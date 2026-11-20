@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-17T20:55:43Z",
+  "type": "claim",
+  "task_id": "T-KATA-SLIM-prj-success-criteria-and-acceptance-criteria-050",
+  "by": "opus-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA"
+  }
+}

@@ -296,6 +296,37 @@ export function gradeFindingsText(
   }
 }
 
+// 実践の型を整備する approach。成果物ではなく、成果物が宣言する実践の型そのものを編集対象にする。
+const KATA_MAINTENANCE_APPROACHES: ReadonlySet<Approach> = new Set<Approach>([
+  "rulebook-maintenance",
+  "recipe-maintenance",
+  "sample-maintenance",
+  "template-maintenance",
+]);
+
+// 実践の型の参照を解決するときの成果物の kind。kind: generated の成果物は CLI が生成するため
+// 既定では実践の型を参照しないが、型の整備の段はカタログが宣言する rulebook 自体を整備するので、
+// generated の扱いを外して宣言どおりに解決する（PJR-DM9B）。
+export function kataRefTargetKind(
+  kind: DctDeliverableItem["kind"] | undefined,
+  approach: Approach | undefined,
+): DctDeliverableItem["kind"] | undefined {
+  return kind === "generated" && approach && KATA_MAINTENANCE_APPROACHES.has(approach)
+    ? undefined
+    : kind;
+}
+
+// タスクの approach を踏まえて、成果物が宣言する実践の型の参照を解決する。
+export function deliverableKataRefs(
+  deliverable: DeliverableInfo | null | undefined,
+  approach: Approach | undefined,
+): KataRefs {
+  return resolveKataRefs(
+    deliverable?.deliverable.rulebook,
+    kataRefTargetKind(deliverable?.deliverable.kind, approach),
+  );
+}
+
 export function gradeFindingTargetPath(
   approach: Approach | undefined,
   deliverable: DeliverableInfo | null,
@@ -327,7 +358,7 @@ export function reviewGradeSubject(
 ): { path: string; target: ReviewGradeTarget } | undefined {
   const deliverable =
     task.local_id && catalogPath ? findDeliverableInfo(catalogPath, task.local_id) : null;
-  const refs = resolveKataRefs(deliverable?.deliverable.rulebook, deliverable?.deliverable.kind);
+  const refs = deliverableKataRefs(deliverable, task.approach);
   const path = gradeFindingTargetPath(task.approach, deliverable, refs);
   if (!path || path === MISSING) return undefined;
   return { path, target: gradeTargetKind(task.approach) };
@@ -606,7 +637,7 @@ export function targetDocIds(
   ];
   const kinds = approach ? (TARGET_REF_KINDS[approach] ?? []) : [];
   if (kinds.length === 0) return ids;
-  const refs = resolveKataRefs(deliverable.deliverable.rulebook, deliverable.deliverable.kind);
+  const refs = deliverableKataRefs(deliverable, approach);
   for (const kind of kinds) {
     const refPath = refs[kind];
     if (refPath !== MISSING) ids.push(refDocIdFromPath(refPath));

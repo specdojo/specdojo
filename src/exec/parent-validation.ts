@@ -1,5 +1,12 @@
 import { spawn } from "node:child_process";
 import { join } from "node:path";
+import { performance } from "node:perf_hooks";
+import { StringDecoder } from "node:string_decoder";
+import {
+  recordValidationGateWait,
+  validationMetric,
+  ValidationTestFiles,
+} from "./validation-metrics.js";
 import { gitEnvironment } from "./worktree.js";
 import { acquirePoolSlot, getActiveExecLocksDir, releaseLock } from "./slot-lock.js";
 import type { EvidenceValidation, ExecEvidence } from "./evidence.js";
@@ -438,21 +445,30 @@ async function invokeParentValidation(
     const stderrCapture: BoundedCapture = { chunks: [], totalBytes: 0 };
     let settled = false;
     let timedOut = false;
+    const testFiles = new ValidationTestFiles();
+    const stdoutDecoder = new StringDecoder("utf8");
     const child = spawn(definition.command, [...definition.args], {
       cwd,
-      env: gitEnvironment(),
+      env: { ...gitEnvironment(), SPECDOJO_PARENT_VALIDATION_METRICS: "1" },
       shell: false,
       stdio: ["ignore", "pipe", "pipe"],
       windowsHide: true,
     });
     child.stdout.on("data", (chunk: Buffer) => {
       appendBounded(stdoutCapture, chunk);
+      testFiles.observe(stdoutDecoder.write(chunk));
     });
     child.stderr.on("data", (chunk: Buffer) => {
       appendBounded(stderrCapture, chunk);
     });
     const timer = setTimeout(() => {
       timedOut = true;
+      validationMetric("validation-timeout", {
+        id: definition.id,
+        cwd,
+        timeout_ms: definition.timeoutMs,
+        ...testFiles.snapshot(),
+      });
       child.kill("SIGTERM");
     }, definition.timeoutMs);
     const finish = (result: ParentValidationProcessResult): void => {
@@ -542,6 +558,7 @@ export async function runParentValidationBatch(
         summary: reason,
         reason,
       });
+      validationMetric("validation-skipped", { id: definition.id, repo, reason });
       continue;
     }
     const root =
@@ -565,8 +582,37 @@ export async function runParentValidationBatch(
       });
       continue;
     }
-    const result = await invoke(definition, root);
+    const startedAt = new Date().toISOString();
+    const started = performance.now();
+    validationMetric("validation-start", {
+      id: definition.id,
+      repo,
+      started_at: startedAt,
+      timeout_ms: definition.timeoutMs,
+    });
+    let result: ParentValidationProcessResult;
+    try {
+      result = await invoke(definition, root);
+    } catch (error) {
+      validationMetric("validation-end", {
+        id: definition.id,
+        repo,
+        started_at: startedAt,
+        duration_ms: performance.now() - started,
+        error: String(error),
+      });
+      throw error;
+    }
     const passed = result.exitCode === 0 && !result.error && !result.timedOut;
+    validationMetric("validation-end", {
+      id: definition.id,
+      repo,
+      started_at: startedAt,
+      duration_ms: performance.now() - started,
+      exit_code: result.exitCode,
+      timed_out: result.timedOut === true,
+      status: passed ? "passed" : "failed",
+    });
     validations.push({
       id: definition.id,
       source: "runner",
@@ -645,9 +691,19 @@ export class ParentValidationGate {
   ) {}
 
   async run<T>(label: string, ids: readonly string[], task: () => Promise<T>): Promise<T> {
+    const queued = performance.now();
+    validationMetric("gate-queued", {
+      ids,
+      running: [...this.active],
+      queued: this.waiters.length,
+    });
     await this.acquire(label, ids);
+    const localWaitMs = performance.now() - queued;
     try {
-      if (!this.lockRoot) return await task();
+      if (!this.lockRoot) {
+        recordValidationGateWait(queued, localWaitMs);
+        return await task();
+      }
       const slot = await acquirePoolSlot(
         parentValidationPoolPath(this.lockRoot),
         this.limit,
@@ -660,6 +716,7 @@ export class ParentValidationGate {
         },
       );
       try {
+        recordValidationGateWait(queued, localWaitMs);
         return await task();
       } finally {
         releaseLock(slot);

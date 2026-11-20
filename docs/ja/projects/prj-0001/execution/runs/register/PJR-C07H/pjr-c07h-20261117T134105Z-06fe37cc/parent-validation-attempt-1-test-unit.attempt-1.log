@@ -1,0 +1,196 @@
+parent validation: test-unit
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.8.0 test:unit
+> vitest run --config vitest.unit.config.ts
+
+
+ RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-C07H
+
+Updated ticket status → ready: /tmp/specdojo-ticket-fCFGKg/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-wKR1jU/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-8bcUe3/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-CXpmmq/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-RXxpEL/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-kiQWgn/pjr-0001-topic.md
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=no
+Using default: devcontainer-preset=recommended
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=no
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=no
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=yes
+before
+  
+  
+docs/selected.md
+grade run is busy for this project; waiting for the active run
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader verdict=pass score=100 findings=0
+graded: docs/ja/specdojo/samples/top-level.yaml actor=actual-grader verdict=pass score=75 findings=1
+graded: docs/ja/specdojo/samples/external.yml actor=actual-grader verdict=pass score=75 findings=1
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader verdict=pass score=100 findings=0
+[dry-run] docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader status=pending
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader verdict=pass score=100 findings=0
+resumed complete: docs/ja/specdojo/rulebooks/example-rulebook.md
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader verdict=pass score=100 findings=0
+resumed complete: docs/ja/specdojo/rulebooks/example-rulebook.md
+graded: docs/ja/specdojo/rulebooks/other-rulebook.md actor=actual-grader verdict=pass score=100 findings=0
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader verdict=pass score=100 findings=0
+resumed complete: docs/ja/specdojo/rulebooks/example-rulebook.md
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader verdict=pass score=100 findings=0
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader verdict=pass score=100 findings=0
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader verdict=pass score=100 findings=0
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader verdict=pass score=100 findings=0
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader verdict=pass score=100 findings=0
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader verdict=pass score=100 findings=0
+resumed complete: docs/ja/specdojo/rulebooks/example-rulebook.md
+graded: ../product/document.md actor=actual-grader verdict=pass score=100 findings=0
+graded: ../api-checkout/document.md actor=actual-grader verdict=pass score=100 findings=0
+graded: ../web-checkout/document.md actor=actual-grader verdict=pass score=100 findings=0
+resumed complete: ../api-checkout/document.md
+graded: document.md actor=actual-grader verdict=pass score=100 findings=0
+resumed complete: ../web-checkout/document.md
+resumed complete: ../api-checkout/document.md
+resumed complete: document.md
+resumed complete: ../web-checkout/document.md
+Written: .specdojo/host/devcontainer-tmux.sh
+[dry-run] would write: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Would move 1 agent member(s) from /tmp/specdojo-members-1LRnXT/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-1LRnXT/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-1LRnXT/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-1LRnXT/.specdojo/agent-members.yaml
+ ❯ tests/src/exec/validation-metrics.test.ts (10 tests | 1 failed) 236ms
+     × records real invoker timeout before SIGTERM, including still-active files and resource samples 7ms
+  [grade] checking docs/overview.md (--target deliverable)
+  [grade] checking rulebook: docs/ja/specdojo/rulebooks/test-rulebook.md (--target kata)
+  [grade] checking sample: specdojo:test-sample: docs/ja/specdojo/samples/test-sample.md (--target kata)
+  [grade] executed: run id test
+  [grade] checking docs/overview.md (--target deliverable)
+  [grade] checking rulebook: docs/ja/specdojo/rulebooks/test-rulebook.md (--target kata)
+  [grade] checking sample: specdojo:test-sample: docs/ja/specdojo/samples/test-sample.md (--target kata)
+  [grade] executed: run id test
+  [grade] checking docs/overview.md (--target deliverable)
+  [grade] checking rulebook: docs/ja/specdojo/rulebooks/test-rulebook.md (--target kata)
+  [grade] checking sample: specdojo:test-sample: docs/ja/specdojo/samples/test-sample.md (--target kata)
+  [grade] executed: run id test
+[night] approved queue (1/10): PJR-AB12
+  PJR-AB12  success  transition=review  commit=committed abc123
+[night] morning report: execution/reports/night-orchestrator/night-orchestrator-20261117T140820824Z.md
+result-markdownlint: result execution/runs/schedule/TASK/TASK/result.md not found; skipped pre-commit lint
+Rate limit detected for pinned agent pinned. Waiting until 2026-11-17T14:09:39.527Z before resuming the same stage.
+resumed
+Rate limit detected for pinned agent primary. Falling back to fallback at 2026-11-17T14:08:39.901Z.
+fallback complete
+Connection error detected for pinned agent primary-reporter. Falling back to fallback-reporter at 2026-11-17T14:08:40.241Z.
+fallback reporter complete
+Wrote agent stdout: /tmp/specdojo-agent-command-mfWn4v/outputs/response.txt
+Wrote agent stdout: /tmp/specdojo-agent-command-0kGlNj/outputs/partial.txt
+
+ Test Files  1 failed | 216 passed (217)
+      Tests  1 failed | 3853 passed (3854)
+   Start at  23:06:53
+   Duration  129.05s (transform 17.63s, setup 5.19s, import 74.54s, tests 139.19s, environment 13ms)
+
+
+
+--- stderr ---
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+reporter failedproblem
+WARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.
+WARN: timeline_path is deprecated. Use register epics and dashboard build.
+[grade] attempt 1/3 failed; retrying: subject.md: exit 1: agent failed
+[grade] attempt 2/3 failed; retrying: subject.md: exit 1: agent failed
+WARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.
+WARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+WARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.
+rate limit; retry-after: 60 seconds
+rate limit
+Cannot connect to API: ECONNREFUSED
+ECONNREFUSED
+WARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/src/exec/validation-metrics.test.ts > parent validation diagnostics > records real invoker timeout before SIGTERM, including still-active files and resource samples
+AssertionError: expected undefined to match object { id: 'test-unit', …(2) }
+
+- Expected:
+{
+  "active_test_files": [
+    "tests/hanging.test.ts",
+  ],
+  "id": "test-unit",
+  "timeout_ms": 600000,
+}
+
++ Received:
+undefined
+
+ ❯ tests/src/exec/validation-metrics.test.ts:197:21
+    195|     const rows = records(path);
+    196|     const timeout = rows.find((row) => row.event === "validation-timeo…
+    197|     expect(timeout).toMatchObject({
+       |                     ^
+    198|       id: "test-unit",
+    199|       active_test_files: ["tests/hanging.test.ts"],
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

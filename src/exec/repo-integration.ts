@@ -594,6 +594,7 @@ export {
   syncWorktreeWithIntegrationTarget,
 } from "./repo-integration-sync.js";
 export type {
+  IntegrationConflictResolver,
   IntegrationTargetSync,
   IntegrationTargetSyncStatus,
 } from "./repo-integration-sync.js";

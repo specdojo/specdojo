@@ -50,6 +50,7 @@ import {
 import { buildInitialStateFromStrategy } from "./schedule/initial.js";
 import { buildScheduleIndex } from "./schedule/schedule.js";
 import { qualifyTaskId } from "./shared.js";
+import { localConfigEnvironment } from "../shared/local-config.js";
 import {
   configuredProductRepos,
   missingProductWorktrees,
@@ -82,6 +83,10 @@ import {
   worktreeNameFromTaskId,
   type ExecWorktree,
 } from "./worktree.js";
+import {
+  isWorktreeCleanupInProgress,
+  worktreeCleanupInProgressReason,
+} from "./worktree-cleanup-lock.js";
 
 export { isCommitTargetPath, stabilizeCommitTargets } from "./worktree-ops.js";
 
@@ -432,6 +437,7 @@ async function agent(opts: AgentOpts): Promise<void> {
     cwd: worktree.path,
     env: {
       ...withoutInheritedRepoEnvironment(gitEnvironment()),
+      ...localConfigEnvironment(worktree.path),
       SPECDOJO_SCHEDULE_PATH: context.schedulePath,
       SPECDOJO_EXECUTION_PATH: context.executionPath,
       ...productRepoEnvironment(worktree.path, worktree.repos),
@@ -524,7 +530,12 @@ function merge(opts: MergeOpts): void {
 
 function remove(opts: RemoveOpts): void {
   const context = resolveContext(opts);
-  const worktree = requireWorktree(context, qualifyTaskId(context.projectId, opts.task));
+  const worktreeTaskId = qualifyTaskId(context.projectId, opts.task);
+  // runner が統合の後の撤去をロックの外で進めている間は、同じ worktree を二重に消さない。
+  if (isWorktreeCleanupInProgress(context.executionPath, worktreeTaskId)) {
+    throw new Error(worktreeCleanupInProgressReason(worktreeTaskId));
+  }
+  const worktree = requireWorktree(context, worktreeTaskId);
   removeWorktree({
     context,
     worktree,

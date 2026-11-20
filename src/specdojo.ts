@@ -15,6 +15,7 @@ import { registerRoutineCommands } from "./routine/routine.js";
 import { registerJobCommands } from "./job/job.js";
 import { registerWatchCommand } from "./commands/watch.js";
 import { registerBuildCommand } from "./commands/build.js";
+import { registerWhereCommand } from "./commands/where.js";
 import { registerYamlPagesCommands } from "./docs/yaml-pages-command.js";
 import { registerDashboardCommands } from "./dashboard/dashboard.js";
 import { registerGradeCommand } from "./grade/grade.js";
@@ -24,6 +25,7 @@ import { registerKataCommands } from "./kata/command.js";
 import { registerDevcontainerCommands } from "./devcontainer/command.js";
 import { registerInitCommand } from "./commands/init.js";
 import { registerOrchestratorCommands } from "./commands/orchestrator.js";
+import { registerGitCommand } from "./commands/git.js";
 
 /**
  * bin は dist/specdojo.js を指すため、開発チェックアウトで `npm run build` を忘れると
@@ -65,6 +67,7 @@ async function main(): Promise<void> {
   registerJobCommands(program);
   registerWatchCommand(program);
   registerBuildCommand(program);
+  registerWhereCommand(program);
   registerYamlPagesCommands(program);
   registerDashboardCommands(program);
   registerGradeCommand(program, {
@@ -75,6 +78,7 @@ async function main(): Promise<void> {
   registerKataCommands(program);
   registerDevcontainerCommands(program);
   registerOrchestratorCommands(program);
+  registerGitCommand(program);
 
   await program.parseAsync(process.argv);
 }

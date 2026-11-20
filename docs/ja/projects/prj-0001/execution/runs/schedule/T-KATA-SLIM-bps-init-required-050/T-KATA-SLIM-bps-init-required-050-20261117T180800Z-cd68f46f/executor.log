@@ -1,0 +1,36 @@
+`bps-sample.md` を書き直しました。指摘 6 件をすべて直し、空白を除いた文字数は 4189 から 2932 に減って、今の 7 割以下という目安に収まりました。markdownlint などの正式な検査は、この後 runner が実行します。
+
+**外す対象の記述は、この sample には元からありませんでした。** 役割の段落、承認と agent の段落、検証の表の文書品質の行、未決事項の表の区分・担当・追跡先の列、共通の運用の参照文は、どれも見当たりませんでした。今回の作業は、同じ判断の言い直しを外して記述を詰めることと、指摘の修正が中心です。
+
+**同じ判断の言い直しを外した箇所**
+
+- 終了点は「出力」の表を、開始点は `T-01` を参照する形にしました。
+- 例外 `E-01` の検出条件は、項目を書き並べず「入力」の表の必須項目を参照するようにしました。
+- 検証の表の例外の行は `E-0x` の検出条件と処置を参照する形にまとめ、6 行を 4 行にしました。
+- 出力の表の補充依頼の確定条件は、`S-03` の完了条件を参照する形にしました。
+- 入力の表のあとにあった論理名の説明文は、rulebook の規則を繰り返していただけなので削りました。トリガーの補足文は、発生元の列に入れました。
+- 数量の用語 4 つは、依頼数量を定める 1 文にまとめました。
+- 対象外の委譲先は、概要の末尾の段落から対象外の行へ移しました。
+
+**指摘への対応**
+
+| 指摘 | 対応 |
+| --- | --- |
+| F001 | 「補充が必要」の入力条件に「未完了依頼なし」を加え、「既存依頼と重複」と条件が重ならないようにした |
+| F002 | `E-01` の処置を「不足項目、対象商品、確認依頼先を保留記録に残す」にし、検証で確かめる記録と揃えた |
+| F003 | 前提条件に「店主代表が判断できない間は起動せず、トリガーを保留する」を加えた |
+| F004 | 出力の表に「重複不要記録」の行を足した |
+| F005 | 引き渡しに失敗した場合を新しい `E-05` に分けた。`E-03` は確定前で再開は `S-03`、`E-05` は確定済み・未受領で再開は `S-04` |
+| F006 | `S-02` で判定時点の現在庫を確かめるようにし、「補充が不要」の条件に「判定時に補充基準以上」を入れた |
+
+**結論が変わった点**
+
+- F003〜F006 の対応で、業務の経路が 3 つ増えました。前提条件が満たされないときの保留、重複不要記録という出力、`E-05` という例外です。
+- `S-01` の判断材料から発注単位を外しました。発注単位は `S-02` の依頼数量の算出で使います。
+- 目的の文から「依頼数量を確定する」を、前提条件から補充基準の定義の文を削りました。どちらも導入文やトリガーと重なるためですが、いずれも判断の基準を変える変更ではありません。
+
+template の `bps-template.md` に運用の記述はなかったので、template への変更案はありません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"bps-sample.md was condensed and all six findings were fixed. Non-whitespace character count went from 4189 to 2932 (70%). The sample had no operational description of the kinds the plan lists for removal, so the work removed restated judgments and condensed the remaining text. The rulebook, recipe, and template were not changed.","handoff":["Changed file: docs/ja/specdojo/samples/bps-sample.md (the only change).","Non-whitespace character count: 4189 before, 2932 after (70% of the original).","None of the descriptions the plan lists for removal were present: role paragraph, closing approval and agent paragraph, document-quality rows in the verification table, and the category, owner, and tracking columns of the open-issues table. The work therefore removed restated judgments instead. The end point now references the Output section, the start point references `T-01`, the `E-01` detection condition references the required items in the Input section, the verification table references exception IDs (6 rows to 4), and the request output references the completion condition of `S-03`. The note on logical names after the input table, the trigger note, and the duplicated quantity-term definitions were folded in or removed.","Finding fixes: F001 added 'no unfinished request' to the 'replenishment needed' condition. F002 made `E-01` record the missing items, the target item, and the person asked to confirm, matching the verification. F003 added to the preconditions that the flow does not start and the trigger is held while the shop-owner representative cannot decide. F004 added a 'no-duplicate record' row to the output table. F005 split handover failure into a new `E-05`: `E-03` stays unconfirmed and restarts at `S-03`, `E-05` is confirmed but unreceived and restarts at `S-04`. F006 made `S-02` use the stock at judgment time and added 'at or above the replenishment threshold at judgment time' to 'replenishment not needed'.","Business-path additions from the findings (not changes to judgment criteria): the precondition hold, the no-duplicate record output, and `E-05`. The order unit was removed from the `S-01` decision because it is used in `S-02`. The same judgment is still written in one place.","bps-template.md has no operational description, so there is no template change proposal."],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/bps-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"No history file changed","reason":"The only changed file is a sample under docs/ja/specdojo/samples; no plan, result, or register ticket was changed"}]}
+</specdojo_executor_evidence>

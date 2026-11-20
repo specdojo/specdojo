@@ -1,9 +1,13 @@
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { basename, join } from "node:path";
 import { createProviderCapacityTracker, loadExecDefaultsConfig } from "../agent-config.js";
 import { activateResolvedProjectPaths, resolveProjectPaths } from "../project.js";
 import { claimOwnerOf, readAllEventFiles, foldEventsToState } from "../events.js";
-import { buildScheduleIndex, findStaleGeneratedTracks } from "../schedule/schedule.js";
+import {
+  buildScheduleIndex,
+  findEditedGeneratedTrackWarnings,
+  findStaleGeneratedTracks,
+} from "../schedule/schedule.js";
 import { buildInitialStateFromStrategy } from "../schedule/initial.js";
 import { scheduleTrackNames } from "../schedule/gantt-chart-scope.js";
 import { readReadySnapshot } from "../schedule/ready.js";
@@ -14,9 +18,9 @@ import { extractLocalId, extractPhaseSuffix } from "../../schedule/phase-sets.js
 import { resolveWorktreeBase } from "../worktree.js";
 import {
   buildPhaseModeIndex,
-  resolveAgentAssignment,
   resolveAgentPipeline,
   resolveApproach,
+  resolveScheduledTaskAgent,
   resolveTaskCapabilities,
   resolveTaskExecution,
   resolveTaskMode,
@@ -39,6 +43,15 @@ import {
   runPreparedTaskSafely,
 } from "./schedule-task.js";
 import { spawnIndexBuild, spawnRefresh, spawnScheduleBuild } from "./mode-shared.js";
+import {
+  ChangeScopeGate,
+  inferChangeScope,
+  parseUnknownScopePolicy,
+  scopePlanMetadata,
+  type ChangeScopeLease,
+} from "./change-scope.js";
+import { targetDocIdsForScheduledTask } from "../plans.js";
+import { findRunRecord } from "../run-records.js";
 
 export type CycleScheduleRebuildResult = {
   status: "not-needed" | "success" | "failure";
@@ -114,6 +127,12 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
     }
   }
 
+  // A directly edited track only warns: runs resolve agents from the strategy regardless, and the
+  // same difference also appears after a catalog change that has not been rebuilt yet.
+  for (const warning of findEditedGeneratedTrackWarnings(schedulePath, repoRoot)) {
+    process.stdout.write(`[run] WARN: ${warning}\n`);
+  }
+
   const execDefaults = loadExecDefaultsConfig(
     resolveExecDefaultsPath(opts, schedulePath),
     executionPath,
@@ -126,6 +145,12 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
   const maxRounds = opts.maxRounds ? Math.max(1, parseInt(opts.maxRounds, 10) || 1) : null;
   const dryRun = !!opts.dryRun;
   const strategy = opts.strategy ?? "critical-first";
+  const scopeGate = new ChangeScopeGate(executionPath, parseUnknownScopePolicy(opts.unknownScope));
+  const scopeLeases = new Map<string, ChangeScopeLease>();
+  const attempted = new Set<string>();
+  // A non-loop run still launches at most --parallel tasks, but defers overlapping preparation
+  // until a prior task integrates instead of forking both worktrees from the same HEAD.
+  let batchBudget = parallel;
 
   const prepareReadyTasks = async (
     capacity: ReturnType<typeof createProviderCapacityTracker>,
@@ -160,11 +185,34 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
     const preparedTasks: PreparedTask[] = [];
 
     for (const taskId of orderedIds) {
-      if (preparedTasks.length >= limit) break;
+      if (preparedTasks.length >= limit || (!loop && batchBudget <= 0)) break;
       const task = taskMap.get(taskId);
-      if (!task) continue;
+      if (!task || attempted.has(taskId) || scopeLeases.has(taskId)) continue;
 
+      let lease: ChangeScopeLease | undefined;
       try {
+        if (!dryRun) {
+          const planPath = findRunRecord(executionPath, "plan", taskId);
+          const plan = planPath ? readFileSync(planPath, "utf8") : "";
+          const metadata = scopePlanMetadata(plan);
+          const scope = inferChangeScope({
+            targets: [
+              ...new Set([
+                ...(metadata.targets ?? []),
+                ...(targetDocIdsForScheduledTask(catalogPath ?? "", task, projectId ?? "") ?? []),
+              ]),
+            ],
+            approach: task.approach ?? metadata.approach,
+            text: plan,
+            projectId: projectId ?? "",
+            repoRoot,
+            catalogPath,
+            schedulePath,
+          });
+          const acquired = await scopeGate.tryAcquire(taskId, scope);
+          if (!acquired) continue;
+          lease = acquired;
+        }
         const prepared = await prepareSingleTask(
           task,
           projectId,
@@ -185,24 +233,40 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
           execDefaults,
           capacity.hasCapacity,
           undefined,
-          opts,
+          { ...opts, changeScopeWaits: lease?.waits },
         );
         // "deferred": every candidate provider is at its cap; try it again after a slot frees.
-        if (prepared === "deferred") continue;
+        if (prepared === "deferred") {
+          await lease?.finish(true);
+          continue;
+        }
+        attempted.add(taskId);
         if (typeof prepared !== "string") {
           preparedTasks.push(prepared);
+          if (lease) {
+            const reserved = lease;
+            scopeLeases.set(taskId, reserved);
+            prepared.onScopeIntegrated = () => reserved.finish(true);
+          }
           capacity.reserve(prepared.agentCandidates[0]?.provider);
+          batchBudget--;
+        } else {
+          await lease?.finish(prepared === "success");
+          if (prepared === "failure") process.exitCode = 1;
         }
       } catch (error) {
+        attempted.add(taskId);
+        await lease?.finish(false);
         const message = error instanceof Error ? error.message : String(error);
         process.stderr.write(`[run] setup error for ${task.id}: ${message}\n`);
+        process.exitCode = 1;
       }
     }
 
     return { preparedTasks, readyCount: orderedIds.length };
   };
 
-  if (!loop || dryRun) {
+  if (dryRun) {
     const capacity = createProviderCapacityTracker(execDefaults);
     const { preparedTasks, readyCount } = await prepareReadyTasks(capacity, parallel);
 
@@ -245,7 +309,8 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
 
   const scheduleAvailable = async (openSlots: number): Promise<PreparedTask[]> => {
     if (stopNewTasks || openSlots <= 0) return [];
-    if (maxRounds !== null && schedulingPass >= maxRounds) {
+    if (!loop && batchBudget <= 0) return [];
+    if (loop && maxRounds !== null && schedulingPass >= maxRounds) {
       process.stdout.write(`[run] reached max-rounds ${maxRounds} — drain running tasks\n`);
       stopNewTasks = true;
       return [];
@@ -253,7 +318,7 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
 
     schedulingPass++;
     const roundSuffix = ` (round ${schedulingPass}${maxRounds !== null ? `/${maxRounds}` : "/-"})`;
-    if (schedulingPass > 1) {
+    if (loop && schedulingPass > 1) {
       // Rebuild doc-index before refresh so deliverables created by the previous round (e.g. a
       // newly authored document referenced by wikilink) are resolvable when this round's tasks
       // are prepared, instead of only becoming resolvable on a later, out-of-band index build.
@@ -304,7 +369,9 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
         dryRun,
         lifecycleLock,
       ),
-    onSettled: (prepared, outcome) => {
+    onSettled: async (prepared, outcome) => {
+      await scopeLeases.get(prepared.task.id)?.finish(outcome.result === "success");
+      scopeLeases.delete(prepared.task.id);
       capacity.release(prepared.agentCandidates[0]?.provider);
 
       if (outcome.result === "failure") process.exitCode = 1;
@@ -440,15 +507,9 @@ export async function runManualMode(opts: RunOpts): Promise<void> {
         task.phase_suffix,
         task.phase_set,
       );
-    task.agent =
-      task.agent ??
-      resolveAgentAssignment(
-        task.local_id,
-        task.id,
-        phaseModeIndex,
-        task.phase_suffix,
-        task.phase_set,
-      );
+    const agent = resolveScheduledTaskAgent(task, phaseModeIndex);
+    if (agent === undefined) delete task.agent;
+    else task.agent = agent;
   }
 
   // If the task is already in "doing" state and --by is not specified,

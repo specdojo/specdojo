@@ -1,0 +1,85 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_1d2ace59b0e447daa3917a1801ea5d3a
+  ts: "2026-11-17T22:47:13Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 古い駄菓子屋の sample（sample-gcs-\*）の中身を specdojo の sample へ反映し、local/ へ移す
+    - field: description
+      from: ""
+      to: docs/ja/sample-gcs-product・sample-gcs-projects・sample-gcs-story の古い sample のうち、今の specdojo の sample に足すと役に立つ記述を反映し、ディレクトリを local/ へ移して git の管理から外す
+    - field: input
+      from: ""
+      to: '["利用者の要望（2026-11-18）: docs/ja/sample-gcs-product・sample-gcs-projects・sample-gcs-story は古い sample の文書で、local 以下に移し、git の履歴からも消したい。内容のうち specdojo の sample に反映したほうがよいものは反映したい","orchestrator の調べ（2026-11-18）: sample-gcs-product は 74 ファイル（業務仕様・外部 IF 仕様・アーキテクチャ、日本語ディレクトリ名の旧構成）、sample-gcs-story は 13 ファイル（物語、484KB）、sample-gcs-projects は .gitkeep の 3 ファイルだけ。参照は docs/ja/index.md の表の 2 行と、過去の登録簿・実行の記録（書き換えない）","利用者の決定（2026-11-18）: git の履歴からの削除は履歴の書き換えと強制 push を伴い、記録に書かれた commit の hash が全部変わるため、todo では手順と影響の調べに留めて `_UNDECIDED_` で残す。実施は決めた後に利用者が行う","利用者の決定（2026-11-18）: local/ は git の管理外のため、exec の worktree では移せない。反映を exec run で先に行い、統合の後に orchestrator が承認を得て local/ への複製と git rm を行う"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-18"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+- v: 1
+  id: reg_efd057d9d70d4d85b8a50efc6f7a7869
+  ts: "2026-11-17T23:35:47Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_1d2ace59b0e447daa3917a1801ea5d3a
+- v: 1
+  id: reg_f97f692d4c2d4c6c9f899ec3d2c1900a
+  ts: "2026-11-17T23:55:41Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_efd057d9d70d4d85b8a50efc6f7a7869
+- v: 1
+  id: reg_94a6a2ccf609411d80b9e2e1919fc9bd
+  ts: "2026-11-18T11:17:10Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を確かめた（docs:build と lint:md が通り、lint:md の唯一のエラーは git 管理外の local/ のメモ）。履歴を消さないのは利用者の決定（2026-11-18）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-18"
+    - field: conclusion
+      from: "-"
+      to: mip-index-sample へ反映し、index.md の 2 行を外し、旧 sample を local/legacy-samples/ へ移して git rm した。履歴は消さない
+  previous_event_id: reg_f97f692d4c2d4c6c9f899ec3d2c1900a

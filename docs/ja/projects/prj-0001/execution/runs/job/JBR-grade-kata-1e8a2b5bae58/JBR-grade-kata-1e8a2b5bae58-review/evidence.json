@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-kata-1e8a2b5bae58-review",
+  "run_id": "JBR-grade-kata-1e8a2b5bae58-review",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-review-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-16T20:39:46.176Z",
+    "completed_at": "2026-11-16T20:41:03.313Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [],
+  "attempt_changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "git diff --stat d4fe0da84df1f188bba4b966b536776f53a6918b..84aa172fa8bd352b3f70275d9b8ef5e5326518cd",
+      "status": "passed",
+      "summary": "22ファイル、+1087/-361。すべて Job Run の出力"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --name-status d4fe0da84df1f188bba4b966b536776f53a6918b..84aa172fa8bd352b3f70275d9b8ef5e5326518cd",
+      "status": "passed",
+      "summary": "評価結果ファイル15件（A5/M10）、Run JSON、run ディレクトリの記録のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node dist/specdojo.js grade list --target kata --project prj-0001 --changed-only",
+      "status": "passed",
+      "summary": "対象15件の recipe はいずれも出力されず、評価結果は最新（記録前の再実行でも0件）"
+    },
+    {
+      "source": "executor",
+      "command": "node dist/specdojo.js grade list --target kata --project prj-0001 --incomplete",
+      "status": "passed",
+      "summary": "出力は対象外の gl-rulebook.md のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node dist/specdojo.js grade state --target kata --project prj-0001 --exhausted",
+      "status": "passed",
+      "summary": "出力なし（retry_exhausted なし）"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 5137 file(s), 135 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 100 passed, 0 error, 0 未検査\n  graph: 6 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5137 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, docs/ja/specdojo/**, docs/specdojo/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, docs/ja/specdojo/**, docs/specdojo/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.8.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schema)\ndocs/ja/specdojo/samples/ifx-api-sample\n… output omitted …\nulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-kata-1e8a2b5bae58/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-kata-1e8a2b5bae58/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.8.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.11 \u001b[39m\u001b[90m/workspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-kata-1e8a2b5bae58\u001b[39m\n\n \u001b[32m✓\u001b[39m tests/src/grade/grade.test.ts \u001b[2m(\u001b[22m\u001b[2m69 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 818\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/src/exec/reporter.test.ts \u001b[2m(\u001b[22m\u001b[2m125 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 60\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/src/exec/plans.test.ts \u001b[2m(\u001b[22m\u001b\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "verdict: complete-with-findings。差分 d4fe0da..84aa172 の22ファイルはすべて当該 Job Run の出力（recipe の評価結果ファイル15件〔追加5・変更10〕、Run JSON、run ディレクトリの plan/result/evidence/pipeline-state/command log）で、対象外の変更はない。Run JSON の state は succeeded、exit_code は0、evidence の executor は succeeded。stdout は selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0、stderr は空。results.tsv は15件すべて passed で、failed・retry_exhausted・rate limit（75）・中断はなく、partial ではない。鮮度: `grade list --target kata --project prj-0001 --changed-only` の出力に対象15件は含まれない（記録直前に HEAD 84aa172 で再実行して確認）。`--incomplete` は対象外の gl-rulebook のみ、`grade state --exhausted` は空。verdict は全件 pass。score は100が10件、98が2件、97・96・95・85が各1件。前回 needs-work の pm-raci（73→100）、pm-roles（70→98）、pm-plan（92→100）は `content_hash` が変わっており、文書の改訂と整合する。`graded_by` が flash-high-executor なのは agy-expert-executor の `alias_of` であり整合する。残る finding（cpd 12、pm-quality-management-plan 4、bes 2、pm-roles 2、cdfd-uc 1、pm-organization 1）は完了を妨げない。軽微な点: pm-organization の finding の1つで anchor が空に変わった（空の anchor はリポジトリ全体に多く、この Run 固有ではない）。result.md の追加ファイル行数 +110 は diff stat の109と1行ずれる。確認できなかった範囲: logs/grade/runs/per-document/JBR-grade-kata-1e8a2b5bae58/ の作業ログと results.tsv 原本（stdout 転記で確認）、finding の内容の妥当性（review の範囲外）、runner が実行する検査の結果。",
+  "completion_status": "complete",
+  "handoff": [
+    "cpd-recipe（score 85、finding 12件）など残る finding は次回の改訂で対応する。",
+    "全件 pass、うち10件が満点という分布が続く場合は、agy 単段（flash-high-executor）の評価の厳しさを人が見直すことを検討する。",
+    "評価結果ファイルの finding の anchor が空になる事象（今回 pm-organization-recipe でも発生）は、grade apply 側での原因調査を検討する。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/job/JBR-grade-kata-1e8a2b5bae58/JBR-grade-kata-1e8a2b5bae58-review/executor.log",
+      "bytes": 7413,
+      "truncated": false
+    }
+  ]
+}

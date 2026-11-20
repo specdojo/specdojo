@@ -2,6 +2,9 @@ import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "nod
 import { dirname, join } from "node:path";
 import { tmpdir } from "node:os";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { remark } from "remark";
+import remarkFrontmatter from "remark-frontmatter";
+import remarkNoUnescapedAnglePlaceholder from "../../../packages/docs-lint/src/remark-no-unescaped-angle-placeholder.js";
 import { dump } from "../../../src/shared/yaml.js";
 import {
   CONDENSE_CATEGORIES,
@@ -250,6 +253,88 @@ describe("condense records and standard phases", () => {
       readFileSync(resultPath, "utf8").replace("task_id: PJR-TEST", "task_id: PJR-OTHER"),
     );
     expect(isResultUnfilled(resultPath, "edit", resetSnapshot)).toBe(true);
+  });
+
+  // PJR-V141: むき出しの `<provider>` が result の frontmatter に入り、lint-fm が落ちた。
+  it("wraps angle placeholders from executor records and block reasons so lint-fm passes", async () => {
+    const lintFrontmatter = async (path: string): Promise<string[]> => {
+      const file = await remark()
+        .use(remarkFrontmatter, ["yaml"])
+        .use(remarkNoUnescapedAnglePlaceholder)
+        .process({ value: readFileSync(path, "utf8"), path });
+      return file.messages.map((message) => message.reason);
+    };
+    const { resultPath } = await scaffoldResult({
+      executionPath: join(root, "execution"),
+      taskId: "PJR-TEST",
+      agent: "executor",
+      mode: "edit",
+      projectId: "test",
+      planRef: "plan.md",
+      startedAt: "2026-11-04T00:00:00Z",
+      origin: "register",
+      approach: "condense",
+      targets: ["test:note"],
+    });
+    const records = [
+      record({
+        location: "## <provider> section",
+        reason: "Kept providers.<provider>.command_template and `<already>` as the rule.",
+        cause: { type: "kata", kind: "recipe", location: "## <kind> | see <https://example.com>" },
+      }),
+    ];
+    const { evidence } = buildExecutorEvidence({
+      taskId: "PJR-TEST",
+      runId: "run-1",
+      actor: "executor",
+      status: "succeeded",
+      startedAt: "2026-11-04T00:00:00Z",
+      completedAt: "2026-11-04T00:01:00Z",
+      exitCode: 0,
+      attempts: 1,
+      stdout: report(records),
+      stderr: "",
+      changes: [],
+      diffStat: "",
+      logRefPath: "executor.log",
+    });
+    const output = {
+      schema_version: 1 as const,
+      mode: "edit" as const,
+      summary: ["Condensed."],
+      changed_files: [],
+      handoff: [],
+      approach: "Preserved constraints.",
+    };
+    const wrapped = [
+      {
+        ...records[0],
+        location: "## `<provider>` section",
+        reason: "Kept `providers.<provider>.command_template` and `<already>` as the rule.",
+        cause: {
+          type: "kata",
+          kind: "recipe",
+          location: "## `<kind>` | see `<https://example.com>`",
+        },
+      },
+    ];
+
+    await renderReporterResult(resultPath, output, evidence);
+    expect(readSpecdojoNamespace(readFileSync(resultPath, "utf8")).condense_records).toEqual(
+      wrapped,
+    );
+    expect(await lintFrontmatter(resultPath)).toEqual([]);
+
+    await updateResultStatus(
+      resultPath,
+      "blocked",
+      "2026-11-04T00:02:00Z",
+      "blocked: missing <reason>; need=<next action>",
+    );
+    const meta = readSpecdojoNamespace(readFileSync(resultPath, "utf8"));
+    expect(meta.condense_records).toEqual(wrapped);
+    expect(meta.block_reason).toBe("blocked: missing `<reason>`; need=`<next action>`");
+    expect(await lintFrontmatter(resultPath)).toEqual([]);
   });
 });
 

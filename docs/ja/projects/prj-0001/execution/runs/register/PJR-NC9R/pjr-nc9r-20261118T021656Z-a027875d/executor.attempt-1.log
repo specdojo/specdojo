@@ -1,0 +1,24 @@
+PJR-NC9R の作業はすべて終わりました。ローカル設定 `.specdojo/specdojo.local.config.json` で、共有の設定にあるリポジトリのパスを差し替えたり、ローカルのリポジトリを足したりできます。worktree の中の子のプロセスにも本体側の設定が効きます。typecheck・lint・unit・integration の全件は親の検証に任せています。手元では対象のテストだけを流し、通りました。
+
+**動き**
+- **読み込み**: `specdojo.config.json` の後に読みます。差し替えは共有の設定と同じ `name` の要素だけで、変えられるのは `path` だけです。共有の設定に無い `name` の要素は、ローカルのリポジトリとして末尾に足します。
+- **エラー**: 許可外のキー、型の誤り、共有の設定に無い project は、ローカル設定のファイルとキーを示して止めます。
+- **worktree**: ファイルはコピーしません。build と agent を起動するとき、本体のファイルのパスを `SPECDOJO_LOCAL_CONFIG` で渡します。worktree の中に同じ名前のファイルがあっても読みません。
+- **表示と記録**: `specdojo config show` を新しく足しました。各リポジトリに `shared`・`local; shared: <path>`・`local; added` のどれかを付けて表示します。`where exec` は、ローカル設定があるときだけ行を足します。`exec run` の evidence には `local_config_overrides` として残し、そのキーをスキーマにも足しました。
+- **`.gitignore`**: `config init` の既定と、このリポジトリの `.gitignore` に足しました。
+
+**完了条件と違う点**
+
+ローカル設定を保護の一覧（`src/exec/agent-protected-config.ts`）には足していません。足すと、保護されたファイル `.specdojo/claude/settings.edit.json` との一致を見るテストが落ち、そのファイルを変えることになるためです。代わりに、既存の `.specdojo/` の範囲で保護されること、`.gitignore` 済みでも executor が書き換えると違反として止まることをテストで確かめました。コードにもコメントで残しています。
+
+**自分で決めたこと**
+- 環境変数は linked worktree の中でだけ使います。本体の作業ツリーでも使うと、別のリポジトリを操作する子のプロセスへ、この環境のローカル設定が漏れるためです。
+- ローカルで足したリポジトリは、orchestrator の定義の「`repos` で宣言されたプロダクトリポジトリ」に含めます。exec はこれらを `repos` と同じに扱います。ローカル設定は保護されていて agent は書けず、足せるのは利用者だけです。
+
+**お願いしたいこと**
+- `.agents/specdojo-orchestrator.agent.md` は保護された設定なので変えていません。変更案は個票の対応結果に書きました。承認のうえ feature ブランチで反映してください。
+- `CHANGELOG.md` に書く区分と文案（Added）は、個票の対応結果に書きました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"ローカル設定 .specdojo/specdojo.local.config.json による repos[].path の差し替えとローカルのリポジトリの追加を実装。worktree の子のプロセスへは SPECDOJO_LOCAL_CONFIG でパスを渡し、worktree 内の同名ファイルは読まない。config show を新設し、where exec と executor evidence の `local_config_overrides` でローカル由来の値を示す。config init の既定の除外と .gitignore に追加。単体・統合テスト、設定リファレンスとコマンドリファレンス、個票の作業内容と対応結果を更新した。","handoff":["保護の一覧 `PROTECTED_EXACT_PATHS` にはローカル設定を足していない。既存の `.specdojo/` の範囲で保護され、`GENERATED_PATHS` にも入らないことをテストとコメントで固定した。完全一致の一覧に足すと、保護された .specdojo/claude/settings.edit.json の deny 一覧と一致させるテストが失敗するため。","決定: `SPECDOJO_LOCAL_CONFIG` は linked worktree の中でだけ受け付ける。本体の作業ツリーでは自分のファイルだけを読む。runner の子のプロセスが別のリポジトリ（`external_projects` の委譲先など）を操作したときの漏れを防ぐため。linked worktree で環境変数が無い場合は本体の作業ツリーのファイルを読み、worktree 内の同名ファイルは読まない。","決定: ローカルで追加したリポジトリには共有の `repos` と同じキーを許可する。既存のリポジトリの上書きでは name・path だけを許可する。上書き後の設定は共有の設定と同じ検証を通る。","決定: ローカルで宣言したリポジトリは、orchestrator の定義の「repos で宣言されたプロダクトリポジトリ」に含める。exec が repos の一員として扱い（プロダクト worktree・commit の許可範囲・orchestrator launch の許可対象）、ローカル設定は保護されていて利用者だけが書けるため。","保護された設定の変更案（利用者の承認のもと feature ブランチで反映）: .agents/specdojo-orchestrator.agent.md と各環境のラッパーで、「`specdojo.config.json` の project に `repos` で宣言されたプロダクトリポジトリは参照してよい。」を「`specdojo.config.json` の project に `repos` で宣言されたプロダクトリポジトリ（`.specdojo/specdojo.local.config.json` で追加・パスを差し替えたものを含む。`specdojo config show` で確かめる）は参照してよい。」に変える。","CHANGELOG に書く事項（CHANGELOG.md は未変更）: 区分 Added。文案「git で管理しないローカル設定 `.specdojo/specdojo.local.config.json` で、`repos[].path` の差し替えとローカルのリポジトリの追加をできるようにした。worktree の子のプロセスには `SPECDOJO_LOCAL_CONFIG` で本体の作業ツリーのファイルを渡す。`specdojo config show` を追加し、`where exec` と executor evidence の `local_config_overrides` でローカル由来の値を示す。`config init` は `.gitignore` にこのファイルを足す。（PJR-NC9R）」"],"validations":[{"command":"npm run validate:history-links","status":"passed","summary":"変更した個票を含め、履歴蓄積ファイルのリンク記法に違反なし（exit 0）"},{"command":"npm run validate:catalog","status":"passed","summary":"OK: dct-index.yaml（既存の based_on の WARN のみ）"},{"command":"npx prettier --check (changed src/tests/docs/schema files)","status":"passed","summary":"変更したファイルはすべて Prettier の書式に一致"}]}
+</specdojo_executor_evidence>

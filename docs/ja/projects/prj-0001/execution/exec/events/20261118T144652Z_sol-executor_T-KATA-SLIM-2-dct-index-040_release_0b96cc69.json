@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-18T14:46:52Z",
+  "type": "release",
+  "task_id": "T-KATA-SLIM-2-dct-index-040",
+  "by": "sol-executor",
+  "msg": "release claim to switch executor to opus-executor",
+  "meta": {
+    "pipeline_resume_released": "true",
+    "replaced_by": "opus-executor"
+  }
+}

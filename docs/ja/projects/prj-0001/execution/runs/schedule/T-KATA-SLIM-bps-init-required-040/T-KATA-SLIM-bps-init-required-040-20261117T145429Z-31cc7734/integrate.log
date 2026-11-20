@@ -1,0 +1,4 @@
+commit-scope: integration blocked; 2 non-target changes (worktree kept):
+  docs/ja/specdojo/recipes/bps-recipe.md
+  docs/ja/specdojo/templates/bps-template.md
+commit-scope: unresolved target doc id (no individual path; approach directory permissions still apply): specdojo:bps-rulebook

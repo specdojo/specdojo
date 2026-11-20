@@ -2,9 +2,9 @@
 id: cdsd-execution-grade-criteria
 document: cdsd-execution
 path: docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md
-graded_at: "2026-11-15T21:31:27.984Z"
+graded_at: "2026-11-16T15:48:04.126Z"
 graded_by: sol-review-executor
-content_hash: 958e60eeb290139bf339886017af58d3719c4e96a457d89b4098ae857f7e17de
+content_hash: 8ea9a6071c89b9ba5c789453f7b7aecd2a4b5fc25cb583791bdfc549bf0fd4b0
 summary:
   satisfied: 3
   unsatisfied: 0

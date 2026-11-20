@@ -1,0 +1,28 @@
+{
+  "v": 1,
+  "ts": "2026-11-18T14:46:52Z",
+  "type": "claim",
+  "task_id": "T-KATA-SLIM-2-dct-index-040",
+  "by": "opus-executor",
+  "msg": "claim task as resumed executor opus-executor",
+  "meta": {
+    "limit_deferred": "false",
+    "limit_availability_state": "limited",
+    "limit_retryable": "false",
+    "limit_auto_resume": "false",
+    "limit_kind": "quota_exhausted",
+    "limit_provider": "codex",
+    "limit_observed_at": "2026-11-18T13:28:43.817Z",
+    "limit_raw_message": "ERROR: You’ve hit your usage limit. Upgrade to Pro (https://chatgpt.com/explore/pro), visit https://chatgpt.com/settings/usage to purchase more credits or try again at Nov 23rd, 2026 6:21 PM.",
+    "limit_attempts": "1",
+    "limit_worktree": "/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-dct-index-040",
+    "claim_actor": "sol-executor",
+    "stage_actor": "sol-executor",
+    "pipeline_stage": "executor",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-dct-index-040/T-KATA-SLIM-2-dct-index-040-20261118T114948Z-58cb7210/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-dct-index-040/T-KATA-SLIM-2-dct-index-040-20261118T114948Z-58cb7210/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-SLIM-2-dct-index-040-20261118T114948Z-58cb7210",
+    "pipeline_resume_claimed": "true",
+    "previous_actor": "sol-executor"
+  }
+}

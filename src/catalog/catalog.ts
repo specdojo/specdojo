@@ -1,3 +1,4 @@
+import { registerDeprecatedWhereAlias } from "../shared/where-alias.js";
 import { type Command } from "commander";
 import { join, relative, resolve } from "node:path";
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -301,21 +302,21 @@ function runPlanScaffold(opts: {
   if (!allOk) process.exitCode = 1;
 }
 
+export function printCatalogPaths(opts: { project?: string }): void {
+  try {
+    const catalogPath = resolveCatalogPath(opts);
+    process.stdout.write(`catalog-path: ${catalogPath}\n`);
+    process.stdout.write(`generated   : ${join(catalogPath, "generated")}\n`);
+    process.stdout.write(`plans       : ${resolvePlansDir(catalogPath)}\n`);
+  } catch (error) {
+    printCommandError(error);
+  }
+}
+
 export function registerCatalogCommands(program: Command): void {
   const cat = program.command("catalog").description("Deliverables catalog (dct-*.yaml) commands");
 
-  const wcmd = cat.command("where").description("Print resolved catalog paths");
-  addProjectOption(wcmd);
-  wcmd.action((opts) => {
-    try {
-      const catalogPath = resolveCatalogPath(opts);
-      process.stdout.write(`catalog-path: ${catalogPath}\n`);
-      process.stdout.write(`generated   : ${join(catalogPath, "generated")}\n`);
-      process.stdout.write(`plans       : ${resolvePlansDir(catalogPath)}\n`);
-    } catch (error) {
-      printCommandError(error);
-    }
-  });
+  registerDeprecatedWhereAlias(cat, printCatalogPaths);
 
   const vcmd = cat.command("validate").description("Validate dct-*.yaml files");
   addProjectOption(vcmd);
@@ -409,7 +410,9 @@ export function registerCatalogCommands(program: Command): void {
     }
   });
 
-  const bcmd = cat.command("build").description("Generate dct-*.md from dct-*.yaml");
+  const bcmd = cat
+    .command("build", { hidden: true })
+    .description("Internal compatibility entry for build --only catalog");
   addProjectOption(bcmd);
   bcmd.action((opts) => {
     try {

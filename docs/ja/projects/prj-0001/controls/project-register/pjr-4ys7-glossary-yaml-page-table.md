@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-4ys7-glossary-yaml-page-table
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: sol-executor
   registered_at: "2026-11-12T13:33:36Z"
+  completed_at: "2026-11-19T14:46:57Z"
+  conclusion: 用語集の YAML の表示ページを分類ごとの表にし、関連用語へのページ内リンクと YAML の正本の折りたたみを足した
   derived_from:
     - PJR-6XQ4
   commit_type: feat
@@ -45,11 +47,11 @@ yaml-pages が type: glossary の YAML を、コードブロックではなく�
 
 ## 4. 作業内容
 
-| No  | 作業                                             | 担当         | 状態 | メモ                                                        |
-| --- | ------------------------------------------------ | ------------ | ---- | ----------------------------------------------------------- |
-| 1   | 用語集の表示用ページの描き方を足し、テストを足す | executor     | done | 分類別の表・関連リンク・YAML の折りたたみと回帰テストを追加 |
-| 2   | 統合の後に文書サイトのビルドで確かめる           | orchestrator | open | -                                                           |
-| 3   | 表示を見て確かめる                               | indie        | open | -                                                           |
+| No  | 作業                                             | 担当         | 状態 | メモ                                                                                                              |
+| --- | ------------------------------------------------ | ------------ | ---- | ----------------------------------------------------------------------------------------------------------------- |
+| 1   | 用語集の表示用ページの描き方を足し、テストを足す | executor     | done | 分類別の表・関連リンク・YAML の折りたたみと回帰テストを追加                                                       |
+| 2   | 統合の後に文書サイトのビルドで確かめる           | orchestrator | done | 2026-11-18 に本項目を含む develop の内容（feature/prj-0001/npm-audit-tinyglobby）で `npm run docs:build` が通った |
+| 3   | 表示を見て確かめる                               | indie        | done | 2026-11-19 に利用者がブラウザで確かめた                                                                           |
 
 ## 5. 対応結果
 

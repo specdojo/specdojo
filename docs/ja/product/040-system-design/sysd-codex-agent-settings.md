@@ -201,7 +201,7 @@ Codex が AGENTS.md と標準入力の plan を読み込む
 2. taskのagent_pipeline stage（`executor` / `reporter`）とmemberの `stage_role` が一致する候補だけを残す。
 3. memberが `mode` を持つ場合は、taskの `mode` と一致する候補だけを残す（`mode` を持たない member は edit/review どちらのtaskにもマッチする）。`reporter` stageの選定ではtaskの `mode` そのものを比較条件に使わない（reporterの役割はedit/reviewで変わらないため）。
 4. taskが要求する `capabilities` をすべて持つ候補だけを残す。
-5. taskに `proficiency` が指定されている場合は、同じ値の候補だけを残す。
+5. taskに `proficiency` が指定されている場合は、同じ値の候補だけを残す。未指定なら `frontier` を除外する。明示要求と起動設定の共通契約は [[sysd-cross-cutting-policy|システム設計横断ルール]] の `scp-SEL-001` / `scp-CFG-001` に従う。
 6. `priority` の数値が小さい候補を優先する。
 7. `priority` が同じ場合は、task要件に対する余分なcapabilityが少ない候補を優先する。
 

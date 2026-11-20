@@ -5,6 +5,12 @@ import { registerDeliverableCommands } from "../../src/deliverable/deliverable.j
 import { registerExecCommands } from "../../src/exec/exec.js";
 import { registerGradeCommand } from "../../src/grade/grade.js";
 import { registerConfigCommands } from "../../src/shared/specdojo-config.js";
+import { registerScheduleCommands } from "../../src/schedule/schedule.js";
+import { registerRegisterCommands } from "../../src/register/register.js";
+import { registerIndexCommands } from "../../src/docs/index-command.js";
+import { registerYamlPagesCommands } from "../../src/docs/yaml-pages-command.js";
+import { registerDashboardCommands } from "../../src/dashboard/dashboard.js";
+import { registerAgentCommands } from "../../src/commands/agent.js";
 
 function subcommandNames(program: Command, name: string): string[] {
   return (
@@ -15,12 +21,45 @@ function subcommandNames(program: Command, name: string): string[] {
 }
 
 describe("CLI generation verb taxonomy", () => {
+  it("retains all six build entries for automation while hiding them from command lists", () => {
+    const program = new Command();
+    registerCatalogCommands(program);
+    registerScheduleCommands(program);
+    registerRegisterCommands(program);
+    registerIndexCommands(program);
+    registerYamlPagesCommands(program);
+    registerDashboardCommands(program);
+
+    for (const name of ["catalog", "schedule", "register", "index", "yaml-pages", "dashboard"]) {
+      const group = program.commands.find((command) => command.name() === name)!;
+      const build = group.commands.find((command) => command.name() === "build");
+      expect(build?.description()).toBe(`Internal compatibility entry for build --only ${name}`);
+      expect(
+        group
+          .createHelp()
+          .visibleCommands(group)
+          .map((command) => command.name()),
+      ).not.toContain("build");
+    }
+    const visible = program
+      .createHelp()
+      .visibleCommands(program)
+      .map((command) => command.name());
+    expect(visible).not.toContain("yaml-pages");
+    expect(visible).not.toContain("dashboard");
+  });
+
   it("offers provider setup under config while retaining the exec compatibility entry", () => {
     const program = new Command();
     registerConfigCommands(program);
     registerExecCommands(program);
 
-    expect(subcommandNames(program, "config")).toEqual(["init", "migrate-members", "scaffold"]);
+    expect(subcommandNames(program, "config")).toEqual([
+      "init",
+      "show",
+      "migrate-members",
+      "scaffold",
+    ]);
     expect(subcommandNames(program, "exec")).toContain("scaffold");
   });
 
@@ -61,6 +100,36 @@ describe("CLI generation verb taxonomy", () => {
       .find((command) => command.name() === "grade")
       ?.commands.find((command) => command.name() === "apply");
     expect(apply?.options.find((option) => option.long === "--by")?.mandatory).toBe(true);
+  });
+
+  it("hides internal commands from help while keeping them registered (PJR-R7BQ)", () => {
+    // runner・job・orchestrator が部品として呼ぶコマンドは、登録を保ったまま一覧から外す。
+    const program = new Command();
+    registerGradeCommand(program);
+    registerExecCommands(program);
+    registerAgentCommands(program);
+    const visible = (group: Command): string[] =>
+      group
+        .createHelp()
+        .visibleCommands(group)
+        .map((command) => command.name());
+    const find = (name: string): Command =>
+      program.commands.find((command) => command.name() === name)!;
+
+    const internalGrade = ["plan", "apply", "translation-plan", "localize", "state", "result"];
+    for (const name of [...internalGrade, "validate"]) {
+      expect(subcommandNames(program, "grade")).toContain(name);
+      expect(visible(find("grade"))).not.toContain(name);
+    }
+    expect(visible(find("grade"))).toEqual(expect.arrayContaining(["list", "run"]));
+    for (const name of ["trial", "slots", "scheduler"]) {
+      expect(subcommandNames(program, "exec")).toContain(name);
+      expect(visible(find("exec"))).not.toContain(name);
+    }
+    expect(visible(find("exec"))).toEqual(expect.arrayContaining(["run", "status", "claim"]));
+    expect(subcommandNames(program, "agent")).toEqual(["launch", "run"]);
+    expect(visible(find("agent"))).toEqual(["help"]);
+    expect(visible(program)).not.toContain("agent");
   });
 
   it("accepts the grading reference on grade apply", () => {

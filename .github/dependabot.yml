@@ -1,0 +1,44 @@
+# 依存の更新を週 1 回 PR にする（PJR-P318）。
+# - 開発用の依存（devDependencies）はディレクトリごとにまとめて 1 本の PR にする。
+# - 配る依存（dependencies）の版の更新は、影響を個別に確かめるため依存ごとの PR にする。
+# - 脆弱性の修正（security updates）は、リポジトリの設定で Dependabot security updates を
+#   有効にすると随時 PR になる。groups は applies-to: version-updates に限るため、
+#   security updates はまとめられず、見つかったときに個別に届く。
+version: 2
+updates:
+  - package-ecosystem: npm
+    directories:
+      - "/"
+      - "/packages/docs-lint"
+      - "/packages/docs-site"
+      - "/packages/vscode-specdojo"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: Asia/Tokyo
+    open-pull-requests-limit: 10
+    groups:
+      development-dependencies:
+        applies-to: version-updates
+        dependency-type: development
+    commit-message:
+      # build(deps): / build(deps-dev): になり、commitlint の type-enum に収まる。
+      prefix: build
+      include: scope
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: Asia/Tokyo
+    groups:
+      github-actions:
+        applies-to: version-updates
+        patterns:
+          - "*"
+    commit-message:
+      prefix: ci
+      include: scope

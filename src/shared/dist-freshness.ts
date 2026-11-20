@@ -18,6 +18,7 @@ export type DistFreshnessResult = {
   packageRoot?: string;
   newestSourcePath?: string;
   newestDistPath?: string;
+  buildFailed?: boolean;
 };
 
 export type DistFreshnessDecision =
@@ -26,6 +27,8 @@ export type DistFreshnessDecision =
 const SKIP_ENV_NAME = "SPECDOJO_SKIP_DIST_FRESHNESS_CHECK";
 const SKIP_ENV_VALUES = new Set(["1", "true", "yes"]);
 const IGNORED_DIRECTORY_NAMES = new Set(["node_modules", ".git"]);
+// A failed tsc may still emit newer JS. A successful clean build removes this marker with dist/.
+export const DIST_BUILD_FAILURE_MARKER = ".specdojo-build-failed";
 
 /** 検証の沈黙した省略を避けるため、exec 系だけは警告ではなく中断する。 */
 const BLOCKING_COMMANDS = new Set(["exec"]);
@@ -73,11 +76,13 @@ export function inspectBuildFreshness(packageRoot: string): DistFreshnessResult 
     return { status: "no-dist-output", packageRoot, newestSourcePath: newestSource.filePath };
   }
 
+  const buildFailed = existsSync(path.join(packageRoot, "dist", DIST_BUILD_FAILURE_MARKER));
   return {
-    status: newestSource.mtimeMs > newestDist.mtimeMs ? "stale" : "up-to-date",
+    status: buildFailed || newestSource.mtimeMs > newestDist.mtimeMs ? "stale" : "up-to-date",
     packageRoot,
     newestSourcePath: newestSource.filePath,
     newestDistPath: newestDist.filePath,
+    ...(buildFailed ? { buildFailed: true } : {}),
   };
 }
 
@@ -107,7 +112,9 @@ function buildMessage(result: DistFreshnessResult, isBlocking: boolean): string 
   const detail =
     result.status === "no-dist-output"
       ? "dist/ が存在しない"
-      : `src が dist より新しい (src: ${toDisplayPath(result.packageRoot, result.newestSourcePath)}, dist: ${toDisplayPath(result.packageRoot, result.newestDistPath)})`;
+      : result.buildFailed
+        ? "直前の統合後ビルドが失敗した"
+        : `src が dist より新しい (src: ${toDisplayPath(result.packageRoot, result.newestSourcePath)}, dist: ${toDisplayPath(result.packageRoot, result.newestDistPath)})`;
   const head = isBlocking
     ? `specdojo: 中断: dist ビルドが古い: ${detail}`
     : `specdojo: 警告: dist ビルドが古い: ${detail}`;

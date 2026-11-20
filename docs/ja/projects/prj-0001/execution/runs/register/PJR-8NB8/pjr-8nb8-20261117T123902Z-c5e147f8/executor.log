@@ -1,0 +1,107 @@
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "exec smoke の実装と関連文書を確認し、前回の結合テスト失敗原因だった fixture の文書 ID 不一致を修正しました。build・整形・追加検証・dry-run は成功しました。単体・結合テスト等の再実行は親 runner に委ねます。",
+  "handoff": [
+    "統合後に npm run build を実行し、新しいプロセスから npx specdojo exec smoke --project prj-0001 --register PJR-JSEY --targets PJR-8NB8 --executor-by claude-executor --reporter-by gemma26-reporter を実行する。実 agent の起動・使用量消費を伴うため executor では未実行。個票の作業 No. 4 は理由付きで open を維持した。結果を確認して No. 4 を更新し、JSEY と PJR-8NB8 の完了条件を確認して close する。この申し送りを result に記載する。",
+    "設計判断: コマンド名は exec smoke。確認用個票は必須の --register、対象は --targets、executor と reporter は明示指定する。対象は review / done、確認用個票は done / open / review の edit タスクを受け付ける。done の場合だけ reopen する。対象一覧は明示マーカーと既存 JSEY 書式に対応し、重複追記しない。レートリミットは stop。close は他の完了条件を人が判断する必要があるため自動化しない。保護された設定の変更案はない。詳細は個票の対応結果に記録済み。",
+    "CHANGELOG 文案（追加）: specdojo exec smoke で、統合済み項目の確認用個票への対象追記・記帳、開き直し、worktree 実行、今回の start / review と実体 actor の確認を一括実行できるようにした。確認用個票・executor・reporter の指定と dry-run に対応する。",
+    "前回の親の結合テスト 2 件は、確認用 fixture の文書 ID とファイル名の不一致で対象追記の段に失敗していた。fixture の ID を修正し、正常系 assertion に標準エラーも表示するよう変更した。修正後のテスト結果は親 runner の検証で確認する。カタログ検証は成功したが、未変更の参照に関する警告が残る。"
+  ],
+  "validations": [
+    {
+      "command": "npx prettier --write docs/ja/projects/prj-0001/030-project-management/pm-orchestrator-playbook.md docs/ja/projects/prj-0001/controls/project-register/pjr-8nb8-exec-smoke-command.md docs/ja/specdojo/references/command-reference.md src/exec/commands.ts src/register/register.ts tests/src/exec/register-pipeline-e2e.integration.test.ts src/exec/smoke.ts tests/src/exec/smoke.test.ts",
+      "status": "passed",
+      "summary": "対象 8 ファイルを整形確認した。"
+    },
+    {
+      "command": "npm run build",
+      "status": "passed",
+      "summary": "CLI のビルド成功。"
+    },
+    {
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検証成功。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "検証成功。未変更の参照に関する警告あり。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿の派生ビュー生成成功。"
+    },
+    {
+      "command": "npm run check:src-imports",
+      "status": "passed",
+      "summary": "実行時 import の依存宣言検査成功。"
+    },
+    {
+      "command": "node dist/specdojo.js exec smoke --project prj-0001 --register PJR-JSEY --targets PJR-R7BQ --executor-by claude-executor --reporter-by gemma26-reporter --dry-run",
+      "status": "passed",
+      "summary": "全段の手順表示と実体 actor sonnet-executor への解決を確認。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白検査成功。"
+    },
+    {
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "executor が編集した YAML 成果物はない。",
+      "reason": "累積差分の register event YAML は runner 管理の状態遷移記録であり、executor の編集対象外。"
+    },
+    {
+      "command": "npx specdojo exec smoke --project prj-0001 --register PJR-JSEY --targets PJR-8NB8 --executor-by claude-executor --reporter-by gemma26-reporter",
+      "status": "requires_human",
+      "summary": "本タスク統合後の新しいプロセスと実 agent 起動・使用量消費が必要。orchestrator が実行し、個票の作業 No. 4 を更新する。"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "docs/ja/projects/prj-0001/030-project-management/pm-orchestrator-playbook.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/030-project-management/pm-orchestrator-playbook.md"
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-8nb8-exec-smoke-command.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-8nb8-exec-smoke-command.md"
+    },
+    {
+      "target": "docs/ja/specdojo/references/command-reference.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/references/command-reference.md"
+    },
+    {
+      "target": "src/exec/commands.ts",
+      "status": "changed",
+      "path": "src/exec/commands.ts"
+    },
+    {
+      "target": "src/register/register.ts",
+      "status": "changed",
+      "path": "src/register/register.ts"
+    },
+    {
+      "target": "tests/src/exec/register-pipeline-e2e.integration.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/register-pipeline-e2e.integration.test.ts"
+    },
+    {
+      "target": "src/exec/smoke.ts",
+      "status": "changed",
+      "path": "src/exec/smoke.ts"
+    },
+    {
+      "target": "tests/src/exec/smoke.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/smoke.test.ts"
+    }
+  ]
+}
+</specdojo_executor_evidence>

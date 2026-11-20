@@ -5,27 +5,27 @@ path: docs/ja/specdojo/samples/clis-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 93
-graded_at: "2026-11-13T06:22:40.797Z"
+score: 96
+graded_at: "2026-11-17T22:33:48.009Z"
 graded_by: sol-review-executor
-content_hash: 99d0afdc738f394954e422d2b4f88c3691d16fa4cfc192f01fa911a43a3a9b0d
+content_hash: 5e736ae7ec4b51bb6a13917506faa7bd1b8dc18e31126518f2867d6c3471bca1
 categories:
   purpose:
     score: 100
   operations:
     score: 94
   planning:
-    score: 100
+    score: 83
   business:
-    score: 92
+    score: 100
   architecture:
     score: 100
   usability:
     score: 100
   implementation:
-    score: 88
+    score: 100
   quality:
-    score: 92
+    score: 100
   consistency:
     score: 75
 viewpoints:
@@ -39,20 +39,20 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-dependency-risk:
     level: 4
     score: 100
   vp-pm-control-reporting:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-business-value:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
     level: 4
     score: 100
@@ -66,8 +66,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-change-impact:
     level: 4
     score: 100
@@ -81,8 +81,8 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -104,82 +104,49 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 5
+  minor: 4
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-ba-requirements-completeness
-    line: 68
-    anchor: >-
-      | `sales start`・`add`・`complete`・`cancel` | 作る／変えるファイル | `.session/current-tx.json`           |
-      取引の開始・明細追加を保存し、会計完了または確定前の取消で終了する。会計が未解決なら保持する | `kinuya-session-schema`                                   |
-    message: >-
-      Specify the user-visible outcome when saving the transaction session fails during sales start, sales add, or sales
-      cancel, including whether the operation took effect and what must be checked before retrying; the current recovery
-      row covers only sales and receipt files.
-    message_ja: >-
-      Specify the user-visible outcome when saving the transaction session fails during sales start, sales add, or sales
-      cancel, including whether the operation took effect and what must be checked before retrying; the current recovery
-      row covers only sales and receipt files.
+    rule: vp-pm-plan-feasibility
+    line: 113
+    anchor: "| 本部との契約・障害回復 | `ifx-api-kinuya-*.yaml` は未同梱。受付照会・重複排除・保存失敗後の回復が決まるまで、結果不明の取引は自動再送せず、当該経路の受入を保留する |"
+    message: 本部契約・障害回復の確定と印字経路の実機確認について、担当する役割と確認タイミングを追記してください。受入保留条件はありますが、解除に向けた作業の割り当てと進捗確認の時点を決められません。
+    message_ja: 本部契約・障害回復の確定と印字経路の実機確認について、担当する役割と確認タイミングを追記してください。受入保留条件はありますが、解除に向けた作業の割り当てと進捗確認の時点を決められません。
   - id: F002
     severity: minor
-    rule: vp-dev-implementation-readiness
-    line: 68
+    rule: vp-pm-control-reporting
+    line: 109
     anchor: >-
-      | `sales start`・`add`・`complete`・`cancel` | 作る／変えるファイル | `.session/current-tx.json`           |
-      取引の開始・明細追加を保存し、会計完了または確定前の取消で終了する。会計が未解決なら保持する | `kinuya-session-schema`                                   |
-    message: >-
-      Define the required persisted state and success-notification behavior when a session update fails, or explicitly
-      defer these decisions with an owner and acceptance gate; implementations currently lack a clear completion
-      condition for failed start, add, and cancel updates.
-    message_ja: >-
-      Define the required persisted state and success-notification behavior when a session update fails, or explicitly
-      defer these decisions with an owner and acceptance gate; implementations currently lack a clear completion
-      condition for failed start, add, and cancel updates.
+      | 論点                   |
+      影響と当面の扱い                                                                                                                          
+      |
+    message: 正本未整備という課題、二重印字のリスク、将来拡張の変更候補について、PJR等へ引き継ぐ区分・担当役割・管理先を明記してください。現状の論点表だけでは、誰がどの記録で追跡するかを判断できません。
+    message_ja: 正本未整備という課題、二重印字のリスク、将来拡張の変更候補について、PJR等へ引き継ぐ区分・担当役割・管理先を明記してください。現状の論点表だけでは、誰がどの記録で追跡するかを判断できません。
   - id: F003
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 108
+    line: 102
     anchor: >-
-      | 売上・レシートファイル保存失敗       | `4`                   | 対象パス、取引番号、保存できた範囲、受付状態                         |
-      開発担当が容量・権限を復旧し、店主代表が本部受付と保持記録を照合する。確定済み売上は再登録せず、記録・控えの回復後に結果を確認する                                                        
-      |
+      | 取引セッション保存失敗                               | `4`                   | 対象取引、反映されなかった操作            |
+      開始・追加・取消は反映されず、成功も通知しない。開発担当の復旧後、店番担当が `sales total` で明細を確認して同じ操作をやり直す  |
     message: >-
-      Extend the persistence-error coverage to .session/current-tx.json: start, add, complete, and cancel modify it, but
-      the specific save-failure row names only sales and receipt files, leaving session-write failures without matching
-      retained-state and recovery expectations.
+      開始の保存失敗後はセッションが作成されないため、sales total は本文52行の定義により「取引未開始」になります。追加・取消の失敗後に行う明細確認と分け、開始失敗では取引未開始を確認して sales start
+      を再試行する手順を明記してください。
     message_ja: >-
-      Extend the persistence-error coverage to .session/current-tx.json: start, add, complete, and cancel modify it, but
-      the specific save-failure row names only sales and receipt files, leaving session-write failures without matching
-      retained-state and recovery expectations.
+      開始の保存失敗後はセッションが作成されないため、sales total は本文52行の定義により「取引未開始」になります。追加・取消の失敗後に行う明細確認と分け、開始失敗では取引未開始を確認して sales start
+      を再試行する手順を明記してください。
   - id: F004
     severity: minor
-    rule: vp-qe-kata-conformance
-    line: 15
-    anchor: >-
-      日々の販売記録を継続する目的は [[specdojo:prj-overview-sample|プロジェクト概要]]
-      の「まず記録する」方針に対応する。対象は単一店舗・現金販売の開始、明細追加、金額確認、会計確定、確定前の取消とする。確定後の返品・訂正は店主代表の照合手順へ引き渡し、つけ販売、キャッシュレス決済、仕入れ、在庫調整は対象外とする。
-    message: >-
-      Replace the body wikilinks to specdojo:prj-overview-sample and specdojo:ifx-cmd-sample with a reference
-      representation permitted by Section 7 of clis-rulebook, preserving the purpose and contract traceability; the
-      current rulebook explicitly prohibits body wikilinks to sample documents.
-    message_ja: >-
-      Replace the body wikilinks to specdojo:prj-overview-sample and specdojo:ifx-cmd-sample with a reference
-      representation permitted by Section 7 of clis-rulebook, preserving the purpose and contract traceability; the
-      current rulebook explicitly prohibits body wikilinks to sample documents.
-  - id: F005
-    severity: minor
     rule: vp-ops-operability
-    line: 68
+    line: 102
     anchor: >-
-      | `sales start`・`add`・`complete`・`cancel` | 作る／変えるファイル | `.session/current-tx.json`           |
-      取引の開始・明細追加を保存し、会計完了または確定前の取消で終了する。会計が未解決なら保持する | `kinuya-session-schema`                                   |
+      | 取引セッション保存失敗                               | `4`                   | 対象取引、反映されなかった操作            |
+      開始・追加・取消は反映されず、成功も通知しない。開発担当の復旧後、店番担当が `sales total` で明細を確認して同じ操作をやり直す  |
     message: >-
-      Add recovery guidance for a failed session creation, update, or cancellation, identifying the responsible person,
-      the saved state to inspect, and the condition for resuming the same transaction; generic storage-fault escalation
-      does not establish whether an item addition or cancellation was retained.
+      取引開始の保存失敗について、復旧後に sales total が「取引未開始」を返す場合の次の操作と、再実行した sales start
+      の取引番号表示をもって回復確認とする条件を追記してください。現在の「明細を確認して同じ操作をやり直す」は、既存取引がある追加・取消の場合にしかそのまま適用できません。
     message_ja: >-
-      Add recovery guidance for a failed session creation, update, or cancellation, identifying the responsible person,
-      the saved state to inspect, and the condition for resuming the same transaction; generic storage-fault escalation
-      does not establish whether an item addition or cancellation was retained.
+      取引開始の保存失敗について、復旧後に sales total が「取引未開始」を返す場合の次の操作と、再実行した sales start
+      の取引番号表示をもって回復確認とする条件を追記してください。現在の「明細を確認して同じ操作をやり直す」は、既存取引がある追加・取消の場合にしかそのまま適用できません。

@@ -1,0 +1,349 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-V0FQ",
+  "run_id": "pjr-v0fq-20261117T011559Z-46db65de",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-17T01:19:20.593Z",
+    "completed_at": "2026-11-17T01:49:42.857Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/040-system-design/sysd-job-execution.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-v0fq.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-v0fq-exec-sequential-batch.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/routine-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/job-definition-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/job-run.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/job.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/evidence.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/job.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/lock.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/shared.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/job/definition.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/job/job.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/run/lock.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/job-sequence-guide.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/job-sequence.yaml",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run/job-lock.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run/job-sequence.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/job-sequence.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/job/sequence.test.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/product/040-system-design/sysd-job-execution.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-v0fq-exec-sequential-batch.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/routine-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/job-definition-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/job-run.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/job.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/evidence.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/job.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/lock.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/shared.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/job/definition.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/job/job.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/run/lock.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/job-sequence-guide.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/job-sequence.yaml",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run/job-lock.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run/job-sequence.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/job-sequence.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/job/sequence.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 22,
+    "summary": ".../040-system-design/sysd-job-execution.md        |  12 +-\n .../pjr-v0fq-exec-sequential-batch.md              |  35 +++++-\n docs/ja/specdojo/guides/routine-operation-guide.md |   2 +\n docs/ja/specdojo/references/command-reference.md   |   2 +\n .../specdojo/standards/job-definition-standard.md  |  21 +++-\n docs/specdojo/schemas/v1/job-run.schema.yaml       |  23 ++++\n docs/specdojo/schemas/v1/job.schema.yaml           |  63 +++++++++-\n src/exec/evidence.ts                               |  11 +-\n src/exec/run/job.ts                                |  67 +++++++---\n src/exec/run/lock.ts                               |  37 +++++-\n src/exec/run/register-command.ts                   |  11 +-\n src/exec/run/shared.ts                             |   4 +\n src/job/definition.ts                              | 136 ++++++++++++++++++++-\n src/job/job.ts                                     |  72 ++++++++++-\n tests/src/exec/run/lock.test.ts                    |  22 ++++\n 15 files changed, 469 insertions(+), 49 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run build",
+      "status": "passed",
+      "summary": "実装のコンパイル成功。"
+    },
+    {
+      "source": "executor",
+      "command": "node tmp/job-sequence-smoke.mjs",
+      "status": "passed",
+      "summary": "停止／継続、状態による延期、実行時間上限、lock 待機上限、子 exec の lock 継承、routine 起動を確認。生成 Run JSON の schema 適合も確認。一時スクリプト・fixture は削除済み。"
+    },
+    {
+      "source": "executor",
+      "command": "node tmp/job-sequence-smoke.mjs --sample",
+      "status": "passed",
+      "summary": "定義例を一時 project に配置し、job validate と CLI dry-run で全段を解決。一時ファイルは削除済み。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts job validate --project prj-0001",
+      "status": "passed",
+      "summary": "既存9件、エラー0件。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/job.schema.yaml --data docs/ja/specdojo/samples/job-sequence.yaml",
+      "status": "passed",
+      "summary": "順次実行の定義例が schema に適合。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --check src/job/definition.ts src/job/job.ts src/exec/evidence.ts src/exec/run/job.ts src/exec/run/job-lock.ts src/exec/run/job-sequence.ts src/exec/run/lock.ts src/exec/run/shared.ts src/exec/run/register-command.ts tests/src/job/sequence.test.ts tests/src/exec/job-sequence.integration.test.ts tests/src/exec/run/lock.test.ts docs/specdojo/schemas/v1/job.schema.yaml docs/specdojo/schemas/v1/job-run.schema.yaml docs/ja/product/040-system-design/sysd-job-execution.md docs/ja/specdojo…",
+      "status": "passed",
+      "summary": "変更21ファイルの整形を確認。個票の最終追記にも Prettier を適用済み。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "終了コード0。既存警告あり、本項目による警告なし。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "個票の最終更新後も通過。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "npx specdojo exec run --project prj-0001 --register PJR-JSEY --worktree --executor-by claude-executor",
+      "status": "requires_human",
+      "summary": "統合後、運用メモに従って対象を追加・再開して実 agent で確認する。利用枠を消費するため sandbox では実行していない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-V0FQ/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-V0FQ/src/schedule/strategy-generate-document.ts\n  87:8  warning  Function 'buildStrategyDocument' has too many lines (289). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-V0FQ/src/shared/specdojo-config.ts\n  1232:1  warning  File has too many lines (1167). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.8.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail\n\n\n\u001b[4m\u001b[33mdocs/ja/specdojo/guides/job-sequence-guide.md\u001b[39m\u001b[24m\n8:1-8:14    \u001b[33mwarning\u001b[39m \u001b[1mH1 直後に必須の導入ブロックがありません: **対象読者** / **この文書で分かること** / **次に読む文書**\u001b[22m\n10:1-10:247 \u001b[33mwarning\u001b[39m \u001b[1mH1 直後に英語名（日本語を含まない1行）がありません\u001b[22m\n\n\u001b[33m⚠\u001b[39m 2 warnings"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 5162 file(s), 135 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 100 passed, 0 error, 0 未検査\n  graph: 6 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5162 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-V0FQ\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this directory in a Dev Container (VS Cod\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.8.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schema)\ndocs/ja/specdojo/samples/ifx-api-sample\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-V0FQ/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-V0FQ/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.8.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.8.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-V0FQ\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-kQD5E9/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-lzbj2a/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-B19B5j/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-k6H34G/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\nsample.yaml\",\n    \"ifx-api-sample.yaml\",\n    \"ifx-cmd-sample.yaml\",\n    \"ifx-index-sample.yaml\",\n    \"ifx-msg-sample.yaml\",\n+   \"job-sequence.yaml\",\n    \"pm-members-sample.yaml\",\n    \"pm-roles-sample.yaml\",\n    \"tml-sample.yaml\",\n  ]\n\n ❯ tests/src/docs/yaml-pages.test.ts:53:7\n     51|         .filter((name) => /\\.ya?ml$/.test(name))\n     52|         .sort(),\n     53|     ).toEqual(Object.keys(sampleTypes).sort());\n       |       ^\n     54|   });\n     55|\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯"
+    }
+  ],
+  "final_message": "command Job の `task.steps` を実装。停止／継続、状態判定、有限の lock 待機、実行時間上限、段別 evidence、失敗時の Run 状態確定に対応した。実装・schema・回帰テスト・設計・ガイド・CLI リファレンス・定義例・個票を更新。sandbox 内の検証は通過した。",
+  "completion_status": "complete",
+  "handoff": [
+    "既存 command Job の拡張を選択した。入力・冪等キー・attempt・routine を再利用し、定義検証と凍結は src/job、順序制御と排他は src/exec に置いた。job → exec の import は追加していない。",
+    "各段の `on_failure` は自身の失敗・延期後の停止／継続を指定する。失敗・延期を含む Run は failed、CLI は失敗を含めば 1、延期だけなら 75。状態判定には必要に応じて `completion` を指定する。",
+    "`task.lock_wait_seconds` の既定は3600秒。上限超過では全段を延期として記録し、precondition・agent は起動しない。段の `timeout_seconds` は lock 待機を含む command 全体の上限。retry は保存済み定義で先頭から実行し、旧 attempt の結果と段別 evidence を保持する。",
+    "CHANGELOG 文案（追加）: command Job の `task.steps` で exec・grade・ビルドを順次実行できる。段ごとの停止／継続、終了コードと状態による完了判定、有限の lock 待機、実行時間上限、段別結果・理由・evidence に対応し、routine／cron から起動できる。個票にも記録済み。",
+    "親 runner の lint・型検査・単体／統合テスト・schema 全体検査を最終根拠とする。result は編集していないため、reporter／runner が個票の判断・検証・CHANGELOG 文案を反映する。保護された設定の変更案はない。",
+    "統合後は運用メモに従い PJR-JSEY に本項目を追加して実 agent で確認する。承認済みの対象・provider 設定で resume → auto → register → grade の定義例と同じ Run の retry を確認する。sandbox では利用枠を消費する実 agent を起動していない。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-V0FQ/pjr-v0fq-20261117T011559Z-46db65de/executor.attempt-1.log",
+      "bytes": 4882,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-V0FQ/pjr-v0fq-20261117T011559Z-46db65de/parent-validation-attempt-1-lint-fm.attempt-1.log",
+      "bytes": 591,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-V0FQ/pjr-v0fq-20261117T011559Z-46db65de/parent-validation-attempt-1-test-unit.attempt-1.log",
+      "bytes": 8747,
+      "truncated": false
+    }
+  ]
+}

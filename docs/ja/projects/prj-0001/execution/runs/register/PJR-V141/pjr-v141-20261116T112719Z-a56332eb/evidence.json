@@ -1,0 +1,171 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-V141",
+  "run_id": "pjr-v141-20261116T112719Z-a56332eb",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-16T11:29:28.560Z",
+    "completed_at": "2026-11-16T11:34:13.213Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-v141.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-v141-condense-records-frontmatter-placeholder.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/results.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/shared.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/text.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/condense.test.ts",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-v141-condense-records-frontmatter-placeholder.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/results.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/shared.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/text.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/condense.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 6,
+    "summary": "...141-condense-records-frontmatter-placeholder.md | 36 ++++++---\n src/exec/results.ts                                | 40 +++++++++-\n src/exec/shared.ts                                 |  1 +\n src/shared/text.ts                                 | 12 ++-\n tests/src/exec/condense.test.ts                    | 85 ++++++++++++++++++++++\n 5 files changed, 157 insertions(+), 17 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx vitest run tests/src/exec/condense.test.ts tests/src/exec/register-plan-escape.test.ts tests/src/exec/results.test.ts",
+      "status": "passed",
+      "summary": "3 files, 109 tests passed (including the new PJR-V141 regression test)"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --check src/shared/text.ts src/exec/shared.ts src/exec/results.ts tests/src/exec/condense.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-v141-condense-records-frontmatter-placeholder.md",
+      "status": "passed",
+      "summary": "All matched files use Prettier code style"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2 docs/ja/projects/prj-0001/controls/project-register/pjr-v141-condense-records-frontmatter-placeholder.md",
+      "status": "passed",
+      "summary": "0 issues"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "no violations reported"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-V141/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-V141/src/schedule/strategy-generate-document.ts\n  87:8  warning  Function 'buildStrategyDocument' has too many lines (289). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-V141/src/shared/specdojo-config.ts\n  1232:1  warning  File has too many lines (1167). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 5085 file(s), 135 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 100 passed, 0 error, 0 未検査\n  graph: 6 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5085 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-V141\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this directory in a Dev Container (VS Cod\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.8.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schema)\ndocs/ja/specdojo/samples/ifx-api-sample\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-V141/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-V141/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.8.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-V141\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-sCCdKi/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-Qj3BmS/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-CEAIk5/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-gBJDOg/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "result の frontmatter へ書き写す condense の記録（location・reason・cause.location）と block_reason の山括弧を、コードスパンの外にあればコードの書式で包むようにした（`inlineCodeFrontmatterAnglePlaceholders`）。回帰テストを足し、個票の対応結果を書いた。",
+  "completion_status": "complete",
+  "handoff": [
+    "決めたこと: lint で検査して止めず、書き写すときにコードスパンの外の山括弧を包む方式にした。止めると executor の正しい記録が書式の問題だけで失われるため。frontmatter 用の関数は lint-fm に合わせて autolink（`<https://...>`）も包む。",
+    "executor の文を frontmatter へ書き写す箇所は `condense_records`（`renderReporterResult`・`serializeFrontmatter`）と `block_reason`（`serializeFrontmatter`）の 2 つで、両方に適用した。result の frontmatter のほかの項目は runner が決める値。",
+    "CHANGELOG に書く事項（個票にも記載）: 区分 Fixed。文案「condense の段の result の frontmatter に executor の記録の山括弧（例: `<provider>`）がそのまま入り、lint-fm で落ちていた不具合を直した。block 理由の山括弧も同様にコードの書式にする（PJR-V141）。」",
+    "保護された設定の変更は不要。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-V141/pjr-v141-20261116T112719Z-a56332eb/executor.log",
+      "bytes": 4708,
+      "truncated": false
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f80e573c35dc4a1ebb129f22bda94489
+  ts: "2026-11-19T22:05:51Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: CodeQL が見つけた src の 5 件を直す
+    - field: description
+      from: ""
+      to: "CodeQL が PR #34 で出した src の alert 5 件を直す。trash.ts の正規表現への local\\_id の埋め込み、change-scope.ts の ReDoS、repo-trace.ts と dashboard/shared.ts の表のセルのエスケープ、exec/shared.ts の何もしない replace"
+    - field: input
+      from: ""
+      to: '["利用者の決定（2026-11-20）: 案 A。0.9.0 はこのまま出し、src の 5 件は 0.9.1 で直す。テストの 3 件は理由を付けて dismiss する","orchestrator の調べ（2026-11-20）: high js/regex-injection src/deliverable/trash.ts:90、high js/redos src/exec/run/change-scope.ts:234、high js/incomplete-sanitization src/exec/repo-trace.ts:135 と src/dashboard/shared.ts:16、medium js/identity-replacement src/exec/shared.ts:23","orchestrator の見立て（2026-11-20）: どれも利用者が自分のリポジトリで動かす CLI への入力に関するもので、外からの攻撃の経路は見当たらない。0.9.0 で入れた変更ではなく、既存のコードが初めて解析されたもの"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-20"
+    - field: due
+      from: ""
+      to: "2026-12-15"
+    - field: derived_from
+      from: ""
+      to: '["PJR-P318"]'
+- v: 1
+  id: reg_9255bf93f2484c58a5bbd87951181aa4
+  ts: "2026-11-19T22:06:25Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: due
+      from: "2026-12-15"
+      to: "-"
+  previous_event_id: reg_f80e573c35dc4a1ebb129f22bda94489

@@ -452,6 +452,9 @@ describe("specdojo init", () => {
       expect(rosterFile.members.some((member) => member.model?.includes("terra"))).toBe(false);
 
       const defaults = loadExecDefaultsConfig(join(repo, ".specdojo/exec-defaults.yaml"));
+      expect(defaults.providers?.codex?.command_params?.by_proficiency?.frontier).toEqual({
+        effort: "xhigh",
+      });
       expect(defaults.pipeline?.parent_validations).toBeUndefined();
       expect(defaults.routing).toEqual({
         hard: {

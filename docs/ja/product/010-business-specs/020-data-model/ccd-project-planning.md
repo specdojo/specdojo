@@ -24,7 +24,6 @@ specdojo:
 
 ```mermaid
 classDiagram
-direction LR
 
 class プロジェクト構成 {
   プロジェクト識別子: PK

@@ -4,11 +4,11 @@ document: prj-0001:stsd-task-execution
 path: docs/ja/product/010-business-specs/020-data-model/stsd-task-execution.md
 target: deliverable
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 92
-graded_at: "2026-11-15T21:36:19.761Z"
+verdict: pass
+score: 96
+graded_at: "2026-11-16T14:42:43.345Z"
 graded_by: sol-review-executor
-content_hash: e32caf5e6107f817a241ec931a753c823bbe7db857bed36d34c693e2524b2346
+content_hash: 58a8b1332ec5b260cb81f9aa5cac9080662721b4ff752c644401c3e704dc8af6
 source_hashes:
   catalog-entry: 6f978281717b7f669c03f5af62abfd90a7623b086827e659a227d201fb81f78c
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
@@ -26,15 +26,15 @@ categories:
   business:
     score: 92
   consistency:
-    score: 100
+    score: 88
   architecture:
-    score: 92
+    score: 100
   usability:
     score: 100
   implementation:
-    score: 88
+    score: 100
   quality:
-    score: 75
+    score: 94
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -64,11 +64,11 @@ viewpoints:
     level: 3
     score: 75
   vp-arc-cross-document-consistency:
-    level: 4
-    score: 100
-  vp-arc-technical-constraints:
     level: 3
     score: 75
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -76,8 +76,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-change-impact:
     level: 4
     score: 100
@@ -88,8 +88,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
     level: 4
     score: 100
@@ -115,117 +115,64 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-config-validity:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 6
+  major: 0
+  minor: 4
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-ba-stakeholder-clarity
-    line: 113
+    line: 119
     anchor: >-
-      - _UNDECIDED_: 担当アクターを claim の持ち主とし、移すのは人間の引き取り指定に限る権限の規則（`T-05`〜`T-12`）の業務上の承認。PO が本書の確定（140）の判断で決め、追跡は
-      [[prj-0001:pjr-tn43-user-decisions-pending]] とする。
-    message: >-
-      Provide a link to the catalog's BA, PO, ARC, QE, and DEV confirmation responsibilities and identify who agrees the
-      unresolved permission contract, without expanding the operational purpose paragraph into an approval procedure.
+      - _UNDECIDED_: 担当アクターを claim の持ち主とし、移すのは人間の引き取り指定に限る権限の規則（`T-05`〜`T-12`）の業務上の承認。PO が本書の確定（140）で決め、承認の前に BA
+      が業務上の正確さを、QE・DEV が状態遷移テストと実装の参照としての使いやすさを確認する。追跡は [[prj-0001:pjr-tn43-user-decisions-pending]] とする。
+    message: カタログの BA、PO、ARC、QE、および DEV の確認責任へのリンクを提供し、未解決の権限契約に誰が合意するかを特定してください。ただし、運用の目的の段落を承認手順に拡張しないでください。
     message_ja: カタログの BA、PO、ARC、QE、および DEV の確認責任へのリンクを提供し、未解決の権限契約に誰が合意するかを特定してください。ただし、運用の目的の段落を承認手順に拡張しないでください。
     cause:
       type: document
   - id: F002
     severity: minor
-    rule: vp-arc-technical-constraints
-    line: 20
+    rule: vp-arc-cross-document-consistency
+    line: 29
     anchor: >-
-      - 同時刻（秒単位）のイベントは、まず種類の既定順（`claim` → `note` → `block`・`complete`・`estimate`・`link` → `unblock`・`reopen` →
-      `release`・`cancel`）、同順位は記録ファイルのパスの昇順で並べる。同じタスクの同時刻のイベントが複数ある場合は、その並びの先頭から、直前までの基本状態に対して遷移として成立する最初のイベントを順に選んで再生し、成立するものがなければ並びの先頭を採る。成立の判定では直前のイベントの記録者を補助に使い、担当アクターは使わない。
+      - 実行中からの記録: 直前の記録者が同じ秒に `block`・`complete`・`release`・`cancel` のいずれかを記録していれば、別のアクターの同種の記録より先に採る。同じ秒に直前の記録者の `block`
+      と `unblock` があり `reopen` がない場合、`complete` は `block`・`unblock` の後に採る。
     message: >-
-      Identify the canonical same-timestamp replay-order contract or link to readAllEventFiles and
-      orderSameTimestampEventsByState in src/exec/events.ts; ordering events only by whether a transition is valid omits
-      the implementation's event-type priorities, path tie-break, and candidate-selection rules.
+      本文は complete を後置する条件を「直前の記録者の block と unblock」がある場合としているが、正本 src/exec/events.ts の isTransitionValidForState は
+      unblock の記録者を限定していない。別アクターによる unblock でも後置される条件へ記述を合わせ、正本と本文で期待順序が分かれないようにしてください。
     message_ja: >-
-      Identify the canonical same-timestamp replay-order contract or link to readAllEventFiles and
-      orderSameTimestampEventsByState in src/exec/events.ts; ordering events only by whether a transition is valid omits
-      the implementation's event-type priorities, path tie-break, and candidate-selection rules.
+      本文は complete を後置する条件を「直前の記録者の block と unblock」がある場合としているが、正本 src/exec/events.ts の isTransitionValidForState は
+      unblock の記録者を限定していない。別アクターによる unblock でも後置される条件へ記述を合わせ、正本と本文で期待順序が分かれないようにしてください。
     cause:
       type: document
   - id: F003
     severity: minor
-    rule: vp-dev-implementation-readiness
-    line: 20
-    anchor: >-
-      - 同時刻（秒単位）のイベントは、まず種類の既定順（`claim` → `note` → `block`・`complete`・`estimate`・`link` → `unblock`・`reopen` →
-      `release`・`cancel`）、同順位は記録ファイルのパスの昇順で並べる。同じタスクの同時刻のイベントが複数ある場合は、その並びの先頭から、直前までの基本状態に対して遷移として成立する最初のイベントを順に選んで再生し、成立するものがなければ並びの先頭を採る。成立の判定では直前のイベントの記録者を補助に使い、担当アクターは使わない。
+    rule: vp-dev-testability
+    line: 19
+    anchor: "- 対象タスクのイベント列を時刻の昇順に再生して得る基本状態を正とする。同時刻のイベントは「同時刻の再生順序」に従う。イベントがないタスクの基本状態は `todo` とする。不正な形式のイベントは黙って読み飛ばさずエラーとする。"
     message: >-
-      The previous actor-authority implementation gap is resolved by the explicit ownership and transfer rules; link the
-      remaining same-timestamp candidate-selection contract in src/exec/events.ts, including competing-claim and
-      block/unblock/complete precedence, so DEV can reproduce replay behavior without inferring these exceptions.
+      Add a verification reference identifying the relevant checks and expected outcomes, such as exec validate for
+      event records, tests/src/exec/events.test.ts for replay and guard behavior, and the Markdown/frontmatter/Mermaid
+      checks for this document; readers currently have no linked verification procedure.
     message_ja: >-
-      The previous actor-authority implementation gap is resolved by the explicit ownership and transfer rules; link the
-      remaining same-timestamp candidate-selection contract in src/exec/events.ts, including competing-claim and
-      block/unblock/complete precedence, so DEV can reproduce replay behavior without inferring these exceptions.
+      Add a verification reference identifying the relevant checks and expected outcomes, such as exec validate for
+      event records, tests/src/exec/events.test.ts for replay and guard behavior, and the Markdown/frontmatter/Mermaid
+      checks for this document; readers currently have no linked verification procedure.
     cause:
       type: document
   - id: F004
     severity: minor
-    rule: vp-dev-testability
-    line: 19
-    anchor: "- 対象タスクのイベント列を時刻の昇順に再生して得る基本状態を正とする。イベントがないタスクの基本状態は `todo` とする。不正な形式のイベントは黙って読み飛ばさずエラーとする。"
-    message: >-
-      Add a verification reference identifying the relevant checks and expected outcomes, such as exec validate for
-      event records, tests/src/exec/events.test.ts for replay and guard behavior, and the Markdown/frontmatter/Mermaid
-      checks for this document; readers currently have no linked verification procedure.
-    message_ja: >-
-      Add a verification reference identifying the relevant checks and expected outcomes, such as exec validate for
-      event records, tests/src/exec/events.test.ts for replay and guard behavior, and the Markdown/frontmatter/Mermaid
-      checks for this document; readers currently have no linked verification procedure.
-    cause:
-      type: document
-  - id: F005
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 20
-    anchor: >-
-      - 同時刻（秒単位）のイベントは、まず種類の既定順（`claim` → `note` → `block`・`complete`・`estimate`・`link` → `unblock`・`reopen` →
-      `release`・`cancel`）、同順位は記録ファイルのパスの昇順で並べる。同じタスクの同時刻のイベントが複数ある場合は、その並びの先頭から、直前までの基本状態に対して遷移として成立する最初のイベントを順に選んで再生し、成立するものがなければ並びの先頭を採る。成立の判定では直前のイベントの記録者を補助に使い、担当アクターは使わない。
-    message: >-
-      The previous actor-identity oracle gap is resolved by lines 24 and 44; add a canonical reference or expected-order
-      examples for competing same-second claims and block/unblock/complete events, because describing the previous
-      recorder only as an auxiliary input leaves these replay expectations underspecified.
-    message_ja: >-
-      The previous actor-identity oracle gap is resolved by lines 24 and 44; add a canonical reference or expected-order
-      examples for competing same-second claims and block/unblock/complete events, because describing the previous
-      recorder only as an auxiliary input leaves these replay expectations underspecified.
-    cause:
-      type: document
-  - id: F006
-    severity: minor
     rule: vp-ops-release-readiness
-    line: 113
-    anchor: >-
-      - _UNDECIDED_: 担当アクターを claim の持ち主とし、移すのは人間の引き取り指定に限る権限の規則（`T-05`〜`T-12`）の業務上の承認。PO が本書の確定（140）の判断で決め、追跡は
-      [[prj-0001:pjr-tn43-user-decisions-pending]] とする。
-    message: >-
-      Link the draft's ready decision to resolution or explicit disposition of the actor-authority gap, reconciliation
-      with the unavailable upstream dictionaries, and human approval and publication checks, so task completion cannot
-      be mistaken for readiness of this specification.
+    line: 120
+    anchor: "- 本書の `ready` への昇格は、上の 2 件が決まり、140 で人間が承認した後に行う。本書を直すタスクの完了は、本書の確定を意味しない。"
+    message: ドラフトの準備完了の決定を、アクター権限のギャップの解決または明示的な処置、利用不可能なアップストリーム・ディクショナリとの調整、および人間の承認と公開チェックに関連付けてください。これにより、タスクの完了がこの仕様の準備完了と誤解されるのを防ぎます。
     message_ja: ドラフトの準備完了の決定を、アクター権限のギャップの解決または明示的な処置、利用不可能なアップストリーム・ディクショナリとの調整、および人間の承認と公開チェックに関連付けてください。これにより、タスクの完了がこの仕様の準備完了と誤解されるのを防ぎます。
     cause:
       type: document
-  - id: F007
-    severity: major
-    rule: vp-qe-config-validity
-    line: 112
-    anchor: >-
-      - _TODO_: 上流の `bdd-exec-state`・`bdd-exec-event`
-      が未作成のため、状態名・イベント名・担当アクターの項目は実装の現在動作（[[prj-0001:pjr-m495-exec-unblock-keeps-claim-owner]]、[[prj-0001:pjr-t4g3-exec-block-after-actor-switch]]）を暫定の根拠としている。影響は全状態と
-      `T-05`〜`T-12`。両辞書の作成時に BA が照合し、食い違いは ARC・DEV が本書または実装の変更として扱う。
-    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
-    message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
 done_criteria:
   satisfied: 5
   total: 5

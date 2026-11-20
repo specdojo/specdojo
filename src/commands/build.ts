@@ -1,4 +1,4 @@
-import { type Command } from "commander";
+import { type Command, Option } from "commander";
 import { spawnSync } from "node:child_process";
 import { loadConfig, loadEnv, specdojoRootDir } from "../shared/specdojo-config.js";
 import type { SpecDojoConfig, SpecDojoProjectConfig } from "../shared/specdojo-config.js";
@@ -9,7 +9,15 @@ import { selfRunArgs } from "../shared/spawn-self.js";
 // ================================
 
 export type BuildScope =
-  "exec" | "catalog" | "register" | "yaml-pages" | "dashboard" | "index" | "all";
+  "exec" | "catalog" | "schedule" | "register" | "yaml-pages" | "dashboard" | "index" | "all";
+
+type BuildOptions = {
+  track?: string;
+  force?: boolean;
+  root?: string;
+  output?: string;
+  registerScope?: string;
+};
 
 export type StepDef = {
   scope: Exclude<BuildScope, "all">;
@@ -20,6 +28,7 @@ export type StepDef = {
 const VALID_SCOPES: BuildScope[] = [
   "exec",
   "catalog",
+  "schedule",
   "register",
   "yaml-pages",
   "dashboard",
@@ -42,6 +51,8 @@ function isStepApplicable(
       return !!(project.schedule_path?.trim() && project.execution_path?.trim());
     case "catalog":
       return !!project.catalog_path?.trim();
+    case "schedule":
+      return !!project.schedule_path?.trim();
     case "register":
       return !!project.project_register_path?.trim();
     case "dashboard":
@@ -76,11 +87,41 @@ export function resolveSteps(
   projectArgs: string[],
   project: SpecDojoProjectConfig | undefined,
   registerProjectIds: readonly string[],
+  opts: BuildOptions = {},
 ): StepDef[] {
+  // schedule build は管理対象の track YAML を上書きし得るため、従来の一括 build には
+  // 加えず、track を明示した --only schedule のときだけ実行する。
+  if (scope === "schedule") {
+    const track = opts.track?.trim();
+    if (!track) throw new Error("--only schedule requires --track <track>");
+    return isStepApplicable(scope, project)
+      ? [
+          {
+            scope,
+            label: "schedule build",
+            subArgs: [
+              "schedule",
+              "build",
+              ...projectArgs,
+              "--track",
+              track,
+              ...(opts.force ? ["--force"] : []),
+            ],
+          },
+        ]
+      : [];
+  }
+
   const registerSteps: StepDef[] = registerProjectIds.map((id) => ({
     scope: "register",
     label: registerProjectIds.length > 1 ? `register build (${id})` : "register build",
-    subArgs: ["register", "build", "--project", id],
+    subArgs: [
+      "register",
+      "build",
+      "--project",
+      id,
+      ...(opts.registerScope ? ["--scope", opts.registerScope] : []),
+    ],
   }));
 
   const candidates: StepDef[] = [
@@ -98,7 +139,7 @@ export function resolveSteps(
     {
       scope: "yaml-pages",
       label: "yaml-pages build",
-      subArgs: ["yaml-pages", "build"],
+      subArgs: ["yaml-pages", "build", ...(opts.root ? ["--root", opts.root] : [])],
     },
     // dashboard は execution/generated/dashboard.md + timeline Gantt SVG を生成する。
     // state.json / ready.json（exec refresh）と tml-index / rtn-*.yaml / routine-state.json
@@ -111,7 +152,12 @@ export function resolveSteps(
     {
       scope: "index",
       label: "index build",
-      subArgs: ["index", "build"],
+      subArgs: [
+        "index",
+        "build",
+        ...(opts.root ? ["--root", opts.root] : []),
+        ...(opts.output ? ["--output", opts.output] : []),
+      ],
     },
   ];
 
@@ -141,15 +187,46 @@ export function registerBuildCommand(program: Command): void {
   program
     .command("build")
     .description(
-      "Run all build steps in sequence (exec → catalog → register → yaml-pages → dashboard → index)",
+      "Run default build steps (exec → catalog → register → yaml-pages → dashboard → index); select one with --only",
     )
     .option("--project <id>", "Project ID (specdojo.config.json)")
-    .option("--scope <scope>", `Build scope: ${VALID_SCOPES.join(" | ")}`, "all")
+    .addOption(
+      new Option("--only <category>", "Build only this category")
+        .choices(VALID_SCOPES.filter((scope) => scope !== "all"))
+        .conflicts("scope"),
+    )
+    .addOption(
+      new Option("--scope <scope>", "Compatibility alias for --only (all runs every default step)")
+        .choices(VALID_SCOPES)
+        .hideHelp(),
+    )
+    .option("--track <track>", "Track name (required for --only schedule)")
+    .option("--force", "Overwrite existing track YAML (only with --only schedule)")
+    .option("--root <path>", "Root directory to scan (only with --only index or yaml-pages)")
+    .option("--output <path>", "Index output path (only with --only index)")
+    .addOption(
+      new Option(
+        "--register-scope <scope>",
+        "Views to generate (only with --only register)",
+      ).choices(["register", "controls", "all"]),
+    )
     .option("--dry-run", "Print commands without executing", false)
     .action((opts) => {
-      const scope = opts.scope as BuildScope;
-      if (!VALID_SCOPES.includes(scope)) {
-        logError(`Invalid scope: "${scope}". Must be one of: ${VALID_SCOPES.join(", ")}`);
+      const scope = (opts.only ?? opts.scope ?? "all") as BuildScope;
+      const optionError =
+        scope === "schedule" && !opts.track?.trim()
+          ? "--only schedule requires --track <track>"
+          : scope !== "schedule" && (opts.track !== undefined || opts.force !== undefined)
+            ? "--track and --force require --only schedule"
+            : opts.root !== undefined && scope !== "index" && scope !== "yaml-pages"
+              ? "--root requires --only index or --only yaml-pages"
+              : opts.output !== undefined && scope !== "index"
+                ? "--output requires --only index"
+                : opts.registerScope !== undefined && scope !== "register"
+                  ? "--register-scope requires --only register"
+                  : undefined;
+      if (optionError) {
+        logError(optionError);
         process.exitCode = 1;
         return;
       }
@@ -181,7 +258,7 @@ export function registerBuildCommand(program: Command): void {
         projectId,
         !!opts.project?.trim(),
       );
-      const steps = resolveSteps(scope, projectArgs, project, registerProjectIds);
+      const steps = resolveSteps(scope, projectArgs, project, registerProjectIds, opts);
 
       if (steps.length === 0) {
         logError(

@@ -1,0 +1,16 @@
+{
+  "v": 1,
+  "ts": "2026-11-19T13:12:21Z",
+  "type": "block",
+  "task_id": "T-KATA-SLIM-2-pjr-index-040",
+  "by": "opus-executor",
+  "msg": "integration failed: uncommitted=1; log=docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-pjr-index-040/T-KATA-SLIM-2-pjr-index-040-20261119T120703Z-392e649c/integrate.log; files=docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-pjr-index-040/T-KATA-SLIM-2-pjr-index-040-20261119T120703Z-392e649c/plan.md; worktree kept: /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-pjr-index-040; next: fix the artifacts with exec resume --task T-KATA-SLIM-2-pjr-index-040 --resume-from executor (syncs the integration target first), or retry only the integration with exec resume --task T-KATA-SLIM-2-pjr-index-040",
+  "meta": {
+    "pipeline_stage": "integrate",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-pjr-index-040/T-KATA-SLIM-2-pjr-index-040-20261119T120703Z-392e649c/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-pjr-index-040/T-KATA-SLIM-2-pjr-index-040-20261119T120703Z-392e649c/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-SLIM-2-pjr-index-040-20261119T120703Z-392e649c",
+    "claim_actor": "opus-executor",
+    "stage_actor": "opus-executor"
+  }
+}

@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-cpzh-prj-comparison-of-alternatives-rework-grade-findings
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: PM
   registered_at: "2026-11-15T12:32:36Z"
+  completed_at: "2026-11-16T22:26:29Z"
+  conclusion: 3 回の手直しでカタログの完了条件 4 件をすべて満たした（95 点）。残る F002 は受け入れ、読みやすさの見直しは別の todo で行う
   commit_type: docs
   commit_scope: pm
   approach: fully-guided
@@ -38,15 +40,18 @@ prj-comparison-of-alternatives を最新の grade の指摘で直す
 - 迷った点は executor が決め、決めた内容と理由を個票の対応結果に書いている。pipeline では報告の `handoff` にも書く。
 - `npm run lint:md`・`npm run lint:fm`・`npm run validate:catalog` と親の検証が通っている。
 - 次の回（2026-11-16 の再 grade の指摘を取り込む回、0.8.0 の後）: `docs/ja/projects/prj-0001/execution/grade/results/prj-0001.prj-comparison-of-alternatives.yaml` の未解消の指摘（major を優先）と未達の完了条件を取り込んで直し、作業内容の表を実績に合わせる。再 grade（`grade run --target deliverable`）は orchestrator が流すため、executor は理由をメモに書いてその行を open のまま残す。
+- 3 回目の実行（2026-11-17、2 回目の再 grade の指摘を取り込む回）: `docs/ja/projects/prj-0001/execution/grade/results/prj-0001.prj-comparison-of-alternatives.yaml` の major のうち、F003（各セルの根拠）を直す。未確認を Middle とする規則を改め、確認済みの中間評価と未判定を分け、各セルに根拠資料の該当箇所または観察結果と確認作業を記録し、未判定の採否への扱いを定める。作業内容の表を実績に合わせる。再 grade は orchestrator が流すため、executor はその行を open のまま残す。
 
 ## 4. 作業内容
 
-| No  | 作業                                                   | 担当 | 状態 | メモ                                                 |
-| --- | ------------------------------------------------------ | ---- | ---- | ---------------------------------------------------- |
-| 1   | 最新の grade の指摘を取り込んで直す                    | PM   | done | executor が実施（対応結果を参照）                    |
-| 2   | grade し直して結果を書く                               | PM   | done | 2026-11-16 orchestrator が grade（needs-work 91 点） |
-| 3   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | PM   | open | 0.8.0 の後に流す                                     |
-| 4   | 直した後に grade し直して結果を書く（次の回）          | PM   | open | orchestrator が流す                                  |
+| No  | 作業                                                   | 担当 | 状態 | メモ                                                                |
+| --- | ------------------------------------------------------ | ---- | ---- | ------------------------------------------------------------------- |
+| 1   | 最新の grade の指摘を取り込んで直す                    | PM   | done | executor が実施（対応結果を参照）                                   |
+| 2   | grade し直して結果を書く                               | PM   | done | 2026-11-16 orchestrator が grade（needs-work 91 点）                |
+| 3   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | PM   | done | executor が F001〜F006 を取り込んだ（対応結果を参照）               |
+| 4   | 直した後に grade し直して結果を書く（次の回）          | PM   | done | 2026-11-17 の 2 回目の再 grade で needs-work                        |
+| 5   | 2 回目の再 grade の指摘を取り込んで直す（3 回目）      | PM   | done | executor が F001〜F004 を取り込んだ（対応結果を参照）               |
+| 6   | 直した後に grade し直して結果を書く（3 回目）          | PM   | done | 2026-11-17 の 3 回目の再 grade で needs-work。利用者が close を判断 |
 
 ## 5. 対応結果
 
@@ -70,6 +75,44 @@ prj-comparison-of-alternatives を最新の grade の指摘で直す
 - major の指摘:
   - F004（vp-qe-verifiability）: High・Middle・Lowの判定境界、各セルの根拠、D-01の重みを総合評価と採否へ反映する規則がなく比較結果を再現できないため、尺度・証拠・集約規則を明記してください。
 - 結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/prj-0001.prj-comparison-of-alternatives.yaml`。
+
+次の回の対応（2026-11-16 の再 grade の指摘 F001〜F006 を取り込む回）:
+
+- 実施内容: [[prj-0001:prj-comparison-of-alternatives|代替案比較]] を次のとおり直した。
+  - F004（major）: 「判定の根拠と集約規則」に、High・Middle・Low を順序尺度とし判定基準の何番目の条件に当たるかで決める規則、根拠表に記すセルの範囲、D-01 の重み5・4・3 が総合評価と採否へ与える役割を定めた。D-01 に案ごとの High・Low の根拠表を比較表の直後に追加し、D-02 の根拠表に必須条件の軸の根拠の列を加え、D-03 の説明文を同じ形の根拠表に置き換えた。既存の評価セルと判定は変えていない。
+  - F001: 廃止された ACD-C03 の参照 3 箇所を、ACD-A01 と憲章の「権限委譲」に置き換え、「前段文書から引き継ぐ条件」に憲章の「権限委譲」が承認事項の正本であることを記した。
+  - F002: Spec Kit の「固定ワークフロー」を「既定プロセス」に改め、カスタマイズの可否は机上で判定せず、試行する版と構成を WP-01 で固定して評価を更新することにした。
+  - F003: 検証手順の正本は前提・制約・依存関係の ACD-D04 で `ARC` が特定するとし、特定まで D-01・D-02 の「検証エラー 0 件」の確認と WP-02 を完了扱いにしないことにした。
+  - F005: WP-03 を反映案の作成（正本は変更しない）に改め、`BA` の意図確認（WP-04）の後に正本への反映（WP-05）を置いた。検証と評価記録は WP-06 に繰り下げ、参照を追従させた。
+  - F006: D-03 の確認に、Issue の受付開始前に `QE` が転記規則（議論の要点・判断根拠・ID 対応）を確認することと、GitHub を参照せず正本だけで経緯を確認できることを加えた。
+- status の扱い: 前の回と同じく `ready` のまま直した。理由は前の回と同じで、確定は人が 140 で行う。
+- 迷った点と決めた内容:
+  - 検証コマンドは宣言された根拠資料で特定できないため具体的なコマンドを書かず、正本を特定する作業（ACD-D04 の `ARC`）への依存として示した。
+  - Spec Kit の版と既定プロセスの詳細は外部資料の調査を要するため本タスクでは確認せず、WP-01 で固定する事項にした。
+  - D-01 の重み4の軸のうち、採否の区分を変えるのはリスクの Low だけとした。既存の判定（STR-01 は適応性が Low でも一部採択）と整合させるためである。
+- 再 grade: executor では実行していない（agent CLI の起動を要するため）。作業内容の No.4 は open のまま残し、orchestrator が `grade run --target deliverable` を流して結果を追記する。
+
+2 回目の再 grade の結果（2026-11-17、orchestrator が `grade run --target deliverable --by sol-review-executor` で実行）: needs-work、93 点。指摘は 4 件（major 1・minor 3）。完了条件は 4 件中 4 件を満たす。major の F003 は、判定境界と集約規則は足されたが各セルの根拠が未解消で、未確認を Middle とする規則を改め、確認済みの中間評価と未判定を分けて根拠を記録するよう求める。結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/prj-0001.prj-comparison-of-alternatives.yaml`。
+
+3 回目の対応（2026-11-17、2 回目の再 grade の指摘 F001〜F004 を取り込む回）:
+
+- 実施内容: [[prj-0001:prj-comparison-of-alternatives|代替案比較]] を次のとおり直した。
+  - F003（major）: 「判定の根拠と集約規則」で、未確認を Middle とする規則をやめ、2番目の条件に当たると確認できたセルだけを Middle とし、確認できないセルと版・構成で当たる条件が変わるセルを「未判定」とした。根拠資料（D-01 は「比較対象案」と P-01〜P-03、D-02・D-03 は「比較対象案」の同じ方式 ID の行と同名の公式資料）と確認作業（根拠資料の記載と判定基準の照合）を定め、未判定の採否への扱い（確定しても判定が変わらない案は確認済みのセルで判定し、変わりうる案は確認作業まで判定を確定しない）を加えた。D-01・D-02・D-03 の根拠表を High・Middle・Low（D-02・D-03 は Low・未判定）の列に分け、全セルの判定理由を軸名付きで記し、未判定のセルに理由と確認作業を記した。
+  - 未判定にしたセル: SDD-01〜SDD-05 と TSK-01 の成熟度、SDD-04 の可逆性、SDD-05 の中立性・人間の統制・導入・移行負荷・可逆性、TSK-04 の運用負荷、TSK-05 の外部協働。SDD-02・SDD-03 の成熟度は WP-01 で版を固定して判定することにし、WP-01 の作業と完了条件に加えた。
+  - F002: SDD-04 は、中立性の Low を構成によらない製品一般の制約（Specs の実行が Kiro 製品を前提とする）とし、可逆性は版と構成で変わるため未判定とした。SDD-05 は、構成によらない制約を SpecDojo との責務の重複とし、使う機能群と版で変わる導入・移行負荷などを未判定とした。
+  - F004: TSK-02 の運用負荷を、Issue ごとの正本への転記とクローズ後の照合を含めて Middle に改めた。採否（段階採用）は変わらない。
+  - F001: 検証手順は ACD-D04 が正本とする品質管理計画の検証方針に従うと改め、手順の充足（定義が欠ける場合は `ARC` が課題として記録）と実行確認（`QE` が検証を実行して確認）を分けた。WP-02 の前提を「検証方針の定義の充足」に改めた。
+- status の扱い: 前の回と同じく `ready` のまま直した。理由は前の回と同じで、確定は人が 140 で行う。
+- 迷った点と決めた内容:
+  - D-02・D-03 の採否規則に、正本以外の案は正本が High でない軸を High で補う場合に試行・段階採用すること、成熟度は補う軸に含めないこと、D-02 では優先試行案の比較対照を一つ比較試行にできることを加えた。SDD-05 の導入・移行負荷を未判定にすると、従来の規則では Low の軸がない案として試行対象になるためである。既存の判定（採択・試行・非採択・保留）はすべて変えていない。
+  - TSK-03・TSK-04 の外部協働を High から Middle に改めた。外部参加者はサイト・ワークスペースへの招待を経て参加する方式で、判定基準の High（Issue / PR へ直接参加できる）の根拠を記せないためである。採否（非採択）は変わらない。
+  - TSK-02 の依存表現の根拠（Issue 間の依存と Projects で blocker と順序を表せる）と、SDD-04・SDD-05 の製品の性質（Specs の利用環境、機能群の個別利用）は、宣言された根拠資料に詳細がなく、2 回目の再 grade の指摘と公式資料の一般的な説明に基づく。executor は外部資料を確認していないため、WP-01 または再評価の条件の発生時に公式資料で確かめる。
+  - SpecDojo 自体（SDD-01・TSK-01）の成熟度は、互換性・更新方針の公開資料を確認していないため未判定とし、`ARC` の確認作業とした。正本の採否は必須条件の軸で決まるため変わらない。
+- 再 grade: executor では実行していない（agent CLI の起動を要するため）。作業内容の No.6 は open のまま残し、orchestrator が `grade run --target deliverable` を流して結果を追記する。
+
+3 回目の再 grade の結果（2026-11-17、orchestrator が `grade run --target deliverable --by sol-review-executor` で実行）: needs-work、95 点。指摘は 4 件（major 1・minor 3）。完了条件は 4 件中 4 件を満たす。major の F002 は 2 回目と同じ文面で、各セルの根拠が未解消とする。3 回目で未判定を分け、判定の根拠と集約規則の節と High の根拠の表を足したが、Middle・Low のセルの根拠を求めているとみられる。4 回目を流すか、カタログの完了条件を満たしたとして close するかを利用者が判断する。結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/prj-0001.prj-comparison-of-alternatives.yaml`。
+
+利用者の判断（2026-11-17、indie）: 4 回目は流さずに close する。カタログの完了条件は 4 件中 4 件を満たしている。残る F002 は完了条件の外の観点（vp-qe-verifiability）の指摘で、これに合わせて直すほど文書が膨らみ（手直し前 27KB から 75KB）、読みにくくなるため受け入れる。読みやすさのための構成の見直しは、目的が違うため別の todo として起票する。grade の指摘への対応で文書が膨らむ運用の問題は、別の issue として起票する。
 
 ## 6. 関連ドキュメント
 

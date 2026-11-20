@@ -20,6 +20,7 @@ import {
 } from "./parent-validation.js";
 import { resolveCommitHookSkips, type CommitHookSkip } from "./commit-hook-skips.js";
 import { configureIndexLockWait, DEFAULT_INDEX_LOCK_WAIT_MS } from "../shared/git.js";
+import { resolvePostIntegrationEntries, type PostIntegrationEntry } from "./post-integration.js";
 
 // ── Types for .specdojo/exec-defaults.yaml (global + per-provider) ─────────────
 
@@ -50,6 +51,8 @@ export type RateLimitPolicy = {
   // Used only when the provider output has no explicit reset time or retry-after. Omitted kinds
   // stay blocked without an estimated resume time.
   cooldown_seconds?: Partial<Record<AgentLimitKind, number>>;
+  // Compatibility-only field, still required by the schema. Ignored at runtime;
+  // automatic selection uses on_critical.retry for both critical and non-critical tasks.
   on_non_critical: {
     action: "skip";
   };
@@ -127,6 +130,7 @@ export type ExecDefaultsConfig = {
   pipeline?: {
     // A string runs in the project repository; `{ id, repo }` runs in the named repository.
     parent_validations?: ParentValidationEntry[];
+    post_integration?: PostIntegrationEntry[];
     parent_validation_concurrency?: number;
     // Hook commands the runner's integration commit skips once the covering parent validations
     // passed (PJR-T01P). Manual commits keep every hook.
@@ -230,6 +234,17 @@ export function resolveMemberCommand(
   config: ExecDefaultsConfig,
   member: CommandMemberAttributes,
 ): string | undefined {
+  // Require provider opt-in even for an explicit member command: otherwise a frontier
+  // member could silently inherit ordinary defaults or bypass the missing-tier error.
+  if (
+    member.proficiency === "frontier" &&
+    (!member.provider ||
+      !config.providers?.[member.provider]?.command_params?.by_proficiency?.frontier)
+  ) {
+    throw new Error(
+      `Cannot launch frontier member ${member.nickname}: configure providers.${member.provider ?? "<provider>"}.command_params.by_proficiency.frontier in exec-defaults.yaml (use {} if no extra variables are needed)`,
+    );
+  }
   const override = member.command?.trim();
   if (override) return override;
 
@@ -625,6 +640,7 @@ export function loadExecDefaultsConfig(
   }
 
   resolveParentValidationDefinitions(defaults.pipeline?.parent_validations);
+  resolvePostIntegrationEntries(defaults.pipeline?.post_integration);
   resolveParentValidationConcurrency(defaults.pipeline?.parent_validation_concurrency);
   resolveCommitHookSkips(
     defaults.pipeline?.commit_hook_skips,

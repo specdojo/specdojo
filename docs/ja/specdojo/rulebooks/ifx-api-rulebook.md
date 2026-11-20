@@ -14,23 +14,22 @@ specdojo:
 
 外部システム（仕入先、会計、物流、決済など）と連携する **1つのREST APIインターフェース**を、**OpenAPI形式**（YAML 1ファイル）で定義します。
 
-EAPIS は ESIL（外部システムIF一覧）から参照される「詳細仕様」です。
-ESIL 側の `spec_ref: ifx-api-...` は、このEAPISのID（およびファイル名）と対応させます。
+EAPIS は ESIL（外部システムIF一覧）から参照される「詳細仕様」で、ESIL 側の `spec_ref: ifx-api-...` をこの EAPIS の ID とファイル名に対応させます。
+
+`status` の昇格と承認、改訂と廃止は [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従い、本書では言い直しません。
 
 ## 1. ファイル規約
 
-- ファイル名: `ifx-api-<短い英小文字ハイフン>.yaml`
-- ESILからの参照: `spec_ref: ifx-api-...`（例: `ifx-api-payment`）
+- ファイル名: `ifx-api-<短い英小文字ハイフン>.yaml`（例: `ifx-api-payment`）
 - 1ファイル = 1つのAPI（1つの外部連携インターフェース）
 
 ## 2. OpenAPIバージョン
 
-- **OpenAPI 3.0.3**（推奨）または **OpenAPI 3.1.x** を利用する
-- 本リポジトリでは互換性のため **3.0.3** を第一候補とする
+- 互換性のため **OpenAPI 3.0.3** を第一候補とし、**3.1.x** も使えます。
 
 ## 3. 記載方針（必須）
 
-- **外部との合意に必要な最小十分**を記載する（内部実装の都合は書かない）
+- **外部との合意に必要な最小十分**を記載する
 - `paths` は **実際に提供/利用するエンドポイントのみ**定義する
 - `operationId` は英字で一意にする（例: `createPayment`）
 - スキーマは `components/schemas` に集約し、`$ref` で参照して使い回す
@@ -54,22 +53,19 @@ ESIL 側の `spec_ref: ifx-api-...` は、このEAPISのID（およびファイ�
 - `servers`（少なくとも1つ）
 - `paths`（少なくとも1つ）
 
-## 4.1 メタ情報（x-spec-meta）
+### 4.1. メタ情報（x-spec-meta）
 
-仕様のトレーサビリティ管理のため、以下を `x-spec-meta` に含めます。
-
-| キー | 説明 | 必須 |
-| ---- | ---- | ---- |
-
-| id | API仕様ID（`ifx-api-...`）、ESILの `spec_ref` と対応 | ○ |
-| type | `api` 固定 | ○ |
-| rulebook | `specdojo:ifx-api-rulebook` | ○ |
-| status | `draft` / `ready` / `deprecated` | ○ |
+| キー     | 説明                                                 | 必須 |
+| -------- | ---------------------------------------------------- | ---- |
+| id       | API仕様ID（`ifx-api-...`）                           | ○    |
+| type     | `api` 固定                                           | ○    |
+| rulebook | `specdojo:ifx-api-rulebook`                          | ○    |
+| status   | ドキュメントメタ情報標準の値                         | ○    |
 | based_on | 根拠となる他仕様のIDリスト（例: `["ifx-api-auth"]`） | 任意 |
 
 ## 5. エラー定義（推奨）
 
-外部連携では、少なくとも以下のエラーレスポンスを定義します。
+外部連携では、少なくとも以下のエラーレスポンスを定義し、共通形式（例: `components/schemas/ErrorResponse`）を各 operation から参照します。
 
 - `400`（入力不正）
 - `401`（認証）/ `403`（認可）
@@ -77,5 +73,3 @@ ESIL 側の `spec_ref: ifx-api-...` は、このEAPISのID（およびファイ�
 - `409`（競合）
 - `429`（レート制限）
 - `500`（内部エラー）
-
-共通形式（例: `components/schemas/ErrorResponse`）を用意し、各operationから参照する運用を推奨します。

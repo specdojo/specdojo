@@ -7,11 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: ARC
   registered_at: "2026-11-15T12:22:46Z"
+  completed_at: "2026-11-16T14:54:09Z"
+  conclusion: stsd-task-execution を grade の指摘で直し、再 grade で pass（96 点、完了条件 5/5）になった。成果物の確定は人の 140 で行う
   depends_on:
     - PJR-M495
     - PJR-T4G3
@@ -50,8 +52,8 @@ specdojo:
 | --- | ------------------------------------------------------ | ---- | ---- | ---------------------------------------------------- |
 | 1   | 最新の grade の指摘を取り込んで直す                    | ARC  | done | executor が実施（対応結果を参照）                    |
 | 2   | grade し直して結果を書く                               | ARC  | done | 2026-11-16 orchestrator が grade（needs-work 92 点） |
-| 3   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | ARC  | open | 0.8.0 の後に流す                                     |
-| 4   | 直した後に grade し直して結果を書く（次の回）          | ARC  | open | orchestrator が流す                                  |
+| 3   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | ARC  | done | executor が実施（対応結果を参照）                    |
+| 4   | 直した後に grade し直して結果を書く（次の回）          | ARC  | done | 2026-11-16 の 2 回目の再 grade で pass               |
 
 ## 5. 対応結果
 
@@ -82,6 +84,16 @@ specdojo:
 - major の指摘:
   - F007（vp-qe-config-validity）: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
 - 結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/prj-0001.stsd-task-execution.yaml`。
+
+### 5.4. 次の回の実施内容（2026-11-16 の再 grade の指摘）
+
+- F007（major）: 上流辞書の照合の `_TODO_` を、食い違うときにどちらを正とするかの決定（BA が照合、PO が決定、期限は辞書の作成時または本書の確定（140））として `_UNDECIDED_` に改め、追跡を [[prj-0001:pjr-tn43-user-decisions-pending]] につないだ。統合済みの実装（PJR-M495・T4G3）に合わせた名称を現在の根拠とし、調べて埋められる不足は残っていないと判断したため。本文の `_TODO_`・`_ASSUMPTION_` はなくなった。
+- F002・F003・F005: 同時刻の再生順序を「状態の判定」の独立した項目に移し、状態ごとに成立するイベント、競合する着手（同じ秒に解放・中断したアクターの着手を先に、自動の実行の再開に伴う着手を後に採る）、実行中からの記録（直前の記録者の記録を先に、`block`・`unblock` の後に `complete`）と、期待する順序の例 2 件を書いた。並べ方の正本は `src/exec/events.ts` のイベント記録の読み込みとし、関数名は載せなかった（rulebook が関数実行を業務の記述として載せることを禁じるため）。
+- F001・F006: 権限の規則の承認に、PO が 140 で決めることに加え、BA・QE・DEV の事前の確認を書いた。`ready` への昇格は 2 件の留保の決定と 140 の人間の承認の後とし、本タスクの完了が確定を意味しないことを書いた。
+- F004: 検証手順（テストのファイル・検査）の参照は足さなかった。rulebook は STSD に検証の章を求めず、テストのファイルは本タスクで参照を宣言された資料にないため。
+- 成果物の `status` は `draft` のまま据え置いた。再 grade は作業内容の 4 の行のとおり orchestrator が流す。
+
+2 回目の再 grade の結果（2026-11-16、orchestrator が `grade run --target deliverable --by sol-review-executor` で実行）: pass、96 点。指摘は 4 件（すべて minor）。完了条件は 5 件中 5 件を満たす。結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/prj-0001.stsd-task-execution.yaml`。
 
 ## 6. 関連ドキュメント
 

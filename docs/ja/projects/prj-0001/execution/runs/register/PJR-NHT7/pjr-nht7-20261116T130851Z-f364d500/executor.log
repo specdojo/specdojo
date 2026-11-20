@@ -1,0 +1,27 @@
+worktree と exec branch の片付けを exec-lifecycle のロックの外へ移しました。commit・merge・review の遷移はロックの中に残しています。手元では、関係する単体テスト（21 ファイル、350 件）と追加したテスト 6 件が通っています。`npm run typecheck`・`lint:ts`・`test:unit`・`lint:md`・`test:integration` などの正式な検証は、このあと親 runner が実行します。統合テストは手元では実行していません。
+
+**変更の内容**
+- **register**：`finalizeRegisterWorktreeRun` が自分でロックを扱う形にしました。統合の後にロックを解放してから `removeWorktree` を行い、派生ビューの作り直しと post-review はロックを取り直して行います。呼び出し側の 4 か所（通常実行・executor 再開・reporter 再開・統合再開）は `runExclusive` で包まない形に揃えました。
+- **schedule**：`src/exec/run/schedule-task.ts` の `runPreparedTask` も同じ形にし、片付けの後に完了か block の記帳をロックの中で行います。
+- **同じ項目との重なり**：片付けの間は、worktree ごとのロック（`exec/.locks/worktree-cleanup/<worktree>`）を持ちます。このロックが生きている間は、同じ項目の再実行・再開・統合再開・`exec worktree remove` は worktree を消さずに理由を返すので、二重に消すことはありません。
+- **途中で落ちた場合**：worktree ごとのロックは古くなると次の操作が引き継ぎます。worktree が残っていれば統合再開が片付けをやり直し、残骸だけなら次の run か `exec worktree prune` で片付きます。
+
+**決めたこと**（個票の対応結果に書きました）
+- post-review は片付けの後に回しました。片付けが失敗したときは review のまま止め、post-review は走らせません。こうしないと、統合再開で post-review が二重に走ります。
+- post-review の差分範囲は merge の直後の HEAD で固定しました。片付けを待つ間に別の項目の commit が積まれても、範囲が広がりません。
+- schedule には worktree ごとのロックを足していません。schedule のロックは同じプロセスの中だけで効くもので、片付けの間も項目は `doing` のまま選び直されないためです。
+- register の片付けの失敗の理由は、通常の統合でも `integrate cleanup failed` に揃えました。merge 前の失敗（`integrate failed`）と見分けられます。
+
+**残る課題**：`removeWorktree` は同期の git 呼び出しなので、片付けの間は同じプロセスの処理も止まります。別のプロセス（`specdojo git`・記帳）はもう待ちませんが、同じプロセスで並列に走る項目は片付けが終わるまで進みません。非同期にするかどうかは別の項目で決める必要があります。
+
+**回帰テスト**：`tests/src/exec/run/deferred-cleanup.test.ts` で、片付けの前にロックが解放されること、片付けの間に別のロック利用者が進めること、片付けの失敗が記帳の段へ渡ることを確かめています。
+
+個票には影響範囲・原因・対応策・対応結果・関連ドキュメントと、「CHANGELOG に書く事項」（区分は Fixed、文案付き）を書きました。`CHANGELOG.md` と保護された設定は変えていません。
+
+変更したファイル：
+- 追加：`src/exec/run/deferred-cleanup.ts`、`src/exec/worktree-cleanup-lock.ts`、`tests/src/exec/run/deferred-cleanup.test.ts`、`tests/src/exec/worktree-cleanup-lock.test.ts`
+- 変更：`src/exec/run/register-worktree.ts`、`src/exec/run/register-resume.ts`、`src/exec/run/schedule-task.ts`、`src/exec/worktree-command.ts`、個票 `pjr-nht7-worktree-cleanup-outside-lifecycle-lock.md`
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"Moved post-integration worktree/branch removal outside the exec-lifecycle lock for register and schedule runs; integration and bookkeeping stay inside the lock, post-cleanup bookkeeping reacquires it. Added a per-worktree cleanup lock that makes re-runs, resumes, and `exec worktree remove` refuse while a cleanup is in progress. Added regression tests showing the lock is released before cleanup. Ticket results updated, including the CHANGELOG entry draft.","handoff":["Decision: post-review runs after the worktree removal (outside the first lock section, reacquiring the lock). When removal fails the item stays in review without post-review, so integration resume redoes cleanup and post-review without running post-review twice.","Decision: the post-review diff range (`outputCommit`) is fixed to HEAD right after the merge, so commits made by other items while cleanup runs do not widen it.","Decision: register cleanup takes a per-worktree lock (`exec/.locks/worktree-cleanup/<worktree>`) inside the exec-lifecycle lock. Same-item setup, resume, integration resume, and `exec worktree remove` refuse while it is live. A crashed cleanup leaves a stale lock that the next operation takes over; the next run or `exec worktree prune` removes the remains.","Decision: schedule (`runPreparedTask`) uses the same deferred-cleanup structure but has no per-worktree lock. Its lifecycle lock is the in-process `SerialAsyncLock`, and the task stays `doing` during cleanup, so the scheduler does not pick it again.","Decision: register removal failures now use the reason prefix `integrate cleanup failed` in the normal integration path too, distinguishing them from pre-merge `integrate failed`.","Remaining issue: `removeWorktree` uses `spawnSync`, so the cleanup still blocks the same process's event loop. Other processes (`specdojo git`, `--join` runs, register bookkeeping) no longer wait, but items running in parallel in the same process do not advance during cleanup. Making the removal asynchronous is a candidate for a separate register item.","CHANGELOG (Fixed): `exec run` の worktree 実行で、統合の後の worktree と exec branch の撤去を exec-lifecycle のロックの外で行うようにした。遅いファイルシステムで撤去に時間がかかっても、別の項目の記帳と `specdojo git` が待たされない。撤去の間は同じ項目の再実行・再開・`exec worktree remove` を拒否する。"],"validations":[{"command":"npm run validate:history-links","status":"passed","summary":"History-link validation passed including the updated ticket."},{"command":"npm run check:src-imports","status":"passed","summary":"src runtime imports are declared in dependencies or peerDependencies."},{"command":"npx prettier --write (changed .ts/.md files)","status":"passed","summary":"Changed TypeScript, test, and ticket files formatted with Prettier."},{"command":"npx markdownlint-cli2 docs/ja/projects/prj-0001/controls/project-register/pjr-nht7-worktree-cleanup-outside-lifecycle-lock.md","status":"passed","summary":"0 issues in the updated ticket."},{"command":"specdojo catalog validate","status":"not_applicable","reason":"Only a project-register ticket under docs/ja/projects changed; no catalog-managed deliverable was changed, and the catalog check is not part of this plan's required validations."}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,85 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_8dd4e03666204279b8fbcf1df8778110
+  ts: "2026-11-17T22:52:03Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 概念クラス図（ccd）の向きを上から下にそろえる
+    - field: description
+      from: ""
+      to: ccd の sample と ccd-project-planning が direction LR で描かれているため、継承の読み方と状態遷移図にそろえて上→下を既定にし、rulebook に向きの決まりを足す
+    - field: input
+      from: ""
+      to: '["利用者の指摘（2026-11-18）: 概念クラス図は左→右ではなく、ほかの図に合わせて上から下の配置にした方がよい","orchestrator の調べ（2026-11-18）: ccd-sample と ccd-project-planning は direction LR。stsd（sample と本番 5 件）は指定なし（上→下）。データフロー図・C4・プロジェクト定義の図は flowchart LR。ccd-mermaid-rulebook に向きの決まりはない。ccd-project-planning はクラス 11 個","利用者の決定（2026-11-18）: 上→下を既定とし、関連の連なりが長く横に並べた方が読みやすい場合だけ LR とし、理由を本文に書く"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-18"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+- v: 1
+  id: reg_d72243a349694fb49919a48a687b58f6
+  ts: "2026-11-17T23:58:45Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_8dd4e03666204279b8fbcf1df8778110
+- v: 1
+  id: reg_f9086ce7e39442218b8b9a1bb9f417f4
+  ts: "2026-11-18T00:23:52Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_d72243a349694fb49919a48a687b58f6
+- v: 1
+  id: reg_a036b0224b194fbdb529d3df0667d09b
+  ts: "2026-11-18T00:26:45Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が差分（direction LR の削除と rulebook の節の追加だけで図の中身は不変）と個票の描画の確認の結果を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-18"
+    - field: conclusion
+      from: "-"
+      to: ccd-mermaid-rulebook に向きの決まり（既定は上→下、LR は理由を本文に書くときだけ）を足し、ccd-sample と ccd-project-planning の図を上→下にした。docs:build で描け、交差は跨ぎの印のある 1 か所だけ
+  previous_event_id: reg_f9086ce7e39442218b8b9a1bb9f417f4

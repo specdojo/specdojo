@@ -1,0 +1,28 @@
+概念クラス図の既定の向きを上→下にし、rulebook に向きの決まりを足しました。対象の 2 つの図も上→下に変え、最終状態で `npm run docs:build` が通ることを確かめました。
+
+**変更したファイル**
+- `docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md`: 記述ガイドに「6.2.3. 図の向き」を足しました。決まりは次の 3 点で、良い例・悪い例の表も付けています。
+  - 既定は上→下（`direction` を書かないか `direction TB`）とし、親を上、子を下に置く。
+  - 横に並べた方が読みやすい場合だけ `direction LR` とし、理由を図の直後に書く。
+  - 線が交差したり重なったりする場合は、向きを変える前に、クラスの宣言や関連の順番を並べ替える。
+- `docs/ja/specdojo/samples/ccd-sample.md` と `docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md`: `direction LR` の 1 行を消しただけです。クラス・関連・多重度・役割名・宣言の順番は変えていません。
+- 個票 `pjr-k3z2-ccd-direction-tb.md`: 作業内容の 3 行を `done` にしました。対応結果には実施内容、描画の確かめ方と結果、迷った点、CHANGELOG の文案（Changed）、残課題（なし）を書きました。
+
+**描画の確かめ方と結果**
+- ビルドで出力された 2 つの図の SVG について、各クラスの座標と線の経路を `tmp/` に置いた自作スクリプトで読み、交差の数とクラス枠に重なる線を数えました。図を画像として目で見てはいません。
+- ccd-sample: 上→下に並び、線の交差も枠への重なりもありません。
+- ccd-project-planning: 上→下に並び、継承の親が子の上にあります。交差は「プロジェクト構成 → 担当ロール」と「計画トラック → 計画タスク」の 1 か所だけで、跨ぎの印（弧）で 2 本の線を見分けられます。
+
+**迷った点と決めたこと**
+上の 1 か所の交差を消すため、担当ロールの宣言を末尾へ移して描き直しましたが、配置は変わらず交差も残りました。跨ぎの印で読めるので交差は受け入れ、宣言の順番は元に戻しました。
+
+**検証**
+- `npm run docs:build`: 成功
+- `npx prettier --check`（変更した 4 ファイル）: 成功
+- `npm run validate:history-links`: 成功
+
+保護された設定は変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"ccd-mermaid-rulebook に「図の向き」（既定は上→下、例外の LR は理由を本文に書く）を足し、ccd-sample と ccd-project-planning から `direction LR` を外して上→下にした。描画は docs:build で出力された SVG の座標と線の経路をスクリプトで読んで確かめた。個票の作業内容と対応結果を更新した。","handoff":["迷った点と決定: ccd-project-planning を上→下にすると、「プロジェクト構成 → 担当ロール」と「計画トラック → 計画タスク」が 1 か所交差する。担当ロールの宣言を並べ替えて描き直しても ELK の配置は変わらなかった。跨ぎの印（弧）で 2 本の線を見分けられるため交差は受け入れ、宣言の順番は元に戻した。","CHANGELOG に書く事項（個票の対応結果にも記載）: 区分 Changed。文案「概念クラス図（ccd）の向きを上→下を既定とし、ccd-mermaid-rulebook に向きの決まりを足した。ccd の sample とプロジェクト計画の概念クラス図を上→下に描き直した。」","描画の確かめ方: 図を画像として目で見てはいない。生成された SVG の座標と線の経路から、交差とクラス枠への重なりを数えた。人が文書サイトで見た目を確かめたい場合は、`npm run docs:dev` で 2 ページを開く。","保護された設定の変更は要らなかった。"],"validations":[{"command":"npm run docs:build","status":"passed","summary":"最終状態で exit 0（build complete in 173.56s）。ログに error はない"},{"command":"npx prettier --check docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md docs/ja/projects/prj-0001/controls/project-register/pjr-k3z2-ccd-direction-tb.md docs/ja/specdojo/samples/ccd-sample.md docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"passed","summary":"exit 0。pjr-k3z2-ccd-direction-tb.md は valid"}]}
+</specdojo_executor_evidence>

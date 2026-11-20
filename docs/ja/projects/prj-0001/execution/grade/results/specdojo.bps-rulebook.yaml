@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/bps-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 93
-graded_at: "2026-10-28T20:30:41.604Z"
-graded_by: flash-high-executor
-content_hash: 090e6f922ded6a5be3c36613ccc03e0872bff5121da23173b8ebf4b1a6d6c75e
+score: 98
+graded_at: "2026-11-17T21:45:14.756Z"
+graded_by: sol-review-executor
+content_hash: fbee89397b029a75407c5003de0bac76c2b521ea9e2f17cf79091e328ebb8cae
 categories:
   purpose:
     score: 100
@@ -21,13 +21,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
     score: 100
   quality:
     score: 92
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -78,8 +78,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
     level: 4
     score: 100
@@ -87,8 +87,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -104,27 +104,13 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 3
+  minor: 1
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-dev-testability
-    line: 150
+    line: 124
     anchor: "### 6.9. 完成判定"
     message: 完成判定に Markdown lint や成果物 Frontmatter スキーマ検証など機械的に確認する検証手段が示されておらず、BPS 作成後にどのコマンドで形式適合を確認するかが読み取れない。
     message_ja: 完成判定に Markdown lint や成果物 Frontmatter スキーマ検証など機械的に確認する検証手段が示されておらず、BPS 作成後にどのコマンドで形式適合を確認するかが読み取れない。
-  - id: F002
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 37
-    anchor: "- 処理ステップ ID は文書内で一意な `S-01` 形式、主要例外 ID は `E-01` 形式とします。CDFD のプロセス ID がある場合は、処理表の「CDFD プロセス」列で対応させます。"
-    message: ファイル命名・ID規則では処理ステップ ID と主要例外 ID の形式だけを定め、6.2 で使うトリガー ID の `T-01` 形式が規則章に含まれておらず ID 規則が分散している。
-    message_ja: ファイル命名・ID規則では処理ステップ ID と主要例外 ID の形式だけを定め、6.2 で使うトリガー ID の `T-01` 形式が規則章に含まれておらず ID 規則が分散している。
-  - id: F003
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 79
-    anchor: "- 導入文は「在庫数更新を受け、補充が必要な商品について発注候補を確定する」のように、起点、対象、業務成果を一文で示します。"
-    message: 記述ガイドの例文は「発注候補」「発注点」を用いるが、同じ補充判断を扱う recipe の良い例と sample は「補充依頼」「補充基準」を用いており、Kata 内で用語がゆれている。
-    message_ja: 記述ガイドの例文は「発注候補」「発注点」を用いるが、同じ補充判断を扱う recipe の良い例と sample は「補充依頼」「補充基準」を用いており、Kata 内で用語がゆれている。

@@ -1,3 +1,4 @@
+import { registerDeprecatedWhereAlias } from "../shared/where-alias.js";
 import { type Command, Option } from "commander";
 import { existsSync } from "node:fs";
 import { join, resolve as pathResolve } from "node:path";
@@ -11,6 +12,7 @@ import {
   loadConfig,
   specdojoRootDir,
 } from "../shared/specdojo-config.js";
+import { formatLocalConfigLines } from "../shared/local-config.js";
 import {
   DEFAULT_EVENT_MESSAGES,
   KNOWN_OWNER_LABELS,
@@ -89,15 +91,39 @@ import { displayWidth, nowUtcIsoSeconds, padEndDisplay, requireNonEmpty } from "
 import { resolveOwnerForLocalId } from "./strategy.js";
 import { buildTaskView } from "./task-view.js";
 import { registerExecTrialCommands } from "./trial.js";
+import { registerExecSmokeCommand } from "./smoke.js";
+import { registerExecQueueCommands, writeActiveQueueSummary } from "./queue-command.js";
 import type { ExecEventType, ExecEventV1, StateSnapshot } from "./types.js";
 import { registerExecWorktreeCommands } from "./worktree-command.js";
 import { validateRunRecordLayout } from "./validate-records.js";
 import { validateRunRecordLayoutAtCommit } from "./validate-records-commit.js";
 
+export function printExecPaths(opts: { project?: string }): void {
+  try {
+    const resolvedPaths = resolveProjectContext(opts);
+    process.stdout.write(`schedule-path: ${resolvedPaths.schedulePath}\n`);
+    process.stdout.write(`execution-path: ${resolvedPaths.executionPath}\n`);
+    const projectPath = resolvedPaths.schedulePath;
+    process.stdout.write(`exec/events : ${eventsDirForProject(projectPath)}\n`);
+    process.stdout.write(`generated   : ${generatedDirForProject(projectPath)}\n`);
+    process.stdout.write(`scheduler-lock: ${schedulerLockPath(projectPath)}\n`);
+    // Only with a local config, so the output stays unchanged for checkouts without one.
+    const loaded = loadConfig();
+    if (loaded.localConfigPath) {
+      const lines = formatLocalConfigLines(loaded, resolveProjectId(opts));
+      process.stdout.write(lines.map((line) => `${line}\n`).join(""));
+    }
+  } catch (error) {
+    printCommandError(error, false);
+  }
+}
+
 export function registerExecCommands(program: Command): void {
   const exec = program.command("exec").description("Execution helpers");
   registerExecHandoffCommands(exec);
   registerRecordMigrationCommand(exec);
+  registerExecSmokeCommand(exec);
+  registerExecQueueCommands(exec);
   const lockedActions: Record<LockedEventAction["type"], LockedEventAction> = {
     claim: {
       type: "claim",
@@ -446,7 +472,7 @@ export function registerExecCommands(program: Command): void {
   });
 
   const scmd = exec
-    .command("scheduler")
+    .command("scheduler", { hidden: true })
     .description("Auto-claim next task safely (with project-level lock).");
   addProjectOptions(scmd);
   scmd.requiredOption("--by <actor>", "Actor (agent name)");
@@ -715,7 +741,7 @@ export function registerExecCommands(program: Command): void {
   );
   statusCmd.action((opts) => {
     try {
-      const { schedulePath } = resolveProjectContext(opts);
+      const { schedulePath, executionPath } = resolveProjectContext(opts);
 
       // Compute state directly from events (not from cached state.json)
       const state = loadValidatedExecState(schedulePath);
@@ -734,6 +760,7 @@ export function registerExecCommands(program: Command): void {
       if (entries.length === 0) {
         const byMsg = filterBy ? ` for ${filterBy}` : "";
         process.stdout.write(`No ${filterState} tasks${byMsg}.\n`);
+        writeActiveQueueSummary(executionPath);
         exitWithCode(true);
         return;
       }
@@ -767,25 +794,12 @@ export function registerExecCommands(program: Command): void {
           `  ${padEndDisplay(r.taskId, taskWidth)} ${padEndDisplay(r.name, nameWidth)} ${padEndDisplay(r.by, byWidth)} ${r.ts}\n`,
         );
       }
+      writeActiveQueueSummary(executionPath);
       exitWithCode(true);
     } catch (error) {
       printCommandError(error, false);
     }
   });
 
-  const wcmd = exec.command("where").description("Print resolved paths");
-  addProjectOptions(wcmd);
-  wcmd.action((opts) => {
-    try {
-      const resolvedPaths = resolveProjectContext(opts);
-      process.stdout.write(`schedule-path: ${resolvedPaths.schedulePath}\n`);
-      process.stdout.write(`execution-path: ${resolvedPaths.executionPath}\n`);
-      const projectPath = resolvedPaths.schedulePath;
-      process.stdout.write(`exec/events : ${eventsDirForProject(projectPath)}\n`);
-      process.stdout.write(`generated   : ${generatedDirForProject(projectPath)}\n`);
-      process.stdout.write(`scheduler-lock: ${schedulerLockPath(projectPath)}\n`);
-    } catch (error) {
-      printCommandError(error, false);
-    }
-  });
+  registerDeprecatedWhereAlias(exec, printExecPaths);
 }

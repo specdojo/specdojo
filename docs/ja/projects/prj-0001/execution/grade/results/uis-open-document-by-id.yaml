@@ -1,0 +1,197 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: uis-open-document-by-id
+path: docs/ja/product/010-business-specs/040-user-interface-model/uis-open-document-by-id.md
+target: deliverable
+rubric: grade-rubric-v2
+verdict: pass
+score: 93
+graded_at: "2026-11-17T23:07:59.746Z"
+graded_by: sol-review-executor
+content_hash: a1b23e9ee708f21484ca73195317bf762108dfe4b8dbac5751d61e84c5fda33b
+source_hashes:
+  catalog-entry: 5f432aaf0709e0d173619bb07df2ff97dff9a06318f798ce47d6c9fded3ac7fd
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: 2c88dff750f6ba825018a44d00dc148f996dbed108c921f5ece9dc352bff0f1b
+  members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: 2e284eadf464d3d86452d8a79d79967a4af07b35436a8b8567c5a357df540592
+categories:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
+  consistency:
+    score: 75
+  architecture:
+    score: 100
+  usability:
+    score: 94
+  implementation:
+    score: 100
+  quality:
+    score: 88
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-cross-document-consistency:
+    level: 3
+    score: 75
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 3
+    score: 75
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 5
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 65
+    anchor: >-
+      | 索引なし     | ワークスペースを開いていない、索引のファイルがない・JSON として読めない、または項目が 0 件 | 警告「SpecDojo index not found. Run: specdojo index
+      build」                     | 入力を破棄し、文書は開かない | リポジトリをワークスペースとして開き、リポジトリのルートで `specdojo index build`
+      を実行してから、コマンドを実行し直す |
+    message: >-
+      「索引のファイルがない」を無条件に「索引なし」警告の発生条件としているが、packages/vscode-specdojo/src/extension.ts の loadIndex
+      はファイル不在時に読み込み済み索引を消さず、specdojo.openById はその索引が非空なら文書を開く。本文71行の例外をこの条件にも反映し、起動時の索引不在と読み込み後の削除を区別する必要がある。
+    message_ja: >-
+      「索引のファイルがない」を無条件に「索引なし」警告の発生条件としているが、packages/vscode-specdojo/src/extension.ts の loadIndex
+      はファイル不在時に読み込み済み索引を消さず、specdojo.openById はその索引が非空なら文書を開く。本文71行の例外をこの条件にも反映し、起動時の索引不在と読み込み後の削除を区別する必要がある。
+    cause:
+      type: document
+  - id: F002
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 73
+    anchor: "- 複数フォルダのワークスペースでは 1 つ目のフォルダだけを対象にする。2 つ目以降のフォルダの文書を開く手段は本画面の対象外とする。"
+    message: 1つ目のフォルダだけを対象とする制約は本文7行ですでに定義されている。2つ目以降が対象外である旨を概要の同じ箇条にまとめ、末尾の再掲を削除すると、判断情報を保ったまま範囲定義を一元化できる。
+    message_ja: 1つ目のフォルダだけを対象とする制約は本文7行ですでに定義されている。2つ目以降が対象外である旨を概要の同じ箇条にまとめ、末尾の再掲を削除すると、判断情報を保ったまま範囲定義を一元化できる。
+    cause:
+      type: document
+  - id: F003
+    severity: minor
+    rule: vp-qe-done-criteria
+    line: 65
+    anchor: >-
+      | 索引なし     | ワークスペースを開いていない、索引のファイルがない・JSON として読めない、または項目が 0 件 | 警告「SpecDojo index not found. Run: specdojo index
+      build」                     | 入力を破棄し、文書は開かない | リポジトリをワークスペースとして開き、リポジトリのルートで `specdojo index build`
+      を実行してから、コマンドを実行し直す |
+    message: 索引ファイル不在を警告条件とする7章と、読み込み済みなら削除後も文書を開くとする8章の対応が明示されていない。DC-002の実装一致とDC-003の受入テスト設計を確認できるよう、読み込み済み索引の有無ごとに期待結果を区別する必要がある。
+    message_ja: 索引ファイル不在を警告条件とする7章と、読み込み済みなら削除後も文書を開くとする8章の対応が明示されていない。DC-002の実装一致とDC-003の受入テスト設計を確認できるよう、読み込み済み索引の有無ごとに期待結果を区別する必要がある。
+    cause:
+      type: document
+  - id: F004
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 71
+    anchor: >-
+      - _UNDECIDED_:
+      索引のファイルを消しても、拡張は読み込み済みの索引を使い続ける（読み直すのは作成と変更のときだけ）。消した後も「索引なし」にならず古い対応で開く点を、仕様として許すか、削除でも読み直すかは決まっていない。
+    message: 読み込み済み索引の削除後は文書を開くと明記している一方、本文65行では索引ファイル不在を警告条件としている。同じ操作系列のpass／failを一意に判定できるよう、削除後の現行動作を7章の警告条件の例外として対応づける必要がある。
+    message_ja: 読み込み済み索引の削除後は文書を開くと明記している一方、本文65行では索引ファイル不在を警告条件としている。同じ操作系列のpass／failを一意に判定できるよう、削除後の現行動作を7章の警告条件の例外として対応づける必要がある。
+    cause:
+      type: document
+  - id: F005
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 34
+    anchor: >-
+      | 入力の確定     | 入力欄で Enter                                      | 文書 ID を入力済み | 索引を確かめ、ID
+      に対応するファイルを開く。開けない場合は警告を出して終わる |
+    message: >-
+      「開けない場合は警告を出して終わる」は、本文67行の「ファイルなし」では拡張独自の表示を持たずVS
+      Codeのコマンド失敗表示に任せるという説明と一致しない。拡張の警告は索引なし・ID未登録に限定し、ファイルを開く処理の失敗とは区別して記述する必要がある。
+    message_ja: >-
+      「開けない場合は警告を出して終わる」は、本文67行の「ファイルなし」では拡張独自の表示を持たずVS
+      Codeのコマンド失敗表示に任せるという説明と一致しない。拡張の警告は索引なし・ID未登録に限定し、ファイルを開く処理の失敗とは区別して記述する必要がある。
+    cause:
+      type: document
+done_criteria:
+  satisfied: 2
+  total: 4
+  unsatisfied:
+    DC-002:
+      - ARC
+    DC-003:
+      - QE
+  detail_ref: uis-open-document-by-id-grade-criteria

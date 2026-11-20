@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/bes-index-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 95
-graded_at: "2026-11-15T02:23:10.676Z"
+score: 98
+graded_at: "2026-11-17T21:41:09.964Z"
 graded_by: sol-review-executor
-content_hash: 8893951bcdc4e3e15a035a71a3261565c4b707711a1732b93cfc433a7ccae9e4
+content_hash: 99ed948204999ee229646eb413e11fce73ddbe0d251ee52777b01d20fb336e9d
 categories:
   purpose:
     score: 100
@@ -27,7 +27,7 @@ categories:
   quality:
     score: 92
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -75,8 +75,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
     level: 3
     score: 75
@@ -101,49 +101,28 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 3
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 58
-    anchor: "| `rulebook`   | 推奨     | `specdojo:bes-index-rulebook`                                  |"
-    message: >-
-      Mark `rulebook` as required rather than recommended: document-metadata-standard lists it as mandatory, and
-      deliverable-frontmatter.schema.yaml requires it; following the current table can produce an inventory that fails
-      Frontmatter validation.
-    message_ja: >-
-      Mark `rulebook` as required rather than recommended: document-metadata-standard lists it as mandatory, and
-      deliverable-frontmatter.schema.yaml requires it; following the current table can produce an inventory that fails
-      Frontmatter validation.
+    rule: vp-qe-kata-conformance
+    line: 24
+    anchor: >-
+      - 個別 BES が行の全体を詳細化する場合は、個別 BES の文書 ID を行のイベント ID と一致させます。行の一部の成立の仕方だけを詳細化する場合は、個別 BES に別の ID
+      を付け、「個別仕様への詳細化」の表で対応を示します。sample の文書 ID はメタ情報標準に従って実物と区別し、イベント ID との対応を詳細化表で示します。
+    message: イベントIDは本文23行の正規表現でauthorityを含まない一方、個別BESの文書IDはbes-rulebookによりプロジェクト配下でauthorityを付けるため、文書ID全体をイベントIDと一致させる条件を満たせません。一致させるのは文書IDのlocal-id部分であることを明記し、イベントIDと完全な文書IDの対応例を示してください。
+    message_ja: イベントIDは本文23行の正規表現でauthorityを含まない一方、個別BESの文書IDはbes-rulebookによりプロジェクト配下でauthorityを付けるため、文書ID全体をイベントIDと一致させる条件を満たせません。一致させるのは文書IDのlocal-id部分であることを明記し、イベントIDと完全な文書IDの対応例を示してください。
   - id: F002
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 12
+    line: 30
     anchor: >-
-      - 一行で発生境界・時点・起点・相関を判定できない出来事だけを個別 BES へ詳細化します。詳細化の要否の判断と個別仕様の書き方は [[specdojo:bes-rulebook|業務イベント仕様 作成ルール]]
-      を正本とします。
+      - イベント自体の廃止・置換では行を残し、イベント名に「（廃止）」を付け、発生条件に理由・時期・後継 ID（なければ代替運用）を記載します。廃止行は現行領域の網羅件数に含めず、イベント ID
+      は再利用しません。行の存廃は本書を正とし、BES 作成ルールの行削除の選択肢は本一覧では採りません。
     message: >-
-      The previous missing completed sample is resolved; the remaining issue is minor: align the exclusive refinement
-      criteria here, in the refinement-reason column, and in the writing guide with bes-rulebook, which also permits
-      refinement when conditions or fact data cannot be determined from the inventory.
+      イベント廃止と個別BES廃止の区別および一覧側の優先規則が追加され、前回の廃止方針の不整合は解消しています。ただし、現在のbes-rulebookには一覧行の削除を許可する記述がないため、「BES
+      作成ルールの行削除の選択肢」という説明は現行の正本と一致しません。この説明を削除するか、現在の規則に即した表現へ更新してください。
     message_ja: >-
-      The previous missing completed sample is resolved; the remaining issue is minor: align the exclusive refinement
-      criteria here, in the refinement-reason column, and in the writing guide with bes-rulebook, which also permits
-      refinement when conditions or fact data cannot be determined from the inventory.
-  - id: F003
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 45
-    anchor: >-
-      - イベント ID は再利用しません。廃止・置換時は行を残し、イベント名に「（廃止）」を付け、発生条件に廃止理由・時期・後継
-      ID（なければ代替運用）を記載します。廃止行を現行領域の網羅件数に含めず、有効な参照元は後継または代替へ更新します。
-    message: >-
-      Reconcile mandatory retention of retired event rows with bes-rulebook, which permits deleting the corresponding
-      inventory row when a BES is retired; distinguish retirement of an individual specification from retirement of the
-      event and state which inventory rule governs each case.
-    message_ja: >-
-      Reconcile mandatory retention of retired event rows with bes-rulebook, which permits deleting the corresponding
-      inventory row when a BES is retired; distinguish retirement of an individual specification from retirement of the
-      event and state which inventory rule governs each case.
+      イベント廃止と個別BES廃止の区別および一覧側の優先規則が追加され、前回の廃止方針の不整合は解消しています。ただし、現在のbes-rulebookには一覧行の削除を許可する記述がないため、「BES
+      作成ルールの行削除の選択肢」という説明は現行の正本と一致しません。この説明を削除するか、現在の規則に即した表現へ更新してください。

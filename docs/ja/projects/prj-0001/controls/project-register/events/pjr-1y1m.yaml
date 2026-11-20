@@ -35,3 +35,48 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_61d49168376243a282ba670812bc6fc1
+  ts: "2026-11-16T11:58:05Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_147c806daad04e3a84ecfd999ebc8f2b
+- v: 1
+  id: reg_4d3667cd29404fb9a991e1d3c50ed3c1
+  ts: "2026-11-16T12:14:17Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_61d49168376243a282ba670812bc6fc1
+- v: 1
+  id: reg_35b496f778c14461b0615ea0871162b3
+  ts: "2026-11-16T13:30:17Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果・result で確かめ、統合後の PJR-JSEY（2026-11-16、sonnet-executor）で runner の動作を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: PJR-160D の停止の仕組みを保ち、止めた理由に対象外のファイルをすべて残すようにした。kata-wave-1 の 3 つの形を回帰テストで再現した
+  previous_event_id: reg_4d3667cd29404fb9a991e1d3c50ed3c1

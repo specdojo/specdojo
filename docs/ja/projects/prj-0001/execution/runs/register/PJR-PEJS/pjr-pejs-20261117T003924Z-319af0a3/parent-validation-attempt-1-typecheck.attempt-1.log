@@ -1,0 +1,13 @@
+parent validation: typecheck
+exit code: 2
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.8.0 typecheck
+> tsc -b --noEmit
+
+packages/docs-site/.vitepress/kata-staging.ts(12,40): error TS2835: Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Did you mean './default-index-pages.js'?
+
+
+--- stderr ---

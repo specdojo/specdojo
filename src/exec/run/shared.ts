@@ -45,6 +45,7 @@ import {
 } from "../../schedule/phase-sets.js";
 import type { AgentStageRole, Proficiency } from "../types.js";
 import type { ReadyTaskView } from "../types.js";
+import type { ScopeWait } from "./change-scope.js";
 
 type StrategyPhase = {
   id: string;
@@ -95,6 +96,9 @@ export type RunOpts = {
   input?: string | string[];
   scheduledAt?: string;
   jobTrigger?: string;
+  /** Internal sequence options; not user CLI flags. */
+  lockWaitMs?: number;
+  sequenceDeferredReason?: string;
   registerCommit?: boolean;
   postReview?: boolean;
   onFailure?: string;
@@ -119,6 +123,10 @@ export type RunOpts = {
   due?: boolean;
   ifBusy?: string;
   join?: boolean;
+  unknownScope?: string;
+  /** Runner facts appended to the generated plan before its checkpoint. */
+  changeScopeWaits?: ScopeWait[];
+  onScopeIntegrated?: () => Promise<void>;
   /** Repeatable `<repo>=<branch>` product integration target overrides. */
   integrationBranch?: string[];
   /** Repeatable product work branch overrides. */
@@ -495,6 +503,9 @@ export function selectCandidates(
       // Temporarily disabled agents (e.g. to isolate one provider while testing rate limits)
       // are skipped during auto-selection.
       if (m.disabled === true) return false;
+      // Opt-in tier: never enter an automatic primary/fallback pool implicitly, even when
+      // every ordinary member is busy. Named selections resolve outside this function.
+      if (m.proficiency === "frontier" && proficiency !== "frontier") return false;
       const caps = m.capabilities ?? [];
       if (!required.every((c) => caps.includes(c))) return false;
       if (proficiency !== undefined && m.proficiency !== proficiency) return false;
@@ -699,6 +710,7 @@ export async function withProjectExecRunLock(
   const handle = await acquireExecRunLock(resolvedPaths.executionPath, {
     actor: opts.by ?? `exec-${commandLabel}`,
     ifBusy: policy,
+    waitTimeoutMs: opts.lockWaitMs,
     shareable: sharing.shareable || sharing.join,
     ...(sharing.join ? { join: { limit: joinLimit } } : {}),
     onWait: () =>

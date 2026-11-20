@@ -31,6 +31,25 @@ groups:
           - text: 索引ビューとサイドバーから全ドメインへ到達できること
             roles: [QE]
             viewpoint: vp-qe-omissions-consistency
+      - local_id: dct-data-model-ccd
+        name: 成果物カタログ（概念クラス図）
+        kind: work
+        depends_on: [dct-index]
+        overview: 概念クラス図（ccd）の成果物の local_id・種別・依存・配置先・概要・完了条件を、ドメイン別の成果物カタログとして定義する
+        path: dct-data-model-ccd.yaml
+        rulebook: specdojo:dct-rulebook
+        note: ドメイン別カタログ（dct-rulebook）の型の代表。同じ形のほかの dct-*.yaml は代表に含めない
+        evidence_refs:
+          - kind: implementation
+            path: src/catalog/build.ts
+            purpose: 成果物カタログの読込・検証と表示ビューの組み立て
+        done_criteria:
+          - text: 成果物の一覧・依存・配置先がドメインの範囲と食い違わないこと
+            roles: [ARC]
+            viewpoint: vp-arc-document-structure
+          - text: 完了条件から各成果物の確認の観点が読み取れること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
   - name: Schedule 共通計画
     base_path: schedule
     deliverables:

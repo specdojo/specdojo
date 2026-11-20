@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-11-19T12:06:14Z",
+  "type": "release",
+  "task_id": "T-KATA-SLIM-2-pm-risk-register-040",
+  "by": "indie",
+  "msg": "PJR-DM9B の修正の後に plan を作り直して最初から流し直すため、編集対象の rulebook が _MISSING_ だった試行を破棄する"
+}

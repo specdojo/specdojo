@@ -79,7 +79,8 @@ export type RegisterMutationOptions = {
   by?: string;
   dryRun?: boolean;
   commit?: boolean;
-  message?: string;
+  // `-m` は git と同じく繰り返せる。各値を段落として空行でつなぐ。
+  message?: string[];
 };
 
 export type RegisterMutationResult = { id: string; title: string };

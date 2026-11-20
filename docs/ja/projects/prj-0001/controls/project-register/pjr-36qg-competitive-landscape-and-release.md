@@ -25,6 +25,7 @@ Spec-Driven Development（SDD）と AI を用いた開発方式・成果物管�
 本 note は状況の変化に応じて更新する。終端させない。初回調査は 2026-09-06 時点で、`Gas Town / Gas City` は 2026-09-24、Claude Code / Codex の plan 機能との比較とチームでの利用は 2026-09-30、v0.3.0 の機能の比較、設計文書の領域の比較、ソフトウェア以外の領域への適用の評価は 2026-10-08 に追加した。
 
 2026-10-24 に BMAD・AI-DLC との比較を `3.14.` へ追加した。開発方式全体の直接競合として両者を扱う。
+2026-11-18 に長期タスクの実行力の比較を `3.15.` へ追加した。
 それ以前の「独自」「確認できず」という評価は、各節に掲げた比較対象と調査日の範囲に限る。
 BMAD・AI-DLC を含む市場全体での独自性を示すものではない。
 
@@ -751,6 +752,76 @@ kata・登録簿・catalog／schedule・grade の接続は SpecDojo の特徴と
 - BMAD Method 公式ドキュメント: <https://docs.bmad-method.org/>
 - AWS の AI-DLC 方法論の解説: <https://aws.amazon.com/blogs/devops/ai-driven-development-life-cycle/>
 - AI-DLC Workflows 公式リポジトリ: <https://github.com/awslabs/aidlc-workflows>
+
+### 3.15. 長期タスクの実行力の比較（2026-11-18）
+
+利用者から「SpecDojo は最近かなりの精度で長期タスクを実行できるようになった。今の実力を競合と比べたい」という依頼を受けて追加した。
+SpecDojo の値は prj-0001 の登録簿と実行の記録から数えた実測である。競合の値は公開情報からの観測で、同じ条件で比較実行した結果ではない。
+
+#### 3.15.1. SpecDojo の実績（prj-0001、2026-11）
+
+| 観点               | 実測                                                                                                                                                                                                                    |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 処理量             | 2026-11-01〜11-18 に登録簿の項目 265 件が done / decided になった。11-11〜11-18 では 110 件。schedule の task の完了は 11 月に 339 件                                                                                   |
+| 無人の連続実行     | track kata-slim（rulebook と sample の 36 task）を 2026-11-17 23:39〜11-18 06:05 の約 6.5 時間、3 並行で人の介入なしに完了した。続く kata-slim-2 は 109 task で実行中                                                   |
+| 止まったときの扱い | 上限（quota）は block に `resume_at` を記録し、`exec resume --due` で再開する。代わりの agent（`--fallback-executor-by`）を指定すれば切り替える。親の検証の失敗は `--resume-from executor` で失敗の結果を渡してやり直す |
+| 統合と並行         | task ごとの worktree、変更範囲の予約、commit の許可リスト、統合の後の dist の作り直し（PJR-8KXJ）で、並行の task が互いの成果を壊さずに develop へ入る                                                                  |
+| 品質の確かめ       | 親プロセスが固定の検査（lint・型・単体・統合）を流し、kata は grade で別の agent が採点する。kata-slim の 40 件は pass 35・needs-work 5                                                                                 |
+| 記録               | 実行ごとに plan・result・evidence・親の検証の記録が残り、登録簿のイベントに判断の主体と理由が残る                                                                                                                       |
+
+#### 3.15.2. 競合の長期実行の機能
+
+| 対象                        | 長期実行の機能（確認日 2026-11-18）                                                                                                                                                                                      |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Kiro（AWS）                 | cloud session で agent を数時間〜夜通し動かす。Kiro Crew で多数の agent を並行に動かし、2026-11-05 に Kiro bots（名前と記憶を持つ長命の agent、worker の監視、スケジュール実行、道具の権限の範囲、人の承認）を GA とした |
+| AI-DLC Workflows（awslabs） | 2.11.4（2026-11-13）が最新。Unit を worktree や別 clone で並行に構築し、会話をまたいで承認待ちを引き継ぎ、状態から進み具合を答える。preview は夜間の全体テストの失敗を待たずに出る                                       |
+| BMAD Method                 | 最新は v6.12.4（2026-10-14）。`bmad-dev-auto`（v6.10.0）は spec の frontmatter の状態で動く無人の 1 回分の worker で、外の orchestrator が polling する。長期の連続実行は利用者の側の仕組みに委ねる                      |
+| Codex CLI の `/goal`        | v0.133.0（2026-05-21）で GA。1 つの目標を数時間〜数日続け、再起動をまたいで保たれ、pause・resume・token の予算を持つ。長い目標が要約の後に継続の指示を失う報告がある                                                     |
+| Claude Code                 | background agent、agent teams、`/goal`、Agent View（2026-05）。1 つの session の中で長く動かす方向                                                                                                                       |
+| Gas Town / Gas City         | 10 以上の agent を並行に動かす orchestrator。2026 年に hosted 版と SDK（Gas City）へ広がった。作者自身が本格的な利用を戒めている                                                                                         |
+
+研究の指標では、2〜10 時間の task を集めた SWE-Marathon（2026-06）の完了率が 30% 未満と報告されている。1 つの agent に長い目標を任せる方式の成功率は、まだ高くない。
+
+#### 3.15.3. 比較と評価
+
+| 比較軸             | SpecDojo                                                                                         | 競合の傾向                                                                                                             |
+| ------------------ | ------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------- |
+| 長期の単位         | 長い仕事を、完了条件を持つ小さな task（約 10〜30 分）の連なりに分け、task ごとに検証して統合する | Codex・Claude Code の `/goal` は 1 つの目標を 1 つの session で長く続ける。Kiro bots は長命の agent が worker を束ねる |
+| 検証の主体         | agent の報告を信じず、親プロセスの固定の検査と、別の agent による grade で確かめる               | `/goal` は完了条件の書き方を利用者に委ねる。AI-DLC は承認ゲート、Kiro は人の sign-off                                  |
+| 止まったときの再開 | 上限・検証の失敗・統合の衝突を種類ごとに記録し、その段から再開する                               | Codex は目標の pause・resume、AI-DLC は会話をまたぐ承認の引き継ぎ                                                      |
+| agent の混在       | codex・claude・local LLM を task ごとに選び、上限で切り替える                                    | Kiro は bot と worker でモデルを分ける。AI-DLC・BMAD は複数の coding tool に対応                                       |
+| 成果の置き場       | すべて git の中（登録簿・plan・result・evidence）。cloud を前提にしない                          | Kiro は cloud session と EC2。Codex・Claude Code は session の状態を手元に持つ                                         |
+| 並行の統合         | worktree・変更範囲の予約・commit の許可リストで、同じリポジトリへ並行の成果を入れる              | AI-DLC も worktree で Unit を並行に入れる。Gas Town は多数の agent の統合を独自の仕組みで扱う                          |
+
+差別化の候補として説明できるのは次の 3 点である。
+
+- 長い仕事を「検証できる完了条件を持つ task の連なり」として計画（catalog・schedule・登録簿）から導き、task ごとに独立に検証して統合すること。1 つの session で長く動かす方式が要約で指示を失う問題を、構造で避けている。
+- 検証を agent の自己申告から切り離していること（親プロセスの検査、別の agent の grade、orchestrator の実物の確認）。
+- 実行の記録と判断の主体がすべて git に残り、後から追えること。
+
+一方で、次の弱点が今回の実行でも観測された。
+
+- 運用の継ぎ目に人や orchestrator の手作業が残る。順番の予約は orchestrator のスクリプトで行っており（PJR-1565 で機能にする）、保護された設定の反映は利用者の承認を待つ。
+- 段の指示の書き方の誤り（glob を強調と読む）で task が準備の段で止まった。変更範囲の誤った重なり（PJR-9JN6）で並行が 1 本に落ちたこともある。
+- 使用量の上限に大きく左右される。代わりの agent を指定しない実行では、10 task が上限の解除まで待った。
+- grade の major は人の判断に回しており、品質の最終判断は自動化していない。
+
+#### 3.15.4. 既存の評価への影響と確かめ方
+
+`3.14.4.` の「実行・検証・履歴」の軸は、SpecDojo の実測で「数百 task を無人で流し、検証と記録を残せる」ところまで裏付けが進んだ。競合より高い品質や低いコストを実現するという優位性は、引き続き未検証とする。
+
+次に比較実行するなら、同じ長期の題材（例: 20〜40 の文書の改訂、または既存コードの段階的な変更）を、SpecDojo の schedule、Codex の `/goal`、AI-DLC Workflows で流し、完了率、人が補った判断の回数、検証で見つかった誤り、止まった回数と再開に要した手間、使用量を測る。
+
+参照した情報（2026-11-18 確認。二次情報を含む）:
+
+- Kiro の長期実行の考え方: <https://kiro.dev/topics/frontier-engineering/maximize-agent-time/>
+- Kiro bots の GA（SD Times、2026-11-05）: <https://sdtimes.com/agentic-ai/kiro-introduces-kiro-bots-goal-oriented-agents/>
+- AI-DLC Workflows のリリース: <https://github.com/awslabs/aidlc-workflows/releases>
+- BMAD Method のリリース: <https://github.com/bmad-code-org/BMAD-METHOD/releases>
+- Codex CLI の `/goal`（二次情報）: <https://codex.danielvaughan.com/2026/05/22/codex-v133-goal-mode-ga/>
+- Claude Code の長期実行の機能（二次情報）: <https://pinggy.io/blog/claude_code_loop_codex_goal_long_horizon_tasks/>
+- Gas Town の hosted 版と Gas City: <https://thenewstack.io/steve-yegges-ai-agent-orchestration-project-gas-town-comes-to-the-cloud-and-brings-the-wasteland-with-it/>
+- SWE-Marathon: <https://neurips.cc/virtual/2026/poster/139342>
 
 ## 4. 関連ドキュメント
 

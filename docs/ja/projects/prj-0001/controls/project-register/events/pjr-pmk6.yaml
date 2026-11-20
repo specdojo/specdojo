@@ -89,3 +89,22 @@
       from: '["PJR-0X0S","PJR-A7CR"]'
       to: '["PJR-M18B","PJR-X05N","PJR-Q2AT","PJR-1GCD","PJR-T4G3","PJR-M495","PJR-ED0K","PJR-V2GH","PJR-BJ7E","PJR-DVNV","PJR-D948","PJR-C6BA","PJR-KV37","PJR-JFRX","PJR-3HXQ","PJR-6XWP","PJR-W63Q","PJR-VEHX","PJR-X1RW","PJR-Q9DF","PJR-8ZX8","PJR-SBNB"]'
   previous_event_id: reg_c37d5c8165c2439a97a1d8d6d5b9ef00
+- v: 1
+  id: reg_01e4ec25632a4819bcec7e0830ff76b8
+  ts: "2026-11-16T11:13:58Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: 0.8.0 を公開した（specdojo 0.8.0、@specdojo/docs-site 0.5.0、@specdojo/docs-lint 0.4.1）。npm の latest と、npm から入れた版の init・kata show・docs-site の build を確かめた
+  previous_event_id: reg_62e06f97b99341ce802a7beb043f120a

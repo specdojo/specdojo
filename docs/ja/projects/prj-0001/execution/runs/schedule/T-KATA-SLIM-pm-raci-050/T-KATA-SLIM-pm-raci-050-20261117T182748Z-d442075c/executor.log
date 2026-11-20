@@ -1,0 +1,28 @@
+`docs/ja/specdojo/samples/pm-raci-sample.md` を短くしました。大きさは 3,742 字から 2,620 字（70.0%）で、目安の 7 割にほぼ一致します（7 割ちょうどは 2,619 字で、1 字上回りました）。数え方は sld の試行と同じで、空白と表の区切り行を除いています。変更したのはこの sample だけで、recipe・template・rulebook と成果物本体には触れていません。prettier の整形確認と markdownlint はどちらもエラーなしです。
+
+**外した記述**
+- 文書の置き換え・廃止をドキュメントメタ情報標準に従う旨の文（rulebook の「共通の運用」が担うため）。
+- 課題管理簿・リスク登録簿・変更要求ログへの振り分けと、`PM` が記録を追跡する段落。不一致の原因が未決のときに課題を記録する段落も外しました。ただし「解決前は担当変更を前提とする作業を保留する」という結論は残しています。
+- 同じ内容の言い直し：
+  - 各行の `A`・`R` の数（rulebook と同じ内容）。
+  - 本文で列名を並べ直す記述（表で読み取れるため）。
+  - リリース候補の `R` の分担（「主担当と照合先」の表と重複）。
+  - 見直しの手順の言い直し。
+
+**整理した記述**
+- 判断・プロセス別 RACI の後の注記を 3 項目の箇条にしました。
+- 不一致時の更新先と見直し条件の表は、セルを要点に縮めました。
+
+**残した結論**
+- RACI の二つの表の値。
+- 専門支援の列を省き、ほかの Role が助言を取り込む扱い。
+- 兼務しても証跡を分けること、AI Agent が `A` の判断をしないこと。
+- 品質未達で必須条件を免除しないこと。
+- 割り当て先の正本と、不一致時の修正先。
+- 見直しのトリガーと完了の条件。
+
+recipe と template に残る AI Agent 支援・承認の記述は、rulebook の本文要件（兼務・Agent 支援の扱い）に対応する RACI 固有の内容でした。共通の運用ではないため、変更案は出していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"`docs/ja/specdojo/samples/pm-raci-sample.md` を短くした。空白と表の区切り行を除いた文字数は 3,742 字から 2,620 字（70.0%）。文書の置き換え・廃止の参照文、課題管理簿などへの振り分けと記録の段落、`A`・`R` の数や列名など rulebook・表の言い直しを外し、注記を箇条に、更新先と見直しの表のセルを要点にした。RACI の値、保留の扱い、品質未達で必須条件を免除しないこと、割り当て先の正本、見直しのトリガーと完了の条件は変えていない。recipe・template・rulebook と成果物本体は変更していない。","handoff":["大きさ: 空白（改行を含む）と表の区切り行を除いた文字数で、3,742 字から 2,620 字（70.0%）。数え方は sld の試行と同じ。","外した記述: 文書の置き換え・廃止をドキュメントメタ情報標準に従う旨の文、課題管理簿・リスク登録簿・変更要求ログへの振り分けと `PM` の追跡の段落、不一致の原因が未決のときに課題を記録する段落（作業を保留する結論は残した）、`A` は一つ・`R` は一つ以上の言い直し、本文で列名を並べ直す記述、リリース候補の `R` の分担の言い直し（「主担当と照合先」の表へ寄せた）。","結論は変えていない。品質計画・試験結果とリリース候補の `A` の判断範囲も、表現を短くして残した。","recipe と template にある AI Agent 支援・承認の記述は、rulebook の本文要件（兼務・Agent 支援の扱い）に対応する RACI 固有の内容のため、変更案は出さない。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/pm-raci-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/pm-raci-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルの変更なし","reason":"変更したのは sample だけで、plan・result・個票などの履歴ファイルを変更していない"}]}
+</specdojo_executor_evidence>

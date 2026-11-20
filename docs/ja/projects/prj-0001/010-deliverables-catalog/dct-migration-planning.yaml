@@ -150,3 +150,63 @@ groups:
           - text: 運用体制・手順・ハイパーケア終了条件が確認できること
             roles: [OPS]
             viewpoint: vp-ops-operability
+
+      - local_id: dmd-slack-records
+        name: データ移行設計（Slack の議論と記録）
+        kind: work
+        depends_on:
+          - dmd-index
+        overview: Slack 上の議論・ワークショップ記録を、登録簿の個票と成果物カタログの項目へ移すときの対象・変換・対応づけ・検証を定義する
+        path: dmd-slack-records.md
+        rulebook: specdojo:dmd-rulebook
+        note: *kata-only-migration-note
+        done_criteria:
+          - text: 移行の対象と、登録簿・カタログへの対応づけが業務観点で確認できること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 変換の方式と再実行の条件が識別できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 移行後の件数・内容の照合の方法が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+
+      - local_id: cop-specdojo-operations
+        name: カットオーバー計画（SpecDojo ベース運営への切替）
+        kind: work
+        depends_on:
+          - cop-index
+        overview: ソーシャルハックデー中心の運営から SpecDojo ベース運営へ切り替える当日の手順・判定ポイント・切戻しを定義する
+        path: cop-specdojo-operations.md
+        rulebook: specdojo:cop-rulebook
+        note: *kata-only-migration-note
+        done_criteria:
+          - text: 切替の手順と止まる活動の範囲が業務観点で確認できること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+          - text: 判定ポイントと切戻しの手順が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 切替の当日の体制と連絡の経路が確認できること
+            roles: [OPS]
+            viewpoint: vp-ops-operability
+
+      - local_id: otp-hypercare
+        name: 運用切替計画（ハイパーケア）
+        kind: work
+        depends_on:
+          - otp-index
+        overview: 切替後に Schedule・登録簿・routine の運用が安定するまでのハイパーケアの体制・監視・問い合わせ対応・終了条件を定義する
+        path: otp-hypercare.md
+        rulebook: specdojo:otp-rulebook
+        note: *kata-only-migration-note
+        done_criteria:
+          - text: ハイパーケアの体制と引継ぎが業務観点で確認できること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+          - text: 安定化の完了条件が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 監視・問い合わせ対応・終了の手順が確認できること
+            roles: [OPS]
+            viewpoint: vp-ops-operability

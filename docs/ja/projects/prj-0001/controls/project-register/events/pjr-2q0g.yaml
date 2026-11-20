@@ -1,0 +1,68 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c9751b9af79e44389df00021bdfe2976
+  ts: "2026-11-17T12:53:28Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade で文書の冗長さと膨らみを点数に反映する
+    - field: description
+      from: ""
+      to: 手直しで文書が膨らんでも grade の点数が下がらないため、機械で測る大きさの指標と冗長性の観点の強化を組み合わせて、冗長さを verdict と点数に反映する
+    - field: input
+      from: ""
+      to: '["PJR-0T83 の対応策 (3) にあたる。利用者が 2026-11-17 に、機械で測る指標と観点の強化を組み合わせる案（c）を選んだ","orchestrator の調査（2026-11-17）: 冗長さを見る観点 vp-arc-conciseness は既定の重大度が minor で「長さだけでは fail にしない」とあり、verdict を needs-work にしない。点数は区分ごとの平均を重み付けしたもので、28 の観点のうち 1 つとして usability の区分の中で平均されるため、1 段下がっても点数は 1〜2 点しか動かない。sld-sample（運用・検証の章が約 28%）はこの観点で 4（満点）だった","手直しで膨らんだ例: PJR-CPZH の代替案比較は 27KB から 75KB（sample は 20KB）、PJR-Y5AC の品質管理計画は 5.4KB から 18.8KB（sample は 15.8KB）。どちらも grade の点数は上がっていた","上限の数値は、PJR-8S4T で sld を見直した結果（前後の大きさと grade の結果）を見てから決める"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-17"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-0T83"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-8S4T"]'
+    - field: commit_type
+      from: ""
+      to: feat
+    - field: commit_scope
+      from: ""
+      to: grade
+- v: 1
+  id: reg_782380c798e1490faeef2dcc42130761
+  ts: "2026-11-17T12:58:43Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: 利用者が担当と期限を決めた
+  changes:
+    - field: owner
+      from: _TODO_
+      to: DEV
+    - field: due
+      from: _TODO_
+      to: "2026-11-30"
+  previous_event_id: reg_c9751b9af79e44389df00021bdfe2976

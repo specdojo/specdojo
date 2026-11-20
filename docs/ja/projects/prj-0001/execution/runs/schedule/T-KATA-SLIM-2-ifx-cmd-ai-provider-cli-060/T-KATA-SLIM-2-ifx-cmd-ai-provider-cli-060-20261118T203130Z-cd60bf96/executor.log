@@ -1,0 +1,34 @@
+`docs/ja/specdojo/recipes/ifx-cmd-recipe.md` だけを書き直しました。大きさは、空白と表の区切り行を除いた文字数で 6,908 字から 3,594 字になり、元の 52.0% です（目安は 7 割以下）。Recipe 記述標準の 8 章の構成はそのまま保っています。markdownlint は 0 件で、prettier の整形も済んでいます。それ以外の lint とテストは親 runner が実行します。
+
+**condense の指摘への対応**
+- 指摘は、provider 名の一覧が `executable` の括弧・コメント・`purpose` の括弧にそれぞれ写されていた点です。
+- 「コマンドと正本参照」のコツに、次の 3 点を書きました。
+  - 括弧やコメントに provider 名を並べたくなったら書かない。一覧は起動設定の鍵が持つ。
+  - provider を足すたびに複数箇所を直すなら、写しが残っている。
+  - 一覧を削るときも、認証の参照名は残す。
+- 「良い例 / 悪い例」に provider 一覧の行を 1 つ置きました。同じ確認はレビュー観点と仕上げチェックから外し、1 か所にまとめています。
+
+**外した記述**
+- rulebook と同じ判断の言い直し:
+  - 終了状態のカテゴリの使い分け
+  - シェル起動の例外条件
+  - `files` の入出力が無い場合の表し方
+  - `based_on` と `command.reference` の違い、`version` と `version_constraint` の違い
+  - 委譲先の文書の指定（exec 設定ガイドの wikilink を含む）
+- 深掘り手順のうち、全体の作成手順をなぞっていた部分。
+- 良い例 / 悪い例、レビュー観点、仕上げチェックで同じ点を確かめていた部分。
+- 章立てをなぞる文。
+
+役割の表、`status` の扱い、未決事項の台帳の列は、元の recipe にもありませんでした。
+
+**残した・足した記述**
+- 「作成前に集める情報」に取り出し元の列を足し、誰に何を聞くかを書きました。
+- 全体の作成手順に、章を書く順番とその理由を書きました。
+- 各節は「書き方」を「コツ」に変え、問いを 2 つずつにしました。コツには、つまずきやすい点と、写さず参照に置き換える点を書いています。
+- 深掘り手順は、対応のない主張を探す順序に書き換えました。
+
+rulebook・sample・template には変える点が見つからず、手を付けていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"`docs/ja/specdojo/recipes/ifx-cmd-recipe.md` を書き直した。外したのは rulebook と同じ判断の言い直し、委譲先の文書の指定、深掘り手順とレビュー観点・仕上げチェックの重複、章立てをなぞる文。残したのは書く順番とその理由、入力の取り出し元、各節 2 つの問い、つまずきやすい点のコツ、対応のない主張を探す深掘り。condense の指摘（provider 一覧が `executable`・`purpose`・コメントに重複）は「コマンドと正本参照」のコツと良い例 / 悪い例の 1 行で直した。8 章の構成は保った。大きさは空白と表の区切り行を除いて 6,908 字から 3,594 字（52.0%）。","handoff":["大きさ: ifx-cmd-recipe は空白と表の区切り行を除いた文字数で、前 6,908 字、後 3,594 字（比 52.0%）。測り方は PJR-7M9J と同じ。","condense の指摘（`prj-0001:xer-t-business-specs-reps-ifx-cmd-ai-provider-cli-080-20261109t045935z-868c17fe`、cause=kata:recipe）への対応: 「コマンドと正本参照」のコツに、`executable` の括弧・コメントと `purpose` の括弧に provider 名を並べないこと、一覧は起動設定の鍵が持つこと、認証の参照名は残すことを書いた。良い例 / 悪い例にも provider 一覧の行を 1 つ置いた。同じ確認はレビュー観点・仕上げチェックから外し、1 か所にまとめた。","rulebook と同じ判断の言い直しとして外した記述: 終了状態のカテゴリの使い分け、シェル起動の例外条件、`files` の入出力が無い場合の表し方、`based_on` と `command.reference` の違い、`version` と `version_constraint` の違い、委譲先の文書の指定（exec 設定ガイドの wikilink を含む）。正本の選び方は「作成前に集める情報」の取り出し元の列に、何をどこから取り出すかとして残した。","変更案: rulebook・sample・template は今回の範囲では変える点が見つからなかった（commit の対象外のため変えていない）。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/recipes/ifx-cmd-recipe.md","status":"passed","summary":"整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/recipes/ifx-cmd-recipe.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変更していない","reason":"変更したファイルは Markdown の recipe だけで、`*.yaml` / `*.yml` を変更していない"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"plan・result・個票を変更していない"}]}
+</specdojo_executor_evidence>

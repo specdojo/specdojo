@@ -1,3 +1,4 @@
+import { registerDeprecatedWhereAlias } from "../shared/where-alias.js";
 import type { Command } from "commander";
 import { spawn, spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
@@ -16,6 +17,7 @@ import {
   getPath,
   isJobAgentTask,
   isJobCommandTask,
+  jobCommandText,
   loadAllJobs,
   loadJobDefinition,
   loadJobRunRecord,
@@ -32,12 +34,14 @@ import {
   type JobRunRecord,
   type JobRunReview,
   type JobStateFile,
+  type JobStepResult,
   type JobTaskDefinition,
   type MaterializedJobRun,
 } from "./definition.js";
 import { jobNoopDirectory, localJobNoopPath } from "./noop.js";
 
 export {
+  jobCommandText,
   isJobAgentTask,
   isJobCommandTask,
   jobDeclaresReview,
@@ -52,6 +56,8 @@ export {
   resolveJobReviewAgentNominations,
 } from "./definition.js";
 export type {
+  JobCommandStepDefinition,
+  JobStepResult,
   JobAgentDefinition,
   JobAgentTaskDefinition,
   JobCommandAnalysisDefinition,
@@ -190,7 +196,11 @@ function commandOutputText(chunks: Buffer[], truncated: boolean): string {
 }
 
 /** Executes a materialized Job command directly in the runner process, never through an agent. */
-export async function executeJobCommand(command: string, cwd: string): Promise<JobCommandResult> {
+export async function executeJobCommand(
+  command: string,
+  cwd: string,
+  options: { timeoutMs?: number } = {},
+): Promise<JobCommandResult> {
   const startedAt = new Date().toISOString();
   return await new Promise((resolveResult) => {
     const stdoutChunks: Buffer[] = [];
@@ -200,6 +210,9 @@ export async function executeJobCommand(command: string, cwd: string): Promise<J
     let stdoutTruncated = false;
     let stderrTruncated = false;
     let settled = false;
+    let timedOut = false;
+    let timeout: NodeJS.Timeout | undefined;
+    let killTimeout: NodeJS.Timeout | undefined;
     const executable = process.platform === "win32" ? process.env.ComSpec || "cmd.exe" : "/bin/sh";
     const args =
       process.platform === "win32" ? ["/d", "/s", "/c", command] : ["-eu", "-c", command];
@@ -209,7 +222,23 @@ export async function executeJobCommand(command: string, cwd: string): Promise<J
       shell: false,
       stdio: ["ignore", "pipe", "pipe"],
       windowsHide: true,
+      detached: options.timeoutMs !== undefined && process.platform !== "win32",
     });
+    const kill = (signal: NodeJS.Signals): void => {
+      try {
+        if (process.platform !== "win32" && child.pid) process.kill(-child.pid, signal);
+        else child.kill(signal);
+      } catch (error) {
+        if ((error as NodeJS.ErrnoException).code !== "ESRCH") child.kill(signal);
+      }
+    };
+    if (options.timeoutMs !== undefined) {
+      timeout = setTimeout(() => {
+        timedOut = true;
+        kill("SIGTERM");
+        killTimeout = setTimeout(() => kill("SIGKILL"), 1000);
+      }, options.timeoutMs);
+    }
     child.stdout.on("data", (chunk: Buffer) => {
       process.stdout.write(chunk);
       const appended = appendCommandOutput(stdoutChunks, chunk, stdoutBytes);
@@ -225,6 +254,9 @@ export async function executeJobCommand(command: string, cwd: string): Promise<J
     const finish = (exitCode: number | null, error?: string): void => {
       if (settled) return;
       settled = true;
+      clearTimeout(timeout);
+      clearTimeout(killTimeout);
+      if (timedOut) kill("SIGKILL");
       resolveResult({
         command,
         startedAt,
@@ -235,6 +267,7 @@ export async function executeJobCommand(command: string, cwd: string): Promise<J
         stdoutTruncated,
         stderrTruncated,
         ...(error ? { error } : {}),
+        ...(timedOut ? { timedOut: true, error: "command timed out" } : {}),
       });
     };
     child.once("error", (error) => finish(null, error.message));
@@ -337,7 +370,7 @@ export async function generateJobPlan(
           "runner が次の解決済みコマンドを agent の sandbox 外で直接実行する。",
           "",
           "```sh",
-          commandTask.command,
+          jobCommandText(commandTask),
           "```",
           "",
           commandTask.analysis
@@ -445,6 +478,7 @@ export async function materializeJobRun(opts: {
   scheduledAt?: string;
   trigger?: "manual" | "routine" | "ci";
   dryRun?: boolean;
+  skipPrecondition?: boolean;
 }): Promise<MaterializedJobRun> {
   const paths = resolveJobPaths(opts.projectId);
   const definition = loadJobDefinition(paths, opts.jobId);
@@ -481,7 +515,22 @@ export async function materializeJobRun(opts: {
         command: renderJobTemplate(task.precondition.command, context),
       };
     }
-    task.command = renderJobTemplate(task.command, context);
+    if (task.command !== undefined) task.command = renderJobTemplate(task.command, context);
+    if (task.steps) {
+      task.steps = task.steps.map((step) => ({
+        ...step,
+        command: renderJobTemplate(step.command, context),
+        ...(step.completion
+          ? {
+              completion: {
+                ...step.completion,
+                path: renderJobTemplate(step.completion.path, context),
+                field: renderJobTemplate(step.completion.field, context),
+              },
+            }
+          : {}),
+      }));
+    }
     if (task.analysis) {
       task.analysis = {
         ...task.analysis,
@@ -546,7 +595,13 @@ export async function materializeJobRun(opts: {
       taskRecordPaths(paths.executionPath, runId, runId, "job").result,
     ),
   };
-  if (!existingRun && !opts.dryRun && isJobCommandTask(task) && task.precondition) {
+  if (
+    !existingRun &&
+    !opts.dryRun &&
+    !opts.skipPrecondition &&
+    isJobCommandTask(task) &&
+    task.precondition
+  ) {
     const precondition = await executeJobPrecondition(task.precondition, specdojoRootDir());
     if (precondition.skipped) {
       return {
@@ -646,29 +701,37 @@ export function completeJobRun(opts: {
   return updated;
 }
 
+/** Persist each step immediately so a stopped runner retains its last known progress. */
+export function recordJobSteps(runPath: string, steps: JobStepResult[]): void {
+  const record = loadJobRunRecord(runPath);
+  const attempt = record.attempts.at(-1);
+  if (!attempt) throw new Error(`Job Run has no attempt: ${record.run_id}`);
+  attempt.steps = steps;
+  record.updated_at = new Date().toISOString();
+  writeJson(runPath, record);
+}
+
 export function jobRunRelativePath(runPath: string): string {
   return repoRelative(runPath);
+}
+
+export function printJobPaths(opts: { project?: string }): void {
+  try {
+    const paths = resolveJobPaths(opts.project);
+    process.stdout.write(`project: ${paths.projectId}\n`);
+    process.stdout.write(`jobs:    ${paths.jobsPath}\n`);
+    process.stdout.write(`runs:    ${paths.runsPath}\n`);
+    process.stdout.write(`state:   ${paths.statePath}\n`);
+  } catch (error) {
+    process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
+    process.exitCode = 1;
+  }
 }
 
 export function registerJobCommands(program: Command): void {
   const command = program.command("job").description("Reusable Job Definition and Run helpers");
 
-  command
-    .command("where")
-    .description("Print resolved Job paths")
-    .option("--project <projectId>", "Project id")
-    .action((opts: { project?: string }) => {
-      try {
-        const paths = resolveJobPaths(opts.project);
-        process.stdout.write(`project: ${paths.projectId}\n`);
-        process.stdout.write(`jobs:    ${paths.jobsPath}\n`);
-        process.stdout.write(`runs:    ${paths.runsPath}\n`);
-        process.stdout.write(`state:   ${paths.statePath}\n`);
-      } catch (error) {
-        process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
-        process.exitCode = 1;
-      }
-    });
+  registerDeprecatedWhereAlias(command, printJobPaths);
 
   command
     .command("validate")

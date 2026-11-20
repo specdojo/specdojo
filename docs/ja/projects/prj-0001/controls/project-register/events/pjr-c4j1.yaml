@@ -1,0 +1,91 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_7cb7e4feac5c436d8f9039a83fda60ce
+  ts: "2026-11-16T11:00:21Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 区分ごとの build を build --only にまとめる
+    - field: description
+      from: ""
+      to: _TODO_
+    - field: input
+      from: ""
+      to: '["PJR-C5AF のまとめる候補: index・catalog・schedule・register・dashboard・yaml-pages の build を、利用者には build と build --only `<区分>` で見せる。個別のコマンドは内部用か非推奨の別名にする。hook や job が呼ぶ個別の build の入口を確かめてから進める"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-16"
+    - field: derived_from
+      from: ""
+      to: '["PJR-C5AF"]'
+    - field: commit_type
+      from: ""
+      to: refactor
+    - field: commit_scope
+      from: ""
+      to: cli
+- v: 1
+  id: reg_49e84f0da03a44adb616693fd207b9a8
+  ts: "2026-11-17T03:30:33Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_7cb7e4feac5c436d8f9039a83fda60ce
+- v: 1
+  id: reg_758c18f34a764d7f8cb3a9f2ffc88b90
+  ts: "2026-11-17T03:46:09Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: "rate limit fallback: sol-executor -> opus-executor at 2026-11-17T03:38:46.471Z"
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_49e84f0da03a44adb616693fd207b9a8
+- v: 1
+  id: reg_c2bbfff9ef7a48e4bb8780f3c61c8b23
+  ts: "2026-11-17T04:48:47Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が build --only の help と dry-run、hook と runner の呼び出し元の確認、JSEY での統合後の動作を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-17"
+    - field: conclusion
+      from: "-"
+      to: 区分ごとの生成を build --only にまとめ、個別の build は内部互換用として一覧から外した
+  previous_event_id: reg_758c18f34a764d7f8cb3a9f2ffc88b90

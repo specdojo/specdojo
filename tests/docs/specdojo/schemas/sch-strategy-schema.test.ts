@@ -66,6 +66,19 @@ describe("sch-strategy.schema.yaml agent_pipeline", () => {
     expect(validate(strategy), JSON.stringify(validate.errors)).toBe(true);
   });
 
+  it("accepts frontier on a phase and both pipeline stages", () => {
+    const strategy = loadStrategyFixture();
+    const phase = firstPhase(strategy);
+    phase.proficiency = "frontier";
+    phase.agent_pipeline = {
+      stages: [
+        { stage_role: "executor", proficiency: "frontier" },
+        { stage_role: "reporter", proficiency: "frontier" },
+      ],
+    };
+    expect(validate(strategy), JSON.stringify(validate.errors)).toBe(true);
+  });
+
   it("accepts an executor-then-reporter pipeline with per-stage requirements", () => {
     const strategy = loadStrategyFixture();
     firstPhase(strategy).agent_pipeline = {

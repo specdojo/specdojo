@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-SLIM-2-nfr-maintainability-040",
+  "run_id": "T-KATA-SLIM-2-nfr-maintainability-040-20261118T174518Z-80829cd0",
+  "updated_at": "2026-11-18T18:19:40.277Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 2,
+      "started_at": "2026-11-18T17:47:10.651Z",
+      "completed_at": "2026-11-18T17:48:45.692Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-nfr-maintainability-040/T-KATA-SLIM-2-nfr-maintainability-040-20261118T174518Z-80829cd0/evidence.json",
+      "rate_limit_events": [
+        {
+          "action": "fallback",
+          "trigger": "rate_limit",
+          "from_actor": "sol-executor",
+          "to_actor": "opus-executor",
+          "resumed_at": "2026-11-18T17:47:12.457Z"
+        }
+      ]
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-18T18:15:54.408Z",
+      "completed_at": "2026-11-18T18:19:10.708Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-nfr-maintainability-040/T-KATA-SLIM-2-nfr-maintainability-040-20261118T174518Z-80829cd0/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-18T18:19:14.685Z",
+      "completed_at": "2026-11-18T18:19:40.277Z",
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-nfr-maintainability-040/T-KATA-SLIM-2-nfr-maintainability-040-20261118T174518Z-80829cd0/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-nfr-maintainability-040/T-KATA-SLIM-2-nfr-maintainability-040-20261118T174518Z-80829cd0/result.md"
+  }
+}

@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { globSync } from "tinyglobby";
+import { globMarkdownFiles } from "./glob-markdown-files.mjs";
 import {
   assertD2Version,
   D2_VERSION,
@@ -21,12 +21,7 @@ export function lintD2(
     const files = [
       ...new Set(
         patterns.flatMap((pattern) => {
-          const matches = globSync(pattern, {
-            cwd,
-            onlyFiles: true,
-            expandDirectories: false,
-            ignore: ["**/node_modules/**", "**/.git/**", "**/secrets/**"],
-          }).filter((file) => /\.mdx?$/u.test(file));
+          const matches = globMarkdownFiles(pattern, cwd);
           if (matches.length === 0) throw new Error(`No Markdown files matched: ${pattern}`);
           return matches;
         }),

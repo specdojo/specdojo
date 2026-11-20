@@ -85,3 +85,48 @@
       from: kata
       to: docs
   previous_event_id: reg_1dc25b3c81fc4e749efd168af42a358c
+- v: 1
+  id: reg_45406617c69c4c9f831a5d69e766d40c
+  ts: "2026-11-16T23:30:34Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_af9c16f39fc2463a8471fd1cf5a09a8b
+- v: 1
+  id: reg_2b33d3bbf16a4dfea1ce90ac777a5185
+  ts: "2026-11-17T00:37:34Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_45406617c69c4c9f831a5d69e766d40c
+- v: 1
+  id: reg_f25a881e2d2445ff92ee30b968b2c96b
+  ts: "2026-11-19T12:12:07Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分と個票で確かめ、統合の後の develop で生成ページの中身と docs:build を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-19"
+    - field: conclusion
+      from: "-"
+      to: ifx-index の YAML から表形式の閲覧ページを yaml-pages build で生成するようにした
+  previous_event_id: reg_2b33d3bbf16a4dfea1ce90ac777a5185

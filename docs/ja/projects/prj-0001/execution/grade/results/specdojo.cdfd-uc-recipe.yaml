@@ -4,11 +4,12 @@ document: specdojo:cdfd-uc-recipe
 path: docs/ja/specdojo/recipes/cdfd-uc-recipe.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-recipe
 verdict: pass
-score: 97
-graded_at: "2026-11-07T20:05:22.292Z"
+score: 100
+graded_at: "2026-11-19T20:24:07.769Z"
 graded_by: flash-high-executor
-content_hash: b037c45a507d94cff4407dff379b5014a0533dc13d6d6656232d414b8e0c83da
+content_hash: 1714a4589d9acab5d0b4cd6a8ea0c630f85ba0c1400bf37038d0d226cce5dd8d
 categories:
   purpose:
     score: 100
@@ -27,7 +28,7 @@ categories:
   quality:
     score: 100
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -78,8 +79,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
     level: 4
     score: 100
@@ -104,13 +105,6 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 1
+  minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 47
-    anchor: "### 4.1. 目的"
-    message: 「4. 各章の書き方」において、rulebook で必須とされている「導入文」に関する問いや具体的な記述ガイドが欠落している。
-    message_ja: 「4. 各章の書き方」において、rulebook で必須とされている「導入文」に関する問いや具体的な記述ガイドが欠落している。
+findings: []

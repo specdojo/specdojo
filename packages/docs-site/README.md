@@ -41,6 +41,13 @@ kata からリンクされる guide / reference）のうち、利用リポジト
 `specdojo` package からはステージングしません。参照元の package は `SPECDOJO_PACKAGE_ROOT`、未指定なら workspace から辿った
 `node_modules/specdojo` です。
 
+利用リポジトリに `docs/index.md` が無いときは、サイトのトップ（`/<base>/`）として SpecDojo の文書と
+`.specdojo/specdojo.config.json` の project ごとのトップへのリンクを置いたページを、ステージングに用意します。
+`docs/` 配下にある project のトップ（`/ja/projects/<project-id>/`）に `index.md` が無いときも、
+登録簿の一覧・派生ビュー・管理ログのうち生成済みのものへのリンクを置いたページを用意します。
+利用リポジトリに `index.md` があればそちらを使い、上書きしません。`docs/ja/index.md` が無いときは、
+上のナビゲーションの「ホーム」がサイトのトップを開きます。
+
 `mermaid` コマンドも `.vitepress/mermaid` に出力します。図の公開 URL は
 `/mermaid/<hash>.svg` のままで、`build` は `.vitepress/dist/mermaid` へ SVG だけを含め、
 `dev` は同じ URL で配信します。利用者の `public/` は従来どおり配信し、生成処理で変更・削除しません。
@@ -56,8 +63,10 @@ Mermaid 図の生成に失敗した場合、`dev` は起動時・文書の追加
 走査中に Markdown が削除された場合は、従来どおり警告して飛ばします。
 
 サイドバーは URL の範囲ごとに分かれ、`/ja/specdojo/` では SpecDojo 文書、
-`/ja/projects/<project-id>/` では対象 project の文書だけを表示します。exec の plan / result は
-ページとしてビルドせず、`exec-records.md` などからのリンクを GitHub 上の正本へ置き換えます。
+`/ja/projects/<project-id>/` では対象 project の文書だけを表示します。
+`execution/runs/<origin>/<item>/<run>/` の `plan.md`・`result.md` と、旧配置の
+`execution/exec/plans/`・`execution/exec/results/` はページとしてビルドせず、
+`exec-records.md` などからのリンクを GitHub 上の正本へ置き換えます。
 event などの実行記録はページとして残しますが、サイドバーには列挙しません。project の dashboard
 から `exec-records.md` を経由して参照できます。
 

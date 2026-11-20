@@ -14,6 +14,7 @@ SpecDojo Configuration Reference
 **対象範囲**
 
 - `.specdojo/specdojo.config.json` のトップレベル、project、`run`、`repos`、`external_projects` の設定キー
+- `.specdojo/specdojo.local.config.json` で上書きできるキーと優先順位
 
 **ここで引けるもの**
 
@@ -332,7 +333,41 @@ exec worktree の中で設定を読む場合（agent が worktree で `specdojo`
 
 設定の形は `docs/specdojo/schemas/v1/specdojo-config.schema.yaml` でも検証できます。リポジトリ名と project ID の重複と `path` の実在は schema で表せないため、CLI の読み込み時の検証が正本です。
 
-## 7. catalog・schedule・execへ進む設定例
+## 7. ローカル設定
+
+`.specdojo/specdojo.local.config.json` は、git で管理しない環境ごとの設定です。`specdojo.config.json` を読んだ後に読み、許可したキーだけを上書きします。`config init` は `.gitignore` にこのファイルを足します。
+
+| 許可するキー                            | 扱い                                                                                                          |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `version`                               | `1` 固定です。                                                                                                |
+| `projects.<project-id>.repos[]`（既存） | 共有の設定と同じ `name` の要素は、`path` だけを差し替えます。`name`・`path` 以外のキーはエラーです。          |
+| `projects.<project-id>.repos[]`（追加） | 共有の設定に無い `name` の要素は、ローカルのリポジトリとして末尾に足します。キーは `repos` のキーと同じです。 |
+
+上書きの後の `repos` は、共有の設定と同じ検証を受けます。共有の設定に無い project、許可していないキー、型の誤りは、ローカル設定のファイルとキーを示してエラーにします。ローカルで足したリポジトリも `repos` で宣言したリポジトリとして扱い、`<name>:<path>` の解決、プロダクト worktree の作成、commit の許可範囲の対象になります。
+
+```json
+{
+  "version": 1,
+  "projects": {
+    "prj-0001": {
+      "repos": [
+        { "name": "app1", "path": "../app1-local" },
+        { "name": "tools", "path": "../tools" }
+      ]
+    }
+  }
+}
+```
+
+読むファイルは次の順序で決めます。
+
+1. 主の作業ツリーでは、そのリポジトリの `.specdojo/specdojo.local.config.json` を読みます。環境変数 `SPECDOJO_LOCAL_CONFIG` は使いません。
+2. linked worktree では、環境変数 `SPECDOJO_LOCAL_CONFIG` があればその絶対パスを読みます。runner は worktree の中の子のプロセス（build・agent）へ主の作業ツリーのファイルのパスを渡します。
+3. linked worktree で環境変数が無ければ、主の作業ツリーのファイルを読みます。worktree の中の同じ名前のファイルは読みません。
+
+ローカル設定は worktree へコピーしません。agent の保護対象（`.specdojo/` 配下）に含まれ、executor が書き換えると統合の前に止まります。ローカル由来の値は `config show` と `where exec` に `local` と表示し、`exec run` の executor evidence の `local_config_overrides` に記録します。
+
+## 8. catalog・schedule・execへ進む設定例
 
 register の最小構成から成果物カタログと Schedule へ進む場合は、対象 project へ必要なキーを追加します。次は Quick Start の代表例です。
 
@@ -358,7 +393,7 @@ agent 実行を使う場合は、この project オブジェクトとは別に�
 
 routine / Job を使う段階で、同じ project 設定へ `routines_path` と `jobs_path` を追加します。未使用のキーまで最初から埋める必要はありません。
 
-## 8. 設定不足時の確認順序
+## 9. 設定不足時の確認順序
 
 1. エラーに表示されたキーが対象 project にあるか確認します。
 2. `base_path` と対象パスを連結した先が意図した配置か確認します。

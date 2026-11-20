@@ -2,9 +2,9 @@
 id: prj-0001:stsd-task-execution-grade-criteria
 document: prj-0001:stsd-task-execution
 path: docs/ja/product/010-business-specs/020-data-model/stsd-task-execution.md
-graded_at: "2026-11-15T21:36:19.761Z"
+graded_at: "2026-11-16T14:42:43.345Z"
 graded_by: sol-review-executor
-content_hash: e32caf5e6107f817a241ec931a753c823bbe7db857bed36d34c693e2524b2346
+content_hash: 58a8b1332ec5b260cb81f9aa5cac9080662721b4ff752c644401c3e704dc8af6
 summary:
   satisfied: 5
   unsatisfied: 0

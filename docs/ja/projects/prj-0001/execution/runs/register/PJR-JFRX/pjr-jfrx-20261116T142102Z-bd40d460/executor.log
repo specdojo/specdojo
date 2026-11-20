@@ -1,0 +1,29 @@
+`bds-progress-report` の手直しを終え、2026-11-16 の再 grade の指摘 F001〜F014 をすべて本文へ取り込みました。再 grade はまだ実行していません。
+
+**major 3 件（F005・F006・F014）の扱い**
+依存文書 `sysd-job-execution` によると、同じ週の Run は ISO 週を `idempotency_key` にしています。キーが同じ Run が既にあれば新しい Run を作らず、作り直せるのは失敗した Run だけです。そのため「終点の前に作った報告を、終点の後に作り直す」手順は今の仕組みでは成り立ちません。
+
+- 手動作成は期間の終点（当週金曜 17 時）を過ぎた週に限り、終点の前には作らないと決めました。暫定の報告ができないので、暫定であることを示す表示（F004）も不要としました。
+- 例外の表は、実際の動きに合わせて「成功した週を再実行した」「終点の前に作成しようとした」の 2 行に置き換えました。
+- 成功した報告を作り直す手段は実装の変更が要るため、「メモ / 将来課題」に「成功した報告の作り直し」として DEV の判断に残しました（F007）。定期起動を有効にする条件には、運用者へ「終点の前に作らない」と周知することを加えました（F012）。
+
+**minor の主な扱い**
+- **ファイル名（F001・F013）：** 日付は期間の終点の日付（当週金曜）、連番は `01` に固定すると本書で決めました。例えば `2026-W32` は `pr-2026-08-07-01.md` です。進捗報告の rulebook にこの対応を書き足すかは PM の判断として残しました。
+- **公開の承認（F002）：** PM が内容を確認した後、PO が承認すると明記しました。
+- **登録簿への移し替え（F003）：** 2 回続けて持ち越したリスク・課題で登録簿に項目がないものは、PM が起票すると決めました。報告にはその登録簿の ID を示します。
+- **その他：** 検証コマンドと失敗時の再実行（F008）、次期予定の選び方（F009）、期間より前の記録の扱い（F010）を書き足しました。Job実行設計への wikilink は `[[sysd-job-execution|...]]` に直しました（F011）。
+
+frontmatter の `status`（`ready`）は変えていません。個票は作業内容の No 3 を done にし、対応結果に今回決めた内容と理由を書き足しました。No 4（再 grade）は、agent を起動するため orchestrator が流すので open のまま残しています。
+
+**検証**
+- `npm run validate:catalog` と `npm run validate:history-links` は成功しました。カタログ検証は未作成の文書について WARN を出しましたが、`bds-progress-report` に関する WARN は `bds-index` の分だけです。
+- 対象成果物への markdownlint は 0 件でした。
+- `lint:md`・`lint:fm`・`validate:schema` などは、この後に親 runner が実行します。
+
+**変更したファイル**
+- `docs/ja/product/010-business-specs/040-user-interface-model/bds-progress-report.md`
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-jfrx-bds-progress-report-rework-wave-2.md`
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"Reworked bds-progress-report for re-grade findings F001-F014 (major F005/F006/F014 resolved by limiting manual creation to after the period end and deferring successful-run regeneration to a tracked DEV item); updated ticket work table and response section. Re-grade left open for orchestrator.","handoff":["決定（F005・F006・F014・F004・F012）: `sysd-job-execution` では同じ `idempotency_key` の Run があれば新しい Run を作らず、再実行は失敗した Run の再試行に限る。そのため手動作成は期間の終点の後に限り、終点の前には作らないと決めた。暫定の報告を作らないため、暫定であることを示す表示は不要とした。","留保（F007）: 成功した報告を同じファイル名のまま作り直す手段（Job の冪等性キーまたは runner の再実行の扱いの変更）の要否を、DEV の判断として「メモ / 将来課題」の「成功した報告の作り直し」に追加した。登録簿で追跡し、判断点は T-KATA-WAVE-2-bds-progress-report-140。","決定（F001・F013）: ファイル名は `pr-<yyyy-mm-dd>-<nn>.md` とし、日付は期間の終点の日付（当週金曜）、連番は `01` に固定する（例: 2026-W32 は `pr-2026-08-07-01.md`）。進捗報告の rulebook へ書き足すかは PM の判断として留保した。","決定（F002・F003）: 報告の外部公開は PM の内容確認の後に PO が承認する。2 回続けて持ち越したリスク・課題で登録簿に項目がないものは PM が起票し、報告に登録簿の ID を示す。","次のアクション: 個票の作業内容 No 4（再 grade）は open のまま残した。`grade run --target deliverable` は agent を起動するため orchestrator が流す。"],"validations":[{"command":"npm run validate:catalog","status":"passed","summary":"OK: dct-index.yaml (exit 0); only pre-existing WARNs for not-yet-created based_on docs"},{"command":"npm run validate:history-links","status":"passed","summary":"exit 0; changed register ticket has no Markdown links"},{"command":"npx markdownlint-cli2 docs/ja/product/010-business-specs/040-user-interface-model/bds-progress-report.md","status":"passed","summary":"0 issues"},{"command":"npx prettier --write (changed md files)","status":"passed","summary":"formatted target deliverable and ticket"}]}
+</specdojo_executor_evidence>

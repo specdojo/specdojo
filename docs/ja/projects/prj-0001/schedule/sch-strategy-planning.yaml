@@ -10,12 +10,17 @@ scope:
   catalogs:
     - id: prj-0001:dct-planning
       path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-planning.yaml
+      # dct-data-model-ccd は kata-slim-2 の代表として足したため、planning の対象を足す前の成果物に固定する（PJR-DJZD）。
+      local_ids:
+        - dct-index
+        - sch-defaults
+        - sch-strategy-launch
+        - sch-strategy-data-flow
   include_kinds:
     - work
 approach_rules:
   - local_ids:
       - dct-index
-      - tml-index
       - sch-defaults
       - sch-strategy-launch
       - sch-strategy-data-flow
@@ -116,7 +121,6 @@ owner_rules:
       - sch-defaults
       - sch-strategy-data-flow
       - sch-strategy-launch
-      - tml-index
     owner: ARC
 phase_gates:
   - id: G-PLANNING-first-pass

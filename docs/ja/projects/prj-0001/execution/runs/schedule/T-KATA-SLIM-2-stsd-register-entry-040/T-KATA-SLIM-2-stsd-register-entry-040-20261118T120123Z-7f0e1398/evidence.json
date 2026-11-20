@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-SLIM-2-stsd-register-entry-040",
+  "run_id": "T-KATA-SLIM-2-stsd-register-entry-040-20261118T120123Z-7f0e1398",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-18T12:03:37.941Z",
+    "completed_at": "2026-11-18T12:06:59.226Z",
+    "exit_code": 0,
+    "attempts": 2
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/rulebooks/stsd-mermaid-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/stsd-rulebook.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 2,
+    "summary": ".../ja/specdojo/rulebooks/stsd-mermaid-rulebook.md |  18 ++--\n docs/ja/specdojo/rulebooks/stsd-rulebook.md        | 117 +++++++++------------\n 2 files changed, 55 insertions(+), 80 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/rulebooks/stsd-rulebook.md docs/ja/specdojo/rulebooks/stsd-mermaid-rulebook.md",
+      "status": "passed",
+      "summary": "All matched files use Prettier code style"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴ファイルを変更していない",
+      "reason": "変更したのは rulebook 2 件だけで、pjr 個票・plan・result は変更していない"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 5356 file(s), 107 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 83 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5356 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-stsd-register-entry-040\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/devcontainer/scaffold.integration.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/exec/job-worktree.integration.test.ts\"}\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.8.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schema)\ndocs/ja/specdojo/samples/ifx-api-sample\n… output omitted …\nrulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-stsd-register-entry-040/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-stsd-register-entry-040/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.8.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-stsd-register-entry-040\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/grade/grade.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/register/commands.test.ts\"}\n ✓ tests/src/grade/grade.test.ts (69 tests) 2367ms\n     ✓ resolves declared and reverse-linked Kata references  305ms\n     ✓ u\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "rate_limit_events": [
+    {
+      "action": "fallback",
+      "trigger": "rate_limit",
+      "from_actor": "sol-executor",
+      "to_actor": "opus-executor",
+      "resumed_at": "2026-11-18T12:03:41.600Z"
+    }
+  ],
+  "final_message": "stsd-rulebook と stsd-mermaid-rulebook を簡潔にした。共通の運用（status・承認・改訂と廃止・役割・未決事項の決定者・決定時期）を外して全体方針の「共通の運用」とドキュメントメタ情報標準への参照に置き換え、F001（値の一意性の重複を「ファイル命名・ID規則」の参照へ）と F002（分岐に「同じイベントによる」を追加）に対応した。stsd-rulebook の空白を除く文字数は 7,313 字から 5,824 字（79.6%、表の区切り行を除く）、区切り行を含めると 8,534 字から 7,024 字（82.3%）。stsd-mermaid-rulebook は区切り行を除いて 4,131 字から 3,956 字。章名と必須・条件付きの区分は変えていない。",
+  "completion_status": "complete",
+  "handoff": [
+    "変更したファイル: docs/ja/specdojo/rulebooks/stsd-rulebook.md、docs/ja/specdojo/rulebooks/stsd-mermaid-rulebook.md。章名と必須・条件付きの区分は変えていない。",
+    "文字数（空白を除く）: stsd-rulebook は表の区切り行を除いて 7,313 字から 5,824 字（79.6%）、区切り行を含めて 8,534 字から 7,024 字（82.3%）、バイト数は 22,828 B から 18,310 B。stsd-mermaid-rulebook は区切り行を除いて 4,131 字から 3,956 字、区切り行を含めて 4,378 字から 4,200 字。",
+    "F001 への対応: 6.4 で値の一意性を言い直していた箇所を「ファイル命名・ID規則」への参照に置き換え、`-` を複数行で使えることだけを残した。F002 への対応: 6.5.1 の分岐を「同じ遷移元から同じイベントで分岐する場合」に限定し、異なるイベントで出る遷移は分岐として扱わないと明記した。stsd-mermaid-rulebook の位置づけの段落にも同じ限定を足した。",
+    "condense から届いた Kata が原因の 4 件（`retain`）: 遷移表を正本とし図をその投影とする規定と、分割した図で共有する状態の宣言は、図と表の対応に必要なため規定として残した。6.5 に「冗長さは図表をなぞる本文から削る」と明記した。分割の閾値（stsd-mermaid-rulebook の 6.3）は根拠が足りないため変えていない。",
+    "外した記述: Frontmatter の `status: draft` と人の承認の行、6.8 の役割ごとの確認と PM への引き継ぎ、6.6 と本文要件の決定者・決定時期、用語の表のうち列の定義を言い直す行（stsd では管理場所・イベント・遷移条件、mermaid では状態・初期点・終了点・遷移）。全体方針・記述ガイド・禁止事項の間の重複（複合状態、`<<choice>>`、遷移ラベル、到達性）は 1 か所にまとめ、stsd-mermaid-rulebook の「完成判定」と「図の分割」を参照する形にした。",
+    "recipe の変更案（commit の対象外のため今回は直していない）: docs/ja/specdojo/recipes/stsd-recipe.md の 42 行目の遷移 ID の振り直しの長い説明を、rulebook の「ファイル命名・ID規則」に揃えて短くする。125 行目と 174 行目の決定者・決定時期を「影響する状態・遷移 ID と決まるまでの扱い」に替える。175〜176 行目の PO による公開判断、`ready` 昇格の条件、`draft` の維持は共通の運用なので外す。",
+    "template の変更案: docs/ja/specdojo/templates/stsd-template.md の 78 行目、未決事項の表の「決定者」「決定時期」の列を「決まるまでの扱い」の列に替える。sample には運用の記述がなく、変更は要らない。",
+    "共通の正本への追記: 要らない。ドキュメントメタ情報標準の「文書の改訂・廃止とライフサイクル変更管理」と「成果物の値制約」で、外した記述を賄える。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-stsd-register-entry-040/T-KATA-SLIM-2-stsd-register-entry-040-20261118T120123Z-7f0e1398/executor.log",
+      "bytes": 8756,
+      "truncated": false
+    }
+  ]
+}

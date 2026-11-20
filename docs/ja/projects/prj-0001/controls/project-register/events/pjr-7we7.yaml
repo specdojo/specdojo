@@ -1,0 +1,116 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_28310f57597b4edda5c154a5a0f2a315
+  ts: "2026-11-16T22:27:28Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者の依頼で起票する（2026-11-17）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: prj-comparison-of-alternatives を読みやすい構成に見直す
+    - field: description
+      from: ""
+      to: 結論を先に置き、判定の区分と根拠の表を絞って、3 回の手直しで膨らんだ代替案比較を読みやすくする
+    - field: input
+      from: ""
+      to: '["利用者が 2026-11-17 に、CPZH の対象の代替案比較は grade の結果以前に内容が分かりにくいと指摘した。grade の指摘への手直しとは目的が違うため、CPZH を close して別の todo で見直すことを選んだ（案 A）","3 回の手直しで本文は 27KB から 75KB に増えた。sample は 20KB である。grade の指摘に応えて表の列や規則を足し、削らなかったためである","orchestrator が示した改善案 7 点（結論の要約を冒頭に置く、判定の区分を 4 つに絞る、集約の規則を短くする、根拠の表を sample と同じ案ごとの形にする、採らない案のセルは判定しない、記録の担当の重複を除く、rulebook が許せば尺度を有利・中間・不利にする）を利用者が了承した","各決定の結論（D-01〜D-03 の採否）は変えない"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-17"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: fully-guided
+    - field: targets
+      from: ""
+      to: '["prj-0001:prj-comparison-of-alternatives"]'
+    - field: derived_from
+      from: ""
+      to: '["PJR-CPZH"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: pm
+- v: 1
+  id: reg_015844c5dad24328b4ceb303e9d29b4a
+  ts: "2026-11-16T22:42:59Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_28310f57597b4edda5c154a5a0f2a315
+- v: 1
+  id: reg_9c18d14644fb4ee694cd2106f9ef92d8
+  ts: "2026-11-16T23:06:00Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_015844c5dad24328b4ceb303e9d29b4a
+- v: 1
+  id: reg_ecf4b67542e94bd2bbb8b790eda32131
+  ts: "2026-11-17T03:28:58Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が再 grade で DC 4 件の satisfied と大きさを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-17"
+    - field: conclusion
+      from: "-"
+      to: 冒頭に結論の要約と 5 区分の凡例を置き、根拠の表を案ごとの 1 行にして 29,903 バイトに縮めた。結論は変えていない
+  previous_event_id: reg_9c18d14644fb4ee694cd2106f9ef92d8
+- v: 1
+  id: reg_35ed80a975c74589a4b96879880982ff
+  ts: "2026-11-17T12:16:08Z"
+  action: update
+  actor: indie
+  from_status: done
+  to_status: done
+  reason: 利用者が担当と期限を決めた
+  changes:
+    - field: owner
+      from: _TODO_
+      to: BA
+    - field: due
+      from: _TODO_
+      to: "2026-11-30"
+  previous_event_id: reg_ecf4b67542e94bd2bbb8b790eda32131

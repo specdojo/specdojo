@@ -1,0 +1,94 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_6c2ac443ba7c4ad6a1f6475a7312af73
+  ts: "2026-11-19T12:47:18Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: kata-slim-2 の pjr-index-040 が runner の誤判定で止まったため、利用者の承認のもと起票する
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: rulebook などの pjr-\*.md を履歴蓄積ファイルと誤って判定し、executor の適用外の報告を受け付けない
+    - field: description
+      from: ""
+      to: isHistoryLinkTargetPath がファイル名の pjr-\*.md だけで判定するため、pjr-rulebook.md の変更でも validate:history-links を必須とし、executor の not\_applicable を拒んで止まる
+    - field: input
+      from: ""
+      to: "[\"2026-11-19 の T-KATA-SLIM-2-pjr-index-040 は、executor が docs/ja/specdojo/rulebooks/pjr-rulebook.md だけを変え、npm run validate:history-links を「履歴蓄積ファイルを変更していない」と `not_applicable` で報告した。runner は executor validation failed or not run: npm run validate:history-links で 3 回止めた（plan に実行を求める指示を書き足しても opus は同じ報告をした）。\",\"src/exec/reporter.ts の isHistoryLinkTargetPath は /(?:^|\\\\/)pjr-[^/]+\\\\.md$/ でディレクトリを見ずに判定する。.github/instructions/markdown.instructions.md の履歴蓄積ファイルの対象は `controls/project-register/pjr-*.md` の個票、exec/plans・exec/results、execution/runs の plan.md・result.md で、pjr-index.md は除く。\",\"利用者は 2026-11-19 に、担当 DEV・期限 11 月末で起票し、v0.9.0 に入れることを承認した。\"]"
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-19"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-DM9B"]'
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: exec
+- v: 1
+  id: reg_262405edd7d947a9b8503e160c692601
+  ts: "2026-11-19T12:54:16Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_6c2ac443ba7c4ad6a1f6475a7312af73
+- v: 1
+  id: reg_c8cf63bc132844b496fa6b4bcaf61517
+  ts: "2026-11-19T13:07:17Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_262405edd7d947a9b8503e160c692601
+- v: 1
+  id: reg_d7579ee2236846fbb23b06e0815f37c1
+  ts: "2026-11-19T13:16:01Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分とテストを確かめ、統合の後に pjr-index-040 の再開で reporter の段を通ることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-19"
+    - field: conclusion
+      from: "-"
+      to: 履歴蓄積ファイルの判定を登録簿の個票のディレクトリに限り、pjr の rulebook などの変更で executor の適用外の報告を受け付けるようにした
+  previous_event_id: reg_c8cf63bc132844b496fa6b4bcaf61517

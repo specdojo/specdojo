@@ -5,10 +5,10 @@ path: docs/ja/specdojo/samples/br-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 100
-graded_at: "2026-11-10T08:32:59.326Z"
+score: 98
+graded_at: "2026-11-17T22:30:06.731Z"
 graded_by: sol-review-executor
-content_hash: 4555e89a36d6fbe15c5dcec0ba86f2c44f695155296e7c9eca4d774c957e80b3
+content_hash: 18b313d9843ad70a73cfb3404548018a0ffdccdb2698c17fea82a67300f16b43
 categories:
   purpose:
     score: 100
@@ -25,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 92
   consistency:
     score: 100
 viewpoints:
@@ -81,8 +81,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -104,6 +104,17 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 1
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 74
+    anchor: 未決事項はない。季節別の発注点の設定方法は将来の別ルールで扱う。
+    message: >-
+      br-template の第6章末尾は承認可能となる条件の記入を求めているが、本例は未決事項なしと将来範囲の説明だけで終わっている。完成例として、判定規則・判定例の確認と人間の PO
+      による承認など、このルールを確定できる条件を追記する。
+    message_ja: >-
+      br-template の第6章末尾は承認可能となる条件の記入を求めているが、本例は未決事項なしと将来範囲の説明だけで終わっている。完成例として、判定規則・判定例の確認と人間の PO
+      による承認など、このルールを確定できる条件を追記する。

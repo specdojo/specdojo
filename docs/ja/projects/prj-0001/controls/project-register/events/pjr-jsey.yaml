@@ -4633,3 +4633,308 @@
       from: "-"
       to: "2026-11-11"
   previous_event_id: reg_5ac17115e3be47a6b6b7130d3f94e604
+- v: 1
+  id: reg_b58419fd235a4aaf992fb2adb729fe9e
+  ts: "2026-11-16T13:14:03Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: V141・EWZG・30SA・1Y1M・KVWH・97KE の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-11-11"
+      to: "-"
+  previous_event_id: reg_fd31de7ca63248d5beab7d941424b4d6
+- v: 1
+  id: reg_1e93d3d0396e4b938979242df0c62b7f
+  ts: "2026-11-16T13:14:58Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_b58419fd235a4aaf992fb2adb729fe9e
+- v: 1
+  id: reg_528914a4d2df4522a96c8491035fa961
+  ts: "2026-11-16T13:22:00Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_1e93d3d0396e4b938979242df0c62b7f
+- v: 1
+  id: reg_fb5bde90ab7c4e13a0bed26d28b184bc
+  ts: "2026-11-16T13:37:10Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果・result で確かめ、統合後の PJR-JSEY（2026-11-16、sonnet-executor）で runner の動作を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: CBV6 の統合後の dist で、claude-executor の exec run --register が start から review・統合まで通った
+      to: V141・EWZG・30SA・1Y1M・KVWH・97KE の統合後に sonnet-executor で start から review まで通り、actor に実体名が記録された
+  previous_event_id: reg_528914a4d2df4522a96c8491035fa961
+- v: 1
+  id: reg_95bca9966b4e42e5af9e6c7975605b40
+  ts: "2026-11-16T13:48:41Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: NHT7・DGRZ の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-11-16"
+      to: "-"
+  previous_event_id: reg_fb5bde90ab7c4e13a0bed26d28b184bc
+- v: 1
+  id: reg_d3b7328630344603b2663b4b4eb1a9a6
+  ts: "2026-11-16T13:49:34Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_95bca9966b4e42e5af9e6c7975605b40
+- v: 1
+  id: reg_8366173a8c314595b3b67d9addb0951d
+  ts: "2026-11-16T14:02:09Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_d3b7328630344603b2663b4b4eb1a9a6
+- v: 1
+  id: reg_df26e2bad1d94a7abad7105e170099f9
+  ts: "2026-11-16T14:07:15Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果・result で確かめ、統合後の PJR-JSEY（2026-11-16、sonnet-executor）で runner の動作を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: V141・EWZG・30SA・1Y1M・KVWH・97KE の統合後に sonnet-executor で start から review まで通り、actor に実体名が記録された
+      to: NHT7・DGRZ の統合後に sonnet-executor で start から review まで通り、actor に実体名が記録された。片付けはロックの外で行われた
+  previous_event_id: reg_8366173a8c314595b3b67d9addb0951d
+- v: 1
+  id: reg_f5f86969f8e949edb40326484c232588
+  ts: "2026-11-17T03:02:41Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: A61W・MJ8V・V0FQ・DH8E の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-11-16"
+      to: "-"
+  previous_event_id: reg_df26e2bad1d94a7abad7105e170099f9
+- v: 1
+  id: reg_2e38d690d3df4198871c7271cba44838
+  ts: "2026-11-17T03:03:24Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_f5f86969f8e949edb40326484c232588
+- v: 1
+  id: reg_21246b203597408f8acd910488bd872c
+  ts: "2026-11-17T03:08:55Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_2e38d690d3df4198871c7271cba44838
+- v: 1
+  id: reg_6de60060a26249e4b2614c2f140e6972
+  ts: "2026-11-17T03:11:38Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が個票・イベント・予約の解放を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-17"
+    - field: conclusion
+      from: NHT7・DGRZ の統合後に sonnet-executor で start から review まで通り、actor に実体名が記録された。片付けはロックの外で行われた
+      to: A61W・MJ8V・V0FQ・DH8E の統合後に sonnet-executor で start から review まで通り、actor に実体名が記録された。変更範囲の予約も統合で解放された
+  previous_event_id: reg_21246b203597408f8acd910488bd872c
+- v: 1
+  id: reg_8b0e3c96a71246e1969df903e35ecc38
+  ts: "2026-11-17T04:35:50Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: C4J1・JKQX・R7BQ の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-11-17"
+      to: "-"
+  previous_event_id: reg_6de60060a26249e4b2614c2f140e6972
+- v: 1
+  id: reg_623d2216c23c42779b533fdee543daec
+  ts: "2026-11-17T04:36:23Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_8b0e3c96a71246e1969df903e35ecc38
+- v: 1
+  id: reg_ae47df9c09de4440bff6edfcafadd9e4
+  ts: "2026-11-17T04:41:01Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_623d2216c23c42779b533fdee543daec
+- v: 1
+  id: reg_2333b139691745368481ef770a3d62db
+  ts: "2026-11-17T04:48:03Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が個票とイベントを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-17"
+    - field: conclusion
+      from: A61W・MJ8V・V0FQ・DH8E の統合後に sonnet-executor で start から review まで通り、actor に実体名が記録された。変更範囲の予約も統合で解放された
+      to: C4J1・JKQX・R7BQ の統合後に sonnet-executor で start から review まで通り、actor に実体名が記録された
+  previous_event_id: reg_ae47df9c09de4440bff6edfcafadd9e4
+- v: 1
+  id: reg_3f7a298962d143abaa745f86f98fabd7
+  ts: "2026-11-19T14:04:19Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-8NB8・PJR-9JN6・PJR-C07H・PJR-ZK3T の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-11-17"
+      to: "-"
+  previous_event_id: reg_2333b139691745368481ef770a3d62db
+- v: 1
+  id: reg_ab91fcb8a38f451cbd01eba18888a746
+  ts: "2026-11-19T14:04:45Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_3f7a298962d143abaa745f86f98fabd7
+- v: 1
+  id: reg_4aa2e4e84f1542aa943d1ee593fcb669
+  ts: "2026-11-19T14:09:50Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_ab91fcb8a38f451cbd01eba18888a746
+- v: 1
+  id: reg_5bf040503e3c46f4b02bc17c5a8b0666
+  ts: "2026-11-19T14:11:58Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分と個票で確かめ、統合の後に exec smoke と実際の run で動作を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-19"
+    - field: conclusion
+      from: C4J1・JKQX・R7BQ の統合後に sonnet-executor で start から review まで通り、actor に実体名が記録された
+      to: PJR-8NB8・9JN6・C07H・ZK3T の統合後に、exec smoke から sonnet-executor で start から review まで通り、actor に実体名が記録された
+  previous_event_id: reg_4aa2e4e84f1542aa943d1ee593fcb669

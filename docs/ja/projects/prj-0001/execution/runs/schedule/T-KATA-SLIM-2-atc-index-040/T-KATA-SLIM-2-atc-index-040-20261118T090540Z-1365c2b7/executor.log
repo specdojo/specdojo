@@ -1,0 +1,63 @@
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "対象 rulebook を更新しました。共通運用を参照化し、空白除外で8,917字から6,149字（68.96%）へ縮小しました。実行した検査は合格しています。親検証は runner が実施します。",
+  "handoff": [
+    "変更ファイルは docs/ja/specdojo/rulebooks/atc-index-rulebook.md のみ。共通運用・Frontmatter の重複説明・各章の見出し指示を整理し、受入全体の合格基準、判定の流れ、判定証跡、共通列変更時の影響確認を補った。result は executor stage の指示に従い編集していない。",
+    "result に記録する文字数: 改行を含む空白除外で8,917→6,149字（68.96%）。sld 試行と同様に表区切り行も除く場合は8,383→5,747字（68.56%）。いずれも80%以下。",
+    "判断根拠: xp/xep-common-conventions-template、rulebook-authoring-standard、document-metadata-standard、docs-structure-guide、成果物リファレンス、sld-rulebook、PJR-8S4T の展開一覧、atc-rulebook、atc-index-sample、dct-test-specs の対象定義、共通レビュー観点の各 finding 対応 ID と vp-arc-conciseness を確認。prj-0001 のレビュー観点に独自差分はない。grade 正本は execution/grade/results/specdojo.atc-index-rulebook.yaml で、修正前の内容ハッシュと一致した。",
+    "章の扱い: 成果物の標準9章の名称・順序・必須区分、ケース表の必須4列と推奨6列の順序は維持。rulebook 自身の「本文構成（標準テンプレ）」だけを「本文要件」へ改称した（F014 と記述標準に対応）。内包サンプルは全必須章の輪郭を示す自己完結したコードブロックへ簡潔化した。",
+    "finding 対応: F001/F004/F011 は既存の「本ドキュメントの目的と適用対象」に合格基準・合否集計・判定手順を追加。F002 は証跡確認者・人間の判定責任者・結果・理由・承認日を追加。F005 は共通運用からメンバー定義を参照し、業務手順で実施者・証跡確認者・判定者の記録を辿る要件を追加。F008 は全対象別カタログ・実施記録・集計処理等の追従確認とケース ID 維持を明記。F010 は禁止対象を具体化。F013/F014/F015 はメタ情報・章名・最小例・図の名称を修正。",
+    "F006/F007 はプロジェクト固有の修飾 ID を明記し、プロダクト仕様ではカタログに従う未修飾 ID も維持した。全成果物への一律修飾は現行標準に要求がなく、改訂済み sld-rulebook も両者を区別しているため。F003 の登録簿への引き継ぎと F009 の文書品質検査は、今回の方針に従い共通正本・リポジトリ検証を参照し、個別の担当表・転記手順・lint コマンドを再掲しなかった。共通正本への追加提案はない。",
+    "未解消 F012: docs/ja/specdojo/samples/atc-index-sample.md は既存の標準章構成と不整合。sample は今回の編集対象外のため変更していない。次の対応では rulebook を正とし、必須8章・任意のメモ章、共通列、合格基準・判定フロー・証跡を具体化し、本文の繰り返しを除く。",
+    "F016 の申し送り: recipe と template は引き続き undecided。次の対応で要否と必要なら所在を判断し、sample の構成不整合を解消してから、共通正本に従って人間が ready 化を判断する。今回、承認条件を rulebook に重複記載せず、Frontmatter の状態も維持した。",
+    "根拠成果物 docs/ja/product/080-test-specs/060-acceptance-test-catalog/atc-index.md は存在しない。plan の4.1に従い、その不在だけを理由に見送らず、カタログ・sample・grade・規範で判断可能な範囲を改訂した。成果物本体、recipe、template、sample、grade サイドカー、保護設定は変更していない。includes の宣言はなく、併せて編集する記法 rulebook はない。",
+    "整形・差分・文字数・標準章の維持・Frontmatter の維持・本文 wikilink の参照先を確認済み。指定された lint・schema・型検査・単体/統合テストは親 runner の担当として実行していない。reporter は本 handoff を result の実施内容・変更ファイル・進め方と実践の型の適用へ反映すること。"
+  ],
+  "validations": [
+    {
+      "command": "npx prettier --write docs/ja/specdojo/rulebooks/atc-index-rulebook.md",
+      "status": "passed",
+      "summary": "対象 rulebook を整形した。"
+    },
+    {
+      "command": "npx prettier --check docs/ja/specdojo/rulebooks/atc-index-rulebook.md",
+      "status": "passed",
+      "summary": "整形規則への適合を確認した。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "command": "python3 -",
+      "status": "passed",
+      "summary": "空白除外68.96%、標準9章の名称・順序・必須区分とFrontmatterの維持、共通運用1項目、本文リンク2種類の参照先を確認した。"
+    },
+    {
+      "command": "node tools/check-evidence-secrets.mjs --staged",
+      "status": "passed",
+      "summary": "ステージ済み実行記録0件、検出0件。"
+    },
+    {
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 YAML スキーマ検証は非適用。",
+      "reason": "変更したファイルは Markdown rulebook のみで、YAML ファイルの変更がない。"
+    },
+    {
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "カタログ検証は非適用。",
+      "reason": "executor の変更は docs/ja/specdojo/rulebooks/ 配下のみで、docs/ja/projects/ 配下への変更がない。"
+    },
+    {
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検証は非適用。",
+      "reason": "executor が変更した登録簿個票・既存 plan・result がない。"
+    }
+  ]
+}
+</specdojo_executor_evidence>

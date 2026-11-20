@@ -1,0 +1,85 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_98bd41786adf46429ceb3a6020cb9f4b
+  ts: "2026-11-17T22:38:23Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: YAML が正本の文書を、VitePress で表＋YAML 正本（折りたたみ）の形で表示する
+    - field: description
+      from: ""
+      to: 業務データ辞書・ロール定義・メンバー定義などの表示用ページが YAML の丸写しになっているため、用語集と同じく表と折りたたんだ YAML 正本の形にする
+    - field: input
+      from: ""
+      to: '["利用者の要望（2026-11-18）: 業務データ辞書・ロール定義・メンバー定義は VitePress で YAML をそのまま HTML にした形で表示される。用語集のように表＋YAML 正本（折りたたみ）にしたい。ほかの YAML が正本の文書も洗い出して対応する","orchestrator の洗い出し（2026-11-18）: 表示用ページ 223 件のうち、表＋折りたたみは用語集・ifx-index・dct テンプレートだけで、ほかは YAML の丸写し（src/docs/yaml-pages.ts の renderYamlPage）","対象の候補: bdd（bdd-register-entry・bdd-sample）、pm-roles（本番・sample）、pm-members（本番・sample）、pm-review-viewpoints（project・defaults）、ifx-cmd（ifx-cmd-ai-provider-cli・ifx-cmd-sample）、ifx-file-agent-evidence、tml（tml-index・tml-sample）、dct カタログのインスタンス 9 件と dct-sample・dct-index-sample、sch-milestones","対象外の案: grade の判定基準・job・routine・schedule の track/strategy/defaults/assessment、schema、YAML の template、OpenAPI/AsyncAPI の sample（ifx-api-sample・ifx-msg-sample）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-18"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+- v: 1
+  id: reg_7370140ff77e4e05915fb2b6fdd73483
+  ts: "2026-11-17T23:08:21Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_98bd41786adf46429ceb3a6020cb9f4b
+- v: 1
+  id: reg_65feaa1771054d07a1a8f21b72732c20
+  ts: "2026-11-17T23:32:28Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_7370140ff77e4e05915fb2b6fdd73483
+- v: 1
+  id: reg_e989ca6f3ce949eaa818c6031878a1f7
+  ts: "2026-11-19T14:44:53Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 利用者が文書サイトの表示をブラウザで確かめ、close を決めた（2026-11-19）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-19"
+    - field: conclusion
+      from: "-"
+      to: YAML が正本の文書の表示ページを表形式にし、YAML の正本を折りたたみで添えるようにした
+  previous_event_id: reg_65feaa1771054d07a1a8f21b72732c20

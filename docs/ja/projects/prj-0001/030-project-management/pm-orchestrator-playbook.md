@@ -36,10 +36,10 @@ npx specdojo exec run --project prj-0001 --register <PJR-ID> --worktree \
 ```
 
 - 列は 2 本までにする（codex の列と agy の列など）。親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）は run をまたいで 1 件ずつ流れるため、列を増やしても速くならず、待ちと負荷が増える。
-- 新方（PJR-EPQ3）では項目は `CHANGELOG.md` を変えないため、列の組み方のうえでの衝突は起きない。同じファイルを触る項目は従来どおり同じ列に順に並べる。LP の `GetStarted.astro` を触る 3 件を並べて流したときは、順に流すことで衝突を避けた。
+- 新方（PJR-EPQ3）では項目ごとに `CHANGELOG.md` を変えない。実装の範囲が重なる項目は runner が先行項目の統合まで待たせる。個票の入力・完了条件に対象の相対パスを書き、推定できない項目も直列化したい列には `--unknown-scope serialize` を付ける。推定と再開の規則は [[specdojo:exec-operation-guide|exec運用ガイド]] の「変更範囲が重なる項目の順番待ち」に従う。
 - 旧方の行（未公開の版の節へ直接書いた `CHANGELOG.md`）が残っている間は、その項目は新方と混ぜて並べる場合、まだ `CHANGELOG.md` を書くため衝突の可能性が残る。リリースまでに旧方の行を集めて `## [Unreleased]` へまとめた後（第 9 節）に列を組むのが安全である。
 - 統合の commit のときにも検査が走る。並行の検証と重なると、`tests/src/exec/pipeline-e2e.integration.test.ts` などの E2E が時間切れで落ちることがある。落ちた場合は、負荷が下がってから `--resume` で統合からやり直す。
-- 列の終わりを待って次を流す待機を書くときは、相手のプロセスを `pgrep -f` のパターンで探さない（`落とし穴` を参照）。実行のログや出力ファイルに結果の行が出たことで判定するか、プロセスの番号で待つ。
+- 列の終わりを待って次を流すときは、待機のスクリプトを書かず `exec queue` で予約する（[[specdojo:command-reference|コマンドリファレンス]] の「実行の予約（exec queue）」）。予約ファイル（`execution/queues/<queue-id>.json`）は記帳と同じく commit する。どうしても待機を書く場合も、相手のプロセスを `pgrep -f` のパターンで探さない（`落とし穴` を参照）。
 
 ## 4. agent の使い分けと癖
 
@@ -57,14 +57,15 @@ npx specdojo exec run --project prj-0001 --register <PJR-ID> --worktree \
 
 ## 5. 止まったときの再開の使い分け
 
-| 止まり方                                  | 原因の例                                                   | 再開の仕方                                                                                                                                                                                                                                                                                  |
-| ----------------------------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 親の検証で、executor の実装の誤りで落ちた | import の抜け、依存の欄の読み違え、lint の違反             | `--resume --resume-from executor`。`--resume-from` は `--resume` と一緒に使う                                                                                                                                                                                                               |
-| 親の検証や統合で、負荷や偶然で落ちた      | E2E の時間切れ、乱数の衝突                                 | 同じテストを手元で流し直して偶然かを確かめ、`--resume`                                                                                                                                                                                                                                      |
-| 再開のときに統合先と同期できない          | `CHANGELOG.md` の `## [Unreleased]` を両方で足した（旧方） | 新方（PJR-EPQ3）では項目は `CHANGELOG.md` を変えないため、この衝突は起きない。旧方の行が残っている間は、worktree で記帳のファイルを統合先の内容にし、`CHANGELOG.md` は両方の行を残して手で取り込み、`exec(register <ID>): merge project/prj-0001/develop ...` で commit してから `--resume` |
-| executor の段が failed で再開できない     | 使えないモデルを指していた、途中で止めた                   | `--force-restart` で最初から流す                                                                                                                                                                                                                                                            |
-| 起動の直後に dist が古いと止まる          | 統合で `src/` が変わった                                   | 本体で `npm run build` してから流し直す                                                                                                                                                                                                                                                     |
-| 統合で `CONFLICT`                         | 並行の項目が同じ行を変えた                                 | 対象ファイルの両方の行を残して worktree で手で解き、`--resume`（旧方では `CHANGELOG.md`、新方では該当の個票・実装ファイル。個別の `CHANGELOG.md` の衝突は新方で起きない）                                                                                                                   |
+| 止まり方                                           | 原因の例                                                   | 再開の仕方                                                                                                                                                                                                                                                                                           |
+| -------------------------------------------------- | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 親の検証で、executor の実装の誤りで落ちた          | import の抜け、依存の欄の読み違え、lint の違反             | `--resume --resume-from executor`。`--resume-from` は `--resume` と一緒に使う                                                                                                                                                                                                                        |
+| 親の検証や統合で、負荷や偶然で落ちた               | E2E の時間切れ、乱数の衝突                                 | 同じテストを手元で流し直して偶然かを確かめ、`--resume`                                                                                                                                                                                                                                               |
+| 再開のときに統合先と同期できない                   | `CHANGELOG.md` の `## [Unreleased]` を両方で足した（旧方） | 新方（PJR-EPQ3）では項目は `CHANGELOG.md` を変えないため、この衝突は起きない。旧方の行が残っている間は、worktree で記帳のファイルを統合先の内容にし、`CHANGELOG.md` は両方の行を残して手で取り込み、`exec(register <ID>): merge project/prj-0001/develop ...` で commit してから `--resume`          |
+| executor の段が failed で再開できない              | 使えないモデルを指していた、途中で止めた                   | `--force-restart` で最初から流す                                                                                                                                                                                                                                                                     |
+| 起動の直後に dist が古いと止まる                   | 統合で `src/` が変わった                                   | 本体で `npm run build` してから流し直す                                                                                                                                                                                                                                                              |
+| 夜間の job の中で止まった子の run を日中に再開する | job の worktree の中で wait になった                       | 本体から `exec run --register <ID> --worktree --resume` で再開できる（PJR-97KE）。再開の前に job の branch から wait の記録を取り込むため、同じ夜にその前に job へ統合された他の項目の成果も、job 全体の review より先に本体へ入る。job 全体の review を待つべき夜は、job を先に統合してから再開する |
+| 統合で `CONFLICT`                                  | 並行の項目が同じ行を変えた                                 | 対象ファイルの両方の行を残して worktree で手で解き、`--resume`（旧方では `CHANGELOG.md`、新方では該当の個票・実装ファイル。個別の `CHANGELOG.md` の衝突は新方で起きない）                                                                                                                            |
 
 - review の項目は `register reopen` できない（すでに有効な状態のため）。完了条件を補って流し直すときは、個票を直して commit し、そのまま `exec run` を流す。
 - 実行中の項目を止めたいときは、見張りのスクリプトだけでなく runner のプロセスが残っていないかを確かめる。commit の途中で止めると後始末が増えるため、終わり際なら最後まで流す。
@@ -75,10 +76,16 @@ npx specdojo exec run --project prj-0001 --register <PJR-ID> --worktree \
 
 runner・register・exec のコードを変えた項目は、統合の後に PJR-JSEY を 1 回流して確かめてから close する。
 
-1. JSEY の個票の対象の一覧（「…・PJR-XXXX）のうち」で終わる箇所）に、確かめる項目の ID を足して commit する。
-2. `register reopen --id PJR-JSEY --by specdojo-orchestrator --reason "<対象> の統合後の動作確認" --commit` で開き直す。
-3. `claude-executor` で流す。start から review まで通り、event の actor に実体名（sonnet-executor など）が記録されることを確かめる。
-4. JSEY と対象の項目を close する。runner に関わる項目が続くときは、まとめて 1 回で確かめてよい。
+統合後に本体で `npm run build` を実行し、新しいプロセスで次を流す。先に `--dry-run` を付けると、書き込みや agent 起動をせず手順を確認できる。
+
+```bash
+npx specdojo exec smoke --project prj-0001 --register PJR-JSEY \
+  --targets PJR-8NB8 --executor-by claude-executor --reporter-by gemma26-reporter
+```
+
+コマンドは対象一覧への重複しない ID 追記と commit、done の JSEY の reopen と commit、`exec run --register --worktree`、今回の start → review と実体 actor の照合を順に行う。対象は実行時点で review または done を要求する。複数項目は `--targets PJR-XXXX,PJR-YYYY` でまとめて確かめる。
+
+成功後に JSEY と対象の項目の完了条件を確認し、既存の `register close --commit` で close する。失敗時は出力の `[smoke:<段>]` と run の記録を調べる。waiting / in-progress の JSEY は先に既存の再開手順で解決する。オプションと他 project の確認用個票の書式は [[specdojo:command-reference|コマンドリファレンス]] の「統合後の runner 動作確認」を参照する。
 
 docs だけの項目や、runner の通らないコード（kata、docs-site など）の項目では JSEY は要らない。
 
@@ -93,7 +100,7 @@ docs だけの項目や、runner の通らないコード（kata、docs-site な
 - 待機が自分自身を数える: `while pgrep -f "register PJR-XXXX"` のような待機は、待機のコマンドの文字列にも同じ語が含まれるため、自分自身に一致して終わらない。結果の行の有無か、プロセスの番号（`kill -0 <pid>`）で待つ。
 - commit メッセージの本文は 1 行 100 文字以内（commitlint の `body-max-line-length`）。長い文は折り返す。
 - 個票の Markdown: 素の URL は MD034 で止まるため `<https://...>` と書く。説明や結論にアスタリスクを 2 つ書くと、0.4.1 までの一覧の生成では MD037 で止まった（PJR-6SQH で修正済み）。
-- `.git/index.lock` が残っているあいだは commit できない。runner の統合と重なるときは、消えるのを待ってから commit する。
+- orchestrator の commit・merge・add・checkout などは `npx specdojo git --project prj-0001 -- <Git の引数>` で実行し、runner の統合と同じ `exec-lifecycle` ロックに並べる。例: `npx specdojo git --project prj-0001 -- commit -m "docs: update playbook"`。`status`・`log`・`diff` はロックを待たない。ロックなしの commit を検知する pre-commit 警告の設定案は [[prj-0001:pjr-30sa-specdojo-git-serialized|PJR-30SA]] にある。
 - 別の作業ツリー（`../specdojo-prj-0002`）の中で `npx specdojo` を打つと、その作業ツリー自身の `dist/` が動く（このリポジトリはパッケージ `specdojo` 自身のため）。古いブランチでは古い CLI が動くので、本体の `dist/specdojo.js` を直接使うか、その作業ツリーで build する。
 - 保護された設定（`.specdojo/`・`package.json`・`.agents/`・`.claude/`・`.codex/`・`.opencode/`・`CLAUDE.md`・`AGENTS.md`・`lefthook.yml` など）は agent が書けない。変更が要る登録簿項目は、executor に変更案を個票の対応結果と報告の `handoff` に書かせ（result へ直接書ける実行形態だけ result にも）、オーケストレーターが利用者の承認を得て feature ブランチで反映する（PJR-SAZC・PJR-EPQ3）。
 
@@ -112,8 +119,50 @@ docs だけの項目や、runner の通らないコード（kata、docs-site な
 3. 各対象の個票の対応結果から、見出しの文言「CHANGELOG に書く事項」（Markdown の連番ルールにより `### <n>.<m>. CHANGELOG に書く事項` のように書かれている）を探して集め、区分（追加・変更・不具合修正など）と行の文案を、CHANGELOG の `## [<版>] - <日付>` の節へまとめる。影響が『なし』と残った項目は対象から外す。個別に `## [Unreleased]` へ書かれていた行（旧方）もここへ取り込み、取り込んだ分は `## [Unreleased]` から消す。
 4. 漏れを確かめる。手順 2 で決めた範囲の close 済み項目の個票について、register event の `close` 件数と集めた個票の件数を照合し、未確認の項目が残っていないかを確かめる。また、「なし」以外の文案が書かれた項目がすべて手順 3 の節に漏れなく取り込まれていることを確かめてから、手順 5 の feature ブランチへの commit に進む。
 5. feature ブランチ（`feature/prj-0001/release-v<版>`）で `npm version <版> --no-git-tag-version --ignore-scripts` と、手順 3 でまとめた `## [<版>] - <日付>` の節を commit する。docs-lint に変更があれば、その版も上げる。
-6. そのブランチで `npm ci`（`packages/*` も）をしてから `npm run check` を流す。
+6. そのブランチで `npm ci`（`packages/*` も）をしてから `npm run check` を流す。`npm audit --omit=dev --audit-level=high` も流し、公開の workflow の関門で止まらないことを先に確かめる（「依存とコードのセキュリティ検査」）。
 7. `npm pack` した tarball を空のリポジトリに入れ、`init` と、その版で変えた機能（lefthook、名簿の雛形など）、`register add` と `exec run --register` を確かめる。
 8. feature ブランチを develop へ `--no-ff` で取り込み、PR の本文を作って、push と PR 作成のコマンドを利用者に渡す。
 9. 利用者が PR を merge commit でマージし、タグを付けて push し、`npm stage` で公開を承認する。
 10. npm の `latest`、タグで起動した workflow の結果、npm から入れた版での導入を確かめ、リリースの todo を close する。
+
+## 10. 依存とコードのセキュリティ検査
+
+PJR-P318 で入れた定期の検査と、その扱いである。workflow の定義（`security-audit.yml`・`codeql.yml`）は保護された設定のため、変えるときは利用者の承認のもと feature ブランチで行う。
+
+### 10.1. 検査の一覧
+
+| 検査                      | 設定                                   | いつ流れるか                      | 止めるか                                                   |
+| ------------------------- | -------------------------------------- | --------------------------------- | ---------------------------------------------------------- |
+| 依存の版の更新            | `.github/dependabot.yml`               | 毎週月曜 9:00（Asia/Tokyo）       | 止めない。PR が届く                                        |
+| 脆弱性の修正              | リポジトリの設定（security updates）   | advisory が出たとき               | 止めない。依存ごとの PR が届く                             |
+| 配る依存の audit          | `.github/workflows/security-audit.yml` | PR と `publish-specdojo.yml` の前 | ルートの `npm audit --omit=dev` に high 以上があれば止める |
+| 開発用・packages の audit | 同上                                   | 同上                              | 止めない。結果を workflow の summary に出す                |
+| CodeQL                    | `.github/workflows/codeql.yml`         | PR、`main` への push、毎週月曜    | 止めない。結果は Security タブの code scanning に出る      |
+
+### 10.2. Dependabot の PR の扱い
+
+- PR は既定のブランチ（`main`）へ届く。中身を確かめたら、PR を merge せず、同じ変更を develop 系の feature ブランチで取り込んでから通常の昇格に乗せる。取り込んだ PR は閉じる。
+- 開発用の依存はディレクトリごとに 1 本の PR、GitHub Actions は 1 本の PR にまとまる。配る依存（`dependencies`）の版の更新と脆弱性の修正は依存ごとに届く。
+- `package.json`・`package-lock.json` は保護された設定のため、取り込みは agent の run ではなく orchestrator が行う。取り込んだ後に `npm run check` と `npm audit --omit=dev --audit-level=high` を流す。
+
+### 10.3. audit の関門の例外
+
+上流が直すまで関門が止まり続ける場合だけ、期限付きの例外を足す。
+
+1. 該当の advisory を扱う登録簿項目を起票する（上流の追跡先と、期限までにすることを書く）。
+2. `security-audit.yml` の `AUDIT_EXCEPTIONS` に 1 行足す。書式は `<GHSA-id> <YYYY-MM-DD> <PJR-ID>` で、期限は長くても 30 日とする。
+3. 期限を過ぎると関門は再び止まる。延ばすときは登録簿項目に理由を書き、期限を書き換える。直ったら行を消す。
+
+### 10.4. GitHub の設定（利用者が行う）
+
+リポジトリの Settings の Advanced Security（Code security）で、次を有効にする。
+
+- Dependabot alerts と Dependabot security updates（脆弱性の修正の PR）。grouped security updates は無効のままにし、修正を依存ごとに届かせる。
+- Secret scanning と push protection。push protection で止まった push は、秘密を消してから push し直す。誤検知の場合だけ理由を選んで通す。
+- Private vulnerability reporting（外から脆弱性を知らせてもらう窓口）。
+- CodeQL の default setup は有効にしない。`codeql.yml`（advanced setup）と並べて使えない。
+
+### 10.5. npm publish の provenance
+
+- 公開の workflow は Trusted Publishing（`id-token: write`）を使う。公開リポジトリから Trusted Publishing で公開すると、provenance は自動で付く。
+- staged publishing（`npm stage publish`）でも付くかは確かめていない。公開した版の npm のページに provenance の表示があるかを確かめ、無ければ `npm stage publish` に `--provenance` を足す。

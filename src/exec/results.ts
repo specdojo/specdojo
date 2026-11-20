@@ -24,7 +24,12 @@ import {
   resultForPlan,
   taskRecordPaths,
 } from "./run-records.js";
-import { escapeMarkdownInline, expandTemplate, stripTerminalControlSequences } from "./shared.js";
+import {
+  escapeMarkdownInline,
+  expandTemplate,
+  inlineCodeFrontmatterAnglePlaceholders,
+  stripTerminalControlSequences,
+} from "./shared.js";
 import type { Approach, ExecResultMeta, TaskMode, TaskOrigin } from "./types.js";
 
 import { isCondenseRecords, type CondenseRecord } from "../shared/condense-records.js";
@@ -57,6 +62,24 @@ function serializeYamlString(value: string): string {
   return serialized.includes("\n") ? JSON.stringify(value) : serialized;
 }
 
+// executor 由来の condense の記録を frontmatter へ書き写す前に、コードスパン外の山括弧を
+// code span 化する。むき出しの `<provider>` などは lint-fm で失敗する（PJR-V141）。
+// 既に code span の語は変えないため、再シリアライズでも値は変わらない。
+function frontmatterCondenseRecords(records: CondenseRecord[]): CondenseRecord[] {
+  return records.map((record) => ({
+    ...record,
+    location: inlineCodeFrontmatterAnglePlaceholders(record.location),
+    reason: inlineCodeFrontmatterAnglePlaceholders(record.reason),
+    cause:
+      record.cause.type === "kata"
+        ? {
+            ...record.cause,
+            location: inlineCodeFrontmatterAnglePlaceholders(record.cause.location),
+          }
+        : record.cause,
+  }));
+}
+
 function serializeFrontmatter(meta: ExecResultMeta): string {
   const inner = [
     `id: ${serializeYamlString(meta.id)}`,
@@ -81,7 +104,10 @@ function serializeFrontmatter(meta: ExecResultMeta): string {
   }
   if (meta.condense_records) {
     inner.push(
-      ...dump({ condense_records: meta.condense_records }, { lineWidth: -1, noRefs: true })
+      ...dump(
+        { condense_records: frontmatterCondenseRecords(meta.condense_records) },
+        { lineWidth: -1, noRefs: true },
+      )
         .trimEnd()
         .split("\n"),
     );
@@ -90,7 +116,10 @@ function serializeFrontmatter(meta: ExecResultMeta): string {
   // シーケンスや制御文字を除去し（色付き hook 出力が result 表示を壊すのを防ぐ）、JSON の
   // 文字列形式で YAML へ埋め込む。改行・引用符・バックスラッシュも値を変えずに保持できる。
   if (meta.block_reason) {
-    const safeReason = stripTerminalControlSequences(meta.block_reason);
+    // executor の stderr（`blocked: <reason>` など）の山括弧も lint-fm で失敗するため code span 化する。
+    const safeReason = inlineCodeFrontmatterAnglePlaceholders(
+      stripTerminalControlSequences(meta.block_reason),
+    );
     inner.push(`block_reason: ${JSON.stringify(safeReason)}`);
   }
   return buildSpecdojoFrontmatter(inner);
@@ -917,7 +946,10 @@ export async function renderReporterResult(
       );
     }
     // Preserve scaffold ownership; add only validated executor facts, never reporter prose.
-    const scaffold = { ...parsed.data, condense_records: evidence.condense_records };
+    const scaffold = {
+      ...parsed.data,
+      condense_records: frontmatterCondenseRecords(evidence.condense_records),
+    };
     frontmatter = `---\n${dump({ specdojo: scaffold }, { lineWidth: -1, noRefs: true }).trimEnd()}\n---`;
     recordsBody = `\n\n## 5. 修正・保持の記録\n\n${renderCondenseRecords(evidence.condense_records)}`;
   }

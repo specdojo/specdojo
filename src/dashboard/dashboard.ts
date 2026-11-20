@@ -1187,13 +1187,13 @@ function printCommandError(error: unknown): void {
 }
 
 export function registerDashboardCommands(program: Command): void {
-  const dash = program.command("dashboard").description("Per-project dashboard build commands");
+  const dash = program
+    .command("dashboard", { hidden: true })
+    .description("Per-project dashboard build commands");
 
   const bcmd = dash
-    .command("build")
-    .description(
-      "Generate per-project dashboard.md, epic Gantt chart SVG and catalog scaffold targets",
-    )
+    .command("build", { hidden: true })
+    .description("Internal compatibility entry for build --only dashboard")
     .option("--project <id>", "Project id in specdojo.config.json")
     .option("--dry-run", "Print generated content to stdout without writing", false);
 

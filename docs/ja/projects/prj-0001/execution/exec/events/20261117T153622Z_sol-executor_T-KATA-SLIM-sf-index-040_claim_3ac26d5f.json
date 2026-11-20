@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-17T15:36:22Z",
+  "type": "claim",
+  "task_id": "T-KATA-SLIM-sf-index-040",
+  "by": "sol-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA"
+  }
+}

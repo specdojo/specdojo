@@ -1,0 +1,21 @@
+`nfr-operations-rulebook` の改訂が終わりました。変更したのは `docs/ja/specdojo/rulebooks/nfr-operations-rulebook.md` の 1 ファイルだけで、成果物本体、sample、result には手を入れていません。prettier と markdownlint はどちらもエラーなしです。
+
+**大きさ**（空白と表の区切り行を除いた文字数）: 3,412 字から 2,728 字になり、79.95% で目安の 8 割以下に収まりました。
+
+**外した記述と、置き換えた参照**
+- 全体方針に「共通の運用」を 1 項目置き、役割はメンバー定義、`status`・承認・改訂と廃止・未決事項の引き継ぎはドキュメントメタ情報標準を参照する形にしました。
+- 第 2 章の用語の表（運用性・MTTD・手動介入条件）は本文要件の言い直しだったため外しました。章名は「位置づけと用語定義」から「位置づけ」に変えています。
+- Frontmatter の項目表から `title`・`status` の行を外し、`rulebook` の行を足しました。相対パスの Markdown リンクは、正本への wikilink とスキーマのパスの記載にしました。
+- 4.2 節「推奨ルール」は全体方針と同じ内容だったため、全体方針の 1 文にまとめました。
+- 記述ガイドの各節で繰り返していた見出しの指定は、冒頭の 1 文にまとめました。
+- 第 8 章の例は `specdojo:` 名前空間の frontmatter に直し、要件の例を 8 行から 3 行にしました。
+
+**残した記述**: 第 5 章の章名と必須の区分、運用要件一覧の 5 列、指標の例、型固有の禁止事項 3 行、測定・検証方法、関連文書への導線。
+
+**grade の指摘への対応**
+- F001（推奨配置ディレクトリがない）: 第 3 章に配置先 `docs/ja/product/060-non-functional-requirements/nfr-operations.md` を追記して解消しました。
+- F002（sample が標準テンプレに沿っていない）: sample はこの段で直せないため未解消です。handoff に変更案を書きました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"nfr-operations-rulebook から共通の運用の記述を外し、全体方針の「共通の運用」1 項目からの参照にした。F001 の配置先は追記した。3,412 字から 2,728 字（79.95%）になった。rulebook 以外は変更していない。","handoff":["大きさ（空白と表の区切り行を除いた文字数）: 3,412 字から 2,728 字（79.95%）。","章名の変更: 第 2 章を「位置づけと用語定義」から「位置づけ」に変え、用語の表を外した。表の 3 語は本文要件の言い直しで、rulebook 作成標準の用語定義を省く条件に当たるため。成果物の章構成（第 5 章の 5 章と必須の区分）は変えていない。","4.2 節「推奨ルール」（OPR に手順がある要件は達成基準のみを書く）は全体方針の 2 項目めと重なるため、全体方針に統合して節を外した。","Frontmatter の項目表から `title`・`status` の行を外し、`rulebook` の行を足した。相対パスの Markdown リンクは、ドキュメントメタ情報標準への wikilink とスキーマのパスの記載に置き換えた。第 8 章の frontmatter の例は `specdojo:` 名前空間の形に直した。","F001（推奨配置ディレクトリがない）: 第 3 章に配置先 `docs/ja/product/060-non-functional-requirements/nfr-operations.md` を追記して解消した（パスは plan の成果物 `path`）。","F002（sample が標準テンプレに沿っていない）は未解消。sample はこの段の commit 対象外のため変えていない。変更案: `nfr-operations-sample.md` を rulebook の 5 章（概要（対象・目的）／適用範囲・体制前提／運用要件一覧（`id`・`内容`・`指標`・`基準`・`備考`）／測定・検証方法／関連ドキュメント導線）で作り直す。その際、H1 と表の中の rulebook への相対リンクを外し、業務文脈を駄菓子屋プロジェクトにそろえる。次のアクションは sample を直す todo の起票。","recipe・template は `undecided` で実体がないため変更案はない。共通の正本への追記も不要と判断した（外した記述はドキュメントメタ情報標準で足りる）。","成果物 `docs/ja/product/060-non-functional-requirements/nfr-operations.md` は worktree にまだ存在せず、成果物との突き合わせはできなかった。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/nfr-operations-rulebook.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/nfr-operations-rulebook.md","status":"passed","summary":"0 issues in 0 files"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更したのは rulebook だけで、plan・result・個票を変更していないため"}]}
+</specdojo_executor_evidence>

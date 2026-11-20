@@ -39,8 +39,10 @@ rate_limit_policy:
   pinned:
     action: stop
     max_wait_seconds: 28800
+  # 既存 schema との互換用の必須項目。実行時は参照せず、skip は行わない。
   on_non_critical:
     action: skip
+  # 自動選択の全タスクに共通の再試行設定。
   on_critical:
     action: try_next
     retry:
@@ -56,6 +58,8 @@ providers:
   claude:
     command_template: "claude -p --verbose --agent {agent} --model {model} --settings .specdojo/claude/settings.{mode}.json"
     command_params:
+      by_proficiency:
+        frontier: {} # Explicit opt-in; model and role still come from the member and mode.
       by_mode:
         edit: { agent: claude-executor }
         review: { agent: claude-review-executor }
@@ -72,12 +76,15 @@ providers:
       by_proficiency:
         normal: { effort: medium }
         expert: { effort: high }
+        frontier: { effort: xhigh }
     rate_limit_detection:
       stderr_patterns: [rate limit, "429", session limit, weekly limit, usage limit]
   opencode:
     # The model ID depends on the provider name in opencode.json. Adjust the members' model.
     command_template: "opencode run --agent {agent} --model {model}"
     command_params:
+      by_proficiency:
+        frontier: {}
       by_mode:
         edit: { agent: opencode-executor }
         review: { agent: opencode-review-executor }
@@ -93,9 +100,15 @@ providers:
     # expert は Flash の high とする（2026-10-15、agy 1.3.5 で確認）。
     # model の ID は実体の member の model に書く（PJR-ZM1K）。
     command_template: 'specdojo agent launch --provider antigravity --role {mode} -- --sandbox --model {model} -p "$(cat)"'
+    command_params:
+      by_proficiency:
+        frontier: {}
     rate_limit_detection:
       stderr_patterns: [rate limit, "429", quota, RESOURCE_EXHAUSTED]
   copilot:
+    command_params:
+      by_proficiency:
+        frontier: {}
     command_template: >-
       copilot -p "$(cat)" --no-color --no-ask-user --model auto
       --no-remote --no-remote-export --disable-builtin-mcps

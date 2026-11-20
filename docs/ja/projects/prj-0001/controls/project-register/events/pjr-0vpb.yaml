@@ -1,0 +1,69 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_7bacd89c794944b596616b3241047e39
+  ts: "2026-11-17T23:21:57Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: ifx-api・ifx-msg・dec の rulebook と sample から文書の運用の記述を外す
+    - field: description
+      from: ""
+      to: SpecDojo に実物がなくカタログに代表を作らない 3 つの型を、sample だけを相手に kata-slim と同じ一覧で簡潔にする
+    - field: input
+      from: ""
+      to: '["利用者の決定（2026-11-18）: SpecDojo には REST API・非同期メッセージの連携・dec 文書がないため、カタログに代表を作らない（捏造を避ける）。dec を非推奨にするかは別の decision で決める"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-18"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-DJZD"]'
+- v: 1
+  id: reg_bf40f61ee3234eccac10a840b0a73f19
+  ts: "2026-11-18T00:10:07Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_7bacd89c794944b596616b3241047e39
+- v: 1
+  id: reg_c98824e1b8a24942a8f6f59a304c8f80
+  ts: "2026-11-18T00:31:22Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_bf40f61ee3234eccac10a840b0a73f19

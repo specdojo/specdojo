@@ -1,0 +1,26 @@
+bes-index-sample を書き直しました。冗長な記述を外し、空白を除いた文字数は 5,290 字から 3,680 字（69.6%）になり、7 割以下の目安に収まりました。業務上の結論は変えていません。検査は Prettier の整形確認だけ実施して通っています。lint などのリポジトリの検査は親 runner が実行するので、まだ結果は出ていません。
+
+**外した記述**
+- 冒頭の役割の段落（BA・UX・QE・ARC・PO の使い方と承認）。
+- 末尾の `status: draft` 維持と PO 承認の段落。
+- 受入条件のうち、Markdown・Frontmatter の静的検査の行と、PO が範囲を承認する行。
+- 未決事項の表の「判断者・確認担当」「次アクション・完了条件」「解消の時期」の列と、PM が登録簿に載せる段落。
+- 改訂時の引き継ぎ（3.3）。決まったときに直す行だけを未決事項の表へ移しました。
+- 詳細化表の下の補足 3 項目。表の言い直しか、作業手順だったためです。
+
+**1 か所にまとめた判断**
+- 未決の論点（発注のない納品、つけ上限超過、締めの関係、事実データの未照合、一覧の範囲）は「未決事項」の表を正とし、一覧の該当セルは章タイトルで参照する形にしました。
+- `_ASSUMPTION_` の段落はデータモデル未照合の言い直しを外し、未照合の件は未決事項の表の行に寄せました。
+
+**残した結論**
+10 行のイベント定義、発生時点・発生条件・事実データ、詳細化の対応、値引き・取消・返品を一覧に含めない扱い、確定入力にしない範囲は変えていません。表現を縮めたのは次の 2 か所です。
+- `bes-cash-sale-confirmed` の「いつ」から「店番担当の要求により」を外しました。誰が起こすかは「誰が／何が」の列にあります。
+- `bes-month-end-closed` の発生条件から「店主代表が締めを確定している」を外しました。確定したことは「いつ」の列が示しています。
+
+rulebook と template は `not-needed` のため触っていません。変更したのは `docs/ja/specdojo/samples/bes-index-sample.md` だけで、成果物本体には手を入れていません。
+
+文字数は空白（改行を含む）を除いて数えました。表の区切り行を除くと 5,023 字から 3,425 字（68.2%）です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"bes-index-sample から役割・承認の段落、静的検査の受入条件、未決事項の管理台帳の列（判断者・次アクション・時期）と PM 登録の段落、改訂時の引き継ぎ、詳細化表下の言い直しを外し、未決の論点は「未決事項」の表を正として一覧から章タイトルで参照する形にした。結論は維持。空白を除く文字数 5,290 → 3,680（69.6%、区切り行除外で 5,023 → 3,425）。rulebook と template は not-needed のため変更なし。","handoff":["文字数（空白・改行を除く）: 前 5,290 字 → 後 3,680 字（69.6%）。表の区切り行を除くと 5,023 字 → 3,425 字（68.2%）。result の `進め方と実践の型の適用` に記録すること。","根拠: `specdojo:bes-index-rulebook`（本文要件・記述ガイド・禁止事項）、`prj-0001:pjr-8s4t-sld-kata-slim-pilot` の「他の型へ広げるときの一覧」、`specdojo:sld-sample`。展開された finding はなし。bes-index-rulebook は recipe・template とも `not-needed` で、template の修正対象はない。","結論は変えていない。表現を縮めた箇所: `bes-cash-sale-confirmed` の「いつ」から「店番担当の要求により」を外した（主体は「誰が／何が」の列にある）。`bes-month-end-closed` の発生条件から「店主代表が締めを確定している」を外した（確定は「いつ」の列が示す）。","外した運用の記述: 未決事項の判断者・確認担当・次アクション・解消時期の列、PM の PJR 登録の段落、PO の範囲承認と `status: draft` 維持の段落、改訂時の引き継ぎ（3.3）のロールごとの作業。決まったときに直す行は未決事項の表の「影響と当面の扱い」に残した。","迷った点: 3 章の見出しは rulebook の章名「未決事項と承認条件」のまま残し、3.1 を「未決事項」、3.2 を「確定入力として扱う条件」とした。3.2 は受入条件のうち業務判定の条件（網羅・ID・発生判定・詳細化対応）だけを残した。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/bes-index-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する parent validation のため executor では実行しない"},{"command":"npm run lint:fm","status":"not_run","summary":"親 runner が実行する parent validation のため executor では実行しない"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/bes-index-sample.md のみで、plan・result・個票を変更していないため"}]}
+</specdojo_executor_evidence>

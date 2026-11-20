@@ -24,6 +24,12 @@ import { scanLocaleSidebar } from "./locale-sidebar";
 import { mermaidAssets } from "./mermaid-assets";
 import { mermaidSvgAutoGenerate } from "./mermaid-auto-generate";
 import { resolveExecRecordWikilink, rewriteExecRecordMarkdownHref } from "./exec-record-links";
+import {
+  EXEC_RECORD_SRC_EXCLUDE,
+  isExecPlanLink,
+  isExecResultLink,
+  isExecRecordPath,
+} from "./exec-record-paths";
 import { loadArchiveLinks, resolveArchiveWikilink } from "./archive-links";
 import * as path from "path";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
@@ -117,7 +123,9 @@ function collectFrontmatterDocLinks(
     if (links[candidate]) return;
     const docsRelPath = resolveDocRelPath(candidate);
     if (!docsRelPath || docsRelPath === currentRelPath) return;
-    links[candidate] = "/" + docsRelPath.replace(/\.md$/, ".html");
+    links[candidate] =
+      resolveExecRecordWikilink(candidate, docIndex, GITHUB_SOURCE)?.href ??
+      "/" + docsRelPath.replace(/\.md$/, ".html");
   };
 
   const visit = (value: unknown, depth: number): void => {
@@ -239,15 +247,11 @@ type SearchRenderEnv = {
   relativePath?: string;
 };
 
-const isExecRecordPath = (relativePath: string | undefined): boolean =>
-  relativePath !== undefined &&
-  /(^|\/)execution\/exec\/(events|plans|results)(\/|$)/.test(relativePath.replace(/\\/g, "/"));
-
 const isExcludedSearchPath = (relativePath: string | undefined): boolean => {
   if (!relativePath) return false;
   const path = relativePath.replace(/\\/g, "/");
 
-  if (/(^|\/)execution\/exec\/(events|plans|results)(\/|$)/.test(path)) return true;
+  if (isExecRecordPath(path)) return true;
   if (/(^|\/)controls\/project-register\/pjr-[^/]+\.md$/.test(path)) return true;
   if (/(^|\/)controls\/project-register\/generated\/pjr-views-by-[^/]+\.md$/.test(path))
     return true;
@@ -280,6 +284,10 @@ const specdojoItems = {
 
 // GitHub Pages の公開パス: https://specdojo.github.io/specdojo/
 const base = "/specdojo/";
+
+// 日本語トップ（docs/ja/index.md）が無い利用リポジトリでは、「ホーム」と言語メニューを
+// ステージングに必ずあるサイトのトップへ向け、404 にしない。
+const jaHomeLink = existsSync(path.join(SITE_CONTENT_ROOT, "ja", "index.md")) ? "/ja/" : "/";
 
 /**
  * 追加したいロケールはここに足すだけでOK
@@ -380,11 +388,6 @@ const docsPathFromLink = (link: string): string | undefined => {
 
   return path.join(WORKSPACE_ROOT, "docs", `${clean}.md`);
 };
-
-// exec 配下の plan / result 判定。H1 が定型文（"Edit Plan: ..." 等）のため、
-// メニューはタスクIDベースの表示名にする
-const isExecPlanLink = (link: string): boolean => link.includes("/exec/plans/");
-const isExecResultLink = (link: string): boolean => link.includes("/exec/results/");
 
 // result frontmatter（specdojo: 名前空間配下）の started_at を読む。
 // 表示名とソートの両方で使うためキャッシュする
@@ -659,7 +662,7 @@ const transformSidebar = (
   const transformed = items
     .filter((it) => !isHandbookTop(it)) // handbook トップは自動生成側に含めない
     // 実行記録（plan / result / events）は件数が多く、サイドバーに載せると全ページの HTML が
-    // 肥大化してビルドがメモリ不足になる。ページは公開したまま、生成一覧（exec-records）から辿る。
+    // 肥大化してビルドがメモリ不足になる。plan / result は生成一覧から GitHub の正本へ辿る。
     // 表示名の解決（ファイル読み込み）より前に除外し、不要な I/O も避ける。
     .filter((it) => !isExecRecordPath(it.link))
     .map((it) => {
@@ -844,8 +847,7 @@ export default defineConfig({
     "templates/**",
     "logs/**",
     "packages/**",
-    "docs/**/execution/exec/plans/**",
-    "docs/**/execution/exec/results/**",
+    ...EXEC_RECORD_SRC_EXCLUDE,
   ],
 
   // サイト設定（サイドバーを含む）とページのハッシュ表は、既定では全ページの HTML へ
@@ -919,10 +921,10 @@ export default defineConfig({
       label: "日本語",
       lang: "ja",
       // 言語メニューで押したときのリンク先（日本語トップ）
-      link: "/ja/",
+      link: jaHomeLink,
       themeConfig: {
         nav: [
-          { text: "ホーム", link: "/ja/" },
+          { text: "ホーム", link: jaHomeLink },
           { text: "SpecDojo", link: "/ja/specdojo/guides/specdojo-overview-guide" },
           {
             text: "プロジェクト",

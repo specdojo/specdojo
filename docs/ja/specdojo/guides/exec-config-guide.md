@@ -81,7 +81,7 @@ phase_sets:
 | `mode`           | 任意 | `edit` または `review`。省略時は `edit`                                                                                                                                                                           |
 | `approach`       | 任意 | `fully-guided` / `condense` / `recipe-guided` / `freeform` / `bootstrap` / `retrofit` / `cross-deliverable-dedup` / `rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` / `template-maintenance` |
 | `capabilities`   | 任意 | 必要なツールリスト。ツール不要の場合は省略                                                                                                                                                                        |
-| `proficiency`    | 任意 | 必要な品質水準。省略すると全水準が候補                                                                                                                                                                            |
+| `proficiency`    | 任意 | 必要な品質水準。`low` / `normal` / `high` / `expert` / `frontier`。省略すると `frontier` を除く水準が候補                                                                                                         |
 | `agent`          | 任意 | `executor`（必須）と `reporter`（任意）の nickname。CLI の stage override に次いで優先                                                                                                                            |
 | `agent_pipeline` | 任意 | executor、reporter の 2 stage と stage ごとの `capabilities` / `proficiency`。省略時は従来の単一 agent フロー                                                                                                     |
 
@@ -149,11 +149,13 @@ alias の連鎖は使用できますが、循環してはならず、終端は�
 
 pipeline 専用 agent には `stage_role: executor` または `stage_role: reporter` を指定します。`stage_role` を省略した既存 agent は従来の単一 agent フロー専用です。自動選択では、従来タスクから stage role 付き agent を除外し、pipeline stage から stage role 未指定 agent と異なる stage role の agent を除外します。これにより既存 agent 定義を変更せず、新しい pipeline agent を追加できます。
 
-`exec run --auto` は phase または pipeline stage の `capabilities` をすべて持つ agent を候補にします。`proficiency` が指定されている場合は一致する agent のみを候補にし、未指定の場合は全水準を候補に含めます。候補のソートキーは次の順に評価します。
+`exec run --auto` は phase または pipeline stage の `capabilities` をすべて持つ agent を候補にします。`proficiency` が指定されている場合は一致する agent のみを候補にし、未指定の場合は `frontier` を除く水準を候補に含めます。候補のソートキーは次の順に評価します。
 
 1. busy 状態（イベントログ上で `doing` のタスクを担当中の agent）を最後尾に置きます。`--parallel` 実行で同じ最上位 agent に集中して rate limit に陥るのを避けるためです。
 2. `priority` 昇順（同値なら次へ）。
 3. 余剰 capabilities 数の少ない順。
+
+`frontier` は `expert` より上の最上位段です。自動選択では、タスクまたは pipeline stage が `proficiency: frontier` を明示した場合だけ候補にします。通常候補がすべて busy の場合や、rate limit で次候補へ切り替える場合も、この条件は変わりません。名前で指名する CLI、`routing`、sch-strategy / Job の `agent` では、タスクの習熟度要件にかかわらず使用できます。
 
 ソート後、`exec-defaults.yaml` の `providers.<provider>.max_concurrency` が設定された provider について、現在実行中の agent が上限に達していれば、その provider の候補を除外します。別 provider の候補が残ればそれを実行者に繰り上げます。すべての候補の provider が上限に達している場合は、claim も worktree 生成も行わずにそのタスクを繰り延べます（タスクは `todo` のまま保持され、取りこぼしません）。`--loop` 実行では、agent 終了時に provider の枠を解放し、空いた `--parallel` 枠へ次の Ready タスクを投入します。`max_concurrency` はグローバルな `--parallel` を下げないため、他 provider は並列実行を維持します。auto 選択以外では、register の worktree モードで実行する executor/reporter pipeline（`--parallel` / `--resume` を含む）に適用し、項目ごとの各 stage を provider の空き枠まで待機させます。その他の Schedule phase の `agent`、`--by` / `--edit-by` / `--review-by` / `--executor-by` / `--reporter-by` による明示指定や Schedule task の resume 実行には適用しません。
 
@@ -166,6 +168,8 @@ phase の by-name agent や `--executor-by` / `--reporter-by` で指名した ag
 手動 CLI の busy 時既定は `--if-busy fail` です。必要に応じて `wait` または `skip` を明示します。routine は待機で cron worker を占有しないよう常に `--if-busy skip` を渡し、再試行は次回の cron tick に委ねます。
 
 自動選択で rate limit を検知したら、まず待機なしで次の優先順 agent に切り替えて再実行します（次候補は別アカウント/プロバイダ想定）。全候補が rate limit の場合のみ `rate_limit_policy.on_critical.retry` の wait+backoff で再パスを行い、`max_attempts` 回（初回パスを 1 回目として数える）まで繰り返します。phase の `agent` で指名した場合は候補がその1件に固定されるため、別 agent へは切り替えません。この再試行は critical / non-critical を問わず全タスクに適用します。
+
+`rate_limit_policy.on_non_critical.action: skip` は既存 schema との互換用の必須項目で、実行時には参照しません。設定しても非クリティカルタスクをスキップしません。既存の設定ではこの項目を残してください。provider 別の `rate_limit_policy` にも同じ扱いを適用します。
 
 ```mermaid
 flowchart LR
@@ -323,6 +327,8 @@ routing:
 
 `exec run --register` は個票に `difficulty` があり、対応する表がある場合だけこの指定を使います。個票に難易度がない場合、または対応する表がない場合は、`stage_role` と `priority` による従来の自動選択へ戻ります。CLI の `--executor-by`・`--reporter-by`・`--on-rate-limit`・fallback 指定は、指定した項目だけ表より優先します。`on_rate_limit: wait` でも fallback は接続不能時の切替先として使用されます。
 
+通常実行（`--force-restart` を含む）では、全選択項目の振り分けを解決し、指名した executor・reporter の fallback を start の記帳・plan/result の生成・worktree の作成前に検査します。CLI の段別指定が振り分けの fallback と同じ agent になる場合も設定エラーとして終了コード 1 で停止します。別の fallback を明示するか、段の agent 指定を変更して再実行します。
+
 上の `qwen-executor` を使う `easy` の例は、変更範囲が docs・src・tests の内側で完結し、それらの外を変更しない作業に限る運用を前提にしています。難易度は優先度ではなく、必要な推論・判断と安全な変更範囲から決めます。
 
 `specdojo init --exec` は、選択した provider の member に合わせて 3 段階の表を生成します。provider を複数選んだ場合は、後続 provider の executor / reporter を fallback の例にも使います。
@@ -403,6 +409,9 @@ provider ごとに挙動が異なる設定は `providers.<provider>` に置き�
 
 - `command_template`: その provider の agent を起動するコマンドテンプレート。`{nickname}`・`{model}`・`{mode}`・`{proficiency}` と `command_params` の変数を member 属性で展開します。`model` のない従来 member は、これまでどおり `command_params` の `model` を使用できます。グローバル既定は持ちません。
 - `command_params`: テンプレートの追加変数表。`by_mode.<mode>`、`by_proficiency.<proficiency>`、`by_nickname.<nickname>` に変数名と値の組を置きます。同じ変数は `by_nickname`、`by_proficiency`、`by_mode` の順で優先します。
+
+`frontier` member を起動する provider には、`command_params.by_proficiency.frontier` が必要です。未定義なら member 名と不足する設定パスを示して起動前に停止します。member の `command` 上書きでも同じ検査を行います。追加変数が不要なら `frontier: {}` と書けます。`specdojo init --exec` の雛形は、Codex に `{ effort: xhigh }`、ほかの標準 provider に `{}` を用意します。既存リポジトリでは、member の追加に先立ってこの設定を加えます。
+
 - `rate_limit_detection`: provider 固有の検出シグナル（`stderr_patterns` を優先します）。
 - `connection_error_detection`: provider API やローカル LLM へ接続できない場合の検出シグナル（`stderr_patterns` を優先します）。
 - `rate_limit_policy`: provider 固有のリトライ／フォールバック／block ポリシー。
@@ -427,6 +436,7 @@ providers:
       by_proficiency: # model は実体の member の model を使い、effort だけを切り替える
         normal: { effort: medium }
         expert: { effort: high }
+        frontier: { effort: xhigh }
 
   antigravity:
     command_template: 'specdojo agent launch --provider antigravity --role {mode} -- --sandbox --model {model} -p "$(cat)"'
@@ -589,6 +599,15 @@ executor の出力は、そのまま reporter へ渡さずに run 単位の evid
 - evidence ディレクトリは Git の管理対象です。成功して統合された run のログは履歴に残り、失敗中の worktree では未コミットのまま保持されます。`--force-restart` などで worktree を破棄すると未コミットログも失われるため、必要な調査を先に行います。既知パターンは保存前に秘匿しますが、未知形式の秘密が残る可能性を考慮し、ログを外部共有する前に内容を確認します。
 - executor が構造化した最終報告を返す場合は、標準出力に `<specdojo_executor_evidence>` タグで JSON（`final_message`・`validations`・省略可能な `completion_status`・`handoff`）を出します。`validations[].status` は `passed` / `failed` / `not_run` / `not_applicable` / `requires_human` のいずれかです。`not_applicable` はリポジトリが検査の適用条件を満たさない場合に使い、`reason` へ理由を必ず記録します。`requires_human` は、実 agent CLI の起動、利用枠や課金を伴う操作、認証情報やホスト側の操作など、agent の sandbox から実行できない確認だけに使います。実行できるが省略した検証には使わず、`not_run` として記録します。タグが無い場合は標準出力の残りを最終メッセージとして扱います。
 - `pipeline.parent_validations` には `validate-schema`（`npm run validate:schema`）、`typecheck`（`npm run typecheck`）、`test-unit`（`npm run test:unit`）、`test-integration`（`npm run test:integration`）、`lint-ts`（`npm run lint:ts`）、`lint-fm`（`npm run lint:fm`）、`lint-md`（`npm run lint:md`）、`lint-mermaid`（`npm run lint:mermaid`）、`lint-d2`（`npm run lint:d2`）、`build`（`npm run build`）、`format-check`（`npm run format:check`）を指定できます。親 runner は executor の成功後・reporter の起動前に、指定順で固定 argv の検証を実行します。
+- `pipeline.post_integration` は、worktree 実行の統合の commit の後に親 runner が流す処理を `{ id, paths }` で指定します。ID は固定の許可リストで、現在は `build-dist`（`npm run build`）だけです。未知の ID、`paths` の欠落・空・空文字、`command` / `args` / `repo` などの余分な項目、ID の重複は設定の読み込みで拒否します。処理は統合の commit の差分が `paths` に当たるときだけ、exec のロックを持ったまま流すため、同時に流れる run の統合と重なりません。失敗しても統合は戻さず、`dist/.specdojo-build-failed` を置いて次の `exec` を dist-freshness の判定で止めます。結果は run の記録の `post-integration.log` に `passed` / `failed` / `skipped`（`paths` に当たらない）として残ります。
+
+  ```yaml
+  pipeline:
+    post_integration:
+      - id: build-dist
+        paths: ["src/**", "tsconfig*.json"]
+  ```
+
 - executor prompt には設定済み ID と対応コマンドを明示します。executor はそのコマンドや対象限定版を sandbox 内で実行せず、executor evidence の validations にも含めなくてよいものとします。親 runner の結果は `source: runner` と許可リスト `id` 付きで同じ `validations` 配列へ保存します。executor が同じ検査を `not_run` または `not_applicable` として含めた場合も、同じリポジトリで実行された親 runner の結果を正とします。これにより sandbox 内で成立しない検証を親へ移した場合も二重実行せず、executor の重複報告で run を止めません。
 - result の `changed_files` のパスは evidence の `changes` から、execution の evidence、project register とその派生ビュー、当該 result という runner 管理記録を除いて runner が機械生成します。除外後の変更一覧だけを reporter へ渡し、edit の変更説明は evidence のパスと対にして受け取ります。runner はパスで突き合わせるため、説明の順序は問いません。説明が不足したパスには Git の変更メタデータ（追加・変更・削除・名前の変更、行数）を記録し、変更ファイルが多い場合（50 件超）はディレクトリごとに集約して記録します。evidence にないパスの説明は捨てます。`outcome` と `block_reason` は stage の状態・終了コード・保護機構が保存した理由・executor / 親 runner の検証から機械生成します。reporter の JSON Schema は文章項目と対応づけ用のパスだけを受け付け、いずれかの検証が failed または `not_run` なら、reporter の文章にかかわらず機械判定は blocked です。ただし、executor が `not_run` または `not_applicable` と記録したコマンドを、親 runner が同じリポジトリで同じコマンドとして実行し成功していれば、親 runner の結果を正として executor の報告を無視します。さらに、`npm run <name>` に対応する script がない、`npx <package>` の package が `dependencies` / `devDependencies` にない、検査の対象となる種類の変更ファイルがない、または SpecDojo サブコマンドの設定上の適用条件を満たさないことを runner が機械的に確定できる場合、その `not_run` は block せず、edit result の申し送りへ「適用外の検証（runner の判定）」として追記します。変更ファイル種別で判定する対応は共通規約の検査表を正本とし、`validate:schema:file` は `*.yaml` / `*.yml`、Prettier は `*.md` / `*.ts` / `*.js` / `*.json` / `*.yaml` / `*.yml`、markdownlint は `*.md`、`validate:history-links`（`specdojo-docs-lint history-links` を含む）は履歴蓄積ファイル（`pjr-*.md`（`pjr-index.md` を除く）、または executor 自身が変更した `execution/runs/<origin>/<item>/<run>/` 配下の `plan.md`・`result.md` や旧来の `exec/plans/**/*.md`・`exec/results/**/*.md`）の変更がある場合だけ適用対象とします。変更範囲の判定では、runner が生成・更新する `exec/` 配下（`plans/`・`results/`・`evidence/`・`events/`・`.locks/`）を executor の変更ファイルから除外し、rename は変更前後の両方を見て、プロダクトリポジトリのコマンドはそのリポジトリの変更だけで判定します。`typecheck` など、この対応に含まれない検査の判定は変更しません。SpecDojo の起動形は `specdojo <subcommand>`、`npx specdojo <subcommand>`、ソース／配布済み CLI の直接起動を認識し、`catalog validate`（`npm run validate:catalog` および `tools/catalog-validate-if-configured.mjs` を含む）は対象 project の `catalog_path` で判定します。対象 project は、コマンドの `--project <id>`、run の対象 project（runner が execution path に一致する project を設定から特定したもの）、`current_project` の順に決めます。別の project が `catalog_path` を持っていても、run の対象 project に `catalog_path` がなければ適用外です。対象 project に `catalog_path` があっても、executor の変更（runner が書く `exec/` 配下などの runner 管理記録を除き、rename は変更前後の両方を見ます）が `docs/ja/projects/` 配下に及ばない run では、plan の共通規約の検証表と同じく適用外とし、executor の `not_applicable` も受理します。変更が及ぶ run では従来どおり適用対象です。また、`<repo>:<path>` を引数に含むコマンド、`--prefix <repo>` 付きのコマンド、または `$SPECDOJO_REPO_<NAME>` / `${SPECDOJO_REPO_<NAME>}` を含むコマンドは、対象 project が `repos` で宣言したそのプロダクトリポジトリの `package.json` で script と依存を判定します（`--prefix` はリポジトリ名か設定の `path` と一致するものを対象にします）。設定が読めない、対象 project を特定できない、または適用条件を未定義のサブコマンドは機械的な救済をせず、通常の `not_run` として扱います。executor の failed は親 runner の成功や適用外判定で打ち消しません。`npm run check` のように npm script を `&&` でつないだだけの合成コマンドを executor が `not_run` とした場合は、対象リポジトリの `package.json` の script を展開し、構成する各コマンドが同じリポジトリの親検証か executor 自身の検証で通っていれば満たされたものとして扱います。`npm test` は、`npm run test:unit` と `npm run test:integration` の両方が通っていれば満たされたものとします。構成するコマンドの script の中身と同じコマンドを executor が直接実行して通した場合も満たします（`tsx` の起動の書き方の違いはそろえて比べます）。任意のシェルを含む script は展開しません。理由付きの `not_applicable` は block の理由にせず、runner が edit result の申し送りへ「適用外の検証: `<コマンド>`（<理由>）」として機械的に追記します。ただし、理由がない場合、変更ファイル種別を含む適用条件を満たした `npm run <name>` の script が存在する場合、または同条件を満たした `npx <package>` の package が `dependencies` / `devDependencies` に存在する場合は誤申告として blocked にします。SpecDojo サブコマンドは package の有無だけでは反証せず、既知の適用条件を設定から判定します。適用条件が未定義なら理由付きの agent の申告に従います。`specdojo index build`（`npx specdojo index build`・`node --import tsx src/specdojo.ts index build` などの起動形を含みます）は runner が担う検証です。出力先の `.specdojo/doc-index.json` は agent が書き込めず、index は worktree の準備と統合の前に runner が再生成するため、executor への指示では実行も記録もしないよう伝えます。executor が `not_run` / `not_applicable` と記録しても block の理由にせず、`not_run` の場合は edit result の申し送りへ「runner が担う検証: `<コマンド>`（<理由>）」として追記します。runner の再生成が失敗した場合は worktree の準備で run が止まるか、runner の検証の失敗として block するため、満たしたものとは扱いません。executor の failed は救済せず、ほかの SpecDojo サブコマンドの `not_run` の扱いも変えません。executor の `requires_human` は block の理由にせず、runner が edit result の申し送りへ「人の確認が必要: `<コマンド>`（<要約>）」として機械的に追記します。項目は review へ進み、人が確認してから close します。
 - `completion_status` は作業の完了状態を示す省略可能な欄で、値は `complete` / `incomplete` です。欄のない既存の報告は `complete` として扱います。値が指定されていてこの 2 値に合わない場合は、安全側に倒して `incomplete` として保存します。executor は計画の作業を終えられなかった場合、`incomplete` とし、理由を `final_message`、残作業を `handoff` に書きます。終了コード 0 や親検証の成功では未完了の申告を上書きしません。`exec run --register` は親検証・reporter を起動する前に停止し、項目を `waiting` にして、秘匿処理・文字数制限を適用した `final_message` の要旨を `block_reason` に記録します。worktree 実行では変更と evidence を残し、統合しません。pipeline の executor は `blocked`、evidence の `stage.status` と `exit_code` は実際のプロセス結果のままとします。`--resume --resume-from executor`（または `--resume`）で再開でき、前回の理由と `handoff`、途中の変更を executor に引き継ぎます。完了を申告し直し、必要な検証を通過してから review・統合へ進みます。
@@ -663,7 +682,7 @@ claude と codex は normal と expert の 2 段を持ちます（0.4.6 から�
 
 init は選んだ provider の実体だけを名簿へ書き、別名は向き先の実体が選ばれたものだけを残します。次の手順の案内（`--executor-by` / `--reporter-by`）には別名を示します。antigravity の `agent-members-snippet.yaml` は実体を `disabled: true` で配布するため、別名は末尾にコメントの例として置きます。別名は無効な member を指せないので、向き先の実体を有効にしたものだけを `aliases` へ写します。
 
-`gpt-6-astra` は雛形の既定に入れません。使う場合は、次のように実体を名簿へ足し、`--executor-by astra-executor` や `routing` で指名します。
+`gpt-6-astra` は雛形の既定に入れません。使う場合は、次のように `proficiency: frontier` の実体を名簿へ足し、`--executor-by astra-executor` や `routing` で指名します。既存の起動設定には `providers.codex.command_params.by_proficiency.frontier: { effort: xhigh }` を追加します。
 
 ```yaml
 members:
@@ -677,7 +696,7 @@ members:
     mode: edit
     stage_role: executor
     capabilities: [web_search]
-    proficiency: expert
+    proficiency: frontier
     priority: 1
     persona: task-executor
     scheduler_strategy: critical-first

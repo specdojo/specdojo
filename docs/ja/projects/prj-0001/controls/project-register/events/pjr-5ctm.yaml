@@ -1,0 +1,111 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_70884c94f79546a2a0c3f678900615cc
+  ts: "2026-11-18T12:18:06Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: npm audit の high を解消する（配る依存を先に）
+    - field: description
+      from: ""
+      to: npm audit の high 15 件を解消する。配る依存（tinyglobby・fdir・picomatch・fast-uri）を先に直し、開発用は依存ごとに上げるか外すかを決める。古い版へ下げる直し方は使わない
+    - field: input
+      from: ""
+      to: '["利用者の依頼（2026-11-18）: npm audit で high が多く出るようになったので直したい","orchestrator の調べ（2026-11-18）: npm audit は high 15・moderate 18・low 3・critical 0。--omit=dev では high 3（tinyglobby・fdir・picomatch）と moderate 1（fast-uri）。tinyglobby は実行時の依存","orchestrator の調べ（2026-11-18）: 開発用の high は vitest・markdownlint-cli・remark-cli・ajv-cli・vite・markdown-it などの推移的な依存。npm audit の直し方には vitest@3.1.4・markdownlint-cli@0.33.0 など今より古い版へ下げる案が混じる","利用者の決定（2026-11-18）: 直し方は推奨の案 1。executor が依存ごとの直し方を調べて個票の対応結果に書き、package.json・package-lock.json（保護された設定）への反映は利用者の承認のもと orchestrator が feature ブランチで行う"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-11-18"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+- v: 1
+  id: reg_c1421b6ff6474af28ad7d04d6977c030
+  ts: "2026-11-18T13:29:13Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_70884c94f79546a2a0c3f678900615cc
+- v: 1
+  id: reg_05b04c90c6654f56b7fe30d766e80cc4
+  ts: "2026-11-18T13:49:14Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_c1421b6ff6474af28ad7d04d6977c030
+- v: 1
+  id: reg_4dba454380b54d3fa2d0af1305abbd67
+  ts: "2026-11-18T22:56:43Z"
+  action: start
+  actor: opus-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_05b04c90c6654f56b7fe30d766e80cc4
+- v: 1
+  id: reg_b0edb9e054ed4c239e625d5d8235a57a
+  ts: "2026-11-18T23:12:27Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_4dba454380b54d3fa2d0af1305abbd67
+- v: 1
+  id: reg_6647218af0994dcd93d2ed8035fb0dd9
+  ts: "2026-11-19T03:43:56Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 2 回の変更案を利用者の承認のもと feature ブランチで反映して統合し、audit と check・typecheck・lint・unit・integration・docs:build を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-19"
+    - field: conclusion
+      from: "-"
+      to: 配る依存の npm audit を 0 件、全体の high を 0 件にした。tinyglobby を node:fs の globSync へ移して依存から外し、docs-lint の engines を 22.17 に上げた。docs-lint 単体の audit に残る markdown-it の high は範囲の外として別に扱う
+  previous_event_id: reg_b0edb9e054ed4c239e625d5d8235a57a

@@ -3,6 +3,11 @@ pre-commit:
   piped: false
   parallel: true
   commands:
+    # run の最中に specdojo git を通さない commit を警告する（PJR-30SA）。警告だけで commit は止めない。
+    # hook の入口を devDependency に頼らせないため、tsx ではなく build 済みの dist を使い、無ければ何もしない。
+    git-lock-warning:
+      run: "[ -f dist/specdojo.js ] && node dist/specdojo.js git --project prj-0001 --warn-unlocked || true"
+
     # docs-build（vitepress build）は rendering pages 時にメモリを大量消費し、
     # 環境によっては OOM (exit 137) で commit がブロックされるため pre-commit から外す。
     # フルビルドの検証は CI 側で実行する想定。

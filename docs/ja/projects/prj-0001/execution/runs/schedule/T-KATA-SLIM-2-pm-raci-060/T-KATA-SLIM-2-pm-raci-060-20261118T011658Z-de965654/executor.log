@@ -1,0 +1,40 @@
+`docs/ja/specdojo/recipes/pm-raci-recipe.md` だけを書き直しました。文字数は 2,230 字から 1,559 字になり、約 69.9% で目安の 7 割以下に収まっています。数え方は prj-charter のときと同じで、空白（改行を含む）と表の区切り行を除いています。Recipe 記述標準の 8 章の構成はそのままです。
+
+**外した記述**
+- rulebook と同じ判断の言い直し:
+  - 各行に `A` を一つ、`R` を一つ以上置く手順
+  - 記号の意味を共通定義に任せる文
+  - 「`A/R` は作業担当も兼ねる」
+  - 通知だけの `I` を担当にしない
+  - 良い例 / 悪い例の「`A` を一つ」「全カタログ行を転記する」
+- 仕上げチェックの構造の検査（「二表がある」）。
+- 同じ確認の繰り返し:
+  - AI Agent の確認を 1 か所にまとめた。
+  - 担当の根拠をレビュー観点と深掘り手順の両方で確かめていたので、レビュー観点から外した。
+  - 「このレシピの使い方」で全体の手順をなぞる文を外した。
+- 元の recipe には、役割の表、`status` の昇格と承認、公開の承認条件、改訂と廃止の手順、未決事項の管理台帳の列はありませんでした。
+
+**残した・足した記述**
+- 書く順番とその理由:
+  - 対象を先に選ぶと責任が埋もれない。
+  - 成果物の承認者が先に決まると、プロセス行の判断を分けやすい。
+  - Schedule との照合は、不一致で表を直すため表の後に行う。
+- 入力の取り出し元（組織定義、初期スコープ、PM への確認、WBS・Schedule）。
+- 各節の問いとコツ。例えば次のものです。
+  - PM に「誰の判断を待って作業が止まったか」を聞く。
+  - 採用 Role の一覧は写さず、参照に置き換える。
+  - 担当が一意に決まらなければ、タスクの分割を WBS の担当者に相談する。
+- 深掘り手順は、対応のない主張を探す順序に書き換えました（行の目的 → `A` → `C`・`I` → `owner` がどの行から来たか）。
+- 「このレシピの使い方」は、Why・What・How・Trace の対応を 1 項目で示す形にしました。
+- recipe 本文に rulebook・sample への参照はありません。
+
+**検証**
+- `npx prettier --check` と `npx markdownlint-cli2` は、どちらも指摘なしでした。
+- lint、型チェック、テスト、schema の検証は、この後に親 runner が実行します。
+- 変更した履歴ファイルがないので、`npm run validate:history-links` は対象外です。
+
+rulebook・sample・template は変えていません。template の「主担当と照合先」の `_TODO_` に「人と組織の定義標準」への wikilink が残っていますが、そちらは recipe ではないので、変えるかどうかは別途判断が要ります。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"pm-raci-recipe から rulebook と同じ判断の言い直し、構造の検査、同じ確認の繰り返しを外し、書く順番とその理由・入力の取り出し元・問いとコツ・対応のない主張を探す深掘りに絞った。空白と表の区切り行を除いた文字数は 2,230 字から 1,559 字（69.9%）。8 章の構成は保った。","handoff":["大きさ（result の実施内容に記載）: pm-raci-recipe は 2,230 字から 1,559 字（69.9%）。空白（改行を含む）と表の区切り行（`| --- |`）を除いて数えた（PJR-7M9J と同じ測り方）。","変更案: rulebook・sample・template の変更は不要と判断した。template の「主担当と照合先」の `_TODO_` に人と組織の定義標準への wikilink が残る。ただし template の指示であり recipe の対象外のため、変えていない。","元の recipe には、役割の表、`status` の昇格と承認、公開の承認条件、改訂と廃止の手順、未決事項の管理台帳の列はなかった。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/recipes/pm-raci-recipe.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/recipes/pm-raci-recipe.md","status":"passed","summary":"0 issues in 1 file"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルは変更していない","reason":"変更したのは docs/ja/specdojo/recipes/pm-raci-recipe.md だけで、plan・result・個票の変更がない"}]}
+</specdojo_executor_evidence>

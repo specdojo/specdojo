@@ -1,0 +1,23 @@
+`dct-index-rulebook.md` を直し、前回止まった原因の schema 検査（`validate:schema`）を通るようにしました。この rulebook の enum 照合はローカルで成功しています。`validate:schema` 全体と lint、test はこのあと親 runner が実行します。
+
+**前回の失敗の原因と修正**
+- 前回は「ルート項目」の表から `status` の値（`draft` / `ready` / `deprecated`）を消していました。`validate:schema:rulebook-enums` は、rulebook に schema の enum 値がすべて書かれているかを照合するため、これで失敗していました。
+- 表の `type` / `status` / `rulebook` の行に、値の一覧だけを戻しました。値の意味の説明は戻さず、「全体方針」の「共通の運用」からメタ情報標準を参照する形のままです。
+
+**大きさ**
+- 空白を除いた文字数は 6269 → 4981 で、約 79.5% です。
+- 値の一覧を戻すと 80.4% になって目安を超えたため、重複していた 2 か所をさらに削りました。
+  - 「ドメイン項目」の「キーは `domain`、`name`、`overview` の順に書く」：「禁止事項」に理由付きで同じ内容があるため削除。
+  - 「変更時の影響確認」の検証手順の文：1 文に短縮。
+
+**それ以前の試行で入っていた改訂（そのまま維持）**
+- 運用の記述を外しました。役割の確認担当の段落、改訂・廃止の段落、影響確認の記録列の段落、本文の言い直しだけの用語の表です。
+- 「全体方針」に「共通の運用」を 1 項目置き、役割はメンバー定義、`status` の昇格・承認、改訂・廃止、未決事項の引き継ぎはメタ情報標準を参照する形にしました。
+- F001（規模ごとの成果物セットをどこで比べるかが分からないという指摘）に対応しました。成果物セットはカタログ template と各成果物の `min_size` で決まることと、scaffold が何を取り込むかを書いています。template に `min_size` があることは実ファイルで確認しました。
+- 章名を「位置づけと用語定義」から「位置づけ」に変えています。結果に理由を書く必要があるため、引き継ぎ事項に入れました。
+
+result、recipe・template・sample、成果物本体は変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"dct-index-rulebook から共通の運用の記述を外し、全体方針の「共通の運用」からメンバー定義とメタ情報標準を参照する形にした。前回の validate-schema 失敗（status の enum 値を本文から消していた）は、ルート項目の表に値の一覧を戻して解消し、rulebook-schema-enums の照合が通ることをローカルで確認した。F001 には template と min_size で規模を比べる方法を書いて対応した。空白を除いた文字数は 6269 から 4981（約 79.5%）。","handoff":["章名の変更: 「位置づけと用語定義」を「位置づけ」に改めた。用語の表は本文要件の言い直しで、生成物の対応は「全体方針」「ファイル命名・ID規則」に既にあるため削り、残る用語定義は domain の論理単位の 1 項目だけになったので章名を内容に合わせた。result に記録が必要。","rulebook-schema-enums の照合のため、ルート項目の表に status の enum 値（draft / ready / deprecated）を残した。値の意味の説明はメタ情報標準の参照に任せている。他の rulebook でも共通の運用を外すときに enum 値まで消すと validate:schema が失敗するため、型を簡潔にする一覧に「schema の enum 値の列挙は残す」を足すことを提案する。","「ドメイン項目」のキーの順序の記述は、禁止事項に理由付きで同じ内容があるため本文から削った。","recipe・template・sample には変更が要る点は見つからなかった（recipe は not-needed）。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/dct-index-rulebook.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"node packages/docs-lint/bin/specdojo-docs-lint.js rulebook-schema-enums","status":"passed","summary":"dct-index-rulebook.md: enum coverage valid（前回の失敗を解消）"},{"command":"npm run validate:schema:file","status":"not_applicable","reason":"変更した成果物は Markdown の rulebook だけで、YAML ファイルを変更していない"},{"command":"npm run validate:history-links","status":"not_applicable","reason":"自分で変更した履歴蓄積ファイル（plan・result・個票）がない"}],"target_coverage":[{"target":"specdojo:dct-index-rulebook","status":"changed","path":"docs/ja/specdojo/rulebooks/dct-index-rulebook.md"},{"target":"prj-0001:dct-index","status":"unchanged","reason":"plan が成果物本体を変えないと定めており、dct-index.yaml は根拠として読んだだけである"}]}
+</specdojo_executor_evidence>

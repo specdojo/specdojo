@@ -1,0 +1,35 @@
+PJR-8KXJ の作業を終えました。`pipeline.post_integration` に `build-dist`（`npm run build`）を指定すると、worktree 実行の統合の commit の後に親 runner が dist を作り直します。typecheck・lint・単体テスト・integration テストはこの環境では流しておらず、この後の親の検証で初めて結果が出ます。
+
+**実装の状態**
+コードとテストの大半は、今回の run の前の executor が作業ツリーに残したものでした。今回はそれを読んで確認し、文書と個票を書き足しました。中身は次のとおりです。
+
+- **設定の読み込み**: 許可する ID は `build-dist` だけです。未知の ID、空の `paths`、`command` などの余分な項目、ID の重複は読み込みで拒否します。schema にも同じ制約を入れました。
+- **実行の条件**: 統合した変更が `paths` に当たるときだけ流します。register・schedule・job の worktree 統合の後に、exec のロックを持ったまま実行します。
+- **失敗時**: 統合は戻しません。`dist/.specdojo-build-failed` という印を置き、次の `exec` は `src/shared/dist-freshness.ts` の判定で止まります。ビルドが成功すると印は消え、手で `npm run build` を流しても dist ごと消えます。
+- **記録**: 結果（`passed` / `failed` / `skipped`）は run の記録の `post-integration.log` と、標準出力の `[post-integration]` 行に残ります。統合段を再開しても、記録済みの処理は繰り返しません。
+
+**個票で決めた点**（理由は個票の対応結果に書きました）
+- 失敗の記録先は result ではなく run の記録にしました。
+- tsc は失敗しても新しい JS を出すことがあり、更新時刻の比較だけでは次の run が止まりません。そのため失敗の印を判定に加えました。
+- 対象は worktree 実行だけで、in-place 実行では流しません。
+- `paths` は必須にしました。
+
+**今回の変更**
+- `docs/ja/specdojo/references/command-reference.md` と `docs/ja/specdojo/guides/exec-config-guide.md` に設定と挙動を書きました。
+- 個票の作業内容の表は全行を `done` にしました。対応結果には実施内容、決めた点、`exec-defaults.yaml` の変更案、CHANGELOG の文案を書きました。
+- 変更したファイルを `npx prettier --write` で整形しました。整形で TypeScript のファイルも書き換わっています。
+- `npm run validate:history-links` は通りました。
+
+**お願いしたいこと**
+prj-0001 の `.specdojo/exec-defaults.yaml` に次を足す変更は保護された設定のため、私は反映していません。承認いただければ feature ブランチで反映してください。`package.json` の変更は要りません。
+
+```yaml
+pipeline:
+  post_integration:
+    - id: build-dist
+      paths: ["src/**", "tsconfig*.json"]
+```
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"`pipeline.post_integration` で `build-dist`（`npm run build`）を指定できるようにした。統合した変更が `paths` に当たるときだけ、worktree 統合（register・schedule・job）の commit の後に、親 runner が exec のロックを持ったまま流す。失敗しても統合は戻さず、`dist/.specdojo-build-failed` を置いて次の `exec` を dist-freshness の判定で止める。結果は `post-integration.log` に残す。単体テスト・schema テスト・E2E テストを足し、command-reference と exec-config-guide に書いた。個票の作業内容・対応結果（決めた点、`exec-defaults.yaml` の案、CHANGELOG の文案）を更新した。","handoff":["保護された設定の変更案: prj-0001 の `.specdojo/exec-defaults.yaml` の `pipeline` に `post_integration: [{ id: build-dist, paths: [\"src/**\", \"tsconfig*.json\"] }]` を足す。利用者の承認のもと feature ブランチで反映する。`package.json` の変更は要らない。","決めた点: 失敗の記録先は run の記録の `post-integration.log`（JSON Lines）とした。result は reporter の後に描画済みで、統合の後に書き換えると統合済みの commit と食い違うため。","決めた点: tsc は失敗しても新しい JS を出し得るため、失敗の印 `dist/.specdojo-build-failed` を dist-freshness の判定に加えた。成功時と手動の `npm run build`（dist を消してから作る）で印は消える。","決めた点: 対象は worktree 実行だけとした（in-place は統合の merge を持たないため）。`paths` は必須とした（docs だけの統合で build を流してロックの保持が延びるのを避けるため）。","CHANGELOG に書く事項（Added）: `exec run` の worktree 実行で、統合の後に `pipeline.post_integration` の固定処理（`build-dist` = `npm run build`）を、統合した変更が `paths` に当たるときだけ流せるようにした。失敗しても統合は戻さず、次の `exec` は dist-freshness の判定で止まる（PJR-8KXJ）。"],"validations":[{"command":"npx prettier --write (changed md/ts/yaml files)","status":"passed","summary":"Formatted changed files"},{"command":"npm run validate:history-links","status":"passed","summary":"All history files valid including pjr-8kxj ticket"}]}
+</specdojo_executor_evidence>

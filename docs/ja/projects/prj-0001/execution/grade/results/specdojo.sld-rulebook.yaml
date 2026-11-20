@@ -4,11 +4,11 @@ document: specdojo:sld-rulebook
 path: docs/ja/specdojo/rulebooks/sld-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-verdict: pass
-score: 97
-graded_at: "2026-11-15T11:50:14.605Z"
+verdict: needs-work
+score: 96
+graded_at: "2026-11-17T22:17:02.879Z"
 graded_by: sol-review-executor
-content_hash: bf2a73882d5223f386e79068de05893320fd93ecdcaefb012419f344496bec71
+content_hash: 00bb324263676b51aa26a330faae80a1885ca172ad01e07c10e12c56bf6f78bd
 categories:
   purpose:
     score: 100
@@ -21,11 +21,11 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 92
+    score: 83
   consistency:
     score: 100
 viewpoints:
@@ -60,8 +60,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -81,8 +81,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 2
+    score: 50
   vp-ux-readability:
     level: 4
     score: 100
@@ -103,48 +103,35 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 0
-  minor: 3
+  major: 1
+  minor: 1
   note: 0
 findings:
   - id: F001
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 47
-    anchor: "| 共有の有無             | 複数人・複数端末・Git リポジトリ等で共有されるか、端末ローカル・作業ブランチ固有・個人手元にとどまるかの区分と共有手段                           |"
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 120
+    anchor: >-
+      - **良い例**: 「`docs/**/generated/` および `.specdojo/doc-index.json` ／ 派生 Markdown ビューと文書索引 ／ `specdojo build`、`index
+      build` ／ 共有なし（`.gitignore` で除外し各環境で生成） ／ ビルド時に再生成 ／ `削除可`。`specdojo build` で再生成できる」
     message: >-
-      The glossary entries for sharing, lifetime, and deletion substantially repeat the corresponding definitions in
-      “保管場所一覧の標準列”; consolidate these explanations in the column definitions and reference them from the glossary,
-      preserving all disposal conditions and recovery requirements.
+      「良い例」が `docs/**/generated/` 全体を `削除可` かつ `specdojo build` で再生成可能としているが、実装の `src/grade/run.ts`
+      はこの配下に実行ロックと再開用状態を保存し、`src/routine/storage.ts` は旧 `routines/generated/`
+      の状態・履歴を移行元として扱う。これらの削除は排他の破綻や再開情報・未移行履歴の消失につながるため、例の対象を再生成可能な派生物へ限定し、実行状態と未移行データの除外条件を明記する。
     message_ja: >-
-      The glossary entries for sharing, lifetime, and deletion substantially repeat the corresponding definitions in
-      “保管場所一覧の標準列”; consolidate these explanations in the column definitions and reference them from the glossary,
-      preserving all disposal conditions and recovery requirements.
+      「良い例」が `docs/**/generated/` 全体を `削除可` かつ `specdojo build` で再生成可能としているが、実装の `src/grade/run.ts`
+      はこの配下に実行ロックと再開用状態を保存し、`src/routine/storage.ts` は旧 `routines/generated/`
+      の状態・履歴を移行元として扱う。これらの削除は排他の破綻や再開情報・未移行履歴の消失につながるため、例の対象を再生成可能な派生物へ限定し、実行状態と未移行データの除外条件を明記する。
   - id: F002
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 12
-    anchor: "- **記載レベル**: 一覧の1行は、共有範囲・寿命・削除可否の判断が同一となる保管場所の区分とします。個々のファイル名や一時変数をすべて列挙せず、運用者や開発者が誤削除や放置を防げる粒度でまとめます。"
-    message: >-
-      The previous sample metadata mismatch is resolved, but the declared sample combines `data/sales/` and
-      `data/summary/` in one row despite this rule requiring identical lifetime and deletion judgments within each row;
-      split them into separate rows. This is minor because the existing cells explicitly distinguish each path’s policy.
-    message_ja: >-
-      The previous sample metadata mismatch is resolved, but the declared sample combines `data/sales/` and
-      `data/summary/` in one row despite this rule requiring identical lifetime and deletion judgments within each row;
-      split them into separate rows. This is minor because the existing cells explicitly distinguish each path’s policy.
-  - id: F003
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 161
+    line: 126
     anchor: >-
-      - **良い例**: 「`_UNDECIDED_`: 監視結果・費用作業記録の具体的な保管先パスと保持期間。[[cdsd-execution|概念データストア定義（プロジェクト実行）]] の未決事項に対応し、運用設計フェーズで
-      OPS・ARC が方式を比較して PO が決定する。決定後に本書の第2章へ該当行を追加する。」
+      - **良い例**: 「`exec run` が異常終了して `execution/exec/.locks/` にロックが残った ／ 同じリポジトリで `exec run`
+      が動いていないことを確かめてから削除する。稼働中に消すと二重実行で実行記録が壊れる ／ DEV」
     message: >-
-      The “良い例” uses the number-only reference “第2章”, contradicting “禁止事項” and the Rulebook Authoring Standard; replace
-      it with the chapter title “保管場所一覧” and align the sample’s number-only chapter references. This is a minor
-      reference-maintenance issue; the previous metadata nonconformance is resolved.
+      「削除・退避・復旧の判断基準」の良い例が、稼働中の `exec run`
+      がないことを削除前の条件として直接記述しており、本文88・125・147行の「削除条件は保管場所一覧を参照する」という規則と矛盾する。条件を一覧へ記載し、場面別の手順から該当行を参照する例へ修正する。
     message_ja: >-
-      The “良い例” uses the number-only reference “第2章”, contradicting “禁止事項” and the Rulebook Authoring Standard; replace
-      it with the chapter title “保管場所一覧” and align the sample’s number-only chapter references. This is a minor
-      reference-maintenance issue; the previous metadata nonconformance is resolved.
+      「削除・退避・復旧の判断基準」の良い例が、稼働中の `exec run`
+      がないことを削除前の条件として直接記述しており、本文88・125・147行の「削除条件は保管場所一覧を参照する」という規則と矛盾する。条件を一覧へ記載し、場面別の手順から該当行を参照する例へ修正する。

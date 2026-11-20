@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-SLIM-2-imp-interface-040",
+  "run_id": "T-KATA-SLIM-2-imp-interface-040-20261118T103036Z-70c5af24",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-18T10:34:21.143Z",
+    "completed_at": "2026-11-18T10:37:21.798Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/rulebooks/imp-interface-rulebook.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../specdojo/rulebooks/imp-interface-rulebook.md   | 52 ++++++----------------\n 1 file changed, 14 insertions(+), 38 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/rulebooks/imp-interface-rulebook.md",
+      "status": "passed",
+      "summary": "対象ファイルを整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/rulebooks/imp-interface-rulebook.md",
+      "status": "passed",
+      "summary": "Prettier 整形に適合。"
+    },
+    {
+      "source": "executor",
+      "command": "node --input-type=module",
+      "status": "passed",
+      "summary": "標準入力の確認スクリプトで Markdown 表の解析、必須6章、標準6列、共通運用1項目、推奨配置、決定期限要件の削除を確認。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 YAML schema 検査は対象外。",
+      "reason": "変更は Markdown rulebook のみで、YAML ファイル変更がない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "成果物カタログ検査は対象外。",
+      "reason": "executor の変更は docs/ja/specdojo/rulebooks/ 配下のみで、docs/ja/projects/ に及ばない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検査は対象外。",
+      "reason": "履歴蓄積ファイル、plan、result を変更していない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 5417 file(s), 130 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 95 passed, 0 error, 0 未検査\n  graph: 6 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5417 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-imp-interface-040\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/devcontainer/scaffold.integration.test.ts\"}\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devconta\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.8.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schema)\ndocs/ja/specdojo/samples/ifx-api-sample\n… output omitted …\n/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-imp-interface-040/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-imp-interface-040/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.8.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-imp-interface-040\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/grade/grade.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/register/commands.test.ts\"}\n ✓ tests/src/grade/grade.test.ts (69 tests) 1732ms\n     ✓ resolves declared and reverse-linked Kata references  497ms\n[parent-valida\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "対象 rulebook を改訂し、共通運用を正本参照へ集約しました。必須6章・標準6列を維持し、文字数は変更前の74.85%。整形・構造確認は合格しました。",
+  "completion_status": "complete",
+  "handoff": [
+    "変更ファイル: docs/ja/specdojo/rulebooks/imp-interface-rulebook.md のみ。成果物本体、sample、recipe、template、grade 結果、result は変更していない。",
+    "result 記載用の判断根拠: xp/xep 共通規約、rulebook-authoring-standard、document-metadata-standard、id-and-file-naming-standard、docs-structure-guide、共通レビュー観点の `vp-ux-readability`・`vp-arc-conciseness`、sld-rulebook、PJR-8S4T の展開一覧、imp-interface-sample とその grade、imp-interface-rulebook の grade、dct-impact-analysis、改訂済み imp-business-rulebook を確認した。指定された成果物本体は未作成だが、カタログ・sample・規範により改訂を判断できた。",
+    "実施内容: 全体方針に「共通の運用」を1項目置き、役割は適用先のメンバー定義、status・承認・改訂と廃止・未決事項の引き継ぎは document-metadata-standard を参照した。用語表、共通 Frontmatter 表、未解決事項の担当・期限・次回レビュー管理、共通の重複転記禁止を削除。未解決事項には論点・不足情報・影響・当面の扱いを要求する。対応方針の実施担当・時期は I/F 対応に必要なため維持した。",
+    "finding 対応: F001 は推奨配置 docs/ja/projects/<project-id>/050-impact-analysis/imp-interface.md と適用先カタログに従う旨を追記して解消。F002 は空行で壊れていた Frontmatter 表を共通正本参照と型固有値の文章へ置換して解消。残る2表は Markdown parser で正常な表として解析でき、必須6章・標準6列も確認した。未解消 finding はない。",
+    "章名変更の理由: rulebook 第2章を「位置づけと用語定義（必要に応じて）」から「位置づけ」へ変更。用語表は本文・標準列の言い直しのため削除し、契約・互換性・障害波及・利用者影響の判断対象は残した。成果物側の章名・必須区分は変更していない。",
+    "文字数: Frontmatter・表区切り行を含み、改行を含む空白を除いて2,680字から2,006字、74.85%。sld 試行と同じく表区切り行も除く場合は2,389字から1,867字、78.15%。いずれも8割以下。",
+    "後続変更案: imp-interface-sample の未解決事項表から決定期限・担当を外し、判断・対応への影響と当面の扱いを示す。既存 grade が指摘する対象期間と高・中・低の尺度の欠落は成果物側の不備として維持し、sample 改訂時に補う。recipe・template は undecided、includes はなく、今回の追加編集対象はない。共通正本への追記は不要と判断した。",
+    "CHANGELOG 文案（変更）: 影響調査（I/F）の rulebook から共通の文書運用と重複定義を外して正本参照へ集約し、推奨配置を明記しました。親 runner が担当する lint・schema・test 等は executor では実行していない。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-imp-interface-040/T-KATA-SLIM-2-imp-interface-040-20261118T103036Z-70c5af24/executor.log",
+      "bytes": 4618,
+      "truncated": false
+    }
+  ]
+}

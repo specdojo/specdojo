@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_0dc29f54256841e386a19c66ffdd0a50
+  ts: "2026-11-18T11:04:53Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 決定記録（dec）と移行テスト計画（ntp）の型を非推奨にする
+    - field: description
+      from: ""
+      to: PJR-3VJM と PJR-ANKZ の決定に従い、dec の型を登録簿の decision へ、ntp の型を mtp-rulebook へ寄せて非推奨にし、参照元を後継へ向ける
+    - field: input
+      from: ""
+      to: '["利用者の決定（2026-11-18）: PJR-3VJM と PJR-ANKZ はどちらも推奨の A を採る","orchestrator の調べ（2026-11-18）: dec と ntp の型のファイルは rulebook と sample だけ。ほかの参照元は pm-review-viewpoints.yaml・dss-sample（dec のみ）・yaml-pages のテストの snapshot（specdojo--pm-review-viewpoints.md.snap）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-18"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-3VJM","PJR-ANKZ"]'

@@ -1,0 +1,141 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-SLIM-2-nfr-integrity-040",
+  "run_id": "T-KATA-SLIM-2-nfr-integrity-040-20261118T172135Z-5fc79419",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-18T17:23:32.087Z",
+    "completed_at": "2026-11-18T17:25:16.096Z",
+    "exit_code": 0,
+    "attempts": 2
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/rulebooks/nfr-integrity-rulebook.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../specdojo/rulebooks/nfr-integrity-rulebook.md   | 91 ++++++++--------------\n 1 file changed, 31 insertions(+), 60 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/rulebooks/nfr-integrity-rulebook.md",
+      "status": "passed",
+      "summary": "All matched files use Prettier code style"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴蓄積ファイルを変更していない",
+      "reason": "変更したのは docs/ja/specdojo/rulebooks/ 配下の rulebook だけで、plan・result・個票の履歴ファイルは変更していないため"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "docs/ja/projects/ への変更なし",
+      "reason": "変更は docs/ja/specdojo/rulebooks/ 配下だけで、docs/ja/projects/ 配下の成果物を変更していないため"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 5408 file(s), 107 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 83 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5408 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-nfr-integrity-040\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/devcontainer/scaffold.integration.test.ts\"}\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devconta\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.8.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schema)\ndocs/ja/specdojo/samples/ifx-api-sample\n… output omitted …\n/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-nfr-integrity-040/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-nfr-integrity-040/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.8.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-nfr-integrity-040\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/grade/grade.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/register/commands.test.ts\"}\n ✓ tests/src/grade/grade.test.ts (69 tests) 1111ms\n     ✓ uses the given reference instead of selecting one  346ms\n[parent-validatio\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "rate_limit_events": [
+    {
+      "action": "fallback",
+      "trigger": "rate_limit",
+      "from_actor": "sol-executor",
+      "to_actor": "opus-executor",
+      "resumed_at": "2026-11-18T17:23:33.890Z"
+    }
+  ],
+  "final_message": "nfr-integrity-rulebook から共通の運用の記述を外し、ドキュメントメタ情報標準への参照にした。第 2 章を「位置づけ」にして用語の表を外し、Frontmatter の表を正本に合わせ、サンプル章を最小例にした。F002 の誤記は直した。F001 は sample が変更対象外のため変更案として申し送った。空白を除いた文字数は 3,824 字から 3,258 字（約 85%）で、8 割の目安は型に固有の内容を残したため満たしていない。",
+  "completion_status": "complete",
+  "handoff": [
+    "大きさ: 空白（改行を含む）を除いた文字数は、前 3,824 字、後 3,258 字（約 85.2%）。8 割の目安に届かないのは、要件と検証の例・保持期間・例外条件など完全性の型に固有の内容を残したため。",
+    "章名の変更: rulebook の第 2 章を「位置づけと用語定義（必要に応じて）」から「位置づけ」に変え、用語の表（完全性・整合性違反・監査証跡）を外した。全体方針の言い直しで、rulebook 作成標準の用語定義を省く場合に当たるため。成果物の本文の 5 章の章名と必須の区分は変えていない。",
+    "Frontmatter の表から `title`（Markdown の frontmatter では禁止）と `status` の値の一覧（共通の正本と同じ内容）を外し、`rulebook` を足した。相対パスの Markdown リンクは wikilink とパス表記に置き換えた。",
+    "サンプル章: rulebook 作成標準の経過措置に従い章は残し、最小例にした。Frontmatter の例を `specdojo:` の配下へ移して `title` を外し、空行で割れていた測定・検証方法の表を直し、要件と検証の表は代表 4 行（001・002・004・006）に、概要の例は 1 文にした。",
+    "F002（vp-ux-language-consistency）: 「冔等キー」を「冪等キー」に直した。",
+    "F001（vp-qe-kata-conformance）の変更案: docs/ja/specdojo/samples/nfr-integrity-sample.md の章構成が「目的と適用範囲・入力情報・記述内容・最小記述例・未解決事項」で、rulebook の本文構成（概要（対象・目的）／適用範囲・前提条件／完全性要件一覧／測定・検証方法／関連ドキュメント導線）に合っていない。sample をこの 5 章に組み替え、H1 の Markdown リンクと本文の rulebook へのパス参照を外すことを提案する。この段では sample は変更対象外のため直していない。",
+    "recipe と template は `undecided` で、対応するファイルがないため変更案はない。",
+    "共通の正本への追記は不要と判断した。外した記述はドキュメントメタ情報標準で賄える。",
+    "根拠となる成果物 docs/ja/product/060-non-functional-requirements/nfr-integrity.md はこの worktree に存在しないため、成果物との照合はしていない。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-nfr-integrity-040/T-KATA-SLIM-2-nfr-integrity-040-20261118T172135Z-5fc79419/executor.log",
+      "bytes": 6167,
+      "truncated": false
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+`docs/ja/specdojo/recipes/bac-recipe.md` を書き直しました。空白を除いた文字数は 3,188 字から 2,229 字（約 69.9%）になり、7 割以下の目安に収まっています。編集したのはこのファイルだけで、rulebook・sample・template・成果物本体・result には手を入れていません。`npx prettier --check` と `npx markdownlint-cli2` はどちらもエラーなしです。
+
+**外した記述**
+- 運用の記述: 作成手順の改訂手順と QE・ARC・PO・PM への引き継ぎ、集める情報の「改訂時の影響」行、仕上げチェックの改訂時の項目。
+- 未決事項の台帳と登録: 台帳の列にあたる「判断依頼先・解消時点・追跡先」と、PJR 登録候補として PM へ渡す段落。
+- rulebook と同じ判断の言い直し:
+  - 対象外の参照先の指定
+  - 期待結果に要る要素（確認者・確認時点・観測先・照合対象）の列挙
+  - `_TODO_` と `_UNDECIDED_` の使い分け
+- 重複と構造の検査: 各章の書き方の良い例・悪い例は「良い例 / 悪い例」の表にまとめました。レビュー観点と深掘り手順・仕上げチェックの重複（観測可能性、合意と継承）と、仕上げチェックの構造の検査も外しました。
+
+**残した記述**
+- このレシピの使い方: Why・What・How・Trace の対応を 1 項目にまとめ、使う順序の 1 項目を添えました。
+- 集める情報: 表に「取り出し元」の列を足しました。
+- 作成手順: 書く順番とその理由を書きました。
+- 各章の書き方: 各節に問いを 2 つずつと、つまずきやすい点・聞き方のコツを置きました。「写さず参照に置き換える」もコツに入れています。
+- 深掘り手順の 4 段と、6 観点の良い例・悪い例も残しています。
+- 8 章の構成は保ち、本文に rulebook・sample への参照は書いていません。
+
+**result に書いてほしいこと**
+- 前後の文字数: 3,188 字 → 2,229 字。
+- rulebook・sample・template の変更案: 今回見た範囲では、変える点は見つかりませんでした。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"bac-recipe から運用の記述、未決事項の台帳の列と登録の段落、rulebook と同じ判断の言い直し、仕上げチェックの構造の検査、レシピ内で繰り返していた確認を外した。8 章の構成は保った。空白を除いた文字数は 3188 から 2229（約 69.9%）。変更したのは docs/ja/specdojo/recipes/bac-recipe.md だけ。","handoff":["result に前後の文字数を書く: 空白を除いて 3188 字から 2229 字（約 69.9%）。","rulebook・sample・template の変更案: 今回見た範囲では、変える点は見つからなかった。","外した記述: 改訂の手順と QE・ARC・PO・PM への引き継ぎ、未決事項の台帳の列（判断依頼先・解消時点・追跡先）と PJR 登録の段落、rulebook と同じ判断の言い直し（期待結果の 4 要素、`_TODO_` と `_UNDECIDED_` の使い分け、対象外の参照先）、レビュー観点の重複（観測可能性、合意と継承）、仕上げチェックの構造の検査。各章の良い例・悪い例は「良い例 / 悪い例」の表にまとめた。","残した記述: 使い方（Why・What・How・Trace の 1 項目）、集める情報（取り出し元の列を追加）、書く順番とその理由、各節の問い 2 つとコツ（写さず参照に置き換える、を含む）、深掘り手順の 4 段、6 観点の良い例・悪い例。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/recipes/bac-recipe.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/recipes/bac-recipe.md","status":"passed","summary":"0 issues in 0 files"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更したのは docs/ja/specdojo/recipes/bac-recipe.md だけで、plan・result・個票は変更していない"}]}
+</specdojo_executor_evidence>

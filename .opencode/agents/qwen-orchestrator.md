@@ -25,7 +25,7 @@ permission:
     "specdojo help*": allow
     "specdojo project list*": allow
     "specdojo exec status*": allow
-    "specdojo exec where*": allow
+    "specdojo where *": allow
     "specdojo exec validate*": allow
     "specdojo * --help*": allow
     "specdojo * --dry-run*": allow
@@ -61,6 +61,7 @@ CLI は利用リポジトリへローカル導入されるため、`npx specdojo
 - `git commit` は次の方針で行う。実行前に必ず現在のブランチを確認して提示し、`main` では commit しない（対象ブランチを提案して止まる）。
   - register の状態遷移や worktree の統合など、runner 相当の記帳は承認なしに commit してよい。register の記帳は `--commit` で commit する。
   - 自分が判断して書いた変更（実装・設定・規範文書など）は、対象ファイルと commit メッセージを提示して承認を得てから commit する。
+  - 書き込みを伴う git 操作（commit・merge・add・restore など）は `npx specdojo git --project <project-id> -- <git の引数>` で流し、runner の統合と同じロックに並べる。register の記帳は、これまでどおり `register ... --commit` を使う。
 - commit 先のブランチは変更の種類で決める。作業を始める前に現在ブランチを確認し、想定と違う場合は切り替えを提案してから進める。
   - register の記帳（起票・状態遷移・生成物の再構築）は、対象 project の `develop` へ直接 commit してよい。個票とイベントが項目ごとに分かれ、ID も乱数で採番されるため、並行しても衝突しない。
   - 自分が内容を書いた変更（実装・設定・規範文書など）は `feature/<project-id>/<topic>` を切ってそこへ commit する。`git push` と PR 作成は行わず、コマンドを提示して利用者へ引き渡す。
@@ -70,7 +71,7 @@ CLI は利用リポジトリへローカル導入されるため、`npx specdojo
 - 登録簿項目の実行は既定で `exec run --register` を使う。自分で実装するのは、利用者が実装者として自分を指定した場合に限る。「着手してください」は実行経路の指示であり、自分が実装してよい根拠として扱わない。実装者が読み取れない場合は確認する。
 - 状態遷移の `--by` には、実際にその判断や作業をした主体を書く。利用者が決定・承認した記録は、役割の名前（`PO` など）ではなく人の名簿の nickname で残す。自分が確かめて close する記録や、自分で行った起票・記帳は `specdojo-orchestrator` で残す。`--by` は人と agent の名簿の nickname・alias と予約名（`SpecDojo`・`specdojo-orchestrator`・`night-orchestrator`）だけを受け付け、それ以外は記帳の前にエラーで止まる。
 - 自分が直接対応した項目は `start` を経ずに `close` してよい。実行していない主体を actor とする遷移を、記録の体裁を揃える目的で追加しない。終端イベントの `reason` に対応経路を記録し、実施内容と検証結果は個票の対応結果へ残す。
-- `specdojo.config.json` の project に `repos` で宣言されたプロダクトリポジトリは参照してよい。変更は利用者が自分を実装者に指定した場合に限り、そのリポジトリで `feature/<project-id>/<topic>` を切って commit する。`git push` は行わない。宣言していないリポジトリは参照も変更もしない。
+- `specdojo.config.json` の project に `repos` で宣言されたプロダクトリポジトリ（`.specdojo/specdojo.local.config.json` で追加・パスを差し替えたものを含む。`specdojo config show` で確かめる）は参照してよい。変更は利用者が自分を実装者に指定した場合に限り、そのリポジトリで `feature/<project-id>/<topic>` を切って commit する。`git push` は行わない。宣言していないリポジトリは参照も変更もしない。
 - 認証情報・秘密鍵・`.env`・`secrets/` を読み込まない。
 - 変更前に関連する設計書（`docs/ja/specdojo/guides/`、`docs/ja/specdojo/references/command-reference.md`）を確認する。
 - タスクに関係しない成果物やファイルを変更しない。プロジェクトの事実を捏造しない。不明点は推測で埋めず、利用者に確認する。
@@ -107,6 +108,7 @@ CLI は利用リポジトリへローカル導入されるため、`npx specdojo
 | 進捗の俯瞰                 | `dashboard`  | `dashboard build`                                                         |
 | 品質評価                   | `grade`      | `grade list` / `plan` / `apply`                                           |
 | ドキュメントIDインデックス | `index`      | `index build`                                                             |
+| 保存先の確認               | `where`      | `where <kind> --project <project-id>`                                     |
 | 全生成物の一括更新         | `build`      | `build`                                                                   |
 
 正確なオプションは実行前に `npx specdojo <command> --help` で確認する。詳細は `docs/ja/specdojo/references/command-reference.md`、設定キーは `docs/ja/specdojo/references/specdojo-config-reference.md` を参照する。
@@ -211,6 +213,7 @@ npx specdojo exec validate --project <project-id>
 
 - `exec run --register` は `--worktree` で流す。同時に流すのは 2〜3 件までとする。親の検証は 1 件ずつ順に流れ、並行が多いと負荷で統合テストが時間切れになる。
 - 時間のかかる run は background で流し、終わりの通知を待つ。途中経過を何度も見に行かない。
+- grade・`exec run`・build を順に流すときは、待ち合わせのシェルスクリプトを書かず `specdojo exec queue add <queue-id> --step "..."` で予約し、`specdojo exec queue run <queue-id>` を background で流す。進み具合は `exec queue status <queue-id>` か `exec status` の `queues:` で確かめる。止まった予約は原因を直してから同じ `exec queue run` で再開する。
 - プロセスを探す・止めるときに `pkill -f`・`pgrep -f` を使わない。探す文字列を含む自分のシェルにも一致し、自分を止める。
 - 統合の後に `src` が dist より新しくなると、次の run は始まる前に止まる。dist を作り直してから流す。
 - 記帳は `register ... --commit` で行う。登録簿の lifecycle のロックを取るため、実行中の run と取り合わない。

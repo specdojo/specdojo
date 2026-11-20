@@ -4,11 +4,12 @@ document: specdojo:bes-recipe
 path: docs/ja/specdojo/recipes/bes-recipe.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-recipe
 verdict: pass
-score: 95
-graded_at: "2026-11-12T20:04:07.290Z"
+score: 98
+graded_at: "2026-11-19T20:09:39.388Z"
 graded_by: flash-high-executor
-content_hash: 56080885506d8f12acbb872c1fe0009e4ab2823f6296cabc1df725ea0ba83a45
+content_hash: 3cb7f6846f0bd08ef8dcb8c4f14546c8c5c1a8134592a5ee6668f0d1c69a87a2
 categories:
   purpose:
     score: 100
@@ -27,7 +28,7 @@ categories:
   quality:
     score: 92
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -78,8 +79,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
     level: 3
     score: 75
@@ -104,30 +105,17 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 2
-  note: 0
+  minor: 0
+  note: 1
 findings:
   - id: F001
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 92
-    anchor: ""
-    message: >-
-      Section 8 (仕上げチェック) omits verification of upstream event list (BEL) correspondence and provisional reference
-      handling (with verification owner and timing) required by bes-rulebook §3 and §5.
-    message_ja: >-
-      Section 8 (仕上げチェック) omits verification of upstream event list (BEL) correspondence and provisional reference
-      handling (with verification owner and timing) required by bes-rulebook §3 and §5.
-  - id: F002
-    severity: minor
+    severity: note
     rule: vp-qe-kata-conformance
-    line: 36
-    anchor: ""
+    line: 44
+    anchor: "### 4.2. 何が起きたか"
     message: >-
-      Section 4 lacks guidance and author questions for the introductory section (clarifying confusion, usage criteria,
-      and upstream list mapping) defined in bes-template and bes-rulebook, and section 4.1 omits questions for
-      specifying the business approval owner, timing, and recording location.
+      前回の指摘にある導入節のガイダンスと問いの追加により主たる問題は解消されたが、bes-template にある業務承認の承認者・判断時期・記録先を指定する問いが 4.2 の問いに含まれていないため severity を note
+      に引き下げる。
     message_ja: >-
-      Section 4 lacks guidance and author questions for the introductory section (clarifying confusion, usage criteria,
-      and upstream list mapping) defined in bes-template and bes-rulebook, and section 4.1 omits questions for
-      specifying the business approval owner, timing, and recording location.
+      前回の指摘にある導入節のガイダンスと問いの追加により主たる問題は解消されたが、bes-template にある業務承認の承認者・判断時期・記録先を指定する問いが 4.2 の問いに含まれていないため severity を note
+      に引き下げる。

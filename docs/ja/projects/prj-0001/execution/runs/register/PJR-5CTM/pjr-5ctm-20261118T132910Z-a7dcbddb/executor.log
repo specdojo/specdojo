@@ -1,0 +1,30 @@
+プロジェクト登録簿の項目 **PJR-5CTM「npm audit の high を解消する（配る依存を先に）」** の executor ステージ作業を完了しました。
+
+作業成果物:
+- [pjr-5ctm-npm-audit-high.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-5CTM/docs/ja/projects/prj-0001/controls/project-register/pjr-5ctm-npm-audit-high.md)
+
+---
+
+### 主な対応内容
+
+1. **配る依存（`npm audit --omit=dev` 対象）の対処方針決定**:
+   - `fast-uri` (moderate): `overrides: { "fast-uri": "^3.1.9" }` を指定（`ajv` の指定範囲内で最新の修正版）。
+   - `tinyglobby` / `fdir` / `picomatch` (high): `picomatch`（<=4.0.7）の ReDoS 脆弱性（GHSA-fc5q-39xc-vjpf）は現在公式パッチ版が未リリースです。一方、`tinyglobby` の利用箇所は `src/register/authoring-sources.ts` のみであり、プロジェクト要件（Node.js >= 22.13）で標準提供されている `node:fs` の `globSync` で完全代替可能です。したがって配る依存から `tinyglobby` を外す（移行する）ことを推奨案とし、これにより配る依存の high を **0 件**（moderate も 0 件）にできる方針を決定しました。
+
+2. **開発用依存の high（12 件）の対処方針決定**:
+   - `ajv-cli` (high): スキーマ検証が `packages/docs-lint` の内部実装へ移行済みのため、「外す（使っていないツール）」として判定（推移的依存 `fast-json-patch` ごと解消）。
+   - `fast-json-patch` (high): `ajv-cli` 除外に伴い解消（残す場合は `overrides: { "fast-json-patch": "^3.1.1" }`）。
+   - `markdownlint-cli` (high): `^0.50.0` に上げる（推移的依存 `markdown-it` が `15.0.3` に更新されて ReDoS 解消）。`picomatch` 起因は上流待ち。
+   - `markdown-it` (high): `markdownlint-cli` の更新に伴い `15.0.3` へ更新されて解消。
+   - `vitest` (high): `^4.1.12` に上げる（推移的依存 `@vitest/mocker@4.1.12` でコードインジェクション脆弱性解消）。`picomatch` 起因は上流待ち。
+   - `vite` (high): `overrides: { "vite": "^8.3.8" }` で launch-editor の Windows bypass 脆弱性を解消。`picomatch` 起因は上流待ち。
+   - `source-map-js` (high): `overrides: { "source-map-js": "^1.2.2" }` で DoS 脆弱性を解消。
+   - `unified-args` / `chokidar` / `anymatch` / `readdirp` / `@typescript-eslint/typescript-estree` (high): すべて `picomatch`（GHSA-fc5q-39xc-vjpf）起因のため上流待ちとして記録。
+
+3. **保護された設定の変更案および検証**:
+   - テスト環境（`tmp/`）で変更案を適用した検証を行い、`npm audit --omit=dev` の脆弱性が 0 件になること、および残存 high が上流待ちの `picomatch` 起因（12 件）のみに絞り込まれることを実証しました。
+   - 個票および報告の `handoff` に変更差分案・反映後の確認事項・CHANGELOG 文案を記録しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"配る依存および開発用依存の high/moderate 脆弱性に対する対処方針（上げる・overrides・外す・上流待ち）を決定し、個票と handoff に package.json 変更案と orchestrator 向け確認事項を記録しました。","handoff":["【保護された設定の変更案】package.json の dependencies から tinyglobby を削除（src/register/authoring-sources.ts を node:fs の globSync に移行）、devDependencies から ajv-cli を削除、markdownlint-cli を ^0.50.0 に更新、vitest を ^4.1.12 に更新、overrides に fast-uri (^3.1.9), vite (^8.3.8), source-map-js (^1.2.2) を追加。","【上流待ちの記録】picomatch（<=4.0.7）の公式パッチ版が未リリースのため、開発用依存における picomatch 起因の high 12 件（picomatch, fdir, tinyglobby, anymatch, readdirp, chokidar, unified-args, markdownlint-cli, @typescript-eslint/typescript-estree, vite, @vitest/mocker, vitest）は上流待ち（追跡先: GHSA-fc5q-39xc-vjpf / micromatch/picomatch）として記録。","【orchestrator 向け反映後の確認事項】利用者の承認のもと feature ブランチで上記変更案および src/register/authoring-sources.ts の移行を反映した後、(1) npm audit --omit=dev で high 0 件・moderate 0 件、(2) npm audit の high が上流待ちの 12 件のみ、(3) npm run check・npm run typecheck・npm run lint:ts・npm run test:unit・npm run test:integration・npm run docs:build が通ることを確認する。","【CHANGELOG 文案】区分: Security、文案: 配る依存から tinyglobby を除外して Node.js 組み込みの globSync へ移行し、fast-uri・source-map-js・vite などの推移的依存の脆弱性を解消（PJR-5CTM）"],"validations":[{"command":"npx prettier --check docs/ja/projects/prj-0001/controls/project-register/pjr-5ctm-npm-audit-high.md","status":"passed","summary":"Prettier formatting check passed for modified register document"},{"command":"npm run validate:history-links","status":"passed","summary":"History link validation passed across all project register documents"}]}
+</specdojo_executor_evidence>

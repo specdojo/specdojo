@@ -1,0 +1,17 @@
+{
+  "v": 1,
+  "ts": "2026-11-19T13:13:29Z",
+  "type": "unblock",
+  "task_id": "T-KATA-SLIM-2-pjr-index-040",
+  "by": "opus-executor",
+  "msg": "resume integration from persisted pipeline state",
+  "meta": {
+    "pipeline_stage": "integrate",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-pjr-index-040/T-KATA-SLIM-2-pjr-index-040-20261119T120703Z-392e649c/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-pjr-index-040/T-KATA-SLIM-2-pjr-index-040-20261119T120703Z-392e649c/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-SLIM-2-pjr-index-040-20261119T120703Z-392e649c",
+    "claim_actor": "opus-executor",
+    "stage_actor": "opus-executor",
+    "pipeline_resume_claimed": "true"
+  }
+}

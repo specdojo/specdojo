@@ -1,0 +1,20 @@
+2026-11-16 の再 grade の指摘 6 件（major 2・minor 4）をすべて `cdsd-execution` に取り込み、個票も更新しました。`status` は `draft` のままです。完了条件にある再 grade は agent CLI を起動するため実行しておらず、個票の作業内容の No 4 を open のまま残しています。
+
+- **F005・F006（major）**: 形式違反の event ファイルは、別の event を追記しても直りません。1 件あるだけで、状態を変えるコマンドがすべて止まります。実装でそうなっていることを確かめたうえで、次のように直しました。
+  - 「訂正・不整合時の扱い」の行を 2 つに分けました。形式は正しいが内容が誤った event は、訂正の遷移を追記します。形式違反のファイルは承認された復旧手順がないので、保留とエスカレーションの条件にしました。状態を変えるコマンドを止め、ファイルは書き換え・削除・退避しません。QE が PM へ報告し、PO が復旧方法を承認するまで待ちます。
+  - 「生成元と利用制約」に、形式違反は追記では解消しないことを書きました。
+  - 「確認事項と変更影響」に、復旧手順の整備を留保として足しました。期限は本書の `ready` 化の判断までです。
+- **F003**: `--schedule-only` は状態を作り直さないと明記しました。実行状態は `specdojo exec status --state done` の一覧と complete の記録を照合する手順と合格条件に分けました。
+- **F004**: `--records-only` が欠落としない配置 4 通りを書き、合格条件を「欠落・配置違反 0 件」にしました。4 通りは、agent の作業、人の作業（result のみ）、evidence の導入前の run、記録の移し替え後の run です。
+- **F001**: 業務データ辞書 7 件は登録簿にも Schedule にも項目がありませんでした。追跡先を「未登録の PJR 候補」とし、PM が `ready` 化の判断より前に起票する、としました。
+- **F002**: `sld-specdojo` は今回の対象外なので編集していません。代わりに「確認事項と変更影響」に照合の申し送りの行を足しました。
+
+**変更したファイル**
+- `docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md`
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-pejq-cdsd-execution-rework-deferred-stores.md`（作業内容の表と対応結果）
+
+**検証**: `validate:catalog` と `validate:history-links` は通りました（catalog は他の成果物の WARN のみ）。整形と markdownlint も 2 ファイルとも 0 件です。それ以外の検査は親の runner に任せています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"cdsd-execution に 2026-11-16 の再 grade の指摘 F001〜F006 を取り込んだ。形式違反の event ファイルは保留とエスカレーションの条件にし、実行 event と実行状態の検証手順を分け、records の受け入れる配置4通りを明記した。辞書7件と復旧手順は未登録の PJR 候補とし、sld-specdojo への申し送りの行を足した。個票の作業内容と対応結果を更新し、再 grade の行は open のまま残した。status は draft のまま。","handoff":["決めた点: 形式違反の実行 event ファイルには実装にも承認済みの手順にも復旧手段がないため、手順は作らず、保留とエスカレーションの条件（状態を変えるコマンドを止める、ファイルは書き換え・削除・退避しない、QE→PM へ報告、PO が復旧方法を承認）として書いた。期限は cdsd-execution の ready 化の判断まで。","決めた点: 業務データ辞書7件と形式違反の event の復旧手順は、登録簿にも Schedule にも項目がないため、executor は起票せず『未登録の PJR 候補』とした。PM が ready 化の判断より前に起票する。","申し送り: sld-specdojo（対象外）の「概念データストア・実装配置との対応」と「CDSD 追加候補の正式登録と対応表の更新」は、実行状態・実行 plan と実行 result・実行 evidence・task worktree をまだ追加候補として書いている。同書の担当が cdsd-execution の名称へ更新する必要がある（F002）。","次のアクション: orchestrator が `grade run --target deliverable` で cdsd-execution を grade し直し、結果を個票 PJR-PEJQ の対応結果に書く（作業内容の No 4 は open のまま）。"],"validations":[{"command":"npm run validate:catalog","status":"passed","summary":"OK: dct-index.yaml（他の成果物の based_on の WARN のみ、exit 0）"},{"command":"npm run validate:history-links","status":"passed","summary":"変更した個票を含め exit 0"},{"command":"npx prettier --write","status":"passed","summary":"変更した Markdown 2 ファイルを整形した"},{"command":"npx markdownlint-cli2","status":"passed","summary":"変更した 2 ファイルとも 0 issues"}]}
+</specdojo_executor_evidence>

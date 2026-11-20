@@ -76,3 +76,48 @@
       from: in-progress
       to: review
   previous_event_id: reg_82ea5899870a427892f220ca578987f6
+- v: 1
+  id: reg_75b5569f0f574d7e8403faa237863fdc
+  ts: "2026-11-16T13:57:16Z"
+  action: start
+  actor: opus-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_edaec99e3f684c78b94c1a6ba7a2ae00
+- v: 1
+  id: reg_c5f2b9f7915f44aba9a6e6a3a20ca37b
+  ts: "2026-11-16T14:17:05Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_75b5569f0f574d7e8403faa237863fdc
+- v: 1
+  id: reg_c49060e350f1437caf55c5dcaa8bbf09
+  ts: "2026-11-16T14:54:45Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 2 回目の手直しの統合後に再 grade し、完了条件をすべて満たして pass になったことを grade の結果と個票の対応結果で確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: ifx-file-agent-evidence を grade の指摘で直し、再 grade で pass（95 点、完了条件 3/3）になった。成果物の確定は人の 140 で行う
+  previous_event_id: reg_c5f2b9f7915f44aba9a6e6a3a20ca37b

@@ -1,0 +1,1 @@
+{"id":"build-dist","command":"npm run build","base_commit":"9225de44ad224e5351c1e6a810e4dba623c5a4e3","output_commit":"6e193e62173aaece21f8ccf7e65a0b0bc13d1232","started_at":"2026-11-18T16:34:59.743Z","completed_at":"2026-11-18T16:34:59.800Z","status":"skipped","summary":"no integrated paths match paths"}

@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/pm-raci-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 100
-graded_at: "2026-11-13T10:26:29.708Z"
+score: 98
+graded_at: "2026-11-17T22:02:40.279Z"
 graded_by: sol-review-executor
-content_hash: c9f00799875cc024f3b47834a643de714bc34dec036ce0db196fdb4319acdb93
+content_hash: 38272f0cce0bb132a0246e12895e72c89339cf1d326ed0f7634314e5feb910b5
 categories:
   purpose:
     score: 100
@@ -25,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 92
   consistency:
     score: 100
 viewpoints:
@@ -81,8 +81,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -104,6 +104,20 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 2
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 24
+    anchor: "- 行は成果物 ID または判断・プロセス名で特定し、統合した行も各成果物から一意に照合できるようにします。"
+    message: 成果物行を成果物IDで特定し統合行も一意に照合するよう要求していますが、完成例の正本とするpm-raci-sampleの成果物別表には名称だけがあり、成果物IDとの対応が示されていません。宣言した完成例にIDと各行の対応を示し、本書の照合規則を実例から確認できるようにしてください。
+    message_ja: 成果物行を成果物IDで特定し統合行も一意に照合するよう要求していますが、完成例の正本とするpm-raci-sampleの成果物別表には名称だけがあり、成果物IDとの対応が示されていません。宣言した完成例にIDと各行の対応を示し、本書の照合規則を実例から確認できるようにしてください。
+  - id: F002
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 66
+    anchor: "- WBS・Schedule の正本（生成する場合は戦略・設定）と割り当て先を文書 ID で参照します。不一致の原因から、RACI の責任配置かタスク定義の正本か、修正先を明記します。"
+    message: 割り当て先を一律に文書IDで参照するよう要求していますが、上位標準と完成例がagent割り当ての正本とする.specdojo/agent-members.yamlは、agent-members.schema.yamlで文書IDを定義せず追加プロパティも禁止しています。文書IDを持つ成果物と設定ファイルを区別し、後者はパスで参照できる条件を明記してください。
+    message_ja: 割り当て先を一律に文書IDで参照するよう要求していますが、上位標準と完成例がagent割り当ての正本とする.specdojo/agent-members.yamlは、agent-members.schema.yamlで文書IDを定義せず追加プロパティも禁止しています。文書IDを持つ成果物と設定ファイルを区別し、後者はパスで参照できる条件を明記してください。

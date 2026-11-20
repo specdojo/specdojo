@@ -1,0 +1,30 @@
+修正は終わり、検証の結果を確かめています。報告します。
+
+`not_applicable` を誤って拒んでいた原因の判定を、登録簿の個票のディレクトリに限るように直しました。その結果、pjr の rulebook など、個票以外の `pjr-*.md` だけを変えた run では、`npm run validate:history-links` の `not_applicable` の報告が受け付けられます。
+
+**変更したファイル**
+
+- `src/exec/reporter.ts`: `isHistoryLinkTargetPath` は、ファイル名が `pjr-*.md` かどうかだけで判定していました。これを `docs/ja/projects/<project>/controls/project-register/pjr-*.md` に限る判定に変えました。`pjr-index.md` の除外と、plan・result の判定はそのままです。対象は記述ルールと docs-lint の既定 glob の両方と一致します。runner が理由として出す適用条件の文言も合わせて改めました。
+- `tests/src/exec/reporter.test.ts`: pjr の rulebook・sample・`pjr-index.md` のどれかだけを変えた場合に、報告を受け付けて `complete` になるテストを 3 件足しました。
+- 個票 `pjr-8z71-history-link-target-path.md`: 対応結果に、解決内容（決めた点とその理由を含む）・確認結果・再発防止策・CHANGELOG に書く事項を書きました。
+
+**確かめたこと**
+
+- 修正前のコードでは、新しいテストのうち rulebook と sample の 2 件が失敗しました。修正後は `reporter.test.ts` の 128 件がすべて通りました。個票を変えた run で報告を拒む既存のテストも通っています。
+- `npm run validate:history-links` は終了コード 0、Prettier の検査も通りました。
+- 途中で裏で走らせた `tests/src/exec/` 全体のテストは、結果を見ないまま終えています。単体テストは親の runner が実行します。
+
+**次に必要なこと**
+
+- 本項目を統合した後、T-KATA-SLIM-2-pjr-index-040 を `exec resume --task` で再開し、統合まで進むかを orchestrator が確かめる必要があります。
+- 差分にある `events/pjr-8z71.yaml` は私の変更ではなく、runner 側が書いたものです。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"isHistoryLinkTargetPath の pjr-*.md 判定を docs/ja/projects/<project>/controls/project-register/ 配下に限定し、個票以外の pjr-*.md だけを変えた run で validate:history-links の not_applicable を受け付ける単体テストを追加した。個票の対応結果を記入した。","handoff":["判断: 個票の判定は docs/ja/projects/ 配下の controls/project-register/pjr-*.md に限定した。理由: `validate:history-links` の既定 glob（packages/docs-lint/src/validate-history-links.ts）と .github/instructions/markdown.instructions.md の対象がこの範囲のため。","本項目の統合後、orchestrator が T-KATA-SLIM-2-pjr-index-040 を `exec resume --task` で再開し、統合まで進むことを確かめる（executor は未実施）。","CHANGELOG 文案（不具合修正）: `exec`: pjr の rulebook など、登録簿の個票ではない `pjr-*.md` だけを変えた run で、executor が `npm run validate:history-links` を `not_applicable` と報告すると runner が拒んで止まる不具合を修正した（PJR-8Z71）。","保護された設定は変更していない。"],"validations":[{"command":"npx vitest run tests/src/exec/reporter.test.ts","status":"passed","summary":"128 tests passed（修正前は追加テストの rulebook・sample の 2 件が失敗することを確認）"},{"command":"npx prettier --check src/exec/reporter.ts tests/src/exec/reporter.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-8z71-history-link-target-path.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"passed","summary":"exit 0（個票を変更したため実行）"}]}
+</specdojo_executor_evidence>
+
+裏で走らせていた `tests/src/exec/` 配下の全テストも終わり、1,939 件すべて通りました。前の報告で「結果を見ないまま終えた」と書いた分です。報告の内容は変わりません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"isHistoryLinkTargetPath の pjr-*.md 判定を docs/ja/projects/<project>/controls/project-register/ 配下に限定し、個票以外の pjr-*.md だけを変えた run で validate:history-links の not_applicable を受け付ける単体テストを追加した。個票の対応結果を記入した。","handoff":["判断: 個票の判定は docs/ja/projects/ 配下の controls/project-register/pjr-*.md に限定した。理由: `validate:history-links` の既定 glob（packages/docs-lint/src/validate-history-links.ts）と .github/instructions/markdown.instructions.md の対象がこの範囲のため。","本項目の統合後、orchestrator が T-KATA-SLIM-2-pjr-index-040 を `exec resume --task` で再開し、統合まで進むことを確かめる（executor は未実施）。","CHANGELOG 文案（不具合修正）: `exec`: pjr の rulebook など、登録簿の個票ではない `pjr-*.md` だけを変えた run で、executor が `npm run validate:history-links` を `not_applicable` と報告すると runner が拒んで止まる不具合を修正した（PJR-8Z71）。","保護された設定は変更していない。"],"validations":[{"command":"npx vitest run tests/src/exec/","status":"passed","summary":"1939 tests passed（修正前は追加テストの rulebook・sample の 2 件が失敗することを確認）"},{"command":"npx prettier --check src/exec/reporter.ts tests/src/exec/reporter.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-8z71-history-link-target-path.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"passed","summary":"exit 0（個票を変更したため実行）"}]}
+</specdojo_executor_evidence>

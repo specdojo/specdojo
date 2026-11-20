@@ -170,6 +170,22 @@ export type PreservedRegisterTicket = {
   content: string;
 };
 
+// 個票の本文（executor が書いた対応結果など）は bodyContent を保ち、frontmatter の状態の欄
+// （登録簿の項目の欄と block_reason）だけを lifecycleContent の値へ揃える。lifecycleContent を
+// 解析できない場合は例外を投げる。
+export function overlayRegisterTicketLifecycle(
+  bodyContent: string,
+  lifecycleContent: string,
+  ticketRelPath: string,
+): string {
+  const parsed = readRegisterItemContent(lifecycleContent, basename(ticketRelPath));
+  if (!parsed) throw new Error(`could not parse register item: ${ticketRelPath}`);
+  return applyRegisterItemFields(bodyContent, {
+    ...registerItemFieldsFromItem(parsed.item),
+    block_reason: parsed.blockReason === CELL_NONE ? null : parsed.blockReason,
+  });
+}
+
 // wait commit の個票は検証済みの root 本文を使う一方、exec branch には agent が編集した本文を
 // 残す。root の frontmatter から lifecycle フィールドだけを重ね、resume 後も waiting 状態と
 // 未統合の作業内容の両方を保持する。
@@ -188,13 +204,11 @@ export function restorePreservedRegisterTicket(
     return;
   }
   try {
-    const rootContent = readFileSync(rootTicketPath, "utf8");
-    const parsed = readRegisterItemContent(rootContent, basename(rel));
-    if (!parsed) throw new Error(`could not parse register item: ${rel}`);
-    const content = applyRegisterItemFields(preserved.content, {
-      ...registerItemFieldsFromItem(parsed.item),
-      block_reason: parsed.blockReason === CELL_NONE ? null : parsed.blockReason,
-    });
+    const content = overlayRegisterTicketLifecycle(
+      preserved.content,
+      readFileSync(rootTicketPath, "utf8"),
+      rel,
+    );
     mkdirSync(dirname(worktreeTicketPath), { recursive: true });
     writeFileSync(worktreeTicketPath, content, "utf8");
   } catch (error) {

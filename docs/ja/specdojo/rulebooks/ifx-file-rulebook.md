@@ -24,7 +24,7 @@ External File Exchange Specification Authoring Rulebook
 
 1. **目的**: システム間・プロセス間で授受されるデータファイルおよび状態ファイルの契約を YAML 1 ファイルで明確化し、書き手（送信元）と読み手（受信先）の認識齟齬および異常時の対応漏れを防ぎます。
 2. **適用範囲**: CSV、TSV、JSON、XML 等のファイルを介して行われるバッチ連携、データ受け渡し、および実行パイプライン段間のエビデンス・状態ファイル連携仕様に適用します。
-3. **完成例の扱い**: 本書には完成例の章や同梱 `sample` / `recipe` / `template` へのリンクを置かず、Frontmatter の `sample` 宣言で対応付けます。なお、成果物や完成例の本文から他仕様（一覧や関連契約）を参照することは妨げません。
+3. **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status` の昇格と承認、改訂と廃止、未決事項の登録簿への引き継ぎは [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従い、本書と成果物で言い直しません。文書の整形・lint はリポジトリの検証で扱い、業務の検証に含めません。
 
 ### 1.2. 記載原則と責務境界
 
@@ -34,18 +34,7 @@ External File Exchange Specification Authoring Rulebook
    - 外部コマンドやエージェントが生成・参照するファイル自体の永続化契約・必須項目・破損時の扱いを独立して合意・検証する必要がある場合は、本ルール（`ifx-file`）で定義します。
 3. **正本の参照と二重管理の防止**: データ構造の完全な定義が外部スキーマ（JSON Schema、XSD 等）や実装コードの型定義に存在する場合は、`schema_ref` または `schema.references` で正本を参照し、全項目の再掲を避けます。
 
-### 1.3. 対象者と確認する内容
-
-| 対象者                                       | 解決する課題                                     | 確認・合意する内容                                                                       |
-| -------------------------------------------- | ------------------------------------------------ | ---------------------------------------------------------------------------------------- |
-| 業務分析担当（BA）・プロダクトオーナー（PO） | 連携目的や異常時の業務継続可否を判断できない     | 対象データ範囲、送信元・受信先の責任分界、欠落・遅延時の業務代替手段と公開可否           |
-| アーキテクト（ARC）                          | 一覧・他契約との重複や競合書き込みリスクが生じる | `ifx-index` との対応、伝送手段、`atomic_write` 等の技術制約、正本スキーマとの責務分離    |
-| 開発者（DEV）                                | 生成・読取・検証ロジックの実装条件が定まらない   | 配置場所、命名規則、文字コード・改行コード、必須項目、パース失敗・I/O 異常時の分岐動作   |
-| 品質保証担当（QE）・運用担当（OPS）          | 異常時の合否判定と復旧手順を確認できない         | 正常受領条件、`missing` / `malformed` / `transport_failure` の検知基準と退避・再実行手順 |
-
-## 2. 位置づけと用語定義
-
-### 2.1. 外部システムI/F一覧および関連仕様との関係
+## 2. 位置づけ
 
 ```mermaid
 flowchart LR
@@ -56,17 +45,7 @@ flowchart LR
 
 1. **一覧からの詳細化**: 本仕様は [[specdojo:ifx-index-rulebook|外部システムI/F一覧作成ルール]] に従う `ifx-index` に登録されたファイル連携（`kind: ファイル`、または外部コマンド連携等で授受するファイル契約）の詳細仕様として位置づけます。
 2. **ID の対応**: `ifx-index` 側の `spec_ref` に記載された文書 ID（例: `prj-0001:ifx-file-agent-evidence`）と、本仕様の `x-spec-meta.id` を一致させます。
-
-### 2.2. 用語定義
-
-| 用語                             | 本書での意味                                                                                                           |
-| -------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| `source`（送信元・生成元）       | 連携契約においてファイルを生成・提供する側のシステム、コンポーネント、またはロール                                     |
-| `target`（受信先・利用先）       | 連携契約においてファイルを受領・消費する側のシステム、コンポーネント、またはロール                                     |
-| `writer`（書込主体）             | 個別ファイルを実際に作成・更新する主体および書き込み契機。双方向連携や複数ファイル連携でファイルごとに明示する         |
-| `reader`（読取主体）             | 個別ファイルを実際に読み取り・検証・後続処理へ渡す主体および利用目的                                                   |
-| `direction`（連携方向）          | `source` と `target` 間のデータの向き（`source_to_target` / `target_to_source` / `bidirectional`）                     |
-| `atomic_write`（アトミック書込） | 書き込み途中の不完全なファイルが読み手に参照されることを防ぐため、一時ファイル出力後にリネーム等で置換する書き込み方式 |
+3. **契約の主体とファイルの主体**: `source` / `target` は連携契約全体の送信元・受信先、`writer` / `reader` は個別ファイルを実際に書く・読む主体です。報告内容の作り手とファイルの書き手が異なる場合は、`writer` にファイルの書き手を書きます。
 
 ## 3. ファイル命名・ID規則
 
@@ -85,11 +64,11 @@ flowchart LR
 
 ## 4. 推奨 Frontmatter・メタ情報項目
 
-共通メタ情報の原則とライフサイクル管理は [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] を正本とします。
+共通メタ情報の原則は [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] を正本とします。
 
 ### 4.1. スキーマ宣言とメタ情報（x-spec-meta）の構成
 
-YAML 成果物の先頭にはスキーマ検証用の modeline コメント（専用スキーマが未整備の場合は `# specdojo-schema: none reason=no-ifx-file-schema`）を記載し、ルートキー `x-spec-meta` 配下にメタ情報を定義します。
+YAML 成果物の先頭にはスキーマ検証用の modeline コメント（専用スキーマが未整備の場合は `# specdojo-schema: none reason=no-ifx-file-schema`）を記載し、ルートキー `x-spec-meta` 配下にメタ情報を定義します。`none` は構造の検証だけを省き、`x-spec-meta.type` と rulebook 宣言の照合はリポジトリの schema 検証で省かれません。
 
 ```yaml
 # specdojo-schema: none reason=no-ifx-file-schema
@@ -105,18 +84,16 @@ x-spec-meta:
 
 ### 4.2. メタ情報の各フィールド定義
 
-| フィールド名 | 必須 | 型     | 説明                                                                                                           |
-| ------------ | ---- | ------ | -------------------------------------------------------------------------------------------------------------- |
-| `id`         | ○    | string | 仕様の一意な ID。ファイル名および `ifx-index` の `spec_ref` と対応させます。                                   |
-| `type`       | ○    | string | `api` 固定。本 rulebook の `deliverable_type: api` と一致させます（`file` 等の別値を指定してはなりません）。   |
-| `status`     | ○    | string | 文書のライフサイクル状態（`draft` / `ready` / `deprecated`）。`ready` への昇格は人間の `PO` のみが判断します。 |
-| `title`      | ○    | string | 対象ファイルまたは連携契約を識別できる日本語名称。                                                             |
-| `rulebook`   | ○    | string | 準拠する rulebook ID（`specdojo:ifx-file-rulebook` 固定）。                                                    |
-| `part_of`    | 任意 | array  | 所属する上位文書 ID の配列。                                                                                   |
-| `based_on`   | 任意 | array  | 根拠となる上位文書 ID（`ifx-index` 等）の配列。未作成の文書や無関係な ID は記載しません。                      |
-| `supersedes` | 任意 | array  | 置き換え元の旧仕様 ID の配列。                                                                                 |
-
-- 同梱の完成例（sample）は、業務背景・運用手順・異常系リカバリの解説を伴う Markdown 文書（Frontmatter の `type: api`、`rulebook: specdojo:ifx-file-rulebook`）として構成し、その本文中に本章および第5章の必須構造を満たす YAML 定義を掲載します。
+| フィールド名 | 必須 | 型     | 説明                                                                                                         |
+| ------------ | ---- | ------ | ------------------------------------------------------------------------------------------------------------ |
+| `id`         | ○    | string | 仕様の一意な ID。ファイル名および `ifx-index` の `spec_ref` と対応させます。                                 |
+| `type`       | ○    | string | `api` 固定。本 rulebook の `deliverable_type: api` と一致させます（`file` 等の別値を指定してはなりません）。 |
+| `status`     | ○    | string | 文書のライフサイクル状態（`draft` / `ready` / `deprecated`）。                                               |
+| `title`      | ○    | string | 対象ファイルまたは連携契約を識別できる日本語名称。                                                           |
+| `rulebook`   | ○    | string | 準拠する rulebook ID（`specdojo:ifx-file-rulebook` 固定）。                                                  |
+| `part_of`    | 任意 | array  | 所属する上位文書 ID の配列。                                                                                 |
+| `based_on`   | 任意 | array  | 根拠となる上位文書 ID（`ifx-index` 等）の配列。未作成の文書や無関係な ID は記載しません。                    |
+| `supersedes` | 任意 | array  | 置き換え元の旧仕様 ID の配列。                                                                               |
 
 ## 5. 本文要件
 
@@ -156,14 +133,12 @@ YAML のルートには以下のキーを配置します。
 
 ### 5.3. 連携方向と参加者（source, target, direction）
 
-1. `source`: ファイルを生成・出力する側のシステム名またはコンポーネント名を明記します。
-2. `target`: ファイルを受領・処理する側のシステム名またはコンポーネント名を明記します。
-3. `direction`: `source_to_target`（送信元から受信先への単方向）、`target_to_source`（受信先から送信元への単方向）、`bidirectional`（段間遷移や状態ファイル更新など双方向の授受）のいずれかを指定します。
+1. `source` / `target`: システム名またはコンポーネント名で書きます。
+2. `direction`: 段間遷移や状態ファイル更新など、双方が書き読みする授受は `bidirectional` とします。
 
 ### 5.4. フォーマットと連携契機（format, timing）
 
-1. `format`: `CSV`、`TSV`、`JSON`、`XML`、`その他` から指定します。
-2. `timing`: 定期バッチの実行時刻（例: `毎週日曜日 21:30`、`毎日営業終了後 21:00`）またはイベント・状態遷移の契機（例: `executor 完了直後、親検証完了時、reporter 起動前後`）を検証可能な条件として記述します。
+1. `timing`: 定期バッチの実行時刻（例: `毎週日曜日 21:30`、`毎日営業終了後 21:00`）またはイベント・状態遷移の契機（例: `executor 完了直後、親検証完了時、reporter 起動前後`）を検証可能な条件として記述します。
 
 ### 5.5. 受け渡し方法（transport）
 
@@ -199,11 +174,11 @@ YAML のルートには以下のキーを配置します。
 
 1. **判断基準**: 誰がいつファイルを書き（`source` / `writer`）、誰が何のために読み（`target` / `reader`）、どこにどの名前で置かれるか（`location` / `naming_rule`）が、実装コードを見ずに特定できること。
 2. **単一ファイルと複数ファイルの使い分け**: 1 つのファイルだけで完結する連携は `file` を使い、実行エビデンス（`evidence.json`）とパイプライン状態（`pipeline-state.json`）のように同一実行単位で協調動作するファイル群は `files` 配列で定義し、ファイルごとに `writer`・`reader`・`required_fields` を明記します。
-3. **仮置き・前提条件の明記**: 通信環境や運用体制に関する前提条件、または未確定の技術判断がある場合は、YAML コメントで `# _ASSUMPTION_:` や `# _UNDECIDED_:` を付記し、解消すべき担当ロール（`ARC`、`PO` 等）を明記します。
+3. **仮置き・前提条件の明記**: 通信環境や運用体制に関する前提条件、または未確定の技術判断がある場合は、YAML コメントで `# _ASSUMPTION_:` や `# _UNDECIDED_:` を付記し、何が決まれば解消するかを書きます。
 
 ### 6.2. 受け渡し条件と構造定義の判断基準
 
-1. **判断基準**: 下流の `DEV` がパーサ・バリデータ・ファイル配置処理を実装でき、`QE` が正常データと境界値・異常データのテストケースを導出できること。
+1. **判断基準**: 下流の実装者がパーサ・バリデータ・ファイル配置処理を実装でき、テスト担当が正常データと境界値・異常データのテストケースを導出できること。
 2. **インライン定義と正本参照の選択**:
    - 外部取引先（問屋や外部システム）との CSV / JSON 連携など、リポジトリ内に別途スキーマ定義が存在しない場合は、`schema.fields` に型・必須性・制約（`constraints`）・マッピング（`mapping`）を具体的に記述します。
    - 同一システム内のランナーとエージェント間の契約など、TypeScript 型定義や JSON Schema が正本として存在する場合は、`files[].schema_ref` および `schema.references` で正本パスを指し、`files[].required_fields` に必須キーを列挙して二重管理を防ぎます。
@@ -217,56 +192,15 @@ YAML のルートには以下のキーを配置します。
 
 #### 6.4.1. 良い例: 正本参照・書き手と読み手・異常時動作の明確化
 
-```yaml
-# specdojo-schema: none reason=no-ifx-file-schema
-x-spec-meta:
-  id: prj-0001:ifx-file-agent-evidence
-  type: api
-  status: draft
-  title: 外部ファイル連携仕様（agent の evidence）
-  rulebook: specdojo:ifx-file-rulebook
-  based_on:
-    - prj-0001:ifx-index
+書き手と読み手、正本参照と必須項目、異常時の動作に絞った抜粋です。
 
+```yaml
 files:
   - name: evidence.json
-    naming_rule: evidence.json
-    location: docs/ja/projects/<project-id>/execution/runs/<origin>/<item-id>/<run-id>/evidence.json
-    description: タスク実行における変更内容・検証結果・最終メッセージを記録する構造化エビデンス
     writer: SpecDojo runner（agent の stdout から抽出・正規化して書き込み）
     reader: SpecDojo runner（検証合否判定、reporter への入力、result.md 反映）
-    format: JSON
-    encoding: UTF-8
     schema_ref: src/exec/evidence.ts#ExecEvidence
-    required_fields:
-      - schema_version
-      - task_id
-      - run_id
-      - stage
-      - changes
-      - diff_summary
-      - validations
-      - final_message
-
-source: AI provider CLI（executor / reporter agent）および SpecDojo runner
-target: SpecDojo runner および結果報告（reporter）
-direction: bidirectional
-format: JSON
-timing: タスク実行サイクルの各段遷移時（executor 完了直後、親検証完了時、reporter 起動前後）
-
-transport:
-  method: ローカルファイルシステム
-  endpoint: <executionPath>/runs/<origin>/<itemId>/<runId>/
-  frequency: タスク実行ごとに都度
-  atomic_write: 一時ファイル（.tmp）へ書き込み後に renameSync でアトミック置換を実施
-
-schema:
-  json:
-    root_type: object
-    content_type: application/json
-    encoding: UTF-8
-  references:
-    evidence_spec: src/exec/evidence.ts
+    required_fields: [schema_version, task_id, run_id, stage, changes, validations, final_message]
 
 error_handling:
   missing:
@@ -286,7 +220,6 @@ error_handling:
 x-spec-meta:
   id: ifx-file-bad-example
   type: file # 禁止: deliverable_type と不整合（api 固定）
-  status: ready # 禁止: AI エージェントによる ready 昇格
   title: 連携仕様
   rulebook: specdojo:ifx-file-rulebook
 
@@ -314,25 +247,11 @@ error_handling:
 | 正本スキーマや型定義の全文コピー＆ペーストによる再掲                            | 正本との二重管理になり、フィールド変更時に仕様間の不整合を引き起こすため   |
 | DB 物理テーブル名、SQL 文、内部クラス名などの内部実装詳細の記載                 | 外部インターフェース契約と内部設計の責務境界が混同されるため               |
 | 接続パスワード、秘密鍵、API トークン、個人情報の実データの直接記載              | セキュリティおよび機密保護上のリスクを防ぐため                             |
-| 「適切に処理する」「問題ないようにする」等の検証不能な曖昧表現                  | `DEV` の実装分岐および `QE` の合否判定基準として機能しないため             |
-| 本 rulebook 本文への同梱 `sample` / `recipe` / `template` の wikilink 設置      | 対応関係は Frontmatter で宣言し、本文の自己完結性と構造標準を保つため      |
+| 「適切に処理する」「問題ないようにする」等の検証不能な曖昧表現                  | 実装の分岐および合否判定の基準として機能しないため                         |
 
 ## 8. 運用ルール
 
 ### 8.1. 成果物の検証手順
 
-1. **構文・メタ情報・整形の検証**: 作成・更新時は Prettier による整形確認、YAML 構文および先頭 modeline（`# specdojo-schema: none reason=no-ifx-file-schema` または対象スキーマ指定）の確認、ならびに `x-spec-meta` の必須項目（`type: api`、`status: draft`、`rulebook: specdojo:ifx-file-rulebook`）を検査します。
-2. **一覧・正本・テストとの照合**: `ARC` と `DEV` は `ifx-index` の `spec_ref` および `schema_ref` / `references` の参照先パスが実在し整合していることを確認します。`QE` は `files[].required_fields` と `error_handling` の 3 区分（`missing`、`malformed`、`transport_failure`）から正常系・異常系の検証ケースを導出し、期待結果と一致することを確認します。
-
-### 8.2. 改訂・廃止とライフサイクル変更管理
-
-成果物の改訂・廃止、置き換え（`supersedes`）、非推奨化（`status: deprecated`）は [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] の「文書の改訂・廃止とライフサイクル変更管理」に従い、以下の役割分担で影響を追跡します。
-
-| Role code | 改訂・廃止時の確認対象と責務                                                                                       |
-| --------- | ------------------------------------------------------------------------------------------------------------------ |
-| `BA`      | 外部システムI/F一覧（`ifx-index`）、業務プロセス、成果物カタログの記載と対象範囲の整合を確認する                   |
-| `ARC`     | `transport` の方式・安全性、正本スキーマ参照（`schema_ref` / `references`）、関連する `ifx-cmd` との境界を確認する |
-| `DEV`     | ファイル生成・読取ロジック、`atomic_write` 実装、正本型定義・スキーマとの一致を確認し追従修正を行う                |
-| `QE`      | 正常受領条件および `missing` / `malformed` / `transport_failure` の異常系テストケース・受入基準への影響を確認する  |
-| `PM`      | 仕様変更に伴う関連成果物・スケジュールタスク・プロジェクト登録簿（PJR）の追従作業を管理する                        |
-| `PO`      | 仕様の合意確定（`status: ready` への昇格）、旧仕様の置き換え（`supersedes`）、および廃止（`deprecated`）を判断する |
+1. **一覧・正本との照合**: `ifx-index` の `spec_ref` と `x-spec-meta.id` が一致し、`schema_ref` / `references` の参照先が実在して、`files[].required_fields` が正本の必須項目と矛盾しないことを確かめます。欠落や不一致が 1 件でもあれば不合格とし、正本に合わせて直します。
+2. **異常系の導出**: `error_handling` の 3 区分（`missing`、`malformed`、`transport_failure`）と `required_fields` から正常系・異常系の確認ケースを導出し、各ケースで継続・停止、ファイルの保持・退避、再試行・引き継ぎの期待結果が一意に決まることを確かめます。

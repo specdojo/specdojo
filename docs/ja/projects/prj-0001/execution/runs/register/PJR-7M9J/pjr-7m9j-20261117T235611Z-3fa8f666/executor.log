@@ -1,0 +1,20 @@
+PJR-7M9J の作業を終えました。prj-charter の recipe から運用の記述と rulebook の言い直しを外し、ほかの recipe へ広げるときの一覧を個票に書きました。prettier、markdownlint、`npm run validate:history-links` は通りました。`lint:md`・`lint:fm` などは親の runner が実行します。
+
+**直したもの**
+
+- **recipe**（`docs/ja/specdojo/recipes/prj-charter-recipe.md`）: 空白を除いて 3,899 字から 2,700 字（69.2%）になり、目安の 7 割以下に収まりました。8 章の構成はそのままです。
+  - 外した記述: rulebook と同じ判断の言い直し（承認履歴の版番号と証跡、GO / Not GO の判断観点、表の列の指定、委譲先の文書の指定）、未決事項の管理台帳の列（期限・担当・対応方針）、仕上げチェックの構造の検査、同じ確認の繰り返し。
+  - 残した・足した記述: 章を書く順番とその理由（認可対象を最初に、冒頭文を最後に書く）、入力の取り出し元、承認責任者への聞き方、つまずきやすい点。
+  - 元の recipe には、役割の表・`status` の昇格と承認・改訂と廃止の手順はもともとありませんでした。
+- **個票**: 作業内容の 1・2 を `done` にしました。3（grade）は orchestrator が統合の後に流すため `open` のままです。対応結果には、実施内容・前後の文字数・迷った点・ほかの recipe へ広げるときの一覧・変更案・CHANGELOG の文案・残課題を書きました。
+
+**判断が要る点**
+
+1. **rulebook への参照の形が標準と食い違っている**: 完了条件は「判断の基準は rulebook を章タイトルで参照する」としていますが、Recipe 記述標準は recipe 本文に rulebook への参照を置くことを禁じています（recipe だけを読み込んで実行するとき、参照が実行できない指示になるため）。私は標準を優先し、判断の基準は言い直さずに外し、憲章の章名で示すだけにしました。ほかの recipe へ広げる schedule の指示もこの形にそろえる案ですが、章タイトルで参照する形を採るなら先に標準を変える必要があります。
+2. **template に管理台帳の列が残っている**: prj-charter-template の未決事項の表が `論点`・`期限`・`担当`・`対応方針` のままです。rulebook に合わせて `論点`・`影響`・`当面の扱い` にする変更案を個票に書きました。この項目では直していません。
+
+rulebook・sample・保護された設定は変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"prj-charter-recipe から rulebook と同じ判断の言い直し、未決事項の管理台帳の列、構造の検査、同じ確認の繰り返しを外した。3,899 字から 2,700 字（69.2%）。個票の対応結果に、前後の文字数、迷った点、ほかの recipe へ広げるときの一覧、変更案、CHANGELOG の文案を書いた。grade の行は open のまま残した。","handoff":["完了条件の『判断の基準は rulebook を章タイトルで参照する』は、Recipe 記述標準（`docs/ja/specdojo/standards/recipe-authoring-standard.md`）の、recipe 本文に rulebook への参照を置かない規則と食い違う。executor は標準を優先し、判断の基準は言い直さずに外し、成果物の章名で示すだけにした。章タイトルで参照する形を採るなら、先に標準を変える必要がある。ほかの recipe へ広げる schedule の指示は、個票の『他の recipe へ広げるときの一覧』の『参照の形』にそろえる案を推す。","変更案: prj-charter-template（`docs/ja/specdojo/templates/prj-charter-template.md`）の『未決事項』の表の列（`論点`・`期限`・`担当`・`対応方針`）を、rulebook の『承認と未決事項』に合わせて `論点`・`影響`・`当面の扱い` にする。この項目では直していない。","統合の後に orchestrator が型の grade を流し、結果を個票に書く（作業内容の 3。open のまま）。","CHANGELOG に書く事項（区分: 変更）: プロジェクト憲章（prj-charter）の recipe から、rulebook と同じ判断の言い直しと未決事項の管理台帳の列を外し、書く順番・入力の集め方・つまずきやすい点に絞りました。約 3 割小さくなりました（PJR-7M9J）。","保護された設定の変更は不要だった。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/recipes/prj-charter-recipe.md","status":"passed","summary":"recipe と個票を prettier で整形し、整形済みを確認した"},{"command":"npx markdownlint-cli2 docs/ja/projects/prj-0001/controls/project-register/pjr-7m9j-recipe-slim-pilot-prj-charter.md docs/ja/specdojo/recipes/prj-charter-recipe.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"passed","summary":"exit 0。違反なし（変更した個票を含む）"}]}
+</specdojo_executor_evidence>

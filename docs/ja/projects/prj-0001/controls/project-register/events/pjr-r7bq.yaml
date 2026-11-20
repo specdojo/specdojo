@@ -1,0 +1,91 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_e6cff9d50cf7449481a8f6475f9a2d33
+  ts: "2026-11-16T11:00:24Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade と exec の内部用のコマンドを利用者の一覧から外す
+    - field: description
+      from: ""
+      to: _TODO_
+    - field: input
+      from: ""
+      to: '["PJR-C5AF の内部用の候補: grade の plan・apply・translation-plan・localize・state・result・validate、agent launch・run、exec trial・slots・scheduler","grade の内部用は、定期の job（job-grade-kata・job-grade-deliverable）が使う tools/grade/run-per-document.sh を grade run に移してから外す。外したコマンドは help に出さないだけにし、runner・job・orchestrator からの呼び出しは保つ"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-16"
+    - field: derived_from
+      from: ""
+      to: '["PJR-C5AF"]'
+    - field: commit_type
+      from: ""
+      to: refactor
+    - field: commit_scope
+      from: ""
+      to: grade
+- v: 1
+  id: reg_f359408540de41219abd0ef9eebbb68a
+  ts: "2026-11-17T04:16:03Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_e6cff9d50cf7449481a8f6475f9a2d33
+- v: 1
+  id: reg_effc4c019b3f4a31a9ffb661d33d6bd3
+  ts: "2026-11-17T04:33:05Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_f359408540de41219abd0ef9eebbb68a
+- v: 1
+  id: reg_c9d6585e6e584efcb7efb4cb329a438f
+  ts: "2026-11-17T04:49:12Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が help の表示、job validate、grade の job の dry-run、JSEY での統合後の動作を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-17"
+    - field: conclusion
+      from: "-"
+      to: 定期の grade の job を grade run へ移し、grade・agent・exec の内部用のコマンドを help の一覧から外した
+  previous_event_id: reg_effc4c019b3f4a31a9ffb661d33d6bd3

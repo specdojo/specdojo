@@ -1,0 +1,27 @@
+sld の rulebook と sample を書き直し、個票の作業内容と対応結果を更新しました。sample の大きさは目安の 6 割をぎりぎり下回り、約 10,000 字（実測 9,885 字）から 5,928 字（59.97%）になりました。親 runner が流す検証（`lint:md`・`lint:fm`・`validate:schema` など）は、まだ結果が出ていません。
+
+**数え方**: 空白・改行を除いた文字数で、表の区切り行（`| --- |`）は数えていません。調査時の約 10,000 字に合う数え方です。区切り行を含めると 13,431 字から 7,943 字（約 59%）です。rulebook は 24,503 B から 17,178 B に減りました。
+
+**sld-rulebook**
+- 役割の表、status と承認の手順、公開前の承認、文書の品質の検査を外しました。代わりに全体方針に「共通の運用」を 1 項目置き、役割はメンバー定義を、承認・改訂と廃止・未決事項の引き継ぎはドキュメントメタ情報標準を参照しています。
+- 共通の正本には何も足していません。ドキュメントメタ情報標準の既存の記述で、外した内容を賄えるためです。
+- 業務の検証は、配置の一致・記録の網羅・削除と復旧の判断の 3 観点にしました。未決事項は論点と影響だけを書き、管理台帳の区分・担当・判断時期の列は求めません。
+- 必須と条件付きの章、章名は変えていません。第 2 章は用語の表を外して「位置づけ」に改めました。表の 5 語が標準列の言い直しだったためです。
+- 禁止事項は、共通規約と同じ行を外し、sld 固有の行を 2 つ足しました。
+
+**sld-sample**
+- 役割の段落、末尾の承認と agent の段落、検証の表の文書品質の行、管理台帳の列を外しました。
+- 削除の条件は保管場所一覧の表を正とし、ほかの章は表を参照します。CDSD・STSD・CLIS などとの対応は 4.1 節の 1 つの表にまとめ、セルは要点にして手順は場面別の表へ寄せました。
+- 保管場所、置くもの、削除可否、復旧の経路と連絡先は変えていません。
+- 「公開前に PO が顧客情報の施錠保管を承認する」段落は外しました。共通の運用で賄う扱いです。
+- recipe と template は sld では不要の宣言で、カタログの template にも運用の記述がないため、変更していません。
+
+**個票（`pjr-8s4t-sld-kata-slim-pilot.md`）**
+- 作業内容の 1〜3 を `done` にしました。4〜6（grade、利用者の確認、他の型へ広げる起票）は、executor が実行できない理由を書いて `open` のまま残しています。
+- 対応結果には、実施内容、章の変更とその理由、結論の扱い、前後の大きさ、他の型へ広げるときの「外す・残す・参照の形」の一覧、迷った点、CHANGELOG の文案、残課題を書きました。
+
+**検証**: `npx prettier --write` と `npx markdownlint-cli2` は対象の 3 ファイルとも通り、エラーは 0 件です。`npm run validate:history-links` も通りました。保護された設定と `CHANGELOG.md` は変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"sld-rulebook と sld-sample から共通の運用の記述（役割・承認・文書品質の検査・管理台帳の列）を外し、ドキュメントメタ情報標準などへの参照にした。sample は区切り行を除く空白なしの文字数で 9,885 字から 5,928 字（59.97%）、rulebook は 24,503 B から 17,178 B。保管場所・置くもの・削除可否・復旧経路と連絡先は変えていない。個票の作業内容 1〜3 を done にし、対応結果を記入した。","handoff":["作業内容の 4: 統合の後に orchestrator が `grade run --target kata` を流し、前後の score と finding を個票に書く。executor は grade を実行していない。","作業内容の 5: 利用者が読みやすさを確かめる。確認が済むまで review のままにする。","作業内容の 6: grade と利用者の確認の後、他の rulebook と sample へ広げる todo を起票する。材料は個票の「他の型へ広げるときの一覧」節。","決めた内容: 章名と必須・条件付きの区分は変えていない（既存成果物 `sld-specdojo.md` との対応を保つため）。rulebook の第 2 章は用語の表（標準列の言い直し）を外して「位置づけ」とした。sample の 4.1 節の整合確認の列は 4.2 節と重なるため外し、固有の確認を 4.2 節の網羅の行へ移した。","共通の正本（ドキュメントメタ情報標準）への追記は不要と判断した。保護された設定の変更はない。","CHANGELOG の文案は個票の「CHANGELOG に書く事項」節にある（区分: 変更）。","大きさの測り方: 空白（改行を含む）を除いた文字数。表の区切り行（`| --- |`）は数えない。区切り行を含めると sample は 13,431 字から 7,943 字。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/sld-sample.md docs/ja/specdojo/rulebooks/sld-rulebook.md docs/ja/projects/prj-0001/controls/project-register/pjr-8s4t-sld-kata-slim-pilot.md","status":"passed","summary":"3 ファイルを整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/sld-sample.md docs/ja/specdojo/rulebooks/sld-rulebook.md docs/ja/projects/prj-0001/controls/project-register/pjr-8s4t-sld-kata-slim-pilot.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"passed","summary":"個票を含め違反なし"}]}
+</specdojo_executor_evidence>

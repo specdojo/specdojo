@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_7755629258974053a9f2f361b493c5e0
+  ts: "2026-11-16T13:40:10Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者の依頼で起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 型の整備 第 3 波（試験）
+    - field: description
+      from: ""
+      to: 試験の型 13 種類（tsp-index・utc・itc・stc・etc・atc とその index・trc-requirements-to-tests・imp-test）を、代表の文書と一緒に整える
+    - field: input
+      from: ""
+      to: '["対象は tsp-index・utc・utc-index・itc・itc-index・stc・stc-index・etc・etc-index・atc・atc-index・trc-requirements-to-tests・imp-test の 13 種類。どれも grade は needs-work で、prj-0001 に代表の文書はない","PJR-APA2（2026-11-13）で、第 3 波は試験として予定されていた。利用者が 2026-11-16 に、試験 → 非機能要件と受け入れ条件 → 運用・移行・影響分析の順で進めることを承認した","SpecDojo には実際のテスト（vitest の単体・結合、親の検証）があり、代表の文書の事実の根拠にできる","2026-11-16 の grade（--target kata）で rulebook 112 種類のうち pass 63・needs-work 47・fail 1。進行中の型の epic（APA2・DD33・T88P・ERR7・960C・2GD6）は人の確定（140）で止まっている","最初の子の todo で、カタログに代表を足し、strategy と schedule を用意する（前例は PJR-STM9・PJR-WSND）。sample の品質（PJR-2W38）は sample の段の完了条件で扱う"]'
+    - field: type
+      from: ""
+      to: epic
+    - field: track
+      from: ""
+      to: kata-wave-3
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-16"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: depends_on
+      from: ""
+      to: '["PJR-DD33"]'

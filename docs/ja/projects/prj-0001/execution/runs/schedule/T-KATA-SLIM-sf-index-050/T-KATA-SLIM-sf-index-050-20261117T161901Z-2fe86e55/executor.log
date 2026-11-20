@@ -1,0 +1,22 @@
+`docs/ja/specdojo/samples/sf-index-sample.md` を書き換えて、文書の運用に関する記述と、同じ判断の言い直しを外しました。変更したのはこのファイルだけです。prettier と markdownlint を直接実行し、指摘は 0 件でした。lint や test は、このあと親 runner が実行します。
+
+**大きさ**：空白と表の区切り行を除いた文字数は、5,409 字から 3,016 字（約 56%）になり、目安の 7 割以下に収まりました。
+
+**外した記述**
+- 「読者・確認責任・公開範囲」の役割の表、採用ロールの参照、公開範囲の段落。
+- 「一覧の完成判定」の章全体（`draft` を維持する段落を含む）。本文要件にない章で、rulebook の「完成判定と継続保守」と内容が重なるため外しました。
+- 未決事項の表の「担当 / 判断者」「判断時点・次アクション」「追跡先」の列と、PM が台帳を用意する旨の段落。
+- 「再照合と申し送り」の節全体。
+
+**まとめた記述**
+- 誰がどの判断に一覧を使うかは、「目的と対象範囲」の 1 文にまとめました。
+- 「システム化機能一覧」の後の注記は、要点に絞って 5 項目にしました。人間に残す判断は「機能構成」の表を正とし、上限超過の扱いは `Q-02` を参照する形にしています。
+- 未決事項は「論点」と「影響と当面の扱い」の 2 列にしました。
+
+**変えていない結論**：機能の構成、全 9 機能の行、人間に残す判断、対象と対象外、`Q-01` から `Q-03` の論点と保留の扱いはそのままです。
+
+rulebook の `recipe` と `template` は `not-needed` なので、変更案はありません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"`docs/ja/specdojo/samples/sf-index-sample.md` から運用の記述（役割の表と段落、公開範囲、完成判定の章と `draft` を維持する段落、未決事項の表の担当・判断時点・追跡先の列、再照合と申し送りの節）と、同じ判断の言い直しを外した。結論は変えていない。空白と表の区切り行を除いた文字数は 5,409 字から 3,016 字（約 56%）。","handoff":["大きさ（空白と表の区切り行を除いた文字数）: 前 5,409 字、後 3,016 字（約 56%）。数え方は sld の試行と同じ。","「一覧の完成判定」の章（担当ごとの判定条件の表と `draft` を維持する段落）を丸ごと外した。理由は 2 つ: rulebook の本文要件にない章であり、rulebook の「完成判定と継続保守」と重なり、承認の運用でもあるため。個別機能の試験条件は個別仕様へ委ねるという結論も外れたが、rulebook の全体方針と重なる。","「再照合と申し送り」の節を外した。再照合の契機は rulebook の「未決事項」の記述ガイドが担い、機能 ID を再利用しないことは rulebook の命名規則が担う。","採用ロールの参照（組織定義・メンバー定義・RACI）と公開範囲の段落を外した。「ARC を独立した主担当にしない」という分担の結論も、運用の記述として一緒に外れた。","未決事項の追跡先（`kinuya-issue-log/SF-01` など）と担当・判断時期の列は、登録簿で追跡する方針に従って外した。論点と当面の扱い（設計・受入の保留）は残した。","rulebook の `recipe` と `template` が `not-needed` なので、変更案はない。rulebook の全体方針にはすでに「共通の運用」がある。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/sf-index-sample.md","status":"passed","summary":"整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/sf-index-sample.md","status":"passed","summary":"0 件"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"対象外","reason":"履歴蓄積ファイル（plan・result・個票）を変更していない"}]}
+</specdojo_executor_evidence>

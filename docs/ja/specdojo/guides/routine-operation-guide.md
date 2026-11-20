@@ -13,7 +13,7 @@ Routine Operation Guide
 
 routineは、既存の未完了Schedule/Register項目を探索するほか、再利用可能なJob Definitionから期間・revisionごとのJob Runを生成できます。週報や変更文書の翻訳は[Job実行設計](../../product/040-system-design/sysd-job-execution.md)を参照してください。
 
-継続品質評価は `job-grade-kata` や `job-grade-deliverable` の Job Definition から `action.kind: job` の routine で定期起動します。文書の選択、各文書の executor 実行、executor の marker を GradeSubmission へ機械変換する `grade apply --path --analysis-from` の逐次処理は `tools/grade/run-per-document.sh` が持ちます。このスクリプトと、このスクリプトを前提とする定期 Job は SpecDojo 本体リポジトリの開発用であり、スクリプトは npm package に含まれません。定期 Job は `--stages 1` で codex 単段を選びます。Job runnerは`task.command`からその入口を直接起動してevidenceを記録し、成功後の結果判断だけを`task.analysis`のreporter agentへ委譲します。責務の切り分け基準は [Job定義標準](../standards/job-definition-standard.md) を参照します。
+継続品質評価は `job-grade-kata` や `job-grade-deliverable` の Job Definition から `action.kind: job` の routine で定期起動します。Job の `task.command` は選択条件ごとの `grade list` の和集合を Run ごとに固定し、各文書の executor 実行と marker の機械変換・反映を `grade run` に任せます（PJR-R7BQ）。`grade run` は単段で評価します。Job runnerは`task.command`からその入口を直接起動してevidenceを記録し、成功後の結果判断だけを`task.analysis`のreporter agentへ委譲します。責務の切り分け基準は [Job定義標準](../standards/job-definition-standard.md) を参照します。
 
 v0.3.0 の公開物における grade は試験的な機能です。利用者は `grade list` / `plan` / `apply` / `validate` / `result` などの部品を利用できますが、定期実行や通しの pipeline は自分で組み合わせます。成果物の grade には project の `catalog_path` が必要です。1 文書の最小手順は [CLI コマンドリファレンス](../references/command-reference.md#81-npm-package-で-1-文書を評価する)を参照してください。
 
@@ -31,6 +31,8 @@ v0.3.0 の公開物における grade は試験的な機能です。利用者は
 - レートリミット再開のための routine 例は [exec運用ガイド](exec-operation-guide.md) の `中断・訂正・再実行` を参照してください。
 
 ## 1. routineの定義
+
+resume → auto → register → grade → build のように前段の完了を待つ流れは、command Job の `task.steps` に定義し、routine からその Job を1回呼びます。各段の失敗方針・状態判定・有限の lock 待機は runner が処理するため、agent の会話再開機能を必要としません。設定例と cron 起動は [[specdojo:job-sequence-guide|順次実行 Job の例]] を参照してください。
 
 `routine` は `rtn-*.yaml` の定義に基づき、Schedule の依存グラフとは独立にタスクを定期実行します。CLI は常駐しません。外部スケジューラ（cron / CI の scheduled workflow）から `routine run --due` を冪等に呼び出す前提です。
 
@@ -162,9 +164,9 @@ Job Definition を持たないため、Job Run と evidence は作られませ�
 
 ### 1.2. grade の単段評価
 
-Kata と成果物の定期評価は、SpecDojo 本体リポジトリ内で executor の単段により実行します。GradeSubmission は LLM の reporter を通さず、`grade apply` が executor の marker から機械的に生成します。executor は判定根拠と finding を日本語で書き、その文が正本になります。正本の grade result を保存した後、旧結果から再掲された英語の正本など英語 finding が1件以上ある場合だけ `gemma26-translator` が日本語へ翻訳し、表示用の `message_ja` を更新します。0件なら翻訳の段を流しません。モデルには英語文だけの配列を渡し、件数、各訳文の仮名、元の文と訳文のインラインコードの多重集合の一致をコードで検証します。元にないインラインコードが増えた項目も不合格とし、不合格項目だけを1件ずつ1回再翻訳します。それでも不合格なら正本の英語を表示に使います。翻訳は判定値を変えません。`job-grade-kata` と `job-grade-deliverable` は本体リポジトリにだけある `tools/grade/run-per-document.sh --stages 1` を起動し、条件付きの後続段は持ちません。変更済み・未評価・段未完了・旧 rubric を横断的に再評価する `rtn-grade-recheck` は `kind: all`、`changed_only: true`、`ungraded: true`、`incomplete: true`、`rubric_outdated: true`、`limit: 15` を入力します。
+Kata と成果物の定期評価は、SpecDojo 本体リポジトリ内で executor の単段により実行します。GradeSubmission は LLM の reporter を通さず、`grade apply` が executor の marker から機械的に生成します。executor は判定根拠と finding を日本語で書き、その文が正本になります。正本の grade result を保存した後、旧結果から再掲された英語の正本など英語 finding が1件以上ある場合だけ `gemma26-translator` が日本語へ翻訳し、表示用の `message_ja` を更新します。0件なら翻訳の段を流しません。モデルには英語文だけの配列を渡し、件数、各訳文の仮名、元の文と訳文のインラインコードの多重集合の一致をコードで検証します。元にないインラインコードが増えた項目も不合格とし、不合格項目だけを1件ずつ1回再翻訳します。それでも不合格なら正本の英語を表示に使います。翻訳は判定値を変えません。`job-grade-kata` と `job-grade-deliverable` は `grade run` を起動し、条件付きの後続段は持ちません。`job-grade-kata` は `--reference-per-kind` で各文書を同じ種別の `prj-overview` 文書と比較します。`grade run` は翻訳の段を持たないため、上記の英語 finding の翻訳は定期 Job では流れません。変更済み・未評価・段未完了・旧 rubric を横断的に再評価する `rtn-grade-recheck` は `kind: all`、`changed_only: true`、`ungraded: true`、`incomplete: true`、`rubric_outdated: true`、`limit: 15` を入力します。
 
-成果物は `rtn-grade-deliverable-recheck` が `job-grade-deliverable` を起動します。Job は同じ script を `--stages 1 --target deliverable` で実行し、成果物カタログから変更済み・未評価・段未完了・旧 rubric の Markdown 成果物だけを最大10件選びます。評価結果は成果物の最新 grade と成果物ごとの `done_criteria` 詳細へ上書きされるため、実行ごとの review result は増やしません。
+成果物は `rtn-grade-deliverable-recheck` が `job-grade-deliverable` を起動します。Job は `grade run --target deliverable` を実行し、成果物カタログから変更済み・未評価・段未完了・旧 rubric の Markdown 成果物だけを最大10件選びます。評価結果は成果物の最新 grade と成果物ごとの `done_criteria` 詳細へ上書きされるため、実行ごとの review result は増やしません。
 
 `rtn-grade-deliverable-recheck` は毎日1時、`rtn-grade-recheck` は毎日5時に実行し、いずれも `missed_run: skip` とします。`rtn-dashboard-refresh` は `action.kind: specdojo` で毎時 `dashboard build` を直接起動します（exec の実行ロックを取らないため、grade や register の実行中でも並行して動きます）。devcontainer の cron は毎時 `routine run --due` を呼びますが、各 routine の発火時刻は routine 側の cron で決まります。コンテナ停止中の実行枠を日中へ持ち越さず、対話的な register 実行との競合を避けます。
 
@@ -200,7 +202,7 @@ Job Definition は script を `if` の条件として起動し、終了コード
 
 実行履歴は同じ保存先の `routine-runs.jsonl` へ1実行1行で追記します。各行は `routine_id`、`scheduled_for`、`started_at`、`completed_at`、`result`、`job_run_ids` を持ち、`docs/specdojo/schemas/v1/routine-run.schema.yaml` に従います。最新状態は due 判定、追記履歴は dashboard の日別実績表示に使います。
 
-保存先は `$XDG_STATE_HOME/specdojo/<repository-key>/routines/<path-key>/`、環境変数が未設定または相対パスなら `~/.local/state/specdojo/` 以下です。repository key は Git 共通ディレクトリの実パス（Git がなければリポジトリの実パス）、path key はリポジトリからの routine 定義の相対パスの SHA-256 です。linked worktree 間で共有し、別リポジトリ・別 routine ツリーを分離します。`routine where` で実際のパスを確認できます。初回の `routine list`・通常実行・dashboard 集計時に旧 `generated/` の状態と履歴をコピーし、新しいファイルがあれば上書きしません。旧ファイルは復旧用に残しますが以後は参照しません。移行前に旧版の routine プロセスを停止してください。別端末へ状態を引き継ぐ場合はこの保存先を別途コピーします。
+保存先は `$XDG_STATE_HOME/specdojo/<repository-key>/routines/<path-key>/`、環境変数が未設定または相対パスなら `~/.local/state/specdojo/` 以下です。repository key は Git 共通ディレクトリの実パス（Git がなければリポジトリの実パス）、path key はリポジトリからの routine 定義の相対パスの SHA-256 です。linked worktree 間で共有し、別リポジトリ・別 routine ツリーを分離します。`where routine` で実際のパスを確認できます。初回の `routine list`・通常実行・dashboard 集計時に旧 `generated/` の状態と履歴をコピーし、新しいファイルがあれば上書きしません。旧ファイルは復旧用に残しますが以後は参照しません。移行前に旧版の routine プロセスを停止してください。別端末へ状態を引き継ぐ場合はこの保存先を別途コピーします。
 
 routine 自身が Git に残すのは、結果が `failure` かつ関連 Job Run ID が空の実行だけです。`<execution-path>/routines/failures/<routine-id>/<UUID>.json` に履歴と同じ項目と `run_id` を書き、理由を伏せ字処理したうえで、そのファイルだけを commit します。Job Run があればその記録を診断に使います。成功・skip・無変更の履歴は端末側にだけ保存し、dashboard も同じ状態・履歴を参照します。lock は文書ツリー外にあり、`.gitignore` の追加設定は不要です。
 
@@ -242,13 +244,16 @@ specdojo routine run --project <project-id> --id rtn-daily-register-sweep
 specdojo routine run --project <project-id> --due --dry-run
 ```
 
-各 action は委譲先へ `--if-busy skip` を渡します。同じ project の `exec run` または `exec resume` が動作中なら待機せず、次のように記録して終了します。単一の routine 実行内では再試行せず、次回の cron tick に委ねます。
+各 action は委譲先へ `--if-busy skip` を渡します。同じ project の `exec run` または `exec resume` が動作中なら待機せず、次のように記録して終了します。単一の routine 実行内では再試行せず、次の `routine run --due` に委ねます。
 
 ```text
 [routine] skipped rtn-daily-register-sweep: job action skipped
+[routine] rtn-daily-register-sweep: busy skip 1/24, retried on the next routine run --due
 ```
 
-`routine-state.json` の `last_result` は、実行開始時に `running` が記録され、実行完了時に `success`、`partial`、`failure`、`skipped` のいずれかへ更新されます。実行中は前回の結果や理由を残さず、`routine list` の最終実行の欄には `(running)` と表示されます（例: `2026-10-15T21:00:03Z (running)`）。実行プロセスの異常終了などにより `running` の表示が残った場合でも、次回の due 判定は `last_run` の時刻（cron の場合は `last_scheduled_for`）に基づいて判定されるため、次回の実行機会には影響しません。`partial` は完了分の統合と失敗分の再試行待ちが混在する状態であり、`routine list` では `(partial)` と表示されます。`skipped` は project busy または Job precondition の skip を表し、failure 件数や終了コードへ加算されません。`routine list` では最終実行時刻の後ろに `(skipped)` と表示されます。
+別の run の lock による skip（busy）は済んだ回として扱いません。cron の routine は `missed_run` が `latest` または `all`（省略時を含む）なら `last_scheduled_for` を進めず、空いた次の `routine run --due` でその回を流し直します。`latest` で新しい回が既に来ていれば新しい回だけを流します。`all` で同じ実行内に後の回が残っていても、busy の回より後は流さず次に回します。interval の routine は `busy_skip_count` が正の間、interval の経過を待たずに次の回で due になります。続いた busy skip が 24 回（毎時の `routine run --due` でおよそ 1 日）を超えたら、その回を済んだ回として扱い、`last_reason` と履歴の `reason` に上限到達を残します。`missed_run: skip` の cron、Job precondition の skip、失敗の回は従来どおり流し直しません。履歴の各行には skip の内訳を `skip_reason`（`busy` / `precondition`）で、流し直し待ちを `retry_pending: true` で残し、`routine status` で状態と直近の履歴を確認できます。
+
+`routine-state.json` の `last_result` は、実行開始時に `running` が記録され、実行完了時に `success`、`partial`、`failure`、`skipped` のいずれかへ更新されます。実行中は前回の結果や理由を残さず、`routine list` の最終実行の欄には `(running)` と表示されます（例: `2026-10-15T21:00:03Z (running)`）。実行プロセスの異常終了などにより `running` の表示が残った場合でも、次回の due 判定は `last_run` の時刻（cron の場合は `last_scheduled_for`）に基づいて判定されるため、次回の実行機会には影響しません。`partial` は完了分の統合と失敗分の再試行待ちが混在する状態であり、`routine list` では `(partial)` と表示されます。`skipped` は project busy または Job precondition の skip を表し、failure 件数や終了コードへ加算されません。内訳は `routine-state.json` の `last_skip_reason` に残ります。`routine list` では最終実行時刻の後ろに `(skipped)` と表示されます。
 
 ### 2.1. devcontainerでのcron設定
 

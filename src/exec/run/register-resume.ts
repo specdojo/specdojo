@@ -10,6 +10,11 @@ import { failedParentValidationReason } from "../parent-validation.js";
 import { integratedRepoNames } from "../pipeline-state.js";
 import { resolveProductBranches } from "../product-branches.js";
 import {
+  adoptForeignWaitRecords,
+  countForeignCommits,
+  findForeignWaitRecords,
+} from "../register-foreign-wait.js";
+import {
   findResumableRegisterRun,
   resolveRegisterResumeArtifacts,
   type RegisterResumeTarget,
@@ -23,6 +28,7 @@ import {
 } from "../register.js";
 import {
   syncTaskWorktreesWithIntegrationTargets,
+  type IntegrationConflictResolver,
   type IntegrationTargetSync,
 } from "../repo-integration.js";
 import { readResultFrontmatterSnapshot } from "../results.js";
@@ -50,11 +56,16 @@ import {
 } from "./register-core.js";
 import {
   copyRepoPaths,
+  overlayRegisterTicketLifecycle,
   rebuildRootRegisterViews,
   registerBookkeepingPaths,
   registerTransitionPaths,
 } from "./register-state.js";
 import { finalizeRegisterWorktreeRun } from "./register-worktree.js";
+import {
+  isWorktreeCleanupInProgress,
+  worktreeCleanupInProgressReason,
+} from "../worktree-cleanup-lock.js";
 import {
   rateLimitRecoveryReason,
   resolveAgentOverride,
@@ -138,6 +149,31 @@ export function resolveRegisterResumeExecutor(
   };
 }
 
+// PJR-EWZG: 再開の前の同期で、項目自身の記帳ファイルの競合は統合先（waiting の記録）を採る。
+// ただし個票は、wait の commit が結果なしでやり直されたり失敗したりして統合先に executor の
+// 本文が無い場合も、exec branch の本文（executor が書いた対応結果など）を保ち、frontmatter の
+// 状態の欄だけを統合先に揃える。
+export function registerResumeConflictPaths(
+  repoRoot: string,
+  bookkeepingPaths: readonly string[],
+  ticketRelPath: string | null,
+): {
+  projectTheirsPaths: string[];
+  projectResolvedPaths: Map<string, IntegrationConflictResolver>;
+} {
+  const relPaths = bookkeepingPaths.map((path) => repoRelativePath(repoRoot, path));
+  const projectResolvedPaths = new Map<string, IntegrationConflictResolver>();
+  if (ticketRelPath) {
+    projectResolvedPaths.set(ticketRelPath, (execContent, targetContent) =>
+      overlayRegisterTicketLifecycle(execContent, targetContent, ticketRelPath),
+    );
+  }
+  return {
+    projectTheirsPaths: relPaths.filter((path) => path !== ticketRelPath),
+    projectResolvedPaths,
+  };
+}
+
 // 統合段だけの再開。executor と reporter が成功済みで、commit → merge → worktree 撤去のいずれかが
 // 失敗した run を、agent を1つも起動せずに統合からやり直す。worktree の成果物と evidence をそのまま
 // 使い、成功なら通常実行と同じ review 遷移、merge 前の失敗なら waiting へ戻す。すでに merge
@@ -203,27 +239,25 @@ export async function resumeRegisterIntegration(params: {
   // reporter が記入済みの result をそのまま使う。agent は起動しないため、成果は success 扱いで
   // 統合だけを実行する（result が未記入なら finalize 側の downgrade が blocked に落とす）。
   const resultScaffold = readResultFrontmatterSnapshot(worktreeResultPath);
-  const finalize = async (): Promise<RegisterItemSummary> =>
-    finalizeRegisterWorktreeRun({
-      context: params.context,
-      opts: params.opts,
-      registerPaths: params.registerPaths,
-      item,
-      ticketPath: params.ticketPath,
-      worktree,
-      stem: params.stem,
-      worktreeResultPath,
-      resultScaffold,
-      agentResult: validationFailure ? "failure" : "success",
-      stderr: validationFailure ?? "",
-      ...(validationFailure ? { runnerBlockReason: validationFailure } : {}),
-      actor,
-      bookkeepingPaths: params.bookkeepingPaths(),
-      pipelineStatePath: target.statePath,
-      resumedIntegration: true,
-    });
-
-  return params.lifecycleLock ? params.lifecycleLock.runExclusive(finalize) : finalize();
+  return finalizeRegisterWorktreeRun({
+    context: params.context,
+    opts: params.opts,
+    registerPaths: params.registerPaths,
+    item,
+    ticketPath: params.ticketPath,
+    worktree,
+    stem: params.stem,
+    worktreeResultPath,
+    resultScaffold,
+    agentResult: validationFailure ? "failure" : "success",
+    stderr: validationFailure ?? "",
+    ...(validationFailure ? { runnerBlockReason: validationFailure } : {}),
+    actor,
+    bookkeepingPaths: params.bookkeepingPaths,
+    pipelineStatePath: target.statePath,
+    resumedIntegration: true,
+    lifecycleLock: params.lifecycleLock,
+  });
 }
 
 // register 項目1件の再開。途中で止まった run を、既存 worktree と evidence を保持したまま
@@ -272,6 +306,10 @@ export async function resumeSingleRegisterItemWorktree(
   if (!foundWorktree) {
     return refuse(`no exec worktree to resume for ${item.id}; run the item again instead`);
   }
+  // 前の統合の後の撤去がロックの外で進んでいる間は、同じ worktree を再開しない（PJR-NHT7）。
+  if (isWorktreeCleanupInProgress(executionPath, worktreeTaskId)) {
+    return refuse(worktreeCleanupInProgressReason(worktreeTaskId));
+  }
   const lookup = findResumableRegisterRun({
     repoRoot,
     worktreePath: foundWorktree.path,
@@ -315,6 +353,38 @@ export async function resumeSingleRegisterItemWorktree(
     );
   }
 
+  // PJR-97KE: job の worktree の中で止まった子の run は、wait の記録が job の branch にしかない。
+  // 本体から再開する場合は、register の遷移と agent の起動より前に、その記録を本体へ取り込む。
+  const foreignWait = findForeignWaitRecords({ repoRoot, worktree, itemId: item.id });
+  if (foreignWait) {
+    const adopt = (): string | null => {
+      try {
+        const count = countForeignCommits(repoRoot, foreignWait);
+        adoptForeignWaitRecords({
+          repoRoot,
+          schedulePath,
+          itemId: item.id,
+          records: foreignWait,
+        });
+        process.stdout.write(
+          `  [resume] merged the wait records of ${item.id} from ${foreignWait.target} ` +
+            `(${foreignWait.commit.slice(0, 12)}, ${count} commit(s) not yet in ${currentBranch(repoRoot)})\n`,
+        );
+        rebuildRootRegisterViews(projectId, item.id);
+        return null;
+      } catch (error) {
+        return (
+          `cannot bring the wait records of run ${target.runId} from ${foreignWait.target} ` +
+          `into the current branch: ${error instanceof Error ? error.message : String(error)}; ` +
+          `resolve it and resume again, resume inside the worktree of ${foreignWait.target}, ` +
+          `or discard the run with --force-restart (without --resume)`
+        );
+      }
+    };
+    const adoptFailure = lifecycleLock ? await lifecycleLock.runExclusive(adopt) : adopt();
+    if (adoptFailure) return refuse(adoptFailure);
+  }
+
   const artifacts = resolveRegisterResumeArtifacts({
     repoRoot,
     worktreePath: worktree.path,
@@ -322,11 +392,18 @@ export async function resumeSingleRegisterItemWorktree(
     taskId: item.id,
     state: target.state,
   });
-  if (!artifacts) return refuse(`cannot restore the plan/result of run ${target.runId}`);
+  if (!artifacts)
+    return refuse(
+      `cannot restore the plan/result of run ${target.runId}; ` +
+        `discard the run with --force-restart (without --resume)`,
+    );
 
   const worktreeResultPath = resolve(worktree.path, artifacts.resultRef);
   if (!existsSync(worktreeResultPath)) {
-    return refuse(`result not found in the worktree: ${artifacts.resultRef}`);
+    return refuse(
+      `result not found in the worktree: ${artifacts.resultRef}; ` +
+        `discard the run with --force-restart (without --resume)`,
+    );
   }
 
   // root 側の実行管理ファイル。plan / result は前回の wait commit で統合ブランチに入っている。
@@ -407,7 +484,11 @@ export async function resumeSingleRegisterItemWorktree(
         worktree,
         projectTarget,
         message: `exec(register ${item.id}): merge integration target before resume`,
-        projectTheirsPaths: bookkeepingPaths().map((path) => repoRelativePath(repoRoot, path)),
+        ...registerResumeConflictPaths(
+          repoRoot,
+          bookkeepingPaths(),
+          ticketPath ? repoRelativePath(repoRoot, ticketPath) : null,
+        ),
         integratedProducts: integratedRepoNames(target.state),
       });
     } catch (error) {
@@ -467,7 +548,11 @@ export async function resumeSingleRegisterItemWorktree(
   const promptPlanPath =
     target.stage === "executor" && existsSync(worktreePlanPath) ? worktreePlanPath : planPath;
   if (!existsSync(promptPlanPath))
-    return refuse(`plan not found for the resumed run: ${artifacts.planRef}`);
+    return refuse(
+      `plan not found for the resumed run: ${artifacts.planRef}; merge the branch that holds ` +
+        `the wait commit of run ${target.runId} into ${currentBranch(repoRoot)} and resume again, ` +
+        `or discard the run with --force-restart (without --resume)`,
+    );
   const prompt = expandPromptRefs(readPlanFile(promptPlanPath));
 
   if (target.stage === "executor") {
@@ -533,27 +618,26 @@ export async function resumeSingleRegisterItemWorktree(
       ),
     });
 
-    const finalize = async (): Promise<RegisterItemSummary> =>
-      finalizeRegisterWorktreeRun({
-        context,
-        opts,
-        registerPaths,
-        item,
-        ticketPath,
-        worktree,
-        stem: artifacts.stem,
-        worktreeResultPath,
-        resultScaffold,
-        agentResult: outcome.runResult,
-        stderr: outcome.blockReason ?? "",
-        runnerBlockReason: outcome.blockReason,
-        actor: executor.candidate.actor,
-        bookkeepingPaths: bookkeepingPaths(),
-        pipelineStatePath: resolve(worktree.path, outcome.stateRef),
-        transitionReason: rateLimitRecoveryReason(outcome.rateLimitEvents) || undefined,
-        resumedExecutor: true,
-      });
-    return lifecycleLock ? lifecycleLock.runExclusive(finalize) : finalize();
+    return finalizeRegisterWorktreeRun({
+      context,
+      opts,
+      registerPaths,
+      item,
+      ticketPath,
+      worktree,
+      stem: artifacts.stem,
+      worktreeResultPath,
+      resultScaffold,
+      agentResult: outcome.runResult,
+      stderr: outcome.blockReason ?? "",
+      runnerBlockReason: outcome.blockReason,
+      actor: executor.candidate.actor,
+      bookkeepingPaths,
+      pipelineStatePath: resolve(worktree.path, outcome.stateRef),
+      transitionReason: rateLimitRecoveryReason(outcome.rateLimitEvents) || undefined,
+      resumedExecutor: true,
+      lifecycleLock,
+    });
   }
 
   const reporter = resolveRegisterResumeReporter(
@@ -609,25 +693,23 @@ export async function resumeSingleRegisterItemWorktree(
     productWorktrees: worktree.repos,
   });
 
-  const finalize = async (): Promise<RegisterItemSummary> =>
-    finalizeRegisterWorktreeRun({
-      context,
-      opts,
-      registerPaths,
-      item,
-      ticketPath,
-      worktree,
-      stem: artifacts.stem,
-      worktreeResultPath,
-      resultScaffold,
-      agentResult: outcome.runResult,
-      stderr: outcome.blockReason ?? "",
-      actor: reporter.candidate.actor,
-      bookkeepingPaths: bookkeepingPaths(),
-      pipelineStatePath: target.statePath,
-      transitionReason:
-        rateLimitRecoveryReason(outcome.state.stages.reporter.rate_limit_events ?? []) || undefined,
-    });
-
-  return lifecycleLock ? lifecycleLock.runExclusive(finalize) : finalize();
+  return finalizeRegisterWorktreeRun({
+    context,
+    opts,
+    registerPaths,
+    item,
+    ticketPath,
+    worktree,
+    stem: artifacts.stem,
+    worktreeResultPath,
+    resultScaffold,
+    agentResult: outcome.runResult,
+    stderr: outcome.blockReason ?? "",
+    actor: reporter.candidate.actor,
+    bookkeepingPaths,
+    pipelineStatePath: target.statePath,
+    transitionReason:
+      rateLimitRecoveryReason(outcome.state.stages.reporter.rate_limit_events ?? []) || undefined,
+    lifecycleLock,
+  });
 }

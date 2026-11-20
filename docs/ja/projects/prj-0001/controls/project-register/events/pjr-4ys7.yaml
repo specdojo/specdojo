@@ -73,3 +73,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_f5bf4da8146940bfb3f80ae8ecd74c79
+- v: 1
+  id: reg_0c8ba312119c4407a1de39921f7c62ad
+  ts: "2026-11-19T14:46:57Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 利用者が文書サイトの表示をブラウザで確かめ、close を決めた（2026-11-19）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-19"
+    - field: conclusion
+      from: "-"
+      to: 用語集の YAML の表示ページを分類ごとの表にし、関連用語へのページ内リンクと YAML の正本の折りたたみを足した
+  previous_event_id: reg_7b7843e773fd4ae6bd45b7982c98dfb3

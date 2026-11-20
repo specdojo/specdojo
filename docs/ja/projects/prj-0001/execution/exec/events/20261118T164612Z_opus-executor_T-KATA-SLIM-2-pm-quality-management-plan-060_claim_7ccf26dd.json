@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-18T16:46:12Z",
+  "type": "claim",
+  "task_id": "T-KATA-SLIM-2-pm-quality-management-plan-060",
+  "by": "opus-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA"
+  }
+}

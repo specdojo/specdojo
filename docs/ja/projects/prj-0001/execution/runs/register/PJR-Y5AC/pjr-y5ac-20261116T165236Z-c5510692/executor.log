@@ -1,0 +1,33 @@
+grade の指摘 F001〜F003 への手直しが終わりました。公開後の SC-04〜SC-06 が当初の判定時期（公開後6・9・24か月）に未達と決まった場合に、どう再観測し、誰が何をするかを品質管理計画に定めました。再 grade は orchestrator が流すため、まだ実行していません。
+
+**`pm-quality-management-plan.md` の変更点**
+
+- **公開後の価値不適合の行**：再判定条件を「判定時期内の次の観測時点」から書き換えました。新しい条件は、当初の未達を記録に残したまま、「公開後の再観測」の時期に同じ測定方法・判定基準で再び合格することです。
+- **「不適合と是正」に表を追加**：SC-04〜SC-06 ごとに、当初の判定時期・再観測の時期・必要な観測期間・再合格条件を並べた表です。再観測の結果は、当初の記録とは別の再評価記録にします。
+- **期限後の是正手順（5 段）を追加**：
+  1. `PM` が改善策と時期・期間を起案し、変更要求個票に登録する。
+  2. `PO` が時期と期間を決めて決定個票に記録し、`PM` が Schedule に置く。
+  3. `BA` が当初の記録を参照する新しい記録を作る。
+  4. `QE` が照合して合格・未達・保留を確定する。
+  5. `PO` が継続を判断する。再観測でも未達なら、改善の継続・縮小・中止を判断する。
+- **「未決事項と保留」に 1 行追加**：「公開後の再観測の時期と観測期間」を `_UNDECIDED_:` とし、期限を「公開後価値ゲートの判断前」としました。追跡先は変更要求個票と決定個票です。
+
+**個票 `pjr-y5ac-…-rework-grade-findings.md` の変更点**
+
+- 作業内容の No.5 を done にしました。No.6（再 grade）は open のまま残しています。
+- 対応結果に「3 回目の対応」として、実施内容・status の扱い・迷った点と決めた内容を書きました。
+
+**自分で決めた点**
+
+- 再観測の時期と SC-05 の観測期間は `PO` が決める値なので、数値は書かず未決にしました。
+- 判定時期を変えることは承認済みの成功条件の変更にあたるため、変更要求個票で扱う形にしました。判定基準と測定方法は変えていません。
+- SC-04 と SC-06 は累積の件数で判定するので、観測期間は「公開から再観測の時期までの累積」としました。SC-05 は利用前後の比較が必要なので、期間は `PO` の決定にしました。
+- frontmatter の status は `ready` のままにしました。章構成と frontmatter を変えない補強だからです。確定は 140 で人が行います。
+
+**検証**
+
+prettier、markdownlint（0 件）、`npm run validate:history-links`、`npm run validate:catalog` はすべて通りました。catalog の検証では、今回の変更と関係のない別ファイル `dct-user-interface-model.yaml` に WARN が 2 件出ています。`lint:md`、`lint:fm` などの親の検証はこの後 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"F001〜F003 に対応し、公開後の SC-04〜SC-06 が未達と確定した場合の再観測の時期・観測期間・再合格条件と、期限後の是正手順（PM→PO→BA→QE→PO）を品質管理計画に加えた。PO が決める値は未決表で期限付きの留保とした。個票の作業内容 No.5 を done にし、対応結果を追記した。再 grade（No.6）は orchestrator が流すため open のまま。","handoff":["再観測の時期と SC-05 の観測期間は PO が決める値のため、数値を書かず「未決事項と保留」に `_UNDECIDED_:` として載せた。期限は公開後価値ゲートの判断前、追跡先は変更要求個票と決定個票。","判定時期の変更は承認済みの成功条件の変更にあたるため、変更要求個票に登録する形にした。判定基準と測定方法は変えていない。","SC-04 と SC-06 の観測期間は公開から再観測の時期までの累積、SC-05 は利用前後の比較期間を PO の決定とした。","status は `ready` のまま直した（章構成と frontmatter を変えない補強のため）。確定は人が 140 で行う。","再 grade（`grade run --target deliverable`）は orchestrator が流す。個票の作業内容 No.6 は open のまま残した。"],"validations":[{"command":"npx prettier --write docs/ja/projects/prj-0001/030-project-management/pm-quality-management-plan.md docs/ja/projects/prj-0001/controls/project-register/pjr-y5ac-pm-quality-management-plan-rework-grade-findings.md","status":"passed","summary":"品質管理計画を整形した。個票は変更なし"},{"command":"npx markdownlint-cli2 docs/ja/projects/prj-0001/030-project-management/pm-quality-management-plan.md docs/ja/projects/prj-0001/controls/project-register/pjr-y5ac-pm-quality-management-plan-rework-grade-findings.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"passed","summary":"すべて valid"},{"command":"npm run validate:catalog","status":"passed","summary":"OK: dct-index.yaml。WARN は今回の変更と関係のない dct-user-interface-model.yaml の 2 件のみ"}]}
+</specdojo_executor_evidence>

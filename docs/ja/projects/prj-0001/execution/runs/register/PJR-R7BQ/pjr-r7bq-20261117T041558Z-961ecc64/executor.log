@@ -1,0 +1,36 @@
+PJR-R7BQ の作業はすべて終えました。定期の job は `grade run` で評価するようになり、内部用のコマンドは help の一覧に出なくなりました。呼び出しは従来どおり動きます。実 agent で job を通しで動かす確認だけは sandbox ではできないので、次の定期実行の結果で確かめてください。
+
+**1. 定期の job を `grade run` に移しました**
+- job が頼っていたスクリプトの動きを `grade run`（`src/grade/run.ts`・`src/grade/command-run.ts`）に足しました。
+  - 完了した文書と失敗した文書が混在すると終了コード 2、完了が 1 件もなければ 1 を返します。
+  - agent が rate limit を返したら、その文書を未完了のまま残して終了コード 75 で止まります。同じ `--run-id` で再開でき、失敗回数には数えません。
+  - `--reference-per-kind`（kata のみ）を指定すると、各文書を同じ種別の `prj-overview` 文書と比べます。
+  - `graded:` の行に verdict・score・finding 件数を足しました。
+- `job-grade-kata.yaml` と `job-grade-deliverable.yaml` の command を書き換えました。
+  - 選択条件ごとの `grade list` の結果を合わせ（和集合）、`logs/grade/jobs/<job_run_id>/selection.txt` に固定します。同じ Run を再試行すると、保存した選択で再開します。
+  - 失敗の上限に達した文書は `grade run` に渡さず、`retry exhausted:` として報告だけします。
+  - analysis の説明を新しい出力に合わせ、idempotency key の版を上げました。
+
+**2. 内部用のコマンドを help から外しました**
+- `grade` の `plan`・`apply`・`translation-plan`・`localize`・`state`・`result`・`validate`、`agent launch`・`agent run`、`exec trial`・`exec slots`・`exec scheduler` に `hidden` を付けました。
+- `agent` のサブコマンドは 2 つとも内部用なので、`agent` 自体も一覧から外しました。
+
+**3. 文書を更新しました**
+- コマンドリファレンスの grade・exec・agent の章で、内部用のコマンドを利用者向けの表から別の表・段落に分けました。
+- routine 運用ガイドと Job 定義標準の記述を `grade run` に合わせました。
+- 個票は作業内容の 3 行を `done` にし、対応結果（実施内容・決めたこと・検証・CHANGELOG に書く事項）を書きました。
+
+**検証**
+- 変更したテストファイルと grade・scheduler の関連テストを `npx vitest run` で流し、すべて通りました。
+- 2 つの job の command を展開し、偽の CLI で動かしました。この確認で、空のファイルを読むと awk の判定（`NR == FNR`）が誤る不具合が見つかったので直しました。
+- `--reference-per-kind` の dry-run、各 help の表示、`grade state --exhausted` が今までどおり動くことを確かめました。
+- `check:src-imports`・`validate:catalog`・`validate:history-links`・markdownlint・Prettier が通りました。
+
+**決めたこと（個票の対応結果にも書きました）**
+- `grade run` の比較の既定（リファレンスなし）は変えず、種別ごとの比較は `--reference-per-kind` で明示する形にしました。レビュー前の grade など、既存の呼び出しの評価条件を変えないためです。
+- `grade run` には英語 finding の翻訳の段がありません。定期の job で翻訳が流れなくなるのは、旧結果の英語の文が再掲された場合だけです（PJR-YYDS の方針どおり）。
+- `tools/grade/run-per-document.sh` とそのテストは消していません。消すかどうかは別の項目で決める想定です。保護された設定の変更は要りませんでした。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"定期の job（job-grade-kata・job-grade-deliverable）を grade run に移した（grade run に終了コード 2・75 と --reference-per-kind を追加）。grade・agent・exec の内部用のコマンドを commander の hidden で help から外し、コマンドリファレンス・routine 運用ガイド・Job 定義標準と個票を更新した。","handoff":["grade run に終了コード 2（部分成功）・1（完了なし）・75（rate limit、同じ --run-id で再開）と --reference-per-kind（kata のみ、--reference と併用不可）を追加した。既定の比較（リファレンスなし）は ensureReviewGrade などの既存の呼び出しを変えないため据え置いた。","job-grade-kata・job-grade-deliverable は、選択条件ごとの grade list の和集合を logs/grade/jobs/<job_run_id>/selection.txt に固定して grade run --path に渡す。上限到達の文書は grade run に渡さず retry exhausted: として報告する。idempotency key を kata command-v10、deliverable command-v9 に上げた。","grade run は英語 finding の翻訳の段を持たないため、定期の job では旧結果から再掲された英語 finding の表示用の翻訳が行われなくなる（PJR-YYDS の方針どおり）。","tools/grade/run-per-document.sh と tests/tools/grade-per-document.test.ts は手動実行（全件再評価・3 段構成の比較）のために残した。削除するかは別の登録簿項目で判断してほしい。stage_total が 1 以外の旧 state で上限到達した文書は、job では報告だけになり再評価されない。","実 agent による定期の job の通し実行（routine run または exec run --job）は sandbox で行えないため、次の定期実行の結果で、grade run の出力と終了コードが analysis・partial の判定へ正しく渡ることを確かめてほしい。","CHANGELOG の文案は個票の「CHANGELOG に書く事項」に書いた（Changed: 内部用のコマンドを help から外した／Added: grade run の終了コード 2・75 と --reference-per-kind／Changed: 定期の job を grade run に移した）。保護された設定の変更は不要だった。"],"validations":[{"command":"npx vitest run tests/src/grade/run.test.ts","status":"passed","summary":"23 tests passed（終了コード 2・1・75 と --reference-per-kind のテストを含む）"},{"command":"npx vitest run tests/src/cli-verb-taxonomy.test.ts tests/src/exec/scheduler-command.test.ts tests/src/grade","status":"passed","summary":"10 files / 167 tests passed（内部用のコマンドが help に出ないことのテストを含む）"},{"command":"npx tsx tmp/jobsim/run.ts","status":"passed","summary":"展開した 2 つの job の command を stub の CLI で実行し、条件の和集合・kind と limit の絞り込み・上限到達の除外・再試行で同じ選択を渡すこと・終了コード 2 の受け渡しを確かめた"},{"command":"npx tsx src/specdojo.ts grade run --target kata --project prj-0001 --kind rulebook --reference-per-kind --by agy-expert-executor --run-id r7bq-dry --path docs/ja/specdojo/rulebooks/atc-rulebook.md --dry-run","status":"passed","summary":"exit 0。grade --help・exec --help・top-level の help に内部用のコマンドが出ないことも確かめた"},{"command":"npm run check:src-imports","status":"passed","summary":"src runtime imports are declared"},{"command":"npm run validate:catalog","status":"passed","summary":"既存の WARN のみ（based_on 先の未作成文書）でエラーなし"},{"command":"npm run validate:history-links","status":"passed","summary":"全件 valid"},{"command":"npx markdownlint-cli2 docs/ja/projects/prj-0001/controls/project-register/pjr-r7bq-hide-internal-commands.md docs/ja/specdojo/guides/routine-operation-guide.md docs/ja/specdojo/standards/job-definition-standard.md docs/ja/specdojo/references/command-reference.md","status":"passed","summary":"0 issues"},{"command":"npx prettier --check src tests/src/grade/run.test.ts tests/src/cli-verb-taxonomy.test.ts docs/ja/projects/prj-0001/jobs","status":"passed","summary":"All matched files use Prettier code style"},{"command":"specdojo routine run / exec run --job job-grade-kata（実 agent による定期の job の通し実行）","status":"requires_human","summary":"実 agent CLI の起動と利用枠の消費を伴うため sandbox では実行できない。次の定期実行で grade run の出力・終了コードが analysis と partial の判定へ渡ることを確かめる"}]}
+</specdojo_executor_evidence>

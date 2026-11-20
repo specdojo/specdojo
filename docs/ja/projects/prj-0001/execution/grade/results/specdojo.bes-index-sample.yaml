@@ -5,17 +5,17 @@ path: docs/ja/specdojo/samples/bes-index-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 100
-graded_at: "2026-11-15T02:24:40.687Z"
+score: 97
+graded_at: "2026-11-17T22:24:00.157Z"
 graded_by: sol-review-executor
-content_hash: b118fdbc977a1b913ff67f63080267e8b4a3d99856e23a85638d5efb53822b9a
+content_hash: 572dd1961f747cdbd71d75e486e47cddb89fabc5bfccc49fc152c4ba5912fba0
 categories:
   purpose:
     score: 100
   operations:
     score: 100
   planning:
-    score: 100
+    score: 83
   business:
     score: 100
   architecture:
@@ -25,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 92
   consistency:
     score: 100
 viewpoints:
@@ -39,14 +39,14 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-dependency-risk:
     level: 4
     score: 100
   vp-pm-control-reporting:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-business-value:
     level: 4
     score: 100
@@ -78,8 +78,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -101,6 +101,33 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 3
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 42
+    anchor: "| _ASSUMPTION_: 事実データが販売記録・在庫記録・つけ台帳のデータモデルと未照合 | 照合まで事実データ列を確定入力にしない。発生時点で情報がそろわない、または発生後の結果を含む行は直す |"
+    message: 事実データの照合と本文30行の未作成 BES の作成について、作業担当の Role code が示されていない。未決事項に各作業の担当を対応付け、誰の作業として着手・完了を追跡するかを明確にする。
+    message_ja: 事実データの照合と本文30行の未作成 BES の作成について、作業担当の Role code が示されていない。未決事項に各作業の担当を対応付け、誰の作業として着手・完了を追跡するかを明確にする。
+  - id: F002
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 39
+    anchor: >-
+      | _UNDECIDED_: 発注のない納品を `bes-goods-delivered` に含めるか | 現定義では発生しない。決まるまで発注外納品の BPS・UI・テストを確定しない。決まったら
+      `bes-goods-delivered` の発生条件を直すか、上位 CDFD と照合して行を足す |
+    message: 未決事項には影響と当面の扱いがあるが、課題・リスクとしての報告先や、解消時の決定記録への転記先が示されていない。各論点に管理先の登録項目または記録先を対応付け、文書内の未決事項と管理記録を追跡できるようにする。
+    message_ja: 未決事項には影響と当面の扱いがあるが、課題・リスクとしての報告先や、解消時の決定記録への転記先が示されていない。各論点に管理先の登録項目または記録先を対応付け、文書内の未決事項と管理記録を追跡できるようにする。
+  - id: F003
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 47
+    anchor: "- 上位 CDFD の 10 領域に有効な 10 行が対応し、出典のない行・空欄、イベント ID の形式違反・重複（廃止行を含む）が 0 件である。"
+    message: >-
+      対応 rulebook 6.10 は照合結果を残すよう求めているが、本節は確定入力として扱う条件だけを示し、実施済みの照合結果を区別して記録していない。領域・起点イベントとの対応、必須列、ID、個別 BES
+      の相互参照について確認結果を示し、未実施項目は未実施と明記する。
+    message_ja: >-
+      対応 rulebook 6.10 は照合結果を残すよう求めているが、本節は確定入力として扱う条件だけを示し、実施済みの照合結果を区別して記録していない。領域・起点イベントとの対応、必須列、ID、個別 BES
+      の相互参照について確認結果を示し、未実施項目は未実施と明記する。

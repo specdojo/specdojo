@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-18T22:27:04Z",
+  "type": "claim",
+  "task_id": "T-KATA-SLIM-2-sysd-index-060",
+  "by": "opus-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA"
+  }
+}

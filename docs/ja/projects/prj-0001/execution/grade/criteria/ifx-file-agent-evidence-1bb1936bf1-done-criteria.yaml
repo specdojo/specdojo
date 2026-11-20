@@ -2,12 +2,12 @@
 id: prj-0001:ifx-file-agent-evidence-grade-criteria
 document: prj-0001:ifx-file-agent-evidence
 path: docs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml
-graded_at: "2026-11-15T22:39:33.604Z"
+graded_at: "2026-11-16T14:53:01.683Z"
 graded_by: sol-review-executor
-content_hash: 87089ef14b9ab00889a818614b4b3720398490c6349754e1d05535bcdcea3a07
+content_hash: 0e045865168eb33f235026770b1b5f071c4bbc2ee91bb1b64a2676b2a81b71a9
 summary:
-  satisfied: 2
-  unsatisfied: 1
+  satisfied: 3
+  unsatisfied: 0
   total: 3
 criteria:
   - id: DC-001
@@ -21,10 +21,7 @@ criteria:
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
-    status: unsatisfied
-    reason: >-
-      OD-02 leaves caller enforcement of safe stopping on missing or corrupt resume state unconfirmed, so the declared
-      failure design is not yet established across the authoritative implementation boundary.
+    status: satisfied
   - id: DC-003
     text: 欠けた・壊れたファイルを扱うテストの設計に活用できること
     roles:

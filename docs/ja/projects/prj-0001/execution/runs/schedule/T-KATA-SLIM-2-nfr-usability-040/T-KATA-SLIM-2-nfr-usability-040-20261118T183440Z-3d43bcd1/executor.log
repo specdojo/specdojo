@@ -1,0 +1,24 @@
+`nfr-usability-rulebook.md` から、どの文書にも共通する運用の記述を外し、指摘 F001 と F003 を直しました。指摘 F002 は直していません。この段では sample を変えられないため、変更案として下に残しています。編集したのはこのルールブック 1 ファイルだけで、成果物本体・sample・recipe・template は変えていません。整形チェック（`npx prettier --check`）は通っています。lint などのリポジトリの検証は、このあと runner が実行します。
+
+**大きさ**（空白と表の区切り行を除いた文字数）: 3,329 字 → 2,645 字で、元の約 79.5% です（区切り行を含めると 3,815 字 → 約 2,910 字）。
+
+**外したもの・置き換えたもの**
+- 全体方針に「共通の運用」を 1 項目だけ置きました。役割は適用先のメンバー定義を、`status`・承認・改訂と廃止・未決事項の引き継ぎはドキュメントメタ情報標準を参照します。文書の整形・lint は測定・検証方法に含めないと 1 文で書きました。
+- 用語の表は、本文の言い直しだったので外しました。第 2 章の名前は「位置づけと用語定義」から「位置づけ」に変えています。これはルールブック自身の章で、成果物の章名と必須の区分は変えていません。
+- 第 3 章にあったルールブック自身の ID の行は、Frontmatter と重なるため外しました。
+
+**指摘ごとの対応**
+- **F001（Frontmatter）**: 第 4 章の表を、共通の正本への参照と型固有の値（`type`・`rulebook`・`part_of`）の箇条書きにしました。サンプル章の Frontmatter は `specdojo:` 名前空間に移し、`rulebook` を足して、`title` を外しました。
+- **F003（記述ガイドが薄い）**: 章ごとに判断基準を書き、2.・3.・4. 章には良い例・悪い例も付けました。本文要件の表に受入条件の列を足し、要件一覧の 5 列と、`基準`・`備考` の書き方を定めました。
+- **禁止事項**: 「測定方法のない要件 ID を置く」を足しました。1 行目は「〜しない」と否定形で書かれていて意味が逆だったため、「『使いやすい』だけで要件を書く」に直しました。
+- **サンプル章**: 執筆標準ではサンプル章は経過措置で、個別の改訂で先に消さないことになっています。そのため章は残し、形の分かる最小例に縮めました。
+
+**残っている作業**
+- **F002 の変更案**: sample `nfr-usability-sample.md` の章が、ルールブックの 5 章（概要（対象・目的）／適用範囲・利用者前提／操作性要件一覧／測定・検証方法／関連ドキュメント導線）になっていません。また H1 と本文にルールブックへの相対リンクがあり、執筆標準の禁止事項に当たります。旧サンプル章の駄菓子屋版の内容で 5 章を作り直す必要があります。
+- recipe と template は `undecided` のままです。ルールブックと食い違う記述は確認していないため、変更案はありません。
+- 共通の正本は、ドキュメントメタ情報標準で足りたので変えていません。
+- 成果物 `nfr-usability.md` がまだ作られていないため、成果物と照らし合わせた見直しはできていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"nfr-usability-rulebook から共通の運用（用語の表、自己 ID の行、共通と重なる記述）を外して全体方針の「共通の運用」1 項目に集約し、F001（specdojo 名前空間・rulebook・title 除去）と F003（判断基準と良い例・悪い例、受入条件の列）を反映した。空白と表の区切り行を除いた文字数は 3,329 字から 2,645 字（約 79.5%）。成果物の章名と必須の区分は維持し、rulebook の第 2 章を「位置づけ」に改めた。F002 は sample の修正が必要なため handoff に変更案を残した。","handoff":["F002 の変更案（sample は本段の commit 対象外）: `docs/ja/specdojo/samples/nfr-usability-sample.md` の章構成を rulebook の本文要件の 5 章（概要（対象・目的）／適用範囲・利用者前提／操作性要件一覧／測定・検証方法／関連ドキュメント導線）に作り直し、旧 rulebook のサンプル章 8.1〜8.5 の内容を駄菓子屋の文脈へ置き換えて移す。H1 と本文にある rulebook への相対リンクは、rulebook-authoring-standard の禁止事項に当たるため外す。","大きさ: 空白（改行を含む）と表の区切り行を除いた文字数で、前 3,329 字・後 2,645 字（約 79.5%）。区切り行を含めると前 3,815 字・後 約 2,910 字。","章の変更: rulebook 自身の第 2 章を「位置づけと用語定義」から「位置づけ」に変えた。用語の表（操作性・タスク完了率・誤操作率）は本文要件と記述ガイドの言い直しで、rulebook-authoring-standard の「重複になる場合は用語定義を省略する」に当たるため。成果物の章名と必須の区分は変えていない。","サンプル章は rulebook-authoring-standard の経過措置の規定（個別の改訂で先行して削除しない）に従って残し、形式の輪郭が分かる最小例（Frontmatter と要件一覧の 2 行）に縮めた。外した完成例の内容は F002 の sample 改訂で移す。","共通の正本（document-metadata-standard）への追記は不要と判断した。recipe と template は `undecided` のままで、rulebook と食い違う記述はないため変更案はない。根拠となる成果物 `docs/ja/product/060-non-functional-requirements/nfr-usability.md` はまだ作られていないため、成果物の実態との照合はできていない。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/nfr-usability-rulebook.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更したのは docs/ja/specdojo/rulebooks/nfr-usability-rulebook.md だけで、plan・result・個票を変更していないため"},{"command":"npm run validate:catalog","status":"not_applicable","summary":"docs/ja/projects/ 配下の成果物を変更していない","reason":"変更が docs/ja/specdojo/rulebooks/ に限られ、docs/ja/projects/ に及ばないため"}]}
+</specdojo_executor_evidence>

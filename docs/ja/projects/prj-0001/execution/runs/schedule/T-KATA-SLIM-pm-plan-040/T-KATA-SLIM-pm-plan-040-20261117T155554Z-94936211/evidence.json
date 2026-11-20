@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-SLIM-pm-plan-040",
+  "run_id": "T-KATA-SLIM-pm-plan-040-20261117T155554Z-94936211",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-17T15:58:55.593Z",
+    "completed_at": "2026-11-17T16:03:32.953Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/rulebooks/pm-plan-rulebook.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/rulebooks/pm-plan-rulebook.md | 91 +++++++++++++-------------\n 1 file changed, 45 insertions(+), 46 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/rulebooks/pm-plan-rulebook.md",
+      "status": "passed",
+      "summary": "整形済みであることを確認。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "node tools/check-evidence-secrets.mjs --staged",
+      "status": "passed",
+      "summary": "対象0ファイル、検出0件。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "YAML ファイル単位検証は適用外。",
+      "reason": "変更は Markdown rulebook のみで、YAML の変更がないため。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "カタログ検証は適用外。",
+      "reason": "変更は docs/ja/specdojo/rulebooks/ 配下のみで、docs/ja/projects/ 配下の成果物を変更していないため。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検証は適用外。",
+      "reason": "登録簿個票および既存の plan・result を変更していないため。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 5216 file(s), 135 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 100 passed, 0 error, 0 未検査\n  graph: 6 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5216 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-pm-plan-040\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/devcontainer/scaffold.integration.test.ts\"}\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/rem\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.8.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schema)\ndocs/ja/specdojo/samples/ifx-api-sample\n… output omitted …\necdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-pm-plan-040/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-pm-plan-040/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.8.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-pm-plan-040\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/grade/grade.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/register/commands.test.ts\"}\n ✓ tests/src/grade/grade.test.ts (69 tests) 910ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/src/grade/grade.test.ts\"}\n[pare\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "pm-plan rulebook の共通運用を正本参照へ集約しました。章構成と固有の判断基準を維持し、空白除外で21.89%削減しました。",
+  "completion_status": "complete",
+  "handoff": [
+    "result の実施内容・変更ファイルへ記録: 編集は docs/ja/specdojo/rulebooks/pm-plan-rulebook.md のみ。全体方針に「共通の運用」を1項目置き、役割割当は適用先のメンバー定義、status・承認・改訂と廃止・未決事項の引き継ぎはドキュメントメタ情報標準へ参照化した。役割の共通定義、Agent の最終判断禁止、改訂・廃止手順、未決事項の判断時期・担当・台帳移管手順、共通禁止事項の再掲を削除した。成果物本体・recipe・template・sample・grade サイドカー・result は変更していない。",
+    "result の文字数記録: Frontmatter・表の区切り行を含む全文から空白・改行を除外すると、変更前5,093字、変更後3,978字、前比78.11%（21.89%削減）。sld 試行と同じく表の区切り行も除く場合は4,828字から3,665字、前比75.91%。全見出し、必須・条件付きの区分、Frontmatter は維持した。",
+    "進め方と実践の型の適用へ記録: 根拠規範は docs/ja/specdojo/standards/rulebook-authoring-standard.md、document-metadata-standard.md、people-and-organization-definition-standard.md、共通 exec 規約、defaults/pm-review-viewpoints.yaml の vp-arc-conciseness。改訂の手本は controls/project-register/pjr-8s4t-sld-kata-slim-pilot.md の「他の型へ広げるときの一覧」と sld-rulebook.md。",
+    "確認した実態・評価根拠: prj-0001 の pm-plan.md・pm-organization.md・pm-roles.yaml、宣言先の pm-plan-recipe.md・pm-plan-template.md・pm-plan-sample.md、T-PROJECT-KATA-pm-plan-050 の result、T-PROJECT-KATA-pm-plan-090 の review result、execution/grade/results/specdojo.pm-plan-rulebook.yaml。plan 展開 finding はなく、確認した rulebook の既存 grade も findings は空。過去 review は grade-stale のため現在の品質証明には使わず、構成管理・技術依存・RACI・条件 ID の追跡要件を維持する参考とした。再採点は実施していない。",
+    "維持した判断情報: 軽量・拡張プロファイル、標準7列と結合 ID による列統合条件、現金支出・作業時間・継続運用負荷の区別、構成管理・技術依存の検知と対応、条件 ID と証跡の照合、未達・材料不足時の保留と是正後の再確認、例外の範囲、追従タスク、各節の良い例・悪い例。未決事項は論点・現状・当面の扱い・決定後の管理行とゲートへの影響へ整理した。代表成果物の `based_on` は概要・スコープ・成功基準を直接宣言していないが、直接根拠の追跡に必要な rulebook 要件として維持し、成果物や依存関係は本タスクでは変更していない。",
+    "対象外ファイルの追従案: recipe の全体手順6・未決事項・仕上げチェックから判断時期・判断者の必須化と期限超過時の台帳移管手順を外し、論点・当面の扱い・影響先へ合わせる。役割・Agent・承認の共通規則も再掲しない。template は未決事項表の「決定時期」「判断者」を外し、影響先を記入できる形へ変更する。sample は共通の権限説明、置き換え・廃止の運用段落、未決事項表の判断時期・判断者列と期限超過時の移管段落を整理し、管理行・ゲートに固有の条件と責任は残す。これらは未編集で、構造・必須項目・禁止事項の判断では改訂 rulebook を正とした。",
+    "共通標準への補足案: document-metadata-standard.md の承認に関する記述から、people-and-organization-definition-standard.md の「Agent 委任方針」「整合性ルール」への参照を追加すると、公開可否や最終承認の共通規則を辿りやすい。また、現状の未決事項引き継ぎ規定は改訂・廃止の過程を対象としているため、通常の計画作成中に期限超過した未決事項にも適用することを明示する案がある。共通標準自体は変更していない。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-pm-plan-040/T-KATA-SLIM-pm-plan-040-20261117T155554Z-94936211/executor.log",
+      "bytes": 5463,
+      "truncated": false
+    }
+  ]
+}

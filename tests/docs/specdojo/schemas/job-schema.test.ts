@@ -15,6 +15,18 @@ function commandJob(review: unknown): Record<string, unknown> {
 }
 
 describe("job.schema.yaml task.review", () => {
+  it("accepts frontier proficiency on an agent task", () => {
+    expect(
+      validate({
+        id: "job-frontier",
+        name: "Frontier",
+        task: { mode: "edit", description: "write", targets: ["doc"], proficiency: "frontier" },
+        run: { idempotency_key: "{{job_id}}" },
+      }),
+      formatErrors(validate.errors),
+    ).toBe(true);
+  });
+
   it("accepts a review declaration with nominated executor and reporter", () => {
     const valid = validate(
       commandJob({

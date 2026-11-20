@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/prj-assumptions-constraints-dependencies-rulebo
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 100
-graded_at: "2026-11-13T10:33:33.477Z"
+score: 98
+graded_at: "2026-11-17T22:05:08.304Z"
 graded_by: sol-review-executor
-content_hash: c8723f57bdf1699768a89217cede41e1ac594cd2118305792e601f9967e07527
+content_hash: 34341dc7dd493c8ecb826b6a277a35570bed14dd3183b5906c2a47231fdda77f
 categories:
   purpose:
     score: 100
@@ -25,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 92
   consistency:
     score: 100
 viewpoints:
@@ -81,8 +81,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -104,6 +104,17 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 1
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 131
+    anchor: "| スコープ等の上位文書の決定事項を行として再掲する | 正本との二重管理になり、更新漏れと矛盾を招く。 |"
+    message: >-
+      禁止事項は上位文書の決定事項を行として再掲することを一律に禁じており、本文11行目が許容する監視未整備の条件の展開との区別が明記されていない。sample の ACD-C02・ACD-C03 と template
+      の制約事項が示す運用化を誤って禁止扱いしないよう、展開元と確認・対応を補う場合の例外を禁止事項にも明記する。
+    message_ja: >-
+      禁止事項は上位文書の決定事項を行として再掲することを一律に禁じており、本文11行目が許容する監視未整備の条件の展開との区別が明記されていない。sample の ACD-C02・ACD-C03 と template
+      の制約事項が示す運用化を誤って禁止扱いしないよう、展開元と確認・対応を補う場合の例外を禁止事項にも明記する。

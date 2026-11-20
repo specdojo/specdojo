@@ -35,3 +35,48 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_cdbee87b7c1641289f49ed700fdebdfe
+  ts: "2026-11-17T00:54:41Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_98d8603209bc448d8734effab611eaa2
+- v: 1
+  id: reg_6ec52cdcf84044de927ce4d7f0a0b295
+  ts: "2026-11-17T01:13:33Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_cdbee87b7c1641289f49ed700fdebdfe
+- v: 1
+  id: reg_57cfa9f8b3a5405f93cc6b66523b96e0
+  ts: "2026-11-17T12:14:49Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 利用者が仮説の完了条件を承認し、orchestrator が差分の範囲を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-17"
+    - field: conclusion
+      from: "-"
+      to: on_non_critical を互換用の未使用項目と schema・型・設定例・ガイドに明記した。受理形式と実行挙動は変えず、廃止は次の版で検討する
+  previous_event_id: reg_6ec52cdcf84044de927ce4d7f0a0b295

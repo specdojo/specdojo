@@ -2,9 +2,9 @@
 id: prj-0001:prj-assumptions-constraints-dependencies-grade-criteria
 document: prj-0001:prj-assumptions-constraints-dependencies
 path: docs/ja/projects/prj-0001/020-project-definition/prj-assumptions-constraints-dependencies.md
-graded_at: "2026-11-15T21:54:29.211Z"
+graded_at: "2026-11-16T15:58:01.767Z"
 graded_by: sol-review-executor
-content_hash: e827db8ff6d62b1a4f38fb72b7d0e99bb738b59d2fb32990fb5f8d7bd5a4b457
+content_hash: c537095bb36474c02dfb7dc2e21216bd7256a58b804e8152d1036f7696a38db0
 summary:
   satisfied: 4
   unsatisfied: 0

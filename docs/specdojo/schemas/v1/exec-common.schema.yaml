@@ -94,13 +94,14 @@ $defs:
 
   Proficiency:
     type: string
-    enum: ["low", "normal", "high", "expert"]
+    enum: ["low", "normal", "high", "expert", "frontier"]
     description: >
       Agent proficiency level used for task assignment and brief generation.
       low:    lightweight tasks such as formatting or template filling.
       normal: standard document creation and editing.
       high:   complex analysis or cross-domain work.
       expert: deep technical judgment or architectural decisions.
+      frontier: highest tier above expert; selected only by name or an explicit frontier request.
 
   Capability:
     type: string

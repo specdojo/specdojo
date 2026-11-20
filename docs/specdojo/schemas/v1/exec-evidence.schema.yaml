@@ -294,3 +294,38 @@ properties:
 
   condense_records:
     $ref: "condense-records.schema.yaml"
+
+  local_config_overrides:
+    type: array
+    description: >-
+      Repository settings the runner took from .specdojo/specdojo.local.config.json for this
+      run: a shared repos[] path replaced by name (kind path) or a local repository added
+      (kind added). Omitted when no local config value was applied.
+    items:
+      type: object
+      additionalProperties: false
+      required: [project, repo, kind, path]
+      properties:
+        project:
+          type: string
+          minLength: 1
+        repo:
+          type: string
+          minLength: 1
+        kind:
+          enum: [path, added]
+        path:
+          type: string
+          minLength: 1
+        shared_path:
+          type: string
+          minLength: 1
+      if:
+        properties:
+          kind:
+            const: path
+      then:
+        required: [shared_path]
+      else:
+        not:
+          required: [shared_path]

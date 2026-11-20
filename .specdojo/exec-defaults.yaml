@@ -57,6 +57,11 @@ pipeline:
     - { hook: test, covered_by: [test-unit, test-integration] }
   # 決まった形の edit result は reporter の agent を起こさず runner が作る（PJR-T01P）。
   mechanical_result: true
+  # src を変えた統合の後に親が dist を作り直し、次の run が古い dist で止まらないようにする（PJR-8KXJ）。
+  # 失敗しても統合は戻さず、dist/.specdojo-build-failed を置いて次の exec を止める。
+  post_integration:
+    - id: build-dist
+      paths: ["src/**", "tsconfig*.json"]
 
 # register 項目は失敗時の変更と再開用 checkpoint を隔離するため、既定で task worktree
 # を使う。短時間の軽微な作業を現在の作業ツリーで行う場合だけ --in-place を明示する。
@@ -139,6 +144,9 @@ providers:
     # モデルは実体の member の model を --model で渡す。permission は mode 別 settings で分離する。
     command_template: "claude -p --verbose --agent {agent} --model {model} --settings .specdojo/claude/settings.{mode}.json"
     command_params:
+      # frontier（PJR-DGRZ）は名前指定のときだけ使う。model と役割は member と mode から決まる。
+      by_proficiency:
+        frontier: {}
       by_mode:
         edit: { agent: claude-executor }
         review: { agent: claude-review-executor }
@@ -191,6 +199,7 @@ providers:
       by_proficiency:
         normal: { effort: medium }
         expert: { effort: high }
+        frontier: { effort: xhigh }
     # OpenAI: 429 / rate limit（API）に加え、ChatGPT プランの 5時間枠（session limit）
     # と週次上限（weekly / usage limit）がスタックする。
     rate_limit_detection:

@@ -324,6 +324,7 @@ viewpoints:
     document_kinds:
       exclude:
         - specdojo:bdd-rulebook
+        - specdojo:cdr-rulebook
         - specdojo:dct-index-rulebook
         - specdojo:dct-rulebook
         - specdojo:gl-rulebook
@@ -573,6 +574,7 @@ viewpoints:
         - specdojo:cdfd-mermaid-rulebook
         - specdojo:cdfd-rulebook
         - specdojo:cdfd-uc-rulebook
+        - specdojo:cdr-rulebook
         - specdojo:cdsd-rulebook
         - specdojo:cdt-rulebook
         - specdojo:cld-rulebook

@@ -9,9 +9,11 @@ import {
 import type { RateLimitRecoveryEvent } from "./run/shared.js";
 import { ensureDir, redactSensitiveText, safeSlug } from "./shared.js";
 import type { AgentStageRole } from "./types.js";
-import { gitOutput } from "./worktree.js";
+import { gitOutput, gitResult } from "./worktree.js";
 
 import { isCondenseRecords, type CondenseRecord } from "../shared/condense-records.js";
+import type { LocalConfigOverride } from "../shared/local-config.js";
+import { loadConfig } from "../shared/specdojo-config.js";
 
 const MAX_LOG_BYTES = 64 * 1024;
 export const MAX_CHANGE_FILES = 1_000;
@@ -73,6 +75,8 @@ export type ExecEvidence = {
   /** Executor notes preserved mechanically in the edit result handoff. Optional for legacy evidence. */
   handoff?: string[];
   condense_records?: CondenseRecord[];
+  /** Repository settings taken from `.specdojo/specdojo.local.config.json` for this run. */
+  local_config_overrides?: LocalConfigOverride[];
   /** Runner-derived reason for process failure, protection, or incomplete work. */
   block_reason?: string;
   command?: {
@@ -150,6 +154,7 @@ export type BuildExecutorEvidenceInput = Omit<
   diffStat: string;
   logRefPath: string;
   parentValidations?: EvidenceValidation[];
+  localConfigOverrides?: readonly LocalConfigOverride[];
 };
 
 export type RecordReporterFailureOutputInput = {
@@ -638,6 +643,9 @@ export function buildExecutorEvidence(input: BuildExecutorEvidenceInput): {
       },
       validations,
       ...(report.condenseRecords ? { condense_records: report.condenseRecords } : {}),
+      ...(input.localConfigOverrides?.length
+        ? { local_config_overrides: input.localConfigOverrides.map((item) => ({ ...item })) }
+        : {}),
       ...(report.targetCoverage.length > 0 ? { target_coverage: report.targetCoverage } : {}),
       ...(input.rateLimitEvents?.length ? { rate_limit_events: input.rateLimitEvents } : {}),
       final_message: report.finalMessage,
@@ -725,6 +733,8 @@ export function recordExecutorEvidence(input: RecordExecutorEvidenceInput): {
     logRefPath: repoRelative(input.worktreePath, logPath),
     parentValidations: input.parentValidations,
     rateLimitEvents: input.rateLimitEvents,
+    // The runner's own config load (the main working tree) decides what the run used.
+    localConfigOverrides: loadConfig(input.repoRoot).localOverrides,
   });
   writeFileSync(logPath, logExcerpt, "utf8");
   writeFileSync(evidencePath, `${JSON.stringify(evidence, null, 2)}\n`, "utf8");
@@ -742,14 +752,19 @@ export function recordCommandEvidence(input: RecordCommandEvidenceInput): {
     `${executionRel}/exec/events/`,
     `${executionRel}/generated/`,
   ];
-  const changes = parseStatusPaths(input.worktreePath)
+  const inGit = gitResult(input.worktreePath, ["rev-parse", "--is-inside-work-tree"]).status === 0;
+  const changes = (inGit ? parseStatusPaths(input.worktreePath) : [])
     .filter((change) => runnerManagedPrefixes.every((prefix) => !change.path.startsWith(prefix)))
     .slice(0, MAX_CHANGE_FILES)
     .map((change) => ({
       path: boundedText(change.path, 1_000),
       status: boundedText(change.status, 40),
     }));
-  const diffStat = gitOutput(input.worktreePath, ["diff", "--stat", "HEAD", "--"]);
+  const hasHead =
+    inGit && gitResult(input.worktreePath, ["rev-parse", "--verify", "HEAD"]).status === 0;
+  const diffStat = inGit
+    ? gitOutput(input.worktreePath, ["diff", "--stat", ...(hasHead ? ["HEAD"] : []), "--"])
+    : "";
   const evidenceDir = taskRecordPaths(
     join(input.worktreePath, executionRel),
     input.taskId,

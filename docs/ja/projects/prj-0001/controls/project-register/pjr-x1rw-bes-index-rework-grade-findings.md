@@ -48,8 +48,8 @@ specdojo:
 | --- | ------------------------------------------------------- | ---- | ---- | ---------------------------------------------------- |
 | 1   | 最新の grade の指摘を取り込み、テストの網羅の確認を足す | ARC  | done | executor が実施（対応結果を参照）                    |
 | 2   | grade し直して結果を書く                                | ARC  | done | 2026-11-16 orchestrator が grade（needs-work 94 点） |
-| 3   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回）  | ARC  | open | 0.8.0 の後に流す                                     |
-| 4   | 直した後に grade し直して結果を書く（次の回）           | ARC  | open | orchestrator が流す                                  |
+| 3   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回）  | ARC  | done | 2026-11-17 executor が実施（対応結果の次の回を参照） |
+| 4   | 直した後に grade し直して結果を書く（次の回）           | ARC  | open | 2026-11-17 の 2 回目の再 grade で needs-work         |
 
 ## 5. 対応結果
 
@@ -65,6 +65,15 @@ specdojo:
 - major の指摘:
   - F004（vp-qe-done-criteria）: 宣言された完了条件が満たされたとマークする前に、ソースドメインのマッピング、PO のスコープ承認、および QE のカバレッジチェックを確認するレビューのエビデンスを追加してください。
 - 結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/bes-index.yaml`。
+
+次の回の対応（2026-11-17、executor が実施）:
+
+- F004（major）と DC-004: 未達の理由だった「未作成の個別仕様 2 件の観点の先送り」を解消するため、「網羅の確認」の `bes-derived-content-requested` に系統ごとの成立・不成立の確かめ方を、`bes-cycle-arrived` に到来の場合分けと、`bes-routine-due` との対応が確かめられた場合・否定された場合それぞれの数え方を書いた。個別仕様に残る点（系統の重なりの数え方、対応の確定）を照合の結果に分けて示した。
+- F002: `bes-task-ready-selected` の現行の本文は本書と対応行を参照しており、双方向の参照は設定済みだった。詳細化の章にその確認を記した。
+- 迷った点と決めた内容: QE による確認は executor が代わりに済ませたことにせず、「未決事項と承認条件」の論点のまま残した（確認の主体を偽らないため）。F003（事実データとデータモデルの照合）は宣言された参照範囲にデータモデルがなく照合できないため、PJR-AK5V の留保のまま残した。F001（カタログの 10 領域の記述）は本タスクの対象が `bes-index` だけで、カタログを直せないため論点のまま残した。人間の PO の判断と留保の記述は消していない。`status` は `draft` のまま。
+- 残課題: `dct-business-model-bes.yaml` の `bes-index` のコメントと概要を 14 領域に直す（別の項目で BA が行う）。QE が「網羅の確認」を確かめる。事実データの照合を ARC が行う。DC-003・DC-004 はこれらの留保と QE の確認が済むまで未充足として残る見込み。再 grade（作業内容の No 4）は orchestrator が流す。
+
+2 回目の再 grade の結果（2026-11-17、orchestrator が `grade run --target deliverable --by sol-review-executor` で実行）: needs-work、90 点。指摘は 7 件（major 1・minor 6）。完了条件は 4 件中 2 件（DC-003 ARC・DC-004 QE が未達）。major の F005 は、元の領域との対応付け、PO の範囲の承認、QE の網羅の確認のレビューの証跡を求める。結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/bes-index.yaml`。
 
 ## 6. 関連ドキュメント
 

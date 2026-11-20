@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-SLIM-2-ifx-cmd-ai-provider-cli-060",
+  "run_id": "T-KATA-SLIM-2-ifx-cmd-ai-provider-cli-060-20261118T203130Z-cd60bf96",
+  "updated_at": "2026-11-18T21:08:56.491Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-18T20:33:25.651Z",
+      "completed_at": "2026-11-18T20:35:32.864Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-ifx-cmd-ai-provider-cli-060/T-KATA-SLIM-2-ifx-cmd-ai-provider-cli-060-20261118T203130Z-cd60bf96/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-18T21:04:46.178Z",
+      "completed_at": "2026-11-18T21:07:54.591Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-ifx-cmd-ai-provider-cli-060/T-KATA-SLIM-2-ifx-cmd-ai-provider-cli-060-20261118T203130Z-cd60bf96/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-18T21:08:27.272Z",
+      "completed_at": "2026-11-18T21:08:56.491Z",
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-ifx-cmd-ai-provider-cli-060/T-KATA-SLIM-2-ifx-cmd-ai-provider-cli-060-20261118T203130Z-cd60bf96/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-ifx-cmd-ai-provider-cli-060/T-KATA-SLIM-2-ifx-cmd-ai-provider-cli-060-20261118T203130Z-cd60bf96/result.md"
+  }
+}

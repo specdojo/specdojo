@@ -1,0 +1,17 @@
+{
+  "v": 1,
+  "ts": "2026-11-18T03:46:30Z",
+  "type": "block",
+  "task_id": "T-KATA-SLIM-2-pm-risk-register-040",
+  "by": "sol-executor",
+  "msg": "executor reported incomplete: 編集対象が計画で unresolved と指定されているため、異常終了条件に従い標準エラーへ理由を出して終了コード 1 で停止しました。ファイルは変更していません。",
+  "meta": {
+    "limit_deferred": "false",
+    "claim_actor": "sol-executor",
+    "stage_actor": "sonnet-reporter",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-pm-risk-register-040/T-KATA-SLIM-2-pm-risk-register-040-20261118T014755Z-6ed75891/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-pm-risk-register-040/T-KATA-SLIM-2-pm-risk-register-040-20261118T014755Z-6ed75891/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-SLIM-2-pm-risk-register-040-20261118T014755Z-6ed75891"
+  }
+}

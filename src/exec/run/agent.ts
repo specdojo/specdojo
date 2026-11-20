@@ -1,6 +1,7 @@
 import { spawn } from "node:child_process";
 import { existsSync } from "node:fs";
-import { basename, relative, resolve, sep } from "node:path";
+import { basename, dirname, join, relative, resolve, sep } from "node:path";
+import { trackExecutor, withValidationMetrics } from "../validation-metrics.js";
 import {
   resolveConnectionErrorDetection,
   resolveMemberCommand,
@@ -16,6 +17,7 @@ import {
   type AgentLimitSignal,
 } from "../limit.js";
 import { replaceDocIndexRefs } from "../../docs/doc-index.js";
+import { localConfigEnvironment } from "../../shared/local-config.js";
 import { loadPlan, parsePlanTaskIdentity } from "../plans.js";
 import type { ReadyTaskView, TaskMode } from "../types.js";
 import {
@@ -312,6 +314,7 @@ export function resumedTargetCoverageFailure(params: {
 }
 
 export type ParentValidationRunOptions = {
+  metricsPath?: string;
   // Identifies the waiting item in gate logs (task / register ID). Defaults to the cwd name.
   label?: string;
   invoke?: ParentValidationInvoker;
@@ -331,10 +334,12 @@ export async function runConfiguredParentValidationBatch(
   if (!entries?.length) return { validations: [], failureOutputs: [] };
   const labels = parentValidationLabels(entries);
   const label = options.label ?? basename(typeof cwd === "string" ? cwd : cwd.project);
-  const batch = await parentValidationGateFor(execDefaults).run(label, labels, async () => {
-    process.stdout.write(`  Running parent validations (${label}): ${labels.join(", ")}\n`);
-    return await runParentValidationBatch(entries, cwd, options.invoke, options.selection);
-  });
+  const batch = await withValidationMetrics(label, options.metricsPath, () =>
+    parentValidationGateFor(execDefaults).run(label, labels, async () => {
+      process.stdout.write(`  Running parent validations (${label}): ${labels.join(", ")}\n`);
+      return await runParentValidationBatch(entries, cwd, options.invoke, options.selection);
+    }),
+  );
   for (const validation of batch.validations) {
     process.stdout.write(
       `  Parent validation ${recordedParentValidationLabel(validation)}: ${validation.status}\n`,
@@ -366,6 +371,7 @@ export async function appendParentValidationsToExecutorEvidence(params: {
     parentValidationRoots(params.cwd, params.productWorktrees),
     {
       label: params.evidence.task_id,
+      metricsPath: join(dirname(params.evidencePath), "parent-validation-metrics.jsonl"),
       selection: parentValidationSelectionForEvidence(params.evidence),
     },
   );
@@ -484,6 +490,7 @@ export async function executeAgent(
   cwd: string,
   env: NodeJS.ProcessEnv,
   quiet = false,
+  stageRole: "executor" | "reporter" = "executor",
 ): Promise<AgentExecution> {
   if (!agentCommand.trim()) {
     return { result: "failure", exitCode: null, stdout: "", stderr: "Empty agent command" };
@@ -498,6 +505,7 @@ export async function executeAgent(
     shell: true,
     stdio: ["pipe", "pipe", "pipe"],
   });
+  const stopTracking = stageRole === "executor" ? trackExecutor(child.pid, cwd) : () => undefined;
   // stdin を読まずに即終了するコマンドへの書き込みは EPIPE になる。未処理だと
   // プロセスごと落ちて失敗時の後処理（block 遷移・result 更新）が走らないため無視する。
   // 実行結果は終了コードで判定する。
@@ -523,6 +531,7 @@ export async function executeAgent(
     });
     child.once("close", (code) => resolveExit(code));
   });
+  stopTracking();
 
   const combinedOutput = `${stdout}\n${stderr}`;
   if (isRateLimitError(exitCode, combinedOutput, detection)) {
@@ -578,6 +587,7 @@ export async function runWithRetry(
   env: NodeJS.ProcessEnv,
   resultPath?: string,
   pinned?: PinnedRateLimitRunOptions,
+  stageRole: "executor" | "reporter" = "executor",
 ): Promise<{
   result: RunResult;
   exitCode: number | null;
@@ -642,6 +652,8 @@ export async function runWithRetry(
         candidatePolicy?.cooldown_seconds,
         cwd,
         env,
+        false,
+        stageRole,
       );
       const protectedConfigChanges = changedAgentProtectedConfigAcrossRepos(protectedConfigBefore);
       if (protectedConfigChanges.length > 0) {
@@ -892,6 +904,7 @@ export function agentEnvironment(
 ): NodeJS.ProcessEnv {
   return {
     ...withoutInheritedRepoEnvironment(gitEnvironment()),
+    ...localConfigEnvironment(repoRoot),
     SPECDOJO_SCHEDULE_PATH: pathInsideWorktree(repoRoot, worktreePath, schedulePath),
     SPECDOJO_EXECUTION_PATH: pathInsideWorktree(repoRoot, worktreePath, executionPath),
     ...productRepoEnvironment(worktreePath, productWorktrees),

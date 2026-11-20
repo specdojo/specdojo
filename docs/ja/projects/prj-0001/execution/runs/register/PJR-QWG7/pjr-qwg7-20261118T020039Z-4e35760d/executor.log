@@ -1,0 +1,35 @@
+`mm-rulebook`・`pr-rulebook` から文書の運用の記述を外し、ドキュメントメタ情報標準への参照にしました。ただし大きさは約 93% で、8 割の目安には届いていません。2 つの sample は外す記述がなかったので変えていません。
+
+**rulebook の変更**
+- 冒頭の H1 を言い直しただけの段落と、「推奨 Frontmatter 項目」の章（`id`・`type`・`status` の表で、共通の正本の再掲）を外しました。代わりに、全体方針に「共通の運用」を 1 項目置いて正本を参照する形にし、章番号を詰めました。
+- 見出しの「位置づけと用語定義（必要に応じて）」を「位置づけ」にしました。用語の定義がないためです。
+- 空行で分断されて崩れていた表と、箇条の途中の余分な空行も直しました。型固有の判断と禁止事項は変えていません。
+
+**大きさ**（空白と表の区切り行を除いた文字数）
+
+| 文書 | 前 | 後 | 比 |
+| --- | --- | --- | --- |
+| `mm-rulebook` | 857 | 798 | 93% |
+| `pr-rulebook` | 893 | 833 | 93% |
+| `mm-sample` | 393 | 393 | 100% |
+| `pr-sample` | 494 | 494 | 100% |
+
+**目安に届かなかった理由**（個票に書きました）
+- rulebook は元々 1,000 字未満で、運用の記述は外した 2 か所だけでした。残りは Frontmatter と型固有の判断なので、目安に合わせて削ると結論が変わります。
+- sample には、役割や承認の段落、文書品質の検査、同じ判断の言い直しのどれもありませんでした。削ると完成例として欠けます。
+
+**個票に書いたこと**
+- 作業内容の 1・2 を `done` にしました。3 の grade は orchestrator の担当なので `open` のまま残し、理由をメモに書きました。
+- 対応結果に、実施内容・前後の文字数・迷った点と決めた内容・CHANGELOG の文案・残課題を書きました。
+- 範囲外の変更案として 2 点を書きました。両 rulebook が rulebook 作成標準の「内容充実化」を満たしていない章があること、`mm-rulebook` の「過度に」に判断の条件がないことです。
+
+**検証**
+- 3 ファイルを prettier で整形しました。
+- `npm run validate:history-links` は全件 valid でした。
+- 変更した 3 ファイルに markdownlint をかけ、指摘は 0 件でした。
+
+保護された設定と CHANGELOG は変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"mm-rulebook・pr-rulebook から Frontmatter の項目表と冒頭の定型文を外して全体方針の「共通の運用」でドキュメントメタ情報標準を参照し、崩れた表を直した（約 93%）。mm-sample・pr-sample は外す記述がなく変更なし。個票の作業内容・対応結果を更新した。","handoff":["大きさの目安に届かない: rulebook は約 93%（mm 857→798 字、pr 893→833 字）。元々 1,000 字未満で運用の記述は外した 2 か所だけで、残りは Frontmatter と型固有の判断のため、目安に合わせて削らなかった。","sample は変更なし（mm 393 字、pr 494 字）。役割や承認の段落、文書品質の検査、判断の言い直しを持たず、7 割の目安に合わせて削ると完成例として欠けるため。","変更案（範囲外）: 両 rulebook は rulebook 作成標準の「内容充実化」（必須章ごとに 3 項目以上、推奨表の列定義）を満たさない章がある。mm-rulebook の禁止事項の「過度に」に判断の条件がない。grade の結果を見て別の項目で扱うかを決める。","型の grade（作業内容の 3）は統合の後に orchestrator が流す。","CHANGELOG の文案は個票の「CHANGELOG に書く事項」に書いた。保護された設定の変更は不要。"],"validations":[{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-qwg7-kata-slim-mm-pr.md docs/ja/specdojo/rulebooks/mm-rulebook.md docs/ja/specdojo/rulebooks/pr-rulebook.md","status":"passed","summary":"個票を整形し、rulebook 2 件は変更なし"},{"command":"npm run -s validate:history-links","status":"passed","summary":"全件 valid（個票を含む）"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/mm-rulebook.md docs/ja/specdojo/rulebooks/pr-rulebook.md docs/ja/projects/prj-0001/controls/project-register/pjr-qwg7-kata-slim-mm-pr.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>

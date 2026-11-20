@@ -4,11 +4,12 @@ document: specdojo:br-recipe
 path: docs/ja/specdojo/recipes/br-recipe.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-recipe
 verdict: pass
 score: 100
-graded_at: "2026-11-12T20:07:40.317Z"
+graded_at: "2026-11-19T20:14:43.646Z"
 graded_by: flash-high-executor
-content_hash: 518b7724d931fedf1348d53a443ab7d311fd2959d12afc180df8052a2e6be380
+content_hash: 3330b4063526dd7a04a26f5c15ed90f60298556ad172fc960c396a825584f2d9
 categories:
   purpose:
     score: 100

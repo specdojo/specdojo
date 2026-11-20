@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_8bbd404235fc4999a106213b51cb34ad
+  ts: "2026-11-16T11:00:26Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 夜間の仕組み（orchestrator night・routine・job）の役割をどう分けるか
+    - field: description
+      from: ""
+      to: _TODO_
+    - field: input
+      from: ""
+      to: '["PJR-C5AF で、夜間に項目を流す仕組みが orchestrator night・routine run・job の 3 つあり、役割が重なっていることが分かった。どれを正にし、ほかをどう整理するかを決める"]'
+    - field: type
+      from: ""
+      to: question
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-16"
+    - field: derived_from
+      from: ""
+      to: '["PJR-C5AF"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: routine

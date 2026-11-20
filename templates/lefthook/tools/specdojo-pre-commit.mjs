@@ -171,6 +171,14 @@ function isMarkdownFile(file) {
 
 let status;
 switch (command) {
+  case "git-lock-warning":
+    // A warning must never block a user's commit, including with an older installed CLI.
+    runNode(join(repoRoot, "node_modules", "specdojo", "dist", "specdojo.js"), [
+      "git",
+      "--warn-unlocked",
+    ]);
+    status = 0;
+    break;
   case "prettier": {
     const targetFiles = filterFiles(files, ".prettierignore");
     status =

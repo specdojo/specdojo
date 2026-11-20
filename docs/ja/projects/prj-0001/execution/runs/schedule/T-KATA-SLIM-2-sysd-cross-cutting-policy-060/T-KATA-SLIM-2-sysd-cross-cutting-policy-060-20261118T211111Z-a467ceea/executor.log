@@ -1,0 +1,31 @@
+`docs/ja/specdojo/recipes/sysd-cross-cutting-policy-recipe.md` を書き直しました。変更したのはこの 1 ファイルだけで、rulebook・sample・template・成果物本体と result は変えていません。
+
+- **大きさ**: 空白を除いた文字数は 4,700 字から 3,067 字（約 65%）になり、目安の 7 割以下に収まりました。
+- **外した記述**:
+  - 作成前に集める情報の「責任」行（役割の割り当て）。
+  - 手順に並んでいたエラー・冪等などの必須領域の列挙と、ルール詳細の六要素の言い直し。
+  - 判断者・期限・次アクション・追跡者といった未決事項の管理台帳の列。
+  - 公開可否と承認・留保・差し戻しの判断。
+  - 各ルール詳細の観点表（rulebook の必須検討領域と同じ内容）。
+  - 各章の書き方の中にあった良い例・避けたい例。良い例 / 悪い例の表へ 1 か所にまとめました。
+- **残した・足した記述**:
+  - 書く順番とその理由を手順に入れました（概要を先に書く、詳細から書いて一覧にまとめる、など）。
+  - 作成前に集める情報に「取り出し元」の列を足しました。
+  - 各章の書き方は、問い 2 つとコツの形にそろえました。
+  - 「写さず正本や上位成果物への参照に置き換える」をコツに書きました。
+  - 深掘り手順は、対応のない主張を探す 4 段の順序にしました。
+- **参照と章立て**: 本文に rulebook・sample への参照はありません。Recipe 記述標準の 8 章の構成は保っています。
+- **finding**: 対応する grade や condense の finding はありませんでした。
+- **検証**: prettier で整形し、markdownlint-cli2 で指摘 0 件でした。親 runner が実行する lint や test は、ここでは実行していません。
+
+template への変更案があります（今回は直していません）。どれも、役割・未決事項の台帳・公開と昇格という共通の運用が template に残っている点です。
+
+1. 「利用・確認・承認責務」の表と「公開・昇格の判断条件」の節を外す。役割はメンバー定義が、`status` の昇格はドキュメントメタ情報標準が担うためです。
+2. 「報告と追跡」の表にある報告者・追跡者・再確認者の列を外す。
+3. 「判断待ちと後続への影響」の表を、rulebook の未決事項の要件（対象 Rule ID・論点・影響・当面の扱い）に合わせ、判断者・担当・判断期限・次アクションの列を外す。
+
+rulebook と sample には、直すべき点は見つかりませんでした。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"sysd-cross-cutting-policy-recipe.md から共通の運用（役割、公開・承認）、未決事項の管理台帳の列、rulebook と同じ判断の言い直し（必須領域の列挙、六要素、観点表）、章をまたぐ同じ確認の繰り返しを外し、書く順番とその理由、入力の取り出し元、問いとコツ、深掘りの順序に絞った。空白を除いた文字数は 4700 字から 3067 字（約 65%）。8 章の構成は保ち、本文に rulebook・sample への参照はない。対応する finding はなかった。rulebook・sample・template・成果物本体は変更していない。","handoff":["文字数（空白を除く）: 変更前 4700 字、変更後 3067 字（約 65%）。result の実施内容に記録する。","変更案（template、この段では直していない）: `docs/ja/specdojo/templates/sysd-cross-cutting-policy-template.md` の「利用・確認・承認責務」の表と「公開・昇格の判断条件」の節は、役割と `status` 昇格という共通の運用にあたる。メンバー定義とドキュメントメタ情報標準に委ねて外す案。","変更案（template）: 「報告と追跡」の表にある報告者・追跡者・再確認者の列と、「判断待ちと後続への影響」の表にある判断者・担当・判断期限・次アクションの列は、未決事項の管理台帳の列にあたる。rulebook の本文要件（対象 Rule ID、論点と影響、当面の扱い）に合わせて絞る案。","rulebook と sample には、合わせて直すべき点は見つからなかった。","Kata 起因の finding（grade / condense）はなかった。見直しの根拠は、rulebook の本文要件と記述ガイド、Recipe 記述標準、手本の `prj-charter-recipe`、PJR-7M9J の「他の recipe へ広げるときの一覧」。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/recipes/sysd-cross-cutting-policy-recipe.md","status":"passed","summary":"変更した recipe を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/recipes/sysd-cross-cutting-policy-recipe.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルの変更なし","reason":"plan・result・個票などの履歴蓄積ファイルを変更していない"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,41 @@
+レビューの判定は **`complete-with-findings`** です。この Job Run（`JBR-grade-kata-1e8a2b5bae58`）は統合してよいと考えます。指摘事項はありますが、どれも Run の完了を妨げるものではありません。成果物と Job Run の出力は一切変更していません。
+
+**評価結果の確認**
+- 15件の評価対象のうち、`grade list --target kata --project prj-0001 --changed-only` が出力したものは0件でした。verdict を記録する直前、HEAD `84aa172` のまま再実行しても0件で、評価結果は最新です。
+- `--incomplete` が出力したのは `gl-rulebook.md` の1件だけで、今回の対象外です。`grade state --exhausted` の出力は空でした。
+
+**差分の範囲**
+- `d4fe0da..84aa172` の22ファイルは、すべてこの Run の出力でした。
+  - 評価結果ファイル `specdojo.*-recipe.yaml` 15件（追加5件、変更10件）。いずれも stdout に出た15文書と一致します。
+  - Run JSON。
+  - `runs/job/JBR-grade-kata-1e8a2b5bae58/JBR-grade-kata-1e8a2b5bae58/` 配下の plan、result、evidence、`pipeline-state`、command の stdout と stderr。
+- 成果物本体の変更や対象外の変更はありません。
+
+**記録の整合**
+- Run JSON は `state: succeeded`、`attempts[0].exit_code: 0` です。evidence の executor も `succeeded`（`exit_code` 0）でした。
+- stdout は `selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0` で、stderr は空です。
+- `results.tsv` は15件すべて `passed` でした。`failed`、`retry_exhausted`、rate limit（終了コード75）、中断はいずれもありません。Run は `partial` ではないので、再開や再試行の判断は要りません。
+- result.md の変更ファイル一覧は、evidence の `changes` 16件と一致します。
+
+**score・verdict の分布と変化**
+- 15件すべて `pass` です。
+  - score 100 が10件。
+  - 98 が2件（pm-organization 1件、pm-roles 2件）。
+  - そのほか bes 95（2件）、pm-quality-management-plan 96（4件）、cdfd-uc 97（1件）、cpd 85（12件）。括弧内は finding の件数です。
+- 前回 `needs-work` だった3件が `pass` になりました。pm-raci は 73→100、pm-roles は 70→98、pm-plan は 92→100 です。3件とも `content_hash` が変わっており、前回の評価後に文書自体が書き直されたことと整合します。
+- stdout の executor は `agy-expert-executor`、評価結果ファイルの `graded_by` は `flash-high-executor` です。`.specdojo/agent-members.yaml` で前者は後者の `alias_of` と定義されているので、矛盾ではありません。
+- 評価設定の見直しが要るほどの偏りは見当たりません。ただ、15件全部が `pass` で、そのうち10件が満点なので、緩めに出ている可能性はあります。
+
+**改善指示（完了は妨げない）**
+- cpd-recipe の12件をはじめ、残っている finding は次の改訂で扱ってください。
+- pm-organization-recipe の finding の1つで `anchor` が `""` になりました（前回は `"## 4. 各章の書き方"`）。空の `anchor` はリポジトリ内の他の評価結果ファイルにも多くあり、この Run だけの問題ではありません。
+- result.md の追加ファイルの行数は +110 と書かれていますが、git の diff stat では 109 行です。軽微な食い違いです。
+
+**確認できなかった範囲**
+- `logs/grade/runs/per-document/JBR-grade-kata-1e8a2b5bae58/` 配下の作業ログと `results.tsv` の原本は開いていません。確認は stdout に転記された内容で行いました。
+- finding の中身が妥当かどうかの再評価はしていません（review の範囲外です）。
+- runner が実行する検査（lint など）の結果は確認できていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict: complete-with-findings。差分 d4fe0da..84aa172 の22ファイルはすべて当該 Job Run の出力（recipe の評価結果ファイル15件〔追加5・変更10〕、Run JSON、run ディレクトリの plan/result/evidence/pipeline-state/command log）で、対象外の変更はない。Run JSON の state は succeeded、exit_code は0、evidence の executor は succeeded。stdout は selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0、stderr は空。results.tsv は15件すべて passed で、failed・retry_exhausted・rate limit（75）・中断はなく、partial ではない。鮮度: `grade list --target kata --project prj-0001 --changed-only` の出力に対象15件は含まれない（記録直前に HEAD 84aa172 で再実行して確認）。`--incomplete` は対象外の gl-rulebook のみ、`grade state --exhausted` は空。verdict は全件 pass。score は100が10件、98が2件、97・96・95・85が各1件。前回 needs-work の pm-raci（73→100）、pm-roles（70→98）、pm-plan（92→100）は `content_hash` が変わっており、文書の改訂と整合する。`graded_by` が flash-high-executor なのは agy-expert-executor の `alias_of` であり整合する。残る finding（cpd 12、pm-quality-management-plan 4、bes 2、pm-roles 2、cdfd-uc 1、pm-organization 1）は完了を妨げない。軽微な点: pm-organization の finding の1つで anchor が空に変わった（空の anchor はリポジトリ全体に多く、この Run 固有ではない）。result.md の追加ファイル行数 +110 は diff stat の109と1行ずれる。確認できなかった範囲: logs/grade/runs/per-document/JBR-grade-kata-1e8a2b5bae58/ の作業ログと results.tsv 原本（stdout 転記で確認）、finding の内容の妥当性（review の範囲外）、runner が実行する検査の結果。","handoff":["cpd-recipe（score 85、finding 12件）など残る finding は次回の改訂で対応する。","全件 pass、うち10件が満点という分布が続く場合は、agy 単段（flash-high-executor）の評価の厳しさを人が見直すことを検討する。","評価結果ファイルの finding の anchor が空になる事象（今回 pm-organization-recipe でも発生）は、grade apply 側での原因調査を検討する。"],"validations":[{"command":"git diff --stat d4fe0da84df1f188bba4b966b536776f53a6918b..84aa172fa8bd352b3f70275d9b8ef5e5326518cd","status":"passed","summary":"22ファイル、+1087/-361。すべて Job Run の出力"},{"command":"git diff --name-status d4fe0da84df1f188bba4b966b536776f53a6918b..84aa172fa8bd352b3f70275d9b8ef5e5326518cd","status":"passed","summary":"評価結果ファイル15件（A5/M10）、Run JSON、run ディレクトリの記録のみ"},{"command":"node dist/specdojo.js grade list --target kata --project prj-0001 --changed-only","status":"passed","summary":"対象15件の recipe はいずれも出力されず、評価結果は最新（記録前の再実行でも0件）"},{"command":"node dist/specdojo.js grade list --target kata --project prj-0001 --incomplete","status":"passed","summary":"出力は対象外の gl-rulebook.md のみ"},{"command":"node dist/specdojo.js grade state --target kata --project prj-0001 --exhausted","status":"passed","summary":"出力なし（retry_exhausted なし）"}]}
+</specdojo_executor_evidence>

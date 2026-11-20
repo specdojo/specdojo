@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/cdsd-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 100
-graded_at: "2026-11-13T06:08:01.079Z"
+score: 93
+graded_at: "2026-11-17T21:50:01.514Z"
 graded_by: sol-review-executor
-content_hash: 9a1b20bb4b4d1aef8ab49ec765647bcbf5294605ac1df5cf37611c0579a57700
+content_hash: dff137e8bfa8457bd14826d4d4760e62d8dfd87af70b3d25453d707fd4ec09ff
 categories:
   purpose:
     score: 100
@@ -21,13 +21,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 92
   implementation:
-    score: 100
+    score: 88
   quality:
-    score: 100
+    score: 92
   consistency:
-    score: 100
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -66,8 +66,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-change-impact:
     level: 4
     score: 100
@@ -78,17 +78,17 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -104,6 +104,50 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 4
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 30
+    anchor: "- `type` は `data`、`rulebook` は `specdojo:cdsd-rulebook` とします。表示名は対象領域が分かる H1 に置き、`title` を併記する場合は H1 と意味を一致させます。"
+    message: >-
+      直前でメタ情報を `specdojo:` 配下に置くと指示したうえで `title` の併記を許容していますが、参照 schema は `specdojo.title`
+      を許可していません。併記を認める場合は第三者ツール用のトップレベル項目であることを明記するか、併記の案内を削除してください。
+    message_ja: >-
+      直前でメタ情報を `specdojo:` 配下に置くと指示したうえで `title` の併記を許容していますが、参照 schema は `specdojo.title`
+      を許可していません。併記を認める場合は第三者ツール用のトップレベル項目であることを明記するか、併記の案内を削除してください。
+  - id: F002
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 30
+    anchor: "- `type` は `data`、`rulebook` は `specdojo:cdsd-rulebook` とします。表示名は対象領域が分かる H1 に置き、`title` を併記する場合は H1 と意味を一致させます。"
+    message: >-
+      `title` を併記できるとしていますが、`deliverable-frontmatter.schema.yaml` とその参照先 `common-frontmatter.schema.yaml` の `specdojo`
+      オブジェクトには `title` が定義されず、未定義キーは禁止されています。本文28行の名前空間指定と矛盾しないよう、`title` の配置先または併記可否を修正してください。
+    message_ja: >-
+      `title` を併記できるとしていますが、`deliverable-frontmatter.schema.yaml` とその参照先 `common-frontmatter.schema.yaml` の `specdojo`
+      オブジェクトには `title` が定義されず、未定義キーは禁止されています。本文28行の名前空間指定と矛盾しないよう、`title` の配置先または併記可否を修正してください。
+  - id: F003
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 68
+    anchor: >-
+      - 関連 BDD・CCD・用語集・プロセス仕様・CDFD、該当する保管場所一覧（SLL）を文書 ID
+      で特定します。名称・内容・粒度・入出力・管理場所のうち何を照合するかを対応付けます。関連文書がない種別を形式的に作成する必要はありません。
+    message: >-
+      保管場所一覧を `SLL` としていますが、現行の `specdojo:sld-rulebook` は `SLD` と `sld-＜term＞` を定義し、旧 `sll-`
+      は移行関係を明記する場合に限って扱います。本文68・87行を現行名称へ揃え、対応する rulebook を参照できるようにしてください。
+    message_ja: >-
+      保管場所一覧を `SLL` としていますが、現行の `specdojo:sld-rulebook` は `SLD` と `sld-＜term＞` を定義し、旧 `sll-`
+      は移行関係を明記する場合に限って扱います。本文68・87行を現行名称へ揃え、対応する rulebook を参照できるようにしてください。
+  - id: F004
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 68
+    anchor: >-
+      - 関連 BDD・CCD・用語集・プロセス仕様・CDFD、該当する保管場所一覧（SLL）を文書 ID
+      で特定します。名称・内容・粒度・入出力・管理場所のうち何を照合するかを対応付けます。関連文書がない種別を形式的に作成する必要はありません。
+    message: 「保管場所一覧（SLL）」および本文87行の「SLL」は、関連規約の「保管場所一覧（SLD）」と表記が異なり、別の成果物種別と誤認され得ます。略称を `SLD` に統一し、旧称が必要なら移行関係を補足してください。
+    message_ja: 「保管場所一覧（SLL）」および本文87行の「SLL」は、関連規約の「保管場所一覧（SLD）」と表記が異なり、別の成果物種別と誤認され得ます。略称を `SLD` に統一し、旧称が必要なら移行関係を補足してください。
