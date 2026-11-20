@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   difficulty: medium
   owner: sol-executor
   registered_at: "2026-11-13T14:07:54Z"
+  block_reason: "executor validation failed or not run: npm run validate:catalog"
   commit_type: docs
   commit_scope: orchestrator
 ---
