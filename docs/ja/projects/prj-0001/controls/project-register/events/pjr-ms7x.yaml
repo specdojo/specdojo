@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_7fb4e208ff224176b991e673cebeabda
+  ts: "2026-11-20T13:57:11Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: specdojo update で、版の更新と移行の案内をまとめて行えるようにする
+    - field: description
+      from: ""
+      to: npm i -D では版が上がるだけで、CHANGELOG の動きが変わる点や設定の手直しを利用者が自分で探す必要がある。specdojo update で、版の比較・CHANGELOG の表示・更新・更新の後の確認をまとめて行う
+    - field: input
+      from: ""
+      to: '["利用者の提案（2026-11-20）: specdojo の更新は npm i -D で行っているが、specdojo update のようなコマンドで行えた方がよい","orchestrator の案（2026-11-20）: 1. 今の版と npm の latest を比べる。2. その間の CHANGELOG の「利用者から見て動きが変わる点」を表示する。3. 利用リポジトリの package manager（npm・pnpm・yarn）で更新する（--dry-run あり）。4. 更新の後に設定の検証と kata status を流し、手直しの要る点を表示する","決めること（2026-11-20、未決）: 設定の手直しを自動でするか表示だけにするか。@specdojo/docs-lint・docs-site も一緒に上げるか。package.json の版の指定（^ を保つか固定か）","orchestrator の調べ（2026-11-20）: 0.9.1 では、repos を宣言した project の opencode の `command_template` に --agent が要る変更があり、版を上げるだけでは気づけない"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-20"
+    - field: due
+      from: ""
+      to: _TODO_
