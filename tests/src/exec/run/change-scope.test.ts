@@ -46,6 +46,15 @@ describe("change scope inference", () => {
     "保護された設定（lefthook.yml・.agents/・.claude/・.codex/・package.json・.specdojo/ など）は変えない。" +
     "`CHANGELOG.md` は変えず、個票の対応結果に文案を書く（PJR-EPQ3）。";
 
+  it("finishes quickly on a long run of path characters that never forms a path", () => {
+    const text = `\`${".-/".repeat(5000)}!\` ${".-/".repeat(5000)}!`;
+    const started = Date.now();
+
+    inferChangeScope({ projectId: "test", repoRoot: root, text });
+
+    expect(Date.now() - started).toBeLessThan(2000);
+  });
+
   it("reads item inputs but not generated register plan procedures and conventions", () => {
     const scope = inferChangeScope({
       projectId: "test",

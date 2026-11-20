@@ -31,16 +31,13 @@ import {
   type RegisterItemFieldUpdates,
 } from "./item.js";
 import { specdojoRootDir } from "../shared/specdojo-config.js";
+import { escapeRegExp } from "../shared/text.js";
 import { loadItemForUpdate } from "./update.js";
 import { findRegisterItem, loadRegisterItems, writeDerivedViews } from "./views.js";
 
 // ================================
 // Renumber (duplicate ID recovery)
 // ================================
-
-function escapeRegExp(text: string): string {
-  return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
 
 // 個票ファイル名 `pjr-XXXX-<topic>.md` から topic を取り出す。
 // ID 接頭辞（`pjr-xxxx-`）と一致しない場合は undefined。

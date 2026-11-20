@@ -1,6 +1,33 @@
 import { describe, expect, it } from "vitest";
-import { redactSensitiveText } from "../../../src/shared/text.js";
+import {
+  escapeMarkdownTableCell,
+  escapeRegExp,
+  redactSensitiveText,
+} from "../../../src/shared/text.js";
 import { sensitiveTextCases } from "../../fixtures/sensitive-text.js";
+
+describe("escapeRegExp", () => {
+  it("makes regex metacharacters match literally", () => {
+    const pattern = new RegExp(`^${escapeRegExp("a.b+c")}$`);
+
+    expect(pattern.test("a.b+c")).toBe(true);
+    expect(pattern.test("aXbbc")).toBe(false);
+  });
+});
+
+describe("escapeMarkdownTableCell", () => {
+  it("escapes a trailing backslash so it cannot swallow the column separator", () => {
+    expect(escapeMarkdownTableCell("path\\")).toBe("path\\\\");
+  });
+
+  it("escapes the backslash before the pipe in a cell containing a backslash-pipe", () => {
+    expect(escapeMarkdownTableCell("a\\|b")).toBe("a\\\\\\|b");
+  });
+
+  it("escapes a plain pipe", () => {
+    expect(escapeMarkdownTableCell("a|b")).toBe("a\\|b");
+  });
+});
 
 // Check exact output so even a surviving suffix or a second occurrence is a failure.
 describe("redactSensitiveText", () => {

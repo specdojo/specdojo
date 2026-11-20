@@ -133,6 +133,19 @@ describe("deliverable trash", () => {
     );
   });
 
+  it("treats regex metacharacters in local_id literally and leaves other entries untouched", () => {
+    const repo = createRepo();
+    repos.push(repo);
+    const catalogDir = join(repo, "docs/ja/projects/prj-0001/010-deliverables-catalog");
+    const plan = planTrash(repo, catalogDir, "cdfd-register-operation");
+    const before = readFileSync(join(catalogDir, "dct-data-flow.yaml"), "utf8");
+
+    expect(() => applyTrash(repo, { ...plan, localId: "cdfd.register.operation" })).toThrow(
+      /local_id 'cdfd\.register\.operation' not found/,
+    );
+    expect(readFileSync(join(catalogDir, "dct-data-flow.yaml"), "utf8")).toBe(before);
+  });
+
   it("throws when the local_id is not found in any catalog", () => {
     const repo = createRepo();
     repos.push(repo);

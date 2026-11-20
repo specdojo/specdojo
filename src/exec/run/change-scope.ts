@@ -231,14 +231,12 @@ export function inferChangeScope(params: {
   for (const match of body.matchAll(/`([^`\n]+)`/g)) {
     const value = match[1]!.replace(/#.*$|:\d+(?::\d+)?$/g, "");
     if (
-      /^(?:[\w-]+:)?(?:\.?\/?[\w@.-]+\/)+[\w@.*?{}[\]/-]*$/.test(value) ||
+      /^(?:[\w-]+:)?\.?\/?[\w@.-]+\/[\w@.*?{}[\]/-]*$/.test(value) ||
       /^[\w.-]+\.[a-z0-9]+$/i.test(value)
     )
       addTextPath(value);
   }
-  for (const match of body.matchAll(
-    /(?:^|[\s`（(・])((?:[\w-]+:)?(?:[\w@.-]+\/)+[\w@.*?{}[\]/-]+)/gm,
-  )) {
+  for (const match of body.matchAll(/(?:^|[\s`（(・])((?:[\w-]+:)?[\w@.-]+\/[\w@.*?{}[\]/-]+)/gm)) {
     const value = match[1]!;
     // A slash in prose can also mean alternatives (executor/reporter). Accept filenames,
     // explicit directory/glob syntax, or an existing repository path rather than every slash.

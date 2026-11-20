@@ -20,7 +20,7 @@ export { randomHex } from "../shared/random.js";
 export { isSchYamlFilename, toScheduleFilePath } from "../shared/schedule-paths.js";
 
 export function tsForFilenameUtc(ts: string): string {
-  return ts.replace(/[-:]/g, "").replace("T", "T");
+  return ts.replace(/[-:]/g, "");
 }
 
 // worktree/branch 生成専用。project 修飾した task ID（`<projectId>:<taskId>`）を返す。

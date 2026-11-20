@@ -1,0 +1,17 @@
+CodeQL の 5 件を修正し、個票の対応結果も書きました。`npm run typecheck` と `npm run lint:ts`（error 0 件）は通り、追加・関連テストも通りました。個票の Prettier 確認は、同じ Bash 呼び出しに入れた `rm` が承認待ちで止まったため実行されていません。`tmp/fix.py` も残っていますが、`tmp/` は commit 対象外です。
+
+- **trash.ts**: `localId` を escape してから `new RegExp` に入れるようにしました。
+- **change-scope.ts**: 234 行目と、その下の prose 用の正規表現を、同じ文字列を受け付ける形に書き換えました。`(A+/)+B+` のように文字クラスが重なっていた部分を `A+/B*` にして、バックトラックを除いています。
+- **repo-trace.ts と dashboard/shared.ts**: セルの escape を `escapeMarkdownTableCell` に置き換えました。先に `\` を `\\` にしてから `|` を `\|` にします。
+- **exec/shared.ts**: 何もしない `.replace("T", "T")` を消しました。
+- **共通化の判断**:
+  - `escapeRegExp` と `escapeMarkdownTableCell` は `src/shared/text.ts` に置きました。
+  - `renumber.ts` と `register-foreign-wait.ts` の同一の複製は削除して、そちらを使います。
+  - `parent-validation.ts` の `escapeRegExp` は `*` と `?` を escape しない別の働きなので、そのままにしました。
+- **テスト**: `text.test.ts`、`change-scope.test.ts`（`.-/` を 5000 回繰り返しても 2 秒未満）、`repo-trace.test.ts`、`trash.integration.test.ts` に追加しました。`trash.integration.test.ts` は `.` を含む `local_id` が別項目に一致しない検査で、単独で実行して通っています。
+- **個票**: 対応結果に、解決内容、共通化の判断、確認結果、CHANGELOG に書く事項（Fixed）、再発防止策を書きました。`CHANGELOG.md` は変えていません。
+- **CodeQL の確認**: merge の後に alert 1・2・5・6・7 が閉じるかは orchestrator が確かめる項目で、未確認です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"CodeQL の 5 件を修正し、escape 関数を src/shared/text.ts に共通化した。単体・統合テストを追加し、個票の対応結果を記入した。","handoff":["merge 後に CodeQL の alert（1・2・5・6・7）が閉じるかを orchestrator が確認する。","CHANGELOG.md は変えず、個票 5.4 に区分 Fixed と文案を記載した。","tmp/fix.py（作業用スクリプト）が残っているが tmp/ は commit 対象外。"],"validations":[{"command":"npm run typecheck","status":"passed","summary":"エラーなし"},{"command":"npm run lint:ts","status":"passed","summary":"error 0 件、既存の warning のみ"},{"command":"npx vitest run tests/src/shared/text.test.ts tests/src/exec/repo-trace.test.ts tests/src/exec/run/change-scope.test.ts tests/src/exec/shared.test.ts tests/src/dashboard/dashboard.test.ts","status":"passed","summary":"167 件通過"},{"command":"npx vitest run tests/src/deliverable/trash.integration.test.ts","status":"passed","summary":"5 件通過"}]}
+</specdojo_executor_evidence>
