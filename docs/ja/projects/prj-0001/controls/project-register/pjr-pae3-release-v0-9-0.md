@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-pae3-release-v0-9-0
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: high
   difficulty: medium
   owner: PO
   registered_at: "2026-11-19T12:48:18Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-20T10:56:09Z"
+  conclusion: specdojo 0.9.0・docs-lint 0.5.0・docs-site 0.6.0 を provenance 付きで公開し、npm から入れた版の動作を確かめた
   depends_on:
     - PJR-DM9B
     - PJR-8Z71
