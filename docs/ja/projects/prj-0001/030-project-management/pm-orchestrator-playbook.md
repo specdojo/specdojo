@@ -122,7 +122,7 @@ docs だけの項目や、runner の通らないコード（kata、docs-site な
 6. そのブランチで `npm ci`（`packages/*` も）をしてから `npm run check` を流す。`npm audit --omit=dev --audit-level=high` も流し、公開の workflow の関門で止まらないことを先に確かめる（「依存とコードのセキュリティ検査」）。
 7. `npm pack` した tarball を空のリポジトリに入れ、`init` と、その版で変えた機能（lefthook、名簿の雛形など）、`register add` と `exec run --register` を確かめる。
 8. feature ブランチを develop へ `--no-ff` で取り込み、PR の本文を作って、push と PR 作成のコマンドを利用者に渡す。
-9. 利用者が PR を merge commit でマージし、タグを付けて push し、`npm stage` で公開を承認する。
+9. 利用者が PR を merge commit でマージし、タグを付けて push し、`npm stage` で公開を承認する。stage の ID は公開の workflow のログ（`staged with id`）にある。承認は 2FA を通した経路で行う（npmjs.com、または手元の端末で `npx -y npm@^11.15.0 login` の後に `npx -y npm@^11.15.0 stage approve <stage-id>`）。npm 11.15 より前には `npm stage` が無く、2FA を迂回する token では 401 になる。
 10. npm の `latest`、タグで起動した workflow の結果、npm から入れた版での導入を確かめ、リリースの todo を close する。
 
 ## 10. 依存とコードのセキュリティ検査
@@ -165,4 +165,4 @@ PJR-P318 で入れた定期の検査と、その扱いである。workflow の�
 ### 10.5. npm publish の provenance
 
 - 公開の workflow は Trusted Publishing（`id-token: write`）を使う。公開リポジトリから Trusted Publishing で公開すると、provenance は自動で付く。
-- staged publishing（`npm stage publish`）でも付くかは確かめていない。公開した版の npm のページに provenance の表示があるかを確かめ、無ければ `npm stage publish` に `--provenance` を足す。
+- staged publishing（`npm stage publish`）でも provenance は付く（0.9.0 で確かめた。公開の workflow のログに `Signed provenance statement` が出る）。公開の後は `npm view <package> dist.attestations.provenance.predicateType` で確かめる。
