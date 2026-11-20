@@ -73,3 +73,35 @@
       from: "-"
       to: "executor validation failed or not run: npm run validate:catalog"
   previous_event_id: reg_483475fa128d46da98819e68490ecb76
+- v: 1
+  id: reg_0a3804fff41e43728803ba2ba3f2a3d7
+  ts: "2026-11-20T23:25:37Z"
+  action: start
+  actor: flash-high-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "executor validation failed or not run: npm run validate:catalog"
+      to: "-"
+  previous_event_id: reg_0117652da00e4beaafdeb6d243f51a59
+- v: 1
+  id: reg_cdcbe24102cd477295704383310d1189
+  ts: "2026-11-20T23:37:17Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: agent exited 0 but result is incomplete or its frontmatter differs from the scaffold (treated as blocked)
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: agent exited 0 but result is incomplete or its frontmatter differs from the scaffold (treated as blocked)
+  previous_event_id: reg_0a3804fff41e43728803ba2ba3f2a3d7

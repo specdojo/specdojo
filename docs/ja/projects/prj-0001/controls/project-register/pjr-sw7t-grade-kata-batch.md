@@ -37,6 +37,13 @@ rulebook と sample の組を型の名前の一覧で指定し、1 回の grade 
 - `CHANGELOG.md` は変えず、個票の対応結果の「CHANGELOG に書く事項」の節に区分と行の文案を書く。利用者に影響が無い場合はそう書く。
 - `npm run typecheck`・`npm run lint:ts`・`npm run test:unit` が通り、親の検証が通る。
 
+2 回目の実行（2026-11-21）で直す点。
+
+- rate limit の後も残りの文書を続けるのは、`--kata` を指定したときだけにする。`--kata` を指定しない `grade run`（夜間の job の `--path` 指定を含む）は、1 回目の前と同じく rate limit のその場で止め、残りを `grade run remaining:` に出して終了コード 75 で終える。理由: `grade run` には代わりの agent への切り替えがなく、続けても同じ agent が rate limit になるだけで、夜間の起動が増えるため。切り替えは PJR-SW7T を由来とする別の項目で扱う。
+- `--kata` を指定したときに続ける動きと、型ごとの結果の一覧は 1 回目のまま変えない。
+- 単体テストで、`--kata` を指定しない run が rate limit のその場で止まり、後の文書を起動しないことを確かめる。1 回目の rate limit のテストは `--kata` を指定した場合として残す。
+- 個票の対応結果の「CHANGELOG に書く事項」の文案を、この範囲に合わせて見直す。
+
 ## 4. 作業内容
 
 | No  | 作業                                             | 担当     | 状態 | メモ                                                                                                        |

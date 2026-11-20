@@ -12,7 +12,7 @@ specdojo:
   difficulty: medium
   owner: sol-executor
   registered_at: "2026-11-13T14:07:54Z"
-  block_reason: "executor validation failed or not run: npm run validate:catalog"
+  block_reason: agent exited 0 but result is incomplete or its frontmatter differs from the scaffold (treated as blocked)
   commit_type: docs
   commit_scope: orchestrator
 ---

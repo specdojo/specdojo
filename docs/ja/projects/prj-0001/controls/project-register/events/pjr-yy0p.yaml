@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_25e4d937d680423491369e9a5250a9bd
+  ts: "2026-11-20T23:36:44Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-5F1Y の確認で見つけた別の問題のため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: register の run の pipeline-state.json が schema に合わない
+    - field: description
+      from: ""
+      to: runner が書く artifacts が pipeline-state.schema.yaml に無く、register の run の記録 965 件中 957 件が schema の検証に通らない。validate:schema が検査していないため見えていない
+    - field: input
+      from: ""
+      to: '["2026-11-21、PJR-5F1Y の確認で validate:schema:file --schema docs/specdojo/schemas/v1/pipeline-state.schema.yaml を `docs/ja/**/execution/runs/register/**/pipeline-state.json` に流すと、develop でも大半が must NOT have additional properties で不合格になった","追跡済みの 965 件のうち 957 件で、schema に無い項目は artifacts だけだった。artifacts は src/exec/pipeline-state.ts の型（PipelineArtifactRefs）にあり、runner が書く","npm run validate:schema は pipeline-state.json を検査していない（job-run・grade-pipeline は検査している）","PJR-5F1Y の schema の変更（`resume_notes`）は、この不合格の件数を変えていない"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-21"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-5F1Y"]'
