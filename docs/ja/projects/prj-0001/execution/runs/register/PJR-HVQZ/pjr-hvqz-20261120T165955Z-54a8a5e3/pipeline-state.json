@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-HVQZ",
   "run_id": "pjr-hvqz-20261120T165955Z-54a8a5e3",
-  "updated_at": "2026-11-20T17:17:09.942Z",
+  "updated_at": "2026-11-20T17:17:33.790Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-HVQZ/pjr-hvqz-20261120T165955Z-54a8a5e3/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "flash-high-executor",
       "attempts": 1,
       "started_at": "2026-11-20T17:17:09.942Z",
-      "completed_at": null,
+      "completed_at": "2026-11-20T17:17:33.790Z",
       "artifact_ref": null
     }
   },
