@@ -22,6 +22,7 @@ import {
 import {
   requireRunnableRegisterItem,
   resolveRegisterRunTarget,
+  registerProductTargetHints,
   sanitizeRegisterConclusion,
   ticketPathFromItem,
   type RegisterItemSummary,
@@ -595,6 +596,7 @@ export async function resumeSingleRegisterItemWorktree(
       registerPaths: registerReporterManagedPaths(registerPaths),
       executorResumeHint: executorStageResumeHint({ kind: "register", itemId: item.id }),
       execDefaults: context.execDefaults,
+      productTargetHints: registerProductTargetHints(item),
       resumedExecutor: true,
       runId: target.runId,
       initialChangeTargets: target.initialChanges,

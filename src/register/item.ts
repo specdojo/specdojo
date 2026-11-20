@@ -169,6 +169,8 @@ export type RegisterItemDoc = {
   item: PjrItem;
   // 登録項目フィールド（item_status）が frontmatter にあるか。未移行の個票は false。
   hasRegisterFields: boolean;
+  // frontmatter の block_reason。無い場合は CELL_NONE。
+  blockReason: string;
 };
 
 export type RegisterItemValidationResult = {
@@ -475,6 +477,7 @@ export function loadRegisterItemDocs(projectRegisterPath: string): RegisterItemD
       filename: entry.name,
       item: parsed.item,
       hasRegisterFields: parsed.hasRegisterFields,
+      blockReason: parsed.blockReason,
     });
   }
 

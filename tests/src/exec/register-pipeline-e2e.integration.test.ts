@@ -215,8 +215,21 @@ if (prompt.includes("# Edit Plan:") && !prompt.includes("result の必須セク�
   throw new Error("common conventions missing from agent prompt");
 }
 
+// PJR-QQRH: exec-no-product はプロダクトを編集せず、exec-denied は加えて opencode の権限拒否を
+// 出力する。どちらも complete と報告する。
+const skipsProducts = nickname === "exec-no-product" || nickname === "exec-denied";
+if (role === "executor" && skipsProducts) {
+  mkdirSync("docs", { recursive: true });
+  writeFileSync("docs/no-product-artifact.md", "# project artifact\\n", "utf8");
+  if (nickname === "exec-denied") {
+    process.stdout.write(
+      'Error: The user has specified a rule which prevents you from using this specific tool call. {"permission":"external_directory","action":"deny","pattern":"*"}\\n',
+    );
+  }
+}
 if (role === "executor") {
-  for (const name of (process.env.SPECDOJO_REPO_NAMES ?? "").split(",").filter(Boolean)) {
+  const productNames = skipsProducts ? "" : (process.env.SPECDOJO_REPO_NAMES ?? "");
+  for (const name of productNames.split(",").filter(Boolean)) {
     const root = process.env["SPECDOJO_REPO_" + name.toUpperCase().replaceAll("-", "_")];
     if (!root) throw new Error("product worktree is missing: " + name);
     mkdirSync(root + "/src", { recursive: true });
@@ -603,6 +616,19 @@ function withRepo(fn: (fixture: Fixture) => Promise<void> | void): Promise<void>
           "    capabilities: []",
           "    proficiency: normal",
           "    priority: 1",
+          ...["exec-no-product", "exec-denied"].flatMap((nickname) => [
+            `  - nickname: ${nickname}`,
+            `    display_name: ${nickname}`,
+            "    email: null",
+            "    roles: []",
+            "    type: agent",
+            "    provider: opencode",
+            "    mode: edit",
+            "    stage_role: executor",
+            "    capabilities: []",
+            "    proficiency: normal",
+            "    priority: 5",
+          ]),
           "  - nickname: exec-advance-root",
           "    display_name: exec-advance-root",
           "    email: null",
@@ -2192,6 +2218,114 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
       });
     },
   );
+
+  // PJR-QQRH: executor が complete と報告しても、プロダクトを対象にする項目でプロダクトに変更が
+  // 無い場合と、出力にツールの権限による拒否がある場合は review に進めず waiting にする。
+  // プロダクトを対象にしない項目は、プロダクトに変更が無くても従来どおり review に進む。
+  const falseSuccessCases: Array<{
+    name: string;
+    executor: "exec-no-product" | "exec-denied";
+    targetsProduct: boolean;
+    expectedStatus: "waiting" | "review";
+    expectedReason?: RegExp;
+  }> = [
+    {
+      name: "waits when a product-targeting item leaves the product unchanged",
+      executor: "exec-no-product",
+      targetsProduct: true,
+      expectedStatus: "waiting",
+      expectedReason: /no product changes in app1/u,
+    },
+    {
+      name: "waits when the executor output shows a tool permission denial",
+      executor: "exec-denied",
+      targetsProduct: false,
+      expectedStatus: "waiting",
+      expectedReason: /tool permission denial/u,
+    },
+    {
+      name: "reaches review when an item that does not target a product leaves it unchanged",
+      executor: "exec-no-product",
+      targetsProduct: false,
+      expectedStatus: "review",
+    },
+  ];
+
+  for (const testCase of falseSuccessCases) {
+    it(testCase.name, { timeout: 120_000 }, async () => {
+      await withRepo(async ({ root, worktreeBase }) => {
+        const output: string[] = [];
+        vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+          output.push(String(chunk));
+          return true;
+        });
+        vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+        const products = enableProductRepositories(root);
+        const ticketPath = join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md");
+        if (testCase.targetsProduct) {
+          writeFileSync(
+            ticketPath,
+            readFileSync(ticketPath, "utf8").replace(
+              "## 2. 完了条件",
+              "## 2. 入力\n\n- `app1:src/feature.ts` の不具合を直す\n\n## 3. 完了条件",
+            ),
+            "utf8",
+          );
+          git(root, "add", "--", ticketPath);
+          git(root, "commit", "--quiet", "-m", "target app1");
+        }
+        const app1Before = git(products.app1, "rev-parse", products.targets.app1);
+
+        try {
+          await runExec([
+            "run",
+            "--project",
+            "test",
+            "--register",
+            "PJR-AB12",
+            "--executor-by",
+            testCase.executor,
+            "--reporter-by",
+            "report-1",
+            "--worktree",
+            "--worktree-base",
+            worktreeBase,
+          ]);
+
+          const ticket = readFileSync(ticketPath, "utf8");
+          expect(ticket).toContain(`item_status: ${testCase.expectedStatus}`);
+          expect(git(products.app1, "rev-parse", products.targets.app1)).toBe(app1Before);
+          if (testCase.expectedStatus === "review") {
+            expect(process.exitCode ?? 0).toBe(0);
+            expect(ticket).not.toContain("block_reason:");
+            return;
+          }
+          expect(process.exitCode).toBe(1);
+          expect(readSpecdojoFields(ticket).block_reason).toMatch(testCase.expectedReason!);
+          expect(execWorktreePath(root)).not.toBeNull();
+          expect(output.join("")).toMatch(
+            new RegExp(
+              `Register run summary:[\\s\\S]*PJR-AB12[^\\n]*reason=[^\\n]*${testCase.expectedReason!.source}`,
+              "u",
+            ),
+          );
+
+          output.length = 0;
+          await runExec(["status", "--project", "test"]);
+          const status = output.join("");
+          if (testCase.executor === "exec-no-product") {
+            expect(status).toContain("warnings (no product changes):");
+            expect(status).toMatch(/PJR-AB12 \(register, waiting\): no product changes in app1/u);
+          } else {
+            expect(status).not.toContain("warnings (no product changes):");
+          }
+        } finally {
+          rmSync(products.app1, { recursive: true, force: true });
+          rmSync(products.app2, { recursive: true, force: true });
+        }
+      });
+    });
+  }
 
   // PJR-69VP: repos を宣言しない構成（同一リポジトリ構成を含む）の回帰。worktree は
   // <worktree_base>/<task>/ 直下に置かれ、Refs は修飾形、result は trace の章を持たず、
