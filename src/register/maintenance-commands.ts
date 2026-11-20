@@ -1,4 +1,5 @@
 import type { Command } from "commander";
+import { warnDeprecated } from "../shared/deprecation.js";
 import { existsSync, writeFileSync } from "node:fs";
 import { collectRegisterHistoryEvents, formatRegisterHistoryEvents } from "./history.js";
 import {
@@ -42,11 +43,17 @@ export function registerMaintenanceCommands(
   // --- migrate ---
   const migrateCmd = reg
     .command("migrate")
-    .description("Migrate legacy register data (index rows, dates, and embedded register events)");
+    .description(
+      "Deprecated: legacy register migration is no longer needed; individual ticket files and external events are standard (will be removed in 0.10.0)",
+    );
   addProjectOption(migrateCmd);
   migrateCmd.option("--dry-run", "Validate and print the migration summary without writing", false);
   migrateCmd.action((opts) => {
     try {
+      warnDeprecated(
+        "register migrate",
+        "Legacy register migration is no longer needed as individual ticket files and external events are standard. This command will be removed in 0.10.0.",
+      );
       const paths = resolveRegisterPaths(opts);
       const plan = planRegisterMigration(paths);
       const summary =

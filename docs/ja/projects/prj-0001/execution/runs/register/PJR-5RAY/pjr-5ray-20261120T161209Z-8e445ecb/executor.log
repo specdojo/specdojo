@@ -1,0 +1,32 @@
+リリースの前の確認に関する各段の所要時間計測を開始しました。現在、lintおよび静的検査（typecheck, lint:ts, check:src-imports, lint:md等）を順次実行して所要時間を測定中です。完了を待機しています。
+静的検査（lint/validate）10種の並列実行による所要時間測定を実行中です。完了を待機しています。
+既定の設定（`maxWorkers: 2`）による `npm test`（unit / integration）の所要時間測定を実行中です。完了を待機しています。
+`npm run test:integration` の単体所要時間を測定中です。完了を待機しています。
+`npm run docs:build` の所要時間を測定中です。完了を待機しています。
+テストの並列数見直し案として、`maxWorkers: 4` を指定した Vitest 実行の所要時間測定を開始しました。完了を待機しています。
+テストの並列数見直し案として、さらに `maxWorkers: 8` を指定した Vitest 実行の所要時間測定を開始しました。完了を待機しています。
+プロジェクト登録簿項目 **PJR-5RAY「リリースの前の確認を速くする」** の対応を完了しました。
+
+### 実施内容の要約
+
+1. **各段の所要時間計測（実測）**:
+   - `npm run check` の構成 11 段、`npm run test:integration`、`npm run docs:build` の各所要時間を高精度計測しました。
+   - `check` 直列合計は 460.69 秒（約 7 分 41 秒）、`test:integration` は 181.69 秒（約 3 分 2 秒）、`docs:build` は 211.15 秒（約 3 分 31 秒）で、従来の合計確認時間は約 14 分 14 秒（853.53 秒）でした。
+2. **運用メモ（`pm-orchestrator-playbook.md`）の改訂**:
+   - `npm run check` 末尾の `npm test` で unit と integration の両方が流れるため、その後に重ねて流していた `npm run test:integration`（実測約 182 秒）が完全な重複であることを確認しました。
+   - 第 9 節「リリースの手順」の手順 6 から `npm run test:integration` を除外し、重複を外す理由を明記しました（約 3 分短縮）。
+3. **並列化案の検証と効果比較（手元での試行）**:
+   - **案 A（lint・検証の並列化）**: 10 種の静的検査を並列実行した結果、直列 96.19 秒から **36.21 秒** へと約 60 秒（62%）短縮しました。
+   - **案 B（テスト並列度 `maxWorkers` 向上）**: `vitest` の `maxWorkers` を 2（364.50 秒）から 4 に引き上げた結果、**239.44 秒**（約 125 秒・34% 短縮）へ短縮しました（8 では 201.38 秒）。
+   - **決定**: 短縮効果と環境負荷・I/O 競合リスクのバランスから、案 A と案 B（`maxWorkers: 4`）の併用を採用・推奨と判断しました（重複除外と合わせ合計約 6 分の短縮見込み）。
+4. **個票（`pjr-5ray-release-check-speedup.md`）の更新**:
+   - 作業内容・対応結果・実測値表・採用理由・保護設定の変更案を記入しました。
+   - `CHANGELOG.md` は変更せず、利用者に影響がない旨を記載しました。
+
+### 変更ファイル
+- [pm-orchestrator-playbook.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-5RAY/docs/ja/projects/prj-0001/030-project-management/pm-orchestrator-playbook.md#L122-L123)
+- [pjr-5ray-release-check-speedup.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-5RAY/docs/ja/projects/prj-0001/controls/project-register/pjr-5ray-release-check-speedup.md#L40-L124)
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"リリースの前の確認手順から重複する test:integration を playbook で除外し、各段の時間計測および lint 並行化・テスト maxWorkers 変更の短縮効果を個票に記録しました。","handoff":["保護された設定 package.json および vitest.config.ts への変更提案: (1) vitest.config.ts で projects の maxWorkers を環境変数 VITEST_MAX_WORKERS（未指定時 2）でオーバーライド可能にする。(2) package.json に静的検査 10 種を並列実行する check:fast スクリプト、およびリリース前確認用として VITEST_MAX_WORKERS=4 でテストを流す check:release スクリプトを追加する。利用者の承認のもと feature ブランチで反映することを提案します。"],"validations":[{"command":"npx prettier --check docs/ja/projects/prj-0001/030-project-management/pm-orchestrator-playbook.md docs/ja/projects/prj-0001/controls/project-register/pjr-5ray-release-check-speedup.md","status":"passed","summary":"2 files formatted and check passed"}]}
+</specdojo_executor_evidence>

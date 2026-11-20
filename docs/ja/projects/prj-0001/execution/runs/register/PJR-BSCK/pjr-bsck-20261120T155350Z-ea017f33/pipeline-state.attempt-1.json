@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-BSCK",
+  "run_id": "pjr-bsck-20261120T155350Z-ea017f33",
+  "updated_at": "2026-11-20T16:11:29.671Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "flash-high-executor",
+      "attempts": 1,
+      "started_at": "2026-11-20T15:55:30.230Z",
+      "completed_at": "2026-11-20T16:04:34.694Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-BSCK/pjr-bsck-20261120T155350Z-ea017f33/evidence.json"
+    },
+    "reporter": {
+      "status": "failed",
+      "actor": "gemma26-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-20T16:10:27.757Z",
+      "completed_at": "2026-11-20T16:11:29.671Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-BSCK/pjr-bsck-20261120T155350Z-ea017f33/result.md"
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-BSCK/pjr-bsck-20261120T155350Z-ea017f33/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-BSCK/pjr-bsck-20261120T155350Z-ea017f33/result.md"
+  }
+}

@@ -46,18 +46,18 @@ specdojo where exec --project prj-0001
 specdojo where routine --project prj-0001
 ```
 
-旧 `exec where`・`catalog where`・`schedule where`・`timeline where`・`job where`・`routine where` は、導入する版の1版だけ非推奨の別名として残します。標準出力と終了コードは新コマンドと同じで、標準エラーへ移行先と削除予定の警告を出します。旧入口は通常のヘルプ一覧には表示しません。
+旧 `exec where`・`catalog where`・`schedule where`・`timeline where`・`job where`・`routine where` は非推奨であり、次の版（0.10.0）で削除予定です。代わりの操作として `specdojo where <種類>` を使用してください。標準出力と終了コードは新コマンドと同じで、標準エラーへ移行先と削除予定の警告を出します。旧入口は通常のヘルプ一覧には表示しません。
 
 ## 2. init / config / project
 
-| コマンド                 | 用途                                                                | 例                                          |
-| ------------------------ | ------------------------------------------------------------------- | ------------------------------------------- |
-| `init`                   | project から agent 実行までを質問式で初期設定する                   | `specdojo init`                             |
-| `config init`            | `specdojo.config.json` と `.gitignore` を個別に用意する             | `specdojo config init`                      |
-| `config show`            | 有効な `repos` と、ローカル設定に由来する値を表示する               | `specdojo config show --project prj-0001`   |
-| `config migrate-members` | agent 定義を保護設定へ移す                                          | `specdojo config migrate-members --dry-run` |
-| `config scaffold`        | provider、VS Code ワークスペース、Git hook、Slidev を個別に配置する | `specdojo config scaffold --slidev`         |
-| `project list`           | 登録済み project を表示する                                         | `specdojo project list`                     |
+| コマンド                 | 用途                                                                                                      | 例                                          |
+| ------------------------ | --------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| `init`                   | project から agent 実行までを質問式で初期設定する                                                         | `specdojo init`                             |
+| `config init`            | `specdojo.config.json` と `.gitignore` を個別に用意する                                                   | `specdojo config init`                      |
+| `config show`            | 有効な `repos` と、ローカル設定に由来する値を表示する                                                     | `specdojo config show --project prj-0001`   |
+| `config migrate-members` | 非推奨（0.10.0 で削除予定）: agent 定義を保護設定へ移す。以後は `.specdojo/agent-members.yaml` に直接記述 | `specdojo config migrate-members --dry-run` |
+| `config scaffold`        | provider、VS Code ワークスペース、Git hook、Slidev を個別に配置する                                       | `specdojo config scaffold --slidev`         |
+| `project list`           | 登録済み project を表示する                                                                               | `specdojo project list`                     |
 
 `init` は対話できる端末で、project ID と名前、register、人の nickname と表示名、複数指定可能な
 provider、exec、Dev Container、Git hook、Slidev の順に質問します。Dev Container を選んだ場合だけ、続けて `minimal` / `recommended` / `full` の preset を質問します（既定は `recommended`）。Git hook は既定では作りません。Slidev の質問は `full` を選んだ場合だけ既定が「はい」、それ以外は「いいえ」です。成果物カタログは対話では質問せず、`--catalog <size>` を
@@ -473,13 +473,13 @@ specdojo schedule strategy generate \
 
 ## 5. timeline（非推奨）
 
-`tml-index.yaml`・`timeline build`・`timeline_path` は非推奨です。全体計画は epic で管理し、`dashboard build` で `execution/generated/` に表とガント、未作成カタログを生成します。epic のない track は全体計画に出しません。期間と範囲の扱いは [[specdojo:register-operation-guide|登録簿運用ガイド]]、移行手順は [[specdojo:timeline-design-guide|Timeline からの移行ガイド]] を参照してください。
+`tml-index.yaml`・`timeline build`・`timeline_path`（および `timeline where`）は非推奨であり、次の版（0.10.0）で削除予定です。全体計画は epic で管理し、`dashboard build` で `execution/generated/` に表とガント、未作成カタログを生成します。保存先確認には `specdojo where timeline` を使用します。epic のない track は全体計画に出しません。期間と範囲の扱いは [[specdojo:register-operation-guide|登録簿運用ガイド]]、移行手順は [[specdojo:timeline-design-guide|Timeline からの移行ガイド]] を参照してください。
 
-| コマンド                 | 用途                                             | 例                                                   |
-| ------------------------ | ------------------------------------------------ | ---------------------------------------------------- |
-| `build --only dashboard` | epic に基づく全体計画を含む dashboard を生成する | `specdojo build --only dashboard --project prj-0001` |
-| `timeline build`         | 警告付きで旧形式の計画を生成する                 | `specdojo timeline build --project prj-0001`         |
-| `where timeline`         | 互換用 timeline の関連パスを表示する             | `specdojo where timeline --project prj-0001`         |
+| コマンド                 | 用途                                                                                      | 例                                                   |
+| ------------------------ | ----------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| `build --only dashboard` | epic に基づく全体計画を含む dashboard を生成する                                          | `specdojo build --only dashboard --project prj-0001` |
+| `timeline build`         | 非推奨（0.10.0 で削除予定）: 警告付きで旧形式の計画を生成する（`dashboard build` を使用） | `specdojo timeline build --project prj-0001`         |
+| `where timeline`         | 互換用 timeline の関連パスを表示する                                                      | `specdojo where timeline --project prj-0001`         |
 
 旧 `timeline build` は `--dry-run` で書き込まずに検証できます。epic の順序と範囲を反映しつつ、既存の strategy と `timeline_path`（既定 `timeline`）の `tml-index.yaml` を互換用に読み、`timeline/generated/` に `timeline-order.md`・`catalog-scaffold.md`・`timeline.json` を出力します。track 重複、依存の未定義参照・循環、`order` との矛盾はエラーです。`catalog-planning` の todo から作成状況を導出し、手書きの状態との不一致は警告します。epic のない project の dashboard は旧 timeline 表示を維持します。
 
@@ -487,22 +487,22 @@ specdojo schedule strategy generate \
 
 `register` は個票を正本とするプロジェクト登録簿と、その生成ビューを扱います。
 
-| コマンド                | 用途                                           | 例                                                                          |
-| ----------------------- | ---------------------------------------------- | --------------------------------------------------------------------------- |
-| `register scaffold`     | 登録簿ディレクトリと生成ビューを初期化する     | `specdojo register scaffold --project prj-0001`                             |
-| `register add`          | issue / todo / question などの項目を追加する   | `specdojo register add --project prj-0001 --type issue --title "確認事項"`  |
-| `build --only register` | 個票から登録項目一覧と派生ビューを生成する     | `specdojo build --only register --project prj-0001`                         |
-| `register update`       | 登録項目を更新する                             | `specdojo register update --project prj-0001 --id PJR-001 --owner PM`       |
-| `register start`        | 項目を対応中へ変更する                         | `specdojo register start --project prj-0001 --id PJR-001`                   |
-| `register wait`         | 項目を待ち状態へ変更する                       | `specdojo register wait --project prj-0001 --id PJR-001`                    |
-| `register review`       | 項目をレビュー状態へ変更する                   | `specdojo register review --project prj-0001 --id PJR-001`                  |
-| `register close`        | 項目を完了にし、個票を `ready` へ昇格する      | `specdojo register close --project prj-0001 --id PJR-001`                   |
-| `register reject`       | 項目を却下にし、個票を `deprecated` にする     | `specdojo register reject --project prj-0001 --id PJR-001`                  |
-| `register defer`        | 項目を延期にする                               | `specdojo register defer --project prj-0001 --id PJR-001`                   |
-| `register reopen`       | 終了済み項目を再オープンする                   | `specdojo register reopen --project prj-0001 --id PJR-001`                  |
-| `register renumber`     | 重複・衝突した PJR-ID を未使用の ID へ移す     | `specdojo register renumber --project prj-0001 --id PJR-0137 --to PJR-0140` |
-| `register history`      | 追記型 event と旧 Git 履歴から変更を再構成する | `specdojo register history --project prj-0001 --since 2026-08-01`           |
-| `register migrate`      | 旧形式の登録簿データを現行形式へ移行する       | `specdojo register migrate --project prj-0001 --dry-run`                    |
+| コマンド                | 用途                                                                                                  | 例                                                                          |
+| ----------------------- | ----------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| `register scaffold`     | 登録簿ディレクトリと生成ビューを初期化する                                                            | `specdojo register scaffold --project prj-0001`                             |
+| `register add`          | issue / todo / question などの項目を追加する                                                          | `specdojo register add --project prj-0001 --type issue --title "確認事項"`  |
+| `build --only register` | 個票から登録項目一覧と派生ビューを生成する                                                            | `specdojo build --only register --project prj-0001`                         |
+| `register update`       | 登録項目を更新する                                                                                    | `specdojo register update --project prj-0001 --id PJR-001 --owner PM`       |
+| `register start`        | 項目を対応中へ変更する                                                                                | `specdojo register start --project prj-0001 --id PJR-001`                   |
+| `register wait`         | 項目を待ち状態へ変更する                                                                              | `specdojo register wait --project prj-0001 --id PJR-001`                    |
+| `register review`       | 項目をレビュー状態へ変更する                                                                          | `specdojo register review --project prj-0001 --id PJR-001`                  |
+| `register close`        | 項目を完了にし、個票を `ready` へ昇格する                                                             | `specdojo register close --project prj-0001 --id PJR-001`                   |
+| `register reject`       | 項目を却下にし、個票を `deprecated` にする                                                            | `specdojo register reject --project prj-0001 --id PJR-001`                  |
+| `register defer`        | 項目を延期にする                                                                                      | `specdojo register defer --project prj-0001 --id PJR-001`                   |
+| `register reopen`       | 終了済み項目を再オープンする                                                                          | `specdojo register reopen --project prj-0001 --id PJR-001`                  |
+| `register renumber`     | 重複・衝突した PJR-ID を未使用の ID へ移す                                                            | `specdojo register renumber --project prj-0001 --id PJR-0137 --to PJR-0140` |
+| `register history`      | 追記型 event と旧 Git 履歴から変更を再構成する                                                        | `specdojo register history --project prj-0001 --since 2026-08-01`           |
+| `register migrate`      | 非推奨（0.10.0 で削除予定）: 旧形式の登録簿データを現行形式へ移行する（個別個票と外部イベントが標準） | `specdojo register migrate --project prj-0001 --dry-run`                    |
 
 `register add` は ID を省略すると自動採番し、現在の project では現在の作業ツリーに type 別の個票を作成します。別 project を `--project` で指定して `--commit` を付けると、対象 project の統合ブランチを開いている worktree、または CLI が作る一時 worktree で起票・再生成・commit を完了します。ID は乱数部分を持ち、曖昧文字（`I` / `L` / `O` / `U`）を除いた英大文字+数字の 32 文字セットによる 4 桁（例: `PJR-4B7K`）です。個票 Frontmatter が分類、処理状態、優先度、担当、日付、結論の正本であり、`register build` は個票から一覧と派生ビューを生成します。`register` 系コマンドはすべて、成功時の通常出力を標準出力へ、エラーメッセージを標準エラー出力へ書きます。
 
@@ -529,6 +529,8 @@ specdojo schedule strategy generate \
 | `--commit-type <type>`       | Conventional Commits の type を指定（`update` は `-` で削除）       | `add` / `update`                                 |
 | `--commit-scope <scope>`     | Conventional Commits の scope を指定（`update` は `-` で削除）      | `add` / `update`                                 |
 | `--topic <slug>`             | 個票ファイル名と文書 ID の論点部分を指定・更新する                  | `add` / `update`                                 |
+| `--section <name>`           | 差し替える個票の章の名前（見出し番号を除いた名前）                  | `update`                                         |
+| `--section-file <path>`      | 差し替え後の章の本文を含む Markdown ファイルのパス                  | `update`                                         |
 | `--commit`                   | `register lifecycle` 枠内で記帳・再生成・commitを行う               | `add` / `update` / `renumber` / 遷移             |
 | `-m, --message <message>`    | `--commit` のcommitメッセージを上書きする（繰り返し可）             | `add` / `update` / `renumber` / 遷移             |
 | `--dry-run`                  | 書き込みを行わず変更対象を表示する                                  | `add` / `update` / `renumber` / 遷移 / `migrate` |
@@ -580,6 +582,18 @@ specdojo exec run --project prj-0001 --register <PJR-ID> --worktree
 
 `register update --topic <slug>` は個票のファイル名と Frontmatter の文書 ID を同時に変更し、`docs/ja` 配下の旧文書 ID 参照を更新してから生成ビューを再生成します。変更は `action: update` の event に文書 ID の変更として記録されます。形式は英小文字・数字・単一ハイフン区切りに限り、変更先ファイルが存在する場合は書き込み前に停止します。
 
+`register update --section <章の名前> --section-file <path>` は、個票の 1 つの章の本文を指定した Markdown ファイルの内容で差し替えます。章は見出しの番号を除いた名前（`完了条件`、`作業内容` など）で指定します。指定した章の見出し行（`## 3. 完了条件` など）はそのまま残し、次の同じ深さ（またはそれより浅い）見出しまでの本文だけを置き換えます。ほかの章や Frontmatter は変更しません。個票に存在しない章名、読み込めないファイル、または Markdown 見出しを含むファイルを指定した場合はエラーになり、個票は変更されません。変更は `action: update` の event に `field: section` として記録され、`--commit` と併用した場合は変更された個票とイベントファイルのみが commit されます。
+
+```bash
+# 完了条件の章本文をファイルから差し替える
+specdojo register update --project prj-0001 --id PJR-AB12 \
+  --section 完了条件 --section-file tmp/new-criteria.md
+
+# 作業内容の章本文を差し替えてコミットする
+specdojo register update --project prj-0001 --id PJR-AB12 \
+  --section 作業内容 --section-file tmp/new-tasks.md --commit
+```
+
 `register add --from <ID>` は、起票の元になった登録項目を個票 Frontmatter の `derived_from` へ記録します。`--from` は複数回指定でき、同じ project の項目は `PJR-XXXX`、別 project の項目は `<project-id>:PJR-XXXX` を使います。自己参照、未設定の project、存在しない項目は書き込み前に拒否します。別 project の項目は、その project の `integration_branch`（省略時は `project/<project-id>/develop`）の Git tree を読んで存在を確認します。`register update --from <ID>` は一覧を置換し、`--from -` で削除します。`register build` は `generated/pjr-derived-items.md` を生成し、元の項目から派生先を逆引きできるようにします。decision から todo を起票するときも、この関係を追跡先として使います。
 
 `register add` / `update` の `--depends-on <ID>` は、起票の由来を示す `derived_from` と区別して、先行項目を `depends_on` に記録します。反復指定で一覧を設定・置換し、`--depends-on -` 単独で削除します。書式と別 project の存在確認は `--from` と同じです。存在しない ID、自己参照、project 間を含む循環を記帳前と `register build` で拒否し、変更を event に記録します。実行はすべての先行項目が `done` / `decided` の場合だけ許可し、`rejected` / `deferred` では進めません。直接の `exec run --register` は未完了の先行 ID と状態を表示して停止し、routine の sweep（`--register-filter`）と夜間 queue は対象を飛ばして理由を出力します。夜間の理由は朝報告にも残し、状態を自動で `waiting` に変えません。スキップは件数上限に数えません。先行完了後の再選択は次回の実行で行います。`generated/pjr-index.md` の `depends_on` 列と、逆引きビュー `generated/pjr-dependent-items.md` で関係を確認できます。
@@ -617,7 +631,7 @@ kata authoring は register 専用です。Schedule の task は対象成果物�
 
 一覧・派生ビューの「登録日」「完了日」は、保存した日時を config の `run.register_date_timezone`（IANA タイムゾーン名、既定 `UTC`）へ変換して導出する表示値です。
 
-`register migrate` は旧形式の登録簿データを現行形式へ移す一度限りの移行コマンドです。追跡対象だった `pjr-index.md` の表を個票 Frontmatter へ移し、旧日時を UTC へ変換し、個票内の `register_events` を `events/pjr-XXXX.yaml` へ分離します。イベントがまだない項目は、利用可能な Git 履歴を項目別イベントファイルへ変換します。event ID は commit・項目 ID・変更内容から決定的に生成するため、再実行で重複しません。
+`register migrate` は非推奨であり、次の版（0.10.0）で削除予定です。旧形式の登録簿データを現行形式へ移す一度限りの移行コマンドとして提供されていましたが、現在は個別個票ファイル（`pjr-*.md`）および外部イベントファイル（`events/*.yaml`）が標準形式のため、新規の移行操作は不要です。追跡対象だった `pjr-index.md` の表を個票 Frontmatter へ移し、旧日時を UTC へ変換し、個票内の `register_events` を `events/pjr-XXXX.yaml` へ分離します。イベントがまだない項目は、利用可能な Git 履歴を項目別イベントファイルへ変換します。event ID は commit・項目 ID・変更内容から決定的に生成するため、再実行で重複しません。
 
 `register history` は `events/pjr-XXXX.yaml` を読み、個票単位の追加（`added`）と変更（`updated`）を発生順に出力します。event 導入前または未移行の期間だけ Git 履歴を読み、削除（`removed`）を含む従来の履歴と統合します。event は発生日時・actor・action・reason・遷移前後状態・変更フィールドを保持するため、複数遷移を1コミットへまとめても粒度を失いません。比較対象は登録項目一覧の列と `block_reason`、`approach`、`targets`、`sources`、`target_path`、`target_rulebook`、`derived_from`、`depends_on` です。
 
@@ -643,9 +657,9 @@ kata authoring は register 専用です。Schedule の task は対象成果物�
 | `exec unblock`  | `blocked` を `doing` に戻す                                                                                                                      | `specdojo exec unblock --project prj-0001 --task <task-id> --by agent-1 --msg "resume"`                 |
 | `exec release`  | `doing` / `blocked` を `todo` に戻す                                                                                                             | `specdojo exec release --project prj-0001 --task <task-id> --by agent-1`                                |
 | `exec cancel`   | `todo` を `cancelled` にする                                                                                                                     | `specdojo exec cancel --project prj-0001 --task <task-id> --by agent-1 --msg "scope removed"`           |
-| `exec note`     | メモイベントを残す                                                                                                                               | `specdojo exec note --project prj-0001 --task <task-id> --by agent-1 --msg "memo"`                      |
-| `exec link`     | 外部参照イベントを残す                                                                                                                           | `specdojo exec link --project prj-0001 --task <task-id> --by agent-1 --ref pr=https://example.com/pr/1` |
-| `exec estimate` | 見積もりイベントを残す                                                                                                                           | `specdojo exec estimate --project prj-0001 --task <task-id> --by agent-1 --meta duration_days=1`        |
+| `exec note`     | 非推奨（0.10.0 で削除予定）: メモイベントを残す（個票の対応結果や実行記録に記録）                                                                | `specdojo exec note --project prj-0001 --task <task-id> --by agent-1 --msg "memo"`                      |
+| `exec link`     | 非推奨（0.10.0 で削除予定）: 外部参照イベントを残す（個票の `depends_on` やカタログで管理）                                                      | `specdojo exec link --project prj-0001 --task <task-id> --by agent-1 --ref pr=https://example.com/pr/1` |
+| `exec estimate` | 非推奨（0.10.0 で削除予定）: 見積もりイベントを残す（個票の `difficulty` や `priority` で管理）                                                  | `specdojo exec estimate --project prj-0001 --task <task-id> --by agent-1 --meta duration_days=1`        |
 | `exec run`      | plan を生成してエージェントを実行する                                                                                                            | `specdojo exec run --project prj-0001 --task <task-id>`                                                 |
 | `exec handoff`  | block された保護設定の提案差分を確認し、統合先へ適用して commit する                                                                             | `specdojo exec handoff apply --project prj-0001 --register PJR-0012`                                    |
 | `exec resume`   | `doing`、または due な利用制限延期 task を既存 worktree で再開する                                                                               | `specdojo exec resume --project prj-0001 --due`                                                         |
@@ -666,7 +680,7 @@ kata authoring は register 専用です。Schedule の task は対象成果物�
 
 `exec validate` は、一部だけの run 記録を通常は `WARN:` で報告し、欠落だけなら終了コード 0 を返します。`--records-only` は同じ欠落を `ERROR:` と終了コード 1 にします。両モードとも、plan・result がそろい state・evidence のない evidence 導入前の run、state・evidence のみがあり同じ出どころ・項目の別 run に plan・result の対がある移行後の先行試行、旧 `exec/plans/`・`results/`・`evidence/` の記録はエラー・警告にしません。`execution/grade/generated/` と空の lock のディレクトリも配置の検査から外します。これら以外の配置違反、Git に無視されない lock、Git 確認失敗は通常時もエラーです。`--schedule-only` は従来どおり schedule・event だけを検査します。`--records-only --commit <rev>` は作業ツリーではなく `<rev>` の tree の記録を検査し、未 commit の run や空のディレクトリを対象にしません（pre-push の検査で使います）。
 
-`exec migrate-records` は検査を通すためには不要です。移さない旧記録は、再開候補の自動探索、task ID からの plan・result の取得、dashboard の実行記録一覧・件数に含まれません。`register build` は旧記録を探索せず、個票の既存リンクを自動移行・補完しません。明示パスを読む経路などの条件と移行手順は [[specdojo:plan-result-lifecycle-guide|plan/resultライフサイクルガイド]] の「既存記録の移行」を参照してください。
+`exec migrate-records` は非推奨であり、次の版（0.10.0）で削除予定です。現在は新形式の実行記録配置（`execution/runs/`）が標準形式です。検査を通すためにも本コマンドの実行は不要です。移さない旧記録は、再開候補の自動探索、task ID からの plan・result の取得、dashboard の実行記録一覧・件数に含まれません。`register build` は旧記録を探索せず、個票の既存リンクを自動移行・補完しません。明示パスを読む経路などの条件と移行手順は [[specdojo:plan-result-lifecycle-guide|plan/resultライフサイクルガイド]] の「既存記録の移行」を参照してください。
 
 schedule の `exec resume --task <task-id> --resume-from executor` は、executor が `succeeded` で reporter が未完了、または統合段（commit・検査・merge）で止まった pipeline、あるいは approach の必須項目（`condense_records` など）を欠いた報告として runner が executor の段で止めた pipeline を、既存 worktree・変更・同じ run を引き継いで executor → reporter → 統合の順に再実行します。対象状態は reporter 段・統合段・executor 段の `blocked` または中断した `doing` で、executor の試行回数を増やし、`blocked` からの状態遷移は `unblock` イベントへ記録します。統合段から戻す場合は、executor を起動する前に統合先（project は root の現在ブランチ）を exec branch と worktree へ取り込みます。統合が成功済みの run、一部のリポジトリを統合済みの run、exec branch が merge 済みの run、worktree が merge の途中の run、executor 未成功、pipeline 以外、`executor` 以外の値は拒否します。`--task` は必須で、`--due` とは併用できません。worktree の `<execution_path>/runs/schedule/<task-id>/<run-id>/plan.md` を編集してから再開すると、その plan を使います。変更理由と再開の経緯を報告の `handoff` へ記載するよう plan に指示し、再開後の result の申し送りを確認してください。手順は [[specdojo:exec-operation-guide|exec運用ガイド]] の「blockedタスクの復帰」を参照してください。
 
@@ -927,11 +941,11 @@ runner は自分が起動した子プロセスの終了を待ってから次の�
 
 `grade run` は npm package から利用でき、`list` と同じ対象選択、文書ごとの plan 生成、agent 実行、marker の機械変換と `apply` を単段で実行します。成果物を `--target deliverable` で評価するには、対象 project に `catalog_path` を設定する必要があります。`viewpoints_path` 未設定時は同梱の `specdojo:pm-review-viewpoints` を使います。
 
-| コマンド        | 用途                                                  |
-| --------------- | ----------------------------------------------------- |
-| `grade list`    | 選択した文書のパスを1行1件で出力し、plan は保存しない |
-| `grade run`     | 文書ごとに評価と反映を実行し、同じ run を再開する     |
-| `grade migrate` | インライン grade / finding をサイドカーへ一括移行する |
+| コマンド        | 用途                                                                                                                                  |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `grade list`    | 選択した文書のパスを1行1件で出力し、plan は保存しない                                                                                 |
+| `grade run`     | 文書ごとに評価と反映を実行し、同じ run を再開する                                                                                     |
+| `grade migrate` | 非推奨（0.10.0 で削除予定）: インライン grade / finding をサイドカーへ一括移行する（結果サイドカーが標準、新規は `grade run` を使用） |
 
 `grade run` は、完了した文書と失敗した文書が混在すると終了コード 2、完了した文書がなく失敗した場合は 1 で終わります。agent が rate limit を返した場合は、その文書を未完了のまま残して直ちに終了コード 75 で止まり、同じ `--run-id` の再実行で再開します。`--target kata --reference-per-kind` は、各文書を同じ種別の `prj-overview-<種別>` 文書と比較します（`--reference` とは併用できません）。定期の job（`job-grade-kata`・`job-grade-deliverable`）はこの経路で評価します。
 
@@ -950,6 +964,8 @@ runner は自分が起動した子プロセスの終了を待ってから次の�
 ```bash
 specdojo grade run --target kata --kind rulebook --run-id quality-check --dry-run
 specdojo grade run --target kata --path <document.md> --run-id quality-check --by <executor-nickname>
+# 型の名前の一覧を指定し、rulebook と sample の組をまとめて順に評価する
+specdojo grade run --target kata --kata pjr --kata sld --run-id kata-batch
 # 同じコマンドを再実行すると完了済み文書を飛ばし、未完了文書から再開する
 specdojo grade run --target deliverable --project prj-0001 --changed-only --run-id deliverable-check
 specdojo grade plan --target kata --changed-only --project prj-0001
@@ -979,6 +995,8 @@ specdojo grade validate --target kata --project prj-0001
 ネイティブ経路は `--stages 1` と機械 reporter を扱います。`--reference` と `--embed-documents` は plan に反映し、`--kind` は kata の `rulebook` / `recipe` / `sample` / `template` / `all`（既定）を選びます。失敗した文書と理由は run 記録に残し、終了コード 1 を返します。`--max-stage-failures`（既定 3）に達するまでは未完了段を再開できます。`grade run` は翻訳の段を持ちません。finding は日本語の正本で書かれるため通常は翻訳が要らず、旧結果の英語の正本が再掲された場合だけ、必要に応じて `translation-plan` / `localize` で表示用の `message_ja` を作ります。開発用シェルの実験的な 3 段構成は CLI の対象外です。
 
 宣言済み `project.repos` 配下の Markdown は、プロジェクトリポジトリから `../product/docs/document.md` のように指定できます。宣言外のリポジトリや symlink による範囲外への参照は拒否します。
+
+`--kata <name>` は `--target kata` 専用で、繰り返し指定できます。指定した型の名前（`pjr`・`sld` などの接頭辞）ごとに、対応する rulebook と sample の組を 1 回の実行で順に評価します。存在しない型の名前は実行前にまとめてエラーにします。1 つの型の失敗や rate limit で残りの型をスキップせず、終了時に型ごとの結果（完了・失敗・未実行）を一覧表示します。完了と失敗が混在すると終了コード 2、rate limit に当たった場合は終了コード 75 を返します。`--path` とは併用できません。
 
 `--target` は `kata` または `deliverable` です。`--path` は繰り返し指定でき、明示した Markdown 文書だけを対象にします。ただし、パス要素に `generated` を含む生成文書と `trash` を含む退避済み文書は自動探索から除外し、`--path` で明示した場合も入力エラーとして拒否します。`--changed-only` は grade result サイドカーの `content_hash` と現在の成果物ファイル全体の SHA-256 を比較します。`grade apply` はサイドカーだけを更新するため、評価結果の書き込み自体で成果物が変更扱いになることはありません。
 

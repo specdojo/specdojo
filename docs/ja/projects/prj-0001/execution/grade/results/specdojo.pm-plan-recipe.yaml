@@ -4,11 +4,12 @@ document: specdojo:pm-plan-recipe
 path: docs/ja/specdojo/recipes/pm-plan-recipe.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-recipe
 verdict: pass
 score: 100
-graded_at: "2026-11-16T20:30:38.193Z"
+graded_at: "2026-11-20T20:05:55.378Z"
 graded_by: flash-high-executor
-content_hash: 75b12f526e8a475d68b2ee2469537306046b183c80d4b1999c669b2129b6e504
+content_hash: 8bdfa8ff0eb8b7a93887665741dd70eb6291f5a6925b93cd734423a8a3662bbc
 categories:
   purpose:
     score: 100

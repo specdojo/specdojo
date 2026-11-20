@@ -3,13 +3,13 @@
   "queue_id": "night-2026-11-20",
   "project_id": "prj-0001",
   "created_at": "2026-11-20T14:19:13.343Z",
-  "updated_at": "2026-11-20T14:19:13.343Z",
-  "state": "pending",
+  "updated_at": "2026-11-20T17:18:34.466Z",
+  "state": "completed_with_failures",
   "steps": [
     {
       "index": 1,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "succeeded",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -33,12 +33,16 @@
         "tmp/orchestrator/exec-defaults-claude-fallback.yaml",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-20T14:19:35.181Z",
+      "completed_at": "2026-11-20T14:38:02.003Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
     },
     {
       "index": 2,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "succeeded",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -62,12 +66,16 @@
         "tmp/orchestrator/exec-defaults-claude-fallback.yaml",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-20T14:38:02.005Z",
+      "completed_at": "2026-11-20T14:51:47.716Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
     },
     {
       "index": 3,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "failed",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -91,12 +99,16 @@
         "tmp/orchestrator/exec-defaults-claude-fallback.yaml",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-20T14:51:47.718Z",
+      "completed_at": "2026-11-20T15:07:07.728Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
     },
     {
       "index": 4,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "failed",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -120,12 +132,16 @@
         "tmp/orchestrator/exec-defaults-claude-fallback.yaml",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-20T15:07:07.731Z",
+      "completed_at": "2026-11-20T15:32:37.354Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
     },
     {
       "index": 5,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "succeeded",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -149,12 +165,16 @@
         "tmp/orchestrator/exec-defaults-claude-fallback.yaml",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-20T15:32:37.357Z",
+      "completed_at": "2026-11-20T15:53:43.945Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
     },
     {
       "index": 6,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "failed",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -178,12 +198,16 @@
         "tmp/orchestrator/exec-defaults-claude-fallback.yaml",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-20T15:53:43.947Z",
+      "completed_at": "2026-11-20T16:12:04.245Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
     },
     {
       "index": 7,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "succeeded",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -207,12 +231,16 @@
         "tmp/orchestrator/exec-defaults-claude-fallback.yaml",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-20T16:12:04.249Z",
+      "completed_at": "2026-11-20T16:45:51.851Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
     },
     {
       "index": 8,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "failed",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -236,12 +264,16 @@
         "tmp/orchestrator/exec-defaults-claude-fallback.yaml",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-20T16:45:51.854Z",
+      "completed_at": "2026-11-20T16:59:50.772Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
     },
     {
       "index": 9,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "succeeded",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -265,7 +297,11 @@
         "tmp/orchestrator/exec-defaults-claude-fallback.yaml",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-20T16:59:50.775Z",
+      "completed_at": "2026-11-20T17:18:34.464Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
     }
   ]
 }

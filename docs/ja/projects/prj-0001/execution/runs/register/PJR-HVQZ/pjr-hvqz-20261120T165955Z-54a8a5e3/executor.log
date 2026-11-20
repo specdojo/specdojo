@@ -1,0 +1,27 @@
+タスク PJR-HVQZ「決定記録（dec）と移行テスト計画（ntp）の型を非推奨にする」に対応し、計画で求められたすべての作業を完了しました。
+
+### 実施内容
+
+1. **決定記録（dec）の非推奨化**:
+   - [`dec-rulebook.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HVQZ/docs/ja/specdojo/rulebooks/dec-rulebook.md): frontmatter の `status` を `deprecated` に更新し、先行の `cstd-rulebook` と同様に H1 に（非推奨）を付与、本文先頭に非推奨の告知と後継（プロジェクト登録簿の decision）への案内段落、および移行方針を記載しました。
+   - [`dec-sample.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HVQZ/docs/ja/specdojo/samples/dec-sample.md): frontmatter の `status` を `deprecated` に更新し、H1 に（非推奨）を付与、本文先頭に後継であるプロジェクト登録簿の decision への案内段落を記載しました。
+
+2. **移行テスト計画（ntp）の非推奨化**:
+   - [`ntp-rulebook.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HVQZ/docs/ja/specdojo/rulebooks/ntp-rulebook.md): frontmatter の `status` を `deprecated` に更新し、同様に H1 に（非推奨）を付与、本文先頭に非推奨告知と後継（`mtp-rulebook`）への案内段落、および移行方針を記載しました。
+   - [`ntp-sample.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HVQZ/docs/ja/specdojo/samples/ntp-sample.md): frontmatter の `status` を `deprecated` に更新し、H1 に（非推奨）を付与、本文先頭に後継の完成例（`mtp-sample`）への案内段落を記載しました。
+
+3. **参照元の後継への切り替え**:
+   - [`dss-sample.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HVQZ/docs/ja/specdojo/samples/dss-sample.md): 8.2 節の節目 4「実装への採用」、および 8.3 節「変更・不適合・例外」の例外判断表と説明文における `dec-rulebook` 準拠の記録先記述（`<project-id>:dec-...`）を、利用先のプロジェクト登録簿（[[specdojo:pjr-rulebook|プロジェクト登録簿作成ルール]]）の decision（個票）へ更新しました。
+
+4. **`pm-review-viewpoints.yaml` および派生 snapshot の扱い（判断事項）**:
+   - `pm-review-viewpoints.yaml` の `document_kinds` における `specdojo:dec-rulebook` および `specdojo:ntp-rulebook` は、現存する全 rulebook ファイル（112 件）を網羅判定するための `confirmed_default` の記録です。
+   - 後継である `specdojo:pjr-rulebook` および `specdojo:mtp-rulebook` は既に `confirmed_default` に含まれています。
+   - 完了条件 2 のとおり rulebook ファイル自体は削除せず残すため、`pm-review-viewpoints.yaml` から削除すると `viewpoint-document-kinds-check` で未判定（`undecided`）エラーとなります（先行の `cstd-rulebook` も非推奨化後も `confirmed_default` に維持されていることと整合します）。
+   - したがって、`pm-review-viewpoints.yaml` および派生テスト snapshot は変更不要と判断しました。
+
+5. **個票の更新**:
+   - [`pjr-hvqz-deprecate-dec-ntp.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HVQZ/docs/ja/projects/prj-0001/controls/project-register/pjr-hvqz-deprecate-dec-ntp.md): 作業内容の表を `done` に更新し、対応結果（実施内容、`pm-review-viewpoints.yaml` の判断理由、CHANGELOG に書く事項、残課題）および関連ドキュメントを記入しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"決定記録（dec）および移行テスト計画（ntp）の型（rulebook・sample）を非推奨化し、後継への案内を記載しました。また dss-sample の dec 参照を登録簿の decision へ更新しました。","handoff":["【pm-review-viewpoints.yaml の扱い】pm-review-viewpoints.yaml の document_kinds における specdojo:dec-rulebook および specdojo:ntp-rulebook は、現存する全 rulebook ファイル（112件）を網羅判定する confirmed_default の記録であり、後継である specdojo:pjr-rulebook および specdojo:mtp-rulebook は既に confirmed_default に含まれている。また dec-rulebook.md と ntp-rulebook.md は本タスクでは削除せず非推奨として残すため（完了条件 2）、pm-review-viewpoints.yaml から削除すると viewpoint-document-kinds-check で未判定（undecided）エラーとなる（先行の cstd-rulebook も非推奨化後も confirmed_default に維持されている）。したがって、pm-review-viewpoints.yaml および派生テスト snapshot（specdojo--pm-review-viewpoints.md.snap）は変更不要と判断した。","【CHANGELOG に書く事項】区分: 変更 / 行の文案: 決定記録（dec）と移行テスト計画（ntp）の型（rulebook・sample）を非推奨にし、後継（dec は登録簿の decision、ntp は mtp-rulebook）への移行方針を明記した。また dss-sample の dec 参照を登録簿の decision へ向けた。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/dec-rulebook.md docs/ja/specdojo/rulebooks/ntp-rulebook.md docs/ja/specdojo/samples/dec-sample.md docs/ja/specdojo/samples/dss-sample.md docs/ja/specdojo/samples/ntp-sample.md docs/ja/projects/prj-0001/controls/project-register/pjr-hvqz-deprecate-dec-ntp.md","status":"passed","summary":"All 6 matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"passed","summary":"history files valid including pjr-hvqz-deprecate-dec-ntp.md"},{"command":"npm run validate:catalog","status":"passed","summary":"Catalog validation passed with code 0"},{"command":"npm run validate:schema:file","status":"not_applicable","reason":"No *.yaml or *.yml files changed"}]}
+</specdojo_executor_evidence>

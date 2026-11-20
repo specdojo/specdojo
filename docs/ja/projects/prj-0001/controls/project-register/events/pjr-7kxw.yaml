@@ -44,3 +44,61 @@
     - field: commit_scope
       from: ""
       to: register
+- v: 1
+  id: reg_b4c64a595de64b6a933b8f09e125ac07
+  ts: "2026-11-20T15:07:15Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_ee37a050428d4421b97e53f8b0260036
+- v: 1
+  id: reg_3815ac18fd9a42a7a0d357b1e730358f
+  ts: "2026-11-20T15:32:07Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-ts, lint-md"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-ts, lint-md"
+  previous_event_id: reg_b4c64a595de64b6a933b8f09e125ac07
+- v: 1
+  id: reg_aa9c27ba7d0646cfb65a9930dfd2d84d
+  ts: "2026-11-20T22:52:17Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-ts, lint-md"
+      to: "-"
+  previous_event_id: reg_3815ac18fd9a42a7a0d357b1e730358f
+- v: 1
+  id: reg_668ac52769184926b136f9da12b4e216
+  ts: "2026-11-20T23:00:38Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_aa9c27ba7d0646cfb65a9930dfd2d84d

@@ -4,16 +4,17 @@ document: specdojo:pm-quality-management-plan-recipe
 path: docs/ja/specdojo/recipes/pm-quality-management-plan-recipe.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-recipe
 verdict: pass
-score: 96
-graded_at: "2026-11-16T20:33:40.351Z"
+score: 100
+graded_at: "2026-11-20T20:07:57.696Z"
 graded_by: flash-high-executor
-content_hash: 6068ec18864f02dd1c2908ae48e977c747e66b8a3a20de4fc3eb92a1194d11d1
+content_hash: 73a227207c9acfbc12972a8ea8ce47eaea07a0f01c4acd91c794e3ec2b401dca
 categories:
   purpose:
     score: 100
   operations:
-    score: 94
+    score: 100
   planning:
     score: 100
   business:
@@ -21,11 +22,11 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 92
+    score: 100
   consistency:
     score: 100
 viewpoints:
@@ -36,8 +37,8 @@ viewpoints:
     level: 4
     score: 100
   vp-po-publication-accountability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-plan-feasibility:
     level: 4
     score: 100
@@ -81,14 +82,14 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -104,34 +105,6 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 4
+  minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: minor
-    rule: vp-po-publication-accountability
-    line: 19
-    anchor: "| 成果物品質 | 構造、参照整合、検証、公開適性                           |"
-    message: 「公開適性」を収集項目として挙げるだけで、公開対象と個人情報・非公開情報の有無を確認する問いがなく, 公開可否の説明根拠を作れない。
-    message_ja: 「公開適性」を収集項目として挙げるだけで、公開対象と個人情報・非公開情報の有無を確認する問いがなく, 公開可否の説明根拠を作れない。
-  - id: F002
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 16
-    anchor: "| 項目       | 集める情報                                               |"
-    message: 「作成前に集める情報」が名詞の列挙に留まり、主要な What と Why、How と What の対応を具体化する問いになっていない。
-    message_ja: 「作成前に集める情報」が名詞の列挙に留まり、主要な What と Why、How と What の対応を具体化する問いになっていない。
-  - id: F003
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 20
-    anchor: "| 判定条件   | 成功基準ID、受入条件ID、検証結果                         |"
-    message: 「成功基準 ID」「受入条件 ID」と「成功基準ID」「受入条件ID」の表記が混在している。
-    message_ja: 「成功基準 ID」「受入条件 ID」と「成功基準ID」「受入条件ID」の表記が混在している。
-  - id: F004
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 97
-    anchor: "- Agentに価値・例外・公開判断を委ねていない。"
-    message: 「AI Agent」(line 49) と 「Agent」(line 96) の表記が混在している。
-    message_ja: 「AI Agent」(line 49) と 「Agent」(line 96) の表記が混在している。
+findings: []

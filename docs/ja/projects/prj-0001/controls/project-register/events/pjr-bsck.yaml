@@ -44,3 +44,61 @@
     - field: commit_scope
       from: ""
       to: cli
+- v: 1
+  id: reg_5ea54e251e014d3daf7ffa3ab624570a
+  ts: "2026-11-20T15:53:56Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_85341586433140158a5fdccd2fabd411
+- v: 1
+  id: reg_39f70e3ded424f65b169b26b96721efc
+  ts: "2026-11-20T16:11:33Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-md, test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-md, test-integration"
+  previous_event_id: reg_5ea54e251e014d3daf7ffa3ab624570a
+- v: 1
+  id: reg_1f25a5c46c8a410aa37eca352f1bbf3e
+  ts: "2026-11-20T23:02:39Z"
+  action: start
+  actor: opus-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-md, test-integration"
+      to: "-"
+  previous_event_id: reg_39f70e3ded424f65b169b26b96721efc
+- v: 1
+  id: reg_dcc1aef618de4850b01527dd5542030a
+  ts: "2026-11-20T23:12:14Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_1f25a5c46c8a410aa37eca352f1bbf3e
