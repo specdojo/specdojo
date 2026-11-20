@@ -4,6 +4,19 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ## [Unreleased]
 
+## [0.9.1] - 2026-11-20
+
+同梱パッケージ（`@specdojo/docs-lint` 0.5.0、`@specdojo/docs-site` 0.6.0）は変わらないため、公開しません。
+
+### 利用者から見て動きが変わる点
+
+- `repos` を宣言した project で opencode の agent を exec から起動するとき、`exec-defaults.yaml` の opencode の `command_template` に `--agent <name>` が必要になりました。許可を渡す agent を決めるためで、無い場合は起動の前に止まります。`specdojo init` が作る雛形には入っています（PJR-08EK）。
+
+### 不具合修正
+
+- `repos` を宣言した project で、exec の opencode の executor がプロダクトリポジトリの worktree を編集できなかった問題を修正しました。runner は起動時の `OPENCODE_CONFIG_CONTENT` で、その run のプロダクトの worktree だけに `external_directory` と `edit` の許可を渡します。agent の定義や `opencode.json` を書き換える必要はありません。`orchestrator launch` の `edit` の許可も、起動場所からの相対パスにそろえました（PJR-08EK）。
+- CodeQL が指摘した 5 か所を直しました。`deliverable trash` は、記号を含む `local_id` でも別の成果物の `path:` を書き換えません。exec の変更範囲の推定は、長い個票の本文でも遅くなりません。プロダクトリポジトリの統合の記録と dashboard の表は、`\` で終わるセルでも列がずれません（PJR-A77M）。
+
 ## [0.9.0] - 2026-11-20
 
 同梱パッケージは `@specdojo/docs-lint` 0.5.0 と `@specdojo/docs-site` 0.6.0 を同時に公開します。動作に必要な Node.js は 22.17 以上です。
