@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-a77m-codeql-src-alerts
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-19T22:05:49Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-20T14:05:37Z"
+  conclusion: "CodeQL が指摘した src の 5 か所を直し、PR #41 で alert が残らないことを確かめた"
   derived_from:
     - PJR-P318
 ---
