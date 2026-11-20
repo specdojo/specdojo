@@ -30,7 +30,13 @@ specdojo:
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- `npm run check`・`npm run test:integration`・`npm run docs:build` を、段（typecheck・lint:ts・lint:md・lint:fm・lint:mermaid・lint:d2・validate:schema・validate:catalog・validate:history-links・npm test）ごとに時間を測り、個票の対応結果に表で書く。
+- 運用メモ（`pm-orchestrator-playbook.md`）のリリースの手順から、`npm run check` と重なる `npm run test:integration` を外す。外す理由（`npm test` が unit と integration の両方を流すこと）を書く。
+- 互いに依存しない lint と検証を並べて流す案と、リリースのときだけテストの並列（`maxWorkers`）を上げる案を、手元で試して所要時間を測る。どちらを採るかと理由を書く。CI と exec の親の検証が検出する不具合は変えない。
+- `package.json`・`vitest*.ts` の変更が要る場合は、保護された設定に当たるものは executor が変えず、案を個票の対応結果に書き、報告の `handoff` にも書く。反映は利用者の承認のもと feature ブランチで行う。
+- 迷った点は executor が決め、決めた内容と理由を個票の対応結果に書く。pipeline では報告の `handoff` にも書く。
+- `CHANGELOG.md` は変えない。利用者に影響が無いことを対応結果に書く。
+- `npm run lint:md` と親の検証が通る。
 
 ## 4. 作業内容
 
