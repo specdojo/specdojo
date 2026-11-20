@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-d25e-release-v0-9-1
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: high
   owner: PO
   registered_at: "2026-11-20T11:24:37Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-20T14:18:33Z"
+  conclusion: specdojo 0.9.1 を provenance 付きで公開し、npm から入れた版の動作を確かめた
   derived_from:
     - PJR-PAE3
   depends_on:

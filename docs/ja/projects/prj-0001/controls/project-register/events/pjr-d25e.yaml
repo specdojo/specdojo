@@ -41,3 +41,22 @@
     - field: depends_on
       from: ""
       to: '["PJR-08EK","PJR-A77M","PJR-H1PQ"]'
+- v: 1
+  id: reg_fa1abf2ee9dd43ee8ffaedf444f30ba5
+  ts: "2026-11-20T14:18:33Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: done
+  reason: orchestrator がリリースの準備と公開後の確認を行い、利用者が merge・タグ・公開の承認を行った
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-20"
+    - field: conclusion
+      from: "-"
+      to: specdojo 0.9.1 を provenance 付きで公開し、npm から入れた版の動作を確かめた
+  previous_event_id: reg_0330202498e3425185d11d940153ef06
