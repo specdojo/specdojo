@@ -950,6 +950,8 @@ runner は自分が起動した子プロセスの終了を待ってから次の�
 ```bash
 specdojo grade run --target kata --kind rulebook --run-id quality-check --dry-run
 specdojo grade run --target kata --path <document.md> --run-id quality-check --by <executor-nickname>
+# 型の名前の一覧を指定し、rulebook と sample の組をまとめて順に評価する
+specdojo grade run --target kata --kata pjr --kata sld --run-id kata-batch
 # 同じコマンドを再実行すると完了済み文書を飛ばし、未完了文書から再開する
 specdojo grade run --target deliverable --project prj-0001 --changed-only --run-id deliverable-check
 specdojo grade plan --target kata --changed-only --project prj-0001
@@ -979,6 +981,8 @@ specdojo grade validate --target kata --project prj-0001
 ネイティブ経路は `--stages 1` と機械 reporter を扱います。`--reference` と `--embed-documents` は plan に反映し、`--kind` は kata の `rulebook` / `recipe` / `sample` / `template` / `all`（既定）を選びます。失敗した文書と理由は run 記録に残し、終了コード 1 を返します。`--max-stage-failures`（既定 3）に達するまでは未完了段を再開できます。`grade run` は翻訳の段を持ちません。finding は日本語の正本で書かれるため通常は翻訳が要らず、旧結果の英語の正本が再掲された場合だけ、必要に応じて `translation-plan` / `localize` で表示用の `message_ja` を作ります。開発用シェルの実験的な 3 段構成は CLI の対象外です。
 
 宣言済み `project.repos` 配下の Markdown は、プロジェクトリポジトリから `../product/docs/document.md` のように指定できます。宣言外のリポジトリや symlink による範囲外への参照は拒否します。
+
+`--kata <name>` は `--target kata` 専用で、繰り返し指定できます。指定した型の名前（`pjr`・`sld` などの接頭辞）ごとに、対応する rulebook と sample の組を 1 回の実行で順に評価します。存在しない型の名前は実行前にまとめてエラーにします。1 つの型の失敗や rate limit で残りの型をスキップせず、終了時に型ごとの結果（完了・失敗・未実行）を一覧表示します。完了と失敗が混在すると終了コード 2、rate limit に当たった場合は終了コード 75 を返します。`--path` とは併用できません。
 
 `--target` は `kata` または `deliverable` です。`--path` は繰り返し指定でき、明示した Markdown 文書だけを対象にします。ただし、パス要素に `generated` を含む生成文書と `trash` を含む退避済み文書は自動探索から除外し、`--path` で明示した場合も入力エラーとして拒否します。`--changed-only` は grade result サイドカーの `content_hash` と現在の成果物ファイル全体の SHA-256 を比較します。`grade apply` はサイドカーだけを更新するため、評価結果の書き込み自体で成果物が変更扱いになることはありません。
 
