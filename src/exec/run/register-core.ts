@@ -25,6 +25,7 @@ import {
   sanitizeRegisterConclusion,
   selectRegisterCommitPaths,
   selectRegisterRunArtifactResidue,
+  registerProductTargetHints,
   ticketPathFromItem,
   type RegisterItemSummary,
   type RegisterItemTransition,
@@ -510,6 +511,7 @@ export async function runSingleRegisterItem(
       resultPath,
       registerPaths: registerReporterManagedPaths(registerPaths),
       execDefaults: context.execDefaults,
+      productTargetHints: registerProductTargetHints(item),
       productWorktrees: configuredProductCheckouts(schedulePath),
       providerConcurrencyGate: context.providerConcurrencyGate,
       executorRateLimitOptions: opts.executorBy

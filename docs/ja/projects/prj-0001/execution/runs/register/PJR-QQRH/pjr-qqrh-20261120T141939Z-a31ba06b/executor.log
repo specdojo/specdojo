@@ -1,0 +1,31 @@
+PJR-QQRH の修正が終わりました。executor が「完了」と報告しても、次のどちらかに当たる場合は review に進めず、項目を `waiting` にして `block_reason` に理由を残します。
+
+- **プロダクトの変更なし**: 項目がプロダクトを対象にしているのに、プロダクトの worktree に未 commit の変更も exec branch の commit もない。
+- **権限による拒否**: executor の出力に、ツールの権限で拒まれた行がある。
+
+追加した 3 件の統合テスト（変更なし→`waiting`、権限拒否→`waiting`、プロダクトを対象にしない項目→従来どおり `review`）と、新しい単体テスト 10 件は通りました。既存の統合テスト全件・typecheck・lint・unit の全件は流しておらず、このあと runner の検証で確かめます。
+
+**判定のしかた**
+- 「プロダクトを対象にしている」は、plan の `targets`、個票の `target_path`・`targets` に `<repo>:<path>` がある場合で判定します。approach の無い plan だけは、本文（入力の行など）が `<repo>:<path>` を参照している場合も含めます。
+- 権限拒否として数えるのは opencode と Claude Code の拒否文言だけです。シェルの `Permission denied` はテストの出力にも出るので数えません。報告のタグの中も除外します。
+- `block_reason` は 200 文字で切られるため、`no product changes in <repo>` を理由の先頭に置きました。
+- 「プロダクトの変更なし」は runner の要約の `reason=` と、`exec status` 末尾の新しい節 `warnings (no product changes):` に出ます。
+
+**変更したファイル**
+- 新規: `src/exec/executor-outcome-checks.ts`、`tests/src/exec/executor-outcome-checks.test.ts`
+- 判定の組み込み: `src/exec/run/agent-pipeline.ts`、`src/exec/task-repos.ts`、`src/exec/register.ts`
+- 個票の値を渡す: `src/exec/run/register-worktree.ts`、`register-resume.ts`、`register-core.ts`
+- `exec status` の警告: `src/exec/commands.ts`、`src/register/item.ts`
+- 統合テスト: `tests/src/exec/register-pipeline-e2e.integration.test.ts`
+- 文書: `docs/ja/specdojo/guides/exec-config-guide.md` に説明を 1 項目追加
+- 個票: 影響範囲・原因・対応結果（CHANGELOG の文案を含む）・関連ドキュメントを記入
+
+**判断してほしいこと・注意点**
+- 個票の入力にある `npm run test:browser` の件（executor が報告した検証と、実際に走ったコマンドが違う）は、この項目では扱わず別に起票する案にしました。報告と実際のコマンドを突き合わせる仕組みが要り、どこまで報告を信じるかの設計判断も別に必要だからです。案のタイトルは「executor が報告した検証が実際に走ったコマンドと違っても、runner は passed として記録する」（issue、DEV）です。
+- 挙動の変化: PJR-08EK の確認で流した PJR-NHV9 のように、拒否されることを確かめる項目も、今後は `waiting` で止まります。
+- close の前に、統合後の PJR-JSEY で runner の動きを確かめる必要があります。executor の範囲外なので未実施です。
+- `runAgentPipeline` は 236 行になり、ESLint の 200 行の目安を超えています（警告のみ）。分割の候補です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"executor が complete と報告しても、edit の出力にツールの権限による拒否がある場合と、プロダクトを対象にする項目でプロダクトの worktree に変更が無い場合は、evidence を incomplete・executor を blocked にして register を waiting にし block_reason を残すようにした。「プロダクトの変更なし」は runner の要約の reason= と exec status の warnings (no product changes): 節に出る。単体テストと統合テスト 3 件（変更なし→waiting、権限拒否→waiting、プロダクトを対象にしない項目→review）を追加し、`exec-config-guide` と個票の対応結果を更新した。","handoff":["検証の主張と実際の食い違い（入力の `npm run test:browser` の件）は、この項目では扱わず別に起票する。理由: executor が報告したコマンドと実際に走ったコマンドの突き合わせが要り、どこまで報告を信じるかの設計判断も要るため。起票の案: 「executor が報告した検証が実際に走ったコマンドと違っても、runner は passed として記録する」（issue、DEV）。","完了条件の「統合の後、PJR-JSEY で runner の動きを確かめてから close する」は executor の範囲外のため未実施。統合後に orchestrator が確かめる。","挙動の変化: PJR-NHV9 のように拒否されることを確かめる項目も、今後は出力に拒否の行があるため waiting になる。理由を見て人が判断する。","`runAgentPipeline` は 236 行になり、`max-lines-per-function` の警告（200 行の目安）が出ている（警告のみ）。分割の候補。","CHANGELOG の文案は個票の「CHANGELOG に書く事項」節にある（区分: 不具合修正）。"],"validations":[{"command":"npx vitest run tests/src/exec/executor-outcome-checks.test.ts","status":"passed","summary":"新しい単体テスト 10 件が通った"},{"command":"npx vitest run --config vitest.integration.config.ts tests/src/exec/register-pipeline-e2e.integration.test.ts -t \"product|permission denial\"","status":"passed","summary":"追加した統合テスト 3 件が通った（既存の全件は親の test-integration に任せた）"},{"command":"npx tsc -p tsconfig.build.json --noEmit","status":"passed","summary":"src の型エラーなし（全体は親の typecheck に任せた）"},{"command":"npx prettier --check src/exec tests/src/exec/executor-outcome-checks.test.ts tests/src/exec/register-pipeline-e2e.integration.test.ts src/register/item.ts","status":"passed","summary":"変更した TS が Prettier の書式どおり。変更した md 2 件にも prettier --write を適用済み"},{"command":"npm run validate:history-links","status":"passed","summary":"exit 0。変更した個票に Markdown リンクなし"}]}
+</specdojo_executor_evidence>

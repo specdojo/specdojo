@@ -3,10 +3,13 @@ import { type Command, Option } from "commander";
 import { existsSync } from "node:fs";
 import { join, resolve as pathResolve } from "node:path";
 import { validateCatalogLocalIds, validateRulebookKata } from "../catalog/build.js";
+import { resolveRegisterPaths } from "../register/core.js";
+import { loadRegisterItemDocs } from "../register/item.js";
 import { commonViewpointsPath, scaffoldViewpoints } from "../review/plan.js";
 import { runProviderScaffold, specdojoPackageRootDir } from "../shared/provider-scaffold.js";
 import {
   assertValidActor,
+  getProjectRegisterPath,
   getProjectViewpointsPath,
   getProjectRoutinesPath,
   loadConfig,
@@ -57,6 +60,7 @@ import {
   schedulerLockPath,
   writeEventFile,
 } from "./events.js";
+import { noProductChangeWarnings } from "./executor-outcome-checks.js";
 import { registerExecHandoffCommands } from "./handoff.js";
 import { registerRecordMigrationCommand } from "./migrate-records.js";
 import {
@@ -761,6 +765,7 @@ export function registerExecCommands(program: Command): void {
         const byMsg = filterBy ? ` for ${filterBy}` : "";
         process.stdout.write(`No ${filterState} tasks${byMsg}.\n`);
         writeActiveQueueSummary(executionPath);
+        writeNoProductChangeWarnings(opts.project, snapshot);
         exitWithCode(true);
         return;
       }
@@ -795,6 +800,7 @@ export function registerExecCommands(program: Command): void {
         );
       }
       writeActiveQueueSummary(executionPath);
+      writeNoProductChangeWarnings(opts.project, snapshot);
       exitWithCode(true);
     } catch (error) {
       printCommandError(error, false);
@@ -802,4 +808,28 @@ export function registerExecCommands(program: Command): void {
   });
 
   registerDeprecatedWhereAlias(exec, printExecPaths);
+}
+
+// PJR-QQRH: keep runs blocked for missing product changes visible in `exec status`, whatever
+// state filter is selected. Register items are read only when the project declares a register.
+function writeNoProductChangeWarnings(project: string | undefined, snapshot: StateSnapshot): void {
+  const projectId = resolveProjectId({ project });
+  const projectConfig = loadConfig().config?.projects[projectId];
+  const registerItems =
+    projectConfig && getProjectRegisterPath(projectConfig)
+      ? loadRegisterItemDocs(resolveRegisterPaths({ project: projectId }).projectRegisterPath).map(
+          (doc) => ({ id: doc.id, status: doc.item.status, blockReason: doc.blockReason }),
+        )
+      : [];
+  const warnings = noProductChangeWarnings({
+    registerItems,
+    tasks: Object.entries(snapshot.tasks).map(([taskId, current]) => ({
+      taskId,
+      state: current.state,
+      ...(current.last_msg ? { lastMsg: current.last_msg } : {}),
+    })),
+  });
+  if (warnings.length === 0) return;
+  process.stdout.write("\nwarnings (no product changes):\n");
+  for (const line of warnings) process.stdout.write(`  ${line}\n`);
 }

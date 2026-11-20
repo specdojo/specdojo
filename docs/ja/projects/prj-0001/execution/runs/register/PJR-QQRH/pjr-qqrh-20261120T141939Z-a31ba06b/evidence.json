@@ -1,0 +1,242 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-QQRH",
+  "run_id": "pjr-qqrh-20261120T141939Z-a31ba06b",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-20T14:21:14.560Z",
+    "completed_at": "2026-11-20T14:30:14.755Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-qqrh.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-qqrh-runner-false-success.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/register.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/agent-pipeline.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-resume.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/task-repos.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/item.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register-pipeline-e2e.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/executor-outcome-checks.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/executor-outcome-checks.test.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-qqrh-runner-false-success.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/register.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/agent-pipeline.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-resume.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/task-repos.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/item.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register-pipeline-e2e.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/executor-outcome-checks.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/executor-outcome-checks.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 14,
+    "summary": ".../pjr-qqrh-runner-false-success.md               |  57 ++++++---\n docs/ja/specdojo/guides/exec-config-guide.md       |   1 +\n src/exec/commands.ts                               |  30 +++++\n src/exec/register.ts                               |   9 ++\n src/exec/run/agent-pipeline.ts                     |  57 ++++++++-\n src/exec/run/register-core.ts                      |   2 +\n src/exec/run/register-resume.ts                    |   2 +\n src/exec/run/register-worktree.ts                  |   2 +\n src/exec/task-repos.ts                             |   6 +\n src/register/item.ts                               |   3 +\n .../exec/register-pipeline-e2e.integration.test.ts | 136 ++++++++++++++++++++-\n 11 files changed, 286 insertions(+), 19 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx vitest run tests/src/exec/executor-outcome-checks.test.ts",
+      "status": "passed",
+      "summary": "新しい単体テスト 10 件が通った"
+    },
+    {
+      "source": "executor",
+      "command": "npx vitest run --config vitest.integration.config.ts tests/src/exec/register-pipeline-e2e.integration.test.ts -t \"product|permission denial\"",
+      "status": "passed",
+      "summary": "追加した統合テスト 3 件が通った（既存の全件は親の test-integration に任せた）"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsc -p tsconfig.build.json --noEmit",
+      "status": "passed",
+      "summary": "src の型エラーなし（全体は親の typecheck に任せた）"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --check src/exec tests/src/exec/executor-outcome-checks.test.ts tests/src/exec/register-pipeline-e2e.integration.test.ts src/register/item.ts",
+      "status": "passed",
+      "summary": "変更した TS が Prettier の書式どおり。変更した md 2 件にも prettier --write を適用済み"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "exit 0。変更した個票に Markdown リンクなし"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.1 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-QQRH/src/catalog/catalog.ts\n  542:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-QQRH/src/dashboard/dashboard.ts\n  1149:1  warning  File has too many lines (1067). Maximum allow\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-QQRH/src/schedule/strategy-generate-document.ts\n  87:8  warning  Function 'buildStrategyDocument' has too many lines (289). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-QQRH/src/shared/specdojo-config.ts\n  1236:1  warning  File has too many lines (1190). Maximum allowed is 1000  max-lines\n\n✖ 41 problems (0 errors, 41 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.1 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.1 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.1 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 5518 file(s), 107 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 83 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.1 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5518 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.1 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-QQRH\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/devcontainer/scaffold.integration.test.ts\"}\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-co\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.1 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.1 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schema)\ndocs/ja/specdojo/samples/ifx-api-sample\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-QQRH/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-QQRH/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.1 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.1 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.1 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-QQRH\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/grade/grade.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/register/commands.test.ts\"}\n ✓ tests/src/grade/grade.test.ts (69 tests) 778ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/src/grade/grade.test.ts\"}\n[parent-validation:t\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "executor が complete と報告しても、edit の出力にツールの権限による拒否がある場合と、プロダクトを対象にする項目でプロダクトの worktree に変更が無い場合は、evidence を incomplete・executor を blocked にして register を waiting にし block_reason を残すようにした。「プロダクトの変更なし」は runner の要約の reason= と exec status の warnings (no product changes): 節に出る。単体テストと統合テスト 3 件（変更なし→waiting、権限拒否→waiting、プロダクトを対象にしない項目→review）を追加し、`exec-config-guide` と個票の対応結果を更新した。",
+  "completion_status": "complete",
+  "handoff": [
+    "検証の主張と実際の食い違い（入力の `npm run test:browser` の件）は、この項目では扱わず別に起票する。理由: executor が報告したコマンドと実際に走ったコマンドの突き合わせが要り、どこまで報告を信じるかの設計判断も要るため。起票の案: 「executor が報告した検証が実際に走ったコマンドと違っても、runner は passed として記録する」（issue、DEV）。",
+    "完了条件の「統合の後、PJR-JSEY で runner の動きを確かめてから close する」は executor の範囲外のため未実施。統合後に orchestrator が確かめる。",
+    "挙動の変化: PJR-NHV9 のように拒否されることを確かめる項目も、今後は出力に拒否の行があるため waiting になる。理由を見て人が判断する。",
+    "`runAgentPipeline` は 236 行になり、`max-lines-per-function` の警告（200 行の目安）が出ている（警告のみ）。分割の候補。",
+    "CHANGELOG の文案は個票の「CHANGELOG に書く事項」節にある（区分: 不具合修正）。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-QQRH/pjr-qqrh-20261120T141939Z-a31ba06b/executor.log",
+      "bytes": 6440,
+      "truncated": false
+    }
+  ]
+}
