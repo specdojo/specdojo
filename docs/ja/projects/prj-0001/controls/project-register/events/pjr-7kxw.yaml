@@ -44,3 +44,16 @@
     - field: commit_scope
       from: ""
       to: register
+- v: 1
+  id: reg_b4c64a595de64b6a933b8f09e125ac07
+  ts: "2026-11-20T15:07:15Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_ee37a050428d4421b97e53f8b0260036
