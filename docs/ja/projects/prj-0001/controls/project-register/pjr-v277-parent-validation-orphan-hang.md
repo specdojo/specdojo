@@ -9,6 +9,7 @@ specdojo:
   item_type: issue
   item_status: open
   priority: high
+  difficulty: hard
   owner: DEV
   registered_at: "2026-11-20T12:29:42Z"
   derived_from:
