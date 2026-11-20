@@ -67,3 +67,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_206ae167b0be40019fbf3759fe0ba7b0
+- v: 1
+  id: reg_b491a7f605b745c994451581e8866012
+  ts: "2026-11-20T22:46:43Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register で対応。完了条件を差分（f84620331）と個票の対応結果で確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-21"
+    - field: conclusion
+      from: "-"
+      to: リリース手順から重複する test:integration を外した。各段の時間を測り、lint の並列化と maxWorkers 4 の案を個票に残した（反映は保護された設定のため別途）
+  previous_event_id: reg_e35ac8f0d0744a3681fda9dd7818598f

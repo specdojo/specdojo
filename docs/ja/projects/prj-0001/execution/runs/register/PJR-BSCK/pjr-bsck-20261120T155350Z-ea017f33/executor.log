@@ -1,0 +1,16 @@
+前回の実行で失敗していた 2 つの検査を直しました。lint・型検査・テストは親 runner が実行するので、私はまだ走らせていません。結果は親 runner の側で出ます。
+
+- **Markdown lint（MD032）**: 個票の「対象コマンドと代わりの操作:」の直後に空行がなかったので足しました。個票単体では `markdownlint-cli2` で 0 件です。
+- **統合テスト**: `where` の別名（`exec where` など 6 種）で出す警告を「次の版で消す」から「0.10.0 で消す」という書き方に変えたため、テストが古い文言を期待して落ちていました。`tests/src/commands/where.integration.test.ts` の期待値を新しい文言 `removed in 0.10.0` に合わせました。
+
+ほかに次の点を直しています。
+
+- `src/exec/migrate-records.ts` で、タスクと関係なく変わっていた import の書き方を元に戻しました。
+- 個票の対応結果に、テストの期待値を合わせたことと、消す前に利用者のリポジトリとガイドでの使われ方をもう一度確かめることを書き足しました。
+- 変更したファイルを Prettier で整えました。中身が変わったのは個票、`src/exec/commands.ts`、`command-reference.md` の 3 つです。
+
+対象の 9 コマンドに非推奨の警告と代わりの操作を出す実装は、前回のものをそのまま使っています。作業 No 3「次の版で消す」は、0.10.0 で行うため `open` のまま残しています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"対象9コマンド（`timeline where`・`timeline build`、`exec note`・`exec link`・`exec estimate`、`exec migrate-records`、`grade migrate`、`register migrate`、`config migrate-members`）に非推奨の警告と代わりの操作を出し、リファレンスとガイドを更新した。前回失敗した lint-md（個票 MD032）と test-integration（`where` 別名警告の期待値）を修正した。","handoff":["作業 No 3「次の版で消す」は 0.10.0 で行うため `open` のまま残した。消す前に、利用者のリポジトリとガイドでの使われ方をもう一度確かめる。","CHANGELOG の文案は個票の「CHANGELOG に書く事項」にある。"],"validations":[{"command":"npx prettier --check docs/ja/projects/prj-0001/controls/project-register/pjr-bsck-deprecate-unused-commands.md","status":"passed","summary":"変更ファイルを prettier --write で整形し、個票の check も通過"},{"command":"npm run validate:history-links","status":"passed","summary":"invalid 0 件"}],"target_coverage":[{"target":"docs/ja/projects/prj-0001/controls/project-register/pjr-bsck-deprecate-unused-commands.md","status":"changed","path":"docs/ja/projects/prj-0001/controls/project-register/pjr-bsck-deprecate-unused-commands.md"},{"target":"docs/ja/specdojo/guides/plan-result-lifecycle-guide.md","status":"changed","path":"docs/ja/specdojo/guides/plan-result-lifecycle-guide.md"},{"target":"docs/ja/specdojo/guides/register-operation-guide.md","status":"changed","path":"docs/ja/specdojo/guides/register-operation-guide.md"},{"target":"docs/ja/specdojo/guides/timeline-design-guide.md","status":"changed","path":"docs/ja/specdojo/guides/timeline-design-guide.md"},{"target":"docs/ja/specdojo/references/command-reference.md","status":"changed","path":"docs/ja/specdojo/references/command-reference.md"},{"target":"src/dashboard/timeline.ts","status":"changed","path":"src/dashboard/timeline.ts"},{"target":"src/exec/commands.ts","status":"changed","path":"src/exec/commands.ts"},{"target":"src/exec/migrate-records.ts","status":"changed","path":"src/exec/migrate-records.ts"},{"target":"src/grade/command-inspect.ts","status":"changed","path":"src/grade/command-inspect.ts"},{"target":"src/register/maintenance-commands.ts","status":"changed","path":"src/register/maintenance-commands.ts"},{"target":"src/shared/specdojo-config.ts","status":"changed","path":"src/shared/specdojo-config.ts"},{"target":"src/shared/where-alias.ts","status":"changed","path":"src/shared/where-alias.ts"}]}
+</specdojo_executor_evidence>

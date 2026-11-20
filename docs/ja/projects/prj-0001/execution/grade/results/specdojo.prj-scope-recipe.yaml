@@ -4,11 +4,12 @@ document: specdojo:prj-scope-recipe
 path: docs/ja/specdojo/recipes/prj-scope-recipe.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 81
-graded_at: "2026-10-08T21:13:16.521Z"
-graded_by: agy-expert-executor
-content_hash: 6d7a7820743f62116fcd00e7398da9b0be5d8c4c95d8743360c9f59608c9db1d
+reference: specdojo:prj-overview-recipe
+verdict: pass
+score: 97
+graded_at: "2026-11-20T20:31:38.577Z"
+graded_by: flash-high-executor
+content_hash: df7896cdafc8f8b60e7e2a402c7977c7d8672a76dc9c0815e9dec8ea28e11d4d
 categories:
   purpose:
     score: 100
@@ -25,9 +26,9 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 67
+    score: 92
   consistency:
-    score: 25
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -75,14 +76,14 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
     level: 3
     score: 75
-  vp-qe-omissions-consistency:
-    level: 1
-    score: 25
-  vp-qe-kata-conformance:
-    level: 1
-    score: 25
   vp-ux-readability:
     level: 3
     score: 75
@@ -103,106 +104,27 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 4
-  minor: 6
+  major: 0
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-verifiability
-    line: 201
-    anchor: ""
-    message: 各対象・対象外を「変更記録」へ追跡する条件が変更済み項目に限られるのか初版にも適用されるのか不明なため、初版は上位目的・境界理由、変更後は変更記録も確認するなど状態別の判定条件へ分ける必要がある。
-    message_ja: 各対象・対象外を「変更記録」へ追跡する条件が変更済み項目に限られるのか初版にも適用されるのか不明なため、初版は上位目的・境界理由、変更後は変更記録も確認するなど状態別の判定条件へ分ける必要がある。
+    rule: vp-qe-kata-conformance
+    line: 110
+    anchor: 4. 受入条件・設計・実装の詳細を書いた箇所を見つけ、後続の成果物へ移す。
+    message: >-
+      委譲先を「後続成果物」とだけ記載し、実在する
+      `prj-success-criteria-and-acceptance-criteria`、`prj-assumptions-constraints-dependencies`、`prj-issues-and-approach`
+      を識別できないため、Recipe 記述標準のリンク規約に従ってリンクまたは文書 ID を明示する必要がある。
+    message_ja: >-
+      委譲先を「後続成果物」とだけ記載し、実在する
+      `prj-success-criteria-and-acceptance-criteria`、`prj-assumptions-constraints-dependencies`、`prj-issues-and-approach`
+      を識別できないため、Recipe 記述標準のリンク規約に従ってリンクまたは文書 ID を明示する必要がある。
   - id: F002
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 193
-    anchor: ""
-    message: 「仕上げチェック」に個人情報・非公開情報・機密情報を含まないことの最終確認がなく、Recipe 記述標準が同章に求める公開適性チェックを満たさないため、確認項目を追加する必要がある。
-    message_ja: 「仕上げチェック」に個人情報・非公開情報・機密情報を含まないことの最終確認がなく、Recipe 記述標準が同章に求める公開適性チェックを満たさないため、確認項目を追加する必要がある。
-  - id: F003
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 195
-    anchor: ""
-    message: 「全体の作成手順」の全章を仕上げ条件にしているため、rulebook が任意とする「境界の判断基準」「スコープ変更方針」を省略した適合成果物が不合格になる；両章を任意として扱う条件付きチェックへ改める必要がある。
-    message_ja: 「全体の作成手順」の全章を仕上げ条件にしているため、rulebook が任意とする「境界の判断基準」「スコープ変更方針」を省略した適合成果物が不合格になる；両章を任意として扱う条件付きチェックへ改める必要がある。
-  - id: F004
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 199
-    anchor: ""
-    message: >-
-      The finishing check unconditionally requires "境界の判断基準" and "スコープ変更方針" to be usable for subsequent decisions, which
-      contradicts the rulebook where these sections are optional; this condition must be modified to apply only when
-      these optional sections exist.
-    message_ja: >-
-      The finishing check unconditionally requires "境界の判断基準" and "スコープ変更方針" to be usable for subsequent decisions, which
-      contradicts the rulebook where these sections are optional; this condition must be modified to apply only when
-      these optional sections exist.
-  - id: F005
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 22
-    anchor: "| 対象利用者         | 誰が使うか、誰が影響を受けるか                                                         |"
-    message: >-
-      委譲先を「後続成果物」とだけ記載し、実在する
-      `prj-success-criteria-and-acceptance-criteria`、`prj-assumptions-constraints-dependencies`、`prj-issues-and-approach`
-      を識別できないため、Recipe 記述標準のリンク規約に従ってリンクまたは文書 ID を明示する必要がある。
-    message_ja: >-
-      委譲先を「後続成果物」とだけ記載し、実在する
-      `prj-success-criteria-and-acceptance-criteria`、`prj-assumptions-constraints-dependencies`、`prj-issues-and-approach`
-      を識別できないため、Recipe 記述標準のリンク規約に従ってリンクまたは文書 ID を明示する必要がある。
-  - id: F006
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 47
-    anchor: ""
-    message: >-
-      The creation procedure unconditionally requires defining "境界の判断基準" and "スコープ変更方針", which contradicts the rulebook
-      where these sections are optional; these steps must be modified to be conditional in accordance with the rulebook.
-    message_ja: >-
-      The creation procedure unconditionally requires defining "境界の判断基準" and "スコープ変更方針", which contradicts the rulebook
-      where these sections are optional; these steps must be modified to be conditional in accordance with the rulebook.
-  - id: F007
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 193
-    anchor: ""
-    message: Recipe 記述標準が「仕上げチェック」に要求する公開適性の最終確認がないため、個人情報・非公開情報・機密情報を含まないことを確認する項目を追加する必要がある。
-    message_ja: Recipe 記述標準が「仕上げチェック」に要求する公開適性の最終確認がないため、個人情報・非公開情報・機密情報を含まないことを確認する項目を追加する必要がある。
-  - id: F008
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 195
-    anchor: ""
-    message: >-
-      Recipe 記述標準が成果物の構造・必須項目の正本を rulebook と定めているのに、rulebook
-      の任意章である「境界の判断基準」「スコープ変更方針」を必須の仕上げ条件として再定義しているため、任意区分を一致させる必要がある。
-    message_ja: >-
-      Recipe 記述標準が成果物の構造・必須項目の正本を rulebook と定めているのに、rulebook
-      の任意章である「境界の判断基準」「スコープ変更方針」を必須の仕上げ条件として再定義しているため、任意区分を一致させる必要がある。
-  - id: F009
-    severity: minor
     rule: vp-ux-readability
-    line: 22
-    anchor: "| 対象利用者         | 誰が使うか、誰が影響を受けるか                                                         |"
+    line: 110
+    anchor: 4. 受入条件・設計・実装の詳細を書いた箇所を見つけ、後続の成果物へ移す。
     message: 「後続成果物」という総称だけでは次に見る文書を識別できないため、成功基準・受入条件, 前提・制約・依存関係, 課題と解決アプローチの各文書 ID またはリンクを明示する必要がある。
     message_ja: 「後続成果物」という総称だけでは次に見る文書を識別できないため、成功基準・受入条件, 前提・制約・依存関係, 課題と解決アプローチの各文書 ID またはリンクを明示する必要がある。
-  - id: F010
-    severity: minor
-    rule: vp-ux-readability
-    line: 38
-    anchor: 6. 境界の判断基準で、迷ったときの優先順位を定義する。
-    message: >-
-      The delegation targets for downstream documents use generic terms like "成功基準、前提・制約、課題", which makes it difficult
-      to identify the exact document IDs to read next; explicit document IDs or links must be provided.
-    message_ja: 下流ドキュメントの委任ターゲットには "成功基準、前提・制約、課題" のような一般的な用語が使用されており、次に読むべき正確なドキュメントIDを特定するのが困難です。明示的なドキュメントIDまたはリンクを提供する必要があります。
-level_corrections:
-  - viewpoint: vp-qe-omissions-consistency
-    original_level: 2
-    corrected_level: 1
-  - viewpoint: vp-qe-kata-conformance
-    original_level: 2
-    corrected_level: 1

@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-qqrh-runner-false-success
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-18T12:17:56Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-20T22:53:06Z"
+  conclusion: 権限で拒否された出力やプロダクトの変更なしを runner が検出し、review に進めず waiting と block_reason を残す。exec status に警告を出す
   derived_from:
     - PJR-08EK
 ---

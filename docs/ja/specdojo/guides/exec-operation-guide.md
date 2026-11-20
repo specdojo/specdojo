@@ -567,6 +567,19 @@ specdojo exec run \
   --resume-from executor
 ```
 
+申し送りだけでは足りない指示（直す順番、触れてはいけない範囲など）を executor へ渡す場合は、`--resume-note <text>` を足します。plan を手で編集したりスクリプトで書き換えたりせずに、run の plan の共通規約の参照の前へ `## 再開の指示（<日時>）` の節を入れて executor を再開します。繰り返し指定すると 1 つの節に並び、足した指示と日時は `pipeline-state.json` の `resume_notes` に残ります。`--resume-from executor` を伴わない場合や、`--register` の ID が 1 件でない場合は、起動の前にエラーで止まります。
+
+```bash
+specdojo exec run \
+  --project <project-id> \
+  --register <PJR-ID> \
+  --worktree \
+  --resume \
+  --resume-from executor \
+  --resume-note "個票の完了条件 3 の文書を先に直す" \
+  --resume-note "src 配下は変えない"
+```
+
 強制した executor の prompt には、保存済み evidence にある失敗した親検証の ID と要約を申し送ります。保護機構の block から通常どおり executor を再開する場合は、保存済みの block 理由を申し送ります。統合段から executor へ戻す指定、worktree が無い run、再開できない run は、register の状態と既存成果を変えずに拒否します。
 
 executor のプロセス結果は、親 runner 検証を始める前に `executor.log` と `evidence.json` へ保存し、`pipeline-state.json` の executor を `succeeded` へ更新します。親検証中にプロセスが中断した場合、`--resume` は保存済みの executor evidence を再利用し、不足している親検証を実行してから reporter へ進みます。agent 実行中の中断で executor が `running` のまま残った場合は、未コミット成果を含む既存 worktree を破棄せず、同じ plan/result を入力に executor から再実行します。`--executor-by` / `--reporter-by` を省略した場合は state に記録された各 agent を引き継ぎます。

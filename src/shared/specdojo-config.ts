@@ -1210,11 +1210,17 @@ export function registerConfigCommands(program: Command): void {
 
   cfg
     .command("migrate-members")
-    .description("Move agent entries from project pm-members.yaml files to protected agent members")
+    .description(
+      "Deprecated: configure agent members directly in .specdojo/agent-members.yaml (will be removed in 0.10.0)",
+    )
     .option("--project <projectId>", "Migrate only one project (default: all configured projects)")
     .option("--dry-run", "Show planned changes without writing", false)
     .action((opts: { project?: string; dryRun?: boolean }) => {
       try {
+        warnDeprecated(
+          "config migrate-members",
+          "Configure agent members directly in .specdojo/agent-members.yaml instead. This command will be removed in 0.10.0.",
+        );
         migrateAgentMembers({ projectId: opts.project, dryRun: !!opts.dryRun });
       } catch (error) {
         process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);

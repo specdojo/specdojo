@@ -22,6 +22,7 @@ import {
   pipelineStateLocation,
   updatePipelineStage,
   writePipelineState,
+  type PipelineResumeNote,
   type PipelineState,
 } from "../pipeline-state.js";
 import {
@@ -390,6 +391,8 @@ export async function runAgentPipeline(params: {
   productWorktrees?: readonly ProductWorktree[];
   /** Run-scoped `--integration-branch` values to record in the checkpoint for resume. */
   integrationBranchOverrides?: Readonly<Record<string, string>>;
+  /** Resume instructions recorded in the checkpoint (earlier entries plus this resume's). */
+  resumeNotes?: readonly PipelineResumeNote[];
   runId?: string;
   /** reporter が返す出力の mode。省略時は edit。 */
   mode?: TaskMode;
@@ -449,6 +452,9 @@ export async function runAgentPipeline(params: {
     },
     ...(params.integrationBranchOverrides
       ? { integrationBranches: { ...params.integrationBranchOverrides } }
+      : {}),
+    ...(params.resumeNotes?.length
+      ? { resumeNotes: params.resumeNotes.map((entry) => ({ ...entry, notes: [...entry.notes] })) }
       : {}),
   });
   state = updatePipelineStage(

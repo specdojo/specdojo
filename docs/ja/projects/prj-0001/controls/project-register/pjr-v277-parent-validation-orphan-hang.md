@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-v277-parent-validation-orphan-hang
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-20T12:29:42Z"
+  completed_at: "2026-11-20T22:54:38Z"
+  conclusion: 親の検証を process group で流し、時間切れでは group 全体へ SIGTERM、10 秒後に SIGKILL、pipe が 5 秒閉じなければ時間切れとして次へ進む
   derived_from:
     - PJR-A77M
 ---

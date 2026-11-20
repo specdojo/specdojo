@@ -1,4 +1,5 @@
 import { registerDeprecatedWhereAlias } from "../shared/where-alias.js";
+import { warnDeprecated } from "../shared/deprecation.js";
 import { type Command, Option } from "commander";
 import { existsSync } from "node:fs";
 import { join, resolve as pathResolve } from "node:path";
@@ -195,8 +196,34 @@ export function registerExecCommands(program: Command): void {
     "estimate",
   ];
 
+  const deprecatedEventCommands: Record<string, { description: string; migration: string }> = {
+    note: {
+      description:
+        "Deprecated: record notes in tickets or execution results instead (will be removed in 0.10.0)",
+      migration:
+        "Record notes in tickets or execution results instead. This command will be removed in 0.10.0.",
+    },
+    link: {
+      description:
+        "Deprecated: declare dependencies in tickets (depends_on) or catalog instead (will be removed in 0.10.0)",
+      migration:
+        "Declare dependencies in tickets (depends_on) or catalog instead. This command will be removed in 0.10.0.",
+    },
+    estimate: {
+      description:
+        "Deprecated: manage estimates and difficulty in register tickets instead (will be removed in 0.10.0)",
+      migration:
+        "Manage estimates and difficulty in register tickets instead. This command will be removed in 0.10.0.",
+    },
+  };
+
   for (const t of types) {
-    const cmd = exec.command(t).description(`Write ${t} event JSON into exec/events/ (UTC)`);
+    const deprecation = deprecatedEventCommands[t];
+    const cmd = exec
+      .command(t)
+      .description(
+        deprecation ? deprecation.description : `Write ${t} event JSON into exec/events/ (UTC)`,
+      );
     addCommonAddOptions(cmd, {
       requireTask: t !== "release" && t !== "complete",
       msgDefault: DEFAULT_EVENT_MESSAGES[t],
@@ -229,7 +256,12 @@ export function registerExecCommands(program: Command): void {
         await runLockedEventCommand(opts, action);
       });
     } else {
-      cmd.action((opts) => runSimpleEventCommand(opts, t));
+      cmd.action((opts) => {
+        if (deprecation) {
+          warnDeprecated(`exec ${t}`, deprecation.migration);
+        }
+        runSimpleEventCommand(opts, t);
+      });
     }
   }
 

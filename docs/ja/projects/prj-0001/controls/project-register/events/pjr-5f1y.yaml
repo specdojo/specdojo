@@ -73,3 +73,32 @@
       from: "-"
       to: "executor validation failed or not run: npm run validate:schema:file"
   previous_event_id: reg_becb4c5e9ee14469949a0a2a2114b63e
+- v: 1
+  id: reg_ae23d574fe3446a4bc56fb0d73fcfafc
+  ts: "2026-11-20T23:13:48Z"
+  action: start
+  actor: opus-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "executor validation failed or not run: npm run validate:schema:file"
+      to: "-"
+  previous_event_id: reg_815f8ea680df43c79a689c1e27b5e597
+- v: 1
+  id: reg_3dddec312e4e494286f0fb7dd386b2f0
+  ts: "2026-11-20T23:23:51Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_ae23d574fe3446a4bc56fb0d73fcfafc

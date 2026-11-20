@@ -4,11 +4,12 @@ document: specdojo:prj-assumptions-constraints-dependencies-recipe
 path: docs/ja/specdojo/recipes/prj-assumptions-constraints-dependencies-recipe.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 93
-graded_at: "2026-10-08T21:05:02.301Z"
-graded_by: agy-expert-executor
-content_hash: 003b26577dd58b97934fe75aeb8d4775c35bdf120d384c9503595780756a616c
+reference: specdojo:prj-overview-recipe
+verdict: pass
+score: 100
+graded_at: "2026-11-20T20:16:08.817Z"
+graded_by: flash-high-executor
+content_hash: e5eecf6f687fb8089cc43be70730d64136ee0b60844ff3d8fcb1f878035d72f0
 categories:
   purpose:
     score: 100
@@ -25,9 +26,9 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 100
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -78,11 +79,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -103,34 +104,7 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 2
+  major: 0
+  minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 147
-    anchor: "- 「全体の作成手順」で示した章立てと必須表がそろっている。"
-    message: 仕上げチェックは「全体の作成手順」で示した章立てと必須表の確認を求めているが、同節には章立ても必須表も示されていないため、正本である rulebook の「本文構成（標準テンプレ）」を参照する記述に修正する必要がある。
-    message_ja: 仕上げチェックは「全体の作成手順」で示した章立てと必須表の確認を求めているが、同節には章立ても必須表も示されていないため、正本である rulebook の「本文構成（標準テンプレ）」を参照する記述に修正する必要がある。
-  - id: F002
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 52
-    anchor: "- 例: 「店頭で使う端末を利用できる」を前提として、利用不可時の代替記録を対応に置く。"
-    message: 前提条件の例として「店頭で使う端末を利用できる」を挙げているが, 直前の記述（line 85）および rulebook の規定に反しており, 依存関係（4.3.）の例とするべきである。
-    message_ja: 前提条件の例として「店頭で使う端末を利用できる」を挙げているが, 直前の記述（line 85）および rulebook の規定に反しており, 依存関係（4.3.）の例とするべきである。
-  - id: F003
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 126
-    anchor: >-
-      | 分類     | 「単一店舗で運用する」を前提として記載する                                                 |
-      「単一店舗で進める」を種別なしで書く                                     |
-    message: >-
-      The good example "単一店舗で運用する" contradicts the sample which explicitly excludes it as a scope boundary, violating
-      the rule not to repeat upstream decisions; it should be replaced with an operational assumption.
-    message_ja: >-
-      The good example "単一店舗で運用する" contradicts the sample which explicitly excludes it as a scope boundary, violating
-      the rule not to repeat upstream decisions; it should be replaced with an operational assumption.
+findings: []

@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-5ray-release-check-speedup
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-20T13:49:36Z"
+  completed_at: "2026-11-20T22:46:43Z"
+  conclusion: リリース手順から重複する test:integration を外した。各段の時間を測り、lint の並列化と maxWorkers 4 の案を個票に残した（反映は保護された設定のため別途）
   derived_from:
     - PJR-D25E
 ---
