@@ -121,3 +121,16 @@
       from: agent exited 0 but result is incomplete or its frontmatter differs from the scaffold (treated as blocked)
       to: "-"
   previous_event_id: reg_cdcbe24102cd477295704383310d1189
+- v: 1
+  id: reg_338fc8edbca643f1a4bfc43708d3d10a
+  ts: "2026-11-20T23:41:30Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_b4b9d7b330464292b9874b873ea9b9ed
