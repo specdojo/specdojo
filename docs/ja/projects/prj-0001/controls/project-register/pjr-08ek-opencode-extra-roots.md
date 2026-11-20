@@ -112,6 +112,13 @@ Error: The user has specified a rule which prevents you from using this specific
 - 区分: 不具合修正
 - 文案: `repos` を宣言した project で、exec の opencode の executor がプロダクトの worktree を編集できなかった問題を修正。runner は起動時の `OPENCODE_CONFIG_CONTENT` で、その run のプロダクトの worktree だけに `external_directory` と `edit` の許可を渡す。`orchestrator launch` の `edit` の許可も、起動場所からの相対パスにそろえた。opencode の `command_template` には `--agent <name>` が必要になった（PJR-08EK）
 
+### 5.5. orchestrator の確認（2026-11-20）
+
+- 統合の後に、手元の opencode 1.19.5 で `opencode debug agent opencode-executor` を流し、注入した後の最終の許可の規則を見た。注入する値は `dist/exec/opencode-permissions.js` の `opencodeExtraRootConfig` で、プロダクトの root を `/workspaces/specdojo-workspace/app1` として作った。
+- agent の定義の frontmatter の `edit` の規則（`*` を deny、`docs/**`・`src/**`・`tests/**` を allow、`docs/ja/projects/**/execution/exec/results/**` を deny）はそのまま残り、注入した `edit` の `../app1/**` の allow がその後ろに足された。`external_directory` も、`*` の deny の後ろに `/workspaces/specdojo-workspace/app1/**` の allow が足された。注入しないときは、この 2 つの規則は無い。inline config が frontmatter に上書きされず、後ろの規則として効くことを確かめた。
+- 実際の run でプロダクトの worktree を編集できるかは、このリポジトリに `repos` が無いため確かめていない。利用者の決定（2026-11-20、案 A）で、問題を見つけたプロジェクトで 0.9.1 の候補を使って 1 回流して確かめる。見ること: プロダクトの worktree のファイルを編集できる、宣言していない外の場所は拒まれる、`opencode.json` の `agent.<name>.permission` を足さなくても動く。確かめるまで review のまま残す。
+- 利用者に関わる変更: プロダクトリポジトリのある run では、opencode の `command_template` に `--agent <name>` が要る。配布の雛形（`templates/init-exec-defaults.yaml`）と、このリポジトリの `exec-defaults.yaml` には入っている。
+
 ## 6. 関連ドキュメント
 
 - [[specdojo:specdojo-config-reference]]
