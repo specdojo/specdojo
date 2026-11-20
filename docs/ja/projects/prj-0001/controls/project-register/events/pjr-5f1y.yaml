@@ -44,3 +44,16 @@
     - field: commit_scope
       from: ""
       to: exec
+- v: 1
+  id: reg_becb4c5e9ee14469949a0a2a2114b63e
+  ts: "2026-11-20T14:52:01Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_dc945efe7ac64172885ece546d9f604d
