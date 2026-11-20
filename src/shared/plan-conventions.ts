@@ -135,6 +135,18 @@ export function withPlanConventionsFiles(paths: readonly string[]): string[] {
   ];
 }
 
+/**
+ * Insert a runner-written section before the conventions reference, which must stay the final
+ * paragraph for expansion and checkpointing. Plans without a reference get the section appended.
+ */
+export function insertBeforePlanConventions(plan: string, section: string): string {
+  const reference = conventionsReference(plan);
+  const offset = reference?.start ?? plan.length;
+  const head = plan.slice(0, offset).trimEnd();
+  const body = `${section.trim()}\n`;
+  return reference ? `${head}\n\n${body}\n${plan.slice(offset)}` : `${head}\n\n${body}`;
+}
+
 export function rebasePlanConventions(plan: string, from: string, to: string): string {
   const [path] = planConventionsFiles(plan, dirname(from));
   const reference = conventionsReference(plan);

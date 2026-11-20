@@ -9,6 +9,7 @@ import { runJobWithProjectLock } from "./job-lock.js";
 import { spawnRefresh, spawnValidate } from "./mode-shared.js";
 import { resolveRegisterPipelineCommand } from "./register-core.js";
 import { runRegisterMode } from "./register-mode.js";
+import { resumeNoteOptionError } from "./resume-notes.js";
 import { runBatchMode, runManualMode } from "./schedule-mode.js";
 import {
   EXCLUSIVE_EXEC_RUN,
@@ -78,6 +79,11 @@ export function registerRunCommand(exec: Command): void {
   rcmd.option(
     "--resume-from <stage>",
     "With --resume: resume a reporter-stage run from executor instead (accepted value: executor)",
+  );
+  rcmd.option(
+    "--resume-note <text>",
+    "With --resume --resume-from executor: add an instruction to the run's plan before the common conventions (repeatable; recorded in pipeline-state.json)",
+    (value: string, previous: string[] = []) => [...previous, value],
   );
   rcmd.option(
     "--force-restart",
@@ -235,6 +241,13 @@ export function registerRunCommand(exec: Command): void {
         process.stdout.write(
           "--track-state cannot be used with --register (state is tracked in the register itself).\n",
         );
+        process.exitCode = 1;
+        return;
+      }
+      // worktree の plan を書き換えるため、project の解決や lock より前に組み合わせを確かめる。
+      const resumeNoteError = resumeNoteOptionError(opts);
+      if (resumeNoteError) {
+        process.stdout.write(`${resumeNoteError}\n`);
         process.exitCode = 1;
         return;
       }

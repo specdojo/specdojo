@@ -104,6 +104,8 @@ export type RunOpts = {
   onFailure?: string;
   resume?: boolean;
   resumeFrom?: string;
+  /** Repeatable `--resume-note` texts added to the plan before an executor resume. */
+  resumeNote?: string[];
   forceRestart?: boolean;
   worktree?: boolean;
   inPlace?: boolean;
