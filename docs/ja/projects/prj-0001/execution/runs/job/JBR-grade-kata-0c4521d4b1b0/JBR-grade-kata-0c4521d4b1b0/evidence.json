@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-kata-0c4521d4b1b0",
+  "run_id": "JBR-grade-kata-0c4521d4b1b0",
+  "stage": {
+    "role": "executor",
+    "actor": "specdojo-runner",
+    "status": "succeeded",
+    "started_at": "2026-11-20T20:01:37.993Z",
+    "completed_at": "2026-11-20T20:45:21.484Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-organization-recipe.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-plan-recipe.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-quality-management-plan-recipe.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-raci-recipe.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-roles-recipe.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-assumptions-constraints-dependencies-recipe.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-charter-recipe.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-comparison-of-alternatives-recipe.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-issues-and-approach-recipe.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-scope-recipe.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-stakeholder-register-recipe.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-success-criteria-and-acceptance-criteria-recipe.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.stsd-recipe.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.sysd-critical-flows-recipe.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.sysd-cross-cutting-policy-recipe.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-kata-0c4521d4b1b0.json",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 16,
+    "summary": ".../results/specdojo.pm-organization-recipe.yaml   |  24 ++--\n .../grade/results/specdojo.pm-plan-recipe.yaml     |   5 +-\n ...specdojo.pm-quality-management-plan-recipe.yaml |  57 +++------\n .../grade/results/specdojo.pm-raci-recipe.yaml     |  62 +++++++---\n .../grade/results/specdojo.pm-roles-recipe.yaml    |  26 ++--\n ...ssumptions-constraints-dependencies-recipe.yaml |  56 +++------\n .../grade/results/specdojo.prj-charter-recipe.yaml |  52 +++-----\n ...dojo.prj-comparison-of-alternatives-recipe.yaml | 119 ++++--------------\n .../specdojo.prj-issues-and-approach-recipe.yaml   | 135 +++++----------------\n .../grade/results/specdojo.prj-scope-recipe.yaml   | 120 ++++--------------\n .../specdojo.prj-stakeholder-register-recipe.yaml  | 115 +++++-------------\n ...ss-criteria-and-acceptance-criteria-recipe.yaml |  32 ++---\n .../grade/results/specdojo.stsd-recipe.yaml        |  17 +--\n 13 files changed, 242 insertions(+), 578 deletions(-)"
+  },
+  "validations": [
+    {
+      "id": "job-command",
+      "source": "runner",
+      "command": "if npm run build; then\n  :\nelse\n  build_status=$?\n  printf 'grade prerequisite build failed: exit_code=%s\\n' \"$build_status\" >&2\n  exit 1\nfi\n# 選択は Run ごとに固定する。同じ job_run_id の再試行は、保存した選択で grade run を再開する。\n# 選択条件の結果は和集合とし、条件がないときだけ全件を対象にする（precondition と同じ）。\nrun_dir=logs/grade/jobs/JBR-grade-kata-0c4521d4b1b0\nmkdir -p \"$run_dir\"\nif [ ! -f \"$run_dir/selection.txt\" ]; then\n  : >\"$run_dir/exhausted.txt\"\n  if [ \"true\" = \"true\" ]; then\n    # 上限到達の文書は grade run へ渡さず、報告だけにする。\n    '/usr/local/bin/node' '…",
+      "status": "passed",
+      "summary": "exit 0"
+    }
+  ],
+  "final_message": "Runner command exit 0.",
+  "command": {
+    "shell": "/bin/sh -eu",
+    "value": "if npm run build; then\n  :\nelse\n  build_status=$?\n  printf 'grade prerequisite build failed: exit_code=%s\\n' \"$build_status\" >&2\n  exit 1\nfi\n# 選択は Run ごとに固定する。同じ job_run_id の再試行は、保存した選択で grade run を再開する。\n# 選択条件の結果は和集合とし、条件がないときだけ全件を対象にする（precondition と同じ）。\nrun_dir=logs/grade/jobs/JBR-grade-kata-0c4521d4b1b0\nmkdir -p \"$run_dir\"\nif [ ! -f \"$run_dir/selection.txt\" ]; then\n  : >\"$run_dir/exhausted.txt\"\n  if [ \"true\" = \"true\" ]; then\n    # 上限到達の文書は grade run へ渡さず、報告だけにする。\n    '/usr/local/bin/node' '/workspaces/specdojo-workspace/specdojo/dist/specdojo.js' grade state --target kata --project prj-0001 --exhausted >\"$run_dir/exhausted.txt\" || exit 1\n  fi\n  selection=$(\n    if [ \"true\" = \"false\" ] && [ \"true\" = \"false\" ] && [ \"true\" = \"false\" ] && [ \"true\" = \"false\" ] && [ \"true\" = \"false\" ] && [ \"true\" = \"false\" ] && [ \"true\" = \"false\" ]; then\n      '/usr/local/bin/node' '/workspaces/specdojo-workspace/specdojo/dist/specdojo.js' grade list --target kata --project prj-0001\n    else\n      if [ \"true\" = \"true\" ]; then\n        '/usr/local/bin/node' '/workspaces/specdojo-workspace/specdojo/dist/specdojo.js' grade list --target kata --project prj-0001 --dependency-changed || exit $?\n      fi\n      if [ \"true\" = \"true\" ]; then\n        '/usr/local/bin/node' '/workspaces/specdojo-workspace/specdojo/dist/specdojo.js' grade list --target kata --project prj-0001 --rulebook-changed || exit $?\n      fi\n      if [ \"true\" = \"true\" ]; then\n        '/usr/local/bin/node' '/workspaces/specdojo-workspace/specdojo/dist/specdojo.js' grade list --target kata --project prj-0001 --unreviewed || exit $?\n      fi\n      if [ \"true\" = \"true\" ]; then\n        '/usr/local/bin/node' '/workspaces/specdojo-workspace/specdojo/dist/specdojo.js' grade list --target kata --project prj-0001 --changed-only || exit $?\n      fi\n      if [ \"true\" = \"true\" ]; then\n        '/usr/local/bin/node' '/workspaces/specdojo-workspace/specdojo/dist/specdojo.js' grade list --target kata --project prj-0001 --ungraded || exit $?\n      fi\n      if [ \"true\" = \"true\" ]; then\n        '/usr/local/bin/node' '/workspaces/specdojo-workspace/specdojo/dist/specdojo.js' grade list --target kata --project prj-0001 --incomplete || exit $?\n      fi\n      if [ \"true\" = \"true\" ]; then\n        '/usr/local/bin/node' '/workspaces/specdojo-workspace/specdojo/dist/specdojo.js' grade list --target kata --project prj-0001 --rubric-outdated || exit $?\n      fi\n      cat \"$run_dir/exhausted.txt\"\n    fi\n  ) || exit 1\n  printf '%s\\n' \"$selection\" | LC_ALL=C sort -u | awk -v kind=\"all\" -v limit=\"15\" '\n    NF && (kind == \"all\" || index($0, \"docs/ja/specdojo/\" kind \"s/\") == 1) && (limit == 0 || selected < limit) {\n      print\n      selected++\n    }\n  ' >\"$run_dir/limited.txt\"\n  awk 'FILENAME == ARGV[1] { if (NF) exhausted[$0] = 1; next } !($0 in exhausted)' \"$run_dir/exhausted.txt\" \"$run_dir/limited.txt\" >\"$run_dir/selection.tmp\"\n  awk 'FILENAME == ARGV[1] { if (NF) exhausted[$0] = 1; next } $0 in exhausted' \"$run_dir/exhausted.txt\" \"$run_dir/limited.txt\" >\"$run_dir/retry-exhausted.txt\"\n  mv \"$run_dir/selection.tmp\" \"$run_dir/selection.txt\"\nfi\nwhile IFS= read -r document; do\n  printf 'retry exhausted: %s\\n' \"$document\"\ndone <\"$run_dir/retry-exhausted.txt\"\nset --\nwhile IFS= read -r document; do\n  [ -n \"$document\" ] && set -- \"$@\" --path \"$document\"\ndone <\"$run_dir/selection.txt\"\nif [ \"$#\" -eq 0 ]; then\n  printf 'grade run: no documents to grade run_id=%s\\n' 'JBR-grade-kata-0c4521d4b1b0'\n  exit 0\nfi\n# grade run は、完了した文書と失敗した文書が混在すると 2、rate limit で止まると 75 を返す。\nif '/usr/local/bin/node' '/workspaces/specdojo-workspace/specdojo/dist/specdojo.js' grade run --run-id JBR-grade-kata-0c4521d4b1b0 --target kata --project prj-0001 --kind all --reference-per-kind --by agy-expert-executor \"$@\"; then\n  :\nelse\n  grade_status=$?\n  if [ \"$grade_status\" -eq 2 ]; then\n    printf 'grade run partial: run_id=%s exit_code=%s\\n' 'JBR-grade-kata-0c4521d4b1b0' \"$grade_status\" >&2\n  else\n    printf 'grade run failed: run_id=%s exit_code=%s\\n' 'JBR-grade-kata-0c4521d4b1b0' \"$grade_status\" >&2\n  fi\n  exit \"$grade_status\"\nfi",
+    "exit_code": 0,
+    "stdout_ref": "docs/ja/projects/prj-0001/execution/runs/job/JBR-grade-kata-0c4521d4b1b0/JBR-grade-kata-0c4521d4b1b0/command.stdout.log",
+    "stderr_ref": "docs/ja/projects/prj-0001/execution/runs/job/JBR-grade-kata-0c4521d4b1b0/JBR-grade-kata-0c4521d4b1b0/command.stderr.log",
+    "stdout": "\n> specdojo@0.9.1 build\n> node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json && node -e \"require('node:fs').chmodSync('dist/specdojo.js', 0o755)\"\n\ngraded: docs/ja/specdojo/recipes/pm-organization-recipe.md actor=flash-high-executor verdict=pass score=100 findings=0\ngraded: docs/ja/specdojo/recipes/pm-plan-recipe.md actor=flash-high-executor verdict=pass score=100 findings=0\ngraded: docs/ja/specdojo/recipes/pm-quality-management-plan-recipe.md actor=flash-high-executor verdict=pass score=100 findings=0\ngraded: docs/ja/specdojo/recipes/pm-raci-recipe.md actor=flash-high-executor verdict=pass score=93 findings=3\ngraded: docs/ja/specdojo/recipes/pm-roles-recipe.md actor=flash-high-executor verdict=pass score=100 findings=1\ngraded: docs/ja/specdojo/recipes/prj-assumptions-constraints-dependencies-recipe.md actor=flash-high-executor verdict=pass score=100 findings=0\ngraded: docs/ja/specdojo/recipes/prj-charter-recipe.md actor=flash-high-executor verdict=pass score=100 findings=0\ngraded: docs/ja/specdojo/recipes/prj-comparison-of-alternatives-recipe.md actor=flash-high-executor verdict=pass score=100 findings=0\ngraded: docs/ja/specdojo/recipes/prj-issues-and-approach-recipe.md actor=flash-high-executor verdict=pass score=97 findings=3\ngraded: docs/ja/specdojo/recipes/prj-scope-recipe.md actor=flash-high-executor verdict=pass score=97 findings=2\ngraded: docs/ja/specdojo/recipes/prj-stakeholder-register-recipe.md actor=flash-high-executor verdict=needs-work score=96 findings=3\ngraded: docs/ja/specdojo/recipes/prj-success-criteria-and-acceptance-criteria-recipe.md actor=flash-high-executor verdict=pass score=97 findings=2\ngraded: docs/ja/specdojo/recipes/stsd-recipe.md actor=flash-high-executor verdict=pass score=98 findings=1\ngraded: docs/ja/specdojo/recipes/sysd-critical-flows-recipe.md actor=flash-high-executor verdict=pass score=100 findings=0\ngraded: docs/ja/specdojo/recipes/sysd-cross-cutting-policy-recipe.md actor=flash-high-executor verdict=pass score=100 findings=0\n",
+    "stderr": "grade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta\n"
+  },
+  "log_refs": [
+    {
+      "kind": "command-stdout",
+      "path": "docs/ja/projects/prj-0001/execution/runs/job/JBR-grade-kata-0c4521d4b1b0/JBR-grade-kata-0c4521d4b1b0/command.stdout.log",
+      "bytes": 2056,
+      "truncated": false
+    },
+    {
+      "kind": "command-stderr",
+      "path": "docs/ja/projects/prj-0001/execution/runs/job/JBR-grade-kata-0c4521d4b1b0/JBR-grade-kata-0c4521d4b1b0/command.stderr.log",
+      "bytes": 889,
+      "truncated": false
+    }
+  ]
+}

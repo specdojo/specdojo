@@ -60,6 +60,7 @@ $defs:
         type: string
         enum:
           - id
+          - section
           - status
           - title
           - description

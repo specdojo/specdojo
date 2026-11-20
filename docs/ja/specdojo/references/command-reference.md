@@ -529,6 +529,8 @@ specdojo schedule strategy generate \
 | `--commit-type <type>`       | Conventional Commits の type を指定（`update` は `-` で削除）       | `add` / `update`                                 |
 | `--commit-scope <scope>`     | Conventional Commits の scope を指定（`update` は `-` で削除）      | `add` / `update`                                 |
 | `--topic <slug>`             | 個票ファイル名と文書 ID の論点部分を指定・更新する                  | `add` / `update`                                 |
+| `--section <name>`           | 差し替える個票の章の名前（見出し番号を除いた名前）                  | `update`                                         |
+| `--section-file <path>`      | 差し替え後の章の本文を含む Markdown ファイルのパス                  | `update`                                         |
 | `--commit`                   | `register lifecycle` 枠内で記帳・再生成・commitを行う               | `add` / `update` / `renumber` / 遷移             |
 | `-m, --message <message>`    | `--commit` のcommitメッセージを上書きする（繰り返し可）             | `add` / `update` / `renumber` / 遷移             |
 | `--dry-run`                  | 書き込みを行わず変更対象を表示する                                  | `add` / `update` / `renumber` / 遷移 / `migrate` |
@@ -579,6 +581,18 @@ specdojo exec run --project prj-0001 --register <PJR-ID> --worktree
 `--registered` / `--completed` にはタイムゾーン付きの RFC 3339 値（`2026-08-09T14:08:51Z` または `2026-08-09T23:08:51+09:00`）を指定し、保存時に UTC へ正規化します。タイムゾーンを含まない値は解釈が実行環境に依存するため受け付けません。期限（`--due`）は瞬間ではなく暦日のため `YYYY-MM-DD` のままです。
 
 `register update --topic <slug>` は個票のファイル名と Frontmatter の文書 ID を同時に変更し、`docs/ja` 配下の旧文書 ID 参照を更新してから生成ビューを再生成します。変更は `action: update` の event に文書 ID の変更として記録されます。形式は英小文字・数字・単一ハイフン区切りに限り、変更先ファイルが存在する場合は書き込み前に停止します。
+
+`register update --section <章の名前> --section-file <path>` は、個票の 1 つの章の本文を指定した Markdown ファイルの内容で差し替えます。章は見出しの番号を除いた名前（`完了条件`、`作業内容` など）で指定します。指定した章の見出し行（`## 3. 完了条件` など）はそのまま残し、次の同じ深さ（またはそれより浅い）見出しまでの本文だけを置き換えます。ほかの章や Frontmatter は変更しません。個票に存在しない章名、読み込めないファイル、または Markdown 見出しを含むファイルを指定した場合はエラーになり、個票は変更されません。変更は `action: update` の event に `field: section` として記録され、`--commit` と併用した場合は変更された個票とイベントファイルのみが commit されます。
+
+```bash
+# 完了条件の章本文をファイルから差し替える
+specdojo register update --project prj-0001 --id PJR-AB12 \
+  --section 完了条件 --section-file tmp/new-criteria.md
+
+# 作業内容の章本文を差し替えてコミットする
+specdojo register update --project prj-0001 --id PJR-AB12 \
+  --section 作業内容 --section-file tmp/new-tasks.md --commit
+```
 
 `register add --from <ID>` は、起票の元になった登録項目を個票 Frontmatter の `derived_from` へ記録します。`--from` は複数回指定でき、同じ project の項目は `PJR-XXXX`、別 project の項目は `<project-id>:PJR-XXXX` を使います。自己参照、未設定の project、存在しない項目は書き込み前に拒否します。別 project の項目は、その project の `integration_branch`（省略時は `project/<project-id>/develop`）の Git tree を読んで存在を確認します。`register update --from <ID>` は一覧を置換し、`--from -` で削除します。`register build` は `generated/pjr-derived-items.md` を生成し、元の項目から派生先を逆引きできるようにします。decision から todo を起票するときも、この関係を追跡先として使います。
 

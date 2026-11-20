@@ -1,0 +1,22 @@
+PJR-7KXW「register update で、個票の章の本文をファイルから入れられるようにする」の対応を完了しました。
+
+### 実施内容
+
+1. **章の置換ロジックの実装（`src/register/section.ts`）**:
+   - `validateSectionFile`: ファイルの存在確認および Markdown 見出しが含まれていないことの検証。
+   - `stripSectionNumber`: 見出し番号（`^\d+(?:\.\d+)*\.?\s*`）を除去した章名の抽出。
+   - `replaceTicketSection`: 指定した章の見出し行を残し、次の同じ深さ（または浅い）見出しまでの本文のみをファイルの中身で置き換えるロジックを実装。ほかの章や frontmatter は変更しません。
+2. **スキーマおよびイベント定義の拡張（`register-events.schema.yaml`, `src/register/events.ts`）**:
+   - `RegisterEventChange` の `field` enum に `section` を追加し、イベント差分として `{ field: "section", from: "", to: <章名> }` を記録できるようにしました。
+3. **CLI コマンドへの統合（`create-commands.ts`, `update.ts`, `renumber.ts`）**:
+   - `register update` に `--section <name>` と `--section-file <path>` オプションを追加しました。
+   - ペア指定・空値・ファイル読込・見出し有無のバリデーションを組み込み、個票本文の置換とイベント追記を連携させました。
+4. **単体テストの追加（`tests/src/register/section.test.ts`）**:
+   - 関数の単体テストおよび CLI 結合テストを作成し、章の差し替え、他の章や frontmatter が不変であること、存在しない章名・読めないファイル・見出しを含むファイル・不整合なオプションでのエラー発生（個票が変更されないこと）を検証しました。
+5. **ドキュメントの更新（`docs/ja/specdojo/references/command-reference.md`, 個票）**:
+   - コマンドリファレンスの主要オプション表と解説節に `--section` / `--section-file` の説明と使用例を追記しました。
+   - 個票の作業内容表を `done` に更新し、対応結果（実施内容・判断事項・CHANGELOG に書く事項）を記載しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"register update に --section と --section-file オプションを追加し、個票の章本文差し替え・検証・イベント記録・単体テスト・ドキュメント更新を完了しました。","handoff":["判断事項（オプション名）: --section <章の名前> と --section-file <path> を採用しました。両オプションはペア指定が必須であり、片方のみの指定はエラーになります。","判断事項（章の探索と置換範囲）: 見出し番号を除去した名前で検索し、個票の標準構造である H2 見出しを優先します。指定した章の見出し行を残し、次の同じ深さ（H2等）または浅い見出しの直前までの本文全体を一括して置き換えます（章内のサブ見出しも含む）。","判断事項（イベント記録形式）: 個票本文と監査履歴を分離する方針に基づき、イベントスキーマに section フィールドを追加して changes に { field: \"section\", from: \"\", to: <章名> } を記録します。また、--reason 省略時の reason は section \"<章名>\" updated となります。","CHANGELOG に書く事項: [追加] specdojo register update に、個票の指定した章の本文をファイルから差し替える --section <name> と --section-file <path> オプションを追加した。"],"validations":[{"command":"npx prettier --check docs/ja/projects/prj-0001/controls/project-register/pjr-7kxw-register-update-section-body.md docs/ja/specdojo/references/command-reference.md docs/specdojo/schemas/v1/register-events.schema.yaml src/register/section.ts src/register/command-types.ts src/register/create-commands.ts src/register/events.ts src/register/renumber.ts src/register/update.ts tests/src/register/section.test.ts","status":"passed","summary":"変更したすべてのファイルが Prettier スタイルに準拠していることを確認"},{"command":"npm run validate:history-links","status":"passed","summary":"個票の履歴リンクおよびフォーマットが有効であることを確認"},{"command":"node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --schema docs/specdojo/schemas/v1/register-events.schema.yaml --data \"docs/ja/projects/prj-0001/controls/project-register/events/*.yaml\"","status":"passed","summary":"更新した register-events.schema.yaml で既存のイベントファイル群が正常に検証されることを確認"},{"command":"npm run validate:catalog","status":"not_applicable","summary":"成果物カタログ管理文書を変更していないため非適用","reason":"変更は register コマンド実装、スキーマ、個票、リファレンス、テストであり、docs/ja/projects/ 配下の成果物カタログ管理文書（deliverables）を含まないため"}]}
+</specdojo_executor_evidence>

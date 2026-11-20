@@ -4938,3 +4938,64 @@
       from: C4J1・JKQX・R7BQ の統合後に sonnet-executor で start から review まで通り、actor に実体名が記録された
       to: PJR-8NB8・9JN6・C07H・ZK3T の統合後に、exec smoke から sonnet-executor で start から review まで通り、actor に実体名が記録された
   previous_event_id: reg_4aa2e4e84f1542aa943d1ee593fcb669
+- v: 1
+  id: reg_124d7c8b739f4060907980999bec61fa
+  ts: "2026-11-20T22:44:11Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-QQRH・PJR-V277 の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-11-19"
+      to: "-"
+  previous_event_id: reg_5bf040503e3c46f4b02bc17c5a8b0666
+- v: 1
+  id: reg_66145441c7504b31a9a09d0e0e49785d
+  ts: "2026-11-20T22:44:54Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_124d7c8b739f4060907980999bec61fa
+- v: 1
+  id: reg_313eac094abb40bab2e4148e741461fe
+  ts: "2026-11-20T22:50:32Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_66145441c7504b31a9a09d0e0e49785d
+- v: 1
+  id: reg_7f9c72e82b8a449ea5caa192167edccf
+  ts: "2026-11-20T22:52:28Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec smoke の結果（58cd14ecb）と記録の actor を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-21"
+    - field: conclusion
+      from: PJR-8NB8・9JN6・C07H・ZK3T の統合後に、exec smoke から sonnet-executor で start から review まで通り、actor に実体名が記録された
+      to: PJR-QQRH・PJR-V277 の統合後に、exec smoke から sonnet-executor で start から review まで通り、actor に実体名が記録された
+  previous_event_id: reg_313eac094abb40bab2e4148e741461fe
