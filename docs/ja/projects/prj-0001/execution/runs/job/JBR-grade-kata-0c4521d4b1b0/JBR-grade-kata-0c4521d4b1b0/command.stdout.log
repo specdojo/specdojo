@@ -1,0 +1,19 @@
+
+> specdojo@0.9.1 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+graded: docs/ja/specdojo/recipes/pm-organization-recipe.md actor=flash-high-executor verdict=pass score=100 findings=0
+graded: docs/ja/specdojo/recipes/pm-plan-recipe.md actor=flash-high-executor verdict=pass score=100 findings=0
+graded: docs/ja/specdojo/recipes/pm-quality-management-plan-recipe.md actor=flash-high-executor verdict=pass score=100 findings=0
+graded: docs/ja/specdojo/recipes/pm-raci-recipe.md actor=flash-high-executor verdict=pass score=93 findings=3
+graded: docs/ja/specdojo/recipes/pm-roles-recipe.md actor=flash-high-executor verdict=pass score=100 findings=1
+graded: docs/ja/specdojo/recipes/prj-assumptions-constraints-dependencies-recipe.md actor=flash-high-executor verdict=pass score=100 findings=0
+graded: docs/ja/specdojo/recipes/prj-charter-recipe.md actor=flash-high-executor verdict=pass score=100 findings=0
+graded: docs/ja/specdojo/recipes/prj-comparison-of-alternatives-recipe.md actor=flash-high-executor verdict=pass score=100 findings=0
+graded: docs/ja/specdojo/recipes/prj-issues-and-approach-recipe.md actor=flash-high-executor verdict=pass score=97 findings=3
+graded: docs/ja/specdojo/recipes/prj-scope-recipe.md actor=flash-high-executor verdict=pass score=97 findings=2
+graded: docs/ja/specdojo/recipes/prj-stakeholder-register-recipe.md actor=flash-high-executor verdict=needs-work score=96 findings=3
+graded: docs/ja/specdojo/recipes/prj-success-criteria-and-acceptance-criteria-recipe.md actor=flash-high-executor verdict=pass score=97 findings=2
+graded: docs/ja/specdojo/recipes/stsd-recipe.md actor=flash-high-executor verdict=pass score=98 findings=1
+graded: docs/ja/specdojo/recipes/sysd-critical-flows-recipe.md actor=flash-high-executor verdict=pass score=100 findings=0
+graded: docs/ja/specdojo/recipes/sysd-cross-cutting-policy-recipe.md actor=flash-high-executor verdict=pass score=100 findings=0
