@@ -1,4 +1,4 @@
-import { stripTerminalControlSequences } from "../shared/text.js";
+import { escapeMarkdownTableCell, stripTerminalControlSequences } from "../shared/text.js";
 
 const MAX_DASHBOARD_CELL_LENGTH = 200;
 
@@ -13,5 +13,5 @@ export function sanitizeDashboardCell(text: string): string {
     singleLine.length <= MAX_DASHBOARD_CELL_LENGTH
       ? singleLine
       : `${singleLine.slice(0, MAX_DASHBOARD_CELL_LENGTH)}…`;
-  return truncated.replace(/\|/g, "\\|");
+  return escapeMarkdownTableCell(truncated);
 }

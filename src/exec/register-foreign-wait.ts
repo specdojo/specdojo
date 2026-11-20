@@ -1,4 +1,5 @@
 import { stagedMergeBlocker } from "../shared/git.js";
+import { escapeRegExp } from "../shared/text.js";
 import { acquireSchedulerLock, releaseSchedulerLock } from "./events.js";
 import { currentBranch } from "./worktree-ops-commit.js";
 import { abortMerge } from "./worktree-ops-merge.js";
@@ -21,10 +22,6 @@ export type ForeignWaitRecords = {
   // 子の run が統合先にした branch（job の worktree の branch など）。
   target: string;
 };
-
-function escapeRegExp(value: string): string {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
 
 // exec branch の first-parent 履歴から最新の wait 後の同期 merge を探し、その統合先の commit が
 // 本体の HEAD に含まれていなければ返す。同期 merge が無い、または含まれている場合は null。

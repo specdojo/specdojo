@@ -96,3 +96,32 @@
       from: "-"
       to: "parent validation failed: test-integration"
   previous_event_id: reg_3882b451d2f04c49a64f082eff240f3b
+- v: 1
+  id: reg_92f2ce9b5eec4314b8c7f42b6b2c0eb4
+  ts: "2026-11-20T12:17:56Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-integration"
+      to: "-"
+  previous_event_id: reg_b6675708a090425799864d5682931676
+- v: 1
+  id: reg_7eaf9782203f4781b6720c4b2c1a24ea
+  ts: "2026-11-20T12:24:30Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_92f2ce9b5eec4314b8c7f42b6b2c0eb4

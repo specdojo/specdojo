@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: review
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-19T22:05:49Z"
   due_on: "2026-11-30"
-  block_reason: "parent validation failed: test-integration"
   derived_from:
     - PJR-P318
 ---
@@ -62,8 +61,35 @@ CodeQL が PR #34 で出した src の alert 5 件を直す。trash.ts の正規
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+### 5.1. 解決内容
+
+- `src/deliverable/trash.ts`: `rewriteCatalogPath` が `localId` を `escapeRegExp` で escape してから `new RegExp` に入れる。
+- `src/exec/run/change-scope.ts`: 2 か所の正規表現を、同じ文字列を受け付ける `A+/B*` の形（重なりのある `(A+/)+B+` をやめた形）へ書き換え、バックトラックを除いた。
+- `src/exec/repo-trace.ts` と `src/dashboard/shared.ts`: セルの escape を `escapeMarkdownTableCell`（`\` を先に `\\`、次に `|` を `\|`）へ置き換えた。
+- `src/exec/shared.ts`: `tsForFilenameUtc` の何もしない `.replace("T", "T")` を消した。
+
+### 5.2. 共通化の判断
+
+- `escapeRegExp` は `src/shared/text.ts` へまとめ、`src/register/renumber.ts` と `src/exec/register-foreign-wait.ts` の同一の複製を消して使う。
+- `src/exec/parent-validation.ts` の `escapeRegExp` は `*` と `?` を escape しない（glob 変換の側で扱う）ため別の働きであり、まとめない。
+- セルの escape は 2 か所で同じ処理のため `escapeMarkdownTableCell` を `src/shared/text.ts` に置き、共有する。
+
+### 5.3. 確認結果
+
+- 単体テスト: `tests/src/shared/text.test.ts`（escape の 2 関数）、`tests/src/exec/run/change-scope.test.ts`（`.-/` を 5000 回繰り返した入力が 2 秒未満）、`tests/src/exec/repo-trace.test.ts`（`\` で終わるセルと `\|` を含むセルで列が崩れない）、既存の `tests/src/exec/shared.test.ts`（出力不変）。
+- 統合テスト: `tests/src/deliverable/trash.integration.test.ts` に `.` を含む `local_id` が別項目を書き換えないことの検査を追加した。
+- `npm run typecheck`、`npm run lint:ts`（error なし）、関連の単体テストは通った。
+- merge の後の CodeQL の alert（1・2・5・6・7）の確認は orchestrator が行う（executor は確認していない）。
+
+### 5.4. CHANGELOG に書く事項
+
+- 区分: Fixed
+- 文案: CodeQL が指摘した 5 件を修正した。`local_id` を正規表現へ入れる前に escape し、パス抽出の正規表現のバックトラックを除き、表のセルの `\` を escape し、何もしない `replace` を除いた。出力は変わらない。
+
+### 5.5. 再発防止策
+
+- escape の処理を `src/shared/text.ts` に集約し、複製を除いた。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- `prj-0001:pjr-index`
