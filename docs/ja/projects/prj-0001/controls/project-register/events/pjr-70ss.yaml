@@ -57,3 +57,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_35f0907995594eadb9d0f29c0c63a983
+- v: 1
+  id: reg_0117652da00e4beaafdeb6d243f51a59
+  ts: "2026-11-20T16:59:07Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor validation failed or not run: npm run validate:catalog"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor validation failed or not run: npm run validate:catalog"
+  previous_event_id: reg_483475fa128d46da98819e68490ecb76
