@@ -102,3 +102,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_1f25a5c46c8a410aa37eca352f1bbf3e
+- v: 1
+  id: reg_e0e2c1500e614247987b91653bebd06c
+  ts: "2026-11-20T23:57:09Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register で対応。差分（41592bf1b）と個票を確かめ、ビルド済みの CLI で警告を確かめた。次の版で消す条件は利用者の判断で別の項目へ分けた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-21"
+    - field: conclusion
+      from: "-"
+      to: 9 コマンドと where の別名を非推奨にし、help と実行時に代わりの操作と 0.10.0 で消すことを出した。消す作業は 0.10.0 の別の項目で行う
+  previous_event_id: reg_dcc1aef618de4850b01527dd5542030a

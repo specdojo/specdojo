@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-bsck-deprecate-unused-commands
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-16T11:00:14Z"
   due_on: null
+  completed_at: "2026-11-20T23:57:09Z"
+  conclusion: 9 コマンドと where の別名を非推奨にし、help と実行時に代わりの操作と 0.10.0 で消すことを出した。消す作業は 0.10.0 の別の項目で行う
   derived_from:
     - PJR-C5AF
   commit_type: refactor
