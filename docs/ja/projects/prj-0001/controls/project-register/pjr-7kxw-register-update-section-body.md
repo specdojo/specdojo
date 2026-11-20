@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: medium
   registered_at: "2026-11-13T14:08:21Z"
-  block_reason: "parent validation failed: lint-ts, lint-md"
   commit_type: feat
   commit_scope: register
 ---
@@ -62,7 +61,7 @@ specdojo:
 ### 5.2. 判断事項
 
 - **オプション名**: `--section <章の名前>` と `--section-file <path>` を採用した。両方はペアで指定必須とし、片方のみの指定はエラーとした。
-- **章の探索と置換範囲**: 見出し文字列から先頭の番号（例: `3. `）を除いた名前で検索する。個票の標準的な章構造である H2 見出しを優先して検索し、指定した章の見出しの行は残した上で、次の同じ深さ（H2 等）またはそれより浅い見出しの直前までの本文全体を差し替え用ファイルの内容で置き換える。これにより、章内にサブ見出し（H3 等）が含まれていても章全体を一括して置換できるようにした。
+- **章の探索と置換範囲**: 見出し文字列から先頭の番号（例: `3.` と続く空白）を除いた名前で検索する。個票の標準的な章構造である H2 見出しを優先して検索し、指定した章の見出しの行は残した上で、次の同じ深さ（H2 等）またはそれより浅い見出しの直前までの本文全体を差し替え用ファイルの内容で置き換える。これにより、章内にサブ見出し（H3 等）が含まれていても章全体を一括して置換できるようにした。
 - **イベントへの記録形式**: 個票本文の変更と監査履歴の差分を分離するアーキテクチャ方針に基づき、イベントスキーマの `RegisterEventChange` に `section` を追加し、イベントの changes に `{ field: "section", from: "", to: <章の名前> }` を記録した。また、`--reason` が明示されていない場合のイベント reason を `section "<章の名前>" updated` とすることで、どの章が更新されたかを監査ログおよびコミットログから追跡可能にした。
 
 ### 5.3. CHANGELOG に書く事項

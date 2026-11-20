@@ -33,6 +33,7 @@ import {
 import { specdojoRootDir } from "../shared/specdojo-config.js";
 import { escapeRegExp } from "../shared/text.js";
 import { loadItemForUpdate } from "./update.js";
+import { replaceTicketSection } from "./section.js";
 import { findRegisterItem, loadRegisterItems, writeDerivedViews } from "./views.js";
 
 // ================================
@@ -242,6 +243,7 @@ export function retopicPjrItem(opts: {
   title?: string;
   description?: string;
   inputs?: string[];
+  section?: { name: string; content: string };
   actor?: string;
   reason?: string;
 }): void {
@@ -249,6 +251,16 @@ export function retopicPjrItem(opts: {
   const ticketWrite = plan.writes.find((write) => write.path === plan.ticketRename.to);
   if (!ticketWrite) throw new Error(`Retopiced ticket content not found: ${plan.ticketRename.to}`);
 
+  let sectionChanged = false;
+  if (opts.section !== undefined) {
+    const sectionResult = replaceTicketSection(
+      ticketWrite.content,
+      opts.section.name,
+      opts.section.content,
+    );
+    ticketWrite.content = sectionResult.content;
+    sectionChanged = sectionResult.changed;
+  }
   if (opts.title !== undefined)
     ticketWrite.content = setRegisterItemTitle(ticketWrite.content, opts.title);
   if (opts.description !== undefined) {
@@ -271,6 +283,12 @@ export function retopicPjrItem(opts: {
   }
 
   const beforeContent = readFileSync(plan.ticketRename.from, "utf8");
+  const extraChanges = [
+    { field: "id" as const, from: plan.fromDocId, to: plan.toDocId },
+    ...(opts.section !== undefined && sectionChanged
+      ? [{ field: "section" as const, from: "", to: opts.section.name }]
+      : []),
+  ];
   const event = buildRegisterEvent({
     beforeContent,
     afterContent: ticketWrite.content,
@@ -279,7 +297,7 @@ export function retopicPjrItem(opts: {
     action: "update",
     actor: opts.actor?.trim() || "manual",
     reason: opts.reason?.trim() || `topic changed from ${plan.fromTopic} to ${opts.topic}`,
-    extraChanges: [{ field: "id", from: plan.fromDocId, to: plan.toDocId }],
+    extraChanges,
   });
   if (!event) throw new Error(`Failed to build topic update event for ${opts.id}`);
   const eventWrite = prepareRegisterEventFile(opts.paths.projectRegisterPath, opts.id, event);

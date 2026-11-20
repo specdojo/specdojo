@@ -1,4 +1,5 @@
 import { normalizeRegisterInput } from "./input.js";
+import { validateSectionFile } from "./section.js";
 import type { Command } from "commander";
 import { existsSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
@@ -435,6 +436,14 @@ export function registerUpdateCommand(
     "--topic <topic>",
     "Update the topic slug in the ticket filename and document ID",
   );
+  updateCmd.option(
+    "--section <name>",
+    "Name of the ticket section to replace (without heading numbers, e.g., '完了条件')",
+  );
+  updateCmd.option(
+    "--section-file <path>",
+    "Path to a markdown file containing the new section body",
+  );
   updateCmd.option("--by <actor>", "Actor recorded in the append-only register event");
   updateCmd.option("--reason <text>", "Reason recorded in the append-only register event");
   updateCmd.option("--dry-run", "Print change without writing", false);
@@ -469,10 +478,12 @@ export function registerUpdateCommand(
         "commitType",
         "commitScope",
         "topic",
+        "section",
+        "sectionFile",
       ].some((key) => opts[key] !== undefined);
       if (!hasUpdates) {
         throw new Error(
-          "At least one field option must be specified (--track, --domain, --title, --description, --priority, --difficulty, --owner, --due, --start-on, --conclusion, --block-reason, --autopilot, --approach, --target, --source, --input, --from, --depends-on, --commit-type, --commit-scope, --topic)",
+          "At least one field option must be specified (--track, --domain, --title, --description, --priority, --difficulty, --owner, --due, --start-on, --conclusion, --block-reason, --autopilot, --approach, --target, --source, --input, --from, --depends-on, --commit-type, --commit-scope, --topic, --section, --section-file)",
         );
       }
 
@@ -516,6 +527,25 @@ export function registerUpdateCommand(
         throw new Error(
           `Invalid topic: "${topic}". Must use lowercase letters, numbers, and single hyphens`,
         );
+      }
+      if ((opts.section !== undefined) !== (opts.sectionFile !== undefined)) {
+        throw new Error("--section and --section-file must be specified together");
+      }
+      const sectionName = opts.section?.trim();
+      if (opts.section !== undefined && sectionName === "") {
+        throw new Error("Section name must not be empty");
+      }
+      const sectionFilePath = opts.sectionFile?.trim();
+      if (opts.sectionFile !== undefined && sectionFilePath === "") {
+        throw new Error("Section file path must not be empty");
+      }
+      let sectionUpdate: { name: string; content: string } | undefined;
+      if (sectionName !== undefined && sectionFilePath !== undefined) {
+        const sectionContent = validateSectionFile(sectionFilePath);
+        sectionUpdate = {
+          name: sectionName,
+          content: sectionContent,
+        };
       }
       const blockReason = opts.blockReason?.trim();
       if (blockReason !== undefined && blockReason === "") {
@@ -777,6 +807,7 @@ export function registerUpdateCommand(
             : {}),
           ...(opts.title !== undefined ? { title: opts.title } : {}),
           ...(opts.description !== undefined ? { description: opts.description } : {}),
+          ...(sectionUpdate !== undefined ? { section: sectionUpdate } : {}),
           actor: registerEventActor(opts),
           reason: opts.reason?.trim() || "",
         });
@@ -789,9 +820,10 @@ export function registerUpdateCommand(
         updated,
         ...(inputs !== undefined ? { inputs } : {}),
         dryRun: opts.dryRun,
-        action: "fields updated",
+        action: sectionUpdate ? `section "${sectionUpdate.name}" updated` : "fields updated",
         ...(opts.title !== undefined ? { title: opts.title } : {}),
         ...(opts.description !== undefined ? { description: opts.description } : {}),
+        ...(sectionUpdate !== undefined ? { section: sectionUpdate } : {}),
         ...(blockReasonUpdates || autopilotUpdates || Object.keys(approachTargetUpdates).length > 0
           ? {
               fieldUpdates: {
@@ -803,7 +835,9 @@ export function registerUpdateCommand(
           : {}),
         eventAction: "update",
         eventActor: registerEventActor(opts),
-        eventReason: opts.reason?.trim() || "fields updated",
+        eventReason:
+          opts.reason?.trim() ||
+          (sectionUpdate ? `section "${sectionUpdate.name}" updated` : "fields updated"),
       });
       return { id: item.id, title: updated.title };
     });
