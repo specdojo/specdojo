@@ -8,6 +8,14 @@ import {
   ValidationTestFiles,
 } from "./validation-metrics.js";
 import { gitEnvironment } from "./worktree.js";
+import {
+  hasValidationProcessTreeSurvivors,
+  signalValidationProcessTree,
+  trackValidationProcessGroup,
+  VALIDATION_CLOSE_GRACE_MS,
+  VALIDATION_KILL_GRACE_MS,
+  VALIDATION_USES_PROCESS_GROUP,
+} from "./validation-process-group.js";
 import { acquirePoolSlot, getActiveExecLocksDir, releaseLock } from "./slot-lock.js";
 import type { EvidenceValidation, ExecEvidence } from "./evidence.js";
 import { MAX_CHANGE_FILES, redactSensitiveText } from "./evidence.js";
@@ -436,15 +444,36 @@ export function parentValidationDisplayCommands(entries: readonly unknown[] | un
   );
 }
 
-async function invokeParentValidation(
+export type ParentValidationStopOptions = {
+  /** Wait after SIGTERM before SIGKILL to the process tree. */
+  killGraceMs?: number;
+  /** Wait after SIGKILL for the output pipes to close. */
+  closeGraceMs?: number;
+};
+
+/**
+ * Spawn one parent validation. On timeout the runner stops the whole process tree (SIGTERM, then
+ * SIGKILL after a grace period) and, if a descendant outside the group still holds the output
+ * pipes, returns without waiting for them so the batch moves on (PJR-V277). Runs that finish
+ * before the timeout settle on `close` exactly as before.
+ */
+export async function invokeParentValidation(
   definition: ParentValidationDefinition,
   cwd: string,
+  options: ParentValidationStopOptions = {},
 ): Promise<ParentValidationProcessResult> {
+  const killGraceMs = options.killGraceMs ?? VALIDATION_KILL_GRACE_MS;
+  const closeGraceMs = options.closeGraceMs ?? VALIDATION_CLOSE_GRACE_MS;
   return await new Promise((resolve) => {
     const stdoutCapture: BoundedCapture = { chunks: [], totalBytes: 0 };
     const stderrCapture: BoundedCapture = { chunks: [], totalBytes: 0 };
     let settled = false;
     let timedOut = false;
+    let timeoutStartedAt = 0;
+    let survivorsAfterTerm: boolean | undefined;
+    let killSent = false;
+    let killTimer: NodeJS.Timeout | undefined;
+    let closeTimer: NodeJS.Timeout | undefined;
     const testFiles = new ValidationTestFiles();
     const stdoutDecoder = new StringDecoder("utf8");
     const child = spawn(definition.command, [...definition.args], {
@@ -453,7 +482,9 @@ async function invokeParentValidation(
       shell: false,
       stdio: ["ignore", "pipe", "pipe"],
       windowsHide: true,
+      detached: VALIDATION_USES_PROCESS_GROUP,
     });
+    const untrack = trackValidationProcessGroup(child);
     child.stdout.on("data", (chunk: Buffer) => {
       appendBounded(stdoutCapture, chunk);
       testFiles.observe(stdoutDecoder.write(chunk));
@@ -461,20 +492,67 @@ async function invokeParentValidation(
     child.stderr.on("data", (chunk: Buffer) => {
       appendBounded(stderrCapture, chunk);
     });
+    const forceKill = (): void => {
+      survivorsAfterTerm = hasValidationProcessTreeSurvivors(child) || child.exitCode === null;
+      killSent = signalValidationProcessTree(child, "SIGKILL") || killSent;
+    };
+    const settle = (exitCode: number | null, pipesClosed: boolean): void => {
+      const stdout = capturedOutput(stdoutCapture);
+      const stderr = capturedOutput(stderrCapture);
+      finish(
+        {
+          exitCode,
+          stdout: stdout.output,
+          stderr: stderr.output,
+          timedOut,
+          stdoutTruncated: stdout.truncated,
+          stderrTruncated: stderr.truncated,
+        },
+        pipesClosed,
+      );
+    };
     const timer = setTimeout(() => {
       timedOut = true;
+      timeoutStartedAt = performance.now();
       validationMetric("validation-timeout", {
         id: definition.id,
         cwd,
         timeout_ms: definition.timeoutMs,
         ...testFiles.snapshot(),
       });
-      child.kill("SIGTERM");
+      signalValidationProcessTree(child, "SIGTERM");
+      killTimer = setTimeout(() => {
+        forceKill();
+        closeTimer = setTimeout(() => {
+          // group の外へ出た子孫が pipe を持ち続けても、close を待たずに時間切れとして返す。
+          child.stdout.destroy();
+          child.stderr.destroy();
+          settle(child.exitCode, false);
+        }, closeGraceMs);
+      }, killGraceMs);
     }, definition.timeoutMs);
-    const finish = (result: ParentValidationProcessResult): void => {
+    const recordStop = (pipesClosed: boolean): void => {
+      if (!timedOut) return;
+      // 猶予の前に close した場合も、group に残った子孫は pipe を持たなくても止めておく。
+      if (survivorsAfterTerm === undefined && hasValidationProcessTreeSurvivors(child)) forceKill();
+      validationMetric("validation-timeout-stop", {
+        id: definition.id,
+        cwd,
+        process_group: VALIDATION_USES_PROCESS_GROUP && child.pid !== undefined,
+        survivors_after_term: survivorsAfterTerm === true,
+        kill_sent: killSent,
+        pipes_closed: pipesClosed,
+        stop_ms: performance.now() - timeoutStartedAt,
+      });
+    };
+    const finish = (result: ParentValidationProcessResult, pipesClosed = true): void => {
       if (settled) return;
       settled = true;
       clearTimeout(timer);
+      clearTimeout(killTimer);
+      clearTimeout(closeTimer);
+      recordStop(pipesClosed);
+      untrack();
       resolve(result);
     };
     child.on("error", (error) => {
@@ -490,18 +568,7 @@ async function invokeParentValidation(
         stderrTruncated: stderr.truncated,
       });
     });
-    child.on("close", (exitCode) => {
-      const stdout = capturedOutput(stdoutCapture);
-      const stderr = capturedOutput(stderrCapture);
-      finish({
-        exitCode,
-        stdout: stdout.output,
-        stderr: stderr.output,
-        timedOut,
-        stdoutTruncated: stdout.truncated,
-        stderrTruncated: stderr.truncated,
-      });
-    });
+    child.on("close", (exitCode) => settle(exitCode, true));
   });
 }
 
