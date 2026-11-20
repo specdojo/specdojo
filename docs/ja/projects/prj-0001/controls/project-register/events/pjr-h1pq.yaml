@@ -38,3 +38,22 @@
     - field: derived_from
       from: ""
       to: '["PJR-P318"]'
+- v: 1
+  id: reg_b77ea362031343aeb1eed0cdedc06525
+  ts: "2026-11-20T12:45:05Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: done
+  reason: orchestrator が lockfile を直して確認し、残す件は利用者の決定に従って記録した
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-20"
+    - field: conclusion
+      from: "-"
+      to: docs-site・vscode-specdojo・docs-lint・ルートの依存を lockfile の範囲で直し、配る依存の high を 0 件にした。major の変更が要る件と vitepress は理由を記録して残す
+  previous_event_id: reg_91bca48795a5473780594a92ccda4f5c

@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-h1pq-dependency-vulnerabilities
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-11-19T21:22:21Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-20T12:45:05Z"
+  conclusion: docs-site・vscode-specdojo・docs-lint・ルートの依存を lockfile の範囲で直し、配る依存の high を 0 件にした。major の変更が要る件と vitepress は理由を記録して残す
   derived_from:
     - PJR-P318
 ---
