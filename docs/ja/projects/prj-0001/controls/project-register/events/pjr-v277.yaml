@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_6c677085105c425e84f51ea6c3331251
+  ts: "2026-11-20T12:29:44Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 親の検証の時間切れの後に、残った子のプロセスで runner が止まる
+    - field: description
+      from: ""
+      to: 親の検証が時間切れになったとき、kill した後も vitest などの子孫のプロセスが出力の pipe を持ったまま残り、runner がその close を待ち続けて先へ進まない。夜間の実行では人がいないため止まったままになる
+    - field: input
+      from: ""
+      to: '["利用者の決定（2026-11-20）: issue として起票する。担当 DEV、優先度 high、0.9.1 には入れず 0.9.2 以降で扱う。期限は未定","orchestrator の観測（2026-11-20、PJR-A77M の run pjr-a77m-20261120T115327Z-88a833fc）: test-integration が `timeout_ms` 600000 で validation-timeout になった後、vitest（PID 87542）が親を失って PPID 1 のまま残った。その子の tests/src/register/external-project.integration.test.ts が起動した specdojo.js --version が `do_epoll_wait` で止まっていた。runner（PID 83412）は次の検証へ進まず、約 4 分後に orchestrator が 3 つの PID を kill すると typecheck・test-unit へ進んだ","orchestrator の観測（2026-11-20）: 同じ specdojo.js --version を手で流すとすぐ 0.9.0 を返した。--resume で流し直した test-integration は通った"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-20"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-A77M"]'
