@@ -1,0 +1,30 @@
+コマンドの非推奨警告の確認を待機しています。
+コマンドの実行完了を待機しています。
+検証処理の完了を待機しています。
+PJR-BSCK「使われていない・移行用・非推奨のコマンドを非推奨にし、次の版で消す」の対応を完了しました。
+
+### 実施内容
+
+PJR-C5AF で選定された使われていない・移行用・非推奨の 9 コマンドについて、help の description および実行時に非推奨警告（`warnDeprecated`）と代わりの操作・削除予定版（0.10.0）を出力するように変更しました。また、コマンドリファレンスおよび関連ガイドを更新しました。
+
+#### 1. 対象コマンドと代わりの操作
+1. **`timeline where`**: `specdojo where timeline` を使用（[src/shared/where-alias.ts](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BSCK/src/shared/where-alias.ts#L10-L20) にて案内）
+2. **`timeline build`**: `specdojo dashboard build` を使用し、ドメインと依存関係は register epic に移行（[src/dashboard/timeline.ts](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BSCK/src/dashboard/timeline.ts#L120-L135)）
+3. **`exec note`**: チケット個票の対応結果や実行記録にメモを直接記録（[src/exec/commands.ts](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BSCK/src/exec/commands.ts#L198-L265)）
+4. **`exec link`**: 個票の `depends_on` またはカタログで依存関係を宣言（[src/exec/commands.ts](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BSCK/src/exec/commands.ts#L198-L265)）
+5. **`exec estimate`**: 個票の `difficulty` や `priority` で見積もりを管理（[src/exec/commands.ts](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BSCK/src/exec/commands.ts#L198-L265)）
+6. **`exec migrate-records`**: 新形式の実行記録配置（`execution/runs/`）が標準のため移行操作は不要（[src/exec/migrate-records.ts](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BSCK/src/exec/migrate-records.ts#L255-L270)）
+7. **`grade migrate`**: 結果サイドカー（YAML）が標準形式のため、`grade run` を使用（[src/grade/command-inspect.ts](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BSCK/src/grade/command-inspect.ts#L130-L155)）
+8. **`register migrate`**: 個別個票ファイル（`pjr-*.md`）および外部イベントファイル（`events/*.yaml`）が標準形式のため移行操作は不要（[src/register/maintenance-commands.ts](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BSCK/src/register/maintenance-commands.ts#L42-L65)）
+9. **`config migrate-members`**: `.specdojo/agent-members.yaml` に直接 agent 定義を記述（[src/shared/specdojo-config.ts](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BSCK/src/shared/specdojo-config.ts#L1210-L1225)）
+
+#### 2. ドキュメント更新
+- [docs/ja/specdojo/references/command-reference.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BSCK/docs/ja/specdojo/references/command-reference.md): 各節の一覧表および本文で 9 コマンドの非推奨・代わりの操作・削除予定版（0.10.0）を明記
+- [docs/ja/specdojo/guides/timeline-design-guide.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BSCK/docs/ja/specdojo/guides/timeline-design-guide.md): 互換運用節に削除予定版（0.10.0）を明記
+- [docs/ja/specdojo/guides/plan-result-lifecycle-guide.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BSCK/docs/ja/specdojo/guides/plan-result-lifecycle-guide.md): 既存記録移行節に `exec migrate-records` の非推奨と削除予定版（0.10.0）を明記
+- [docs/ja/specdojo/guides/register-operation-guide.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BSCK/docs/ja/specdojo/guides/register-operation-guide.md): 履歴追跡節に `register migrate` の非推奨と削除予定版（0.10.0）を明記
+- [docs/ja/projects/prj-0001/controls/project-register/pjr-bsck-deprecate-unused-commands.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BSCK/docs/ja/projects/prj-0001/controls/project-register/pjr-bsck-deprecate-unused-commands.md): 作業内容と対応結果（CHANGELOG に書く事項を含む）を更新
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"使われていない・移行用・非推奨の9コマンドについて、helpと実行時の非推奨警告および代わりの操作を追加し、コマンドリファレンスとガイドに非推奨と削除予定版（0.10.0）を明記しました。","handoff":["作業No.3「次の版で消す」は、利用者の移行期間を考慮して次期マイナー版（0.10.0）で実施するため、本タスク（PJR-BSCK）では非推奨警告と代わりの操作の案内に留め、未着手（open）として残しています。0.10.0 リリース準備時にコマンドの削除を行ってください。","CHANGELOG に書く事項: [変更] 使われていない・移行用・非推奨の 9 コマンド（timeline where/build、exec note/link/estimate、exec migrate-records、grade migrate、register migrate、config migrate-members）を非推奨にし、help と実行時に代わりの操作と削除予定版（0.10.0）の警告を出すように変更"],"validations":[{"command":"node tools/check-src-imports-in-dependencies.mjs","status":"passed","summary":"src runtime imports are declared in dependencies or peerDependencies"},{"command":"tsx src/specdojo.ts catalog validate","status":"passed","summary":"validated deliverable catalogs"},{"command":"node packages/docs-lint/bin/specdojo-docs-lint.js history-links","status":"passed","summary":"validated history links"}]}
+</specdojo_executor_evidence>

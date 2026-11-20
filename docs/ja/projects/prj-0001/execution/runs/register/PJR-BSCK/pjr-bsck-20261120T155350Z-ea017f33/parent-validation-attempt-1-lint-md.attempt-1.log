@@ -1,0 +1,13 @@
+parent validation: lint-md
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.9.1 lint:md
+> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'
+
+
+
+--- stderr ---
+docs/ja/projects/prj-0001/controls/project-register/pjr-bsck-deprecate-unused-commands.md:53 error MD032/blanks-around-lists Lists should be surrounded by blank lines [Context: "1. `timeline where`: `specdojo..."]

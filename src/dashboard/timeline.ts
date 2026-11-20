@@ -120,7 +120,7 @@ export function registerTimelineCommands(program: Command): void {
   const bcmd = tml
     .command("build")
     .description(
-      "Deprecated: derive track order and catalog targets from epics and legacy tml-index.yaml",
+      "Deprecated: use dashboard build; move domains and dependencies to register epics (will be removed in 0.10.0)",
     );
   addProjectOption(bcmd);
   bcmd.option("--dry-run", "Print generated content to stdout without writing", false);
@@ -128,7 +128,7 @@ export function registerTimelineCommands(program: Command): void {
     try {
       warnDeprecated(
         "timeline build",
-        "Use dashboard build; move domains and dependencies to register epics.",
+        "Use dashboard build; move domains and dependencies to register epics. This command will be removed in 0.10.0.",
       );
       const { timelinePath, ...paths } = resolveTimelinePaths(opts);
       const result = buildTimeline({ timelinePath, ...paths });
