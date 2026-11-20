@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: low
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-16T11:00:14Z"
   due_on: null
+  block_reason: "parent validation failed: lint-md, test-integration"
   derived_from:
     - PJR-C5AF
   commit_type: refactor
