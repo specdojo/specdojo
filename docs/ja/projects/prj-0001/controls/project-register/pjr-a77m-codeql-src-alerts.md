@@ -9,9 +9,10 @@ specdojo:
   item_type: issue
   item_status: open
   priority: medium
+  difficulty: medium
   owner: DEV
   registered_at: "2026-11-19T22:05:49Z"
-  due_on: null
+  due_on: "2026-11-30"
   derived_from:
     - PJR-P318
 ---
