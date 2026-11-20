@@ -57,3 +57,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_dc945efe7ac64172885ece546d9f604d
+- v: 1
+  id: reg_815f8ea680df43c79a689c1e27b5e597
+  ts: "2026-11-20T15:06:37Z"
+  action: wait
+  actor: opus-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor validation failed or not run: npm run validate:schema:file"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor validation failed or not run: npm run validate:schema:file"
+  previous_event_id: reg_becb4c5e9ee14469949a0a2a2114b63e
