@@ -689,7 +689,8 @@ function withRepo(fn: (fixture: Fixture) => Promise<void> | void): Promise<void>
         [
           "providers:",
           "  opencode:",
-          `    command_template: "node ${join(root, "fake-agent.mjs")} --nickname {nickname}"`,
+          // PJR-08EK: opencode は --agent の名前に product worktree の許可を注入するため、名前を渡す。
+          `    command_template: "node ${join(root, "fake-agent.mjs")} --nickname {nickname} --agent fake-opencode-agent"`,
           "  claude:",
           `    command_template: "node ${join(root, "fake-agent.mjs")} --nickname {nickname} --settings .specdojo/claude/settings.{mode}.json"`,
           "  codex:",

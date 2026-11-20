@@ -1,0 +1,30 @@
+exec の opencode 起動でも、その run のプロダクトの worktree だけに書き込み許可が渡るように直しました。ただし実機の opencode では一度も確かめていません。sandbox から opencode CLI を起動できなかったためです。対象の 3 ファイルの vitest、markdownlint、prettier、`validate:history-links` は通っています。`typecheck`・`lint:ts`・`test:unit`・`test:integration` は実行しておらず、親の runner の結果待ちです。
+
+**実装の中身**
+- **注入の方法:** opencode のときは、起動コマンドの前に `OPENCODE_CONFIG_CONTENT` を付けます。対象は起動コマンドの `--agent` で選ばれる agent です。
+  - `external_directory` は全部拒否したうえで、プロダクトの worktree の絶対パス `<abs>/**` だけを許可します。
+  - `edit` は既存のルールに、作業ディレクトリからの相対パス `../<repo>/**` の許可を足します。
+  - 環境変数に元からある `OPENCODE_CONFIG_CONTENT` の他の項目は残します。
+- **上書きされない理由:** opencode の公式ドキュメントでは、この環境変数の設定は agent の定義ファイルより後に読み込まれます。そのため agent の frontmatter に上書きされません。
+- **共通化:** 注入の処理を新しい `src/exec/opencode-permissions.ts` にまとめ、`orchestrator launch` と exec で同じものを使います。exec では `exec/run/agent.ts`・`exec/run/in-place.ts`・`exec/worktree-command.ts` から呼びます。
+- **claude・codex・antigravity・copilot:** 起動の引数は変えていません。単体テストでも確かめています。
+- **`orchestrator launch`:** `edit` に絶対パスを入れていて、exec と同じ問題がありました。同じ処理を使う形に直し、`edit` を起動場所からの相対パスにしました。
+- **開始前に止める処理:** 許可を渡せるようになったので、プロダクトを対象にする項目を一律に止めることはしていません。ただし起動コマンドに `--agent <name>` が無いと許可の範囲を決められないので、そのときだけ起動前にエラーで止めます。doctor の警告は追加していません。
+
+**ほかに変えたもの**
+- **単体テスト:** `tests/src/exec/task-repos.test.ts` にテストを足し、`tests/src/exec/opencode-permissions.test.ts` を新しく作りました。`tests/src/commands/orchestrator.test.ts` は `edit` の期待値を相対パスに変えました。
+- **e2e の fixture:** `register-pipeline-e2e.integration.test.ts` の opencode の `command_template` に `--agent fake-opencode-agent` を足しました。足さないと、上の起動前のエラーで止まります。
+- **参照文書:** `specdojo-config-reference.md`・`command-reference.md`・`orchestrator-operation-guide.md` の opencode の記述を今の動きに合わせました。
+- **個票:** 影響範囲、対応結果（CHANGELOG に書く事項を含む）、関連ドキュメントを埋めました。
+
+**実機で確かめていない前提**
+- 相対パス・絶対パスの照合の形は、報告にある opencode 1.19.5 の試験結果に合わせました。
+- 設定の読み込み順は、公式ドキュメントで確かめただけです。
+- 足した許可が `"*": deny` より後のルールとして効くかどうかは、opencode のマージがキーの順を保つかに左右されます。これも確かめていません。
+
+**利用者への影響**
+- 既存の環境でも、opencode の `command_template` に `--agent` が無く `repos` を宣言している場合は、起動前にエラーで止まるようになります。CHANGELOG の文案にもこのことを書いています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"exec の opencode 起動（`withAgentExtraRoots`）で、その run のプロダクトの worktree だけに `OPENCODE_CONFIG_CONTENT` で許可を渡すようにした。`external_directory` は絶対パス、`edit` は起動場所からの相対パス `../<repo>/**`。`orchestrator launch` も同じモジュール（`src/exec/opencode-permissions.ts`）を使う形に直した。claude・codex・antigravity・copilot の起動の引数は変えていない。単体テスト、参照文書、e2e の fixture、個票の対応結果を更新した。","handoff":["照合の形（`external_directory` は絶対パス、`edit` は起動場所からの相対パス）と、`OPENCODE_CONFIG_CONTENT` が `.opencode/agents/<name>.md` の frontmatter より後に効くことは、実機の opencode では確かめていない。sandbox から opencode CLI を起動できないため。前者は報告（opencode 1.19.5）の試験結果、後者は公式ドキュメント https://opencode.ai/docs/config に合わせた。足した許可が `\"*\": deny` より後のルールとして効くかどうか（マージがキーの順を保つか）も未確認。`repos` を宣言した project で opencode-executor を流し、プロダクトの worktree を編集できるか人が確かめる必要がある。","対応策の 2 点目（開始前に止める・doctor で警告）: 許可の注入を実装したので、一律に止める処理は入れていない。opencode の起動コマンドに `--agent <name>` が無いと許可の範囲を決められないため、その場合だけ `withAgentExtraRoots` がエラーで起動前に止める。doctor の警告は追加していない。","`orchestrator launch` の `edit` に絶対パスが入っていて exec と同じ問題があったため、同じ関数を使う形に直し、`edit` を相対パスにした（別項目は起票していない）。","CHANGELOG に書く事項（不具合修正）: `repos` を宣言した project で、exec の opencode の executor がプロダクトの worktree を編集できなかった問題を修正。runner は起動時の `OPENCODE_CONFIG_CONTENT` で、その run のプロダクトの worktree だけに `external_directory` と `edit` の許可を渡す。`orchestrator launch` の `edit` の許可も、起動場所からの相対パスにそろえた。opencode の `command_template` には `--agent <name>` が必要になった（PJR-08EK）","互換性への影響: `repos` を宣言した project で opencode の `command_template` に `--agent` が無い場合、起動前にエラーで止まるようになる。e2e の fixture は `--agent fake-opencode-agent` を足して対応した。"],"validations":[{"command":"npx vitest run tests/src/exec/task-repos.test.ts tests/src/exec/opencode-permissions.test.ts tests/src/commands/orchestrator.test.ts","status":"passed","summary":"3 ファイル、48 件のテストがすべて通った（変更箇所の事前確認。正本は親の test:unit）"},{"command":"npx prettier --check","status":"passed","summary":"変更した ts・md ファイルがすべて Prettier の書式どおり"},{"command":"npx markdownlint-cli2","status":"passed","summary":"変更した md 4 ファイルで 0 件"},{"command":"npm run validate:history-links","status":"passed","summary":"個票を含む履歴ファイルに違反なし"},{"command":"specdojo catalog validate","status":"not_applicable","reason":"成果物の変更は個票（controls/project-register）と docs/ja/specdojo の参照文書だけで、カタログの対象になる成果物の変更はない"}]}
+</specdojo_executor_evidence>

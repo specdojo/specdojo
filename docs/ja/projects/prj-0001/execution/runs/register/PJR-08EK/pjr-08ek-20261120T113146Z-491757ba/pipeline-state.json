@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-08EK",
+  "run_id": "pjr-08ek-20261120T113146Z-491757ba",
+  "updated_at": "2026-11-20T11:51:13.708Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-20T11:34:30.934Z",
+      "completed_at": "2026-11-20T11:40:36.055Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-08EK/pjr-08ek-20261120T113146Z-491757ba/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 0,
+      "started_at": "2026-11-20T11:48:55.257Z",
+      "completed_at": "2026-11-20T11:48:55.257Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-08EK/pjr-08ek-20261120T113146Z-491757ba/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "gemma26-reporter",
+      "attempts": 2,
+      "started_at": "2026-11-20T11:51:13.708Z",
+      "completed_at": null,
+      "artifact_ref": null,
+      "repos": {
+        "project": {
+          "status": "failed",
+          "commit": null,
+          "merged_at": null,
+          "error": "Result Markdown notation violation before commit: docs/ja/projects/prj-0001/execution/runs/register/PJR-08EK/pjr-08ek-20261120T113146Z-491757ba/result.md:40:241 error MD034/no-bare-urls Bare URL used [Context: \"https://opencode.ai/docs/confi...\"]"
+        }
+      }
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-08EK/pjr-08ek-20261120T113146Z-491757ba/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-08EK/pjr-08ek-20261120T113146Z-491757ba/result.md"
+  }
+}

@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: in-progress
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-18T12:17:01Z"
   due_on: "2026-11-30"
-  block_reason: "integrate failed: project: Result Markdown notation violation before commit: docs/ja/projects/prj-0001/execution/runs/register/PJR-08EK/pjr-08ek-20261120T113146Z-491757ba/result.md:40:241 error MD034/…"
 ---
 
 # PJR-08EK exec で opencode の executor がプロダクトリポジトリの worktree を編集できない

@@ -229,6 +229,7 @@ export async function spawnAgentInPlace(
       command,
       provider,
       products.map((product) => product.path),
+      { cwd },
     ),
     {
       cwd,
