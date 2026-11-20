@@ -116,8 +116,15 @@ Error: The user has specified a rule which prevents you from using this specific
 
 - 統合の後に、手元の opencode 1.19.5 で `opencode debug agent opencode-executor` を流し、注入した後の最終の許可の規則を見た。注入する値は `dist/exec/opencode-permissions.js` の `opencodeExtraRootConfig` で、プロダクトの root を `/workspaces/specdojo-workspace/app1` として作った。
 - agent の定義の frontmatter の `edit` の規則（`*` を deny、`docs/**`・`src/**`・`tests/**` を allow、`docs/ja/projects/**/execution/exec/results/**` を deny）はそのまま残り、注入した `edit` の `../app1/**` の allow がその後ろに足された。`external_directory` も、`*` の deny の後ろに `/workspaces/specdojo-workspace/app1/**` の allow が足された。注入しないときは、この 2 つの規則は無い。inline config が frontmatter に上書きされず、後ろの規則として効くことを確かめた。
-- 実際の run でプロダクトの worktree を編集できるかは、このリポジトリに `repos` が無いため確かめていない。利用者の決定（2026-11-20、案 A）で、問題を見つけたプロジェクトで 0.9.1 の候補を使って 1 回流して確かめる。見ること: プロダクトの worktree のファイルを編集できる、宣言していない外の場所は拒まれる、`opencode.json` の `agent.<name>.permission` を足さなくても動く。確かめるまで review のまま残す。
+- 実際の run での確認は、利用者の決定（2026-11-20、案 A）で問題を見つけたプロジェクトで行う予定だった。利用者が候補の版を `../tmp` に入れ、確認を orchestrator に依頼したため、orchestrator がそこで行った（次の節）。
 - 利用者に関わる変更: プロダクトリポジトリのある run では、opencode の `command_template` に `--agent <name>` が要る。配布の雛形（`templates/init-exec-defaults.yaml`）と、このリポジトリの `exec-defaults.yaml` には入っている。
+
+### 5.6. 実際の run での確認（2026-11-20）
+
+- 環境: 利用者が develop の 4f3486914 から作った候補の tarball（`specdojo-0.9.1-rc-4f3486914.tgz`）を `/workspaces/specdojo-workspace/tmp` に入れた。orchestrator がそこで `init --yes --project prj-9001 --provider opencode --exec` を流し、`tmp/app1` に git リポジトリを作って `repos` に `{ "name": "app1", "path": "app1" }` を宣言した。agent の定義（`external_directory` は拒否）と `opencode.json` は init が作ったままで、許可を足していない。opencode は 1.19.5、executor は `opencode-executor`（gemma4 31B）、reporter は `opencode-reporter`。
+- 書けること（PJR-J0ZR）: 完了条件は `app1:docs/opencode-check.md` を作って 1 行書くこと。`exec run --register --worktree` が start から review まで成功し、runner が app1 の main に統合した（app1 の b80380c）。ファイルの中身は完了条件のとおりで、executor の記録に拒否や許可に関する行は無かった。
+- 外は拒まれること（PJR-NHV9）: 完了条件は、宣言していない `/workspaces/specdojo-workspace/tmp-outside/opencode-outside.md` へ書こうとし、拒まれたら記録して終えること。executor は opencode に「The user has specified a rule which prevents you from using this specific tool call.」で拒まれたと個票に書いた。`tmp-outside` は作られておらず、app1 も変わらなかった（runner は app1 の統合を飛ばした）。
+- これで完了条件の「その run のプロダクトの worktree にだけ許可が渡り、それ以外は拒まれる」「agent の定義の frontmatter に上書きされない経路で渡す」を実際の run で確かめた。
 
 ## 6. 関連ドキュメント
 
