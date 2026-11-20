@@ -4,11 +4,12 @@ document: specdojo:pm-raci-recipe
 path: docs/ja/specdojo/recipes/pm-raci-recipe.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-recipe
 verdict: pass
-score: 100
-graded_at: "2026-11-16T20:36:05.058Z"
+score: 93
+graded_at: "2026-11-20T20:11:16.627Z"
 graded_by: flash-high-executor
-content_hash: 96eadaa9bfa1dcd8fa94cf92fe58e1ea2347982c32086bb7afc0cccb2fad417d
+content_hash: b184a9c45a1c5281ed7575759990c90a1540a703482f3c2c03e3d8a902b35aba
 categories:
   purpose:
     score: 100
@@ -21,13 +22,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 92
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 92
   consistency:
-    score: 100
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -78,17 +79,17 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -104,6 +105,39 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 3
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 72
+    anchor: "## 7. レビュー観点"
+    message: >-
+      rulebook
+      の禁止事項（複数Rの主担当注記、Aの単一性とRの必須性、兼務による責任統合の禁止等）や不一致時の更新先を確認するための観点が抜け落ちており、レビュー観点表が1項目のみになっているため、必須チェック項目を追加する。
+    message_ja: >-
+      rulebook
+      の禁止事項（複数Rの主担当注記、Aの単一性とRの必須性、兼務による責任統合の禁止等）や不一致時の更新先を確認するための観点が抜け落ちており、レビュー観点表が1項目のみになっているため、必須チェック項目を追加する。
+  - id: F002
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 7
+    anchor: "## 1. このレシピの使い方"
+    message: >-
+      recipe-authoring-standard
+      の「各必須章には最低3つ以上の具体項目を置く」という基準に対し、第1章（1項目）、第7章（1項目）、第8章（2項目）で具体項目数が不足しているため、手順・観点・チェック項目をそれぞれ3項目以上に拡充する。
+    message_ja: >-
+      recipe-authoring-standard
+      の「各必須章には最低3つ以上の具体項目を置く」という基準に対し、第1章（1項目）、第7章（1項目）、第8章（2項目）で具体項目数が不足しているため、手順・観点・チェック項目をそれぞれ3項目以上に拡充する。
+  - id: F003
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 35
+    anchor: "### 4.2. 成果物別RACI"
+    message: >-
+      見出し「4.2. 成果物別RACI」および「4.3. 判断・プロセス別RACI」において「別」と「RACI」の間に半角スペースがなく、rulebook・sample・template の見出し表記とゆれがあるため、「成果物別
+      RACI」「判断・プロセス別 RACI」に統一する。
+    message_ja: >-
+      見出し「4.2. 成果物別RACI」および「4.3. 判断・プロセス別RACI」において「別」と「RACI」の間に半角スペースがなく、rulebook・sample・template の見出し表記とゆれがあるため、「成果物別
+      RACI」「判断・プロセス別 RACI」に統一する。
