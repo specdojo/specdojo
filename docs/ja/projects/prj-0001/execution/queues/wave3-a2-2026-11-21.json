@@ -1,0 +1,125 @@
+{
+  "version": 1,
+  "queue_id": "wave3-a2-2026-11-21",
+  "project_id": "prj-0001",
+  "created_at": "2026-11-21T13:18:44.855Z",
+  "updated_at": "2026-11-21T13:18:44.855Z",
+  "state": "pending",
+  "steps": [
+    {
+      "index": 1,
+      "on_failure": "continue",
+      "status": "pending",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--task",
+        "T-KATA-WAVE-3-itc-index-sample-080",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--fallback-executor-by",
+        "sonnet-executor",
+        "--exec-defaults",
+        "tmp/orchestrator/exec-defaults-claude-fallback.yaml",
+        "--project",
+        "prj-0001"
+      ]
+    },
+    {
+      "index": 2,
+      "on_failure": "continue",
+      "status": "pending",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--task",
+        "T-KATA-WAVE-3-itc-sample-040",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--fallback-executor-by",
+        "sonnet-executor",
+        "--exec-defaults",
+        "tmp/orchestrator/exec-defaults-claude-fallback.yaml",
+        "--project",
+        "prj-0001"
+      ]
+    },
+    {
+      "index": 3,
+      "on_failure": "continue",
+      "status": "pending",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--task",
+        "T-KATA-WAVE-3-itc-sample-050",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--fallback-executor-by",
+        "sonnet-executor",
+        "--exec-defaults",
+        "tmp/orchestrator/exec-defaults-claude-fallback.yaml",
+        "--project",
+        "prj-0001"
+      ]
+    },
+    {
+      "index": 4,
+      "on_failure": "continue",
+      "status": "pending",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--task",
+        "T-KATA-WAVE-3-itc-sample-080",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--fallback-executor-by",
+        "sonnet-executor",
+        "--exec-defaults",
+        "tmp/orchestrator/exec-defaults-claude-fallback.yaml",
+        "--project",
+        "prj-0001"
+      ]
+    },
+    {
+      "index": 5,
+      "on_failure": "continue",
+      "status": "pending",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--task",
+        "T-KATA-WAVE-3-imp-test-sample-080",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--fallback-executor-by",
+        "sonnet-executor",
+        "--exec-defaults",
+        "tmp/orchestrator/exec-defaults-claude-fallback.yaml",
+        "--project",
+        "prj-0001"
+      ]
+    }
+  ]
+}
