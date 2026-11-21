@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_66f2b9beeb9f4241bc4f3faeaf0d1436
+  ts: "2026-11-21T03:05:01Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: これまでの波で磨き込んでいない型を一通り整えるため（利用者の依頼、2026-11-21）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 型の整備 第 6 波（プロジェクトの型の残り）
+    - field: description
+      from: ""
+      to: プロジェクトの型の残り 8 種類（prj-charter・prj-issues-and-approach・prj-overview・prj-scope・prj-stakeholder-register・prj-success-criteria-and-acceptance-criteria・pm-communication-plan・pm-members）を、sample を代表にして整える
+    - field: input
+      from: ""
+      to: '["対象: prj-charter・prj-issues-and-approach・prj-overview・prj-scope・prj-stakeholder-register・prj-success-criteria-and-acceptance-criteria・pm-communication-plan・pm-members の 8 種類","PJR-6998 の決定（2026-11-21、indie）: kata ドメイン（dct-kata.yaml）に sample を成果物として載せ、sample を代表にして型を整える","2026-11-21 の洗い直し（tmp の一覧ではなく個票に要点を残す）: これまでの波で rulebook と sample の中身を整えていない 74 種類のうち、第 3〜5 波と PJR-CPA8 に入らない残りをこの epic を含む第 6 波の 3 件に割り振った。rulebook はどれも ready で grade は pass だが、PJR-960C の対象外で中身を整えていない。sample は prj-charter・prj-stakeholder-register・prj-success-criteria-and-acceptance-criteria が needs-work（76〜85）。pm-members は sample がない","段の組み方: rulebook を簡潔に → sample を厚く → 簡潔さの確認（condense） → review → 人の確定（利用者の承認、2026-11-21）。対象と順番は、2026-11-21 から opus で流している grade（run id regrade-kata-2026-11-21）の結果で見直す"]'
+    - field: type
+      from: ""
+      to: epic
+    - field: track
+      from: ""
+      to: kata-wave-6-project
+    - field: domains
+      from: ""
+      to: '["kata"]'
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-21"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-6998"]'
