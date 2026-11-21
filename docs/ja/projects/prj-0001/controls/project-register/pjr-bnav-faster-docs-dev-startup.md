@@ -30,7 +30,16 @@ docs:dev は起動のたびに docs/ の 17,321 ファイルを共有フォル�
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- 変える前に、`npm run docs:dev` の段ごとの時間（`docs:generate`、閲覧用のツリーのコピー、VitePress の起動、最初のページが開けるまで）を測り、個票の対応結果に表で書く。測り方（コマンド・回数・ほかの run が流れていたか）も書く。
+- 閲覧用のツリー（`.vitepress/kata-staging`）へのコピーから、サイトに出さない実行の記録（`docs/**/execution/` のうち、ページとして出さない log・json・plan・result など）を外す。サイトに出すページ・画像・ページが参照するファイルは今までどおりコピーする。
+- 重ねる型が 0 件のとき（SpecDojo 自身のリポジトリなど）は、ツリーへのコピーを減らすか、なくす。利用リポジトリで package の型を重ねる動き（eject 済みは利用リポジトリ側を採る、消した型が残らない）は今までどおりとし、テストで確かめる。
+- `docs:generate` を、ビルド済みの `dist` で流せるようにする（`dist` が古いときの扱いを決め、理由を個票の対応結果に書く）。生成物が新しいときに `docs:generate` を飛ばす選択肢を足す。
+- 対象のパスは `packages/docs-site/.vitepress/kata-staging.ts`・`packages/docs-site/.vitepress/config.mts`・`packages/docs-site/bin/` と、その単体テスト。
+- 保護された設定（`package.json` の script、`.devcontainer/devcontainer.json` でツリーと cache を named volume に置く案）は変えない。案を個票の対応結果と報告の `handoff` に書く。反映は利用者の承認のもと feature ブランチで行う。
+- 変えた後に、同じ段の時間を測り直し、変える前と並べて個票の対応結果に書く。
+- `npm run docs:build` が通ることを確かめる。
+- `CHANGELOG.md` は変えない。個票の対応結果の `### 5.1. CHANGELOG に書く事項` に、区分と行の文案を書く（`@specdojo/docs-site` の変更として書く）。
+- `npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md` を通し、親の検証を通す。
 
 ## 4. 作業内容
 
