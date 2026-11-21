@@ -12,7 +12,7 @@ specdojo:
   difficulty: easy
   owner: DEV
   registered_at: "2026-11-21T09:06:40Z"
-  block_reason: "parent validation failed: test-unit"
+  block_reason: "parent validation failed: lint-md"
 ---
 
 # PJR-QTZ7 外部プロジェクトへの register add --commit で、-m の段落がカンマで件名につながる

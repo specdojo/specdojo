@@ -106,3 +106,35 @@
       from: "-"
       to: "parent validation failed: test-unit"
   previous_event_id: reg_5901912eae084b0e8180bb33b59f6c41
+- v: 1
+  id: reg_1e95340e9cb648fc816a3856efe4a943
+  ts: "2026-11-21T23:05:42Z"
+  action: start
+  actor: qwen-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_01fd27486910489eb3b8246dd62b1883
+- v: 1
+  id: reg_a7bcdc4e0eb44090893489a3eeea140d
+  ts: "2026-11-21T23:23:46Z"
+  action: wait
+  actor: qwen-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-md"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-md"
+  previous_event_id: reg_1e95340e9cb648fc816a3856efe4a943
