@@ -55,32 +55,43 @@ orchestrator の所見（決定ではない）: D を採り、1b・2a・3a・4a 
 
 ## 4. 決定内容
 
-_TODO_: 採択した内容を明確に記載する。
+D を、1b・2a・3a・4a の組み合わせで採る。PJR-11EX の決定（C）を置き換える。
+
+- register を専用のブランチ（`project/prj-0001/register`）に置き、リモートを正本とする。コードと文書の変更は feature ブランチと PR で develop へ入れる。
+- register のブランチには、登録簿の個票とイベント（`controls/project-register/`）と、schedule の実行のイベント（`execution/exec/events/`）を置く。run の記録と grade の結果は develop 側に残す（1b）。
+- runner は、状態の遷移と対応結果を register のブランチへ直接書いて push する。exec のブランチには個票の変更を含めない（2a）。
+- register のブランチを develop へ一方向に merge し続け、develop では register のファイルを直接変えない（3a）。
+- `register ... --commit` が push まで行い、non-fast-forward のときは `pull --rebase` して push し直す。CI は push のたびに記録の形と schema を検査し、register の範囲の外のファイルを含む commit を止める（4a）。
+- 単独の運用の間は今の方式のままでよい。移り方（ブランチの作成、CLI と runner の対応、hook と CI）は後続の項目として起票する。
 
 ## 5. 採択理由
 
-- _TODO_: 判断根拠を記載する。
+- 複数人で同期が要るのは記帳と claim だけで、コードと文書の変更は GitHub の標準の保護と PR で守れる。
+- C に要る GitHub App・Actions・許可リストの検査・claim の競合の検出より、準備が小さい。
+- 記帳がすぐにほかの人に見え、外部のプロジェクトからの起票も register のブランチへ push するだけで済む（2026-11-21 の coderdojo-lessons からの起票の例）。
+- ID が乱数でファイルが項目ごとのため、register のブランチでの衝突はほぼ起きず、起きても `pull --rebase` で自動で解ける。
 
 ## 6. 承認
 
-| 項目     | 内容   |
-| -------- | ------ |
-| 決定者   | _TODO_ |
-| 決定日   | _TODO_ |
-| 承認方式 | _TODO_ |
-| 証跡     | _TODO_ |
+| 項目     | 内容                                                                                                                     |
+| -------- | ------------------------------------------------------------------------------------------------------------------------ |
+| 決定者   | indie                                                                                                                    |
+| 決定日   | 2026-11-21                                                                                                               |
+| 承認方式 | commit                                                                                                                   |
+| 証跡     | 2026-11-21 の対話で indie が orchestrator の推奨（D、1b・2a・3a・4a）を承認した。この個票の close の commit を証跡とする |
 
 - 承認方式は `commit` または `PR` を記載する。`PR` の場合は証跡に PR URL と merge SHA を本文テキストで記載する。
 - 不可逆・高リスク・framework schema 破壊的変更に該当する決定は `PR` 方式で承認する。
 
 ## 7. 影響範囲とフォローアップ
 
-| 項目       | 内容   |
-| ---------- | ------ |
-| 影響範囲   | _TODO_ |
-| 必要な対応 | _TODO_ |
-| 追跡先     | _TODO_ |
+| 項目       | 内容                                                                                                                                     |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| 影響範囲   | git-branching-standard の 3 層の経路、register と schedule のイベントを書く CLI、runner の統合、hook と CI、外部のプロジェクトからの起票 |
+| 必要な対応 | 複数人の運用へ移る前に、register のブランチの作成、CLI と runner の対応、git-branching-standard の改訂、hook と CI を後続の項目で行う    |
+| 追跡先     | 後続の項目は複数人の運用へ移る準備として起票する。PJR-11EX はこの決定で置き換える                                                        |
 
 ## 8. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-11ex-multi-user-integration-actor|PJR-11EX]]
+- [[specdojo:git-branching-standard|Git ブランチ運用標準]]
