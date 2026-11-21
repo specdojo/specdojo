@@ -77,19 +77,29 @@ describe("resolveMemberCommand", () => {
   });
 
   it.each(["edit", "review", "report"] as const)(
-    "selects the agy session role %s through the shipped template",
+    "refuses to build the 0.9.1 agy %s command from the shipped template",
     (mode) => {
       const config = load(
         readFileSync("templates/init-exec-defaults.yaml", "utf8"),
       ) as ExecDefaultsConfig;
-      expect(
+
+      expect(() =>
         resolveMemberCommand(
           config,
           buildMember({ provider: "antigravity", mode, model: "fixture" }),
         ),
-      ).toContain(`--role ${mode} -- --sandbox --model fixture`);
+      ).toThrow(/do not launch Antigravity \(agy\).*https:\/\/antigravity\.google\/terms/);
     },
   );
+
+  it("refuses an antigravity member even with an explicit command override", () => {
+    expect(() =>
+      resolveMemberCommand(
+        {},
+        buildMember({ nickname: "agy-custom", provider: "antigravity", command: "agy -p" }),
+      ),
+    ).toThrow(/Cannot launch member agy-custom: .*agent-members\.yaml/);
+  });
 
   it("expands by_proficiency variables for the member's proficiency", () => {
     const normal = resolveMemberCommand(

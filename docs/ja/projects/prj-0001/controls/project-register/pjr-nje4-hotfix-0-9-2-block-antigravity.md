@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-21T00:32:31Z"
-  block_reason: "parent validation failed: lint-md, test-integration"
   derived_from:
     - PJR-5V0T
 ---
@@ -62,6 +61,7 @@ hotfix 0.9.2 で、exec・grade・orchestrator などから agy を起動しよ�
 - init の provider の選択肢から antigravity を外し、指定されたら同じ理由のエラーにする（対話では同じ質問をやり直す）。`config scaffold` / `exec scaffold` の `--provider antigravity` と `devcontainer scaffold` の antigravity は、ファイルを書く前にエラーにする。
 - 配布テンプレート（`templates/antigravity/`、`templates/init-agent-members.yaml`・`templates/init-exec-defaults.yaml` の agy の部分）は消していない。init のテストで、antigravity を指定したときに `.specdojo/agent-members.yaml`・`.specdojo/exec-defaults.yaml`・`.specdojo/antigravity/`・npm script を書き出さないことを確かめた。
 - 単体テスト `tests/src/shared/antigravity-block.test.ts` で、名前で指定・自動選択・代わりの選択・`agent launch`・`orchestrator launch`・`init` の 6 つの場合を確かめた。`agent launch` と `orchestrator launch` は PATH に置いた偽の agy が実行されないこと（印のファイルができないこと）も確かめた。既存の agy 起動のテストは、止めることを確かめる内容に置き換えた。
+- 統合テスト `tests/src/commands/init-agent-roster.integration.test.ts` は antigravity を provider に含めて init と `config scaffold` を流していたため、今回のエラーで落ちた。実装は変えず、provider から antigravity を外し、`init --provider claude,antigravity` と `config scaffold --provider antigravity` が理由付きのエラー（終了コード 0 以外）になり `.specdojo/antigravity/` を書かないことを確かめる形に直した。
 
 ### 5.2. 決めた内容と理由
 
@@ -74,7 +74,7 @@ hotfix 0.9.2 で、exec・grade・orchestrator などから agy を起動しよ�
 
 区分: 利用者から見て動きが変わる点
 
-- 0.9.2 から Antigravity CLI（`agy`）を起動しない。consumer plan では、他社の agent や application の中から agy を起動することを Antigravity の FAQ が対象外、Additional Terms Section 6 が契約違反としているため（https://antigravity.google/docs/faq 、https://antigravity.google/terms ）。exec・grade・trial、`agent launch`、`orchestrator launch` は provider が `antigravity` の指定を agy の起動前にエラーで止め、自動選択と代わりの選択では agy の member を候補から外す。`init`・`config scaffold`・`devcontainer scaffold` でも antigravity を選べない。
+- 0.9.2 から Antigravity CLI（`agy`）を起動しない。consumer plan では、他社の agent や application の中から agy を起動することを Antigravity の FAQ が対象外、Additional Terms Section 6 が契約違反としているため（<https://antigravity.google/docs/faq>、<https://antigravity.google/terms>）。exec・grade・trial、`agent launch`、`orchestrator launch` は provider が `antigravity` の指定を agy の起動前にエラーで止め、自動選択と代わりの選択では agy の member を候補から外す。`init`・`config scaffold`・`devcontainer scaffold` でも antigravity を選べない。
 - 0.9.1 の `init` で antigravity を選んだ利用者は、0.9.2 に上げると agy の member を使う `exec run` などがエラーで止まる。`.specdojo/agent-members.yaml` で agy の member に `disabled: true` を付けるか消し、`.specdojo/exec-defaults.yaml` の `routing` で agy の member を指している箇所をほかの provider の member に替える。`package.json` の `orch:argon`・`orch:flash` などは使えないため消す。
 
 ### 5.4. 残課題

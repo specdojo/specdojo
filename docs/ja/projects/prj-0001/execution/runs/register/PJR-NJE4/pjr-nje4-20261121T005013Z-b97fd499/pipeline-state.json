@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-NJE4",
+  "run_id": "pjr-nje4-20261121T005013Z-b97fd499",
+  "updated_at": "2026-11-21T01:18:52.231Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-21T01:11:19.563Z",
+      "completed_at": "2026-11-21T01:12:57.293Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-NJE4/pjr-nje4-20261121T005013Z-b97fd499/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 0,
+      "started_at": "2026-11-21T01:18:49.987Z",
+      "completed_at": "2026-11-21T01:18:49.987Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-NJE4/pjr-nje4-20261121T005013Z-b97fd499/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-21T01:18:52.231Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-NJE4/pjr-nje4-20261121T005013Z-b97fd499/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-NJE4/pjr-nje4-20261121T005013Z-b97fd499/result.md"
+  },
+  "resume_notes": [
+    {
+      "at": "2026-11-21T01:11:19.549Z",
+      "notes": [
+        "tests/src/commands/init-agent-roster.integration.test.ts の 2 件は、antigravity を provider に含めて init と config scaffold を流しているため、今回足したエラーで落ちた。実装の動きは変えず、テストから antigravity を外し、antigravity を指定すると理由付きでエラーになることを確かめる形に直す。",
+        "個票の対応結果の 76 行目付近の URL が MD034（bare URL）に当たっている。<https://...> の形で囲む。"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,325 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-NJE4",
+  "run_id": "pjr-nje4-20261121T005013Z-b97fd499",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-21T00:52:17.217Z",
+    "completed_at": "2026-11-21T01:01:20.643Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "README.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-nje4.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-nje4-hotfix-0-9-2-block-antigravity.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/orchestrator-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/agent.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/init.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/orchestrator.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/devcontainer/command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/devcontainer/scaffold.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/agent-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/shared.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/provider-scaffold.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/specdojo-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/commands/init.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/commands/orchestrator.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/devcontainer/scaffold.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/devcontainer/scaffold.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/agent-config-command.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/antigravity-session.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/shared/provider-scaffold.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/antigravity-block.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/shared/antigravity-block.test.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "README.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-nje4-hotfix-0-9-2-block-antigravity.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/orchestrator-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/agent.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/init.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/orchestrator.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/devcontainer/command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/devcontainer/scaffold.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/agent-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/shared.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/provider-scaffold.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/specdojo-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/commands/init.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/commands/orchestrator.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/devcontainer/scaffold.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/devcontainer/scaffold.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/agent-config-command.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/antigravity-session.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/shared/provider-scaffold.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/antigravity-block.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/shared/antigravity-block.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 25,
+    "summary": "README.md                                          |   8 +-\n .../pjr-nje4-hotfix-0-9-2-block-antigravity.md     |  42 +++++--\n docs/ja/specdojo/guides/exec-config-guide.md       |  26 +++--\n .../guides/orchestrator-operation-guide.md         |   8 +-\n docs/ja/specdojo/references/command-reference.md   |  21 ++--\n src/commands/agent.ts                              |  44 +++-----\n src/commands/init.ts                               |  13 ++-\n src/commands/orchestrator.ts                       |  23 ++--\n src/devcontainer/command.ts                        |   2 +-\n src/devcontainer/scaffold.ts                       |  14 +--\n src/exec/agent-config.ts                           |   4 +\n src/exec/commands.ts                               |   2 +-\n src/exec/run/shared.ts                             |   4 +\n src/shared/provider-scaffold.ts                    |   4 +\n src/shared/specdojo-config.ts                      |   9 +-\n tests/src/commands/init.test.ts                    | 122 ++++++++++++---------\n tests/src/commands/orchestrator.test.ts            |  27 ++---\n .../src/devcontainer/scaffold.integration.test.ts  |  10 +-\n tests/src/devcontainer/scaffold.test.ts            |  28 ++++-\n tests/src/exec/agent-config-command.test.ts        |  16 ++-\n .../exec/antigravity-session.integration.test.ts   | 116 ++++++++------------\n tests/src/shared/provider-scaffold.test.ts         |  95 +++++-----------\n 22 files changed, 317 insertions(+), 321 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "変更した個票を含め、履歴蓄積ファイルに Markdown リンクの違反なし（exit 0）"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --check README.md docs/ja/specdojo/guides/orchestrator-operation-guide.md docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-nje4-hotfix-0-9-2-block-antigravity.md src tests/src/shared tests/src/commands tests/src/devcontainer tests/src/exec/agent-config-command.test.ts tests/src/exec/antigravity-session.integration.test.ts",
+      "status": "passed",
+      "summary": "All matched files use Prettier code style"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.1 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-NJE4/src/catalog/catalog.ts\n  542:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-NJE4/src/dashboard/dashboard.ts\n  1149:1  warning  File has too many lines (1067). Maximum allow\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-NJE4/src/schedule/strategy-generate-document.ts\n  87:8  warning  Function 'buildStrategyDocument' has too many lines (289). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-NJE4/src/shared/specdojo-config.ts\n  1236:1  warning  File has too many lines (1193). Maximum allowed is 1000  max-lines\n\n✖ 41 problems (0 errors, 41 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.1 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.9.1 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'\n\n\ndocs/ja/projects/prj-0001/controls/project-register/pjr-nje4-hotfix-0-9-2-block-antigravity.md:76:163 error MD034/no-bare-urls Bare URL used [Context: \"https://antigravity.google/doc...\"]\ndocs/ja/projects/prj-0001/controls/project-register/pjr-nje4-hotfix-0-9-2-block-antigravity.md:76:200 error MD034/no-bare-urls Bare URL used [Context: \"https://antigravity.google/ter...\"]"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.1 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 5557 file(s), 107 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 83 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.1 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5557 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.9.1 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-NJE4\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/devcontainer/scaffold.integration.test.ts\"}\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-co\n… output omitted …\nlity\n\n- Expected\n+ Received\n\n- 0\n+ 1\n\n ❯ expectSuccess tests/src/commands/init-agent-roster.integration.test.ts:69:81\n     67|\n     68| function expectSuccess(result: SpawnSyncReturns<string>): void {\n     69|   expect(result.status, `stdout:\\n${result.stdout}\\nstderr:\\n${result.…\n       |                                                                                 ^\n     70| }\n     71|\n ❯ tests/src/commands/init-agent-roster.integration.test.ts:154:9\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.1 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.1 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schema)\ndocs/ja/specdojo/samples/ifx-api-sample\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-NJE4/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-NJE4/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.1 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.1 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.1 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-NJE4\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/grade/grade.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/register/commands.test.ts\"}\n ✓ tests/src/grade/grade.test.ts (69 tests) 774ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/src/grade/grade.test.ts\"}\n[parent-validation:t\n… output omitted …\ncated. Move track domains and dependencies to register epics; use dashboard build.\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "0.9.2 で agy の起動を止めた。provider が antigravity の member は resolveMemberCommand で拒否し、selectCandidates で候補から外す。agent launch・orchestrator launch は起動前にエラーで止め、init・config scaffold・exec scaffold・devcontainer scaffold では antigravity を選べなくした。6 つの場合の単体テストを足し、既存の agy のテストを止める内容に書き換えた。コマンドリファレンス・exec設定ガイド・オーケストレーター運用ガイド・README に注意書きを足し、個票の作業内容・対応結果（CHANGELOG に書く事項を含む）・関連ドキュメントを更新した。",
+  "completion_status": "complete",
+  "handoff": [
+    "決めた内容: 名前で指定した代わり（`fallback_executor_by` / `fallback_reporter_by`、難易度別の振り分け `routing`）が agy の member の場合は、ほかの member へ進まずにエラーで止める。名前の指定は利用者の明示の選択で、黙って別の agent に替えないため。自動選択の中の代わりの候補は外して次へ進む。",
+    "決めた内容: 判定は member の `provider` で行う。`provider: custom` にして `command` で agy を直接呼ぶ設定は検出しない（command の文字列による判定は誤検出の恐れがあり、完了条件も provider を対象にしているため）。",
+    "決めた内容: `agent launch` は agy 専用の入口だったため、agy 以外の provider も起動せずエラーにする。`--role` は 0.9.1 の `command_template` を確実にこのエラーまで通すため任意にした。",
+    "決めた内容: init が書く Antigravity の orch の npm script と Dev Container の volume は 0.9.2 では作られないため、コマンドリファレンスの該当の記述は現在の動きに合わせて削除した。agy の設定方法の説明（session プロファイル・`--global`・command template）は消さずに、先頭へ使えないことを書いた（説明そのものの削除は PJR-N6FQ）。",
+    "CHANGELOG に書く事項（区分: 利用者から見て動きが変わる点）の文案は個票の対応結果「CHANGELOG に書く事項」にある。0.9.1 の init で antigravity を選んだ利用者は、0.9.2 に上げると exec run などが止まる。直し方は agent-members.yaml で agy の member を `disabled: true` にするか消す、exec-defaults.yaml の `routing` の agy の member をほかの provider に替える、`orch:argon`・`orch:flash` などの npm script を消す、の 3 つ。",
+    "残課題: exec run が名前で指定された disabled の member を断らない件は PJR-77JB。配布テンプレート（`templates/antigravity/` ほか）と agy の設定の説明の削除は PJR-N6FQ。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-NJE4/pjr-nje4-20261121T005013Z-b97fd499/executor.attempt-1.log",
+      "bytes": 7108,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-NJE4/pjr-nje4-20261121T005013Z-b97fd499/parent-validation-attempt-1-lint-md.attempt-1.log",
+      "bytes": 565,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-NJE4/pjr-nje4-20261121T005013Z-b97fd499/parent-validation-attempt-1-test-integration.attempt-1.log",
+      "bytes": 391197,
+      "truncated": false
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 import { existsSync } from "node:fs";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import * as path from "node:path";
+import { assertProviderLaunchAllowed } from "../shared/antigravity-block.js";
 
 export interface RunDevcontainerScaffoldOptions {
   packageRoot: string;
@@ -200,6 +201,10 @@ export async function runDevcontainerScaffold(opts: RunDevcontainerScaffoldOptio
     force,
     dryRun,
   } = opts;
+  // agy is never launched since 0.9.2, so refuse before writing any install step or volume for it.
+  for (const provider of providers) {
+    assertProviderLaunchAllowed(provider, "devcontainer scaffold cannot add provider antigravity");
+  }
   if (preset !== undefined && !DEVCONTAINER_PRESETS.includes(preset as DevcontainerPreset)) {
     throw new Error(
       `Unknown Dev Container preset: ${preset}. Available: ${DEVCONTAINER_PRESETS.join(", ")}`,
@@ -395,7 +400,7 @@ fi`);
   }
 
   // providers の処理
-  const knownProviders = new Set(["claude", "codex", "opencode", "antigravity"]);
+  const knownProviders = new Set(["claude", "codex", "opencode"]);
   for (const provider of providers) {
     if (!knownProviders.has(provider)) {
       process.stdout.write(`Warning: unknown provider "${provider}"\n`);
@@ -432,13 +437,6 @@ fi`);
       devcontainer.containerEnv["OPENCODE_DISABLE_AUTO_UPDATE"] = "1";
       // 本リポジトリで設定を確かめている opencode の npm パッケージ（opencode-ai）を使う。
       extraScripts.push("sudo npm install -g opencode-ai@latest");
-    } else if (provider === "antigravity") {
-      devcontainer.mounts.push(
-        `source=${volumeName("antigravity")},target=/home/node/.config/antigravity,type=volume`,
-      );
-      extraScripts.push(
-        'if ! curl -fsSL https://antigravity.google/cli/install.sh | bash; then\n  echo "Warning: Antigravity CLI installer failed."\nfi',
-      );
     }
   }
 

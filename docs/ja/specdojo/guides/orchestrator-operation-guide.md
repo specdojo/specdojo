@@ -63,13 +63,15 @@ CLI を直接操作する場合の代表フローは [遂行の技活用ガイ�
 | `orch:flash`        | Antigravity / `gemini-3.8-flash-high` | なし                                            |
 | `orch:flash:work`   | Antigravity / `gemini-3.8-flash-high` | `../worktrees/agy-work`（無ければ自動作成）     |
 
+0.9.2 から、`orch:argon`・`orch:flash` などの Antigravity の行は使えません。`orchestrator launch --provider antigravity` は agy を起動する前にエラーで終了します。理由と代わりの操作は [[specdojo:exec-config-guide|exec設定ガイド]] の `provider 設定の配布と scaffold` を参照してください。以下の agy の説明は 0.9.1 までの記録です。
+
 Antigravity CLI（`agy`）はファイル定義の agent を持たないため、Codex と同じく SSOT `.agents/specdojo-orchestrator.agent.md` の本文を `-i`（初期プロンプトを与えて対話を続ける）で渡します。ラッパーは不要で、`.agents/rules/*.md` の薄いラッパー経由で `.github/instructions/` の規則も読み込まれます。
 
 Antigravity で使えるモデル ID は `agy models` で確認してください。配布スクリプトは `gemini-4-argon-medium` と `gemini-3.8-flash-high` を指定します。
 
-`specdojo init` と `config scaffold` が利用者の `package.json` へ追加するスクリプトは、Claude Code が `orch:opus`・`orch:sonnet`、Codex が `orch:sol`（`gpt-6.1-sol`）・`orch:luna`（`gpt-6-luna`）、Antigravity が `orch:argon`（`gemini-4-argon-medium`）・`orch:flash`（`gemini-3.8-flash-high`）、OpenCode が `orch:opencode` です。Codex と Antigravity のスクリプトは、名前に対応するモデルを起動コマンドで明示します。
+`specdojo init` と `config scaffold` が利用者の `package.json` へ追加するスクリプトは、Claude Code が `orch:opus`・`orch:sonnet`、Codex が `orch:sol`（`gpt-6.1-sol`）・`orch:luna`（`gpt-6-luna`）、OpenCode が `orch:opencode` です（0.9.2 から Antigravity のスクリプトは追加しません）。Codex のスクリプトは、名前に対応するモデルを起動コマンドで明示します。
 
-0.4.0 以前に作った `orch:codex`・`orch:agy` は自動では削除・上書きされません。`config scaffold --provider codex` または `config scaffold --provider antigravity` を再実行して新しいスクリプトを追加し、新しい名前で起動できることを確認してから、旧スクリプトを `package.json` から削除してください。
+0.4.0 以前に作った `orch:codex`・`orch:agy` は自動では削除・上書きされません。`config scaffold --provider codex` を再実行して新しいスクリプトを追加し、新しい名前で起動できることを確認してから、旧スクリプトを `package.json` から削除してください。
 
 用途に応じて使い分けます。
 
@@ -102,7 +104,7 @@ scaffold が追加する `orch:*` は `specdojo orchestrator launch` を経由�
 
 OpenCode は起動引数に追加ルートの指定を持たないため、選択した orchestrator agent の `permission.external_directory` を実行時の inline config で上書きします。全外部ディレクトリを拒否してから宣言済みルートだけを許可し、同じルートの `permission.edit` も許可します。`edit` は起動場所からの相対パスで照合されるため、相対パスのパターンで渡します。設定ファイル自体は変更しません。
 
-Antigravity CLI の無人実行に必要な permission rule は、利用者のすべてのリポジトリに効くグローバル設定です。通常の scaffold では変更されないため、明示的に dry-run で追加 rule を確認してから適用します。既存設定は保持され、実適用前にバックアップされます。
+次の Antigravity CLI のグローバル設定は 0.9.2 から使えません（`config scaffold --provider antigravity` はエラーになります）。0.9.1 まで、Antigravity CLI の無人実行に必要な permission rule は、利用者のすべてのリポジトリに効くグローバル設定です。通常の scaffold では変更されないため、明示的に dry-run で追加 rule を確認してから適用します。既存設定は保持され、実適用前にバックアップされます。
 
 ```bash
 npx specdojo config scaffold --provider antigravity --global --dry-run

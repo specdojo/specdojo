@@ -67,4 +67,11 @@ plan に展開された finding は、message と同じ viewpoint ID の判定�
 - 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
 - agent 自身は登録簿の状態を変更せず、終了コードと標準エラー出力で runner に結果を返す。
 
+## 再開の指示（2026-11-21T01:11:19.549Z）
+
+利用者が再開の前に足した指示である。これまでの申し送りとあわせて、この指示に従って作業を続ける。
+
+- tests/src/commands/init-agent-roster.integration.test.ts の 2 件は、antigravity を provider に含めて init と config scaffold を流しているため、今回足したエラーで落ちた。実装の動きは変えず、テストから antigravity を外し、antigravity を指定すると理由付きでエラーになることを確かめる形に直す。
+- 個票の対応結果の 76 行目付近の URL が MD034（bare URL）に当たっている。<https://...> の形で囲む。
+
 `共通規約 sha256:e7dd6ff2a0dec2f12ed4ffc905cd185aca2d6f9c3922c56a249c88cb45b2a14e` `docs/ja/projects/prj-0001/execution/conventions/e7dd6ff2a0dec2f12ed4ffc905cd185aca2d6f9c3922c56a249c88cb45b2a14e.txt`

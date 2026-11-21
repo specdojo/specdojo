@@ -1,7 +1,5 @@
 import { type Command } from "commander";
-import { antigravityRole, antigravitySessionArguments } from "../exec/antigravity-session.js";
-import { productRootsFromEnvironment } from "../exec/task-repos.js";
-import { runOrchestratorLaunch } from "./orchestrator.js";
+import { assertProviderLaunchAllowed } from "../shared/antigravity-block.js";
 import {
   AGENT_RUN_RATE_LIMIT_EXIT_CODE,
   runAgentPlan,
@@ -16,6 +14,17 @@ export {
   runAgentPlan,
 } from "../exec/agent-plan.js";
 
+/**
+ * `agent launch` only ever wrapped agy, and 0.9.1 `init` wrote command templates that call it.
+ * Since 0.9.2 it fails before spawning anything so those existing configurations stop here.
+ */
+export function runAgentLaunch(options: { provider: string }): never {
+  assertProviderLaunchAllowed(options.provider, "agent launch");
+  throw new Error(
+    `agent launch supports no provider other than antigravity, which is no longer launched: ${options.provider}`,
+  );
+}
+
 export function registerAgentCommands(program: Command): void {
   const agent = program
     .command("agent", { hidden: true })
@@ -23,30 +32,13 @@ export function registerAgentCommands(program: Command): void {
 
   agent
     .command("launch", { hidden: true })
-    .description("Launch agy with role-specific session permissions and runner-declared roots")
-    .requiredOption("--provider <name>", "Provider CLI (antigravity)")
-    .requiredOption("--role <role>", "Pipeline role (edit|review|report)")
-    .argument("[providerArgs...]", "agy arguments after --")
-    .action(async (providerArgs: string[], options: { provider: string; role: string }) => {
+    .description("Former agy launcher; refuses to launch Antigravity since 0.9.2")
+    .requiredOption("--provider <name>", "Provider CLI (antigravity is no longer launched)")
+    .option("--role <role>", "Pipeline role (edit|review|report); ignored")
+    .argument("[providerArgs...]", "Provider arguments after --")
+    .action((_providerArgs: string[], options: { provider: string }) => {
       try {
-        if (options.provider !== "antigravity" || options.role === "orchestrator") {
-          throw new Error(
-            "agent launch requires antigravity and a pipeline role (edit|review|report)",
-          );
-        }
-        const cwd = process.cwd();
-        const args = antigravitySessionArguments({
-          role: antigravityRole(options.role),
-          cwd,
-          repoRoots: productRootsFromEnvironment(process.env).map((repo) => repo.path),
-          providerArgs,
-        });
-        process.exitCode = await runOrchestratorLaunch({
-          command: "agy",
-          args,
-          cwd,
-          env: { ...process.env },
-        });
+        runAgentLaunch(options);
       } catch (error) {
         process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
         process.exitCode = 1;

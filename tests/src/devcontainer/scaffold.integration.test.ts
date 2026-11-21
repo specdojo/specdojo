@@ -399,10 +399,7 @@ exit 0`,
   });
 
   it("passes bash syntax checks for both generated scripts", async () => {
-    const fixture = await createScaffoldFixture(
-      ["claude", "codex", "opencode", "antigravity"],
-      "full",
-    );
+    const fixture = await createScaffoldFixture(["claude", "codex", "opencode"], "full");
 
     for (const script of [fixture.postCreateScript, fixture.tmuxScript]) {
       const result = spawnSync("/bin/bash", ["-n", script], { encoding: "utf8" });
@@ -418,10 +415,7 @@ exit 0`,
   it.skipIf(!shellcheckAvailable)(
     "passes shellcheck for both generated scripts when shellcheck is installed",
     async () => {
-      const fixture = await createScaffoldFixture(
-        ["claude", "codex", "opencode", "antigravity"],
-        "full",
-      );
+      const fixture = await createScaffoldFixture(["claude", "codex", "opencode"], "full");
 
       for (const script of [fixture.postCreateScript, fixture.tmuxScript]) {
         const result = spawnSync("shellcheck", [script], { encoding: "utf8" });

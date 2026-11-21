@@ -707,7 +707,7 @@ export function registerExecCommands(program: Command): void {
   scaffoldCmd.option("--dry-run", "Show planned files without writing", false);
   scaffoldCmd.option(
     "--global",
-    "Merge provider permissions into user-level settings (currently antigravity only)",
+    "Merge provider permissions into user-level settings (no provider currently supports it)",
     false,
   );
   scaffoldCmd.action(async (opts) => {
