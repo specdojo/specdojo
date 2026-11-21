@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-xa6y-grade-run-rate-limit-fallback
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-20T23:35:36Z"
+  completed_at: "2026-11-21T22:49:26Z"
+  conclusion: grade run に --fallback-by を足し、rate limit のときに同じ run id のまま代わりの評価者で続けるようにした。job から fallback_by で渡せる。
   derived_from:
     - PJR-SW7T
 ---
