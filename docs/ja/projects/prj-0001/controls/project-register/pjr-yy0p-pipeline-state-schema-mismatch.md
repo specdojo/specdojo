@@ -60,8 +60,37 @@ runner が書く artifacts が pipeline-state.schema.yaml に無く、register �
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+### 5.1. 解決内容
+
+- `docs/specdojo/schemas/v1/pipeline-state.schema.yaml` に `artifacts`（`plan_ref` と `result_ref`、いずれも 1 文字以上の文字列、追加項目なし）を足した。`src/exec/pipeline-state.ts` の `PipelineArtifactRefs` と `isArtifactRefs` の検査と同じ形である。
+- 過去の記録は書き換えていない。
+
+### 5.2. 確認結果
+
+- `npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/pipeline-state.schema.yaml --data "docs/ja/**/execution/runs/register/**/pipeline-state.json"` が追跡済みの 973 件すべて valid だった。不合格は 0 件で、schema を広げる・外す対応は不要だった。
+- 単体テストは足していない。上のコマンドで全記録に対して確かめた。
+
+### 5.3. 再発防止策（`package.json` の変更案）
+
+`package.json` は保護された設定のため executor は変更しない。orchestrator が次を反映する。
+
+```json
+"validate:schema:pipeline-state": "node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --schema docs/specdojo/schemas/v1/pipeline-state.schema.yaml --data \"docs/ja/**/execution/runs/**/pipeline-state.json\" --allow-empty",
+"validate:schema": "npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary"
+```
+
+`runs/**` は register 以外の origin も含める。反映前に register 以外の記録が通ることを確認し、通らなければ `runs/register/**` に絞る。
+
+### 5.4. CHANGELOG に書く事項
+
+- 区分: Fixed
+- 文案: `pipeline-state.schema.yaml` に runner が記録する `artifacts` を追加し、既存の記録が schema に合うようにした。
+- 利用者への影響: schema の記述を実際の記録に合わせただけで、実行時の挙動は変わらない。
+
+### 5.5. 決定事項
+
+- 検査の範囲は register の記録だけで確かめた。他の origin への拡張は上の変更案の反映時に確認する。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- `PJR-5F1Y`: 不合格の発見元。`resume_notes` の schema 変更。
