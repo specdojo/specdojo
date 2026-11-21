@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_dcc84d80b4c74a018aec08a20d23fbc7
+  ts: "2026-11-21T14:02:40Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: result のバッククォートがエスケープされて書かれ、統合の前の検査で止まる
+    - field: description
+      from: ""
+      to: reporter などが result の本文にバックスラッシュでエスケープしたバッククォートを書き、統合の前の Markdown の検査（MD038）で止まる。原因を確かめ、書かせないか runner が直す
+    - field: input
+      from: ""
+      to: "[\"2026-11-21、T-KATA-WAVE-3-utc-sample-050 の統合が、result.md のバッククォートが \\\\` とエスケープされていたため MD038（Spaces inside code span elements）で止まった。成果物と親の検証は通っていた。オーケストレーターがエスケープを戻して exec resume --task で統合した\",\"オーケストレーターの観察: 同じ形の止まり方は以前にもあった（回数は未集計）\",\"利用者の決定（2026-11-21、indie）: 夜の間に流す。直し方は executor が決めて理由を記録する\"]"
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-21"
+    - field: due
+      from: ""
+      to: _TODO_
