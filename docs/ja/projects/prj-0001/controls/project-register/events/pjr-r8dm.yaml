@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_2b87df3182224654ac6f1b29012395c2
+  ts: "2026-11-21T08:16:06Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: 第 3 波の試しの準備で、原因を取り違えやすいエラーに気付いたため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: exec run --task が、流せないタスクに段の情報が見つからないという紛らわしいエラーを出す
+    - field: description
+      from: ""
+      to: 依存が終わっていないタスクや done のタスクを --task で指定すると、本当の理由ではなく Cannot resolve phase context ... not found in sch-strategy files と出る
+    - field: input
+      from: ""
+      to: '["2026-11-21、T-KATA-WAVE-3-utc-sample-040（依存の T-KATA-WAVE-3-utc-index-sample-080 が未完了）と、done の T-KATA-SLIM-2-prj-overview-040・060・T-KATA-SLIM-2-sch-defaults-040 を exec run --task --dry-run で指定すると、どれも Cannot resolve phase context for ... not found in sch-strategy files で止まった。見出しにタスクの名前も出なかった","依存の終わった T-KATA-WAVE-3-tsp-index-sample-040 は、同じ strategy で claim と opus-executor の起動まで dry-run が通った","メッセージは src/exec/run/schedule-prepare.ts の prepareSingleTask が、agent の候補が無いときに出す"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-21"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-VCER"]'
