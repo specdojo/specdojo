@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_4e266936a7db4081a01bc7b48d4fbf16
+  ts: "2026-11-21T08:22:36Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: cnd-specdojo の本文から承認の記録を外すにあたり、留保 A の追跡先を登録簿に置くため（PJR-76N9）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 文書サイトの閲覧の認証と配信（構築環境・配信先・公開範囲）をどうするか
+    - field: description
+      from: ""
+      to: cnd-specdojo の留保 A。生成ドキュメントサイトの構築環境、配信先、公開範囲、到達先、閲覧の認証を決める
+    - field: input
+      from: ""
+      to: '["cnd-specdojo の 4.2 で、人間の PO が 2026-11-15 に留保を承認した（運用設計・非機能要件の整備まで）。追跡先の PJR が未登録だった","留保の間も進めてよい作業: 作業環境でのサイト構築と内容確認、ifd-specdojo での候補整理、選別方式の案の作成。保留する作業: 配信先への公開、認証方式と配信先の確定、配信の運用手順の確定","関係: cnd-specdojo の REL-04（承認者 → サイトの閲覧）と REL-06（サイト → リポジトリの構築時の参照）"]'
+    - field: type
+      from: ""
+      to: question
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: PO
+    - field: registered
+      from: ""
+      to: "2026-11-21"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-Q9DF"]'
