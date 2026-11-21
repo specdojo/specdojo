@@ -1,0 +1,14 @@
+result の本文でバッククォートがエスケープされる原因を特定し、runner が書き込む前に直す対応を入れました。
+
+- **原因:** reporter が JSON 文字列の中でバッククォートを `\`` と二重にエスケープして返していました。runner の `reporterFreeText`（`src/exec/results.ts`）がそれをそのまま result 本文へ書き、MD038 で止まっていました。
+- **直し方:** `src/shared/text.ts` に `unescapeBackticksWhenUniform` を追加し、`reporterFreeText` から呼びます。文中のバッククォートがすべてバックスラッシュ付きのときだけエスケープを外します。エスケープなしのバッククォートが混ざる文は変えません。
+- **runner 側で直した理由:** reporter への指示だけでは LLM の出力を保証できず、再発するためです。
+- **コードブロック:** `reporterFreeText` の対象は 1 行化済みの自由記述です。コードブロックの中は処理しないので変わりません。
+- **テスト:** `tests/src/shared/text.test.ts` に 3 件追加しました（一律エスケープの復元、混在時は不変、エスケープなしは不変）。
+- **個票:** 対応結果に原因、直し方と理由、確認結果、CHANGELOG 文案（区分は Fixed）を書きました。`CHANGELOG.md` 自体は変えていません。
+
+`lint:md`・`lint:fm`・`validate:schema` と `test:unit`・`test:integration` の全件は、親 runner の実行に任せました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"reporter の JSON 出力でバッククォートが `\\`` とエスケープされ、runner の `reporterFreeText` がそのまま result 本文へ書いて MD038 になる原因を特定した。runner 側で、バッククォートがすべてエスケープされている文に限り戻す `unescapeBackticksWhenUniform` を追加し、`reporterFreeText` から呼ぶ。単体テストを 3 件追加した。個票の対応結果と CHANGELOG 文案を記入した。","handoff":["直し方は runner 側の復元を選んだ。理由は、reporter への指示だけでは LLM の出力を保証できず再発するため。","エスケープなしのバッククォートが混ざる文は、code span 内の意図したバックスラッシュを壊さないよう復元しない。この場合は MD038 を防げない。","CHANGELOG 文案（区分 Fixed）は個票の `### 5.1. CHANGELOG に書く事項` に記載した。`CHANGELOG.md` は変更していない。","reporter ごとの発生回数と、どの reporter agent で起きるかは未集計。"],"validations":[{"command":"npx vitest run tests/src/shared/text.test.ts tests/src/exec/results.test.ts tests/src/exec/reporter.test.ts","status":"passed","summary":"3 ファイル 232 件が通過"},{"command":"npx markdownlint-cli2 docs/ja/projects/prj-0001/controls/project-register/pjr-g3tt-escaped-backticks-in-result.md","status":"passed","summary":"個票は指摘 0 件"},{"command":"npx prettier --check docs/ja/projects/prj-0001/controls/project-register/pjr-g3tt-escaped-backticks-in-result.md","status":"passed","summary":"個票は整形済みで、最後の `--write` が `unchanged`"},{"command":"npm run validate:history-links","status":"passed","summary":"出力の末尾は valid のみ"}]}
+</specdojo_executor_evidence>

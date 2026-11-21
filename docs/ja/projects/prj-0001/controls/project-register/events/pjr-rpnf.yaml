@@ -1,0 +1,56 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_52df63e020334deca5b7dadd88036808
+  ts: "2026-11-21T23:03:51Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: sample の executor がタスクごとに docs:build を流し、メモリーと時間を使う
+    - field: description
+      from: ""
+      to: sample の作成規則の最終チェックが docs:build を求めるため、型の executor が 1 件ごとに 5〜6GB と数分を使う。タスクごとのチェックから外し、波の区切りと release の前に 1 回流す運用にする。
+    - field: input
+      from: ""
+      to: '["2026-11-21 の夜、型の executor の docs:build（5.8GB）でコンテナのメモリーと swap が尽きかけた。","runner は executor が `not_run` と報告した検証を、親の検証が肩代わりしない限り失敗にする（src/exec/reporter.ts）。docs:build は親の検証に入っていない。","docs:build は deploy の workflow（.github/workflows/deploy.yml）で流れる。check:release には入っていない。","タスクごとのチェックから外し、区切りで 1 回流す案（A）は indie の決定（2026-11-22）。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-22"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-50RQ"]'
+- v: 1
+  id: reg_936c147e7226420bbaee225ab299975a
+  ts: "2026-11-21T23:04:34Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_52df63e020334deca5b7dadd88036808

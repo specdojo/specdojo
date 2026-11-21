@@ -1,0 +1,103 @@
+{
+  "version": 1,
+  "queue_id": "morning-c-2026-11-22",
+  "project_id": "prj-0001",
+  "created_at": "2026-11-21T22:46:12.344Z",
+  "updated_at": "2026-11-21T22:46:12.344Z",
+  "state": "pending",
+  "steps": [
+    {
+      "index": 1,
+      "on_failure": "continue",
+      "status": "pending",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--register",
+        "PJR-50RQ",
+        "--resume",
+        "--resume-from",
+        "executor",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--project",
+        "prj-0001"
+      ]
+    },
+    {
+      "index": 2,
+      "on_failure": "continue",
+      "status": "pending",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--register",
+        "PJR-F6MC",
+        "--resume",
+        "--resume-from",
+        "executor",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--project",
+        "prj-0001"
+      ]
+    },
+    {
+      "index": 3,
+      "on_failure": "stop",
+      "status": "pending",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--task",
+        "T-KATA-WAVE-3-trc-requirements-to-tests-sample-050",
+        "--resume",
+        "--resume-from",
+        "executor",
+        "--fallback-executor-by",
+        "sonnet-executor",
+        "--exec-defaults",
+        "tmp/orchestrator/exec-defaults-claude-fallback.yaml",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--project",
+        "prj-0001"
+      ]
+    },
+    {
+      "index": 4,
+      "on_failure": "stop",
+      "status": "pending",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--task",
+        "T-KATA-WAVE-3-trc-requirements-to-tests-sample-080",
+        "--fallback-executor-by",
+        "sonnet-executor",
+        "--exec-defaults",
+        "tmp/orchestrator/exec-defaults-claude-fallback.yaml",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--project",
+        "prj-0001"
+      ]
+    }
+  ]
+}

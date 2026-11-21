@@ -33,6 +33,9 @@ export type ParentValidationId =
   | "lint-ts"
   | "lint-fm"
   | "lint-md"
+  | "lint-fm-changed"
+  | "lint-md-changed"
+  | "test-docs"
   | "lint-mermaid"
   | "lint-d2"
   | "build"
@@ -120,6 +123,27 @@ const PARENT_VALIDATION_REGISTRY: Record<ParentValidationId, ParentValidationDef
     command: process.platform === "win32" ? "npm.cmd" : "npm",
     args: ["run", "lint:md"],
     displayCommand: "npm run lint:md",
+    timeoutMs: 10 * 60 * 1_000,
+  },
+  "lint-fm-changed": {
+    id: "lint-fm-changed",
+    command: process.platform === "win32" ? "npm.cmd" : "npm",
+    args: ["run", "lint:fm:changed"],
+    displayCommand: "npm run lint:fm:changed",
+    timeoutMs: 10 * 60 * 1_000,
+  },
+  "lint-md-changed": {
+    id: "lint-md-changed",
+    command: process.platform === "win32" ? "npm.cmd" : "npm",
+    args: ["run", "lint:md:changed"],
+    displayCommand: "npm run lint:md:changed",
+    timeoutMs: 10 * 60 * 1_000,
+  },
+  "test-docs": {
+    id: "test-docs",
+    command: process.platform === "win32" ? "npm.cmd" : "npm",
+    args: ["run", "test:docs"],
+    displayCommand: "npm run test:docs",
     timeoutMs: 10 * 60 * 1_000,
   },
   "lint-mermaid": {
@@ -229,7 +253,7 @@ export const PARENT_VALIDATION_PROJECT_REPO = PROJECT_REPO_WORKTREE_DIRNAME;
 
 /** One element of `pipeline.parent_validations` in exec-defaults. */
 export type ParentValidationEntry =
-  string | { id: string; repo?: string; paths?: readonly string[] };
+  string | { id: string; repo?: string; paths?: readonly string[]; parallel?: boolean };
 
 export type ParentValidationAssignment = {
   definition: ParentValidationDefinition;
@@ -242,6 +266,8 @@ export type ParentValidationAssignment = {
    * Absent means the validation always runs.
    */
   paths?: readonly string[];
+  /** PJR-50RQ: validation may run alongside adjacent `parallel` validations (light lint). */
+  parallel?: boolean;
 };
 
 /**
@@ -277,7 +303,12 @@ function assignmentLabel(id: string, repo: string): string {
   return repo === PARENT_VALIDATION_PROJECT_REPO ? id : `${repo}:${id}`;
 }
 
-type ParsedEntry = { id: string; repo: string; paths?: readonly string[] };
+type ParsedEntry = {
+  id: string;
+  repo: string;
+  paths?: readonly string[];
+  parallel?: boolean;
+};
 
 function parsePaths(value: unknown, where: string): readonly string[] | undefined {
   if (value === undefined) return undefined;
@@ -300,7 +331,7 @@ function parseEntry(entry: unknown, index: number): ParsedEntry {
     );
   }
   const unknownKeys = Object.keys(entry)
-    .filter((key) => key !== "id" && key !== "repo" && key !== "paths")
+    .filter((key) => !["id", "repo", "paths", "parallel"].includes(key))
     .sort();
   if (unknownKeys.length > 0) {
     throw new Error(`${where}: unknown key(s) ${unknownKeys.map((key) => `"${key}"`).join(", ")}`);
@@ -309,8 +340,11 @@ function parseEntry(entry: unknown, index: number): ParsedEntry {
     throw new Error(`${where}.id must be a non-empty string`);
   }
   const paths = parsePaths(entry.paths, where);
-  if (entry.repo === undefined && paths === undefined) {
-    throw new Error(`${where} must set repo or paths when written as an object`);
+  if (entry.parallel !== undefined && typeof entry.parallel !== "boolean") {
+    throw new Error(`${where}.parallel must be a boolean`);
+  }
+  if (entry.repo === undefined && paths === undefined && entry.parallel === undefined) {
+    throw new Error(`${where} must set repo, paths or parallel when written as an object`);
   }
   const repo = entry.repo ?? PARENT_VALIDATION_PROJECT_REPO;
   if (typeof repo !== "string" || !REPO_NAME_PATTERN.test(repo)) {
@@ -318,7 +352,12 @@ function parseEntry(entry: unknown, index: number): ParsedEntry {
       `${where}.repo must match ${String(REPO_NAME_PATTERN)} (got ${JSON.stringify(entry.repo)})`,
     );
   }
-  return { id: entry.id, repo, ...(paths ? { paths } : {}) };
+  return {
+    id: entry.id,
+    repo,
+    ...(paths ? { paths } : {}),
+    ...(entry.parallel === true ? { parallel: true } : {}),
+  };
 }
 
 export function resolveParentValidationAssignments(
@@ -327,7 +366,7 @@ export function resolveParentValidationAssignments(
   if (!entries) return [];
   const seen = new Set<string>();
   return entries.map((entry, index) => {
-    const { id, repo, paths } = parseEntry(entry, index);
+    const { id, repo, paths, parallel } = parseEntry(entry, index);
     const label = assignmentLabel(id, repo);
     if (seen.has(label)) {
       throw new Error(`Duplicate parent validation id in exec-defaults: ${label}`);
@@ -341,7 +380,13 @@ export function resolveParentValidationAssignments(
         `Unknown parent validation id in exec-defaults: ${id} (allowed: ${Object.keys(PARENT_VALIDATION_REGISTRY).join(", ")})`,
       );
     }
-    return { definition, repo, label, ...(paths ? { paths } : {}) };
+    return {
+      definition,
+      repo,
+      label,
+      ...(paths ? { paths } : {}),
+      ...(parallel ? { parallel } : {}),
+    };
   });
 }
 
@@ -606,7 +651,9 @@ export async function runParentValidationBatch(
   const validations: EvidenceValidation[] = [];
   const failureOutputs: ParentValidationFailureOutput[] = [];
   const productRepos = Object.keys(roots.repos ?? {});
-  for (const assignment of assignments) {
+  const runOne = async (
+    assignment: ParentValidationAssignment,
+  ): Promise<{ validation: EvidenceValidation; failure?: ParentValidationFailureOutput }> => {
     const { definition, repo } = assignment;
     const repoField = recordsRepo ? { repo } : {};
     if (isParentValidationSkipped(assignment, selection, productRepos)) {
@@ -616,17 +663,18 @@ export async function runParentValidationBatch(
         `skipped by change type: no changed file matches paths (${(assignment.paths ?? []).join(", ")})`,
         MAX_SUMMARY_LENGTH,
       );
-      validations.push({
-        id: definition.id,
-        source: "runner",
-        ...repoField,
-        command: definition.displayCommand,
-        status: "not_applicable",
-        summary: reason,
-        reason,
-      });
       validationMetric("validation-skipped", { id: definition.id, repo, reason });
-      continue;
+      return {
+        validation: {
+          id: definition.id,
+          source: "runner",
+          ...repoField,
+          command: definition.displayCommand,
+          status: "not_applicable",
+          summary: reason,
+          reason,
+        },
+      };
     }
     const root =
       repo === PARENT_VALIDATION_PROJECT_REPO
@@ -635,19 +683,20 @@ export async function runParentValidationBatch(
           ? roots.repos?.[repo]
           : undefined;
     if (!root) {
-      validations.push({
-        id: definition.id,
-        source: "runner",
-        ...repoField,
-        command: definition.displayCommand,
-        status: "failed",
-        summary: truncateHead(
-          `repository "${repo}" has no worktree for this task; declare it in projects.<project-id>.repos ` +
-            `or assign ${definition.id} to another repository in pipeline.parent_validations`,
-          MAX_SUMMARY_LENGTH,
-        ),
-      });
-      continue;
+      return {
+        validation: {
+          id: definition.id,
+          source: "runner",
+          ...repoField,
+          command: definition.displayCommand,
+          status: "failed",
+          summary: truncateHead(
+            `repository "${repo}" has no worktree for this task; declare it in projects.<project-id>.repos ` +
+              `or assign ${definition.id} to another repository in pipeline.parent_validations`,
+            MAX_SUMMARY_LENGTH,
+          ),
+        },
+      };
     }
     const startedAt = new Date().toISOString();
     const started = performance.now();
@@ -680,22 +729,37 @@ export async function runParentValidationBatch(
       timed_out: result.timedOut === true,
       status: passed ? "passed" : "failed",
     });
-    validations.push({
+    const validation: EvidenceValidation = {
       id: definition.id,
       source: "runner",
       ...repoField,
       command: definition.displayCommand,
       status: passed ? "passed" : "failed",
       summary: validationSummary(result),
-    });
-    if (!passed) {
-      failureOutputs.push({
+    };
+    if (passed) return { validation };
+    return {
+      validation,
+      failure: {
         ...result,
         id: definition.id,
         ...(recordsRepo ? { repo } : {}),
         label: assignmentLabel(definition.id, repo),
-      });
+      },
+    };
+  };
+  // PJR-50RQ: `parallel` が続く検証は同時に流し、それ以外は 1 本ずつ流す。結果は設定の並びで記録する。
+  for (let start = 0; start < assignments.length;) {
+    let end = start + 1;
+    if (assignments[start].parallel) {
+      while (end < assignments.length && assignments[end].parallel) end++;
     }
+    const settled = await Promise.all(assignments.slice(start, end).map(runOne));
+    for (const { validation, failure } of settled) {
+      validations.push(validation);
+      if (failure) failureOutputs.push(failure);
+    }
+    start = end;
   }
   return { validations, failureOutputs };
 }

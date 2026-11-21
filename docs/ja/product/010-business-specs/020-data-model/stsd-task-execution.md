@@ -128,6 +128,6 @@ stateDiagram-v2
 
 ## 6. 今後の検討メモ
 
-- _UNDECIDED_: 上流の `bdd-exec-state`・`bdd-exec-event` が未作成のため、状態名・イベント名・担当アクターの項目は、統合済みの実装の現在動作（[[prj-0001:pjr-m495-exec-unblock-keeps-claim-owner]]、[[prj-0001:pjr-t4g3-exec-block-after-actor-switch]]）に合わせている。両辞書の作成時に BA が照合し、食い違う場合に本書と辞書のどちらを正とするかを PO が決め、ARC・DEV が本書または実装を直す。辞書が本書の確定（140）までに作成されない場合は、PO が 140 で現在の名称を正として確定するかを決める。影響は全状態と `T-05`〜`T-12`、追跡は [[prj-0001:pjr-tn43-user-decisions-pending]] とする。
-- _UNDECIDED_: 担当アクターを claim の持ち主とし、移すのは人間の引き取り指定に限る権限の規則（`T-05`〜`T-12`）の業務上の承認。PO が本書の確定（140）で決め、承認の前に BA が業務上の正確さを、QE・DEV が状態遷移テストと実装の参照としての使いやすさを確認する。追跡は [[prj-0001:pjr-tn43-user-decisions-pending]] とする。
+- _UNDECIDED_: 上流の `bdd-exec-state`・`bdd-exec-event` が未作成のため、状態名・イベント名・担当アクターの項目は、統合済みの実装の現在動作（[[prj-0001:pjr-m495-exec-unblock-keeps-claim-owner]]、[[prj-0001:pjr-t4g3-exec-block-after-actor-switch]]）に合わせている。両辞書の作成時に照合し、食い違う場合は本書と辞書のどちらを正とするかを決めて、本書または実装を直す。辞書が本書の確定（140）までに作成されない場合は、140 で現在の名称を正として確定するかを決める。影響は全状態と `T-05`〜`T-12`、追跡は [[prj-0001:pjr-tn43-user-decisions-pending]] とする。
+- _UNDECIDED_: 担当アクターを claim の持ち主とし、移すのは人間の引き取り指定に限る権限の規則（`T-05`〜`T-12`）の業務上の確定。本書の確定（140）で決め、確定の前に業務上の正確さ、状態遷移テストと実装の参照としての使いやすさを確認する。追跡は [[prj-0001:pjr-tn43-user-decisions-pending]] とする。
 - 本書の `ready` への昇格は、上の 2 件が決まり、140 で人間が承認した後に行う。本書を直すタスクの完了は、本書の確定を意味しない。

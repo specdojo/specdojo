@@ -93,3 +93,32 @@
       from: "-"
       to: "parent validation failed: test-unit"
   previous_event_id: reg_9d633a9c0b1649ff9cb088df7df92ca6
+- v: 1
+  id: reg_adf34632b1e949ae85a847170412fc74
+  ts: "2026-11-21T22:57:31Z"
+  action: start
+  actor: sonnet-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_48ce3f2297ac4fbba77ffffd07e34d3e
+- v: 1
+  id: reg_aa0cc9317f704731af208bf7e54b171e
+  ts: "2026-11-21T23:01:43Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_adf34632b1e949ae85a847170412fc74

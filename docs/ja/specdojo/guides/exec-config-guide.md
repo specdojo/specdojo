@@ -382,6 +382,22 @@ pipeline:
     - { id: test-unit, paths: ["{src,tests,tools}/**", "docs/ja/specdojo/**", "vitest.config.*"] }
 ```
 
+要素に `parallel: true` を書くと、直前・直後の `parallel: true` の要素と同時に流します（PJR-50RQ）。書かない要素は従来どおり 1 本ずつ、設定の並び順で流します。結果は設定の並び順で記録します。lint のような軽い検証だけに使い、vitest を使う test の検証には付けません。
+
+文書だけを変えた run の検証は、次の ID で軽くできます（PJR-50RQ）。
+
+- `lint-md-changed`（`npm run lint:md:changed`）と `lint-fm-changed`（`npm run lint:fm:changed`）は、作業ツリーで変えた Markdown だけに lint を流します。範囲は統合の commit の hook と同じです。変更が無ければ何もせず成功します。設定や lint の規則のファイルを変えた run では、`paths` を付けた全体の `lint-md` / `lint-fm` も併せて流します。
+- `test-docs`（`npm run test:docs`）は、`docs/ja/specdojo/**`・`docs/specdojo/**` の実際の文書を読むテストだけを流します。`test-unit` と `test-integration` の `paths` から文書を外し、文書だけの変更ではこの検証を流します。
+
+```yaml
+pipeline:
+  parent_validations:
+    - { id: lint-md-changed, parallel: true }
+    - { id: lint-fm-changed, parallel: true }
+    - { id: lint-md, paths: ["packages/docs-lint/**", ".markdownlint*"], parallel: true }
+    - { id: test-docs, paths: ["docs/ja/specdojo/**", "docs/specdojo/**"] }
+```
+
 `pipeline.commit_hook_skips` は、runner の統合の commit で流し直さない Git hook（lefthook のコマンド名）を宣言します。`covered_by` に並べた親の検証がその run ですべて `passed` のときだけ、commit を `LEFTHOOK_EXCLUDE` 付きで実行します。`not_applicable` や失敗した検証は代わりにならないため、その場合は hook を流します。人が手で commit するときの hook は変わりません。
 
 ```yaml
