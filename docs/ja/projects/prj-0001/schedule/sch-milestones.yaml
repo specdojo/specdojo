@@ -667,3 +667,47 @@ milestones:
     depends_on:
       - T-KATA-WAVE-2-ifx-file-agent-evidence-140
     owner: PO
+  - id: G-KATA-WAVE-3-first-pass
+    name: 初回パス完了
+    depends_on:
+      - T-KATA-WAVE-3-tsp-index-sample-080
+      - T-KATA-WAVE-3-utc-index-sample-080
+      - T-KATA-WAVE-3-utc-sample-080
+      - T-KATA-WAVE-3-itc-index-sample-080
+      - T-KATA-WAVE-3-itc-sample-080
+      - T-KATA-WAVE-3-stc-index-sample-080
+      - T-KATA-WAVE-3-stc-sample-080
+      - T-KATA-WAVE-3-etc-index-sample-080
+      - T-KATA-WAVE-3-etc-sample-080
+      - T-KATA-WAVE-3-atc-index-sample-080
+      - T-KATA-WAVE-3-atc-sample-080
+      - T-KATA-WAVE-3-trc-requirements-to-tests-sample-080
+      - T-KATA-WAVE-3-imp-test-sample-080
+    owner: PO
+  - id: G-KATA-WAVE-3-review-pass
+    name: レビュー完了
+    depends_on:
+      - T-KATA-WAVE-3-tsp-index-sample-090
+      - T-KATA-WAVE-3-utc-index-sample-090
+      - T-KATA-WAVE-3-utc-sample-090
+      - T-KATA-WAVE-3-itc-index-sample-090
+      - T-KATA-WAVE-3-itc-sample-090
+      - T-KATA-WAVE-3-stc-index-sample-090
+      - T-KATA-WAVE-3-stc-sample-090
+      - T-KATA-WAVE-3-etc-index-sample-090
+      - T-KATA-WAVE-3-etc-sample-090
+      - T-KATA-WAVE-3-atc-index-sample-090
+      - T-KATA-WAVE-3-atc-sample-090
+      - T-KATA-WAVE-3-trc-requirements-to-tests-sample-090
+      - T-KATA-WAVE-3-imp-test-sample-090
+    owner: PO
+  - id: M-KATA-WAVE-3-kata
+    name: ドメイン完了
+    artifact_name: 実践の型（試験の型）
+    depends_on:
+      - T-KATA-WAVE-3-utc-sample-140
+      - T-KATA-WAVE-3-itc-sample-140
+      - T-KATA-WAVE-3-etc-sample-140
+      - T-KATA-WAVE-3-trc-requirements-to-tests-sample-140
+      - T-KATA-WAVE-3-imp-test-sample-140
+    owner: PO

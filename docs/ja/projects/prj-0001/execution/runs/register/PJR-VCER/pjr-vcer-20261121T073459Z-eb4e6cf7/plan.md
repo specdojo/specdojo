@@ -68,4 +68,11 @@ plan に展開された finding は、message と同じ viewpoint ID の判定�
 - 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
 - agent 自身は登録簿の状態を変更せず、終了コードと標準エラー出力で runner に結果を返す。
 
+## 再開の指示（2026-11-21T08:00:23.697Z）
+
+利用者が再開の前に足した指示である。これまでの申し送りとあわせて、この指示に従って作業を続ける。
+
+- 親の検証の test-unit で tests/src/docs/yaml-tables.test.ts のスナップショット（tests/fixtures/yaml-pages/prj-0001--sch-milestones.md.snap）が落ちた。schedule build が sch-milestones.yaml に第 3 波のマイルストーンを足したためで、変更は正しい。スナップショットを作り直し（npx vitest run --config vitest.unit.config.ts tests/src/docs/yaml-tables.test.ts -u）、そのテストが通ることを確かめる。
+- 完了条件にない src/catalog/build-references.ts と tests/src/catalog/based-on.test.ts を変えている。kata ドメインのために要った理由と、変えなかった場合に何が起きるかを個票の対応結果と handoff に書く。要らない変更なら戻す。
+
 `共通規約 sha256:e7dd6ff2a0dec2f12ed4ffc905cd185aca2d6f9c3922c56a249c88cb45b2a14e` `docs/ja/projects/prj-0001/execution/conventions/e7dd6ff2a0dec2f12ed4ffc905cd185aca2d6f9c3922c56a249c88cb45b2a14e.txt`
