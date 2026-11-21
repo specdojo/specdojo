@@ -38,3 +38,42 @@
     - field: derived_from
       from: ""
       to: '["PJR-5F1Y"]'
+- v: 1
+  id: reg_c39337416f9a49c9b610d2631987214b
+  ts: "2026-11-21T06:06:49Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "影響範囲" updated
+  changes:
+    - field: section
+      from: ""
+      to: 影響範囲
+  previous_event_id: reg_25e4d937d680423491369e9a5250a9bd
+- v: 1
+  id: reg_f7e25ef4aaee4746a9ece98a40360652
+  ts: "2026-11-21T06:06:53Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "対応方針" updated
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_c39337416f9a49c9b610d2631987214b
+- v: 1
+  id: reg_3460d2edc47d483585e34d50c3779f87
+  ts: "2026-11-21T06:07:17Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: difficulty
+      from: "-"
+      to: medium
+  previous_event_id: reg_f7e25ef4aaee4746a9ece98a40360652

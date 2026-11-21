@@ -38,3 +38,42 @@
     - field: derived_from
       from: ""
       to: '["PJR-SW7T"]'
+- v: 1
+  id: reg_9a549a03e9324d7a9fabf65920c3fd9c
+  ts: "2026-11-21T06:06:42Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "影響範囲" updated
+  changes:
+    - field: section
+      from: ""
+      to: 影響範囲
+  previous_event_id: reg_c0e037906f7645e6af608c5846bc3725
+- v: 1
+  id: reg_d902234e7e1041f698507fb95a9f2fa6
+  ts: "2026-11-21T06:06:46Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "対応方針" updated
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_9a549a03e9324d7a9fabf65920c3fd9c
+- v: 1
+  id: reg_81f189c4456a424c812a02742ae78e3c
+  ts: "2026-11-21T06:07:12Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: difficulty
+      from: "-"
+      to: medium
+  previous_event_id: reg_d902234e7e1041f698507fb95a9f2fa6
