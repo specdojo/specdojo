@@ -157,3 +157,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_58618fe0899f40fc8d91b1ad1bc130a6
+- v: 1
+  id: reg_41b01230509a43748a09d7d6e395e3ee
+  ts: "2026-11-21T14:42:41Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（opus）で実装し、保護された設定は利用者の承認のもと feature ブランチで反映した（d15436815）。オーケストレーターが、残る agy の参照が移行のエラーと文書の注記だけであること、空のリポジトリで init --provider antigravity が断られ claude が通ること、antigravity の member を足すと exec run がエラーで止まること、N6FQ の commit が保護された設定と CHANGELOG.md を変えていないことを確かめた。以後の exec run がこの統合の後の dist で動いている
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-21"
+    - field: conclusion
+      from: "-"
+      to: provider の実装、配布テンプレート、init・scaffold・orchestrator launch・agent launch、道具、テスト、文書、schema の enum から agy の対応を外した（f1071c571）。名簿に antigravity の member が残ると、理由と直し方を示すエラーになる
+  previous_event_id: reg_1836d92f03f8463bb61104eb09ccf34d

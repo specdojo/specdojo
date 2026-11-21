@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-n6fq-remove-antigravity-0-10
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-21T00:33:00Z"
+  completed_at: "2026-11-21T14:42:41Z"
+  conclusion: provider の実装、配布テンプレート、init・scaffold・orchestrator launch・agent launch、道具、テスト、文書、schema の enum から agy の対応を外した（f1071c571）。名簿に antigravity の member が残ると、理由と直し方を示すエラーになる
   derived_from:
     - PJR-5V0T
 ---
