@@ -51,3 +51,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_6f99300aed5449419432ef8e3a4b444e
+- v: 1
+  id: reg_744f2e5e0d8a45bea91f08a6a8cab2a4
+  ts: "2026-11-21T09:55:27Z"
+  action: wait
+  actor: opus-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor validation failed or not run: npm run validate:history-links"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor validation failed or not run: npm run validate:history-links"
+  previous_event_id: reg_3dda723058534eb78b3e2787a52cd48f
