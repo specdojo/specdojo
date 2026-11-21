@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-3-etc-index-sample-040
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-3-etc-index-sample-040/T-KATA-WAVE-3-etc-index-sample-040-20261121T115748Z-eeecbd83/plan.md
   started_at: "2026-11-21T11:58:04.067Z"
+  completed_at: "2026-11-21T12:08:07.351Z"
   agent: opus-executor
   execution: agent
   approach: rulebook-maintenance
@@ -20,16 +21,20 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- rulebook を簡潔化し、grade による指摘事項（F001, F002, F003, F004, F007, F008）を解消しました。
+- 具体的には、完成例の章を削除し、代わりに記述ガイドとして判断基準や良い例・悪い例を追加することで、成果物カタログの rulebook としての責務を明確にしました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/rulebooks/etc-index-rulebook.md`: 完成例の章を削除し、`itc-index` で扱う範囲の追記、`case_id` の `perspective_key` に関する規則の明記、ファイル名と `dct` の `path` の整合性向上、`id` と `local_id` の区別、TSP（`tsp-index`）の正式名称と `id` の記述、および mermaid 図のラベルの修正を行いました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- F005（major）: `etc-index-sample` が rulebook の本文構成（1〜8章）に従っていない。後続の `sample-maintenance` で本文構成どおりに厚くする。指摘の「type に `project` を指定」は、確認した `sample` の frontmatter が `type: test` だったため事実と一致しない。再評価で確認する。
+- F006: rulebook の `recipe` / `template` は `undecided` のまま（plan で宣言の変更を禁止）。`template` は `PJR-WYTX` で扱う。`target_format` を省略すると markdown とみなされるため、宣言を補うかどうかを後続で判断する。
+- F005（major）: etc-index-sample が rulebook の本文構成（1〜8章）に従っていない。後続の sample-maintenance で本文構成どおりに厚くする。指摘の「type に project を指定」は、確認した sample の frontmatter が `type: test` だったため事実と一致しない。再評価で確認する。
+- F006: rulebook の `recipe` / `template` は `undecided` のまま（plan で宣言の変更を禁止）。template は PJR-WYTX で扱う。`target_format` を省略すると markdown とみなされるため、宣言を補うかどうかを後続で判断する。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+rulebook-maintenance
