@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_757ab6ab863a413a9700f58f27dfc6b6
+  ts: "2026-11-21T09:27:51Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者の提案を、11EX の C と比べて決めるため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 複数人で開発するときに、register だけを専用のブランチで同期するか（PJR-11EX の見直し）
+    - field: description
+      from: ""
+      to: register を project/prj-0001/register のような専用のブランチに置いてリモートを正本とし、ほかの変更は GitHub Flow や git flow の PR で扱う方式（D）を、11EX の C（GitHub App が develop へ merge）と比べて決める
+    - field: input
+      from: ""
+      to: '["利用者の提案（2026-11-21）: 複数人で開発するときに同期したいのは register だけで、ほかは通常の GitHub Flow や git flow で対応できる。project/prj-0001/register のようなブランチを作り、register はリモートを正本とする運用でよいのではないか","PJR-11EX の決定（2026-11-15、C）: 統合専用の actor を GitHub Actions 上の GitHub App とし、runner は exec と記帳のブランチを push するだけにする。後続の作業（runner の push 方式、Actions の workflow、App の権限、claim の競合の検出）は単独の運用の間は起票しないとした","2026-11-21 の例: coderdojo-lessons から `external_projects` で起票した 4 件（PJR-7KQT・FGKB・F6MC・QTZ7）が develop へ直接 push され、こちらでは run の統合とぶつからないよう specdojo git の merge で取り込んだ（index の書き込みで一度止まった）","決める点（orchestrator の整理）: 1) register に何を含めるか（個票とイベントだけか、schedule の claim・complete のイベント、run の記録、grade の結果まで含めるか） 2) runner が個票の状態の遷移と対応結果を書く先（今は exec のブランチで書いて develop に統合している） 3) develop から register をどう見るか（register のブランチを develop へ一方向に merge し続けるか、CLI が register のブランチから読むか。製品の文書の wikilink、文書サイトの build、exec plan が個票を読む） 4) register のブランチへの push の競合（ID は乱数でファイルは項目ごとのため衝突はほぼ無い。register ... --commit に pull --rebase と push のやり直しを組み込むか）と CI での形の検査"]'
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: PO
+    - field: registered
+      from: ""
+      to: "2026-11-21"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-11EX"]'
