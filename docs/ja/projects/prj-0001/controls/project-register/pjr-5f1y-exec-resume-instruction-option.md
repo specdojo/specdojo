@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-5f1y-exec-resume-instruction-option
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   registered_at: "2026-11-13T14:08:18Z"
+  completed_at: "2026-11-21T00:52:21Z"
+  conclusion: exec run --register --resume --resume-from executor に --resume-note を足し、再開の指示を plan の共通規約の参照の前へ入れ、pipeline-state.json の resume_notes に残す
   commit_type: feat
   commit_scope: exec
 ---
