@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-Q9DF",
+  "run_id": "pjr-q9df-20261121T083751Z-72785615",
+  "stage": {
+    "role": "executor",
+    "actor": "sonnet-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-21T08:39:31.844Z",
+    "completed_at": "2026-11-21T08:40:53.223Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/030-architecture/010-c4/cnd-specdojo.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-q9df.yaml",
+      "status": "MM"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/product/030-architecture/010-c4/cnd-specdojo.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 2,
+    "summary": ".../030-architecture/010-c4/cnd-specdojo.md        | 136 +++++++++------------\n 1 file changed, 61 insertions(+), 75 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/product/030-architecture/010-c4/cnd-specdojo.md",
+      "status": "passed",
+      "summary": "成果物を整形した"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:md",
+      "status": "not_run",
+      "summary": "親 runner が実行する検査のため、executor では実行していない"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:fm",
+      "status": "not_run",
+      "summary": "親 runner が実行する検査のため、executor では実行していない"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_run",
+      "summary": "成果物は docs/ja/product 配下で、実行可否と結果は親の検証に委ねる"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 5591 file(s), 107 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 83 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5591 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, docs/ja/specdojo/**, docs/specdojo/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, docs/ja/specdojo/**, docs/specdojo/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Q9DF/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Q9DF/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Q9DF\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/grade/grade.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/register/commands.test.ts\"}\n ✓ tests/src/grade/grade.test.ts (69 tests) 274ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/src/grade/grade.test.ts\"}\n[parent-validation:t\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "cnd-specdojo.md を 2 回目の指摘どおり手直しした。概要 4 段落目を削除し、4.2 は配備の基準の表だけにして承認範囲・留保の表と記録段落を外した。留保 A は PJR-PST5、留保 B は PJR-CJMN をメモ表で参照し、PO 承認日と進める作業・保留作業をメモに残した。3.2 の責務列を外し、3.6・3.3・3.4・4.3 を絞った。3・4 章は 12320 文字から 7269 文字（約 41% 短縮）。status は draft のまま。",
+  "completion_status": "complete",
+  "handoff": [
+    "3・4 章の文字数: 短縮前 12320 文字（101 行）、短縮後 7269 文字（89 行）。約 41% 減。",
+    "判断: 4.2 後半の承認範囲・留保の表を外したため、留保の間に進める作業と保留する作業、および 2026-11-15 の PO 承認日を「メモ / 将来課題」の留保 A（PJR-PST5）・留保 B（PJR-CJMN）の行に移した。",
+    "判断: 見出し「配備の基準と承認範囲」を「配備の基準」に改め、概要の参照も合わせた。",
+    "判断: 3.5 の外部システム表は型の要求どおり 3 列のまま、文言のみ簡潔化した。",
+    "検証: 図のノードと REL-01〜REL-10 は 3 章の表に残り、4.3 の観測結果も全経路に残る。図は変更していない。",
+    "grade run --target deliverable による再 grade は未実施。親 runner または人間が実施する。",
+    "tmp/new_body.md は作業用ファイルで、tmp/ 配下のため commit 対象外。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-Q9DF/pjr-q9df-20261121T083751Z-72785615/executor.log",
+      "bytes": 4338,
+      "truncated": false
+    }
+  ]
+}
