@@ -155,6 +155,8 @@ npx specdojo kata eject --id <id>           # 上書きしたいものだけ複�
 
 利用者が規範を変えたいと言った場合にだけ `eject` を提案する。eject したファイルは利用リポジトリの git 管理下に入り、以後そちらが優先される。`exec-template` と `schema` は CLI の版と対応するため eject できない。
 
+型を整える schedule では、review の段とは別に、型そのもの（rulebook と sample の組）を grade して確かめる。
+
 ## タスク実行
 
 ```bash
@@ -170,15 +172,20 @@ npx specdojo exec validate --project <project-id>
 
 失敗して `waiting` になった場合は、個票の `block_reason` と result の申し送りを読み、原因を特定してから再開する。reporter 段だけの再開は `--resume` で行う。
 
+人の確定のタスクも claim と complete で記録し、確定したら成果物の `status` を ready に上げる。直すために確定を開き直すときは、`exec reopen` してから直す。
+
 ## 実行の運び方
 
 - `exec run --register` は `--worktree` で流す。同時に流すのは 2〜3 件までとする。親の検証は 1 件ずつ順に流れ、並行が多いと負荷で統合テストが時間切れになる。
 - 時間のかかる run は background で流し、終わりの通知を待つ。途中経過を何度も見に行かない。
+- 裏で完了を待つときは、ログの文字列ではなく、終了コードや lock のファイルで判定する。ログを grep で読む場合はバイナリとして扱われないようにする。
 - grade・`exec run`・build を順に流すときは、待ち合わせのシェルスクリプトを書かず `specdojo exec queue add <queue-id> --step "..."` で予約し、`specdojo exec queue run <queue-id>` を background で流す。進み具合は `exec queue status <queue-id>` か `exec status` の `queues:` で確かめる。止まった予約は原因を直してから同じ `exec queue run` で再開する。
 - プロセスを探す・止めるときに `pkill -f`・`pgrep -f` を使わない。探す文字列を含む自分のシェルにも一致し、自分を止める。
 - 統合の後に `src` が dist より新しくなると、次の run は始まる前に止まる。dist を作り直してから流す。
 - 記帳は `register ... --commit` で行う。登録簿の lifecycle のロックを取るため、実行中の run と取り合わない。
 - 個票の本文を書き換えて普通に commit するのは、統合中の run がないときだけにする（`.git/index.lock` を確かめる）。commit に失敗したら、index に載ったファイルを残さない。残ると次の run の checkpoint が止まる。
+- 実行中の run が残した状態のファイルを、自分の commit に混ぜない。
+- strategy の YAML を道具で書き直したときは、`task_suffix` などの文字列が数値に変わっていないかを schema の検査で確かめる。
 - 保護された設定（agent の定義・名簿・`exec-defaults.yaml`・`package.json` など）は、executor が書き換えると統合の前に止まる。register の完了条件では「案を個票の対応結果に書き、pipeline では報告の `handoff` にも書く」と指示する。「案を result に書く」は executor が result を直接書ける実行形式に限る。反映は利用者の承認のもと feature ブランチで行う。
 - プロジェクトの文書にオーケストレーター向けの運用メモがあれば、作業を始める前に読む。
 
