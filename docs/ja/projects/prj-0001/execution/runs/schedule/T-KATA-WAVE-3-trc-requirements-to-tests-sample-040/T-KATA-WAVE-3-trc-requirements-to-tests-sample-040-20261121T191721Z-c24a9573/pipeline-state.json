@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-WAVE-3-trc-requirements-to-tests-sample-040",
   "run_id": "T-KATA-WAVE-3-trc-requirements-to-tests-sample-040-20261121T191721Z-c24a9573",
-  "updated_at": "2026-11-21T19:25:15.596Z",
+  "updated_at": "2026-11-21T19:25:51.352Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-3-trc-requirements-to-tests-sample-040/T-KATA-WAVE-3-trc-requirements-to-tests-sample-040-20261121T191721Z-c24a9573/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-21T19:25:15.596Z",
-      "completed_at": null,
+      "completed_at": "2026-11-21T19:25:51.352Z",
       "artifact_ref": null
     }
   },
