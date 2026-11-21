@@ -77,3 +77,48 @@
       from: "-"
       to: medium
   previous_event_id: reg_f7e25ef4aaee4746a9ece98a40360652
+- v: 1
+  id: reg_c5d0d35116f740ca8a24552461278174
+  ts: "2026-11-21T07:49:59Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_3460d2edc47d483585e34d50c3779f87
+- v: 1
+  id: reg_cfff68d5189f4f52b3bef97d63d1a431
+  ts: "2026-11-21T07:54:22Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_c5d0d35116f740ca8a24552461278174
+- v: 1
+  id: reg_eb55286ab93b46a5a6f92c83ca50c505
+  ts: "2026-11-21T07:55:57Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（sonnet-executor）で対応。register の 973 件と、register 以外を含む runs の 1,570 件がすべて schema に通ることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-21"
+    - field: conclusion
+      from: "-"
+      to: pipeline-state.schema.yaml に artifacts を足し、追跡済みの pipeline-state.json がすべて schema に通るようにした。validate:schema に検査を足す package.json の案を個票に残した（反映は orchestrator が別に行う）
+  previous_event_id: reg_cfff68d5189f4f52b3bef97d63d1a431
