@@ -26,8 +26,10 @@ import {
   gitignorePatternsForLayouts,
 } from "../shared/specdojo-gitignore.js";
 import { specdojoPackageRootDir } from "../shared/package-paths.js";
+import { AntigravityBlockedError, isBlockedProvider } from "../shared/antigravity-block.js";
 
-const PROVIDERS = ["claude", "codex", "opencode", "antigravity", "copilot"] as const;
+// antigravity is intentionally absent: agy is never launched since 0.9.2 (PJR-NJE4).
+const PROVIDERS = ["claude", "codex", "opencode", "copilot"] as const;
 type InitProvider = (typeof PROVIDERS)[number];
 
 const PARENT_VALIDATION_SCRIPTS = {
@@ -110,6 +112,9 @@ function parseProviders(value: string | undefined): InitProvider[] {
         .filter(Boolean),
     ),
   ];
+  if (providers.some((provider) => isBlockedProvider(provider))) {
+    throw new AntigravityBlockedError("init cannot select provider antigravity");
+  }
   const unknown = providers.filter(
     (provider): provider is string => !PROVIDERS.includes(provider as InitProvider),
   );
@@ -505,7 +510,7 @@ function writeExecConfiguration(
     new Set(members.map((member) => member.nickname)),
   );
   // normal の段（medium・easy と全 reporter）と expert の段（hard）を provider ごとに選ぶ。
-  // expert の段がない provider（opencode・antigravity など）は hard も normal の段を使う。
+  // expert の段がない provider（opencode など）は hard も normal の段を使う。
   const pairs = providers.map((provider) => {
     const executor = members.find(
       (member) =>
@@ -811,9 +816,7 @@ export async function runInit(
       ? "orch:opus"
       : firstProvider === "codex"
         ? "orch:sol"
-        : firstProvider === "antigravity"
-          ? "orch:flash"
-          : `orch:${firstProvider}`;
+        : `orch:${firstProvider}`;
   process.stdout.write(
     "Next steps:\n" +
       (firstProvider

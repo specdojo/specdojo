@@ -632,7 +632,7 @@ describe("runDevcontainerScaffold", () => {
     await runDevcontainerScaffold({
       packageRoot,
       repoRoot,
-      providers: ["claude", "codex", "opencode", "antigravity"],
+      providers: ["claude", "codex", "opencode"],
       editors: [],
       ollama: false,
       cron: false,
@@ -655,9 +655,6 @@ describe("runDevcontainerScaffold", () => {
     expect(json.mounts).toContain(
       "source=repo-specdojo-opencode-data,target=/home/node/.local/share/opencode,type=volume",
     );
-    expect(json.mounts).toContain(
-      "source=repo-specdojo-antigravity,target=/home/node/.config/antigravity,type=volume",
-    );
     expect(json.runArgs).toEqual(["--security-opt=seccomp=unconfined"]);
 
     const shCall = findWriteCall("post-create.sh");
@@ -672,7 +669,26 @@ describe("runDevcontainerScaffold", () => {
     expect(shCall[1]).toContain("curl -fsSL https://chatgpt.com/codex/install.sh");
     expect(shCall[1]).toContain("sudo npm install -g @openai/codex@latest");
     expect(shCall[1]).toContain("sudo npm install -g opencode-ai@latest");
-    expect(shCall[1]).toContain("curl -fsSL https://antigravity.google/cli/install.sh");
+    expect(shCall[1]).not.toContain("antigravity.google/cli/install.sh");
+  });
+
+  it("refuses the antigravity provider before writing any Dev Container file", async () => {
+    await expect(
+      runDevcontainerScaffold({
+        packageRoot,
+        repoRoot,
+        providers: ["claude", "antigravity"],
+        editors: [],
+        ollama: false,
+        cron: false,
+        tmux: false,
+        force: false,
+        dryRun: false,
+      }),
+    ).rejects.toThrow(
+      /devcontainer scaffold cannot add provider antigravity: SpecDojo 0\.9\.2 and later do not launch Antigravity/,
+    );
+    expect(writeFileMock).not.toHaveBeenCalled();
   });
 
   it("should add Emacs tools, setup, and init template only when requested", async () => {
@@ -1002,7 +1018,7 @@ describe("runDevcontainerScaffold", () => {
     await runDevcontainerScaffold({
       packageRoot,
       repoRoot,
-      providers: ["claude", "opencode", "antigravity"],
+      providers: ["claude", "opencode"],
       editors: [],
       ollama: false,
       cron: false,

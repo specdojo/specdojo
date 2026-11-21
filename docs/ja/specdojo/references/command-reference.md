@@ -67,6 +67,8 @@ provider、exec、Dev Container、Git hook、Slidev の順に質問します。D
 空の場合も、provider の質問だけをやり直します。非対話環境や `--yes` では再質問せず、従来どおり不正な
 指定をエラーとして終了します。
 
+0.9.2 から、SpecDojo は Antigravity CLI（`agy`）を起動しません。consumer plan では、他社の agent や application の中から agy を起動することを [Antigravity の FAQ](https://antigravity.google/docs/faq) が対象外とし、[Additional Terms](https://antigravity.google/terms) の Section 6 が契約違反としているためです。`exec`・`grade`・`trial` などの agent 実行と `agent launch`・`orchestrator launch` は、provider が `antigravity` の指定を agy の起動前に終了コード 1 で止めます。名前で指定した member は止め、自動選択と代わりの選択では agy の member を候補から外してほかの member へ進みます。`init`・`config scaffold`・`devcontainer scaffold` でも `antigravity` は選べず、対話の選択肢にも出ません。止めるのを外す設定や環境変数はありません。0.9.1 の `init` で antigravity を選んだ場合は、`.specdojo/agent-members.yaml` で agy の member に `disabled: true` を付けるか削除し、ほかの provider を使ってください。
+
 非対話環境では質問せず、次の主要オプションと既定値を使います。
 
 | オプション                     | 用途                                                                      | 既定値                |
@@ -112,7 +114,7 @@ provider 設定、登録簿作成の順に次のコマンドを案内します�
 追記した行と飛ばした行を表示し、追記があった場合は管理済みの `node_modules/` や生成物を
 `git rm -r --cached` で外す手順を案内します。`config init --dry-run` は設定と `.gitignore` を
 書き込まず、予定の内容だけを表示します。`config scaffold` の `--provider` には
-`antigravity`、`claude`、`codex`、`copilot`、`opencode` を指定でき、`--dry-run` と `--force` も利用できます。
+`claude`、`codex`、`copilot`、`opencode` を指定でき（`antigravity` は 0.9.2 からエラーになります）、`--dry-run` と `--force` も利用できます。
 
 `config show` は、`specdojo.config.json` とローカル設定 `.specdojo/specdojo.local.config.json` のパス、ローカルで上書きした項目、project ごとの `repos` を表示します。各リポジトリには `shared`（共有の設定）、`local; shared: <path>`（パスの差し替え）、`local; added`（ローカルで追加）のいずれかを付けます。`--project <id>` で対象を絞れます。ローカル設定の許可キーと優先順位は [[specdojo:specdojo-config-reference|SpecDojo設定リファレンス]] の「ローカル設定」を参照してください。
 
@@ -130,9 +132,9 @@ exec の result の commit 前検査は markdownlint-cli が読む利用リポ�
 `.markdownlintrc` を含む）を優先し、設定がなければ上記の6規則だけをコマンド引数で無効にします。
 フォールバック用ファイルは利用リポジトリに作りません。CLI2 専用設定はこの検査では読みません。
 
-`package.json` がある場合、provider ごとのオーケストレーター起動スクリプトも追加します。Claude Code は `orch:opus`・`orch:sonnet`、Codex は `orch:sol`（`gpt-6.1-sol`）・`orch:luna`（`gpt-6-luna`）、Antigravity は `orch:argon`（`gemini-4-argon-medium`）・`orch:flash`（`gemini-3.8-flash-high`）、OpenCode は `orch:opencode` です。既存のスクリプトは `--force` を付けても上書きしません。
+`package.json` がある場合、provider ごとのオーケストレーター起動スクリプトも追加します。Claude Code は `orch:opus`・`orch:sonnet`、Codex は `orch:sol`（`gpt-6.1-sol`）・`orch:luna`（`gpt-6-luna`）、OpenCode は `orch:opencode` です。既存のスクリプトは `--force` を付けても上書きしません。
 
-agy 1.4.12 以降向けの通常導入は edit / review / report / orchestrator のセッション別プロファイルを配置し、ユーザー設定を書き換えません。非対話用 command template は `specdojo agent launch --provider antigravity --role {mode} -- --sandbox --model {model} -p "$(cat)"`、対話型は `specdojo orchestrator launch --provider antigravity -- <agy 引数>` を使います。各入口が宣言済みルートの保護ルールを一つの `--settings` JSON として渡します。`agent launch` は runner の `SPECDOJO_REPO_*` に示された task worktree と cwd だけを追加し、任意の `--add-dir` や別 `--settings`、bypass、既存会話の再開を拒否します。review / report は全書き込み・command・MCP を拒否します。詳しい移行と実機確認は [[sysd-antigravity-agent-settings|Antigravity CLI エージェント設定]] を参照してください。
+次の 2 段落の agy の設定は 0.9.2 から使えません（理由は `init` の説明を参照）。agy 1.4.12 以降向けの通常導入は edit / review / report / orchestrator のセッション別プロファイルを配置し、ユーザー設定を書き換えません。非対話用 command template は `specdojo agent launch --provider antigravity --role {mode} -- --sandbox --model {model} -p "$(cat)"`、対話型は `specdojo orchestrator launch --provider antigravity -- <agy 引数>` を使います。各入口が宣言済みルートの保護ルールを一つの `--settings` JSON として渡します。`agent launch` は runner の `SPECDOJO_REPO_*` に示された task worktree と cwd だけを追加し、任意の `--add-dir` や別 `--settings`、bypass、既存会話の再開を拒否します。review / report は全書き込み・command・MCP を拒否します。詳しい移行と実機確認は [[sysd-antigravity-agent-settings|Antigravity CLI エージェント設定]] を参照してください。
 
 `antigravity` に限り `--global` を指定すると、`~/.gemini/antigravity-cli/settings.json` へ SpecDojo 用の permission rule を追記します。既存キー・既存 rule は保持し、実書き込み前に timestamp 付きバックアップを作ります。`--global` を省略した通常実行はユーザーディレクトリへ触れません。適用前は次の dry-run で追加 rule を確認してください。
 
@@ -1291,10 +1293,10 @@ schedule / register / job / routine の使い分けの基準は [exec運用ガ�
 
 `agent` とその `run`・`launch` は、`grade run`・runner・exec-defaults の command template が部品として呼ぶ内部用のコマンドです。help の一覧には表示しませんが、呼び出しは従来どおり動きます。
 
-| コマンド       | 用途                                                                    |
-| -------------- | ----------------------------------------------------------------------- |
-| `agent run`    | plan を stdin で agent へ渡し、標準出力をファイルへ保存する             |
-| `agent launch` | agy を役割別セッション設定と runner の宣言済み task worktree で起動する |
+| コマンド       | 用途                                                                                      |
+| -------------- | ----------------------------------------------------------------------------------------- |
+| `agent run`    | plan を stdin で agent へ渡し、標準出力をファイルへ保存する                               |
+| `agent launch` | 0.9.2 から agy を起動せず、常にエラーで終了する（0.9.1 の command template を止める入口） |
 
 ```bash
 specdojo agent run --plan <plan.md> --by <nickname> --out <response.txt>
@@ -1322,7 +1324,7 @@ specdojo orchestrator launch --provider claude --project prj-0001 -- \
 
 provider CLI の実行中、起動元は `SIGINT` と `SIGQUIT` を無視して子プロセスの終了を待ちます。端末での Ctrl-C は provider CLI に直接届くため、入力の取り消しとして扱う CLI が起動元だけを終了させることはありません。`SIGTERM` と `SIGHUP` は子プロセスへ転送し、子の終了後に同じ終了コードを返します。子がシグナルで終了した場合は `128 + シグナル番号` を返します。
 
-Claude Code、Codex、Antigravity、GitHub Copilot には exec と同じ追加ルート引数を渡します。OpenCode は、起動時の `OPENCODE_CONFIG_CONTENT` に選択 agent の `permission.external_directory` を注入し、全外部ディレクトリを拒否したうえで宣言済みのリポジトリだけを許可します。外部パスへ既存の `permission.edit` が一致しないため、同じ宣言済みルートの編集許可を起動場所からの相対パス（例: `../<repo>/**`）で注入します。既存の inline config の他項目は保持します。未宣言のリポジトリは、どの provider でも許可対象になりません。
+`--provider antigravity` は 0.9.2 から agy を起動する前にエラーで終了します（理由は「init / config / project」の説明を参照）。Claude Code、Codex、GitHub Copilot には exec と同じ追加ルート引数を渡します。OpenCode は、起動時の `OPENCODE_CONFIG_CONTENT` に選択 agent の `permission.external_directory` を注入し、全外部ディレクトリを拒否したうえで宣言済みのリポジトリだけを許可します。外部パスへ既存の `permission.edit` が一致しないため、同じ宣言済みルートの編集許可を起動場所からの相対パス（例: `../<repo>/**`）で注入します。既存の inline config の他項目は保持します。未宣言のリポジトリは、どの provider でも許可対象になりません。
 
 `orchestrator night` は `autopilot: approved` の付いた `open` todo・issue だけを夜間 queue として実行します。
 
@@ -1345,7 +1347,7 @@ Job worktree 内から起動しても、子 run の worktree は主の作業ツ�
 | `devcontainer scaffold`    | `.devcontainer/` の設定ファイル群を生成する                             |
 | `devcontainer host-script` | ホストから tmux へ接続するスクリプト本体を `.specdojo/host/` に書き出す |
 
-`devcontainer scaffold` は、指定された provider の CLI と、要求された追加機能を組み込んだ `devcontainer.json` と `post-create.sh` を生成します。あわせて、常時稼働ホストへの接続と tmux セッション維持のためのサンプルスクリプト（`.devcontainer/remote-host/specdojo-tmux.sh.sample`）と接続元 SSH 設定サンプル（`.devcontainer/remote-host/ssh-config.sample`）も生成します。provider は `antigravity`、`claude`、`codex`、`opencode` を指定できます。`--editor emacs` / `--editor vim` を指定した場合は、それぞれ Emacs 用の `emacs/init.el` / Vim 用の `vim/vimrc` も生成します。Dev Container は任意の実行環境であり、既存の Node.js 環境を置き換える必須手順ではありません。
+`devcontainer scaffold` は、指定された provider の CLI と、要求された追加機能を組み込んだ `devcontainer.json` と `post-create.sh` を生成します。あわせて、常時稼働ホストへの接続と tmux セッション維持のためのサンプルスクリプト（`.devcontainer/remote-host/specdojo-tmux.sh.sample`）と接続元 SSH 設定サンプル（`.devcontainer/remote-host/ssh-config.sample`）も生成します。provider は `claude`、`codex`、`opencode` を指定できます。`antigravity` は 0.9.2 からエラーになり、agy 用の設定を足しません。`--editor emacs` / `--editor vim` を指定した場合は、それぞれ Emacs 用の `emacs/init.el` / Vim 用の `vim/vimrc` も生成します。Dev Container は任意の実行環境であり、既存の Node.js 環境を置き換える必須手順ではありません。
 
 主要オプション:
 
@@ -1413,7 +1415,6 @@ Codex 自身の sandbox は引き続き使用し、`workspace-write` で許可�
 | Codex の設定・認証            | `/home/node/.codex`                | `<repository>-specdojo-codex`         | `codex` provider       |
 | OpenCode の設定               | `/home/node/.config/opencode`      | `<repository>-specdojo-opencode`      | `opencode` provider    |
 | OpenCode の認証・アプリデータ | `/home/node/.local/share/opencode` | `<repository>-specdojo-opencode-data` | `opencode` provider    |
-| Antigravity の設定・認証      | `/home/node/.config/antigravity`   | `<repository>-specdojo-antigravity`   | `antigravity` provider |
 
 OpenCode の API key は `/home/node/.local/share/opencode/auth.json` に入り、設定とは別の `opencode-data` volume に残ります。`post-create.sh` は mount 先をコンテナユーザーが読み書きできる所有者へ整えます。Git 設定は volume 内の global config から、Dev Containers がホストからコピーした `~/.gitconfig` を include しますが、ホスト上のファイル自体を mount しません。
 

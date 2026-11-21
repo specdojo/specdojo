@@ -2,6 +2,7 @@ import { existsSync } from "node:fs";
 import { copyFile, mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { homedir } from "node:os";
 import path from "node:path";
+import { assertProviderLaunchAllowed } from "./antigravity-block.js";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -369,6 +370,9 @@ export async function runProviderScaffold(
   provider: string,
   opts: RunProviderScaffoldOptions,
 ): Promise<void> {
+  // The templates/antigravity/ source stays in the package until PJR-N6FQ, but it is no longer
+  // copied: scaffolding agy settings would only prepare a launch SpecDojo refuses.
+  assertProviderLaunchAllowed(provider, `Cannot scaffold provider ${provider}`);
   const plan = await buildProviderScaffoldPlan({
     packageRoot: opts.packageRoot,
     repoRoot: opts.repoRoot,

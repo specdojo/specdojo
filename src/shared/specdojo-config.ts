@@ -1231,10 +1231,7 @@ export function registerConfigCommands(program: Command): void {
   cfg
     .command("scaffold")
     .description("Scaffold provider settings, a VS Code multi-root workspace, Git hooks, or Slidev")
-    .option(
-      "--provider <name>",
-      "Provider template to copy (antigravity|claude|codex|copilot|opencode)",
-    )
+    .option("--provider <name>", "Provider template to copy (claude|codex|copilot|opencode)")
     .option(
       "--workspace",
       "Generate VS Code multi-root workspace (<project-id>.code-workspace) from repos config",
@@ -1250,7 +1247,7 @@ export function registerConfigCommands(program: Command): void {
     .option("--dry-run", "Show planned files without writing", false)
     .option(
       "--global",
-      "Merge provider permissions into user-level settings (currently antigravity only)",
+      "Merge provider permissions into user-level settings (no provider currently supports it)",
       false,
     )
     .action(async (opts) => {
@@ -1261,7 +1258,7 @@ export function registerConfigCommands(program: Command): void {
           );
         }
         if (opts.global && !opts.provider) {
-          throw new Error("--global requires --provider antigravity");
+          throw new Error("--global requires --provider <name>");
         }
         if (opts.provider) {
           await runProviderScaffold(String(opts.provider), {

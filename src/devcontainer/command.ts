@@ -12,7 +12,7 @@ export function registerDevcontainerCommands(program: Command): void {
     .option("--preset <name>", "Apply a bundled preset (minimal|recommended|full)")
     .option(
       "--provider <names>",
-      "Comma-separated list of agent providers to install (e.g. claude,codex,opencode,antigravity)",
+      "Comma-separated list of agent providers to install (e.g. claude,codex,opencode)",
       "",
     )
     .option(

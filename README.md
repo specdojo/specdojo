@@ -105,18 +105,18 @@ npm run orch:opus
 | `claude`      | `.claude/agents/specdojo-orchestrator.md`   | `npm run orch:opus` ほか          |
 | `opencode`    | `.opencode/agents/specdojo-orchestrator.md` | `npm run orch:opencode`           |
 | `codex`       | `.specdojo/codex/orchestrator.md`           | `npm run orch:sol` ほか           |
-| `antigravity` | `.specdojo/antigravity/orchestrator.md`     | `npm run orch:argon` ほか         |
+| `antigravity` | 0.9.2 から使えない（下記）                  | -                                 |
 
 各設定を個別に管理したい場合は、後述の「設定を個別に行う場合」にある `config init` と `config scaffold` を使います。
 
-Antigravity CLI を無人実行する場合は、利用者のグローバル設定へ permission rule を追加します。この設定はすべてのリポジトリに効くため、必ず先に差分を確認してから適用してください。通常の scaffold はグローバル設定へ触れません。
+0.9.2 から、SpecDojo は Antigravity CLI（`agy`）を起動しません。consumer plan では、他社の agent や application の中から agy を起動することを [Antigravity の FAQ](https://antigravity.google/docs/faq) が対象外とし、[Additional Terms](https://antigravity.google/terms) の Section 6 が契約違反としているためです。exec・grade などの agent 実行、`agent launch`・`orchestrator launch` は provider が `antigravity` の指定を agy の起動前にエラーで止め、`init`・`config scaffold`・`devcontainer scaffold` でも `antigravity` は選べません。0.9.1 の `init` で antigravity を選んだ場合は、`.specdojo/agent-members.yaml` で agy の member に `disabled: true` を付けるか削除し、ほかの provider を使ってください。
+
+次の Antigravity CLI のグローバル設定は 0.9.2 から使えません（`config scaffold --provider antigravity` はエラーになります）。0.9.1 までは、Antigravity CLI を無人実行する場合に利用者のグローバル設定へ permission rule を追加していました。この設定はすべてのリポジトリに効くため、必ず先に差分を確認してから適用していました。
 
 ```sh
 npx specdojo config scaffold --provider antigravity --global --dry-run
 npx specdojo config scaffold --provider antigravity --global
 ```
-
-実適用では既存設定を残し、変更前のファイルをバックアップします。追加する allow は `git status` / `diff` / `log` / `show` の読み取り操作だけです。
 
 #### Dev Container を使う場合（任意）
 
