@@ -47,6 +47,13 @@ specdojo:
 - CHANGELOG.md は変えず、利用者に影響する変更（オーケストレーターの本体の変更）を個票の対応結果の「CHANGELOG に書く事項」の節に書いている（PJR-EPQ3）。
 - `npm run lint:md` と親の検証が通っている。
 
+2 回目の実行（2026-11-21）で直す点。
+
+- 運用メモの「再開の前に plan へ追加の指示を入れたい場合は、手動で plan ファイルを編集して追記する」を消す。worktree の plan を手で直すと、通常の再開では統合の前に範囲外の変更として止まるため。代わりに、PJR-5F1Y で足した `exec run --register <ID> --resume --resume-from executor --resume-note <text>` を使うと書く。
+- 運用メモの「個票の章の本文を差し替える際、現在は手動でファイルを編集している（PJR-7KXW）」を、`register update --section <章の名前> --section-file <path>` を使う書き方に変える。
+- 運用メモの「型の一覧をまとめて grade したい場合も、現在は順次流す必要がある（PJR-SW7T）」を、`grade run --target kata --kata <name>` を繰り返して 1 回で流せる書き方に変える。rate limit の後も続けるのは `--kata` のときだけで、代わりの agent への切り替えはない（PJR-XA6Y）ことも書く。
+- 本体（`.agents/specdojo-orchestrator.agent.md`）の変更案は 1 回目のものをオーケストレーターが反映するため、この実行では本体の変更案を作り直さない。
+
 ## 4. 作業内容
 
 | No  | 作業                                                        | 担当         | 状態 | メモ                                                                                                                               |
