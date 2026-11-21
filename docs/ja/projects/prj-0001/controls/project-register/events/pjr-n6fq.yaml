@@ -67,3 +67,32 @@
       from: ""
       to: 作業内容
   previous_event_id: reg_d7edc0f41b9c4d1382a68131292962a9
+- v: 1
+  id: reg_8de79c2737944fc3a663dce13e5be0ca
+  ts: "2026-11-21T12:29:05Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_2821af18a9964928b4fb1a3a454a6398
+- v: 1
+  id: reg_ec7b2e5d845e4d2481be16c88942c27f
+  ts: "2026-11-21T12:39:33Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor reported incomplete: Removed Antigravity (agy) for 0.10.0 from the provider code, templates, init / config scaffold / devcontainer scaffold / orchestrator launch, agent launch, tools, tests, …"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor reported incomplete: Removed Antigravity (agy) for 0.10.0 from the provider code, templates, init / config scaffold / devcontainer scaffold / orchestrator launch, agent launch, tools, tests, …"
+  previous_event_id: reg_8de79c2737944fc3a663dce13e5be0ca
