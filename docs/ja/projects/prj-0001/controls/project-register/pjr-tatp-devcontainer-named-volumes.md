@@ -21,13 +21,24 @@ specdojo:
 
 ## 2. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- devcontainer で、exec の worktree の置き場（`/workspaces/specdojo-workspace/worktrees`）と、ワークスペースの 11 か所の `node_modules`（このリポジトリの 5 か所、`specdojo-prj-0002` の 4 か所、`specdojo-lp`・`specdojo-assets` の各 1 か所）を named volume にする。
+- SpecDojo の設定（`worktree_base` など）は変えない。devcontainer の外（ホストで直接）で実行しても、今と同じく `../worktrees` とホストの `node_modules` を使って動く。
+- `post-create.sh` が、volume の持ち主を `node` にそろえ、`package-lock.json` のあるディレクトリで `npm ci` を流す。volume が空の初回でも、作り直しのあとでも、`npm run build`・`npm link`・lefthook が動く。
+- `.git` の設定に `gc.worktreePruneExpire=never` を入れ、ホストから見えない container の worktree の記録が `git gc` で消えないようにする。ホストで `git worktree prune` を流さないことと、同じ項目の run をホストと container で同時に流さないことを、運用メモに書く。
+- 作り直す前に、ホストの `../worktrees` にある途中の worktree を一覧にし、利用者の確認のうえで片付ける。
+- 作り直しのあと、`exec run --register --worktree` を 1 件と `npm run check` を流して動作を確かめ、作り直す前と後の時間（`npm ci`・worktree の作成・`npm run check`）を対応結果に書く。
+- devcontainer の設定は利用者の環境の設定のため、orchestrator が feature ブランチで変え、利用者の確認のうえで develop へ取り込む。
 
 ## 3. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                | 担当                  | 状態 | メモ                       |
+| --- | --------------------------------------------------- | --------------------- | ---- | -------------------------- |
+| 1   | `devcontainer.json` に named volume の mount を足す | specdojo-orchestrator | open | -                          |
+| 2   | `post-create.sh` に持ち主の調整と `npm ci` を足す   | specdojo-orchestrator | open | -                          |
+| 3   | `gc.worktreePruneExpire` と運用メモ                 | specdojo-orchestrator | open | -                          |
+| 4   | 途中の worktree の片付け                            | indie                 | open | 一覧は orchestrator が出す |
+| 5   | container の作り直し                                | indie                 | open | -                          |
+| 6   | 作り直しのあとの動作と時間の確認                    | specdojo-orchestrator | open | -                          |
 
 ## 4. 対応結果
 

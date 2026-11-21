@@ -32,3 +32,29 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_f122048bb2b34d5383cb2e2849c317e5
+  ts: "2026-11-21T03:52:21Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_f0f8a0f1bcec47c2890946ba0e6112d9
+- v: 1
+  id: reg_a2bcdd57b7244bd1a32f7b25565c3ff7
+  ts: "2026-11-21T03:52:46Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "作業内容" updated
+  changes:
+    - field: section
+      from: ""
+      to: 作業内容
+  previous_event_id: reg_f122048bb2b34d5383cb2e2849c317e5
