@@ -75,7 +75,7 @@ describe("specdojo where", () => {
     expect(alias.stdout).toBe(result.stdout);
     expect(alias.stderr).toContain(`WARN: ${kind} where is deprecated.`);
     expect(alias.stderr).toContain(`Use specdojo where ${kind}.`);
-    expect(alias.stderr).toContain("removed after one release");
+    expect(alias.stderr).toContain("removed in 0.10.0");
     expect(readdirSync(root, { recursive: true }).sort()).toEqual(before);
     if (kind === "exec") {
       expect(result.stdout).toContain(join(root, "project/execution/exec/events"));

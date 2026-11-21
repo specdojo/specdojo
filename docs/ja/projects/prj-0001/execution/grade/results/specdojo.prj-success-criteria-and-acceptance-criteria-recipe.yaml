@@ -4,11 +4,12 @@ document: specdojo:prj-success-criteria-and-acceptance-criteria-recipe
 path: docs/ja/specdojo/recipes/prj-success-criteria-and-acceptance-criteria-recipe.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-recipe
 verdict: pass
-score: 96
-graded_at: "2026-10-09T21:05:38.945Z"
-graded_by: agy-expert-executor
-content_hash: 6e24264aced15a8b811af0d495b12fb9d7b008f58dbfddd52b8900d96370ca74
+score: 97
+graded_at: "2026-11-20T20:38:47.227Z"
+graded_by: flash-high-executor
+content_hash: 9d64b04246b6f98ec9c6a5a3a26da1432d2478b5c0a4672f431ffe4b8f51f326
 categories:
   purpose:
     score: 100
@@ -21,7 +22,7 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
     score: 88
   quality:
@@ -87,8 +88,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -104,14 +105,14 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 3
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-dev-change-impact
-    line: 109
-    anchor: ""
+    line: 75
+    anchor: "- 否決したとき、何を直し、どの条件を確かめ直すか。"
     message: >-
       条件の追加・変更時に変更理由と影響範囲を追記するという rulebook
       の運用要件を引き出す問い・手順がなく、既存の成功基準・受入条件や関連成果物への変更影響を記録できないため、判定手順または仕上げチェックに追加する必要がある。
@@ -121,18 +122,11 @@ findings:
   - id: F002
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 109
-    anchor: ""
+    line: 75
+    anchor: "- 否決したとき、何を直し、どの条件を確かめ直すか。"
     message: >-
       rulebook は条件追加・変更時の変更理由と影響範囲の追記を要求しているが, recipe の判定手順・レビュー観点・仕上げチェックのいずれにも対応する問いがなく, Kata
       間で変更管理要件が欠落しているため追記が必要である。
     message_ja: >-
       rulebook は条件追加・変更時の変更理由と影響範囲の追記を要求しているが, recipe の判定手順・レビュー観点・仕上げチェックのいずれにも対応する問いがなく, Kata
       間で変更管理要件が欠落しているため追記が必要である。
-  - id: F003
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 128
-    anchor: 5. 証跡に、確認日、確認者、対象条件 ID、判定対象と母数を残せるか確認する。
-    message: "recipe 自身を「本ルールブック」と呼んでおり文書種別を誤認させるため、「本書」または「本成果物」に改めて _UNDECIDED_: の統一先を明確にする必要がある。"
-    message_ja: "recipe 自身を「本ルールブック」と呼んでおり文書種別を誤認させるため、「本書」または「本成果物」に改めて _UNDECIDED_: の統一先を明確にする必要がある。"

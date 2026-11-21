@@ -52,7 +52,7 @@ export const REGISTER_EVENT_FIELDS = [
 export type RegisterEventField = (typeof REGISTER_EVENT_FIELDS)[number];
 
 export type RegisterEventChange = {
-  field: RegisterEventField | "id";
+  field: RegisterEventField | "id" | "section";
   from: string;
   to: string;
 };
@@ -264,7 +264,7 @@ export function validateRegisterEventShape(value: unknown, source: string): stri
       }
       if (
         typeof change.field !== "string" ||
-        ![...REGISTER_EVENT_FIELDS, "id"].includes(change.field as RegisterEventField)
+        ![...REGISTER_EVENT_FIELDS, "id", "section"].includes(change.field as RegisterEventField)
       ) {
         error(`changes[${index}].field is invalid`);
       }

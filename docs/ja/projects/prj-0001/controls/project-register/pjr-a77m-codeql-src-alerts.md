@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-a77m-codeql-src-alerts
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-19T22:05:49Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-20T14:05:37Z"
+  conclusion: "CodeQL が指摘した src の 5 か所を直し、PR #41 で alert が残らないことを確かめた"
   derived_from:
     - PJR-P318
 ---
@@ -89,6 +91,11 @@ CodeQL が PR #34 で出した src の alert 5 件を直す。trash.ts の正規
 ### 5.5. 再発防止策
 
 - escape の処理を `src/shared/text.ts` に集約し、複製を除いた。
+
+### 5.6. orchestrator の確認（2026-11-20）
+
+- 統合の差分（1366fb13d）を完了条件と照らした。5 か所の直し方、`escapeRegExp` と `escapeMarkdownTableCell` の `src/shared/text.ts` への共通化、足した単体テストと統合テストが、完了条件のとおりだった。`src/exec/parent-validation.ts` の `escapeRegExp` は `*` と `?` を扱わない別の働きのため残した、という判断も妥当だった。
+- 0.9.1 のリリースの PR #41 の CI で、CodeQL の解析（`analyze`）が通り、結果の check `CodeQL` も通った（PR #34 では fail だった）。PR の merge ref（`refs/pull/41/merge`）に open の alert は 0 件で、alert 1・2・5・6・7 の instance も無かった。
 
 ## 6. 関連ドキュメント
 

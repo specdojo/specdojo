@@ -22,6 +22,7 @@ import {
   pipelineStateLocation,
   updatePipelineStage,
   writePipelineState,
+  type PipelineResumeNote,
   type PipelineState,
 } from "../pipeline-state.js";
 import {
@@ -34,7 +35,8 @@ import { mechanicalEditReporterOutput } from "../mechanical-result.js";
 import { readResultFrontmatterSnapshot, renderReporterResult } from "../results.js";
 import { isRunRecordPath, recordStem, snapshotRunAttempt } from "../run-records.js";
 import { randomHex } from "../shared.js";
-import { withProductRepoPrompt } from "../task-repos.js";
+import { executorOutcomeFailure, targetedProductRepos } from "../executor-outcome-checks.js";
+import { productHasPendingWork, withProductRepoPrompt } from "../task-repos.js";
 import type { TaskMode } from "../types.js";
 import { worktreeStatusPaths } from "../worktree-ops.js";
 import type { ProductWorktree } from "../worktree.js";
@@ -339,6 +341,30 @@ export async function runReporterStage(params: {
   return { exitCode, runResult, blockReason, state };
 }
 
+function editOutcomeFailure(params: {
+  mode: TaskMode;
+  output: string;
+  plan: string;
+  productWorktrees: readonly ProductWorktree[];
+  hints: readonly string[];
+  resumeHint: string;
+}): string | undefined {
+  if (params.mode !== "edit") return undefined;
+  const targeted = targetedProductRepos({
+    productNames: params.productWorktrees.map((product) => product.name),
+    plan: params.plan,
+    hints: params.hints,
+  });
+  const unchanged = params.productWorktrees
+    .filter((product) => targeted.includes(product.name) && !productHasPendingWork(product))
+    .map((product) => product.name);
+  return executorOutcomeFailure({
+    output: params.output,
+    unchangedTargetedRepos: unchanged,
+    resumeHint: params.resumeHint,
+  });
+}
+
 // 1件の plan/result を executor→reporter の2段階で実行する。register 項目と Job Run の
 // 双方が使い、in-place（cwd: repoRoot）・worktree（cwd: worktree.path）から共有する。
 // evidence・pipeline-state の記録先は
@@ -365,6 +391,8 @@ export async function runAgentPipeline(params: {
   productWorktrees?: readonly ProductWorktree[];
   /** Run-scoped `--integration-branch` values to record in the checkpoint for resume. */
   integrationBranchOverrides?: Readonly<Record<string, string>>;
+  /** Resume instructions recorded in the checkpoint (earlier entries plus this resume's). */
+  resumeNotes?: readonly PipelineResumeNote[];
   runId?: string;
   /** reporter が返す出力の mode。省略時は edit。 */
   mode?: TaskMode;
@@ -372,6 +400,11 @@ export async function runAgentPipeline(params: {
   reporterRateLimitOptions?: PinnedRateLimitRunOptions;
   /** Recovery command recorded when the executor evidence breaks the approach contract. */
   executorResumeHint?: string;
+  /**
+   * Register `target_path` / `targets` values. A `<repo>:<path>` value marks the product
+   * repository as a target that the executor must change (PJR-QQRH).
+   */
+  productTargetHints?: readonly string[];
 }): Promise<{
   exitCode: 0 | 1;
   runResult: RunResult;
@@ -419,6 +452,9 @@ export async function runAgentPipeline(params: {
     },
     ...(params.integrationBranchOverrides
       ? { integrationBranches: { ...params.integrationBranchOverrides } }
+      : {}),
+    ...(params.resumeNotes?.length
+      ? { resumeNotes: params.resumeNotes.map((entry) => ({ ...entry, notes: [...entry.notes] })) }
       : {}),
   });
   state = updatePipelineStage(
@@ -491,8 +527,28 @@ export async function runAgentPipeline(params: {
           initialChangeTargets: params.initialChangeTargets,
         })
       : undefined;
+  // PJR-QQRH: a complete report cannot override tool-permission denials in the output or a
+  // targeted product repository left unchanged. The evidence is marked incomplete so resume
+  // selects the executor stage, as with the approach contract.
+  const outcomeFailure =
+    outcome.result === "success" && !completionFailure && !coverageFailure
+      ? editOutcomeFailure({
+          mode: params.mode ?? "edit",
+          output: `${outcome.stdout}\n${outcome.stderr}`,
+          plan: planPrompt,
+          productWorktrees: params.productWorktrees ?? [],
+          hints: params.productTargetHints ?? [],
+          resumeHint: params.executorResumeHint ?? DEFAULT_EXECUTOR_RESUME_HINT,
+        })
+      : undefined;
+  if (outcomeFailure) {
+    recorded.evidence.completion_status = "incomplete";
+    recorded.evidence.block_reason = outcomeFailure;
+    writeExecutorEvidence(recorded.evidencePath, recorded.evidence);
+    process.stdout.write(`  Warning: ${outcomeFailure}\n`);
+  }
   const executorResult: RunResult =
-    completionFailure || coverageFailure ? "failure" : outcome.result;
+    completionFailure || coverageFailure || outcomeFailure ? "failure" : outcome.result;
   const evidenceRef = relative(cwd, recorded.evidencePath).split(sep).join("/");
   const executorCompletedAt = new Date().toISOString();
   state = updatePipelineStage(
@@ -502,7 +558,7 @@ export async function runAgentPipeline(params: {
       status:
         executorResult === "success"
           ? "succeeded"
-          : outcome.protectionBlock || completionFailure
+          : outcome.protectionBlock || completionFailure || outcomeFailure
             ? "blocked"
             : executorResult === "rate_limit"
               ? "rate_limited"
@@ -522,6 +578,7 @@ export async function runAgentPipeline(params: {
     const blockReason =
       completionFailure ??
       coverageFailure ??
+      outcomeFailure ??
       (executorResult === "rate_limit"
         ? "executor rate limit reached"
         : extractBlockReason(outcome.stderr));

@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-5f1y-exec-resume-instruction-option
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: medium
   difficulty: medium
   registered_at: "2026-11-13T14:08:18Z"
+  completed_at: "2026-11-21T00:52:21Z"
+  conclusion: exec run --register --resume --resume-from executor に --resume-note を足し、再開の指示を plan の共通規約の参照の前へ入れ、pipeline-state.json の resume_notes に残す
   commit_type: feat
   commit_scope: exec
 ---
@@ -39,14 +41,44 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                                                        | 担当     | 状態 | メモ                                                                                                 |
+| --- | ------------------------------------------------------------------------------------------- | -------- | ---- | ---------------------------------------------------------------------------------------------------- |
+| 1   | `exec run --register` に `--resume-note <text>`（繰り返し可）と起動前の組み合わせ検査を足す | executor | done | `src/exec/run/register-command.ts`・`src/exec/run/resume-notes.ts`                                   |
+| 2   | executor の再開で worktree の plan の共通規約の参照の前へ節を入れる                         | executor | done | `src/shared/plan-conventions.ts` の `insertBeforePlanConventions`・`src/exec/run/register-resume.ts` |
+| 3   | 足した指示と日時を `pipeline-state.json` の `resume_notes` に残す                           | executor | done | `src/exec/pipeline-state.ts`・`src/exec/run/agent-pipeline.ts`・schema                               |
+| 4   | 単体テストを足す                                                                            | executor | done | `tests/src/exec/run/resume-notes.test.ts`                                                            |
+| 5   | コマンドリファレンスと exec 運用ガイドの再開の節を更新する                                  | executor | done | 両文書の register の再開の説明                                                                       |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 5.1. 実施内容
+
+- `specdojo exec run --register <PJR-ID> --worktree --resume --resume-from executor --resume-note <text>` を足した。繰り返し指定した指示は 1 つの節に箇条書きで並ぶ。
+- 指示は worktree の plan の共通規約の参照の行（最後の段落）の前に `## 再開の指示（<ISO 日時>）` の節として入る。参照の行とその後ろは変えない。参照の無い旧形式の plan では末尾に足す。挿入は agent の起動と register の `start` の後、executor を起動する直前に行い、prompt は挿入後の plan から作り直す。
+- `--resume-from executor` を伴わない場合、`--resume` が無い場合、`--register` の ID が 1 件でない場合、`--register-filter` と併用した場合、空の文字列の場合は、project の解決・lock・register の状態変更より前にエラーで止める。
+- 足した指示と日時は `pipeline-state.json` の `resume_notes`（`at`・`notes` の配列）に残る。次の再開でも前回までの分を引き継ぐ。`docs/specdojo/schemas/v1/pipeline-state.schema.yaml` と読み込み時の検査に項目を足した。
+- 単体テストで、挿入の位置（参照の前・参照の不変・展開が引き続き動くこと）、参照の無い plan、組み合わせのエラー（CLI の起動前の停止を含む）、`resume_notes` の記録・引き継ぎ・schema 適合・不正値の拒否を確かめた。
+- [[specdojo:command-reference|コマンドリファレンス]] のオプション表・例・register の再開の説明と、[[specdojo:exec-operation-guide|exec運用ガイド]] の「register実行の再開」に、オプションと使う場面を書いた。
+
+### 5.2. 迷った点と決めた内容
+
+- オプション名は完了条件の例のとおり `--resume-note <text>` とした。
+- 対象は完了条件のとおり `exec run --register` に限り、schedule の `exec resume --task` には足していない。schedule でも同じ要望があれば別の項目で扱う。
+- `--register` の ID は 1 件に限った。指示は項目ごとの内容であり、複数の項目へ同じ指示を入れる誤りを防ぐためである。
+- 記録先は `pipeline-state.json` とした。run の checkpoint として再開のたびに読み込まれ、前回までの分を引き継げるためである。executor を再開すると前回の state は `pipeline-state.attempt-N.json` に退避されるが、`resume_notes` は新しい state に引き継ぐ。
+- 挿入先は worktree の plan とした。`--resume-from executor` の再開では worktree の plan が prompt の入力で、統合でも plan の変更が許されるためである。worktree に plan が無い場合は、状態を変えずに再開を拒否する。
+- 節の見出しには番号を付けていない。plan の runner が足す節（変更範囲による実行待ち）と同じ形にそろえた。
+
+### 5.3. CHANGELOG に書く事項
+
+- 区分: Added
+- 行の文案: `exec run --register <PJR-ID> --resume --resume-from executor` に `--resume-note <text>`（繰り返し可）を追加。再開の前に、run の plan の共通規約の参照の前へ再開の指示の節を足し、指示と日時を `pipeline-state.json` の `resume_notes` に記録する（PJR-5F1Y）。
+
+### 5.4. 残課題
+
+- 本項目の外の既存の不足として、`pipeline-state.schema.yaml` には `src/exec/pipeline-state.ts` が書く `artifacts` の項目が無い。そのため実際の run の `pipeline-state.json` は `npm run validate:schema:file` で `must NOT have additional properties` になる。本項目では `artifacts` を除き `resume_notes` を足した state で schema への適合を確かめた。schema への `artifacts` の追加は別の項目で扱う。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[specdojo:command-reference|コマンドリファレンス]]
+- [[specdojo:exec-operation-guide|exec運用ガイド]]

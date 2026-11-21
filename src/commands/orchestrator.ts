@@ -3,7 +3,7 @@ import { constants as osConstants } from "node:os";
 import { resolve } from "node:path";
 import { type Command } from "commander";
 import { agentExtraRootArguments, resolveProductRepos } from "../exec/task-repos.js";
-import { antigravitySessionArguments } from "../exec/antigravity-session.js";
+import { assertProviderLaunchAllowed } from "../shared/antigravity-block.js";
 import {
   OPENCODE_CONFIG_CONTENT_ENV,
   opencodeAgentNameFromArguments,
@@ -80,20 +80,10 @@ export function buildOrchestratorLaunch(options: {
   cwd: string;
   env?: NodeJS.ProcessEnv;
 }): OrchestratorLaunch {
+  assertProviderLaunchAllowed(options.provider, "orchestrator launch");
   const env = { ...(options.env ?? process.env) };
   const args = [...options.providerArgs];
-  if (options.provider === "antigravity") {
-    args.splice(
-      0,
-      args.length,
-      ...antigravitySessionArguments({
-        role: "orchestrator",
-        cwd: options.cwd,
-        repoRoots: options.repoRoots,
-        providerArgs: args,
-      }),
-    );
-  } else if (options.provider === "opencode" && options.repoRoots.length > 0) {
+  if (options.provider === "opencode" && options.repoRoots.length > 0) {
     env[OPENCODE_CONFIG_CONTENT_ENV] = opencodeExtraRootConfig(
       env[OPENCODE_CONFIG_CONTENT_ENV],
       opencodeAgentName(args),
@@ -117,6 +107,8 @@ export function resolveOrchestratorLaunch(options: {
   project?: string;
   env?: NodeJS.ProcessEnv;
 }): OrchestratorLaunch {
+  // Refuse before reading any configuration so a blocked provider never reaches spawn.
+  assertProviderLaunchAllowed(options.provider, "orchestrator launch");
   const env = options.env ?? process.env;
   const rootDir = specdojoRootDir();
   const configuredRoot = env[ORCHESTRATOR_CONFIG_ROOT_ENV]?.trim();
@@ -212,7 +204,10 @@ export function registerOrchestratorCommands(program: Command): void {
   orchestrator
     .command("launch")
     .description("Launch a provider CLI and allow only repositories declared by the project")
-    .requiredOption("--provider <name>", "Provider CLI (antigravity|claude|codex|copilot|opencode)")
+    .requiredOption(
+      "--provider <name>",
+      "Provider CLI (claude|codex|copilot|opencode; antigravity is refused)",
+    )
     .option("--project <projectId>", "Project id in specdojo.config.json")
     .argument("[providerArgs...]", "Provider arguments; put them after --")
     .action(async (providerArgs: string[], opts: { provider: string; project?: string }) => {

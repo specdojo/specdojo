@@ -15,6 +15,7 @@ import {
   repoRelativePath,
   resolveDeliverableDoneCriteria,
   resolveGradeSourceHashes,
+  resolveKataBatchTargets,
   resolveProject,
   resolveSafeMarkdownPath,
   resolveSafeRepositoryPath,
@@ -24,6 +25,7 @@ export type GradeRunOptions = GradeTargetFilters & {
   target: GradeTarget;
   project?: string;
   paths?: string[];
+  kata?: string[];
   kind?: string;
   runId: string;
   by?: string;
@@ -148,6 +150,14 @@ async function runGradeUnlocked(
     throw new Error("Invalid --kind");
   if (opts.target !== "kata" && opts.kind !== undefined)
     throw new Error("--kind is only valid for kata");
+  if (opts.target !== "kata" && (opts.kata?.length ?? 0) > 0)
+    throw new Error("--kata is only valid for kata");
+  if (opts.paths?.length && (opts.kata?.length ?? 0) > 0)
+    throw new Error("Use either --path or --kata");
+  let documentsByKata: Map<string, string[]> | undefined;
+  if (opts.kata && opts.kata.length > 0) {
+    documentsByKata = resolveKataBatchTargets(opts.kata, specdojoRootDir()).documentsByKata;
+  }
   const maxFailures = opts.maxStageFailures ?? 3;
   if (!Number.isSafeInteger(maxFailures) || maxFailures < 1)
     throw new Error("Invalid --max-stage-failures");
@@ -207,10 +217,16 @@ async function runGradeUnlocked(
         throw new Error("Invalid grade run document state");
     }
   } else {
-    let paths = discoverGradeTargets({ ...opts, project: projectId });
-    if (opts.target === "kata" && kind !== "all")
-      paths = paths.filter((path) => repoRelativePath(path).split("/").includes(`${kind}s`));
-    if (opts.limit !== undefined) paths = paths.slice(0, opts.limit);
+    let paths: string[];
+    if (documentsByKata) {
+      const flattened = Array.from(documentsByKata.values()).flat();
+      paths = Array.from(new Set(flattened));
+    } else {
+      paths = discoverGradeTargets({ ...opts, project: projectId });
+      if (opts.target === "kata" && kind !== "all")
+        paths = paths.filter((path) => repoRelativePath(path).split("/").includes(`${kind}s`));
+      if (opts.limit !== undefined) paths = paths.slice(0, opts.limit);
+    }
     state = {
       version: 1,
       request,
@@ -291,6 +307,8 @@ async function runGradeUnlocked(
   }
   writeState(statePath, state);
   const failures: string[] = [];
+  let rateLimited = false;
+  let rateLimitedActor: string | undefined;
   for (const [index, document] of state.documents.entries()) {
     const reference = references.get(document.path);
     if (document.status === "complete") {
@@ -361,6 +379,11 @@ async function runGradeUnlocked(
         // A rate limit is not a document failure: keep the stage retryable in this run id.
         document.status = "pending";
         writeState(statePath, state);
+        if (documentsByKata) {
+          rateLimited = true;
+          rateLimitedActor = actualActor;
+          continue;
+        }
         const unstarted = state.documents
           .filter((item) => item.status !== "complete")
           .map((item) => item.path);
@@ -460,6 +483,38 @@ async function runGradeUnlocked(
       });
       failures.push(`${document.path}: ${document.error}`);
     }
+  }
+  if (documentsByKata && documentsByKata.size > 0) {
+    process.stdout.write("kata results:\n");
+    for (const [name, docs] of documentsByKata) {
+      const statuses = docs.map((docPath) => {
+        const repoPath = repoRelativePath(docPath);
+        const doc = state.documents.find((item) => item.path === repoPath);
+        return doc?.status ?? "pending";
+      });
+      let verdictJa = "未実行";
+      let verdictEn = "pending";
+      if (statuses.every((s) => s === "complete")) {
+        verdictJa = "完了";
+        verdictEn = "complete";
+      } else if (statuses.some((s) => s === "failed")) {
+        verdictJa = "失敗";
+        verdictEn = "failed";
+      }
+      process.stdout.write(`  ${name}: ${verdictJa} (${verdictEn})\n`);
+    }
+  }
+  if (rateLimited) {
+    const unstarted = state.documents
+      .filter((item) => item.status !== "complete")
+      .map((item) => item.path);
+    throw new GradeRunIncompleteError(
+      [
+        `grade run stopped by rate limit: agent=${rateLimitedActor ?? actor} run_id=${opts.runId}; rerun with the same --run-id to resume`,
+        ...unstarted.map((path) => `grade run remaining: ${path}`),
+      ].join("\n"),
+      GRADE_RUN_RATE_LIMIT_EXIT_CODE,
+    );
   }
   if (failures.length) {
     const completed = state.documents.filter((document) => document.status === "complete").length;

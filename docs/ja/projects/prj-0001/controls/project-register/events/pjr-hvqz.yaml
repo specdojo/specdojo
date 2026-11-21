@@ -41,3 +41,48 @@
     - field: derived_from
       from: ""
       to: '["PJR-3VJM","PJR-ANKZ"]'
+- v: 1
+  id: reg_6fed41c05cb9446b868b66513c6d90d9
+  ts: "2026-11-20T16:59:58Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_0dc29f54256841e386a19c66ffdd0a50
+- v: 1
+  id: reg_39ef9daeb63a4cd480bd5009590f4cfe
+  ts: "2026-11-20T17:17:32Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_6fed41c05cb9446b868b66513c6d90d9
+- v: 1
+  id: reg_eb0f1912864343d19824eb2563214db3
+  ts: "2026-11-20T22:47:22Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register で対応。完了条件を差分（bdb592f7f）と個票で確かめた。本文は cstd の非推奨と同じ形に揃え、pm-review-viewpoints は全 rulebook の判定の記録のため残すという判断を妥当とした
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-21"
+    - field: conclusion
+      from: "-"
+      to: dec と ntp の rulebook・sample を deprecated にし、後継への案内を書いた。dss-sample の参照を登録簿の decision へ向けた
+  previous_event_id: reg_39ef9daeb63a4cd480bd5009590f4cfe

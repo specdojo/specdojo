@@ -459,6 +459,12 @@ export function pendingProductWorktreeChanges(worktree: ExecWorktree): string[] 
   return pending;
 }
 
+/** Whether a product worktree has uncommitted changes or exec-branch commits to integrate. */
+export function productHasPendingWork(product: ProductWorktree): boolean {
+  if (!existsSync(product.path)) return false;
+  return statusPaths(product.path).length > 0 || commitsAhead(product) > 0;
+}
+
 export function assertNoPendingProductChanges(worktree: ExecWorktree): void {
   const pending = pendingProductWorktreeChanges(worktree);
   if (pending.length === 0) return;

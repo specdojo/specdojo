@@ -107,7 +107,7 @@ state と evidence は元も残し、ログは退避先へ移します。退避�
 
 ### 2.3. 既存記録の移行
 
-`exec migrate-records` は検査を通すためには不要です。旧配置の記録を CLI の通常の探索で使う場合に移行します。移さない場合の制約は次のとおりです。
+`exec migrate-records` は非推奨であり、次の版（0.10.0）で削除予定です。現在は新形式の実行記録配置（`execution/runs/`）が標準形式であり、通常の運用や検査を通すためにも本コマンドの実行は不要です。旧配置の記録を CLI の通常の探索で使う場合に移行します。移さない場合の制約は次のとおりです。
 
 - `exec run --register ... --resume` と schedule の executor 再開は、`runs/` 内の checkpoint を候補にするため旧 `exec/evidence/` の run を発見しません。schedule の通常実行・統合再開も、plan・result の通常の探索では旧配置を参照しません。保存済みイベントや checkpoint の明示的なパス参照を読む経路はありますが、旧配置を自動探索する互換機能ではありません。
 - `dashboard build` の実行記録一覧と plan・result 件数には、旧配置の記録が含まれません。`exec archive` や task ID からの plan・result の取得も `runs/` のみを探索します。

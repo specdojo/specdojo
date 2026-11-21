@@ -21,6 +21,7 @@ import {
 import { resolveCommitHookSkips, type CommitHookSkip } from "./commit-hook-skips.js";
 import { configureIndexLockWait, DEFAULT_INDEX_LOCK_WAIT_MS } from "../shared/git.js";
 import { resolvePostIntegrationEntries, type PostIntegrationEntry } from "./post-integration.js";
+import { assertProviderLaunchAllowed } from "../shared/antigravity-block.js";
 
 // ── Types for .specdojo/exec-defaults.yaml (global + per-provider) ─────────────
 
@@ -234,6 +235,9 @@ export function resolveMemberCommand(
   config: ExecDefaultsConfig,
   member: CommandMemberAttributes,
 ): string | undefined {
+  // Every launch path (named, automatic, fallback) expands the command here, so refusing an
+  // Antigravity member before building any command keeps agy from ever being spawned.
+  assertProviderLaunchAllowed(member.provider, `Cannot launch member ${member.nickname}`);
   // Require provider opt-in even for an explicit member command: otherwise a frontier
   // member could silently inherit ordinary defaults or bypass the missing-tier error.
   if (

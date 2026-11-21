@@ -1,0 +1,13 @@
+parent validation: lint-md
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.9.1 lint:md
+> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'
+
+
+
+--- stderr ---
+docs/ja/projects/prj-0001/controls/project-register/pjr-7kxw-register-update-section-body.md:64:38 error MD038/no-space-in-code Spaces inside code span elements [Context: "`3. `"]

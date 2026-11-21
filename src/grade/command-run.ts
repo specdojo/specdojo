@@ -50,6 +50,7 @@ export function registerGradeRunCommand(grade: Command, runtime?: GradeAgentRunt
             ...options,
             target: requireTarget(options.target),
             paths: options.path,
+            kata: options.kata,
             by: options.by ?? options.stage1Executor,
             execDefaultsPath: options.execDefaults,
           },

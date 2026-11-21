@@ -22,6 +22,7 @@ import {
 import {
   requireRunnableRegisterItem,
   resolveRegisterRunTarget,
+  registerProductTargetHints,
   sanitizeRegisterConclusion,
   ticketPathFromItem,
   type RegisterItemSummary,
@@ -62,6 +63,7 @@ import {
   registerTransitionPaths,
 } from "./register-state.js";
 import { finalizeRegisterWorktreeRun } from "./register-worktree.js";
+import { appendResumeNotesToPlan, nextResumeNotes } from "./resume-notes.js";
 import {
   isWorktreeCleanupInProgress,
   worktreeCleanupInProgressReason,
@@ -553,9 +555,18 @@ export async function resumeSingleRegisterItemWorktree(
         `the wait commit of run ${target.runId} into ${currentBranch(repoRoot)} and resume again, ` +
         `or discard the run with --force-restart (without --resume)`,
     );
-  const prompt = expandPromptRefs(readPlanFile(promptPlanPath));
+  let prompt = expandPromptRefs(readPlanFile(promptPlanPath));
 
   if (target.stage === "executor") {
+    // PJR-5F1Y: --resume-note は worktree の plan（統合で plan の変更を許す executor 再開の入力）へ
+    // 足す。root の plan は wait commit の checkpoint のまま残す。
+    const resumeNotes = (opts.resumeNote ?? []).map((note) => note.trim()).filter(Boolean);
+    if (resumeNotes.length > 0 && promptPlanPath !== worktreePlanPath) {
+      return refuse(
+        `plan not found in the worktree: ${artifacts.planRef}; --resume-note requires the plan ` +
+          `of run ${target.runId} in the worktree`,
+      );
+    }
     const executor = resolveRegisterResumeExecutor(
       context.roster,
       opts,
@@ -580,6 +591,17 @@ export async function resumeSingleRegisterItemWorktree(
     const beginFailure = await begin(executor.candidate.actor, "executor resumed");
     if (beginFailure) return beginFailure;
 
+    const resumeNoteEntry =
+      resumeNotes.length > 0 ? { at: new Date().toISOString(), notes: resumeNotes } : undefined;
+    if (resumeNoteEntry) {
+      appendResumeNotesToPlan(worktreePlanPath, resumeNoteEntry);
+      prompt = expandPromptRefs(readPlanFile(worktreePlanPath));
+      process.stdout.write(
+        `  [resume] added ${resumeNotes.length} resume note(s) to ${artifacts.planRef}\n`,
+      );
+    }
+    const recordedResumeNotes = nextResumeNotes(target.state.resume_notes, resumeNoteEntry);
+
     const resultScaffold = readResultFrontmatterSnapshot(worktreeResultPath);
     const outcome = await runAgentPipeline({
       repoRoot,
@@ -595,6 +617,7 @@ export async function resumeSingleRegisterItemWorktree(
       registerPaths: registerReporterManagedPaths(registerPaths),
       executorResumeHint: executorStageResumeHint({ kind: "register", itemId: item.id }),
       execDefaults: context.execDefaults,
+      productTargetHints: registerProductTargetHints(item),
       resumedExecutor: true,
       runId: target.runId,
       initialChangeTargets: target.initialChanges,
@@ -602,6 +625,7 @@ export async function resumeSingleRegisterItemWorktree(
       providerConcurrencyGate: context.providerConcurrencyGate,
       productWorktrees: worktree.repos,
       ...(integrationBranchOverrides ? { integrationBranchOverrides } : {}),
+      ...(recordedResumeNotes.length > 0 ? { resumeNotes: recordedResumeNotes } : {}),
       executorRateLimitOptions: resolvePinnedRateLimitRunOptions(
         opts,
         context.execDefaults,

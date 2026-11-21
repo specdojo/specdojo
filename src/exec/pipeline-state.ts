@@ -60,6 +60,13 @@ export type PipelineArtifactRefs = {
   result_ref: string;
 };
 
+// PJR-5F1Y: `exec run --resume --resume-from executor --resume-note` で再開時に plan へ足した指示。
+// 再開のたびに 1 件を追記し、次の再開でも前回までの分を引き継ぐ。
+export type PipelineResumeNote = {
+  at: string;
+  notes: string[];
+};
+
 export type PipelineState = {
   schema_version: 1;
   task_id: string;
@@ -69,6 +76,8 @@ export type PipelineState = {
   artifacts?: PipelineArtifactRefs;
   /** Run-scoped `--integration-branch` overrides (repo name → branch), reused on resume. */
   integration_branches?: Record<string, string>;
+  /** Instructions added to the plan by `--resume-note`, one entry per resume. */
+  resume_notes?: PipelineResumeNote[];
 };
 
 export type PipelineStateLocation = {
@@ -95,6 +104,7 @@ export function createPipelineState(input: {
   reporterActor?: string;
   artifacts?: PipelineArtifactRefs;
   integrationBranches?: Record<string, string>;
+  resumeNotes?: PipelineResumeNote[];
 }): PipelineState {
   return {
     schema_version: 1,
@@ -107,6 +117,7 @@ export function createPipelineState(input: {
     },
     ...(input.artifacts ? { artifacts: input.artifacts } : {}),
     ...(input.integrationBranches ? { integration_branches: input.integrationBranches } : {}),
+    ...(input.resumeNotes?.length ? { resume_notes: input.resumeNotes } : {}),
   };
 }
 
@@ -216,6 +227,23 @@ function isIntegrationBranches(value: unknown): value is Record<string, string> 
   );
 }
 
+function isResumeNotes(value: unknown): value is PipelineResumeNote[] {
+  return (
+    Array.isArray(value) &&
+    value.every((entry) => {
+      if (!entry || typeof entry !== "object" || Array.isArray(entry)) return false;
+      const record = entry as Record<string, unknown>;
+      return (
+        typeof record.at === "string" &&
+        !!record.at &&
+        Array.isArray(record.notes) &&
+        record.notes.length > 0 &&
+        record.notes.every((note) => typeof note === "string" && !!note.trim())
+      );
+    })
+  );
+}
+
 export function isPipelineState(value: unknown): value is PipelineState {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;
   const state = value as Record<string, unknown>;
@@ -238,6 +266,7 @@ export function isPipelineState(value: unknown): value is PipelineState {
     !isIntegrationBranches(state.integration_branches)
   )
     return false;
+  if (state.resume_notes !== undefined && !isResumeNotes(state.resume_notes)) return false;
   const stages = state.stages as Record<string, unknown>;
   if (stages.integrate !== undefined && !isIntegrateStageState(stages.integrate)) return false;
   return isStageState(stages.executor) && isStageState(stages.reporter);

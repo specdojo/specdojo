@@ -1,0 +1,263 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-BSCK",
+  "run_id": "pjr-bsck-20261120T155350Z-ea017f33",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-20T23:02:46.818Z",
+    "completed_at": "2026-11-20T23:04:19.477Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-bsck.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-bsck-deprecate-unused-commands.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/plan-result-lifecycle-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/register-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/timeline-design-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/timeline.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/migrate-records.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/command-inspect.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/maintenance-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/specdojo-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/where-alias.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/commands/where.integration.test.ts",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-bsck-deprecate-unused-commands.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/migrate-records.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/commands/where.integration.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 14,
+    "summary": ".../controls/project-register/events/pjr-bsck.yaml | 20 +++++-\n .../pjr-bsck-deprecate-unused-commands.md          | 16 +++--\n .../specdojo/guides/plan-result-lifecycle-guide.md |  2 +-\n .../ja/specdojo/guides/register-operation-guide.md |  2 +-\n docs/ja/specdojo/guides/timeline-design-guide.md   |  2 +-\n docs/ja/specdojo/references/command-reference.md   | 82 +++++++++++-----------\n src/dashboard/timeline.ts                          |  4 +-\n src/exec/commands.ts                               | 36 +++++++++-\n src/exec/migrate-records.ts                        |  9 ++-\n src/grade/command-inspect.ts                       |  9 ++-\n src/register/maintenance-commands.ts               |  9 ++-\n src/shared/specdojo-config.ts                      |  8 ++-\n src/shared/where-alias.ts                          |  4 +-\n tests/src/commands/where.integration.test.ts       |  2 +-\n 14 files changed, 141 insertions(+), 64 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/projects/prj-0001/controls/project-register/pjr-bsck-deprecate-unused-commands.md",
+      "status": "passed",
+      "summary": "変更ファイルを prettier --write で整形し、個票の check も通過"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "invalid 0 件"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.1 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BSCK/src/catalog/catalog.ts\n  542:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BSCK/src/dashboard/dashboard.ts\n  1149:1  warning  File has too many lines (1067). Maximum allow\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BSCK/src/schedule/strategy-generate-document.ts\n  87:8  warning  Function 'buildStrategyDocument' has too many lines (289). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BSCK/src/shared/specdojo-config.ts\n  1236:1  warning  File has too many lines (1196). Maximum allowed is 1000  max-lines\n\n✖ 41 problems (0 errors, 41 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.1 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.1 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.1 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 5539 file(s), 107 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 83 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.1 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5539 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.1 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BSCK\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/commands/where.integration.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/tools/commit-msg-merge.integration.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/commands/build.integration.test.ts\"}\n[parent-val\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.1 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.1 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schema)\ndocs/ja/specdojo/samples/ifx-api-sample\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BSCK/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BSCK/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.1 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.1 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.1 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BSCK\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/tools/grade-per-document.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/register/catalogless-target.test.ts\"}\n ✓ tests/tools/grade-per-document.test.ts (32 tests) 7987ms\n     ✓ runs all three stages for one document and skips it on resume  458ms\n\n… output omitted …\n/invalid.md\n\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\n[grade] attempt 1/3 failed; retrying: subject.md: exit 1: agent failed\n[grade] attempt 2/3 failed; retrying: subject.md: exit 1: agent failed\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-bsck-deprecate-unused-commands.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-bsck-deprecate-unused-commands.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/guides/plan-result-lifecycle-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/plan-result-lifecycle-guide.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/guides/register-operation-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/register-operation-guide.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/guides/timeline-design-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/timeline-design-guide.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/references/command-reference.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "reason": ""
+    },
+    {
+      "target": "src/dashboard/timeline.ts",
+      "status": "changed",
+      "path": "src/dashboard/timeline.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/commands.ts",
+      "status": "changed",
+      "path": "src/exec/commands.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/migrate-records.ts",
+      "status": "changed",
+      "path": "src/exec/migrate-records.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/grade/command-inspect.ts",
+      "status": "changed",
+      "path": "src/grade/command-inspect.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/register/maintenance-commands.ts",
+      "status": "changed",
+      "path": "src/register/maintenance-commands.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/shared/specdojo-config.ts",
+      "status": "changed",
+      "path": "src/shared/specdojo-config.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/shared/where-alias.ts",
+      "status": "changed",
+      "path": "src/shared/where-alias.ts",
+      "reason": ""
+    }
+  ],
+  "final_message": "対象9コマンド（`timeline where`・`timeline build`、`exec note`・`exec link`・`exec estimate`、`exec migrate-records`、`grade migrate`、`register migrate`、`config migrate-members`）に非推奨の警告と代わりの操作を出し、リファレンスとガイドを更新した。前回失敗した lint-md（個票 MD032）と test-integration（`where` 別名警告の期待値）を修正した。",
+  "completion_status": "complete",
+  "handoff": [
+    "作業 No 3「次の版で消す」は 0.10.0 で行うため `open` のまま残した。消す前に、利用者のリポジトリとガイドでの使われ方をもう一度確かめる。",
+    "CHANGELOG の文案は個票の「CHANGELOG に書く事項」にある。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-BSCK/pjr-bsck-20261120T155350Z-ea017f33/executor.log",
+      "bytes": 4222,
+      "truncated": false
+    }
+  ]
+}

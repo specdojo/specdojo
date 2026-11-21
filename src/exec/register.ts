@@ -303,6 +303,15 @@ export function selectRegisterRunArtifactResidue(paths: Iterable<string>): strin
   return [...residue].sort();
 }
 
+/** Register values that may name a product target as `<repo>:<path>` (PJR-QQRH). */
+export function registerProductTargetHints(
+  item: Pick<PjrItem, "targetPath" | "targets">,
+): string[] {
+  return [item.targetPath, ...(item.targets ?? [])].filter(
+    (value): value is string => typeof value === "string" && value.length > 0,
+  );
+}
+
 export type RegisterRunTarget = {
   registerPaths: RegisterPaths;
   item: PjrItem;

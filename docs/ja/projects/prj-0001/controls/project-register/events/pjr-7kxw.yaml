@@ -44,3 +44,138 @@
     - field: commit_scope
       from: ""
       to: register
+- v: 1
+  id: reg_b4c64a595de64b6a933b8f09e125ac07
+  ts: "2026-11-20T15:07:15Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_ee37a050428d4421b97e53f8b0260036
+- v: 1
+  id: reg_3815ac18fd9a42a7a0d357b1e730358f
+  ts: "2026-11-20T15:32:07Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-ts, lint-md"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-ts, lint-md"
+  previous_event_id: reg_b4c64a595de64b6a933b8f09e125ac07
+- v: 1
+  id: reg_aa9c27ba7d0646cfb65a9930dfd2d84d
+  ts: "2026-11-20T22:52:17Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-ts, lint-md"
+      to: "-"
+  previous_event_id: reg_3815ac18fd9a42a7a0d357b1e730358f
+- v: 1
+  id: reg_668ac52769184926b136f9da12b4e216
+  ts: "2026-11-20T23:00:38Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_aa9c27ba7d0646cfb65a9930dfd2d84d
+- v: 1
+  id: reg_ec141750dd6b453180523a44ab098e8b
+  ts: "2026-11-20T23:58:12Z"
+  action: start
+  actor: flash-high-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_668ac52769184926b136f9da12b4e216
+- v: 1
+  id: reg_74302bd7421e46f982085ae272c0eb17
+  ts: "2026-11-21T00:07:05Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: root agent idle; waiting for 1 background task(s) to finish"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: root agent idle; waiting for 1 background task(s) to finish"
+  previous_event_id: reg_ec141750dd6b453180523a44ab098e8b
+- v: 1
+  id: reg_d8fe9b2937784ecfb404c74209332616
+  ts: "2026-11-21T00:38:29Z"
+  action: start
+  actor: sonnet-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: root agent idle; waiting for 1 background task(s) to finish"
+      to: "-"
+  previous_event_id: reg_74302bd7421e46f982085ae272c0eb17
+- v: 1
+  id: reg_4e21f6f868a74009aea2468259f89342
+  ts: "2026-11-21T00:48:43Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_d8fe9b2937784ecfb404c74209332616
+- v: 1
+  id: reg_1e959ca17a824eb0a57f6e9a8af6ce8f
+  ts: "2026-11-21T00:50:05Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register を 2 回で対応（2 回目は agy を止めたため sonnet で最初から流し直した）。確認用の空のリポジトリでの書き込みと --commit、ビルド済みの CLI での dry-run の 3 つのエラーを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-21"
+    - field: conclusion
+      from: "-"
+      to: register update に --section と --section-file を足し、個票の 1 つの章の本文をファイルで差し替える。dry-run でも無い章・読めないファイル・見出しを含むファイルをエラーにする
+  previous_event_id: reg_4e21f6f868a74009aea2468259f89342

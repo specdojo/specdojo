@@ -9,12 +9,12 @@ export function registerDeprecatedWhereAlias(
   const kind = parent.name();
   parent
     .command("where", { hidden: true })
-    .description(`Deprecated: use where ${kind} (retained for one release)`)
+    .description(`Deprecated: use specdojo where ${kind} (will be removed in 0.10.0)`)
     .option("--project <projectId>", "Project id in specdojo.config.json")
     .action((opts: { project?: string }) => {
       warnDeprecated(
         `${kind} where`,
-        `Use specdojo where ${kind}. This alias will be removed after one release.`,
+        `Use specdojo where ${kind}. This alias will be removed in 0.10.0.`,
       );
       printPaths(opts);
     });

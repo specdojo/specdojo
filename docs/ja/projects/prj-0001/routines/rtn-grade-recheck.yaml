@@ -2,7 +2,8 @@
 id: rtn-grade-recheck
 name: 依存先変更・kata更新・未レビューの実践の型の定期評価
 description: 毎日5時（Asia/Tokyo）に、依存先が変更された、kataが更新された、scheduleタスクを持たない、または旧rubricで評価された実践の型を最大15件評価する。
-enabled: true
+# 2026-11-21: 評価者の agy-expert-executor（Antigravity）を使わなくしたため、評価者を決めるまで止める。
+enabled: false
 trigger:
   cron: "0 5 * * *"
   timezone: Asia/Tokyo

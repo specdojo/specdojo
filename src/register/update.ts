@@ -1,4 +1,5 @@
 import { setRegisterInput } from "./input.js";
+import { replaceTicketSection } from "./section.js";
 import { existsSync, readFileSync } from "node:fs";
 import { basename, join } from "node:path";
 import { atomicWriteFile, prepareRegisterEventFile, type TicketStatus } from "./core.js";
@@ -79,6 +80,7 @@ export function applyItemUpdate(opts: {
   title?: string;
   description?: string;
   inputs?: string[];
+  section?: { name: string; content: string };
   fieldUpdates?: RegisterItemFieldUpdates;
   eventAction: RegisterEventAction;
   eventActor: string;
@@ -99,11 +101,22 @@ export function applyItemUpdate(opts: {
   };
 
   if (opts.dryRun) {
+    if (opts.section !== undefined) {
+      // 通常実行と同じく、個票に無い章の名前はエラーにする（書き込みはしない）。
+      replaceTicketSection(
+        readFileSync(ticketPath, "utf8"),
+        opts.section.name,
+        opts.section.content,
+      );
+    }
     const lines = [`Would update ${ticketPath} (${opts.updated.id} ${label}):`];
     if (opts.title !== undefined) lines.push(`  title: ${opts.title}`);
     if (opts.description !== undefined) lines.push(`  description: ${opts.description}`);
     if (opts.inputs !== undefined) {
       lines.push(`  input: ${opts.inputs.length ? JSON.stringify(opts.inputs) : "-"}`);
+    }
+    if (opts.section !== undefined) {
+      lines.push(`  section: ${opts.section.name}`);
     }
     lines.push(formatRegisterItemFields(updates));
     process.stdout.write(`${lines.join("\n")}\n`);
@@ -112,12 +125,22 @@ export function applyItemUpdate(opts: {
 
   const beforeContent = readFileSync(ticketPath, "utf8");
   let content = beforeContent;
+  let sectionChanged = false;
+  if (opts.section !== undefined) {
+    const sectionResult = replaceTicketSection(content, opts.section.name, opts.section.content);
+    content = sectionResult.content;
+    sectionChanged = sectionResult.changed;
+  }
   if (opts.title !== undefined) content = setRegisterItemTitle(content, opts.title);
   if (opts.description !== undefined) {
     content = setRegisterItemDescription(content, opts.description);
   }
   if (opts.inputs !== undefined) content = setRegisterInput(content, opts.inputs);
   content = applyRegisterItemFields(content, updates);
+  const extraChanges =
+    opts.section !== undefined && sectionChanged
+      ? [{ field: "section" as const, from: "", to: opts.section.name }]
+      : undefined;
   const event = buildRegisterEvent({
     beforeContent,
     afterContent: content,
@@ -126,6 +149,7 @@ export function applyItemUpdate(opts: {
     action: opts.eventAction,
     actor: opts.eventActor,
     reason: opts.eventReason,
+    ...(extraChanges ? { extraChanges } : {}),
   });
   if (!event) {
     process.stdout.write(`Unchanged: ${ticketPath} (${opts.updated.id})\n`);

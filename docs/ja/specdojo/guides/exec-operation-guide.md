@@ -152,13 +152,14 @@ specdojo exec run --project <project-id> --register PJR-00QV --worktree --join
 
 親検証の時間切れを調べるときは、run の `evidence.json` と同じディレクトリの `parent-validation-metrics.jsonl` を確認します。trial では `exec/trials/<comparison-id>/trials/<trial-id>/` に保存します。再開時も追記するため、`batch_id` と検証の `id`・`repo` で絞って読みます。
 
-| 記録                                  | 読み方                                                                                                                                                                                                                                 |
-| ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `gate-queued` / `gate-acquired`       | 枠の要求・取得時刻。`local_wait_ms` は同一プロセス内、`shared_wait_ms` は共有ロックの取得にかかった時間。各検証の `gate_wait_ms` はバッチ全体の待ち時間で、検証ごとの待ちの合計ではありません                                          |
-| `validation-start` / `validation-end` | `at` は UTC の記録時刻、`started_at` は開始時刻、`duration_ms` は単調時計で測った実行時間。`status`・`exit_code`・`timed_out` で終了状態を確認します                                                                                   |
-| `validation-timeout`                  | 上限に達した時点で終了要求より先に保存します。`active_test_files` は開始通知があり終了通知のないテストファイル、`output_tail` は直近 16 Ki 文字の標準出力です。詳細な出力は従来の失敗ログも参照します                                  |
-| `load`                                | Linux の CPU・memory・I/O の PSI（`pressure`）、`loadavg`、`/proc/meminfo` 由来のメモリ・swap 使用量（bytes）。PSI の `avg10` などは待ちの割合、`total` は累積待ち時間（マイクロ秒）です。開始・終了・時間切れの差分で確認します       |
-| `activity`                            | `scope: project-locks` は同じ project の primary / join run の数と PID、および実行中 executor の子 PID・worktree 名。reporter と終了済み executor は数えません。共有ロックのない実行は `scope: process` として自プロセスだけを数えます |
+| 記録                                  | 読み方                                                                                                                                                                                                                                                                    |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `gate-queued` / `gate-acquired`       | 枠の要求・取得時刻。`local_wait_ms` は同一プロセス内、`shared_wait_ms` は共有ロックの取得にかかった時間。各検証の `gate_wait_ms` はバッチ全体の待ち時間で、検証ごとの待ちの合計ではありません                                                                             |
+| `validation-start` / `validation-end` | `at` は UTC の記録時刻、`started_at` は開始時刻、`duration_ms` は単調時計で測った実行時間。`status`・`exit_code`・`timed_out` で終了状態を確認します                                                                                                                      |
+| `validation-timeout`                  | 上限に達した時点で終了要求より先に保存します。`active_test_files` は開始通知があり終了通知のないテストファイル、`output_tail` は直近 16 Ki 文字の標準出力です。詳細な出力は従来の失敗ログも参照します                                                                     |
+| `validation-timeout-stop`             | 時間切れの後に検証を止め終えた時点で保存します。`survivors_after_term` は SIGTERM の猶予（10 秒）の後に子孫が残っていたか、`kill_sent` は SIGKILL を送ったか、`pipes_closed: false` は group 外の子孫が出力の pipe を持ったまま残り、close を待たずに返したことを示します |
+| `load`                                | Linux の CPU・memory・I/O の PSI（`pressure`）、`loadavg`、`/proc/meminfo` 由来のメモリ・swap 使用量（bytes）。PSI の `avg10` などは待ちの割合、`total` は累積待ち時間（マイクロ秒）です。開始・終了・時間切れの差分で確認します                                          |
+| `activity`                            | `scope: project-locks` は同じ project の primary / join run の数と PID、および実行中 executor の子 PID・worktree 名。reporter と終了済み executor は数えません。共有ロックのない実行は `scope: process` として自プロセスだけを数えます                                    |
 
 このリポジトリの Vitest 設定は、親検証が渡す `SPECDOJO_PARENT_VALIDATION_METRICS=1` のときだけファイル開始・終了通知を出します。他リポジトリの検証でこの通知がない場合、`active_test_files` は空で、実行ファイルは未特定です。直近の出力が示す完了済みファイルを実行中と解釈しないでください。テストの初期化前の停止も通知がない場合があります。
 
@@ -564,6 +565,19 @@ specdojo exec run \
   --worktree \
   --resume \
   --resume-from executor
+```
+
+申し送りだけでは足りない指示（直す順番、触れてはいけない範囲など）を executor へ渡す場合は、`--resume-note <text>` を足します。plan を手で編集したりスクリプトで書き換えたりせずに、run の plan の共通規約の参照の前へ `## 再開の指示（<日時>）` の節を入れて executor を再開します。繰り返し指定すると 1 つの節に並び、足した指示と日時は `pipeline-state.json` の `resume_notes` に残ります。`--resume-from executor` を伴わない場合や、`--register` の ID が 1 件でない場合は、起動の前にエラーで止まります。
+
+```bash
+specdojo exec run \
+  --project <project-id> \
+  --register <PJR-ID> \
+  --worktree \
+  --resume \
+  --resume-from executor \
+  --resume-note "個票の完了条件 3 の文書を先に直す" \
+  --resume-note "src 配下は変えない"
 ```
 
 強制した executor の prompt には、保存済み evidence にある失敗した親検証の ID と要約を申し送ります。保護機構の block から通常どおり executor を再開する場合は、保存済みの block 理由を申し送ります。統合段から executor へ戻す指定、worktree が無い run、再開できない run は、register の状態と既存成果を変えずに拒否します。

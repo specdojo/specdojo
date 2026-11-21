@@ -172,6 +172,7 @@ export type RegisterCommandDependencies = {
     title?: string;
     description?: string;
     inputs?: string[];
+    section?: { name: string; content: string };
     actor?: string;
     reason?: string;
   }) => void;

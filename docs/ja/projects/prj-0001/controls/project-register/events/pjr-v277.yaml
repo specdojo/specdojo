@@ -51,3 +51,48 @@
       from: "-"
       to: hard
   previous_event_id: reg_6c677085105c425e84f51ea6c3331251
+- v: 1
+  id: reg_e83d288401fa4bcfb6aa5546b5825295
+  ts: "2026-11-20T14:38:15Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_f82a174b91354a70b082040db954c449
+- v: 1
+  id: reg_8fce7ebfe2324d61a2f23aafc4290673
+  ts: "2026-11-20T14:50:40Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_e83d288401fa4bcfb6aa5546b5825295
+- v: 1
+  id: reg_f2bcd5e5f6ed490182c871aae5609968
+  ts: "2026-11-20T22:54:38Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register で対応。完了条件を差分（c852d6f43）と個票で確かめ、孫のプロセスの統合テストと、統合後の PJR-JSEY の smoke で親の検証が通常どおり流れることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-21"
+    - field: conclusion
+      from: "-"
+      to: 親の検証を process group で流し、時間切れでは group 全体へ SIGTERM、10 秒後に SIGKILL、pipe が 5 秒閉じなければ時間切れとして次へ進む
+  previous_event_id: reg_8fce7ebfe2324d61a2f23aafc4290673

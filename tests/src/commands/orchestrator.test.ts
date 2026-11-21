@@ -90,21 +90,18 @@ describe("buildOrchestratorLaunch", () => {
     }
   });
 
-  it("injects orchestrator session settings and declared directories for agy", () => {
-    const launch = buildOrchestratorLaunch({
-      provider: "antigravity",
-      providerArgs: ["--model", "fixture", "-i", "prompt"],
-      repoRoots,
-      cwd: "/workspace/project",
-      env: {},
-    });
-    expect(launch.command).toBe("agy");
-    expect(launch.args).toContain("/workspace/app1");
-    expect(launch.args).toContain("/workspace/project");
-    const settings = JSON.parse(launch.args.at(-1)!);
-    expect(settings.permissions.allow).toContain("write_file(/workspace/app1/)");
-    expect(settings.permissions.deny).toContain("read_file(/workspace/app1/.env)");
-    expect(settings.permissions.deny).not.toContain("write_file(/workspace/app1/package.json)");
+  it("refuses antigravity before building an agy command", () => {
+    expect(() =>
+      buildOrchestratorLaunch({
+        provider: "antigravity",
+        providerArgs: ["--model", "fixture", "-i", "prompt"],
+        repoRoots,
+        cwd: "/workspace/project",
+        env: {},
+      }),
+    ).toThrow(
+      /orchestrator launch: SpecDojo 0\.9\.2 and later do not launch Antigravity \(agy\)\..*https:\/\/antigravity\.google\/docs\/faq.*https:\/\/antigravity\.google\/terms.*\.specdojo\/agent-members\.yaml/,
+    );
   });
 
   it("injects an OpenCode agent override that denies undeclared external directories", () => {

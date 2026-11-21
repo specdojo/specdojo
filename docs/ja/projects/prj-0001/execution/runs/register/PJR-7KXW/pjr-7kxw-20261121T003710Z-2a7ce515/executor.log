@@ -1,0 +1,11 @@
+`register update --section` は `--dry-run` でも、個票に無い章の名前を通常の実行と同じくエラー(終了コード 1)にするようになりました。このタスクで実行したのは `src/register/section.ts` 周りの 14 件の単体テストだけで、すべて通っています。`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` などは親 runner の実行に任せました。
+
+- **修正**: `src/register/update.ts` の dry-run 分岐で、章の置換処理を書き込みなしで呼ぶようにしました。個票は変わらず、「Would update」も出ません。読めないファイルと見出しを含むファイルは、元から dry-run より前に検査されていたため、変更していません。
+- **テスト**: `tests/src/register/section.test.ts` に、`--dry-run` 付きの 3 つのエラー(無い章・読めないファイル・見出し含むファイル)を確かめるテストを足しました。
+- **個票の更新**: 対応結果に 2 回目の修正を追記し、「CHANGELOG に書く事項」の文案に dry-run でもエラーになる旨を足しました。
+- **変えていない点**: dry-run で期限や結論が「(removed)」と出る表示は、前からある動きのため触っていません。`CHANGELOG.md` も変えていません。
+- **prettier**: `src/register/update.ts` に prettier の整形が入ったため、ディスク上の内容は私の編集後から変わっています。整形のみの想定で、内容は読み直していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"`register update --section` の dry-run でも、個票に無い章の名前を通常実行と同じくエラーにした。読めないファイルと見出しを含むファイルは既存の事前検査でエラーになる。dry-run の 3 つのエラーを確かめる単体テストを追加し、個票の対応結果と CHANGELOG 文案を見直した。","handoff":["判断: dry-run 分岐で `replaceTicketSection` を書き込みなしで呼び、章名の存在検査を通常実行と共通化した。読めないファイルと見出しを含むファイルは、`create-commands.ts` の `validateSectionFile` が dry-run より前に検査しているため追加の変更は不要。","dry-run で期限や結論が「(removed)」と出る表示は、章の指定と関係なく前からある動きのため変更していない。","CHANGELOG 区分は「追加」。文案に dry-run でも個票に無い章・読めないファイル・見出しを含むファイルがエラーになることを加えた。CHANGELOG.md は変えていない。"],"validations":[{"command":"npx vitest run tests/src/register/section.test.ts","status":"passed","summary":"14 件すべて通過"},{"command":"npx prettier --write src/register/update.ts tests/src/register/section.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-7kxw-register-update-section-body.md","status":"passed","summary":"update.ts のみ整形が入り、残り 2 件は変更なし"}]}
+</specdojo_executor_evidence>
