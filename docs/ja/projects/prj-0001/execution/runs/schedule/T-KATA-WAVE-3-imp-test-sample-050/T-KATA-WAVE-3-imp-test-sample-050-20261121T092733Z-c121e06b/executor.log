@@ -1,0 +1,18 @@
+`docs/ja/specdojo/samples/imp-test-sample.md` を、rulebook の6章構成と各章の必須列に沿って書き直しました。担当者名や日付などを駄菓子屋の題材で具体的に埋めた完成例です。grade の指摘 F001〜F030 はすべて本文で対応しました。整形確認と文書サイトのビルドは通っています。親 runner の検査（`lint:md` など）はまだ結果が出ていません。
+
+**主な変更**
+- **Frontmatter**: `part_of` を `[]` にしました（F025）。`status` は `draft` のままです。
+- **目的と適用範囲**: 承認する役割（`PO`）、対象外のテスト範囲とその理由、対象期間（2026-05-07〜05-28）を書きました。リリース予定日の 2026-06-01 は `_ASSUMPTION_` として明示しています。
+- **変更要求の概要**: 成功条件を3つ追加しました。合格件数28件、受入判定項目の全件合格、重大度「高」の未解決欠陥0件で、それぞれに確認対象と判定方法を付けています。
+- **影響分析サマリ**: 3つの評価観点ごとに、高・中・低を分ける条件の表を置きました。行の影響度は「観点ごとの判定のうち最も高いもの」とし、件数も同じ規則で数えています。
+- **影響詳細一覧**: 1行を「テストレベル／テスト観点」の組にしました。判断根拠には観点ごとの判定と、規則を当てはめた結果を書いています。結合テストの新規8ケースは、値引き種別2 × 集計項目2 × 会計操作2 の内訳です。
+- **対応方針**: 列名を rulebook どおり「影響度」「期限」にし、担当を Role code（`QE` / `BA` / `DEV`）にしました。人名と独自の役割ラベルはなくなっています。前提条件は未解決事項とその期限に対応させました。代替・見送りは `PO` の決定記録として扱い、再評価の条件と、成功条件を使った受入確認の手順も入れました。
+- **未解決事項**: 7列（判断・対応への影響、当面の扱い、転記先の登録項目を含む）に広げました。あわせて、期限を過ぎたら `PM` へ報告すること、確定扱いにする条件と承認する役割を書きました。
+
+**引き継ぎが必要な点**
+- `PJR-T5D1` / `PJR-T5R2` / `PJR-T5Q3` / `PJR-T5Q4` は例示用の架空の ID で、インラインコードで書いています。
+- 兄弟 sample の `imp-business` / `imp-interface` / `imp-operations` / `imp-data` には、`part_of: [prj-0001]` と個人名入りの担当欄がまだ残っています。今回の範囲外なので触っていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"rulebook の6章構成と必須列に沿って imp-test-sample.md を書き直した。成功条件、評価観点ごとの尺度、集約規則、Role code の担当、未解決事項の7列を値で埋め、F001〜F030 を本文で解消した。prettier と docs:build は通過。","handoff":["F001〜F030 はすべて sample 本文の修正で解消した。主な対応は、対象期間（2026-05-07〜05-28）と予定リリース日 2026-06-01（`_ASSUMPTION_`）、成功条件3つと判定方法、評価観点ごとの高・中・低の条件と最大値の集約規則、行単位を「テストレベル／テスト観点」にしたこと、列名を rulebook に合わせたこと（影響度・期限）、担当を Role code にしたこと、`PO` の決定記録による代替・見送りと受入確認の手順、未解決事項の7列化と転記先（`risk`/`question`）、`PM` への報告と確定扱いの条件、`part_of: []`。","sample 内の `PJR-T5D1` / `PJR-T5R2` / `PJR-T5Q3` / `PJR-T5Q4` は例示用の架空の登録項目 ID で、インラインコードで書いている。","兄弟 sample（imp-business / imp-interface / imp-operations / imp-data）には、`part_of: [prj-0001]` と個人名入りの担当欄がまだ残っている。同じ指摘を受ける可能性があるため、別タスクで直す必要がある（今回は範囲外のため未編集）。","rulebook の変更案はない。今回の sample は現行の imp-test-rulebook と矛盾しない。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/imp-test-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/imp-test-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run docs:build","status":"passed","summary":"build complete in 174.16s"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルの変更なし","reason":"変更は docs/ja/specdojo/samples 配下の sample だけで、plan / result / 個票を変更していない"}]}
+</specdojo_executor_evidence>
