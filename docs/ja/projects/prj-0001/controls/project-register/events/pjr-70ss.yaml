@@ -160,3 +160,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_3f336f8afe6142b29c5767a25014adfd
+- v: 1
+  id: reg_2a1bd5fc48614a969e1a00dd4c62b9b1
+  ts: "2026-11-21T00:35:31Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register を 2 回で対応。1 回目（73c60dd81）と 2 回目（9408a0008）の差分と個票を完了条件と照らして確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-21"
+    - field: conclusion
+      from: "-"
+      to: 運用メモに型の整備と夜間の実行の知見を書き足し、本体の変更案を個票に残した。本体の反映は orchestrator が feature ブランチで行う
+  previous_event_id: reg_3ceebbbc87264db893f18e93ba126e63

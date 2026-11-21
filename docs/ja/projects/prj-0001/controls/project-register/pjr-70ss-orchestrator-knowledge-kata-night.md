@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-70ss-orchestrator-knowledge-kata-night
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: sol-executor
   registered_at: "2026-11-13T14:07:54Z"
+  completed_at: "2026-11-21T00:35:31Z"
+  conclusion: 運用メモに型の整備と夜間の実行の知見を書き足し、本体の変更案を個票に残した。本体の反映は orchestrator が feature ブランチで行う
   commit_type: docs
   commit_scope: orchestrator
 ---
