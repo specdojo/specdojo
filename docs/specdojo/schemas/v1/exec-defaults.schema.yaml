@@ -283,6 +283,17 @@ $defs:
         description: >
           Extra template variables resolved by member attributes. Resolution precedence is
           by_nickname, then by_proficiency, then by_mode.
+      allow_commands:
+        type: array
+        minItems: 1
+        uniqueItems: true
+        description: >
+          claude only. Extra permission rules appended to edit-mode launch commands as
+          --allowedTools, so validation commands survive `config scaffold --force` of
+          settings.edit.json. Deny rules in the settings file still take precedence.
+        items:
+          type: string
+          pattern: "^Bash\\([^'\\\\\\r\\n]+\\)$"
       rate_limit_detection:
         $ref: "#/$defs/AgentErrorDetection"
         description: "Provider-specific failure signals. Prefer stderr_patterns over generic exit_codes."

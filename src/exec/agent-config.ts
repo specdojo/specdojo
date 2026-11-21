@@ -93,6 +93,9 @@ export type ProviderOverride = {
   // from command_params.
   command_template?: string;
   command_params?: CommandParams;
+  // claude only: extra `Bash(...)` permission rules appended to edit-mode launch commands as
+  // `--allowedTools`. They survive `config scaffold --force`; deny rules still take precedence.
+  allow_commands?: string[];
   rate_limit_detection?: RateLimitDetection;
   connection_error_detection?: ConnectionErrorDetection;
   rate_limit_policy?: RateLimitPolicy;
@@ -274,7 +277,31 @@ export function resolveMemberCommand(
       `Cannot resolve ${[...new Set(unresolved)].join(", ")} in providers.${provider}.command_template for member ${member.nickname} (mode: ${member.mode ?? "-"}, proficiency: ${member.proficiency ?? "-"})`,
     );
   }
-  return expanded;
+  return appendAllowedCommands(expanded, provider, member, config.providers?.[provider]);
+}
+
+const ALLOW_COMMAND_PATTERN = /^Bash\([^'\\\r\n]+\)$/;
+
+// Append providers.claude.allow_commands to an edit-mode command as `--allowedTools`.
+// Rules are single-quoted for the shell, so quotes, backslashes, and newlines are rejected.
+function appendAllowedCommands(
+  command: string,
+  provider: AgentProvider,
+  member: CommandMemberAttributes,
+  override: ProviderOverride | undefined,
+): string {
+  const rules = override?.allow_commands;
+  if (provider !== "claude" || member.mode !== "edit" || !rules || rules.length === 0) {
+    return command;
+  }
+  for (const rule of rules) {
+    if (!ALLOW_COMMAND_PATTERN.test(rule)) {
+      throw new Error(
+        `exec-defaults providers.${provider}.allow_commands entry must look like Bash(<command> *) without quotes or backslashes: ${JSON.stringify(rule)}`,
+      );
+    }
+  }
+  return `${command} --allowedTools ${rules.map((rule) => `'${rule}'`).join(" ")}`;
 }
 
 // ── Provider resolution ─────────────────────────────────────────────────────
