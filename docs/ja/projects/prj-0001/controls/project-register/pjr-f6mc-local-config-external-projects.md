@@ -12,7 +12,7 @@ specdojo:
   difficulty: easy
   owner: DEV
   registered_at: "2026-11-21T09:03:34Z"
-  block_reason: "parent validation failed: lint-fm, validate-schema, test-unit"
+  block_reason: "parent validation failed: test-unit"
 ---
 
 # PJR-F6MC ローカル設定で external_projects を宣言できない
@@ -54,8 +54,30 @@ external_projects の path は相手のリポジトリの置き場所で、環�
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+### 5.1. 実施内容
+
+- `src/shared/local-config.ts` の `applyLocalConfig` で `external_projects` を許可リストへ追加した。トップレベルの許可キーが `version`・`projects`・`external_projects` となり、既存の共有 alias は `path` だけを差し替え、共有に無い alias は `path`・`project_id` ともに local から足す（`kind: external-path` / `external-added`）。
+- `LocalConfigOverride` の型を 4 種に広げた（`path`・`added`・`external-path`・`external-added`）。`formatLocalOverride`・`formatConfigShow` も各 kind に合わせて表示する。
+- `docs/specdojo/schemas/v1/exec-evidence.schema.yaml` の `local_config_overrides` を `oneOf` 形式に書き替え、`project`/`repo` 系と `external` 系の項目を同時に許すようにした。
+- テスト: `tests/src/shared/local-config.test.ts` に「共有の別名の `path` 差し替え＋新規 alias の追加」「許可外のキーの拒否」「`path` が空文字の拒否」を追加した。
+- 文書: [[specdojo:specdojo-config-reference]] のトップレベルキー表・許可するキー表・7. ローカル設定へ、`external_projects.<alias>`（既存／追加）と `external-path` / `external-added` を足した。
+
+### 5.2. 決めた内容と理由
+
+- 共有 alias の local 上書きは `path` だけとし、`project_id` は共有から引き継ぐにした。相対パスだけが環境依存で、相手の project ID は利用者の意思に属するため、`path` を差し替えるだけで済む。
+- `external_projects` はトップルートのオブジェクト（別名をキー）なので、`repos[]` とは別枠の処理になる。共有の alias には `path` 以外を渡すとエラー、新規 alias には `project_id` は必須と、共有の設定と同じ `validateExternalProjects` を適用する。
+- `local_config_overrides` の schema は既存の要素とも後方互換のため `oneOf` にした。`kind: external-path` のときだけ `shared_path` が必須。
+
+### 5.3. CHANGELOG に書く事項
+
+- 区分: Added
+- 文案: 「ローカル設定 `.specdojo/specdojo.local.config.json` で `external_projects` を宣言・上書きできるようになった。共有 alias は `path` の差し替え、新規 alias は `path` と `project_id` の両方を local から足す（PJR-F6MC）。」
+
+### 5.4. 残課題
+
+- なし。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[specdojo:specdojo-config-reference]]
+- [[prj-0001:pjr-nc9r-local-config-override|PJR-NC9R ローカル設定の基盤]]
