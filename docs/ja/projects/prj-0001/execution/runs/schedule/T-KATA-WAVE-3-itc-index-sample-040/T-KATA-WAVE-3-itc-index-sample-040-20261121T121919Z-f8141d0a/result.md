@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-3-itc-index-sample-040
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-3-itc-index-sample-040/T-KATA-WAVE-3-itc-index-sample-040-20261121T121919Z-f8141d0a/plan.md
   started_at: "2026-11-21T12:19:36.399Z"
+  completed_at: "2026-11-21T12:26:38.741Z"
   agent: opus-executor
   execution: agent
   approach: rulebook-maintenance
@@ -20,16 +21,23 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- rulebook (`docs/ja/specdojo/rulebooks/itc-index-rulebook.md`) を簡潔に整えました。
+- 完成例の章を削除し、見出しレベルを H3 までに制限して `docs/ja/specdojo/standards/rulebook-authoring-standard.md` の構成に合わせました。
+- grade 判定結果に基づき、F001、F002、F003、F006 の指摘事項を本文内で解消しました。
+- F004、F005、F007 については、sample や frontmatter の変更を伴わないため、後続のステップへ申し送り事項として残しています。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/rulebooks/itc-index-rulebook.md`: rulebook の構成を簡潔化し、finding に基づく修正を行いました。完成例の章を削除し、見出しレベルを H3 までに抑えたほか、ケースIDの重複や列の定義、テストレベルの略語体系に関する指摘事項（F001, F002, F003, F006）を本文の記述へ反映しました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- F004: sample `specdojo:itc-index-sample` が rulebook の本文要件（固定見出し順の 10 章）に沿っていない。後続の sample-maintenance で、駄菓子屋の販売管理システムを題材に必須章を揃えて厚くする。
+- F005: rulebook frontmatter の `recipe` と `template` が `undecided` のまま。この段では宣言を変えない指示のため未対応。template は PJR-WYTX で扱い、recipe は作成するか `not-needed` とするかを人が判断する。
+- F007: ready 化の前提として、F004（sample の整合）と F005（recipe・template の要否）の解消を誰がいつ行うかを決める必要がある。rulebook の `status` は `draft` のまま据え置いた。
+- 適用外の検証: `npm run validate:history-links`（変更は docs/ja/specdojo/rulebooks/itc-index-rulebook.md だけで、plan・result・個票などの履歴ファイルを変更していないため）
+- 適用外の検証: `npm run validate:catalog`（変更は docs/ja/specdojo/ 配下だけで、docs/ja/projects/ 配下の成果物を変更していないため）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+対象の sample が従う rulebook を、grade の指摘と `done_criteria` に沿って簡潔に整える。rulebook に完成例の章を置かず、見出しは H4 までとする。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を維持しつつ、指摘された問題（case ID の検査、カラム区分の定義、トレース列の定義、テストレベルの略語体系）を解消する。
