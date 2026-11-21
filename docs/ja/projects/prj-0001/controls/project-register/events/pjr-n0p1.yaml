@@ -38,3 +38,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-08EK"]'
+- v: 1
+  id: reg_8e02df691e18490189bf3b86076f49c3
+  ts: "2026-11-21T11:47:09Z"
+  action: update
+  actor: SpecDojo
+  from_status: open
+  to_status: open
+  reason: section "影響範囲" updated
+  changes:
+    - field: section
+      from: ""
+      to: 影響範囲
+  previous_event_id: reg_210774183eca465ca934f5dba34c81af
