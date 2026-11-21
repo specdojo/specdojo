@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-N6FQ",
+  "run_id": "pjr-n6fq-20261121T122859Z-2cdd293a",
+  "updated_at": "2026-11-21T14:40:27.408Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-21T14:35:46.137Z",
+      "completed_at": "2026-11-21T14:36:54.336Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-N6FQ/pjr-n6fq-20261121T122859Z-2cdd293a/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 0,
+      "started_at": "2026-11-21T14:40:25.142Z",
+      "completed_at": "2026-11-21T14:40:25.142Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-N6FQ/pjr-n6fq-20261121T122859Z-2cdd293a/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-21T14:40:27.408Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-N6FQ/pjr-n6fq-20261121T122859Z-2cdd293a/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-N6FQ/pjr-n6fq-20261121T122859Z-2cdd293a/result.md"
+  },
+  "resume_notes": [
+    {
+      "at": "2026-11-21T13:03:58.010Z",
+      "notes": [
+        "保護された設定は利用者の承認のもと develop に反映済み（d15436815）。.specdojo/agent-members.yaml の antigravity の member 11 件、exec-defaults.yaml の providers.antigravity、package.json の orch:flash・orch:argon 系、lefthook.yml の templates/antigravity/orchestrator.md、.agents/rules の 6 件を消した。統合先と同期したうえで、残りとして docs/specdojo/schemas/v1/agent-members.schema.yaml と exec-defaults.schema.yaml の enum から antigravity を外し、npm run validate:schema を通す。.devcontainer と CONTRIBUTING.md の agy の記述と、config scaffold・exec scaffold の --global の扱いは、この項目では変えない"
+      ]
+    },
+    {
+      "at": "2026-11-21T14:35:46.124Z",
+      "notes": [
+        "親の検証の test-unit で 1 件だけ落ちた: tests/src/cli-verb-taxonomy.test.ts の hides internal commands from help while keeping them registered (PJR-R7BQ) が、agent の subcommand に launch と run を期待している（expected [ 'run' ] to deeply equal [ 'launch', 'run' ]）。agent launch はこの項目で意図して消したため、期待を run だけに直す。ほかに agent launch や antigravity を前提にしたテストが残っていないかを tests の grep で確かめる"
+      ]
+    }
+  ]
+}

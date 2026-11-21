@@ -247,49 +247,6 @@ members:
     persona: execution-reporter
     scheduler_strategy: fifo
 
-  - nickname: flash-executor
-    display_name: Antigravity Flash Executor
-    email: null
-    roles: []
-    type: agent
-    provider: antigravity
-    model: gemini-3.8-flash-high
-    mode: edit
-    stage_role: executor
-    capabilities: [web_search]
-    proficiency: normal
-    priority: 4
-    persona: task-executor
-    scheduler_strategy: critical-first
-  - nickname: flash-review-executor
-    display_name: Antigravity Flash Review Executor
-    email: null
-    roles: []
-    type: agent
-    provider: antigravity
-    model: gemini-3.8-flash-high
-    mode: review
-    stage_role: executor
-    capabilities: [web_search]
-    proficiency: normal
-    priority: 4
-    persona: multi-viewpoint-reviewer
-    scheduler_strategy: fifo
-  - nickname: flash-reporter
-    display_name: Antigravity Flash Reporter
-    email: null
-    roles: []
-    type: agent
-    provider: antigravity
-    model: gemini-3.8-flash-high
-    mode: report
-    stage_role: reporter
-    capabilities: []
-    proficiency: normal
-    priority: 4
-    persona: execution-reporter
-    scheduler_strategy: fifo
-
   # Copilot selects its model automatically (--model auto), so its members have no model
   # family to name. They stay as concrete members under the earlier names and need no alias.
   - nickname: copilot-executor
@@ -358,9 +315,3 @@ aliases:
     alias_of: gemma-review-executor
   - nickname: opencode-reporter
     alias_of: gemma-reporter
-  - nickname: agy-executor
-    alias_of: flash-executor
-  - nickname: agy-review-executor
-    alias_of: flash-review-executor
-  - nickname: agy-reporter
-    alias_of: flash-reporter

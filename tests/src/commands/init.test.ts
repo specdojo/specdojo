@@ -584,7 +584,7 @@ describe("specdojo init", () => {
       expect(new Set(roster.members.map((member) => member.provider))).toEqual(
         new Set(["claude", "opencode", "copilot"]),
       );
-      // 選ばなかった provider（codex・antigravity）の実体を指す別名は書かない。
+      // 選ばなかった provider（codex）の実体を指す別名は書かない。
       expect(roster.aliases).toEqual([
         { nickname: "claude-executor", alias_of: "sonnet-executor" },
         { nickname: "claude-review-executor", alias_of: "sonnet-review-executor" },
@@ -655,56 +655,6 @@ describe("specdojo init", () => {
       process.chdir(originalCwd);
       rmSync(repo, { recursive: true, force: true });
     }
-  });
-
-  it.each(["antigravity", "codex,antigravity"])(
-    "refuses provider %s without writing agy members, templates, or settings",
-    async (provider) => {
-      const repo = createRepo("specdojo-init-antigravity-");
-      vi.spyOn(process.stdout, "write").mockImplementation(() => true);
-      try {
-        process.chdir(repo);
-        await expect(runInit({ yes: true, provider, exec: true })).rejects.toThrow(
-          /init cannot select provider antigravity: SpecDojo 0\.9\.2 and later do not launch Antigravity \(agy\)\..*https:\/\/antigravity\.google\/docs\/faq.*https:\/\/antigravity\.google\/terms/,
-        );
-
-        expect(existsSync(join(repo, ".specdojo/agent-members.yaml"))).toBe(false);
-        expect(existsSync(join(repo, ".specdojo/exec-defaults.yaml"))).toBe(false);
-        expect(existsSync(join(repo, ".specdojo/antigravity"))).toBe(false);
-        const initializedPackage = JSON.parse(readFileSync(join(repo, "package.json"), "utf8")) as {
-          scripts: Record<string, string>;
-        };
-        expect(Object.keys(initializedPackage.scripts)).toEqual([]);
-      } finally {
-        process.chdir(originalCwd);
-        rmSync(repo, { recursive: true, force: true });
-      }
-    },
-  );
-
-  it("does not offer antigravity in the interactive provider prompt and refuses it there", async () => {
-    const prompts: string[] = [];
-    const errors: string[] = [];
-    const answers = ["", "", "", "", "", "antigravity", "codex", "no", "no", "no"];
-    vi.spyOn(process.stderr, "write").mockImplementation((chunk) => {
-      errors.push(String(chunk));
-      return true;
-    });
-    const prompter: InitPrompter = {
-      async question(prompt) {
-        prompts.push(prompt);
-        return answers.shift() ?? "";
-      },
-      close() {},
-    };
-
-    const actual = await collectInitAnswers({}, prompter);
-
-    expect(actual.providers).toEqual(["codex"]);
-    const providerPrompts = prompts.filter((prompt) => prompt.startsWith("Orchestrator providers"));
-    expect(providerPrompts).toHaveLength(2);
-    expect(providerPrompts.join("")).not.toContain("antigravity");
-    expect(errors.join("")).toContain("init cannot select provider antigravity");
   });
 
   it("recommends the Opus orchestrator for Claude", async () => {

@@ -68,7 +68,7 @@ policy:
   overlap: skip
 ```
 
-cron は repository に移動して `routine run --due` を起動するだけです。たとえば5分ごとに `cd /path/to/repository && specdojo routine run --project prj-0001 --due` を呼びます。runner 自身が待機・各段の起動・完了判定を行うので、Claude Code・Codex・Antigravity の会話機能には依存しません。
+cron は repository に移動して `routine run --due` を起動するだけです。たとえば5分ごとに `cd /path/to/repository && specdojo routine run --project prj-0001 --due` を呼びます。runner 自身が待機・各段の起動・完了判定を行うので、Claude Code・Codex などの会話機能には依存しません。
 
 ## 3. 結果と再試行
 

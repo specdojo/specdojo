@@ -316,17 +316,37 @@ describe("split human and agent member registries", () => {
     expect(roster?.members.map((member) => member.nickname)).toEqual(["codex-executor"]);
   });
 
-  it.each(["copilot", "antigravity"])(
-    "ships a schema-valid %s agent registry snippet",
-    (provider) => {
-      const root = mkdtempSync(join(tmpdir(), "specdojo-members-"));
-      const snippet = readFileSync(
-        join(specdojoPackageRootDir(), "templates", provider, "agent-members-snippet.yaml"),
-        "utf8",
-      );
-      write(join(root, ".specdojo", "agent-members.yaml"), snippet);
+  it("ships a schema-valid copilot agent registry snippet", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-members-"));
+    const snippet = readFileSync(
+      join(specdojoPackageRootDir(), "templates", "copilot", "agent-members-snippet.yaml"),
+      "utf8",
+    );
+    write(join(root, ".specdojo", "agent-members.yaml"), snippet);
 
-      expect(loadMemberRoster(root, {})?.members.length).toBeGreaterThan(0);
+    expect(loadMemberRoster(root, {})?.members.length).toBeGreaterThan(0);
+  });
+
+  it.each([false, true])(
+    "rejects an antigravity member with the reason and the fix (disabled: %s)",
+    (disabled) => {
+      const root = mkdtempSync(join(tmpdir(), "specdojo-members-"));
+      write(
+        join(root, ".specdojo", "agent-members.yaml"),
+        `version: 1\nmembers:${agentMember}
+  - nickname: flash-executor
+    display_name: Flash Executor
+    email: null
+    roles: []
+    type: agent
+    provider: antigravity
+    disabled: ${disabled}
+`,
+      );
+
+      expect(() => loadMemberRoster(root, {})).toThrow(
+        /agent-members\.yaml: provider antigravity was removed in SpecDojo 0\.10\.0 \(members: flash-executor\)\..*Additional Terms \(Section 6\).*remove these members and any aliases.*routing, strategy, and fallback.*providers\.antigravity.*package\.json scripts/,
+      );
     },
   );
 

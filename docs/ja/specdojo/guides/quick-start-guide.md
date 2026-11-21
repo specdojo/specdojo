@@ -57,7 +57,7 @@ landing-page-workspace/
 
 - ワークスペースディレクトリに既存のプロダクトリポジトリ `landing-page/` があること。
 - Node.js 22.13 以上、npm、Git が利用可能であること。
-- オーケストレーターに使う AI provider（Claude Code、Codex、Antigravity、OpenCode など）の CLI が導入・ログイン済みであること。
+- オーケストレーターに使う AI provider（Claude Code、Codex、OpenCode など）の CLI が導入・ログイン済みであること。
 
 #### 導入と起動コマンド（本文）
 
@@ -97,7 +97,7 @@ Create Git hooks with lefthook? [y/N]: n            <- Enter（初期設定で�
 npm run orch:opus
 ```
 
-provider に応じて `npm run orch:sonnet`、`npm run orch:sol`、`npm run orch:flash`、`npm run orch:opencode` などが利用できます。詳細は [[specdojo:orchestrator-operation-guide|オーケストレーター運用ガイド]] を参照してください。
+provider に応じて `npm run orch:sonnet`、`npm run orch:sol`、`npm run orch:opencode` などが利用できます。詳細は [[specdojo:orchestrator-operation-guide|オーケストレーター運用ガイド]] を参照してください。
 
 #### 具体的対話
 

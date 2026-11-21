@@ -67,8 +67,8 @@ describe("agentExtraRootArguments", () => {
     ]);
   });
 
-  it("repeats --add-dir for codex, antigravity, and copilot", () => {
-    for (const provider of ["codex", "antigravity", "copilot"] as const) {
+  it("repeats --add-dir for codex and copilot", () => {
+    for (const provider of ["codex", "copilot"] as const) {
       expect(agentExtraRootArguments(provider, dirs)).toEqual([
         "--add-dir",
         "/work/task/app1",
@@ -100,14 +100,14 @@ describe("withAgentExtraRoots", () => {
     );
   });
 
-  it("keeps the claude, codex, antigravity, and copilot arguments when cwd and env are given", () => {
+  it("keeps the claude, codex, and copilot arguments when cwd and env are given", () => {
     const dirs = ["/work/task/app1"];
     const options = {
       cwd: "/work/task/project",
       env: { OPENCODE_CONFIG_CONTENT: '{"autoupdate":false}' },
     };
 
-    for (const provider of ["claude", "codex", "antigravity", "copilot"] as const) {
+    for (const provider of ["claude", "codex", "copilot"] as const) {
       const expected = `cmd ${agentExtraRootArguments(provider, dirs)
         .map((arg) => `'${arg}'`)
         .join(" ")}`;

@@ -1,6 +1,4 @@
 import { describe, expect, it } from "vitest";
-import { readFileSync } from "node:fs";
-import { load } from "js-yaml";
 import {
   hasMemberCommandSource,
   resolveMemberCommand,
@@ -75,31 +73,6 @@ describe("resolveMemberCommand", () => {
     expect(actual).toBe(
       "claude -p --agent claude-reporter --settings .specdojo/claude/settings.report.json",
     );
-  });
-
-  it.each(["edit", "review", "report"] as const)(
-    "refuses to build the 0.9.1 agy %s command from the shipped template",
-    (mode) => {
-      const config = load(
-        readFileSync("templates/init-exec-defaults.yaml", "utf8"),
-      ) as ExecDefaultsConfig;
-
-      expect(() =>
-        resolveMemberCommand(
-          config,
-          buildMember({ provider: "antigravity", mode, model: "fixture" }),
-        ),
-      ).toThrow(/do not launch Antigravity \(agy\).*https:\/\/antigravity\.google\/terms/);
-    },
-  );
-
-  it("refuses an antigravity member even with an explicit command override", () => {
-    expect(() =>
-      resolveMemberCommand(
-        {},
-        buildMember({ nickname: "agy-custom", provider: "antigravity", command: "agy -p" }),
-      ),
-    ).toThrow(/Cannot launch member agy-custom: .*agent-members\.yaml/);
   });
 
   it("refuses a disabled member selected by name before building a command", () => {

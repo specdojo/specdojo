@@ -1,0 +1,677 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-N6FQ",
+  "run_id": "pjr-n6fq-20261121T122859Z-2cdd293a",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-21T13:03:58.023Z",
+    "completed_at": "2026-11-21T13:05:36.252Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "README.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-n6fq.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-n6fq-remove-antigravity-0-10.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/job-sequence-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/orchestrator-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/quick-start-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/remote-host-development-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/specdojo-overview-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/specdojo-config-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/agent-members.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/exec-defaults.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/agent.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/init.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/orchestrator.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/devcontainer/scaffold.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/agent-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/antigravity-session.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/limit.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/shared.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/task-repos.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/antigravity-block.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/shared/provider-scaffold.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/specdojo-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "templates/antigravity/README.md",
+      "status": "D"
+    },
+    {
+      "path": "templates/antigravity/agent-members-snippet.yaml",
+      "status": "D"
+    },
+    {
+      "path": "templates/antigravity/exec-defaults-snippet.yaml",
+      "status": "D"
+    },
+    {
+      "path": "templates/antigravity/orchestrator.md",
+      "status": "D"
+    },
+    {
+      "path": "templates/antigravity/settings.edit.json",
+      "status": "D"
+    },
+    {
+      "path": "templates/antigravity/settings.global.json",
+      "status": "D"
+    },
+    {
+      "path": "templates/antigravity/settings.orchestrator.json",
+      "status": "D"
+    },
+    {
+      "path": "templates/antigravity/settings.report.json",
+      "status": "D"
+    },
+    {
+      "path": "templates/antigravity/settings.review.json",
+      "status": "D"
+    },
+    {
+      "path": "templates/devcontainer/post-create.sh",
+      "status": "M"
+    },
+    {
+      "path": "templates/init-agent-members.yaml",
+      "status": "M"
+    },
+    {
+      "path": "templates/init-exec-defaults.yaml",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/commands/init-agent-roster.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/commands/init.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/commands/orchestrator.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/devcontainer/scaffold.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/agent-config-command.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/antigravity-session.integration.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec/antigravity-session.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec/frontier.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/limit.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/task-repos.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/unblock-claim-owner.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/shared/antigravity-block.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/shared/provider-scaffold.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/shared/specdojo-config.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/tools/validate-orchestrator-sync.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tools/exec/verify-multi-repo-agent-write.sh",
+      "status": "M"
+    },
+    {
+      "path": "tools/update-agent-clis.mjs",
+      "status": "M"
+    },
+    {
+      "path": "tools/validate-orchestrator-sync.mjs",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-n6fq-remove-antigravity-0-10.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/agent-members.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/exec-defaults.schema.yaml",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 56,
+    "summary": "README.md                                          |  20 +-\n .../controls/project-register/events/pjr-n6fq.yaml |  20 +-\n .../pjr-n6fq-remove-antigravity-0-10.md            |  71 +++++-\n .../pjr-n6fq-20261121T122859Z-2cdd293a/plan.md     |  12 +\n docs/ja/specdojo/guides/exec-config-guide.md       |  83 ++----\n docs/ja/specdojo/guides/exec-operation-guide.md    |   2 +-\n docs/ja/specdojo/guides/job-sequence-guide.md      |   2 +-\n .../guides/orchestrator-operation-guide.md         |  59 ++---\n docs/ja/specdojo/guides/quick-start-guide.md       |   4 +-\n .../guides/remote-host-development-guide.md        |   2 +-\n docs/ja/specdojo/guides/specdojo-overview-guide.md |   2 +-\n docs/ja/specdojo/references/command-reference.md   |  28 +-\n .../references/specdojo-config-reference.md        |  15 +-\n docs/specdojo/schemas/v1/agent-members.schema.yaml |   2 +-\n docs/specdojo/schemas/v1/exec-defaults.schema.yaml |   2 +-\n src/commands/agent.ts                              |  27 --\n src/commands/init.ts                               |   5 -\n src/commands/orchestrator.ts                       |  10 +-\n src/devcontainer/scaffold.ts                       |   5 -\n src/exec/agent-config.ts                           |   4 -\n src/exec/antigravity-session.ts                    | 190 --------------\n src/exec/limit.ts                                  |   2 +-\n src/exec/run/shared.ts                             |   4 -\n src/exec/task-repos.ts                             |   1 -\n src/shared/antigravity-block.ts                    |  29 ---\n src/shared/provider-scaffold.ts                    | 210 +--------------\n src/shared/specdojo-config.ts                      |  28 +-\n templates/antigravity/README.md                    |  37 ---\n templates/antigravity/agent-members-snippet.yaml   | 157 ------------\n templates/antigravity/exec-defaults-snippet.yaml   |  35 ---\n templates/antigravity/orchestrator.md              | 236 -----------------\n templates/antigravity/settings.edit.json           |  73 ------\n templates/antigravity/settings.global.json         |  60 -----\n templates/antigravity/settings.orchestrator.json   |  15 --\n templates/antigravity/settings.report.json         |   7 -\n templates/antigravity/settings.review.json         |   7 -\n templates/devcontainer/post-create.sh              |   3 +-\n templates/init-agent-members.yaml                  |  49 ----\n templates/init-exec-defaults.yaml                  |  10 -\n .../commands/init-agent-roster.integration.test.ts |  20 --\n tests/src/commands/init.test.ts                    |  52 +---\n tests/src/commands/orchestrator.test.ts            |  14 -\n tests/src/devcontainer/scaffold.test.ts            |  19 --\n tests/src/exec/agent-config-command.test.ts        |  27 --\n .../exec/antigravity-session.integration.test.ts   |  63 -----\n tests/src/exec/antigravity-session.test.ts         | 157 ------------\n tests/src/exec/frontier.test.ts                    |   2 +-\n tests/src/exec/limit.test.ts                       |   6 +-\n tests/src/exec/task-repos.test.ts                  |   8 +-\n tests/src/exec/unblock-claim-owner.test.ts         |   2 +-\n tests/src/shared/antigravity-block.test.ts         | 244 ------------------\n tests/src/shared/provider-scaffold.test.ts         | 283 +--------------------\n tests/src/shared/specdojo-config.test.ts           |  36 ++-\n tests/tools/validate-orchestrator-sync.test.ts     |   2 +-\n tools/exec/verify-multi-repo-agent-write.sh        |  21 +-\n tools/update-agent-clis.mjs                        |   1 -\n tools/validate-orchestrator-sync.mjs               |   3 +-\n 57 files changed, 243 insertions(+), 2245 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-n6fq-remove-antigravity-0-10.md docs/specdojo/schemas/v1/agent-members.schema.yaml docs/specdojo/schemas/v1/exec-defaults.schema.yaml",
+      "status": "passed",
+      "summary": "All 3 files unchanged (already formatted)"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "All history files valid, including the PJR-N6FQ ticket"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-N6FQ/src/catalog/catalog.ts\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-N6FQ/src/dashboard/dashboard.ts\n  1149:1  warning  File has too many lines (1067). Maximum allow\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-N6FQ/src/schedule/strategy-generate-document.ts\n  87:8  warning  Function 'buildStrategyDocument' has too many lines (289). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-N6FQ/src/shared/specdojo-config.ts\n  1240:1  warning  File has too many lines (1080). Maximum allowed is 1000  max-lines\n\n✖ 40 problems (0 errors, 40 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 5643 file(s), 107 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 83 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5643 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-N6FQ\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/devcontainer/scaffold.integration.test.ts\"}\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-co\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-N6FQ/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-N6FQ/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.9.2 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-N6FQ\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/grade/grade.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/register/commands.test.ts\"}\n ✓ tests/src/grade/grade.test.ts (69 tests) 254ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/src/grade/grade.test.ts\"}\n[parent-validation:t\n… output omitted …\nxpected\n+ Received\n\n  [\n-   \"launch\",\n    \"run\",\n  ]\n\n ❯ tests/src/cli-verb-taxonomy.test.ts:124:47\n    122|     }\n    123|     expect(visible(find(\"exec\"))).toEqual(expect.arrayContaining([\"run…\n    124|     expect(subcommandNames(program, \"agent\")).toEqual([\"launch\", \"run\"…\n       |                                               ^\n    125|     expect(visible(find(\"agent\"))).toEqual([\"help\"]);\n    126|     expect(visible(program)).not.toContain(\"agent\");\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "README.md",
+      "status": "changed",
+      "path": "README.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-n6fq-remove-antigravity-0-10.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-n6fq-remove-antigravity-0-10.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/guides/job-sequence-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/job-sequence-guide.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/guides/orchestrator-operation-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/orchestrator-operation-guide.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/guides/quick-start-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/quick-start-guide.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/guides/remote-host-development-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/remote-host-development-guide.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/guides/specdojo-overview-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/specdojo-overview-guide.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/references/command-reference.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/references/specdojo-config-reference.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/references/specdojo-config-reference.md",
+      "reason": ""
+    },
+    {
+      "target": "src/commands/agent.ts",
+      "status": "changed",
+      "path": "src/commands/agent.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/commands/init.ts",
+      "status": "changed",
+      "path": "src/commands/init.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/commands/orchestrator.ts",
+      "status": "changed",
+      "path": "src/commands/orchestrator.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/devcontainer/scaffold.ts",
+      "status": "changed",
+      "path": "src/devcontainer/scaffold.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/agent-config.ts",
+      "status": "changed",
+      "path": "src/exec/agent-config.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/antigravity-session.ts",
+      "status": "changed",
+      "path": "src/exec/antigravity-session.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/limit.ts",
+      "status": "changed",
+      "path": "src/exec/limit.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/run/shared.ts",
+      "status": "changed",
+      "path": "src/exec/run/shared.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/task-repos.ts",
+      "status": "changed",
+      "path": "src/exec/task-repos.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/shared/antigravity-block.ts",
+      "status": "changed",
+      "path": "src/shared/antigravity-block.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/shared/provider-scaffold.ts",
+      "status": "changed",
+      "path": "src/shared/provider-scaffold.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/shared/specdojo-config.ts",
+      "status": "changed",
+      "path": "src/shared/specdojo-config.ts",
+      "reason": ""
+    },
+    {
+      "target": "templates/antigravity/README.md",
+      "status": "changed",
+      "path": "templates/antigravity/README.md",
+      "reason": ""
+    },
+    {
+      "target": "templates/antigravity/agent-members-snippet.yaml",
+      "status": "changed",
+      "path": "templates/antigravity/agent-members-snippet.yaml",
+      "reason": ""
+    },
+    {
+      "target": "templates/antigravity/exec-defaults-snippet.yaml",
+      "status": "changed",
+      "path": "templates/antigravity/exec-defaults-snippet.yaml",
+      "reason": ""
+    },
+    {
+      "target": "templates/antigravity/orchestrator.md",
+      "status": "changed",
+      "path": "templates/antigravity/orchestrator.md",
+      "reason": ""
+    },
+    {
+      "target": "templates/antigravity/settings.edit.json",
+      "status": "changed",
+      "path": "templates/antigravity/settings.edit.json",
+      "reason": ""
+    },
+    {
+      "target": "templates/antigravity/settings.global.json",
+      "status": "changed",
+      "path": "templates/antigravity/settings.global.json",
+      "reason": ""
+    },
+    {
+      "target": "templates/antigravity/settings.orchestrator.json",
+      "status": "changed",
+      "path": "templates/antigravity/settings.orchestrator.json",
+      "reason": ""
+    },
+    {
+      "target": "templates/antigravity/settings.report.json",
+      "status": "changed",
+      "path": "templates/antigravity/settings.report.json",
+      "reason": ""
+    },
+    {
+      "target": "templates/antigravity/settings.review.json",
+      "status": "changed",
+      "path": "templates/antigravity/settings.review.json",
+      "reason": ""
+    },
+    {
+      "target": "templates/devcontainer/post-create.sh",
+      "status": "changed",
+      "path": "templates/devcontainer/post-create.sh",
+      "reason": ""
+    },
+    {
+      "target": "templates/init-agent-members.yaml",
+      "status": "changed",
+      "path": "templates/init-agent-members.yaml",
+      "reason": ""
+    },
+    {
+      "target": "templates/init-exec-defaults.yaml",
+      "status": "changed",
+      "path": "templates/init-exec-defaults.yaml",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/commands/init-agent-roster.integration.test.ts",
+      "status": "changed",
+      "path": "tests/src/commands/init-agent-roster.integration.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/commands/init.test.ts",
+      "status": "changed",
+      "path": "tests/src/commands/init.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/commands/orchestrator.test.ts",
+      "status": "changed",
+      "path": "tests/src/commands/orchestrator.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/devcontainer/scaffold.test.ts",
+      "status": "changed",
+      "path": "tests/src/devcontainer/scaffold.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/exec/agent-config-command.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/agent-config-command.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/exec/antigravity-session.integration.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/antigravity-session.integration.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/exec/antigravity-session.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/antigravity-session.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/exec/frontier.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/frontier.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/exec/limit.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/limit.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/exec/task-repos.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/task-repos.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/exec/unblock-claim-owner.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/unblock-claim-owner.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/shared/antigravity-block.test.ts",
+      "status": "changed",
+      "path": "tests/src/shared/antigravity-block.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/shared/provider-scaffold.test.ts",
+      "status": "changed",
+      "path": "tests/src/shared/provider-scaffold.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/shared/specdojo-config.test.ts",
+      "status": "changed",
+      "path": "tests/src/shared/specdojo-config.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/tools/validate-orchestrator-sync.test.ts",
+      "status": "changed",
+      "path": "tests/tools/validate-orchestrator-sync.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tools/exec/verify-multi-repo-agent-write.sh",
+      "status": "changed",
+      "path": "tools/exec/verify-multi-repo-agent-write.sh",
+      "reason": ""
+    },
+    {
+      "target": "tools/update-agent-clis.mjs",
+      "status": "changed",
+      "path": "tools/update-agent-clis.mjs",
+      "reason": ""
+    },
+    {
+      "target": "tools/validate-orchestrator-sync.mjs",
+      "status": "changed",
+      "path": "tools/validate-orchestrator-sync.mjs",
+      "reason": ""
+    }
+  ],
+  "final_message": "Synced with the integration target (d15436815, which removed the protected agy config). Removed antigravity from the provider enums in agent-members.schema.yaml and exec-defaults.schema.yaml. Updated the ticket's response/results to match the applied state. All Antigravity (agy) removal work in the plan is in the worktree diff.",
+  "completion_status": "complete",
+  "handoff": [
+    "Protected-config items 1-5 (agent-members.yaml, exec-defaults.yaml, package.json, lefthook.yml, .agents/rules) were applied by the user on develop (d15436815). Item 6 (removing the schema enum antigravity) was applied in this resume. Confirm with the parent runner's `npm run validate:schema`.",
+    "Per the user's instructions, .devcontainer/ and CONTRIBUTING.md (agy descriptions) and the --global option of config scaffold / exec scaffold are unchanged in this item. --global currently errors before writing.",
+    "The CHANGELOG draft (section: removal, with migration steps) is in the ticket under 5.1. CHANGELOG.md itself is unchanged.",
+    "Row 5 (pass validations) in the ticket's task table stays open because the executor cannot check the parent validations. After the runner's validations pass, mark it done at close time."
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-N6FQ/pjr-n6fq-20261121T122859Z-2cdd293a/executor.attempt-2.log",
+      "bytes": 9806,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-N6FQ/pjr-n6fq-20261121T122859Z-2cdd293a/parent-validation-attempt-1-test-unit.attempt-2.log",
+      "bytes": 91291,
+      "truncated": false
+    }
+  ]
+}

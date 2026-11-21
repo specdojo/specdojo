@@ -43,7 +43,7 @@ afterEach(async () => {
   );
 });
 
-// raw は本文をそのまま持つ形式で、agy のようにファイル定義 agent を持たない provider 向け。
+// raw は本文をそのまま持つ形式で、codex のようにファイル定義 agent を使わない provider 向け。
 function wrapperFixtureContent(wrapper: Wrapper, body: string): string {
   if (wrapper.format === "raw") return body;
   if (wrapper.format === "markdown") return `---\nname: fixture\n---\n\n${body}`;

@@ -90,20 +90,6 @@ describe("buildOrchestratorLaunch", () => {
     }
   });
 
-  it("refuses antigravity before building an agy command", () => {
-    expect(() =>
-      buildOrchestratorLaunch({
-        provider: "antigravity",
-        providerArgs: ["--model", "fixture", "-i", "prompt"],
-        repoRoots,
-        cwd: "/workspace/project",
-        env: {},
-      }),
-    ).toThrow(
-      /orchestrator launch: SpecDojo 0\.9\.2 and later do not launch Antigravity \(agy\)\..*https:\/\/antigravity\.google\/docs\/faq.*https:\/\/antigravity\.google\/terms.*\.specdojo\/agent-members\.yaml/,
-    );
-  });
-
   it("injects an OpenCode agent override that denies undeclared external directories", () => {
     const launch = buildOrchestratorLaunch({
       provider: "opencode",

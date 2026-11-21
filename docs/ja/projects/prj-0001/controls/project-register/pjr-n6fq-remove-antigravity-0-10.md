@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-21T00:33:00Z"
-  block_reason: "parent validation failed: test-unit"
   derived_from:
     - PJR-5V0T
 ---
@@ -42,13 +41,13 @@ provider の実装、配布テンプレート（templates/antigravity/ など）
 
 ## 4. 作業内容
 
-| No  | 作業                                        | 担当 | 状態 | メモ                                                                                                                                                                                                                                       |
-| --- | ------------------------------------------- | ---- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 1   | 範囲を洗い出して対応結果に書く              | DEV  | done | 対応結果の「洗い出しの結果」に書いた                                                                                                                                                                                                       |
-| 2   | provider・テンプレート・選択肢を消す        | DEV  | done | provider の実装・0.9.2 の止める処理・`templates/antigravity/` を消し、名簿の読み込みでエラーにした                                                                                                                                         |
-| 3   | ラッパー・道具・テスト・文書から外す        | DEV  | done | 同期の対象・道具・テスト・文書から外した。保護された `.agents/rules/*.md` は利用者が develop で消し、schema の enum は再開後に外した                                                                                                       |
-| 4   | 保護された設定の案と CHANGELOG の文案を書く | DEV  | done | 対応結果の「保護された設定を変える案」と「CHANGELOG に書く事項」に書いた                                                                                                                                                                   |
-| 5   | 検証を通す                                  | DEV  | open | 親の検証（`npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md` など）は runner が executor の後に実行するため、executor は結果を確かめられない。影響する単体テストのファイル 11 件（249 件）は executor で通した |
+| No  | 作業                                        | 担当 | 状態 | メモ                                                                                                                                                                                                                                                                                                                       |
+| --- | ------------------------------------------- | ---- | ---- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | 範囲を洗い出して対応結果に書く              | DEV  | done | 対応結果の「洗い出しの結果」に書いた                                                                                                                                                                                                                                                                                       |
+| 2   | provider・テンプレート・選択肢を消す        | DEV  | done | provider の実装・0.9.2 の止める処理・`templates/antigravity/` を消し、名簿の読み込みでエラーにした                                                                                                                                                                                                                         |
+| 3   | ラッパー・道具・テスト・文書から外す        | DEV  | done | 同期の対象・道具・テスト・文書から外した。保護された `.agents/rules/*.md` は利用者が develop で消し、schema の enum は再開後に外した                                                                                                                                                                                       |
+| 4   | 保護された設定の案と CHANGELOG の文案を書く | DEV  | done | 対応結果の「保護された設定を変える案」と「CHANGELOG に書く事項」に書いた                                                                                                                                                                                                                                                   |
+| 5   | 検証を通す                                  | DEV  | open | 親の検証（`npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md` など）は runner が executor の後に実行するため、executor は結果を確かめられない。影響する単体テストのファイル 11 件（249 件）は executor で通した。前回の親の test-unit で落ちた `cli-verb-taxonomy.test.ts` は期待を直して通した |
 
 ## 5. 対応結果
 
@@ -77,7 +76,7 @@ provider の実装、配布テンプレート（templates/antigravity/ など）
 - `src/shared/specdojo-config.ts`: 0.9.2 の止める処理の代わりに、名簿に provider が `antigravity` の member があるとエラーにする検査を schema の検証の前に足した。
 - `templates`: `templates/antigravity/` を消した。`init-agent-members.yaml` の `flash-*` の実体と `agy-*` の別名、`init-exec-defaults.yaml` の `providers.antigravity`、`devcontainer/post-create.sh` の `~/.config/antigravity` を消した。
 - `tools`: `validate-orchestrator-sync.mjs` の対象（`orchestrator:sync` も同じ一覧を使う）から `templates/antigravity/orchestrator.md` を外した。`update-agent-clis.mjs` と `exec/verify-multi-repo-agent-write.sh` から agy を外した。
-- `tests`: agy 専用のテスト 3 ファイルと、各テストの agy の場合を消した。`tests/src/shared/specdojo-config.test.ts` に、agy の member（`disabled` の有無の両方）がエラーになるテストを足した。
+- `tests`: agy 専用のテスト 3 ファイルと、各テストの agy の場合を消した。`tests/src/shared/specdojo-config.test.ts` に、agy の member（`disabled` の有無の両方）がエラーになるテストを足した。`tests/src/cli-verb-taxonomy.test.ts` の `agent` のサブコマンドの期待を `run` だけに直した。`tests` を grep し、`agent launch` や `antigravity` を前提にしたテストがほかに残っていないことを確かめた（残る一致は、名簿のエラーのテストと `post-create.sh` に agy が入らないことの検査、無関係の track 名 `launch`）。
 - 文書: `exec-config-guide`・`orchestrator-operation-guide`・`command-reference`・`specdojo-config-reference`・`quick-start-guide`・`exec-operation-guide`・`remote-host-development-guide`・`job-sequence-guide`・`specdojo-overview-guide` と `README.md` から agy の説明を消した。`command-reference` と `README.md` には、0.10.0 で外した理由と移行の操作を 1 段落だけ残した。
 
 残したもの（理由）:

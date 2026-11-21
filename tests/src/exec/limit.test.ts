@@ -220,17 +220,17 @@ describe("normalizeAgentLimit の解除時刻（PJR-NJ6J）", () => {
     expect(actual.resume_at).toBe(new Date(2026, 9, 18, 12, 15, 0).toISOString());
   });
 
-  it("agy の相対の Resets in を観測時刻からの経過で読む", () => {
+  it("相対の Resets in を観測時刻からの経過で読む", () => {
     const observedAt = new Date("2026-10-18T10:00:00.000Z");
 
     const short = normalizeAgentLimit({
-      provider: "antigravity",
+      provider: "custom",
       output:
         "error: Individual quota reached. Please upgrade your subscription to increase your limits. Resets in 4h36m50s.",
       observedAt,
     });
     const long = normalizeAgentLimit({
-      provider: "antigravity",
+      provider: "custom",
       output: "Individual quota reached. Resets in 85h46m36s.",
       observedAt,
     });

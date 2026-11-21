@@ -49,7 +49,7 @@ function event(
   };
 }
 
-const AGENT = "agy-executor";
+const AGENT = "luna-executor";
 const HUMAN = "indie";
 const pipelineMeta = {
   pipeline_stage: "reporter",

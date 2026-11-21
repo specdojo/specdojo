@@ -305,17 +305,16 @@ agent には、各 worktree の絶対パスを次の環境変数で渡します�
 
 agent の起動コマンドには、provider ごとにプロダクト worktree への書き込み許可を runner が付け足します。`exec-defaults.yaml` の `command_template` を変える必要はありません。
 
-| provider      | 付け足す引数                                                     | 制約                                                                                             |
-| ------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| `claude`      | `--add-dir <path>...` と `--allowedTools 'Edit(//<path>/**)'...` | mode 別 settings の `Edit` 許可は作業ディレクトリ相対のため、絶対パスの許可を別に渡す            |
-| `codex`       | `--add-dir <path>`（リポジトリの数だけ）                         | `--sandbox workspace-write` の書き込みルートに加わる。`.git` は codex の仕様で読み取り専用のまま |
-| `antigravity` | `--add-dir <path>`（リポジトリの数だけ）                         | テンプレートの `--add-dir "$(pwd)"` に追加する                                                   |
-| `copilot`     | `--add-dir <path>`（リポジトリの数だけ）                         | 書き込みはテンプレートの `--allow-tool write` に従う                                             |
-| `opencode`    | なし（`OPENCODE_CONFIG_CONTENT` を起動コマンドの前に付ける）     | 下記の inline config で許可する。`command_template` に `--agent <name>` が無いと起動前に止まる   |
+| provider   | 付け足す引数                                                     | 制約                                                                                             |
+| ---------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `claude`   | `--add-dir <path>...` と `--allowedTools 'Edit(//<path>/**)'...` | mode 別 settings の `Edit` 許可は作業ディレクトリ相対のため、絶対パスの許可を別に渡す            |
+| `codex`    | `--add-dir <path>`（リポジトリの数だけ）                         | `--sandbox workspace-write` の書き込みルートに加わる。`.git` は codex の仕様で読み取り専用のまま |
+| `copilot`  | `--add-dir <path>`（リポジトリの数だけ）                         | 書き込みはテンプレートの `--allow-tool write` に従う                                             |
+| `opencode` | なし（`OPENCODE_CONFIG_CONTENT` を起動コマンドの前に付ける）     | 下記の inline config で許可する。`command_template` に `--agent <name>` が無いと起動前に止まる   |
 
 OpenCode は起動引数に追加ルートの指定を持たないため、runner は `OPENCODE_CONFIG_CONTENT` で、起動コマンドの `--agent` が選ぶ agent の `permission.external_directory` を「全拒否、プロダクト worktree だけ許可」に差し替え、同じ worktree の `permission.edit` を許可に加えます。`external_directory` は絶対パス（`<path>/**`）、`edit` は作業ディレクトリ（プロジェクトの worktree）からの相対パス（`../<name>/**`）で照合されるため、それぞれの形で渡します。inline config は agent 定義の frontmatter より後に読まれるため上書きされません。継承した `OPENCODE_CONFIG_CONTENT` の他項目は保持します。
 
-対話型オーケストレーターは `specdojo orchestrator launch` が同じ `repos` を読み、プロダクトリポジトリ本体のルートを許可します。Claude Code、Codex、Antigravity、GitHub Copilot は上表と同じ引数規則です。OpenCode は起動時の inline config で、exec と同じ形で、選択 agent の `permission.external_directory` を「全拒否、宣言済みルートだけ許可」に差し替え、宣言済みルートの `permission.edit` を起動場所からの相対パスで許可します。この設定はオーケストレーターのプロセスだけに適用され、agent 定義や利用者の設定ファイルは書き換えません。`repos` を省略した project では追加の引数・設定を渡しません。
+対話型オーケストレーターは `specdojo orchestrator launch` が同じ `repos` を読み、プロダクトリポジトリ本体のルートを許可します。Claude Code、Codex、GitHub Copilot は上表と同じ引数規則です。OpenCode は起動時の inline config で、exec と同じ形で、選択 agent の `permission.external_directory` を「全拒否、宣言済みルートだけ許可」に差し替え、宣言済みルートの `permission.edit` を起動場所からの相対パスで許可します。この設定はオーケストレーターのプロセスだけに適用され、agent 定義や利用者の設定ファイルは書き換えません。`repos` を省略した project では追加の引数・設定を渡しません。
 
 agent 実行の前後で行う保護設定（`package.json`、CI 設定など）と Git 状態（HEAD・ローカル設定）の検査は、プロダクト worktree にも同じ一覧で行います。evidence の変更ファイルは、プロダクト側を `<name>:<path>` で記録します。
 

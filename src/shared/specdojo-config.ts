@@ -180,7 +180,7 @@ export const DEFAULT_PROJECT_CONTEXT = ["prj-overview"] as const;
 
 // Agent runtime provider family. Selects which providers.<name> override in
 // exec-defaults.yaml applies to a member's failure handling.
-export type AgentProvider = "opencode" | "claude" | "codex" | "copilot" | "antigravity" | "custom";
+export type AgentProvider = "opencode" | "claude" | "codex" | "copilot" | "custom";
 
 // Member launch profiles include the task-facing executor modes plus the reporter-only
 // profile. `report` never becomes a TaskMode: reporter eligibility is resolved by stage_role.
@@ -795,6 +795,7 @@ export function loadMemberRoster(
         `Invalid agent members file: ${agentFullPath}: human '${human.nickname ?? "<unknown>"}' is not allowed`,
       );
     }
+    assertNoRemovedProviders(agentFullPath, agentRoster);
     validateMemberFile("agent-members.schema.yaml", agentFullPath, agentRoster);
     validateAgentAliases(agentFullPath, agentRoster);
   }
@@ -828,6 +829,31 @@ export function loadMemberRoster(
   const aliases = agentRoster?.aliases;
   if (humanRoster) return { ...humanRoster, members, ...(aliases ? { aliases } : {}) };
   return { version: agentRoster?.version ?? 1, members, ...(aliases ? { aliases } : {}) };
+}
+
+// SpecDojo 0.10.0 removed the Antigravity (agy) provider (PJR-5V0T, PJR-N6FQ). A roster that still
+// declares one fails here, before schema validation, so the error names the reason and the fix
+// instead of a bare enum mismatch. Disabled members fail too: the provider no longer exists.
+const REMOVED_ANTIGRAVITY_PROVIDER = "antigravity";
+
+function assertNoRemovedProviders(path: string, roster: AgentMemberRoster): void {
+  const removed = roster.members
+    .filter((member) => {
+      // The YAML is not yet schema-validated, so the value may lie outside AgentProvider.
+      const provider: unknown = member?.provider;
+      return provider === REMOVED_ANTIGRAVITY_PROVIDER;
+    })
+    .map((member) => member.nickname ?? "<unknown>");
+  if (removed.length === 0) return;
+  throw new Error(
+    `Invalid agent members file: ${path}: provider antigravity was removed in SpecDojo 0.10.0 ` +
+      `(members: ${removed.join(", ")}). On consumer plans, the Antigravity FAQ does not cover ` +
+      `launching agy from third-party agents or applications, and the Antigravity Additional ` +
+      `Terms (Section 6) treat it as a breach of contract. To fix: remove these members and any ` +
+      `aliases that point to them, move routing, strategy, and fallback references in ` +
+      `exec-defaults.yaml to another member, delete providers.antigravity from exec-defaults.yaml, ` +
+      `and delete package.json scripts that launch agy.`,
+  );
 }
 
 function validateAgentAliases(path: string, roster: AgentMemberRoster): void {

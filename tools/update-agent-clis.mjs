@@ -17,7 +17,6 @@ const TARGETS = [
   { name: "claude", command: "claude", updateArgs: ["update"] },
   { name: "codex", command: "codex", updateArgs: ["update"] },
   { name: "copilot", command: "copilot", updateArgs: ["update"] },
-  { name: "agy", command: "agy", updateArgs: ["update"] },
   { name: "opencode", command: "opencode", updateArgs: ["upgrade"] },
 ];
 
