@@ -54,3 +54,16 @@
       from: "-"
       to: medium
   previous_event_id: reg_3661ee4ffad54d8da57f3f8f64496a67
+- v: 1
+  id: reg_52f70f69033747b48c4030445762c3ac
+  ts: "2026-11-21T14:07:57Z"
+  action: update
+  actor: SpecDojo
+  from_status: open
+  to_status: open
+  reason: section "作業内容" updated
+  changes:
+    - field: section
+      from: ""
+      to: 作業内容
+  previous_event_id: reg_04b901dc3894406e84d4e9fd7e0113d5
