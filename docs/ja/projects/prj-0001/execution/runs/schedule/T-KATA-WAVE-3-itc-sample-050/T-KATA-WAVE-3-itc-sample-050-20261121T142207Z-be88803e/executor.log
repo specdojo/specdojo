@@ -1,0 +1,23 @@
+`itc-sample.md` を、rulebook の必須 6 章（概要〜テスト観点とケース）に沿った完成例に書き直しました。題材は駄菓子屋きぬやの会計確定（`itc-sales-checkout`）です。
+
+**検証**
+- `npx prettier --check`（対象ファイル）: 通過しました。
+- `npm run docs:build`: 通過しました（約 212 秒）。
+- `lint:md` などの親 runner が実行する検査は、指示どおり実行していません。
+
+**書いた内容**
+- **見出しと frontmatter:** H1 を `# 内部結合テストカタログ: 会計確定（…）` に変え、相対パスのリンクを外しました。frontmatter には `based_on`（`tsp-index-sample`・`itc-index-sample`・`bac-sample`）を足しました。
+- **責務と対象外:** 責務は観測できる結果つきで 6 項目書きました。対象外は「理由・代替」の形で 3 項目で、つけ残高、レシート印刷、計算ロジックです。
+- **結合境界と依存:** 入口・出口・結合対象と、依存ごとの扱いの表を書きました（DB は実接続、印刷は Stub、時刻は固定）。環境前提と観測点も入れています。
+- **トレース:** 根拠仕様を `TR-01`〜`TR-05` で番号づけし、BAC-01〜BAC-03 と itc-index につなげました。
+- **観点とケース:** 観点は 3 つ（`persistence-integrity`・`transaction-boundary`・`pending-hold`）で、ケースは 6 行です。各行に `case_id`・条件（入力/状態/環境）・期待値・観測点・トレース・優先度・自動化・証跡（テストコードのパスと CI run 番号）を埋めました。
+- **旧来の章:** 旧「未解決事項」の章は rulebook にない章なので削除しました。代わりに、結合境界の章の `_ASSUMPTION_`（担当者と PJR の扱い）と、概要の `ready` 化の条件（QE が確認し PO へ諮る）に移しています。
+
+**対応していない指摘**
+- F018 のうち `title` は追加していません。Markdown 規約で frontmatter に `title:` を書くことが禁じられているためです。
+
+result、rulebook、PJR は変更していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"docs/ja/specdojo/samples/itc-sample.md を rulebook の必須6章（概要〜テスト観点とケース）に沿う itc-sales-checkout の完成例へ全面改訂した。H1形式・based_on・責務/対象外/結合境界と依存表/トレース TR-01〜05/観点3つ・ケース6行（case_id・条件・期待値・観測点・証跡付き）を整備し、F001〜F023 に対応した（F018 の title は Markdown 規約で禁止のため追加せず）。","handoff":["F018 のうち `title` は frontmatter への追加を見送った。`.github/instructions/markdown.instructions.md` が frontmatter に `title:` を書くことを禁止し、H1 を正とするため。再評価で同じ指摘が出た場合は grade の判定根拠側の見直しを検討する。","F002/F005/F022（未解決事項）は、rulebook に未解決事項の章がなく sample-authoring-standard が独自章を禁じるため、章を削除した。論点は「結合境界/依存/環境前提」の `_ASSUMPTION_`（分離レベル、判断者は ARC、PJR は itc-index 側へ集約）と、概要の ready 化条件（QE が確認し PO へ諮る）へ移した。","rulebook 変更案: itc-rulebook の「全体方針」にある `_UNDECIDED_` の「sample は本文要件の見出し構成・`trace_key`・条件・ケース表へ未整合」の記述は、本改訂で解消したので削除できる（`recipe`・`template` の要否の部分は残す）。","rulebook 変更案: `perspective_key` 宣言行の書式（インラインコードで囲むか、素のテキストか）を rulebook で明示するとよい。本 sample では `perspective_key: <key>` をインラインコードの1行で書いた。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/itc-sample.md","status":"passed","summary":"prettier --write で整形したあと check が通過"},{"command":"npm run docs:build","status":"passed","summary":"build complete in 212.29s（既存の cron/gitignore ハイライト警告のみ）"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/itc-sample.md のみで、plan/result/PJR 個票などの履歴蓄積ファイルを変更していないため"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML の変更なし","reason":"変更した *.yaml / *.yml ファイルがないため"},{"command":"npm run validate:catalog","status":"not_applicable","summary":"プロジェクト成果物の変更なし","reason":"変更は docs/ja/specdojo/ 配下の sample のみで、docs/ja/projects/ 配下の成果物に変更が及ばないため"}]}
+</specdojo_executor_evidence>
