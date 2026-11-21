@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-76n9-no-role-assignment-in-documents
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: high
   owner: PO
   registered_at: "2026-11-21T08:19:42Z"
+  completed_at: "2026-11-21T08:21:00Z"
+  conclusion: 成果物と sample の本文に、文書の役割の割り当てと承認の進み具合を書かず、登録簿で追う。rulebook の「誰が判断するか」を「どの利用場面で何を判断するための文書か」に直す
 ---
 
 # PJR-76N9 成果物と sample の本文に、文書の役割の割り当てと承認の進み具合を書かない
