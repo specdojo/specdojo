@@ -54,6 +54,8 @@ export type RegisterResumeCandidate = {
   executorEvidence?: ExecEvidence;
   evidence?: ExecEvidence;
   evidenceRef?: string;
+  /** Executor evidence of earlier attempts of the same run, in attempt order. */
+  archivedExecutorEvidence?: ExecEvidence[];
 };
 
 type RegisterResumeTargetBase = {
@@ -137,6 +139,9 @@ export function loadRegisterResumeCandidates(input: {
       state: checkpoint.state,
       ...(checkpoint.executorEvidence ? { executorEvidence: checkpoint.executorEvidence } : {}),
       ...(checkpoint.evidence ? { evidence: checkpoint.evidence } : {}),
+      ...(checkpoint.archivedExecutorEvidence
+        ? { archivedExecutorEvidence: checkpoint.archivedExecutorEvidence }
+        : {}),
       ...(checkpoint.evidence
         ? {
             evidenceRef:
@@ -168,9 +173,13 @@ export function selectResumableRegisterRun(
   // The earliest interrupted or incomplete attempt is the stable lower bound for later resumes.
   // Rejected protection-block changes are intentionally excluded; the handoff requires removing
   // them before resume. `attempt_changes` also excludes runner lifecycle changes that predated the
-  // executor invocation.
+  // executor invocation. Resuming the same run overwrites its evidence, so archived attempts of
+  // each run are considered before its current evidence (PJR-FGKB).
   const firstAttemptEvidence = ordered
-    .map((candidate) => candidate.executorEvidence ?? candidate.evidence)
+    .flatMap((candidate) => [
+      ...(candidate.archivedExecutorEvidence ?? []),
+      candidate.executorEvidence ?? candidate.evidence,
+    ])
     .find(
       (evidence) =>
         evidence?.stage.status === "rate_limited" || evidence?.completion_status === "incomplete",

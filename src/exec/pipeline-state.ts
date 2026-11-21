@@ -392,6 +392,30 @@ function isExecutorEvidence(value: unknown, taskId: string, runId: string): valu
   );
 }
 
+// Executor evidence that `snapshotRunAttempt` archived from earlier attempts of the same run, in
+// attempt order. Resuming the same run overwrites `evidence.json`, so the first attempt's
+// `attempt_changes` lower bound survives only in these snapshots (PJR-FGKB).
+function loadArchivedExecutorEvidence(
+  evidencePath: string,
+  taskId: string,
+  runId: string,
+): ExecEvidence[] {
+  const archived: ExecEvidence[] = [];
+  const stem = evidencePath.endsWith(".json")
+    ? evidencePath.slice(0, -".json".length)
+    : evidencePath;
+  for (let attempt = 1; existsSync(`${stem}.attempt-${attempt}.json`); attempt++) {
+    try {
+      const evidence: unknown = JSON.parse(readFileSync(`${stem}.attempt-${attempt}.json`, "utf8"));
+      if (isExecutorEvidence(evidence, taskId, runId)) archived.push(evidence);
+    } catch {
+      // A broken snapshot only loses history; the current evidence still decides resumability.
+      continue;
+    }
+  }
+  return archived;
+}
+
 export function loadPipelineResumeCheckpoint(input: {
   worktreePath: string;
   stateRef: string;
@@ -401,6 +425,7 @@ export function loadPipelineResumeCheckpoint(input: {
   statePath: string;
   executorEvidence?: ExecEvidence;
   evidence?: ExecEvidence;
+  archivedExecutorEvidence?: ExecEvidence[];
 } | null {
   const statePath = resolveArtifactRef(input.worktreePath, input.stateRef);
   if (!statePath || !existsSync(statePath)) return null;
@@ -425,10 +450,16 @@ export function loadPipelineResumeCheckpoint(input: {
   try {
     const evidence: unknown = JSON.parse(readFileSync(evidencePath, "utf8"));
     if (!isExecutorEvidence(evidence, input.taskId, state.run_id)) return { state, statePath };
+    const archivedExecutorEvidence = loadArchivedExecutorEvidence(
+      evidencePath,
+      input.taskId,
+      state.run_id,
+    );
     return {
       state,
       statePath,
       executorEvidence: evidence,
+      ...(archivedExecutorEvidence.length > 0 ? { archivedExecutorEvidence } : {}),
       ...(evidence.stage.status === "succeeded" &&
       evidence.completion_status !== "incomplete" &&
       (state.stages.executor.status === "succeeded" || state.stages.executor.status === "running")

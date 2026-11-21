@@ -45,6 +45,8 @@ import {
   appendParentValidationsToExecutorEvidence,
   buildExecutorPrompt,
   extractBlockReason,
+  pruneVanishedInitialChangeTargets,
+  recordExcludedCoverageTargets,
   resumedTargetCoverageFailure,
   runConfiguredParentValidationBatch,
   runWithRetry,
@@ -466,14 +468,22 @@ export async function runAgentPipeline(params: {
   writePipelineState(stateLocation.path, state);
 
   const env = agentEnvironment(repoRoot, cwd, schedulePath, executionPath, params.productWorktrees);
+  // PJR-FGKB: a lower-bound path the earlier attempt created and that was removed before resume
+  // has nothing left to account for; drop it and record the exclusion in the evidence.
+  const resumedCoverage = params.resumedExecutor
+    ? pruneVanishedInitialChangeTargets({
+        plan: planPrompt,
+        initialChangeTargets: params.initialChangeTargets ?? [],
+        worktreePath: cwd,
+        productWorktrees: params.productWorktrees,
+      })
+    : { targets: [...(params.initialChangeTargets ?? [])], excluded: [] };
   const executorPrompt = withProductRepoPrompt(
     buildExecutorPrompt(planPrompt, execDefaults.pipeline?.parent_validations, {
       mode: params.mode ?? "edit",
       resumed: params.resumedExecutor,
       ...(params.resumedExecutor ? { existingChanges: worktreeStatusPaths(cwd) } : {}),
-      ...(params.resumedExecutor
-        ? { initialChangeTargets: params.initialChangeTargets ?? [] }
-        : {}),
+      ...(params.resumedExecutor ? { initialChangeTargets: resumedCoverage.targets } : {}),
       ...(params.resumedExecutor ? { resumeHandoff: params.resumeHandoff ?? [] } : {}),
     }),
     params.productWorktrees,
@@ -515,6 +525,7 @@ export async function runAgentPipeline(params: {
     productWorktrees: params.productWorktrees,
     rateLimitEvents: outcome.rateLimitEvents,
   });
+  recordExcludedCoverageTargets(recorded.evidence, recorded.evidencePath, resumedCoverage.excluded);
   const completionFailure =
     outcome.result === "success" ? executorCompletionFailure(recorded.evidence) : undefined;
   const coverageFailure =
@@ -524,7 +535,8 @@ export async function runAgentPipeline(params: {
           plan: planPrompt,
           evidence: recorded.evidence,
           evidencePath: recorded.evidencePath,
-          initialChangeTargets: params.initialChangeTargets,
+          initialChangeTargets: resumedCoverage.targets,
+          resumeHint: params.executorResumeHint ?? DEFAULT_EXECUTOR_RESUME_HINT,
         })
       : undefined;
   // PJR-QQRH: a complete report cannot override tool-permission denials in the output or a
@@ -558,7 +570,7 @@ export async function runAgentPipeline(params: {
       status:
         executorResult === "success"
           ? "succeeded"
-          : outcome.protectionBlock || completionFailure || outcomeFailure
+          : outcome.protectionBlock || completionFailure || coverageFailure || outcomeFailure
             ? "blocked"
             : executorResult === "rate_limit"
               ? "rate_limited"
