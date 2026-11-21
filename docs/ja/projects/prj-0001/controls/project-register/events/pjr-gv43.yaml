@@ -67,3 +67,32 @@
       from: ""
       to: 作業内容
   previous_event_id: reg_178701e7be02429fba9aaac08bd69308
+- v: 1
+  id: reg_740929f2528f498d96d7c166fb8de0c7
+  ts: "2026-11-21T11:35:59Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_c77ccb16ab104b3190226a993511f695
+- v: 1
+  id: reg_49b43172b205435f9a72bf1f9a9f6773
+  ts: "2026-11-21T11:57:08Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-integration"
+  previous_event_id: reg_740929f2528f498d96d7c166fb8de0c7
