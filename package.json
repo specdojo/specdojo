@@ -106,6 +106,8 @@
     "validate:catalog": "tsx src/specdojo.ts catalog validate",
     "validate:history-links": "node packages/docs-lint/bin/specdojo-docs-lint.js history-links",
     "check": "npm run typecheck && npm run lint:ts && npm run check:src-imports && npm run lint:md && npm run lint:fm && npm run lint:mermaid && npm run lint:d2 && npm run validate:schema && npm run validate:catalog && npm run validate:history-links && npm test",
+    "check:fast": "node tools/run-checks-parallel.mjs --test",
+    "check:release": "node tools/run-checks-parallel.mjs --test --max-workers 4",
     "check:src-imports": "node tools/check-src-imports-in-dependencies.mjs",
     "dc:ps": "docker ps --format \"table {{.Names}}\\t{{.Image}}\\t{{.Status}}\"",
     "dc:name": "bash -lc 'docker ps --format \"{{.Names}}\\t{{.Image}}\" | awk \"\\$2 ~ /^vsc-specdojo/ {print \\$1; exit}\"'",
