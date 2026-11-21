@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: medium
   difficulty: medium
   registered_at: "2026-11-13T14:08:21Z"
-  block_reason: "agent exited with non-zero code: root agent idle; waiting for 1 background task(s) to finish"
   commit_type: feat
   commit_scope: register
 ---
@@ -72,10 +71,14 @@ specdojo:
 - **章の探索と置換範囲**: 見出し文字列から先頭の番号（例: `3.` と続く空白）を除いた名前で検索する。個票の標準的な章構造である H2 見出しを優先して検索し、指定した章の見出しの行は残した上で、次の同じ深さ（H2 等）またはそれより浅い見出しの直前までの本文全体を差し替え用ファイルの内容で置き換える。これにより、章内にサブ見出し（H3 等）が含まれていても章全体を一括して置換できるようにした。
 - **イベントへの記録形式**: 個票本文の変更と監査履歴の差分を分離するアーキテクチャ方針に基づき、イベントスキーマの `RegisterEventChange` に `section` を追加し、イベントの changes に `{ field: "section", from: "", to: <章の名前> }` を記録した。また、`--reason` が明示されていない場合のイベント reason を `section "<章の名前>" updated` とすることで、どの章が更新されたかを監査ログおよびコミットログから追跡可能にした。
 
+- 2 回目の実行（2026-11-21）で、`src/register/update.ts` の `applyItemUpdate` の dry-run 分岐でも `replaceTicketSection` を呼び、個票に無い章の名前を通常実行と同じくエラー（終了コード 1）にした。読めないファイルと見出しを含むファイルは、`create-commands.ts` の `validateSectionFile` が dry-run より前に検査するため、すでにエラーになる。
+- `tests/src/register/section.test.ts` に、`--dry-run` 指定時の 3 つのエラー（無い章・読めないファイル・見出し含むファイル）が終了コード 1 で、個票を変えず「Would update」を出さないことを確かめるテストを追加した。
+- dry-run で期限や結論が「(removed)」と出る表示は、章の指定と関係なく前からある動きのため、変更していない。
+
 ### 5.3. CHANGELOG に書く事項
 
 - 区分: 追加
-- 文案: `specdojo register update` に、個票の指定した章の本文をファイルから差し替える `--section <name>` と `--section-file <path>` オプションを追加した。
+- 文案: `specdojo register update` に、個票の指定した章の本文をファイルから差し替える `--section <name>` と `--section-file <path>` オプションを追加した。`--dry-run` でも、個票に無い章・読めないファイル・見出しを含むファイルは通常の実行と同じくエラーになる。
 
 ## 6. 関連ドキュメント
 

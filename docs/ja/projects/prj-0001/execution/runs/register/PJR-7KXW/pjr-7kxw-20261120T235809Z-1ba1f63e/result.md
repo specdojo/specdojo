@@ -4,14 +4,13 @@ specdojo:
   type: exec-result
   task_id: PJR-7KXW
   mode: edit
-  status: blocked
+  status: superseded
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-7KXW/pjr-7kxw-20261120T235809Z-1ba1f63e/plan.md
   started_at: "2026-11-20T23:58:10.156Z"
-  completed_at: "2026-11-21T00:07:02.583Z"
+  completed_at: "2026-11-21T00:38:24.038Z"
   agent: flash-high-executor
-  block_reason: "agent exited with non-zero code: root agent idle; waiting for 1 background task(s) to finish"
 ---
 
 # Edit Result
