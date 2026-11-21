@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-2tx0-register-branch-remote-ssot
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   owner: PO
   registered_at: "2026-11-21T09:27:48Z"
+  completed_at: "2026-11-21T09:44:22Z"
+  conclusion: D を採る。register と schedule の実行のイベントを project/prj-0001/register に置いてリモートを正本とし、コードと文書は PR で develop へ入れる。runner は個票を register のブランチへ書き、register を develop へ一方向に merge する。PJR-11EX を置き換える
   derived_from:
     - PJR-11EX
 ---

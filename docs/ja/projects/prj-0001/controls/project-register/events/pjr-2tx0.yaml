@@ -51,3 +51,22 @@
       from: ""
       to: 検討した選択肢
   previous_event_id: reg_757ab6ab863a413a9700f58f27dfc6b6
+- v: 1
+  id: reg_3e8174b594564f53abd51632dd59bb44
+  ts: "2026-11-21T09:44:22Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: 2026-11-21 の対話で indie が orchestrator の推奨を承認した
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-11-21"
+    - field: conclusion
+      from: "-"
+      to: D を採る。register と schedule の実行のイベントを project/prj-0001/register に置いてリモートを正本とし、コードと文書は PR で develop へ入れる。runner は個票を register のブランチへ書き、register を develop へ一方向に merge する。PJR-11EX を置き換える
+  previous_event_id: reg_031f5aa883284942b749df95b67e5c1b
