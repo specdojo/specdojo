@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c0e037906f7645e6af608c5846bc3725
+  ts: "2026-11-21T03:11:38Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: 型の grade のし直しの準備で見つけたため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade run --kata が、rulebook に複数並べた sample の一部しか選ばない
+    - field: description
+      from: ""
+      to: rulebook の frontmatter の sample に複数の sample を並べた型（opd・opr）で、--kata が `<name>-sample` だけを選び、ほかの sample を評価の対象から外す
+    - field: input
+      from: ""
+      to: '["2026-11-21、grade run --target kata --kata opd --kata opr --dry-run で、選ばれた sample は opd-sample と opr-sample だけだった。opd-rulebook は sample を 4 件（うち opd-index-sample を除く 3 件が漏れた）、opr-rulebook は 8 件（opr-sample 以外の 7 件が漏れた）並べている","--kata と --path は一緒に使えないため、漏れた 10 件は別の grade run で --path を並べて評価した（run id regrade-kata-op-samples-2026-11-21）","PJR-SW7T の対応結果では、型名の解決は docs/ja/specdojo/samples/`<name>-sample``.*`（または rulebook の frontmatter で指定された sample）を対象とすると書かれている"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-21"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-SW7T"]'
