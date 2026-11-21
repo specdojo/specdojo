@@ -1,0 +1,19 @@
+`docs/ja/specdojo/rulebooks/atc-rulebook.md` の見直しを終えました。変更したのはこのファイルだけで、3 行追加・27 行削除です。sample、recipe、template と frontmatter の宣言はそのままです。
+
+**修正内容**
+- **F001・F004（未決事項と ready 化の判断者）:** 「全体方針」に `_UNDECIDED_` の項を足しました。書いた内容は次の 3 点で、`stc-rulebook` と同じ書き方にそろえています。
+  - recipe と template の要否はまだ決めていない。template は PJR-WYTX で扱い、recipe は QE が ready 化の判断時に決める。
+  - sample は本文要件に合っていない。
+  - これらを解消してから、`ready` へ上げるかを人が判断する。
+- **F002（検証手順がない）:** 「全体方針」に確認の手順を書きました。作った `atc-<term>` に `npm run -s lint:md` と `npm run lint:fm` をかけ、どちらもエラーなし・終了コード 0 になることを確かめる、という内容です。2 つのスクリプトが `package.json` にあることは確認済みです。
+- **完成例の章:** 「サンプル（最小）」の章を消し、完成例は sample に任せる形にしました。「受入観点とケース」の良い例はこの章を参照していたので、ケース 1 行分の主な値を書いた例に差し替えました。見出しは H4 までです。
+
+**F003 はまだ解消していません。** 指摘は rulebook 側ではなく、sample が rulebook の構成と type に合っていないというものです。この段では sample を変えない決まりなので、rulebook に不整合があることを明記するだけにとどめ、直すのは後続の sample の見直しです。
+
+**検証**
+- `npx prettier --check` と `npx markdownlint-cli2` は、どちらも指摘なしで通りました。
+- `lint:md` などの許可済みの検査は、このあと親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"atc-rulebook を簡潔化。全体方針に検証コマンドと期待結果（F002）、recipe・template 未決と sample 不整合・ready 化の判断者を _UNDECIDED_ で明記（F001・F004）、経過措置のサンプル章を削除し記述ガイドの良い例を自己完結化。F003 は sample 側の不整合のため後続の sample-maintenance へ申し送り。","handoff":["F003（sample docs/ja/specdojo/samples/atc-sample.md が rulebook の本文要件の章構成・トレース表・条件・ケース表に未準拠）は本段で sample を変更しない方針のため未解消。後続の sample-maintenance で、本文要件の 6 章構成・`trace_key`・`case_id` 形式・relations.verifies に沿って厚くする。","recipe・template の要否は未判断のまま（template は PJR-WYTX、recipe は QE が ready 化判断時に決める）。ready 昇格は人が判断する。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/atc-rulebook.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/atc-rulebook.md","status":"passed","summary":"0 issues in 0 files"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更は rulebook のみで、plan・result・個票などの履歴蓄積ファイルを変更していないため"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML の変更なし","reason":"変更ファイルに *.yaml / *.yml がなく、rulebook は markdown 対象のため"}]}
+</specdojo_executor_evidence>

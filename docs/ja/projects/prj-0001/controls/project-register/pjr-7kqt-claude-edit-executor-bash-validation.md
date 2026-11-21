@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: medium
   difficulty: medium
   owner: DEV
@@ -55,8 +55,21 @@ templates/claude/settings.edit.json の allow は Edit(**) だけでコマンド
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+A+B を実装した。
+
+- A: `templates/claude/settings.edit.json` の allow に `npm run`・`npm test`・`npx prettier`・`npx markdownlint-cli2`・`npx markdownlint`・`npx eslint`・`npx tsc`・`npx vitest`・`npx slidev`・`specdojo` を足した。`git push`・`gh` の deny は変えず優先される。
+- B: `exec-defaults.yaml` の `providers.<name>.allow_commands`（`Bash(...)` の配列、claude の edit mode のみ）を追加した。起動コマンドへ `--allowedTools` として足すため、`scaffold --force` 後も残る。引用符・バックスラッシュ・改行を含む規則は起動前にエラーにする。schema（`exec-defaults.schema.yaml`）と `src/exec/agent-config.ts` を更新した。
+- `exec-config-guide` に「claude の edit executor に許すコマンド」の節を追加した。
+- テスト: `tests/src/exec/agent-config-allow-commands.test.ts` を追加し、許可と非許可（`git`・`rm`・`gh` が allow に無いこと、deny が残ること）と `--allowedTools` の付与を確かめた。`provider-scaffold.test.ts` の allow 期待値を `toContain` に直した。
+- 確認: 関連 vitest・`npm run typecheck`・`npm run lint:ts`（error 0）・Prettier を通した。親の検証は runner が実行する。
+- 未確認: `--allowedTools` が実際の `claude -p` で deny に負けず効くことは、実機（クォータ消費）では確かめていない。人が 1 回確認する。
+- `.specdojo` の保護された設定は変えていない。変える案: `.specdojo/exec-defaults.yaml` の `providers.claude` に `allow_commands` を必要に応じて足す。
+
+### 5.1. CHANGELOG に書く事項
+
+- 区分: 追加
+- 文案: claude の edit executor が検証コマンド（`npm run`・prettier・markdownlint-cli2・eslint・tsc・vitest・slidev）を実行できるよう、配布する `settings.edit.json` の allow を拡張し、`exec-defaults.yaml` に `providers.claude.allow_commands` を追加した。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-tm1b-claude-edit-allowlist-too-narrow]]

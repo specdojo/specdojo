@@ -1,0 +1,71 @@
+{
+  "version": 1,
+  "queue_id": "morning-a-2026-11-22",
+  "project_id": "prj-0001",
+  "created_at": "2026-11-21T22:46:11.872Z",
+  "updated_at": "2026-11-21T22:46:11.872Z",
+  "state": "pending",
+  "steps": [
+    {
+      "index": 1,
+      "on_failure": "continue",
+      "status": "pending",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--register",
+        "PJR-G3TT",
+        "--resume",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--project",
+        "prj-0001"
+      ]
+    },
+    {
+      "index": 2,
+      "on_failure": "stop",
+      "status": "pending",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--register",
+        "PJR-QTZ7",
+        "--resume",
+        "--resume-from",
+        "executor",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--project",
+        "prj-0001"
+      ]
+    },
+    {
+      "index": 3,
+      "on_failure": "stop",
+      "status": "pending",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--register",
+        "PJR-HCHH",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--project",
+        "prj-0001"
+      ]
+    }
+  ]
+}

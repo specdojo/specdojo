@@ -1,0 +1,32 @@
+review の段で、プロダクトの worktree を読み取りだけで渡すようにしました。ただし codex と copilot は読み取りだけにできず、review の後にプロダクトへ変更が出たかを runner が検出して止める形になっています。`npm run typecheck` は通りました。`npm run lint:ts` は error 0 です。`tests/src/exec/task-repos.test.ts` の 40 件は通りました。`npm run lint:md` と `tests/src/exec` 全体の vitest は未確認です。同じコマンドが 120 秒を超えてバックグラウンドへ移り、結果を読んでいません。
+
+## provider ごとの権限
+
+| provider | review の段で渡す権限 | 読み取りだけにできたか |
+| --- | --- | --- |
+| claude | `--add-dir` だけ（`Edit` の許可を渡さない） | できた |
+| opencode | `external_directory` の allow だけ（`edit` を足さない） | できた |
+| codex | `--add-dir` | できなかった（読み取り専用の追加ディレクトリの引数がない） |
+| copilot | `--add-dir` | できなかった（同上） |
+
+## 変更内容
+
+- review の段かどうかを mode から決め、環境変数 `SPECDOJO_REPO_ACCESS=read` で agent の起動処理へ伝える。変更したのは `src/exec/task-repos.ts`・`src/exec/opencode-permissions.ts`・`src/exec/run/agent.ts`・`src/exec/run/agent-pipeline.ts`・`src/exec/run/schedule-task.ts`・`src/exec/worktree-command.ts`。
+- review の前後でプロダクトの worktree の未コミットの変更を比べ、増えていれば `blocked: review stage changed product repositories that are read-only: ...` で失敗にする（保護違反と同じ扱い）。
+- テストは `tests/src/exec/task-repos.test.ts` に追加した。claude の引数に `Edit(` と `--allowedTools` が含まれないこと、opencode の注入に `edit` が無いこと、変更の検出を見ている。
+- 個票の対応結果に、provider ごとの表と `### 5.1. CHANGELOG に書く事項` を書いた。`CHANGELOG.md` は変えていない。
+
+## 完了条件との差
+
+- 「項目が waiting になる」テストは書いていません。schedule の review の段は block の経路で止まります。register の run は mode が常に `edit` で review の段を持たないため、register の `waiting` 遷移は足していません。
+- 変更の検出は `changedProductStatuses` の単体テストまでで、`runWithRetry` を通した block の統合テストはありません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"review の段でプロダクトの worktree を provider ごとに読み取りへ絞った（claude・opencode）。codex・copilot は絞れないため、review 後の変更を検出して block する。個票の対応結果と CHANGELOG 文案を記入した。「項目が waiting になる」テストは書いておらず、runWithRetry 経由の block 統合テストもない（個票と handoff に記録）。","handoff":["codex と copilot は `--add-dir` が書き込みを許すため読み取りだけにできない。review 後のプロダクトの変更を runner が検出して block する。","schedule の review の段は `protectionBlock` で failure になり既存の block の経路で止まる。register の run は mode が常に `edit` で review の段を持たないため、register の `waiting` 遷移はこの件では足していない。","`runWithRetry` を通した block の統合テストは未作成。検出関数 `changedProductStatuses` の単体テストのみ。必要なら別項目にする。","CHANGELOG 文案は個票の `### 5.1. CHANGELOG に書く事項` に記載済み（区分: 変更）。"],"validations":[{"command":"npx vitest run tests/src/exec/task-repos.test.ts","status":"passed","summary":"40 件通過"},{"command":"npm run typecheck","status":"passed","summary":"エラーなし"},{"command":"npm run lint:ts","status":"passed","summary":"error 0（既存の warning のみ）"}]}
+</specdojo_executor_evidence>
+
+バックグラウンドで動かしていたコマンドが終わりました。`lint:md` は出力が空で、エラーはありませんでした。`tests/src/exec` 全体の vitest も 111 ファイル・1964 件がすべて通りました。前の報告で未確認としていた 2 点は、どちらも問題ありません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"review の段でプロダクトの worktree を provider ごとに読み取りへ絞った（claude・opencode）。codex・copilot は絞れないため、review 後の変更を検出して block する。個票の対応結果と CHANGELOG 文案を記入した。「項目が waiting になる」テストは書いておらず、runWithRetry 経由の block 統合テストもない（個票と handoff に記録）。","handoff":["codex と copilot は `--add-dir` が書き込みを許すため読み取りだけにできない。review 後のプロダクトの変更を runner が検出して block する。","schedule の review の段は `protectionBlock` で failure になり既存の block の経路で止まる。register の run は mode が常に `edit` で review の段を持たないため、register の `waiting` 遷移はこの件では足していない。","`runWithRetry` を通した block の統合テストは未作成。検出関数 `changedProductStatuses` の単体テストのみ。必要なら別項目にする。","CHANGELOG 文案は個票の `### 5.1. CHANGELOG に書く事項` に記載済み（区分: 変更）。"],"validations":[{"command":"npx vitest run tests/src/exec","status":"passed","summary":"111 ファイル・1964 件が通過"},{"command":"npx vitest run tests/src/exec/task-repos.test.ts","status":"passed","summary":"40 件通過"},{"command":"npm run typecheck","status":"passed","summary":"エラーなし"},{"command":"npm run lint:ts","status":"passed","summary":"error 0（既存の warning のみ）"},{"command":"npm run lint:md","status":"passed","summary":"出力なし、エラーなし"}]}
+</specdojo_executor_evidence>

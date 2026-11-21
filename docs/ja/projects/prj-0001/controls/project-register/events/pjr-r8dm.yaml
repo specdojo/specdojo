@@ -67,3 +67,29 @@
       from: "-"
       to: medium
   previous_event_id: reg_08a479bc7aab4c6fbfba9d36fcea770f
+- v: 1
+  id: reg_b275e3b57d6d4649bb8c2c3b21b451dd
+  ts: "2026-11-21T15:46:17Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_0201e2d8e33e4142838de2fd3ed52318
+- v: 1
+  id: reg_99ff295ac95341bca98c3075dc559d95
+  ts: "2026-11-21T15:52:11Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_b275e3b57d6d4649bb8c2c3b21b451dd

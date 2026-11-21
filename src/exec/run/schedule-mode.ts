@@ -12,7 +12,7 @@ import { buildInitialStateFromStrategy } from "../schedule/initial.js";
 import { scheduleTrackNames } from "../schedule/gantt-chart-scope.js";
 import { readReadySnapshot } from "../schedule/ready.js";
 import { specdojoRootDir } from "../../shared/specdojo-config.js";
-import { type ReadyTaskView } from "../types.js";
+import { type ReadyTaskView, type ScheduleIndex } from "../types.js";
 import { type CurrentState } from "../types.js";
 import { extractLocalId, extractPhaseSuffix } from "../../schedule/phase-sets.js";
 import { resolveWorktreeBase } from "../worktree.js";
@@ -414,6 +414,27 @@ export function resolveClaimingActor(
   return { actor, resumed: true };
 }
 
+// Explains why a task outside ready.json cannot be run with --task. Returns undefined when the
+// task may proceed (doing/blocked resumes, or unknown to the schedule so existing handling applies).
+export function explainUnrunnableTask(
+  taskId: string,
+  tasks: Record<string, CurrentState> | undefined,
+  schedule: ScheduleIndex,
+): string | undefined {
+  const state = tasks?.[taskId]?.state;
+  if (state === "done") return `Task ${taskId} is already done; nothing to run.`;
+  if (state === "cancelled") return `Task ${taskId} is cancelled; it cannot be run.`;
+  if (state === "doing" || state === "blocked") return undefined;
+  const node = schedule.nodes.get(taskId);
+  if (!node) return undefined;
+  const unfinished = node.depends_on.filter((dep) => {
+    const depState = tasks?.[dep]?.state;
+    return depState !== "done" && depState !== "cancelled";
+  });
+  if (unfinished.length === 0) return undefined;
+  return `Task ${taskId} is not ready: unfinished dependencies: ${unfinished.join(", ")}.`;
+}
+
 export async function runManualMode(opts: RunOpts): Promise<void> {
   const taskId = opts.task as string;
   const resolvedPaths = resolveProjectPaths({ project: opts.project });
@@ -440,11 +461,15 @@ export async function runManualMode(opts: RunOpts): Promise<void> {
   const phaseModeIndex = buildPhaseModeIndex(schedulePath);
 
   const readyJsonPath = join(executionPath, "generated", "ready.json");
+  let inReadySnapshot = false;
   let task: ReadyTaskView = { id: taskId, schedule_file: "", fifo_rank: 0, critical_first_rank: 0 };
   if (existsSync(readyJsonPath)) {
     const snap = readReadySnapshot(readyJsonPath);
     const found = snap.tasks.find((t) => t.id === taskId);
-    if (found) task = found;
+    if (found) {
+      task = found;
+      inReadySnapshot = true;
+    }
   }
   // If task not in ready.json (e.g. already "doing"), derive local_id from task id pattern.
   if (!task.local_id) {
@@ -452,11 +477,17 @@ export async function runManualMode(opts: RunOpts): Promise<void> {
     const localId = extractLocalId(taskId);
     if (localId && parts[0] === "T" && parts[1]) {
       const track = parts[1];
+      let definedFile: string | undefined;
+      try {
+        definedFile = buildScheduleIndex(schedulePath).nodes.get(taskId)?.schedule_file;
+      } catch {
+        definedFile = undefined;
+      }
       task = {
         ...task,
         local_id: localId,
         phase_suffix: extractPhaseSuffix(taskId),
-        schedule_file: `sch-track-${track.toLowerCase()}.yaml`,
+        schedule_file: definedFile ?? `sch-track-${track.toLowerCase()}.yaml`,
       };
     }
   }
@@ -517,18 +548,26 @@ export async function runManualMode(opts: RunOpts): Promise<void> {
   // Read from events directly (not state.json cache) to reflect recent scheduler claims.
   let actorOverride = opts.by;
   let alreadyClaimed = false;
-  if (!actorOverride) {
-    try {
-      const sch = buildScheduleIndex(schedulePath);
-      const evts = readAllEventFiles(schedulePath);
-      const initTasks = buildInitialStateFromStrategy(schedulePath, sch);
-      const snap = foldEventsToState(evts, sch, schedulePath, initTasks);
+  try {
+    const sch = buildScheduleIndex(schedulePath);
+    const evts = readAllEventFiles(schedulePath);
+    const initTasks = buildInitialStateFromStrategy(schedulePath, sch);
+    const snap = foldEventsToState(evts, sch, schedulePath, initTasks);
+    if (!inReadySnapshot) {
+      const reason = explainUnrunnableTask(taskId, snap.tasks, sch);
+      if (reason) {
+        process.stdout.write(`  ${reason}\n`);
+        process.exitCode = 1;
+        return;
+      }
+    }
+    if (!actorOverride) {
       const resolved = resolveClaimingActor(snap.tasks?.[taskId], undefined);
       actorOverride = resolved.actor;
       alreadyClaimed = resolved.resumed;
-    } catch {
-      // ignore errors reading state; fall through to normal agent selection
     }
+  } catch {
+    // ignore errors reading state; fall through to normal agent selection
   }
 
   const prepared = await prepareSingleTask(

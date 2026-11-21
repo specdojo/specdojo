@@ -19,6 +19,7 @@ export function registerGradeRunCommand(grade: Command, runtime?: GradeAgentRunt
     .requiredOption("--run-id <id>", "Stable id for persisted selection and completed stages")
     .option("--kind <kind>", "Kata kind: rulebook, recipe, sample, template, all")
     .option("--by <nickname>", "Grading executor (default: roster auto-selection)")
+    .option("--fallback-by <nickname>", "Grader that takes over when --by hits a rate limit")
     .option("--stage-1-executor <nickname>", "Alias for --by")
     .option("--stages <count>", "Native pipeline stage count (1)", "1")
     .option("--work-dir <directory>", "Repository-relative run state directory")
@@ -52,6 +53,7 @@ export function registerGradeRunCommand(grade: Command, runtime?: GradeAgentRunt
             paths: options.path,
             kata: options.kata,
             by: options.by ?? options.stage1Executor,
+            fallbackBy: options.fallbackBy,
             execDefaultsPath: options.execDefaults,
           },
           runtime,

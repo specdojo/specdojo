@@ -3,6 +3,10 @@ id: job-grade-deliverable
 name: 成果物の継続品質評価
 description: 成果物を文書単位の agy 単段評価へ流し、最新の品質と done_criteria 充足状況を更新する。
 inputs:
+  # grade run の --by が rate limit のときに切り替える評価者（PJR-XA6Y）。空なら切り替えない。
+  fallback_by:
+    type: string
+    default: ""
   period:
     type: string
     required: true
@@ -138,6 +142,9 @@ task:
     while IFS= read -r document; do
       printf 'retry exhausted: %s\n' "$document"
     done <"$run_dir/retry-exhausted.txt"
+    # 代わりの評価者は入力 fallback_by が空でないときだけ渡す（未指定なら従来どおり）。
+    fallback_args=
+    [ -n "{{inputs.fallback_by}}" ] && fallback_args="--fallback-by {{inputs.fallback_by}}"
     set --
     while IFS= read -r document; do
       [ -n "$document" ] && set -- "$@" --path "$document"
@@ -147,7 +154,7 @@ task:
       exit 0
     fi
     # grade run は、完了した成果物と失敗した成果物が混在すると 2、rate limit で止まると 75 を返す。
-    if {{specdojo}} grade run --run-id {{job_run_id}} --target deliverable --project {{project_id}} --by agy-expert-executor "$@"; then
+    if {{specdojo}} grade run --run-id {{job_run_id}} --target deliverable --project {{project_id}} --by agy-expert-executor $fallback_args "$@"; then
       :
     else
       grade_status=$?

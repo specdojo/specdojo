@@ -67,6 +67,8 @@ import {
   buildExecutorPrompt,
   extractBlockReason,
   pathInsideWorktree,
+  pruneVanishedInitialChangeTargets,
+  recordExcludedCoverageTargets,
   resumedTargetCoverageFailure,
   runWithRetry,
 } from "./agent.js";
@@ -168,6 +170,7 @@ export async function runPreparedTask(
         schedulePath,
         executionPath,
         prepared.worktree.repos,
+        prepared.task.mode,
       ),
       worktreeResultPath,
       prepared.executorRateLimitOptions,
@@ -295,12 +298,22 @@ export async function runPreparedTask(
     );
     writePipelineState(pipelineStatePath, pipelineState);
     process.stdout.write(`  Running executor: ${prepared.agentCandidates[0]?.command ?? ""}\n`);
+    // PJR-FGKB: drop lower-bound paths that vanished before resume and record them in evidence.
+    const resumedCoverage =
+      prepared.pipelineResumeStage === "executor"
+        ? pruneVanishedInitialChangeTargets({
+            plan: prepared.plan,
+            initialChangeTargets: prepared.initialChangeTargets ?? [],
+            worktreePath: prepared.worktree.path,
+            productWorktrees: prepared.worktree.repos,
+          })
+        : { targets: [...(prepared.initialChangeTargets ?? [])], excluded: [] };
     const executorPrompt =
       prepared.pipelineResumeStage === "executor"
         ? buildExecutorPrompt(prepared.plan, execDefaults.pipeline?.parent_validations, {
             resumed: true,
             existingChanges: worktreeStatusPaths(prepared.worktree.path),
-            initialChangeTargets: prepared.initialChangeTargets,
+            initialChangeTargets: resumedCoverage.targets,
             resumeHandoff: prepared.resumeHandoff,
           })
         : prepared.prompt;
@@ -315,6 +328,7 @@ export async function runPreparedTask(
         schedulePath,
         executionPath,
         prepared.worktree.repos,
+        prepared.task.mode,
       ),
       worktreeResultPath,
       prepared.executorRateLimitOptions,
@@ -349,6 +363,7 @@ export async function runPreparedTask(
       .join("/");
     executorEvidencePath = recorded.evidencePath;
     executorEvidence = recorded.evidence;
+    recordExcludedCoverageTargets(executorEvidence, executorEvidencePath, resumedCoverage.excluded);
     const coverageFailure =
       result === "success"
         ? resumedTargetCoverageFailure({
@@ -356,7 +371,8 @@ export async function runPreparedTask(
             plan: prepared.plan,
             evidence: executorEvidence,
             evidencePath: executorEvidencePath,
-            initialChangeTargets: prepared.initialChangeTargets,
+            initialChangeTargets: resumedCoverage.targets,
+            resumeHint: executorStageResumeHint({ kind: "schedule", taskId: prepared.task.id }),
           })
         : undefined;
     if (result === "success" && coverageFailure) {
@@ -372,7 +388,7 @@ export async function runPreparedTask(
         status:
           result === "success"
             ? "succeeded"
-            : executorOutcome.protectionBlock
+            : executorOutcome.protectionBlock || coverageFailure
               ? "blocked"
               : result === "rate_limit"
                 ? "rate_limited"
@@ -482,6 +498,7 @@ export async function runPreparedTask(
               schedulePath,
               executionPath,
               prepared.worktree.repos,
+              prepared.task.mode,
             ),
             worktreeResultPath,
             prepared.reporterRateLimitOptions,

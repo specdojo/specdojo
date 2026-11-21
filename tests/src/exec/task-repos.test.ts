@@ -1,8 +1,11 @@
 import { describe, expect, it } from "vitest";
+import { changedProductStatuses } from "../../../src/exec/run/agent.js";
 import {
   agentExtraRootArguments,
   integrationBranchOverrideRecord,
   parseIntegrationBranchOverrides,
+  productAccessForMode,
+  productAccessFromEnvironment,
   productIntegrationTarget,
   productRepoEnvironment,
   productRepoPromptSection,
@@ -345,5 +348,80 @@ describe("resumeIntegrationBranches", () => {
     expect(() => resumeIntegrationBranches(undefined, ["app1=topic"])).toThrow(
       /checkpoint: not specified, requested: topic/,
     );
+  });
+});
+
+describe("read-only product access (review stage)", () => {
+  const dirs = ["/work/task/app1"];
+
+  it("maps only the review mode to read access", () => {
+    expect(productAccessForMode("review")).toBe("read");
+    expect(productAccessForMode("edit")).toBe("write");
+    expect(productAccessForMode(undefined)).toBe("write");
+  });
+
+  it("announces read access through the environment only for review", () => {
+    const review = productRepoEnvironment("/work/task/project", products, "read");
+    const edit = productRepoEnvironment("/work/task/project", products);
+
+    expect(productAccessFromEnvironment(review)).toBe("read");
+    expect(productAccessFromEnvironment(edit)).toBe("write");
+  });
+
+  it("gives claude --add-dir without any Edit allowance", () => {
+    expect(agentExtraRootArguments("claude", dirs, "read")).toEqual([
+      "--add-dir",
+      "/work/task/app1",
+    ]);
+  });
+
+  it("keeps --add-dir for codex and copilot, which have no read-only flag", () => {
+    for (const provider of ["codex", "copilot"] as const) {
+      expect(agentExtraRootArguments(provider, dirs, "read")).toEqual([
+        "--add-dir",
+        "/work/task/app1",
+      ]);
+    }
+  });
+
+  it("does not put any Edit argument in the claude command for a read-only stage", () => {
+    const actual = withAgentExtraRoots("claude -p", "claude", dirs, { access: "read" });
+
+    expect(actual).not.toContain("Edit(");
+    expect(actual).not.toContain("--allowedTools");
+  });
+
+  it("allows opencode to read the product worktree but adds no edit pattern", () => {
+    const actual = withAgentExtraRoots("opencode run --agent opencode-reviewer", "opencode", dirs, {
+      cwd: "/work/task/project",
+      env: {},
+      access: "read",
+    });
+
+    const match = /^OPENCODE_CONFIG_CONTENT='([^']*)' /.exec(actual);
+    const config = JSON.parse(match?.[1] ?? "{}") as {
+      agent: Record<string, { permission: Record<string, unknown> }>;
+    };
+    const permission = config.agent["opencode-reviewer"].permission;
+    expect(permission.external_directory).toEqual({
+      "*": "deny",
+      "/work/task/app1/**": "allow",
+    });
+    expect(permission.edit).toBeUndefined();
+  });
+});
+
+describe("changedProductStatuses", () => {
+  it("reports only paths that became dirty during the read-only stage", () => {
+    const before = [{ name: "app1", paths: ["old.ts"] }];
+    const after = [{ name: "app1", paths: ["old.ts", "src/new.ts"] }];
+
+    expect(changedProductStatuses(before, after)).toEqual(["app1:src/new.ts"]);
+  });
+
+  it("reports nothing when the product worktree is unchanged", () => {
+    const state = [{ name: "app1", paths: [] }];
+
+    expect(changedProductStatuses(state, state)).toEqual([]);
   });
 });

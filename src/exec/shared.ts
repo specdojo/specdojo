@@ -9,6 +9,7 @@ export {
   padEndDisplay,
   redactSensitiveText,
   stripTerminalControlSequences,
+  unescapeBackticksWhenUniform,
 } from "../shared/text.js";
 export {
   formatDateOnlyUtc,

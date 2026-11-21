@@ -20,10 +20,14 @@ import { replaceDocIndexRefs } from "../../docs/doc-index.js";
 import { localConfigEnvironment } from "../../shared/local-config.js";
 import { loadPlan, parsePlanTaskIdentity } from "../plans.js";
 import type { ReadyTaskView, TaskMode } from "../types.js";
+import { worktreeStatusPaths } from "../worktree-ops.js";
 import {
+  partitionVanishedCoverageTargets,
   recordParentValidationFailureOutput,
   validateResumedTargetCoverage,
   writeExecutorEvidence,
+  type EvidenceExcludedCoverageTarget,
+  type EvidenceProductWorktree,
   type ExecEvidence,
 } from "../evidence.js";
 import {
@@ -67,6 +71,8 @@ import {
 } from "../protection-handoff.js";
 import {
   productRepoEnvironment,
+  productAccessForMode,
+  productAccessFromEnvironment,
   productRootsFromEnvironment,
   withAgentExtraRoots,
   withoutInheritedRepoEnvironment,
@@ -134,6 +140,39 @@ export function resolveResumedCoverageTargets(
   return initial.length > 0
     ? { source: "initial-changes", targets: initial }
     : { source: "none", targets: [] };
+}
+
+/**
+ * Drops lower-bound targets from an earlier attempt that vanished before resume (PJR-FGKB).
+ * Declared plan targets take precedence over the lower bound and are never pruned here.
+ */
+export function pruneVanishedInitialChangeTargets(params: {
+  plan: string;
+  initialChangeTargets: readonly string[];
+  worktreePath: string;
+  productWorktrees?: readonly EvidenceProductWorktree[];
+}): { targets: string[]; excluded: EvidenceExcludedCoverageTarget[] } {
+  const coverage = resolveResumedCoverageTargets(params.plan, params.initialChangeTargets);
+  if (coverage.source !== "initial-changes") {
+    return { targets: [...params.initialChangeTargets], excluded: [] };
+  }
+  const { kept, excluded } = partitionVanishedCoverageTargets(
+    params.worktreePath,
+    params.productWorktrees ?? [],
+    coverage.targets,
+  );
+  return { targets: kept, excluded };
+}
+
+/** Records runner-excluded lower-bound targets in executor evidence (no-op when none). */
+export function recordExcludedCoverageTargets(
+  evidence: ExecEvidence,
+  evidencePath: string,
+  excluded: readonly EvidenceExcludedCoverageTarget[],
+): void {
+  if (excluded.length === 0) return;
+  evidence.excluded_coverage_targets = excluded.map((entry) => ({ ...entry }));
+  writeExecutorEvidence(evidencePath, evidence);
 }
 
 function executorEvidenceContract(
@@ -296,21 +335,28 @@ export function buildExecutorPrompt(
   })}`;
 }
 
+// PJR-FGKB: a coverage gap is incomplete work, not a process failure. The evidence keeps the
+// succeeded process status and is marked incomplete with the missing targets in `block_reason`, so
+// the run stops at the executor stage as blocked and `--resume-from executor` can pick it up again
+// without discarding the worktree.
 export function resumedTargetCoverageFailure(params: {
   resumed: boolean;
   plan: string;
   evidence: ExecEvidence;
   evidencePath: string;
   initialChangeTargets?: readonly string[];
+  resumeHint?: string;
 }): string | undefined {
   if (!params.resumed) return undefined;
   const targets = resolveResumedCoverageTargets(params.plan, params.initialChangeTargets).targets;
   const coverage = validateResumedTargetCoverage(targets, params.evidence);
   if (coverage.ok) return undefined;
 
-  params.evidence.stage.status = "failed";
+  const reason = params.resumeHint ? `${coverage.reason}; ${params.resumeHint}` : coverage.reason;
+  params.evidence.completion_status = "incomplete";
+  params.evidence.block_reason = reason;
   writeExecutorEvidence(params.evidencePath, params.evidence);
-  return coverage.reason;
+  return reason;
 }
 
 export type ParentValidationRunOptions = {
@@ -579,6 +625,25 @@ function rateLimitPrefix(result: RunResult): string {
   return result === "rate_limit" ? "rate limit reached; " : "";
 }
 
+type ProductStatus = { name: string; paths: string[] };
+
+function productStatuses(roots: readonly { name: string; path: string }[]): ProductStatus[] {
+  return roots.map((root) => ({ name: root.name, paths: worktreeStatusPaths(root.path) }));
+}
+
+/** Product paths whose status differs after a read-only (review) stage, as `<repo>:<path>`. */
+export function changedProductStatuses(
+  before: readonly ProductStatus[],
+  after: readonly ProductStatus[],
+): string[] {
+  return after.flatMap((current) => {
+    const previous = new Set(before.find((entry) => entry.name === current.name)?.paths ?? []);
+    return current.paths
+      .filter((path) => !previous.has(path))
+      .map((path) => `${current.name}:${path}`);
+  });
+}
+
 export async function runWithRetry(
   candidates: AgentRunCandidate[],
   prompt: string,
@@ -604,6 +669,7 @@ export async function runWithRetry(
   // PJR-98G4: agentEnvironment が渡したプロダクト worktree を、provider の追加ディレクトリと
   // 保護設定・Git 状態の検査対象に加える。宣言の無い project では cwd だけになる。
   const productRoots = productRootsFromEnvironment(env);
+  const productAccess = productAccessFromEnvironment(env);
   const agentRepos = [
     { root: cwd },
     ...productRoots.map((root) => ({ name: root.name, root: root.path })),
@@ -640,12 +706,13 @@ export async function runWithRetry(
       lastActor = candidate.actor;
       const protectedConfigBefore = captureAgentProtectedConfigAcrossRepos(agentRepos);
       const gitStateBefore = captureAgentGitStateAcrossRepos(agentRepos);
+      const productChangesBefore = productAccess === "read" ? productStatuses(productRoots) : [];
       const attempt = await executeAgent(
         withAgentExtraRoots(
           candidate.command,
           candidate.provider,
           productRoots.map((root) => root.path),
-          { cwd, env },
+          { cwd, env, access: productAccess },
         ),
         prompt,
         detection,
@@ -671,6 +738,24 @@ export async function runWithRetry(
           }),
           resultPath,
         );
+        return {
+          result: "failure",
+          exitCode: 1,
+          stdout: attempt.stdout,
+          stderr: `${attempt.stderr}${attempt.stderr.endsWith("\n") || !attempt.stderr ? "" : "\n"}${reason}\n`,
+          protectionBlock: true,
+          actor: candidate.actor,
+        };
+      }
+      const readOnlyViolations =
+        productAccess === "read"
+          ? changedProductStatuses(productChangesBefore, productStatuses(productRoots))
+          : [];
+      if (readOnlyViolations.length > 0) {
+        const reason =
+          rateLimitPrefix(attempt.result) +
+          `review stage changed product repositories that are read-only: ${readOnlyViolations.join(", ")}`;
+        process.stderr.write(`blocked: ${reason}\n`);
         return {
           result: "failure",
           exitCode: 1,
@@ -902,13 +987,14 @@ export function agentEnvironment(
   schedulePath: string,
   executionPath: string,
   productWorktrees?: readonly ProductWorktree[],
+  mode?: TaskMode,
 ): NodeJS.ProcessEnv {
   return {
     ...withoutInheritedRepoEnvironment(gitEnvironment()),
     ...localConfigEnvironment(repoRoot),
     SPECDOJO_SCHEDULE_PATH: pathInsideWorktree(repoRoot, worktreePath, schedulePath),
     SPECDOJO_EXECUTION_PATH: pathInsideWorktree(repoRoot, worktreePath, executionPath),
-    ...productRepoEnvironment(worktreePath, productWorktrees),
+    ...productRepoEnvironment(worktreePath, productWorktrees, productAccessForMode(mode)),
   };
 }
 

@@ -112,7 +112,7 @@ describe("specdojoPackageRootDir", () => {
       ),
     ) as { permissions?: { allow?: string[]; deny?: string[] } };
 
-    expect(settings.permissions?.allow).toEqual(["Edit(**)"]);
+    expect(settings.permissions?.allow).toContain("Edit(**)");
     expect(settings.permissions?.deny).toEqual([
       ...PROTECTED_DIRECTORY_PREFIXES.map((prefix) => `Edit(${prefix}**)`),
       ...[...PROTECTED_EXACT_PATHS].map((protectedPath) => `Edit(./${protectedPath})`),
