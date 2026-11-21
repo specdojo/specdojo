@@ -1,0 +1,20 @@
+tsp-index の rulebook を簡潔にし、grade の指摘 10 件のうち rulebook 側で直せる 9 件（F001〜F006、F008〜F010）を修正しました。変更したのは `docs/ja/specdojo/rulebooks/tsp-index-rulebook.md` だけです。plan どおり sample と frontmatter の宣言（`recipe` / `sample` / `template`）は変えておらず、`status` も `draft` のままです。手元で実行した検査は Prettier の整形確認のみで、通っています。lint 類は親 runner が実行します。
+
+主な変更と、それで解消した指摘は次のとおりです。
+
+- **完成例の章を削除（F006・F008）**: 旧「サンプル（最小）」の章をなくし、完成例は sample に任せる形にしました。記述ガイドの冒頭で、全体像は frontmatter の `sample` を参照するよう案内しています。見出しは H4 までに収めています。
+- **本文要件を表に再構成**: 章名を「本文構成（標準テンプレ）」から Rulebook 記述標準と同じ「本文要件」に改め、各章の必須・推奨・任意と受入条件を 1 つの表にまとめました。
+- **判定者と例外承認者の列を追加（F001）**: 入口／出口条件の表に「判定者」列を設け、出口判定者と例外承認者を Role code で書くよう定めました。判定者のない出口条件は禁止事項にも加えています。
+- **非機能の出口条件の基準を明確化（F003）**: NFR・SAC の ID と合格基準への接続を必須にしました。接続できる要求がない場合は、代わりの合格基準（指標・閾値・測定条件）と根拠・合意者を書きます。
+- **`tsp-index` の役割を一つに固定（F004）**: 分割の有無にかかわらず `tsp-index` が全体方針を持ち、ナビゲーション専用にはしないと定めました。分割の対象は、独立して合意・更新する方針だけです。
+- **推奨列の整合（F005）**: 例の表にだけあった「前提（下位で保証済み）」をテストレベル一覧の推奨列に加えました。
+- **よくある誤りと対策の表を削除（F002）**: 各章の要求を言い換えた行が大半だったため、記述ガイドの判断基準と良い例・悪い例に吸収しました。
+- **テストレベル名を統一（F009）**: 単体・内部結合・外部結合・総合・受入の 5 つに揃えました。
+- **略語を用語定義に追加（F010）**: BAC・SAC・NFR を、それぞれの rulebook へのリンク付きで追加しました。DEC は非推奨（PJR-HVQZ）のため、根拠の例から外しています。
+- **記述ガイドの書き方を変更**: 9 章それぞれに、判断基準と駄菓子屋題材の良い例・悪い例を置きました。
+
+**後続段に残る課題**: F007（sample が成果物の実例ではなく説明書になっている）はこの段の対象外なので未解消です。後続の sample-maintenance で、削除した旧サンプル章の内容（テストレベル一覧・スコープ・環境・入口／出口条件など）を新しい本文要件に沿って sample へ移す必要があります。その際は判定者列と、NFR・SAC への接続も入れてください。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"tsp-index-rulebook を簡潔化。完成例の章（旧サンプル章）とよくある誤りの表を削除し、本文要件の表・列定義（判定者列、前提列）と、章ごとの判断基準・良い例・悪い例の記述ガイドへ再構成した。F001〜F006・F008〜F010 を rulebook 側で解消。F007（sample 本体）はこの段の対象外のため後続 sample-maintenance へ申し送り。","handoff":["F007（sample が説明書で実例になっていない）は本段の対象外（plan: sample はこの段で変更しない）のため未解消。後続の sample-maintenance で、削除した旧サンプル章の内容（テストレベル一覧・スコープ・環境・入口／出口条件・自動化方針・メモ）を新しい本文要件（判定者列、NFR/SAC 接続、5 レベル名称）に沿って tsp-index-sample.md へ移す。","DEC は PJR-HVQZ で非推奨のため、`based_on` の根拠例から外した（旧記述は BAC/NFR/SAC/DEC）。","章名を「本文構成（標準テンプレ）」から Rulebook 記述標準と同じ「本文要件」へ変更した。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/tsp-index-rulebook.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更は docs/ja/specdojo/rulebooks/tsp-index-rulebook.md のみで、plan/result/個票を変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML の変更なし","reason":"変更したファイルに *.yaml / *.yml がない"},{"command":"specdojo catalog validate","status":"not_applicable","summary":"docs/ja/projects/ 配下の成果物変更なし","reason":"変更は docs/ja/specdojo/ 配下のみで docs/ja/projects/ に及ばない"}]}
+</specdojo_executor_evidence>
