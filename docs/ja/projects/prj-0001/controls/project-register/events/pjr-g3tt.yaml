@@ -93,3 +93,19 @@
       from: "-"
       to: "integrate failed: project: Result Markdown notation violation before commit: docs/ja/projects/prj-0001/execution/runs/register/PJR-G3TT/pjr-g3tt-20261121T163107Z-34c23eb6/result.md:20:178 error MD038/…"
   previous_event_id: reg_06004c244b09402cbd55338b06d47cc9
+- v: 1
+  id: reg_53d54d2abc13415dad218c989dafbeb1
+  ts: "2026-11-21T22:46:45Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: project: Result Markdown notation violation before commit: docs/ja/projects/prj-0001/execution/runs/register/PJR-G3TT/pjr-g3tt-20261121T163107Z-34c23eb6/result.md:20:178 error MD038/…"
+      to: "-"
+  previous_event_id: reg_9b14ac81e03f4fa3a0590eaf814b6cf4

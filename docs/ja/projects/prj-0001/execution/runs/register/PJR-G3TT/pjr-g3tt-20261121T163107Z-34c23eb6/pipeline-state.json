@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-G3TT",
+  "run_id": "pjr-g3tt-20261121T163107Z-34c23eb6",
+  "updated_at": "2026-11-21T22:50:52.194Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sonnet-executor",
+      "attempts": 1,
+      "started_at": "2026-11-21T16:31:43.703Z",
+      "completed_at": "2026-11-21T16:33:09.144Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-G3TT/pjr-g3tt-20261121T163107Z-34c23eb6/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 0,
+      "started_at": "2026-11-21T16:36:42.950Z",
+      "completed_at": "2026-11-21T16:36:42.950Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-G3TT/pjr-g3tt-20261121T163107Z-34c23eb6/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "gemma26-reporter",
+      "attempts": 2,
+      "started_at": "2026-11-21T22:50:52.194Z",
+      "completed_at": null,
+      "artifact_ref": null,
+      "repos": {
+        "project": {
+          "status": "failed",
+          "commit": null,
+          "merged_at": null,
+          "error": "Result Markdown notation violation before commit: docs/ja/projects/prj-0001/execution/runs/register/PJR-G3TT/pjr-g3tt-20261121T163107Z-34c23eb6/result.md:20:178 error MD038/no-space-in-code Spaces inside code span elements [Context: \"` を追加し、`\"] docs/ja/projects/prj-0001/execution/runs/register/PJR-G3TT/pjr-g3tt-20261121T163107Z-34c23eb6/result.md:20:53 error MD038/no-space-in-code Spaces inside code span elements [Context: \"`\\`` とエスケープされ、runner の `\"]"
+        }
+      }
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-G3TT/pjr-g3tt-20261121T163107Z-34c23eb6/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-G3TT/pjr-g3tt-20261121T163107Z-34c23eb6/result.md"
+  }
+}
