@@ -156,7 +156,7 @@ export type ExecDefaultsConfig = {
 
 type CommandMemberAttributes = Pick<
   ProjectMember,
-  "nickname" | "provider" | "model" | "mode" | "proficiency" | "command"
+  "nickname" | "provider" | "model" | "mode" | "proficiency" | "command" | "disabled"
 >;
 
 const PLACEHOLDER_PATTERN = /\{([a-z][a-z0-9_]*)\}/g;
@@ -238,6 +238,13 @@ export function resolveMemberCommand(
   // Every launch path (named, automatic, fallback) expands the command here, so refusing an
   // Antigravity member before building any command keeps agy from ever being spawned.
   assertProviderLaunchAllowed(member.provider, `Cannot launch member ${member.nickname}`);
+  // Auto-selection already skips disabled members; this covers every named path (--by,
+  // --executor-by, --reporter-by, routing, strategy agent, fallback_executor) in one place.
+  if (member.disabled === true) {
+    throw new Error(
+      `Cannot launch member ${member.nickname}: disabled in .specdojo/agent-members.yaml`,
+    );
+  }
   // Require provider opt-in even for an explicit member command: otherwise a frontier
   // member could silently inherit ordinary defaults or bypass the missing-tier error.
   if (
