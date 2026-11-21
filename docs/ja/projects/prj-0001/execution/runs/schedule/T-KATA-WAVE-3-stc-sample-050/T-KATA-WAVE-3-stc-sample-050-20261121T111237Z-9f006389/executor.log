@@ -1,0 +1,21 @@
+`docs/ja/specdojo/samples/stc-sample.md` を、店頭の現金販売（`stc-cash-sale`）の総合テストカタログの完成例として書き直しました。変更したのはこの1ファイルだけです。result、rulebook、grade result サイドカーには手を入れておらず、`status` も `draft` のままです。markdownlint の指摘は0件、`npm run docs:build` も通りました。
+
+- **見出しと Frontmatter（F018–F022）**: H1 を `# 総合テストカタログ: 店頭の現金販売` にし、章を rulebook の6章（概要・目的・対象外・境界/環境/依存・トレース・テスト観点とケース）の順にそろえました。Frontmatter には `based_on`（`specdojo:tsp-index-sample` と `specdojo:stc-index-sample`）を追加しました。
+- **値で埋めた実例（F001・F007–F017・F023・F024）**:
+  - 目的は判定できる文で6項目書きました。
+  - 対象外は4件で、それぞれ代替レベルを付けました。応答の1回測定は `stc-index` が定める例外として扱っています。
+  - 「境界/環境/依存」には開始・完了、データ、スタブ、観測点、担当を書きました。トレース表は TR-01〜TR-05 で、根拠は BAC-01、AC-01、印刷連携仕様、`stc-index` の分配方針、TSP の出口条件です。
+  - 観点は4つ、ケースは計7件です。ケース表は `stc-index` の共通カラムに合わせ、期待値は商品A 単価30円・在庫5個を使った具体的な値にしています。
+- **承認と未決事項（F002・F003・F005・F006・F026）**: 確認の分担（PO・BA が目的と対象外、QE が期待値と証跡、DEV がテストコードとの対応）と、`ready` にする条件を概要に書きました。仮置きの前提2件は、影響するケース、当面の扱い、判断者、次の手をまとめた表にしました。
+- **性能ケースの在庫**: 共通データの在庫5個では60取引の途中で在庫が切れて測れません。そのため、このケースだけ在庫を100個にし、その理由を「共通方針との差」として書きました。
+- **ベタ書きの解消（F025）**: 「handbook の共通方針」というあいまいな記述はなくしました。
+
+**rulebook への変更案（後続で判断が必要）:**
+
+1. rulebook 全体方針の `_UNDECIDED_` にある「sample は本文要件の見出し構成へ未整合」は、今回の改訂で解消したので削除してよいと考えます。
+2. 本文の6章には未決事項を置く場所がありません。今回は「境界/環境/依存」に表として入れましたが、置き場所を rulebook に書くか、「メモ / 将来課題」を任意の章として認めるかを決める必要があります。
+3. 観点見出しの直下に `perspective_key` をどう書くかが rulebook にないため、この sample では見出し直下に1行で書きました。書き方を rulebook に定めるかどうかの判断が必要です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"docs/ja/specdojo/samples/stc-sample.md を店頭の現金販売（`stc-cash-sale`）の総合テストカタログ完成例に書き直した。章は rulebook 本文要件の6章の順、H1 は規定形式、Frontmatter に `based_on` を追加。トレース表は TR-01〜TR-05、観点は4つ、ケースは計7件で、期待値は具体的な値にした。承認の分担、ready にする条件、判断者つきの仮置き前提2件も記載。性能ケースだけ在庫を100個に変え、その理由を書いた。rulebook・result は変更していない。","handoff":["rulebook 変更案: stc-rulebook 全体方針の `_UNDECIDED_` のうち「sample は本文要件の見出し構成へ未整合」は今回の sample 改訂で解消したため削除候補（recipe・template の要否の記述は残す）。","rulebook 変更案: 本文要件の6章には未決事項・仮置き前提を置く場所がない。sample では「境界/環境/依存」の章に判断者と次の手を付けた表で入れた。置き場所を rulebook に書くか、任意の章「メモ / 将来課題」を認めるかを QE が判断する必要がある。","rulebook 変更案: 観点見出しの配下で `perspective_key` をどう書くかが規定されていない。sample では見出し直下に `perspective_key`: `flow-success` の形で1行書いた。書き方を記述ガイドの観点の節で定めるかを検討する。","F001〜F027 はすべて sample の改訂で対応した。F019 の `based_on` は sample の id（`specdojo:tsp-index-sample`、`specdojo:stc-index-sample`）で記載した。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/stc-sample.md","status":"passed","summary":"変更した Markdown を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/stc-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run docs:build","status":"passed","summary":"build complete in 165.45s（cron / gitignore の言語未ロード警告とチャンクサイズ警告のみで、エラーなし）"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更したのは docs/ja/specdojo/samples/stc-sample.md だけで、pjr 個票・plan・result などの履歴蓄積ファイルに当たらない"},{"command":"npm run validate:catalog","status":"not_applicable","summary":"プロジェクト成果物を変更していない","reason":"変更が docs/ja/projects/ 配下に及んでいない（docs/ja/specdojo/samples/ の sample だけ）"}]}
+</specdojo_executor_evidence>
