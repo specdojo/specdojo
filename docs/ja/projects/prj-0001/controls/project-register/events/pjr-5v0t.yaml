@@ -35,3 +35,22 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_c4f51315f3c6477baae3c8f0723dd837
+  ts: "2026-11-21T00:34:41Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: 2026-11-21 の対話で indie が決定した
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-11-21"
+    - field: conclusion
+      from: "-"
+      to: 0.9.2 で agy の起動そのものを止め、init で選べなくする。0.10.0 で agy の対応を外す
+  previous_event_id: reg_dd2231f959ae4e1692ebe03fe25b8c07

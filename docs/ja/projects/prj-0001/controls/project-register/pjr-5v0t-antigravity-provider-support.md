@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-5v0t-antigravity-provider-support
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: high
   owner: PO
   registered_at: "2026-11-21T00:23:18Z"
+  completed_at: "2026-11-21T00:34:41Z"
+  conclusion: 0.9.2 で agy の起動そのものを止め、init で選べなくする。0.10.0 で agy の対応を外す
 ---
 
 # PJR-5V0T SpecDojo のパッケージとしての Antigravity（agy）対応をどうするか
