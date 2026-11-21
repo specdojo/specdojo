@@ -172,7 +172,7 @@ owner_rules:
           reporter: gemma26-reporter
       - phase: review
         agent:
-          executor: sol-review-executor
+          executor: opus-review-executor
           reporter: gemma26-reporter
 phase_gates:
   - id: G-KATA-WAVE-3-first-pass
