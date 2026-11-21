@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_6f99300aed5449419432ef8e3a4b444e
+  ts: "2026-11-21T05:58:36Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-WBWX の決定を文書へ反映するため、利用者の承認を得て起票する
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: Continuous Specification Engineering の定義の文と略称を決めて正本にまとめる
+    - field: description
+      from: ""
+      to: PJR-WBWX の決定を受け、分野の定義の文・近い概念との関係の表・略称の扱いを正本にまとめ、README・概要ガイド・specdojo-lp への反映の範囲を決める
+    - field: input
+      from: ""
+      to: '["PJR-WBWX で、分野の正式名称を Continuous Specification Engineering とし、Spec道 を愛称、SpecDojo をその道場と位置付けることが決まった。","略称の扱いは PJR-WBWX で未決のまま残した。CSE は Computer Science and Engineering とぶつかる。","「Specification」だけでは範囲が狭く聞こえるため、定義の文で成果物の体系・判断の記録・型と評定・運用中の維持まで含むことを補う。","関係を示す近い概念は SDD（仕様駆動開発）・Docs as Code・Continuous Requirements Engineering。","影響先は README・概要ガイド（specdojo-overview-guide）・specdojo-lp。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-21"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-WBWX"]'
