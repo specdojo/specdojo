@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: in-progress
   priority: medium
   difficulty: medium
   owner: DEV
