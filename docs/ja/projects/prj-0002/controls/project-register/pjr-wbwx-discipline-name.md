@@ -2,14 +2,16 @@
 specdojo:
   id: prj-0002:pjr-wbwx-discipline-name
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0002:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   registered_at: "2026-11-21T04:40:41Z"
+  completed_at: "2026-11-21T05:38:08Z"
+  conclusion: 分野の正式名称を Continuous Specification Engineering とし、Spec道 を愛称、SpecDojo をその道場と位置付ける。略称は後続で決める
 ---
 
 # PJR-WBWX SpecDojo が提唱する分野の正式名称を決める

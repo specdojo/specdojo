@@ -35,3 +35,22 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_5e644cf6f6904e809b98b9e08e24da4d
+  ts: "2026-11-21T05:38:08Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: 利用者が対話で選択肢 B を決定した
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-11-21"
+    - field: conclusion
+      from: "-"
+      to: 分野の正式名称を Continuous Specification Engineering とし、Spec道 を愛称、SpecDojo をその道場と位置付ける。略称は後続で決める
+  previous_event_id: reg_860a506e63bd4d3a9d0d9d8632c4127a
