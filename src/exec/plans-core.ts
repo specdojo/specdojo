@@ -150,7 +150,7 @@ function resolvedDeliverablesInCatalog(catalogPath: string): ResolvedDeliverable
     }
   };
   for (const doc of loadCatalogDocs(catalogPath)) {
-    visit(doc.groups, resolveBasePath("", doc.base_path), doc.domain);
+    visit(doc.groups ?? [], resolveBasePath("", doc.base_path), doc.domain);
   }
   return deliverables;
 }
@@ -672,6 +672,22 @@ export function targetReferenceDirsForApproach(approach: Approach | undefined): 
 // 新規成果物の commit 許可判定に使う。
 export function deliverableDocPath(catalogPath: string, localId: string): string | undefined {
   return findDeliverableInfo(catalogPath, localId)?.resolvedPath;
+}
+
+// catalog の成果物のうち、文書の id が docId と一致するものの文書パス（repo ルート相対）を返す。
+// kata ドメインの sample（specdojo:<name>-sample）のように project 以外の名前空間で修飾された
+// id は local_id から引けないため、文書の frontmatter の id で照合する。readDocId は呼び出し側が
+// 改ざん耐性のある版（worktree の HEAD など）から読む。一致が 0 件または複数件なら undefined。
+export function deliverableDocPathByDocId(
+  catalogPath: string,
+  docId: string,
+  readDocId: (resolvedPath: string) => string | undefined,
+): string | undefined {
+  if (!catalogPath || !existsSync(catalogPath)) return undefined;
+  const matches = resolvedDeliverablesInCatalog(catalogPath).filter(
+    (target) => readDocId(target.info.resolvedPath) === docId,
+  );
+  return matches.length === 1 ? matches[0].info.resolvedPath : undefined;
 }
 
 // Resolve the target doc ids for a deliverable by local_id (result scaffold 用)。

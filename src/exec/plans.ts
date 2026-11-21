@@ -4,6 +4,7 @@ export {
   buildInPlaceStem,
   deliverableDocId,
   deliverableDocPath,
+  deliverableDocPathByDocId,
   execTemplatePath,
   execTemplatesDir,
   finalizeResultSectionsForDeliverable,
