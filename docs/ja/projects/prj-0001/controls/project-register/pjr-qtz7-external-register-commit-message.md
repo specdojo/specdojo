@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: waiting
   priority: medium
   difficulty: easy
   owner: DEV
   registered_at: "2026-11-21T09:06:40Z"
+  block_reason: "parent validation failed: test-unit"
 ---
 
 # PJR-QTZ7 外部プロジェクトへの register add --commit で、-m の段落がカンマで件名につながる
