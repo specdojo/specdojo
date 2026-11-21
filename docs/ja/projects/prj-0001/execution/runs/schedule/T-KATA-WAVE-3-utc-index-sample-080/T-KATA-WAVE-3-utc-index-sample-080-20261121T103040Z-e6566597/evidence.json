@@ -1,0 +1,199 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-3-utc-index-sample-080",
+  "run_id": "T-KATA-WAVE-3-utc-index-sample-080-20261121T103040Z-e6566597",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-21T10:31:15.433Z",
+    "completed_at": "2026-11-21T10:31:51.417Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/utc-index-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/utc-index-sample.md | 2 +-\n 1 file changed, 1 insertion(+), 1 deletion(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/samples/utc-index-sample.md",
+      "status": "passed",
+      "summary": "All matched files use Prettier code style"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2 docs/ja/specdojo/samples/utc-index-sample.md",
+      "status": "passed",
+      "summary": "0 issues in 0 files"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴ファイルは変更していない",
+      "reason": "変更したのは docs/ja/specdojo/samples 配下の sample だけで、plan・result・個票は変更していない"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "YAML の変更はない",
+      "reason": "変更したファイルに *.yaml / *.yml はない"
+    },
+    {
+      "source": "executor",
+      "command": "specdojo catalog validate",
+      "status": "not_applicable",
+      "summary": "プロジェクト成果物は変更していない",
+      "reason": "変更は docs/ja/specdojo/ 配下だけで、docs/ja/projects/ には及ばない"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 5617 file(s), 107 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 83 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5617 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-3-utc-index-sample-080\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/exec/job-worktree.integration.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/devcontainer/scaffold.integration.test.ts\"}\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWr\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nmbers-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-3-utc-index-sample-080/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-3-utc-index-sample-080/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-3-utc-index-sample-080\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/grade/grade.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/register/commands.test.ts\"}\n ✓ tests/src/grade/grade.test.ts (69 tests) 259ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/src/grade/grade.test\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "condense_records": [
+    {
+      "location": "「ケース表の共通カラム」導入文",
+      "category": "canonical-restatement",
+      "action": "reference",
+      "reason": "rulebook の10カラム名の列挙を消し、rulebook と直後の記入例の表への参照に置き換えた。カラムの数・順序・必須であることは参照先に残るので、意味は変わらない",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "「本ドキュメントの目的と適用対象」最終段落（合否判定）",
+      "category": "canonical-restatement",
+      "action": "retain",
+      "reason": "受け入れ基準と判定者（CI ジョブで失敗0件・DEV が判定）を書いた唯一の場所で、判定に必要なため",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "「テスト対象の括り方と分割基準」の箇条書き「画面の部品では切らない」",
+      "category": "canonical-restatement",
+      "action": "retain",
+      "reason": "rulebook の規則を本システムの具体的な部品と代わりのテストレベル（総合テスト）に当てはめた判断のため",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "「対象外・除外理由（共通）」表の後の一文",
+      "category": "table-prose",
+      "action": "retain",
+      "reason": "例外をどのカラム（境界/依存）に書くかという、表にない記入先の決定を示すため",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "「観点の立て方（共通）」表の後の段落（受領額60円の例）",
+      "category": "table-prose",
+      "action": "retain",
+      "reason": "命名規則を本システムに当てはめた統合例で、表の内容とは重なっていないため",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "「条件の立て方（共通）」表の後の段落（追加順）",
+      "category": "canonical-restatement",
+      "action": "retain",
+      "reason": "BAC-01 の C-01・C-02 という具体的な条件と、全組合せは作らないという制約を示すため",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "「観点/条件の採用基準と対象別への分配方針（共通）」冒頭段落",
+      "category": "table-prose",
+      "action": "retain",
+      "reason": "表の採用理由・主担当がどの基準で決まったかを示す根拠で、表だけでは読み取れないため",
+      "cause": {
+        "type": "document"
+      }
+    }
+  ],
+  "final_message": "utc-index-sample の冗長箇所1件（ケース表の共通カラムで rulebook の10カラム名を再掲していた箇所）を参照に置き換え、ほかの候補6件は判断情報として残した。",
+  "completion_status": "complete",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-3-utc-index-sample-080/T-KATA-WAVE-3-utc-index-sample-080-20261121T103040Z-e6566597/executor.log",
+      "bytes": 5438,
+      "truncated": false
+    }
+  ]
+}
