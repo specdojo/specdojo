@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-n5d2-grade-kata-multi-sample
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-21T03:11:12Z"
+  completed_at: "2026-11-21T07:36:15Z"
+  conclusion: grade run --kata が、rulebook の sample に並べた sample をすべて選ぶ。宣言した sample のファイルが無いときと rulebook を読めないときは理由を示して止める
   derived_from:
     - PJR-SW7T
 ---
