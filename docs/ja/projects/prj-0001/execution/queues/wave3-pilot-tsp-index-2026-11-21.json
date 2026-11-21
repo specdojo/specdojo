@@ -1,0 +1,93 @@
+{
+  "version": 1,
+  "queue_id": "wave3-pilot-tsp-index-2026-11-21",
+  "project_id": "prj-0001",
+  "created_at": "2026-11-21T08:15:51.256Z",
+  "updated_at": "2026-11-21T08:49:54.944Z",
+  "state": "stopped",
+  "steps": [
+    {
+      "index": 1,
+      "on_failure": "stop",
+      "status": "succeeded",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--task",
+        "T-KATA-WAVE-3-tsp-index-sample-040",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--fallback-executor-by",
+        "sol-executor",
+        "--exec-defaults",
+        "tmp/orchestrator/exec-defaults-claude-fallback.yaml",
+        "--project",
+        "prj-0001"
+      ],
+      "started_at": "2026-11-21T08:15:51.590Z",
+      "completed_at": "2026-11-21T08:24:01.603Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
+    },
+    {
+      "index": 2,
+      "on_failure": "stop",
+      "status": "succeeded",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--task",
+        "T-KATA-WAVE-3-tsp-index-sample-050",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--fallback-executor-by",
+        "sol-executor",
+        "--exec-defaults",
+        "tmp/orchestrator/exec-defaults-claude-fallback.yaml",
+        "--project",
+        "prj-0001"
+      ],
+      "started_at": "2026-11-21T08:24:01.607Z",
+      "completed_at": "2026-11-21T08:36:30.918Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
+    },
+    {
+      "index": 3,
+      "on_failure": "stop",
+      "status": "failed",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--task",
+        "T-KATA-WAVE-3-tsp-index-sample-080",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--fallback-executor-by",
+        "sol-executor",
+        "--exec-defaults",
+        "tmp/orchestrator/exec-defaults-claude-fallback.yaml",
+        "--project",
+        "prj-0001"
+      ],
+      "started_at": "2026-11-21T08:36:30.944Z",
+      "completed_at": "2026-11-21T08:49:54.931Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
+    }
+  ],
+  "stopped_step": 3,
+  "reason": "step 3 failed: exit code 1"
+}
