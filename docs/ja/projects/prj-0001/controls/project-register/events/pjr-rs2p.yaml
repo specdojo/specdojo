@@ -96,3 +96,19 @@
       from: "-"
       to: "parent validation failed: test-unit"
   previous_event_id: reg_6d17bef09a5c4040ac6c4c759644dc1e
+- v: 1
+  id: reg_6add16185ce646d4b12f79dda445cdfb
+  ts: "2026-11-21T22:51:38Z"
+  action: start
+  actor: sonnet-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_300a49870ef4480a94f67a2dc2e7f246

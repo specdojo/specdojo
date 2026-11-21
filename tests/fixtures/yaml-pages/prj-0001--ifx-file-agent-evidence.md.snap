@@ -68,7 +68,7 @@ specdojo:
 | --- | --- |
 | `json` | `root_type`: object / `content_type`: application/json / `encoding`: UTF-8 |
 | `references` | `evidence_spec`: src/exec/evidence.ts / `pipeline_state_spec`: src/exec/pipeline-state.ts / `path_resolution_spec`: src/shared/run-records.ts |
-| `change_impact` | ExecEvidence・PipelineState の型や必須項目、または run-records の配置解決を変更する場合、DEV は同じ変更で 本仕様の files[].`required_fields`・location・`error_handling` と verification の該当ケースを更新し、 ARC が本仕様と正本の一致を確認する。正本だけの変更で本仕様と食い違った状態を残さない。 |
+| `change_impact` | ExecEvidence・PipelineState の型や必須項目、または run-records の配置解決を変更する場合、同じ変更で 本仕様の files[].`required_fields`・location・`error_handling` と verification の該当ケースを更新し、 本仕様と正本の一致を確認する。正本だけの変更で本仕様と食い違った状態を残さない。 |
 
 ## 7. 異常時の扱い
 
@@ -84,7 +84,7 @@ specdojo:
 <!-- prettier-ignore -->
 | 項目 | 内容 |
 | --- | --- |
-| 手順 | QE は各ケースの入力ファイルを一時ディレクトリの run 配置（location）に置き、正本の読込・再開判定を実行して期待結果と照合する。 期待結果と一致すれば合格、一致しないか例外で中断すれば不合格とする。 正常系の各ファイルは `file_checks` の手順をすべて満たせば合格、1 つでも満たさなければ不合格とする。 |
+| 手順 | 各ケースの入力ファイルを一時ディレクトリの run 配置（location）に置き、正本の読込・再開判定を実行して期待結果と照合する。 期待結果と一致すれば合格、一致しないか例外で中断すれば不合格とする。 正常系の各ファイルは `file_checks` の手順をすべて満たせば合格、1 つでも満たさなければ不合格とする。 |
 | ファイルごとの確認 | `evidence_json`: JSON として解釈でき、ルートが object である / `required_fields` がすべて存在し、`schema_version` が 1 である / `task_id`・`run_id` が同じ run の pipeline-state.json と一致し、stage.role が executor である / changes・validations が配列、`final_message` が文字列である / `pipeline_state_json`: JSON として解釈でき、ルートが object である / `required_fields` がすべて存在し、`schema_ref` の型の検証関数（isPipelineState）が真を返す / `task_id` が対象タスクと一致する |
 
 ## 9. 検証ケース
@@ -111,10 +111,10 @@ specdojo:
 <!-- prettier-ignore -->
 | ID | 論点 | 影響 | 担当 | 次の対応 |
 | --- | --- | --- | --- | --- |
-| OD-01 | evidence 読込・整合検証の失敗で再開不可となったときの通知（標準エラー出力にパス・失敗理由・回復コマンド）が現在の CLI の出力と一致するか | 一致しなければ、利用者が停止理由と回復手順を把握できず、TC-06 の期待結果が実装と食い違う | DEV が呼び出し側 CLI の現在動作を TC-06 で確認し、ARC が仕様と実装のどちらに合わせるかを提案する | 乖離があれば修正の登録簿項目を起票し、PO が採否を判断する |
-| OD-02 | --resume 時の pipeline-state.json 欠落・破損で停止する箇所と、実装が停止を保証しているか | 再開用読込は欠落・破損を「checkpoint なし」として返すため、呼び出し側で停止しなければ新規実行として進み、二重実行の危険がある | DEV が呼び出し側の現在動作を TC-09・TC-10 で確認し、ARC が仕様と実装のどちらに合わせるかを提案する | 乖離があれば修正の登録簿項目を起票し、PO が採否を判断する |
-| OD-03 | evidence の読込で `required_fields` の欠落・型不正を検知しない乖離と、成功済み executor 段の evidence 欠落・不正時の回復経路 | 必須項目が欠けた evidence が再開に使われ得る。再開不可で停止した後に executor 段からの再開が保証されなければ、利用者が回復できない | DEV が TC-06・TC-13 で現在動作を確認し、ARC が読込の検証範囲を仕様と実装のどちらに合わせるかを提案する | 乖離があれば修正の登録簿項目を起票し、PO が採否を判断する |
-| OD-04 | integrate 段の pipeline-state.json 更新失敗を警告で続行する現在動作を、契約として認めるか即時停止へ直すか | 続行を認めると統合後の状態記録が欠け、再開時の統合状態の追跡が不正確になり得る | ARC が続行の妥当性を判断し、DEV が必要な修正量を見積もる | PO が続行を承認すれば `error_handling`.`transport_failure` へ反映し、否なら修正の登録簿項目を起票する |
+| OD-01 | evidence 読込・整合検証の失敗で再開不可となったときの通知（標準エラー出力にパス・失敗理由・回復コマンド）が現在の CLI の出力と一致するか | 一致しなければ、利用者が停止理由と回復手順を把握できず、TC-06 の期待結果が実装と食い違う | - | 呼び出し側の現在動作を確認し、乖離があれば仕様と実装のどちらに合わせるかを決めて修正の登録簿項目を起票する |
+| OD-02 | --resume 時の pipeline-state.json 欠落・破損で停止する箇所と、実装が停止を保証しているか | 再開用読込は欠落・破損を「checkpoint なし」として返すため、呼び出し側で停止しなければ新規実行として進み、二重実行の危険がある | - | 呼び出し側の現在動作を確認し、乖離があれば仕様と実装のどちらに合わせるかを決めて修正の登録簿項目を起票する |
+| OD-03 | evidence の読込で `required_fields` の欠落・型不正を検知しない乖離と、成功済み executor 段の evidence 欠落・不正時の回復経路 | 必須項目が欠けた evidence が再開に使われ得る。再開不可で停止した後に executor 段からの再開が保証されなければ、利用者が回復できない | - | 呼び出し側の現在動作を確認し、乖離があれば仕様と実装のどちらに合わせるかを決めて修正の登録簿項目を起票する |
+| OD-04 | integrate 段の pipeline-state.json 更新失敗を警告で続行する現在動作を、契約として認めるか即時停止へ直すか | 続行を認めると統合後の状態記録が欠け、再開時の統合状態の追跡が不正確になり得る | - | 続行の妥当性と必要な修正量を確認し、続行するなら `error_handling`.`transport_failure` へ反映し、しないなら修正の登録簿項目を起票する |
 
 ## 11. YAML の正本
 
@@ -137,7 +137,7 @@ x-spec-meta:
 # executor agent が報告し runner が管理・検証・統合するための実行エビデンスおよび
 # パイプライン状態ファイルの受け渡し契約を定義する。
 # 実装コードおよび型定義の正本は src/exec/evidence.ts, src/exec/pipeline-state.ts, src/shared/run-records.ts とする。
-# 未確定の技術判断は人間の ARC が行い、ready への昇格は PO が open_decisions の解消または留保の承認を確認して判断する。
+# 未確定の技術判断は open_decisions に残し、解消または留保として扱う。
 
 files:
   - name: evidence.json
@@ -208,9 +208,9 @@ schema:
     pipeline_state_spec: src/exec/pipeline-state.ts
     path_resolution_spec: src/shared/run-records.ts
   change_impact: >-
-    ExecEvidence・PipelineState の型や必須項目、または run-records の配置解決を変更する場合、DEV は同じ変更で
+    ExecEvidence・PipelineState の型や必須項目、または run-records の配置解決を変更する場合、同じ変更で
     本仕様の files[].required_fields・location・error_handling と verification の該当ケースを更新し、
-    ARC が本仕様と正本の一致を確認する。正本だけの変更で本仕様と食い違った状態を残さない。
+    本仕様と正本の一致を確認する。正本だけの変更で本仕様と食い違った状態を残さない。
 
 error_handling:
   missing:
@@ -267,7 +267,7 @@ error_handling:
 
 verification:
   procedure: >-
-    QE は各ケースの入力ファイルを一時ディレクトリの run 配置（location）に置き、正本の読込・再開判定を実行して期待結果と照合する。
+    各ケースの入力ファイルを一時ディレクトリの run 配置（location）に置き、正本の読込・再開判定を実行して期待結果と照合する。
     期待結果と一致すれば合格、一致しないか例外で中断すれば不合格とする。
     正常系の各ファイルは file_checks の手順をすべて満たせば合格、1 つでも満たさなければ不合格とする。
   file_checks:
@@ -323,27 +323,22 @@ verification:
 
 open_decisions:
   # 追跡先は PJR-TN43（利用者の判断待ち）。期限は T-KATA-WAVE-2-ifx-file-agent-evidence-140 の判断時。
-  # PO は ready への昇格前に、各項目が解消済みか、留保として承認されたかを確認する。
   - id: OD-01
     topic: evidence 読込・整合検証の失敗で再開不可となったときの通知（標準エラー出力にパス・失敗理由・回復コマンド）が現在の CLI の出力と一致するか
     impact: 一致しなければ、利用者が停止理由と回復手順を把握できず、TC-06 の期待結果が実装と食い違う
-    owner: DEV が呼び出し側 CLI の現在動作を TC-06 で確認し、ARC が仕様と実装のどちらに合わせるかを提案する
-    next_action: 乖離があれば修正の登録簿項目を起票し、PO が採否を判断する
+    next_action: 呼び出し側の現在動作を確認し、乖離があれば仕様と実装のどちらに合わせるかを決めて修正の登録簿項目を起票する
   - id: OD-02
     topic: --resume 時の pipeline-state.json 欠落・破損で停止する箇所と、実装が停止を保証しているか
     impact: 再開用読込は欠落・破損を「checkpoint なし」として返すため、呼び出し側で停止しなければ新規実行として進み、二重実行の危険がある
-    owner: DEV が呼び出し側の現在動作を TC-09・TC-10 で確認し、ARC が仕様と実装のどちらに合わせるかを提案する
-    next_action: 乖離があれば修正の登録簿項目を起票し、PO が採否を判断する
+    next_action: 呼び出し側の現在動作を確認し、乖離があれば仕様と実装のどちらに合わせるかを決めて修正の登録簿項目を起票する
   - id: OD-03
     topic: evidence の読込で required_fields の欠落・型不正を検知しない乖離と、成功済み executor 段の evidence 欠落・不正時の回復経路
     impact: 必須項目が欠けた evidence が再開に使われ得る。再開不可で停止した後に executor 段からの再開が保証されなければ、利用者が回復できない
-    owner: DEV が TC-06・TC-13 で現在動作を確認し、ARC が読込の検証範囲を仕様と実装のどちらに合わせるかを提案する
-    next_action: 乖離があれば修正の登録簿項目を起票し、PO が採否を判断する
+    next_action: 呼び出し側の現在動作を確認し、乖離があれば仕様と実装のどちらに合わせるかを決めて修正の登録簿項目を起票する
   - id: OD-04
     topic: integrate 段の pipeline-state.json 更新失敗を警告で続行する現在動作を、契約として認めるか即時停止へ直すか
     impact: 続行を認めると統合後の状態記録が欠け、再開時の統合状態の追跡が不正確になり得る
-    owner: ARC が続行の妥当性を判断し、DEV が必要な修正量を見積もる
-    next_action: PO が続行を承認すれば error_handling.transport_failure へ反映し、否なら修正の登録簿項目を起票する
+    next_action: 続行の妥当性と必要な修正量を確認し、続行するなら error_handling.transport_failure へ反映し、しないなら修正の登録簿項目を起票する
 ```
 
 </details>
