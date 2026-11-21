@@ -77,3 +77,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_0f049c215a3946b4accbb4b0cb3cdaac
+- v: 1
+  id: reg_9b14ac81e03f4fa3a0590eaf814b6cf4
+  ts: "2026-11-21T16:36:44Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: project: Result Markdown notation violation before commit: docs/ja/projects/prj-0001/execution/runs/register/PJR-G3TT/pjr-g3tt-20261121T163107Z-34c23eb6/result.md:20:178 error MD038/…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: project: Result Markdown notation violation before commit: docs/ja/projects/prj-0001/execution/runs/register/PJR-G3TT/pjr-g3tt-20261121T163107Z-34c23eb6/result.md:20:178 error MD038/…"
+  previous_event_id: reg_06004c244b09402cbd55338b06d47cc9

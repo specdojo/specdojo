@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-21T14:02:38Z"
+  block_reason: "integrate failed: project: Result Markdown notation violation before commit: docs/ja/projects/prj-0001/execution/runs/register/PJR-G3TT/pjr-g3tt-20261121T163107Z-34c23eb6/result.md:20:178 error MD038/…"
 ---
 
 # PJR-G3TT result のバッククォートがエスケープされて書かれ、統合の前の検査で止まる
@@ -53,8 +54,24 @@ reporter などが result の本文にバックスラッシュでエスケープ
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+### 5.0. 原因
+
+reporter が構造化出力（JSON）の文字列でバッククォートを ``\` `` と二重にエスケープして返し、runner の `src/exec/results.ts` の `reporterFreeText` がそのまま result 本文へ書いていた。Markdown では ``\` `` は code span にならず、対になる位置で MD038 が出る。経路は reporter の自由記述（`summary`・`approach`・`grade_check` など `reporterFreeText` を通る欄）。executor の検証要約も同じ関数を通る。reporter ごとの発生回数は未集計。
+
+### 5.0.1. 直し方と理由
+
+runner が書き込む前に直す方を選んだ。agent への指示は LLM の出力を保証できず再発するため。`src/shared/text.ts` に `unescapeBackticksWhenUniform` を追加し、`reporterFreeText` から呼ぶ。文中のバッククォートがすべてバックスラッシュ付きのときだけ、エスケープを外して元のバッククォートへ戻す。エスケープなしのバッククォートが混ざる文は、code span 内の意図したバックスラッシュを壊さないため変えない。対象は 1 行化済みの自由記述で、コードブロックは対象外。
+
+### 5.0.2. 確認
+
+- `tests/src/shared/text.test.ts` に 3 件追加（一律エスケープの復元、混在時は不変、エスケープなしは不変）。
+- 実行した検証: `npx vitest run`（text・results・reporter のテスト 232 件）と `npm run typecheck` が通過。親の検証は runner が実行する。
+
+### 5.1. CHANGELOG に書く事項
+
+- 区分: Fixed
+- 文案: reporter が result の本文でバッククォートをバックスラッシュ付きで返しても、runner が戻してから書き込み、統合の前の Markdown の検査（MD038）で止まらないようにした。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- `src/exec/results.ts`、`src/shared/text.ts`
