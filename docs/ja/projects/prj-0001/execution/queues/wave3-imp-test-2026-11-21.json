@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "queue_id": "wave3-imp-test-2026-11-21",
+  "project_id": "prj-0001",
+  "created_at": "2026-11-21T09:11:08.696Z",
+  "updated_at": "2026-11-21T09:38:06.254Z",
+  "state": "succeeded",
+  "steps": [
+    {
+      "index": 1,
+      "on_failure": "stop",
+      "status": "succeeded",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--task",
+        "T-KATA-WAVE-3-imp-test-sample-040",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--fallback-executor-by",
+        "sol-executor",
+        "--exec-defaults",
+        "tmp/orchestrator/exec-defaults-claude-fallback.yaml",
+        "--project",
+        "prj-0001"
+      ],
+      "started_at": "2026-11-21T09:11:09.109Z",
+      "completed_at": "2026-11-21T09:19:14.365Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
+    },
+    {
+      "index": 2,
+      "on_failure": "stop",
+      "status": "succeeded",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--task",
+        "T-KATA-WAVE-3-imp-test-sample-050",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--fallback-executor-by",
+        "sol-executor",
+        "--exec-defaults",
+        "tmp/orchestrator/exec-defaults-claude-fallback.yaml",
+        "--project",
+        "prj-0001"
+      ],
+      "started_at": "2026-11-21T09:19:14.369Z",
+      "completed_at": "2026-11-21T09:38:06.223Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
+    }
+  ]
+}

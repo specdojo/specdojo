@@ -3,6 +3,10 @@ id: job-grade-kata
 name: 実践の型の品質評価
 description: 文書単位の agy 単段評価を起動し、その実行結果に異常がないかを判断する。
 inputs:
+  # grade run の --by が rate limit のときに切り替える評価者（PJR-XA6Y）。空なら切り替えない。
+  fallback_by:
+    type: string
+    default: ""
   period:
     type: string
     required: true
@@ -144,6 +148,9 @@ task:
     while IFS= read -r document; do
       printf 'retry exhausted: %s\n' "$document"
     done <"$run_dir/retry-exhausted.txt"
+    # 代わりの評価者は入力 fallback_by が空でないときだけ渡す（未指定なら従来どおり）。
+    fallback_args=
+    [ -n "{{inputs.fallback_by}}" ] && fallback_args="--fallback-by {{inputs.fallback_by}}"
     set --
     while IFS= read -r document; do
       [ -n "$document" ] && set -- "$@" --path "$document"
@@ -153,7 +160,7 @@ task:
       exit 0
     fi
     # grade run は、完了した文書と失敗した文書が混在すると 2、rate limit で止まると 75 を返す。
-    if {{specdojo}} grade run --run-id {{job_run_id}} --target kata --project {{project_id}} --kind {{inputs.kind}} --reference-per-kind --by agy-expert-executor "$@"; then
+    if {{specdojo}} grade run --run-id {{job_run_id}} --target kata --project {{project_id}} --kind {{inputs.kind}} --reference-per-kind --by agy-expert-executor $fallback_args "$@"; then
       :
     else
       grade_status=$?

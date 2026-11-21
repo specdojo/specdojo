@@ -64,3 +64,32 @@
       from: ""
       to: 作業内容
   previous_event_id: reg_aaa30b78d5e14b7fa9de23e2f0be72b8
+- v: 1
+  id: reg_3d966911d4624173860cf09b71f9c942
+  ts: "2026-11-21T23:02:23Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_a0ccd2617391436bb33ee83c68becc7f
+- v: 1
+  id: reg_e22b66d5f75f49fd83cf577da5e58fa2
+  ts: "2026-11-21T23:04:55Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor reported incomplete: kata-staging の差分コピーと execution/ の除外、bin の generate コマンド、単体テスト、個票の更新は完了。docs:dev 全体の段ごとの時間測定と docs:build は sandbox で実行できず未実施。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor reported incomplete: kata-staging の差分コピーと execution/ の除外、bin の generate コマンド、単体テスト、個票の更新は完了。docs:dev 全体の段ごとの時間測定と docs:build は sandbox で実行できず未実施。"
+  previous_event_id: reg_3d966911d4624173860cf09b71f9c942

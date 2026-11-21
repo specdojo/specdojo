@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-21T12:22:43Z"
+  block_reason: "executor reported incomplete: kata-staging の差分コピーと execution/ の除外、bin の generate コマンド、単体テスト、個票の更新は完了。docs:dev 全体の段ごとの時間測定と docs:build は sandbox で実行できず未実施。"
 ---
 
 # PJR-BNAV npm run docs:dev の起動して開けるまでの時間を縮める

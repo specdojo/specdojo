@@ -67,3 +67,48 @@
       from: ""
       to: 作業内容
   previous_event_id: reg_04b901dc3894406e84d4e9fd7e0113d5
+- v: 1
+  id: reg_5e816d6ef4bd4e3b8e74ccb05d40b864
+  ts: "2026-11-21T19:11:15Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_52f70f69033747b48c4030445762c3ac
+- v: 1
+  id: reg_075fdd00ffaa40da887ae044f1ab9716
+  ts: "2026-11-21T19:16:48Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_5e816d6ef4bd4e3b8e74ccb05d40b864
+- v: 1
+  id: reg_327610a7040047a59af903bf0138b534
+  ts: "2026-11-21T22:49:26Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register で実施（統合 3678b2c4c）。grade run --dry-run で fallback の表示、元と同じ評価者と不明な名前の拒否を確かめ、単体テスト 3 件と CHANGELOG 不変を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: grade run に --fallback-by を足し、rate limit のときに同じ run id のまま代わりの評価者で続けるようにした。job から fallback_by で渡せる。
+  previous_event_id: reg_075fdd00ffaa40da887ae044f1ab9716

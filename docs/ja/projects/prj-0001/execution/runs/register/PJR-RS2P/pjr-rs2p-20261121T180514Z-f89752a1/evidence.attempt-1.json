@@ -1,0 +1,364 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-RS2P",
+  "run_id": "pjr-rs2p-20261121T180514Z-f89752a1",
+  "stage": {
+    "role": "executor",
+    "actor": "sonnet-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-21T18:05:52.045Z",
+    "completed_at": "2026-11-21T18:14:24.342Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/cdsd-planning.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/cdsd-sharing.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/cdt-register-type.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/sld-specdojo.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/stsd-deliverable.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/stsd-job-run.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/stsd-routine-run.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/stsd-task-execution.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/030-business-model/bes-index.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/030-business-model/bes-task-ready-selected.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/030-business-model/br-task-selection-strategy.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/040-user-interface-model/bds-progress-report.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/050-system-functions/sf-index.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/050-system-functions/sf-task-execution.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/020-external-interface-specs/ifx-cmd-ai-provider-cli.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/020-external-interface-specs/ifx-index.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/030-architecture/010-c4/cpd-specdojo-cli.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/030-architecture/010-c4/cxd-specdojo.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/030-architecture/020-infrastructure/ifd-specdojo.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/040-system-design/sysd-critical-flows.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/040-system-design/sysd-cross-cutting-policy.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/040-system-design/sysd-index.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/050-business-acceptance-criteria/bac-task-completion.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-rs2p.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-rs2p-product-docs-remove-role-assignment.md",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/cdsd-planning.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/cdsd-sharing.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/cdt-register-type.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/sld-specdojo.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/stsd-deliverable.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/stsd-job-run.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/stsd-routine-run.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/stsd-task-execution.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/030-business-model/bes-index.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/030-business-model/bes-task-ready-selected.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/030-business-model/br-task-selection-strategy.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/040-user-interface-model/bds-progress-report.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/050-system-functions/sf-index.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/050-system-functions/sf-task-execution.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/020-external-interface-specs/ifx-cmd-ai-provider-cli.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/020-external-interface-specs/ifx-index.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/030-architecture/010-c4/cpd-specdojo-cli.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/030-architecture/010-c4/cxd-specdojo.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/030-architecture/020-infrastructure/ifd-specdojo.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/040-system-design/sysd-critical-flows.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/040-system-design/sysd-cross-cutting-policy.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/040-system-design/sysd-index.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/050-business-acceptance-criteria/bac-task-completion.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-rs2p-product-docs-remove-role-assignment.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 29,
+    "summary": ".../020-data-model/ccd-project-planning.md         |  12 +-\n .../020-data-model/cdsd-execution.md               |  60 +++++----\n .../020-data-model/cdsd-planning.md                |   2 +-\n .../020-data-model/cdsd-sharing.md                 |   2 +-\n .../020-data-model/cdt-register-type.md            |   6 +-\n .../020-data-model/sld-specdojo.md                 |  16 +--\n .../020-data-model/stsd-deliverable.md             |  10 +-\n .../020-data-model/stsd-job-run.md                 |  10 +-\n .../020-data-model/stsd-register-entry.md          |  12 +-\n .../020-data-model/stsd-routine-run.md             |  20 +--\n .../020-data-model/stsd-task-execution.md          |   4 +-\n .../030-business-model/bes-index.md                |  38 +++---\n .../030-business-model/bes-task-ready-selected.md  |  29 +++--\n .../br-task-selection-strategy.md                  |  24 ++--\n .../bds-progress-report.md                         |  46 +++----\n .../050-system-functions/sf-index.md               |  22 ++--\n .../050-system-functions/sf-task-execution.md      |  26 ++--\n .../ifx-cmd-ai-provider-cli.yaml                   |  18 +--\n .../ifx-file-agent-evidence.yaml                   |  21 ++--\n .../020-external-interface-specs/ifx-index.yaml    |  29 ++---\n .../030-architecture/010-c4/cpd-specdojo-cli.md    |  60 ++++-----\n .../030-architecture/010-c4/cxd-specdojo.md        |  22 ++--\n .../020-infrastructure/ifd-specdojo.md             |  22 ++--\n .../040-system-design/sysd-critical-flows.md       |  38 +++---\n .../040-system-design/sysd-cross-cutting-policy.md | 135 ++++++++++-----------\n docs/ja/product/040-system-design/sysd-index.md    |  80 ++++++------\n .../bac-task-completion.md                         |  60 ++++-----\n ...pjr-rs2p-product-docs-remove-role-assignment.md |  86 +++++++++++--\n 28 files changed, 476 insertions(+), 434 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "個票の Markdown リンク違反なし"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write",
+      "status": "passed",
+      "summary": "変更した md・yaml を整形した"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 5689 file(s), 107 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 83 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5689 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, docs/ja/specdojo/**, docs/specdojo/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, docs/ja/specdojo/**, docs/specdojo/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-RS2P/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-RS2P/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.9.2 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-RS2P\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/grade/grade.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/register/commands.test.ts\"}\n ✓ tests/src/grade/grade.test.ts (69 tests) 251ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/src/grade/grade.test.ts\"}\n[parent-validation:t\n… output omitted …\n_action: 続行の妥当性と必要な修正量を確認し、続行するなら error_handling.transport_failure へ反映し、しないなら修正の登録簿項目を起票する\n  ```\n\n  </details>\n\n\n ❯ tests/src/docs/yaml-tables.test.ts:54:18\n     52|     const content = readFileSync(source!, \"utf8\");\n     53|     const page = renderYamlPage(source!, content);\n     54|     expect(page).toBe(expected);\n       |                  ^\n     55|     const visible = page.split(\"<details>\")[0];\n     56|     expect(visible).not.toContain(\"```yaml\");\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯"
+    }
+  ],
+  "final_message": "docs/ja/product の成果物 27 ファイルから、文書の役割の割り当てと承認の進み具合の記述を外した。個票の対応結果に、直した成果物の表・残したものと理由・未完了の承認と留保の一覧・CHANGELOG に書く事項（なし）を記載した。作業内容の表は 4 行とも done にした。",
+  "completion_status": "complete",
+  "handoff": [
+    "sysd-critical-flows と bac-task-completion の「確認する」記述の一部に役割の主体が残っている。業務プロセスの主体との切り分けが要るため、外すかどうか利用者の判断を待つ。",
+    "個票 5.4 の未完了の承認と留保（PJR-AK5V、PJR-TN43、PJR-Y2X4、PJR-39AB、PJR-CJMN、PJR-W63Q など追跡先ありのもの、および追跡先のない M-01〜M-04、U-01〜U-07 など）の登録簿への起票は、オーケストレーターが利用者と決める。",
+    "ifx-* は YAML が正本のため YAML だけを直した。generated/ は git 管理外で build により再生成される。",
+    "CHANGELOG への記載は不要（利用者の操作・出力に影響しない）と判断した。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-RS2P/pjr-rs2p-20261121T180514Z-f89752a1/executor.attempt-1.log",
+      "bytes": 3805,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-RS2P/pjr-rs2p-20261121T180514Z-f89752a1/parent-validation-attempt-1-test-unit.attempt-1.log",
+      "bytes": 118445,
+      "truncated": false
+    }
+  ]
+}
