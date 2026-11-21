@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_b6eda158d7e049dbadc66898a14d1041
+  ts: "2026-11-21T11:49:53Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 文書だけを変えた run の親の検証を軽くし、並列を増やせるようにする
+    - field: description
+      from: ""
+      to: 文書だけを変えた run でも test-integration・test-unit の全体とリポジトリ全体の lint が 1 本ずつ流れ、1 件あたり約 4 分かかる。文書を読むテストへの絞り込み、変えたファイルだけの lint、lint の並列化で縮め、exec の並列を 4 以上にできるようにする
+    - field: input
+      from: ""
+      to: '["2026-11-21、第 3 波と register の run の 46 回分の parent-validation-metrics.jsonl で測った中央値（最大）: test-integration 140 秒（869 秒）、test-unit 48 秒（119 秒）、lint-md 18 秒（90 秒）、lint-fm 17 秒（32 秒）、lint-mermaid・lint-d2・validate-schema は合わせて約 15 秒","exec-defaults は `parent_validation_concurrency:` 1。test-integration の paths に `docs/ja/specdojo/**` が入り、test-unit は paths がなく毎回流れる。lint:md と lint:fm はリポジトリ全体を検査する","文書のパスを含む integration テストは 10 ファイルあるが、多くは fixture の文字列と見ている（未確認）","コンテナのメモリーは 16GB で、測定時に swap を 2.5GB 使っていた。割り当ての変更は利用者がホストで行う","利用者の決定（2026-11-21、indie）: 文書を読むテストへの絞り込み、lint を変えたファイルだけにする、lint の並列化をこの項目で行い、確かめてから 4 列目を増やす"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-21"
+    - field: due
+      from: ""
+      to: _TODO_
