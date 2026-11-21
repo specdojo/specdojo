@@ -2,7 +2,7 @@
 specdojo:
   id: cnd-specdojo
   type: architecture
-  status: draft
+  status: ready
   owner: ARC
   rulebook: specdojo:cnd-rulebook
   part_of: []
