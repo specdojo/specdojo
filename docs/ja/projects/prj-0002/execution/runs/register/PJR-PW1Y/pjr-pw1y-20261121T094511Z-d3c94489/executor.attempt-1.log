@@ -1,0 +1,33 @@
+PJR-PW1Y の作業はすべて終わりました。定義の正本を書き、略称の扱いを決め、反映の todo を 3 件起票しました。`npx markdownlint` と `npx prettier` は、変更した Markdown ファイルすべてで通っています。
+
+**正本の置き場所:** `docs/ja/specdojo/philosophy/specdojo-philosophy.md` の先頭に新しい章「分野: Continuous Specification Engineering」を足しました。既存の章は番号を 1 つずつ振り直しています。新しいガイドや概要ガイドの章にしなかった理由は 2 つです。
+- 分野の定義は「なぜそう考えるか」を扱う philosophy の役割に合い、Docs as Code などの「基本方針」と同じ文書に並べられます。
+- 概要ガイドは入口の文書で、status が `ready` です。新しいガイドにすると philosophy と内容が重なります。
+
+**章の中身:**
+- **定義:** 日本語と英語の定義の文です。成果物の体系・判断の記録・型と評定・運用中の維持の 4 つが範囲に入ることが読み取れます。
+- **近い概念との関係:** SDD・Docs as Code・Continuous Requirements Engineering との関係を表にしました。
+- **略称の扱い:** 正式な略称は設けず、短く呼ぶときは愛称の Spec道 を使います。
+  - CSE は既存の略称とぶつかります。
+  - CSpE のような造語は初見で意味が伝わりません。
+  - 短い呼び名の役割は Spec道 が既に担っています。
+
+**起票した反映の todo:** すべて `--from PJR-PW1Y`・owner BA で起票し、完了条件と作業内容の表も書き込みました。期限は決めていないので `-` にしています。
+
+| ID | 対象 | 直す箇所 |
+| --- | --- | --- |
+| PJR-P8G7 | README | 冒頭の紹介文と、npm に出る `package.json` の `description` |
+| PJR-KGH2 | 概要ガイド | 「SpecDojoとは」の冒頭の文と「目的別の次の読み物」 |
+| PJR-T1TH | specdojo-lp | `Hero.astro`・`ToolFit.astro` の SDD の行・`index.astro` の description |
+
+PJR-PW1Y の個票は、作業内容の 5 行をすべて `done` にし、対応結果に置き場所の理由・略称の理由・反映の範囲を書きました。
+
+**確認してほしい点:**
+- 定義の文と関係の表は、PJR-WBWX と本個票の入力をもとに私が起草した案です。文言は人間のレビューで確定してください。philosophy は `draft` のままです。
+- `register add` を実行しても `pjr-index.md` は変わりませんでした。新しい 3 件を一覧へ載せるのは runner 側の作業です。
+- 同じく `register add` が `events/pjr-pw1y.yaml` の引用符だけを書き直していたので、元の状態に戻しました。
+- `npm run validate:history-links` は exit 1 でした。今回変更していない PJR-9TSG の個票と plan に、既存の違反（ラベル付きの外部 URL）があるためです。今回変更・作成した個票は valid です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"`specdojo-philosophy` に章「分野: Continuous Specification Engineering」（日英の定義の文・近い概念との関係の表・略称は設けない決定と理由）を追加した。反映の todo PJR-P8G7（README と package.json）・PJR-KGH2（概要ガイド）・PJR-T1TH（specdojo-lp）を `--from PJR-PW1Y` で起票し、PJR-PW1Y の個票の作業内容と対応結果を更新した。","handoff":["正本は `specdojo:specdojo-philosophy` の章「分野: Continuous Specification Engineering」に置いた。概要ガイドではなくここにした理由（philosophy の役割に合う、概要ガイドは入口の文書で status が `ready`、新しいガイドにすると内容が重なる）は個票 PJR-PW1Y の対応結果に書いた。","略称は設けず、短く呼ぶときは愛称の Spec道 を使うと決めた（CSE は既存の略称とぶつかる、CSpE などの造語は伝わらない、短い呼び名は愛称が担っている）。","_ASSUMPTION_: 定義の文（日本語と英語）と関係の表は、BA が PJR-WBWX と個票の入力から起草した案である。文言は人間のレビューで確定する。`specdojo-philosophy` は `draft` のまま。","反映の todo PJR-P8G7・PJR-KGH2・PJR-T1TH の期限は未定（`due_on: null`）。`register add` を実行しても `pjr-index.md` の行は変わらなかったため、一覧への追加は runner による register の再生成で行う。","`register add` が `events/pjr-pw1y.yaml` の引用符だけを書き直していたため、index 側の内容へ戻した（意味は変わらない）。","`npm run validate:history-links` は exit 1。今回変更していない `pjr-9tsg-lp-changelog-release-2026-11-02.md` と PJR-9TSG の plan に、既存の違反（ラベル付きの外部 URL）がある。今回変更・作成した個票は valid。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/philosophy/specdojo-philosophy.md","status":"passed","summary":"整形した"},{"command":"npx prettier --write docs/ja/projects/prj-0002/controls/project-register/pjr-*.md","status":"passed","summary":"個票を整形した。今回の 4 件以外の差分は出ていない"},{"command":"npx markdownlint docs/ja/specdojo/philosophy/specdojo-philosophy.md docs/ja/projects/prj-0002/controls/project-register/pjr-pw1y-cse-definition.md docs/ja/projects/prj-0002/controls/project-register/pjr-p8g7-readme-cse-positioning.md docs/ja/projects/prj-0002/controls/project-register/pjr-kgh2-overview-guide-cse-positioning.md docs/ja/projects/prj-0002/controls/project-register/pjr-t1th-lp-cse-positioning.md","status":"passed","summary":"エラーなし"},{"command":"npm run validate:history-links","status":"failed","summary":"今回の個票はすべて valid。今回変更していない `pjr-9tsg-lp-changelog-release-2026-11-02.md` と PJR-9TSG の plan の既存の違反（ラベル付きの外部 URL）で exit 1"}]}
+</specdojo_executor_evidence>

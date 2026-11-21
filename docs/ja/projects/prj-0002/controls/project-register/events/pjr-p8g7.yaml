@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_e01e44bbc8f145d9a5ba658938209296
+  ts: "2026-11-21T09:48:15Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: README と package.json の紹介文を Continuous Specification Engineering の位置付けに合わせる
+    - field: description
+      from: ""
+      to: README 冒頭と package.json の description を、specdojo-philosophy の分野の定義に合わせて直す
+    - field: input
+      from: ""
+      to: '["正本は specdojo-philosophy の「分野: Continuous Specification Engineering」の章（定義の文・近い概念との関係・略称の扱い）。","README 冒頭の「SpecDojo は、Spec道（仕様道）の道場です。」を「SpecDojo は、Continuous Specification Engineering（愛称 Spec道）を実践する道場です。」の趣旨に直し、続く文の「仕様駆動開発のツールに対しては、その上流で…」は残す。定義の文と関係の表は再掲せず、正本の章を参照する一文を置く。","package.json の description（npm に出る英語の紹介文）を、正本の英語の定義の文に合わせて Continuous Specification Engineering を含む文へ直す。","略称は CSpE（正本の「略称の扱い」）。使う場合は初出を「Continuous Specification Engineering（CSpE）」とする。CSE などの別の略称を書かない。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-21"
+    - field: derived_from
+      from: ""
+      to: '["PJR-PW1Y"]'
+    - field: commit_type
+      from: ""
+      to: docs

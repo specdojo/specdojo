@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_822889a1c58e4fda8f1805dfff9ce23e
+  ts: "2026-11-21T09:48:26Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 概要ガイドの「SpecDojoとは」を Continuous Specification Engineering の位置付けに合わせる
+    - field: description
+      from: ""
+      to: specdojo-overview-guide の「SpecDojoとは」の位置付けの文を直し、分野の定義の正本を参照させる
+    - field: input
+      from: ""
+      to: '["正本は specdojo-philosophy の「分野: Continuous Specification Engineering」の章（定義の文・近い概念との関係・略称の扱い）。","「SpecDojoとは」冒頭の「SpecDojo は、Spec道（仕様道）の道場です。」を「SpecDojo は、Continuous Specification Engineering（愛称 Spec道）を実践する道場です。」の趣旨に直し、正本の章への参照を置く。定義の文と関係の表は再掲しない。","同じ章の「仕様駆動開発のツールに対しては、その上流で仕様と設計の体系を担います。」は正本の関係の表と矛盾しないことを確かめて残す。「目的別の次の読み物」の「SpecDojoの考え方を理解する」で specdojo-philosophy の案内に分野の定義が含まれると分かるようにする。","概要ガイドは status ready のため、変更は人間の確認を経る。略称を使う場合は CSpE とし、初出を「Continuous Specification Engineering（CSpE）」とする。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-21"
+    - field: derived_from
+      from: ""
+      to: '["PJR-PW1Y"]'
+    - field: commit_type
+      from: ""
+      to: docs
