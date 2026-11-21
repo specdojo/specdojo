@@ -7,11 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-21T00:23:41Z"
+  completed_at: "2026-11-21T08:02:00Z"
+  conclusion: 起動コマンドを組み立てる resolveMemberCommand で disabled の member を断り、名前の指定・routing・strategy・fallback のどの経路でも起動の前に止める。代わりの選択では無効な member を飛ばす
   derived_from:
     - PJR-XA6Y
 ---

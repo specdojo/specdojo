@@ -142,3 +142,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_d110771dfd934c4786ab85eefb917a87
+- v: 1
+  id: reg_64bdb7d2a3a34e07b9b2ba252a5107bf
+  ts: "2026-11-21T08:02:00Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register を 2 回で対応（1 回目は報告のテストが差分に入っていなかった）。2 回目の差分で単体テスト 3 件が足されたことと、25 件が通ることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-21"
+    - field: conclusion
+      from: "-"
+      to: 起動コマンドを組み立てる resolveMemberCommand で disabled の member を断り、名前の指定・routing・strategy・fallback のどの経路でも起動の前に止める。代わりの選択では無効な member を飛ばす
+  previous_event_id: reg_c8891f56d034432891789e1b21015870
