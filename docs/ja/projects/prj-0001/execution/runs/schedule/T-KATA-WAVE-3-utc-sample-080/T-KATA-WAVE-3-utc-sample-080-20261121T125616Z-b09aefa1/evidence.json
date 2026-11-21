@@ -1,0 +1,169 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-3-utc-sample-080",
+  "run_id": "T-KATA-WAVE-3-utc-sample-080-20261121T125616Z-b09aefa1",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-21T12:56:56.685Z",
+    "completed_at": "2026-11-21T12:57:38.859Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/utc-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/utc-sample.md | 8 +++-----\n 1 file changed, 3 insertions(+), 5 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/samples/utc-sample.md",
+      "status": "passed",
+      "summary": "All matched files use Prettier code style"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2 docs/ja/specdojo/samples/utc-sample.md",
+      "status": "passed",
+      "summary": "0 issues"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 5643 file(s), 107 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 83 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5643 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-3-utc-sample-080\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/devcontainer/scaffold.integration.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/exec/job-worktree.integration.test.ts\"}\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten:\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-3-utc-sample-080/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-3-utc-sample-080/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-3-utc-sample-080\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/grade/grade.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/register/commands.test.ts\"}\n ✓ tests/src/grade/grade.test.ts (69 tests) 254ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/src/grade/grade.test.ts\"}\n\n… output omitted …\n it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "condense_records": [
+    {
+      "location": "## 3. 対象外 の印刷失敗の項目の後半文「本書では印刷要求の送信回数と内容だけを Mock で確認する。」",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "境界/依存の表の receipt-print 行（Mock で送信回数と送信内容を検証する）と TR-05 の要点に同じ内容があり、削っても判断情報は残る",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "## 4. 境界/依存 の表の直後の「共通方針から外れる依存の扱いはない。」",
+      "category": "repetition",
+      "action": "merge",
+      "reason": "表の直前の「共通の扱いに従い」と同じ主張なので、その文に「（外れる扱いはない）」としてまとめた。例外がないという宣言は残している",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "## 5. トレース の TR-05 の備考「印刷失敗時の会計維持は `PATH-05`」",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "同じ内容を ## 3. 対象外 の項目（代替: 外部結合テスト PATH-05）が正本として持ち、要点の「UT は要求データのみ」で範囲も分かる",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "## 1. 概要 の DEV・QE の分担の文",
+      "category": "unneeded-background",
+      "action": "retain",
+      "reason": "ケースを追加・実装する人と照合する人という前提を示し、rulebook の概要の要件（読み手が前提を把握できること）を満たすため",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "## 1. 概要 と ## 2. 責務 の重なり",
+      "category": "repetition",
+      "action": "retain",
+      "reason": "rulebook が両方の章を必須と定め、概要は要約、責務は観測点つきの詳細と粒度が違うため",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "## 6. の各ケース表の証跡列に同じ文言が並ぶ点",
+      "category": "table-prose",
+      "action": "retain",
+      "reason": "1 行が 1 テストの表で証跡は必須の列なので、行ごとに書く必要があるため",
+      "cause": {
+        "type": "document"
+      }
+    }
+  ],
+  "final_message": "utc-sample の冗長箇所を3件整理（delete 2・merge 1）し、3件を retain として記録した。意味と必須情報は維持し、Prettier と markdownlint はどちらも問題なし。",
+  "completion_status": "complete",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-3-utc-sample-080/T-KATA-WAVE-3-utc-sample-080-20261121T125616Z-b09aefa1/executor.log",
+      "bytes": 4153,
+      "truncated": false
+    }
+  ]
+}
