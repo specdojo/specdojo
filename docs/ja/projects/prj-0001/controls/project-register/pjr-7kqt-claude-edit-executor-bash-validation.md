@@ -29,13 +29,13 @@ templates/claude/settings.edit.json の allow は Edit(**) だけでコマンド
 
 ## 3. 影響範囲
 
-| 観点         | 影響   |
-| ------------ | ------ |
-| スコープ     | _TODO_ |
-| スケジュール | _TODO_ |
-| コスト       | _TODO_ |
-| 品質         | _TODO_ |
-| 関係者       | _TODO_ |
+| 観点         | 影響                                                                                           |
+| ------------ | ---------------------------------------------------------------------------------------------- |
+| スコープ     | claude の edit の executor の権限設定（`templates/claude/settings.edit.json`）と exec-defaults |
+| スケジュール | なし（回避策: 利用者が設定を手で直す。`scaffold --force` で戻る）                              |
+| コスト       | 小さい（runner と CLI の一部の修正）                                                           |
+| 品質         | plan が求める検証を executor が流せず、incomplete で止まる                                     |
+| 関係者       | 利用者のプロジェクト（coderdojo-lessons-specdojo など）と prj-0001 のオーケストレーター        |
 
 ## 4. 対応方針
 
