@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-Q9DF
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-Q9DF/pjr-q9df-20261121T085001Z-dab37044/plan.md
   started_at: "2026-11-21T08:50:04.449Z"
+  completed_at: "2026-11-21T08:52:41.954Z"
   agent: sonnet-executor
   approach: fully-guided
   targets:
@@ -19,16 +20,19 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- 4.1 と「メモ / 将来課題」から承認の進み具合の記述を削除し、個票に 2 回目・3 回目の対応結果（5.1・5.2）を追記した。3・4 章は 19,318 から 11,532 バイトで約 40% 減。status は draft のまま。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/product/030-architecture/010-c4/cnd-specdojo.md`: 変更、+8 / -8 行
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- grade run --target deliverable による再 grade は executor の範囲外のため未実施。orchestrator が実行する。
+- 迷った点: 表の後の段落の「人間の PO が承認を記録した版を公開の元とする」は進み具合ではなく運用規則のため残した。
+- 3・4 章の「2 回目の前 19,318 バイト」は、e72b2b946 時点の文書全体が 26,711 バイトで 3・4 章単体の値と判断できないため、指示された値をそのまま基準にした。現在の 3・4 章は 11,532 バイト、文書全体は 19,068 バイト。
+- 適用外の検証（runner の判定）: `npm run validate:catalog`（変更が docs/ja/projects/ 配下に及ばない）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+reporter を使わず、runner が executor の報告（`final_message`・`handoff`）と証跡から機械的に作成した（`pipeline.mechanical_result`）。
