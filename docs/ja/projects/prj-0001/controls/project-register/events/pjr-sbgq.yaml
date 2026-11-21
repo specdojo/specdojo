@@ -70,3 +70,16 @@
       from: ""
       to: 完了の判断の基準
   previous_event_id: reg_11ec1d15de7f42918ce7bc7822c355e5
+- v: 1
+  id: reg_eb4bb47e2dcb460f946d7e0d7a281d7f
+  ts: "2026-11-21T07:21:07Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "範囲（track と domain）" updated
+  changes:
+    - field: section
+      from: ""
+      to: 範囲（track と domain）
+  previous_event_id: reg_c6675b0e44ee43679dadf60e5eb7da9d
