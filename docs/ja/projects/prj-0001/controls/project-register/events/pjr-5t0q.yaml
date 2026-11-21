@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_490bc17007a94ef79957a21bd63de07b
+  ts: "2026-11-21T09:10:15Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-6998 の方式で、condense と review の段が kata ドメインの sample を扱えるようにするため（利用者の承認、案 B）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: kata ドメインの成果物（sample）の変更が、成果物向けの段で commit の対象外として止まる
+    - field: description
+      from: ""
+      to: kata ドメインに載せた sample を condense などの成果物向けの段で直すと、target の specdojo:`<name>-sample` が commit してよいファイルに読み替えられず、統合の段で non-target changes として止まる
+    - field: input
+      from: ""
+      to: '["2026-11-21、第 3 波の試しで T-KATA-WAVE-3-tsp-index-sample-080（condense）が、commit-scope: integration blocked; 1 non-target changes: docs/ja/specdojo/samples/tsp-index-sample.md で止まった（worktree は残してある）。040（rulebook-maintenance）と 050（sample-maintenance）は統合まで通った","plan の targets は specdojo:tsp-index-sample。src/exec/worktree-ops-commit.ts は targets を doc-index で引き、引けなければ prj-0001: で始まる ID だけを `local_id` にしてカタログで引くため、specdojo: の ID はどちらでも引けない。050 は sample-maintenance の approach が docs/ja/specdojo/samples/ を参考資料のディレクトリとして許すため通った（orchestrator の見立て、executor が確かめる）","第 3 波の 11 種類の 040 は、各 index が tsp-index の 080、対象別が各 index の 080 に依存するため、この件が直るまで流れない。第 4〜6 波も kata ドメインを使う（PJR-6998）"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-21"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-6998"]'
