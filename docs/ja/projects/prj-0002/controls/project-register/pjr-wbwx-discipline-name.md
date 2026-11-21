@@ -36,20 +36,25 @@ Spec道 では分かりにくいため、SDD と範囲の違う分野として C
 
 ## 4. 決定内容
 
-_TODO_: 採択した内容を明確に記載する。
+- 分野の正式名称を Continuous Specification Engineering とする（選択肢 B）。
+- Spec道 は愛称として残す。
+- SpecDojo は、Continuous Specification Engineering を実践する道場と位置付ける。
+- 略称の扱いは _UNDECIDED_ とし、後続の todo で決める。
 
 ## 5. 採択理由
 
-- _TODO_: 判断根拠を記載する。
+- SDD との範囲の違い（成果物の体系・判断の記録・型と評定・運用中の維持）を名前で示せる。
+- 「磨き続ける」と CI/CD の連想が合う。
+- 「範囲が狭く聞こえる」懸念は定義の文で補い、略称が Computer Science and Engineering とぶつかる懸念は後続の todo で扱う。
 
 ## 6. 承認
 
-| 項目     | 内容   |
-| -------- | ------ |
-| 決定者   | _TODO_ |
-| 決定日   | _TODO_ |
-| 承認方式 | _TODO_ |
-| 証跡     | _TODO_ |
+| 項目     | 内容                                                                  |
+| -------- | --------------------------------------------------------------------- |
+| 決定者   | indie                                                                 |
+| 決定日   | 2026-11-21                                                            |
+| 承認方式 | commit                                                                |
+| 証跡     | register event `close`（`events/pjr-wbwx.yaml`）と本個票の遷移 commit |
 
 - 承認方式は `commit` または `PR` を記載する。`PR` の場合は証跡に PR URL と merge SHA を本文テキストで記載する。
 - 不可逆・高リスク・framework schema 破壊的変更に該当する決定は `PR` 方式で承認する。
@@ -64,4 +69,6 @@ _TODO_: 採択した内容を明確に記載する。
 
 ## 8. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[specdojo:specdojo-overview-guide]]: 影響先。「SpecDojoとは」の位置付けの文を更新する。
+- [[prj-0002:pm-members]]: 決定者 `indie` を記帳するために置いた名簿。
+- README（リポジトリルートの `README.md`）と specdojo-lp: 影響先。
