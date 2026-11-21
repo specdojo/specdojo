@@ -38,3 +38,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-VCER"]'
+- v: 1
+  id: reg_08a479bc7aab4c6fbfba9d36fcea770f
+  ts: "2026-11-21T11:42:59Z"
+  action: update
+  actor: SpecDojo
+  from_status: open
+  to_status: open
+  reason: section "影響範囲" updated
+  changes:
+    - field: section
+      from: ""
+      to: 影響範囲
+  previous_event_id: reg_2b87df3182224654ac6f1b29012395c2
