@@ -1641,6 +1641,86 @@ describe("exec worktree ops", () => {
     expect(readFileSync(records.log("integrate.log"), "utf8")).toContain(path);
   });
 
+  describe("kata domain deliverable targets (PJR-5T0Q)", () => {
+    const samplePath = "docs/ja/specdojo/samples/tsp-index-sample.md";
+    const sampleDoc = (body: string) =>
+      `---\nspecdojo:\n  id: specdojo:tsp-index-sample\n  type: sample\n  status: draft\n---\n\n# Sample\n\n${body}\n`;
+
+    function setupKataCatalog(fixture: Fixture): void {
+      const catalogPath = join(fixture.repo, "catalog");
+      writeFile(
+        join(catalogPath, "dct-kata.yaml"),
+        [
+          "domain: kata",
+          "base_path: /docs/ja/specdojo",
+          "groups:",
+          "  - name: samples",
+          "    base_path: samples",
+          "    deliverables:",
+          "      - local_id: tsp-index-sample",
+          "        path: tsp-index-sample.md",
+          "",
+        ].join("\n"),
+      );
+      writeFile(join(fixture.repo, samplePath), sampleDoc("before"));
+      git(fixture.repo, "add", "catalog", samplePath);
+      git(fixture.repo, "commit", "-m", "add kata catalog");
+      fixture.context = { ...fixture.context, catalogPath };
+    }
+
+    it("commits a condense edit to a kata domain sample targeted by its specdojo id", () => {
+      const fixture = setupRepository();
+      setupKataCatalog(fixture);
+      const taskId = "T-KATA-tsp-index-sample-080";
+      const worktree = prepare(
+        fixture,
+        taskId,
+        taskId,
+        planWithIdentity(taskId, {
+          mode: "edit",
+          approach: "condense",
+          targets: ["specdojo:tsp-index-sample"],
+        }),
+      );
+      writeFile(join(worktree.path, samplePath), sampleDoc("after"));
+
+      const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+
+      expect(committed.targets).toContain(samplePath);
+    });
+
+    it("keeps blocking a condense edit to a type document that the catalog does not list", () => {
+      const fixture = setupRepository();
+      setupKataCatalog(fixture);
+      const rulebookPath = "docs/ja/specdojo/rulebooks/tsp-index-rulebook.md";
+      writeFile(
+        join(fixture.repo, rulebookPath),
+        "---\nspecdojo:\n  id: specdojo:tsp-index-rulebook\n---\n\n# Rulebook\n",
+      );
+      git(fixture.repo, "add", rulebookPath);
+      git(fixture.repo, "commit", "-m", "add rulebook");
+      const taskId = "T-KATA-tsp-index-rulebook-080";
+      const worktree = prepare(
+        fixture,
+        taskId,
+        taskId,
+        planWithIdentity(taskId, {
+          mode: "edit",
+          approach: "condense",
+          targets: ["specdojo:tsp-index-rulebook"],
+        }),
+      );
+      writeFile(
+        join(worktree.path, rulebookPath),
+        "---\nspecdojo:\n  id: specdojo:tsp-index-rulebook\n---\n\n# Rulebook changed\n",
+      );
+
+      expect(() => commitWorktreeChanges({ context: fixture.context, worktree, taskId })).toThrow(
+        UncommittedChangesError,
+      );
+    });
+  });
+
   it("does not write block evidence during a dry run", () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";

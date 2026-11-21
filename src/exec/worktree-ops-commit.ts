@@ -18,8 +18,10 @@ import {
   qualifiedRepoPaths,
   type AgentRepoPathChanges,
 } from "./agent-protected-config.js";
+import { readSpecdojoNamespace } from "../docs/frontmatter-namespace.js";
 import {
   deliverableDocPath,
+  deliverableDocPathByDocId,
   parsePlanTaskIdentity,
   targetReferenceDirsForApproach,
 } from "./plans.js";
@@ -308,6 +310,24 @@ function headDocIndexLookup(worktreePath: string): (id: string) => string | unde
   };
 }
 
+function isForeignNamespaceId(target: string, projectId: string | undefined): boolean {
+  return target.includes(":") && !(projectId && target.startsWith(`${projectId}:`));
+}
+
+// HEAD の文書の frontmatter（specdojo: 名前空間）の id。agent の working tree 改変で
+// 別の文書を target に見せかけられないよう、checkpoint 済みの版から読む。
+function headDocumentId(worktreePath: string, relPath: string): string | undefined {
+  const content = readWorktreeHeadFile(worktreePath, relPath);
+  if (!content) return undefined;
+  try {
+    const id = readSpecdojoNamespace(content).id;
+    return typeof id === "string" ? id.trim() : undefined;
+  } catch {
+    // frontmatter の壊れた文書は照合対象にしない。
+    return undefined;
+  }
+}
+
 // commit を許可する範囲。mode 別の許可リスト（review は result のみ、edit は result と
 // 対象成果物、maintenance / bootstrap 系 approach は参考資料ディレクトリも追加）。
 export type CommitScope = {
@@ -386,6 +406,18 @@ export function resolveCommitScope(
       : undefined;
     if (fromCatalog) {
       allowedFiles.add(fromCatalog);
+      continue;
+    }
+    // project 以外の名前空間の id（kata ドメインの specdojo:<name>-sample など）は、catalog の
+    // 成果物の文書 id と HEAD の frontmatter で照合する。catalog に無い型の文書は解決しない。
+    const fromCatalogDocId =
+      context.catalogPath && isForeignNamespaceId(target, identity.projectId)
+        ? deliverableDocPathByDocId(context.catalogPath, target, (path) =>
+            headDocumentId(worktree.path, path),
+          )
+        : undefined;
+    if (fromCatalogDocId) {
+      allowedFiles.add(fromCatalogDocId);
       continue;
     }
     unresolvedTargets.push(target);
