@@ -38,3 +38,19 @@
     - field: derived_from
       from: ""
       to: '["PJR-BSCK"]'
+- v: 1
+  id: reg_178701e7be02429fba9aaac08bd69308
+  ts: "2026-11-21T11:30:40Z"
+  action: update
+  actor: SpecDojo
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+    - field: difficulty
+      from: "-"
+      to: medium
+  previous_event_id: reg_9f2b2228655a44e7978b4ecee37104fb

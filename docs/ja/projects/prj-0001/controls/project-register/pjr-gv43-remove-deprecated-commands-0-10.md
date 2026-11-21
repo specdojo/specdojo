@@ -9,6 +9,7 @@ specdojo:
   item_type: todo
   item_status: open
   priority: medium
+  difficulty: medium
   owner: DEV
   registered_at: "2026-11-20T23:57:32Z"
   derived_from:
@@ -28,7 +29,14 @@ PJR-BSCK で非推奨にした timeline where・timeline build・exec note・exe
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- 消す前に、次の場所で 9 コマンド（`timeline where`・`timeline build`・`exec note`・`exec link`・`exec estimate`・`exec migrate-records`・`grade migrate`・`register migrate`・`config migrate-members`）と各コマンドの `where` の別名の使われ方をもう一度確かめ、結果を個票の対応結果に書く。
+  - このリポジトリの `src`・`tools`・`templates`・`package.json`・`.specdojo`・routine の定義
+  - `../specdojo-prj-0002` の `.specdojo` と `package.json`
+- 9 コマンドと `where` の別名を、CLI の登録・実装（`src/dashboard/timeline-build.ts`・`src/exec/migrate-records.ts`・`src/register/maintenance-commands.ts`・`src/grade/command-inspect.ts`・`src/shared/where-alias.ts`・`src/shared/specdojo-config.ts` など）・テストから消す。ほかのコマンドが使う関数は残す。
+- 非推奨の警告の仕組み（`src/shared/deprecation.ts`）は、消した後もほかで使っていれば残し、使われなくなれば消す。どちらにしたかを対応結果に書く。
+- 9 コマンドと別名に触れている文書（`docs/ja/specdojo/references/command-reference.md`・`docs/ja/specdojo/guides/` のガイド・`tml-rulebook`・`pm-members-rulebook` など）を直す。過去の版の移行ガイド（`release-v0-3-0-migration-guide.md` など）は、書かれた時点の記録として変えない。
+- `CHANGELOG.md` は変えない。個票の対応結果の `### 5.1. CHANGELOG に書く事項` に、区分（削除）と行の文案を書く。消したコマンドと、代わりの操作を利用者向けに書く。
+- `npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md` を通し、親の検証を通す。
 
 ## 4. 作業内容
 
