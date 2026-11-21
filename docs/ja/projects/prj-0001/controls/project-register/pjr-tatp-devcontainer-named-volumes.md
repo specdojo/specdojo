@@ -37,12 +37,25 @@ specdojo:
 | 2   | `post-create.sh` に持ち主の調整と `npm ci` を足す   | specdojo-orchestrator | done | `.devcontainer/prepare-workspace-volumes.sh`                                                                                                                                                       |
 | 3   | `gc.worktreePruneExpire` と運用メモ                 | specdojo-orchestrator | done | 設定は作り直しのときに `prepare-workspace-volumes.sh` が入れる                                                                                                                                     |
 | 4   | 途中の worktree の片付け                            | indie                 | done | 2026-11-21 に利用者の承認で 28 個を消した（取り込み済み 11、終わったタスクの残り 9、orchestrator の作業 3、agent の作業場所 3、prj-0002 の KH17 の 2）。共有の `worktrees/` は 19GB から空になった |
-| 5   | container の作り直し                                | indie                 | open | grade のし直し（regrade-kata-2026-11-21）が終わってから                                                                                                                                            |
+| 5   | container の作り直し                                | indie                 | done | 2026-11-21                                                                                                                                                                                         |
 | 6   | 作り直しのあとの動作と時間の確認                    | specdojo-orchestrator | open | -                                                                                                                                                                                                  |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `.devcontainer/devcontainer.json` に、exec の worktree の置き場（`/workspaces/specdojo-workspace/worktrees`）と 11 か所の `node_modules` の named volume を足した（`5704317eb`、develop へ取り込み `6d7839a3b`）。`worktree_base` は `../worktrees` のまま変えていない。
+- `.devcontainer/prepare-workspace-volumes.sh` を足し、`post-create.sh` から `npm run build` の前に呼ぶ。volume の持ち主を `node` にそろえ、空の `node_modules` に `npm ci` を流し、`gc.worktreePruneExpire=never` を入れる。
+- 作り直しの前に、利用者の承認で共有の `worktrees/` の 28 個の worktree を消した（19GB から空へ）。
+- 2026-11-21 に利用者が container を作り直したあと、12 か所がすべて ext4 の volume（作り直す前は共有フォルダの `fakeowner`）で持ち主が `node`、11 か所の `node_modules` が `npm ci` 済み、`gc.worktreePruneExpire` が `never` であることを確かめた。
+- 時間の比べ（作り直す前 → あと）。
+
+| 処理                                | 作り直す前                             | 作り直したあと |
+| ----------------------------------- | -------------------------------------- | -------------- |
+| `git worktree add`                  | 2 分を過ぎても終わらない               | 2.6 秒         |
+| worktree のルートの `npm ci`        | 計っていない（共有フォルダの上で数分） | 2.7 秒         |
+| `npm run check`                     | 461 秒（PJR-5RAY の計測）              | 281 秒         |
+| `npm run check:release`（PJR-5RAY） | -                                      | 141 秒         |
+
+- 運用メモの「落とし穴」に、ホストで `git worktree prune` を流さないこと、同じ項目の run をホストと container で同時に流さないこと、ホストで直接動かすときは一度 `npm ci` を流すことを書いた。
 
 ## 5. 関連ドキュメント
 
