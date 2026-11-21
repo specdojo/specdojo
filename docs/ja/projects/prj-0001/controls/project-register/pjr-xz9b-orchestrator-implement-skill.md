@@ -55,9 +55,14 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                | 担当                  | 状態 | メモ                         |
+| --- | --------------------------------------------------- | --------------------- | ---- | ---------------------------- |
+| 1   | worktree と feature ブランチを作る                  | specdojo-orchestrator | open | 作業ツリーは develop のまま  |
+| 2   | 正本の SKILL.md を書く                              | specdojo-orchestrator | open | 範囲・使う条件・手順         |
+| 3   | Claude Code のラッパーを書く                        | specdojo-orchestrator | open | シンボリックリンクは使わない |
+| 4   | orchestrator の本文に 1 行足し、sync する           | specdojo-orchestrator | open | `npm run orchestrator:sync`  |
+| 5   | 検査を流し、承認を得て merge し、片付ける           | specdojo-orchestrator | open | push と PR は利用者          |
+| 6   | 別の項目で 1 回使い、結果と配布の案を対応結果に書く | specdojo-orchestrator | open | 正本を読んだかを確かめる     |
 
 ## 5. 対応結果
 
