@@ -75,7 +75,11 @@ agent-members.yaml で disabled にした member でも、exec run --executor-by
 
 ### 5.2. 確認結果
 
-- `tests/src/exec/agent-config-command.test.ts` に、名前の指定・command 上書き（routing 相当）・代わりの選択の 3 つの単体テストを追加し、通った。`npm run typecheck` も通った。
+- `tests/src/exec/agent-config-command.test.ts` の `resolveMemberCommand` に 3 件を実際に追加した。
+  - `refuses a disabled member selected by name before building a command`（名前の指定）
+  - `refuses a disabled member even when a command override (routing) is set`（routing の command 上書き）
+  - `skips a disabled member and moves on to the next candidate when choosing a fallback`（代わりの選択。`selectCandidates` が `disabled` を除き次の候補を返す）
+- 確かめ方: `resolveMemberCommand` の `disabled` の確認を一時的に無効化して `vitest run` を実行すると、名前の指定と routing の 2 件が落ちた。確認を戻すと 25 件すべてが通る。代わりの選択のテストは `selectCandidates` の既存の除外を固定するもので、今回の実装を外しても通る（回帰防止）。
 
 ### 5.3. 迷った点と決定
 
