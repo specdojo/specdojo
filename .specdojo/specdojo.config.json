@@ -21,6 +21,7 @@
     },
     "prj-0002": {
       "base_path": "docs/ja/projects/prj-0002",
+      "members_path": "030-project-management/pm-members.yaml",
       "project_register_path": "controls/project-register",
       "project_context": ["prj-overview"],
       "repos": [

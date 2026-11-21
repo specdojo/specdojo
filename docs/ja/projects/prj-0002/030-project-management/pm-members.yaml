@@ -1,0 +1,39 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/pm-members.schema.yaml
+id: prj-0002:pm-members
+type: project
+status: ready
+title: メンバー名簿
+rulebook: specdojo:pm-members-rulebook
+based_on:
+  - specdojo:people-and-organization-definition-standard
+version: 1
+project_id: prj-0002
+# Member は、実際に作業する人間を表す。agent の定義は .specdojo/agent-members.yaml にある。
+# prj-0002 は人の決定と承認を register の --by に記録するため、この名簿を置く（PJR-WBWX）。
+
+members:
+  - nickname: indie
+    display_name: Indie Hacker
+    email: null
+    roles:
+      - PO
+      - PM
+      - BA
+      - ARC
+      - DEV
+      - QE
+      - UX
+      - OPS
+    type: human
+    persona: final-decision-maker
+    focus:
+      - purpose
+      - scope
+      - priority
+      - publication
+      - accountability
+    note: 個人開発における人間の最終判断主体。全責務を兼務する。公開文書では個人名と連絡先を記載しない。
+rules:
+  - specdojo register / exec の --by には members[].nickname を指定し、記録後の nickname は変更しない。
+  - agent は草案作成、レビュー支援、整合性確認、機械的更新を支援するが、最終承認、公開可否判断、説明責任は人間の PO が担う。
+  - 公開文書には個人名、私用メールアドレス、非公開組織情報、アクセス情報を記載しない。
