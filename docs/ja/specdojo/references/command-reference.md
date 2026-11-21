@@ -927,7 +927,7 @@ runner は自分が起動した子プロセスの終了を待ってから次の�
 | `grade list` | 選択した文書のパスを1行1件で出力し、plan は保存しない |
 | `grade run`  | 文書ごとに評価と反映を実行し、同じ run を再開する     |
 
-`grade run` は、完了した文書と失敗した文書が混在すると終了コード 2、完了した文書がなく失敗した場合は 1 で終わります。agent が rate limit を返した場合は、その文書を未完了のまま残して直ちに終了コード 75 で止まり、同じ `--run-id` の再実行で再開します。`--target kata --reference-per-kind` は、各文書を同じ種別の `prj-overview-<種別>` 文書と比較します（`--reference` とは併用できません）。定期の job（`job-grade-kata`・`job-grade-deliverable`）はこの経路で評価します。
+`grade run` は、完了した文書と失敗した文書が混在すると終了コード 2、完了した文書がなく失敗した場合は 1 で終わります。agent が rate limit を返した場合は、その文書を未完了のまま残して直ちに終了コード 75 で止まり、同じ `--run-id` の再実行で再開します。`--fallback-by <nickname>` を指定すると、`--by`（未指定時は自動選択）の評価者が rate limit になった時点で、同じ run ID のまま、その文書と残りの文書を代わりの評価者で続けます。代わりの評価者は有効な executor の member で、元の評価者と異なる必要があり、違反や不明な nickname はエラーです。代わりの評価者も rate limit になった場合は、従来どおり残りを未実行のまま終了コード 75 で止めます。どの評価者が評価したかは、grade の結果の `graded_by` と run 記録（`run.json`）の文書ごとの `actor` に残ります。`exec-defaults.yaml` からの既定は引かず、明示指定のみです。`--target kata --reference-per-kind` は、各文書を同じ種別の `prj-overview-<種別>` 文書と比較します（`--reference` とは併用できません）。定期の job（`job-grade-kata`・`job-grade-deliverable`）はこの経路で評価します。
 
 次のコマンドは `grade run`・runner・job・orchestrator が部品として呼ぶ内部用のコマンドです。help の一覧には表示しませんが、呼び出しは従来どおり動きます。
 
@@ -944,6 +944,8 @@ runner は自分が起動した子プロセスの終了を待ってから次の�
 ```bash
 specdojo grade run --target kata --kind rulebook --run-id quality-check --dry-run
 specdojo grade run --target kata --path <document.md> --run-id quality-check --by <executor-nickname>
+# rate limit のときに代わりの評価者へ切り替える
+specdojo grade run --target kata --path <document.md> --run-id quality-check --by <executor-nickname> --fallback-by <fallback-nickname>
 # 型の名前の一覧を指定し、rulebook と sample の組をまとめて順に評価する
 specdojo grade run --target kata --kata pjr --kata sld --run-id kata-batch
 # 同じコマンドを再実行すると完了済み文書を飛ばし、未完了文書から再開する

@@ -1,0 +1,18 @@
+`grade run --fallback-by <nickname>` を追加しました。評価者が rate limit になると、同じ run id のまま代わりの評価者で続けます。`tests/src/grade/run.test.ts` 単体は 33 件通り、変更ファイルの Prettier 検査も通りました。`typecheck`・`lint`・`test:unit` 全体は親 runner が実行します。
+
+- **切り替えの動き**:
+  - 代わりの評価者が元の評価者と同じ、空文字、不明な nickname のいずれかなら、agent を起動する前にエラーにします。
+  - 代わりも rate limit になったら、従来どおり残りを未実行のまま終了コード 75 で止めます。
+  - 切り替えたことは標準出力に出します。dry-run には `fallback=` を表示します。
+- **記録**: どの評価者が評価したかは、grade 結果の `graded_by` と `run.json` の文書ごとの `actor` に残ります。
+- **既定の引き方**: `exec-defaults.yaml` から既定を引く案は採らず、明示指定だけにしました。評価者がまだ決まっていない今は、既定を引くと意図しない agent で評価される恐れがあるためです。
+- **再開時の注意**: `--fallback-by` は run の request の digest に含まれます。再開するときは同じ指定が要ります。
+- **job**: `job-grade-kata` と `job-grade-deliverable` に入力 `fallback_by` を足しました。既定は空で、空でないときだけ `--fallback-by` を渡します。routine の定義は変えていません。
+- **単体テスト**: 切り替える場合、代わりも rate limit の場合、指定が不正な場合の 3 件を足しました。
+- **文書**: `command-reference.md` の `grade run` の節に、オプションの説明と使用例を足しました。個票の作業内容 4 行は `done` にし、対応結果と CHANGELOG の文案（区分 Added）を書きました。CHANGELOG 本体は変えていません。
+
+routine で切り替えを有効にするには、評価者が決まった後に `rtn-grade-recheck` と `rtn-grade-deliverable-recheck` の `inputs` へ `fallback_by: sol` のように足します。`rtn-grade-recheck` は今 `enabled: false` です。この案は個票と `handoff` にも書きました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"grade run に --fallback-by を追加し、rate limit 時に同じ run id で代わりの評価者へ切り替えて続けるようにした。job 入力 fallback_by、単体テスト 3 件、command-reference、個票を更新した。","handoff":["--fallback-by は明示指定のみで exec-defaults.yaml からの既定は引かない。評価者が未決で、暗黙に agent が変わるのを避けるため。","prj-0001 の routine は変更していない。評価者が決まったら rtn-grade-recheck と rtn-grade-deliverable-recheck の inputs に fallback_by（例: sol）を足せば切り替わる。rtn-grade-recheck は現在 enabled: false。","job の --by agy-expert-executor は固定のまま。評価者を入力にする案は評価者の決定後に検討する。","CHANGELOG 案: 区分 Added。grade run に --fallback-by <nickname> を追加し、評価者が rate limit のときに代わりの評価者へ切り替えて同じ run を続けられるようにした。","--fallback-by は run request の digest に含まれるため、再開時は同じ指定が必要。"],"validations":[{"command":"npx vitest run tests/src/grade/run.test.ts","status":"passed","summary":"33 件通過（fallback 追加の 3 件を含む）"},{"command":"npx prettier --check src/grade tests/src/grade/run.test.ts docs/ja/projects/prj-0001/jobs/job-grade-*.yaml docs/ja/specdojo/references/command-reference.md","status":"passed","summary":"整形違反なし"}]}
+</specdojo_executor_evidence>
