@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_8fd8533d38a44d4daafa9248e43abac1
+  ts: "2026-11-21T02:20:58Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: agy の利用を止めたあと、規約に沿って agent を使い続ける方式を決めるため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 親の agent が subagent で項目を実行する方式を採るか
+    - field: description
+      from: ""
+      to: 利用者が起動した agy・Claude Code・Codex を親にし、skill と subagent で register の項目と schedule のタスクを実行し、SpecDojo は段ごとのコマンドとして呼ばれる方式を採るかを決める
+    - field: input
+      from: ""
+      to: '["利用者の提案（2026-11-21）: specdojo の runner が agy -p を起動する代わりに、agy を orchestrator として立ち上げ、agy の subagent で todo を実行する。skill を用意する。claude・codex も同様にし、schedule の実行も同様にする","Antigravity の FAQ（<https://antigravity.google/docs/faq>）は、他社のソフトから Antigravity を使うことと、agy を他社の agent や application の中に包むことを禁じる。利用者が起動した agy が skill（<https://antigravity.google/docs/skills>）で SpecDojo の CLI を呼ぶ形はこれに当たらない。ただし Additional Terms Section 6 の「using the Service in connection with products not provided by us」は広く読めるため、本格的に使う前に Google に確かめるかを決める","Claude: 2026-02 に Consumer Terms が明確になり、Free・Pro・Max の OAuth を他の product・tool・service（Agent SDK を含む）で使うことは禁止（<https://www.theregister.com/software/2026/02/20/anthropic-clarifies-ban-on-third-party-tool-access-to-claude/5014546>）。公式の claude -p を他社の orchestrator から起動する形の扱いを明記した一次情報は見つかっていない","Codex: ChatGPT のログインで他社のツールから codex exec を起動することを禁じる記載は見つかっていない。公式の規約の一次情報は未確認","方式の利点: 規約の不確かさが小さい。保護された設定の検査・commit の許可リスト・親の検証は SpecDojo の段のコマンドに残せる。欠点: 無人の夜間の実行ができず親のセッションが要る。並列と rate limit の切り替えは親の agent に依る。evidence が subagent の自己申告になる"]'
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: PO
+    - field: registered
+      from: ""
+      to: "2026-11-21"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-5V0T"]'
