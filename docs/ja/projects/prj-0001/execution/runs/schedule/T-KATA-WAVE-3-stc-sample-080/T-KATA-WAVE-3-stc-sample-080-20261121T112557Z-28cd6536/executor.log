@@ -1,0 +1,16 @@
+`docs/ja/specdojo/samples/stc-sample.md` を確認し、冗長な箇所を1つ削りました。変更はこの1文だけで、ほかのファイルには触れていません。docs サイトのビルドは成功しました。
+
+- **削った箇所**: 「二重確定防止」の意図にあった「照合待ちの識別と復元は `stc-record-recovery` が主担当である。」です。同じ除外は「対象外」に、理由と代わりのテスト（`stc-record-recovery`）付きで書かれているため、繰り返しと判断しました。意図の本文「販売記録と在庫減算が1回分だけ残ることを保証する」はそのまま残っているので、意味は変わっていません。
+- **残した箇所（6件）**: どれも判断に必要な情報なので、手を入れていません。
+  - 「概要」の確認と合意、`status` を `ready` にする条件：この文書独自の昇格条件
+  - 会計確定応答の例外の条件：rulebook が条件・根拠・環境前提を書くよう求めている
+  - 「共通方針との差」の再現性への影響：rulebook が理由と影響を書くよう求めている
+  - 前提表の前置き文：前提が確定するまで合格を出口条件の根拠に使わない、という制約
+  - 「目的」の仮置き基準：合否を判定できる値
+  - 「概要」の取消・印刷失敗の扱い：この term が何を扱うかを決める記述
+
+**検証**: Prettier の書式チェックと `npm run docs:build` は通りました。markdownlint などの検査は、このあと runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"stc-sample の「二重確定防止」の意図から、「対象外」の除外と重なる1文を削除した。ほかの候補6件は判断に要る情報のため残した。Prettier の書式チェックと docs:build は成功した。","handoff":[],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/stc-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run docs:build","status":"passed","summary":"build complete in 154.11s（未読込言語の警告のみ、エラーなし）"}],"condense_records":[{"location":"テスト観点とケース > 観点: 二重確定防止 > 意図（2文目）","category":"repetition","action":"delete","reason":"「照合待ちの識別と復元は stc-record-recovery が主担当」は「対象外」の3項目めと同じ主張で、そちらに理由と代わりのテストがあるため削った。意図の本文（販売記録と在庫減算が1回分だけ残ること）は残しており、意味は変わらない。","cause":{"type":"document"}},{"location":"概要 2段落目（確認と合意、status を ready にする条件）","category":"canonical-restatement","action":"retain","reason":"役割分担は rulebook 全体方針の「確認と合意」と重なるが、ready にする条件（3者の確認と、P0 の判定を左右する前提の解消）はこの文書だけの完了条件なので残した。","cause":{"type":"document"}},{"location":"対象外 > 例外（会計確定の応答）","category":"repetition","action":"retain","reason":"環境や負荷の条件は「境界/環境/依存」やケースと重なるが、rulebook の対象外の節が例外に条件・根拠・環境前提を書くよう求めているため残した。","cause":{"type":"kata","kind":"rulebook","location":"記述ガイド > 対象外「例外として ST で扱う場合は、条件・根拠・環境前提を書く」"}},{"location":"境界/環境/依存 > 共通方針との差","category":"repetition","action":"retain","reason":"測定後にデータを戻して再現性に影響しないという記述は、データ行の「開始時に戻す」と重なるが、rulebook が共通方針から外れる理由と再現性への影響を書くよう求めているため残した。","cause":{"type":"kata","kind":"rulebook","location":"記述ガイド > 境界/環境/依存「共通方針から外れる場合は、理由と再現性・費用・安全性への影響を書く」"}},{"location":"境界/環境/依存 > 前提表の前置き文","category":"table-prose","action":"retain","reason":"確定するまで合格を出口条件の根拠に使わないという制約は表の列にないため、表をなぞる文ではなく残すべき制約と判断した。","cause":{"type":"document"}},{"location":"目的 6項目め（仮置き基準 95%が2秒以内）","category":"repetition","action":"retain","reason":"前提表の値と重なるが、目的に合否を判定できる値を書くため残した。","cause":{"type":"document"}},{"location":"概要 1段落目（確定前の取消・印刷失敗もこの term で扱う）","category":"repetition","action":"retain","reason":"トレース TR-04 の要点と重なるが、概要としてこの term が何を扱うかを示すのに要るため残した。","cause":{"type":"document"}}]}
+</specdojo_executor_evidence>
