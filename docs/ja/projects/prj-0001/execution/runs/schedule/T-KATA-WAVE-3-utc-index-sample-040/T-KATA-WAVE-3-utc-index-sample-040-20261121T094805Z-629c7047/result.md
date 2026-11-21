@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-3-utc-index-sample-040
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-3-utc-index-sample-040/T-KATA-WAVE-3-utc-index-sample-040-20261121T094805Z-629c7047/plan.md
   started_at: "2026-11-21T09:48:10.790Z"
+  completed_at: "2026-11-21T09:54:42.498Z"
   agent: opus-executor
   execution: agent
   approach: rulebook-maintenance
@@ -20,16 +21,28 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- Rulebook `docs/ja/specdojo/rulebooks/utc-index-rulebook.md` を更新し、指摘事項（finding）に基づいた修正を実施した。
+- F001: 境界/依存関係の章において、実接続の検証に関する記述を例外一覧への参照に置き換え、重複を解消した。
+- F002: ケース表の全10カラムについて、必須であることを定義し、未充足の場合の扱い（`トレース`/`証跡` カラムの扱い）を明記した。
+- F003: 文書の目的文を、ケース表の共通カラムに合わせて修正した。
+- F005: 図（diagram）のノード名を、成果物名と一致するよう修正した。
+- F006: `recipe` および `template` が `undecided` であることに対する `_UNDECIDED_` 注記を、全体方針の章に追加した。
+- 文書構成の変更: 第5章を `本文要件` へ改名し、`サンプル` 章を削除した。あわせて、記述ガイドの各セクションに「良い例・悪い例」を追加した。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/rulebooks/utc-index-rulebook.md`: rulebook の内容を、指摘事項（F001, F002, F003, F005, F006）に基づいて修正。具体的には、重複の削除、カラムの定義明確化、ノード名の表記ゆれ修正、未決定事項の注記追加、および章構成の整理（`サンプル` 章の削除と `本文要件` への改名）を行った。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- F004 not fixed: `docs/ja/specdojo/samples/utc-index-sample.md` が本 rulebook の `本文要件` で定義した章構成に従っていない。本フェーズでは sample の編集は禁止されているため、後続の `sample-maintenance` で、見出しの構成・順序の整合および Markdown リンクの削除を行う必要がある。
+- The `サンプル（最小）` chapter was removed because the plan says the rulebook must not hold a completed example. `rulebook-authoring-standard` says existing rulebooks should not remove this chapter ahead of others in an individual revision; please confirm which rule takes precedence.
+- F006: the frontmatter declarations (`recipe: undecided`, `template: undecided`) are unchanged per the plan; the `_UNDECIDED_` note in `全体方針` must be removed once they are decided (template is handled by PJR-WYTX).
+- F004 not fixed: docs/ja/specdojo/samples/utc-index-sample.md does not follow the rulebook's 本文要件 chapters 1-9. The plan forbids editing the sample in this stage, so the follow-up `sample-maintenance` should align its headings and order (also remove the Markdown links in its H1 and body).
+- The サンプル（最小） chapter was removed because the plan says the rulebook must not hold a completed example. rulebook-authoring-standard says existing rulebooks should not remove this chapter ahead of others in an individual revision; please confirm which rule takes precedence.
+- F006: the frontmatter declarations (`recipe: undecided`, `template: undecided`) are unchanged per the plan; the `_UNDECIDED_` note in 全体方針 must be removed once they are decided (template is handled by PJR-WYTX).
+- 適用外の検証: `npm run validate:history-links`（Only a rulebook under docs/ja/specdojo/rulebooks was changed; no plan/result/pjr ticket was edited）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+rulebook-maintenance

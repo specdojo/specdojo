@@ -1,0 +1,23 @@
+`docs/ja/specdojo/rulebooks/utc-index-rulebook.md` だけを編集しました。plan の要求どおり、sample・frontmatter の宣言・`status: draft` は変えていません。指摘 F001・F002・F003・F005・F006 は rulebook 側で直し、F004 は今回の作業範囲外のため後続の作業へ回します。Prettier の整形確認と markdownlint はどちらもエラーなしでした。lint 系・schema・テストは親 runner が実行します。
+
+| finding | 対応 |
+| --- | --- |
+| F001 | 境界/依存の章で DB の扱いを再掲していた行を削り、「対象外・除外理由（共通）」の典型例を参照する形にしました。 |
+| F002 | 「推奨カラム（運用必須）」をやめ、全 10 カラムを必須として並び順を固定した表にまとめました。`トレース`・`証跡` が未確定のときは空欄にせず、暫定であることと確定予定を書くとしました（`utc-rulebook` の禁止事項に合わせています）。`case_id` の形式は 1 段落にまとめました。 |
+| F003 | 目的の文から「合格基準・証跡方針」を外し、ケース表の共通カラム（`期待値`・`証跡` を含む）を揃える、と実際の章に合う書き方に変えました。 |
+| F005 | 図のノード名を「単体テストカタログ 概要」「単体テストカタログ 対象別」にしました。 |
+| F006 | 全体方針に `_UNDECIDED_` の行を足し、`recipe`・`template` の要否が未判断なこと（template は PJR-WYTX で扱う）、sample が本文構成と合っていないこと、どちらも ready 化の前に解消することを書きました。 |
+
+ほかに 2 点変えました。
+
+- **章の構成:** 5 章の名前を標準どおり「本文要件」にしました。完成例を置いていた「8. サンプル（最小）」の章は削除し、見出しは H4 までに収まっています。
+- **良い例・悪い例:** 分割基準、観点の立て方、ケース表の各節に 1 つずつ足しました。ほかの節には足していません。
+
+確認してほしい点が 2 つあります。
+
+- **サンプル章の削除:** 執筆標準は「既存 rulebook のサンプル章は個別の改訂で先に削除しない」としています。今回は plan の「rulebook に完成例の章を置かない」を優先して削除しました。
+- **F004 は未対応:** sample の見出し構成が「本文要件」と合っていない件です。sample はこの段階では変えない決まりなので、後続の `sample-maintenance` で 1〜9 章の見出しと順序に揃える必要があります。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"Edited only docs/ja/specdojo/rulebooks/utc-index-rulebook.md. Fixed F001 (DB exception restated in the boundary/dependency chapter now references the exclusion table), F002 (all 10 case-table columns are required in a fixed order; unresolved `トレース`/`証跡` cells must state they are provisional), F003 (purpose text now matches the case-table common columns), F005 (diagram node names match the deliverable names) and F006 (`_UNDECIDED_` note for the undecided recipe/template and the sample mismatch). Renamed chapter 5 to 本文要件, removed the サンプル chapter, and added good/bad examples to three guide sections. F004 (sample structure mismatch) is out of scope for this stage and is handed off.","handoff":["F004 not fixed: docs/ja/specdojo/samples/utc-index-sample.md does not follow the rulebook's 本文要件 chapters 1-9. The plan forbids editing the sample in this stage, so the follow-up `sample-maintenance` should align its headings and order (also remove the Markdown links in its H1 and body).","The サンプル（最小） chapter was removed because the plan says the rulebook must not hold a completed example. rulebook-authoring-standard says existing rulebooks should not remove this chapter ahead of others in an individual revision; please confirm which rule takes precedence.","F006: the frontmatter declarations (`recipe: undecided`, `template: undecided`) are unchanged per the plan; the `_UNDECIDED_` note in 全体方針 must be removed once they are decided (template is handled by PJR-WYTX)."],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/utc-index-rulebook.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/utc-index-rulebook.md","status":"passed","summary":"0 issues in 0 files"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"No history file changed","reason":"Only a rulebook under docs/ja/specdojo/rulebooks was changed; no plan/result/pjr ticket was edited"}]}
+</specdojo_executor_evidence>
