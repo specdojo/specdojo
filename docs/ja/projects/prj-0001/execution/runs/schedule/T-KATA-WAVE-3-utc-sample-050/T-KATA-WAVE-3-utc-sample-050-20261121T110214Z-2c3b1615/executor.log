@@ -1,0 +1,18 @@
+`docs/ja/specdojo/samples/utc-sample.md` を書き直しました。中身のない中間版から、駄菓子屋きぬやの会計確定（`utc-sales-checkout`）を題材にした完成例になっています。確認では Prettier 整形・markdownlint・`npm run docs:build` が通りました。lint や test などの検査は、このあと親 runner が実行します。
+
+**変更内容**
+- **章立て**: rulebook が定める 6 章（概要（`sales-checkout`）・責務・対象外・境界/依存・トレース・テスト観点とケース）に揃えました。元の「目的と適用範囲」「最小記述例」「未解決事項」の章は削っています。
+- **frontmatter**: `based_on` に `tsp-index-sample`・`utc-index-sample`・`bac-sample` を追加しました。
+- **H1**: 「単体テストカタログ: 会計確定（駄菓子屋きぬや 販売管理システム）」に変え、Markdown リンクを外しました。
+- **観点とケース**: 観点を 3 つ立て、ケースを 6 件入れました。請求額・在庫の計算、在庫や受領額が足りないときに確定しないこと、印刷要求の回数と内容です。各表は 10 カラムすべてを値で埋め、期待値は判定できる書き方にしています。
+- **トレース**: `TR-01`〜`TR-05` を受入条件（BAC-01 / BAC-02）とテスト戦略に結び付けました。
+- **依存の扱い**: 商品・在庫は Fake、取引番号は固定の採番、`receipt-print` は Mock で制御すると書きました。
+
+**残った判断（handoff に記載）**
+- 受領額が足りないケースは、BAC-01 の前提「合意した請求額の現金を受領してから確定する」を解釈したもので、`_ASSUMPTION_` と明記しています。業務分析担当（BA）が受入条件に明示の条件を足すか判断する必要があります。
+- 計画・リリース判定・未解決事項表などを求める指摘（F002、F004〜F006、F027、F028）は、rulebook に該当する章がないので章を足していません。未解決事項の扱いは rulebook がメタ情報標準を参照しているため、そちらに従います。
+- rulebook の全体方針にある「sample は見出し構成へ未整合」という `_UNDECIDED_` は今回の改訂で解消したので、該当部分を削る変更案を出しています。rulebook 自体はこの段では変更していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"utc-sample.md を utc-rulebook の本文要件（概要〜テスト観点とケース の6章）に沿った会計確定（`utc-sales-checkout`）の完成例へ全面改訂した。frontmatter に `based_on`（tsp-index-sample・utc-index-sample・bac-sample）を追加し、H1 を規定形式に改め、トレース表（`trace_key` TR-01〜05）、依存の制御方法、3観点・6ケースを10カラムすべて値ありで記載した。確認として Prettier 整形・markdownlint（0 issues）・docs:build（成功）を実行した。","handoff":["rulebook 変更案: utc-rulebook の全体方針にある `_UNDECIDED_` のうち「sample は本文要件の見出し構成へ未整合」の文言は今回の改訂で解消したため削除する（recipe・template の要否は残す）。","F002/F004/F005/F006/F027/F028（PM の計画・依存リスク・報告経路・ready 化の判定基準・運用ガイダンス・未解決事項表）は utc-rulebook の本文要件（6章固定）に該当する章がなく、sample 独自の章は作れないため本文には追加していない。未決事項・承認・改訂の扱いは rulebook がドキュメントメタ情報標準へ委ねている。sample 群で扱うかは rulebook の側で判断する必要がある。","TR-04（受領額不足で確定しない）は bac-sample の BAC-01 前提「合意した請求額の現金を受領している」からの解釈であり、`_ASSUMPTION_` として明記した。BAC 側に明示の条件を追加するか BA の判断が要る。","F001/F007〜F010（目的・ビジネス価値・受入基準・ステークホルダー）は概要・責務・対象外とトレース（BAC・tsp-index）で対応した。目的と関与者の一覧は utc-index-sample にあるため、本 sample には重ねて書いていない。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/utc-sample.md","status":"passed","summary":"変更した sample を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/utc-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run docs:build","status":"passed","summary":"build complete（警告は既存の cron ハイライトのみ）"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルは変更していない","reason":"変更ファイルは docs/ja/specdojo/samples/utc-sample.md のみで、pjr 個票や plan/result などの履歴ファイルを変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML の変更なし","reason":"変更した *.yaml / *.yml ファイルがない"}]}
+</specdojo_executor_evidence>
