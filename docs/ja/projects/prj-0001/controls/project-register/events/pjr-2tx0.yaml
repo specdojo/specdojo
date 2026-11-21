@@ -38,3 +38,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-11EX"]'
+- v: 1
+  id: reg_031f5aa883284942b749df95b67e5c1b
+  ts: "2026-11-21T09:39:37Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "検討した選択肢" updated
+  changes:
+    - field: section
+      from: ""
+      to: 検討した選択肢
+  previous_event_id: reg_757ab6ab863a413a9700f58f27dfc6b6
