@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-77JB
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-77JB/pjr-77jb-20261121T072203Z-125ac855/plan.md
   started_at: "2026-11-21T07:22:04.045Z"
+  completed_at: "2026-11-21T07:27:14.693Z"
   agent: sonnet-executor
 ---
 
@@ -16,16 +17,18 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- resolveMemberCommand に disabled 確認を追加し、名前指定・routing・fallback の全経路で起動前にエラーにした。単体テスト3件を追加。個票の対応結果を更新。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `src/exec/agent-config.ts`: 変更、+8 / -1 行
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- afbebe967（exec-defaults の antigravity の `command_template` を外した回避策）は、戻してよいと判断した。member を disabled にすれば `resolveMemberCommand` が起動前に断り、agy は `isBlockedProvider` でも遮断される。protected 設定のためこの項目では変更しておらず、戻すかどうかは人間が決める。
+- CHANGELOG 案（Fixed）: `exec run` で `disabled` の member を名前で指定（`--executor-by`・`--reporter-by` など）すると、起動の前にエラーにするようにした。
+- 個票に作業内容の表が無かったため、表の更新は行っていない。
 
 ## 4. 進め方
 
-_TODO_: どう進めたか、根拠にした文書や規約を記入する。
+reporter を使わず、runner が executor の報告（`final_message`・`handoff`）と証跡から機械的に作成した（`pipeline.mechanical_result`）。

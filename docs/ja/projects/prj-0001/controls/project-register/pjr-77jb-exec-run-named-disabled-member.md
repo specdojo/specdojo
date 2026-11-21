@@ -60,7 +60,29 @@ agent-members.yaml で disabled にした member でも、exec run --executor-by
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+### 5.1. 解決内容
+
+- 起動コマンドを組み立てる共通関数 `resolveMemberCommand`（`src/exec/agent-config.ts`）で、`disabled: true` の member をエラーにした。名前の指定（`--by`・`--executor-by`・`--reporter-by`）、routing、strategy の `agent`、`fallback_executor`、trial、resume はすべてこの関数を通るため、起動の前に断られる。エラーの文に nickname と `.specdojo/agent-members.yaml` を含む。
+- 別名から辿った実体が無効な場合は、`resolveAgentMember`（`src/shared/specdojo-config.ts`）が元から解決しない。
+- 代わりの選択は `selectCandidates` が `disabled` を除くため、次の候補へ進む。候補が残らなければ既存の理由付きエラーで止まる。
+- `grade run --by` は `resolveAgentMember`（`src/exec/agent-plan.ts`）で先に断るため動きは変わらない。
+
+### 5.2. 確認結果
+
+- `tests/src/exec/agent-config-command.test.ts` に、名前の指定・command 上書き（routing 相当）・代わりの選択の 3 つの単体テストを追加し、通った。`npm run typecheck` も通った。
+
+### 5.3. 迷った点と決定
+
+- 解決箇所ごとに確認を足す案は漏れやすいため、antigravity の遮断と同じ共通関数への一括の確認にした。
+
+### 5.4. 回避策（afbebe967）の戻し可否
+
+- 戻してよい。ただし protected 設定のため、この項目では変えていない。人間の判断で antigravity の `command_template` を戻せる。agy は `isBlockedProvider` でも遮断され、member を disabled にすれば `resolveMemberCommand` で断られる。
+
+### 5.5. CHANGELOG に書く事項
+
+- 区分: Fixed
+- 文案: `exec run` で `disabled` の member を名前で指定（`--executor-by`・`--reporter-by` など）すると、起動の前にエラーにするようにした。
 
 ## 6. 関連ドキュメント
 
