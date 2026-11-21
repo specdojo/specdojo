@@ -1,0 +1,16 @@
+`cnd-specdojo` の 3 回目の手直しを終えました。`grade run --target deliverable` は未実施です。executor の範囲外のため、再 grade は orchestrator 側で必要です。
+
+- **成果物の修正:** 4.1 の承認の括弧書きを消し、「配信先には公開対象の生成物だけを渡す」という方針だけにしました。
+- **進み具合の記述:** 「メモ / 将来課題」の表にあった「人間の `PO` が 2026-11-15 に…承認」も外しました。PJR-PST5 と PJR-CJMN の追跡先リンクと留保の範囲は残しています。
+- **2 回目の指摘:** 概要の 4 段落目の削除、4.2 後半の外し、3.2 の列削除、3.6 の整理は、作業開始時点の本文にすでに反映されていました。
+- **バイト数:** 3・4 章は 2 回目の前の 19,318 バイトから 11,532 バイトで、約 40% 減です。文書全体は 3 回目の前が 19,379、後が 19,068 バイトです。
+- **個票の対応結果:** 1 回目の対応結果は残したまま、2 回目と 3 回目の節（5.1・5.2）を追加しました。
+- **`status`:** 成果物の `status` は `draft` のままです。
+
+表の後の段落にある「人間の `PO` が承認を記録した版を公開の元とする」は、進み具合ではなく運用の規則と判断して残しました。この判断は個票にも書いています。
+
+`lint:md`・`lint:fm`・`validate:catalog` は親 runner が実行する検証です。ここでは実行していません。私が実行したのは `prettier --write` で、個票は変更なしでした。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"4.1 と「メモ / 将来課題」から承認の進み具合の記述を削除し、個票に 2 回目・3 回目の対応結果（5.1・5.2）を追記した。3・4 章は 19,318 から 11,532 バイトで約 40% 減。status は draft のまま。","handoff":["grade run --target deliverable による再 grade は executor の範囲外のため未実施。orchestrator が実行する。","迷った点: 表の後の段落の「人間の PO が承認を記録した版を公開の元とする」は進み具合ではなく運用規則のため残した。","3・4 章の「2 回目の前 19,318 バイト」は、e72b2b946 時点の文書全体が 26,711 バイトで 3・4 章単体の値と判断できないため、指示された値をそのまま基準にした。現在の 3・4 章は 11,532 バイト、文書全体は 19,068 バイト。"],"validations":[{"command":"npx prettier --write docs/ja/product/030-architecture/010-c4/cnd-specdojo.md","status":"passed","summary":"整形済み（本文は表の幅調整のみ）"},{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する検証のため、executor では実行していない"},{"command":"npm run lint:fm","status":"not_run","summary":"親 runner が実行する検証のため、executor では実行していない"},{"command":"npm run validate:catalog","status":"not_run","summary":"親 runner が実行する検証のため、executor では実行していない"}]}
+</specdojo_executor_evidence>
