@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: medium
   registered_at: "2026-11-13T14:08:21Z"
-  block_reason: "agent exited with non-zero code: root agent idle; waiting for 1 background task(s) to finish"
   commit_type: feat
   commit_scope: register
 ---
