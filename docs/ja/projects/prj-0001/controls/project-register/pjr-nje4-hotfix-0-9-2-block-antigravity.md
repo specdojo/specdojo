@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-nje4-hotfix-0-9-2-block-antigravity
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-21T00:32:31Z"
+  completed_at: "2026-11-21T01:21:32Z"
+  conclusion: provider が antigravity の member と agent launch・orchestrator launch を agy の起動前に理由付きのエラーで止め、自動選択では agy を候補から外す。init・config scaffold・devcontainer scaffold で antigravity を選べなくした
   derived_from:
     - PJR-5V0T
 ---

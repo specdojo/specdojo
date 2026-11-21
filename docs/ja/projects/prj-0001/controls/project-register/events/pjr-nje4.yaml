@@ -125,3 +125,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_c4f7b3d4d75242cdb3b7b5d4028cdc9f
+- v: 1
+  id: reg_a2f08f41815f499e86709db1d27be9e7
+  ts: "2026-11-21T01:21:32Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（opus-executor）で対応し、親の検証の失敗を --resume-note で executor から直した。PATH に偽の agy を置き、exec の名前指定・agent launch・orchestrator launch・grade（agy の member が有効な確認用リポジトリ）・init・自動選択のどれでも agy が呼ばれないことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-21"
+    - field: conclusion
+      from: "-"
+      to: provider が antigravity の member と agent launch・orchestrator launch を agy の起動前に理由付きのエラーで止め、自動選択では agy を候補から外す。init・config scaffold・devcontainer scaffold で antigravity を選べなくした
+  previous_event_id: reg_ee5c9ecc0f9d404a96393004dc61c7f8
