@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_064fe54429ec4da181a4275a281f1741
+  ts: "2026-11-21T08:19:44Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者の指摘を、型と成果物の全体の決まりとして決めるため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 成果物と sample の本文に、文書の役割の割り当てと承認の進み具合を書かない
+    - field: description
+      from: ""
+      to: 成果物と sample の本文には、文書を作る・確かめる・承認する役割の割り当てや承認の進み具合を書かず、承認と留保は登録簿で追う。rulebook の「誰が判断するか」は「どの利用場面で何を判断するための文書か」に直す
+    - field: input
+      from: ""
+      to: '["利用者の指摘（2026-11-21、cnd-specdojo の確定の前）: 概要に PO・ARC・BA・DEV などの役割を書く必要があるか。3 章・4 章が長い","orchestrator の調べ（2026-11-21）: 役割の割り当ての文は製品の成果物と sample に約 28 件（cnd-specdojo・cpd-specdojo-cli・bes-index・cdsd-execution・`sysd-*`・cnd-sample など）、「誰が……判断するか」と書く rulebook は 19 件（cnd・cxd・atc・pjr など）。cnd-rulebook の 6.1 は「誰がどの利用場面で配置・結合の何を判断するかを示します」としつつ、1 章では役割の割り当てをメンバー定義に委ね、Person を確認者一覧と区別している","cnd-specdojo の 4.2 の後半は承認の範囲・留保・差し戻しの記録で、設計の中身ではない。品質管理計画（pm-quality-management-plan）の本文も多くが役割の手順で、CLI・runner・hook は読んでおらず、ゲートの判定の記録も無い","利用者の承認（2026-11-21）: decision を起票して決まりを決め、流している波の strategy に伝え、cnd-specdojo は手直しの todo（Q9DF）を開き直し、ほかの成果物はまとめて直す todo、rulebook は第 3〜6 波と kata-slim-3 で直す"]'
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: PO
+    - field: registered
+      from: ""
+      to: "2026-11-21"
+    - field: due
+      from: ""
+      to: _TODO_
