@@ -31,14 +31,14 @@ specdojo:
 
 ## 3. 作業内容
 
-| No  | 作業                                                | 担当                  | 状態 | メモ                       |
-| --- | --------------------------------------------------- | --------------------- | ---- | -------------------------- |
-| 1   | `devcontainer.json` に named volume の mount を足す | specdojo-orchestrator | open | -                          |
-| 2   | `post-create.sh` に持ち主の調整と `npm ci` を足す   | specdojo-orchestrator | open | -                          |
-| 3   | `gc.worktreePruneExpire` と運用メモ                 | specdojo-orchestrator | open | -                          |
-| 4   | 途中の worktree の片付け                            | indie                 | open | 一覧は orchestrator が出す |
-| 5   | container の作り直し                                | indie                 | open | -                          |
-| 6   | 作り直しのあとの動作と時間の確認                    | specdojo-orchestrator | open | -                          |
+| No  | 作業                                                | 担当                  | 状態 | メモ                                                                                                                                                                                               |
+| --- | --------------------------------------------------- | --------------------- | ---- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | `devcontainer.json` に named volume の mount を足す | specdojo-orchestrator | done | `5704317eb`、develop へ取り込み `6d7839a3b`                                                                                                                                                        |
+| 2   | `post-create.sh` に持ち主の調整と `npm ci` を足す   | specdojo-orchestrator | done | `.devcontainer/prepare-workspace-volumes.sh`                                                                                                                                                       |
+| 3   | `gc.worktreePruneExpire` と運用メモ                 | specdojo-orchestrator | done | 設定は作り直しのときに `prepare-workspace-volumes.sh` が入れる                                                                                                                                     |
+| 4   | 途中の worktree の片付け                            | indie                 | done | 2026-11-21 に利用者の承認で 28 個を消した（取り込み済み 11、終わったタスクの残り 9、orchestrator の作業 3、agent の作業場所 3、prj-0002 の KH17 の 2）。共有の `worktrees/` は 19GB から空になった |
+| 5   | container の作り直し                                | indie                 | open | grade のし直し（regrade-kata-2026-11-21）が終わってから                                                                                                                                            |
+| 6   | 作り直しのあとの動作と時間の確認                    | specdojo-orchestrator | open | -                                                                                                                                                                                                  |
 
 ## 4. 対応結果
 
