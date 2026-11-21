@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_860a506e63bd4d3a9d0d9d8632c4127a
+  ts: "2026-11-21T04:40:42Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者との対話で、分野の正式名称の検討を依頼されたため起票する
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: SpecDojo が提唱する分野の正式名称を決める
+    - field: description
+      from: ""
+      to: Spec道 では分かりにくいため、SDD と範囲の違う分野として Continuous Specification Engineering を正式名称に掲げるかを決める
+    - field: input
+      from: ""
+      to: '["候補は Continuous Specification Engineering。","Spec道 は愛称として残す（分野・道・道場の二層または三層で使う案）。","SDD（仕様駆動開発）との範囲の違い（成果物の体系・判断の記録・型と評定・運用中の維持）を示す必要がある。","略称の CSE は Computer Science and Engineering とぶつかる。","2026-11-21 の調査では、Continuous Specification Engineering を分野として定義した用語は見当たらなかった。近い研究に Continuous Requirements Engineering がある。"]'
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-21"
+    - field: due
+      from: ""
+      to: _TODO_
