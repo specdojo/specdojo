@@ -32,13 +32,25 @@ dct-kata.yaml を作って試験の型 13 種類の sample を成果物として
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-kata.yaml` を作り、`dct-index.yaml` に domain `kata` を足す。試験の型 13 種類（tsp-index・utc-index・utc・itc-index・itc・stc-index・stc・etc-index・etc・atc-index・atc・trc-requirements-to-tests・imp-test）の sample を、`kind: work`・`local_id: <name>-sample`・`rulebook: specdojo:<name>-rulebook` の成果物として載せる。
+- 各成果物の `done_criteria` は、型に共通の条件（rulebook の章立てと必須の表に沿う、sample の作成標準と共通のサンプル文脈に沿う、rulebook の禁止事項に当たらない）を基本にし、型に固有の条件を足す。固有の条件は、grade のし直しの結果（`execution/grade/results/specdojo.<name>-rulebook.yaml` と `specdojo.<name>-sample.yaml` の findings）から、型ごとに大きい指摘を拾って書く。grade の結果がまだ無い型は、共通の条件だけにして対応結果に書く。
+- `docs/ja/projects/prj-0001/schedule/sch-strategy-kata-wave-3.yaml` を作り、`schedule build --track kata-wave-3` で `sch-track-kata-wave-3.yaml` を生成する。track は手で編集しない。
+- 段は PJR-ABY4 の範囲に従う（rulebook を簡潔に → sample を厚く → condense → review → 人の確定）。recipe のある型は、rulebook に合わせて recipe を直す段を足す。template の段は入れない（PJR-WYTX で扱う）。成果物が sample そのものなので、sample を整える段と成果物を磨く段が同じファイルを触る。どちらの approach で組むかは executor が決め、`exec plan --track kata-wave-3` の dry-run で、各段の plan の対象と手本が食い違わないことを確かめて対応結果に書く。
+- 段ごとの agent は strategy の `phase_overrides[].agent` で決める。edit の段は `opus-executor`、review の段は `sol-review-executor`、reporter は `gemma26-reporter`、人の確定は利用者とする。agy の member は使わない。
+- 先行の track の前例（`sch-strategy-kata-wave-1.yaml`・`sch-strategy-kata-slim-2.yaml`）の書き方に合わせる。
+- この項目では schedule のタスクを実行しない。
+- `npm run validate:schema`（strategy と track の YAML の `task_suffix` などの文字列が数値に変わっていないことを含む）・`npx specdojo catalog validate`・`npx specdojo exec validate`・`npm run lint:md` が通り、親の検証が通る。
+- `CHANGELOG.md` は変えず、個票の対応結果の「CHANGELOG に書く事項」の節に、利用者に影響が無いことを書く。
+- 迷った点は executor が決め、決めた内容と理由を個票の対応結果に書く。pipeline では報告の `handoff` にも書く。
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                              | 担当 | 状態 | メモ |
+| --- | ------------------------------------------------- | ---- | ---- | ---- |
+| 1   | `dct-kata.yaml` と `dct-index.yaml` の domain     | DEV  | open | -    |
+| 2   | 13 種類の `done_criteria` を grade の結果から書く | DEV  | open | -    |
+| 3   | strategy を作り、track を生成する                 | DEV  | open | -    |
+| 4   | plan の dry-run で段の組み方を確かめる            | DEV  | open | -    |
 
 ## 5. 対応結果
 

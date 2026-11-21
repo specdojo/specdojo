@@ -41,3 +41,29 @@
     - field: derived_from
       from: ""
       to: '["PJR-ABY4"]'
+- v: 1
+  id: reg_9a4bf8d8161f4ebf9ade15f1027c29b0
+  ts: "2026-11-21T06:08:50Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_a4b9fbaab33e4bf1bbf9c4efd24b4c08
+- v: 1
+  id: reg_f8d242c7dd7941ddadaa425e92c6971b
+  ts: "2026-11-21T06:08:54Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "作業内容" updated
+  changes:
+    - field: section
+      from: ""
+      to: 作業内容
+  previous_event_id: reg_9a4bf8d8161f4ebf9ade15f1027c29b0
