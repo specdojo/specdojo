@@ -38,7 +38,7 @@ specdojo:
 | 3   | `gc.worktreePruneExpire` と運用メモ                 | specdojo-orchestrator | done | 設定は作り直しのときに `prepare-workspace-volumes.sh` が入れる                                                                                                                                     |
 | 4   | 途中の worktree の片付け                            | indie                 | done | 2026-11-21 に利用者の承認で 28 個を消した（取り込み済み 11、終わったタスクの残り 9、orchestrator の作業 3、agent の作業場所 3、prj-0002 の KH17 の 2）。共有の `worktrees/` は 19GB から空になった |
 | 5   | container の作り直し                                | indie                 | done | 2026-11-21                                                                                                                                                                                         |
-| 6   | 作り直しのあとの動作と時間の確認                    | specdojo-orchestrator | open | -                                                                                                                                                                                                  |
+| 6   | 作り直しのあとの動作と時間の確認                    | specdojo-orchestrator | done | PJR-77JB・PJR-N5D2 の exec run --register --worktree が統合まで通った                                                                                                                              |
 
 ## 4. 対応結果
 
