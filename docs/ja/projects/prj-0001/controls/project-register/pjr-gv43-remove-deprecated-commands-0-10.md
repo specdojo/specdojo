@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-gv43-remove-deprecated-commands-0-10
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-20T23:57:32Z"
+  completed_at: "2026-11-21T12:57:25Z"
+  conclusion: 非推奨の 9 コマンドと exec・catalog・schedule・job・routine の where の別名を消した（3eea88005）。使われ方を確かめ、prj-0002 を含めて呼び出しがないことを確かめた
   derived_from:
     - PJR-BSCK
 ---
