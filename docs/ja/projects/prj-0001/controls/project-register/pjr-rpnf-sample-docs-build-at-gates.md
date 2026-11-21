@@ -30,7 +30,16 @@ sample の作成規則の最終チェックが docs:build を求めるため、�
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- `.github/instructions/sample.instructions.md` の最終チェックから「`npm run docs:build` でエラーがない」を外す。代わりに、文書サイトのビルドは型の schedule の区切り（gate の前）と release の前にオーケストレーターがまとめて 1 回流すため、タスクごとには流さないと 1 行で書く。
+- 外した後も、最終チェックに `npm run -s lint:md` は残す。
+- `pm-orchestrator-playbook` の docs:build の項に、次を書く。
+  - 型の schedule では、gate（例: `G-KATA-WAVE-3-first-pass`）の前と release の前に、`exec queue` の 1 段として `npm run docs:build` を 1 回流す。並べた run と重ねない。
+  - 失敗したら、出力の対象ファイルから原因のタスクを特定し、同じ型の todo か新しい項目で直す。
+- `rulebook.instructions.md` など、ほかの作成規則に docs:build をタスクごとに求める記述がないことを確かめ、個票の対応結果に書く。
+- `docs/ja/specdojo/` の guides・standards で、executor にタスクごとの docs:build を求める記述があれば同じ方針に直す。手順の例として docs:build を挙げているだけの記述（`id-and-file-naming-standard` の解決の確認の手順など）は変えない。どれを変え、どれを変えなかったかを個票の対応結果に書く。
+- `package.json`・`tools/`・`.github/workflows/` は変えない。`check:release` に docs:build を足す案があれば、個票の対応結果に案として書く。
+- `CHANGELOG.md` は変えない。個票の対応結果の `### 5.1. CHANGELOG に書く事項` に、区分と行の文案を書く。
+- `npm run lint:md`・`npm run lint:fm` を通し、親の検証を通す。
 
 ## 4. 作業内容
 

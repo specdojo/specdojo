@@ -41,3 +41,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-50RQ"]'
+- v: 1
+  id: reg_936c147e7226420bbaee225ab299975a
+  ts: "2026-11-21T23:04:34Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_52df63e020334deca5b7dadd88036808
