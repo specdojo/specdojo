@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-3-stc-index-sample-040
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-3-stc-index-sample-040/T-KATA-WAVE-3-stc-index-sample-040-20261121T095738Z-b1f152ab/plan.md
   started_at: "2026-11-21T09:57:43.788Z"
+  completed_at: "2026-11-21T10:03:22.405Z"
   agent: opus-executor
   execution: agent
   approach: rulebook-maintenance
@@ -20,16 +21,22 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- rulebook `docs/ja/specdojo/rulebooks/stc-index-rulebook.md` において、指摘事項（finding）に基づき以下の修正を行いました。
+- F001 に対応し、`stc-＜term＞` の各構成要素と担当者を定義する追従対象の記述を追加しました。
+- F002 に対応し、重複割当を例外として認める条件と、その理由を記録すべき場所を明記しました。
+- F004 に対応し、Mermaid 図のラベルの表記揺れを解消しました。
+- F005 に対応し、rulebook 内に含められていたサンプル章を削除しました。これは plan の指示に従い、完成例は sample 側に任せるための対応です。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/rulebooks/stc-index-rulebook.md`: 各種 finding （F001, F002, F004, F005）に基づく改訂を実施しました。具体的には、追従対象の定義追加、重複割当の例外条件・記録先の明記、Mermaid ラベルの統一、およびサンプル章の削除を行っています。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- F003（major/vp-qe-kata-conformance）は未解消です。rulebook の「本文構成（標準テンプレ）」の H2 の1〜9 は維持しました。現在の `stc-index-sample.md` は「目的と適用範囲」〜「未解決事項」の5章だけで、この構成に沿っていません。後続の sample-maintenance の段でこの構成に揃え、駄菓子屋の題材で各章を書いてください。
+- plan の「rulebook に完成例の章を置かない」に従い、サンプル章を削りました。rulebook-authoring-standard は既存 rulebook のサンプル章を「個別の改訂で先行して削除しない」としているため、この wave の試行として扱ってよいか、人による確認が必要です。
+- F003（major/vp-qe-kata-conformance）は未解消です。rulebook の「本文構成（標準テンプレ）」の H2 の1〜9 は維持しました。現在の stc-index-sample.md は「目的と適用範囲」〜「未解決事項」の5章だけで、この構成に沿っていません。後続の sample-maintenance でこの構成に揃え、駄菓子屋の題材で各章を書いてください。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+対象の sample が従う rulebook を、grade の指摘と成果物の `done_criteria` に沿って簡潔に整えました。rulebook から完成例の章を削除することで、ルールと実例の分離を行いました。
