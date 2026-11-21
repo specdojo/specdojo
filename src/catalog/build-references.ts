@@ -126,15 +126,24 @@ function resolveReference(
   return { kind: "unresolved" };
 }
 
-// Reads the based_on list from a deliverable document's frontmatter.
+// Reads the document id and based_on list from a deliverable document's frontmatter.
 // Returns null when the document file does not exist.
-function readBasedOn(docFsPath: string): string[] | null {
+function readBasedOn(docFsPath: string): { id: string | undefined; basedOn: string[] } | null {
   if (!existsSync(docFsPath)) return null;
   const content = readFileSync(docFsPath, "utf8");
   // based_on は Markdown frontmatter の `specdojo:` 名前空間配下にある。
-  const based = readSpecdojoNamespace(content).based_on;
-  if (!Array.isArray(based)) return [];
-  return based.filter((value): value is string => typeof value === "string");
+  const metadata = readSpecdojoNamespace(content);
+  const id = typeof metadata.id === "string" ? metadata.id : undefined;
+  const based = metadata.based_on;
+  if (!Array.isArray(based)) return { id, basedOn: [] };
+  return { id, basedOn: based.filter((value): value is string => typeof value === "string") };
+}
+
+// 文書の id が catalog の project 以外の名前空間で修飾されている場合（kata ドメインの
+// specdojo:<name>-sample など）、その based_on は文書自身の世界（sample の共通サンプル
+// 文脈）の ID を指すため、catalog の project の deliverable として解決・閉包検査しない。
+function isForeignNamespaceDocument(id: string | undefined, projectId: string): boolean {
+  return !!id && id.includes(":") && !id.startsWith(`${projectId}:`);
 }
 
 // Validates the invariant: every same-project catalog deliverable referenced in
@@ -161,13 +170,15 @@ export function validateBasedOn(
   for (const node of nodes.values()) {
     if (node.kind !== "work" || !node.resolvedDocPath) continue;
 
-    const basedOn = readBasedOn(join(rootDir, node.resolvedDocPath));
-    if (basedOn === null) {
+    const doc = readBasedOn(join(rootDir, node.resolvedDocPath));
+    if (doc === null) {
       warnings.push(
         `${node.filePath}: ${node.localId}: based_on を検証する文書が見つかりません (${node.resolvedDocPath})`,
       );
       continue;
     }
+    if (isForeignNamespaceDocument(doc.id, node.projectId)) continue;
+    const basedOn = doc.basedOn;
 
     const closure = transitiveDependsOn(node.fullId, nodes);
     for (const ref of basedOn) {

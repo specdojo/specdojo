@@ -1,0 +1,367 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/dct.schema.yaml
+id: prj-0001:dct-kata
+type: project
+status: draft
+title: 成果物カタログ（実践の型）
+rulebook: specdojo:dct-rulebook
+project_id: prj-0001
+domain: kata
+base_path: /docs/ja/specdojo
+
+# 実践の型（rulebook・sample）を成果物として整える段の対象を載せる（PJR-6998）。
+# 代表は sample そのもの（駄菓子屋の共通サンプル文脈）で、rulebook は対応する型を指す。
+# done_criteria は型に共通の 3 条件に、grade のし直し（run id regrade-kata-2026-11-21）の
+# 大きい指摘から拾った型に固有の条件を足す。depends_on はテストの型の上下関係
+# （tsp-index → 各 *-index → 対象別）に合わせ、上位の完成例と食い違わないよう順に整える。
+
+groups:
+  - name: サンプル
+    base_path: samples
+    deliverables:
+      - local_id: tsp-index-sample
+        name: テスト戦略・方針の完成例
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋の販売管理システムを題材に、テスト戦略・方針の完成例を示す
+        path: tsp-index-sample.md
+        rulebook: specdojo:tsp-index-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 何を書くかの説明ではなく、テストレベル一覧・スコープ・体制・環境を値で埋めた成果物の実例になっていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 入口／出口条件（品質ゲート）を、失敗件数や重大度の上限など pass / fail を判定できる基準で示していること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: rulebook に完成例の章を残さず、完成例の正本が sample だけになっていること
+            roles: [ARC]
+            viewpoint: vp-arc-conciseness
+
+      - local_id: utc-index-sample
+        name: 単体テスト（全体構成）の完成例
+        kind: work
+        depends_on:
+          - tsp-index-sample
+        overview: 駄菓子屋の販売管理システムを題材に、単体テストの全体構成の完成例を示す
+        path: utc-index-sample.md
+        rulebook: specdojo:utc-index-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: H1 が rulebook の定めるタイトル形式で、Frontmatter の `based_on` に直接の根拠（tsp-index）を持つこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 受け入れ基準と合否の判定基準が、観測できる条件と期待値で書かれていること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+
+      - local_id: utc-sample
+        name: 単体テスト（対象別）の完成例
+        kind: work
+        depends_on:
+          - utc-index-sample
+        overview: 駄菓子屋の販売管理システムの 1 対象を題材に、単体テストの対象別の完成例を示す
+        path: utc-sample.md
+        rulebook: specdojo:utc-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: H1 が rulebook の定めるタイトル形式で、Frontmatter の `based_on` に tsp-index と utc-index を持つこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook にない独自の必須観点を置かず、観点とケース表の列が rulebook の用語に一致していること
+            roles: [QE]
+            viewpoint: vp-ux-language-consistency
+          - text: ケースごとに前提・入力・判定できる期待値があり、テストコードを書く手掛かりになること
+            roles: [DEV]
+            viewpoint: vp-dev-testability
+
+      - local_id: itc-index-sample
+        name: 内部結合テスト（全体構成）の完成例
+        kind: work
+        depends_on:
+          - tsp-index-sample
+        overview: 駄菓子屋の販売管理システムを題材に、内部結合テストの全体構成の完成例を示す
+        path: itc-index-sample.md
+        rulebook: specdojo:itc-index-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: H1 が rulebook の定めるタイトル形式で、Frontmatter の `based_on` に tsp-index を持つこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 合格基準に、観測点を含む判定可能な期待値の例（応答と DB の差分など）を少なくとも 1 つ示していること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+
+      - local_id: itc-sample
+        name: 内部結合テスト（対象別）の完成例
+        kind: work
+        depends_on:
+          - itc-index-sample
+        overview: 駄菓子屋の販売管理システムの 1 対象を題材に、内部結合テストの対象別の完成例を示す
+        path: itc-sample.md
+        rulebook: specdojo:itc-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook が H5 以下の見出しを使わず、見出しを H4 までに収めていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: H1 が rulebook の定めるタイトル形式で、Frontmatter の `based_on` に tsp-index と itc-index を持つこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 期待値を応答・DB の状態・イベントなどの観測点で書き、pass / fail を判定できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+
+      - local_id: stc-index-sample
+        name: 総合テスト（全体構成）の完成例
+        kind: work
+        depends_on:
+          - tsp-index-sample
+        overview: 駄菓子屋の販売管理システムを題材に、総合テストの全体構成の完成例を示す
+        path: stc-index-sample.md
+        rulebook: specdojo:stc-index-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: Frontmatter の `based_on` に tsp-index を持つこと
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: 優先度（P0・P1・P2）ごとの共通の合格基準と、観測点を含む期待値の例を示していること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+
+      - local_id: stc-sample
+        name: 総合テスト（対象別）の完成例
+        kind: work
+        depends_on:
+          - stc-index-sample
+        overview: 駄菓子屋の店頭販売の業務を題材に、総合テストの対象別の完成例を示す
+        path: stc-sample.md
+        rulebook: specdojo:stc-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook が H5 以下の見出しを使わず、見出しを H4 までに収めていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: H1 が rulebook の定めるタイトル形式で、駄菓子屋の具体的な対象名を用いていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 判定基準を、判定できる値や状態で書いていること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+
+      - local_id: etc-index-sample
+        name: 外部結合テスト（全体構成）の完成例
+        kind: work
+        depends_on:
+          - tsp-index-sample
+        overview: 駄菓子屋の販売管理システムと外部サービスの連携を題材に、外部結合テストの全体構成の完成例を示す
+        path: etc-index-sample.md
+        rulebook: specdojo:etc-index-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: Frontmatter の `type` が rulebook の定義と一致し、H1 が rulebook の定めるタイトル形式で、`based_on` に tsp-index を持つこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 共通の合格基準を、タイムアウトの上限・リトライの回数・冪等性の観測結果など、数値や状態で判定できる条件で書いていること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+
+      - local_id: etc-sample
+        name: 外部結合テスト（対象別）の完成例
+        kind: work
+        depends_on:
+          - etc-index-sample
+        overview: 駄菓子屋の販売管理システムと 1 つの外部サービスの連携を題材に、外部結合テストの対象別の完成例を示す
+        path: etc-sample.md
+        rulebook: specdojo:etc-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook にない独自の必須観点を置かず、`trace_key` と条件・ケース表を rulebook のとおりに持つこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: H1 が rulebook の定めるタイトル形式で、etc-index と tsp-index を根拠として参照していること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: 期待値と未解決事項の解消の条件を、判定できる値や状態で書いていること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+
+      - local_id: atc-index-sample
+        name: 受入テスト（全体構成）の完成例
+        kind: work
+        depends_on:
+          - tsp-index-sample
+        overview: 駄菓子屋の販売管理システムを題材に、受入テストの全体構成の完成例を示す
+        path: atc-index-sample.md
+        rulebook: specdojo:atc-index-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook に完成例の章を残さず、`based_on`・全必須章・合格基準・ケース表の共通の列を持つ sample が完成例の正本になっていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 受入条件に期待値・観測点・証跡の要件があり、pass / fail を再現して判定できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+
+      - local_id: atc-sample
+        name: 受入テスト（対象別）の完成例
+        kind: work
+        depends_on:
+          - atc-index-sample
+        overview: 駄菓子屋の現金販売を題材に、受入テストの対象別の完成例を示す
+        path: atc-sample.md
+        rulebook: specdojo:atc-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: Frontmatter の `based_on` に tsp-index と atc-index を持ち、検証する業務受入条件が bac の完成例（現金販売）と一致していること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 判定基準とテストケースが、pass / fail を判定できる期待値で書かれていること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+
+      - local_id: trc-requirements-to-tests-sample
+        name: 要求とテストの対応（派生ビュー）の完成例
+        kind: work
+        depends_on:
+          - atc-sample
+          - stc-sample
+        overview: 駄菓子屋の業務の受入基準と受入テスト・総合テストを題材に、要求とテストの対応の派生ビューの完成例を示す
+        path: trc-requirements-to-tests-sample.md
+        rulebook: specdojo:trc-requirements-to-tests-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook が出力の列ごとに生成元と変換規則を定め、手編集しない派生ビューとして入力の解決・充足状況とギャップの導出・再生成の方法を示していること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: 各要求の充足状況が rulebook の判定条件と一致していること（対応テストのある要求を未着手にしない）
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: Frontmatter の `based_on` に本文が参照する直接の生成元をすべて持ち、前提に生成の手段と生成日を書いていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: ギャップ表に担当・期限の列を持たず、手編集を前提にした更新ルールを書いていないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+
+      - local_id: imp-test-sample
+        name: テストへの影響調査の完成例
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋の販売管理システムの変更を題材に、テストへの影響調査の完成例を示す
+        path: imp-test-sample.md
+        rulebook: specdojo:imp-test-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと（担当欄に個人名を使わずロールで書く）
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 対象期間と、指標・状態・閾値で判定できる成功条件を持つこと
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 評価観点（欠陥流出リスク・回帰範囲・実行コスト）ごとの高・中・低の境界と、判定が分かれたときの集約規則を示していること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 影響詳細の判断根拠に、評価観点ごとの事実と尺度・集約規則を当てはめた結果を書いていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency

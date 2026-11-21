@@ -1,0 +1,1051 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/sch-track.schema.yaml
+kind: track
+id: prj-0001:sch-track-kata-wave-3
+type: project
+status: draft
+title: スケジュールトラック（kata-wave-3）
+rulebook: specdojo:sch-rulebook
+version: 1
+project_id: prj-0001
+track: kata-wave-3
+settings: {}
+tasks:
+  - local_id: tsp-index-sample
+    phase_suffix: "040"
+    phase_set: rulebook-maintenance-pass
+    phase_id: rulebook-maintenance
+    name: rulebook を簡潔にする
+    duration_days: 0.5
+    depends_on: []
+    owner: QE
+    agent:
+      executor: opus-executor
+      reporter: gemma26-reporter
+    description: >
+      対象の sample が従う rulebook を、grade のし直しの指摘（run id regrade-kata-2026-11-21）と成果物の done_criteria に沿って簡潔に整える。rulebook
+      に完成例の章を置かず、完成例は sample に任せる。見出しは H4 までにする。sample はこの段で変更せず、後続の sample-maintenance で厚くする。recipe・template
+      は作らず、frontmatter の宣言も変えない（template は PJR-WYTX で扱う）。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: tsp-index-sample
+    phase_suffix: "050"
+    phase_set: sample-maintenance-pass
+    phase_id: sample-maintenance
+    name: sample を厚くする
+    duration_days: 0.5
+    depends_on:
+      - T-KATA-WAVE-3-tsp-index-sample-040
+    owner: QE
+    agent:
+      executor: opus-executor
+      reporter: gemma26-reporter
+    description: >
+      直した rulebook に沿い、sample を共通サンプル文脈（駄菓子屋のプロジェクト）の完成例として厚くする。この sample が成果物そのものなので、成果物の done_criteria と sample の
+      grade の指摘をこの段で満たす。何を書くかの説明ではなく、値で埋めた成果物の実例にする。rulebook はこの段で変更せず、合わせて直すべき点は変更案として result に書く。
+
+      sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さにし、[[specdojo:sample-authoring-standard|Sample
+      記述標準]]（docs/ja/specdojo/standards/sample-authoring-standard.md）に従う。
+  - local_id: tsp-index-sample
+    phase_suffix: "080"
+    phase_set: condense-pass
+    phase_id: condense
+    name: 冗長さの整理
+    duration_days: 0.25
+    depends_on:
+      - T-KATA-WAVE-3-tsp-index-sample-050
+    owner: QE
+    agent:
+      executor: opus-executor
+      reporter: gemma26-reporter
+    description: |
+      1 文書の冗長さを削る・まとめる・参照に置き換える。判断に要る背景・制約・例外・完了条件と意味を保ち、新しい内容を足さず、修正・保持した箇所と原因を result に記録する。
+  - local_id: tsp-index-sample
+    phase_suffix: "090"
+    phase_set: review-pass
+    phase_id: review
+    name: 完成版レビュー
+    duration_days: 0.25
+    depends_on:
+      - T-KATA-WAVE-3-tsp-index-sample-080
+      - G-KATA-WAVE-3-first-pass
+    owner: QE
+    agent:
+      executor: sol-review-executor
+      reporter: gemma26-reporter
+    description: >
+      対応する rulebook と sample を読み、章構成・判断基準・例の充実度・相互整合をレビューする。sample の done_criteria だけで完了としない。成果物・型は変更せず、指摘と根拠を review
+      result に残す。
+  - local_id: tsp-index-sample
+    phase_suffix: "140"
+    phase_set: finalize-pass
+    phase_id: finalize
+    name: 完成版確定
+    duration_days: 0.125
+    depends_on:
+      - T-KATA-WAVE-3-tsp-index-sample-090
+      - G-KATA-WAVE-3-review-pass
+    owner: QE
+    description: |
+      利用者がレビュー結果と done_criteria を最終確認し、sample を完成版として確定する。同じ track で直した rulebook もあわせて確認する。
+  - local_id: utc-index-sample
+    phase_suffix: "040"
+    phase_set: rulebook-maintenance-pass
+    phase_id: rulebook-maintenance
+    name: rulebook を簡潔にする
+    duration_days: 0.5
+    depends_on:
+      - T-KATA-WAVE-3-tsp-index-sample-080
+    owner: QE
+    agent:
+      executor: opus-executor
+      reporter: gemma26-reporter
+    description: >
+      対象の sample が従う rulebook を、grade のし直しの指摘（run id regrade-kata-2026-11-21）と成果物の done_criteria に沿って簡潔に整える。rulebook
+      に完成例の章を置かず、完成例は sample に任せる。見出しは H4 までにする。sample はこの段で変更せず、後続の sample-maintenance で厚くする。recipe・template
+      は作らず、frontmatter の宣言も変えない（template は PJR-WYTX で扱う）。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: utc-index-sample
+    phase_suffix: "050"
+    phase_set: sample-maintenance-pass
+    phase_id: sample-maintenance
+    name: sample を厚くする
+    duration_days: 0.5
+    depends_on:
+      - T-KATA-WAVE-3-utc-index-sample-040
+    owner: QE
+    agent:
+      executor: opus-executor
+      reporter: gemma26-reporter
+    description: >
+      直した rulebook に沿い、sample を共通サンプル文脈（駄菓子屋のプロジェクト）の完成例として厚くする。この sample が成果物そのものなので、成果物の done_criteria と sample の
+      grade の指摘をこの段で満たす。何を書くかの説明ではなく、値で埋めた成果物の実例にする。rulebook はこの段で変更せず、合わせて直すべき点は変更案として result に書く。
+
+      sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さにし、[[specdojo:sample-authoring-standard|Sample
+      記述標準]]（docs/ja/specdojo/standards/sample-authoring-standard.md）に従う。
+  - local_id: utc-index-sample
+    phase_suffix: "080"
+    phase_set: condense-pass
+    phase_id: condense
+    name: 冗長さの整理
+    duration_days: 0.25
+    depends_on:
+      - T-KATA-WAVE-3-utc-index-sample-050
+    owner: QE
+    agent:
+      executor: opus-executor
+      reporter: gemma26-reporter
+    description: |
+      1 文書の冗長さを削る・まとめる・参照に置き換える。判断に要る背景・制約・例外・完了条件と意味を保ち、新しい内容を足さず、修正・保持した箇所と原因を result に記録する。
+  - local_id: utc-index-sample
+    phase_suffix: "090"
+    phase_set: review-pass
+    phase_id: review
+    name: 完成版レビュー
+    duration_days: 0.25
+    depends_on:
+      - T-KATA-WAVE-3-utc-index-sample-080
+      - G-KATA-WAVE-3-first-pass
+    owner: QE
+    agent:
+      executor: sol-review-executor
+      reporter: gemma26-reporter
+    description: >
+      対応する rulebook と sample を読み、章構成・判断基準・例の充実度・相互整合をレビューする。sample の done_criteria だけで完了としない。成果物・型は変更せず、指摘と根拠を review
+      result に残す。
+  - local_id: utc-index-sample
+    phase_suffix: "140"
+    phase_set: finalize-pass
+    phase_id: finalize
+    name: 完成版確定
+    duration_days: 0.125
+    depends_on:
+      - T-KATA-WAVE-3-utc-index-sample-090
+      - G-KATA-WAVE-3-review-pass
+    owner: QE
+    description: |
+      利用者がレビュー結果と done_criteria を最終確認し、sample を完成版として確定する。同じ track で直した rulebook もあわせて確認する。
+  - local_id: utc-sample
+    phase_suffix: "040"
+    phase_set: rulebook-maintenance-pass
+    phase_id: rulebook-maintenance
+    name: rulebook を簡潔にする
+    duration_days: 0.5
+    depends_on:
+      - T-KATA-WAVE-3-utc-index-sample-080
+    owner: QE
+    agent:
+      executor: opus-executor
+      reporter: gemma26-reporter
+    description: >
+      対象の sample が従う rulebook を、grade のし直しの指摘（run id regrade-kata-2026-11-21）と成果物の done_criteria に沿って簡潔に整える。rulebook
+      に完成例の章を置かず、完成例は sample に任せる。見出しは H4 までにする。sample はこの段で変更せず、後続の sample-maintenance で厚くする。recipe・template
+      は作らず、frontmatter の宣言も変えない（template は PJR-WYTX で扱う）。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: utc-sample
+    phase_suffix: "050"
+    phase_set: sample-maintenance-pass
+    phase_id: sample-maintenance
+    name: sample を厚くする
+    duration_days: 0.5
+    depends_on:
+      - T-KATA-WAVE-3-utc-sample-040
+    owner: QE
+    agent:
+      executor: opus-executor
+      reporter: gemma26-reporter
+    description: >
+      直した rulebook に沿い、sample を共通サンプル文脈（駄菓子屋のプロジェクト）の完成例として厚くする。この sample が成果物そのものなので、成果物の done_criteria と sample の
+      grade の指摘をこの段で満たす。何を書くかの説明ではなく、値で埋めた成果物の実例にする。rulebook はこの段で変更せず、合わせて直すべき点は変更案として result に書く。
+
+      sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さにし、[[specdojo:sample-authoring-standard|Sample
+      記述標準]]（docs/ja/specdojo/standards/sample-authoring-standard.md）に従う。
+  - local_id: utc-sample
+    phase_suffix: "080"
+    phase_set: condense-pass
+    phase_id: condense
+    name: 冗長さの整理
+    duration_days: 0.25
+    depends_on:
+      - T-KATA-WAVE-3-utc-sample-050
+    owner: QE
+    agent:
+      executor: opus-executor
+      reporter: gemma26-reporter
+    description: |
+      1 文書の冗長さを削る・まとめる・参照に置き換える。判断に要る背景・制約・例外・完了条件と意味を保ち、新しい内容を足さず、修正・保持した箇所と原因を result に記録する。
+  - local_id: utc-sample
+    phase_suffix: "090"
+    phase_set: review-pass
+    phase_id: review
+    name: 完成版レビュー
+    duration_days: 0.25
+    depends_on:
+      - T-KATA-WAVE-3-utc-sample-080
+      - G-KATA-WAVE-3-first-pass
+    owner: QE
+    agent:
+      executor: sol-review-executor
+      reporter: gemma26-reporter
+    description: >
+      対応する rulebook と sample を読み、章構成・判断基準・例の充実度・相互整合をレビューする。sample の done_criteria だけで完了としない。成果物・型は変更せず、指摘と根拠を review
+      result に残す。
+  - local_id: utc-sample
+    phase_suffix: "140"
+    phase_set: finalize-pass
+    phase_id: finalize
+    name: 完成版確定
+    duration_days: 0.125
+    depends_on:
+      - T-KATA-WAVE-3-utc-sample-090
+      - G-KATA-WAVE-3-review-pass
+    owner: QE
+    description: |
+      利用者がレビュー結果と done_criteria を最終確認し、sample を完成版として確定する。同じ track で直した rulebook もあわせて確認する。
+  - local_id: itc-index-sample
+    phase_suffix: "040"
+    phase_set: rulebook-maintenance-pass
+    phase_id: rulebook-maintenance
+    name: rulebook を簡潔にする
+    duration_days: 0.5
+    depends_on:
+      - T-KATA-WAVE-3-tsp-index-sample-080
+    owner: QE
+    agent:
+      executor: opus-executor
+      reporter: gemma26-reporter
+    description: >
+      対象の sample が従う rulebook を、grade のし直しの指摘（run id regrade-kata-2026-11-21）と成果物の done_criteria に沿って簡潔に整える。rulebook
+      に完成例の章を置かず、完成例は sample に任せる。見出しは H4 までにする。sample はこの段で変更せず、後続の sample-maintenance で厚くする。recipe・template
+      は作らず、frontmatter の宣言も変えない（template は PJR-WYTX で扱う）。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: itc-index-sample
+    phase_suffix: "050"
+    phase_set: sample-maintenance-pass
+    phase_id: sample-maintenance
+    name: sample を厚くする
+    duration_days: 0.5
+    depends_on:
+      - T-KATA-WAVE-3-itc-index-sample-040
+    owner: QE
+    agent:
+      executor: opus-executor
+      reporter: gemma26-reporter
+    description: >
+      直した rulebook に沿い、sample を共通サンプル文脈（駄菓子屋のプロジェクト）の完成例として厚くする。この sample が成果物そのものなので、成果物の done_criteria と sample の
+      grade の指摘をこの段で満たす。何を書くかの説明ではなく、値で埋めた成果物の実例にする。rulebook はこの段で変更せず、合わせて直すべき点は変更案として result に書く。
+
+      sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さにし、[[specdojo:sample-authoring-standard|Sample
+      記述標準]]（docs/ja/specdojo/standards/sample-authoring-standard.md）に従う。
+  - local_id: itc-index-sample
+    phase_suffix: "080"
+    phase_set: condense-pass
+    phase_id: condense
+    name: 冗長さの整理
+    duration_days: 0.25
+    depends_on:
+      - T-KATA-WAVE-3-itc-index-sample-050
+    owner: QE
+    agent:
+      executor: opus-executor
+      reporter: gemma26-reporter
+    description: |
+      1 文書の冗長さを削る・まとめる・参照に置き換える。判断に要る背景・制約・例外・完了条件と意味を保ち、新しい内容を足さず、修正・保持した箇所と原因を result に記録する。
+  - local_id: itc-index-sample
+    phase_suffix: "090"
+    phase_set: review-pass
+    phase_id: review
+    name: 完成版レビュー
+    duration_days: 0.25
+    depends_on:
+      - T-KATA-WAVE-3-itc-index-sample-080
+      - G-KATA-WAVE-3-first-pass
+    owner: QE
+    agent:
+      executor: sol-review-executor
+      reporter: gemma26-reporter
+    description: >
+      対応する rulebook と sample を読み、章構成・判断基準・例の充実度・相互整合をレビューする。sample の done_criteria だけで完了としない。成果物・型は変更せず、指摘と根拠を review
+      result に残す。
+  - local_id: itc-index-sample
+    phase_suffix: "140"
+    phase_set: finalize-pass
+    phase_id: finalize
+    name: 完成版確定
+    duration_days: 0.125
+    depends_on:
+      - T-KATA-WAVE-3-itc-index-sample-090
+      - G-KATA-WAVE-3-review-pass
+    owner: QE
+    description: |
+      利用者がレビュー結果と done_criteria を最終確認し、sample を完成版として確定する。同じ track で直した rulebook もあわせて確認する。
+  - local_id: itc-sample
+    phase_suffix: "040"
+    phase_set: rulebook-maintenance-pass
+    phase_id: rulebook-maintenance
+    name: rulebook を簡潔にする
+    duration_days: 0.5
+    depends_on:
+      - T-KATA-WAVE-3-itc-index-sample-080
+    owner: QE
+    agent:
+      executor: opus-executor
+      reporter: gemma26-reporter
+    description: >
+      対象の sample が従う rulebook を、grade のし直しの指摘（run id regrade-kata-2026-11-21）と成果物の done_criteria に沿って簡潔に整える。rulebook
+      に完成例の章を置かず、完成例は sample に任せる。見出しは H4 までにする。sample はこの段で変更せず、後続の sample-maintenance で厚くする。recipe・template
+      は作らず、frontmatter の宣言も変えない（template は PJR-WYTX で扱う）。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: itc-sample
+    phase_suffix: "050"
+    phase_set: sample-maintenance-pass
+    phase_id: sample-maintenance
+    name: sample を厚くする
+    duration_days: 0.5
+    depends_on:
+      - T-KATA-WAVE-3-itc-sample-040
+    owner: QE
+    agent:
+      executor: opus-executor
+      reporter: gemma26-reporter
+    description: >
+      直した rulebook に沿い、sample を共通サンプル文脈（駄菓子屋のプロジェクト）の完成例として厚くする。この sample が成果物そのものなので、成果物の done_criteria と sample の
+      grade の指摘をこの段で満たす。何を書くかの説明ではなく、値で埋めた成果物の実例にする。rulebook はこの段で変更せず、合わせて直すべき点は変更案として result に書く。
+
+      sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さにし、[[specdojo:sample-authoring-standard|Sample
+      記述標準]]（docs/ja/specdojo/standards/sample-authoring-standard.md）に従う。
+  - local_id: itc-sample
+    phase_suffix: "080"
+    phase_set: condense-pass
+    phase_id: condense
+    name: 冗長さの整理
+    duration_days: 0.25
+    depends_on:
+      - T-KATA-WAVE-3-itc-sample-050
+    owner: QE
+    agent:
+      executor: opus-executor
+      reporter: gemma26-reporter
+    description: |
+      1 文書の冗長さを削る・まとめる・参照に置き換える。判断に要る背景・制約・例外・完了条件と意味を保ち、新しい内容を足さず、修正・保持した箇所と原因を result に記録する。
+  - local_id: itc-sample
+    phase_suffix: "090"
+    phase_set: review-pass
+    phase_id: review
+    name: 完成版レビュー
+    duration_days: 0.25
+    depends_on:
+      - T-KATA-WAVE-3-itc-sample-080
+      - G-KATA-WAVE-3-first-pass
+    owner: QE
+    agent:
+      executor: sol-review-executor
+      reporter: gemma26-reporter
+    description: >
+      対応する rulebook と sample を読み、章構成・判断基準・例の充実度・相互整合をレビューする。sample の done_criteria だけで完了としない。成果物・型は変更せず、指摘と根拠を review
+      result に残す。
+  - local_id: itc-sample
+    phase_suffix: "140"
+    phase_set: finalize-pass
+    phase_id: finalize
+    name: 完成版確定
+    duration_days: 0.125
+    depends_on:
+      - T-KATA-WAVE-3-itc-sample-090
+      - G-KATA-WAVE-3-review-pass
+    owner: QE
+    description: |
+      利用者がレビュー結果と done_criteria を最終確認し、sample を完成版として確定する。同じ track で直した rulebook もあわせて確認する。
+  - local_id: stc-index-sample
+    phase_suffix: "040"
+    phase_set: rulebook-maintenance-pass
+    phase_id: rulebook-maintenance
+    name: rulebook を簡潔にする
+    duration_days: 0.5
+    depends_on:
+      - T-KATA-WAVE-3-tsp-index-sample-080
+    owner: QE
+    agent:
+      executor: opus-executor
+      reporter: gemma26-reporter
+    description: >
+      対象の sample が従う rulebook を、grade のし直しの指摘（run id regrade-kata-2026-11-21）と成果物の done_criteria に沿って簡潔に整える。rulebook
+      に完成例の章を置かず、完成例は sample に任せる。見出しは H4 までにする。sample はこの段で変更せず、後続の sample-maintenance で厚くする。recipe・template
+      は作らず、frontmatter の宣言も変えない（template は PJR-WYTX で扱う）。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: stc-index-sample
+    phase_suffix: "050"
+    phase_set: sample-maintenance-pass
+    phase_id: sample-maintenance
+    name: sample を厚くする
+    duration_days: 0.5
+    depends_on:
+      - T-KATA-WAVE-3-stc-index-sample-040
+    owner: QE
+    agent:
+      executor: opus-executor
+      reporter: gemma26-reporter
+    description: >
+      直した rulebook に沿い、sample を共通サンプル文脈（駄菓子屋のプロジェクト）の完成例として厚くする。この sample が成果物そのものなので、成果物の done_criteria と sample の
+      grade の指摘をこの段で満たす。何を書くかの説明ではなく、値で埋めた成果物の実例にする。rulebook はこの段で変更せず、合わせて直すべき点は変更案として result に書く。
+
+      sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さにし、[[specdojo:sample-authoring-standard|Sample
+      記述標準]]（docs/ja/specdojo/standards/sample-authoring-standard.md）に従う。
+  - local_id: stc-index-sample
+    phase_suffix: "080"
+    phase_set: condense-pass
+    phase_id: condense
+    name: 冗長さの整理
+    duration_days: 0.25
+    depends_on:
+      - T-KATA-WAVE-3-stc-index-sample-050
+    owner: QE
+    agent:
+      executor: opus-executor
+      reporter: gemma26-reporter
+    description: |
+      1 文書の冗長さを削る・まとめる・参照に置き換える。判断に要る背景・制約・例外・完了条件と意味を保ち、新しい内容を足さず、修正・保持した箇所と原因を result に記録する。
+  - local_id: stc-index-sample
+    phase_suffix: "090"
+    phase_set: review-pass
+    phase_id: review
+    name: 完成版レビュー
+    duration_days: 0.25
+    depends_on:
+      - T-KATA-WAVE-3-stc-index-sample-080
+      - G-KATA-WAVE-3-first-pass
+    owner: QE
+    agent:
+      executor: sol-review-executor
+      reporter: gemma26-reporter
+    description: >
+      対応する rulebook と sample を読み、章構成・判断基準・例の充実度・相互整合をレビューする。sample の done_criteria だけで完了としない。成果物・型は変更せず、指摘と根拠を review
+      result に残す。
+  - local_id: stc-index-sample
+    phase_suffix: "140"
+    phase_set: finalize-pass
+    phase_id: finalize
+    name: 完成版確定
+    duration_days: 0.125
+    depends_on:
+      - T-KATA-WAVE-3-stc-index-sample-090
+      - G-KATA-WAVE-3-review-pass
+    owner: QE
+    description: |
+      利用者がレビュー結果と done_criteria を最終確認し、sample を完成版として確定する。同じ track で直した rulebook もあわせて確認する。
+  - local_id: stc-sample
+    phase_suffix: "040"
+    phase_set: rulebook-maintenance-pass
+    phase_id: rulebook-maintenance
+    name: rulebook を簡潔にする
+    duration_days: 0.5
+    depends_on:
+      - T-KATA-WAVE-3-stc-index-sample-080
+    owner: QE
+    agent:
+      executor: opus-executor
+      reporter: gemma26-reporter
+    description: >
+      対象の sample が従う rulebook を、grade のし直しの指摘（run id regrade-kata-2026-11-21）と成果物の done_criteria に沿って簡潔に整える。rulebook
+      に完成例の章を置かず、完成例は sample に任せる。見出しは H4 までにする。sample はこの段で変更せず、後続の sample-maintenance で厚くする。recipe・template
+      は作らず、frontmatter の宣言も変えない（template は PJR-WYTX で扱う）。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: stc-sample
+    phase_suffix: "050"
+    phase_set: sample-maintenance-pass
+    phase_id: sample-maintenance
+    name: sample を厚くする
+    duration_days: 0.5
+    depends_on:
+      - T-KATA-WAVE-3-stc-sample-040
+    owner: QE
+    agent:
+      executor: opus-executor
+      reporter: gemma26-reporter
+    description: >
+      直した rulebook に沿い、sample を共通サンプル文脈（駄菓子屋のプロジェクト）の完成例として厚くする。この sample が成果物そのものなので、成果物の done_criteria と sample の
+      grade の指摘をこの段で満たす。何を書くかの説明ではなく、値で埋めた成果物の実例にする。rulebook はこの段で変更せず、合わせて直すべき点は変更案として result に書く。
+
+      sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さにし、[[specdojo:sample-authoring-standard|Sample
+      記述標準]]（docs/ja/specdojo/standards/sample-authoring-standard.md）に従う。
+  - local_id: stc-sample
+    phase_suffix: "080"
+    phase_set: condense-pass
+    phase_id: condense
+    name: 冗長さの整理
+    duration_days: 0.25
+    depends_on:
+      - T-KATA-WAVE-3-stc-sample-050
+    owner: QE
+    agent:
+      executor: opus-executor
+      reporter: gemma26-reporter
+    description: |
+      1 文書の冗長さを削る・まとめる・参照に置き換える。判断に要る背景・制約・例外・完了条件と意味を保ち、新しい内容を足さず、修正・保持した箇所と原因を result に記録する。
+  - local_id: stc-sample
+    phase_suffix: "090"
+    phase_set: review-pass
+    phase_id: review
+    name: 完成版レビュー
+    duration_days: 0.25
+    depends_on:
+      - T-KATA-WAVE-3-stc-sample-080
+      - G-KATA-WAVE-3-first-pass
+    owner: QE
+    agent:
+      executor: sol-review-executor
+      reporter: gemma26-reporter
+    description: >
+      対応する rulebook と sample を読み、章構成・判断基準・例の充実度・相互整合をレビューする。sample の done_criteria だけで完了としない。成果物・型は変更せず、指摘と根拠を review
+      result に残す。
+  - local_id: stc-sample
+    phase_suffix: "140"
+    phase_set: finalize-pass
+    phase_id: finalize
+    name: 完成版確定
+    duration_days: 0.125
+    depends_on:
+      - T-KATA-WAVE-3-stc-sample-090
+      - G-KATA-WAVE-3-review-pass
+    owner: QE
+    description: |
+      利用者がレビュー結果と done_criteria を最終確認し、sample を完成版として確定する。同じ track で直した rulebook もあわせて確認する。
+  - local_id: etc-index-sample
+    phase_suffix: "040"
+    phase_set: rulebook-maintenance-pass
+    phase_id: rulebook-maintenance
+    name: rulebook を簡潔にする
+    duration_days: 0.5
+    depends_on:
+      - T-KATA-WAVE-3-tsp-index-sample-080
+    owner: QE
+    agent:
+      executor: opus-executor
+      reporter: gemma26-reporter
+    description: >
+      対象の sample が従う rulebook を、grade のし直しの指摘（run id regrade-kata-2026-11-21）と成果物の done_criteria に沿って簡潔に整える。rulebook
+      に完成例の章を置かず、完成例は sample に任せる。見出しは H4 までにする。sample はこの段で変更せず、後続の sample-maintenance で厚くする。recipe・template
+      は作らず、frontmatter の宣言も変えない（template は PJR-WYTX で扱う）。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: etc-index-sample
+    phase_suffix: "050"
+    phase_set: sample-maintenance-pass
+    phase_id: sample-maintenance
+    name: sample を厚くする
+    duration_days: 0.5
+    depends_on:
+      - T-KATA-WAVE-3-etc-index-sample-040
+    owner: QE
+    agent:
+      executor: opus-executor
+      reporter: gemma26-reporter
+    description: >
+      直した rulebook に沿い、sample を共通サンプル文脈（駄菓子屋のプロジェクト）の完成例として厚くする。この sample が成果物そのものなので、成果物の done_criteria と sample の
+      grade の指摘をこの段で満たす。何を書くかの説明ではなく、値で埋めた成果物の実例にする。rulebook はこの段で変更せず、合わせて直すべき点は変更案として result に書く。
+
+      sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さにし、[[specdojo:sample-authoring-standard|Sample
+      記述標準]]（docs/ja/specdojo/standards/sample-authoring-standard.md）に従う。
+  - local_id: etc-index-sample
+    phase_suffix: "080"
+    phase_set: condense-pass
+    phase_id: condense
+    name: 冗長さの整理
+    duration_days: 0.25
+    depends_on:
+      - T-KATA-WAVE-3-etc-index-sample-050
+    owner: QE
+    agent:
+      executor: opus-executor
+      reporter: gemma26-reporter
+    description: |
+      1 文書の冗長さを削る・まとめる・参照に置き換える。判断に要る背景・制約・例外・完了条件と意味を保ち、新しい内容を足さず、修正・保持した箇所と原因を result に記録する。
+  - local_id: etc-index-sample
+    phase_suffix: "090"
+    phase_set: review-pass
+    phase_id: review
+    name: 完成版レビュー
+    duration_days: 0.25
+    depends_on:
+      - T-KATA-WAVE-3-etc-index-sample-080
+      - G-KATA-WAVE-3-first-pass
+    owner: QE
+    agent:
+      executor: sol-review-executor
+      reporter: gemma26-reporter
+    description: >
+      対応する rulebook と sample を読み、章構成・判断基準・例の充実度・相互整合をレビューする。sample の done_criteria だけで完了としない。成果物・型は変更せず、指摘と根拠を review
+      result に残す。
+  - local_id: etc-index-sample
+    phase_suffix: "140"
+    phase_set: finalize-pass
+    phase_id: finalize
+    name: 完成版確定
+    duration_days: 0.125
+    depends_on:
+      - T-KATA-WAVE-3-etc-index-sample-090
+      - G-KATA-WAVE-3-review-pass
+    owner: QE
+    description: |
+      利用者がレビュー結果と done_criteria を最終確認し、sample を完成版として確定する。同じ track で直した rulebook もあわせて確認する。
+  - local_id: etc-sample
+    phase_suffix: "040"
+    phase_set: rulebook-maintenance-pass
+    phase_id: rulebook-maintenance
+    name: rulebook を簡潔にする
+    duration_days: 0.5
+    depends_on:
+      - T-KATA-WAVE-3-etc-index-sample-080
+    owner: QE
+    agent:
+      executor: opus-executor
+      reporter: gemma26-reporter
+    description: >
+      対象の sample が従う rulebook を、grade のし直しの指摘（run id regrade-kata-2026-11-21）と成果物の done_criteria に沿って簡潔に整える。rulebook
+      に完成例の章を置かず、完成例は sample に任せる。見出しは H4 までにする。sample はこの段で変更せず、後続の sample-maintenance で厚くする。recipe・template
+      は作らず、frontmatter の宣言も変えない（template は PJR-WYTX で扱う）。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: etc-sample
+    phase_suffix: "050"
+    phase_set: sample-maintenance-pass
+    phase_id: sample-maintenance
+    name: sample を厚くする
+    duration_days: 0.5
+    depends_on:
+      - T-KATA-WAVE-3-etc-sample-040
+    owner: QE
+    agent:
+      executor: opus-executor
+      reporter: gemma26-reporter
+    description: >
+      直した rulebook に沿い、sample を共通サンプル文脈（駄菓子屋のプロジェクト）の完成例として厚くする。この sample が成果物そのものなので、成果物の done_criteria と sample の
+      grade の指摘をこの段で満たす。何を書くかの説明ではなく、値で埋めた成果物の実例にする。rulebook はこの段で変更せず、合わせて直すべき点は変更案として result に書く。
+
+      sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さにし、[[specdojo:sample-authoring-standard|Sample
+      記述標準]]（docs/ja/specdojo/standards/sample-authoring-standard.md）に従う。
+  - local_id: etc-sample
+    phase_suffix: "080"
+    phase_set: condense-pass
+    phase_id: condense
+    name: 冗長さの整理
+    duration_days: 0.25
+    depends_on:
+      - T-KATA-WAVE-3-etc-sample-050
+    owner: QE
+    agent:
+      executor: opus-executor
+      reporter: gemma26-reporter
+    description: |
+      1 文書の冗長さを削る・まとめる・参照に置き換える。判断に要る背景・制約・例外・完了条件と意味を保ち、新しい内容を足さず、修正・保持した箇所と原因を result に記録する。
+  - local_id: etc-sample
+    phase_suffix: "090"
+    phase_set: review-pass
+    phase_id: review
+    name: 完成版レビュー
+    duration_days: 0.25
+    depends_on:
+      - T-KATA-WAVE-3-etc-sample-080
+      - G-KATA-WAVE-3-first-pass
+    owner: QE
+    agent:
+      executor: sol-review-executor
+      reporter: gemma26-reporter
+    description: >
+      対応する rulebook と sample を読み、章構成・判断基準・例の充実度・相互整合をレビューする。sample の done_criteria だけで完了としない。成果物・型は変更せず、指摘と根拠を review
+      result に残す。
+  - local_id: etc-sample
+    phase_suffix: "140"
+    phase_set: finalize-pass
+    phase_id: finalize
+    name: 完成版確定
+    duration_days: 0.125
+    depends_on:
+      - T-KATA-WAVE-3-etc-sample-090
+      - G-KATA-WAVE-3-review-pass
+    owner: QE
+    description: |
+      利用者がレビュー結果と done_criteria を最終確認し、sample を完成版として確定する。同じ track で直した rulebook もあわせて確認する。
+  - local_id: atc-index-sample
+    phase_suffix: "040"
+    phase_set: rulebook-maintenance-pass
+    phase_id: rulebook-maintenance
+    name: rulebook を簡潔にする
+    duration_days: 0.5
+    depends_on:
+      - T-KATA-WAVE-3-tsp-index-sample-080
+    owner: QE
+    agent:
+      executor: opus-executor
+      reporter: gemma26-reporter
+    description: >
+      対象の sample が従う rulebook を、grade のし直しの指摘（run id regrade-kata-2026-11-21）と成果物の done_criteria に沿って簡潔に整える。rulebook
+      に完成例の章を置かず、完成例は sample に任せる。見出しは H4 までにする。sample はこの段で変更せず、後続の sample-maintenance で厚くする。recipe・template
+      は作らず、frontmatter の宣言も変えない（template は PJR-WYTX で扱う）。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: atc-index-sample
+    phase_suffix: "050"
+    phase_set: sample-maintenance-pass
+    phase_id: sample-maintenance
+    name: sample を厚くする
+    duration_days: 0.5
+    depends_on:
+      - T-KATA-WAVE-3-atc-index-sample-040
+    owner: QE
+    agent:
+      executor: opus-executor
+      reporter: gemma26-reporter
+    description: >
+      直した rulebook に沿い、sample を共通サンプル文脈（駄菓子屋のプロジェクト）の完成例として厚くする。この sample が成果物そのものなので、成果物の done_criteria と sample の
+      grade の指摘をこの段で満たす。何を書くかの説明ではなく、値で埋めた成果物の実例にする。rulebook はこの段で変更せず、合わせて直すべき点は変更案として result に書く。
+
+      sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さにし、[[specdojo:sample-authoring-standard|Sample
+      記述標準]]（docs/ja/specdojo/standards/sample-authoring-standard.md）に従う。
+  - local_id: atc-index-sample
+    phase_suffix: "080"
+    phase_set: condense-pass
+    phase_id: condense
+    name: 冗長さの整理
+    duration_days: 0.25
+    depends_on:
+      - T-KATA-WAVE-3-atc-index-sample-050
+    owner: QE
+    agent:
+      executor: opus-executor
+      reporter: gemma26-reporter
+    description: |
+      1 文書の冗長さを削る・まとめる・参照に置き換える。判断に要る背景・制約・例外・完了条件と意味を保ち、新しい内容を足さず、修正・保持した箇所と原因を result に記録する。
+  - local_id: atc-index-sample
+    phase_suffix: "090"
+    phase_set: review-pass
+    phase_id: review
+    name: 完成版レビュー
+    duration_days: 0.25
+    depends_on:
+      - T-KATA-WAVE-3-atc-index-sample-080
+      - G-KATA-WAVE-3-first-pass
+    owner: QE
+    agent:
+      executor: sol-review-executor
+      reporter: gemma26-reporter
+    description: >
+      対応する rulebook と sample を読み、章構成・判断基準・例の充実度・相互整合をレビューする。sample の done_criteria だけで完了としない。成果物・型は変更せず、指摘と根拠を review
+      result に残す。
+  - local_id: atc-index-sample
+    phase_suffix: "140"
+    phase_set: finalize-pass
+    phase_id: finalize
+    name: 完成版確定
+    duration_days: 0.125
+    depends_on:
+      - T-KATA-WAVE-3-atc-index-sample-090
+      - G-KATA-WAVE-3-review-pass
+    owner: QE
+    description: |
+      利用者がレビュー結果と done_criteria を最終確認し、sample を完成版として確定する。同じ track で直した rulebook もあわせて確認する。
+  - local_id: atc-sample
+    phase_suffix: "040"
+    phase_set: rulebook-maintenance-pass
+    phase_id: rulebook-maintenance
+    name: rulebook を簡潔にする
+    duration_days: 0.5
+    depends_on:
+      - T-KATA-WAVE-3-atc-index-sample-080
+    owner: QE
+    agent:
+      executor: opus-executor
+      reporter: gemma26-reporter
+    description: >
+      対象の sample が従う rulebook を、grade のし直しの指摘（run id regrade-kata-2026-11-21）と成果物の done_criteria に沿って簡潔に整える。rulebook
+      に完成例の章を置かず、完成例は sample に任せる。見出しは H4 までにする。sample はこの段で変更せず、後続の sample-maintenance で厚くする。recipe・template
+      は作らず、frontmatter の宣言も変えない（template は PJR-WYTX で扱う）。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: atc-sample
+    phase_suffix: "050"
+    phase_set: sample-maintenance-pass
+    phase_id: sample-maintenance
+    name: sample を厚くする
+    duration_days: 0.5
+    depends_on:
+      - T-KATA-WAVE-3-atc-sample-040
+    owner: QE
+    agent:
+      executor: opus-executor
+      reporter: gemma26-reporter
+    description: >
+      直した rulebook に沿い、sample を共通サンプル文脈（駄菓子屋のプロジェクト）の完成例として厚くする。この sample が成果物そのものなので、成果物の done_criteria と sample の
+      grade の指摘をこの段で満たす。何を書くかの説明ではなく、値で埋めた成果物の実例にする。rulebook はこの段で変更せず、合わせて直すべき点は変更案として result に書く。
+
+      sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さにし、[[specdojo:sample-authoring-standard|Sample
+      記述標準]]（docs/ja/specdojo/standards/sample-authoring-standard.md）に従う。
+  - local_id: atc-sample
+    phase_suffix: "080"
+    phase_set: condense-pass
+    phase_id: condense
+    name: 冗長さの整理
+    duration_days: 0.25
+    depends_on:
+      - T-KATA-WAVE-3-atc-sample-050
+    owner: QE
+    agent:
+      executor: opus-executor
+      reporter: gemma26-reporter
+    description: |
+      1 文書の冗長さを削る・まとめる・参照に置き換える。判断に要る背景・制約・例外・完了条件と意味を保ち、新しい内容を足さず、修正・保持した箇所と原因を result に記録する。
+  - local_id: atc-sample
+    phase_suffix: "090"
+    phase_set: review-pass
+    phase_id: review
+    name: 完成版レビュー
+    duration_days: 0.25
+    depends_on:
+      - T-KATA-WAVE-3-atc-sample-080
+      - G-KATA-WAVE-3-first-pass
+    owner: QE
+    agent:
+      executor: sol-review-executor
+      reporter: gemma26-reporter
+    description: >
+      対応する rulebook と sample を読み、章構成・判断基準・例の充実度・相互整合をレビューする。sample の done_criteria だけで完了としない。成果物・型は変更せず、指摘と根拠を review
+      result に残す。
+  - local_id: atc-sample
+    phase_suffix: "140"
+    phase_set: finalize-pass
+    phase_id: finalize
+    name: 完成版確定
+    duration_days: 0.125
+    depends_on:
+      - T-KATA-WAVE-3-atc-sample-090
+      - G-KATA-WAVE-3-review-pass
+    owner: QE
+    description: |
+      利用者がレビュー結果と done_criteria を最終確認し、sample を完成版として確定する。同じ track で直した rulebook もあわせて確認する。
+  - local_id: trc-requirements-to-tests-sample
+    phase_suffix: "040"
+    phase_set: rulebook-maintenance-pass
+    phase_id: rulebook-maintenance
+    name: rulebook を簡潔にする
+    duration_days: 0.5
+    depends_on:
+      - T-KATA-WAVE-3-atc-sample-080
+      - T-KATA-WAVE-3-stc-sample-080
+    owner: QE
+    agent:
+      executor: opus-executor
+      reporter: gemma26-reporter
+    description: >
+      対象の sample が従う rulebook を、grade のし直しの指摘（run id regrade-kata-2026-11-21）と成果物の done_criteria に沿って簡潔に整える。rulebook
+      に完成例の章を置かず、完成例は sample に任せる。見出しは H4 までにする。sample はこの段で変更せず、後続の sample-maintenance で厚くする。recipe・template
+      は作らず、frontmatter の宣言も変えない（template は PJR-WYTX で扱う）。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: trc-requirements-to-tests-sample
+    phase_suffix: "050"
+    phase_set: sample-maintenance-pass
+    phase_id: sample-maintenance
+    name: sample を厚くする
+    duration_days: 0.5
+    depends_on:
+      - T-KATA-WAVE-3-trc-requirements-to-tests-sample-040
+    owner: QE
+    agent:
+      executor: opus-executor
+      reporter: gemma26-reporter
+    description: >
+      直した rulebook に沿い、sample を共通サンプル文脈（駄菓子屋のプロジェクト）の完成例として厚くする。この sample が成果物そのものなので、成果物の done_criteria と sample の
+      grade の指摘をこの段で満たす。何を書くかの説明ではなく、値で埋めた成果物の実例にする。rulebook はこの段で変更せず、合わせて直すべき点は変更案として result に書く。
+
+      sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さにし、[[specdojo:sample-authoring-standard|Sample
+      記述標準]]（docs/ja/specdojo/standards/sample-authoring-standard.md）に従う。
+  - local_id: trc-requirements-to-tests-sample
+    phase_suffix: "080"
+    phase_set: condense-pass
+    phase_id: condense
+    name: 冗長さの整理
+    duration_days: 0.25
+    depends_on:
+      - T-KATA-WAVE-3-trc-requirements-to-tests-sample-050
+    owner: QE
+    agent:
+      executor: opus-executor
+      reporter: gemma26-reporter
+    description: |
+      1 文書の冗長さを削る・まとめる・参照に置き換える。判断に要る背景・制約・例外・完了条件と意味を保ち、新しい内容を足さず、修正・保持した箇所と原因を result に記録する。
+  - local_id: trc-requirements-to-tests-sample
+    phase_suffix: "090"
+    phase_set: review-pass
+    phase_id: review
+    name: 完成版レビュー
+    duration_days: 0.25
+    depends_on:
+      - T-KATA-WAVE-3-trc-requirements-to-tests-sample-080
+      - G-KATA-WAVE-3-first-pass
+    owner: QE
+    agent:
+      executor: sol-review-executor
+      reporter: gemma26-reporter
+    description: >
+      対応する rulebook と sample を読み、章構成・判断基準・例の充実度・相互整合をレビューする。sample の done_criteria だけで完了としない。成果物・型は変更せず、指摘と根拠を review
+      result に残す。
+  - local_id: trc-requirements-to-tests-sample
+    phase_suffix: "140"
+    phase_set: finalize-pass
+    phase_id: finalize
+    name: 完成版確定
+    duration_days: 0.125
+    depends_on:
+      - T-KATA-WAVE-3-trc-requirements-to-tests-sample-090
+      - G-KATA-WAVE-3-review-pass
+    owner: QE
+    description: |
+      利用者がレビュー結果と done_criteria を最終確認し、sample を完成版として確定する。同じ track で直した rulebook もあわせて確認する。
+  - local_id: imp-test-sample
+    phase_suffix: "040"
+    phase_set: rulebook-maintenance-pass
+    phase_id: rulebook-maintenance
+    name: rulebook を簡潔にする
+    duration_days: 0.5
+    depends_on: []
+    owner: QE
+    agent:
+      executor: opus-executor
+      reporter: gemma26-reporter
+    description: >
+      対象の sample が従う rulebook を、grade のし直しの指摘（run id regrade-kata-2026-11-21）と成果物の done_criteria に沿って簡潔に整える。rulebook
+      に完成例の章を置かず、完成例は sample に任せる。見出しは H4 までにする。sample はこの段で変更せず、後続の sample-maintenance で厚くする。recipe・template
+      は作らず、frontmatter の宣言も変えない（template は PJR-WYTX で扱う）。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: imp-test-sample
+    phase_suffix: "050"
+    phase_set: sample-maintenance-pass
+    phase_id: sample-maintenance
+    name: sample を厚くする
+    duration_days: 0.5
+    depends_on:
+      - T-KATA-WAVE-3-imp-test-sample-040
+    owner: QE
+    agent:
+      executor: opus-executor
+      reporter: gemma26-reporter
+    description: >
+      直した rulebook に沿い、sample を共通サンプル文脈（駄菓子屋のプロジェクト）の完成例として厚くする。この sample が成果物そのものなので、成果物の done_criteria と sample の
+      grade の指摘をこの段で満たす。何を書くかの説明ではなく、値で埋めた成果物の実例にする。rulebook はこの段で変更せず、合わせて直すべき点は変更案として result に書く。
+
+      sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さにし、[[specdojo:sample-authoring-standard|Sample
+      記述標準]]（docs/ja/specdojo/standards/sample-authoring-standard.md）に従う。
+  - local_id: imp-test-sample
+    phase_suffix: "080"
+    phase_set: condense-pass
+    phase_id: condense
+    name: 冗長さの整理
+    duration_days: 0.25
+    depends_on:
+      - T-KATA-WAVE-3-imp-test-sample-050
+    owner: QE
+    agent:
+      executor: opus-executor
+      reporter: gemma26-reporter
+    description: |
+      1 文書の冗長さを削る・まとめる・参照に置き換える。判断に要る背景・制約・例外・完了条件と意味を保ち、新しい内容を足さず、修正・保持した箇所と原因を result に記録する。
+  - local_id: imp-test-sample
+    phase_suffix: "090"
+    phase_set: review-pass
+    phase_id: review
+    name: 完成版レビュー
+    duration_days: 0.25
+    depends_on:
+      - T-KATA-WAVE-3-imp-test-sample-080
+      - G-KATA-WAVE-3-first-pass
+    owner: QE
+    agent:
+      executor: sol-review-executor
+      reporter: gemma26-reporter
+    description: >
+      対応する rulebook と sample を読み、章構成・判断基準・例の充実度・相互整合をレビューする。sample の done_criteria だけで完了としない。成果物・型は変更せず、指摘と根拠を review
+      result に残す。
+  - local_id: imp-test-sample
+    phase_suffix: "140"
+    phase_set: finalize-pass
+    phase_id: finalize
+    name: 完成版確定
+    duration_days: 0.125
+    depends_on:
+      - T-KATA-WAVE-3-imp-test-sample-090
+      - G-KATA-WAVE-3-review-pass
+    owner: QE
+    description: |
+      利用者がレビュー結果と done_criteria を最終確認し、sample を完成版として確定する。同じ track で直した rulebook もあわせて確認する。

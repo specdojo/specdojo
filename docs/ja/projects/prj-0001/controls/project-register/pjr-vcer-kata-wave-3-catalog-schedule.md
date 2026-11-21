@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-21T06:08:04Z"
-  block_reason: "parent validation failed: test-unit"
   derived_from:
     - PJR-ABY4
 ---
@@ -77,7 +76,13 @@ kata ドメインに載せると、`catalog validate` が sample の `based_on`�
 
 そこで `src/catalog/build-references.ts` の `validateBasedOn` を直した。文書の `id` が catalog の project 以外の名前空間（`specdojo:` など）で修飾されているときは、その `based_on` を照合しない。`tests/src/catalog/based-on.test.ts` にテストを 1 件足した。
 
-### 5.4. plan の dry-run の結果
+この 2 ファイルは完了条件に挙がっていない。それでも直したのは、完了条件の「`catalog validate` が通る」を kata ドメインで満たすためである。再開の際に `build-references.ts` を HEAD の内容へ一時的に戻して `catalog validate --project prj-0001` を実行すると、`dct-kata.yaml` についてエラー 3 件（trc-requirements-to-tests-sample の `utc-index`・`itc-index` が `depends_on` の推移閉包に無い、imp-test-sample の `cr-2026-004` を解決できない）で失敗した。直した版ではエラーは 0 件だった。sample の `based_on` を消して通すと、sample が駄菓子屋の文脈で示すトレーサビリティの手本が崩れるので、検証の側を直した。
+
+### 5.4. 単体テストのフィクスチャの更新
+
+`schedule build` が `sch-milestones.yaml` に第 3 波のゲートとマイルストーンを足したので、`tests/src/docs/yaml-tables.test.ts` が比べる `tests/fixtures/yaml-pages/prj-0001--sch-milestones.md.snap` を作り直した。このテストは `toBe` でファイルと比べるので、`vitest -u` では更新されない。そのため `renderYamlPage` の出力をファイルへ書き戻した（47 行の追加だけ）。作り直した後、このテストは 38 件すべて通った。
+
+### 5.5. plan の dry-run の結果
 
 `exec plan --project prj-0001` で、utc-sample の 4 つの段（040・050・080・090）と trc-requirements-to-tests-sample の 050 の plan を `tmp/` へ作って確かめた。
 
@@ -90,12 +95,12 @@ kata ドメインに載せると、`catalog validate` が sample の `based_on`�
 
 どの段も、対象と手本は食い違わない。050 では成果物と編集の対象が同じ ID なので、`targets` に同じ ID が 2 回並ぶ。exec-plan の schema は重複を禁じていないので、そのまま進められる。finalize は human の段なので plan を作らない（claim で result を作る）。
 
-### 5.5. 残課題
+### 5.6. 残課題
 
-- `--project` を付けないと、この worktree では `exec plan` が既存の成果物（`utc-catalog` など）も見つけられなかった。グローバルの `specdojo` コマンドはメインのリポジトリの `dist` を指す。schedule のタスクを走らせる前に、`dist` に 5.3 の修正を build しておく必要がある。
-- `targets` の重複（5.4 の 050）は、`targetDocIds` で重複を除くかを別の項目で決める。
+- `--project` を付けないと、この worktree では `exec plan` が既存の成果物（`utc-catalog` など）も見つけられなかった。グローバルの `specdojo` コマンドはメインのリポジトリの `dist` を指す。schedule のタスクを走らせる前に、`dist` に「カタログ検証の修正」を build しておく必要がある。
+- `targets` の重複（「plan の dry-run の結果」の 050）は、`targetDocIds` で重複を除くかを別の項目で決める。
 
-### 5.6. CHANGELOG に書く事項
+### 5.7. CHANGELOG に書く事項
 
 利用者への影響は無い。`CHANGELOG.md` は変えていない。kata の成果物カタログ・strategy・track は prj-0001 の内部の計画で、`catalog validate` の修正は、project の外の名前空間の文書の照合を外すだけ。既存の project のカタログの検証の結果は変わらない。
 
