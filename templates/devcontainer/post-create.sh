@@ -19,8 +19,7 @@ for dir in \
   "${HOME}/.codex" \
   "${HOME}/.config/gh" \
   "${HOME}/.config/opencode" \
-  "${HOME}/.local/share/opencode" \
-  "${HOME}/.config/antigravity"; do
+  "${HOME}/.local/share/opencode"; do
   if [ -d "$dir" ]; then
     sudo chown -R "$(id -u):$(id -g)" "$dir"
   fi

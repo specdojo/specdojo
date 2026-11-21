@@ -140,7 +140,7 @@ function parseProviderReset(output: string, observedAt: Date): Date | undefined 
     if (!Number.isNaN(parsed.getTime()) && parsed > observedAt) return parsed;
   }
 
-  // Antigravity reports a relative reset such as "Resets in 4h36m50s".
+  // Some providers report a relative reset such as "Resets in 4h36m50s".
   const relative = output.match(/\bresets?\s+in\s+(\d+\s*[dhms](?:\s*\d+\s*[dhms])*)\b/i);
   if (relative) {
     const unitMilliseconds: Record<string, number> = {

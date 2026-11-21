@@ -786,7 +786,6 @@ export function agentExtraRootArguments(
         ...absolute.map((dir) => `Edit(/${dir}/**)`),
       ];
     case "codex":
-    case "antigravity":
     case "copilot":
       return absolute.flatMap((dir) => ["--add-dir", dir]);
     default:

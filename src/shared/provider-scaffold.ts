@@ -1,8 +1,6 @@
 import { existsSync } from "node:fs";
 import { copyFile, mkdir, readdir, readFile, writeFile } from "node:fs/promises";
-import { homedir } from "node:os";
 import path from "node:path";
-import { assertProviderLaunchAllowed } from "./antigravity-block.js";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -23,14 +21,6 @@ export const ORCHESTRATOR_NPM_SCRIPTS: Record<string, Record<string, string>> = 
     "orch:luna":
       'specdojo orchestrator launch --provider codex -- -m gpt-6-luna "$(cat .specdojo/codex/orchestrator.md)"',
   },
-  antigravity: {
-    "orch:argon":
-      'specdojo orchestrator launch --provider antigravity -- --add-dir "$(pwd)" --model gemini-4-argon-medium -i "$(cat .specdojo/antigravity/orchestrator.md)"',
-    "orch:argon:work":
-      'tools/worktree/open-agent-worktree.sh argon-work specdojo orchestrator launch --provider antigravity -- --add-dir . --model gemini-4-argon-medium -i "$(cat .specdojo/antigravity/orchestrator.md)"',
-    "orch:flash":
-      'specdojo orchestrator launch --provider antigravity -- --add-dir "$(pwd)" --model gemini-3.8-flash-high -i "$(cat .specdojo/antigravity/orchestrator.md)"',
-  },
   opencode: {
     "orch:opencode":
       "specdojo orchestrator launch --provider opencode -- --agent specdojo-orchestrator",
@@ -50,7 +40,6 @@ export const ORCHESTRATOR_NPM_SCRIPTS: Record<string, Record<string, string>> = 
 //   templates/opencode/opencode.json      -> opencode.json           （リポジトリ直下の接続・モデル設定）
 //   templates/<provider>/ 配下のその他    -> .specdojo/<provider>/** （--settings 等で明示参照）
 // Copilot の orchestrator だけは native の探索先 .github/agents/ に同梱 wrapper を配置する。
-// ユーザーディレクトリ設定は PROVIDER_GLOBAL_SETTINGS で明示し、--global 時だけマージする。
 
 export interface ProviderScaffoldEntry {
   sourcePath: string;
@@ -77,28 +66,6 @@ export interface RunProviderScaffoldOptions {
   global?: boolean;
   /** Composite commands such as `specdojo init` print one consolidated handoff. */
   showNextSteps?: boolean;
-  /** テストでは実ユーザーのホームへ触れないよう一時ディレクトリを注入する。 */
-  homeDir?: string;
-}
-
-interface ProviderGlobalSettingsDefinition {
-  templateRelPath: string;
-  destinationSegments: string[];
-}
-
-const PROVIDER_GLOBAL_SETTINGS: Readonly<Record<string, ProviderGlobalSettingsDefinition>> = {
-  antigravity: {
-    templateRelPath: "settings.global.json",
-    destinationSegments: [".gemini", "antigravity-cli", "settings.json"],
-  },
-};
-
-type PermissionListName = "allow" | "deny" | "ask";
-
-interface PermissionAdditions {
-  allow: string[];
-  deny: string[];
-  ask: string[];
 }
 
 export async function listProviderTemplates(packageRoot: string): Promise<string[]> {
@@ -148,14 +115,8 @@ export async function buildProviderScaffoldPlan(opts: {
   const relFiles = (await collectFilesRecursively(templateDir)).map(toPosix).sort();
   const entries: ProviderScaffoldEntry[] = [];
   for (const relFile of relFiles) {
-    // 配布原本の説明書と、明示的な --global でだけ利用するユーザー設定は
-    // repository 内へコピーしない。
-    if (
-      relFile === "README.md" ||
-      relFile === PROVIDER_GLOBAL_SETTINGS[provider]?.templateRelPath
-    ) {
-      continue;
-    }
+    // 配布原本の説明書は repository 内へコピーしない。
+    if (relFile === "README.md") continue;
 
     const destinationRelPath =
       provider === "opencode" && relFile === "opencode.json"
@@ -189,158 +150,6 @@ export async function buildProviderScaffoldPlan(opts: {
   };
 }
 
-function parseJsonObject(content: string, sourcePath: string): Record<string, unknown> {
-  let parsed: unknown;
-  try {
-    parsed = JSON.parse(content);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    throw new Error(`Invalid JSON in ${sourcePath}: ${message}`);
-  }
-  if (!isRecord(parsed)) {
-    throw new Error(`Invalid JSON in ${sourcePath}: top-level value must be an object`);
-  }
-  return parsed;
-}
-
-function permissionList(
-  permissions: Record<string, unknown>,
-  name: PermissionListName,
-  sourcePath: string,
-): string[] {
-  const value = permissions[name];
-  if (value === undefined) return [];
-  if (!Array.isArray(value) || value.some((entry) => typeof entry !== "string")) {
-    throw new Error(`Invalid ${sourcePath}: permissions.${name} must be an array of strings`);
-  }
-  return value as string[];
-}
-
-function mergePermissionSettings(
-  current: Record<string, unknown>,
-  required: Record<string, unknown>,
-  currentPath: string,
-  templatePath: string,
-): { merged: Record<string, unknown>; additions: PermissionAdditions } {
-  const currentPermissionsValue = current.permissions;
-  if (currentPermissionsValue !== undefined && !isRecord(currentPermissionsValue)) {
-    throw new Error(`Invalid ${currentPath}: permissions must be an object`);
-  }
-  if (!isRecord(required.permissions)) {
-    throw new Error(`Invalid ${templatePath}: permissions must be an object`);
-  }
-
-  const currentPermissions = isRecord(currentPermissionsValue) ? currentPermissionsValue : {};
-  const mergedPermissions: Record<string, unknown> = { ...currentPermissions };
-  const additions: PermissionAdditions = { allow: [], deny: [], ask: [] };
-
-  for (const name of ["allow", "deny", "ask"] as const) {
-    const existing = permissionList(currentPermissions, name, currentPath);
-    const requiredItems = permissionList(required.permissions, name, templatePath);
-    const existingSet = new Set(existing);
-    additions[name] = requiredItems.filter((item) => !existingSet.has(item));
-    if (existing.length > 0 || requiredItems.length > 0) {
-      mergedPermissions[name] = [...existing, ...additions[name]];
-    }
-  }
-
-  return {
-    merged: { ...current, permissions: mergedPermissions },
-    additions,
-  };
-}
-
-function hasPermissionAdditions(additions: PermissionAdditions): boolean {
-  return additions.allow.length + additions.deny.length + additions.ask.length > 0;
-}
-
-function displayHomePath(segments: readonly string[]): string {
-  return `~/${segments.join("/")}`;
-}
-
-function printGlobalSettingsDiff(
-  displayPath: string,
-  additions: PermissionAdditions,
-  dryRun: boolean,
-): void {
-  const prefix = dryRun ? "[dry-run] " : "";
-  process.stdout.write(`${prefix}global settings diff: ${displayPath}\n`);
-  process.stdout.write(`--- ${displayPath} (current)\n`);
-  process.stdout.write(`+++ ${displayPath} (merged)\n`);
-  for (const name of ["allow", "deny", "ask"] as const) {
-    if (additions[name].length === 0) continue;
-    process.stdout.write(`@@ permissions.${name} @@\n`);
-    for (const rule of additions[name]) process.stdout.write(`+ ${JSON.stringify(rule)}\n`);
-  }
-}
-
-async function nextBackupPath(settingsPath: string): Promise<string> {
-  const stamp = new Date().toISOString().replace(/[-:.]/g, "");
-  const base = `${settingsPath}.backup-${stamp}`;
-  let candidate = base;
-  let suffix = 1;
-  while (existsSync(candidate)) {
-    candidate = `${base}-${suffix}`;
-    suffix += 1;
-  }
-  return candidate;
-}
-
-/**
- * provider のユーザーディレクトリ設定へ、テンプレートの permission rule だけを追記する。
- * 既存キー・既存配列要素は保持し、実書き込み前には必ず元ファイルをバックアップする。
- */
-export async function mergeProviderGlobalSettings(
-  provider: string,
-  opts: Pick<RunProviderScaffoldOptions, "packageRoot" | "dryRun" | "homeDir">,
-): Promise<void> {
-  const definition = PROVIDER_GLOBAL_SETTINGS[provider];
-  if (!definition) {
-    throw new Error(`Provider ${provider} does not define global settings for --global`);
-  }
-
-  const templatePath = path.join(
-    opts.packageRoot,
-    "templates",
-    provider,
-    ...definition.templateRelPath.split("/"),
-  );
-  const settingsPath = path.join(opts.homeDir ?? homedir(), ...definition.destinationSegments);
-  const displayPath = displayHomePath(definition.destinationSegments);
-  const required = parseJsonObject(await readFile(templatePath, "utf8"), templatePath);
-  const currentContent = existsSync(settingsPath) ? await readFile(settingsPath, "utf8") : "{}\n";
-  const current = parseJsonObject(currentContent, settingsPath);
-  const { merged, additions } = mergePermissionSettings(
-    current,
-    required,
-    settingsPath,
-    templatePath,
-  );
-
-  if (!hasPermissionAdditions(additions)) {
-    process.stdout.write(`Global settings unchanged: ${displayPath}\n`);
-    return;
-  }
-
-  printGlobalSettingsDiff(displayPath, additions, opts.dryRun);
-  if (opts.dryRun) return;
-
-  await mkdir(path.dirname(settingsPath), { recursive: true });
-  if (existsSync(settingsPath)) {
-    const backupPath = await nextBackupPath(settingsPath);
-    await copyFile(settingsPath, backupPath);
-    process.stdout.write(
-      `Backup: ${displayHomePath([...definition.destinationSegments])}${backupPath.slice(settingsPath.length)}\n`,
-    );
-  }
-  await writeFile(
-    settingsPath,
-    `${JSON.stringify(merged, null, detectIndent(currentContent))}\n`,
-    "utf8",
-  );
-  process.stdout.write(`Merged global settings: ${displayPath}\n`);
-}
-
 export async function applyProviderScaffoldPlan(
   plan: ProviderScaffoldPlan,
   opts: { force: boolean },
@@ -370,17 +179,16 @@ export async function runProviderScaffold(
   provider: string,
   opts: RunProviderScaffoldOptions,
 ): Promise<void> {
-  // The templates/antigravity/ source stays in the package until PJR-N6FQ, but it is no longer
-  // copied: scaffolding agy settings would only prepare a launch SpecDojo refuses.
-  assertProviderLaunchAllowed(provider, `Cannot scaffold provider ${provider}`);
+  // --global merged Antigravity's user-level settings, the only provider that defined them.
+  // Refuse it before writing repository files now that no provider supports it.
+  if (opts.global) {
+    throw new Error(`Provider ${provider} does not define global settings for --global`);
+  }
   const plan = await buildProviderScaffoldPlan({
     packageRoot: opts.packageRoot,
     repoRoot: opts.repoRoot,
     provider,
   });
-  if (opts.global && !PROVIDER_GLOBAL_SETTINGS[provider]) {
-    throw new Error(`Provider ${provider} does not define global settings for --global`);
-  }
 
   if (opts.dryRun) {
     for (const entry of plan.entries) {
@@ -409,10 +217,6 @@ export async function runProviderScaffold(
     await addOrchestratorNpmScripts(path.join(opts.repoRoot, "package.json"), scriptsToAdd, {
       dryRun: !!opts.dryRun,
     });
-  }
-
-  if (opts.global) {
-    await mergeProviderGlobalSettings(provider, opts);
   }
 
   if (opts.dryRun) {

@@ -1,7 +1,6 @@
 import { existsSync } from "node:fs";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import * as path from "node:path";
-import { assertProviderLaunchAllowed } from "../shared/antigravity-block.js";
 
 export interface RunDevcontainerScaffoldOptions {
   packageRoot: string;
@@ -201,10 +200,6 @@ export async function runDevcontainerScaffold(opts: RunDevcontainerScaffoldOptio
     force,
     dryRun,
   } = opts;
-  // agy is never launched since 0.9.2, so refuse before writing any install step or volume for it.
-  for (const provider of providers) {
-    assertProviderLaunchAllowed(provider, "devcontainer scaffold cannot add provider antigravity");
-  }
   if (preset !== undefined && !DEVCONTAINER_PRESETS.includes(preset as DevcontainerPreset)) {
     throw new Error(
       `Unknown Dev Container preset: ${preset}. Available: ${DEVCONTAINER_PRESETS.join(", ")}`,

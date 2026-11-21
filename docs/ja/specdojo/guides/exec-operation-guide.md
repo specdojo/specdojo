@@ -529,7 +529,7 @@ SpecDojo package 自身の `src/`・`tools/`・`package.json`・lock file を変
 specdojo exec run \
   --project <project-id> \
   --register PJR-0001 PJR-0002 PJR-0003 \
-  --executor-by PJR-0001=codex-expert-executor,PJR-0002=agy-expert-executor,PJR-0003=agy-claude-expert-executor \
+  --executor-by PJR-0001=codex-expert-executor,PJR-0002=claude-expert-executor,PJR-0003=sonnet-executor \
   --reporter-by gemma-reporter \
   --worktree \
   --parallel 3 \

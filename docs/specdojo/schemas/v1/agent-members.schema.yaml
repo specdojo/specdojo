@@ -51,7 +51,7 @@ $defs:
       type:
         const: agent
       provider:
-        enum: [opencode, claude, codex, copilot, antigravity, custom]
+        enum: [opencode, claude, codex, copilot, custom]
       model:
         type: string
         minLength: 1

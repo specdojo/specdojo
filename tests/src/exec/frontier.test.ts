@@ -252,7 +252,7 @@ describe("frontier command configuration", () => {
     );
   });
 
-  it.each(["codex", "claude", "opencode", "antigravity", "copilot"] as const)(
+  it.each(["codex", "claude", "opencode", "copilot"] as const)(
     "ships frontier command support for %s",
     (provider) => {
       const config = load(

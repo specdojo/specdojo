@@ -42,36 +42,26 @@ CLI を直接操作する場合の代表フローは [遂行の技活用ガイ�
 
 `package.json` に、対話起動用の npm スクリプトを `orch:` 接頭辞で用意しています。Claude Code / Codex はモデル別に用意し、`:work` 付きは固定 worktree で起動します。
 
-| スクリプト          | CLI・モデル                           | worktree                                        |
-| ------------------- | ------------------------------------- | ----------------------------------------------- |
-| `orch:sonnet`       | Claude Code / `sonnet`                | なし                                            |
-| `orch:sonnet:work`  | Claude Code / `sonnet`                | `../worktrees/claude-work`（無ければ自動作成）  |
-| `orch:opus`         | Claude Code / `opus`                  | なし                                            |
-| `orch:opus:work`    | Claude Code / `opus`                  | `../worktrees/claude-work`（無ければ自動作成）  |
-| `orch:luna`         | Codex / `gpt-6-luna`                  | なし                                            |
-| `orch:luna:work`    | Codex / `gpt-6-luna`                  | `../worktrees/codex-work`（無ければ自動作成）   |
-| `orch:sol`          | Codex / `gpt-6.1-sol`                 | なし                                            |
-| `orch:sol:work`     | Codex / `gpt-6.1-sol`                 | `../worktrees/codex-work`（無ければ自動作成）   |
-| `orch:copilot`      | GitHub Copilot                        | なし                                            |
-| `orch:copilot:work` | GitHub Copilot                        | `../worktrees/copilot-work`（無ければ自動作成） |
-| `orch:qwen`         | OpenCode / Qwen 3.8                   | なし                                            |
-| `orch:qwen:work`    | OpenCode / Qwen 3.8                   | `../worktrees/qwen-work`（無ければ自動作成）    |
-| `orch:gemma`        | OpenCode / Gemma 4                    | なし                                            |
-| `orch:gemma:work`   | OpenCode / Gemma 4                    | `../worktrees/gemma-work`（無ければ自動作成）   |
-| `orch:argon`        | Antigravity / `gemini-4-argon-medium` | なし                                            |
-| `orch:argon:work`   | Antigravity / `gemini-4-argon-medium` | `../worktrees/argon-work`（無ければ自動作成）   |
-| `orch:flash`        | Antigravity / `gemini-3.8-flash-high` | なし                                            |
-| `orch:flash:work`   | Antigravity / `gemini-3.8-flash-high` | `../worktrees/agy-work`（無ければ自動作成）     |
+| スクリプト          | CLI・モデル            | worktree                                        |
+| ------------------- | ---------------------- | ----------------------------------------------- |
+| `orch:sonnet`       | Claude Code / `sonnet` | なし                                            |
+| `orch:sonnet:work`  | Claude Code / `sonnet` | `../worktrees/claude-work`（無ければ自動作成）  |
+| `orch:opus`         | Claude Code / `opus`   | なし                                            |
+| `orch:opus:work`    | Claude Code / `opus`   | `../worktrees/claude-work`（無ければ自動作成）  |
+| `orch:luna`         | Codex / `gpt-6-luna`   | なし                                            |
+| `orch:luna:work`    | Codex / `gpt-6-luna`   | `../worktrees/codex-work`（無ければ自動作成）   |
+| `orch:sol`          | Codex / `gpt-6.1-sol`  | なし                                            |
+| `orch:sol:work`     | Codex / `gpt-6.1-sol`  | `../worktrees/codex-work`（無ければ自動作成）   |
+| `orch:copilot`      | GitHub Copilot         | なし                                            |
+| `orch:copilot:work` | GitHub Copilot         | `../worktrees/copilot-work`（無ければ自動作成） |
+| `orch:qwen`         | OpenCode / Qwen 3.8    | なし                                            |
+| `orch:qwen:work`    | OpenCode / Qwen 3.8    | `../worktrees/qwen-work`（無ければ自動作成）    |
+| `orch:gemma`        | OpenCode / Gemma 4     | なし                                            |
+| `orch:gemma:work`   | OpenCode / Gemma 4     | `../worktrees/gemma-work`（無ければ自動作成）   |
 
-0.9.2 から、`orch:argon`・`orch:flash` などの Antigravity の行は使えません。`orchestrator launch --provider antigravity` は agy を起動する前にエラーで終了します。理由と代わりの操作は [[specdojo:exec-config-guide|exec設定ガイド]] の `provider 設定の配布と scaffold` を参照してください。以下の agy の説明は 0.9.1 までの記録です。
+`specdojo init` と `config scaffold` が利用者の `package.json` へ追加するスクリプトは、Claude Code が `orch:opus`・`orch:sonnet`、Codex が `orch:sol`（`gpt-6.1-sol`）・`orch:luna`（`gpt-6-luna`）、OpenCode が `orch:opencode` です。Codex のスクリプトは、名前に対応するモデルを起動コマンドで明示します。
 
-Antigravity CLI（`agy`）はファイル定義の agent を持たないため、Codex と同じく SSOT `.agents/specdojo-orchestrator.agent.md` の本文を `-i`（初期プロンプトを与えて対話を続ける）で渡します。ラッパーは不要で、`.agents/rules/*.md` の薄いラッパー経由で `.github/instructions/` の規則も読み込まれます。
-
-Antigravity で使えるモデル ID は `agy models` で確認してください。配布スクリプトは `gemini-4-argon-medium` と `gemini-3.8-flash-high` を指定します。
-
-`specdojo init` と `config scaffold` が利用者の `package.json` へ追加するスクリプトは、Claude Code が `orch:opus`・`orch:sonnet`、Codex が `orch:sol`（`gpt-6.1-sol`）・`orch:luna`（`gpt-6-luna`）、OpenCode が `orch:opencode` です（0.9.2 から Antigravity のスクリプトは追加しません）。Codex のスクリプトは、名前に対応するモデルを起動コマンドで明示します。
-
-0.4.0 以前に作った `orch:codex`・`orch:agy` は自動では削除・上書きされません。`config scaffold --provider codex` を再実行して新しいスクリプトを追加し、新しい名前で起動できることを確認してから、旧スクリプトを `package.json` から削除してください。
+0.4.0 以前に作った `orch:codex` は自動では削除・上書きされません。`config scaffold --provider codex` を再実行して新しいスクリプトを追加し、新しい名前で起動できることを確認してから、旧スクリプトを `package.json` から削除してください。
 
 用途に応じて使い分けます。
 
@@ -103,13 +93,6 @@ npx specdojo config scaffold --provider <name>
 scaffold が追加する `orch:*` は `specdojo orchestrator launch` を経由します。起動時に対象 project の `repos` を解決し、宣言済みのプロダクトリポジトリ本体だけを provider の追加ルートとして許可します。`repos` が無い場合の provider コマンドは従来どおりです。npm script に追加引数を渡す場合は `npm run orch:<name> -- <引数>` とし、その引数は provider CLI へそのまま渡されます。
 
 OpenCode は起動引数に追加ルートの指定を持たないため、選択した orchestrator agent の `permission.external_directory` を実行時の inline config で上書きします。全外部ディレクトリを拒否してから宣言済みルートだけを許可し、同じルートの `permission.edit` も許可します。`edit` は起動場所からの相対パスで照合されるため、相対パスのパターンで渡します。設定ファイル自体は変更しません。
-
-次の Antigravity CLI のグローバル設定は 0.9.2 から使えません（`config scaffold --provider antigravity` はエラーになります）。0.9.1 まで、Antigravity CLI の無人実行に必要な permission rule は、利用者のすべてのリポジトリに効くグローバル設定です。通常の scaffold では変更されないため、明示的に dry-run で追加 rule を確認してから適用します。既存設定は保持され、実適用前にバックアップされます。
-
-```bash
-npx specdojo config scaffold --provider antigravity --global --dry-run
-npx specdojo config scaffold --provider antigravity --global
-```
 
 分離環境が必要な場合は、追加の任意手順として `devcontainer scaffold` を利用できます。既存の `.devcontainer/` は上書きされず、provider の設定ディレクトリは名前付きボリュームへ保存されます。詳細は [CLIコマンドリファレンス](../references/command-reference.md) の `devcontainer` を参照してください。
 
@@ -151,7 +134,7 @@ Claude Code などの AI ツールが備える plan モード（計画モード�
 
 #### plan モードと register の性質の違い
 
-Claude Code の plan モードで作成される plan は、会話の中でアイデアを整理し、作業手順の当たりをつけるための「使い捨ての下書き（ドラフト）」です。既定では `~/.claude/plans/` 配下にランダムな名前で保存され、古いファイルは一定期間（約 30 日）で自動削除される一時的な性質を持ちます（Claude Code では `plansDirectory` 設定で保存先を変更できます）。これは Claude Code に限らず、他の AI ツール（Codex、Antigravity、OpenCode など）が提供する一時的な plan 機能や計画モードにも共通する特徴です。
+Claude Code の plan モードで作成される plan は、会話の中でアイデアを整理し、作業手順の当たりをつけるための「使い捨ての下書き（ドラフト）」です。既定では `~/.claude/plans/` 配下にランダムな名前で保存され、古いファイルは一定期間（約 30 日）で自動削除される一時的な性質を持ちます（Claude Code では `plansDirectory` 設定で保存先を変更できます）。これは Claude Code に限らず、他の AI ツール（Codex、OpenCode など）が提供する一時的な plan 機能や計画モードにも共通する特徴です。
 
 一方、`specdojo` のプロジェクト登録簿（register）は、プロジェクト進行中の意思決定、課題、作業を体系的に記録・追跡する「リポジトリの正本台帳」です（詳細は [[specdojo:register-operation-guide|登録簿運用ガイド]] を参照してください）。
 

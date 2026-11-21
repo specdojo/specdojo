@@ -121,7 +121,7 @@ describe("CLI generation verb taxonomy", () => {
       expect(visible(find("exec"))).not.toContain(name);
     }
     expect(visible(find("exec"))).toEqual(expect.arrayContaining(["run", "status", "claim"]));
-    expect(subcommandNames(program, "agent")).toEqual(["launch", "run"]);
+    expect(subcommandNames(program, "agent")).toEqual(["run"]);
     expect(visible(find("agent"))).toEqual(["help"]);
     expect(visible(program)).not.toContain("agent");
   });

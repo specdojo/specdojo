@@ -11,7 +11,7 @@ export const ORCHESTRATOR_SOURCE = ".agents/specdojo-orchestrator.agent.md";
 // format は本文の埋め込み方を表す。
 //   markdown: frontmatter の後ろが本文
 //   toml:     developer_instructions の複数行文字列が本文
-//   raw:      ファイル全体が本文。agy のようにファイル定義 agent を持たず、本文をそのまま
+//   raw:      ファイル全体が本文。codex のようにファイル定義 agent を使わず、本文をそのまま
 //             起動時の指示として渡す provider 向け
 export const ORCHESTRATOR_WRAPPERS = [
   { path: ".claude/agents/specdojo-orchestrator.md", format: "markdown" },
@@ -23,7 +23,6 @@ export const ORCHESTRATOR_WRAPPERS = [
   { path: "templates/opencode/agents/specdojo-orchestrator.md", format: "markdown" },
   { path: "templates/codex/agents/specdojo-orchestrator.toml", format: "toml" },
   { path: "templates/codex/orchestrator.md", format: "raw" },
-  { path: "templates/antigravity/orchestrator.md", format: "raw" },
 ];
 
 export function extractMarkdownBody(source, filePath = "Markdown wrapper") {

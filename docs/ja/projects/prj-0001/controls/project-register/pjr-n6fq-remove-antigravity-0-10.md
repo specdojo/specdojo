@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-21T00:33:00Z"
-  block_reason: "parent validation failed: test-unit"
   derived_from:
     - PJR-5V0T
 ---
@@ -42,19 +41,19 @@ provider の実装、配布テンプレート（templates/antigravity/ など）
 
 ## 4. 作業内容
 
-| No  | 作業                                        | 担当 | 状態 | メモ                                                                                                                                                                                                                                       |
-| --- | ------------------------------------------- | ---- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 1   | 範囲を洗い出して対応結果に書く              | DEV  | done | 対応結果の「洗い出しの結果」に書いた                                                                                                                                                                                                       |
-| 2   | provider・テンプレート・選択肢を消す        | DEV  | done | provider の実装・0.9.2 の止める処理・`templates/antigravity/` を消し、名簿の読み込みでエラーにした                                                                                                                                         |
-| 3   | ラッパー・道具・テスト・文書から外す        | DEV  | done | 同期の対象・道具・テスト・文書から外した。`.agents/rules/*.md` は保護されたパスで executor は消せないため、消す案を残課題とした                                                                                                            |
-| 4   | 保護された設定の案と CHANGELOG の文案を書く | DEV  | done | 対応結果の「保護された設定を変える案」と「CHANGELOG に書く事項」に書いた                                                                                                                                                                   |
-| 5   | 検証を通す                                  | DEV  | open | 親の検証（`npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md` など）は runner が executor の後に実行するため、executor は結果を確かめられない。影響する単体テストのファイル 11 件（249 件）は executor で通した |
+| No  | 作業                                        | 担当 | 状態 | メモ                                                                                                                                                                                                                                                                                                                       |
+| --- | ------------------------------------------- | ---- | ---- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | 範囲を洗い出して対応結果に書く              | DEV  | done | 対応結果の「洗い出しの結果」に書いた                                                                                                                                                                                                                                                                                       |
+| 2   | provider・テンプレート・選択肢を消す        | DEV  | done | provider の実装・0.9.2 の止める処理・`templates/antigravity/` を消し、名簿の読み込みでエラーにした                                                                                                                                                                                                                         |
+| 3   | ラッパー・道具・テスト・文書から外す        | DEV  | done | 同期の対象・道具・テスト・文書から外した。保護された `.agents/rules/*.md` は利用者が develop で消し、schema の enum は再開後に外した                                                                                                                                                                                       |
+| 4   | 保護された設定の案と CHANGELOG の文案を書く | DEV  | done | 対応結果の「保護された設定を変える案」と「CHANGELOG に書く事項」に書いた                                                                                                                                                                                                                                                   |
+| 5   | 検証を通す                                  | DEV  | open | 親の検証（`npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md` など）は runner が executor の後に実行するため、executor は結果を確かめられない。影響する単体テストのファイル 11 件（249 件）は executor で通した。前回の親の test-unit で落ちた `cli-verb-taxonomy.test.ts` は期待を直して通した |
 
 ## 5. 対応結果
 
 0.10.0 に向けて、provider の実装・配布テンプレート・選択肢・道具・テスト・文書から Antigravity（agy）の対応を外した。`.specdojo/agent-members.yaml` に provider が `antigravity` の member があると、`disabled: true` でも名簿の読み込み（`loadMemberRoster`）で理由と直し方を示すエラーになる。
 
-_CONTEXT_: このリポジトリの `.specdojo/agent-members.yaml` には provider が `antigravity` の member が 11 件ある（すべて `disabled: true`）。この変更を build した `specdojo` は、それらを消すまで名簿を読み込めない。build と配布の前に、下の「保護された設定を変える案」を反映する。
+このリポジトリの保護された設定は、利用者の承認のもと develop に反映済み（d15436815）である。再開後に統合先と同期し、schema の enum から `antigravity` を外した（「保護された設定を変える案」を参照）。
 
 ### 5.1. CHANGELOG に書く事項
 
@@ -77,22 +76,21 @@ _CONTEXT_: このリポジトリの `.specdojo/agent-members.yaml` には provid
 - `src/shared/specdojo-config.ts`: 0.9.2 の止める処理の代わりに、名簿に provider が `antigravity` の member があるとエラーにする検査を schema の検証の前に足した。
 - `templates`: `templates/antigravity/` を消した。`init-agent-members.yaml` の `flash-*` の実体と `agy-*` の別名、`init-exec-defaults.yaml` の `providers.antigravity`、`devcontainer/post-create.sh` の `~/.config/antigravity` を消した。
 - `tools`: `validate-orchestrator-sync.mjs` の対象（`orchestrator:sync` も同じ一覧を使う）から `templates/antigravity/orchestrator.md` を外した。`update-agent-clis.mjs` と `exec/verify-multi-repo-agent-write.sh` から agy を外した。
-- `tests`: agy 専用のテスト 3 ファイルと、各テストの agy の場合を消した。`tests/src/shared/specdojo-config.test.ts` に、agy の member（`disabled` の有無の両方）がエラーになるテストを足した。
+- `tests`: agy 専用のテスト 3 ファイルと、各テストの agy の場合を消した。`tests/src/shared/specdojo-config.test.ts` に、agy の member（`disabled` の有無の両方）がエラーになるテストを足した。`tests/src/cli-verb-taxonomy.test.ts` の `agent` のサブコマンドの期待を `run` だけに直した。`tests` を grep し、`agent launch` や `antigravity` を前提にしたテストがほかに残っていないことを確かめた（残る一致は、名簿のエラーのテストと `post-create.sh` に agy が入らないことの検査、無関係の track 名 `launch`）。
 - 文書: `exec-config-guide`・`orchestrator-operation-guide`・`command-reference`・`specdojo-config-reference`・`quick-start-guide`・`exec-operation-guide`・`remote-host-development-guide`・`job-sequence-guide`・`specdojo-overview-guide` と `README.md` から agy の説明を消した。`command-reference` と `README.md` には、0.10.0 で外した理由と移行の操作を 1 段落だけ残した。
 
 残したもの（理由）:
 
-- `.agents/rules/*.md`（6 件）: agy 向けの薄いラッパーだが、`.agents/rules/` は agent が書けない保護されたパスで executor は消せない。消す案を残課題にした。オーケストレーターの SSOT `.agents/specdojo-orchestrator.agent.md` は codex の `orch:sol` なども使うため残す。
-- `docs/specdojo/schemas/v1/agent-members.schema.yaml`・`exec-defaults.schema.yaml` の enum の `antigravity`: 保護された `.specdojo/*.yaml` がまだ `antigravity` を使っており、消すと `npm run validate:schema` が失敗するため。名簿の読み込みでは schema の検証より先に専用のエラーを出すので、enum が残っていても agy の member は通らない。
+- オーケストレーターの SSOT `.agents/specdojo-orchestrator.agent.md`: codex の `orch:sol` なども使うため残す。
 - `src/exec/limit.ts` の相対の reset（`Resets in 4h36m50s`）の読み取り: provider に依らない処理のため残し、コメントだけ直した。
 - `src/exec/agent-protected-config.ts` の `.agents/rules/` の保護: ほかの agent 設定も守る一般の規則のため残した。
 - `tests/src/devcontainer/scaffold.test.ts` の、生成する `post-create.sh` に agy のインストールが入らないことの検査: 回帰を防ぐため残した。
 - `docs/ja/specdojo/guides/release-v0-3-0-migration-guide.md` と `CHANGELOG.md`: 完了条件のとおり過去の版の記述は変えない。
-- 洗い出しの範囲外: このリポジトリの開発環境（`.devcontainer/`・`CONTRIBUTING.md` の agy の導入とボリューム）と、プロダクトの設計書（`sysd-antigravity-agent-settings` などの `docs/ja/product/040-system-design/`）。
+- 洗い出しの範囲外: このリポジトリの開発環境（`.devcontainer/`・`CONTRIBUTING.md` の agy の導入とボリューム）と、プロダクトの設計書（`sysd-antigravity-agent-settings` などの `docs/ja/product/040-system-design/`）。`.devcontainer/`・`CONTRIBUTING.md` と `config scaffold`・`exec scaffold` の `--global` の扱いは、利用者の指示によりこの項目では変えない。
 
 ### 5.3. 保護された設定を変える案
 
-利用者の承認のもと、feature ブランチで次を反映する。上の _CONTEXT_ のとおり、名簿の 1 と 2 は build の前に必要である。
+1 から 5 は利用者の承認のもと develop に反映済み（d15436815）。6 は再開後に executor が反映した。7 と 8 は利用者の指示によりこの項目では行わない。
 
 1. `.specdojo/agent-members.yaml`: provider が `antigravity` の member 11 件（`flash-executor`・`flash-high-executor`・`argon-executor`・`flash-high-review-executor`・`hydrogen-executor`・`hydrogen-review-executor`・`flash-reporter`・`agy-sonnet-executor`・`agy-opus-executor`・`agy-opus-review-executor`・`agy-gpt-oss-executor`）と注記の節を消す。向き先にする別名は無い。
 2. `.specdojo/exec-defaults.yaml`: `providers.antigravity` の節と、routing の agy の注記を消す。agy の member を参照する routing は無い。

@@ -120,7 +120,7 @@ members:
     priority: 10
 ```
 
-モデルを持つ実体の `nickname` は、モデルの版を含めず、モデルの系統と役割で付けます（例: `opus-executor`・`sol-review-executor`）。版は `model` に記録します。同じモデル系統を既定でない provider から使う場合は、`agy-opus-executor` のように provider 名を前に付けます。従来名など実体を指す名前はトップレベルの `aliases` に置き、`alias_of` で実体または別の alias を指します。
+モデルを持つ実体の `nickname` は、モデルの版を含めず、モデルの系統と役割で付けます（例: `opus-executor`・`sol-review-executor`）。版は `model` に記録します。同じモデル系統を既定でない provider から使う場合は、`copilot-opus-executor` のように provider 名を前に付けます。従来名など実体を指す名前はトップレベルの `aliases` に置き、`alias_of` で実体または別の alias を指します。
 
 ```yaml
 members:
@@ -437,16 +437,8 @@ providers:
         normal: { effort: medium }
         expert: { effort: high }
         frontier: { effort: xhigh }
-
-  antigravity: # 0.9.2 から使えない（agy を起動しない）
-    command_template: 'specdojo agent launch --provider antigravity --role {mode} -- --sandbox --model {model} -p "$(cat)"'
-    # model を持たない従来の 1 段の member だけが、次の model を使う
-    command_params:
-      by_proficiency:
-        normal: { model: gemini-3.8-flash-medium }
-        expert: { model: gemini-3.8-flash-high }
       by_nickname:
-        agy-claude-expert-executor: { model: claude-opus-5-5-high }
+        sol-review-executor: { effort: xhigh }
 ```
 
 `by_nickname` は、同じ provider の一部 member だけモデルなどを差し替える用途です。層をまたぐ同名変数は意図的な上書きとして許可されます。一方、`nickname`、`mode`、`proficiency` は組み込み変数なので、どの `command_params` 層でも再定義できません。
@@ -622,17 +614,14 @@ executor の出力は、そのまま reporter へ渡さずに run 単位の evid
 
 agent が exec 実行時に読み込む provider 固有の設定（agent 定義・permission 設定）は、npm package 内の `templates/<provider>/` を配布原本とし、利用プロジェクトへコピーして使います。worktree 実行はコミット済み内容から worktree を作るため、コピーした設定は必ずコミットします。
 
-0.9.2 から、SpecDojo は Antigravity CLI（`agy`）を起動しません。consumer plan では、他社の agent や application の中から agy を起動することを [Antigravity の FAQ](https://antigravity.google/docs/faq) が対象外とし、[Additional Terms](https://antigravity.google/terms) の Section 6 が契約違反としているためです。provider が `antigravity` の member は、名前で指定すると agent の起動前にエラーで止まり、自動選択と代わりの選択では候補から外れます。`agent launch` と `orchestrator launch` の `--provider antigravity`、`init`・`config scaffold`・`devcontainer scaffold` での `antigravity` の指定もエラーになり、止めるのを外す設定はありません。0.9.1 の `init` で antigravity を選んだ場合は、`.specdojo/agent-members.yaml` で agy の member に `disabled: true` を付けるか削除し、ほかの provider を使ってください。以降の agy の設定の説明は 0.9.1 までの記録で、0.9.2 では使えません。
-
 配置規則は provider 名から機械的に決まります（`agents/` 配下 → `.<provider>/agents/`、`rules/` 配下 → `.<provider>/rules/`、`opencode.json` → リポジトリ直下の `opencode.json`、それ以外のファイル → `.specdojo/<provider>/`、`README.md` はコピーしません）。provider ごとの配布内容は次のとおりです。
 
-| provider    | 配布内容                                                                                                                                                                                                                        | 配置先                                 |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
-| claude      | `agents/*.md`（役割ごとの agent 定義）、`settings.edit.json` / `settings.orchestrator.json` / `settings.review.json` / `settings.report.json`                                                                                   | `.claude/agents/`、`.specdojo/claude/` |
-| codex       | `agents/*.toml`（親 Codex が spawn する subagent 定義）、`rules/*.rules`（command rule）                                                                                                                                        | `.codex/agents/`、`.codex/rules/`      |
-| opencode    | `agents/*.md`（permission frontmatter 込みの agent 定義）、`opencode.json`（Ollama 接続・モデル設定）                                                                                                                           | `.opencode/agents/`、`opencode.json`   |
-| copilot     | `agent-members-snippet.yaml`（agent 定義）と `exec-defaults-snippet.yaml`（`providers.copilot` の command template・rate limit 検出）の参照スニペット                                                                           | `.specdojo/copilot/`                   |
-| antigravity | 0.9.2 から配置できない。0.9.1 までは役割別 `settings.edit.json` / `settings.review.json` / `settings.report.json` / `settings.orchestrator.json`、orchestrator と設定スニペット。旧 `settings.global.json` は互換用途だけに使用 | `.specdojo/antigravity/`               |
+| provider | 配布内容                                                                                                                                              | 配置先                                 |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
+| claude   | `agents/*.md`（役割ごとの agent 定義）、`settings.edit.json` / `settings.orchestrator.json` / `settings.review.json` / `settings.report.json`         | `.claude/agents/`、`.specdojo/claude/` |
+| codex    | `agents/*.toml`（親 Codex が spawn する subagent 定義）、`rules/*.rules`（command rule）                                                              | `.codex/agents/`、`.codex/rules/`      |
+| opencode | `agents/*.md`（permission frontmatter 込みの agent 定義）、`opencode.json`（Ollama 接続・モデル設定）                                                 | `.opencode/agents/`、`opencode.json`   |
+| copilot  | `agent-members-snippet.yaml`（agent 定義）と `exec-defaults-snippet.yaml`（`providers.copilot` の command template・rate limit 検出）の参照スニペット | `.specdojo/copilot/`                   |
 
 導入手順と手動設定（`.codex/config.toml` や接続先 URL の調整、Modelfile によるローカル派生タグの作成など）は各 `templates/<provider>/README.md` を参照します。
 
@@ -661,29 +650,27 @@ specdojo config scaffold --provider claude
 - 配布原本はインストール済み package のルートから解決します。`templates/<name>/` が存在しない provider を指定した場合は、指定可能な provider 一覧を添えてエラーにします。
 - 配置先に同名ファイルが存在する場合は上書きせず `Skipped (already exists):` を出力します。`--force` 指定時のみ上書きします。ファイルごとに `Written:` / `Skipped:` を 1 行ずつ出力します（既存の scaffold 系コマンドの出力形式に合わせます）。
 - `--dry-run` 指定時は書き込みを行わず、コピー予定のファイル一覧を表示します。
-- 0.9.2 から使えません。0.9.1 までは、`antigravity` で `--global` を明示した場合だけ、`~/.gemini/antigravity-cli/settings.json` の `permissions.allow` / `deny` / `ask` へ不足 rule を追記します。既存キーと配列要素は保持し、書き換え前に timestamp 付きバックアップを作ります。`--global --dry-run` は追加 rule の差分だけを表示し、設定もバックアップも作りません。
-- `--global` をサポートしない provider へ指定した場合はエラーにします。`--force` はグローバル設定の既存値を上書きしません。
+- `--global` は、ユーザーディレクトリ設定を持つ provider へ permission rule を追記するオプションです。0.10.0 では対応する provider がないため、指定するとリポジトリへ書き込む前にエラーにします。
 - コピー完了後、次の 2 点を案内メッセージとして出力します。配置ファイルのコミットが必要であること（worktree 実行の前提）、および `.specdojo/exec-defaults.yaml` の `providers.claude.command_template` に `--settings` の指定が必要であること。
 - `settings.*.json` の `Edit(...)` / `Write(...)` パスパターンの調整は利用者に委ねます。scaffold は `.specdojo/specdojo.config.json` のパス設定に基づく書き換えを行いません（テンプレートを事実上の推奨レイアウト前提で配布します）。
-- 将来 provider を追加する場合は `templates/<provider>/` を追加し、`package.json` の `files` に含めます。repository 内へのコピーは provider 名からディレクトリを解決します。ユーザーディレクトリ設定も扱う provider だけは、グローバル設定原本と配置先を実装の許可リストへ明示します。
+- 将来 provider を追加する場合は `templates/<provider>/` を追加し、`package.json` の `files` に含めます。repository 内へのコピーは provider 名からディレクトリを解決します。
 
 ### 7.2. agent の名簿の 2 段構成と移行
 
 `specdojo init --exec` と `config scaffold` が配布する agent の名簿と定義は、実体と別名の 2 段構成です（0.4.0 から）。実体は model の系統と役割で名付け、provider・`model`・役割を持ちます。従来の名前は `aliases` で実体を指す別名として残します。claude と opencode の agent の定義は役割（executor・review executor・reporter）ごとの 1 ファイルで `model` を持たず、`command_params.by_mode` で mode から定義を選び、model は実体の `model` を `--model {model}` で渡します。
 
-| provider    | init が生成する実体                                                                                                   | 別名（従来の名前）                                                   | model の書き場所                                                            |
-| ----------- | --------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| claude      | `sonnet-executor`・`sonnet-review-executor`・`sonnet-reporter`                                                        | `claude-executor`・`claude-review-executor`・`claude-reporter`       | 実体の `model`（`sonnet`）                                                  |
-| claude      | `opus-executor`・`opus-review-executor`（expert）                                                                     | `claude-expert-executor`・`claude-expert-review-executor`            | 実体の `model`（`opus`）                                                    |
-| codex       | `luna-executor`・`luna-review-executor`・`luna-reporter`                                                              | `codex-executor`・`codex-review-executor`・`codex-reporter`          | 実体の `model`（`gpt-6-luna`、effort は `by_proficiency`）                  |
-| codex       | `sol-executor`・`sol-review-executor`（expert）                                                                       | `codex-expert-executor`・`codex-expert-review-executor`              | 実体の `model`（`gpt-6.1-sol`、effort は `by_proficiency`）                 |
-| opencode    | `gemma-executor`・`gemma-review-executor`・`gemma-reporter`、`qwen-executor`・`qwen-review-executor`・`qwen-reporter` | `opencode-executor`・`opencode-review-executor`・`opencode-reporter` | 実体の `model`（`opencode.json` の provider 名込み、原則 `*-mlx-work-64k`） |
-| antigravity | 0.9.2 から生成しない。0.9.1 までは `flash-executor`・`flash-review-executor`・`flash-reporter`                        | `agy-executor`・`agy-review-executor`・`agy-reporter`                | 実体の `model`（推論強度を含む ID）                                         |
-| copilot     | `copilot-executor`・`copilot-review-executor`・`copilot-reporter`                                                     | なし（`--model auto` で model を自動選択するため系統で名付けない）   | `command_template` の `--model auto`                                        |
+| provider | init が生成する実体                                                                                                   | 別名（従来の名前）                                                   | model の書き場所                                                            |
+| -------- | --------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| claude   | `sonnet-executor`・`sonnet-review-executor`・`sonnet-reporter`                                                        | `claude-executor`・`claude-review-executor`・`claude-reporter`       | 実体の `model`（`sonnet`）                                                  |
+| claude   | `opus-executor`・`opus-review-executor`（expert）                                                                     | `claude-expert-executor`・`claude-expert-review-executor`            | 実体の `model`（`opus`）                                                    |
+| codex    | `luna-executor`・`luna-review-executor`・`luna-reporter`                                                              | `codex-executor`・`codex-review-executor`・`codex-reporter`          | 実体の `model`（`gpt-6-luna`、effort は `by_proficiency`）                  |
+| codex    | `sol-executor`・`sol-review-executor`（expert）                                                                       | `codex-expert-executor`・`codex-expert-review-executor`              | 実体の `model`（`gpt-6.1-sol`、effort は `by_proficiency`）                 |
+| opencode | `gemma-executor`・`gemma-review-executor`・`gemma-reporter`、`qwen-executor`・`qwen-review-executor`・`qwen-reporter` | `opencode-executor`・`opencode-review-executor`・`opencode-reporter` | 実体の `model`（`opencode.json` の provider 名込み、原則 `*-mlx-work-64k`） |
+| copilot  | `copilot-executor`・`copilot-review-executor`・`copilot-reporter`                                                     | なし（`--model auto` で model を自動選択するため系統で名付けない）   | `command_template` の `--model auto`                                        |
 
-claude と codex は normal と expert の 2 段を持ちます（0.4.6 から）。expert の実体には `proficiency: expert` を付けます。init が書く振り分けの表（`routing`）は、hard を expert の別名（`claude-expert-executor`・`codex-expert-executor`）、medium と easy を normal の別名にし、reporter はどの難易度でも normal の別名にします。expert の段がない provider（opencode・antigravity など）は、hard も normal の別名を使います。codex の reasoning effort は `by_proficiency` で normal が `medium`、expert が `high` で、`gpt-6-luna` は Max までしか受け付けないため Ultra を割り当てません。
+claude と codex は normal と expert の 2 段を持ちます（0.4.6 から）。expert の実体には `proficiency: expert` を付けます。init が書く振り分けの表（`routing`）は、hard を expert の別名（`claude-expert-executor`・`codex-expert-executor`）、medium と easy を normal の別名にし、reporter はどの難易度でも normal の別名にします。expert の段がない provider（opencode など）は、hard も normal の別名を使います。codex の reasoning effort は `by_proficiency` で normal が `medium`、expert が `high` で、`gpt-6-luna` は Max までしか受け付けないため Ultra を割り当てません。
 
-init は選んだ provider の実体だけを名簿へ書き、別名は向き先の実体が選ばれたものだけを残します。次の手順の案内（`--executor-by` / `--reporter-by`）には別名を示します。antigravity の `agent-members-snippet.yaml` は実体を `disabled: true` で配布するため、別名は末尾にコメントの例として置きます。別名は無効な member を指せないので、向き先の実体を有効にしたものだけを `aliases` へ写します。
+init は選んだ provider の実体だけを名簿へ書き、別名は向き先の実体が選ばれたものだけを残します。次の手順の案内（`--executor-by` / `--reporter-by`）には別名を示します。
 
 `gpt-6-astra` は雛形の既定に入れません。使う場合は、次のように `proficiency: frontier` の実体を名簿へ足し、`--executor-by astra-executor` や `routing` で指名します。既存の起動設定には `providers.codex.command_params.by_proficiency.frontier: { effort: xhigh }` を追加します。
 
@@ -717,7 +704,7 @@ members:
 
 1 段から 2 段へ移す手順は次のとおりです。`.specdojo/` は agent が書き換えられない保護設定のため、人間（または orchestrator の承認を経た操作）が行います。
 
-1. member ごとに、使っている model の系統と役割から実体の名前を決め（`claude-expert-executor` が opus なら `opus-executor`）、`nickname` を実体の名前へ変え、`model`（版を含む ID）を加えます。同じ系統を既定でない provider から使う場合は `agy-opus-executor` のように provider 名を前に付けます。
+1. member ごとに、使っている model の系統と役割から実体の名前を決め（`claude-expert-executor` が opus なら `opus-executor`）、`nickname` を実体の名前へ変え、`model`（版を含む ID）を加えます。同じ系統を既定でない provider から使う場合は `copilot-opus-executor` のように provider 名を前に付けます。
 2. 従来の名前を、トップレベルの `aliases` に `nickname` と `alias_of`（実体の名前）の組で加えます。Job・routine・`sch-strategy`・文書・スクリプトにある名前は、別名として解決されるため変えなくて構いません。
 3. `.specdojo/exec-defaults.yaml` の `command_params.by_proficiency` などにある `model` を外し、member の `model` を正とします。codex の reasoning effort のように model 以外の値は残します。
 4. claude と opencode は、`templates/<provider>/agents/` の役割ごとの定義を `config scaffold --provider <name> --force` で配置し（手を加えた定義がある場合は差分を確認してから）、`command_template` を `--agent {agent} --model {model}` と `command_params.by_mode` の形へ改めます。model ごとに複製していた定義ファイル（`claude-expert-review-executor.md` など）は、別名から参照されなくなったら削除します。
@@ -743,8 +730,6 @@ provider によらず、exec の実行構造そのものが次の境界を提供
 ### 8.2. provider 別の権限設定
 
 **claude** は `provider 設定の配布と scaffold` のとおり、pipeline のロール別 `--settings` でパス単位に制限します。executor・review executor・reporter は `git push` と全 `gh` を deny します。対話型オーケストレーターの npm script は専用の `settings.orchestrator.json` を読み込み、保護設定を含む編集を妨げず、`git push` と `gh` の書き込みだけを deny して読み取りを allow します。`--permission-mode bypassPermissions` は使わず、`.claude/settings.json` の `disableBypassPermissionsMode: "disable"` で起動自体を拒否します。
-
-**antigravity** は 0.9.2 から使えません（`provider 設定の配布と scaffold` を参照）。0.9.1 までは `config scaffold --provider antigravity --global` で fine-grained permission を追記します。グローバル設定は利用者のすべてのリポジトリに効くため、allow は読み取りの Git コマンド（`git status` / `diff` / `log` / `show`）だけとし、`npm run` など任意のスクリプトを実行できる command は含めません。deny には、`git push`、全 `gh`、Git の変更操作・破壊的 command・秘密情報・固定保護設定へのアクセスを入れます。`--dangerously-skip-permissions` は使いません。CLI の permission に加えて、実行後の provider 非依存ガードでも保護設定の変更を block します。
 
 **codex** はパス単位の permission 機構を持たず、sandbox（`read-only` / `workspace-write` / `danger-full-access`）の粒度で制御します。review でも result の記入が必要なため `read-only` にはできず、edit / review とも `workspace-write` を使います。command template には次を明示します。
 
@@ -774,7 +759,7 @@ providers:
 
 `bash` を deny 基点の許可リストにするのは、`git add` / `git commit` を含む任意コマンドを塞ぐためで、denylist（`git push` などの列挙）では不十分です。executor・review executor は、将来の許可リスト追加で意図せず開かないよう `git push` と全 `gh` を末尾でも明示 deny します。対話型オーケストレーターは agent 定義ごとに権限を分離できるため、`edit` をリポジトリ全体で allow し、PR・workflow run・release などの読み取りだけを allow します。`gh api` と書き込みサブコマンドは明示 deny し、それ以外は先頭の deny により拒否されます。
 
-Codex の project-local rule と Antigravity の global settings は役割共通であり、同じリポジトリまたは利用者の orchestrator だけを例外にできません。この 2 provider は全 agent の `gh` 全面拒否を維持します。Claude と OpenCode は orchestrator 専用設定を持てるため読み取りだけを許可し、pipeline executor・reporter は全 `gh` を拒否します。
+Codex の project-local rule は役割共通であり、同じリポジトリの orchestrator だけを例外にできません。Codex は全 agent の `gh` 全面拒否を維持します。Claude と OpenCode は orchestrator 専用設定を持てるため読み取りだけを許可し、pipeline executor・reporter は全 `gh` を拒否します。
 
 **copilot**（GitHub Copilot CLI）は command のフラグで権限を制御します。deny は allow より常に優先され、`--allow-all-tools` すら上書きできます。`.specdojo/agent-members.yaml` には copilot member を `disabled: true` で定義し、起動コマンドは `providers.copilot.command_template` に定義します。有効化する際も次の構成を維持します。
 
@@ -792,30 +777,6 @@ providers:
       --deny-tool 'shell(git add)' --deny-tool 'shell(git commit)'
       --deny-tool 'shell(git push)' --deny-tool 'shell(git reset)'
 ```
-
-**antigravity**（Antigravity CLI `agy`）は 0.9.2 から起動できません（`provider 設定の配布と scaffold` を参照）。以下は 0.9.1 までの設定です。pipeline の役割指示は plan の共通規約を正本とし、権限は `agent launch --role {mode}` が分離します。非対話実行は `-p` ですが、プロンプトを引数に取り stdin を読まないので、runner が stdin へ書く plan を `"$(cat)"` で引数に渡します（command は `shell: true` で実行されます）。
-
-```yaml
-providers:
-  antigravity:
-    command_template: >-
-      specdojo agent launch --provider antigravity --role {mode} -- --sandbox --model {model} -p "$(cat)"
-    command_params:
-      by_proficiency:
-        normal: { model: gemini-3.8-flash-medium }
-        expert: { model: gemini-3.8-flash-high }
-      by_nickname:
-        agy-claude-executor: { model: claude-sonnet-5-5-medium }
-        agy-claude-expert-executor: { model: claude-opus-5-5-high }
-        agy-claude-expert-review-executor: { model: claude-opus-5-5-high }
-        agy-gpt-executor: { model: gpt-oss-120b-medium }
-```
-
-- `--sandbox` は書き込み先を `~/.gemini/antigravity-cli/scratch/` へ逃がすため、`--add-dir "$(pwd)"` で作業ディレクトリ（worktree）を明示して成果物へ書けるようにします。`--add-dir` なしでは成果物が更新されません。
-- `config scaffold --provider antigravity` で役割別の設定を配置します。`agent launch` がプロファイルと宣言済み task worktree ごとの絶対パスの保護を一つの `--settings` JSON にまとめます。通常導入はユーザー設定を書き換えず、`--global` は不要です。review / report は全ファイルの書き込みと command / MCP を拒否し、親 runner が検証します。対話型は `orchestrator launch` が専用の設定を渡します。`--dangerously-skip-permissions` は使いません。既存の command template・個別 command・npm script の移行と、未確認のグローバル／project 設定マージの実機検証は [[sysd-antigravity-agent-settings|Antigravity CLI エージェント設定]] を参照してください。
-- モデルは `agy models` で確認します。標準モデルは `by_proficiency`、Antigravity 経由の Claude / GPT は `by_nickname` で選びます。モデル ID は推論強度を含む（`gemini-3.8-flash-medium` など）ため `--effort` は併用しません。ID と `--effort` が食い違うと `invalid model selection` で起動に失敗します。
-- 資格情報はコンテナ内では `~/.gemini/antigravity-cli/antigravity-oauth-token` に保存されます。devcontainer では `~/.gemini` を名前付きボリュームにして永続化します。
-- `--output-format json --json-schema <file>` は `structured_output` を含む JSON エンベロープを返します。runner の reporter は stdout の本文から JSON を読むため、現時点では既定のテキスト出力を使います。
 
 - `--allow-all` / `--yolo` / `--allow-all-tools` / `--allow-all-paths` / 環境変数 `COPILOT_ALLOW_ALL` は使いません（claude の bypassPermissions 相当）。
 - ファイルアクセスはデフォルトで cwd（= worktree）配下 + 一時ディレクトリに制限されます。`--allow-all-paths` を使わないことで codex の `workspace-write` 相当の境界になります。

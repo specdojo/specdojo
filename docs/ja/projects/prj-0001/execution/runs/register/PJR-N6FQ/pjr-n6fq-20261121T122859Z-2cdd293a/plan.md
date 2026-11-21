@@ -77,4 +77,10 @@ plan に展開された finding は、message と同じ viewpoint ID の判定�
 
 - 保護された設定は利用者の承認のもと develop に反映済み（d15436815）。.specdojo/agent-members.yaml の antigravity の member 11 件、exec-defaults.yaml の providers.antigravity、package.json の orch:flash・orch:argon 系、lefthook.yml の templates/antigravity/orchestrator.md、.agents/rules の 6 件を消した。統合先と同期したうえで、残りとして docs/specdojo/schemas/v1/agent-members.schema.yaml と exec-defaults.schema.yaml の enum から antigravity を外し、npm run validate:schema を通す。.devcontainer と CONTRIBUTING.md の agy の記述と、config scaffold・exec scaffold の --global の扱いは、この項目では変えない
 
+## 再開の指示（2026-11-21T14:35:46.124Z）
+
+利用者が再開の前に足した指示である。これまでの申し送りとあわせて、この指示に従って作業を続ける。
+
+- 親の検証の test-unit で 1 件だけ落ちた: tests/src/cli-verb-taxonomy.test.ts の hides internal commands from help while keeping them registered (PJR-R7BQ) が、agent の subcommand に launch と run を期待している（expected [ 'run' ] to deeply equal [ 'launch', 'run' ]）。agent launch はこの項目で意図して消したため、期待を run だけに直す。ほかに agent launch や antigravity を前提にしたテストが残っていないかを tests の grep で確かめる
+
 `共通規約 sha256:e7dd6ff2a0dec2f12ed4ffc905cd185aca2d6f9c3922c56a249c88cb45b2a14e` `docs/ja/projects/prj-0001/execution/conventions/e7dd6ff2a0dec2f12ed4ffc905cd185aca2d6f9c3922c56a249c88cb45b2a14e.txt`
