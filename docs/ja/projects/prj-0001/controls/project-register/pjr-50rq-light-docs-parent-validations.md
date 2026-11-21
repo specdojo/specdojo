@@ -30,7 +30,16 @@ specdojo:
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- 変える前に、文書だけを変えた run（第 3 波の型の run など）の親の検証の時間を、`parent-validation-metrics.jsonl` から検証ごとに集計して個票の対応結果に書く。
+- test-integration のうち、実際の文書（`docs/ja/specdojo/**`・`docs/specdojo/**`）を読むテストを確かめて一覧にし、個票の対応結果に書く。文書のパスを fixture の文字列として持つだけのテストは、一覧に含めない。
+- 実際の文書を読むテストを、unit と integration のどちらからも別の検証（例: `test-docs`。名前は executor が決め、理由を対応結果に書く）として流せるようにし、`package.json` の script の案を作る。文書だけを変えた run では、test-integration と test-unit の全体ではなく、この検証が流れるようにする。src・tests・tools・scripts・packages・vitest の設定・tsconfig を変えた run では、今までどおり test-integration と test-unit の全体が流れる。
+- lint-md と lint-fm を、変えたファイルだけに流せるようにする（統合の commit の hook と同じ範囲）。設定や lint の規則のファイルを変えた run では、今までどおり全体に流す。
+- 軽い lint の検証は並べて流し、test の検証は 1 本ずつにできるようにする。runner の側に必要な仕組み（検証ごとに並べてよいかを書くキーなど）を足し、schema と `exec-config-guide` を直す。
+- 保護された設定（`.specdojo/exec-defaults.yaml`・`package.json`）は変えない。変える案を個票の対応結果と報告の `handoff` に書く。反映は利用者の承認のもと feature ブランチで行う。
+- 単体テストで、文書だけの変更と src の変更のそれぞれで、どの検証が選ばれるかを確かめる。
+- `CHANGELOG.md` は変えない。個票の対応結果の `### 5.1. CHANGELOG に書く事項` に、区分と行の文案を書く。
+- `npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md` を通し、親の検証を通す。
+- 統合と保護された設定の反映の後に、オーケストレーターが文書だけを変える run を 1 回流し、検証の合計の時間を変える前と比べて個票に書く。
 
 ## 4. 作業内容
 
