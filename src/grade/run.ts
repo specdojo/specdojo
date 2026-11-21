@@ -29,6 +29,8 @@ export type GradeRunOptions = GradeTargetFilters & {
   kind?: string;
   runId: string;
   by?: string;
+  /** Grader that takes over the remaining documents when `by` hits a rate limit. */
+  fallbackBy?: string;
   workDir?: string;
   isolatePipelineState?: boolean;
   ifBusy?: "fail" | "wait";
@@ -298,10 +300,19 @@ async function runGradeUnlocked(
   const actor = state.documents.some((document) => document.status !== "complete")
     ? runtime.resolveActor({ ...opts, execDefaultsPath })
     : undefined;
+  let fallbackActor: string | undefined;
+  if (opts.fallbackBy !== undefined) {
+    if (!opts.fallbackBy.trim()) throw new Error("Invalid --fallback-by; expected a nickname");
+    if (actor !== undefined) {
+      fallbackActor = runtime.resolveActor({ ...opts, by: opts.fallbackBy, execDefaultsPath });
+      if (fallbackActor === actor)
+        throw new Error(`--fallback-by must differ from the primary grader: ${actor}`);
+    }
+  }
   if (opts.dryRun) {
     for (const document of state.documents)
       process.stdout.write(
-        `[dry-run] ${document.path} actor=${actor ?? document.actor} status=${document.status}\n`,
+        `[dry-run] ${document.path} actor=${actor ?? document.actor}${fallbackActor ? ` fallback=${fallbackActor}` : ""} status=${document.status}\n`,
       );
     return { documents: state.documents };
   }
@@ -309,6 +320,7 @@ async function runGradeUnlocked(
   const failures: string[] = [];
   let rateLimited = false;
   let rateLimitedActor: string | undefined;
+  let currentActor = actor;
   for (const [index, document] of state.documents.entries()) {
     const reference = references.get(document.path);
     if (document.status === "complete") {
@@ -362,17 +374,33 @@ async function runGradeUnlocked(
         embedDocuments: opts.embedDocuments,
         doneCriteriaByPath: criteria,
       });
-      document.actor = actor;
+      document.actor = currentActor;
       document.status = "pending";
       delete document.error;
       writeState(statePath, state);
-      const { execution, actor: actualActor } = await runtime.executePlan({
-        planPath: resolve(specdojoRootDir(), plan.path),
-        nickname: actor!,
-        project: projectId,
-        execDefaultsPath,
-        quiet: true,
-      });
+      const execute = () =>
+        runtime.executePlan({
+          planPath: resolve(specdojoRootDir(), plan.path),
+          nickname: currentActor!,
+          project: projectId,
+          execDefaultsPath,
+          quiet: true,
+        });
+      let { execution, actor: actualActor } = await execute();
+      if (
+        execution?.result === "rate_limit" &&
+        fallbackActor !== undefined &&
+        currentActor !== fallbackActor
+      ) {
+        // Same run id: the rest of the documents continue with the fallback grader.
+        process.stdout.write(
+          `grade run: rate limit on ${actualActor}; switching to fallback ${fallbackActor}\n`,
+        );
+        currentActor = fallbackActor;
+        document.actor = currentActor;
+        writeState(statePath, state);
+        ({ execution, actor: actualActor } = await execute());
+      }
       document.actor = actualActor;
       if (!execution) throw new Error("Agent returned no execution result");
       if (execution.result === "rate_limit") {

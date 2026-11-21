@@ -3,13 +3,13 @@
   "queue_id": "wave3-b2-2026-11-21",
   "project_id": "prj-0001",
   "created_at": "2026-11-21T13:18:45.244Z",
-  "updated_at": "2026-11-21T13:18:45.244Z",
-  "state": "pending",
+  "updated_at": "2026-11-21T19:34:59.417Z",
+  "state": "completed_with_failures",
   "steps": [
     {
       "index": 1,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "succeeded",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -27,12 +27,16 @@
         "tmp/orchestrator/exec-defaults-claude-fallback.yaml",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-21T13:36:16.111Z",
+      "completed_at": "2026-11-21T13:56:04.774Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
     },
     {
       "index": 2,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "succeeded",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -50,12 +54,16 @@
         "tmp/orchestrator/exec-defaults-claude-fallback.yaml",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-21T13:56:04.779Z",
+      "completed_at": "2026-11-21T14:22:02.430Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
     },
     {
       "index": 3,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "succeeded",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -73,12 +81,16 @@
         "tmp/orchestrator/exec-defaults-claude-fallback.yaml",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-21T14:22:02.436Z",
+      "completed_at": "2026-11-21T14:56:38.227Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
     },
     {
       "index": 4,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "succeeded",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -96,12 +108,16 @@
         "tmp/orchestrator/exec-defaults-claude-fallback.yaml",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-21T14:56:38.232Z",
+      "completed_at": "2026-11-21T15:20:24.374Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
     },
     {
       "index": 5,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "succeeded",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -119,12 +135,16 @@
         "tmp/orchestrator/exec-defaults-claude-fallback.yaml",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-21T15:20:24.380Z",
+      "completed_at": "2026-11-21T15:46:09.765Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
     },
     {
       "index": 6,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "succeeded",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -142,12 +162,16 @@
         "tmp/orchestrator/exec-defaults-claude-fallback.yaml",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-21T15:46:09.768Z",
+      "completed_at": "2026-11-21T15:59:29.772Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
     },
     {
       "index": 7,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "succeeded",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -165,12 +189,16 @@
         "tmp/orchestrator/exec-defaults-claude-fallback.yaml",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-21T15:59:29.775Z",
+      "completed_at": "2026-11-21T16:24:23.726Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
     },
     {
       "index": 8,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "succeeded",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -188,12 +216,16 @@
         "tmp/orchestrator/exec-defaults-claude-fallback.yaml",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-21T16:24:23.729Z",
+      "completed_at": "2026-11-21T16:49:50.530Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
     },
     {
       "index": 9,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "succeeded",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -211,12 +243,16 @@
         "tmp/orchestrator/exec-defaults-claude-fallback.yaml",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-21T16:49:50.535Z",
+      "completed_at": "2026-11-21T19:11:03.762Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
     },
     {
       "index": 10,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "succeeded",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -234,12 +270,16 @@
         "tmp/orchestrator/exec-defaults-claude-fallback.yaml",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-21T19:11:03.765Z",
+      "completed_at": "2026-11-21T19:27:07.416Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
     },
     {
       "index": 11,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "failed",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -257,12 +297,16 @@
         "tmp/orchestrator/exec-defaults-claude-fallback.yaml",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-21T19:27:07.419Z",
+      "completed_at": "2026-11-21T19:34:55.317Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
     },
     {
       "index": 12,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "failed",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -280,7 +324,11 @@
         "tmp/orchestrator/exec-defaults-claude-fallback.yaml",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-21T19:34:55.319Z",
+      "completed_at": "2026-11-21T19:34:59.413Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
     }
   ]
 }

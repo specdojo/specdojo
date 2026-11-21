@@ -3,13 +3,13 @@
   "queue_id": "night-extra-2026-11-21",
   "project_id": "prj-0001",
   "created_at": "2026-11-21T14:11:33.808Z",
-  "updated_at": "2026-11-21T14:11:33.808Z",
-  "state": "pending",
+  "updated_at": "2026-11-21T19:27:11.010Z",
+  "state": "completed_with_failures",
   "steps": [
     {
       "index": 1,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "failed",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -23,12 +23,16 @@
         "fallback",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-21T16:06:05.938Z",
+      "completed_at": "2026-11-21T16:37:17.420Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
     },
     {
       "index": 2,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "failed",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -42,12 +46,16 @@
         "fallback",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-21T16:37:17.422Z",
+      "completed_at": "2026-11-21T18:17:10.851Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
     },
     {
       "index": 3,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "succeeded",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -61,12 +69,16 @@
         "fallback",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-21T18:17:10.856Z",
+      "completed_at": "2026-11-21T19:17:17.873Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
     },
     {
       "index": 4,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "failed",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -80,7 +92,11 @@
         "fallback",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-21T19:17:17.875Z",
+      "completed_at": "2026-11-21T19:27:11.007Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
     }
   ]
 }

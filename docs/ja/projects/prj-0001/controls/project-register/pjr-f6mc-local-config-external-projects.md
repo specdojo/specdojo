@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: waiting
   priority: low
   difficulty: easy
   owner: DEV
   registered_at: "2026-11-21T09:03:34Z"
+  block_reason: "parent validation failed: lint-fm, validate-schema, test-unit"
 ---
 
 # PJR-F6MC ローカル設定で external_projects を宣言できない

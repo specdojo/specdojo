@@ -77,3 +77,32 @@
       from: ""
       to: 対応方針
   previous_event_id: reg_4600c9a157324a1182195d37a06b433d
+- v: 1
+  id: reg_2a7d51024cdb47fd919720b3b4d94530
+  ts: "2026-11-21T18:17:18Z"
+  action: start
+  actor: qwen-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_1456bfbd8f6a48fbbef5fc60c122a7e5
+- v: 1
+  id: reg_d73218dabed94cf0b2c7f7968c1712a0
+  ts: "2026-11-21T19:00:53Z"
+  action: wait
+  actor: qwen-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-fm, validate-schema, test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-fm, validate-schema, test-unit"
+  previous_event_id: reg_2a7d51024cdb47fd919720b3b4d94530
