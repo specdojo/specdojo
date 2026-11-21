@@ -80,3 +80,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_ac82068e83f14400ab838b1416a45b27
+- v: 1
+  id: reg_8e1ef71948f245eeaf5dac6c43e09169
+  ts: "2026-11-21T09:47:27Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（opus-executor）で対応。差分の単体テストと統合テストを確かめ、統合のあとに止まっていた T-KATA-WAVE-3-tsp-index-sample-080 を exec resume で流し直して統合まで通ることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-21"
+    - field: conclusion
+      from: "-"
+      to: commit の範囲を決める処理で、prj-0001 以外の名前空間の target を、カタログの成果物の文書の id（HEAD から読む）で引けるようにした。kata ドメインの sample は condense の段でも commit の対象に入り、カタログに無い型の文書は今までどおり止まる
+  previous_event_id: reg_449c2455dbad4f2897174780a9b7a75c

@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-5t0q-kata-domain-commit-scope
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-21T09:10:13Z"
+  completed_at: "2026-11-21T09:47:27Z"
+  conclusion: commit の範囲を決める処理で、prj-0001 以外の名前空間の target を、カタログの成果物の文書の id（HEAD から読む）で引けるようにした。kata ドメインの sample は condense の段でも commit の対象に入り、カタログに無い型の文書は今までどおり止まる
   derived_from:
     - PJR-6998
 ---
