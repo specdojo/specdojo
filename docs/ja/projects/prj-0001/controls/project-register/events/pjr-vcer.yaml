@@ -125,3 +125,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_890461f7712442538bd53d6925ae3f17
+- v: 1
+  id: reg_54c66be245a045e29c96f02ed6fb47e8
+  ts: "2026-11-21T08:08:32Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（opus-executor）で対応し、スナップショットの古さを --resume-note で直した。develop で catalog validate・exec validate が通り、65 タスクが todo で登録され、dist に修正が入っていることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-21"
+    - field: conclusion
+      from: "-"
+      to: dct-kata.yaml に試験の型 13 種類の sample を載せ、kata-wave-3 の strategy と track（65 タスク）を作った。kata ドメインの sample の based_on を prj-0001 の成果物として照合しないよう catalog validate を直した
+  previous_event_id: reg_f65bca7df7a948cd87c382fda27296e7

@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-vcer-kata-wave-3-catalog-schedule
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-21T06:08:04Z"
+  completed_at: "2026-11-21T08:08:32Z"
+  conclusion: dct-kata.yaml に試験の型 13 種類の sample を載せ、kata-wave-3 の strategy と track（65 タスク）を作った。kata ドメインの sample の based_on を prj-0001 の成果物として照合しないよう catalog validate を直した
   derived_from:
     - PJR-ABY4
 ---
