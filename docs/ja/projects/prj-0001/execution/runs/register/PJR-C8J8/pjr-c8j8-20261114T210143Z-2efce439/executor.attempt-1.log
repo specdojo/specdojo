@@ -1,0 +1,40 @@
+`sidebar-config.ts` に型の文書を手で足す決まりを、型の文書から自動で作る形に替えました。今回のテストファイルの 13 件と、`.vitepress` の型検査はどちらも通っています。全件の `test:unit`・`typecheck`・`lint:ts`・`lint:md` などは、この後に親の runner が流します。
+
+**仕組み**
+- **組み立て:** 新しい `sidebar-kata.ts` が、文書サイトの設定を読み込むときに `docs/ja/specdojo/` の型の文書からルール・レシピ・サンプル・テンプレートの 4 つのメニューをその場で作ります。起点は非推奨でない rulebook で、frontmatter の `recipe`・`sample`・`template`・`includes` と `deliverable_type` を使います。生成物は書き出さないので、`.gitignore` も変えていません。
+- **手で書く設定:** Git で管理するのは `sidebar-kata-config.ts` だけです。中身は分類の名前と並び、`deliverable_type` と分類の対応、表示名と並びの上書きに限っています。今のメニューの表示名・分類・並びをここへ写しました。
+- **新しい型を足すとき:** 型の文書を作るだけでメニューに出ます。既にある分類に入る型なら設定ファイルを触らないので、並べて流すタスクどうしが同じファイルでぶつかりません。どの分類にも当たらない型は「その他」に入り、メニューから消えたりテストが落ちたりしません。
+- **非推奨と YAML:** 非推奨の型は出しません。YAML の型は、今と同じく `generated/` の表示用ページへリンクします。
+- **利用者のリポジトリ:** `config.mts` は package の型を重ねたステージングを読むので、文書サイトを入れた利用者のリポジトリ（PJR-PEJS）でも同じ仕組みでメニューができます。
+- **テスト:** `sidebar-kata.test.ts` は、自動で作ったメニューに対して「すべての型が出る・非推奨が出ない・同じ型が二度出ない・リンク先が実在する」を確かめる形に直しました。仮のディレクトリで組み立て規則を確かめるテストも足しています。
+
+**今のメニューとの違い**
+直す前の `sidebar-config.ts` と並べて比べると、違いはサンプルの「運用」だけでした。
+- 「運用方針・設計」「運用手順」のグループがなくなり、個別の sample は各項目の下に子として並びます。
+- 「全体構成」の表示名は rulebook と同じ「運用方針・設計 全体構成」「運用手順 全体構成」になりました。
+- リンク先の増減はありません。
+
+それ以外のメニュー（ルール・レシピ・テンプレート、ガイドなど）は完全に一致しました。
+
+**自分で決めた点**（理由とあわせて個票と `handoff` に書きました）
+- **設定ファイルの形式:** 例にあった YAML ではなく TypeScript にしました。`@specdojo/docs-site` に YAML パーサーがなく、この sandbox では依存を追加できなかったためです。frontmatter も、型の文書が使う単純な形だけを読む小さな関数で読んでいます。
+- **`undecided`・`not-needed`:** リンク先がないので、どちらもその種類の項目を作りません。
+- **`pm-decision-log-template`:** rulebook への手がかりがないため、`dec` に付けると設定に書きました。
+
+**まだ残っている作業**
+- **YAML に移すかどうかの判断:** 設定を YAML にしたい場合は、docs-site の `dependencies` に `yaml` を足す必要があります。
+- **schedule の決まりを外す:** 「メニューにも足す」の 1 文は不要になりました。ただ、kata-wave-1 が流れている間に書き換えると走っているタスクとぶつかるので、strategy と track は変えていません。この対応が develop に入った後に、strategy から外して track を作り直す変更案を個票に書きました。
+- **CHANGELOG:** 変えていません。利用者に影響する 2 点は、個票の「CHANGELOG に書く事項」に書きました。
+- **dev サーバー:** 起動中に足した型がメニューに出るのは、設定を読み直した後（再起動後）です。
+
+変更・追加したファイル:
+- `packages/docs-site/.vitepress/sidebar-kata.ts`（新規）
+- `packages/docs-site/.vitepress/sidebar-kata-config.ts`（新規）
+- `packages/docs-site/.vitepress/sidebar-config.ts`
+- `packages/docs-site/.vitepress/config.mts`
+- `tests/packages/docs-site/sidebar-kata.test.ts`
+- 個票 `pjr-c8j8-docs-site-kata-sidebar-auto.md`
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"The docs site's kata menus (rulebooks, recipes, samples, templates) are now built from the kata documents in docs/ja/specdojo/ whenever the site config loads. New sidebar-kata.ts builds the menus; new sidebar-kata-config.ts is the only hand-maintained file and holds category names/order, deliverable_type mapping, and label/order overrides copied from the old menu. The kata data was removed from sidebar-config.ts, config.mts now reads the staged docs, and sidebar-kata.test.ts checks the generated menus and the build rules. Compared with the old menu, only the samples 運用 section changed (opd/opr groups removed). Ticket results updated.","handoff":["設定ファイルは YAML ではなく TypeScript（packages/docs-site/.vitepress/sidebar-kata-config.ts）にした。@specdojo/docs-site に YAML パーサーがなく、この sandbox では npm install で依存を追加できなかったため。YAML に移す場合は docs-site の `dependencies` に yaml を足す必要がある。frontmatter は、型の文書が使う形（字下げした key: value、- item の並び、[a, b]）だけを読む小さな関数で読む。","rulebook の `recipe`・`sample`・`template` が `undecided`・`not-needed`・空の場合は、リンク先が無いのでその種類の項目を作らない。","今のメニューとの差分: サンプルの『運用』で『運用方針・設計』『運用手順』のグループが無くなり、個別の sample は opd・opr の項目の下に子として並ぶ。『全体構成』の表示名は『運用方針・設計 全体構成』『運用手順 全体構成』になった。ほかのメニューは変更前と完全に一致した（tmp/compare-all.mts で比較）。","`pm-decision-log-template` は frontmatter にもファイル名にも rulebook への手がかりが無いため、設定の `attach` で dec に付けた。`agent-members-template` と `exec-human-finalize-recipe` は設定の `menu` にファイル名で置いた。","schedule の変更案: sch-strategy-kata-wave-1.yaml の各段の説明にある『新しく作った型の文書…sidebar-config.ts の型のメニューにも足す…』の 1 文を消し、sch-track-kata-wave-1.yaml を再生成する。kata-wave-1 が流れている間に書き換えると走っているタスクとぶつかるため、本タスクでは変えていない。本対応が develop へ入った後に orchestrator が行う。","CHANGELOG.md は変えていない。個票の『CHANGELOG に書く事項』に 2 点書いた（メニューの自動生成、サンプルの運用の並び替え）。","dev サーバーの起動中に足した型がメニューに出るのは、設定を読み直した後（再起動後）になる。手書きメニューのときと同じ扱い。"],"validations":[{"command":"npx vitest run --config vitest.unit.config.ts tests/packages/docs-site/sidebar-kata.test.ts","status":"passed","summary":"13 tests passed (targeted run; full test:unit is run by parent runner)"},{"command":"npx tsc -p packages/docs-site/.vitepress/tsconfig.json --noEmit","status":"passed","summary":"docs-site .vitepress typecheck with no errors (not covered by root typecheck)"},{"command":"npx prettier --check packages/docs-site/.vitepress/sidebar-kata.ts packages/docs-site/.vitepress/sidebar-kata-config.ts packages/docs-site/.vitepress/sidebar-config.ts packages/docs-site/.vitepress/config.mts tests/packages/docs-site/sidebar-kata.test.ts","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-c8j8-docs-site-kata-sidebar-auto.md","status":"passed","summary":"Ticket formatted"},{"command":"npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-c8j8-docs-site-kata-sidebar-auto.md","status":"passed","summary":"No markdownlint errors"},{"command":"npm run -s validate:history-links","status":"passed","summary":"Exit 0; no invalid history files"},{"command":"npx eslint packages/docs-site/.vitepress/sidebar-kata.ts packages/docs-site/.vitepress/sidebar-kata-config.ts packages/docs-site/.vitepress/sidebar-config.ts","status":"not_applicable","summary":"Files ignored by ESLint config","reason":"The ESLint config and lint:ts do not cover packages/docs-site/.vitepress; the test file is covered by parent lint-ts"}]}
+</specdojo_executor_evidence>

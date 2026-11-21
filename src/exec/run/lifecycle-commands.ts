@@ -1,7 +1,7 @@
-import { gradeCheckpointPaths } from "../grade-checkpoint.js";
-import { existsSync } from "node:fs";
-import { join } from "node:path";
+import { withPlanConventionsFiles } from "../../shared/plan-conventions.js";
 import { type Command } from "commander";
+import { existsSync } from "node:fs";
+import { specdojoRootDir, type AgentProvider } from "../../shared/specdojo-config.js";
 import {
   loadExecDefaultsConfig,
   providerSlotPoolPath,
@@ -9,31 +9,71 @@ import {
   resolveMaxConcurrentRuns,
   type ExecDefaultsConfig,
 } from "../agent-config.js";
-import { activateResolvedProjectPaths, resolveProjectPaths } from "../project.js";
 import {
   acquireSchedulerLock,
   buildEvent,
-  readAllEventFiles,
+  claimOwnerOf,
   foldEventsToState,
+  readAllEventFiles,
   releaseSchedulerLock,
   writeEventFile,
 } from "../events.js";
+import { gradeCheckpointPaths } from "../grade-checkpoint.js";
 import { selectDueDeferredLimitTasks } from "../limit.js";
-import { buildScheduleIndex } from "../schedule/schedule.js";
-import { buildInitialStateFromStrategy } from "../schedule/initial.js";
-import { qualifyTaskId } from "../shared.js";
-import { specdojoRootDir, type AgentProvider } from "../../shared/specdojo-config.js";
-import { type ReadyTaskView, type CurrentState } from "../types.js";
-import { collectExecLockUsage, execLocksDir, formatExecLockUsage } from "./lock.js";
-import { buildTaskView } from "../task-view.js";
-import { readResultFrontmatterSnapshot, updateResultStatus } from "../results.js";
-import { findExecWorktree, resolveWorktreeBase } from "../worktree.js";
-import { configuredProductRepos, withProductWorktrees } from "../task-repos.js";
 import {
   parentValidationPoolPath,
   resolveParentValidationConcurrency,
 } from "../parent-validation.js";
-import { loadPipelineResumeCheckpoint } from "../pipeline-state.js";
+import {
+  integratedRepoNames,
+  loadPipelineResumeCheckpoint,
+  type PipelineState,
+} from "../pipeline-state.js";
+import { activateResolvedProjectPaths, resolveProjectPaths } from "../project.js";
+import {
+  loadRegisterResumeCandidates,
+  selectScheduleExecutorResume,
+  type RegisterResumeTarget,
+} from "../register-resume.js";
+import { readResultFrontmatterSnapshot, updateResultStatus } from "../results.js";
+import { recordPathForRead } from "../run-records.js";
+import { buildInitialStateFromStrategy } from "../schedule/initial.js";
+import { buildScheduleIndex } from "../schedule/schedule.js";
+import { qualifyTaskId } from "../shared.js";
+import { configuredProductRepos, withProductWorktrees } from "../task-repos.js";
+import { buildTaskView } from "../task-view.js";
+import { type CurrentState, type ReadyTaskView } from "../types.js";
+import { PROJECT_REPO_NAME, mergeInProgress } from "../repo-integration-git.js";
+import {
+  syncTaskWorktreesWithIntegrationTargets,
+  type IntegrationTargetSync,
+} from "../repo-integration-sync.js";
+import { findExecWorktree, resolveWorktreeBase, type ExecWorktree } from "../worktree.js";
+import { currentBranch, isExecBranchMergedIntoCurrent } from "../worktree-ops.js";
+import { loadRosterForExecutionPath, pathInsideWorktree } from "./agent.js";
+import { collectExecLockUsage, execLocksDir, formatExecLockUsage } from "./lock.js";
+import {
+  spawnBlock,
+  spawnIndexBuild,
+  spawnRefresh,
+  spawnValidate,
+  stageActorMeta,
+} from "./mode-shared.js";
+import {
+  rebuildStaleGeneratedTracksForCycle,
+  resolveClaimingActor,
+  runBatchMode,
+} from "./schedule-mode.js";
+import {
+  findClaimEventPath,
+  prepareSingleTask,
+  type PlanGenPaths,
+  type PreparedTask,
+} from "./schedule-prepare.js";
+import { runPreparedTask } from "./schedule-task.js";
+import { withTrailingRunRecords } from "./trailing-records.js";
+import { branchOwnedRunRecordPaths } from "../trailing-records.js";
+import { repoRelative } from "../../shared/git.js";
 import {
   buildTaskPhaseMap,
   configuredWorktreeBase,
@@ -42,20 +82,6 @@ import {
   withProjectExecRunLock,
   type RunOpts,
 } from "./shared.js";
-import { loadRosterForExecutionPath, pathInsideWorktree } from "./agent.js";
-import {
-  type PlanGenPaths,
-  type PreparedTask,
-  findClaimEventPath,
-  prepareSingleTask,
-} from "./schedule-prepare.js";
-import { runPreparedTask } from "./schedule-task.js";
-import {
-  rebuildStaleGeneratedTracksForCycle,
-  resolveClaimingActor,
-  runBatchMode,
-} from "./schedule-mode.js";
-import { spawnBlock, spawnIndexBuild, spawnRefresh, spawnValidate } from "./mode-shared.js";
 
 // 同じ project の exec run が共有する枠（主 run・--join run・register lifecycle・provider の
 // max_concurrency・親検証）の上限と現在の使用数を表示する。ロックは取得しない。
@@ -100,7 +126,7 @@ export function formatExecSlotsReport(
 
 export function registerSlotsCommand(exec: Command): void {
   const cmd = exec
-    .command("slots")
+    .command("slots", { hidden: true })
     .description(
       "Show the limits and current usage of the slots shared by concurrent exec runs of a project",
     );
@@ -208,7 +234,7 @@ export async function runCycleMode(opts: RunOpts): Promise<void> {
   // Step 4/5: validate + refresh schedule state before selecting Ready tasks.
   process.stdout.write("[cycle] step 4/5: validate + refresh schedule state\n");
   if (dryRun) {
-    process.stdout.write("  [dry-run] specdojo exec validate\n");
+    process.stdout.write("  [dry-run] specdojo exec validate --schedule-only\n");
     process.stdout.write("  [dry-run] specdojo exec refresh\n");
     stepOutcomes.push("refresh=success");
   } else if (!spawnValidate(projectId)) {
@@ -303,7 +329,9 @@ export function registerCycleCommand(exec: Command): void {
 
   cmd.action(async (opts: RunOpts) => {
     try {
-      await withProjectExecRunLock(opts, "cycle", () => runCycleMode(opts));
+      await withProjectExecRunLock(opts, "cycle", () =>
+        withTrailingRunRecords(opts, "cycle", () => runCycleMode(opts)),
+      );
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       process.stdout.write(message + "\n");
@@ -357,24 +385,28 @@ export function prepareScheduleIntegrationResume(params: {
     );
   }
 
-  const resultPath = join(executionPath, "exec", "results", `${task.id}-result.md`);
+  const resultPath = recordPathForRead(executionPath, "result", task.id);
   const worktreeResultPath = pathInsideWorktree(repoRoot, worktree.path, resultPath);
   if (!existsSync(resultPath) || !existsSync(worktreeResultPath)) {
     throw new Error(`result is missing for integration resume: ${task.id}-result.md`);
   }
   // 統合再開でも、root に未 commit のまま残る claim / plan / result の作業コピーを merge 前に
   // 解放できるよう、通常実行と同じ checkpoint パスを持たせる。
-  const claimEventPath = findClaimEventPath(schedulePath, task.id);
-  const checkpointPaths = [
-    join(executionPath, "exec", "plans", `${task.id}-plan.md`),
+  const claimEventPath = findClaimEventPath(schedulePath, task.id, {
+    repoRoot,
+    worktreePath: worktree.path,
+  });
+  const checkpointPaths = withPlanConventionsFiles([
+    recordPathForRead(executionPath, "plan", task.id),
     resultPath,
     ...(claimEventPath ? [claimEventPath] : []),
     ...gradeCheckpointPaths({ repoRoot, executionPath }),
-  ];
+  ]);
 
   return {
     task,
     actor,
+    claimActor: claimOwnerOf(taskState) ?? actor,
     agentCandidates: [],
     plan: "",
     prompt: "",
@@ -388,12 +420,119 @@ export function prepareScheduleIntegrationResume(params: {
   };
 }
 
+// 統合の段（reporter の後の commit・検査・merge）まで進んでから止まった run か。
+function stoppedInIntegration(state: PipelineState): boolean {
+  return (
+    state.stages.reporter.status === "succeeded" || (state.stages.integrate?.attempts ?? 0) > 0
+  );
+}
+
+// task 自身の run の記録（repo 相対）。block の後の記帳 commit（PJR-DVNV）が統合先へ入れた
+// 作業コピーは、exec branch 側の同じ記録と両側の追加として競合する。再開の取り込みでは exec branch
+// 側を採る。統合の merge と同じ向きで、再開した executor はこの記録を引き継いで書き直し、後の統合も
+// 統合先の側に変更が無いため競合しない。
+function taskRunRecordPaths(params: {
+  repoRoot: string;
+  executionPath: string;
+  branches: readonly string[];
+  taskId: string;
+}): string[] {
+  const paths = params.branches.flatMap((branch) =>
+    branchOwnedRunRecordPaths({ ...params, branch }).map((path) =>
+      repoRelative(params.repoRoot, path),
+    ),
+  );
+  return [...new Set(paths)].sort();
+}
+
+// 統合の段で止まった task を executor へ戻す前の準備（PJR-ED0K）。worktree が merge の途中なら、
+// 解消に `git merge --abort` が要り stage 済みの成果を失うため、状態を変えずに止める。止まって
+// いなければ、統合先（project は root の現在ブランチ）の直しを exec branch へ取り込む。
+// 未 commit の成果と run の記録は取り込みの前に控えて戻し、戻せない場合は取り込み前へ戻して止める。
+export function prepareExecutorResumeFromIntegration(params: {
+  taskId: string;
+  worktree: ExecWorktree;
+  state: PipelineState;
+  repoRoot: string;
+  schedulePath: string;
+  executionPath: string;
+  dryRun: boolean;
+}): IntegrationTargetSync[] {
+  const { taskId, worktree, repoRoot } = params;
+  const context = {
+    repoRoot,
+    schedulePath: params.schedulePath,
+    executionPath: params.executionPath,
+  };
+  if (isExecBranchMergedIntoCurrent({ context, worktree })) {
+    throw new Error(
+      `cannot resume the executor for ${taskId}: ${worktree.branch} is already merged; ` +
+        `run exec resume --task ${taskId} to finish the integration cleanup`,
+    );
+  }
+  const merging = [
+    ...(worktree.repos ?? [])
+      .filter((product) => existsSync(product.path) && mergeInProgress(product.path))
+      .map((product) => product.name),
+    ...(mergeInProgress(worktree.path) ? [PROJECT_REPO_NAME] : []),
+  ];
+  if (merging.length > 0) {
+    throw new Error(
+      `cannot resume the executor for ${taskId}: a merge is in progress in ${merging.join(", ")} ` +
+        `(${worktree.path}); aborting it would discard staged changes. Commit or resolve the ` +
+        `merge in the worktree, then run exec resume --task ${taskId} --resume-from executor again`,
+    );
+  }
+  if (params.dryRun) return [];
+  process.stdout.write(`  Syncing integration targets before executor resume: ${taskId}\n`);
+  let synced: IntegrationTargetSync[];
+  try {
+    const projectTarget = currentBranch(repoRoot);
+    synced = syncTaskWorktreesWithIntegrationTargets({
+      worktree,
+      projectTarget,
+      message: `exec(${taskId}): merge integration target before executor resume`,
+      projectOursPaths: taskRunRecordPaths({
+        repoRoot,
+        executionPath: params.executionPath,
+        branches: [worktree.branch, projectTarget],
+        taskId,
+      }),
+      integratedProducts: integratedRepoNames(params.state),
+    });
+  } catch (error) {
+    throw new Error(
+      `cannot sync the worktree with the integration target before executor resume of ` +
+        `${taskId}: ${error instanceof Error ? error.message : String(error)}; ` +
+        `resolve it in ${worktree.path} and run exec resume --task ${taskId} --resume-from executor again`,
+      { cause: error },
+    );
+  }
+  for (const entry of synced) {
+    process.stdout.write(
+      `  [sync] ${entry.repo}: ${entry.status} (${entry.target})` +
+        `${entry.detail ? ` — ${entry.detail}` : ""}\n`,
+    );
+  }
+  return synced;
+}
+
+function validateScheduleResumeOptions(opts: RunOpts): void {
+  if (opts.resumeFrom !== undefined) {
+    if (opts.resumeFrom !== "executor") throw new Error('--resume-from must be "executor".');
+    if (!opts.task || opts.due) {
+      throw new Error("--resume-from requires --task and cannot be combined with --due.");
+    }
+  }
+}
+
 // Resume tasks left in "doing" state by an interrupted run. Unlike --auto (which selects from
 // ready.json and provably excludes "doing"/"blocked" tasks), resume folds the event log to find
 // in-flight tasks and re-runs each on its existing worktree, reusing the claiming actor and the
 // partially-filled result (scaffoldResult is idempotent; the worktree is reused). No validate/build
 // pass — selection comes from events, not the generated cache.
 export async function runResumeMode(opts: RunOpts): Promise<void> {
+  validateScheduleResumeOptions(opts);
   const resolvedPaths = resolveProjectPaths({ project: opts.project });
   activateResolvedProjectPaths(resolvedPaths);
   const { schedulePath, executionPath, catalogPath, rolesPath, viewpointsPath, projectContext } =
@@ -421,7 +560,68 @@ export async function runResumeMode(opts: RunOpts): Promise<void> {
   const events = readAllEventFiles(schedulePath);
   const initTasks = buildInitialStateFromStrategy(schedulePath, schedule);
   let snapshot = foldEventsToState(events, schedule, schedulePath, initTasks);
+  const initialTaskStates = new Map(
+    Object.entries(snapshot.tasks).map(([id, state]) => [
+      id,
+      { ...state, ...(state.meta ? { meta: { ...state.meta } } : {}) },
+    ]),
+  );
   let doingIds: string[];
+  let executorResume: Extract<RegisterResumeTarget, { stage: "executor" }> | undefined;
+  let executorWorktree: ReturnType<typeof withProductWorktrees> | undefined;
+  let pendingExecutorUnblock: ReturnType<typeof buildEvent> | undefined;
+
+  // Validate before changing lifecycle state or generating a plan. Interrupted doing tasks may
+  // have no block metadata, so discover their latest run in the existing worktree as register does.
+  if (opts.resumeFrom === "executor" && opts.task) {
+    const task = buildTaskView(schedulePath, executionPath, opts.task);
+    if (!task.agent_pipeline) throw new Error("--resume-from requires an agent_pipeline task.");
+    const taskState = snapshot.tasks[opts.task];
+    const blockedStage =
+      taskState?.state === "blocked" ? taskState.meta?.pipeline_stage : undefined;
+    // A blocked executor stage is accepted here; selectScheduleExecutorResume admits it only when
+    // the runner rejected the executor report before the reporter (PJR-1GCD).
+    if (
+      taskState?.state !== "doing" &&
+      blockedStage !== "reporter" &&
+      blockedStage !== "integrate" &&
+      blockedStage !== "executor"
+    ) {
+      throw new Error(
+        "--resume-from executor requires a doing task or a blocked reporter, integrate, or executor stage.",
+      );
+    }
+    const worktreeTaskId = qualifyTaskId(projectId, opts.task);
+    const found = findExecWorktree(repoRoot, worktreeTaskId);
+    if (!found) throw new Error(`no exec worktree to resume executor for ${opts.task}`);
+    const lookup = selectScheduleExecutorResume(
+      loadRegisterResumeCandidates({
+        repoRoot,
+        worktreePath: found.path,
+        executionPath,
+        taskId: opts.task,
+      }),
+    );
+    if (lookup.kind !== "resumable") throw new Error(lookup.reason);
+    if (lookup.target.stage !== "executor") throw new Error("no executor stage to resume");
+    executorResume = lookup.target;
+    executorWorktree = withProductWorktrees(
+      found,
+      configuredProductRepos(schedulePath),
+      worktreeTaskId,
+    );
+    if (stoppedInIntegration(executorResume.state)) {
+      prepareExecutorResumeFromIntegration({
+        taskId: opts.task,
+        worktree: executorWorktree,
+        state: executorResume.state,
+        repoRoot,
+        schedulePath,
+        executionPath,
+        dryRun,
+      });
+    }
+  }
 
   if (opts.due) {
     let lockDir = "";
@@ -484,26 +684,31 @@ export async function runResumeMode(opts: RunOpts): Promise<void> {
           blockedPipelineStage === "integrate") &&
         typeof taskState.meta?.pipeline_state_ref === "string";
       if (canResumeBlockedPipeline) {
-        const actor = taskState.last_by ?? opts.by ?? "exec-pipeline-resume";
+        const actor = claimOwnerOf(taskState) ?? opts.by ?? "exec-pipeline-resume";
         if (!dryRun) {
-          const meta = Object.entries(taskState.meta ?? {}).map(
-            ([key, value]) => `${key}=${String(value)}`,
-          );
+          const resumeMeta = {
+            ...taskState.meta,
+            ...(executorResume
+              ? { pipeline_stage: "executor", pipeline_state_ref: executorResume.stateRef }
+              : {}),
+          };
+          const meta = Object.entries(resumeMeta).map(([key, value]) => `${key}=${String(value)}`);
           meta.push("pipeline_resume_claimed=true");
-          writeEventFile(
-            schedulePath,
-            buildEvent("unblock", {
-              task: opts.task,
-              by: actor,
-              msg:
-                blockedPipelineStage === "integrate"
+          const event = buildEvent("unblock", {
+            task: opts.task,
+            by: actor,
+            msg:
+              opts.resumeFrom === "executor"
+                ? "resume executor from persisted pipeline state (--resume-from executor)"
+                : blockedPipelineStage === "integrate"
                   ? "resume integration from persisted pipeline state"
                   : blockedPipelineStage === "reporter"
                     ? "resume reporter from persisted pipeline state"
                     : "resume executor from persisted pipeline state",
-              meta,
-            }),
-          );
+            meta,
+          });
+          if (executorResume || opts.executorBy) pendingExecutorUnblock = event;
+          else writeEventFile(schedulePath, event);
         }
         snapshot.tasks[opts.task] = {
           ...taskState,
@@ -544,12 +749,14 @@ export async function runResumeMode(opts: RunOpts): Promise<void> {
       try {
         const task = buildTaskView(schedulePath, executionPath, taskId);
         const resolved = resolveClaimingActor(snapshot.tasks[taskId], opts.by);
+        // --resume-from executor は統合の段で止まった task でも executor から再実行する。
         const prepared =
-          snapshot.tasks[taskId]?.meta?.pipeline_stage === "integrate"
+          !executorResume && snapshot.tasks[taskId]?.meta?.pipeline_stage === "integrate"
             ? prepareScheduleIntegrationResume({
                 task,
                 taskState: snapshot.tasks[taskId],
-                actor: resolved.actor ?? snapshot.tasks[taskId]?.last_by ?? "exec-pipeline-resume",
+                actor:
+                  resolved.actor ?? claimOwnerOf(snapshot.tasks[taskId]) ?? "exec-pipeline-resume",
                 projectId,
                 repoRoot,
                 executionPath,
@@ -575,20 +782,86 @@ export async function runResumeMode(opts: RunOpts): Promise<void> {
                 execDefaults,
                 undefined,
                 {
-                  stage:
-                    snapshot.tasks[taskId]?.meta?.pipeline_stage === "reporter"
+                  stage: executorResume
+                    ? "executor"
+                    : snapshot.tasks[taskId]?.meta?.pipeline_stage === "reporter"
                       ? "reporter"
                       : snapshot.tasks[taskId]?.meta?.pipeline_stage === "executor"
                         ? "executor"
                         : undefined,
                   stateRef:
-                    typeof snapshot.tasks[taskId]?.meta?.pipeline_state_ref === "string"
+                    executorResume?.stateRef ??
+                    (typeof snapshot.tasks[taskId]?.meta?.pipeline_state_ref === "string"
                       ? snapshot.tasks[taskId]?.meta?.pipeline_state_ref
-                      : undefined,
+                      : undefined),
+                  ...(executorResume
+                    ? { executorTarget: executorResume, worktree: executorWorktree }
+                    : {}),
                 },
                 opts,
               );
         if (typeof prepared !== "string") {
+          const priorTaskState = initialTaskStates.get(taskId);
+          const previousActor = claimOwnerOf(priorTaskState);
+          const resumingExecutorStage =
+            prepared.pipelineResumeStage !== "reporter" &&
+            prepared.pipelineResumeStage !== "integrate";
+          if (
+            resumingExecutorStage &&
+            previousActor &&
+            prepared.actor &&
+            prepared.actor !== previousActor
+          ) {
+            if (!dryRun) {
+              const releaseEvent = buildEvent("release", {
+                task: taskId,
+                by: previousActor,
+                msg:
+                  opts.resumeFrom === "executor"
+                    ? `release claim to switch executor to ${prepared.actor} (--resume-from executor)`
+                    : `release claim to switch executor to ${prepared.actor}`,
+                meta: ["pipeline_resume_released=true", `replaced_by=${prepared.actor}`],
+              });
+              const resumeMeta: Record<string, unknown> = {
+                ...(priorTaskState?.meta ?? {}),
+                ...(executorResume
+                  ? { pipeline_stage: "executor", pipeline_state_ref: executorResume.stateRef }
+                  : {}),
+                pipeline_resume_claimed: "true",
+                previous_actor: previousActor,
+              };
+              const meta = Object.entries(resumeMeta).map(
+                ([key, value]) => `${key}=${String(value)}`,
+              );
+              const claimEvent = buildEvent("claim", {
+                task: taskId,
+                by: prepared.actor,
+                msg:
+                  opts.resumeFrom === "executor"
+                    ? `claim task as resumed executor ${prepared.actor} (--resume-from executor)`
+                    : `claim task as resumed executor ${prepared.actor}`,
+                meta,
+              });
+              writeEventFile(schedulePath, releaseEvent);
+              writeEventFile(schedulePath, claimEvent);
+            }
+            pendingExecutorUnblock = undefined;
+            snapshot.tasks[taskId] = {
+              ...snapshot.tasks[taskId],
+              state: "doing",
+              last_by: prepared.actor,
+              claimed_by: prepared.actor,
+              last_type: "claim",
+            };
+            prepared.claimActor = prepared.actor;
+          } else {
+            if (pendingExecutorUnblock) {
+              if (!dryRun) writeEventFile(schedulePath, pendingExecutorUnblock);
+              pendingExecutorUnblock = undefined;
+            }
+            // The claim stays with its holder when --by or a stage override runs another agent.
+            prepared.claimActor = snapshot.tasks[taskId]?.last_by ?? prepared.claimActor;
+          }
           const attempts = snapshot.tasks[taskId]?.meta?.limit_attempts;
           prepared.priorLimitAttempts =
             typeof attempts === "string" && /^\d+$/.test(attempts)
@@ -603,7 +876,7 @@ export async function runResumeMode(opts: RunOpts): Promise<void> {
           spawnBlock(
             projectId,
             taskId,
-            snapshot.tasks[taskId]?.last_by ?? "exec-limit-resume",
+            claimOwnerOf(snapshot.tasks[taskId]) ?? "exec-limit-resume",
             `resume setup error: ${message}`,
           );
         }
@@ -637,7 +910,10 @@ export async function runResumeMode(opts: RunOpts): Promise<void> {
           const completedAt = new Date().toISOString();
           if (prepared.resultPath)
             await updateResultStatus(prepared.resultPath, "blocked", completedAt);
-          spawnBlock(projectId, prepared.task.id, prepared.actor, `runner error: ${message}`);
+          spawnBlock(projectId, prepared.task.id, prepared.claimActor, `runner error: ${message}`, {
+            limit_deferred: "false",
+            ...stageActorMeta(prepared.claimActor, prepared.actor),
+          });
         }
         process.exitCode = 1;
       } else if (result.value === "failure") {
@@ -663,6 +939,10 @@ export function registerResumeCommand(exec: Command): void {
     "--due",
     "Atomically claim and resume only retryable limit blocks whose resume time has arrived",
     false,
+  );
+  cmd.option(
+    "--resume-from <stage>",
+    "Restart at executor, preserving existing work (requires --task; cannot be combined with --due)",
   );
   cmd.option(
     "--by <nickname>",
@@ -705,6 +985,7 @@ export function registerResumeCommand(exec: Command): void {
 
   cmd.action(async (opts: RunOpts) => {
     try {
+      validateScheduleResumeOptions(opts);
       if (opts.by && opts.executorBy) {
         process.stdout.write("Specify either --by or --executor-by, not both.\n");
         process.exitCode = 1;
@@ -715,7 +996,9 @@ export function registerResumeCommand(exec: Command): void {
         process.exitCode = 1;
         return;
       }
-      await withProjectExecRunLock(opts, "resume", () => runResumeMode(opts));
+      await withProjectExecRunLock(opts, "resume", () =>
+        withTrailingRunRecords(opts, "resume", () => runResumeMode(opts)),
+      );
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       process.stdout.write(message + "\n");

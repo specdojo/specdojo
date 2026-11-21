@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-SLIM-2-pm-plan-060",
+  "run_id": "T-KATA-SLIM-2-pm-plan-060-20261118T150337Z-7713e7f3",
+  "updated_at": "2026-11-18T15:38:40.849Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-18T15:05:26.015Z",
+      "completed_at": "2026-11-18T15:09:21.386Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-pm-plan-060/T-KATA-SLIM-2-pm-plan-060-20261118T150337Z-7713e7f3/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-18T15:35:22.841Z",
+      "completed_at": "2026-11-18T15:38:05.589Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-pm-plan-060/T-KATA-SLIM-2-pm-plan-060-20261118T150337Z-7713e7f3/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-18T15:38:11.622Z",
+      "completed_at": "2026-11-18T15:38:40.849Z",
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-pm-plan-060/T-KATA-SLIM-2-pm-plan-060-20261118T150337Z-7713e7f3/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-pm-plan-060/T-KATA-SLIM-2-pm-plan-060-20261118T150337Z-7713e7f3/result.md"
+  }
+}

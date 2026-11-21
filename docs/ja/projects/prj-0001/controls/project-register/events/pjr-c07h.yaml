@@ -1,0 +1,139 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_94c4e5d947d94824b6157b586c796680
+  ts: "2026-11-17T12:22:11Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 親の検証の時間切れの原因を調べるため、検証の実行時の負荷と待ち時間を記録する
+    - field: description
+      from: ""
+      to: 並べて流した run の親の検証が時間切れになる原因を特定するため、各検証の開始・終了時刻、検証の順番待ち、同時に動く run、CPU・メモリ・I/O の負荷を記録に残す
+    - field: input
+      from: ""
+      to: '["2026-11-16〜17 に、並べて流した run の親の検証（統合テストなど）が時間切れで止まることがあった。親の検証は `parent_validation_concurrency:` 1 で 1 件ずつ流れ、各検証の上限は 10 分である","orchestrator の調べ（2026-11-17）: 止まった時間帯に動いていたのは opus・sol・sonnet の agent だけで、opencode のローカル LLM（Mac の Ollama）は使われておらず、job も動いていなかった。原因の候補は、親の検証の直列化の外で executor が流すテスト、メモリの圧迫（container は 15GB・swap 4GB のうち 2.9GB 使用）、共有フォルダの I/O の遅さ（PJR-TATP）である","利用者が 2026-11-17 に、対策の前に原因を明確にするよう指示し、計測の todo の起票を依頼した。自動の再開（PJR-52EE）は原因が分かるまで保留している"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-17"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: commit_type
+      from: ""
+      to: feat
+    - field: commit_scope
+      from: ""
+      to: exec
+- v: 1
+  id: reg_3786d6a617cd416099c8d0d0a0cc3da3
+  ts: "2026-11-17T12:23:17Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: 利用者が担当と期限を決めた
+  changes:
+    - field: owner
+      from: _TODO_
+      to: DEV
+    - field: due
+      from: _TODO_
+      to: "2026-11-30"
+  previous_event_id: reg_94c4e5d947d94824b6157b586c796680
+- v: 1
+  id: reg_fd5b5f2037c244109da5a68cb48e26ec
+  ts: "2026-11-17T13:41:09Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_3786d6a617cd416099c8d0d0a0cc3da3
+- v: 1
+  id: reg_47f0ba97ed5747989a7873e71af6be0e
+  ts: "2026-11-17T14:09:21Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-ts, test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-ts, test-unit"
+  previous_event_id: reg_fd5b5f2037c244109da5a68cb48e26ec
+- v: 1
+  id: reg_8145864c38764178b9830e41300e1b71
+  ts: "2026-11-17T14:13:52Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-ts, test-unit"
+      to: "-"
+  previous_event_id: reg_47f0ba97ed5747989a7873e71af6be0e
+- v: 1
+  id: reg_a0e0ca99a5d44f1891b582097c53eac3
+  ts: "2026-11-17T14:28:34Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_8145864c38764178b9830e41300e1b71
+- v: 1
+  id: reg_9a886e0113444356852cb5aecd12ff30
+  ts: "2026-11-19T14:13:10Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分と個票で確かめ、統合の後に exec smoke と実際の run で動作を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-19"
+    - field: conclusion
+      from: "-"
+      to: 親の検証の記録に、検証ごとの時刻と所要時間、順番待ち、動いている run と executor の数、負荷と、時間切れのときのテストのファイルを残すようにした
+  previous_event_id: reg_a0e0ca99a5d44f1891b582097c53eac3

@@ -1,4 +1,7 @@
 import { describe, expect, it } from "vitest";
+import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import {
   buildMarkdown,
   isDctTemplateCatalog,
@@ -324,6 +327,81 @@ describe("validateDctDoc", () => {
   });
 
   describe("evidence_refs の検証", () => {
+    function validateEvidenceSource(source: string, path = "src/evidence.ts") {
+      const root = mkdtempSync(join(tmpdir(), "specdojo-evidence-"));
+      try {
+        mkdirSync(join(root, "src"));
+        writeFileSync(join(root, path), source, "utf8");
+        const item = makeWorkItem({
+          evidence_refs: [{ kind: "implementation", path, purpose: "本体の確認" }],
+        });
+        return validateDctDoc(
+          makeDoc({ groups: [makeSection({ deliverables: [item] })] }),
+          "catalog/dct-test.yaml",
+          undefined,
+          root,
+        );
+      } finally {
+        rmSync(root, { recursive: true, force: true });
+      }
+    }
+
+    it.each([
+      'export { run } from "./core.js";',
+      'export type { State as RunState } from "./types.js";',
+      'export { type State, run as execute } from "./core.js";',
+      'export * from "./core.js";\nexport * as types from "./types.js";',
+      'export type * from "./types.js";\nexport type * as types from "./types.js";',
+      '// 入口\nexport {\n /* 本体へ */ run,\n type State,\n} from "./core.js"\n',
+      'export{run}from"./core.js"\nexport type{State}from"./types.js"',
+      'export { "run-command" as run } from "./core.js";',
+      'export {} from "./core.js";',
+      'export { run } from "https://example.test/core.js"; // URL 中の // はコメントではない',
+    ])("re-export だけなら文脈付きで警告しエラーにはしない: %s", (source) => {
+      const result = validateEvidenceSource(source);
+
+      expect(result.ok).toBe(true);
+      expect(result.errors).toEqual([]);
+      expect(result.warnings).toHaveLength(1);
+      expect(result.warnings[0]).toContain("catalog/dct-test.yaml: item-1:");
+      expect(result.warnings[0]).toContain("src/evidence.ts");
+      expect(result.warnings[0]).toContain("re-export だけ");
+    });
+
+    it.each([
+      "export function run() { return true; }",
+      'export { run } from "./core.js";\nexport const state = "ready";',
+      'const state = "ready";\nexport type { State } from "./types.js";',
+      'import { run } from "./core.js";\nexport { run };',
+      "export type State = 'ready' | 'done';",
+      'export const example = `export { run } from "./core.js";`;',
+      "",
+      '// export { run } from "./core.js";\n/* 型の説明 */',
+    ])("本体・ローカル export・空ファイルは警告しない: %s", (source) => {
+      const result = validateEvidenceSource(source);
+
+      expect(result.ok).toBe(true);
+      expect(result.warnings).toEqual([]);
+    });
+
+    it.each(["js", "mjs", "cjs", "jsx", "mts", "cts", "tsx"])(
+      "%s の re-export も警告する",
+      (extension) => {
+        const result = validateEvidenceSource(
+          'export * from "./core.js";',
+          `src/evidence.${extension}`,
+        );
+        expect(result.ok).toBe(true);
+        expect(result.warnings).toHaveLength(1);
+      },
+    );
+
+    it("JavaScript / TypeScript 以外を re-export として検査しない", () => {
+      const result = validateEvidenceSource('export * from "./core.js";', "src/evidence.txt");
+      expect(result.ok).toBe(true);
+      expect(result.warnings).toEqual([]);
+    });
+
     it("正準な既存実装パスを許可する", () => {
       const item = makeWorkItem({
         evidence_refs: [
@@ -339,6 +417,21 @@ describe("validateDctDoc", () => {
       const result = validateDctDoc(doc, "/dummy/dct.yaml", undefined, process.cwd());
 
       expect(result.ok).toBe(true);
+      expect(result.warnings).toEqual([]);
+    });
+
+    it("責務単位のディレクトリ参照をファイルとして読まない", () => {
+      const item = makeWorkItem({
+        evidence_refs: [{ kind: "implementation", path: "src/catalog", purpose: "カタログの責務" }],
+      });
+      const result = validateDctDoc(
+        makeDoc({ groups: [makeSection({ deliverables: [item] })] }),
+        "/dummy/dct.yaml",
+        undefined,
+        process.cwd(),
+      );
+      expect(result.ok).toBe(true);
+      expect(result.warnings).toEqual([]);
     });
 
     it.each(["/src/catalog/build.ts", "../src/catalog/build.ts", "src\\catalog\\build.ts"])(

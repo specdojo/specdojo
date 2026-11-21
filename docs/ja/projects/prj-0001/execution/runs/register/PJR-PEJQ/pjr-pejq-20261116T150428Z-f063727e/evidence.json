@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-PEJQ",
+  "run_id": "pjr-pejq-20261116T150428Z-f063727e",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-16T15:06:08.674Z",
+    "completed_at": "2026-11-16T15:08:13.563Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-pejq.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-pejq-cdsd-execution-rework-deferred-stores.md",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-pejq-cdsd-execution-rework-deferred-stores.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 3,
+    "summary": ".../020-data-model/cdsd-execution.md               | 77 ++++++++++++----------\n ...r-pejq-cdsd-execution-rework-deferred-stores.md | 24 +++++--\n 2 files changed, 62 insertions(+), 39 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "passed",
+      "summary": "OK: dct-index.yaml（他の成果物の based_on の WARN のみ、exit 0）"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "変更した個票を含め exit 0"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write",
+      "status": "passed",
+      "summary": "変更した Markdown 2 ファイルを整形した"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2",
+      "status": "passed",
+      "summary": "変更した 2 ファイルとも 0 issues"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 5121 file(s), 135 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 100 passed, 0 error, 0 未検査\n  graph: 6 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5121 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, docs/ja/specdojo/**, docs/specdojo/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, docs/ja/specdojo/**, docs/specdojo/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.8.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schema)\ndocs/ja/specdojo/samples/ifx-api-sample\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-PEJQ/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-PEJQ/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.8.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-PEJQ\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-35972j/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-gZhVpc/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-bps7v3/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-vyy4Ch/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "cdsd-execution に 2026-11-16 の再 grade の指摘 F001〜F006 を取り込んだ。形式違反の event ファイルは保留とエスカレーションの条件にし、実行 event と実行状態の検証手順を分け、records の受け入れる配置4通りを明記した。辞書7件と復旧手順は未登録の PJR 候補とし、sld-specdojo への申し送りの行を足した。個票の作業内容と対応結果を更新し、再 grade の行は open のまま残した。status は draft のまま。",
+  "completion_status": "complete",
+  "handoff": [
+    "決めた点: 形式違反の実行 event ファイルには実装にも承認済みの手順にも復旧手段がないため、手順は作らず、保留とエスカレーションの条件（状態を変えるコマンドを止める、ファイルは書き換え・削除・退避しない、QE→PM へ報告、PO が復旧方法を承認）として書いた。期限は cdsd-execution の ready 化の判断まで。",
+    "決めた点: 業務データ辞書7件と形式違反の event の復旧手順は、登録簿にも Schedule にも項目がないため、executor は起票せず『未登録の PJR 候補』とした。PM が ready 化の判断より前に起票する。",
+    "申し送り: sld-specdojo（対象外）の「概念データストア・実装配置との対応」と「CDSD 追加候補の正式登録と対応表の更新」は、実行状態・実行 plan と実行 result・実行 evidence・task worktree をまだ追加候補として書いている。同書の担当が cdsd-execution の名称へ更新する必要がある（F002）。",
+    "次のアクション: orchestrator が `grade run --target deliverable` で cdsd-execution を grade し直し、結果を個票 PJR-PEJQ の対応結果に書く（作業内容の No 4 は open のまま）。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-PEJQ/pjr-pejq-20261116T150428Z-f063727e/executor.log",
+      "bytes": 5236,
+      "truncated": false
+    }
+  ]
+}

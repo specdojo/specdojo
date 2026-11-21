@@ -1,4 +1,4 @@
-import { existsSync } from "node:fs";
+import { loadTrackPlan } from "../register/track-plan.js";
 import { join } from "node:path";
 import { collectCatalogFilesByDomain } from "../shared/catalog-files.js";
 import { resolveTimelineCatalogStatus } from "../register/catalog-status.js";
@@ -153,13 +153,11 @@ export function buildTimeline(opts: {
   timelinePath: string;
   catalogPath: string | null;
   registerPath?: string;
+  schedulePath?: string;
+  projectId?: string;
+  repoRoot?: string;
 }): TimelineBuildResult {
-  const indexFile = join(opts.timelinePath, "tml-index.yaml");
-  if (!existsSync(indexFile)) {
-    throw new Error(`Timeline index not found: ${indexFile}`);
-  }
-
-  const { index, errors: loadErrors } = loadTimelineIndex(indexFile);
+  const { index, errors: loadErrors } = loadTrackPlan(opts);
   const errors = [...loadErrors];
   const warnings: string[] = [];
 
@@ -211,8 +209,8 @@ export function renderTimelineOrderMarkdown(result: TimelineBuildResult): string
   lines.push(`- catalog_scaffold_targets: \`${result.scaffolds.length}\``);
   lines.push("");
   lines.push(
-    `この文書は \`tml-index.yaml\` から \`specdojo timeline build\` が生成した派生ビューです。` +
-      `直接編集せず、計画は \`tml-index.yaml\`、カタログ作成の完了は register の todo に記録してください。`,
+    `この文書は epic・strategy（互換用 \`tml-index.yaml\`）から非推奨の \`specdojo timeline build\` が生成した派生ビューです。` +
+      `計画は register の epic、範囲は strategy の scope、カタログ作成の完了は register の todo に記録し、通常は \`dashboard build\` を使ってください。`,
   );
 
   for (const wave of result.waves) {
@@ -242,7 +240,7 @@ export function renderCatalogScaffoldMarkdown(result: TimelineBuildResult): stri
   lines.push(`- targets: \`${result.scaffolds.length}\``);
   lines.push("");
   lines.push(
-    `\`tml-index.yaml\` の各トラックが対象とするドメインのうち、\`dct-<domain>.yaml\` が未作成のものを列挙します。`,
+    `既存 strategy の scope、epic の domains、互換用 \`tml-index.yaml\` の順で対象を解決し、\`dct-<domain>.yaml\` が未作成のものを列挙します。`,
   );
   lines.push("");
 

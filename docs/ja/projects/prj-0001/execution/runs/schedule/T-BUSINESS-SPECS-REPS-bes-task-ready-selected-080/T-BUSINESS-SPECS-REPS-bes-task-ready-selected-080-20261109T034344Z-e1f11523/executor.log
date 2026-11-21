@@ -1,0 +1,6 @@
+導入部と重複していた「自動・並列の順位付け規則は `br-task-selection-strategy` に従う」という箇条書きを削除しました。導入部の参照は残し、他の条件・例外・未決定事項は維持しています。
+
+`git diff --check` は通過しました。文書の lint など親 runner が実行する検証は、指示に従いここでは実行していません。result ファイルも編集していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"重複した順位付け規則の再掲を削除し、導入部の正本参照とイベント判断に必要な記述を維持しました。git diff --check は通過しました。","handoff":[],"validations":[{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし"}],"condense_records":[{"location":"導入部「候補の順位付けの規則は `br-task-selection-strategy`」、§3 表後の箇条書き「自動と並列の順位の付け方」","category":"repetition","action":"delete","reason":"同じ正本への委譲を導入部ですでに説明しているため、後続の再掲を削除した。正本参照と責務境界は導入部に残る。","cause":{"type":"document"}}]}</specdojo_executor_evidence>

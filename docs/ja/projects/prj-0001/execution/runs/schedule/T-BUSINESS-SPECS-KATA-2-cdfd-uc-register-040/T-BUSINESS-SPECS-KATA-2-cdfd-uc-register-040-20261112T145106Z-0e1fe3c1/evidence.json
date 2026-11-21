@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "task_id": "T-BUSINESS-SPECS-KATA-2-cdfd-uc-register-040",
+  "run_id": "T-BUSINESS-SPECS-KATA-2-cdfd-uc-register-040-20261112T145106Z-0e1fe3c1",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-12T14:54:08.238Z",
+    "completed_at": "2026-11-12T14:58:52.165Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md | 71 +++++++++++++++-----------\n 1 file changed, 42 insertions(+), 29 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md",
+      "status": "passed",
+      "summary": "変更した Markdown を整形。最終実行で追加変更なし。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白・差分の問題なし。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "ファイル単位の YAML schema 検査は適用外。",
+      "reason": "変更は Markdown のみで、変更した YAML ファイルがありません。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "成果物カタログ検査は適用外。",
+      "reason": "executor の変更は docs/ja/specdojo/rulebooks/ 配下のみで、docs/ja/projects/ 配下に及びません。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検査は適用外。",
+      "reason": "登録簿個票や既存の plan・result などの履歴ファイルを変更していません。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-2-cdfd-uc-register-040/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-line\n… output omitted …\nworkspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-2-cdfd-uc-register-040/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-2-cdfd-uc-register-040/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1152). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4527 file(s), 136 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 104 passed, 0 error, 0 未検査\n  graph: 3 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4527 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-2-cdfd-uc-register-040\n\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-jJ0UCK/T-T-doc-010\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-TTwN32/worktrees/prj-0001-T-T-doc-010/project\nSkipping worktree dependencies: no \n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nnum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-2-cdfd-uc-register-040/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-2-cdfd-uc-register-040/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-2-cdfd-uc-register-040\n\nresult-markdownlint: result execution/runs/schedule/TASK/TASK/result.md not found; skipped pre-commit lint\nRate limit detected for pinned agent pinned. Waiting until 2026-11-13T03:30:56.772Z before resuming the same stage.\nresumed\nRate limit detected for pinned agent primary. Falling back to fallba\n… output omitted …\n track domains and dependencies to register epics; use dashboard build.\nWARN: timeline_path is deprecated. Use register epics and dashboard build.\nproblem\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "cdfd-uc-rulebook を改訂し、指摘4件に対応しました。章ごとの判断基準と良い例・悪い例を補い、整形・差分検査に成功しました。指定の lint・テストは親 runner が実行します。",
+  "completion_status": "complete",
+  "handoff": [
+    "変更ファイルは `docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md` のみ。reporter は result の「実施内容」「変更ファイル」「進め方と実践の型の適用」に以下の判断根拠を反映してください。result と grade サイドカーは編集していません。",
+    "F001・F004: 「完成判定」に、RACI の該当する A とメンバー定義から人間の承認者を特定する手順、RACI がない場合の参照方法、登録簿個票の対応結果またはタスク result に残す承認証跡、対象版・レビュー結果・検査証跡の照合を追加しました。F002: 横断順序は図だけを正本とし、役割表と章冒頭の通過順を図へ追従させる方針を全体方針・記述ガイド・完成判定で統一しました。F003: recipe の不足を補うため、ケース選定直後、目的を書く前に導入文を書く手順を rulebook に明記しました。4件とも該当観点の判定根拠に照らして対応を確認しました。grade の再評価は後続に委ねます。",
+    "規範として `docs/ja/specdojo/standards/rulebook-authoring-standard.md`、`document-metadata-standard.md`、`people-and-organization-definition-standard.md`、共通レビュー観点の `vp-qe-verifiability`・`vp-qe-omissions-consistency`・`vp-qe-kata-conformance`・`vp-ops-release-readiness`・`vp-arc-conciseness` を確認しました。プロジェクトのレビュー観点は共通正本を継承し、固有差分がないことも確認しました。本文要件の骨組みの重複と Frontmatter の共通値一覧を参照へ整理し、章番号、各章の内容要件、列の意味、禁止事項を維持しました。",
+    "根拠成果物は `cdfd-uc-register`・`cdfd-overview` と schedule・routine 系の関連記述。レビュー根拠は `docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdfd-uc-rulebook.yaml` の F001〜F004、および `cdfd-uc-register.yaml` の最新 pass・指摘なし。展開された finding は grade 由来で、condense 由来の記録と `cause.location` はありません。register 系の 20261103T103452747Z-c6824940 の edit result も確認し、共用領域を1ノードにする境界と戻りの分割方針を維持しました。代表成果物で使われている条件付きの計画連携・補完の順序表示を明文化しました。旧レビューが要求した引き渡し表は PJR-PRYZ の後続決定と現行規範に合わないため復活させていません。",
+    "recipe と template は必要と判断し、既存の完全 ID 宣言を維持しました。recipe は参加単位・境界を選んで流れを具体化する手順、template は見出し・表・記入欄の骨組みに必要です。構造・必須項目・禁止事項では rulebook を優先すると明記しました。次の recipe・template メンテナンス案: recipe に導入文の問いと手順、図を正本とする順序照合、承認証跡の確認を反映し、template の通過順の記入指示も図への追従と明示する。現段階は rulebook の補足で適用できます。",
+    "完成例は既存の `specdojo:cdfd-uc-sample` を正本とし、サンプル章は追加していません。sample の充実は計画どおり後続の sample-maintenance で行います。PJR-2GD6 の重複回避方針に従い、実装・schema の詳細は転載していません。改訂・廃止時の追従対象と担当責務を上位標準に沿って補いました。成果物本体・recipe・template・sample・保護設定は変更せず、rulebook の `status: draft` を維持しました。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-2-cdfd-uc-register-040/T-BUSINESS-SPECS-KATA-2-cdfd-uc-register-040-20261112T145106Z-0e1fe3c1/executor.log",
+      "bytes": 5046,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-2-cdfd-uc-register-040/T-BUSINESS-SPECS-KATA-2-cdfd-uc-register-040-20261112T145106Z-0e1fe3c1/parent-validation-attempt-1-test-unit.log",
+      "bytes": 7826,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-2-cdfd-uc-register-040/T-BUSINESS-SPECS-KATA-2-cdfd-uc-register-040-20261112T145106Z-0e1fe3c1/parent-validation-attempt-2-test-unit.log",
+      "bytes": 7824,
+      "truncated": false
+    }
+  ]
+}

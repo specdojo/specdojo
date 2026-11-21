@@ -1,0 +1,94 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_04a853dc4a314ca1a07d598f4aa15dc1
+  ts: "2026-11-05T10:44:53Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: stsd の rulebook に、終了点を置かない境界の書き方を足す
+    - field: description
+      from: ""
+      to: 3APD の段 6。差し戻せる完了や記録が残る中止のように、業務の終了と状態管理の継続が分かれる場合の、終了点と継続状態の書き方を stsd-rulebook に足す
+    - field: input
+      from: ""
+      to: '["PJR-Q9AW の磨き込みで、完了は差し戻せ、中止の後も記録が残るため、stsd-task-execution では終了点を置かず理由を「概要」に書いた。rulebook は終了点を省く場合を「継続状態」で説明するが、この境界の書き方がない"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-05"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: rulebook-maintenance
+    - field: targets
+      from: ""
+      to: '["specdojo:stsd-rulebook"]'
+    - field: derived_from
+      from: ""
+      to: '["PJR-3APD","PJR-00NY"]'
+- v: 1
+  id: reg_96ad1b4e690a44159a6485938189a591
+  ts: "2026-11-05T10:47:29Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_04a853dc4a314ca1a07d598f4aa15dc1
+- v: 1
+  id: reg_173ba19e58d74d4ea845364234175873
+  ts: "2026-11-05T10:57:16Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_96ad1b4e690a44159a6485938189a591
+- v: 1
+  id: reg_8d78cbc96d4f4c8680f9e7ec532fb901
+  ts: "2026-11-05T10:58:39Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票・result で確かめた（利用者の委任による自動の進行）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-05"
+    - field: conclusion
+      from: "-"
+      to: 終了点を置く場合と置かない場合の境界と、省くときの書き方を stsd-rulebook に足した
+  previous_event_id: reg_173ba19e58d74d4ea845364234175873

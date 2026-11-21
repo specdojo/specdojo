@@ -1,0 +1,94 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_8792e3047f5e4386b93d6dcf13629a68
+  ts: "2026-11-16T03:13:36Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 統合の git 操作が index.lock の長い保持を待てるようにする
+    - field: description
+      from: ""
+      to: runner の統合の git 操作の index.lock の待ち時間を延ばし、hook の実行中の lock で失敗せずに待つ
+    - field: input
+      from: ""
+      to: '["2026-11-15、orchestrator の手の commit で lefthook の pre-commit の npm test が負荷の下で 17 分ほど index.lock を握り、runner の統合の git restore・merge が「Unable to create index.lock」で失敗した（sld-090 などが blocked）。PJR-G90K で入れた再試行は短い取り合いだけを吸収し、長い保持を越えられない","本命の直列化（PJR の specdojo git）が入るまでの手当てとして、待ち時間を延ばす。利用者が 2026-11-16 に起票を依頼した"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-16"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-G90K"]'
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: exec
+- v: 1
+  id: reg_a4bf1b9cbdce4c849e15202a8d7786f6
+  ts: "2026-11-16T03:29:47Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_8792e3047f5e4386b93d6dcf13629a68
+- v: 1
+  id: reg_73cfc76fec6d4e95bb3d98816552dff8
+  ts: "2026-11-16T03:47:22Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_a4bf1b9cbdce4c849e15202a8d7786f6
+- v: 1
+  id: reg_375811a3fad847de9214980df771e390
+  ts: "2026-11-16T04:19:51Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: 統合の git 操作の index.lock の再試行を時間上限方式にし、既定 20 分（exec-defaults の run.git_index_lock_wait_seconds）まで待つようにした。待機中は 30 秒ごとに告知し、持ち主のいない古い lock は待ち続けない
+  previous_event_id: reg_73cfc76fec6d4e95bb3d98816552dff8

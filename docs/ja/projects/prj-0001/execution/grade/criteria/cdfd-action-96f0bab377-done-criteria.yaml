@@ -2,7 +2,7 @@
 id: cdfd-action-grade-criteria
 document: cdfd-action
 path: docs/ja/product/010-business-specs/010-data-flow/cdfd-action.md
-graded_at: "2026-10-29T16:04:06.553Z"
+graded_at: "2026-11-01T16:04:29.405Z"
 graded_by: flash-high-executor
 content_hash: 5d3fc7872c2d9f07e2e7282dc9c546babd6f6c39af2fc4c2afc0ad10611e17da
 summary:
@@ -17,8 +17,8 @@ criteria:
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
     reason: >-
-      Major output 'Orchestrator への完了・改善判断' is missing from process areas, and inputs for approval results and
-      deprecation decisions are inconsistent with cdfd-overview.
+      Major inputs and outputs such as Orchestrator completion/improvement determinations are omitted or diverge from
+      cdfd-overview.
   - id: DC-002
     text: 完了記録、稼働構成、Kata のバージョン、成果物カタログ、保管庫への更新がプロセス単位で識別でき、Plan への再計画要求がグループ外委譲として示されていること
     roles:
@@ -32,5 +32,5 @@ criteria:
     viewpoint: vp-po-decision-readiness
     status: unsatisfied
     reason: >-
-      RACI assigns accountability for change requests and deprecation decisions to PO, but PO is omitted from P-12-01
-      and P-13-01 decision boundaries.
+      Process completion conditions are missing and final approval authority for PO is not properly established per
+      RACI.

@@ -1,0 +1,16 @@
+{
+  "v": 1,
+  "ts": "2026-11-14T16:17:31Z",
+  "type": "unblock",
+  "task_id": "T-KATA-WAVE-1-bes-index-080",
+  "by": "qwen-executor",
+  "msg": "resume reporter from persisted pipeline state",
+  "meta": {
+    "limit_deferred": "false",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-bes-index-080/T-KATA-WAVE-1-bes-index-080-20261114T124016Z-9c0b2cd5/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-bes-index-080/T-KATA-WAVE-1-bes-index-080-20261114T124016Z-9c0b2cd5/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-1-bes-index-080-20261114T124016Z-9c0b2cd5",
+    "pipeline_resume_claimed": "true"
+  }
+}

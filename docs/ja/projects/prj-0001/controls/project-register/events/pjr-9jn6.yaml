@@ -1,0 +1,133 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_84ae406ad30a463999f246e0195aa2e8
+  ts: "2026-11-17T12:55:01Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 完了条件の保護された設定の一覧が変更範囲と読まれ、関係のない項目が順番待ちになる
+    - field: description
+      from: ""
+      to: 保護された設定を「変えない」と書いた完了条件の文から .agents などが変更範囲として推定され、触る範囲の違う項目どうしが重なると判定される
+    - field: input
+      from: ""
+      to: '["2026-11-17 に PJR-8NB8 と PJR-C07H を並べて流すと、C07H が「[scope] waiting: PJR-C07H — PJR-8NB8: project:.agents <> project:.agents」で 8NB8 の統合まで待った。8NB8 は JSEY の手順のコマンド化、C07H は親の検証の計測で、どちらも .agents を変える予定はない","どちらの完了条件にも「保護された設定（lefthook.yml・.agents/・.claude/・.codex/・package.json・.specdojo/ など）は変えない」という文があり、ほかの多くの項目の完了条件にも同じ文がある。PJR-MJ8V の 2 回目で plan の共通の手順は推定から外したが、項目ごとの完了条件の中の「変えない」と書いた一覧は推定に残っている","止まりはしないが、この文を持つ項目は並べても順番に流れ、並べる効果がなくなる"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-17"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-MJ8V"]'
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: exec
+- v: 1
+  id: reg_3fa692820659405689181daddf6b6a75
+  ts: "2026-11-17T12:58:02Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: 利用者が担当と期限を決めた
+  changes:
+    - field: owner
+      from: _TODO_
+      to: DEV
+    - field: due
+      from: _TODO_
+      to: "2026-11-30"
+  previous_event_id: reg_84ae406ad30a463999f246e0195aa2e8
+- v: 1
+  id: reg_a33fa94c4372423da80551f63e03f063
+  ts: "2026-11-17T13:24:41Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_3fa692820659405689181daddf6b6a75
+- v: 1
+  id: reg_6d8432fa4caa4c42920ace53817eda06
+  ts: "2026-11-17T13:39:49Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_a33fa94c4372423da80551f63e03f063
+- v: 1
+  id: reg_a1d40d8bb15f4bc29d4976dabeeb96af
+  ts: "2026-11-17T15:22:13Z"
+  action: start
+  actor: sol-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_6d8432fa4caa4c42920ace53817eda06
+- v: 1
+  id: reg_536588f84c52401dbc09e58c86b20457
+  ts: "2026-11-17T15:34:41Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_a1d40d8bb15f4bc29d4976dabeeb96af
+- v: 1
+  id: reg_173204fc62ce4af5b07902f596b50f06
+  ts: "2026-11-19T14:12:46Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分と個票で確かめ、統合の後に exec smoke と実際の run で動作を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-19"
+    - field: conclusion
+      from: "-"
+      to: 変更範囲の推定から「変えない」と書いた節のパスを外し、保護された設定や CHANGELOG を変えないと書いた項目どうしを並べて流せるようにした
+  previous_event_id: reg_536588f84c52401dbc09e58c86b20457

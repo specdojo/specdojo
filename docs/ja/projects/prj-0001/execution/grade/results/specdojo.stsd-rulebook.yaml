@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 97
-graded_at: "2026-10-09T21:14:08.302Z"
-graded_by: agy-expert-executor
-content_hash: e004a66c16b7e6b4c88333712c7c85d406a1888e883f1d5326f31d4b05c69a23
+graded_at: "2026-11-13T06:03:38.514Z"
+graded_by: sol-review-executor
+content_hash: f39590c23d2bc208253068c6fd6331bced9327177a3cc34a9bdf3e21a17dce0c
 categories:
   purpose:
     score: 100
@@ -21,13 +21,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 92
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 92
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -60,8 +60,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -78,11 +78,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
-  vp-qe-kata-conformance:
     level: 4
     score: 100
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -109,19 +109,29 @@ finding_counts:
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 34
-    anchor: "- 遷移 ID は文書内で一意な `T-<nn>` 形式とし、遷移の説明とレビュー指摘で同じ ID を使います。"
-    message: 遷移 ID をレビュー指摘の参照キーに使う一方、遷移追加・削除時の既存 ID の保持と廃止 ID の再利用可否が未定義で指摘が別遷移へ結び付く恐れがあるため、採番の不変性と欠番・再利用ルールを明記してください。
-    message_ja: 遷移 ID をレビュー指摘の参照キーに使う一方、遷移追加・削除時の既存 ID の保持と廃止 ID の再利用可否が未定義で指摘が別遷移へ結び付く恐れがあるため、採番の不変性と欠番・再利用ルールを明記してください。
+    rule: vp-arc-conciseness
+    line: 110
+    anchor: "- `値` は文書内で重複させず、外部参照から対応する状態を一意に特定できるようにします。`-` はコードを持たないことを表し、複数行で使用できます。"
+    message: >-
+      Section 6.4 repeats the state-value uniqueness requirement and the `-` exception already defined in Section 3.
+      Replace this repeated normative statement with a reference to the naming and ID rules, retaining the column
+      definition's explanation of code-less states, so future changes have one authoritative rule to update.
+    message_ja: >-
+      Section 6.4 repeats the state-value uniqueness requirement and the `-` exception already defined in Section 3.
+      Replace this repeated normative statement with a reference to the naming and ID rules, retaining the column
+      definition's explanation of code-less states, so future changes have one authoritative rule to update.
   - id: F002
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 57
-    anchor: "| 1    | 概要           | ○        | 対象、スコープ、状態を管理する目的、利用者                                         |"
+    rule: vp-qe-kata-conformance
+    line: 137
+    anchor: "- 分岐は同じ遷移元から出る複数の遷移として表し、各矢印へ同じイベントと相互排他的な条件を記載します。`<<choice>>` など、状態一覧にない疑似状態は使用しません。"
     message: >-
-      The summary contents in the table of Section 5 omit the "状態の正本となる管理場所" and "状態変更を起こす業務範囲", which causes an
-      inconsistency with the requirements defined in Section 6.1 and the template. Please align the table contents.
+      Section 6.5.1 requires the same event and mutually exclusive conditions on all branches from a state, whereas
+      Section 6.5.2 and the included Mermaid rulebook apply that requirement to branches triggered by the same event.
+      Add the same-event qualifier here so authors can represent different outgoing business events without treating
+      them as a violation.
     message_ja: >-
-      The summary contents in the table of Section 5 omit the "状態の正本となる管理場所" and "状態変更を起こす業務範囲", which causes an
-      inconsistency with the requirements defined in Section 6.1 and the template. Please align the table contents.
+      Section 6.5.1 requires the same event and mutually exclusive conditions on all branches from a state, whereas
+      Section 6.5.2 and the included Mermaid rulebook apply that requirement to branches triggered by the same event.
+      Add the same-event qualifier here so authors can represent different outgoing business events without treating
+      them as a violation.

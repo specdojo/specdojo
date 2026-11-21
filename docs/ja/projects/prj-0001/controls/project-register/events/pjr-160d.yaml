@@ -1,0 +1,126 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_b6ce8b85674f4bf5a04245ef61de2c68
+  ts: "2026-11-13T21:53:07Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳。indie が承認
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: executor の変更が commit の対象外のまま統合されないようにする
+    - field: description
+      from: ""
+      to: PJR-1Y1M の修正
+    - field: input
+      from: ""
+      to: '["PJR-1Y1M の修正。kata-wave-1 の後、wave-2 を作る前に流す（indie が 2026-11-14 に承認）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: sol-executor
+    - field: registered
+      from: ""
+      to: "2026-11-14"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-1Y1M"]'
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: commit-scope
+- v: 1
+  id: reg_402ef7598cd04cd6858082e4d56f411a
+  ts: "2026-11-14T11:51:39Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_b6ce8b85674f4bf5a04245ef61de2c68
+- v: 1
+  id: reg_8037e351f6404f36b5108e7367b56412
+  ts: "2026-11-14T12:12:58Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-integration"
+  previous_event_id: reg_402ef7598cd04cd6858082e4d56f411a
+- v: 1
+  id: reg_12713b1612f14a1e94e8747f456dbaab
+  ts: "2026-11-14T20:40:57Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-integration"
+      to: "-"
+  previous_event_id: reg_8037e351f6404f36b5108e7367b56412
+- v: 1
+  id: reg_0e97438d57ea40c8bf277500f12fa4ae
+  ts: "2026-11-14T20:59:18Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_12713b1612f14a1e94e8747f456dbaab
+- v: 1
+  id: reg_adf2e16f7953401e90f3c6cb155388b0
+  ts: "2026-11-15T01:19:20Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-15"
+    - field: conclusion
+      from: "-"
+      to: commit 対象外の変更が残ると統合と撤去を止め、対象パスと次の操作を result とログに残すようにした
+  previous_event_id: reg_0e97438d57ea40c8bf277500f12fa4ae

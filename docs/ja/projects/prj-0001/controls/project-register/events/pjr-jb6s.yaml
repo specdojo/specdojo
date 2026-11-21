@@ -1,0 +1,191 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c5633649b8c94ed59569a6785ddb1ddc
+  ts: "2026-11-10T12:46:15Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: GUI のデザインのルール（デザインシステム）の型を新しく作る
+    - field: description
+      from: ""
+      to: uis はワイヤーフレームとレイアウトを含めないため、画面をまたいで見た目を揃えるデザインのルール（色・文字・余白などの基本の値、部品、レイアウトの型、アクセシビリティ）を、設計の新しい種類として定める rulebook と sample を作る
+    - field: input
+      from: ""
+      to: '["indie の要望（2026-11-10）: uis はワイヤーフレームを含めないので、デザインシステムを別途設計として定める型を作る。","orchestrator の案（PJR-MXQB の入力、2026-11-08）: デザインのルールは設計の範疇で、実装の共通ルールを扱う sysd-cross-cutting-policy とは分けた新しい型にする。ワイヤーフレームは文書として保守せず、uis とデザインのルールから agent に試作を作らせ、プロダクトのリポジトリに置く。nfr-usability は測れる目標を決める要求で、デザインのルールはそれを満たす設計の決まりにあたる。","略号・ID・置き場所（設計の文書の階層）は executor が既存の命名の標準と設計の型を読んで決め、理由を個票の対応結果に書く。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-10"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-MXQB"]'
+- v: 1
+  id: reg_8b45c9eae78b4649aa56298c26a09393
+  ts: "2026-11-10T12:59:16Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: 完了条件と変更範囲を承認し、夜間の実行に加える（indie が決定、2026-11-10）
+  changes:
+    - field: autopilot
+      from: "-"
+      to: approved
+  previous_event_id: reg_c5633649b8c94ed59569a6785ddb1ddc
+- v: 1
+  id: reg_f2b7e99099ac4e3996143e63bf0a6db1
+  ts: "2026-11-10T23:13:36Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_8b45c9eae78b4649aa56298c26a09393
+- v: 1
+  id: reg_47128ab0ecf742f7a0ab5227b9e7f708
+  ts: "2026-11-10T23:36:38Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: git merge failed: CONFLICT (content): Merge conflict in docs/ja/specdojo/rulebooks/uis-rulebook.md"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: git merge failed: CONFLICT (content): Merge conflict in docs/ja/specdojo/rulebooks/uis-rulebook.md"
+  previous_event_id: reg_f2b7e99099ac4e3996143e63bf0a6db1
+- v: 1
+  id: reg_579e84cc7ba14bf5bf7a38adb7766315
+  ts: "2026-11-11T00:28:59Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: git merge failed: CONFLICT (content): Merge conflict in docs/ja/specdojo/rulebooks/uis-rulebook.md"
+      to: "-"
+  previous_event_id: reg_47128ab0ecf742f7a0ab5227b9e7f708
+- v: 1
+  id: reg_552ead509ede43bdb846720a99604d51
+  ts: "2026-11-11T00:36:57Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_579e84cc7ba14bf5bf7a38adb7766315
+- v: 1
+  id: reg_c1d7a5310374441b8a297549e7ca6f32
+  ts: "2026-11-11T03:36:27Z"
+  action: start
+  actor: sol-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_552ead509ede43bdb846720a99604d51
+- v: 1
+  id: reg_687907bc350f494c92f778c2b85ab6e2
+  ts: "2026-11-11T03:45:27Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor reported incomplete: DSS rulebook・sample の改訂と個票への記録、sandbox 内検査を完了。両文書の再 grade による pass 確認が残っています。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor reported incomplete: DSS rulebook・sample の改訂と個票への記録、sandbox 内検査を完了。両文書の再 grade による pass 確認が残っています。"
+  previous_event_id: reg_c1d7a5310374441b8a297549e7ca6f32
+- v: 1
+  id: reg_3fa78928f8484c99abee284d4d8d797f
+  ts: "2026-11-11T03:51:00Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "executor reported incomplete: DSS rulebook・sample の改訂と個票への記録、sandbox 内検査を完了。両文書の再 grade による pass 確認が残っています。"
+      to: "-"
+  previous_event_id: reg_687907bc350f494c92f778c2b85ab6e2
+- v: 1
+  id: reg_8bfefc054a7643d29d7b2c3686af2519
+  ts: "2026-11-11T03:59:16Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_3fa78928f8484c99abee284d4d8d797f
+- v: 1
+  id: reg_82f579a2fd4b46a4b38d96f0833a4f95
+  ts: "2026-11-11T04:04:26Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register で対応。2 回目の実行の後、grade で dss-rulebook・dss-sample とも pass 100 を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-11"
+    - field: conclusion
+      from: "-"
+      to: GUI のデザインのルール（dss）の rulebook と sample を作り、種類の一覧と uis から案内した
+  previous_event_id: reg_8bfefc054a7643d29d7b2c3686af2519

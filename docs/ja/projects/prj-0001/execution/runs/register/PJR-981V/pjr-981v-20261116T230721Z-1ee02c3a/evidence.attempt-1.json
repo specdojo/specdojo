@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-981V",
+  "run_id": "pjr-981v-20261116T230721Z-1ee02c3a",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-16T23:09:38.923Z",
+    "completed_at": "2026-11-16T23:29:26.044Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-981v.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-981v-kata-coding-rules-instructions.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/defaults/pm-review-viewpoints.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/deliverables-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdr-rulebook.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/cdr-sample.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/cdr-template.md",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-981v-kata-coding-rules-instructions.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/defaults/pm-review-viewpoints.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/deliverables-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdr-rulebook.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/cdr-sample.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/cdr-template.md",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 7,
+    "summary": ".../pjr-981v-kata-coding-rules-instructions.md     | 30 ++++++++++++++++----\n .../ja/specdojo/defaults/pm-review-viewpoints.yaml |  2 ++\n .../specdojo/references/deliverables-reference.md  | 33 ++++++++++++++--------\n 3 files changed, 47 insertions(+), 18 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "変更した個票を含め、すべての履歴ファイルが valid"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/rulebooks/cdr-rulebook.md docs/ja/specdojo/samples/cdr-sample.md docs/ja/specdojo/templates/cdr-template.md docs/ja/specdojo/references/deliverables-reference.md docs/ja/specdojo/defaults/pm-review-viewpoints.yaml docs/ja/projects/prj-0001/controls/project-register/pjr-981v-kata-coding-rules-instructions.md",
+      "status": "passed",
+      "summary": "All matched files use Prettier code style"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/docs/viewpoint-document-kinds-check.ts",
+      "status": "passed",
+      "summary": "document_kinds decisions cover all 112 rulebooks"
+    },
+    {
+      "source": "executor",
+      "command": "npm run docs:build",
+      "status": "requires_human",
+      "summary": "building client + server bundles は通ったが、rendering pages の途中で子プロセスが SIGKILL（メモリ不足と思われる）で終了した。メモリの足りる環境か CI で確認が必要"
+    },
+    {
+      "source": "executor",
+      "command": "specdojo grade run --target kata",
+      "status": "requires_human",
+      "summary": "agent CLI の起動と利用枠の消費が必要なため、sandbox では実行できない。runner または人が実行し pass を確認する"
+    }
+  ],
+  "final_message": "コーディング規約の型（`cdr`）の rulebook・sample・template を作り、観点定義と成果物リファレンスに登録し、個票の対応結果を書いた。完了条件の `grade run --target kata` は sandbox で agent CLI を起動できないため未実施。",
+  "completion_status": "incomplete",
+  "handoff": [
+    "`grade run --target kata` で `specdojo:cdr-rulebook`・`specdojo:cdr-sample`・`specdojo:cdr-template` を grade し、pass を確認する（個票の作業内容 3 は `open` のまま）。",
+    "executor が決めた点: 接頭辞は `cdr`（Coding Rules）。成果物の id は `.` が使えないため `<言語>-instructions`。`deliverable_type` は `tsd` と同じ系統の `architecture`。recipe は入力が `tsd` とリポジトリ設定だけで問いで集める情報がないため `not-needed`。正本の frontmatter はトップレベルに `applyTo`、`specdojo:` 配下に SpecDojo の項目を置き、template では `frontmatter_template` に `applyTo: _APPLY_TO_` を置いて展開する。カタログはグループの `base_path` を `/.github/instructions` にして正本だけを登録し、ラッパーは載せない。`vp-ba-business-value` は除外、`vp-arc-single-responsibility` は既定どおり適用する一覧に入れた。",
+    "既存の `.github/instructions/typescript.instructions.md` の `applyTo`（`{src,tools,tests,scripts}/**/*.ts`）とラッパー `.claude/rules/typescript.md` の `paths`（`{src,tools}/**/*.ts`）がずれており、新しい rulebook の規則に合わない。既存の正本には `specdojo:` の frontmatter もない。対象外のため変更しておらず、別の登録簿項目での対応を提案する。",
+    "`npm run docs:build` はページのレンダリング中に子プロセスが SIGKILL（メモリ不足と思われる）で終了した。メモリの足りる環境（CI など）で確認する。"
+  ],
+  "block_reason": "executor reported incomplete: コーディング規約の型（`cdr`）の rulebook・sample・template を作り、観点定義と成果物リファレンスに登録し、個票の対応結果を書いた。完了条件の `grade run --target kata` は sandbox で agent CLI を起動できないため未実施。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-981V/pjr-981v-20261116T230721Z-1ee02c3a/executor.attempt-1.log",
+      "bytes": 6958,
+      "truncated": false
+    }
+  ]
+}

@@ -1,0 +1,154 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-SLIM-2-cxd-specdojo-040",
+  "run_id": "T-KATA-SLIM-2-cxd-specdojo-040-20261118T042028Z-f6e26535",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-18T04:22:13.475Z",
+    "completed_at": "2026-11-18T04:26:31.604Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/rulebooks/cxd-mermaid-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cxd-rulebook.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 2,
+    "summary": "docs/ja/specdojo/rulebooks/cxd-mermaid-rulebook.md | 157 ++-------------------\n docs/ja/specdojo/rulebooks/cxd-rulebook.md         |  86 +++++------\n 2 files changed, 51 insertions(+), 192 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/rulebooks/cxd-rulebook.md docs/ja/specdojo/rulebooks/cxd-mermaid-rulebook.md",
+      "status": "passed",
+      "summary": "変更した2ファイルを整形しました。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/rulebooks/cxd-rulebook.md docs/ja/specdojo/rulebooks/cxd-mermaid-rulebook.md",
+      "status": "passed",
+      "summary": "両ファイルの整形検査に合格しました。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーはありません。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "対象外です。",
+      "reason": "YAML ファイルの変更がありません。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "対象外です。",
+      "reason": "履歴ファイルや plan・result を変更していません。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "対象外です。",
+      "reason": "変更は docs/ja/specdojo/rulebooks/ 配下だけで、docs/ja/projects/ 配下の成果物変更がありません。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 5347 file(s), 135 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 100 passed, 0 error, 0 未検査\n  graph: 6 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5347 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-cxd-specdojo-040\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/devcontainer/scaffold.integration.test.ts\"}\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontai\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.8.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schema)\ndocs/ja/specdojo/samples/ifx-api-sample\n… output omitted …\nks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-cxd-specdojo-040/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-cxd-specdojo-040/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.8.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-cxd-specdojo-040\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/grade/grade.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/register/commands.test.ts\"}\n ✓ tests/src/grade/grade.test.ts (69 tests) 892ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/src/grade/grade.test.ts\"\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "CXD rulebook と includes の Mermaid rulebook を簡潔化しました。F001 は解消し、F002 は共通標準への変更案として申し送ります。result は編集していません。",
+  "completion_status": "complete",
+  "handoff": [
+    "空白除外文字数: cxd-rulebook.md は9,169字→7,333字（79.98%）、cxd-mermaid-rulebook.md は7,906字→5,472字（69.21%）。変更ファイルは docs/ja/specdojo/rulebooks/ 配下のこの2ファイルのみです。",
+    "判断根拠: rulebook-authoring-standard、document-metadata-standard、SLD rulebook、PJR-8S4T「他の型へ広げるときの一覧」、CXD recipe・template・sample、cxd-specdojo、grade result（specdojo.cxd-rulebook.yaml）、condense result（prj-0001:xer-t-kata-wave-1-cxd-specdojo-080-20261114t124526z-e35312ed）、共通観点 vp-arc-conciseness / vp-dev-testability を確認しました。",
+    "F001（source=grade）は全体方針の委譲先列挙を「正本の選び方と参照の境界」への参照に変更して解消しました。同節の対応表は変更していません。",
+    "F002（source=grade）は共通正本の不足として未解消です。document-metadata-standard の「バリデーション」には Mermaid の検査手順・合格条件がありません。exec-config-guide は親検証の概要を示しますが、対象指定と未検査ゼロの条件を満たしません。変更案: 共通標準に `npm run lint:mermaid -- <document-path>`、構文エラー・未検査がともにゼロであること、失敗時は構文または依存環境を修正して再検査することを追記してください。package.json と tools/lint-mermaid.mjs でコマンドと判定動作を確認済みです。この段の変更範囲に従い、共通標準へは追記していません。",
+    "source=condense の6記録を原因箇所と照合しました。概要の読者確認観点と Person の利用責務を区別し、人間とシステムの責任分界、図の方向・応答省略の注記、仮定と見直し条件、同一端末上の外部責務、詳細正本への委譲を維持しました。文書運用の役割割り当て・承認手順は共通参照に置き換えました。",
+    "成果物の章名・順序・必須／条件付き区分、Person・外部システム・Relationship の推奨列を維持しました。Mermaid rulebook は章タイトルを維持し、見出し階層と番号末尾を標準へ合わせ、重複する plainText ブロックを削除しました。Mermaid の図例は保持し、「一店員」の誤記だけを「店員」に直しました。",
+    "後続変更案: cxd-template と cxd-sample の「メモ / 将来課題」は担当ロール列と引き継ぎ先の管理情報を外し、論点・影響・解消条件を中心にしてください。cxd-recipe の手順6、メモの問い・例、仕上げ確認にある担当・追跡先の要求も共通運用へ委ねてください。recipe・template・sample と成果物本体は今回変更していません。",
+    "親 runner に指定された lint・schema・型検査・単体／統合テストは executor では実行していません。result の実施内容・変更ファイル・判断根拠には本レポートの内容を反映してください。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-cxd-specdojo-040/T-KATA-SLIM-2-cxd-specdojo-040-20261118T042028Z-f6e26535/executor.log",
+      "bytes": 4637,
+      "truncated": false
+    }
+  ]
+}

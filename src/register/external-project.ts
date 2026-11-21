@@ -15,6 +15,7 @@ export type ExternalRegisterAddOptions = {
   project?: string;
   type: string;
   track?: string;
+  domain?: string[];
   title: string;
   description: string;
   input?: string[];
@@ -23,6 +24,7 @@ export type ExternalRegisterAddOptions = {
   status: string;
   owner: string;
   registered?: string;
+  startOn?: string;
   due: string;
   completed: string;
   conclusion: string;
@@ -88,8 +90,10 @@ export function buildExternalRegisterAddArgs(
     opts.conclusion,
   ];
   addValue(args, "--track", opts.track);
+  for (const domain of opts.domain ?? []) addValue(args, "--domain", domain);
   addValue(args, "--difficulty", opts.difficulty);
   addValue(args, "--registered", opts.registered);
+  addValue(args, "--start-on", opts.startOn);
   addValue(args, "--approach", opts.approach);
   for (const input of opts.input ?? []) addValue(args, "--input", input);
   for (const target of opts.target ?? []) addValue(args, "--target", target);

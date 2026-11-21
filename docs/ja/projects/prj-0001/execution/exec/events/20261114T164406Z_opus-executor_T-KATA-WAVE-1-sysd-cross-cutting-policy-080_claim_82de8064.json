@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "ts": "2026-11-14T16:44:06Z",
+  "type": "claim",
+  "task_id": "T-KATA-WAVE-1-sysd-cross-cutting-policy-080",
+  "by": "opus-executor",
+  "msg": "claim task as resumed executor opus-executor",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "ARC",
+    "pipeline_resume_claimed": "true",
+    "previous_actor": "agy-gpt-oss-executor"
+  }
+}

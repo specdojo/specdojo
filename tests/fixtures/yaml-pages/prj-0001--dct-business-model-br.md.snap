@@ -1,0 +1,311 @@
+---
+specdojo:
+  id: prj-0001:dct-business-model-br
+  type: project
+  status: draft
+  rulebook: specdojo:dct-rulebook
+---
+
+# 成果物カタログ（業務モデル／ビジネスルール）
+
+> このページは `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-br.yaml` から生成された表示用ページです。正本は YAML ファイルであり、このページは再生成できます。
+
+<!-- specdojo:generated-by=yaml-pages -->
+
+## 1. カタログの設定
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| プロジェクト | prj-0001 |
+| ドメイン | business-model |
+| 基準パス | /docs/ja/product/010-business-specs/030-business-model |
+
+## 2. ビジネスルール
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| 配置先（親からの相対パス） | - |
+| 注記 | - |
+
+<!-- prettier-ignore -->
+| 成果物 ID | 名称 | 種別 | 根拠 | 概要 |
+| --- | --- | --- | --- | --- |
+| br-task-selection-strategy | ビジネスルール（タスク選択戦略） | work | bps-task-selection-preparation | Ready task を critical-first / fifo などで選ぶ選択順位・selection strategyを定義する |
+| br-actor-assignment | ビジネスルール（担当・claim解決） | work | bps-task-selection-preparation | task の実行区分・mode・必要能力・熟練度から担当nickname（実行担当・記録担当）を解決する規則を定義する |
+| br-execution-result-judgment | ビジネスルール（実行結果判定） | work | bps-task-judgment-integration | 記入済みresultと必須節・frontmatterの保持状態からsuccess判定またはblockedを導く規則を定義する |
+| br-routine-action-routing | ビジネスルール（routine action kind選択・委譲） | work | bps-routine-register-schedule-cycle / bps-routine-job-run | routineのaction kind（register / exec-auto / exec-resume / exec-cycle / job）別の選択・制御・委譲条件を定義する |
+| br-review-verdict | ビジネスルール（レビュー判定） | work | bps-task-verification | タスクの完了可否を review の verdict（complete / complete-with-findings / incomplete / grade-stale / grade-unavailable / changed-during-review）のいずれに判定するかの規則を定義する |
+| br-agent-config-safety-boundary | ビジネスルール（agent構成の権限・安全境界） | work | bps-config-change-proposal-approval | task の mode・targets・capability、provider権限、プロンプトインジェクション対策から構成変更案の許可範囲・禁止事項を判定する規則を定義する |
+| br-branch-integration-direction | ビジネスルール（branch・worktree統合方向） | work | bps-parallel-sync-integration | feature / exec branch と project develop、mainの間で、どちらを正本としどちらへ統合するかの方向を定義する |
+| br-deprecation-route-selection | ビジネスルール（非推奨化の経路選択） | work | bps-deprecation-process | 対象文書の同一性・後継候補から、経路A（ファイル名のみ変更）と経路B（新ID切替）のどちらを選ぶかの判断規則を定義する |
+
+**`br-task-selection-strategy`**
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| パス | br-task-selection-strategy.md |
+| 準拠ルール | specdojo:br-rulebook |
+| 作成指示 | - |
+| 注記 | - |
+
+<!-- prettier-ignore -->
+| 完了条件 | 確認ロール | 観点 ID |
+| --- | --- | --- |
+| ルール・入力・出力・例外が業務観点で明確に記述されていること | BA | vp-ba-requirements-completeness |
+| ルールの業務的妥当性と適用範囲を承認できること | PO | vp-po-purpose-alignment |
+| ルール実装（バリデーション・ドメインロジック）の基礎として参照できること | ARC | vp-arc-technical-constraints |
+| ルールベースのテストケース設計に活用できること | QE | vp-qe-verifiability |
+| ビジネスロジック実装の参照として使えること | DEV | vp-dev-implementation-readiness |
+
+**`br-actor-assignment`**
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| パス | br-actor-assignment.md |
+| 準拠ルール | specdojo:br-rulebook |
+| 作成指示 | - |
+| 注記 | - |
+
+<!-- prettier-ignore -->
+| 完了条件 | 確認ロール | 観点 ID |
+| --- | --- | --- |
+| ルール・入力・出力・例外が業務観点で明確に記述されていること | BA | vp-ba-requirements-completeness |
+| ルールの業務的妥当性と適用範囲を承認できること | PO | vp-po-purpose-alignment |
+| ルール実装（バリデーション・ドメインロジック）の基礎として参照できること | ARC | vp-arc-technical-constraints |
+| ルールベースのテストケース設計に活用できること | QE | vp-qe-verifiability |
+| ビジネスロジック実装の参照として使えること | DEV | vp-dev-implementation-readiness |
+
+**`br-execution-result-judgment`**
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| パス | br-execution-result-judgment.md |
+| 準拠ルール | specdojo:br-rulebook |
+| 作成指示 | - |
+| 注記 | - |
+
+<!-- prettier-ignore -->
+| 完了条件 | 確認ロール | 観点 ID |
+| --- | --- | --- |
+| ルール・入力・出力・例外が業務観点で明確に記述されていること | BA | vp-ba-requirements-completeness |
+| ルールの業務的妥当性と適用範囲を承認できること | PO | vp-po-purpose-alignment |
+| ルール実装（バリデーション・ドメインロジック）の基礎として参照できること | ARC | vp-arc-technical-constraints |
+| ルールベースのテストケース設計に活用できること | QE | vp-qe-verifiability |
+| ビジネスロジック実装の参照として使えること | DEV | vp-dev-implementation-readiness |
+
+**`br-routine-action-routing`**
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| パス | br-routine-action-routing.md |
+| 準拠ルール | specdojo:br-rulebook |
+| 作成指示 | - |
+| 注記 | - |
+
+<!-- prettier-ignore -->
+| 完了条件 | 確認ロール | 観点 ID |
+| --- | --- | --- |
+| ルール・入力・出力・例外が業務観点で明確に記述されていること | BA | vp-ba-requirements-completeness |
+| ルールの業務的妥当性と適用範囲を承認できること | PO | vp-po-purpose-alignment |
+| ルール実装（バリデーション・ドメインロジック）の基礎として参照できること | ARC | vp-arc-technical-constraints |
+| ルールベースのテストケース設計に活用できること | QE | vp-qe-verifiability |
+| ビジネスロジック実装の参照として使えること | DEV | vp-dev-implementation-readiness |
+
+**`br-review-verdict`**
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| パス | br-review-verdict.md |
+| 準拠ルール | specdojo:br-rulebook |
+| 作成指示 | - |
+| 注記 | - |
+
+<!-- prettier-ignore -->
+| 完了条件 | 確認ロール | 観点 ID |
+| --- | --- | --- |
+| ルール・入力・出力・例外が業務観点で明確に記述されていること | BA | vp-ba-requirements-completeness |
+| ルールの業務的妥当性と適用範囲を承認できること | PO | vp-po-purpose-alignment |
+| ルール実装（バリデーション・ドメインロジック）の基礎として参照できること | ARC | vp-arc-technical-constraints |
+| ルールベースのテストケース設計に活用できること | QE | vp-qe-verifiability |
+| ビジネスロジック実装の参照として使えること | DEV | vp-dev-implementation-readiness |
+
+**`br-agent-config-safety-boundary`**
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| パス | br-agent-config-safety-boundary.md |
+| 準拠ルール | specdojo:br-rulebook |
+| 作成指示 | - |
+| 注記 | - |
+
+<!-- prettier-ignore -->
+| 完了条件 | 確認ロール | 観点 ID |
+| --- | --- | --- |
+| ルール・入力・出力・例外が業務観点で明確に記述されていること | BA | vp-ba-requirements-completeness |
+| ルールの業務的妥当性と適用範囲を承認できること | PO | vp-po-purpose-alignment |
+| ルール実装（バリデーション・ドメインロジック）の基礎として参照できること | ARC | vp-arc-technical-constraints |
+| ルールベースのテストケース設計に活用できること | QE | vp-qe-verifiability |
+| ビジネスロジック実装の参照として使えること | DEV | vp-dev-implementation-readiness |
+
+**`br-branch-integration-direction`**
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| パス | br-branch-integration-direction.md |
+| 準拠ルール | specdojo:br-rulebook |
+| 作成指示 | - |
+| 注記 | - |
+
+<!-- prettier-ignore -->
+| 完了条件 | 確認ロール | 観点 ID |
+| --- | --- | --- |
+| ルール・入力・出力・例外が業務観点で明確に記述されていること | BA | vp-ba-requirements-completeness |
+| ルールの業務的妥当性と適用範囲を承認できること | PO | vp-po-purpose-alignment |
+| ルール実装（バリデーション・ドメインロジック）の基礎として参照できること | ARC | vp-arc-technical-constraints |
+| ルールベースのテストケース設計に活用できること | QE | vp-qe-verifiability |
+| ビジネスロジック実装の参照として使えること | DEV | vp-dev-implementation-readiness |
+
+**`br-deprecation-route-selection`**
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| パス | br-deprecation-route-selection.md |
+| 準拠ルール | specdojo:br-rulebook |
+| 作成指示 | - |
+| 注記 | - |
+
+<!-- prettier-ignore -->
+| 完了条件 | 確認ロール | 観点 ID |
+| --- | --- | --- |
+| ルール・入力・出力・例外が業務観点で明確に記述されていること | BA | vp-ba-requirements-completeness |
+| ルールの業務的妥当性と適用範囲を承認できること | PO | vp-po-purpose-alignment |
+| ルール実装（バリデーション・ドメインロジック）の基礎として参照できること | ARC | vp-arc-technical-constraints |
+| ルールベースのテストケース設計に活用できること | QE | vp-qe-verifiability |
+| ビジネスロジック実装の参照として使えること | DEV | vp-dev-implementation-readiness |
+
+## 3. YAML の正本
+
+<details>
+<summary>YAML の正本を表示</summary>
+
+<!-- prettier-ignore -->
+```yaml
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/dct.schema.yaml
+id: prj-0001:dct-business-model-br
+type: project
+status: draft
+title: 成果物カタログ（業務モデル／ビジネスルール）
+rulebook: specdojo:dct-rulebook
+project_id: prj-0001
+domain: business-model
+base_path: /docs/ja/product/010-business-specs/030-business-model
+
+# business-model ドメインの物理分割ファイル（br 部分）。domain キーは分割前と同じ business-model を保つ。
+# br-rulebook.md は「1ファイル=1ビジネスルール」を想定する。各領域別CDFDの「判定・選択・委譲規則」
+# 系の表（action kind別の選択・委譲規則、権限・安全境界の承認条件等）を根拠に抽出した、複数プロセス
+# から参照される横断的な判断・条件ロジックを列挙する。
+
+groups:
+  - name: ビジネスルール
+    deliverables:
+      - local_id: br-task-selection-strategy
+        name: ビジネスルール（タスク選択戦略）
+        kind: work
+        depends_on:
+          - bps-task-selection-preparation
+        overview: Ready task を critical-first / fifo などで選ぶ選択順位・selection strategyを定義する
+        path: br-task-selection-strategy.md
+        rulebook: specdojo:br-rulebook
+        done_criteria: &br-done-criteria
+          - text: ルール・入力・出力・例外が業務観点で明確に記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: ルールの業務的妥当性と適用範囲を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: ルール実装（バリデーション・ドメインロジック）の基礎として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: ルールベースのテストケース設計に活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: ビジネスロジック実装の参照として使えること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+      - local_id: br-actor-assignment
+        name: ビジネスルール（担当・claim解決）
+        kind: work
+        depends_on:
+          - bps-task-selection-preparation
+        overview: task の実行区分・mode・必要能力・熟練度から担当nickname（実行担当・記録担当）を解決する規則を定義する
+        path: br-actor-assignment.md
+        rulebook: specdojo:br-rulebook
+        done_criteria: *br-done-criteria
+      - local_id: br-execution-result-judgment
+        name: ビジネスルール（実行結果判定）
+        kind: work
+        depends_on:
+          - bps-task-judgment-integration
+        overview: 記入済みresultと必須節・frontmatterの保持状態からsuccess判定またはblockedを導く規則を定義する
+        path: br-execution-result-judgment.md
+        rulebook: specdojo:br-rulebook
+        done_criteria: *br-done-criteria
+      - local_id: br-routine-action-routing
+        name: ビジネスルール（routine action kind選択・委譲）
+        kind: work
+        depends_on:
+          - bps-routine-register-schedule-cycle
+          - bps-routine-job-run
+        overview: routineのaction kind（register / exec-auto / exec-resume / exec-cycle / job）別の選択・制御・委譲条件を定義する
+        path: br-routine-action-routing.md
+        rulebook: specdojo:br-rulebook
+        done_criteria: *br-done-criteria
+      - local_id: br-review-verdict
+        name: ビジネスルール（レビュー判定）
+        kind: work
+        depends_on:
+          - bps-task-verification
+        overview: タスクの完了可否を review の verdict（complete / complete-with-findings / incomplete / grade-stale / grade-unavailable / changed-during-review）のいずれに判定するかの規則を定義する
+        path: br-review-verdict.md
+        rulebook: specdojo:br-rulebook
+        done_criteria: *br-done-criteria
+      - local_id: br-agent-config-safety-boundary
+        name: ビジネスルール（agent構成の権限・安全境界）
+        kind: work
+        depends_on:
+          - bps-config-change-proposal-approval
+        overview: task の mode・targets・capability、provider権限、プロンプトインジェクション対策から構成変更案の許可範囲・禁止事項を判定する規則を定義する
+        path: br-agent-config-safety-boundary.md
+        rulebook: specdojo:br-rulebook
+        done_criteria: *br-done-criteria
+      - local_id: br-branch-integration-direction
+        name: ビジネスルール（branch・worktree統合方向）
+        kind: work
+        depends_on:
+          - bps-parallel-sync-integration
+        overview: feature / exec branch と project develop、mainの間で、どちらを正本としどちらへ統合するかの方向を定義する
+        path: br-branch-integration-direction.md
+        rulebook: specdojo:br-rulebook
+        done_criteria: *br-done-criteria
+      - local_id: br-deprecation-route-selection
+        name: ビジネスルール（非推奨化の経路選択）
+        kind: work
+        depends_on:
+          - bps-deprecation-process
+        overview: 対象文書の同一性・後継候補から、経路A（ファイル名のみ変更）と経路B（新ID切替）のどちらを選ぶかの判断規則を定義する
+        path: br-deprecation-route-selection.md
+        rulebook: specdojo:br-rulebook
+        done_criteria: *br-done-criteria
+```
+
+</details>

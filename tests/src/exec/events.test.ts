@@ -799,6 +799,66 @@ function validEvent(taskId: string): string {
 }
 
 describe("readAllEventFiles", () => {
+  describe.each([
+    ["00000000", "ffffffff"],
+    ["ffffffff", "00000000"],
+  ])("pipeline block suffixes reporter=%s integrate=%s", (reporterSuffix, integrateSuffix) => {
+    it.each(["blocked", "doing", "done"] as const)(
+      "replays same-second reporter and integration resumes to %s",
+      (expectedState) => {
+        const { dir, projectPath } = setupEventsRepo();
+        try {
+          const schedule = makeSchedule([{ id: "T-001" }]);
+          const meta = (stage: string): Record<string, string> => ({
+            pipeline_stage: stage,
+            pipeline_state_ref: "execution/runs/schedule/T-001/run/pipeline-state.json",
+          });
+          const write = (type: ExecEventV1["type"], stage: string, suffix: string): void => {
+            writeEventFile(projectPath, makeEvent({ type, meta: meta(stage) }), {
+              randomHex: () => suffix,
+            });
+          };
+
+          writeEventFile(projectPath, makeEvent({ ts: "2026-05-31T23:59:58Z" }));
+          // Exercise colliding blocks while blocked, and colliding unblocks on the next resume.
+          writeEventFile(
+            projectPath,
+            makeEvent({
+              type: "block",
+              ts: expectedState === "blocked" ? "2026-06-01T00:00:00Z" : "2026-05-31T23:59:59Z",
+              meta: meta("reporter"),
+            }),
+            { randomHex: () => reporterSuffix },
+          );
+          write("unblock", "reporter", "ffffffff");
+          write("block", "integrate", integrateSuffix);
+          if (expectedState !== "blocked") write("unblock", "integrate", "00000000");
+          if (expectedState === "done") write("complete", "integrate", "00000000");
+
+          const events = readAllEventFiles(projectPath);
+          expect(
+            events.map(({ event }) => `${event.type}:${event.meta?.pipeline_stage ?? ""}`),
+          ).toEqual([
+            "claim:",
+            "block:reporter",
+            "unblock:reporter",
+            "block:integrate",
+            ...(expectedState !== "blocked" ? ["unblock:integrate"] : []),
+            ...(expectedState === "done" ? ["complete:integrate"] : []),
+          ]);
+          expect(foldEventsToState(events, schedule, projectPath).tasks["T-001"]).toMatchObject({
+            state: expectedState,
+            meta: meta("integrate"),
+          });
+        } finally {
+          process.chdir(originalCwd);
+          rmSync(dir, { recursive: true, force: true });
+          restoreEnv();
+        }
+      },
+    );
+  });
+
   it("keeps both events when their timestamp and random suffix collide", () => {
     const { dir, projectPath } = setupEventsRepo();
     try {
@@ -853,6 +913,64 @@ describe("readAllEventFiles", () => {
       expect(() => readAllEventFiles(projectPath)).toThrow(
         /Invalid exec event file: .*broken\.json: /,
       );
+    } finally {
+      process.chdir(originalCwd);
+      rmSync(dir, { recursive: true, force: true });
+      restoreEnv();
+    }
+  });
+
+  it("orders release before the replacement claim when switching executors within the same second", () => {
+    const { dir, projectPath } = setupEventsRepo();
+    try {
+      const schedule = makeSchedule([{ id: "T-001" }]);
+      writeEventFile(
+        projectPath,
+        makeEvent({
+          ts: "2026-11-03T13:43:20Z",
+          type: "claim",
+          task_id: "T-001",
+          by: "opus-executor",
+          msg: "initial claim",
+        }),
+      );
+      writeEventFile(
+        projectPath,
+        makeEvent({
+          ts: "2026-11-03T13:43:27Z",
+          type: "release",
+          task_id: "T-001",
+          by: "opus-executor",
+          msg: "release claim to switch executor to sol-executor (--resume-from executor)",
+          meta: { pipeline_resume_released: "true", replaced_by: "sol-executor" },
+        }),
+      );
+      writeEventFile(
+        projectPath,
+        makeEvent({
+          ts: "2026-11-03T13:43:27Z",
+          type: "claim",
+          task_id: "T-001",
+          by: "sol-executor",
+          msg: "claim task as resumed executor sol-executor (--resume-from executor)",
+          meta: { pipeline_resume_claimed: "true", previous_actor: "opus-executor" },
+        }),
+      );
+
+      const events = readAllEventFiles(projectPath);
+      expect(events.map((item) => `${item.event.type}:${item.event.by}`)).toEqual([
+        "claim:opus-executor",
+        "release:opus-executor",
+        "claim:sol-executor",
+      ]);
+
+      const snapshot = foldEventsToState(events, schedule, projectPath);
+      expect(snapshot.tasks["T-001"]).toMatchObject({
+        state: "doing",
+        last_by: "sol-executor",
+        last_type: "claim",
+      });
+      expect(canCompleteTask(schedule, snapshot, "T-001", "sol-executor").ok).toBe(true);
     } finally {
       process.chdir(originalCwd);
       rmSync(dir, { recursive: true, force: true });

@@ -1,0 +1,36 @@
+---
+specdojo:
+  id: prj-0001:xer-pjr-jsey-20261031t152208z-8e3f429f
+  type: exec-result
+  task_id: PJR-JSEY
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  origin: register
+  plan_ref: runs/register/PJR-JSEY/20261031T152208572Z-3e24362d/plan.md
+  started_at: "2026-10-31T15:22:08.943Z"
+  completed_at: "2026-10-31T15:28:33.130Z"
+  agent: sonnet-executor
+---
+
+# Edit Result
+
+## 1. 実施内容
+
+- 個票 `docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md` の対応結果に、今回の実行結果（PJR-6NEM）を追記し、確認対象の説明文を更新した。
+
+## 2. 変更ファイル
+
+- なし
+
+## 3. 申し送り
+
+- agent nickname は先行行に合わせて `sonnet-executor` とした。実体 `actor` は後続段で確認する。
+- 親 runner の 7 検証、reporter の `result` 記入、統合、review 遷移は後記段で確認する。
+- agent nickname は先行行に合わせて sonnet-executor とした。実体 actor は後続段で確認する。
+- 親 runner の 7 検証、reporter の result 記入、統合、review 遷移は後続段で確認する。
+- 適用外の検証（runner の判定）: `npm run lint:md`（変更に Markdown ファイル（`*.md`） がない）
+
+## 4. 進め方
+
+個票 `docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md` を開き、対応結果のテーブルに行を追加して、今回の `exec run` の動作確認結果を記録した。

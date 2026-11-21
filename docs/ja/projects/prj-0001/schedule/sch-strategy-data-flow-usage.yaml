@@ -1,0 +1,148 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/sch-strategy.schema.yaml
+kind: strategy
+id: prj-0001:sch-strategy-data-flow-usage
+type: project
+status: draft
+title: スケジュール戦略（data-flow-usage）
+rulebook: specdojo:sch-rulebook
+track: data-flow-usage
+
+# sch-track-data-flow-usage.yaml を生成するための戦略定義（PJR-SJQC）。
+# cdfd-overview は、プロジェクト構成の構築・管理、文書の廃棄（非推奨化・保管）、3 系統（register・schedule・routine）、
+# 実行サイクル（実行・評価・完了）、Orchestrator の 7 区分と 3 系統の関係を描く形へ改訂した（rewrite-pass）。
+# cdfd-uc-register はプロセス領域の単位と入口イベントを描く形へ書き直す（既存草案を尊重する fully-guided、register-rewrite-pass）。
+# cdfd-uc-schedule と cdfd-uc-routine は系統別詳細 CDFD として新規に作成する（雛形から下書きを起こす draft）。
+# dct-data-flow.yaml のうち 4 件を local_ids で scope にする。
+# owner はロールのみを持ち、実際の実行者は pm-members.yaml と実行要件から解決する。
+
+settings:
+  start_date: "2026-11-01"
+
+scope:
+  catalogs:
+    - id: prj-0001:dct-data-flow
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml
+      local_ids:
+        - cdfd-overview
+        - cdfd-uc-register
+        - cdfd-uc-schedule
+        - cdfd-uc-routine
+  include_kinds:
+    - work
+
+approach_rules:
+  - local_ids:
+      - cdfd-overview
+    intent: author-deliverable
+  - local_ids:
+      - cdfd-uc-register
+    intent: author-deliverable
+  - local_ids:
+      - cdfd-uc-schedule
+      - cdfd-uc-routine
+    intent: author-deliverable
+
+phase_sets:
+  rewrite-pass:
+    - id: rewrite
+      name: 全体概要の改訂
+      execution: agent
+      mode: edit
+      approach: fully-guided
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "010"
+      duration_days: 0.5
+      description: |
+        PJR-SJQC の決定に基づき、cdfd-overview を、プロジェクト構成の構築・管理、文書の廃棄、
+        3 系統、実行サイクル、Orchestrator の関係を描く形へ改訂する。既存の草案記述と
+        Kata（cdfd-overview-rulebook / cdfd-d2-rulebook）を尊重し、fully-guided で磨き込む。
+        cdfd-uc-register などの詳細 CDFD は本 phase の対象外とする。
+
+  register-rewrite-pass:
+    - id: rewrite
+      name: register 系の詳細 CDFD の書き直し
+      execution: agent
+      mode: edit
+      approach: fully-guided
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "010"
+      duration_days: 0.5
+      description: |
+        PJR-SJQC の決定に基づき、cdfd-uc-register を register 系の詳細 CDFD として、プロセス領域
+        （P-xx）の単位と入口の起点イベントを描く形へ書き直す。プロセス領域の区分・名称・起点イベントの
+        文言は cdfd-overview の「プロセス領域」の章（7 区分）と同じにし、実行サイクル（P-07・P-08・P-11）
+        と Orchestrator（P-14）は 3 系統が共用する領域として同じ領域 ID・名称で描き、内部を複製しない。
+        図は cdfd-d2-rulebook に従い direction: down、プロセスは上から P・D・C・A の順に並べ、
+        配色と凡例は cdfd-overview の凡例を参照して再掲しない。本文は表を中心に端的に書く。
+        既存の草案記述と Kata（cdfd-uc-rulebook）を尊重し、他の CDFD の文書は変えない。
+
+  author-pass:
+    - id: author
+      name: 系統別詳細 CDFD のドラフト新規作成
+      execution: agent
+      mode: edit
+      approach: draft
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "010"
+      duration_days: 0.5
+      description: |
+        PJR-SJQC の決定に基づき、cdfd-overview と Kata（cdfd-uc-rulebook / sample / template）を
+        骨組みにして、系統別詳細 CDFD（schedule 系・routine 系）をドラフト作成する。
+        プロセス領域の単位、入口のイベント、データストアとの読み書きを定義する。
+        プロセス領域の区分・名称・起点イベントの文言は cdfd-overview の「プロセス領域」の章（7 区分）と
+        同じにし、実行サイクル（P-07・P-08・P-11）と Orchestrator（P-14）は 3 系統が共用する領域として
+        同じ領域 ID・名称で描き、内部を複製しない。routine 系の入口の起点イベントは、定義のきっかけ
+        ではなく Orchestrator（P-14）の「PDCA の各サイクルが到来した」とする（PJR-SJQC）。
+        図は cdfd-d2-rulebook に従い direction: down、プロセスは上から P・D・C・A の順に並べ、
+        配色と凡例は cdfd-overview の凡例を参照して再掲しない。本文は表を中心に端的に書く。
+        cdfd-uc-schedule は cdfd-uc-deliverable を引き継ぐ新しい ID であり、cdfd-uc-deliverable は変えない。
+
+owner_rules:
+  - local_ids:
+      - cdfd-overview
+    owner: BA
+    phase_set: rewrite-pass
+
+  - local_ids:
+      - cdfd-uc-register
+    owner: BA
+    phase_set: register-rewrite-pass
+
+  - local_ids:
+      - cdfd-uc-schedule
+      - cdfd-uc-routine
+    owner: BA
+    phase_set: author-pass
+
+phase_gates:
+  - id: G-DATA-FLOW-USAGE-pass
+    name: data-flow-usage pass 完了
+    artifact_name: データフロー（利用導線）
+    after_phase_sets: [rewrite-pass, register-rewrite-pass, author-pass]
+    owner: PM
+    scope:
+      catalogs:
+        - prj-0001:dct-data-flow
+
+group_milestones:
+  - catalog_id: prj-0001:dct-data-flow
+    milestone:
+      id: M-DATA-FLOW-USAGE-data-flow
+      name: 利用導線構成の CDFD 完了
+      artifact_name: データフロー（利用導線）
+      owner: PM

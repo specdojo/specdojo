@@ -4,11 +4,11 @@ document: specdojo:otp-rulebook
 path: docs/ja/specdojo/rulebooks/otp-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 94
-graded_at: "2026-10-05T21:09:46.060Z"
-graded_by: agy-expert-executor
-content_hash: 13d515501de58410f11ae168c56b8e538630f7c569718f1d47993948f11bd35d
+verdict: pass
+score: 99
+graded_at: "2026-11-07T20:23:57.103Z"
+graded_by: flash-high-executor
+content_hash: fd43c35c644bb199aa701fc93ef6242c70d9024cad7b675d6a1f330e9676e79a
 categories:
   purpose:
     score: 100
@@ -25,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 100
   consistency:
     score: 100
 viewpoints:
@@ -81,8 +81,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -103,21 +103,14 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
+  major: 0
   minor: 1
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-arc-conciseness
-    line: 194
+    line: 185
     anchor: ""
     message: 191行目で「otp-index への導線（本体SSOT）を必ず記載する」と述べており、直後の194行目の記述は内容が重複しているため削除できる。
-  - id: F002
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 59
-    anchor: "- `based_on` には運用・移行判断に直接利用した成果物（例: `mip-index` / `cop-index` / `mtp-index` / `br-*` / `issue-*`）のみ列挙する"
-    message: >-
-      前回の指摘（未解消）: 推奨 Frontmatter の定義（59行目）では type を migration 固定としているが、同文書内のサンプル（221行目）および参考資料の otp-sample.md では project
-      となっており矛盾している。（※同文書内のサンプルは削除されたが、参考資料との矛盾は残存）
+    message_ja: 191行目で「otp-index への導線（本体SSOT）を必ず記載する」と述べており、直後の194行目の記述は内容が重複しているため削除できる。

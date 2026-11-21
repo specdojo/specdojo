@@ -1,0 +1,88 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_b82abd2e78d94a509716fe7bdc2d4464
+  ts: "2026-11-18T13:34:53Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: "生成物（kind: generated）の成果物で rulebook-maintenance の編集対象の rulebook を解決できない"
+    - field: description
+      from: ""
+      to: "kind: generated の成果物はカタログに rulebook を宣言していても、rulebook-maintenance の plan で rulebook が none・編集対象が \\_MISSING\\_（unresolved）になり、executor が止まる。原因を調べて直す"
+    - field: input
+      from: ""
+      to: '["orchestrator の観測（2026-11-18）: kata-slim-2 の T-KATA-SLIM-2-pjr-index-040・pm-issue-log-040・pm-risk-register-040・pm-change-request-log-040 が、plan の frontmatter で rulebook: none、編集対象が kind: rulebook・path: `_MISSING_`・state: unresolved になり、executor が手順どおり変更なしで exit 1 した","orchestrator の調べ（2026-11-18）: 4 件はいずれも dct-project-management.yaml で kind: generated と rulebook（specdojo:pjr-rulebook・pm-issue-log-rulebook・pm-risk-register-rulebook・pm-change-request-log-rulebook）を宣言している。strategy の `include_kinds` は generated を受け付ける","利用者の依頼（2026-11-18）: issue を起票する。担当 DEV、期限 11 月末"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-18"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-MNM5"]'
+- v: 1
+  id: reg_54d8253e7703473a950e9acb0708b1ac
+  ts: "2026-11-19T10:09:34Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_b82abd2e78d94a509716fe7bdc2d4464
+- v: 1
+  id: reg_5c8850cccb6649fb9ea67020586b55c3
+  ts: "2026-11-19T10:25:43Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_54d8253e7703473a950e9acb0708b1ac
+- v: 1
+  id: reg_1fc840a126314f2f9da86e483f07c40c
+  ts: "2026-11-19T14:03:15Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分とテストを確かめ、統合の後に 4 件の新しい plan が rulebook を解決し、最後まで流れることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-19"
+    - field: conclusion
+      from: "-"
+      to: "型の整備の段では kind: generated の成果物でも宣言どおりに rulebook を解決するようにした。止まっていた 4 件を流し直し、すべて rulebook を直して統合した"
+  previous_event_id: reg_5c8850cccb6649fb9ea67020586b55c3

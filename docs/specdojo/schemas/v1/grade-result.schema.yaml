@@ -119,6 +119,8 @@ properties:
         message_ja:
           type: string
           minLength: 1
+        cause:
+          $ref: "finding-cause.schema.yaml"
   level_corrections:
     type: array
     items:

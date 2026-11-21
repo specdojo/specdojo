@@ -1,5 +1,6 @@
 import type { Command } from "commander";
 import { runDevcontainerScaffold } from "./scaffold.js";
+import { runDevcontainerHostScript } from "./host-script.js";
 import { specdojoPackageRootDir } from "../shared/package-paths.js";
 import { specdojoRootDir } from "../shared/specdojo-config.js";
 
@@ -11,7 +12,7 @@ export function registerDevcontainerCommands(program: Command): void {
     .option("--preset <name>", "Apply a bundled preset (minimal|recommended|full)")
     .option(
       "--provider <names>",
-      "Comma-separated list of agent providers to install (e.g. claude,codex,opencode,antigravity)",
+      "Comma-separated list of agent providers to install (e.g. claude,codex,opencode)",
       "",
     )
     .option(
@@ -46,6 +47,23 @@ export function registerDevcontainerCommands(program: Command): void {
           cron: !!opts.cron,
           tmux: !!opts.tmux,
           force: !!opts.force,
+          dryRun: !!opts.dryRun,
+        });
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        process.stderr.write(`${message}\n`);
+        process.exitCode = 1;
+      }
+    });
+
+  dc.command("host-script")
+    .description("Write the devcontainer tmux host script into .specdojo/host/")
+    .option("--dry-run", "Show planned files without writing", false)
+    .action(async (opts) => {
+      try {
+        await runDevcontainerHostScript({
+          packageRoot: specdojoPackageRootDir(),
+          repoRoot: specdojoRootDir(),
           dryRun: !!opts.dryRun,
         });
       } catch (error) {

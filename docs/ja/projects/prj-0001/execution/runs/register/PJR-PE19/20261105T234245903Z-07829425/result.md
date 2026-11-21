@@ -1,0 +1,65 @@
+---
+specdojo:
+  id: prj-0001:xer-pjr-pe19-20261105t231841z-3ce8895b
+  type: exec-result
+  task_id: PJR-PE19
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  origin: register
+  plan_ref: runs/register/PJR-PE19/20261105T234245903Z-07829425/plan.md
+  started_at: "2026-11-05T23:18:42.105Z"
+  completed_at: "2026-11-05T23:52:12.191Z"
+  agent: sol-executor
+---
+
+# Edit Result
+
+## 1. 実施内容
+
+- timeline および `tml-index.yaml` の管理を非推奨とし、`epic` から `domains` や全体計画を構築する仕組みへ移行しました。
+- `epic` に `domains` を持たせるためのスキーマ更新および、`dashboard` 生成プロセスにおける `timeline` 依存の削除を行いました。
+- `dashboard` 生成時に `epic` の情報を基に計画を構成できるよう、関連するロジックの修正とテストの拡充を実施しました。
+
+## 2. 変更ファイル
+
+- `CHANGELOG.md`: 今回の変更内容を `CHANGELOG.md` に追記しました。
+- `docs/specdojo/schemas/v1/register-events.schema.yaml`: 監査 event に `domains` を含めるためのスキーマ更新を行いました。
+- `docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml`: register item の frontmatter に `domains` を持たせるためのスキーマ更新を行いました。
+- `src/dashboard/dashboard-timeline.ts`: 非推奨となった `timeline` 関連のロジックを削除しました。
+- `src/dashboard/dashboard.ts`: `epic` ベースの計画生成プロセスへの統合を行いました。
+- `src/dashboard/timeline-build.ts`: `timeline` ビルドに関連する処理を削除または修正しました。
+- `src/dashboard/timeline.ts`: `timeline` 関連のロジックを非推奨として処理する変更を行いました。
+- `src/exec/plans-planning.ts`: 計画生成プロセスにおける変更を反映しました。
+- `src/register/command-types.ts`: 新しいコマンド体系に対応するための型定義の更新を行いました。
+- `src/register/core.ts`: `epic` と `domains` の扱いに基づくコアロジックの修正を行いました。
+- `src/register/create-commands.ts`: 新しいデータ構造に対応したコマンド作成ロジックの更新を行いました。
+- `src/register/epic.ts`: `epic` の定義および `domains` との関連付けに関する実装を更新しました。
+- `src/register/event-merge.ts`: イベントの統合プロセスにおける変更を反映しました。
+- `src/register/events.ts`: イベント定義の更新を行いました。
+- `src/register/external-project.ts`: 外部プロジェクトの登録に関するロジックを更新しました。
+- `src/register/item.ts`: アイテムの定義に `domains` 関連の変更を加えました。
+- `src/register/planning.ts`: 計画立案に関連する登録ロジックを修正しました。
+- `src/schedule/strategy-generate-scope.ts`: 戦略のスコープ生成に関するロジックを更新しました。
+- `src/shared/specdojo-config.ts`: 設定ファイルの構造変更に対応しました。
+- `src/shared/timeline-index.ts`: 非推奨となった `timeline-index` 関連の処理を調整しました。
+- `tests/src/dashboard/dashboard.test.ts`: 新しい `dashboard` 生成ロジックに対する回帰テストを追加しました。
+- `tests/src/register/commands.test.ts`: 新しいコマンドの動作検証テストを追加しました。
+- `tests/src/register/epic.test.ts`: `epic` と `domains` の関連付けに関するテストを追加しました。
+- `tests/src/register/external-project.test.ts`: 外部プロジェクト登録に関するテストを更新しました。
+- `tests/src/register/planning.test.ts`: 計画登録のテストを補強しました。
+- `src/dashboard/epic-plan.ts`: `epic` ベースの計画を生成するための新規ロジックを実装しました。
+- `src/register/track-domains.ts`: `track` と `domains` の対応関係を管理するロジックを実装しました。
+- `src/register/track-plan.ts`: `track` に基づく計画管理のロジックを実装しました。
+- `src/shared/deprecation.ts`: 非推奨となる機能の定義を追加しました。
+- `tests/src/dashboard/epic-plan.test.ts`: `epic-plan` に関するユニットテストを追加しました。
+- `tests/src/register/track-domains.test.ts`: `track-domains` に関するユニットテストを追加しました。
+
+## 3. 申し送り
+
+- 期間の判断: `due_on` のない未完了 epic は終了日・稼働日数を未定とし、開始日が分かる場合は開始点を表示します。先行 epic の終了日が未定なら後続の開始日も未定とします。架空の予定を依存先へ伝播させないためです。個票の対応結果にも記録済みです。
+- 保護設定の変更は不要です。文書・Kata・prj-0001 の計画データ移行は PJR-JM29 の範囲です。統合後の register / exec の運用確認は、運用メモに従い PJR-JSEY で実施してください。個票にも記録済みです。
+
+## 4. 進め方
+
+まず `timeline` および `tml-index.yaml` を非推奨とする設定を `src/shared/deprecation.ts` に追加しました。次に、`epic` が `domains` を保持できるようにスキーマ (`docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml`) を拡張しました。これに伴い、`src/register/` 配下の各種ロジックを `epic` ベースの構造へ移行するための修正を行いました。最後に、`dashboard` 生成プロセスにおいて `timeline` への依存を排除し、`epic` からの計画構築を行うための新しい `src/dashboard/epic-plan.ts` を導入しました。全ての変更に対し、単体テストおよび統合テストによる検証を実施しました。

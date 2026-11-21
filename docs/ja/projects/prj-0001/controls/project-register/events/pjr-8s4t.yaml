@@ -1,0 +1,91 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_42000ffacba1481086447222d3130b0a
+  ts: "2026-11-17T12:48:49Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: sld の rulebook と sample から文書の運用の記述を外し、共通の正本への参照にする（試行）
+    - field: description
+      from: ""
+      to: 業務仕様までの sample の冗長さを減らす試行として、sld 1 件で運用の記述を共通の正本へ寄せ、同じ判断の言い直しを除く。効果を確かめてから他の rulebook と sample へ広げる
+    - field: input
+      from: ""
+      to: '["PJR-0T83 の対応策 (2)・(4) の試行である。利用者が 2026-11-17 に、sld 1 件で試してから他の rulebook と sample へ広げる進め方（案 C から B）を選んだ","orchestrator の調査（2026-11-17）: sld-sample は 40KB（空白を除いて約 10,000 字）で業務仕様までの sample で最も大きい。運用・検証の章が全体の約 28% を占める。保管場所ごとの削除の条件を、保管場所一覧の表・3 区分の判断・場面別の対処・検証手順の 4 か所で書き、CDSD・STSD・CLIS との対応も 1.1 節と 4.1 節に二重にある。冒頭に役割の段落、検証の表に prettier・lint:md の行、末尾に PO の承認と agent の draft 維持の段落がある。表のセルは 1 行 700 字前後ある","sld-rulebook（24KB）は、BA・ARC・DEV・QE・PM・OPS・PO の役割の表と status・承認の手順を持ち、「関連仕様・実装配置との対応と検証」を必須の章、「確認事項と変更影響」を条件付きの章として求める。status・承認・改訂と廃止の正本はドキュメントメタ情報標準にある"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-17"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-0T83"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: kata
+- v: 1
+  id: reg_3a12054bf53a4b5987936b3bb0063981
+  ts: "2026-11-17T12:52:35Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: 利用者が担当と期限を決めた
+  changes:
+    - field: owner
+      from: _TODO_
+      to: BA
+    - field: due
+      from: _TODO_
+      to: "2026-11-30"
+  previous_event_id: reg_42000ffacba1481086447222d3130b0a
+- v: 1
+  id: reg_338a437fa9994ca9b8e8db601cdb2b20
+  ts: "2026-11-17T13:42:51Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_3a12054bf53a4b5987936b3bb0063981
+- v: 1
+  id: reg_47413815686a4ee8bdd6948b50f123dd
+  ts: "2026-11-17T13:59:34Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_338a437fa9994ca9b8e8db601cdb2b20

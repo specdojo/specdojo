@@ -1,0 +1,97 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_24b67f70eb394aebb2bc5cc3c640840d
+  ts: "2026-11-05T13:05:05Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: stsd-recipe の「概要」の手順を目的・適用範囲に分ける
+    - field: description
+      from: ""
+      to: stsd-recipe の「概要」の節を、新しい冒頭（頭書き・目的・適用範囲）の書き方に合わせる
+    - field: input
+      from: ""
+      to: '["業務仕様の冒頭は、H1 直下の 1〜2 行の頭書き、「1. 目的」（状態を管理する目的と利用者）、「2. 適用範囲」（対象・スコープ、正本の管理場所、状態変更を起こす業務範囲、終了点を置かない理由）に分け、3 章以降は状態一覧・状態遷移図・遷移の説明・今後の検討メモの順とする（PJR-VNT1、cdfd の形に合わせる）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-05"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: recipe-maintenance
+    - field: targets
+      from: ""
+      to: '["specdojo:stsd-recipe"]'
+    - field: derived_from
+      from: ""
+      to: '["PJR-3APD","PJR-VNT1"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-F1FD"]'
+- v: 1
+  id: reg_684bff35a7554586b7ac2dd4e3581db0
+  ts: "2026-11-05T16:18:27Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_24b67f70eb394aebb2bc5cc3c640840d
+- v: 1
+  id: reg_f864bcb9faa14d5c9f391ee2aab611d5
+  ts: "2026-11-05T16:28:27Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_684bff35a7554586b7ac2dd4e3581db0
+- v: 1
+  id: reg_761e0e3c46bd4797bbe8aae2f81b04a5
+  ts: "2026-11-05T16:30:16Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票・result で確かめた（利用者の委任による自動の進行）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-06"
+    - field: conclusion
+      from: "-"
+      to: recipe の概要の節を頭書き・目的・適用範囲の手順に分けた
+  previous_event_id: reg_f864bcb9faa14d5c9f391ee2aab611d5

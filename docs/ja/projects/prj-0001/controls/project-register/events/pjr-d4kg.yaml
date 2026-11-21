@@ -32,3 +32,22 @@
     - field: due
       from: ""
       to: "2026-11-14"
+- v: 1
+  id: reg_6578ac00b0c14aee978060c3f0e57955
+  ts: "2026-10-31T12:37:40Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: 対話で indie が候補 A を指示
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-10-31"
+    - field: conclusion
+      from: "-"
+      to: 候補 A。owner・RACI は宣言させず、schedule の owner_rules を唯一の経路とする
+  previous_event_id: reg_12092955a9254228b2a865c86b715989

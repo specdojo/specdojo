@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-08T17:10:55Z",
+  "type": "claim",
+  "task_id": "T-BUSINESS-SPECS-REPS-sf-task-execution-010",
+  "by": "sol-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA"
+  }
+}

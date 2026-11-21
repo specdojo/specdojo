@@ -1,4 +1,5 @@
 import { type Command } from "commander";
+import { warnDeprecated } from "../shared/deprecation.js";
 import {
   addGradeSelectionOptions as addSelection,
   commandError,
@@ -20,7 +21,9 @@ import { specdojoRootDir } from "../shared/specdojo-config.js";
 
 export function registerGradeInspectionCommands(grade: Command): void {
   addSelection(
-    grade.command("validate").description("Validate stored grade hashes and finding counts"),
+    grade
+      .command("validate", { hidden: true })
+      .description("Validate stored grade hashes and finding counts"),
   ).action((options) => {
     try {
       const target = requireTarget(options.target);
@@ -51,9 +54,9 @@ export function registerGradeInspectionCommands(grade: Command): void {
   });
 
   grade
-    .command("result")
+    .command("result", { hidden: true })
     .description("Print the stored grade result sidecar for one document as JSON")
-    .requiredOption("--path <path>", "Markdown document whose grade result is read")
+    .requiredOption("--path <path>", "Markdown or YAML document whose grade result is read")
     .option("--project <projectId>", "Project id in specdojo.config.json")
     .action((options) => {
       try {
@@ -67,11 +70,11 @@ export function registerGradeInspectionCommands(grade: Command): void {
     });
 
   grade
-    .command("state")
+    .command("state", { hidden: true })
     .description("Read or update persistent per-document grade pipeline state")
     .requiredOption("--target <target>", "kata or deliverable")
     .option("--project <projectId>", "Project id in specdojo.config.json")
-    .option("--path <path>", "Markdown document whose pipeline state is read or updated")
+    .option("--path <path>", "Markdown or YAML document whose pipeline state is read or updated")
     .option("--status <status>", "Record passed, failed, or complete", requirePipelineStatus)
     .option("--stage <number>", "Current pipeline stage", requirePositiveInteger)
     .option("--stage-total <number>", "Total pipeline stages", requirePositiveInteger, 3)
@@ -128,7 +131,9 @@ export function registerGradeInspectionCommands(grade: Command): void {
 
   grade
     .command("migrate")
-    .description("Move legacy inline grade snapshots and findings to result sidecars")
+    .description(
+      "Deprecated: inline grade migration is no longer needed; result sidecars are standard (will be removed in 0.10.0)",
+    )
     .option("--target <target>", "Restrict migration to kata or deliverable", requireTarget)
     .option("--project <projectId>", "Project id in specdojo.config.json")
     .option(
@@ -140,6 +145,10 @@ export function registerGradeInspectionCommands(grade: Command): void {
     .option("--dry-run", "List updates without writing", false)
     .action((options) => {
       try {
+        warnDeprecated(
+          "grade migrate",
+          "Inline grade migration is no longer needed as result sidecars are standard. Use grade run instead. This command will be removed in 0.10.0.",
+        );
         const changed = migrateInlineGrades({
           project: options.project,
           target: options.target,

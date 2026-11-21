@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-17T18:17:50Z",
+  "type": "claim",
+  "task_id": "T-KATA-SLIM-pm-plan-050",
+  "by": "opus-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA"
+  }
+}

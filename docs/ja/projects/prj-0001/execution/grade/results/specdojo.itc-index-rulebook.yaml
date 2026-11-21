@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 89
-graded_at: "2026-10-03T21:48:59.264Z"
-graded_by: agy-expert-executor
-content_hash: 89514ca95dec9d54be3a4a240634d2c2a05c51aebc95b3714792e04178666d0c
+graded_at: "2026-11-02T20:20:46.658Z"
+graded_by: flash-high-executor
+content_hash: 2604c08307ef6c70cecd7ae7e9d78ad2745375d4fb18f3b511857c99c1807bdb
 categories:
   purpose:
     score: 100
@@ -110,9 +110,11 @@ findings:
     line: 58
     anchor: "| 項目       | 説明                                               | 必須 |"
     message: IDを `itc-index` 固定とする指定は、プロジェクト一意性を担保する `＜project-id＞:id` 形式の命名慣習と矛盾している。
+    message_ja: IDを `itc-index` 固定とする指定は、プロジェクト一意性を担保する `＜project-id＞:id` 形式の命名慣習と矛盾している。
   - id: F002
     severity: major
     rule: vp-qe-kata-conformance
     line: 7
     anchor: ""
     message: 参照サンプル `specdojo:itc-index-sample` が、本文第5章で定義した必須構成（固定見出し順）に従っておらず、完成例として不整合である。
+    message_ja: 参照サンプル `specdojo:itc-index-sample` が、本文第5章で定義した必須構成（固定見出し順）に従っておらず、完成例として不整合である。

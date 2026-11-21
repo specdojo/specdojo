@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "task_id": "T-BUSINESS-SPECS-KATA-2-cdsd-execution-040",
+  "run_id": "T-BUSINESS-SPECS-KATA-2-cdsd-execution-040-20261112T150823Z-66b7c91c",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-12T15:10:07.506Z",
+    "completed_at": "2026-11-12T15:16:57.211Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdsd-rulebook.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/rulebooks/cdsd-rulebook.md | 170 +++++++++++++++++-----------\n 1 file changed, 102 insertions(+), 68 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/rulebooks/cdsd-rulebook.md",
+      "status": "passed",
+      "summary": "変更した Markdown を整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "node tools/check-evidence-secrets.mjs docs/ja/specdojo/rulebooks/cdsd-rulebook.md",
+      "status": "passed",
+      "summary": "1ファイルを検査し、検出0件。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 YAML schema 検査は対象外。",
+      "reason": "変更は Markdown rulebook のみで、変更した YAML・YML ファイルがない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "カタログ検証は対象外。",
+      "reason": "executor の変更は docs/ja/specdojo/rulebooks/ 配下のみで、docs/ja/projects/ 配下の成果物変更がない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検証は対象外。",
+      "reason": "登録簿個票および既存 plan・result 等の履歴ファイルを変更していない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-2-cdsd-execution-040/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-\n… output omitted …\nojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-2-cdsd-execution-040/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-2-cdsd-execution-040/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1152). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4457 file(s), 137 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 105 passed, 0 error, 0 未検査\n  graph: 3 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4457 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-2-cdsd-execution-040\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this di\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nd: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-2-cdsd-execution-040/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-2-cdsd-execution-040/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-2-cdsd-execution-040\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-T1Gdmc/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-SDBLrw/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-KC4NrQ/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-ACpqh8/pjr-0001-to\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "CDSD rulebook の改訂を完了。標準章構成、管理境界・更新責務、受入条件、変更管理、章別判断ガイドを整備し、recipe・template を not-needed に確定した。status は draft を維持。",
+  "completion_status": "complete",
+  "handoff": [
+    "reporter は result の実施内容・変更ファイル・進め方と実践の型の適用に本報告を反映すること。変更ファイルは docs/ja/specdojo/rulebooks/cdsd-rulebook.md のみ。成果物本体、sample、grade サイドカー、result は編集していない。",
+    "改訂根拠: docs/ja/specdojo/standards/rulebook-authoring-standard.md、document-metadata-standard.md、docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml・common-frontmatter.schema.yaml・rulebook-frontmatter.schema.yaml、docs-structure-guide、ryu-guide のメンテナンス手順、pm-review-viewpoints.yaml の各該当観点と vp-arc-conciseness、PJR-2GD6 を確認した。cdsd-execution・cdsd-planning・cdsd-sharing、各 grade result、specdojo.cdsd-rulebook・specdojo.cdsd-sample の grade result、CDSD カタログ、BDD・CCD・用語集・保管場所一覧の rulebook、プロジェクトの Role 定義も照合した。plan に成果物由来の Kata finding・source=condense の展開はない。",
+    "finding 対応: F001・F007・F008 は目的・上位根拠・対象境界・業務価値と受入条件、F004・F009・F011 は作業単位・確認順・Role code・配置、F005・F010・F012・F013 は依存文書の識別・正本参照・変更影響・検証手順、F006 は Schedule と PJR の課題・リスク・変更要求・決定の分担、F014・F016・F019 は連続した表構造と共通 schema 参照、F015・F018 は位置づけ・禁止事項、F002・F003・F020・F021 は判断者・公開前確認・変更管理・問い合わせ導線を補完して対応した。判定根拠に照らして規定の充足を確認したが、grade の再評価は本段階では実施していない。",
+    "F017 は未解消。既存 specdojo:cdsd-sample は標準6列を使う完成例ではなく、その grade result でも同じ不備を確認した。本フェーズは sample 本体を変更せず後続 sample-maintenance で整備する指示のため、宣言と標準6列を維持した。次作業では BA が概要・標準6列の具体的な一覧・全行の正本区分と更新責務・関連仕様と検証を備え、clis-sample 程度の厚さの完成例を作成し、QE が改訂 rulebook と照合すること。完成例の所在は Frontmatter のみで示す方針に従い rulebook のサンプル章を削除した。本 rulebook の人間による ready 判断前に sample の同期確認が必要。",
+    "recipe・template の要否判断: 入力がカタログ・辞書・プロセス仕様から特定でき、章別の判断ガイドと少数の表で作成・確認できるため、独立した問いの手順や骨組みの二重管理は不要と判断し、両方を not-needed とした。dct-data-model-cdsd-template.yaml は成果物カタログ用であり CDSD 本文の template ではない。他の recipe・template の同期更新案はなし。",
+    "維持・変更の判断: type: data、標準6列の列順、日本語業務名称と慣用名、更新契機を具体化する方針は維持。旧 cdsl ID 規則は現行カタログ・成果物リファレンス・3件の CDSD に合わせ cdsd へ修正。物理名の lowerCamelCase 強制は BDD・schema の正本表記と競合し得るため、必要時だけ補足し正本表記を参照する規定へ変更。3成果物で共通する対象未収録は成果物側の不備と判断し、標準列を緩和せず網羅照合と未決事項の追跡を要求した。値・構文・構造を再掲しない PJR-2GD6 の方針を保った。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-2-cdsd-execution-040/T-BUSINESS-SPECS-KATA-2-cdsd-execution-040-20261112T150823Z-66b7c91c/executor.log",
+      "bytes": 5428,
+      "truncated": false
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+PJR-964D の実装は終わりました。runner の統合・記帳の git 操作は、別のプロセスが握る `index.lock` を既定で 20 分まで待ってから失敗します。対象を絞った単体テスト（3 ファイル、113 件）は通っています。親の検証と `npm run check` 全体は、まだ実行していません。
+
+**挙動**
+- **待ち方**: 最初の 10 回は従来どおり 1.5 秒間隔でやり直し、その後は 5 秒間隔で待ちます。
+- **設定**: 待ち時間は exec-defaults の `run.git_index_lock_wait_seconds`（0 以上の整数、既定 1200 秒）で変えられます。不正な値は設定の読み込みでエラーにします。
+- **待機中の表示**: 最初の取り合いのときと、その後 30 秒ごとに `warning: waiting for index.lock to be released (elapsed … / limit …, lock: …)` を出します。
+- **上限を越えたとき**: lock のパスと原因の候補（pre-commit などの hook の実行中、または異常終了した git が残した古い lock）を示して失敗します。
+- **古い lock**: 最初の 10 回（約 15 秒）の後、lock のファイルが残っているのに `/proc` に git のプロセスが 1 つもなければ古い lock とみなし、上限を待たずに `index.lock looks stale` で失敗します。lock のファイルは従来どおり消しません。
+
+**前提として置いた判断**
+- git は lock を握るプロセスを記録しないため、古い lock の判定は「git のプロセスが 1 つでも動いていれば待つ」という慎重な形にしました。このため、別の run の git が並行して動いていると判定は働かず、上限まで待ちます。直列化の本対応（PJR-30SA）が入るまでの手当てとして許容しました。
+- `/proc` を読めない環境（Linux 以外など）では、古い lock の判定をせず上限まで待ちます。
+- `.specdojo/exec-defaults.yaml` は既定値で足りるため変更していません。
+
+**変更したファイル**
+- 実装: `src/shared/git.ts`、`src/exec/agent-config.ts`
+- schema: `docs/specdojo/schemas/v1/exec-defaults.schema.yaml`
+- テスト: `tests/src/shared/git.test.ts`、`tests/src/exec/agent-config.test.ts`
+  - 17 分の保持を越えて成功すること、告知の間隔、上限での失敗、設定の反映、古い lock での早期の失敗、`/proc` を模した判定、設定値の検査を加えました。
+- 文書: `exec-config-guide.md`、`schedule-operation-guide.md`、`CHANGELOG.md`
+- 個票: 作業内容の 3 行を `done` にし、対応結果を書きました。
+
+**sandbox で実行した検査**
+- `npx vitest run`（上記 3 ファイル）: passed
+- `npm run validate:history-links`: passed
+- `npm run check:src-imports`: passed
+- `npx prettier --check`（変更したファイル）: passed
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"src/shared/git.ts の index.lock の再試行を時間上限方式に変えた。最初の 10 回は 1.5 秒間隔、その後は 5 秒間隔で、既定 20 分（exec-defaults の `run.git_index_lock_wait_seconds`）まで待つ。待機中は最初と 30 秒ごとに経過を表示し、上限を越えたら lock のパスと原因の候補を示して失敗する。最初の 10 回の後に lock が残っていて /proc に git のプロセスがなければ、古い lock とみなして早めに失敗する。schema・exec-config-guide・schedule-operation-guide・CHANGELOG・個票を更新し、回帰テストを追加した。","handoff":["_ASSUMPTION_: 古い lock の判定は、Linux の /proc に git のプロセスが 1 つもないときだけ働く。別の run の git が並行して動いていると判定は働かず、上限（既定 20 分）まで待つ。直列化の本対応（PJR-30SA）が入るまでの手当てとして許容した。","/proc を読めない環境では古い lock の判定をせず、上限まで待つ。lock のファイルは runner が消さず、人が git の不在を確かめてから消す運用のまま。",".specdojo/exec-defaults.yaml は既定値（1200 秒）で足りるため変更していない。値を変える場合は `run.git_index_lock_wait_seconds` を足す。","個票の完了条件の `npm run check` 全体は sandbox で実行していない。親の検証の結果で確かめる。"],"validations":[{"command":"npx vitest run tests/src/shared/git.test.ts tests/src/exec/agent-config.test.ts tests/src/exec/worktree.test.ts","status":"passed","summary":"3 files, 113 tests passed"},{"command":"npm run validate:history-links","status":"passed","summary":"all history files valid (changed ticket included)"},{"command":"npm run check:src-imports","status":"passed","summary":"src runtime imports are declared"},{"command":"npx prettier --check (changed files)","status":"passed","summary":"All matched files use Prettier code style"}]}
+</specdojo_executor_evidence>

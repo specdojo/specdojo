@@ -1,0 +1,37 @@
+PJR-KVWH を修正しました。別の run が lock を持っていて skip した回（busy skip）は、済んだ回として記録されなくなり、空いた次の `routine run --due` で流し直されます。ローカルで実行した routine と dashboard のテスト（141 件）は通っています。`npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md` は親の runner が実行するため、まだ結果は出ていません。
+
+**原因**: 委譲先の終了コード 75 は busy でも Job の前提条件による skip でも返るため、routine は両方を同じ `skipped` として扱っていました。さらに開始時に進めた `last_run`・`last_scheduled_for` をそのまま残していたので、busy の回も済んだ回になっていました。
+
+**変えた挙動**
+- **busy の判別**: 委譲先の出力に `skipped: exec busy` があれば busy、無ければ前提条件による skip とみなします。この判別は exec 側の出力文言に依存しています。
+- **cron の routine**: `missed_run` が `latest`・`all` のときは `last_scheduled_for` を開始前の値に戻し、次の `--due` でその回を流し直します。`all` で後の回が残っていても、busy の回より後は流さず次に回します。後の回だけ進めると、busy の回が流し直されなくなるためです。
+- **interval の routine**: `busy_skip_count` が正の間は、interval の経過を待たずに次の回で due になります。`routine list`・`routine run --due`・dashboard の due 判定はこの判定にそろえました。
+- **変えていないもの**: `missed_run: skip`、前提条件による skip、失敗・部分成功の回は従来どおり流し直しません。
+- **履歴と状態の確認**: 履歴の各行に `skip_reason`（`busy` / `precondition`）と `retry_pending` を、state に `last_skip_reason` と `busy_skip_count` を残します。新しく足した `routine status [--id] [--limit]` で、状態・流し直し待ち・直近の履歴を確認できます。
+
+**私が決めた点**（理由とともに個票の対応結果に書きました）
+- 流し直しの上限は、続いた busy skip が 24 回です。毎時の `--due` でおよそ 1 日ぶん試し、超えたらその回を済んだ回として扱い、理由を `last_reason` と履歴に残します。
+- 朝の報告（dashboard）の表示は変えていません。busy の回は従来どおり `skipped` の行で出て、内訳は `routine status` で確かめます。
+- 流し直す回は同じ `scheduled_for` で起動します。Job Run には重複実行を防ぐ仕組みがあるので、配列 action で先の段が成功済みでも、全体が `skipped` なら回ごと流し直します。
+- `routine run --id` の手動実行が busy で skip した場合も、同じく流し直し待ちにします。
+
+**テスト**
+- 回帰テスト（`execution.test.ts`）: cron の 09:00 の回が busy skip した後、次の `--due` で同じ 09:00 の回が流れ、その次は流れないこと。interval でも次の `--due` で流れ直すこと。前提条件による skip は流し直さないこと。
+- 単体テスト（新しい `busy-skip.test.ts`）: busy の判別、skip の回の状態の確定、due 判定、`routine status` の表示。
+- 修正前のコードで回帰テストが失敗することは、実際には確かめていません。
+
+**変更したファイル**
+- `src/routine/definition.ts`、`src/routine/routine.ts`
+- `src/routine/status.ts`（新規）
+- `src/dashboard/routines.ts`
+- `tests/src/routine/execution.test.ts`
+- `tests/src/routine/busy-skip.test.ts`（新規）
+- `docs/ja/specdojo/guides/routine-operation-guide.md`
+- `docs/ja/specdojo/references/command-reference.md`
+- 個票 `pjr-kvwh-routine-busy-skip-not-retried.md`（影響範囲・対応方針・対応結果・関連ドキュメント）
+
+`CHANGELOG.md` と保護された設定は変えていません。CHANGELOG の文案（不具合修正と追加機能の 2 件）は、個票の「CHANGELOG に書く事項」の節にあります。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"routine が別の run の lock で skip した回（busy skip）を済んだ回として記録しないようにした。cron の missed_run が latest・all のときは last_scheduled_for を開始前の値へ戻し、次の routine run --due でその回を流し直す。interval は busy_skip_count が正の間 due になる。上限は 24 回。履歴に skip_reason と retry_pending を残し、routine status を追加した。回帰テストと単体テストを追加し、ガイド・リファレンス・個票を更新した。","handoff":["流し直しの上限を、続いた busy skip 24 回（`ROUTINE_BUSY_RETRY_LIMIT`）に決めた。毎時の `routine run --due` でおよそ 1 日ぶん試す。超えたらその回を済んだ回とし、`last_reason` と履歴の `reason` に上限到達を残す。","朝の報告（dashboard の routine 実行状況）の表示は変えていない。busy の回は `skipped` の行のままで、内訳は `routine status` と履歴の `skip_reason` で確かめる。dashboard に内訳の列を出すかは別の項目で判断する。","busy の判別は exec の出力 `[<command>] skipped: exec busy`（`src/exec/run/shared.ts`）に依存する。この文言を変えるときは `isExecBusySkipOutput` も合わせて変える。","配列 action は全体の結果が `skipped` で、いずれかの段が busy なら同じ `scheduled_for` で回ごと流し直す。Job Run の重複実行の防止を前提にしている。`routine run --id` の手動実行が busy で skip した場合も流し直し待ちにする。","CHANGELOG の文案（不具合修正・追加機能の 2 件）は、個票の対応結果「CHANGELOG に書く事項」にある。CHANGELOG.md と保護された設定は変えていない。"],"validations":[{"command":"npx vitest run tests/src/routine tests/src/dashboard","status":"passed","summary":"8 files, 141 tests passed (includes the new busy-skip.test.ts and the busy skip regression tests in execution.test.ts)"},{"command":"npx tsc --noEmit -p tsconfig.build.json","status":"passed","summary":"No type errors in src"},{"command":"npx prettier --write (changed md/ts files)","status":"passed","summary":"Formatted the changed md and ts files"},{"command":"npx markdownlint-cli2 (ticket, routine-operation-guide.md, command-reference.md)","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"passed","summary":"Ticket has no history-link violations"}]}
+</specdojo_executor_evidence>

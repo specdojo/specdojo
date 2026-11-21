@@ -1,0 +1,100 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_bcde0e5a92d049e28a2a8171e4feeae9
+  ts: "2026-11-04T14:31:14Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: エージェント CLI の更新手順の冗長さを condense で直し、condense の動きを確かめる
+    - field: description
+      from: ""
+      to: PJR-1BRQ の統合後の確認として、既にある成果物 opr-agent-cli-update に approach condense を流し、対象だけが直ること、result の記録の表とリスト、Kata が原因の記録の手入れの plan への展開を確かめる
+    - field: input
+      from: ""
+      to: '["PJR-1BRQ の完了条件: 統合の後にオーケストレーターが既にある成果物 1 件で condense を流して動きを確かめる（2026-11-05）","対象は draft の運用手順 opr-agent-cli-update（129 行、rulebook は specdojo:opr-rulebook）。stsd の試行（PJR-3APD）の対象とは重ならないものを選んだ（2026-11-05）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-11-04"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: approach
+      from: ""
+      to: condense
+    - field: targets
+      from: ""
+      to: '["opr-agent-cli-update"]'
+    - field: derived_from
+      from: ""
+      to: '["PJR-1BRQ"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: operations
+- v: 1
+  id: reg_2c5de83f0a17467ca41671d85d5b852b
+  ts: "2026-11-04T14:39:10Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_bcde0e5a92d049e28a2a8171e4feeae9
+- v: 1
+  id: reg_d31b82e012564c5f861f4b1d471412e8
+  ts: "2026-11-04T14:56:10Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_2c5de83f0a17467ca41671d85d5b852b
+- v: 1
+  id: reg_8b5c7a78848347de875f53faa1700c5e
+  ts: "2026-11-04T22:48:37Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator の確認結果を利用者が承認
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-05"
+    - field: conclusion
+      from: "-"
+      to: 完了条件を満たした
+  previous_event_id: reg_d31b82e012564c5f861f4b1d471412e8

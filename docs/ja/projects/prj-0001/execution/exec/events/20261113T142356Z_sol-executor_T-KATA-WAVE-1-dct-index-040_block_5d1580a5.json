@@ -1,0 +1,26 @@
+{
+  "v": 1,
+  "ts": "2026-11-13T14:23:56Z",
+  "type": "block",
+  "task_id": "T-KATA-WAVE-1-dct-index-040",
+  "by": "sol-executor",
+  "msg": "quota_exhausted reached; resume_at=2026-11-13T14:37:00.000Z",
+  "meta": {
+    "limit_deferred": "true",
+    "limit_availability_state": "limited",
+    "limit_retryable": "true",
+    "limit_auto_resume": "true",
+    "limit_kind": "quota_exhausted",
+    "limit_provider": "codex",
+    "limit_observed_at": "2026-11-13T14:23:52.113Z",
+    "limit_raw_message": "ERROR: You’ve hit your usage limit. Upgrade to Pro (https://chatgpt.com/explore/pro), visit https://chatgpt.com/settings/usage to purchase more credits or try again at 11:37 PM.",
+    "limit_attempts": "1",
+    "limit_worktree": "/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-dct-index-040",
+    "limit_resume_at": "2026-11-13T14:37:00.000Z",
+    "limit_resume_source": "provider_reset",
+    "pipeline_stage": "executor",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-dct-index-040/T-KATA-WAVE-1-dct-index-040-20261113T142156Z-13a964b8/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-dct-index-040/T-KATA-WAVE-1-dct-index-040-20261113T142156Z-13a964b8/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-1-dct-index-040-20261113T142156Z-13a964b8"
+  }
+}

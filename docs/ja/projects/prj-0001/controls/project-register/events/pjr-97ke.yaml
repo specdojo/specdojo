@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_a4799d40ab9145a1aa5a8325f241dab4
+  ts: "2026-11-13T14:08:08Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳。indie の依頼（2026-11-13）で、orchestrator の知見と手作業をコマンドと文書に移す
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 夜間の job の中で作られた子の run を、日中に --resume できない
+    - field: description
+      from: ""
+      to: 子の run の plan と実行記録が job の worktree の側にしかなく、日中の exec run --register --resume が plan を見つけられない。写すと統合で重なる
+    - field: input
+      from: ""
+      to: '["2026-11-12〜13 の型の整備と夜間の実行で、orchestrator が手作業やシェルスクリプトで補った"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-13"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_8c7f64ebc13941f38eaf23239871ae16
+  ts: "2026-11-16T12:02:27Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_a4799d40ab9145a1aa5a8325f241dab4
+- v: 1
+  id: reg_94025b07c29345f48699be1bb1e80a10
+  ts: "2026-11-16T12:54:04Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_8c7f64ebc13941f38eaf23239871ae16
+- v: 1
+  id: reg_c8687a6f898048c68bc2d05166a8aa81
+  ts: "2026-11-16T13:32:03Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果・result で確かめ、統合後の PJR-JSEY（2026-11-16、sonnet-executor）で runner の動作を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: 本体からの再開の前に job の branch から wait の記録を取り込むようにした。job の review より先に他の成果が入る点は利用者が受け入れ、回避の手順を運用メモに書いた
+  previous_event_id: reg_94025b07c29345f48699be1bb1e80a10

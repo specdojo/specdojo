@@ -1,0 +1,38 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: bes-index-grade-criteria
+document: bes-index
+path: docs/ja/product/010-business-specs/030-business-model/bes-index.md
+graded_at: "2026-11-16T15:51:23.727Z"
+graded_by: sol-review-executor
+content_hash: 9f4bc779b167edeb1a89c530cbfb99d5d89a2b8f173b882650b927d415eefbf8
+summary:
+  satisfied: 2
+  unsatisfied: 2
+  total: 4
+criteria:
+  - id: DC-001
+    text: 主要な業務イベントが業務観点で網羅的に一覧化されていること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: satisfied
+  - id: DC-002
+    text: イベント一覧のスコープを承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-purpose-alignment
+    status: satisfied
+  - id: DC-003
+    text: イベント駆動設計・メッセージング設計の入力として参照できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: unsatisfied
+    reason: 事実データと正本のデータモデル・schema の照合が未実施で、本文88行が設計の確定入力としての利用を留保している。
+  - id: DC-004
+    text: イベントベースのテスト設計への網羅性が確認できること
+    roles:
+      - QE
+    viewpoint: vp-qe-omissions-consistency
+    status: unsatisfied
+    reason: QE による網羅確認が未実施で、派生生成要求の系統が重なった場合の発生回数も個別仕様の作成待ちである。

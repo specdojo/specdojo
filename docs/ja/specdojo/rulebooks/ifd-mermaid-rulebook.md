@@ -3,11 +3,11 @@ specdojo:
   id: specdojo:ifd-mermaid-rulebook
   type: rulebook
   deliverable_type: architecture
-  status: draft
+  status: ready
   target_format: markdown
-  recipe: undecided
+  recipe: specdojo:ifd-recipe
   sample: specdojo:ifd-sample
-  template: undecided
+  template: specdojo:ifd-template
   based_on:
     - specdojo:rulebook-authoring-standard
 ---
@@ -16,283 +16,93 @@ specdojo:
 
 Infrastructure Flow Diagram (IFD) Documentation Rules using Mermaid
 
-本ドキュメントは、アーキテクチャ検討・合意形成のために **インフラ構成図** を Mermaid の `flowchart` で記述するための標準ルールを定義します。
+実行環境・ネットワーク・信頼境界と主要な通信経路を合意するための規約を定める。
 
-IFD は、インフラの **論理的な境界（環境 / ネットワーク / ゾーン）** と、主要コンポーネント間の **通信の流れ** を示すことを目的とします。
+## 1. 全体方針
 
-以下の内容は IFD の責務外とし、別ドキュメントで扱います。
+- 上位の要素を実行場所へ対応付け、配置の事実・仮定・未決事項を区別する。
+- 同じホスト上でも管理主体・到達範囲が異なる境界は区別する。
+- 通信は障害の影響範囲と検証対象を識別できる粒度で示す。
+- CIDR、IP、ポート、台数、版、認証値、FW・IAM 設定、コマンド構文は載せず、技術構成・連携・運用の正本へ委ねる。
+- 共通の運用: 役割の割り当ては適用先のメンバー定義に、`status` の昇格と承認、改訂と廃止、未決事項の引き継ぎは [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従う。文書の整形・lint はリポジトリの検証で扱い、成果物の検証観点に含めない。
 
-- 物理構成（CIDR、IP、ポート、AZ）
-- スケーリング、冗長化、台数
-- セキュリティ設定（FW / SG / IAM）
-- 技術選定・製品名の詳細
+## 2. 位置づけと用語定義
 
-## 1. 設計思想（最重要）
+| 用語             | 本書での意味                                                       |
+| ---------------- | ------------------------------------------------------------------ |
+| ネットワーク境界 | 到達経路・接続条件が変わる区切り。物理構成と一致するとは限らない   |
+| 論理ゾーン       | 管理主体、公開範囲、情報の持ち出し条件を検討する区切り             |
+| 上位構成図       | 責務を定義する入力。論理的なコンテナと実行用コンテナを同一視しない |
 
-- Mermaid は図ではなく **「構造化テキスト」** として扱う。
-- 生成 AI は特に以下を **意味として解釈** する：
-  - **ノード名**（役割）
-  - **境界（subgraph）**（実行環境 / ネットワーク / ゾーン）
-  - **矢印の方向**（入口 → 処理 → 永続化）
-- 見栄えは **配置・命名・色の一貫性** によって担保する。
+## 3. ファイル命名・ID規則
 
-指針：**「装飾より構造」**
+- ファイル名は `ifd-<target>.md` とし、`id` は stem と対応させる。共通規則は [[specdojo:docs-structure-guide|ドキュメント構造ガイド]] を正とする。
+- Mermaid のノード ID と表示名を分離し、改訂時も同じ要素・経路の ID を維持する。
 
-## 2. 図タイプ・方向の固定（必須）
+## 4. 推奨 Frontmatter 項目
 
-IFD は以下の形式に固定します。
+共通の値・構文は [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] を正とする。
 
-````markdown
-```mermaid
-flowchart LR
-```
-````
+| 項目                     | 扱い     | IFD での用途                                         |
+| ------------------------ | -------- | ---------------------------------------------------- |
+| `rulebook`               | 必須     | `specdojo:ifd-mermaid-rulebook` を指定する           |
+| `based_on`               | 条件付き | 直接の根拠となる上位構成図。単なる参考文書は含めない |
+| `part_of` / `supersedes` | 条件付き | 所属・置き換え関係がある場合に記載する               |
 
-### 2.1. 理由
+## 5. 本文要件
 
-- `flowchart LR` に固定することで **通信方向 = 左 → 右** が一貫し、生成AIが推論しやすくなる。
+骨組みは template を正本とし、以下は内容の成立条件である。
 
-### 2.2. 禁止
+| 内容                     | 必須性   | 判定条件                                                                                               |
+| ------------------------ | -------- | ------------------------------------------------------------------------------------------------------ |
+| 概要                     | 必須     | 対象環境、図で判断すること、上位入力、対象外を識別できる                                               |
+| インフラ構成図           | 必須     | 実行場所、必要な境界、主要経路を Mermaid で示し、凡例で向き・線種・省略を説明する                      |
+| 配置と境界の定義         | 必須     | 要素に管理主体・保持情報・到達条件を対応付け、上位要素の配置か対象外かを示す。代替配置は適用条件を示す |
+| 通信経路と情報の境界     | 必須     | 図と本文の経路 ID・起点・終点が対応し、目的、情報の要点、利用条件、詳細の正本を追える                  |
+| 技術前提・制約と検証観点 | 必須     | 隔離・認証・公開の前提と、境界別の障害影響・観測対象を示す                                             |
+| メモ / 将来課題          | 条件付き | 仮定・未決事項がある場合、論点と影響（当面の扱い）を残す                                               |
 
-- `TB` / `RL` / `BT`
-- 図中での方向混在
+### 5.1. Mermaid の表現規約
 
-## 3. 境界（subgraph）ルール（最大3階層）
+- `flowchart LR` を使う。矢印は主たる起点から終点へ向け、応答は同じ線に含める。独立した逆方向の起動だけを別線にする。
+- `subgraph` は最大 3 階層とし、必要な境界だけを描いて各枠が何の区切りか明記する。
+- 表示名は役割を主語とし、製品名は「推論サービス（製品名）」のように補記する。
+- 処理は矩形、DB は円筒、ファイル保管は角丸を基本とし、形状・色・絵文字だけに意味を持たせない。
+- 経路ラベルに ID と通信目的を付け、プロトコル名だけにしない。線種を分ける場合は凡例で定義する。
+- 中継を省略して一本で描く場合は、図の近傍で中継と到達条件を説明し、直接接続と誤読させない。
+- 色は `classDef` で役割の分類を統一する。交差が判断を妨げる場合は範囲を分割し、共有要素と経路 ID を対応付ける。
+- 図の確認: 「インフラ構成図」章の全 Mermaid ブロックの構文を `npm run lint:mermaid` で確かめ、描画プレビューで表示名・経路ラベル・枠名が読めること、枠の包含が「配置と境界の定義」と一致することを確かめる。
 
-境界は **最大3階層** までとし、意味を固定します。
+## 6. 記述ガイド
 
-| レベル | 意味         | 例                      |
-| ------ | ------------ | ----------------------- |
-| Lv1    | 実行環境     | Cloud / On-Prem / SaaS  |
-| Lv2    | ネットワーク | VPC / Project / Segment |
-| Lv3    | 論理ゾーン   | Public / Private        |
+### 6.1. 概要
 
-### 3.1. 例
+対象環境と判断範囲を先に選ぶ。良い例は「店舗端末から共有サービスまでの到達範囲を示し、通信不能時の切り分けに使う」。悪い例は「システム全体を説明する」。
 
-```mermaid
-flowchart LR
-subgraph Cloud["Cloud Environment"]
-  subgraph VPC["VPC"]
-    subgraph Public["Public Zone"]
-    end
-    subgraph Private["Private Zone"]
-    end
-  end
-end
-```
+### 6.2. インフラ構成図
 
-### 3.2. 禁止
+枠を越えるごとに実行場所・接続条件・管理主体のどれが変わるかで描き分ける。良い例は「店舗端末と外部保管サービスを別枠にし、送信する記録をラベルにする」。悪い例は「同じ製品なので外部サービスも端末の枠に入れる」。
 
-- Lv4 以上の subgraph
-- Subnet CIDR、AZ 名、IP、ポート番号などの物理情報
-- 業務概念（例：Order Management）を境界名に使うこと
+### 6.3. 配置と境界の定義
 
-## 4. ノード命名規約（最重要）
+図にない管理責務・保持情報を補う。推奨列は「図中の環境・要素、上位要素、管理主体、情報・到達条件」。良い例は「作業記録は端末側、外部には送信対象だけを渡す案」。悪い例は「Private 枠なので安全」。
 
-### 4.1. 表示名は「役割名」で統一する
+代替配置が選択肢なら、置き換え後の保持範囲・到達性を確認対象にする。良い例は「ホストで同じ役割を実行し、書込範囲を再確認する」。悪い例は「両環境に同名の処理を置き、稼働条件を示さない」。
 
-- 表示名は **役割（Role）** を表す
-- 製品名 / サービス名 / 略語は使用しない
-- 英語・単数形を基本とする
+### 6.4. 通信経路と情報の境界
 
-#### 4.1.1. OK
+条件付きの外部依存を常時必須の経路と混ぜない。推奨列は「経路 ID、起点 → 終点、目的・情報、利用条件・詳細の委譲先」。良い例は「共有時だけ控えを外部へ送り、接続・認証の契約は連携仕様で定める」。悪い例は「全データを同期する」。
 
-- `Load Balancer`
-- `Web App`
-- `API Server`
-- `Relational Database`
-- `Object Storage`
-- `Cache`
-- `Message Queue`
+### 6.5. 技術前提・制約と検証観点
 
-#### 4.1.2. NG
+境界が成立する条件と、崩れたときに観測するものを結ぶ。良い例は「別ホストへの到達不能、応答欠落、保存失敗を分けて観測する」。悪い例は「トンネルがつながるので作業も成功する」。検証設計への入力と実施済みの証跡を区別し、閾値や復旧コマンドを再定義しない。
 
-- `ALB`
-- `EC2`
-- `Cloud Run`
-- `RDS`
-- `Redis` / `Kafka`（※技術選定は別ドキュメント）
+### 6.6. メモ / 将来課題
 
-### 4.2. 絵文字アイコン（任意）
+不明点が配置・境界・経路のどこに効くかで影響を具体化する。良い例は「公開先が未決のため公開経路は仮定とし、決まったら枠と経路を直す」。悪い例は「後で検討する」。
 
-絵文字は **人間の視認性向上** には有効ですが、表示差や幅崩れが起きる環境もあるため、次のルールで運用します。
+## 7. 禁止事項
 
-- 絵文字は **任意**（なくても成立する）
-- 絵文字は **表示名（Label）のみに付ける**（IDには付けない）
-- **1ノード1個まで**、表示名の **先頭に付ける**
-- 絵文字だけに頼らず、必ず役割名テキストも併記する
-
-OK:
-
-```mermaid
-flowchart LR
-lb["🧭 Load Balancer"]
-db[("🗄️ Relational Database")]
-cache{{"⚡ Cache"}}
-```
-
-NG:
-
-```text
-flowchart LR
-🧭lb["Load Balancer"]
-```
-
-## 5. ノードIDと表示名を分離する（必須）
-
-Mermaid のノードは **ID（参照用）と表示名（意味）を分離** します。
-
-```mermaid
-flowchart LR
-lb["🧭 Load Balancer"]
-web["🖥️ Web App"]
-api["⚙️ API Server"]
-db[("🗄️ Relational Database")]
-```
-
-### 5.1. 狙い
-
-- ノード参照が安定する
-- 生成AIがノード同士の関係を誤解しにくくなる
-
-## 6. 記法（形＝意味を固定）
-
-ノード形状を **意味として固定** します（役割名だけでなく形でも読み取れるようにする）。
-
-| 種類           | 意味（役割）                  | 記法             | 表示名の例               |
-| -------------- | ----------------------------- | ---------------- | ------------------------ |
-| 🗄️ Database    | 永続DB                        | `db[("...")]`    | `🗄️ Relational Database` |
-| 🪣 Storage     | オブジェクト/ファイル保管     | `storage("...")` | `🪣 Object Storage`      |
-| 📨 Queue/Topic | 非同期連携（キュー/トピック） | `queue[["..."]]` | `📨 Message Queue`       |
-| ⚡ Cache       | 参照高速化（任意）            | `cache{{"..."}}` | `⚡ Cache`               |
-
-### 6.1. 例
-
-```mermaid
-flowchart LR
-db[("🗄️ Relational Database")]
-storage("🪣 Object Storage")
-queue[["📨 Message Queue"]]
-cache{{"⚡ Cache"}}
-```
-
-補足:
-
-- Cache と Storage を分けるかは、図で合意したい論点（境界/経路/責務）がある場合のみ分ければ十分です。
-- Cache を描かない場合も、このルールに反しません。
-
-## 7. 通信矢印のルール（意味重視）
-
-### 7.1. 原則は片方向
-
-```mermaid
-flowchart LR
-A --> B
-```
-
-### 7.2. 双方向通信
-
-```mermaid
-flowchart LR
-A --> B
-B --> A
-```
-
-### 7.3. 矢印ラベルのルール
-
-- ラベルは **通信の意味** を表す場合のみ使用する
-- プロトコル名・ポート番号は記載しない
-
-#### 7.3.1. OK
-
-```mermaid
-flowchart LR
-api -->|Authenticate| auth
-```
-
-#### 7.3.2. NG
-
-```mermaid
-flowchart LR
-api -->|HTTPS 443| db
-```
-
-## 8. 見栄えを整える最小限スタイル（任意）
-
-### 8.1. 原則
-
-- 色は **境界単位** または **役割の大分類** で付ける
-- ノード単位でバラバラな色付けはしない
-- `classDef` のみ使用可、`style` は原則使用しない
-
-### 8.2. 例
-
-```mermaid
-flowchart LR
-lb["🧭 Load Balancer"]
-web["🖥️ Web App"]
-api["⚙️ API Server"]
-cache{{"⚡ Cache"}}
-db[("🗄️ Relational Database")]
-storage("🪣 Object Storage")
-
-classDef boundary fill:#f5f7fa,stroke:#999,color:#000
-classDef compute fill:#e3f2fd,stroke:#1e88e5,color:#000
-classDef data fill:#e8f5e9,stroke:#43a047,color:#000
-
-class lb,web,api compute
-class cache,db,storage data
-```
-
-## 9. 完成例（推奨テンプレート）
-
-```mermaid
-flowchart LR
-  classDef boundary fill:#f5f7fa,stroke:#999,color:#000
-  classDef compute fill:#e3f2fd,stroke:#1e88e5,color:#000
-  classDef data fill:#e8f5e9,stroke:#43a047,color:#000
-
-  user["👤 User"] --> internet["🌐 Internet"]
-
-  subgraph Cloud["☁️ Cloud Environment"]
-    subgraph VPC["🛡️ VPC"]
-      subgraph Public["🌍 Public Zone"]
-        lb["🧭 Load Balancer"]
-      end
-
-      subgraph Private["🔒 Private Zone"]
-        web["🖥️ Web App"]
-        api["⚙️ API Server"]
-        cache{{"⚡ Cache"}}
-        db[("🗄️ Relational Database")]
-        storage("🪣 Object Storage")
-      end
-    end
-  end
-
-  internet --> lb
-  lb --> web
-  web --> api
-  api --> cache
-  api --> db
-  api --> storage
-
-  class user,internet boundary
-  class lb,web,api compute
-  class cache,db,storage data
-```
-
-### 9.1. この図で合意できること
-
-- ネットワーク境界（Public / Private）
-- 主要コンポーネントの役割分担
-- 主要な通信フロー
-- 永続化先の種別（🗄️/🪣）と非同期の有無（📨）
-
-## 10. 禁止事項
-
-- 物理構成の詳細（CIDR、IP、ポート、AZ、台数、Auto Scaling 等）
-- 技術選定の詳細（特定クラウドサービス名、製品名）
-- 意味のないラベル（HTTPS / TCP / 443 等）
-- 方向の混在
-- 矢印の過剰な交差（読みづらくなった場合は境界整理または図を分割する）
+- 上位図の責務を変更したり、業務判断・公開可否・製品採択を根拠なく確定したりしない。
+- 論理ゾーンやトンネルの存在だけから、隔離・認証・情報非保持を保証しない。
+- 詳細設定・schema・リファレンスの値、構文、構造を複製しない。秘密値や個人固有の接続先を載せない。

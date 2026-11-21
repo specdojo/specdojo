@@ -1,0 +1,36 @@
+レビューの結論は `complete-with-findings` を推奨します。Job Run は統合できる状態です。ただし Job Run の result と command evidence が、自分で直接書いた2ファイルしか変更として挙げていない点を指摘として残します。
+
+**出力範囲**
+- `d20bb9353..ccacf5c90` の差分は67ファイルで、commit は21件です。内訳は次の3つだけでした。
+  - Job Run の記録：Run JSON、朝報告、job の plan・result・evidence・stdout・stderr のログ。
+  - 承認済みの登録項目4件（PJR-1VF0・PJR-8BSV・PJR-8E7Z・PJR-FGSE）の run 記録、個票、events。
+  - それら4件が変更した rulebook 5件、sample 5件、standards 2件。
+- commit はすべて `exec(register PJR-xxxx)` の start / edit / review / post-review と、最後の `chore(routine)` です。4件以外の変更は混ざっていませんでした。
+- 作業ツリーは出力 commit と同じで、追跡外にあるのはこの review の run ディレクトリだけです。
+
+**記録どうしの整合**
+- Run JSON は `state: succeeded` です。試行1回で `exit_code: 0`、`partial_exit_code: 2` は発生していません。
+- evidence の `job-command` は passed（exit 0）で、result の `status: complete` と食い違いはありません。
+- stdout は `[night] approved queue (4/10): PJR-1VF0, PJR-8BSV, PJR-8E7Z, PJR-FGSE` から始まります。対象は承認済みの4件で、Job の目的どおりです。
+- 4件の個票はすべて `autopilot: approved`、`item_status: done` です。events にも open → in-progress → review → done の遷移が残っています。
+- 4件とも post-review の result は `complete-with-findings` で、朝報告の表（success / done、停止理由なし、waiting なし）と合っています。
+- 4件の個票の `status` は post-review の commit で draft から ready に変わっていました。done の個票847件のうち690件が ready なので、クローズ時の通常の動作と判断しました。
+- FGSE の post-review が参照している commit `9a41e1c84` は、実在する実行前 commit の祖先です。
+
+**score・verdict・finding**
+- Job Run 自体には評価（grade）結果も評価対象もなく、plan にも「評価結果」の章がないため、鮮度確認（`E-01`）は対象外です。
+- 個々の項目の判断は、各 post-review の `complete-with-findings` を事実として受け取りました。中身は再評価していません。
+
+**指摘（統合は妨げない）**
+1. command evidence の `changes` と result の「変更ファイル」は、Run JSON と朝報告の2ファイルしか挙げていません。実際の差分には、4件の register run が commit した成果物と記録が含まれます。commit 済みの子 run の出力もたどれるように記録することを勧めます。
+2. stderr に、claude の sign-in が 2026-11-12 までに切れるという警告が4回出ています。次回の夜間実行が失敗するおそれがあるので、人による対応が必要です。
+3. stderr には、`tml-index.yaml` が非推奨という WARN も出ています。
+
+**確認できなかった範囲**
+- stdout（622行）は grep と末尾だけを確認し、全行は読んでいません。
+- 4件の個票の完了条件について、成果物そのものは読み直していません。各 post-review の判断に任せています。
+- lint や test は親 runner が担当するため、ここでは実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"推奨 verdict: complete-with-findings。差分 d20bb9353..ccacf5c90（67 files、21 commits）は Job Run の記録（Run JSON・朝報告・job の plan/result/evidence/stdout/stderr ログ）と、承認済みの登録項目4件（PJR-1VF0/8BSV/8E7Z/FGSE）の register run の出力（run 記録・個票・events と、対象の rulebook 5件・sample 5件・standards 2件）だけで構成されていた。commit はすべて exec(register PJR-xxxx) と chore(routine) で、対象外の変更はない。Run JSON は `state: succeeded`、試行1回、`exit_code` 0。evidence の `job-command` は passed（exit 0）、result は `status: complete` で、互いに整合する。stdout は承認済みキュー4件を示し、4件の個票はいずれも `autopilot: approved`、`item_status: done`。events は open→in-progress→review→done。4件の post-review は complete-with-findings で、朝報告の表（success/done、停止理由なし、waiting なし）と合う。個票の `status` は post-review commit で draft→ready に変わっていたが、done の個票847件のうち690件が ready で、クローズ時の通常の動作と判断した。Job Run には評価（grade）結果も評価対象もなく、plan にも評価結果の章がないため、鮮度確認 `E-01` は対象外。指摘（統合は妨げない）: (1) evidence の `changes` と result の「変更ファイル」が2ファイルしか挙げず、commit 済みの子 register run の出力を含まない。(2) stderr に claude の sign-in が 2026-11-12 までに切れる警告が4回あり、次回の夜間実行が失敗するおそれがある。(3) stderr に `tml-index.yaml` 非推奨の WARN がある。確認できなかった範囲: stdout 622行は grep と末尾だけを確認した。各項目の成果物は再評価しておらず、post-review の判断を事実として用いた。lint/test は親 runner が担当する。","handoff":["Job Run の evidence の changes と result の変更ファイルが、runner command が直接書いた2ファイルだけを挙げ、子 register run が commit した成果物を含まない。子 run の commit 範囲もたどれるよう、記録の改善を検討する。","stderr に claude の sign-in が 2026-11-12 までに切れる警告がある。次回の夜間実行の前に、claude auth login または claude setup-token で認証を更新する（人による対応）。","stderr に tml-index.yaml 非推奨の WARN が出ている。register epics と dashboard build への移行を別の項目で検討する。"],"validations":[{"command":"git diff --stat d20bb9353bfd6c9c0be99915ff9745f3f8faf3c6..ccacf5c902043ce9605b319ccc6b6872d40b9f52","status":"passed","summary":"67 files changed, 3824 insertions, 74 deletions"},{"command":"git diff --name-status d20bb9353bfd6c9c0be99915ff9745f3f8faf3c6..ccacf5c902043ce9605b319ccc6b6872d40b9f52","status":"passed","summary":"Job Run の記録と、登録項目4件の register run の出力・対象成果物だけで、対象外の変更なし"},{"command":"git log --oneline d20bb9353bfd..ccacf5c90204","status":"passed","summary":"21 commits。すべて exec(register PJR-1VF0/8BSV/8E7Z/FGSE) と chore(routine)"}]}
+</specdojo_executor_evidence>

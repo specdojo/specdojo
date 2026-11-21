@@ -1,0 +1,19 @@
+バックグラウンドタスク（静的検証コマンド `npm run typecheck && npm run lint:ts && npm run lint:md`）を実行中です。完了を待機しています。
+プロジェクト登録簿項目 PJR-SW7T「型の一覧をまとめて grade する指定を用意する」の2回目の実行要件に対応しました。
+
+### 実施内容
+
+1. **評価ループにおける rate limit 時の制御分岐の実装**
+   - [`src/grade/run.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-SW7T/src/grade/run.ts#L378-L396) において、`--kata` が指定されている場合（`documentsByKata` が存在する場合）は、1 回目の実装どおり `rateLimited = true` を保持して後続の型・文書の評価を継続し、最後に型ごとの結果（完了・失敗・未実行）を表示した上で終了コード 75（`GradeRunIncompleteError`）をスローするようにしました。
+   - 一方、`--kata` を指定しない通常の `grade run`（夜間ジョブの `--path` 指定を含む）では、同一 agent への連続呼び出しや無駄な夜間起動を防ぐため、1 回目の修正前と同様に rate limit が発生したその場で直ちに未完了文書を `grade run remaining:` に出力して終了コード 75 で中断するよう制御を分岐させました。
+
+2. **単体テストの追加と既存テストの維持**
+   - [`tests/src/grade/run.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-SW7T/tests/src/grade/run.test.ts#L381-L398) に、`--kata` を指定しない場合に複数文書のうち最初の文書で rate limit が発生した際、後続の文書を実行せずにその場で直ちに終了コード 75 で中断することを確認する単体テスト（`stops immediately at a rate limit without running subsequent documents when --kata is not specified`）を追加しました。
+   - `--kata` 指定時に rate limit が発生しても残りの型をスキップせずに評価を継続するテストはそのまま維持しています。
+
+3. **個票の更新**
+   - [`pjr-sw7t-grade-kata-batch.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-SW7T/docs/ja/projects/prj-0001/controls/project-register/pjr-sw7t-grade-kata-batch.md) の作業内容テーブル、実施内容、設計・判断事項、CHANGELOG に書く事項の文案を今回の変更範囲に合わせて見直しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"--kata 指定時の rate limit 継続と非指定時の即時中断の分岐制御を実装し、単体テストおよび個票を更新しました。","handoff":["設計判断: `--kata` 指定時のみ rate limit 発生後も後続の型・文書の評価を継続し、非指定時は同一 agent の連続 rate limit や夜間起動増加を防ぐため、従来通りその場で中断して終了コード 75 で終了するよう分岐しました。","CHANGELOG 案（区分: 追加）: `grade run --target kata` に、型名の一覧を指定して rulebook と sample の組を順に評価できる `--kata <name>` オプションを追加（`--kata` 指定時は rate limit 発生時も後続の評価を継続）"],"validations":[]}
+</specdojo_executor_evidence>

@@ -1,0 +1,23 @@
+Markdown の静的検査（`lint:md`）を実行しています。完了を待機します。
+Frontmatter の静的検査（`lint:fm`）の完了を待機しています。
+単体テスト（`test:unit`）の完了を待機しています。
+PJR-TE2N「CDFD の D2 版の rulebook と記法の選び方を用意する」の executor 作業を完了しました。
+
+### 実施内容の概要
+
+1. **`cdfd-d2-rulebook.md` の作成**:
+   - `docs/ja/specdojo/rulebooks/cdfd-d2-rulebook.md`（ID: `specdojo:cdfd-d2-rulebook`）を新規作成しました。
+   - `specdojo:cdfd-mermaid-rulebook` と一対一で対応する概念（プロセス、プロセスグループ、サブグラフ、データストア、物理保管、外部主体、イベント、情報の流れ、物の流れ）の D2 表現表および記述ルールを整備しました。
+   - `classes` による概念大分類ごとのスタイル定義、ノード単位 `style` 指定の禁止、`direction: right` および ELK 配置エンジンの前提、`status: draft` を遵守しています。
+2. **CDFD 関連 rulebook 3 文書の記法選択対応**:
+   - `cdfd-overview-rulebook.md`、`cdfd-rulebook.md`、`cdfd-uc-rulebook.md` の `includes` に `specdojo:cdfd-d2-rulebook` を追加しました。
+   - プロダクトの全体概要（`cdfd-overview.md`）の「凡例（本プロダクト共通）」章で記法（Mermaid または D2）を選択・宣言する規程を追加しました。
+   - 記法を宣言しない既存プロダクトは従来どおり Mermaid 記法として扱われる後方互換性を確保しました。
+3. **共通レビュー観点の更新**:
+   - 前回の失敗原因であった単体テストのエラー（`vp-arc-single-responsibility` および `vp-ba-business-value` における rulebook 網羅判定）を解消するため、`docs/ja/specdojo/defaults/pm-review-viewpoints.yaml` の両観点の `confirmed_default` に `specdojo:cdfd-d2-rulebook` を追加しました。これにより `test:unit`（全 169 テストファイル、2996 件）がすべて通過することを確認しました。
+4. **個票の更新**:
+   - `docs/ja/projects/prj-0001/controls/project-register/pjr-te2n-cdfd-d2-rulebook.md` の作業内容および対応結果を最新化しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"CDFD の D2 版 rulebook (cdfd-d2-rulebook.md) の作成、CDFD 3 rulebook の記法選択対応、共通レビュー観点の更新、および個票の対応結果記録を完了しました。","handoff":["記法の選択場所として、全体概要（cdfd-overview.md）の「凡例（本プロダクト共通）」章で宣言する方式を採用しました。凡例を省略した場合や記法を宣言しない場合は従来どおり Mermaid（specdojo:cdfd-mermaid-rulebook）が既定として適用されます。","cdfd-d2-rulebook の新規追加に伴い、docs/ja/specdojo/defaults/pm-review-viewpoints.yaml の vp-ba-business-value および vp-arc-single-responsibility の confirmed_default に specdojo:cdfd-d2-rulebook を追加しました。","プロダクトの CDFD 文書（docs/ja/product/010-business-specs/010-data-flow/）は変更していません（書き直しは後続の PJR-RXVC および PJR-T1D1 で実施予定です）。","各 rulebook の status は格上げせず維持しています（cdfd-d2-rulebook は draft のまま）。ready への格上げは人間によるレビュー・承認で実施してください。"],"validations":[{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"成果物カタログの依存関係および整合性検証が正常に通過しました"}],"target_coverage":[{"target":"docs/ja/projects/prj-0001/controls/project-register/pjr-te2n-cdfd-d2-rulebook.md","status":"changed","path":"docs/ja/projects/prj-0001/controls/project-register/pjr-te2n-cdfd-d2-rulebook.md"},{"target":"docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md","status":"changed","path":"docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md"},{"target":"docs/ja/specdojo/rulebooks/cdfd-rulebook.md","status":"changed","path":"docs/ja/specdojo/rulebooks/cdfd-rulebook.md"},{"target":"docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md","status":"changed","path":"docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md"},{"target":"docs/ja/specdojo/rulebooks/cdfd-d2-rulebook.md","status":"changed","path":"docs/ja/specdojo/rulebooks/cdfd-d2-rulebook.md"},{"target":"docs/ja/specdojo/defaults/pm-review-viewpoints.yaml","status":"changed","path":"docs/ja/specdojo/defaults/pm-review-viewpoints.yaml"}]}
+</specdojo_executor_evidence>

@@ -1,27 +1,19 @@
-import { gradeCheckpointPaths } from "../grade-checkpoint.js";
 import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { basename, dirname, resolve } from "node:path";
-import {
-  sanitizeRegisterConclusion,
-  type RegisterItemSummary,
-  type RegisterItemTransition,
-} from "../register.js";
-import { type PjrItem, type RegisterPaths } from "../../register/register.js";
 import {
   applyRegisterItemFields,
   CELL_NONE,
   readRegisterItemContent,
   registerItemFieldsFromItem,
 } from "../../register/item.js";
+import { type PjrItem, type RegisterPaths } from "../../register/register.js";
+import { gradeCheckpointPaths } from "../grade-checkpoint.js";
 import {
-  appendGitFailureLog,
-  appendGitResultFailureLog,
-  formatGitResultFailure,
-  gitOutput,
-  gitResult,
-  summarizeGitHookFailure,
-  type ExecWorktree,
-} from "../worktree.js";
+  sanitizeRegisterConclusion,
+  type RegisterItemSummary,
+  type RegisterItemTransition,
+} from "../register.js";
+import { isRunRecordPath } from "../run-records.js";
 import {
   abortMerge,
   currentBranch,
@@ -32,12 +24,21 @@ import {
   unstageCommitTargets,
   worktreeStatusPaths,
 } from "../worktree-ops.js";
+import {
+  appendGitFailureLog,
+  appendGitResultFailureLog,
+  formatGitResultFailure,
+  gitOutput,
+  gitResult,
+  summarizeGitHookFailure,
+  type ExecWorktree,
+} from "../worktree.js";
 import { pathInsideWorktree } from "./agent.js";
 import { repoRelativePath } from "./mode-shared.js";
 import {
-  spawnRegisterTransition,
   registerEventPathForTicket,
   registerRunnerManagedPaths,
+  spawnRegisterTransition,
 } from "./register-core.js";
 
 // register の状態遷移（start/review/wait）が変更した調整状態（pjr-index と派生ビュー）だけを
@@ -157,8 +158,10 @@ export function copyRepoPaths(
 // event は agent が編集した未検証の本文を含みうるため、root に残してある checkpoint 版を
 // wait 遷移の入力にする。派生ビューは遷移後に root で再生成する。
 export function registerFailureArtifactPaths(repoRoot: string, paths: readonly string[]): string[] {
-  return paths.filter((path) =>
-    /(?:^|\/)exec\/(?:plans|results)\//.test(repoRelativePath(repoRoot, path)),
+  return paths.filter(
+    (path) =>
+      /(?:^|\/)exec\/(?:plans|results)\//.test(repoRelativePath(repoRoot, path)) ||
+      isRunRecordPath(path),
   );
 }
 
@@ -166,6 +169,22 @@ export type PreservedRegisterTicket = {
   path: string;
   content: string;
 };
+
+// 個票の本文（executor が書いた対応結果など）は bodyContent を保ち、frontmatter の状態の欄
+// （登録簿の項目の欄と block_reason）だけを lifecycleContent の値へ揃える。lifecycleContent を
+// 解析できない場合は例外を投げる。
+export function overlayRegisterTicketLifecycle(
+  bodyContent: string,
+  lifecycleContent: string,
+  ticketRelPath: string,
+): string {
+  const parsed = readRegisterItemContent(lifecycleContent, basename(ticketRelPath));
+  if (!parsed) throw new Error(`could not parse register item: ${ticketRelPath}`);
+  return applyRegisterItemFields(bodyContent, {
+    ...registerItemFieldsFromItem(parsed.item),
+    block_reason: parsed.blockReason === CELL_NONE ? null : parsed.blockReason,
+  });
+}
 
 // wait commit の個票は検証済みの root 本文を使う一方、exec branch には agent が編集した本文を
 // 残す。root の frontmatter から lifecycle フィールドだけを重ね、resume 後も waiting 状態と
@@ -185,13 +204,11 @@ export function restorePreservedRegisterTicket(
     return;
   }
   try {
-    const rootContent = readFileSync(rootTicketPath, "utf8");
-    const parsed = readRegisterItemContent(rootContent, basename(rel));
-    if (!parsed) throw new Error(`could not parse register item: ${rel}`);
-    const content = applyRegisterItemFields(preserved.content, {
-      ...registerItemFieldsFromItem(parsed.item),
-      block_reason: parsed.blockReason === CELL_NONE ? null : parsed.blockReason,
-    });
+    const content = overlayRegisterTicketLifecycle(
+      preserved.content,
+      readFileSync(rootTicketPath, "utf8"),
+      rel,
+    );
     mkdirSync(dirname(worktreeTicketPath), { recursive: true });
     writeFileSync(worktreeTicketPath, content, "utf8");
   } catch (error) {
@@ -265,13 +282,14 @@ export function registerWaitSummary(params: {
   item: PjrItem;
   ticketPath: string | null;
   reason: string;
+  reasonMaxLength?: number;
   actor: string;
   // root 側の絶対パス。worktree がある場合は plan / result だけを root へ写してから遷移する。
   bookkeepingPaths: readonly string[];
   worktree?: ExecWorktree;
 }): RegisterItemSummary {
   const { repoRoot, projectId, registerPaths, item, ticketPath, actor, worktree } = params;
-  const blockReason = sanitizeRegisterConclusion(params.reason);
+  const blockReason = sanitizeRegisterConclusion(params.reason, params.reasonMaxLength);
   const bookkeepingPaths = [...params.bookkeepingPaths];
   const preservedTicketPath =
     worktree && ticketPath ? pathInsideWorktree(repoRoot, worktree.path, ticketPath) : undefined;
@@ -370,7 +388,10 @@ export function commitRegisterWaitState(params: {
 }
 
 export function isRegisterResultPath(repoRoot: string, path: string): boolean {
-  return /\/exec\/results\/[^/]+-result\.md$/.test(repoRelativePath(repoRoot, path));
+  return (
+    /\/exec\/results\/[^/]+-result\.md$/.test(repoRelativePath(repoRoot, path)) ||
+    (isRunRecordPath(path) && path.endsWith("/result.md"))
+  );
 }
 
 // wait commit と、その時点までに統合先へ入った変更を exec branch へ通常 merge する。

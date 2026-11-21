@@ -1,0 +1,39 @@
+---
+specdojo:
+  id: prj-0001:xer-pjr-hcnx-20261106t130445z-c06347e6
+  type: exec-result
+  task_id: PJR-HCNX
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  origin: register
+  plan_ref: runs/register/PJR-HCNX/20261106T130445292Z-a311600d/plan.md
+  started_at: "2026-11-06T13:05:01.620Z"
+  completed_at: "2026-11-06T13:14:11.044Z"
+  agent: sol-executor
+  approach: recipe-maintenance
+  targets:
+    - specdojo:stsd-recipe
+---
+
+# Edit Result
+
+## 1. 実施内容
+
+- stsd-recipe の作成手順における遷移 ID の規則を、PJR-FS9A の規則（確定前は振り直し可、確定後は不変・再利用禁止）に合わせて更新しました。
+- 具体的には、確定前（`status: draft`）における図と表の順序に応じた ID 振り直しを許可し、その際の作業記録（旧 ID と新 ID の対応）を求める手順を追加しました。また、確定後（`status: ready`）の既存 ID 保持および削除済み ID の再利用禁止についても明記しました。
+
+## 2. 変更ファイル
+
+- `docs/ja/specdojo/recipes/stsd-recipe.md`: stsd-recipe の作成手順を更新。遷移 ID について、確定前（`status: draft`）は図表の構成変更に伴う ID の振り直しを許可し、その記録を残すよう指示を追加。一方で、確定後（`status: ready`）は既存 ID を維持し、削除した ID は再利用しないという規則を反映しました。
+
+## 3. 申し送り
+
+- reporter 記録用: [[specdojo:stsd-rulebook|STSD 作成ルール]] の「ファイル命名・ID規則」、[[specdojo:recipe-authoring-standard|Recipe 記述標準]]、[[specdojo:pm-review-viewpoints|共通レビュー観点一覧]] の `vp-arc-conciseness`、PJR-FS9A の個票・実行結果、PJR-CY0S の実行結果を確認した。無条件の既存 ID 保持を rulebook を正として改訂し、初回確定前の振り直し、図表・本文参照の同時更新、旧新 ID・削除の作業記録、確定後の ID 保持と再利用禁止を手順へ反映した。問いには確定履歴と旧 ID の追跡確認を追加した。遷移 ID 以外の手順・問い・例は維持し、ほかの Kata・製品成果物・result は変更していない。指定 lint を含む親検証は runner に委ねる。
+- 適用外の検証: `npm run validate:schema:file`（executor の変更は Markdown のみで、YAML・YML の変更なし。）
+- 適用外の検証: `npm run validate:history-links`（executor は履歴蓄積ファイルを変更していない。）
+- 適用外の検証: `npm run validate:catalog`（executor の変更は recipes 配下のみで、docs/ja/projects/ 配下の成果物に及ばない。）
+
+## 4. 進め方と実践の型の適用
+
+参照の向きを「成果物 → recipe」に切り替え、対象成果物に紐づく recipe を「見直す対象」として編集した。`[[specdojo:stsd-rulebook|STSD 作成ルール]]` の遷移 ID に関する規則を根拠として、`stsd-recipe` 内の作成手順を更新した。

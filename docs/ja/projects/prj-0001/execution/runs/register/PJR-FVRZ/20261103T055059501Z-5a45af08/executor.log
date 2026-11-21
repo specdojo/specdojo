@@ -1,0 +1,85 @@
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "既存実装と回帰テストを確認し、前回の lint エラーを型専用 import への変更で修正しました。個票を更新し、sandbox 内の追加検証は成功しました。親検証は runner に委ねます。",
+  "handoff": [
+    "result には、検査時点を共通の plan 生成処理にした理由と dry-run の適用範囲を記録してください。展開済み plan 全体を検査でき、auto と処理を共有できるためです。`exec run --auto --dry-run` は検査対象です。plan を生成しない `exec run --task <task-id> --dry-run` は対象外です。詳細は個票に記載済みです。",
+    "前回の lint-ts エラーである `@typescript-eslint/consistent-type-imports` 違反を修正しました。typecheck・lint・単体／integration テストなど、設定済みの親検証の再実行結果は runner が記録してください。",
+    "統合後はオーケストレーター運用メモに従い、PJR-JSEY で runner の動作を確認してから close してください。個票にも記録済みです。"
+  ],
+  "validations": [
+    {
+      "command": "npx prettier --write CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-fvrz-plan-markdown-early-check.md docs/ja/specdojo/guides/schedule-operation-guide.md src/exec/plans-generation.ts src/exec/plan-markdownlint.ts tests/helpers/plan-markdownlint.ts tests/src/exec/plan-markdownlint.integration.test.ts tests/src/exec/plan-markdownlint.test.ts",
+      "status": "passed",
+      "summary": "変更対象8ファイルの整形が成功。個票追記後も再整形済み。"
+    },
+    {
+      "command": "npx prettier --check CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-fvrz-plan-markdown-early-check.md docs/ja/specdojo/guides/schedule-operation-guide.md src/exec/plans-generation.ts src/exec/plan-markdownlint.ts tests/helpers/plan-markdownlint.ts tests/src/exec/plan-markdownlint.integration.test.ts tests/src/exec/plan-markdownlint.test.ts",
+      "status": "passed",
+      "summary": "全対象が整形規則に適合。"
+    },
+    {
+      "command": "npm run check:src-imports",
+      "status": "passed",
+      "summary": "実行時 import の依存関係宣言に違反なし。"
+    },
+    {
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "カタログ検証成功。worktree に存在しない product 文書への参照警告あり、エラーなし。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿の派生ビュー生成成功。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "CHANGELOG.md",
+      "status": "changed",
+      "path": "CHANGELOG.md"
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-fvrz-plan-markdown-early-check.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-fvrz-plan-markdown-early-check.md"
+    },
+    {
+      "target": "docs/ja/specdojo/guides/schedule-operation-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/schedule-operation-guide.md"
+    },
+    {
+      "target": "src/exec/plans-generation.ts",
+      "status": "changed",
+      "path": "src/exec/plans-generation.ts"
+    },
+    {
+      "target": "src/exec/plan-markdownlint.ts",
+      "status": "changed",
+      "path": "src/exec/plan-markdownlint.ts"
+    },
+    {
+      "target": "tests/helpers/plan-markdownlint.ts",
+      "status": "changed",
+      "path": "tests/helpers/plan-markdownlint.ts"
+    },
+    {
+      "target": "tests/src/exec/plan-markdownlint.integration.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/plan-markdownlint.integration.test.ts"
+    },
+    {
+      "target": "tests/src/exec/plan-markdownlint.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/plan-markdownlint.test.ts"
+    }
+  ]
+}
+</specdojo_executor_evidence>

@@ -4,37 +4,37 @@ document: specdojo:bes-index-sample
 path: docs/ja/specdojo/samples/bes-index-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: fail
-score: 55
-graded_at: "2026-09-27T21:33:16.011Z"
-graded_by: codex-expert-executor
-content_hash: 6bebd6da8e378735fccfd497c30f647e5d2002939dfd133c7cb485d04cd1956a
+verdict: pass
+score: 97
+graded_at: "2026-11-17T22:24:00.157Z"
+graded_by: sol-review-executor
+content_hash: 572dd1961f747cdbd71d75e486e47cddb89fabc5bfccc49fc152c4ba5912fba0
 categories:
   purpose:
-    score: 75
+    score: 100
   operations:
-    score: 88
+    score: 100
   planning:
-    score: 75
+    score: 83
   business:
-    score: 67
+    score: 100
   architecture:
-    score: 88
+    score: 100
   usability:
-    score: 58
+    score: 100
   implementation:
-    score: 63
+    score: 100
   quality:
-    score: 42
+    score: 92
   consistency:
-    score: 0
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-publication-accountability:
     level: 4
     score: 100
@@ -42,56 +42,56 @@ viewpoints:
     level: 3
     score: 75
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
     level: 3
     score: 75
   vp-ba-business-value:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-requirements-completeness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-implementation-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-dev-change-impact:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-testability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-verifiability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
-    level: 0
-    score: 0
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 0
-    score: 0
+    level: 3
+    score: 75
   vp-ux-readability:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-operability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -99,134 +99,35 @@ viewpoints:
     level: 4
     score: 100
 finding_counts:
-  blocker: 2
-  major: 5
-  minor: 14
+  blocker: 0
+  major: 0
+  minor: 3
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-purpose-alignment
-    line: 5
-    anchor: 本書は、業務上で発生する主要なイベントを一覧で定義するための最小サンプルである。
-    message: "§ 2 の「参照: ../rulebooks/bes-index-rulebook.md」のみで上位のプロジェクト目的・スコープとの関係が不明であり、目的整合の根拠が不足している。"
+    rule: vp-pm-plan-feasibility
+    line: 42
+    anchor: "| _ASSUMPTION_: 事実データが販売記録・在庫記録・つけ台帳のデータモデルと未照合 | 照合まで事実データ列を確定入力にしない。発生時点で情報がそろわない、または発生後の結果を含む行は直す |"
+    message: 事実データの照合と本文30行の未作成 BES の作成について、作業担当の Role code が示されていない。未決事項に各作業の担当を対応付け、誰の作業として着手・完了を追跡するかを明確にする。
+    message_ja: 事実データの照合と本文30行の未作成 BES の作成について、作業担当の Role code が示されていない。未決事項に各作業の担当を対応付け、誰の作業として着手・完了を追跡するかを明確にする。
   - id: F002
     severity: minor
-    rule: vp-po-decision-readiness
-    line: 27
-    anchor: ""
-    message: § 5 の未解決事項「要件詳細の補強」について、影響範囲・判断者・次アクションが明示されていない。
+    rule: vp-pm-control-reporting
+    line: 39
+    anchor: >-
+      | _UNDECIDED_: 発注のない納品を `bes-goods-delivered` に含めるか | 現定義では発生しない。決まるまで発注外納品の BPS・UI・テストを確定しない。決まったら
+      `bes-goods-delivered` の発生条件を直すか、上位 CDFD と照合して行を足す |
+    message: 未決事項には影響と当面の扱いがあるが、課題・リスクとしての報告先や、解消時の決定記録への転記先が示されていない。各論点に管理先の登録項目または記録先を対応付け、文書内の未決事項と管理記録を追跡できるようにする。
+    message_ja: 未決事項には影響と当面の扱いがあるが、課題・リスクとしての報告先や、解消時の決定記録への転記先が示されていない。各論点に管理先の登録項目または記録先を対応付け、文書内の未決事項と管理記録を追跡できるようにする。
   - id: F003
     severity: minor
-    rule: vp-pm-plan-feasibility
-    line: 27
-    anchor: ""
-    message: § 5 の未解決事項に担当 Role code・完了条件・期限が記載されていない。
-  - id: F004
-    severity: minor
-    rule: vp-pm-dependency-risk
-    line: 12
-    anchor: ""
-    message: ルールブックが言及する後続成果物（BPS/BR/UI/テスト仕様）との依存関係やリスクが記載されていない。
-  - id: F005
-    severity: minor
-    rule: vp-pm-control-reporting
-    line: 27
-    anchor: ""
-    message: 未解決事項の PJR 転記候補・報告先・対応担当の Role code が未記載。
-  - id: F006
-    severity: minor
-    rule: vp-ba-business-value
-    line: 5
-    anchor: 本書は、業務上で発生する主要なイベントを一覧で定義するための最小サンプルである。
-    message: 対象者の業務課題・期待価値・成功基準が明示されておらず、ビジネス上の意義が読み取りにくい。
-  - id: F007
-    severity: major
-    rule: vp-ba-requirements-completeness
-    line: 14
-    anchor: ""
-    message: ルールブック § 5 が定める必須構成「業務イベント一覧（表）」の標準7列（イベントID/イベント名/何が起きたか/いつ/誰が・何が/発生条件/事実データ）を含む具体的な完成例が存在せず、サンプルとしての要件を満たしていない。
-  - id: F008
-    severity: minor
-    rule: vp-ba-stakeholder-clarity
-    line: 5
-    anchor: 本書は、業務上で発生する主要なイベントを一覧で定義するための最小サンプルである。
-    message: サンプルの利用者（ドキュメント執筆者）、確認者、合意対象が明示されていない。
-  - id: F009
-    severity: minor
-    rule: vp-arc-technical-constraints
-    line: 8
-    anchor: ""
-    message: Frontmatter の schema 制約（id 規約 `bes-index`）やドキュメント検証手順への言及がない。
-  - id: F010
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 15
-    anchor: "- 主な内容: イベントID、イベント名、何が起きたか、いつ、発生条件 など"
-    message: "§ 3「主な内容: イベントID、イベント名…」と § 4 表の「主な内容」行が同一情報の反復であり、一方に統合しても判断情報を失わない。"
-  - id: F011
-    severity: major
-    rule: vp-dev-implementation-readiness
-    line: 19
-    anchor: ""
-    message: "ルールブックの標準列定義に対応する具体的なデータ行（例: bes-sale-checkout のような実例行）がなく、実装者が記載水準を把握できない。"
-  - id: F012
-    severity: minor
-    rule: vp-dev-change-impact
-    line: 1
-    anchor: "# [業務イベント / 業務イベント仕様 全体構成](../rulebooks/bes-index-rulebook.md) サンプル"
-    message: サンプルの変更が他の成果物（template、recipe）や生成処理に与える影響が識別されていない。
-  - id: F013
-    severity: minor
-    rule: vp-dev-testability
-    line: 1
-    anchor: "# [業務イベント / 業務イベント仕様 全体構成](../rulebooks/bes-index-rulebook.md) サンプル"
-    message: このサンプルの正しさを確認するための lint・schema 検証コマンドや期待結果が記載されていない。
-  - id: F014
-    severity: major
-    rule: vp-qe-verifiability
-    line: 1
-    anchor: "# [業務イベント / 業務イベント仕様 全体構成](../rulebooks/bes-index-rulebook.md) サンプル"
-    message: サンプルの成功基準・受入条件が明示されておらず、ルールブックの必須構成を満たしているか判定できない。
-  - id: F015
-    severity: blocker
-    rule: vp-qe-omissions-consistency
-    line: 1
-    anchor: "# [業務イベント / 業務イベント仕様 全体構成](../rulebooks/bes-index-rulebook.md) サンプル"
-    message: ルールブック § 5 が定める必須章「業務イベント一覧（表）」および必須7列（イベントID/イベント名/何が起きたか/いつ/誰が・何が/発生条件/事実データ）を含む表が完全に欠落しており、構成要件を満たしていない。
-  - id: F016
-    severity: blocker
     rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# [業務イベント / 業務イベント仕様 全体構成](../rulebooks/bes-index-rulebook.md) サンプル"
-    message: 標準テンプレートに準拠しておらず、核心となる業務イベント一覧の具体例が示されていないため、サンプルとしての役割を果たしていない。
-  - id: F017
-    severity: major
-    rule: vp-ux-readability
-    line: 1
-    anchor: "# [業務イベント / 業務イベント仕様 全体構成](../rulebooks/bes-index-rulebook.md) サンプル"
-    message: ルールブックが定める主要な記述内容（イベント一覧表）が含まれておらず、初見の読者が正しい記載水準を理解できない。
-  - id: F018
-    severity: major
-    rule: vp-ux-readability
-    line: 19
-    anchor: ""
-    message: § 4「最小記述例」の表がドキュメントメタ情報（ドキュメント/目的/主な内容）であり、業務イベントの具体例ではないため、読者に誤った記載水準を示す。
-  - id: F019
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 10
-    anchor: "- 前提: プロジェクト文脈は handbook の共通方針に準拠する"
-    message: "§ 2「対象: 駄菓子屋の販売管理システム」の「対象」が入力情報なのか適用範囲なのか曖昧であり、ルールブックの用語との対応が不明確。"
-  - id: F020
-    severity: minor
-    rule: vp-ops-release-readiness
-    line: 27
-    anchor: ""
-    message: ready 化の前提条件（必須構成の充足、未解決指摘の解消）が明示されていない。
-  - id: F021
-    severity: minor
-    rule: vp-ops-operability
-    line: 1
-    anchor: "# [業務イベント / 業務イベント仕様 全体構成](../rulebooks/bes-index-rulebook.md) サンプル"
-    message: ルールブック変更時のサンプル更新方針・再生成手順が記載されていない。
+    line: 47
+    anchor: "- 上位 CDFD の 10 領域に有効な 10 行が対応し、出典のない行・空欄、イベント ID の形式違反・重複（廃止行を含む）が 0 件である。"
+    message: >-
+      対応 rulebook 6.10 は照合結果を残すよう求めているが、本節は確定入力として扱う条件だけを示し、実施済みの照合結果を区別して記録していない。領域・起点イベントとの対応、必須列、ID、個別 BES
+      の相互参照について確認結果を示し、未実施項目は未実施と明記する。
+    message_ja: >-
+      対応 rulebook 6.10 は照合結果を残すよう求めているが、本節は確定入力として扱う条件だけを示し、実施済みの照合結果を区別して記録していない。領域・起点イベントとの対応、必須列、ID、個別 BES
+      の相互参照について確認結果を示し、未実施項目は未実施と明記する。

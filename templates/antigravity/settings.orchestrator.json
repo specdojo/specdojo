@@ -1,0 +1,15 @@
+{
+  "toolPermission": "request-review",
+  "permissions": {
+    "allow": ["command(git status)", "command(git diff)", "command(git log)", "command(git show)"],
+    "deny": [
+      "read_file(.env)",
+      "read_file(secrets/)",
+      "write_file(.git/)",
+      "command(git push)",
+      "command(gh)",
+      "command(rm -rf)",
+      "command(sudo)"
+    ]
+  }
+}

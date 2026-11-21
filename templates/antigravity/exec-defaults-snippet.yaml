@@ -7,20 +7,19 @@
 
 providers:
   antigravity:
-    # Antigravity CLI（agy）は --agent による定義ファイルの選択を持たず、codex と同じく
-    # プロンプト（plan）だけで役割を与える。-p はプロンプトを引数に取り stdin を読まないため、
+    # pipeline の役割指示は plan、権限は agent launch の --role で分離する。
+    # -p はプロンプトを引数に取り stdin を読まないため、
     # runner が stdin へ書く plan を "$(cat)" で引数に渡す（shell: true で実行される）。
     # --sandbox は書き込み先を ~/.gemini 配下の scratch へ逃がすため、--add-dir で作業
     # ディレクトリ（worktree）を明示して成果物へ書けるようにする（2026-09-21 実測）。
-    # 非対話実行で必要な command は、config scaffold --provider antigravity --global が
-    # ~/.gemini/antigravity-cli/settings.json へ追記する。dangerously-skip-permissions は
-    # deny rule も含めた承認境界を迂回するため使わない。
+    # agent launch が settings.{mode}.json と宣言済み worktree の保護ルールを一つの
+    # --settings JSON にまとめて渡す。グローバル設定への書き込みは不要。
     # agy のモデル ID は推論強度を含む（gemini-3.8-flash-{high,medium,low} など）。--effort を
     # 併用すると ID と食い違ったときに "invalid model selection" で起動に失敗するため、
     # 強度はモデル ID だけで指定する（2026-09-21 実測: flash-high + --effort medium で失敗）。
     # 使える model の ID は `agy models` で確かめる。Gemini の Pro 系は提供されなくなったため、
     # expert は Flash の high とする（2026-10-15、agy 1.3.5 で確認）。
-    command_template: 'agy --sandbox --add-dir "$(pwd)" --model {model} -p "$(cat)"'
+    command_template: 'specdojo agent launch --provider antigravity --role {mode} -- --sandbox --model {model} -p "$(cat)"'
     # 従来の 1 段の名簿（model を持たない member）を使い続ける場合の補い方:
     # command_params:
     #   by_proficiency:

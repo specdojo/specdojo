@@ -1,0 +1,137 @@
+対象文書の重複を整理しました。6状態・16遷移・9種類の業務イベントと遷移条件を維持し、整形・差分検査は通過しています。`lint:md`・`lint:fm` は親 runner が実行します。
+
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "対象文書だけを修正し、導入・概要・遷移補足の重複を削除・統合した。状態一覧、状態遷移図、遷移条件、例外、未決事項を維持した。result と Kata は編集していない。lint:md・lint:fm などの指定された親検証は runner に委ねる。",
+  "handoff": [],
+  "validations": [
+    {
+      "command": "npx prettier --write docs/ja/product/010-business-specs/020-data-model/stsd-task-execution.md",
+      "status": "passed",
+      "summary": "対象文書を整形した。"
+    },
+    {
+      "command": "python3 -",
+      "status": "passed",
+      "summary": "標準入力の比較スクリプトで変更前後を検証。6状態・16遷移・9種類の業務イベントと名前、遷移条件、7種類の状態変更イベントの対応が同一。frontmatter、状態一覧、図、未決事項の完全一致と、権限・互換性・例外・受入承認との境界の保持を確認した。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白・差分形式の問題なし。作業開始時から存在した runner 管理ファイル以外では、対象文書だけを変更した。"
+    }
+  ],
+  "condense_records": [
+    {
+      "location": "導入文・修正前15行「SpecDojo におけるタスク実行…状態と状態遷移を定義する」",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "対象とライフサイクルの範囲は概要の対象・スコープに記載済みのため、導入の繰り返しを削除した。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "§1 一意判定・修正前27行",
+      "category": "table-prose",
+      "action": "reference",
+      "reason": "依存充足による未着手・着手可能の判定を状態一覧への参照にまとめた。基本状態が `todo` の場合だけ導出する制約、非永続化、他状態への依存変化の非適用を保持した。依存未充足への戻りは状態一覧と `T-15` に残る。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "§1 対象範囲の到達点・修正前29行「完了・中止後も記録に基づく状態管理を継続するため」",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "直前の完了・中止の扱いと継続状態の説明に重なる部分を削除した。差し戻し可能性、補足記録・状態確認の継続、終了イベントがないこと、終了点を置かない判断は保持した。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "§4 `T-06` 補足・修正前96行",
+      "category": "repetition",
+      "action": "merge",
+      "reason": "着手解放と基本状態を `todo` に戻す規則を§4冒頭に集約した。再着手可能の判定は同じ行の遷移先・条件で保持し、`release` の対応も残した。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "§4 `T-07` 補足・修正前97行",
+      "category": "repetition",
+      "action": "merge",
+      "reason": "中断中の試行の放棄、基本状態の復帰、依存再判定を§4冒頭に集約した。遷移元・遷移先・条件と `release` の対応を保持した。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "§4 `T-08` 補足・修正前98行「操作権限を持つアクターが完了と検証合格を報告する」",
+      "category": "table-prose",
+      "action": "delete",
+      "reason": "操作権限は§4冒頭、作業完了・成果物検証成功は同行の条件、報告された状態の意味は状態一覧に残る。重複を削除し、完了イベントが受入承認まで保証しない制約を保持した。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "§4 `T-09` 補足・修正前99行",
+      "category": "repetition",
+      "action": "merge",
+      "reason": "完了記録を消さず基本状態を `todo` に戻す規則を§4冒頭に集約した。再作業待ちの条件・遷移先と、後続が中止なら差し戻しを妨げない例外を保持した。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "§4 `T-11` 補足・修正前101行「着手可能となったが不要となったタスクを恒久的に中止する」",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "遷移元・遷移先と状態一覧の中止の意味を言い直す説明を削除した。`cancel` の対応と中止条件、`T-10` の直接中止に関する制約は保持した。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "§4 `T-14` 補足・修正前102行",
+      "category": "table-prose",
+      "action": "delete",
+      "reason": "開始から着手可能へ直接進むことは同行の遷移元・遷移先に、依存なしを含むことは概要と状態一覧に記載済みのため、補足の再説明を削除した。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "§4 `T-16` 補足・修正前104行",
+      "category": "repetition",
+      "action": "merge",
+      "reason": "基本状態を `todo` に戻す規則を§4冒頭に集約した。依存未充足では再着手できないことは同行の条件・遷移先と状態一覧で維持した。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "§4 `T-17` 補足・修正前105行",
+      "category": "repetition",
+      "action": "merge",
+      "reason": "中断中の試行の放棄を§4冒頭に集約した。依存待ちへの復帰は同行の遷移先・条件で維持し、`release` の対応を残した。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "§4 `T-18` 補足・修正前106行",
+      "category": "repetition",
+      "action": "merge",
+      "reason": "基本状態を `todo` に戻して依存を再判定する規則を§4冒頭に集約した。依存充足後に再着手する制約は同行の条件・遷移先と状態一覧に残る。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "§3 図の分割説明・修正前45〜47行および63行",
+      "category": "figure-prose",
+      "action": "retain",
+      "reason": "分割理由、共有状態、対象遷移 ID と図間の読み方は、分割図から到達性を判断するために必要。遷移そのものの言い換えではなく、template の明示要件にも対応するため保持した。Kata の修正提案はない。",
+      "cause": {
+        "type": "kata",
+        "kind": "template",
+        "location": "docs/ja/specdojo/templates/stsd-template.md §3 状態遷移図のコメント「各図が扱う遷移 ID と共有状態を明記する」"
+      }
+    },
+    {
+      "location": "§1 状態の正本・修正前24行の依存充足規則",
+      "category": "unneeded-background",
+      "action": "retain",
+      "reason": "マイルストーン・ゲートの再帰判定、存在しない依存、循環、依存なし、中止は完了の代わりにならないという境界条件は、状態一覧の成立条件を判断するために必要なため保持した。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "§5 今後の検討メモ・修正前112〜115行",
+      "category": "table-prose",
+      "action": "retain",
+      "reason": "本文の業務要件を再掲する部分はあるが、未作成の辞書、実装との差異、承認の不足、決定者・決定時期を示す固有の判断情報があるため、全項目を保持した。",
+      "cause": {"type": "document"}
+    }
+  ]
+}
+</specdojo_executor_evidence>

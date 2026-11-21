@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-11-09T20:48:53Z",
+  "type": "reopen",
+  "task_id": "T-BUSINESS-SPECS-REPS-ccd-project-planning-090",
+  "by": "indie",
+  "msg": "grade が古いため、grade を流し直してから review をやり直す（indie が決定、orchestrator が記帳）"
+}

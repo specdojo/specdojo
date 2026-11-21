@@ -1,0 +1,155 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_17698705bfe346fabf58eafefb8cdd30
+  ts: "2026-11-13T21:50:32Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳。indie の依頼
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 文書サイトの型のメニューを、型の文書から自動で作る
+    - field: description
+      from: ""
+      to: sidebar-config.ts に型の文書を手で足す決まりを、rulebook・recipe・sample・template の frontmatter や置き場所から自動で作る形に変え、足し忘れで develop のテストが落ちないようにする
+    - field: input
+      from: ""
+      to: '["2026-11-14 の kata-wave-1 で、初期整備が作った recipe・template を型のメニューに足し忘れ、tests/packages/docs-site/sidebar-kata.test.ts が develop で落ちて、後に続くタスクの親の検証がすべて止まった（cxd・ifx-index など 3 回）","段の説明に「メニューにも足す」と書いても守られなかった。executor が足した場合も、develop の直しと sidebar-config.ts でぶつかった"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: sol-executor
+    - field: registered
+      from: ""
+      to: "2026-11-14"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: commit_type
+      from: ""
+      to: feat
+    - field: commit_scope
+      from: ""
+      to: docs-site
+- v: 1
+  id: reg_4fead21b5b8543dab8998391b83ef282
+  ts: "2026-11-14T11:46:45Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_17698705bfe346fabf58eafefb8cdd30
+- v: 1
+  id: reg_7564434a148a4b56817d2f4ac6564c84
+  ts: "2026-11-14T12:03:11Z"
+  action: wait
+  actor: opus-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: agent exited with non-zero code
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: agent exited with non-zero code
+  previous_event_id: reg_4fead21b5b8543dab8998391b83ef282
+- v: 1
+  id: reg_781dd7fe25ba495a83760607d5da2377
+  ts: "2026-11-14T21:03:01Z"
+  action: start
+  actor: opus-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: agent exited with non-zero code
+      to: "-"
+  previous_event_id: reg_7564434a148a4b56817d2f4ac6564c84
+- v: 1
+  id: reg_cdc57783f48947b0a3721bc93509cd08
+  ts: "2026-11-14T21:24:24Z"
+  action: wait
+  actor: opus-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: typecheck"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: typecheck"
+  previous_event_id: reg_781dd7fe25ba495a83760607d5da2377
+- v: 1
+  id: reg_ad4a8a74615b4f7faed7abbb9e7c1a86
+  ts: "2026-11-14T21:49:12Z"
+  action: start
+  actor: opus-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: typecheck"
+      to: "-"
+  previous_event_id: reg_cdc57783f48947b0a3721bc93509cd08
+- v: 1
+  id: reg_e3c983320c134d618b0277531a3bab1f
+  ts: "2026-11-14T22:02:06Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_ad4a8a74615b4f7faed7abbb9e7c1a86
+- v: 1
+  id: reg_2a5d4f5be64b4e95a5131c18e0527e93
+  ts: "2026-11-15T01:19:43Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-15"
+    - field: conclusion
+      from: "-"
+      to: docs-site の型のメニューを rulebook の frontmatter から自動で作るようにした。develop で sidebar の手修正が不要になった
+  previous_event_id: reg_e3c983320c134d618b0277531a3bab1f

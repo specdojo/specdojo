@@ -1,0 +1,141 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:cdr-sample
+path: docs/ja/specdojo/samples/cdr-sample.md
+target: kata
+rubric: grade-rubric-v2
+verdict: pass
+score: 97
+graded_at: "2026-11-17T04:47:02.888Z"
+graded_by: sol-review-executor
+content_hash: 86d0f5af1856182d03d32cf375a2babf3a7aabcf594f8094d815c39cc21544a0
+categories:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
+  architecture:
+    score: 100
+  usability:
+    score: 92
+  implementation:
+    score: 100
+  quality:
+    score: 92
+  consistency:
+    score: 100
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 3
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 63
+    anchor: "| 金額を浮動小数点で計算する                           | 端数の誤差でつけ残高が合わなくなるため     |"
+    message: >-
+      禁止事項表の金額計算、クライアントからの DB import、未検証の
+      as、顧客情報のログ出力は、それぞれ本文10・17・24・39行目の規則と重複している。理由を本文側へ統合するなどして各規則の記載箇所を一つにし、禁止事項表には重複しない事項を残す。
+    message_ja: >-
+      禁止事項表の金額計算、クライアントからの DB import、未検証の
+      as、顧客情報のログ出力は、それぞれ本文10・17・24・39行目の規則と重複している。理由を本文側へ統合するなどして各規則の記載箇所を一つにし、禁止事項表には重複しない事項を残す。
+  - id: F002
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 16
+    anchor: >-
+      - `app/` から業務処理を呼ぶ場合は `src/` の公開関数を経由し、`src/` から `app/` を import しない。この向きは `eslint.config.mjs` の
+      `no-restricted-imports` で検査する。
+    message: >-
+      import の依存方向を eslint.config.mjs の no-restricted-imports で検査すると明記しながら、その規則内容も本文に再掲している。cdr-rulebook
+      6.1節に従い、機械で強制する内容は設定ファイル名と規則名への参照に集約する。
+    message_ja: >-
+      import の依存方向を eslint.config.mjs の no-restricted-imports で検査すると明記しながら、その規則内容も本文に再掲している。cdr-rulebook
+      6.1節に従い、機械で強制する内容は設定ファイル名と規則名への参照に集約する。
+  - id: F003
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 17
+    anchor: "- サーバー専用の処理（Prisma による DB 接続、つけ残高の更新）は `src/server/` に置く。"
+    message: >-
+      サーバー専用処理を src/server/ に配置する判断と、37行目の API ルート境界で Sentry へ送る方針について、設計上の正本への参照がない。cdr-rulebook が配置・境界・横断ルールの正本とする
+      cpd・sysd-* への参照を示し、本書では選定済みの設計に従う実装・検証方法として記述する。
+    message_ja: >-
+      サーバー専用処理を src/server/ に配置する判断と、37行目の API ルート境界で Sentry へ送る方針について、設計上の正本への参照がない。cdr-rulebook が配置・境界・横断ルールの正本とする
+      cpd・sysd-* への参照を示し、本書では選定済みの設計に従う実装・検証方法として記述する。

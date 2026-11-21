@@ -1,9 +1,10 @@
 import { existsSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, resolve, sep } from "node:path";
 import type { ExecEvidence } from "./evidence.js";
-import { ensureDir, safeSlug } from "./shared.js";
-import type { AgentStageRole } from "./types.js";
+import { runEvidencePath, taskEvidencePaths } from "./run-records.js";
 import type { RateLimitRecoveryEvent } from "./run/shared.js";
+import { ensureDir } from "./shared.js";
+import type { AgentStageRole } from "./types.js";
 
 export type PipelineStageStatus =
   "pending" | "running" | "succeeded" | "failed" | "rate_limited" | "blocked";
@@ -59,6 +60,13 @@ export type PipelineArtifactRefs = {
   result_ref: string;
 };
 
+// PJR-5F1Y: `exec run --resume --resume-from executor --resume-note` で再開時に plan へ足した指示。
+// 再開のたびに 1 件を追記し、次の再開でも前回までの分を引き継ぐ。
+export type PipelineResumeNote = {
+  at: string;
+  notes: string[];
+};
+
 export type PipelineState = {
   schema_version: 1;
   task_id: string;
@@ -68,6 +76,8 @@ export type PipelineState = {
   artifacts?: PipelineArtifactRefs;
   /** Run-scoped `--integration-branch` overrides (repo name → branch), reused on resume. */
   integration_branches?: Record<string, string>;
+  /** Instructions added to the plan by `--resume-note`, one entry per resume. */
+  resume_notes?: PipelineResumeNote[];
 };
 
 export type PipelineStateLocation = {
@@ -94,6 +104,7 @@ export function createPipelineState(input: {
   reporterActor?: string;
   artifacts?: PipelineArtifactRefs;
   integrationBranches?: Record<string, string>;
+  resumeNotes?: PipelineResumeNote[];
 }): PipelineState {
   return {
     schema_version: 1,
@@ -106,6 +117,7 @@ export function createPipelineState(input: {
     },
     ...(input.artifacts ? { artifacts: input.artifacts } : {}),
     ...(input.integrationBranches ? { integration_branches: input.integrationBranches } : {}),
+    ...(input.resumeNotes?.length ? { resume_notes: input.resumeNotes } : {}),
   };
 }
 
@@ -124,15 +136,11 @@ export function pipelineStateLocation(input: {
   taskId: string;
   runId: string;
 }): PipelineStateLocation {
-  const path = join(
-    input.worktreePath,
-    executionRelative(input.repoRoot, input.executionPath),
-    "exec",
-    "evidence",
-    safeSlug(input.taskId),
-    safeSlug(input.runId),
-    "pipeline-state.json",
-  );
+  const path = taskEvidencePaths(
+    join(input.worktreePath, executionRelative(input.repoRoot, input.executionPath)),
+    input.taskId,
+    input.runId,
+  ).state;
   return { path, ref: relative(input.worktreePath, path).split(sep).join("/") };
 }
 
@@ -219,6 +227,23 @@ function isIntegrationBranches(value: unknown): value is Record<string, string> 
   );
 }
 
+function isResumeNotes(value: unknown): value is PipelineResumeNote[] {
+  return (
+    Array.isArray(value) &&
+    value.every((entry) => {
+      if (!entry || typeof entry !== "object" || Array.isArray(entry)) return false;
+      const record = entry as Record<string, unknown>;
+      return (
+        typeof record.at === "string" &&
+        !!record.at &&
+        Array.isArray(record.notes) &&
+        record.notes.length > 0 &&
+        record.notes.every((note) => typeof note === "string" && !!note.trim())
+      );
+    })
+  );
+}
+
 export function isPipelineState(value: unknown): value is PipelineState {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;
   const state = value as Record<string, unknown>;
@@ -241,6 +266,7 @@ export function isPipelineState(value: unknown): value is PipelineState {
     !isIntegrationBranches(state.integration_branches)
   )
     return false;
+  if (state.resume_notes !== undefined && !isResumeNotes(state.resume_notes)) return false;
   const stages = state.stages as Record<string, unknown>;
   if (stages.integrate !== undefined && !isIntegrateStageState(stages.integrate)) return false;
   return isStageState(stages.executor) && isStageState(stages.reporter);
@@ -327,6 +353,29 @@ function resolveArtifactRef(worktreePath: string, ref: string): string | null {
   return path;
 }
 
+/**
+ * Validations recorded in the executor evidence of a run (PJR-T01P: the integration commit reads
+ * the parent-validation results). Returns an empty list when the state or evidence is unreadable.
+ */
+export function recordedRunValidations(
+  worktreePath: string,
+  statePath: string | undefined,
+): ExecEvidence["validations"] {
+  if (!statePath || !existsSync(statePath)) return [];
+  try {
+    const state = readPipelineState(statePath);
+    const ref = state.stages.executor.artifact_ref;
+    const evidencePath = ref ? resolveArtifactRef(worktreePath, ref) : null;
+    if (!evidencePath || !existsSync(evidencePath)) return [];
+    const evidence: unknown = JSON.parse(readFileSync(evidencePath, "utf8"));
+    if (!isExecutorEvidence(evidence, state.task_id, state.run_id)) return [];
+    return Array.isArray(evidence.validations) ? evidence.validations : [];
+  } catch {
+    // 読めない場合は hook を外さない（すべて流す）側へ倒す。
+    return [];
+  }
+}
+
 function isExecutorEvidence(value: unknown, taskId: string, runId: string): value is ExecEvidence {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;
   const evidence = value as Partial<ExecEvidence>;
@@ -368,9 +417,7 @@ export function loadPipelineResumeCheckpoint(input: {
   const evidenceRef =
     recordedEvidenceRef ??
     (state.stages.executor.status === "running"
-      ? relative(input.worktreePath, join(dirname(statePath), "evidence.json"))
-          .split(sep)
-          .join("/")
+      ? relative(input.worktreePath, runEvidencePath(statePath)).split(sep).join("/")
       : null);
   if (!evidenceRef) return { state, statePath };
   const evidencePath = resolveArtifactRef(input.worktreePath, evidenceRef);

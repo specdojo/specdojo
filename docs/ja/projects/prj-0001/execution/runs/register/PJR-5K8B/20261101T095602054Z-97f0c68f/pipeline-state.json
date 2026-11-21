@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-5K8B",
+  "run_id": "20261101T095602054Z-97f0c68f",
+  "updated_at": "2026-11-01T10:20:00.937Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "flash-high-executor",
+      "attempts": 1,
+      "started_at": "2026-11-01T09:58:40.338Z",
+      "completed_at": "2026-11-01T10:09:15.012Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-5K8B/20261101T095602054Z-97f0c68f/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-01T10:17:16.060Z",
+      "completed_at": "2026-11-01T10:18:23.323Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-5K8B/20261101T095602054Z-97f0c68f/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 2,
+      "started_at": "2026-11-01T10:19:40.413Z",
+      "completed_at": "2026-11-01T10:20:00.937Z",
+      "artifact_ref": null,
+      "repos": {
+        "project": {
+          "status": "failed",
+          "commit": null,
+          "merged_at": null,
+          "error": "Deliverable status promotion to \"ready\" is human-only and must not be done by an agent run: docs/ja/projects/prj-0001/schedule/sch-strategy-data-flow-usage.yaml, docs/ja/projects/prj-0001/schedule/sch-track-data-flow-usage.yaml"
+        }
+      }
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-5K8B/20261101T095602054Z-97f0c68f/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-5K8B/20261101T095602054Z-97f0c68f/result.md"
+  }
+}

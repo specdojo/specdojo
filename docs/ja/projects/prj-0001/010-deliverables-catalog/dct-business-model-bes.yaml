@@ -18,9 +18,15 @@ groups:
       - local_id: bes-index
         name: 業務イベント仕様（全体構成）
         kind: work
+        depends_on:
+          - cdfd-overview
         overview: cdfd-overview.md の10プロセス領域の起点イベントを一覧で定義する
         path: bes-index.md
         rulebook: specdojo:bes-index-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/specdojo.ts
+            purpose: 業務イベントの起点となる利用者の操作を受け付けるコマンドの入口
         done_criteria:
           - text: 主要な業務イベントが業務観点で網羅的に一覧化されていること
             roles: [BA]
@@ -63,6 +69,8 @@ groups:
         kind: work
         depends_on:
           - bes-index
+          - cdfd-overview
+          - stsd-task-execution
         overview: 実行可能なタスクが選択されたイベント（単発／自動／並列など起点が一意にならない）を定義する
         path: bes-task-ready-selected.md
         rulebook: specdojo:bes-rulebook

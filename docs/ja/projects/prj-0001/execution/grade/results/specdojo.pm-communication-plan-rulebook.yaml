@@ -5,15 +5,15 @@ path: docs/ja/specdojo/rulebooks/pm-communication-plan-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 95
-graded_at: "2026-10-05T21:13:24.712Z"
-graded_by: agy-expert-executor
-content_hash: f816cef26ab691548cb25692742af7f12ecccd0b26c0f9c44b3eacb407573e7b
+score: 97
+graded_at: "2026-11-17T21:53:53.886Z"
+graded_by: sol-review-executor
+content_hash: 3bdfe6099ff61629f3d01beed7712d2f8758276539c904531741eadf73bf957b
 categories:
   purpose:
     score: 100
   operations:
-    score: 100
+    score: 94
   planning:
     score: 100
   business:
@@ -21,13 +21,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
-    score: 100
+    score: 88
   quality:
-    score: 100
+    score: 92
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -69,8 +69,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-change-impact:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-testability:
     level: 4
     score: 100
@@ -78,14 +78,14 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
-  vp-qe-kata-conformance:
     level: 4
     score: 100
-  vp-ux-readability:
+  vp-qe-kata-conformance:
     level: 3
     score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 4
     score: 100
@@ -93,8 +93,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-operability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -104,18 +104,37 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 2
+  minor: 3
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 1
-    anchor: "# コミュニケーション計画 作成ルール"
-    message: 「位置づけ」という見出しがあるが、他成果物から見た本文書の役割や依存関係などの位置づけに関する記述が不足している。
+    rule: vp-dev-change-impact
+    line: 70
+    anchor: "- ステークホルダー、判断ゲート、公開方針、連絡手段が変わった場合に見直します。"
+    message: >-
+      共通の変更管理規則は参照されているが、連絡時期・判断経路・共有手段を変更した際に影響確認するScheduleの確認・承認タスク、責任分担、チャネル設定などの追従対象が示されていないため、適用先で該当する対象と更新担当Role
+      codeを特定する要件を追記する。
+    message_ja: >-
+      共通の変更管理規則は参照されているが、連絡時期・判断経路・共有手段を変更した際に影響確認するScheduleの確認・承認タスク、責任分担、チャネル設定などの追従対象が示されていないため、適用先で該当する対象と更新担当Role
+      codeを特定する要件を追記する。
   - id: F002
     severity: minor
-    rule: vp-ux-readability
-    line: 1
-    anchor: "# コミュニケーション計画 作成ルール"
-    message: 見出しに「位置づけ」が含まれているが、具体的な位置づけの説明がないため、利用者が文書の役割を把握しにくい。
+    rule: vp-qe-kata-conformance
+    line: 70
+    anchor: "- ステークホルダー、判断ゲート、公開方針、連絡手段が変わった場合に見直します。"
+    message: >-
+      Rulebook記述標準の「各 rulebook
+      は自系統の成果物における具体的な追従対象と役割分担を定義する」という要件に対し、本書は共通標準への参照と見直しトリガーのみで、コミュニケーション計画の変更時に確認する管理計画・ステークホルダー登録簿・Schedule等の該当箇所と担当Role
+      codeを定義していないため、系統固有の追従要件を補う。
+    message_ja: >-
+      Rulebook記述標準の「各 rulebook
+      は自系統の成果物における具体的な追従対象と役割分担を定義する」という要件に対し、本書は共通標準への参照と見直しトリガーのみで、コミュニケーション計画の変更時に確認する管理計画・ステークホルダー登録簿・Schedule等の該当箇所と担当Role
+      codeを定義していないため、系統固有の追従要件を補う。
+  - id: F003
+    severity: minor
+    rule: vp-ops-operability
+    line: 70
+    anchor: "- ステークホルダー、判断ゲート、公開方針、連絡手段が変わった場合に見直します。"
+    message: 見直しの契機は定義されているが、本計画の更新担当と、変更後の伝達先・時期・手段が実際の連絡運用へ反映されたことを確認する担当を記載させる規定がないため、採用済みRole codeによる担当と反映確認の証跡を定める要件を追加する。
+    message_ja: 見直しの契機は定義されているが、本計画の更新担当と、変更後の伝達先・時期・手段が実際の連絡運用へ反映されたことを確認する担当を記載させる規定がないため、採用済みRole codeによる担当と反映確認の証跡を定める要件を追加する。

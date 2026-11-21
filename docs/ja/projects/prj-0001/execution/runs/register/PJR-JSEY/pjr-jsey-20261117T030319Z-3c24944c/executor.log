@@ -1,0 +1,9 @@
+個票の対応結果の表に 1 行追記しました。確認対象は PJR-MJ8V、日時は 2026-11-17 12:06 JST、agent は `sonnet-executor` です。変更したファイルは `docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md` だけです。
+
+- **確認対象の根拠:** 完了条件の一覧のうち、`git log` で最も新しい統合は PJR-MJ8V でした。統合コミットは `0f641871e`（2026-11-17 11:37 JST）です。この worktree の HEAD に含まれています。
+- **説明文の更新:** 表の直後の説明文も、PJR-DGRZ から PJR-MJ8V に書き換えました。
+- **検証:** この個票に対する `prettier --check` は通りました。親 runner の検証と統合の完了は、後続の段で確認が必要です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"個票の対応結果の表に PJR-MJ8V の確認行（2026-11-17 12:06 JST、sonnet-executor）を追記し、直後の説明文も更新した。変更は個票のみ。","handoff":["確認対象は、一覧のうち最も新しく統合された PJR-MJ8V（統合コミット 0f641871e、2026-11-17 11:37 JST）とした。親 runner の検証・reporter の記入・統合は後続段で確認する。"],"validations":[{"command":"npx prettier --check docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md","status":"passed","summary":"整形に問題なし"},{"command":"npm run validate:history-links","status":"not_run","summary":"個票の追記内容に Markdown リンクはなく、親 runner の検証で確認される"}]}
+</specdojo_executor_evidence>

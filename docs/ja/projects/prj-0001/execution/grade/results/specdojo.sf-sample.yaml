@@ -4,70 +4,70 @@ document: specdojo:sf-sample
 path: docs/ja/specdojo/samples/sf-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: fail
-score: 51
-graded_at: "2026-10-17T20:34:15.478Z"
-graded_by: agy-expert-executor
-content_hash: 7c2987eae3ef4bbeac2d1763da85054cc664bd75df7ce7295a075bc67b4ed7e8
+verdict: pass
+score: 93
+graded_at: "2026-11-17T22:58:26.662Z"
+graded_by: sol-review-executor
+content_hash: 7576e1a48502ad80a0f9a6e1e11608000770c030ef1250ca1aaf807a22f01f4c
 categories:
   purpose:
-    score: 50
+    score: 100
   operations:
-    score: 88
+    score: 100
   planning:
-    score: 58
-  business:
-    score: 50
-  architecture:
     score: 83
+  business:
+    score: 100
+  architecture:
+    score: 100
   usability:
-    score: 58
+    score: 100
   implementation:
-    score: 63
+    score: 75
   quality:
-    score: 42
+    score: 83
   consistency:
-    score: 0
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-po-decision-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-po-publication-accountability:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-pm-dependency-risk:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-pm-control-reporting:
     level: 3
     score: 75
   vp-ba-business-value:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ba-requirements-completeness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
     level: 3
     score: 75
-  vp-arc-single-responsibility:
-    level: 2
-    score: 50
-  vp-dev-implementation-readiness:
-    level: 2
-    score: 50
   vp-dev-change-impact:
     level: 3
     score: 75
@@ -75,26 +75,26 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-verifiability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
-    level: 0
-    score: 0
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 0
-    score: 0
+    level: 3
+    score: 75
   vp-ux-readability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-language-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ops-release-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-operability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -102,184 +102,67 @@ viewpoints:
     level: 4
     score: 100
 finding_counts:
-  blocker: 4
-  major: 12
+  blocker: 0
+  major: 0
   minor: 6
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-po-purpose-alignment
-    line: 1
-    anchor: "# [システム化機能一覧 / 個別](../rulebooks/sf-rulebook.md) サンプル"
-    message: >-
-      The sample describes its purpose as defining individual system function specifications rather than providing a
-      system function list aligned with the project scope and purpose defined in sf-rulebook.md.
-    message_ja: このサンプルは、その目的を、sf-rulebook.mdで定義されたプロジェクトのスコープや目的に沿ったシステム機能一覧を提供することではなく、個々のシステム機能仕様を定義することであると述べています。
-  - id: F002
-    severity: major
-    rule: vp-po-decision-readiness
-    line: 26
-    anchor: "## 5. 未解決事項"
-    message: >-
-      Unresolved items lack concrete decision criteria, owners, impacts, and actionable next steps required for PO
-      review.
-    message_ja: 未解決事項には、POレビューに必要な具体的な決定基準、担当者、影響、および実行可能な次のステップが不足しています。
-  - id: F003
-    severity: major
+    severity: minor
     rule: vp-pm-plan-feasibility
-    line: 18
-    anchor: "## 4. 最小記述例"
-    message: >-
-      The sample does not provide concrete system functions or work units, making it impossible to derive tasks,
-      sequencing, or estimation for project management.
-    message_ja: サンプルには具体的なシステム機能や作業単位が記載されていないため、プロジェクト管理のためのタスク、順序付け、または見積もりの算出が不可能です。
-  - id: F004
-    severity: major
-    rule: vp-pm-dependency-risk
-    line: 18
-    anchor: "## 4. 最小記述例"
-    message: >-
-      Dependencies on subsequent deliverables, related specifications, and associated project risks are not identified
-      in the functional definitions or unresolved items.
-    message_ja: 機能定義や未解決事項において、後続の成果物、関連する仕様、および関連するプロジェクトリスクに関する依存関係が特定されていません。
-  - id: F005
+    line: 117
+    anchor: >-
+      | `Q-01` `_UNDECIDED_`: `sf-index` の対応、BPS の詳細対応、税計算、取引状態、在庫・印刷・記録先の連携契約が未整備 |
+      設計境界・税額・再送時の一意性を保証できない。確定までは未照合部分を確定した設計入力に使わず、確定後に「業務プロセス・画面との対応」と `FR-03` を照合する |
+    message: Q-01・Q-02には解消を担当するRole codeと判断時期がなく、契約整備・実端末測定・代替運用の合意を誰がいつ進めるか計画できません。各論点の担当と「設計着手前」「統合受入前」などの判断時期を明記してください。
+    message_ja: Q-01・Q-02には解消を担当するRole codeと判断時期がなく、契約整備・実端末測定・代替運用の合意を誰がいつ進めるか計画できません。各論点の担当と「設計着手前」「統合受入前」などの判断時期を明記してください。
+  - id: F002
     severity: minor
     rule: vp-pm-control-reporting
-    line: 26
-    anchor: "## 5. 未解決事項"
-    message: Unresolved issues lack assigned Role codes, reporting targets, and tracking mechanisms for project control.
-    message_ja: 未解決の課題には、プロジェクト管理のためのRoleコード、報告先、および追跡メカニズムが割り当てられていません。
-  - id: F006
-    severity: major
-    rule: vp-ba-business-value
-    line: 7
-    anchor: "## 2. 入力情報"
+    line: 115
+    anchor: >-
+      | 論点                                                                                                            |
+      影響と当面の扱い                                                                                                                                         
+      |
     message: >-
-      The sample fails to articulate specific business problems, target users, or expected values for the candy store
-      business context.
-    message_ja: サンプルは、キャンディショップのビジネスコンテキストにおける具体的なビジネス課題、ターゲットユーザー、または期待される価値を明文化できていません。
-  - id: F007
-    severity: major
-    rule: vp-ba-requirements-completeness
-    line: 18
-    anchor: "## 4. 最小記述例"
-    message: >-
-      Functional requirements, acceptance criteria, scope boundaries, and exclusions are completely absent from the
-      sample.
-    message_ja: 機能要件、受け入れ基準、スコープの境界、および除外事項がサンプルから完全に欠落しています。
-  - id: F008
-    severity: major
-    rule: vp-ba-stakeholder-clarity
-    line: 18
-    anchor: "## 4. 最小記述例"
-    message: Stakeholders, user roles, reviewers, and responsible actors are not identified in the functional sample.
-    message_ja: 機能のサンプルにおいて、ステークホルダー、ユーザーロール、レビュアー、および責任あるアクターが特定されていません。
-  - id: F009
+      Q-01・Q-02は文書内の未決事項に留まり、契約整備の課題、営業停止・二重転記のリスク、受入値・代替運用の決定をどの管理記録へ引き継ぐか不明です。転記先の種別または参照先と報告担当Role
+      codeを対応付け、進捗と判断結果を追跡できるようにしてください。
+    message_ja: >-
+      Q-01・Q-02は文書内の未決事項に留まり、契約整備の課題、営業停止・二重転記のリスク、受入値・代替運用の決定をどの管理記録へ引き継ぐか不明です。転記先の種別または参照先と報告担当Role
+      codeを対応付け、進捗と判断結果を追跡できるようにしてください。
+  - id: F003
     severity: minor
-    rule: vp-arc-conciseness
-    line: 13
-    anchor: "## 3. 記述内容"
-    message: >-
-      The bullet points under '## 3. 記述内容' duplicate the exact text presented in the table under '## 4. 最小記述例' without
-      adding distinct informational value.
-    message_ja: 「## 3. 記述内容」の下の箇条書きは、「## 4. 最小記述例」の下の表に示されているテキストと全く同じ内容を重複しており、独自の付加価値を与えていません。
-  - id: F010
-    severity: major
-    rule: vp-arc-single-responsibility
-    line: 1
-    anchor: "# [システム化機能一覧 / 個別](../rulebooks/sf-rulebook.md) サンプル"
-    message: ルールブックが規定する「機能一覧」のサンプルではなく、「個別機能定義」のサンプルとなっており、期待される役割を果たしていない。
-    message_ja: ルールブックが規定する「機能一覧」のサンプルではなく、「個別機能定義」のサンプルとなっており、期待される役割を果たしていない。
-  - id: F011
-    severity: major
     rule: vp-dev-implementation-readiness
-    line: 18
-    anchor: "## 4. 最小記述例"
-    message: >-
-      The sample lacks concrete inputs, outputs, and interface specifications for individual functions, failing to
-      provide implementation readiness.
-    message_ja: サンプルには個々の機能に関する具体的な入力、出力、およびインターフェースの仕様が不足しており、実装の準備が整っていることが確認できません。
-  - id: F012
+    line: 44
+    anchor: >-
+      | 入力 | 在庫反映結果、保存済みの販売と処理結果 | 在庫確認機能・販売記録 / 確定・再開判定 | 確定要求時と結果照合時に必須           |
+      `sf-inventory`、`ifx-api-store-sales`                 | `FR-03`          |
+    message: 「在庫反映結果、保存済みの販売と処理結果」を「確定要求時」に必須としているため、保存済み結果のない初回確定にも要求されると読めます。初回・再送・結果照合ごとの必須性と、未記録・未反映の場合の扱いを分けてください。
+    message_ja: 「在庫反映結果、保存済みの販売と処理結果」を「確定要求時」に必須としているため、保存済み結果のない初回確定にも要求されると読めます。初回・再送・結果照合ごとの必須性と、未記録・未反映の場合の扱いを分けてください。
+  - id: F004
     severity: minor
     rule: vp-dev-change-impact
-    line: 18
-    anchor: "## 4. 最小記述例"
-    message: >-
-      The sample does not demonstrate how to specify related specification IDs (e.g., UI, process, reports), hindering
-      change impact analysis across deliverables.
-    message_ja: サンプルには関連する仕様ID（例：UI、プロセス、レポート）の指定方法が示されておらず、成果物横断的な変更影響分析の妨げとなっています。
-  - id: F013
+    line: 117
+    anchor: >-
+      | `Q-01` `_UNDECIDED_`: `sf-index` の対応、BPS の詳細対応、税計算、取引状態、在庫・印刷・記録先の連携契約が未整備 |
+      設計境界・税額・再送時の一意性を保証できない。確定までは未照合部分を確定した設計入力に使わず、確定後に「業務プロセス・画面との対応」と `FR-03` を照合する |
+    message: Q-01の確定後の照合先は第2章とFR-03だけですが、税計算はFR-02と金額の検証条件にも影響します。またQ-02の代替運用は回復手順にも影響します。論点ごとに更新・再確認する要件、受入観点、連携仕様・運用手順を対応付けてください。
+    message_ja: Q-01の確定後の照合先は第2章とFR-03だけですが、税計算はFR-02と金額の検証条件にも影響します。またQ-02の代替運用は回復手順にも影響します。論点ごとに更新・再確認する要件、受入観点、連携仕様・運用手順を対応付けてください。
+  - id: F005
     severity: minor
     rule: vp-dev-testability
-    line: 18
-    anchor: "## 4. 最小記述例"
-    message: >-
-      The functional definition lacks concrete input/output criteria necessary to establish test conditions or
-      acceptance verification.
-    message_ja: 機能定義には、テスト条件または受け入れ検証を確立するために必要な具体的な入出力基準が不足しています。
-  - id: F014
-    severity: major
-    rule: vp-qe-verifiability
-    line: 26
-    anchor: "## 5. 未解決事項"
-    message: 表内の「値」がメタ記述となっており、具体的で検証可能な機能定義の例となっていない。
-    message_ja: 表内の「値」がメタ記述となっており、具体的で検証可能な機能定義の例となっていない。
-  - id: F015
-    severity: blocker
-    rule: vp-qe-omissions-consistency
-    line: 4
-    anchor: ""
-    message: メタデータの type がルールブック指定の domain ではなく project となっている。
-    message_ja: メタデータの type がルールブック指定の domain ではなく project となっている。
-  - id: F016
-    severity: blocker
-    rule: vp-qe-omissions-consistency
-    line: 26
-    anchor: "## 5. 未解決事項"
-    message: ルールブックで必須とされている「機能一覧（1行1機能の表形式）」が記載されていない。
-    message_ja: ルールブックで必須とされている「機能一覧（1行1機能の表形式）」が記載されていない。
-  - id: F017
-    severity: blocker
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# [システム化機能一覧 / 個別](../rulebooks/sf-rulebook.md) サンプル"
-    message: 参照ルールブックで定義されている「機能一覧（表形式）」ではなく、「個別機能定義」のサンプルとなっており、整合性が完全に失われている。
-    message_ja: 参照ルールブックで定義されている「機能一覧（表形式）」ではなく、「個別機能定義」のサンプルとなっており、整合性が完全に失われている。
-  - id: F018
-    severity: blocker
-    rule: vp-qe-kata-conformance
-    line: 26
-    anchor: "## 5. 未解決事項"
-    message: ルールブックで定義された標準列（機能ID, 機能名等）を持たない表形式となっており、作成ルールに全く準拠していない。
-    message_ja: ルールブックで定義された標準列（機能ID, 機能名等）を持たない表形式となっており、作成ルールに全く準拠していない。
-  - id: F019
-    severity: major
-    rule: vp-ux-readability
-    line: 1
-    anchor: "# [システム化機能一覧 / 個別](../rulebooks/sf-rulebook.md) サンプル"
-    message: タイトルに「個別」とあり、内容も個別定義となっているが、SFLルールブックのサンプルとして提示されているため、正解となる記述形式が不明確である。
-    message_ja: タイトルに「個別」とあり、内容も個別定義となっているが、SFLルールブックのサンプルとして提示されているため、正解となる記述形式が不明確である。
-  - id: F020
-    severity: major
-    rule: vp-ux-language-consistency
-    line: 4
-    anchor: ""
-    message: メタデータ type の値が, ルールブックで定義されている domain ではなく project と表記されており, 不整合である。
-    message_ja: メタデータ type の値が, ルールブックで定義されている domain ではなく project と表記されており, 不整合である。
-  - id: F021
+    line: 105
+    anchor: >-
+      | `V-02`  | `FR-02`・`FR-03` | 請求額108円の明細に、預かり金107円・108円・200円を与える                      |
+      107円は確定不可、108円は釣銭0円、200円は釣銭92円。完了時は売上記録と在庫反映を確認できる                      | 結合試験、金額表示・記録照合       | QE・BA       |
+    message: V-02は請求額108円を前提に預かり金と釣銭を検証しており、FR-02の税額・請求額の算出自体を確認できません。Q-01で税計算を確定する際に、税区分と端数処理の正常・境界条件、観測する税額・請求額、正本との照合方法を検証表へ追加することを明記してください。
+    message_ja: V-02は請求額108円を前提に預かり金と釣銭を検証しており、FR-02の税額・請求額の算出自体を確認できません。Q-01で税計算を確定する際に、税区分と端数処理の正常・境界条件、観測する税額・請求額、正本との照合方法を検証表へ追加することを明記してください。
+  - id: F006
     severity: minor
-    rule: vp-ops-release-readiness
-    line: 26
-    anchor: "## 5. 未解決事項"
-    message: >-
-      The sample does not specify the criteria or approver required to transition the document from draft to ready
-      status.
-    message_ja: サンプルには、ドキュメントをドラフトからレディの状態に移行するために必要な基準や承認者が指定されていません。
-  - id: F022
-    severity: minor
-    rule: vp-ops-operability
-    line: 26
-    anchor: "## 5. 未解決事項"
-    message: Guidance or role assignments for ongoing maintenance and updates to the function list are omitted.
-    message_ja: 機能一覧の継続的なメンテナンスおよび更新のためのガイダンスやロールの割り当てが省略されています。
+    rule: vp-qe-kata-conformance
+    line: 42
+    anchor: >-
+      | 入力 | 販売単価、税区分、販売可能な在庫数量   | 商品台帳・在庫確認機能 / 会計確認       | 会計前に確認できること                 |
+      業務データ辞書、`br-tax-calculation`、`sf-inventory`  | `FR-01`・`FR-02` |
+    message: 販売単価の正本として業務データ辞書を参照する一方、販売登録画面は税込単価、業務データ辞書の販売単価は税抜価格を定義しており、本書では表示・計算・保存に使う価格の対応を特定できません。Q-01の税計算・連携契約の論点にこの差を明記し、確定時に価格の対応とFR-02・FR-03への適用を照合してください。
+    message_ja: 販売単価の正本として業務データ辞書を参照する一方、販売登録画面は税込単価、業務データ辞書の販売単価は税抜価格を定義しており、本書では表示・計算・保存に使う価格の対応を特定できません。Q-01の税計算・連携契約の論点にこの差を明記し、確定時に価格の対応とFR-02・FR-03への適用を照合してください。

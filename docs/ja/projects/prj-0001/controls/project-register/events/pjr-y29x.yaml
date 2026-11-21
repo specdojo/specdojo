@@ -1,0 +1,107 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_3f32b22d41ec4084a08d8bc2270b9846
+  ts: "2026-11-06T11:17:26Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: stsd-task-execution のレビューの指摘を Kata と 5 件へ反映する（PJR-3APD の段 12 の前）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: stsd-job-run を新しい Kata に合わせる
+    - field: description
+      from: ""
+      to: stsd-job-run を新しい章立てと遷移 ID 入りのラベルに合わせる
+    - field: input
+      from: ""
+      to: '["利用者のレビュー: 目的には、状態が対象の何を管理し、何のために使われるか（誰がその状態で何を判断するか）を書く。文書の読み手や使い方（承認する人、実装・テストへの利用）は書かない。章の名前は「目的」のままとする（2026-11-06 indie が決定）","利用者のレビュー: 状態の正本・判定の規則・互換の扱いは「適用範囲」ではない。「適用範囲」の後に新しい章「状態の判定」を置いてそこへ書き、「適用範囲」には対象・業務の範囲・到達点だけを残す（2026-11-06 indie が決定）","利用者のレビュー: スコープ（AS-IS / TO-BE）は既定を現行とし、「現行実装（AS-IS）」とは書かない。TO-BE の文書と並ぶときだけスコープを書く（2026-11-06 indie が決定）","利用者のレビュー: 「状態遷移図」と「遷移の説明」を 1 つの章「状態遷移」にまとめ、図を分けた場合は図ごとに、そのすぐ下へ遷移の表を置く。図の遷移のラベルにも遷移 ID を入れ、`T-<nn>` イベント / 条件 の形にする（2026-11-06 indie が決定）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-06"
+    - field: approach
+      from: ""
+      to: retrofit
+    - field: targets
+      from: ""
+      to: '["prj-0001:stsd-job-run"]'
+    - field: derived_from
+      from: ""
+      to: '["PJR-3APD"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-S8EF","PJR-16T7","PJR-8TMF","PJR-0QJS","PJR-93NK"]'
+- v: 1
+  id: reg_2aaa7fe95bb046c5b58b47f7408e6abb
+  ts: "2026-11-06T11:56:56Z"
+  action: update
+  actor: SpecDojo
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: depends_on
+      from: '["PJR-S8EF","PJR-16T7","PJR-8TMF","PJR-0QJS","PJR-93NK"]'
+      to: '["PJR-S8EF","PJR-16T7","PJR-8TMF","PJR-0QJS","PJR-93NK","PJR-FS9A"]'
+  previous_event_id: reg_3f32b22d41ec4084a08d8bc2270b9846
+- v: 1
+  id: reg_0223c40bcfa64a968202eff1ba8bddb2
+  ts: "2026-11-06T13:59:26Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_2aaa7fe95bb046c5b58b47f7408e6abb
+- v: 1
+  id: reg_cda710af382f4f20aeec09f943b873b1
+  ts: "2026-11-06T14:12:43Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_0223c40bcfa64a968202eff1ba8bddb2
+- v: 1
+  id: reg_2ea69ed09fad4332987635d0e1f23cd2
+  ts: "2026-11-06T14:15:35Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register の結果を orchestrator が章立て・図と表の対応・ID の連番・旧新の対応・検討メモの見直しで確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-06"
+    - field: conclusion
+      from: "-"
+      to: stsd-job-run を新しい Kata に合わせ、状態の判定の章・図ごとの直下の表・`T-<nn>` 入りのラベルにした。遷移 ID は振り直しても既存の順と一致した
+  previous_event_id: reg_cda710af382f4f20aeec09f943b873b1

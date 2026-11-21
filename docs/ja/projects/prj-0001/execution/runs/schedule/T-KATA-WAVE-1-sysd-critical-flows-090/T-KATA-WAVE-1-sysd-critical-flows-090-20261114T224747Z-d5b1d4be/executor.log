@@ -1,0 +1,20 @@
+評価結果は最新ではありませんでした。verdict は `grade-stale` です。
+
+- `specdojo grade list --target deliverable --path docs/ja/product/040-system-design/sysd-critical-flows.md --changed-only` は、評価対象のパスを出力しました。終了コードは 0 です。
+- `--dependency-changed` を付けた同じコマンドも、評価対象のパスを出力しました。終了コードは 0 です。
+- `--incomplete` を付けた同じコマンドは、何も出力しませんでした。評価パイプラインは完了しています。
+- plan は評価結果を「最新」としていましたが、実行時の確認と食い違います。共通規約の `E-01` に従い、成果物を自分で評価し直さず、`grade-stale` とします。
+- 評価結果のサイドカーの値は plan から転記します。`verdict` は `needs-work`、`score` は 89 です。finding は blocker 0 件、major 1 件、minor 7 件、note 0 件です。サイドカー自体は読んでいません。
+- 完了可否は判断していません。
+- 実装エビデンスとの突き合わせは、成果物の次の記述だけを確認しました。
+  - `src/exec/worktree.ts` は scf-002 に記載があります。
+  - `src/register/register.ts` は scf-003 に記載があります。
+  - `src/exec/run/run.ts` は scf-004 に記載があります。
+- 実装側のコードは読んでいないため、一致・乖離の判定は未確認です。実行記録の対応記録（一致・乖離・確認不能・未確認）も確認していません。
+- worktree の変更は、runner 管理の `pipeline-state.json` が未追跡で増えているだけでした。成果物の編集はしていません。
+
+確認できなかった範囲は、実装との一致判定、乖離ごとの修正対象候補の記録、grade サイドカーの内容の直接確認、再評価後の完了可否です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"鮮度確認(--changed-only / --dependency-changed)が評価対象パスを出力したため評価結果は最新でない。verdict は grade-stale を推奨し、完了可否は判断しない。--incomplete は出力なし(パイプライン完了)。確認できなかった範囲: 実装(run.ts/worktree.ts/register.ts)と成果物の一致判定、実行記録の対応記録、grade再実行後の完了可否。","handoff":["verdict=grade-stale。runner は plan 記載の「最新」と異なり、grade list --changed-only が sysd-critical-flows.md を出力した。成果物の再 grade 後に review を再実行すること。"],"validations":[{"command":"specdojo grade list --target deliverable --path docs/ja/product/040-system-design/sysd-critical-flows.md --changed-only","status":"passed","summary":"評価対象パスを出力(評価結果が最新でない)"},{"command":"specdojo grade list --target deliverable --path docs/ja/product/040-system-design/sysd-critical-flows.md --dependency-changed","status":"passed","summary":"評価対象パスを出力(依存変更あり)"},{"command":"specdojo grade list --target deliverable --path docs/ja/product/040-system-design/sysd-critical-flows.md --incomplete","status":"passed","summary":"出力なし(評価パイプラインは完了)"}]}
+</specdojo_executor_evidence>

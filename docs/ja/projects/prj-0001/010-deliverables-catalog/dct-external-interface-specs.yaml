@@ -23,7 +23,7 @@ groups:
         overview: 外部システムとの連携を一覧（YAML）で定義する。SpecDojo自身の連携はAI provider CLIとGit/GitHubが中心
         path: ifx-index.yaml
         rulebook: specdojo:ifx-index-rulebook
-        note: interfaces の kind はコマンドを使用し、個別の ifx-cmd-<term> 詳細仕様が未作成の間は spec_ref を TBD とする
+        note: interfaces の kind はコマンドを使用する。業務仕様の種類ごとに代表を1件作る方針（PJR-2GD6）に基づき、AI provider CLI の起動（ifx-cmd-ai-provider-cli）を代表として個別作成する。詳細仕様が未作成の個別連携は spec_ref を TBD とする
         evidence_refs:
           - kind: implementation
             path: src/exec/exec.ts
@@ -44,3 +44,61 @@ groups:
           - text: 外部I/F実装スコープの参照として使えること
             roles: [DEV]
             viewpoint: vp-dev-implementation-readiness
+      - local_id: ifx-cmd-ai-provider-cli
+        name: 外部コマンド連携仕様（AI provider CLI）
+        kind: work
+        depends_on:
+          - ifx-index
+        overview: AI provider CLI（Claude Code / Codex CLI / opencode 等）を外部プロセスとして起動・連携するための実行契約、正本の参照、入出力の約束（渡すもの・受け取るもの・終了コードの意味・作るファイル・副作用・失敗の扱い）、認証注入を定義する
+        path: ifx-cmd-ai-provider-cli.yaml
+        rulebook: specdojo:ifx-cmd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/exec/run/agent.ts
+            purpose: AI provider CLI の起動コマンド組み立て・非対話プロセス実行・エラー検知の実装
+          - kind: implementation
+            path: src/exec/agent-config.ts
+            purpose: プロバイダ別コマンドテンプレートとモデル・実行時引数の解決処理の実装
+        done_criteria:
+          - text: AI provider CLI の実行契約・入出力の約束・エラー処理が業務観点で整理されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: AI provider CLI との連携スコープと方式を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: 外部コマンド連携仕様（正本参照・入出力の約束・認証注入）の設計として妥当であること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 外部 CLI 起動テスト・結合テスト設計に活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: プロセス起動・連携エラー処理実装の基礎として参照できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+
+      - local_id: ifx-file-agent-evidence
+        name: 外部ファイル連携仕様（agent の evidence）
+        kind: work
+        depends_on:
+          - ifx-index
+        overview: executor の agent が書き runner が読む evidence.json と pipeline-state.json の受け渡しについて、置き場所・命名・形式・必須項目・書き手と読み手・失敗時の扱いを定義する
+        path: ifx-file-agent-evidence.yaml
+        rulebook: specdojo:ifx-file-rulebook
+        note: 外部ファイル連携の型（ifx-file）の代表（PJR-DD33、indie が 2026-11-15 に承認）。項目の型や制約は schema を正本として参照する
+        evidence_refs:
+          - kind: implementation
+            path: src/exec/evidence.ts
+            purpose: evidence.json の読込・検証と runner の検証結果の追記
+          - kind: implementation
+            path: src/exec/pipeline-state.ts
+            purpose: pipeline-state.json の段ごとの状態の記録と再開の判定
+        done_criteria:
+          - text: 受け渡すファイルの置き場所・命名・形式・必須項目・書き手と読み手が記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: ファイル連携の方式と失敗時の扱いが設計として妥当であること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 欠けた・壊れたファイルを扱うテストの設計に活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability

@@ -5,8 +5,8 @@ path: docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 91
-graded_at: "2026-10-29T16:23:34.476Z"
+score: 90
+graded_at: "2026-11-01T16:18:41.087Z"
 graded_by: flash-high-executor
 content_hash: 1c0c4356f655ccdaf485fcbbbe8c03b97b6d604f8864da1574caddcdcfe6a814
 source_hashes:
@@ -19,7 +19,7 @@ source_hashes:
   dependency:cdfd-plan: fa438c52a36eaa9e43b88df336f876264351918d14ece7b3bb8f46aaea8a30ba
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
-  schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
+  schedule: 19c1bd1483cbadbe965c7078d2496f9b4c8c8efb31325bc095b2275bb5463093
 categories:
   purpose:
     score: 100
@@ -34,7 +34,7 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 94
   implementation:
     score: 100
   quality:
@@ -74,8 +74,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -124,7 +124,7 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 5
-  minor: 0
+  minor: 1
   note: 0
 findings:
   - id: F001
@@ -138,6 +138,17 @@ findings:
     message: プロセス領域の表に完了条件が定義されていないため、各タスクの完了や進捗を客観的に判定できません。完了条件を明記してください。
     message_ja: プロセス領域の表に完了条件が定義されていないため、各タスクの完了や進捗を客観的に判定できません。完了条件を明記してください。
   - id: F002
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 31
+    anchor: >-
+      - **主要入力**: 参加者の運転意図、稼働構成の agent 定義・実行既定値、成果物カタログの完了条件、スケジュール戦略の作業要件、定期実行の周期・条件、Plan の計画要求への応答（生成した実行計画を含む）、Do
+      の実行状態・ブロック理由・判断依頼、Check の評価結果・進捗報告・派生ビュー・索引、Action の完了・改善判断と再計画要求
+    message: >-
+      The bullet points for main inputs, outputs, and data stores in section 3.1 duplicate the content of sections 4 and
+      6, and should be removed as redundant per the rulebook guidelines.
+    message_ja: セクション3.1における主要な入力、出力、およびデータストアの箇条書きは、セクション4および6のコンテンツと重複しているため、ルールブックのガイドラインに従い、冗長なものとして削除すべきです。
+  - id: F003
     severity: major
     rule: vp-qe-verifiability
     line: 35
@@ -147,14 +158,14 @@ findings:
       起動条件                                                                                                     | 必須性 |
     message: プロセスごとの完了条件が記載されていないため、各処理のテストや受入の合否を判定する基準が不足しています。
     message_ja: プロセスごとの完了条件が記載されていないため、各処理のテストや受入の合否を判定する基準が不足しています。
-  - id: F003
+  - id: F004
     severity: major
     rule: vp-qe-omissions-consistency
     line: 13
     anchor: "## 2. 適用範囲"
     message: rulebook と recipe が必須とする適用期間または期間を限定しない旨が適用範囲から欠落しているため追記してください。
     message_ja: rulebook と recipe が必須とする適用期間または期間を限定しない旨が適用範囲から欠落しているため追記してください。
-  - id: F004
+  - id: F005
     severity: major
     rule: vp-qe-omissions-consistency
     line: 35
@@ -164,7 +175,7 @@ findings:
       起動条件                                                                                                     | 必須性 |
     message: rulebook 6.2 が必須とする「完了条件」列がプロセス領域の表から欠落しているため、列を追加し各プロセスの完了条件を明記してください。
     message_ja: rulebook 6.2 が必須とする「完了条件」列がプロセス領域の表から欠落しているため、列を追加し各プロセスの完了条件を明記してください。
-  - id: F005
+  - id: F006
     severity: major
     rule: vp-qe-omissions-consistency
     line: 145

@@ -1,0 +1,54 @@
+
+> specdojo@0.6.0 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-kata-025aa6e74be5 project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true rubric_outdated=true embed_documents=false max_stage_failures=3 stages=1 documents=15 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-025aa6e74be5
+stage=1 executor=agy-expert-executor reporter=machine reference=none
+translation_by=gemma26-translator
+document start: docs/ja/specdojo/recipes/cdfd-overview-recipe.md
+document complete: docs/ja/specdojo/recipes/cdfd-overview-recipe.md
+document start: docs/ja/specdojo/recipes/cdfd-recipe.md
+document complete: docs/ja/specdojo/recipes/cdfd-recipe.md
+document start: docs/ja/specdojo/recipes/cdfd-uc-recipe.md
+document complete: docs/ja/specdojo/recipes/cdfd-uc-recipe.md
+document start: docs/ja/specdojo/rulebooks/cdfd-d2-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/cdfd-d2-rulebook.md
+document start: docs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md
+document start: docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md
+document start: docs/ja/specdojo/rulebooks/cdfd-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/cdfd-rulebook.md
+document start: docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md
+document start: docs/ja/specdojo/rulebooks/ifx-api-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/ifx-api-rulebook.md
+document start: docs/ja/specdojo/rulebooks/ifx-cmd-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/ifx-cmd-rulebook.md
+document start: docs/ja/specdojo/rulebooks/ifx-file-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/ifx-file-rulebook.md
+document start: docs/ja/specdojo/rulebooks/ifx-index-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/ifx-index-rulebook.md
+document start: docs/ja/specdojo/rulebooks/ifx-msg-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/ifx-msg-rulebook.md
+document start: docs/ja/specdojo/rulebooks/imp-business-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/imp-business-rulebook.md
+document start: docs/ja/specdojo/rulebooks/imp-data-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/imp-data-rulebook.md
+grade pipeline complete: selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-025aa6e74be5/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference	consecutive_failures	max_failures
+2026-11-01T20:03:28Z	docs/ja/specdojo/recipes/cdfd-overview-recipe.md	1	passed	130	pass	95	9	agy-expert-executor	machine	none		
+2026-11-01T20:07:29Z	docs/ja/specdojo/recipes/cdfd-recipe.md	1	passed	239	pass	95	3	agy-expert-executor	machine	none		
+2026-11-01T20:10:04Z	docs/ja/specdojo/recipes/cdfd-uc-recipe.md	1	passed	153	needs-work	93	2	agy-expert-executor	machine	none		
+2026-11-01T20:11:51Z	docs/ja/specdojo/rulebooks/cdfd-d2-rulebook.md	1	passed	105	pass	100	0	agy-expert-executor	machine	none		
+2026-11-01T20:13:41Z	docs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md	1	passed	108	needs-work	77	14	agy-expert-executor	machine	none		
+2026-11-01T20:16:22Z	docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md	1	passed	159	pass	87	10	agy-expert-executor	machine	none		
+2026-11-01T20:19:34Z	docs/ja/specdojo/rulebooks/cdfd-rulebook.md	1	passed	190	pass	89	11	agy-expert-executor	machine	none		
+2026-11-01T20:22:00Z	docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md	1	passed	144	needs-work	87	7	agy-expert-executor	machine	none		
+2026-11-01T20:24:19Z	docs/ja/specdojo/rulebooks/ifx-api-rulebook.md	1	passed	138	needs-work	80	11	agy-expert-executor	machine	none		
+2026-11-01T20:30:19Z	docs/ja/specdojo/rulebooks/ifx-cmd-rulebook.md	1	passed	358	needs-work	82	7	agy-expert-executor	machine	none		
+2026-11-01T20:33:20Z	docs/ja/specdojo/rulebooks/ifx-file-rulebook.md	1	passed	180	needs-work	90	3	agy-expert-executor	machine	none		
+2026-11-01T20:36:01Z	docs/ja/specdojo/rulebooks/ifx-index-rulebook.md	1	passed	159	pass	87	10	agy-expert-executor	machine	none		
+2026-11-01T20:37:38Z	docs/ja/specdojo/rulebooks/ifx-msg-rulebook.md	1	passed	96	pass	92	6	agy-expert-executor	machine	none		
+2026-11-01T20:39:15Z	docs/ja/specdojo/rulebooks/imp-business-rulebook.md	1	passed	95	pass	93	4	agy-expert-executor	machine	none		
+2026-11-01T20:42:47Z	docs/ja/specdojo/rulebooks/imp-data-rulebook.md	1	passed	210	needs-work	78	11	agy-expert-executor	machine	none		

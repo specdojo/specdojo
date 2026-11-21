@@ -6,7 +6,6 @@ import rule from "../../../packages/docs-lint/src/markdownlint-rule-no-chinese-g
 
 describe("MD061/no-chinese-glyphs", () => {
   const lint = async (content: string) => {
-    // @ts-expect-error: markdown-it types are not installed
     const mdIt = (await import("markdown-it")).default;
     return markdownlint({
       strings: { "test.md": content },

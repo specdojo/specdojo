@@ -1,0 +1,32 @@
+---
+specdojo:
+  id: prj-0001:xer-pjr-gq14-20261102t142242z-56012c76
+  type: exec-result
+  task_id: PJR-GQ14
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  origin: register
+  plan_ref: runs/register/PJR-GQ14/20261102T142242837Z-b70e90e1/plan.md
+  started_at: "2026-11-02T14:22:43.351Z"
+  completed_at: "2026-11-02T14:37:46.571Z"
+  agent: flash-high-executor
+---
+
+# Edit Result
+
+## 1. 実施内容
+
+- ユースケース別ガイド（`use-case-guide.md`）を、LP、Next.js Web サービス、Unity ゲームの3つの具体的なプロダクト作成パターンに基づいた対話フローへと改訂しました。
+
+## 2. 変更ファイル
+
+- `docs/ja/specdojo/guides/use-case-guide.md`: LP・Next.js Web サービス・Unity ゲームの各ケースにおける相談から成果物作成、検証、運用までの対話フローを定義し、構成を刷新しました。
+
+## 3. 申し送り
+
+- PJR-RTD5 用途別ひな型の提供後後続作業: 1) LP スターター公開時の template 複製・初期化・追加設定手順の追記、2) Next.js + Cloudflare スターター公開時の template 複製・Wrangler/OpenNext・セキュリティ初期化手順の追記、3) Unity スターター提供時の Git LFS・アセット初期設定を含めた導入手順の追記。
+
+## 4. 進め方
+
+個票の目的および完了条件に基づき、`use-case-guide.md` を作りたいプロダクト別に再構成しました。具体的に LP、Next.js Web サービス、Unity ゲームという3つのユースケースを定義し、それぞれの対話フロー（相談 → 作成 → 検証 → 運用）を明文化しました。また、共通運用に関する整理を行い、個票への対応結果の記録および `prettier` による整形を完了しています。

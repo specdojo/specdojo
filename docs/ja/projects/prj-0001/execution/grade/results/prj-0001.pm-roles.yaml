@@ -1,0 +1,142 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: prj-0001:pm-roles
+path: docs/ja/projects/prj-0001/030-project-management/pm-roles.yaml
+target: deliverable
+rubric: grade-rubric-v2
+verdict: pass
+score: 99
+graded_at: "2026-11-13T02:05:03.524Z"
+graded_by: sol-review-executor
+content_hash: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+source_hashes:
+  catalog-entry: 956169d2250c9fb066052f1bd5b5be80e206509c75ff61a939792d742ba04859
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  dependency:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: 1bd233283dc93b916e0783284633349b63610f498ea9d6bf3e9368e6020c854c
+categories:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
+  consistency:
+    score: 100
+  architecture:
+    score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
+  quality:
+    score: 94
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 3
+    score: 75
+  vp-qe-done-criteria:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 1
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-dev-testability
+    line: 1
+    anchor: "# yaml-language-server: $schema=../../../../specdojo/schemas/v1/pm-roles.schema.yaml"
+    message: >-
+      Add a comment linking to the validation procedure or specifying the targeted schema-validation command, with
+      successful validation and no undefined or duplicate Role codes as the expected result, so maintainers can
+      reproduce the checks after edits.
+    message_ja: >-
+      Add a comment linking to the validation procedure or specifying the targeted schema-validation command, with
+      successful validation and no undefined or duplicate Role codes as the expected result, so maintainers can
+      reproduce the checks after edits.
+    cause:
+      type: document
+done_criteria:
+  satisfied: 3
+  total: 3
+  detail_ref: prj-0001:pm-roles-grade-criteria

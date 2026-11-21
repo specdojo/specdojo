@@ -205,7 +205,7 @@ export function loadTemplatesForDomain(
     } catch {
       continue;
     }
-    if (!template || template.domain !== domain) continue;
+    if (!template || template.domain !== domain || template.status === "deprecated") continue;
     loaded.push({ file, relPath: toRepoRelative(filePath, repoRoot), template });
   }
   return loaded;

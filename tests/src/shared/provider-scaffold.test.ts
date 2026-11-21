@@ -671,59 +671,36 @@ describe("applyProviderScaffoldPlan", () => {
 });
 
 describe("runProviderScaffold", () => {
-  it("does not touch user-level settings unless global is explicitly enabled", async () => {
-    const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));
-    try {
-      const packageRoot = path.join(dir, "pkg");
-      const repoRoot = path.join(dir, "repo");
-      const homeDir = path.join(dir, "home");
-      await makeAntigravityTemplateFixture(packageRoot);
-      await mkdir(repoRoot, { recursive: true });
-      vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+  it.each([false, true])(
+    "refuses antigravity before writing repository or user-level files (global: %s)",
+    async (global) => {
+      const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));
+      try {
+        const packageRoot = path.join(dir, "pkg");
+        const repoRoot = path.join(dir, "repo");
+        const homeDir = path.join(dir, "home");
+        await makeAntigravityTemplateFixture(packageRoot);
+        await mkdir(repoRoot, { recursive: true });
 
-      await runProviderScaffold("antigravity", {
-        packageRoot,
-        repoRoot,
-        homeDir,
-        force: false,
-        dryRun: false,
-      });
-
-      expect(existsSync(path.join(homeDir, ".gemini", "antigravity-cli", "settings.json"))).toBe(
-        false,
-      );
-    } finally {
-      await rm(dir, { recursive: true, force: true });
-    }
-  });
-
-  it("merges provider permissions into the injected temporary home with global enabled", async () => {
-    const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));
-    try {
-      const packageRoot = path.join(dir, "pkg");
-      const repoRoot = path.join(dir, "repo");
-      const homeDir = path.join(dir, "home");
-      await makeAntigravityTemplateFixture(packageRoot);
-      await mkdir(repoRoot, { recursive: true });
-      vi.spyOn(process.stdout, "write").mockImplementation(() => true);
-
-      await runProviderScaffold("antigravity", {
-        packageRoot,
-        repoRoot,
-        homeDir,
-        force: false,
-        dryRun: false,
-        global: true,
-      });
-
-      const settings = JSON.parse(
-        await readFile(path.join(homeDir, ".gemini", "antigravity-cli", "settings.json"), "utf8"),
-      );
-      expect(settings).toEqual(ANTIGRAVITY_GLOBAL_SETTINGS);
-    } finally {
-      await rm(dir, { recursive: true, force: true });
-    }
-  });
+        await expect(
+          runProviderScaffold("antigravity", {
+            packageRoot,
+            repoRoot,
+            homeDir,
+            force: false,
+            dryRun: false,
+            global,
+          }),
+        ).rejects.toThrow(
+          /Cannot scaffold provider antigravity: SpecDojo 0\.9\.2 and later do not launch Antigravity/,
+        );
+        expect(existsSync(path.join(repoRoot, ".specdojo", "antigravity"))).toBe(false);
+        expect(existsSync(path.join(homeDir, ".gemini"))).toBe(false);
+      } finally {
+        await rm(dir, { recursive: true, force: true });
+      }
+    },
+  );
 
   it("rejects global mode for unsupported providers before writing repository files", async () => {
     const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));
@@ -793,14 +770,6 @@ describe("runProviderScaffold", () => {
           'specdojo orchestrator launch --provider codex -- -m gpt-6-luna "$(cat .specdojo/codex/orchestrator.md)"',
       },
       legacy: "orch:codex",
-    },
-    {
-      provider: "antigravity",
-      scripts: {
-        "orch:flash":
-          'specdojo orchestrator launch --provider antigravity -- --add-dir "$(pwd)" --model gemini-3.8-flash-high -i "$(cat .specdojo/antigravity/orchestrator.md)"',
-      },
-      legacy: "orch:agy",
     },
     {
       provider: "opencode",

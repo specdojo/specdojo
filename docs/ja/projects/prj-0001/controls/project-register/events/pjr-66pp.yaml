@@ -1,0 +1,97 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_0316b933a9cd48a9b47c1b3bf8464fc6
+  ts: "2026-11-05T13:09:59Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: stsd-job-run の冒頭と図の表示名を新しい Kata に合わせる
+    - field: description
+      from: ""
+      to: stsd-job-run の「概要」を頭書き・目的・適用範囲に分け、状態遷移図の表示名を状態名と値の 2 行にする。内容は変えない
+    - field: input
+      from: ""
+      to: '["PJR-VNT1 の決定に合わせて手入れした stsd の Kata（PJR-F1FD・PJR-NEPD・PJR-YSST・PJR-SWRE・PJR-P9SW）に合わせる。状態・遷移・条件などの中身は schedule の磨き込み・condense・review を通った内容を保つ"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-05"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: fully-guided
+    - field: targets
+      from: ""
+      to: '["prj-0001:stsd-job-run"]'
+    - field: derived_from
+      from: ""
+      to: '["PJR-3APD","PJR-VNT1"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-SWRE","PJR-P9SW"]'
+- v: 1
+  id: reg_9f19c92d5ba94e3ab92837a37de52bf9
+  ts: "2026-11-05T17:46:09Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_0316b933a9cd48a9b47c1b3bf8464fc6
+- v: 1
+  id: reg_84dc329bb0ea483aae73701ac842727e
+  ts: "2026-11-05T17:56:00Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_9f19c92d5ba94e3ab92837a37de52bf9
+- v: 1
+  id: reg_9a0916491adb43e8835ae7b38320443e
+  ts: "2026-11-05T18:00:11Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が状態・遷移・遷移 ID の不変、表示名と状態一覧の一致、変更範囲、lint を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-06"
+    - field: conclusion
+      from: "-"
+      to: stsd-job-run の冒頭を頭書き・目的・適用範囲へ、図の表示名を 状態名`<br>`値 へ合わせた
+  previous_event_id: reg_84dc329bb0ea483aae73701ac842727e

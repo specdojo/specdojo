@@ -1,0 +1,177 @@
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "逐次実行 Job の実装を確認し、前回失敗したガイド書式と YAML サンプル表示テストを修正しました。設計・標準・個票を更新し、sandbox 内の検証は通過しました。親検証は runner が再実行します。",
+  "handoff": [
+    "既存 command Job の `task.steps` を採用し、入力・冪等キー・attempt・routine を再利用する。定義検証と凍結は job 層、順序制御・排他・evidence は exec 層が担当する。判断と理由は個票の対応結果に記録済み。",
+    "各段は終了コードと任意の状態ファイルで判定する。失敗・延期後の停止／継続を指定でき、失敗・延期を含む Run は failed に確定する。retry は凍結済み定義で先頭から再実行する。",
+    "親 runner は指定された lint・型検査・単体／統合テスト・schema 検査を再実行し、その結果を最終根拠にする。result は編集していないため、本報告と個票の対応結果を reporter／runner が反映する。",
+    "統合後、PJR-JSEY に本項目を加え、実 provider 設定で resume → auto → register → grade の連続実行と同一 Run の retry を確認する。実 agent の起動は利用枠を消費するため sandbox では未実施。",
+    "CHANGELOG 文案（追加）: command Job の `task.steps` で exec・grade・ビルドを順次実行できる。段ごとの停止／継続、状態による完了判定、有限の lock 待機、実行時間上限、attempt ごとの結果・理由・evidence を記録し、routine／cron から起動できる。個票にも記録済み。"
+  ],
+  "validations": [
+    {
+      "command": "npm run build",
+      "status": "passed",
+      "summary": "CLI のビルド成功。"
+    },
+    {
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/job.schema.yaml --data docs/ja/specdojo/samples/job-sequence.yaml",
+      "status": "passed",
+      "summary": "順次実行の定義例が schema に適合。"
+    },
+    {
+      "command": "node dist/specdojo.js job validate --project prj-0001",
+      "status": "passed",
+      "summary": "既存9件、エラー0件。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "終了コード0。既存カタログの警告あり。"
+    },
+    {
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検査成功。"
+    },
+    {
+      "command": "npm run check:src-imports",
+      "status": "passed",
+      "summary": "実行時 import の依存宣言検査成功。"
+    },
+    {
+      "command": "node dist/specdojo.js register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿の派生ビュー生成成功。"
+    },
+    {
+      "command": "npx prettier --check docs/ja/product/040-system-design/sysd-job-execution.md docs/ja/projects/prj-0001/controls/project-register/pjr-v0fq-exec-sequential-batch.md docs/ja/specdojo/guides/routine-operation-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/standards/job-definition-standard.md docs/specdojo/schemas/v1/job-run.schema.yaml docs/specdojo/schemas/v1/job.schema.yaml src/exec/evidence.ts src/exec/run/job.ts src/exec/run/lock.ts src/exec/run/register-command.ts src/exec/run/shared.ts src/job/definition.ts src/job/job.ts tests/src/exec/run/lock.test.ts docs/ja/specdojo/guides/job-sequence-guide.md docs/ja/specdojo/samples/job-sequence.yaml src/exec/run/job-lock.ts src/exec/run/job-sequence.ts tests/src/exec/job-sequence.integration.test.ts tests/src/job/sequence.test.ts tests/src/docs/yaml-pages.test.ts",
+      "status": "passed",
+      "summary": "成果物22ファイルの整形を確認。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "command": "実 agent による連続実行と retry（統合後の PJR-JSEY）",
+      "status": "requires_human",
+      "summary": "実 provider 設定と利用枠を使う確認。個票に後続手順を記録済み。"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "docs/ja/product/040-system-design/sysd-job-execution.md",
+      "status": "changed",
+      "path": "docs/ja/product/040-system-design/sysd-job-execution.md"
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-v0fq-exec-sequential-batch.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-v0fq-exec-sequential-batch.md"
+    },
+    {
+      "target": "docs/ja/specdojo/guides/routine-operation-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/routine-operation-guide.md"
+    },
+    {
+      "target": "docs/ja/specdojo/references/command-reference.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/references/command-reference.md"
+    },
+    {
+      "target": "docs/ja/specdojo/standards/job-definition-standard.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/standards/job-definition-standard.md"
+    },
+    {
+      "target": "docs/specdojo/schemas/v1/job-run.schema.yaml",
+      "status": "changed",
+      "path": "docs/specdojo/schemas/v1/job-run.schema.yaml"
+    },
+    {
+      "target": "docs/specdojo/schemas/v1/job.schema.yaml",
+      "status": "changed",
+      "path": "docs/specdojo/schemas/v1/job.schema.yaml"
+    },
+    {
+      "target": "src/exec/evidence.ts",
+      "status": "changed",
+      "path": "src/exec/evidence.ts"
+    },
+    {
+      "target": "src/exec/run/job.ts",
+      "status": "changed",
+      "path": "src/exec/run/job.ts"
+    },
+    {
+      "target": "src/exec/run/lock.ts",
+      "status": "changed",
+      "path": "src/exec/run/lock.ts"
+    },
+    {
+      "target": "src/exec/run/register-command.ts",
+      "status": "changed",
+      "path": "src/exec/run/register-command.ts"
+    },
+    {
+      "target": "src/exec/run/shared.ts",
+      "status": "changed",
+      "path": "src/exec/run/shared.ts"
+    },
+    {
+      "target": "src/job/definition.ts",
+      "status": "changed",
+      "path": "src/job/definition.ts"
+    },
+    {
+      "target": "src/job/job.ts",
+      "status": "changed",
+      "path": "src/job/job.ts"
+    },
+    {
+      "target": "tests/src/exec/run/lock.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/run/lock.test.ts"
+    },
+    {
+      "target": "docs/ja/specdojo/guides/job-sequence-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/job-sequence-guide.md"
+    },
+    {
+      "target": "docs/ja/specdojo/samples/job-sequence.yaml",
+      "status": "changed",
+      "path": "docs/ja/specdojo/samples/job-sequence.yaml"
+    },
+    {
+      "target": "src/exec/run/job-lock.ts",
+      "status": "changed",
+      "path": "src/exec/run/job-lock.ts"
+    },
+    {
+      "target": "src/exec/run/job-sequence.ts",
+      "status": "changed",
+      "path": "src/exec/run/job-sequence.ts"
+    },
+    {
+      "target": "tests/src/exec/job-sequence.integration.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/job-sequence.integration.test.ts"
+    },
+    {
+      "target": "tests/src/job/sequence.test.ts",
+      "status": "changed",
+      "path": "tests/src/job/sequence.test.ts"
+    },
+    {
+      "target": "tests/src/docs/yaml-pages.test.ts",
+      "status": "changed",
+      "path": "tests/src/docs/yaml-pages.test.ts"
+    }
+  ]
+}
+</specdojo_executor_evidence>

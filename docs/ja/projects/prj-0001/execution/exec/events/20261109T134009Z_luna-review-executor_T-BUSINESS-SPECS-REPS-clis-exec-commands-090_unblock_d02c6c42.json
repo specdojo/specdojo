@@ -1,0 +1,15 @@
+{
+  "v": 1,
+  "ts": "2026-11-09T13:40:09Z",
+  "type": "unblock",
+  "task_id": "T-BUSINESS-SPECS-REPS-clis-exec-commands-090",
+  "by": "luna-review-executor",
+  "msg": "resume integration from persisted pipeline state",
+  "meta": {
+    "pipeline_stage": "integrate",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-clis-exec-commands-090/T-BUSINESS-SPECS-REPS-clis-exec-commands-090-20261109T060525Z-c3607d73/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-clis-exec-commands-090/T-BUSINESS-SPECS-REPS-clis-exec-commands-090-20261109T060525Z-c3607d73/pipeline-state.json",
+    "pipeline_run_id": "T-BUSINESS-SPECS-REPS-clis-exec-commands-090-20261109T060525Z-c3607d73",
+    "pipeline_resume_claimed": "true"
+  }
+}

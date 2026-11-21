@@ -1,0 +1,9 @@
+個票 `pjr-jsey-exec-run-split-smoke.md` の「対応結果」の表に 1 行追記し、直後の説明文の確認対象も更新しました。lint などの検証は実行していません。親 runner の検証で確認されます。
+
+- **追記した行:** `2026-11-01 00:24 | PJR-6NEM | sonnet-executor`。
+- **確認対象の選び方:** 個票の対象一覧のうち、最も新しく統合された項目を `git log` で調べ、PJR-6NEM（統合コミット `9b363fe45`、2026-11-01 00:19 JST、`review` 遷移は `94336c4f0`）としました。
+- **変更範囲:** この個票以外のファイルは変更していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"個票の対応結果の表に PJR-6NEM（2026-11-01 00:24 JST、sonnet-executor）の行を追記し、確認対象の説明文を更新した。変更は個票のみ。","handoff":["agent nickname は先行行に合わせて sonnet-executor とした。実体 actor は後続段で確認する。","親 runner の 7 検証、reporter の result 記入、統合、review 遷移は後続段で確認する。"],"validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する allowlist 検証のため、executor では実行していない。"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-FTRC",
+  "run_id": "pjr-ftrc-20261108T152439Z-3b62d76a",
+  "updated_at": "2026-11-08T16:05:40.360Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "flash-high-executor",
+      "attempts": 1,
+      "started_at": "2026-11-08T15:26:55.395Z",
+      "completed_at": "2026-11-08T15:39:29.862Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-FTRC/pjr-ftrc-20261108T152439Z-3b62d76a/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 2,
+      "started_at": "2026-11-08T15:58:35.338Z",
+      "completed_at": "2026-11-08T15:59:13.454Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-FTRC/pjr-ftrc-20261108T152439Z-3b62d76a/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-08T15:59:15.200Z",
+      "completed_at": "2026-11-08T16:05:40.360Z",
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-FTRC/pjr-ftrc-20261108T152439Z-3b62d76a/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-FTRC/pjr-ftrc-20261108T152439Z-3b62d76a/result.md"
+  }
+}

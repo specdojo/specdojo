@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 
 const require = createRequire(import.meta.url);
 const PACKAGE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const COMMANDS = new Set(["build", "dev", "mermaid", "preview"]);
+const COMMANDS = new Set(["build", "dev", "mermaid", "d2", "preview"]);
 
 function usage() {
   console.log(`Usage: specdojo-docs-site <command> [workspace-root] [options]
@@ -16,6 +16,7 @@ Commands:
   build     Build the VitePress site
   dev       Start the VitePress development server
   mermaid   Generate Mermaid SVG files only
+  d2        Generate D2 SVG files only (requires d2 v0.9.0)
   preview   Preview the built site`);
 }
 
@@ -35,12 +36,12 @@ if (!command || !COMMANDS.has(command)) {
 
   let executable;
   let args;
-  if (command === "mermaid") {
+  if (command === "mermaid" || command === "d2") {
     executable = process.execPath;
     args = [
       "--import",
       require.resolve("tsx"),
-      path.join(PACKAGE_ROOT, "src", "gen-mermaid-svg.ts"),
+      path.join(PACKAGE_ROOT, "src", `gen-${command}-svg.ts`),
       ...forwardedArgs,
     ];
   } else {

@@ -1,0 +1,25 @@
+品質管理計画の sample を短くしました。区切り行を除き、空白を除いた文字数は 5,059 字から 3,434 字になり、元の約 68% です（目安の 7 割以下）。区切り行を含めると 6,482 字から 4,541 字で、ファイルは 15,762 B から 10,926 B です。変更したのは `docs/ja/specdojo/samples/pm-quality-management-plan-sample.md` だけです。整形は `npx prettier --write` で通しました。markdownlint などの検査は親 runner が実行するため、ここでは結果を確認していません。
+
+**外した記述**
+- 品質方針と適用範囲の章: AI Agent と人の役割分担、RACI とメンバー定義の段落。
+- 品質ゲートの章: `DEV` が検証計画を定めて `QE` が確認する段落。
+- レビューと証跡の章: 記録の整備の担当、`PO` の判断の付記先、「出口条件を満たしても公開承認とは扱わない」という承認の段落。
+- 不適合と是正の章: `PM` が課題ログ・スケジュールへ登録する段落と、リスク登録簿・変更要求ログへの振り分け。決定ごとに判断者・理由・判断日を付記する文。
+- 見直しと後続作業の節: `PO` の承認手順、`kinuya-baseline-log`、ドキュメントメタ情報標準への参照文。
+- 未決事項と保留の節: 「正本と判断材料の担当」「決定時期・判断者」の列と、課題ログへの登録の段落。列は「論点」「影響・未決中に保留する判定」の 2 つにし、正本の ID は論点のセルに残しました。
+
+**同じ判断の言い直しの整理**
+- 重大な不適合の通過制限は、不適合と是正の章の冒頭の 1 か所にまとめました。
+- 証跡に残す項目は、レビューと証跡の章の 1 文に寄せました。
+- 表のセルは要点に縮めました。
+
+**変えていない結論**
+各ゲートの合格条件、条件 ID、確認者と承認者、出口条件、不適合の区分と再判定条件、期限付き例外を設けないこと、未決の論点と保留する判定は変えていません。
+
+**template と recipe への変更案（今回は変更していません）**
+- template: 品質方針の欄が「人間と AI Agent の判断境界」を求め、不適合の欄が「報告・登録の責任」を求めています。未決事項の表には「正本と判断材料の担当」「決定時期・判断者」の列があります。sample と同じ方針で外すか、rulebook の「論点」「影響・未決中に保留する判定」の 2 列に揃える案を引き継ぎに入れました。
+- recipe: 37・50・95・106 行目に AI Agent との判断境界の問いと確認項目があり、73 行目にも担当・期限・確認者の問いがあります。同じ方針で見直す候補です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"pm-quality-management-plan-sample から運用の記述（役割の段落、検証計画の担当の段落、承認・登録の段落、未決事項表の担当・判断者・時期の列）と同じ判断の言い直しを外した。結論（ゲートの合格条件、条件 ID、確認者と承認者、出口条件、不適合の区分と再判定条件、例外なし、未決の論点と保留）は変えていない。空白を除いた文字数は区切り行を除いて 5,059 字から 3,434 字（67.9%）、区切り行を含めて 6,482 字から 4,541 字（15,762 B から 10,926 B）。","handoff":["大きさ: 区切り行を除き空白を除いた文字数は 5,059 字から 3,434 字（67.9%）。区切り行を含めると 6,482 字から 4,541 字、15,762 B から 10,926 B。","template 変更案: `docs/ja/specdojo/templates/pm-quality-management-plan-template.md` の品質方針の欄から「人間と AI Agent の判断境界」を外し、不適合の欄から「報告・登録の責任」を外す。未決事項と保留の表は「論点」「影響・未決中に保留する判定」の 2 列にする（rulebook の記述ガイドと sample に揃える）。","recipe 変更案: `docs/ja/specdojo/recipes/pm-quality-management-plan-recipe.md` の 37・50・95・106 行目の AI Agent との判断境界の問いと確認項目、73 行目の担当・期限・確認者の問いを、共通の運用（rulebook の全体方針）へ寄せる方向で見直す。","決めた点: ゲート・レビュー・不適合の表にある確認者 / 承認者、実施責任、再判定責任の列は rulebook の本文要件が求める判定の内容のため残した。未決事項の正本の参照（管理計画 U-01〜U-03 など）は論点のセルに残した。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/pm-quality-management-plan-sample.md","status":"passed","summary":"整形済み"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples 配下の sample のみで、plan・result・個票を変更していない"},{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する（parent validation）"}]}
+</specdojo_executor_evidence>

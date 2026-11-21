@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "ts": "2026-11-14T15:37:24Z",
+  "type": "block",
+  "task_id": "T-KATA-WAVE-1-ifx-index-090",
+  "by": "luna-review-executor",
+  "msg": "git restore failed: index.lock is still held (lock: /workspaces/specdojo-workspace/specdojo/.git/index.lock) / fatal: Unable to create '/workspaces/specdojo-workspace/specdojo/.git/index.lock': ファイルが存在します. (args: --source=HEAD --staged --worktree -- 1 path)",
+  "meta": {
+    "pipeline_stage": "integrate",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-ifx-index-090/T-KATA-WAVE-1-ifx-index-090-20261114T142300Z-61184671/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-ifx-index-090/T-KATA-WAVE-1-ifx-index-090-20261114T142300Z-61184671/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-1-ifx-index-090-20261114T142300Z-61184671"
+  }
+}

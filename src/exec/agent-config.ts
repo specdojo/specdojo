@@ -18,6 +18,10 @@ import {
   resolveParentValidationDefinitions,
   type ParentValidationEntry,
 } from "./parent-validation.js";
+import { resolveCommitHookSkips, type CommitHookSkip } from "./commit-hook-skips.js";
+import { configureIndexLockWait, DEFAULT_INDEX_LOCK_WAIT_MS } from "../shared/git.js";
+import { resolvePostIntegrationEntries, type PostIntegrationEntry } from "./post-integration.js";
+import { assertProviderLaunchAllowed } from "../shared/antigravity-block.js";
 
 // ── Types for .specdojo/exec-defaults.yaml (global + per-provider) ─────────────
 
@@ -48,6 +52,8 @@ export type RateLimitPolicy = {
   // Used only when the provider output has no explicit reset time or retry-after. Omitted kinds
   // stay blocked without an estimated resume time.
   cooldown_seconds?: Partial<Record<AgentLimitKind, number>>;
+  // Compatibility-only field, still required by the schema. Ignored at runtime;
+  // automatic selection uses on_critical.retry for both critical and non-critical tasks.
   on_non_critical: {
     action: "skip";
   };
@@ -119,11 +125,20 @@ export type ExecDefaultsConfig = {
     // Maximum number of `exec run` processes that may run at once for one project, counting the
     // primary run and every `--join` run (default 4). 1 disables `--join`.
     max_concurrent_runs?: number;
+    // Seconds the runner's Git operations wait for index.lock to be released (default 1200).
+    git_index_lock_wait_seconds?: number;
   };
   pipeline?: {
     // A string runs in the project repository; `{ id, repo }` runs in the named repository.
     parent_validations?: ParentValidationEntry[];
+    post_integration?: PostIntegrationEntry[];
     parent_validation_concurrency?: number;
+    // Hook commands the runner's integration commit skips once the covering parent validations
+    // passed (PJR-T01P). Manual commits keep every hook.
+    commit_hook_skips?: CommitHookSkip[];
+    // Write the edit result from executor evidence without the reporter agent when the facts are
+    // complete (PJR-T01P). Review results and blocked runs still use the reporter.
+    mechanical_result?: boolean;
   };
   rate_limit_detection?: RateLimitDetection;
   connection_error_detection?: ConnectionErrorDetection;
@@ -220,6 +235,20 @@ export function resolveMemberCommand(
   config: ExecDefaultsConfig,
   member: CommandMemberAttributes,
 ): string | undefined {
+  // Every launch path (named, automatic, fallback) expands the command here, so refusing an
+  // Antigravity member before building any command keeps agy from ever being spawned.
+  assertProviderLaunchAllowed(member.provider, `Cannot launch member ${member.nickname}`);
+  // Require provider opt-in even for an explicit member command: otherwise a frontier
+  // member could silently inherit ordinary defaults or bypass the missing-tier error.
+  if (
+    member.proficiency === "frontier" &&
+    (!member.provider ||
+      !config.providers?.[member.provider]?.command_params?.by_proficiency?.frontier)
+  ) {
+    throw new Error(
+      `Cannot launch frontier member ${member.nickname}: configure providers.${member.provider ?? "<provider>"}.command_params.by_proficiency.frontier in exec-defaults.yaml (use {} if no extra variables are needed)`,
+    );
+  }
   const override = member.command?.trim();
   if (override) return override;
 
@@ -382,6 +411,21 @@ export function resolveRegisterPostReview(config: ExecDefaultsConfig): boolean {
   if (typeof raw !== "boolean") {
     throw new Error(
       `run.register_post_review in exec-defaults must be true or false: ${String(raw)}`,
+    );
+  }
+  return raw;
+}
+
+export const DEFAULT_GIT_INDEX_LOCK_WAIT_SECONDS = DEFAULT_INDEX_LOCK_WAIT_MS / 1000;
+
+// How long the runner's Git operations wait for another process to release index.lock. Invalid
+// values are rejected so a typo cannot turn the wait off or make it unbounded.
+export function resolveGitIndexLockWaitSeconds(config: ExecDefaultsConfig): number {
+  const raw = config.run?.git_index_lock_wait_seconds;
+  if (raw === undefined) return DEFAULT_GIT_INDEX_LOCK_WAIT_SECONDS;
+  if (typeof raw !== "number" || !Number.isInteger(raw) || raw < 0) {
+    throw new Error(
+      `run.git_index_lock_wait_seconds in exec-defaults must be a non-negative integer: ${String(raw)}`,
     );
   }
   return raw;
@@ -600,8 +644,22 @@ export function loadExecDefaultsConfig(
   }
 
   resolveParentValidationDefinitions(defaults.pipeline?.parent_validations);
+  resolvePostIntegrationEntries(defaults.pipeline?.post_integration);
   resolveParentValidationConcurrency(defaults.pipeline?.parent_validation_concurrency);
+  resolveCommitHookSkips(
+    defaults.pipeline?.commit_hook_skips,
+    defaults.pipeline?.parent_validations,
+  );
+  if (
+    defaults.pipeline?.mechanical_result !== undefined &&
+    typeof defaults.pipeline.mechanical_result !== "boolean"
+  ) {
+    throw new Error("pipeline.mechanical_result in exec-defaults must be a boolean");
+  }
   resolveRegisterExecution(defaults);
+  // 統合・記帳の git 操作は src/shared/git.ts の gitResult を通るため、読み込んだ設定を
+  // この process の index.lock の待ち時間として反映する（PJR-964D）。
+  configureIndexLockWait(resolveGitIndexLockWaitSeconds(defaults) * 1000);
   resolvePinnedRateLimitPolicy(defaults);
   for (const provider of Object.keys(defaults.providers ?? {}) as AgentProvider[]) {
     if (defaults.providers?.[provider]?.rate_limit_policy) {

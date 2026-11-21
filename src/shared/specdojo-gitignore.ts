@@ -33,12 +33,14 @@ export const NODE_MODULES_PATTERN = "node_modules/";
 export const DEFAULT_GITIGNORE_PATTERNS = [
   NODE_MODULES_PATTERN,
   ".specdojo/doc-index.json",
+  ".specdojo/specdojo.local.config.json",
   "docs/**/generated/*",
   "!docs/**/generated/.gitkeep",
   "docs/**/execution/exec/.locks/",
   "/.vitepress/dist/",
   "/.vitepress/cache/",
   "/.vitepress/mermaid/",
+  "/.vitepress/d2/",
   "/.vitepress/kata-staging/",
 ] as const;
 

@@ -4,16 +4,17 @@ document: specdojo:stsd-recipe
 path: docs/ja/specdojo/recipes/stsd-recipe.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 92
-graded_at: "2026-10-10T21:01:44.028Z"
-graded_by: agy-expert-executor
-content_hash: d406c471857d6d282ed3110e9fefc1ddfdd838811c33d71846743e202f9f4ece
+reference: specdojo:prj-overview-recipe
+verdict: pass
+score: 98
+graded_at: "2026-11-20T20:42:11.590Z"
+graded_by: flash-high-executor
+content_hash: 63c8e21d00304de7abff450ab84be6b8887c14279003f2fa213ac70c10bfeca4
 categories:
   purpose:
     score: 100
   operations:
-    score: 88
+    score: 100
   planning:
     score: 100
   business:
@@ -25,9 +26,9 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 92
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -36,8 +37,8 @@ viewpoints:
     level: 4
     score: 100
   vp-po-publication-accountability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-plan-feasibility:
     level: 4
     score: 100
@@ -78,11 +79,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
     level: 3
     score: 75
-  vp-qe-kata-conformance:
-    level: 2
-    score: 50
   vp-ux-readability:
     level: 4
     score: 100
@@ -90,8 +91,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-operability:
     level: 4
     score: 100
@@ -103,42 +104,18 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 4
+  major: 0
+  minor: 1
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-publication-accountability
-    line: 128
-    anchor: "- 実装条件式、SQL、詳細 API、画面操作を状態定義として記載していない。"
-    message: 仕上げチェックに、個人情報・非公開情報を含まないことと、公開可否を人間の責任者が判断することを確認する項目を追加する必要がある。
-    message_ja: 仕上げチェックに、個人情報・非公開情報を含まないことと、公開可否を人間の責任者が判断することを確認する項目を追加する必要がある。
-  - id: F002
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 131
+    rule: vp-qe-kata-conformance
+    line: 8
     anchor: ""
-    message: 状態一覧の全行に入力すべき項目として、rulebook で定義された「値」と「通称」が漏れているため追記し、値の一意性確認もチェックに含める必要がある。
-    message_ja: 状態一覧の全行に入力すべき項目として、rulebook で定義された「値」と「通称」が漏れているため追記し、値の一意性確認もチェックに含める必要がある。
-  - id: F003
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 84
-    anchor: "- 影響する状態名または遷移 ID、決定者、決定時期を添えます。"
-    message: Rulebook では初期点を「開始」、終了点を「終了」とし状態一覧には含めないとしているため、「遷移元・遷移先は状態一覧と同じ名称ですか」という問いは初期・終了遷移の場合と矛盾する。
-    message_ja: Rulebook では初期点を「開始」、終了点を「終了」とし状態一覧には含めないとしているため、「遷移元・遷移先は状態一覧と同じ名称ですか」という問いは初期・終了遷移の場合と矛盾する。
-  - id: F004
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 128
-    anchor: "- 実装条件式、SQL、詳細 API、画面操作を状態定義として記載していない。"
-    message: rulebook で定義された具体的なラベル（`_TODO_:`、`_UNDECIDED_:`、`_ASSUMPTION_:`）を明記し、使用を促す記述にする必要がある。
-    message_ja: rulebook で定義された具体的なラベル（`_TODO_:`、`_UNDECIDED_:`、`_ASSUMPTION_:`）を明記し、使用を促す記述にする必要がある。
-  - id: F005
-    severity: minor
-    rule: vp-ops-release-readiness
-    line: 128
-    anchor: "- 実装条件式、SQL、詳細 API、画面操作を状態定義として記載していない。"
-    message: 仕上げチェックに、公開対象、承認者、`ready` への昇格条件を確認する項目がなく、公開前のリリース判断を完結できない。
-    message_ja: 仕上げチェックに、公開対象、承認者、`ready` への昇格条件を確認する項目がなく、公開前のリリース判断を完結できない。
+    message: >-
+      前回の指摘（Why, What, How, Trace の明記）は解消されているが、「1. このレシピの使い方」において recipe-authoring-standard
+      が求める「このレシピを使う順序と確認の進め方」の記述が不足しており、必須章に求められる最低3つ以上の具体項目（箇条書き等）を満たしていない（1項目のみにとどまる）。
+    message_ja: >-
+      前回の指摘（Why, What, How, Trace の明記）は解消されているが、「1. このレシピの使い方」において recipe-authoring-standard
+      が求める「このレシピを使う順序と確認の進め方」の記述が不足しており、必須章に求められる最低3つ以上の具体項目（箇条書き等）を満たしていない（1項目のみにとどまる）。

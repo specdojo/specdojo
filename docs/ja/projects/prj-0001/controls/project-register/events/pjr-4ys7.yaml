@@ -1,0 +1,94 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_3ba90c3a5a7c4341bf8f2e660530beb8
+  ts: "2026-11-12T13:33:39Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳。indie が案を承認
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 用語集の YAML の表示用ページを、分類ごとの表で描く
+    - field: description
+      from: ""
+      to: "yaml-pages が type: glossary の YAML を、コードブロックではなく分類ごとの表で描き、YAML の正本は折りたたんで残す"
+    - field: input
+      from: ""
+      to: '["用語集の確定の段の前に、表示用ページが YAML をコードブロックに埋めただけでレビューしにくいと indie が気づいた。表示の案を orchestrator が出し、indie が承認した（2026-11-12）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: sol-executor
+    - field: registered
+      from: ""
+      to: "2026-11-12"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-6XQ4"]'
+    - field: commit_type
+      from: ""
+      to: feat
+    - field: commit_scope
+      from: ""
+      to: docs
+- v: 1
+  id: reg_f5bf4da8146940bfb3f80ae8ecd74c79
+  ts: "2026-11-12T13:34:40Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_3ba90c3a5a7c4341bf8f2e660530beb8
+- v: 1
+  id: reg_7b7843e773fd4ae6bd45b7982c98dfb3
+  ts: "2026-11-12T14:01:26Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_f5bf4da8146940bfb3f80ae8ecd74c79
+- v: 1
+  id: reg_0c8ba312119c4407a1de39921f7c62ad
+  ts: "2026-11-19T14:46:57Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 利用者が文書サイトの表示をブラウザで確かめ、close を決めた（2026-11-19）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-19"
+    - field: conclusion
+      from: "-"
+      to: 用語集の YAML の表示ページを分類ごとの表にし、関連用語へのページ内リンクと YAML の正本の折りたたみを足した
+  previous_event_id: reg_7b7843e773fd4ae6bd45b7982c98dfb3

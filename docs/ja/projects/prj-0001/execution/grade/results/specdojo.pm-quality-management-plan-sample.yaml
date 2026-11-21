@@ -4,43 +4,43 @@ document: specdojo:pm-quality-management-plan-sample
 path: docs/ja/specdojo/samples/pm-quality-management-plan-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 90
-graded_at: "2026-10-16T20:52:24.552Z"
-graded_by: agy-expert-executor
-content_hash: 5695a324894abd8b0c95fb6531010b1c2027b4e819a934174c178456ebdc2c0d
+verdict: pass
+score: 97
+graded_at: "2026-11-17T22:41:31.131Z"
+graded_by: sol-review-executor
+content_hash: 0326a622e574ef39081cb3fec5bb7a41889161c3a7f9a14d322e529572dba6e7
 categories:
   purpose:
-    score: 100
+    score: 88
   operations:
     score: 100
   planning:
-    score: 100
+    score: 92
   business:
     score: 100
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
     score: 100
   quality:
     score: 92
   consistency:
-    score: 50
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-publication-accountability:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-dependency-risk:
     level: 4
     score: 100
@@ -75,20 +75,20 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
-  vp-qe-omissions-consistency:
-    level: 2
-    score: 50
-  vp-qe-kata-conformance:
     level: 4
     score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -103,28 +103,30 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 2
+  major: 0
+  minor: 3
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-verifiability
-    line: 20
-    anchor: "| レビュー         | 主な観点                               | 実施者               | 証跡               |"
-    message: レビュー表に「出口条件」が含まれておらず、pass / fail の判定基準が不明確である。
-    message_ja: レビュー表に「出口条件」が含まれておらず、pass / fail の判定基準が不明確である。
+    rule: vp-po-decision-readiness
+    line: 59
+    anchor: "| `_UNDECIDED_:` オフライン時の運用・受入範囲（成功条件の未解決事項） | 当該経路の実運用と、その未決を残した店頭試用開始                                          |"
+    message: オフライン時の運用・受入範囲について、判断材料を整理するRole codeとPOへの提示時点を補ってください。参照先の成功条件にも材料準備の担当がなく、保留解除に必要な検討を誰に依頼するかが不明です。
+    message_ja: オフライン時の運用・受入範囲について、判断材料を整理するRole codeとPOへの提示時点を補ってください。参照先の成功条件にも材料準備の担当がなく、保留解除に必要な検討を誰に依頼するかが不明です。
   - id: F002
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 5
-    anchor: 品質は、文書が整っていることではなく、店主と家族が販売・在庫・つけの記録を正しく続けられ、追加負担を許容できることを中心に判定する。文書・実装・公開物の品質は、その価値を安全に実現するための条件として扱う。
-    message: 「品質方針と適用範囲」において, rulebook で必須とされている「対象期間」および「人と AI の境界」の記述が欠落している。
-    message_ja: 「品質方針と適用範囲」において, rulebook で必須とされている「対象期間」および「人と AI の境界」の記述が欠落している。
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 59
+    anchor: "| `_UNDECIDED_:` オフライン時の運用・受入範囲（成功条件の未解決事項） | 当該経路の実運用と、その未決を残した店頭試用開始                                          |"
+    message: オフライン方針の検討を、運用案・追加受入条件案の準備作業として担当Role codeと完了条件に結び付けてください。現状は試用開始を止める条件だけが示され、未決解消の作業をScheduleへ割り当てる際に補完が必要です。
+    message_ja: オフライン方針の検討を、運用案・追加受入条件案の準備作業として担当Role codeと完了条件に結び付けてください。現状は試用開始を止める条件だけが示され、未決解消の作業をScheduleへ割り当てる際に補完が必要です。
   - id: F003
     severity: minor
-    rule: vp-ux-language-consistency
-    line: 20
-    anchor: "| レビュー         | 主な観点                               | 実施者               | 証跡               |"
-    message: レビュー表の列名（レビュー、実施者、証跡）が、rulebook の定義（対象、実施責任、出口条件・証跡）と不整合である。
-    message_ja: レビュー表の列名（レビュー、実施者、証跡）が、rulebook の定義（対象、実施責任、出口条件・証跡）と不整合である。
+    rule: vp-qe-kata-conformance
+    line: 56
+    anchor: >-
+      | 論点                                                                |
+      影響・未決中に保留する判定                                                                |
+    message: 未決事項表をtemplateの「論点」「正本と判断材料の担当」「決定時期・判断者」「未決中に保留する判定・作業」に合わせてください。現状の2列では担当・判断時期・判断者の記入例が欠け、recipeが求める未決解消までの責任と時点を示す完成例になっていません。
+    message_ja: 未決事項表をtemplateの「論点」「正本と判断材料の担当」「決定時期・判断者」「未決中に保留する判定・作業」に合わせてください。現状の2列では担当・判断時期・判断者の記入例が欠け、recipeが求める未決解消までの責任と時点を示す完成例になっていません。

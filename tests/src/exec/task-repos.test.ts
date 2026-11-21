@@ -99,6 +99,103 @@ describe("withAgentExtraRoots", () => {
       "codex exec '--add-dir' '/tmp/it'\\''s here'",
     );
   });
+
+  it("keeps the claude, codex, antigravity, and copilot arguments when cwd and env are given", () => {
+    const dirs = ["/work/task/app1"];
+    const options = {
+      cwd: "/work/task/project",
+      env: { OPENCODE_CONFIG_CONTENT: '{"autoupdate":false}' },
+    };
+
+    for (const provider of ["claude", "codex", "antigravity", "copilot"] as const) {
+      const expected = `cmd ${agentExtraRootArguments(provider, dirs)
+        .map((arg) => `'${arg}'`)
+        .join(" ")}`;
+      expect(withAgentExtraRoots("cmd", provider, dirs, options)).toBe(expected);
+    }
+  });
+});
+
+describe("withAgentExtraRoots for opencode", () => {
+  const command = "opencode run --agent opencode-executor --model local/qwen";
+  const cwd = "/work/task/project";
+
+  interface InjectedAgent {
+    permission?: {
+      external_directory?: Record<string, string>;
+      edit?: Record<string, string>;
+      bash?: string;
+    };
+  }
+
+  function injectedConfig(actual: string): {
+    autoupdate?: boolean;
+    agent: Record<string, InjectedAgent>;
+  } {
+    const match = /^OPENCODE_CONFIG_CONTENT='([^']*)' (.*)$/.exec(actual);
+    expect(match?.[2]).toBe(command);
+    return JSON.parse(match?.[1] ?? "") as {
+      autoupdate?: boolean;
+      agent: Record<string, InjectedAgent>;
+    };
+  }
+
+  it("allows only the product worktrees: absolute external_directory, cwd-relative edit", () => {
+    const actual = withAgentExtraRoots(
+      command,
+      "opencode",
+      ["/work/task/app1", "/work/task/admin-ui"],
+      {
+        cwd,
+        env: {},
+      },
+    );
+
+    const permission = injectedConfig(actual).agent["opencode-executor"].permission;
+    expect(permission?.external_directory).toEqual({
+      "*": "deny",
+      "/work/task/app1/**": "allow",
+      "/work/task/admin-ui/**": "allow",
+    });
+    expect(permission?.edit).toEqual({
+      "../app1/**": "allow",
+      "../admin-ui/**": "allow",
+    });
+  });
+
+  it("merges the inherited OPENCODE_CONFIG_CONTENT without dropping other settings", () => {
+    const inherited = JSON.stringify({
+      autoupdate: false,
+      agent: {
+        other: {},
+        "opencode-executor": { permission: { bash: "deny", edit: { "*": "deny" } } },
+      },
+    });
+
+    const actual = withAgentExtraRoots(command, "opencode", ["/work/task/app1"], {
+      cwd,
+      env: { OPENCODE_CONFIG_CONTENT: inherited },
+    });
+
+    const config = injectedConfig(actual);
+    expect(config.autoupdate).toBe(false);
+    expect(config.agent.other).toEqual({});
+    expect(config.agent["opencode-executor"].permission).toEqual({
+      bash: "deny",
+      edit: { "*": "deny", "../app1/**": "allow" },
+      external_directory: { "*": "deny", "/work/task/app1/**": "allow" },
+    });
+  });
+
+  it("leaves the command unchanged without product worktrees", () => {
+    expect(withAgentExtraRoots(command, "opencode", [], { cwd, env: {} })).toBe(command);
+  });
+
+  it("refuses to start when the command does not name the agent", () => {
+    expect(() =>
+      withAgentExtraRoots("opencode run", "opencode", ["/work/task/app1"], { cwd, env: {} }),
+    ).toThrow(/--agent <name>.*opencode run/);
+  });
 });
 
 describe("productRepoPromptSection", () => {

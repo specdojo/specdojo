@@ -1,0 +1,13 @@
+`dct-index.yaml` は編集していません。rulebook とすべて適合していて、磨き込みで直すべき不整合は見つかりませんでした。`npm run validate:schema:file` は実行していません。変更したYAMLがないためです。
+
+- **メタ情報**: `id` と `project_id` が対応していて、`title` は参照起点を示しています。`size` は変えていません。
+- **ドメインの配置**: 23 ドメインがすべて1か所だけに宣言されていて、重複はありません。外部I/F仕様は業務仕様群に置き、その判断理由を YAML コメントに残してあります。
+- **ドメイン項目**: `domain`、`name`、`overview` の順に書かれています。`overview` は1文で、個別成果物を列挙していません。`name` に状態や件数は入っていません。
+- **禁止事項**: 個別成果物の配置・依存・完了条件は索引に載せていません。
+- **未確認**: 宣言した23ドメインと実在する `dct-*.yaml` の `domain` の一致は、plan が `catalog validate` を許可していないため確認していません。生成ビューやサイドバーからの到達も確認していません。
+
+`status` は `draft` のままです。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"dct-index.yaml を rulebook と照合し、必須要素・禁止事項・分類の一意性に問題がなかったため変更なし。","handoff":["dct-index.yaml は rulebook に適合しており、編集は行っていない。","宣言ドメインと実在する dct-*.yaml の domain 集合の一致、および生成ビューとサイドバーからの到達性は未確認。plan が catalog validate を許可していないため、後続の catalog validate / catalog build 後の確認に委ねる。"],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/dct-index.schema.yaml --data docs/ja/projects/prj-0001/010-deliverables-catalog/dct-index.yaml","status":"not_applicable","summary":"変更したYAMLファイルがないため未実施。","reason":"対象YAMLを変更していない（validate:schema:file は変更された yaml/yml が必要）。"}]}
+</specdojo_executor_evidence>

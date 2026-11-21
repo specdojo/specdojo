@@ -1,0 +1,15 @@
+{
+  "v": 1,
+  "ts": "2026-11-15T02:39:50Z",
+  "type": "block",
+  "task_id": "T-KATA-WAVE-2-bac-task-execution-005",
+  "by": "sol-executor",
+  "msg": "executor reported incomplete: 必須依存 BPS 4文書が欠落しているため停止。存在確認は終了コード 1 で理由を標準エラーへ出力した。ファイル変更なし。",
+  "meta": {
+    "limit_deferred": "false",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-bac-task-execution-005/T-KATA-WAVE-2-bac-task-execution-005-20261115T021711Z-c43e9a30/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-bac-task-execution-005/T-KATA-WAVE-2-bac-task-execution-005-20261115T021711Z-c43e9a30/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-2-bac-task-execution-005-20261115T021711Z-c43e9a30"
+  }
+}

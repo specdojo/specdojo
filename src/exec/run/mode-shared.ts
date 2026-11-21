@@ -1,6 +1,6 @@
 import { spawnSync } from "node:child_process";
 import { existsSync } from "node:fs";
-import { dirname, join, relative, sep } from "node:path";
+import { relative, sep } from "node:path";
 import { selfRunArgs } from "../../shared/spawn-self.js";
 import { specdojoRootDir } from "../../shared/specdojo-config.js";
 import {
@@ -9,9 +9,10 @@ import {
   updatePipelineStage,
   writePipelineState,
   type PipelineRepoIntegrationState,
-  type PipelineStageState,
   type PipelineStageRole,
+  type PipelineStageState,
 } from "../pipeline-state.js";
+import { runLogPath } from "../run-records.js";
 
 export function spawnSelf(args: string[], cwd = specdojoRootDir()): boolean {
   const [exe, fullArgs] = selfRunArgs(args);
@@ -20,7 +21,9 @@ export function spawnSelf(args: string[], cwd = specdojoRootDir()): boolean {
 }
 
 export function spawnValidate(projectId: string | undefined): boolean {
-  const args = ["exec", "validate"];
+  // Run records can still be incomplete at startup or resume, and the run lock is held.
+  // Audit persisted records explicitly or in CI, independently of schedule readiness.
+  const args = ["exec", "validate", "--schedule-only"];
   if (projectId) args.push("--project", projectId);
   return spawnSelf(args);
 }
@@ -104,6 +107,15 @@ export function pipelineRecoveryMeta(input: {
   };
 }
 
+// The runner blocks a failed task as the actor holding its claim, because another agent may have
+// run the failed stage (fallback, --executor-by, --reporter-by). Record both actors on the event.
+export function stageActorMeta(
+  claimActor: string,
+  stageActor: string | undefined,
+): Record<string, string> {
+  return { claim_actor: claimActor, stage_actor: stageActor || claimActor };
+}
+
 export function spawnBlock(
   projectId: string | undefined,
   taskId: string,
@@ -175,5 +187,5 @@ export function recordRepoIntegration(
 }
 
 export function integrateLogPath(statePath: string | undefined): string | undefined {
-  return statePath ? join(dirname(statePath), "integrate.log") : undefined;
+  return statePath ? runLogPath(statePath, "integrate.log") : undefined;
 }

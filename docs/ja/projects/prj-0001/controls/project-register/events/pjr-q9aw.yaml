@@ -1,0 +1,142 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ffd59c800e3d4b9dbf51e898850e84f7
+  ts: "2026-11-04T23:38:13Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: stsd-task-execution を磨き込む
+    - field: description
+      from: ""
+      to: stsd の試行（3APD）の段 3。draft した stsd-task-execution を fully-guided で磨き込み、Kata の出来を測る材料にする
+    - field: input
+      from: ""
+      to: '["磨き込みは stsd の Kata（rulebook・図の rulebook・recipe・sample・template）に沿って行う。Kata の出来は、この 1 件を材料に人が判断する（3APD の段 5）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-05"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: fully-guided
+    - field: targets
+      from: ""
+      to: '["prj-0001:stsd-task-execution"]'
+    - field: derived_from
+      from: ""
+      to: '["PJR-3APD"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-1799"]'
+- v: 1
+  id: reg_ca4e4881d66742c58f6e5ac2d705cad2
+  ts: "2026-11-04T23:54:48Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_ffd59c800e3d4b9dbf51e898850e84f7
+- v: 1
+  id: reg_6718b79dc37d40f8979a59ac53f1b23e
+  ts: "2026-11-04T23:58:01Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor reported incomplete: 依存成果物 bdd-exec-state.yaml／bdd-exec-event.yaml が存在せず停止。個票の対応結果のみ更新し、標準エラーへ理由を出力、終了コード1。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor reported incomplete: 依存成果物 bdd-exec-state.yaml／bdd-exec-event.yaml が存在せず停止。個票の対応結果のみ更新し、標準エラーへ理由を出力、終了コード1。"
+  previous_event_id: reg_ca4e4881d66742c58f6e5ac2d705cad2
+- v: 1
+  id: reg_a9e3e3baab6b4a22afaa6c80c99f6615
+  ts: "2026-11-05T03:43:23Z"
+  action: update
+  actor: SpecDojo
+  from_status: waiting
+  to_status: waiting
+  reason: fields updated
+  changes:
+    - field: depends_on
+      from: '["PJR-1799"]'
+      to: '["PJR-1799","PJR-H2V8"]'
+  previous_event_id: reg_6718b79dc37d40f8979a59ac53f1b23e
+- v: 1
+  id: reg_2f499ee4962e4e2aa03567c28c56f906
+  ts: "2026-11-05T10:02:47Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "executor reported incomplete: 依存成果物 bdd-exec-state.yaml／bdd-exec-event.yaml が存在せず停止。個票の対応結果のみ更新し、標準エラーへ理由を出力、終了コード1。"
+      to: "-"
+  previous_event_id: reg_a9e3e3baab6b4a22afaa6c80c99f6615
+- v: 1
+  id: reg_802faf1d49e44019868bbd689cb19eb6
+  ts: "2026-11-05T10:16:18Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_2f499ee4962e4e2aa03567c28c56f906
+- v: 1
+  id: reg_e3601557842248c3aa63dfd97ae4596b
+  ts: "2026-11-05T10:18:02Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票・result で確かめた（利用者の委任による自動の進行）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-05"
+    - field: conclusion
+      from: "-"
+      to: 実装の根拠と stsd の Kata に沿って磨き込んだ。Kata の判断材料 3 点を対応結果に残した
+  previous_event_id: reg_802faf1d49e44019868bbd689cb19eb6

@@ -1,11 +1,13 @@
 import { execFileSync } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve, sep } from "node:path";
 import { isDeepStrictEqual } from "node:util";
 import { buildSpecdojoFrontmatter, parseSpecdojoDocument } from "../docs/frontmatter-namespace.js";
-import { escapeMarkdownInline, expandTemplate, stripTerminalControlSequences } from "./shared.js";
+import { resolveSpecdojoPath, resolveSpecdojoPathIfExists } from "../docs/template-resolution.js";
+import { gitEnvironment } from "../shared/git-environment.js";
+import { dump } from "../shared/yaml.js";
+import type { ExecEvidence } from "./evidence.js";
 import { formatMarkdownFile } from "./format.js";
-import type { Approach, ExecResultMeta, TaskMode, TaskOrigin } from "./types.js";
 import {
   deriveReporterFacts,
   mechanicallyNotApplicableReason,
@@ -13,10 +15,25 @@ import {
   type ReporterOutput,
   type ReviewReporterOutput,
 } from "./reporter.js";
-import type { ExecEvidence } from "./evidence.js";
-import { resolveSpecdojoPath, resolveSpecdojoPathIfExists } from "../docs/template-resolution.js";
-import { dump } from "../shared/yaml.js";
-import { gitEnvironment } from "../shared/git-environment.js";
+import {
+  isRunRecordPath,
+  listRunRecords,
+  recordPathForRead,
+  recordStem,
+  resolveRunPlanRef,
+  resultForPlan,
+  taskRecordPaths,
+} from "./run-records.js";
+import {
+  escapeMarkdownInline,
+  expandTemplate,
+  inlineCodeFrontmatterAnglePlaceholders,
+  stripTerminalControlSequences,
+} from "./shared.js";
+import type { Approach, ExecResultMeta, TaskMode, TaskOrigin } from "./types.js";
+
+import { isCondenseRecords, type CondenseRecord } from "../shared/condense-records.js";
+import { inlineCode } from "./plans-grade-findings.js";
 
 export const MAX_INDIVIDUAL_CHANGED_FILES = 50;
 
@@ -45,6 +62,24 @@ function serializeYamlString(value: string): string {
   return serialized.includes("\n") ? JSON.stringify(value) : serialized;
 }
 
+// executor 由来の condense の記録を frontmatter へ書き写す前に、コードスパン外の山括弧を
+// code span 化する。むき出しの `<provider>` などは lint-fm で失敗する（PJR-V141）。
+// 既に code span の語は変えないため、再シリアライズでも値は変わらない。
+function frontmatterCondenseRecords(records: CondenseRecord[]): CondenseRecord[] {
+  return records.map((record) => ({
+    ...record,
+    location: inlineCodeFrontmatterAnglePlaceholders(record.location),
+    reason: inlineCodeFrontmatterAnglePlaceholders(record.reason),
+    cause:
+      record.cause.type === "kata"
+        ? {
+            ...record.cause,
+            location: inlineCodeFrontmatterAnglePlaceholders(record.cause.location),
+          }
+        : record.cause,
+  }));
+}
+
 function serializeFrontmatter(meta: ExecResultMeta): string {
   const inner = [
     `id: ${serializeYamlString(meta.id)}`,
@@ -67,11 +102,24 @@ function serializeFrontmatter(meta: ExecResultMeta): string {
     inner.push("targets:");
     for (const target of meta.targets) inner.push(`  - ${serializeYamlString(target)}`);
   }
+  if (meta.condense_records) {
+    inner.push(
+      ...dump(
+        { condense_records: frontmatterCondenseRecords(meta.condense_records) },
+        { lineWidth: -1, noRefs: true },
+      )
+        .trimEnd()
+        .split("\n"),
+    );
+  }
   // reason は agent stderr や subprocess の生出力由来で任意文字を含みうる。まず ANSI エスケープ
   // シーケンスや制御文字を除去し（色付き hook 出力が result 表示を壊すのを防ぐ）、JSON の
   // 文字列形式で YAML へ埋め込む。改行・引用符・バックスラッシュも値を変えずに保持できる。
   if (meta.block_reason) {
-    const safeReason = stripTerminalControlSequences(meta.block_reason);
+    // executor の stderr（`blocked: <reason>` など）の山括弧も lint-fm で失敗するため code span 化する。
+    const safeReason = inlineCodeFrontmatterAnglePlaceholders(
+      stripTerminalControlSequences(meta.block_reason),
+    );
     inner.push(`block_reason: ${JSON.stringify(safeReason)}`);
   }
   return buildSpecdojoFrontmatter(inner);
@@ -83,6 +131,7 @@ function serializeFrontmatter(meta: ExecResultMeta): string {
 function parseFrontmatter(content: string): {
   meta: Record<string, string>;
   targets?: string[];
+  condenseRecords?: CondenseRecord[];
   body: string;
 } {
   const { data, body } = parseSpecdojoDocument(content);
@@ -97,7 +146,12 @@ function parseFrontmatter(content: string): {
     if (typeof value === "string") meta[key] = value;
     else if (typeof value === "number" || typeof value === "boolean") meta[key] = String(value);
   }
-  return { meta, ...(targets ? { targets } : {}), body };
+  return {
+    meta,
+    ...(targets ? { targets } : {}),
+    body,
+    ...(isCondenseRecords(data.condense_records) ? { condenseRecords: data.condense_records } : {}),
+  };
 }
 
 function frontmatterWithBody(frontmatter: string, body: string): string {
@@ -137,6 +191,12 @@ function loadResultTemplate(
       "utf8",
     );
   }
+  if (mode === "edit" && approach === "condense") {
+    return readFileSync(
+      resolveSpecdojoPath("docs/ja/specdojo/exec-templates/xer-condense-template.md"),
+      "utf8",
+    );
+  }
   if (mode === "edit" && approach === "cross-deliverable-dedup") {
     const crossDeliverablePath = resolveSpecdojoPathIfExists(
       "docs/ja/specdojo/exec-templates/xer-cross-deliverable-dedup-template.md",
@@ -160,7 +220,7 @@ function loadResultTemplate(
 // ---------------------------------------------------------------------------
 
 export function resultPathForTask(executionPath: string, nameBase: string): string {
-  return join(executionPath, "exec", "results", `${nameBase}-result.md`);
+  return recordPathForRead(executionPath, "result", nameBase);
 }
 
 // A unique-name run retains every attempt as a separate result. When a new result is scaffolded,
@@ -173,9 +233,7 @@ async function supersedePriorResults(
   supersededAt: string,
 ): Promise<string[]> {
   const supersededPaths: string[] = [];
-  for (const fileName of readdirSync(resultsDir).sort()) {
-    if (!fileName.endsWith("-result.md")) continue;
-    const candidatePath = join(resultsDir, fileName);
+  for (const candidatePath of listRunRecords(resultsDir, "result")) {
     if (candidatePath === nextResultPath) continue;
 
     let meta: Record<string, string>;
@@ -234,15 +292,21 @@ export async function scaffoldResult(opts: {
   stem?: string;
 }): Promise<{ resultPath: string; created: boolean; supersededPaths: string[] }> {
   const { executionPath, taskId, mode, projectId, planRef, agent, startedAt, approach } = opts;
-  const stem = opts.stem ?? taskId;
-  const resultPath = resultPathForTask(executionPath, stem);
+  if (approach === "condense" && (mode !== "edit" || opts.targets?.length !== 1)) {
+    throw new Error("condense requires edit mode and exactly one target");
+  }
+  const stem = opts.stem ?? (planRef && isRunRecordPath(planRef) ? recordStem(planRef) : taskId);
+  const resultPath =
+    planRef && isRunRecordPath(planRef)
+      ? resultForPlan(resolveRunPlanRef(executionPath, planRef))
+      : taskRecordPaths(executionPath, taskId, opts.runId ?? stem, opts.origin).result;
 
   // Idempotent: claim and exec run can both reach this; never clobber an in-progress result.
   if (existsSync(resultPath)) {
     return { resultPath, created: false, supersededPaths: [] };
   }
 
-  const resultsDir = join(executionPath, "exec", "results");
+  const resultsDir = dirname(resultPath);
   if (!existsSync(resultsDir)) mkdirSync(resultsDir, { recursive: true });
 
   const template = loadResultTemplate(mode, approach, opts.execution);
@@ -262,6 +326,7 @@ export async function scaffoldResult(opts: {
     ...(planRef ? { plan_ref: planRef } : {}),
     ...(opts.execution ? { execution: opts.execution } : {}),
     ...(approach ? { approach } : {}),
+    ...(approach === "condense" ? { condense_records: [] } : {}),
     ...(opts.targets && opts.targets.length > 0 ? { targets: opts.targets } : {}),
   };
 
@@ -285,7 +350,7 @@ export async function scaffoldResult(opts: {
 
   writeFileSync(resultPath, content, "utf8");
   await formatMarkdownFile(resultPath);
-  const supersededPaths = await supersedePriorResults(resultsDir, taskId, resultPath, startedAt);
+  const supersededPaths = await supersedePriorResults(executionPath, taskId, resultPath, startedAt);
   return { resultPath, created: true, supersededPaths };
 }
 
@@ -382,10 +447,26 @@ export function isResultUnfilled(
   const current = parseSpecdojoDocument(readFileSync(resultPath, "utf8"));
   if (MANDATORY_PLACEHOLDERS[mode].some((marker) => current.body.includes(marker))) return true;
   if (!hasNonEmptyScaffoldFields(current.data, mode)) return true;
+  if (
+    current.data.approach === "condense" &&
+    (mode !== "edit" ||
+      !isCondenseRecords(current.data.condense_records) ||
+      !Array.isArray(current.data.targets) ||
+      current.data.targets.length !== 1)
+  )
+    return true;
+  // Condense records are executor facts, filled after scaffolding. Identity and lifecycle
+  // fields retain the same comparisons as every other approach.
+  const comparable = (data: Record<string, unknown>): Record<string, unknown> => {
+    const copy = { ...data };
+    if (data.approach === "condense" && isCondenseRecords(data.condense_records))
+      delete copy.condense_records;
+    return copy;
+  };
 
   if (scaffoldFrontmatter !== undefined) {
     if (!hasNonEmptyScaffoldFields(scaffoldFrontmatter, mode)) return true;
-    if (!isDeepStrictEqual(current.data, scaffoldFrontmatter)) return true;
+    if (!isDeepStrictEqual(comparable(current.data), comparable(scaffoldFrontmatter))) return true;
   }
 
   // resume 時は、実行直前の worktree result を上の厳密比較に使う。さらに root に保持した
@@ -395,8 +476,8 @@ export function isResultUnfilled(
     if (!hasNonEmptyScaffoldFields(originalScaffoldFrontmatter, mode)) return true;
     if (
       !isDeepStrictEqual(
-        immutableScaffoldFields(current.data),
-        immutableScaffoldFields(originalScaffoldFrontmatter),
+        immutableScaffoldFields(comparable(current.data)),
+        immutableScaffoldFields(comparable(originalScaffoldFrontmatter)),
       )
     ) {
       return true;
@@ -746,7 +827,7 @@ export function renderEditReporterBody(
       : `${event.trigger === "connection_error" ? "接続エラー" : "rate limit"}後に ${event.from_actor} から ${event.to_actor} へ切り替え、${event.resumed_at} に再開`,
   );
   return [
-    "# Edit Result",
+    options?.approach === "condense" ? "# Condense Result" : "# Edit Result",
     "",
     "## 1. 実施内容",
     "",
@@ -810,9 +891,25 @@ function renderReviewReporterBody(output: ReviewReporterOutput, evidence: ExecEv
   ].join("\n");
 }
 
+function renderCondenseRecords(records: CondenseRecord[]): string {
+  if (!records.length) return "なし";
+  const cell = (text: string): string => inlineCode(text).replaceAll("|", "\\|");
+  return [
+    "| 場所（修正前） | 種類 | 直し方 | 残した理由／意味の維持 | 原因 |",
+    "| --- | --- | --- | --- | --- |",
+    ...records.map((record) => {
+      const cause =
+        record.cause.type === "kata"
+          ? `kata:${record.cause.kind}; location=${record.cause.location}`
+          : "document";
+      return `| ${[record.location, record.category, record.action, record.reason, cause].map(cell).join(" | ")} |`;
+    }),
+  ].join("\n");
+}
+
 /**
- * Replaces only the result body from schema-validated reporter data. The scaffolded frontmatter
- * remains byte-for-byte runner-owned until the lifecycle status update serializes it.
+ * Renders reporter prose and runner-owned facts. Condense records come only from validated
+ * executor evidence; all other approaches preserve the scaffold frontmatter byte-for-byte.
  */
 export async function renderReporterResult(
   resultPath: string,
@@ -826,7 +923,7 @@ export async function renderReporterResult(
   if (parsed.data.mode !== output.mode) {
     throw new Error(`reporter mode does not match result scaffold: ${output.mode}`);
   }
-  const frontmatter = content.match(/^---\r?\n[\s\S]*?\r?\n---/)?.[0];
+  let frontmatter = content.match(/^---\r?\n[\s\S]*?\r?\n---/)?.[0];
   if (!frontmatter) throw new Error(`Result frontmatter not found: ${resultPath}`);
 
   const approach =
@@ -841,11 +938,26 @@ export async function renderReporterResult(
     worktreeDir: options?.worktreeDir ?? findGitRoot(dirname(resultPath)) ?? undefined,
   };
 
+  let recordsBody = "";
+  if (approach === "condense" && output.mode === "edit") {
+    if (!isCondenseRecords(evidence.condense_records)) {
+      throw new Error(
+        "condense requires valid executor condense_records (use [] when no candidates)",
+      );
+    }
+    // Preserve scaffold ownership; add only validated executor facts, never reporter prose.
+    const scaffold = {
+      ...parsed.data,
+      condense_records: frontmatterCondenseRecords(evidence.condense_records),
+    };
+    frontmatter = `---\n${dump({ specdojo: scaffold }, { lineWidth: -1, noRefs: true }).trimEnd()}\n---`;
+    recordsBody = `\n\n## 5. 修正・保持の記録\n\n${renderCondenseRecords(evidence.condense_records)}`;
+  }
   const body =
     output.mode === "edit"
       ? renderEditReporterBody(output, evidence, resolvedOptions)
       : renderReviewReporterBody(output, evidence);
-  writeFileSync(resultPath, frontmatterWithBody(frontmatter, body), "utf8");
+  writeFileSync(resultPath, frontmatterWithBody(frontmatter, body + recordsBody), "utf8");
   await formatMarkdownFile(resultPath);
 }
 
@@ -858,7 +970,12 @@ export async function updateResultStatus(
   if (!existsSync(resultPath)) return;
 
   const content = readFileSync(resultPath, "utf8");
-  const { meta: existingMeta, targets: existingTargets, body } = parseFrontmatter(content);
+  const {
+    meta: existingMeta,
+    targets: existingTargets,
+    condenseRecords,
+    body,
+  } = parseFrontmatter(content);
 
   // block 理由は blocked のときのみ保持する。新しい reason を優先し、無ければ既存値を残す。
   // complete へ遷移した場合は理由を消す。
@@ -884,6 +1001,7 @@ export async function updateResultStatus(
       : {}),
     approach: existingMeta.approach ? (existingMeta.approach as Approach) : undefined,
     ...(existingTargets ? { targets: existingTargets } : {}),
+    ...(condenseRecords ? { condense_records: condenseRecords } : {}),
     ...(blockReason ? { block_reason: blockReason } : {}),
   };
 
@@ -903,7 +1021,12 @@ export async function resetResultForClaim(
   if (!existsSync(resultPath)) return;
 
   const content = readFileSync(resultPath, "utf8");
-  const { meta: existingMeta, targets: existingTargets, body } = parseFrontmatter(content);
+  const {
+    meta: existingMeta,
+    targets: existingTargets,
+    condenseRecords,
+    body,
+  } = parseFrontmatter(content);
   const existingExecution =
     existingMeta.execution === "human" || existingMeta.execution === "agent"
       ? existingMeta.execution
@@ -925,6 +1048,7 @@ export async function resetResultForClaim(
     ...(nextExecution ? { execution: nextExecution } : {}),
     approach: existingMeta.approach ? (existingMeta.approach as Approach) : undefined,
     ...(existingTargets ? { targets: existingTargets } : {}),
+    ...(condenseRecords ? { condense_records: condenseRecords } : {}),
   };
 
   writeFileSync(resultPath, frontmatterWithBody(serializeFrontmatter(updatedMeta), body), "utf8");
@@ -957,6 +1081,7 @@ export function parseResultTaskIdentity(resultContent: string): ResultTaskIdenti
     [
       "draft",
       "fully-guided",
+      "condense",
       "recipe-guided",
       "freeform",
       "bootstrap",

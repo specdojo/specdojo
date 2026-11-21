@@ -224,16 +224,36 @@ flowchart TB
 
 ### 6.1. dct・sch・execの対応
 
-| 情報                | 主な役割                                                             | 担当ファイル                                           |
-| ------------------- | -------------------------------------------------------------------- | ------------------------------------------------------ |
-| 成果物カタログ      | 管理する成果物、配置、依存関係、完了条件を定義する                   | `dct-<domain>.yaml`                                    |
-| トラック            | 対象成果物のスコープを決め、実行系列としてまとめる                   | `sch-track-<track>.yaml` / `sch-strategy-<track>.yaml` |
-| 実行フェーズ / パス | 成果物ごと、または成果物群を横断して適用する作業段階を定義する       | `sch-strategy-<track>.yaml`                            |
-| タスク              | 成果物×フェーズ から生成される実行アトム。担当・期限・依存関係を持つ | `sch-track-<track>.yaml`（生成物）                     |
-| plan                | 一回の作業で確認・変更する対象と手順を示す                           | `execution/exec/plans/`                                |
-| result              | 実施内容、確認結果、残課題を記録する                                 | `execution/exec/results/`                              |
-| 実行イベント        | claim / complete / block などの実行履歴を表す                        | `execution/exec/events/`                               |
-| 実行生成物          | Ready、状態スナップショット、クリティカルパスなどを表す              | `execution/generated/`                                 |
+| 情報                | 主な役割                                                             | 担当ファイル                                             |
+| ------------------- | -------------------------------------------------------------------- | -------------------------------------------------------- |
+| 成果物カタログ      | 管理する成果物、配置、依存関係、完了条件を定義する                   | `dct-<domain>.yaml`                                      |
+| トラック            | 対象成果物のスコープを決め、実行系列としてまとめる                   | `sch-track-<track>.yaml` / `sch-strategy-<track>.yaml`   |
+| 実行フェーズ / パス | 成果物ごと、または成果物群を横断して適用する作業段階を定義する       | `sch-strategy-<track>.yaml`                              |
+| タスク              | 成果物×フェーズ から生成される実行アトム。担当・期限・依存関係を持つ | `sch-track-<track>.yaml`（生成物）                       |
+| plan                | 一回の作業で確認・変更する対象と手順を示す                           | `execution/runs/<出どころ>/<項目 ID>/<run ID>/plan.md`   |
+| result              | 実施内容、確認結果、残課題を記録する                                 | `execution/runs/<出どころ>/<項目 ID>/<run ID>/result.md` |
+| 実行イベント        | claim / complete / block などの実行履歴を表す                        | `execution/exec/events/`                                 |
+| 実行生成物          | Ready、状態スナップショット、クリティカルパスなどを表す              | `execution/generated/`                                   |
+
+実行記録は次の配置で保持します。出どころは `register`・`schedule`・`job` です。項目 ID と run ID の決め方は [[specdojo:plan-result-lifecycle-guide|plan/resultライフサイクルガイド]] を参照してください。
+
+```text
+execution/
+  runs/<出どころ>/<項目 ID>/<run ID>/
+    plan.md
+    result.md
+    evidence.json
+    pipeline-state.json
+    executor.log
+    reporter.log
+  conventions/
+  exec/events/
+  grade/results/
+  jobs/runs/
+  generated/
+```
+
+job の定義はプロジェクト直下の `jobs/` に置きます。`exec/trials/` は比較実験の記録であり、通常の run とは別に管理します。配置の検査は [[specdojo:plan-result-lifecycle-guide|plan/resultライフサイクルガイド]] の「配置の検査」を参照してください。
 
 ### 6.2. 展開の流れ
 
@@ -287,14 +307,17 @@ idと対応させない場合（日本語名称を使用する場合等）は、
 #### 8.1.2. 横断ドキュメント
 
 - 横断ディレクトリは特定ドメインの配下に置かず、プロジェクト直下に置きます。
-  `controls/project-register/` の登録項目や `execution/exec/plans/` の実行プランは、
+  `controls/project-register/` の登録項目や `execution/runs/<出どころ>/<項目 ID>/<run ID>/plan.md` の実行プランは、
   プロジェクト定義・プロダクト変更を含む全ドメインの成果物を対象とするためです。
 - これらが成果物カタログの管理対象かどうかは配置とは独立で、
   どのドメインに分類するかは各 `dct-<domain>.yaml` の `domain` が決めます。
   例えば `controls/` と `reporting/` は `dct-project-management.yaml`
-  （`domain: project-management`）が管理します。`timeline/` と `schedule/` の計画成果物は、
-  トラック追加に伴って増えるため `dct-planning.yaml`（`domain: planning`）で管理します。
-  `routines/`、`controls/reviews/`、各 `generated/` は CLI の入出力領域なのでカタログ管理対象外です。
+  （`domain: project-management`）が管理します。全体計画の正本は `controls/project-register/` の epic です。
+  `schedule/` の計画成果物は `dct-planning.yaml`（`domain: planning`）で管理し、
+  旧 `timeline/tml-index.yaml` は非推奨の互換用ファイルとして扱います。
+  `routines/`、`controls/generated/`、各 `generated/` は CLI の入出力領域なのでカタログ管理対象外です。
+
+派生ビューは `controls/generated/`、`schedule/generated/` など横断ディレクトリの直下に置きます。旧 sch-assessment は廃止済みのため、専用のサブディレクトリは作りません。routine の状態・履歴・lock は [[specdojo:routine-operation-guide|routine 運用ガイド]] に従って Git の外の端末側へ保存し、exec の lock は Git が無視する `execution/exec/.locks/` に置きます。
 
 再利用可能なJob Definitionは`jobs/`、各回のJob Runは`execution/jobs/`へ置きます。詳細は[Job実行設計](../../product/040-system-design/sysd-job-execution.md)を参照してください。
 
@@ -311,7 +334,7 @@ projects/<prj-id>/
 ├── 050-impact-analysis/        # 導入・変更の影響調査
 ├── 060-migration-planning/     # 移行計画・設計・切替計画
 ├── ...                         # 070- 以降の成果物ドメイン
-├── controls/                   # 管理台帳・派生ビュー（登録簿・レビュー結果）
+├── controls/                   # 管理台帳・派生ビュー（登録簿・generated/）
 ├── schedule/                   # Schedule（sch-*.yaml）
 ├── routines/                   # 定期実行ルーチン（rtn-*.yaml）
 ├── jobs/                       # 再利用可能なJob Definition（job-*.yaml）
@@ -320,6 +343,16 @@ projects/<prj-id>/
 ```
 
 ファイル単位の完全なツリーは [ディレクトリレイアウトリファレンス](../references/directory-layout-reference.md) の `プロジェクトドキュメントの構成` を参照してください。
+
+`reporting/progress-reports/` は週報などの成果物を初めて保存するときに作成します。job・routine の定義を置くだけでは作成されません。agent 型 job は作業指示を exec plan に展開し、報告本文と保存先ディレクトリの作成を agent が行います。出力先は project の `base_path` からの相対パスです。
+
+prj-0001 の `job-weekly-report.yaml` はこの出力先を指定していますが、対応する `rtn-weekly-report.yaml` は `enabled: false` のサンプルであり、`routine run --due` では選ばれません。週報を作成するまで `reporting/` が存在しないのは、この構成では正常です。
+
+### 8.3. 公開しない旧文書の保管
+
+現行の文書ツリーから外す旧文書は、リポジトリ直下の `archive/` に保管します。prj-0001 で廃止したプロダクト文書22件は `archive/ja/product/trash/` に置きます。`docs/` と project の外に置くことで、文書サイトのページ・サイドバー・検索と doc index の走査対象から外します。`trash` のパス区分は残し、カタログの現行文書探索や grade の対象に戻さないようにします。
+
+カタログの `path` は移動先を指し、ID と本文は保持します。過去の文書からの wikilink は `archive/ja/product/trash/links.json` で旧IDと移動先を対応付け、サイトではリポジトリ上のソースへ解決します。この対応表は公開 doc index には追加しません。
 
 ## 9. プロダクトドキュメントの構成
 

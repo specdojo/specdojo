@@ -1,0 +1,149 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_3c2a19803b4b497da51b9b8d4de22c5a
+  ts: "2026-11-15T12:32:24Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: pm-quality-management-plan を grade の指摘で手直しする（project-kata の 140 の差し戻し）
+    - field: description
+      from: ""
+      to: pm-quality-management-plan を最新の grade の指摘で直す
+    - field: input
+      from: ""
+      to: '["T-PROJECT-KATA-pm-quality-management-plan-140 で差し戻し（indie が 2026-11-15 に判断、PJR-TN43 の 1.4 の D）。2026-11-15 の grade で完了条件を満たしていない","最新の grade の未充足の完了条件と major の指摘を取り込む。本文は status: ready のまま差し戻したため、直す間の status の扱いも決める"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: PM
+    - field: registered
+      from: ""
+      to: "2026-11-15"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: fully-guided
+    - field: targets
+      from: ""
+      to: '["prj-0001:pm-quality-management-plan"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: pm
+- v: 1
+  id: reg_01e5557cbdc441a4af5053da5bf0d691
+  ts: "2026-11-15T18:01:38Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_3c2a19803b4b497da51b9b8d4de22c5a
+- v: 1
+  id: reg_90f91ee503b94ef8a5f270c967336521
+  ts: "2026-11-15T18:48:37Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_01e5557cbdc441a4af5053da5bf0d691
+- v: 1
+  id: reg_5df10e316ecf429d8390a5e4fd3a4367
+  ts: "2026-11-16T15:36:17Z"
+  action: start
+  actor: opus-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_90f91ee503b94ef8a5f270c967336521
+- v: 1
+  id: reg_abd6b586f26d454e8d045264ec449c3a
+  ts: "2026-11-16T15:43:14Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_5df10e316ecf429d8390a5e4fd3a4367
+- v: 1
+  id: reg_5e95e713aa90461cb34425b54206ef2a
+  ts: "2026-11-16T16:52:47Z"
+  action: start
+  actor: opus-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_abd6b586f26d454e8d045264ec449c3a
+- v: 1
+  id: reg_0ad6c0b6b25b4ef3810e053c1b6834c4
+  ts: "2026-11-16T16:58:51Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_5e95e713aa90461cb34425b54206ef2a
+- v: 1
+  id: reg_a8a5aab7c01a4961a0ab708161c31870
+  ts: "2026-11-16T17:07:25Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 3 回目の手直しの統合後に再 grade し、完了条件をすべて満たして pass になったことを grade の結果と個票の対応結果で確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-17"
+    - field: conclusion
+      from: "-"
+      to: pm-quality-management-plan を grade の指摘で 3 回直し、再 grade で pass（100 点、完了条件 3/3）になった。成果物の確定は人の 140 で行う
+  previous_event_id: reg_0ad6c0b6b25b4ef3810e053c1b6834c4

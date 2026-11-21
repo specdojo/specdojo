@@ -4,16 +4,16 @@ document: specdojo:prj-comparison-of-alternatives-rulebook
 path: docs/ja/specdojo/rulebooks/prj-comparison-of-alternatives-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 91
-graded_at: "2026-10-06T21:26:22.270Z"
-graded_by: agy-expert-executor
-content_hash: 3af0dafde04b081c68310ac5418c491ca554714f596db73648120e6513fa0990
+verdict: pass
+score: 97
+graded_at: "2026-11-17T22:09:47.090Z"
+graded_by: sol-review-executor
+content_hash: 6bf669e9409d446d81516d93eef1b9b45a2950114603999e215dc22c7e3c59a6
 categories:
   purpose:
     score: 100
   operations:
-    score: 100
+    score: 94
   planning:
     score: 100
   business:
@@ -21,11 +21,11 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 83
-  implementation:
     score: 100
+  implementation:
+    score: 88
   quality:
-    score: 75
+    score: 92
   consistency:
     score: 100
 viewpoints:
@@ -60,8 +60,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -69,8 +69,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-change-impact:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-testability:
     level: 4
     score: 100
@@ -81,20 +81,20 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 1
-    score: 25
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 4
     score: 100
   vp-ops-operability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -103,56 +103,38 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 2
-  minor: 5
+  major: 0
+  minor: 3
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-arc-conciseness
-    line: 115
-    anchor: ""
-    message: Frontmatter で template を骨組みの正本として宣言している一方、「本文構成（標準テンプレ）」で同じ見出し構成を再掲しており、各章の目的・必須性・記述規約だけを残せば判断情報を失わずに重複を削減できる。
-    message_ja: Frontmatter で template を骨組みの正本として宣言している一方、「本文構成（標準テンプレ）」で同じ見出し構成を再掲しており、各章の目的・必須性・記述規約だけを残せば判断情報を失わずに重複を削減できる。
+    rule: vp-dev-change-impact
+    line: 111
+    anchor: "- 方針変更の理由、評価結果、影響範囲、移行・撤退方法を記録先から辿れるようにします。未決の比較条件には論点と採否・後続作業への影響を示します。"
+    message: 方針変更の影響を記録する要求に加え、採択案の変更時に後続設計、外部連携・データ移行の設定、受入・運用手順のどれを追従確認するかを記述してください。比較時の影響評価は定義されていますが、既存成果物や設定の更新漏れを防ぐ確認対象が明確ではありません。
+    message_ja: 方針変更の影響を記録する要求に加え、採択案の変更時に後続設計、外部連携・データ移行の設定、受入・運用手順のどれを追従確認するかを記述してください。比較時の影響評価は定義されていますが、既存成果物や設定の更新漏れを防ぐ確認対象が明確ではありません。
   - id: F002
-    severity: major
+    severity: minor
     rule: vp-qe-kata-conformance
-    line: 163
-    anchor: ""
-    message: ルールブックは「リスク」と「技術実現性」を評価軸の最低ラインとし省略理由を要求しているが、sample の評価軸・比較結果は両軸と省略理由を欠いており、参照成果物間で必須条件が一致していない。
-    message_ja: ルールブックは「リスク」と「技術実現性」を評価軸の最低ラインとし省略理由を要求しているが、sample の評価軸・比較結果は両軸と省略理由を欠いており、参照成果物間で必須条件が一致していない。
+    line: 12
+    anchor: >-
+      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status`・承認・改訂と廃止・未決事項の引き継ぎは [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]]
+      に従います。文書の整形・lint はリポジトリの検証で扱い、業務の受入条件に含めません。
+    message: >-
+      Rulebook 記述標準は、共通の変更管理規則への参照に加えて、各系統の具体的な追従対象と役割分担を定義するよう求めています。代替案比較の変更に伴う後続成果物・Schedule の更新対象と責任 Role
+      を補い、template「決定と見直し」の追従責任欄を埋める基準を rulebook 側にも定めてください。
+    message_ja: >-
+      Rulebook 記述標準は、共通の変更管理規則への参照に加えて、各系統の具体的な追従対象と役割分担を定義するよう求めています。代替案比較の変更に伴う後続成果物・Schedule の更新対象と責任 Role
+      を補い、template「決定と見直し」の追従責任欄を埋める基準を rulebook 側にも定めてください。
   - id: F003
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 163
-    anchor: ""
-    message: 完成例である sample が最低ラインの評価軸「リスク」「技術実現性」を評価軸・比較結果から省略し、その理由も示していないため、rulebook を適用した正しい完成例として機能していない。
-    message_ja: 完成例である sample が最低ラインの評価軸「リスク」「技術実現性」を評価軸・比較結果から省略し、その理由も示していないため、rulebook を適用した正しい完成例として機能していない。
-  - id: F004
     severity: minor
-    rule: vp-qe-kata-conformance
-    line: 115
-    anchor: ""
-    message: 著述標準は template 宣言済み系統の第5章を「本文要件」とし、見出し順・表・記入欄の骨組みを template の正本として転載しないよう定めているが、本書は「本文構成（標準テンプレ）」として見出し一覧を再掲している。
-    message_ja: 著述標準は template 宣言済み系統の第5章を「本文要件」とし、見出し順・表・記入欄の骨組みを template の正本として転載しないよう定めているが、本書は「本文構成（標準テンプレ）」として見出し一覧を再掲している。
-  - id: F005
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 165
-    anchor: "- 判断過程を追跡できるよう、根拠資料へのリンクを記載します。"
-    message: ルールブックは評価軸を省略する場合の理由記載を要求しているが, template は「不要な軸を削除」とだけ案内して省略理由の記入を促しておらず、適用手順が一致していない。
-    message_ja: ルールブックは評価軸を省略する場合の理由記載を要求しているが, template は「不要な軸を削除」とだけ案内して省略理由の記入を促しておらず、適用手順が一致していない。
-  - id: F006
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 165
-    anchor: "- 判断過程を追跡できるよう、根拠資料へのリンクを記載します。"
-    message: template は評価軸を削除できると案内しながら省略理由の記入を指示しておらず、rulebook が定める適用方法を骨組みに十分反映していない。
-    message_ja: template は評価軸を削除できると案内しながら省略理由の記入を指示しておらず、rulebook が定める適用方法を骨組みに十分反映していない。
-  - id: F007
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 163
-    anchor: ""
-    message: 最低ラインの評価軸として「運用適合」と記載されているが、sample/template では「業務適合」となっており、用語が不統一である。
-    message_ja: 最低ラインの評価軸として「運用適合」と記載されているが、sample/template では「業務適合」となっており、用語が不統一である。
+    rule: vp-ops-operability
+    line: 110
+    anchor: "- 採択・試行・保留は決定 ID ごとに要約し、最終判断者を示します。再評価トリガーは期間・測定値・制約や依存の変化で定め、特定製品の自動採用条件にしません。"
+    message: >-
+      再評価後に比較結果・決定記録を更新する担当と、後続作業・Schedule
+      への反映完了を確認する担当を、この系統の責務として明示してください。再評価の契機と記録先は定義されていますが、比較の更新から計画の追従までを誰が完了させるかは共通規則からの補完が必要です。
+    message_ja: >-
+      再評価後に比較結果・決定記録を更新する担当と、後続作業・Schedule
+      への反映完了を確認する担当を、この系統の責務として明示してください。再評価の契機と記録先は定義されていますが、比較の更新から計画の追従までを誰が完了させるかは共通規則からの補完が必要です。

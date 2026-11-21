@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_e300550b36244d54950923c9bdf00eb3
+  ts: "2026-11-08T08:12:25Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: GUI のワイヤーフレームとデザインのルールをどの型で定めるか
+    - field: description
+      from: ""
+      to: uis はワイヤーフレームとレイアウトを含めず、今の型にはそれらとデザインのルールを定める場所がない。デザインのルール（色・文字・余白の基本の値、部品、レイアウトの型、アクセシビリティ）を設計の新しい型にするか、ワイヤーフレームを文書にせず uis とデザインのルールから試作として作るかを決める
+    - field: input
+      from: ""
+      to: '["orchestrator の案（2026-11-08、indie が question として起票することに同意）: デザインのルールは設計の範疇で、実装の共通ルールを扱う sysd-cross-cutting-policy とは分けた新しい型にする。ワイヤーフレームは文書として保守せず、uis とデザインのルールから agent に試作を作らせ、プロダクトのリポジトリに置く。","uis だけでも画面の試作は作れるが、項目の並び・部品の選び方・色や余白・画面をまたいだ揃いが決まらず、作るたびに見た目が変わる。","prj-0001（SpecDojo）には GUI がないため、GUI を持つプロジェクト（prj-0002 の LP など）で必要になったときに決める。nfr-usability は測れる目標を決める要求で、デザインのルールはそれを満たす設計の決まりにあたる。"]'
+    - field: type
+      from: ""
+      to: question
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-08"
+    - field: due
+      from: ""
+      to: _TODO_

@@ -1,24 +1,24 @@
-import { registerInputSection } from "../register/input.js";
-import { mkdirSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
-import { DEFAULT_PROJECT_CONTEXT } from "../shared/specdojo-config.js";
-import { resolveDeliverableSchemaRef, resolveKataRefs, type KataRefs } from "../kata/kata.js";
-import { formatMarkdownFile } from "./format.js";
-import { expandTemplate } from "./shared.js";
-import type { Approach, ExecPlanMeta, ReadyTaskView, TaskMode, TaskOrigin } from "./types.js";
+import { existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { expandPlanConventions } from "../shared/plan-conventions.js";
+import { dirname, resolve } from "node:path";
 import type { CriteriaItem } from "../catalog/types.js";
-import type { ReviewViewpoint } from "../review/types.js";
-import type { RoleDefinition } from "./role-types.js";
-import type { ReviewGradeOutcome } from "../review/grade.js";
 import { isAuthoringApproach, type AuthoringKind } from "../kata/authoring.js";
+import { resolveDeliverableSchemaRef, type KataRefs } from "../kata/kata.js";
+import { registerInputSection } from "../register/input.js";
 import { isPlanningApproach } from "../register/planning.js";
+import type { ReviewGradeOutcome } from "../review/grade.js";
+import type { ReviewViewpoint } from "../review/types.js";
+import { DEFAULT_PROJECT_CONTEXT, specdojoRootDir } from "../shared/specdojo-config.js";
+import { formatMarkdownFile } from "./format.js";
+import { assertPlanMarkdownlint } from "./plan-markdownlint.js";
 import {
-  MISSING,
   applicableReviewCriteria,
+  buildInPlaceStem,
   crossDeliverableTargetDetails,
-  deliverableDependsOn,
   deliverableBasedOn,
   deliverableBrief,
+  deliverableDependsOn,
+  deliverableKataRefs,
   deliverableName,
   deliverableOverview,
   deliverablePath,
@@ -35,9 +35,11 @@ import {
   implementationEvidence,
   injectCommonConventions,
   kataRefState,
+  kataRefTargetKind,
   loadPlanTemplate,
   loadRoles,
   loadViewpoints,
+  MISSING,
   ownerRoleFields,
   phaseDescriptionText,
   projectContextSection,
@@ -51,6 +53,12 @@ import {
   type PlanTask,
   type ResolvedDeliverable,
 } from "./plans-core.js";
+import { kataCauseFindingsText } from "./plans-kata-findings.js";
+import { kataReviewSummary, scheduleKataReviewSubjects } from "./review-kata.js";
+import type { RoleDefinition } from "./role-types.js";
+import { isRunRecordPath, resultForPlan, taskRecordPaths } from "./run-records.js";
+import { expandTemplate } from "./shared.js";
+import type { Approach, ExecPlanMeta, ReadyTaskView, TaskMode, TaskOrigin } from "./types.js";
 
 function buildEditPlanMarkdown(
   template: string,
@@ -97,15 +105,23 @@ function buildEditPlanMarkdown(
 
   const criteria: CriteriaItem[] = deliverable?.deliverable.done_criteria ?? [];
   const ownerRole = ownerRoleFields(task.owner, roleMap, vpMap, deliverable?.deliverable.rulebook);
-  const refs =
-    planOverrides?.refs ??
-    resolveKataRefs(deliverable?.deliverable.rulebook, deliverable?.deliverable.kind);
+  const refs = planOverrides?.refs ?? deliverableKataRefs(deliverable, task.approach);
+  const usesOptionalImplementationEvidence =
+    task.approach === "draft" ||
+    task.approach === "fully-guided" ||
+    task.approach === "recipe-guided";
+  const evidence = implementationEvidence(deliverable);
   const values: Record<string, string> = {
     _FRONTMATTER_: frontmatter(meta),
     _TASK_ID_: task.id,
     _PHASE_DESCRIPTION_: phaseDescriptionText(task),
     _DELIVERABLE_NAME_: deliverableName(deliverable),
-    _DELIVERABLE_DEPENDS_ON_: deliverableDependsOn(deliverable, projectId, catalogPath),
+    _DELIVERABLE_DEPENDS_ON_: deliverableDependsOn(
+      deliverable,
+      projectId,
+      catalogPath,
+      usesOptionalImplementationEvidence,
+    ),
     _DELIVERABLE_BASED_ON_: deliverableBasedOn(deliverable),
     _REGISTER_INPUT_: registerInputSection(planOverrides?.registerInput)
       ? "下記「個票の入力（前提）」を参照。"
@@ -113,16 +129,20 @@ function buildEditPlanMarkdown(
     _DELIVERABLE_BRIEF_: deliverableBrief(deliverable),
     _PROJECT_CONTEXT_: projectContextSection(projectContext, deliverable, task.approach, projectId),
     _DELIVERABLE_OVERVIEW_: deliverableOverview(deliverable),
-    _IMPLEMENTATION_EVIDENCE_: deliverable?.catalogless
-      ? "個票に指定された実装のパスを読み取り専用の調査入力とする。パスが未指定なら実装反映の前に個票へ明記する。"
-      : implementationEvidence(deliverable),
+    _IMPLEMENTATION_EVIDENCE_: usesOptionalImplementationEvidence
+      ? evidence === MISSING
+        ? "なし（`evidence_refs` 未指定またはカタログなし）。"
+        : evidence
+      : deliverable?.catalogless
+        ? "個票に指定された実装のパスを読み取り専用の調査入力とする。パスが未指定なら実装反映の前に個票へ明記する。"
+        : evidence,
     _DELIVERABLE_PATH_: deliverablePath(deliverable),
     _RESULT_REF_: resultRef,
     _RULEBOOK_REF_: refs.rulebook,
     _RULEBOOK_STATE_: kataRefState(refs.rulebook),
     _RULEBOOK_INCLUDES_: rulebookIncludesText(
       deliverable?.deliverable.rulebook,
-      deliverable?.deliverable.kind,
+      kataRefTargetKind(deliverable?.deliverable.kind, task.approach),
     ),
     _RECIPE_REF_: refs.recipe,
     _RECIPE_STATE_: kataRefState(refs.recipe),
@@ -141,7 +161,15 @@ function buildEditPlanMarkdown(
     _GRADE_FINDINGS_: gradeFindingsText(
       projectId,
       gradeFindingTargetPath(task.approach, deliverable, refs),
+      task.approach === "fully-guided",
     ),
+    _KATA_CAUSE_FINDINGS_: task.approach?.endsWith("-maintenance")
+      ? kataCauseFindingsText(
+          projectId,
+          task.approach.replace(/-maintenance$/, "") as keyof KataRefs,
+          gradeFindingTargetPath(task.approach, deliverable, refs),
+        )
+      : "- なし",
     _TARGET_DELIVERABLES_: crossDeliverableTargetDetails(
       projectId,
       task.target_local_ids ?? [],
@@ -249,7 +277,7 @@ function buildReviewPlanMarkdown(
     ...(targets.length > 0 ? { targets } : {}),
   };
 
-  const refs = resolveKataRefs(deliverable?.deliverable.rulebook, deliverable?.deliverable.kind);
+  const refs = deliverableKataRefs(deliverable, task.approach);
   const applicableCriteria = applicableReviewCriteria(
     criteria,
     vpMap,
@@ -273,7 +301,7 @@ function buildReviewPlanMarkdown(
     _RULEBOOK_REF_: refs.rulebook,
     _RULEBOOK_INCLUDES_: rulebookIncludesText(
       deliverable?.deliverable.rulebook,
-      deliverable?.deliverable.kind,
+      kataRefTargetKind(deliverable?.deliverable.kind, task.approach),
     ),
     _RECIPE_REF_: refs.recipe,
     _SAMPLE_REF_: refs.sample,
@@ -281,7 +309,12 @@ function buildReviewPlanMarkdown(
     _GRADE_SUBJECT_PATH_: gradeSubjectPath,
     _GRADE_TARGET_: gradeTargetKind(task.approach),
     _GRADE_RESULT_PATH_: gradeResultRef(projectId, gradeSubjectPath),
-    _GRADE_SUMMARY_: reviewGradeSummaryText(projectId, gradeSubjectPath, reviewGradeOutcome),
+    _GRADE_SUMMARY_: [
+      reviewGradeSummaryText(projectId, gradeSubjectPath, reviewGradeOutcome),
+      kataReviewSummary(scheduleKataReviewSubjects(task, deliverable, projectId), projectId),
+    ]
+      .filter(Boolean)
+      .join("\n\n"),
     _DONE_CRITERIA_ROWS_: reviewDoneCriteriaRows(applicableCriteria),
   };
   const hasBrief = Boolean(deliverable?.deliverable.brief?.trim());
@@ -301,7 +334,6 @@ function buildReviewPlanMarkdown(
 // Shared per-task plan rendering. Used by the full generatePlans loop and the
 // single-task generateSinglePlan (manual re-run support).
 type PlanGenContext = {
-  plansDir: string;
   executionPath: string;
   projectId: string;
   catalogPath: string;
@@ -365,11 +397,14 @@ async function writeTaskPlan(
       : localId && ctx.catalogPath
         ? findDeliverableInfo(ctx.catalogPath, localId)
         : null;
-  // The stem links a plan to its result (both share `<stem>-{plan,result}.md` and the doc id).
-  // Defaults to the task id (fixed-name worktree/claim flow); in-place callers pass a unique stem.
-  const stem = override?.stem ?? task.id;
-  const resultRef = `${repoRelativePath(ctx.executionPath)}/exec/results/${stem}-result.md`;
-  const outPath = override?.outPath ?? join(ctx.plansDir, `${stem}-plan.md`);
+  // Keep the existing document-id convention, with a unique stem for each retained run.
+  const stem = override?.stem ?? buildInPlaceStem(task.id);
+  const records = taskRecordPaths(ctx.executionPath, task.id, stem, override?.origin ?? "schedule");
+  const outPath = override?.outPath ?? records.plan;
+  mkdirSync(dirname(outPath), { recursive: true });
+  const resultRef = repoRelativePath(
+    isRunRecordPath(outPath) ? resultForPlan(outPath) : records.result,
+  );
   const criteria: CriteriaItem[] = deliverable?.deliverable.done_criteria ?? [];
   if ((task.execution ?? "agent") === "human") {
     throw new Error(
@@ -384,6 +419,20 @@ async function writeTaskPlan(
   ) {
     throw new Error(
       `Task ${task.id} uses approach: retrofit but the target deliverable has no evidence_refs.`,
+    );
+  }
+  if (
+    task.approach === "condense" &&
+    (mode !== "edit" ||
+      !deliverable?.resolvedPath ||
+      !existsSync(resolve(specdojoRootDir(), deliverable.resolvedPath)) ||
+      (
+        override?.targets ??
+        targetDocIdsForTask(ctx.projectId, task, deliverable, crossDeliverables)
+      ).length !== 1)
+  ) {
+    throw new Error(
+      `Task ${task.id} uses condense; exactly one existing deliverable and edit mode are required`,
     );
   }
   const template = loadPlanTemplate(mode, task.approach, ctx.templateCache);
@@ -418,7 +467,16 @@ async function writeTaskPlan(
           override,
         );
   const schemaRef = resolveDeliverableSchemaRef(deliverable?.resolvedPath);
-  const content = injectCommonConventions(body, schemaRef, ctx.templateCache, mode);
+  const content = `${injectCommonConventions(body, schemaRef, ctx.templateCache, mode, { executionPath: ctx.executionPath, planPath: outPath }).replace(/[\r\n]+$/u, "")}\n`;
+
+  if (task.schedule_file && override?.origin !== "register") {
+    await assertPlanMarkdownlint(
+      specdojoRootDir(),
+      task.id,
+      outPath,
+      expandPlanConventions(content, dirname(outPath)),
+    );
+  }
 
   writeFileSync(outPath, content, "utf8");
   await formatMarkdownFile(outPath);
@@ -550,11 +608,7 @@ function newPlanGenContext(opts: {
   viewpointsPath?: string;
   projectContext?: readonly string[];
 }): PlanGenContext {
-  const plansDir = join(opts.executionPath, "exec", "plans");
-  mkdirSync(plansDir, { recursive: true });
-
   return {
-    plansDir,
     executionPath: opts.executionPath,
     projectId: opts.projectId,
     catalogPath: opts.catalogPath,
@@ -569,7 +623,3 @@ function newPlanGenContext(opts: {
     templateCache: new Map<string, string>(),
   };
 }
-
-// Move a completed plan to exec/plans/done/ with a unique UTC + random suffix
-// (same convention as event filenames), or delete it. The plan is regenerable
-// from the catalog, so deletion is safe; the result remains as the record.

@@ -1,0 +1,64 @@
+## レビュー結果: `complete-with-findings`
+
+Job Run は完了条件を満たしており、統合できます。評価上の finding は残りますが、成果物の品質の問題であり、この Run の完了は妨げません。
+
+### 評価結果の確認
+- **鮮度:** 選択された10件それぞれに `--changed-only`、`--dependency-changed`、`--incomplete` を実行し、出力は0行でした。verdict の直前に再実行しても同じです。
+- **ハッシュ:** 10件すべてで、`content_hash` が現在のファイルの SHA-256 と一致しました。
+- **未完了と上限到達:** `grade state --exhausted` の出力は空で、`retry_exhausted` はありません。
+
+| 成果物 | 前回の verdict / score | 今回の verdict / score | major / minor | done_criteria |
+| --- | --- | --- | --- | --- |
+| `cdfd-overview` | pass 100 | pass 100 | 0 / 0 | 4/4 |
+| `cdfd-uc-register` | pass 100 | pass 100 | 0 / 0 | 4/4 |
+| `cdfd-uc-routine` | needs-work 94 | pass 100 | 0 / 0 | 4/4 |
+| `cdfd-uc-schedule` | pass 100 | pass 100 | 0 / 0 | 4/4 |
+| `bps-deliverable-evaluation` | pass 96 | pass 98 | 0 / 2 | 5/5 |
+| `cdsd-execution` | needs-work 65 | needs-work 65 | 13 / 11 | 0/3 |
+| `cdsd-planning` | needs-work 65 | needs-work 65 | 15 / 7 | 0/3 |
+| `cdsd-sharing` | needs-work 59 | needs-work 59 | 21 / 6 | 0/3 |
+| `stsd-register-entry` | needs-work 67 | needs-work 67 | 16 / 9 | 0/5 |
+| `stsd-routine-run` | needs-work 64 | needs-work 64 | 17 / 7 | 0/5 |
+
+### 判断根拠
+- **出力範囲:** 差分は27ファイルで、すべて `docs/ja/projects/prj-0001/execution/` 配下です。
+  - 内訳は criteria 10、results 10、evidence 4、plan 1、result 1、Run JSON 1 で、10件の選択と対応します。
+  - `docs/ja/product` は変更されていません。
+- **実行記録の整合:** Run JSON は `succeeded` / `exit_code` 0 で、evidence の終了コードも0、stderr は0バイトです。
+  - `selected=10 processed=10 completed_now=10 incomplete=0 exhausted=0` を確認しました。
+  - `results.tsv` と各文書の `stage-1.state.tsv` はすべて `passed` で、サイドカーの値とも一致します。
+- **rate limit と失敗段:** 終了コード75、`failed` の段、中断はありません。`commands.log` にも rate limit の痕跡はなく、翻訳の拒否も全件0です。
+- **`graded_by`:** 記録は `flash-high-executor` で、指定の `agy-expert-executor` と異なりますが、`agent-members.yaml` の `alias_of` で同一と確認しました。
+- **変化の理由:**
+  - `cdfd-uc-routine` の改善は、前回の major 2件（行382の `_TODO_` への機械 finding）が消えたためです。11月3日の書き直しで `content_hash` が変わり、現在の本文に `_TODO_` / `_ASSUMPTION_` はありません。
+  - cdsd・stsd の5件は本文が同じで、`source_hashes` は `schedule` だけが変わっています。message と score の一致は、前回の canonical message を維持する grade plan の手順7どおりです。
+
+### finding と改善指示
+1. **Job result の報告漏れ:** Job plan が求める次の2点が result にありません。申し送りも「なし」です。数値の記述に誤りはないため、完了は妨げないと判断し、本レビューで補います。次回以降は reporter の出力を確認してください。
+   - 評価の偏りの判断
+   - 未充足の done_criteria と確認担当ロールの特定
+2. **未充足の done_criteria と確認担当:** 5件で全項目が未充足です。品質上の finding であり、該当ロールが確認してください。
+   - `cdsd-execution`、`cdsd-planning`、`cdsd-sharing`: BA、ARC、QE
+   - `stsd-register-entry`、`stsd-routine-run`: BA、PO、ARC、QE、DEV
+3. **評価の偏り:** 分布は2群に分かれ、010-data-flow と bps は98〜100、020-data-model は59〜67です。ただし、評価設定の見直しが必要とまでは判断できません。
+   - 低スコア群の本文には未収録を示す `_TODO_` が残っています。
+   - finding は同じ箇所に集中しています（重複を除いた anchor 数は24件中7、22件中8、27件中9、25件中14、24件中7）。
+   - 1つの原因が複数の viewpoint で重複して数えられていないかは、人の判断が必要です。
+4. **`cdfd-uc-routine` の疑義:** pass 100 ですが、次の点から実質的に解消したのかは未確認です。再評価はせず、要否を人に委ねます。
+   - 消えた finding は `_TODO_` の機械検出で、`src/grade/plan.ts` は `_UNDECIDED_` を検出しません。本文の行286〜288には `_UNDECIDED_` が3件あります。
+   - 前回 `_TODO_` が未作成としていた状態正本 `stsd-job-run` / `stsd-task-execution` は、`020-data-model` にまだありません。行23には同じ文字列への言及があります。
+5. **残りの評価対象:** `limit` 10 の上限で評価していない対象があり、プロジェクト全体の選択条件の和集合は33件です。今回の10件は含まれていないので、次回以降の Run で処理されます。
+
+### approach に応じた確認
+Job Run の出力を対象にしました。plan の `approach` は未設定で、評価の実行と記録という求められた更新が行われたことを確認しました。
+
+### 確認できなかった範囲
+- **`bps-deliverable-evaluation` の変化:** 本文のハッシュは同じなのに F001（`cdfd-check` の `E-08-02` との不整合）が消え、score が96から98に上がった理由です。
+- **評価内容の妥当性:** 単段評価で `reference=none` のため独立した照合はなく、finding や pass の内容は再評価していません。cdsd・stsd の score 一致も、独立した再現の根拠にはなりません。
+- **`cdfd-overview` の viewpoint 数:** 他より1つ少ない26件です（`vp-arc-single-responsibility` がありません）。意図的な差かは未確認です。
+- **`cause` のない finding:** cdsd・stsd の各1件（計5件）は `_TODO_` / `_ASSUMPTION_` の機械 finding で、`cause` が付きません。これが仕様どおりかは未確認です。
+- **`source_hashes` の算出:** CLI の鮮度判定結果を使い、自分では再計算していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict: complete-with-findings。Run `JBR-grade-deliverable-437fc289729d` は `succeeded`、exit 0、10件すべて stage 1 `passed`、差分27ファイルはすべて `docs/ja/projects/prj-0001/execution/` 配下で対象外変更なし。評価結果は最新（10件で `--changed-only` / `--dependency-changed` / `--incomplete` の出力0行、verdict 直前の再確認も同じ。`content_hash` は実ファイルの SHA-256 と一致）。`retry_exhausted` なし、`failed` なし、rate limit なし、`partial` ではない。\n\n変化: `cdfd-uc-routine` は needs-work 94 から pass 100（`_TODO_` 機械 finding 2件が本文変更で消滅）、`bps-deliverable-evaluation` は 96 から 98（minor 3 から 2、本文ハッシュ不変）。他の pass 3件は 100 のまま。needs-work 5件（`cdsd-execution` 65、`cdsd-planning` 65、`cdsd-sharing` 59、`stsd-register-entry` 67、`stsd-routine-run` 64）は本文不変で score も不変。`source_hashes` の変化は `schedule` のみで、message の一致は grade plan 手順7の canonical message 維持によるもの。\n\n未充足の done_criteria と確認担当: `cdsd-execution` / `cdsd-planning` / `cdsd-sharing` は 0/3（BA、ARC、QE）、`stsd-register-entry` / `stsd-routine-run` は 0/5（BA、PO、ARC、QE、DEV）。\n\nfinding: (1) Job result は Job plan が求める偏りの判断と未充足 done_criteria・担当ロールの特定を欠き、申し送りも「なし」。数値の記述に誤りはなく完了は妨げないため本レビューで補った。(2) 偏りは 010-data-flow と bps が 98〜100、020-data-model が 59〜67 の2群。低スコア群の本文に未収録を示す `_TODO_` があり、finding は同じ箇所に集中する（重複除外 anchor 数 7/24、8/22、9/27、14/25、7/24）。評価設定の見直しが必要とまでは判断できない。(3) `cdfd-uc-routine` は pass 100 だが、消えた finding は `_TODO_` の機械検出で、本文に `_UNDECIDED_` が3件残り、`src/grade/plan.ts` はこれを検出しない。状態正本 `stsd-job-run` / `stsd-task-execution` も `020-data-model` に未作成で、実質的な解消は未確認。(4) `limit` 10 の上限で未評価の対象が和集合33件残る（今回の10件は含まれない）。\n\n確認できなかった範囲: `bps-deliverable-evaluation` で本文ハッシュ不変のまま F001 が消えた理由、評価内容の妥当性（単段評価で `reference=none`、再評価は未実施）、`cdfd-overview` の viewpoint が26件で `vp-arc-single-responsibility` がない理由、`cause` のない機械 finding 5件が仕様どおりか、`source_hashes` の再計算。","handoff":["人の判断: cdsd・stsd の needs-work 5件について、1つの原因が複数の viewpoint で重複して数えられていないか、評価設定の見直しが必要かを判断する。重複除外 anchor 数は `cdsd-execution` 7/24、`cdsd-planning` 8/22、`cdsd-sharing` 9/27、`stsd-register-entry` 14/25、`stsd-routine-run` 7/24。","確認依頼: 未充足の done_criteria を担当ロールが確認する。`cdsd-execution` / `cdsd-planning` / `cdsd-sharing` は BA、ARC、QE。`stsd-register-entry` / `stsd-routine-run` は BA、PO、ARC、QE、DEV。","人の判断: `cdfd-uc-routine` の再評価の要否を判断する。pass 100 の根拠となった finding の消滅は `_TODO_` 機械検出の解消で、本文の行286〜288に `_UNDECIDED_` が3件残り、`stsd-job-run` / `stsd-task-execution` は `020-data-model` に未作成。","改善候補: `gemma-reporter` の Job result が、plan の求める偏りの判断と未充足 done_criteria・担当ロールを省略し、申し送りを「なし」としていた。reporter の指示または出力確認を見直す。","未確認事項の調査候補: `bps-deliverable-evaluation` で本文ハッシュ不変のまま F001（`cdfd-check` の `E-08-02` との不整合）が消え score が 96 から 98 になった理由、`cdfd-overview` に `vp-arc-single-responsibility` がない理由、`cause` のない機械 finding 5件が仕様どおりか。"],"validations":[{"command":"git diff --stat 45231f869c86cbdfcb8861324a38d955fde8fa5a..aa543de2f5dd46631b039324b64d24df3921791b","status":"passed","summary":"27ファイル変更（858行追加、202行削除）。"},{"command":"git diff --name-status 45231f869c86cbdfcb8861324a38d955fde8fa5a..aa543de2f5dd46631b039324b64d24df3921791b","status":"passed","summary":"全27ファイルが `docs/ja/projects/prj-0001/execution/` 配下で、対象外変更なし。"},{"command":"node dist/specdojo.js grade list --target deliverable --path <10件の各評価対象> --changed-only","status":"passed","summary":"10件とも出力0行。verdict 直前の再実行も0行。"},{"command":"node dist/specdojo.js grade list --target deliverable --path <10件の各評価対象> --dependency-changed","status":"passed","summary":"10件とも出力0行。verdict 直前の再実行も0行。"},{"command":"node dist/specdojo.js grade list --target deliverable --path <10件の各評価対象> --incomplete","status":"passed","summary":"10件とも出力0行で、評価パイプラインの未完了なし。verdict 直前の再実行も0行。"},{"command":"node dist/specdojo.js grade state --target deliverable --project prj-0001 --exhausted","status":"passed","summary":"出力なしで、`retry_exhausted` の成果物なし。"},{"command":"node dist/specdojo.js grade list --target deliverable --project prj-0001 <--changed-only / --dependency-changed / --rulebook-changed / --unreviewed / --ungraded / --incomplete / --rubric-outdated>","status":"passed","summary":"件数は順に 33 / 4 / 0 / 4 / 0 / 0 / 0、和集合33件。今回の10件は含まれない。"}]}
+</specdojo_executor_evidence>

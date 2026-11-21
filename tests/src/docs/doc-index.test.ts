@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { globSync } from "tinyglobby";
+import { globFilesSync } from "../../../packages/docs-lint/src/glob-files.js";
 import {
   assertControlGeneratedIndexes,
   buildDocIndex,
@@ -746,11 +746,10 @@ describe("prj-0001 project register references", () => {
         "docs/ja/projects/prj-0001/controls/project-register/generated/pjr-index.md";
       expect(lookupDocIndex(registerId, indexPath)).toBe(expectedPath);
 
-      const registerFiles = globSync("docs/ja/projects/prj-0001/controls/project-register/*.md", {
-        cwd: repoRoot,
-        absolute: true,
-        expandDirectories: false,
-      });
+      const registerFiles = globFilesSync(
+        "docs/ja/projects/prj-0001/controls/project-register/*.md",
+        { cwd: repoRoot, absolute: true },
+      );
       let partOfReferenceCount = 0;
       for (const file of registerFiles) {
         const namespace = readSpecdojoNamespace(readFileSync(file, "utf8"));
@@ -765,10 +764,9 @@ describe("prj-0001 project register references", () => {
       }
       expect(partOfReferenceCount).toBe(1);
 
-      const markdownFiles = globSync("docs/**/*.md", {
+      const markdownFiles = globFilesSync("docs/**/*.md", {
         cwd: repoRoot,
         absolute: true,
-        expandDirectories: false,
         ignore: ["**/generated/**"],
       });
       let wikilinkReferenceCount = 0;

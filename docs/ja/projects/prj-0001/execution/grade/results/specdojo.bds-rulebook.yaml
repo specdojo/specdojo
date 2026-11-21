@@ -4,97 +4,97 @@ document: specdojo:bds-rulebook
 path: docs/ja/specdojo/rulebooks/bds-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 73
-graded_at: "2026-10-28T20:21:30.986Z"
-graded_by: flash-high-executor
-content_hash: 14990158df823c9956e0d07e953add508edcef43b36f8ee19f4b38d32884b881
+verdict: pass
+score: 97
+graded_at: "2026-11-17T21:39:11.995Z"
+graded_by: sol-review-executor
+content_hash: 879576bbaa5f3de32a087d77067f129306bda435bc4287cfb1292063ef567413
 categories:
   purpose:
-    score: 75
+    score: 100
   operations:
-    score: 88
+    score: 100
   planning:
-    score: 75
+    score: 100
   business:
-    score: 83
+    score: 100
   architecture:
-    score: 83
+    score: 100
   usability:
-    score: 83
+    score: 100
   implementation:
-    score: 63
+    score: 88
   quality:
-    score: 67
+    score: 92
   consistency:
-    score: 50
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-publication-accountability:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-business-value:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-dev-change-impact:
     level: 3
     score: 75
   vp-dev-testability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
-  vp-ux-readability:
     level: 3
     score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-operability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -103,156 +103,33 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 4
-  minor: 15
+  major: 0
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-purpose-alignment
-    line: 15
-    anchor: "## 2. 用語定義"
-    message: 上位文書（成果物リファレンス等）への参照と、schema 上 `ui`（画面・帳票仕様）とされる UIS との分担が書かれていないため、BDS を独立した成果物とする必要性を上位の根拠から説明できない。
-    message_ja: 上位文書（成果物リファレンス等）への参照と、schema 上 `ui`（画面・帳票仕様）とされる UIS との分担が書かれていないため、BDS を独立した成果物とする必要性を上位の根拠から説明できない。
+    rule: vp-dev-change-impact
+    line: 14
+    anchor: >-
+      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status`・承認・改訂と廃止・未決事項の引き継ぎは [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]]
+      に従います。文書の整形・lint はリポジトリの検証で扱い、業務の受入確認に含めません。
+    message: >-
+      変更管理を共通標準へ委譲していますが、表示項目・算出規則・出力契機の変更時に確認する帳票生成処理、定期実行設定、過去帳票の再出力、他帳票の比較値への影響が列挙されていません。BDS
+      固有の追従対象と、再生成・互換性の扱いを確認する要件を補ってください。
+    message_ja: >-
+      変更管理を共通標準へ委譲していますが、表示項目・算出規則・出力契機の変更時に確認する帳票生成処理、定期実行設定、過去帳票の再出力、他帳票の比較値への影響が列挙されていません。BDS
+      固有の追従対象と、再生成・互換性の扱いを確認する要件を補ってください。
   - id: F002
     severity: minor
-    rule: vp-po-decision-readiness
-    line: 11
-    anchor: "- 帳票は **業務ユーザー視点**で、目的・出力タイミング・表示項目・集計/算出を明確にします。"
-    message: >-
-      Frontmatter の `recipe` / `template` が `undecided` のままだが、判断に必要な論点・判断タイミング・影響が本文に _UNDECIDED_ などで示されておらず、PO
-      が承認・保留を判断する材料が不足している。
-    message_ja: >-
-      Frontmatter の `recipe` / `template` が `undecided` のままだが、判断に必要な論点・判断タイミング・影響が本文に _UNDECIDED_ などで示されておらず、PO
-      が承認・保留を判断する材料が不足している。
-  - id: F003
-    severity: minor
-    rule: vp-pm-plan-feasibility
-    line: 63
-    anchor: 7. 集計/算出ルール
-    message: 本文構成の各章に必須/任意の区別や完了条件がないため、BDS 作成タスクの完了判定と進捗確認の粒度に使いにくい。
-    message_ja: 本文構成の各章に必須/任意の区別や完了条件がないため、BDS 作成タスクの完了判定と進捗確認の粒度に使いにくい。
-  - id: F004
-    severity: minor
-    rule: vp-pm-dependency-risk
-    line: 55
-    anchor: 各 BDS ファイルは以下見出しを順番に並べます。
-    message: "`based_on` に BPS/UIS/BR/BES を挙げるだけで、BDS 作成に先行して必要な成果物や、根拠文書が未確定の場合の扱い（依存・リスク）が示されていない。"
-    message_ja: "`based_on` に BPS/UIS/BR/BES を挙げるだけで、BDS 作成に先行して必要な成果物や、根拠文書が未確定の場合の扱い（依存・リスク）が示されていない。"
-  - id: F005
-    severity: minor
-    rule: vp-pm-control-reporting
-    line: 75
-    anchor: "- 利用者（例: 店主、経理担当、バイヤー）"
-    message: 「メモ / 将来課題」章の記述ガイドがなく、PJR へ転記すべき課題・変更要求と、文書内のメモに留める事項の区別が示されていない。
-    message_ja: 「メモ / 将来課題」章の記述ガイドがなく、PJR へ転記すべき課題・変更要求と、文書内のメモに留める事項の区別が示されていない。
-  - id: F006
-    severity: minor
-    rule: vp-ba-requirements-completeness
-    line: 63
-    anchor: 7. 集計/算出ルール
-    message: 本文構成に帳票の受入条件（検収観点・確認方法）を記述する章や項目がなく、要件を利用者が受入判定できる粒度まで落とす指示が不足している。
-    message_ja: 本文構成に帳票の受入条件（検収観点・確認方法）を記述する章や項目がなく、要件を利用者が受入判定できる粒度まで落とす指示が不足している。
-  - id: F007
-    severity: minor
-    rule: vp-ba-stakeholder-clarity
-    line: 61
-    anchor: 5. 抽出条件/対象範囲
-    message: 「業務側の合意対象」とするだけで、帳票仕様をレビュー・合意する確認者（Role）と合意事項が本文構成・記述ガイドのどこにも定義されていない。
-    message_ja: 「業務側の合意対象」とするだけで、帳票仕様をレビュー・合意する確認者（Role）と合意事項が本文構成・記述ガイドのどこにも定義されていない。
-  - id: F008
-    severity: major
-    rule: vp-arc-technical-constraints
-    line: 45
-    anchor: "| based_on | 根拠となる仕様ID（BPS/UIS/BR/BES 等） | 任意 |"
-    message: >-
-      参照先の deliverable-frontmatter schema は `specdojo:` 名前空間・`rulebook` 必須・`title` 不許可・`type` enum に `domain` なし（帳票は
-      `ui`）であり、本書の Frontmatter 指示（`type: domain` 固定、`title` 必須、トップレベル配置）と矛盾する。
-    message_ja: >-
-      参照先の deliverable-frontmatter schema は `specdojo:` 名前空間・`rulebook` 必須・`title` 不許可・`type` enum に `domain` なし（帳票は
-      `ui`）であり、本書の Frontmatter 指示（`type: domain` 固定、`title` 必須、トップレベル配置）と矛盾する。
-  - id: F009
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 25
-    anchor: ""
-    message: 用語定義の「表示項目」「抽出条件」「集計/算出」「出力形式」は本文構成の見出しと記述ガイドの言い換えにとどまり、削除しても判断情報を失わない重複になっている。
-    message_ja: 用語定義の「表示項目」「抽出条件」「集計/算出」「出力形式」は本文構成の見出しと記述ガイドの言い換えにとどまり、削除しても判断情報を失わない重複になっている。
-  - id: F010
-    severity: major
-    rule: vp-dev-implementation-readiness
-    line: 47
-    anchor: ""
-    message: >-
-      推奨 Frontmatter 項目の表が空行で分断されて `type`/`title`/`status` 等の行が表として描画されず、しかも指示に従うと schema 検証に失敗する（`specdojo:`
-      名前空間・`rulebook` 必須の欠落）。
-    message_ja: >-
-      推奨 Frontmatter 項目の表が空行で分断されて `type`/`title`/`status` 等の行が表として描画されず、しかも指示に従うと schema 検証に失敗する（`specdojo:`
-      名前空間・`rulebook` 必須の欠落）。
-  - id: F011
-    severity: minor
-    rule: vp-dev-change-impact
-    line: 56
-    anchor: ""
-    message: "`supersedes` の記載だけで、帳票仕様の変更時に `based_on` 先や用語集 `tm-...` との整合をどう確認・更新するかが示されていない。"
-    message_ja: "`supersedes` の記載だけで、帳票仕様の変更時に `based_on` 先や用語集 `tm-...` との整合をどう確認・更新するかが示されていない。"
-  - id: F012
-    severity: minor
-    rule: vp-dev-testability
-    line: 45
-    anchor: "| based_on | 根拠となる仕様ID（BPS/UIS/BR/BES 等） | 任意 |"
-    message: BDS 作成・更新後に実行すべき検証コマンド（`npm run lint:md`、`npm run lint:fm`、schema 検証）と期待結果が記載されていない。
-    message_ja: BDS 作成・更新後に実行すべき検証コマンド（`npm run lint:md`、`npm run lint:fm`、schema 検証）と期待結果が記載されていない。
-  - id: F013
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 97
-    anchor: 表示項目は表（Markdown table）で列挙します。レイアウト指定はせず、**何が出力されるか**を記述します。
-    message: CSV エクスポート時の必須記載事項（文字コード・ヘッダ行の有無・区切り文字）が1行に連結された崩れた箇条書きになっており、項目ごとにチェックできない。
-    message_ja: CSV エクスポート時の必須記載事項（文字コード・ヘッダ行の有無・区切り文字）が1行に連結された崩れた箇条書きになっており、項目ごとにチェックできない。
-  - id: F014
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 41
-    anchor: "| type | `ui` 固定 | ○ |"
-    message: >-
-      Frontmatter に `title` を書くよう指示しているが、Markdown 規約（Frontmatter に `title:` を書かない）と deliverable
-      schema（`unevaluatedProperties: false`）に矛盾する。
-    message_ja: >-
-      Frontmatter に `title` を書くよう指示しているが、Markdown 規約（Frontmatter に `title:` を書かない）と deliverable
-      schema（`unevaluatedProperties: false`）に矛盾する。
-  - id: F015
-    severity: major
     rule: vp-qe-kata-conformance
-    line: 11
-    anchor: "- 帳票は **業務ユーザー視点**で、目的・出力タイミング・表示項目・集計/算出を明確にします。"
-    message: 参照されているサンプル（specdojo:bds-sample）の内容が, 本書の「5. 本文構成（標準テンプレ）」に従っておらず, 実例としての機能が不十分である。
-    message_ja: 参照されているサンプル（specdojo:bds-sample）の内容が, 本書の「5. 本文構成（標準テンプレ）」に従っておらず, 実例としての機能が不十分である。
-  - id: F016
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 63
-    anchor: 7. 集計/算出ルール
-    message: rulebook-authoring-standard は template 未整備系統の本文要件に各章の必須・任意の明示を求めるが、「本文構成（標準テンプレ）」には必須・任意の区別がない。
-    message_ja: rulebook-authoring-standard は template 未整備系統の本文要件に各章の必須・任意の明示を求めるが、「本文構成（標準テンプレ）」には必須・任意の区別がない。
-  - id: F017
-    severity: minor
-    rule: vp-ux-readability
-    line: 47
-    anchor: ""
-    message: 推奨 Frontmatter 項目の表が空行で分断され、2行目以降が表として描画されないため、必須項目の一覧を一目で読み取れない。
-    message_ja: 推奨 Frontmatter 項目の表が空行で分断され、2行目以降が表として描画されないため、必須項目の一覧を一目で読み取れない。
-  - id: F018
-    severity: minor
-    rule: vp-ops-release-readiness
-    line: 11
-    anchor: "- 帳票は **業務ユーザー視点**で、目的・出力タイミング・表示項目・集計/算出を明確にします。"
-    message: ready 化の条件と未解決事項（`recipe`/`template` の `undecided`、sample 未整備）、承認者が本文に示されておらず、ready 判断の前提が読み取れない。
-    message_ja: ready 化の条件と未解決事項（`recipe`/`template` の `undecided`、sample 未整備）、承認者が本文に示されておらず、ready 判断の前提が読み取れない。
-  - id: F019
-    severity: minor
-    rule: vp-ops-operability
-    line: 56
-    anchor: ""
-    message: 帳票仕様の改版・廃止時の運用（`deprecated` 化の条件、`supersedes` の付け方、更新担当 Role）が示されておらず、継続更新の手順が読み取れない。
-    message_ja: 帳票仕様の改版・廃止時の運用（`deprecated` 化の条件、`supersedes` の付け方、更新担当 Role）が示されておらず、継続更新の手順が読み取れない。
+    line: 14
+    anchor: >-
+      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status`・承認・改訂と廃止・未決事項の引き継ぎは [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]]
+      に従います。文書の整形・lint はリポジトリの検証で扱い、業務の受入確認に含めません。
+    message: >-
+      Rulebook 記述標準の「記述ガイド」は、各 rulebook に自系統の具体的な追従対象と役割分担の定義を求めています。本書は共通標準と適用先のメンバー定義への参照にとどまるため、BDS の変更時に
+      BA・ARC・DEV・QE・PM が何を確認・更新するかを補ってください。
+    message_ja: >-
+      Rulebook 記述標準の「記述ガイド」は、各 rulebook に自系統の具体的な追従対象と役割分担の定義を求めています。本書は共通標準と適用先のメンバー定義への参照にとどまるため、BDS の変更時に
+      BA・ARC・DEV・QE・PM が何を確認・更新するかを補ってください。

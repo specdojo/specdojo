@@ -692,7 +692,7 @@ $defs:
         $ref: "./exec-common.schema.yaml#/$defs/Proficiency"
         description: >
           Required agent proficiency for execution: agent phases.
-          Omit to accept agents of any proficiency level.
+          Omit to accept any proficiency except frontier. Frontier requires an explicit request.
           Can be overridden per-deliverable via owner_rules[].phase_overrides.
       agent:
         $ref: "./sch-common.schema.yaml#/$defs/AgentAssignment"
@@ -762,7 +762,7 @@ $defs:
       proficiency:
         $ref: "./exec-common.schema.yaml#/$defs/Proficiency"
         description: >
-          Agent proficiency required for this stage. Omit to accept any proficiency level.
+          Agent proficiency required for this stage. Omit to accept any proficiency except frontier.
 
   Capabilities:
     type: array

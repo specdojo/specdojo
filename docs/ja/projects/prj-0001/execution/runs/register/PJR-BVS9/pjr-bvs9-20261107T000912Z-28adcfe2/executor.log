@@ -1,0 +1,149 @@
+テスト間に残る保存先の環境変数を修正しました。ビルドとスモーク検証、整形・静的検査は通過しています。単体・統合テストなどの親検証は runner が再実行します。
+
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "共通規約の版への参照保存と prompt の全文復元を確認し、再開時に残っていた統合テストの保存先混入を修正した。原因と検証結果を個票へ記録した。result は編集していない。",
+  "handoff": [
+    "規約は `<execution_path>/conventions/<SHA-256>.txt` に共有保存する。mode・schema 解決後の本文と末尾改行から版を計算し、資源への参照はリポジトリ相対または package 内の相対パスにする。欠落・改変時に現在のテンプレートへフォールバックしない。保護設定の変更は不要。",
+    "外部への書き込み原因は、親 runner の `SPECDOJO_SCHEDULE_PATH`・`SPECDOJO_EXECUTION_PATH` がテストへ継承されたこと。さらに CLI が設定した両パスがテスト間に残り、直近の統合テスト 7 件が最初の fixture を再利用していた。共通 setup で親の値を除去し、対象スイートでも各テストで除去・復元する。統合先に前回作成されたファイルは変更していない。",
+    "個票に記録した削減例は、freeform の edit plan 1 件で復元後 9,226 バイト、保存時 5,764 バイト、差分 3,462 バイト。共有ファイルは 3,643 バイトで、同じ版の次の plan から再利用する。",
+    "前回失敗した lint・単体／統合テストを含む親検証は、指示に従い runner の再実行に委ねる。実 agent CLI の確認は統合後に PJR-JSEY で行う。"
+  ],
+  "validations": [
+    {
+      "command": "npm run build",
+      "status": "passed",
+      "summary": "配布用コードのビルド成功。"
+    },
+    {
+      "command": "node tmp/pjr-bvs9-smoke.mjs",
+      "status": "passed",
+      "summary": "独立した 2 fixture の CLI 保存先と同一ハッシュ、全文復元、重複防止、移動・archive、欠落・改変、旧 plan を確認。一時スクリプトと fixture は削除済み。"
+    },
+    {
+      "command": "node node_modules/prettier/bin/prettier.cjs --write CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-bvs9-plan-conventions-by-reference.md docs/ja/specdojo/guides/plan-result-lifecycle-guide.md src/exec/agent-plan.ts src/exec/plans-generation.ts src/exec/plans-storage.ts src/exec/register.ts src/exec/run/in-place.ts src/exec/run/job.ts src/exec/run/lifecycle-commands.ts src/exec/run/register-core.ts src/exec/run/register-post-review.ts src/exec/run/register-resume.ts src/exec/run/register-worktree.ts src/exec/run/schedule-prepare.ts src/exec/trial-commands.ts src/exec/worktree-ops-lifecycle.ts src/job/job.ts src/job/noop.ts src/shared/plan-templates.ts src/shared/run-records.ts src/shared/plan-conventions.ts tests/setup/git-environment.ts tests/src/exec/catalogless-register.integration.test.ts tests/src/exec/pipeline-e2e.integration.test.ts tests/src/exec/plans.test.ts tests/src/exec/register-pipeline-e2e.integration.test.ts tests/src/exec/register-plan-escape.test.ts tests/src/exec/register-resume.integration.test.ts tests/src/exec/run/inplace.test.ts tests/src/job/noop.test.ts tests/src/register/catalogless-target.test.ts tests/src/exec/plan-conventions.test.ts",
+      "status": "passed",
+      "summary": "変更成果物 33 ファイルを整形した。"
+    },
+    {
+      "command": "node node_modules/prettier/bin/prettier.cjs --write docs/ja/projects/prj-0001/controls/project-register/pjr-bvs9-plan-conventions-by-reference.md",
+      "status": "passed",
+      "summary": "検証結果を追記した個票を再整形した。"
+    },
+    {
+      "command": "npm run check:src-imports",
+      "status": "passed",
+      "summary": "実行時 import の依存宣言に問題なし。"
+    },
+    {
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検査成功。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "エラーなし。既存のカタログ警告あり。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿の派生ビュー生成成功。"
+    },
+    {
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "executor が変更した YAML 成果物なし。",
+      "reason": "差分にある登録簿イベント YAML は runner が管理する状態遷移ファイルであり、executor は編集していない。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-bvs9-plan-conventions-by-reference.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-bvs9-plan-conventions-by-reference.md"
+    },
+    {
+      "target": "docs/ja/specdojo/guides/plan-result-lifecycle-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/plan-result-lifecycle-guide.md"
+    },
+    {
+      "target": "src/exec/agent-plan.ts",
+      "status": "changed",
+      "path": "src/exec/agent-plan.ts"
+    },
+    {
+      "target": "src/exec/run/lifecycle-commands.ts",
+      "status": "changed",
+      "path": "src/exec/run/lifecycle-commands.ts"
+    },
+    {
+      "target": "src/exec/run/schedule-prepare.ts",
+      "status": "changed",
+      "path": "src/exec/run/schedule-prepare.ts"
+    },
+    {
+      "target": "src/exec/trial-commands.ts",
+      "status": "changed",
+      "path": "src/exec/trial-commands.ts"
+    },
+    {
+      "target": "src/exec/worktree-ops-lifecycle.ts",
+      "status": "changed",
+      "path": "src/exec/worktree-ops-lifecycle.ts"
+    },
+    {
+      "target": "src/job/noop.ts",
+      "status": "changed",
+      "path": "src/job/noop.ts"
+    },
+    {
+      "target": "src/shared/plan-templates.ts",
+      "status": "changed",
+      "path": "src/shared/plan-templates.ts"
+    },
+    {
+      "target": "tests/setup/git-environment.ts",
+      "status": "changed",
+      "path": "tests/setup/git-environment.ts"
+    },
+    {
+      "target": "tests/src/exec/catalogless-register.integration.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/catalogless-register.integration.test.ts"
+    },
+    {
+      "target": "tests/src/exec/register-resume.integration.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/register-resume.integration.test.ts"
+    },
+    {
+      "target": "tests/src/job/noop.test.ts",
+      "status": "changed",
+      "path": "tests/src/job/noop.test.ts"
+    },
+    {
+      "target": "tests/src/register/catalogless-target.test.ts",
+      "status": "changed",
+      "path": "tests/src/register/catalogless-target.test.ts"
+    },
+    {
+      "target": "src/shared/plan-conventions.ts",
+      "status": "changed",
+      "path": "src/shared/plan-conventions.ts"
+    },
+    {
+      "target": "tests/src/exec/plan-conventions.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/plan-conventions.test.ts"
+    }
+  ]
+}
+</specdojo_executor_evidence>

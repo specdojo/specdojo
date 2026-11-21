@@ -1,0 +1,204 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: prj-0001:ifx-file-agent-evidence
+path: docs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml
+target: deliverable
+rubric: grade-rubric-v2
+verdict: pass
+score: 95
+graded_at: "2026-11-16T14:53:01.683Z"
+graded_by: sol-review-executor
+content_hash: 0e045865168eb33f235026770b1b5f071c4bbc2ee91bb1b64a2676b2a81b71a9
+source_hashes:
+  catalog-entry: 58ee3b496cc90d59a1b29b05facedd9368cc5bf92eaab11c7f868d3f60cf3e14
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: 2c88dff750f6ba825018a44d00dc148f996dbed108c921f5ece9dc352bff0f1b
+  dependency:ifx-index: d235081f2eb0b16a1a9c5d70ca76e7a91a3aa5b0c8c326bab23d866b0eb27357
+  members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: 0dfcda0848e7a3c34e36da9dfb892ca2b6a3186f870750012492f1beee3ccc56
+categories:
+  purpose:
+    score: 100
+  operations:
+    score: 88
+  planning:
+    score: 100
+  business:
+    score: 100
+  consistency:
+    score: 88
+  architecture:
+    score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
+  quality:
+    score: 88
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-cross-document-consistency:
+    level: 3
+    score: 75
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 3
+    score: 75
+  vp-qe-done-criteria:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 6
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 27
+    anchor: 成果物カタログの overview の「agent が書き」は報告内容の書き手を指し、ファイルとしての書き手は runner である。
+    message: >-
+      Reconcile the writer descriptions with
+      docs/ja/projects/prj-0001/010-deliverables-catalog/dct-external-interface-specs.yaml:84, which says the executor
+      agent writes the exchanged files, while this contract assigns file writing to the runner and explicitly prohibits
+      direct agent writes.
+    message_ja: >-
+      Reconcile the writer descriptions with
+      docs/ja/projects/prj-0001/010-deliverables-catalog/dct-external-interface-specs.yaml:84, which says the executor
+      agent writes the exchanged files, while this contract assigns file writing to the runner and explicitly prohibits
+      direct agent writes.
+    cause:
+      type: document
+  - id: F002
+    severity: minor
+    rule: vp-dev-testability
+    line: 153
+    anchor: "- changes・validations が配列、final_message が文字列である"
+    message: 参照されている型と失敗時の動作に対して、YAML コントラクトをチェックするための検証手順と期待される結果を特定する。
+    message_ja: 参照されている型と失敗時の動作に対して、YAML コントラクトをチェックするための検証手順と期待される結果を特定する。
+    cause:
+      type: document
+  - id: F003
+    severity: minor
+    rule: vp-dev-testability
+    line: 145
+    anchor: QE は各ケースの入力ファイルを一時ディレクトリの run 配置（location）に置き、正本の読込・再開判定を実行して期待結果と照合する。
+    message: >-
+      procedure は配置済みファイルの読込・再開判定だけを指定しているため、stdout の報告解析を扱う TC-02～TC-05 と書込失敗を扱う TC-12 を実行できない。各ケースで呼び出す解析・生成・書込処理と、I/O
+      エラーを発生させる手順を指定する。
+    message_ja: >-
+      procedure は配置済みファイルの読込・再開判定だけを指定しているため、stdout の報告解析を扱う TC-02～TC-05 と書込失敗を扱う TC-12 を実行できない。各ケースで呼び出す解析・生成・書込処理と、I/O
+      エラーを発生させる手順を指定する。
+    cause:
+      type: document
+  - id: F004
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 147
+    anchor: 正常系の各ファイルは file_checks の手順をすべて満たせば合格、1 つでも満たさなければ不合格とする。
+    message: 各ファイルを、その参照されている型および必須フィールドと照らし合わせて検証するための、合格/不合格の結果を伴うチェック手順を提供する。
+    message_ja: 各ファイルを、その参照されている型および必須フィールドと照らし合わせて検証するための、合格/不合格の結果を伴うチェック手順を提供する。
+    cause:
+      type: document
+  - id: F005
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 5
+    anchor: "status: ready"
+    message: >-
+      status は ready だが、200～201行では OD-01～OD-04 が判断待ちで、ready 昇格前に必要とする解消または留保承認の結果が記録されていない。各 OD
+      の判断結果と承認記録への参照を示し、未承認なら現在のライフサイクル状態を判断待ちであることが分かる記載に整合させる。
+    message_ja: >-
+      status は ready だが、200～201行では OD-01～OD-04 が判断待ちで、ready 昇格前に必要とする解消または留保承認の結果が記録されていない。各 OD
+      の判断結果と承認記録への参照を示し、未承認なら現在のライフサイクル状態を判断待ちであることが分かる記載に整合させる。
+    cause:
+      type: document
+  - id: F006
+    severity: minor
+    rule: vp-ops-operability
+    line: 139
+    anchor: ファイルロック競合等の I/O エラーが発生した場合は、標準エラー出力に blocked 理由を出力してパイプラインを即時異常停止（exit code 1）させる。
+    message: >-
+      書込 I/O エラー時の停止後について、容量・権限等を復旧する担当、既存ファイルと残存 .tmp
+      の保持・確認方針、再開または再実行する段の選択手順を定義する。現在の記載だけでは、部分書込や状態更新失敗の後にどの記録を使って復旧するか判断できない。
+    message_ja: >-
+      書込 I/O エラー時の停止後について、容量・権限等を復旧する担当、既存ファイルと残存 .tmp
+      の保持・確認方針、再開または再実行する段の選択手順を定義する。現在の記載だけでは、部分書込や状態更新失敗の後にどの記録を使って復旧するか判断できない。
+    cause:
+      type: document
+done_criteria:
+  satisfied: 3
+  total: 3
+  detail_ref: prj-0001:ifx-file-agent-evidence-grade-criteria

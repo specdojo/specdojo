@@ -1,0 +1,85 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_a79b60434bbc43aca180181aa30bc19e
+  ts: "2026-11-04T22:50:06Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: opr と bps の template で概要が 2 回出る作りを直す
+    - field: description
+      from: ""
+      to: opr-template と bps-template は H1 の直下に概要を置いたうえで「概要」の章も置くため、成果物で同じことを 2 回書く。stsd-template と同じく概要を章の中へ一本化する
+    - field: input
+      from: ""
+      to: '["DF38 の condense で、opr-agent-cli-update の冒頭の導入文と「1. 概要」が重複し、原因が opr-template（H1 直下の `_DELIVERABLE_OVERVIEW_` と「1. 概要」の章）と記録された（2026-11-05）","同じ作りは bps-template にもある。stsd-template は概要を「1. 概要」の章の中に置いており、重複しない","直したあと、既存の opr・bps の成果物へ反映するかは別に決める"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-05"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-DF38"]'
+- v: 1
+  id: reg_8c405e6ff17346c598208024875ac99e
+  ts: "2026-11-04T23:15:28Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_a79b60434bbc43aca180181aa30bc19e
+- v: 1
+  id: reg_b78067ebe98244749bf040bb2bdf95af
+  ts: "2026-11-04T23:33:29Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_8c405e6ff17346c598208024875ac99e
+- v: 1
+  id: reg_7f040eeddd0044a78897c233f374c8e5
+  ts: "2026-11-04T23:35:43Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票・result で確かめた（利用者の委任による自動の進行）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-05"
+    - field: conclusion
+      from: "-"
+      to: opr-template の概要を「1. 概要」の章へ一本化した。bps は導入文と概要の役割が分かれるため変えない
+  previous_event_id: reg_b78067ebe98244749bf040bb2bdf95af

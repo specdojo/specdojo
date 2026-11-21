@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
-import { copyFileSync, existsSync, readFileSync, writeFileSync } from "node:fs";
+import { readPlanFile } from "../shared/plan-conventions.js";
+import { copyFileSync, existsSync, writeFileSync } from "node:fs";
 import { basename, dirname, join, resolve } from "node:path";
 import type { Command } from "commander";
 import {
@@ -114,6 +115,12 @@ async function runOneTrial(params: {
       worktree.path,
       {
         label: `${params.record.task_id} (${trial.trial_id})`,
+        metricsPath: join(
+          comparisonDir(params.executionPath, params.record.comparison_id),
+          "trials",
+          trial.trial_id,
+          "parent-validation-metrics.jsonl",
+        ),
       },
     );
     parentValidations = parentValidationBatch.validations;
@@ -197,6 +204,7 @@ async function runOneTrial(params: {
             params.schedulePath,
             params.executionPath,
           ),
+          "reporter",
         );
         const result =
           reporterOutcome.exitCode === 0
@@ -321,7 +329,7 @@ async function runTrials(opts: TrialRunOptions): Promise<void> {
   if (!projectId) throw new Error("exec trial run requires a project id.");
   const planPath = resolve(opts.plan);
   if (!existsSync(planPath)) throw new Error(`Plan not found: ${planPath}`);
-  const planContent = readFileSync(planPath, "utf8");
+  const planContent = readPlanFile(planPath);
   const identity = parsePlanTaskIdentity(planContent);
   if (!identity)
     throw new Error("Trial plan must have SpecDojo task_id/mode/project_id frontmatter.");
@@ -642,7 +650,9 @@ function commandError(error: unknown): void {
 }
 
 export function registerExecTrialCommands(exec: Command): void {
-  const trial = exec.command("trial").description("Compare multiple agents on one immutable plan");
+  const trial = exec
+    .command("trial", { hidden: true })
+    .description("Compare multiple agents on one immutable plan");
   trial
     .command("run")
     .requiredOption("--project <projectId>", "Project id")

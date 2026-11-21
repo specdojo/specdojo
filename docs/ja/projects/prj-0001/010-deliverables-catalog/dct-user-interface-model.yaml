@@ -9,26 +9,77 @@ domain: user-interface-model
 base_path: /docs/ja/product/010-business-specs/040-user-interface-model
 groups:
   - deliverables:
-      - local_id: uis-index
-        name: 画面仕様（全体構成）
+      - local_id: clis-index
+        name: CLI仕様（全体構成）
         kind: work
-        overview: SpecDojoの操作単位（CLIコマンド群）の利用目的・表示項目・操作・遷移の要点を、command-referenceや運用ガイドへの導線としてまとめる
-        path: uis-index.md
-        note: SpecDojoはCLIツールのためGUI画面を持たない。command-reference.md の11コマンド群を「画面」に見立てて要点を記述し、詳細はcommand-reference・各運用ガイドへリンクする。個別画面（uis-<term>）は作成しない
+        overview: SpecDojoが提供するCLIコマンド群の全体構成、利用目的、操作の流れ、入力と出力の要点を、command-referenceや運用ガイドへの導線としてまとめる
+        path: clis-index.md
+        note: 業務仕様の種類ごとに代表を1件作る方針（PJR-2GD6）に基づき、exec コマンド群（clis-exec-commands）を代表として個別作成する。その他のコマンド群は clis-index から command-reference・各運用ガイドへリンクする。索引専用の rulebook（clis-index-rulebook）は未整備のため、個別成果物用の rulebook は流用せず未宣言とする
         done_criteria:
-          - text: 利用目的・表示項目・操作・遷移・エラー表示が業務観点で記述されていること
+          - text: CLIコマンド群の利用目的・操作の流れ・入力と出力の要点・エラー時の次の手が業務観点で記述されていること
             roles: [BA]
             viewpoint: vp-ba-requirements-completeness
-          - text: 画面のスコープと利用フローを承認できること
+          - text: CLIコマンド群のスコープと利用フローを承認できること
             roles: [PO]
             viewpoint: vp-po-purpose-alignment
-          - text: フロントエンド設計・API連携設計の入力として参照できること
+          - text: CLI実装・コマンド体系設計の入力として参照できること
             roles: [ARC]
             viewpoint: vp-arc-technical-constraints
-          - text: UIテスト・受入テスト設計に活用できること
+          - text: CLIテスト・受入テスト設計に活用できること
             roles: [QE]
             viewpoint: vp-qe-verifiability
-          - text: 業務ユーザーが操作しやすい表現・構成になっていること
+          - text: 開発者・運用者が操作しやすい表現・構成になっていること
+            roles: [UX]
+            viewpoint: vp-ux-readability
+      - local_id: clis-exec-commands
+        name: CLI仕様（exec コマンド群）
+        kind: work
+        depends_on:
+          - clis-index
+        overview: exec コマンド群の利用目的、操作の流れ、コマンドリファレンスへの参照、入力情報と出力情報の要点、終了コード、エラー表示、および利用者の次の手を定義する
+        path: clis-exec-commands.md
+        rulebook: specdojo:clis-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/exec/commands.ts
+            purpose: exec サブコマンド群（run・plan・review・worktree等）のコマンド定義・対話出力・エラー表示を処理するCLI操作部
+        done_criteria:
+          - text: exec コマンド群の利用目的・操作の流れ・入力情報と出力情報の要点・利用者の次の手が業務観点で記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: exec コマンド群のスコープと利用フローを承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: CLI 実装・コマンド体系設計の入力として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: CLI テスト・受入テスト設計に活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 開発者・運用者が操作しやすい表現・構成になっていること
+            roles: [UX]
+            viewpoint: vp-ux-readability
+      - local_id: uis-open-document-by-id
+        name: 画面仕様（VS Code の ID で文書を開く入力）
+        kind: work
+        overview: "VS Code 拡張のコマンド「SpecDojo: Open Document by ID」で、利用者が文書 ID を入力して対応する文書を開くまでの表示項目、操作、遷移、入力の検証、警告の表示と利用者の次の手を定義する"
+        path: uis-open-document-by-id.md
+        rulebook: specdojo:uis-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: packages/vscode-specdojo/src/extension.ts
+            purpose: specdojo.openById コマンドの入力欄・索引の読み込み・警告表示・文書を開く処理
+        done_criteria:
+          - text: 入力欄・警告・文書を開く結果と、利用者の次の手が業務観点で記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 実装（specdojo.openById）の表示文言・分岐と食い違いがないこと
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 入力と警告の条件から受入テストを設計できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 利用者が迷わず操作できる表現・構成になっていること
             roles: [UX]
             viewpoint: vp-ux-readability
       - local_id: bds-index
@@ -48,5 +99,33 @@ groups:
             roles: [ARC]
             viewpoint: vp-arc-technical-constraints
           - text: 帳票テスト設計に活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+
+      - local_id: bds-progress-report
+        name: 帳票仕様（週次進捗報告）
+        kind: work
+        depends_on:
+          - bds-index
+          - sysd-job-execution
+        overview: routine が週ごとに作る進捗報告（reporting/progress-reports/）の利用目的・読み手・表示項目・出力の時期と、元にする記録を定義する
+        path: bds-progress-report.md
+        rulebook: specdojo:bds-rulebook
+        note: 帳票の型（bds）の代表として 1 件だけ作る（PJR-DD33、indie が 2026-11-15 に承認）。bds-index の「個別帳票は作成しない」方針の例外とし、ほかの出力物は今までどおり bds-index から既存のガイドへ導く
+        evidence_refs:
+          - kind: implementation
+            path: src/routine/storage.ts
+            purpose: 進捗報告の出力先と routine の実行記録の保存の規則
+          - kind: implementation
+            path: src/routine/definition.ts
+            purpose: 進捗報告を作る routine の定義の読込・検証
+        done_criteria:
+          - text: 利用目的・読み手・表示項目・出力の時期が業務観点で記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 報告の範囲と業務的妥当性を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: 報告の内容を記録から確かめるテストの設計に活用できること
             roles: [QE]
             viewpoint: vp-qe-verifiability

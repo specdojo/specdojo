@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "task_id": "T-PROJECT-KATA-pm-raci-090",
+  "run_id": "T-PROJECT-KATA-pm-raci-090-20261113T014633Z-38b02ebb",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-review-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-13T01:48:46.933Z",
+    "completed_at": "2026-11-13T01:51:47.370Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/projects/prj-0001/030-project-management/pm-raci.md --changed-only",
+      "status": "passed",
+      "summary": "開始時・終了直前とも終了コード0。両回とも対象パスを出力し、評価結果が最新でないことを検知。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/projects/prj-0001/030-project-management/pm-raci.md --dependency-changed",
+      "status": "passed",
+      "summary": "開始時・終了直前とも終了コード0、出力なし。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/projects/prj-0001/030-project-management/pm-raci.md --incomplete",
+      "status": "passed",
+      "summary": "開始時・終了直前とも終了コード0、出力なし。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check && git status --short",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。追跡ファイルの変更なし。開始時と同じ runner 管理の pipeline-state.json のみ未追跡。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-PROJECT-KATA-pm-raci-090/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/w\n… output omitted …\n-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-PROJECT-KATA-pm-raci-090/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-PROJECT-KATA-pm-raci-090/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1152). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4516 file(s), 136 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 104 passed, 0 error, 0 未検査\n  graph: 3 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4516 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.11 \u001b[39m\u001b[90m/workspaces/specdojo-workspace/worktrees/prj-0001-T-PROJECT-KATA-pm-raci-090\u001b[39m\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the sc\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\n/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-PROJECT-KATA-pm-raci-090/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-PROJECT-KATA-pm-raci-090/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.11 \u001b[39m\u001b[90m/workspaces/specdojo-workspace/worktrees/prj-0001-T-PROJECT-KATA-pm-raci-090\u001b[39m\n\n \u001b[32m✓\u001b[39m tests/src/grade/grade.test.ts \u001b[2m(\u001b[22m\u001b[2m69 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 836\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/src/exec/reporter.test.ts \u001b[2m(\u001b[22m\u001b[2m116 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 52\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/src/exec/plans.test.ts \u001b[2m(\u001b[22m\u001b[\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "レビューを実施し、verdict は `grade-stale` と判断しました。開始時・終了直前とも鮮度確認が対象パスを出力したため、タスクの完了可否は保留します。成果物・型・result は変更していません。確認できなかった範囲: 最新評価に基づく完了条件の充足、template 本文の整合性。親 runner 所管の検証は実行していません。",
+  "completion_status": "complete",
+  "handoff": [
+    "reporter は review result の全必須セクションへ以下の内容を記録してください。executor 段階の指示に従い result は更新していません。decision の verdict は `grade-stale` としてください。レビュー作業自体は終了しています。",
+    "評価結果の確認: `node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/projects/prj-0001/030-project-management/pm-raci.md --changed-only` は開始時・終了直前とも終了コード0、出力は `docs/ja/projects/prj-0001/030-project-management/pm-raci.md`。同じ対象の `--dependency-changed` と `--incomplete` は両時点とも終了コード0、出力なし。plan の鮮度表示と実行結果が異なるため、共通規約 E-01 に従って `grade-stale` とする。最初から stale であり、`changed-during-review` ではない。起動時の `npx --no-install specdojo` は npm キャッシュ領域の ENOENT により起動できず、リポジトリの CLI を `node --import tsx` で実行した。",
+    "評価結果の確認への補足: サイドカー `docs/ja/projects/prj-0001/execution/grade/results/prj-0001.pm-raci.yaml` は読み取り可能。既存値は `verdict: needs-work`、score 84、`graded_at`: 2026-10-22T16:32:44.124Z、blocker 0 / major 4 / minor 3 / note 0。既存の `done_criteria` は2/4充足、未充足は DC-001・DC-004。ただし鮮度確認が stale のため、これらを現在の完了判定には使用せず、F001〜F007の再評価・重複指摘も行っていない。",
+    "判断根拠・approach に応じた確認: [[specdojo:pm-raci-rulebook|RACI 作成ルール]] は記述標準に沿う七章構成で、サンプル章を設けず完成例を外出ししている。記述ガイドの五節には判断基準と良い例・悪い例がある。[[specdojo:pm-raci-sample|RACI 完成例]] は五章構成で、二つの責任表、複数 R の作業別分担、作成と内容承認の境界、承認・レビューの担当例外、三種類の不一致の更新先、五種類の見直しトリガーと管理記録への引き継ぎを具体化している。[[specdojo:clis-sample|CLI 仕様完成例]] と同様、単なる表の雛形に留まらず、例外時の判断と次の行動を含む。読んだ rulebook・recipe・sample・代表成果物の本文見出しには階層ごとの連番がある。上位標準・メタ情報標準への参照により、実装・schema の詳細の再掲を避けている。",
+    "未充足事項・改善指示: [[specdojo:pm-raci-recipe|RACI 作成レシピ]] の「全体の作成手順」「Schedule・実行主体との対応」「良い例 / 悪い例」は owner と主たる R の一致を一律に求め、改訂後 rulebook と [[specdojo:people-and-organization-definition-standard|人と組織の定義標準]] が定める WBS の明示 owner の優先、別の承認・レビュー・外部待ちタスクの A/C の例外を説明していない。これらの優先順・例外と複数 R の主担当注記へ追従させること。また「深掘り手順」の Schedule にない管理目的の行の削除は、主要判断の責任を残す必要性を判断できないため、Schedule の有無だけで削除せず責任境界の重要性から選別する手順へ修正すること。これは代表成果物の既存 finding の再評価ではなく、型一式の相互整合に関する改善指示である。まず runner 側で grade を更新し、その後に完了可否を判断すること。",
+    "実行記録との照合: [[prj-0001:xer-t-project-kata-pm-raci-040-20261112t231322z-3c92d3e4|rulebook 改訂記録]] と [[prj-0001:xer-t-project-kata-pm-raci-050-20261112t233130z-93a6cb28|sample 改訂記録]] を特定した。両 run の evidence に記録された変更はそれぞれ rulebook 一ファイル、sample 一ファイルであり、各九件の親検証はいずれも passed。実際の現行本文でも主担当の識別・担当例外・更新先・見直し条件の具体化を確認した。recipe の未追従は両記録に申し送りがあり、現行 recipe にも残っている。今回の作業前後で追跡ファイルの差分はなく、既存の runner 管理ファイルだけが未追跡のままである。",
+    "recipe・template の要否: recipe は対象の選定から責任配置・担当照合までの検討手順を支援するため必要、template は二表と記入欄の骨組みを再利用するため必要と判断する。rulebook frontmatter は既に `recipe: specdojo:pm-raci-recipe`、`template: specdojo:pm-raci-template`、`sample: specdojo:pm-raci-sample` を宣言しており、template の所在も確認した。fully-guided の制約に従い template 本文は読まず、その内容の適否は未確認。[[prj-0001:prj-overview|プロジェクト概要]] の人間の最終判断と継続可能な分担、[[prj-0001:pm-organization|組織定義]] の Role と実行主体の分離を判断文脈として確認した。未宣言の他プロジェクト文書や外部情報は参照していない。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-PROJECT-KATA-pm-raci-090/T-PROJECT-KATA-pm-raci-090-20261113T014633Z-38b02ebb/executor.log",
+      "bytes": 6801,
+      "truncated": false
+    }
+  ]
+}

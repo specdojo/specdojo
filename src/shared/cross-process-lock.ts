@@ -9,6 +9,7 @@ import {
   utimesSync,
 } from "node:fs";
 import { spawn, type ChildProcess } from "node:child_process";
+import { AsyncLocalStorage } from "node:async_hooks";
 import { join } from "node:path";
 import { ensureDir, writeJson } from "./fs.js";
 import { randomHex } from "./random.js";
@@ -22,6 +23,15 @@ import { nowUtcIsoSeconds } from "./time.js";
 export const LOCK_HEARTBEAT_MS = 5_000;
 export const LOCK_STALE_MS = 30_000;
 export const LOCK_POLL_MS = 200;
+
+// Propagate only locks held by this async operation to Git hooks, without changing process.env.
+export const GIT_LOCK_TOKENS_ENV = "SPECDOJO_GIT_LOCK_TOKENS";
+const heldLocks = new AsyncLocalStorage<LockHandle[]>();
+
+export function gitLockEnvironment(): NodeJS.ProcessEnv {
+  const locks = heldLocks.getStore();
+  return locks?.length ? { [GIT_LOCK_TOKENS_ENV]: locks.map((lock) => lock.token).join(",") } : {};
+}
 
 // The lock directory of the project whose exec-run lock this process holds. Gates that are
 // reached through many call paths (parent validations) read it instead of having the directory
@@ -312,7 +322,7 @@ export class CrossProcessMutex {
     try {
       const handle = await acquirePoolSlot(this.poolDir, 1, this.owner, this.options);
       try {
-        return await fn();
+        return await heldLocks.run([...(heldLocks.getStore() ?? []), handle], fn);
       } finally {
         releaseLock(handle);
       }

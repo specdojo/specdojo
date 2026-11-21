@@ -1,0 +1,107 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_9a6e019bab9f4ab18211c8a8c1aa13a0
+  ts: "2026-11-17T13:24:03Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: pipeline-e2e の reporter の再開のテストが、時々 reporter を 1 回多く呼んで落ちる
+    - field: description
+      from: ""
+      to: tests/src/exec/pipeline-e2e.integration.test.ts の reporter の再開のテストが偶然で落ち、並べて流した run の親の検証（test-integration）を止める
+    - field: input
+      from: ""
+      to: '["2026-11-17 の PJR-8NB8 の 2 回目の親の検証で、「executor / reporter pipeline resume E2E (worktree) > blocks non-target changes after reporter resume and resumes only integration after review」が落ちた。期待した agent の呼び出しは 3 件だが、4 件目として local-gemma-reporter（gemma3-12b、role reporter）が呼ばれていた。時間切れではなかった（timed out: no、テストは約 6.7 秒）","orchestrator が同じテストだけを手元で流し直すと、8NB8 の worktree では 6 回中 5 回、develop では 5 回中 5 回通った。8NB8 の変更（exec smoke の登録と、register の関数を失敗時に例外で止める形にしたこと）は reporter の再試行に関わらないため、偶然の失敗と判断して --resume で親の検証を流し直した","親の検証が落ちると、その項目の変更範囲の予約が残り、範囲が重なると判定された後続の項目も止まる（PJR-9JN6）。偶然の失敗でも、並べて流した複数の run が止まる"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-17"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-8NB8"]'
+    - field: commit_type
+      from: ""
+      to: test
+    - field: commit_scope
+      from: ""
+      to: exec
+- v: 1
+  id: reg_a0efe7d2a6594a86ac9bac20b651abfa
+  ts: "2026-11-17T13:27:28Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: 利用者が担当と期限を決めた
+  changes:
+    - field: owner
+      from: _TODO_
+      to: DEV
+    - field: due
+      from: _TODO_
+      to: "2026-11-30"
+  previous_event_id: reg_9a6e019bab9f4ab18211c8a8c1aa13a0
+- v: 1
+  id: reg_4227cc66d38f4d00aa01d44cd127aba0
+  ts: "2026-11-17T14:10:47Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_a0efe7d2a6594a86ac9bac20b651abfa
+- v: 1
+  id: reg_3e6da0ac40294cf88891731d482c7f45
+  ts: "2026-11-17T14:37:38Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_4227cc66d38f4d00aa01d44cd127aba0
+- v: 1
+  id: reg_2a6a2a8cf2ba41cdac5eccaa178f3308
+  ts: "2026-11-19T14:13:33Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分と個票で確かめ、統合の後に exec smoke と実際の run で動作を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-19"
+    - field: conclusion
+      from: "-"
+      to: reporter の再開の E2E テストが時々落ちる原因の、runner のイベントの再生順序を直した
+  previous_event_id: reg_3e6da0ac40294cf88891731d482c7f45

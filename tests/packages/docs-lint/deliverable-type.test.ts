@@ -1,4 +1,4 @@
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
@@ -352,5 +352,31 @@ describe("Markdown deliverable type matching in the frontmatter plugin", () => {
       file,
     );
     expect(await messages(root, document("data"))).toEqual([]);
+  });
+
+  it("indexes rulebook files sorted, skipping generated, dot entries, and directories but keeping file links", () => {
+    const root = workspace();
+    rulebook(root, "specdojo:b-rulebook", "data", "docs/ja/specdojo/rulebooks/b.md");
+    rulebook(root, "specdojo:a-rulebook", "ui", "docs/ja/specdojo/rulebooks/nested/a.md");
+    rulebook(root, "specdojo:gen-rulebook", "ui", "docs/ja/specdojo/rulebooks/generated/gen.md");
+    rulebook(root, "specdojo:dot-rulebook", "ui", "docs/ja/specdojo/rulebooks/.hidden.md");
+    rulebook(root, "specdojo:dotdir-rulebook", "ui", "docs/ja/specdojo/rulebooks/.draft/d.md");
+    rulebook(root, "specdojo:target-rulebook", "ui", "outside/target.md");
+    mkdirSync(join(root, "docs/ja/specdojo/rulebooks/dir.md"), { recursive: true });
+    symlinkSync(join(root, "outside/target.md"), join(root, "docs/ja/specdojo/rulebooks/link.md"));
+
+    const index = createChecker.buildRulebookIndex(root) as Map<
+      string,
+      Array<{ filePath: string }>
+    >;
+
+    expect([...index.keys()]).toEqual([
+      "specdojo:b-rulebook",
+      "specdojo:target-rulebook",
+      "specdojo:a-rulebook",
+    ]);
+    expect(index.get("specdojo:a-rulebook")?.[0]?.filePath).toBe(
+      join(root, "docs/ja/specdojo/rulebooks/nested/a.md").replaceAll("\\", "/"),
+    );
   });
 });

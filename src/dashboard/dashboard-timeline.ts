@@ -1,5 +1,8 @@
+import { existsSync } from "node:fs";
+import { join } from "node:path";
+import { readYaml } from "../shared/fs.js";
 import { addWorkingDaysToDate } from "../exec/schedule/calendar.js";
-import { buildScheduleIndex, defaultScheduleCalendar } from "../shared/schedule-index.js";
+import { applyScheduleCalendar, defaultScheduleCalendar } from "../shared/schedule-index.js";
 import type { ScheduleCalendar } from "../exec/types.js";
 import { buildTimelineWaves, type TimelineIndex } from "./timeline-build.js";
 
@@ -66,15 +69,13 @@ export function computeTimelineTrackSchedules(
   return { schedule, plannedStartDate: index.planned_start_date };
 }
 
-// 稼働日カレンダーの機械可読正本：tml-index.planned_start_date を起点にし、Schedule 側
-// （sch-defaults.yaml と各 sch-*.yaml）の calendar を buildScheduleIndex から復用する。
-// 両方とも YAML 正本から機械的に読み取り、表示文言の解析に依存しない。
+// The project calendar comes exclusively from sch-defaults.yaml.
 export function resolveDashboardCalendar(schedulePath: string): ScheduleCalendar {
-  try {
-    return buildScheduleIndex(schedulePath).calendar;
-  } catch {
-    return defaultScheduleCalendar();
-  }
+  const defaults = join(schedulePath, "sch-defaults.yaml");
+  const base = defaultScheduleCalendar();
+  if (!existsSync(defaults)) return base;
+  const doc = readYaml(defaults) as { calendar?: unknown } | null;
+  return applyScheduleCalendar(base, doc?.calendar) ?? base;
 }
 
 // ================================
@@ -100,6 +101,7 @@ export function buildTimelineGanttSvg(
   schedule: TimelineTrackSchedule[],
   plannedStartDate: string | undefined,
   title = "トラック計画ガントチャート",
+  caption = "横軸は日付。予定開始日・予定終了日は tml-index.yaml の planned_start_date と catalog_duration_estimate_days（推定稼働日数）から算出。",
 ): string {
   const dayWidth = 30;
   const rowHeight = 26;
@@ -115,7 +117,8 @@ export function buildTimelineGanttSvg(
       title,
       plannedStartDate
         ? "トラックの予定開始日・終了日を算出できませんでした。"
-        : "計画開始日（tml-index.yaml の planned_start_date）が未設定です。",
+        : "開始日を確定できる項目がありません。",
+      schedule,
     );
   }
 
@@ -154,9 +157,7 @@ export function buildTimelineGanttSvg(
       </style>`);
   parts.push(`<rect x="0" y="0" width="${width}" height="${height}" fill="#fffdf8" />`);
   parts.push(`<text class="tl-title" x="16" y="24">${xmlEscape(title)}</text>`);
-  parts.push(
-    `<text class="tl-caption" x="16" y="42">横軸は日付。予定開始日・予定終了日は tml-index.yaml の planned_start_date と catalog_duration_estimate_days（推定稼働日数）から算出。</text>`,
-  );
+  parts.push(`<text class="tl-caption" x="16" y="42">${xmlEscape(caption)}</text>`);
 
   for (let offset = 0; offset < totalDays; offset++) {
     const dayMs = startMs + offset * 86_400_000;
@@ -209,19 +210,26 @@ export function buildTimelineGanttSvg(
 
 function datePlanNote(row: TimelineTrackSchedule): string {
   if (!row.startDate) return "手始め日未定";
-  if (row.endDate === undefined || !row.estimateDays)
-    return `着手順 ${row.order}（推定稼働日数未定）`;
+  if (row.endDate === undefined || !row.estimateDays) return `着手順 ${row.order}（終了日未定）`;
   return `${row.startDate} ~ ${row.endDate}`;
 }
 
-function noDataTimelineSvg(title: string, message: string): string {
+function noDataTimelineSvg(
+  title: string,
+  message: string,
+  rows: TimelineTrackSchedule[] = [],
+): string {
   const width = 560;
-  const height = 120;
+  const height = 120 + rows.length * 24;
   return [
     `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-label="${xmlEscape(title)}">`,
     `<rect x="0" y="0" width="${width}" height="${height}" fill="#fffdf8" />`,
     `<text class="tl-title" x="16" y="24">${xmlEscape(title)}</text>`,
     `<text x="16" y="72" font-size="13" fill="#64748b">${xmlEscape(message)}</text>`,
+    ...rows.map(
+      (row, index) =>
+        `<text x="16" y="${104 + index * 24}" font-size="12">${xmlEscape(row.track)}: 開始日未定 / 終了日 ${xmlEscape(row.endDate ?? "未定")}</text>`,
+    ),
     `</svg>`,
   ].join("\n");
 }

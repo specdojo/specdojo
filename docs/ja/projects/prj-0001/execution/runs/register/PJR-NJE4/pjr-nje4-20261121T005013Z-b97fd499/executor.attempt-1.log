@@ -1,0 +1,29 @@
+0.9.2 では、agy の member をどの経路で起動しようとしても agent を起動する前にエラーで止まり、init と各 scaffold でも antigravity を選べなくなりました。関連する単体テスト（32 ファイル・533 件）と `validate:history-links`、変更範囲の prettier check は通っています。`npm run test:unit` の全件・typecheck・lint・integration テストは親 runner が実行するため、ここでは回していません。
+
+**止める仕組み**
+- 止める理由・根拠の URL 2 つ・代わりの操作を含むエラー文を `src/shared/antigravity-block.ts` 1 か所にまとめました。止めるのを外す設定や環境変数はありません。
+- exec・grade・trial などはすべて `resolveMemberCommand` を通るので、ここで provider が `antigravity` の member を command を組み立てる前に拒否します。member に `command` 上書きがあっても拒否します。
+- 自動選択（`selectCandidates`）では agy の member を候補から外し、ほかの member へ進みます。
+- `agent launch` は agy を起動する処理を消し、常に終了コード 1 で終わります。0.9.1 の init が書いた `command_template` はここで止まります。
+- `orchestrator launch` は、設定を読む前と command を組み立てる前の両方で止めます。
+- init は選択肢から antigravity を外し、指定されたらエラーにします。対話では provider の質問だけやり直します。`config scaffold`・`exec scaffold`・`devcontainer scaffold` は、ファイルを書く前にエラーにします。
+- 配布テンプレートは消していません（PJR-N6FQ で消す）。init がそれらを書き出さないことはテストで確かめました。
+
+**テスト**
+- `tests/src/shared/antigravity-block.test.ts` を新しく作り、完了条件の 6 つの場合を確かめています。`agent launch` と `orchestrator launch` では、PATH に置いた偽の agy が実行されないことも確かめています。
+- agy の起動を前提にしていた既存のテストは、止まることを確かめる内容に書き換えました。
+
+**文書**
+- コマンドリファレンス・exec設定ガイド・オーケストレーター運用ガイド・README に、0.9.2 から agy を起動しないことと理由を書きました。agy の設定方法の説明は消さず、先頭に使えないことを書いています。
+- コマンドリファレンスの Antigravity の `orch:*` と devcontainer の volume の行は、0.9.2 では作られないので削除しました。
+
+個票の作業内容（3 行とも `done`）、対応結果（決めた内容と理由、CHANGELOG に書く事項の文案）、関連ドキュメントを埋めました。`CHANGELOG.md` は変えていません。
+
+**決めた点（`handoff` にも記載）**
+- 名前で指定した代わり（`fallback_executor_by` や難易度別の振り分け `routing`）が agy の member の場合は、ほかへ進まずにエラーで止めます。明示の選択を黙って別の agent に替えないためです。
+- 判定は member の `provider` だけで行います。`provider: custom` にして `command` で agy を直接呼ぶ設定は検出しません。
+- `agent launch` の `--role` を任意にしました。0.9.1 の template が必ずこのエラーまで通るようにするためです。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"0.9.2 で agy の起動を止めた。provider が antigravity の member は resolveMemberCommand で拒否し、selectCandidates で候補から外す。agent launch・orchestrator launch は起動前にエラーで止め、init・config scaffold・exec scaffold・devcontainer scaffold では antigravity を選べなくした。6 つの場合の単体テストを足し、既存の agy のテストを止める内容に書き換えた。コマンドリファレンス・exec設定ガイド・オーケストレーター運用ガイド・README に注意書きを足し、個票の作業内容・対応結果（CHANGELOG に書く事項を含む）・関連ドキュメントを更新した。","handoff":["決めた内容: 名前で指定した代わり（`fallback_executor_by` / `fallback_reporter_by`、難易度別の振り分け `routing`）が agy の member の場合は、ほかの member へ進まずにエラーで止める。名前の指定は利用者の明示の選択で、黙って別の agent に替えないため。自動選択の中の代わりの候補は外して次へ進む。","決めた内容: 判定は member の `provider` で行う。`provider: custom` にして `command` で agy を直接呼ぶ設定は検出しない（command の文字列による判定は誤検出の恐れがあり、完了条件も provider を対象にしているため）。","決めた内容: `agent launch` は agy 専用の入口だったため、agy 以外の provider も起動せずエラーにする。`--role` は 0.9.1 の `command_template` を確実にこのエラーまで通すため任意にした。","決めた内容: init が書く Antigravity の orch の npm script と Dev Container の volume は 0.9.2 では作られないため、コマンドリファレンスの該当の記述は現在の動きに合わせて削除した。agy の設定方法の説明（session プロファイル・`--global`・command template）は消さずに、先頭へ使えないことを書いた（説明そのものの削除は PJR-N6FQ）。","CHANGELOG に書く事項（区分: 利用者から見て動きが変わる点）の文案は個票の対応結果「CHANGELOG に書く事項」にある。0.9.1 の init で antigravity を選んだ利用者は、0.9.2 に上げると exec run などが止まる。直し方は agent-members.yaml で agy の member を `disabled: true` にするか消す、exec-defaults.yaml の `routing` の agy の member をほかの provider に替える、`orch:argon`・`orch:flash` などの npm script を消す、の 3 つ。","残課題: exec run が名前で指定された disabled の member を断らない件は PJR-77JB。配布テンプレート（`templates/antigravity/` ほか）と agy の設定の説明の削除は PJR-N6FQ。"],"validations":[{"command":"npm run validate:history-links","status":"passed","summary":"変更した個票を含め、履歴蓄積ファイルに Markdown リンクの違反なし（exit 0）"},{"command":"npx prettier --check README.md docs/ja/specdojo/guides/orchestrator-operation-guide.md docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-nje4-hotfix-0-9-2-block-antigravity.md src tests/src/shared tests/src/commands tests/src/devcontainer tests/src/exec/agent-config-command.test.ts tests/src/exec/antigravity-session.integration.test.ts","status":"passed","summary":"All matched files use Prettier code style"}]}
+</specdojo_executor_evidence>

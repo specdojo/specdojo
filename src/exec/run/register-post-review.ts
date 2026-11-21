@@ -1,18 +1,24 @@
+import { readPlanFile } from "../../shared/plan-conventions.js";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, resolve, sep } from "node:path";
-import { resolveMemberCommand, type ExecDefaultsConfig } from "../agent-config.js";
 import { buildSpecdojoFrontmatter } from "../../docs/frontmatter-namespace.js";
+import type { PjrItem, RegisterPaths } from "../../register/register.js";
+import {
+  registerWorkTableIssueMessage,
+  registerWorkTableIssues,
+} from "../../register/work-table.js";
 import { formatMarkdownFile } from "../../shared/markdown-format.js";
-import { expandTemplate } from "../../shared/text.js";
 import type { MemberRoster, ProjectMember } from "../../shared/specdojo-config.js";
-import { execTemplatePath } from "../plans.js";
-import { scaffoldResult, stripLeadingListMarker, updateResultStatus } from "../results.js";
+import { expandTemplate } from "../../shared/text.js";
+import { resolveMemberCommand, type ExecDefaultsConfig } from "../agent-config.js";
 import type { ExecEvidence } from "../evidence.js";
 import { readPipelineState } from "../pipeline-state.js";
+import { execTemplatePath } from "../plans.js";
 import { sanitizeRegisterConclusion, type RegisterItemTransition } from "../register.js";
-import type { PjrItem, RegisterPaths } from "../../register/register.js";
-import { gitOutput } from "../worktree.js";
+import { scaffoldResult, stripLeadingListMarker, updateResultStatus } from "../results.js";
+import { runLogPath, taskRecordPaths } from "../run-records.js";
 import { worktreeStatusPaths } from "../worktree-ops.js";
+import { gitOutput } from "../worktree.js";
 import { runAgentPipeline } from "./agent-pipeline.js";
 import { expandPromptRefs } from "./agent.js";
 import {
@@ -45,8 +51,9 @@ export function registerPostReviewDisposition(params: {
   itemType: string;
   verdict: string | undefined;
   runnerImplementationChanged?: boolean;
+  workTableIssue?: string;
 }): RegisterPostReviewDisposition {
-  const { itemType, verdict, runnerImplementationChanged = false } = params;
+  const { itemType, verdict, runnerImplementationChanged = false, workTableIssue } = params;
   if (verdict === "incomplete" || !verdict) {
     return {
       transition: "waiting",
@@ -60,6 +67,10 @@ export function registerPostReviewDisposition(params: {
       outcome: "failure",
       explanation: `review verdict is not accepted: ${verdict}`,
     };
+  }
+  // 作業内容の表が実績に合っていなければ、review が通っても完了にしない。
+  if (workTableIssue) {
+    return { transition: "waiting", outcome: "failure", explanation: workTableIssue };
   }
   if (!AUTO_CLOSE_REGISTER_TYPES.has(itemType)) {
     return {
@@ -220,8 +231,11 @@ export async function generateRegisterPostReviewPlan(params: {
   const { context, item, stem } = params;
   const taskId = `${item.id}-post-review`;
   const reviewStem = `${stem}-post-review`;
-  const planPath = join(context.executionPath, "exec", "plans", `${reviewStem}-plan.md`);
-  const resultPath = join(context.executionPath, "exec", "results", `${reviewStem}-result.md`);
+  const { plan: planPath, result: resultPath } = taskRecordPaths(
+    context.executionPath,
+    item.id,
+    reviewStem,
+  );
   const templatePath = execTemplatePath("xrp-register-post-run-template.md");
   const frontmatter = buildSpecdojoFrontmatter([
     `id: ${context.projectId}:xrp-${reviewStem}`,
@@ -428,7 +442,7 @@ export async function runRegisterPostReview(params: {
     executor: agents.executor,
     reporterCandidates: agents.reporterCandidates,
     planPath: generated.planPath,
-    planPrompt: expandPromptRefs(readFileSync(generated.planPath, "utf8")),
+    planPrompt: expandPromptRefs(readPlanFile(generated.planPath)),
     resultPath: generated.resultPath,
     registerPaths: registerReporterManagedPaths(registerPaths),
     execDefaults: reviewExecDefaults,
@@ -493,10 +507,16 @@ export async function runRegisterPostReview(params: {
     context.repoRoot,
     changedPathsBetween(context.repoRoot, params.baseCommit, params.outputCommit),
   );
+  const workTableIssues = existsSync(params.ticketPath)
+    ? registerWorkTableIssues(readFileSync(params.ticketPath, "utf8"))
+    : [];
   const disposition = registerPostReviewDisposition({
     itemType: item.type,
     verdict,
     runnerImplementationChanged,
+    ...(workTableIssues.length > 0
+      ? { workTableIssue: registerWorkTableIssueMessage(item.id, workTableIssues) }
+      : {}),
   });
   const rationale = sanitizeRegisterConclusion(
     `post-run review verdict ${verdict}: ${reviewRationale(generated.resultPath)}; ${disposition.explanation}`,
@@ -545,7 +565,7 @@ export async function runRegisterPostReview(params: {
       );
     })
     .map((path) => resolve(context.repoRoot, path));
-  const commitFailureLogPath = join(dirname(reviewStatePath), "post-review-commit.log");
+  const commitFailureLogPath = runLogPath(reviewStatePath, "post-review-commit.log");
   try {
     commitRegisterState(
       context.repoRoot,

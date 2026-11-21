@@ -65,10 +65,9 @@ describe("buildOrchestratorLaunch", () => {
     ]);
   });
 
-  it("reuses repeated --add-dir arguments for codex, antigravity, and copilot", () => {
+  it("reuses repeated --add-dir arguments for codex and copilot", () => {
     for (const [provider, executable] of [
       ["codex", "codex"],
-      ["antigravity", "agy"],
       ["copilot", "copilot"],
     ] as const) {
       const launch = buildOrchestratorLaunch({
@@ -89,6 +88,20 @@ describe("buildOrchestratorLaunch", () => {
         "/workspace/admin-ui",
       ]);
     }
+  });
+
+  it("refuses antigravity before building an agy command", () => {
+    expect(() =>
+      buildOrchestratorLaunch({
+        provider: "antigravity",
+        providerArgs: ["--model", "fixture", "-i", "prompt"],
+        repoRoots,
+        cwd: "/workspace/project",
+        env: {},
+      }),
+    ).toThrow(
+      /orchestrator launch: SpecDojo 0\.9\.2 and later do not launch Antigravity \(agy\)\..*https:\/\/antigravity\.google\/docs\/faq.*https:\/\/antigravity\.google\/terms.*\.specdojo\/agent-members\.yaml/,
+    );
   });
 
   it("injects an OpenCode agent override that denies undeclared external directories", () => {
@@ -124,15 +137,16 @@ describe("buildOrchestratorLaunch", () => {
       "/workspace/app1/**": "allow",
       "/workspace/admin-ui/**": "allow",
     });
+    // OpenCode matches edit by the path relative to its cwd (PJR-08EK).
     expect(config.agent["specdojo-orchestrator"].permission?.edit).toEqual({
-      "/workspace/app1/**": "allow",
-      "/workspace/admin-ui/**": "allow",
+      "../app1/**": "allow",
+      "../admin-ui/**": "allow",
     });
     expect(launch.env.OPENCODE_CONFIG_CONTENT).not.toContain("/workspace/undeclared");
   });
 
-  it("keeps every provider command unchanged when the project has no repos", () => {
-    for (const provider of ["claude", "codex", "antigravity", "copilot", "opencode"] as const) {
+  it("keeps other provider commands unchanged when the project has no repos", () => {
+    for (const provider of ["claude", "codex", "copilot", "opencode"] as const) {
       const env = { PATH: "/bin", OPENCODE_CONFIG_CONTENT: '{"autoupdate":false}' };
       const args = ["--agent", "specdojo-orchestrator", "--user-option"];
       const launch = buildOrchestratorLaunch({

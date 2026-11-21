@@ -2,12 +2,12 @@
 id: stsd-register-entry-grade-criteria
 document: stsd-register-entry
 path: docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md
-graded_at: "2026-10-28T16:06:00.451Z"
+graded_at: "2026-11-07T16:34:12.799Z"
 graded_by: flash-high-executor
-content_hash: 5f2f86eb0b753c314030e556af09fa243289336abcb1b4654d35f5125469cd33
+content_hash: 28a1919d9966d9e1dfae12a082f3dc0b158ef478ea3d1c6eaa4f58f8d8b1af6b
 summary:
-  satisfied: 0
-  unsatisfied: 5
+  satisfied: 4
+  unsatisfied: 1
   total: 5
 criteria:
   - id: DC-001
@@ -17,39 +17,29 @@ criteria:
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
     reason: >-
-      Direct terminal transitions, terminal-to-active reopening transitions, and accurate waiting/in-progress entry
-      conditions are missing or conflict with actual operations.
+      The requirements and approval conditions for automatic closure of human-preapproved todo and issue items after
+      overnight post-review are not defined.
   - id: DC-002
     text: 状態遷移の業務的妥当性を承認できること
     roles:
       - PO
     viewpoint: vp-po-purpose-alignment
-    status: unsatisfied
-    reason: Unresolved assumptions and discrepancies with actual CLI/operation rules prevent PO approval of business validity.
+    status: satisfied
   - id: DC-003
     text: 状態遷移実装の基礎として参照できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
-    status: unsatisfied
-    reason: >-
-      State and transition definitions do not align with item_status, block_reason, completed_at fields and existing CLI
-      guards.
+    status: satisfied
   - id: DC-004
     text: 状態ベースのテスト設計に活用できること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
-    status: unsatisfied
-    reason: >-
-      Transition conditions rely on vague phrasing without concrete pass/fail criteria, and permitted/forbidden
-      transitions are not comprehensively testable.
+    status: satisfied
   - id: DC-005
     text: 状態管理実装の参照として使えること
     roles:
       - DEV
     viewpoint: vp-dev-implementation-readiness
-    status: unsatisfied
-    reason: >-
-      Register commands, updated frontmatter keys, and rejection guards are not mapped per transition ID to support
-      implementation.
+    status: satisfied

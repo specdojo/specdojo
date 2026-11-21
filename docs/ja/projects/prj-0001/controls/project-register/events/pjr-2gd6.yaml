@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_a8e54053c053412c9ea731067486d80f
+  ts: "2026-11-08T00:29:24Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 業務仕様の種類ごとに代表の文書を 1 件ずつ作る
+    - field: description
+      from: ""
+      to: 業務仕様（データモデル・業務モデル・システム化機能・画面・外部 I/F）の種類ごとに代表の文書を 1 件ずつ、schedule で作成・磨き込み・condense・review・確定まで進める。実装と重なる種類は、型の手入れで schema・型・リファレンスの参照に寄せてから作る
+    - field: input
+      from: ""
+      to: '["利用者の方針: stsd をすべて作るのではなく、業務仕様の文書を種類別に代表の文書を一通り作る。schedule で実行する（2026-11-08、indie が決定）。","各代表は作成・磨き込み（fully-guided）・condense・agent の review・確定（人）まで進める（案 B と review の段を残す、indie が決定）。","代表: bdd-register-entry・ccd-project-planning・cdt-register-type（旧 cld）・br-task-selection-strategy・bes-task-ready-selected と、カタログに足す sf・uis・ifx の各 1 件。","実装と同じことを 2 回書かない: bdd は schema を正として参照し、ccd は属性を主キーだけにして関連に絞る。cdt・ifx-cmd・sf も参照に寄せる（indie が決定）。br・bps の分け方は PJR-FQZ5 で決め、決まるまでは今の型のまま作る。","分類一覧の略号は ccd と紛れるため cld から cdt に変える（indie が決定）。","schedule の --auto --parallel は PJR-HQVE を直してから使う（indie が決定）。"]'
+    - field: type
+      from: ""
+      to: epic
+    - field: track
+      from: ""
+      to: business-specs-reps
+    - field: domains
+      from: ""
+      to: '["data-model","business-model","system-functions","user-interface-model","external-interface-specs"]'
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-08"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-3APD"]'

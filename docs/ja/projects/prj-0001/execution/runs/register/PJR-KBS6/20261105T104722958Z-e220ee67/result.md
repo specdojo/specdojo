@@ -1,0 +1,48 @@
+---
+specdojo:
+  id: prj-0001:xer-pjr-kbs6-20261105t104722z-4a079bbc
+  type: exec-result
+  task_id: PJR-KBS6
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  origin: register
+  plan_ref: runs/register/PJR-KBS6/20261105T104722958Z-e220ee67/plan.md
+  started_at: "2026-11-05T10:47:28.324Z"
+  completed_at: "2026-11-05T10:57:06.373Z"
+  agent: sol-executor
+  approach: rulebook-maintenance
+  targets:
+    - specdojo:stsd-rulebook
+---
+
+# Edit Result
+
+## 1. 実施内容
+
+- stsd-rulebook の終了点および継続状態に関する規則を更新しました。
+- 業務の終了と状態管理の継続が分かれる場合（差し戻せる完了や記録が残る中止など）の、終了点と継続状態の書き方を追加しました。
+- finding F001（遷移 ID の不変性と再利用ルール）および F002（要件表の概要項目不足）を解消しました。
+
+## 2. 変更ファイル
+
+- `docs/ja/specdojo/rulebooks/stsd-rulebook.md`: 状態遷移図における終了点の扱い（業務終了と状態管理の継続の区別）に関する規則を追加し、finding F001（遷移 ID の採番・再利用ルール）および F002（要件表の概要項目）の修正を行いました。
+
+## 3. 申し送り
+
+- reporter は result の「進め方と実践の型の適用」に以下の根拠と判断を記録してください。executor が変更したのは `docs/ja/specdojo/rulebooks/stsd-rulebook.md` のみです。result、grade サイドカー、他の Kata、`docs/ja/product/` 配下、開始時から存在した登録簿イベント・evidence は編集していません。
+- 根拠として `stsd-rulebook`、`rulebook-authoring-standard`、`stsd-mermaid-rulebook`、`stsd-recipe`、`stsd-sample`、`stsd-template`、共通レビュー観点の `vp-qe-omissions-consistency`・`vp-arc-conciseness`、grade 結果 `specdojo.stsd-rulebook.yaml`、PJR-KBS6 個票、PJR-Q9AW の 20261105T100217Z 実行結果、`stsd-task-execution`・`stsd-register-entry`・`stsd-routine-run` を確認しました。
+- 終了点の規則は既存の「状態遷移図」内へ統合しました。ライフサイクルを閉じるイベント・条件がある場合と、業務終了後も状態管理が続く場合を区別し、省略時の概要に到達点・管理を続ける状態・理由を要求しました。出力遷移のない状態を継続状態とする Mermaid 規則を維持し、単なる記録保存と確認・記録更新の継続を区別しました。`stsd-task-execution` の概要「対象範囲の到達点」は、完了の差し戻し、中止後の補足記録・状態確認、終了イベントがない理由を示しており、新規則を満たします。図表にも完了からの戻りがあり、中止には出力遷移がありません。sample の販売・返品後の終了は対象のライフサイクルを閉じるため維持できます。
+- F001 は既存遷移 ID の振り直し禁止、削除 ID の欠番化・再利用禁止、新規遷移への未使用 ID 割当で解消しました。PJR-Q9AW の廃止 `T-12`・`T-13` を再利用しない実例とも整合します。F002 は本文要件表の概要へ「状態の正本となる管理場所」「状態変更を起こす業務範囲」を補い、概要の記述ガイドと `template` に揃えて解消しました。章構成・frontmatter は維持し、同じ省略ルールを別章へ重複追加していません。
+- reporter は result の「進め方と実践の型の適用」に以下の根拠と判断を記録してください。executor が変更したのは docs/ja/specdojo/rulebooks/stsd-rulebook.md のみです。result、grade サイドカー、他の Kata、docs/ja/product/ 配下、開始時から存在した登録簿イベント・evidence は編集していません。
+- 根拠として stsd-rulebook、rulebook-authoring-standard、stsd-mermaid-rulebook、stsd-recipe、stsd-sample、stsd-template、共通レビュー観点の vp-qe-omissions-consistency・vp-arc-conciseness、grade 結果 specdojo.stsd-rulebook.yaml、PJR-KBS6 個票、PJR-Q9AW の 20261105T100217Z 実行結果、stsd-task-execution・stsd-register-entry・stsd-routine-run を確認しました。
+- 終了点の規則は既存の「状態遷移図」内へ統合しました。ライフサイクルを閉じるイベント・条件がある場合と、業務終了後も状態管理が続く場合を区別し、省略時の概要に到達点・管理を続ける状態・理由を要求しました。出力遷移のない状態を継続状態とする Mermaid 規則を維持し、単なる記録保存と確認・記録更新の継続を区別しました。stsd-task-execution の概要「対象範囲の到達点」は、完了の差し戻し、中止後の補足記録・状態確認、終了イベントがない理由を示しており、新規則を満たします。図表にも完了からの戻りがあり、中止には出力遷移がありません。sample の販売・返品後の終了は対象範囲のライフサイクルを閉じるため維持できます。
+- F001 は既存遷移 ID の振り直し禁止、削除 ID の欠番化・再利用禁止、新規遷移への未使用 ID 割当で解消しました。PJR-Q9AW の廃止 T-12・T-13 を再利用しない実例とも整合します。F002 は本文要件表の概要へ「状態の正本となる管理場所」「状態変更を起こす業務範囲」を補い、概要の記述ガイドと template に揃えて解消しました。章構成・frontmatter は維持し、同じ省略ルールを別章へ重複追加していません。
+- lint:md・lint:fm を含む指定済み親検証は pipeline 指示に従って実行・重複報告していません。最終合否は親 runner の検証結果を使用してください。
+- 適用外の検証: `npm run validate:schema:file`（executor の変更は Markdown のみで、YAML ファイルを変更していません。）
+- 適用外の検証: `node --import tsx tools/catalog-validate-if-configured.mjs`（executor の変更は docs/ja/specdojo/rulebooks/ 配下のみで、docs/ja/projects/ 配下を変更していません。）
+- 適用外の検証: `npm run validate:history-links`（executor は個票履歴、既存 exec plan、result を変更していません。）
+
+## 4. 進め方と実践の型の適用
+
+まず `stsd-rulebook` を読み込み、現状の章構成と「状態遷移図」における終了点の扱いを確認しました。次に、finding F001 および F002 の内容から、修正すべき規範（遷移 ID の不変性および要件表の構成項目）を特定しました。これに基づき、`stsd-rulebook` に業務終了と継続状態の区別を定義する規則を追加し、同時に finding の指摘内容を反映させる形で各記載を更新しました。最後に、追加した規則が `stsd-task-execution` の実態と整合していることを確認しました。

@@ -1,0 +1,26 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: Condense Records
+description: Changes and deliberately retained candidates within one document.
+type: array
+maxItems: 100
+items:
+  type: object
+  additionalProperties: false
+  required: [location, category, action, reason, cause]
+  properties:
+    location:
+      type: string
+      pattern: "\\S"
+      maxLength: 4000
+      description: Heading, line, or passage in the deliverable before the edit.
+    category:
+      enum: [repetition, table-prose, figure-prose, unneeded-background, canonical-restatement]
+    action:
+      enum: [delete, merge, reference, retain]
+    reason:
+      type: string
+      pattern: "\\S"
+      maxLength: 4000
+      description: Meaning-preservation evidence or reason for retaining the candidate.
+    cause:
+      $ref: "finding-cause.schema.yaml"

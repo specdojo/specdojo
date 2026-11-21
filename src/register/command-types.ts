@@ -24,6 +24,7 @@ export type RegisterItemView = {
 export type RegisterAddFields = {
   type: string;
   track?: string;
+  domains?: string[];
   title: string;
   description: string;
   inputs?: string[];
@@ -32,6 +33,7 @@ export type RegisterAddFields = {
   status: string;
   owner: string;
   registeredAt: string;
+  startOn?: string;
   due: string;
   completedAt: string;
   conclusion: string;
@@ -77,7 +79,8 @@ export type RegisterMutationOptions = {
   by?: string;
   dryRun?: boolean;
   commit?: boolean;
-  message?: string;
+  // `-m` は git と同じく繰り返せる。各値を段落として空行でつなぐ。
+  message?: string[];
 };
 
 export type RegisterMutationResult = { id: string; title: string };
@@ -169,6 +172,7 @@ export type RegisterCommandDependencies = {
     title?: string;
     description?: string;
     inputs?: string[];
+    section?: { name: string; content: string };
     actor?: string;
     reason?: string;
   }) => void;

@@ -1,0 +1,130 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ae38de77d1204f67ad0cec25fba82240
+  ts: "2026-11-08T06:49:17Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: カタログの uis の 2 件を clis に付け替える
+    - field: description
+      from: ""
+      to: prj-0001 のカタログの uis-index・uis-exec-commands を clis-index・clis-exec-commands にし、rulebook と overview と done\_criteria を確定した clis の型に合わせる
+    - field: input
+      from: ""
+      to: '["PJR-RMMM（indie が決定、2026-11-08）: uis の代表は作らず（SpecDojo に GUI はない）、clis の代表 clis-exec-commands を作る。成果物も schedule のタスクもまだないため、名前を変えるだけで済む。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-08"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-2GD6","PJR-RMMM"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-PJYJ"]'
+- v: 1
+  id: reg_288209672a07413f838dfb3a16787f21
+  ts: "2026-11-08T08:12:06Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: clis の型の直し（PJR-PJYJ）の確定を待ってからカタログを付け替えるため
+  changes:
+    - field: depends_on
+      from: '["PJR-PJYJ"]'
+      to: '["PJR-PJYJ","PJR-025M"]'
+  previous_event_id: reg_ae38de77d1204f67ad0cec25fba82240
+- v: 1
+  id: reg_530048927d014816be2cf737afd9a320
+  ts: "2026-11-08T08:52:21Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: clis の型の直し（PJR-025M）の確定を待ってからカタログを付け替えるため
+  changes:
+    - field: depends_on
+      from: '["PJR-PJYJ","PJR-025M"]'
+      to: '["PJR-PJYJ","PJR-025M","PJR-K4PM"]'
+  previous_event_id: reg_288209672a07413f838dfb3a16787f21
+- v: 1
+  id: reg_169bdb57e57d49df83bc492a1f495b7a
+  ts: "2026-11-08T11:54:07Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: clis の型の直し（PJR-K4PM）の確定を待ってからカタログを付け替えるため
+  changes:
+    - field: depends_on
+      from: '["PJR-PJYJ","PJR-025M","PJR-K4PM"]'
+      to: '["PJR-PJYJ","PJR-025M","PJR-K4PM","PJR-25B9"]'
+  previous_event_id: reg_530048927d014816be2cf737afd9a320
+- v: 1
+  id: reg_518258a26aad459a93ebf16a3a27fe40
+  ts: "2026-11-08T13:40:16Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_169bdb57e57d49df83bc492a1f495b7a
+- v: 1
+  id: reg_18e33c7ec6ba4667a1c71f50f4595c31
+  ts: "2026-11-08T13:54:30Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_518258a26aad459a93ebf16a3a27fe40
+- v: 1
+  id: reg_ed66fed9c96847a6ac09c092c746bf84
+  ts: "2026-11-08T13:56:38Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（flash-high-executor）で対応。差分・個票の対応結果・catalog validate を確かめた。索引専用の rulebook がないため clis-index は rulebook を宣言しない
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-08"
+    - field: conclusion
+      from: "-"
+      to: カタログの uis-index・uis-exec-commands を clis-index・clis-exec-commands に付け替え、説明と完了条件を確定した clis の型に合わせた。sf-index の参照も直した
+  previous_event_id: reg_18e33c7ec6ba4667a1c71f50f4595c31

@@ -156,18 +156,34 @@ type は派生ビューの生成と `exec run --register` の挙動（`agent実�
 
 ### 1.4. track の仕事を epic と子 todo で管理する
 
-epic は `track` を Frontmatter に持ち、子 todo と schedule の進捗を材料に、人が完了を判断します。`tml-index.yaml` がある場合は、定義済みの track だけを指定できます。timeline がない project でも track の識別子を保持できます。
+epic は track ごとの全体計画の正本です。順序は epic 間の `depends_on`、範囲は `domains`、期間は予定開始日 `start_on`・着手・完了の記録と `due_on` で管理します。未着手の計画も `open` の epic として起票し、epic がない track は全体計画に出しません。子 todo と schedule の進捗を材料に、人が完了を判断します。
 
 ```bash
-specdojo register add --type epic --title "業務の仕様整備" --topic business-specs --track business
+specdojo register add --type epic --title "業務の仕様整備" --topic business-specs \
+  --track business --domain business-model --start-on 2026-11-09 --due 2026-11-30
 specdojo register add --type todo --title "カタログを作成する" --topic business-catalog --from PJR-AB12
-specdojo register update --id PJR-AB12 --track business
+specdojo register update --id PJR-AB12 --track business --domain business-model
 specdojo register build
+specdojo dashboard build
 ```
 
-`PJR-AB12` は作成した epic の ID に置き換えます。`--track` は epic で必須で、`update` では別の識別子に置換できます。削除（`--track -`）とほかの type への指定は拒否します。timeline の配置は project の `timeline_path` に従い、省略時は project 配下の `timeline/tml-index.yaml` を参照します。add・update・build で track を検証し、変更は event に記録します。
+`PJR-AB12` は作成した epic の ID に置き換えます。`--track` は epic で必須で、`update` では別の識別子に置換できます。削除（`--track -`）とほかの type への指定は拒否します。track の重複は add・update・build で、epic 間の依存循環は build で拒否します。旧 timeline への track 登録は不要です。
+
+`--domain` は epic にだけ繰り返し指定でき、`update` では一覧を置き換えます。`--domain -` 単独で削除できます。domain の一部だけを対象にする場合は個票の範囲の章に境界を書き、strategy の `scope.catalogs[].local_ids` で限定します。strategy と未作成カタログの範囲は既存 strategy の scope、epic の `domains`、互換用 timeline の順で解決し、空の scope や `domains: []` も明示指定として扱います。変更は event に記録します。
+
+`--start-on` は epic にだけ指定できる予定開始日です。実在する暦日を `YYYY-MM-DD` で指定し、未定なら省略します。`update` では未指定なら保持し、`--start-on -` で削除します。ほかの type への指定と不正な日付は、個票・event を書く前に拒否します。
 
 `register build` は `generated/pjr-epic-items.md` に、epic ごとの直接の子項目とその type・現在の状態を表示します。別 project の子も project 修飾 ID で表示し、子がない epic も残します。孫は再帰的に表示しません。子の状態から epic を自動 close せず、完了基準を満たしたことを人が確認して `register close --id <epic-id> --conclusion "判断の根拠"` で `done` にします。`reject` / `defer` / `reopen` も todo と同じように使用できます。
+
+### 1.5. 全体計画を確認する
+
+`dashboard build` は epic の依存順に全体計画の表とガントを `execution/generated/` へ出力します。カレンダーは `sch-defaults.yaml` を使います。
+
+開始日は `start_on`、epic 自身の最初の着手 event、先行 epic の最も遅い終了日の翌稼働日の順に使います。どれも求められなければ未定です。子 todo の着手や起票日からは補いません。
+
+終了日は完了した epic なら `completed_at`、未完了なら `due_on` を使います。開始日と終了日がそろえば稼働日数とガントの期間を表示します。期限のない未完了 epic の終了日は未定です。先行 epic の終了日が未定でも、後続自身の予定開始日や着手記録があれば開始日に使います。`start_on` が `due_on` より後なら `register build` が警告し、開始日が終了日より後になる場合も含めて期間は未定とし、後続への終了日の引き継ぎも止めます。`derived_from` は起票の由来であり、全体計画の順序には使いません。
+
+`execution/generated/catalog-scaffold.md` には未作成の domain のカタログと作成コマンドを出力します。旧 timeline の移行は [[specdojo:timeline-design-guide|Timeline からの移行ガイド]] を参照してください。
 
 ## 2. 登録項目のライフサイクル
 
@@ -251,7 +267,9 @@ specdojo register close \
   --commit
 ```
 
-`--commit` は register の worktree 実行の記帳・統合と同じ `register lifecycle` 枠が空くまで待ち、枠の内側で記帳、`register build` 相当の検証・再生成、commit を順に行います。commit 対象はそのコマンドが新たに変更した個票・event・参照文書だけで、開始前からあるほかの未 commit 変更は残します。対象個票やevent自体に開始前の変更がある場合は、既存差分を混ぜないため書き込み前に停止します。既定の件名は `docs(register PJR-XXXX): <command> <title>` で、`-m <message>` または `--message <message>` で上書きできます。`--dry-run` と同時に指定した場合は表示だけを行い、枠の取得と commit は行いません。
+`--commit` は register の worktree 実行の記帳・統合と同じ `register lifecycle` 枠が空くまで待ち、枠の内側で記帳、`register build` 相当の検証・再生成、commit を順に行います。commit 対象はそのコマンドが新たに変更した個票・event・参照文書だけで、開始前からあるほかの未 commit 変更は残します。対象個票やevent自体に開始前の変更がある場合は、既存差分を混ぜないため書き込み前に停止します。既定の件名は `docs(register PJR-XXXX): <command> <title>` で、`-m <message>` または `--message <message>` で上書きできます。`-m` を繰り返すと、`git commit -m` と同じく 1 つ目を件名、2 つ目以降を本文の段落にします。commit に失敗した場合は、記帳済みで未 commit のファイルを示して終了コード 1 で終わります。`--dry-run` と同時に指定した場合は表示だけを行い、枠の取得と commit は行いません。
+
+ほかのファイルがすでに stage されていても、初回 commit と hook 整形後の amend は対象パスだけを記録し、既存の staged 変更を保持します。実行中に別タスクの exec event が増えても対象へ取り込みません。stage 後の検査や commit・amend が失敗した場合、または `SIGINT`・`SIGTERM`・`SIGHUP` で中断された場合は、そのコマンドが stage した対象だけを unstage し、作業ツリーの本文を残します。Git の実行中に届いた中断は Git が戻ってから処理します。初回 commit 後の失敗・中断では commit が残るため、本文と HEAD の差分を確認してから再実行してください。
 
 別 project への起票では、対象登録簿全体が clean であることを追加で確認します。元の作業ツリーのブランチと HEAD は変更しません。
 
@@ -408,7 +426,7 @@ specdojo register history --project <project-id> --since 2026-08-01 --json
 - 異なる項目の並行実行は別の個票とイベントファイルへ書くため共有ログ競合を起こしません。同じ項目を複数 worktree で変更してイベントファイルが競合した場合は、統合時に両側のイベントの和集合で解決します。
 - exec event と共通化するのは UTC 秒精度、version、actor、reason、追記・検証の原則です。exec は task state の SSOT で 1 event 1 JSON、Register は現在値を個票に維持し項目別 YAML 配列を監査履歴とするため、保存形式と fold 処理は共通化しません。
 - 生成物（`generated/` 配下）は追跡対象外のため、PR の差分にも Git 履歴にも現れません。レビュー対象は個票と `events/` 配下の項目別ログです。
-- 既存プロジェクトは移行前でも動作し、event のない個票は Git 履歴から再構成します。`register migrate --dry-run` で件数を確認し、`register migrate` で復元可能な Git 履歴を決定的な event ID へ変換します。浅い clone などで履歴が不足する場合は無理に合成せず Git フォールバックを維持します。
+- 既存プロジェクトは移行前でも動作し、event のない個票は Git 履歴から再構成します。`register migrate` は非推奨であり、次の版（0.10.0）で削除予定です（現在は個別個票ファイルと外部イベントファイルが標準形式のため新規移行は不要です）。旧データを移行する場合は `register migrate --dry-run` で件数を確認し、`register migrate` で復元可能な Git 履歴を決定的な event ID へ変換します。浅い clone などで履歴が不足する場合は無理に合成せず Git フォールバックを維持します。
 - 分離前の CLI は `events/` を読まないため、ロールバック時も項目別ログを削除せず、分離対応版の CLI を再適用して履歴を維持します。
 - 個票へ移行する前（`pjr-index.md` の表が正本だった期間）の履歴は、削除済みの一覧ファイルの履歴に残ります。`git log -p --follow -- <登録簿ディレクトリ>/pjr-index.md` で参照します。
 
@@ -494,6 +512,10 @@ specdojo register update --project <project-id> --id PJR-0012 \
 `autopilot: approved` は「現在の個票に書かれた完了条件」の承認です。夜間 orchestrator は印のある `open` の todo・issue だけを ID 順に選びます。epic、decision、印のない項目、`waiting` の項目は実行しません。完了条件を変更した場合は一度承認を取り消し、変更後の条件を再確認して承認します。
 
 夜間実行は `specdojo orchestrator night` が担います。worktree 隔離、post-review、自動 close / `waiting` への復帰を必須とし、件数、並列数、連続失敗停止、rate limit 時の fallback をオプションで制限します。承認範囲外の操作が必要になった失敗は、元項目を `derived_from` に持つ issue として起票します。結果は `execution/reports/night-orchestrator/` の朝報告 1 文書へ集約します。
+
+朝報告は `type: project`・`status: draft`・`rulebook: none` の管理文書として生成し、番号付きの「1. 集計」「2. 実行結果」を記録します。Job の review 前に、通常の成果物と同じ frontmatter・Markdown 検査の対象になります。
+
+merge に commit-msg hook を使うリポジトリでは、Git が hook に渡すメッセージファイルを検査してください。Lefthook の設定例は `run: npx commitlint --edit "{1}"` です。`$1` は Lefthook の引数置換ではないため、ファイル名が渡らず `COMMIT_EDITMSG` を検査する場合があります。merge で渡される `MERGE_MSG` と異なり、linked worktree では未作成、主の作業ツリーでは古い内容が残っていることがあります。検査を省略せず、両方の作業ツリーで有効な merge メッセージの受理と無効なメッセージの拒否を確かめてください。
 
 定期起動は Job `job-night-approved-register` と routine `rtn-night-approved-register` を使います。サンプル routine は保護された運用設定を勝手に有効化しないため `enabled: false` です。人が 2 時（Asia/Tokyo）、一晩 10 件、並列 2、連続失敗 2 件、fallback executor を確認してから有効化してください。
 

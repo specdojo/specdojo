@@ -1,0 +1,130 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c85f0e842c1a48e6a496024c168acb8c
+  ts: "2026-11-11T03:08:43Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: schedule の review の段が、古い grade で判定し、reopen の後の引き受けの重なりで統合の前に止まる
+    - field: description
+      from: ""
+      to: 代表の review の段（mode review）で、review の agent が runner の grade の流し直しより前に評価して grade-stale と判定する。reopen の後に再び流すと、完了の前の検査が「別の actor が引き受けている」として統合の前に止める。blocked の review を resume すると、古い executor の結果を使い回す。原因を特定して直す
+    - field: input
+      from: ""
+      to: '["2026-11-11、T-BUSINESS-SPECS-REPS の sf・cdt・ccd の 090 を reopen して流したところ、review の agent は grade-stale と判定し、completion preflight failed: task is being worked on by another actor: sol-review-executor で Blocked before integration になった。","bdd・ifx-cmd の 090 は、PJR-CBV6 で YAML の grade が流せるようになった後に exec resume したが、CBV6 の前の executor の結果（grade list が失敗した記録）を使い回して止まった。","代表の確定には、review の段をやめて grade を直接流す形を使う（indie が案 A を決定）。"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-11"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-2GD6"]'
+- v: 1
+  id: reg_f87ed6b5cbcb4728af245926f0e54fae
+  ts: "2026-11-16T03:28:51Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: orchestrator が記帳（0.8.0 に足して流すため）
+  changes:
+    - field: difficulty
+      from: "-"
+      to: medium
+  previous_event_id: reg_c85f0e842c1a48e6a496024c168acb8c
+- v: 1
+  id: reg_01dd964eed3244cbb336b57c763c1ec9
+  ts: "2026-11-16T03:31:26Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_f87ed6b5cbcb4728af245926f0e54fae
+- v: 1
+  id: reg_0ee4a4ebf5f044118426a5ffee2f9d99
+  ts: "2026-11-16T04:02:24Z"
+  action: wait
+  actor: opus-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: Grade sidecar changed after checkpoint; reconcile before merge: docs/ja/projects/prj-0001/execution/grade/pipeline/gl-sample-ce5ff98c5873.json"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: Grade sidecar changed after checkpoint; reconcile before merge: docs/ja/projects/prj-0001/execution/grade/pipeline/gl-sample-ce5ff98c5873.json"
+  previous_event_id: reg_01dd964eed3244cbb336b57c763c1ec9
+- v: 1
+  id: reg_ae862c6b8b124d2ca2de0cd5f98082b4
+  ts: "2026-11-16T04:05:47Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: Grade sidecar changed after checkpoint; reconcile before merge: docs/ja/projects/prj-0001/execution/grade/pipeline/gl-sample-ce5ff98c5873.json"
+      to: "-"
+  previous_event_id: reg_0ee4a4ebf5f044118426a5ffee2f9d99
+- v: 1
+  id: reg_2d9877fe193348b4927d879744bb504e
+  ts: "2026-11-16T04:11:43Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_ae862c6b8b124d2ca2de0cd5f98082b4
+- v: 1
+  id: reg_466cfdbd51e544c7986f63dee16b5032
+  ts: "2026-11-16T04:20:15Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: review の段で、古い grade の流し直しを review の agent の起動より前に済ませ、reopen の後の流し直しが引き受けの重なりで止まらないようにした
+  previous_event_id: reg_2d9877fe193348b4927d879744bb504e

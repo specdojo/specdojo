@@ -53,8 +53,10 @@ export type BuildStrategyResult = {
   errors: string[];
 };
 
-function phaseSetsOf(approach: Approach): string[] {
-  return profileFor(approach).phase_sets;
+function phaseSetsOf(deliverable: StrategyDeliverable): string[] {
+  return profileFor(deliverable.approach).phase_sets.filter(
+    (name) => !deliverable.not_needed_kata?.some((kind) => name === `${kind}-maintenance-pass`),
+  );
 }
 
 function orderPhaseSets(names: Iterable<string>): string[] {
@@ -106,36 +108,52 @@ export function buildStrategyDocument(input: BuildStrategyInput): BuildStrategyR
     left.local_id.localeCompare(right.local_id),
   );
 
-  // --- owner_rules: one rule per (owner, approach) pair -------------------------
-  const groups = new Map<string, { owner: string; approach: Approach; localIds: string[] }>();
+  // Group by the effective sequence too: the same approach can omit different not-needed Kata.
+  const groups = new Map<
+    string,
+    { owner: string; approach: Approach; sequence: string[]; localIds: string[] }
+  >();
   for (const deliverable of sorted) {
     const owner = input.owners.get(deliverable.local_id);
     if (!owner) {
       errors.push(`${deliverable.local_id}: owner が解決できていない。`);
       continue;
     }
-    const key = JSON.stringify([owner, deliverable.approach]);
-    const group = groups.get(key) ?? { owner, approach: deliverable.approach, localIds: [] };
+    const sequence = phaseSetsOf(deliverable);
+    const key = JSON.stringify([owner, deliverable.approach, sequence]);
+    const group = groups.get(key) ?? {
+      owner,
+      approach: deliverable.approach,
+      sequence,
+      localIds: [],
+    };
     group.localIds.push(deliverable.local_id);
     groups.set(key, group);
   }
   const orderedGroups = [...groups.values()].sort((left, right) =>
     left.owner === right.owner
-      ? left.approach.localeCompare(right.approach)
+      ? left.approach.localeCompare(right.approach) ||
+        left.sequence.join(",").localeCompare(right.sequence.join(","))
       : left.owner.localeCompare(right.owner),
   );
 
   // The most common profile becomes default_phase_sets so rules that follow it stay compact.
-  const byApproach = new Map<Approach, number>();
+  const bySequence = new Map<string, { sequence: string[]; count: number }>();
   for (const deliverable of sorted) {
-    byApproach.set(deliverable.approach, (byApproach.get(deliverable.approach) ?? 0) + 1);
+    const sequence = phaseSetsOf(deliverable);
+    const key = JSON.stringify(sequence);
+    const entry = bySequence.get(key) ?? { sequence, count: 0 };
+    entry.count++;
+    bySequence.set(key, entry);
   }
-  const defaultApproach = [...byApproach.entries()].sort((left, right) =>
-    right[1] === left[1] ? left[0].localeCompare(right[0]) : right[1] - left[1],
-  )[0]?.[0];
-  const defaultSequence = defaultApproach ? phaseSetsOf(defaultApproach) : [];
+  const defaultSequence =
+    [...bySequence.entries()].sort((left, right) =>
+      right[1].count === left[1].count
+        ? left[0].localeCompare(right[0])
+        : right[1].count - left[1].count,
+    )[0]?.[1].sequence ?? [];
 
-  const usedPhaseSets = orderPhaseSets(sorted.flatMap((d) => phaseSetsOf(d.approach)));
+  const usedPhaseSets = orderPhaseSets(sorted.flatMap(phaseSetsOf));
   const phaseSets: Record<string, unknown> = {};
   for (const name of usedPhaseSets) {
     const definition = STRATEGY_PHASE_SETS[name];
@@ -147,7 +165,7 @@ export function buildStrategyDocument(input: BuildStrategyInput): BuildStrategyR
   }
 
   const ownerRules = orderedGroups.map((group) => {
-    const sequence = phaseSetsOf(group.approach);
+    const sequence = group.sequence;
     const sameAsDefault =
       sequence.length === defaultSequence.length &&
       sequence.every((name, index) => name === defaultSequence[index]);
@@ -164,7 +182,7 @@ export function buildStrategyDocument(input: BuildStrategyInput): BuildStrategyR
 
   // --- phase gates -------------------------------------------------------------
   const countUsing = (phaseSetName: string): number =>
-    sorted.filter((d) => phaseSetsOf(d.approach).includes(phaseSetName)).length;
+    sorted.filter((d) => phaseSetsOf(d).includes(phaseSetName)).length;
 
   const authorPhaseSets = orderPhaseSets(
     usedPhaseSets.filter((name) => AUTHOR_PHASE_SETS.includes(name)),
@@ -179,7 +197,7 @@ export function buildStrategyDocument(input: BuildStrategyInput): BuildStrategyR
     .map((d) => d.local_id);
 
   const authorPassDeliverables = sorted.filter((d) =>
-    phaseSetsOf(d.approach).some((name) => AUTHOR_PHASE_SETS.includes(name)),
+    phaseSetsOf(d).some((name) => AUTHOR_PHASE_SETS.includes(name)),
   ).length;
 
   const firstPassGateId = `G-${trackUpper}-first-pass`;

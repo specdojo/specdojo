@@ -1,0 +1,127 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_0ad0145f284a48f3a7011e463b09ce39
+  ts: "2026-10-31T14:15:36Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: CDFD の rulebook を要点に絞った形に直し、全体概要で試す
+    - field: description
+      from: ""
+      to: CDFD の文書が長く、要点がつかみにくい。主な原因は rulebook の要求で、受け渡しを箇条書き・図・注記の 3 か所に書かせ、図を文章でなぞらせ、定型の文を文書ごとに繰り返させている。cdfd-overview・cdfd・cdfd-uc の 3 つの rulebook を要点に絞った形に直し、試しに cdfd-overview.md を書き直す
+    - field: input
+      from: ""
+      to: '["利用者は CDFD の文章が長すぎて返って分かりにくいと感じており、要点だけに絞りたい（2026-10-31）","CDFD の 9 文書は計約 225KB、cdfd-overview.md は約 32KB。3 つの rulebook は計約 78KB","短くした形の方向（2026-10-31 の対話で利用者が案 A を選択）: 目的は 1〜2 文、適用範囲は対象と対象外を 1 行ずつで共通の原則は 1 か所を参照、プロセス領域は表だけで主要入力・主要出力の箇条書きをやめ受け渡しは図を正本にする、図の説明は 1〜2 文、凡例は全体概要に 1 回だけ","rulebook と文書を同時に揃えないと、grade や review で元の長さに戻されるため、rulebook から直す"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-10-31"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+- v: 1
+  id: reg_1ca6df0048e542838eb3b09a331cfe40
+  ts: "2026-10-31T14:18:13Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: difficulty
+      from: "-"
+      to: medium
+  previous_event_id: reg_0ad0145f284a48f3a7011e463b09ce39
+- v: 1
+  id: reg_862184001081483a927ecbcd717f96c2
+  ts: "2026-10-31T14:36:10Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_1ca6df0048e542838eb3b09a331cfe40
+- v: 1
+  id: reg_701482162c534e9888d6949d0e55fc5e
+  ts: "2026-10-31T14:53:27Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: 'integrate failed: project: Deliverable status promotion to "ready" is human-only and must not be done by an agent run: docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md; integrated repositories: none; no…'
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: 'integrate failed: project: Deliverable status promotion to "ready" is human-only and must not be done by an agent run: docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md; integrated repositories: none; no…'
+  previous_event_id: reg_862184001081483a927ecbcd717f96c2
+- v: 1
+  id: reg_71a9378011cd4581a0c4ff3565a906ef
+  ts: "2026-10-31T15:00:51Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: 'integrate failed: project: Deliverable status promotion to "ready" is human-only and must not be done by an agent run: docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md; integrated repositories: none; no…'
+      to: "-"
+  previous_event_id: reg_701482162c534e9888d6949d0e55fc5e
+- v: 1
+  id: reg_a00fdf0860b84f09bf5317f2212352ac
+  ts: "2026-10-31T15:05:07Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_71a9378011cd4581a0c4ff3565a906ef
+- v: 1
+  id: reg_1ce2835b17dd4f7da240f99c40af24a1
+  ts: "2026-10-31T23:32:10Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 利用者が cdfd-overview.md の密度を確かめて承認
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-01"
+    - field: conclusion
+      from: "-"
+      to: 3 つの CDFD の rulebook を要点に絞った形に直し、cdfd-overview.md を書き直した。文章は約半分になり、利用者が分かりやすい密度と確認した
+  previous_event_id: reg_a00fdf0860b84f09bf5317f2212352ac

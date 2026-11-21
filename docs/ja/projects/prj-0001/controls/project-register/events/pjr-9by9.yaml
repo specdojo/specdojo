@@ -1,0 +1,197 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_a027c83f6d134cdf836e381ee9ad0db4
+  ts: "2026-11-06T15:06:09Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-VH8D・PJR-2WC2 の決定を実装する
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 既存の実行記録を run 単位のディレクトリへ移す
+    - field: description
+      from: ""
+      to: 既存の plan・result・evidence・ログ約 3,000 件を git mv で execution/runs/ へ移すコマンドを作って実行し、記録の中のパスの欄を書き換え、古い配置の読み取りと plans/done/ をなくす
+    - field: input
+      from: ""
+      to: '["PJR-VH8D の決定（2026-11-07 indie）: 実行記録は run 単位のディレクトリ execution/runs/`<出どころ>`/`<項目 ID>`/`<run ID>`/ に plan.md・result.md・evidence.json・ログを置く（R1）。出どころは register・schedule・job。置き場所を決める処理はコードの 1 つのモジュールにまとめる（R2）。exec validate と CI で置き場所を検査する（R3）。ガイドの構成図をモジュールと照らすテストを置く（R4）。grade/results と jobs/ の定義は外に残す。既存は git mv で移し、パスの欄だけ書き換える"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-07"
+    - field: derived_from
+      from: ""
+      to: '["PJR-VH8D"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-Z0XR","PJR-BVS9"]'
+- v: 1
+  id: reg_5b23a325d9ae40f3842c7aae71b84de7
+  ts: "2026-11-06T16:08:19Z"
+  action: update
+  actor: SpecDojo
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: depends_on
+      from: '["PJR-Z0XR","PJR-BVS9"]'
+      to: '["PJR-VH8D","PJR-Z0XR","PJR-BVS9","PJR-BRN4"]'
+  previous_event_id: reg_a027c83f6d134cdf836e381ee9ad0db4
+- v: 1
+  id: reg_e98dd58fb31a47de9174ee9c74f2cf6e
+  ts: "2026-11-07T01:17:40Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_5b23a325d9ae40f3842c7aae71b84de7
+- v: 1
+  id: reg_0f393f8d53eb49ad9bccf05fa40515f2
+  ts: "2026-11-07T01:33:20Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor reported incomplete: 移行CLI・旧配置探索の廃止・ガイド・テストを実装。一時リポジトリで全5,576件の移行を検証したが、本体はGit indexが読み取り専用のため実移動0件。詳細を個票へ記録した。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor reported incomplete: 移行CLI・旧配置探索の廃止・ガイド・テストを実装。一時リポジトリで全5,576件の移行を検証したが、本体はGit indexが読み取り専用のため実移動0件。詳細を個票へ記録した。"
+  previous_event_id: reg_e98dd58fb31a47de9174ee9c74f2cf6e
+- v: 1
+  id: reg_2175f138f6354d72b75ea2cad1d64ad7
+  ts: "2026-11-07T01:40:43Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "executor reported incomplete: 移行CLI・旧配置探索の廃止・ガイド・テストを実装。一時リポジトリで全5,576件の移行を検証したが、本体はGit indexが読み取り専用のため実移動0件。詳細を個票へ記録した。"
+      to: "-"
+  previous_event_id: reg_0f393f8d53eb49ad9bccf05fa40515f2
+- v: 1
+  id: reg_946fe00ec594411ba491723e14151694
+  ts: "2026-11-07T01:50:39Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-integration, test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-integration, test-unit"
+  previous_event_id: reg_2175f138f6354d72b75ea2cad1d64ad7
+- v: 1
+  id: reg_5694984d6f8d4d6aa95b58251a00e361
+  ts: "2026-11-07T01:51:49Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-integration, test-unit"
+      to: "-"
+  previous_event_id: reg_946fe00ec594411ba491723e14151694
+- v: 1
+  id: reg_5ccf633906a04197a87eff2673b9b151
+  ts: "2026-11-07T02:04:36Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-integration"
+  previous_event_id: reg_5694984d6f8d4d6aa95b58251a00e361
+- v: 1
+  id: reg_fc0e35bd9be8442fb2e6dd23de7cfcae
+  ts: "2026-11-07T02:05:46Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-integration"
+      to: "-"
+  previous_event_id: reg_5ccf633906a04197a87eff2673b9b151
+- v: 1
+  id: reg_88db8533965c4948b534f0d6b8e01333
+  ts: "2026-11-07T02:22:03Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_fc0e35bd9be8442fb2e6dd23de7cfcae
+- v: 1
+  id: reg_95fb25a9af5041adb896e1a89a95a3a2
+  ts: "2026-11-07T02:33:40Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: sandbox で移せなかった移動を orchestrator が worktree で流して commit した（d17dcdeba）。統合後に exec validate・exec status・dashboard build が移す前と同じ結果になることと、JSEY の run を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-07"
+    - field: conclusion
+      from: "-"
+      to: exec migrate-records を足し、既存の実行記録 5,576 件を execution/runs/ へ git mv で移してパスの欄だけを書き換えた。古い配置の読み取りと plans/done/ の処理をコードから外した。exec/events と exec/trials は対象外として残す
+  previous_event_id: reg_88db8533965c4948b534f0d6b8e01333

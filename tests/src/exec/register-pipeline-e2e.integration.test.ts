@@ -1,4 +1,4 @@
-import { reserveProductBranch } from "../../../src/exec/product-branch-records.js";
+import { Command } from "commander";
 import { execFileSync } from "node:child_process";
 import {
   chmodSync,
@@ -15,14 +15,20 @@ import {
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, relative, sep } from "node:path";
-import { Command } from "commander";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { registerExecCommands } from "../../../src/exec/exec.js";
-import { registerRegisterCommands } from "../../../src/register/register.js";
-import { registerConfigCommands } from "../../../src/shared/specdojo-config.js";
-import type { SpecDojoRepoConfig } from "../../../src/shared/specdojo-config.js";
+import { reserveProductBranch } from "../../../src/exec/product-branch-records.js";
+import { listRunRecords } from "../../../src/exec/run-records.js";
 import { gitEnvironment } from "../../../src/exec/worktree.js";
+import {
+  buildRegisterEvent,
+  readRegisterEventsFromContent,
+  serializeRegisterEvents,
+} from "../../../src/register/events.js";
 import { readSpecdojoFields } from "../../../src/register/item.js";
+import { registerRegisterCommands } from "../../../src/register/register.js";
+import type { SpecDojoRepoConfig } from "../../../src/shared/specdojo-config.js";
+import { registerConfigCommands } from "../../../src/shared/specdojo-config.js";
 import { MARKDOWN_HOOK_ERROR, MARKDOWN_HOOK_FAILURE } from "../../helpers/git-hook-output.js";
 
 // PJR-TNDH: `exec run --register` を executor/reporter パイプラインで実行する E2E 検証。
@@ -204,9 +210,26 @@ function arg(name) {
 const nickname = arg("nickname");
 const role = nickname.startsWith("exec-") ? "executor" : "reporter";
 const prompt = readFileSync(0, "utf8");
+if (prompt.includes("共通規約 sha256:")) throw new Error("conventions reference reached agent");
+if (prompt.includes("# Edit Plan:") && !prompt.includes("result の必須セクション")) {
+  throw new Error("common conventions missing from agent prompt");
+}
 
+// PJR-QQRH: exec-no-product はプロダクトを編集せず、exec-denied は加えて opencode の権限拒否を
+// 出力する。どちらも complete と報告する。
+const skipsProducts = nickname === "exec-no-product" || nickname === "exec-denied";
+if (role === "executor" && skipsProducts) {
+  mkdirSync("docs", { recursive: true });
+  writeFileSync("docs/no-product-artifact.md", "# project artifact\\n", "utf8");
+  if (nickname === "exec-denied") {
+    process.stdout.write(
+      'Error: The user has specified a rule which prevents you from using this specific tool call. {"permission":"external_directory","action":"deny","pattern":"*"}\\n',
+    );
+  }
+}
 if (role === "executor") {
-  for (const name of (process.env.SPECDOJO_REPO_NAMES ?? "").split(",").filter(Boolean)) {
+  const productNames = skipsProducts ? "" : (process.env.SPECDOJO_REPO_NAMES ?? "");
+  for (const name of productNames.split(",").filter(Boolean)) {
     const root = process.env["SPECDOJO_REPO_" + name.toUpperCase().replaceAll("-", "_")];
     if (!root) throw new Error("product worktree is missing: " + name);
     mkdirSync(root + "/src", { recursive: true });
@@ -430,7 +453,7 @@ function isAncestor(repoRoot: string, ancestor: string, descendant: string): boo
 }
 
 function integrateRepoStatuses(root: string): Record<string, string | undefined> {
-  const evidenceRoot = join(root, EXECUTION_REL, "exec", "evidence", "PJR-AB12");
+  const evidenceRoot = join(root, EXECUTION_REL, "runs", "register", "PJR-AB12");
   const runIds = readdirSync(evidenceRoot);
   expect(runIds).toHaveLength(1);
   const state = JSON.parse(
@@ -442,14 +465,13 @@ function integrateRepoStatuses(root: string): Record<string, string | undefined>
 }
 
 function readRootResult(root: string): string {
-  const resultDir = join(root, EXECUTION_REL, "exec", "results");
-  const files = readdirSync(resultDir);
+  const files = listRunRecords(join(root, EXECUTION_REL), "result");
   expect(files).toHaveLength(1);
-  return readFileSync(join(resultDir, files[0]!), "utf8");
+  return readFileSync(files[0]!, "utf8");
 }
 
 function readIntegrateState(root: string): { status: string; repos?: Record<string, unknown> } {
-  const evidenceRoot = join(root, EXECUTION_REL, "exec", "evidence", "PJR-AB12");
+  const evidenceRoot = join(root, EXECUTION_REL, "runs", "register", "PJR-AB12");
   const runIds = readdirSync(evidenceRoot);
   expect(runIds).toHaveLength(1);
   const state = JSON.parse(
@@ -594,6 +616,19 @@ function withRepo(fn: (fixture: Fixture) => Promise<void> | void): Promise<void>
           "    capabilities: []",
           "    proficiency: normal",
           "    priority: 1",
+          ...["exec-no-product", "exec-denied"].flatMap((nickname) => [
+            `  - nickname: ${nickname}`,
+            `    display_name: ${nickname}`,
+            "    email: null",
+            "    roles: []",
+            "    type: agent",
+            "    provider: opencode",
+            "    mode: edit",
+            "    stage_role: executor",
+            "    capabilities: []",
+            "    proficiency: normal",
+            "    priority: 5",
+          ]),
           "  - nickname: exec-advance-root",
           "    display_name: exec-advance-root",
           "    email: null",
@@ -680,7 +715,8 @@ function withRepo(fn: (fixture: Fixture) => Promise<void> | void): Promise<void>
         [
           "providers:",
           "  opencode:",
-          `    command_template: "node ${join(root, "fake-agent.mjs")} --nickname {nickname}"`,
+          // PJR-08EK: opencode は --agent の名前に product worktree の許可を注入するため、名前を渡す。
+          `    command_template: "node ${join(root, "fake-agent.mjs")} --nickname {nickname} --agent fake-opencode-agent"`,
           "  claude:",
           `    command_template: "node ${join(root, "fake-agent.mjs")} --nickname {nickname} --settings .specdojo/claude/settings.{mode}.json"`,
           "  codex:",
@@ -738,7 +774,453 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
+function prepareSmokeFixture(root: string): void {
+  const smoke = buildTicket("PJR-AB12")
+    .replace("id: test:pjr-ab12-topic", "id: test:pjr-ab12-pipeline-test")
+    .replace("item_status: open", 'item_status: done\n  completed_at: "2026-11-16T00:00:00Z"')
+    .replace(
+      "- ダミーの完了条件。",
+      "<!-- specdojo:smoke-targets -->\n<!-- /specdojo:smoke-targets -->",
+    )
+    .replace("| ARC | open |", "| ARC | done |");
+  const target = buildTicket("PJR-CD34").replace("item_status: open", "item_status: review");
+  mkdirSync(join(root, REGISTER_REL, "events"), { recursive: true });
+  for (const [filename, content, id] of [
+    ["pjr-ab12-pipeline-test.md", smoke, "pjr-ab12"],
+    ["pjr-cd34-topic.md", target, "pjr-cd34"],
+  ]) {
+    writeFileSync(join(root, REGISTER_REL, filename), content);
+    const event = buildRegisterEvent({
+      afterContent: content,
+      filename,
+      timeZone: "UTC",
+      action: "add",
+      actor: "SpecDojo",
+      reason: "smoke fixture",
+    });
+    writeFileSync(
+      join(root, REGISTER_REL, "events", `${id}.yaml`),
+      serializeRegisterEvents([event!]),
+    );
+  }
+  const agentsPath = join(root, ".specdojo/agent-members.yaml");
+  writeFileSync(
+    agentsPath,
+    readFileSync(agentsPath, "utf8") +
+      "aliases:\n  - nickname: smoke-alias\n    alias_of: exec-1\n",
+  );
+  git(root, "add", "-A");
+  git(root, "commit", "-m", "prepare smoke fixture");
+}
+
+function smokeArgs(worktreeBase: string): string[] {
+  return [
+    "smoke",
+    "--project",
+    "test",
+    "--register",
+    "PJR-AB12",
+    "--targets",
+    "PJR-CD34",
+    "--executor-by",
+    "smoke-alias",
+    "--reporter-by",
+    "report-1",
+    "--worktree-base",
+    worktreeBase,
+  ];
+}
+
+describe("exec smoke integration", () => {
+  it(
+    "records targets, reopens, runs and integrates with the alias resolved to concrete event actors",
+    { timeout: 120_000 },
+    async () => {
+      await withRepo(async ({ root, worktreeBase }) => {
+        prepareSmokeFixture(root);
+        const output: string[] = [];
+        vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+          output.push(String(chunk));
+          return true;
+        });
+        vi.spyOn(process.stderr, "write").mockImplementation((chunk) => {
+          output.push(String(chunk));
+          return true;
+        });
+        await runExec(smokeArgs(worktreeBase));
+        expect(process.exitCode ?? 0, output.join("")).toBe(0);
+        const events = readRegisterEventsFromContent(
+          readFileSync(join(root, REGISTER_REL, "events/pjr-ab12.yaml"), "utf8"),
+          "smoke",
+        );
+        expect(events.map((event) => event.action)).toEqual(["add", "reopen", "start", "review"]);
+        expect(events.slice(-2).map((event) => event.actor)).toEqual(["exec-1", "exec-1"]);
+        const ticket = readFileSync(join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md"), "utf8");
+        expect(ticket).toContain("PJR-CD34");
+        expect(readSpecdojoFields(ticket).item_status).toBe("review");
+        expect(output.join("")).toContain("Smoke passed:");
+        expect(git(root, "status", "--porcelain")).toBe("");
+        expect(git(root, "log", "--format=%s")).toContain("smoke-targets");
+      });
+    },
+  );
+
+  it("prints every dry-run step without writes, commits, worktrees or agent launches", async () => {
+    await withRepo(async ({ root, worktreeBase }) => {
+      prepareSmokeFixture(root);
+      const before = git(root, "rev-parse", "HEAD");
+      const worktrees = git(root, "worktree", "list", "--porcelain");
+      const output: string[] = [];
+      vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+        output.push(String(chunk));
+        return true;
+      });
+      await runExec([...smokeArgs(worktreeBase), "--dry-run"]);
+      expect(process.exitCode ?? 0).toBe(0);
+      expect(output.join("")).toContain("[smoke:verify]");
+      expect(output.join("")).toContain("concrete actor exec-1");
+      expect(git(root, "rev-parse", "HEAD")).toBe(before);
+      expect(git(root, "status", "--porcelain")).toBe("");
+      expect(git(root, "worktree", "list", "--porcelain")).toBe(worktrees);
+      expect(readdirSync(worktreeBase)).toEqual([]);
+    });
+  });
+
+  it("stops at target recording and preserves preexisting ticket edits", async () => {
+    await withRepo(async ({ root, worktreeBase }) => {
+      prepareSmokeFixture(root);
+      const path = join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md");
+      const dirty = readFileSync(path, "utf8") + "\nUser edit\n";
+      writeFileSync(path, dirty);
+      const head = git(root, "rev-parse", "HEAD");
+      const output: string[] = [];
+      vi.spyOn(process.stderr, "write").mockImplementation((chunk) => {
+        output.push(String(chunk));
+        return true;
+      });
+      await runExec(smokeArgs(worktreeBase));
+      expect(process.exitCode).toBe(1);
+      expect(output.join("")).toContain("[smoke:targets] failed:");
+      expect(readFileSync(path, "utf8")).toBe(dirty);
+      expect(git(root, "rev-parse", "HEAD")).toBe(head);
+      expect(readdirSync(worktreeBase)).toEqual([]);
+    });
+  });
+
+  it.each(["target-open", "missing-executor", "missing-list"])(
+    "rejects %s before any lifecycle writes",
+    async (failure) => {
+      await withRepo(async ({ root, worktreeBase }) => {
+        prepareSmokeFixture(root);
+        const args = smokeArgs(worktreeBase);
+        if (failure === "target-open") {
+          const path = join(root, REGISTER_REL, "pjr-cd34-topic.md");
+          writeFileSync(
+            path,
+            readFileSync(path, "utf8").replace("item_status: review", "item_status: open"),
+          );
+        } else if (failure === "missing-executor") {
+          args[args.indexOf("smoke-alias")] = "unknown-executor";
+        } else {
+          const path = join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md");
+          writeFileSync(
+            path,
+            readFileSync(path, "utf8").replace("<!-- specdojo:smoke-targets -->", ""),
+          );
+        }
+        const head = git(root, "rev-parse", "HEAD");
+        const status = git(root, "status", "--porcelain");
+        const output: string[] = [];
+        vi.spyOn(process.stderr, "write").mockImplementation((chunk) => {
+          output.push(String(chunk));
+          return true;
+        });
+        await runExec(args);
+        expect(process.exitCode).toBe(1);
+        expect(output.join("")).toContain("[smoke:preflight] failed:");
+        expect(git(root, "rev-parse", "HEAD")).toBe(head);
+        expect(git(root, "status", "--porcelain")).toBe(status);
+        expect(readdirSync(worktreeBase)).toEqual([]);
+      });
+    },
+  );
+
+  it(
+    "stops after a failed executor and does not treat older events as a success",
+    { timeout: 120_000 },
+    async () => {
+      await withRepo(async ({ root, worktreeBase }) => {
+        prepareSmokeFixture(root);
+        const output: string[] = [];
+        vi.spyOn(process.stderr, "write").mockImplementation((chunk) => {
+          output.push(String(chunk));
+          return true;
+        });
+        const args = smokeArgs(worktreeBase);
+        args[args.indexOf("smoke-alias")] = "exec-rate-limit";
+        await runExec(args);
+        expect(process.exitCode).toBe(1);
+        expect(output.join("")).toContain("[smoke:run] failed:");
+        const ticket = readSpecdojoFields(
+          readFileSync(join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md"), "utf8"),
+        );
+        expect(ticket.item_status).toBe("waiting");
+      });
+    },
+  );
+});
+
 describe("exec run --register executor/reporter pipeline (E2E)", () => {
+  it.each(["passed", "failed", "skipped"] as const)(
+    "records post-integration %s in the root run after merge and preserves review",
+    { timeout: 120_000 },
+    async (status) => {
+      await withRepo(async ({ root, worktreeBase }) => {
+        const defaultsPath = join(root, ".specdojo/exec-defaults.yaml");
+        writeFileSync(
+          defaultsPath,
+          readFileSync(defaultsPath, "utf8").replace(
+            "pipeline:\n",
+            `pipeline:\n  post_integration:\n    - id: build-dist\n      paths: ["${status === "skipped" ? "src/**" : "docs/**"}"]\n`,
+          ),
+        );
+        writeFileSync(
+          join(root, "package.json"),
+          JSON.stringify({
+            scripts: {
+              "test:integration": 'node -e "process.exit(0)"',
+              build: `node -e "process.exit(${status === "failed" ? 1 : 0})"`,
+            },
+          }),
+        );
+        git(root, "add", "-A");
+        git(root, "commit", "-m", "configure post integration");
+        const baseCommit = git(root, "rev-parse", "HEAD");
+        const output: string[] = [];
+        vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+          output.push(String(chunk));
+          return true;
+        });
+        vi.spyOn(process.stderr, "write").mockImplementation((chunk) => {
+          output.push(String(chunk));
+          return true;
+        });
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-AB12",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+          "--executor-by",
+          "exec-1",
+          "--reporter-by",
+          "report-1",
+        ]);
+        expect(process.exitCode ?? 0, output.join("")).toBe(0);
+        const resultPath = listRunRecords(join(root, EXECUTION_REL), "result")[0];
+        const record = JSON.parse(
+          readFileSync(join(resultPath, "..", "post-integration.log"), "utf8"),
+        );
+        expect(record).toMatchObject({
+          status,
+          base_commit: baseCommit,
+          output_commit: git(root, "rev-parse", "HEAD"),
+        });
+        expect(git(root, "rev-parse", `${record.output_commit}^1`)).toBe(baseCommit);
+        expect(
+          readFileSync(join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md"), "utf8"),
+        ).toContain("item_status: review");
+        expect(execWorktreePath(root)).toBeNull();
+        expect(output.join("")).toContain(`[post-integration] build-dist: ${status}`);
+        if (status === "failed") expect(output.join("")).toContain("integration kept");
+      });
+    },
+  );
+
+  it.each([
+    ["--worktree", "executor", false],
+    ["--in-place", "executor", false],
+    ["--worktree", "reporter", false],
+    ["--in-place", "reporter", false],
+    ["--worktree", "executor", true],
+    ["--in-place", "executor", true],
+  ] as const)(
+    "rejects %s with a routed fallback matching the pinned %s before any run artifacts (later item: %s)",
+    { timeout: 120_000 },
+    async (executionMode, stage, laterItem) => {
+      await withRepo(async ({ root, worktreeBase }) => {
+        const ticketPath = join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md");
+        writeFileSync(
+          ticketPath,
+          buildTicket("PJR-AB12").replace(
+            "  priority: medium",
+            "  priority: medium\n  difficulty: medium",
+          ),
+        );
+        if (laterItem) {
+          writeFileSync(
+            join(root, REGISTER_REL, "pjr-cd34-topic.md"),
+            buildTicket("PJR-CD34").replace(
+              "  priority: medium",
+              "  priority: medium\n  difficulty: medium",
+            ),
+          );
+        }
+        const defaultsPath = join(root, ".specdojo/exec-defaults.yaml");
+        writeFileSync(
+          defaultsPath,
+          readFileSync(defaultsPath, "utf8") +
+            "routing:\n  medium:\n    executor_by: exec-2\n    reporter_by: report-1\n" +
+            "    on_rate_limit: fallback\n    fallback_executor_by: exec-1\n" +
+            (stage === "reporter" ? "    fallback_reporter_by: report-1\n" : ""),
+        );
+        git(root, "add", "-A");
+        git(root, "commit", "-m", "configure routed fallbacks");
+        const initialHead = git(root, "rev-parse", "HEAD");
+        const initialTicket = readFileSync(ticketPath, "utf8");
+        const initialWorktrees = git(root, "worktree", "list", "--porcelain");
+        const output: string[] = [];
+        vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+          output.push(String(chunk));
+          return true;
+        });
+        vi.spyOn(process.stderr, "write").mockImplementation((chunk) => {
+          output.push(String(chunk));
+          return true;
+        });
+
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          laterItem ? "PJR-AB12,PJR-CD34" : "PJR-AB12",
+          "--executor-by",
+          laterItem
+            ? "PJR-AB12=exec-2,PJR-CD34=exec-1"
+            : stage === "executor"
+              ? "exec-1"
+              : "exec-2",
+          "--reporter-by",
+          "report-1",
+          executionMode,
+          "--worktree-base",
+          worktreeBase,
+        ]);
+
+        expect(process.exitCode, output.join("")).toBe(1);
+        expect(output.join("")).toContain(
+          `Fallback ${stage} must differ from the pinned agent: ${stage === "executor" ? "exec-1" : "report-1"}`,
+        );
+        expect(readFileSync(ticketPath, "utf8")).toBe(initialTicket);
+        expect(existsSync(join(root, REGISTER_REL, "events/pjr-ab12.yaml"))).toBe(false);
+        expect(existsSync(join(root, REGISTER_REL, "events/pjr-cd34.yaml"))).toBe(false);
+        expect(listRunRecords(join(root, EXECUTION_REL), "plan")).toEqual([]);
+        expect(listRunRecords(join(root, EXECUTION_REL), "result")).toEqual([]);
+        expect(git(root, "worktree", "list", "--porcelain")).toBe(initialWorktrees);
+        expect(readdirSync(worktreeBase)).toEqual([]);
+        expect(git(root, "rev-parse", "HEAD")).toBe(initialHead);
+        expect(git(root, "status", "--porcelain")).toBe("");
+
+        if (executionMode === "--worktree" && stage === "executor" && !laterItem) {
+          // After fixing the selection, a force restart must record the agent that actually runs.
+          await runExec([
+            "run",
+            "--project",
+            "test",
+            "--register",
+            "PJR-AB12",
+            "--executor-by",
+            "exec-2",
+            "--reporter-by",
+            "report-1",
+            "--worktree",
+            "--worktree-base",
+            worktreeBase,
+            "--force-restart",
+          ]);
+          expect(process.exitCode ?? 0, output.join("")).toBe(0);
+          const eventPath = join(root, REGISTER_REL, "events/pjr-ab12.yaml");
+          const events = readRegisterEventsFromContent(readFileSync(eventPath, "utf8"), eventPath);
+          expect(
+            events.filter((event) => event.action === "start").map((event) => event.actor),
+          ).toEqual(["exec-2"]);
+          expect(events.find((event) => event.action === "review")?.actor).toBe("exec-2");
+          expect(readRootResult(root)).toContain("status: complete");
+        }
+      });
+    },
+  );
+
+  it(
+    "integrates child run records into the invoking Job branch without nesting worktrees",
+    { timeout: 120_000 },
+    async () => {
+      await withRepo(async ({ root, worktreeBase }) => {
+        const parentJob = join(worktreeBase, "parent-job");
+        writeFileSync(
+          join(root, ".specdojo/specdojo.config.json"),
+          JSON.stringify({
+            ...CONFIG,
+            projects: {
+              test: {
+                ...CONFIG.projects.test,
+                run: { ...CONFIG.projects.test.run, worktree_base: relative(root, worktreeBase) },
+              },
+            },
+          }),
+        );
+        git(root, "add", ".specdojo/specdojo.config.json");
+        git(root, "commit", "-m", "configure relative worktree base");
+        git(root, "worktree", "add", "-b", "exec/parent-job", parentJob);
+        const rootHead = git(root, "rev-parse", "HEAD");
+        process.chdir(parentJob);
+        const output: string[] = [];
+        vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+          output.push(String(chunk));
+          return true;
+        });
+        vi.spyOn(process.stderr, "write").mockImplementation((chunk) => {
+          output.push(String(chunk));
+          return true;
+        });
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-AB12",
+          "--executor-by",
+          "exec-1",
+          "--reporter-by",
+          "report-1",
+          "--worktree",
+        ]);
+
+        expect(process.exitCode ?? 0, output.join("")).toBe(0);
+        expect(output.join("")).toContain(join(worktreeBase, TASK_DIR_NAME));
+        expect(existsSync(join(worktreeBase, "worktrees"))).toBe(false);
+        expect(existsSync(join(worktreeBase, TASK_DIR_NAME))).toBe(false);
+        const records = git(parentJob, "ls-files", `${EXECUTION_REL}/runs/register/PJR-AB12`).split(
+          "\n",
+        );
+        for (const name of ["plan.md", "result.md", "evidence.json", "pipeline-state.json"]) {
+          expect(
+            records.some((path) => path.endsWith(`/${name}`)),
+            name,
+          ).toBe(true);
+        }
+        expect(readRootResult(parentJob)).toContain("status: complete");
+        expect(git(parentJob, "log", "-1", "--pretty=%P").split(" ")).toHaveLength(2);
+        expect(git(root, "rev-parse", "HEAD")).toBe(rootHead);
+        expect(git(parentJob, "worktree", "list", "--porcelain")).not.toContain(EXEC_BRANCH);
+      });
+    },
+  );
+
   it.each([
     {
       run: { parent_validations_exclude: ["arbitrary-command"] },
@@ -843,7 +1325,7 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
         expect(readFileSync(join(worktree!, "docs/incomplete-artifact.md"), "utf8")).toContain(
           "partial implementation",
         );
-        const evidenceDir = join(worktree!, EXECUTION_REL, "exec", "evidence", "PJR-AB12");
+        const evidenceDir = join(worktree!, EXECUTION_REL, "runs", "register", "PJR-AB12");
         const runId = readdirSync(evidenceDir)[0]!;
         const evidence = JSON.parse(
           readFileSync(join(evidenceDir, runId, "evidence.json"), "utf8"),
@@ -862,12 +1344,30 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
             (validation: { source: string }) => validation.source !== "runner",
           ),
         ).toBe(true);
+        let editedPlan: string | undefined;
+        const planRel = state.artifacts.plan_ref as string;
+        expect(readFileSync(join(worktree!, planRel), "utf8")).toContain("共通規約 sha256:");
+        if (explicit) {
+          const originalPlan = readFileSync(join(worktree!, planRel), "utf8");
+          editedPlan = originalPlan.replace(
+            "`共通規約 sha256:",
+            "## Additional Instructions\n\nPreserve this edited plan in resume.\n\n`共通規約 sha256:",
+          );
+          writeFileSync(join(worktree!, planRel), editedPlan, "utf8");
+        }
         await runExec([...args, "--resume", ...(explicit ? ["--resume-from", "executor"] : [])]);
         expect(process.exitCode ?? 0).toBe(0);
         expect(readFileSync(ticketPath, "utf8")).toContain("item_status: review");
         expect(readFileSync(join(root, "docs/incomplete-artifact.md"), "utf8")).toContain(
           "completed implementation",
         );
+        const mergedFiles = git(root, "diff", "--name-only", "HEAD^1..HEAD");
+        if (explicit && editedPlan) {
+          expect(readFileSync(join(root, planRel), "utf8")).toBe(editedPlan);
+          expect(mergedFiles).toContain(planRel);
+        } else {
+          expect(mergedFiles).not.toContain(planRel);
+        }
         expect(execWorktreePath(root)).toBeNull();
       });
     },
@@ -1024,18 +1524,15 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
         const ticket = readFileSync(join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md"), "utf8");
         expect(ticket).toContain("item_status: review");
 
-        const resultFiles = readdirSync(join(root, EXECUTION_REL, "exec", "results"));
+        const resultFiles = listRunRecords(join(root, EXECUTION_REL), "result");
         expect(resultFiles).toHaveLength(1);
-        const result = readFileSync(
-          join(root, EXECUTION_REL, "exec", "results", resultFiles[0]),
-          "utf8",
-        );
+        const result = readFileSync(resultFiles[0], "utf8");
         expect(result).toContain("status: complete");
         expect(result).toContain("register 項目を pipeline 経由で処理した。");
         expect(result).not.toContain("_TODO_");
 
         // executor evidence が記録されていること（reporter へ渡す根拠）。
-        const evidenceDir = join(root, EXECUTION_REL, "exec", "evidence", "PJR-AB12");
+        const evidenceDir = join(root, EXECUTION_REL, "runs", "register", "PJR-AB12");
         expect(existsSync(evidenceDir)).toBe(true);
         const runDirs = readdirSync(evidenceDir);
         expect(runDirs).toHaveLength(1);
@@ -1051,7 +1548,85 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
   );
 
   it(
-    "runs two register items in parallel with different per-item executors",
+    "serializes ED0K/1GCD changes to the same function before branching, through integration",
+    { timeout: 120_000 },
+    async () => {
+      await withRepo(async ({ root, worktreeBase }) => {
+        const output: string[] = [];
+        vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+          output.push(String(chunk));
+          return true;
+        });
+        vi.spyOn(process.stderr, "write").mockReturnValue(true);
+        const source = "docs/shared-run.ts";
+        writeFileSync(join(root, source), "export function resume() { return []; }\n");
+        for (const id of ["PJR-ED0K", "PJR-1GCD"]) {
+          writeFileSync(
+            join(root, REGISTER_REL, `${id.toLowerCase()}-pipeline-test.md`),
+            buildTicket(id).replace(
+              "- ダミーの完了条件。",
+              `- \`${source}\` の resume 関数を変更する。`,
+            ),
+          );
+        }
+        writeFileSync(
+          join(root, "fake-agent.mjs"),
+          FAKE_PIPELINE_AGENT_SCRIPT.replace(
+            'if (role === "executor") {',
+            `if (role === "executor") {
+            const source = ${JSON.stringify(source)};
+            const current = readFileSync(source, "utf8");
+            const before = nickname === "exec-1" ? "return [];" : 'return ["ED0K"];';
+            const after = nickname === "exec-1" ? 'return ["ED0K"];' : 'return ["ED0K", "1GCD"];';
+            if (!current.includes(before)) throw new Error("second executor did not inherit integrated ED0K");
+            writeFileSync(source, current.replace(before, after));`,
+          ),
+        );
+        await runConfig(["init"]);
+        const trackedIgnored = git(root, "ls-files", "-ci", "--exclude-standard")
+          .split("\n")
+          .filter(Boolean);
+        git(root, "rm", "-r", "--cached", "--quiet", ...trackedIgnored);
+        git(root, "add", "-A");
+        git(root, "commit", "-m", "prepare overlapping function edits");
+
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-ED0K",
+          "PJR-1GCD",
+          "--executor-by",
+          "PJR-ED0K=exec-1,PJR-1GCD=exec-2",
+          "--reporter-by",
+          "report-1",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+          "--parallel",
+          "2",
+        ]);
+
+        expect(process.exitCode ?? 0).toBe(0);
+        expect(readFileSync(join(root, source), "utf8")).toContain('return ["ED0K", "1GCD"];');
+        expect(git(root, "diff", "--name-only", "--diff-filter=U")).toBe("");
+        expect(output.join("")).toMatch(/\[scope\] waiting: PJR-1GCD — PJR-ED0K:.*shared-run\.ts/);
+        const plan = listRunRecords(join(root, EXECUTION_REL), "plan").find((path) =>
+          path.includes("PJR-1GCD"),
+        );
+        expect(readFileSync(plan!, "utf8")).toContain("変更範囲による実行待ち");
+        expect(readFileSync(plan!, "utf8")).toContain("PJR-ED0K");
+        for (const id of ["PJR-ED0K", "PJR-1GCD"])
+          expect(
+            readFileSync(join(root, REGISTER_REL, `${id.toLowerCase()}-pipeline-test.md`), "utf8"),
+          ).toContain("item_status: review");
+      });
+    },
+  );
+
+  it(
+    "runs independent register items with existing generated plans in parallel",
     { timeout: 120_000 },
     async () => {
       await withRepo(async ({ root, worktreeBase }) => {
@@ -1060,7 +1635,11 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
           buildTicket("PJR-CD34"),
           "utf8",
         );
-        vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+        const output: string[] = [];
+        vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+          output.push(String(chunk));
+          return true;
+        });
         vi.spyOn(process.stderr, "write").mockImplementation(() => true);
         // 並行に走る 2 項目がどちらも登録簿の生成物を作り直すため、生成物を git で管理
         // していると統合で add/add の衝突になる。利用者と同じく config init で .gitignore
@@ -1071,6 +1650,10 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
           .filter((line) => line.length > 0);
         expect(trackedIgnored).toContain(`${REGISTER_REL}/generated/pjr-index.md`);
         git(root, "rm", "-r", "--cached", "--quiet", ...trackedIgnored);
+        // Both existing plans contain the shared prohibition mentioning pjr-index.md. It must
+        // not become a shared scope and serialize otherwise independent register items.
+        for (const id of ["PJR-AB12", "PJR-CD34"])
+          await runExec(["plan", "--project", "test", "--register", id]);
         git(root, "add", "-A");
         git(root, "commit", "-m", "add second register item");
 
@@ -1101,8 +1684,10 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
           expect(readFileSync(join(root, REGISTER_REL, ticketName), "utf8")).toContain(
             "item_status: review",
           );
-          const evidenceDir = join(root, EXECUTION_REL, "exec", "evidence", id);
-          const runDirs = readdirSync(evidenceDir);
+          const evidenceDir = join(root, EXECUTION_REL, "runs", "register", id);
+          const runDirs = readdirSync(evidenceDir).filter((run) =>
+            existsSync(join(evidenceDir, run, "pipeline-state.json")),
+          );
           expect(runDirs).toHaveLength(1);
           const state = JSON.parse(
             readFileSync(join(evidenceDir, runDirs[0], "pipeline-state.json"), "utf8"),
@@ -1110,6 +1695,7 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
           expect(state.stages.executor.actor).toBe(expectedExecutor);
           expect(state.stages.reporter.actor).toBe("report-1");
         }
+        expect(output.join("")).not.toContain("[scope] waiting:");
         expect(process.exitCode ?? 0).toBe(0);
       });
     },
@@ -1237,17 +1823,14 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
         const ticket = readFileSync(join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md"), "utf8");
         expect(ticket).toContain("item_status: review");
 
-        const resultFiles = readdirSync(join(root, EXECUTION_REL, "exec", "results"));
+        const resultFiles = listRunRecords(join(root, EXECUTION_REL), "result");
         expect(resultFiles).toHaveLength(1);
-        const result = readFileSync(
-          join(root, EXECUTION_REL, "exec", "results", resultFiles[0]),
-          "utf8",
-        );
+        const result = readFileSync(resultFiles[0], "utf8");
         expect(result).toContain("status: complete");
         expect(result).toContain("register 項目を pipeline 経由で処理した。");
         expect(result).not.toContain("_TODO_");
 
-        const evidenceDir = join(root, EXECUTION_REL, "exec", "evidence", "PJR-AB12");
+        const evidenceDir = join(root, EXECUTION_REL, "runs", "register", "PJR-AB12");
         expect(existsSync(evidenceDir)).toBe(true);
         expect(readdirSync(evidenceDir)).toHaveLength(1);
 
@@ -1379,8 +1962,8 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
         const evidenceRoot = join(
           worktreePath ?? "",
           EXECUTION_REL,
-          "exec",
-          "evidence",
+          "runs",
+          "register",
           "PJR-AB12",
         );
         const runIds = readdirSync(evidenceRoot);
@@ -1416,7 +1999,7 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
         expect(
           readFileSync(join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md"), "utf8"),
         ).toContain("item_status: review");
-        const mergedEvidenceRoot = join(root, EXECUTION_REL, "exec", "evidence", "PJR-AB12");
+        const mergedEvidenceRoot = join(root, EXECUTION_REL, "runs", "register", "PJR-AB12");
         const mergedRunIds = readdirSync(mergedEvidenceRoot);
         expect(mergedRunIds).toEqual(runIds);
         const mergedState = JSON.parse(
@@ -1635,6 +2218,114 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
       });
     },
   );
+
+  // PJR-QQRH: executor が complete と報告しても、プロダクトを対象にする項目でプロダクトに変更が
+  // 無い場合と、出力にツールの権限による拒否がある場合は review に進めず waiting にする。
+  // プロダクトを対象にしない項目は、プロダクトに変更が無くても従来どおり review に進む。
+  const falseSuccessCases: Array<{
+    name: string;
+    executor: "exec-no-product" | "exec-denied";
+    targetsProduct: boolean;
+    expectedStatus: "waiting" | "review";
+    expectedReason?: RegExp;
+  }> = [
+    {
+      name: "waits when a product-targeting item leaves the product unchanged",
+      executor: "exec-no-product",
+      targetsProduct: true,
+      expectedStatus: "waiting",
+      expectedReason: /no product changes in app1/u,
+    },
+    {
+      name: "waits when the executor output shows a tool permission denial",
+      executor: "exec-denied",
+      targetsProduct: false,
+      expectedStatus: "waiting",
+      expectedReason: /tool permission denial/u,
+    },
+    {
+      name: "reaches review when an item that does not target a product leaves it unchanged",
+      executor: "exec-no-product",
+      targetsProduct: false,
+      expectedStatus: "review",
+    },
+  ];
+
+  for (const testCase of falseSuccessCases) {
+    it(testCase.name, { timeout: 120_000 }, async () => {
+      await withRepo(async ({ root, worktreeBase }) => {
+        const output: string[] = [];
+        vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+          output.push(String(chunk));
+          return true;
+        });
+        vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+        const products = enableProductRepositories(root);
+        const ticketPath = join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md");
+        if (testCase.targetsProduct) {
+          writeFileSync(
+            ticketPath,
+            readFileSync(ticketPath, "utf8").replace(
+              "## 2. 完了条件",
+              "## 2. 入力\n\n- `app1:src/feature.ts` の不具合を直す\n\n## 3. 完了条件",
+            ),
+            "utf8",
+          );
+          git(root, "add", "--", ticketPath);
+          git(root, "commit", "--quiet", "-m", "target app1");
+        }
+        const app1Before = git(products.app1, "rev-parse", products.targets.app1);
+
+        try {
+          await runExec([
+            "run",
+            "--project",
+            "test",
+            "--register",
+            "PJR-AB12",
+            "--executor-by",
+            testCase.executor,
+            "--reporter-by",
+            "report-1",
+            "--worktree",
+            "--worktree-base",
+            worktreeBase,
+          ]);
+
+          const ticket = readFileSync(ticketPath, "utf8");
+          expect(ticket).toContain(`item_status: ${testCase.expectedStatus}`);
+          expect(git(products.app1, "rev-parse", products.targets.app1)).toBe(app1Before);
+          if (testCase.expectedStatus === "review") {
+            expect(process.exitCode ?? 0).toBe(0);
+            expect(ticket).not.toContain("block_reason:");
+            return;
+          }
+          expect(process.exitCode).toBe(1);
+          expect(readSpecdojoFields(ticket).block_reason).toMatch(testCase.expectedReason!);
+          expect(execWorktreePath(root)).not.toBeNull();
+          expect(output.join("")).toMatch(
+            new RegExp(
+              `Register run summary:[\\s\\S]*PJR-AB12[^\\n]*reason=[^\\n]*${testCase.expectedReason!.source}`,
+              "u",
+            ),
+          );
+
+          output.length = 0;
+          await runExec(["status", "--project", "test"]);
+          const status = output.join("");
+          if (testCase.executor === "exec-no-product") {
+            expect(status).toContain("warnings (no product changes):");
+            expect(status).toMatch(/PJR-AB12 \(register, waiting\): no product changes in app1/u);
+          } else {
+            expect(status).not.toContain("warnings (no product changes):");
+          }
+        } finally {
+          rmSync(products.app1, { recursive: true, force: true });
+          rmSync(products.app2, { recursive: true, force: true });
+        }
+      });
+    });
+  }
 
   // PJR-69VP: repos を宣言しない構成（同一リポジトリ構成を含む）の回帰。worktree は
   // <worktree_base>/<task>/ 直下に置かれ、Refs は修飾形、result は trace の章を持たず、
@@ -1935,8 +2626,8 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
           const evidenceDir = join(
             worktreePath ?? "",
             EXECUTION_REL,
-            "exec",
-            "evidence",
+            "runs",
+            "register",
             "PJR-AB12",
           );
           const blockedRunId = readdirSync(evidenceDir)[0];
@@ -2044,7 +2735,7 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
         expect(process.exitCode).toBe(1);
         const worktreePath = execWorktreePath(root);
         expect(worktreePath).not.toBeNull();
-        const evidenceDir = join(worktreePath ?? "", EXECUTION_REL, "exec", "evidence", "PJR-AB12");
+        const evidenceDir = join(worktreePath ?? "", EXECUTION_REL, "runs", "register", "PJR-AB12");
         const firstRunId = readdirSync(evidenceDir)[0];
         const firstEvidence = JSON.parse(
           readFileSync(join(evidenceDir, firstRunId, "evidence.json"), "utf8"),
@@ -2067,9 +2758,9 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
         expect(process.exitCode).toBe(1);
         expect(execWorktreePath(root)).not.toBeNull();
         const runIds = readdirSync(evidenceDir).sort();
-        expect(runIds).toHaveLength(2);
+        expect(runIds).toHaveLength(1);
         const resumedState = JSON.parse(
-          readFileSync(join(evidenceDir, runIds[1], "pipeline-state.json"), "utf8"),
+          readFileSync(join(evidenceDir, runIds[0], "pipeline-state.json"), "utf8"),
         ) as { stages: { executor: { status: string }; reporter: { status: string } } };
         expect(resumedState.stages.executor.status).toBe("failed");
         expect(resumedState.stages.reporter.status).toBe("pending");

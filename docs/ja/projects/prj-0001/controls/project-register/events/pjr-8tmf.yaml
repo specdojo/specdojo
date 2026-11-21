@@ -1,0 +1,126 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_cd71e2174e1f4157ad4cf9c47078c667
+  ts: "2026-11-06T11:14:10Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: stsd-task-execution のレビューの指摘を Kata と 5 件へ反映する（PJR-3APD の段 12 の前）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: stsd-template を新しい章立てに合わせる
+    - field: description
+      from: ""
+      to: stsd-template の見出しと骨組みを、目的・適用範囲・状態の判定・状態一覧・状態遷移の章立てに合わせる
+    - field: input
+      from: ""
+      to: '["利用者のレビュー: 目的には、状態が対象の何を管理し、何のために使われるか（誰がその状態で何を判断するか）を書く。文書の読み手や使い方（承認する人、実装・テストへの利用）は書かない。章の名前は「目的」のままとする（2026-11-06 indie が決定）","利用者のレビュー: 状態の正本・判定の規則・互換の扱いは「適用範囲」ではない。「適用範囲」の後に新しい章「状態の判定」を置いてそこへ書き、「適用範囲」には対象・業務の範囲・到達点だけを残す（2026-11-06 indie が決定）","利用者のレビュー: スコープ（AS-IS / TO-BE）は既定を現行とし、「現行実装（AS-IS）」とは書かない。TO-BE の文書と並ぶときだけスコープを書く（2026-11-06 indie が決定）","利用者のレビュー: 「状態遷移図」と「遷移の説明」を 1 つの章「状態遷移」にまとめ、図を分けた場合は図ごとに、そのすぐ下へ遷移の表を置く。図の遷移のラベルにも遷移 ID を入れ、`T-<nn>` イベント / 条件 の形にする（2026-11-06 indie が決定）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-06"
+    - field: approach
+      from: ""
+      to: template-maintenance
+    - field: targets
+      from: ""
+      to: '["specdojo:stsd-template"]'
+    - field: derived_from
+      from: ""
+      to: '["PJR-3APD"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-S8EF","PJR-16T7"]'
+- v: 1
+  id: reg_2ea72b68fd74454fafab94190328f765
+  ts: "2026-11-06T12:28:48Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_cd71e2174e1f4157ad4cf9c47078c667
+- v: 1
+  id: reg_f69ae3eb4ca14246a8e40a2bfa507766
+  ts: "2026-11-06T12:39:47Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-fm"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-fm"
+  previous_event_id: reg_2ea72b68fd74454fafab94190328f765
+- v: 1
+  id: reg_ec42c7d4f7cb41cfbf2d15fa7fc98d4e
+  ts: "2026-11-06T12:53:12Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-fm"
+      to: "-"
+  previous_event_id: reg_f69ae3eb4ca14246a8e40a2bfa507766
+- v: 1
+  id: reg_9c143b55a6da4c6ea215b8c0e739b2df
+  ts: "2026-11-06T13:03:46Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_ec42c7d4f7cb41cfbf2d15fa7fc98d4e
+- v: 1
+  id: reg_8199a1d3425e43ef90d9785eab864db9
+  ts: "2026-11-06T13:06:45Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register の結果を orchestrator が差分と完了条件で確かめた。lint-fm の失敗は orchestrator が HTML コメント内の山括弧を直して再開した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-06"
+    - field: conclusion
+      from: "-"
+      to: stsd-template を目的（状態の目的）・適用範囲・状態の判定・状態一覧・状態遷移（図の直下に遷移表、`T-<nn>` 入りのラベル）の骨組みに合わせ、スコープは TO-BE と並ぶ場合だけ書く形にした
+  previous_event_id: reg_9c143b55a6da4c6ea215b8c0e739b2df

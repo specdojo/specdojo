@@ -1,7 +1,7 @@
 import { defineConfig } from "vitepress";
 import { generateSidebar } from "vitepress-sidebar";
 import {
-  specdojoSidebarItems,
+  buildSpecdojoSidebarItems,
   PROJECTS_SEGMENT_TEXT,
   PROJECTS_FILE_TEXT,
   PROJECTS_FILE_MENU,
@@ -12,6 +12,9 @@ import {
 } from "./sidebar-config";
 import type { SidebarItem } from "./sidebar-config";
 import { mermaidSvgId } from "../src/gen-mermaid-svg";
+import { d2SvgId } from "../src/gen-d2-svg";
+import { isChatFence, renderChat } from "../src/chat.js";
+import { d2SvgAutoGenerate } from "./d2-auto-generate";
 import {
   STAGED_PACKAGE_DEAD_LINK_PATTERNS,
   stageBundledKata,
@@ -21,12 +24,20 @@ import { scanLocaleSidebar } from "./locale-sidebar";
 import { mermaidAssets } from "./mermaid-assets";
 import { mermaidSvgAutoGenerate } from "./mermaid-auto-generate";
 import { resolveExecRecordWikilink, rewriteExecRecordMarkdownHref } from "./exec-record-links";
+import {
+  EXEC_RECORD_SRC_EXCLUDE,
+  isExecPlanLink,
+  isExecResultLink,
+  isExecRecordPath,
+} from "./exec-record-paths";
+import { loadArchiveLinks, resolveArchiveWikilink } from "./archive-links";
 import * as path from "path";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 
 const WORKSPACE_ROOT = path.resolve(process.env.SPECDOJO_DOCS_ROOT ?? process.cwd());
 const CONTENT_ROOT = path.join(WORKSPACE_ROOT, "docs");
 const MERMAID_OUT_DIR = path.join(WORKSPACE_ROOT, ".vitepress", "mermaid");
+const D2_OUT_DIR = path.join(WORKSPACE_ROOT, ".vitepress", "d2");
 
 // サイトから除外した exec の plan / result は、リポジトリ上の正本へリンクする。
 // URL の組み立て元をここに集約し、Markdown 本文や doc-index には GitHub 固有値を持たせない。
@@ -64,6 +75,7 @@ function loadDocIndex(workspaceRoot: string): Record<string, string> {
   }
 }
 const docIndex = loadDocIndex(WORKSPACE_ROOT);
+const archiveLinks = loadArchiveLinks(WORKSPACE_ROOT);
 
 // doc-index エントリから行番号サフィックスを除去する（例: "docs/ja/foo.yaml:42" → "docs/ja/foo.yaml"）
 function stripEntryLineSuffix(entry: string): string {
@@ -111,7 +123,9 @@ function collectFrontmatterDocLinks(
     if (links[candidate]) return;
     const docsRelPath = resolveDocRelPath(candidate);
     if (!docsRelPath || docsRelPath === currentRelPath) return;
-    links[candidate] = "/" + docsRelPath.replace(/\.md$/, ".html");
+    links[candidate] =
+      resolveExecRecordWikilink(candidate, docIndex, GITHUB_SOURCE)?.href ??
+      "/" + docsRelPath.replace(/\.md$/, ".html");
   };
 
   const visit = (value: unknown, depth: number): void => {
@@ -233,15 +247,11 @@ type SearchRenderEnv = {
   relativePath?: string;
 };
 
-const isExecRecordPath = (relativePath: string | undefined): boolean =>
-  relativePath !== undefined &&
-  /(^|\/)execution\/exec\/(events|plans|results)(\/|$)/.test(relativePath.replace(/\\/g, "/"));
-
 const isExcludedSearchPath = (relativePath: string | undefined): boolean => {
   if (!relativePath) return false;
   const path = relativePath.replace(/\\/g, "/");
 
-  if (/(^|\/)execution\/exec\/(events|plans|results)(\/|$)/.test(path)) return true;
+  if (isExecRecordPath(path)) return true;
   if (/(^|\/)controls\/project-register\/pjr-[^/]+\.md$/.test(path)) return true;
   if (/(^|\/)controls\/project-register\/generated\/pjr-views-by-[^/]+\.md$/.test(path))
     return true;
@@ -267,12 +277,17 @@ const specdojoItems = {
     text: "specdojo",
     link: "/ja/specdojo/",
     collapsed: false,
-    items: specdojoSidebarItems,
+    // 型のメニューは、package 側の型を重ねたステージングの型の文書から設定の読み込み時に組み立てる。
+    items: buildSpecdojoSidebarItems(path.join(SITE_CONTENT_ROOT, "ja", "specdojo")),
   },
 };
 
 // GitHub Pages の公開パス: https://specdojo.github.io/specdojo/
 const base = "/specdojo/";
+
+// 日本語トップ（docs/ja/index.md）が無い利用リポジトリでは、「ホーム」と言語メニューを
+// ステージングに必ずあるサイトのトップへ向け、404 にしない。
+const jaHomeLink = existsSync(path.join(SITE_CONTENT_ROOT, "ja", "index.md")) ? "/ja/" : "/";
 
 /**
  * 追加したいロケールはここに足すだけでOK
@@ -373,11 +388,6 @@ const docsPathFromLink = (link: string): string | undefined => {
 
   return path.join(WORKSPACE_ROOT, "docs", `${clean}.md`);
 };
-
-// exec 配下の plan / result 判定。H1 が定型文（"Edit Plan: ..." 等）のため、
-// メニューはタスクIDベースの表示名にする
-const isExecPlanLink = (link: string): boolean => link.includes("/exec/plans/");
-const isExecResultLink = (link: string): boolean => link.includes("/exec/results/");
 
 // result frontmatter（specdojo: 名前空間配下）の started_at を読む。
 // 表示名とソートの両方で使うためキャッシュする
@@ -652,7 +662,7 @@ const transformSidebar = (
   const transformed = items
     .filter((it) => !isHandbookTop(it)) // handbook トップは自動生成側に含めない
     // 実行記録（plan / result / events）は件数が多く、サイドバーに載せると全ページの HTML が
-    // 肥大化してビルドがメモリ不足になる。ページは公開したまま、生成一覧（exec-records）から辿る。
+    // 肥大化してビルドがメモリ不足になる。plan / result は生成一覧から GitHub の正本へ辿る。
     // 表示名の解決（ファイル読み込み）より前に除外し、不要な I/O も避ける。
     .filter((it) => !isExecRecordPath(it.link))
     .map((it) => {
@@ -837,8 +847,7 @@ export default defineConfig({
     "templates/**",
     "logs/**",
     "packages/**",
-    "docs/**/execution/exec/plans/**",
-    "docs/**/execution/exec/results/**",
+    ...EXEC_RECORD_SRC_EXCLUDE,
   ],
 
   // サイト設定（サイドバーを含む）とページのハッシュ表は、既定では全ページの HTML へ
@@ -912,10 +921,10 @@ export default defineConfig({
       label: "日本語",
       lang: "ja",
       // 言語メニューで押したときのリンク先（日本語トップ）
-      link: "/ja/",
+      link: jaHomeLink,
       themeConfig: {
         nav: [
-          { text: "ホーム", link: "/ja/" },
+          { text: "ホーム", link: jaHomeLink },
           { text: "SpecDojo", link: "/ja/specdojo/guides/specdojo-overview-guide" },
           {
             text: "プロジェクト",
@@ -1027,18 +1036,23 @@ export default defineConfig({
           }
         }
 
-        if (info === "mermaid") {
+        if (info === "mermaid" || info.split(/\s/)[0] === "d2") {
           const code = token.content.trim();
-          // 生成側と同じキー（mermaid-cli の版・設定・コード）で SVG 名を求める
-          const id = mermaidSvgId(code);
-          const src = `${base}mermaid/${id}.svg`;
+          // 生成側と同じキー（CLI の版・配置設定・コード）で SVG 名を求める
+          const kind = info === "mermaid" ? "mermaid" : "d2";
+          const id = kind === "mermaid" ? mermaidSvgId(code) : d2SvgId(code);
+          const src = `${base}${kind}/${id}.svg`;
 
           // 800x800 を超える場合はスクロールさせるためのラッパーを用意
           // 具体的な判定は CSS / JS 側で行う想定（ここではクラスだけ付与）
           return `
               <p class="mermaid-container">
-                <img :src="'${src}'" alt="mermaid diagram" loading="lazy" class="mermaid-image">
+                <img :src="'${src}'" alt="${kind} diagram" loading="lazy" class="mermaid-image">
               </p>\n`;
+        }
+
+        if (isChatFence(info)) {
+          return renderChat(token.content, info);
         }
 
         // それ以外のコードブロックはデフォルトの描画
@@ -1064,12 +1078,14 @@ export default defineConfig({
 
         if (!silent) {
           const entry = docIndex[id];
-          const execRecordLink = resolveExecRecordWikilink(inner, docIndex, GITHUB_SOURCE);
-          if (execRecordLink) {
+          const sourceLink =
+            resolveArchiveWikilink(inner, archiveLinks, GITHUB_SOURCE) ??
+            resolveExecRecordWikilink(inner, docIndex, GITHUB_SOURCE);
+          if (sourceLink) {
             let token = state.push("link_open", "a", 1);
-            token.attrSet("href", execRecordLink.href);
+            token.attrSet("href", sourceLink.href);
             token = state.push("text", "", 0);
-            token.content = execRecordLink.displayText;
+            token.content = sourceLink.displayText;
             state.push("link_close", "a", -1);
           } else if (entry) {
             const entryPath = stripEntryLineSuffix(entry);
@@ -1122,6 +1138,13 @@ export default defineConfig({
         syncFile: (file) => kataStaging.syncFile(file),
       }),
       mermaidAssets(MERMAID_OUT_DIR, base),
+      d2SvgAutoGenerate({
+        rootDir: SITE_CONTENT_ROOT,
+        outDir: D2_OUT_DIR,
+        contentRoot: CONTENT_ROOT,
+        syncFile: (file) => kataStaging.syncFile(file),
+      }),
+      mermaidAssets(D2_OUT_DIR, base, "d2"),
     ],
     build: {
       // 最大のチャンクはローカル検索インデックス（@localSearchIndex*）で、

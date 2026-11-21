@@ -1,0 +1,193 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-1-sysd-critical-flows-005",
+  "run_id": "T-KATA-WAVE-1-sysd-critical-flows-005-20261114T024622Z-83dc1ed9",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-14T02:49:35.185Z",
+    "completed_at": "2026-11-14T03:03:52.816Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/040-system-design/sysd-critical-flows.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/sysd-critical-flows-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/sysd-critical-flows-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/.vitepress/sidebar-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/recipes/sysd-critical-flows-recipe.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/sysd-critical-flows-template.md",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 6,
+    "summary": ".../040-system-design/sysd-critical-flows.md       | 325 +++++++++++------\n .../rulebooks/sysd-critical-flows-rulebook.md      | 393 ++++-----------------\n .../specdojo/samples/sysd-critical-flows-sample.md | 171 +++++++--\n packages/docs-site/.vitepress/sidebar-config.ts    |  10 +-\n 4 files changed, 446 insertions(+), 453 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/product/040-system-design/sysd-critical-flows.md docs/ja/specdojo/rulebooks/sysd-critical-flows-rulebook.md docs/ja/specdojo/recipes/sysd-critical-flows-recipe.md docs/ja/specdojo/samples/sysd-critical-flows-sample.md docs/ja/specdojo/templates/sysd-critical-flows-template.md packages/docs-site/.vitepress/sidebar-config.ts",
+      "status": "passed",
+      "summary": "変更6ファイルを整形。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/product/040-system-design/sysd-critical-flows.md docs/ja/specdojo/rulebooks/sysd-critical-flows-rulebook.md docs/ja/specdojo/recipes/sysd-critical-flows-recipe.md docs/ja/specdojo/samples/sysd-critical-flows-sample.md docs/ja/specdojo/templates/sysd-critical-flows-template.md packages/docs-site/.vitepress/sidebar-config.ts",
+      "status": "passed",
+      "summary": "6ファイルすべて整形規約に適合。"
+    },
+    {
+      "source": "executor",
+      "command": "python tmp/check-critical-flow-references.py",
+      "status": "passed",
+      "summary": "19件のファイル参照と16件のwikilink IDに欠落なし。動作・網羅性の確認は含まない。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別YAML検証は対象外。",
+      "reason": "executorによるyaml／ymlファイルの変更なし。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "カタログ検証は対象外。",
+      "reason": "executorによるdocs/ja/projects/配下の成果物変更なし。runner管理ファイルは対象に含めない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検証は対象外。",
+      "reason": "PJR個票および既存plan／resultを編集していない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-sysd-critical-flows-005/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-f\n… output omitted …\naces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-sysd-critical-flows-005/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-sysd-critical-flows-005/src/shared/specdojo-config.ts\n  1232:1  warning  File has too many lines (1167). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4689 file(s), 135 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 102 passed, 0 error, 0 未検査\n  graph: 4 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4689 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-sysd-critical-flows-005\n\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-UwZzwz/worktrees/prj-0001-T-T-doc-010/project\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-HM6d3B/T-T-doc-010\nSkipping worktree dependencies: no tracked\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-as\n… output omitted …\nrulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-sysd-critical-flows-005/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-sysd-critical-flows-005/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-sysd-critical-flows-005\n\nresult-markdownlint: result execution/runs/schedule/TASK/TASK/result.md not found; skipped pre-commit lint\nRate limit detected for pinned agent pinned. Waiting until 2026-11-14T04:36:18.562Z before resuming the same stage.\nresumed\nRate limit detected for pinned agent primary. Falling back to fallback at 2\n… output omitted …\n track domains and dependencies to register epics; use dashboard build.\nWARN: timeline_path is deprecated. Use register epics and dashboard build.\nproblem\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "重要フロー5件、rulebook・recipe・sample・template、型メニューを整備しました。整形・参照確認は成功。未確認事項はCF-U01〜05へ整理し、draftを維持しています。",
+  "completion_status": "complete",
+  "handoff": [
+    "reporterへ: 変更対象はsysd-critical-flows.md、対応rulebook／sample、新規recipe／template、packages/docs-site/.vitepress/sidebar-config.tsの6ファイル。result・gradeサイドカー・保護設定・Git状態遷移は編集していない。",
+    "実践の型の判断: 既存成果物の5フローと責務境界は維持して補強。rulebookは章構成と記述ガイドを改訂し、完成例を除去。sampleは説明用の骨組みから、駄菓子屋の会計・印字回復の完成例へ作り直した。事故選定・中断後の判断に品質差が出るためrecipeを、固定5章を再利用するためtemplateを新規作成し、rulebook frontmatterへ完全IDを宣言した。カタログのrulebook宣言は既に一致しているため維持。",
+    "bootstrapの形の手本: 成果物はsysd-job-execution.md、rulebookはtsd-index-rulebook.md、recipeはifx-cmd-recipe.md、sampleはcdfd-sample.md、templateはcdfd-template.mdのready文書を参照。章番号、責務境界、表、生成物メタ情報の分離を参考とし、内容は転用していない。sampleの厚さは指定のclis-sample.mdも参照。Web出典なし。",
+    "根拠と未解決事項: plan依存の3つのCDFDはarchive内のdeprecated文書だった。比較根拠として読み、成果物の`based_on`は直接依存のsysd-indexへ変更した。現行CDFDとの照合とカタログの旧依存の扱いはCF-U01に残した。PM／ARC／BAが受入前に確認し、必要な依存変更を計画する。",
+    "finding対応: F001〜008、F011、F016〜018について、判断対象・選定理由・受入条件・Role code・作業依存・管理記録・変更影響・title・参照導線を補強。F009／015の図の境界・主要識別子・同期非同期・相関範囲を追加した。実装主体と人間の責任を分離し、公開／ready条件も明示した。",
+    "未解消・根拠不足のfinding: F009／010／014の設定実効条件はCF-U03、F012の既存suiteの網羅性はCF-U04、F013の適合証跡はCF-U01〜05、F019／020の運用充足・閾値・通知・OPRはCF-U05へ接続した。許可された根拠に設定キー・有効値・承認済み運用条件がなく、推測で補っていない。DEV／ARCが正本を特定し、QEが条件と網羅性を確認、OPSが運用条件を提示し、人間のPOが採否を判断する。hosting保護の実効性はCF-U02で人間確認が必要。",
+    "CF-U01〜05は文書内の追跡IDであり、PJR採番済みではない。PMが受入前にissue／risk／change-request／decisionとして登録簿へ移し、実IDとSchedule依存を戻す。未作成OPRや業務判断を確定したとは扱わない。",
+    "仕上げ4操作を1巡実施: rulebookの不要な完成例・詳細値の再掲を削除し、完成例の正本をsample、骨組みをtemplateへ統合。成果物の参照・検証・未決事項・承認条件を分割した。並列実行の継続条件を整理し、クリティカルパス停止時の新規投入停止と整合させた。成果物と型の意味要件はrulebookを正として揃えた。",
+    "lint・schema・typecheck・単体／統合テストは指定どおり親runnerへ委任。sidebar-kata.test.tsも親の単体テストで確認する。参照確認用の一時スクリプトは削除済み。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-sysd-critical-flows-005/T-KATA-WAVE-1-sysd-critical-flows-005-20261114T024622Z-83dc1ed9/executor.log",
+      "bytes": 5510,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-sysd-critical-flows-005/T-KATA-WAVE-1-sysd-critical-flows-005-20261114T024622Z-83dc1ed9/parent-validation-attempt-1-lint-fm.log",
+      "bytes": 665,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-sysd-critical-flows-005/T-KATA-WAVE-1-sysd-critical-flows-005-20261114T024622Z-83dc1ed9/parent-validation-attempt-1-lint-md.log",
+      "bytes": 784,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-sysd-critical-flows-005/T-KATA-WAVE-1-sysd-critical-flows-005-20261114T024622Z-83dc1ed9/parent-validation-attempt-2-test-unit.log",
+      "bytes": 7693,
+      "truncated": false
+    }
+  ]
+}

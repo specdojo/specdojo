@@ -1,0 +1,53 @@
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "use-case-guide.md と個票を改訂・検証した。LP・Next.js・Unity の対話フローを維持し、文書の schedule と実装 todo、CLI・repos 設定、runner の責務を修正した。実プロダクトの生成・実行・公開、外部スターターの公開状況、後続の親検証は未検証。",
+  "handoff": [
+    "reporter / runner が result を記入し、設定済みの親検証を実施する。executor は result、登録簿一覧、個票のステータスを変更していない。開始時から存在する runner のイベント・evidence 差分は保持した。",
+    "PJR-RTD5 の方針は LP、次に Next.js + Cloudflare。提供後に実物を確認し、複製・初期化・対話開始・追加設定・動作確認を追記する。Unity は採用・提供が決まった場合に追記範囲を判断する。詳細は個票の対応結果に記録した。",
+    "カタログ検証は成功したが、対象外の未作成プロダクト文書に関する警告が出た。実プロダクトの動作と外部スターターの提供状況は本改訂では確認していない。Quick Start の同種修正は PJR-V5AZ で扱う。"
+  ],
+  "validations": [
+    {
+      "command": "npx prettier --check docs/ja/specdojo/guides/use-case-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-gq14-use-case-product-conversation-flow.md docs/ja/projects/prj-0001/controls/project-register/events/pjr-gq14.yaml",
+      "status": "passed",
+      "summary": "整形後の対象ファイルはすべて適合。個票の最終追記も Prettier で整形済み。"
+    },
+    {
+      "command": "node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint docs/ja/specdojo/guides/use-case-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-gq14-use-case-product-conversation-flow.md",
+      "status": "passed",
+      "summary": "変更した Markdown 2 件で違反なし。"
+    },
+    {
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "終了コード 0。対象外の未作成文書に関する警告あり。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "個票・イベントの検証と派生ビュー生成が成功。"
+    },
+    {
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/register-events.schema.yaml --data docs/ja/projects/prj-0001/controls/project-register/events/pjr-gq14.yaml",
+      "status": "passed",
+      "summary": "開始時から差分のあるイベント YAML が schema に適合。"
+    },
+    {
+      "command": "node tmp/pjr-gq14-verify-guide.mjs",
+      "status": "passed",
+      "summary": "VitePress 描画で文書内リンク 17 件、wikilink 16 ID、CLI 例 17 件、折りたたみ、repos 配列を確認。一時スクリプトは削除済み。"
+    },
+    {
+      "command": "bash -n tmp/pjr-gq14-examples.sh",
+      "status": "passed",
+      "summary": "ガイドから抽出したシェル例の構文が正常。一時ファイルは削除済み。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "最終差分に空白エラーなし。"
+    }
+  ]
+}
+</specdojo_executor_evidence>

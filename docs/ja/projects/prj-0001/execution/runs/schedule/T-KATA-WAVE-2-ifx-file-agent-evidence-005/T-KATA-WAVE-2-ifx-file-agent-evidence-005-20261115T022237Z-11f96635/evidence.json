@@ -1,0 +1,159 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-2-ifx-file-agent-evidence-005",
+  "run_id": "T-KATA-WAVE-2-ifx-file-agent-evidence-005-20261115T022237Z-11f96635",
+  "stage": {
+    "role": "executor",
+    "actor": "flash-high-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-15T04:06:43.088Z",
+    "completed_at": "2026-11-15T04:12:40.741Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/rulebooks/ifx-file-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/ifx-file-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 3,
+    "summary": ".../plan.md                                        |   5 +\n .../result.md                                      |  19 +-\n docs/ja/specdojo/rulebooks/ifx-file-rulebook.md    | 390 ++++++++-------------\n docs/ja/specdojo/samples/ifx-file-sample.md        | 267 ++++++++++++--\n 4 files changed, 420 insertions(+), 261 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/rulebooks/ifx-file-rulebook.md docs/ja/specdojo/samples/ifx-file-sample.md docs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml",
+      "status": "passed",
+      "summary": "Prettier check passed for all modified targets"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --modeline docs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml",
+      "status": "passed",
+      "summary": "YAML modeline validation passed (schema: none)"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "",
+      "reason": "No history files or plan/result files changed by executor"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "",
+      "reason": "Deliverable changes are outside docs/ja/projects/"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4812 file(s), 137 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 103 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4812 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-2-ifx-file-agent-evidence-005\n\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-IbKFUa/worktrees/prj-0001-T-T-doc-010/project\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-vAaxvN/T-T-doc-010\nSkipping worktree dependencies: no tra\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schema)\ndocs/ja/specdojo/samples/ifx-api-sample\n… output omitted …\n.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-2-ifx-file-agent-evidence-005/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-2-ifx-file-agent-evidence-005/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-2-ifx-file-agent-evidence-005\n\nresult-markdownlint: result execution/runs/schedule/TASK/TASK/result.md not found; skipped pre-commit lint\nRate limit detected for pinned agent pinned. Waiting until 2026-11-15T04:17:40.350Z before resuming the same stage.\nresumed\nRate limit detected for pinned agent primary. Falling back to fallback \n… output omitted …\n a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nproblem\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "ifx-file-agent-evidence",
+      "status": "changed",
+      "path": "docs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml",
+      "reason": ""
+    },
+    {
+      "target": "specdojo:ifx-file-rulebook",
+      "status": "changed",
+      "path": "docs/ja/specdojo/rulebooks/ifx-file-rulebook.md",
+      "reason": ""
+    },
+    {
+      "target": "specdojo:ifx-file-sample",
+      "status": "changed",
+      "path": "docs/ja/specdojo/samples/ifx-file-sample.md",
+      "reason": ""
+    }
+  ],
+  "final_message": "外部ファイル連携仕様（ifx-file-agent-evidence.yaml）および実践の型（ifx-file-rulebook.md, ifx-file-sample.md）の初期整備と検証を完了しました。",
+  "completion_status": "complete",
+  "handoff": [
+    "recipe および template は、YAML 1 ファイルの外部ファイル連携仕様書であり、構造・必須項目・失敗時の扱いが rulebook と sample で十分に伝わるため、独立した手順書および雛形ファイルは不要と判断し not-needed と宣言しました。",
+    "ifx-file-agent-evidence.yaml は SpecDojo パイプライン実行における executor / runner 間の evidence.json および pipeline-state.json の連携契約を定義しています。実装正本は src/exec/evidence.ts および src/exec/pipeline-state.ts です。未確定の技術判断は ARC が行い、ready への昇格は PO が判断します。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-ifx-file-agent-evidence-005/T-KATA-WAVE-2-ifx-file-agent-evidence-005-20261115T022237Z-11f96635/executor.log",
+      "bytes": 5018,
+      "truncated": false
+    }
+  ]
+}

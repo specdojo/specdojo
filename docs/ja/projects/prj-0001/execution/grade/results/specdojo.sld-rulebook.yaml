@@ -5,45 +5,45 @@ path: docs/ja/specdojo/rulebooks/sld-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 72
-graded_at: "2026-10-09T21:09:23.065Z"
-graded_by: agy-expert-executor
-content_hash: 50aa5e9b93a71eaab3cbea103f1adf9e723584d791b1f2cef93394196d9da1ad
+score: 96
+graded_at: "2026-11-17T22:17:02.879Z"
+graded_by: sol-review-executor
+content_hash: 00bb324263676b51aa26a330faae80a1885ca172ad01e07c10e12c56bf6f78bd
 categories:
   purpose:
-    score: 75
+    score: 100
   operations:
-    score: 94
+    score: 100
   planning:
-    score: 92
+    score: 100
   business:
-    score: 92
+    score: 100
   architecture:
     score: 100
   usability:
-    score: 50
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 50
+    score: 83
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-po-publication-accountability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-plan-feasibility:
     level: 4
     score: 100
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
     level: 4
     score: 100
@@ -54,8 +54,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-stakeholder-clarity:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
     level: 4
     score: 100
@@ -75,20 +75,20 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ux-readability:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ux-language-consistency:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -103,74 +103,35 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 5
-  minor: 4
+  major: 1
+  minor: 1
   note: 0
 findings:
   - id: F001
     severity: major
-    rule: vp-po-decision-readiness
-    line: 67
-    anchor: "## 4. 本文構成（標準テンプレ）"
+    rule: vp-qe-kata-conformance
+    line: 120
+    anchor: >-
+      - **良い例**: 「`docs/**/generated/` および `.specdojo/doc-index.json` ／ 派生 Markdown ビューと文書索引 ／ `specdojo build`、`index
+      build` ／ 共有なし（`.gitignore` で除外し各環境で生成） ／ ビルド時に再生成 ／ `削除可`。`specdojo build` で再生成できる」
     message: >-
-      The template does not define a section for pending issues or discussion points, lacking the necessary information
-      for PO approval decisions.
-    message_ja: テンプレートには保留中の問題や検討事項のセクションが定義されておらず、POの承認決定に必要な情報が不足しています。
+      「良い例」が `docs/**/generated/` 全体を `削除可` かつ `specdojo build` で再生成可能としているが、実装の `src/grade/run.ts`
+      はこの配下に実行ロックと再開用状態を保存し、`src/routine/storage.ts` は旧 `routines/generated/`
+      の状態・履歴を移行元として扱う。これらの削除は排他の破綻や再開情報・未移行履歴の消失につながるため、例の対象を再生成可能な派生物へ限定し、実行状態と未移行データの除外条件を明記する。
+    message_ja: >-
+      「良い例」が `docs/**/generated/` 全体を `削除可` かつ `specdojo build` で再生成可能としているが、実装の `src/grade/run.ts`
+      はこの配下に実行ロックと再開用状態を保存し、`src/routine/storage.ts` は旧 `routines/generated/`
+      の状態・履歴を移行元として扱う。これらの削除は排他の破綻や再開情報・未移行履歴の消失につながるため、例の対象を再生成可能な派生物へ限定し、実行状態と未移行データの除外条件を明記する。
   - id: F002
     severity: minor
-    rule: vp-po-publication-accountability
-    line: 5
-    anchor: "## 1. メタデータ"
-    message: There is no requirement to specify the approver (PO) who bears the final decision and accountability.
-    message_ja: 最終的な決定権と責任を負う承認者（PO）を指定する要件がありません。
-  - id: F003
-    severity: minor
-    rule: vp-pm-dependency-risk
-    line: 67
-    anchor: "## 4. 本文構成（標準テンプレ）"
-    message: >-
-      There are no items defined to identify dependencies on other processes or subsequent deliverables, nor are there
-      items to identify risks or issues.
-    message_ja: 他のプロセスや後続の成果物との依存関係を特定する項目や、リスクや問題を特定する項目が定義されていません。
-  - id: F004
-    severity: minor
-    rule: vp-ba-stakeholder-clarity
-    line: 67
-    anchor: "## 4. 本文構成（標準テンプレ）"
-    message: There are no items defined to clarify stakeholders, users, and reviewers of this document.
-    message_ja: このドキュメントのステークホルダー、ユーザー、およびレビュアーを明確にする項目が定義されていません。
-  - id: F005
-    severity: major
-    rule: vp-qe-verifiability
-    line: 10
-    anchor: "| type | `domain` 固定                 | ○    |"
-    message: "20行目の「`domain` 固定」という記述と 28行目の 「`type: data`」 という記述が矛盾しており、正しい設定値が判定不能である。"
-    message_ja: "20行目の「`domain` 固定」という記述と 28行目の 「`type: data`」 という記述が矛盾しており、正しい設定値が判定不能である。"
-  - id: F006
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 1
-    anchor: "# 保管場所一覧 （Storage Locations List）作成ルール"
-    message: 他成果物との関係性を定義する「位置づけ」節が欠落しており、文書の役割が不明確である。
-    message_ja: 他成果物との関係性を定義する「位置づけ」節が欠落しており、文書の役割が不明確である。
-  - id: F007
-    severity: major
     rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 保管場所一覧 （Storage Locations List）作成ルール"
-    message: サンプル `sld-sample.md` のメタデータがルールブックの規定に従っていない。
-    message_ja: サンプル `sld-sample.md` のメタデータがルールブックの規定に従っていない。
-  - id: F008
-    severity: major
-    rule: vp-ux-readability
-    line: 1
-    anchor: "# 保管場所一覧 （Storage Locations List）作成ルール"
-    message: サンプルでの名称不一致およびメタデータ定義の矛盾により、成果物の正体と分類が判別しにくい。
-    message_ja: サンプルでの名称不一致およびメタデータ定義の矛盾により、成果物の正体と分類が判別しにくい。
-  - id: F009
-    severity: major
-    rule: vp-ux-language-consistency
-    line: 1
-    anchor: "# 保管場所一覧 （Storage Locations List）作成ルール"
-    message: ルールブックの「保管場所一覧」とサンプルの「保管場所定義 / 業務データ辞書」の間で名称が統一されていない。
-    message_ja: ルールブックの「保管場所一覧」とサンプルの「保管場所定義 / 業務データ辞書」の間で名称が統一されていない。
+    line: 126
+    anchor: >-
+      - **良い例**: 「`exec run` が異常終了して `execution/exec/.locks/` にロックが残った ／ 同じリポジトリで `exec run`
+      が動いていないことを確かめてから削除する。稼働中に消すと二重実行で実行記録が壊れる ／ DEV」
+    message: >-
+      「削除・退避・復旧の判断基準」の良い例が、稼働中の `exec run`
+      がないことを削除前の条件として直接記述しており、本文88・125・147行の「削除条件は保管場所一覧を参照する」という規則と矛盾する。条件を一覧へ記載し、場面別の手順から該当行を参照する例へ修正する。
+    message_ja: >-
+      「削除・退避・復旧の判断基準」の良い例が、稼働中の `exec run`
+      がないことを削除前の条件として直接記述しており、本文88・125・147行の「削除条件は保管場所一覧を参照する」という規則と矛盾する。条件を一覧へ記載し、場面別の手順から該当行を参照する例へ修正する。

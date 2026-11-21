@@ -1,0 +1,64 @@
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "Kata 4 文書と D2 共通規定を修正し、個票に変更内容・整合確認・SVG の寸法・判断理由を記録しました。整形・描画・カタログ検査・登録簿ビュー生成は成功しました。指定の親検証は runner が実施します。",
+  "handoff": [
+    "result は編集していません。個票「対応結果」の文書別変更表、整合確認、SVG 出力結果、executor の判断を reporter が result へ反映してください。",
+    "目的を業務の存在理由・成果へ変更し、引き渡し／戻り先の章、引き渡し ID、条件イベントを廃止しました。受け渡しは線のラベル、重要な戻りは任意の図で表します。Orchestrator は全体概要へ委ね、区分と任意の PDCA 列、有効な参照先、短いイベントを規定しました。",
+    "sample の業務内容を維持しました。ELK 出力は通常図 931×1732、戻り図 942×810。在庫→仕入→販売の上下順、イベントの改行、ラベル配置を確認しました。template の 2 図も出力成功。確認用ファイルは削除済みです。",
+    "判断理由は個票に記録済みです。関連引き渡しを参加単位へ変更し、重要な戻りを図として保持しました。複数の起点イベントは原文を保って分割し、粒度・方向・イベントは主 rulebook を優先します。分割図・戻り図への開始と終了の再掲は不要としました。",
+    "4 文書の status は draft を維持しています。全体概要の Kata・全体概要・詳細 3 文書は未変更です。詳細 3 文書の改訂は後続の epic・schedule に委ねます。未決事項や保護設定の変更提案はありません。",
+    "親 runner は指定の lint・テスト等を実行し、その結果を result に反映してください。カタログ検査には、今回変更していない未作成文書の参照警告があります。"
+  ],
+  "validations": [
+    {
+      "command": "npx prettier --write docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md docs/ja/specdojo/recipes/cdfd-uc-recipe.md docs/ja/specdojo/samples/cdfd-uc-sample.md docs/ja/specdojo/templates/cdfd-uc-template.md docs/ja/specdojo/rulebooks/cdfd-d2-rulebook.md docs/ja/projects/prj-0001/controls/project-register/pjr-pryz-cdfd-uc-kata-align.md",
+      "status": "passed",
+      "summary": "変更した Markdown 6 ファイルを整形済み。"
+    },
+    {
+      "command": "d2 --layout elk tmp/pjr-pryz/sample-1.d2 tmp/pjr-pryz/sample-1.svg && d2 --layout elk tmp/pjr-pryz/sample-2.d2 tmp/pjr-pryz/sample-2.svg",
+      "status": "passed",
+      "summary": "sample の 2 図を SVG 出力し、座標とプレビューで並び・大きさを確認。"
+    },
+    {
+      "command": "d2 --layout elk tmp/pjr-pryz/template-1.d2 tmp/pjr-pryz/template-1.svg && d2 --layout elk tmp/pjr-pryz/template-2.d2 tmp/pjr-pryz/template-2.svg",
+      "status": "passed",
+      "summary": "template の通常図と任意の戻り図を SVG 出力。"
+    },
+    {
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "カタログ検査成功。変更対象外の未作成文書に関する参照警告あり。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿の検証と派生ビュー生成に成功。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 YAML スキーマ検査は対象外。",
+      "reason": "今回の編集は Markdown のみで、YAML ファイルを変更していません。"
+    },
+    {
+      "command": "npx tsx src/specdojo.ts catalog build",
+      "status": "not_applicable",
+      "summary": "カタログ再生成は対象外。",
+      "reason": "dct-*.yaml を変更していません。"
+    },
+    {
+      "command": "npx tsx src/specdojo.ts exec refresh",
+      "status": "not_applicable",
+      "summary": "実行計画の再生成は対象外。",
+      "reason": "sch-*.yaml を変更していません。"
+    }
+  ]
+}
+</specdojo_executor_evidence>

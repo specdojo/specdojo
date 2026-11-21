@@ -1,0 +1,79 @@
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "7種類を対象とする strategy と track（32タスク・10マイルストーン）を生成しました。個票に判断根拠と検証結果を記録しました。",
+  "handoff": [
+    "sf・cdt・ccd・bdd・ifx-cmd は `improve-kata` を選択し、rulebook → sample（ifx-cmd は recipe・template も）→ review → human の型確定を配置した。bes・br は rulebook の有効な grade がともに needs-work のため、`bootstrap_scope: [rulebook, sample]` で bootstrap → refine → condense → review → human の型確定を配置できた。全件の主担当は ARC、全 review 完了後の確定は `bootstrap-finalize` とした。",
+    "標準 generator の出力に専用 maintenance 段・指示・agent 指定を追加した。strategy を再生成する際は dry-run の差分を確認し、追加内容を維持する必要がある。編集は sol-executor、review は sol-review-executor を指定済み。",
+    "build が生じさせた既存 planning の4マイルストーンの対象外差分は元に戻し、既存項目を保持して本 track の10項目だけを追加した。再 build 時も対象外差分を確認すること。他 track・カタログ・互換 Timeline・CHANGELOG・result は編集していない。",
+    "全体の schema・Markdown lint など指定された親検証は runner に委ねた。schedule のタスクは実行していない。型確定後の business-specs-reps 再実行は別作業。個票の「CHANGELOG に書く事項」は「なし」と記録した。"
+  ],
+  "validations": [
+    {
+      "command": "node --import tsx src/specdojo.ts schedule strategy generate --project prj-0001 --track business-specs-kata --gate-owner PM --milestone-owner PM --force --dry-run",
+      "status": "passed",
+      "summary": "標準 profile の25タスク・10マイルストーンと差分を確認。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts schedule strategy generate --project prj-0001 --track business-specs-kata --gate-owner PM --milestone-owner PM --force",
+      "status": "passed",
+      "summary": "strategy を生成。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts schedule build --project prj-0001 --track business-specs-kata --force",
+      "status": "passed",
+      "summary": "追加段を含む32タスクを生成。既存マイルストーンを保持し、新規10項目との対応も確認。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts exec refresh --project prj-0001",
+      "status": "passed",
+      "summary": "実行状態の派生ビューを更新。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts exec validate --project prj-0001 --schedule-only",
+      "status": "passed",
+      "summary": "schedule 検証成功。旧タスクIDの既存履歴警告あり。"
+    },
+    {
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/sch-strategy.schema.yaml --data docs/ja/projects/prj-0001/schedule/sch-strategy-business-specs-kata.yaml",
+      "status": "passed",
+      "summary": "strategy の schema 適合。"
+    },
+    {
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/sch-track.schema.yaml --data docs/ja/projects/prj-0001/schedule/sch-track-business-specs-kata.yaml",
+      "status": "passed",
+      "summary": "track の schema 適合。"
+    },
+    {
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/sch-milestones.schema.yaml --data docs/ja/projects/prj-0001/schedule/sch-milestones.yaml",
+      "status": "passed",
+      "summary": "milestones の schema 適合。"
+    },
+    {
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "catalog 検証成功。既存参照・未作成文書の警告あり。"
+    },
+    {
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "個票を含む履歴リンク検証成功。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿の派生ビュー生成成功。"
+    },
+    {
+      "command": "npx --no-install prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-hgvm-business-specs-kata-strategy.md docs/ja/projects/prj-0001/schedule/sch-strategy-business-specs-kata.yaml docs/ja/projects/prj-0001/schedule/sch-track-business-specs-kata.yaml docs/ja/projects/prj-0001/schedule/sch-milestones.yaml",
+      "status": "passed",
+      "summary": "変更した4ファイルを整形。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    }
+  ]
+}
+</specdojo_executor_evidence>

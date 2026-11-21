@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: sf-index-grade-criteria
+document: sf-index
+path: docs/ja/product/010-business-specs/050-system-functions/sf-index.md
+graded_at: "2026-11-16T15:55:11.797Z"
+graded_by: sol-review-executor
+content_hash: 375696620d87ab6e175e8ced5d8cf51a07b6266bd69a6670d91b6c0f5d8c2316
+summary:
+  satisfied: 1
+  unsatisfied: 4
+  total: 5
+criteria:
+  - id: DC-001
+    text: 機能一覧が業務仕様と対応し、スコープが網羅されていること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: unsatisfied
+    reason: ORCH の代表 BPS が未決で、各行の業務仕様との対応も未照合のため、合意した業務スコープの網羅性を確認できない。
+  - id: DC-002
+    text: システム化機能のスコープを承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-purpose-alignment
+    status: unsatisfied
+    reason: Q-02 が本書の確定保留条件として残り、システム化機能全体のスコープを承認できる状態にない。
+  - id: DC-003
+    text: 機能分割・コンポーネント設計の入力として参照できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: satisfied
+  - id: DC-004
+    text: テスト対象機能の網羅性が確認できること
+    roles:
+      - QE
+    viewpoint: vp-qe-omissions-consistency
+    status: unsatisfied
+    reason: 全機能のテスト対象は列挙されているが、ORCH の根拠仕様の不一致と実行状態の記録責務の食い違いが残り、業務仕様に対応する網羅性を確認できない。
+  - id: DC-005
+    text: 実装スコープ・機能境界の参照として使えること
+    roles:
+      - DEV
+    viewpoint: vp-dev-implementation-readiness
+    status: unsatisfied
+    reason: P-14 の実行状態記録が登録簿機能へ割り当てられ、タスク・Job Run の記録機能との実装境界が確定していない。

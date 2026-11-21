@@ -1,12 +1,15 @@
 import { type Command } from "commander";
 import { existsSync, readFileSync } from "node:fs";
 import { relative, sep } from "node:path";
+import { setImmediate } from "node:timers/promises";
 import { CrossProcessMutex } from "../shared/cross-process-lock.js";
 import {
   gitOutput,
   gitResult,
   repoRelative,
+  restoreIndexAfterPathspecCommit,
   stageCommitTargets,
+  unstageCommitTargets,
   worktreeStatusPaths,
 } from "../shared/git.js";
 import { inlineCodeAnglePlaceholders } from "../shared/text.js";
@@ -234,7 +237,7 @@ type RegisterMutationOptions = {
   by?: string;
   dryRun?: boolean;
   commit?: boolean;
-  message?: string;
+  message?: string[];
 };
 
 type RegisterMutationResult = {
@@ -251,7 +254,10 @@ function assertRegisterItemCommitTargetsClean(
   context: RegisterMutationContext,
   view: RegisterItemView,
 ): void {
-  if (!view.ticketPath) return;
+  if (!view.ticketPath) {
+    context.assertCommitTargetsClean([context.paths.pjrIndexPath]);
+    return;
+  }
   context.assertCommitTargetsClean([
     view.ticketPath,
     registerEventFilePath(context.paths.projectRegisterPath, view.id),
@@ -265,7 +271,28 @@ function addRegisterCommitOptions(cmd: Command): Command {
       "Take the register lifecycle lock, rebuild views, and commit only this command's changes",
       false,
     )
-    .option("-m, --message <message>", "Override the register commit message");
+    .option(
+      "-m, --message <message>",
+      "Override the register commit message (repeatable; each value becomes a paragraph, as in git commit -m)",
+      collectRegisterCommitMessage,
+    );
+}
+
+// commander は値付きオプションの繰り返しを最後の値で上書きする。`-m <subject> -m <body>` の
+// subject が失われて body だけが commit message になり、commitlint に拒否されていた（PJR-Y3XS）。
+function collectRegisterCommitMessage(value: string, previous: string[] | undefined): string[] {
+  return [...(previous ?? []), value];
+}
+
+// git commit -m と同じく、空でない各値を段落として空行でつなぐ。
+export function registerCommitMessageFromParagraphs(
+  paragraphs: readonly string[] | undefined,
+): string | undefined {
+  const text = (paragraphs ?? [])
+    .map((paragraph) => paragraph.trim())
+    .filter((paragraph) => paragraph !== "")
+    .join("\n\n");
+  return text === "" ? undefined : text;
 }
 
 const REGISTER_COMMIT_SUBJECT_MAX_LENGTH = 100;
@@ -312,62 +339,111 @@ function isGeneratedRegisterPath(repoRoot: string, paths: RegisterPaths, path: s
   );
 }
 
-function commitRegisterMutation(
+async function commitRegisterMutation(
   repoRoot: string,
   paths: RegisterPaths,
   command: string,
   result: RegisterMutationResult,
   preexisting: ReadonlySet<string>,
-  message?: string,
-): void {
+  targets: ReadonlySet<string>,
+  message?: readonly string[],
+): Promise<void> {
   const changed = worktreeStatusPaths(repoRoot).filter(
-    (path) => !preexisting.has(path) && !isGeneratedRegisterPath(repoRoot, paths, path),
+    (path) =>
+      targets.has(path) &&
+      !preexisting.has(path) &&
+      !isGeneratedRegisterPath(repoRoot, paths, path),
   );
   if (changed.length === 0) {
     process.stdout.write(`No register changes to commit for ${result.id}.\n`);
     return;
   }
 
-  stageCommitTargets(repoRoot, changed);
-  const staged = gitResult(repoRoot, ["diff", "--cached", "--quiet", "--", ...changed]);
-  if (staged.status === 0) {
-    process.stdout.write(`No register changes to commit for ${result.id}.\n`);
-    return;
-  }
-  if (staged.status !== 1) throw new Error("Failed to inspect staged register changes.");
+  // spawnSync delays JS signal callbacks until Git returns. Yield before committing and after
+  // each commit so a pending interruption uses the same targeted rollback as a hook failure.
+  let interrupted: NodeJS.Signals | undefined;
+  const signals = ["SIGINT", "SIGTERM", "SIGHUP"] as const;
+  const handlers = signals.map((signal) => {
+    const handler = (): void => {
+      interrupted = signal;
+    };
+    process.on(signal, handler);
+    return handler;
+  });
+  const checkInterruption = async (): Promise<void> => {
+    await setImmediate();
+    if (interrupted)
+      throw new Error(`Register commit interrupted by ${interrupted}; staged changes rolled back.`);
+  };
+  let committed = false;
+  try {
+    stageCommitTargets(repoRoot, changed);
+    await checkInterruption();
+    const staged = gitResult(repoRoot, ["diff", "--cached", "--quiet", "--", ...changed]);
+    if (staged.status === 0) {
+      process.stdout.write(`No register changes to commit for ${result.id}.\n`);
+      return;
+    }
+    if (staged.status !== 1) throw new Error("Failed to inspect staged register changes.");
 
-  const commitMessage = message?.trim() || defaultRegisterCommitMessage(command, result);
-  if (commitMessage === "") throw new Error("Register commit message must not be empty");
-  gitOutput(repoRoot, ["commit", "-m", commitMessage, "--", ...changed]);
+    const commitMessage =
+      registerCommitMessageFromParagraphs(message) ?? defaultRegisterCommitMessage(command, result);
+    // --only は初回・amend とも指定し、開始前からある staged 変更を混ぜない。
+    gitOutput(repoRoot, ["commit", "--only", "-m", commitMessage, "--", ...changed]);
+    committed = true;
+    // hook の整形は一時 index にだけ入る。HEAD と一致した対象を index でも HEAD へ戻し、
+    // 整形前の内容を staged のまま残さない（PJR-Y3XS）。
+    restoreIndexAfterPathspecCommit(repoRoot, changed);
+    await checkInterruption();
 
-  for (let attempt = 0; attempt < REGISTER_COMMIT_STABILIZATION_ATTEMPTS; attempt++) {
+    for (let attempt = 0; attempt < REGISTER_COMMIT_STABILIZATION_ATTEMPTS; attempt++) {
+      const remaining = worktreeStatusPaths(repoRoot).filter((path) => changed.includes(path));
+      if (remaining.length === 0) {
+        const sha = gitOutput(repoRoot, ["rev-parse", "--short", "HEAD"]).trim();
+        process.stdout.write(`Committed: ${sha} (${result.id})\n`);
+        return;
+      }
+      stageCommitTargets(repoRoot, remaining);
+      await checkInterruption();
+      gitOutput(repoRoot, ["commit", "--only", "--amend", "--no-edit", "--", ...remaining]);
+      restoreIndexAfterPathspecCommit(repoRoot, remaining);
+      await checkInterruption();
+    }
+
     const remaining = worktreeStatusPaths(repoRoot).filter((path) => changed.includes(path));
     if (remaining.length === 0) {
       const sha = gitOutput(repoRoot, ["rev-parse", "--short", "HEAD"]).trim();
       process.stdout.write(`Committed: ${sha} (${result.id})\n`);
       return;
     }
-    stageCommitTargets(repoRoot, remaining);
-    gitOutput(repoRoot, ["commit", "--amend", "--no-edit", "--", ...remaining]);
+    throw new Error(
+      `Register commit incomplete: target paths remained dirty after hook stabilization:\n` +
+        remaining.map((path) => `  ${path}`).join("\n"),
+    );
+  } catch (error) {
+    // changed は開始前に clean だった対象だけ。本文を残して、自分の stage だけを戻す。
+    unstageCommitTargets(repoRoot, changed);
+    await setImmediate();
+    if (committed) throw error;
+    // 記帳は作業ツリーに残り commit だけが無い。最後の行に結果が出るよう、原因の後に状態を書く。
+    const cause = error instanceof Error ? error.message : String(error);
+    throw new Error(
+      `Register commit failed for ${result.id}: ${cause}\n` +
+        `The register changes were written but not committed:\n` +
+        changed.map((path) => `  ${path}`).join("\n"),
+      { cause: error },
+    );
+  } finally {
+    signals.forEach((signal, index) => process.removeListener(signal, handlers[index]!));
   }
-
-  const remaining = worktreeStatusPaths(repoRoot).filter((path) => changed.includes(path));
-  if (remaining.length === 0) {
-    const sha = gitOutput(repoRoot, ["rev-parse", "--short", "HEAD"]).trim();
-    process.stdout.write(`Committed: ${sha} (${result.id})\n`);
-    return;
-  }
-  throw new Error(
-    `Register commit incomplete: target paths remained dirty after hook stabilization:\n` +
-      remaining.map((path) => `  ${path}`).join("\n"),
-  );
 }
 
-async function runRegisterMutationInCurrentWorktree(
+// Throws on failure so composite commands can stop before the next lifecycle step.
+export async function runRegisterMutationInCurrentWorktree(
   command: string,
   opts: RegisterMutationOptions,
   mutate: (context: RegisterMutationContext) => RegisterMutationResult,
-  requireCleanRegister: boolean,
+  requireCleanRegister = false,
 ): Promise<void> {
   const paths = resolveRegisterPaths(opts);
   if (!opts.commit || opts.dryRun) {
@@ -391,8 +467,9 @@ async function runRegisterMutationInCurrentWorktree(
     },
   );
 
-  await mutex.runExclusive(() => {
+  await mutex.runExclusive(async () => {
     const preexisting = new Set(worktreeStatusPaths(repoRoot));
+    const commitTargets = new Set<string>();
     if (requireCleanRegister) {
       const registerPrefix = `${repoRelative(repoRoot, paths.projectRegisterPath)}/`;
       const dirtyRegisterPaths = [...preexisting].filter(
@@ -405,11 +482,16 @@ async function runRegisterMutationInCurrentWorktree(
         );
       }
     }
+    // These paths are declared by add/update/transition/rename before they write. A repository
+    // status delta also contains files created by concurrent schedule processes, so it is not
+    // an ownership boundary for this commit.
     const assertCommitTargetsClean = (targets: readonly string[]): void => {
-      const overlapping = targets
-        .map((target) => repoRelative(repoRoot, target))
-        .filter((target) => preexisting.has(target));
-      if (overlapping.length === 0) return;
+      const relativeTargets = targets.map((target) => repoRelative(repoRoot, target));
+      const overlapping = relativeTargets.filter((target) => preexisting.has(target));
+      if (overlapping.length === 0) {
+        relativeTargets.forEach((target) => commitTargets.add(target));
+        return;
+      }
       throw new Error(
         `Cannot use --commit because register targets already have uncommitted changes:\n` +
           overlapping.map((path) => `  ${path}`).join("\n"),
@@ -417,7 +499,15 @@ async function runRegisterMutationInCurrentWorktree(
     };
     const result = mutate({ paths, assertCommitTargetsClean });
     rebuildRegisterViews(paths);
-    commitRegisterMutation(repoRoot, paths, command, result, preexisting, opts.message);
+    await commitRegisterMutation(
+      repoRoot,
+      paths,
+      command,
+      result,
+      preexisting,
+      commitTargets,
+      opts.message,
+    );
   });
 }
 

@@ -1,0 +1,146 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f80e573c35dc4a1ebb129f22bda94489
+  ts: "2026-11-19T22:05:51Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: CodeQL が見つけた src の 5 件を直す
+    - field: description
+      from: ""
+      to: "CodeQL が PR #34 で出した src の alert 5 件を直す。trash.ts の正規表現への local\\_id の埋め込み、change-scope.ts の ReDoS、repo-trace.ts と dashboard/shared.ts の表のセルのエスケープ、exec/shared.ts の何もしない replace"
+    - field: input
+      from: ""
+      to: '["利用者の決定（2026-11-20）: 案 A。0.9.0 はこのまま出し、src の 5 件は 0.9.1 で直す。テストの 3 件は理由を付けて dismiss する","orchestrator の調べ（2026-11-20）: high js/regex-injection src/deliverable/trash.ts:90、high js/redos src/exec/run/change-scope.ts:234、high js/incomplete-sanitization src/exec/repo-trace.ts:135 と src/dashboard/shared.ts:16、medium js/identity-replacement src/exec/shared.ts:23","orchestrator の見立て（2026-11-20）: どれも利用者が自分のリポジトリで動かす CLI への入力に関するもので、外からの攻撃の経路は見当たらない。0.9.0 で入れた変更ではなく、既存のコードが初めて解析されたもの"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-20"
+    - field: due
+      from: ""
+      to: "2026-12-15"
+    - field: derived_from
+      from: ""
+      to: '["PJR-P318"]'
+- v: 1
+  id: reg_9255bf93f2484c58a5bbd87951181aa4
+  ts: "2026-11-19T22:06:25Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: due
+      from: "2026-12-15"
+      to: "-"
+  previous_event_id: reg_f80e573c35dc4a1ebb129f22bda94489
+- v: 1
+  id: reg_5dfdb86d867f4e9e9df40effcde3e4a7
+  ts: "2026-11-20T11:25:16Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: difficulty
+      from: "-"
+      to: medium
+    - field: due
+      from: "-"
+      to: "2026-11-30"
+  previous_event_id: reg_9255bf93f2484c58a5bbd87951181aa4
+- v: 1
+  id: reg_3882b451d2f04c49a64f082eff240f3b
+  ts: "2026-11-20T11:53:35Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_5dfdb86d867f4e9e9df40effcde3e4a7
+- v: 1
+  id: reg_b6675708a090425799864d5682931676
+  ts: "2026-11-20T12:17:04Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-integration"
+  previous_event_id: reg_3882b451d2f04c49a64f082eff240f3b
+- v: 1
+  id: reg_92f2ce9b5eec4314b8c7f42b6b2c0eb4
+  ts: "2026-11-20T12:17:56Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-integration"
+      to: "-"
+  previous_event_id: reg_b6675708a090425799864d5682931676
+- v: 1
+  id: reg_7eaf9782203f4781b6720c4b2c1a24ea
+  ts: "2026-11-20T12:24:30Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_92f2ce9b5eec4314b8c7f42b6b2c0eb4
+- v: 1
+  id: reg_1ba03664e8c64c9cbeb668d9a89f5f7e
+  ts: "2026-11-20T14:05:37Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: "sonnet-executor の実装を統合し、orchestrator が差分と PR #41 の CodeQL の結果で確かめた"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-20"
+    - field: conclusion
+      from: "-"
+      to: "CodeQL が指摘した src の 5 か所を直し、PR #41 で alert が残らないことを確かめた"
+  previous_event_id: reg_7eaf9782203f4781b6720c4b2c1a24ea

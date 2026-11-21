@@ -1,0 +1,19 @@
+parent validation: typecheck
+exit code: 2
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.7.0 typecheck
+> tsc -b --noEmit
+
+tests/packages/docs-site/chat.test.ts(1,24): error TS7016: Could not find a declaration file for module 'markdown-it'. '/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GZ42/node_modules/markdown-it/index.mjs' implicitly has an 'any' type.
+  Try `npm i --save-dev @types/markdown-it` if it exists or add a new declaration (.d.ts) file containing `declare module 'markdown-it';`
+tests/packages/docs-site/chat.test.ts(155,34): error TS7006: Parameter 'tokens' implicitly has an 'any' type.
+tests/packages/docs-site/chat.test.ts(155,42): error TS7006: Parameter 'idx' implicitly has an 'any' type.
+tests/packages/docs-site/chat.test.ts(155,47): error TS7006: Parameter 'options' implicitly has an 'any' type.
+tests/packages/docs-site/chat.test.ts(155,56): error TS7006: Parameter 'env' implicitly has an 'any' type.
+tests/packages/docs-site/chat.test.ts(155,61): error TS7006: Parameter 'self' implicitly has an 'any' type.
+
+
+--- stderr ---

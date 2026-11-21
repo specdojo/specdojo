@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-deliverable-fc919d149061-review",
+  "run_id": "JBR-grade-deliverable-fc919d149061-review",
+  "updated_at": "2026-11-07T16:44:40.030Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "opus-review-executor",
+      "attempts": 1,
+      "started_at": "2026-11-07T16:38:08.670Z",
+      "completed_at": "2026-11-07T16:39:41.444Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/job/JBR-grade-deliverable-fc919d149061/JBR-grade-deliverable-fc919d149061-review/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "sonnet-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-07T16:44:28.570Z",
+      "completed_at": "2026-11-07T16:44:40.030Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/job/JBR-grade-deliverable-fc919d149061/JBR-grade-deliverable-fc919d149061-review/result.md"
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/job/JBR-grade-deliverable-fc919d149061/JBR-grade-deliverable-fc919d149061-review/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/job/JBR-grade-deliverable-fc919d149061/JBR-grade-deliverable-fc919d149061-review/result.md"
+  }
+}

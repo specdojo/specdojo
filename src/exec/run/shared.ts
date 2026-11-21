@@ -12,6 +12,7 @@ import {
   type RateLimitDetection,
 } from "../agent-config.js";
 import { resolveProjectPaths } from "../project.js";
+import { isBlockedProvider } from "../../shared/antigravity-block.js";
 import type { AgentLimitSignal } from "../limit.js";
 import { buildInitialStateFromStrategy } from "../schedule/initial.js";
 import { buildScheduleIndex } from "../schedule/schedule.js";
@@ -36,7 +37,7 @@ import {
   type ExecRunBusyPolicy,
 } from "./lock.js";
 import { getActiveExecLocksDir, setActiveExecLocksDir } from "../slot-lock.js";
-import { readAllEventFiles, foldEventsToState } from "../events.js";
+import { claimOwnerOf, readAllEventFiles, foldEventsToState } from "../events.js";
 import {
   extractPhaseSuffix,
   normalizePhaseSetSelection,
@@ -45,6 +46,7 @@ import {
 } from "../../schedule/phase-sets.js";
 import type { AgentStageRole, Proficiency } from "../types.js";
 import type { ReadyTaskView } from "../types.js";
+import type { ScopeWait } from "./change-scope.js";
 
 type StrategyPhase = {
   id: string;
@@ -81,6 +83,7 @@ export type RunOpts = {
   agentConfig?: string;
   dryRun?: boolean;
   auto?: boolean;
+  track?: string;
   task?: string;
   deliverable?: string;
   plan?: string;
@@ -94,11 +97,16 @@ export type RunOpts = {
   input?: string | string[];
   scheduledAt?: string;
   jobTrigger?: string;
+  /** Internal sequence options; not user CLI flags. */
+  lockWaitMs?: number;
+  sequenceDeferredReason?: string;
   registerCommit?: boolean;
   postReview?: boolean;
   onFailure?: string;
   resume?: boolean;
   resumeFrom?: string;
+  /** Repeatable `--resume-note` texts added to the plan before an executor resume. */
+  resumeNote?: string[];
   forceRestart?: boolean;
   worktree?: boolean;
   inPlace?: boolean;
@@ -118,6 +126,10 @@ export type RunOpts = {
   due?: boolean;
   ifBusy?: string;
   join?: boolean;
+  unknownScope?: string;
+  /** Runner facts appended to the generated plan before its checkpoint. */
+  changeScopeWaits?: ScopeWait[];
+  onScopeIntegrated?: () => Promise<void>;
   /** Repeatable `<repo>=<branch>` product integration target overrides. */
   integrationBranch?: string[];
   /** Repeatable product work branch overrides. */
@@ -494,6 +506,12 @@ export function selectCandidates(
       // Temporarily disabled agents (e.g. to isolate one provider while testing rate limits)
       // are skipped during auto-selection.
       if (m.disabled === true) return false;
+      // Antigravity members are never launched (0.9.2); drop them so selection moves on to the
+      // next member instead of failing the whole candidate list.
+      if (isBlockedProvider(m.provider)) return false;
+      // Opt-in tier: never enter an automatic primary/fallback pool implicitly, even when
+      // every ordinary member is busy. Named selections resolve outside this function.
+      if (m.proficiency === "frontier" && proficiency !== "frontier") return false;
       const caps = m.capabilities ?? [];
       if (!required.every((c) => caps.includes(c))) return false;
       if (proficiency !== undefined && m.proficiency !== proficiency) return false;
@@ -539,7 +557,8 @@ export function collectBusyActors(schedulePath: string): Set<string> {
     const initTasks = buildInitialStateFromStrategy(schedulePath, sch);
     const snap = foldEventsToState(evts, sch, schedulePath, initTasks);
     for (const taskState of Object.values(snap.tasks ?? {})) {
-      if (taskState?.state === "doing" && taskState.last_by) busy.add(taskState.last_by);
+      const owner = taskState?.state === "doing" ? claimOwnerOf(taskState) : undefined;
+      if (owner) busy.add(owner);
     }
   } catch {
     // ignore; selection falls back to priority-only ordering
@@ -697,6 +716,7 @@ export async function withProjectExecRunLock(
   const handle = await acquireExecRunLock(resolvedPaths.executionPath, {
     actor: opts.by ?? `exec-${commandLabel}`,
     ifBusy: policy,
+    waitTimeoutMs: opts.lockWaitMs,
     shareable: sharing.shareable || sharing.join,
     ...(sharing.join ? { join: { limit: joinLimit } } : {}),
     onWait: () =>

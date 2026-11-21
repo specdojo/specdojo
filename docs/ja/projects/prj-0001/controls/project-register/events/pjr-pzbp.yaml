@@ -1,0 +1,149 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ea0000286fa94da49398516ddf183690
+  ts: "2026-11-06T15:05:12Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-VH8D・PJR-2WC2 の決定を実装する
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 定期処理の状態を Git の外へ移し、何もしなかった job の記録を残さない
+    - field: description
+      from: ""
+      to: "routine-state.json と routine-runs.jsonl を端末の状態を置く場所へ移し、job の記録なしで失敗した実行だけを Git に残す。何も変えなかった job の実行記録は commit しない（VH8D の #8）"
+    - field: input
+      from: ""
+      to: '["PJR-VH8D の決定（2026-11-07 indie）: 実行記録は run 単位のディレクトリ execution/runs/`<出どころ>`/`<項目 ID>`/`<run ID>`/ に plan.md・result.md・evidence.json・ログを置く（R1）。出どころは register・schedule・job。置き場所を決める処理はコードの 1 つのモジュールにまとめる（R2）。exec validate と CI で置き場所を検査する（R3）。ガイドの構成図をモジュールと照らすテストを置く（R4）。grade/results と jobs/ の定義は外に残す。既存は git mv で移し、パスの欄だけ書き換える","利用者の決定（PJR-VH8D #8）: 定期処理の実行状態と履歴は Git の外の端末の状態を置く場所へ移す。Git に残すのは job の実行記録を残さずに失敗した定期処理の実行だけとし、正常に何もしなかった実行（skip を含む）は残さない。precondition を持たない job が動いて何も変えなかった場合も実行記録を commit しない。実現の方法は設計で決める（2026-11-06）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-07"
+    - field: derived_from
+      from: ""
+      to: '["PJR-VH8D"]'
+- v: 1
+  id: reg_57fd7680747543d484930f2772abbf27
+  ts: "2026-11-06T16:05:03Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_ea0000286fa94da49398516ddf183690
+- v: 1
+  id: reg_8358d736a2154e8db2bed5110ba088c3
+  ts: "2026-11-06T16:27:37Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-unit"
+  previous_event_id: reg_57fd7680747543d484930f2772abbf27
+- v: 1
+  id: reg_91583a312bef4c5b88789b13bb06d67d
+  ts: "2026-11-06T16:55:57Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_8358d736a2154e8db2bed5110ba088c3
+- v: 1
+  id: reg_0bea842682b8431ca892c5e0b71d2aab
+  ts: "2026-11-06T17:12:43Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-ts"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-ts"
+  previous_event_id: reg_91583a312bef4c5b88789b13bb06d67d
+- v: 1
+  id: reg_43aff76739f1479eb125afa4da38a441
+  ts: "2026-11-06T17:14:12Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-ts"
+      to: "-"
+  previous_event_id: reg_0bea842682b8431ca892c5e0b71d2aab
+- v: 1
+  id: reg_2620ca6a5ebd40f588c8ef1cc8f4adaf
+  ts: "2026-11-06T17:24:59Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_43aff76739f1479eb125afa4da38a441
+- v: 1
+  id: reg_5f57d2ee0e8848babd50514f285119f1
+  ts: "2026-11-06T23:32:50Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が JSEY の run と、統合後の実際の routine の実行（状態の置き場所・dashboard-refresh の記録が commit されないこと）を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-07"
+    - field: conclusion
+      from: "-"
+      to: 定期処理の状態と履歴を Git の外（XDG_STATE_HOME の下）へ移し、job の記録なしの失敗だけを Git に残し、何もしなかった job の記録を commit しないようにした
+  previous_event_id: reg_2620ca6a5ebd40f588c8ef1cc8f4adaf

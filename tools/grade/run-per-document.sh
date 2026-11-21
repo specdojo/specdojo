@@ -996,13 +996,17 @@ execute_stage() {
     return 0
   fi
 
-  # The canonical result is already stored. Translation is display-only. `grade localize`
-  # validates each translated item and records rejected translation indexes as JSON. Each
-  # rejected item is retried separately once; a second rejection leaves the canonical English
-  # message as the display fallback without changing viewpoint, level, severity, or line.
+  # The canonical result is already stored. Since PJR-YYDS the executor writes Japanese canonical
+  # findings, and `grade translation-plan` lists only English ones (for example, an English
+  # canonical finding restated verbatim from an older result). When none remain, the translation
+  # stage is skipped. Otherwise translation is display-only: `grade localize` validates each
+  # translated item and records rejected translation indexes as JSON. Each rejected item is
+  # retried separately once; a second rejection leaves the canonical English message as the
+  # display fallback without changing viewpoint, level, severity, or line.
+  local translation_needed=1
   if run_specdojo "$log_file" grade translation-plan --target "$target" --project "$project" --path "$document" --out "$translation_plan"; then
     if grep -Fqx '[]' "$translation_plan"; then
-      printf '[]\n' >"$translation_output"
+      translation_needed=0
     elif run_specdojo "$log_file" agent run --project "$project" --plan "$translation_plan" --by "$translation_by" --out "$translation_output"; then
       :
     else
@@ -1013,7 +1017,9 @@ execute_stage() {
     printf 'warning: finding translation plan failed; retrying canonical messages individually\n' >>"$log_file"
     printf '[]\n' >"$translation_output"
   fi
-  if run_specdojo "$log_file" grade localize --target "$target" --project "$project" --path "$document" --from "$translation_output" --rejections-out "$translation_rejections"; then
+  if ((translation_needed == 0)); then
+    :
+  elif run_specdojo "$log_file" grade localize --target "$target" --project "$project" --path "$document" --from "$translation_output" --rejections-out "$translation_rejections"; then
     local -a rejected_translation_indices=()
     if [[ -f "$translation_rejections" ]]; then
       mapfile -t rejected_translation_indices < <(

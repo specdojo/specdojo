@@ -1,0 +1,24 @@
+PJR-C4J1 は完了しました。`specdojo build` と `specdojo build --only <区分>` で、区分ごとの生成を流せます。今回の実行で前回の作業内容を確認し、ずれていた個票の表の整形を Prettier で直しました。
+
+**実装**
+- `--only` で選べる区分は index・catalog・schedule・register・dashboard・yaml-pages と、従来からある exec です。中身は既存の個別 build に引き渡すだけです。
+- 区分ごとのオプション（`--track`・`--force`・`--root`・`--output`・`--register-scope`）は、合わない区分と組み合わせると何も実行する前にエラーにします。
+- 6 つの個別 build と旧 `build --scope` は削除せず、内部互換用としてヘルプの一覧から隠しました。引数も動作も変えていないので、hook・watch・runner・routine からの呼び出しはそのまま動きます。job 定義にはこれらを直接呼ぶ箇所はありませんでした。
+- 保護された設定（`lefthook.yml`・`package.json`・`.specdojo/` など）は変えていません。変更案もありません。
+
+**決めたこと**
+- schedule は一括の `build` に含めず、`build --only schedule --track <track>` で明示したときだけ動かします。track YAML を上書きするおそれがあるためで、上書きには従来どおり `--force` が要ります。
+- 一括 `build` の実行順は変えていません。
+
+**文書と個票**
+- コマンドリファレンス、遂行の技活用ガイド、Quick Start を `build --only` の書き方に更新し、内部互換用の入口について節を足しました。
+- 個票の作業内容は 3 行とも `done`、`_TODO_` は残っていません。対応結果に「CHANGELOG に書く事項」の文案があります。
+
+**検証**
+- 通ったもの: `npm run build`、`npm run check:src-imports`、`npm run validate:catalog`、`npm run validate:history-links`、変更ファイルへの Prettier（個票を整形し直した後）、`--only schedule --dry-run` を実際に流した確認。
+- `npm run validate:catalog` は警告を 2 件出しますが、`based_on` が指す product 側の文書（`clis-index.md`・`bds-index.md`）がないというもので、今回の変更とは関係ありません。
+- `npm run check` そのものは一括実行していません。lint・型検査・unit/integration test・schema 検証は親 runner が実行し、その結果が正式になります。`check` が通ったかどうかは親の結果と合わせて決まります。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"build --only で 6 区分と exec を選べるようにし、個別の build を内部互換用の非表示入口として残した。文書と個票を更新し、残る executor 用の検査を実行した。","handoff":["個別の 6 つの build と旧 `build --scope` は削除せず、内部互換用として非表示にした。hook・watch・runner・routine の呼び出し元は変えていない。保護された設定の変更案はない。","schedule は track YAML を上書きし得るため一括 `build` には含めず、`build --only schedule --track <track>` で明示したときだけ実行する（上書きには `--force` が必要）。","CHANGELOG の文案は個票の対応結果の「CHANGELOG に書く事項」に記載した。","完了条件の `npm run check` は親 runner の検証（lint・typecheck・test・schema）と、executor の `check:src-imports`・`validate:catalog`・`validate:history-links` を合わせて判定する。"],"validations":[{"command":"npm run build","status":"passed","summary":"tsc build succeeded"},{"command":"npm run check:src-imports","status":"passed","summary":"src runtime imports are declared in dependencies or peerDependencies"},{"command":"npm run validate:catalog","status":"passed","summary":"catalog valid; warnings about missing product based_on docs are unrelated to this change"},{"command":"npm run validate:history-links","status":"passed","summary":"ticket and run plan/result valid"},{"command":"npx prettier --check <changed files>","status":"passed","summary":"ticket reformatted with prettier --write; all changed src/tests/docs files formatted"},{"command":"node dist/specdojo.js build --only schedule --dry-run --project prj-0001 --track launch","status":"passed","summary":"prints schedule build invocation without writing"}]}
+</specdojo_executor_evidence>

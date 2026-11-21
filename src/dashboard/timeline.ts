@@ -1,9 +1,12 @@
+import { registerDeprecatedWhereAlias } from "../shared/where-alias.js";
+import { warnDeprecated } from "../shared/deprecation.js";
 import { type Command } from "commander";
 import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import {
   getProjectCatalogPath,
   getProjectTimelinePath,
+  getProjectSchedulePath,
   getProjectRegisterPath,
   loadConfig,
   loadEnv,
@@ -19,6 +22,9 @@ import {
 function resolveTimelinePaths(opts: { project?: string }): {
   timelinePath: string;
   catalogPath: string | null;
+  schedulePath: string;
+  repoRoot: string;
+  projectId: string;
   registerPath?: string;
 } {
   loadEnv();
@@ -47,6 +53,9 @@ function resolveTimelinePaths(opts: { project?: string }): {
 
   return {
     timelinePath: resolve(baseDir, getProjectTimelinePath(project)),
+    schedulePath: resolve(baseDir, getProjectSchedulePath(project)),
+    repoRoot: baseDir,
+    projectId,
     catalogPath: catalogPath ? resolve(baseDir, catalogPath) : null,
     ...(registerPath ? { registerPath: resolve(baseDir, registerPath) } : {}),
   };
@@ -88,35 +97,41 @@ function buildTimelineJson(result: TimelineBuildResult): string {
   );
 }
 
+export function printTimelinePaths(opts: { project?: string }): void {
+  try {
+    const { timelinePath, catalogPath } = resolveTimelinePaths(opts);
+    process.stdout.write(`timeline-path: ${timelinePath}\n`);
+    process.stdout.write(`catalog-path: ${catalogPath ?? "(not configured)"}\n`);
+
+    const indexFile = join(timelinePath, "tml-index.yaml");
+    process.stdout.write(
+      `tml-index: ${indexFile}${existsSync(indexFile) ? "" : " (does not exist)"}\n`,
+    );
+  } catch (error) {
+    printCommandError(error);
+  }
+}
+
 export function registerTimelineCommands(program: Command): void {
   const tml = program.command("timeline").description("Timeline build commands");
 
-  const wcmd = tml.command("where").description("Print resolved timeline paths");
-  addProjectOption(wcmd);
-  wcmd.action((opts) => {
-    try {
-      const { timelinePath, catalogPath } = resolveTimelinePaths(opts);
-      process.stdout.write(`timeline-path: ${timelinePath}\n`);
-      process.stdout.write(`catalog-path: ${catalogPath ?? "(not configured)"}\n`);
-
-      const indexFile = join(timelinePath, "tml-index.yaml");
-      process.stdout.write(
-        `tml-index: ${indexFile}${existsSync(indexFile) ? "" : " (does not exist)"}\n`,
-      );
-    } catch (error) {
-      printCommandError(error);
-    }
-  });
+  registerDeprecatedWhereAlias(tml, printTimelinePaths);
 
   const bcmd = tml
     .command("build")
-    .description("Derive track start order and catalog scaffold targets from tml-index.yaml");
+    .description(
+      "Deprecated: use dashboard build; move domains and dependencies to register epics (will be removed in 0.10.0)",
+    );
   addProjectOption(bcmd);
   bcmd.option("--dry-run", "Print generated content to stdout without writing", false);
   bcmd.action((opts) => {
     try {
-      const { timelinePath, catalogPath, registerPath } = resolveTimelinePaths(opts);
-      const result = buildTimeline({ timelinePath, catalogPath, registerPath });
+      warnDeprecated(
+        "timeline build",
+        "Use dashboard build; move domains and dependencies to register epics. This command will be removed in 0.10.0.",
+      );
+      const { timelinePath, ...paths } = resolveTimelinePaths(opts);
+      const result = buildTimeline({ timelinePath, ...paths });
 
       for (const warning of result.warnings) process.stdout.write(`WARN: ${warning}\n`);
       for (const error of result.errors) process.stdout.write(`ERROR: ${error}\n`);

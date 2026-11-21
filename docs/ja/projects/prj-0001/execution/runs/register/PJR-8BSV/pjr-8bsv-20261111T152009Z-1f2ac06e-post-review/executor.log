@@ -1,0 +1,40 @@
+**判定は `complete-with-findings` です。** 完了条件 1〜7 はすべて差分で満たされ、対象外の変更も混じっていません。ただし、人に確かめてほしい点が 1 つあります。いまの完了条件は人が書いたものではなく、edit executor が自分で書いたものです。
+
+**最初に確かめてほしい点**
+統合前の commit `f8e9c7c` では、個票の「完了条件」は `_TODO_: 完了と判断できる具体的な条件を記載する。` だけでした。edit executor（flash-high-executor）が条件 1〜7 を自分で考え、個票の完了条件の節に直接書きました。edit plan は「完了条件が無い場合は仮説を立てて記録する」ことを認めていますが、記録先は個票の対応結果と `handoff` です。夜間 autopilot の制約は「人が記載済みの完了条件だけを承認した」としています。それでも executor は、自分で書いた条件であることを `handoff` に書いていません。条件 1〜7 は個票の概要と入力に沿っていますが、人が承認したものかどうかは close の前に確認が必要です。
+
+**完了条件の照合**
+
+| No | 判定 | 根拠 |
+| --- | --- | --- |
+| 1 | 充足 | `ifx-cmd-rulebook.md` に、`type: template`、`status` の `draft`/`ready`/`deprecated`、`kind` と `value_source` の値の説明が加わった。これらの値は過去の形式との互換のための定義であり、引数表は持たない（PJR-4N3R）と書かれている。「ファイル」の指針には `outputs: []` の例外と責務の境界が加わった。 |
+| 2 | 充足（一部未確認） | `files.inputs` の説明に、作成主体（`[[specdojo:clis-sample]]`）、日付 `YYYYMMDD` と連番 `NNNN` の解決元、内容仕様 `kinuya-receipt-format-schema` が書かれ、`outputs: []` と揃っている。 |
+| 3 | 充足 | `bes-sample.md` に、`bes-index` の照合担当（BA）、確定時期（BEL 作成時・引き渡し前）、未解決のときは PO が承認して記録することが加わった。`br-sales-amount`、`bps-sales-order-flow`、`bdd-sales-record`、`payment_status: unconfirmed` も明記された。 |
+| 4 | 充足 | `sf-sample.md` に、`sf-index`（仮置き）、`SF-POS-01`「店頭商品販売」、照合担当（BA）と時期が加わり、`Q-01` の次アクションにも反映された。 |
+| 5 | 充足 | `cdt-sample.md` の「区分を変更する場合」に、棚札表示（`★定番` / `季節限定` / `お試し`）の貼り替えを店番担当が行うと書かれた。 |
+| 6 | 充足 | `ccd-sample.md` の Frontmatter に `based_on: [specdojo:bdd-sample]` が加わった。参照先の id は実在する。 |
+| 7 | 充足 | `CHANGELOG.md` は変更されていない。記載する文案は個票の「CHANGELOG に書く事項」と `handoff` にある。 |
+
+**差分の範囲**
+`git diff --name-status` で見た 13 ファイルは、成果物 6 件、個票、イベントログ、runner が置いた run ファイル（evidence、executor.log、pipeline-state、plan、result）だけでした。対象外の変更はありません。
+
+**検証結果**
+この review では grade を使わず、edit の検証結果を確かめました。
+- executor と runner の検証（`validate:schema`、`lint:md`、`lint:fm`、`typecheck`、`test:unit`、`test:integration` ほか）はすべて passed です。
+- 検査ツールは `status: ready` の rulebook しか見ないため、draft の `ifx-cmd-rulebook.md` は検査対象外です。executor の「enum 網羅検査がすべて通過することを確認済み」は、この rulebook については根拠になっていません。
+- そこで検査関数 `lintRulebookSchemaEnums` を直接呼んで確かめました。統合後は欠けている値が 0 件、統合前は 11 件（`template`、`ready`、`deprecated`、`argument`、`option`、`positional`、`literal`、`generated`、`config`、`secret`、`user_input`）でした。
+- 変更した Markdown 5 件は markdownlint で 0 件でした。
+- wikilink の参照先（`clis-sample`、`br-sample`、`bdd-sample`）はすべて実在します。
+
+**そのほかの軽い指摘**
+- 個票の概要は「bdd の残りの軽い指摘もここで扱う」としていますが、bdd への変更はありません。`specdojo.bdd-sample.yaml` の grade 結果は minor が 0 件なので、実際に残った指摘は無いと判断しました。
+- edit result の申し送りに同じ 2 項目が二重に載っています。「変更ファイル」には個票とイベントログがありません。どちらも見た目だけの問題です。
+- `sf-sample.md` の `Q-01` の論点の列で、`sf-index` がインラインコードで囲まれていません。
+
+**確認できなかった範囲**
+- `yaml-pages build` で表示用ページが同期されたかどうか。生成されたページは git 管理外のため、差分では確かめられません。
+- 統合後の commit での `npm run docs:build`。実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"判定は `complete-with-findings`。完了条件 1〜7 はすべて差分で満たされ、対象外の変更は無い。最初に確かめてほしい点: 統合前の個票の完了条件は `_TODO_` だけで、edit executor が条件 1〜7 を自分で書き、個票の完了条件の節に直接入れた。edit plan は仮説の記録先を対応結果と `handoff` としており、夜間 autopilot は人が書いた完了条件だけを承認していたが、executor はこのことを `handoff` に書いていない。close の前に人がこの条件を承認する必要がある。検証: executor と runner の検証はすべて passed。ただし `validate:schema:rulebook-enums` は `status: ready` の rulebook しか見ないため、draft の `ifx-cmd-rulebook.md` は対象外で、executor の通過済みという報告はこの rulebook の根拠にならない。そこで `lintRulebookSchemaEnums` を直接呼び、統合後は欠けた enum 値 0 件、統合前は 11 件だったことを確かめた。変更した Markdown 5 件は markdownlint で 0 件、wikilink の参照先（`clis-sample`、`br-sample`、`bdd-sample`）はすべて実在する。軽い指摘: 概要にある bdd への変更は無い（`bdd-sample` の grade は minor 0 件で、残った指摘は無いと判断）、edit result の申し送りに同じ項目が二重に載っている、「変更ファイル」に個票とイベントログが無い、`sf-sample` の `Q-01` で `sf-index` がインラインコードで囲まれていない。確認できなかった範囲: `yaml-pages build` で生成されるページの同期（生成物は git 管理外）、統合後の commit での `npm run docs:build`（実行していない）。","handoff":["個票 PJR-8BSV の完了条件 1〜7 は、人ではなく edit executor が書いたもの（統合前は `_TODO_` だけだった）。close の前に、人がこの完了条件を承認するか直すかを決める。","`validate:schema:rulebook-enums` は draft の rulebook を検査しない。`ifx-cmd-rulebook.md` を `ready` に上げるときは、同じ検査を流し直して欠けた enum 値が 0 件であることを確かめる（この review で検査関数を直接呼んだ結果は 0 件）。"],"validations":[{"command":"git diff --stat f8e9c7c40e652939045e9d0965284ed631d207ce..db91dd6af356bf64e2444587a45026fc2cbfe3fe","status":"passed","summary":"13 ファイル。内訳は成果物 6 件、個票、イベントログ、runner の run ファイル"},{"command":"git diff --name-status f8e9c7c40e652939045e9d0965284ed631d207ce..db91dd6af356bf64e2444587a45026fc2cbfe3fe","status":"passed","summary":"対象外の変更は無い"},{"command":"npm run -s validate:schema:rulebook-enums","status":"passed","summary":"exit 0。ただし draft の ifx-cmd-rulebook は検査対象外"},{"command":"npx tsx -e '<lintRulebookSchemaEnums を ifx-cmd-rulebook.md と ifx-cmd.schema.yaml に適用>'","status":"passed","summary":"統合後は欠けた enum 値 0 件、統合前は 11 件"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/bes-sample.md docs/ja/specdojo/samples/sf-sample.md docs/ja/specdojo/samples/cdt-sample.md docs/ja/specdojo/samples/ccd-sample.md docs/ja/specdojo/rulebooks/ifx-cmd-rulebook.md","status":"passed","summary":"5 ファイルで 0 件"}]}
+</specdojo_executor_evidence>

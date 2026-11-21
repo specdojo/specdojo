@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-FGSE-post-review",
+  "run_id": "pjr-fgse-20261111T154705Z-257714c7-post-review",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-review-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-11T16:03:10.611Z",
+    "completed_at": "2026-11-11T16:04:50.421Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-8e7z.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-8e7z-kata-revision-deprecation-rules.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-night-approved-register-a8a4379f38e2.json",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [],
+  "diff_summary": {
+    "files_changed": 3,
+    "summary": ".../controls/project-register/events/pjr-8e7z.yaml      | 17 +++++++++++++++--\n .../pjr-8e7z-kata-revision-deprecation-rules.md         |  2 +-\n 2 files changed, 16 insertions(+), 3 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "git diff --stat 441d79fda0eec6bfad919b438d4e2d4ac209e8ef..7ceaaa38c9fd37794d3e7524f604c8bc2d683f7d",
+      "status": "passed",
+      "summary": "変更は7ファイル（412行追加、7行削除）で、すべて PJR-FGSE の個票、イベント、run ディレクトリの成果物"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --name-status 441d79fda0eec6bfad919b438d4e2d4ac209e8ef..7ceaaa38c9fd37794d3e7524f604c8bc2d683f7d",
+      "status": "passed",
+      "summary": "M は2件（個票とイベント）、A は5件（run の成果物）。対象外の変更はない"
+    },
+    {
+      "source": "executor",
+      "command": "git diff 441d79fda0eec6bfad919b438d4e2d4ac209e8ef..7ceaaa38c9fd37794d3e7524f604c8bc2d683f7d -- docs/ja/projects/prj-0001/controls/project-register/events/pjr-fgse.yaml",
+      "status": "passed",
+      "summary": "追加は start（open→in-progress）と review（in-progress→review）の2イベントだけ"
+    },
+    {
+      "source": "executor",
+      "command": "git show --stat 9a41e1c84",
+      "status": "passed",
+      "summary": "kata-040 の commit で ifx-cmd-rulebook.md を変更しており、個票の記述と一致する"
+    }
+  ],
+  "final_message": "verdict: complete-with-findings。PJR-FGSE の完了条件5件をすべて満たすことを確認した。根拠: ifx-cmd-rulebook の 6.2「コマンドと正本参照」にシェル起動の例外と禁止事項の行がある（kata-040 の commit 9a41e1c84）。recipe は 4.2 と 6章、template は 29行目コメント、schema は `BooleanOrPlaceholder`。代表仕様 docs/ja/product/020-external-interface-specs/ifx-cmd-ai-provider-cli.yaml は 34行目で shell: true とし、理由コメントと reference がある。実装は src/exec/run/agent.ts 491行目が shell: true で、exec-defaults の copilot/agy は -p \"$(cat)\" を使う。結論は個票の対応結果 5.1 と `handoff` に、CHANGELOG「なし」は個票 5.2 と `handoff` に記録されている。差分 441d79fd..7ceaaa38 は個票、events/pjr-fgse.yaml（start と review の遷移のみ）、run ディレクトリの成果物の計7件だけで、対象外の変更はない。edit evidence は completion_status complete で、executor と runner の検証（lint:ts は error 0、lint:fm、lint:md、lint:mermaid、lint:d2、test:integration、validate:schema、typecheck、test:unit）はすべて passed、block と未解消の申し送りはない。この review では grade を使わず、edit の検証結果を確認した。指摘（軽微）: F1 個票は nickname を「英数字に限定」と書くが、実際の `NICKNAME_PATTERN` は /^[a-z0-9][a-z0-9_-]{0,62}$/ で `_` と `-` も許す。F2「3層の多層防御」の3層が何かは個票にも exec-config-guide にも明記がなく確認できない。F3 edit result の申し送りで「完了条件の仮説と達成状況」が重複している（30行目と33行目）。確認できなかった範囲: 多層防御の各層の実装箇所（`NICKNAME_PATTERN` 以外）、copilot/agy に stdin からプロンプトを読むオプションがないかの外部資料での裏取り、統合後の lint/test の再実行（runner の evidence に依拠）。",
+  "completion_status": "complete",
+  "handoff": [
+    "個票の nickname の記述（英数字に限定）を、実際のパターン（英小文字・数字・_・-）に合わせて直すか、次に個票を触るときに検討する。",
+    "「3層の多層防御」の内訳を個票または exec-config-guide で明示するかを検討する。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-FGSE/pjr-fgse-20261111T154705Z-257714c7-post-review/executor.log",
+      "bytes": 7491,
+      "truncated": false
+    }
+  ]
+}

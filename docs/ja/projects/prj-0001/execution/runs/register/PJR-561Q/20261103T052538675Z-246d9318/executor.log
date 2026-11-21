@@ -1,0 +1,14 @@
+`exec run --auto --track <track>` を実装しました。失敗後や loop の再選択でも指定 track に限定し、不明な track は claim 前に停止します。
+
+変更ファイル：
+
+- `src/exec/run/` の `register-command.ts`・`schedule-mode.ts`・`shared.ts`
+- `tests/src/exec/run/track-filter.test.ts`
+- command-reference、exec／schedule 運用ガイド
+- CHANGELOG、PJR-561Q 個票
+
+整形・カタログ検証・登録簿ビュー生成は成功しました。型検査・lint・単体／統合テストは親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"--auto の単一 track 絞り込み、事前検証、回帰テスト、ガイド・CHANGELOG・個票を更新した。result は後続 reporter に委ねる。","handoff":["親 runner は指定された型検査・lint・単体／統合テストを実行し、reporter は変更内容と検証結果を result に反映する。追加テストの成否は親の test-unit で確定する。","個票の対応結果に設計判断と検証結果を記録済み。保護設定の変更提案・未決事項はない。","pm-orchestrator-playbook 5.1 に従い、統合後の close 前にオーケストレーターが PJR-JSEY に本件を含めて実 agent による動作確認を行う。"],"validations":[{"command":"npx prettier --check src/exec/run/shared.ts src/exec/run/register-command.ts src/exec/run/schedule-mode.ts tests/src/exec/run/track-filter.test.ts docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/specdojo/guides/schedule-operation-guide.md CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-561q-exec-auto-track-filter.md","status":"passed","summary":"変更した全 9 ファイルの整形検査に成功。"},{"command":"node --import tsx tools/catalog-validate-if-configured.mjs","status":"passed","summary":"終了コード 0。未作成文書の `based_on` 検証に関する警告あり。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿の派生ビュー生成に成功。"},{"command":"git diff --check","status":"passed","summary":"差分の空白検査に成功。"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"個別 YAML schema 検査は非適用。","reason":"本 executor による YAML／YML の変更がない。"},{"command":"specdojo exec run --project prj-0001 --register PJR-JSEY --worktree --executor-by claude-executor","status":"requires_human","summary":"統合後、本件を PJR-JSEY の確認対象に追加して必要な状態遷移を行い、実 agent CLI で確認する。利用枠を消費するため sandbox 外で実施する。"}]}
+</specdojo_executor_evidence>

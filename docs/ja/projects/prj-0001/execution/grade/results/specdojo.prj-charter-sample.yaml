@@ -5,23 +5,23 @@ path: docs/ja/specdojo/samples/prj-charter-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 86
-graded_at: "2026-10-17T20:14:15.993Z"
-graded_by: agy-expert-executor
-content_hash: adc2b858213c7deecc09400107c307d7621ddcd63467224c7fc0fd3fc9cb1797
+score: 85
+graded_at: "2026-11-17T22:48:04.818Z"
+graded_by: sol-review-executor
+content_hash: 5ebcca4a7ff1f00db985962209670c01492b7692f8cbd0d804ac5ba15ba1435f
 categories:
   purpose:
-    score: 100
+    score: 50
   operations:
-    score: 100
+    score: 88
   planning:
-    score: 100
+    score: 83
   business:
     score: 100
   architecture:
     score: 100
   usability:
-    score: 75
+    score: 100
   implementation:
     score: 100
   quality:
@@ -30,23 +30,23 @@ categories:
     score: 75
 viewpoints:
   vp-po-purpose-alignment:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-po-decision-readiness:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-po-publication-accountability:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-dependency-risk:
     level: 4
     score: 100
   vp-pm-control-reporting:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-business-value:
     level: 4
     score: 100
@@ -84,14 +84,14 @@ viewpoints:
     level: 2
     score: 50
   vp-ux-readability:
-    level: 3
-    score: 75
-  vp-ux-language-consistency:
-    level: 2
-    score: 50
-  vp-ops-release-readiness:
     level: 4
     score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 2
+    score: 50
   vp-ops-operability:
     level: 4
     score: 100
@@ -103,104 +103,88 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 2
-  minor: 9
+  major: 4
+  minor: 5
   note: 0
 findings:
   - id: F001
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 88
-    anchor: "| 目的整合 | 成果物体系、公開対象、優先順位がプロジェクトの目的と矛盾しない   | `pm-plan` / 決定記録          |"
+    severity: major
+    rule: vp-po-purpose-alignment
+    line: 78
+    anchor: >-
+      | 品質     | 初期公開する rulebook、recipe、sample、template | 品質管理計画の初期公開条件をすべて満たす              |
+      [[specdojo:pm-quality-management-plan-sample\|品質管理計画]] |
     message: >-
-      GO / Not GO表の「矛盾しない」「責任範囲が確認できる」「整っている」には判定項目や必須状態がなくpass / failが一意にならないため、照合対象、必須承認、必要なstatusやgrade
-      verdictなどの合格条件を明示してください。
+      販売管理システムの開始判断で「初期公開する
+      rulebook、recipe、sample、template」を品質確認対象としており、概要・スコープの対象業務との対応がありません。対象を販売管理システムの実装、操作手順、受入結果、公開物へ改め、目的に対応する品質判断にしてください。
     message_ja: >-
-      GO / Not GO表の「矛盾しない」「責任範囲が確認できる」「整っている」には判定項目や必須状態がなくpass / failが一意にならないため、照合対象、必須承認、必要なstatusやgrade
-      verdictなどの合格条件を明示してください。
+      販売管理システムの開始判断で「初期公開する
+      rulebook、recipe、sample、template」を品質確認対象としており、概要・スコープの対象業務との対応がありません。対象を販売管理システムの実装、操作手順、受入結果、公開物へ改め、目的に対応する品質判断にしてください。
   - id: F002
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 106
-    anchor: "| 初回承認日         | _UNDECIDED_ | 店主代表（`PO`） | 憲章初版の承認時に記録する                                      |"
-    message: 未決事項4件の期限がすべて`_UNDECIDED_`で解消期限を判定できないため、日付が未確定でも「詳細計画承認前」「初期運用開始前」など確認可能な期限条件を記載してください。
-    message_ja: 未決事項4件の期限がすべて`_UNDECIDED_`で解消期限を判定できないため、日付が未確定でも「詳細計画承認前」「初期運用開始前」など確認可能な期限条件を記載してください。
+    severity: major
+    rule: vp-po-decision-readiness
+    line: 78
+    anchor: >-
+      | 品質     | 初期公開する rulebook、recipe、sample、template | 品質管理計画の初期公開条件をすべて満たす              |
+      [[specdojo:pm-quality-management-plan-sample\|品質管理計画]] |
+    message: >-
+      GO / Not
+      GOの品質判断材料がKataの4文書種別になっているため、販売管理システムの受入結果を確認する判断になっていません。参照先の品質管理計画にある技術・公開ゲートと初期受入ゲートのうち、今回の判断で必要な材料・条件を明示してください。
+    message_ja: >-
+      GO / Not
+      GOの品質判断材料がKataの4文書種別になっているため、販売管理システムの受入結果を確認する判断になっていません。参照先の品質管理計画にある技術・公開ゲートと初期受入ゲートのうち、今回の判断で必要な材料・条件を明示してください。
   - id: F003
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 32
-    anchor: "## 3. ハイレベルスコープ"
-    message: rulebookがハイレベルスコープに要求し、メンバー定義にも複数のagentが存在するAI Agentの支援範囲が記載されていないため、許可する支援作業と人間に残す判断責任を追加してください。
-    message_ja: rulebookがハイレベルスコープに要求し、メンバー定義にも複数のagentが存在するAI Agentの支援範囲が記載されていないため、許可する支援作業と人間に残す判断責任を追加してください。
+    rule: vp-pm-plan-feasibility
+    line: 88
+    anchor: "| 論点               | 影響                           | 当面の扱い                                           |"
+    message: 未決事項の表に担当がなく、費用上限案の整理、目標日の調整、オフライン方針案の作成を誰の作業として計画するかが不明です。各項目に担当Role codeを付け、店主代表の決裁と案の作成・調整を区別してください。
+    message_ja: 未決事項の表に担当がなく、費用上限案の整理、目標日の調整、オフライン方針案の作成を誰の作業として計画するかが不明です。各項目に担当Role codeを付け、店主代表の決裁と案の作成・調整を区別してください。
   - id: F004
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 64
-    anchor: 次の事項は店主代表（`PO`）の承認を必要とする。
-    message: rulebookがPO承認事項として必須化しているライセンス方針の確定が箇条書きから欠落しているため、承認対象へ追加してください。
-    message_ja: rulebookがPO承認事項として必須化しているライセンス方針の確定が箇条書きから欠落しているため、承認対象へ追加してください。
+    rule: vp-pm-control-reporting
+    line: 88
+    anchor: "| 論点               | 影響                           | 当面の扱い                                           |"
+    message: 未決事項に引き継ぎ先の管理記録がなく、本文の未決事項と後続の課題・決定記録を対応づけられません。費用上限は管理計画のU-01、目標日はU-03など対応先を示し、オフライン方針も決定を追跡する記録へ接続してください。
+    message_ja: 未決事項に引き継ぎ先の管理記録がなく、本文の未決事項と後続の課題・決定記録を対応づけられません。費用上限は管理計画のU-01、目標日はU-03など対応先を示し、オフライン方針も決定を追跡する記録へ接続してください。
   - id: F005
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 80
-    anchor: "| 制約 | 顧客情報は必要最小限にし、公開サンプルには個人情報を含めない                           | `prj-assumptions-constraints-dependencies` |"
-    message: rulebookが公開文書の制約として要求する秘密情報および非公開組織情報の禁止がなく、個人情報だけに限定されているため、公開対象外となる情報区分を補完してください。
-    message_ja: rulebookが公開文書の制約として要求する秘密情報および非公開組織情報の禁止がなく、個人情報だけに限定されているため、公開対象外となる情報区分を補完してください。
+    rule: vp-qe-verifiability
+    line: 78
+    anchor: >-
+      | 品質     | 初期公開する rulebook、recipe、sample、template | 品質管理計画の初期公開条件をすべて満たす              |
+      [[specdojo:pm-quality-management-plan-sample\|品質管理計画]] |
+    message: 「品質管理計画の初期公開条件」は参照先で定義されたゲート名ではなく、技術・公開、初期受入、短期利用のどれを合否判定に使うかが一意になりません。適用するゲート名または条件IDを指定し、短期利用の将来判定を開始条件へ混ぜないことを明示してください。
+    message_ja: 「品質管理計画の初期公開条件」は参照先で定義されたゲート名ではなく、技術・公開、初期受入、短期利用のどれを合否判定に使うかが一意になりません。適用するゲート名または条件IDを指定し、短期利用の将来判定を開始条件へ混ぜないことを明示してください。
   - id: F006
     severity: minor
-    rule: vp-qe-kata-conformance
-    line: 13
-    anchor: "| 直接根拠        | [プロジェクト概要サンプル](prj-overview-sample.md)、[ステークホルダー登録簿サンプル](prj-stakeholder-register-sample.md) |"
-    message: >-
-      参照先が作成済みであるにもかかわらず、直接根拠は相対Markdownリンク、成功基準・スコープ・成果物カタログ・管理文書などはバッククォートIDのままであるため、rulebook
-      6.1に従い実在するdocument_idへのwikilinkへ更新してください。
-    message_ja: >-
-      参照先が作成済みであるにもかかわらず、直接根拠は相対Markdownリンク、成功基準・スコープ・成果物カタログ・管理文書などはバッククォートIDのままであるため、rulebook
-      6.1に従い実在するdocument_idへのwikilinkへ更新してください。
+    rule: vp-qe-omissions-consistency
+    line: 88
+    anchor: "| 論点               | 影響                           | 当面の扱い                                           |"
+    message: recipe 4.6とtemplateの未決事項表が求める「担当」が完成例から欠落しています。現在の影響・当面の扱いを残し、各未決事項を解消する担当Role codeを追加してください。
+    message_ja: recipe 4.6とtemplateの未決事項表が求める「担当」が完成例から欠落しています。現在の影響・当面の扱いを残し、各未決事項を解消する担当Role codeを追加してください。
   - id: F007
-    severity: minor
+    severity: major
     rule: vp-qe-kata-conformance
-    line: 32
-    anchor: "## 3. ハイレベルスコープ"
-    message: rulebook 6.4が求めるAI Agentの支援範囲がハイレベルスコープの完成例へ反映されていないため、適用する支援範囲を具体値で示してください。
-    message_ja: rulebook 6.4が求めるAI Agentの支援範囲がハイレベルスコープの完成例へ反映されていないため、適用する支援範囲を具体値で示してください。
+    line: 78
+    anchor: >-
+      | 品質     | 初期公開する rulebook、recipe、sample、template | 品質管理計画の初期公開条件をすべて満たす              |
+      [[specdojo:pm-quality-management-plan-sample\|品質管理計画]] |
+    message: 品質確認対象の「rulebook、recipe、sample、template」は、販売管理システムを題材とする共通サンプル文脈および参照先の品質管理計画と一致しません。Sample記述標準の共通文脈に従い、店頭利用するシステムと関連成果物を対象にした完成例へ修正してください。
+    message_ja: 品質確認対象の「rulebook、recipe、sample、template」は、販売管理システムを題材とする共通サンプル文脈および参照先の品質管理計画と一致しません。Sample記述標準の共通文脈に従い、店頭利用するシステムと関連成果物を対象にした完成例へ修正してください。
   - id: F008
-    severity: major
+    severity: minor
     rule: vp-qe-kata-conformance
-    line: 48
-    anchor: "| `STH-OWNER`             | 店主代表       | スポンサー / 意思決定者 / 利用者 | `PO`           | 目的、優先順位、予算枠、リリース可否を判断する   |"
-    message: >-
-      初期ステークホルダー表が直接根拠の登録簿と一致せず、`STH-SHOP-OWNER`を`STH-OWNER`、`STH-DEVELOPER`（`DEV`）を`STH-DEVELOPMENT`（`PM`）へ変更し,
-      家族利用者へ未登録の`BA`を割り当て、未登録の常連客・仕入れ先を追加する一方で技術メンターを欠落させているため、登録簿のID・Role code・掲載対象に合わせてください。
-    message_ja: >-
-      初期ステークホルダー表が直接根拠の登録簿と一致せず、`STH-SHOP-OWNER`を`STH-OWNER`、`STH-DEVELOPER`（`DEV`）を`STH-DEVELOPMENT`（`PM`）へ変更し,
-      家族利用者へ未登録の`BA`を割り当て、未登録の常連客・仕入れ先を追加する一方で技術メンターを欠落させているため、登録簿のID・Role code・掲載対象に合わせてください。
+    line: 88
+    anchor: "| 論点               | 影響                           | 当面の扱い                                           |"
+    message: recipeとtemplateでは未決事項に担当を記載する構成ですが、sampleには担当列も項目別の担当記述もありません。影響と期限条件に加えて担当Role codeを具体値で示し、作成手順と完成例を整合させてください。
+    message_ja: recipeとtemplateでは未決事項に担当を記載する構成ですが、sampleには担当列も項目別の担当記述もありません。影響と期限条件に加えて担当Role codeを具体値で示し、作成手順と完成例を整合させてください。
   - id: F009
-    severity: minor
-    rule: vp-ux-readability
-    line: 30
-    anchor: 成功判定の観点と受入条件は `prj-success-criteria-and-acceptance-criteria` を正とする。
-    message: 成功基準、スコープ、成果物カタログ、前提・制約、管理計画、組織定義、RACI、品質計画が作成済みでもクリック可能な参照になっていないため、表示名を伴うwikilinkへ置き換えて次に読む正本へ直接到達できるようにしてください。
-    message_ja: 成功基準、スコープ、成果物カタログ、前提・制約、管理計画、組織定義、RACI、品質計画が作成済みでもクリック可能な参照になっていないため、表示名を伴うwikilinkへ置き換えて次に読む正本へ直接到達できるようにしてください。
-  - id: F010
     severity: major
-    rule: vp-ux-language-consistency
-    line: 48
-    anchor: "| `STH-OWNER`             | 店主代表       | スポンサー / 意思決定者 / 利用者 | `PO`           | 目的、優先順位、予算枠、リリース可否を判断する   |"
-    message: >-
-      店主代表、家族利用者、開発担当のID・名称・Role
-      codeがステークホルダー登録簿およびメンバー定義と一致せず、特に開発担当の`DEV`と`PM`、家族利用者とagentの`BA`を区別できないため、正本に合わせて識別子とRole codeを統一してください。
-    message_ja: >-
-      店主代表、家族利用者、開発担当のID・名称・Role
-      codeがステークホルダー登録簿およびメンバー定義と一致せず、特に開発担当の`DEV`と`PM`、家族利用者とagentの`BA`を区別できないため、正本に合わせて識別子とRole codeを統一してください。
-  - id: F011
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 100
-    anchor: 本書はドラフトであり、承認日と証跡リンクが確定するまでは正式な立ち上げ認可文書として扱わない。
-    message: >-
-      Frontmatterの`status:
-      ready`に対して本文が無限定に「本書はドラフト」と記して文書状態が矛盾して見えるため、本文を「立ち上げ認可は未承認」などに改め、成果物の成熟度とプロジェクト認可状態を区別してください。
-    message_ja: >-
-      Frontmatterの`status:
-      ready`に対して本文が無限定に「本書はドラフト」と記して文書状態が矛盾して見えるため、本文を「立ち上げ認可は未承認」などに改め、成果物の成熟度とプロジェクト認可状態を区別してください。
+    rule: vp-ops-release-readiness
+    line: 78
+    anchor: >-
+      | 品質     | 初期公開する rulebook、recipe、sample、template | 品質管理計画の初期公開条件をすべて満たす              |
+      [[specdojo:pm-quality-management-plan-sample\|品質管理計画]] |
+    message: 公開・開始前の品質確認対象がKataの4文書種別に限定され、販売管理システムの公開候補版・操作手順・受入結果が明示されていません。品質管理計画の対象版と技術・公開／初期受入の証跡へ結び、必要な判定がそろった候補だけをPOが承認できる条件にしてください。
+    message_ja: 公開・開始前の品質確認対象がKataの4文書種別に限定され、販売管理システムの公開候補版・操作手順・受入結果が明示されていません。品質管理計画の対象版と技術・公開／初期受入の証跡へ結び、必要な判定がそろった候補だけをPOが承認できる条件にしてください。

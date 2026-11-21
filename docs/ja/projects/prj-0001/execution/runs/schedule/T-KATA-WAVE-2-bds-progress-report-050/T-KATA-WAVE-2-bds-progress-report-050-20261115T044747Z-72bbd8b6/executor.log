@@ -1,0 +1,22 @@
+`docs/ja/specdojo/samples/bds-sample.md` を直しました。変更はこのファイルだけで、成果物本体の `bds-progress-report` には手を付けていません。
+
+plan に展開された finding F001〜F024 は、`-005` で書き直す前の版（「最小サンプル」、`type: project`、handbook への言及、「最小記述例」の章）を指していました。今の sample はすでに rulebook の 9 章構成で、`type: ui` になっています。そのため finding の多くはもう当てはまりません。今回は、改訂後の rulebook と、同梱の `specdojo:bes-sample`・`specdojo:cdsd-sample` に照らして足りない点だけを直しました。
+
+**主な変更**
+- **根拠の接続:** `based_on` に `specdojo:bes-sample` と `specdojo:cdsd-sample` をつなぎました。「商品マスタ」は `cdsd-sample` の呼び方に合わせて「商品台帳」に統一しています。
+- **読み手と利用目的:** 作成は DEV、確認と承認は PO、仕様の確認は BA と QE と、Role code で書き分けました。存在しない `bds-tab-balance-list`・`bds-daily-sales-summary` への言及は消し、つけ台帳と日次締め記録を参照先にしました。
+- **出力形式と提供方法:** 報告の章立てを決める別の rulebook はないので、本書の「表示項目」を正とすると書きました。
+- **対象範囲と元にする記録:** 対象外のもの（EC、発注、廃棄・値引き）と、手書きの店番ノートの扱いを書きました。
+- **集計・算出ルール:** 値は整数で端数が出ないこと、分母がないので割合は出さないことを書きました。
+- **メモ / 将来課題:** つけ販売の確定と欠品の記録はまだ業務イベントがないので、つながるまでは受入の対象外にすると書きました。月間の欠品削減は月次報告で判定すると書いています。
+
+**確認結果:** prettier での整形と markdownlint-cli2 は、エラーなしで通りました。`validate:history-links` は、変更が履歴ファイルではないので対象外です。ほかの lint と schema 検証は親 runner が実行します。
+
+**確認してほしい点**
+- recipe と template は、rulebook の `not-needed` のまま変えていません。
+- つけ販売の確定と欠品の記録の業務イベントが作られたら、`based_on` へつなぐ必要があります。
+- 補充候補を欠品 1 回以上にするか 2 回以上にするかは、まだ決まっていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"bds-sample.md を改訂後の bds-rulebook と同梱 sample（bes-sample・cdsd-sample）に合わせて直した。based_on の接続、作成・確認・承認の Role code、本文構成の正本、対象外、端数・割合の扱い、未接続の業務イベントの影響を足した。展開された finding F001〜F024 は -005 で書き直す前の版を指していて、現行版ではほぼ解消済みだった。","handoff":["finding F001〜F024 は -005 で書き直す前の bds-sample（最小サンプル版）が対象で、現行版では解消済み。今回は rulebook・関連 sample との差分だけを直した（result の `進め方と実践の型の適用` に記録してください）","recipe と template は rulebook frontmatter の not-needed のまま。理由: 帳票仕様は Markdown 1 ファイルの記述規約で、rulebook の記述ガイドと sample で書けるため、作成手順書や雛形を別に用意する必要がない","根拠の判断: 販売記録は specdojo:cdsd-sample の販売記録と specdojo:bes-sample（現金会計の確定）を `based_on` に接続した。つけ販売の確定と bes-stock-out-recorded は未同梱のまま、接続するまで受入対象外として「メモ / 将来課題」に担当（BA・QE）と解消条件を書いた","補充候補を欠品 1 回以上にするか 2 回以上に絞るかは未決（_UNDECIDED_）のまま残した。店主代表（PO）が初回の報告を見て決める"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/bds-sample.md","status":"passed","summary":"整形が正常に終わった"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/bds-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"対象外","reason":"変更したのは docs/ja/specdojo/samples/bds-sample.md だけで、履歴ファイル（plan・result・pjr 個票）を変更していない"},{"command":"npm run validate:catalog","status":"not_applicable","summary":"対象外","reason":"変更は docs/ja/projects/ の外（docs/ja/specdojo/samples/）だけ"}]}
+</specdojo_executor_evidence>

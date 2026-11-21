@@ -1,0 +1,54 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: sf-task-execution-grade-criteria
+document: sf-task-execution
+path: docs/ja/product/010-business-specs/050-system-functions/sf-task-execution.md
+graded_at: "2026-11-11T03:32:34.840Z"
+graded_by: sol-review-executor
+content_hash: 687046ec82abbc0f6a21ba5d4eddece883142e30dde23199465d988f9626bec4
+summary:
+  satisfied: 1
+  unsatisfied: 4
+  total: 5
+criteria:
+  - id: DC-001
+    text: タスク実行機能の入出力・処理要件が業務プロセス仕様と整合していること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: unsatisfied
+    reason: >-
+      Section 2 provides only provisional business-area mappings; correspondence with the detailed upstream BPS remains
+      unconfirmed.
+  - id: DC-002
+    text: タスク実行機能の機能スコープと振る舞いを承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-purpose-alignment
+    status: unsatisfied
+    reason: >-
+      Sections 7–8 explicitly withhold PO approval while business correspondence, resource acceptance, and contract
+      conditions remain unresolved.
+  - id: DC-003
+    text: タスク実行コンポーネント設計・アーキテクチャ境界の入力として参照できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: unsatisfied
+    reason: >-
+      Section 5.2 leaves authoritative evidence and stage-record contracts, schemas, and version sources unidentified,
+      preventing complete component-design input.
+  - id: DC-004
+    text: タスク実行機能のテスト観点・検証可能性が確認できること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: unsatisfied
+    reason: >-
+      V-15 lacks an identified compatibility oracle, V-13 retains an unresolved parent-validation timeout authority, and
+      confidentiality lacks an acceptance case.
+  - id: DC-005
+    text: 実装スコープ・機能境界の参照として使えること
+    roles:
+      - DEV
+    viewpoint: vp-dev-implementation-readiness
+    status: satisfied

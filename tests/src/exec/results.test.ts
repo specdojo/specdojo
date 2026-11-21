@@ -1486,7 +1486,7 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     expect(isResultUnfilled(resultPath, "edit", scaffoldFrontmatter)).toBe(true);
   });
 
-  it("uses the stem for the result file name and doc id while keeping task_id", async () => {
+  it("uses the stem for the run directory and doc id while keeping task_id", async () => {
     const stem = "prj-overview-20260620t125519z-0328";
     const { resultPath, created } = await scaffoldResult({
       executionPath,
@@ -1500,7 +1500,9 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     });
 
     expect(created).toBe(true);
-    expect(resultPath.endsWith(`${stem}-result.md`)).toBe(true);
+    expect(resultPath).toBe(
+      join(executionPath, "runs", "schedule", "prj-overview", stem, "result.md"),
+    );
     const frontmatter = readFileSync(resultPath, "utf8").split("\n---")[0];
     // id is unique per stem (no doc-index collision); task_id stays the bare task id.
     expect(frontmatter).toContain(`id: prj-0001:xrr-${stem}`);

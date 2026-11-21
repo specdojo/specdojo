@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-15T12:32:07Z",
+  "type": "claim",
+  "task_id": "T-PROJECT-KATA-pm-raci-140",
+  "by": "indie",
+  "msg": "finalize",
+  "meta": {
+    "claim_owner": "PM",
+    "planned_owner": "PM"
+  }
+}

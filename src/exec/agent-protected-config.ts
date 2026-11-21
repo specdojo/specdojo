@@ -55,6 +55,8 @@ const SNAPSHOT_DIRECTORY_ROOTS = [
 // 保護対象ディレクトリの配下にあるが、設定ではなく再生成可能な既知の生成物。
 // 任意の gitignore 対象を除外すると、agent が .gitignore と新規設定を同時に作ることで
 // ガードをすり抜けられるため、生成物として用途が確定しているパスだけを列挙する。
+// `.specdojo/specdojo.local.config.json`（PJR-NC9R）は gitignore 済みでも設定であり、repos の
+// 差し替え・追加で commit の許可範囲を変えるため、ここに含めず `.specdojo/` の保護対象に残す。
 // `.opencode/` の 4 件は opencode が起動時に作る実行時生成物で、親 runner / hook / CI の
 // 実行内容を変えない。指示ファイル（`.opencode/AGENTS.md`、`.opencode/agents/**`）は
 // ここに含めず、保護対象のままにする。

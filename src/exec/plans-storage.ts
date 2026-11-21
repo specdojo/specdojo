@@ -1,26 +1,20 @@
-import { existsSync, mkdirSync, readFileSync, renameSync, rmSync } from "node:fs";
+import { existsSync, readFileSync, rmSync } from "node:fs";
 import { join, relative } from "node:path";
-import { specdojoRootDir } from "../shared/specdojo-config.js";
-import { nowUtcIsoSeconds, randomHex, tsForFilenameUtc } from "./shared.js";
-import type { Approach, TaskMode, TaskOrigin } from "./types.js";
+import { lookupDocIndex } from "../docs/doc-index.js";
 import { readSpecdojoNamespace } from "../docs/frontmatter-namespace.js";
 import { gradeResultPathForDocument, readGradeResultForDocument } from "../shared/grade-result.js";
-import { lookupDocIndex } from "../docs/doc-index.js";
+import { specdojoRootDir } from "../shared/specdojo-config.js";
+import { readPlanFile } from "../shared/plan-conventions.js";
 import { planGradeFindingText } from "./plans-grade-findings.js";
+import { recordPathForRead } from "./run-records.js";
+import type { Approach, TaskMode, TaskOrigin } from "./types.js";
 
-export function archivePlan(
-  opts: { executionPath: string; slug: string; delete?: boolean },
-  dependencies: {
-    now?: () => string;
-    randomHex?: (bytes: number) => string;
-  } = {},
-): {
+export function archivePlan(opts: { executionPath: string; slug: string; delete?: boolean }): {
   from: string;
   to?: string;
   deleted: boolean;
 } {
-  const plansDir = join(opts.executionPath, "exec", "plans");
-  const from = join(plansDir, `${opts.slug}-plan.md`);
+  const from = recordPathForRead(opts.executionPath, "plan", opts.slug);
   if (!existsSync(from)) throw new Error(`plan not found: ${from}`);
 
   if (opts.delete) {
@@ -28,29 +22,16 @@ export function archivePlan(
     return { from, deleted: true };
   }
 
-  const doneDir = join(plansDir, "done");
-  mkdirSync(doneDir, { recursive: true });
-  const now = dependencies.now ?? nowUtcIsoSeconds;
-  const makeRandomHex = dependencies.randomHex ?? randomHex;
-  const stamp = tsForFilenameUtc(now());
-  const base = `${opts.slug}-${stamp}-${makeRandomHex(4)}`;
-  let sequence = 0;
-  let to = join(doneDir, `${base}-plan.md`);
-  while (existsSync(to)) {
-    sequence += 1;
-    to = join(doneDir, `${base}-${sequence}-plan.md`);
-  }
-  renameSync(from, to);
-  return { from, to, deleted: false };
+  return { from, to: from, deleted: false };
 }
 
 export function planPathForTask(executionPath: string, taskId: string): string {
-  return join(executionPath, "exec", "plans", `${taskId}-plan.md`);
+  return recordPathForRead(executionPath, "plan", taskId);
 }
 
 export function loadPlan(executionPath: string, taskId: string): string | null {
   const planPath = planPathForTask(executionPath, taskId);
-  if (existsSync(planPath)) return readFileSync(planPath, "utf8");
+  if (existsSync(planPath)) return readPlanFile(planPath);
   return null;
 }
 
@@ -70,6 +51,7 @@ export type PlanTaskIdentity = {
 const PLAN_APPROACHES: readonly Approach[] = [
   "draft",
   "fully-guided",
+  "condense",
   "recipe-guided",
   "freeform",
   "bootstrap",
@@ -110,7 +92,7 @@ export function parsePlanTaskIdentity(planContent: string): PlanTaskIdentity | n
     : [];
   // 未知の値は採用せず undefined（= schedule）として扱う。
   const origin =
-    parsed.origin === "register" || parsed.origin === "schedule"
+    parsed.origin === "register" || parsed.origin === "schedule" || parsed.origin === "job"
       ? (parsed.origin as TaskOrigin)
       : undefined;
 

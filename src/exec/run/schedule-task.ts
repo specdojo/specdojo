@@ -1,15 +1,53 @@
 import { relative, resolve, sep } from "node:path";
+import { ChangeScopeGate } from "./change-scope.js";
 import { type ExecDefaultsConfig } from "../agent-config.js";
+import {
+  enforceExecutorReportContract,
+  executorStageResumeHint,
+  recordExecutorEvidence,
+  recordReporterFailureOutput,
+  writeExecutorEvidence,
+} from "../evidence.js";
+import { integrationCommitSkipHooks } from "../commit-hook-skips.js";
+import { integratedCommitRange, runPostIntegration } from "../post-integration.js";
+import { reviewTaskBlockReason } from "../review-completion.js";
 import { limitEventMeta, type AgentLimitSignal } from "../limit.js";
-import { type AgentStageRole } from "../types.js";
+import {
+  createPipelineState,
+  loadPipelineResumeCheckpoint,
+  pipelineStateLocation,
+  updatePipelineStage,
+  writePipelineState,
+  type PipelineState,
+} from "../pipeline-state.js";
+import {
+  commitProductWorktrees,
+  integrateTaskRepositories,
+  PROJECT_REPO_NAME,
+  projectMergeBlockers,
+  RepoIntegrationError,
+} from "../repo-integration.js";
+import {
+  deriveReporterFacts,
+  evidenceForReporter,
+  runReporterWithFormatRetry,
+} from "../reporter.js";
 import {
   readResultFrontmatterSnapshot,
   renderReporterResult,
   updateResultStatus,
 } from "../results.js";
-import { gitOutput } from "../worktree.js";
-import { withProductRepoPrompt } from "../task-repos.js";
 import {
+  recordPathForRead,
+  runLogPath,
+  snapshotRunAttempt,
+  taskRecordPaths,
+} from "../run-records.js";
+import { withProductRepoPrompt } from "../task-repos.js";
+import { branchOwnedRunRecordPaths } from "../trailing-records.js";
+import { type AgentStageRole } from "../types.js";
+import {
+  assertCommitScope,
   commitTargetPaths,
   commitWorktreeChanges,
   isExecBranchMergedIntoCurrent,
@@ -20,32 +58,9 @@ import {
   WorktreeRemovedBranchDeletionError,
   worktreeStatusPaths,
 } from "../worktree-ops.js";
-import {
-  commitProductWorktrees,
-  integrateTaskRepositories,
-  projectMergeBlockers,
-  PROJECT_REPO_NAME,
-  RepoIntegrationError,
-} from "../repo-integration.js";
-import {
-  recordExecutorEvidence,
-  recordReporterFailureOutput,
-  writeExecutorEvidence,
-} from "../evidence.js";
-import {
-  deriveReporterFacts,
-  evidenceForReporter,
-  runReporterWithFormatRetry,
-} from "../reporter.js";
-import {
-  createPipelineState,
-  loadPipelineResumeCheckpoint,
-  pipelineStateLocation,
-  updatePipelineStage,
-  writePipelineState,
-  type PipelineState,
-} from "../pipeline-state.js";
-import { type AsyncLock, type RateLimitRecoveryEvent, type RunResult } from "./shared.js";
+import { gitOutput } from "../worktree.js";
+import { refreshParentValidationsForReporterResume } from "./agent-pipeline.js";
+import { DeferredCleanup, runWithDeferredCleanup } from "./deferred-cleanup.js";
 import {
   agentEnvironment,
   appendParentValidationsToExecutorEvidence,
@@ -55,12 +70,6 @@ import {
   resumedTargetCoverageFailure,
   runWithRetry,
 } from "./agent.js";
-import { refreshParentValidationsForReporterResume } from "./agent-pipeline.js";
-import {
-  downgradeUnfilledResult,
-  readCompletionPreflight,
-  type PreparedTask,
-} from "./schedule-prepare.js";
 import {
   commitSubject,
   integrateLogPath,
@@ -70,7 +79,36 @@ import {
   repoRelativePath,
   spawnBlock,
   spawnComplete,
+  stageActorMeta,
 } from "./mode-shared.js";
+import {
+  downgradeUnfilledResult,
+  enforceScheduleKataReview,
+  readCompletionPreflight,
+  type PreparedTask,
+} from "./schedule-prepare.js";
+import { type AsyncLock, type RateLimitRecoveryEvent, type RunResult } from "./shared.js";
+import { execLifecyclePoolPath } from "./lock.js";
+import { CrossProcessMutex } from "../../shared/cross-process-lock.js";
+
+// 統合の段（commit・merge・記帳）は root の index と HEAD を書き換える。register ... --commit と
+// specdojo git -- commit は project の lifecycle ロックの下で stage・commit（hook を含む）を行う。
+// 統合も同じロックを取り、記帳の commit の途中に stage 済みのファイルを stagedMergeBlocker で
+// 拒否しない（PJR-Y3XS）。プロセス内の直列化（schedule の準備との排他）は外側の lock が担う。
+export function withExecLifecycleMutex(
+  inner: AsyncLock | undefined,
+  executionPath: string,
+  owner: { actor: string; label: string },
+): AsyncLock {
+  const mutex = new CrossProcessMutex(execLifecyclePoolPath(executionPath), owner, {
+    onWait: () =>
+      process.stdout.write("  Waiting for the register lifecycle lock held by another operation\n"),
+  });
+  return {
+    runExclusive: <T>(fn: () => Promise<T> | T): Promise<T> =>
+      inner ? inner.runExclusive(() => mutex.runExclusive(fn)) : mutex.runExclusive(fn),
+  };
+}
 
 export async function runPreparedTask(
   prepared: PreparedTask,
@@ -170,7 +208,8 @@ export async function runPreparedTask(
       } else if (
         prepared.pipelineResumeStage === "reporter" &&
         checkpoint.evidence &&
-        checkpoint.state.stages.executor.artifact_ref
+        checkpoint.state.stages.executor.artifact_ref &&
+        !prepared.reviewGradeRefreshed?.length
       ) {
         executorEvidence = checkpoint.evidence;
         executorEvidenceRef = checkpoint.state.stages.executor.artifact_ref;
@@ -188,7 +227,9 @@ export async function runPreparedTask(
         });
       } else if (prepared.pipelineResumeStage === "reporter") {
         process.stdout.write(
-          "  Persisted executor evidence is invalid; starting a new executor run.\n",
+          prepared.reviewGradeRefreshed?.length
+            ? "  Grade changed after the persisted review executor ran; starting a new executor run.\n"
+            : "  Persisted executor evidence is invalid; starting a new executor run.\n",
         );
         pipelineState = undefined;
         pipelineStatePath = undefined;
@@ -218,6 +259,14 @@ export async function runPreparedTask(
       updatedAt: now,
       executorActor: prepared.agentCandidates[0]?.actor ?? prepared.actor,
       reporterActor: prepared.reporterCandidates?.[0]?.actor,
+      artifacts: {
+        plan_ref: relative(repoRoot, recordPathForRead(executionPath, "plan", prepared.task.id))
+          .split(sep)
+          .join("/"),
+        result_ref: worktreeResultPath
+          ? relative(prepared.worktree.path, worktreeResultPath).split(sep).join("/")
+          : "",
+      },
     });
     pipelineStatePath = location.path;
     pipelineStateRef = location.ref;
@@ -231,6 +280,7 @@ export async function runPreparedTask(
     pipelineState &&
     pipelineStatePath
   ) {
+    if (prepared.pipelineResumeStage === "executor") snapshotRunAttempt(pipelineStatePath);
     const executorStartedAt = new Date().toISOString();
     pipelineState = updatePipelineStage(
       pipelineState,
@@ -250,6 +300,8 @@ export async function runPreparedTask(
         ? buildExecutorPrompt(prepared.plan, execDefaults.pipeline?.parent_validations, {
             resumed: true,
             existingChanges: worktreeStatusPaths(prepared.worktree.path),
+            initialChangeTargets: prepared.initialChangeTargets,
+            resumeHandoff: prepared.resumeHandoff,
           })
         : prepared.prompt;
     const executorOutcome = await runWithRetry(
@@ -304,6 +356,7 @@ export async function runPreparedTask(
             plan: prepared.plan,
             evidence: executorEvidence,
             evidencePath: executorEvidencePath,
+            initialChangeTargets: prepared.initialChangeTargets,
           })
         : undefined;
     if (result === "success" && coverageFailure) {
@@ -344,6 +397,39 @@ export async function runPreparedTask(
         evidence: executorEvidence,
         evidencePath: executorEvidencePath,
       });
+    }
+  }
+
+  // PJR-1GCD: a missing approach-required field (e.g. `condense_records`) is an executor failure.
+  // Checked before the reporter so fresh runs and reporter resumes both stop at the executor stage.
+  if (
+    prepared.pipelineRunId &&
+    result === "success" &&
+    !resumeIntegration &&
+    executorEvidence &&
+    executorEvidencePath
+  ) {
+    const contractFailure = enforceExecutorReportContract({
+      evidence: executorEvidence,
+      evidencePath: executorEvidencePath,
+      contract: { approach: prepared.task.approach, mode: prepared.task.mode ?? "edit" },
+      resumeHint: executorStageResumeHint({ kind: "schedule", taskId: prepared.task.id }),
+    });
+    if (contractFailure) {
+      result = "failure";
+      stderr = contractFailure;
+      pipelineBlockReason = contractFailure;
+      if (pipelineState && pipelineStatePath) {
+        const blockedAt = new Date().toISOString();
+        pipelineState = updatePipelineStage(
+          pipelineState,
+          "executor",
+          { status: "blocked", completed_at: blockedAt },
+          blockedAt,
+        );
+        writePipelineState(pipelineStatePath, pipelineState);
+      }
+      process.stdout.write(`  Executor report rejected before the reporter: ${contractFailure}\n`);
     }
   }
 
@@ -399,6 +485,7 @@ export async function runPreparedTask(
             ),
             worktreeResultPath,
             prepared.reporterRateLimitOptions,
+            "reporter",
           );
           reporterAttempts += outcome.attempts;
           reporterActor = outcome.actor ?? reporterActor;
@@ -494,7 +581,30 @@ export async function runPreparedTask(
     }
   }
 
-  const finalize = async (): Promise<RunResult> => {
+  const failedStageActor = (): string =>
+    pipelineFailureStage === "reporter" ? (reporterActor ?? prepared.actor) : prepared.actor;
+
+  const finalize = async (): Promise<RunResult | DeferredCleanup<RunResult>> => {
+    if (result === "success" && worktreeResultPath) {
+      enforceScheduleKataReview({
+        task: prepared.task,
+        catalogPath,
+        resultPath: worktreeResultPath,
+        projectId,
+        rootDir: prepared.worktree.path,
+      });
+      const reviewBlockReason = reviewTaskBlockReason({
+        mode: prepared.task.mode,
+        resultPath: worktreeResultPath,
+        ...(prepared.reviewGradeOutcome ? { gradeOutcome: prepared.reviewGradeOutcome } : {}),
+      });
+      if (reviewBlockReason) {
+        result = "failure";
+        pipelineBlockReason = reviewBlockReason;
+        stderr = reviewBlockReason;
+        process.stdout.write(`  Review not completed: ${reviewBlockReason}\n`);
+      }
+    }
     const completedAt = new Date().toISOString();
     const context = {
       repoRoot,
@@ -520,7 +630,7 @@ export async function runPreparedTask(
       const completionPreflight = readCompletionPreflight(
         schedulePath,
         prepared.task.id,
-        prepared.actor,
+        prepared.claimActor,
       );
       if (!completionPreflight.ok) {
         const reason = `completion preflight failed: ${completionPreflight.reason ?? "unknown reason"}`;
@@ -531,6 +641,37 @@ export async function runPreparedTask(
         return "failure";
       }
 
+      // 統合の段の失敗を block として記帳する。merge の前の失敗と、merge の後の撤去の失敗で共通。
+      const blockIntegration = async (error: unknown): Promise<RunResult> => {
+        const reason = integrationBlockReason(
+          prepared.task.id,
+          error instanceof Error ? error.message : String(error),
+          prepared.worktree.path,
+        );
+        const integrateFailedAt = new Date().toISOString();
+        recordIntegrateStage(pipelineStatePath, integrateFailedAt, () => ({
+          status: "failed",
+          completed_at: integrateFailedAt,
+        }));
+        if (worktreeResultPath)
+          await updateResultStatus(worktreeResultPath, "blocked", completedAt, reason);
+        spawnBlock(projectId, prepared.task.id, prepared.claimActor, reason, {
+          ...(pipelineStateRef
+            ? pipelineRecoveryMeta({
+                stage: "integrate",
+                evidenceRef: executorEvidenceRef,
+                stateRef: pipelineStateRef,
+                runId: pipelineState?.run_id ?? prepared.pipelineRunId,
+              })
+            : { limit_deferred: "false" }),
+          ...stageActorMeta(prepared.claimActor, prepared.actor),
+        });
+        process.stderr.write(`${reason}\n`);
+        process.stdout.write(
+          `  Blocked: ${prepared.task.id} (worktree kept: ${prepared.worktree.path})\n`,
+        );
+        return "failure";
+      };
       // A previous attempt may have merged successfully and failed only while removing the
       // worktree. In that case the branch is already contained in HEAD: do not create another
       // commit or merge. Discard only runner-owned lifecycle diffs left by the failure handler,
@@ -539,6 +680,10 @@ export async function runPreparedTask(
         resumeIntegration &&
         isExecBranchMergedIntoCurrent({ context, worktree: prepared.worktree });
       try {
+        assertCommitScope(context, prepared.worktree, prepared.task.id, {
+          scopeLogPath: integrateLogPath(pipelineStatePath),
+          allowEditedPlan: prepared.pipelineResumeStage === "executor",
+        });
         if (alreadyMerged) {
           const lifecyclePaths = new Set(
             [worktreeResultPath, pipelineStatePath]
@@ -571,6 +716,16 @@ export async function runPreparedTask(
           process.stdout.write(
             `  [integrate] already merged: ${prepared.worktree.branch} (skipping commit and merge)\n`,
           );
+          await runPostIntegration({
+            entries: execDefaults.pipeline?.post_integration,
+            repoRoot,
+            ...integratedCommitRange(repoRoot, prepared.worktree.branch),
+            logPath: runLogPath(
+              prepared.resultPath ??
+                taskRecordPaths(executionPath, prepared.task.id, prepared.pipelineRunId).result,
+              "post-integration.log",
+            ),
+          });
         } else {
           // Record completion and integration start before the first commit. The succeeded state
           // is committed on the project exec branch before its merge, so successful runs retain a
@@ -610,6 +765,12 @@ export async function runPreparedTask(
               failureLogPath: integrateLogPath(pipelineStatePath),
               productsIntegratedByCaller: true,
               productRootNewFiles,
+              allowEditedPlan: prepared.pipelineResumeStage === "executor",
+              skipHooks: integrationCommitSkipHooks({
+                pipeline: execDefaults.pipeline,
+                worktreePath: prepared.worktree.path,
+                pipelineStatePath,
+              }),
             });
           } catch (error) {
             const message = error instanceof Error ? error.message : String(error);
@@ -627,6 +788,7 @@ export async function runPreparedTask(
             });
           }
 
+          const baseCommit = gitOutput(repoRoot, ["rev-parse", "HEAD"]).trim();
           integrateTaskRepositories({
             worktree: prepared.worktree,
             mergeMessage,
@@ -650,6 +812,7 @@ export async function runPreparedTask(
                 taskId: prepared.task.id,
                 failureLogPath: integrateLogPath(pipelineStatePath),
                 productsIntegratedByCaller: true,
+                allowEditedPlan: prepared.pipelineResumeStage === "executor",
               });
             },
             mergeProject: () =>
@@ -659,57 +822,67 @@ export async function runPreparedTask(
                 taskId: prepared.task.id,
                 message: mergeMessage,
                 releaseRootPaths: prepared.checkpointPaths,
+                // 失敗・延期の後の記帳 commit が root の作業コピーを先に統合ブランチへ入れている
+                // 場合、同じ run の記録は両側の追加として競合する。exec branch 側を最新とする。
+                resolveConflictsWithBranchPaths: [
+                  ...(prepared.checkpointPaths ?? []),
+                  ...branchOwnedRunRecordPaths({
+                    repoRoot,
+                    executionPath,
+                    branch: prepared.worktree.branch,
+                    taskId: prepared.task.id,
+                  }),
+                ],
                 failureLogPath: integrateLogPath(pipelineStatePath),
               }),
             record: (repo, patch) => recordRepoIntegration(pipelineStatePath, repo, patch),
             failureLogPath: integrateLogPath(pipelineStatePath),
             lockPath: schedulePath,
           });
+          await runPostIntegration({
+            entries: execDefaults.pipeline?.post_integration,
+            repoRoot,
+            baseCommit,
+            outputCommit: gitOutput(repoRoot, ["rev-parse", "HEAD"]).trim(),
+            logPath: runLogPath(
+              prepared.resultPath ??
+                taskRecordPaths(executionPath, prepared.task.id, prepared.pipelineRunId).result,
+              "post-integration.log",
+            ),
+          });
         }
-
-        removeWorktree({
-          context,
-          worktree: prepared.worktree,
-          taskId: prepared.task.id,
-          deleteBranch: true,
-        });
       } catch (error) {
-        if (error instanceof WorktreeRemovedBranchDeletionError) {
-          // The task changes are already merged and the worktree is gone. Keep task completion
-          // independent from branch housekeeping, but make the residue and recovery command clear.
-          process.stderr.write(`Warning: ${error.message}; run exec worktree prune.\n`);
-        } else {
-          const reason = error instanceof Error ? error.message : String(error);
-          const integrateFailedAt = new Date().toISOString();
-          recordIntegrateStage(pipelineStatePath, integrateFailedAt, () => ({
-            status: "failed",
-            completed_at: integrateFailedAt,
-          }));
-          if (worktreeResultPath)
-            await updateResultStatus(worktreeResultPath, "blocked", completedAt, reason);
-          spawnBlock(
-            projectId,
-            prepared.task.id,
-            prepared.actor,
-            reason,
-            pipelineStateRef
-              ? pipelineRecoveryMeta({
-                  stage: "integrate",
-                  evidenceRef: executorEvidenceRef,
-                  stateRef: pipelineStateRef,
-                  runId: pipelineState?.run_id ?? prepared.pipelineRunId,
-                })
-              : { limit_deferred: "false" },
-          );
-          process.stderr.write(`${reason}\n`);
-          process.stdout.write(
-            `  Blocked: ${prepared.task.id} (worktree kept: ${prepared.worktree.path})\n`,
-          );
-          return "failure";
+        if (isExecBranchMergedIntoCurrent({ context, worktree: prepared.worktree })) {
+          await prepared.onScopeIntegrated?.();
+          await new ChangeScopeGate(executionPath).clearIntegrated(prepared.task.id);
         }
+        return blockIntegration(error);
       }
-      spawnComplete(projectId, prepared.task.id, prepared.actor);
-      process.stdout.write(`  Done: ${prepared.task.id}\n`);
+      await prepared.onScopeIntegrated?.();
+      await new ChangeScopeGate(executionPath).clearIntegrated(prepared.task.id);
+      // PJR-NHT7: 撤去はロックの外で行い、完了の記帳はロックを取り直して行う。
+      return new DeferredCleanup<RunResult>(
+        () =>
+          removeWorktree({
+            context,
+            worktree: prepared.worktree,
+            taskId: prepared.task.id,
+            deleteBranch: true,
+          }),
+        async (outcome) => {
+          if (!outcome.ok) {
+            if (!(outcome.error instanceof WorktreeRemovedBranchDeletionError)) {
+              return blockIntegration(outcome.error);
+            }
+            // The task changes are already merged and the worktree is gone. Keep task completion
+            // independent from branch housekeeping, but make the residue and recovery command clear.
+            process.stderr.write(`Warning: ${outcome.error.message}; run exec worktree prune.\n`);
+          }
+          spawnComplete(projectId, prepared.task.id, prepared.claimActor);
+          process.stdout.write(`  Done: ${prepared.task.id}\n`);
+          return "success";
+        },
+      );
     } else if (effectiveResult === "rate_limit") {
       // Keep the worktree for the due-time resume path; do not merge partial changes.
       const activeLimit = pipelineFailureStage === "reporter" ? reporterLimit : limit;
@@ -720,10 +893,11 @@ export async function runPreparedTask(
         : (pipelineBlockReason ?? "rate limit reached");
       if (worktreeResultPath)
         await updateResultStatus(worktreeResultPath, "blocked", completedAt, reason);
+      const rateLimitActorMeta = stageActorMeta(prepared.claimActor, failedStageActor());
       spawnBlock(
         projectId,
         prepared.task.id,
-        prepared.actor,
+        prepared.claimActor,
         reason,
         activeLimit
           ? {
@@ -731,6 +905,7 @@ export async function runPreparedTask(
                 attempts: totalAttempts,
                 worktree: prepared.worktree.path,
               }),
+              ...rateLimitActorMeta,
               ...(prepared.pipelineRunId
                 ? pipelineRecoveryMeta({
                     stage: pipelineFailureStage,
@@ -742,6 +917,7 @@ export async function runPreparedTask(
             }
           : {
               limit_deferred: "false",
+              ...rateLimitActorMeta,
               ...(prepared.pipelineRunId
                 ? pipelineRecoveryMeta({
                     stage: pipelineFailureStage,
@@ -763,8 +939,9 @@ export async function runPreparedTask(
         : (pipelineBlockReason ?? extractBlockReason(stderr));
       if (worktreeResultPath)
         await updateResultStatus(worktreeResultPath, "blocked", completedAt, blockReason);
-      spawnBlock(projectId, prepared.task.id, prepared.actor, blockReason, {
+      spawnBlock(projectId, prepared.task.id, prepared.claimActor, blockReason, {
         limit_deferred: "false",
+        ...stageActorMeta(prepared.claimActor, failedStageActor()),
         ...(prepared.pipelineRunId
           ? pipelineRecoveryMeta({
               stage: pipelineFailureStage,
@@ -782,7 +959,29 @@ export async function runPreparedTask(
     return effectiveResult;
   };
 
-  return lifecycleLock ? lifecycleLock.runExclusive(finalize) : finalize();
+  return runWithDeferredCleanup(
+    withExecLifecycleMutex(lifecycleLock, executionPath, {
+      actor: prepared.claimActor,
+      label: `integrate ${prepared.task.id}`,
+    }),
+    finalize,
+  );
+}
+
+// 統合の段の失敗の理由（検査の名前・commit の対象外のパス・merge の失敗など、失敗した操作の
+// メッセージ）に、worktree の成果を保ったまま続ける次の操作を足す。block の理由と result の
+// 両方へ同じ文を残す（PJR-ED0K）。
+export function integrationBlockReason(
+  taskId: string,
+  cause: string,
+  worktreePath: string,
+): string {
+  return (
+    `integration failed: ${cause.trim() || "unknown error"}; worktree kept: ${worktreePath}; ` +
+    `next: fix the artifacts with exec resume --task ${taskId} --resume-from executor ` +
+    `(syncs the integration target first), or retry only the integration with ` +
+    `exec resume --task ${taskId}`
+  );
 }
 
 export type PreparedTaskOutcome = {
@@ -822,7 +1021,10 @@ export async function runPreparedTaskSafely(
         const completedAt = new Date().toISOString();
         if (prepared.resultPath)
           await updateResultStatus(prepared.resultPath, "blocked", completedAt);
-        spawnBlock(projectId, prepared.task.id, prepared.actor, `runner error: ${message}`);
+        spawnBlock(projectId, prepared.task.id, prepared.claimActor, `runner error: ${message}`, {
+          limit_deferred: "false",
+          ...stageActorMeta(prepared.claimActor, prepared.actor),
+        });
       }
     };
     if (lifecycleLock) await lifecycleLock.runExclusive(block);

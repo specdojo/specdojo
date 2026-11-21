@@ -1,10 +1,11 @@
+import { isGradeDocument } from "../shared/document-metadata.js";
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from "node:fs";
 import { basename, dirname, extname, isAbsolute, join, resolve } from "node:path";
 import { listFilesRecursive } from "../shared/fs.js";
 import {
   isRecord,
-  parseMarkdown,
+  parseGradeDocument,
   pipelineContentHash,
   type GradePipelineState,
   type GradeTarget,
@@ -15,6 +16,7 @@ import {
   repoRelativePath,
   resolveProject,
   resolveSafeMarkdownPath,
+  resolveSafeRepositoryPath,
 } from "./targets.js";
 import { getProjectExecutionPath, specdojoRootDir } from "../shared/specdojo-config.js";
 
@@ -27,6 +29,7 @@ function gradePipelineStatePath(
   documentPath: string,
   projectOption?: string,
   rootDir = specdojoRootDir(),
+  directory?: string,
 ): string {
   const relativeDocument = relativePathFromRoot(resolve(rootDir, documentPath), rootDir);
   const stem = basename(relativeDocument, extname(relativeDocument)).replace(
@@ -34,7 +37,12 @@ function gradePipelineStatePath(
     "-",
   );
   const digest = createHash("sha256").update(relativeDocument).digest("hex").slice(0, 12);
-  return join(gradePipelineStateDirectory(projectOption, rootDir), `${stem}-${digest}.json`);
+  return join(
+    directory === undefined
+      ? gradePipelineStateDirectory(projectOption, rootDir)
+      : resolveSafeRepositoryPath(directory, "grade pipeline state directory"),
+    `${stem}-${digest}.json`,
+  );
 }
 
 function parseGradePipelineState(value: unknown, path: string): GradePipelineState {
@@ -79,8 +87,8 @@ function parseGradePipelineState(value: unknown, path: string): GradePipelineSta
   if (!/^[a-f0-9]{64}$/.test(state.content_hash)) {
     throw new Error(`${path}: content_hash must be a SHA-256 hex digest`);
   }
-  if (isAbsolute(state.document) || !state.document.endsWith(".md")) {
-    throw new Error(`${path}: document must be a relative Markdown path`);
+  if (isAbsolute(state.document) || !isGradeDocument(state.document)) {
+    throw new Error(`${path}: document must be a relative Markdown or YAML path`);
   }
   if (state.stage_completed >= state.stage_total) {
     throw new Error(`${path}: completed pipeline state must be removed`);
@@ -139,10 +147,16 @@ export function readGradePipelineState(opts: {
   target: GradeTarget;
   project?: string;
   path: string;
+  directory?: string;
 }): GradePipelineState | undefined {
   const absolute = resolveSafeMarkdownPath(opts.path, specdojoRootDir(), opts.project);
   const relativeDocument = repoRelativePath(absolute);
-  const statePath = gradePipelineStatePath(relativeDocument, opts.project);
+  const statePath = gradePipelineStatePath(
+    relativeDocument,
+    opts.project,
+    specdojoRootDir(),
+    opts.directory,
+  );
   if (!existsSync(statePath)) return undefined;
   const state = parseGradePipelineState(
     JSON.parse(readFileSync(statePath, "utf8")),
@@ -152,7 +166,7 @@ export function readGradePipelineState(opts: {
   if (state.project_id !== projectId) {
     throw new Error(`${repoRelativePath(statePath)}: project_id must be ${projectId}`);
   }
-  const document = parseMarkdown(readFileSync(absolute, "utf8"), relativeDocument);
+  const document = parseGradeDocument(readFileSync(absolute, "utf8"), relativeDocument);
   return currentGradePipelineState(document, relativeDocument, state, opts.target);
 }
 
@@ -168,7 +182,7 @@ export function listExhaustedGradePipelineStates(opts: {
       const absolute = resolve(specdojoRootDir(), state.document);
       if (!existsSync(absolute)) return false;
       resolveSafeMarkdownPath(state.document, specdojoRootDir(), opts.project);
-      const document = parseMarkdown(readFileSync(absolute, "utf8"), state.document);
+      const document = parseGradeDocument(readFileSync(absolute, "utf8"), state.document);
       return currentGradePipelineState(document, state.document, state, opts.target) !== undefined;
     })
     .sort((left, right) => left.document.localeCompare(right.document));
@@ -178,6 +192,7 @@ export function recordGradePipelineStage(opts: {
   target: GradeTarget;
   project?: string;
   path: string;
+  directory?: string;
   runId: string;
   stage: number;
   stageTotal: number;
@@ -187,7 +202,12 @@ export function recordGradePipelineStage(opts: {
 }): GradePipelineState | undefined {
   const absolute = resolveSafeMarkdownPath(opts.path, specdojoRootDir(), opts.project);
   const relativeDocument = repoRelativePath(absolute);
-  const statePath = gradePipelineStatePath(relativeDocument, opts.project);
+  const statePath = gradePipelineStatePath(
+    relativeDocument,
+    opts.project,
+    specdojoRootDir(),
+    opts.directory,
+  );
   if (opts.status === "complete") {
     if (existsSync(statePath)) unlinkSync(statePath);
     return undefined;
@@ -202,8 +222,9 @@ export function recordGradePipelineStage(opts: {
   ) {
     throw new Error("grade pipeline stage, total, and failure limit are invalid");
   }
-  const document = parseMarkdown(readFileSync(absolute, "utf8"), relativeDocument);
+  const document = parseGradeDocument(readFileSync(absolute, "utf8"), relativeDocument);
   const previous = readGradePipelineState({
+    directory: opts.directory,
     target: opts.target,
     project: opts.project,
     path: relativeDocument,

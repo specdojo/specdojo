@@ -64,6 +64,11 @@ describe("runDevcontainerScaffold", () => {
       if (file.endsWith("vimrc")) {
         return Promise.resolve("set number\n");
       }
+      if (file.endsWith("tmux.conf")) {
+        return Promise.resolve(
+          `# Enable mouse interactions, including scrolling through pane history with the wheel.\nset -g mouse on\nset -g set-clipboard on\n\nset -g default-terminal "tmux-256color"\nset -as terminal-overrides ',*:Tc'\n`,
+        );
+      }
       if (file.endsWith("specdojo-tmux.sh.sample")) {
         return Promise.resolve("#!/usr/bin/env bash\necho sample");
       }
@@ -258,6 +263,10 @@ describe("runDevcontainerScaffold", () => {
 
       const script = String(findWriteCall("post-create.sh")[1]);
       expect(script.includes("/usr/local/bin/fd")).toBe(preset === "full");
+      expect(writeFileMock.mock.calls.some(([file]) => String(file).endsWith("tmux.conf"))).toBe(
+        recommended,
+      );
+      expect(script.includes("tmux.conf")).toBe(recommended);
     },
   );
 
@@ -398,6 +407,209 @@ describe("runDevcontainerScaffold", () => {
     expect(json.postAttachCommand).toBe("sudo service cron start");
   });
 
+  it("should generate tmux.conf and post-create.sh linking logic when tmux is requested", async () => {
+    await runDevcontainerScaffold({
+      packageRoot,
+      repoRoot,
+      providers: [],
+      editors: [],
+      ollama: false,
+      cron: false,
+      tmux: true,
+      force: false,
+      dryRun: false,
+    });
+
+    const tmuxCall = findWriteCall("tmux.conf");
+    expect(String(tmuxCall[0])).toBe(path.join(repoRoot, ".devcontainer", "tmux.conf"));
+    const tmuxContent = String(tmuxCall[1]);
+    expect(tmuxContent).toContain("set -g mouse on");
+    expect(tmuxContent).toContain("set -g set-clipboard on");
+    expect(tmuxContent).toContain('set -g default-terminal "tmux-256color"');
+    expect(tmuxContent).toContain("set -as terminal-overrides ',*:Tc'");
+
+    const shCall = findWriteCall("post-create.sh");
+    const script = String(shCall[1]);
+    expect(script).toContain('SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"');
+    expect(script).toContain('[ -f "${SCRIPT_DIR}/tmux.conf" ]');
+    expect(script).toContain('[ ! -e "$HOME/.tmux.conf" ] || [ -L "$HOME/.tmux.conf" ]');
+    expect(script).toContain('ln -sfn "${SCRIPT_DIR}/tmux.conf" "$HOME/.tmux.conf"');
+
+    // post-start.sh and postStartCommand must not be added
+    expect(writeFileMock.mock.calls.some(([file]) => String(file).endsWith("post-start.sh"))).toBe(
+      false,
+    );
+    const jsonCall = findWriteCall("devcontainer.json");
+    const json = JSON.parse(String(jsonCall[1]));
+    expect(json).not.toHaveProperty("postStartCommand");
+  });
+
+  it("should not generate tmux.conf or linking logic when tmux is not requested", async () => {
+    await runDevcontainerScaffold({
+      packageRoot,
+      repoRoot,
+      preset: "minimal",
+      providers: [],
+      editors: [],
+      ollama: false,
+      cron: false,
+      tmux: false,
+      force: false,
+      dryRun: false,
+    });
+
+    expect(writeFileMock.mock.calls.some(([file]) => String(file).endsWith("tmux.conf"))).toBe(
+      false,
+    );
+    const shCall = findWriteCall("post-create.sh");
+    expect(String(shCall[1])).not.toContain("tmux.conf");
+    expect(String(shCall[1])).not.toContain(".tmux.conf");
+  });
+
+  it("should report tmux.conf in dry-run mode when tmux is requested", async () => {
+    await runDevcontainerScaffold({
+      packageRoot,
+      repoRoot,
+      providers: [],
+      editors: [],
+      ollama: false,
+      cron: false,
+      tmux: true,
+      force: false,
+      dryRun: true,
+    });
+
+    expect(stdoutWrite).toHaveBeenCalledWith(
+      expect.stringContaining("[dry-run] would write: .devcontainer/tmux.conf"),
+    );
+    expect(writeFileMock).not.toHaveBeenCalled();
+  });
+
+  it("should link tmux.conf to ~/.tmux.conf in post-create.sh only when missing or a symlink", async () => {
+    await runDevcontainerScaffold({
+      packageRoot,
+      repoRoot,
+      providers: [],
+      editors: [],
+      ollama: false,
+      cron: false,
+      tmux: true,
+      force: false,
+      dryRun: false,
+    });
+
+    const script = String(findWriteCall("post-create.sh")[1]);
+    const actualFs = await vi.importActual<typeof fs>("node:fs");
+    const temporaryRoot = actualFs.mkdtempSync(path.join(os.tmpdir(), "specdojo-tmux-home-"));
+    const fakeBin = path.join(temporaryRoot, "bin");
+    actualFs.mkdirSync(fakeBin);
+    actualFs.writeFileSync(path.join(fakeBin, "npm"), "#!/usr/bin/env bash\nexit 0\n", {
+      mode: 0o755,
+    });
+
+    const cases = [
+      {
+        name: "empty home",
+        prepare: (_home: string) => undefined,
+        hasBundledConf: true,
+        expectLinked: true,
+      },
+      {
+        name: "existing symlink",
+        prepare: (home: string) => {
+          const dummyTarget = path.join(home, "other-tmux.conf");
+          actualFs.writeFileSync(dummyTarget, "dummy");
+          actualFs.symlinkSync(dummyTarget, path.join(home, ".tmux.conf"));
+        },
+        hasBundledConf: true,
+        expectLinked: true,
+      },
+      {
+        name: "existing regular file",
+        prepare: (home: string) => {
+          actualFs.writeFileSync(path.join(home, ".tmux.conf"), "user regular tmux config");
+        },
+        hasBundledConf: true,
+        expectLinked: false,
+      },
+      {
+        name: "missing bundled tmux.conf",
+        prepare: (_home: string) => undefined,
+        hasBundledConf: false,
+        expectLinked: false,
+      },
+    ];
+
+    try {
+      for (const testCase of cases) {
+        const home = path.join(temporaryRoot, testCase.name.replaceAll(" ", "-"));
+        const workspace = path.join(home, "workspace");
+        const devcontainerDir = path.join(workspace, ".devcontainer");
+        actualFs.mkdirSync(devcontainerDir, { recursive: true });
+        const bundledContent = "set -g mouse on\n";
+        if (testCase.hasBundledConf) {
+          actualFs.writeFileSync(path.join(devcontainerDir, "tmux.conf"), bundledContent);
+        }
+        testCase.prepare(home);
+
+        const postCreatePath = path.join(devcontainerDir, "post-create.sh");
+        actualFs.writeFileSync(
+          postCreatePath,
+          `#!/usr/bin/env bash\nset -euo pipefail\n${script}`,
+          { mode: 0o755 },
+        );
+
+        const result = spawnSync("bash", [postCreatePath], {
+          cwd: workspace,
+          encoding: "utf8",
+          env: { ...process.env, HOME: home, PATH: `${fakeBin}:${process.env.PATH ?? ""}` },
+        });
+
+        expect(result.status, `${testCase.name}: ${result.stderr}`).toBe(0);
+        const targetPath = path.join(home, ".tmux.conf");
+        if (testCase.expectLinked) {
+          const lstat = actualFs.lstatSync(targetPath);
+          expect(lstat.isSymbolicLink(), `${testCase.name} should be a symbolic link`).toBe(true);
+          const linkTarget = actualFs.readlinkSync(targetPath);
+          expect(linkTarget).toBe(path.join(devcontainerDir, "tmux.conf"));
+        } else if (testCase.name === "existing regular file") {
+          const lstat = actualFs.lstatSync(targetPath);
+          expect(lstat.isSymbolicLink(), `${testCase.name} should not be a symbolic link`).toBe(
+            false,
+          );
+          expect(actualFs.readFileSync(targetPath, "utf8")).toBe("user regular tmux config");
+        } else {
+          expect(actualFs.existsSync(targetPath)).toBe(false);
+        }
+      }
+    } finally {
+      actualFs.rmSync(temporaryRoot, { recursive: true, force: true });
+    }
+  });
+
+  it("should pass shellcheck on post-create.sh link handling when tmux is enabled", async () => {
+    await runDevcontainerScaffold({
+      packageRoot,
+      repoRoot,
+      providers: [],
+      editors: [],
+      ollama: false,
+      cron: false,
+      tmux: true,
+      force: false,
+      dryRun: false,
+    });
+
+    const script = String(findWriteCall("post-create.sh")[1]);
+    const fullScript = `#!/usr/bin/env bash\nset -euo pipefail\n${script}\n`;
+    const result = spawnSync("shellcheck", ["-s", "bash", "-"], {
+      input: fullScript,
+      encoding: "utf8",
+    });
+    if (result.error && "code" in result.error && result.error.code === "ENOENT") return;
+    expect(result.status, result.stderr || result.stdout).toBe(0);
+  });
+
   it("should add ollama env", async () => {
     await runDevcontainerScaffold({
       packageRoot,
@@ -420,7 +632,7 @@ describe("runDevcontainerScaffold", () => {
     await runDevcontainerScaffold({
       packageRoot,
       repoRoot,
-      providers: ["claude", "codex", "opencode", "antigravity"],
+      providers: ["claude", "codex", "opencode"],
       editors: [],
       ollama: false,
       cron: false,
@@ -443,9 +655,6 @@ describe("runDevcontainerScaffold", () => {
     expect(json.mounts).toContain(
       "source=repo-specdojo-opencode-data,target=/home/node/.local/share/opencode,type=volume",
     );
-    expect(json.mounts).toContain(
-      "source=repo-specdojo-antigravity,target=/home/node/.config/antigravity,type=volume",
-    );
     expect(json.runArgs).toEqual(["--security-opt=seccomp=unconfined"]);
 
     const shCall = findWriteCall("post-create.sh");
@@ -460,7 +669,26 @@ describe("runDevcontainerScaffold", () => {
     expect(shCall[1]).toContain("curl -fsSL https://chatgpt.com/codex/install.sh");
     expect(shCall[1]).toContain("sudo npm install -g @openai/codex@latest");
     expect(shCall[1]).toContain("sudo npm install -g opencode-ai@latest");
-    expect(shCall[1]).toContain("curl -fsSL https://antigravity.google/cli/install.sh");
+    expect(shCall[1]).not.toContain("antigravity.google/cli/install.sh");
+  });
+
+  it("refuses the antigravity provider before writing any Dev Container file", async () => {
+    await expect(
+      runDevcontainerScaffold({
+        packageRoot,
+        repoRoot,
+        providers: ["claude", "antigravity"],
+        editors: [],
+        ollama: false,
+        cron: false,
+        tmux: false,
+        force: false,
+        dryRun: false,
+      }),
+    ).rejects.toThrow(
+      /devcontainer scaffold cannot add provider antigravity: SpecDojo 0\.9\.2 and later do not launch Antigravity/,
+    );
+    expect(writeFileMock).not.toHaveBeenCalled();
   });
 
   it("should add Emacs tools, setup, and init template only when requested", async () => {
@@ -790,7 +1018,7 @@ describe("runDevcontainerScaffold", () => {
     await runDevcontainerScaffold({
       packageRoot,
       repoRoot,
-      providers: ["claude", "opencode", "antigravity"],
+      providers: ["claude", "opencode"],
       editors: [],
       ollama: false,
       cron: false,
@@ -1186,7 +1414,7 @@ describe("runDevcontainerScaffold", () => {
       expect(findWriteCall("ssh-config.sample")).toBeDefined();
     });
 
-    it("generates specdojo-tmux.sh.sample with -u flag and reflects remoteUser from devcontainer.json", async () => {
+    it("generates specdojo-tmux.sh.sample calling .specdojo/host/devcontainer-tmux.sh", async () => {
       const actualFs = await vi.importActual<typeof fs>("node:fs");
       const tmuxTemplate = actualFs.readFileSync(
         path.join(process.cwd(), "templates/devcontainer/remote-host/specdojo-tmux.sh.sample"),
@@ -1227,30 +1455,11 @@ describe("runDevcontainerScaffold", () => {
 
       const tmuxCall = findWriteCall("specdojo-tmux.sh.sample");
       const tmuxContent = String(tmuxCall[1]);
-      expect(tmuxContent).toContain('docker exec -it --detach-keys="ctrl-]" -u "$container_user"');
-      expect(tmuxContent).toContain('container_user="developer"');
       expect(tmuxContent).toContain(
-        "remoteUser を変更した場合は、下記 container_user の値を変更してください。",
+        'exec bash "$workspace_dir/.specdojo/host/devcontainer-tmux.sh" "$workspace_dir"',
       );
-      expect(tmuxContent).toContain('node_bin_dir="/absolute/path/to/node/bin"');
-      expect(tmuxContent).toContain(
-        'export PATH="$node_bin_dir:/opt/homebrew/bin:/usr/local/bin:$PATH"',
-      );
-      expect(tmuxContent).toContain('dirname "$(command -v devcontainer)"');
-      expect(tmuxContent).toContain('node_bin_dir="/opt/homebrew/bin"');
-      expect(tmuxContent).toContain('node_bin_dir="$HOME/.nvm/versions/node/v22.0.0/bin"');
-      expect(tmuxContent).toContain('node_bin_dir="$HOME/.local/share/mise/installs/node/24/bin"');
-      expect(tmuxContent).toContain(
-        'echo "Dev Container CLI is not installed or not in PATH." >&2',
-      );
-      expect(tmuxContent).toContain('echo "Current PATH: $PATH" >&2');
-      expect(tmuxContent).toContain(
-        'echo "Check the location on the host terminal with: dirname \\"\\$(command -v devcontainer)\\"" >&2',
-      );
-      expect(tmuxContent).toContain('echo "Docker command was not found in PATH." >&2');
-      expect(tmuxContent).toContain(
-        'echo "Check the location on the host terminal with: dirname \\"\\$(command -v docker)\\"" >&2',
-      );
+      expect(tmuxContent).toContain('workspace_dir="${1:-$HOME/<path-to-workspace>/<repo-name>}"');
+      expect(tmuxContent).toContain(".specdojo/host/devcontainer-tmux.sh");
     });
   });
 

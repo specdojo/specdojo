@@ -2,7 +2,7 @@ import { Command } from "commander";
 import { mkdtempSync, readFileSync, rmSync, unlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
-import { dump, load } from "js-yaml";
+import { dump, load } from "../../../src/shared/yaml.js";
 import { describe, expect, it } from "vitest";
 import {
   collectProjectMilestones,
@@ -68,16 +68,20 @@ function writeMilestoneStrategy(
 }
 
 describe("schedule command registration", () => {
-  it("build コマンドを登録する", () => {
+  it("build コマンドを内部互換用として登録する", () => {
     const program = new Command();
     registerScheduleCommands(program);
 
-    const schedule = program.commands.find((command) => command.name() === "schedule");
-    const commandNames = schedule?.commands.map((command) => command.name());
-    const help = schedule?.helpInformation();
+    const schedule = program.commands.find((command) => command.name() === "schedule")!;
+    const commandNames = schedule.commands.map((command) => command.name());
 
     expect(commandNames).toEqual(["where", "build", "strategy"]);
-    expect(help).toContain("build");
+    expect(
+      schedule
+        .createHelp()
+        .visibleCommands(schedule)
+        .map((command) => command.name()),
+    ).not.toContain("build");
   });
 });
 

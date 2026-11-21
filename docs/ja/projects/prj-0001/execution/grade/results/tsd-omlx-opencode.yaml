@@ -212,8 +212,8 @@ findings:
     rule: vp-dev-testability
     line: 261
     anchor: "- <https://huggingface.co/mlx-community/Qwen3.6-35B-A3B-4bit>"
-    message: "API key付きで起動する前提にもかかわらず起動確認のcurlにAuthorization: Bearerヘッダーがなく、認証が正常な環境でも失敗するため、認証付きコマンドと期待結果へ修正する必要がある。"
-    message_ja: "API key付きで起動する前提にもかかわらず起動確認のcurlにAuthorization: Bearerヘッダーがなく、認証が正常な環境でも失敗するため、認証付きコマンドと期待結果へ修正する必要がある。"
+    message: "API key付きで起動する前提にもかかわらず起動確認のcurlにBearer 方式の Authorization ヘッダーがなく、認証が正常な環境でも失敗するため、認証付きコマンドと期待結果へ修正する必要がある。"
+    message_ja: "API key付きで起動する前提にもかかわらず起動確認のcurlにBearer 方式の Authorization ヘッダーがなく、認証が正常な環境でも失敗するため、認証付きコマンドと期待結果へ修正する必要がある。"
   - id: F013
     severity: major
     rule: vp-qe-done-criteria

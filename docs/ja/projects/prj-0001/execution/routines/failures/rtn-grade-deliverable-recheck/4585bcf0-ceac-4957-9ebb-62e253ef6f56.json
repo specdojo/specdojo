@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "routine_id": "rtn-grade-deliverable-recheck",
+  "scheduled_for": "2026-11-19T16:00:00.000Z",
+  "started_at": "2026-11-19T16:00:19Z",
+  "completed_at": "2026-11-19T16:01:45Z",
+  "result": "failure",
+  "job_run_ids": [],
+  "reason": ".github/instructions/typescript.instructions.md: frontmatter must contain a specdojo mapping",
+  "run_id": "4585bcf0-ceac-4957-9ebb-62e253ef6f56"
+}

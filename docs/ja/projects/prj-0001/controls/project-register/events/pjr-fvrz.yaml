@@ -1,0 +1,158 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_dcd0e41acf8945d5950ebab70fb49bad
+  ts: "2026-11-03T05:23:58Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: data-flow-uc-rewrite の実行で見つかった不具合を起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: phase の説明の Markdown の誤りが実行するまで分からない
+    - field: description
+      from: ""
+      to: schedule の phase の説明は plan の本文に入るが、Markdown の誤りは exec run の checkpoint の commit で初めて分かる。schedule build か exec plan の時点で plan の Markdown を検査して失敗させる
+    - field: input
+      from: ""
+      to: '["2026-11-03 に track data-flow-uc-rewrite の 3 タスクを exec run --auto --parallel 3 で流したところ、3 タスクとも checkpoint の commit が markdownlint の MD032 で拒否されて始まる前に失敗した（原因は phase の説明で箇条書きの前に空行がなかったこと、72749b20e で修正済み）","exec run --dry-run は plan を作るだけで、checkpoint の commit とその検査までは試さないため、事前に見つけられなかった（2026-11-03）"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-03"
+    - field: due
+      from: ""
+      to: "2026-11-07"
+    - field: derived_from
+      from: ""
+      to: '["PJR-GQN3"]'
+    - field: commit_type
+      from: ""
+      to: feat
+    - field: commit_scope
+      from: ""
+      to: schedule
+- v: 1
+  id: reg_56ae1292069f4c53883e18d5c8c47e3b
+  ts: "2026-11-03T05:27:13Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_dcd0e41acf8945d5950ebab70fb49bad
+- v: 1
+  id: reg_afaf56ca1e2e499a893e57e09fc2da69
+  ts: "2026-11-03T05:48:49Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-ts"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-ts"
+  previous_event_id: reg_56ae1292069f4c53883e18d5c8c47e3b
+- v: 1
+  id: reg_1f98723900cb4885961ab89eddccb5a0
+  ts: "2026-11-03T05:50:51Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-ts"
+      to: "-"
+  previous_event_id: reg_afaf56ca1e2e499a893e57e09fc2da69
+- v: 1
+  id: reg_f245fbfca20545188d5bb4fda77a1e28
+  ts: "2026-11-03T06:06:20Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /unit/ tests/src/exec/run/pinned-rate-limit.test.ts > pinned-agent rate-limit recovery > keeps a connection…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /unit/ tests/src/exec/run/pinned-rate-limit.test.ts > pinned-agent rate-limit recovery > keeps a connection…"
+  previous_event_id: reg_1f98723900cb4885961ab89eddccb5a0
+- v: 1
+  id: reg_30378a9f4d3c4b409507ee86361c1ef6
+  ts: "2026-11-03T06:07:14Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /unit/ tests/src/exec/run/pinned-rate-limit.test.ts > pinned-agent rate-limit recovery > keeps a connection…"
+      to: "-"
+  previous_event_id: reg_f245fbfca20545188d5bb4fda77a1e28
+- v: 1
+  id: reg_7be9b3c4592c4185b6084ebb856b71bd
+  ts: "2026-11-03T06:15:39Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_30378a9f4d3c4b409507ee86361c1ef6
+- v: 1
+  id: reg_7e82112955514d6f901a5be4098916e3
+  ts: "2026-11-03T06:41:04Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 利用者が close を承認した。差分・テスト・JSEY の動作確認で確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-03"
+    - field: conclusion
+      from: "-"
+      to: plan の生成の時点で Markdown を検査し、誤りをタスクと行を示して止めることを、単体 5 件と統合 6 件のテストと正しい説明での plan の生成で確かめた
+  previous_event_id: reg_7be9b3c4592c4185b6084ebb856b71bd

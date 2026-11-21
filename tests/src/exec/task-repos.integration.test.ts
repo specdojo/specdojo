@@ -37,10 +37,12 @@ import {
   withProductWorktrees,
   type ProductRepo,
 } from "../../../src/exec/task-repos.js";
+import { registerResumeConflictPaths } from "../../../src/exec/run/register-resume.js";
 import { gitOutput, gitResult, type ExecWorktree } from "../../../src/exec/worktree.js";
 import {
   commitProductWorktrees,
   integrateTaskRepositories,
+  mergeProductIntoTarget,
   productMergeBlockers,
   projectMergeBlockers,
   syncTaskWorktreesWithIntegrationTargets,
@@ -378,7 +380,7 @@ describe("multi-repository task worktrees", () => {
 
     const taskDir = join(fixture.worktreeBase, TASK_DIR_NAME);
     expect(readFileSync(npmLog, "utf8")).toBe(
-      `${realpathSync(join(taskDir, "app1"))} ci --include=dev\n`,
+      `${realpathSync(join(taskDir, "app1"))} ci --include=dev --prefer-offline --no-audit --no-fund\n`,
     );
     expect(output).toContain(
       `Skipping worktree dependencies: no tracked package-lock.json in ${join(taskDir, "app2")}\n`,
@@ -641,6 +643,34 @@ describe("multi-repository task worktrees", () => {
       gitResult(fixture.repo, ["merge-base", "--is-ancestor", worktree.branch, "HEAD"]).status,
     ).toBe(1);
   });
+
+  it.each(["project", "product"])(
+    "rejects unrelated staged changes in the %s before merging any repository",
+    (target) => {
+      const fixture = setup();
+      const worktree = prepare(fixture);
+      commitIntegrationFixture(worktree);
+      const app1 = worktree.repos![0]!;
+      const checkout = target === "project" ? fixture.repo : app1.repoRoot;
+      writeFile(join(checkout, "unrelated.txt"), "keep staged\n");
+      git(checkout, "add", "unrelated.txt");
+      const roots = [fixture.repo, ...fixture.products.map((product) => product.repoRoot)];
+      const heads = roots.map((root) => git(root, "rev-parse", "HEAD"));
+      const index = git(checkout, "diff", "--cached", "--binary");
+
+      expect(() => integrateFixture(fixture, worktree)).toThrow(
+        /Staged changes.*unrelated\.txt.*git restore --staged/,
+      );
+      if (target === "product") {
+        expect(() => mergeProductIntoTarget({ product: app1, message: "merge" })).toThrow(
+          /Staged changes/,
+        );
+      }
+      expect(roots.map((root) => git(root, "rev-parse", "HEAD"))).toEqual(heads);
+      expect(git(checkout, "diff", "--cached", "--binary")).toBe(index);
+      expect(readFileSync(join(checkout, "unrelated.txt"), "utf8")).toBe("keep staged\n");
+    },
+  );
 
   it("allows unrelated uncommitted files on product and project integration targets", () => {
     const fixture = setup();
@@ -1437,6 +1467,71 @@ describe("syncTaskWorktreesWithIntegrationTargets", () => {
     ).not.toBe(0);
   });
 
+  // PJR-EWZG: wait の commit を結果なしでやり直した（または失敗して記帳を手で commit した）後は、
+  // 統合先の個票に executor の本文が無い。再開の前の同期で個票を統合先に寄せると本文が消える。
+  it("keeps the executor's ticket body and takes the waiting lifecycle when the ticket conflicts on resume", () => {
+    const fixture = setup({ withProducts: false });
+    const ticketRel = "docs/controls/project-register/pjr-ab12-sample.md";
+    const eventRel = "docs/controls/project-register/events/pjr-ab12.yaml";
+    const ticket = (status: string, blockReason: string | null, result: string): string =>
+      [
+        "---",
+        "specdojo:",
+        "  id: test:pjr-ab12-sample",
+        "  type: project",
+        "  status: draft",
+        "  item_type: issue",
+        `  item_status: ${status}`,
+        "  priority: medium",
+        "  owner: DEV",
+        '  registered_at: "2026-11-16T00:00:00Z"',
+        "  due_on: null",
+        ...(blockReason ? [`  block_reason: ${blockReason}`] : []),
+        "---",
+        "",
+        "# PJR-AB12 sample",
+        "",
+        "## 1. 対応結果",
+        "",
+        result,
+        "",
+      ].join("\n");
+    commitOn(fixture.repo, ticketRel, ticket("in-progress", null, "-"));
+    commitOn(fixture.repo, eventRel, "events:\n  - start\n");
+    const worktree = prepare(fixture);
+    writeFile(
+      join(worktree.path, ticketRel),
+      ticket("review", null, "- 原因: executor が書いた本文"),
+    );
+    writeFile(join(worktree.path, eventRel), "events:\n  - start\n  - review\n");
+    git(worktree.path, "add", ticketRel, eventRel);
+    git(worktree.path, "commit", "-m", "executor result");
+    // 統合先には executor の本文を含まない waiting の記録だけが入る。
+    commitOn(fixture.repo, eventRel, "events:\n  - start\n  - wait\n");
+    commitOn(fixture.repo, ticketRel, ticket("waiting", "integration failed", "-"));
+
+    const synced = syncTaskWorktreesWithIntegrationTargets({
+      worktree,
+      projectTarget: currentBranch(fixture.repo),
+      message: "merge integration target before resume",
+      ...registerResumeConflictPaths(
+        fixture.repo,
+        [join(fixture.repo, ticketRel), join(fixture.repo, eventRel)],
+        ticketRel,
+      ),
+    });
+
+    expect(synced.map((entry) => entry.status)).toEqual(["merged"]);
+    const resumed = readFileSync(join(worktree.path, ticketRel), "utf8");
+    expect(resumed).toContain("- 原因: executor が書いた本文");
+    expect(resumed).toContain("item_status: waiting");
+    expect(resumed).toContain("block_reason: integration failed");
+    expect(readFileSync(join(worktree.path, eventRel), "utf8")).toBe(
+      "events:\n  - start\n  - wait\n",
+    );
+    expect(git(worktree.path, "status", "--porcelain")).toBe("");
+  });
+
   it("reports up-to-date and creates no commit when the integration branch has nothing new", () => {
     const fixture = setup({ withProducts: false });
     const worktree = prepare(fixture);
@@ -1586,5 +1681,24 @@ describe("syncTaskWorktreesWithIntegrationTargets", () => {
     expect(readFileSync(join(worktree.path, "ticket.md"), "utf8")).toBe(
       "integration branch ticket\n",
     );
+  });
+
+  it("keeps the exec branch content for conflicts on the task's own run records", () => {
+    const fixture = setup({ withProducts: false });
+    const worktree = prepare(fixture);
+    commitOn(worktree.path, "result.md", "exec branch result\n");
+    commitOn(fixture.repo, "result.md", "trailing record result\n");
+    commitOn(fixture.repo, "fix.md", "integration fix\n");
+
+    const synced = syncTaskWorktreesWithIntegrationTargets({
+      worktree,
+      projectTarget: currentBranch(fixture.repo),
+      message: "merge integration target before resume",
+      projectOursPaths: ["result.md"],
+    });
+
+    expect(synced.map((entry) => entry.status)).toEqual(["merged"]);
+    expect(readFileSync(join(worktree.path, "result.md"), "utf8")).toBe("exec branch result\n");
+    expect(readFileSync(join(worktree.path, "fix.md"), "utf8")).toBe("integration fix\n");
   });
 });

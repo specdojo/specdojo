@@ -1,0 +1,22 @@
+対象文書（`cnd-specdojo.md`）は今回の作業で最終的に変更していません。前回の試行では図の直後の注記を「図をなぞる文」として削除していましたが、元の文に戻しました。この注記は C4 コンテナ図の rulebook（`cnd-rulebook.md`）が求める内容だったためです。
+
+**戻した理由**
+
+- rulebook の「矢印が依頼の方向か情報移動の方向かを注記し、応答を省略する場合も意味が通るようにします」に当たる文でした。
+- 前回の削除では「矢印は主たる利用・依頼・参照の向きで、応答を含む」が消え、図だけでは矢印の読み方が分からなくなっていました。
+- recipe（`cnd-recipe.md`）にも「応答を同じ線に含めるかを注記します」と書かれています。
+
+**ほかの候補も、判断に要る情報のため残しました**
+
+- **3.3 表の後の文:** 未確定事項（サイトの構築・配備を誰が担うか）と、対象外の範囲（閲覧先から CLI を操作する経路）です。表とは中身が重なりません。
+- **3.4 表の後の文:** 「閲覧先の編集を正本へ反映する経路は定義しない」という制約を含むため、概要との言い換えではありません。
+- **4.2 冒頭の一文:** 検証対象が実施済みのテストではないという前提を、QE が判断するために必要です。
+
+**検証**
+
+- 対象文書に差分が残らないため、Prettier と markdownlint は適用外としました。
+- 親 runner が実行する検査は、ここでは実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"冗長さの候補を確認しましたが、削れる箇所はありませんでした。前回の試行で削除した図直後の矢印の注記は cnd-rulebook.md が求める内容のため HEAD の文に戻し、対象文書は最終的に変更していません。","handoff":[],"condense_records":[{"location":"「C4コンテナ図（Mermaid）」図直後の注記（「矢印は主たる利用・依頼・参照の向きで、応答を含む。」）","category":"figure-prose","action":"retain","reason":"cnd-rulebook.md は、矢印が依頼の方向か情報移動の方向かを注記し、応答を省略する場合も意味が通るようにすることを求めている。この注記は図から読み取れない読み方の規約である。閲覧者を代表として描いていることと、リモート接続経路が仮定であることも判断に必要なため残した。前回の試行での削除は元に戻した。","cause":{"type":"document"}},{"location":"「Container（コンテナ）」表の後の段落（「サイトの構築・配備を CLI が直接起動するか…」）","category":"table-prose","action":"retain","reason":"表にない未確定事項（構築・配備を担う主体）と、対象外の範囲（閲覧先から CLI を操作する経路）を示しており、インフラ設計の判断に必要なため残した。","cause":{"type":"document"}},{"location":"「Data Store（データストア）」表の後の段落（「サイトの静的生成物は正本の派生物で…」）","category":"repetition","action":"retain","reason":"概要の「正本と生成物を区別する」と重なって見えるが、「閲覧先の編集を正本へ反映する経路は定義しない」という制約を含むため残した。","cause":{"type":"document"}},{"location":"「コンテナ間・外部依存の検証対象」冒頭の一文（「以下は検証設計への入力であり…」）","category":"unneeded-background","action":"retain","reason":"検証対象が実施済みのテストや合格の保証ではないという前提を示す。QE が結合テストの対象を判断するときに必要なため残した。","cause":{"type":"document"}}],"validations":[{"command":"git diff --stat HEAD -- docs/ja/product/","status":"passed","summary":"対象文書を HEAD に戻し、差分がないことを確認した。"},{"command":"npx prettier --check docs/ja/product/030-architecture/010-c4/cnd-specdojo.md","status":"not_applicable","summary":"対象の Markdown に差分がないため実行していない。","reason":"今回の作業で最終的に変更した md・ts・js・json・yaml ファイルがないため。"}],"target_coverage":[{"target":"cnd-specdojo","status":"unchanged","reason":"冗長さの候補をすべて確認したが、どれも判断に要る注記・制約・前提だった。図直後の矢印の注記は cnd-rulebook.md が求める内容のため、前回の試行での削除を元に戻した。削っても判断情報を失わない箇所がないため変更しない。"}]}
+</specdojo_executor_evidence>

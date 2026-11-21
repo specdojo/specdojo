@@ -31,6 +31,7 @@ export type ExecRunLockOptions = {
   staleMs?: number;
   pollMs?: number;
   onWait?: () => void;
+  waitTimeoutMs?: number;
 };
 
 export type ExecRunLockHandle = LockHandle;
@@ -48,6 +49,18 @@ export class ExecRunBusyError extends Error {
   ) {
     super(`Exec run is busy for this project.\nLock: ${lockDir}\nOwner: ${owner}`);
     this.name = "ExecRunBusyError";
+  }
+}
+
+export class ExecRunLockTimeoutError extends ExecRunBusyError {
+  constructor(
+    lockDir: string,
+    owner: string,
+    public readonly waitTimeoutMs: number,
+  ) {
+    super(lockDir, owner);
+    this.name = "ExecRunLockTimeoutError";
+    this.message = `Exec lock wait timed out after ${waitTimeoutMs} ms.\n${this.message}`;
   }
 }
 
@@ -136,8 +149,23 @@ export async function acquireExecRunLock(
   const staleMs = opts.staleMs ?? EXEC_RUN_LOCK_STALE_MS;
   const pollMs = opts.pollMs ?? LOCK_POLL_MS;
   let waitingAnnounced = false;
+  if (
+    opts.waitTimeoutMs !== undefined &&
+    (!Number.isFinite(opts.waitTimeoutMs) || opts.waitTimeoutMs < 0)
+  )
+    throw new Error("waitTimeoutMs must be a finite non-negative number");
+  const deadline = opts.waitTimeoutMs === undefined ? Infinity : Date.now() + opts.waitTimeoutMs;
+  let firstAttempt = true;
 
   while (true) {
+    if (!firstAttempt && opts.ifBusy === "wait" && Date.now() >= deadline) {
+      throw new ExecRunLockTimeoutError(
+        execRunLockPath(executionPath),
+        describeHolders(executionPath, staleMs),
+        opts.waitTimeoutMs!,
+      );
+    }
+    firstAttempt = false;
     const handle = opts.join
       ? tryAcquireJoin(executionPath, opts, opts.join.limit, staleMs)
       : tryAcquireExclusive(executionPath, opts, staleMs);
@@ -154,7 +182,14 @@ export async function acquireExecRunLock(
       opts.onWait?.();
       waitingAnnounced = true;
     }
-    await delay(pollMs);
+    if (Date.now() >= deadline) {
+      throw new ExecRunLockTimeoutError(
+        execRunLockPath(executionPath),
+        describeHolders(executionPath, staleMs),
+        opts.waitTimeoutMs!,
+      );
+    }
+    await delay(Math.min(pollMs, Math.max(0, deadline - Date.now())));
   }
 }
 

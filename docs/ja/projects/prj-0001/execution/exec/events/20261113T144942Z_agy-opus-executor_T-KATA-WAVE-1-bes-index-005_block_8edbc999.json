@@ -1,0 +1,26 @@
+{
+  "v": 1,
+  "ts": "2026-11-13T14:49:42Z",
+  "type": "block",
+  "task_id": "T-KATA-WAVE-1-bes-index-005",
+  "by": "agy-opus-executor",
+  "msg": "rate_limit reached; resume_at=2026-11-20T06:38:50.240Z",
+  "meta": {
+    "limit_deferred": "true",
+    "limit_availability_state": "limited",
+    "limit_retryable": "true",
+    "limit_auto_resume": "true",
+    "limit_kind": "rate_limit",
+    "limit_provider": "antigravity",
+    "limit_observed_at": "2026-11-13T14:49:40.240Z",
+    "limit_raw_message": "AGY_ERROR: {\"short_error\":\"RESOURCE_EXHAUSTED (code 429): Individual quota reached. Please upgrade your subscription to increase your limits. Resets in 159h49m10s.\",\"status\":\"RESOURCE_EXHAUSTED\",\"error_code\":429,\"code_kind\":\"http\",\"retryable\":true,\"error_id\":\"02de4b94-cff0-461f-82d4-f7cc9e43b4f8-1\"}",
+    "limit_attempts": "1",
+    "limit_worktree": "/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-bes-index-005",
+    "limit_resume_at": "2026-11-20T06:38:50.240Z",
+    "limit_resume_source": "provider_reset",
+    "pipeline_stage": "executor",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-bes-index-005/T-KATA-WAVE-1-bes-index-005-20261113T135759Z-78dd5f7d/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-bes-index-005/T-KATA-WAVE-1-bes-index-005-20261113T135759Z-78dd5f7d/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-1-bes-index-005-20261113T135759Z-78dd5f7d"
+  }
+}

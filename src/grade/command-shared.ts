@@ -5,6 +5,16 @@ export function collectPathOption(value: string, previous: string[]): string[] {
   return [...previous, value];
 }
 
+export function collectKataOption(value: string, previous: string[]): string[] {
+  return [
+    ...previous,
+    ...value
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean),
+  ];
+}
+
 export function requireTarget(value: string): GradeTarget {
   if (value !== "kata" && value !== "deliverable")
     throw new Error("--target must be kata or deliverable");
@@ -68,8 +78,14 @@ export function addGradeSelectionOptions(command: Command): Command {
     .option("--project <projectId>", "Project id in specdojo.config.json")
     .option(
       "--path <path>",
-      "Grade only this Markdown document (repeatable)",
+      "Grade only this Markdown or YAML document (repeatable)",
       collectPathOption,
+      [],
+    )
+    .option(
+      "--kata <name>",
+      "Grade rulebook and sample for this kata name or prefix (repeatable)",
+      collectKataOption,
       [],
     )
     .option("--changed-only", "Select documents changed since their latest grade", false)

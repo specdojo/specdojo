@@ -1,6 +1,7 @@
 import { createInterface } from "node:readline/promises";
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
-import { dirname, join, relative } from "node:path";
+import { tmpdir } from "node:os";
+import { dirname, join, relative, resolve } from "node:path";
 import type { Command } from "commander";
 import { dump, load } from "../shared/yaml.js";
 import { runScaffold, type ProjectSize } from "../catalog/scaffold.js";
@@ -25,8 +26,10 @@ import {
   gitignorePatternsForLayouts,
 } from "../shared/specdojo-gitignore.js";
 import { specdojoPackageRootDir } from "../shared/package-paths.js";
+import { AntigravityBlockedError, isBlockedProvider } from "../shared/antigravity-block.js";
 
-const PROVIDERS = ["claude", "codex", "opencode", "antigravity", "copilot"] as const;
+// antigravity is intentionally absent: agy is never launched since 0.9.2 (PJR-NJE4).
+const PROVIDERS = ["claude", "codex", "opencode", "copilot"] as const;
 type InitProvider = (typeof PROVIDERS)[number];
 
 const PARENT_VALIDATION_SCRIPTS = {
@@ -34,6 +37,7 @@ const PARENT_VALIDATION_SCRIPTS = {
   "lint-fm": "lint:fm",
   "lint-md": "lint:md",
   "lint-mermaid": "lint:mermaid",
+  "lint-d2": "lint:d2",
   "test-integration": "test:integration",
   "validate-schema": "validate:schema",
   typecheck: "typecheck",
@@ -108,6 +112,9 @@ function parseProviders(value: string | undefined): InitProvider[] {
         .filter(Boolean),
     ),
   ];
+  if (providers.some((provider) => isBlockedProvider(provider))) {
+    throw new AntigravityBlockedError("init cannot select provider antigravity");
+  }
   const unknown = providers.filter(
     (provider): provider is string => !PROVIDERS.includes(provider as InitProvider),
   );
@@ -503,14 +510,15 @@ function writeExecConfiguration(
     new Set(members.map((member) => member.nickname)),
   );
   // normal の段（medium・easy と全 reporter）と expert の段（hard）を provider ごとに選ぶ。
-  // expert の段がない provider（opencode・antigravity など）は hard も normal の段を使う。
+  // expert の段がない provider（opencode など）は hard も normal の段を使う。
   const pairs = providers.map((provider) => {
     const executor = members.find(
       (member) =>
         member.provider === provider &&
         member.stage_role === "executor" &&
         member.mode === "edit" &&
-        member.proficiency !== "expert",
+        member.proficiency !== "expert" &&
+        member.proficiency !== "frontier",
     );
     const expertExecutor = members.find(
       (member) =>
@@ -523,7 +531,8 @@ function writeExecConfiguration(
       (member) =>
         member.provider === provider &&
         member.stage_role === "reporter" &&
-        member.proficiency !== "expert",
+        member.proficiency !== "expert" &&
+        member.proficiency !== "frontier",
     );
     if (!executor || !reporter) {
       throw new Error(
@@ -723,6 +732,9 @@ export async function runInit(
   deps?: { prompter?: InitPrompter },
 ): Promise<void> {
   const repoRoot = specdojoRootDir();
+  if (resolve(repoRoot) === resolve(tmpdir())) {
+    throw new Error("Refusing to initialize specdojo directly under temporary directory root.");
+  }
   const packageRoot = specdojoPackageRootDir();
   const interactive = !options.yes && !!process.stdin.isTTY && !process.env.CI;
   const prompter =
@@ -804,9 +816,7 @@ export async function runInit(
       ? "orch:opus"
       : firstProvider === "codex"
         ? "orch:sol"
-        : firstProvider === "antigravity"
-          ? "orch:flash"
-          : `orch:${firstProvider}`;
+        : `orch:${firstProvider}`;
   process.stdout.write(
     "Next steps:\n" +
       (firstProvider

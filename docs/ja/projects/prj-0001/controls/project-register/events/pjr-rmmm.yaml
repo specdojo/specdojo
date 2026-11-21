@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_bc09906d6f714a58a7d929431e1dc9fe
+  ts: "2026-11-08T04:01:14Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 画面仕様（uis）の手入れした型を確定する
+    - field: description
+      from: ""
+      to: 手入れした uis の型を人が確かめ、確定するか直すかを決める
+    - field: input
+      from: ""
+      to: '["型の確定は人が行う（PJR-RZ9Q と同じ扱い）。"]'
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-08"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-2GD6"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-0YNQ"]'
+- v: 1
+  id: reg_c8da7bf5c76944f8bcff9232a8fc9ea5
+  ts: "2026-11-08T06:47:11Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: indie が決定（推奨どおり、2026-11-08）
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-11-08"
+    - field: conclusion
+      from: "-"
+      to: uis の型は直す。CLI を新しい種類 clis に分け、uis は GUI の画面仕様だけにし、rulebook のサンプルの章を消す
+  previous_event_id: reg_bc09906d6f714a58a7d929431e1dc9fe

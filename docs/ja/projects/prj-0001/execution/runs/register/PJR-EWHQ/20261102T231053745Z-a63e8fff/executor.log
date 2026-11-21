@@ -1,0 +1,37 @@
+PJR-EWHQ「Antigravity の orchestrator に Gemini 4 Argon の起動スクリプトを足す」の対応を完了しました。
+
+### 実施内容
+1. `specdojo init` および `config scaffold` が Antigravity 向けに配布する起動スクリプト（[`src/shared/provider-scaffold.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EWHQ/src/shared/provider-scaffold.ts) の `ORCHESTRATOR_NPM_SCRIPTS.antigravity`）に、`orch:argon`（`gemini-4-argon-medium`）と `orch:argon:work`（`tools/worktree/open-agent-worktree.sh` による `argon-work`）を追加しました。既存の `orch:flash` は維持しています。
+2. 単体テスト [`tests/src/shared/provider-scaffold.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EWHQ/tests/src/shared/provider-scaffold.test.ts) および [`tests/src/commands/init.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EWHQ/tests/src/commands/init.test.ts) を更新し、Antigravity 選択時に `orch:argon` と `orch:argon:work` が `package.json` へ配られることを確認しました。
+3. [`README.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EWHQ/README.md)、[`templates/antigravity/README.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EWHQ/templates/antigravity/README.md)、[[specdojo:orchestrator-operation-guide|オーケストレーター運用ガイド]]、[[specdojo:command-reference|コマンドリファレンス]]、[[sysd-antigravity-agent-settings|Antigravity CLI エージェント設定]] に `orch:argon`・`orch:argon:work` の記述を反映しました。
+4. [`CHANGELOG.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EWHQ/CHANGELOG.md) の `[Unreleased]` 節に起動スクリプトの追加内容を追記しました。
+5. 個票 [`pjr-ewhq-orch-argon.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EWHQ/docs/ja/projects/prj-0001/controls/project-register/pjr-ewhq-orch-argon.md) の作業内容および対応結果を更新し、保護されたルート `package.json` に追加すべき 2 行の案を個票と `handoff` に記載しました。
+
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "Antigravity の orchestrator 起動スクリプトに orch:argon と orch:argon:work を追加し、テスト・案内文書・個票を更新しました。",
+  "handoff": [
+    "本リポジトリのルート package.json は保護された設定のため executor stage では変更していません。統合後に利用者の承認のもとで orchestrator が以下の 2 行を scripts（orch:flash の前）へ追加してください:\n    \"orch:argon\": \"tsx src/specdojo.ts orchestrator launch --provider antigravity -- --add-dir \\\"$(pwd)\\\" --model gemini-4-argon-medium -i \\\"$(cat .agents/specdojo-orchestrator.agent.md)\\\",\n    \"orch:argon:work\": \"tools/worktree/open-agent-worktree.sh argon-work tsx \\\"$(pwd)/src/specdojo.ts\\\" orchestrator launch --provider antigravity -- --add-dir . --model gemini-4-argon-medium -i \\\"$(cat .agents/specdojo-orchestrator.agent.md)\\\",",
+    "統合後に、本リポジトリの package.json に上記 2 行を足し、npm run orch:argon と npm run orch:argon:work で対話型オーケストレーターが正常に起動することを利用者が terminal で確認してください（認証・利用枠を要するため人による確認が必要）。",
+    "個票 frontmatter の item_status および登録簿（pjr-index.md）の行は変更していません。状態遷移は runner および人間が行います。"
+  ],
+  "validations": [
+    {
+      "command": "npx prettier --check 'src/shared/provider-scaffold.ts' 'tests/src/shared/provider-scaffold.test.ts' 'tests/src/commands/init.test.ts' 'README.md' 'templates/antigravity/README.md' 'docs/ja/specdojo/guides/orchestrator-operation-guide.md' 'docs/ja/specdojo/references/command-reference.md' 'docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md' 'CHANGELOG.md' 'docs/ja/projects/prj-0001/controls/project-register/pjr-ewhq-orch-argon.md'",
+      "status": "passed",
+      "summary": "変更されたすべてのファイルが Prettier の整形規約を満たしていることを確認しました。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分に行末空白や競合マーカーなどの問題がないことを確認しました。"
+    },
+    {
+      "command": "npm run validate:catalog",
+      "status": "passed",
+      "summary": "成果物カタログの構文と整合性検証が正常に完了しました。"
+    }
+  ]
+}
+</specdojo_executor_evidence>

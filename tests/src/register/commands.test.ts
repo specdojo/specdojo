@@ -494,20 +494,10 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
     });
   });
 
-  it("tml-index の定義を add / update / build で検証し、削除・未定義 track を拒否する", async () => {
-    await withRepo(async ({ root, registerDir }) => {
+  it("timeline にない track も作成でき、重複 track と削除を拒否する", async () => {
+    await withRepo(async ({ registerDir }) => {
       vi.spyOn(process.stdout, "write").mockReturnValue(true);
       const stderr = vi.spyOn(process.stderr, "write").mockReturnValue(true);
-      const timelineDir = join(root, "docs/ja/projects/prj-0001/custom-timeline");
-      mkdirSync(timelineDir, { recursive: true });
-      const config = structuredClone(CONFIG);
-      Object.assign(config.projects["prj-0001"], { timeline_path: "custom-timeline" });
-      writeFileSync(join(root, ".specdojo/specdojo.config.json"), JSON.stringify(config));
-      const timelinePath = join(timelineDir, "tml-index.yaml");
-      writeFileSync(
-        timelinePath,
-        "project_id: prj-0001\ntracks:\n  - track: business\n    domains: [business]\n    catalog_status: draft\n    order: 1\n    depends_on: []\n",
-      );
       await runRegister([
         "add",
         "--type",
@@ -519,11 +509,66 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
         "--title",
         "x",
         "--track",
-        "unknown",
+        "new",
+        "--domain",
+        "a",
+        "--domain",
+        "b",
+      ]);
+      expect(process.exitCode).toBeUndefined();
+      const ticketPath = join(registerDir, "pjr-ab12-epic.md");
+      expect(readFileSync(ticketPath, "utf8")).toContain("domains:");
+      await runRegister(["update", "--id", "PJR-AB12", "--domain", "c"]);
+      expect(process.exitCode).toBeUndefined();
+      expect(readFileSync(ticketPath, "utf8")).toContain("  - c");
+      expect(readFileSync(ticketPath, "utf8")).not.toContain("  - a");
+      expect(readEvents(registerDir, "PJR-AB12").at(-1)?.changes).toContainEqual({
+        field: "domains",
+        from: '["a","b"]',
+        to: '["c"]',
+      });
+      await runRegister(["update", "--id", "PJR-AB12", "--domain", "-"]);
+      expect(process.exitCode).toBeUndefined();
+      expect(readFileSync(ticketPath, "utf8")).not.toContain("domains:");
+      expect(readEvents(registerDir, "PJR-AB12").at(-1)?.changes).toContainEqual({
+        field: "domains",
+        from: '["c"]',
+        to: "-",
+      });
+      await runRegister([
+        "add",
+        "--type",
+        "epic",
+        "--id",
+        "PJR-AB13",
+        "--topic",
+        "epic",
+        "--title",
+        "y",
+        "--track",
+        "new",
       ]);
       expect(process.exitCode).toBe(1);
-      expect(existsSync(join(registerDir, "pjr-ab12-epic.md"))).toBe(false);
+      expect(stderr.mock.calls.flat().join("")).toContain("Duplicate epic track");
       process.exitCode = undefined;
+      await runRegister(["update", "--id", "PJR-AB12", "--track", "-"]);
+      expect(process.exitCode).toBe(1);
+      process.exitCode = undefined;
+      await runRegister(["build"]);
+      expect(process.exitCode).toBeUndefined();
+      writeFileSync(
+        join(registerDir, "pjr-ab13-epic.md"),
+        readFileSync(ticketPath, "utf8").replaceAll("ab12", "ab13").replaceAll("AB12", "AB13"),
+      );
+      await runRegister(["build"]);
+      expect(process.exitCode).toBe(1);
+    });
+  });
+
+  it("epic の予定開始日を追加・保持・変更・削除し、逆転は build で警告する", async () => {
+    await withRepo(async ({ registerDir }) => {
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+      const stderr = vi.spyOn(process.stderr, "write").mockReturnValue(true);
       await runRegister([
         "add",
         "--type",
@@ -536,24 +581,172 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
         "x",
         "--track",
         "business",
+        "--start-on",
+        "2026-11-06",
+        "--due",
+        "2026-11-30",
       ]);
+      const path = join(registerDir, "pjr-ab12-epic.md");
       expect(process.exitCode).toBeUndefined();
-      const ticketPath = join(registerDir, "pjr-ab12-epic.md");
-      const before = readFileSync(ticketPath, "utf8");
-      for (const track of ["unknown", "-"]) {
+      expect(readFileSync(path, "utf8")).toContain('start_on: "2026-11-06"');
+      expect(readEvents(registerDir, "PJR-AB12")[0].changes).toContainEqual({
+        field: "start_on",
+        from: "",
+        to: "2026-11-06",
+      });
+      await runRegister(["update", "--id", "PJR-AB12", "--priority", "high"]);
+      expect(readFileSync(path, "utf8")).toContain('start_on: "2026-11-06"');
+      const before = readFileSync(path, "utf8");
+      const eventsBefore = readFileSync(registerEventFilePath(registerDir, "PJR-AB12"), "utf8");
+      for (const invalid of [
+        "2026-11-6",
+        "2026-02-29",
+        "2026-13-01",
+        "2026-11-06T00:00:00Z",
+        "",
+        "_TODO_",
+      ]) {
         process.exitCode = undefined;
-        await runRegister(["update", "--id", "PJR-AB12", "--track", track]);
-        expect(process.exitCode).toBe(1);
-        expect(readFileSync(ticketPath, "utf8")).toBe(before);
+        await runRegister(["update", "--id", "PJR-AB12", "--start-on", invalid]);
+        expect(process.exitCode, invalid).toBe(1);
+        expect(readFileSync(path, "utf8")).toBe(before);
+        expect(readFileSync(registerEventFilePath(registerDir, "PJR-AB12"), "utf8")).toBe(
+          eventsBefore,
+        );
       }
       process.exitCode = undefined;
-      writeFileSync(
-        timelinePath,
-        readFileSync(timelinePath, "utf8").replace("track: business", "track: renamed"),
-      );
+      await runRegister(["update", "--id", "PJR-AB12", "--start-on", "2026-12-01"]);
+      expect(readEvents(registerDir, "PJR-AB12").at(-1)?.changes).toContainEqual({
+        field: "start_on",
+        from: "2026-11-06",
+        to: "2026-12-01",
+      });
+      stderr.mockClear();
       await runRegister(["build"]);
-      expect(process.exitCode).toBe(1);
-      expect(stderr.mock.calls.flat().join("")).toContain('Undefined epic track "business"');
+      expect(process.exitCode).toBeUndefined();
+      expect(stderr.mock.calls.flat().join("")).toContain(
+        "PJR-AB12: start_on (2026-12-01) is after due_on (2026-11-30); period is unknown",
+      );
+      expect(readFileSync(path, "utf8")).toContain('start_on: "2026-12-01"');
+      await runRegister(["update", "--id", "PJR-AB12", "--start-on", "-"]);
+      expect(readFileSync(path, "utf8")).not.toContain("start_on:");
+      expect(readEvents(registerDir, "PJR-AB12").at(-1)?.changes).toContainEqual({
+        field: "start_on",
+        from: "2026-12-01",
+        to: "-",
+      });
+      stderr.mockClear();
+      await runRegister(["build"]);
+      expect(process.exitCode).toBeUndefined();
+      expect(stderr.mock.calls.flat().join("")).not.toContain("start_on");
+      await runRegister([
+        "add",
+        "--type",
+        "epic",
+        "--id",
+        "PJR-AB13",
+        "--topic",
+        "epic",
+        "--title",
+        "y",
+        "--track",
+        "implementation",
+        "--start-on",
+        "-",
+      ]);
+      expect(process.exitCode).toBeUndefined();
+      expect(readFileSync(join(registerDir, "pjr-ab13-epic.md"), "utf8")).not.toContain(
+        "start_on:",
+      );
+      await runRegister(["update", "--id", "PJR-AB13", "--start-on", "2028-02-29"]);
+      expect(process.exitCode).toBeUndefined();
+      expect(readFileSync(join(registerDir, "pjr-ab13-epic.md"), "utf8")).toContain(
+        'start_on: "2028-02-29"',
+      );
+    });
+  });
+
+  it("不正な予定開始日と epic 以外への指定は、add / update とも記帳しない", async () => {
+    await withRepo(async ({ registerDir }) => {
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+      const stderr = vi.spyOn(process.stderr, "write").mockReturnValue(true);
+      for (const date of ["2026-02-29", "2026-11-6", "_TODO_"]) {
+        process.exitCode = undefined;
+        await runRegister([
+          "add",
+          "--type",
+          "epic",
+          "--id",
+          "PJR-AB12",
+          "--topic",
+          "epic",
+          "--title",
+          "x",
+          "--track",
+          "business",
+          "--start-on",
+          date,
+        ]);
+        expect(process.exitCode).toBe(1);
+        expect(existsSync(join(registerDir, "pjr-ab12-epic.md"))).toBe(false);
+        expect(existsSync(registerEventFilePath(registerDir, "PJR-AB12"))).toBe(false);
+      }
+      for (const type of [
+        "todo",
+        "question",
+        "risk",
+        "issue",
+        "change-request",
+        "decision",
+        "note",
+      ]) {
+        for (const date of ["2026-11-06", "-"]) {
+          process.exitCode = undefined;
+          await runRegister([
+            "add",
+            "--type",
+            type,
+            "--id",
+            "PJR-AB12",
+            "--topic",
+            "topic",
+            "--title",
+            "x",
+            "--start-on",
+            date,
+          ]);
+          expect(process.exitCode).toBe(1);
+          expect(existsSync(join(registerDir, "pjr-ab12-topic.md"))).toBe(false);
+          expect(existsSync(registerEventFilePath(registerDir, "PJR-AB12"))).toBe(false);
+        }
+        process.exitCode = undefined;
+        await runRegister([
+          "add",
+          "--type",
+          type,
+          "--id",
+          "PJR-AB12",
+          "--topic",
+          "topic",
+          "--title",
+          "x",
+        ]);
+        const path = join(registerDir, "pjr-ab12-topic.md");
+        const before = readFileSync(path, "utf8");
+        const eventsBefore = readFileSync(registerEventFilePath(registerDir, "PJR-AB12"), "utf8");
+        for (const date of ["2026-11-06", "-"]) {
+          process.exitCode = undefined;
+          await runRegister(["update", "--id", "PJR-AB12", "--start-on", date]);
+          expect(process.exitCode).toBe(1);
+          expect(readFileSync(path, "utf8")).toBe(before);
+          expect(readFileSync(registerEventFilePath(registerDir, "PJR-AB12"), "utf8")).toBe(
+            eventsBefore,
+          );
+        }
+        rmSync(path);
+        rmSync(registerEventFilePath(registerDir, "PJR-AB12"));
+      }
+      expect(stderr.mock.calls.flat().join("")).toContain("only valid for epic");
     });
   });
 
@@ -662,7 +855,7 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
     });
   });
 
-  it.each(["fully-guided", "draft"])(
+  it.each(["fully-guided", "condense", "draft"])(
     "add は %s と target を検証して個票へ書く",
     async (approach) => {
       await withRepo(async ({ root, registerDir }) => {
@@ -1460,6 +1653,62 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
       });
     },
   );
+
+  it("close は作業内容の表に理由のない open の行が残る個票を書き換えず終了コード 1 で拒否する", async () => {
+    await withRepo(async ({ registerDir }) => {
+      const ticketPath = join(registerDir, "pjr-ab12-topic.md");
+      writeFileSync(join(registerDir, "pjr-index.md"), buildIndex([]), "utf8");
+      const original = [
+        buildTicket("PJR-AB12", ["item_status: in-progress", "priority: high"]),
+        "## 3. 作業内容",
+        "",
+        "| No  | 作業 | 担当 | 状態 | メモ |",
+        "| --- | ---- | ---- | ---- | ---- |",
+        "| 1   | 実装 | DEV  | done | -    |",
+        "| 2   | 文書 | DEV  | open | -    |",
+        "",
+      ].join("\n");
+      writeFileSync(ticketPath, original, "utf8");
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+      const stderr = vi.spyOn(process.stderr, "write").mockReturnValue(true);
+
+      await runRegister(["close", "--id", "PJR-AB12"]);
+
+      expect(process.exitCode).toBe(1);
+      expect(stderr.mock.calls.map((call) => String(call[0])).join("")).toContain(
+        'Cannot close PJR-AB12: the 作業内容 table of PJR-AB12 does not match the work done: row 2 is "open" without a reason in メモ',
+      );
+      expect(readFileSync(ticketPath, "utf8")).toBe(original);
+      expect(existsSync(registerEventFilePath(registerDir, "PJR-AB12"))).toBe(false);
+    });
+  });
+
+  it("close は作業内容の表の行がすべて done か理由つきで残された個票を終端できる", async () => {
+    await withRepo(async ({ registerDir }) => {
+      const ticketPath = join(registerDir, "pjr-ab12-topic.md");
+      writeFileSync(join(registerDir, "pjr-index.md"), buildIndex([]), "utf8");
+      writeFileSync(
+        ticketPath,
+        [
+          buildTicket("PJR-AB12", ["item_status: in-progress", "priority: high"]),
+          "## 3. 作業内容",
+          "",
+          "| No  | 作業       | 担当 | 状態 | メモ                         |",
+          "| --- | ---------- | ---- | ---- | ---------------------------- |",
+          "| 1   | 実装       | DEV  | done | -                            |",
+          "| 2   | grade 起動 | DEV  | open | executor から起動できないため |",
+          "",
+        ].join("\n"),
+        "utf8",
+      );
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+      await runRegister(["close", "--id", "PJR-AB12"]);
+
+      expect(process.exitCode).toBeUndefined();
+      expect(readFileSync(ticketPath, "utf8")).toContain("  item_status: done");
+    });
+  });
 
   it("update は note の内容を従来どおり更新できる", async () => {
     await withRepo(async ({ registerDir }) => {

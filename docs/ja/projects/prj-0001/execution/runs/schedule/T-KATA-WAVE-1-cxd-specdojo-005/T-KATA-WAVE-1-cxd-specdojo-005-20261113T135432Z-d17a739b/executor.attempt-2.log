@@ -1,0 +1,63 @@
+CXD 一式を確認し、recipe・template のサイドバー登録漏れを修正しました。整形・差分検査は通過し、親検証の再実行待ちです。
+
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "代表成果物と実践の型の整合を確認し、CXD recipe・template の文書サイト登録漏れを修正した。result は編集していない。",
+  "handoff": [
+    "累積変更: cxd-specdojo.md の代表初版、cxd-rulebook.md の規約再構成、cxd-sample.md の完成例への改稿、cxd-recipe.md と cxd-template.md の新規作成を維持した。対象5文書はすべて draft。今回 packages/docs-site/.vitepress/sidebar-config.ts に recipe・template のアーキテクチャ → C4 メニューを追加した。",
+    "型の要否判断: 境界・利用者・外部依存の選択には schema だけで規定できない判断があるため rulebook が必要。境界判断と依存失敗時の具体化には品質差が出るため recipe、完成時の粒度・文体を示すため sample、共通の章立て・表から開始するため template が必要。rulebook frontmatter の3種の ID 宣言と実在ファイルは対応している。成果物カタログの rulebook 宣言は既に specdojo:cxd-rulebook であり変更不要。",
+    "既存評価と手本: 単一システムと外部関係を扱う既存方針を維持し、rulebook の完成例を sample へ外出しした累積変更を確認した。ready の tsd-index-rulebook.md、cdfd-overview-recipe.md、cdfd-overview-template.md の構造・記法を手本とし、plan 指定の clis-sample.md を完成例の厚さと学習用 CLI 文脈の参考とした。製品固有の値を recipe・template へ持ち込まず一般化している。Web 参照なし。",
+    "相互整合と仕上げ: 意味要件は rulebook、見出し・記入欄は template、問いと手順は recipe、完成例は sample とした。Mermaid 記法は includes の specdojo:cxd-mermaid-rulebook へ委譲する。前回の仕上げ1巡による不要な実装列挙の削除、詳細仕様への重複の統合、技術前提と検証観点の分割、図・表・型宣言の整合を維持した。今回の再開ではサイドバー登録のみを追加修正し、観点別の自己レビューループは実施していない。",
+    "内容上の引き継ぎ: `depends_on` が空のため代表成果物の `based_on` は空のままとした。ローカル配置の仮定、Git / GitHub の接続経路・認証境界・失敗時の保持範囲、AI 実行結果不明時の扱いは、担当と解消条件を付けて代表成果物の将来課題に残した。業務判断や未確認の復旧保証は確定していない。",
+    "前回失敗への対応: test-unit が指摘した cxd-recipe と cxd-template のメニュー欠落を修正した。現在の result frontmatter を読み取り確認し、前回 lint-fm が指摘した山括弧プレースホルダは残っていなかった。reporter は検証記録を生成する際、説明用プレースホルダをそのまま frontmatter に埋め込まず、必要な識別子はインラインコードで表記すること。result・既存の別タスク plan・実行管理ファイルは今回編集していない。result の変更ファイル欄と進め方・実践の型の適用欄へ本報告を反映すること。親 runner 所有の検証は重複実行していない。"
+  ],
+  "validations": [
+    {
+      "command": "npx prettier --write docs/ja/product/030-architecture/010-c4/cxd-specdojo.md docs/ja/specdojo/rulebooks/cxd-rulebook.md docs/ja/specdojo/samples/cxd-sample.md docs/ja/specdojo/recipes/cxd-recipe.md docs/ja/specdojo/templates/cxd-template.md packages/docs-site/.vitepress/sidebar-config.ts",
+      "status": "passed",
+      "summary": "対象6ファイルの整形が成功した。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "累積差分に空白エラーなし。"
+    },
+    {
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 YAML schema 検査は適用外。",
+      "reason": "成果物変更は Markdown と TypeScript のみで、変更した YAML / YML ファイルがない。"
+    },
+    {
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "成果物カタログ検査は適用外。",
+      "reason": "本 executor の成果物変更は docs/ja/product/、docs/ja/specdojo/、packages/docs-site/ 配下であり、docs/ja/projects/ 配下は変更していない。"
+    },
+    {
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検査は適用外。",
+      "reason": "本 executor は既存 plan・result・登録簿個票などの履歴ファイルを変更していない。"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "cxd-specdojo",
+      "status": "changed",
+      "path": "docs/ja/product/030-architecture/010-c4/cxd-specdojo.md"
+    },
+    {
+      "target": "specdojo:cxd-rulebook",
+      "status": "changed",
+      "path": "docs/ja/specdojo/rulebooks/cxd-rulebook.md"
+    },
+    {
+      "target": "specdojo:cxd-sample",
+      "status": "changed",
+      "path": "docs/ja/specdojo/samples/cxd-sample.md"
+    }
+  ]
+}
+</specdojo_executor_evidence>

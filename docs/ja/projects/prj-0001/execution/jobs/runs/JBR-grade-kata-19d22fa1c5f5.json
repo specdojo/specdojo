@@ -41,16 +41,16 @@
     "owner": "ARC"
   },
   "checkpoint_before": {},
-  "plan_ref": "exec/plans/JBR-grade-kata-19d22fa1c5f5-plan.md",
-  "result_ref": "exec/results/JBR-grade-kata-19d22fa1c5f5-result.md",
+  "plan_ref": "runs/job/JBR-grade-kata-19d22fa1c5f5/attempt-1/plan.md",
+  "result_ref": "runs/job/JBR-grade-kata-19d22fa1c5f5/attempt-1/result.md",
   "attempts": [
     {
       "attempt": 1,
       "started_at": "2026-10-01T21:00:05.269Z",
       "status": "failed",
       "completed_at": "2026-10-01T21:05:34.543Z",
-      "result_ref": "exec/results/JBR-grade-kata-19d22fa1c5f5-result.md",
-      "evidence_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-19d22fa1c5f5/attempt-1/evidence.json",
+      "result_ref": "runs/job/JBR-grade-kata-19d22fa1c5f5/attempt-1/result.md",
+      "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/job/JBR-grade-kata-19d22fa1c5f5/attempt-1/evidence.json",
       "exit_code": 1,
       "reason": "command exited with code 1"
     }

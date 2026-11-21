@@ -1,0 +1,26 @@
+`docs/ja/specdojo/recipes/cdfd-uc-recipe.md` を手本の prj-charter に合わせて縮めました。大きさは空白と表の区切り行を除いて 5,467 字から 3,111 字になり、56.9% で 7 割以下の目安に収まっています。区切り行を含めると 5,770 字から 3,423 字、バイト数は 16,374 B から 9,636 B です。prettier と markdownlint はエラーなしです。lint などの allowlist の検査は親 runner が実行するため、ここでは実行していません。
+
+**指摘への対応（F001: 導入文の書き方がない）**
+- 4.1 を「導入文と目的」に変え、導入文で答える問い（どのケース ID と業務名の流れを示す文書か）とコツを足しました。
+- 良い例 / 悪い例にも導入文の行を足し、全体の作成手順の最後に「H1 直下の導入文を書く」を入れました。
+
+**外した記述**
+- rulebook への参照と照合指示（「描き方の選択」に従う、など）。
+- rulebook と同じ判断の言い直し: D2 の `direction: down` と `a <- b`、図を分ける目安の数値、目的に読み手の役割を書かないこと、引き渡し ID・条件イベント・Orchestrator・凡例の規定。
+- 各節の問いの多くが判定条件の言い直しだったため、2 問ずつに絞りました。
+- 未決事項の論点に添えていた「決定者・決定時期」（管理台帳の列）。
+- レビュー観点の「主な確認者」の列と、確認者の呼称の段落（役割の記述）。
+- 仕上げチェックの構造の検査と、ほかの章と同じ確認の繰り返し。
+
+**残した・足した記述**
+- 書く順番と理由: 順序の正本は図なので図を先に描き、目的と適用範囲は図が決まってから書く。
+- 「作成前に集める情報」に取り出し元の列を足しました。
+- 聞き方のコツ（「次の人は何を受け取れば始められるか」「差し戻した事例をすべて」）と、つまずきやすい点（全体概要の一覧を丸ごと写す、PDCA を区分の代わりに書く）。
+- 条件付きで通る領域は、順序欄に参加場面を書く。これは対象の成果物 cdfd-uc-register の書き方から取りました。
+- 深掘り手順は、対応のない主張を探す順序に書き直しました。
+
+8 章の構成と frontmatter はそのままで、rulebook・sample・template と成果物は変えていません。template と sample に台帳の列はなく、変更案はありません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"cdfd-uc-recipe を縮めた（空白と表の区切り行を除き 5,467 字 → 3,111 字、56.9%）。F001 には 4.1「導入文と目的」に導入文の問いとコツ、良い例 / 悪い例に導入文の行を足して対応した。rulebook と同じ判断の言い直し、rulebook への参照、確認者の列、未決事項の決定者・決定時期、構造の検査を外した。8 章の構成は保った。rulebook・sample・template と成果物は変えていない。","handoff":["大きさ（空白を除き、表の区切り行を除く）: 前 5,467 字（区切り行込み 5,770 字・16,374 B）→ 後 3,111 字（3,423 字・9,636 B）、比 56.9%。result の `進め方と実践の型の適用` に記載する。","F001（導入文の書き方がない）は、4.1 を「導入文と目的」に変え、問い・コツ・良い例 / 悪い例・作成手順の最終段に導入文を入れて対応した。再 grade で解消を確認する。","rulebook・sample・template に合わせて直す点はなかった（template の未決事項の章に台帳の列はない）。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/recipes/cdfd-uc-recipe.md","status":"passed","summary":"--write で整形した後は差分なし"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/recipes/cdfd-uc-recipe.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更は recipe だけで、plan・result・個票を変更していない"}]}
+</specdojo_executor_evidence>

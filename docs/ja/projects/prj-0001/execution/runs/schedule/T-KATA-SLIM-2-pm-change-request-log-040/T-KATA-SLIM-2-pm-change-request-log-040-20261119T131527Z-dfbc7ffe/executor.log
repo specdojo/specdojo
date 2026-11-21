@@ -1,0 +1,29 @@
+pm-change-request-log の rulebook を直しました。prettier と markdownlint はどちらもエラーなしです。ただし、大きさの目安（今の 8 割以下）は満たしていません。改訂後は 1,380 字から 1,930 字（約 140%）に増えています。
+
+**大きさが増えた理由**
+- 改訂前の rulebook は短く、外せる運用の記述は第 2 章の用語の列挙と、Frontmatter 項目の表くらいしかありませんでした。
+- 一方で、major の finding 2 件（F007・F008）を直すと記述が増えます。実際の成果物 `controls/generated/pm-change-request-log.md` は、`register build` が `item_type: change-request` の個票から作る生成物で、Frontmatter は `rulebook: specdojo:pjr-rulebook` です。この点を第 2 章「位置づけ」に書き足しました。
+
+**外した記述**
+- 第 2 章の用語の列挙（章名を「位置づけと用語定義」から「位置づけ」に変更）。
+- 推奨 Frontmatter 項目の表。ドキュメントメタ情報標準の参照に置き換えました。
+- 「曖昧表現を避ける」という一般的な方針。
+
+**足した記述**
+- 全体方針に「共通の運用」を 1 項目だけ置き、役割はメンバー定義、`status`・承認・改訂と廃止・未決事項はドキュメントメタ情報標準を参照する形にしました。
+- 審査を `pm-plan` のスコープと優先順位に照らして行うこと（F001）。
+- 見送ったときの影響と期待効果を書くこと（F002）。
+- 変更理由として、応える業務課題と期待価値を書くこと（F005）。
+- 要求内容と完了条件の書き方と例（F006）。
+- 変更から生じたリスク・課題を `pm-risk-register`・`pm-issue-log` に起票して結ぶこと（F004）。
+- 禁止事項に 2 行：個人情報・認証情報を書き写さない（F003）、生成された `pm-change-request-log.md` を直接直さない。
+- ファイル名をカタログに合わせて `pm-change-request-log.md` にし、変更 ID の採番規則を足しました。
+
+本文構成の章名と必須の区分は変えていません。成果物本体、template、sample も変えていません。
+
+**未解消の点（template）**
+F007 と F008 は template 側にも残っています。`pm-change-request-log-template` は生成ビューを前提にしていて、宣言している rulebook も `pjr-rulebook` です。この rulebook と組みにするか、Frontmatter の `template` を見直すかを決める必要があり、変更案として handoff に書きました。sample は、登録簿を使わない単独ログの例としてはそのまま使えるので、変更不要と判断しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"pm-change-request-log の rulebook を直した。共通の運用の参照を 1 項目置き、用語の列挙と Frontmatter 項目の表を外した。生成ビューと change-request 個票との関係（F007・F008）と、F001〜F006 の判断基準を足した。大きさは 1,380 字から 1,930 字（約 140%）で、8 割以下の目安は満たしていない。","handoff":["大きさ: 空白と表の区切り行を除いた文字数で、前 1,380 字、後 1,930 字（約 140%）。改訂前の rulebook には外せる運用の記述が少なく（用語の列挙と Frontmatter の表のみ）、major の F007・F008 を直すため生成ビューとの関係を足したので、8 割以下の目安を超えた。","章名の変更: 第 2 章を「位置づけと用語定義」から「位置づけ」に変えた。用語の列挙は文書 ID を並べただけで、rulebook 作成標準の『用語定義が不要な場合は章を位置づけとする』に当たるため。本文構成の章名と必須の区分は変えていない。","template の変更案（F007・F008 の残り）: `specdojo:pm-change-request-log-template` は生成ビュー（`rulebook: specdojo:pjr-rulebook`、view-slot）の骨組みで、この rulebook の 6 章構成と合わない。(a) rulebook の Frontmatter `template` を `specdojo:pjr-change-request-template`（個票の 6 節と章が対応する）へ替える、(b) 生成ビュー用の template は pjr-rulebook の管轄だと明記する、のどちらかを人が決める。この段は rulebook 以外を commit の対象にしないため直していない。pm-issue-log・pm-risk-register・pm-decision-log の rulebook も同じ構造の可能性がある。","sample: `pm-change-request-log-sample` は登録簿を使わない単独の変更要求ログの例として rulebook と矛盾しない。変更理由の列と、見送ったときの影響の記述を足すとよい（変更案）。","共通の正本への追記: 不要と判断した。ドキュメントメタ情報標準で共通の運用を賄える。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/rulebooks/pm-change-request-log-rulebook.md","status":"passed","summary":"整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/pm-change-request-log-rulebook.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>

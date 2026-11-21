@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-11-03T04:45:56Z",
+  "type": "release",
+  "task_id": "T-DATA-FLOW-UC-REWRITE-cdfd-uc-schedule-010",
+  "by": "sol-executor",
+  "msg": "rollback: checkpoint failed"
+}

@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-11-03T05:15:17Z",
+  "type": "release",
+  "task_id": "T-LAUNCH-pm-communication-plan-105",
+  "by": "qwen-review-executor",
+  "msg": "released by specdojo-orchestrator: unintended --auto claim after target tasks failed"
+}

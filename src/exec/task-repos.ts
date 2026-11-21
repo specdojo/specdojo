@@ -25,6 +25,11 @@ import {
   type ExecWorktree,
   type ProductWorktree,
 } from "./worktree.js";
+import {
+  OPENCODE_CONFIG_CONTENT_ENV,
+  opencodeAgentNameFromCommand,
+  opencodeExtraRootConfig,
+} from "./opencode-permissions.js";
 
 import {
   assertProductBranchAvailable,
@@ -454,6 +459,12 @@ export function pendingProductWorktreeChanges(worktree: ExecWorktree): string[] 
   return pending;
 }
 
+/** Whether a product worktree has uncommitted changes or exec-branch commits to integrate. */
+export function productHasPendingWork(product: ProductWorktree): boolean {
+  if (!existsSync(product.path)) return false;
+  return statusPaths(product.path).length > 0 || commitsAhead(product) > 0;
+}
+
 export function assertNoPendingProductChanges(worktree: ExecWorktree): void {
   const pending = pendingProductWorktreeChanges(worktree);
   if (pending.length === 0) return;
@@ -755,8 +766,8 @@ function shellQuote(value: string): string {
 
 /**
  * Provider arguments that add the product worktrees as extra roots with write access. The agent
- * keeps the project worktree as cwd. Returns [] for providers without a launch flag. OpenCode's
- * orchestrator entry injects `permission.external_directory` through its runtime config instead.
+ * keeps the project worktree as cwd. Returns [] for providers without a launch flag. OpenCode has
+ * no such flag; withAgentExtraRoots injects its permissions through `OPENCODE_CONFIG_CONTENT`.
  */
 export function agentExtraRootArguments(
   provider: AgentProvider | undefined,
@@ -783,12 +794,34 @@ export function agentExtraRootArguments(
   }
 }
 
-/** Append the extra-root arguments to a resolved shell command (unchanged when there are none). */
+/**
+ * Give the agent write access to the extra roots in a resolved shell command (unchanged when there
+ * are none). Most providers get launch arguments appended. OpenCode gets an
+ * `OPENCODE_CONFIG_CONTENT` assignment prefixed to the command, scoped to the `--agent` in the
+ * command and merged with the inherited value from `options.env`; `edit` patterns are relative
+ * to `options.cwd`, the agent's working directory.
+ */
 export function withAgentExtraRoots(
   command: string,
   provider: AgentProvider | undefined,
   dirs: readonly string[],
+  options: { cwd?: string; env?: NodeJS.ProcessEnv } = {},
 ): string {
+  if (provider === "opencode" && dirs.length > 0) {
+    const agentName = opencodeAgentNameFromCommand(command);
+    if (!agentName) {
+      throw new Error(
+        `OpenCode command needs --agent <name> to scope the product worktree permissions: ${command}`,
+      );
+    }
+    const config = opencodeExtraRootConfig(
+      (options.env ?? process.env)[OPENCODE_CONFIG_CONTENT_ENV],
+      agentName,
+      dirs,
+      options.cwd ?? process.cwd(),
+    );
+    return `${OPENCODE_CONFIG_CONTENT_ENV}=${shellQuote(config)} ${command}`;
+  }
   const args = agentExtraRootArguments(provider, dirs);
   if (args.length === 0) return command;
   return `${command} ${args.map(shellQuote).join(" ")}`;

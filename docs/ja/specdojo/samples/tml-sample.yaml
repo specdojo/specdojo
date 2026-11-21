@@ -1,12 +1,15 @@
 # yaml-language-server: $schema=../../../../docs/specdojo/schemas/v1/tml-index.schema.yaml
+# 非推奨: 全体計画は epic で管理する。移行先は specdojo:pjr-rulebook、
+# 移行手順は specdojo:timeline-design-guide を参照。以下は旧形式の互換用サンプル。
 
 id: specdojo:tml-sample
 type: project
-status: draft
+status: deprecated
 title: トラック順序計画
 rulebook: specdojo:tml-rulebook
 version: 1
 project_id: prj-0001
+notes: 全体計画は epic へ移行してください（specdojo:pjr-rulebook、specdojo:timeline-design-guide）。
 
 tracks:
   - track: launch

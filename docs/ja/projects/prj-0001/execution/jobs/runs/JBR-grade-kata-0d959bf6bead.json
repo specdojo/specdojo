@@ -37,16 +37,16 @@
     "owner": "ARC"
   },
   "checkpoint_before": {},
-  "plan_ref": "exec/plans/JBR-grade-kata-0d959bf6bead-plan.md",
-  "result_ref": "exec/results/JBR-grade-kata-0d959bf6bead-result.md",
+  "plan_ref": "runs/job/JBR-grade-kata-0d959bf6bead/attempt-1/plan.md",
+  "result_ref": "runs/job/JBR-grade-kata-0d959bf6bead/attempt-1/result.md",
   "attempts": [
     {
       "attempt": 1,
       "started_at": "2026-09-18T07:00:02.471Z",
       "status": "failed",
       "completed_at": "2026-09-18T10:41:48.840Z",
-      "result_ref": "exec/results/JBR-grade-kata-0d959bf6bead-result.md",
-      "evidence_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-0d959bf6bead/attempt-1/evidence.json",
+      "result_ref": "runs/job/JBR-grade-kata-0d959bf6bead/attempt-1/result.md",
+      "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/job/JBR-grade-kata-0d959bf6bead/attempt-1/evidence.json",
       "exit_code": 0,
       "reason": "`docs/ja/specdojo/samples/cdfd-uc-sample.md` の3段目が `failed` となり、文書全体として `incomplete` 状態であるため。"
     }

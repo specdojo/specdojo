@@ -3,7 +3,6 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { load } from "js-yaml";
 import { loadExecDefaultsConfig, resolveMemberCommand } from "../../../src/exec/agent-config.js";
 import { gitEnvironment } from "../../../src/shared/git-environment.js";
 import {
@@ -17,7 +16,8 @@ import {
 
 // Vitest はリポジトリ直下を cwd にして実行される。
 const REPO_ROOT = resolve(process.cwd());
-const PROVIDERS = ["claude", "codex", "opencode", "antigravity", "copilot"] as const;
+// antigravity is not selectable since 0.9.2 (PJR-NJE4); its rejection is tested separately.
+const PROVIDERS = ["claude", "codex", "opencode", "copilot"] as const;
 
 const tempDirs: string[] = [];
 
@@ -111,14 +111,12 @@ describe("specdojo init and config scaffold agent rosters", () => {
         "opencode-executor",
         "opencode-review-executor",
         "opencode-reporter",
-        "agy-executor",
-        "agy-review-executor",
-        "agy-reporter",
       ]);
       for (const alias of roster?.aliases ?? []) {
         const member = resolveAgentMember(roster, alias.nickname);
         expect(member?.nickname, alias.nickname).toBe(alias.alias_of);
         expect(member?.model, alias.nickname).toBeTruthy();
+        expect(member?.provider, alias.nickname).not.toBe("antigravity");
         expect(resolveMemberCommand(defaults, member!)).toContain(`--model ${member!.model}`);
       }
 
@@ -139,49 +137,35 @@ describe("specdojo init and config scaffold agent rosters", () => {
   );
 
   it(
-    "scaffolds agent member snippets that pass schema validation, including the alias examples",
+    "scaffolds the copilot agent member snippet that passes schema validation",
     { timeout: 120_000 },
     () => {
       const repo = createEmptyRepo();
-      for (const provider of ["antigravity", "copilot"] as const) {
-        expectSuccess(runCli(repo, ["config", "scaffold", "--provider", provider]));
-      }
+      expectSuccess(runCli(repo, ["config", "scaffold", "--provider", "copilot"]));
 
       const copilot = readFileSync(
         join(repo, ".specdojo", "copilot", "agent-members-snippet.yaml"),
         "utf8",
       );
       expect(loadAsAgentRoster(copilot)?.members.length).toBeGreaterThan(0);
+    },
+  );
 
-      const antigravity = readFileSync(
-        join(repo, ".specdojo", "antigravity", "agent-members-snippet.yaml"),
-        "utf8",
-      );
-      expect(loadAsAgentRoster(antigravity)?.members.length).toBeGreaterThan(0);
+  it(
+    "rejects antigravity in init and config scaffold with the reason, without writing agy settings",
+    { timeout: 120_000 },
+    () => {
+      const repo = createEmptyRepo();
 
-      // 末尾のコメントの別名の例を、向き先の実体を有効にした名簿へ写すと検証を通る。
-      const exampleStart = antigravity.indexOf("# aliases:");
-      expect(exampleStart).toBeGreaterThan(0);
-      const aliasExample = antigravity
-        .slice(exampleStart)
-        .split("\n")
-        .filter((line) => line.startsWith("#"))
-        .map((line) => line.replace(/^# ?/, ""))
-        .join("\n");
-      const parsed = load(antigravity) as {
-        version: number;
-        members: Array<Record<string, unknown>>;
-      };
-      const enabled = {
-        version: parsed.version,
-        members: parsed.members.map((member) => ({ ...member, disabled: false })),
-        ...(load(aliasExample) as { aliases: Array<{ nickname: string; alias_of: string }> }),
-      };
-      const roster = loadAsAgentRoster(JSON.stringify(enabled));
-      expect(roster?.aliases).toHaveLength(8);
-      expect(resolveAgentMember(roster, "agy-claude-expert-executor")?.model).toBe(
-        "claude-opus-5-5-high",
-      );
+      const init = runCli(repo, ["init", "--yes", "--exec", "--provider", "claude,antigravity"]);
+      const scaffold = runCli(repo, ["config", "scaffold", "--provider", "antigravity"]);
+
+      for (const result of [init, scaffold]) {
+        expect(result.status, result.stdout).not.toBe(0);
+        expect(result.stderr).toContain("do not launch Antigravity (agy)");
+        expect(result.stderr).toContain("Additional Terms (Section 6)");
+      }
+      expect(existsSync(join(repo, ".specdojo", "antigravity"))).toBe(false);
     },
   );
 });

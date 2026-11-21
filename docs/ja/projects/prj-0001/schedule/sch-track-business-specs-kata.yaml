@@ -1,0 +1,690 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/sch-track.schema.yaml
+kind: track
+id: prj-0001:sch-track-business-specs-kata
+type: project
+status: draft
+title: スケジュールトラック（business-specs-kata）
+rulebook: specdojo:sch-rulebook
+version: 1
+project_id: prj-0001
+track: business-specs-kata
+settings: {}
+tasks:
+  - local_id: bdd-register-entry
+    phase_suffix: "040"
+    phase_set: rulebook-maintenance-pass
+    phase_id: rulebook-maintenance
+    name: rulebook の見直し
+    duration_days: 0.5
+    depends_on: []
+    owner: ARC
+    agent:
+      executor: sol-executor
+    description: >
+      代表成果物の実績から sf-rulebook・cdt-rulebook・ccd-mermaid-rulebook・bdd-rulebook・ifx-cmd-rulebook のうち対応する rulebook
+      を手入れする。成果物本体は変更しない。sample の完成例は後続の sample-maintenance で整備する。ifx-cmd の recipe・template は後続の専用段で同期する。他の系統で新たに必要と判断した
+      recipe・template は対応結果に次の作業案を残す。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample
+      に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample
+      は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result
+      に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: bdd-register-entry
+    phase_suffix: "050"
+    phase_set: sample-maintenance-pass
+    phase_id: sample-maintenance
+    name: sample の見直し
+    duration_days: 0.5
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-bdd-register-entry-040
+    owner: ARC
+    agent:
+      executor: sol-executor
+    description: >
+      改訂した rulebook（ifx-cmd では recipe も）に沿い、対応する sf-sample・cdt-sample・ccd-sample・bdd-sample・ifx-cmd-sample
+      を完成例として手入れする。代表成果物から判断に要る場面・例外を拾い、例を単純に複写しない。成果物本体は変更しない。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample
+      に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample
+      は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result
+      に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: bdd-register-entry
+    phase_suffix: "090"
+    phase_set: review-pass
+    phase_id: review
+    name: 完成版レビュー
+    duration_days: 0.25
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-bdd-register-entry-050
+      - G-BUSINESS-SPECS-KATA-first-pass
+    owner: ARC
+    agent:
+      executor: sol-review-executor
+    description: >
+      対応する rulebook・sample（ifx-cmd は recipe・template も）と代表成果物を読み、型一式の章構成・判断基準・例の充実度・相互整合をレビューする。代表成果物の `done_criteria`
+      だけで完了としない。template は frontmatter の ID から明示的に開く。成果物・型は変更せず、指摘と根拠を review result に残す。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample
+      に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample
+      は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result
+      に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: bdd-register-entry
+    phase_suffix: "140"
+    phase_set: finalize-pass
+    phase_id: finalize
+    name: 型一式の確定（人）
+    duration_days: 0.125
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-bdd-register-entry-090
+      - G-BUSINESS-SPECS-KATA-review-pass
+    owner: ARC
+    description: >
+      全系統のレビューが完了してから、indie（主担当 ARC）が対応する型一式を確認して確定する。sf・cdt・ccd・bdd は rulebook・sample、ifx-cmd は
+      rulebook・recipe・sample・template、bes・br は作り直した rulebook・sample と必要と判断した型を対象に、代表との整合と保留事項を確認する。business-specs-reps
+      の代表の最終確定は別作業として残し、後続の磨き込み再実行へ渡す。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample
+      に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample
+      は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result
+      に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: ccd-project-planning
+    phase_suffix: "040"
+    phase_set: rulebook-maintenance-pass
+    phase_id: rulebook-maintenance
+    name: rulebook の見直し
+    duration_days: 0.5
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-bdd-register-entry-050
+    owner: ARC
+    agent:
+      executor: sol-executor
+    description: >
+      代表成果物の実績から sf-rulebook・cdt-rulebook・ccd-mermaid-rulebook・bdd-rulebook・ifx-cmd-rulebook のうち対応する rulebook
+      を手入れする。成果物本体は変更しない。sample の完成例は後続の sample-maintenance で整備する。ifx-cmd の recipe・template は後続の専用段で同期する。他の系統で新たに必要と判断した
+      recipe・template は対応結果に次の作業案を残す。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample
+      に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample
+      は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result
+      に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: ccd-project-planning
+    phase_suffix: "050"
+    phase_set: sample-maintenance-pass
+    phase_id: sample-maintenance
+    name: sample の見直し
+    duration_days: 0.5
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-ccd-project-planning-040
+    owner: ARC
+    agent:
+      executor: sol-executor
+    description: >
+      改訂した rulebook（ifx-cmd では recipe も）に沿い、対応する sf-sample・cdt-sample・ccd-sample・bdd-sample・ifx-cmd-sample
+      を完成例として手入れする。代表成果物から判断に要る場面・例外を拾い、例を単純に複写しない。成果物本体は変更しない。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample
+      に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample
+      は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result
+      に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: ccd-project-planning
+    phase_suffix: "090"
+    phase_set: review-pass
+    phase_id: review
+    name: 完成版レビュー
+    duration_days: 0.25
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-ccd-project-planning-050
+      - G-BUSINESS-SPECS-KATA-first-pass
+    owner: ARC
+    agent:
+      executor: sol-review-executor
+    description: >
+      対応する rulebook・sample（ifx-cmd は recipe・template も）と代表成果物を読み、型一式の章構成・判断基準・例の充実度・相互整合をレビューする。代表成果物の `done_criteria`
+      だけで完了としない。template は frontmatter の ID から明示的に開く。成果物・型は変更せず、指摘と根拠を review result に残す。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample
+      に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample
+      は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result
+      に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: ccd-project-planning
+    phase_suffix: "140"
+    phase_set: finalize-pass
+    phase_id: finalize
+    name: 型一式の確定（人）
+    duration_days: 0.125
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-ccd-project-planning-090
+      - G-BUSINESS-SPECS-KATA-review-pass
+    owner: ARC
+    description: >
+      全系統のレビューが完了してから、indie（主担当 ARC）が対応する型一式を確認して確定する。sf・cdt・ccd・bdd は rulebook・sample、ifx-cmd は
+      rulebook・recipe・sample・template、bes・br は作り直した rulebook・sample と必要と判断した型を対象に、代表との整合と保留事項を確認する。business-specs-reps
+      の代表の最終確定は別作業として残し、後続の磨き込み再実行へ渡す。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample
+      に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample
+      は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result
+      に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: cdt-register-type
+    phase_suffix: "040"
+    phase_set: rulebook-maintenance-pass
+    phase_id: rulebook-maintenance
+    name: rulebook の見直し
+    duration_days: 0.5
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-bdd-register-entry-050
+    owner: ARC
+    agent:
+      executor: sol-executor
+    description: >
+      代表成果物の実績から sf-rulebook・cdt-rulebook・ccd-mermaid-rulebook・bdd-rulebook・ifx-cmd-rulebook のうち対応する rulebook
+      を手入れする。成果物本体は変更しない。sample の完成例は後続の sample-maintenance で整備する。ifx-cmd の recipe・template は後続の専用段で同期する。他の系統で新たに必要と判断した
+      recipe・template は対応結果に次の作業案を残す。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample
+      に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample
+      は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result
+      に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: cdt-register-type
+    phase_suffix: "050"
+    phase_set: sample-maintenance-pass
+    phase_id: sample-maintenance
+    name: sample の見直し
+    duration_days: 0.5
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-cdt-register-type-040
+    owner: ARC
+    agent:
+      executor: sol-executor
+    description: >
+      改訂した rulebook（ifx-cmd では recipe も）に沿い、対応する sf-sample・cdt-sample・ccd-sample・bdd-sample・ifx-cmd-sample
+      を完成例として手入れする。代表成果物から判断に要る場面・例外を拾い、例を単純に複写しない。成果物本体は変更しない。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample
+      に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample
+      は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result
+      に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: cdt-register-type
+    phase_suffix: "090"
+    phase_set: review-pass
+    phase_id: review
+    name: 完成版レビュー
+    duration_days: 0.25
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-cdt-register-type-050
+      - G-BUSINESS-SPECS-KATA-first-pass
+    owner: ARC
+    agent:
+      executor: sol-review-executor
+    description: >
+      対応する rulebook・sample（ifx-cmd は recipe・template も）と代表成果物を読み、型一式の章構成・判断基準・例の充実度・相互整合をレビューする。代表成果物の `done_criteria`
+      だけで完了としない。template は frontmatter の ID から明示的に開く。成果物・型は変更せず、指摘と根拠を review result に残す。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample
+      に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample
+      は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result
+      に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: cdt-register-type
+    phase_suffix: "140"
+    phase_set: finalize-pass
+    phase_id: finalize
+    name: 型一式の確定（人）
+    duration_days: 0.125
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-cdt-register-type-090
+      - G-BUSINESS-SPECS-KATA-review-pass
+    owner: ARC
+    description: >
+      全系統のレビューが完了してから、indie（主担当 ARC）が対応する型一式を確認して確定する。sf・cdt・ccd・bdd は rulebook・sample、ifx-cmd は
+      rulebook・recipe・sample・template、bes・br は作り直した rulebook・sample と必要と判断した型を対象に、代表との整合と保留事項を確認する。business-specs-reps
+      の代表の最終確定は別作業として残し、後続の磨き込み再実行へ渡す。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample
+      に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample
+      は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result
+      に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: bes-task-ready-selected
+    phase_suffix: "005"
+    phase_set: bootstrap-pass
+    phase_id: bootstrap
+    name: 代表成果物・実践の型の初期整備
+    duration_days: 0.5
+    depends_on: []
+    owner: ARC
+    agent:
+      executor: sol-executor
+    description: >
+      既存の代表 [[prj-0001:bes-task-ready-selected|実行可能タスクの選択]] または [[prj-0001:br-task-selection-strategy|タスク選択戦略]]
+      を手本に、対応する bes-rulebook・bes-sample または br-rulebook・br-sample を起こし直す。既存の業務上の境界と未決事項を保ち、機械的な複写を避けて他の案件に使える型にする。必要な
+      recipe・template の要否も判断する。代表成果物は新しい型との整合に必要な範囲だけ補正し、業務判断を確定しない。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample
+      に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample
+      は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result
+      に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: bes-task-ready-selected
+    phase_suffix: "070"
+    phase_set: refine-pass
+    phase_id: refine
+    name: 磨き込み・整合性確認
+    duration_days: 0.25
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-bes-task-ready-selected-005
+      - G-BUSINESS-SPECS-KATA-first-pass
+    owner: ARC
+    agent:
+      executor: sol-executor
+    description: >
+      bes・br の新しい型と代表成果物の用語・章の責務・判断基準を照合し、bootstrap で補正した代表を磨き込む。rulebook・sample の不足は指摘として残す。実装を根拠に業務上の未決事項を確定しない。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample
+      に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample
+      は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result
+      に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: bes-task-ready-selected
+    phase_suffix: "080"
+    phase_set: condense-pass
+    phase_id: condense
+    name: 冗長さの整理
+    duration_days: 0.25
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-bes-task-ready-selected-070
+      - G-BUSINESS-SPECS-KATA-refine-pass
+    owner: ARC
+    agent:
+      executor: sol-executor
+    description: >
+      bes・br の代表成果物について、判断に要る背景・制約・例外・完了条件と意味を保って重複を整理する。型と代表の説明を二重に持たず、参照でつなぐ。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample
+      に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample
+      は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result
+      に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: bes-task-ready-selected
+    phase_suffix: "090"
+    phase_set: review-pass
+    phase_id: review
+    name: 完成版レビュー
+    duration_days: 0.25
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-bes-task-ready-selected-080
+    owner: ARC
+    agent:
+      executor: sol-review-executor
+    description: >
+      対応する rulebook・sample（ifx-cmd は recipe・template も）と代表成果物を読み、型一式の章構成・判断基準・例の充実度・相互整合をレビューする。代表成果物の `done_criteria`
+      だけで完了としない。template は frontmatter の ID から明示的に開く。成果物・型は変更せず、指摘と根拠を review result に残す。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample
+      に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample
+      は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result
+      に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: bes-task-ready-selected
+    phase_suffix: "140"
+    phase_set: finalize-pass
+    phase_id: finalize
+    name: 型一式の確定（人）
+    duration_days: 0.125
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-bes-task-ready-selected-090
+      - G-BUSINESS-SPECS-KATA-review-pass
+    owner: ARC
+    description: >
+      全系統のレビューが完了してから、indie（主担当 ARC）が対応する型一式を確認して確定する。sf・cdt・ccd・bdd は rulebook・sample、ifx-cmd は
+      rulebook・recipe・sample・template、bes・br は作り直した rulebook・sample と必要と判断した型を対象に、代表との整合と保留事項を確認する。business-specs-reps
+      の代表の最終確定は別作業として残し、後続の磨き込み再実行へ渡す。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample
+      に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample
+      は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result
+      に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: br-task-selection-strategy
+    phase_suffix: "005"
+    phase_set: bootstrap-pass
+    phase_id: bootstrap
+    name: 代表成果物・実践の型の初期整備
+    duration_days: 0.5
+    depends_on: []
+    owner: ARC
+    agent:
+      executor: sol-executor
+    description: >
+      既存の代表 [[prj-0001:bes-task-ready-selected|実行可能タスクの選択]] または [[prj-0001:br-task-selection-strategy|タスク選択戦略]]
+      を手本に、対応する bes-rulebook・bes-sample または br-rulebook・br-sample を起こし直す。既存の業務上の境界と未決事項を保ち、機械的な複写を避けて他の案件に使える型にする。必要な
+      recipe・template の要否も判断する。代表成果物は新しい型との整合に必要な範囲だけ補正し、業務判断を確定しない。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample
+      に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample
+      は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result
+      に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: br-task-selection-strategy
+    phase_suffix: "070"
+    phase_set: refine-pass
+    phase_id: refine
+    name: 磨き込み・整合性確認
+    duration_days: 0.25
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-br-task-selection-strategy-005
+      - G-BUSINESS-SPECS-KATA-first-pass
+    owner: ARC
+    agent:
+      executor: sol-executor
+    description: >
+      bes・br の新しい型と代表成果物の用語・章の責務・判断基準を照合し、bootstrap で補正した代表を磨き込む。rulebook・sample の不足は指摘として残す。実装を根拠に業務上の未決事項を確定しない。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample
+      に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample
+      は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result
+      に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: br-task-selection-strategy
+    phase_suffix: "080"
+    phase_set: condense-pass
+    phase_id: condense
+    name: 冗長さの整理
+    duration_days: 0.25
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-br-task-selection-strategy-070
+      - G-BUSINESS-SPECS-KATA-refine-pass
+    owner: ARC
+    agent:
+      executor: sol-executor
+    description: >
+      bes・br の代表成果物について、判断に要る背景・制約・例外・完了条件と意味を保って重複を整理する。型と代表の説明を二重に持たず、参照でつなぐ。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample
+      に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample
+      は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result
+      に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: br-task-selection-strategy
+    phase_suffix: "090"
+    phase_set: review-pass
+    phase_id: review
+    name: 完成版レビュー
+    duration_days: 0.25
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-br-task-selection-strategy-080
+    owner: ARC
+    agent:
+      executor: sol-review-executor
+    description: >
+      対応する rulebook・sample（ifx-cmd は recipe・template も）と代表成果物を読み、型一式の章構成・判断基準・例の充実度・相互整合をレビューする。代表成果物の `done_criteria`
+      だけで完了としない。template は frontmatter の ID から明示的に開く。成果物・型は変更せず、指摘と根拠を review result に残す。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample
+      に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample
+      は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result
+      に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: br-task-selection-strategy
+    phase_suffix: "140"
+    phase_set: finalize-pass
+    phase_id: finalize
+    name: 型一式の確定（人）
+    duration_days: 0.125
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-br-task-selection-strategy-090
+      - G-BUSINESS-SPECS-KATA-review-pass
+    owner: ARC
+    description: >
+      全系統のレビューが完了してから、indie（主担当 ARC）が対応する型一式を確認して確定する。sf・cdt・ccd・bdd は rulebook・sample、ifx-cmd は
+      rulebook・recipe・sample・template、bes・br は作り直した rulebook・sample と必要と判断した型を対象に、代表との整合と保留事項を確認する。business-specs-reps
+      の代表の最終確定は別作業として残し、後続の磨き込み再実行へ渡す。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample
+      に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample
+      は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result
+      に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: sf-task-execution
+    phase_suffix: "040"
+    phase_set: rulebook-maintenance-pass
+    phase_id: rulebook-maintenance
+    name: rulebook の見直し
+    duration_days: 0.5
+    depends_on: []
+    owner: ARC
+    agent:
+      executor: sol-executor
+    description: >
+      代表成果物の実績から sf-rulebook・cdt-rulebook・ccd-mermaid-rulebook・bdd-rulebook・ifx-cmd-rulebook のうち対応する rulebook
+      を手入れする。成果物本体は変更しない。sample の完成例は後続の sample-maintenance で整備する。ifx-cmd の recipe・template は後続の専用段で同期する。他の系統で新たに必要と判断した
+      recipe・template は対応結果に次の作業案を残す。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample
+      に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample
+      は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result
+      に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: sf-task-execution
+    phase_suffix: "050"
+    phase_set: sample-maintenance-pass
+    phase_id: sample-maintenance
+    name: sample の見直し
+    duration_days: 0.5
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-sf-task-execution-040
+    owner: ARC
+    agent:
+      executor: sol-executor
+    description: >
+      改訂した rulebook（ifx-cmd では recipe も）に沿い、対応する sf-sample・cdt-sample・ccd-sample・bdd-sample・ifx-cmd-sample
+      を完成例として手入れする。代表成果物から判断に要る場面・例外を拾い、例を単純に複写しない。成果物本体は変更しない。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample
+      に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample
+      は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result
+      に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: sf-task-execution
+    phase_suffix: "090"
+    phase_set: review-pass
+    phase_id: review
+    name: 完成版レビュー
+    duration_days: 0.25
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-sf-task-execution-050
+      - G-BUSINESS-SPECS-KATA-first-pass
+    owner: ARC
+    agent:
+      executor: sol-review-executor
+    description: >
+      対応する rulebook・sample（ifx-cmd は recipe・template も）と代表成果物を読み、型一式の章構成・判断基準・例の充実度・相互整合をレビューする。代表成果物の `done_criteria`
+      だけで完了としない。template は frontmatter の ID から明示的に開く。成果物・型は変更せず、指摘と根拠を review result に残す。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample
+      に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample
+      は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result
+      に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: sf-task-execution
+    phase_suffix: "140"
+    phase_set: finalize-pass
+    phase_id: finalize
+    name: 型一式の確定（人）
+    duration_days: 0.125
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-sf-task-execution-090
+      - G-BUSINESS-SPECS-KATA-review-pass
+    owner: ARC
+    description: >
+      全系統のレビューが完了してから、indie（主担当 ARC）が対応する型一式を確認して確定する。sf・cdt・ccd・bdd は rulebook・sample、ifx-cmd は
+      rulebook・recipe・sample・template、bes・br は作り直した rulebook・sample と必要と判断した型を対象に、代表との整合と保留事項を確認する。business-specs-reps
+      の代表の最終確定は別作業として残し、後続の磨き込み再実行へ渡す。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample
+      に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample
+      は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result
+      に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: ifx-cmd-ai-provider-cli
+    phase_suffix: "040"
+    phase_set: rulebook-maintenance-pass
+    phase_id: rulebook-maintenance
+    name: rulebook の見直し
+    duration_days: 0.5
+    depends_on: []
+    owner: ARC
+    agent:
+      executor: sol-executor
+    description: >
+      代表成果物の実績から sf-rulebook・cdt-rulebook・ccd-mermaid-rulebook・bdd-rulebook・ifx-cmd-rulebook のうち対応する rulebook
+      を手入れする。成果物本体は変更しない。sample の完成例は後続の sample-maintenance で整備する。ifx-cmd の recipe・template は後続の専用段で同期する。他の系統で新たに必要と判断した
+      recipe・template は対応結果に次の作業案を残す。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample
+      に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample
+      は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result
+      に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: ifx-cmd-ai-provider-cli
+    phase_suffix: "045"
+    phase_set: recipe-maintenance-pass
+    phase_id: recipe-maintenance
+    name: recipe の見直し
+    duration_days: 0.5
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-ifx-cmd-ai-provider-cli-040
+    owner: ARC
+    agent:
+      executor: sol-executor
+    description: >
+      ifx-cmd-rulebook の改訂を受け、ifx-cmd-recipe を手入れする。判断の順序、入力、完了条件を具体化し、rulebook や実装の再掲を避ける。代表成果物本体は変更しない。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample
+      に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample
+      は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result
+      に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: ifx-cmd-ai-provider-cli
+    phase_suffix: "050"
+    phase_set: sample-maintenance-pass
+    phase_id: sample-maintenance
+    name: sample の見直し
+    duration_days: 0.5
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-ifx-cmd-ai-provider-cli-045
+    owner: ARC
+    agent:
+      executor: sol-executor
+    description: >
+      改訂した rulebook（ifx-cmd では recipe も）に沿い、対応する sf-sample・cdt-sample・ccd-sample・bdd-sample・ifx-cmd-sample
+      を完成例として手入れする。代表成果物から判断に要る場面・例外を拾い、例を単純に複写しない。成果物本体は変更しない。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample
+      に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample
+      は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result
+      に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: ifx-cmd-ai-provider-cli
+    phase_suffix: "060"
+    phase_set: template-maintenance-pass
+    phase_id: template-maintenance
+    name: template の見直し
+    duration_days: 0.5
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-ifx-cmd-ai-provider-cli-050
+    owner: ARC
+    agent:
+      executor: sol-executor
+    description: >
+      ifx-cmd-rulebook・ifx-cmd-recipe・ifx-cmd-sample と整合する ifx-cmd-template
+      を手入れする。判断に必要な記入欄と最小限の補助を残し、説明や完成例を転載しない。成果物本体は変更しない。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample
+      に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample
+      は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result
+      に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: ifx-cmd-ai-provider-cli
+    phase_suffix: "090"
+    phase_set: review-pass
+    phase_id: review
+    name: 完成版レビュー
+    duration_days: 0.25
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-ifx-cmd-ai-provider-cli-060
+      - G-BUSINESS-SPECS-KATA-first-pass
+    owner: ARC
+    agent:
+      executor: sol-review-executor
+    description: >
+      対応する rulebook・sample（ifx-cmd は recipe・template も）と代表成果物を読み、型一式の章構成・判断基準・例の充実度・相互整合をレビューする。代表成果物の `done_criteria`
+      だけで完了としない。template は frontmatter の ID から明示的に開く。成果物・型は変更せず、指摘と根拠を review result に残す。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample
+      に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample
+      は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result
+      に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+  - local_id: ifx-cmd-ai-provider-cli
+    phase_suffix: "140"
+    phase_set: finalize-pass
+    phase_id: finalize
+    name: 型一式の確定（人）
+    duration_days: 0.125
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-ifx-cmd-ai-provider-cli-090
+      - G-BUSINESS-SPECS-KATA-review-pass
+    owner: ARC
+    description: >
+      全系統のレビューが完了してから、indie（主担当 ARC）が対応する型一式を確認して確定する。sf・cdt・ccd・bdd は rulebook・sample、ifx-cmd は
+      rulebook・recipe・sample・template、bes・br は作り直した rulebook・sample と必要と判断した型を対象に、代表との整合と保留事項を確認する。business-specs-reps
+      の代表の最終確定は別作業として残し、後続の磨き込み再実行へ渡す。
+
+      [[specdojo:rulebook-authoring-standard|Rulebook
+      記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample
+      に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は
+      [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample
+      は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result
+      に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。

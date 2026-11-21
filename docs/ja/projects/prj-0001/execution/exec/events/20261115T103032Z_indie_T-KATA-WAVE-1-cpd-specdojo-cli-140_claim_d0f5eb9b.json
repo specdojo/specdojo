@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-15T10:30:32Z",
+  "type": "claim",
+  "task_id": "T-KATA-WAVE-1-cpd-specdojo-cli-140",
+  "by": "indie",
+  "msg": "finalize",
+  "meta": {
+    "claim_owner": "ARC",
+    "planned_owner": "ARC"
+  }
+}

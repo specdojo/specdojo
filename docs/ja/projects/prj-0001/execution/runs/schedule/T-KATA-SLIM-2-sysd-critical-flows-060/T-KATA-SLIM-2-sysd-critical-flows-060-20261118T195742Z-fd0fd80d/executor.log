@@ -1,0 +1,30 @@
+重要フローの recipe（`docs/ja/specdojo/recipes/sysd-critical-flows-recipe.md`）を見直し、空白を除いた文字数を 3702 字から 2582 字（69.7%）に減らしました。7 割以下の目安に収まっています。変更したのはこの 1 ファイルだけです。
+
+**外した記述**
+- どの成果物にも共通する運用の記述: 公開を誰が判断するか、公開してよいかを人が判断できるか、未決事項の担当・判断時期・引き渡し先です。
+- rulebook と同じ判断の言い直し: ITC/ETC の分け方、テスト参照に要る項目（実行方法・期待結果・失敗判定）、最大 5 件の件数を確かめる指示、詳細値を二重に管理しないことの確認です。
+- 同じ確認の繰り返し:
+  - 各章の「対比」は良い例 / 悪い例の表へまとめ、重なるコツを削りました。
+  - 同じ点を確かめていたレビュー観点の「永続化と失敗」「人間の責任」「正本と証跡」「変更の波及」も削りました。
+
+**残した記述・作り直した記述**
+- 「このレシピの使い方」は、失敗による損失・処理の境界・保存と再開の方針・フロー ID による対応（Why・What・How・Trace）を 1 項目にまとめました。
+- 集める情報の表には、取り出し元の列を足しました。
+- 作成手順には書く順番の理由を入れ、例として「成功の確定点を先に置かないと、図が通常処理の説明になる」と書きました。
+- 各節は問い 2 つとコツの形に直し、「写さず参照に置き換える」もコツとして入れました。
+- 深掘り手順の 5 段は残しました。
+- 8 章の構成は変えておらず、本文に rulebook・sample への参照もありません。
+
+**検証**
+markdownlint と prettier を個別のファイルに対して実行し、問題はありませんでした。lint、test などは親 runner が実行します。
+
+**template への変更案（今回は直していません）**
+`docs/ja/specdojo/templates/sysd-critical-flows-template.md` には、外した運用の記述がまだ残っています。
+- 「未決事項と後続作業」の表に管理台帳の列（担当Role code・判断時期・登録先）があります。rulebook の要件（論点・依存・影響・当面の扱い・解消条件）に合わせる案です。
+- 「承認対象と公開前条件」の章と、ready 昇格の `_TODO_` も運用の記述にあたり、見直し候補です。
+
+rulebook は見直しましたが、合わせて変える点はありませんでした。sample は確認していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"sysd-critical-flows-recipe から共通の運用・rulebook の言い直し・同じ確認の繰り返しを外し、書く順番・入力の取り出し元・問いとコツに絞った。空白を除いた文字数 3702 → 2582（69.7%）。変更は docs/ja/specdojo/recipes/sysd-critical-flows-recipe.md のみ。","handoff":["文字数（空白を除く）: 変更前 3702、変更後 2582（69.7%）。","template への変更案（未適用）: docs/ja/specdojo/templates/sysd-critical-flows-template.md の「未決事項と後続作業」の表の列（担当Role code・判断時期・登録先）は管理台帳の列なので、rulebook の要件（論点・依存・影響・当面の扱い・解消条件）に合わせる。「承認対象と公開前条件」の章と ready 昇格の `_TODO_` も共通の運用なので見直し候補。","rulebook は見直したが、合わせて変える点はなかった。sample は確認していない。"],"validations":[{"command":"npx markdownlint-cli2 docs/ja/specdojo/recipes/sysd-critical-flows-recipe.md","status":"passed","summary":"0 issues"},{"command":"npx prettier --write docs/ja/specdojo/recipes/sysd-critical-flows-recipe.md","status":"passed","summary":"整形済み"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルの変更なし","reason":"変更は recipe のみで、plan・result・個票を変更していない"}]}
+</specdojo_executor_evidence>

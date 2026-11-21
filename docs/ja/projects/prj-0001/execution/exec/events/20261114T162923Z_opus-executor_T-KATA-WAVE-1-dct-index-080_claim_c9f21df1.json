@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "ts": "2026-11-14T16:29:23Z",
+  "type": "claim",
+  "task_id": "T-KATA-WAVE-1-dct-index-080",
+  "by": "opus-executor",
+  "msg": "claim task as resumed executor opus-executor",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "ARC",
+    "pipeline_resume_claimed": "true",
+    "previous_actor": "agy-sonnet-executor"
+  }
+}

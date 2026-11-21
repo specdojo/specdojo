@@ -1,0 +1,255 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-RKHR",
+  "run_id": "20261101T113229142Z-4abc8d7c",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-01T11:32:29.142Z",
+    "completed_at": "2026-11-01T11:36:36.716Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-rkhr.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-rkhr-schedule-resume-from-executor.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/register-resume.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/lifecycle-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/schedule-prepare.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/schedule-task.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/pipeline-e2e.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register-resume.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/run/resume.test.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-rkhr-schedule-resume-from-executor.md",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/pipeline-e2e.integration.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 12,
+    "summary": "CHANGELOG.md                                       |   2 +\n .../controls/project-register/events/pjr-rkhr.yaml |  20 +-\n .../pjr-rkhr-schedule-resume-from-executor.md      |   6 +-\n docs/ja/specdojo/guides/exec-operation-guide.md    |  26 ++-\n docs/ja/specdojo/references/command-reference.md   |  60 +++---\n src/exec/register-resume.ts                        |  32 +++\n src/exec/run/lifecycle-commands.ts                 | 107 ++++++++--\n src/exec/run/schedule-prepare.ts                   |  51 ++++-\n src/exec/run/schedule-task.ts                      |   3 +\n tests/src/exec/pipeline-e2e.integration.test.ts    | 218 ++++++++++++++++++++-\n tests/src/exec/register-resume.test.ts             |  65 ++++++\n 11 files changed, 525 insertions(+), 65 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx --no-install prettier --write src/exec/register-resume.ts src/exec/run/lifecycle-commands.ts src/exec/run/schedule-prepare.ts src/exec/run/schedule-task.ts tests/src/exec/register-resume.test.ts tests/src/exec/run/resume.test.ts tests/src/exec/pipeline-e2e.integration.test.ts docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/specdojo/references/command-reference.md CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-rkhr-schedule-resume-from-executor.md",
+      "status": "passed",
+      "summary": "対象11ファイルを整形し、追記後の個票も再整形済み。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "終了コード0。参照先文書が存在しない旨の既存警告あり。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "個票更新後の登録簿派生ビュー生成が成功。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "specdojo exec resume --task T-DATA-FLOW-USAGE-cdfd-overview-010 --resume-from executor",
+      "status": "requires_human",
+      "summary": "統合後に orchestrator が対象の残存 worktree と実 agent を使って確認する。個票で executor の作業外と指定されている。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.6.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-RKHR/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-RKHR/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-RKHR/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1147). Maximum allowed is 1000  max-lines\n\n✖ 37 problems (0 errors, 37 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.6.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.6.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.6.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 3641 file(s), 186 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 8 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 158 passed, 0 error, 0 未検査\n  graph: 2 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 11 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.6.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 3641 file(s), 10 diagram(s), 10 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.6.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-RKHR\n\nWritten: lefthook.yml\nPlanned markdownlint base (.markdownlintrc):\n{\n  \"MD013\": false,\n  \"MD024\": false,\n  \"MD033\": false,\n  \"MD036\": false,\n  \"MD041\": false,\n  \"MD060\": false\n}\nPlanned markdownlint-cli2 configuration (.markdownlint-cli2.yaml):\nconfig:\n  extends: .markdownlintrc\nWritten: .markdownlintrc\nWritten: .markdo\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.6.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.6.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-RKHR/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-RKHR/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.6.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.6.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.6.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-RKHR\n\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\nRate limit detected for pinned agent pinned. Waiting until 2026-11-01T11:41:21.393Z before resuming the same stage.\nresumed\nRate limit detected for pinned agent primary. Falling back to fallback at 2026-11-01T11:40:21.771Z.\nfallback c\n… output omitted …\nnknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nreporter failedWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nproblem"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "CHANGELOG.md",
+      "status": "changed",
+      "path": "CHANGELOG.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-rkhr-schedule-resume-from-executor.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-rkhr-schedule-resume-from-executor.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/references/command-reference.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/register-resume.ts",
+      "status": "changed",
+      "path": "src/exec/register-resume.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/run/lifecycle-commands.ts",
+      "status": "changed",
+      "path": "src/exec/run/lifecycle-commands.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/run/schedule-prepare.ts",
+      "status": "changed",
+      "path": "src/exec/run/schedule-prepare.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/run/schedule-task.ts",
+      "status": "changed",
+      "path": "src/exec/run/schedule-task.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/exec/pipeline-e2e.integration.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/pipeline-e2e.integration.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/exec/register-resume.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/register-resume.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/exec/run/resume.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/run/resume.test.ts",
+      "reason": ""
+    }
+  ],
+  "final_message": "schedule の --resume-from executor 対応を確認し、前回失敗した統合テスト3件の対象外ファイルへの期待を修正した。対象成果物上で前回の成果・手作業の追記・再開後の成果の保持を検査し、reporter への編集済み plan の引き渡しも検査する。個票へ原因と対応を記録済み。修正後の単体・統合テスト、型検査、lint、schema 検証は親 runner が実行する。",
+  "completion_status": "complete",
+  "handoff": [
+    "統合後、orchestrator が T-DATA-FLOW-USAGE-cdfd-overview-010 の残存 worktree の plan に追加指示と経緯記録の指示を書き、exec resume --task T-DATA-FLOW-USAGE-cdfd-overview-010 --resume-from executor を実 agent で実行して確認する。plan の変更理由と再開までの経緯を executor 報告の `handoff` に含め、result の申し送りへの反映を確認する。",
+    "runner の変更を含むため、運用メモに従い統合後に PJR-JSEY も実行してから close を判断する。result の記入は reporter と runner が行う。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-RKHR/20261101T113229142Z-4abc8d7c/executor.log",
+      "bytes": 4162,
+      "truncated": false
+    }
+  ]
+}

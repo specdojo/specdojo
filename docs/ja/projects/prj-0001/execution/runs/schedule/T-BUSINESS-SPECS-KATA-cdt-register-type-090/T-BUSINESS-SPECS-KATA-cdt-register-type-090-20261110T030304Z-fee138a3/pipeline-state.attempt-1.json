@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "T-BUSINESS-SPECS-KATA-cdt-register-type-090",
+  "run_id": "T-BUSINESS-SPECS-KATA-cdt-register-type-090-20261110T030304Z-fee138a3",
+  "updated_at": "2026-11-10T04:25:45.894Z",
+  "stages": {
+    "executor": {
+      "status": "rate_limited",
+      "actor": "sol-review-executor",
+      "attempts": 1,
+      "started_at": "2026-11-10T04:25:42.369Z",
+      "completed_at": "2026-11-10T04:25:45.894Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-cdt-register-type-090/T-BUSINESS-SPECS-KATA-cdt-register-type-090-20261110T030304Z-fee138a3/evidence.json"
+    },
+    "reporter": {
+      "status": "pending",
+      "actor": "gemma-reporter",
+      "attempts": 0,
+      "started_at": null,
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-cdt-register-type-090/T-BUSINESS-SPECS-KATA-cdt-register-type-090-20261110T030304Z-fee138a3/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-cdt-register-type-090/T-BUSINESS-SPECS-KATA-cdt-register-type-090-20261110T030304Z-fee138a3/result.md"
+  }
+}

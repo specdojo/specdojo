@@ -1,0 +1,148 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: ifx-cmd-ai-provider-cli
+path: docs/ja/product/020-external-interface-specs/ifx-cmd-ai-provider-cli.yaml
+target: deliverable
+rubric: grade-rubric-v2
+verdict: needs-work
+score: 96
+graded_at: "2026-11-11T13:01:12.185Z"
+graded_by: sol-review-executor
+content_hash: 474aef1d36d169f75ab3a28e83c1adc086846c8413395ed3e59da2a4537bc901
+source_hashes:
+  catalog-entry: 4a4c5e506d083c25f5eb2eb05327947d44c577cd0d730d29c5c53c50055f02e7
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: 04012afc4200d6818182c8456f8de807ea5bbe3f4471aa1ad474356633280281
+categories:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
+  consistency:
+    score: 100
+  architecture:
+    score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
+  quality:
+    score: 81
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 3
+    score: 75
+  vp-qe-done-criteria:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 2
+    score: 50
+finding_counts:
+  blocker: 0
+  major: 1
+  minor: 1
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-dev-testability
+    line: 18
+    anchor: "# 起動・失敗分類・報告解析の検証入口は exec設定ガイド 6.3 の親検証（test-unit / test-integration）、"
+    message: >-
+      Add a concise verification reference identifying the schema-validation command and the relevant launch,
+      failure-classification, and report-parsing test entry points, so maintainers can select the checks required after
+      changing this contract.
+    message_ja: >-
+      Add a concise verification reference identifying the schema-validation command and the relevant launch,
+      failure-classification, and report-parsing test entry points, so maintainers can select the checks required after
+      changing this contract.
+    cause:
+      type: document
+  - id: F002
+    severity: major
+    rule: vp-qe-config-validity
+    line: 13
+    anchor: "# _ASSUMPTION_: 未決事項の技術判断は人間の ARC、追跡・報告は PM に依頼する。"
+    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+    message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+done_criteria:
+  satisfied: 5
+  total: 5
+  detail_ref: ifx-cmd-ai-provider-cli-grade-criteria

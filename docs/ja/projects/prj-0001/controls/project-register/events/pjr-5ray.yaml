@@ -1,0 +1,88 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_20926a1c3a394c67b42950e1148a246c
+  ts: "2026-11-20T13:49:38Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: リリースの前の確認を速くする
+    - field: description
+      from: ""
+      to: リリースの前の npm run check・統合テスト・docs:build が 20 分を超えるため、重複を外し、並べて流せるものを並べ、テストの並列を見直して短くする
+    - field: input
+      from: ""
+      to: '["利用者の依頼（2026-11-20）: リリースの前の確認を速くしたい。todo として起票する。担当 DEV、期限は未定、0.9.1 には入れない","orchestrator の調べ（2026-11-20）: npm run check の最後の npm test は vitest.config.ts の projects で unit と integration の両方を流す。リリースの手順でその後に流している test:integration は重複で、0.9.1 の前の実測で約 112 秒","orchestrator の調べ（2026-11-20）: npm test は unit・integration とも maxWorkers 2。この環境は 16 コアで、テストの実時間は約 205 秒（テストの合計は約 367 秒）。check の lint と検証は && で 1 本ずつ流れている。lint ごとの所要時間は測っていない"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-20"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-D25E"]'
+- v: 1
+  id: reg_206ae167b0be40019fbf3759fe0ba7b0
+  ts: "2026-11-20T16:12:12Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_20926a1c3a394c67b42950e1148a246c
+- v: 1
+  id: reg_e35ac8f0d0744a3681fda9dd7818598f
+  ts: "2026-11-20T16:44:44Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_206ae167b0be40019fbf3759fe0ba7b0
+- v: 1
+  id: reg_b491a7f605b745c994451581e8866012
+  ts: "2026-11-20T22:46:43Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register で対応。完了条件を差分（f84620331）と個票の対応結果で確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-21"
+    - field: conclusion
+      from: "-"
+      to: リリース手順から重複する test:integration を外した。各段の時間を測り、lint の並列化と maxWorkers 4 の案を個票に残した（反映は保護された設定のため別途）
+  previous_event_id: reg_e35ac8f0d0744a3681fda9dd7818598f

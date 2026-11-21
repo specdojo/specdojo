@@ -1,9 +1,16 @@
-import { parseProductBranchOverrides } from "../product-branches.js";
 import { type Command } from "commander";
 import { loadExecDefaultsConfig, resolveRegisterPostReview } from "../agent-config.js";
+import { parseProductBranchOverrides } from "../product-branches.js";
 import { resolveProjectPaths } from "../project.js";
 import { isRegisterFailureMode } from "../register.js";
 import { configuredProductRepos } from "../task-repos.js";
+import { runInPlaceMode } from "./in-place.js";
+import { runJobWithProjectLock } from "./job-lock.js";
+import { spawnRefresh, spawnValidate } from "./mode-shared.js";
+import { resolveRegisterPipelineCommand } from "./register-core.js";
+import { runRegisterMode } from "./register-mode.js";
+import { resumeNoteOptionError } from "./resume-notes.js";
+import { runBatchMode, runManualMode } from "./schedule-mode.js";
 import {
   EXCLUSIVE_EXEC_RUN,
   parseParallel,
@@ -13,12 +20,8 @@ import {
   type ExecRunLockSharing,
   type RunOpts,
 } from "./shared.js";
-import { runBatchMode, runManualMode } from "./schedule-mode.js";
-import { runInPlaceMode } from "./in-place.js";
-import { runJobMode } from "./job.js";
-import { spawnRefresh, spawnValidate } from "./mode-shared.js";
-import { resolveRegisterPipelineCommand } from "./register-core.js";
-import { runRegisterMode } from "./register-mode.js";
+import { withTrailingRunRecords } from "./trailing-records.js";
+import { parseUnknownScopePolicy } from "./change-scope.js";
 
 export function registerRunCommand(exec: Command): void {
   const rcmd = exec
@@ -28,6 +31,7 @@ export function registerRunCommand(exec: Command): void {
   rcmd.option("--project <projectId>", "Project id in .specdojo/specdojo.config.json");
   rcmd.option("--by <nickname>", "Select an agent-members.yaml agent for a manual target");
   rcmd.option("--auto", "Automatically select and run next ready task", false);
+  rcmd.option("--track <track>", "Limit --auto selection to one schedule track");
   rcmd.option("--task <taskId>", "Task ID to run (manual selection)");
   rcmd.option(
     "--deliverable <localId>",
@@ -77,6 +81,11 @@ export function registerRunCommand(exec: Command): void {
     "With --resume: resume a reporter-stage run from executor instead (accepted value: executor)",
   );
   rcmd.option(
+    "--resume-note <text>",
+    "With --resume --resume-from executor: add an instruction to the run's plan before the common conventions (repeatable; recorded in pipeline-state.json)",
+    (value: string, previous: string[] = []) => [...previous, value],
+  );
+  rcmd.option(
     "--force-restart",
     "With register worktree mode: re-run the whole item even when a resumable executor result exists (discards the worktree and its uncommitted changes)",
     false,
@@ -98,7 +107,7 @@ export function registerRunCommand(exec: Command): void {
   );
   rcmd.option(
     "--archive-on-success",
-    "Archive the generated plan to exec/plans/done/ after a successful in-place run",
+    "Keep the completed plan in its run directory after a successful in-place run",
     false,
   );
   rcmd.option(
@@ -112,6 +121,10 @@ export function registerRunCommand(exec: Command): void {
     (value: string, previous: string[] = []) => [...previous, value],
   );
   rcmd.option("--parallel <n>", "Number of worktree instances to run in parallel", "1");
+  rcmd.option(
+    "--unknown-scope <policy>",
+    "Items with an unknown change scope: parallel|serialize (default: parallel)",
+  );
   rcmd.option("--worktree-base <path>", "Override worktree base directory");
   rcmd.option(
     "--strategy <s>",
@@ -173,6 +186,7 @@ export function registerRunCommand(exec: Command): void {
 
   rcmd.action(async (opts: RunOpts) => {
     try {
+      parseUnknownScopePolicy(opts.unknownScope);
       const isAuto = !!opts.auto;
       const hasTask = !!opts.task;
       const hasDeliverable = !!opts.deliverable;
@@ -183,6 +197,12 @@ export function registerRunCommand(exec: Command): void {
       const hasJob = !!opts.job;
       const isManual = hasTask || hasDeliverable || hasPlan || hasRegister || hasJob;
       const isBatch = isAuto;
+
+      if (opts.track !== undefined && !isAuto) {
+        process.stdout.write("--track requires --auto.\n");
+        process.exitCode = 1;
+        return;
+      }
 
       if (hasRegisterIds && hasRegisterFilter) {
         process.stdout.write("Specify either --register or --register-filter, not both.\n");
@@ -221,6 +241,13 @@ export function registerRunCommand(exec: Command): void {
         process.stdout.write(
           "--track-state cannot be used with --register (state is tracked in the register itself).\n",
         );
+        process.exitCode = 1;
+        return;
+      }
+      // worktree の plan を書き換えるため、project の解決や lock より前に組み合わせを確かめる。
+      const resumeNoteError = resumeNoteOptionError(opts);
+      if (resumeNoteError) {
+        process.stdout.write(`${resumeNoteError}\n`);
         process.exitCode = 1;
         return;
       }
@@ -388,6 +415,10 @@ export function registerRunCommand(exec: Command): void {
 
       // register worktree 実行だけが共有資源をプロセス横断で統制するため、後から --join する
       // run を受け入れる。それ以外の run は従来どおり project 全体を排他する。
+      if (hasJob) {
+        await runJobWithProjectLock(opts, resolveRegisterPipelineCommand);
+        return;
+      }
       const registerWorktreeLockSharing: ExecRunLockSharing =
         hasRegister && opts.worktree ? { shareable: true, join: !!opts.join } : EXCLUSIVE_EXEC_RUN;
       await withProjectExecRunLock(
@@ -398,11 +429,6 @@ export function registerRunCommand(exec: Command): void {
           // via register transitions (start → review / waiting) instead of exec events.
           if (hasRegister) {
             await runRegisterMode(opts);
-            return;
-          }
-
-          if (hasJob) {
-            await runJobMode(opts, resolveRegisterPipelineCommand);
             return;
           }
 
@@ -427,11 +453,9 @@ export function registerRunCommand(exec: Command): void {
           }
           process.stdout.write("[run] refresh: ok\n");
 
-          if (isBatch) {
-            await runBatchMode(opts);
-          } else {
-            await runManualMode(opts);
-          }
+          await withTrailingRunRecords(opts, "run", () =>
+            isBatch ? runBatchMode(opts) : runManualMode(opts),
+          );
         },
         registerWorktreeLockSharing,
       );

@@ -4,11 +4,11 @@ document: specdojo:sysd-index-sample
 path: docs/ja/specdojo/samples/sysd-index-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: fail
-score: 79
-graded_at: "2026-10-20T20:32:43.036Z"
-graded_by: flash-high-executor
-content_hash: 41644465d2e1732f8a0a9e58c4a69caabcda77157e962d0d49c802c77eda465e
+verdict: pass
+score: 100
+graded_at: "2026-11-15T10:44:30.715Z"
+graded_by: sol-review-executor
+content_hash: 3af9e86879427d78aebbc1b5faa706f013b3953dfc090cabb2748acd7b440c41
 categories:
   purpose:
     score: 100
@@ -21,13 +21,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 75
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 58
+    score: 100
   consistency:
-    score: 50
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -72,20 +72,20 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 0
-    score: 0
+    level: 4
+    score: 100
   vp-ux-readability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -99,46 +99,8 @@ viewpoints:
     level: 4
     score: 100
 finding_counts:
-  blocker: 1
-  major: 2
-  minor: 2
+  blocker: 0
+  major: 0
+  minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 23
-    anchor: >-
-      | 目的         |
-      システム設計のSSOTへの導線を1箇所に集約し、設計情報を迷子にしない                                                                                                           
-      | specdojo:deliverables-reference 準拠 |
-    message: 「最小記述例」の内容が成果物自体のメタデータに留まっており、具体的な SSOT 定義の書き方を示す検証可能な例になっていない。
-    message_ja: 「最小記述例」の内容が成果物自体のメタデータに留まっており、具体的な SSOT 定義の書き方を示す検証可能な例になっていない。
-  - id: F002
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 1
-    anchor: "# 全体構成（リンク集） サンプル"
-    message: Frontmatter の title 不足、および必須章（SSOT一覧, 変更の入口, 関連ドメイン導線）と更新責任（Owner）が欠落している。
-    message_ja: Frontmatter の title 不足、および必須章（SSOT一覧, 変更の入口, 関連ドメイン導線）と更新責任（Owner）が欠落している。
-  - id: F003
-    severity: blocker
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 全体構成（リンク集） サンプル"
-    message: rulebook 第5節で定義された必須見出し構成および順序に準拠していない。
-    message_ja: rulebook 第5節で定義された必須見出し構成および順序に準拠していない。
-  - id: F004
-    severity: major
-    rule: vp-ux-readability
-    line: 1
-    anchor: "# 全体構成（リンク集） サンプル"
-    message: rulebook が定義する SSOT 一覧表などの核心的要素が実装されておらず、作成サンプルとしての有用性を欠いている。
-    message_ja: rulebook が定義する SSOT 一覧表などの核心的要素が実装されておらず、作成サンプルとしての有用性を欠いている。
-  - id: F005
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 7
-    anchor: "## 2. 入力情報"
-    message: 見出し名が規定の「概要（対象範囲・更新責任）」ではなく「目的と適用範囲」となっている。
-    message_ja: 見出し名が規定の「概要（対象範囲・更新責任）」ではなく「目的と適用範囲」となっている。
+findings: []

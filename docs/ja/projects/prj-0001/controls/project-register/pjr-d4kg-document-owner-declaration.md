@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-d4kg-document-owner-declaration
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: question
-  item_status: open
+  item_status: decided
   priority: low
   owner: ARC
   registered_at: "2026-09-24T13:42:55Z"
   due_on: "2026-11-14"
+  completed_at: "2026-10-31T12:37:40Z"
+  conclusion: 候補 A。owner・RACI は宣言させず、schedule の owner_rules を唯一の経路とする
 ---
 
 # PJR-D4KG 文書へ owner または RACI を宣言させるかを決める
@@ -52,20 +54,26 @@ catalog の `done_criteria` は `roles` を項目ごとに持つが、これは�
 
 ## 4. 回答・結論
 
-_TODO_: 回答または採択した方針を記載する。未回答の場合は `-` とする。
+候補 A を採る。文書の frontmatter や catalog へ owner・RACI を追加せず、文書の責任者は schedule の `owner_rules` を唯一の経路とする。
+
+- `pm-raci.yaml` との二重管理を避ける。
+- 現状の review は schedule のフェーズとしてのみあり、schedule を持たない最小構成で review を行う需要は確認されていない。
+- 需要が確認された時点で、置き場所として自然な候補 D（catalog の deliverable への `owner` の追加）を改めて検討する。
 
 ## 5. 承認
 
-| 項目     | 内容   |
-| -------- | ------ |
-| 回答者   | _TODO_ |
-| 回答日   | _TODO_ |
-| 承認方式 | _TODO_ |
-| 証跡     | _TODO_ |
+| 項目     | 内容                                                                             |
+| -------- | -------------------------------------------------------------------------------- |
+| 回答者   | indie                                                                            |
+| 回答日   | 2026-10-31                                                                       |
+| 承認方式 | commit                                                                           |
+| 証跡     | 2026-10-31 の対話で indie が候補 A を指示し、本個票の close の commit で記録した |
 
 - 承認方式は既定で `commit`（`register close` により `decided` へ遷移）を用いる。
 - 回答が不可逆・高リスク・framework schema 破壊的変更を伴う場合は `PR` 方式で承認し、証跡に PR URL と merge SHA を記載する。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-2zvs-grade-review-integration]]
+- [[specdojo:pm-raci-rulebook]]
+- [[specdojo:schedule-design-guide]]

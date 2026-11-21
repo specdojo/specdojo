@@ -1,0 +1,168 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_56e93de8786a43c6ab1968ea5547f3eb
+  ts: "2026-11-13T14:08:15Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳。indie の依頼（2026-11-13）で、orchestrator の知見と手作業をコマンドと文書に移す
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 複数の exec run・grade を順に流す仕組みを用意する
+    - field: description
+      from: ""
+      to: 前の run が終わってから次の run・grade・ビルドを順に流し、前が失敗したら止めるか続けるかを選べるようにする（orchestrator のシェルスクリプトの置き換え）
+    - field: input
+      from: ""
+      to: '["2026-11-12〜13 の型の整備と夜間の実行で、orchestrator が手作業やシェルスクリプトで補った"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-13"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: commit_type
+      from: ""
+      to: feat
+    - field: commit_scope
+      from: ""
+      to: exec
+- v: 1
+  id: reg_855ac6446f424c369d2968fd7c103eee
+  ts: "2026-11-13T22:37:53Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: orchestrator が記帳。完了条件を書いた
+  changes:
+    - field: owner
+      from: _TODO_
+      to: sol-executor
+  previous_event_id: reg_56e93de8786a43c6ab1968ea5547f3eb
+- v: 1
+  id: reg_b4527898b86f433eb84c2b08f37452a1
+  ts: "2026-11-16T23:36:25Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_855ac6446f424c369d2968fd7c103eee
+- v: 1
+  id: reg_5c4d207cafd848fabcee871af162c557
+  ts: "2026-11-17T00:09:17Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-ts, test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-ts, test-integration"
+  previous_event_id: reg_b4527898b86f433eb84c2b08f37452a1
+- v: 1
+  id: reg_179f5e378d954ba9b238e14e6f1c10d3
+  ts: "2026-11-17T01:17:30Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-ts, test-integration"
+      to: "-"
+  previous_event_id: reg_5c4d207cafd848fabcee871af162c557
+- v: 1
+  id: reg_2cee085b89344c398bcc2c434e081799
+  ts: "2026-11-17T01:55:29Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-fm, test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-fm, test-unit"
+  previous_event_id: reg_179f5e378d954ba9b238e14e6f1c10d3
+- v: 1
+  id: reg_55a5be90a57d4646aeae8aeb409de6d4
+  ts: "2026-11-17T01:57:15Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-fm, test-unit"
+      to: "-"
+  previous_event_id: reg_2cee085b89344c398bcc2c434e081799
+- v: 1
+  id: reg_a144db9ab87a4e8190546eaab4a39fb8
+  ts: "2026-11-17T02:09:58Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_55a5be90a57d4646aeae8aeb409de6d4
+- v: 1
+  id: reg_c94a1427779a4c1d823615c1d5538093
+  ts: "2026-11-17T03:13:28Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が job から exec を import していないこと、親の検証の通過、JSEY での統合後の動作を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-17"
+    - field: conclusion
+      from: "-"
+      to: command Job の task.steps で exec・grade・検査を順に流せる。段の失敗・延期で run を failed に確定し、lock の待機に上限を持つ
+  previous_event_id: reg_a144db9ab87a4e8190546eaab4a39fb8

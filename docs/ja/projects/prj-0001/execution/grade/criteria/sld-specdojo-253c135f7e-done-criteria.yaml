@@ -1,0 +1,30 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: sld-specdojo-grade-criteria
+document: sld-specdojo
+path: docs/ja/product/010-business-specs/020-data-model/sld-specdojo.md
+graded_at: "2026-11-15T21:27:25.632Z"
+graded_by: sol-review-executor
+content_hash: 4ad710f4e27d39db2eba911c82626d98b4738e32bf3455aca48254a904b66a4d
+summary:
+  satisfied: 3
+  unsatisfied: 0
+  total: 3
+criteria:
+  - id: DC-001
+    text: 保管場所ごとに置くもの・共有の有無・寿命・消してよいかが記述されていること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: satisfied
+  - id: DC-002
+    text: 保管場所の区分が実装の配置と一致していること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: satisfied
+  - id: DC-003
+    text: 運用者が消してよい場所と残すべき場所を判断できること
+    roles:
+      - OPS
+    viewpoint: vp-ops-operability
+    status: satisfied

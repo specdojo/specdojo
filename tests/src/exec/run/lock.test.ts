@@ -8,6 +8,7 @@ import {
   EXEC_RUN_LOCK_TOKEN_ENV,
   execRunLockPath,
   ExecRunBusyError,
+  ExecRunLockTimeoutError,
   formatExecLockUsage,
   inheritsExecRunLock,
   releaseExecRunLock,
@@ -23,6 +24,27 @@ async function withTempExecution(test: (executionPath: string) => Promise<void>)
 }
 
 describe("exec run project lock", () => {
+  it("bounds wait time without stealing the live owner's lock", async () => {
+    await withTempExecution(async (executionPath) => {
+      const first = await acquireExecRunLock(executionPath, { actor: "first", ifBusy: "fail" });
+      try {
+        await expect(
+          acquireExecRunLock(executionPath, {
+            actor: "second",
+            ifBusy: "wait",
+            pollMs: 5,
+            waitTimeoutMs: 15,
+          }),
+        ).rejects.toBeInstanceOf(ExecRunLockTimeoutError);
+        expect(inheritsExecRunLock(executionPath)).toBe(false);
+        await expect(
+          acquireExecRunLock(executionPath, { actor: "third", ifBusy: "skip" }),
+        ).resolves.toBeNull();
+      } finally {
+        releaseExecRunLock(first!);
+      }
+    });
+  });
   it("親 runner の一致する token だけを継承済み lock として扱う", async () => {
     await withTempExecution(async (executionPath) => {
       const handle = await acquireExecRunLock(executionPath, {
@@ -96,8 +118,13 @@ describe("exec run project lock", () => {
       });
       expect(handle).not.toBeNull();
       const before = (await stat(execRunLockPath(executionPath))).mtimeMs;
-      await new Promise((resolve) => setTimeout(resolve, 35));
-      const after = (await stat(execRunLockPath(executionPath))).mtimeMs;
+      // 負荷の高い並列実行では timer が遅れるため、固定の待ち時間ではなく更新を待つ（上限 3 秒）。
+      let after = before;
+      const deadline = Date.now() + 3000;
+      while (after <= before && Date.now() < deadline) {
+        await new Promise((resolve) => setTimeout(resolve, 20));
+        after = (await stat(execRunLockPath(executionPath))).mtimeMs;
+      }
       expect(after).toBeGreaterThan(before);
       releaseExecRunLock(handle!);
     });

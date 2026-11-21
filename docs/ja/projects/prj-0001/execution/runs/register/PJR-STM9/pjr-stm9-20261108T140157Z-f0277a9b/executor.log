@@ -1,0 +1,69 @@
+I have initiated the grading evaluation for `docs/ja/specdojo/rulebooks/bdd-rulebook.md` in the background and am waiting for the execution to complete.
+I have started the grading evaluation for `docs/ja/specdojo/samples/bes-sample.md` and am waiting for it to finish.
+Markdownの構文チェック（`npm run lint:md`）を実行中です。完了を待ちます。
+Markdown構文チェックの完了を待機しています。
+Markdownの静的検査が進行中です。完了通知を待ちます。
+業務仕様の代表 8 件を対象にしたスケジュール戦略（`sch-strategy-business-specs-reps.yaml`）およびトラック（`sch-track-business-specs-reps.yaml`）の生成・検証が完了しました。
+
+### 実施概要
+
+1. **スコープ定義と段構成の検証**
+   - 対象 8 件（`bdd-register-entry`, `ccd-project-planning`, `cdt-register-type`, `br-task-selection-strategy`, `bes-task-ready-selected`, `sf-task-execution`, `ifx-cmd-ai-provider-cli`, `clis-exec-commands`）のみを `scope.catalogs` に限定。
+   - すべての成果物について、要求された「作成 → 磨き込み（fully-guided） → 整理（condense） → agent review → 確定（人）」の 5 段構成（計 40 タスク、11 マイルストーン）を生成・反映しました。
+
+2. **選定した intent と理由**
+   - **実装エビデンスが存在する 6 件**:
+     - `bdd-register-entry`, `ccd-project-planning`, `cdt-register-type`, `sf-task-execution`, `ifx-cmd-ai-provider-cli`, `clis-exec-commands`
+     - 選定 intent: `reflect-implementation`（→ approach: `retrofit`）
+     - 理由: 親 epic（[PJR-2GD6](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-STM9/docs/ja/projects/prj-0001/controls/project-register/pjr-2gd6-business-specs-reps.md)）の「実装と同じことを 2 回書かない」「実装参照に寄せる」方針に基づき選定。`retrofit` profile により要求される 5 段（retrofit-pass → refine-pass → condense-pass → retrofit-review-pass → finalize-pass）が導出され、YAML サンプル未 grade の成果物であっても実装エビデンスにより安定して生成されます。
+   - **実装エビデンスが存在しない 2 件**:
+     - `br-task-selection-strategy`, `bes-task-ready-selected`
+     - 選定 intent: `author-deliverable`（→ approach: `freeform`）
+     - 理由: 新規に型から書き起こす仕様であるため `author-deliverable` を選定。不足していた Kata grade（bdd-rulebook: 90点 pass, bes-sample: 50点 fail）を事前に評価した上で、`freeform` approach を採用。要求される 5 段（freeform-pass → refine-pass → condense-pass → review-pass → finalize-pass）が導出されます。
+
+3. **他 track との分離**
+   - [sch-milestones.yaml](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-STM9/docs/ja/projects/prj-0001/schedule/sch-milestones.yaml) に追加された差分は `business-specs-reps` 由来の 11 件のみとし、他 track への影響を排除しました。
+   - カタログ本体（`dct-*.yaml`）および `tml-index.yaml` は変更していません。
+
+4. **個票の更新と検証**
+   - 個票 [pjr-stm9-business-specs-reps-strategy.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-STM9/docs/ja/projects/prj-0001/controls/project-register/pjr-stm9-business-specs-reps-strategy.md) の作業内容（done）および対応結果を更新しました（frontmatter のステータスは不変）。
+   - `specdojo exec validate --project prj-0001 --schedule-only`、`npm run validate:schema`、`npm run lint:md` のすべてがパスすることを確認しました。
+
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "PJR-STM9: 業務仕様代表8件の sch-strategy-business-specs-reps.yaml および sch-track-business-specs-reps.yaml を作成・検証完了し、個票と sch-milestones.yaml を更新しました。",
+  "target_coverage": [
+    {
+      "target": "track:business-specs-reps",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/schedule/sch-strategy-business-specs-reps.yaml",
+      "reason": "代表8件の5段構成スケジュール戦略、トラック定義、およびマイルストーンを生成・反映"
+    }
+  ],
+  "handoff": [
+    "対象8件の段構成: すべての成果物について作成 → 磨き込み（fully-guided） → 整理（condense） → agent review → 確定（人）の5段構成（計40タスク、11マイルストーン）を生成。",
+    "選定intent（実装エビデンスあり6件: bdd-register-entry, ccd-project-planning, cdt-register-type, sf-task-execution, ifx-cmd-ai-provider-cli, clis-exec-commands）: PJR-2GD6方針「実装参照に寄せる」に従い reflect-implementation（retrofit）を選定。YAMLサンプル等のKata grade未評価に依存せず安定して5段構成を生成。",
+    "選定intent（実装エビデンスなし2件: br-task-selection-strategy, bes-task-ready-selected）: 新規作成のため author-deliverable（freeform）を選定。Kata gradeを評価した上で5段構成を生成。",
+    "sch-milestones.yaml: business-specs-reps のマイルストーン11件のみを追加し、他trackの不要な差分は混入させないよう整理済み。",
+    "検証結果: specdojo exec validate --schedule-only, npm run validate:schema, npm run lint:md が全てパス。"
+  ],
+  "validations": [
+    {
+      "command": "npx specdojo exec validate --project prj-0001 --schedule-only",
+      "status": "passed",
+      "summary": "OK: validation passed (events=791, schedule_ids=436, schedule_files=9)"
+    },
+    {
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "yaml-schema, job-run, grade-pipeline, rulebook-enums, glossary all valid"
+    },
+    {
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "markdownlint passed without errors"
+    }
+  ]
+}
+</specdojo_executor_evidence>

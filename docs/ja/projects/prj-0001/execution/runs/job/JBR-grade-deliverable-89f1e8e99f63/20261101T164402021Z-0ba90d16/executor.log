@@ -1,0 +1,59 @@
+## レビュー結果: Job Run `JBR-grade-deliverable-89f1e8e99f63`（`job-grade-deliverable`）
+
+**判定: `complete-with-findings`。** Run は10件すべてを評価して正常に終わっており、統合してかまいません。ただし、5件の成果物で done_criteria が未充足です。また Job Run の result は、plan が求めた「未充足の done_criteria と確認担当ロール」を報告していません。
+
+### 評価結果の確認
+- **鮮度（`E-01`）:** 3つの確認で、対象10件はどれも出力されませんでした。verdict を決める直前に `--changed-only` と `--dependency-changed` をもう一度実行し、結果は同じでした（0件）。
+  - `specdojo grade list --target deliverable --project prj-0001 --changed-only`
+  - 同じコマンドの `--dependency-changed`
+  - 同じコマンドの `--incomplete`
+  - `--changed-only` の出力には `cdfd-uc-schedule.md` などが含まれますが、今回の対象外です。
+- **未完了と再試行上限:** `grade state --exhausted` の出力は空でした。評価が未確定のもの（`grade-unavailable`）はありません。
+- **サイドカーとの一致:** 10件の sidecar の最上位の `verdict` と `score` は、stdout の `results.tsv` と全件一致しました。
+
+### 判断根拠
+- **差分の範囲:** `a51455df..46752911` の変更27ファイルは、すべて Job Run の出力です。対象外の変更は混入していません。
+  - Run の evidence、plan、result、Run JSON
+  - `grade/criteria` 配下の done_criteria 10件（新規1件）
+  - `grade/results` 配下の評価結果 10件（新規1件）
+- **記録どうしの整合:** 状態はどの記録でも成功で揃っています。
+  - Run JSON: `state: succeeded`、attempt 1 の `exit_code: 0`
+  - pipeline-state: executor と reporter がどちらも `succeeded`
+  - stdout: `selected=10 processed=10 completed_now=10 incomplete=0 exhausted=0`
+  - stderr: 空
+  - result: `status: complete`
+- **plan の確認事項:**
+  - 終了コード75（rate limit）や中断による未完了の段はありません。
+  - `failed` の段はなく、`retry_exhausted` の成果物もありません。Run は `partial` ではありません。
+- **verdict と score の偏り:** 結果は `pass` 3件、`needs-work` 7件です。
+  - `needs-work`: onboarding 65、action 72、plan 78、check 79、do 85、orchestrator 90、uc-routine 98
+  - `pass`: overview 100、uc-deliverable 97、uc-register 100
+  - `cdfd-uc-routine` は score 98・finding 1件でも `needs-work` です。判定のしきい値が score ではなく finding の severity で決まっている可能性があります。ただし推測で、確かめていません。
+- **未充足の done_criteria と確認担当ロール:**
+
+| 成果物 | 未充足 | 確認担当ロール |
+| --- | --- | --- |
+| `cdfd-action` | DC-001、DC-003 | BA、PO |
+| `cdfd-check` | DC-001 | BA |
+| `cdfd-do` | DC-002 | ARC |
+| `cdfd-onboarding` | DC-001 | BA |
+| `cdfd-plan` | DC-001 | BA |
+
+  - 残りの5件（orchestrator、overview、uc-deliverable、uc-register、uc-routine）は unsatisfied が0件です。
+
+### 未充足事項・改善指示（統合を妨げない finding）
+1. **result の報告漏れ:** Job Run の result は、上の未充足 done_criteria と担当ロールを書いていません。「申し送り」も「なし」になっています。BA、PO、ARC への確認依頼として引き継いでください。
+2. **result の変更ファイル一覧:** evidence、plan、result 自身が載っていません。記録上の軽微な漏れです。
+3. **評価者名の不一致:** sidecar の `graded_by` は `flash-high-executor` ですが、run の executor は `agy-expert-executor` です。同じエージェントの別名かどうかは確かめていません。
+4. **`needs-work` 7件の扱い:** これは成果物の品質についての finding で、Job Run の完了は妨げません。各成果物の担当側で改善してください。
+
+### 確認できなかった範囲
+- evidence.json の中身は、stdout と pipeline-state で照合して代えました。詳しくは読んでいません。
+- 前回の評価と比べた score の差分は、sidecar の diff を個別には確認していません。
+- `needs-work` の判定ルールと `graded_by` の別名関係は確かめていません。
+
+Job Run の出力と review result は変更していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict: complete-with-findings。差分 a51455df..46752911 の27ファイルはすべて Job Run の出力（evidence・plan・result・Run JSON、grade/criteria の done_criteria 10件、grade/results の評価結果 10件）で、対象外の変更は混入していない。Run JSON は state succeeded・exit_code 0、pipeline-state は executor と reporter とも succeeded、stdout は selected=10 processed=10 completed_now=10 incomplete=0 exhausted=0、stderr は空、result は status complete で、記録どうしは整合している。results.tsv は10件すべて passed で、failed・retry_exhausted・rate limit（75）による未完了の段はない。鮮度確認は grade list の --changed-only・--dependency-changed・--incomplete と grade state --exhausted のいずれも対象10件を出力せず、verdict を決める直前の再確認（--changed-only と --dependency-changed）も0件で最新と確認した。sidecar 10件の最上位の verdict と score は results.tsv と全件一致した（pass 3件: overview 100、uc-deliverable 97、uc-register 100。needs-work 7件: onboarding 65、action 72、plan 78、check 79、do 85、orchestrator 90、uc-routine 98）。未充足の done_criteria は cdfd-action DC-001（BA）と DC-003（PO）、cdfd-check DC-001（BA）、cdfd-do DC-002（ARC）、cdfd-onboarding DC-001（BA）、cdfd-plan DC-001（BA）。finding: (1) Job Run の result は plan が求めた未充足 done_criteria と確認担当ロールを報告しておらず、申し送りも「なし」になっている。(2) result の変更ファイル一覧に evidence・plan・result 自身が載っていない。(3) sidecar の `graded_by` は flash-high-executor で、run の executor の agy-expert-executor と表記が違う（別名かどうかは確かめていない）。(4) needs-work 7件は成果物の品質 finding で、Job Run の完了は妨げない。確認できなかった範囲: evidence.json の詳細（stdout と pipeline-state で照合して代えた）、前回の評価と比べた score の差分、cdfd-uc-routine が score 98・finding 1件でも needs-work になる判定ルール（severity で決まる可能性があるが推測で、確かめていない）、`graded_by` の別名関係。","handoff":["未充足の done_criteria について、確認担当ロールへ確認を依頼する: cdfd-action DC-001（BA）と DC-003（PO）、cdfd-check DC-001（BA）、cdfd-do DC-002（ARC）、cdfd-onboarding DC-001（BA）、cdfd-plan DC-001（BA）。","Job Run の result（gemma-reporter が作成）が、plan で指定された未充足 done_criteria と担当ロールを報告していない。reporter の出力が要件を満たすように見直すことを検討する。","sidecar の `graded_by`（flash-high-executor）と run の executor（agy-expert-executor）の表記が違う。同じエージェントの別名かどうかを確認する。"],"validations":[{"command":"git diff --name-status a51455df04eda9e9a977f98c5eeae2d974521b5b..467529118ded0c8aaae6ab02fa92abada738a616","status":"passed","summary":"変更27ファイルはすべて Job Run の出力（evidence・plan・result・Run JSON、done_criteria 10件、評価結果 10件）で、対象外の変更はない"},{"command":"specdojo grade list --target deliverable --project prj-0001 --changed-only","status":"passed","summary":"対象10件を出力しなかった（評価結果は最新）。verdict を決める直前の再実行でも0件"},{"command":"specdojo grade list --target deliverable --project prj-0001 --dependency-changed","status":"passed","summary":"対象10件を出力しなかった。verdict を決める直前の再実行でも0件"},{"command":"specdojo grade list --target deliverable --project prj-0001 --incomplete","status":"passed","summary":"対象10件を出力しなかった（評価パイプラインは完了済み）"},{"command":"specdojo grade state --target deliverable --project prj-0001 --exhausted","status":"passed","summary":"出力は空で、retry_exhausted の成果物はない"}]}
+</specdojo_executor_evidence>

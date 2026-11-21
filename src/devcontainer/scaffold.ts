@@ -1,6 +1,7 @@
 import { existsSync } from "node:fs";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import * as path from "node:path";
+import { assertProviderLaunchAllowed } from "../shared/antigravity-block.js";
 
 export interface RunDevcontainerScaffoldOptions {
   packageRoot: string;
@@ -160,8 +161,10 @@ export function generateSshConfigSample(ports: number[]): string {
     "",
     "# devcontainer 内の tmux セッションへ直接入る接続用",
     "# RemoteCommand は非対話シェルで動くため、接続先端末の ~/.zshrc などの PATH 設定は読み込まれません。",
+    "# 通常の接続（コンテナ稼働中または停止中）では Node.js は不要です（docker のみ使用）。",
+    "# コンテナ未作成時のみ Dev Container CLI が自動起動されます。",
     "# 接続元から「ssh <host> 'command -v devcontainer'」を実行して Dev Container CLI が見つかるか確認できます。",
-    "# 見つからない場合は、ホスト側の ~/bin/specdojo-tmux.sh の node_bin_dir を設定してください。",
+    "# 見つからない場合は、ホストの環境変数 SPECDOJO_NODE_BIN を設定するか、ログインシェルの PATH を確認してください。",
     "Host <host>-tmux",
     "  HostName <host>",
     "  User <user>",
@@ -198,6 +201,10 @@ export async function runDevcontainerScaffold(opts: RunDevcontainerScaffoldOptio
     force,
     dryRun,
   } = opts;
+  // agy is never launched since 0.9.2, so refuse before writing any install step or volume for it.
+  for (const provider of providers) {
+    assertProviderLaunchAllowed(provider, "devcontainer scaffold cannot add provider antigravity");
+  }
   if (preset !== undefined && !DEVCONTAINER_PRESETS.includes(preset as DevcontainerPreset)) {
     throw new Error(
       `Unknown Dev Container preset: ${preset}. Available: ${DEVCONTAINER_PRESETS.join(", ")}`,
@@ -245,6 +252,7 @@ export async function runDevcontainerScaffold(opts: RunDevcontainerScaffoldOptio
   // options に応じて json と script を改変
   const aptPackages: string[] = [];
   const extraScripts: string[] = [];
+  let tmuxConfTemplate: string | undefined;
   let emacsInitTemplate: string | undefined;
   let vimrcTemplate: string | undefined;
 
@@ -263,6 +271,14 @@ fi`);
 
   if (effectiveTmux) {
     aptPackages.push("tmux");
+    tmuxConfTemplate = await readFile(path.join(templateDir, "tmux.conf"), "utf8");
+    extraScripts.push(`# Link bundled tmux.conf when tmux is enabled, preserving any non-symlink user configuration.
+SCRIPT_DIR="$(cd "$(dirname "\${BASH_SOURCE[0]}")" && pwd)"
+if [ -f "\${SCRIPT_DIR}/tmux.conf" ]; then
+  if [ ! -e "$HOME/.tmux.conf" ] || [ -L "$HOME/.tmux.conf" ]; then
+    ln -sfn "\${SCRIPT_DIR}/tmux.conf" "$HOME/.tmux.conf"
+  fi
+fi`);
   }
   if (effectiveCron) {
     aptPackages.push("cron");
@@ -384,7 +400,7 @@ fi`);
   }
 
   // providers の処理
-  const knownProviders = new Set(["claude", "codex", "opencode", "antigravity"]);
+  const knownProviders = new Set(["claude", "codex", "opencode"]);
   for (const provider of providers) {
     if (!knownProviders.has(provider)) {
       process.stdout.write(`Warning: unknown provider "${provider}"\n`);
@@ -421,13 +437,6 @@ fi`);
       devcontainer.containerEnv["OPENCODE_DISABLE_AUTO_UPDATE"] = "1";
       // 本リポジトリで設定を確かめている opencode の npm パッケージ（opencode-ai）を使う。
       extraScripts.push("sudo npm install -g opencode-ai@latest");
-    } else if (provider === "antigravity") {
-      devcontainer.mounts.push(
-        `source=${volumeName("antigravity")},target=/home/node/.config/antigravity,type=volume`,
-      );
-      extraScripts.push(
-        'if ! curl -fsSL https://antigravity.google/cli/install.sh | bash; then\n  echo "Warning: Antigravity CLI installer failed."\nfi',
-      );
     }
   }
 
@@ -439,7 +448,7 @@ fi`);
   }
 
   const specdojoTmuxTemplatePath = path.join(templateDir, "remote-host", "specdojo-tmux.sh.sample");
-  let specdojoTmuxScript = await readFile(specdojoTmuxTemplatePath, "utf8");
+  const specdojoTmuxScript = await readFile(specdojoTmuxTemplatePath, "utf8");
   const remoteUser =
     typeof devcontainer.remoteUser === "string" && devcontainer.remoteUser.trim()
       ? devcontainer.remoteUser.trim()
@@ -464,16 +473,15 @@ fi`);
     PATH: remotePath,
   };
 
-  specdojoTmuxScript = specdojoTmuxScript.replace(
-    'container_user="node"',
-    `container_user="${remoteUser}"`,
-  );
   const publishedPorts = extractPublishedPorts(devcontainer);
   const sshConfigScript = generateSshConfigSample(publishedPorts);
 
   if (dryRun) {
     process.stdout.write(`[dry-run] would write: .devcontainer/devcontainer.json\n`);
     process.stdout.write(`[dry-run] would write: .devcontainer/post-create.sh\n`);
+    if (tmuxConfTemplate !== undefined) {
+      process.stdout.write(`[dry-run] would write: .devcontainer/tmux.conf\n`);
+    }
     if (emacsInitTemplate !== undefined) {
       process.stdout.write(`[dry-run] would write: .devcontainer/emacs/init.el\n`);
     }
@@ -497,6 +505,9 @@ fi`);
     "utf8",
   );
   await writeFile(path.join(devcontainerDir, "post-create.sh"), postCreateScript, "utf8");
+  if (tmuxConfTemplate !== undefined) {
+    await writeFile(path.join(devcontainerDir, "tmux.conf"), tmuxConfTemplate, "utf8");
+  }
   if (emacsInitTemplate !== undefined) {
     await mkdir(path.join(devcontainerDir, "emacs"), { recursive: true });
     await writeFile(path.join(devcontainerDir, "emacs", "init.el"), emacsInitTemplate, "utf8");
@@ -520,6 +531,9 @@ fi`);
 
   process.stdout.write(`Written: .devcontainer/devcontainer.json\n`);
   process.stdout.write(`Written: .devcontainer/post-create.sh\n`);
+  if (tmuxConfTemplate !== undefined) {
+    process.stdout.write(`Written: .devcontainer/tmux.conf\n`);
+  }
   if (emacsInitTemplate !== undefined) {
     process.stdout.write(`Written: .devcontainer/emacs/init.el\n`);
   }

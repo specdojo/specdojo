@@ -148,14 +148,15 @@ specdojo schedule strategy generate --project <project-id> --track <track> \
 
 `sch-strategy-<track>.yaml`（生成入力）から `sch-track-<track>.yaml`（生成物）への展開では、タスク単位で確定する実行情報だけを展開します。
 
-| 展開する情報       | 理由                                                     |
-| ------------------ | -------------------------------------------------------- |
-| `name`             | 実行者が作業を識別するために必要                         |
-| `description`      | エージェント・人間が実行時に参照するフェーズ指示         |
-| `target_local_ids` | 横断タスクの対象成果物群を plan / commit scope へ渡す    |
-| `owner`            | 誰が実行するかを決定するために必要                       |
-| `duration_days`    | CPM 計算に必要                                           |
-| `depends_on`       | 実行順序の決定に必要。タスク ID に解決済みの形で展開する |
+| 展開する情報       | 理由                                                                                                                  |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------- |
+| `name`             | 実行者が作業を識別するために必要                                                                                      |
+| `description`      | エージェント・人間が実行時に参照するフェーズ指示                                                                      |
+| `target_local_ids` | 横断タスクの対象成果物群を plan / commit scope へ渡す                                                                 |
+| `owner`            | 誰が実行するかを決定するために必要                                                                                    |
+| `duration_days`    | CPM 計算に必要                                                                                                        |
+| `depends_on`       | 実行順序の決定に必要。タスク ID に解決済みの形で展開する                                                              |
+| `agent`            | phase の `agent` と `owner_rules[].phase_overrides[].agent` を解決した指名。plan だけで実行者を確かめられるようにする |
 
 トラック全体に共通する生成ルールや設計意図は strategy に留めます。
 
@@ -165,6 +166,8 @@ specdojo schedule strategy generate --project <project-id> --track <track> \
 | `owner_rules`                     | どの `local_id` を誰が担当するかのルール。トラックには展開しない |
 | `cross_domain_dependencies`       | 依存関係の設計意図。トラックには解決済み `depends_on` として反映 |
 | `phase_gates`・`group_milestones` | 生成ロジック。トラックにはマイルストーンとして展開済み           |
+
+`agent` もトラックへ展開しますが、実行時の解決は strategy を正とし、トラックの値では上書きしません。指名を変えるときは strategy を直し、`schedule build --track <track> --force` で作り直します。トラックを直接直すと、`exec validate` と `exec run --auto` が strategy から作り直した結果との違いを警告します。
 
 `description` をトラックへ展開するのは、エージェントや人間が plan ファイルだけを読んで実行できるようにするためです。strategy を参照させる方式は plan 生成時にファイルが 2 つ必要になり、自己完結性が損なわれます。
 
@@ -276,14 +279,14 @@ phase_sets:
       proficiency: expert
 ```
 
-| フィールド     | 用途                                       |
-| -------------- | ------------------------------------------ |
-| `execution`    | `agent` または `human`。省略時は `agent`   |
-| `mode`         | `edit` または `review`。省略時は `edit`    |
-| `approach`     | plan テンプレートの進め方を選ぶ            |
-| `capabilities` | 必要なツールや能力を示す                   |
-| `proficiency`  | 必要な習熟度を示す                         |
-| `agent`        | executor / reporter を nickname で指名する |
+| フィールド     | 用途                                                                |
+| -------------- | ------------------------------------------------------------------- |
+| `execution`    | `agent` または `human`。省略時は `agent`                            |
+| `mode`         | `edit` または `review`。省略時は `edit`                             |
+| `approach`     | plan テンプレートの進め方を選ぶ                                     |
+| `capabilities` | 必要なツールや能力を示す                                            |
+| `proficiency`  | 必要な習熟度を示す。`frontier` は明示要求時だけ自動選択の候補になる |
+| `agent`        | executor / reporter を nickname で指名する                          |
 
 `approach` の値ごとの意味と、rulebook / recipe / sample / template の参照方針は [実践の進め方ガイド](ryu-guide.md) を参照します。エージェント選択の詳細は [exec設定ガイド](exec-config-guide.md) を参照します。
 
@@ -320,7 +323,7 @@ phase_sets:
 - pipeline を指定した phase は agent 実行専用です。`execution: human` と併用できません。
 - `mode` と `approach` は phase 全体へ適用し、各 stage の agent 選択要件は stage 内の `capabilities` と `proficiency` で定義します。
 - 通常は `stage_role` と実行要件に一致する member を実行時に自動選択します。provider の利用枠を phase ごとに計画する場合は、phase の `agent.executor` / `agent.reporter` に `.specdojo/agent-members.yaml` の nickname を指定します。
-- `agent` と `agent_pipeline` は併用できます。`--executor-by` / `--reporter-by`、phase の `agent`、stage の `capabilities` / `proficiency` による自動選択の順で解決します。`owner_rules[].phase_overrides[].agent` では成果物単位に指名を上書きできます。
+- `agent` と `agent_pipeline` は併用できます。`--executor-by` / `--reporter-by`、成果物単位に指名を上書きする `owner_rules[].phase_overrides[].agent`、phase の `agent`、stage の `capabilities` / `proficiency` による自動選択の順で解決します。ready の作り直し・タスクの表示・実行のどれでも同じ順で、strategy を持つトラックでは、トラックへ展開した `agent` を使いません（トラックへ展開する情報を参照）。
 - by-name の agent が rate limit になった場合は別 agent へ自動フォールバックせず、タスクを待機状態にします。再開時も同じ agent を使い、緊急の差し替えだけを CLI の stage override で行います。
 - 登録簿の項目（`exec run --register`）は per-item のパイプライン宣言を持たないため、`agent_pipeline` の YAML 定義は使いません。代わりに `--executor-by <nickname>` と `--reporter-by <nickname>` を両方指定すると、同じ executor/reporter 2段階（evidence の受け渡し・result 描画を含む）で実行します。詳細は [CLIコマンドリファレンス](../references/command-reference.md) の `exec run` を参照します。
 
@@ -332,8 +335,9 @@ phase_sets:
 2. `retrofit` edit: DCT の `evidence_refs` から各成果物を新設・補正する。
 3. `cross-deliverable-dedup`: 必要な場合だけ、成果物間の正本選択と重複整理を行う。
 4. `fully-guided`: 整備済みの実践の型に沿って内容を磨き込む。
-5. `retrofit` review: 完成版と実装エビデンスの一致・乖離・未確認範囲を判定する。
-6. `finalize` または `bootstrap-finalize`: human が成果物と必要な実践の型を確定する。
+5. `condense`: 意味と判断に要る情報を保ち、1 文書内の冗長さを整理して記録する。
+6. `retrofit` review: 完成版と実装エビデンスの一致・乖離・未確認範囲を判定する。
+7. `finalize` または `bootstrap-finalize`: human が成果物と必要な実践の型を確定する。
 
 `retrofit` を使う成果物には、事前に DCT の `evidence_refs` を宣言します。実装エビデンスは Schedule の依存関係ではなく調査入力であるため、`depends_on` や `targets` へ複製しません。
 
@@ -369,6 +373,7 @@ phase や owner rule に書く `approach` は、タスクの目的と実践の�
 - `bootstrap` は `bootstrap_scope`（作成条件から必要と判断し、一式で初期整備する実践の型）と理由の記載が必要です。`not-needed` またはすべて利用可能な型を対象にできません。`retrofit` は解決済みの `evidence_refs` が 1 件以上必要です。
 - intent の欠落・重複、必要な grade や追加パラメータの欠落、参照切れがある場合は暫定 approach を使わず生成を停止します。
 - 標準 profile は `bootstrap`、`retrofit`、`draft`、`fully-guided`、`recipe-guided`、`freeform`、4種の maintenance、横断整理、`finalize` / `bootstrap-finalize` を、固定の phase ID・suffix・duration・execution・mode・agent pipeline へ写像します。`not-needed` の型に対応する maintenance は生成せず、成果物ごとに異なる profile は `owner_rules[].phase_sets` で分けます。
+- `bootstrap-kata-set` は初期整備の後、rulebook → recipe → sample → template の見直しを経て、磨き込み・冗長整理・実装照合レビュー・確定へ進みます。`improve-kata` の `kata_target: rulebook` も同じ順で型一式を同期してからレビュー・確定へ進みます。recipe / sample / template を直接指定した場合は、その型だけを見直します。生成時に `not-needed` の段は省略し、実行までに不要と判断された段は変更せず理由を result に残します。型の整備段には Rulebook 記述標準、完成例の厚さ、詳細の正本参照の方針も含めます。
 - owner は明示オプション、既存 strategy、既定 owner の順に解決します。DCT の `done_criteria.roles` はレビュー観点なので、主担当へ流用しません。
 - generator は書き込み前に `schedule build --dry-run` 相当を実行します。全 strategy の project ID、参照、schema、milestone ID に問題があれば既存ファイルを上書きしません。
 
@@ -389,15 +394,16 @@ approach_rules:
 | 雛形作成・文脈記入 | `context-pass`  | `010`  | `human`   | `edit`   | `draft`        |
 | 下書き             | `guided-pass`   | `020`  | `agent`   | `edit`   | `draft`        |
 | 磨き込み           | `refine-pass`   | `070`  | `agent`   | `edit`   | `fully-guided` |
+| 冗長さの整理       | `condense-pass` | `080`  | `agent`   | `edit`   | `condense`     |
 | 完成版レビュー     | `review-pass`   | `090`  | `agent`   | `review` | `fully-guided` |
 | 確定               | `finalize-pass` | `140`  | `human`   | `edit`   | `finalize`     |
 
-雛形作成と文脈記入は一つの human 段にまとめます。雛形を人が確認してその場で文脈を記入でき、独立した空の待ち段を増やさずに draft へ渡せます。各段は直前の段に依存し、human の完了前に agent は着手しません。human 段には agent pipeline を付けません。
+雛形作成と文脈記入は一つの human 段にまとめます。雛形を人が確認してその場で文脈を記入でき、独立した空の待ち段を増やさずに draft へ渡せます。`condense-pass` の executor / reporter はともに `normal` です。`refine-pass` を含むすべての標準 profile に、磨き込みの後・review の前の段として生成します。既存 strategy は自動更新しません。各段は直前の段に依存し、human の完了前に agent は着手しません。human 段には agent pipeline を付けません。
 
 1. `specdojo exec claim --project <project-id> --task <context-task-id> --by <human>` で着手します。既存の human タスクと同じく plan は生成せず、claim が作成した result に作業案内と記録欄を持ちます。
 2. `specdojo deliverable scaffold --project <project-id> --target <doc-id>` で対象成果物の雛形を作成します。既存成果物は上書きせず、`--force` は指定しません。
 3. 対象本文の `_CONTEXT_:` に固定前提・制約・調査や選定を任せる範囲を書きます。例: `_CONTEXT_: 既存 API を維持し、認証方式の候補を調べて提案してほしい。` 記法は [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] の「文脈の目印」に従います。
-4. result に対象と記入内容を残し、`specdojo exec complete --project <project-id> --task <context-task-id> --by <human>` で draft へ渡します。draft は指示を本文へ反映し、元の指示と反映箇所を実行記録へ残します。続いて refine・review を行い、最後に人が finalize を claim / complete して確定します。
+4. result に対象と記入内容を残し、`specdojo exec complete --project <project-id> --task <context-task-id> --by <human>` で draft へ渡します。draft は指示を本文へ反映し、元の指示と反映箇所を実行記録へ残します。続いて refine・condense・review を行い、最後に人が finalize を claim / complete して確定します。
 
 文脈の記入を待つ必要がない場合は従来の `author-deliverable` を使います。必要な型がそろった場合の `fully-guided` profile も、草案作成の `guided-pass` は `approach: draft` です。文脈や成果物が未作成でも template を骨組みにして根拠のある範囲を下書きします。文脈が無いことを調査・選定の委任とは解釈せず、未委任の判断は保留します。既存 strategy の段定義を更新するには `schedule strategy generate --force` の差分を確認して適用し、構造が変わる場合は `schedule build --force`、続いて `exec refresh` を実行します。
 

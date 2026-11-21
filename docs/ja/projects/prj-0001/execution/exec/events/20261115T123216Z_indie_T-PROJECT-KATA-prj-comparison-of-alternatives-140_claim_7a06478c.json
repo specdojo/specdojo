@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-15T12:32:16Z",
+  "type": "claim",
+  "task_id": "T-PROJECT-KATA-prj-comparison-of-alternatives-140",
+  "by": "indie",
+  "msg": "finalize",
+  "meta": {
+    "claim_owner": "PM",
+    "planned_owner": "PM"
+  }
+}

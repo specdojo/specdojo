@@ -1,0 +1,155 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ac132a5aec6e4cd98ace9f68d54bda90
+  ts: "2026-11-14T03:31:42Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳。indie の依頼
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: agent の 1 段を速くする（親の検証の選び方・統合の commit・reporter・worktree の準備）
+    - field: description
+      from: ""
+      to: 1 段に 20〜30 分かかっている内訳を減らし、10〜12 分程度にする
+    - field: input
+      from: ""
+      to: '["2026-11-14 の kata-wave-1 の実績（cpd-specdojo-cli-050）: worktree の準備 1.7 分、executor 6.8 分、親の検証 5.2 分、reporter（ローカルの gemma）3.7 分、統合 0.25 分。統合の commit のときに lefthook がテスト全体を流し直すと 7.8 分かかり、負荷で時間切れになって統合が止まることもあった（sysd-cross-cutting-policy-005）","親の検証の順番待ちは、`parent_validation_concurrency` を 2 にして先に解消した（2026-11-14）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: sol-executor
+    - field: registered
+      from: ""
+      to: "2026-11-14"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: commit_type
+      from: ""
+      to: perf
+    - field: commit_scope
+      from: ""
+      to: exec
+- v: 1
+  id: reg_e0c4202fbb2b47878a683465fa77d1c3
+  ts: "2026-11-14T11:49:01Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_ac132a5aec6e4cd98ace9f68d54bda90
+- v: 1
+  id: reg_868a17e3fe4a45c785b70adb1c2a7a4a
+  ts: "2026-11-14T12:02:21Z"
+  action: wait
+  actor: opus-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: agent exited with non-zero code
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: agent exited with non-zero code
+  previous_event_id: reg_e0c4202fbb2b47878a683465fa77d1c3
+- v: 1
+  id: reg_1662ffa6a1d14cffbf1acfb41f3ddb90
+  ts: "2026-11-14T21:26:20Z"
+  action: start
+  actor: opus-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: agent exited with non-zero code
+      to: "-"
+  previous_event_id: reg_868a17e3fe4a45c785b70adb1c2a7a4a
+- v: 1
+  id: reg_4738b8a4d68b4036a12143614654f40d
+  ts: "2026-11-14T21:47:39Z"
+  action: wait
+  actor: opus-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-unit"
+  previous_event_id: reg_1662ffa6a1d14cffbf1acfb41f3ddb90
+- v: 1
+  id: reg_e80c194ef68840dc91645ecf3a5fe7bd
+  ts: "2026-11-14T22:03:15Z"
+  action: start
+  actor: opus-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_4738b8a4d68b4036a12143614654f40d
+- v: 1
+  id: reg_67c3439702654e94981a8283ba649823
+  ts: "2026-11-14T22:17:20Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_e80c194ef68840dc91645ecf3a5fe7bd
+- v: 1
+  id: reg_219def7d6969494e9fa74757f45fbcc5
+  ts: "2026-11-19T12:14:27Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 反映後の実 run で 1 段の時間を測り、develop の check で落とした検査の見逃しがないことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-19"
+    - field: conclusion
+      from: "-"
+      to: 親の検証を変更の種類で選び、統合の commit の hook の流し直しを省き、決まった形の result を runner が作るようにした。実 run で文書だけの 1 段が 13.4 分、コードの 1 段が 16.3 分になった
+  previous_event_id: reg_67c3439702654e94981a8283ba649823

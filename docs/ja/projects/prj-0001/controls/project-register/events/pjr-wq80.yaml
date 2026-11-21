@@ -1,0 +1,59 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_4af26d0ac6154aaa993a4b8a3758c374
+  ts: "2026-11-08T14:03:46Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 記帳以外の commit と統合が、統合中の exec run と順番を取れない
+    - field: description
+      from: ""
+      to: register --commit は登録簿の lifecycle のロックを取るが、個票の本文の普通の commit や feature ブランチの統合には順番を取る仕組みがなく、統合中の exec run と index を取り合う。直し方を決めて解消する
+    - field: input
+      from: ""
+      to: '["2026-11-08、PJR-2SRR の個票の commit が統合中の run の .git/index.lock に当たって失敗した。orchestrator は、run のログの終わりの行と .git/index.lock がなくなるのをシェルで待つ処理を書いて避けている。","commit が index にファイルを残すと、次の run の checkpoint が止まるおそれがある（PJR-HQVE と同じ種類）。","直し方の案: (1) register lifecycle と同じロックを普通の commit からも取れるコマンド、(2) commit の hook で統合中の run を検出して待つ、(3) feature ブランチの統合を CLI のコマンドにする。どれにするかは未決。","issue として起票する（indie が決定、2026-11-08）。直し方が決まった後の作業は、この issue から --from で todo を起票する。"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-08"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-HQVE"]'
+- v: 1
+  id: reg_5ff93cd95b374e0fa69215d4ee9161eb
+  ts: "2026-11-16T03:43:52Z"
+  action: reject
+  actor: indie
+  from_status: open
+  to_status: rejected
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: open
+      to: rejected
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: PJR-30SA（git の書き込みを runner と同じロックで直列化する specdojo git）に引き継いだ
+  previous_event_id: reg_4af26d0ac6154aaa993a4b8a3758c374

@@ -2,7 +2,7 @@
 id: specdojo:pm-members-sample
 type: project
 status: draft
-title: メンバー名簿
+title: "メンバー定義: 駄菓子屋きぬや 販売管理システム"
 rulebook: specdojo:pm-members-rulebook
 based_on:
   - specdojo:people-and-organization-definition-standard
@@ -14,21 +14,45 @@ project_id: prj-0001
 # agent 定義は repository 共通の .specdojo/agent-members.yaml に置く。
 
 members:
-  - nickname: po
-    display_name: Project Owner
+  - nickname: shop-owner
+    display_name: 店主代表
     email: null
-    roles:
-      - PO
-      - PM
-      - OPS
+    roles: [PO, OPS]
     type: human
-    persona: final-decision-maker
     focus:
-      - 目的、優先順位、公開可否の最終判断
-      - 既存運用を変えすぎない範囲管理
-      - agent 支援結果の承認判断
-    scheduler_strategy: critical-first
-    note: 人間の最終判断主体。小規模運用では管理と公開判断を兼務し、agent に承認責任を委ねない。
+      - 範囲、費用・参加時間上限、受入、公開・継続の最終判断
+      - 店頭運用と引き継ぎへの専門支援
+    note: 店舗の当事者として最終判断する。OPS の支援は PM が導入準備へ取り込み、初期は独立した owner にしない。
+  - nickname: developer
+    display_name: 開発担当
+    email: null
+    roles: [PM, BA, DEV]
+    type: human
+    focus:
+      - 作業順序・参加負荷の調整と業務・利用者確認
+      - 実装・データ設計と技術的な是正判断
+    note: 管理・業務確認・開発を兼務する。利用者の確認と QE の照合を受け、作業記録と判断記録を分ける。
+  - nickname: peer-reviewer
+    display_name: 同行レビュー担当
+    email: null
+    roles: [QE]
+    type: human
+    focus:
+      - 条件 ID と対象版・検証結果の照合
+      - 指摘の是正・再判定結果の確認
+    note: 開発担当の作業を第三者視点で確認し、受入・公開の判断材料を PO へ渡す。
+  - nickname: technical-mentor
+    display_name: 技術メンター
+    email: null
+    roles: [ARC]
+    type: human
+    note: DEV が主導する構成・設計に助言する。初期は独立した Schedule タスクの主責任を持たない。
+  - nickname: family-user-representative
+    display_name: 家族利用者代表
+    email: null
+    roles: [UX]
+    type: human
+    note: 家族の店番での操作・説明を確認し、BA へ専門支援として意見を渡す。内部 Role の承認責任は持たない。
 
 rules:
   - Schedule の owner には pm-roles.yaml に記載された Role code を使用し、member nickname は書かない。

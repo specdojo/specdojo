@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 93
-graded_at: "2026-10-08T21:16:37.437Z"
-graded_by: agy-expert-executor
-content_hash: 9042fd0e0576c3996b06168b14b76df91bac98ee223338b7295e3bf2bbfc8341
+graded_at: "2026-11-07T20:38:43.309Z"
+graded_by: flash-high-executor
+content_hash: 7a7fffe5240f0b664c4c50904e8253a13543093d3ea3c18f1e7cfe6d7dd61835
 categories:
   purpose:
     score: 100
@@ -107,8 +107,8 @@ findings:
   - id: F001
     severity: minor
     rule: vp-qe-verifiability
-    line: 46
-    anchor: "| `based_on`   | 任意 | 根拠文書 ID                      |"
+    line: 33
+    anchor: "- `members[].nickname` は英小文字または数字で始め、英小文字、数字、ハイフン、アンダースコアだけを使います。"
     message: nicknameの許容文字だけを示し、先頭を英小文字か数字とする条件と最大文字数のschema制約を示していないため、schemaでrejectされる値を作成し得る。
     message_ja: nicknameの許容文字だけを示し、先頭を英小文字か数字とする条件と最大文字数のschema制約を示していないため、schemaでrejectされる値を作成し得る。
   - id: F002
@@ -121,7 +121,7 @@ findings:
   - id: F003
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 74
-    anchor: ""
+    line: 66
+    anchor: "| `roles`              | ○    | 対応可能な Role code の配列                               |"
     message: members[].rolesを必須としているが、based_onの標準定義では任意とされており、関連文書間で必須性と優先する規定を判断できない。
     message_ja: members[].rolesを必須としているが、based_onの標準定義では任意とされており、関連文書間で必須性と優先する規定を判断できない。

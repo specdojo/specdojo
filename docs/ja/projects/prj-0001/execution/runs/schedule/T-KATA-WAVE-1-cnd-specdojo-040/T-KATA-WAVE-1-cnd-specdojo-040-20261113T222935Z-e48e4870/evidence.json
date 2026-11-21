@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-1-cnd-specdojo-040",
+  "run_id": "T-KATA-WAVE-1-cnd-specdojo-040-20261113T222935Z-e48e4870",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-13T22:31:12.278Z",
+    "completed_at": "2026-11-13T22:35:45.785Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/rulebooks/cnd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/.vitepress/sidebar-config.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 2,
+    "summary": "docs/ja/specdojo/rulebooks/cnd-rulebook.md      | 32 +++++++++++++++++++++++--\n packages/docs-site/.vitepress/sidebar-config.ts |  6 +++--\n 2 files changed, 34 insertions(+), 4 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/rulebooks/cnd-rulebook.md",
+      "status": "passed",
+      "summary": "rulebook を整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write packages/docs-site/.vitepress/sidebar-config.ts",
+      "status": "passed",
+      "summary": "サイドバー設定の整形を確認した。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 YAML schema 検証は対象外。",
+      "reason": "YAML/YML ファイルを変更していない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "カタログ検証は対象外。",
+      "reason": "executor の変更が docs/ja/projects/ 配下に及ばない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検証は対象外。",
+      "reason": "登録簿個票および既存 plan/result などの履歴ファイルを変更していない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-cnd-specdojo-040/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n… output omitted …\nction\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-cnd-specdojo-040/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-cnd-specdojo-040/src/shared/specdojo-config.ts\n  1232:1  warning  File has too many lines (1167). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4642 file(s), 143 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 109 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4642 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-cnd-specdojo-040\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this directory in a\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-as\n… output omitted …\nks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-cnd-specdojo-040/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-cnd-specdojo-040/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-cnd-specdojo-040\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-jGWIxx/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-Oktjun/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-gDZjlN/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-9JgRsJ/pjr-0001-topic.md\nWarni\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "CND rulebook に承認・保守責任、課題管理への引き継ぎ、検証・公開条件を補足しました。サイドバーへ既存の recipe・template を追加し、整形と差分確認が完了しました。",
+  "completion_status": "complete",
+  "handoff": [
+    "result の実施内容・変更ファイルへ記録: docs/ja/specdojo/rulebooks/cnd-rulebook.md を改訂。packages/docs-site/.vitepress/sidebar-config.ts の C4 メニューへ CND recipe・template を追加。成果物本体、sample・recipe・template 本文、grade サイドカー、result は変更していない。",
+    "進め方と実践の型の適用へ記録する根拠: rulebook-authoring-standard.md、document-metadata-standard.md、id-and-file-naming-standard.md、people-and-organization-definition-standard.md、docs-structure-guide.md、deliverable-frontmatter.schema.yaml、rulebook-frontmatter.schema.yaml、共通レビュー観点の各 finding と同じ viewpoint、および PJR-2GD6 を確認。内容根拠として cnd-specdojo.md、cxd-specdojo.md、CND の関連 Kata 一式、初期整備タスク T-KATA-WAVE-1-cnd-specdojo-005 の result、execution/grade/results/specdojo.cnd-rulebook.yaml を照合した。plan に condense 記録はない。",
+    "finding 対応: F001・F002・F004・F013 は「作成・合意・保守の責任」と概要ガイドに担当 Role code、確認者、判断者、完了時点、問い合わせ窓口を追加。F003 は ARC→PM→PJR の報告と転送先・判断時点の記録を追加。F005・F006・F009 は現行の主 rulebook 宣言を維持し、`specdojo:` 配下への配置と文書名を H1 に置く方針を明記。必須条件・値・構造の詳細はメタ情報標準と schema を正本とした。",
+    "finding 対応: F007 は対象ファイルの Markdown・Frontmatter・Mermaid 構文検査、SVG 生成のコマンドと合格条件を追加。F008 は上位図の各利用目的・外部依存と担当コンテナの対応、全ノード・関係と定義の対応、正常・失敗時の観測条件を明確化。F012 はレビュー・未決事項・人間の承認・公開対象の確認条件を追加。実際の再評価は後続工程で行い、grade サイドカーは更新していない。",
+    "型の要否・維持判断: recipe は実行単位の分割、正本と生成物、構築時と実行時の判断を支援するため必要。template は共通する章・表の骨組みがあるため必要。Frontmatter の specdojo:cnd-recipe・specdojo:cnd-template 宣言を維持。完成例は specdojo:cnd-sample を正本とし、rulebook の7章構成、階層別の連番、章ごとの良い例・悪い例、サンプル章を置かない構成を維持した。",
+    "F010・F011 は初期整備済みの現行 sample で主 rulebook が specdojo:cnd-rulebook となり、概要・図・要素定義・技術前提・将来課題を備えることを確認した。今回追加した承認者・PJR 転送先・判断時点・検証記録の反映は、計画どおり後続の T-KATA-WAVE-1-cnd-specdojo-045（recipe）、050（sample）、060（template）へ引き継ぐ。骨組みとの解釈差は rulebook の意味要件を正とする。",
+    "lint・schema・型検査・単体／結合テストは指定の親 runner に委ね、重複実行していない。sidebar-kata.test.ts は親の test-unit 対象に含まれる。新設文書はなく、既存 recipe・template のメニュー登録漏れを修正した。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-cnd-specdojo-040/T-KATA-WAVE-1-cnd-specdojo-040-20261113T222935Z-e48e4870/executor.log",
+      "bytes": 4597,
+      "truncated": false
+    }
+  ]
+}

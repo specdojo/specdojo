@@ -2,12 +2,12 @@
 id: sysd-cross-cutting-policy-grade-criteria
 document: sysd-cross-cutting-policy
 path: docs/ja/product/040-system-design/sysd-cross-cutting-policy.md
-graded_at: "2026-10-20T16:33:21.587Z"
-graded_by: flash-high-executor
-content_hash: 9c044498807d98d0b40dbe54a4b6549629ced8e1609ef6916125888146f34979
+graded_at: "2026-11-14T19:33:38.136Z"
+graded_by: sonnet-review-executor
+content_hash: 0d92cdb702c154a2f396fd8019ee7a14f0ddd44db10595260575d73be27f0206
 summary:
-  satisfied: 2
-  unsatisfied: 2
+  satisfied: 4
+  unsatisfied: 0
   total: 4
 criteria:
   - id: DC-001
@@ -21,8 +21,7 @@ criteria:
     roles:
       - DEV
     viewpoint: vp-dev-implementation-readiness
-    status: unsatisfied
-    reason: Common error format, idempotency, timeout setting/abortion, and logging policy are not described in the rules.
+    status: satisfied
   - id: DC-003
     text: 横断ルールのテスト・検証方針が確認できること
     roles:
@@ -34,5 +33,4 @@ criteria:
     roles:
       - OPS
     viewpoint: vp-ops-operability
-    status: unsatisfied
-    reason: Operational perspectives for monitoring and distributed tracing are missing.
+    status: satisfied

@@ -1,0 +1,152 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_da18cbb574bc4a25bf2f8edb52051306
+  ts: "2026-11-06T15:05:41Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-VH8D・PJR-2WC2 の決定を実装する
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 保存する plan の共通の規約を版への参照にする
+    - field: description
+      from: ""
+      to: agent に渡す prompt には共通の規約の全文を含めたまま、保存する plan.md の規約の部分を版（ハッシュ）への参照にし、規約の本体は版ごとに 1 つだけ保存する（PJR-2WC2）
+    - field: input
+      from: ""
+      to: '["PJR-VH8D の決定（2026-11-07 indie）: 実行記録は run 単位のディレクトリ execution/runs/`<出どころ>`/`<項目 ID>`/`<run ID>`/ に plan.md・result.md・evidence.json・ログを置く（R1）。出どころは register・schedule・job。置き場所を決める処理はコードの 1 つのモジュールにまとめる（R2）。exec validate と CI で置き場所を検査する（R3）。ガイドの構成図をモジュールと照らすテストを置く（R4）。grade/results と jobs/ の定義は外に残す。既存は git mv で移し、パスの欄だけ書き換える","利用者の決定（PJR-2WC2）: 増え方はログ以外の原因で抑える。全 plan に埋め込む共通の規約（約 3 KB）を減らす（2026-11-06）","既存の設計: 共通の規約は plan の本文に断片として注入する。agent の CLI によらず規約が届くのは plan の本文経由だけのため。agent に渡す内容は変えず、保存する plan.md だけを規約の版への参照にする（2026-11-07 indie が承認）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-07"
+    - field: derived_from
+      from: ""
+      to: '["PJR-2WC2"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-Z0XR"]'
+- v: 1
+  id: reg_a03c485254e14557a821a3f8ff1ccde8
+  ts: "2026-11-07T00:09:14Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_da18cbb574bc4a25bf2f8edb52051306
+- v: 1
+  id: reg_2c1e0c6b99eb47a092776ad250be77da
+  ts: "2026-11-07T00:30:40Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-ts, test-integration, test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-ts, test-integration, test-unit"
+  previous_event_id: reg_a03c485254e14557a821a3f8ff1ccde8
+- v: 1
+  id: reg_b40b175b2dda4e1ba218d64217960da7
+  ts: "2026-11-07T00:32:31Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-ts, test-integration, test-unit"
+      to: "-"
+  previous_event_id: reg_2c1e0c6b99eb47a092776ad250be77da
+- v: 1
+  id: reg_aa9c06b47e7c483faa085382f202c47a
+  ts: "2026-11-07T00:49:22Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-integration"
+  previous_event_id: reg_b40b175b2dda4e1ba218d64217960da7
+- v: 1
+  id: reg_52fc9069825f4610a1875174e229366e
+  ts: "2026-11-07T00:50:14Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-integration"
+      to: "-"
+  previous_event_id: reg_aa9c06b47e7c483faa085382f202c47a
+- v: 1
+  id: reg_15b2834a7b834c14a6fb5b4626132398
+  ts: "2026-11-07T01:05:22Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_52fc9069825f4610a1875174e229366e
+- v: 1
+  id: reg_aa8b23e73807401c9373d7e44f3b0d11
+  ts: "2026-11-07T01:16:28Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が完了条件を差分・個票・result と照らし、JSEY で統合後の動作を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-07"
+    - field: conclusion
+      from: "-"
+      to: 保存する plan の共通の規約を版（SHA-256）への参照にし、本体を execution/conventions/ に版ごとに 1 つだけ置くようにした。agent への prompt には全文を復元して渡す
+  previous_event_id: reg_15b2834a7b834c14a6fb5b4626132398

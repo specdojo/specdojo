@@ -5,10 +5,10 @@ path: docs/ja/specdojo/samples/pm-raci-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 97
-graded_at: "2026-10-17T20:04:25.576Z"
-graded_by: agy-expert-executor
-content_hash: e1d69bdb1e8d79e642a20af6e93f964104132bebfc25c8137e32956d2efe60ba
+score: 98
+graded_at: "2026-11-17T22:43:35.389Z"
+graded_by: sol-review-executor
+content_hash: a49ea52112355bd50fe8191ad56fde5f2916d2156c62c5baaa578843f6673134
 categories:
   purpose:
     score: 100
@@ -25,9 +25,9 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 92
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -78,11 +78,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
-  vp-qe-kata-conformance:
     level: 4
     score: 100
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -104,20 +104,13 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 2
+  minor: 1
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 40
-    anchor: "- 成果物を統合・分割した場合も、各作業の `A` が不明にならないようにする。"
-    message: Schedule・実行主体との対応において、RACI と Schedule owner が不一致となった場合にどちらを正本として更新するかの方針が不足している。
-    message_ja: Schedule・実行主体との対応において、RACI と Schedule owner が不一致となった場合にどちらを正本として更新するかの方針が不足している。
-  - id: F002
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 45
-    anchor: 採用 Role code、成果物区分、Schedule の owner、主要判断、兼務の継続可能性が変わった場合に見直す。
-    message: 見直し条件において、更新トリガーのみが記載されており、ルールブックで例示されている「確認すること（確認内容）」の記述が不足している。
-    message_ja: 見直し条件において、更新トリガーのみが記載されており、ルールブックで例示されている「確認すること（確認内容）」の記述が不足している。
+    rule: vp-qe-kata-conformance
+    line: 15
+    anchor: "| プロジェクト概要・スコープ・成功基準   | A   | C   | R   | C   | C   |"
+    message: 成果物別RACIの統合行が成果物名だけで記載され、rulebook第3節が求める成果物IDとの対応を直接確認できません。各行に対象成果物IDまたはIDへのリンクを併記し、統合された各成果物から責任行を一意に辿れるようにしてください。
+    message_ja: 成果物別RACIの統合行が成果物名だけで記載され、rulebook第3節が求める成果物IDとの対応を直接確認できません。各行に対象成果物IDまたはIDへのリンクを併記し、統合された各成果物から責任行を一意に辿れるようにしてください。

@@ -1,0 +1,132 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_b1191d751b7d4c819da6f6065a45f354
+  ts: "2026-11-13T13:11:53Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳。indie が進め方を承認
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 用語集の型（gl）を、確定した用語集 6 件を手本に磨き込む
+    - field: description
+      from: ""
+      to: 確定した用語集 6 件と確定のレビューで決めた決まりを、gl-rulebook と gl-sample に反映し、grade で pass にする
+    - field: input
+      from: ""
+      to: '["用語集 6 件（gl-common など）を 2026-11-13 に確定した。PJR-960C に足すとゲートで 7 種類の確定が止まるため、別の todo にした（orchestrator の判断、indie が進め方を承認）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: sol-executor
+    - field: registered
+      from: ""
+      to: "2026-11-13"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: rulebook-maintenance
+    - field: targets
+      from: ""
+      to: '["specdojo:gl-rulebook"]'
+    - field: derived_from
+      from: ""
+      to: '["PJR-960C","PJR-6XQ4","PJR-2RHB"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: kata
+- v: 1
+  id: reg_909934f18e7b49d6b09beb1dfad4607a
+  ts: "2026-11-13T13:13:00Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_b1191d751b7d4c819da6f6065a45f354
+- v: 1
+  id: reg_b6afeff3cfa64fa9a159dce49420e58d
+  ts: "2026-11-13T13:35:30Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-integration"
+  previous_event_id: reg_909934f18e7b49d6b09beb1dfad4607a
+- v: 1
+  id: reg_e74b924f440940689dce6eb25b7a1a84
+  ts: "2026-11-13T13:42:26Z"
+  action: start
+  actor: flash-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-integration"
+      to: "-"
+  previous_event_id: reg_b6afeff3cfa64fa9a159dce49420e58d
+- v: 1
+  id: reg_20fb5d80c87d4418ab83bd3c3c4a004c
+  ts: "2026-11-13T13:48:54Z"
+  action: review
+  actor: flash-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_e74b924f440940689dce6eb25b7a1a84
+- v: 1
+  id: reg_b95c627c23ea4a1f9a1c53331b37febd
+  ts: "2026-11-16T03:45:50Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: 用語集の型（gl）を確定した用語集 6 件を手本に見直し、型の再 grade で rulebook pass 88 点・sample pass 93 点
+  previous_event_id: reg_20fb5d80c87d4418ab83bd3c3c4a004c

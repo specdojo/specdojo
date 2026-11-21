@@ -83,6 +83,193 @@ export function isExecEventV1(value: unknown, source: string): value is ExecEven
   return validateEventShape(value, source).length === 0;
 }
 
+type SimpleTaskState = "todo" | "doing" | "blocked" | "done" | "cancelled";
+
+function advanceTaskState(state: SimpleTaskState, event: ExecEventV1): SimpleTaskState {
+  if (event.type === "claim") return "doing";
+  if (event.type === "block") return "blocked";
+  if (event.type === "unblock") return "doing";
+  if (event.type === "complete") return "done";
+  if (event.type === "reopen") return state === "done" ? "todo" : state;
+  if (event.type === "release") {
+    return state === "doing" || state === "blocked" ? "todo" : state;
+  }
+  if (event.type === "cancel") {
+    if (state === "todo") return "cancelled";
+    if (state === "doing" || state === "blocked") return "todo";
+    return "cancelled";
+  }
+  return state;
+}
+
+function resumesPipelineBlock(block: ExecEventV1, unblock: ExecEventV1): boolean {
+  return (
+    block.type === "block" &&
+    unblock.type === "unblock" &&
+    typeof block.meta?.pipeline_stage === "string" &&
+    typeof block.meta?.pipeline_state_ref === "string" &&
+    block.meta.pipeline_stage === unblock.meta?.pipeline_stage &&
+    block.meta.pipeline_state_ref === unblock.meta?.pipeline_state_ref
+  );
+}
+
+type EventOrderState = {
+  state: SimpleTaskState;
+  lastBy?: string;
+  lastBlock?: ExecEventV1;
+};
+
+function advanceEventOrderState(cur: EventOrderState, event: ExecEventV1): EventOrderState {
+  return {
+    state: advanceTaskState(cur.state, event),
+    lastBy: event.by,
+    lastBlock: event.type === "block" ? event : cur.lastBlock,
+  };
+}
+
+function isTransitionValidForState(
+  state: SimpleTaskState,
+  lastBy: string | undefined,
+  lastBlock: ExecEventV1 | undefined,
+  candidate: ExecEventV1,
+  remaining: readonly { path: string; event: ExecEventV1 }[],
+): boolean {
+  const { type } = candidate;
+  if (type === "note" || type === "estimate" || type === "link") return true;
+  if (state === "todo") {
+    if (type === "cancel") return true;
+    if (type !== "claim") return false;
+    const otherClaims = remaining.filter(
+      (item) => item.event !== candidate && item.event.type === "claim",
+    );
+    if (otherClaims.length === 0) return true;
+    const isResumeClaim = candidate.meta?.pipeline_resume_claimed === "true";
+    if (
+      isResumeClaim &&
+      otherClaims.some((item) => item.event.meta?.pipeline_resume_claimed !== "true")
+    ) {
+      return false;
+    }
+    const actorReleasedOrBlocked = (actor: string): boolean =>
+      remaining.some(
+        (item) =>
+          (item.event.type === "release" || item.event.type === "block") && item.event.by === actor,
+      );
+    if (
+      !actorReleasedOrBlocked(candidate.by) &&
+      otherClaims.some((item) => actorReleasedOrBlocked(item.event.by))
+    ) {
+      return false;
+    }
+    return true;
+  }
+  if (state === "doing") {
+    if (type !== "block" && type !== "complete" && type !== "release" && type !== "cancel") {
+      return false;
+    }
+    // A resume identifies the block it follows. Prefer that block over a later failure in
+    // the same second, regardless of the random suffix in either block's filename.
+    if (type === "block") {
+      const resumedBlocks = remaining.filter((item) =>
+        remaining.some((other) => resumesPipelineBlock(item.event, other.event)),
+      );
+      if (resumedBlocks.length > 0 && !resumedBlocks.some((item) => item.event === candidate)) {
+        return false;
+      }
+    }
+    if (
+      lastBy &&
+      candidate.by !== lastBy &&
+      remaining.some(
+        (item) =>
+          (item.event.type === "block" ||
+            item.event.type === "complete" ||
+            item.event.type === "release" ||
+            item.event.type === "cancel") &&
+          item.event.by === lastBy,
+      )
+    ) {
+      return false;
+    }
+    if (
+      type === "complete" &&
+      remaining.some((item) => item.event.type === "unblock") &&
+      !remaining.some((item) => item.event.type === "reopen") &&
+      remaining.some((item) => item.event.type === "block" && (!lastBy || item.event.by === lastBy))
+    ) {
+      return false;
+    }
+    return true;
+  }
+  if (state === "blocked") {
+    if (
+      type === "unblock" &&
+      lastBlock &&
+      !resumesPipelineBlock(lastBlock, candidate) &&
+      remaining.some((item) => resumesPipelineBlock(lastBlock, item.event))
+    ) {
+      return false;
+    }
+    return type === "unblock" || type === "release" || type === "cancel";
+  }
+  if (state === "done") {
+    return type === "reopen";
+  }
+  return false;
+}
+
+function orderSameTimestampEventsByState(items: { path: string; event: ExecEventV1 }[]): void {
+  const taskStates = new Map<string, EventOrderState>();
+  for (let start = 0; start < items.length;) {
+    const ts = items[start]!.event.ts;
+    let end = start + 1;
+    while (end < items.length && items[end]!.event.ts === ts) end += 1;
+
+    if (end - start === 1) {
+      const { event } = items[start]!;
+      const cur = taskStates.get(event.task_id) ?? { state: "todo" as SimpleTaskState };
+      taskStates.set(event.task_id, advanceEventOrderState(cur, event));
+      start = end;
+      continue;
+    }
+
+    const byTask = new Map<string, number[]>();
+    for (let i = start; i < end; i += 1) {
+      const taskId = items[i]!.event.task_id;
+      const indices = byTask.get(taskId);
+      if (indices) indices.push(i);
+      else byTask.set(taskId, [i]);
+    }
+
+    for (const [taskId, indices] of byTask.entries()) {
+      let cur = taskStates.get(taskId) ?? { state: "todo" as SimpleTaskState };
+      if (indices.length === 1) {
+        const { event } = items[indices[0]!]!;
+        taskStates.set(taskId, advanceEventOrderState(cur, event));
+        continue;
+      }
+      const remaining = indices.map((idx) => items[idx]!);
+      for (const targetIdx of indices) {
+        const validIdx = remaining.findIndex((candidate) =>
+          isTransitionValidForState(
+            cur.state,
+            cur.lastBy,
+            cur.lastBlock,
+            candidate.event,
+            remaining,
+          ),
+        );
+        const [chosen] = remaining.splice(validIdx >= 0 ? validIdx : 0, 1);
+        items[targetIdx] = chosen!;
+        cur = advanceEventOrderState(cur, chosen!.event);
+      }
+      taskStates.set(taskId, cur);
+    }
+
+    start = end;
+  }
+}
+
 export function readAllEventFiles(projectPath: string): { path: string; event: ExecEventV1 }[] {
   const dir = eventsDirForProject(projectPath);
   const files = listFilesRecursive(dir).filter((p) => extname(p).toLowerCase() === ".json");
@@ -123,6 +310,7 @@ export function readAllEventFiles(projectPath: string): { path: string; event: E
     if (orderA !== orderB) return orderA - orderB;
     return a.path.localeCompare(b.path);
   });
+  orderSameTimestampEventsByState(items);
 
   return items;
 }
@@ -173,6 +361,19 @@ export function writeEventFile(
   }
 }
 
+// The actor that owns the claim of a doing/blocked task. Snapshots built before claimed_by existed
+// (or hand-built ones) fall back to last_by.
+export function claimOwnerOf(state: CurrentState | undefined): string | undefined {
+  return state?.claimed_by ?? state?.last_by;
+}
+
+// `exec unblock --take-over` records take_over=true so the unblocking (human) actor becomes the claim
+// owner. A plain unblock keeps the existing owner so the agent run can resume and complete.
+export function isTakeOverEvent(event: ExecEventV1): boolean {
+  const value = event.meta?.take_over;
+  return value === true || value === "true";
+}
+
 export function foldEventsToState(
   events: { path: string; event: ExecEventV1 }[],
   schedule: ScheduleIndex,
@@ -189,6 +390,7 @@ export function foldEventsToState(
   for (const { event } of events) {
     if (!schedule.nodes.has(event.task_id)) continue;
     const cur = ensure(event.task_id);
+    const previousOwner = claimOwnerOf(cur);
     cur.last_ts = event.ts;
     cur.last_by = event.by;
     cur.last_type = event.type;
@@ -221,6 +423,14 @@ export function foldEventsToState(
       if (cur.state === "todo") cur.state = "cancelled";
       else if (cur.state === "doing" || cur.state === "blocked") cur.state = "todo";
       else cur.state = "cancelled";
+    }
+
+    if (cur.state === "doing" || cur.state === "blocked") {
+      const movesClaim =
+        event.type === "claim" || (event.type === "unblock" && isTakeOverEvent(event));
+      cur.claimed_by = movesClaim ? event.by : (previousOwner ?? event.by);
+    } else {
+      delete cur.claimed_by;
     }
   }
 
@@ -272,7 +482,7 @@ export function computeReadyIds(schedule: ScheduleIndex, snapshot: StateSnapshot
 
 export function findDoingTasksForActor(snapshot: StateSnapshot, actor: string): string[] {
   return Object.entries(snapshot.tasks)
-    .filter(([, st]) => st.state === "doing" && st.last_by === actor)
+    .filter(([, st]) => st.state === "doing" && claimOwnerOf(st) === actor)
     .map(([taskId]) => taskId)
     .sort();
 }
@@ -354,8 +564,8 @@ export function canCompleteTask(
   if (state === "cancelled") return { ok: false, reason: `task cancelled: ${taskId}` };
 
   if (state !== "doing") return { ok: false, reason: `task is not doing: ${taskId}` };
-  if (cur?.last_by !== actor && !canOverrideCrossActor(override)) {
-    return { ok: false, reason: crossActorReason(cur?.last_by) };
+  if (claimOwnerOf(cur) !== actor && !canOverrideCrossActor(override)) {
+    return { ok: false, reason: crossActorReason(claimOwnerOf(cur)) };
   }
 
   return { ok: true };
@@ -437,8 +647,8 @@ export function canBlockTask(
   if (state === "cancelled") return { ok: false, reason: `task cancelled: ${taskId}` };
 
   if (state !== "doing") return { ok: false, reason: `task is not doing: ${taskId}` };
-  if (cur?.last_by !== actor && !canOverrideCrossActor(override)) {
-    return { ok: false, reason: crossActorReason(cur?.last_by) };
+  if (claimOwnerOf(cur) !== actor && !canOverrideCrossActor(override)) {
+    return { ok: false, reason: crossActorReason(claimOwnerOf(cur)) };
   }
 
   return { ok: true };
@@ -448,6 +658,7 @@ export function canUnblockTask(
   schedule: ScheduleIndex,
   snapshot: StateSnapshot,
   taskId: string,
+  takeOver?: { requested: boolean; isHuman: boolean },
 ): { ok: boolean; reason?: string } {
   const node = schedule.nodes.get(taskId);
   if (!node) return { ok: false, reason: `task not found in schedule: ${taskId}` };
@@ -462,6 +673,10 @@ export function canUnblockTask(
   if (state === "cancelled") return { ok: false, reason: `task cancelled: ${taskId}` };
 
   if (state !== "blocked") return { ok: false, reason: `task is not blocked: ${taskId}` };
+  // Taking over moves the claim away from its owner, so it is limited to humans like --force.
+  if (takeOver?.requested && !takeOver.isHuman) {
+    return { ok: false, reason: `--take-over requires a human actor: ${taskId}` };
+  }
 
   return { ok: true };
 }
@@ -490,8 +705,8 @@ export function canReleaseTask(
   if (state !== "doing" && state !== "blocked") {
     return { ok: false, reason: `task is not doing or blocked: ${taskId}` };
   }
-  if (cur?.last_by !== actor && !canOverrideCrossActor(override)) {
-    return { ok: false, reason: crossActorReason(cur?.last_by) };
+  if (claimOwnerOf(cur) !== actor && !canOverrideCrossActor(override)) {
+    return { ok: false, reason: crossActorReason(claimOwnerOf(cur)) };
   }
 
   return { ok: true };

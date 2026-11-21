@@ -1,0 +1,56 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_dd2231f959ae4e1692ebe03fe25b8c07
+  ts: "2026-11-21T00:23:19Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: prj-0001 で agy を止めたあと、パッケージとしての扱いを決める必要があるため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: SpecDojo のパッケージとしての Antigravity（agy）対応をどうするか
+    - field: description
+      from: ""
+      to: consumer plan では他社の agent や application から agy を起動することが規約上対象外のため、provider の実装・配布テンプレート・文書の agy 対応を外すか、注意書きを付けて残すかを決める
+    - field: input
+      from: ""
+      to: '["Antigravity の FAQ（https://antigravity.google/docs/faq）: agy -p は direct scripting と CI 向け。Wrapping agy inside third-party coding agents or applications は consumer plans で not supported。他社のソフトから Antigravity のログインで使うのは規約違反で、アカウントの停止・終了がありうる","Additional Terms の Section 6（https://antigravity.google/terms）: 当社が提供しない製品と組み合わせた利用と、他社のソフトを通じたアクセスは契約違反","2026-10-16 のフォーラムの回答（https://discuss.ai.google.dev/t/clarification-on-consumer-plan-policy-for-invoking-official-agy-via-local-subprocess/189905）で、FAQ が今の方針であり以前の回答より優先すると示された","SpecDojo は 2026-09-21（21726189f）に agy を provider として追加し、利用者へ配るテンプレート（templates/antigravity/ など）と orchestrator launch --provider antigravity を持つ","prj-0001 では 2026-11-21 に agy の利用を止めた（afbebe967）。利用者の契約は Google AI Pro（consumer plan）"]'
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: PO
+    - field: registered
+      from: ""
+      to: "2026-11-21"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_c4f51315f3c6477baae3c8f0723dd837
+  ts: "2026-11-21T00:34:41Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: 2026-11-21 の対話で indie が決定した
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-11-21"
+    - field: conclusion
+      from: "-"
+      to: 0.9.2 で agy の起動そのものを止め、init で選べなくする。0.10.0 で agy の対応を外す
+  previous_event_id: reg_dd2231f959ae4e1692ebe03fe25b8c07

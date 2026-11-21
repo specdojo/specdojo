@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "task_id": "T-GLOSSARY-gl-planning-090",
+  "run_id": "T-GLOSSARY-gl-planning-090-20261111T211635Z-66163f7b",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-review-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-11T21:18:06.682Z",
+    "completed_at": "2026-11-11T21:20:16.216Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/060-glossary/gl-planning.yaml --changed-only",
+      "status": "passed",
+      "summary": "開始時・判定直前の2回とも終了コード0、標準出力空。成果物変更による評価の陳腐化なし。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/060-glossary/gl-planning.yaml --dependency-changed",
+      "status": "passed",
+      "summary": "開始時・判定直前の2回とも終了コード0、標準出力空。評価コンテキスト変更による陳腐化なし。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/060-glossary/gl-planning.yaml --incomplete",
+      "status": "passed",
+      "summary": "開始時・判定直前の2回とも終了コード0、標準出力空。未完了の評価対象なし。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check && git status --short",
+      "status": "passed",
+      "summary": "終了コード0、空白エラー・追跡済みファイルの差分なし。開始時から存在する runner 管理の pipeline-state.json のみ未追跡。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-GLOSSARY-gl-planning-090/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/w\n… output omitted …\n-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-GLOSSARY-gl-planning-090/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-GLOSSARY-gl-planning-090/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1152). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4430 file(s), 137 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 105 passed, 0 error, 0 未検査\n  graph: 3 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4430 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-GLOSSARY-gl-planning-090\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this directory in a Dev\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\n/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-GLOSSARY-gl-planning-090/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-GLOSSARY-gl-planning-090/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-GLOSSARY-gl-planning-090\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-WQuBNh/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-KYdoWr/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-fQXpWZ/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-lTGS1u/pjr-0001-topic.md\nWarning: \n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "review verdict: complete。grade は最新の pass・100点、finding は全種別0件、DC-001〜DC-005 は評価済みで全件 satisfied。4つの実装エビデンスの対応記録、変更履歴、先行検証の成功を確認した。成果物・実装・result は変更していない。確認できなかった範囲: 参照先の共通 schema 定義本体、生成器の実行分岐、CLI 引数の実動作、将来作成される用語集との重複。これらは先行記録に調査限界として明示されており、今回指定された4つの schema の対応記録確認を妨げない。",
+  "completion_status": "complete",
+  "handoff": [
+    "reporter は review result の5章を以下の事実で記入すること。decision の verdict は complete。executor 段階の指示に従い result は編集していない。",
+    "評価結果の確認: docs/ja/projects/prj-0001/execution/grade/results/gl-planning.yaml を読了。verdict=pass、score=100、graded_at=2026-11-11T21:16:35.840Z、finding_counts は blocker/major/minor/note が各0、findings=[]。`content_hash` は 89e4da14481c9ce249b75203b457f3e97ddab995fe15d8ca35b4c85d165e21d7。完了条件の詳細 [[prj-0001:gl-planning-grade-criteria|計画用語集の完了条件評価]] は DC-001〜DC-005 が全件 satisfied。validations に示す changed-only・dependency-changed・incomplete の3コマンドは開始時と判定直前に各1回実行し、すべて終了コード0・標準出力空。対象パスの出力はなく、鮮度と評価確定を確認した。",
+    "判断根拠: [[gl-planning|用語集（計画）]]、[[gl-common|用語集（共通）]]、[[prj-0001:prj-overview|プロジェクト概要]]、[[prj-0001:xrp-t-glossary-gl-planning-090-20261111t211635z-66163f7b|完成版レビュープラン]] と先行記録を読了。作成記録 [[prj-0001:xer-t-glossary-gl-planning-010-20261111t165324z-31fa2135|初稿作成結果]]、磨き込み記録 [[prj-0001:xer-t-glossary-gl-planning-070-20261111t182300z-8a0dbdb4|磨き込み結果]]、簡潔化記録 [[prj-0001:xer-t-glossary-gl-planning-080-20261111t194853z-caf22ac6|簡潔化結果]] を特定。Git の 0d2e235b1 で対象179行の新設、991c1858b で補足2か所の更新、27f571148 で重複4か所の整理を確認した。各コミットの変更は対象用語集と runner の実行記録で、実装変更の混入はない。各 run の evidence.json では executor の整形・個別 schema 検査と runner の9検証すべてが passed。品質・完了条件は grade の判定を採用し、再評価していない。",
+    "approach に応じた確認（1/2）: docs/specdojo/schemas/v1/dct.schema.yaml は先行010結果の参照済み実装①と対応し、一致・反映を確認。実ファイルの domain、Section、DeliverableItem、EvidenceRef と、対象の tm-catalog-domain・tm-catalog-group・tm-deliverable-local-id・tm-deliverable-kind・tm-implementation-evidence-ref が対応する。`kind: work` の配置先・完了条件、および依存を作らない読み取り専用 `evidence_refs` の関係が記録されている。docs/specdojo/schemas/v1/sch-strategy.schema.yaml は参照済み実装②と先行070の変更根拠に対応し、一致・反映を確認。scope、段と組、owner、周回と反復、初期完了、ゲート、横断作業、intent と追加項目、agent pipeline の関係を実ファイルと突き合わせた。特に `improve-kata` と `kata_target`、`bootstrap-kata-set`・`confirm-with-kata-set` と `bootstrap_scope`、pipeline 指定と agent 実行の関係が対象の補足にあり、詳細条件は schema 参照を維持している。",
+    "approach に応じた確認（2/2）: docs/specdojo/schemas/v1/sch-track.schema.yaml は先行010結果の参照済み実装③と対応し、一致・反映を確認。実ファイルの track、期間を持つ tasks、期間0の milestones と、対象の tm-track・tm-milestone の記述が対応する。docs/specdojo/schemas/v1/sch-milestones.schema.yaml は同④と対応し、一致・反映を確認。プロジェクト全体の milestones と tm-milestone が対応する。同期ゲートの詳細は sch-strategy.schema.yaml の `phase_gates` に対応する。4パスとも対応記録が存在し、記録欠落はない。先行010結果には共通 schema 定義本体、生成器分岐、CLI 実動作、将来の他用語集との重複が範囲外と明示されている。本レビューでもその実動作は検証していない。目的・業務判断・将来方針の推測を示す grade finding はない。",
+    "未充足事項・改善指示: 今回の完了を妨げる未充足事項はなし。先行010で記録済みの文書乖離について、[[specdojo:schedule-design-guide|Schedule設計ガイド]] 1.1.1 の表が現在も Schedule にタスク実行状態を持たせていることを本文で確認した。修正対象候補は同ガイド。[[prj-0001:pjr-bb92-cdfd-overview-propagation|Schedule と実行状態の責務の決定記録]]、[[gl-common|用語集（共通）]]、[[gl-planning|用語集（計画）]] に合わせ、状態の正本を実行記録とする訂正を後続作業へ引き継ぐ。対象用語集は決定済みの責務に従い、乖離の修正対象・根拠・未確認範囲も先行記録にあるため今回の完了を妨げない。grade finding への追加・再評価は行っていない。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-GLOSSARY-gl-planning-090/T-GLOSSARY-gl-planning-090-20261111T211635Z-66163f7b/executor.log",
+      "bytes": 7056,
+      "truncated": false
+    }
+  ]
+}

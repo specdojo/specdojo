@@ -1,0 +1,149 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_8b423482f0b0465588ca57a342f12cb4
+  ts: "2026-11-16T03:22:49Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 同じ範囲を触る項目を並べて流さず、順番に流す
+    - field: description
+      from: ""
+      to: 並列の run で、同じファイルや同じ範囲を変えそうな項目を同時に流さず、先の項目の統合の後に流す
+    - field: input
+      from: ""
+      to: '["2026-11-15〜16、PJR-1GCD と PJR-ED0K が同じ develop から分かれて src/exec/run/lifecycle-commands.ts・in-place.ts・register-resume.ts などの同じ関数を書き換えた。ED0K が先に統合されたため、1GCD は再開の前の同期でコードの衝突になり、orchestrator が手で両方の規則を合わせて解いた","merge を直列化しても（PJR-30SA）、同じ起点から同じ範囲を変えた 2 件目の衝突は防げない。防ぐには、流す前に範囲が重なる項目を順番にするか、衝突を executor に解かせる必要がある。まず前者を入れ、後者は起きたときの手当てとして別に扱う（2026-11-16、利用者が起票を依頼）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-16"
+    - field: derived_from
+      from: ""
+      to: '["PJR-1GCD"]'
+    - field: commit_type
+      from: ""
+      to: feat
+    - field: commit_scope
+      from: ""
+      to: exec
+- v: 1
+  id: reg_bdf648be167f4c2fb0fc5495b4d2c433
+  ts: "2026-11-16T23:02:02Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_8b423482f0b0465588ca57a342f12cb4
+- v: 1
+  id: reg_7b4f3b713a864ea2be1141bc67c689fe
+  ts: "2026-11-16T23:35:31Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-ts, test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-ts, test-integration"
+  previous_event_id: reg_bdf648be167f4c2fb0fc5495b4d2c433
+- v: 1
+  id: reg_4363c86bcb2c46ccad9e82f682300019
+  ts: "2026-11-17T00:12:32Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-ts, test-integration"
+      to: "-"
+  previous_event_id: reg_7b4f3b713a864ea2be1141bc67c689fe
+- v: 1
+  id: reg_4bd42d7aafb54f598243a61536b10ded
+  ts: "2026-11-17T00:30:27Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_4363c86bcb2c46ccad9e82f682300019
+- v: 1
+  id: reg_c4645695ad424fe3988870c6d81a5a37
+  ts: "2026-11-17T02:11:32Z"
+  action: start
+  actor: sol-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_4bd42d7aafb54f598243a61536b10ded
+- v: 1
+  id: reg_aced4344729f45098507af7663f235e6
+  ts: "2026-11-17T02:37:04Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_c4645695ad424fe3988870c6d81a5a37
+- v: 1
+  id: reg_f1a820977c2845abb11b078e5e0c0166
+  ts: "2026-11-17T03:12:50Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が 2 回目の差分と回帰テスト、JSEY での統合後の動作と予約の解放を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-17"
+    - field: conclusion
+      from: "-"
+      to: 変更範囲の重なる項目を先行の統合まで待たせ、共通手順の文による誤った重なりを除いた
+  previous_event_id: reg_aced4344729f45098507af7663f235e6

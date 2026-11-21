@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "task_id": "T-BUSINESS-SPECS-KATA-sf-task-execution-090",
+  "run_id": "T-BUSINESS-SPECS-KATA-sf-task-execution-090-20261110T032519Z-f11cc4b4",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-review-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-10T03:27:02.769Z",
+    "completed_at": "2026-11-10T03:29:46.110Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/050-system-functions/sf-task-execution.md --changed-only",
+      "status": "passed",
+      "summary": "開始時・判断直前の2回とも標準出力なし、終了コード0。変更対象として検出されない。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/050-system-functions/sf-task-execution.md --dependency-changed",
+      "status": "passed",
+      "summary": "開始時・判断直前の2回とも標準出力なし、終了コード0。評価コンテキスト変更は検出されない。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/050-system-functions/sf-task-execution.md --incomplete",
+      "status": "passed",
+      "summary": "開始時・判断直前の2回とも標準出力なし、終了コード0。評価パイプラインの未完了は検出されない。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check && git status --short",
+      "status": "passed",
+      "summary": "終了コード0。差分の空白エラーなし。開始時と同じ runner 管理の未追跡 pipeline-state.json のみで、executor によるファイル変更なし。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-sf-task-execution-090/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines\n… output omitted …\no-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-sf-task-execution-090/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-sf-task-execution-090/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1152). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4251 file(s), 137 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 105 passed, 0 error, 0 未検査\n  graph: 3 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4251 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-sf-task-execution-090\n\nWritten: lefthook.yml\nPlanned markdownlint base (.markdownlintrc):\n{\n  \"MD013\": false,\n  \"MD024\": false,\n  \"MD033\": false,\n  \"MD036\": false,\n  \"MD041\": false,\n  \"MD060\": false\n}\nPlanned markdownlint-cli2 configuration (.markdownlint-cli2.yaml):\nconfig:\n  extends: .markdownlintrc\nWritte\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\n enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-sf-task-execution-090/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-sf-task-execution-090/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-sf-task-execution-090\n\nresult-markdownlint: result execution/runs/schedule/TASK/TASK/result.md not found; skipped pre-commit lint\nRate limit detected for pinned agent pinned. Waiting until 2026-11-10T04:32:32.906Z before resuming the same stage.\nresumed\nRate limit detected for pinned agent primary. Falling back to fallbac\n… output omitted …\n track domains and dependencies to register epics; use dashboard build.\nWARN: timeline_path is deprecated. Use register epics and dashboard build.\nproblem\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "レビューを完了しました。review verdict は `incomplete` です。評価結果は最新ですが、DC-001・DC-002 が未充足です。成果物・型・result は変更していません。確認できなかった範囲: 未作成の上流成果物との直接照合、および今回の親検証結果（終了後に runner が実施）。",
+  "completion_status": "complete",
+  "handoff": [
+    "評価結果の確認: サイドカー `docs/ja/projects/prj-0001/execution/grade/results/sf-task-execution.yaml` を実読した。grade は `verdict: needs-work`、score 89、blocker 0 / major 1 / minor 7 / note 0。`graded_at` は 2026-11-09T22:40:30.836Z、`content_hash` は f3e30a0a157e87f33c5021825edbe2746cc01a8bf199dc87164bf4aa9bb9efcd。validations に示す3コマンドを開始時と判断直前にそれぞれ実行し、全6回で標準出力なし・終了コード0。成果物変更・評価コンテキスト変更・未完了の評価パイプラインは検出されず、評価結果は最新。",
+    "判断根拠: [[sf-task-execution|システム化機能（タスク実行）]] と本 plan、評価結果、先行実行記録を照合した。grade の `done_criteria` は3/5充足で、DC-001（BA）・DC-002（PO）が未充足。その他3条件の充足判定は変更しない。F001〜F003・F006 は業務対応と承認範囲の未確定に関係し、DC-001・DC-002に直結するため今回の完了を妨げる。本文の「業務プロセス・画面との対応」と「未決事項」にも詳細照合と資源受入値の保留が残る。型の整備や文書検査の成功によって、この未充足を充足扱いにはできない。新しい観点評価や既存 finding の再判定は行っていない。",
+    "判断根拠（先行変更と検証）: [[prj-0001:xer-t-business-specs-kata-sf-task-execution-040-20261110t003014z-1794df56|rulebook 改訂記録]] と [[prj-0001:xer-t-business-specs-kata-sf-task-execution-050-20261110t005514z-0da077f7|sample 改訂記録]]、各 run の evidence、およびコミット e7d3153e5・768d4cadf の変更一覧を確認した。実行管理記録を除く変更は、それぞれ sf-rulebook と sf-sample のみ。両 evidence の `source=runner` に記録された9件の親検証はすべて passed。今回それらを再実行したという意味ではない。現在の Git 状態も開始時と同じ runner 管理の未追跡 pipeline-state.json のみで、executor による変更はない。",
+    "approach に応じた確認（型一式）: [[specdojo:rulebook-authoring-standard|Rulebook 記述標準]]、[[specdojo:sf-rulebook|システム化機能仕様 作成ルール]]、[[specdojo:sf-sample|商品販売機能仕様の完成例]]、比較基準の [[specdojo:clis-sample|CLI仕様の完成例]] を実読した。rulebook は標準に沿う7章構成で完成例のサンプル章を持たず、記述ガイド6.1〜6.9に判断基準と良い例・悪い例がある。rulebook・sample の本文見出しには階層別の連番がある。sample は8章を通じて4要件、8受入観点、部分失敗・再送・印刷失敗の回復、証跡・確認ロール、未決事項の追跡・承認保留条件を具体化しており、短い雛形に留まらない。論理的な要件と受入結果を扱い、構文・物理構造・設定値一覧の正本を参照する方針を確認した。型への追加改善指示はない。",
+    "approach に応じた確認（要否と文脈）: rulebook frontmatter は `sample: specdojo:sf-sample`、`recipe: not-needed`、`template: not-needed` を明示する。plan の recipe `_MISSING_` は未判断・未整備ではなく不要宣言によるもの。章別ガイドに判断基準があり、独立した問いの手順を追加する必要がないため recipe は不要。本文要件と推奨表から開始でき、機能に応じた構成を許容するため固定 template も不要。開くべき template ID は宣言されていない。この理由は先行記録にも残っている。[[prj-0001:prj-overview|プロジェクト概要]] の判断軸に対し、代表成果物は再実行費用・引継ぎ負担の低減と人間の承認責任を記述している。`sf-index`・`bps-task-selection-preparation` は docs 配下のファイル一覧で見つからず、本文も未作成と明記しているため、直接照合できなかった範囲として記録する。未宣言の設計書・実装・外部情報による補完はしていない。",
+    "未充足事項・改善指示: 既存 grade の F001〜F003・F006 に従い、BA が上流 BPS 正本との詳細対応を確定し、ARC が境界を確認、PO がスコープと振る舞いを承認できる状態にする。F004・F007 に従い、資源制約の正本・適用経路・有効設定値に本文と V-13/V-14 を合わせ、上書き・省略・適用外も受入条件に含める。既存契約を変更する要求なら承認済みの変更判断と影響を明示する。F005 に従い証跡・段状態の論理契約と版の正本を特定し、F008 に従い事後条件と V-11 の完了記録を状態追跡する経路に限定する。これらは既存 finding の改善指示であり、新規 finding ではない。資源受入値の最終判断は ARC・QE と費用・参加負荷に責任を持つ PO に引き渡し、修正後に grade を更新して review を再実行する。",
+    "decision: reporter は review result の `verdict` に `incomplete` を記録すること。本 executor の `completion_status: complete` はレビュー作業の完了を表し、対象タスクの受入完了を意味しない。result の5章には本 handoff と validations の実測内容を反映し、成果物・型の変更や再評価は行わない。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-sf-task-execution-090/T-BUSINESS-SPECS-KATA-sf-task-execution-090-20261110T032519Z-f11cc4b4/executor.log",
+      "bytes": 7212,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-sf-task-execution-090/T-BUSINESS-SPECS-KATA-sf-task-execution-090-20261110T032519Z-f11cc4b4/parent-validation-attempt-1-test-unit.log",
+      "bytes": 7398,
+      "truncated": false
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+[cdfd-uc-schedule.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-UC-REWRITE-cdfd-uc-schedule-020/docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-schedule.md) の磨き込み（目的の改定、実行サイクルの 1 ノード集約、絵文字の凡例統一、例外時戻りの整理）を確認・検証しました。
+
+### 主な実施内容
+
+1. **目的の更新**:
+   - `register` 系の書き方にそろえ、指示通りの文面「管理する成果物とその完了条件をカタログとスケジュールに定め、計画に沿ったタスクの実行から評価、完了記録までを進捗と対応付けることで、成果物の作成を計画どおりに進め、遅れや抜けを早く見つけられるようにする。」に更新されています。
+2. **実行サイクル（P-07・P-08・P-11）の集約**:
+   - 複数系統が共通して通る実行サイクルの内部処理は全体概要に委ね、1 つのプロセスノード `⚙️ 実行サイクル（実行・評価・完了）\nP-07〜P-08・P-11` として配置し、計画・スケジュールからの受け渡しとデータストア読み書き、完了成立の線のみを描く構成に集約されています。
+   - プロセス領域の役割表（3.2 節）およびデータストア表（4.1, 4.2 節）の参加単位も対応させて統合されています。
+3. **ノードラベルの絵文字統一**:
+   - `[[cdfd-overview|概念データフロー図（全体概要）]]` の凡例および他文書に合わせて、プロセス（`⚙️`）、起点イベント（`⚡`）、マスタ（`🧩`, `📐`, `📚`, `🧭`）、トランザクション（`📒`, `📅`, `📋`, `🧾`, `📄`, `🧪`, `📊`, `🗂️`）の絵文字を文書内のすべての図で統一しています。
+4. **例外時の戻りの整理**:
+   - 実行サイクル内部の例外（検証失敗・レビュー差し戻し）は全体概要を正本とし、本詳細 CDFD では schedule 系固有領域と実行サイクルの間の再計画要求・再展開、およびカタログ定義と計画展開の間の補完・修正の戻り（4 本）に集約されています。
+5. **構文・フォーマット検証**:
+   - `prettier`、`markdownlint`、`remark`、`d2` の各検査を通過していることを確認しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"cdfd-uc-schedule.md の磨き込み（目的の改定、実行サイクルの 1 ノード集約、絵文字の凡例統一、例外時戻りの整理）を完了し、構文・フォーマット検証を通過しました。","handoff":["目的の改定: schedule 系の目的を Kata および register 系の書き方にそろえ、「管理する成果物とその完了条件をカタログとスケジュールに定め、計画に沿ったタスクの実行から評価、完了記録までを進捗と対応付けることで、成果物の作成を計画どおりに進め、遅れや抜けを早く見つけられるようにする。」に更新しました。","実行サイクルの集約: 複数の系統が共通して通るプロセス領域（P-07・P-08・P-11）の内部を描き直さず、1 つのノード「⚙️ 実行サイクル（実行・評価・完了）\\nP-07〜P-08・P-11」として配置し、受け渡しの線のみを描くよう磨き込みを実施しました。役割表（3.2 節）およびデータストア表（4 章）も参加単位を統合しました。","絵文字の統一: cdfd-overview の凡例および各図に合わせて、プロセス（⚙️）、起点イベント（⚡）、マスタ（🧩, 📐, 📚, 🧭）、トランザクション（📒, 📅, 📋, 🧾, 📄, 🧪, 📊, 🗂️）のノードラベル絵文字を全図で統一しました。","例外時の戻りの整理: 実行サイクル内部の例外は全体概要に委ね、schedule 系と実行サイクルの間の再計画要求・再展開、およびカタログ定義と計画展開の間の補完・修正の戻り線（4本）に集約しました。","図ごとの測定結果（線数、データストア数、画像サイズ）:\n- 5.1. カタログ定義からスケジュール計画展開まで: 線数 13本、データストア数 7個、画像サイズ 幅 1372px × 高さ 1542px (viewBox 0 0 1372 1542)\n- 5.2. タスク実行から完了記録まで: 線数 14本、データストア数 11個、画像サイズ 幅 1972px × 高さ 1122px (viewBox 0 0 1972 1122)\n- 5.3. 進捗報告と派生情報の閲覧提供: 線数 17本、データストア数 9個、画像サイズ 幅 2627px × 高さ 1156px (viewBox 0 0 2627 1156)\n- 5.4. 例外時の戻り: 線数 4本、データストア数 0個、画像サイズ 幅 1000px × 高さ 778px (viewBox 0 0 1000 778)"],"validations":[{"command":"npx prettier --check docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-schedule.md","status":"passed","summary":"Prettier check passed for modified cdfd-uc-schedule.md"},{"command":"specdojo catalog validate","status":"not_applicable","reason":"Changes are outside docs/ja/projects/"},{"command":"npm run validate:schema:file","status":"not_applicable","reason":"No *.yaml or *.yml files changed"}],"target_coverage":[{"target":"cdfd-uc-schedule","status":"changed","path":"docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-schedule.md"}]}
+</specdojo_executor_evidence>

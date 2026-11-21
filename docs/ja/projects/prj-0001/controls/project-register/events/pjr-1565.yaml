@@ -1,0 +1,98 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_028ead770aa144a3af1fbc106d366f52
+  ts: "2026-11-17T22:58:17Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade・register の実行・build を混ぜた順番の予約を、specdojo の機能で流す
+    - field: description
+      from: ""
+      to: orchestrator が scratchpad のシェルスクリプトで grade・exec run・build の順番を予約しており、セッションが終わると消え、利用者から見えないため、specdojo の機能で予約して流せるようにする
+    - field: input
+      from: ""
+      to: '["利用者の問い（2026-11-18）: 実行の予約は specdojo の機能か、orchestrator が script を書いているのか","orchestrator の調べ（2026-11-18）: 予約は orchestrator が書いたシェルスクリプト（前の出力に終わりの行が出るまで 30 秒ごとに確かめ、次の npx specdojo を実行する）。specdojo にあるのは exec run --register A B C（--on-failure）、register の --depends-on、--if-busy wait（同じ種類のロックだけ）。grade・exec run・npm run build を混ぜた順番と、別の種類の作業の終わりを待つ機能はない。job は validate と list だけで、routine から起動される","利用者の決定（2026-11-18）: 方式（job の定義に段を並べる、exec run に予約を持たせる など）は executor が比べて決め、理由を書く。予約の中身と進み具合が登録簿か exec status から見えること。dist の作り直しは統合の後の処理の項目に任せる"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-11-18"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+- v: 1
+  id: reg_6619ffded995409cbf1a0e59f7ec2b39
+  ts: "2026-11-17T22:59:52Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: depends_on
+      from: "-"
+      to: '["PJR-8KXJ"]'
+  previous_event_id: reg_028ead770aa144a3af1fbc106d366f52
+- v: 1
+  id: reg_ba177d8fb17f4154830c56bb1b6e3929
+  ts: "2026-11-18T13:10:52Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_6619ffded995409cbf1a0e59f7ec2b39
+- v: 1
+  id: reg_d6e6ba5d1011471ab74e929cd29fbbf3
+  ts: "2026-11-18T13:27:01Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: "rate limit fallback: sol-executor -> opus-executor at 2026-11-18T13:12:40.321Z"
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_ba177d8fb17f4154830c56bb1b6e3929
+- v: 1
+  id: reg_4fbfb317a5634111be5f85b643379087
+  ts: "2026-11-19T03:49:36Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票・実プロセスの確認で確かめ、保護された設定の変更案を利用者の承認のもと反映した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-19"
+    - field: conclusion
+      from: "-"
+      to: exec queue で grade・exec run・統合の後の処理を混ぜた順番を予約して流せるようにした。実プロセスで失敗時の継続と次の段の実行を確かめ、orchestrator の定義と運用メモを exec queue を使う形に書き換えた
+  previous_event_id: reg_d6e6ba5d1011471ab74e929cd29fbbf3

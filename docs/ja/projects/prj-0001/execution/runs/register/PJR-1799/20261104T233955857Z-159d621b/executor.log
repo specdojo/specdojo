@@ -1,0 +1,22 @@
+ステータス定義（タスク実行）成果物 `docs/ja/product/010-business-specs/020-data-model/stsd-task-execution.md` の下書き作成を完了しました。
+
+### 実施内容の概要
+
+1. **現行実装に基づく状態一覧の定義**:
+   - `src/exec/types.ts` および `src/exec/events.ts` の実装に基づき、タスク実行が取り得る 6 つの状態（`todo` / `ready` / `doing` / `blocked` / `done` / `cancelled`）を定義しました。
+   - `ready`（着手可能）はイベントログに記録される永続化された状態ではなく、最新状態が `todo` かつ全先行依存タスクが `done` であることから動的に導出される状態であることを明記しました。
+
+2. **状態遷移図（Mermaid `stateDiagram-v2`）の作成**:
+   - 初期点 `[*]` からのタスク登録、先行依存充足による着手可能への導出、着手（`claim`）、中断（`block`）、再開（`unblock`）、解放（`release`）、完了（`complete`）、差し戻し（`reopen`）、中止（`cancel`）、終了点 `[*]` への遷移を網羅しました。
+   - すべての業務状態の入出力遷移合計が 6 以下（最大 6）となるよう設計し、疑似状態（`<<choice>>` 等）を用いずに単一の図として整合性を確保しました。
+
+3. **遷移の説明（`T-01` 〜 `T-13`）の策定**:
+   - 状態遷移図の全矢印と 1 対 1 で対応する遷移一覧を作成し、各遷移のイベントを実装の `ExecEventType` と厳密に対応付けました。
+   - 実行権限ガード（アクター一致、人間限定など）や成立条件を補足欄に整理しました。
+
+4. **今後の検討メモの整理**:
+   - 状態変化を起こさないイベント（`note`, `link`, `estimate`）の位置づけ、先行依存巻き戻し時の逆導出（`ready` → `todo`）の扱い、レガシー cancel 互換処理について、未決事項（`_UNDECIDED_` / `_ASSUMPTION_`）として決定者と時期を付して記録しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"stsd-task-execution を現行実装（src/exec/events.ts, src/exec/types.ts）に基づき下書き完了しました。","handoff":["状態一覧に todo / ready / doing / blocked / done / cancelled を網羅し、ready が依存充足からの動的導出であることを明記","遷移の説明（T-01〜T-13）を実装の ExecEventType（claim, block, unblock, release, complete, reopen, cancel）と対応付け","状態を変更しない補助イベント（note, link, estimate）および先行依存巻き戻し時の逆導出を今後の検討メモ（_UNDECIDED_）として記録"],"validations":[]}
+</specdojo_executor_evidence>

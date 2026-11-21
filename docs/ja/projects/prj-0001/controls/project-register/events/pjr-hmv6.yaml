@@ -1,0 +1,104 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_bc42a5ccdfa34326bf119642f0a00f7f
+  ts: "2026-11-08T00:30:13Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 分類一覧の略号を cld から cdt に変える
+    - field: description
+      from: ""
+      to: 分類一覧（Classification List）の略号 cld が概念クラス図の ccd と紛れるため、code table の cdt に変える。公開済みの kata ID は経路 B で新しい ID に切り替え、古い ID は非推奨として残す
+    - field: input
+      from: ""
+      to: '["略号は cdt にする（indie が決定、2026-11-08）。prj-0001 には cld の成果物も schedule のタスクもまだない。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-08"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-2GD6"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-2GD6"]'
+- v: 1
+  id: reg_9a44105362e241bc85534bc0caaf627f
+  ts: "2026-11-08T00:36:01Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 起票のスクリプトの誤りで epic を依存に入れていたため、カタログへの追加の todo（PJR-V6RB）に付け直す
+  changes:
+    - field: depends_on
+      from: '["PJR-2GD6"]'
+      to: '["PJR-V6RB"]'
+  previous_event_id: reg_bc42a5ccdfa34326bf119642f0a00f7f
+- v: 1
+  id: reg_f552a508fcc548a9ab4f778c8e15f965
+  ts: "2026-11-08T00:58:26Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_9a44105362e241bc85534bc0caaf627f
+- v: 1
+  id: reg_b2ab1438c8f94d63bda6ff4ba26fcfbf
+  ts: "2026-11-08T01:39:53Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_f552a508fcc548a9ab4f778c8e15f965
+- v: 1
+  id: reg_6abc2231ef944bc5bc72fb5ea35702d6
+  ts: "2026-11-08T02:03:42Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（flash-high-executor）で対応。差分・個票の対応結果・残る cld の参照・親の検証・catalog validate・docs:build（heap 8GB で通過）を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-08"
+    - field: conclusion
+      from: "-"
+      to: 分類一覧の略号を cdt にし、cdt の rulebook・sample・カタログのテンプレートを正本とした。古い cld の 3 件は非推奨の案内として残し、prj-0001 のカタログと参照を cdt に揃えた
+  previous_event_id: reg_b2ab1438c8f94d63bda6ff4ba26fcfbf

@@ -1,0 +1,48 @@
+---
+specdojo:
+  id: prj-0001:xer-pjr-fma4-20261105t235847z-f10bb399
+  type: exec-result
+  task_id: PJR-FMA4
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  origin: register
+  plan_ref: runs/register/PJR-FMA4/20261105T235847209Z-c2cd84b1/plan.md
+  started_at: "2026-11-05T23:58:47.735Z"
+  completed_at: "2026-11-06T00:19:42.325Z"
+  agent: sol-executor
+---
+
+# Edit Result
+
+## 1. 実施内容
+
+- 実行記録への秘密混入を検査するための自前スクリプト `tools/check-evidence-secrets.mjs` を作成し、`src/shared/text.ts` の伏せ字対象を拡充しました。
+- 作成した検査スクリプトの動作を確認するための単体テストおよび統合テストを追加しました。
+- 実行記録の監査結果（4件の候補検出）と、保護設定（`lefthook.yml` および GitHub Actions）の適用案を記録しました。
+- `CHANGELOG.md` および `docs/ja/specdojo/guides/exec-config-guide.md` を更新しました。
+
+## 2. 変更ファイル
+
+- `CHANGELOG.md`: タスク完了に伴う変更内容を追記。
+- `docs/ja/specdojo/guides/exec-config-guide.md`: 実行記録への秘密混入検査に関する設定案を追記。
+- `src/shared/text.ts`: `redactSensitiveText` の対象となるパターンを拡充。
+- `tests/fixtures/sensitive-text.ts`: テスト用の秘密情報を含むフィクスチャを作成。
+- `tests/src/shared/text.test.ts`: `redactSensitiveText` のテストケースを追加。
+- `tests/tools/check-evidence-secrets.integration.test.ts`: 検査ツールの統合テストを追加。
+- `tests/tools/check-evidence-secrets.test.ts`: 検査ツールの単体テストを追加。
+- `tools/check-evidence-secrets.mjs`: 実行記録をスキャンし、秘密情報の混入を検出するスクリプトを作成。
+
+## 3. 申し送り
+
+- 変更ファイル: `src/shared/text.ts`、`tools/check-evidence-secrets.mjs`、`tests/fixtures/sensitive-text.ts`、`tests/src/shared/text.test.ts`、`tests/tools/check-evidence-secrets.test.ts`、`tests/tools/check-evidence-secrets.integration.test.py`、`CHANGELOG.md`、`docs/ja/specdojo/guides/exec-config-guide.md`、`docs/ja/projects/prj-0001/controls/project-register/pjr-fma4-evidence-secret-redaction.md`。result と登録簿のステータスは編集していない。
+- 外部バイナリや依存のない linked worktree で実行できるよう、自前の plain JS 検査を選択した。形式定義は TS と `.mjs` に持ち、種類・正規表現の source/flags・置換文字列・順序の一致をテストする。現行の TS ビルドと配布構成を維持するための選択である。
+- `node tools/check-evidence-secrets.mjs --tracked` の監査結果: 6,782ファイル、候補4件、読み取り失敗なし、終了コード1。すべて credential-assignment。検出場所は `docs/ja/projects/prj-0001/execution/exec/plans/pjr-fma4-20261105T235847Z-f10bb399-plan.md:38`、`docs/ja/projects/prj-0001/execution/exec/results/pjr-tc43-20260810T204732Z-4f04-result.md:25`、`docs/ja/projects/prj-0001/execution/grade/results/tsd-omlx-opencode.yaml:215` と216。値は記録していない。既存履歴は編集せず、CI有効化前に利用者が候補を確認し、伏せ字や例示の書き直しを判断する。
+- 保護された設定は未変更。利用者の承認後、既存 `lefthook.yml` の `pre-commit.commands` に追加する全文案: `evidence-secrets: run: node tools/check-evidence-secrets.mjs --staged` 新規 `.github/workflows/check-evidence-secrets.yml` の全文案: `name: Check evidence secrets on: pull_request: push: permissions: contents: read jobs: evidence-secrets: runs-on: ubuntu-latest steps: - uses: actions/checkout@v5 - uses: actions/setup-node@v5 with: node-version: 24 - name: Check tracked execution records run: node tools/check-evidence-secrets.mjs --tracked` 依存インストールや `package.json` の変更は不要。既存候補4件が残ればCIは失敗する。設定案と監査結果をresultの申し送りにも反映する。
+- 型検査・TS lint・単体／統合テスト等の指定された親検証はrunnerが実行する。catalog検査は終了0で、既存のre-export参照・未作成文書などの警告がある。
+- 変更ファイル: `src/shared/text.ts`、`tools/check-evidence-secrets.mjs`、`tests/fixtures/sensitive-text.ts`、`tests/src/shared/text.test.ts`、`tests/tools/check-evidence-secrets.test.ts`、`tests/tools/check-evidence-secrets.integration.test.ts`、`CHANGELOG.md`、`docs/ja/specdojo/guides/exec-config-guide.md`、`docs/ja/projects/prj-0001/controls/project-register/pjr-fma4-evidence-secret-redaction.md`。result と登録簿のステータスは編集していない。
+- 適用外の検証: `npm run validate:schema:file`（変更した成果物に `.yaml` / `.yml` はなく、runner管理のイベント変更は対象外。）
+
+## 4. 進め方
+
+外部ツール（gitleaks等）に依存せず、リポジトリの構成を維持したまま実行できる自前の Node.js スクリプト（`tools/check-evidence-secrets.mjs`）を作成する手法を選択しました。このスクリプトは、`src/shared/text.ts` で拡張された伏せ字の定義に基づき、実行記録をスキャンします。まず、スクリプト単体および統合的な動作をテストコードで検証し、その後、実際の実行記録に対して監査を実施しました。

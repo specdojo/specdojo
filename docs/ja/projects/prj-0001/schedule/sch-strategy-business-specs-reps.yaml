@@ -1,0 +1,289 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/sch-strategy.schema.yaml
+kind: strategy
+id: prj-0001:sch-strategy-business-specs-reps
+type: project
+status: draft
+title: スケジュール戦略（business-specs-reps）
+rulebook: specdojo:sch-rulebook
+track: business-specs-reps
+scope:
+  catalogs:
+    - id: prj-0001:dct-data-model-bdd
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-bdd.yaml
+      local_ids:
+        - bdd-register-entry
+    - id: prj-0001:dct-data-model-ccd
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-ccd.yaml
+      local_ids:
+        - ccd-project-planning
+    - id: prj-0001:dct-data-model-cdt
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cdt.yaml
+      local_ids:
+        - cdt-register-type
+    - id: prj-0001:dct-business-model-br
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-br.yaml
+      local_ids:
+        - br-task-selection-strategy
+    - id: prj-0001:dct-business-model-bes
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bes.yaml
+      local_ids:
+        - bes-task-ready-selected
+    - id: prj-0001:dct-system-functions
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-system-functions.yaml
+      local_ids:
+        - sf-task-execution
+    - id: prj-0001:dct-external-interface-specs
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-external-interface-specs.yaml
+      local_ids:
+        - ifx-cmd-ai-provider-cli
+    - id: prj-0001:dct-user-interface-model
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-user-interface-model.yaml
+      local_ids:
+        - clis-exec-commands
+  include_kinds:
+    - work
+approach_rules:
+  - local_ids:
+      - bdd-register-entry
+      - ccd-project-planning
+      - cdt-register-type
+      - sf-task-execution
+      - ifx-cmd-ai-provider-cli
+      - clis-exec-commands
+    intent: reflect-implementation
+  - local_ids:
+      - br-task-selection-strategy
+      - bes-task-ready-selected
+    intent: author-deliverable
+phase_sets:
+  retrofit-pass:
+    - id: retrofit
+      name: 実装調査・草案反映
+      execution: agent
+      mode: edit
+      approach: retrofit
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "010"
+      duration_days: 0.5
+      description: >
+        成果物カタログの evidence_refs から現在動作を調査し、既存成果物・決定記録・プロジェクト文脈が示す意図された仕様、および done_criteria
+        と照合する。一致する内容は成果物へ反映し、乖離は実装へ無条件に合わせず result に記録する。
+  freeform-pass:
+    - id: draft
+      name: 草案作成（基準なし）
+      execution: agent
+      mode: edit
+      approach: freeform
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "020"
+      duration_days: 0.5
+      description: |
+        基準にできる実践の型が無い状態で草案を作成する。成果物カタログの done_criteria、対応 schema、既存の類似成果物を根拠にし、参考にした文書と決めきれなかった論点を result に明示する。
+  refine-pass:
+    - id: refine
+      name: 磨き込み・整合性確認
+      execution: agent
+      mode: edit
+      approach: fully-guided
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: normal
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "070"
+      duration_days: 0.25
+      description: >
+        整備済みの実践の型と先行・隣接成果物を参照し、既存の草案を保守的に磨き込む。責務境界と depends_on に沿った情報の受け渡しを確認し、不足や不整合だけを最小限修正して done_criteria
+        を満たす状態へ整える。
+  condense-pass:
+    - id: condense
+      name: 冗長さの整理
+      execution: agent
+      mode: edit
+      approach: condense
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: normal
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "080"
+      duration_days: 0.25
+      description: |
+        1 文書の冗長さを削る・まとめる・参照に置き換える。判断に要る背景・制約・例外・完了条件と意味を保ち、新しい内容を足さず、修正・保持した箇所と原因を result に記録する。
+  review-pass:
+    - id: review
+      name: 完成版レビュー
+      execution: agent
+      mode: review
+      approach: fully-guided
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: normal
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "090"
+      duration_days: 0.25
+      description: |
+        完成版を変更せず、実践の型と done_criteria、先行成果物との整合を照合する。判定結果と修正対象候補を根拠付きで review result に記録する。
+  retrofit-review-pass:
+    - id: review
+      name: 完成版レビュー（実装照合）
+      execution: agent
+      mode: review
+      approach: retrofit
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: normal
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "090"
+      duration_days: 0.25
+      description: |
+        完成版を変更せず、evidence_refs が示す現在動作、意図された仕様、done_criteria を照合する。実装との一致・乖離・未確認範囲を判定し、根拠と修正対象候補を review result に記録する。
+  finalize-pass:
+    - id: finalize
+      name: 完成版確定
+      execution: human
+      mode: edit
+      approach: finalize
+      task_suffix: "140"
+      duration_days: 0.125
+      description: >
+        担当ロールがレビュー結果と done_criteria を最終確認し、成果物を完成版として確定する。bootstrap 対象では、同じタスクで整備した rulebook / recipe / sample /
+        template もあわせて確認する。
+default_phase_sets:
+  - phase_set: retrofit-pass
+  - phase_set: refine-pass
+  - phase_set: condense-pass
+  - phase_set: retrofit-review-pass
+  - phase_set: finalize-pass
+owner_rules:
+  - local_ids:
+      - bes-task-ready-selected
+      - br-task-selection-strategy
+    owner: BA
+    phase_sets:
+      - phase_set: freeform-pass
+      - phase_set: refine-pass
+      - phase_set: condense-pass
+      - phase_set: review-pass
+      - phase_set: finalize-pass
+  - local_ids:
+      - bdd-register-entry
+      - ccd-project-planning
+      - cdt-register-type
+      - clis-exec-commands
+      - ifx-cmd-ai-provider-cli
+      - sf-task-execution
+    owner: BA
+phase_gates:
+  - id: G-BUSINESS-SPECS-REPS-first-pass
+    name: 初回パス完了
+    after_phase_sets:
+      - retrofit-pass
+      - freeform-pass
+    owner: PM
+    scope:
+      catalogs:
+        - prj-0001:dct-data-model-bdd
+        - prj-0001:dct-data-model-ccd
+        - prj-0001:dct-data-model-cdt
+        - prj-0001:dct-business-model-br
+        - prj-0001:dct-business-model-bes
+        - prj-0001:dct-system-functions
+        - prj-0001:dct-external-interface-specs
+        - prj-0001:dct-user-interface-model
+  - id: G-BUSINESS-SPECS-REPS-refine-pass
+    name: 磨き込み完了
+    after_phase_sets:
+      - refine-pass
+    owner: PM
+    scope:
+      catalogs:
+        - prj-0001:dct-data-model-bdd
+        - prj-0001:dct-data-model-ccd
+        - prj-0001:dct-data-model-cdt
+        - prj-0001:dct-business-model-br
+        - prj-0001:dct-business-model-bes
+        - prj-0001:dct-system-functions
+        - prj-0001:dct-external-interface-specs
+        - prj-0001:dct-user-interface-model
+  - id: G-BUSINESS-SPECS-REPS-review-pass
+    name: レビュー完了
+    after_phase_sets:
+      - review-pass
+      - retrofit-review-pass
+    owner: PM
+    scope:
+      catalogs:
+        - prj-0001:dct-data-model-bdd
+        - prj-0001:dct-data-model-ccd
+        - prj-0001:dct-data-model-cdt
+        - prj-0001:dct-business-model-br
+        - prj-0001:dct-business-model-bes
+        - prj-0001:dct-system-functions
+        - prj-0001:dct-external-interface-specs
+        - prj-0001:dct-user-interface-model
+group_milestones:
+  - catalog_id: prj-0001:dct-data-model-bdd
+    milestone:
+      id: M-BUSINESS-SPECS-REPS-data-model-bdd
+      name: ドメイン完了
+      artifact_name: データモデル／業務データ辞書
+      owner: PM
+  - catalog_id: prj-0001:dct-data-model-ccd
+    milestone:
+      id: M-BUSINESS-SPECS-REPS-data-model-ccd
+      name: ドメイン完了
+      artifact_name: データモデル／概念クラス図
+      owner: PM
+  - catalog_id: prj-0001:dct-data-model-cdt
+    milestone:
+      id: M-BUSINESS-SPECS-REPS-data-model-cdt
+      name: ドメイン完了
+      artifact_name: データモデル／分類一覧
+      owner: PM
+  - catalog_id: prj-0001:dct-business-model-br
+    milestone:
+      id: M-BUSINESS-SPECS-REPS-business-model-br
+      name: ドメイン完了
+      artifact_name: 業務モデル／ビジネスルール
+      owner: PM
+  - catalog_id: prj-0001:dct-business-model-bes
+    milestone:
+      id: M-BUSINESS-SPECS-REPS-business-model-bes
+      name: ドメイン完了
+      artifact_name: 業務モデル／業務イベント仕様
+      owner: PM
+  - catalog_id: prj-0001:dct-system-functions
+    milestone:
+      id: M-BUSINESS-SPECS-REPS-system-functions
+      name: ドメイン完了
+      artifact_name: システム化機能
+      owner: PM
+  - catalog_id: prj-0001:dct-external-interface-specs
+    milestone:
+      id: M-BUSINESS-SPECS-REPS-external-interface-specs
+      name: ドメイン完了
+      artifact_name: 外部I/F仕様
+      owner: PM
+  - catalog_id: prj-0001:dct-user-interface-model
+    milestone:
+      id: M-BUSINESS-SPECS-REPS-user-interface-model
+      name: ドメイン完了
+      artifact_name: ユーザーインターフェースモデル
+      owner: PM

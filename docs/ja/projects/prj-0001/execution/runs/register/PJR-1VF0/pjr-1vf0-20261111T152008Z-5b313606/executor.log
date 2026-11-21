@@ -1,0 +1,22 @@
+タスク PJR-1VF0「ccd と ifx-cmd の型に、規則の検査を流すコマンドを書く」の対応を完了しました。
+
+### 実施内容
+
+1. **`docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md` の更新**
+   - 「6.6. 検証と改訂時の確認」を小節構成（「6.6.1. 静的検査の手順とコマンド」「6.6.2. 整合性の手動照合と改訂時の確認」）に再編。
+   - Markdown 構文（`npm run lint:md`）、Frontmatter（`npm run lint:fm`）、Mermaid 構文（`npm run lint:mermaid`）の静的検査コマンド例、期待結果（エラーなく終了コード 0）、移行先リポジトリでの代替定義の許容、構文検査と業務上の妥当性検証の限界を明記しました。
+
+2. **`docs/ja/specdojo/rulebooks/ifx-cmd-rulebook.md` の更新**
+   - 「5. 本文要件」の冒頭に、スキーマ検証手順（6.9 節）への参照を追加。
+   - 「6. 記述ガイド」に「6.9. 成果物の検証手順」（「6.9.1. 個別のスキーマ・modeline 検証」「6.9.2. 全体検証と整形確認」）を追加し、`ifx-cmd.schema.yaml` による個別検証（`npm run validate:schema:file`）、modeline 検証、全体検証（`npm run validate:schema`）、Prettier による整形確認（`prettier --check`）、期待結果および手動照合の責務境界を明記しました。
+
+3. **個票 `docs/ja/projects/prj-0001/controls/project-register/pjr-1vf0-kata-validation-commands.md` の更新**
+   - 完了条件の仮説、作業内容、対応結果（実施内容・成果物・残課題/申し送り）、および関連ドキュメントを記入しました。
+
+4. **静的検査と整形の確認**
+   - 変更した Markdown ファイルに対して Prettier を実行し、整形を確認しました。
+   - `npm run validate:history-links` および `npm run validate:catalog` を実行し、すべて正常終了することを確認しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"ccd-mermaid-rulebook と ifx-cmd-rulebook に静的検査・スキーマ検証の手順とコマンドを追記し、個票を更新しました。","handoff":["grade 指摘 F001（静的検査コマンド・検証手順の明記）を解消完了。","F002（ccd-mermaid-rulebook の based_on と ccd-sample の整合性、ifx-cmd-rulebook の files 契約要件と ifx-cmd-sample の整合性）は型確定後の対応方針（indie決定）に従い本タスクのスコープ外として申し送り。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md docs/ja/specdojo/rulebooks/ifx-cmd-rulebook.md docs/ja/projects/prj-0001/controls/project-register/pjr-1vf0-kata-validation-commands.md","status":"passed","summary":"変更した Markdown ファイルの Prettier 整形が正常終了"},{"command":"npm run validate:history-links","status":"passed","summary":"履歴蓄積ファイル（pjr 個票）のリンク検証が正常終了"},{"command":"npm run validate:catalog","status":"passed","summary":"成果物カタログ検証が正常終了"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,6 @@
+対象文書の冗長な記述を整理しました。概要の「判断内容」は詳細ルールと出力の説明と重複していたため削除し、工程計算ができない場合の説明から例外 ID の重複を除きました。順位の決め方と例外 `E-02` の扱いは残しています。
+
+Prettier は実行済みで、`git diff --check` も通過しました。変更後の整形は不要でした。Markdown lint などの親 runner 検証は指示どおり実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"対象文書の重複を整理し、判断に必要な順位規則と例外の説明を維持した。","handoff":[],"validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/030-business-model/br-task-selection-strategy.md","status":"passed","summary":"Prettier を実行し、変更後の整形は不要だった。"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし。"},{"command":"parent runner validations: lint-ts, lint-fm, lint-md, lint-mermaid, lint-d2, test-integration, validate-schema, typecheck, test-unit","status":"not_run","summary":"pipeline 指示により親 runner が実行するため、executor では重複実行しない。"}],"condense_records":[{"location":"「1. 概要」の「判断内容」行（修正前）","category":"repetition","action":"delete","reason":"選択戦略の確定、Ready タスクの順位付け、先頭の選択はルール節と出力節に定義済みのため、概要での言い換えを削除した。","cause":{"type":"document"}},{"location":"「3.4. 工程計算ができない場合」の末尾の `E-02` 参照（修正前）","category":"repetition","action":"merge","reason":"工程計算不能時の代替順位と着手継続はこの節に残し、異常時の追加対応は例外表 `E-02` に集約した。","cause":{"type":"document"}}]}</specdojo_executor_evidence>

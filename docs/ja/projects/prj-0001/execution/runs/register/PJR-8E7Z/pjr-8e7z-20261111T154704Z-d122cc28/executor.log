@@ -1,0 +1,27 @@
+プロジェクト登録簿の項目 **PJR-8E7Z**「業務仕様の型に、文書の改訂と廃止のときに関係する文書を追って直す決まりを足す」の executor 作業を完了しました。
+
+### 実施概要
+
+1. **共通基準の策定**:
+   - [`document-metadata-standard.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8E7Z/docs/ja/specdojo/standards/document-metadata-standard.md#L324-L355) に「`6.3. 文書の改訂・廃止とライフサイクル変更管理（supersedes と deprecated）`」を新設しました。
+     - `supersedes` による置き換え（大幅改訂時の新旧関係、旧文書の `status: deprecated` 化、変更点・理由の明記）。
+     - `deprecated` への移行（非推奨化・廃止予告、廃止理由・代替手段の明記、有効文書の参照先指定禁止）。
+     - ダウンストリーム（一覧・プロセス仕様・データモデル・実装・テスト）への影響追跡と追従更新手順。
+     - 担当 Role code（BA, PO, ARC, DEV, QE, PM）の責務分担。
+     - 未決事項・永続的リスク・課題の PJR レコードへの引き継ぎ手順。
+   - [`rulebook-authoring-standard.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8E7Z/docs/ja/specdojo/standards/rulebook-authoring-standard.md#L107) に、各 rulebook が改訂・廃止・波及影響を定義する際の共通規約への準拠要件を追記しました。
+
+2. **各業務仕様の型（Rulebook）への反映**:
+   - [`bes-rulebook.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8E7Z/docs/ja/specdojo/rulebooks/bes-rulebook.md#L38-L82):
+     - 改訂時の `supersedes` 運用と `status: deprecated` への移行、BEL（業務イベント一覧）・BPS（業務プロセス仕様）・外部 IF・実装・テスト（BAC/ATC）への影響追跡手順、および担当 Role code（BA, PO, ARC, DEV, QE, PM）を明記し、F001 および F003 を解消しました。
+   - [`br-rulebook.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8E7Z/docs/ja/specdojo/rulebooks/br-rulebook.md#L32-L75):
+     - ライフサイクル操作（更新・廃止・問い合わせ対応）、BPS・実装コード・テスト仕様への波及影響追跡規則、担当 Role code、およびメモ/将来課題から PJR レコードへの引き継ぎ手順を明記し、F001, F002, F003 を解消しました。
+   - [`bdd-rulebook.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8E7Z/docs/ja/specdojo/rulebooks/bdd-rulebook.md#L56-L75):
+     - アップストリーム（正本スキーマまたは TypeScript 型）側でのフィールド削除に対する運用パス（レガシーアノテーション退避または互換バージョン固定）を明記し、手動照合条件との競合を解消して F001 および F002 を解消しました。
+
+3. **個票の更新**:
+   - [`pjr-8e7z-kata-revision-deprecation-rules.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8E7Z/docs/ja/projects/prj-0001/controls/project-register/pjr-8e7z-kata-revision-deprecation-rules.md#L30-L75) の「完了条件（仮説）」「作業内容」「対応結果（CHANGELOG 文案含む）」および「関連ドキュメント」を更新しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"業務仕様の型（BES・BR・BDD）およびドキュメントメタ情報標準に、文書の改訂・廃止手順、波及影響追跡、担当Role code、アップストリーム削除対応を追加しました。","handoff":["[CHANGELOG:変更] 業務仕様の型（BES・BR・BDD）およびドキュメントメタ情報標準に、文書の改訂・置き換え（`supersedes`）と廃止（`deprecated`）時の波及影響追跡手順（一覧・BPS・実装・テストへの追従）、担当 Role code、およびアップストリーム削除時の運用パスを追加","仮説完了条件1〜6をすべて満たし、document-metadata-standard.mdへの共通原則策定、rulebook-authoring-standard.mdへの準拠要件追記、bes-rulebook.md・br-rulebook.md・bdd-rulebook.mdへの改訂・廃止手順・影響追跡・Role code・アップストリーム削除対応の反映、および個票更新を完了した。"],"validations":[{"command":"npm run validate:history-links","status":"passed","summary":"History files and pjr links validated successfully with zero errors."},{"command":"npm run validate:catalog","status":"passed","summary":"Project deliverable catalog validated successfully."},{"command":"npx prettier --check docs/ja/projects/prj-0001/controls/project-register/pjr-8e7z-kata-revision-deprecation-rules.md docs/ja/specdojo/rulebooks/bdd-rulebook.md docs/ja/specdojo/rulebooks/bes-rulebook.md docs/ja/specdojo/rulebooks/br-rulebook.md docs/ja/specdojo/standards/document-metadata-standard.md docs/ja/specdojo/standards/rulebook-authoring-standard.md","status":"passed","summary":"All modified Markdown files match Prettier formatting style."},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"No deliverable YAML files changed in this task.","reason":"No deliverable YAML files changed"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_3661ee4ffad54d8da57f3f8f64496a67
+  ts: "2026-11-20T23:35:41Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-SW7T の確認で、grade run に代わりの agent への切り替えがないことが分かったため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade run で rate limit のときに代わりの agent へ切り替える
+    - field: description
+      from: ""
+      to: grade run に代わりの agent の指定を足し、rate limit のときに切り替えて残りの文書を続ける。夜間の grade の job にも組み込む
+    - field: input
+      from: ""
+      to: '["夜間の grade（rtn-grade-recheck・rtn-grade-deliverable-recheck）は job の中で grade run --by agy-expert-executor に固定され、rate limit のときに代わりの agent へ切り替える仕組みがない（2026-11-21 に src/grade/run.ts と src/exec/agent-plan.ts で確かめた）","rate limit のときは残りを未実行のまま止め、終了コード 75 で終える。残りは翌日の run が未完了・未評価の条件で選び直す","利用者の要望: agy が rate limit に当たったら sol に切り替わるようにしたい","PJR-SW7T の 2 回目の実行で、rate limit の後も続けるのは --kata のときだけに絞る。切り替えはこの項目で扱う"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-21"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-SW7T"]'

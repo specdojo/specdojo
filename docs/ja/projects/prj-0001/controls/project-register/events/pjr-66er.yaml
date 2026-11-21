@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ff7f49299be7482793c4edd9ef6fdaa0
+  ts: "2026-11-03T05:02:53Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: リポジトリをまたぐリンクの書き方を起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: リポジトリをまたぐ文書のリンクの書き方を決めて対応する
+    - field: description
+      from: ""
+      to: 管理用リポジトリとプロダクトのリポジトリ、別リポジトリへ移した project の間で、wikilink を文書サイトで解決できるよう、リポジトリをまたぐリンクの書き方と表示の仕組みを決めて対応する
+    - field: input
+      from: ""
+      to: '["利用者は、prj-0002（specdojo-lp の管理）を将来、管理用の別リポジトリ（例: specdojo-lp-specdojo）へ移す可能性を考え、安全に移すための機能を用意することを求めた。全自動の移行コマンドは後回しにし、読むだけの点検・手順のガイド・リポジトリをまたぐリンクの 3 件に分けると判断した（2026-11-03）","今は prj-0002 の文書から prj-0001 の個票へ wikilink が 10 種類あり、prj-0001 の運用メモや個票からも prj-0002 を指している。リポジトリが分かれると文書サイトで解決できなくなる（2026-11-03）","PJR-8HCB で決めたスターターの 3 種類のリポジトリ（管理・作る側・配る側）でも同じ問題が起きるため、移行の点検とガイドより先に要る。書き方の案の例は、`external_projects` の別名を付けた wikilink を GitHub の URL に置き換えて表示する形。方式は選択肢と理由を記録して決める（2026-11-03）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-11-03"
+    - field: due
+      from: ""
+      to: "2026-12-31"
+    - field: derived_from
+      from: ""
+      to: '["PJR-8HCB"]'
+    - field: commit_type
+      from: ""
+      to: feat
+    - field: commit_scope
+      from: ""
+      to: docs

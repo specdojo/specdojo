@@ -1,0 +1,94 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_2a7f182479574f5284db18c8b5eb2dfc
+  ts: "2026-11-18T22:17:13Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: strategy を正本とする規則を利用者と確認し、X21W に代えて担当 DEV・期限 11 月末で起票する
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 手で直した schedule の track に気づけず、経路ごとに agent の解決の順が違う
+    - field: description
+      from: ""
+      to: strategy を正本とする規則に反して track を直接編集しても検出されず、ready の作り直しとタスクの表示・実行で agent の解決の順が食い違う
+    - field: input
+      from: ""
+      to: '["sch-rulebook は strategy と成果物カタログを SSOT とし、生成後の `sch-track-<track>.yaml` を直接編集しないと定め、禁止事項にも挙げている。schedule-design-guide は agent を --executor-by、strategy の phase の agent（`owner_rules[].phase_overrides[].agent` で成果物ごとに上書き）、自動選択の順で解決すると書く。","2026-11-18 にオーケストレーターが sch-track-kata-slim-2.yaml の agent.executor を直接編集した（commit b210e5b5a）が、エラーにも警告にもならず、runner は strategy の段の指定で claim した。track の鮮度は strategy とのファイル更新時刻だけで判定している（src/exec/run/schedule-mode.ts の findStaleGeneratedTracks）。","src/exec/schedule/schedule.ts の ready を作る処理は resolveAgentAssignment（strategy 由来）で task.agent を無条件に上書きする。src/exec/task-view.ts と src/exec/run/schedule-mode.ts は track の task.agent を先に使い、未指定のときだけ strategy から解決する。","schedule-design-guide の「トラックへ展開する情報」の表に agent がないが、src/schedule/build.ts は phase の agent と `phase_overrides` の agent を track へ展開している。","PJR-X21W は track の指定を優先させる方向で起票したが、strategy を正本とする規則に照らして reject し、本項目へ引き継いだ。"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-19"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-X21W"]'
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: exec
+- v: 1
+  id: reg_fc91a539a4174abb8542423293b9c01b
+  ts: "2026-11-19T10:12:36Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_2a7f182479574f5284db18c8b5eb2dfc
+- v: 1
+  id: reg_27394d2282c74c1b8c3858a52a3f8ab1
+  ts: "2026-11-19T10:38:39Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_fc91a539a4174abb8542423293b9c01b
+- v: 1
+  id: reg_77cca4f516a54e3a8fc4e31e43548bb8
+  ts: "2026-11-19T11:42:39Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分と個票で確かめ、統合の後の実際の exec run --auto で strategy どおりの claim と警告を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-19"
+    - field: conclusion
+      from: "-"
+      to: track の直接の編集を exec validate と exec run --auto の前に警告し、schedule のタスクの agent を 3 経路とも strategy を正とする同じ順で解決するようにした。設計ガイドの展開の表に agent を足した
+  previous_event_id: reg_27394d2282c74c1b8c3858a52a3f8ab1

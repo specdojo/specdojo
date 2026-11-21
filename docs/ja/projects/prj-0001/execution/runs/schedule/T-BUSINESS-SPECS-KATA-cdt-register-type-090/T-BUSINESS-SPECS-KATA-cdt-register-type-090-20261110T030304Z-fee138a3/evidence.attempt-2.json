@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "task_id": "T-BUSINESS-SPECS-KATA-cdt-register-type-090",
+  "run_id": "T-BUSINESS-SPECS-KATA-cdt-register-type-090-20261110T030304Z-fee138a3",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-review-executor",
+    "status": "rate_limited",
+    "started_at": "2026-11-10T05:14:36.943Z",
+    "completed_at": "2026-11-10T05:14:40.930Z",
+    "exit_code": 1,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "packages/docs-site/.vitepress/sidebar-config.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../result.md                                       | 21 +++++++++++++++------\n packages/docs-site/.vitepress/sidebar-config.ts     | 12 ++++++++++--\n 2 files changed, 25 insertions(+), 8 deletions(-)"
+  },
+  "validations": [],
+  "final_message": "",
+  "block_reason": "executor rate limit reached",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-cdt-register-type-090/T-BUSINESS-SPECS-KATA-cdt-register-type-090-20261110T030304Z-fee138a3/executor.attempt-2.log",
+      "bytes": 31973,
+      "truncated": false
+    }
+  ]
+}

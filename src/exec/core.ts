@@ -1,5 +1,11 @@
 import { type Command } from "commander";
 import {
+  assertValidActor,
+  loadConfig,
+  loadMemberRoster,
+  specdojoRootDir,
+} from "../shared/specdojo-config.js";
+import {
   acquireSchedulerLock,
   buildEvent,
   canReleaseTask,
@@ -10,13 +16,11 @@ import {
   releaseSchedulerLock,
   writeEventFile,
 } from "./events.js";
+import { finalizeResultSectionsForDeliverable, targetDocIdsForScheduledTask } from "./plans.js";
 import { activateResolvedProjectPaths, resolveProjectPaths } from "./project.js";
-import {
-  assertValidActor,
-  loadConfig,
-  loadMemberRoster,
-  specdojoRootDir,
-} from "../shared/specdojo-config.js";
+import { resetResultForClaim, scaffoldResult } from "./results.js";
+import { recordPathForRead, recordRef } from "./run-records.js";
+import { buildInitialStateFromStrategy } from "./schedule/initial.js";
 import {
   buildScheduleIndex,
   computeCpm,
@@ -27,19 +31,16 @@ import {
   writeGeneratedCore,
   writeScheduleHashAndDiff,
 } from "./schedule/schedule.js";
-import type { Approach, ExecEventType, SchedulerStrategy, TaskMode } from "./types.js";
 import { qualifyTaskId, requireNonEmpty } from "./shared.js";
-import { finalizeResultSectionsForDeliverable, targetDocIdsForScheduledTask } from "./plans.js";
-import { resetResultForClaim, scaffoldResult } from "./results.js";
-import { discardStaleExecWorktree } from "./worktree-ops.js";
-import { configuredProductRepos } from "./task-repos.js";
-import { buildInitialStateFromStrategy } from "./schedule/initial.js";
 import {
   buildPhaseModeIndex,
   resolveApproach,
   resolveTaskExecution,
   resolveTaskMode,
 } from "./strategy.js";
+import { configuredProductRepos } from "./task-repos.js";
+import type { Approach, ExecEventType, SchedulerStrategy, TaskMode } from "./types.js";
+import { discardStaleExecWorktree } from "./worktree-ops.js";
 
 export const KNOWN_OWNER_LABELS = ["PO", "PM", "BA", "ARC", "DEV", "QE", "UX", "OPS"] as const;
 export const KNOWN_OWNER_LABELS_TEXT = KNOWN_OWNER_LABELS.join("|");
@@ -47,6 +48,7 @@ export const KNOWN_OWNER_LABELS_TEXT = KNOWN_OWNER_LABELS.join("|");
 const KNOWN_APPROACHES = [
   "draft",
   "fully-guided",
+  "condense",
   "recipe-guided",
   "freeform",
   "bootstrap",
@@ -100,6 +102,7 @@ export type ExecCommandOpts = {
   strategy?: string;
   dryRun?: boolean;
   force?: boolean;
+  takeOver?: boolean;
   resetWorktree?: boolean;
   allBlocked?: boolean;
 };
@@ -136,6 +139,14 @@ export function addForceOption(cmd: Command): Command {
   return cmd.option(
     "--force",
     "Human actor only: override the guard on a task held by another actor",
+    false,
+  );
+}
+
+export function addTakeOverOption(cmd: Command): Command {
+  return cmd.option(
+    "--take-over",
+    "Human actor only: become the claim owner instead of keeping the current owner (e.g. an agent run)",
     false,
   );
 }
@@ -391,7 +402,14 @@ export async function scaffoldClaimResult(opts: {
     taskId: opts.taskId,
     mode,
     projectId: opts.projectId,
-    ...(execution === "agent" ? { planRef: `exec/plans/${opts.taskId}-plan.md` } : {}),
+    ...(execution === "agent"
+      ? {
+          planRef: recordRef(
+            opts.executionPath,
+            recordPathForRead(opts.executionPath, "plan", opts.taskId),
+          ),
+        }
+      : {}),
     agent: opts.actor,
     startedAt: opts.startedAt,
     execution,
@@ -491,6 +509,9 @@ export async function runLockedEventCommand(
       if (plannedOwner && claimOwner !== plannedOwner && resolvedOpts.allowOwnerMismatch) {
         event.meta.owner_override = true;
       }
+    }
+    if (action.type === "unblock" && resolvedOpts.takeOver) {
+      event.meta = { ...(event.meta ?? {}), take_over: true };
     }
     if (opts.dryRun) {
       process.stdout.write(`[dry-run] ${JSON.stringify(event, null, 2)}\n`);

@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 97
-graded_at: "2026-10-08T21:19:35.734Z"
-graded_by: agy-expert-executor
-content_hash: 52c72d93e1b54b4b5f94f0fd0be16191b8235df64c6ef112a56484cf57abc43f
+graded_at: "2026-11-17T22:11:19.167Z"
+graded_by: sol-review-executor
+content_hash: 1921db7461745e97d2a38d20053b731904358a4eba765b919e34a1315fa0e8ad
 categories:
   purpose:
     score: 100
@@ -21,9 +21,9 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 92
-  implementation:
     score: 100
+  implementation:
+    score: 88
   quality:
     score: 92
   consistency:
@@ -60,8 +60,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -69,8 +69,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-change-impact:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-testability:
     level: 4
     score: 100
@@ -109,15 +109,27 @@ finding_counts:
 findings:
   - id: F001
     severity: minor
-    rule: vp-arc-conciseness
-    line: 83
-    anchor: "### 4.2. 推奨ルール"
-    message: 4.2節はFrontmatterの章であるにもかかわらず本文のルール（表の分離、業務価値の対応付けなど）が含まれ、それらは6節（記述ガイド）と重複しているため、6節へ統合できる。
-    message_ja: 4.2節はFrontmatterの章であるにもかかわらず本文のルール（表の分離、業務価値の対応付けなど）が含まれ、それらは6節（記述ガイド）と重複しているため、6節へ統合できる。
+    rule: vp-dev-change-impact
+    line: 12
+    anchor: >-
+      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status`・承認・改訂と廃止・未決事項の引き継ぎは [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]]
+      に従います。文書の整形・lint・見出し・wikilink の検査はリポジトリの検証で扱い、業務の検証や受入条件に含めません。
+    message: >-
+      改訂時の扱いをメタ情報標準へ委ねていますが、成功基準・閾値・初期受入の必須条件を変更した際に、業務受入条件・システム受入条件・関連テストや既存証跡のどれを再照合するか、および担当 Role code
+      が未定義です。Rulebook 記述標準が求める自系統の具体的な追従対象と役割分担を補ってください。
+    message_ja: >-
+      改訂時の扱いをメタ情報標準へ委ねていますが、成功基準・閾値・初期受入の必須条件を変更した際に、業務受入条件・システム受入条件・関連テストや既存証跡のどれを再照合するか、および担当 Role code
+      が未定義です。Rulebook 記述標準が求める自系統の具体的な追従対象と役割分担を補ってください。
   - id: F002
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 90
-    anchor: "## 5. 本文構成（標準テンプレ）"
-    message: 「本文構成（標準テンプレ）」節で番号と見出し順を正本化しているため、骨組みの定義は template に一元化し、本節では各章の記述目的や必須要件などの「本文要件」としての解説に留めるべきである。
-    message_ja: 「本文構成（標準テンプレ）」節で番号と見出し順を正本化しているため、骨組みの定義は template に一元化し、本節では各章の記述目的や必須要件などの「本文要件」としての解説に留めるべきである。
+    line: 12
+    anchor: >-
+      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status`・承認・改訂と廃止・未決事項の引き継ぎは [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]]
+      に従います。文書の整形・lint・見出し・wikilink の検査はリポジトリの検証で扱い、業務の検証や受入条件に含めません。
+    message: >-
+      本文では文書の lint を業務の検証や受入条件から除外していますが、対応する recipe の「作成前に集める情報」と「深掘り手順」は測定方法の候補に lint を含め、リポジトリ検証との区別を示していません。受入条件へ文書
+      lint を混入させないよう、recipe 側にも同じ責務境界を明示して整合させてください。
+    message_ja: >-
+      本文では文書の lint を業務の検証や受入条件から除外していますが、対応する recipe の「作成前に集める情報」と「深掘り手順」は測定方法の候補に lint を含め、リポジトリ検証との区別を示していません。受入条件へ文書
+      lint を混入させないよう、recipe 側にも同じ責務境界を明示して整合させてください。

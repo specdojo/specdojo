@@ -1,0 +1,16 @@
+{
+  "v": 1,
+  "ts": "2026-11-08T22:09:12Z",
+  "type": "unblock",
+  "task_id": "T-BUSINESS-SPECS-REPS-ccd-project-planning-010",
+  "by": "sol-executor",
+  "msg": "resume executor from persisted pipeline state (--resume-from executor)",
+  "meta": {
+    "limit_deferred": "false",
+    "pipeline_stage": "executor",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-ccd-project-planning-010/T-BUSINESS-SPECS-REPS-ccd-project-planning-010-20261108T163541Z-03520068/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-ccd-project-planning-010/T-BUSINESS-SPECS-REPS-ccd-project-planning-010-20261108T163541Z-03520068/pipeline-state.json",
+    "pipeline_run_id": "T-BUSINESS-SPECS-REPS-ccd-project-planning-010-20261108T163541Z-03520068",
+    "pipeline_resume_claimed": "true"
+  }
+}

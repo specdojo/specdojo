@@ -1,0 +1,87 @@
+品質評価点の重複説明を削除しました。定義・制約・参照情報を維持し、整形と schema 検査は通過しました。
+
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "gl-quality.yaml の品質評価点の補足から重複説明を削除。用語定義・別名・分類・参照・判定上の制約を維持し、対象文書のみ変更した。result は編集していない。",
+  "handoff": [],
+  "validations": [
+    {
+      "command": "npx prettier --write docs/ja/product/010-business-specs/060-glossary/gl-quality.yaml",
+      "status": "passed",
+      "summary": "整形済みで追加変更なし。"
+    },
+    {
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/gl.schema.yaml --data docs/ja/product/010-business-specs/060-glossary/gl-quality.yaml",
+      "status": "passed",
+      "summary": "対応 schema に適合。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーなし。差分確認で品質評価点の補足のみの変更を確認。"
+    },
+    {
+      "command": "node tools/check-evidence-secrets.mjs --staged",
+      "status": "passed",
+      "summary": "検査対象の staged ファイルは0件、検出0件。"
+    },
+    {
+      "command": "npx markdownlint",
+      "status": "not_applicable",
+      "summary": "Markdown 検査は適用外。",
+      "reason": "executor の変更は YAML 文書のみで、Markdown ファイルは変更していない。"
+    },
+    {
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "not_applicable",
+      "summary": "カタログ検査は適用外。",
+      "reason": "変更対象は docs/ja/product/ 配下で、docs/ja/projects/ 配下の成果物は変更していない。"
+    },
+    {
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検査は適用外。",
+      "reason": "登録簿個票・既存 plan・result などの履歴ファイルを変更していない。"
+    }
+  ],
+  "condense_records": [
+    {
+      "location": "docs/ja/product/010-business-specs/060-glossary/gl-quality.yaml:121、tm-grade-score の notes「カテゴリ別・観点別の点数も記録する」",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "同項の定義が観点別・カテゴリ別・文書全体の点数を示し、カテゴリ別の記録は tm-review-category、観点別の記録は tm-grade-level に明記されている。重複節を削除し、`score` の整数範囲、合格点・重みの参照先、点数だけで完了・確定を判断しない制約は維持した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "docs/ja/product/010-business-specs/060-glossary/gl-quality.yaml:8,16、gl-common を正本とするコメントと成果物評価の補足",
+      "category": "repetition",
+      "action": "retain",
+      "reason": "冒頭コメントは文書の責務境界を示し、用語の補足は出力の grade・finding の定義へ直接案内する。用語単独で参照した場合にも正本へ到達できるため保持した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "docs/ja/product/010-business-specs/060-glossary/gl-quality.yaml:137、tm-review-verdict の notes",
+      "category": "canonical-restatement",
+      "action": "retain",
+      "reason": "6種類の判定語彙と意味は、品質判定との区別と schema 項目の参照に必要。選択条件は既にガイドを正本として参照しており、条件の再掲には広げず保持した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "docs/ja/product/010-business-specs/060-glossary/gl-quality.yaml:153、tm-finding-cause の notes",
+      "category": "canonical-restatement",
+      "action": "retain",
+      "reason": "省略時の扱いと、原因が実践の型の場合に種類・原因箇所の根拠を要する制約は改善先の判断に必要。`kind`・`location` との対応と schema 正本への参照を保持した。",
+      "cause": {
+        "type": "document"
+      }
+    }
+  ]
+}
+</specdojo_executor_evidence>

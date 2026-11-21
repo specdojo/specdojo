@@ -1,0 +1,56 @@
+---
+specdojo:
+  id: prj-0001:xer-t-kata-slim-pm-quality-management-plan-040-20261117t165902z-7cbd737d
+  type: exec-result
+  task_id: T-KATA-SLIM-pm-quality-management-plan-040
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  plan_ref: runs/schedule/T-KATA-SLIM-pm-quality-management-plan-040/T-KATA-SLIM-pm-quality-management-plan-040-20261117T165902Z-7cbd737d/plan.md
+  started_at: "2026-11-17T16:59:08.916Z"
+  completed_at: "2026-11-17T17:26:52.643Z"
+  agent: sol-executor
+  execution: agent
+  approach: rulebook-maintenance
+  targets:
+    - prj-0001:pm-quality-management-plan
+    - specdojo:pm-quality-management-plan-rulebook
+---
+
+# Edit Result
+
+## 1. 実施内容
+
+- 品質管理計画の rulebook から、どの成果物にも共通する文書運用の記述を外し、共通の正本への参照に置き換えた。変更は対象 rulebook のみ。
+- 全体方針に「共通の運用」を 1 項目だけ置いた。役割は適用先のメンバー定義を参照する。`status`・承認・改訂と廃止・未決事項の引き継ぎは、ドキュメントメタ情報標準を参照する。
+- 役割・Agent の判断境界・公開承認・登録手順の再掲を削除した。文書品質の検査は業務の受入条件から分離した。
+- 型固有の判断基準、標準列、章の受入条件、良い例・悪い例は維持した。品質ゲート、価値品質と成果物品質、初期受入と公開後観測、出口条件・証跡・記録先、重大性の境界、再判定条件・責任などが該当する。
+- 成果物本文の 5 章と必須・条件付きの区分は変えていない。rulebook の第 2 章だけ「位置づけと用語定義」から「位置づけ」に改めた。用語表 4 語が本文要件の言い直しだったため、表を削除した。
+- 空白・改行を除いた文字数は 5,215 字から 4,129 字になり、比率は 79.18% で目安の 8 割以下に収まった。
+- executor の検証では Prettier 整形と `git diff --check` が成功した。runner の lint-fm・lint-md・lint-mermaid・lint-d2・validate-schema・test-unit・test-integration も成功した。
+
+## 2. 変更ファイル
+
+- `docs/ja/specdojo/rulebooks/pm-quality-management-plan-rulebook.md`: 全体方針に「共通の運用」を 1 項目追加し、役割・`status` 運用・承認・改訂と廃止・未決事項の引き継ぎを共通の正本への参照にした。役割の再掲、Agent の判断境界、公開承認、登録手順の記述と、文書品質検査を業務の受入条件に含める記述を削除した。未決事項は、担当・決定時期・判断者の管理欄を求めず、論点・影響・保留対象・決定後に直す条件と証跡を求める形にした。第 2 章は「位置づけ」に改め、言い直しだけの用語表を削除した。型固有の判断基準、標準列、受入条件、良い例・悪い例は維持した。
+
+## 3. 申し送り
+
+- 共通の正本に足りない点の変更案: `document-metadata-standard.md` の未決事項引き継ぎ規定は改訂・廃止の過程に限られている。通常の作成・運用で生じる未決事項にも適用する旨を明記する案がある。
+- 初回公開・通常改訂時の承認条件と判断責任の参照先を共通化し、Agent の判断境界は `people-and-organization-definition-standard.md` の「Agent 委任方針」へ接続する案もある。今回は標準へ追記していない。
+- recipe・template・sample への後続の変更案: template の品質方針にある人間・Agent の境界、重大不適合の報告・登録責任、見直し時の役割手順を共通運用に委譲し、未決表は論点と影響・保留対象に整理する。
+- recipe の作成手順・章別質問・レビュー観点・仕上げチェックにある同種の運用要求も整理する。sample は冒頭の役割段落、改訂・承認・登録手順、未決表の担当・判断時期・判断者の欄を外す。今回は rulebook を正とし、この 3 文書は変更していない。
+- result の実施内容・変更ファイルへ記録: docs/ja/specdojo/rulebooks/pm-quality-management-plan-rulebook.md のみ編集した。全体方針へ「共通の運用」を1項目追加し、役割は適用先のメンバー定義、`status`・承認・改訂と廃止・未決事項の引き継ぎはドキュメントメタ情報標準へ委譲した。役割・Agent判断境界・公開承認・登録手順の再掲を削除し、文書品質の検査を業務の受入条件から分離した。成果物本体、recipe、template、sample、result、grade サイドカーは変更していない。
+- result の進め方と実践の型の適用へ記録: 規範は docs/ja/specdojo/standards/rulebook-authoring-standard.md、document-metadata-standard.md、people-and-organization-definition-standard.md、共通規約2文書、defaults/pm-review-viewpoints.yaml の `vp-arc-conciseness`。手本は sld-rulebook.md と PJR-8S4T の「他の型へ広げるときの一覧」。根拠成果物は prj-0001 の pm-plan.md・pm-quality-management-plan.md、および宣言された recipe・template・sample。既存 grade result は成果物・rulebook とも findings が空であり、直接更新していない。
+- 維持した判断と根拠: 実成果物と sample で使用される品質ゲート、価値品質と成果物品質、初期受入と公開後観測の時点区分、現金支出と作業・運用負荷の区別、出口条件・証跡・記録先の独立列、重大性の境界、再判定条件・責任の独立列を維持した。未達と証跡不足による保留を区別し、条件別照合と全条件合格による通過の例を残した。期限付き例外は管理計画が認める範囲を参照し、対象条件・理由・期限・再判定条件を残す。
+- 章名と必須区分: 成果物本文の5章と必須・条件付きの区分は変更していない。rulebook 第2章のみ「位置づけと用語定義」から「位置づけ」へ変更した。用語表4語が本文要件・記述ガイドの言い直しであり、Rulebook 記述標準の重複する用語定義を省く規定に従って表を削除したため。未決事項は論点・影響・保留対象・決定後に直す条件と証跡を求め、担当・決定時期・判断者の管理欄を要求しない形にした。
+- 文字数: Frontmatter と表の区切りを含み、空白・改行を除外した文字数は変更前5,215字、変更後4,129字、比率79.18%。SLD試行と同様に表の区切り行も除いた場合は4,909字→3,911字、79.67%。Frontmatter は変更していない。
+- 共通正本への変更案: document-metadata-standard.md の未決事項引き継ぎ規定は改訂・廃止の過程に限定されているため、通常の作成・運用で生じる未決事項にも適用する旨を明記する案を申し送る。また、初回公開・通常改訂時の承認条件と判断責任の参照先を共通化し、Agent の判断境界は people-and-organization-definition-standard.md の「Agent 委任方針」へ接続する案を申し送る。本タスクでは標準へ追記していない。
+- 後続変更案: template の品質方針にある人間・Agent境界、重大不適合の報告・登録責任、見直し時の役割手順を共通運用へ委譲し、未決表を論点と影響・保留対象へ整理する。recipe の作成手順・章別質問・レビュー観点・仕上げチェックにある同種の運用要求も整理する。sample の冒頭の役割段落、改訂・承認・登録手順、未決表の担当・判断時期・判断者の欄を外し、型固有の品質判定と未決の影響を残す。今回の範囲では rulebook を正とし、これら3文書は変更していない。
+- 検証: Prettier 整形と git diff --check は成功。親 runner 所有の lint・schema・typecheck・unit/integration 検査は重複実行していない。
+- 適用外の検証: `npm run validate:schema:file`（変更対象は Markdown rulebook のみで、YAML・YML ファイルの変更がない。）
+- 適用外の検証: `npm run validate:catalog`（変更は docs/ja/specdojo/rulebooks/ 配下のみで、docs/ja/projects/ 配下の成果物に変更がない。）
+- 適用外の検証: `npm run validate:history-links`（登録簿個票および既存 plan・result の履歴ファイルを変更していない。）
+
+## 4. 進め方と実践の型の適用
+
+規範として、Rulebook 記述標準、ドキュメントメタ情報標準、人と組織の定義標準、共通規約 2 文書、`pm-review-viewpoints.yaml` の `vp-arc-conciseness` を参照した。手本は sld-rulebook.md と PJR-8S4T の「他の型へ広げるときの一覧」である。根拠成果物は prj-0001 の pm-plan.md、pm-quality-management-plan.md、宣言された recipe・template・sample である。今回の plan には grade や condense 由来の finding はなかった。既存の grade result も、成果物・rulebook とも findings が空だったため、直接は更新していない。実成果物と sample で使われている品質ゲート、価値品質と成果物品質、初期受入と公開後観測の区分、出口条件・証跡・記録先の独立列などは維持した。共通運用の記述は参照に置き換えた。矛盾が生じる場合は rulebook を正とした。

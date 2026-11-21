@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/nfr-maintainability-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 95
-graded_at: "2026-10-04T21:12:14.669Z"
-graded_by: agy-expert-executor
-content_hash: d066eb3ff0ae9cd1bd00a520dbc6dfc1499e8e986d330f8d6217149fa06df6a5
+score: 96
+graded_at: "2026-11-05T20:23:23.145Z"
+graded_by: flash-high-executor
+content_hash: 0ae178b195a1bfe6979820b54062eb7e0004de1ee21ff5c03ef6cabd60adc74f
 categories:
   purpose:
     score: 100
@@ -19,7 +19,7 @@ categories:
   business:
     score: 100
   architecture:
-    score: 92
+    score: 100
   usability:
     score: 100
   implementation:
@@ -57,8 +57,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-technical-constraints:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -104,21 +104,13 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 1
-  minor: 1
+  minor: 0
   note: 0
 findings:
   - id: F001
-    severity: minor
-    rule: vp-arc-technical-constraints
-    line: 41
-    anchor: >-
-      Frontmatter は共通スキーマに従います（参照:
-      [docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml](../../../specdojo/schemas/v1/deliverable-frontmatter.schema.yaml)
-      / [document-metadata-standard.md](../standards/document-metadata-standard.md)）。
-    message: スキーマへの相対パスが誤っており、正しくは `../../../../specdojo/schemas/v1/deliverable-frontmatter.schema.yaml` となる。
-  - id: F002
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# 非機能要件 / 保守性 作成ルール"
     message: 指定されているサンプル成果物 `specdojo:nfr-maintainability-sample` が、本書で定義した標準テンプレの構成に従っていない。
+    message_ja: 指定されているサンプル成果物 `specdojo:nfr-maintainability-sample` が、本書で定義した標準テンプレの構成に従っていない。

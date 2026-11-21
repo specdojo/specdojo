@@ -1,0 +1,332 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/gl.schema.yaml
+id: gl-execution
+type: glossary
+rulebook: specdojo:gl-rulebook
+title: 用語集（実行）
+locale: ja
+status: ready
+# 共通概念の task・plan・result・event・evidence・trial・routine・job は gl-common を正本とする。
+# 本書は実行固有の操作・役割・管理単位を扱い、計画・品質評価・導入設定の詳細は各領域へ委ねる。
+terms:
+  - id: tm-execution
+    term: タスク実行
+    englishName: exec
+    aliases: [実行]
+    definition: 実行計画に従う作業を人または AI Agent が進め、成果・検証結果・停止理由を記録して後続へ引き渡す活動。
+    notes: 基本概念は [[gl-common|用語集（共通）]] を参照する。CLI の入口は `specdojo exec`。
+    relatedTerms: [tm-task-origin, tm-task-mode, tm-task-state, tm-execution-pipeline]
+    source: "[[sf-task-execution|システム化機能（タスク実行）]]、[[clis-exec-commands|CLI仕様（exec コマンド群）]]"
+  - id: tm-task-origin
+    term: タスク起点
+    englishName: task origin
+    definition: タスクが計画済みの作業、登録簿の項目、ジョブ実行のどこから生じたかを示す区分。
+    notes: "`TaskOrigin` は `schedule`・`register`・`job` を区別する。作業範囲と状態管理は起点ごとの規約に従い、すべてを Schedule の状態として扱わない。"
+    category: tm-execution
+    relatedTerms: [tm-job-run, tm-worktree]
+    source: "`docs/specdojo/schemas/v1/exec-common.schema.yaml` の `TaskOrigin`"
+  - id: tm-task-mode
+    term: 作業モード
+    englishName: task mode
+    definition: タスクで成果物を作成・更新するか、成果物をレビューするかを示す区分。
+    notes: "`TaskMode` の `edit` と `review` に対応する。Job の `task.mode: command` はコマンド実行の種類であり、共通の `TaskMode` には含まれない。"
+    category: tm-execution
+    relatedTerms: [tm-executor, tm-job-agent-task, tm-job-command-task]
+    source: "`docs/specdojo/schemas/v1/exec-common.schema.yaml` の `TaskMode`、`docs/specdojo/schemas/v1/job.schema.yaml` の `task`"
+  - id: tm-task-state
+    term: タスク実行状態
+    englishName: task execution state
+    definition: Schedule のタスクについて、着手前から進行・中断・完了・中止までの進捗を表す状態。
+    notes: "`todo`（未着手）・`ready`（着手可能）・`doing`（実行中）・`blocked`（中断中）・`done`（完了）・`cancelled`（中止）を区別する。着手可能は先行依存がそろったことから求める。成果物の文書成熟度とは別のもの。"
+    category: tm-execution
+    relatedTerms: [tm-claim, tm-task-completion, tm-task-block, tm-pipeline-stage]
+    source: "[[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]]"
+  - id: tm-claim
+    term: claim
+    englishName: claim
+    aliases: [着手宣言, クレーム]
+    definition: 着手可能なタスクの作業権限を担当アクターが確保し、実行中として記録する操作。
+    notes: CLI は `exec claim`。状態追跡する自動実行では runner が記録する。plan の生成や worktree の準備だけではclaim にならない。
+    category: tm-execution
+    relatedTerms: [tm-task-state, tm-task-release, tm-runner]
+    source: "[[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]]、[[clis-exec-commands|CLI仕様（exec コマンド群）]]"
+  - id: tm-task-completion
+    term: complete
+    englishName: complete
+    aliases: [タスク完了報告]
+    definition: 実行中のタスクの作業完了を記録し、後続タスクの依存充足に用いる操作。
+    notes: CLI は `exec complete`。状態追跡する自動実行では executor の成功、result の確認、親検証・統合の成功後に runner が記録する。成果物の受入承認・文書成熟度の昇格は人間が別に判断する。
+    category: tm-execution
+    relatedTerms: [tm-task-state, tm-executor-completion, tm-parent-validation, tm-integration]
+    source: "[[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]]、[[sf-task-execution|システム化機能（タスク実行）]]"
+  - id: tm-task-block
+    term: block
+    englishName: block
+    aliases: [タスク中断]
+    definition: 障害・外部依存・確認待ちなどで実行中のタスクを一時停止し、理由を記録する操作。
+    notes: CLI は `exec block`。恒久的な中止と区別し、中断中の作業は再開またはrelease の対象となる。
+    category: tm-execution
+    relatedTerms: [tm-task-state, tm-task-unblock, tm-task-release, tm-task-cancel]
+    source: "[[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]]"
+  - id: tm-task-unblock
+    term: unblock
+    englishName: unblock
+    aliases: [タスク中断解除, 再開要求]
+    definition: 中断中のタスクを実行中へ戻し、作業の再開を記録する操作。
+    notes: CLI は `exec unblock`。保存済みの成果・段状態から処理を続ける `exec resume` と区別する。
+    category: tm-execution
+    relatedTerms: [tm-task-block, tm-execution-resume]
+    source: "[[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]]、[[clis-exec-commands|CLI仕様（exec コマンド群）]]"
+  - id: tm-task-release
+    term: release
+    englishName: release
+    aliases: [着手解放]
+    definition: 実行中または中断中のタスクの着手を解放し、先行依存に応じた着手前の状態へ戻す操作。
+    notes: CLI は `exec release`。タスクを恒久的に中止する操作ではない。
+    category: tm-execution
+    relatedTerms: [tm-claim, tm-task-state, tm-task-cancel]
+    source: "[[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]]"
+  - id: tm-task-reopen
+    term: reopen
+    englishName: reopen
+    aliases: [タスク完了訂正, タスク差し戻し]
+    definition: 人間の要求で完了タスクを着手前へ戻し、完了判断を訂正する操作。
+    notes: CLI は `exec reopen`。過去の完了記録を残し、後続タスクの進捗を含む許可条件は状態定義に従う。追加作業を新しいタスクにする場合と区別する。
+    category: tm-execution
+    relatedTerms: [tm-task-completion, tm-task-state]
+    source: "[[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]]、[[clis-exec-commands|CLI仕様（exec コマンド群）]]"
+  - id: tm-task-cancel
+    term: cancel
+    englishName: cancel
+    aliases: [タスク中止]
+    definition: 着手前のタスクを不要または実行不能と判断し、恒久的な中止を記録する操作。
+    notes: CLI は `exec cancel`。実行中・中断中は先に release する。中止は先行タスクの完了の代わりにならない。
+    category: tm-execution
+    relatedTerms: [tm-task-block, tm-task-release, tm-task-state]
+    source: "[[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]]"
+  - id: tm-worktree
+    term: worktree
+    englishName: worktree
+    aliases: [隔離作業ツリー, ワークツリー]
+    definition: タスクの変更をほかの作業から分離し、検証・統合・回復の単位とする Git の作業場所。
+    notes: 失敗時は成果と再開に必要な記録を保持する。タスク起点と実行方式によって利用の有無が異なる。
+    category: tm-execution
+    relatedTerms: [tm-integration, tm-execution-resume]
+    source: "[[sf-task-execution|システム化機能（タスク実行）]]、`docs/specdojo/schemas/v1/exec-common.schema.yaml` の `TaskOrigin`"
+  - id: tm-runner
+    term: runner
+    englishName: runner
+    aliases: [実行制御主体, ランナー]
+    definition: agent やコマンドの起動、証跡収集、親検証、実行状態と統合の制御を担う仕組み。
+    notes: reporter の文章から完了可否を推測せず、証跡に基づく変更一覧・検証結果・停止理由を管理する。
+    category: tm-execution
+    relatedTerms: [tm-executor, tm-reporter, tm-parent-validation, tm-integration]
+    source: "[[sf-task-execution|システム化機能（タスク実行）]]、[[prj-0001:pjr-gbev-exec-reporter-machine-facts|reporter の事実項目の機械生成]]"
+  - id: tm-executor
+    term: executor
+    englishName: executor
+    aliases: [作業遂行者, エグゼキューター]
+    definition: 実行計画に従う成果物の編集またはレビューと、担当する検証を行う agent の役割。
+    notes: pipeline では result の直接更新とタスク状態の記録を担当しない。reporter を伴わない単独の Job 実行では result も担当する。
+    category: tm-execution-pipeline
+    relatedTerms: [tm-task-mode, tm-reporter, tm-executor-completion]
+    source: "[[sf-task-execution|システム化機能（タスク実行）]]、`docs/specdojo/schemas/v1/job.schema.yaml` の `agentTask.agent`"
+  - id: tm-reporter
+    term: reporter
+    englishName: reporter
+    aliases: [実行報告者, レポーター]
+    definition: 実行計画と証跡を読み、実施内容・変更説明・申し送りを result の文章として構成する agent の役割。
+    notes: 変更パス・検証結果・停止理由などの事実は runner の記録を正とする。報告の生成成功だけではタスク完了や統合成功にならない。
+    category: tm-execution-pipeline
+    relatedTerms: [tm-executor, tm-runner, tm-execution-handoff]
+    source: "[[sf-task-execution|システム化機能（タスク実行）]]、[[prj-0001:pjr-gbev-exec-reporter-machine-facts|reporter の事実項目の機械生成]]"
+  - id: tm-execution-pipeline
+    term: pipeline
+    englishName: executor/reporter pipeline
+    aliases: [実行パイプライン]
+    definition: executor による作業と reporter による証跡に基づく報告を別の役割へ分け、runner が検証と統合を制御する実行方式。
+    notes: Job の agent 指名では reporter を伴うとこの方式になり、伴わない場合は executor が単独で実行する。親検証は段状態の `stages` に独立した段としては記録しない。
+    category: tm-execution
+    relatedTerms: [tm-pipeline-stage, tm-pipeline-state, tm-parent-validation]
+    source: "`docs/specdojo/schemas/v1/pipeline-state.schema.yaml`、`docs/specdojo/schemas/v1/job.schema.yaml` の `agentTask.agent`、[[sf-task-execution|システム化機能（タスク実行）]]"
+  - id: tm-pipeline-stage
+    term: pipeline の段
+    englishName: pipeline stage
+    aliases: [実行段]
+    definition: パイプライン内で担当・試行回数・開始終了時刻・成果参照を分けて進捗を管理する処理単位。
+    notes: 段状態の `stages.executor`・`stages.reporter`・`stages.integrate` に対応する。段の `status` はタスク実行状態や証跡内の executor のプロセス結果（`stage.status`）と区別する。
+    category: tm-execution-pipeline
+    relatedTerms: [tm-executor, tm-reporter, tm-integration, tm-executor-completion]
+    source: "`docs/specdojo/schemas/v1/pipeline-state.schema.yaml` の `stages`、`docs/specdojo/schemas/v1/exec-evidence.schema.yaml` の `stage`"
+  - id: tm-pipeline-state
+    term: pipeline の状態
+    englishName: pipeline state
+    aliases: [実行段状態記録]
+    definition: 一回の実行に属する各段の進捗と再開点を runner が保存する回復用の記録。
+    notes: タスクと実行を `task_id`・`run_id` で対応付ける。旧記録では統合段が省略される場合があり、段状態の形式と互換性は schema を正本とする。
+    category: tm-execution-pipeline
+    relatedTerms: [tm-pipeline-stage, tm-execution-resume]
+    source: "`docs/specdojo/schemas/v1/pipeline-state.schema.yaml`"
+  - id: tm-parent-validation
+    term: 親の検証
+    englishName: parent validation
+    aliases: [親検証]
+    definition: executor の成功後に親の runner が実行し、成果の検証結果を証跡へ追加する検査。
+    notes: "証跡では `validations.source: runner` と検査の `id` で識別する。executor の同じ検査の申告で置き換えない。検証失敗を含む result の作成と、統合を許可する判断は分ける。"
+    category: tm-execution-pipeline
+    relatedTerms: [tm-runner, tm-validation-result, tm-integration]
+    source: "`docs/specdojo/schemas/v1/exec-evidence.schema.yaml` の `validations`、[[sf-task-execution|システム化機能（タスク実行）]]"
+  - id: tm-validation-result
+    term: 検証結果
+    englishName: validation result
+    aliases: [実行検査結果]
+    definition: 実行した検査の成否、未実行、適用外、または sandbox 外での確認が必要なことを区別して残す証跡の要素。
+    notes: "成功・失敗のほか、流さなかった（`not_run`）、当てはまらない（`not_applicable`、理由を付ける）、人が確かめる（`requires_human`、sandbox で流せない検査だけ）を区別する。検査の出力は記録へのリンクで残す。"
+    category: tm-execution-pipeline
+    relatedTerms: [tm-parent-validation, tm-executor-completion]
+    source: "`docs/specdojo/schemas/v1/exec-evidence.schema.yaml` の `validations`・`log_refs`"
+  - id: tm-executor-completion
+    term: executor の完了報告
+    englishName: executor completion status
+    aliases: [作業完了申告]
+    definition: executor が計画で要求された作業を完了したか、残作業があるかをプロセスの成否と別に示す申告。
+    notes: "`completion_status` の `complete`・`incomplete` に対応する。未完了では正常終了でも統合へ進まず、残作業を申し送る。欄を省略した旧報告の扱いは schema を正本とする。"
+    category: tm-execution-pipeline
+    relatedTerms: [tm-task-completion, tm-execution-handoff, tm-pipeline-stage]
+    source: "`docs/specdojo/schemas/v1/exec-evidence.schema.yaml` の `completion_status`、[[prj-0001:pjr-xte6-executor-incomplete-report|executor の未完了報告]]"
+  - id: tm-execution-handoff
+    term: 申し送り
+    englishName: handoff
+    aliases: [実行申し送り, 引き継ぎ事項]
+    definition: 未解決の判断・保護設定の変更提案・次の作業を、後続の報告や再開へ引き渡す記録。
+    notes: 証跡の `handoff` に対応する。作業が残る場合は完了申告と整合させ、申し送りの記載だけで完了扱いにしない。
+    category: tm-execution-pipeline
+    relatedTerms: [tm-reporter, tm-executor-completion, tm-execution-resume]
+    source: "`docs/specdojo/schemas/v1/exec-evidence.schema.yaml` の `handoff`、[[sf-task-execution|システム化機能（タスク実行）]]"
+  - id: tm-target-coverage
+    term: 実行対象の対応状況
+    englishName: target coverage
+    definition: 計画に含まれる各対象を変更したか、変更不要と判断したかを理由とともに示す申告。
+    notes: 証跡の `target_coverage` に対応する。再開時も元の対象範囲を引き継ぐ。今回の試行で実際に変更したファイルの記録（`attempt_changes`）とは区別する。
+    category: tm-execution-pipeline
+    relatedTerms: [tm-executor, tm-execution-resume]
+    source: "`docs/specdojo/schemas/v1/exec-evidence.schema.yaml` の `target_coverage`・`attempt_changes`"
+  - id: tm-integration
+    term: 実行成果の統合
+    englishName: integrate
+    aliases: [統合]
+    definition: 検証済みで許可された成果と実行記録を runner が commit・merge し、隔離作業を片付ける処理。
+    notes: "許可された成果だけを統合する。複数のリポジトリにまたがるときは、リポジトリごとに結果を残す。統合先を指定した場合は、再開のときも同じ統合先を使う。"
+    category: tm-execution-pipeline
+    relatedTerms: [tm-runner, tm-worktree, tm-task-completion]
+    source: "`docs/specdojo/schemas/v1/pipeline-state.schema.yaml` の `integrateStage`・`repoIntegration`、[[sf-task-execution|システム化機能（タスク実行）]]"
+  - id: tm-execution-resume
+    term: resume
+    englishName: resume
+    aliases: [実行再開]
+    definition: 保存済みの成果・証跡・段状態を引き継ぎ、停止した実行を必要な段から続ける操作。
+    notes: Schedule では `exec resume` を使う。reporter だけの失敗では executor の編集を繰り返さず、証跡から報告を再開する。起点・停止段ごとの条件は実行仕様に従う。
+    category: tm-execution
+    relatedTerms: [tm-pipeline-state, tm-worktree, tm-execution-handoff, tm-task-unblock]
+    source: "[[sf-task-execution|システム化機能（タスク実行）]]、[[clis-exec-commands|CLI仕様（exec コマンド群）]]"
+  - id: tm-job-run
+    term: job run
+    englishName: job run
+    aliases: [ジョブ実行, ジョブラン]
+    definition: ジョブ定義と解決済みの入力から具体化され、冪等キーで同じ論理実行を識別する一件の実行単位。
+    notes: ジョブ定義自体は [[gl-common|用語集（共通）]] の `tm-job` を参照する。起動は `exec run --job` または routine から行い、実行ごとの試行履歴と結果を管理する。結果の成功は受入承認・統合完了を単独では保証しない。
+    category: tm-execution
+    relatedTerms:
+      [tm-job-idempotency-key, tm-job-checkpoint, tm-job-agent-task, tm-job-command-task]
+    source: "[[sysd-job-execution|Job実行設計]]、[[stsd-job-run|ステータス定義（Job Run）]]、`docs/specdojo/schemas/v1/exec-common.schema.yaml` の `TaskOrigin`"
+  - id: tm-job-input
+    term: ジョブ入力
+    englishName: job input
+    definition: ジョブ実行を具体化するために、ジョブ定義の型・既定値・値域に従って解決するパラメーター。
+    notes: "`inputs` で定義する。型によって列挙値の種類が異なり、数値範囲は整数入力に用いる。checkpoint からの引き継ぎは `from_checkpoint` で指定する。型別の条件は schema を正本とする。"
+    category: tm-job-run
+    relatedTerms: [tm-job-idempotency-key, tm-job-checkpoint]
+    source: "`docs/specdojo/schemas/v1/job.schema.yaml` の `inputs`、[[sysd-job-execution|Job実行設計]]"
+  - id: tm-job-agent-task
+    term: エージェント委譲ジョブ
+    englishName: agent task
+    definition: 成果物の編集またはレビューを、作業範囲と指示を伴って agent に委譲するジョブの実行種類。
+    notes: "`task.mode` の `edit`・`review` に対応する。対象成果物（`targets`）またはパス（`paths`）で範囲を示す。agent の指名と reporter を伴う場合の構成条件は schema を正本とする。"
+    category: tm-job-run
+    relatedTerms: [tm-task-mode, tm-executor, tm-reporter, tm-job-command-task]
+    source: "`docs/specdojo/schemas/v1/job.schema.yaml` の `agentTask`"
+  - id: tm-job-command-task
+    term: コマンド実行ジョブ
+    englishName: command task
+    aliases: [command Job]
+    definition: 決定論的な手順の入口となるコマンドを runner が直接実行するジョブの実行種類。
+    notes: "`task.mode: command` と `task.command` に対応する。必要な場合だけ実行前の判定と実行後の agent 分析を組み合わせる。部分成功として扱う終了コードは `partial_exit_code` で宣言し、任意の異常終了を成功に読み替えない。"
+    category: tm-job-run
+    relatedTerms: [tm-runner, tm-job-precondition, tm-job-analysis]
+    source: "`docs/specdojo/schemas/v1/job.schema.yaml` の `commandTask`、[[sysd-job-execution|Job実行設計]]"
+  - id: tm-job-precondition
+    term: ジョブ事前判定
+    englishName: precondition
+    definition: コマンド実行ジョブの Run を生成する前に、対象がなく実行不要かを判定する処理。
+    notes: "`task.precondition` に対応する。出力または終了コードを用いるスキップ条件は `skip_when` に定義する。Run 作成前のスキップと、作成後の処理不要（`noop`）は区別する。"
+    category: tm-job-run
+    relatedTerms: [tm-job-command-task, tm-job-run]
+    source: "`docs/specdojo/schemas/v1/job.schema.yaml` の `commandTask.precondition`、[[sysd-job-execution|Job実行設計]]、[[stsd-job-run|ステータス定義（Job Run）]]"
+  - id: tm-job-analysis
+    term: ジョブ結果分析
+    englishName: analysis
+    definition: コマンド実行後の結果について、必要な判断だけを指名した agent へ委譲する処理。
+    notes: "`task.analysis` に agent と判断内容を指定する。決定論的な手順は `task.command` の側に置く。"
+    category: tm-job-run
+    relatedTerms: [tm-job-command-task, tm-executor]
+    source: "`docs/specdojo/schemas/v1/job.schema.yaml` の `commandTask.analysis`、[[sysd-job-execution|Job実行設計]]"
+  - id: tm-job-review
+    term: Job の統合前 review
+    englishName: job review declaration
+    aliases: [ジョブ統合前レビュー宣言]
+    definition: ジョブの出力を worktree で commit し、レビューで受理された場合だけ統合することを定める宣言。
+    notes: "agent に任せる Job にもコマンドの Job にも使え、手動でも routine からでも同じに働く。review の agent も Job の側で指名する。"
+    category: tm-job-run
+    relatedTerms: [tm-worktree, tm-integration, tm-job-agent-task, tm-job-command-task]
+    source: "`docs/specdojo/schemas/v1/job.schema.yaml` の `review`、`docs/specdojo/schemas/v1/routine.schema.yaml` の `jobAction.commit`"
+  - id: tm-job-idempotency-key
+    term: ジョブ冪等キー
+    englishName: idempotency key
+    definition: 同じジョブへの要求が同じ論理実行に当たるかを識別し、重複処理を防ぐためのキー。
+    notes: ジョブ定義の `run.idempotency_key` で規則を定める。同一 Run 内の再試行とは管理単位を分ける。
+    category: tm-job-run
+    relatedTerms: [tm-job-run, tm-job-input]
+    source: "`docs/specdojo/schemas/v1/job.schema.yaml` の `run`、[[sysd-job-execution|Job実行設計]]"
+  - id: tm-job-checkpoint
+    term: checkpoint
+    englishName: checkpoint
+    aliases: [ジョブ継続位置, チェックポイント]
+    definition: 次回のジョブ入力へ引き継ぐために、許可された結果の実行から保存する処理済みの位置や値。
+    notes: ジョブ定義の `checkpoint` に保存値を定め、`advance_on` で継続位置を進める結果を指定する。成功・処理不要が対象となり、部分成功を成功に読み替えない。更新条件は schema と Job の状態定義を正本とする。
+    category: tm-job-run
+    relatedTerms: [tm-job-input, tm-job-run, tm-pipeline-state]
+    source: "`docs/specdojo/schemas/v1/job.schema.yaml` の `checkpoint`、[[stsd-job-run|ステータス定義（Job Run）]]"
+  - id: tm-routine-trigger
+    term: 定期実行の起動条件
+    englishName: routine trigger
+    definition: 定期実行定義について、経過時間または暦上の予定により実行機会を選ぶための条件。
+    notes: "一定の間隔（`interval`）か、暦の予定（`cron` とタイムゾーン）のどちらかで決める。定期実行定義そのものは [[gl-common|用語集（共通）]] の routine を参照する。"
+    category: tm-execution
+    relatedTerms: [tm-routine-action, tm-routine-policy]
+    source: "`docs/specdojo/schemas/v1/routine.schema.yaml`、[[stsd-routine-run|ステータス定義（定期処理の実行結果）]]"
+  - id: tm-routine-action
+    term: 定期実行アクション
+    englishName: routine action
+    definition: 定期実行の機会に、Job への委譲または読み取り・派生生成用コマンドの直接起動を指定する実行単位。
+    notes: "Job に任せる（`kind: job`）か、agent を使わない specdojo のコマンドを直接流す（`kind: specdojo`）かを選ぶ。複数を並べることもできる。統合の前の review は「Job の統合前 review」を参照する。"
+    category: tm-execution
+    relatedTerms: [tm-routine-trigger, tm-job-run, tm-job-review]
+    source: "`docs/specdojo/schemas/v1/routine.schema.yaml` の `action`、[[prj-0001:pjr-2jye-dashboard-daily-briefing|dashboard 更新用の直接アクションの決定記録]]"
+  - id: tm-routine-policy
+    term: routine の実行方針
+    englishName: routine policy
+    aliases: [定期実行の機会処理方針]
+    definition: 定期実行で取りこぼした予定と重複起動の扱いを宣言する方針。
+    notes: "取りこぼした予定（`missed_run`）と、前の回がまだ動いているときの重複（`overlap`）の扱いを決める。別の実行が lock を持っているために skip した回は、取りこぼしとして流し直されない。"
+    category: tm-execution
+    relatedTerms: [tm-routine-trigger, tm-routine-action]
+    source: "`docs/specdojo/schemas/v1/routine.schema.yaml` の `policy`、[[stsd-routine-run|ステータス定義（定期処理の実行結果）]] の検討項目 `M-02`"

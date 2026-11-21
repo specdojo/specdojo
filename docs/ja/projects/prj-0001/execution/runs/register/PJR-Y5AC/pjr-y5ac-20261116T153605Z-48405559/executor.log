@@ -1,0 +1,32 @@
+品質管理計画（`pm-quality-management-plan.md`）に、2026-11-16 の再 grade の指摘 F001〜F005 と未達の DC-003 を取り込みました。直したのは指摘があった箇所だけで、章構成と frontmatter は変えていません。再 grade はまだ流していないので、指摘が解消したかは未確認です。
+
+**直した内容**
+
+| 指摘 | 対応 |
+| --- | --- |
+| F002・F003（試行証跡の形式と確認手順が未決） | 「レビューと証跡」に記録の様式を定めた。条件 ID ごとに 1 件とし、既存の証跡項目に測定方法の参照・測定値・合格／未達／保留の区分を足す。確認の順序（`BA` が記録をそろえ、`QE` が照合し、`PM` が判定材料にまとめ、`PO` が判断）と「公開後価値の観測結果」のレビュー行も加えた。未決表には保存先 2 件だけを `_UNDECIDED_:` で残した。 |
+| F004・F005（公開後の価値の失敗に是正の流れがない） | 価値不適合の行を「初期公開前」と「公開後（SC-04〜SC-06 の未達）」に分けた。公開後の行は次のとおり。 |
+| F001（minor、決定の遅れへの対応） | 決定時期を Schedule の節目に置くこと、未決のときに保留列に当たるタスクとゲートを特定することを `PM` の責任として書いた。 |
+
+公開後の価値不適合の行の中身:
+
+- **是正の証跡:** `BA` が原因と是正の証跡を整え、`PM` が改善策を Schedule に置く。
+- **再判定条件:** 未達の SC を同じ測定方法で、判定時期内の次の観測時点に再確認する。
+- **責任:** `QE` が照合し、`PO` が継続を判断する。
+
+**決めた点（確定は人が 140 で行う）**
+
+- **status:** `ready` のまま直しました。理由は前回と同じで、章構成を変えない補強だからです。
+- **様式と順序:** `PO` の決定を待たずに本書で定めました。様式は既存の証跡項目から、順序は管理計画の判断ゲートと RACI に合わせて組んでおり、新しい事実は加えていません。140 で承認が要ります。
+- **保存先:** 根拠となる資料がないので、パスは書かず未決のまま残しました。
+- **観測時点:** SC-04〜SC-06 の観測時点は成功条件の判定時期に従うとし、本書では数値を決めていません。
+
+**個票**
+`pjr-y5ac-pm-quality-management-plan-rework-grade-findings.md` の対応結果に上の内容を書きました。作業内容の表は No.3 を done にし、No.4（grade し直し）は orchestrator が流すので open のまま残しています。
+
+**検証**
+`npm run validate:catalog` と `npm run validate:history-links` は通りました（catalog は他の文書について WARN を出しますが成功です）。lint 類は親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"Incorporated re-grade findings F001-F005 and unmet DC-003 into pm-quality-management-plan (record format and check order, post-release value review row, split value-nonconformity rows, undecided table narrowed to storage locations, PM schedule responsibility) and updated the PJR-Y5AC ticket response and work table; re-grade left open for orchestrator.","handoff":["status: kept `ready` while revising (same reason as the previous round: content reinforcement without changing chapter structure or frontmatter); final confirmation by a human at 140.","Executor decided the trial / post-release value record format (one record per condition ID with measurement-method reference, measured value, pass/fail/hold) and the check order (BA -> QE -> PM -> PO) in the plan itself, derived from existing evidence items, pm-plan decision gates and RACI; PO should approve this at 140.","Storage locations for trial records and post-release value records remain `_UNDECIDED_:` because no declared source supports a concrete path.","SC-04 to SC-06 observation timing is deferred to the success criteria's judgment periods; no numeric values were added.","Ticket work-table row 4 (re-run `grade run --target deliverable` and record result) left open for the orchestrator; it cannot run from the executor sandbox."],"validations":[{"command":"npm run validate:catalog","status":"passed","summary":"exit 0 (only pre-existing WARNs for unrelated product docs)"},{"command":"npm run validate:history-links","status":"passed","summary":"exit 0; edited ticket valid"},{"command":"npx prettier --write docs/ja/projects/prj-0001/030-project-management/pm-quality-management-plan.md docs/ja/projects/prj-0001/controls/project-register/pjr-y5ac-pm-quality-management-plan-rework-grade-findings.md","status":"passed","summary":"formatted both changed Markdown files"},{"command":"grade run --target deliverable","status":"requires_human","summary":"Re-grade must be run by the orchestrator on the host; ticket row 4 left open"}]}
+</specdojo_executor_evidence>

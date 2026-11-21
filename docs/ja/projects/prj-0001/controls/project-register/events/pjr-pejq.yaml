@@ -1,0 +1,123 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_344f0cdd514847c5b0d6c36eaf550f57
+  ts: "2026-11-15T12:21:54Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: cdsd-execution を grade の指摘で手直しする（後回しの 4 つのデータストア）
+    - field: description
+      from: ""
+      to: 最新の grade の指摘を取り込み、4 つのデータストアと検証の基準を書く
+    - field: input
+      from: ""
+      to: '["T-BUSINESS-SPECS-KATA-2-cdsd-execution-140 で差し戻し（indie が 2026-11-15 に判断、PJR-TN43）。grade は needs-work 65 点で完了条件 0/3","主な指摘: 実行状態・plan と result・evidence・worktree の 4 つのデータストアが `_TODO_` のまま。技術的な制約と正本・派生の区別、検証の合否の基準がない"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-11-15"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: fully-guided
+    - field: targets
+      from: ""
+      to: '["cdsd-execution"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: cdsd
+- v: 1
+  id: reg_3f02f5b8bfd345c4a8796715ad23c5f9
+  ts: "2026-11-15T18:42:48Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_344f0cdd514847c5b0d6c36eaf550f57
+- v: 1
+  id: reg_2701281ec9e5410e81dbcdcde13b51a7
+  ts: "2026-11-15T19:27:41Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_3f02f5b8bfd345c4a8796715ad23c5f9
+- v: 1
+  id: reg_90c1c5c0a51e4ae29bd6718fc92f812a
+  ts: "2026-11-16T15:04:39Z"
+  action: start
+  actor: opus-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_2701281ec9e5410e81dbcdcde13b51a7
+- v: 1
+  id: reg_12ea7bc280bb4c13b2c5270d9fe18268
+  ts: "2026-11-16T15:11:09Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_90c1c5c0a51e4ae29bd6718fc92f812a
+- v: 1
+  id: reg_6934c4561ec344898b5163e3b0b40d7a
+  ts: "2026-11-16T16:06:22Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 2 回目の手直しの統合後に再 grade し、完了条件をすべて満たして pass になったことを grade の結果と個票の対応結果で確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-17"
+    - field: conclusion
+      from: "-"
+      to: cdsd-execution を grade の指摘で直し、再 grade で pass（95 点、完了条件 3/3）になった。成果物の確定は人の 140 で行う
+  previous_event_id: reg_12ea7bc280bb4c13b2c5270d9fe18268

@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f6db75ecc23440af8b5f6536db190e6c
+  ts: "2026-11-03T05:00:15Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: project の移行に備えた点検を起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: project を別リポジトリへ移す前の読むだけの点検を作る
+    - field: description
+      from: ""
+      to: project を別リポジトリへ移す前に、実行中の項目・exec の worktree とブランチ・リポジトリをまたぐリンク・写すべき設定を一覧にする、何も書き換えない点検のコマンドを作る
+    - field: input
+      from: ""
+      to: '["利用者は、prj-0002（specdojo-lp の管理）を将来、管理用の別リポジトリ（例: specdojo-lp-specdojo）へ移す可能性を考え、安全に移すための機能を用意することを求めた。全自動の移行コマンドは後回しにし、読むだけの点検・手順のガイド・リポジトリをまたぐリンクの 3 件に分けると判断した（2026-11-03）","点検する項目の候補: 実行中・waiting の登録簿の項目と doing の schedule タスク、exec の worktree とブランチ（exec/`<project-id>-``*`）、統合先のブランチ、定期実行の設定、移す project とほかの project の間の wikilink（prj-0002 から prj-0001 の個票へ 10 種類ある）、写すべき設定（specdojo.config.json の project の項目、repos の相対パス、.specdojo の名簿と exec-defaults）、Kata の参照元（移した後は npm パッケージで版を固定する）（2026-11-03）","コマンドの名前の例は specdojo project move --check。名前と出力の形は executor が決め、理由を記録してよい（2026-11-03）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-11-03"
+    - field: due
+      from: ""
+      to: "2026-12-31"
+    - field: derived_from
+      from: ""
+      to: '["PJR-8HCB"]'
+    - field: commit_type
+      from: ""
+      to: feat
+    - field: commit_scope
+      from: ""
+      to: project

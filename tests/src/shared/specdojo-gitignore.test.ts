@@ -79,6 +79,7 @@ describe("mergeGitignore", () => {
         "dist/index.html",
         "cache/data.json",
         "mermaid/1234abcd.svg",
+        "d2/1234abcd.svg",
         "kata-staging/docs/index.md",
       ].map((file) => `.vitepress/${file}`);
       const ignored = execFileSync("git", ["check-ignore", "--stdin"], {

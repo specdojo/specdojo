@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-Y5XH",
+  "run_id": "pjr-y5xh-20261115T181019Z-b95779e2",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-15T18:14:20.447Z",
+    "completed_at": "2026-11-15T18:19:21.339Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/030-project-management/pm-raci.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-y5xh.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-y5xh-pm-raci-rework-grade-findings.md",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/030-project-management/pm-raci.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-y5xh-pm-raci-rework-grade-findings.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 3,
+    "summary": ".../prj-0001/030-project-management/pm-raci.md     | 69 +++++++++++++++-------\n .../pjr-y5xh-pm-raci-rework-grade-findings.md      | 12 +++-\n 2 files changed, 58 insertions(+), 23 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "passed",
+      "summary": "exit 0。今回の変更と無関係な既存の `based_on` 未作成の WARN のみ"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "exit 0。個票に Markdown リンクの違反なし"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/projects/prj-0001/030-project-management/pm-raci.md docs/ja/projects/prj-0001/controls/project-register/pjr-y5xh-pm-raci-rework-grade-findings.md",
+      "status": "passed",
+      "summary": "All matched files use Prettier code style"
+    },
+    {
+      "source": "executor",
+      "command": "specdojo grade run --target deliverable",
+      "status": "requires_human",
+      "summary": "直した後の再 grade。agent CLI を起動し利用枠を消費するため sandbox では実行していない。人またはオーケストレーターが実行し、結果を個票に追記する"
+    }
+  ],
+  "final_message": "pm-raci を grade の指摘 F001〜F020 に沿って直し、個票 PJR-Y5XH の対応結果に実施内容・status の扱い・判断理由を書いた。完了条件のうち再 grade（`grade run --target deliverable`）は agent CLI を使うため executor の sandbox では実行できず、人またはオーケストレーターに残している。",
+  "completion_status": "incomplete",
+  "handoff": [
+    "`status` の扱い: `pm-raci` は `ready` のまま直した。修正は指摘箇所に限った加筆と行の分割であり、`ready` への昇格は人だけが行うため、`draft` に戻すと 140 で再昇格の手間が増える。確定は人が 140 で行う。",
+    "Launch Track Strategy を独立行「Launch スケジュール戦略定義（`sch-strategy-launch`）」に分け、`ARC=R`・`PM=A` とした。grade の指摘（F006・F014）にある `sch-track-planning` の `owner=ARC` を正とした。Schedule のファイルは plan で参照してよい文書に含まれないため、実際の値は確認していない。",
+    "成果物カタログの作業別の主担当（選定・`overview`・`done_criteria` は `BA`、`depends_on`・rulebook・配置は `ARC`）と、戦略定義の `A=PM` は、組織定義の責任領域から executor が決めた。",
+    "旧「成果物作成」行を「成果物作成フローの運営」に限定した結果、`DEV`・`UX` はどの行でも `R` を持たない。実装・体験の成果物を計画した時点で行を追加する旨を本文に書いた。",
+    "次のアクション: `grade run --target deliverable` で `prj-0001:pm-raci` を grade し直し、結果を個票 PJR-Y5XH の対応結果に追記する（agent CLI を使うため人またはオーケストレーターが実行する）。"
+  ],
+  "block_reason": "executor reported incomplete: pm-raci を grade の指摘 F001〜F020 に沿って直し、個票 PJR-Y5XH の対応結果に実施内容・status の扱い・判断理由を書いた。完了条件のうち再 grade（`grade run --target deliverable`）は agent CLI を使うため executor の sandbox では実行できず、人またはオーケストレーターに残している。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-Y5XH/pjr-y5xh-20261115T181019Z-b95779e2/executor.attempt-1.log",
+      "bytes": 6128,
+      "truncated": false
+    }
+  ]
+}

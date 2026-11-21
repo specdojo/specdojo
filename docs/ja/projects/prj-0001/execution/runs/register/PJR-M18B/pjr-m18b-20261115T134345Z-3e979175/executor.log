@@ -1,0 +1,24 @@
+PJR-M18B の変更は終わりました。schedule の review タスクは、grade がない、または最新でないまま done にならなくなりました。検証では、対象を絞ったユニットテスト 3 ファイル・39 件が通っています。完全な `typecheck`・`lint:ts`・`test:unit`・`lint:md`・統合テストは、この後に親 runner が実行します。
+
+**変更内容**
+- **grade の再試行**（`src/review/grade.ts`）: review の前の grade が失敗したら、試行ごとに別の run ID を使い、合計 3 回まで試します。3 回とも失敗した場合は試行回数も返し、review plan には「この review タスクは完了にせず blocked にする」と書きます。
+- **完了を止める判定**（新規 `src/exec/review-completion.ts`）: 再試行しても grade が失敗した場合と、review の verdict が `grade-stale`・`grade-unavailable`・`changed-during-review` の場合に、次の操作を含む block の理由を返します。
+- **組み込み**（`schedule-task.ts`・`schedule-prepare.ts`・`in-place.ts`）: worktree 実行でも in-place 実行でも、完了の直前にこの判定を呼びます。止める理由があれば done と統合をせずに blocked にし、理由を block イベントと result の `block_reason` に残します。worktree 実行では grade の結果を `PreparedTask.reviewGradeOutcome` で完了の判定まで渡します。
+- **回帰テスト**: 新規 `tests/src/exec/review-completion.test.ts` で、grade の失敗時と `grade-stale` などの verdict のときに blocked になることを確かめています。`tests/src/review/grade.test.ts` には、再試行で成功する場合と 3 回とも失敗する場合を足しました。
+- **文書**: `review-guide.md` と個票の「対応結果」（実施内容・判断した点・残課題・CHANGELOG に書く事項）を書きました。CHANGELOG.md は変えていません。
+
+**判断した点**（個票と `handoff` にも記載）
+- 再試行は合計 3 回としました。形式の誤りは試行ごとにばらつく一方、grade は agent を呼ぶので、回数を増やしすぎないためです。
+- grade が失敗しても review の agent は実行し、完了の段で止めます。agent を 1 回余分に動かす代わりに、変更を小さくしました。
+- done にしない verdict には、`grade-stale` に加えて、同じく保留を表す `grade-unavailable` と `changed-during-review` も含めました。`incomplete` の扱いは変えていません。
+- 判定は schedule のタスクだけに入れました。register の post-review と Job Run の review は、これらの verdict を既に受け入れていないためです。
+
+**残課題**
+- schedule の review タスクを最初から最後まで通すテストはありません。組み込み部分は、型検査とコードを読んで確かめただけです。
+- 既存の統合テスト `worktree-ops.integration.test.ts` の grade 失敗ケースは、再試行が入ったので失敗するまでに 3 回起動します。各試行は別の run ID なので期待値は変わらないはずですが、まだ実行していません。親 runner の結果で確かめてください。
+
+**手元で実行した検証**: 対象を絞った vitest、変更ファイルへの eslint（エラー 0。警告 4 件は以前からある関数の長さ）、`tsc -b`（出力なし）、prettier、markdownlint、`npm run validate:history-links` が通りました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"review の前の grade を合計 3 回まで再試行するようにした。再試行しても失敗した場合と、verdict が grade-stale / grade-unavailable / changed-during-review の場合は、schedule の review タスクを done にせず blocked にし、理由と次の操作を block の理由と result の block_reason に残す。回帰テスト・review-guide・個票の対応結果も更新した。","handoff":["再試行の回数は合計 3 回（REVIEW_GRADE_MAX_ATTEMPTS）とした。形式の誤りは試行ごとにばらつき、grade は agent を呼ぶため回数を増やしすぎない。各試行は別の run ID（末尾 -a<n>）を使う。","grade が失敗しても review の agent は実行し、完了の段（schedule-task の finalize と in-place の完了処理）で blocked にする。claim の前に止める案は変更が大きくなるため採らなかった。","done にしない verdict は grade-stale に加え、同じく保留を表す grade-unavailable と changed-during-review も含めた。incomplete の扱いは変えていない。","register の post-review と Job Run の review には判定を入れていない。これらの verdict を既に受け入れていないため。","schedule の review タスク全体（runPreparedTask）を通す統合テストはない。判定は単体テストで、組み込みは型検査とコードの確認で確かめた。","tests/src/exec/worktree-ops.integration.test.ts の grade 失敗ケースは、再試行が入ったので失敗するまでに 3 回起動する。各試行は別の run ID なので期待値は変わらない見込みだが、親 runner の test-integration の結果で確かめる必要がある。","CHANGELOG に書く事項は個票の対応結果「CHANGELOG に書く事項」の節に書いた。CHANGELOG.md は変えていない。"],"validations":[{"command":"npx vitest run --config vitest.unit.config.ts tests/src/exec/review-completion.test.ts tests/src/review/grade.test.ts tests/src/exec/review-kata.test.ts","status":"passed","summary":"3 files, 39 tests passed"},{"command":"npx eslint src/exec/review-completion.ts src/review/grade.ts src/exec/run/schedule-task.ts src/exec/run/schedule-prepare.ts src/exec/run/in-place.ts tests/src/exec/review-completion.test.ts tests/src/review/grade.test.ts","status":"passed","summary":"0 errors; 4 existing max-lines-per-function warnings"},{"command":"npx prettier --check (changed ts and md files)","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/guides/review-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-m18b-review-grade-failure-blocks-completion.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"passed","summary":"all history files valid"}]}
+</specdojo_executor_evidence>

@@ -109,6 +109,7 @@ $defs:
         lint-fm,
         lint-md,
         lint-mermaid,
+        lint-d2,
         build,
         format-check,
       ]
@@ -136,7 +137,8 @@ $defs:
             - $ref: "#/$defs/ParentValidationId"
             - type: object
               additionalProperties: false
-              required: [id, repo]
+              required: [id]
+              minProperties: 2
               properties:
                 id:
                   $ref: "#/$defs/ParentValidationId"
@@ -144,8 +146,73 @@ $defs:
                   type: string
                   pattern: "^[a-z0-9-]+$"
                   description: >
-                    Repository name: `project` for the project repository, or a product
-                    repository name from `projects.<id>.repos`.
+                    Repository name: `project` for the project repository (default), or a
+                    product repository name from `projects.<id>.repos`.
+                paths:
+                  type: array
+                  minItems: 1
+                  items:
+                    type: string
+                    minLength: 1
+                  description: >
+                    Glob patterns relative to the assigned repository (`**`, `*`, `?`, `{a,b}`).
+                    The runner runs the validation only when a file the executor changed matches
+                    one of them, and records `not_applicable` otherwise. Without `paths`, or when
+                    the change set is unknown or truncated, or when the integration targets were
+                    merged into the worktree, the validation always runs.
+      post_integration:
+        type: array
+        uniqueItems: true
+        description: >
+          Fixed actions run in the integration target checkout after its merge commit, while
+          retaining the exec/lifecycle lock. Failure is recorded without undoing integration.
+          Each ID may appear only once; arbitrary commands, arguments and repositories are rejected.
+        items:
+          type: object
+          additionalProperties: false
+          required: [id, paths]
+          properties:
+            id:
+              type: string
+              enum: [build-dist]
+              description: Runs npm run build with fixed argv (no shell).
+            paths:
+              type: array
+              minItems: 1
+              items:
+                type: string
+                pattern: "\\S"
+              description: >
+                Repository-relative globs (`**`, `*`, `?`, `{a,b}`) selecting the action from
+                the actual integration commit diff, including deletions and both rename paths.
+      commit_hook_skips:
+        type: array
+        description: >
+          Git hook commands (lefthook command names) that the runner's integration commit skips
+          through `LEFTHOOK_EXCLUDE` when every parent validation in `covered_by` was recorded as
+          passed for the run. Manual commits are not affected.
+        items:
+          type: object
+          additionalProperties: false
+          required: [hook, covered_by]
+          properties:
+            hook:
+              type: string
+              pattern: "^[A-Za-z0-9_.-]+$"
+            covered_by:
+              type: array
+              minItems: 1
+              items:
+                type: string
+                minLength: 1
+              description: Labels (`<id>` or `<repo>:<id>`) from `parent_validations`.
+      mechanical_result:
+        type: boolean
+        default: false
+        description: >
+          When true, the runner writes an edit result from executor evidence without invoking the
+          reporter agent if the outcome is complete and the executor supplied `final_message`.
+          Review results, blocked outcomes, and rendering failures still use the reporter.
       parent_validation_concurrency:
         type: integer
         minimum: 1
@@ -182,6 +249,15 @@ $defs:
           Maximum number of `exec run` processes that may run at the same time for one project,
           counting the primary run and every `exec run --register --worktree --join` run
           (default 4). 1 disables `--join`.
+      git_index_lock_wait_seconds:
+        type: integer
+        minimum: 0
+        default: 1200
+        description: >
+          Seconds the runner's Git operations (integration and trailing-record commits) wait for
+          another process, such as a manual commit's pre-commit hook, to release index.lock before
+          failing (default 1200). After the first short retries, the wait stops early when the
+          lock file remains but no git process is running (a stale lock); the lock is never removed.
 
   ProviderOverride:
     type: object
@@ -249,9 +325,16 @@ $defs:
       by_proficiency:
         type: object
         minProperties: 1
-        description: "Variables selected by the member's proficiency."
+        description: >
+          Variables selected by the member's proficiency. Frontier members require an explicit
+          frontier entry before launch; use an empty mapping when no extra variables are needed.
         propertyNames:
-          enum: ["low", "normal", "high", "expert"]
+          $ref: "./exec-common.schema.yaml#/$defs/Proficiency"
+        properties:
+          frontier:
+            anyOf:
+              - $ref: "#/$defs/CommandVariableSet"
+              - const: {}
         additionalProperties:
           $ref: "#/$defs/CommandVariableSet"
       by_nickname:
@@ -362,17 +445,22 @@ $defs:
         additionalProperties: false
         required:
           - action
-        description: "Behavior for non-critical tasks (cpm.slack > 0)."
+        description: >
+          Compatibility-only field, still required by this schema. Ignored at runtime:
+          automatic agent selection uses on_critical.retry for all tasks, regardless of
+          critical-path membership. Keep action: skip in existing configurations.
         properties:
           action:
             const: "skip"
-            description: "Record a block event and move to the next task."
+            description: "Compatibility value only; does not skip tasks at runtime."
       on_critical:
         type: object
         additionalProperties: false
         required:
           - action
-        description: "Behavior for critical-path tasks (cpm.slack == 0)."
+        description: >
+          Retry policy used by automatic agent selection for all tasks, regardless of
+          critical-path membership. The on_critical name is retained for compatibility.
         properties:
           action:
             type: string

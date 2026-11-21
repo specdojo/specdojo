@@ -32,3 +32,22 @@
     - field: due
       from: ""
       to: "2026-10-31"
+- v: 1
+  id: reg_8723c0c1623d4f5482b7a26d13792f63
+  ts: "2026-10-31T12:37:26Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: 対話で indie が候補 A を指示
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-10-31"
+    - field: conclusion
+      from: "-"
+      to: 候補 A。配布する CLI は specdojo だけとし、alias・PATH・VS Code 統合ターミナルを文書で案内する
+  previous_event_id: reg_9d2fb7771813492c87318dea5a9d1c7e

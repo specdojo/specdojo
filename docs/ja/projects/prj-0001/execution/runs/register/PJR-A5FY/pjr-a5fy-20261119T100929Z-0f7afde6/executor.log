@@ -1,0 +1,21 @@
+PJR-A5FY の判断と変更案を個票の対応結果に書き、作業内容の No.1・2 を `done` にしました。`package.json` と lock には触っていないので、audit の件数が実際に減ったかはまだ確かめていません。
+
+**決めた直し方**（今より古い版へ下げる直し方は使っていません）
+- **high（`markdown-it`）**: `markdownlint-cli` を `^0.50.0` に上げます。0.50.0 は修正済みの `markdown-it` 15.0.3 を引き、ルートの lock でもこの版になっています。
+- **同じ更新で消える moderate**: `markdownlint-cli` の下の `js-yaml` は 5.5.0、`smol-toml` は 1.9.1 になります。
+- **`fast-uri`**: lock の更新だけで 3.1.9 に上げます。`ajv` の指定 `^3.0.1` の中に修正版があるので、`package.json` は変えません。
+- **上流待ち（moderate）**: `glob`・`minimatch` と、それを引く `unified-engine`・`@npmcli/*`・`remark-cli`・`markdownlint-cli` です。修正版が `glob` 14.0.2・`minimatch` 11.0.1 しかなく、依存元は `glob` を `^10`、`minimatch` を `~10.2.6` で指定しているためです。
+- **上流待ち（low、完了条件の対象外）**: `katex` 系です。`markdownlint` は `katex` の描画を呼んでいません。
+- **`overrides` は使いません。** publish したパッケージに書いても利用者の環境には効かず、配る依存の audit を直せないためです。
+
+**コードの変更は不要と判断しました。** markdownlint 0.42 もカスタムルールに今と同じ形でトークンを渡します。また、このルールの単体テストはすでにルートの `markdownlint@0.42.2`・`markdown-it@15.0.3` で動いています。
+
+**sandbox で確かめられなかったこと**
+- `npm view` が使えず、レジストリの最新版は調べていません。修正版は GitHub Advisory Database で確かめました。
+- 0.50.0 の規則で全文書が通るかは試せていません。ルートの `npm run lint:md` は docs-lint 側の `markdownlint` を使うので、反映後の `npm run lint:md` で確かめる必要があります。
+
+変更したのは個票 `docs/ja/projects/prj-0001/controls/project-register/pjr-a5fy-docs-lint-npm-audit.md` だけです。prettier で整形し、`npm run validate:history-links` は通りました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"docs-lint の配る依存の high と moderate について直し方（上げる・上流待ち）を決め、変更案を個票に書いた。変更案は markdownlint-cli を ^0.50.0 へ上げ、lock の fast-uri を 3.1.9 にすること。overrides は使わない。コードの変更は不要と判断した。package.json と lock は変えておらず、audit の件数が減ったことはまだ確かめていない。","handoff":["変更案（利用者の承認の後に orchestrator が feature ブランチで反映）: packages/docs-lint/package.json の dependencies の `markdownlint-cli` を `^0.49.1` から `^0.50.0` に変える。`devDependencies`・`overrides` は変えない。lock は `npm install --prefix packages/docs-lint` の後に `npm update fast-uri --prefix packages/docs-lint` で更新する。","反映後に残る見込み: `glob`・`minimatch` 起因の moderate（`unified-engine`・`unified-args`・`remark-cli`・`@npmcli/config`・`@npmcli/package-json`・`@npmcli/map-workspaces`・`markdownlint-cli`）と `katex` 起因の low。すべて個票で上流待ちとして記録した。修正版は glob 14.0.2・minimatch 11.0.1・katex 0.18.2 しかなく、依存元の版指定と合わない。","executor が決めた点: `overrides` は使わない。publish したパッケージに書いても利用者の環境に効かないため。`fast-uri` は `ajv` の `^3.0.1` の中に修正版があるため、`package.json` を変えず lock の更新だけにする。","コードの変更は不要と判断した。markdownlint 0.42 も `parser` を持たないカスタムルールに `params.tokens` を渡す。ルールの単体テストはすでにルートの markdownlint@0.42.2・markdown-it@15.0.3 で動いている。","反映後に確かめること: ルートの `npm run lint:md` は packages/docs-lint/node_modules/.bin の markdownlint を使うため、反映後は 0.50.0 の規則で全文書を検査する。sandbox では試せなかった。","sandbox では `npm view` が使えず、レジストリの最新版は調べていない。修正版は GitHub Advisory Database で確かめた。","CHANGELOG の文案（区分は 変更）は個票の「CHANGELOG に書く事項」に書いた。"],"validations":[{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-a5fy-docs-lint-npm-audit.md","status":"passed","summary":"個票を整形した"},{"command":"npm run validate:history-links","status":"passed","summary":"個票を含むすべての履歴ファイルが valid"},{"command":"npm audit --prefix packages/docs-lint --omit=dev","status":"passed","summary":"変更前の調査として実行し、16 件（low 3・moderate 12・high 1）を確かめた。変更案の反映後の audit は orchestrator が確かめる"}]}
+</specdojo_executor_evidence>

@@ -60,16 +60,19 @@ $defs:
         type: string
         enum:
           - id
+          - section
           - status
           - title
           - description
           - input
           - type
           - track
+          - domains
           - priority
           - difficulty
           - owner
           - registered
+          - start_on
           - due
           - completed
           - conclusion

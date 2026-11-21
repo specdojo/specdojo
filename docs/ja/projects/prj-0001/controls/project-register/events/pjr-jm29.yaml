@@ -1,0 +1,123 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_0de7bc29d1ed49e6918da0b0541c1435
+  ts: "2026-11-05T22:55:08Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 文書と Kata と prj-0001 を epic ベースの全体計画に移す
+    - field: description
+      from: ""
+      to: tml の Kata を非推奨にし、ガイドとリファレンスを epic ベースの説明に直し、prj-0001 の epic に domains を書いて全体計画を確かめる
+    - field: input
+      from: ""
+      to: '["由来: PJR-VYSC の決定。runner とスキーマの変更は PJR-PE19 で行う（2026-11-06）","利用者の決定: epic がない track は全体計画に出さない（2026-11-06）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-06"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-VYSC"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-PE19"]'
+- v: 1
+  id: reg_d3215186ff46479d80aacaf1b61c494e
+  ts: "2026-11-06T00:26:46Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_0de7bc29d1ed49e6918da0b0541c1435
+- v: 1
+  id: reg_55ddfabb333e455a8dfea1c4122d0648
+  ts: "2026-11-06T00:41:49Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-fm, test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-fm, test-unit"
+  previous_event_id: reg_d3215186ff46479d80aacaf1b61c494e
+- v: 1
+  id: reg_cd96a7034873420f8ca30889057a7cf1
+  ts: "2026-11-06T00:43:31Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-fm, test-unit"
+      to: "-"
+  previous_event_id: reg_55ddfabb333e455a8dfea1c4122d0648
+- v: 1
+  id: reg_91732a2bff74446687acc3158e3c45d4
+  ts: "2026-11-06T00:53:17Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_cd96a7034873420f8ca30889057a7cf1
+- v: 1
+  id: reg_774ddc797e93426487e75226ca0afe7e
+  ts: "2026-11-06T00:59:41Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が差分、runner のコードと保護された設定の不変、catalog validate、親の検証の合格、ホストでの npm run docs:build の成功（1 回目は kata-staging の片付けの一時的な失敗、再実行で成功）を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-06"
+    - field: conclusion
+      from: "-"
+      to: tml の Kata を deprecated にし、ガイド 3 本・リファレンス 2 本・rulebook 2 本を epic ベースの全体計画に直した。epic 3 件に domains を記入し、dct-planning から tml-index を外し、tml-index.yaml は非推奨の注記付きで残した
+  previous_event_id: reg_91732a2bff74446687acc3158e3c45d4

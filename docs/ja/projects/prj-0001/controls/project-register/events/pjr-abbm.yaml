@@ -1,0 +1,88 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_d151783c8d854c0e874a6a5bbc0ea927
+  ts: "2026-11-05T22:52:19Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 根拠にならない evidence\_refs を警告し、見直しの段で本体のファイルを確かめる
+    - field: description
+      from: ""
+      to: catalog validate が存在しないパスと re-export だけのファイルを指す evidence\_refs を警告し、catalog-planning の手順に本体のファイルの確認を足す
+    - field: input
+      from: ""
+      to: '["由来: PJR-PSXJ の決定（A 案）。候補 (2) の置き換えと (3)〜(5) は対象外（2026-11-06）","orchestrator の調査: 成果物 203 件のうち 93 件に `evidence_refs` があり参照は 181 件。src/exec/exec.ts は 2 行の re-export で 56 回引かれている（2026-11-06）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-06"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-PSXJ"]'
+- v: 1
+  id: reg_ce9f71d147b9433aa7111ed20601065e
+  ts: "2026-11-05T22:59:03Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_d151783c8d854c0e874a6a5bbc0ea927
+- v: 1
+  id: reg_f4bfa2d7a08b4f2aaca369f1bf0a1f4c
+  ts: "2026-11-05T23:15:57Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_ce9f71d147b9433aa7111ed20601065e
+- v: 1
+  id: reg_e5e6d9361a4a45e4a2438bda9de87d5d
+  ts: "2026-11-05T23:18:00Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が差分・警告の件数と終了コード 0・関連テスト 77 件・親の検証の合格を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-06"
+    - field: conclusion
+      from: "-"
+      to: catalog validate が re-export だけの evidence_refs を警告し（prj-0001 で 64 件、全件 src/exec/exec.ts）、catalog-planning の手順と dct-rulebook に本体のファイルの確認を足した
+  previous_event_id: reg_f4bfa2d7a08b4f2aaca369f1bf0a1f4c

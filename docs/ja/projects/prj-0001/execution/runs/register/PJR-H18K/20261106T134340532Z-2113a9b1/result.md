@@ -1,0 +1,46 @@
+---
+specdojo:
+  id: prj-0001:xer-pjr-h18k-20261106t134340z-861ab994
+  type: exec-result
+  task_id: PJR-H18K
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  origin: register
+  plan_ref: runs/register/PJR-H18K/20261106T134340532Z-2113a9b1/plan.md
+  started_at: "2026-11-06T13:43:53.307Z"
+  completed_at: "2026-11-06T13:57:55.099Z"
+  agent: sol-executor
+  approach: retrofit
+  targets:
+    - prj-0001:stsd-register-entry
+---
+
+# Edit Result
+
+## 1. 実施内容
+
+- stsd-register-entry を新しい Kata に部分反映し、状態の判定章・図直下の遷移表・`T-01`〜`T-40` の連番ラベルを整備した。
+- 既存の 8 状態・40 遷移を維持しつつ、目的・適用範囲・状態判定の章立て、および図表の配置ルールを更新した。
+- 遷移 ID のリナンバリング対応結果を個票へ記録した。
+
+## 2. 変更ファイル
+
+- `docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md`: 新しい章立て（「目的」「適用範囲」「状態の判定」「状態遷移」）への再構成、図の遷移ラベルへの遷移 ID (`T-nn`) の付与、および図直下への遷移表の配置を実施した。
+
+## 3. 申し送り
+
+- reporter は `PJR-H18K` 個票の「5. 対応結果」を result へ反映すること。変更ファイルは `docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md` と `docs/ja/projects/prj-0001/controls/project-register/pjr-h18k-stsd-register-entry-review-retrofit.md`。判断は部分反映。既存の 8 状態・40 遷移を保ち、目的・適用範囲・状態判定・図表配置を更新した。Frontmatter の `status: draft`・`based_on: []` は維持。実装・Kata・ほかの成果物は変更していない。
+- 実装エビデンス 5 本を全て参照した。`src/register/item.ts`: 八状態・四終端、個票現在値と欠損時の `open` 読み取り。`src/register/register.ts`: コマンド登録、整合検査の接続、旧履歴の `event` 変換。`src/register/transition-commands.ts`: 活動中からの終了、四活動状態への直接再開、完了日時・結論・待機理由の更新。`src/register/create-commands.ts`: `add` の既定 `open` と任意状態指定、`update` に状態変更指定がないこと。`src/register/update.ts`: 活動中・終端のガード、`note` の終端拒否、待機理由削除、個票と `event` の書き込み。照合結果は個票 5.1 に記載した。
+- 遷移 ID 対応は個票 5.2 に記録済み。旧→新: `T-01`〜`T-04` → 同番、`T-05` → `T-09`、`T-06` → `T-10`、`T-07`〜`T-10` → `T-05`〜`T-08`、`T-11`〜`T-14` → 同番、`T-15`〜`T-18` → `T-25`〜`T-28`、`T-19`〜`T-28` → `T-15`〜`T-24`、`T-29`〜`T-40` → 同番。各範囲は同じ順序の一対一対応。追加・削除なし。
+- M-01 は業務条件の強制方針と未承認経路の採否が実装から決定できないため残した。確認済みの CLI 動作は本文へ整理した。PO・ARC・QE が判断し、PM が後食 PJR・日程へ接続する。M-04 は `[[bdd-register-entry]]` が未作成で用語照合できないため残した。辞書作成後に BA が照合し `based_on` を追加する。列挙外の実装・`schema`・関連テスト・日時/`event` の委譲先・`exec`/夜間 `queue` の実装詳細は未確認。人間の承認・証跡条件は既存仕様として保持した。Kata の修正提案はない。以上は個票 5.3 にも記録した。
+- 親 runner が必須 lint を含む設定済み検査を実行し、結果を追記すること。executor は親検査を重複実行していない。カタログ検証は終了コード 0 で、対象外の未変更文書に re-export 参照・未作成文書などの警告があった。
+- reporter は PJR-H18K 個票の「5. 対応結果」を result へ反映すること。変更ファイルは docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md と docs/ja/projects/prj-0001/controls/project-register/pjr-h18k-stsd-register-entry-review-retrofit.md。判断は部分反映。既存の8状態・40遷移を保ち、目的・適用範囲・状態判定・図表配置を更新した。Frontmatter の `status: draft`・`based_on: []` は維持。実装・Kata・ほかの成果物は変更していない。
+- 実装エビデンス5本を全て参照した。src/register/item.ts: 八状態・四終端、個票現在値と欠損時の open 読み取り。src/register/register.ts: コマンド登録、整合検査の接続、旧履歴の event 変換。src/register/transition-commands.ts: 活動中からの終了、四活動状態への直接再開、完了日時・結論・待機理由の更新。src/register/create-commands.ts: add の既定 open と任意状態指定、update に状態変更指定がないこと。src/register/update.ts: 活動中・終端のガード、note の終端拒否、待機理由削除、個票と event の書き込み。照合結果は個票5.1に記載した。
+- 遷移ID対応は個票5.2に記録済み。旧→新: T-01〜T-04→同番、T-05→T-09、T-06→T-10、T-07〜T-10→T-05〜T-08、T-11〜T-14→同番、T-15〜T-18→T-25〜T-28、T-19〜T-28→T-15〜T-24、T-29〜T-40→同番。各範囲は同じ順序の一対一対応。追加・削除なし。
+- M-01 は業務条件の強制方針と未承認経路の採否が実装から決定できないため残した。確認済みの CLI 動作は本文へ整理した。PO・ARC・QE が判断し、PM が後続 PJR・日程へ接続する。M-04 は `bdd-register-entry` が未作成で用語照合できないため残した。辞書作成後に BA が照合し `based_on` を追加する。列挙外の実装・schema・関連テスト・日時/event の委譲先・exec/夜間 queue の実装詳細は未確認。人間の承認・証跡条件は既存仕様として保持した。Kata の修正提案はない。以上は個票5.3にも記録した。
+- 親 runner が必須 lint を含む設定済み検査を実行し、結果を追記すること。executor は親検査を重複実行していない。カタログ検証は終了コード0で、対象外の未変更文書に re-export 参照・未作成文書などの警告があった。
+
+## 4. 進め方と実践の型の適用
+
+stsd-register-entry を新しい章立てと遷移 ID 入りのラベルに合わせるために、既存の記述を維持しつつ、新しい章構成（目的、適用範囲、状態の判定、状態遷移）への再構成および図・表の整合性向上を行った。

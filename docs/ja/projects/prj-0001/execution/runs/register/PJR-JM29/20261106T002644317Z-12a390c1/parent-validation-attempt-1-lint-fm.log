@@ -1,0 +1,17 @@
+parent validation: lint-fm
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.7.0 lint:fm
+> node packages/docs-lint/bin/specdojo-docs-lint.js remark "docs/**/*.{md,mdx}" --quiet --frail
+
+
+
+--- stderr ---
+[4m[33mdocs/ja/specdojo/guides/timeline-design-guide.md[39m[24m
+8:1-8:27    [33mwarning[39m [1mH1 直後に必須の導入ブロックがありません: **対象読者** / **この文書で分かること** / **次に読む文書**[22m
+10:1-10:188 [33mwarning[39m [1mH1 直後に英語名（日本語を含まない1行）がありません[22m
+
+[33m⚠[39m 2 warnings

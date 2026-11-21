@@ -19,6 +19,20 @@ describe("register post-review disposition", () => {
     },
   );
 
+  it("作業内容の表が実績に合っていなければ、verdict が complete でも close せず waiting にする", () => {
+    const disposition = registerPostReviewDisposition({
+      itemType: "todo",
+      verdict: "complete",
+      workTableIssue: 'row 2 is "open" without a reason in メモ',
+    });
+
+    expect(disposition).toEqual({
+      transition: "waiting",
+      outcome: "failure",
+      explanation: 'row 2 is "open" without a reason in メモ',
+    });
+  });
+
   it.each(["todo", "issue"])(
     "verdict が complete-with-findings のとき %s を close する判定になり、指摘が close の理由に残る",
     (itemType) => {

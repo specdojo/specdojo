@@ -1,0 +1,55 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: prj-0001:stsd-deliverable-grade-criteria
+document: prj-0001:stsd-deliverable
+path: docs/ja/product/010-business-specs/020-data-model/stsd-deliverable.md
+graded_at: "2026-11-10T16:32:36.819Z"
+graded_by: flash-high-executor
+content_hash: 7bdabd6b5cfd48ceb520c5cef956a82025853f737c01cce69ceade7af65b3351
+summary:
+  satisfied: 0
+  unsatisfied: 5
+  total: 5
+criteria:
+  - id: DC-001
+    text: ステータス名・意味・成立条件と、遷移・イベント・条件が業務観点で正確に定義されていること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: unsatisfied
+    reason: >-
+      Approval conditions for T-02 and transition rules for downgrade, restoration, and retirement without successor
+      remain undecided.
+  - id: DC-002
+    text: 状態遷移の業務的妥当性を承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-purpose-alignment
+    status: unsatisfied
+    reason: >-
+      Business validity of state transitions cannot be fully approved while T-02 approval requirements and exceptional
+      transition paths remain unresolved.
+  - id: DC-003
+    text: 状態遷移実装の基礎として参照できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: unsatisfied
+    reason: Policy for unlisted transitions and missing or invalid status values is not established for implementation design.
+  - id: DC-004
+    text: 状態ベースのテスト設計に活用できること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: unsatisfied
+    reason: >-
+      Observable approval evidence, negative-case expectations, and outcomes for exceptional transitions are not defined
+      for test design.
+  - id: DC-005
+    text: 状態管理実装の参照として使えること
+    roles:
+      - DEV
+    viewpoint: vp-dev-implementation-readiness
+    status: unsatisfied
+    reason: >-
+      Implementation validation against source code is still pending (_TODO_) and fallback behavior for undefined
+      transitions is not specified.

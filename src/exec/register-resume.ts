@@ -1,8 +1,12 @@
-import { existsSync, readdirSync } from "node:fs";
-import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
+import { existsSync } from "node:fs";
+import { basename, dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import type { ExecEvidence } from "./evidence.js";
-import { loadPipelineResumeCheckpoint, type PipelineState } from "./pipeline-state.js";
-import { safeSlug } from "./shared.js";
+import {
+  integratedRepoNames,
+  loadPipelineResumeCheckpoint,
+  type PipelineState,
+} from "./pipeline-state.js";
+import { recordStem, resumeStatePaths, runEvidencePath, taskRecordPaths } from "./run-records.js";
 
 // register 項目の executor/reporter pipeline を、途中で止まった段から再開するための run 特定と
 // 入力復元。途中で止まった run は worktree の未コミット成果と `pipeline-state.json` /
@@ -13,9 +17,34 @@ import { safeSlug } from "./shared.js";
 // 再実行する。executor が成功済みで reporter が未完了なら reporter 段から、reporter も成功して
 // 統合（commit → merge → worktree 撤去）だけが残っているなら integrate 段から再開する。
 // reporter 段から再開可能な run は、明示指定により既存成果を保持して executor へ戻せる。
+// schedule では、どのリポジトリも統合していない統合の段の run も executor へ戻せる。
 
 export type RegisterResumeStage = "executor" | "reporter" | "integrate";
 export type RegisterResumeFrom = "executor";
+
+type RegisterResumeSelectOptions = {
+  resumeFrom?: RegisterResumeFrom;
+  // Schedule only: let --resume-from executor return to the executor after an integration that
+  // stopped before any repository was integrated. Register keeps refusing this case.
+  allowFailedIntegration?: boolean;
+};
+
+// 統合の段が止まった run を executor へ戻せない理由を返す。統合が成功済み、または一部の
+// リポジトリを統合済みの run を戻すと、統合済みの成果と食い違うため止める。
+function integratedRunBlocker(state: PipelineState): string | undefined {
+  const integrate = state.stages.integrate;
+  if (integrate?.status === "succeeded") {
+    return `cannot resume the executor after the integration of run ${state.run_id} succeeded`;
+  }
+  const integrated = [...integratedRepoNames(state)].sort();
+  if (integrated.length > 0) {
+    return (
+      `cannot resume the executor from the integrate stage of run ${state.run_id}: ` +
+      `already integrated repositories: ${integrated.join(", ")}`
+    );
+  }
+  return undefined;
+}
 
 export type RegisterResumeCandidate = {
   runId: string;
@@ -77,7 +106,7 @@ export function registerEvidenceDir(input: {
   taskId: string;
 }): string {
   const executionRel = relative(input.repoRoot, input.executionPath);
-  return join(input.worktreePath, executionRel, "exec", "evidence", safeSlug(input.taskId));
+  return dirname(taskRecordPaths(join(input.worktreePath, executionRel), input.taskId).directory);
 }
 
 // worktree に残っている run ディレクトリを読み、pipeline-state.json を持つものを候補にする。
@@ -89,16 +118,10 @@ export function loadRegisterResumeCandidates(input: {
   executionPath: string;
   taskId: string;
 }): RegisterResumeCandidate[] {
-  const evidenceDir = registerEvidenceDir(input);
-  if (!existsSync(evidenceDir)) return [];
-  const runIds = readdirSync(evidenceDir, { withFileTypes: true })
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => entry.name)
-    .sort();
-
+  const executionPath = join(input.worktreePath, relative(input.repoRoot, input.executionPath));
   const candidates: RegisterResumeCandidate[] = [];
-  for (const runId of runIds) {
-    const statePath = join(evidenceDir, runId, "pipeline-state.json");
+  for (const statePath of resumeStatePaths(executionPath, input.taskId)) {
+    const runId = basename(dirname(statePath));
     if (!existsSync(statePath)) continue;
     const stateRef = relative(input.worktreePath, statePath).split(sep).join("/");
     const checkpoint = loadPipelineResumeCheckpoint({
@@ -118,9 +141,7 @@ export function loadRegisterResumeCandidates(input: {
         ? {
             evidenceRef:
               checkpoint.state.stages.executor.artifact_ref ??
-              relative(input.worktreePath, join(dirname(statePath), "evidence.json"))
-                .split(sep)
-                .join("/"),
+              relative(input.worktreePath, runEvidencePath(statePath)).split(sep).join("/"),
           }
         : {}),
     });
@@ -132,7 +153,7 @@ export function loadRegisterResumeCandidates(input: {
 // 未コミット成果や result と食い違うため、最新 run が再開できない場合は理由を返して止める。
 export function selectResumableRegisterRun(
   candidates: readonly RegisterResumeCandidate[],
-  options: { resumeFrom?: RegisterResumeFrom } = {},
+  options: RegisterResumeSelectOptions = {},
 ): RegisterResumeLookup {
   if (candidates.length === 0) {
     return { kind: "not-resumable", reason: "no pipeline run state found in the worktree" };
@@ -250,9 +271,21 @@ export function selectResumableRegisterRun(
     latest.state.stages.reporter.status === "succeeded" ? "integrate" : "reporter";
   if (options.resumeFrom === "executor") {
     if (inferredStage !== "reporter") {
+      const blocker = options.allowFailedIntegration
+        ? integratedRunBlocker(latest.state)
+        : `cannot resume the executor from the ${inferredStage} stage of run ${latest.runId}`;
+      if (!blocker) {
+        const forcedChanges =
+          initialChanges.length > 0
+            ? initialChanges
+            : (latest.evidence.attempt_changes ?? latest.evidence.changes).map(
+                (change) => change.path,
+              );
+        return { kind: "resumable", target: executorTarget(latest, forcedChanges) };
+      }
       return {
         kind: "not-resumable",
-        reason: `cannot resume the executor from the ${inferredStage} stage of run ${latest.runId}`,
+        reason: blocker,
       };
     }
     const forcedChanges =
@@ -289,23 +322,41 @@ export function findResumableRegisterRun(input: {
   );
 }
 
-// plan / result のファイル名は `<pjr-id>-<UTC>-<rand>-(plan|result).md`（buildInPlaceStem）。
-// state に artifacts が無い旧 run のために、worktree の result 一覧から最新の stem を復元する。
-export function selectLatestRegisterResultStem(
-  fileNames: readonly string[],
-  pjrId: string,
-): string | null {
-  const pattern = new RegExp(
-    `^(${pjrId.toLowerCase()}-\\d{8}T\\d{6}Z-[0-9a-f]+)-result\\.md$`,
-    "i",
+// Schedule の明示的な executor 再開は、成功済み executor から reporter または統合の段へ進んだ run と、
+// executor の報告が approach の必須項目を欠いて executor の段で止めた run（PJR-1GCD）に限る。
+// 統合の段（commit・検査・merge）で止まった run も、どのリポジトリも統合していなければ
+// worktree の成果を保ったまま executor へ戻す（PJR-ED0K）。run の選択・変更一覧・申し送りの
+// 復元は register と同じ規則を使う。
+export function selectScheduleExecutorResume(
+  candidates: readonly RegisterResumeCandidate[],
+): RegisterResumeLookup {
+  const lookup = selectResumableRegisterRun(candidates, {
+    resumeFrom: "executor",
+    allowFailedIntegration: true,
+  });
+  if (lookup.kind !== "resumable") return lookup;
+  const { state } = lookup.target;
+  const candidate = candidates.find(
+    (entry) => entry.runId === lookup.target.runId && entry.stateRef === lookup.target.stateRef,
   );
-  const stems: string[] = [];
-  for (const name of fileNames) {
-    const match = name.match(pattern);
-    if (match) stems.push(match[1]);
+  const evidence = candidate?.executorEvidence ?? candidate?.evidence;
+  const rejectedReport =
+    state.stages.executor.status === "blocked" && evidence?.completion_status === "incomplete";
+  if (state.stages.executor.status !== "succeeded" && !rejectedReport) {
+    return {
+      kind: "not-resumable",
+      reason: `--resume-from executor requires a succeeded executor stage for run ${state.run_id} (status: ${state.stages.executor.status})`,
+    };
   }
-  if (stems.length === 0) return null;
-  return stems.sort()[stems.length - 1];
+  if (evidence?.stage.status !== "succeeded") {
+    return {
+      kind: "not-resumable",
+      reason: `succeeded executor evidence is missing or invalid for run ${state.run_id}`,
+    };
+  }
+  const blocker = integratedRunBlocker(state);
+  if (blocker) return { kind: "not-resumable", reason: blocker };
+  return lookup;
 }
 
 export type RegisterResumeArtifacts = {
@@ -324,7 +375,7 @@ function isContainedRef(root: string, ref: string): boolean {
 }
 
 // reporter 段の入力（plan と result）を state から復元する。state に artifacts がある場合は
-// それを正本とし、無い旧 run では worktree の result ファイル名から stem を復元する。
+// それを正本とし、無い run では同じ run ディレクトリを参照する。
 export function resolveRegisterResumeArtifacts(input: {
   repoRoot: string;
   worktreePath: string;
@@ -341,17 +392,11 @@ export function resolveRegisterResumeArtifacts(input: {
     ) {
       return null;
     }
-    const stem = artifacts.result_ref.replace(/^.*\//, "").replace(/-result\.md$/, "");
+    const stem = recordStem(artifacts.result_ref);
     return { planRef: artifacts.plan_ref, resultRef: artifacts.result_ref, stem };
   }
 
-  const resultsDir = join(input.worktreePath, executionRel, "exec", "results");
-  if (!existsSync(resultsDir)) return null;
-  const stem = selectLatestRegisterResultStem(readdirSync(resultsDir), input.taskId);
-  if (!stem) return null;
-  return {
-    planRef: `${executionRel}/exec/plans/${stem}-plan.md`,
-    resultRef: `${executionRel}/exec/results/${stem}-result.md`,
-    stem,
-  };
+  const records = taskRecordPaths(executionRel, input.taskId, input.state.run_id);
+  if (!existsSync(join(input.worktreePath, records.result))) return null;
+  return { planRef: records.plan, resultRef: records.result, stem: input.state.run_id };
 }

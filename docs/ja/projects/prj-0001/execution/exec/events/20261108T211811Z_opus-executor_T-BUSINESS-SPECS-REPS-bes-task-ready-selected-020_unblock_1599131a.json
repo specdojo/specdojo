@@ -1,0 +1,15 @@
+{
+  "v": 1,
+  "ts": "2026-11-08T21:18:11Z",
+  "type": "unblock",
+  "task_id": "T-BUSINESS-SPECS-REPS-bes-task-ready-selected-020",
+  "by": "opus-executor",
+  "msg": "resume integration from persisted pipeline state",
+  "meta": {
+    "pipeline_stage": "integrate",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-bes-task-ready-selected-020/T-BUSINESS-SPECS-REPS-bes-task-ready-selected-020-20261108T161513Z-750c6005/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-bes-task-ready-selected-020/T-BUSINESS-SPECS-REPS-bes-task-ready-selected-020-20261108T161513Z-750c6005/pipeline-state.json",
+    "pipeline_run_id": "T-BUSINESS-SPECS-REPS-bes-task-ready-selected-020-20261108T161513Z-750c6005",
+    "pipeline_resume_claimed": "true"
+  }
+}

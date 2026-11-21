@@ -1,0 +1,32 @@
+タスク PJR-Q8KP「ホストから tmux へ入る script の本体を SpecDojo から配る」の全作業を完了しました。
+
+### 実施内容の概要
+
+1. **スクリプト本体と配布コマンドの実装**:
+   - スクリプト本体: [`templates/devcontainer/remote-host/devcontainer-tmux.sh`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Q8KP/templates/devcontainer/remote-host/devcontainer-tmux.sh)
+   - 配布処理: [`src/devcontainer/host-script.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Q8KP/src/devcontainer/host-script.ts)
+   - CLI コマンド: `specdojo devcontainer host-script`（[`src/devcontainer/command.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Q8KP/src/devcontainer/command.ts) に登録、`--dry-run` 対応）
+   - コマンドを実行すると、workspace の `.specdojo/host/devcontainer-tmux.sh` へ実行権限（`0o755`）付きで書き出されます（同一バージョンで複数回実行しても冪等）。
+   - 対応 OS: macOS、Linux、Windows の WSL2。
+   - スクリプト本体は、引数の workspace パスと `devcontainer.json` の `remoteUser` を読み取り、
+     - ラベル `devcontainer.local_folder` が一致する稼働中コンテナがあればそのまま tmux に接続
+     - 停止中コンテナがあれば `docker start` で起こして接続（Node.js 不要）
+     - コンテナが存在しない場合のみ `devcontainer up` を動かし（`SPECDOJO_NODE_BIN` による PATH 上書き、または `"$SHELL" -lic` ログインシェル経由）、コンテナ内の作業ディレクトリを `docker inspect` のマウント情報から求めて接続
+
+2. **サンプルの更新**:
+   - [`templates/devcontainer/remote-host/specdojo-tmux.sh.sample`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Q8KP/templates/devcontainer/remote-host/specdojo-tmux.sh.sample) を、workspace パスを渡して `.specdojo/host/devcontainer-tmux.sh` を呼び出す数行のラッパーに置き換えました。
+   - [`templates/devcontainer/remote-host/ssh-config.sample`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Q8KP/templates/devcontainer/remote-host/ssh-config.sample) および [`src/devcontainer/scaffold.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Q8KP/src/devcontainer/scaffold.ts) の説明コメントを新方式（通常接続時は Node.js 不要、`SPECDOJO_NODE_BIN` の説明等）に更新しました。
+
+3. **テストの追加と更新**:
+   - [`tests/src/devcontainer/host-script.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Q8KP/tests/src/devcontainer/host-script.test.ts): コマンドのファイル書き出し・実行権限・冪等性・dry-run と、fake docker/devcontainer を使った 3 つの経路（稼働中・停止中・未作成）および各種異常系をテスト（14 tests passed）。
+   - [`tests/src/devcontainer/scaffold.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Q8KP/tests/src/devcontainer/scaffold.test.ts) および [`tests/src/devcontainer/scaffold.integration.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Q8KP/tests/src/devcontainer/scaffold.integration.test.ts) を新方式に合わせて更新（全テスト passed）。
+
+4. **ドキュメントと CHANGELOG の更新**:
+   - [`docs/ja/specdojo/guides/remote-host-development-guide.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Q8KP/docs/ja/specdojo/guides/remote-host-development-guide.md): 新方式の構成、対応 OS（macOS、Linux、Windows WSL2）、mise 使用時の shims ディレクトリ指定について記載。
+   - [`docs/ja/specdojo/references/command-reference.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Q8KP/docs/ja/specdojo/references/command-reference.md): `devcontainer host-script` コマンドのリファレンスを追加。
+   - [`CHANGELOG.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Q8KP/CHANGELOG.md): 未公開の版の節（`## [Unreleased]`）に追記。
+   - 個票 [`docs/ja/projects/prj-0001/controls/project-register/pjr-q8kp-host-tmux-script-distribution.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Q8KP/docs/ja/projects/prj-0001/controls/project-register/pjr-q8kp-host-tmux-script-distribution.md): 作業内容および対応結果（実施内容、コマンド・ファイル名選定理由、利用者向け確認手順）を記入。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"PJR-Q8KP の全完了条件（devcontainer host-script コマンドの実装、本体スクリプトの作成、サンプル・ドキュメント・CHANGELOG・個票の更新、挙動テストの追加・更新）を完了しました。","handoff":["ホスト実環境での接続確認は、Docker daemon および実環境を持つホスト上で利用者が個票の手順に沿って実施します。"],"validations":[]}
+</specdojo_executor_evidence>

@@ -1,0 +1,222 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_d615fe9bb60f4413becb1a612a7574d4
+  ts: "2026-11-15T11:31:27Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 型を整備する schedule の review で、型一式の grade が流れるようにする（E4R5 の効き目の確認）
+    - field: description
+      from: ""
+      to: E4R5 の自動の grade が kata-wave-2 で流れなかった理由を調べ、直す
+    - field: input
+      from: ""
+      to: '["2026-11-15、kata-wave-2 の 090（review）が 4 件とも完了したのに、型（bac・bds・sld・ifx-file の rulebook・sample）の grade は 2026-10 のままで、自動の grade が流れていなかった。PJR-E4R5 で、型を整備する schedule の review で型一式を自動 grade するようにしたはず"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-15"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-E4R5"]'
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: review
+- v: 1
+  id: reg_a7430e228b114ac9a554c598af18370f
+  ts: "2026-11-15T14:33:08Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_d615fe9bb60f4413becb1a612a7574d4
+- v: 1
+  id: reg_d0f5c7f837f6496ca04a2e7fc4a97c55
+  ts: "2026-11-15T14:58:55Z"
+  action: wait
+  actor: opus-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: validate-schema"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: validate-schema"
+  previous_event_id: reg_a7430e228b114ac9a554c598af18370f
+- v: 1
+  id: reg_d804eaf5e3e64c09b29ce693ebd267d7
+  ts: "2026-11-15T16:20:07Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: validate-schema"
+      to: "-"
+  previous_event_id: reg_d0f5c7f837f6496ca04a2e7fc4a97c55
+- v: 1
+  id: reg_a0015c89d56f4630adbcd95de9baff08
+  ts: "2026-11-15T16:28:19Z"
+  action: wait
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-integration"
+  previous_event_id: reg_d804eaf5e3e64c09b29ce693ebd267d7
+- v: 1
+  id: reg_e2eaed1211034559ba80c2a88a810865
+  ts: "2026-11-15T16:29:54Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-integration"
+      to: "-"
+  previous_event_id: reg_a0015c89d56f4630adbcd95de9baff08
+- v: 1
+  id: reg_dc985199baac4cabbcf30e5b0055e714
+  ts: "2026-11-15T16:36:19Z"
+  action: wait
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-integration"
+  previous_event_id: reg_e2eaed1211034559ba80c2a88a810865
+- v: 1
+  id: reg_ce45fd96b26c42dc96747b4659b436a0
+  ts: "2026-11-15T16:37:28Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-integration"
+      to: "-"
+  previous_event_id: reg_dc985199baac4cabbcf30e5b0055e714
+- v: 1
+  id: reg_81509edfa69140a79e399888501fd7f5
+  ts: "2026-11-15T16:44:17Z"
+  action: wait
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-integration"
+  previous_event_id: reg_ce45fd96b26c42dc96747b4659b436a0
+- v: 1
+  id: reg_8b77246a40354d04ab1f2c0d6d6ebe90
+  ts: "2026-11-15T21:51:19Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-integration"
+      to: "-"
+  previous_event_id: reg_81509edfa69140a79e399888501fd7f5
+- v: 1
+  id: reg_a22c2608d19e417180ced92dfbe83695
+  ts: "2026-11-15T22:06:18Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_8b77246a40354d04ab1f2c0d6d6ebe90
+- v: 1
+  id: reg_a193eac17a2b4216a404c4be54685f86
+  ts: "2026-11-15T22:20:34Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: 0.8.0 の第 1 段で直した（review の段で型の自動の grade が流れない件）。親の検証をすべて通って統合済み
+  previous_event_id: reg_a22c2608d19e417180ced92dfbe83695

@@ -225,7 +225,7 @@ flowchart
 | [業務データ辞書 / 概念データストア定義](../rulebooks/cdsd-rulebook.md) | Conceptual Data Store Definition | `cdsd-<term>` | 概念データストア（情報の保管場所）を一覧で定義する | データストア名、対応プロセス、内容、更新タイミング、粒度、主な用途 など |
 | [業務データ辞書 / 保管場所定義](../rulebooks/sld-rulebook.md) | Storage Location Definition | `sld-<term>` | 業務対象となる物の物理的な保管場所を一覧で定義する | 保管場所名、保管対象、内容・目的、関連プロセス、管理頻度 など |
 | [業務データ辞書 / ステータス定義](../rulebooks/stsd-rulebook.md) | Status Definition | `stsd-<term>` | 業務上のエンティティが取り得る状態と状態間の遷移を一文書で定義する | 対象、状態名、通称、意味、成立条件、管理場所、状態遷移図、イベント、遷移条件など |
-| [業務データ辞書 / 分類定義](../rulebooks/cld-rulebook.md) | Classification Definition | `cld-<term>` | 業務上の分類（カテゴリ、種別、区分など）を一覧で定義する | 分類定義名、種別、分類名、説明など |
+| [業務データ辞書 / 分類一覧](../rulebooks/cdt-rulebook.md) | Code Table | `cdt-<term>` | 業務上の分類（カテゴリ、種別、区分など）を一覧で定義する | 分類定義名、種別、分類名、説明など |
 | [概念クラス図](../rulebooks/ccd-mermaid-rulebook.md) | Conceptual Class Diagram | `ccd-<term>` | 業務上のエンティティ関係を図で定義する | 商品・在庫・発注・店舗などの概念と属性、関連（継承/親子/参照） など |
 
 #### 2.1.3. 業務モデル
@@ -244,6 +244,7 @@ flowchart
 | ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 |
 | --- | --- | --- | --- | --- |
 | [画面仕様](../rulebooks/uis-rulebook.md) | UI Specification | `uis-<term>` | 業務ユーザー視点の画面の利用目的や表示項目、操作を定義する | 画面概要、利用目的、表示項目、操作、遷移、エラー表示 など |
+| [CLI仕様](../rulebooks/clis-rulebook.md) | CLI Specification | `clis-<term>` | 利用者視点での CLI コマンド群の利用目的や操作の流れ、出力・エラーを定義する | 概要、利用目的、操作の流れ、操作とコマンド参照、出力・生成ファイルの要点、終了コードとエラー表示・利用者の次の手 など |
 | [帳票仕様](../rulebooks/bds-rulebook.md) | Business Document Specification | `bds-<term>` | 業務ユーザー視点の帳票の利用目的や表示項目を定義する | 帳票概要、利用目的、表示項目、出力タイミング など |
 
 #### 2.1.5. システム化機能
@@ -251,8 +252,8 @@ flowchart
 <!-- prettier-ignore -->
 | ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 |
 | --- | --- | --- | --- | --- |
-| [システム化機能一覧 / 全体構成](../rulebooks/sf-rulebook.md) | System Functions Index | `sf-index` | システムで実現する機能の全体構成と一覧を定義する | 機能ID、機能名、概要、関連プロセス、関連仕様ID など |
-| [システム化機能一覧 / 個別](../rulebooks/sf-rulebook.md) | System Function | `sf-<term>` | 個別のシステム化機能の概要・関連仕様を定義する | 機能概要、関連プロセス、関連画面、関連IF、関連ルール など |
+| [システム化機能一覧 / 全体構成](../rulebooks/sf-index-rulebook.md) | System Functions Index | `sf-index` | システムで実現する機能の全体構成と一覧を定義する | 機能ID、機能名、概要、関連プロセス、関連仕様ID など |
+| [システム化機能（個別）](../rulebooks/sf-rulebook.md) | System Function | `sf-<term>` | 個別のシステム化機能の目的、業務プロセス・画面との対応、処理要件を定義する | 機能目的・概要、業務プロセス・画面との対応、入出力・前提条件、処理要件、非機能制約、操作手順・コマンド参照、検証観点 |
 
 #### 2.1.6. 用語集
 
@@ -272,7 +273,7 @@ flowchart
 | [外部API仕様](../rulebooks/ifx-api-rulebook.md) | External API Specification | `ifx-api-<term>.yaml` | 外部システムとのAPI連携をOpenAPI形式(YAML)で定義する | エンドポイント、HTTPメソッド、リクエスト／レスポンス、ステータスコード |
 | [外部ファイル連携仕様](../rulebooks/ifx-file-rulebook.md) | External File Exchange Specification | `ifx-file-<term>.yaml` | 外部システムとのファイル連携をYAMLで定義する | ファイル形式、伝送方法、スケジュール、ファイル項目一覧 |
 | [外部メッセージ仕様](../rulebooks/ifx-msg-rulebook.md) | External Message Specification | `ifx-msg-<term>.yaml` | 他システムとのイベント／キューのメッセージ連携をAsyncAPI + CloudEvents(YAML)で定義する | チャネル名、メッセージ構造、エンドポイント、プロトコル |
-| [外部コマンド連携仕様](../rulebooks/ifx-cmd-rulebook.md) | External Command Interface Specification | `ifx-cmd-<term>.yaml` | 外部CLIコマンドの起動契約をYAMLで定義する | コマンド名、引数、stdin／stdout／stderr、終了コード、認証注入方式、エラー処理 |
+| [外部コマンド連携仕様](../rulebooks/ifx-cmd-rulebook.md) | External Command Interface Specification | `ifx-cmd-<term>.yaml` | 外部CLIコマンドの起動契約をYAMLで定義する | コマンド名、正本参照、入出力ストリーム、入出力ファイル、副作用、終了コード、エラー処理 |
 
 ### 2.3. アーキテクチャ
 
@@ -301,6 +302,7 @@ flowchart
 - **System Design Index**：設計のSSOT（OpenAPI / AsyncAPI / migration / job定義 / config schema 等）への導線
 - **System Design Critical Flows**：事故や仕様誤解の原因になりやすい“重要フロー”だけを少数（最大5件）定義
 - **System Design Cross-cutting Policy**：エラー・冪等・リトライ・監査・トレーシング等の横断ルール（実装の共通前提）
+- **Design System Specification**：画面をまたぐ GUI のデザインの決まり。既存のトークンや部品の正本は参照する
 
 #### 2.4.1. ドキュメント一覧と概要（最小構成）
 
@@ -310,6 +312,9 @@ flowchart
 | 全体構成（リンク集） | System Design Index | `sysd-index` | システム設計のSSOTへの導線を1箇所に集約し、設計情報を迷子にしない | 内部API定義（OpenAPI等）/イベント定義（AsyncAPI等）/DBスキーマ（migration等）/バッチ定義（workflow/cron等）/設定スキーマ（config schema等）/コード配置規約（モジュール境界） |
 | 重要フロー | System Design Critical Flows | `sysd-critical-flows` | “読まないと事故る”フローだけを可視化し、実装・テスト・運用の共通理解を作る | 最大5フロー（冪等/補償/非同期/順序/整合性/外部I/F障害など）について、境界・永続化点・再実行性・失敗時挙動を図または箇条書きで定義 |
 | 横断ルール | System Design Cross-cutting Policy | `sysd-cross-cutting-policy` | 実装全体に影響する共通ルールをSSOT化し、各所の実装ブレを防ぐ | エラー形式/例外分類、タイムアウト・リトライ、冪等キー、トランザクション境界、ログ/監査ログ、トレーシング、セキュリティ（認証・認可の実装原則）、バージョニング、設定の上書き階層 |
+| [[specdojo:dss-rulebook\|デザインシステム]] | Design System Specification | `dss-<term>`（既定: `dss-common`） | GUI の見た目と操作時の表現を揃え、操作性目標を満たす設計の決まりを定める | デザイントークン、部品の使い方、レイアウトの型、状態表示、アクセシビリティ、正本への参照、検証方法 |
+
+DSS の成果物は `docs/ja/product/040-system-design/` へ置きます。画面ごとの目的・項目・操作・遷移は UIS、測れる操作性目標は NFR が持ちます。ワイヤーフレームは文書として保守せず、UIS と DSS から試作を作ってプロダクトのリポジトリに置きます。
 
 > 補足：従来の「実装データフロー図／実装クラス図／DB論理・物理／実装画面仕様／内部I/F／バッチ設計／設定一覧」は、
 > **“SSOTをコード（定義ファイル）に寄せる”** 方針により、個別ドキュメントとしては作りません。
@@ -317,14 +322,23 @@ flowchart
 
 カテゴリ別に何を SSOT とし、何を個別ドキュメントとして書かないかの判断基準は [システム設計-全体構成 作成ルール](../rulebooks/sysd-index-rulebook.md) の `カテゴリ別の書き分け方針` を正本とします。
 
-### 2.5. 業務受入条件
+### 2.5. 実装
+
+実装の段の型は、agent が実装の直前に読むコーディング規約の 1 種類だけとします。実装の設計書は置かず、モジュールの分け方やコンポーネントの境界はアーキテクチャとシステム設計で、使う言語・ライブラリは技術スタック一覧で決めます。
+
+<!-- prettier-ignore -->
+| ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 |
+| --- | --- | --- | --- | --- |
+| [[specdojo:cdr-rulebook\|コーディング規約（agent 向け instructions）]] | Coding Rules (Agent Instructions) | `.github/instructions/<言語>.instructions.md` | 言語・枠組みごとの書き方と検証を 1 つの正本に定め、環境別のラッパーから agent に読ませる | 基本方針、モジュールと import、型、エラー処理、命名、テストと検証のコマンド、禁止事項 |
+
+### 2.6. 業務受入条件
 
 <!-- prettier-ignore -->
 | ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 |
 | --- | --- | --- | --- | --- |
 | [業務受入条件](../rulebooks/bac-rulebook.md) | Business Acceptance Criteria | `bac-<term>` | 業務として受け入れ可能であることを示す条件を定義する | 業務シナリオ、受入条件、前提、操作、期待結果 など |
 
-### 2.6. 非機能要件
+### 2.7. 非機能要件
 
 <!-- prettier-ignore -->
 | ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 |
@@ -339,25 +353,25 @@ flowchart
 | [非機能要件 / 運用](../rulebooks/nfr-operations-rulebook.md) | Non-functional Requirements / Operations | `nfr-operations` | 監視・手順・継続運用を定義する | アラート検知率、復旧達成率、運用手順充実度 |
 | [非機能要件 / 操作性](../rulebooks/nfr-usability-rulebook.md) | Non-functional Requirements / Usability | `nfr-usability` | 使いやすさと誤操作防止を定義する | タスク完了率、誤操作率、エラーメッセージ明確性 |
 
-### 2.7. システム受入条件
+### 2.8. システム受入条件
 
 <!-- prettier-ignore -->
 | ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 |
 | --- | --- | --- | --- | --- |
 | [システム受入条件](../rulebooks/sac-rulebook.md) | System Acceptance Criteria | `sac-<term>` | システム全体としての合格基準を定義する | 機能・非機能・障害・移行などの受け入れ条件 |
 
-### 2.8. テスト
+### 2.9. テスト
 
 ※ 個別仕様のサフィックスは、対象ドキュメントの目的に合わせて「用語集」のtermから命名します。リンクされる可能性も鑑みなるべく固定できる名前を選びます。
 
-#### 2.8.1. 共通
+#### 2.9.1. 共通
 
 <!-- prettier-ignore -->
 | ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 |
 | --- | --- | --- | --- | --- |
 | [テスト戦略・方針](../rulebooks/tsp-index-rulebook.md) | Test Strategy and Policy | `tsp-index` | 全体テストの考え方を示す（要件） | テストレベルと目的、対象/対象外（スコープ）、品質目標、体制/役割、環境、使用ツール、テストデータ方針、入口/出口条件、進め方・優先度、リスクと対策 |
 
-#### 2.8.2. 単体テストカタログ
+#### 2.9.2. 単体テストカタログ
 
 <!-- prettier-ignore -->
 | ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 |
@@ -365,7 +379,7 @@ flowchart
 | [単体テスト](../rulebooks/utc-index-rulebook.md) | Unit Test Catalog | `utc-index` | 単体テストとして確認する観点・条件と分配を定義する | 対象単位、テスト範囲と対象外、境界（モック/スタブ方針）、TPC の観点・条件の分配、合格基準とエビデンス（共通） |
 | [単体テスト対象別](../rulebooks/utc-rulebook.md) | Unit Test Specification | `utc-<target>` | 単体テスト仕様を対象ごとに分割して定義する | 個別対象の範囲、観点、代表条件（状態レベル）、合格基準とエビデンス（参照） |
 
-#### 2.8.3. 内部結合テストカタログ
+#### 2.9.3. 内部結合テストカタログ
 
 <!-- prettier-ignore -->
 | ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 |
@@ -373,7 +387,7 @@ flowchart
 | [内部結合テスト](../rulebooks/itc-index-rulebook.md) | Internal Integration Test Catalog | `itc-index` | 内部コンポーネント間の連携を確認する観点・条件を定義する | 対象コンポーネントと結合範囲、インターフェース（API/イベント/DB）観点、主要フロー/例外フロー、トランザクション・整合性、エラー処理、ログ/監視観点、合格基準 |
 | [内部結合テスト対象別](../rulebooks/itc-rulebook.md) | Internal Integration Test Specification | `itc-<target>` | 内部結合テスト仕様を対象（機能/連携）ごとに分割して定義する | 個別結合範囲、前提、テスト条件（シナリオ）一覧、合格基準、関連する仕様ID/機能ID |
 
-#### 2.8.4. 外部結合テストカタログ
+#### 2.9.4. 外部結合テストカタログ
 
 <!-- prettier-ignore -->
 | ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 |
@@ -381,7 +395,7 @@ flowchart
 | [外部結合テスト](../rulebooks/etc-index-rulebook.md) | External Integration Test Catalog | `etc-index` | 外部システム連携を含む結合観点・条件を定義する（仕様） | 対象I/F（API/ファイル/メッセージ）、契約（スキーマ/コード/制約）、正常/異常（タイムアウト・リトライ・冪等・順序）、セキュリティ（認証/認可）、性能/レート制限、監査ログ、合格基準 |
 | [外部結合テスト対象別](../rulebooks/etc-rulebook.md) | External Integration Test Specification | `etc-<target>` | 外部結合テスト仕様を連携単位で分割して定義する（仕様） | I/Fごとのテスト条件一覧（入力/期待/エラー）、前提（接続先・認証・テストデータ）、合格基準、関連する外部I/F仕様ID |
 
-#### 2.8.5. 総合結合テストカタログ
+#### 2.9.5. 総合結合テストカタログ
 
 <!-- prettier-ignore -->
 | ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 |
@@ -389,7 +403,7 @@ flowchart
 | [総合テスト](../rulebooks/stc-index-rulebook.md) | System Test Catalog | `stc-index` | システム全体として業務シナリオが成立することを定義する（仕様） | エンドツーエンドの業務シナリオ、画面/API/バッチ/外部連携の通し観点、運用観点（ジョブ・監視・障害時）、非機能の観点（代表値）、合格基準 |
 | [総合テスト対象別](../rulebooks/stc-rulebook.md) | System Test Specification | `stc-<scenario>` | 総合テスト仕様をシナリオ/業務単位で分割して定義する（仕様） | 個別シナリオの前提、データ準備、テスト条件、期待結果、合格基準、関連する業務仕様ID/受入条件ID/入条件ID |
 
-#### 2.8.6. 受入結合テストカタログ
+#### 2.9.6. 受入結合テストカタログ
 
 <!-- prettier-ignore -->
 | ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 |
@@ -397,9 +411,9 @@ flowchart
 | [受入テスト](../rulebooks/atc-index-rulebook.md) | Acceptance Test Catalog | `atc-index` | 業務として受け入れ可能であることを確認する観点・条件を定義する（仕様） | 業務受入シナリオ、受入条件（合格基準）、利用者視点の操作・期待結果、例外時の扱い、データ準備、役割分担、エビデンス要件、判定/承認フロー |
 | [受入テスト対象別](../rulebooks/atc-rulebook.md) | Acceptance Test Specification | `atc-<scenario>` | 受入テスト仕様を業務シナリオ/受入条件単位で分割して定義する（仕様） | 個別受入シナリオの前提、テスト条件、期待結果、合格基準、関連する業務受入条件ID/システム受入条件ID |
 
-### 2.9. 運用
+### 2.10. 運用
 
-#### 2.9.1. ドキュメント一覧と概要
+#### 2.10.1. ドキュメント一覧と概要
 
 | ドキュメント                                   | 英語名称                     | 推奨ファイル名 | 目的                                                                                          | 主な内容                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | ---------------------------------------------- | ---------------------------- | -------------- | --------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

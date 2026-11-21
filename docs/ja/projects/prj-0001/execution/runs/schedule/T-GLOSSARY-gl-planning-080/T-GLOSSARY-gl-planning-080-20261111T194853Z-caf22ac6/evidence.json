@@ -1,0 +1,227 @@
+{
+  "schema_version": 1,
+  "task_id": "T-GLOSSARY-gl-planning-080",
+  "run_id": "T-GLOSSARY-gl-planning-080-20261111T194853Z-caf22ac6",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-11T19:50:22.883Z",
+    "completed_at": "2026-11-11T19:52:20.491Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/060-glossary/gl-planning.yaml",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/product/010-business-specs/060-glossary/gl-planning.yaml | 8 ++++----\n 1 file changed, 4 insertions(+), 4 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/product/010-business-specs/060-glossary/gl-planning.yaml",
+      "status": "passed",
+      "summary": "整形済み。追加の整形差分なし。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/gl.schema.yaml --data docs/ja/product/010-business-specs/060-glossary/gl-planning.yaml",
+      "status": "passed",
+      "summary": "用語集 schema に適合。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーなし。差分確認で補足4か所以外に変更がないことを確認。"
+    },
+    {
+      "source": "executor",
+      "command": "node tools/check-evidence-secrets.mjs --staged",
+      "status": "passed",
+      "summary": "ステージ済みの対象ファイル0件、検出0件。"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/product/010-business-specs/060-glossary/gl-planning.yaml",
+      "status": "not_applicable",
+      "summary": "Markdown 検査の適用なし。",
+      "reason": "変更対象は YAML のみで、Markdown を変更していない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検査の適用なし。",
+      "reason": "登録簿個票や既存の plan・result を変更していない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "カタログ検査の適用なし。",
+      "reason": "変更対象は docs/ja/product/ 配下のみで、docs/ja/projects/ 配下の成果物を変更していない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-GLOSSARY-gl-planning-080/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/w\n… output omitted …\n-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-GLOSSARY-gl-planning-080/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-GLOSSARY-gl-planning-080/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1152). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4416 file(s), 137 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 105 passed, 0 error, 0 未検査\n  graph: 3 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4416 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-GLOSSARY-gl-planning-080\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this directory in a Dev\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\n/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-GLOSSARY-gl-planning-080/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-GLOSSARY-gl-planning-080/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-GLOSSARY-gl-planning-080\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-M4JESa/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-WUxoz0/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-14S9ya/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-ltlakF/pjr-0001-topic.md\nWarning: \n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "condense_records": [
+    {
+      "location": "docs/ja/product/010-business-specs/060-glossary/gl-planning.yaml:65 / tm-track の notes",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "ドメインとトラックの説明の反復を削除した。分類と計画単位の違いは各用語の定義に残り、CLI 対応・生成入力・直接編集の禁止・実行状態の正本も維持した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "docs/ja/product/010-business-specs/060-glossary/gl-planning.yaml:83 / tm-planning-dependency の notes",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "実装エビデンス参照が依存を作らないという重複文を削除した。同じ制約は tm-implementation-evidence-ref の notes に残り、依存の各フィールドとの対応も維持した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "docs/ja/product/010-business-specs/060-glossary/gl-planning.yaml:142 / tm-phase-gate の notes",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "対象全体の足並みをそろえるという定義の言い換えを削除した。群の待ち合わせは definition に残り、`after_phase_sets` との対応と人間の承認作業を別に計画する条件も維持した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "docs/ja/product/010-business-specs/060-glossary/gl-planning.yaml:151 / tm-cross-deliverable-pass の notes",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "成果物ごとに作業を複製しないという重複説明を削除した。群全体で一つのタスクとする定義、配置関係、`scope`、agent 実行時のパイプライン利用と schema 参照は維持した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "docs/ja/product/010-business-specs/060-glossary/gl-planning.yaml:47 / tm-deliverable-kind の notes",
+      "category": "canonical-restatement",
+      "action": "retain",
+      "reason": "種別値と業務上の区分の対応、作業対象の配置先・完了条件、通常の戦略での選択対象は判断に必要。詳細条件を複製せず schema に委ねているため保持した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "docs/ja/product/010-business-specs/060-glossary/gl-planning.yaml:92 / tm-phase の notes",
+      "category": "canonical-restatement",
+      "action": "retain",
+      "reason": "実行方式・編集とレビュー・進め方の区別、および agent の段とパイプラインの関係は参照に必要。組合せの詳細は schema を正本としているため保持した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "docs/ja/product/010-business-specs/060-glossary/gl-planning.yaml:101 / tm-phase-set の notes",
+      "category": "canonical-restatement",
+      "action": "retain",
+      "reason": "段の組の定義・選択・未指定時の既定適用は利用判断に必要。単数・複数の指定方法と優先関係は schema 参照に留めているため保持した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "docs/ja/product/010-business-specs/060-glossary/gl-planning.yaml:158 / tm-initial-completion の notes",
+      "category": "canonical-restatement",
+      "action": "retain",
+      "reason": "反復時の指定と `completed_through` 省略時の意味は完了範囲の判断に必要。実行中の状態記録との区別と、表記・指定条件の schema 参照を含めて保持した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "docs/ja/product/010-business-specs/060-glossary/gl-planning.yaml:167 / tm-task-intent の notes",
+      "category": "canonical-restatement",
+      "action": "retain",
+      "reason": "作業意図と `kata_target`・`bootstrap_scope` の関係は技術参照に必要。追加項目の要否を列挙せず schema に委ねているため保持した。",
+      "cause": {
+        "type": "document"
+      }
+    }
+  ],
+  "final_message": "gl-planning.yaml の重複4か所を削除し、定義・制約・条件付きの関係と正本参照を維持した。変更は対象文書のみで、result は編集していない。",
+  "completion_status": "complete",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-GLOSSARY-gl-planning-080/T-GLOSSARY-gl-planning-080-20261111T194853Z-caf22ac6/executor.log",
+      "bytes": 6367,
+      "truncated": false
+    }
+  ]
+}

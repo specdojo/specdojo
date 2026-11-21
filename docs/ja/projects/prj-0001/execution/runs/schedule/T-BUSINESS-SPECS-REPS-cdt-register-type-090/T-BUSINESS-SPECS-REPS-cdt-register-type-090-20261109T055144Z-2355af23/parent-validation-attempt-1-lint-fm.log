@@ -1,0 +1,16 @@
+parent validation: lint-fm
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.7.0 lint:fm
+> node packages/docs-lint/bin/specdojo-docs-lint.js remark "docs/**/*.{md,mdx}" --quiet --frail
+
+
+
+--- stderr ---
+[4m[31mdocs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-080/T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-080-20261109T045935Z-868c17fe/result.md[39m[24m
+1:1-32:4 [31merror[39m [1mfrontmatter に未エスケープの山括弧 [36m`<provider>`[39m を検知しました。インラインコード（例: [36m`<provider>`[39m）で囲んでください。[22m
+
+[31m✖[39m 1 error

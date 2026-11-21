@@ -4,11 +4,12 @@ document: specdojo:pm-organization-recipe
 path: docs/ja/specdojo/recipes/pm-organization-recipe.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-recipe
 verdict: pass
-score: 98
-graded_at: "2026-10-06T21:04:17.751Z"
-graded_by: agy-expert-executor
-content_hash: a08d130f0866c92d25a512ecf23ce8ab433cd52ad2d01dc1b945d771f2a14061
+score: 100
+graded_at: "2026-11-20T20:03:42.640Z"
+graded_by: flash-high-executor
+content_hash: 10ba61d842f9a7c7b632f94225bc88cf4ce345ca9c76536bc72e2fc401d9ce38
 categories:
   purpose:
     score: 100
@@ -25,7 +26,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 92
+    score: 100
   consistency:
     score: 100
 viewpoints:
@@ -81,8 +82,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -104,13 +105,6 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 1
+  minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 33
-    anchor: "## 4. 各章の書き方"
-    message: 各章の書き方において, 良質な実例（prj-overview-recipe）のような「問い」と「書き方（コツ）」の形式を採用し, 執筆者が具体的に何を記述すべきか導く構成にしてください。
-    message_ja: 各章の書き方において, 良質な実例（prj-overview-recipe）のような「問い」と「書き方（コツ）」の形式を採用し, 執筆者が具体的に何を記述すべきか導く構成にしてください。
+findings: []

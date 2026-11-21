@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 94
-graded_at: "2026-10-04T21:04:06.608Z"
-graded_by: agy-expert-executor
-content_hash: bb7165214fa0566163a623da7d1bcc43f57d2737bec1f01b4613feb017922165
+graded_at: "2026-11-02T20:22:23.148Z"
+graded_by: flash-high-executor
+content_hash: 7f7aabaea126a57834f93f574c5bcbdfbb2c40a21db696c63b9b88f2be04fbc6
 categories:
   purpose:
     score: 100
@@ -113,9 +113,11 @@ findings:
     line: 1
     anchor: "# 内部結合テストカタログ 対象別 作成ルール"
     message: 参照サンプル `specdojo:itc-sample` が本ルールブックで定義した構成（第5節）に従っておらず、実例として不適切である。
+    message_ja: 参照サンプル `specdojo:itc-sample` が本ルールブックで定義した構成（第5節）に従っておらず、実例として不適切である。
   - id: F002
     severity: minor
     rule: vp-ux-language-consistency
     line: 93
     anchor: 生成する `utc-<term>` 本文の見出しは各章で指定された **番号付き** の形式
     message: "`utc-＜term＞` は `itc-＜term＞` の誤記である。"
+    message_ja: "`utc-＜term＞` は `itc-＜term＞` の誤記である。"

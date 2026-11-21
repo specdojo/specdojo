@@ -156,6 +156,7 @@ milestones:
     name: ドメイン完了
     artifact_name: 計画
     depends_on:
+      - T-PLANNING-dct-index-140
       - T-PLANNING-sch-strategy-launch-140
       - T-PLANNING-sch-strategy-data-flow-140
     owner: PM
@@ -164,7 +165,6 @@ milestones:
     artifact_name: 計画
     depends_on:
       - T-PLANNING-dct-index-020
-      - T-PLANNING-tml-index-020
       - T-PLANNING-sch-defaults-020
       - T-PLANNING-sch-strategy-launch-020
       - T-PLANNING-sch-strategy-data-flow-020
@@ -174,7 +174,6 @@ milestones:
     artifact_name: 計画
     depends_on:
       - T-PLANNING-dct-index-070
-      - T-PLANNING-tml-index-070
       - T-PLANNING-sch-defaults-070
       - T-PLANNING-sch-strategy-launch-070
       - T-PLANNING-sch-strategy-data-flow-070
@@ -184,7 +183,6 @@ milestones:
     artifact_name: 計画
     depends_on:
       - T-PLANNING-dct-index-090
-      - T-PLANNING-tml-index-090
       - T-PLANNING-sch-defaults-090
       - T-PLANNING-sch-strategy-launch-090
       - T-PLANNING-sch-strategy-data-flow-090
@@ -224,3 +222,448 @@ milestones:
       - T-DATA-FLOW-PDCA-cdfd-uc-register-140
       - T-DATA-FLOW-PDCA-cdfd-uc-deliverable-140
     owner: PM
+  - id: G-DATA-FLOW-USAGE-pass
+    name: data-flow-usage pass 完了
+    artifact_name: データフロー（利用導線）
+    depends_on:
+      - T-DATA-FLOW-USAGE-cdfd-overview-010
+      - T-DATA-FLOW-USAGE-cdfd-uc-register-010
+      - T-DATA-FLOW-USAGE-cdfd-uc-schedule-010
+      - T-DATA-FLOW-USAGE-cdfd-uc-routine-010
+    owner: PM
+  - id: M-DATA-FLOW-USAGE-data-flow
+    name: 利用導線構成の CDFD 完了
+    artifact_name: データフロー（利用導線）
+    depends_on:
+      - T-DATA-FLOW-USAGE-cdfd-uc-register-010
+      - T-DATA-FLOW-USAGE-cdfd-uc-schedule-010
+      - T-DATA-FLOW-USAGE-cdfd-uc-routine-010
+    owner: PM
+  - id: G-DATA-FLOW-UC-REWRITE-pass
+    name: data-flow-uc-rewrite pass 完了
+    artifact_name: データフロー（系統別の詳細）
+    depends_on:
+      - T-DATA-FLOW-UC-REWRITE-cdfd-uc-register-020
+      - T-DATA-FLOW-UC-REWRITE-cdfd-uc-schedule-020
+      - T-DATA-FLOW-UC-REWRITE-cdfd-uc-routine-020
+    owner: PM
+  - id: M-DATA-FLOW-UC-REWRITE-data-flow
+    name: 系統別の詳細 CDFD の書き直し完了
+    artifact_name: データフロー（系統別の詳細）
+    depends_on:
+      - T-DATA-FLOW-UC-REWRITE-cdfd-uc-register-020
+      - T-DATA-FLOW-UC-REWRITE-cdfd-uc-schedule-020
+      - T-DATA-FLOW-UC-REWRITE-cdfd-uc-routine-020
+    owner: PM
+  - id: G-BUSINESS-SPECS-REPS-first-pass
+    name: 初回パス完了
+    depends_on:
+      - T-BUSINESS-SPECS-REPS-bdd-register-entry-010
+      - T-BUSINESS-SPECS-REPS-ccd-project-planning-010
+      - T-BUSINESS-SPECS-REPS-cdt-register-type-010
+      - T-BUSINESS-SPECS-REPS-br-task-selection-strategy-020
+      - T-BUSINESS-SPECS-REPS-bes-task-ready-selected-020
+      - T-BUSINESS-SPECS-REPS-sf-task-execution-010
+      - T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-010
+      - T-BUSINESS-SPECS-REPS-clis-exec-commands-010
+    owner: PM
+  - id: G-BUSINESS-SPECS-REPS-refine-pass
+    name: 磨き込み完了
+    depends_on:
+      - T-BUSINESS-SPECS-REPS-bdd-register-entry-070
+      - T-BUSINESS-SPECS-REPS-ccd-project-planning-070
+      - T-BUSINESS-SPECS-REPS-cdt-register-type-070
+      - T-BUSINESS-SPECS-REPS-br-task-selection-strategy-070
+      - T-BUSINESS-SPECS-REPS-bes-task-ready-selected-070
+      - T-BUSINESS-SPECS-REPS-sf-task-execution-070
+      - T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-070
+      - T-BUSINESS-SPECS-REPS-clis-exec-commands-070
+    owner: PM
+  - id: G-BUSINESS-SPECS-REPS-review-pass
+    name: レビュー完了
+    depends_on:
+      - T-BUSINESS-SPECS-REPS-bdd-register-entry-090
+      - T-BUSINESS-SPECS-REPS-ccd-project-planning-090
+      - T-BUSINESS-SPECS-REPS-cdt-register-type-090
+      - T-BUSINESS-SPECS-REPS-br-task-selection-strategy-090
+      - T-BUSINESS-SPECS-REPS-bes-task-ready-selected-090
+      - T-BUSINESS-SPECS-REPS-sf-task-execution-090
+      - T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-090
+      - T-BUSINESS-SPECS-REPS-clis-exec-commands-090
+    owner: PM
+  - id: M-BUSINESS-SPECS-REPS-data-model-bdd
+    name: ドメイン完了
+    artifact_name: データモデル／業務データ辞書
+    depends_on:
+      - T-BUSINESS-SPECS-REPS-bdd-register-entry-140
+    owner: PM
+  - id: M-BUSINESS-SPECS-REPS-data-model-ccd
+    name: ドメイン完了
+    artifact_name: データモデル／概念クラス図
+    depends_on:
+      - T-BUSINESS-SPECS-REPS-ccd-project-planning-140
+    owner: PM
+  - id: M-BUSINESS-SPECS-REPS-data-model-cdt
+    name: ドメイン完了
+    artifact_name: データモデル／分類一覧
+    depends_on:
+      - T-BUSINESS-SPECS-REPS-cdt-register-type-140
+    owner: PM
+  - id: M-BUSINESS-SPECS-REPS-business-model-br
+    name: ドメイン完了
+    artifact_name: 業務モデル／ビジネスルール
+    depends_on:
+      - T-BUSINESS-SPECS-REPS-br-task-selection-strategy-140
+    owner: PM
+  - id: M-BUSINESS-SPECS-REPS-business-model-bes
+    name: ドメイン完了
+    artifact_name: 業務モデル／業務イベント仕様
+    depends_on:
+      - T-BUSINESS-SPECS-REPS-bes-task-ready-selected-140
+    owner: PM
+  - id: M-BUSINESS-SPECS-REPS-system-functions
+    name: ドメイン完了
+    artifact_name: システム化機能
+    depends_on:
+      - T-BUSINESS-SPECS-REPS-sf-task-execution-140
+    owner: PM
+  - id: M-BUSINESS-SPECS-REPS-external-interface-specs
+    name: ドメイン完了
+    artifact_name: 外部I/F仕様
+    depends_on:
+      - T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-140
+    owner: PM
+  - id: M-BUSINESS-SPECS-REPS-user-interface-model
+    name: ドメイン完了
+    artifact_name: ユーザーインターフェースモデル
+    depends_on:
+      - T-BUSINESS-SPECS-REPS-clis-exec-commands-140
+    owner: PM
+  - id: G-BUSINESS-SPECS-KATA-first-pass
+    name: 初回パス完了
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-bdd-register-entry-050
+      - T-BUSINESS-SPECS-KATA-ccd-project-planning-050
+      - T-BUSINESS-SPECS-KATA-cdt-register-type-050
+      - T-BUSINESS-SPECS-KATA-bes-task-ready-selected-005
+      - T-BUSINESS-SPECS-KATA-br-task-selection-strategy-005
+      - T-BUSINESS-SPECS-KATA-sf-task-execution-050
+      - T-BUSINESS-SPECS-KATA-ifx-cmd-ai-provider-cli-060
+    owner: PM
+  - id: G-BUSINESS-SPECS-KATA-refine-pass
+    name: 磨き込み完了
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-bes-task-ready-selected-070
+      - T-BUSINESS-SPECS-KATA-br-task-selection-strategy-070
+    owner: PM
+  - id: G-BUSINESS-SPECS-KATA-review-pass
+    name: レビュー完了
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-bdd-register-entry-090
+      - T-BUSINESS-SPECS-KATA-ccd-project-planning-090
+      - T-BUSINESS-SPECS-KATA-cdt-register-type-090
+      - T-BUSINESS-SPECS-KATA-bes-task-ready-selected-090
+      - T-BUSINESS-SPECS-KATA-br-task-selection-strategy-090
+      - T-BUSINESS-SPECS-KATA-sf-task-execution-090
+      - T-BUSINESS-SPECS-KATA-ifx-cmd-ai-provider-cli-090
+    owner: PM
+  - id: M-BUSINESS-SPECS-KATA-data-model-bdd
+    name: ドメイン完了
+    artifact_name: データモデル／業務データ辞書
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-bdd-register-entry-140
+    owner: PM
+  - id: M-BUSINESS-SPECS-KATA-data-model-ccd
+    name: ドメイン完了
+    artifact_name: データモデル／概念クラス図
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-ccd-project-planning-140
+    owner: PM
+  - id: M-BUSINESS-SPECS-KATA-data-model-cdt
+    name: ドメイン完了
+    artifact_name: データモデル／分類一覧
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-cdt-register-type-140
+    owner: PM
+  - id: M-BUSINESS-SPECS-KATA-business-model-bes
+    name: ドメイン完了
+    artifact_name: 業務モデル／業務イベント仕様
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-bes-task-ready-selected-140
+    owner: PM
+  - id: M-BUSINESS-SPECS-KATA-business-model-br
+    name: ドメイン完了
+    artifact_name: 業務モデル／ビジネスルール
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-br-task-selection-strategy-140
+    owner: PM
+  - id: M-BUSINESS-SPECS-KATA-system-functions
+    name: ドメイン完了
+    artifact_name: システム化機能
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-sf-task-execution-140
+    owner: PM
+  - id: M-BUSINESS-SPECS-KATA-external-interface-specs
+    name: ドメイン完了
+    artifact_name: 外部I/F仕様
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-ifx-cmd-ai-provider-cli-140
+    owner: PM
+  - id: M-GLOSSARY-glossary
+    name: ドメイン完了
+    artifact_name: 用語集
+    depends_on:
+      - T-GLOSSARY-gl-register-140
+      - T-GLOSSARY-gl-planning-140
+      - T-GLOSSARY-gl-execution-140
+      - T-GLOSSARY-gl-quality-140
+      - T-GLOSSARY-gl-setup-140
+    owner: PO
+  - id: G-GLOSSARY-first-pass
+    name: 初回パス完了
+    artifact_name: 用語集
+    depends_on:
+      - T-GLOSSARY-gl-common-010
+      - T-GLOSSARY-gl-register-010
+      - T-GLOSSARY-gl-planning-010
+      - T-GLOSSARY-gl-execution-010
+      - T-GLOSSARY-gl-quality-010
+      - T-GLOSSARY-gl-setup-010
+    owner: PO
+  - id: G-GLOSSARY-refine-pass
+    name: 磨き込み完了
+    artifact_name: 用語集
+    depends_on:
+      - T-GLOSSARY-gl-common-070
+      - T-GLOSSARY-gl-register-070
+      - T-GLOSSARY-gl-planning-070
+      - T-GLOSSARY-gl-execution-070
+      - T-GLOSSARY-gl-quality-070
+      - T-GLOSSARY-gl-setup-070
+    owner: PO
+  - id: G-GLOSSARY-review-pass
+    name: レビュー完了
+    artifact_name: 用語集
+    depends_on:
+      - T-GLOSSARY-gl-common-090
+      - T-GLOSSARY-gl-register-090
+      - T-GLOSSARY-gl-planning-090
+      - T-GLOSSARY-gl-execution-090
+      - T-GLOSSARY-gl-quality-090
+      - T-GLOSSARY-gl-setup-090
+    owner: PO
+  - id: G-BUSINESS-SPECS-KATA-2-first-pass
+    name: 初回パス完了
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-2-stsd-task-execution-050
+      - T-BUSINESS-SPECS-KATA-2-cdsd-execution-050
+      - T-BUSINESS-SPECS-KATA-2-cdfd-uc-register-050
+      - T-BUSINESS-SPECS-KATA-2-clis-exec-commands-050
+      - T-BUSINESS-SPECS-KATA-2-ifx-cmd-ai-provider-cli-050
+    owner: PO
+  - id: G-BUSINESS-SPECS-KATA-2-review-pass
+    name: レビュー完了
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-2-stsd-task-execution-090
+      - T-BUSINESS-SPECS-KATA-2-cdsd-execution-090
+      - T-BUSINESS-SPECS-KATA-2-cdfd-uc-register-090
+      - T-BUSINESS-SPECS-KATA-2-clis-exec-commands-090
+      - T-BUSINESS-SPECS-KATA-2-ifx-cmd-ai-provider-cli-090
+    owner: PO
+  - id: M-BUSINESS-SPECS-KATA-2-data-model-stsd
+    name: ドメイン完了
+    artifact_name: データモデル／ステータス定義・状態遷移
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-2-stsd-task-execution-140
+    owner: PO
+  - id: M-BUSINESS-SPECS-KATA-2-data-model-cdsd
+    name: ドメイン完了
+    artifact_name: データモデル／概念データストア定義
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-2-cdsd-execution-140
+    owner: PO
+  - id: M-BUSINESS-SPECS-KATA-2-data-flow
+    name: ドメイン完了
+    artifact_name: データフロー
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-2-cdfd-uc-register-140
+    owner: PO
+  - id: M-BUSINESS-SPECS-KATA-2-user-interface-model
+    name: ドメイン完了
+    artifact_name: ユーザーインターフェースモデル
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-2-clis-exec-commands-140
+    owner: PO
+  - id: M-BUSINESS-SPECS-KATA-2-external-interface-specs
+    name: ドメイン完了
+    artifact_name: 外部I/F仕様
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-2-ifx-cmd-ai-provider-cli-140
+    owner: PO
+  - id: G-PROJECT-KATA-first-pass
+    name: 初回パス完了
+    depends_on:
+      - T-PROJECT-KATA-pm-organization-050
+      - T-PROJECT-KATA-pm-roles-050
+      - T-PROJECT-KATA-pm-plan-050
+      - T-PROJECT-KATA-pm-quality-management-plan-050
+      - T-PROJECT-KATA-pm-raci-050
+      - T-PROJECT-KATA-prj-assumptions-constraints-dependencies-050
+      - T-PROJECT-KATA-prj-comparison-of-alternatives-050
+    owner: PO
+  - id: G-PROJECT-KATA-review-pass
+    name: レビュー完了
+    depends_on:
+      - T-PROJECT-KATA-pm-organization-090
+      - T-PROJECT-KATA-pm-roles-090
+      - T-PROJECT-KATA-pm-plan-090
+      - T-PROJECT-KATA-pm-quality-management-plan-090
+      - T-PROJECT-KATA-pm-raci-090
+      - T-PROJECT-KATA-prj-assumptions-constraints-dependencies-090
+      - T-PROJECT-KATA-prj-comparison-of-alternatives-090
+    owner: PO
+  - id: M-PROJECT-KATA-project-management
+    name: ドメイン完了
+    artifact_name: プロジェクト管理
+    depends_on:
+      - T-PROJECT-KATA-pm-quality-management-plan-140
+      - T-PROJECT-KATA-pm-raci-140
+    owner: PO
+  - id: M-PROJECT-KATA-project-definition
+    name: ドメイン完了
+    artifact_name: プロジェクト定義
+    depends_on:
+      - T-PROJECT-KATA-prj-assumptions-constraints-dependencies-140
+      - T-PROJECT-KATA-prj-comparison-of-alternatives-140
+    owner: PO
+  - id: G-KATA-WAVE-1-first-pass
+    name: 初回パス完了
+    depends_on:
+      - T-KATA-WAVE-1-cxd-specdojo-060
+      - T-KATA-WAVE-1-cnd-specdojo-060
+      - T-KATA-WAVE-1-cpd-specdojo-cli-060
+      - T-KATA-WAVE-1-ifd-specdojo-060
+      - T-KATA-WAVE-1-sysd-index-060
+      - T-KATA-WAVE-1-sysd-critical-flows-060
+      - T-KATA-WAVE-1-sysd-cross-cutting-policy-060
+      - T-KATA-WAVE-1-bes-index-060
+      - T-KATA-WAVE-1-sf-index-060
+      - T-KATA-WAVE-1-ifx-index-060
+      - T-KATA-WAVE-1-dct-index-060
+    owner: PO
+  - id: G-KATA-WAVE-1-refine-pass
+    name: 磨き込み完了
+    depends_on:
+      - T-KATA-WAVE-1-cxd-specdojo-070
+      - T-KATA-WAVE-1-cnd-specdojo-070
+      - T-KATA-WAVE-1-cpd-specdojo-cli-070
+      - T-KATA-WAVE-1-ifd-specdojo-070
+      - T-KATA-WAVE-1-sysd-index-070
+      - T-KATA-WAVE-1-sysd-critical-flows-070
+      - T-KATA-WAVE-1-sysd-cross-cutting-policy-070
+      - T-KATA-WAVE-1-bes-index-070
+      - T-KATA-WAVE-1-sf-index-070
+      - T-KATA-WAVE-1-ifx-index-070
+      - T-KATA-WAVE-1-dct-index-070
+    owner: PO
+  - id: G-KATA-WAVE-1-review-pass
+    name: レビュー完了
+    depends_on:
+      - T-KATA-WAVE-1-cxd-specdojo-090
+      - T-KATA-WAVE-1-cnd-specdojo-090
+      - T-KATA-WAVE-1-cpd-specdojo-cli-090
+      - T-KATA-WAVE-1-ifd-specdojo-090
+      - T-KATA-WAVE-1-sysd-index-090
+      - T-KATA-WAVE-1-sysd-critical-flows-090
+      - T-KATA-WAVE-1-sysd-cross-cutting-policy-090
+      - T-KATA-WAVE-1-bes-index-090
+      - T-KATA-WAVE-1-sf-index-090
+      - T-KATA-WAVE-1-ifx-index-090
+      - T-KATA-WAVE-1-dct-index-090
+    owner: PO
+  - id: M-KATA-WAVE-1-architecture
+    name: ドメイン完了
+    artifact_name: アーキテクチャ
+    depends_on:
+      - T-KATA-WAVE-1-cpd-specdojo-cli-140
+      - T-KATA-WAVE-1-ifd-specdojo-140
+    owner: PO
+  - id: M-KATA-WAVE-1-system-design
+    name: ドメイン完了
+    artifact_name: システム設計
+    depends_on:
+      - T-KATA-WAVE-1-sysd-critical-flows-140
+      - T-KATA-WAVE-1-sysd-cross-cutting-policy-140
+    owner: PO
+  - id: M-KATA-WAVE-1-business-model
+    name: ドメイン完了
+    artifact_name: 業務モデル／業務イベント仕様
+    depends_on:
+      - T-KATA-WAVE-1-bes-index-140
+    owner: PO
+  - id: M-KATA-WAVE-1-system-functions
+    name: ドメイン完了
+    artifact_name: システム化機能
+    depends_on:
+      - T-KATA-WAVE-1-sf-index-140
+    owner: PO
+  - id: M-KATA-WAVE-1-external-interface-specs
+    name: ドメイン完了
+    artifact_name: 外部I/F仕様
+    depends_on:
+      - T-KATA-WAVE-1-ifx-index-140
+    owner: PO
+  - id: M-KATA-WAVE-1-planning
+    name: ドメイン完了
+    artifact_name: 計画
+    depends_on:
+      - T-KATA-WAVE-1-dct-index-140
+    owner: PO
+  - id: G-KATA-WAVE-2-first-pass
+    name: 初回パス完了
+    depends_on:
+      - T-KATA-WAVE-2-bac-task-completion-060
+      - T-KATA-WAVE-2-bds-progress-report-050
+      - T-KATA-WAVE-2-sld-specdojo-050
+      - T-KATA-WAVE-2-ifx-file-agent-evidence-050
+    owner: PO
+  - id: G-KATA-WAVE-2-refine-pass
+    name: 磨き込み完了
+    depends_on:
+      - T-KATA-WAVE-2-bac-task-completion-070
+      - T-KATA-WAVE-2-bds-progress-report-070
+      - T-KATA-WAVE-2-sld-specdojo-070
+      - T-KATA-WAVE-2-ifx-file-agent-evidence-070
+    owner: PO
+  - id: G-KATA-WAVE-2-review-pass
+    name: レビュー完了
+    depends_on:
+      - T-KATA-WAVE-2-bac-task-completion-090
+      - T-KATA-WAVE-2-bds-progress-report-090
+      - T-KATA-WAVE-2-sld-specdojo-090
+      - T-KATA-WAVE-2-ifx-file-agent-evidence-090
+    owner: PO
+  - id: M-KATA-WAVE-2-business-acceptance-criteria
+    name: ドメイン完了
+    artifact_name: 業務受入条件
+    depends_on:
+      - T-KATA-WAVE-2-bac-task-completion-140
+    owner: PO
+  - id: M-KATA-WAVE-2-user-interface-model
+    name: ドメイン完了
+    artifact_name: ユーザーインターフェースモデル
+    depends_on:
+      - T-KATA-WAVE-2-bds-progress-report-140
+    owner: PO
+  - id: M-KATA-WAVE-2-data-model
+    name: ドメイン完了
+    artifact_name: データモデル／概念データストア定義
+    depends_on:
+      - T-KATA-WAVE-2-sld-specdojo-140
+    owner: PO
+  - id: M-KATA-WAVE-2-external-interface-specs
+    name: ドメイン完了
+    artifact_name: 外部I/F仕様
+    depends_on:
+      - T-KATA-WAVE-2-ifx-file-agent-evidence-140
+    owner: PO

@@ -7,7 +7,7 @@ import { resolveKataRefs } from "../kata/kata.js";
 import { planningTarget } from "../register/planning.js";
 import {
   getProjectSchedulePath,
-  getProjectTimelinePath,
+  getProjectRegisterPath,
   type SpecDojoProjectConfig,
 } from "../shared/specdojo-config.js";
 
@@ -65,7 +65,8 @@ export function planningPlanFields(opts: {
       `4. \`specdojo catalog plan validate ${projectArg} --domain ${unit}\` を通す。blocking な \`open_questions\` を解消する。`,
       `5. \`specdojo catalog scaffold ${projectArg} --domain ${unit} --plan\` で \`dct-${unit}.yaml\`（物理分割時は全 part）を生成する。\`dct-index.yaml\` の \`size\` がない場合は個票の範囲に合わせて \`--size <small|medium|large>\` を明示する。既存ファイルは差分を確認し、必要な場合だけ \`--force\` を使う。`,
       `6. \`specdojo catalog validate ${projectArg}\` を通す。先に \`dct-index.yaml\` の全 domain の索引を整備し、生成した domain を登録する（物理分割も同じ domain の一項目とする）。判定計画とカタログの保存、参照・依存・完了条件の整合を完了基準とする。`,
-      "7. 個票の作業内容・対応結果と実行記録に判断・検証結果を記録する。todo の close は runner と人が行う。close 後の `timeline build` が domain を `primary` と導く。`tml-index.yaml` は変更しない。",
+      "7. `evidence_refs` がある成果物は参照先を読み、状態遷移・判定・検証の本体を含むファイルが参照にあるか確認する。re-export だけのファイルを根拠にせず、転送先をたどって本体を特定する。不足する本体の参照を補い、`catalog validate` を再実行する。確認した本体のパス・判断根拠・未確認範囲を記録する。",
+      "8. 個票の作業内容・対応結果と実行記録に判断・検証結果を記録する。todo の close は runner と人が行う。close 後の `dashboard build` がカタログの状態を導出する。`tml-index.yaml` は変更しない。",
     );
   } else {
     const strategy = join(
@@ -75,10 +76,10 @@ export function planningPlanFields(opts: {
     common.push(
       "### scope・intent の宣言と完了条件",
       "",
-      `1. \`${join(getProjectTimelinePath(opts.project), "tml-index.yaml").replaceAll("\\", "/")}\` があれば対象 track の domains と依存・着手順を確認する。\`timeline build\` の register 由来の状態と既存カタログも確認する。`,
+      `1. \`${getProjectRegisterPath(opts.project) ?? "controls/project-register"}\` の対象 track を担う epic の domains と depends_on を確認する。範囲は既存 strategy の scope、epic の domains、互換用 tml-index.yaml の順で解決する。\`dashboard build\` のカタログ検出と既存カタログも確認する。`,
       `2. \`${strategy}\` に \`scope.catalogs\`（ID・リポジトリルートからのパス）、\`scope.include_kinds\` と \`approach_rules\` を宣言する。既存 scope の意図を保ち、各成果物の \`local_ids\` と \`intent\`（例: author-deliverable / bootstrap-kata-set / confirm-deliverable）、必要時の \`kata_target\` / \`bootstrap_scope\` を根拠付きで決める。`,
       "3. 主担当を `owner_rules` または生成時の `--owner` / `--default-owner` で明示する。`done_criteria.roles` を主担当と解釈しない。必要な kata の grade が不足なら先に評価し、不明な判断を推測で補わない。",
-      "   人の文脈記入から始める場合は `intent: draft-with-context` を選ぶ。必要な kata がすべて利用可能なら `draft` profile（context → draft → refine → review → finalize）になる。context と finalize は human、他は agent とし、refine は `fully-guided` で磨き込む。",
+      "   人の文脈記入から始める場合は `intent: draft-with-context` を選ぶ。必要な kata がすべて利用可能なら `draft` profile（context → draft → refine → condense → review → finalize）になる。context と finalize は human、他は agent とし、refine は `fully-guided` で磨き込む。",
       `   context の担当者は \`specdojo exec claim ${projectArg} --task <context-task-id> --by <human>\` で着手し、\`specdojo deliverable scaffold ${projectArg} --target <doc-id>\` で雛形を作る。既存成果物は上書きしない。本文の \`_CONTEXT_:\` に固定前提・制約・調査や選定を任せる範囲を書く（例: \`_CONTEXT_: 既存 API を維持し、認証方式の候補を調べて提案してほしい。\`）。result に記入内容を残して \`specdojo exec complete ${projectArg} --task <context-task-id> --by <human>\` で draft へ渡す。human 用の plan は生成しない。`,
       `4. \`specdojo schedule strategy generate ${projectArg} --track ${unit}\` を実行し、scope・intent・担当・依存関係に関するエラーを解消する。既存 strategy の変更は差分を確認し、必要な場合だけ \`--force\` を指定する。`,
       `5. \`specdojo schedule build ${projectArg} --track ${unit}\` を通し、\`sch-track-${unit}.yaml\` が生成され、scope の成果物とタスクの対応・依存が一致することを確認する。`,

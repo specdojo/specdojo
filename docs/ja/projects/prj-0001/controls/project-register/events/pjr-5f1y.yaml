@@ -1,0 +1,123 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_dc945efe7ac64172885ece546d9f604d
+  ts: "2026-11-13T14:08:20Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳。indie の依頼（2026-11-13）で、orchestrator の知見と手作業をコマンドと文書に移す
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: exec resume に、再開の指示を plan へ足すオプションを用意する
+    - field: description
+      from: ""
+      to: 再開の前に plan の共通規約の前へ追加の指示を入れる作業を、Python の挿入ではなく CLI で行えるようにする
+    - field: input
+      from: ""
+      to: '["2026-11-12〜13 の型の整備と夜間の実行で、orchestrator が手作業やシェルスクリプトで補った"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-13"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: commit_type
+      from: ""
+      to: feat
+    - field: commit_scope
+      from: ""
+      to: exec
+- v: 1
+  id: reg_becb4c5e9ee14469949a0a2a2114b63e
+  ts: "2026-11-20T14:52:01Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_dc945efe7ac64172885ece546d9f604d
+- v: 1
+  id: reg_815f8ea680df43c79a689c1e27b5e597
+  ts: "2026-11-20T15:06:37Z"
+  action: wait
+  actor: opus-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor validation failed or not run: npm run validate:schema:file"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor validation failed or not run: npm run validate:schema:file"
+  previous_event_id: reg_becb4c5e9ee14469949a0a2a2114b63e
+- v: 1
+  id: reg_ae23d574fe3446a4bc56fb0d73fcfafc
+  ts: "2026-11-20T23:13:48Z"
+  action: start
+  actor: opus-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "executor validation failed or not run: npm run validate:schema:file"
+      to: "-"
+  previous_event_id: reg_815f8ea680df43c79a689c1e27b5e597
+- v: 1
+  id: reg_3dddec312e4e494286f0fb7dd386b2f0
+  ts: "2026-11-20T23:23:51Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_ae23d574fe3446a4bc56fb0d73fcfafc
+- v: 1
+  id: reg_80beab1b03e747b780c1b03b22adcb48
+  ts: "2026-11-21T00:52:21Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register で対応。差分（652ff53c5 の前の統合）・単体テスト・ビルド済みの CLI のエラーを確かめ、既存の再開の統合テストを写した一時のテストで、偽の agent の run を --resume-note 2 つで再開し、plan の位置と記録と review への遷移を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-21"
+    - field: conclusion
+      from: "-"
+      to: exec run --register --resume --resume-from executor に --resume-note を足し、再開の指示を plan の共通規約の参照の前へ入れ、pipeline-state.json の resume_notes に残す
+  previous_event_id: reg_3dddec312e4e494286f0fb7dd386b2f0

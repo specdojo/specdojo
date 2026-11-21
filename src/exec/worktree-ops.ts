@@ -3,6 +3,7 @@ export {
   ROOT_NEW_FILES_HANDOFF_LABEL,
   applyRootNewFilesHandoff,
   assertResultMarkdownlint,
+  assertCommitScope,
   commitTargetPaths,
   commitWorktreeChanges,
   currentBranch,
@@ -20,6 +21,7 @@ export {
   taskTargetsAtHead,
   unstageCommitTargets,
   worktreeStatusPaths,
+  UncommittedChangesError,
 } from "./worktree-ops-commit.js";
 export type { CommitScope, WorktreeOpsContext } from "./worktree-ops-commit.js";
 export {
@@ -35,6 +37,7 @@ export {
   discardStaleExecWorktree,
   listOrphanedExecBranches,
   pruneOrphanedExecBranches,
+  refreshWorktreeCheckpoint,
   removeWorktree,
 } from "./worktree-ops-lifecycle.js";
 export type { OrphanedExecBranch } from "./worktree-ops-lifecycle.js";

@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-11-15T04:03:22Z",
+  "type": "unblock",
+  "task_id": "T-KATA-WAVE-2-ifx-file-agent-evidence-005",
+  "by": "indie",
+  "msg": "orchestrator が記帳: executor の段からやり直すため"
+}

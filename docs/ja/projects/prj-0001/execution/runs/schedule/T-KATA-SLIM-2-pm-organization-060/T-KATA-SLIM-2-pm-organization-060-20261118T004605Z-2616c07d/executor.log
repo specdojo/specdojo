@@ -1,0 +1,34 @@
+`docs/ja/specdojo/recipes/pm-organization-recipe.md` を書き直しました。変更したのはこのファイルだけで、Recipe 記述標準の 8 章の構成はそのまま残しています。markdownlint と Prettier のチェックはどちらも通りました。
+
+**大きさ**（空白と表の区切り行を除いた文字数。括弧内は区切り行込みの文字数とバイト数）
+
+| 文書 | 前 | 後 | 比 |
+| --- | --- | --- | --- |
+| `pm-organization-recipe` | 1,999 字（2,223 字・5,888 B） | 1,399 字（1,619 字・4,087 B） | 70.0% |
+
+**外した記述**
+- rulebook と同じ判断の言い直し：ロールの採否・理由・代替先の列の指定、RACI の列との突き合わせ、ロール定義・メンバー定義などの委譲先の指定、ロールを増やす前に責任を再配分する方針。
+- 仕上げチェックの構造の検査（「組織モデル、owner方針、正本、見直し条件がある」）と、重複していた確認（「正本」の良い例・悪い例とレビュー観点、AI Agent の確認）。
+- 全体の作成手順をなぞっていた深掘り手順。
+- 章立てをなぞっていた「このレシピの使い方」の箇条書き 3 行。
+- 元の recipe には、どの成果物にも共通する文書の運用と、未決事項の台帳の列はありませんでした。
+
+**残した・足した記述**
+- 「作成前に集める情報」に取り出し元の列を足しました（プロジェクト概要、ステークホルダー登録簿、最終判断者への確認）。
+- 作成手順で組織モデルを最初に書く理由と、見直し条件の手がかりは組織モデルを書くときに見えていることを書きました。
+- 各章の書き方を、prj-charter の recipe と同じ「問い」（各節 2 つ）と「コツ」の形にしました。これで指摘 F001 に対応しています。コツには次のような聞き方とつまずく点を書いています。
+  - 「誰がやるか」より先に「どの判断が要るか」を聞く。
+  - 採用と専任配置を分けて聞く。
+  - 一覧や名簿は写さず参照に置き換える。
+  - 見直しのきっかけを、観測できる出来事で聞く。
+- 深掘り手順は、対応のない主張を探す順序（責任領域→主要判断、採用ロール→責任領域、見直し条件→兼務の前提）に書き換えました。
+- Why・What・How・Trace の対応は「このレシピの使い方」の 1 項目にまとめました。
+
+**未対応の点**
+- 7 割の目安を守るため、レビュー観点の表と良い例・悪い例の表を 2 行ずつにしました。Recipe 記述標準の「必須章ごとに 3 項目以上」を下回るので、grade で指摘されるかもしれません。
+- 指摘 F001 が解消したかは、統合後の grade で確かめる必要があります。
+- rulebook・sample・template は変えておらず、合わせて直すべき点も見つかりませんでした。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"pm-organization-recipe を改訂し、共通運用・rulebook の言い直し・構造検査・重複確認・手順をなぞる深掘りを外した。各章を問いとコツの形にし（F001 対応）、取り出し元の列・書く順番の理由・対応のない主張を探す深掘りの順序を加えた。大きさは空白と表の区切り行を除いて 1,999 字から 1,399 字（70.0%）、区切り行込みで 2,223 字・5,888 B から 1,619 字・4,087 B。成果物本体・rulebook・sample・template は変更していない。","handoff":["result の大きさの表に記録する: pm-organization-recipe 前 1,999 字（2,223 字・5,888 B）→ 後 1,399 字（1,619 字・4,087 B）、比 70.0%。測り方は PJR-7M9J と同じ（空白・改行と表の区切り行を除く）。","F001（各章を問いとコツの形にする）は各章の書き方を『問い:』『コツ:』の形に改めて対応した。解消したかは統合後の grade で確かめる。","7 割の目安を守るため、レビュー観点と良い例・悪い例の表を 2 行ずつにした。Recipe 記述標準の『内容充実化』の『必須章ごとに 3 項目以上』を下回るので、grade で指摘されたら、目安の扱いと合わせて判断が要る。","rulebook・sample・template は変えておらず、合わせて直すべき点も見つからなかった。"],"validations":[{"command":"npx markdownlint-cli2 docs/ja/specdojo/recipes/pm-organization-recipe.md","status":"passed","summary":"0 issues"},{"command":"npx prettier --check docs/ja/specdojo/recipes/pm-organization-recipe.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更は recipe（docs/ja/specdojo/recipes/）のみで、plan・result・個票を変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変更していない","reason":"変更ファイルに *.yaml / *.yml がない"}]}
+</specdojo_executor_evidence>

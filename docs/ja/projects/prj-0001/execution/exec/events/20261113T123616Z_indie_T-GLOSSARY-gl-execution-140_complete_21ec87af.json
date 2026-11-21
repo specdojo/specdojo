@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-11-13T12:36:16Z",
+  "type": "complete",
+  "task_id": "T-GLOSSARY-gl-execution-140",
+  "by": "indie",
+  "msg": "orchestrator が記帳。長い補足を読み手向けに書き直し、grade（gl-exec-notes-20261113）で pass 100 を確かめて確定し直した"
+}

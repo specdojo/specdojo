@@ -1,5 +1,6 @@
 import { existsSync, readdirSync, writeFileSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { tmpdir } from "node:os";
+import { dirname, join, resolve } from "node:path";
 import { dump } from "js-yaml";
 
 // Keep the fallback result check and every scaffold on the same document rules.
@@ -21,9 +22,12 @@ export function hasMarkdownlintConfig(repoRoot: string): boolean {
   )
     return true;
   // markdownlint-cli also discovers .markdownlintrc in parent directories.
-  for (let dir = repoRoot; ; dir = dirname(dir)) {
+  // ただし一時ディレクトリのルート（/tmp など）や Git リポジトリ境界を越えて親を辿らない。
+  const systemTmp = resolve(tmpdir());
+  for (let dir = resolve(repoRoot); ; dir = dirname(dir)) {
     if (existsSync(join(dir, ".markdownlintrc"))) return true;
-    if (dirname(dir) === dir) return false;
+    if (dirname(dir) === dir || dir === systemTmp) return false;
+    if (existsSync(join(dir, ".git"))) return false;
   }
 }
 

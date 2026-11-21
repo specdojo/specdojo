@@ -16,7 +16,7 @@ SpecDojo CLI と Antigravity CLI（`agy`）を組み合わせ、executor / repor
 
 共通の責務分担、worktree、member 選択、保護ガードは [[sysd-agent-settings|エージェント実行・共通設計]] に従う。本書では `provider: antigravity` 固有の起動方法、モデル選択、指示読込、認証、制限検出だけを定義する。
 
-- `agy` はファイル定義 agent を選択する仕組みを持たないため、executor / reporter の役割は runner が plan へ付加する stage 指示を正本とする。
+- executor / reporter の役割は runner が plan へ付加する stage 指示を正本とし、agy の `--agent` は使わない。
 - 起動コマンドは `.specdojo/exec-defaults.yaml` の `providers.antigravity.command_template` に集約し、member に `command` を書かない。
 - 標準モデルは `proficiency`、Antigravity 経由の他社モデルは `nickname` で選択する。解決順序は `by_nickname`、`by_proficiency`、`by_mode` の順とする。
 - 自動選択の評価が完了するまでは codex / claude より低い `priority` を設定し、主に by-name と `--executor-by` / `--reporter-by` で使う。
@@ -28,7 +28,7 @@ SpecDojo CLI と Antigravity CLI（`agy`）を組み合わせ、executor / repor
 ```yaml
 providers:
   antigravity:
-    command_template: 'agy --sandbox --add-dir "$(pwd)" --model {model} -p "$(cat)"'
+    command_template: 'specdojo agent launch --provider antigravity --role {mode} -- --sandbox --model {model} -p "$(cat)"'
     command_params:
       by_proficiency:
         normal: { model: gemini-3.8-flash-medium }
@@ -49,13 +49,13 @@ providers:
 | `agy-executor`                      | `edit`   | `normal`    | `gemini-3.8-flash-medium`  | 標準 executor    |
 | `agy-expert-executor`               | `edit`   | `expert`    | `gemini-3.8-flash-high`    | expert executor  |
 | `agy-expert-review-executor`        | `review` | `expert`    | `gemini-3.8-flash-high`    | expert review    |
-| `agy-reporter`                      | —        | `normal`    | `gemini-3.8-flash-medium`  | reporter         |
+| `agy-reporter`                      | `report` | `normal`    | `gemini-3.8-flash-medium`  | reporter         |
 | `agy-claude-executor`               | `edit`   | `normal`    | `claude-sonnet-5-5-medium` | Sonnet executor  |
 | `agy-claude-expert-executor`        | `edit`   | `expert`    | `claude-opus-5-5-high`     | Opus executor    |
 | `agy-claude-expert-review-executor` | `review` | `expert`    | `claude-opus-5-5-high`     | Opus review      |
 | `agy-gpt-executor`                  | `edit`   | `normal`    | `gpt-oss-120b-medium`      | GPT OSS executor |
 
-`command_params.by_nickname` は member ごとのモデル差し替えだけに使う。権限フラグや worktree 指定は `command_template` に残し、同じ provider の全 member へ一括適用する。
+`command_params.by_nickname` は member ごとのモデル差し替えだけに使う。役割の選択は `command_template` の `--role {mode}`、権限と worktree 指定は起動処理に集約し、同じ provider の全 member へ一括適用する。
 
 ## 4. 指示と設定ファイル
 
@@ -63,7 +63,7 @@ providers:
 
 executor 向けの stage 契約は `src/exec/run/agent.ts` が plan 末尾へ付加し、reporter の prompt・出力契約は `src/exec/reporter.ts`、両 stage の進行は `src/exec/run/agent-pipeline.ts` が担う。executor は成果物の編集と検証だけを行い result・lifecycle を更新せず、reporter は evidence から構造化結果を返すだけでファイルを書かない。したがって `templates/antigravity/agents/` は設けない。一方、`config scaffold --provider antigravity` はオーケストレーターと provider 設定スニペットをリポジトリへ配置し、`--global` 指定時だけ CLI のユーザー権限設定をマージする。
 
-対話型オーケストレーターはファイル定義 agent ではなく、`npm run orch:flash` が `gemini-3.8-flash-high` を指定し、`.agents/specdojo-orchestrator.agent.md` の本文を `-i` で渡して起動する。
+対話型オーケストレーターはファイル定義 agent ではなく、`npm run orch:argon` が `gemini-4-argon-medium`、`npm run orch:flash` が `gemini-3.8-flash-high` を指定し、`.agents/specdojo-orchestrator.agent.md` の本文を `-i` で渡して起動する。
 
 ## 5. 認証・秘密情報
 
@@ -71,15 +71,33 @@ executor 向けの stage 契約は `src/exec/run/agent.ts` が plan 末尾へ付
 
 ## 6. 権限と保護境界
 
-Antigravity CLI の権限は、[公式の fine-grained permissions](https://antigravity.google/docs/permissions?tab=cli) に従って `~/.gemini/antigravity-cli/settings.json` の `permissions.allow` / `deny` / `ask` で管理する。deny が ask と allow より優先されるため、必要な検証コマンドだけを allow し、次を deny する。
+agy 1.4.12 の `--settings` は JSON またはファイルパスを取り、セッション内だけに適用する（2026-11-02 のローカル `agy --version` / `agy --help` で確認）。通常の scaffold は `settings.edit.json`、`settings.review.json`、`settings.report.json`、`settings.orchestrator.json` を `.specdojo/antigravity/` へ配置し、ユーザーのグローバル設定を書き換えない。
 
-- `git add` / `commit` / `push`、`git reset --hard`、`rm -rf`、`sudo`
-- `.env` と `secrets/` の読み取り
-- `.git/` と、親 runner・hook・CI・agent の実行内容を定義する固定保護パスへの書き込み。`.specdojo/` は設定ファイルと provider ディレクトリを個別に deny し、検証で再生成する `.specdojo/doc-index.json` は妨げない
+非対話実行は `specdojo agent launch --provider antigravity --role {mode} -- <agy 引数>` を通す。同じ版の `specdojo` が PATH に必要である。runner が追加する `--add-dir` はこの入口を通り、`SPECDOJO_REPO_*` から得た task worktree と cwd に含まれる場合だけ受け付ける。対話型は `orchestrator launch --provider antigravity` が選択 project の宣言済み product repository と宣言済み外部 project を同じ生成処理へ渡す。任意の外部 repository は自動許可しない。
 
-`--dangerously-skip-permissions` はこれらの承認境界を迂回するため command template へ含めない。permission 設定に加えて、worktree、commit 許可リスト、Git 状態ガード、provider 非依存の固定保護パス検査を併用する。
+`src/exec/antigravity-session.ts` はローカルの役割プロファイル（未配置なら配布原本）に追加ルートの絶対パスと固定の制限を足し、重複を除いた単一の `--settings` JSON を渡す。ファイルを生成・保存しない。ルートの symlink は実体へ正規化し、権限構文で安全に表現できない `(`、`)`、`*` 等を含むルートは拒否する。不正な JSON・ルール配列は起動前に失敗する。
 
-`config scaffold --provider antigravity --global` は同設定へ不足ルールだけを追記する。既存キーと既存配列要素は変更・削除せず、書き換え前に `settings.json.backup-<timestamp>` を作る。`--global` を省略した場合はユーザーディレクトリへ触れず、`--global --dry-run` は追加ルールだけを差分表示して書き込まない。不正な JSON または文字列配列以外の permission 設定は、非破壊のためエラーとして扱う。
+| 役割            | ファイル権限                         | command・MCP                            |
+| --------------- | ------------------------------------ | --------------------------------------- |
+| edit            | cwd と宣言済み task worktree を編集  | 検証用 command を allow、その他は確認制 |
+| review / report | 宣言済みルートの読み取りのみ         | 全 command・MCP・ブラウザ操作を deny    |
+| orchestrator    | 宣言済みルートと承認された設定を編集 | 未設定操作は確認制、push・gh 等は deny  |
+
+全役割で各ルートの `.env` と主要な環境別ファイル、`secrets/` 等の読み取り、Git metadata の書き込みを deny する。edit の固定保護ルールは provider 非依存ガードのディレクトリ・ファイル定義から生成し、既存 commitlint 設定も加える。review / report は `write_file(*)` に加えて `command(*)`・`unsandboxed(*)`・`mcp(*)` を拒否するため、shell からの書き込みも許可しない。検証コマンドは親 runner が担当する。orchestrator は利用者の承認で保護設定を変更する役割なので、executor の設定パス deny を引き継がない。
+
+[CLI 権限仕様](https://antigravity.google/docs/permissions/?tab=cli) は `deny > ask > allow`、workspace 内の暗黙許可、ファイルパスの再帰的照合を定める。Claude の `Edit(...)` / `Bash(...)` と agy の `write_file(...)` / `command(...)` は同一の構文ではない。特に agy の `*` は全対象指定であり、Claude のパス glob を転記しない。
+
+_ASSUMPTION_: 公開仕様では `--settings` と既存グローバル・project 設定の permission 配列が結合されるか置換されるかを確定できない。今回確認したのは session-only の help と生成 JSON の内容・起動引数であり、Claude と同等の隔離を実証したとは扱わない。独立した複数の `--settings` のマージには依存せず、必須ルールを毎回一つの JSON に含める。既存の deny / ask が残って許可を狭める場合や、置換によって利用者独自ルールが失われる場合は実機確認が必要である。追加の独自制限は各役割プロファイルへ明示する。
+
+`toolPermission` は `request-review` に固定し、bypass・別 settings・project／会話の再開・別 agent を指定する引数は拒否する。`--dangerously-skip-permissions` に依存しない。秘密情報の任意の別名・入れ子配置や、許可された検証 script 自体の任意処理まで権限 JSON だけで保証するものではない。実機で sandbox と shell の拒否範囲を確認し、provider 非依存の保護設定・Git 状態ガード、worktree、commit 許可リストを引き続き併用する。
+
+### 6.1. 既存利用者の移行
+
+1. `config scaffold --provider antigravity --dry-run` を確認してから通常実行し、役割プロファイルを追加する。既存ファイルは保持され、`--force` は内容確認後にだけ使う。
+2. `providers.antigravity.command_template` を上記の `agent launch` 形式へ変更し、member の `mode` を edit / review / report に合わせる。member の個別 command がある場合も移行する。
+3. 旧 `--dangerously-skip-permissions` を削除する。対話型の npm script は `orchestrator launch` 経由にする。scaffold は既存 npm script を上書きしない。
+4. 旧 `--global` で追加した executor 用 deny が orchestrator の設定編集を妨げる場合、バックアップと自身のルールを照合して必要な項目だけ手動で各役割へ移す。CLI は既存グローバルルールを自動削除しない。`settings.global.json` と明示的な `--global` は互換入口として残すが、新規導入には不要である。
+5. 設定を commit し、下記の実機検証後に運用へ適用する。本リポジトリ自身の保護設定は個票・result の申し送りを承認後に反映する。
 
 ## 7. 利用制限と検証
 
@@ -93,3 +111,13 @@ Antigravity CLI の権限は、[公式の fine-grained permissions](https://anti
 4. 指示ディレクトリまたは root 指示ファイルの変更が `agent-config-write` で block される。
 5. 実タスクでは executor evidence、親 runner 検証、reporter、統合までを確認する。
 6. 一時 HOME を使い、`--global --dry-run` が無変更、実適用が既存キーを保持してバックアップを作ること、再実行が冪等であることを確認する。
+
+### 7.1. 実機確認の申し送り
+
+実 agy は認証・使用枠を伴うため sandbox 内では起動しない。秘密情報を含まない使い捨て project / product repository と task worktree を使い、次を記録する。
+
+1. グローバル・project・session に相反する allow / deny / ask と識別用ルールを置き、配列の結合／置換と優先順位、セッション終了後の設定無変更を確認する。実ユーザー設定・認証ファイルは証跡へ転記しない。
+2. edit で両 worktree の通常ファイルの作成・変更が通ること、未宣言ルートの書き込みが自動許可されないことを確認する。
+3. 無害な内容の `.env`、`secrets/probe.txt`、`package.json`、agent 設定を使い、両 repository で読み取り／書き込みの拒否を確認する。shell 経由も含める。
+4. review / report の通常ファイルと result の書き込み、command / MCP を拒否すること、orchestrator では承認された保護設定編集が可能であることを確認する。
+5. 統合後に [[prj-0001:pm-orchestrator-playbook|運用プレイブック]] の PJR-JSEY を実行し、実際の `exec run --register` の executor・親検証・reporter・統合の証跡を個票と result に記録する。

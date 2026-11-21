@@ -14,6 +14,7 @@ SpecDojo Configuration Reference
 **対象範囲**
 
 - `.specdojo/specdojo.config.json` のトップレベル、project、`run`、`repos`、`external_projects` の設定キー
+- `.specdojo/specdojo.local.config.json` で上書きできるキーと優先順位
 
 **ここで引けるもの**
 
@@ -99,21 +100,23 @@ exec の result の commit 前検査にも、利用リポジトリに設定が�
 
 `projects.<project-id>` に指定するキーです。`base_path` 以外の表中のパスは、`base_path` があればそこからの相対パス、無ければリポジトリルートからの相対パスとして解決します。
 
-| キー                    | 既定値           | 主な役割                                          | 必要とする主なコマンド                                        |
-| ----------------------- | ---------------- | ------------------------------------------------- | ------------------------------------------------------------- |
-| `base_path`             | リポジトリルート | project 文書に共通するパス接頭辞                  | project に紐づく各コマンド                                    |
-| `project_register_path` | なし             | 個票、event、登録簿の配置先                       | `register *`、`exec plan/run --register`                      |
-| `catalog_path`          | なし             | `dct-*.yaml` と生成ビューの配置先                 | `catalog *`、`deliverable scaffold`、catalog を使う grade 等  |
-| `schedule_path`         | `schedule`       | strategy、track、Schedule の配置先                | `schedule *`、schedule 対象の `exec *`                        |
-| `execution_path`        | `execution`      | plan、result、実行状態、grade / Job Run の配置先  | `exec *`、`grade *`、`job *`、`dashboard build`               |
-| `timeline_path`         | `timeline`       | Timeline の正本と生成物の配置先                   | `timeline *`、`dashboard build`、`schedule strategy generate` |
-| `members_path`          | なし             | 人間と対応 Role code を定義する `pm-members.yaml` | actor 検証、owner 検証、合成名簿の project 側入力             |
-| `roles_path`            | なし             | role 定義ファイルの配置先                         | `schedule strategy generate`、owner を解決する `exec plan`    |
-| `viewpoints_path`       | なし             | review / grade 観点ファイルの配置先               | `grade *`、review plan、`exec scaffold --project`             |
-| `routines_path`         | なし             | `rtn-*.yaml` と routine 状態の配置先              | `routine *`、routine を集約する `dashboard build`             |
-| `jobs_path`             | なし             | `job-*.yaml` の配置先                             | `job *`、`exec run --job`                                     |
+| キー                    | 既定値           | 主な役割                                           | 必要とする主なコマンド                                       |
+| ----------------------- | ---------------- | -------------------------------------------------- | ------------------------------------------------------------ |
+| `base_path`             | リポジトリルート | project 文書に共通するパス接頭辞                   | project に紐づく各コマンド                                   |
+| `project_register_path` | なし             | 個票、event、登録簿の配置先                        | `register *`、`exec plan/run --register`                     |
+| `catalog_path`          | なし             | `dct-*.yaml` と生成ビューの配置先                  | `catalog *`、`deliverable scaffold`、catalog を使う grade 等 |
+| `schedule_path`         | `schedule`       | strategy、track、Schedule の配置先                 | `schedule *`、schedule 対象の `exec *`                       |
+| `execution_path`        | `execution`      | plan、result、実行状態、grade / Job Run の配置先   | `exec *`、`grade *`、`job *`、`dashboard build`              |
+| `timeline_path`         | `timeline`       | 非推奨。旧 timeline の互換読み込み・生成物の配置先 | 旧 `timeline *` と範囲解決の互換処理                         |
+| `members_path`          | なし             | 人間と対応 Role code を定義する `pm-members.yaml`  | actor 検証、owner 検証、合成名簿の project 側入力            |
+| `roles_path`            | なし             | role 定義ファイルの配置先                          | `schedule strategy generate`、owner を解決する `exec plan`   |
+| `viewpoints_path`       | なし             | review / grade 観点ファイルの配置先                | `grade *`、review plan、`exec scaffold --project`            |
+| `routines_path`         | なし             | `rtn-*.yaml` と routine 状態の配置先               | `routine *`、routine を集約する `dashboard build`            |
+| `jobs_path`             | なし             | `job-*.yaml` の配置先                              | `job *`、`exec run --job`                                    |
 
-`schedule_path`、`execution_path`、`timeline_path` には解決時の既定値があります。ただし `schedule` コマンドや一括 `build` の対象判定ではキーの明示が必要なため、catalog から Schedule と exec へ進む構成では省略しないでください。
+`schedule_path` と `execution_path` は解決時の既定値があります。ただし `schedule` コマンドや一括 `build` の対象判定ではキーの明示が必要なため、catalog から Schedule と exec へ進む構成では省略しないでください。
+
+全体計画は `project_register_path` の epic を正本とし、`dashboard build` が `execution_path` 配下の `generated/` へ生成します。`timeline_path` の明示指定と旧 `tml-index.yaml` の読み込みは非推奨の警告を出します。未指定でも互換読み込み先は `timeline/` です。新規構成で `timeline_path` は不要です。移行手順は [[specdojo:timeline-design-guide|Timeline からの移行ガイド]] を参照してください。
 
 ## 4. projectの非パスキー
 
@@ -302,15 +305,17 @@ agent には、各 worktree の絶対パスを次の環境変数で渡します�
 
 agent の起動コマンドには、provider ごとにプロダクト worktree への書き込み許可を runner が付け足します。`exec-defaults.yaml` の `command_template` を変える必要はありません。
 
-| provider      | 付け足す引数                                                     | 制約                                                                                                                  |
-| ------------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `claude`      | `--add-dir <path>...` と `--allowedTools 'Edit(//<path>/**)'...` | mode 別 settings の `Edit` 許可は作業ディレクトリ相対のため、絶対パスの許可を別に渡す                                 |
-| `codex`       | `--add-dir <path>`（リポジトリの数だけ）                         | `--sandbox workspace-write` の書き込みルートに加わる。`.git` は codex の仕様で読み取り専用のまま                      |
-| `antigravity` | `--add-dir <path>`（リポジトリの数だけ）                         | テンプレートの `--add-dir "$(pwd)"` に追加する                                                                        |
-| `copilot`     | `--add-dir <path>`（リポジトリの数だけ）                         | 書き込みはテンプレートの `--allow-tool write` に従う                                                                  |
-| `opencode`    | なし                                                             | 作業ディレクトリ外は agent 定義の `permission.external_directory` で拒否される。許可には agent 定義の変更が必要になる |
+| provider      | 付け足す引数                                                     | 制約                                                                                             |
+| ------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `claude`      | `--add-dir <path>...` と `--allowedTools 'Edit(//<path>/**)'...` | mode 別 settings の `Edit` 許可は作業ディレクトリ相対のため、絶対パスの許可を別に渡す            |
+| `codex`       | `--add-dir <path>`（リポジトリの数だけ）                         | `--sandbox workspace-write` の書き込みルートに加わる。`.git` は codex の仕様で読み取り専用のまま |
+| `antigravity` | `--add-dir <path>`（リポジトリの数だけ）                         | テンプレートの `--add-dir "$(pwd)"` に追加する                                                   |
+| `copilot`     | `--add-dir <path>`（リポジトリの数だけ）                         | 書き込みはテンプレートの `--allow-tool write` に従う                                             |
+| `opencode`    | なし（`OPENCODE_CONFIG_CONTENT` を起動コマンドの前に付ける）     | 下記の inline config で許可する。`command_template` に `--agent <name>` が無いと起動前に止まる   |
 
-対話型オーケストレーターは `specdojo orchestrator launch` が同じ `repos` を読み、プロダクトリポジトリ本体のルートを許可します。Claude Code、Codex、Antigravity、GitHub Copilot は上表と同じ引数規則です。OpenCode は起動時の inline config で、選択 agent の `permission.external_directory` を「全拒否、宣言済みルートだけ許可」に差し替え、宣言済みルートの `permission.edit` も許可します。この設定はオーケストレーターのプロセスだけに適用され、agent 定義や利用者の設定ファイルは書き換えません。`repos` を省略した project では追加の引数・設定を渡しません。
+OpenCode は起動引数に追加ルートの指定を持たないため、runner は `OPENCODE_CONFIG_CONTENT` で、起動コマンドの `--agent` が選ぶ agent の `permission.external_directory` を「全拒否、プロダクト worktree だけ許可」に差し替え、同じ worktree の `permission.edit` を許可に加えます。`external_directory` は絶対パス（`<path>/**`）、`edit` は作業ディレクトリ（プロジェクトの worktree）からの相対パス（`../<name>/**`）で照合されるため、それぞれの形で渡します。inline config は agent 定義の frontmatter より後に読まれるため上書きされません。継承した `OPENCODE_CONFIG_CONTENT` の他項目は保持します。
+
+対話型オーケストレーターは `specdojo orchestrator launch` が同じ `repos` を読み、プロダクトリポジトリ本体のルートを許可します。Claude Code、Codex、Antigravity、GitHub Copilot は上表と同じ引数規則です。OpenCode は起動時の inline config で、exec と同じ形で、選択 agent の `permission.external_directory` を「全拒否、宣言済みルートだけ許可」に差し替え、宣言済みルートの `permission.edit` を起動場所からの相対パスで許可します。この設定はオーケストレーターのプロセスだけに適用され、agent 定義や利用者の設定ファイルは書き換えません。`repos` を省略した project では追加の引数・設定を渡しません。
 
 agent 実行の前後で行う保護設定（`package.json`、CI 設定など）と Git 状態（HEAD・ローカル設定）の検査は、プロダクト worktree にも同じ一覧で行います。evidence の変更ファイルは、プロダクト側を `<name>:<path>` で記録します。
 
@@ -330,7 +335,41 @@ exec worktree の中で設定を読む場合（agent が worktree で `specdojo`
 
 設定の形は `docs/specdojo/schemas/v1/specdojo-config.schema.yaml` でも検証できます。リポジトリ名と project ID の重複と `path` の実在は schema で表せないため、CLI の読み込み時の検証が正本です。
 
-## 7. catalog・schedule・execへ進む設定例
+## 7. ローカル設定
+
+`.specdojo/specdojo.local.config.json` は、git で管理しない環境ごとの設定です。`specdojo.config.json` を読んだ後に読み、許可したキーだけを上書きします。`config init` は `.gitignore` にこのファイルを足します。
+
+| 許可するキー                            | 扱い                                                                                                          |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `version`                               | `1` 固定です。                                                                                                |
+| `projects.<project-id>.repos[]`（既存） | 共有の設定と同じ `name` の要素は、`path` だけを差し替えます。`name`・`path` 以外のキーはエラーです。          |
+| `projects.<project-id>.repos[]`（追加） | 共有の設定に無い `name` の要素は、ローカルのリポジトリとして末尾に足します。キーは `repos` のキーと同じです。 |
+
+上書きの後の `repos` は、共有の設定と同じ検証を受けます。共有の設定に無い project、許可していないキー、型の誤りは、ローカル設定のファイルとキーを示してエラーにします。ローカルで足したリポジトリも `repos` で宣言したリポジトリとして扱い、`<name>:<path>` の解決、プロダクト worktree の作成、commit の許可範囲の対象になります。
+
+```json
+{
+  "version": 1,
+  "projects": {
+    "prj-0001": {
+      "repos": [
+        { "name": "app1", "path": "../app1-local" },
+        { "name": "tools", "path": "../tools" }
+      ]
+    }
+  }
+}
+```
+
+読むファイルは次の順序で決めます。
+
+1. 主の作業ツリーでは、そのリポジトリの `.specdojo/specdojo.local.config.json` を読みます。環境変数 `SPECDOJO_LOCAL_CONFIG` は使いません。
+2. linked worktree では、環境変数 `SPECDOJO_LOCAL_CONFIG` があればその絶対パスを読みます。runner は worktree の中の子のプロセス（build・agent）へ主の作業ツリーのファイルのパスを渡します。
+3. linked worktree で環境変数が無ければ、主の作業ツリーのファイルを読みます。worktree の中の同じ名前のファイルは読みません。
+
+ローカル設定は worktree へコピーしません。agent の保護対象（`.specdojo/` 配下）に含まれ、executor が書き換えると統合の前に止まります。ローカル由来の値は `config show` と `where exec` に `local` と表示し、`exec run` の executor evidence の `local_config_overrides` に記録します。
+
+## 8. catalog・schedule・execへ進む設定例
 
 register の最小構成から成果物カタログと Schedule へ進む場合は、対象 project へ必要なキーを追加します。次は Quick Start の代表例です。
 
@@ -342,7 +381,6 @@ agent 実行を使う場合は、この project オブジェクトとは別に�
   "catalog_path": "010-deliverables-catalog",
   "schedule_path": "schedule",
   "execution_path": "execution",
-  "timeline_path": "timeline",
   "members_path": "030-project-management/pm-members.yaml",
   "roles_path": "030-project-management/pm-roles.yaml",
   "viewpoints_path": "030-project-management/pm-review-viewpoints.yaml",
@@ -357,7 +395,7 @@ agent 実行を使う場合は、この project オブジェクトとは別に�
 
 routine / Job を使う段階で、同じ project 設定へ `routines_path` と `jobs_path` を追加します。未使用のキーまで最初から埋める必要はありません。
 
-## 8. 設定不足時の確認順序
+## 9. 設定不足時の確認順序
 
 1. エラーに表示されたキーが対象 project にあるか確認します。
 2. `base_path` と対象パスを連結した先が意図した配置か確認します。

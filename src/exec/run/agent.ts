@@ -1,6 +1,7 @@
 import { spawn } from "node:child_process";
 import { existsSync } from "node:fs";
-import { basename, relative, resolve, sep } from "node:path";
+import { basename, dirname, join, relative, resolve, sep } from "node:path";
+import { trackExecutor, withValidationMetrics } from "../validation-metrics.js";
 import {
   resolveConnectionErrorDetection,
   resolveMemberCommand,
@@ -16,6 +17,7 @@ import {
   type AgentLimitSignal,
 } from "../limit.js";
 import { replaceDocIndexRefs } from "../../docs/doc-index.js";
+import { localConfigEnvironment } from "../../shared/local-config.js";
 import { loadPlan, parsePlanTaskIdentity } from "../plans.js";
 import type { ReadyTaskView, TaskMode } from "../types.js";
 import {
@@ -29,6 +31,7 @@ import {
   parentValidationGateFor,
   parentValidationLabels,
   parentValidationRoots,
+  parentValidationSelectionForEvidence,
   recordedParentValidationLabel,
   replaceParentValidationResults,
   runParentValidationBatch,
@@ -36,6 +39,7 @@ import {
   type ParentValidationEntry,
   type ParentValidationInvoker,
   type ParentValidationRoots,
+  type ParentValidationSelection,
 } from "../parent-validation.js";
 import {
   getProjectExecutionPath,
@@ -140,7 +144,7 @@ function executorEvidenceContract(
   const parentValidationCommands = parentValidationDisplayCommands(parentValidations);
   const parentValidationInstruction =
     parentValidationLabelList.length > 0
-      ? `\nThe SpecDojo parent runner will execute these allowlisted validations after you exit: ${parentValidationLabelList.join(", ")} (${parentValidationCommands.join(", ")}). Do not run those commands inside the agent sandbox or report duplicate executor results for them. Run only the remaining sandbox-safe validations required by the plan. Parent-run results will be appended to evidence with source=runner and are authoritative.\n`
+      ? `\nThe SpecDojo parent runner will execute these allowlisted validations after you exit: ${parentValidationLabelList.join(", ")} (${parentValidationCommands.join(", ")}). Do not run those commands inside the agent sandbox or report duplicate executor results for them. If you still list one, use one validation entry per command with its exact command; never combine several parent validations into one entry. Run only the remaining sandbox-safe validations required by the plan. Parent-run results will be appended to evidence with source=runner and are authoritative.\n`
       : "";
   const coverage = {
     source: options.coverageSource ?? "none",
@@ -248,16 +252,26 @@ blocking completion, but rejects the claim when it can confirm the check applies
   change-type condition below is met.
 - \`npm run validate:schema:file\` requires a changed \`*.yaml\` or \`*.yml\` file; Prettier
   requires a changed \`*.md\`, \`*.ts\`, \`*.js\`, \`*.json\`, \`*.yaml\`, or \`*.yml\` file;
-  markdownlint requires a changed \`*.md\` file.
+  markdownlint requires a changed \`*.md\` file; \`npm run validate:history-links\` requires a
+  changed history file (\`docs/ja/projects/**/controls/project-register/pjr-*.md\` excluding
+  \`pjr-index.md\`, or an existing \`plan.md\` / \`result.md\` under
+  \`execution/runs/<origin>/<item>/<run>/\` or legacy \`exec/plans/**/*.md\` /
+  \`exec/results/**/*.md\` that you changed yourself).
 - A command that targets a declared product repository (a \`<repo>:<path>\` argument or
   \`--prefix <repo>\`) is judged by that repository's package.json, not the project repository's.
-- \`specdojo catalog validate\`: the run's target project (or \`--project <id>\`) sets \`catalog_path\`
-  and your changes reach \`docs/ja/projects/\`. A project without \`catalog_path\`, or changes
+- \`specdojo catalog validate\` / \`npm run validate:catalog\`: the run's target project (or
+  \`--project <id>\`) sets \`catalog_path\` and your deliverable changes reach \`docs/ja/projects/\`.
+  Runner-managed files under \`exec/\` (\`plans/\`, \`results/\`, \`evidence/\`, \`events/\`, \`.locks/\`)
+  do not count as your changes. A project without \`catalog_path\`, or changes
   outside \`docs/ja/projects/\`, is a valid reason; state it in \`reason\`.
 
 Do not run or report \`specdojo index build\`. It writes \`.specdojo/doc-index.json\`, which the
 agent may not write, and the runner regenerates the index while preparing the worktree and before
 integration.
+
+For a plan with approach \`condense\`, also include \`condense_records\` in this envelope
+as specified by the plan (an empty array if there are no candidates). The runner writes those
+validated executor facts to the result frontmatter and table; do not edit the result yourself.
 
 End the final response with exactly one machine-readable report using this envelope. Do not place
 Markdown fences around the JSON.
@@ -300,9 +314,12 @@ export function resumedTargetCoverageFailure(params: {
 }
 
 export type ParentValidationRunOptions = {
+  metricsPath?: string;
   // Identifies the waiting item in gate logs (task / register ID). Defaults to the cwd name.
   label?: string;
   invoke?: ParentValidationInvoker;
+  // 変更の種類で選ぶ検証（`paths` あり）の判定に使う変更一覧。省略時はすべて流す（PJR-T01P）。
+  selection?: ParentValidationSelection;
 };
 
 // 同じ exec run 内の親検証は run 全体の gate（既定 1 本）で直列化する。executor と reporter は
@@ -317,10 +334,12 @@ export async function runConfiguredParentValidationBatch(
   if (!entries?.length) return { validations: [], failureOutputs: [] };
   const labels = parentValidationLabels(entries);
   const label = options.label ?? basename(typeof cwd === "string" ? cwd : cwd.project);
-  const batch = await parentValidationGateFor(execDefaults).run(label, labels, async () => {
-    process.stdout.write(`  Running parent validations (${label}): ${labels.join(", ")}\n`);
-    return await runParentValidationBatch(entries, cwd, options.invoke);
-  });
+  const batch = await withValidationMetrics(label, options.metricsPath, () =>
+    parentValidationGateFor(execDefaults).run(label, labels, async () => {
+      process.stdout.write(`  Running parent validations (${label}): ${labels.join(", ")}\n`);
+      return await runParentValidationBatch(entries, cwd, options.invoke, options.selection);
+    }),
+  );
   for (const validation of batch.validations) {
     process.stdout.write(
       `  Parent validation ${recordedParentValidationLabel(validation)}: ${validation.status}\n`,
@@ -350,7 +369,11 @@ export async function appendParentValidationsToExecutorEvidence(params: {
   const parentValidationBatch = await runConfiguredParentValidationBatch(
     params.execDefaults,
     parentValidationRoots(params.cwd, params.productWorktrees),
-    { label: params.evidence.task_id },
+    {
+      label: params.evidence.task_id,
+      metricsPath: join(dirname(params.evidencePath), "parent-validation-metrics.jsonl"),
+      selection: parentValidationSelectionForEvidence(params.evidence),
+    },
   );
   const evidenceWithValidations = replaceParentValidationResults(
     params.evidence,
@@ -467,6 +490,7 @@ export async function executeAgent(
   cwd: string,
   env: NodeJS.ProcessEnv,
   quiet = false,
+  stageRole: "executor" | "reporter" = "executor",
 ): Promise<AgentExecution> {
   if (!agentCommand.trim()) {
     return { result: "failure", exitCode: null, stdout: "", stderr: "Empty agent command" };
@@ -481,6 +505,7 @@ export async function executeAgent(
     shell: true,
     stdio: ["pipe", "pipe", "pipe"],
   });
+  const stopTracking = stageRole === "executor" ? trackExecutor(child.pid, cwd) : () => undefined;
   // stdin を読まずに即終了するコマンドへの書き込みは EPIPE になる。未処理だと
   // プロセスごと落ちて失敗時の後処理（block 遷移・result 更新）が走らないため無視する。
   // 実行結果は終了コードで判定する。
@@ -506,6 +531,7 @@ export async function executeAgent(
     });
     child.once("close", (code) => resolveExit(code));
   });
+  stopTracking();
 
   const combinedOutput = `${stdout}\n${stderr}`;
   if (isRateLimitError(exitCode, combinedOutput, detection)) {
@@ -561,6 +587,7 @@ export async function runWithRetry(
   env: NodeJS.ProcessEnv,
   resultPath?: string,
   pinned?: PinnedRateLimitRunOptions,
+  stageRole: "executor" | "reporter" = "executor",
 ): Promise<{
   result: RunResult;
   exitCode: number | null;
@@ -618,6 +645,7 @@ export async function runWithRetry(
           candidate.command,
           candidate.provider,
           productRoots.map((root) => root.path),
+          { cwd, env },
         ),
         prompt,
         detection,
@@ -625,6 +653,8 @@ export async function runWithRetry(
         candidatePolicy?.cooldown_seconds,
         cwd,
         env,
+        false,
+        stageRole,
       );
       const protectedConfigChanges = changedAgentProtectedConfigAcrossRepos(protectedConfigBefore);
       if (protectedConfigChanges.length > 0) {
@@ -875,6 +905,7 @@ export function agentEnvironment(
 ): NodeJS.ProcessEnv {
   return {
     ...withoutInheritedRepoEnvironment(gitEnvironment()),
+    ...localConfigEnvironment(repoRoot),
     SPECDOJO_SCHEDULE_PATH: pathInsideWorktree(repoRoot, worktreePath, schedulePath),
     SPECDOJO_EXECUTION_PATH: pathInsideWorktree(repoRoot, worktreePath, executionPath),
     ...productRepoEnvironment(worktreePath, productWorktrees),

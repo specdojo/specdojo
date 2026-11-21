@@ -3,18 +3,19 @@ import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "
 import { dirname, join, resolve } from "node:path";
 import type { GradeAgentRuntime } from "../shared/agent-plan.js";
 import { getProjectExecutionPath, specdojoRootDir } from "../shared/specdojo-config.js";
-import { tryAcquireLock, releaseLock } from "../shared/cross-process-lock.js";
+import { delay, LOCK_POLL_MS, tryAcquireLock, releaseLock } from "../shared/cross-process-lock.js";
 import { applyGradeSubmission, buildGradeSubmissionFromAnalysis } from "./apply.js";
 import { type GradeTarget, type GradeTargetFilters } from "./core.js";
 import { readGradePipelineState, recordGradePipelineStage } from "./pipeline-state.js";
 import { writeGradePlans } from "./plan.js";
-import { gradeContentHash, readGradeResultForDocument } from "./result.js";
+import { gradeContentHash, gradeFindingCount, readGradeResultForDocument } from "./result.js";
 import { discoverGradeTargets } from "./target-discovery.js";
 import {
   loadViewpoints,
   repoRelativePath,
   resolveDeliverableDoneCriteria,
   resolveGradeSourceHashes,
+  resolveKataBatchTargets,
   resolveProject,
   resolveSafeMarkdownPath,
   resolveSafeRepositoryPath,
@@ -24,11 +25,16 @@ export type GradeRunOptions = GradeTargetFilters & {
   target: GradeTarget;
   project?: string;
   paths?: string[];
+  kata?: string[];
   kind?: string;
   runId: string;
   by?: string;
   workDir?: string;
+  isolatePipelineState?: boolean;
+  ifBusy?: "fail" | "wait";
   reference?: string;
+  /** Kata only: compare each document with the same-kind prj-overview document. */
+  referencePerKind?: boolean;
   embedDocuments?: boolean;
   maxStageFailures?: number;
   limit?: number;
@@ -46,6 +52,42 @@ type DocumentRun = {
   appliedAt?: string;
 };
 type RunState = { version: 1; request: string; documents: DocumentRun[] };
+
+/**
+ * A run that stopped with documents left ungraded. Callers such as scheduled jobs tell a
+ * partial run (2) from a run without any completed document (1) and from a rate limit (75),
+ * after which the same run id resumes.
+ */
+export class GradeRunIncompleteError extends Error {
+  constructor(
+    message: string,
+    readonly exitCode: 1 | 2 | 75,
+  ) {
+    super(message);
+    this.name = "GradeRunIncompleteError";
+  }
+}
+
+export const GRADE_RUN_PARTIAL_EXIT_CODE = 2;
+export const GRADE_RUN_RATE_LIMIT_EXIT_CODE = 75;
+
+const PER_KIND_REFERENCES: Record<string, string> = {
+  rulebooks: "docs/ja/specdojo/rulebooks/prj-overview-rulebook.md",
+  recipes: "docs/ja/specdojo/recipes/prj-overview-recipe.md",
+  samples: "docs/ja/specdojo/samples/prj-overview-sample.md",
+  templates: "docs/ja/specdojo/templates/prj-overview-template.md",
+};
+
+function perKindReference(documentPath: string): string | undefined {
+  const kindDirectory = documentPath.split("/").find((part) => part in PER_KIND_REFERENCES);
+  if (!kindDirectory) throw new Error(`${documentPath}: cannot determine the Kata kind`);
+  const reference = PER_KIND_REFERENCES[kindDirectory]!;
+  if (existsSync(resolve(specdojoRootDir(), reference))) return reference;
+  process.stderr.write(
+    `grade run: ${documentPath}: same-kind reference not found; continuing without a reference: ${reference}\n`,
+  );
+  return undefined;
+}
 
 const digest = (value: unknown): string =>
   createHash("sha256").update(JSON.stringify(value)).digest("hex");
@@ -70,6 +112,8 @@ export async function runGrade(
   opts: GradeRunOptions,
   runtime: GradeAgentRuntime,
 ): Promise<{ documents: DocumentRun[] }> {
+  if (opts.ifBusy !== undefined && opts.ifBusy !== "fail" && opts.ifBusy !== "wait")
+    throw new Error("Invalid --if-busy; expected fail or wait");
   // Serialize all runs for a project: different run ids still write the same canonical sidecars.
   if (opts.dryRun) return runGradeUnlocked(opts, runtime);
   const { project } = resolveProject(opts.project);
@@ -78,7 +122,15 @@ export async function runGrade(
     "grade lock",
   );
   mkdirSync(dirname(lockPath), { recursive: true });
-  const lock = tryAcquireLock(lockPath, { actor: opts.by ?? "grade", label: opts.runId });
+  const owner = { actor: opts.by ?? "grade", label: opts.runId };
+  let lock = tryAcquireLock(lockPath, owner);
+  if (!lock && opts.ifBusy === "wait") {
+    process.stdout.write("grade run is busy for this project; waiting for the active run\n");
+    while (!lock) {
+      await delay(LOCK_POLL_MS);
+      lock = tryAcquireLock(lockPath, owner);
+    }
+  }
   if (!lock)
     throw new Error("grade run is busy for this project; retry after the active run finishes");
   try {
@@ -98,11 +150,23 @@ async function runGradeUnlocked(
     throw new Error("Invalid --kind");
   if (opts.target !== "kata" && opts.kind !== undefined)
     throw new Error("--kind is only valid for kata");
+  if (opts.target !== "kata" && (opts.kata?.length ?? 0) > 0)
+    throw new Error("--kata is only valid for kata");
+  if (opts.paths?.length && (opts.kata?.length ?? 0) > 0)
+    throw new Error("Use either --path or --kata");
+  let documentsByKata: Map<string, string[]> | undefined;
+  if (opts.kata && opts.kata.length > 0) {
+    documentsByKata = resolveKataBatchTargets(opts.kata, specdojoRootDir()).documentsByKata;
+  }
   const maxFailures = opts.maxStageFailures ?? 3;
   if (!Number.isSafeInteger(maxFailures) || maxFailures < 1)
     throw new Error("Invalid --max-stage-failures");
   if (opts.limit !== undefined && (!Number.isSafeInteger(opts.limit) || opts.limit < 1))
     throw new Error("Invalid --limit");
+  if (opts.referencePerKind && opts.target !== "kata")
+    throw new Error("--reference-per-kind is only valid for kata");
+  if (opts.referencePerKind && opts.reference !== undefined)
+    throw new Error("Use either --reference or --reference-per-kind");
   const { id: projectId, project } = resolveProject(opts.project);
   const viewpoints = loadViewpoints(projectId);
   const executionPath = getProjectExecutionPath(project);
@@ -116,8 +180,13 @@ async function runGradeUnlocked(
     "--work-dir",
   );
   const statePath = join(directory, "run.json");
+  // Review preparation runs in the integration worktree. Its failures must never mutate
+  // shared retry state that another task may already have included in its checkpoint.
+  const pipelineStateDirectory = opts.isolatePipelineState
+    ? join(directory, "pipeline")
+    : undefined;
   const requestOptions = Object.fromEntries(
-    Object.entries(opts).filter(([key]) => key !== "dryRun"),
+    Object.entries(opts).filter(([key]) => key !== "dryRun" && key !== "ifBusy"),
   );
   const request = digest({ ...requestOptions, project: projectId });
   let state: RunState;
@@ -148,10 +217,16 @@ async function runGradeUnlocked(
         throw new Error("Invalid grade run document state");
     }
   } else {
-    let paths = discoverGradeTargets({ ...opts, project: projectId });
-    if (opts.target === "kata" && kind !== "all")
-      paths = paths.filter((path) => repoRelativePath(path).split("/").includes(`${kind}s`));
-    if (opts.limit !== undefined) paths = paths.slice(0, opts.limit);
+    let paths: string[];
+    if (documentsByKata) {
+      const flattened = Array.from(documentsByKata.values()).flat();
+      paths = Array.from(new Set(flattened));
+    } else {
+      paths = discoverGradeTargets({ ...opts, project: projectId });
+      if (opts.target === "kata" && kind !== "all")
+        paths = paths.filter((path) => repoRelativePath(path).split("/").includes(`${kind}s`));
+      if (opts.limit !== undefined) paths = paths.slice(0, opts.limit);
+    }
     state = {
       version: 1,
       request,
@@ -169,12 +244,18 @@ async function runGradeUnlocked(
           projectId,
         )
       : undefined;
+  const references = new Map<string, string | undefined>(
+    state.documents.map((document) => [
+      document.path,
+      opts.referencePerKind ? perKindReference(document.path) : opts.reference,
+    ]),
+  );
   // Validate all subjects before starting any agent or writing run files.
   for (const document of state.documents) {
     const path = resolveSafeMarkdownPath(document.path, specdojoRootDir(), projectId);
     const fingerprint = digest({
       content: gradeContentHash(readFileSync(path, "utf8")),
-      reference: referenceHash(opts.reference, projectId),
+      reference: referenceHash(references.get(document.path), projectId),
       viewpoints,
       criteria: criteria?.get(document.path),
       sources: resolveGradeSourceHashes({
@@ -226,9 +307,13 @@ async function runGradeUnlocked(
   }
   writeState(statePath, state);
   const failures: string[] = [];
+  let rateLimited = false;
+  let rateLimitedActor: string | undefined;
   for (const [index, document] of state.documents.entries()) {
+    const reference = references.get(document.path);
     if (document.status === "complete") {
       recordGradePipelineStage({
+        directory: pipelineStateDirectory,
         target: opts.target,
         project: projectId,
         path: document.path,
@@ -242,6 +327,7 @@ async function runGradeUnlocked(
       continue;
     }
     const prior = readGradePipelineState({
+      directory: pipelineStateDirectory,
       target: opts.target,
       project: projectId,
       path: document.path,
@@ -253,6 +339,7 @@ async function runGradeUnlocked(
     // The native runner has one stage. Old experimental three-stage retries cannot be reused.
     if (prior && prior.stage_total !== 1)
       recordGradePipelineStage({
+        directory: pipelineStateDirectory,
         target: opts.target,
         project: projectId,
         path: document.path,
@@ -268,7 +355,7 @@ async function runGradeUnlocked(
         target: opts.target,
         paths: [document.path],
         referenceExampleCandidates: [],
-        referenceExampleOverride: opts.reference,
+        referenceExampleOverride: reference,
         viewpoints,
         projectId,
         outputDirectory: stageDirectory,
@@ -288,6 +375,26 @@ async function runGradeUnlocked(
       });
       document.actor = actualActor;
       if (!execution) throw new Error("Agent returned no execution result");
+      if (execution.result === "rate_limit") {
+        // A rate limit is not a document failure: keep the stage retryable in this run id.
+        document.status = "pending";
+        writeState(statePath, state);
+        if (documentsByKata) {
+          rateLimited = true;
+          rateLimitedActor = actualActor;
+          continue;
+        }
+        const unstarted = state.documents
+          .filter((item) => item.status !== "complete")
+          .map((item) => item.path);
+        throw new GradeRunIncompleteError(
+          [
+            `grade run stopped by rate limit: agent=${actualActor} run_id=${opts.runId}; rerun with the same --run-id to resume`,
+            ...unstarted.map((path) => `grade run remaining: ${path}`),
+          ].join("\n"),
+          GRADE_RUN_RATE_LIMIT_EXIT_CODE,
+        );
+      }
       writeFileSync(join(stageDirectory, "executor-output.txt"), execution.stdout, "utf8");
       if (execution.result !== "success")
         throw new Error(
@@ -297,7 +404,7 @@ async function runGradeUnlocked(
       const currentPath = resolveSafeMarkdownPath(document.path, specdojoRootDir(), projectId);
       const currentFingerprint = digest({
         content: gradeContentHash(readFileSync(currentPath, "utf8")),
-        reference: referenceHash(opts.reference, projectId),
+        reference: referenceHash(reference, projectId),
         viewpoints: loadViewpoints(projectId),
         criteria:
           opts.target === "deliverable"
@@ -329,7 +436,7 @@ async function runGradeUnlocked(
         viewpoints,
         target: opts.target,
         gradedBy: actualActor,
-        reference: opts.reference,
+        reference,
         doneCriteriaByPath: criteria,
         criteriaDirectory: join(executionPath, "grade", "criteria"),
         resultsDirectory: join(executionPath, "grade", "results"),
@@ -345,6 +452,7 @@ async function runGradeUnlocked(
       document.resultHash = digest(result);
       writeState(statePath, state);
       recordGradePipelineStage({
+        directory: pipelineStateDirectory,
         target: opts.target,
         project: projectId,
         path: document.path,
@@ -354,12 +462,16 @@ async function runGradeUnlocked(
         maxFailures,
         status: "complete",
       });
-      process.stdout.write(`graded: ${document.path} actor=${actualActor}\n`);
+      process.stdout.write(
+        `graded: ${document.path} actor=${actualActor} verdict=${result.verdict} score=${result.score} findings=${gradeFindingCount(result)}\n`,
+      );
     } catch (error) {
+      if (error instanceof GradeRunIncompleteError) throw error;
       document.status = "failed";
       document.error = error instanceof Error ? error.message : String(error);
       writeState(statePath, state);
       recordGradePipelineStage({
+        directory: pipelineStateDirectory,
         target: opts.target,
         project: projectId,
         path: document.path,
@@ -372,6 +484,44 @@ async function runGradeUnlocked(
       failures.push(`${document.path}: ${document.error}`);
     }
   }
-  if (failures.length) throw new Error(`grade run incomplete:\n${failures.join("\n")}`);
+  if (documentsByKata && documentsByKata.size > 0) {
+    process.stdout.write("kata results:\n");
+    for (const [name, docs] of documentsByKata) {
+      const statuses = docs.map((docPath) => {
+        const repoPath = repoRelativePath(docPath);
+        const doc = state.documents.find((item) => item.path === repoPath);
+        return doc?.status ?? "pending";
+      });
+      let verdictJa = "未実行";
+      let verdictEn = "pending";
+      if (statuses.every((s) => s === "complete")) {
+        verdictJa = "完了";
+        verdictEn = "complete";
+      } else if (statuses.some((s) => s === "failed")) {
+        verdictJa = "失敗";
+        verdictEn = "failed";
+      }
+      process.stdout.write(`  ${name}: ${verdictJa} (${verdictEn})\n`);
+    }
+  }
+  if (rateLimited) {
+    const unstarted = state.documents
+      .filter((item) => item.status !== "complete")
+      .map((item) => item.path);
+    throw new GradeRunIncompleteError(
+      [
+        `grade run stopped by rate limit: agent=${rateLimitedActor ?? actor} run_id=${opts.runId}; rerun with the same --run-id to resume`,
+        ...unstarted.map((path) => `grade run remaining: ${path}`),
+      ].join("\n"),
+      GRADE_RUN_RATE_LIMIT_EXIT_CODE,
+    );
+  }
+  if (failures.length) {
+    const completed = state.documents.filter((document) => document.status === "complete").length;
+    throw new GradeRunIncompleteError(
+      `grade run incomplete: completed=${completed} failed=${failures.length} run_id=${opts.runId}\n${failures.join("\n")}`,
+      completed > 0 ? GRADE_RUN_PARTIAL_EXIT_CODE : 1,
+    );
+  }
   return { documents: state.documents };
 }

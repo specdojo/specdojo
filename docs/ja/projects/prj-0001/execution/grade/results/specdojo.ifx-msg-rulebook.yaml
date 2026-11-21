@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 92
-graded_at: "2026-10-03T21:29:21.773Z"
-graded_by: agy-expert-executor
-content_hash: c25cd626d41b7f49d5acbf484e17028063b0f139922d11ae12049d1d36b8d183
+graded_at: "2026-11-01T20:37:36.772Z"
+graded_by: flash-high-executor
+content_hash: 11c3781e13c37fc192d44435113dc757d063e6dcbe265dda23630046c779631e
 categories:
   purpose:
     score: 88
@@ -110,33 +110,39 @@ findings:
     line: 12
     anchor: ""
     message: EMSの合意や承認を行う主体（POや外部システム担当者など）に関する言及がない。
+    message_ja: EMSの合意や承認を行う主体（POや外部システム担当者など）に関する言及がない。
   - id: F002
     severity: minor
     rule: vp-dev-testability
     line: 47
     anchor: "## 4.1 メタ情報（x-spec-meta）"
     message: AsyncAPI YAMLの妥当性を検証する手順（lintコマンドやバリデーション方法）についての言及がない。
+    message_ja: AsyncAPI YAMLの妥当性を検証する手順（lintコマンドやバリデーション方法）についての言及がない。
   - id: F003
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 22
     anchor: "## 3. 記載方針（必須）"
     message: "sampleにあるスキーマ検証回避のディレクティブ（`# specdojo-schema: none reason=external-asyncapi`）に関する記載ルールが欠落している。"
+    message_ja: "sampleにあるスキーマ検証回避のディレクティブ（`# specdojo-schema: none reason=external-asyncapi`）に関する記載ルールが欠落している。"
   - id: F004
     severity: minor
     rule: vp-ux-readability
     line: 12
     anchor: ""
     message: 成果物の位置づけについて言及があるが、関連するルールブック（ESIL等）へのリンクがなく、ナビゲーションが不十分である。（前回の未解消指摘）
+    message_ja: 成果物の位置づけについて言及があるが、関連するルールブック（ESIL等）へのリンクがなく、ナビゲーションが不十分である。（前回の未解消指摘）
   - id: F005
     severity: minor
     rule: vp-ux-readability
     line: 41
     anchor: "- `info`（`title`, `version` を含む）"
     message: 禁止事項に理由（例：詳細設計への委譲のためなど）が記載されていないため、記述範囲の境界判断が困難である。（前回の未解消指摘）
+    message_ja: 禁止事項に理由（例：詳細設計への委譲のためなど）が記載されていないため、記述範囲の境界判断が困難である。（前回の未解消指摘）
   - id: F006
     severity: minor
     rule: vp-ops-release-readiness
     line: 66
-    anchor: "- `time`: 発生時刻（RFC3339）"
+    anchor: "- `id`: イベントID（重複しない）"
     message: statusを `ready` にするための完了条件（例：外部システム担当者との合意完了など）が明示されていない。
+    message_ja: statusを `ready` にするための完了条件（例：外部システム担当者との合意完了など）が明示されていない。

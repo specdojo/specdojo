@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-11-15T12:17:35Z",
+  "type": "cancel",
+  "task_id": "T-DATA-FLOW-PDCA-cdfd-plan-140",
+  "by": "indie",
+  "msg": "取り下げ: 文書は廃止済みで archive/ja/product/trash/ へ移したため確定しない（indie が 2026-11-15 に判断、PJR-TN43）"
+}

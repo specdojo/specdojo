@@ -1,0 +1,28 @@
+`docs/ja/specdojo/recipes/cdfd-recipe.md` だけを書き直しました。章の構成は Recipe 記述標準の 8 章のまま保っています。指摘 3 件のうち、F003 は直しました。F002 と F001 は、この段の「rulebook と同じ判断を言い直さない」方針と食い違うため、記述を足していません。理由は申し送りに残しました。
+
+**外した記述**
+- プロセス領域に主要入力・主要出力・データストアの箇条書きを置く指示（手順 3、4.3、仕上げチェック）。rulebook の禁止事項と矛盾していたもので、これで F003 は解消しています。
+- rulebook と同じ判断の言い直し。具体的には、表の列の指定、ID の形式、図の注記に書く項目、1 図 15 プロセスまでの上限、未決事項のラベルの使い方です。
+- 担当の対応付けの段落と、責任分担の文書を参照させる行（文書の運用にあたる部分）。
+- 仕上げチェックの構造の検査と、同じ確認の繰り返し（レビュー観点・良い例 / 悪い例・仕上げチェックの重複、全体の手順をなぞっていた深掘り手順）。
+- 使い方の章で、章立てをなぞっていた文。
+
+**残した・足した記述**
+- 「作成前に集める情報」に取り出し元の列を足しました（全体概要、担当者への聞き取り、過去の障害記録など）。
+- 書く順番とその理由。プロセスが固まってから図を描く、例外は正常の流れの後に書く、目的と適用範囲は最後に書く、の 3 つです。
+- 各節に問いを 2 つずつと、聞き方のコツを置きました（例:「必要に応じて」と返ってきたら「何が起きたら始めるか」を聞き直す）。
+- 深掘り手順は、対応のない主張を探す 4 段の順序に書き換えました。
+- 全体概要を正とする名称や上位の目的は、写さずに参照に置き換えるようコツに書きました。
+- 本文に rulebook・sample への参照はありません。
+
+**大きさ**（空白を除く文字数、表の区切り行は除く。括弧内は区切り行を含む文字数とバイト数）
+
+| 文書        | 前                             | 後                             | 比    |
+| ----------- | ------------------------------ | ------------------------------ | ----- |
+| cdfd-recipe | 6,890 字（7,259 字・21,136 B） | 3,491 字（3,844 字・10,915 B） | 50.7% |
+
+**検査**: prettier で整形し、markdownlint-cli2 は 0 件でした。`lint:md` などの決まった検査はこの段では実行しておらず、親 runner が流します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"Rewrote only docs/ja/specdojo/recipes/cdfd-recipe.md and kept the 8-chapter structure. Removed restatements of rulebook decisions, document-operation text, structural finish checks and repeated checks. Removed the instruction that contradicted the rulebook by putting input/output/datastore bullets under process areas (F003 resolved). Size: 6,890 to 3,491 non-whitespace characters (50.7%). F001 and F002 are deliberately unaddressed and recorded in handoff.","handoff":["Size (non-whitespace characters, excluding table separator rows; same method as PJR-8S4T): before 6,890 (7,259 including separator rows, 21,136 B), after 3,491 (3,844, 10,915 B), ratio 50.7%.","F003 (vp-qe-kata-conformance, line 38): resolved. Removed the instruction to put input/output/datastore bullets under process areas from step 3, section 4.3 and the finish check, which contradicted the cdfd-rulebook prohibitions. The 4.3 tips now say to collect inputs/outputs in the per-process input/output section.","F002 (vp-qe-kata-conformance): the plan requires removing restatements of rulebook decisions such as table column lists, so the table columns (process name, completion condition, target process, stop scope, delegated items) were not restated; the questions and tips cover the decisions instead (one business purpose and a yes/no completion condition, where processing stops and where it resumes, what is handed to the delegate). Because this conflicts with the finding, judge on re-grade whether the viewpoint should treat column restatement as unnecessary.","F001 (vp-qe-omissions-consistency): Frontmatter checks and the responsibility-split reference are structural checks or document operation, which the plan says to remove, so they were not added to the finish check. The rulebook completion criteria are the source of truth. If the grade viewpoint still requires them in recipes, the viewpoint wording needs aligning with the slim policy.","Proposed rulebook change (not applied): '6.8. 完成判定' says to use it together with the type-specific prohibitions, but the rulebook does not explain how authors gather inputs/outputs; no change needed. No proposed changes to the sample or template."],"validations":[{"command":"npx prettier --write docs/ja/specdojo/recipes/cdfd-recipe.md","status":"passed","summary":"formatted"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/recipes/cdfd-recipe.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"no history files changed","reason":"Only a recipe changed; no plan/result/pjr history file was edited."}]}
+</specdojo_executor_evidence>

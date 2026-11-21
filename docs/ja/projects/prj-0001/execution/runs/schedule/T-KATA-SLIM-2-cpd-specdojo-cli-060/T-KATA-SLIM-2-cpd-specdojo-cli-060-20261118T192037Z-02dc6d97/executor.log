@@ -1,0 +1,36 @@
+`docs/ja/specdojo/recipes/cpd-recipe.md` を書き直しました。空白を除いた文字数は 4,465 字から 3,124 字になり、7 割以下（70.0%）に収まっています。Prettier と markdownlint は通りました。lint などの残りの検査は、このあと親 runner が実行します。
+
+**変えた点**
+- **外した記述:**
+  - 文書の運用（確認者・合意者、公開の範囲と承認、構文・描画・参照の検査を手順に入れること）
+  - 「メモ / 将来課題」の台帳的な項目（担当・判断者・判断時点・PJR 登録）
+  - rulebook と同じ判断の言い直し
+  - 構造を確かめる仕上げチェック
+  - 改訂の影響を全体の作成手順と深掘り手順で 2 回書いていた重複
+- **書く順番:** 代表の依頼をたどる → 要素と境界の定義 → 図 → 検証観点 → 未確認事項 → 最後に概要、とし、それぞれ理由を添えました。
+- **各章:** 「問い」と「コツ」の形にしました。上位の目的・成功基準や、値・構文・構造は「写さず参照に置き換える」とコツに書いています。
+- **良い例 / 悪い例:** 各章にあった例を 7 行の表 1 つにまとめました。
+- 章の構成（8 章）と frontmatter は変えていません。
+
+**finding への対応**
+- **対応した 7 件:**
+  - F004: 深掘り手順の 1 に、出力と成功基準の対応を確かめる手順を入れた。
+  - F005: 概要の問いに「今回扱わない範囲」を加えた。
+  - F006・F012: 「技術前提・制約と検証観点」の問いを、技術前提と検証観点に分けた。共通機構の保証を確かめる問いもここに入れた。
+  - F007・F011: 改訂の影響の確認を深掘り手順の 4 にまとめた。
+  - F008: 概要のコツに、確かめていない構成を _ASSUMPTION_ にすることを入れた。
+- **対応しなかった 5 件:** 今回の方針（運用・検査・rulebook の言い直しを外す、rulebook への参照を書かない）とぶつかるためです。
+  - F001: 上位の標準文書への参照を足す案。
+  - F002: 作業の規模を見積もる基準を足す案。
+  - F003: PJR・担当ロールへの転記を足す案。
+  - F009: メタ情報・Mermaid 構文・描画などの検査項目を足す案。
+  - F010: 合否の判定を recipe に書く案。
+
+  この理由は result に書く必要があるため、handoff に入れました。
+
+**rulebook の変更案（今回は直していない）**
+`cpd-rulebook` の「記述ガイド」の冒頭にある「共通のメタ情報・命名は上位標準を参照し」は、「全体方針」の「共通の運用」とほぼ同じ内容です。整理する余地があります。rulebook・sample・template は変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"`docs/ja/specdojo/recipes/cpd-recipe.md` を書き直した。文書の運用、台帳の列、rulebook の言い直し、構造の検査、重複を外し、書く順番と理由・入力の集め方・問いとコツ・深掘りの順序・良い例と悪い例の表にまとめた。空白を除いた文字数は 4465 字から 3124 字（70.0%）。8 章の構成は保ち、rulebook・sample・template は変えていない。","handoff":["文字数（空白を除く）: 改訂前 4465 字、改訂後 3124 字（70.0%）。result の『進め方と実践の型の適用』に記録する。","根拠とした文書: `specdojo:cpd-rulebook`（記述ガイド・禁止事項）、Recipe 記述標準（`docs/ja/specdojo/standards/recipe-authoring-standard.md`）、手本の `specdojo:prj-charter-recipe`、PJR-7M9J の『他の recipe へ広げるときの一覧』。構造・必須項目は rulebook を正とし、recipe では言い直さず外した。","対応した finding: F004（深掘り手順の 1 に、出力と上位の成功基準の対応を確かめる手順を入れた）、F005（概要の問いに『今回扱わない範囲』を加えた）、F006・F012（『技術前提・制約と検証観点』の問いを技術前提と検証観点に分け、共通機構の保証を確かめる問いを入れた）、F007・F011（改訂の影響の確認を深掘り手順の 4 にまとめ、重複をなくした）、F008（概要のコツに、確かめていない構成を _ASSUMPTION_ にすることを入れた）。","対応を見送った finding: F001（上位の標準文書への参照）、F003（PJR・Role への転記）、F009（メタ情報・Mermaid 構文・描画の検査項目）は、文書の運用と文書品質の検査を外す方針、および recipe 本文に rulebook や共通の運用への参照を書かない規則（Recipe 記述標準）とぶつかるため対応しない。F010（合否の判定）は rulebook の『検証と合意の判定』の言い直しになるため外した。F002（作業の規模の見積もり基準）は recipe の責務外（Schedule 側の扱い）と判断した。次のアクション: 型の再 grade で、同じ観点の指摘が出ないか確かめる。","rulebook の変更案（この段では直していない）: `cpd-rulebook` の『記述ガイド』の冒頭の『共通のメタ情報・命名は上位標準を参照し』は、『全体方針』の『共通の運用』と重なるため整理の余地がある。sample と template に変える点はなかった。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/recipes/cpd-recipe.md","status":"passed","summary":"Prettier の書式に合っている"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/recipes/cpd-recipe.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更したのは recipe だけで、pjr 個票・plan・result は変更していないため"}]}
+</specdojo_executor_evidence>

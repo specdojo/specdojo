@@ -1,0 +1,52 @@
+**判定は `complete-with-findings` です。** この Run は統合してよい状態で、評価結果に残る finding は Run の完了を妨げません。
+
+**出力範囲**
+- 差分 `6469dd3..2c0a0d6` は22ファイルで、Job Run の出力だけで構成されています。
+  - 評価結果ファイル（サイドカー）`execution/grade/results/specdojo.*.yaml` の更新が15件。
+  - Run JSON が1件。
+  - `runs/job/JBR-grade-kata-451746c3a3b3/JBR-grade-kata-451746c3a3b3/` 配下の plan・result・evidence・pipeline-state・stdout・stderr が6件。
+- 評価対象の文書本体（`docs/ja/specdojo/**`）は変更されていません。
+
+**状態と記録の整合**
+- Run JSON の `state` と attempt 1 の状態はどちらも `succeeded`、`exit_code` は 0 です。
+- evidence の `job-command` は passed（exit 0）、`stderr` は空です。pipeline-state の executor と reporter もどちらも succeeded です。
+- stdout の集計行は `selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0` です。
+- results.tsv の15行はすべて stage 1 が `passed` でした。`failed`、`retry_exhausted`、終了コード75（rate limit）はありません。
+- results.tsv の verdict と score は、15件すべてで各サイドカーの値と一致しました。findings 数も major と minor の合計と一致し、result.md の記載とも一致しています。
+
+**評価結果の鮮度**
+- `specdojo grade list --target kata --project prj-0001` を `--changed-only` と `--dependency-changed` で実行しました。評価した15文書はどちらにも出てこないため、評価結果は最新です。
+- `--incomplete`、`--rubric-outdated`、`grade state --exhausted` の出力は空でした。
+
+**score と verdict の分布**
+- pass が5件（93〜99点）、needs-work が10件（79〜94点）です。
+- pass の5件は major が0件、needs-work の10件は major が1件以上です。opr-rulebook が94点でも needs-work なのは、major が2件あるためです。判定は major の有無と一貫しており、評価設定の見直しが必要な偏りは見当たりません。
+- 前回からの主な変化は次のとおりです。
+  - otp-rulebook: needs-work 94点 → pass 99点
+  - otp-index-rulebook: 84点 → 92点
+  - opr-index-rulebook: 83点 → 79点
+  - stsd-recipe: 100点 → 98点
+- cdfd-overview-recipe と cdfd-uc-recipe は `content_hash` が変わらず、`graded_at` だけが更新されています。
+
+**finding と改善指示**
+- 次の10件は needs-work で、major を中心に finding が残っています。
+  - pm-plan-rulebook: major 10
+  - opr-index-rulebook: major 4、minor 9
+  - dct-rulebook、pjr-rulebook: それぞれ major 3
+  - pm-change-request-log、pm-issue-log、pm-organization、opr-rulebook: それぞれ major 2
+  - otp-index-rulebook: major 1
+- これらは各文書を改訂するときに対応すべき事項で、この Run の完了条件には影響しません。
+- 実践の型（kata）全体では、まだ `--changed-only` に101件、`--ungraded` に3件（pjr-dependent-items・pjr-epic-items・pjr-epic の各テンプレート）が残っています。今回は上限15件の選択どおりに処理しており、残りは次回以降の Run の対象です。
+- result.md の記述に軽微な点が2つあります。
+  - 変更ファイル一覧に Run の記録ファイル（plan・evidence など）が含まれていません。
+  - pass と needs-work の件数が、上位の項目と同じ階層の箇条書きになっています。
+- review plan の「Job Run result」のパスに `_RUN..` という崩れた接頭辞が付いています。実際のファイルは `runs/job/.../JBR-grade-kata-451746c3a3b3/result.md` で確認しました。
+
+**確認できなかった範囲**
+- サイドカーの finding の内容が妥当かどうかは、review の範囲外のため再評価していません。
+- `logs/grade/runs/per-document/JBR-grade-kata-451746c3a3b3/` 配下の作業ログ（results.tsv の原本や per-document state）は直接読んでおらず、stdout に出力された内容で確認しました。
+- verdict を確定する直前の鮮度の再確認は、最初の確認と同じ一連の操作の中で行っており、その間に成果物の変更はありませんでした。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict: complete-with-findings。差分 6469dd3..2c0a0d6 は Job Run の出力のみ（`execution/grade/results` サイドカー15件、Run JSON、runs/job 配下の plan・result・evidence・pipeline-state・stdout・stderr）で、評価対象の文書本体の変更はない。Run JSON は `state: succeeded`・exit_code 0、evidence の `job-command` は passed（exit 0、stderr 空）、pipeline-state の executor と reporter は succeeded。stdout は selected=15 processed=15 incomplete=0 exhausted=0 で、results.tsv の15行はすべて stage 1 が passed。failed、`retry_exhausted`、rate limit（終了コード75）はない。results.tsv の verdict・score・findings 数は各サイドカー（major+minor）および result.md と15件すべて一致した。鮮度: `grade list --target kata` の `--changed-only` と `--dependency-changed` に対象15件は出現せず（最新）、`--incomplete`・`--rubric-outdated`・`grade state --exhausted` は空。分布は pass 5件（93〜99点、major 0）、needs-work 10件（79〜94点、すべて major 1件以上）で、判定は major の有無と一貫しており、評価設定の見直しを要する偏りはない。finding: pm-plan-rulebook major10、opr-index-rulebook major4・minor9、dct・pjr major3 など needs-work 10件の finding は文書改訂の対象で、Run の完了は妨げない。kata 全体では未処理の `--changed-only` が101件、`--ungraded` が3件残っているが、上限15件の選択どおりで次回 Run の対象。軽微な点: result.md の変更ファイル一覧に Run の記録ファイルが含まれず、件数の箇条書きが上位項目と同じ階層。review plan の Job Run result パスに `_RUN..` という崩れた接頭辞がある。確認できなかった範囲: finding 内容の妥当性（review の範囲外のため再評価していない）、`logs/grade/runs/per-document/` 配下の原本ログは直接読んでおらず stdout で代替して確認した。","handoff":["needs-work 10件（特に pm-plan-rulebook major10、opr-index-rulebook major4・minor9、dct-rulebook・pjr-rulebook major3）は各 rulebook の改訂タスクで対応する。","kata の `--changed-only` に未処理の101件、`--ungraded` に3件（pjr-dependent-items・pjr-epic-items・pjr-epic の各テンプレート）が残っており、次回以降の job-grade-kata Run で処理する。","review plan の Job Run result パスに `_RUN..` という崩れた接頭辞が出力されている。plan 生成側で確認する。"],"validations":[{"command":"git diff --stat 6469dd315229c0fdcecdca6b91e5efeb3a559acc..2c0a0d6f5f9481215d234bdd033b37cb2057169d && git diff --name-status 6469dd315229c0fdcecdca6b91e5efeb3a559acc..2c0a0d6f5f9481215d234bdd033b37cb2057169d","status":"passed","summary":"22ファイル。サイドカー15件の更新と Run の記録7件の追加のみで、対象外の変更はない"},{"command":"specdojo grade list --target kata --project prj-0001 --changed-only","status":"passed","summary":"101件を出力したが、評価した15文書はいずれも含まれない（最新）"},{"command":"specdojo grade list --target kata --project prj-0001 --dependency-changed","status":"passed","summary":"評価した15文書はいずれも含まれない"},{"command":"specdojo grade list --target kata --project prj-0001 --incomplete","status":"passed","summary":"出力なし（未完了の評価パイプラインなし）"},{"command":"specdojo grade list --target kata --project prj-0001 --rubric-outdated","status":"passed","summary":"出力なし"},{"command":"specdojo grade list --target kata --project prj-0001 --ungraded","status":"passed","summary":"今回の対象外のテンプレート3件のみ"},{"command":"specdojo grade state --target kata --project prj-0001 --exhausted","status":"passed","summary":"出力なし（`retry_exhausted` なし）"}]}
+</specdojo_executor_evidence>

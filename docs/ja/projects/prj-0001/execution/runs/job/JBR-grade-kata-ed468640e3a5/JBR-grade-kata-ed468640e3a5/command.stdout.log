@@ -1,0 +1,54 @@
+
+> specdojo@0.7.0 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-kata-ed468640e3a5 project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true rubric_outdated=true embed_documents=false max_stage_failures=3 stages=1 documents=15 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-ed468640e3a5
+stage=1 executor=agy-expert-executor reporter=machine reference=none
+translation_by=gemma26-translator
+document start: docs/ja/specdojo/recipes/ifx-cmd-recipe.md
+document complete: docs/ja/specdojo/recipes/ifx-cmd-recipe.md
+document start: docs/ja/specdojo/recipes/pm-communication-plan-recipe.md
+document complete: docs/ja/specdojo/recipes/pm-communication-plan-recipe.md
+document start: docs/ja/specdojo/recipes/pm-members-recipe.md
+document complete: docs/ja/specdojo/recipes/pm-members-recipe.md
+document start: docs/ja/specdojo/recipes/pm-organization-recipe.md
+document complete: docs/ja/specdojo/recipes/pm-organization-recipe.md
+document start: docs/ja/specdojo/recipes/pm-plan-recipe.md
+document complete: docs/ja/specdojo/recipes/pm-plan-recipe.md
+document start: docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md
+document start: docs/ja/specdojo/rulebooks/cdt-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/cdt-rulebook.md
+document start: docs/ja/specdojo/rulebooks/cld-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/cld-rulebook.md
+document start: docs/ja/specdojo/rulebooks/clis-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/clis-rulebook.md
+document start: docs/ja/specdojo/rulebooks/dec-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/dec-rulebook.md
+document start: docs/ja/specdojo/rulebooks/ifx-cmd-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/ifx-cmd-rulebook.md
+document start: docs/ja/specdojo/rulebooks/imp-business-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/imp-business-rulebook.md
+document start: docs/ja/specdojo/rulebooks/imp-data-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/imp-data-rulebook.md
+document start: docs/ja/specdojo/rulebooks/imp-interface-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/imp-interface-rulebook.md
+document start: docs/ja/specdojo/rulebooks/imp-operations-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/imp-operations-rulebook.md
+grade pipeline complete: selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-ed468640e3a5/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference	consecutive_failures	max_failures
+2026-11-08T20:03:54Z	docs/ja/specdojo/recipes/ifx-cmd-recipe.md	1	passed	117	pass	100	0	agy-expert-executor	machine	none		
+2026-11-08T20:06:10Z	docs/ja/specdojo/recipes/pm-communication-plan-recipe.md	1	passed	134	needs-work	88	4	agy-expert-executor	machine	none		
+2026-11-08T20:09:10Z	docs/ja/specdojo/recipes/pm-members-recipe.md	1	passed	178	pass	97	9	agy-expert-executor	machine	none		
+2026-11-08T20:10:55Z	docs/ja/specdojo/recipes/pm-organization-recipe.md	1	passed	103	pass	98	1	agy-expert-executor	machine	none		
+2026-11-08T20:12:56Z	docs/ja/specdojo/recipes/pm-plan-recipe.md	1	passed	118	needs-work	92	3	agy-expert-executor	machine	none		
+2026-11-08T20:14:25Z	docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md	1	passed	87	pass	100	0	agy-expert-executor	machine	none		
+2026-11-08T20:19:20Z	docs/ja/specdojo/rulebooks/cdt-rulebook.md	1	passed	293	pass	94	3	agy-expert-executor	machine	none		
+2026-11-08T20:25:56Z	docs/ja/specdojo/rulebooks/cld-rulebook.md	1	passed	394	pass	100	0	agy-expert-executor	machine	none		
+2026-11-08T20:28:32Z	docs/ja/specdojo/rulebooks/clis-rulebook.md	1	passed	154	pass	100	0	agy-expert-executor	machine	none		
+2026-11-08T20:30:40Z	docs/ja/specdojo/rulebooks/dec-rulebook.md	1	passed	126	pass	93	8	agy-expert-executor	machine	none		
+2026-11-08T20:33:09Z	docs/ja/specdojo/rulebooks/ifx-cmd-rulebook.md	1	passed	148	pass	100	0	agy-expert-executor	machine	none		
+2026-11-08T20:35:22Z	docs/ja/specdojo/rulebooks/imp-business-rulebook.md	1	passed	131	pass	93	4	agy-expert-executor	machine	none		
+2026-11-08T20:39:45Z	docs/ja/specdojo/rulebooks/imp-data-rulebook.md	1	passed	261	needs-work	78	11	agy-expert-executor	machine	none		
+2026-11-08T20:44:11Z	docs/ja/specdojo/rulebooks/imp-interface-rulebook.md	1	passed	264	pass	99	2	agy-expert-executor	machine	none		
+2026-11-08T20:45:55Z	docs/ja/specdojo/rulebooks/imp-operations-rulebook.md	1	passed	102	pass	97	3	agy-expert-executor	machine	none		

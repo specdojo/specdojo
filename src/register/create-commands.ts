@@ -1,4 +1,5 @@
 import { normalizeRegisterInput } from "./input.js";
+import { validateSectionFile } from "./section.js";
 import type { Command } from "commander";
 import { existsSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
@@ -26,7 +27,7 @@ import { validateRegisterApproachTargetsForProject } from "./approach.js";
 import { normalizeDependsOn, validateRegisterDependencies } from "./dependency.js";
 import { normalizeDerivedFrom, validateDerivedFrom } from "./derivation.js";
 import { delegateExternalRegisterAdd } from "./external-project.js";
-import { validateRegisterTrack } from "./epic.js";
+import { validateRegisterDomains, validateRegisterStartOn, validateRegisterTrack } from "./epic.js";
 import { isAuthoringApproach } from "../kata/authoring.js";
 
 function collectTarget(value: string, previous: string[] = []): string[] {
@@ -116,6 +117,11 @@ export function registerCreateCommands(
   addProjectOption(addCmd);
   addCmd.requiredOption("--type <type>", `Item type: ${VALID_TYPES.join(" | ")}`);
   addCmd.option("--track <track>", "Track governed by an epic (required for epic)");
+  addCmd.option(
+    "--domain <domain>",
+    "Catalog domain governed by an epic (repeatable)",
+    collectTarget,
+  );
   addCmd.requiredOption("--title <title>", "Short title for the item");
   addCmd.option("--input <text>", "Premise recorded in the ticket (repeatable)", collectTarget);
   addCmd.option("--description <text>", "Description shown in the list", "_TODO_");
@@ -128,6 +134,7 @@ export function registerCreateCommands(
     "Registration date-time (RFC 3339 with time zone, or _TODO_; defaults to now in UTC)",
   );
   addCmd.option("--due <date>", "Due date (YYYY-MM-DD, -, or _TODO_)", "_TODO_");
+  addCmd.option("--start-on <date>", "Planned epic start date (YYYY-MM-DD; - omits)");
   addCmd.option(
     "--completed <datetime>",
     "Completion date-time (RFC 3339 with time zone, or -)",
@@ -237,8 +244,12 @@ export function registerCreateCommands(
       });
 
       const track = opts.track?.trim();
+      validateRegisterStartOn(opts.type, opts.startOn, true);
       validateRegisterTrack(paths.projectId, opts.type, track);
+      const domains = opts.domain?.map((value: string) => value.trim());
+      validateRegisterDomains(opts.type, domains);
       const fields: RegisterAddFields = {
+        ...(domains !== undefined ? { domains } : {}),
         ...(track !== undefined ? { track } : {}),
         type: opts.type,
         title: opts.title,
@@ -249,6 +260,7 @@ export function registerCreateCommands(
         status: opts.status,
         owner: opts.owner,
         registeredAt: registeredAt ?? nowUtcTimestamp(),
+        ...(opts.startOn !== undefined && opts.startOn !== "-" ? { startOn: opts.startOn } : {}),
         due: opts.due,
         completedAt: completedAt ?? CELL_NONE,
         conclusion: opts.conclusion,
@@ -360,6 +372,11 @@ export function registerUpdateCommand(
   addProjectOption(updateCmd);
   updateCmd.requiredOption("--id <id>", "Item ID (PJR-XXXX)");
   updateCmd.option("--track <track>", "Replace the track governed by an epic");
+  updateCmd.option(
+    "--domain <domain>",
+    "Replace epic domains (repeatable; - removes)",
+    collectTarget,
+  );
   updateCmd.option("--title <title>", "Update title");
   updateCmd.option("--description <text>", "Update description");
   updateCmd.option("--priority <priority>", `Update priority: ${VALID_PRIORITIES.join(" | ")}`);
@@ -369,6 +386,7 @@ export function registerUpdateCommand(
   );
   updateCmd.option("--owner <owner>", "Update owner or role");
   updateCmd.option("--due <date>", "Update due date (YYYY-MM-DD, -, or _TODO_)");
+  updateCmd.option("--start-on <date>", "Update planned epic start date (YYYY-MM-DD; - removes)");
   updateCmd.option("--conclusion <text>", "Update conclusion or use - to remove it");
   updateCmd.option("--block-reason <text>", "Update the waiting reason or use - to remove it");
   updateCmd.option(
@@ -418,6 +436,14 @@ export function registerUpdateCommand(
     "--topic <topic>",
     "Update the topic slug in the ticket filename and document ID",
   );
+  updateCmd.option(
+    "--section <name>",
+    "Name of the ticket section to replace (without heading numbers, e.g., '完了条件')",
+  );
+  updateCmd.option(
+    "--section-file <path>",
+    "Path to a markdown file containing the new section body",
+  );
   updateCmd.option("--by <actor>", "Actor recorded in the append-only register event");
   updateCmd.option("--reason <text>", "Reason recorded in the append-only register event");
   updateCmd.option("--dry-run", "Print change without writing", false);
@@ -430,12 +456,14 @@ export function registerUpdateCommand(
 
       const hasUpdates = [
         "track",
+        "domain",
         "title",
         "description",
         "priority",
         "difficulty",
         "owner",
         "due",
+        "startOn",
         "conclusion",
         "blockReason",
         "autopilot",
@@ -450,10 +478,12 @@ export function registerUpdateCommand(
         "commitType",
         "commitScope",
         "topic",
+        "section",
+        "sectionFile",
       ].some((key) => opts[key] !== undefined);
       if (!hasUpdates) {
         throw new Error(
-          "At least one field option must be specified (--track, --title, --description, --priority, --difficulty, --owner, --due, --conclusion, --block-reason, --autopilot, --approach, --target, --source, --input, --from, --depends-on, --commit-type, --commit-scope, --topic)",
+          "At least one field option must be specified (--track, --domain, --title, --description, --priority, --difficulty, --owner, --due, --start-on, --conclusion, --block-reason, --autopilot, --approach, --target, --source, --input, --from, --depends-on, --commit-type, --commit-scope, --topic, --section, --section-file)",
         );
       }
 
@@ -497,6 +527,25 @@ export function registerUpdateCommand(
         throw new Error(
           `Invalid topic: "${topic}". Must use lowercase letters, numbers, and single hyphens`,
         );
+      }
+      if ((opts.section !== undefined) !== (opts.sectionFile !== undefined)) {
+        throw new Error("--section and --section-file must be specified together");
+      }
+      const sectionName = opts.section?.trim();
+      if (opts.section !== undefined && sectionName === "") {
+        throw new Error("Section name must not be empty");
+      }
+      const sectionFilePath = opts.sectionFile?.trim();
+      if (opts.sectionFile !== undefined && sectionFilePath === "") {
+        throw new Error("Section file path must not be empty");
+      }
+      let sectionUpdate: { name: string; content: string } | undefined;
+      if (sectionName !== undefined && sectionFilePath !== undefined) {
+        const sectionContent = validateSectionFile(sectionFilePath);
+        sectionUpdate = {
+          name: sectionName,
+          content: sectionContent,
+        };
       }
       const blockReason = opts.blockReason?.trim();
       if (blockReason !== undefined && blockReason === "") {
@@ -612,6 +661,9 @@ export function registerUpdateCommand(
       const shouldUpdateSources =
         opts.source !== undefined || (authoring && providedLegacySources.length > 0);
       const approachTargetUpdates: RegisterItemFieldUpdates = {
+        ...(opts.startOn !== undefined
+          ? { start_on: opts.startOn === "-" ? REMOVE_REGISTER_ITEM_FIELD : opts.startOn }
+          : {}),
         ...(opts.dependsOn !== undefined
           ? { depends_on: nextDependsOn ?? REMOVE_REGISTER_ITEM_FIELD }
           : {}),
@@ -659,10 +711,21 @@ export function registerUpdateCommand(
       };
 
       const track = opts.track === undefined ? item.track : opts.track.trim();
-      validateRegisterTrack(paths.projectId, item.type, track);
+      validateRegisterStartOn(item.type, opts.startOn, true);
+      validateRegisterTrack(paths.projectId, item.type, track, item.id);
+      const domains = opts.domain?.map((value: string) => value.trim());
+      const removeDomains = domains?.length === 1 && domains[0] === "-";
+      if (domains !== undefined) {
+        validateRegisterDomains(item.type, removeDomains ? [] : domains);
+        approachTargetUpdates.domains = removeDomains ? REMOVE_REGISTER_ITEM_FIELD : domains;
+      }
       const inputs = normalizeRegisterInput(opts.input, true);
       const updated: PjrItem = {
         ...item,
+        ...(opts.startOn !== undefined
+          ? { startOn: opts.startOn === "-" ? undefined : opts.startOn }
+          : {}),
+        ...(domains !== undefined ? { domains: removeDomains ? undefined : domains } : {}),
         ...(inputs !== undefined ? { inputs } : {}),
         ...(track !== undefined ? { track } : {}),
         ...(opts.title !== undefined ? { title: opts.title } : {}),
@@ -744,6 +807,7 @@ export function registerUpdateCommand(
             : {}),
           ...(opts.title !== undefined ? { title: opts.title } : {}),
           ...(opts.description !== undefined ? { description: opts.description } : {}),
+          ...(sectionUpdate !== undefined ? { section: sectionUpdate } : {}),
           actor: registerEventActor(opts),
           reason: opts.reason?.trim() || "",
         });
@@ -756,9 +820,10 @@ export function registerUpdateCommand(
         updated,
         ...(inputs !== undefined ? { inputs } : {}),
         dryRun: opts.dryRun,
-        action: "fields updated",
+        action: sectionUpdate ? `section "${sectionUpdate.name}" updated` : "fields updated",
         ...(opts.title !== undefined ? { title: opts.title } : {}),
         ...(opts.description !== undefined ? { description: opts.description } : {}),
+        ...(sectionUpdate !== undefined ? { section: sectionUpdate } : {}),
         ...(blockReasonUpdates || autopilotUpdates || Object.keys(approachTargetUpdates).length > 0
           ? {
               fieldUpdates: {
@@ -770,7 +835,9 @@ export function registerUpdateCommand(
           : {}),
         eventAction: "update",
         eventActor: registerEventActor(opts),
-        eventReason: opts.reason?.trim() || "fields updated",
+        eventReason:
+          opts.reason?.trim() ||
+          (sectionUpdate ? `section "${sectionUpdate.name}" updated` : "fields updated"),
       });
       return { id: item.id, title: updated.title };
     });

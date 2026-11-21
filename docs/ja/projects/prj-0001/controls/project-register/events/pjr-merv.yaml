@@ -1,0 +1,126 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_0a90da04a5754c989bc159fc81ce04e3
+  ts: "2026-11-03T12:53:23Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: data-flow-uc-rewrite の実行で繰り返した停止を起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 検査の対象外の判断が runner と executor で食い違う
+    - field: description
+      from: ""
+      to: runner は自分が書く plan・result を変更ファイルに含めて履歴のリンクやカタログの検査を求め、executor は自分が変えたファイルだけを見て対象外とするため、作業が済んでも blocked になる
+    - field: input
+      from: ""
+      to: '["2026-11-03 の data-flow-uc-rewrite の実行で、executor が plan の求める検査を対象外として流さず、runner が「executor validation failed or not run」で止める事象が 4 回起きた（routine の opus と schedule の opus が validate:history-links、schedule の flash-high が validate:catalog。いずれもプロダクトの文書だけを変えたタスク）","src/exec/reporter.ts の isValidNotApplicableValidation は、対象外の理由があっても、変更ファイル（runner が書く exec の plan・result を含む）から検査が対象になると判定すると block する。executor は自分が変えたプロダクトの文書だけを見て対象外と判断している（2026-11-03）","直し方の案: runner が書いたファイルによって対象になる検査は runner が流す、または plan に runner が書くファイルも検査の対象に入ることを明記する。どちらにするかは選択肢と理由を記録して決める（2026-11-03）"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-11-03"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-GQN3"]'
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: exec
+- v: 1
+  id: reg_353465fe9b9e40a187cbe7e024cfc619
+  ts: "2026-11-03T13:02:55Z"
+  action: start
+  actor: argon-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_0a90da04a5754c989bc159fc81ce04e3
+- v: 1
+  id: reg_a20459aeb3a64b2ba31e64e790ab65d2
+  ts: "2026-11-03T13:42:37Z"
+  action: wait
+  actor: argon-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: project: Result Markdown notation violation before commit: docs/ja/projects/prj-0001/execution/exec/results/pjr-merv-20261103T130253Z-9fc08e8a-result.md:39:12 error MD038/no-space-in…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: project: Result Markdown notation violation before commit: docs/ja/projects/prj-0001/execution/exec/results/pjr-merv-20261103T130253Z-9fc08e8a-result.md:39:12 error MD038/no-space-in…"
+  previous_event_id: reg_353465fe9b9e40a187cbe7e024cfc619
+- v: 1
+  id: reg_9aba51d4199f415ba744688804c88bde
+  ts: "2026-11-03T15:35:56Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: project: Result Markdown notation violation before commit: docs/ja/projects/prj-0001/execution/exec/results/pjr-merv-20261103T130253Z-9fc08e8a-result.md:39:12 error MD038/no-space-in…"
+      to: "-"
+  previous_event_id: reg_a20459aeb3a64b2ba31e64e790ab65d2
+- v: 1
+  id: reg_afabe79089294ffe8cb92c4889866bbc
+  ts: "2026-11-03T15:40:14Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_9aba51d4199f415ba744688804c88bde
+- v: 1
+  id: reg_f199d01189b341089189321991d6f077
+  ts: "2026-11-03T22:50:47Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 利用者が close を承認した。差分・テスト・動作確認で確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-04"
+    - field: conclusion
+      from: "-"
+      to: runner が書く exec/ の下の実行管理ファイルを executor の変更範囲から外し、それだけで対象になる検査を求めないようにした。plan の共通規約と executor への指示も合わせた
+  previous_event_id: reg_afabe79089294ffe8cb92c4889866bbc

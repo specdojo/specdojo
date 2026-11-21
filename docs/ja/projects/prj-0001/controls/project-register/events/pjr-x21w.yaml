@@ -1,0 +1,65 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_7299809b7c9944ff920fb8d7329da922
+  ts: "2026-11-18T22:10:16Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: kata-slim-2 の夜間ループで振り分けが効かなかったことを利用者と確認し、担当 DEV・期限 11 月末で起票する
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: schedule のタスクに指定した executor が、ready の作り直しで strategy の段の指定に上書きされる
+    - field: description
+      from: ""
+      to: track のタスクに書いた agent.executor が、ready の作り直しで strategy の段の指定に無条件で上書きされ、振り分けが効かない
+    - field: input
+      from: ""
+      to: '["kata-slim-2 の残りのタスクを commit b210e5b5a で sch-track-kata-slim-2.yaml の agent.executor に argon-executor（15 件）と agy-opus-executor（14 件）として振り分けたが、2026-11-18 の夜間ループでは 29 件すべてが strategy の段の指定（040 は sol-executor、060 は opus-executor）で claim された。","src/exec/schedule/schedule.ts の ready を作る処理（386 行付近）は resolveAgentAssignment の結果で task.agent を無条件に上書きする。src/exec/task-view.ts と src/exec/run/schedule-mode.ts は task.agent が未指定のときだけ同じ解決を使う。","resolveAgentAssignment は taskIdToAgent・localIdSuffixToAgent・phaseSetSuffixToAgent の順に見るが、track のタスク節点の agent（src/shared/schedule-index.ts で読む）は見ない。","sol-executor は上限で止まっていたため、040 の段は毎回上限を検知して opus-executor へ切り替わって進んだ。"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-19"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: exec
+- v: 1
+  id: reg_2562ff7d366b492ab12b69fc848e77e1
+  ts: "2026-11-18T22:17:34Z"
+  action: reject
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: rejected
+  reason: 利用者と規則を確認し、目的が track の優先から strategy の正本の徹底へ変わったため reject して新しく起票する
+  changes:
+    - field: status
+      from: open
+      to: rejected
+    - field: completed
+      from: "-"
+      to: "2026-11-19"
+    - field: conclusion
+      from: "-"
+      to: strategy を正本とし track を直接編集しない規則（sch-rulebook）に照らすと、runner が strategy の段の指定で claim したのは設計どおりの動きだった。原因は track を直接編集したことで、残る問題（直接の編集を検出しないこと、経路ごとの解決の順の違い、設計ガイドの抜け）は PJR-YGZF へ引き継ぐ
+  previous_event_id: reg_7299809b7c9944ff920fb8d7329da922

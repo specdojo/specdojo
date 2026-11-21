@@ -1,0 +1,107 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_292b70d5e08144768d9b5f269d952d45
+  ts: "2026-11-03T05:23:35Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: data-flow-uc-rewrite の実行で見つかった不具合を起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: checkpoint の commit に失敗しても index に載せたファイルが残る
+    - field: description
+      from: ""
+      to: exec run の checkpoint の commit が失敗すると、runner が index に載せたファイルが残り、その後の register --commit がそれを巻き込んで commit する。失敗時に外し、register --commit はほかのプロセスが載せたファイルを含めないようにする
+    - field: input
+      from: ""
+      to: '["2026-11-03 に track data-flow-uc-rewrite の 3 タスクを exec run --auto --parallel 3 で流したところ、3 タスクとも checkpoint の commit が markdownlint の MD032 で拒否されて始まる前に失敗した（原因は phase の説明で箇条書きの前に空行がなかったこと、72749b20e で修正済み）","失敗した checkpoint のあと runner が index に載せた event ファイル 2 件が残り、次のタスクの setup が「Root index has staged checkpoint changes」で失敗した。さらに、その後の register close --commit（PJR-8HCB の decided、244c9f901、push 済み）がその 2 件を巻き込んで commit した","pm-orchestrator-playbook と配布するオーケストレーターの本文は「commit に失敗したら index に載ったファイルを残さない」としているが、runner がそうなっていない。register --commit は「そのコマンドが変更した個票とイベントだけ」を commit すると説明している（2026-11-03）"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-03"
+    - field: due
+      from: ""
+      to: "2026-11-07"
+    - field: derived_from
+      from: ""
+      to: '["PJR-GQN3"]'
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: exec
+- v: 1
+  id: reg_198899e192fb4b108b1af5169c622778
+  ts: "2026-11-03T05:25:09Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 同じ runner のコードに触れるため PJR-561Q の後に流す
+  changes:
+    - field: depends_on
+      from: "-"
+      to: '["PJR-561Q"]'
+  previous_event_id: reg_292b70d5e08144768d9b5f269d952d45
+- v: 1
+  id: reg_ae04931cfb714be9ace837ec8af3c43a
+  ts: "2026-11-03T06:41:32Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_198899e192fb4b108b1af5169c622778
+- v: 1
+  id: reg_42fe261baaad4265b74f5b9d1fe9e4a7
+  ts: "2026-11-03T07:00:39Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_ae04931cfb714be9ace837ec8af3c43a
+- v: 1
+  id: reg_015da298712f49689a01b3cba1051700
+  ts: "2026-11-03T07:15:57Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 利用者が close を承認した。差分・テスト・JSEY の動作確認で確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-03"
+    - field: conclusion
+      from: "-"
+      to: checkpoint と register --commit の失敗時に自分が載せたファイルだけを index から外し、ほかの staged の変更を残したまま対象のパスだけを commit することを、統合テスト 63 件と JSEY の動作確認で確かめた
+  previous_event_id: reg_42fe261baaad4265b74f5b9d1fe9e4a7

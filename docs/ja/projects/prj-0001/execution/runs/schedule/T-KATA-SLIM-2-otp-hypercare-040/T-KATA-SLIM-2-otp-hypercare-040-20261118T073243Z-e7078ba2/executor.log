@@ -1,0 +1,26 @@
+`docs/ja/specdojo/rulebooks/otp-rulebook.md` を簡潔にしました。変更したのはこのファイルだけです。大きさは、空白と表の区切り行を除いて 3,987 字から 3,161 字になり、元の約 79.3% です（目安は 8 割以下）。
+
+**外した記述**
+- **Frontmatter の表:** `title`・`id`・`type`・`status` の行を外しました。`title` は Markdown 規約に反し、`status` の値は共通の正本の言い直しだったためです。許可キーの説明は、ドキュメントメタ情報標準とスキーマを参照する 1 文に置き換えました。`type` は `operations` 固定とする規則と、`based_on` の型固有の規則は残しています。
+- **全体方針の箇条:** 監視・権限・窓口・増員・旧システムを並べた箇条は、本文構成の表の言い直しだったので外しました。運用方針（term 運用）の箇条は全体方針に統合しました。
+- **見出しの指定:** 記述ガイドで 11 回繰り返していた「生成する本文の見出しは…」を、冒頭の 1 文にまとめました。
+- **「関連ドキュメント」が必須である旨:** 4 か所に書かれていました。本文構成の表と記述ガイドだけに残し、同じ内容の禁止事項の行も外しました。
+- **grade の指摘 F001**（`vp-arc-conciseness`）: 「`otp-index` への導線を必ず記載する」の重複行を消し、解消しました。
+
+**足した記述**
+- 全体方針に「共通の運用」を 1 項目置きました。役割は適用先のメンバー定義、`status`・承認・改訂と廃止・未決事項の引き継ぎはドキュメントメタ情報標準を参照する形です。Frontmatter 節のリンクも同じ wikilink 形式に揃えました。
+
+**変えていないもの**
+- 章名、章の順序、必須の区分。既存の成果物との対応を保つためです。
+- 型固有の記述ガイドの箇条、推奨の表、型固有の禁止事項。
+- 元の rulebook には、役割の表、承認の手順、文書品質の検査、未決事項の管理台帳の列はもともとありませんでした。
+- 共通の正本に足りない記述は見つからなかったので、変更案はありません。
+
+**確認と残りの作業**
+- 自分で実行した検査は `npx prettier --check` だけで、通りました。lint などの検査はこの後 runner が実行します。
+- `otp-sample` の見出しが `## 11. 関連ドキュメント（必須）` で、rulebook の見出し「関連ドキュメント」と食い違っています。sample はこの段では直さないので、変更案として引き継ぎに入れました。
+- 改訂の根拠とした文書と判断の記録は、引き継ぎの次の段で result に書いてもらいます。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"otp-rulebook から共通の運用の記述（Frontmatter の title・id・type・status 行、全体方針の本文構成の言い直し、各節の見出し指定の繰り返し、関連ドキュメント必須の重複と禁止事項の重複行、F001 の重複行）を外し、全体方針に「共通の運用」を 1 項目置いて document-metadata-standard を参照する形にした。章名・順序・必須区分は変えていない。大きさは空白と表の区切り行を除いて 3,987 字から 3,161 字（約 79.3%）。変更ファイルは docs/ja/specdojo/rulebooks/otp-rulebook.md だけ。","handoff":["result の『進め方と実践の型の適用』に書く事項: F001（vp-arc-conciseness、『otp-index への導線を必ず記載する』の重複行）は、6.11 節の重複行を消して解消した。根拠とした文書は pjr-8s4t の『他の型へ広げるときの一覧』、sld-rulebook、document-metadata-standard。章名・順序・必須区分は既存の成果物との対応を保つため変えていない。","result の大きさの記録: 空白（改行を含む）と表の区切り行を除いて数え、変更前 3,987 字、変更後 3,161 字（79.3%）。","sample の変更案: otp-sample の見出し『## 11. 関連ドキュメント（必須）』を rulebook の本文構成に合わせて『## 11. 関連ドキュメント』にする（この段では sample は commit の対象外のため変更していない）。","共通の正本の変更案: なし。otp-rulebook には役割の表・承認の手順・文書品質の検査・未決事項の管理台帳の列がもともとなく、外した Frontmatter の値制約は document-metadata-standard と schema で賄える。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/otp-rulebook.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更したのは docs/ja/specdojo/rulebooks/otp-rulebook.md だけで、plan・result・個票を変更していないため"},{"command":"npm run validate:catalog","status":"not_applicable","summary":"docs/ja/projects/ 配下を変更していない","reason":"変更は docs/ja/specdojo/rulebooks/ にとどまり、docs/ja/projects/ の成果物を変更していないため"}]}
+</specdojo_executor_evidence>

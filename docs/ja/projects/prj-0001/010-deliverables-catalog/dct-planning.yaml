@@ -20,6 +20,10 @@ groups:
         overview: 成果物ドメインの分類と索引構造を定義
         path: dct-index.yaml
         rulebook: specdojo:dct-index-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/catalog/build.ts
+            purpose: 成果物カタログの読込・検証と索引ビューの組み立て
         done_criteria:
           - text: 全ドメインが重複なく適切な分類へ配置されていること
             roles: [ARC]
@@ -27,36 +31,32 @@ groups:
           - text: 索引ビューとサイドバーから全ドメインへ到達できること
             roles: [QE]
             viewpoint: vp-qe-omissions-consistency
-  - name: トラック順序計画
-    base_path: timeline
-    deliverables:
-      - local_id: tml-index
-        name: トラック順序計画
+      - local_id: dct-data-model-ccd
+        name: 成果物カタログ（概念クラス図）
         kind: work
         depends_on: [dct-index]
-        overview: 成果物カタログ作成からトラック実行までのマクロな着手順序を計画
-        path: tml-index.yaml
-        rulebook: specdojo:tml-rulebook
+        overview: 概念クラス図（ccd）の成果物の local_id・種別・依存・配置先・概要・完了条件を、ドメイン別の成果物カタログとして定義する
+        path: dct-data-model-ccd.yaml
+        rulebook: specdojo:dct-rulebook
+        note: ドメイン別カタログ（dct-rulebook）の型の代表。同じ形のほかの dct-*.yaml は代表に含めない
+        evidence_refs:
+          - kind: implementation
+            path: src/catalog/build.ts
+            purpose: 成果物カタログの読込・検証と表示ビューの組み立て
         done_criteria:
-          - text: トラックの着手順序と並行方針を承認できること
-            roles: [PO]
-            viewpoint: vp-po-decision-readiness
-          - text: order・parallel_group・depends_on が計画立案に使える粒度で定義されていること
-            roles: [PM]
-            viewpoint: vp-pm-plan-feasibility
-          - text: トラック間の依存関係に循環や矛盾がないこと
-            roles: [PM]
-            viewpoint: vp-pm-dependency-risk
-          - text: catalog_status と実際のカタログ作成状況が一致していること
+          - text: 成果物の一覧・依存・配置先がドメインの範囲と食い違わないこと
+            roles: [ARC]
+            viewpoint: vp-arc-document-structure
+          - text: 完了条件から各成果物の確認の観点が読み取れること
             roles: [QE]
-            viewpoint: vp-qe-config-validity
+            viewpoint: vp-qe-verifiability
   - name: Schedule 共通計画
     base_path: schedule
     deliverables:
       - local_id: sch-defaults
         name: スケジュールデフォルト定義
         kind: work
-        depends_on: [tml-index]
+        depends_on: []
         overview: 全トラック共通のカレンダーと開始日を定義
         path: sch-defaults.yaml
         rulebook: specdojo:sch-rulebook

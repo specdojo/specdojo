@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "ts": "2026-11-15T09:33:05Z",
+  "type": "block",
+  "task_id": "T-KATA-WAVE-2-sld-specdojo-090",
+  "by": "sonnet-review-executor",
+  "msg": "git merge failed: error: Unable to create '/workspaces/specdojo-workspace/specdojo/.git/index.lock': ファイルが存在します.",
+  "meta": {
+    "pipeline_stage": "integrate",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-sld-specdojo-090/T-KATA-WAVE-2-sld-specdojo-090-20261115T085926Z-2e77e598/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-sld-specdojo-090/T-KATA-WAVE-2-sld-specdojo-090-20261115T085926Z-2e77e598/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-2-sld-specdojo-090-20261115T085926Z-2e77e598"
+  }
+}

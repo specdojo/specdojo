@@ -27,10 +27,12 @@ export const REGISTER_EVENT_FIELDS = [
   "input",
   "type",
   "track",
+  "domains",
   "priority",
   "difficulty",
   "owner",
   "registered",
+  "start_on",
   "due",
   "completed",
   "conclusion",
@@ -50,7 +52,7 @@ export const REGISTER_EVENT_FIELDS = [
 export type RegisterEventField = (typeof REGISTER_EVENT_FIELDS)[number];
 
 export type RegisterEventChange = {
-  field: RegisterEventField | "id";
+  field: RegisterEventField | "id" | "section";
   from: string;
   to: string;
 };
@@ -123,10 +125,12 @@ export function registerEventFieldValues(
     input: item.inputs?.length ? JSON.stringify(item.inputs) : CELL_NONE,
     type: item.type,
     track: item.track ?? CELL_NONE,
+    domains: item.domains ? JSON.stringify(item.domains) : CELL_NONE,
     priority: item.priority,
     difficulty: item.difficulty ?? CELL_NONE,
     owner: item.owner,
     registered: item.registered,
+    start_on: item.startOn ?? CELL_NONE,
     due: item.due,
     completed: item.completed,
     conclusion: item.conclusion,
@@ -260,7 +264,7 @@ export function validateRegisterEventShape(value: unknown, source: string): stri
       }
       if (
         typeof change.field !== "string" ||
-        ![...REGISTER_EVENT_FIELDS, "id"].includes(change.field as RegisterEventField)
+        ![...REGISTER_EVENT_FIELDS, "id", "section"].includes(change.field as RegisterEventField)
       ) {
         error(`changes[${index}].field is invalid`);
       }

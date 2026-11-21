@@ -1,0 +1,14 @@
+`ifx-file-agent-evidence.yaml` を実装と突き合わせ、食い違っていた 3 箇所だけを修正しました。Prettier の整形確認は通り、YAML の構文も正常に読めました。runner が実行する lint 系・test 系は、指示どおり実行していません。
+
+- **evidence.json の説明:** agent は evidence.json を直接書きません。最終応答の `<specdojo_executor_evidence>` タグ内の JSON 報告を runner が取り込み、evidence.json を書きます。報告に含まれる項目と、複数タグがあるときは最後を採用することを `description` に追記しました。
+- **`malformed` の扱い:**
+  - 「必須フィールド欠落、上限バイト数超過」を異常として停止または空扱いにする、という既存の記述は実装と合っていませんでした。
+  - 実際はタグ内の JSON 構文エラーなら報告を空として扱い、`validations` と `target_coverage` の不正な要素は個別に破棄、上限超過は切り詰めです。`condense_records` が不適合なら `completion_status` を incomplete にします。
+  - 書き込み済みの evidence.json が JSON として読めない、または `task_id`・`run_id`・`stage` の整合検証に失敗したときは、再開判定で evidence なし扱いにします。この点も反映しました。
+- **`atomic_write` の適用範囲:** `.tmp` と rename で置換するのは pipeline-state.json と、更新し直す evidence.json です。executor 完了直後の evidence.json の初回書き込みは直接書き込みなので、そう明記しました。
+
+`status` は `draft` のままです。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"ifx-file-agent-evidence.yaml を実装（evidence.ts / pipeline-state.ts）と突き合わせ、agent 報告タグの経路、malformed の実挙動、atomic_write の適用範囲の 3 点を最小修正した。status は draft のまま。","handoff":["`pipeline-state.json` 不正時の「直ちに failed / blocked として停止」と、`reporter` 実行時に `evidence.json` が欠落した場合の blocked は、宣言された参照範囲では実装の根拠を確認できなかったため既存記述を維持した。DEV の確認が必要。","読込失敗時に利用者へ出す通知の文言・出力先は実装で確認できておらず、`_ASSUMPTION_` として YAML に残した。"],"validations":[{"command":"npx prettier --check docs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml","status":"passed","summary":"整形済み。YAML 構文も node の yaml パーサで読み込めた。"}]}
+</specdojo_executor_evidence>

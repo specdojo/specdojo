@@ -57,6 +57,7 @@ describe("specdojo init", () => {
       await runInit({ yes: true, provider: "none" });
       expect(readFileSync(join(repo, ".markdownlint.yaml"), "utf8")).toBe("MD013: true\n");
     } finally {
+      process.chdir(originalCwd);
       rmSync(repo, { recursive: true, force: true });
     }
   });
@@ -126,6 +127,7 @@ describe("specdojo init", () => {
         );
       }
     } finally {
+      process.chdir(originalCwd);
       rmSync(repo, { recursive: true, force: true });
     }
   });
@@ -337,7 +339,7 @@ describe("specdojo init", () => {
     expect(prompts.filter((prompt) => prompt.startsWith("Delegate work"))).toHaveLength(1);
     expect(prompts.filter((prompt) => prompt.startsWith("Create a Dev Container"))).toHaveLength(2);
     expect(prompts.some((prompt) => prompt.includes("Deliverables catalog"))).toBe(false);
-    expect(errors.join("")).toContain("Available: claude, codex, opencode, antigravity, copilot");
+    expect(errors.join("")).toContain("Available: claude, codex, opencode, copilot");
     expect(errors.join("")).toContain("--exec requires at least one --provider");
     expect(errors.join("")).toContain("yes/no で答えてください: later");
     expect(closed).toBe(true);
@@ -373,6 +375,7 @@ describe("specdojo init", () => {
       };
       expect(packageJson.scripts.prepare).toBe("node tools/install-lefthook.mjs");
     } finally {
+      process.chdir(originalCwd);
       rmSync(repo, { recursive: true, force: true });
     }
   });
@@ -449,6 +452,9 @@ describe("specdojo init", () => {
       expect(rosterFile.members.some((member) => member.model?.includes("terra"))).toBe(false);
 
       const defaults = loadExecDefaultsConfig(join(repo, ".specdojo/exec-defaults.yaml"));
+      expect(defaults.providers?.codex?.command_params?.by_proficiency?.frontier).toEqual({
+        effort: "xhigh",
+      });
       expect(defaults.pipeline?.parent_validations).toBeUndefined();
       expect(defaults.routing).toEqual({
         hard: {
@@ -492,6 +498,7 @@ describe("specdojo init", () => {
         "npx specdojo exec run --register <id> --executor-by codex-executor --reporter-by codex-reporter",
       );
     } finally {
+      process.chdir(originalCwd);
       rmSync(repo, { recursive: true, force: true });
     }
   });
@@ -527,6 +534,7 @@ describe("specdojo init", () => {
         'Skipped parent validation: lint-fm (package.json script "lint:fm" was not found)',
       );
     } finally {
+      process.chdir(originalCwd);
       rmSync(repo, { recursive: true, force: true });
     }
   });
@@ -557,6 +565,7 @@ describe("specdojo init", () => {
       expect(output.join("")).toContain("[dry-run] would write: .specdojo/agent-members.yaml");
       expect(existsSync(join(repo, ".markdownlint.yaml"))).toBe(false);
     } finally {
+      process.chdir(originalCwd);
       rmSync(repo, { recursive: true, force: true });
     }
   });
@@ -643,31 +652,59 @@ describe("specdojo init", () => {
         "--settings .specdojo/claude/settings.edit.json",
       );
     } finally {
+      process.chdir(originalCwd);
       rmSync(repo, { recursive: true, force: true });
     }
   });
 
-  it("generates Antigravity members that carry a currently provided model", async () => {
-    const repo = createRepo("specdojo-init-antigravity-");
-    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
-    try {
-      process.chdir(repo);
-      await runInit({ yes: true, provider: "antigravity", exec: true });
+  it.each(["antigravity", "codex,antigravity"])(
+    "refuses provider %s without writing agy members, templates, or settings",
+    async (provider) => {
+      const repo = createRepo("specdojo-init-antigravity-");
+      vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+      try {
+        process.chdir(repo);
+        await expect(runInit({ yes: true, provider, exec: true })).rejects.toThrow(
+          /init cannot select provider antigravity: SpecDojo 0\.9\.2 and later do not launch Antigravity \(agy\)\..*https:\/\/antigravity\.google\/docs\/faq.*https:\/\/antigravity\.google\/terms/,
+        );
 
-      const roster = loadMemberRoster(repo, {});
-      const executor = resolveAgentMember(roster, "agy-executor");
-      expect(executor).toMatchObject({
-        nickname: "flash-executor",
-        model: "gemini-3.8-flash-high",
-      });
-      const defaults = loadExecDefaultsConfig(join(repo, ".specdojo/exec-defaults.yaml"));
-      expect(resolveMemberCommand(defaults, executor!)).toContain("--model gemini-3.8-flash-high");
-      expect(roster?.members.map((member) => member.model).join(" ")).not.toMatch(
-        /gemini-3\.1-pro/,
-      );
-    } finally {
-      rmSync(repo, { recursive: true, force: true });
-    }
+        expect(existsSync(join(repo, ".specdojo/agent-members.yaml"))).toBe(false);
+        expect(existsSync(join(repo, ".specdojo/exec-defaults.yaml"))).toBe(false);
+        expect(existsSync(join(repo, ".specdojo/antigravity"))).toBe(false);
+        const initializedPackage = JSON.parse(readFileSync(join(repo, "package.json"), "utf8")) as {
+          scripts: Record<string, string>;
+        };
+        expect(Object.keys(initializedPackage.scripts)).toEqual([]);
+      } finally {
+        process.chdir(originalCwd);
+        rmSync(repo, { recursive: true, force: true });
+      }
+    },
+  );
+
+  it("does not offer antigravity in the interactive provider prompt and refuses it there", async () => {
+    const prompts: string[] = [];
+    const errors: string[] = [];
+    const answers = ["", "", "", "", "", "antigravity", "codex", "no", "no", "no"];
+    vi.spyOn(process.stderr, "write").mockImplementation((chunk) => {
+      errors.push(String(chunk));
+      return true;
+    });
+    const prompter: InitPrompter = {
+      async question(prompt) {
+        prompts.push(prompt);
+        return answers.shift() ?? "";
+      },
+      close() {},
+    };
+
+    const actual = await collectInitAnswers({}, prompter);
+
+    expect(actual.providers).toEqual(["codex"]);
+    const providerPrompts = prompts.filter((prompt) => prompt.startsWith("Orchestrator providers"));
+    expect(providerPrompts).toHaveLength(2);
+    expect(providerPrompts.join("")).not.toContain("antigravity");
+    expect(errors.join("")).toContain("init cannot select provider antigravity");
   });
 
   it("recommends the Opus orchestrator for Claude", async () => {
@@ -684,30 +721,32 @@ describe("specdojo init", () => {
       expect(output.join("")).toContain("Run npm run orch:opus");
       expect(output.join("")).not.toContain("Run npm run orch:sonnet");
     } finally {
+      process.chdir(originalCwd);
       rmSync(repo, { recursive: true, force: true });
     }
   });
 
-  it.each([
-    ["codex", "orch:sol", "orch:codex"],
-    ["antigravity", "orch:flash", "orch:agy"],
-  ])("recommends the model-family orchestrator for %s", async (provider, expected, legacy) => {
-    const repo = createRepo(`specdojo-init-${provider}-next-step-`);
-    const output: string[] = [];
-    vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
-      output.push(String(chunk));
-      return true;
-    });
-    try {
-      process.chdir(repo);
-      await runInit({ yes: true, provider, dryRun: true });
+  it.each([["codex", "orch:sol", "orch:codex"]])(
+    "recommends the model-family orchestrator for %s",
+    async (provider, expected, legacy) => {
+      const repo = createRepo(`specdojo-init-${provider}-next-step-`);
+      const output: string[] = [];
+      vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+        output.push(String(chunk));
+        return true;
+      });
+      try {
+        process.chdir(repo);
+        await runInit({ yes: true, provider, dryRun: true });
 
-      expect(output.join("")).toContain(`Run npm run ${expected}`);
-      expect(output.join("")).not.toContain(`Run npm run ${legacy}`);
-    } finally {
-      rmSync(repo, { recursive: true, force: true });
-    }
-  });
+        expect(output.join("")).toContain(`Run npm run ${expected}`);
+        expect(output.join("")).not.toContain(`Run npm run ${legacy}`);
+      } finally {
+        process.chdir(originalCwd);
+        rmSync(repo, { recursive: true, force: true });
+      }
+    },
+  );
 
   it("passes --workspace-name to Dev Container scaffolding", async () => {
     const repo = createRepo("specdojo-init-devcontainer-");
@@ -764,6 +803,7 @@ describe("specdojo init", () => {
       );
       expect(existsSync(join(repo, ".devcontainer/remote-host/ssh-config.sample"))).toBe(true);
     } finally {
+      process.chdir(originalCwd);
       rmSync(repo, { recursive: true, force: true });
     }
   });
@@ -799,6 +839,7 @@ describe("specdojo init", () => {
       ).toBe(true);
       expect(outputWithCatalog.join("")).not.toContain("When deliverables are ready");
     } finally {
+      process.chdir(originalCwd);
       rmSync(repoWithCatalog, { recursive: true, force: true });
     }
 
@@ -828,7 +869,47 @@ describe("specdojo init", () => {
         "When deliverables are ready, configure catalog_path in .specdojo/specdojo.config.json and run npx specdojo catalog scaffold",
       );
     } finally {
+      process.chdir(originalCwd);
       rmSync(repoWithoutCatalog, { recursive: true, force: true });
+    }
+  });
+
+  it("does not pick up existing settings or leak when parent directory contains .specdojo or lefthook.yml", async () => {
+    const parentDir = mkdtempSync(join(tmpdir(), "specdojo-fake-tmp-"));
+    const repo = join(parentDir, "child-repo");
+    mkdirSync(repo);
+    mkdirSync(join(repo, ".git"));
+    writeFileSync(
+      join(repo, "package.json"),
+      `${JSON.stringify({ name: "fixture", private: true, scripts: {} }, null, 2)}\n`,
+      "utf8",
+    );
+
+    mkdirSync(join(parentDir, ".specdojo"));
+    writeFileSync(
+      join(parentDir, ".specdojo", "specdojo.config.json"),
+      JSON.stringify({ version: 1, projects: { parent: {} } }),
+      "utf8",
+    );
+    writeFileSync(join(parentDir, "lefthook.yml"), "pre-commit:\n  commands: {}\n", "utf8");
+    writeFileSync(join(parentDir, ".markdownlint.yaml"), "MD013: true\n", "utf8");
+
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    try {
+      process.chdir(repo);
+      await runInit({ yes: true, provider: "none" });
+
+      expect(existsSync(join(repo, ".specdojo", "specdojo.config.json"))).toBe(true);
+      expect(existsSync(join(repo, ".markdownlint.yaml"))).toBe(true);
+
+      const parentConfig = JSON.parse(
+        readFileSync(join(parentDir, ".specdojo", "specdojo.config.json"), "utf8"),
+      ) as SpecDojoConfig;
+      expect(parentConfig.projects["parent"]).toBeDefined();
+      expect(parentConfig.projects["prj-0001"]).toBeUndefined();
+    } finally {
+      process.chdir(originalCwd);
+      rmSync(parentDir, { recursive: true, force: true });
     }
   });
 });

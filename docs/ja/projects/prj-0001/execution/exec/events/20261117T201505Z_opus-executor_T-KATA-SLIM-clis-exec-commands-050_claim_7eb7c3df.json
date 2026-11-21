@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-17T20:15:05Z",
+  "type": "claim",
+  "task_id": "T-KATA-SLIM-clis-exec-commands-050",
+  "by": "opus-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA"
+  }
+}

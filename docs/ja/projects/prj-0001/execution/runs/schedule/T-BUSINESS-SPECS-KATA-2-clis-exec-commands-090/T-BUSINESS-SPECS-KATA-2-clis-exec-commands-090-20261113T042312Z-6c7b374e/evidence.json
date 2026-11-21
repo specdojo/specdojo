@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "task_id": "T-BUSINESS-SPECS-KATA-2-clis-exec-commands-090",
+  "run_id": "T-BUSINESS-SPECS-KATA-2-clis-exec-commands-090-20261113T042312Z-6c7b374e",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-review-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-13T04:25:17.541Z",
+    "completed_at": "2026-11-13T04:27:50.465Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/040-user-interface-model/clis-exec-commands.md --changed-only",
+      "status": "passed",
+      "summary": "開始時・判定直前の2回とも終了コード0。両回の標準出力は docs/ja/product/010-business-specs/040-user-interface-model/clis-exec-commands.md。鮮度条件未充足を検出。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/040-user-interface-model/clis-exec-commands.md --dependency-changed",
+      "status": "passed",
+      "summary": "開始時・判定直前の2回とも終了コード0、標準出力なし。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/040-user-interface-model/clis-exec-commands.md --incomplete",
+      "status": "passed",
+      "summary": "開始時・判定直前の2回とも終了コード0、標準出力なし。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "2回実行し、両回とも終了コード0、出力なし。executor によるファイル変更なし。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-2-clis-exec-commands-090/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-li\n… output omitted …\nspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-2-clis-exec-commands-090/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-2-clis-exec-commands-090/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1152). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4535 file(s), 136 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 104 passed, 0 error, 0 未検査\n  graph: 3 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4535 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-2-clis-exec-commands-090\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open thi\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\ncoverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-2-clis-exec-commands-090/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-2-clis-exec-commands-090/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-2-clis-exec-commands-090\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-y68q2E/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-Aemn3P/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-dfPkTm/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-Ec6Syw/pjr-000\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "レビューを実施し、判定は `grade-stale`。開始時・判定直前とも鮮度確認が対象パスを出力したため、タスクの完了可否を保留する。成果物・型・result は未変更。確認できなかった範囲: 最新評価に基づく完了条件と finding の受入判断、未作成の `clis-index` との整合、実機での外部 agent 実行。result の記入は reporter へ引き継ぐ。",
+  "completion_status": "complete",
+  "handoff": [
+    "評価結果の確認: サイドカー `docs/ja/projects/prj-0001/execution/grade/results/clis-exec-commands.yaml` は読み取り可能。既存値は `verdict: pass`、`score: 84`、`graded_at: 2026-11-09T06:05:25.474Z`、blocker 0 / major 0 / minor 16 / note 0、`done_criteria` は5/5。開始時・判定直前の各3コマンドはすべて終了コード0。`--changed-only` は両回とも対象パスを出力し、`--dependency-changed` と `--incomplete` は両回とも出力なし。正確なコマンド・出力は validations を転記すること。",
+    "判断根拠: [[prj-0001:xrp-t-business-specs-kata-2-clis-exec-commands-090-20261113t042312z-6c7b374e|完成版レビュープラン]] の事前確認では最新とされているが、実際の鮮度確認は開始時から対象パスを出力した。共通規約 E-01 により `grade-stale` とする。レビュー途中で初めて非最新となったケースではないため `changed-during-review` は選ばない。既存 grade の品質判定・F001〜F016・完了条件の判定は再評価していない。",
+    "approach に応じた確認: [[specdojo:rulebook-authoring-standard|Rulebook 記述標準]]、[[specdojo:clis-rulebook|CLI仕様作成ルール]]、[[specdojo:clis-sample|CLI仕様の完成例]]、[[clis-exec-commands|CLI仕様（exec コマンド群）]]、[[prj-0001:prj-overview|プロジェクト概要]] を読んだ。rulebook は全体方針から運用ルールまでの8章と階層番号を持ち、記述ガイドには章別の判断基準・良い例・悪い例がある。完成例の章はなく、frontmatter の sample ID で外出しされている。sample は7章、主要5コマンド、入力7行・出力11行、正常・警告・異常時の保持成果と回復確認を記述している。値・構文・構造の詳細は正本への参照としている。これはフェーズで求めた整備の確認であり、成果物の再採点ではない。",
+    "recipe・template の要否: rulebook frontmatter は両方とも `not-needed`。plan の recipe `_MISSING_` は実ファイルでは不要宣言に対応する。template は ID 宣言がないため、ID から開く対象がない。rulebook の本文要件・章別判断基準と sample の構成・表で執筆を案内でき、別の工程や骨組みを管理する必要がないという判断は、[[prj-0001:xer-t-business-specs-kata-2-clis-exec-commands-040-20261112t152744z-042a52a4|rulebook整備結果]] と [[prj-0001:xer-t-business-specs-kata-2-clis-exec-commands-050-20261112t164652z-edaf3920|sample整備結果]] に記録されている。本文にも開始に必要な構成・判断基準・表が存在することを確認した。",
+    "先行変更・検証: コミット 57ba0e0c6 と f553a7ce0 の変更ファイル一覧では、実行管理記録を除く変更はそれぞれ clis-rulebook.md と clis-sample.md のみ。先行2タスクの evidence.json で、親 runner による lint-ts / lint-fm / lint-md / lint-mermaid / lint-d2 / test-integration / validate-schema / typecheck / test-unit の9項目が両タスクとも passed であることを確認した。本レビューではそれらを重複実行していない。",
+    "未充足事項・改善指示: runner は対象成果物の grade を再実行し、サイドカー更新後に同じ鮮度確認を通してから review を再実行すること。plan の事前確認と実コマンドの差異の原因は未特定。既存16件の finding は消去・重複指摘せず、最新評価へ引き継ぐ。`clis-index` は対象成果物の将来課題で未作成と明記され、該当ファイルも見つからなかったため内容照合はできていない。外部契約・内部経路・終了コード全分岐の未確認も同章に残っている。鮮度回復前にこれらの完了阻害性や完了条件の充足を確定しない。",
+    "decision: reporter は review result の必須5セクションを上記の事実と実行出力で埋め、`verdict: grade-stale` を記録すること。executor は result とライフサイクル状態を変更していない。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-2-clis-exec-commands-090/T-BUSINESS-SPECS-KATA-2-clis-exec-commands-090-20261113T042312Z-6c7b374e/executor.log",
+      "bytes": 5915,
+      "truncated": false
+    }
+  ]
+}

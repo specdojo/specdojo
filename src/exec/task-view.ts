@@ -4,9 +4,9 @@ import { buildScheduleIndex } from "./schedule/schedule.js";
 import { readReadySnapshot } from "./schedule/ready.js";
 import {
   buildPhaseModeIndex,
-  resolveAgentAssignment,
   resolveAgentPipeline,
   resolveApproach,
+  resolveScheduledTaskAgent,
   resolveTaskCapabilities,
   resolveTaskExecution,
   resolveTaskMode,
@@ -72,8 +72,8 @@ export function buildTaskView(
   task.agent_pipeline =
     task.agent_pipeline ??
     resolveAgentPipeline(task.local_id, task.id, phaseIndex, task.phase_suffix, task.phase_set);
-  task.agent =
-    task.agent ??
-    resolveAgentAssignment(task.local_id, task.id, phaseIndex, task.phase_suffix, task.phase_set);
+  const agent = resolveScheduledTaskAgent(task, phaseIndex);
+  if (agent === undefined) delete task.agent;
+  else task.agent = agent;
   return task;
 }

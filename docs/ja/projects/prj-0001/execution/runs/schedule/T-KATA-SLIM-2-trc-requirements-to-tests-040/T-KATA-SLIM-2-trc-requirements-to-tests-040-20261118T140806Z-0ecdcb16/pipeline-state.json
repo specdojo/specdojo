@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-SLIM-2-trc-requirements-to-tests-040",
+  "run_id": "T-KATA-SLIM-2-trc-requirements-to-tests-040-20261118T140806Z-0ecdcb16",
+  "updated_at": "2026-11-18T14:26:19.563Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 2,
+      "started_at": "2026-11-18T14:09:54.400Z",
+      "completed_at": "2026-11-18T14:11:32.748Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-trc-requirements-to-tests-040/T-KATA-SLIM-2-trc-requirements-to-tests-040-20261118T140806Z-0ecdcb16/evidence.json",
+      "rate_limit_events": [
+        {
+          "action": "fallback",
+          "trigger": "rate_limit",
+          "from_actor": "sol-executor",
+          "to_actor": "opus-executor",
+          "resumed_at": "2026-11-18T14:09:57.378Z"
+        }
+      ]
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-18T14:19:32.117Z",
+      "completed_at": "2026-11-18T14:25:09.254Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-trc-requirements-to-tests-040/T-KATA-SLIM-2-trc-requirements-to-tests-040-20261118T140806Z-0ecdcb16/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-18T14:25:16.952Z",
+      "completed_at": "2026-11-18T14:26:19.563Z",
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-trc-requirements-to-tests-040/T-KATA-SLIM-2-trc-requirements-to-tests-040-20261118T140806Z-0ecdcb16/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-trc-requirements-to-tests-040/T-KATA-SLIM-2-trc-requirements-to-tests-040-20261118T140806Z-0ecdcb16/result.md"
+  }
+}

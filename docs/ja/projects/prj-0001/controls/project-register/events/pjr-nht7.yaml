@@ -1,0 +1,94 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_35e4675fcebe49b3836847b5b5efc299
+  ts: "2026-11-16T13:06:22Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者の依頼で起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 統合の後の worktree の片付けが登録簿のロックの中で走り、記帳と specdojo git を長く待たせる
+    - field: description
+      from: ""
+      to: runner が統合の後の git worktree remove を exec-lifecycle のロックの中で行うため、遅いファイルシステムでは片付けの間ずっと記帳と specdojo git が待たされる
+    - field: input
+      from: ""
+      to: '["2026-11-16、PJR-1Y1M の統合の後の git worktree remove に 23 分以上かかった。その間の CPU 時間は 4 秒で、ほとんどがディスクの待ちだった（共有フォルダの bind mount、PJR-TATP）","その間、specdojo git -- worktree add が exec-lifecycle のロックの空きを 25 分待った","removeWorktree は src/exec/run/register-worktree.ts の finalizeRegisterWorktreeRun の中で呼ばれ、lifecycleLock.runExclusive の中にある"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-16"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-30SA"]'
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: exec
+- v: 1
+  id: reg_5827806f768d4b06900f5d7aa48a4ab6
+  ts: "2026-11-16T13:11:25Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_35e4675fcebe49b3836847b5b5efc299
+- v: 1
+  id: reg_636386e688034679b9f1ad3113486d72
+  ts: "2026-11-16T13:34:35Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_5827806f768d4b06900f5d7aa48a4ab6
+- v: 1
+  id: reg_9967cb2c488a45e2be30de5e1fa05261
+  ts: "2026-11-16T14:05:29Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果・result で確かめ、統合後の PJR-JSEY（2026-11-16、sonnet-executor）で runner の動作を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: 統合の後の worktree と branch の片付けを exec-lifecycle のロックの外へ出し、片付けの間は同じ項目の再実行と再開を worktree ごとのロックで止めるようにした。同じプロセスの中で片付けの間も止まる点は残る課題として記録した
+  previous_event_id: reg_636386e688034679b9f1ad3113486d72

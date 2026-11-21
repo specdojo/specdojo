@@ -1,0 +1,52 @@
+**判定: `complete-with-findings`**
+
+Job Run `JBR-grade-deliverable-ad1b159cc38d` は `succeeded` です。選ばれた成果物は10件で、すべて完了しました。評価結果は最新です。未充足の done_criteria と品質の finding は残っていますが、どれもこの Job の完了を妨げません。Job Run の出力は変更していません。review result の記入は reporter に任せます。
+
+## 評価結果が最新か
+
+- `specdojo grade list --target deliverable --project prj-0001` を `--changed-only`、`--dependency-changed`、`--incomplete` の3通りで実行しました。対象10件はどの出力にも含まれません。
+- `grade state --exhausted` の出力は空でした。
+- verdict を決める直前にも `--changed-only` と `--dependency-changed` を再実行しました。対象10件との一致は0件です。HEAD は `8222692ce` のままで、作業ツリーに増えたのは review 用の未追跡ファイルだけです。
+
+## 判断根拠
+
+- **差分の範囲:** `acd3a07..8222692` の差分は27ファイルで、すべてこの Run の出力です。内訳は、Run の evidence 4件、plan、result、Run JSON、done_criteria 10件、評価結果 10件です。10件ずつのファイルは、選ばれた10文書にちょうど対応します。新規は `cdfd-uc-schedule` の評価結果と done_criteria だけです。対象外の変更はありません。
+- **記録の整合:** Run JSON、evidence、pipeline state、result の記録は一致しています。
+  - Run JSON は `state: succeeded`、`attempts[0].exit_code: 0` です。
+  - evidence は `exit_code: 0`、stderr は空です。
+  - pipeline state では executor と reporter がともに `succeeded` です。
+  - stdout には `selected=10 processed=10 completed_now=10 incomplete=0 exhausted=0` と出ています。
+- **失敗・中断:** `results.tsv` の10行はすべて `status=passed` です。`failed` の段、終了コード75（rate limit）による中断、`retry_exhausted` はありません。再開の必要はありません。
+- **スコアの変化:** 前回から変わったのは次の2件です。
+  - `cdfd-uc-routine` は score が 98 から 94 に下がりました。verdict は `needs-work` のままです。新しい major F001（`vp-qe-omissions-consistency`、382行目に `_TODO_` が残っている）が加わり、major は1件から2件になりました。
+  - `cdsd-sharing` は score 59 のままで、done_criteria の充足数が0から1に増えました。
+  - そのほかの文書は、評価日時、`content_hash`、依存先のハッシュが更新されただけです。
+- **verdict と score の偏り:** `cdfd-` の4件と `bps-` の1件はすべて `pass` で、score は 94〜100 です（`cdfd-uc-routine` は `needs-work`）。データモデルの5件（`cdsd-*`、`stsd-*`）はすべて `needs-work` で、score は 59〜67、finding は22〜27件です。この差は文書の種類に沿っています。ただし、評価設定に問題があるかどうかは今回の観測だけでは判断できません。
+
+## 未充足の done_criteria（担当ロール）
+
+| 成果物 | 未充足 | 担当ロール |
+| --- | --- | --- |
+| `cdsd-execution` | 3/3 | BA、ARC、QE |
+| `cdsd-planning` | 3/3 | BA、ARC、QE |
+| `cdsd-sharing` | 2/3 | BA、ARC |
+| `stsd-register-entry` | 5/5 | BA、PO、ARC、QE、DEV |
+| `stsd-routine-run` | 5/5 | BA、PO、ARC、QE、DEV |
+
+残りの5件（`cdfd-overview`、`cdfd-uc-register`、`cdfd-uc-routine`、`cdfd-uc-schedule`、`bps-deliverable-evaluation`）は全項目を満たしています。`bps-deliverable-evaluation` に残る finding は minor 3件だけです。
+
+## 改善指示
+
+- **result の記述が不正確:** Job Run result の「実施内容」は、未充足の done_criteria の担当者を「各文書のオーナー」としています。実際の担当は、上の表のとおり項目ごとのロールです。統合は妨げないため、修正は任意です。
+- **データモデル5件の改善が必要:** `needs-work` の5件と `cdfd-uc-routine` の F001 は、上の担当ロールで直す必要があります。この Job の範囲外なので、別のタスクとして起票してください。
+- **評価エージェント名の不一致:** 実行ログには `executor=agy-expert-executor` と出ていますが、評価結果の `graded_by` は `flash-high-executor` です。`stsd-routine-run` の done_criteria でも、`graded_by` が `agy-expert-executor` から `flash-high-executor` に変わりました。エージェント名の割り当てによるものかどうかは確認していません。
+
+## 確認できなかった範囲
+
+- `logs/grade/runs/per-document/.../results.tsv` そのものは読んでいません。stdout に出力された写しで判断しました。
+- 上記の `graded_by` の不一致の原因は未確認です。
+- 評価内容が妥当かどうかは確かめていません。この review の範囲外です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict: complete-with-findings。Run JBR-grade-deliverable-ad1b159cc38d は succeeded（exit 0、stderr 空、selected=10 processed=10 incomplete=0 exhausted=0）。results.tsv の10行はすべて passed で、failed・rate limit（exit 75）・`retry_exhausted` はない。差分 acd3a07..8222692 は27ファイルで、Run の evidence・plan・result・Run JSON と、選ばれた10文書の done_criteria・評価結果だけから成る（対象外の変更なし）。鮮度確認（grade list の `--changed-only`・`--dependency-changed`・`--incomplete`、grade state の `--exhausted`）では対象10件が出力されず、verdict 直前の再確認でも0件だった。スコアの変化: cdfd-uc-routine は 98 から 94（major F001 の `_TODO_` 残存が加わり major は2件）、cdsd-sharing は done_criteria の充足が0から1。pass 5件（cdfd-overview・cdfd-uc-register・cdfd-uc-schedule が100、bps-deliverable-evaluation が96 で minor 3件）、needs-work 5件（cdsd・stsd のデータモデル文書、59〜67）と cdfd-uc-routine（94）。差は文書の種類に沿っており、評価設定の問題とは断定できない。未充足の done_criteria と担当ロール: cdsd-execution 3/3（BA・ARC・QE）、cdsd-planning 3/3（BA・ARC・QE）、cdsd-sharing 2/3（BA・ARC）、stsd-register-entry 5/5（BA・PO・ARC・QE・DEV）、stsd-routine-run 5/5（BA・PO・ARC・QE・DEV）。確認できなかった範囲: logs/grade 配下の results.tsv 本体は読んでいない（stdout の写しで判断）。実行ログの executor=agy-expert-executor と評価結果の `graded_by`=flash-high-executor の不一致の原因は未確認。評価内容の妥当性は確かめていない。","handoff":["Job Run result の「実施内容」は未充足 done_criteria の担当者を「各文書のオーナー」と書いているが、実際は項目ごとのロール（BA・PO・ARC・QE・DEV）。統合は妨げないため修正は任意。","needs-work の5件（cdsd-execution・cdsd-planning・cdsd-sharing・stsd-register-entry・stsd-routine-run）と cdfd-uc-routine の F001（382行目の `_TODO_`、stsd-job-run・stsd-task-execution が未作成）は、担当ロールでの改善を別タスクとして起票すること。","実行ログの executor=agy-expert-executor と評価結果の `graded_by`=flash-high-executor が食い違っている（stsd-routine-run の done_criteria でも agy-expert-executor から flash-high-executor に変わった）。エージェント名の割り当てによるものかを確認すること。"],"validations":[{"command":"git diff --stat / --name-status acd3a07a5df41e6a86f01db49a9049aeeca83905..8222692ceb1014ef62fdd027bab947e84392b600","status":"passed","summary":"27ファイルはすべて Run の出力（evidence 4、plan、result、Run JSON、done_criteria 10、評価結果 10）"},{"command":"specdojo grade list --target deliverable --project prj-0001 --changed-only","status":"passed","summary":"対象10件は出力に含まれない（verdict 直前の再確認でも0件）"},{"command":"specdojo grade list --target deliverable --project prj-0001 --dependency-changed","status":"passed","summary":"対象10件は出力に含まれない（verdict 直前の再確認でも0件）"},{"command":"specdojo grade list --target deliverable --project prj-0001 --incomplete","status":"passed","summary":"出力なし（未完了なし）"},{"command":"specdojo grade state --target deliverable --project prj-0001 --exhausted","status":"passed","summary":"出力なし（`retry_exhausted` なし）"}]}
+</specdojo_executor_evidence>

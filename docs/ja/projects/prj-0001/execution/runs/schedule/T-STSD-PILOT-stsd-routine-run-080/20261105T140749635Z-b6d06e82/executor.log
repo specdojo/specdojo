@@ -1,0 +1,122 @@
+対象文書の重複説明を整理しました。6状態・11遷移、例外・承認条件を維持し、整形・差分検査を通過しています。
+
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "stsd-routine-run.md の重複説明を整理した。6状態・11遷移、集約規則、例外・完了条件を維持し、result は編集していない。",
+  "handoff": [
+    "既存の業務承認条件として、検討項目 M-01〜M-04 の解消が引き続き必要。復旧方針、重複起動、旧・欠損記録、先行辞書との整合に関する判断条件は対象文書に保持した。"
+  ],
+  "validations": [
+    {
+      "command": "npx prettier --write docs/ja/product/010-business-specs/020-data-model/stsd-routine-run.md",
+      "status": "passed",
+      "summary": "整形済み。最終実行で追加変更なし。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "command": "python3 -",
+      "status": "passed",
+      "summary": "標準入力の比較スクリプトで、編集前後の frontmatter、集約規則、6状態、二図、11遷移のID・元・先・イベント・条件、検討項目 M-01〜M-04 の全行が一致することを確認した。"
+    },
+    {
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 YAML schema 検査は適用外。",
+      "reason": "変更は Markdown 一文書のみで、YAML・YML ファイルの変更がない。"
+    },
+    {
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検査は適用外。",
+      "reason": "登録簿個票および既存の exec plan・result を変更していない。"
+    },
+    {
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "カタログ検査は適用外。",
+      "reason": "成果物の変更は docs/ja/product/ 配下のみで、docs/ja/projects/ 配下への変更がない。"
+    }
+  ],
+  "condense_records": [
+    {
+      "location": "1. 概要、第1段落「結果と確認要否」「状態が一意に分からなければ」",
+      "category": "repetition",
+      "action": "merge",
+      "reason": "判断目的を結果と完了確認・再実行の要否へ集約した。利用者、確認・引継ぎの負担軽減、BV-03 との対応を維持した。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "1. 概要、第2段落の BA・PO の確認分担、および5. 今後の検討メモの最終段落",
+      "category": "repetition",
+      "action": "merge",
+      "reason": "BA の辞書照合と PO の正常・例外経路の確認を末尾の業務承認条件へ集約した。概要には BA の状態・遷移の説明責任と ARC・QE・DEV の利用目的を残した。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "1. 概要、「一意判定」の冒頭2文",
+      "category": "table-prose",
+      "action": "reference",
+      "reason": "現在状態の判定説明を2. 状態一覧の成立条件への参照に置き換えた。未実行の結果値を書き込まない制約は T-01 に残し、開始時更新と不正・旧記録の扱いも維持した。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "1.1. due 判定と実行機会の選択、末尾段落「次回も現在分の一致と処理済み時刻を比較する」",
+      "category": "table-prose",
+      "action": "delete",
+      "reason": "同節の cron 行にある現在分と処理済み時刻の比較と重複するため削除した。取りこぼし時に状態・履歴を記録しない制約と T-05 との区別は残した。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "4. 遷移の説明、T-05 補足「一部の段が成功していてもこの結果になる」",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "2. 状態一覧のスキップ行に成功した段を伴う場合も含むと明記され、1.2 の集約優先順も保持されている。同じ実行機会を消化済みとする制約は残した。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "4. 遷移の説明、T-06・T-07・T-08・T-10・T-11 の補足「開始条件は T-02 と同じ」および T-06 の記録更新説明",
+      "category": "repetition",
+      "action": "merge",
+      "reason": "各行の共通説明を表直前の T-02 補足への参照へ集約した。開始条件と記録更新の適用範囲を明記し、再評価・即時再試行・試行中の再開始に関する固有の制約は各行に維持した。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "4. 遷移の説明、T-09 補足「スキップが含まれていても部分完了を優先する」",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "1.2 の集約優先順と2. 状態一覧の部分完了行に同じ意味があるため削除した。遷移条件は変更していない。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "1. 概要、実装エビデンスと未作成の先行辞書に関する段落、および5. 今後の検討メモの M-04",
+      "category": "table-prose",
+      "action": "retain",
+      "reason": "概要は業務整合が未確認であることと `based_on` が空である根拠、M-04 は辞書作成・照合・承認の担当と完了条件を担う。判断と後続作業に必要なため保持した。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "3. 状態遷移図、二図の共有状態と4. 遷移の説明との対応",
+      "category": "repetition",
+      "action": "retain",
+      "reason": "図と遷移表は全体像と詳細の対応に必要。6状態・11遷移でも試行中への接続数が6を超えるため二図を保持し、共有状態・遷移範囲の説明も残した。",
+      "cause": {
+        "type": "kata",
+        "kind": "rulebook",
+        "location": "docs/ja/specdojo/rulebooks/stsd-mermaid-rulebook.md、6.3. 図の分割：一つの業務状態に接続する入出力遷移の合計が6を超える場合の分割と共有状態の指定"
+      }
+    },
+    {
+      "location": "5. 今後の検討メモ、M-01 の表行と表後の運用案",
+      "category": "table-prose",
+      "action": "retain",
+      "reason": "表は復旧案の選択肢・影響・承認条件、本文は生存確認、証跡候補、ARC への調査依頼、PO の判断範囲を示す。確定手順が未定である制約を含め、例外時の引き渡しに必要なため保持した。",
+      "cause": {"type": "document"}
+    }
+  ]
+}
+</specdojo_executor_evidence>

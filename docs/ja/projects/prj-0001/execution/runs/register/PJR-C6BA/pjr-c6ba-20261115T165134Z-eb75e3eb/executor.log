@@ -1,0 +1,29 @@
+保管場所一覧の sample を、grade の指摘 F001〜F018 に合わせて書き直しました。rulebook は変えておらず、駄菓子屋きぬやの共通サンプル文脈もそのままです。ただし、完了条件の一つである再 grade（`grade run --target kata`）は executor の sandbox では実行できず、未実施です。sample が pass になるかはまだ確認できていません。
+
+**変更したファイル**
+- `docs/ja/specdojo/samples/sld-sample.md`（本文の第1章〜第5章。frontmatter はそのまま）
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-c6ba-sld-sample-rework-wave-2.md`（「対応結果」に、決めた点・理由・残課題を記入）
+
+**主な修正**
+- **保管場所の追加（F003・F008・F009・F018）**: 母屋書庫・母屋金庫・外部退避媒体・撤去品保留箱の行を足しました。仕入ノートは店頭台帳保管棚に含めました。在庫記録は今は店主の記憶だけで置き場所がないため、一覧には載せず「確認事項と変更影響」で追跡します。
+- **1行に1つの区分（F013）**: `data/sales/`・`data/summary/`・`receipts/`・`tmp/` を別々の行に分けました。
+- **保持期間（F007・F015）**: 「恒久保持（3年間）」は矛盾するので使わず、「保持期間は未決。決定まで全件を保持する」に揃えました。年数は根拠がないため書いていません。
+- **CLI 仕様（`clis-sample`）との整合（F010・F011）**: 設定ファイルは、無いときは既定設定で動き、壊れているときは「店舗設定不正」で止まる、と区別しました。`data/sales/` は販売実績のローカル控えと本部の受付結果の置き場所としました。
+- **商品の状態（F012）**: `stsd-sample` に合わせ、`sellable` は売場棚だけ、`return-pending` は検品不合格品だけにしました。
+- **復旧手順（F004・F017・F018）**: 会計要求の前と後で再起動時の対処を分け、本部の受付結果が分からない取引は取消・削除・再登録をしないことにしました。設定ファイルと `data/sales/` が消えたり壊れたりしたときの復旧手順と、退避がない場合の連絡先も加えました。
+- **検証項目（F006）**: 設定ファイルが無い・壊れている場合、受付結果が分からない取引、日次集計の作り直し、の3つの検証と合格条件を足しました。
+- **確認事項と公開条件（F001・F002・F005・F016）**: 各論点に管理台帳の区分（`decision`・`issue`・`risk`・`change-request`）を付け、PM が台帳へ登録する流れを書きました。紙からタブレットへの移行の影響範囲を広げ、本部との照合手順と日次集計の作り直し手順が整うまでは、それに頼る運用を承認しないという条件を加えました。
+- **章の参照（F014）**: 章番号ではなく章タイトルで書くよう直しました。
+
+**自分で決めた点**（個票と handoff の両方に記録済み）
+- **推測を避けて仮置きにしたもの**: `data/summary/` と `tmp/` は CLI 仕様に定義がないため `_ASSUMPTION_` の仮置きにしました。日次集計は、作り直しの手順が整うまで削除しない扱いです。
+- **取り下げた記述**: `receipts/` は CLI 仕様に再出力の手段がないため、「再出力できる」という記述を消しました。
+- **バックヤードの扱い**: 予備棚の行は `stsd-sample` に該当する状態がないので削除しました。期限切れ・破損品は撤去品保留箱に分け、状態の追加を変更要求として記録しました。
+
+**検証結果**
+- 自分で実行して通ったもの: `npm run validate:catalog`（WARN は今回と関係のない既存のもの）、`npm run validate:history-links`、変更した2ファイルへの `npx prettier --write` / `--check`、sample への `npx markdownlint-cli2`。
+- lint:md・lint:fm・validate:schema などは親の runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"sld-sample を grade の指摘 F001〜F018 に合わせて書き直し、個票の対応結果に決めた点・理由・残課題を記入した。rulebook は変更していない。再 grade（`grade run --target kata`）は sandbox で実行できないため未実施で、sample が pass かは未確認。","handoff":["`grade run --target kata` で sld-rulebook と sld-sample を grade し直し、sample が pass になったかを個票 PJR-C6BA の対応結果に追記する（executor の sandbox では実行できない）。","決めた点: 仕入記録は仕入ノートとして店頭台帳保管棚に含めた。在庫記録は現行の保管場所がない（店主の記憶）ため一覧に載せず、確認事項の `decision` で追跡する（根拠: `cdfd-overview-sample` のデータストア表）。","決めた点: 保持期間の「恒久保持（3年間）」は根拠がないため使わず、「保持期間は未決。決定まで全件を保持する」に揃えた。年数は推測で書かず `decision` として追跡する。","決めた点: `data/summary/` と `tmp/` は CLIS に定義がないため `_ASSUMPTION_` の仮置きとした。日次集計は再生成手順（予定 `specdojo:cop-sales-reconciliation`）が整うまで削除しない。`receipts/` は CLIS に再出力手段がないため「再出力可能」を取り下げた。","決めた点: STSD に合わせ、`sellable` は売場棚だけ、`return-pending` は検品不合格品だけとした。バックヤード予備棚の行は削除した。期限切れ・破損品の撤去品保留箱は STSD に状態がないため `_ASSUMPTION_` とし、STSD への状態追加を `change-request` 候補 `specdojo:pjr-stsd-removed-goods` として記録した。"],"validations":[{"command":"npm run validate:catalog","status":"passed","summary":"OK: dct-index.yaml（WARN は今回と関係のない既存の based_on 未作成文書）"},{"command":"npm run validate:history-links","status":"passed","summary":"変更した個票を含め違反なし"},{"command":"npx prettier --write docs/ja/specdojo/samples/sld-sample.md","status":"passed","summary":"整形済み。変更した2ファイルで --check も通過"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/sld-sample.md","status":"passed","summary":"0 issues"},{"command":"grade run --target kata","status":"requires_human","summary":"実際の agent CLI を起動して利用枠を消費するため sandbox では実行できない。runner または人が rulebook と sample を grade し直し、sample が pass かを個票に記録する"}]}
+</specdojo_executor_evidence>

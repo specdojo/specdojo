@@ -1,0 +1,91 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ebaf6545cf2f4ce58bd821f47d307f51
+  ts: "2026-11-16T04:22:49Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: wait の commit を結果なしでやり直すと、再開の後に executor が書いた個票の本文が消える
+    - field: description
+      from: ""
+      to: _TODO_
+    - field: input
+      from: ""
+      to: '["2026-11-16、PJR-ZSRD・5QJ5 の wait の commit が、紛れ込んだ grade の進み具合のファイルで失敗し、runner は「failed with the result included; retrying without it」として結果を含めずに commit し直した。develop には executor の対応結果を含まない個票が残った","再開の前の同期（register-resume の projectTheirsPaths に記帳のファイル）が個票を develop の側に寄せたため、exec branch にあった executor の対応結果（原因・実施内容・CHANGELOG に書く事項）が消えた。コードの変更は統合された。orchestrator が executor の commit から本文を戻した（8732bdcdd）"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-16"
+    - field: derived_from
+      from: ""
+      to: '["PJR-ZSRD"]'
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: exec
+- v: 1
+  id: reg_002959fc17634a9fb3e040320ff51d93
+  ts: "2026-11-16T11:29:39Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_ebaf6545cf2f4ce58bd821f47d307f51
+- v: 1
+  id: reg_d8b8c4f4d0d3428ab75942f1faabc522
+  ts: "2026-11-16T11:49:00Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_002959fc17634a9fb3e040320ff51d93
+- v: 1
+  id: reg_c8bb8c4968ba465eae2656dcb7bef56d
+  ts: "2026-11-16T13:28:32Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果・result で確かめ、統合後の PJR-JSEY（2026-11-16、sonnet-executor）で runner の動作を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: 再開の前の同期で、個票の本文は exec branch の側を保ち、状態の欄だけを統合先にそろえるようにした
+  previous_event_id: reg_d8b8c4f4d0d3428ab75942f1faabc522

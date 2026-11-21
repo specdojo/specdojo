@@ -1,4 +1,7 @@
 # yaml-language-server: $schema=../../../../specdojo/schemas/v1/tml-index.schema.yaml
+# 非推奨: 全体計画は epic の depends_on・domains・着手と完了の記録・due_on から生成する。
+# 移行先は controls/project-register/ の epic、確認は dashboard build。
+# 本ファイルは互換用に保持する。削除は利用者が判断する（PJR-VYSC・PJR-JM29）。
 id: prj-0001:tml-index
 type: project
 status: draft
@@ -54,6 +57,30 @@ tracks:
     depends_on: [data-flow]
     note: cdfd-overview の PDCA 構成に合わせたプロセスグループ別・ユースケース別 CDFD 8 件の新規作成（PJR-6PD7）。dct-data-flow を local_ids で部分 scope にする。
 
+  - track: data-flow-usage
+    domains: [data-flow]
+    catalog_status: primary
+    order: 5
+    parallel_group: business-specs
+    depends_on: [data-flow-pdca]
+    note: PJR-SJQC の決定に基づき、概念データフローの文書体系を overview と系統別の詳細 3 文書（register・schedule・routine）へ再編する作業。dct-data-flow を local_ids で部分 scope にする。
+
+  - track: data-flow-uc-rewrite
+    domains: [data-flow]
+    catalog_status: primary
+    order: 6
+    parallel_group: business-specs
+    depends_on: [data-flow-usage]
+    note: PJR-PRYZ で直したユースケース別 CDFD の Kata に合わせて、系統別の詳細 3 文書（register・schedule・routine）を書き直す作業。dct-data-flow を local_ids で部分 scope にする。
+
+  - track: stsd-pilot
+    domains: [data-model]
+    catalog_status: primary
+    order: 7
+    parallel_group: business-specs
+    depends_on: [data-flow-uc-rewrite]
+    note: 業務仕様を実装ベースで量産する流れ（カタログの見直し → draft → 磨き込み → condense → 手入れか作り直しかの判断 → Kata の手入れまたは bootstrap → Kata の確定 → retrofit → 磨き込み → condense → review → 確定）を、ステータス定義（stsd、5 件）で 1 回通して確かめる試しの track。dct-data-model-stsd を local_ids で部分 scope にする。
+
   - track: data-model
     domains: [data-model]
     catalog_status: draft
@@ -61,7 +88,7 @@ tracks:
     order: 3
     parallel_group: business-specs
     depends_on: [launch]
-    note: bdd / ccd / cld / cstd / cdsd / stsd の6カタログを持つため、他ドメインより見積りが大きい。
+    note: bdd / ccd / cdt / cstd / cdsd / stsd の6カタログを持つため、他ドメインより見積りが大きい。
 
   - track: business-model
     domains: [business-model]

@@ -1,0 +1,13 @@
+parent validation: lint-md
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.7.0 lint:md
+> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'
+
+
+
+--- stderr ---
+docs/ja/product/010-business-specs/030-business-model/bes-index.md:54 error MD022/blanks-around-headings Headings should be surrounded by blank lines [Expected: 1; Actual: 0; Below] [Context: "## 3. 未決事項と承認条件                 | 現時点の扱い                                                                                                                                      | 判断者・確認担当                     | 解消の時期と記録先                                                     |"]

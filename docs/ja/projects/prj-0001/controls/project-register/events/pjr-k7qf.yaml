@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_8709f170d2bf464ba5071a70c9c62dbb
+  ts: "2026-11-20T14:15:56Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: Dependabot の週次の更新のうち minor と patch を取り込む（2026-11-20 分）
+    - field: description
+      from: ""
+      to: "PR #36〜#39 の minor と patch の更新を、GitHub で merge せず develop の feature ブランチで取り込み、PR を閉じる"
+    - field: input
+      from: ""
+      to: '["利用者の決定（2026-11-20、案 A）: 週次の更新は minor・patch の取り込みと major の評価の 2 件に分ける。minor・patch は orchestrator が日中に feature ブランチで取り込む。期限は未定","orchestrator の調べ（2026-11-20）: #37 commander 15.0.0→15.1.0、#38 dotenv 18.0.4→18.0.10、#39 prettier 3.9.9→3.10.1（どれもルートの package-lock.json だけ）。#36 は開発用の依存の 4 か所分で、commitlint 21.2.4・typescript-eslint 8.73.0・lefthook 2.2.2・cloc 2.11.0 などの minor と、TypeScript 7・vitest 5・@types/node 26 の major が混ざる","運用メモの決まり: Dependabot の PR は merge せず、同じ変更を develop 系の feature ブランチで取り込み、PR を閉じる。package.json・package-lock.json は保護された設定のため、agent の run ではなく orchestrator が行う"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-20"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-P318"]'

@@ -1,0 +1,31 @@
+判定は `complete-with-findings` です。Run は成功しており、評価した15件はそのまま統合できます。7件の文書が `needs-work` 判定ですが、これは文書の品質に関する finding で、この Run の完了は妨げません。成果物と result は変更していません。
+
+**一致を確認した点**
+- **差分の範囲:** `06d9845ca..d20f38644` の22ファイルは、すべてこの Run の出力でした（evidence 一式4件、plan、result、Run JSON、評価結果ファイル15件）。範囲内で型の文書（`docs/ja/specdojo`）は変わっていません。
+- **記録の整合:**
+  - 状態と終了コード: Run JSON は `state: succeeded`・`exit_code: 0`、evidence の command も終了コード0で、stderr は0バイトです。pipeline state の executor と reporter はどちらも `succeeded` です。
+  - 処理件数: stdout は `selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0` です。
+- **段の結果:** `results.tsv` は全15件が `passed` です。`failed`、`retry_exhausted`、終了コード75（rate limit）、中断による未完了の段はありません。
+- **result の記述:** pass 8件・needs-work 7件・スコア77〜100という result の記述は `results.tsv` と一致しました。
+- **finding 件数:** 出力 commit 時点の評価結果ファイルを数えた finding 件数は、15件すべて `results.tsv` の `findings` 列と一致しました（`cdfd-d2-rulebook` は0件）。
+- **評価者名:** 評価結果ファイルの `graded_by` は `flash-high-executor` で、実行した `agy-expert-executor` と名前が違います。`.specdojo/agent-members.yaml` で `agy-expert-executor` は `alias_of: flash-high-executor` と定義されているため、矛盾ではありません。
+- **評価結果の変化:**
+  - 新規は `cdfd-d2-rulebook` の1件で、pass・スコア100です。
+  - 判定またはスコアが変わったのは2件です。1件は pass 97 から needs-work 93 へ下がりました。もう1件はスコアが75から78へ上がりました。
+  - 残りは評価日時、`content_hash`、`graded_by`、finding の行番号・訳文の更新です。
+- **鮮度:** 評価した15件は、`specdojo grade list --target kata --project prj-0001` の `--changed-only` と `--dependency-changed` のどちらにも出ませんでした。`--incomplete` と `grade state --exhausted` も0件です。verdict を決める直前にも再確認し、HEAD は `d20f38644` のまま、結果も変わっていません。
+
+**finding と改善指示**
+- **needs-work の7件:** `cdfd-uc-recipe`(93)、`cdfd-mermaid-rulebook`(77)、`cdfd-uc-rulebook`(87)、`ifx-api-rulebook`(80)、`ifx-cmd-rulebook`(82)、`ifx-file-rulebook`(90)、`imp-data-rulebook`(78)。各文書の改善を別途計画する必要があります。
+- **スコアの分布:** 77〜100で、パイプライン異常や評価設定の見直しを示すほどの偏りは見当たりません。
+- **未評価の文書:** `--changed-only` で選ばれる型の文書があと125件残っています。今回の Run は `limit: 15` の設定どおりの処理で、失敗ではありません。次回以降の Run で処理される見込みです。
+
+**確認できなかった範囲**
+- finding の内容と severity が妥当かどうかは評価し直していません（review の役割ではないため）。
+- スコアが変わった2件の文書名と、変化の理由は特定していません。
+- 一部の評価結果ファイルは `content_hash` が変わっていません。これがツールの想定どおりの再評価かどうかは確認していません。
+- 125件の未評価文書が具体的にどの条件で選ばれたかの内訳も確認していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict は complete-with-findings。Job Run JBR-grade-kata-025aa6e74be5 は succeeded（exit 0、stderr 空）で、selected=15 processed=15 incomplete=0 exhausted=0。results.tsv の全15件が passed で、failed・retry_exhausted・rate limit（75）・中断による未完了の段はない。06d9845ca..d20f38644 の差分22件はすべてこの Run の出力（evidence 4件、plan、result、Run JSON、grade result 15件）で、docs/ja/specdojo の変更はない。result の pass 8 / needs-work 7・score 77〜100 の記述と、各 grade result の finding 件数は results.tsv と一致した。sidecar の `graded_by`=flash-high-executor は agent-members.yaml で agy-expert-executor の `alias_of` と定義されており整合する。grade list --target kata の `--changed-only`・`--dependency-changed` に評価済み15件は出ず、`--incomplete` と grade state `--exhausted` も0件で、verdict 記録直前の再確認でも結果は変わらなかった（HEAD=d20f38644 のまま）。完了を妨げない finding: needs-work 7件（cdfd-uc-recipe 93、cdfd-mermaid-rulebook 77、cdfd-uc-rulebook 87、ifx-api-rulebook 80、ifx-cmd-rulebook 82、ifx-file-rulebook 90、imp-data-rulebook 78）は文書品質の改善対象。score 分布に評価設定の見直しを要する偏りは見られない。`--changed-only` の未評価 kata が125件残るが、`limit: 15` の設定どおりで失敗ではない。確認できなかった範囲: finding 内容・severity の妥当性（review の役割外）、score が変わった2件の文書名と変化の理由、一部 sidecar で `content_hash` が変わらないことがツールの想定どおりの再評価か、残り125件の選択条件の内訳。","handoff":["needs-work と判定された kata 7件（cdfd-uc-recipe、cdfd-mermaid-rulebook、cdfd-uc-rulebook、ifx-api-rulebook、ifx-cmd-rulebook、ifx-file-rulebook、imp-data-rulebook）は finding に基づく改善を別途計画する。","`--changed-only` で選ばれる未評価 kata が125件残っている。limit 15 の routine では解消まで多数の Run が必要なため、頻度または limit の見直しを検討する。"],"validations":[{"command":"git diff --stat 06d9845ca3ade56fd2e58a629650c7ad4a5a1cf7..d20f38644fd17b5ce714f64ee9efacfd96c2c28b && git diff --name-status 06d9845ca3ade56fd2e58a629650c7ad4a5a1cf7..d20f38644fd17b5ce714f64ee9efacfd96c2c28b","status":"passed","summary":"22ファイルすべてが当該 Job Run の出力（evidence・plan・result・Run JSON・grade result 15件）で、対象外の変更はない"},{"command":"specdojo grade list --target kata --project prj-0001 --changed-only","status":"passed","summary":"125件を出力したが、評価済み15件は含まれない（verdict 記録前の再実行でも0件一致）"},{"command":"specdojo grade list --target kata --project prj-0001 --dependency-changed","status":"passed","summary":"評価済み15件はいずれも出力されない"},{"command":"specdojo grade list --target kata --project prj-0001 --incomplete","status":"passed","summary":"出力0件で、未完了の評価パイプラインはない"},{"command":"specdojo grade state --target kata --project prj-0001 --exhausted","status":"passed","summary":"出力0件で、retry_exhausted の文書はない"},{"command":"git grep -c '^  - id: F' d20f38644 -- grade results (cdfd-*, ifx-*, imp-business, imp-data)","status":"passed","summary":"評価した15件の finding 件数が results.tsv の findings 列と一致した"}]}
+</specdojo_executor_evidence>

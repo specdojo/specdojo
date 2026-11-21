@@ -1,0 +1,38 @@
+---
+specdojo:
+  id: prj-0001:xer-pjr-0162-20260807t130425z-3f4f
+  type: exec-result
+  task_id: PJR-0162
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  origin: register
+  plan_ref: runs/register/PJR-0162/pjr-0162-20260807T130425Z-3f4f/plan.md
+  started_at: "2026-08-07T13:04:29.890Z"
+  completed_at: "2026-08-07T13:20:15.982Z"
+  agent: codex-expert-edit-agent
+---
+
+# Edit Result
+
+## 1. 実施内容
+
+- `exec run` / `exec resume` の `--cmd` / `--agent-cmd` / `--edit-agent` / `--review-agent` と、`exec worktree agent` の `--agent-cmd` を CLI 定義・`RunOpts`・正規化処理から撤去した。
+- agent 解決を roster nickname に限定し、単体の `--by`、自動実行の `--edit-by` / `--review-by`、claim actor の nickname を `pm-members.yaml` / `exec-defaults.yaml` から command へ解決する構成に統一した。raw command と `auto-agent` へのフォールバック、および旧 `--cmd` によるバッチ判定も削除した。
+- 旧フラグに依存した unit / integration / E2E fixture を nickname 前提へ移行し、command reference、exec guides、agent system design、package script を更新した。
+- `npm run build`、`npm run lint:ts`、`npm run lint:md`、関連テストを実施した。Git subprocess を使わないテストは成功した。
+
+## 2. 変更ファイル
+
+- 実装・設定: `src/exec-run.ts`、`src/exec-worktree-command.ts`、`package.json`
+- テスト: `tests/src/exec-run.test.ts`、`tests/src/exec-run-resolve-command.test.ts`、`tests/src/exec-run-resolve-claiming-actor.test.ts`、`tests/src/exec-register.test.ts`、`tests/src/exec-run-inplace.test.ts`、`tests/src/exec-worktree-command.test.ts`、`tools/e2e/exec-run-e2e.ts`
+- 文書: `docs/ja/specdojo/references/command-reference.md`、`docs/ja/specdojo/guides/exec-operation-guide.md`、`docs/ja/specdojo/guides/exec-config-guide.md`、`docs/ja/specdojo/guides/exec-worktree-guide.md`、`docs/ja/product/040-system-design/sysd-agent-settings.md`、`docs/ja/product/040-system-design/sysd-codex-agent-settings.md`、`docs/ja/product/040-system-design/sysd-github-copilot-agent-settings.md`
+- タスク記録: `docs/ja/projects/prj-0001/controls/project-register/pjr-0162-exec-agent-flag-removal.md`、本 result
+
+## 3. 申し送り
+
+- 制限環境では Git subprocess を使うテストが `spawnSync git EPERM` となったが、Git subprocess を許可した環境で `npm test` の成功を確認した。`tools/vscode-specdojo` の依存を復元後、`npm run typecheck` も成功した。
+
+## 4. 実践の型の活用
+
+本 plan は rulebook 指定なしのため、個票の完了条件と PJR-0159 で定義された nickname 統一方針を基準にした。実装では `src/exec-run.ts` と `src/exec-worktree-command.ts` の現行解決経路を追跡し、設計文書の roster / exec-defaults を SSOT とする規則へ合わせて raw command 経路を撤去した。既存履歴である PJR-0159、登録簿、PJR-0162 plan 内の旧フラグ記述はタスク経緯の証跡として変更対象外にした。

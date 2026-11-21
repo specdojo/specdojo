@@ -1,0 +1,219 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_9650bc26a0024fc38ac3f6cf99fcdb3e
+  ts: "2026-11-15T12:22:12Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: sld の sample を grade の指摘で手直しする（kata-wave-2 の 2 回目）
+    - field: description
+      from: ""
+      to: 保管場所一覧の sample を最新の grade の指摘で直す
+    - field: input
+      from: ""
+      to: '["T-KATA-WAVE-2-sld-specdojo-140 で差し戻し（indie が 2026-11-15 に判断、PJR-TN43）。型の rulebook は pass、sample は needs-work","最新の grade（specdojo.sld-sample）の major の指摘を取り込む。rulebook は変えない"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-11-15"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: sample-maintenance
+    - field: targets
+      from: ""
+      to: '["specdojo:sld-sample"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: kata
+- v: 1
+  id: reg_0e9484dd4d624aa689823e2e33243245
+  ts: "2026-11-15T16:54:25Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_9650bc26a0024fc38ac3f6cf99fcdb3e
+- v: 1
+  id: reg_45fa442840f248659500e7fb464f5ae7
+  ts: "2026-11-15T17:51:54Z"
+  action: wait
+  actor: opus-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-integration"
+  previous_event_id: reg_0e9484dd4d624aa689823e2e33243245
+- v: 1
+  id: reg_db9b4c92d43c4de9913d52537154ae79
+  ts: "2026-11-15T19:51:59Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-integration"
+      to: "-"
+  previous_event_id: reg_45fa442840f248659500e7fb464f5ae7
+- v: 1
+  id: reg_2c5d2dda34d14c16890f749694d41214
+  ts: "2026-11-15T20:16:12Z"
+  action: wait
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-integration"
+  previous_event_id: reg_db9b4c92d43c4de9913d52537154ae79
+- v: 1
+  id: reg_97868a75a4a642c2ba5eeb1d2f5daa9f
+  ts: "2026-11-15T21:12:54Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-integration"
+      to: "-"
+  previous_event_id: reg_2c5d2dda34d14c16890f749694d41214
+- v: 1
+  id: reg_c6a0a309e9c9439ba30750aa7327ca17
+  ts: "2026-11-15T21:40:38Z"
+  action: wait
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: lint-ts"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: lint-ts"
+  previous_event_id: reg_97868a75a4a642c2ba5eeb1d2f5daa9f
+- v: 1
+  id: reg_6238ab8452ee4ea5b4ada9a46abbceb4
+  ts: "2026-11-15T21:49:50Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: lint-ts"
+      to: "-"
+  previous_event_id: reg_c6a0a309e9c9439ba30750aa7327ca17
+- v: 1
+  id: reg_22d534d6c48d4476ac049340795b4f60
+  ts: "2026-11-15T21:58:28Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_6238ab8452ee4ea5b4ada9a46abbceb4
+- v: 1
+  id: reg_dfd2b3a954184366bbd912548cc06b9f
+  ts: "2026-11-15T23:38:22Z"
+  action: start
+  actor: opus-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_22d534d6c48d4476ac049340795b4f60
+- v: 1
+  id: reg_cc1c48e1373e4863a802f25961298f74
+  ts: "2026-11-16T00:19:52Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_dfd2b3a954184366bbd912548cc06b9f
+- v: 1
+  id: reg_dccfdcca948f4bde81874ec221f7d85c
+  ts: "2026-11-16T00:52:32Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: sld-sample を手直しし、型の再 grade で pass（98 点）
+  previous_event_id: reg_cc1c48e1373e4863a802f25961298f74

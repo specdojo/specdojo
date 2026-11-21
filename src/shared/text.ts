@@ -92,7 +92,17 @@ function replaceOutsideMarkdownCodeSpans(
 export function inlineCodeAnglePlaceholders(text: string): string {
   // HTTP(S) autolink は Markdown として既に安全な山括弧記法なので、プレースホルダとして
   // code span 化しない。register の表セルで bare URL を囲んだ後も autolink を保持する。
-  const placeholder = /[A-Za-z0-9._-]*(?:<(?!https?:\/\/)[^<>\r\n]+>[A-Za-z0-9._-]*)+/g;
+  return wrapAngleTokens(text, /[A-Za-z0-9._-]*(?:<(?!https?:\/\/)[^<>\r\n]+>[A-Za-z0-9._-]*)+/g);
+}
+
+// frontmatter の文字列値へ書き写す executor 由来の文（condense の記録・block 理由など）向け。
+// lint-fm は frontmatter のコードスパン外の山括弧を autolink や実在 HTML 名も含めて拒否する
+// ため（PJR-V141）、本文用と異なり `<https://...>` も code span 化する。
+export function inlineCodeFrontmatterAnglePlaceholders(text: string): string {
+  return wrapAngleTokens(text, /[A-Za-z0-9._-]*(?:<[^<>\r\n]+>[A-Za-z0-9._-]*)+/g);
+}
+
+function wrapAngleTokens(text: string, placeholder: RegExp): string {
   const wrapToken = (token: string): string => {
     const trailing = token.match(/\.+$/)?.[0] ?? "";
     const body = trailing ? token.slice(0, -trailing.length) : token;
@@ -127,13 +137,90 @@ export function stripTerminalControlSequences(text: string): string {
   return text.replace(ANSI_ESCAPE, "").replace(CONTROL_CHARS, "");
 }
 
-/** Redacts common credential forms before subprocess output is persisted as evidence. */
+/** Kept in sync with tools/check-evidence-secrets.mjs by a parity test. */
+export const SENSITIVE_TEXT_RULES: ReadonlyArray<{
+  kind: string;
+  pattern: RegExp;
+  replacement: string;
+}> = [
+  {
+    kind: "private-key",
+    pattern: /-----BEGIN ((?:[A-Z0-9]+ )*PRIVATE KEY)-----[\s\S]*?-----END \1-----/gu,
+    replacement: "[REDACTED]",
+  },
+  {
+    kind: "url-credentials",
+    pattern: /(\b[a-z][a-z0-9+.-]*:\/\/)[^\s/@<>"'`?#]+@/giu,
+    replacement: "$1[REDACTED]@",
+  },
+  {
+    kind: "bearer-token",
+    pattern: /\bBearer\s+[A-Za-z0-9._~+/=-]+/giu,
+    replacement: "Bearer [REDACTED]",
+  },
+  {
+    kind: "aws-access-key",
+    pattern: /\b(?:AKIA|ASIA)[A-Z0-9]{16}\b/gu,
+    replacement: "[REDACTED]",
+  },
+  {
+    kind: "google-api-key",
+    pattern: /\bAIza[A-Za-z0-9_-]{35}(?![A-Za-z0-9_-])/gu,
+    replacement: "[REDACTED]",
+  },
+  {
+    kind: "slack-token",
+    pattern: /\bxox[a-z]-[A-Za-z0-9-]{8,}(?![A-Za-z0-9-])/gu,
+    replacement: "[REDACTED]",
+  },
+  {
+    kind: "github-fine-grained-token",
+    pattern: /\bgithub_pat_[A-Za-z0-9_]{8,}\b/gu,
+    replacement: "[REDACTED]",
+  },
+  {
+    kind: "anthropic-api-key",
+    pattern: /\bsk-ant-[A-Za-z0-9_-]{8,}(?![A-Za-z0-9_-])/gu,
+    replacement: "[REDACTED]",
+  },
+  {
+    kind: "api-token",
+    pattern: /\b(?:sk-(?:proj-)?[A-Za-z0-9_-]{8,}|gh[oprsu]_[A-Za-z0-9_]{8,})(?![A-Za-z0-9_-])/gu,
+    replacement: "[REDACTED]",
+  },
+  {
+    kind: "jwt",
+    pattern: /\beyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+(?![A-Za-z0-9_-])/gu,
+    replacement: "[REDACTED]",
+  },
+  {
+    kind: "quoted-credential",
+    pattern:
+      /(\b(?:api[_-]?key|access[_-]?token|auth(?:orization)?|password|passwd|secret)\b["']?\s*[:=]\s*)(["'])(?:\\[\s\S]|(?!\2)[^\\\r\n])+\2/giu,
+    replacement: "$1$2[REDACTED]$2",
+  },
+  {
+    kind: "credential-assignment",
+    pattern:
+      /(\b(?:api[_-]?key|access[_-]?token|auth(?:orization)?|password|passwd|secret)\b["']?\s*[:=]\s*)(?:Bearer\s+)?[^\s,;}"'`\\]+/giu,
+    replacement: "$1[REDACTED]",
+  },
+];
+
+/** Redacts known credential forms before subprocess output is persisted as evidence. */
 export function redactSensitiveText(value: string): string {
-  return value
-    .replace(/\bBearer\s+[A-Za-z0-9._~+/=-]+/giu, "Bearer [REDACTED]")
-    .replace(/\b(sk-(?:proj-)?[A-Za-z0-9_-]{8,}|gh[opsu]_[A-Za-z0-9_]{8,})\b/gu, "[REDACTED]")
-    .replace(
-      /\b(api[_-]?key|access[_-]?token|auth(?:orization)?|password|passwd|secret)\b(\s*[:=]\s*)([^\s,;]+)/giu,
-      "$1$2[REDACTED]",
-    );
+  return SENSITIVE_TEXT_RULES.reduce(
+    (text, { pattern, replacement }) => text.replace(pattern, replacement),
+    value,
+  );
+}
+
+// 正規表現のメタ文字をエスケープし、外から入る値をリテラルとして埋め込めるようにする。
+export function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+// Markdown 表のセルへ入れる文字列をエスケープする。先に `\` を `\\` にしてから `|` を `\|` にする。
+export function escapeMarkdownTableCell(cell: string): string {
+  return cell.replace(/\\/g, "\\\\").replace(/\|/g, "\\|");
 }

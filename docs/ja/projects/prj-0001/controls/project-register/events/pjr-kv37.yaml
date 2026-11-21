@@ -1,0 +1,213 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_1ec5be370ba04178ad4ae874ebe7846f
+  ts: "2026-11-15T12:22:22Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: ifx-file の sample を grade の指摘で手直しする（kata-wave-2 の 2 回目）
+    - field: description
+      from: ""
+      to: 外部ファイル連携の sample を最新の grade の指摘で直す
+    - field: input
+      from: ""
+      to: '["T-KATA-WAVE-2-ifx-file-agent-evidence-140 で差し戻し（indie が 2026-11-15 に判断、PJR-TN43）。型の rulebook は pass、sample は needs-work","最新の grade（specdojo.ifx-file-sample）の major の指摘を取り込む。rulebook は変えない"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-11-15"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: sample-maintenance
+    - field: targets
+      from: ""
+      to: '["specdojo:ifx-file-sample"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: kata
+- v: 1
+  id: reg_7e4d74e4d04f4323b228ad4e2005f8b9
+  ts: "2026-11-15T16:56:45Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_1ec5be370ba04178ad4ae874ebe7846f
+- v: 1
+  id: reg_1e89b6c33de94772b8ce5feeb49b5128
+  ts: "2026-11-15T17:43:42Z"
+  action: wait
+  actor: opus-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-integration"
+  previous_event_id: reg_7e4d74e4d04f4323b228ad4e2005f8b9
+- v: 1
+  id: reg_f2cf4da0638044259aca51901ea16c81
+  ts: "2026-11-15T19:52:21Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-integration"
+      to: "-"
+  previous_event_id: reg_1e89b6c33de94772b8ce5feeb49b5128
+- v: 1
+  id: reg_ec8d88f526a54c5583a9f333fa0d58e4
+  ts: "2026-11-15T20:24:06Z"
+  action: wait
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-integration"
+  previous_event_id: reg_f2cf4da0638044259aca51901ea16c81
+- v: 1
+  id: reg_8222b682255a4a3794ad61d862b7612f
+  ts: "2026-11-15T21:13:08Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-integration"
+      to: "-"
+  previous_event_id: reg_ec8d88f526a54c5583a9f333fa0d58e4
+- v: 1
+  id: reg_2d0aa10465bf4593a2ab19271a571d3c
+  ts: "2026-11-15T21:47:03Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_8222b682255a4a3794ad61d862b7612f
+- v: 1
+  id: reg_dc9b0328010447d2ba2f811356af7c40
+  ts: "2026-11-15T23:51:37Z"
+  action: start
+  actor: opus-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_2d0aa10465bf4593a2ab19271a571d3c
+- v: 1
+  id: reg_42c5dde9b23a438ea6b5ec15c702089f
+  ts: "2026-11-16T00:28:05Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_dc9b0328010447d2ba2f811356af7c40
+- v: 1
+  id: reg_6f968a74479e473eab2d9063234049d3
+  ts: "2026-11-16T00:56:47Z"
+  action: start
+  actor: opus-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_42c5dde9b23a438ea6b5ec15c702089f
+- v: 1
+  id: reg_59000388d2884cef8d3f6a50d15a2e66
+  ts: "2026-11-16T01:13:09Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_6f968a74479e473eab2d9063234049d3
+- v: 1
+  id: reg_d1640464b3ac448886ca644c70c06fcf
+  ts: "2026-11-16T01:25:21Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: ifx-file-sample を手直しし、型の再 grade で pass（100 点）
+  previous_event_id: reg_59000388d2884cef8d3f6a50d15a2e66

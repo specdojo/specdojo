@@ -1,0 +1,152 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_cfb8e51b09aa4a329654f570e8749b59
+  ts: "2026-11-15T13:17:56Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 実装の段の型として、agent 向けのコーディング規約（言語別の instructions）の型を作る
+    - field: description
+      from: ""
+      to: rulebook・sample・template を初期整備し、正本と環境別のラッパーの作り方を定める
+    - field: input
+      from: ""
+      to: '["PJR-SJ3Q の結論（indie が 2026-11-15 に決定）: 実装の段の型は、agent 向けのコーディング規約（言語別の instructions）の 1 種類だけにする。実装の設計書は置かない","手本は prj-0001 の .github/instructions/typescript.instructions.md と vitest.instructions.md。正本は .github/instructions/`<言語>.instructions.md`、環境別（.claude/rules、AGENTS.md など）は薄いラッパーにする"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-11-15"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-SJ3Q"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: kata
+- v: 1
+  id: reg_7c575b4fd0f5417da13da7536b0e1fcd
+  ts: "2026-11-16T23:07:27Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_cfb8e51b09aa4a329654f570e8749b59
+- v: 1
+  id: reg_d6435aea56a54f69ad412aceeda3480d
+  ts: "2026-11-16T23:29:33Z"
+  action: wait
+  actor: opus-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor reported incomplete: コーディング規約の型（`cdr`）の rulebook・sample・template を作り、観点定義と成果物リファレンスに登録し、個票の対応結果を書いた。完了条件の `grade run --target kata` は sandbox で agent CLI を起動できないため未実施。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor reported incomplete: コーディング規約の型（`cdr`）の rulebook・sample・template を作り、観点定義と成果物リファレンスに登録し、個票の対応結果を書いた。完了条件の `grade run --target kata` は sandbox で agent CLI を起動できないため未実施。"
+  previous_event_id: reg_7c575b4fd0f5417da13da7536b0e1fcd
+- v: 1
+  id: reg_6e43de0de1ca42fd912f3ccef1ce9330
+  ts: "2026-11-17T02:39:40Z"
+  action: start
+  actor: opus-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "executor reported incomplete: コーディング規約の型（`cdr`）の rulebook・sample・template を作り、観点定義と成果物リファレンスに登録し、個票の対応結果を書いた。完了条件の `grade run --target kata` は sandbox で agent CLI を起動できないため未実施。"
+      to: "-"
+  previous_event_id: reg_d6435aea56a54f69ad412aceeda3480d
+- v: 1
+  id: reg_5d439a77ee72453ca7e6c8f9f507f775
+  ts: "2026-11-17T02:47:37Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_6e43de0de1ca42fd912f3ccef1ce9330
+- v: 1
+  id: reg_b494aef413a743c0a95fb3aef2aad3e5
+  ts: "2026-11-17T03:46:47Z"
+  action: start
+  actor: opus-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_5d439a77ee72453ca7e6c8f9f507f775
+- v: 1
+  id: reg_6d467a91186d4620b1fd4a3179d33909
+  ts: "2026-11-17T03:56:39Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_b494aef413a743c0a95fb3aef2aad3e5
+- v: 1
+  id: reg_5c9f52cc18e7407d87279d7f4568fe66
+  ts: "2026-11-17T04:48:24Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が統合後に型の grade を 2 回流し、2 回目で major がないことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-17"
+    - field: conclusion
+      from: "-"
+      to: agent 向けのコーディング規約の型（cdr の rulebook・sample・template）を作り、型の grade で rulebook と sample が pass になった
+  previous_event_id: reg_6d467a91186d4620b1fd4a3179d33909

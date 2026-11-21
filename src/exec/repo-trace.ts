@@ -1,5 +1,6 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { productMergeState, type ProductMergeState } from "./repo-integration.js";
+import { escapeMarkdownTableCell } from "../shared/text.js";
 import { productIntegrationTarget } from "./task-repos.js";
 import { gitOutput, gitResult, type ProductWorktree } from "./worktree.js";
 
@@ -132,7 +133,7 @@ function traceRows(
 }
 
 function renderTable(header: readonly string[], rows: readonly string[][]): string[] {
-  const escape = (cell: string): string => cell.replace(/\|/g, "\\|");
+  const escape = (cell: string): string => escapeMarkdownTableCell(cell);
   const all = [header.map(escape), ...rows.map((row) => row.map(escape))];
   const widths = header.map((cell, column) =>
     Math.max(3, cell.length, ...all.map((row) => (row[column] ?? "").length)),

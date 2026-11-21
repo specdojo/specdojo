@@ -1,0 +1,129 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_bf8e7ee1f485407eac32af6449ec95ab
+  ts: "2026-11-15T12:32:29Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: pm-raci を grade の指摘で手直しする（project-kata の 140 の差し戻し）
+    - field: description
+      from: ""
+      to: pm-raci を最新の grade の指摘で直す
+    - field: input
+      from: ""
+      to: '["T-PROJECT-KATA-pm-raci-140 で差し戻し（indie が 2026-11-15 に判断、PJR-TN43 の 1.4 の D）。2026-11-15 の grade で完了条件を満たしていない","最新の grade の未充足の完了条件と major の指摘を取り込む。本文は status: ready のまま差し戻したため、直す間の status の扱いも決める"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: PM
+    - field: registered
+      from: ""
+      to: "2026-11-15"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: fully-guided
+    - field: targets
+      from: ""
+      to: '["prj-0001:pm-raci"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: pm
+- v: 1
+  id: reg_6130ffd502184ee99c215f7750a7cf53
+  ts: "2026-11-15T18:11:05Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_bf8e7ee1f485407eac32af6449ec95ab
+- v: 1
+  id: reg_bc7502f710534b7abdd1a91f3dc75582
+  ts: "2026-11-15T18:23:12Z"
+  action: wait
+  actor: opus-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor reported incomplete: pm-raci を grade の指摘 F001〜F020 に沿って直し、個票 PJR-Y5XH の対応結果に実施内容・status の扱い・判断理由を書いた。完了条件のうち再 grade（`grade run --target deliverable`）は agent CLI を使うため executor の sandbox では実行で…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor reported incomplete: pm-raci を grade の指摘 F001〜F020 に沿って直し、個票 PJR-Y5XH の対応結果に実施内容・status の扱い・判断理由を書いた。完了条件のうち再 grade（`grade run --target deliverable`）は agent CLI を使うため executor の sandbox では実行で…"
+  previous_event_id: reg_6130ffd502184ee99c215f7750a7cf53
+- v: 1
+  id: reg_45a956035915422da3e78fb4ba321d55
+  ts: "2026-11-15T20:08:32Z"
+  action: start
+  actor: opus-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "executor reported incomplete: pm-raci を grade の指摘 F001〜F020 に沿って直し、個票 PJR-Y5XH の対応結果に実施内容・status の扱い・判断理由を書いた。完了条件のうち再 grade（`grade run --target deliverable`）は agent CLI を使うため executor の sandbox では実行で…"
+      to: "-"
+  previous_event_id: reg_bc7502f710534b7abdd1a91f3dc75582
+- v: 1
+  id: reg_8f0a05c4bb174e62b088f66fefc3ebeb
+  ts: "2026-11-15T20:35:30Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_45a956035915422da3e78fb4ba321d55
+- v: 1
+  id: reg_23dc38b7b81945eab1b0e3c4711318cc
+  ts: "2026-11-15T22:23:48Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: pm-raci を手直しし、再 grade で pass（95 点、前回は needs-work 71 点）
+  previous_event_id: reg_8f0a05c4bb174e62b088f66fefc3ebeb

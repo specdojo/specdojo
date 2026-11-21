@@ -1,0 +1,21 @@
+プロジェクト登録簿項目 **PJR-AD33**（「CDFD の D2 図で P・D・C・A を左から順に並べる」）の 2 回目の run における作業を完了しました。
+
+### 実施内容
+
+1. **`specdojo:cdfd-d2-rulebook` への規則追記**:
+   - [cdfd-d2-rulebook.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-AD33/docs/ja/specdojo/rulebooks/cdfd-d2-rulebook.md#L199-L201) の第 6.3 節および第 7 節に、プロセス間の受け渡しが存在せず `a <- b` では並び順を決められない図において、並び順を固定するために透明度 0 の線（`style.opacity: 0`、ラベルなし）を使用してよいこと、および直前に受け渡しではないことを示すコメントを記述する規則を追記しました。
+2. **`prj-0001:cdfd-overview` の共通・基盤の図の修正**:
+   - [cdfd-overview.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-AD33/docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md#L518-L525) の第 5.4 節（共通・基盤の流れ）の D2 コードブロックに、配置制御用コメント（`# 配置制御用（受け渡しではない）`）と透明度 0 の線（`orchestrator -> plan -> do_exec -> check -> action: {style.opacity: 0}`）を追加しました。
+3. **SVG による並び順・エッジの再測定・検証**:
+   - `d2 --layout elk` による SVG レンダリングを行い、4 つの図すべてにおいてプロセスノードの中心 x 座標が左から順に単調増加して配置されることを確認しました。
+     - **5.1 register 系**: Orchestrator (93.0) < Plan (791.0) < Do (1809.5) < Check (3009.0) < Action (4173.0)（適合）
+     - **5.2 schedule 系**: Orchestrator (93.0) < Plan (898.0) < Do (2144.5) < Check (3398.0) < Action (4761.0)（適合）
+     - **5.3 routine 系**: Orchestrator (93.0) < Plan (752.0) < Do (1855.5) < Check (2885.0) < Action (3949.0)（適合）
+     - **5.4 共通・基盤**: Onboarding (88.5) < Orchestrator (1241.0) < Plan (1490.0) < Do (1713.5) < Check (1917.0) < Action (2194.0)（適合）
+   - 変更前の業務受け渡し全 94 エッジ（from, to, label）と変更後の業務受け渡し全 94 エッジが完全一致することを確認しました。
+4. **個票 `pjr-ad33-cdfd-d2-pdca-order.md` の更新**:
+   - [pjr-ad33-cdfd-d2-pdca-order.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-AD33/docs/ja/projects/prj-0001/controls/project-register/pjr-ad33-cdfd-d2-pdca-order.md#L50-L108) の作業内容 No.4, 5 を `done` に更新し、5.1 実施内容、5.2 並び順検証結果表（実測値に更新し判定を「適合」に更新）、5.3 エッジ照合結果表を最新情報に更新しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"共通・基盤の図への透明度 0 の配置制御線の追加、cdfd-d2-rulebook への例外規則の追記、4 図の SVG 実測値による適合確認、および個票の更新を完了しました。","handoff":["利用者が VS Code の Markdown プレビューで見た目を確かめてから close する（orchestrator / 人間による確認が必要）"],"validations":[{"command":"npx specdojo catalog validate --project prj-0001","status":"passed","summary":"全 27 カタログファイルの検証に成功"},{"command":"npm run validate:schema:file","status":"not_applicable","reason":"スキーマ対象の *.yaml / *.yml ファイルの変更なし"}]}
+</specdojo_executor_evidence>

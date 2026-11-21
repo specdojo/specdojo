@@ -1,0 +1,407 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-9BY9",
+  "run_id": "pjr-9by9-20261107T011738Z-f0ee4d58",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-07T01:40:47.546Z",
+    "completed_at": "2026-11-07T01:44:35.569Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-9by9.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-9by9-exec-run-record-migration.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/docs-structure-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/plan-result-lifecycle-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/exec-records.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/plans-storage.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/register-resume.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-ops-commit.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/job/noop.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/run-records.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/dashboard/dashboard.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/deliverable.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/plan-conventions.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register-resume.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register-resume.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/run-records.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/job/noop.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/migrate-records.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/migrate-records.test.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-9by9-exec-run-record-migration.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 22,
+    "summary": "CHANGELOG.md                                       |  2 +\n .../controls/project-register/events/pjr-9by9.yaml | 26 ++++--\n .../pjr-9by9-exec-run-record-migration.md          | 31 ++++----\n .../pjr-9by9-20261107T011738Z-f0ee4d58/plan.md     | 15 ++++\n docs/ja/specdojo/guides/docs-structure-guide.md    | 42 +++++++---\n .../specdojo/guides/plan-result-lifecycle-guide.md | 93 ++++++++--------------\n src/dashboard/exec-records.ts                      | 33 ++------\n src/exec/commands.ts                               |  8 +-\n src/exec/plans-storage.ts                          | 36 ++-------\n src/exec/register-resume.ts                        | 44 ++--------\n src/exec/run/register-worktree.ts                  | 12 ++-\n src/exec/worktree-ops-commit.ts                    |  3 +-\n src/job/noop.ts                                    | 19 ++---\n src/shared/run-records.ts                          | 84 +++----------------\n tests/src/dashboard/dashboard.test.ts              | 50 +++++++-----\n tests/src/exec/deliverable.test.ts                 | 73 +++--------------\n tests/src/exec/plan-conventions.test.ts            |  4 +-\n tests/src/exec/register-resume.integration.test.ts | 13 +--\n tests/src/exec/register-resume.test.ts             | 66 +++++----------\n tests/src/exec/run-records.test.ts                 | 34 +++++---\n tests/src/job/noop.test.ts                         | 10 +--\n 21 files changed, 271 insertions(+), 427 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts exec migrate-records --project prj-0001 --dry-run",
+      "status": "passed",
+      "summary": "移動・参照更新・欠落・除外はいずれも0件。実移動は再実行していない。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts exec validate --project prj-0001",
+      "status": "passed",
+      "summary": "events 791件を検証。既存のscheduleに存在しない歴史イベントの警告のみ。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts exec status --project prj-0001",
+      "status": "passed",
+      "summary": "No doing tasks."
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts dashboard build --project prj-0001 --dry-run",
+      "status": "passed",
+      "summary": "plan 1,197件・result 1,211件を読み取った。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts dashboard build --project prj-0001",
+      "status": "passed",
+      "summary": "dashboard・実行記録一覧など4成果物を生成。既存timelineの非推奨警告のみ。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "既存の参照先未作成などの警告はあるが、エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿の派生ビューを生成。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "個票更新後の全件検査に成功。PJR-G1W9の既存違反は解消済み。"
+    },
+    {
+      "source": "executor",
+      "command": "python3 - <<'PY'\nimport subprocess\npaths = subprocess.check_output(['git', 'diff', '--name-only', '-z']).decode().split('\\0')\npaths += ['src/exec/migrate-records.ts', 'tests/src/exec/migrate-records.test.ts']\nowned = [p for p in paths if p.endswith(('.md', '.ts')) and '/execution/runs/' not in p]\nsubprocess.run(['node_modules/.bin/prettier', '--write', *owned], check=True)\nPY",
+      "status": "passed",
+      "summary": "成果物・ソース・テスト計21ファイルを整形。"
+    },
+    {
+      "source": "executor",
+      "command": "node tools/check-evidence-secrets.mjs --staged",
+      "status": "passed",
+      "summary": "ステージ対象0件、検出0件。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "executor成果物に対象YAMLなし。",
+      "reason": "変更されたYAMLは開始時から存在するrunner管理の登録簿イベントのみ。executorはYAML成果物を編集していない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-9BY9/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-9BY9/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-9BY9/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1152). Maximum allowed is 1000  max-lines\n\n✖ 41 problems (0 errors, 41 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 3991 file(s), 138 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 8 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 104 passed, 0 error, 0 未検査\n  graph: 2 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 3991 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-9BY9\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this directory in a Dev Container (VS Cod\n… output omitted …\n.md', …(1) ]\n\n- Expected\n+ Received\n\n  [\n    \"README.md\",\n    \"ROOT-NOTE.md\",\n-   \"execution/exec/results/PJR-0143-result.md\",\n  ]\n\n ❯ tests/src/exec/worktree-ops.integration.test.ts:1550:43\n    1548|\n    1549|     // ROOT-NOTE.md は最上位の新規ファイルとして result の申し送りへ記録されるため、result も commi…\n    1550|     expect([...committed.targets].sort()).toEqual([\n       |                                           ^\n    1551|       \"README.md\",\n    1552|       \"ROOT-NOTE.md\",\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/20]⎯"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-9BY9/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-9BY9/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-9BY9\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-dXUzph/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-QqPZOu/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-laqJMH/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-5cphMR/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\n/migrate-records.test.ts:18: expected [ Array(1) ] to deeply equal []\n\n- Expected\n+ Received\n\n- []\n+ [\n+   \"tests/src/exec/migrate-records.test.ts:18\",\n+ ]\n\n ❯ tests/src/shared/git-environment-isolation.test.ts:194:83\n    192|       }\n    193|     }\n    194|     expect(offenders, `gitEnvironment() を使っていない git 起動: ${offenders.jo…\n       |                                                                                   ^\n    195|       [],\n    196|     );\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/16]⎯"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "CHANGELOG.md",
+      "status": "changed",
+      "path": "CHANGELOG.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-9by9-exec-run-record-migration.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-9by9-exec-run-record-migration.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/guides/docs-structure-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/docs-structure-guide.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/guides/plan-result-lifecycle-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/plan-result-lifecycle-guide.md",
+      "reason": ""
+    },
+    {
+      "target": "src/dashboard/exec-records.ts",
+      "status": "changed",
+      "path": "src/dashboard/exec-records.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/commands.ts",
+      "status": "changed",
+      "path": "src/exec/commands.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/plans-storage.ts",
+      "status": "changed",
+      "path": "src/exec/plans-storage.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/register-resume.ts",
+      "status": "changed",
+      "path": "src/exec/register-resume.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/run/register-worktree.ts",
+      "status": "changed",
+      "path": "src/exec/run/register-worktree.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/worktree-ops-commit.ts",
+      "status": "changed",
+      "path": "src/exec/worktree-ops-commit.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/job/noop.ts",
+      "status": "changed",
+      "path": "src/job/noop.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/shared/run-records.ts",
+      "status": "changed",
+      "path": "src/shared/run-records.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/dashboard/dashboard.test.ts",
+      "status": "changed",
+      "path": "tests/src/dashboard/dashboard.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/exec/deliverable.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/deliverable.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/exec/plan-conventions.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/plan-conventions.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/exec/register-resume.integration.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/register-resume.integration.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/exec/register-resume.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/register-resume.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/exec/run-records.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/run-records.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/job/noop.test.ts",
+      "status": "changed",
+      "path": "tests/src/job/noop.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/migrate-records.ts",
+      "status": "changed",
+      "path": "src/exec/migrate-records.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/exec/migrate-records.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/migrate-records.test.ts",
+      "reason": ""
+    }
+  ],
+  "final_message": "移動済み記録を再移行せず、個票の実績と申し送りを修正。旧配置の対象ファイル0件、移行後CLIと履歴リンク検査の成功を確認した。",
+  "completion_status": "complete",
+  "handoff": [
+    "実移動はorchestratorがcommit `d17dcdeba` に記録済み。5,576件を移動し、内容保持2,458件、参照更新3,118件、配置を維持したjob状態96件を更新した。今回のdry-runも移動・更新とも0件。移行前の対の欠落18件は個票に保持した。",
+    "判断: `exec/events/` 791件はタスク状態遷移の正本として維持する。`exec/trials/` 40件は比較実験独自の形式として維持する。job状態JSON、job定義、grade結果も配置を維持する。共有されたplan/resultは最新checkpointのrunに置き、先行試行のevidence・ログを保持する。対応不明の対は旧stemをrun IDとする。個票にも記録済み。",
+    "型・lint・単体／統合テスト・schemaは指定された親runner検証に委ねる。runner変更の統合後は運用メモに従いPJR-JSEYで確認してからcloseする。result記入と登録項目の状態遷移はreporter／runnerが行う。保護設定の変更案と未決事項はない。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-9BY9/pjr-9by9-20261107T011738Z-f0ee4d58/executor.attempt-2.log",
+      "bytes": 6458,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-9BY9/pjr-9by9-20261107T011738Z-f0ee4d58/parent-validation-attempt-1-test-integration.attempt-2.log",
+      "bytes": 296396,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-9BY9/pjr-9by9-20261107T011738Z-f0ee4d58/parent-validation-attempt-1-test-unit.attempt-2.log",
+      "bytes": 45539,
+      "truncated": false
+    }
+  ]
+}

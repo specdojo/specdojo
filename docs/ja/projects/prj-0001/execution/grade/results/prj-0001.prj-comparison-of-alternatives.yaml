@@ -5,38 +5,38 @@ path: docs/ja/projects/prj-0001/020-project-definition/prj-comparison-of-alterna
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 90
-graded_at: "2026-10-12T16:32:20.172Z"
-graded_by: agy-expert-executor
-content_hash: 266402ac08a10581bb2882e9794b3aa0708aaf46b04ec78032b646673915e355
+score: 94
+graded_at: "2026-11-17T03:27:27.023Z"
+graded_by: sol-review-executor
+content_hash: 1a0d194c0358cdf10f3f96b7ebbac2afc8a1b753eadf01829572b2b16b137326
 source_hashes:
   catalog-entry: 45f28b64a72bff5c4a2ac190021085a90b320b7cb95a5d42edbc611b85b96185
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
-  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  deliverable:pm-raci: 2c88dff750f6ba825018a44d00dc148f996dbed108c921f5ece9dc352bff0f1b
   dependency:prj-issues-and-approach: ae90307d8224fab79e09ae1f1947389032e361f513b8ba0364776cf340937706
   dependency:prj-scope: e631f8a78068b515871352df3a7547fdd32eef4c91fb923f944e19605c3b5564
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
-  schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
+  schedule: 0dfcda0848e7a3c34e36da9dfb892ca2b6a3186f870750012492f1beee3ccc56
 categories:
   purpose:
     score: 100
   operations:
-    score: 100
+    score: 94
   planning:
     score: 100
   business:
-    score: 83
-  consistency:
-    score: 75
-  architecture:
     score: 100
+  consistency:
+    score: 88
+  architecture:
+    score: 92
   usability:
     score: 100
   implementation:
     score: 100
   quality:
-    score: 75
+    score: 88
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -57,8 +57,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-business-value:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ba-requirements-completeness:
     level: 4
     score: 100
@@ -69,8 +69,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-technical-constraints:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -87,14 +87,14 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-done-criteria:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-verifiability:
     level: 2
     score: 50
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -108,8 +108,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-operability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -121,55 +121,65 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 4
-  minor: 1
+  major: 1
+  minor: 3
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-ba-business-value
-    line: 109
-    anchor: "| 評価軸             | 判定基準                                                          |"
-    message: D-02とD-03の評価軸に「主に対応する課題・制約」の列がなく業務課題との対応が不明なため、各評価軸と根拠資料の課題・制約の対応を明記してください。
-    message_ja: D-02とD-03の評価軸に「主に対応する課題・制約」の列がなく業務課題との対応が不明なため、各評価軸と根拠資料の課題・制約の対応を明記してください。
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 76
+    anchor: "| SDD-02 | GitHub Spec Kit     | プラットフォーム型   | 仕様・計画・タスク・実装の段階（構成は版依存） | 生成物と成果物の対応付けが要る    |"
+    message: >-
+      SDD-02 の既定プロセスは Implement までとされていますが、参照する現行の公式資料は Converge
+      を含め、仕様・計画・タスクと実装の不足を検査する工程を説明しています。机上評価に用いた版または資料確認日を示し、対象プロセスと検証・対応付けへの影響を更新してください。[Spec Kit
+      公式資料](https://github.github.com/spec-kit/quickstart.html)
+    message_ja: >-
+      SDD-02 の既定プロセスは Implement までとされていますが、参照する現行の公式資料は Converge
+      を含め、仕様・計画・タスクと実装の不足を検査する工程を説明しています。机上評価に用いた版または資料確認日を示し、対象プロセスと検証・対応付けへの影響を更新してください。[Spec Kit
+      公式資料](https://github.github.com/spec-kit/quickstart.html)
+    cause:
+      type: document
   - id: F002
     severity: major
-    rule: vp-qe-done-criteria
-    line: 198
-    anchor: >-
-      | 区分         | 内容                                                                           |
-      軽減策                                                               |
-    message: リスクとトレードオフ表に案IDがなく、D-02・D-03を含む各候補のリスクとトレードオフを比較できないため、各記述を案IDへ対応付けてください。
-    message_ja: リスクとトレードオフ表に案IDがなく、D-02・D-03を含む各候補のリスクとトレードオフを比較できないため、各記述を案IDへ対応付けてください。
-  - id: F003
-    severity: major
     rule: vp-qe-verifiability
-    line: 132
-    anchor: >-
-      評価は `High` / `Middle` / `Low` とし、採択に有利なほど高くする。重みは D-01 の優先順位を示すが、機械的な合計だけで決定しない。D-02 と D-03
-      は、追跡可能な正本、人間の判断責任、可逆性を必須条件とする。
-    message: High・Middle・Lowの判定境界、各セルの根拠、D-01の重みを総合評価と採否へ反映する規則がなく比較結果を再現できないため、尺度・証拠・集約規則を明記してください。
-    message_ja: High・Middle・Lowの判定境界、各セルの根拠、D-01の重みを総合評価と採否へ反映する規則がなく比較結果を再現できないため、尺度・証拠・集約規則を明記してください。
+    line: 147
+    anchor: "- 証拠: 各セルは「比較対象案」・P-01〜P-03・公式資料を判定基準と照らした机上評価で、試行後に観察結果で更新する。"
+    message: >-
+      High・Middle・Lowの判定境界、各セルの根拠、D-01の重みを総合評価と採否へ反映する規則がなく比較結果を再現できないため、尺度・証拠・集約規則を明記してください。判定境界と集約規則は今回追加されていますが、各セルの根拠については未解消です。未確認を
+      Middle とする規則を改め、確認済みの中間評価と未判定を分離し、根拠資料の該当箇所または観察結果と確認作業を記録して、未判定の採否への扱いも定めてください。
+    message_ja: >-
+      High・Middle・Lowの判定境界、各セルの根拠、D-01の重みを総合評価と採否へ反映する規則がなく比較結果を再現できないため、尺度・証拠・集約規則を明記してください。判定境界と集約規則は今回追加されていますが、各セルの根拠については未解消です。未確認を
+      Middle とする規則を改め、確認済みの中間評価と未判定を分離し、根拠資料の該当箇所または観察結果と確認作業を記録して、未判定の採否への扱いも定めてください。
+    cause:
+      type: document
+  - id: F003
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 210
+    anchor: "| TSK-05 | 継続的な同期を要し、外部協働と成熟度は公式資料で未確認。不利は特定の Agent 作業に限る | 依存見落としが出た場合     |"
+    message: >-
+      TSK-05 の成熟度は「試行で確認を要する」を根拠に Low
+      とされていますが、本文142行では判定条件を確認できないセルを未判定としています。公式資料で更新継続性・互換性・回復手段を確認できないと判定した根拠を示すか、未判定に変更して確認作業と採否への扱いを記してください。
+    message_ja: >-
+      TSK-05 の成熟度は「試行で確認を要する」を根拠に Low
+      とされていますが、本文142行では判定条件を確認できないセルを未判定としています。公式資料で更新継続性・互換性・回復手段を確認できないと判定した根拠を示すか、未判定に変更して確認作業と採否への扱いを記してください。
+    cause:
+      type: document
   - id: F004
     severity: minor
-    rule: vp-qe-verifiability
-    line: 167
-    anchor: 試行では同じ小規模な変更要求を処理し、成果物の重複と反映手順、要求から検証までの追跡漏れ、人間のレビューによる意図保持、ツールや Agent / IDE を外した場合の再開可能性を測定する。
-    message: OpenSpecとSpec Kitの試行は測定項目だけで完了条件と採用・撤退の閾値がないため,合否を判定できる数値または状態条件を追加してください。
-    message_ja: OpenSpecとSpec Kitの試行は測定項目だけで完了条件と採用・撤退の閾値がないため,合否を判定できる数値または状態条件を追加してください。
-  - id: F005
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 107
-    anchor: "### 3.2. D-02 の評価軸"
-    message: D-02とD-03は最低ラインである効果・コスト・期間・リスク・運用適合・技術実現性の一部を省略しているのに省略理由がないため、必要な軸を追加するか各省略理由を明記してください。
-    message_ja: D-02とD-03は最低ラインである効果・コスト・期間・リスク・運用適合・技術実現性の一部を省略しているのに省略理由がないため、必要な軸を追加するか各省略理由を明記してください。
+    rule: vp-ops-operability
+    line: 255
+    anchor: "| リスク・外部ツール全般 | 更新・障害・終了で運用を継続できなくなる     | WP-06 の再開可能性と D-03 の照合で確認する       |"
+    message: >-
+      TSK-02 を受付・議論に一部採択していますが、外部ツール停止時の軽減策は D-03
+      の照合にとどまり、未転記情報の保全・回収、受付の切替、復旧または撤退の担当と完了条件が示されていません。受付開始前に整備する運用手順と確認条件、またはそれを定めた参照先を追加してください。
+    message_ja: >-
+      TSK-02 を受付・議論に一部採択していますが、外部ツール停止時の軽減策は D-03
+      の照合にとどまり、未転記情報の保全・回収、受付の切替、復旧または撤退の担当と完了条件が示されていません。受付開始前に整備する運用手順と確認条件、またはそれを定めた参照先を追加してください。
+    cause:
+      type: document
 done_criteria:
-  satisfied: 2
+  satisfied: 4
   total: 4
-  unsatisfied:
-    DC-001:
-      - BA
-    DC-004:
-      - PM
   detail_ref: prj-0001:prj-comparison-of-alternatives-grade-criteria

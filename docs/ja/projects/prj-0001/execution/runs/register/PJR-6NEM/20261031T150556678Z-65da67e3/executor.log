@@ -1,0 +1,107 @@
+前回の lint 違反を修正し、D2 基盤の変更を再確認しました。保護設定の反映案と、sandbox 外で必要な検証を個票に記録しました。親検証は runner が再実行します。
+
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "D2 テストの import() 型注釈を型専用 import に修正しました。全対象を完了条件と照合し、sandbox で実行可能な検証に成功しました。result と登録簿の状態は編集していません。",
+  "handoff": [
+    "個票 5.2. の反映案に従い、承認後に package.json へ lint:d2 = node tools/lint-d2.mjs を追加し、check の lint:mermaid 直後へ npm run lint:d2 を追加してください。lefthook.yml の Markdown 検査末尾にも node tools/lint-d2.mjs {staged_files} を追加してください。",
+    "承認後に .specdojo/exec-defaults.yaml の `pipeline.parent_validations` へ lint-d2 を追加してください。実行コード・初期化時の検出・設定 schema は対応済みです。",
+    "承認後に .github/workflows/deploy.yml へ個票 5.2. の CI steps を反映してください。sh .devcontainer/install-d2.sh \"$RUNNER_TEMP/d2-bin\" で導入し、GITHUB_PATH へ追加した後、node tools/lint-d2.mjs と実 CLI の統合テストを実行します。固定版・SHA-256 は https://github.com/d2lang/d2/releases/expanded_assets/v0.9.0 と照合済みです。",
+    "sandbox では d2 未導入、GitHub の DNS 解決失敗、Node.js の子プロセス起動 EPERM を確認しました。ホスト側で Dev Container を再ビルドし、d2 version、実 CLI の正常・異常系統合テスト、D2 を含む文書のフルビルドと図の表示を確認してください。実 CLI の統合テストが skip されないことも確認してください。",
+    "親の lint・型検査・単体／統合テスト等は今回も runner に委ねています。前回失敗した lint-ts を含め、再実行結果を result に反映してください。",
+    "親検証の許可リストを変更したため、統合後はオーケストレーターの手順に従い PJR-JSEY を 1 回実行してください。"
+  ],
+  "validations": [
+    {
+      "command": "npm --prefix packages/docs-site run typecheck",
+      "status": "passed",
+      "summary": "docs-site の型検査に成功しました。"
+    },
+    {
+      "command": "node --check tools/lint-d2.mjs && node --check packages/docs-site/src/d2.mjs && node --check packages/docs-site/bin/specdojo-docs-site.js && sh -n .devcontainer/install-d2.sh && node tools/lint-d2.mjs",
+      "status": "passed",
+      "summary": "JavaScript・シェルの構文検査に成功しました。D2 lint は 3,599 文書・図 0 件で成功し、実 CLI は呼び出していません。"
+    },
+    {
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "カタログ検証に成功しました。既存の未作成成果物に関する警告があります。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿の派生ビュー生成に成功しました。"
+    },
+    {
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/exec-defaults.schema.yaml --data tmp/pjr-6nem-exec-defaults.yaml",
+      "status": "passed",
+      "summary": "lint-d2 を追加した一時設定の検証に成功しました。一時ファイルは削除済みです。"
+    },
+    {
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/specdojo-config.schema.yaml --data tmp/pjr-6nem-config.json",
+      "status": "passed",
+      "summary": "プロジェクトの親検証へ lint-d2 を指定した一時設定の検証に成功しました。一時ファイルは削除済みです。"
+    },
+    {
+      "command": "npx prettier --write CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-6nem-d2-rendering-foundation.md docs/ja/specdojo/guides/docs-editing-guide.md docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/references/command-reference.md docs/specdojo/schemas/v1/exec-defaults.schema.yaml docs/specdojo/schemas/v1/specdojo-config.schema.yaml packages/docs-site/.vitepress/config.mts packages/docs-site/.vitepress/mermaid-assets.ts packages/docs-site/.vitepress/d2-auto-generate.ts packages/docs-site/README.md packages/docs-site/bin/specdojo-docs-site.js packages/docs-site/src/d2.d.mts packages/docs-site/src/d2.mjs packages/docs-site/src/gen-d2-svg.ts src/commands/init.ts src/exec/parent-validation.ts src/shared/specdojo-gitignore.ts tests/packages/docs-site/mermaid-assets.test.ts tests/packages/docs-site/d2.test.ts tests/src/exec/parent-validation.test.ts tests/src/shared/specdojo-gitignore.test.ts tests/tools/d2-cli.integration.test.ts tools/lint-d2.mjs",
+      "status": "passed",
+      "summary": "変更ファイルの整形に成功しました。"
+    },
+    {
+      "command": "npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-6nem-d2-rendering-foundation.md",
+      "status": "passed",
+      "summary": "最終追記後の個票を整形しました。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白検査に成功しました。"
+    },
+    {
+      "command": "sh .devcontainer/install-d2.sh tmp/pjr-6nem-d2-bin",
+      "status": "requires_human",
+      "summary": "sandbox の DNS 制限で github.com を解決できませんでした。ネットワークを利用できるホスト側で固定版の導入を確認してください。"
+    },
+    {
+      "command": "npm --prefix packages/docs-site run docs:build",
+      "status": "requires_human",
+      "summary": "既存の Mermaid 子プロセス描画で停止しました。最小の Node.js 子プロセス起動でも EPERM を確認したため、実 CLI を導入したホスト側で再検証してください。"
+    },
+    {
+      "command": "devcontainer build --workspace-folder .",
+      "status": "requires_human",
+      "summary": "Docker を利用できるホスト側で再ビルドし、D2 v0.9.0 の導入を確認してください。"
+    }
+  ],
+  "target_coverage": [
+    {"target": ".devcontainer/Dockerfile", "status": "changed", "path": ".devcontainer/Dockerfile"},
+    {"target": ".gitignore", "status": "changed", "path": ".gitignore"},
+    {"target": "CHANGELOG.md", "status": "changed", "path": "CHANGELOG.md"},
+    {"target": "docs/ja/projects/prj-0001/controls/project-register/pjr-6nem-d2-rendering-foundation.md", "status": "changed", "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-6nem-d2-rendering-foundation.md"},
+    {"target": "docs/ja/specdojo/guides/docs-editing-guide.md", "status": "changed", "path": "docs/ja/specdojo/guides/docs-editing-guide.md"},
+    {"target": "docs/ja/specdojo/guides/exec-config-guide.md", "status": "changed", "path": "docs/ja/specdojo/guides/exec-config-guide.md"},
+    {"target": "docs/ja/specdojo/references/command-reference.md", "status": "changed", "path": "docs/ja/specdojo/references/command-reference.md"},
+    {"target": "docs/specdojo/schemas/v1/exec-defaults.schema.yaml", "status": "changed", "path": "docs/specdojo/schemas/v1/exec-defaults.schema.yaml"},
+    {"target": "docs/specdojo/schemas/v1/specdojo-config.schema.yaml", "status": "changed", "path": "docs/specdojo/schemas/v1/specdojo-config.schema.yaml"},
+    {"target": "packages/docs-site/.vitepress/config.mts", "status": "changed", "path": "packages/docs-site/.vitepress/config.mts"},
+    {"target": "packages/docs-site/.vitepress/mermaid-assets.ts", "status": "changed", "path": "packages/docs-site/.vitepress/mermaid-assets.ts"},
+    {"target": "packages/docs-site/README.md", "status": "changed", "path": "packages/docs-site/README.md"},
+    {"target": "packages/docs-site/bin/specdojo-docs-site.js", "status": "changed", "path": "packages/docs-site/bin/specdojo-docs-site.js"},
+    {"target": "src/commands/init.ts", "status": "changed", "path": "src/commands/init.ts"},
+    {"target": "src/exec/parent-validation.ts", "status": "changed", "path": "src/exec/parent-validation.ts"},
+    {"target": "src/shared/specdojo-gitignore.ts", "status": "changed", "path": "src/shared/specdojo-gitignore.ts"},
+    {"target": "tests/packages/docs-site/mermaid-assets.test.ts", "status": "changed", "path": "tests/packages/docs-site/mermaid-assets.test.ts"},
+    {"target": "tests/src/exec/parent-validation.test.ts", "status": "changed", "path": "tests/src/exec/parent-validation.test.ts"},
+    {"target": "tests/src/shared/specdojo-gitignore.test.ts", "status": "changed", "path": "tests/src/shared/specdojo-gitignore.test.ts"},
+    {"target": ".devcontainer/install-d2.sh", "status": "changed", "path": ".devcontainer/install-d2.sh"},
+    {"target": "packages/docs-site/.vitepress/d2-auto-generate.ts", "status": "changed", "path": "packages/docs-site/.vitepress/d2-auto-generate.ts"},
+    {"target": "packages/docs-site/src/d2.d.mts", "status": "changed", "path": "packages/docs-site/src/d2.d.mts"},
+    {"target": "packages/docs-site/src/d2.mjs", "status": "changed", "path": "packages/docs-site/src/d2.mjs"},
+    {"target": "packages/docs-site/src/gen-d2-svg.ts", "status": "changed", "path": "packages/docs-site/src/gen-d2-svg.ts"},
+    {"target": "tests/packages/docs-site/d2.test.ts", "status": "changed", "path": "tests/packages/docs-site/d2.test.ts"},
+    {"target": "tests/tools/d2-cli.integration.test.ts", "status": "changed", "path": "tests/tools/d2-cli.integration.test.ts"},
+    {"target": "tools/lint-d2.mjs", "status": "changed", "path": "tools/lint-d2.mjs"}
+  ]
+}
+</specdojo_executor_evidence>

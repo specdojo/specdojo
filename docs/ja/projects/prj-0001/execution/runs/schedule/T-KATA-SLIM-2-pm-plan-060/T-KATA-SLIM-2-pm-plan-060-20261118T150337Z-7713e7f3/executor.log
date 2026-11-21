@@ -1,0 +1,44 @@
+`docs/ja/specdojo/recipes/pm-plan-recipe.md` を書き直しました。変更したのはこのファイルだけです。文字数は今の 7 割の目安に収まっていて、prettier と markdownlint はどちらも通っています。
+
+**大きさ**（prj-charter のときと同じ測り方で、空白と改行を除き、表の区切り行も除く）
+
+| 文書 | 前 | 後 | 比 |
+| --- | --- | --- | --- |
+| `pm-plan-recipe` | 2,216 字（区切り行込み 2,459 字・6,806 B） | 1,549 字（同 1,746 字・4,529 B） | 69.9% |
+
+**外した記述**
+- **rulebook と同じ判断の言い直し**:
+  - 管理行に書く項目の列挙（根拠 ID・基準・上限・確認契機・逸脱時対応・責任・証跡）
+  - 同じ基準の行をまとめる指示
+  - 「未達や材料不足を合格扱いにしない」
+  - 正本がない場合の整備担当と時期
+  - 変更時の追従タスクの書き方
+  - カタログ依存の確認
+- **未決事項の管理台帳への移し替え**: 「期限を過ぎたら管理簿へ移し、担当 Role と転送先を追う」の段落を外しました。
+- **仕上げチェックの構造の検査**: 「統合管理表・判断ゲート・正本がそろっている」「要らない章・表がない」「決定時期と判断者がある」を外しました。
+- **同じ確認の繰り返し**:
+  - 「正本」の良い例と悪い例（深掘り手順と同じ確認）
+  - レビュー観点の「根拠」「委譲」「判定」「負荷」
+  - 全体の作成手順の「他文書の一覧を削除する」（深掘り手順と同じ）
+  - 「このレシピの使い方」の手順のなぞり
+
+**残した・足した記述**
+- 「作成前に集める情報」に取り出し元の列を足しました（成功基準・スコープ・承認責任者・組織定義・RACI・登録簿・Schedule）。
+- **書く順番と理由**: 管理目的を先に決めないと、網羅目的の行が増えます。管理表は一般的な PM 項目から始めず、条件 ID ごとの行から書きます。判断ゲートは逸脱時対応から作り、未決事項は最後に集めます。
+- **聞き方とつまずきやすい点**:
+  - 費用を聞くと現金支出だけが返るので、準備時間と日々の操作時間を別に聞く。
+  - 材料を整理する Role と最終判断する Role を分けて聞く。
+  - Schedule の作業担当を承認者と取り違えやすいので、承認者は別に聞く。
+- **上位の文書を正とする内容**: 「写さず参照する」とコツに書きました（成功基準の数値や測定手順、別の正本で追う論点）。
+- **深掘り手順**: 対応のない主張を探す順序に変えました（管理行から条件 ID、判断ゲートから管理行、重なる説明を参照に戻す）。
+- **レビュー観点**: 判断者と作業者が使う場面から読む 2 行に置き換えました（plan の BA の観点に合わせた判断です）。
+- **良い例 / 悪い例**: 「管理目的」と「コスト」の 2 行です。
+- recipe 本文に rulebook・sample への参照は書いていません。Recipe 記述標準の 8 章の構成はそのままです。
+
+元の recipe には、役割の表と段落、`status` の昇格と承認、公開の承認条件、改訂と廃止の手順、文書品質の検査は書かれていませんでした。rulebook・sample・template と成果物本体は変えていません。合わせて直すべき点も見つからず、変更案はありません。
+
+検査は、prettier の整形（変更なし）と markdownlint（指摘 0 件）を実行しました。`lint:md` などの検査は、この後 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"pm-plan recipe から rulebook と同じ判断の言い直し、未決事項の台帳への移し替え、構造の検査、同じ確認の繰り返し、章立てのなぞりを外し、取り出し元の列・書く順番と理由・聞き方とつまずきやすい点・対応のない主張を探す深掘りの順序を残すか足した。空白を除いた文字数（表の区切り行を除く）は 2,216 字から 1,549 字（69.9%）。区切り行を含めると 2,459 字から 1,746 字、6,806 B から 4,529 B。8 章の構成はそのまま。rulebook・sample・template と成果物本体は変えていない。変更ファイル: docs/ja/specdojo/recipes/pm-plan-recipe.md","handoff":["大きさの記録（result の実施内容へ）: 測り方は prj-charter の試行（PJR-7M9J）と同じで、空白と改行を除き、表の区切り行も除く。前 2,216 字（区切り行込み 2,459 字・6,806 B）、後 1,549 字（同 1,746 字・4,529 B）、比 69.9%。","rulebook・sample・template への変更案: なし。recipe から外した判断の基準（管理行の項目、判断ゲートの成立条件、正本・追従の扱い）は rulebook の本文要件と記述ガイドが持っているため、作成に支障はないと判断した。","レビュー観点は、plan の BA の観点（関係者・利用場面）に合わせ、rulebook の判断基準を言い直さない形として、判断者と作業者が使う場面から読む 2 行に置き換えた。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/recipes/pm-plan-recipe.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/recipes/pm-plan-recipe.md","status":"passed","summary":"0 issues in 0 files"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更したのは docs/ja/specdojo/recipes/pm-plan-recipe.md だけで、plan・result・個票は変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変更していない","reason":"変更したファイルに *.yaml / *.yml がない"}]}
+</specdojo_executor_evidence>

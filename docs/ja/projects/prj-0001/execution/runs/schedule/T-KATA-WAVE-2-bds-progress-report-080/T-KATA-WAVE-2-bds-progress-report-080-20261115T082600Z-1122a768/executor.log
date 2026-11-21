@@ -1,0 +1,6 @@
+第6節冒頭の「本文の章立ては進捗報告の rulebook に従う」を削除しました。第4節に同じ参照があり、表示項目表の説明は残したため、判断に必要な情報は維持されています。期間の制約、例外、未決事項は維持しました。
+
+整形として `npx prettier --write docs/ja/product/010-business-specs/040-user-interface-model/bds-progress-report.md` を実行し、変更はありませんでした。指定の親 runner 検査は runner に委ねます。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"第6節に重複していた章立ての rulebook 参照を削除し、表示項目の説明を維持しました。Prettier 整形は変更なしでした。","handoff":[],"validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/040-user-interface-model/bds-progress-report.md","status":"passed","summary":"Prettier は変更なしで完了"},{"command":"npm run lint:md","status":"not_run","summary":"親 runner の allowlist 検査に委ねる"},{"command":"npm run lint:fm","status":"not_run","summary":"親 runner の allowlist 検査に委ねる"}],"condense_records":[{"location":"第6節冒頭「本文の章立ては進捗報告の rulebook に従う」","category":"canonical-restatement","action":"delete","reason":"第4節で本文の章立ての正本を同じ rulebook と定めているため重複を削除し、第6節の表示項目表が担う意味と出所の説明を維持した。","cause":{"type":"document"}}]}</specdojo_executor_evidence>

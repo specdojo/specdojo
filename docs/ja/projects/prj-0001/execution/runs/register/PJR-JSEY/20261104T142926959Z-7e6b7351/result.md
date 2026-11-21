@@ -1,0 +1,35 @@
+---
+specdojo:
+  id: prj-0001:xer-pjr-jsey-20261104t142926z-8c022b68
+  type: exec-result
+  task_id: PJR-JSEY
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  origin: register
+  plan_ref: runs/register/PJR-JSEY/20261104T142926959Z-7e6b7351/plan.md
+  started_at: "2026-11-04T14:29:27.745Z"
+  completed_at: "2026-11-04T14:37:04.786Z"
+  agent: sonnet-executor
+---
+
+# Edit Result
+
+## 1. 実施内容
+
+- 個票 `pjr-jsey-exec-run-split-smoke.md` の対応結果に、最新の実行コミットに関する情報を追記しました。
+- 確認対象の説明文を、対象一覧の最新項目である PJR-1BRQ（実行コミット `5b9439598`）に更新しました。
+
+## 2. 変更ファイル
+
+- なし
+
+## 3. 申し送り
+
+- 確認対象は、対象一覧で最も新しく統合された PJR-1BRQ にした（最終の実行コミット `5b9439598`、2026-11-04 23:27 JST）。
+- 親 runner の検証 7 件、reporter の result 記入、統合、`review` 遷移は後続段で確認する。
+- 適用外の検証: `npm run validate:history-links`（変更したのは個票 pjr-jsey-exec-run-split-smoke.md の 1 件だけだが、実行していない。この個票は `pjr-*.md` の履歴ファイルに当たり、追記した内容に Markdown リンクは含まれない。）
+
+## 4. 進め方
+
+個票 `pjr-jsey-exec-run-split-smoke.md` を開き、現在の作業状況を反映させるために、対応結果の表への実行ログの追記と、確認対象の説明文の更新を行いました。変更は個票のみです。

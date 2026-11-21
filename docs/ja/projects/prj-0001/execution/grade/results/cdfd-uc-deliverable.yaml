@@ -5,8 +5,8 @@ path: docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-deliverable.md
 target: deliverable
 rubric: grade-rubric-v2
 verdict: pass
-score: 100
-graded_at: "2026-10-29T16:33:31.925Z"
+score: 97
+graded_at: "2026-11-01T16:34:45.984Z"
 graded_by: flash-high-executor
 content_hash: 47b546dcc120ff8524bb125f83a4a8459dadfde13aa256410e6bfa8da6935105
 source_hashes:
@@ -19,7 +19,7 @@ source_hashes:
   dependency:cdfd-plan: fa438c52a36eaa9e43b88df336f876264351918d14ece7b3bb8f46aaea8a30ba
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
-  schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
+  schedule: 19c1bd1483cbadbe965c7078d2496f9b4c8c8efb31325bc095b2275bb5463093
 categories:
   purpose:
     score: 100
@@ -30,11 +30,11 @@ categories:
   business:
     score: 100
   consistency:
-    score: 100
+    score: 88
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 94
   implementation:
     score: 100
   quality:
@@ -74,8 +74,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -95,8 +95,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -124,9 +124,32 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 2
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 35
+    anchor: ""
+    message: >-
+      In Section 3 (3.1-3.4), bullet items for main inputs, main outputs, and data stores redundantly duplicate content
+      from Chapter 4 (Data Stores), Chapter 5 (Conceptual Data Flow), and Chapter 6 (Handoffs), and should be removed.
+    message_ja: >-
+      セクション 3 (3.1-3.4) において、主要な入力、主要な出力、およびデータストアの箇条書き項目は、第4章 (Data Stores)、第5章 (Conceptual Data Flow)、および第6章
+      (Handoffs) の内容と重複しているため、削除する必要があります。
+  - id: F002
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 35
+    anchor: ""
+    message: >-
+      Section 3 (3.1-3.4) includes bullet lists for main inputs, main outputs, and data stores, violating Section 7
+      (Prohibited Items) of cdfd-uc-rulebook which forbids bullet lists of inputs, outputs, and data stores in process
+      domain sections.
+    message_ja: >-
+      セクション 3 (3.1-3.4) には主要な入力、主要な出力、およびデータストアの箇条書きが含まれており、これはプロセスドメインのセクションにおける入力、出力、およびデータストアの箇条書きを禁止している
+      cdfd-uc-rulebook のセクション 7 (Prohibited Items) に違反しています。
 done_criteria:
   satisfied: 3
   total: 3

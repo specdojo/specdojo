@@ -1,0 +1,120 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_611e7af89df04c99b3a489b680fe08df
+  ts: "2026-11-01T11:13:17Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: schedule のタスクでも executor からやり直せるようにする
+    - field: description
+      from: ""
+      to: exec resume に --resume-from executor を足し、reporter の段で blocked になった、または doing のまま中断した pipeline のタスクを、残った worktree と変更を引き継いで executor からやり直せるようにする。worktree の plan を直してから再開すると、直した plan を使う
+    - field: input
+      from: ""
+      to: '["schedule のタスク T-DATA-FLOW-USAGE-cdfd-overview-010 が、executor の未完了の報告で reporter の段の blocked になった。worktree の plan に追加の指示を足して executor からやり直したいが、--resume-from executor は exec run --register にしかなく、exec resume --task は reporter から再開するだけである（2026-11-01）","登録簿の側の実装は src/exec/register-resume.ts の resumeFrom（executorTarget に前の試行の変更を引き継ぐ）と src/exec/run/register-command.ts のオプションの検査にある","利用者は、試行を exec release で破棄するのではなく、schedule でも --resume-from executor を使えるように直す方針を選んだ（2026-11-01）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-01"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-GEZN"]'
+- v: 1
+  id: reg_fe3a0e8b8c854c588a83469c1463d17f
+  ts: "2026-11-01T11:14:13Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_611e7af89df04c99b3a489b680fe08df
+- v: 1
+  id: reg_1ae7bca47eb64b66bb1ee4f64ba3cf6d
+  ts: "2026-11-01T11:31:29Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-integration"
+  previous_event_id: reg_fe3a0e8b8c854c588a83469c1463d17f
+- v: 1
+  id: reg_b7077dcd194b41f3a57d34db06abb6e9
+  ts: "2026-11-01T11:32:24Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-integration"
+      to: "-"
+  previous_event_id: reg_1ae7bca47eb64b66bb1ee4f64ba3cf6d
+- v: 1
+  id: reg_f7040e973ef34f6a90d8a7bc10ca3c08
+  ts: "2026-11-01T11:45:39Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_b7077dcd194b41f3a57d34db06abb6e9
+- v: 1
+  id: reg_c58457cd33734ce09e71828a099a3fdf
+  ts: "2026-11-01T13:38:14Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分とテストを確かめ、T-DATA-FLOW-USAGE-cdfd-overview-010 で実際に executor から再開して統合まで通ることを確かめた。JSEY の確認も通った。直した plan が統合で置き換わる問題は PJR-Z807 に分けた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-01"
+    - field: conclusion
+      from: "-"
+      to: exec resume に --resume-from executor を足し、reporter の段で blocked になった、または doing のまま中断した schedule の pipeline のタスクを、残った worktree と変更を引き継いで executor からやり直せるようにした
+  previous_event_id: reg_f7040e973ef34f6a90d8a7bc10ca3c08

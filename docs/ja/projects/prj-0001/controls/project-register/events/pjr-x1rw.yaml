@@ -1,0 +1,104 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_43aa44de7e894edc999dfea0b5b294be
+  ts: "2026-11-15T11:12:26Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: bes-index を grade の指摘で手直しする（イベントからのテストの網羅）
+    - field: description
+      from: ""
+      to: 最新の grade の指摘を取り込み、テスト設計の入口としての網羅の確認を本文に足す
+    - field: input
+      from: ""
+      to: '["kata-wave-1 の確定（T-KATA-WAVE-1-bes-index-140）で差し戻した（indie が 2026-11-15 に判断、PJR-TN43）。grade は needs-work 86 点で完了条件 2/4","主な指摘: イベントからテスト設計を網羅できるかを確かめた記録がない（DC-004）。事実データとデータモデルの照合（DC-003）は PJR-AK5V の留保として残す"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-11-15"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: fully-guided
+    - field: targets
+      from: ""
+      to: '["bes-index"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: bes
+- v: 1
+  id: reg_ecf04eb4d2cd4f968b8fce5a38548497
+  ts: "2026-11-15T17:45:24Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_43aa44de7e894edc999dfea0b5b294be
+- v: 1
+  id: reg_b5cc0e3b71484793b0e57bd9bdc77e6d
+  ts: "2026-11-15T18:30:32Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_ecf04eb4d2cd4f968b8fce5a38548497
+- v: 1
+  id: reg_4100ad2de4ae423c8da0441375037202
+  ts: "2026-11-16T15:28:31Z"
+  action: start
+  actor: opus-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_b5cc0e3b71484793b0e57bd9bdc77e6d
+- v: 1
+  id: reg_d67151cf80624f7e8b022e37e3ad10d5
+  ts: "2026-11-16T15:35:01Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_4100ad2de4ae423c8da0441375037202

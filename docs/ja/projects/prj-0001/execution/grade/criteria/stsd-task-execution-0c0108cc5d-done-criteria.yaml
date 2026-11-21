@@ -1,0 +1,42 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: prj-0001:stsd-task-execution-grade-criteria
+document: prj-0001:stsd-task-execution
+path: docs/ja/product/010-business-specs/020-data-model/stsd-task-execution.md
+graded_at: "2026-11-16T14:42:43.345Z"
+graded_by: sol-review-executor
+content_hash: 58a8b1332ec5b260cb81f9aa5cac9080662721b4ff752c644401c3e704dc8af6
+summary:
+  satisfied: 5
+  unsatisfied: 0
+  total: 5
+criteria:
+  - id: DC-001
+    text: ステータス名・意味・成立条件と、遷移・イベント・条件が業務観点で正確に定義されていること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: satisfied
+  - id: DC-002
+    text: 状態遷移の業務的妥当性を承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-purpose-alignment
+    status: satisfied
+  - id: DC-003
+    text: 状態遷移実装の基礎として参照できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: satisfied
+  - id: DC-004
+    text: 状態ベースのテスト設計に活用できること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: satisfied
+  - id: DC-005
+    text: 状態管理実装の参照として使えること
+    roles:
+      - DEV
+    viewpoint: vp-dev-implementation-readiness
+    status: satisfied

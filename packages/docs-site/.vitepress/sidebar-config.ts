@@ -1,5 +1,9 @@
 // VitePress サイドバーの固定データ（手動メニュー構成・表示名・表示順）を集約する。
 // 変換ロジック（transformSidebar 等）は config.mts 側に置く。
+// 型のメニュー（ルール・レシピ・サンプル・テンプレート）は sidebar-kata.ts が型の文書から組み立てる。
+// 型の分類・並び・表示名の上書きは sidebar-kata-config.ts に書く（PJR-C8J8）。
+import { buildKataMenus } from "./sidebar-kata.js";
+import { kataMenuConfig } from "./sidebar-kata-config.js";
 
 export type SidebarItem = {
   text?: string;
@@ -25,326 +29,115 @@ const philosophy = (text: string, id: string): SidebarItem => ({
   text,
   link: specdojoLink("philosophy", id),
 });
-const rulebook = (text: string, id: string, items?: SidebarItem[]): SidebarItem => ({
-  text,
-  link: specdojoLink("rulebooks", `${id}-rulebook`),
-  ...(items ? { collapsed: true, items } : {}),
-});
-const recipe = (text: string, id: string): SidebarItem => ({
-  text,
-  link: specdojoLink("recipes", `${id}-recipe`),
-});
 const group = (text: string, items: SidebarItem[], collapsed = true): SidebarItem => ({
   text,
   collapsed,
   items,
 });
 
-const projectDefinitionRulebooks = [
-  rulebook("プロジェクト概要", "prj-overview"),
-  rulebook("ステークホルダー登録簿", "prj-stakeholder-register"),
-  rulebook("プロジェクト憲章", "prj-charter"),
-  rulebook("プロジェクトスコープ", "prj-scope"),
-  rulebook("成功基準と受入条件", "prj-success-criteria-and-acceptance-criteria"),
-  rulebook("プロジェクト課題と解決アプローチ", "prj-issues-and-approach"),
-  rulebook("前提・制約・依存関係", "prj-assumptions-constraints-dependencies"),
-  rulebook("代替案の比較", "prj-comparison-of-alternatives"),
-];
-
-const projectManagementRulebooks = [
-  group("成果物カタログ", [
-    rulebook("成果物カタログの索引", "dct-index"),
-    rulebook("成果物カタログ", "dct"),
-  ]),
-  group("管理計画", [
-    rulebook("プロジェクト管理計画", "pm-plan"),
-    rulebook("コミュニケーション計画", "pm-communication-plan"),
-    rulebook("品質管理計画", "pm-quality-management-plan"),
-  ]),
-  group("組織体制", [
-    rulebook("組織とロールの定義", "pm-organization"),
-    rulebook("ロール定義", "pm-roles"),
-    rulebook("メンバー定義", "pm-members"),
-    rulebook("組織体制とRACI", "pm-raci"),
-  ]),
-  group("管理台帳・管理ビュー", [
-    rulebook("プロジェクト登録簿", "pjr"),
-    rulebook("リスク登録簿", "pm-risk-register"),
-    rulebook("課題ログ", "pm-issue-log"),
-    rulebook("変更要求ログ", "pm-change-request-log"),
-    rulebook("意思決定ログ", "dec"),
-  ]),
-  rulebook("スケジュール", "sch"),
-  rulebook("進捗報告", "pr"),
-  rulebook("議事録", "mm"),
-];
-
-const businessSpecificationRulebooks = [
-  rulebook("概念データフロー図", "cdfd", [rulebook("図の記法ルール", "cdfd-mermaid")]),
-  group("データモデル", [
-    rulebook("業務データ辞書", "bdd"),
-    rulebook("概念データストア定義", "cdsd"),
-    rulebook("保管場所定義", "sld"),
-    rulebook("ステータス定義", "stsd"),
-    rulebook("分類定義", "cld"),
-    rulebook("概念クラス図", "ccd-mermaid"),
-    rulebook("概念状態遷移図", "cstd", [rulebook("図の記法ルール", "cstd-mermaid")]),
-  ]),
-  group("業務モデル", [
-    rulebook("業務プロセス仕様", "bps"),
-    rulebook("ビジネスルール", "br"),
-    rulebook("業務イベント一覧", "bes-index"),
-    rulebook("業務イベント仕様", "bes"),
-  ]),
-  group("インターフェースモデル", [rulebook("画面仕様", "uis"), rulebook("帳票仕様", "bds")]),
-  group("共通", [
-    rulebook("システム化機能一覧", "sf-index"),
-    rulebook("システム化機能", "sf"),
-    rulebook("用語集", "gl"),
-  ]),
-];
-
-const externalIfRulebooks = [
-  rulebook("外部システムI/F一覧", "ifx-index", [rulebook("外部システムIF一覧（YAML）", "ifx")]),
-  rulebook("外部API仕様", "ifx-api"),
-  rulebook("外部ファイル仕様", "ifx-file"),
-  rulebook("外部メッセージ仕様", "ifx-msg"),
-];
-
-const architectureRulebooks = [
-  group("C4", [
-    rulebook("コンテキスト図", "cxd", [rulebook("図の記法ルール", "cxd-mermaid")]),
-    rulebook("コンテナ図", "cnd", [rulebook("図の記法ルール", "cnd-mermaid")]),
-    rulebook("コンポーネント図", "cpd", [rulebook("図の記法ルール", "cpd-mermaid")]),
-  ]),
-  group("インフラ・技術選定", [
-    rulebook("インフラ構成図", "ifd-mermaid"),
-    rulebook("技術スタック一覧", "tsd-index"),
-    rulebook("技術スタック", "tsd"),
-  ]),
-];
-
-const systemDesignRulebooks = [
-  rulebook("システム設計 全体構成", "sysd-index"),
-  rulebook("重要フロー", "sysd-critical-flows"),
-  rulebook("横断ルール", "sysd-cross-cutting-policy"),
-];
-
-const nonFunctionalRequirementRulebooks = [
-  rulebook("非機能要件 全体構成", "nfr-index"),
-  rulebook("信頼性", "nfr-reliability"),
-  rulebook("可用性", "nfr-availability"),
-  rulebook("保守性", "nfr-maintainability"),
-  rulebook("完全性", "nfr-integrity"),
-  rulebook("機密性・安全性", "nfr-security-safety"),
-  rulebook("性能", "nfr-performance"),
-  rulebook("運用", "nfr-operations"),
-  rulebook("操作性", "nfr-usability"),
-];
-
-const testingRulebooks = [
-  rulebook("テスト戦略・方針", "tsp-index"),
-  group("単体テスト", [
-    rulebook("単体テストカタログ 概要", "utc-index"),
-    rulebook("単体テストカタログ 対象別", "utc"),
-  ]),
-  group("内部結合テスト", [
-    rulebook("内部結合テストカタログ 概要", "itc-index"),
-    rulebook("内部結合テストカタログ 対象別", "itc"),
-  ]),
-  group("外部結合テスト", [
-    rulebook("外部結合テストカタログ 概要", "etc-index"),
-    rulebook("外部結合テストカタログ 対象別", "etc"),
-  ]),
-  group("総合テスト", [
-    rulebook("総合テストカタログ 概要", "stc-index"),
-    rulebook("総合テストカタログ 対象別", "stc"),
-  ]),
-  group("受入テスト", [
-    rulebook("受入テストカタログ 概要", "atc-index"),
-    rulebook("受入テストカタログ 対象別", "atc"),
-  ]),
-];
-
-const migrationRulebooks = [
-  rulebook("移行計画", "mip-index"),
-  rulebook("データ移行設計 全体構成", "dmd-index"),
-  rulebook("データ移行設計", "dmd"),
-  rulebook("移行テスト計画", "mtp"),
-  rulebook("カットオーバー計画 全体構成", "cop-index"),
-  rulebook("カットオーバー計画", "cop"),
-  rulebook("運用切替計画 全体構成", "otp-index"),
-  rulebook("運用切替計画", "otp"),
-];
-
-const operationsRulebooks = [
-  rulebook("運用方針・設計 全体構成", "opd-index"),
-  rulebook("運用方針・設計", "opd"),
-  rulebook("運用手順 全体構成", "opr-index"),
-  rulebook("運用手順", "opr"),
-];
-
-const productChangeRulebooks = [
-  group("影響調査", [
-    rulebook("業務影響", "imp-business"),
-    rulebook("データ影響", "imp-data"),
-    rulebook("インターフェース影響", "imp-interface"),
-    rulebook("テスト影響", "imp-test"),
-    rulebook("運用影響", "imp-operations"),
-  ]),
-  group("トレーサビリティ", [
-    rulebook("要求と仕様のトレース", "trc-requirements-to-specs"),
-    rulebook("要求とテストのトレース", "trc-requirements-to-tests"),
-  ]),
-  group("移行", migrationRulebooks),
-];
-
-// recipe は rulebook と同じ並び順にし、成果物ごとに rulebook / recipe を対で辿れるようにする。
-const projectDefinitionRecipes = [
-  recipe("プロジェクト概要", "prj-overview"),
-  recipe("ステークホルダー登録簿", "prj-stakeholder-register"),
-  recipe("プロジェクト憲章", "prj-charter"),
-  recipe("プロジェクトスコープ", "prj-scope"),
-  recipe("成功基準と受入条件", "prj-success-criteria-and-acceptance-criteria"),
-  recipe("プロジェクト課題と解決アプローチ", "prj-issues-and-approach"),
-  recipe("前提・制約・依存関係", "prj-assumptions-constraints-dependencies"),
-  recipe("代替案の比較", "prj-comparison-of-alternatives"),
-];
-
-const projectManagementRecipes = [
-  recipe("プロジェクト管理計画", "pm-plan"),
-  recipe("コミュニケーション計画", "pm-communication-plan"),
-  recipe("品質管理計画", "pm-quality-management-plan"),
-  recipe("組織とロールの定義", "pm-organization"),
-  recipe("ロール定義", "pm-roles"),
-  recipe("メンバー定義", "pm-members"),
-  recipe("組織体制とRACI", "pm-raci"),
-];
-
-const execRecipes = [recipe("humanタスクの確定", "exec-human-finalize")];
-
 // サイドバーの表示名は対象ページの H1 に揃える。guide と philosophy はグループ配下で
 // 種別が自明なため接尾辞（「ガイド」「の考え方」）を落とし、reference は H1 をそのまま使う。
 // クリック前後でタイトルが変わらないようにするため、H1 を変更したらここも合わせて更新する。
-export const specdojoSidebarItems = [
-  {
-    text: "ガイド",
-    collapsed: false,
-    items: [
-      group(
-        "はじめに",
-        [
-          guide("全体概要", "specdojo-overview-guide"),
-          guide("Quick Start", "quick-start-guide"),
-          guide("ユースケース別", "use-case-guide"),
-          guide("ドキュメント構成", "docs-structure-guide"),
-        ],
-        false,
-      ),
-      group(
-        "型で作る",
-        [
-          guide("型の構成", "practice-system-composition-guide"),
-          guide("実践の進め方", "ryu-guide"),
-          guide("実践の型活用", "kata-guide"),
-          guide("レビュー", "review-guide"),
-        ],
-        false,
-      ),
-      group(
-        "技で回す",
-        [
-          guide("遂行の技活用", "waza-guide"),
-          guide("オーケストレーター運用", "orchestrator-operation-guide"),
-          guide("exec運用", "exec-operation-guide"),
-          guide("登録簿運用", "register-operation-guide"),
-          group("Schedule設計・実行", [
-            guide("トラック設計", "track-design-guide"),
-            guide("Schedule設計", "schedule-design-guide"),
-            guide("Schedule実行運用", "schedule-operation-guide"),
-          ]),
-          guide("routine運用", "routine-operation-guide"),
-          guide("常時稼働ホスト運用", "remote-host-development-guide"),
-          group("exec共通", [
-            guide("exec設定", "exec-config-guide"),
-            guide("plan/resultライフサイクル", "plan-result-lifecycle-guide"),
-            guide("exec worktree運用", "exec-worktree-guide"),
-            guide("ブランチワークフロー", "branch-workflow-guide"),
-          ]),
-        ],
-        false,
-      ),
-      group("付録", [guide("ドキュメント編集", "docs-editing-guide")]),
-    ],
-  },
-  {
-    text: "リファレンス",
-    collapsed: false,
-    items: [
-      reference("成果物リファレンス", "deliverables-reference"),
-      reference("ディレクトリレイアウトリファレンス", "directory-layout-reference"),
-      reference("SpecDojo設定リファレンス", "specdojo-config-reference"),
-      reference("CLIコマンドリファレンス", "command-reference"),
-    ],
-  },
-  {
-    // 規約の前提となる考え方。一度読めば足りるため、実務で引く guide / reference の後ろへ置く。
-    text: "考え方",
-    collapsed: true,
-    items: [
-      philosophy("SpecDojo", "specdojo-philosophy"),
-      philosophy("要求から実装まで", "needs-to-implementation-philosophy"),
-    ],
-  },
-  {
-    text: "レシピ",
-    collapsed: true,
-    items: [
-      group("プロジェクト定義", projectDefinitionRecipes),
-      group("プロジェクトマネジメント", projectManagementRecipes),
-      group("実行", execRecipes),
-    ],
-  },
-  {
-    text: "標準",
-    collapsed: true,
-    items: [
-      standard("ドキュメントID・ファイル命名", "id-and-file-naming-standard"),
-      standard("ドキュメントメタ情報", "document-metadata-standard"),
-      standard("Gitブランチ運用", "git-branching-standard"),
-      standard("ルールブック記述", "rulebook-authoring-standard"),
-      standard("レシピ記述", "recipe-authoring-standard"),
-      standard("サンプル記述", "sample-authoring-standard"),
-      standard("テンプレート記述", "template-authoring-standard"),
-      standard("ガイド記述", "guide-authoring-standard"),
-      standard("リファレンス記述", "reference-authoring-standard"),
-      standard("標準記述", "standard-authoring-standard"),
-      standard("人・組織定義", "people-and-organization-definition-standard"),
-      standard("テスト文書スコープ", "test-document-scope-standard"),
-    ],
-  },
-  {
-    text: "ルール",
-    collapsed: true,
-    items: [
-      group("プロジェクト", [
-        group("プロジェクト定義", projectDefinitionRulebooks),
-        group("プロジェクトマネジメント", projectManagementRulebooks),
-        group("プロダクト変更", productChangeRulebooks),
-      ]),
-      group("業務仕様", businessSpecificationRulebooks),
-      group("外部I/F仕様", externalIfRulebooks),
-      group("アーキテクチャ", architectureRulebooks),
-      group("システム設計", systemDesignRulebooks),
-      rulebook("業務受入条件", "bac"),
-      group("非機能要件", nonFunctionalRequirementRulebooks),
-      rulebook("システム受入条件", "sac"),
-      group("テスト", testingRulebooks),
-      group("移行", migrationRulebooks),
-      group("運用", operationsRulebooks),
-    ],
-  },
-];
+// rulebook / recipe / sample / template の表示名は sidebar-kata.ts が H1 から作り、
+// 接尾辞（「作成ルール」など）を落として対象成果物の名称に揃える。
+// specdojoDir は docs/ja/specdojo に当たるディレクトリ（文書サイトではステージング側）。
+export function buildSpecdojoSidebarItems(specdojoDir: string): SidebarItem[] {
+  const kata = buildKataMenus(specdojoDir, kataMenuConfig);
+  return [
+    {
+      text: "ガイド",
+      collapsed: false,
+      items: [
+        group(
+          "はじめに",
+          [
+            guide("全体概要", "specdojo-overview-guide"),
+            guide("Quick Start", "quick-start-guide"),
+            guide("ユースケース別", "use-case-guide"),
+            guide("ドキュメント構成", "docs-structure-guide"),
+          ],
+          false,
+        ),
+        group(
+          "型で作る",
+          [
+            guide("型の構成", "practice-system-composition-guide"),
+            guide("実践の進め方", "ryu-guide"),
+            guide("実践の型活用", "kata-guide"),
+            guide("レビュー", "review-guide"),
+          ],
+          false,
+        ),
+        group(
+          "技で回す",
+          [
+            guide("遂行の技活用", "waza-guide"),
+            guide("オーケストレーター運用", "orchestrator-operation-guide"),
+            guide("exec運用", "exec-operation-guide"),
+            guide("登録簿運用", "register-operation-guide"),
+            group("Schedule設計・実行", [
+              guide("トラック設計", "track-design-guide"),
+              guide("Schedule設計", "schedule-design-guide"),
+              guide("Schedule実行運用", "schedule-operation-guide"),
+            ]),
+            guide("routine運用", "routine-operation-guide"),
+            guide("常時稼働ホスト運用", "remote-host-development-guide"),
+            group("exec共通", [
+              guide("exec設定", "exec-config-guide"),
+              guide("plan/resultライフサイクル", "plan-result-lifecycle-guide"),
+              guide("exec worktree運用", "exec-worktree-guide"),
+              guide("ブランチワークフロー", "branch-workflow-guide"),
+            ]),
+            guide("プロジェクト移行", "project-move-guide"),
+          ],
+          false,
+        ),
+        group("付録", [guide("ドキュメント編集", "docs-editing-guide")]),
+      ],
+    },
+    {
+      text: "リファレンス",
+      collapsed: false,
+      items: [
+        reference("成果物リファレンス", "deliverables-reference"),
+        reference("ディレクトリレイアウトリファレンス", "directory-layout-reference"),
+        reference("SpecDojo設定リファレンス", "specdojo-config-reference"),
+        reference("CLIコマンドリファレンス", "command-reference"),
+      ],
+    },
+    {
+      // 規約の前提となる考え方。一度読めば足りるため、実務で引く guide / reference の後ろへ置く。
+      text: "考え方",
+      collapsed: true,
+      items: [
+        philosophy("SpecDojo", "specdojo-philosophy"),
+        philosophy("要求から実装まで", "needs-to-implementation-philosophy"),
+      ],
+    },
+    { text: "レシピ", collapsed: true, items: kata.recipes },
+    { text: "サンプル", collapsed: true, items: kata.samples },
+    { text: "テンプレート", collapsed: true, items: kata.templates },
+    {
+      text: "標準",
+      collapsed: true,
+      items: [
+        standard("ドキュメントID・ファイル命名", "id-and-file-naming-standard"),
+        standard("ドキュメントメタ情報", "document-metadata-standard"),
+        standard("Gitブランチ運用", "git-branching-standard"),
+        standard("ルールブック記述", "rulebook-authoring-standard"),
+        standard("レシピ記述", "recipe-authoring-standard"),
+        standard("サンプル記述", "sample-authoring-standard"),
+        standard("テンプレート記述", "template-authoring-standard"),
+        standard("ガイド記述", "guide-authoring-standard"),
+        standard("リファレンス記述", "reference-authoring-standard"),
+        standard("標準記述", "standard-authoring-standard"),
+        standard("人・組織定義", "people-and-organization-definition-standard"),
+        standard("テスト文書スコープ", "test-document-scope-standard"),
+      ],
+    },
+    { text: "ルール", collapsed: true, items: kata.rulebooks },
+  ];
+}
 
 export const PROJECTS_SEGMENT_TEXT: Record<string, string> = {
   projects: "プロジェクト",
@@ -395,9 +188,21 @@ export const PRODUCT_SEGMENT_TEXT: Record<string, string> = {
 // docs/ja/product 配下の既知ファイルのメニュー表示（PROJECTS_FILE_MENU と同じ仕組み）。
 // text: 全ファイル共通の「概念データフロー図（...）: SpecDojo」という H1 は冗長なため、
 // 固定の短い表示名（H1 より優先）にする。
-// order: cdfd-overview を先頭、以降は全体概要（P-01〜P-10）の並び順に揃える。
+// order: cdfd-overview を先頭、続けて系統別の詳細（register 系・schedule 系・routine 系）を並べる（PJR-SJQC）。
+// 廃止済み（trash）の旧文書は、旧体系ごとにまとめて後ろへ並べる。
 export const PRODUCT_FILE_MENU: Record<string, { text: string; order?: number }> = {
   "cdfd-overview": { text: "全体概要", order: 0 },
+  "cdfd-uc-register": { text: "register 系", order: 1 },
+  "cdfd-uc-schedule": { text: "schedule 系", order: 2 },
+  "cdfd-uc-routine": { text: "routine 系", order: 3 },
+  // 廃止済み（PJR-SJQC）。プロセスグループ別 CDFD と、cdfd-uc-schedule に引き継いだ旧ユースケース別 CDFD。
+  "cdfd-onboarding": { text: "（旧）Onboarding（P-01）", order: 200 },
+  "cdfd-plan": { text: "（旧）Plan（P-02〜P-06）", order: 210 },
+  "cdfd-do": { text: "（旧）Do（P-07）", order: 220 },
+  "cdfd-check": { text: "（旧）Check（P-08〜P-10）", order: 230 },
+  "cdfd-action": { text: "（旧）Action（P-11〜P-13）", order: 240 },
+  "cdfd-orchestrator": { text: "（旧）Orchestrator（P-14）", order: 250 },
+  "cdfd-uc-deliverable": { text: "（旧）成果物の作成から完了まで", order: 260 },
   "cdfd-init": { text: "初期セットアップ（P-01）", order: 10 },
   "cdfd-register-lifecycle": { text: "登録簿ライフサイクル（P-02）", order: 20 },
   "cdfd-catalog-planning": { text: "計画展開（P-03）", order: 30 },
@@ -469,6 +274,8 @@ export const PROJECTS_FILE_MENU: Record<string, { text: string; order?: number }
 // 番号付きの成果物ツリー（成果物カタログ〜プロダクト変更）の後ろに運用順で並べる。
 // 実行プラン・実行結果は大量の項目を含むため、進捗ビューの後ろに置く。
 export const PROJECTS_GROUP_ORDER: Record<string, number> = {
+  // 非推奨化した文書（trash）は現行の文書の後ろに置く。
+  廃止済み: 900,
   "管理台帳・管理ビュー": 10,
   スケジュール: 20,
   ルーチン: 30,

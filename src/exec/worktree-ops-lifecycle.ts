@@ -1,4 +1,5 @@
-import { copyFileSync, existsSync, lstatSync, mkdirSync, rmSync } from "node:fs";
+import { copyFileSync, existsSync, lstatSync, mkdirSync, readFileSync, rmSync } from "node:fs";
+import { withPlanConventionsFiles } from "../shared/plan-conventions.js";
 import { resolve } from "node:path";
 import { stripTerminalControlSequences } from "./shared.js";
 import {
@@ -28,6 +29,7 @@ import {
   type ProductWorktree,
 } from "./worktree.js";
 import {
+  assertCommitScope,
   commitTargetPaths,
   currentBranch,
   repoRelative,
@@ -52,6 +54,7 @@ export function removeWorktree(params: {
     throw new Error("Run remove from the merge-target worktree, not the task worktree.");
   }
   const dirty = commitTargetPaths(context, worktree, taskId);
+  if (!params.force) assertCommitScope(context, worktree, taskId, { dryRun: params.dryRun });
   const merged =
     gitResult(context.repoRoot, ["merge-base", "--is-ancestor", worktree.branch, "HEAD"]).status ===
     0;
@@ -332,7 +335,9 @@ function checkpointAndEnsureProjectWorktree(
     if (currentBranch(context.repoRoot) === branch) {
       throw new Error(`Prepare must run from a branch other than ${branch}.`);
     }
-    const paths = params.checkpointPaths.map((path) => repoRelative(context.repoRoot, path));
+    const paths = withPlanConventionsFiles(params.checkpointPaths).map((path) =>
+      repoRelative(context.repoRoot, path),
+    );
     const stagedFiles = zeroSeparatedPaths(context.repoRoot, [
       "diff",
       "--cached",
@@ -355,51 +360,87 @@ function checkpointAndEnsureProjectWorktree(
     }
 
     const worktree = ensureProjectWorktree();
-    for (const path of paths) copyCheckpointPath(context.repoRoot, worktree.path, path);
-    stageCommitTargets(worktree.path, paths);
-    const checkpointArgs = ["diff", "--cached", "--quiet", "--", ...paths];
-    const checkpoint = gitResult(worktree.path, checkpointArgs);
-    assertCheckpointInspection(checkpointArgs, checkpoint, params.failureLogPath);
-    if (checkpoint.status === 1) {
-      const committed = gitResult(worktree.path, [
-        "commit",
-        "-m",
-        params.commitMessage,
-        "--",
-        ...paths,
-      ]);
-      if (committed.status !== 0) {
-        // A failing git hook (pre-commit / commit-msg) aborts the commit but leaves the staged
-        // paths in the index. Unstage only this checkpoint so a hook or caller's unrelated staged
-        // paths remain intact.
-        unstageCommitTargets(worktree.path, paths);
-        // hook（lefthook 等）の生出力には ANSI エスケープや制御文字が含まれうる。この detail は
-        // register 経路で pjr-index の結論列・result の理由欄へ伝播するため、ここで除去して
-        // 表示崩れを防ぐ（register 側の sanitize と二重だが、非 register の呼び出し元も守る）。
-        const output = [committed.stdout, committed.stderr]
-          .map((part) =>
-            typeof part === "string" ? stripTerminalControlSequences(part).trim() : "",
-          )
-          .filter(Boolean)
-          .join("\n");
-        appendGitFailureLog(params.failureLogPath, [
-          `=== ${new Date().toISOString()} git commit checkpoint ===`,
-          `exit: ${committed.status ?? "unknown"}`,
-          "--- stdout ---",
-          typeof committed.stdout === "string" ? committed.stdout : "",
-          "--- stderr ---",
-          typeof committed.stderr === "string" ? committed.stderr : "",
-          "",
-        ]);
-        throw new Error(
-          // register の短い block_reason にも step とエラーが残るよう、補足より先に要約を置く。
-          `Checkpoint commit failed: ${summarizeGitHookFailure(output)} ` +
-            `(${params.commitMessage}; staged changes rolled back; likely a failing git hook)`,
-        );
-      }
-    }
+    commitCheckpointPaths(context.repoRoot, worktree.path, paths, params);
     return worktree;
   }
 
   return ensureProjectWorktree();
+}
+
+// Copy root-side checkpoint files into the worktree and commit them on the exec branch.
+function commitCheckpointPaths(
+  repoRoot: string,
+  worktreePath: string,
+  paths: readonly string[],
+  params: { commitMessage: string; failureLogPath?: string },
+): void {
+  for (const path of paths) copyCheckpointPath(repoRoot, worktreePath, path);
+  try {
+    stageCommitTargets(worktreePath, [...paths]);
+    const checkpointArgs = ["diff", "--cached", "--quiet", "--", ...paths];
+    const checkpoint = gitResult(worktreePath, checkpointArgs);
+    assertCheckpointInspection(checkpointArgs, checkpoint, params.failureLogPath);
+    if (checkpoint.status !== 1) return;
+    const committed = gitResult(worktreePath, [
+      "commit",
+      "-m",
+      params.commitMessage,
+      "--",
+      ...paths,
+    ]);
+    if (committed.status === 0) return;
+    // hook（lefthook 等）の生出力には ANSI エスケープや制御文字が含まれうる。この detail は
+    // register 経路で pjr-index の結論列・result の理由欄へ伝播するため、ここで除去して
+    // 表示崩れを防ぐ（register 側の sanitize と二重だが、非 register の呼び出し元も守る）。
+    const output = [committed.stdout, committed.stderr]
+      .map((part) => (typeof part === "string" ? stripTerminalControlSequences(part).trim() : ""))
+      .filter(Boolean)
+      .join("\n");
+    appendGitFailureLog(params.failureLogPath, [
+      `=== ${new Date().toISOString()} git commit checkpoint ===`,
+      `exit: ${committed.status ?? "unknown"}`,
+      "--- stdout ---",
+      typeof committed.stdout === "string" ? committed.stdout : "",
+      "--- stderr ---",
+      typeof committed.stderr === "string" ? committed.stderr : "",
+      "",
+    ]);
+    throw new Error(
+      // register の短い block_reason にも step とエラーが残るよう、補足より先に要約を置く。
+      `Checkpoint commit failed: ${summarizeGitHookFailure(output)} ` +
+        `(${params.commitMessage}; staged changes rolled back; likely a failing git hook)`,
+    );
+  } catch (error) {
+    // stage 後の検査や hook が失敗しても、この checkpoint の対象だけを戻す。
+    // root の index と、hook が別途 stage した無関係なパスには触れない。
+    unstageCommitTargets(worktreePath, [...paths]);
+    throw error;
+  }
+}
+
+/**
+ * Bring root-side files that changed after the exec branch was prepared (for example a grade the
+ * runner re-ran before resuming a review, PJR-ZSRD) into the existing worktree as a checkpoint
+ * commit. Only files that exist at the root and differ from the worktree are copied. Returns the
+ * repo-relative paths that were refreshed.
+ */
+export function refreshWorktreeCheckpoint(params: {
+  repoRoot: string;
+  worktreePath: string;
+  paths: readonly string[];
+  commitMessage: string;
+  failureLogPath?: string;
+}): string[] {
+  const changed = [
+    ...new Set(params.paths.map((path) => repoRelative(params.repoRoot, path))),
+  ].filter((path) => {
+    const source = resolve(params.repoRoot, path);
+    if (!existsSync(source) || !lstatSync(source).isFile()) return false;
+    const target = resolve(params.worktreePath, path);
+    return !existsSync(target) || !readFileSync(source).equals(readFileSync(target));
+  });
+  changed.sort();
+  if (changed.length === 0) return [];
+  commitCheckpointPaths(params.repoRoot, params.worktreePath, changed, params);
+  return changed;
 }

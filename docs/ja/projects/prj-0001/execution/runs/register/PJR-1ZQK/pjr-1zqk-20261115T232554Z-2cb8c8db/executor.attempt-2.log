@@ -1,0 +1,30 @@
+PJR-1ZQK はこの再開分で完了です。作業 2 の lefthook への登録だけは保護対象のため手を付けておらず、統合の後に orchestrator が入れる前提です。今回直したのは個票だけです。
+
+**今回の変更（個票）**
+- 作業 2 の行は状態 open のまま、メモを「orchestrator が lefthook に登録する（保護対象）。入口と検査は実装済み」に書き換えました。
+- 残課題にある lefthook の登録案を差し替えました。lefthook の文書では、`use_stdin: true` のコマンドが複数あると標準入力は 1 つにしか渡りません。前回の案（コマンドを 1 つ足す）では、どちらかの検査に push の内容が届きません。
+  - 新しい案は、既存の `protect-main`（前回の案の `protect-main-push` は誤りで、正しくはこの名前）の `run` で標準入力を一度読み、両方の入口へ順に渡す形です。
+  - この形を手元で流す確認は承認が要るため実行できず、未確認です。
+- prettier で個票を整形しました。
+
+**前回までに済んでいる実装**
+- 記帳の commit は、`plan.md`・`result.md`・`evidence.json` がそろわない run を外し、作業ツリーに残して標準エラーで知らせます。
+- `exec validate --records-only --commit <rev>` を足しました。作業ツリーではなく、指定した commit の中身で記録の配置を検査します。
+- push の前に検査する入口 `tools/check-run-record-layout-push.mjs` を足しました。
+- テストとガイドの更新も済んでいます。
+
+**検査**
+- `npm run validate:history-links` は通りました。invalid は 0 件です。
+- prettier は整形のあとに `--write` で直しました。
+- lint・型チェック・テストは、このあと runner が実行します。
+
+**未確認の点**
+- register の run の `wait` commit に入る、plan と result だけ（evidence なし）の記録が配置の検査を通るかは確かめていません。push の前の検査で気づけます。
+
+Sources:
+- [use stdin](https://lefthook.dev/configuration/use_stdin/)
+- [Pass stdin to a command or script](https://lefthook.dev/usage/features/pass-stdin/)
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"記録のそろわない run を記帳の commit から外す実装、exec validate --records-only --commit、push の前に検査する入口 tools/check-run-record-layout-push.mjs は前回までに実装済み。今回は再開の指示に従い、個票の作業 2 を open のままにしてメモを『orchestrator が lefthook に登録する（保護対象）』に更新し、lefthook の登録案を標準入力の制約に合わせて直した。","handoff":["orchestrator が統合の後に feature ブランチで `lefthook.yml` の `pre-push` に検査を登録する（保護対象）。lefthook の文書（https://lefthook.dev/configuration/use_stdin/ ）では、`use_stdin: true` のコマンドが複数あると標準入力は 1 つにしか渡らない。そのため新しいコマンドは足さず、既存の `protect-main` を次の形にする: `run: input=\"$(cat)\"; printf '%s\\n' \"$input\" | node tools/protect-main-push.mjs && printf '%s\\n' \"$input\" | node tools/check-run-record-layout-push.mjs --project prj-0001` と `use_stdin: true`。executor の sandbox ではこの形を流す確認ができなかったため、登録した後に、main ではない ref の push で通ることと、`606535f7f` を含む push で止まることを確かめる。","作業 1 の判断: 止まった理由を書いて result・evidence を作り足す案ではなく、記録のそろわない run を記帳しない案にした。配置の規約（`plan-result-lifecycle-guide` の「配置の検査」）は記録がそろった revision を対象にすることを求めており、作り足すと同じ run を再開する経路と衝突するため。","確かめていない点: register の run の `wait` commit に入る plan と result だけ（evidence なし）の記録が、配置の検査を通るか。push の前の検査で気づける。","CHANGELOG に書く事項は個票の「CHANGELOG に書く事項」の節にある（Added: `exec validate --records-only --commit <rev>`。Fixed: 記録のそろわない run を記帳しない）。"],"validations":[{"command":"npx prettier --check docs/ja/projects/prj-0001/controls/project-register/pjr-1zqk-run-record-layout-guard.md","status":"passed","summary":"最初の check で整形の差分が出たため --write で整形した"},{"command":"npm run validate:history-links","status":"passed","summary":"invalid 0 件"}],"target_coverage":[{"target":"docs/ja/projects/prj-0001/controls/project-register/pjr-1zqk-run-record-layout-guard.md","status":"changed","path":"docs/ja/projects/prj-0001/controls/project-register/pjr-1zqk-run-record-layout-guard.md"},{"target":"docs/ja/specdojo/guides/plan-result-lifecycle-guide.md","status":"changed","path":"docs/ja/specdojo/guides/plan-result-lifecycle-guide.md"},{"target":"docs/ja/specdojo/guides/schedule-operation-guide.md","status":"changed","path":"docs/ja/specdojo/guides/schedule-operation-guide.md"},{"target":"docs/ja/specdojo/references/command-reference.md","status":"changed","path":"docs/ja/specdojo/references/command-reference.md"},{"target":"src/exec/commands.ts","status":"changed","path":"src/exec/commands.ts"},{"target":"src/exec/trailing-records.ts","status":"changed","path":"src/exec/trailing-records.ts"},{"target":"src/exec/validate-records.ts","status":"changed","path":"src/exec/validate-records.ts"},{"target":"tests/src/exec/trailing-records.integration.test.ts","status":"changed","path":"tests/src/exec/trailing-records.integration.test.ts"},{"target":"src/exec/validate-records-commit.ts","status":"changed","path":"src/exec/validate-records-commit.ts"},{"target":"tests/src/exec/validate-records-commit.integration.test.ts","status":"changed","path":"tests/src/exec/validate-records-commit.integration.test.ts"},{"target":"tests/tools/check-run-record-layout-push.test.ts","status":"changed","path":"tests/tools/check-run-record-layout-push.test.ts"},{"target":"tools/check-run-record-layout-push.mjs","status":"changed","path":"tools/check-run-record-layout-push.mjs"}]}
+</specdojo_executor_evidence>

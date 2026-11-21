@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-11-03T11:49:44Z",
+  "type": "reopen",
+  "task_id": "T-DATA-FLOW-UC-REWRITE-cdfd-uc-schedule-020",
+  "by": "indie",
+  "msg": "5.3 exceeds the Kata split threshold (17 edges) and has overlapping labels; rerun with opus-executor"
+}

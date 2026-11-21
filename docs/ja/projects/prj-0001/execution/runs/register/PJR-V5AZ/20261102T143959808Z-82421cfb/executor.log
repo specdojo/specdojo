@@ -1,0 +1,7 @@
+Quick Start を対話主体に改訂し、現行仕様に合わせて名簿と Schedule の配置、register の正常終端、`npm ci` の条件を修正しました。生成される task ID や成果物パス、Job の存在を決め打ちしない説明も加えています。個票に照合根拠と検証結果を記録しました。
+
+Prettier と `git diff --check` は通過しました。`catalog validate` は終了コード 0 でしたが、既存カタログの未生成参照について警告がありました。Markdown lint などの親 runner 検証は後段で実行されます。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"Quick Start と個票の対応結果を更新し、現行 CLI・設定仕様との不整合を修正しました。","handoff":["catalog validate は終了コード 0。既存カタログの based_on が参照する未生成成果物について WARN が出ています。変更対象外のためカタログは変更していません。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/guides/quick-start-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-v5az-quick-start-conversation-flow.md","status":"passed","summary":"対象 Markdown を整形しました。"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"終了コード 0。既存カタログに未生成成果物参照の WARN あり。"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし。"}]}
+</specdojo_executor_evidence>

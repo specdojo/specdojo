@@ -1,0 +1,11 @@
+`cpd-specdojo-cli.md` は、概要の `_ASSUMPTION_` を1文だけ修正しました。lint など allowlist の検査は親 runner が実行するため、私は何も実行していません。
+
+- **修正内容**: CLI の入口(`src/specdojo.ts`)が catalog・schedule・exec・register・routine・index の各コマンド群を個別に登録していることは、実装で確認できました。そのため、「上位図だけでは確認できない」という元の言い回しを、この点を確認済みとして書き直しました。
+- **確認済みでない点**: エンジン間の実際の呼出関係とソース配置は、`src/specdojo.ts` からは見えません。内部依存を実装確認済みとは扱わない扱いは、そのまま残しています。
+- **修正しなかった点**: 構成、図、表、「メモ / 将来課題」は、`cpd-rulebook.md` の必須要素と禁止事項を満たし、`cnd-specdojo.md` とも矛盾していませんでした。そのため変更していません。新しい具体値やパスも書き足していません。
+- **`_CONTEXT_:`**: 成果物内に残っていませんでした。
+- **result への記録**: result は私が編集しません。runner が `handoff` を result に転記します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"概要の _ASSUMPTION_ に、src/specdojo.ts で確認できたコマンド群の個別登録と、未確認の内部呼出関係・ソース配置を区別して追記した。その他は rulebook と cnd-specdojo に整合しており、変更していない。","handoff":["進め方と実践の型の適用: cpd-rulebook と cpd-mermaid-rulebook に照らして既存記述は適合、cnd-specdojo の REL 参照とも整合しているため、修正は概要の _ASSUMPTION_ の1文だけに限った。理由は、src/specdojo.ts で6エンジンのコマンド群が個別登録されていることが確認でき、仮定の根拠を正確にするため。エンジン間呼出関係とソース配置は src/specdojo.ts から確認できないため、未確認として残し、REL-08 から REL-17 の実装対応確認を引き続き DEV の課題とする。recipe と sample は読み込んでいない。既存の対象成果物が rulebook に適合しており、構成の補完が不要だったため。","_CONTEXT_ は成果物内に存在しなかった。削除・統合した記述はない。"],"validations":[{"command":"npm run lint:md","status":"not_applicable","reason":"親 runner が実行する allowlist 検査のため executor では実行しない"},{"command":"npm run lint:mermaid","status":"not_applicable","reason":"親 runner が実行する allowlist 検査のため executor では実行しない。Mermaid 図は未変更"}]}
+</specdojo_executor_evidence>

@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 94
-graded_at: "2026-10-04T21:10:54.319Z"
-graded_by: agy-expert-executor
-content_hash: 01854cc3851a5a8d3c1d18f053fb537f73ea67de0d1201664e0e02b9709e53e8
+graded_at: "2026-11-02T20:38:51.590Z"
+graded_by: flash-high-executor
+content_hash: cfd8d277cd8ecabf0290d96ba6a249cf477b20815345e6cf103ce4c1ded3287f
 categories:
   purpose:
     score: 100
@@ -113,9 +113,11 @@ findings:
     line: 2
     anchor: ""
     message: 指定されたサンプルの構成が本ルールの必須見出し構成（5章）に準拠していない。
+    message_ja: 指定されたサンプルの構成が本ルールの必須見出し構成（5章）に準拠していない。
   - id: F002
     severity: minor
     rule: vp-ux-language-consistency
     line: 151
     anchor: "| nfr-int-007 | 外部連携データの取り込みは検証済みであること | 検証バイパス率     | 0%       | スキーマ検証 + ビジネスルール |"
     message: 「冔等キー」は「冪等キー」の誤記である。
+    message_ja: 「冔等キー」は「冪等キー」の誤記である。

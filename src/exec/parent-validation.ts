@@ -1,9 +1,24 @@
 import { spawn } from "node:child_process";
 import { join } from "node:path";
+import { performance } from "node:perf_hooks";
+import { StringDecoder } from "node:string_decoder";
+import {
+  recordValidationGateWait,
+  validationMetric,
+  ValidationTestFiles,
+} from "./validation-metrics.js";
 import { gitEnvironment } from "./worktree.js";
+import {
+  hasValidationProcessTreeSurvivors,
+  signalValidationProcessTree,
+  trackValidationProcessGroup,
+  VALIDATION_CLOSE_GRACE_MS,
+  VALIDATION_KILL_GRACE_MS,
+  VALIDATION_USES_PROCESS_GROUP,
+} from "./validation-process-group.js";
 import { acquirePoolSlot, getActiveExecLocksDir, releaseLock } from "./slot-lock.js";
 import type { EvidenceValidation, ExecEvidence } from "./evidence.js";
-import { redactSensitiveText } from "./evidence.js";
+import { MAX_CHANGE_FILES, redactSensitiveText } from "./evidence.js";
 import { PROJECT_REPO_WORKTREE_DIRNAME, REPO_NAME_PATTERN } from "../shared/specdojo-config.js";
 
 export const MAX_PARENT_VALIDATION_STREAM_BYTES = 1024 * 1024;
@@ -19,6 +34,7 @@ export type ParentValidationId =
   | "lint-fm"
   | "lint-md"
   | "lint-mermaid"
+  | "lint-d2"
   | "build"
   | "format-check";
 
@@ -113,6 +129,13 @@ const PARENT_VALIDATION_REGISTRY: Record<ParentValidationId, ParentValidationDef
     displayCommand: "npm run lint:mermaid",
     timeoutMs: 10 * 60 * 1_000,
   },
+  "lint-d2": {
+    id: "lint-d2",
+    command: process.platform === "win32" ? "npm.cmd" : "npm",
+    args: ["run", "lint:d2"],
+    displayCommand: "npm run lint:d2",
+    timeoutMs: 10 * 60 * 1_000,
+  },
   build: {
     id: "build",
     command: process.platform === "win32" ? "npm.cmd" : "npm",
@@ -205,7 +228,8 @@ function capturedOutput(capture: BoundedCapture): { output: string; truncated: b
 export const PARENT_VALIDATION_PROJECT_REPO = PROJECT_REPO_WORKTREE_DIRNAME;
 
 /** One element of `pipeline.parent_validations` in exec-defaults. */
-export type ParentValidationEntry = string | { id: string; repo: string };
+export type ParentValidationEntry =
+  string | { id: string; repo?: string; paths?: readonly string[] };
 
 export type ParentValidationAssignment = {
   definition: ParentValidationDefinition;
@@ -213,6 +237,19 @@ export type ParentValidationAssignment = {
   repo: string;
   /** `<id>` for the project repository, `<repo>:<id>` for a product repository. */
   label: string;
+  /**
+   * PJR-T01P: repository-relative glob patterns that select this validation by change type.
+   * Absent means the validation always runs.
+   */
+  paths?: readonly string[];
+};
+
+/**
+ * Changed files that select the validations declared with `paths`. An absent `changedPaths`
+ * means the change set is unknown (or truncated), in which case every validation runs.
+ */
+export type ParentValidationSelection = {
+  changedPaths?: readonly string[];
 };
 
 /** Worktree roots the parent validations may run in (project worktree and product worktrees). */
@@ -240,14 +277,30 @@ function assignmentLabel(id: string, repo: string): string {
   return repo === PARENT_VALIDATION_PROJECT_REPO ? id : `${repo}:${id}`;
 }
 
-function parseEntry(entry: unknown, index: number): { id: string; repo: string } {
+type ParsedEntry = { id: string; repo: string; paths?: readonly string[] };
+
+function parsePaths(value: unknown, where: string): readonly string[] | undefined {
+  if (value === undefined) return undefined;
+  if (
+    !Array.isArray(value) ||
+    value.length === 0 ||
+    !value.every((pattern) => typeof pattern === "string" && pattern.trim().length > 0)
+  ) {
+    throw new Error(`${where}.paths must be a non-empty array of non-empty glob strings`);
+  }
+  return value.map((pattern: string) => pattern.trim());
+}
+
+function parseEntry(entry: unknown, index: number): ParsedEntry {
   const where = `pipeline.parent_validations[${index}] in exec-defaults`;
   if (typeof entry === "string") return { id: entry, repo: PARENT_VALIDATION_PROJECT_REPO };
   if (!isRecord(entry)) {
-    throw new Error(`${where} must be a validation id or { id, repo }: ${JSON.stringify(entry)}`);
+    throw new Error(
+      `${where} must be a validation id or { id, repo?, paths? }: ${JSON.stringify(entry)}`,
+    );
   }
   const unknownKeys = Object.keys(entry)
-    .filter((key) => key !== "id" && key !== "repo")
+    .filter((key) => key !== "id" && key !== "repo" && key !== "paths")
     .sort();
   if (unknownKeys.length > 0) {
     throw new Error(`${where}: unknown key(s) ${unknownKeys.map((key) => `"${key}"`).join(", ")}`);
@@ -255,12 +308,17 @@ function parseEntry(entry: unknown, index: number): { id: string; repo: string }
   if (typeof entry.id !== "string" || entry.id.length === 0) {
     throw new Error(`${where}.id must be a non-empty string`);
   }
-  if (typeof entry.repo !== "string" || !REPO_NAME_PATTERN.test(entry.repo)) {
+  const paths = parsePaths(entry.paths, where);
+  if (entry.repo === undefined && paths === undefined) {
+    throw new Error(`${where} must set repo or paths when written as an object`);
+  }
+  const repo = entry.repo ?? PARENT_VALIDATION_PROJECT_REPO;
+  if (typeof repo !== "string" || !REPO_NAME_PATTERN.test(repo)) {
     throw new Error(
       `${where}.repo must match ${String(REPO_NAME_PATTERN)} (got ${JSON.stringify(entry.repo)})`,
     );
   }
-  return { id: entry.id, repo: entry.repo };
+  return { id: entry.id, repo, ...(paths ? { paths } : {}) };
 }
 
 export function resolveParentValidationAssignments(
@@ -269,7 +327,7 @@ export function resolveParentValidationAssignments(
   if (!entries) return [];
   const seen = new Set<string>();
   return entries.map((entry, index) => {
-    const { id, repo } = parseEntry(entry, index);
+    const { id, repo, paths } = parseEntry(entry, index);
     const label = assignmentLabel(id, repo);
     if (seen.has(label)) {
       throw new Error(`Duplicate parent validation id in exec-defaults: ${label}`);
@@ -283,8 +341,87 @@ export function resolveParentValidationAssignments(
         `Unknown parent validation id in exec-defaults: ${id} (allowed: ${Object.keys(PARENT_VALIDATION_REGISTRY).join(", ")})`,
       );
     }
-    return { definition, repo, label };
+    return { definition, repo, label, ...(paths ? { paths } : {}) };
   });
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.+^${}()|[\]\\]/g, "\\$&");
+}
+
+// lefthook の glob と同じ書き方のうち、`**`・`*`・`?`・入れ子のない `{a,b}` だけを扱う。
+function globSource(pattern: string): string {
+  let source = "";
+  for (let index = 0; index < pattern.length; index++) {
+    const char = pattern[index];
+    if (char === "*" && pattern[index + 1] === "*") {
+      const followedBySlash = pattern[index + 2] === "/";
+      source += followedBySlash ? "(?:.*/)?" : ".*";
+      index += followedBySlash ? 2 : 1;
+    } else if (char === "*") {
+      source += "[^/]*";
+    } else if (char === "?") {
+      source += "[^/]";
+    } else if (char === "{" && pattern.indexOf("}", index) > index) {
+      const end = pattern.indexOf("}", index);
+      const alternatives = pattern
+        .slice(index + 1, end)
+        .split(",")
+        .map(globSource);
+      source += `(?:${alternatives.join("|")})`;
+      index = end;
+    } else {
+      source += escapeRegExp(char);
+    }
+  }
+  return source;
+}
+
+export function matchesParentValidationPaths(path: string, patterns: readonly string[]): boolean {
+  return patterns.some((pattern) => new RegExp(`^${globSource(pattern)}$`).test(path));
+}
+
+// evidence の変更一覧は、プロジェクトの変更を相対パス、プロダクトの変更を `<repo>:<path>`、
+// 名前の変更を `old -> new` で記録する。割り当てたリポジトリの相対パスへ戻して照合する。
+function changedPathsForRepo(
+  changedPaths: readonly string[],
+  repo: string,
+  productRepos: readonly string[],
+): string[] {
+  const sides = changedPaths.flatMap((path) => path.split(" -> "));
+  if (repo !== PARENT_VALIDATION_PROJECT_REPO) {
+    const prefix = `${repo}:`;
+    return sides.filter((path) => path.startsWith(prefix)).map((path) => path.slice(prefix.length));
+  }
+  return sides.filter((path) => !productRepos.some((name) => path.startsWith(`${name}:`)));
+}
+
+/**
+ * Selection from the executor's recorded changes. A truncated change list (the evidence keeps at
+ * most MAX_CHANGE_FILES entries) is treated as unknown so no validation is skipped.
+ */
+export function parentValidationSelectionForEvidence(
+  evidence: Pick<ExecEvidence, "changes">,
+): ParentValidationSelection {
+  if (evidence.changes.length >= MAX_CHANGE_FILES) return {};
+  return { changedPaths: evidence.changes.map((change) => change.path) };
+}
+
+/**
+ * Whether a validation declared with `paths` is skipped for the given change set. Validations
+ * without `paths` always run, and so does every validation when the change set is unknown.
+ */
+export function isParentValidationSkipped(
+  assignment: ParentValidationAssignment,
+  selection: ParentValidationSelection | undefined,
+  productRepos: readonly string[] = [],
+): boolean {
+  const patterns = assignment.paths;
+  const changedPaths = selection?.changedPaths;
+  if (!patterns || changedPaths === undefined) return false;
+  return !changedPathsForRepo(changedPaths, assignment.repo, productRepos).some((path) =>
+    matchesParentValidationPaths(path, patterns),
+  );
 }
 
 export function resolveParentValidationDefinitions(
@@ -307,36 +444,115 @@ export function parentValidationDisplayCommands(entries: readonly unknown[] | un
   );
 }
 
-async function invokeParentValidation(
+export type ParentValidationStopOptions = {
+  /** Wait after SIGTERM before SIGKILL to the process tree. */
+  killGraceMs?: number;
+  /** Wait after SIGKILL for the output pipes to close. */
+  closeGraceMs?: number;
+};
+
+/**
+ * Spawn one parent validation. On timeout the runner stops the whole process tree (SIGTERM, then
+ * SIGKILL after a grace period) and, if a descendant outside the group still holds the output
+ * pipes, returns without waiting for them so the batch moves on (PJR-V277). Runs that finish
+ * before the timeout settle on `close` exactly as before.
+ */
+export async function invokeParentValidation(
   definition: ParentValidationDefinition,
   cwd: string,
+  options: ParentValidationStopOptions = {},
 ): Promise<ParentValidationProcessResult> {
+  const killGraceMs = options.killGraceMs ?? VALIDATION_KILL_GRACE_MS;
+  const closeGraceMs = options.closeGraceMs ?? VALIDATION_CLOSE_GRACE_MS;
   return await new Promise((resolve) => {
     const stdoutCapture: BoundedCapture = { chunks: [], totalBytes: 0 };
     const stderrCapture: BoundedCapture = { chunks: [], totalBytes: 0 };
     let settled = false;
     let timedOut = false;
+    let timeoutStartedAt = 0;
+    let survivorsAfterTerm: boolean | undefined;
+    let killSent = false;
+    let killTimer: NodeJS.Timeout | undefined;
+    let closeTimer: NodeJS.Timeout | undefined;
+    const testFiles = new ValidationTestFiles();
+    const stdoutDecoder = new StringDecoder("utf8");
     const child = spawn(definition.command, [...definition.args], {
       cwd,
-      env: gitEnvironment(),
+      env: { ...gitEnvironment(), SPECDOJO_PARENT_VALIDATION_METRICS: "1" },
       shell: false,
       stdio: ["ignore", "pipe", "pipe"],
       windowsHide: true,
+      detached: VALIDATION_USES_PROCESS_GROUP,
     });
+    const untrack = trackValidationProcessGroup(child);
     child.stdout.on("data", (chunk: Buffer) => {
       appendBounded(stdoutCapture, chunk);
+      testFiles.observe(stdoutDecoder.write(chunk));
     });
     child.stderr.on("data", (chunk: Buffer) => {
       appendBounded(stderrCapture, chunk);
     });
+    const forceKill = (): void => {
+      survivorsAfterTerm = hasValidationProcessTreeSurvivors(child) || child.exitCode === null;
+      killSent = signalValidationProcessTree(child, "SIGKILL") || killSent;
+    };
+    const settle = (exitCode: number | null, pipesClosed: boolean): void => {
+      const stdout = capturedOutput(stdoutCapture);
+      const stderr = capturedOutput(stderrCapture);
+      finish(
+        {
+          exitCode,
+          stdout: stdout.output,
+          stderr: stderr.output,
+          timedOut,
+          stdoutTruncated: stdout.truncated,
+          stderrTruncated: stderr.truncated,
+        },
+        pipesClosed,
+      );
+    };
     const timer = setTimeout(() => {
       timedOut = true;
-      child.kill("SIGTERM");
+      timeoutStartedAt = performance.now();
+      validationMetric("validation-timeout", {
+        id: definition.id,
+        cwd,
+        timeout_ms: definition.timeoutMs,
+        ...testFiles.snapshot(),
+      });
+      signalValidationProcessTree(child, "SIGTERM");
+      killTimer = setTimeout(() => {
+        forceKill();
+        closeTimer = setTimeout(() => {
+          // group の外へ出た子孫が pipe を持ち続けても、close を待たずに時間切れとして返す。
+          child.stdout.destroy();
+          child.stderr.destroy();
+          settle(child.exitCode, false);
+        }, closeGraceMs);
+      }, killGraceMs);
     }, definition.timeoutMs);
-    const finish = (result: ParentValidationProcessResult): void => {
+    const recordStop = (pipesClosed: boolean): void => {
+      if (!timedOut) return;
+      // 猶予の前に close した場合も、group に残った子孫は pipe を持たなくても止めておく。
+      if (survivorsAfterTerm === undefined && hasValidationProcessTreeSurvivors(child)) forceKill();
+      validationMetric("validation-timeout-stop", {
+        id: definition.id,
+        cwd,
+        process_group: VALIDATION_USES_PROCESS_GROUP && child.pid !== undefined,
+        survivors_after_term: survivorsAfterTerm === true,
+        kill_sent: killSent,
+        pipes_closed: pipesClosed,
+        stop_ms: performance.now() - timeoutStartedAt,
+      });
+    };
+    const finish = (result: ParentValidationProcessResult, pipesClosed = true): void => {
       if (settled) return;
       settled = true;
       clearTimeout(timer);
+      clearTimeout(killTimer);
+      clearTimeout(closeTimer);
+      recordStop(pipesClosed);
+      untrack();
       resolve(result);
     };
     child.on("error", (error) => {
@@ -352,18 +568,7 @@ async function invokeParentValidation(
         stderrTruncated: stderr.truncated,
       });
     });
-    child.on("close", (exitCode) => {
-      const stdout = capturedOutput(stdoutCapture);
-      const stderr = capturedOutput(stderrCapture);
-      finish({
-        exitCode,
-        stdout: stdout.output,
-        stderr: stderr.output,
-        timedOut,
-        stdoutTruncated: stdout.truncated,
-        stderrTruncated: stderr.truncated,
-      });
-    });
+    child.on("close", (exitCode) => settle(exitCode, true));
   });
 }
 
@@ -391,6 +596,7 @@ export async function runParentValidationBatch(
   entries: readonly unknown[] | undefined,
   cwd: string | ParentValidationRoots,
   invoke: ParentValidationInvoker = invokeParentValidation,
+  selection?: ParentValidationSelection,
 ): Promise<ParentValidationBatchResult> {
   const assignments = resolveParentValidationAssignments(entries);
   const roots = typeof cwd === "string" ? { project: cwd } : cwd;
@@ -399,8 +605,29 @@ export async function runParentValidationBatch(
     assignments.some((assignment) => assignment.repo !== PARENT_VALIDATION_PROJECT_REPO);
   const validations: EvidenceValidation[] = [];
   const failureOutputs: ParentValidationFailureOutput[] = [];
-  for (const { definition, repo } of assignments) {
+  const productRepos = Object.keys(roots.repos ?? {});
+  for (const assignment of assignments) {
+    const { definition, repo } = assignment;
     const repoField = recordsRepo ? { repo } : {};
+    if (isParentValidationSkipped(assignment, selection, productRepos)) {
+      // 変更の種類に合わない検証は流さず、記録だけを残す（PJR-T01P）。ラベルの並びを保つため、
+      // 再開時の hasRecordedParentValidations は流し直しを要求しない。
+      const reason = truncateHead(
+        `skipped by change type: no changed file matches paths (${(assignment.paths ?? []).join(", ")})`,
+        MAX_SUMMARY_LENGTH,
+      );
+      validations.push({
+        id: definition.id,
+        source: "runner",
+        ...repoField,
+        command: definition.displayCommand,
+        status: "not_applicable",
+        summary: reason,
+        reason,
+      });
+      validationMetric("validation-skipped", { id: definition.id, repo, reason });
+      continue;
+    }
     const root =
       repo === PARENT_VALIDATION_PROJECT_REPO
         ? roots.project
@@ -422,8 +649,37 @@ export async function runParentValidationBatch(
       });
       continue;
     }
-    const result = await invoke(definition, root);
+    const startedAt = new Date().toISOString();
+    const started = performance.now();
+    validationMetric("validation-start", {
+      id: definition.id,
+      repo,
+      started_at: startedAt,
+      timeout_ms: definition.timeoutMs,
+    });
+    let result: ParentValidationProcessResult;
+    try {
+      result = await invoke(definition, root);
+    } catch (error) {
+      validationMetric("validation-end", {
+        id: definition.id,
+        repo,
+        started_at: startedAt,
+        duration_ms: performance.now() - started,
+        error: String(error),
+      });
+      throw error;
+    }
     const passed = result.exitCode === 0 && !result.error && !result.timedOut;
+    validationMetric("validation-end", {
+      id: definition.id,
+      repo,
+      started_at: startedAt,
+      duration_ms: performance.now() - started,
+      exit_code: result.exitCode,
+      timed_out: result.timedOut === true,
+      status: passed ? "passed" : "failed",
+    });
     validations.push({
       id: definition.id,
       source: "runner",
@@ -448,8 +704,9 @@ export async function runParentValidations(
   entries: readonly unknown[] | undefined,
   cwd: string | ParentValidationRoots,
   invoke: ParentValidationInvoker = invokeParentValidation,
+  selection?: ParentValidationSelection,
 ): Promise<EvidenceValidation[]> {
-  return (await runParentValidationBatch(entries, cwd, invoke)).validations;
+  return (await runParentValidationBatch(entries, cwd, invoke, selection)).validations;
 }
 
 /** `<id>` or `<repo>:<id>` of a recorded runner validation (no `repo` means the project). */
@@ -501,9 +758,19 @@ export class ParentValidationGate {
   ) {}
 
   async run<T>(label: string, ids: readonly string[], task: () => Promise<T>): Promise<T> {
+    const queued = performance.now();
+    validationMetric("gate-queued", {
+      ids,
+      running: [...this.active],
+      queued: this.waiters.length,
+    });
     await this.acquire(label, ids);
+    const localWaitMs = performance.now() - queued;
     try {
-      if (!this.lockRoot) return await task();
+      if (!this.lockRoot) {
+        recordValidationGateWait(queued, localWaitMs);
+        return await task();
+      }
       const slot = await acquirePoolSlot(
         parentValidationPoolPath(this.lockRoot),
         this.limit,
@@ -516,6 +783,7 @@ export class ParentValidationGate {
         },
       );
       try {
+        recordValidationGateWait(queued, localWaitMs);
         return await task();
       } finally {
         releaseLock(slot);
@@ -576,11 +844,61 @@ export function parentValidationGateFor(
 export function failedParentValidationReason(
   validations: readonly EvidenceValidation[],
 ): string | undefined {
+  // runner の `not_applicable` は、`paths` に合う変更が無く流さなかった検証である（PJR-T01P）。
   const failed = validations.filter(
-    (validation) => validation.source === "runner" && validation.status !== "passed",
+    (validation) =>
+      validation.source === "runner" &&
+      validation.status !== "passed" &&
+      validation.status !== "not_applicable",
   );
   if (failed.length === 0) return undefined;
   return `parent validation failed: ${failed.map(recordedParentValidationLabel).join(", ")}`;
+}
+
+// PJR-Q2AT: executor が親検証をまとめて 1 行（例: `parent runner: lint-ts, lint-fm`、
+// `親 runner 指定検査（lint-ts, lint-fm）`）に書いた場合に、末尾の区切り列を検証ラベルとして取り出す。
+const AGGREGATE_LABEL_PATTERN = "(?:[A-Za-z0-9][A-Za-z0-9_-]*:)?[a-z][a-z0-9-]*";
+const AGGREGATE_LINE_PATTERN = new RegExp(
+  `^(\\S.*?)(?:[:：(（\\[]|\\s)\\s*(${AGGREGATE_LABEL_PATTERN}(?:\\s*[,、]\\s*${AGGREGATE_LABEL_PATTERN})*)\\s*[)）\\]]?\\s*$`,
+  "u",
+);
+// コマンドそのもの（`npm run lint:md` など）をまとめた行と取り違えない。
+const COMMAND_PREFIX_PATTERN = /^(?:npm|npx|pnpm|yarn|node|tsx|specdojo)(?:\s|$)/u;
+
+function aggregatedParentValidationLabels(command: string): string[] | undefined {
+  const normalized = command.trim().replace(/\s+/gu, " ");
+  if (COMMAND_PREFIX_PATTERN.test(normalized)) return undefined;
+  const match = AGGREGATE_LINE_PATTERN.exec(normalized);
+  if (!match) return undefined;
+  return match[2].split(/\s*[,、]\s*/u).filter((label) => label.length > 0);
+}
+
+/**
+ * Whether an executor validation line that lists parent validation labels together
+ * (e.g. `parent runner: lint-ts, lint-fm`) is covered by the runner's own results.
+ * Every listed label must have a runner record (so it is configured in
+ * `pipeline.parent_validations`) that passed or was skipped by change type.
+ */
+export function isAggregatedParentValidationSatisfied(
+  command: string,
+  validations: readonly EvidenceValidation[],
+): boolean {
+  const labels = aggregatedParentValidationLabels(command);
+  if (!labels || labels.length === 0) return false;
+  const runnerStatuses = new Map<string, EvidenceValidation["status"][]>();
+  for (const validation of validations) {
+    if (validation.source !== "runner" || typeof validation.id !== "string") continue;
+    const label = recordedParentValidationLabel(validation);
+    runnerStatuses.set(label, [...(runnerStatuses.get(label) ?? []), validation.status]);
+  }
+  return labels.every((label) => {
+    const statuses = runnerStatuses.get(label);
+    return (
+      statuses !== undefined &&
+      statuses.length > 0 &&
+      statuses.every((status) => status === "passed" || status === "not_applicable")
+    );
+  });
 }
 
 /**

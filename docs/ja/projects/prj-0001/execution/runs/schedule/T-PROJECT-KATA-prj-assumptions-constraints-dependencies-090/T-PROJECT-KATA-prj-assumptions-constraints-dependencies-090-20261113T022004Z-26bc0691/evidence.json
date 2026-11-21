@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "task_id": "T-PROJECT-KATA-prj-assumptions-constraints-dependencies-090",
+  "run_id": "T-PROJECT-KATA-prj-assumptions-constraints-dependencies-090-20261113T022004Z-26bc0691",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-review-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-13T02:22:23.210Z",
+    "completed_at": "2026-11-13T02:26:00.638Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/projects/prj-0001/020-project-definition/prj-assumptions-constraints-dependencies.md --changed-only",
+      "status": "passed",
+      "summary": "初回・最終とも exit 0、対象パスを出力。コマンド実行は成功したが、鮮度判定は最新でない。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/projects/prj-0001/020-project-definition/prj-assumptions-constraints-dependencies.md --dependency-changed",
+      "status": "passed",
+      "summary": "初回・最終とも exit 0、出力なし。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/projects/prj-0001/020-project-definition/prj-assumptions-constraints-dependencies.md --incomplete",
+      "status": "passed",
+      "summary": "初回・最終とも exit 0、出力なし。評価パイプライン未完了の対象としては検出されなかった。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --exit-code; git diff --cached --exit-code; git status --short",
+      "status": "passed",
+      "summary": "作業ツリー・ステージとも追跡済みファイルの差分なし。未追跡は開始時から存在するrunner管理の pipeline-state.json のみ。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-PROJECT-KATA-prj-assumptions-constraints-dependencies-090/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed i\n… output omitted …\n-PROJECT-KATA-prj-assumptions-constraints-dependencies-090/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-PROJECT-KATA-prj-assumptions-constraints-dependencies-090/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1152). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4521 file(s), 136 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 104 passed, 0 error, 0 未検査\n  graph: 3 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4521 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.11 \u001b[39m\u001b[90m/workspaces/specdojo-workspace/worktrees/prj-0001-T-PROJECT-KATA-prj-assumptions-constraints-dependencies-090\u001b[39m\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.samp\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\ns/specdojo-workspace/worktrees/prj-0001-T-PROJECT-KATA-prj-assumptions-constraints-dependencies-090/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-PROJECT-KATA-prj-assumptions-constraints-dependencies-090/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.11 \u001b[39m\u001b[90m/workspaces/specdojo-workspace/worktrees/prj-0001-T-PROJECT-KATA-prj-assumptions-constraints-dependencies-090\u001b[39m\n\n \u001b[32m✓\u001b[39m tests/src/grade/grade.test.ts \u001b[2m(\u001b[22m\u001b[2m69 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 711\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/src/exec/reporter.test.ts \u001b[2m(\u001b[22m\u001b[2m116 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 54\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/sr\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "レビュー実施完了。decision の verdict は grade-stale。初回・最終とも鮮度確認で対象が更新対象として検出されたため、完了可否は保留します。成果物・型・result は変更していません。確認できなかった範囲: 最新評価による完了条件の充足、template 本文の整合性（fully-guided の指定により未読）。",
+  "completion_status": "complete",
+  "handoff": [
+    "reporter は review result の必須5章へ以下を反映すること。executor 段階の指示に従い、result は直接更新していない。",
+    "評価結果の確認: サイドカー `docs/ja/projects/prj-0001/execution/grade/results/prj-0001.prj-assumptions-constraints-dependencies.yaml` は読み取り可能。初回・最終とも validations 記載の `--changed-only` が対象パスを出力し、`--dependency-changed` と `--incomplete` は出力なし。全コマンド exit 0。plan の「最新」という記載と実測が異なるため、共通規約 E-01 により grade-stale。保存済み評価は needs-work / 70点、blocker 0・major 13・minor 8・note 0。保存済み `done_criteria` は1/4充足、DC-001・DC-002・DC-004が未充足だが、最新の判定根拠としては採用しない。",
+    "判断根拠: [[prj-0001:xrp-t-project-kata-prj-assumptions-constraints-dependencies-090-20261113t022004z-26bc0691|完成版レビュープラン]]、[[prj-0001:prj-assumptions-constraints-dependencies|代表成果物]]、[[prj-0001:prj-scope|スコープ]]、[[prj-0001:prj-charter|憲章]]、[[prj-0001:prj-overview|プロジェクト概要]]および宣言された型・標準・実行記録を実読した。最初から評価結果が最新でないため changed-during-review には該当しない。成果物の再評価、既存findingの再採点・解消判定は行わず、タスクの完了可否を保留する。",
+    "approach に応じた確認: [[specdojo:prj-assumptions-constraints-dependencies-rulebook|作成ルール]]は標準の7章構成、階層別の連番、必須5章それぞれの判断基準・良い例・悪い例を持ち、完成例のサンプル章を置いていない。[[specdojo:prj-assumptions-constraints-dependencies-sample|完成例]]には前提2件・制約2件・依存4件に加え、確認者・証跡・時点、部分決定と未決、公開不適合時の保留と再確認、課題・リスク・変更要求・決定への接続が記載されている。[[specdojo:clis-sample|CLI完成例]]と同様に、通常時だけでなく変化・保留・再判断まで具体化されている。値・構文・構造の詳細は標準・schema・別の正本へ委譲しており、PJR-2GD6としてplanに示された重複回避方針を維持している。",
+    "先行変更・検証: [[prj-0001:xer-t-project-kata-prj-assumptions-constraints-dependencies-040-20261112t234651z-d630e725|rulebook整備結果]]と[[prj-0001:xer-t-project-kata-prj-assumptions-constraints-dependencies-050-20261113t002343z-56401c82|sample整備結果]]を特定した。Gitの変更ファイル一覧では、実行管理ファイルを除く変更はそれぞれrulebookとsampleのみ。両実行の evidence.json で親runnerの9検証がすべて passed であることを確認した。これは先行実行の記録であり、今回の検証結果として重複計上しない。今回の追跡済みファイルには差分がない。",
+    "未充足事項・改善指示: runnerで代表成果物を再評価し、鮮度確認後にreviewを再実行すること。既存21件のfindingは履歴として保持し、今回のreviewで再指摘・再判定しない。先行040・050の申し送りは未解消で、[[specdojo:prj-assumptions-constraints-dependencies-recipe|作成レシピ]]の「前提条件」には継続提供基盤を依存とする説明と、端末の利用可能性を前提とする例が併存する。「良い例 / 悪い例」にも先行実行で修正を申し送った単一店舗運用の例が残る。後続recipe整備で例を統一し、「仕上げチェック」の参照先もrulebookの「本文要件」へ合わせること。新しい成果物品質findingとしては採番しない。",
+    "recipe / template の要否: recipeは条件抽出・分類・具体化の手順に、templateは必須5章と表の記入漏れ防止に必要。rulebook frontmatterには `specdojo:prj-assumptions-constraints-dependencies-recipe` と `specdojo:prj-assumptions-constraints-dependencies-template` が宣言済みで、not-neededへの変更は不要。template本文はfully-guidedの指定により読み込んでおらず、内容の整合性は今回確認していない。併用rulebookの未宣言を、直ちに実践の型の欠落とは判定していない。decision: verdict は grade-stale。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-PROJECT-KATA-prj-assumptions-constraints-dependencies-090/T-PROJECT-KATA-prj-assumptions-constraints-dependencies-090-20261113T022004Z-26bc0691/executor.log",
+      "bytes": 6208,
+      "truncated": false
+    }
+  ]
+}

@@ -1,6 +1,7 @@
-import { relative, sep } from "node:path";
+import { dirname, join, relative, sep } from "node:path";
 import type { ExecDefaultsConfig, ProviderConcurrencyGate } from "../agent-config.js";
 import {
+  enforceExecutorReportContract,
   executorCompletionFailure,
   recordExecutorEvidence,
   recordParentValidationFailureOutput,
@@ -13,6 +14,7 @@ import {
   failedParentValidationReason,
   hasRecordedParentValidations,
   parentValidationRoots,
+  parentValidationSelectionForEvidence,
   replaceParentValidationResults,
 } from "../parent-validation.js";
 import {
@@ -20,19 +22,24 @@ import {
   pipelineStateLocation,
   updatePipelineStage,
   writePipelineState,
+  type PipelineResumeNote,
   type PipelineState,
 } from "../pipeline-state.js";
 import {
   deriveReporterFacts,
   evidenceForReporter,
   runReporterWithFormatRetry,
+  type ReporterEvidence,
 } from "../reporter.js";
-import { renderReporterResult } from "../results.js";
+import { mechanicalEditReporterOutput } from "../mechanical-result.js";
+import { readResultFrontmatterSnapshot, renderReporterResult } from "../results.js";
+import { isRunRecordPath, recordStem, snapshotRunAttempt } from "../run-records.js";
 import { randomHex } from "../shared.js";
-import { withProductRepoPrompt } from "../task-repos.js";
+import { executorOutcomeFailure, targetedProductRepos } from "../executor-outcome-checks.js";
+import { productHasPendingWork, withProductRepoPrompt } from "../task-repos.js";
 import type { TaskMode } from "../types.js";
-import type { ProductWorktree } from "../worktree.js";
 import { worktreeStatusPaths } from "../worktree-ops.js";
+import type { ProductWorktree } from "../worktree.js";
 import {
   agentEnvironment,
   appendParentValidationsToExecutorEvidence,
@@ -76,7 +83,12 @@ export async function refreshParentValidationsForReporterResume(params: {
   const parentValidationBatch = await runConfiguredParentValidationBatch(
     params.execDefaults,
     parentValidationRoots(params.cwd, params.productWorktrees),
-    { label: params.evidence.task_id },
+    {
+      label: params.evidence.task_id,
+      metricsPath: join(dirname(params.evidencePath), "parent-validation-metrics.jsonl"),
+      // 統合先を取り込んだ後は executor の変更以外も入るため、変更の種類で選ばずすべて流す。
+      ...(force ? {} : { selection: parentValidationSelectionForEvidence(params.evidence) }),
+    },
   );
   const evidenceWithValidations = replaceParentValidationResults(
     params.evidence,
@@ -96,6 +108,31 @@ export async function refreshParentValidationsForReporterResume(params: {
   );
   return evidence;
 }
+
+// PJR-T01P: 決まった形の edit result は reporter を起動せずに runner が作る。作れない場合や
+// 描画に失敗した場合は undefined を返し、呼び出し側は従来どおり reporter を起動する。
+async function writeMechanicalResult(params: {
+  enabled: boolean;
+  mode: TaskMode;
+  resultPath: string;
+  evidence: ReporterEvidence;
+}): Promise<boolean> {
+  if (!params.enabled) return false;
+  const output = mechanicalEditReporterOutput(params.evidence, params.mode);
+  if (!output) return false;
+  try {
+    await renderReporterResult(params.resultPath, output, params.evidence);
+    return true;
+  } catch (error) {
+    process.stdout.write(
+      `  Mechanical result failed; running the reporter instead: ${error instanceof Error ? error.message : String(error)}\n`,
+    );
+    return false;
+  }
+}
+
+const DEFAULT_EXECUTOR_RESUME_HINT =
+  "resume the executor stage with --resume-from executor (add --executor-by <nickname> to switch the executor agent)";
 
 // register pipeline の reporter 段だけを実行する。executor 直後の通常経路と、executor が
 // 成功したまま reporter だけが失敗した run の再開経路の双方から共有し、reporter 起動・
@@ -119,6 +156,8 @@ export async function runReporterStage(params: {
   /** reporter が返す出力の mode。省略時は edit（Job Run の review だけが review を渡す）。 */
   mode?: TaskMode;
   rateLimitOptions?: PinnedRateLimitRunOptions;
+  /** Recovery command recorded when the executor evidence breaks the approach contract. */
+  executorResumeHint?: string;
 }): Promise<{
   exitCode: 0 | 1;
   runResult: RunResult;
@@ -126,6 +165,30 @@ export async function runReporterStage(params: {
   state: PipelineState;
 }> {
   const { repoRoot, cwd, schedulePath, executionPath, reporterCandidates, execDefaults } = params;
+  // PJR-1GCD: an envelope missing an approach-required field is an executor failure. Checking it
+  // here also covers reporter-only resumes of evidence recorded before this check existed.
+  const resultApproach = readResultFrontmatterSnapshot(params.resultPath).approach;
+  const contractFailure = enforceExecutorReportContract({
+    evidence: params.evidence,
+    evidencePath: params.evidencePath,
+    contract: {
+      ...(typeof resultApproach === "string" ? { approach: resultApproach } : {}),
+      mode: params.mode ?? "edit",
+    },
+    resumeHint: params.executorResumeHint ?? DEFAULT_EXECUTOR_RESUME_HINT,
+  });
+  if (contractFailure) {
+    const blockedAt = new Date().toISOString();
+    const state = updatePipelineStage(
+      params.state,
+      "executor",
+      { status: "blocked", completed_at: blockedAt },
+      blockedAt,
+    );
+    writePipelineState(params.statePath, state);
+    process.stdout.write(`  Executor report rejected before the reporter: ${contractFailure}\n`);
+    return { exitCode: 1, runResult: "failure", blockReason: contractFailure, state };
+  }
   const env = agentEnvironment(repoRoot, cwd, schedulePath, executionPath, params.productWorktrees);
   const reporterEvidence = evidenceForReporter(params.evidence, {
     repoRoot,
@@ -135,6 +198,35 @@ export async function runReporterStage(params: {
     ...(params.registerPaths ? { registerPaths: params.registerPaths } : {}),
   });
   let state = params.state;
+
+  const mechanical = await writeMechanicalResult({
+    enabled: execDefaults.pipeline?.mechanical_result === true,
+    mode: params.mode ?? "edit",
+    resultPath: params.resultPath,
+    evidence: reporterEvidence,
+  });
+  if (mechanical) {
+    const completedAt = new Date().toISOString();
+    state = updatePipelineStage(
+      state,
+      "reporter",
+      {
+        status: "succeeded",
+        // register の遷移と再開は reporter の actor を実行者として使うため、割り当てた reporter を
+        // 記録する。runner が書いたことは result の「進め方」とログに残る。
+        actor: reporterCandidates[0]?.actor ?? null,
+        started_at: completedAt,
+        completed_at: completedAt,
+        artifact_ref: relative(cwd, params.resultPath).split(sep).join("/"),
+      },
+      completedAt,
+    );
+    writePipelineState(params.statePath, state);
+    process.stdout.write(
+      "  Reporter skipped: the runner wrote the result from executor evidence (pipeline.mechanical_result).\n",
+    );
+    return { exitCode: 0, runResult: "success", state };
+  }
 
   const reporterStartedAt = new Date().toISOString();
   state = updatePipelineStage(
@@ -168,6 +260,7 @@ export async function runReporterStage(params: {
           env,
           params.resultPath,
           params.rateLimitOptions,
+          "reporter",
         );
         reporterAttempts += reporterOutcome.attempts;
         reporterActor = reporterOutcome.actor ?? reporterActor;
@@ -248,10 +341,34 @@ export async function runReporterStage(params: {
   return { exitCode, runResult, blockReason, state };
 }
 
+function editOutcomeFailure(params: {
+  mode: TaskMode;
+  output: string;
+  plan: string;
+  productWorktrees: readonly ProductWorktree[];
+  hints: readonly string[];
+  resumeHint: string;
+}): string | undefined {
+  if (params.mode !== "edit") return undefined;
+  const targeted = targetedProductRepos({
+    productNames: params.productWorktrees.map((product) => product.name),
+    plan: params.plan,
+    hints: params.hints,
+  });
+  const unchanged = params.productWorktrees
+    .filter((product) => targeted.includes(product.name) && !productHasPendingWork(product))
+    .map((product) => product.name);
+  return executorOutcomeFailure({
+    output: params.output,
+    unchangedTargetedRepos: unchanged,
+    resumeHint: params.resumeHint,
+  });
+}
+
 // 1件の plan/result を executor→reporter の2段階で実行する。register 項目と Job Run の
 // 双方が使い、in-place（cwd: repoRoot）・worktree（cwd: worktree.path）から共有する。
 // evidence・pipeline-state の記録先は
-// Schedule タスクの pipeline と同じ形式（exec/evidence/<taskId>/<runId>/）にすることで、
+// Schedule タスクの pipeline と同じ run ディレクトリにすることで、
 // 監査証跡のフォーマットを実行経路によらず統一する。state には plan / result の参照も
 // 記録し、reporter だけが失敗した場合に `--resume` が入力を復元できるようにする。
 export async function runAgentPipeline(params: {
@@ -274,11 +391,20 @@ export async function runAgentPipeline(params: {
   productWorktrees?: readonly ProductWorktree[];
   /** Run-scoped `--integration-branch` values to record in the checkpoint for resume. */
   integrationBranchOverrides?: Readonly<Record<string, string>>;
+  /** Resume instructions recorded in the checkpoint (earlier entries plus this resume's). */
+  resumeNotes?: readonly PipelineResumeNote[];
   runId?: string;
   /** reporter が返す出力の mode。省略時は edit。 */
   mode?: TaskMode;
   executorRateLimitOptions?: PinnedRateLimitRunOptions;
   reporterRateLimitOptions?: PinnedRateLimitRunOptions;
+  /** Recovery command recorded when the executor evidence breaks the approach contract. */
+  executorResumeHint?: string;
+  /**
+   * Register `target_path` / `targets` values. A `<repo>:<path>` value marks the product
+   * repository as a target that the executor must change (PJR-QQRH).
+   */
+  productTargetHints?: readonly string[];
 }): Promise<{
   exitCode: 0 | 1;
   runResult: RunResult;
@@ -300,7 +426,9 @@ export async function runAgentPipeline(params: {
     execDefaults,
   } = params;
   const startedAt = new Date().toISOString();
-  const runId = params.runId ?? `${new Date().toISOString().replace(/[-:.]/g, "")}-${randomHex(4)}`;
+  const runId = isRunRecordPath(params.planPath)
+    ? recordStem(params.planPath)
+    : (params.runId ?? `${new Date().toISOString().replace(/[-:.]/g, "")}-${randomHex(4)}`);
   const stateLocation = pipelineStateLocation({
     repoRoot,
     worktreePath: cwd,
@@ -308,6 +436,7 @@ export async function runAgentPipeline(params: {
     taskId,
     runId,
   });
+  if (params.resumedExecutor) snapshotRunAttempt(stateLocation.path);
   let state = createPipelineState({
     taskId,
     runId,
@@ -323,6 +452,9 @@ export async function runAgentPipeline(params: {
     },
     ...(params.integrationBranchOverrides
       ? { integrationBranches: { ...params.integrationBranchOverrides } }
+      : {}),
+    ...(params.resumeNotes?.length
+      ? { resumeNotes: params.resumeNotes.map((entry) => ({ ...entry, notes: [...entry.notes] })) }
       : {}),
   });
   state = updatePipelineStage(
@@ -395,8 +527,28 @@ export async function runAgentPipeline(params: {
           initialChangeTargets: params.initialChangeTargets,
         })
       : undefined;
+  // PJR-QQRH: a complete report cannot override tool-permission denials in the output or a
+  // targeted product repository left unchanged. The evidence is marked incomplete so resume
+  // selects the executor stage, as with the approach contract.
+  const outcomeFailure =
+    outcome.result === "success" && !completionFailure && !coverageFailure
+      ? editOutcomeFailure({
+          mode: params.mode ?? "edit",
+          output: `${outcome.stdout}\n${outcome.stderr}`,
+          plan: planPrompt,
+          productWorktrees: params.productWorktrees ?? [],
+          hints: params.productTargetHints ?? [],
+          resumeHint: params.executorResumeHint ?? DEFAULT_EXECUTOR_RESUME_HINT,
+        })
+      : undefined;
+  if (outcomeFailure) {
+    recorded.evidence.completion_status = "incomplete";
+    recorded.evidence.block_reason = outcomeFailure;
+    writeExecutorEvidence(recorded.evidencePath, recorded.evidence);
+    process.stdout.write(`  Warning: ${outcomeFailure}\n`);
+  }
   const executorResult: RunResult =
-    completionFailure || coverageFailure ? "failure" : outcome.result;
+    completionFailure || coverageFailure || outcomeFailure ? "failure" : outcome.result;
   const evidenceRef = relative(cwd, recorded.evidencePath).split(sep).join("/");
   const executorCompletedAt = new Date().toISOString();
   state = updatePipelineStage(
@@ -406,7 +558,7 @@ export async function runAgentPipeline(params: {
       status:
         executorResult === "success"
           ? "succeeded"
-          : outcome.protectionBlock || completionFailure
+          : outcome.protectionBlock || completionFailure || outcomeFailure
             ? "blocked"
             : executorResult === "rate_limit"
               ? "rate_limited"
@@ -426,6 +578,7 @@ export async function runAgentPipeline(params: {
     const blockReason =
       completionFailure ??
       coverageFailure ??
+      outcomeFailure ??
       (executorResult === "rate_limit"
         ? "executor rate limit reached"
         : extractBlockReason(outcome.stderr));
@@ -465,6 +618,7 @@ export async function runAgentPipeline(params: {
     productWorktrees: params.productWorktrees,
     mode: params.mode,
     rateLimitOptions: params.reporterRateLimitOptions,
+    ...(params.executorResumeHint ? { executorResumeHint: params.executorResumeHint } : {}),
   });
 
   return {

@@ -1,0 +1,159 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/sch-strategy.schema.yaml
+kind: strategy
+id: prj-0001:sch-strategy-project-kata
+type: project
+status: draft
+title: スケジュール戦略（プロジェクトの型の整備）
+rulebook: specdojo:sch-rulebook
+track: project-kata
+scope:
+  catalogs:
+    - id: prj-0001:dct-project-management
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-project-management.yaml
+      local_ids:
+        - pm-plan
+        - pm-organization
+        - pm-roles
+        - pm-raci
+        - pm-quality-management-plan
+    - id: prj-0001:dct-project-definition
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-project-definition.yaml
+      local_ids:
+        - prj-assumptions-constraints-dependencies
+        - prj-comparison-of-alternatives
+  include_kinds:
+    - work
+approach_rules:
+  - local_ids:
+      - pm-plan
+      - pm-organization
+      - pm-roles
+      - pm-raci
+      - pm-quality-management-plan
+      - prj-assumptions-constraints-dependencies
+      - prj-comparison-of-alternatives
+    intent: improve-kata
+    kata_target: rulebook
+phase_sets:
+  rulebook-maintenance-pass:
+    - id: rulebook-maintenance
+      name: rulebook の見直し
+      execution: agent
+      mode: edit
+      approach: rulebook-maintenance
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "040"
+      duration_days: 0.5
+      description:
+        "代表成果物の実績から pm-plan・pm-organization・pm-roles・pm-raci・pm-quality-management-plan・prj-assumptions-constraints-dependencies・prj-comparison-of-alternatives のうち対応する rulebook を手入れする。成果物本体は変更しない。sample の完成例は後続の sample-maintenance で整備する。必要と判断した recipe・template は対応結果に次の作業案を残す。
+
+        [[specdojo:rulebook-authoring-standard|Rulebook 記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+
+        "
+  sample-maintenance-pass:
+    - id: sample-maintenance
+      name: sample の見直し
+      execution: agent
+      mode: edit
+      approach: sample-maintenance
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "050"
+      duration_days: 0.5
+      description:
+        "改訂した rulebook に沿い、対応する sample（pm-plan-sample など）を完成例として手入れする。sample は共通サンプル文脈（駄菓子屋のプロジェクト）に合わせ、代表成果物（SpecDojo の prj-0001）の内容を写さない。代表から判断に要る場面・例外を拾う。成果物本体は変更しない。
+
+        [[specdojo:rulebook-authoring-standard|Rulebook 記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+
+        "
+      agent:
+        executor: sol-executor
+  review-pass:
+    - id: review
+      name: 完成版レビュー
+      execution: agent
+      mode: review
+      approach: fully-guided
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: normal
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "090"
+      duration_days: 0.25
+      description:
+        "対応する rulebook・sample と代表成果物を読み、型一式の章構成・判断基準・例の充実度・相互整合をレビューする。代表成果物の `done_criteria` だけで完了としない。成果物・型は変更せず、指摘と根拠を review result に残す。
+
+        [[specdojo:rulebook-authoring-standard|Rulebook 記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+
+        "
+  finalize-pass:
+    - id: finalize
+      name: 完成版確定
+      execution: human
+      mode: edit
+      approach: finalize
+      task_suffix: "140"
+      duration_days: 0.125
+      description:
+        "担当ロールがレビュー結果と done_criteria を最終確認し、成果物を完成版として確定する。bootstrap 対象では、同じタスクで整備した rulebook / recipe / sample / template もあわせて確認する。
+
+        "
+default_phase_sets:
+  - phase_set: rulebook-maintenance-pass
+  - phase_set: sample-maintenance-pass
+  - phase_set: review-pass
+  - phase_set: finalize-pass
+owner_rules:
+  - local_ids:
+      - pm-organization
+      - pm-plan
+      - pm-quality-management-plan
+      - pm-raci
+      - pm-roles
+      - prj-assumptions-constraints-dependencies
+      - prj-comparison-of-alternatives
+    owner: PM
+phase_gates:
+  - id: G-PROJECT-KATA-first-pass
+    name: 初回パス完了
+    after_phase_sets:
+      - rulebook-maintenance-pass
+      - sample-maintenance-pass
+    owner: PO
+    scope:
+      catalogs:
+        - prj-0001:dct-project-management
+        - prj-0001:dct-project-definition
+  - id: G-PROJECT-KATA-review-pass
+    name: レビュー完了
+    after_phase_sets:
+      - review-pass
+    owner: PO
+    scope:
+      catalogs:
+        - prj-0001:dct-project-management
+        - prj-0001:dct-project-definition
+group_milestones:
+  - catalog_id: prj-0001:dct-project-management
+    milestone:
+      id: M-PROJECT-KATA-project-management
+      name: ドメイン完了
+      artifact_name: プロジェクト管理
+      owner: PO
+  - catalog_id: prj-0001:dct-project-definition
+    milestone:
+      id: M-PROJECT-KATA-project-definition
+      name: ドメイン完了
+      artifact_name: プロジェクト定義
+      owner: PO

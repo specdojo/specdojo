@@ -1,5 +1,7 @@
+import { warnDeprecated } from "./deprecation.js";
 import { type Command } from "commander";
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { basename, dirname, isAbsolute, join, posix, relative, resolve } from "node:path";
 import dotenv from "dotenv";
 import { validateBranchTemplate } from "./branch-template.js";
@@ -8,7 +10,7 @@ import { validateCommitMessageTemplate } from "./commit-message-template.js";
 import { dump, load } from "./yaml.js";
 import Ajv2020Module from "ajv/dist/2020.js";
 import type { ValidateFunction } from "ajv";
-import type { AgentStageRole, SchedulerStrategy, TaskMode } from "./agent-types.js";
+import type { AgentStageRole, Proficiency, SchedulerStrategy, TaskMode } from "./agent-types.js";
 import { runProviderScaffold, specdojoPackageRootDir } from "./provider-scaffold.js";
 import { runWorkspaceScaffold } from "./workspace-scaffold.js";
 import { runLefthookScaffold } from "./lefthook-scaffold.js";
@@ -20,6 +22,13 @@ import {
   gitignorePatternsForLayouts,
   type ProjectGitignoreLayout,
 } from "./specdojo-gitignore.js";
+import {
+  applyLocalConfig,
+  formatConfigShow,
+  readLocalConfig,
+  repositoryIdentityRoot,
+  type LocalConfigOverride,
+} from "./local-config.js";
 
 export type SpecDojoRunConfig = {
   exec_defaults?: string;
@@ -189,7 +198,7 @@ export type ProjectMember = {
   persona?: string;
   focus?: string[];
   capabilities?: string[]; // agent only: tool access (e.g. web_search)
-  proficiency?: "low" | "normal" | "high" | "expert"; // agent only: quality tier
+  proficiency?: Proficiency; // agent only: quality tier
   priority?: number; // agent only: tiebreaker within same profile (lower = tried first)
   command?: string; // agent only: shell command executed by exec run
   mode?: AgentMode; // agent only: launch profile; report is reserved for stage_role: reporter
@@ -299,20 +308,6 @@ export const DEFAULT_AGENT_MEMBERS_PATH = ".specdojo/agent-members.yaml";
 
 export const KATA_AUTHORITY_PATTERN = /^(?!prj-)(?!specdojo$)[a-z][a-z0-9-]*$/;
 
-function repositoryIdentityRoot(rootDir: string): string {
-  const root = resolve(rootDir);
-  const dotGit = join(root, ".git");
-  if (!existsSync(dotGit) || statSync(dotGit).isDirectory()) return root;
-  const gitdirLine = readTextFileOrNull(dotGit)
-    ?.split(/\r?\n/)
-    .find((line) => line.startsWith("gitdir:"));
-  if (!gitdirLine) return root;
-  const gitdir = resolve(root, gitdirLine.slice("gitdir:".length).trim()).replaceAll("\\", "/");
-  const marker = "/.git/worktrees/";
-  const markerIndex = gitdir.lastIndexOf(marker);
-  return markerIndex >= 0 ? gitdir.slice(0, markerIndex) : root;
-}
-
 export function defaultKataAuthority(rootDir: string = specdojoRootDir()): string {
   const directoryName = basename(repositoryIdentityRoot(rootDir));
   const normalized = directoryName
@@ -356,29 +351,46 @@ type AgentMemberRoster = {
 export type ConfigLoadResult = {
   configPath: string;
   config: SpecDojoConfig | null;
+  /** Local config applied after the shared one (absent when none was read). */
+  localConfigPath?: string;
+  /** Values that came from the local config, in application order. */
+  localOverrides?: LocalConfigOverride[];
 };
 
-function findUpward(startDir: string, name: string): string | null {
-  let currentDir = resolve(startDir);
+export function specdojoRootDir(startDir: string = process.cwd()): string {
+  const current = resolve(startDir);
+  const systemTmp = resolve(tmpdir());
+
+  let dir = current;
+  let firstGitDir: string | null = null;
 
   while (true) {
-    const candidate = resolve(currentDir, name);
-    if (existsSync(candidate)) return candidate;
+    // 一時ディレクトリのルートそのもの（/tmp など）にある設定は、テストや検証の
+    // 漏洩・干渉を防ぐため親として拾わない。また一時ディレクトリ内から systemTmp を越えて探索しない。
+    if (dir === systemTmp) {
+      break;
+    }
 
-    const parentDir = resolve(currentDir, "..");
-    if (parentDir === currentDir) return null;
-    currentDir = parentDir;
+    if (existsSync(join(dir, ".specdojo", "specdojo.config.json"))) {
+      return dir;
+    }
+
+    if (!firstGitDir && existsSync(join(dir, ".git"))) {
+      firstGitDir = dir;
+      // リポジトリ境界に到達した。.git より親の .specdojo は拾わない。
+      break;
+    }
+
+    const parent = dirname(dir);
+    if (parent === dir) break;
+    dir = parent;
   }
-}
 
-export function specdojoRootDir(): string {
-  const configPath = findUpward(process.cwd(), join(".specdojo", "specdojo.config.json"));
-  if (configPath) return dirname(dirname(configPath));
+  if (firstGitDir) {
+    return firstGitDir;
+  }
 
-  const gitMarker = findUpward(process.cwd(), ".git");
-  if (gitMarker) return dirname(gitMarker);
-
-  return process.cwd();
+  return current;
 }
 
 /** Default worktree directory beside the repository, derived from its directory name. */
@@ -426,6 +438,8 @@ export function getProjectExecutionPath(project: SpecDojoProjectConfig): string 
 // Timeline lives in a fixed cross-cutting directory under the project root, so an
 // unset timeline_path falls back to "timeline" instead of disabling the command.
 export function getProjectTimelinePath(project: SpecDojoProjectConfig): string {
+  if (project.timeline_path !== undefined)
+    warnDeprecated("timeline_path", "Use register epics and dashboard build.");
   return withBasePath(project, project.timeline_path?.trim() || "timeline");
 }
 
@@ -1025,6 +1039,8 @@ export function loadConfig(configRootDir: string = specdojoRootDir()): ConfigLoa
   }
 
   for (const [projectId, project] of Object.entries(parsed.projects)) {
+    if (project?.timeline_path !== undefined)
+      warnDeprecated("timeline_path", "Use register epics and dashboard build.");
     if (!isValidProjectConfig(project)) {
       throw new Error(
         `Invalid .specdojo/specdojo.config.json: projects.${projectId} must omit ` +
@@ -1036,29 +1052,44 @@ export function loadConfig(configRootDir: string = specdojoRootDir()): ConfigLoa
 
   const projectIds = Object.keys(parsed.projects);
   const rootDir = dirname(dirname(configPath));
+  // The local config is read after the shared one and may change only allowlisted keys
+  // (PJR-NC9R). The merged result goes through the same validation as the shared config.
+  const local = readLocalConfig(rootDir);
+  const applied = local
+    ? applyLocalConfig(parsed, local.value, local.path, REPO_KEYS)
+    : { config: parsed, overrides: [] };
+  const effective = applied.config;
   const repoErrors = projectIds
     .sort()
     .flatMap((projectId) => [
       ...validateCommitTypes(
-        parsed.projects[projectId].commit_types,
+        effective.projects[projectId].commit_types,
         `projects.${projectId}.commit_types`,
       ),
-      ...validateProjectRepos(projectId, parsed.projects[projectId], projectIds, rootDir),
+      ...validateProjectRepos(projectId, effective.projects[projectId], projectIds, rootDir),
     ]);
   const externalProjectErrors = validateExternalProjects(
-    parsed.external_projects,
+    effective.external_projects,
     projectIds,
     rootDir,
   );
   const configErrors = [...repoErrors, ...externalProjectErrors];
   if (configErrors.length > 0) {
+    const localNote = local ? ` with local overrides from ${local.path}` : "";
     throw new Error(
-      `Invalid .specdojo/specdojo.config.json (${configPath}):\n` +
+      `Invalid .specdojo/specdojo.config.json (${configPath}${localNote}):\n` +
         configErrors.map((message) => `  - ${message}`).join("\n"),
     );
   }
 
-  return { configPath, config: parsed };
+  return local
+    ? {
+        configPath,
+        config: effective,
+        localConfigPath: local.path,
+        localOverrides: applied.overrides,
+      }
+    : { configPath, config: parsed };
 }
 
 export function writeConfig(config: SpecDojoConfig): void {
@@ -1113,9 +1144,15 @@ export function registerConfigCommands(program: Command): void {
       false,
     )
     .action((opts: { dryRun?: boolean }) => {
+      const rootDir = specdojoRootDir();
+      if (resolve(rootDir) === resolve(tmpdir())) {
+        throw new Error(
+          "Refusing to initialize specdojo configuration directly under temporary directory root.",
+        );
+      }
       const dryRun = !!opts.dryRun;
-      const { configPath, config } = loadConfig();
-      ensureMarkdownlintConfig(specdojoRootDir(), dryRun);
+      const { configPath, config } = loadConfig(rootDir);
+      ensureMarkdownlintConfig(rootDir, dryRun);
       if (config) {
         process.stdout.write(`Already exists: ${configPath}\n`);
         writeGitignoreForConfig(config, dryRun);
@@ -1157,12 +1194,33 @@ export function registerConfigCommands(program: Command): void {
     });
 
   cfg
+    .command("show")
+    .description(
+      "Show the effective repos and which values come from .specdojo/specdojo.local.config.json",
+    )
+    .option("--project <projectId>", "Show only one project")
+    .action((opts: { project?: string }) => {
+      try {
+        process.stdout.write(formatConfigShow(loadConfig(), opts.project));
+      } catch (error) {
+        process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
+        process.exitCode = 1;
+      }
+    });
+
+  cfg
     .command("migrate-members")
-    .description("Move agent entries from project pm-members.yaml files to protected agent members")
+    .description(
+      "Deprecated: configure agent members directly in .specdojo/agent-members.yaml (will be removed in 0.10.0)",
+    )
     .option("--project <projectId>", "Migrate only one project (default: all configured projects)")
     .option("--dry-run", "Show planned changes without writing", false)
     .action((opts: { project?: string; dryRun?: boolean }) => {
       try {
+        warnDeprecated(
+          "config migrate-members",
+          "Configure agent members directly in .specdojo/agent-members.yaml instead. This command will be removed in 0.10.0.",
+        );
         migrateAgentMembers({ projectId: opts.project, dryRun: !!opts.dryRun });
       } catch (error) {
         process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
@@ -1173,10 +1231,7 @@ export function registerConfigCommands(program: Command): void {
   cfg
     .command("scaffold")
     .description("Scaffold provider settings, a VS Code multi-root workspace, Git hooks, or Slidev")
-    .option(
-      "--provider <name>",
-      "Provider template to copy (antigravity|claude|codex|copilot|opencode)",
-    )
+    .option("--provider <name>", "Provider template to copy (claude|codex|copilot|opencode)")
     .option(
       "--workspace",
       "Generate VS Code multi-root workspace (<project-id>.code-workspace) from repos config",
@@ -1192,7 +1247,7 @@ export function registerConfigCommands(program: Command): void {
     .option("--dry-run", "Show planned files without writing", false)
     .option(
       "--global",
-      "Merge provider permissions into user-level settings (currently antigravity only)",
+      "Merge provider permissions into user-level settings (no provider currently supports it)",
       false,
     )
     .action(async (opts) => {
@@ -1203,7 +1258,7 @@ export function registerConfigCommands(program: Command): void {
           );
         }
         if (opts.global && !opts.provider) {
-          throw new Error("--global requires --provider antigravity");
+          throw new Error("--global requires --provider <name>");
         }
         if (opts.provider) {
           await runProviderScaffold(String(opts.provider), {

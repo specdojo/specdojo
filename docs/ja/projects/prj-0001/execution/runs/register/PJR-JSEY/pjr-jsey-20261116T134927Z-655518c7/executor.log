@@ -1,0 +1,10 @@
+個票の対応結果の表に 1 行追記しました。変更したのはこの個票だけで、検証コマンドは実行していません（親 runner が実行します）。
+
+- **追記した行:** 2026-11-16 22:53（JST）、確認対象 PJR-DGRZ、agent は `sonnet-executor` です。
+- **PJR-DGRZ を選んだ理由:** 対象一覧の項目のうち、HEAD に含まれる最新の統合が PJR-DGRZ でした。統合コミットは `1ad19b616`（22:44 JST）で、実行時点の状態は `review` です。
+- **段落の更新:** 表の下の「今回の確認対象」の段落も、PJR-KVWH から PJR-DGRZ に書き換えました。
+- **作業内容の表:** 行 1 は `done` のまま、メモは変更していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"個票の対応結果の表に PJR-DGRZ（最新の統合）の行を追記し、確認対象の説明段落を更新した。変更は個票のみ。","handoff":["親 runner の検証、reporter の result 記入、統合、review 遷移は後続段で確認する。"],"validations":[]}
+</specdojo_executor_evidence>

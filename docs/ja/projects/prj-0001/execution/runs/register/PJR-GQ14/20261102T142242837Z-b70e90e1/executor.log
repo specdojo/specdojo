@@ -1,0 +1,24 @@
+PJR-GQ14「ユースケース別ガイドを具体的なプロダクト作成の対話フローに改訂する」に対応し、[`use-case-guide.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GQ14/docs/ja/specdojo/guides/use-case-guide.md) および個票 [`pjr-gq14-use-case-product-conversation-flow.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GQ14/docs/ja/projects/prj-0001/controls/project-register/pjr-gq14-use-case-product-conversation-flow.md) の改訂を完了しました。
+
+### 実施内容の概要
+
+1. **ユースケース別ガイド（[`use-case-guide.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GQ14/docs/ja/specdojo/guides/use-case-guide.md)）の改訂**:
+   - **作りたいもの別の構成と導線**:
+     - 冒頭にプロダクトの特性（LP、Next.js Web サービス、Unity ゲーム、共通運用）から選べる Mermaid 早見図を設置しました。
+     - 「ケース1: ランディングページ（LP）の作成」「ケース2: Next.js の Web サービスの作成」「ケース3: Unity のゲーム開発」の 3 つの主要プロダクトを新設しました。
+   - **対話フローと成果物作成手順**:
+     - 各ケースに完成イメージと前提、最初の相談、確認・判断事項、必要な成果物と作成順序、register・schedule による進行、完成確認と運用の流れを記述しました。
+     - オーケストレーターが担当者・期限・技術採択を勝手に確定せず、不足事項の確認・提案・利用者の承認を経て起票・実行する対話原則を徹底しました。
+     - コマンドや設定例は `<details>` で折りたたみ、共通操作は [`quick-start-guide.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GQ14/docs/ja/specdojo/guides/quick-start-guide.md) や各種専門ガイドへリンクして説明の重複を抑えました。
+   - **共通運用情報の再構成**:
+     - 現行ガイドの重要運用情報（register による計画外課題管理、grade/review による ready 確定、worktree 隔離実行、routine 定期巡回、複数プロジェクト・ブランチ並行運用）を第 5 章に再編成し、各ケースからの到達性を確保しました。
+   - **用途別ひな型（[`pjr-rtd5-starter-templates.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GQ14/docs/ja/projects/prj-0001/controls/project-register/pjr-rtd5-starter-templates.md)）との整合**:
+     - ひな型（スターター template repository）が未提供であることを確認し、公式生成ツールを用いた手順を記載した上で、提供後の追記予定を明記しました。
+
+2. **個票（[`pjr-gq14-use-case-product-conversation-flow.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GQ14/docs/ja/projects/prj-0001/controls/project-register/pjr-gq14-use-case-product-conversation-flow.md)）の更新**:
+   - 作業内容（No 1-4）をすべて `done` に更新しました。
+   - 対応結果セクションに改訂内容、各ケースの対話・成果物フロー、共通運用の再構成、未提供ひな型の確認結果、およびひな型提供後の後続追記・確認事項を詳細に記録しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"use-case-guide.md を LP・Next.js Web サービス・Unity ゲーム別の対話フローに改訂し、共通運用の整理と個票の対応結果・申し送り記録を完了しました。","handoff":["PJR-RTD5 用途別ひな型の提供後後続作業: 1) LP スターター公開時の template 複製・初期化・追加設定手順の追記、2) Next.js + Cloudflare スターター公開時の template 複製・Wrangler/OpenNext・セキュリティ初期化手順の追記、3) Unity スターター提供時の Git LFS・アセット初期設定を含めた導入手順の追記。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/guides/use-case-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-gq14-use-case-product-conversation-flow.md","status":"passed","summary":"変更したMarkdown文書2件を整形済み。"},{"command":"git diff --check","status":"passed","summary":"変更差分に空白エラーなし。"}]}
+</specdojo_executor_evidence>

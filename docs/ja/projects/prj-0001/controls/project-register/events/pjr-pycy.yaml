@@ -1,0 +1,97 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_8c82a5479f7041298419cc878b3f41bb
+  ts: "2026-11-05T11:25:32Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: stsd-job-run を確定した Kata と実装に合わせる（retrofit）
+    - field: description
+      from: ""
+      to: 3APD の段 8。ステータス定義（Job Run）を、確定した stsd の Kata と現行の実装（カタログの evidence\_refs）に合わせて retrofit する。成果物はまだない
+    - field: input
+      from: ""
+      to: '["Kata は PJR-PT5N で確定した。代表の 1 件 stsd-task-execution（PJR-Q9AW・PJR-MC63）を書き方の参考にできるが、宣言された資料ではないため、根拠には実装とカタログを使う","図の分割は stsd-mermaid-rulebook の閾値を超える場合だけ行い、閾値以下の図は 1 つのままにする（PJR-PT5N）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-05"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: retrofit
+    - field: targets
+      from: ""
+      to: '["prj-0001:stsd-job-run"]'
+    - field: derived_from
+      from: ""
+      to: '["PJR-3APD","PJR-PT5N"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-PT5N"]'
+- v: 1
+  id: reg_4c5cab9953a4445f9269783cf258a361
+  ts: "2026-11-05T12:06:36Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_8c82a5479f7041298419cc878b3f41bb
+- v: 1
+  id: reg_92eb8d45c4674f02a54e30e11490b503
+  ts: "2026-11-05T12:16:44Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_4c5cab9953a4445f9269783cf258a361
+- v: 1
+  id: reg_7d6ee66652d74f9893c32851f7d86cf6
+  ts: "2026-11-05T12:19:05Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票・result で確かめた（利用者の委任による自動の進行）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-05"
+    - field: conclusion
+      from: "-"
+      to: 新設。5 状態・7 遷移を実装で確かめて書き、閾値を超えるため 2 図に分けた
+  previous_event_id: reg_92eb8d45c4674f02a54e30e11490b503

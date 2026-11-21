@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "task_id": "T-STSD-PILOT-stsd-register-entry-070",
+  "run_id": "20261105T125158985Z-8c59e41b",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-05T13:30:07.204Z",
+    "completed_at": "2026-11-05T13:38:05.795Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../020-data-model/stsd-register-entry.md          | 190 +++++++++++++++------\n .../T-STSD-PILOT-stsd-register-entry-070-plan.md   |   3 +\n .../T-STSD-PILOT-stsd-register-entry-070-result.md |  26 ++-\n 3 files changed, 162 insertions(+), 57 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md",
+      "status": "passed",
+      "summary": "対象成果物を整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "python3 tmp/check-stsd-register-entry-070.py",
+      "status": "passed",
+      "summary": "8状態・40遷移の一意性、図表の名称・イベント・条件一致、到達性、直接終端・再開の網羅、draft と空の based_on 維持を確認。一時検査スクリプトは削除済み。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "変更した成果物は Markdown のみ。",
+      "reason": "executor が変更した YAML ファイルがない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴蓄積ファイルの変更なし。",
+      "reason": "executor は PJR 個票・既存 plan・result を変更していない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "成果物変更は product 配下のみ。",
+      "reason": "executor による docs/ja/projects/ 配下の成果物変更がない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-STSD-PILOT-stsd-register-entry-070/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-fu\n… output omitted …\nspaces/specdojo-workspace/worktrees/prj-0001-T-STSD-PILOT-stsd-register-entry-070/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-STSD-PILOT-stsd-register-entry-070/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1147). Maximum allowed is 1000  max-lines\n\n✖ 39 problems (0 errors, 39 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 3866 file(s), 184 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 8 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 150 passed, 0 error, 0 未検査\n  graph: 2 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 3866 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-STSD-PILOT-stsd-register-entry-070\n\nWritten: lefthook.yml\nPlanned markdownlint base (.markdownlintrc):\n{\n  \"MD013\": false,\n  \"MD024\": false,\n  \"MD033\": false,\n  \"MD036\": false,\n  \"MD041\": false,\n  \"MD060\": false\n}\nPlanned markdownlint-cli2 configuration (.markdownlint-cli2.yaml):\nconfig:\n  extends: .markdownlintrc\nWritten: .mar\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\ns-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-STSD-PILOT-stsd-register-entry-070/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-STSD-PILOT-stsd-register-entry-070/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-STSD-PILOT-stsd-register-entry-070\n\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\nUpdated ticket status → ready: /tmp/specdojo-ticket-u8iKIS/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-OpkdTY/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-\n… output omitted …\nnknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nreporter failedrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nproblem"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "stsd-register-entry",
+      "status": "changed",
+      "path": "docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md",
+      "reason": ""
+    }
+  ],
+  "final_message": "対象文書の磨き込みを完了しました。8状態・40遷移の図表整合を確認し、整形・差分検査は通過しました。未作成依存と未承認の実装差異は申し送りに残しています。",
+  "completion_status": "complete",
+  "handoff": [
+    "変更した成果物は `docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md` のみ。`status: draft`、`based_on: []`、既存 T-ID を維持した。result、plan、既存 evidence、grade result サイドカーは更新していない。以下の判断根拠と未解消事項を reporter が result の「進め方と実践の型の適用」へ転記すること。",
+    "実践の型の適用: 指定 rulebook 2件、recipe、sample、プロジェクト概要、PJR-PT5N、共通規約、AGENTS.md、playbook、カタログの対象項目、指定実装エビデンス5件を参照した。rulebook を構造・図表対応、recipe を条件の判定可能性、sample を形式確認に使用した。対象 template は読んでいない。40遷移で分割閾値を超えるため、既存の三図を活動・終了判断・再開へ整理した。",
+    "F001・F007・F010・F011: plan の現行運用指摘を追加実装エビデンスと照合し、直接終端10経路を T-19〜T-28、直接再開12経路を T-29〜T-40 として追加した。再開先の選択を条件に明記した。F002 の従来の直接終端・直接再開に関する未確認メモ M-02・M-03 は本文へ反映して統合した。旧履歴変換の説明は、現在の許可条件の根拠として使えないため現在動作との対応へ置き換えた。",
+    "F006・F008・F009・F019・F021・F024: 先行修正の BV-03 への寄与、担当・期限未定の扱い、`status` と `item_status` の区別、外部 event への記録、待機理由の `block_reason` への記録と `conclusion` の保持を維持・補強した。着手・審査提出・終了・再開の pass / fail 条件を共通条件へ集約した。AC-02 の定義本体は参照範囲外のため、その対応付けは確定していない。",
+    "F012・F014・F015・F017・F016: `note` の close・reject・defer 拒否、活動中・終端ガード、延期の完了日時非付与、再開時の完了日時削除、待機離脱時の `block_reason` 削除を反映した。各 T-ID と操作・主要更新キー・拒否条件を対応付け、後続検証の期待結果と `register build` の整合検査範囲を記載した。影響先として指定実装5件、register item/event schema、関連テスト、PJR rulebook、運用ガイドを列挙した。schema・関連テスト・運用規則の本文は宣言参照外のため読んでおらず、既存テストの網羅と schema の一致確認は後続作業として残る。",
+    "F002・F004・F018・F022・F023・F025: M-01 に業務条件と CLI の未承認差異を残した。CLI は承認・証跡・結論・待機理由を必須化せず、明示 close の type 別制限、`note` の活動中操作、起票時の非 open 指定にも差異がある。起票済み・待機中から審査待ち、審査待ちから対応中への直接変更は実装で可能だが、承認根拠がないため業務図表へ追加していない。PO・ARC・QE が採否と自動強制範囲を決定し、PM が issue・decision・必要な change-request と Schedule に接続する。採否別の反映先と後続作業への影響は本文へ記録した。",
+    "F003・F004・F005・F013・F020: `bdd-register-entry` は未作成であり、推測による作成や `based_on` 追加は行っていない。M-04 に辞書作成・確認、用語照合、不整合修正、参照追加の順序と完了条件を残した。BA による辞書作成と、PM による実在する PJR ID・Schedule への接続が必要である。接続先と日程を参照できないため創作していない。",
+    "未解消判定: M-01 の未承認差異、M-04 の依存未作成、実 PJR・Schedule への接続、schema・関連テストとの照合が残るため、F003〜F005・F013・F014・F017・F018・F020・F022・F025 の完全解消および全 done criteria 達成は主張しない。今回の許可範囲内の編集・検証は完了している。親 runner 指定の lint・schema・型検査・テストは実行していない。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-STSD-PILOT-stsd-register-entry-070/20261105T125158985Z-8c59e41b/executor.log",
+      "bytes": 5810,
+      "truncated": false
+    }
+  ]
+}

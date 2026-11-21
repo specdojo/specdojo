@@ -1,0 +1,29 @@
+`docs/ja/specdojo/recipes/prj-issues-and-approach-recipe.md` を直しました。触ったのはこの recipe だけで、rulebook・sample・template・成果物本体は変えていません。result は作っていません。大きさは 3,840 字から 2,668 字（69.5%）になり、7 割以下の目安に収まりました。測り方は PJR-7M9J と同じで、空白と表の区切り行を除いて数えています。Prettier と markdownlint は通りました（指摘 0 件）。lint・schema・test は親 runner に任せています。
+
+**外した記述**
+- rulebook と同じ判断の言い直し: 表の列の指定、委譲先の文書の指定、`_TODO_` / `_UNDECIDED_` ラベルの付け方。
+- 記録先の指定: リスクを課題ログやリスク登録簿へ転記する旨、見直しの記録先と担当ロール。
+- 仕上げチェックの構造の検査（章立てと必須表がそろっている）と、レビュー観点・仕上げチェックでの同じ確認の繰り返し。
+- 全体の作成手順をなぞっていた深掘り手順と、冒頭の章立てをなぞる文。
+
+**残した・足した記述**
+- 「作成前に集める情報」に取り出し元の列を足しました。
+- 書く順番とその理由: 課題一覧を最初に書き、導入部は最後に書く。
+- 任意の 3 章（トレードオフ/リスク、次の検討事項、見直しと変更管理）は、書く内容があるときだけ置くと明記しました。
+- 各節は問い 2 つとコツの形に書き換えました。コツは、聞き方とつまずきやすい点です。
+- 深掘り手順は、対応のない主張を探す順序に書き換えました。
+- 仕上げチェックには、個人や組織を識別できる情報や非公開の観察事実がないことの確認を足しました。
+
+**指摘（F001〜F013）の扱い**
+- F001・F003: ToDo 表に列を足すと rulebook の列の定義と食い違うため、列は足していません。代わりに「何が決まれば完了で、いつまでに決めるか」という問いを足しました。
+- F002・F006・F011・F013: 内容の公開適性は仕上げチェックに足しました。人間の PO による公開・最終承認は共通の運用なので recipe には入れていません。
+- F004・F005・F009・F012: 該当する記述を外したので、指摘の対象がなくなりました。
+- F007: 計画では委譲先の文書を外す方針のため、「詳細比較を書き始めたら論点だけを残す」というコツに置き換えました。
+- F008: ラベルの言い直しを外したので解消しました。
+- F010: 任意章を必要なときだけ置くと明記して対応しました。
+
+recipe の `status` は `ready` のまま変えていません。迷った点と変更案は handoff に書きました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"Edited docs/ja/specdojo/recipes/prj-issues-and-approach-recipe.md only. Removed common document-operation text, the risk-register transfer and record-owner text, restated rulebook rules (table columns, delegation target, label usage), structural checks, and duplicated checks. Rebuilt the recipe around writing order and reasons, input sources, two questions plus tips per section, and a deepening order that looks for claims without a link. Kept the 8-chapter layout. Size went from 3,840 to 2,668 characters (69.5%), counted without whitespace and table separator rows; with separator rows 4,111 to 2,960; bytes 11,583 to 8,156. Prettier and markdownlint passed with 0 issues.","handoff":["Size: 3,840 characters before, 2,668 after (69.5%), counted without whitespace and table separator rows (with separator rows: 4,111 to 2,960; bytes: 11,583 to 8,156).","Findings: F001/F003 - no columns added to the ToDo table because they would conflict with the rulebook's ToDo/purpose/owner-role columns; added the question 'what counts as done and by when must it be decided' instead. F002/F006/F011/F013 - added a content-level confidentiality check to the final checklist (no personal or organization identifiers, no non-public observations); human PO publication approval is common operation and left out under the plan. F004/F005/F008/F009/F012 - resolved by removing the targeted text (register transfer, 'required tables' check, label instructions). F007 - per the plan's 'remove delegation target', replaced the reference to the alternatives-comparison document with a tip to keep only the points that need comparison. F010 - the procedure now says the three optional chapters are written only when needed.","Change proposal (not applied): prj-issues-and-approach-rulebook ToDo table has only ToDo/purpose/owner-role, while the prj-0001 deliverable already uses a completion-criteria column and grade findings F001/F003 ask for a decision timing and an impact. Consider adding a completion-criteria column and a decision-timing column to the rulebook and template.","Change proposal (not applied): recipe-authoring-standard says the final checklist must confirm 'publication suitability', which grade viewpoints read as including human PO publication approval. That conflicts with the slim policy of keeping common operation out of recipes. Clarify in the standard that this means only a content-level confidentiality check.","Change proposal (not applied): the rulebook's description of the trade-off/risk table says nothing about an owner, while the prj-0001 deliverable adds an owner column. Check whether the template and rulebook should match.","Rulebook and sample: no other change was found to be needed. The recipe status stays ready; no status change was made."],"validations":[{"command":"npx prettier --write docs/ja/specdojo/recipes/prj-issues-and-approach-recipe.md","status":"passed","summary":"Formatted the changed recipe"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/recipes/prj-issues-and-approach-recipe.md","status":"passed","summary":"0 issues in 0 files"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"No history file changed","reason":"Only a recipe under docs/ja/specdojo/recipes was changed; no plan, result or register ticket was edited"}]}
+</specdojo_executor_evidence>

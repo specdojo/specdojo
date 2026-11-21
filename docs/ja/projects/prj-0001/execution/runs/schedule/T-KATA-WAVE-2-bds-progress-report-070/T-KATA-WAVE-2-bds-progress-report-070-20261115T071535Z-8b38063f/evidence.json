@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-2-bds-progress-report-070",
+  "run_id": "T-KATA-WAVE-2-bds-progress-report-070-20261115T071535Z-8b38063f",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-15T08:16:29.459Z",
+    "completed_at": "2026-11-15T08:17:02.775Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ".../plan.md                                               |  6 ++++++\n .../result.md                                             | 15 ++++++++++-----\n 2 files changed, 16 insertions(+), 5 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/product/010-business-specs/040-user-interface-model/bds-progress-report.md",
+      "status": "passed",
+      "summary": "exit 0。結果は unchanged で、ファイルは書き換わっていない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4845 file(s), 138 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 103 passed, 0 error, 0 未検査\n  graph: 6 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4845 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, docs/ja/specdojo/**, docs/specdojo/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, docs/ja/specdojo/**, docs/specdojo/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schema)\ndocs/ja/specdojo/samples/ifx-api-sample\n… output omitted …\nrulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-2-bds-progress-report-070/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-2-bds-progress-report-070/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-2-bds-progress-report-070\n\nresult-markdownlint: result execution/runs/schedule/TASK/TASK/result.md not found; skipped pre-commit lint\nUpdated ticket status → ready: /tmp/specdojo-ticket-0uuII4/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-qwY87E/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-\n… output omitted …\n a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nproblem\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "bds-progress-report",
+      "status": "unchanged",
+      "reason": "bds-rulebook の必須章と内容の要件、および done_criteria（利用目的・読み手・表示項目・出力の時期の記述、範囲の承認、記録から確かめるテストへの活用）を既存の記述が満たしている。depends_on（sysd-job-execution）や実装エビデンスとの矛盾も見つからなかったため、fully-guided の既存記述尊重の方針に従い変更不要と判断した。prettier でも差分は出なかった。"
+    }
+  ],
+  "final_message": "成果物 bds-progress-report.md は、前回の判断（宣言された根拠の範囲で修正が必要な欠落や不整合はない）を引き継ぎ、変更していない。指示どおり prettier --write を流し、結果は unchanged だった。",
+  "completion_status": "complete",
+  "handoff": [
+    "result の「進め方と実践の型の適用」に記録する内容: bds-rulebook と bds-sample を確認し、既存成果物が必須章と内容の要件を満たしているため変更不要と判断した。未作成の `bds-index` は既存のメモ・将来課題に記録済み。本文の 2 か所の _ASSUMPTION_（`rtn-weekly-report` が今 `enabled: false` であることと、記録が欠けたときに止める扱いの根拠）は、根拠が揃うまで論点として残す。",
+    "確認した根拠: docs/ja/product/010-business-specs/040-user-interface-model/bds-progress-report.md、docs/ja/product/040-system-design/sysd-job-execution.md、docs/ja/projects/prj-0001/020-project-definition/prj-overview.md、docs/ja/specdojo/rulebooks/bds-rulebook.md、docs/ja/specdojo/samples/bds-sample.md、src/routine/storage.ts、src/routine/definition.ts。template は fully-guided の指示に従い参照していない。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-bds-progress-report-070/T-KATA-WAVE-2-bds-progress-report-070-20261115T071535Z-8b38063f/executor.log",
+      "bytes": 3020,
+      "truncated": false
+    }
+  ]
+}

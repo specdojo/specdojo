@@ -295,6 +295,18 @@ describe("summarizeGitArguments", () => {
     expect(summarizeGitArguments(["--", "docs/a.md"])).toBe("-- 1 path");
   });
 
+  it("folds a multi-line argument such as a commit body onto one line", () => {
+    const actual = summarizeGitArguments([
+      "commit",
+      "-m",
+      "subject\n\nCo-Authored-By: A",
+      "--",
+      "a",
+    ]);
+
+    expect(actual).toBe("commit -m subject Co-Authored-By: A -- 1 path");
+  });
+
   it("abbreviates an argument longer than the per-argument limit", () => {
     const actual = summarizeGitArguments(["-m", "x".repeat(60)]);
 

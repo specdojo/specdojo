@@ -164,7 +164,7 @@ members:
     roles: []
     type: agent
     provider: opencode
-    model: ollama-local/gemma4:26b-mlx-work-64k
+    model: ollama-local/gemma4:31b-mlx-work-64k
     mode: report
     stage_role: reporter
     proficiency: normal
@@ -613,6 +613,59 @@ members:
       add/commit を deny する .specdojo/claude/settings.report.json で定義する。ツールは
       .claude/agents/claude-reporter.md で定義。
 
+  - nickname: fable-executor
+    disabled: false
+    priority: 9
+    display_name: Claude Fable Executor
+    email: null
+    roles: []
+    type: agent
+    provider: claude
+    model: fable
+    mode: edit
+    stage_role: executor
+    proficiency: frontier
+    persona: task-executor
+    focus:
+      - task-execution
+      - document-creation
+      - implementation
+      - verification
+      - complex-analysis
+      - architecture-judgment
+    capabilities:
+      - web_search
+    scheduler_strategy: critical-first
+    note: >-
+      Claude Code CLI で fable（最新の model の別名）を使う frontier の pipeline executor（edit）。通常は使わず、名前指定のときだけ
+      使う（PJR-DGRZ）。別名のため、Claude Code の版が上がると指す model が変わりうる（`claude --help` の --model の説明で確かめた、
+      2026-11-16）。ツールは .claude/agents/claude-executor.md、権限は .specdojo/claude/settings.edit.json で定義。
+  - nickname: fable-review-executor
+    disabled: false
+    priority: 9
+    display_name: Claude Fable Review Executor
+    email: null
+    roles: []
+    type: agent
+    provider: claude
+    model: fable
+    mode: review
+    stage_role: executor
+    proficiency: frontier
+    persona: multi-viewpoint-reviewer
+    focus:
+      - done-criteria-verification
+      - cross-viewpoint-consistency
+      - quality-assurance
+      - complex-analysis
+    capabilities:
+      - web_search
+    scheduler_strategy: fifo
+    note: >-
+      Claude Code CLI で fable（最新の model の別名）を使う frontier の pipeline executor（review）。通常は使わず、名前指定のときだけ
+      使う（PJR-DGRZ）。result も含めファイルへは一切書き込まない（読み取り専用）。ツールは .claude/agents/claude-review-executor.md、
+      権限は .specdojo/claude/settings.review.json で定義。
+
   #
   # codex members
   #
@@ -746,8 +799,119 @@ members:
       への反映は runner が行う）。edit/review どちらの executor の後段にも使う。reasoning effortはexec-defaultsのcommand
       template（proficiency normal相当）で指定する。codexはnicknameによるagent選択を行わないため、専用の.codex/agents定義は持たない。
 
+  - nickname: terra-executor
+    disabled: false
+    priority: 3
+    display_name: Codex Terra Executor
+    email: null
+    roles: []
+    type: agent
+    provider: codex
+    model: gpt-6.1-terra
+    effort: medium
+    mode: edit
+    stage_role: executor
+    proficiency: normal
+    persona: task-executor
+    focus:
+      - task-execution
+      - document-creation
+      - implementation
+      - verification
+    capabilities:
+      - web_search
+    scheduler_strategy: critical-first
+    note: >-
+      Codex CLI で GPT-6.1 Terra を使う pipeline executor（edit）。Sonnet 相当の normal として扱う。成果物の編集と検証だけを
+      担当し、result は更新しない。最終判断は行わない。model の ID は `codex debug models` で確かめた gpt-6.1-terra（2026-11-16）。
+      codexはnicknameによるagent選択を行わないため、専用の.codex/agents定義は持たない。
+  - nickname: terra-review-executor
+    disabled: false
+    priority: 3
+    display_name: Codex Terra Review Executor
+    email: null
+    roles: []
+    type: agent
+    provider: codex
+    model: gpt-6.1-terra
+    effort: medium
+    mode: review
+    stage_role: executor
+    proficiency: normal
+    persona: multi-viewpoint-reviewer
+    focus:
+      - done-criteria-verification
+      - cross-viewpoint-consistency
+      - quality-assurance
+    capabilities:
+      - web_search
+    scheduler_strategy: fifo
+    note: >-
+      Codex CLI で GPT-6.1 Terra を使う pipeline executor（review）。Sonnet 相当の normal として扱う。成果物・result のいずれも
+      変更しない（読み取り専用）。境界は plan の指示と specdojo CLI の commit 許可リストで作る。最終判断は行わない。model の ID は
+      `codex debug models` で確かめた gpt-6.1-terra（2026-11-16）。
+
+  - nickname: astra-executor
+    disabled: false
+    priority: 9
+    display_name: Codex Astra Executor
+    email: null
+    roles: []
+    type: agent
+    provider: codex
+    model: gpt-6-astra
+    mode: edit
+    stage_role: executor
+    proficiency: frontier
+    persona: task-executor
+    focus:
+      - task-execution
+      - document-creation
+      - implementation
+      - verification
+      - complex-analysis
+      - architecture-judgment
+    capabilities:
+      - web_search
+    scheduler_strategy: critical-first
+    note: >-
+      Codex CLI で GPT-6-Astra を使う frontier の pipeline executor（edit）。通常は使わず、名前指定のときだけ使う（PJR-DGRZ）。
+      成果物の編集と検証だけを担当し、result は更新しない。最終判断は行わない。model の ID は `codex debug models` で確かめた
+      gpt-6-astra（2026-11-16）。effort は exec-defaults の by_proficiency.frontier（xhigh）で決まる。
+  - nickname: astra-review-executor
+    disabled: false
+    priority: 9
+    display_name: Codex Astra Review Executor
+    email: null
+    roles: []
+    type: agent
+    provider: codex
+    model: gpt-6-astra
+    mode: review
+    stage_role: executor
+    proficiency: frontier
+    persona: multi-viewpoint-reviewer
+    focus:
+      - done-criteria-verification
+      - cross-viewpoint-consistency
+      - quality-assurance
+      - complex-analysis
+    capabilities:
+      - web_search
+    scheduler_strategy: fifo
+    note: >-
+      Codex CLI で GPT-6-Astra を使う frontier の pipeline executor（review）。通常は使わず、名前指定のときだけ使う（PJR-DGRZ）。
+      成果物・result のいずれも変更しない（読み取り専用）。境界は plan の指示と specdojo CLI の commit 許可リストで作る。
+      model の ID は `codex debug models` で確かめた gpt-6-astra（2026-11-16）。
+
   #
   # antigravity members
+  #
+  # 2026-11-21: agy の member はすべて disabled にした。Antigravity の FAQ と Additional Terms
+  # Section 6 は、consumer plan（Google AI Pro）で agy を他社の coding agent や application の中から
+  # 起動することを対象外・契約違反としており、SpecDojo の runner や Claude Code からの起動がこれに
+  # 当たるため。agy を指していた別名（agy-* など）も、無効の member を指すと名簿の読み込みが
+  # 失敗するため消した。
   #
   # Antigravity CLI（agy）を使う member（nickname はコマンド名に合わせて agy-*）。プロバイダの利用制限で codex / claude が止まった際の
   # 第 3 経路として PJR-2T2S で追加した。評価（exec trial）が済むまで priority は codex / claude
@@ -756,14 +920,14 @@ members:
   #
 
   - nickname: flash-executor
-    disabled: false
+    disabled: true
     priority: 4
     display_name: Antigravity Executor
     email: null
     roles: []
     type: agent
     provider: antigravity
-    model: gemini-3.8-flash-high
+    model: gemini-3.8-flash-medium
     mode: edit
     stage_role: executor
     proficiency: normal
@@ -781,8 +945,8 @@ members:
       は更新しない。最終判断は行わない。effort は exec-defaults の command template（proficiency normal
       相当）で指定し、タスク固有の手順は edit plan を正本とする。
   - nickname: flash-high-executor
-    disabled: false
-    priority: 3
+    disabled: true
+    priority: 5
     display_name: Antigravity Expert Executor
     email: null
     roles: []
@@ -806,9 +970,36 @@ members:
     note: >-
       Antigravity CLI（agy）を使用する高性能 pipeline executor（edit）。複雑な分析・設計判断を伴う成果物の編集と検証だけを担当し、result
       は更新しない。最終判断は行わない。effort は exec-defaults の command template（proficiency expert 相当）で指定する。
+  - nickname: argon-executor
+    disabled: true
+    priority: 4
+    display_name: Antigravity Argon Executor
+    email: null
+    roles: []
+    type: agent
+    provider: antigravity
+    model: gemini-4-argon-high
+    mode: edit
+    stage_role: executor
+    proficiency: expert
+    persona: task-executor
+    focus:
+      - task-execution
+      - document-creation
+      - implementation
+      - verification
+      - complex-analysis
+      - architecture-judgment
+    capabilities:
+      - web_search
+    scheduler_strategy: critical-first
+    note: >-
+      Antigravity CLI（agy）で Gemini 4 Argon（high）を使う高性能 pipeline executor（edit）。難しい作業の成果物の
+      編集と検証だけを担当し、result は更新しない。最終判断は行わない。model の ID は `agy models` で確かめた
+      gemini-4-argon-high（2026-11-03）。週あたりの利用枠が厳しいため、自動の選択では後回しにする（priority 9）。
   - nickname: flash-high-review-executor
-    disabled: false
-    priority: 3
+    disabled: true
+    priority: 5
     display_name: Antigravity Expert Review Executor
     email: null
     roles: []
@@ -830,15 +1021,40 @@ members:
     note: >-
       Antigravity CLI（agy）を使用する高性能 pipeline executor（review）。複雑な多観点レビューを支援するが、成果物・result
       のいずれも変更しない（読み取り専用）。境界は plan の指示と specdojo CLI の commit 許可リストで作る。最終判断は行わない。
-  - nickname: flash-review-executor
-    disabled: false
+  - nickname: hydrogen-executor
+    disabled: true
     priority: 4
-    display_name: Antigravity Flash Review Executor
+    display_name: Antigravity Hydrogen Executor
     email: null
     roles: []
     type: agent
     provider: antigravity
-    model: gemini-3.8-flash-high
+    model: gemini-4-hydrogen-medium
+    mode: edit
+    stage_role: executor
+    proficiency: normal
+    persona: task-executor
+    focus:
+      - task-execution
+      - document-creation
+      - implementation
+      - verification
+    capabilities:
+      - web_search
+    scheduler_strategy: critical-first
+    note: >-
+      Antigravity CLI（agy）で Gemini 4 Hydrogen（medium）を使う pipeline executor（edit）。Sonnet 相当の normal として扱う。
+      成果物の編集と検証だけを担当し、result は更新しない。最終判断は行わない。model の ID は `agy models` で確かめた
+      gemini-4-hydrogen-medium（2026-11-16）。
+  - nickname: hydrogen-review-executor
+    disabled: true
+    priority: 4
+    display_name: Antigravity Hydrogen Review Executor
+    email: null
+    roles: []
+    type: agent
+    provider: antigravity
+    model: gemini-4-hydrogen-medium
     mode: review
     stage_role: executor
     proficiency: normal
@@ -851,17 +1067,18 @@ members:
       - web_search
     scheduler_strategy: fifo
     note: >-
-      Antigravity CLI（agy）を使用する pipeline executor（review）。成果物・result のいずれも変更しない（読み取り専用）。
-      境界は plan の指示と specdojo CLI の commit 許可リストで作る。最終判断は行わない。
+      Antigravity CLI（agy）で Gemini 4 Hydrogen（medium）を使う pipeline executor（review）。Sonnet 相当の normal として扱う。
+      成果物・result のいずれも変更しない（読み取り専用）。境界は plan の指示と specdojo CLI の commit 許可リストで作る。
+      最終判断は行わない。model の ID は `agy models` で確かめた gemini-4-hydrogen-medium（2026-11-16）。
   - nickname: flash-reporter
-    disabled: false
+    disabled: true
     priority: 4
     display_name: Antigravity Reporter
     email: null
     roles: []
     type: agent
     provider: antigravity
-    model: gemini-3.8-flash-high
+    model: gemini-3.8-flash-medium
     stage_role: reporter
     proficiency: normal
     persona: execution-reporter
@@ -874,7 +1091,7 @@ members:
       Antigravity CLI（agy）を使用する pipeline reporter。ファイルや外部情報へアクセスせず、渡された evidence
       から指定スキーマの構造化結果だけを返す（result への反映は runner が行う）。edit / review どちらの executor の後段にも使う。
   - nickname: agy-sonnet-executor
-    disabled: false
+    disabled: true
     priority: 4
     display_name: Antigravity Claude Executor
     email: null
@@ -898,8 +1115,8 @@ members:
       Antigravity CLI 経由の Claude Sonnet を使用する pipeline executor（edit）。member の `model`
       でモデルを選び、by-name 指定で利用する。成果物の編集と検証だけを担当し、result は更新しない。
   - nickname: agy-opus-executor
-    disabled: false
-    priority: 4
+    disabled: true
+    priority: 6
     display_name: Antigravity Claude Expert Executor
     email: null
     roles: []
@@ -925,8 +1142,8 @@ members:
       executor（edit）。member の `model` でモデルを選び、by-name 指定で利用する。成果物の編集と検証だけを担当し、result
       は更新しない。
   - nickname: agy-opus-review-executor
-    disabled: false
-    priority: 4
+    disabled: true
+    priority: 6
     display_name: Antigravity Claude Expert Review Executor
     email: null
     roles: []
@@ -949,7 +1166,7 @@ members:
       Antigravity CLI 経由の Claude Opus Thinking を使用する expert pipeline
       executor（review）。member の `model` でモデルを選び、by-name 指定で利用する。成果物・result のいずれも変更しない。
   - nickname: agy-gpt-oss-executor
-    disabled: false
+    disabled: true
     priority: 4
     display_name: Antigravity GPT Executor
     email: null
@@ -1066,27 +1283,3 @@ aliases:
     alias_of: sol-review-executor
   - nickname: codex-reporter
     alias_of: luna-reporter
-  - nickname: opencode-executor
-    alias_of: gemma-executor
-  - nickname: opencode-review-executor
-    alias_of: gemma-review-executor
-  - nickname: opencode-reporter
-    alias_of: gemma-reporter
-  - nickname: agy-executor
-    alias_of: flash-executor
-  - nickname: agy-review-executor
-    alias_of: flash-review-executor
-  - nickname: agy-expert-executor
-    alias_of: flash-high-executor
-  - nickname: agy-expert-review-executor
-    alias_of: flash-high-review-executor
-  - nickname: agy-reporter
-    alias_of: flash-reporter
-  - nickname: agy-claude-executor
-    alias_of: agy-sonnet-executor
-  - nickname: agy-claude-expert-executor
-    alias_of: agy-opus-executor
-  - nickname: agy-claude-expert-review-executor
-    alias_of: agy-opus-review-executor
-  - nickname: agy-gpt-executor
-    alias_of: agy-gpt-oss-executor

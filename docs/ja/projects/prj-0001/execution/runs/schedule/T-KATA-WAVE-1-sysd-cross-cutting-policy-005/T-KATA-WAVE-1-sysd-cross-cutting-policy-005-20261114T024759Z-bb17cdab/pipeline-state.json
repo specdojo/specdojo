@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-1-sysd-cross-cutting-policy-005",
+  "run_id": "T-KATA-WAVE-1-sysd-cross-cutting-policy-005-20261114T024759Z-bb17cdab",
+  "updated_at": "2026-11-14T04:02:10.519Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-14T02:49:35.265Z",
+      "completed_at": "2026-11-14T03:02:01.785Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-sysd-cross-cutting-policy-005/T-KATA-WAVE-1-sysd-cross-cutting-policy-005-20261114T024759Z-bb17cdab/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-14T03:07:13.500Z",
+      "completed_at": "2026-11-14T03:12:40.110Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-sysd-cross-cutting-policy-005/T-KATA-WAVE-1-sysd-cross-cutting-policy-005-20261114T024759Z-bb17cdab/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "sol-executor",
+      "attempts": 2,
+      "started_at": "2026-11-14T03:56:44.499Z",
+      "completed_at": "2026-11-14T04:02:10.519Z",
+      "artifact_ref": null,
+      "repos": {
+        "project": {
+          "status": "failed",
+          "commit": null,
+          "merged_at": null,
+          "error": "git commit failed: test: error: unknown option '--reserve'; FAIL  |integration| tests/src/exec/pipeline-e2e.integration.test.ts > executor / reporter pipeline resume E2E (worktree) > restarts a doing reporter run at executor using the edited worktree plan and existing changes; Test Files  1 failed | 226 passed (227); Tests  1 failed | 3811 passed (3812)"
+        }
+      }
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-sysd-cross-cutting-policy-005/T-KATA-WAVE-1-sysd-cross-cutting-policy-005-20261114T024759Z-bb17cdab/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-sysd-cross-cutting-policy-005/T-KATA-WAVE-1-sysd-cross-cutting-policy-005-20261114T024759Z-bb17cdab/result.md"
+  }
+}

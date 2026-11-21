@@ -66,6 +66,10 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# D2 は Dev Container と CI で同じ版・SHA-256 を使う。
+COPY install-d2.sh /tmp/install-d2.sh
+RUN sh /tmp/install-d2.sh && rm /tmp/install-d2.sh
+
 # Neovim、Marksman、lazygit は公式 release を版と SHA-256 で固定する。
 # Debian の amd64 は upstream の x86_64、arm64 は upstream の arm64 に対応する。
 RUN set -eux; \

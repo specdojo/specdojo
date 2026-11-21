@@ -1,0 +1,91 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_470dbd28655c4740b5f92378775f8690
+  ts: "2026-11-16T03:13:38Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: git の書き込みを runner と同じロックで直列化する specdojo git を足す
+    - field: description
+      from: ""
+      to: orchestrator や人の commit・merge も exec-lifecycle のロックの下で流し、runner の統合と順番に並べる
+    - field: input
+      from: ""
+      to: '["runner の統合と register の記帳は exec-lifecycle のロックで直列化されているが、orchestrator や人が直接流す git commit・merge はロックを取らず、runner の統合と同時に走る。lefthook の hook の実行中は index.lock を長く握るため、runner 側が失敗する（2026-11-15 の sld-090）","OSS を調べた（2026-11-16）: git 本体に index.lock を待つ設定はない。git-wait（Rust）は空くのを待つだけでロックを持たず、flock は Linux 向け、GNU parallel の sem は Perl に依存し、どれも runner のロックとは別の列になる。そのため specdojo のコマンドとして作り、ロックの部品が足りなければ proper-lockfile（npm）を使う方針とした","利用者が 2026-11-16 に起票を依頼した。0.8.0 の後に行う"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-16"
+    - field: derived_from
+      from: ""
+      to: '["PJR-G90K"]'
+    - field: commit_type
+      from: ""
+      to: feat
+    - field: commit_scope
+      from: ""
+      to: exec
+- v: 1
+  id: reg_802c1a092d234f6089afa25060156d2d
+  ts: "2026-11-16T11:23:22Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_470dbd28655c4740b5f92378775f8690
+- v: 1
+  id: reg_61fcea390da24099b047ea35afb8d5e4
+  ts: "2026-11-16T11:56:07Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_802c1a092d234f6089afa25060156d2d
+- v: 1
+  id: reg_1f0d69cbb0014e7bb658d7b5225f6499
+  ts: "2026-11-16T13:29:21Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果・result で確かめ、統合後の PJR-JSEY（2026-11-16、sonnet-executor）で runner の動作を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: specdojo git を足し、git の書き込みを runner と同じロックに並べた。lefthook の警告とオーケストレーターの方針は承認のもと feature ブランチで反映した
+  previous_event_id: reg_61fcea390da24099b047ea35afb8d5e4

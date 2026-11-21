@@ -1,0 +1,15 @@
+{
+  "v": 1,
+  "ts": "2026-11-08T21:30:52Z",
+  "type": "block",
+  "task_id": "T-BUSINESS-SPECS-REPS-ccd-project-planning-010",
+  "by": "sol-executor",
+  "msg": "parent validation failed: lint-fm, lint-md",
+  "meta": {
+    "limit_deferred": "false",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-ccd-project-planning-010/T-BUSINESS-SPECS-REPS-ccd-project-planning-010-20261108T163541Z-03520068/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-ccd-project-planning-010/T-BUSINESS-SPECS-REPS-ccd-project-planning-010-20261108T163541Z-03520068/pipeline-state.json",
+    "pipeline_run_id": "T-BUSINESS-SPECS-REPS-ccd-project-planning-010-20261108T163541Z-03520068"
+  }
+}

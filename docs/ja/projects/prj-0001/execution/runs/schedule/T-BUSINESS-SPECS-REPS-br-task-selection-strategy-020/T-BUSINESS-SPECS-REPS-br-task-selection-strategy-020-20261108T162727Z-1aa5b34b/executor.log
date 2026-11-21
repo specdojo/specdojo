@@ -1,0 +1,26 @@
+`docs/ja/product/010-business-specs/030-business-model/br-task-selection-strategy.md` に草案を新しく作りました。ステータスは `draft` のままです。
+
+前提にするはずだった `bps-task-selection-preparation`（実行受入のプロセス仕様）のファイルがまだありません。plan では依存が未解決なら異常終了する決まりですが、スケジューラはこのタスクを Ready と判定していたので、作業を続けました。ただし本文は依存先ではなく、主に実装（`src/exec/schedule/ready.ts`、`src/exec/core.ts`、`src/exec/commands.ts`、`src/exec/run/schedule-mode.ts`）、成果物カタログ、用語集、プロジェクト概要に基づいています。依存先ができたら、本書の適用範囲・対象外がそれと合っているかを確認する必要があります。
+
+**草案の内容**（`br-rulebook` の章構成どおり）
+
+- **概要:** 業務上の価値（`BV-02`/`BV-03`）、適用範囲、対象外を書きました。対象外は Ready かどうかの判定、担当・mode による絞り込み、register/routine の選択などです。
+- **入力:** 何を入力に使うかを表にまとめました。
+- **ルール:**
+  - 戦略の決め方は、明示指定 → 実行主体の既定戦略 → `critical-first` の順です。
+  - `critical-first` は余裕日数 → 最早開始日 → ID 辞書順で並べ、工程計算の結果がないタスクは後ろに回します。
+  - `fifo` はタスク ID の辞書順です。工程計算ができないときも `fifo` と同じ順で選びます。
+  - 擬似コードと、テストに使える判定例 7 件を付けました。
+- **出力と例外:** 出力を表にし、例外は `E-01` から `E-04` の 4 件です。
+
+**決めきれなかった点**（本文に _TODO_ / _ASSUMPTION_ として残しています）
+
+- `fifo` は名前と違い、到着順ではなくタスク ID の辞書順です。名前と動きのどちらに合わせるかは PO の判断が必要です。
+- メンバー定義の schema は `dependency-first`/`manual` も受け付けますが、選ぶ段階でエラーになります。
+- 自動 claim は実行主体の既定戦略を見ますが、エージェント実行の自動選択では見ず、そのまま `critical-first` になります。
+
+**検証:** `npx prettier --write` で整形し、`npx markdownlint-cli2` は 0 件でした。親 runner が実行する検査は、ここでは実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"br-task-selection-strategy.md の草案を新規作成した（status: draft）。依存成果物 `bps-task-selection-preparation` が未作成のため、実装・成果物カタログ・用語集・プロジェクト概要を根拠にした。依存の欠落は本文の _TODO_ と handoff に記録した。","handoff":["依存成果物 `bps-task-selection-preparation`（docs/ja/product/010-business-specs/030-business-model/bps-task-selection-preparation.md）が未作成のまま、スケジューラは本タスクを Ready と判定した。本書の適用範囲と対象外は実装（src/exec/schedule/ready.ts, src/exec/core.ts, src/exec/commands.ts, src/exec/run/schedule-mode.ts）、dct-business-model-br / dct-business-model-bps の定義、gl-common.yaml、prj-overview.md から仮置きした。同仕様の作成後に `P-07-01` の手順との対応を確認する必要がある。","PO の判断待ち: `fifo` はタスク ID の辞書順で、到着順ではない。業務上の意味（到着順）に合わせるか、名称・説明を ID 順へ改めるかを決める必要がある。","判断待ち: agent-members / pm-members の schema の `scheduler_strategy` は dependency-first / manual も受け付けるが、選択時（`resolveSchedulerStrategy`）にエラーになる。受け付ける値を揃えるか、両戦略を定義する必要がある。","判断待ち: `exec scheduler` はメンバーの `scheduler_strategy` を参照するが、`exec run --auto` / `exec cycle` は参照せず、そのまま critical-first を既定値として使う。揃えるか、意図した差として明記するかを決める必要がある。","result の『進め方と実践の型の適用』に記録する内容: 既存記述はなく新規作成した。実践の型は br-rulebook の章構成だけを参考にし、判定内容は実装を正とした。Web 検索は行っていない（内部情報で判断できたため）。"],"validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/030-business-model/br-task-selection-strategy.md","status":"passed","summary":"整形を適用した"},{"command":"npx markdownlint-cli2 docs/ja/product/010-business-specs/030-business-model/br-task-selection-strategy.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルの変更なし","reason":"変更したのは docs/ja/product 配下の成果物だけで、plan / result / pjr 個票は変更していない"},{"command":"specdojo catalog validate","status":"not_applicable","summary":"docs/ja/projects 配下の成果物変更なし","reason":"変更は docs/ja/product/ 配下だけで、docs/ja/projects/ には及んでいない"}]}
+</specdojo_executor_evidence>

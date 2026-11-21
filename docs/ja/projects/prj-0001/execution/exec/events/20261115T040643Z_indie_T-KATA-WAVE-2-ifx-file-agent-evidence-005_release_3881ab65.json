@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-15T04:06:43Z",
+  "type": "release",
+  "task_id": "T-KATA-WAVE-2-ifx-file-agent-evidence-005",
+  "by": "indie",
+  "msg": "release claim to switch executor to flash-high-executor",
+  "meta": {
+    "pipeline_resume_released": "true",
+    "replaced_by": "flash-high-executor"
+  }
+}

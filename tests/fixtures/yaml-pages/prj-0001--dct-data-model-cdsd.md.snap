@@ -1,0 +1,267 @@
+---
+specdojo:
+  id: prj-0001:dct-data-model-cdsd
+  type: project
+  status: draft
+  rulebook: specdojo:dct-rulebook
+---
+
+# 成果物カタログ（データモデル／概念データストア定義）
+
+> このページは `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cdsd.yaml` から生成された表示用ページです。正本は YAML ファイルであり、このページは再生成できます。
+
+<!-- specdojo:generated-by=yaml-pages -->
+
+## 1. カタログの設定
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| プロジェクト | prj-0001 |
+| ドメイン | data-model |
+| 基準パス | /docs/ja/product/010-business-specs/020-data-model |
+
+## 2. 概念データストア定義
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| 配置先（親からの相対パス） | - |
+| 注記 | - |
+
+<!-- prettier-ignore -->
+| 成果物 ID | 名称 | 種別 | 根拠 | 概要 |
+| --- | --- | --- | --- | --- |
+| cdsd-planning | 概念データストア定義（プロジェクトの立上と計画） | work | bdd-project-config / bdd-operations-config / bdd-register-entry / bdd-deliverables-catalog / bdd-schedule-strategy / bdd-schedule-track | プロジェクトの立上と計画で扱うデータストア（プロジェクト構成、登録簿、成果物カタログ、Schedule等）を一覧で定義する |
+| cdsd-execution | 概念データストア定義（プロジェクト実行） | work | bdd-exec-event / bdd-exec-state / bdd-exec-plan-result / bdd-exec-evidence / bdd-worktree-branch / bdd-routine-definition / bdd-job-run | プロジェクト実行で扱うデータストア（実行イベント・状態、plan/result、worktree、定期処理、Job Run等）を一覧で定義する |
+| cdsd-sharing | 概念データストア定義（活用と共有） | work | bdd-deliverable / bdd-derived-view / bdd-report-record | 活用と共有で扱うデータストア（成果物、派生ビュー、報告記録）を一覧で定義する |
+| sld-specdojo | 保管場所一覧（SpecDojo） | work | cdsd-planning / cdsd-execution / cdsd-sharing | SpecDojo が記録を置く場所（リポジトリ内の docs・execution・controls、端末側の状態ディレクトリ、worktree、一時ディレクトリ）ごとに、置くもの・Git で共有するか・寿命・消してよいかを一覧にする |
+
+**`cdsd-planning`**
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| パス | cdsd-planning.md |
+| 準拠ルール | specdojo:cdsd-rulebook |
+| 作成指示 | - |
+| 注記 | - |
+
+<!-- prettier-ignore -->
+| 完了条件 | 確認ロール | 観点 ID |
+| --- | --- | --- |
+| データストアの業務的役割・内容・粒度が記述されていること | BA | vp-ba-requirements-completeness |
+| データストア構成を設計の基礎として参照できること | ARC | vp-arc-technical-constraints |
+| データ検証・整合性確認の対象が識別できること | QE | vp-qe-verifiability |
+
+**`cdsd-execution`**
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| パス | cdsd-execution.md |
+| 準拠ルール | specdojo:cdsd-rulebook |
+| 作成指示 | - |
+| 注記 | - |
+
+<!-- prettier-ignore -->
+| 完了条件 | 確認ロール | 観点 ID |
+| --- | --- | --- |
+| データストアの業務的役割・内容・粒度が記述されていること | BA | vp-ba-requirements-completeness |
+| データストア構成を設計の基礎として参照できること | ARC | vp-arc-technical-constraints |
+| データ検証・整合性確認の対象が識別できること | QE | vp-qe-verifiability |
+
+**`cdsd-sharing`**
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| パス | cdsd-sharing.md |
+| 準拠ルール | specdojo:cdsd-rulebook |
+| 作成指示 | - |
+| 注記 | 報告記録ストア（pr-*/mm-*）はCLI側の専用生成コードを持たないため、`evidence_refs`に含めない |
+
+<!-- prettier-ignore -->
+| 完了条件 | 確認ロール | 観点 ID |
+| --- | --- | --- |
+| データストアの業務的役割・内容・粒度が記述されていること | BA | vp-ba-requirements-completeness |
+| データストア構成を設計の基礎として参照できること | ARC | vp-arc-technical-constraints |
+| データ検証・整合性確認の対象が識別できること | QE | vp-qe-verifiability |
+
+**`sld-specdojo`**
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| パス | sld-specdojo.md |
+| 準拠ルール | specdojo:sld-rulebook |
+| 作成指示 | - |
+| 注記 | 保管場所一覧の型（sld）の代表（PJR-DD33、indie が 2026-11-15 に承認）。データストアの業務的な意味は cdsd-* を正本とし、本書は置き場所の物理的な区分に絞る |
+
+<!-- prettier-ignore -->
+| 完了条件 | 確認ロール | 観点 ID |
+| --- | --- | --- |
+| 保管場所ごとに置くもの・共有の有無・寿命・消してよいかが記述されていること | BA | vp-ba-requirements-completeness |
+| 保管場所の区分が実装の配置と一致していること | ARC | vp-arc-technical-constraints |
+| 運用者が消してよい場所と残すべき場所を判断できること | OPS | vp-ops-operability |
+
+## 3. YAML の正本
+
+<details>
+<summary>YAML の正本を表示</summary>
+
+<!-- prettier-ignore -->
+```yaml
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/dct.schema.yaml
+id: prj-0001:dct-data-model-cdsd
+type: project
+status: draft
+title: 成果物カタログ（データモデル／概念データストア定義）
+rulebook: specdojo:dct-rulebook
+project_id: prj-0001
+domain: data-model
+base_path: /docs/ja/product/010-business-specs/020-data-model
+
+# data-model ドメインの物理分割ファイル（cdsd 部分）。domain キーは分割前と同じ data-model を保つ。
+# cdsd は「一覧」形式（1ファイルに複数データストアを表の行として列挙する）のため、bdd のような
+# データストア単位の細分割はせず、cdfd-overview.md の3プロセスグループ単位でまとめる。
+
+groups:
+  - name: 概念データストア定義
+    deliverables:
+      - local_id: cdsd-planning
+        name: 概念データストア定義（プロジェクトの立上と計画）
+        kind: work
+        depends_on:
+          - bdd-project-config
+          - bdd-operations-config
+          - bdd-register-entry
+          - bdd-deliverables-catalog
+          - bdd-schedule-strategy
+          - bdd-schedule-track
+        overview: プロジェクトの立上と計画で扱うデータストア（プロジェクト構成、登録簿、成果物カタログ、Schedule等）を一覧で定義する
+        path: cdsd-planning.md
+        rulebook: specdojo:cdsd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/shared/specdojo-config.ts
+            purpose: プロジェクト構成ストアの読込・検証
+          - kind: implementation
+            path: src/register/register.ts
+            purpose: 登録簿ストアの生成・状態遷移
+          - kind: implementation
+            path: src/catalog/catalog.ts
+            purpose: 成果物カタログストアの読込・検証
+          - kind: implementation
+            path: src/exec/exec.ts
+            purpose: exec コマンド入口から到達するSchedule戦略ストアの型・解決規則
+          - kind: implementation
+            path: src/schedule/schedule.ts
+            purpose: Scheduleトラックストアの読込・タスクID導出
+        done_criteria:
+          - text: データストアの業務的役割・内容・粒度が記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: データストア構成を設計の基礎として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: データ検証・整合性確認の対象が識別できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+      - local_id: cdsd-execution
+        name: 概念データストア定義（プロジェクト実行）
+        kind: work
+        depends_on:
+          - bdd-exec-event
+          - bdd-exec-state
+          - bdd-exec-plan-result
+          - bdd-exec-evidence
+          - bdd-worktree-branch
+          - bdd-routine-definition
+          - bdd-job-run
+        overview: プロジェクト実行で扱うデータストア（実行イベント・状態、plan/result、worktree、定期処理、Job Run等）を一覧で定義する
+        path: cdsd-execution.md
+        rulebook: specdojo:cdsd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/exec/exec.ts
+            purpose: exec コマンド入口から到達する実行イベントストアのスキーマ・追記規則、実行状態（Ready）ストアの算出、plan/resultストアのscaffold規則、worktreeストアの命名・配置
+          - kind: implementation
+            path: src/routine/routine.ts
+            purpose: 定期処理ストアのスキーマ
+          - kind: implementation
+            path: src/job/job.ts
+            purpose: Job Runストアのスキーマ
+        done_criteria:
+          - text: データストアの業務的役割・内容・粒度が記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: データストア構成を設計の基礎として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: データ検証・整合性確認の対象が識別できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+      - local_id: cdsd-sharing
+        name: 概念データストア定義（活用と共有）
+        kind: work
+        depends_on:
+          - bdd-deliverable
+          - bdd-derived-view
+          - bdd-report-record
+        overview: 活用と共有で扱うデータストア（成果物、派生ビュー、報告記録）を一覧で定義する
+        path: cdsd-sharing.md
+        rulebook: specdojo:cdsd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/deliverable/deliverable.ts
+            purpose: 成果物本体ストアの読込・雛形生成
+          - kind: implementation
+            path: src/catalog/catalog.ts
+            purpose: catalog コマンド入口から到達する派生ビューストアの生成規則
+        note: 報告記録ストア（pr-*/mm-*）はCLI側の専用生成コードを持たないため、evidence_refsに含めない
+        done_criteria:
+          - text: データストアの業務的役割・内容・粒度が記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: データストア構成を設計の基礎として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: データ検証・整合性確認の対象が識別できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+
+      - local_id: sld-specdojo
+        name: 保管場所一覧（SpecDojo）
+        kind: work
+        depends_on:
+          - cdsd-planning
+          - cdsd-execution
+          - cdsd-sharing
+        overview: SpecDojo が記録を置く場所（リポジトリ内の docs・execution・controls、端末側の状態ディレクトリ、worktree、一時ディレクトリ）ごとに、置くもの・Git で共有するか・寿命・消してよいかを一覧にする
+        path: sld-specdojo.md
+        rulebook: specdojo:sld-rulebook
+        note: 保管場所一覧の型（sld）の代表（PJR-DD33、indie が 2026-11-15 に承認）。データストアの業務的な意味は cdsd-* を正本とし、本書は置き場所の物理的な区分に絞る
+        evidence_refs:
+          - kind: implementation
+            path: src/shared/run-records.ts
+            purpose: 実行記録の run ごとの配置の決定
+          - kind: implementation
+            path: src/routine/storage.ts
+            purpose: 端末側の状態ディレクトリへの routine の状態・履歴・lock の配置
+          - kind: implementation
+            path: src/exec/worktree.ts
+            purpose: task worktree の命名・配置
+        done_criteria:
+          - text: 保管場所ごとに置くもの・共有の有無・寿命・消してよいかが記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 保管場所の区分が実装の配置と一致していること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 運用者が消してよい場所と残すべき場所を判断できること
+            roles: [OPS]
+            viewpoint: vp-ops-operability
+```
+
+</details>

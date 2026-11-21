@@ -1,0 +1,304 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-9BY9",
+  "run_id": "pjr-9by9-20261107T011738Z-f0ee4d58",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-07T01:18:48.716Z",
+    "completed_at": "2026-11-07T01:33:16.203Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-9by9.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-9by9-exec-run-record-migration.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/docs-structure-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/plan-result-lifecycle-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/exec-records.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/plans-storage.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/register-resume.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-ops-commit.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/job/noop.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/run-records.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/dashboard/dashboard.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/deliverable.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/plan-conventions.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register-resume.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register-resume.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/run-records.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/job/noop.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/migrate-records.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/migrate-records.test.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-9by9-exec-run-record-migration.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/docs-structure-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/plan-result-lifecycle-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/exec-records.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/plans-storage.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/register-resume.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-ops-commit.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/job/noop.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/run-records.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/dashboard/dashboard.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/deliverable.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/plan-conventions.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register-resume.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register-resume.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/run-records.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/job/noop.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/migrate-records.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/migrate-records.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 22,
+    "summary": "CHANGELOG.md                                       |  2 +\n .../pjr-9by9-exec-run-record-migration.md          | 55 +++++++++++--\n docs/ja/specdojo/guides/docs-structure-guide.md    | 42 +++++++---\n .../specdojo/guides/plan-result-lifecycle-guide.md | 93 ++++++++--------------\n src/dashboard/exec-records.ts                      | 33 ++------\n src/exec/commands.ts                               |  8 +-\n src/exec/plans-storage.ts                          | 36 ++-------\n src/exec/register-resume.ts                        | 44 ++--------\n src/exec/run/register-worktree.ts                  | 12 ++-\n src/exec/worktree-ops-commit.ts                    |  3 +-\n src/job/noop.ts                                    | 19 ++---\n src/shared/run-records.ts                          | 84 +++----------------\n tests/src/dashboard/dashboard.test.ts              | 50 +++++++-----\n tests/src/exec/deliverable.test.ts                 | 73 +++--------------\n tests/src/exec/plan-conventions.test.ts            |  4 +-\n tests/src/exec/register-resume.integration.test.ts | 13 +--\n tests/src/exec/register-resume.test.ts             | 66 +++++----------\n tests/src/exec/run-records.test.ts                 | 34 +++++---\n tests/src/job/noop.test.ts                         | 10 +--\n 19 files changed, 267 insertions(+), 414 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run build",
+      "status": "passed",
+      "summary": "最終ソースのビルド成功。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts exec migrate-records --project prj-0001 --dry-run",
+      "status": "passed",
+      "summary": "移動5,576件、参照更新3,214件、対の欠落18件。衝突・分類不能0件。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts exec migrate-records --project prj-0001",
+      "status": "requires_human",
+      "summary": "最初のgit mvが読み取り専用のGit indexで失敗。実移動0件。書き込み可能な親／ホスト側での実行が必要。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tmp/pjr-9by9-smoke.ts",
+      "status": "passed",
+      "summary": "一時Gitリポジトリで全5,576件を移行。ログ1,257件のバイト一致、文書ID2,394件の保持、ログ参照1,231件の解決、dashboardで1,206 runの読み取り、再実行時の移動・更新0件を確認。一時データは削除済み。"
+    },
+    {
+      "source": "executor",
+      "command": "npx --no-install prettier --write src/exec/migrate-records.ts src/exec/plans-storage.ts src/shared/run-records.ts tests/src/exec/migrate-records.test.ts tests/src/exec/register-resume.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-9by9-exec-run-record-migration.md",
+      "status": "passed",
+      "summary": "整形成功。他の変更Markdown・TypeScriptも先行して整形済み。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts exec validate --project prj-0001",
+      "status": "passed",
+      "summary": "移行前の検証成功。既存の履歴event警告あり。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts exec status --project prj-0001",
+      "status": "passed",
+      "summary": "移行前の状態表示成功。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts dashboard build --project prj-0001",
+      "status": "passed",
+      "summary": "移行前の派生生成成功。既存timelineの非推奨警告あり。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "カタログ検査成功。既存参照の警告あり。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿の派生生成成功。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "failed",
+      "summary": "既存のPJR-G1W9個票27行目のMarkdownリンク違反。HEADにも同じ記述が存在する。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links -- docs/ja/projects/prj-0001/controls/project-register/pjr-9by9-exec-run-record-migration.md",
+      "status": "passed",
+      "summary": "本個票の履歴リンク検査成功。"
+    },
+    {
+      "source": "executor",
+      "command": "node tools/check-evidence-secrets.mjs --staged",
+      "status": "passed",
+      "summary": "対象0ファイル、検出0件。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "executorによるYAML変更なし。",
+      "reason": "本作業で変更した成果物はTypeScriptとMarkdown。runner管理のevent YAMLは適用対象に含めない。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    }
+  ],
+  "final_message": "移行CLI・旧配置探索の廃止・ガイド・テストを実装。一時リポジトリで全5,576件の移行を検証したが、本体はGit indexが読み取り専用のため実移動0件。詳細を個票へ記録した。",
+  "completion_status": "incomplete",
+  "handoff": [
+    "Git indexに書き込める親runner／ホストで、ほかのrunを止めて `node --import tsx src/specdojo.ts exec migrate-records --project prj-0001 --dry-run` を確認後、`--dry-run` を外して実行する。移動対象5,576件、参照更新3,214件、対の欠落18件。旧配置の残存0件と移行後のCLIを再確認する。",
+    "移行と読み取りの切り替えを同じ変更として取り込む。別runの記録は既存のcommit保護で除外されるため、親側で移動の両側を確認し、PJR-BRN4の停止・保持手順に従って統合する。",
+    "判断: `exec/trials/` の40ファイルは比較実験独自の形式として維持する。jobの状態管理JSON96件は配置を維持して参照のみ更新する。同じ対を複数checkpointが参照するときは最新runに対を置き、先行試行のevidence・ログを保持する。対応不明の対は旧stemをrun IDとする。",
+    "全件の履歴リンク検査は、HEADにも存在するPJR-G1W9個票27行目のMarkdownリンクで失敗した。対象外の個票は変更していない。違反の解消、移行後の確認、親runnerのlint・型検査・単体／統合テスト・schema検証が必要。"
+  ],
+  "block_reason": "executor reported incomplete: 移行CLI・旧配置探索の廃止・ガイド・テストを実装。一時リポジトリで全5,576件の移行を検証したが、本体はGit indexが読み取り専用のため実移動0件。詳細を個票へ記録した。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-9BY9/pjr-9by9-20261107T011738Z-f0ee4d58/executor.attempt-1.log",
+      "bytes": 4605,
+      "truncated": false
+    }
+  ]
+}

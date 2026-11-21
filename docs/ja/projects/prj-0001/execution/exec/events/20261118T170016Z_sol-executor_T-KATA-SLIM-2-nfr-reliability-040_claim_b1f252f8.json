@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-18T17:00:16Z",
+  "type": "claim",
+  "task_id": "T-KATA-SLIM-2-nfr-reliability-040",
+  "by": "sol-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA"
+  }
+}

@@ -1,18 +1,11 @@
 # yaml-language-server: $schema=../../../specdojo/schemas/v1/dct.schema.yaml
 # specdojo-schema: validate=false reason=template
-# Template: data model deliverables catalog (classification definition)
-# Placeholder _PROJECT_ID_ is not used for product-level templates.
-# base_path is fixed to the product document directory.
-#
-# This is the cld physical part of the data-model domain. Catalog build merges
-# all dct-data-model-*-template parts by same-name group in sorted file order.
-#
-# local_id の _TERM_ 反復方針（複数業務領域への複製 / 単一領域を複数項目に分割）は
-# dct-rulebook.md の「業務領域テンプレートの反復方針（_TERM_ の使い分け）」を正とする。
+# 非推奨: 分類一覧の略号は cld から cdt へ移行しました。
+# 移行先は specdojo:dct-data-model-cdt-template を参照してください。
 id: specdojo:dct-data-model-cld-template
 type: template
-status: draft
-title: 成果物カタログ（データモデル／分類定義）
+status: deprecated
+title: 成果物カタログ（データモデル／分類定義）（非推奨）
 rulebook: specdojo:dct-rulebook
 domain: data-model
 base_path: /docs/ja/product/010-business-specs/020-data-model
@@ -22,13 +15,13 @@ groups:
     deliverables:
       - local_id: cld-_TERM_
         min_size: medium
-        name: 分類定義
+        name: 分類定義（非推奨）
         kind: work
         depends_on: []
-        overview: 業務上の分類（カテゴリ・種別・区分など）を一覧で定義する
+        overview: 非推奨。specdojo:dct-data-model-cdt-template の cdt-_TERM_ を参照
         path: cld-_TERM_.md
         rulebook: specdojo:cld-rulebook
-        note: "_TERM_ は対象分類体系の略称（kebab-case）"
+        note: 非推奨。specdojo:dct-data-model-cdt-template を使用してください
         done_criteria:
           - text: 分類名・説明が業務観点で正確に定義されていること
             roles: [BA]

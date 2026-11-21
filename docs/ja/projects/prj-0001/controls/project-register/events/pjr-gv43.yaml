@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_9f2b2228655a44e7978b4ecee37104fb
+  ts: "2026-11-20T23:57:34Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-BSCK の完了条件のうち、次の版で消す部分を分けたため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 0.10.0 で非推奨の 9 コマンドと where の別名を消す
+    - field: description
+      from: ""
+      to: PJR-BSCK で非推奨にした timeline where・timeline build・exec note・exec link・exec estimate・exec migrate-records・grade migrate・register migrate・config migrate-members と、各コマンドの where の別名を 0.10.0 で消す
+    - field: input
+      from: ""
+      to: '["PJR-BSCK で 9 コマンドと where の別名を非推奨にし、help と実行時の警告に 0.10.0 で消すと書いた（2026-11-21 にビルド済みの CLI で確かめた）","PJR-BSCK の完了条件「警告を出した版の次の版で消す（消す前に使われ方をもう一度確かめる）」を、利用者の判断でこの項目へ分けた"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-21"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-BSCK"]'

@@ -245,10 +245,10 @@ CLI の導入は
 
 ### 8.3. 成果物の作成を計画する
 
-| 目的                                                                                       | 参照先                                         |
-| ------------------------------------------------------------------------------------------ | ---------------------------------------------- |
-| 複数トラックの着手順序・並行可否を計画し、カタログ作成から Schedule 展開までを見通す       | [Timeline設計ガイド](timeline-design-guide.md) |
-| 成果物カタログから Schedule への流れを理解する、フェーズ・タスク・依存関係・反復を設計する | [Schedule設計ガイド](schedule-design-guide.md) |
+| 目的                                                                                       | 参照先                                                  |
+| ------------------------------------------------------------------------------------------ | ------------------------------------------------------- |
+| epic の依存・範囲・期間で全体計画を管理する                                                | [[specdojo:register-operation-guide\|登録簿運用ガイド]] |
+| 成果物カタログから Schedule への流れを理解する、フェーズ・タスク・依存関係・反復を設計する | [Schedule設計ガイド](schedule-design-guide.md)          |
 
 ### 8.4. プロジェクトを実行・管理する
 
@@ -268,6 +268,7 @@ CLI の導入は
 | worktreeを使って手動で隔離実行する                                      | [exec worktree運用ガイド](exec-worktree-guide.md)                 |
 | 対話でCLI操作を進める                                                   | [オーケストレーター運用ガイド](orchestrator-operation-guide.md)   |
 | 任意の Dev Container や常時稼働ホストで実行環境を分離する               | [常時稼働ホスト運用ガイド](remote-host-development-guide.md)      |
+| プロジェクトを管理用の別リポジトリへ移す手順と安全確認を行う            | [[specdojo:project-move-guide\|プロジェクト移行ガイド]]           |
 
 登録簿を agent 実行と並行して記帳する場合は、記帳コマンドの `--commit` が同じ project の `register lifecycle` 枠を使います。provider 設定を配布するときは `config scaffold` を使い、Antigravity の `--global` はすべてのリポジトリに効くため dry-run 後に適用します。Dev Container は必須ではなく、必要な場合だけ `devcontainer scaffold` で追加します。各操作の詳細は上表のガイドと [CLIコマンドリファレンス](../references/command-reference.md) を参照してください。
 

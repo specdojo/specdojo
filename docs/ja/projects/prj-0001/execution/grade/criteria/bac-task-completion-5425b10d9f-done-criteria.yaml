@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: bac-task-completion-grade-criteria
+document: bac-task-completion
+path: docs/ja/product/050-business-acceptance-criteria/bac-task-completion.md
+graded_at: "2026-11-15T22:42:16.228Z"
+graded_by: sol-review-executor
+content_hash: c227ff44dc8d7b5b948a2f04879b3e0f4ef7af79a2921ee0a9816d8dcabe106e
+summary:
+  satisfied: 3
+  unsatisfied: 1
+  total: 4
+criteria:
+  - id: DC-001
+    text: 業務シナリオ・受入条件・前提・期待結果が業務観点で記述されていること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: satisfied
+  - id: DC-002
+    text: 受入条件の業務的妥当性と判定基準を承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-decision-readiness
+    status: satisfied
+  - id: DC-003
+    text: システム実装が受入条件を満たせる設計になっていること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: unsatisfied
+    reason: >-
+      The coverage table still identifies missing evaluation-result design definitions and pending ARC checks for
+      freshness, interruption, independence, replanning, and decision authority; complete and confirm that coverage
+      before treating implementation feasibility as established.
+  - id: DC-004
+    text: 受入テスト設計の基礎として活用できること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: satisfied

@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_80dce2152a98403aab44a1da1f81ccf5
+  ts: "2026-11-21T00:23:43Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: agy を止める作業で見つけたため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: exec run が名前で指定された無効な member をそのまま起動する
+    - field: description
+      from: ""
+      to: agent-members.yaml で disabled にした member でも、exec run --executor-by や --reporter-by で名前を指定すると起動前に断られない。grade run の --by は断る
+    - field: input
+      from: ""
+      to: '["2026-11-21、agy の member を disabled にした後、exec run --register PJR-XA6Y --executor-by flash-high-executor --reporter-by gemma26-reporter --dry-run が通った。grade run --by flash-high-executor は「--by agent is disabled in agent-members.yaml」で断られた","src/exec/run/shared.ts は自動選択でだけ disabled を除き、コメントに Named selections resolve outside this function とある。src/exec/agent-plan.ts と src/exec/trial-core.ts は disabled を確かめている","当面の回避策として、exec-defaults の antigravity の `command_template` を外し、起動コマンドを解決できなくして断っている（afbebe967）"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-21"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-XA6Y"]'

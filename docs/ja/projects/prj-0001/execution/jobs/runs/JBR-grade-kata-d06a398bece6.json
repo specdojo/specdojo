@@ -37,16 +37,16 @@
     "owner": "ARC"
   },
   "checkpoint_before": {},
-  "plan_ref": "exec/plans/JBR-grade-kata-d06a398bece6-plan.md",
-  "result_ref": "exec/results/JBR-grade-kata-d06a398bece6-result.md",
+  "plan_ref": "runs/job/JBR-grade-kata-d06a398bece6/attempt-1/plan.md",
+  "result_ref": "runs/job/JBR-grade-kata-d06a398bece6/attempt-1/result.md",
   "attempts": [
     {
       "attempt": 1,
       "started_at": "2026-09-19T21:00:03.349Z",
       "status": "failed",
       "completed_at": "2026-09-19T21:46:07.555Z",
-      "result_ref": "exec/results/JBR-grade-kata-d06a398bece6-result.md",
-      "evidence_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-d06a398bece6/attempt-1/evidence.json",
+      "result_ref": "runs/job/JBR-grade-kata-d06a398bece6/attempt-1/result.md",
+      "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/job/JBR-grade-kata-d06a398bece6/attempt-1/evidence.json",
       "exit_code": 0,
       "reason": "1件の文書 (`docs/ja/specdojo/rulebooks/stsd-rulebook.md`) が `failed` ステータスとなっており、全対象文書の品質評価が完了していないため。"
     }

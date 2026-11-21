@@ -1,0 +1,14 @@
+parent validation: lint-md
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.9.1 lint:md
+> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'
+
+
+
+--- stderr ---
+docs/ja/projects/prj-0001/controls/project-register/pjr-nje4-hotfix-0-9-2-block-antigravity.md:76:163 error MD034/no-bare-urls Bare URL used [Context: "https://antigravity.google/doc..."]
+docs/ja/projects/prj-0001/controls/project-register/pjr-nje4-hotfix-0-9-2-block-antigravity.md:76:200 error MD034/no-bare-urls Bare URL used [Context: "https://antigravity.google/ter..."]

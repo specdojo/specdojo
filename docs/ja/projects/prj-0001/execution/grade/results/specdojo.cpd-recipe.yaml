@@ -1,0 +1,169 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:cpd-recipe
+path: docs/ja/specdojo/recipes/cpd-recipe.md
+target: kata
+rubric: grade-rubric-v2
+reference: specdojo:prj-overview-recipe
+verdict: pass
+score: 90
+graded_at: "2026-11-19T20:30:20.297Z"
+graded_by: flash-high-executor
+content_hash: d43090b2b4397e9442e2f98fdc9c52d35d908401f2b2c69f68aaf3d6e5568586
+categories:
+  purpose:
+    score: 88
+  operations:
+    score: 100
+  planning:
+    score: 83
+  business:
+    score: 92
+  architecture:
+    score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
+  quality:
+    score: 83
+  consistency:
+    score: 75
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 3
+    score: 75
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 3
+    score: 75
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
+  vp-ba-business-value:
+    level: 3
+    score: 75
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 3
+    score: 75
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 7
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-po-purpose-alignment
+    line: 9
+    anchor: >-
+      - CPD は、上位図と上位の要求から分割の理由（Why）を引き継ぎ、コンポーネントの責務と境界で受け渡す情報（What）を定め、依存方向と失敗時の観測点（How）を示す。これらをコンポーネント名と関係 ID
+      でたどれるようにする（Trace）。
+    message: 上位の業務目的・成功基準を recipe がどこへ遡り、rulebook の上位文書群（メタ情報標準・命名標準・構成ガイド）とどう関係するかの参照先を一行で補うべきである。
+    message_ja: 上位の業務目的・成功基準を recipe がどこへ遡り、rulebook の上位文書群（メタ情報標準・命名標準・構成ガイド）とどう関係するかの参照先を一行で補うべきである。
+  - id: F002
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 87
+    anchor: "問い:"
+    message: 作業単位の規模・所要時間を見積もる基準（関係数や未確定範囲の取り扱い）を一行追加し、Schedule 見積に使える粒度へ高める。
+    message_ja: 作業単位の規模・所要時間を見積もる基準（関係数や未確定範囲の取り扱い）を一行追加し、Schedule 見積に使える粒度へ高める。
+  - id: F003
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 92
+    anchor: "コツ:"
+    message: 分類された各論点がどの PJR / Schedule / 報告先に転記され、どの Role code が担当するかを一行足して、進捗・課題・リスクの分離と担当を recipe 内で確認できる形にする。
+    message_ja: 分類された各論点がどの PJR / Schedule / 報告先に転記され、どの Role code が担当するかを一行足して、進捗・課題・リスクの分離と担当を recipe 内で確認できる形にする。
+  - id: F004
+    severity: minor
+    rule: vp-ba-business-value
+    line: 16
+    anchor: "| 必要な成果 | 利用者が確認して次へ進む結果、期待価値・成功基準の記述箇所             | 上位の要求・目的、BA    |"
+    message: 「必要な成果」の問いに、期待価値・成功基準が主な方針/成果（例：失敗時の未印字引き継ぎ等の境界判断）のどれへどう応えるかという一項を足し、BA による対応確認に recipe が直接使える形にする。
+    message_ja: 「必要な成果」の問いに、期待価値・成功基準が主な方針/成果（例：失敗時の未印字引き継ぎ等の境界判断）のどれへどう応えるかという一項を足し、BA による対応確認に recipe が直接使える形にする。
+  - id: F005
+    severity: minor
+    rule: vp-dev-testability
+    line: 118
+    anchor: "## 7. レビュー観点"
+    message: >-
+      「メタ情報/主 rulebook、参照先の lookup 索引整合、Mermaid 構文、描画・可読性」の4項目を recipe 上に一行追加し、rulebook §6.6 と recipe の検証観点の対応を recipe
+      内で確認できる形にする。
+    message_ja: >-
+      「メタ情報/主 rulebook、参照先の lookup 索引整合、Mermaid 構文、描画・可読性」の4項目を recipe 上に一行追加し、rulebook §6.6 と recipe の検証観点の対応を recipe
+      内で確認できる形にする。
+  - id: F006
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 76
+    anchor: "検証観点の問い:"
+    message: 「与える条件 → 観測する結果」を各境界で pass/fail として明確化し、rulebook §6.6「各行の観測結果を満たせば Pass、違反すれば Fail」との整合を recipe 上に明示すべきである。
+    message_ja: 「与える条件 → 観測する結果」を各境界で pass/fail として明確化し、rulebook §6.6「各行の観測結果を満たせば Pass、違反すれば Fail」との整合を recipe 上に明示すべきである。
+  - id: F007
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 104
+    anchor: 4. 一つの変更（境界・責務・外部契約）を仮定し、関係 ID から上位図・詳細契約・観測点・作業順への影響をたどる。たどれない関係は定義を補う。
+    message: >-
+      「改訂なら、変更した関係から後続設計・実装・検証・作業順への影響をたどり、更新先を決める」という §3-8 の文は rulebook §6.7「変更・保守時の影響確認」に対応するが、recipe 内で §5-5
+      と併せて「変更時の影響確認」を一貫して指す章またはラベルとして明示した方がよい（rulebook §6.7 対応漏れの解消のため）。
+    message_ja: >-
+      「改訂なら、変更した関係から後続設計・実装・検証・作業順への影響をたどり、更新先を決める」という §3-8 の文は rulebook §6.7「変更・保守時の影響確認」に対応するが、recipe 内で §5-5
+      と併せて「変更時の影響確認」を一貫して指す章またはラベルとして明示した方がよい（rulebook §6.7 対応漏れの解消のため）。

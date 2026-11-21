@@ -692,3 +692,33 @@ groups:
         rulebook: specdojo:atc-rulebook
         evidence_refs: *evidence-deprecation
         done_criteria: *atc-target-done-criteria
+  - name: トレーサビリティ
+    base_path: 070-traceability
+    deliverables:
+      - local_id: trc-requirements-to-specs
+        name: トレーサビリティ（要求→仕様）
+        kind: work
+        overview: 業務の受入基準（bac）とシステム化機能（sf）などの仕様の型付き ID 参照から、要求と仕様の対応を派生ビューとして示し、要求漏れ・仕様漏れを見つける
+        path: trc-requirements-to-specs.md
+        rulebook: specdojo:trc-requirements-to-specs-rulebook
+        done_criteria:
+          - text: 要求ごとに対応する仕様と、対応のない要求・仕様が識別できること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 対応の漏れと食い違いを確認できること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+      - local_id: trc-requirements-to-tests
+        name: トレーサビリティ（要求→テスト）
+        kind: work
+        depends_on: [trc-requirements-to-specs]
+        overview: 業務の受入基準（bac）と受入テスト・総合テスト（atc・stc）の型付き ID 参照から、要求とテストの対応を派生ビューとして示し、要求漏れ・テスト漏れを見つける
+        path: trc-requirements-to-tests.md
+        rulebook: specdojo:trc-requirements-to-tests-rulebook
+        done_criteria:
+          - text: 要求ごとに対応するテストと、テストのない要求が識別できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 対応の漏れと食い違いを確認できること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency

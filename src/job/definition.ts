@@ -10,7 +10,12 @@ import {
   specdojoRootDir,
   type SpecDojoProjectConfig,
 } from "../shared/specdojo-config.js";
-import type { Proficiency, TaskMode } from "../shared/agent-types.js";
+import {
+  isProficiency,
+  PROFICIENCIES,
+  type Proficiency,
+  type TaskMode,
+} from "../shared/agent-types.js";
 
 export type JobInputType = "string" | "integer" | "boolean" | "list";
 
@@ -68,13 +73,38 @@ export type JobCommandTaskDefinition = {
   mode: "command";
   owner?: string;
   precondition?: JobPreconditionDefinition;
-  command: string;
+  command?: string;
+  steps?: JobCommandStepDefinition[];
+  lock_wait_seconds?: number;
   /** A non-zero command exit code that records a reviewable partial Run instead of a failure. */
   partial_exit_code?: number;
   analysis?: JobCommandAnalysisDefinition;
   targets?: string[];
   paths?: string[];
   review?: JobReviewDefinition;
+};
+
+export type JobCommandStepDefinition = {
+  id: string;
+  command: string;
+  on_failure?: "stop" | "continue";
+  timeout_seconds?: number;
+  completion?: {
+    path: string;
+    field: string;
+    succeeded: string[];
+    deferred?: string[];
+  };
+};
+
+export type JobStepResult = {
+  id: string;
+  status: "running" | "succeeded" | "failed" | "deferred";
+  started_at?: string;
+  completed_at?: string;
+  exit_code?: number | null;
+  reason?: string;
+  evidence_ref?: string;
 };
 
 export type JobTaskDefinition = JobAgentTaskDefinition | JobCommandTaskDefinition;
@@ -103,6 +133,7 @@ export type JobRunAttempt = {
   evidence_ref?: string;
   exit_code?: number | null;
   reason?: string;
+  steps?: JobStepResult[];
 };
 
 export type JobRunReview = {
@@ -170,6 +201,8 @@ export type JobCommandResult = {
   stdoutTruncated: boolean;
   stderrTruncated: boolean;
   error?: string;
+  timedOut?: boolean;
+  reason?: string;
 };
 
 export type JobStateFile = {
@@ -197,6 +230,82 @@ function validStringList(value: unknown): value is string[] {
     Array.isArray(value) &&
     value.length > 0 &&
     value.every((item) => typeof item === "string" && item.trim())
+  );
+}
+
+export function parseJobSteps(value: unknown): {
+  steps?: JobCommandStepDefinition[];
+  errors: string[];
+} {
+  const errors: string[] = [];
+  if (!Array.isArray(value) || value.length === 0)
+    return { errors: ["task.steps must be a non-empty list"] };
+  const steps: JobCommandStepDefinition[] = [];
+  const ids = new Set<string>();
+  for (const [index, raw] of value.entries()) {
+    const prefix = `task.steps[${index}]`;
+    if (!isRecord(raw)) {
+      errors.push(`${prefix} must be a mapping`);
+      continue;
+    }
+    if (
+      Object.keys(raw).some(
+        (key) => !["id", "command", "on_failure", "timeout_seconds", "completion"].includes(key),
+      )
+    )
+      errors.push(`${prefix} has unknown keys`);
+    if (typeof raw.id !== "string" || !/^[a-z][a-z0-9-]*$/.test(raw.id) || ids.has(raw.id))
+      errors.push(`${prefix}.id must be a unique lowercase slug`);
+    else ids.add(raw.id);
+    if (typeof raw.command !== "string" || !raw.command.trim())
+      errors.push(`${prefix}.command must be non-empty`);
+    if (raw.on_failure !== undefined && raw.on_failure !== "stop" && raw.on_failure !== "continue")
+      errors.push(`${prefix}.on_failure must be stop|continue`);
+    if (
+      raw.timeout_seconds !== undefined &&
+      (!Number.isSafeInteger(raw.timeout_seconds) ||
+        Number(raw.timeout_seconds) < 1 ||
+        Number(raw.timeout_seconds) > 2147483)
+    )
+      errors.push(`${prefix}.timeout_seconds must be an integer from 1 to 2147483`);
+    let completion: JobCommandStepDefinition["completion"];
+    if (raw.completion !== undefined) {
+      const state = raw.completion;
+      if (
+        !isRecord(state) ||
+        Object.keys(state).some(
+          (key) => !["path", "field", "succeeded", "deferred"].includes(key),
+        ) ||
+        typeof state.path !== "string" ||
+        !state.path.trim() ||
+        typeof state.field !== "string" ||
+        !state.field.trim() ||
+        !validStringList(state.succeeded) ||
+        (state.deferred !== undefined && !validStringList(state.deferred)) ||
+        (Array.isArray(state.deferred) &&
+          state.deferred.some((item) => (state.succeeded as string[]).includes(item)))
+      )
+        errors.push(
+          `${prefix}.completion requires path, field and disjoint succeeded/deferred state lists`,
+        );
+      else completion = state as JobCommandStepDefinition["completion"];
+    }
+    steps.push({
+      id: String(raw.id),
+      command: String(raw.command),
+      ...(raw.on_failure ? { on_failure: raw.on_failure as "stop" | "continue" } : {}),
+      ...(raw.timeout_seconds !== undefined
+        ? { timeout_seconds: Number(raw.timeout_seconds) }
+        : {}),
+      ...(completion ? { completion } : {}),
+    });
+  }
+  return { ...(errors.length === 0 ? { steps } : {}), errors };
+}
+
+export function jobCommandText(task: JobCommandTaskDefinition): string {
+  return (
+    task.steps?.map((step) => `# ${step.id}\n${step.command}`).join("\n") ?? task.command ?? ""
   );
 }
 
@@ -342,7 +451,8 @@ function isJobTaskDefinition(value: unknown): value is JobTaskDefinition {
   if (value.review !== undefined && !isJobReviewDefinition(value.review)) return false;
   if (value.mode === "command") {
     return (
-      typeof value.command === "string" &&
+      ((typeof value.command === "string" && value.steps === undefined) ||
+        (value.command === undefined && parseJobSteps(value.steps).errors.length === 0)) &&
       (value.partial_exit_code === undefined ||
         (Number.isSafeInteger(value.partial_exit_code) &&
           Number(value.partial_exit_code) >= 1 &&
@@ -619,7 +729,23 @@ export function parseJobDefinition(
 
     if (mode === "command") {
       const command = typeof value.task.command === "string" ? value.task.command.trim() : "";
-      if (!command) errors.push("task.command is required for command mode");
+      const parsedSteps =
+        value.task.steps === undefined ? undefined : parseJobSteps(value.task.steps);
+      if (parsedSteps) errors.push(...parsedSteps.errors);
+      if (
+        (value.task.command !== undefined) === (value.task.steps !== undefined) ||
+        (value.task.command !== undefined && !command)
+      )
+        errors.push("command mode requires exactly one of task.command or task.steps");
+      if (
+        value.task.lock_wait_seconds !== undefined &&
+        (!parsedSteps ||
+          !Number.isSafeInteger(value.task.lock_wait_seconds) ||
+          Number(value.task.lock_wait_seconds) < 0)
+      )
+        errors.push("task.lock_wait_seconds must be a non-negative integer for task.steps");
+      if (parsedSteps && value.task.partial_exit_code !== undefined)
+        errors.push("task.partial_exit_code cannot be combined with task.steps");
       const partialExitCode = value.task.partial_exit_code;
       if (
         partialExitCode !== undefined &&
@@ -705,11 +831,14 @@ export function parseJobDefinition(
       if (value.task.capabilities !== undefined || value.task.proficiency !== undefined) {
         errors.push("task.capabilities and task.proficiency are not allowed in command mode");
       }
-      if (command)
+      if (command || parsedSteps?.steps)
         task = {
           mode: "command",
           ...(precondition ? { precondition } : {}),
-          command,
+          ...(parsedSteps?.steps ? { steps: parsedSteps.steps } : { command }),
+          ...(value.task.lock_wait_seconds !== undefined
+            ? { lock_wait_seconds: Number(value.task.lock_wait_seconds) }
+            : {}),
           ...(Number.isSafeInteger(partialExitCode)
             ? { partial_exit_code: Number(partialExitCode) }
             : {}),
@@ -734,6 +863,8 @@ export function parseJobDefinition(
       if (
         value.task.analysis !== undefined ||
         value.task.command !== undefined ||
+        value.task.steps !== undefined ||
+        value.task.lock_wait_seconds !== undefined ||
         value.task.precondition !== undefined ||
         value.task.partial_exit_code !== undefined
       ) {
@@ -745,11 +876,8 @@ export function parseJobDefinition(
         errors.push("task.capabilities must be a non-empty string list");
       }
       const proficiency = value.task.proficiency;
-      if (
-        proficiency !== undefined &&
-        !["low", "normal", "high", "expert"].includes(String(proficiency))
-      ) {
-        errors.push("task.proficiency must be low|normal|high|expert");
+      if (proficiency !== undefined && !isProficiency(proficiency)) {
+        errors.push(`task.proficiency must be ${PROFICIENCIES.join("|")}`);
       }
       if ((mode === "edit" || mode === "review") && description && (targets || paths)) {
         task = {

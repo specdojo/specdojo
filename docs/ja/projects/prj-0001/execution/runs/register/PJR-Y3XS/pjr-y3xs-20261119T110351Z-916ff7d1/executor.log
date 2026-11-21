@@ -1,0 +1,32 @@
+3 つの現象の原因がわかり、修正しました。ただし、どれも手元では動かしていません。`npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run test:integration` は親 runner が実行するので、こちらでは走らせていません。sandbox が `/tmp` の書き込みを拒否したため、一時リポジトリでの再現実験もできていません。3 つ目の原因は Git の挙動から推論したもので、確かめるのは新しく足した統合テストになります。
+
+**原因と修正**
+
+- **記帳の commit の途中に統合が止まる**: `register ... --commit` と `specdojo git` は lifecycle ロックを取っていましたが、schedule の task の統合はプロセス内のロックしか取っていませんでした。記帳が stage して hook（50 秒ほどかかる register-build）を走らせている間に統合が始まり、staged のファイルで止まっていました。
+  - 統合も同じロックを取るようにしました（`withExecLifecycleMutex`）。統合は記帳の commit が終わるのを待ちます。
+  - 方針は「待つ」にしました。register 側はすでにこのロックで直列化しており、playbook の運用ともそろうためです。
+  - schedule 実行・手動実行・`exec resume` はすべてこの経路を通ります。
+- **`-m` を 2 つ付けると commit されない**: commander は同じオプションを繰り返すと最後の値だけを残します。message が本文だけになり、件名に type が無いため commitlint が拒否していました。
+  - 終了コードは 1 でしたが、エラーの最後の行が引数の断片（`Co-Authored-By… -- 2 paths)`）だったので、失敗に気づきにくくなっていました。
+  - `-m` を繰り返せるようにし、`git commit -m` と同じく 1 つ目を件名、2 つ目以降を本文の段落にしました。
+  - 失敗したときは、記帳済みで未 commit のファイルの一覧を最後に出し、終了コード 1 で終わります。エラー中の git 引数は 1 行に畳みます。
+- **commit の後に YAML が index に残る**: パスを指定した commit は一時 index で行われます。hook の整形と `git add`（lefthook の `stage_fixed`）はその一時 index にしか入らず、本来の index には整形前の内容が残っていました。
+  - commit の後、作業ツリーが HEAD と一致するパスだけ index を HEAD へ戻すようにしました（`restoreIndexAfterPathspecCommit`）。作業ツリーが HEAD と違うパスは触りません。
+  - `register ... --commit` の commit と amend の後、および `specdojo git -- commit ... -- <パス>` が成功した後に、この処理を行います。
+
+**テスト**
+- 統合テスト: `-m` 2 つ（本文は複数行）で件名と本文の両方が入り、個票と event だけが commit されること。hook が整形して stage したファイルが commit の後の index に残らないこと（`register` と `specdojo git` の両方）。commit が失敗したときのメッセージ。
+- 単体テスト: 統合が記帳のロック解放を待つこと。`commitPathspecs`・`registerCommitMessageFromParagraphs` と、git 引数の 1 行化。
+
+コマンドリファレンスと登録簿運用ガイドも更新しました。個票の対応結果には、原因・対応・決めた点・確認・CHANGELOG の文案を書きました。`lefthook.yml`・`package.json` など保護された設定は変えていません。
+
+**今回の対象外**
+- job モードの統合と手動の `exec worktree merge` は、まだロックを取りません。同じ現象が出たら、同じ helper を別の項目で当てます。
+- `specdojo git -- add` と、後の別の `specdojo git -- commit` の間はロックが無く、そこで統合が始まると止まり得ます。記帳は `register ... --commit`、またはパスを指定した 1 回の `specdojo git -- commit` で行うのが安全です。
+- index を戻すのは `--` の後にパスがある commit だけです。`--` の無い `git commit <path>` は対象外です。
+
+`validate:history-links` と `validate:catalog` は通っています（catalog の警告は以前からあるものです）。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"Fixed the three PJR-Y3XS issues. 1) Schedule-task integration now also takes the project lifecycle lock (`withExecLifecycleMutex`), so it waits for an in-progress `register ... --commit` instead of failing on its staged files. 2) `register` `-m` is repeatable and the values are joined as paragraphs like `git commit -m`; previously commander kept only the last `-m` (the body), commitlint rejected it, and the failure message ended with an argument fragment. A failed commit now lists the written-but-uncommitted files and exits 1, and git argument summaries are folded onto one line. 3) After a pathspec (`--only`) commit, `restoreIndexAfterPathspecCommit` resets index entries the hook's `stage_fixed` left behind; it runs in both `register ... --commit` and `specdojo git -- commit ... -- <pathspec>`. Added unit and integration tests, updated command-reference and register-operation-guide, and wrote causes, decisions, verification and CHANGELOG draft lines in the ticket's 対応結果. Nothing was run locally: the parent runs typecheck/lint/tests, and the sandbox blocked an ad-hoc Git reproduction, so cause 3 is inferred from Git behavior and confirmed only by the new integration tests.","handoff":["Decision: integration vs register-commit contention is resolved by waiting (schedule integration takes the same exec-lifecycle CrossProcessMutex as `register ... --commit` / `specdojo git` / register worktree runs), not by excluding the register files from the integration check.","Not covered: job-mode integration (`src/exec/run/job.ts`) and manual `exec worktree merge` still do not take the cross-process lifecycle lock; apply `withExecLifecycleMutex` in a separate item if the same symptom appears there.","Not covered: a separate `specdojo git -- add` followed later by `specdojo git -- commit` leaves staged files unlocked in between; recommend recording via `register ... --commit` or a single pathspec `specdojo git -- commit`.","`specdojo git` index restoration applies only to `commit ... -- <pathspec>` (with `--`); `git commit <path>` without `--` is not detected.","No protected configuration changes (`lefthook.yml`, `package.json`) were needed.","CHANGELOG draft lines (不具合修正 x3) are in the ticket's `### 5.5. CHANGELOG に書く事項`; `CHANGELOG.md` was not changed."],"validations":[{"command":"npm run validate:history-links","status":"passed","summary":"All history files valid, including the updated ticket pjr-y3xs"},{"command":"npm run validate:catalog","status":"passed","summary":"OK: dct-index.yaml; only pre-existing warnings"},{"command":"npx prettier --check docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/guides/register-operation-guide.md","status":"passed","summary":"Changed docs use Prettier style; changed ts files formatted with prettier --write"}]}
+</specdojo_executor_evidence>

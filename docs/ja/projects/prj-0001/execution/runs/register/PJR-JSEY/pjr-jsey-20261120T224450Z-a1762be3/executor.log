@@ -1,0 +1,11 @@
+個票の「対応結果」の表に 1 行追記しました。変更したのは個票だけで、親の検証は実行していません。親 runner が走らせます。
+
+- **確認対象:** PJR-V277 です。対象一覧のうち最も新しく統合された項目で、完了 commit は `2d293b8ff`（2026-11-20 23:51 JST）、この worktree の HEAD に含まれています。
+- **追記した行:** 2026-11-21 07:46、PJR-V277、`sonnet-executor` です。
+- **PJR-V277 が最新と判断した根拠:** 直近の git log を見ると、PJR-V277 の後に完了している項目は PJR-HVQZ・PJR-5RAY・PJR-SW7T などで、どれも対象一覧に含まれません。一覧内では PJR-V277 の完了 commit が最も新しいです。
+- **PJR-V277 の状態:** 登録簿で実行時点の状態（`review`）までは確認していません。個票の本文には `review` と書いてあるので、runner 側で確認してください。
+- **本文の更新:** 確認対象の説明文を PJR-V277 の内容に書き換え、作業内容の表のメモも PJR-V277 に合わせました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"個票の対応結果の表に PJR-V277 の行（2026-11-21 07:46 JST、sonnet-executor）を追記し、説明文と作業内容のメモを更新した。変更は個票のみ。","handoff":["確認対象は PJR-V277（完了 commit 2d293b8ff、2026-11-20 23:51 JST）。PJR-V277 の登録簿上の状態（review）は個票の記述に従い、登録簿では確認していない。","親 runner の検証、reporter の result 記入、統合、review 遷移は後続段で確認する。"],"validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner の検証として実行される"}]}
+</specdojo_executor_evidence>

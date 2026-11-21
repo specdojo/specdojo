@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-03T04:45:58Z",
+  "type": "claim",
+  "task_id": "T-LAUNCH-pm-communication-plan-105",
+  "by": "qwen-review-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "PM"
+  }
+}

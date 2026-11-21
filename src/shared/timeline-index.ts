@@ -1,3 +1,4 @@
+import { warnDeprecated } from "./deprecation.js";
 import { readYaml } from "./fs.js";
 import { normalizeDateOnly } from "./time.js";
 
@@ -113,6 +114,10 @@ function parseTrack(raw: unknown, index: number, errors: string[]): TimelineTrac
 export function loadTimelineIndex(filePath: string): { index: TimelineIndex; errors: string[] } {
   const errors: string[] = [];
   const parsed = readYaml(filePath);
+  warnDeprecated(
+    "tml-index.yaml",
+    "Move track domains and dependencies to register epics; use dashboard build.",
+  );
   if (!isRecord(parsed)) {
     throw new Error(`${filePath}: invalid or empty YAML`);
   }

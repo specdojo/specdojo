@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-10T22:13:13Z",
+  "type": "claim",
+  "task_id": "T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-090",
+  "by": "sol-review-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA"
+  }
+}

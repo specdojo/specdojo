@@ -1,0 +1,154 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: bds-progress-report
+path: docs/ja/product/010-business-specs/040-user-interface-model/bds-progress-report.md
+target: deliverable
+rubric: grade-rubric-v2
+verdict: pass
+score: 99
+graded_at: "2026-11-16T14:49:12.950Z"
+graded_by: sol-review-executor
+content_hash: 4f9d713ef67fb342272dbb372c20ad9e55d58909af7f2371176043b189880f8f
+source_hashes:
+  catalog-entry: 6c7f49355beee88c31aeb06ea46b65674c20ceccd1478b52ae57cc2166f4b5e9
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: 2c88dff750f6ba825018a44d00dc148f996dbed108c921f5ece9dc352bff0f1b
+  dependency:sysd-job-execution: 01f7fcd557e1c04884f49e5b5fc0966cecb523c8d468b0342dc60fe141e28837
+  members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: 0dfcda0848e7a3c34e36da9dfb892ca2b6a3186f870750012492f1beee3ccc56
+categories:
+  purpose:
+    score: 100
+  operations:
+    score: 94
+  planning:
+    score: 92
+  business:
+    score: 100
+  consistency:
+    score: 100
+  architecture:
+    score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
+  quality:
+    score: 100
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 2
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 91
+    anchor: >-
+      本書の確定の判断点は、人が本書を確定する T-KATA-WAVE-2-bds-progress-report-140 とする。担当・解消条件に「登録簿で追跡」とある項目は、その判断点までに PM
+      が登録簿へ起票し、個票で担当と期日を追跡する。起票した個票の ID は該当する行の担当・解消条件へ書き足し、それまでは未起票として扱う。それ以外の項目は本書の改訂で解消する。改訂のたびに `npm run
+      lint:md`・`npm run lint:fm`・`npm run validate:schema`・`npm run validate:catalog`
+      を実行し、すべてエラーなしで終わることを確かめる。失敗した場合は指摘箇所を直して再実行し、通るまで確定しない。
+    message: レポートの出力先、および追跡リファレンスを含めて、プロジェクトレジスターに転送すべき永続的な問題を特定する。
+    message_ja: レポートの出力先、および追跡リファレンスを含めて、プロジェクトレジスターに転送すべき永続的な問題を特定する。
+    cause:
+      type: document
+  - id: F002
+    severity: minor
+    rule: vp-ops-operability
+    line: 47
+    anchor: >-
+      | 前回の週次進捗報告        | 前週との差分と、持ち越した課題を確かめる | `reporting/progress-reports/` の前回分                               |
+      初回など前回分がない場合は差分を「前回なし」と記す |
+    message: 前回の週次進捗報告が存在するのに読めない場合の作成可否、表示、PMの復旧手順を定める。初回の「前回なし」と区別し、持ち越しが2回続いた課題の起票判定を推測で行わない扱いを明示する。
+    message_ja: 前回の週次進捗報告が存在するのに読めない場合の作成可否、表示、PMの復旧手順を定める。初回の「前回なし」と区別し、持ち越しが2回続いた課題の起票判定を推測で行わない扱いを明示する。
+    cause:
+      type: document
+done_criteria:
+  satisfied: 3
+  total: 3
+  detail_ref: bds-progress-report-grade-criteria

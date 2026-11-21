@@ -1,4 +1,5 @@
 import type { Command } from "commander";
+import { warnDeprecated } from "../shared/deprecation.js";
 import { existsSync, writeFileSync } from "node:fs";
 import { collectRegisterHistoryEvents, formatRegisterHistoryEvents } from "./history.js";
 import {
@@ -11,7 +12,7 @@ import { validateRegisterItemDocs } from "./item.js";
 import { specdojoRootDir } from "../shared/specdojo-config.js";
 import type { BuildScope, RegisterCommandDependencies } from "./command-types.js";
 import { validateRegisterDependencyDocs } from "./dependency.js";
-import { validateRegisterEpicDocs } from "./epic.js";
+import { registerEpicDateWarnings, validateRegisterEpicDocs } from "./epic.js";
 import { validateDerivedFromDocs } from "./derivation.js";
 
 export function registerMaintenanceCommands(
@@ -42,11 +43,17 @@ export function registerMaintenanceCommands(
   // --- migrate ---
   const migrateCmd = reg
     .command("migrate")
-    .description("Migrate legacy register data (index rows, dates, and embedded register events)");
+    .description(
+      "Deprecated: legacy register migration is no longer needed; individual ticket files and external events are standard (will be removed in 0.10.0)",
+    );
   addProjectOption(migrateCmd);
   migrateCmd.option("--dry-run", "Validate and print the migration summary without writing", false);
   migrateCmd.action((opts) => {
     try {
+      warnDeprecated(
+        "register migrate",
+        "Legacy register migration is no longer needed as individual ticket files and external events are standard. This command will be removed in 0.10.0.",
+      );
       const paths = resolveRegisterPaths(opts);
       const plan = planRegisterMigration(paths);
       const summary =
@@ -111,8 +118,8 @@ export function registerMaintenanceCommands(
 
   // --- build ---
   const buildCmd = reg
-    .command("build")
-    .description("Generate the register list and derived views from register item files");
+    .command("build", { hidden: true })
+    .description("Internal compatibility entry for build --only register");
   addProjectOption(buildCmd);
   buildCmd.option("--scope <scope>", "Generation scope: register | controls | all", "all");
   buildCmd.option("--dry-run", "Print generated content without writing", false);
@@ -154,6 +161,9 @@ export function registerMaintenanceCommands(
         );
       }
 
+      for (const warning of registerEpicDateWarnings(paths)) {
+        process.stderr.write(`Warning: ${warning}\n`);
+      }
       const views = generateDerivedViewFiles(paths, scope);
 
       if (opts.dryRun) {

@@ -1,0 +1,23 @@
+# PJR-NV5T ホストの tmux の script でマウント元のパスを正規化して比べる - 対応報告
+
+計画および個票（`docs/ja/projects/prj-0001/controls/project-register/pjr-nv5t-host-tmux-script-hardening.md`）の完了条件に基づき、以下の通り実装および検証を完了しました。
+
+## 実施内容の概要
+
+1. **マウント元の正規化および判定精緻化**:
+   - `templates/devcontainer/remote-host/devcontainer-tmux.sh` において、`m_type` が `bind` のマウントのみを対象に選定し、`volume` マウントなどをスキップするように改修しました。
+   - ホストに存在するディレクトリの場合に `(cd "$m_src" && pwd -P)` でパスを正規化してから、正規化済みの `workspace_dir` と比較するようにしました。これにより、Docker Desktop for Mac などでマウント元のパスが `<親>/<repo>/..` の形式で返る環境でもコンテナ内作業ディレクトリを正しく特定できます。
+   - 前方一致判定（`${workspace_dir#"$norm_src"/}` および `${workspace_dir#"$best_match_src"/}`）で変数をクォートし、パスに `*` などの glob 文字が含まれる場合でもパターン展開による判定のずれを防止しました。あわせて shellcheck の SC2295・SC2034 を解消しました。
+2. **ラッパースクリプトの `bash` 経由起動**:
+   - `templates/devcontainer/remote-host/specdojo-tmux.sh.sample` を `exec bash "$workspace_dir/.specdojo/host/devcontainer-tmux.sh" "$workspace_dir"` に変更し、本体スクリプトの実行権限に依存せず実行できるようにしました。
+3. **テストの追加・更新**:
+   - `tests/src/devcontainer/host-script.test.ts` に、マウント元の正規化（`<親>/<repo>/..` 形式）、`volume` マウント混在ケース、パスに `*` 等の glob 文字が含まれるケース、および `shellcheck` による静的検証テストを追加しました。
+   - `tests/src/devcontainer/scaffold.test.ts` のアサーションをラッパーの `bash` 呼び出しに合わせて更新しました。
+4. **CHANGELOG への追記**:
+   - `CHANGELOG.md` の `## [Unreleased]` 不具合修正セクションに PJR-NV5T の対応内容を追記しました。
+5. **保護された設定の申し送り**:
+   - 完了条件 6 の `.specdojo/host/devcontainer-tmux.sh` は保護された設定（protected configuration）であるため、エージェントによる直接更新は行わず、個票の対応結果および evidence の `handoff` にオーケストレーター・人間による反映手順（`npx specdojo devcontainer host-script`）を申し送り事項として記録しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"PJR-NV5T の完了条件に対応し、マウントパスの正規化・bind 絞り込み・変数展開クォート・bash 経由起動ラッパーへの改修およびテスト追加・CHANGELOG 追記・個票の対応結果更新を完了しました。検証した成果物: templates/devcontainer/remote-host/devcontainer-tmux.sh, templates/devcontainer/remote-host/specdojo-tmux.sh.sample, tests/src/devcontainer/host-script.test.ts, tests/src/devcontainer/scaffold.test.ts, CHANGELOG.md, docs/ja/projects/prj-0001/controls/project-register/pjr-nv5t-host-tmux-script-hardening.md, docs/ja/projects/prj-0001/controls/project-register/events/pjr-nv5t.yaml。未検証（実機/環境依存）: macOS / Docker Desktop ホスト上での実コンテナ接続確認（利用者が実施）、および protected configuration である .specdojo/host/devcontainer-tmux.sh への反映（オーケストレーター/人間が実施）。","handoff":["保護設定の反映依頼（完了条件 6）: `.specdojo/host/devcontainer-tmux.sh` は保護された設定ファイル（protected configuration）のため、エージェントによる直接更新は行っていません。マージ後またはオーケストレーターにより、本リポジトリで `node --import tsx src/specdojo.ts devcontainer host-script`（または `npx specdojo devcontainer host-script`）を実行して `.specdojo/host/devcontainer-tmux.sh` を最新テンプレート内容で更新してください。","ホスト実環境での接続確認（完了条件 7）: macOS / Docker Desktop 環境において、マウント元が `<親>/<repo>/..` の形式で返る環境での devcontainer 接続確認を利用者が個票（`pjr-nv5t-host-tmux-script-hardening.md`）の手順に沿って実施してください。"],"validations":[{"command":"npx prettier --check docs/ja/projects/prj-0001/controls/project-register/events/pjr-nv5t.yaml docs/ja/projects/prj-0001/controls/project-register/pjr-nv5t-host-tmux-script-hardening.md CHANGELOG.md tests/src/devcontainer/host-script.test.ts tests/src/devcontainer/scaffold.test.ts","status":"passed","summary":"Prettier formatting check passed for all modified markdown, ts, and yaml files"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"Catalog validate passed for prj-0001 deliverables catalog"},{"command":"shellcheck templates/devcontainer/remote-host/devcontainer-tmux.sh templates/devcontainer/remote-host/specdojo-tmux.sh.sample","status":"passed","summary":"shellcheck passed with zero warnings or errors for devcontainer-tmux.sh and specdojo-tmux.sh.sample"}]}
+</specdojo_executor_evidence>

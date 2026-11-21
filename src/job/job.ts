@@ -1,18 +1,23 @@
-import { createHash } from "node:crypto";
+import { registerDeprecatedWhereAlias } from "../shared/where-alias.js";
+import type { Command } from "commander";
 import { spawn, spawnSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join, relative, resolve } from "node:path";
-import type { Command } from "commander";
 import { buildSpecdojoFrontmatter } from "../docs/frontmatter-namespace.js";
+import { recordRef, taskRecordPaths } from "../shared/run-records.js";
 import { listFilesRecursive, writeJson } from "../shared/fs.js";
 import { gitEnvironment } from "../shared/git.js";
 import { formatMarkdownFile } from "../shared/markdown-format.js";
 import { execTemplatePath, injectCommonConventions, MISSING } from "../shared/plan-templates.js";
+import { selfRunCommand } from "../shared/spawn-self.js";
+import { specdojoRootDir } from "../shared/specdojo-config.js";
 import { expandTemplate } from "../shared/text.js";
 import {
+  getPath,
   isJobAgentTask,
   isJobCommandTask,
-  getPath,
+  jobCommandText,
   loadAllJobs,
   loadJobDefinition,
   loadJobRunRecord,
@@ -29,13 +34,14 @@ import {
   type JobRunRecord,
   type JobRunReview,
   type JobStateFile,
+  type JobStepResult,
   type JobTaskDefinition,
   type MaterializedJobRun,
 } from "./definition.js";
-import { specdojoRootDir } from "../shared/specdojo-config.js";
-import { selfRunCommand } from "../shared/spawn-self.js";
+import { jobNoopDirectory, localJobNoopPath } from "./noop.js";
 
 export {
+  jobCommandText,
   isJobAgentTask,
   isJobCommandTask,
   jobDeclaresReview,
@@ -50,6 +56,8 @@ export {
   resolveJobReviewAgentNominations,
 } from "./definition.js";
 export type {
+  JobCommandStepDefinition,
+  JobStepResult,
   JobAgentDefinition,
   JobAgentTaskDefinition,
   JobCommandAnalysisDefinition,
@@ -77,8 +85,10 @@ export function jobCheckpoint(paths: JobPaths, jobId: string): Record<string, un
 
 export function deriveJobState(paths: JobPaths): JobStateFile {
   const state: JobStateFile = { version: 1, jobs: {} };
-  if (!existsSync(paths.runsPath)) return state;
-  for (const filePath of listFilesRecursive(paths.runsPath)
+  for (const filePath of [
+    ...listFilesRecursive(paths.runsPath),
+    ...listFilesRecursive(jobNoopDirectory(paths.executionPath)),
+  ]
     .filter((path) => path.endsWith(".json"))
     .sort()) {
     try {
@@ -186,7 +196,11 @@ function commandOutputText(chunks: Buffer[], truncated: boolean): string {
 }
 
 /** Executes a materialized Job command directly in the runner process, never through an agent. */
-export async function executeJobCommand(command: string, cwd: string): Promise<JobCommandResult> {
+export async function executeJobCommand(
+  command: string,
+  cwd: string,
+  options: { timeoutMs?: number } = {},
+): Promise<JobCommandResult> {
   const startedAt = new Date().toISOString();
   return await new Promise((resolveResult) => {
     const stdoutChunks: Buffer[] = [];
@@ -196,6 +210,9 @@ export async function executeJobCommand(command: string, cwd: string): Promise<J
     let stdoutTruncated = false;
     let stderrTruncated = false;
     let settled = false;
+    let timedOut = false;
+    let timeout: NodeJS.Timeout | undefined;
+    let killTimeout: NodeJS.Timeout | undefined;
     const executable = process.platform === "win32" ? process.env.ComSpec || "cmd.exe" : "/bin/sh";
     const args =
       process.platform === "win32" ? ["/d", "/s", "/c", command] : ["-eu", "-c", command];
@@ -205,7 +222,23 @@ export async function executeJobCommand(command: string, cwd: string): Promise<J
       shell: false,
       stdio: ["ignore", "pipe", "pipe"],
       windowsHide: true,
+      detached: options.timeoutMs !== undefined && process.platform !== "win32",
     });
+    const kill = (signal: NodeJS.Signals): void => {
+      try {
+        if (process.platform !== "win32" && child.pid) process.kill(-child.pid, signal);
+        else child.kill(signal);
+      } catch (error) {
+        if ((error as NodeJS.ErrnoException).code !== "ESRCH") child.kill(signal);
+      }
+    };
+    if (options.timeoutMs !== undefined) {
+      timeout = setTimeout(() => {
+        timedOut = true;
+        kill("SIGTERM");
+        killTimeout = setTimeout(() => kill("SIGKILL"), 1000);
+      }, options.timeoutMs);
+    }
     child.stdout.on("data", (chunk: Buffer) => {
       process.stdout.write(chunk);
       const appended = appendCommandOutput(stdoutChunks, chunk, stdoutBytes);
@@ -221,6 +254,9 @@ export async function executeJobCommand(command: string, cwd: string): Promise<J
     const finish = (exitCode: number | null, error?: string): void => {
       if (settled) return;
       settled = true;
+      clearTimeout(timeout);
+      clearTimeout(killTimeout);
+      if (timedOut) kill("SIGKILL");
       resolveResult({
         command,
         startedAt,
@@ -231,6 +267,7 @@ export async function executeJobCommand(command: string, cwd: string): Promise<J
         stdoutTruncated,
         stderrTruncated,
         ...(error ? { error } : {}),
+        ...(timedOut ? { timedOut: true, error: "command timed out" } : {}),
       });
     };
     child.once("error", (error) => finish(null, error.message));
@@ -310,7 +347,7 @@ export async function generateJobPlan(
 ): Promise<string> {
   const templatePath = execTemplatePath("xep-job-template.md");
   if (!existsSync(templatePath)) throw new Error(`Template not found: ${templatePath}`);
-  const planPath = join(paths.executionPath, "exec", "plans", `${record.run_id}-plan.md`);
+  const planPath = taskRecordPaths(paths.executionPath, record.run_id, record.run_id, "job").plan;
   mkdirSync(resolve(planPath, ".."), { recursive: true });
   const commandTask = isJobCommandTask(record.task) ? record.task : undefined;
   const values: Record<string, string> = {
@@ -333,7 +370,7 @@ export async function generateJobPlan(
           "runner が次の解決済みコマンドを agent の sandbox 外で直接実行する。",
           "",
           "```sh",
-          commandTask.command,
+          jobCommandText(commandTask),
           "```",
           "",
           commandTask.analysis
@@ -345,11 +382,14 @@ export async function generateJobPlan(
     _JOB_TARGETS_: record.task.targets?.map((target) => `- [[${target}]]`).join("\n") ?? "- -",
     _JOB_PATHS_: record.task.paths?.map((path) => `- \`${path}\``).join("\n") ?? "- -",
     _RESULT_REF_: repoRelative(
-      join(paths.executionPath, "exec", "results", `${record.run_id}-result.md`),
+      taskRecordPaths(paths.executionPath, record.run_id, record.run_id, "job").result,
     ),
   };
   const body = expandTemplate(readFileSync(templatePath, "utf8"), values);
-  const content = injectCommonConventions(body, MISSING, new Map<string, string>());
+  const content = injectCommonConventions(body, MISSING, new Map<string, string>(), "edit", {
+    executionPath: paths.executionPath,
+    planPath,
+  });
   writeFileSync(planPath, content, "utf8");
   await formatMarkdownFile(planPath);
   return planPath;
@@ -383,12 +423,11 @@ export async function generateJobReviewPlan(
 ): Promise<{ planPath: string; resultPath: string }> {
   const templatePath = execTemplatePath("xrp-job-template.md");
   if (!existsSync(templatePath)) throw new Error(`Template not found: ${templatePath}`);
-  const planPath = join(paths.executionPath, "exec", "plans", `${record.run_id}-review-plan.md`);
-  const resultPath = join(
+  const { plan: planPath, result: resultPath } = taskRecordPaths(
     paths.executionPath,
-    "exec",
-    "results",
-    `${record.run_id}-review-result.md`,
+    record.run_id,
+    `${record.run_id}-review`,
+    "job",
   );
   mkdirSync(resolve(planPath, ".."), { recursive: true });
   const values: Record<string, string> = {
@@ -408,7 +447,10 @@ export async function generateJobReviewPlan(
     _RUN_RESULT_REF_: repoRelative(join(paths.executionPath, record.result_ref)),
   };
   const body = expandTemplate(readFileSync(templatePath, "utf8"), values);
-  const content = injectCommonConventions(body, MISSING, new Map<string, string>(), "review");
+  const content = injectCommonConventions(body, MISSING, new Map<string, string>(), "review", {
+    executionPath: paths.executionPath,
+    planPath,
+  });
   writeFileSync(planPath, content, "utf8");
   await formatMarkdownFile(planPath);
   return { planPath, resultPath };
@@ -436,6 +478,7 @@ export async function materializeJobRun(opts: {
   scheduledAt?: string;
   trigger?: "manual" | "routine" | "ci";
   dryRun?: boolean;
+  skipPrecondition?: boolean;
 }): Promise<MaterializedJobRun> {
   const paths = resolveJobPaths(opts.projectId);
   const definition = loadJobDefinition(paths, opts.jobId);
@@ -472,7 +515,22 @@ export async function materializeJobRun(opts: {
         command: renderJobTemplate(task.precondition.command, context),
       };
     }
-    task.command = renderJobTemplate(task.command, context);
+    if (task.command !== undefined) task.command = renderJobTemplate(task.command, context);
+    if (task.steps) {
+      task.steps = task.steps.map((step) => ({
+        ...step,
+        command: renderJobTemplate(step.command, context),
+        ...(step.completion
+          ? {
+              completion: {
+                ...step.completion,
+                path: renderJobTemplate(step.completion.path, context),
+                field: renderJobTemplate(step.completion.field, context),
+              },
+            }
+          : {}),
+      }));
+    }
     if (task.analysis) {
       task.analysis = {
         ...task.analysis,
@@ -483,10 +541,11 @@ export async function materializeJobRun(opts: {
     task.description = renderJobTemplate(task.description, context);
   }
   const now = new Date().toISOString();
-  const existingRun = existsSync(runPath);
+  const localNoop = localJobNoopPath(paths.executionPath, runId);
+  const existingRun = existsSync(localNoop) || existsSync(runPath);
   let record: JobRunRecord;
   if (existingRun) {
-    record = loadJobRunRecord(runPath);
+    record = loadJobRunRecord(existsSync(localNoop) ? localNoop : runPath);
     if (record.idempotency_key !== idempotencyKey || record.job_id !== definition.id) {
       throw new Error(`Job Run identity collision: ${runId}`);
     }
@@ -514,12 +573,35 @@ export async function materializeJobRun(opts: {
       inputs,
       task,
       checkpoint_before: checkpoint,
-      plan_ref: `exec/plans/${runId}-plan.md`,
-      result_ref: `exec/results/${runId}-result.md`,
+      plan_ref: recordRef(
+        paths.executionPath,
+        taskRecordPaths(paths.executionPath, runId, runId, "job").plan,
+      ),
+      result_ref: recordRef(
+        paths.executionPath,
+        taskRecordPaths(paths.executionPath, runId, runId, "job").result,
+      ),
       attempts: [],
     };
   }
-  if (!existingRun && !opts.dryRun && isJobCommandTask(task) && task.precondition) {
+  record = {
+    ...record,
+    plan_ref: recordRef(
+      paths.executionPath,
+      taskRecordPaths(paths.executionPath, runId, runId, "job").plan,
+    ),
+    result_ref: recordRef(
+      paths.executionPath,
+      taskRecordPaths(paths.executionPath, runId, runId, "job").result,
+    ),
+  };
+  if (
+    !existingRun &&
+    !opts.dryRun &&
+    !opts.skipPrecondition &&
+    isJobCommandTask(task) &&
+    task.precondition
+  ) {
     const precondition = await executeJobPrecondition(task.precondition, specdojoRootDir());
     if (precondition.skipped) {
       return {
@@ -619,29 +701,37 @@ export function completeJobRun(opts: {
   return updated;
 }
 
+/** Persist each step immediately so a stopped runner retains its last known progress. */
+export function recordJobSteps(runPath: string, steps: JobStepResult[]): void {
+  const record = loadJobRunRecord(runPath);
+  const attempt = record.attempts.at(-1);
+  if (!attempt) throw new Error(`Job Run has no attempt: ${record.run_id}`);
+  attempt.steps = steps;
+  record.updated_at = new Date().toISOString();
+  writeJson(runPath, record);
+}
+
 export function jobRunRelativePath(runPath: string): string {
   return repoRelative(runPath);
+}
+
+export function printJobPaths(opts: { project?: string }): void {
+  try {
+    const paths = resolveJobPaths(opts.project);
+    process.stdout.write(`project: ${paths.projectId}\n`);
+    process.stdout.write(`jobs:    ${paths.jobsPath}\n`);
+    process.stdout.write(`runs:    ${paths.runsPath}\n`);
+    process.stdout.write(`state:   ${paths.statePath}\n`);
+  } catch (error) {
+    process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
+    process.exitCode = 1;
+  }
 }
 
 export function registerJobCommands(program: Command): void {
   const command = program.command("job").description("Reusable Job Definition and Run helpers");
 
-  command
-    .command("where")
-    .description("Print resolved Job paths")
-    .option("--project <projectId>", "Project id")
-    .action((opts: { project?: string }) => {
-      try {
-        const paths = resolveJobPaths(opts.project);
-        process.stdout.write(`project: ${paths.projectId}\n`);
-        process.stdout.write(`jobs:    ${paths.jobsPath}\n`);
-        process.stdout.write(`runs:    ${paths.runsPath}\n`);
-        process.stdout.write(`state:   ${paths.statePath}\n`);
-      } catch (error) {
-        process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
-        process.exitCode = 1;
-      }
-    });
+  registerDeprecatedWhereAlias(command, printJobPaths);
 
   command
     .command("validate")

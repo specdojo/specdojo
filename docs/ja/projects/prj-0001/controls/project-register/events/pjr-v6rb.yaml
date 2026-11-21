@@ -1,0 +1,88 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_97e45d1f465b47569e52f2be339565c7
+  ts: "2026-11-08T00:31:29Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: カタログに sf・uis・ifx の代表を 1 件ずつ足す
+    - field: description
+      from: ""
+      to: システム化機能・画面・外部 I/F のカタログには索引しかないため、代表として作る個別の文書を 1 件ずつ足す
+    - field: input
+      from: ""
+      to: '["候補（indie が推奨どおりと決定）: sf はタスクの実行の機能、uis は exec コマンド群、ifx は AI provider CLI の起動（ifx-cmd）。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-08"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-2GD6"]'
+- v: 1
+  id: reg_49ac6e74400b46d5a8cd1ab33b055da7
+  ts: "2026-11-08T00:40:05Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_97e45d1f465b47569e52f2be339565c7
+- v: 1
+  id: reg_d90bcddb8d474668800d14b8fdd0f884
+  ts: "2026-11-08T00:56:21Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_49ac6e74400b46d5a8cd1ab33b055da7
+- v: 1
+  id: reg_5f35782378dc443bbff911be9f2748f6
+  ts: "2026-11-08T00:57:55Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（flash-high-executor）で対応。差分・個票の対応結果・evidence_refs の実在・catalog validate・validate:schema を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-08"
+    - field: conclusion
+      from: "-"
+      to: カタログに sf-task-execution・uis-exec-commands・ifx-cmd-ai-provider-cli を足し、3 つの索引の note を代表を作る方針に合わせた
+  previous_event_id: reg_d90bcddb8d474668800d14b8fdd0f884

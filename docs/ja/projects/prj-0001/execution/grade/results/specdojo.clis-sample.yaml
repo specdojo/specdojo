@@ -1,0 +1,152 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:clis-sample
+path: docs/ja/specdojo/samples/clis-sample.md
+target: kata
+rubric: grade-rubric-v2
+verdict: pass
+score: 96
+graded_at: "2026-11-17T22:33:48.009Z"
+graded_by: sol-review-executor
+content_hash: 5e736ae7ec4b51bb6a13917506faa7bd1b8dc18e31126518f2867d6c3471bca1
+categories:
+  purpose:
+    score: 100
+  operations:
+    score: 94
+  planning:
+    score: 83
+  business:
+    score: 100
+  architecture:
+    score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
+  quality:
+    score: 100
+  consistency:
+    score: 75
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 3
+    score: 75
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 4
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 113
+    anchor: "| 本部との契約・障害回復 | `ifx-api-kinuya-*.yaml` は未同梱。受付照会・重複排除・保存失敗後の回復が決まるまで、結果不明の取引は自動再送せず、当該経路の受入を保留する |"
+    message: 本部契約・障害回復の確定と印字経路の実機確認について、担当する役割と確認タイミングを追記してください。受入保留条件はありますが、解除に向けた作業の割り当てと進捗確認の時点を決められません。
+    message_ja: 本部契約・障害回復の確定と印字経路の実機確認について、担当する役割と確認タイミングを追記してください。受入保留条件はありますが、解除に向けた作業の割り当てと進捗確認の時点を決められません。
+  - id: F002
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 109
+    anchor: >-
+      | 論点                   |
+      影響と当面の扱い                                                                                                                          
+      |
+    message: 正本未整備という課題、二重印字のリスク、将来拡張の変更候補について、PJR等へ引き継ぐ区分・担当役割・管理先を明記してください。現状の論点表だけでは、誰がどの記録で追跡するかを判断できません。
+    message_ja: 正本未整備という課題、二重印字のリスク、将来拡張の変更候補について、PJR等へ引き継ぐ区分・担当役割・管理先を明記してください。現状の論点表だけでは、誰がどの記録で追跡するかを判断できません。
+  - id: F003
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 102
+    anchor: >-
+      | 取引セッション保存失敗                               | `4`                   | 対象取引、反映されなかった操作            |
+      開始・追加・取消は反映されず、成功も通知しない。開発担当の復旧後、店番担当が `sales total` で明細を確認して同じ操作をやり直す  |
+    message: >-
+      開始の保存失敗後はセッションが作成されないため、sales total は本文52行の定義により「取引未開始」になります。追加・取消の失敗後に行う明細確認と分け、開始失敗では取引未開始を確認して sales start
+      を再試行する手順を明記してください。
+    message_ja: >-
+      開始の保存失敗後はセッションが作成されないため、sales total は本文52行の定義により「取引未開始」になります。追加・取消の失敗後に行う明細確認と分け、開始失敗では取引未開始を確認して sales start
+      を再試行する手順を明記してください。
+  - id: F004
+    severity: minor
+    rule: vp-ops-operability
+    line: 102
+    anchor: >-
+      | 取引セッション保存失敗                               | `4`                   | 対象取引、反映されなかった操作            |
+      開始・追加・取消は反映されず、成功も通知しない。開発担当の復旧後、店番担当が `sales total` で明細を確認して同じ操作をやり直す  |
+    message: >-
+      取引開始の保存失敗について、復旧後に sales total が「取引未開始」を返す場合の次の操作と、再実行した sales start
+      の取引番号表示をもって回復確認とする条件を追記してください。現在の「明細を確認して同じ操作をやり直す」は、既存取引がある追加・取消の場合にしかそのまま適用できません。
+    message_ja: >-
+      取引開始の保存失敗について、復旧後に sales total が「取引未開始」を返す場合の次の操作と、再実行した sales start
+      の取引番号表示をもって回復確認とする条件を追記してください。現在の「明細を確認して同じ操作をやり直す」は、既存取引がある追加・取消の場合にしかそのまま適用できません。

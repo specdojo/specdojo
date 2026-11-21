@@ -6,7 +6,7 @@ import {
   requirePositiveInteger,
   requireTarget,
 } from "./command-shared.js";
-import { runGrade } from "./run.js";
+import { GradeRunIncompleteError, runGrade } from "./run.js";
 
 export function registerGradeRunCommand(grade: Command, runtime?: GradeAgentRuntime): void {
   addGradeSelectionOptions(
@@ -22,7 +22,14 @@ export function registerGradeRunCommand(grade: Command, runtime?: GradeAgentRunt
     .option("--stage-1-executor <nickname>", "Alias for --by")
     .option("--stages <count>", "Native pipeline stage count (1)", "1")
     .option("--work-dir <directory>", "Repository-relative run state directory")
+    .option("--isolate-pipeline-state", "Keep retry state inside this run directory")
+    .option("--if-busy <policy>", "Project grade lock policy: fail or wait")
     .option("--reference <path>", "Comparison reference document")
+    .option(
+      "--reference-per-kind",
+      "Kata only: compare each document with the same-kind prj-overview document",
+      false,
+    )
     .option("--embed-documents", "Embed target and reference contents", false)
     .option("--max-stage-failures <count>", "Consecutive failure limit", requirePositiveInteger, 3)
     .option("--limit <count>", "Maximum number of documents", requirePositiveInteger)
@@ -43,6 +50,7 @@ export function registerGradeRunCommand(grade: Command, runtime?: GradeAgentRunt
             ...options,
             target: requireTarget(options.target),
             paths: options.path,
+            kata: options.kata,
             by: options.by ?? options.stage1Executor,
             execDefaultsPath: options.execDefaults,
           },
@@ -50,6 +58,8 @@ export function registerGradeRunCommand(grade: Command, runtime?: GradeAgentRunt
         );
       } catch (error) {
         commandError(error);
+        // Exit 2 marks a partial run and 75 a rate limit; scheduled jobs tell them apart.
+        if (error instanceof GradeRunIncompleteError) process.exitCode = error.exitCode;
       }
     });
 }

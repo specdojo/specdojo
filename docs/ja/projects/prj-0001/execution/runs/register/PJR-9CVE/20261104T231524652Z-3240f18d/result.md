@@ -1,0 +1,38 @@
+---
+specdojo:
+  id: prj-0001:xer-pjr-9cve-20261104t231524z-cee46339
+  type: exec-result
+  task_id: PJR-9CVE
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  origin: register
+  plan_ref: runs/register/PJR-9CVE/20261104T231524652Z-3240f18d/plan.md
+  started_at: "2026-11-04T23:15:25.227Z"
+  completed_at: "2026-11-04T23:29:28.597Z"
+  agent: flash-high-executor
+---
+
+# Edit Result
+
+## 1. 実施内容
+
+- opr-template において、H1 直下の概要記述を削除し、「1. 概要」章の中へ記述を一本化しました。
+- bps-template については、導入文と概要の役割分担が明確であるため、変更の必要はないと判断しました。
+- 個票 `docs/ja/projects/prj-0001/controls/project-register/pjr-9cve-template-overview-duplication.md` および `CHANGELOG.md` を更新しました。
+
+## 2. 変更ファイル
+
+- `CHANGELOG.md`: タスクの実施内容を記録するために更新されました。
+- `docs/ja/specdojo/templates/opr-template.md`: H1 直下の導入文（`_DELIVERABLE_OVERVIEW_`）を削除し、概要の記述を「1. 概要」章内に一本化しました。
+
+## 3. 申し送り
+
+- PJR-9CVE: opr-template の概要記述を「1. 概要」章内に一本化しました。\n
+- bps-template は役割分担が確立されているため、現状維持としています。
+- 適用外の検証: `npm run validate:schema:file`（No yaml or yml deliverable files were modified.）
+- 適用外の検証: `npm run validate:catalog`（Changes did not modify deliverable catalog or project deliverables under docs/ja/projects/.）
+
+## 4. 進め方
+
+まず `docs/ja/specdojo/templates/opr-template.md` を確認し、H1 直下の概要が 「1. 概要」章と重複していることを確認しました。次に、概要の記述を「1. 概要」章内へ集約する修正を行いました。あわせて、変更内容を `CHANGELOG.md` および個票へ反映しました。`bps-template` については、ルールブックの意図を再確認し、現状の構成が適切であると判断したため、変更対象から除外しました。

@@ -1,0 +1,88 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f92196bdd0204c48a96262e142c1161a
+  ts: "2026-11-02T06:57:01Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 全体概要の Orchestrator を指示の図にし、線のない区分を外す
+    - field: description
+      from: ""
+      to: cdfd-overview の Orchestrator の調整の表を、Orchestrator から 6 区分への指示と、Orchestrator が直接読み書きするデータストアへの線の図に置き換え、トランザクションデータの図から 3.1、マスタ・構成データの図から 3.6 を外す
+    - field: input
+      from: ""
+      to: '["PJR-05QS の後、トランザクションデータの図では 3.1、マスタ・構成データの図では 3.6 に線がない。利用者はこれらを図から外すよう求めた（2026-11-02）","利用者の考え: Orchestrator は register 系・schedule 系・routine 系・実行サイクル・3.1・3.6 に指示を出す。Orchestrator が直接触るデータストアには線をつなぎ、それ以外のデータストアは各区分が CLI 経由で扱う（2026-11-02）","5.3 の Orchestrator の調整の表は、この図に置き換えて不要にする"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-02"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-05QS"]'
+- v: 1
+  id: reg_1d2de6f1971747d28749fe1af2e6ef3a
+  ts: "2026-11-02T06:57:57Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_f92196bdd0204c48a96262e142c1161a
+- v: 1
+  id: reg_ed5a82acbd834320a98d8d564a3b0ff7
+  ts: "2026-11-02T07:18:25Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_1d2de6f1971747d28749fe1af2e6ef3a
+- v: 1
+  id: reg_e47db9b0f7264d26bb987eefe3772d4b
+  ts: "2026-11-03T00:19:51Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 直接のデータストアの範囲は PJR-KV58 で絞り直した。最終形を利用者が VitePress で確かめた（2026-11-03）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-03"
+    - field: conclusion
+      from: "-"
+      to: Orchestrator の調整を表から図にし、線のない区分を各図から外した
+  previous_event_id: reg_ed5a82acbd834320a98d8d564a3b0ff7

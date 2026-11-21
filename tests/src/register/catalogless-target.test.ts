@@ -1,10 +1,11 @@
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { validateRegisterApproachTargets } from "../../../src/register/approach.js";
 import { resolveRegisterDeliverableTarget } from "../../../src/register/deliverable-target.js";
 import { generateRegisterPlan } from "../../../src/exec/register.js";
+import { readPlanFile } from "../../../src/shared/plan-conventions.js";
 import type { PjrItem, RegisterPaths } from "../../../src/register/register.js";
 import type { Approach } from "../../../src/shared/agent-types.js";
 
@@ -79,7 +80,7 @@ async function plan(approach: Approach, overrides: Partial<PjrItem> = {}): Promi
     item,
     stem: "note",
   });
-  return readFileSync(result.planPath, "utf8");
+  return readPlanFile(result.planPath);
 }
 
 // 統合時の全件実行など負荷下で、一時ディレクトリ生成・kata 配置・plan 生成の累積により
@@ -111,7 +112,7 @@ describe("catalog-less deliverable resolution and plans", { timeout: 30_000 }, (
     rmSync(root, { recursive: true, force: true });
   });
 
-  it.each<Approach>(["fully-guided", "recipe-guided", "freeform", "retrofit"])(
+  it.each<Approach>(["fully-guided", "condense", "recipe-guided", "freeform", "retrofit"])(
     "resolves existing frontmatter and creates a %s plan",
     async (approach) => {
       validate(approach);
@@ -123,6 +124,16 @@ describe("catalog-less deliverable resolution and plans", { timeout: 30_000 }, (
       expect(text).not.toContain("note-template");
     },
   );
+
+  it("rejects condense on an uncreated deliverable", () => {
+    expect(() =>
+      validate("condense", {
+        targets: ["prj-test:new"],
+        targetPath: "docs/ja/product/new.md",
+        targetRulebook: "customer:note-rulebook",
+      }),
+    ).toThrow(/existing deliverable/);
+  });
 
   it.each<Approach>(["fully-guided", "recipe-guided", "freeform", "retrofit"])(
     "resolves an uncreated target with explicit path/rulebook for %s",

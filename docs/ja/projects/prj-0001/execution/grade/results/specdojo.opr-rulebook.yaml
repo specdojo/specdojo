@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 94
-graded_at: "2026-10-05T21:07:18.929Z"
-graded_by: agy-expert-executor
-content_hash: d87bbd7211a64205892c02b499eba8ec4e42fd4ffeab2eb85691daf31fd8d892
+graded_at: "2026-11-07T20:19:38.312Z"
+graded_by: flash-high-executor
+content_hash: 1b3ea011d0c0343708f22f0a0ae400d314a98a656bc120456dea6236a9ec70ba
 categories:
   purpose:
     score: 100
@@ -113,9 +113,11 @@ findings:
     line: 58
     anchor: "| ---------- | -------------------------------------------- | ---- |"
     message: Frontmatter の定義表に `rulebook` 項目が欠落しており、`opr-template.md` の定義と矛盾している。
+    message_ja: Frontmatter の定義表に `rulebook` 項目が欠落しており、`opr-template.md` の定義と矛盾している。
   - id: F002
     severity: major
     rule: vp-qe-kata-conformance
     line: 81
     anchor: ""
     message: "第6章の各節で指定されている見出し名（括弧書きの有無）や表のヘッダ（例: 6.4の「初動SLA」とテンプレートの「初動目標」）が、`opr-template.md` の定義と一致しておらず矛盾している。"
+    message_ja: "第6章の各節で指定されている見出し名（括弧書きの有無）や表のヘッダ（例: 6.4の「初動SLA」とテンプレートの「初動目標」）が、`opr-template.md` の定義と一致しておらず矛盾している。"

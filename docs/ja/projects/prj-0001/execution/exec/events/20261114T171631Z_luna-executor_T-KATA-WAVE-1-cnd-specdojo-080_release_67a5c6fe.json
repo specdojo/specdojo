@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-14T17:16:31Z",
+  "type": "release",
+  "task_id": "T-KATA-WAVE-1-cnd-specdojo-080",
+  "by": "luna-executor",
+  "msg": "release claim to switch executor to opus-executor (--resume-from executor)",
+  "meta": {
+    "pipeline_resume_released": "true",
+    "replaced_by": "opus-executor"
+  }
+}

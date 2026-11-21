@@ -884,10 +884,11 @@ specdojo deliverable trash --project prj-0001 --local-id cdfd-register-operation
 | 概念データストア定義 | Conceptual Data Store Definition | cdsd- | cdsd-common, cdsd-sales |
 | 保管場所定義 | Storage Location Definition | sld- | sld-common, sld-sales |
 | ステータス定義（状態一覧・状態遷移図） | Status Definition | stsd- | stsd-product |
-| 分類定義 | Classification Definition | cld- | cld-product |
+| 分類一覧 | Code Table | cdt- | cdt-product |
 | 業務プロセス仕様 | Business Process Specification | bps- | bps-order-flow |
 | ビジネスルール | Business Rule | br- | br-discount |
 | 画面仕様 | UI Specification | uis- | uis-order-edit |
+| CLI仕様 | CLI Specification | clis- | clis-exec-commands |
 | 帳票仕様 | Business Document Specification | bds- | bds-order-summary |
 | システム化機能 | System Function | sf- | sf-index, sf-product-register |
 | 業務イベント仕様 | Business Event Specification | bes- | bes-index, bes-order-approved |
@@ -906,6 +907,7 @@ specdojo deliverable trash --project prj-0001 --local-id cdfd-register-operation
 | システム設計-全体構成 | System Design Index | sysd- | sysd-index |
 | システム設計-重要フロー | System Design Critical Flows | sysd- | sysd-critical-flows |
 | システム設計-横断ルール | System Design Cross-cutting Policy | sysd- | sysd-cross-cutting-policy |
+| デザインシステム | Design System Specification | dss- | dss-common, dss-store-gui |
 | 非機能要件 | Non-Functional Requirements | nfr- | nfr-performance |
 | システム受入条件 | System Acceptance Criteria | sac- | sac-performance |
 | テスト戦略・方針 | Test Strategy and Policy | tsp- | tsp-index |

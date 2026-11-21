@@ -1,0 +1,15 @@
+{
+  "v": 1,
+  "ts": "2026-11-15T06:09:17Z",
+  "type": "block",
+  "task_id": "T-KATA-WAVE-2-ifx-file-agent-evidence-050",
+  "by": "argon-executor",
+  "msg": "parent validation failed: lint-md",
+  "meta": {
+    "limit_deferred": "false",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-ifx-file-agent-evidence-050/T-KATA-WAVE-2-ifx-file-agent-evidence-050-20261115T052059Z-7250b1dd/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-ifx-file-agent-evidence-050/T-KATA-WAVE-2-ifx-file-agent-evidence-050-20261115T052059Z-7250b1dd/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-2-ifx-file-agent-evidence-050-20261115T052059Z-7250b1dd"
+  }
+}

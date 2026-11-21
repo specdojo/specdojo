@@ -1,0 +1,307 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: bes-task-ready-selected
+path: docs/ja/product/010-business-specs/030-business-model/bes-task-ready-selected.md
+target: deliverable
+rubric: grade-rubric-v2
+verdict: needs-work
+score: 87
+graded_at: "2026-11-16T14:45:50.644Z"
+graded_by: sol-review-executor
+content_hash: 108fbd59672a7fbf7e7cce523344e17fe30c1d64c5b8b972ef01fc23d20e804a
+source_hashes:
+  catalog-entry: 2584b0d3c9b1e33a54da977a6307eb41c36383ad364e84e7da2a67f44b950134
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: 2c88dff750f6ba825018a44d00dc148f996dbed108c921f5ece9dc352bff0f1b
+  dependency:bes-index: 1dc7e50fd7b01c326c1315ebcf1fe55b71b5f230ac8ec06baf67f6d81f558cbe
+  dependency:cdfd-overview: 0aecdaca4ce0a56ed8f672e9882bce4023abc8d4b6ec7cb5645fc181ca6ede74
+  dependency:stsd-task-execution: 58a8b1332ec5b260cb81f9aa5cac9080662721b4ff752c644401c3e704dc8af6
+  members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: 0dfcda0848e7a3c34e36da9dfb892ca2b6a3186f870750012492f1beee3ccc56
+categories:
+  purpose:
+    score: 100
+  operations:
+    score: 94
+  planning:
+    score: 100
+  business:
+    score: 83
+  consistency:
+    score: 88
+  architecture:
+    score: 92
+  usability:
+    score: 100
+  implementation:
+    score: 75
+  quality:
+    score: 69
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 3
+    score: 75
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 3
+    score: 75
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 1
+    score: 25
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 2
+    score: 50
+finding_counts:
+  blocker: 0
+  major: 6
+  minor: 5
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 25
+    anchor: >-
+      | 承認者の識別 | _UNDECIDED_: 業務定義の妥当性と公開可否（`status: ready` への昇格を含む）を承認する人間の PO の Member ID
+      または氏名は、宣言された参照範囲から確認できない                  | PM が業務レビューの依頼前に人間の PO を特定し、その識別と承認結果をレビュー結果に記録する。AI Agent
+      による承認で代替しない                                                |
+    message: Identify the human PO responsible for approving the event definition and its publication readiness.
+    message_ja: Identify the human PO responsible for approving the event definition and its publication readiness.
+    cause:
+      type: document
+  - id: F002
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 35
+    anchor: >-
+      _UNDECIDED_: 自動選択で、選択と着手宣言（`claim`）を業務上同一のイベント境界（発生時点）とみなすかは未決定。確認に必要な `bps-task-selection-preparation`
+      は本タスクの参照範囲に含まれず、人間の PO の業務判断も未了であるため、本書では既存の対象確定と `claim` の区別を維持する。BA と ARC
+      が同プロセス仕様を依存に宣言して、対象確定と着手宣言の業務境界を確認し、人間の PO が実装・テスト設計への引き渡し前に判断する。判断結果は PM が本書とレビュー結果に記録する。
+    message: >-
+      自動選択について、対象確定と着手宣言を別の発生境界とする本文12・31行の定義が未確定である。bps-task-selection-preparation との照合と人間の PO
+      の判断により発生時点を確定し、発生条件と確認例に反映する必要がある。
+    message_ja: >-
+      自動選択について、対象確定と着手宣言を別の発生境界とする本文12・31行の定義が未確定である。bps-task-selection-preparation との照合と人間の PO
+      の判断により発生時点を確定し、発生条件と確認例に反映する必要がある。
+    cause:
+      type: document
+  - id: F003
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 90
+    anchor: >-
+      _UNDECIDED_: 「並列選択要求識別子」の正本上の対応項目は未確定である。[[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]]
+      が根拠（`based_on`）に挙げる実行記録モデル（`prj-0001:bdd-exec-event` および
+      `prj-0001:bdd-exec-state`）は、同書の「今後の検討メモ」で未作成とされている。両辞書の本文と対応 schema
+      は本タスクの参照範囲に宣言されていないため、要求単位の項目の有無は確認できていない。正本に対応項目がないと確認したものではない。照合先候補は `prj-0001:bdd-exec-event`（実行イベント）とし、実行 1 回の
+      ID での代用や新規項目の必要性は断定しない。この対応が確定するまで、並列のイベントデータを実装・テスト設計への確定入力にはできない。
+    message: >-
+      Specify the event-data field that correlates selections made by the same parallel request, based on the
+      execution-record model.
+    message_ja: >-
+      Specify the event-data field that correlates selections made by the same parallel request, based on the
+      execution-record model.
+    cause:
+      type: document
+  - id: F004
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 90
+    anchor: >-
+      _UNDECIDED_: 「並列選択要求識別子」の正本上の対応項目は未確定である。[[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]]
+      が根拠（`based_on`）に挙げる実行記録モデル（`prj-0001:bdd-exec-event` および
+      `prj-0001:bdd-exec-state`）は、同書の「今後の検討メモ」で未作成とされている。両辞書の本文と対応 schema
+      は本タスクの参照範囲に宣言されていないため、要求単位の項目の有無は確認できていない。正本に対応項目がないと確認したものではない。照合先候補は `prj-0001:bdd-exec-event`（実行イベント）とし、実行 1 回の
+      ID での代用や新規項目の必要性は断定しない。この対応が確定するまで、並列のイベントデータを実装・テスト設計への確定入力にはできない。
+    message: >-
+      Resolve the parallel-request correlation field against the execution-record data model so the event payload can be
+      represented consistently.
+    message_ja: >-
+      Resolve the parallel-request correlation field against the execution-record data model so the event payload can be
+      represented consistently.
+    cause:
+      type: document
+  - id: F005
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 35
+    anchor: >-
+      _UNDECIDED_: 自動選択で、選択と着手宣言（`claim`）を業務上同一のイベント境界（発生時点）とみなすかは未決定。確認に必要な `bps-task-selection-preparation`
+      は本タスクの参照範囲に含まれず、人間の PO の業務判断も未了であるため、本書では既存の対象確定と `claim` の区別を維持する。BA と ARC
+      が同プロセス仕様を依存に宣言して、対象確定と着手宣言の業務境界を確認し、人間の PO が実装・テスト設計への引き渡し前に判断する。判断結果は PM が本書とレビュー結果に記録する。
+    message: 自動選択のイベント発行時点が対象確定時か着手宣言時か未確定であるため、パブリッシャーとハンドラが共有する発生境界を決められない。BPS との照合結果と人間の PO の判断を反映してから実装へ引き渡す必要がある。
+    message_ja: 自動選択のイベント発行時点が対象確定時か着手宣言時か未確定であるため、パブリッシャーとハンドラが共有する発生境界を決められない。BPS との照合結果と人間の PO の判断を反映してから実装へ引き渡す必要がある。
+    cause:
+      type: document
+  - id: F006
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 90
+    anchor: >-
+      _UNDECIDED_: 「並列選択要求識別子」の正本上の対応項目は未確定である。[[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]]
+      が根拠（`based_on`）に挙げる実行記録モデル（`prj-0001:bdd-exec-event` および
+      `prj-0001:bdd-exec-state`）は、同書の「今後の検討メモ」で未作成とされている。両辞書の本文と対応 schema
+      は本タスクの参照範囲に宣言されていないため、要求単位の項目の有無は確認できていない。正本に対応項目がないと確認したものではない。照合先候補は `prj-0001:bdd-exec-event`（実行イベント）とし、実行 1 回の
+      ID での代用や新規項目の必要性は断定しない。この対応が確定するまで、並列のイベントデータを実装・テスト設計への確定入力にはできない。
+    message: >-
+      Define the parallel-request correlation field against the execution-record model before using this event
+      specification as an implementation reference.
+    message_ja: >-
+      Define the parallel-request correlation field against the execution-record model before using this event
+      specification as an implementation reference.
+    cause:
+      type: document
+  - id: F007
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 23
+    anchor: >-
+      | 対象系統     | 上記の前提は業務承認前である。一覧と概念データフロー図では `P-07` を 3 系統が共用するが、本書の状態条件の根拠は schedule 系に限られ、register・routine
+      系の適用条件は未確認 | BA が一覧の対応行を踏まえ、各系統の起点イベント仕様・状態条件の根拠を参照範囲に宣言して照合し、人間の PO が確定の段で、実装・テスト設計への引き渡し前に適用範囲を判断する |
+    message: >-
+      Resolve the task-flow scope and obtain business approval of the event’s applicability before claiming the event
+      specification is complete.
+    message_ja: >-
+      Resolve the task-flow scope and obtain business approval of the event’s applicability before claiming the event
+      specification is complete.
+    cause:
+      type: document
+  - id: F008
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 90
+    anchor: >-
+      _UNDECIDED_: 「並列選択要求識別子」の正本上の対応項目は未確定である。[[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]]
+      が根拠（`based_on`）に挙げる実行記録モデル（`prj-0001:bdd-exec-event` および
+      `prj-0001:bdd-exec-state`）は、同書の「今後の検討メモ」で未作成とされている。両辞書の本文と対応 schema
+      は本タスクの参照範囲に宣言されていないため、要求単位の項目の有無は確認できていない。正本に対応項目がないと確認したものではない。照合先候補は `prj-0001:bdd-exec-event`（実行イベント）とし、実行 1 回の
+      ID での代用や新規項目の必要性は断定しない。この対応が確定するまで、並列のイベントデータを実装・テスト設計への確定入力にはできない。
+    message: >-
+      Specify the parallel-request correlation field and verify it against the execution-record model so the event can
+      support implementation and test design.
+    message_ja: >-
+      Specify the parallel-request correlation field and verify it against the execution-record model so the event can
+      support implementation and test design.
+    cause:
+      type: document
+  - id: F009
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 17
+    anchor: >-
+      _ASSUMPTION_: 本書は、[[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]] で発生条件を説明できる schedule
+      系（スケジュール帳票のタスク）の対象確定に適用する前提で記述する。3 系統が共用する実行サイクル全体への適用は、人間の PO による確定の段での業務承認を要する。register 系・routine
+      系は適用未判定とし、本書の条件をそのまま適用しない。恒久的な対象外ともせず、executor による承認済みの判断にはしない。
+    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+    message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+    cause:
+      type: document
+  - id: F010
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 24
+    anchor: >-
+      | 一覧との接続 | [[prj-0001:bes-index\|業務イベント一覧]] の「個別仕様への詳細化」に本書へのリンクがあり、本書からも対応イベントを識別できる。成果物カタログ定義との内容の整合は未確認       |
+      一覧の対応と双方向リンクは確認済み。ARC が成果物カタログの本イベント定義との内容の整合を、業務仕様の完成判断前に確認して PM へ報告する                                    |
+    message: >-
+      Add the event-index link when the index is created and verify this event’s catalog entry against the
+      specification.
+    message_ja: >-
+      Add the event-index link when the index is created and verify this event’s catalog entry against the
+      specification.
+    cause:
+      type: document
+  - id: F011
+    severity: major
+    rule: vp-qe-config-validity
+    line: 17
+    anchor: >-
+      _ASSUMPTION_: 本書は、[[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]] で発生条件を説明できる schedule
+      系（スケジュール帳票のタスク）の対象確定に適用する前提で記述する。3 系統が共用する実行サイクル全体への適用は、人間の PO による確定の段での業務承認を要する。register 系・routine
+      系は適用未判定とし、本書の条件をそのまま適用しない。恒久的な対象外ともせず、executor による承認済みの判断にはしない。
+    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+    message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+done_criteria:
+  satisfied: 0
+  total: 5
+  unsatisfied:
+    DC-001:
+      - BA
+    DC-002:
+      - PO
+    DC-003:
+      - ARC
+    DC-004:
+      - QE
+    DC-005:
+      - DEV
+  detail_ref: bes-task-ready-selected-grade-criteria

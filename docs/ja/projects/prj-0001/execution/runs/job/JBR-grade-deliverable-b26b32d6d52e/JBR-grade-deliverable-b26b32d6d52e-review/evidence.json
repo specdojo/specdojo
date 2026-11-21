@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-deliverable-b26b32d6d52e-review",
+  "run_id": "JBR-grade-deliverable-b26b32d6d52e-review",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-review-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-10T16:36:24.824Z",
+    "completed_at": "2026-11-10T16:38:24.732Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [],
+  "attempt_changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "git diff --stat / --name-status 4eb4ad3cf758f75eb9dbedf91bf9ef1c3f8954a4..fb13c386ad3d4c1cdebb56cb81fcab5cfd10d617",
+      "status": "passed",
+      "summary": "27ファイルすべてがこの Job Run の出力（評価結果・criteria・Run JSON・run 記録）で、対象外の変更は混入していない"
+    },
+    {
+      "source": "executor",
+      "command": "node dist/specdojo.js grade list --target deliverable --project prj-0001 --changed-only | grep -cE <10 docs>",
+      "status": "passed",
+      "summary": "0件（最初の確認と verdict 直前の再確認の両方）"
+    },
+    {
+      "source": "executor",
+      "command": "node dist/specdojo.js grade list --target deliverable --project prj-0001 --dependency-changed / --rulebook-changed / --rubric-outdated | grep -cE <10 docs>",
+      "status": "passed",
+      "summary": "いずれも0件"
+    },
+    {
+      "source": "executor",
+      "command": "node dist/specdojo.js grade list --target deliverable --project prj-0001 --incomplete",
+      "status": "passed",
+      "summary": "出力なし（未完了の評価パイプラインはない）"
+    },
+    {
+      "source": "executor",
+      "command": "node dist/specdojo.js grade state --target deliverable --project prj-0001 --exhausted",
+      "status": "passed",
+      "summary": "出力なし（retry_exhausted の成果物はない）"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-deliverable-b26b32d6d52e/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-func\n… output omitted …\nworkspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-deliverable-b26b32d6d52e/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-deliverable-b26b32d6d52e/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1152). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4290 file(s), 137 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 105 passed, 0 error, 0 未検査\n  graph: 3 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4290 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.11 \u001b[39m\u001b[90m/workspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-deliverable-b26b32d6d52e\u001b[39m\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commi\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nmbers-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-deliverable-b26b32d6d52e/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-deliverable-b26b32d6d52e/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.11 \u001b[39m\u001b[90m/workspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-deliverable-b26b32d6d52e\u001b[39m\n\n \u001b[32m✓\u001b[39m tests/src/grade/grade.test.ts \u001b[2m(\u001b[22m\u001b[2m69 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 725\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/src/exec/reporter.test.ts \u001b[2m(\u001b[22m\u001b[2m116 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 58\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/src/exec/plans.test.ts \u001b[2m\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "推奨 verdict は complete-with-findings。Run は succeeded（attempt 1・command とも exit 0、stderr は空）。評価した10件はすべて完了し、`failed`・`retry_exhausted`・未完了の段はない（`selected=10 processed=10 completed_now=10 incomplete=0 exhausted=0`）。鮮度: `grade list --target deliverable` を `--changed-only`・`--dependency-changed`・`--rulebook-changed`・`--rubric-outdated` で実行し、対象10件はどれにも出てこない。verdict 直前の `--changed-only` 再実行でも0件、`--incomplete` と `grade state --exhausted` は空。差分27ファイルはすべてこの Job Run の出力（評価結果と `done_criteria` criteria の更新各10件、Run JSON、run 記録）。10件とも `content_hash` は不変で、今回の評価は `source_hashes.schedule` の変化による。結果ファイルの verdict・score・`finding_counts` は results.tsv と全件一致し、`agy-expert-executor` は `alias_of: flash-high-executor` で `graded_by` と一致。pass 6件（cdfd-overview / cdfd-uc-register / cdfd-uc-routine / cdfd-uc-schedule / ccd-project-planning が 100、cdt-register-type が 87 で minor 14）。needs-work 4件: cdsd-execution 65（major 13・minor 11）、cdsd-planning 65（major 15・minor 7）、cdsd-sharing 59（major 21・minor 6）、stsd-deliverable 85（major 6・minor 3）。未充足の `done_criteria`: cdsd-execution / cdsd-planning / cdsd-sharing は DC-001 BA・DC-002 ARC・DC-003 QE、stsd-deliverable は DC-001 BA・DC-002 PO・DC-003 ARC・DC-004 QE・DC-005 DEV。finding: 本文が同じなのに判定が変わった3件（cdsd-sharing DC-003 と stsd-deliverable DC-003 が satisfied から unsatisfied、ccd-project-planning が score 98 から 100 で F001 消失）は評価のぶれの可能性がある。result の「変更ファイル」は Run JSON を +57 と書くが実際は +58 で、runs 配下の記録ファイルも載っていない（軽微）。確認できなかった範囲: `logs/grade/runs/per-document/` 配下の作業ファイル（results.tsv は stdout 出力分で確認）、成果物品質の再評価（review の範囲外）、評価のぶれの原因の特定。",
+  "completion_status": "complete",
+  "handoff": [
+    "cdsd-execution・cdsd-planning・cdsd-sharing は BA・ARC・QE、stsd-deliverable は BA・PO・ARC・QE・DEV に、未充足の `done_criteria` の確認と改善を引き継ぐ。",
+    "本文が同じ（`content_hash` 不変）なのに判定が変わった3件（cdsd-sharing DC-003、stsd-deliverable DC-003、ccd-project-planning の score と F001）について、評価のぶれとして評価設定（agy 単段・ルーブリック）の見直しが要るかを人手で判断する。",
+    "`--changed-only` には上限10件を超えた別の成果物が39件残っており、次回以降の Run で評価される。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/job/JBR-grade-deliverable-b26b32d6d52e/JBR-grade-deliverable-b26b32d6d52e-review/executor.log",
+      "bytes": 10486,
+      "truncated": false
+    }
+  ]
+}

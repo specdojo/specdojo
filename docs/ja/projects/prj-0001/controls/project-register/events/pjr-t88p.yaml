@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_1d04338716394e0bb6c914d593c3d297
+  ts: "2026-11-09T22:16:31Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 業務仕様の型 7 種類を標準の章立てに合わせ、中身を厚くする
+    - field: description
+      from: ""
+      to: 代表づくりで使った型（sf・cdt・ccd・bdd・ifx-cmd・bes・br）を、rulebook-authoring-standard の章立てに合わせ、記述ガイドの判断の基準と良い例・悪い例、clis 程度の厚さの sample を備えた形にし、人が確定する。schedule で流す
+    - field: input
+      from: ""
+      to: '["2026-11-10、代表の確認の中で、clis 以外の型は章立てが標準に届かず、中身も薄いと分かった（indie の指摘）。bes・br は作り直し、sf・cdt・ccd・bdd・ifx-cmd は手入れとする（indie が承認）。","executor は sol-executor、review は sol-review-executor。使用量の上限のときは argon-executor（review は agy-opus-review-executor）に替える（indie が決定）。","型の確定の後、business-specs-reps の磨き込みから先を流し直す。代表の確定（人）は型の確定まで先送りにする。"]'
+    - field: type
+      from: ""
+      to: epic
+    - field: track
+      from: ""
+      to: business-specs-kata
+    - field: domains
+      from: ""
+      to: '["data-model","business-model","system-functions","external-interface-specs"]'
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-10"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-2GD6"]'

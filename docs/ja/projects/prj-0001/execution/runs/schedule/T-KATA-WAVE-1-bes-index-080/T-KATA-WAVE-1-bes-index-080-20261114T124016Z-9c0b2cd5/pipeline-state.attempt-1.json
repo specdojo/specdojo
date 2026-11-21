@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-1-bes-index-080",
+  "run_id": "T-KATA-WAVE-1-bes-index-080-20261114T124016Z-9c0b2cd5",
+  "updated_at": "2026-11-14T16:28:02.970Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "qwen-executor",
+      "attempts": 1,
+      "started_at": "2026-11-14T12:50:29.762Z",
+      "completed_at": "2026-11-14T13:07:24.898Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-bes-index-080/T-KATA-WAVE-1-bes-index-080-20261114T124016Z-9c0b2cd5/evidence.json"
+    },
+    "reporter": {
+      "status": "failed",
+      "actor": "gemma-reporter",
+      "attempts": 2,
+      "started_at": "2026-11-14T16:25:37.363Z",
+      "completed_at": "2026-11-14T16:28:02.970Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-bes-index-080/T-KATA-WAVE-1-bes-index-080-20261114T124016Z-9c0b2cd5/result.md"
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-bes-index-080/T-KATA-WAVE-1-bes-index-080-20261114T124016Z-9c0b2cd5/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-bes-index-080/T-KATA-WAVE-1-bes-index-080-20261114T124016Z-9c0b2cd5/result.md"
+  }
+}

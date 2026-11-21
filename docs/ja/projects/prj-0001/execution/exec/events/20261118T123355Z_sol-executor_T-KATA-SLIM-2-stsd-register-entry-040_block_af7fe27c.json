@@ -1,0 +1,16 @@
+{
+  "v": 1,
+  "ts": "2026-11-18T12:33:55Z",
+  "type": "block",
+  "task_id": "T-KATA-SLIM-2-stsd-register-entry-040",
+  "by": "sol-executor",
+  "msg": "integration failed: Staged changes in integration target /workspaces/specdojo-workspace/specdojo: docs/ja/projects/prj-0001/controls/project-register/events/pjr-5ctm.yaml, docs/ja/projects/prj-0001/controls/project-register/events/pjr-p318.yaml, docs/ja/projects/prj-0001/controls/project-register/events/pjr-y3xs.yaml. Commit them, or run git restore --staged -- <path> for each listed path in that worktree (file contents are preserved), then retry integration.; worktree kept: /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-stsd-register-entry-040; next: fix the artifacts with exec resume --task T-KATA-SLIM-2-stsd-register-entry-040 --resume-from executor (syncs the integration target first), or retry only the integration with exec resume --task T-KATA-SLIM-2-stsd-register-entry-040",
+  "meta": {
+    "pipeline_stage": "integrate",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-stsd-register-entry-040/T-KATA-SLIM-2-stsd-register-entry-040-20261118T120123Z-7f0e1398/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-stsd-register-entry-040/T-KATA-SLIM-2-stsd-register-entry-040-20261118T120123Z-7f0e1398/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-SLIM-2-stsd-register-entry-040-20261118T120123Z-7f0e1398",
+    "claim_actor": "sol-executor",
+    "stage_actor": "opus-executor"
+  }
+}
