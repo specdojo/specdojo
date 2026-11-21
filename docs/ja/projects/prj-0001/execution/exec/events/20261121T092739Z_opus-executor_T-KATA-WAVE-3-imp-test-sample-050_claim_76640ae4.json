@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-21T09:27:39Z",
+  "type": "claim",
+  "task_id": "T-KATA-WAVE-3-imp-test-sample-050",
+  "by": "opus-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "QE"
+  }
+}
