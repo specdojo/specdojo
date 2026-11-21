@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-RS2P",
   "run_id": "pjr-rs2p-20261121T180514Z-f89752a1",
-  "updated_at": "2026-11-21T22:56:02.656Z",
+  "updated_at": "2026-11-21T22:56:11.265Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-RS2P/pjr-rs2p-20261121T180514Z-f89752a1/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sonnet-executor",
       "attempts": 1,
       "started_at": "2026-11-21T22:56:02.656Z",
-      "completed_at": null,
+      "completed_at": "2026-11-21T22:56:11.265Z",
       "artifact_ref": null
     }
   },
