@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_3a5daff14e20424a99cd9bd9bf75ce99
+  ts: "2026-11-21T09:06:42Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者の依頼を受けて、外部プロジェクトへの起票の結果から起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 外部プロジェクトへの register add --commit で、-m の段落がカンマで件名につながる
+    - field: description
+      from: ""
+      to: external\_projects へ register add --commit -m を複数渡すと、各段落が改行ではなくカンマで連結され、本文と Co-Authored-By の行が件名の1行に入る。また相手のリポジトリの commit-msg hook で commit が失敗したとき、CLI は書き込んだファイルの一覧と「not committed」だけを示し、失敗の理由（hook の出力）を出さない。段落を git commit -m と同じに扱い、commit の失敗の理由を示す
+    - field: input
+      from: ""
+      to: '["発端は利用者のプロジェクト coderdojo-lessons-specdojo（SpecDojo 0.9.2、2026-11-21）。","register add --project `<外部の別名>` --commit -m `<件名>` -m `<本文>` -m `<Co-Authored-By>` で起票したところ、相手のリポジトリの commit の件名が「`<件名>`,`<本文>`,`<Co-Authored-By>`」の1行（275 文字・414 文字）になった。この2件（PJR-FGKB・PJR-F6MC）の commit は orchestrator がメッセージだけを作り直した。","別の起票では、本文の1行が commitlint の body-max-line-length（100 文字）を超え、相手の commit-msg hook で commit が失敗した。CLI の出力は「The register changes were written but not committed:」とファイルの一覧だけで、理由は手で git commit を流して初めて分かった。個票とイベントは相手の作業ツリーに未 commit のまま残った（PJR-7KQT）。","help の -m の説明は「each value becomes a paragraph, as in git commit -m」で、ローカルの project への起票ではそのとおりに動く。"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-21"
+    - field: due
+      from: ""
+      to: _TODO_
