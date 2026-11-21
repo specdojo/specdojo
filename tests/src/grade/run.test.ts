@@ -397,6 +397,54 @@ describe("native grade run", () => {
     expect(executePlan).toHaveBeenCalledTimes(1);
   });
 
+  describe("--fallback-by", () => {
+    const rateLimit = {
+      actor: "primary",
+      command: "test",
+      execution: { result: "rate_limit" as const, exitCode: 1, stdout: "", stderr: "limit" },
+    };
+    const resolveActor = (opts: { by?: string }) => opts.by ?? "primary";
+    const run = (extra: Partial<GradeRunOptions>) =>
+      runGrade(
+        { ...options, by: "primary", ...extra },
+        { executePlan, resolveActor: (opts) => resolveActor(opts) },
+      );
+
+    it("continues the same run id with the fallback grader and records who graded", async () => {
+      executePlan.mockResolvedValueOnce(rateLimit);
+      executePlan.mockImplementationOnce(async (input) => ({
+        actor: input.nickname,
+        command: "test",
+        execution: { result: "success", exitCode: 0, stdout: GRADE_RUN_MARKERS, stderr: "" },
+      }));
+      const result = await run({ fallbackBy: "backup" });
+      expect(executePlan.mock.calls.map(([input]) => input.nickname)).toEqual([
+        "primary",
+        "backup",
+      ]);
+      expect(result.documents[0]).toMatchObject({ status: "complete", actor: "backup" });
+      expect(
+        readGradeResultForDocument({ documentPath: GRADE_RUN_DOCUMENT, project: "test" }),
+      ).toMatchObject({ graded_by: "backup" });
+    });
+
+    it("stops with exit code 75 when the fallback grader also hits a rate limit", async () => {
+      executePlan.mockResolvedValueOnce(rateLimit);
+      executePlan.mockResolvedValueOnce({ ...rateLimit, actor: "backup" });
+      await expect(run({ fallbackBy: "backup" })).rejects.toMatchObject({
+        exitCode: GRADE_RUN_RATE_LIMIT_EXIT_CODE,
+        message: expect.stringMatching(/agent=backup[\s\S]*grade run remaining: /),
+      });
+      expect(executePlan).toHaveBeenCalledTimes(2);
+    });
+
+    it("rejects a fallback equal to the primary grader before running an agent", async () => {
+      await expect(run({ fallbackBy: "primary" })).rejects.toThrow(/must differ/);
+      await expect(run({ fallbackBy: " " })).rejects.toThrow(/Invalid --fallback-by/);
+      expect(executePlan).not.toHaveBeenCalled();
+    });
+  });
+
   it("compares each Kata document with the same-kind prj-overview document", async () => {
     const reference = "docs/ja/specdojo/rulebooks/prj-overview-rulebook.md";
     writeFileSync(
