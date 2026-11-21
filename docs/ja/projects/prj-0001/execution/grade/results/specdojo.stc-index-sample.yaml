@@ -4,79 +4,80 @@ document: specdojo:stc-index-sample
 path: docs/ja/specdojo/samples/stc-index-sample.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-sample
 verdict: needs-work
-score: 81
-graded_at: "2026-10-20T20:21:14.315Z"
-graded_by: flash-high-executor
-content_hash: 450b099990ae36d6a16f74f1d57640670b4cc668fb996ab745354dbf5964d98f
+score: 56
+graded_at: "2026-11-21T05:49:46.122Z"
+graded_by: opus-executor
+content_hash: ff94a9137ca91d487858b4900b4b6038e749a8df977452fccdf2fd7c4bc89854
 categories:
   purpose:
-    score: 100
+    score: 63
   operations:
-    score: 100
+    score: 88
   planning:
-    score: 100
+    score: 58
   business:
-    score: 100
+    score: 58
   architecture:
-    score: 100
-  usability:
     score: 75
-  implementation:
-    score: 100
-  quality:
+  usability:
     score: 67
+  implementation:
+    score: 63
+  quality:
+    score: 42
   consistency:
-    score: 50
+    score: 25
 viewpoints:
   vp-po-purpose-alignment:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-po-decision-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-publication-accountability:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-pm-dependency-risk:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-pm-control-reporting:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-business-value:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-ba-requirements-completeness:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-ba-stakeholder-clarity:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-technical-constraints:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-arc-conciseness:
     level: 3
     score: 75
   vp-dev-implementation-readiness:
-    level: 4
-    score: 100
-  vp-dev-change-impact:
-    level: 4
-    score: 100
-  vp-dev-testability:
-    level: 4
-    score: 100
-  vp-qe-verifiability:
-    level: 3
-    score: 75
-  vp-qe-omissions-consistency:
     level: 2
     score: 50
+  vp-dev-change-impact:
+    level: 3
+    score: 75
+  vp-dev-testability:
+    level: 3
+    score: 75
+  vp-qe-verifiability:
+    level: 1
+    score: 25
+  vp-qe-omissions-consistency:
+    level: 1
+    score: 25
   vp-qe-kata-conformance:
     level: 1
     score: 25
@@ -84,14 +85,14 @@ viewpoints:
     level: 2
     score: 50
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-operability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -100,19 +101,113 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 4
-  minor: 2
+  major: 13
+  minor: 10
   note: 0
 findings:
   - id: F001
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 29
-    anchor: "| -------------- | ------------------------ |"
-    message: 「主な内容」の記述が前の節の内容をそのまま反復しており、冗長である。
-    message_ja: 「主な内容」の記述が前の節の内容をそのまま反復しており、冗長である。
+    severity: major
+    rule: vp-po-purpose-alignment
+    line: 5
+    anchor: 本書は、システム全体として業務シナリオが成立することを定義する（仕様）ための最小サンプルである。
+    message: >-
+      目的の章が「最小サンプルである」という自己説明で終わっています。`stc-＜term＞` の粒度・責任範囲を揃える目的、UT/IT/ET/AT との境界、`tsp-index` との対応という rulebook
+      の要求を、駄菓子屋の販売管理システムを題材にした完成例として書く必要があります。
+    message_ja: >-
+      目的の章が「最小サンプルである」という自己説明で終わっています。`stc-＜term＞` の粒度・責任範囲を揃える目的、UT/IT/ET/AT との境界、`tsp-index` との対応という rulebook
+      の要求を、駄菓子屋の販売管理システムを題材にした完成例として書く必要があります。
   - id: F002
     severity: minor
+    rule: vp-po-decision-readiness
+    line: 30
+    anchor: "| 要件詳細の補強 | 実案件適用時に具体化する |"
+    message: "未解決事項が「要件詳細の補強」という抽象的な一行だけです。rulebook の「メモ / 将来課題」に沿って、具体的な論点（例: 証跡形式の統一、スモーク/回帰の分離）、影響、当面の扱い、確定時に見直す方針を示す必要があります。"
+    message_ja: "未解決事項が「要件詳細の補強」という抽象的な一行だけです。rulebook の「メモ / 将来課題」に沿って、具体的な論点（例: 証跡形式の統一、スモーク/回帰の分離）、影響、当面の扱い、確定時に見直す方針を示す必要があります。"
+  - id: F003
+    severity: major
+    rule: vp-pm-plan-feasibility
+    line: 13
+    anchor: "## 3. 記述内容"
+    message: 分割基準と対象別への分配方針（主担当 `stc-＜term＞` の割り当て）の例がありません。対象別カタログをどの単位で作業化するか判断できないため、業務シナリオ単位の分割例と分配表の例を加える必要があります。
+    message_ja: 分割基準と対象別への分配方針（主担当 `stc-＜term＞` の割り当て）の例がありません。対象別カタログをどの単位で作業化するか判断できないため、業務シナリオ単位の分割例と分配表の例を加える必要があります。
+  - id: F004
+    severity: major
+    rule: vp-pm-dependency-risk
+    line: 1
+    anchor: "# [総合テスト](../rulebooks/stc-index-rulebook.md) サンプル"
+    message: >-
+      Frontmatter に `based_on` がなく、rulebook の「推奨ルール」が求める `tsp-index` への依存が示されていません。上位 TSP との依存関係を完成例として示すため、`based_on:
+      [tsp-index]` を加える必要があります。
+    message_ja: >-
+      Frontmatter に `based_on` がなく、rulebook の「推奨ルール」が求める `tsp-index` への依存が示されていません。上位 TSP との依存関係を完成例として示すため、`based_on:
+      [tsp-index]` を加える必要があります。
+  - id: F005
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 28
+    anchor: "| 論点           | 処理方針                 |"
+    message: 未解決事項の表に「影響」と「確定時の見直し方針」の列がありません。登録簿へ引き継げるかを判断できないため、rulebook の「メモ / 将来課題」に沿って、影響と当面の扱いを書く必要があります。
+    message_ja: 未解決事項の表に「影響」と「確定時の見直し方針」の列がありません。登録簿へ引き継げるかを判断できないため、rulebook の「メモ / 将来課題」に沿って、影響と当面の扱いを書く必要があります。
+  - id: F006
+    severity: major
+    rule: vp-ba-business-value
+    line: 9
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+    message: "対象が「駄菓子屋の販売管理システム」の一語にとどまり、保証すべき業務シナリオ（例: 販売確定→在庫減算、つけ記録）と、業務影響を根拠にした採用理由が示されていません。テストが業務のどの価値を守るのか読み取れません。"
+    message_ja: "対象が「駄菓子屋の販売管理システム」の一語にとどまり、保証すべき業務シナリオ（例: 販売確定→在庫減算、つけ記録）と、業務影響を根拠にした採用理由が示されていません。テストが業務のどの価値を守るのか読み取れません。"
+  - id: F007
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 13
+    anchor: "## 3. 記述内容"
+    message: 対象外・除外理由の表（対象外、除外理由、代替レベル/代替手段、例外）がありません。総合テストの対象範囲と対象外を利用者の視点で確認できないため、厳密な性能や外部事業者の障害網羅などの例を表で示す必要があります。
+    message_ja: 対象外・除外理由の表（対象外、除外理由、代替レベル/代替手段、例外）がありません。総合テストの対象範囲と対象外を利用者の視点で確認できないため、厳密な性能や外部事業者の障害網羅などの例を表で示す必要があります。
+  - id: F008
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 16
+    anchor: "- 必須観点: 対象、条件、判定基準、責任者"
+    message: 必須観点に「責任者」と書きながら、本文に責任者・確認者の例が一つもありません。挙げた観点と記述が食い違っているので、例を示すか、この項目自体を見直す必要があります。
+    message_ja: 必須観点に「責任者」と書きながら、本文に責任者・確認者の例が一つもありません。挙げた観点と記述が食い違っているので、例を示すか、この項目自体を見直す必要があります。
+  - id: F009
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 13
+    anchor: "## 3. 記述内容"
+    message: 環境（ST 専用環境、データ namespace、初期化・後始末）、外部依存（sandbox/スタブ）、観測点、証跡の共通方針を示す章がありません。総合テストの技術的前提が読み取れないため、駄菓子屋の例で記述する必要があります。
+    message_ja: 環境（ST 専用環境、データ namespace、初期化・後始末）、外部依存（sandbox/スタブ）、観測点、証跡の共通方針を示す章がありません。総合テストの技術的前提が読み取れないため、駄菓子屋の例で記述する必要があります。
+  - id: F010
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 24
+    anchor: >-
+      | 主な内容     | エンドツーエンドの業務シナリオ、画面/API/バッチ/外部連携の通し観点、運用観点（ジョブ・監視・障害時）、非機能の観点（代表値）、合格基準 |
+      要点のみ記載                         |
+    message: 「主な内容」の記述が前の節の内容をそのまま反復しており、冗長である。
+    message_ja: 「主な内容」の記述が前の節の内容をそのまま反復しており、冗長である。
+  - id: F011
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 13
+    anchor: "## 3. 記述内容"
+    message: ケース表の共通カラム（`case_id`、条件、手順（最小）、期待値と推奨カラム）と `case_id` の形式例がありません。対象別カタログを作る作業者が表の形式を決められないため、例を加える必要があります。
+    message_ja: ケース表の共通カラム（`case_id`、条件、手順（最小）、期待値と推奨カラム）と `case_id` の形式例がありません。対象別カタログを作る作業者が表の形式を決められないため、例を加える必要があります。
+  - id: F012
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 5
+    anchor: 本書は、システム全体として業務シナリオが成立することを定義する（仕様）ための最小サンプルである。
+    message: "`stc-index` の共通方針が対象別カタログ `stc-＜term＞` の分割・分配・カラムに影響するという関係が示されていません。変更時の影響範囲を判断できないため、適用先を明記する必要があります。"
+    message_ja: "`stc-index` の共通方針が対象別カタログ `stc-＜term＞` の分割・分配・カラムに影響するという関係が示されていません。変更時の影響範囲を判断できないため、適用先を明記する必要があります。"
+  - id: F013
+    severity: minor
+    rule: vp-dev-testability
+    line: 13
+    anchor: "## 3. 記述内容"
+    message: テスト実施後の確認に使う証跡の形式（CI run、レポート、ログの相関キーなど）が示されていません。実施結果をどう確認するかが分からないため、境界/環境の章で例を示す必要があります。
+    message_ja: テスト実施後の確認に使う証跡の形式（CI run、レポート、ログの相関キーなど）が示されていません。実施結果をどう確認するかが分からないため、境界/環境の章で例を示す必要があります。
+  - id: F014
+    severity: major
     rule: vp-qe-verifiability
     line: 20
     anchor: >-
@@ -121,31 +216,74 @@ findings:
       | 備考                                 |
     message: 判定基準の具体例がなく、verifiability（検証可能性）を担保する記述方法のサンプルとして不十分である。
     message_ja: 判定基準の具体例がなく、verifiability（検証可能性）を担保する記述方法のサンプルとして不十分である。
-  - id: F003
+  - id: F015
+    severity: major
+    rule: vp-qe-verifiability
+    line: 15
+    anchor: "- 主な内容: エンドツーエンドの業務シナリオ、画面/API/バッチ/外部連携の通し観点、運用観点（ジョブ・監視・障害時）、非機能の観点（代表値）、合格基準"
+    message: 「合格基準」を主な内容に挙げながら、P0/P1/P2 ごとの共通合格基準や、観測点を含む期待値の例がありません。pass / fail を判定できる表現の手本を示す必要があります。
+    message_ja: 「合格基準」を主な内容に挙げながら、P0/P1/P2 ごとの共通合格基準や、観測点を含む期待値の例がありません。pass / fail を判定できる表現の手本を示す必要があります。
+  - id: F016
     severity: major
     rule: vp-qe-omissions-consistency
     line: 9
     anchor: "- 対象: 駄菓子屋の販売管理システム"
     message: "rulebook で定義された必須見出し構成（## 1 〜 ## 8）に従っておらず、第 2 章から 第 8 章までの必須項目がすべて欠落している。"
     message_ja: "rulebook で定義された必須見出し構成（## 1 〜 ## 8）に従っておらず、第 2 章から 第 8 章までの必須項目がすべて欠落している。"
-  - id: F004
+  - id: F017
     severity: major
-    rule: vp-qe-kata-conformance
-    line: 4
-    anchor: ""
-    message: Frontmatter の `type` が `project` となっており, rulebook 第 4.1 節の「`test` 固定」というルールに違反している。
-    message_ja: Frontmatter の `type` が `project` となっており, rulebook 第 4.1 節の「`test` 固定」というルールに違反している。
-  - id: F005
+    rule: vp-qe-omissions-consistency
+    line: 1
+    anchor: "# [総合テスト](../rulebooks/stc-index-rulebook.md) サンプル"
+    message: "Frontmatter に、rulebook の「推奨ルール」が最低限求める `based_on: [tsp-index]` がありません。rulebook のサンプル抜粋とも一致しません。"
+    message_ja: "Frontmatter に、rulebook の「推奨ルール」が最低限求める `based_on: [tsp-index]` がありません。rulebook のサンプル抜粋とも一致しません。"
+  - id: F018
     severity: major
     rule: vp-qe-kata-conformance
     line: 9
     anchor: "- 対象: 駄菓子屋の販売管理システム"
     message: rulebook で定義された標準テンプレの見出し構成を無視しており、kata（種別）としての責務を果たすサンプルになっていない。
     message_ja: rulebook で定義された標準テンプレの見出し構成を無視しており、kata（種別）としての責務を果たすサンプルになっていない。
-  - id: F006
+  - id: F019
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# [総合テスト](../rulebooks/stc-index-rulebook.md) サンプル"
+    message: >-
+      H1 と表のセルで、rulebook を相対パスの Markdown リンク `../rulebooks/stc-index-rulebook.md` で参照しています。対応関係は Frontmatter の
+      `rulebook` で宣言済みなので、リンクを除くか id ベースの参照にする必要があります。
+    message_ja: >-
+      H1 と表のセルで、rulebook を相対パスの Markdown リンク `../rulebooks/stc-index-rulebook.md` で参照しています。対応関係は Frontmatter の
+      `rulebook` で宣言済みなので、リンクを除くか id ベースの参照にする必要があります。
+  - id: F020
     severity: major
     rule: vp-ux-readability
     line: 9
     anchor: "- 対象: 駄菓子屋の販売管理システム"
     message: 記述が抽象的すぎて、STC Index の具体的な書き方（特に共通ルールや判定基準の定義方法）を学習するためのガイドとして機能していない。
     message_ja: 記述が抽象的すぎて、STC Index の具体的な書き方（特に共通ルールや判定基準の定義方法）を学習するためのガイドとして機能していない。
+  - id: F021
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 1
+    anchor: "# [総合テスト](../rulebooks/stc-index-rulebook.md) サンプル"
+    message: H1 が「総合テスト サンプル」で、rulebook の成果物名「総合テストカタログ 概要」と一致していません。本文16行目の「必須観点」も、rulebook の観点・条件の用語と食い違っています。
+    message_ja: H1 が「総合テスト サンプル」で、rulebook の成果物名「総合テストカタログ 概要」と一致していません。本文16行目の「必須観点」も、rulebook の観点・条件の用語と食い違っています。
+  - id: F022
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 30
+    anchor: "| 要件詳細の補強 | 実案件適用時に具体化する |"
+    message: 未解決事項「要件詳細の補強」が抽象的で、ready にするまでに解消すべき事項が特定できません。具体的な論点に分けて書く必要があります。
+    message_ja: 未解決事項「要件詳細の補強」が抽象的で、ready にするまでに解消すべき事項が特定できません。具体的な論点に分けて書く必要があります。
+  - id: F023
+    severity: minor
+    rule: vp-ops-operability
+    line: 18
+    anchor: "## 4. 最小記述例"
+    message: 「最小記述例」の章に、`case_id` を変更しない規則や、`stc-＜term＞` へ方針を分配する運用の例がありません。継続して更新するときの扱いが読み取れません。
+    message_ja: 「最小記述例」の章に、`case_id` を変更しない規則や、`stc-＜term＞` へ方針を分配する運用の例がありません。継続して更新するときの扱いが読み取れません。
+level_corrections:
+  - viewpoint: vp-qe-verifiability
+    original_level: 2
+    corrected_level: 1

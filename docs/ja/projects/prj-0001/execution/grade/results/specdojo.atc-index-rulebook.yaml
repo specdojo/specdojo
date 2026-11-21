@@ -4,40 +4,41 @@ document: specdojo:atc-index-rulebook
 path: docs/ja/specdojo/rulebooks/atc-index-rulebook.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-rulebook
 verdict: needs-work
-score: 74
-graded_at: "2026-10-28T20:10:06.394Z"
-graded_by: flash-high-executor
-content_hash: 14960c359b22d933344a281f3287300795cfee04b7e003d4b7fef8957ea920ae
+score: 93
+graded_at: "2026-11-21T03:03:52.889Z"
+graded_by: opus-executor
+content_hash: 41753da07af8a6fd90e1a6db7dab9d8782ef571f1d736c5c2b67339216072a54
 categories:
   purpose:
-    score: 88
+    score: 100
   operations:
-    score: 88
+    score: 94
   planning:
-    score: 92
+    score: 100
   business:
-    score: 83
+    score: 100
   architecture:
-    score: 75
+    score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
-    score: 75
+    score: 100
   quality:
-    score: 58
+    score: 75
   consistency:
-    score: 50
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-publication-accountability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-plan-feasibility:
     level: 4
     score: 100
@@ -45,47 +46,47 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-control-reporting:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-business-value:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-change-impact:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-testability:
     level: 3
     score: 75
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
     level: 2
     score: 50
-  vp-qe-kata-conformance:
-    level: 1
-    score: 25
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 3
     score: 75
@@ -100,130 +101,27 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 4
-  minor: 12
+  major: 1
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-decision-readiness
-    line: 18
-    anchor: "- 「対象外」や「合否判定の原則」を明示し、受入テストの責任境界（何をもって受け入れるか/受け入れないか）を固定する"
-    message: 受入可否の判定者と判定・承認フロー（合否集計から承認までの流れ）を生成物 `atc-index` に記述させる要求がなく、PO が受入判断の論点を確認できないため、本文構成か記述ガイドに記載要求を追加する。
-    message_ja: 受入可否の判定者と判定・承認フロー（合否集計から承認までの流れ）を生成物 `atc-index` に記述させる要求がなく、PO が受入判断の論点を確認できないため、本文構成か記述ガイドに記載要求を追加する。
-  - id: F002
-    severity: minor
-    rule: vp-po-publication-accountability
-    line: 238
-    anchor: "- 証跡の最小セット（例）："
-    message: 証跡の最小セットに実施者はあるが受入判定の責任者（PO 等の人間）の記録が含まれず、合否の説明責任の所在が追えないため、判定者・承認日を証跡項目に加える。
-    message_ja: 証跡の最小セットに実施者はあるが受入判定の責任者（PO 等の人間）の記録が含まれず、合否の説明責任の所在が追えないため、判定者・承認日を証跡項目に加える。
-  - id: F003
-    severity: minor
-    rule: vp-pm-control-reporting
-    line: 274
-    anchor: ""
-    message: メモ / 将来課題に記録した未決事項を PJR（課題・変更要求・決定記録）へ転記する基準と担当が定義されておらず、進捗・課題管理と分離されないため, 転記条件を追記する。
-    message_ja: メモ / 将来課題に記録した未決事項を PJR（課題・変更要求・決定記録）へ転記する基準と担当が定義されておらず、進捗・課題管理と分離されないため, 転記条件を追記する。
-  - id: F004
-    severity: minor
-    rule: vp-ba-requirements-completeness
-    line: 262
-    anchor: "- `優先度`：P0/P1/P2（受入で外せないものを明確化）"
-    message: 優先度 P0/P1/P2 を定義しているが、受入全体の合否集計基準（P0 全件 pass 等、fail 許容の条件）を生成物に書かせる要求がなく、受入条件が完結しないため追記する。
-    message_ja: 優先度 P0/P1/P2 を定義しているが、受入全体の合否集計基準（P0 全件 pass 等、fail 許容の条件）を生成物に書かせる要求がなく、受入条件が完結しないため追記する。
-  - id: F005
-    severity: minor
-    rule: vp-ba-stakeholder-clarity
-    line: 18
-    anchor: "- 「対象外」や「合否判定の原則」を明示し、受入テストの責任境界（何をもって受け入れるか/受け入れないか）を固定する"
-    message: 関係者として顧客/PO/QA を挙げているが、受入テストの実施者・判定者・証跡確認者の役割分担を生成物 `atc-index` に記述させる要求がないため、共通方針の章に役割定義を追加する。
-    message_ja: 関係者として顧客/PO/QA を挙げているが、受入テストの実施者・判定者・証跡確認者の役割分担を生成物 `atc-index` に記述させる要求がないため、共通方針の章に役割定義を追加する。
-  - id: F006
-    severity: major
-    rule: vp-arc-technical-constraints
-    line: 58
-    anchor: "| ---------- | -------------------------------------------------- | ---- |"
-    message: >-
-      推奨 Frontmatter が `title` 必須・トップレベル配置・非修飾 `id: atc-index` を指示しており、document-metadata-standard の `specdojo:`
-      名前空間・`title` 不使用・プロジェクト修飾 id と矛盾するため、共通スキーマに合わせて表を改める。
-    message_ja: >-
-      推奨 Frontmatter が `title` 必須・トップレベル配置・非修飾 `id: atc-index` を指示しており、document-metadata-standard の `specdojo:`
-      名前空間・`title` 不使用・プロジェクト修飾 id と矛盾するため、共通スキーマに合わせて表を改める。
-  - id: F007
-    severity: minor
-    rule: vp-dev-implementation-readiness
-    line: 47
-    anchor: "- 本ルールの対象ドキュメントの `id` は `atc-index` 固定。対象別は `atc-<term>`（詳細は `atc-rulebook.md`）。"
-    message: "`id` を `atc-index` 固定としているが、成果物 id はプロジェクト修飾（`＜project-id＞:atc-index`）が正のため、ID 規則を修飾形で記載し直す。"
-    message_ja: "`id` を `atc-index` 固定としているが、成果物 id はプロジェクト修飾（`＜project-id＞:atc-index`）が正のため、ID 規則を修飾形で記載し直す。"
-  - id: F008
-    severity: minor
-    rule: vp-dev-change-impact
-    line: 244
-    anchor: ""
-    message: 全 term 共通のカラム順を定めているが、共通カラム変更時に既存 `atc-＜term＞` と `case_id` 参照へ与える影響と追従手順が未記載のため、変更時の扱いを追記する。
-    message_ja: 全 term 共通のカラム順を定めているが、共通カラム変更時に既存 `atc-＜term＞` と `case_id` 参照へ与える影響と追従手順が未記載のため、変更時の扱いを追記する。
-  - id: F009
-    severity: minor
     rule: vp-dev-testability
-    line: 57
-    anchor: "| 項目       | 説明                                               | 必須 |"
+    line: 12
+    anchor: >-
+      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status`・承認・改訂と廃止・未決事項の登録簿への引き継ぎは
+      [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従います。文書の整形・lint はリポジトリの検証で扱い、業務の受入確認に含めません。
     message: 生成した `atc-index` の Frontmatter・Markdown を確認する検証コマンド（`npm run lint:md` / `npm run lint:fm` 等）と期待結果が示されていないため追記する。
     message_ja: 生成した `atc-index` の Frontmatter・Markdown を確認する検証コマンド（`npm run lint:md` / `npm run lint:fm` 等）と期待結果が示されていないため追記する。
-  - id: F010
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 287
-    anchor: >-
-      | ------------------------------------------------------------------ |
-      ---------------------------------------------------------------------- |
-    message: 禁止事項の「大量に列挙する」「細部を大量に書く」は閾値がなく違反を pass / fail で判定できないため、件数や禁止対象の具体例で判定条件を示す。
-    message_ja: 禁止事項の「大量に列挙する」「細部を大量に書く」は閾値がなく違反を pass / fail で判定できないため、件数や禁止対象の具体例で判定条件を示す。
-  - id: F011
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 18
-    anchor: "- 「対象外」や「合否判定の原則」を明示し、受入テストの責任境界（何をもって受け入れるか/受け入れないか）を固定する"
-    message: 全体方針で「合否判定の原則」「合格基準」を定義するとしながら本文構成（標準テンプレ）と記述ガイドに該当章がなく、必須章に抜けがあるため、合格基準・合否判定の章を追加するか方針を修正する。
-    message_ja: 全体方針で「合否判定の原則」「合格基準」を定義するとしながら本文構成（標準テンプレ）と記述ガイドに該当章がなく、必須章に抜けがあるため、合格基準・合否判定の章を追加するか方針を修正する。
-  - id: F012
+  - id: F002
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# 受入テストカタログ 概要 作成ルール"
     message: 指定されているサンプル `specdojo:atc-index-sample` が、本ルールブックの第5章で定義した標準テンプレ（見出し構成および順序）に準拠していない。
     message_ja: 指定されているサンプル `specdojo:atc-index-sample` が、本ルールブックの第5章で定義した標準テンプレ（見出し構成および順序）に準拠していない。
-  - id: F013
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 58
-    anchor: "| ---------- | -------------------------------------------------- | ---- |"
-    message: >-
-      推奨 Frontmatter の表がトップレベルの `id`/`title` を用いており、組織定義 document-metadata-standard の `specdojo:` 名前空間・`title`
-      不使用と矛盾するため、共通規約に沿った内容へ改める。
-    message_ja: >-
-      推奨 Frontmatter の表がトップレベルの `id`/`title` を用いており、組織定義 document-metadata-standard の `specdojo:` 名前空間・`title`
-      不使用と矛盾するため、共通規約に沿った内容へ改める。
-  - id: F014
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 73
-    anchor: ""
-    message: >-
-      rulebook-authoring-standard
-      の標準章構成は「本文要件」、サンプル章は最小例をコードブロックで自己完結させる形だが、本書は「本文構成（標準テンプレ）」と見出し付き文章のサンプルになっており、authoring standard と揃える。
-    message_ja: >-
-      rulebook-authoring-standard
-      の標準章構成は「本文要件」、サンプル章は最小例をコードブロックで自己完結させる形だが、本書は「本文構成（標準テンプレ）」と見出し付き文章のサンプルになっており、authoring standard と揃える。
-  - id: F015
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 32
-    anchor: TCDetail["atc-&lt;term&gt;<br>テスト仕様-対象別"]
-    message: 位置づけ図のラベル「テスト仕様-全体構成」「テスト仕様-対象別」が本文の「受入テストカタログ 概要」「対象別カタログ」と表記揺れしているため、成果物名を統一する。
-    message_ja: 位置づけ図のラベル「テスト仕様-全体構成」「テスト仕様-対象別」が本文の「受入テストカタログ 概要」「対象別カタログ」と表記揺れしているため、成果物名を統一する。
-  - id: F016
+  - id: F003
     severity: minor
     rule: vp-ops-release-readiness
     line: 1

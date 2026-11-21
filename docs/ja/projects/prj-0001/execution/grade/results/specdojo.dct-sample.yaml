@@ -1,0 +1,169 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:dct-sample
+path: docs/ja/specdojo/samples/dct-sample.yaml
+target: kata
+rubric: grade-rubric-v2
+reference: specdojo:prj-overview-sample
+verdict: pass
+score: 88
+graded_at: "2026-11-21T03:44:47.733Z"
+graded_by: opus-executor
+content_hash: fa397f6479c3adae409d692e3cef256b8b8bda4394ac8686f9a5f3077f08f05e
+categories:
+  purpose:
+    score: 88
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
+  architecture:
+    score: 100
+  usability:
+    score: 83
+  implementation:
+    score: 100
+  quality:
+    score: 83
+  consistency:
+    score: 75
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 3
+    score: 75
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 6
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-po-purpose-alignment
+    line: 26
+    anchor: "- POS 端末および在庫管理端末はタブレット Web アプリケーションとする"
+    message: >-
+      共有 brief の「POS 端末および在庫管理端末」は端末が複数あるように読め、prj-overview-sample の前提「操作端末は店内のタブレット 1 台」と食い違って見えるため、「店内のタブレット 1 台で動く
+      Web アプリケーションとする」など上位の前提と同じ表現にそろえる。
+    message_ja: >-
+      共有 brief の「POS 端末および在庫管理端末」は端末が複数あるように読め、prj-overview-sample の前提「操作端末は店内のタブレット 1 台」と食い違って見えるため、「店内のタブレット 1 台で動く
+      Web アプリケーションとする」など上位の前提と同じ表現にそろえる。
+  - id: F002
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 86
+    anchor: "note: 統制文書のためスケジュール展開対象外。work ではないため done_criteria は持たない"
+    message: >-
+      note の「work ではないため done_criteria は持たない」は rulebook の kind 規則の再掲で、構造化フィールドで表せない補足という note
+      の役割から外れるため、統制文書である理由など成果物固有の補足だけを残す。
+    message_ja: >-
+      note の「work ではないため done_criteria は持たない」は rulebook の kind 規則の再掲で、構造化フィールドで表せない補足という note
+      の役割から外れるため、統制文書である理由など成果物固有の補足だけを残す。
+  - id: F003
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 39
+    anchor: "- text: 成功判定の輪郭が確認できること"
+    message: 「成功判定の輪郭が確認できること」は「輪郭」の範囲が曖昧で合否を判定できないため、「成功基準の観点と測定方法が識別できること」など確かめる対象を具体的に書く。
+    message_ja: 「成功判定の輪郭が確認できること」は「輪郭」の範囲が曖昧で合否を判定できないため、「成功基準の観点と測定方法が識別できること」など確かめる対象を具体的に書く。
+  - id: F004
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 79
+    anchor: "- local_id: prj-glossary"
+    message: >-
+      prj-glossary は rulebook を省いており、rulebook の規則では「必要だが未整備」と読めるため、完成例として意図した状態に合わせて undecided か not-needed
+      を明示するか、省いた意図をコメントで示す。
+    message_ja: >-
+      prj-glossary は rulebook を省いており、rulebook の規則では「必要だが未整備」と読めるため、完成例として意図した状態に合わせて undecided か not-needed
+      を明示するか、省いた意図をコメントで示す。
+  - id: F005
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 13
+    anchor: "- prj-0001:dct-index"
+    message: >-
+      part_of が SpecDojo 本体の prj-0001:dct-index を指し、dct-sample を参照する同梱の specdojo:dct-index-sample と対応していないため、sample
+      間の親子関係を specdojo:dct-index-sample にそろえる。
+    message_ja: >-
+      part_of が SpecDojo 本体の prj-0001:dct-index を指し、dct-sample を参照する同梱の specdojo:dct-index-sample と対応していないため、sample
+      間の親子関係を specdojo:dct-index-sample にそろえる。
+  - id: F006
+    severity: minor
+    rule: vp-ux-readability
+    line: 4
+    anchor: "# 駄菓子屋きぬや販売管理システム構築プロジェクトのプロジェクト定義ドメインを題材とする。"
+    message: >-
+      project_id と part_of の prj-0001 が例示値で SpecDojo 本体のプロジェクトを指さないことや、共通サンプル文脈への参照がなく実在プロジェクトと誤読されうるため、dct-index-sample
+      と同様の _ASSUMPTION_ コメントと参照を加える。
+    message_ja: >-
+      project_id と part_of の prj-0001 が例示値で SpecDojo 本体のプロジェクトを指さないことや、共通サンプル文脈への参照がなく実在プロジェクトと誤読されうるため、dct-index-sample
+      と同様の _ASSUMPTION_ コメントと参照を加える。

@@ -4,10 +4,11 @@ document: specdojo:uis-sample
 path: docs/ja/specdojo/samples/uis-sample.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-sample
 verdict: pass
 score: 91
-graded_at: "2026-11-17T23:03:30.895Z"
-graded_by: sol-review-executor
+graded_at: "2026-11-21T06:11:08.748Z"
+graded_by: opus-executor
 content_hash: c7acd292fc1e0ca6d2576e72bd3770fe1d5f7e5bf7352ab94b607be787799dc4
 categories:
   purpose:
@@ -104,7 +105,7 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 5
+  minor: 6
   note: 0
 findings:
   - id: F001
@@ -138,6 +139,16 @@ findings:
     message_ja: 本文115行では商品の存在を追加時と会計確定時に判定するが、対応する「商品コード未登録」の状態説明は「明細は追加しない」と追加時だけを扱っているため、確定時に検出した場合の既存明細・集計・取引状態の扱いを区別して記載する。
   - id: F004
     severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 131
+    anchor: >-
+      | 販売対象外                   | 追加時または確定時に販売停止を検出                   |
+      「現在販売できない商品です」と商品名                                     |
+      確定せず登録中を保持                                                   | 別の商品を選ぶか、明細内なら「明細削除」                            |
+    message: 「販売対象外」の発生条件は追加時と確定時の両方だが、状態の扱いは「確定せず登録中を保持」と確定時だけを記しているため、追加時に検出した場合は入力を保持し明細を追加しないことを区別して記載する。
+    message_ja: 「販売対象外」の発生条件は追加時と確定時の両方だが、状態の扱いは「確定せず登録中を保持」と確定時だけを記しているため、追加時に検出した場合は入力を保持し明細を追加しないことを区別して記載する。
+  - id: F005
+    severity: minor
     rule: vp-qe-kata-conformance
     line: 130
     anchor: >-
@@ -150,7 +161,7 @@ findings:
     message_ja: >-
       uis-rulebook
       の「エラー表示と利用者の次の手」は回復操作とその結果を求めているが、会計確定時の商品未登録に対する回復が追加時の説明に含まれていないため、確定を拒否した後に利用者が何を変更すれば再開できるかを完成例に補う。
-  - id: F005
+  - id: F006
     severity: minor
     rule: vp-ux-readability
     line: 10

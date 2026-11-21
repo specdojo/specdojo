@@ -4,28 +4,29 @@ document: specdojo:nfr-reliability-sample
 path: docs/ja/specdojo/samples/nfr-reliability-sample.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-sample
 verdict: fail
-score: 51
-graded_at: "2026-10-15T21:13:21.913Z"
-graded_by: agy-expert-executor
-content_hash: 834b93f194f52191ee27e1e27144ae55d88dbeda50c22f91851968153699e106
+score: 48
+graded_at: "2026-11-21T04:49:47.741Z"
+graded_by: opus-executor
+content_hash: f89746a2b66397e88fe835b744fb84f7a300ead2bfe6108cf98eb667827dde70
 categories:
   purpose:
     score: 63
   operations:
     score: 81
   planning:
-    score: 58
+    score: 50
   business:
     score: 33
   architecture:
     score: 83
   usability:
-    score: 75
+    score: 67
   implementation:
-    score: 50
+    score: 63
   quality:
-    score: 33
+    score: 25
   consistency:
     score: 0
 viewpoints:
@@ -42,8 +43,8 @@ viewpoints:
     level: 2
     score: 50
   vp-pm-dependency-risk:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-pm-control-reporting:
     level: 3
     score: 75
@@ -66,8 +67,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-dev-change-impact:
     level: 3
     score: 75
@@ -75,8 +76,8 @@ viewpoints:
     level: 2
     score: 50
   vp-qe-verifiability:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-qe-omissions-consistency:
     level: 0
     score: 0
@@ -87,8 +88,8 @@ viewpoints:
     level: 2
     score: 50
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 3
     score: 75
@@ -103,8 +104,8 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 3
-  major: 10
-  minor: 7
+  major: 12
+  minor: 9
   note: 0
 findings:
   - id: F001
@@ -112,164 +113,178 @@ findings:
     rule: vp-po-purpose-alignment
     line: 5
     anchor: 本書は、障害抑止と誤動作防止を定義するための最小サンプルである。
-    message: >-
-      Although the high-level purpose is stated, scope boundaries, priorities, and expected outcomes for the target
-      system are not defined.
+    message: ハイレベルな目的は述べられていますが、対象システムのスコープの境界、優先順位、および期待される成果が定義されていません。
     message_ja: ハイレベルな目的は述べられていますが、対象システムのスコープの境界、優先順位、および期待される成果が定義されていません。
   - id: F002
     severity: major
     rule: vp-po-decision-readiness
     line: 30
     anchor: "| 要件詳細の補強 | 実案件適用時に具体化する |"
-    message: >-
-      The unresolved items section defers requirement details without specifying decision owners, criteria, impacts, or
-      concrete next actions.
+    message: 未解決事項のセクションでは、決定権者、基準、影響、または具体的な次のアクションを指定することなく、要件の詳細を後回しにしています。
     message_ja: 未解決事項のセクションでは、決定権者、基準、影響、または具体的な次のアクションを指定することなく、要件の詳細を後回しにしています。
   - id: F003
     severity: minor
     rule: vp-po-publication-accountability
     line: 5
     anchor: 本書は、障害抑止と誤動作防止を定義するための最小サンプルである。
-    message: >-
-      The document does not define human approval responsibility or ownership for transitioning status from draft to
-      ready.
+    message: ドキュメントには、ステータスを draft から ready へ移行するための人間の承認責任や所有権が定義されていません。
     message_ja: ドキュメントには、ステータスを draft から ready へ移行するための人間の承認責任や所有権が定義されていません。
   - id: F004
     severity: major
     rule: vp-pm-plan-feasibility
     line: 30
     anchor: "| 要件詳細の補強 | 実案件適用時に具体化する |"
-    message: >-
-      Work units, completion criteria, responsible role codes, and timelines are entirely absent, preventing task
-      breakdown and estimation.
+    message: 作業単位、完了基準、担当ロールコード、およびタイムラインが完全に欠落しており、タスクの分解と見積もりができません。
     message_ja: 作業単位、完了基準、担当ロールコード、およびタイムラインが完全に欠落しており、タスクの分解と見積もりができません。
   - id: F005
     severity: major
     rule: vp-pm-dependency-risk
     line: 11
     anchor: "- 参照: `../rulebooks/nfr-reliability-rulebook.md`"
-    message: Downstream dependencies, schedule impacts, and risks for related deliverables are not identified.
+    message: 関連する成果物に対する下流への依存関係、スケジュールの影響、およびリスクが特定されていません。
     message_ja: 関連する成果物に対する下流への依存関係、スケジュールの影響、およびリスクが特定されていません。
   - id: F006
+    severity: major
+    rule: vp-pm-dependency-risk
+    line: 11
+    anchor: "- 参照: `../rulebooks/nfr-reliability-rulebook.md`"
+    message: >-
+      rulebook の「関連ドキュメント導線」が必須とする `nfr-index`・`sac-*`・`opr-*`・`dec-*`
+      への導線がなく、信頼性要件の検証先と障害時運用への接続を示せていないため、導線の章を追加すべきです。
+    message_ja: >-
+      rulebook の「関連ドキュメント導線」が必須とする `nfr-index`・`sac-*`・`opr-*`・`dec-*`
+      への導線がなく、信頼性要件の検証先と障害時運用への接続を示せていないため、導線の章を追加すべきです。
+  - id: F007
     severity: minor
     rule: vp-pm-control-reporting
     line: 30
     anchor: "| 要件詳細の補強 | 実案件適用時に具体化する |"
-    message: >-
-      Outstanding issues are listed without tracking attributes such as reporting destinations, response policies, or
-      assigned role codes.
+    message: 未解決の課題が、報告先、対応方針、または割り当てられたロールコードなどの追跡属性なしにリストされています。
     message_ja: 未解決の課題が、報告先、対応方針、または割り当てられたロールコードなどの追跡属性なしにリストされています。
-  - id: F007
+  - id: F008
     severity: major
     rule: vp-ba-business-value
     line: 9
     anchor: "- 対象: 駄菓子屋の販売管理システム"
-    message: >-
-      The document does not explain specific business challenges, operational impacts of failures, or expected business
-      value for the target system.
+    message: ドキュメントでは、具体的なビジネス上の課題、障害による運用への影響、または対象システムの期待されるビジネス価値について説明されていません。
     message_ja: ドキュメントでは、具体的なビジネス上の課題、障害による運用への影響、または対象システムの期待されるビジネス価値について説明されていません。
-  - id: F008
+  - id: F009
     severity: blocker
     rule: vp-ba-requirements-completeness
     line: 15
     anchor: "- 主な内容: 故障率、平均故障間隔(MTBF)、エラー率、データ検証ルール"
-    message: >-
-      Requirements, acceptance criteria, and explicit scope boundaries are entirely missing, leaving only high-level
-      topic titles.
+    message: 要件、受け入れ基準、および明示的なスコープの境界が完全に欠落しており、ハイレベルなトピックのタイトルのみが残っています。
     message_ja: 要件、受け入れ基準、および明示的なスコープの境界が完全に欠落しており、ハイレベルなトピックのタイトルのみが残っています。
-  - id: F009
+  - id: F010
     severity: major
     rule: vp-ba-stakeholder-clarity
     line: 16
     anchor: "- 必須観点: 対象、条件、判定基準、責任者"
-    message: >-
-      Stakeholders, usage scenarios, reviewers, and target agreement parties are not specified beyond abstract
-      placeholders.
+    message: ステークホルダー、ユースケース、レビューア、および対象となる合意当事者が、抽象的なプレースホルダー以外に指定されていません。
     message_ja: ステークホルダー、ユースケース、レビューア、および対象となる合意当事者が、抽象的なプレースホルダー以外に指定されていません。
-  - id: F010
+  - id: F011
     severity: major
     rule: vp-arc-technical-constraints
     line: 10
     anchor: "- 前提: プロジェクト文脈は handbook の共通方針に準拠する"
-    message: >-
-      Technical constraints, external dependencies, operational hours, and architectural preconditions are not
-      specified.
+    message: 技術的な制約、外部依存関係、稼働時間、およびアーキテクチャの前提条件が指定されていません。
     message_ja: 技術的な制約、外部依存関係、稼働時間、およびアーキテクチャの前提条件が指定されていません。
-  - id: F011
+  - id: F012
     severity: minor
     rule: vp-arc-conciseness
     line: 22
     anchor: "| ドキュメント | [非機能要件 / 信頼性](../rulebooks/nfr-reliability-rulebook.md) | 最小サンプル                         |"
-    message: >-
-      Section 3 and Section 4 duplicate the exact same descriptions of purpose and main topics without adding distinct
-      informational value.
+    message: セクション 3 とセクション 4 は、独自の情報を追加することなく、目的と主要なトピックに関する全く同じ説明を重複して記載しています。
     message_ja: セクション 3 とセクション 4 は、独自の情報を追加することなく、目的と主要なトピックに関する全く同じ説明を重複して記載しています。
-  - id: F012
+  - id: F013
     severity: major
     rule: vp-dev-implementation-readiness
     line: 15
     anchor: "- 主な内容: 故障率、平均故障間隔(MTBF)、エラー率、データ検証ルール"
-    message: >-
-      Concrete parameters, thresholds, and implementation constraints are not provided, preventing developers from
-      implementing reliability mechanisms.
+    message: 具体的なパラメータ、閾値、および実装の制約が提供されていないため、開発者が信頼性メカニズムを実装することができません。
     message_ja: 具体的なパラメータ、閾値、および実装の制約が提供されていないため、開発者が信頼性メカニズムを実装することができません。
-  - id: F013
+  - id: F014
     severity: minor
     rule: vp-dev-change-impact
     line: 30
     anchor: "| 要件詳細の補強 | 実案件適用時に具体化する |"
-    message: >-
-      The document does not describe the change impact or scope of influence on existing components when reliability
-      requirements are updated.
+    message: 信頼性の要件が更新された際の、既存のコンポーネントへの変更の影響や影響範囲が記述されていません。
     message_ja: 信頼性の要件が更新された際の、既存のコンポーネントへの変更の影響や影響範囲が記述されていません。
-  - id: F014
+  - id: F015
     severity: major
     rule: vp-dev-testability
     line: 15
     anchor: "- 主な内容: 故障率、平均故障間隔(MTBF)、エラー率、データ検証ルール"
-    message: >-
-      Verification commands, expected test results, and validation procedures for reliability requirements are
-      completely omitted.
+    message: 信頼性の要件に関する検証コマンド、期待されるテスト結果、およびバリデーション手順が完全に省略されています。
     message_ja: 信頼性の要件に関する検証コマンド、期待されるテスト結果、およびバリデーション手順が完全に省略されています。
-  - id: F015
+  - id: F016
     severity: major
     rule: vp-qe-verifiability
     line: 16
     anchor: "- 必須観点: 対象、条件、判定基準、責任者"
     message: 信頼性要件に必須とされる測定可能な指標（数値基準など）や検証方法が具体的に記述されておらず、合否判定不可能な状態である。
     message_ja: 信頼性要件に必須とされる測定可能な指標（数値基準など）や検証方法が具体的に記述されておらず、合否判定不可能な状態である。
-  - id: F016
+  - id: F017
     severity: blocker
     rule: vp-qe-omissions-consistency
     line: 6
     anchor: ""
     message: ルールブック第5章で定義された必須構成（概要、適用範囲、要件一覧、検証方法、導線）に準拠していない。
     message_ja: ルールブック第5章で定義された必須構成（概要、適用範囲、要件一覧、検証方法、導線）に準拠していない。
-  - id: F017
+  - id: F018
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 1
+    anchor: "# [非機能要件 / 信頼性](../rulebooks/nfr-reliability-rulebook.md) サンプル"
+    message: H1 にルールブックへの相対 Markdown リンクが埋め込まれており、タイトルとして不適切なため、H1 は成果物名のみとし、rulebook との対応は Frontmatter の `rulebook` に委ねるべきです。
+    message_ja: H1 にルールブックへの相対 Markdown リンクが埋め込まれており、タイトルとして不適切なため、H1 は成果物名のみとし、rulebook との対応は Frontmatter の `rulebook` に委ねるべきです。
+  - id: F019
     severity: blocker
     rule: vp-qe-kata-conformance
     line: 6
     anchor: ""
     message: 信頼性要件の具体例を示すべきサンプルでありながら、形式的な要約に留まっており、ルールブックを適用した成果物の正解例となっていない。
     message_ja: 信頼性要件の具体例を示すべきサンプルでありながら、形式的な要約に留まっており、ルールブックを適用した成果物の正解例となっていない。
-  - id: F018
+  - id: F020
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 22
+    anchor: "| ドキュメント | [非機能要件 / 信頼性](../rulebooks/nfr-reliability-rulebook.md) | 最小サンプル                         |"
+    message: >-
+      rulebook の「サンプル」章にある輪郭の最小例（要件一覧・測定方法表を含む）より sample の内容が乏しく、「完成例は sample を正とする」という Kata 間の役割分担が逆転しているため、sample を
+      rulebook の最小例以上の完成例へ拡充すべきです。
+    message_ja: >-
+      rulebook の「サンプル」章にある輪郭の最小例（要件一覧・測定方法表を含む）より sample の内容が乏しく、「完成例は sample を正とする」という Kata 間の役割分担が逆転しているため、sample を
+      rulebook の最小例以上の完成例へ拡充すべきです。
+  - id: F021
     severity: major
     rule: vp-ux-readability
     line: 6
     anchor: ""
     message: 具体的かつ実用的な記述パターンが示されていないため、作成者が参照して模倣できるサンプルとして機能していない。
     message_ja: 具体的かつ実用的な記述パターンが示されていないため、作成者が参照して模倣できるサンプルとして機能していない。
-  - id: F019
+  - id: F022
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 15
+    anchor: "- 主な内容: 故障率、平均故障間隔(MTBF)、エラー率、データ検証ルール"
+    message: 指標名を「故障率」と記載しているが rulebook は「障害率（処理失敗・異常終了の発生割合）」に統一しているため、用語を rulebook に揃えるべきです。
+    message_ja: 指標名を「故障率」と記載しているが rulebook は「障害率（処理失敗・異常終了の発生割合）」に統一しているため、用語を rulebook に揃えるべきです。
+  - id: F023
     severity: minor
     rule: vp-ops-release-readiness
     line: 30
     anchor: "| 要件詳細の補強 | 実案件適用時に具体化する |"
-    message: Conditions and criteria for transitioning the document status from draft to ready are not defined.
+    message: ドキュメントのステータスを draft から ready へ移行するための条件と基準が定義されていません。
     message_ja: ドキュメントのステータスを draft から ready へ移行するための条件と基準が定義されていません。
-  - id: F020
+  - id: F024
     severity: minor
     rule: vp-ops-operability
     line: 5
     anchor: 本書は、障害抑止と誤動作防止を定義するための最小サンプルである。
-    message: Maintenance procedures, contact channels, and responsible role codes for updating the document are not documented.
+    message: ドキュメントを更新するためのメンテナンス手順、連絡先、および担当ロールコードが文書化されていません。
     message_ja: ドキュメントを更新するためのメンテナンス手順、連絡先、および担当ロールコードが文書化されていません。
+level_corrections:
+  - viewpoint: vp-pm-dependency-risk
+    original_level: 2
+    corrected_level: 1

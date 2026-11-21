@@ -4,20 +4,21 @@ document: specdojo:otp-rulebook
 path: docs/ja/specdojo/rulebooks/otp-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-verdict: pass
-score: 99
-graded_at: "2026-11-07T20:23:57.103Z"
-graded_by: flash-high-executor
-content_hash: fd43c35c644bb199aa701fc93ef6242c70d9024cad7b675d6a1f330e9676e79a
+reference: specdojo:prj-overview-rulebook
+verdict: needs-work
+score: 83
+graded_at: "2026-11-21T05:08:28.057Z"
+graded_by: opus-executor
+content_hash: 3281752978934c0ae9c590db13264da1a39768edc0dbacda33f0b49531dcad85
 categories:
   purpose:
     score: 100
   operations:
-    score: 100
+    score: 94
   planning:
     score: 100
   business:
-    score: 100
+    score: 92
   architecture:
     score: 100
   usability:
@@ -25,9 +26,9 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 67
   consistency:
-    score: 100
+    score: 50
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -36,8 +37,8 @@ viewpoints:
     level: 4
     score: 100
   vp-po-publication-accountability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-plan-feasibility:
     level: 4
     score: 100
@@ -51,8 +52,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-stakeholder-clarity:
     level: 4
     score: 100
@@ -60,8 +61,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -72,23 +73,23 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -103,14 +104,88 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 0
-  minor: 1
+  major: 2
+  minor: 7
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-arc-conciseness
-    line: 185
-    anchor: ""
-    message: 191行目で「otp-index への導線（本体SSOT）を必ず記載する」と述べており、直後の194行目の記述は内容が重複しているため削除できる。
-    message_ja: 191行目で「otp-index への導線（本体SSOT）を必ず記載する」と述べており、直後の194行目の記述は内容が重複しているため削除できる。
+    rule: vp-po-publication-accountability
+    line: 115
+    anchor: "- ハイパーケア期間、当番体制、SLA（一次応答/暫定復旧など）を明記する"
+    message: 当番・窓口・指揮系統・責任者の記載を求めているのに、個人名・電話番号・個人の連絡先を書かず Role code や公開可能なチャネル名で書く制約がないため、禁止事項に「個人名・連絡先等の公開不適切情報」を追加すべきである。
+    message_ja: 当番・窓口・指揮系統・責任者の記載を求めているのに、個人名・電話番号・個人の連絡先を書かず Role code や公開可能なチャネル名で書く制約がないため、禁止事項に「個人名・連絡先等の公開不適切情報」を追加すべきである。
+  - id: F002
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 66
+    anchor: "- 対象範囲（どの運用領域/チーム/サービスが対象か）を明記する"
+    message: >-
+      概要で対象範囲の明記だけを求め、対象外（当日手順の `cop-*`、共通方針の `otp-index` などへ委ねる範囲）の明記を求めていないため、term
+      間や関連文書との境界を確認できるよう「対象外」も必須項目に加えるべきである。
+    message_ja: >-
+      概要で対象範囲の明記だけを求め、対象外（当日手順の `cop-*`、共通方針の `otp-index` などへ委ねる範囲）の明記を求めていないため、term
+      間や関連文書との境界を確認できるよう「対象外」も必須項目に加えるべきである。
+  - id: F003
+    severity: minor
+    rule: vp-dev-testability
+    line: 35
+    anchor: >-
+      許可キー・必須項目・型制約は [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] と
+      `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml` を正本とする。
+    message: >-
+      Frontmatter の正本は示されているが、作成後に実行する検証（`npm run lint:fm` による `type: operations` と rulebook 宣言の照合、`npm run lint:md`、必須
+      11 章の順序確認）が示されていないため、確認手順を追記すべきである。
+    message_ja: >-
+      Frontmatter の正本は示されているが、作成後に実行する検証（`npm run lint:fm` による `type: operations` と rulebook 宣言の照合、`npm run lint:md`、必須
+      11 章の順序確認）が示されていないため、確認手順を追記すべきである。
+  - id: F004
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 131
+    anchor: "- 完了条件（重大障害未発生期間、問い合わせ収束、運用手順整備完了等）を列挙する"
+    message: クローズ条件の列挙だけを求め、未発生期間の日数や問い合わせ件数などを定量的な閾値として書く要件がないため、収束を判定できるよう判定値と測定方法の記載を必須にすべきである。
+    message_ja: クローズ条件の列挙だけを求め、未発生期間の日数や問い合わせ件数などを定量的な閾値として書く要件がないため、収束を判定できるよう判定値と測定方法の記載を必須にすべきである。
+  - id: F005
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 30
+    anchor: "- ファイル名は `otp-020-運用切替計画-<term>.md` 等、プロジェクト内で一意になるように命名する。"
+    message: ファイル名を「`otp-020-運用切替計画-＜term＞.md` 等」としており命名の合否を判定できないため、許容する命名パターンを確定して記載すべきである。
+    message_ja: ファイル名を「`otp-020-運用切替計画-＜term＞.md` 等」としており命名の合否を判定できないため、許容する命名パターンを確定して記載すべきである。
+  - id: F006
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 115
+    anchor: "- ハイパーケア期間、当番体制、SLA（一次応答/暫定復旧など）を明記する"
+    message: >-
+      全体方針と禁止事項は期間・SLA・優先度分類・クローズ基準を `otp-index` の共通方針として重複記載を禁じているのに、6.6・6.8・6.10 はそれらの明記を求めており矛盾するため、「`otp-index`
+      を参照し、term 固有の差分・上書きだけを記載する」と各節に明示すべきである。
+    message_ja: >-
+      全体方針と禁止事項は期間・SLA・優先度分類・クローズ基準を `otp-index` の共通方針として重複記載を禁じているのに、6.6・6.8・6.10 はそれらの明記を求めており矛盾するため、「`otp-index`
+      を参照し、term 固有の差分・上書きだけを記載する」と各節に明示すべきである。
+  - id: F007
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 124
+    anchor: "### 6.9. 旧システムの停止/参照方針"
+    message: >-
+      対応する otp-sample が、9 章の停止時期・データ保持/アーカイブ方針、3 章の保管先・完了基準、6 章の優先度分類・エスカレーション条件、7 章の判断基準、10 章のクローズ判断者・最終報告物など、rulebook
+      が明記を求める項目を欠いており、11 章の見出しも rulebook と異なるため、sample を rulebook の必須項目に合わせて補うべきである。
+    message_ja: >-
+      対応する otp-sample が、9 章の停止時期・データ保持/アーカイブ方針、3 章の保管先・完了基準、6 章の優先度分類・エスカレーション条件、7 章の判断基準、10 章のクローズ判断者・最終報告物など、rulebook
+      が明記を求める項目を欠いており、11 章の見出しも rulebook と異なるため、sample を rulebook の必須項目に合わせて補うべきである。
+  - id: F008
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 42
+    anchor: "`otp-<term>` は以下の見出し構成を **順序固定** で配置します。"
+    message: rulebook-authoring-standard の「本文要件」は各章の目的と必須・任意の明示を求めるが、本文構成の表には目的の列がなく見出しの羅列になっているため、章ごとの目的（要点）の列を追加すべきである。
+    message_ja: rulebook-authoring-standard の「本文要件」は各章の目的と必須・任意の明示を求めるが、本文構成の表には目的の列がなく見出しの羅列になっているため、章ごとの目的（要点）の列を追加すべきである。
+  - id: F009
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 101
+    anchor: "### 6.6. 問合せ窓口/一次対応"
+    message: 「問合せ」と「問い合わせ」、「クローズ基準」と「クローズ条件」の表記が混在し、同じ概念か別の概念かが読み手に分からないため、どちらかに統一すべきである。
+    message_ja: 「問合せ」と「問い合わせ」、「クローズ基準」と「クローズ条件」の表記が混在し、同じ概念か別の概念かが読み手に分からないため、どちらかに統一すべきである。

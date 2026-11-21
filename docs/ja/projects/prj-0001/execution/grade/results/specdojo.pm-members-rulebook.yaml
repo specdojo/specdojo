@@ -4,11 +4,12 @@ document: specdojo:pm-members-rulebook
 path: docs/ja/specdojo/rulebooks/pm-members-rulebook.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-rulebook
 verdict: pass
-score: 93
-graded_at: "2026-11-07T20:38:43.309Z"
-graded_by: flash-high-executor
-content_hash: 7a7fffe5240f0b664c4c50904e8253a13543093d3ea3c18f1e7cfe6d7dd61835
+score: 94
+graded_at: "2026-11-21T06:41:19.575Z"
+graded_by: opus-executor
+content_hash: be8f942543d16bd4be54213666354ca5546165c8f101d9c5b711a184be024c19
 categories:
   purpose:
     score: 100
@@ -21,13 +22,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 92
   implementation:
     score: 100
   quality:
     score: 83
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -69,23 +70,23 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-verifiability:
     level: 3
     score: 75
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -106,22 +107,34 @@ finding_counts:
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-verifiability
-    line: 33
-    anchor: "- `members[].nickname` は英小文字または数字で始め、英小文字、数字、ハイフン、アンダースコアだけを使います。"
-    message: nicknameの許容文字だけを示し、先頭を英小文字か数字とする条件と最大文字数のschema制約を示していないため、schemaでrejectされる値を作成し得る。
-    message_ja: nicknameの許容文字だけを示し、先頭を英小文字か数字とする条件と最大文字数のschema制約を示していないため、schemaでrejectされる値を作成し得る。
+    rule: vp-dev-testability
+    line: 74
+    anchor: "- 人間名簿と agent 定義の合成後、全 nickname が一意であり、`--by`・実行イベントが登録値を使うことを照合します。"
+    message: >-
+      合成名簿でnicknameが一意かの照合と、schema適合の確認について、実行するコマンド（例: `npm run validate:schema:yaml`
+      やCLIの検証）と期待結果が示されておらず、作成者が完了をpass/failで確かめられない。
+    message_ja: >-
+      合成名簿でnicknameが一意かの照合と、schema適合の確認について、実行するコマンド（例: `npm run validate:schema:yaml`
+      やCLIの検証）と期待結果が示されておらず、作成者が完了をpass/failで確かめられない。
   - id: F002
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 50
-    anchor: schema にないメタ項目は追加しません。成果物の `status` は作成中は `draft` とし、`ready` への変更は人間が判断します。
-    message: schemaが任意のルートメタ項目として許可するsupersedesが「推奨メタ項目」とルート構造から欠落しており、置き換え関係の記述可否を判断できない。
-    message_ja: schemaが任意のルートメタ項目として許可するsupersedesが「推奨メタ項目」とルート構造から欠落しており、置き換え関係の記述可否を判断できない。
+    rule: vp-qe-verifiability
+    line: 57
+    anchor: "| `roles`              | ○    | `pm-roles.yaml` に存在する Role code の重複なし配列       |"
+    message: >-
+      `roles`を必須としながら、空配列`[]`を人間memberに認めるかを示していない。schemaは空配列を許可し、上位標準は`[]`を汎用agent用と定義しているため、人間の`roles:
+      []`の適否をpass/failで判定できない。
+    message_ja: >-
+      `roles`を必須としながら、空配列`[]`を人間memberに認めるかを示していない。schemaは空配列を許可し、上位標準は`[]`を汎用agent用と定義しているため、人間の`roles:
+      []`の適否をpass/failで判定できない。
   - id: F003
     severity: minor
-    rule: vp-qe-kata-conformance
-    line: 66
-    anchor: "| `roles`              | ○    | 対応可能な Role code の配列                               |"
-    message: members[].rolesを必須としているが、based_onの標準定義では任意とされており、関連文書間で必須性と優先する規定を判断できない。
-    message_ja: members[].rolesを必須としているが、based_onの標準定義では任意とされており、関連文書間で必須性と優先する規定を判断できない。
+    rule: vp-ux-language-consistency
+    line: 1
+    anchor: "# プロジェクトメンバー定義 作成ルール"
+    message: >-
+      成果物名がH1「プロジェクトメンバー定義」、sample
+      title「メンバー定義」、template生成物title「メンバー名簿」とKata間で揺れており、rulebookも`title`の標準表記を示していないため、生成物の名称が統一されない。
+    message_ja: >-
+      成果物名がH1「プロジェクトメンバー定義」、sample
+      title「メンバー定義」、template生成物title「メンバー名簿」とKata間で揺れており、rulebookも`title`の標準表記を示していないため、生成物の名称が統一されない。

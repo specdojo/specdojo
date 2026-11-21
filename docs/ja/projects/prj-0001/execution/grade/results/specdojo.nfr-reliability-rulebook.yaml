@@ -4,79 +4,80 @@ document: specdojo:nfr-reliability-rulebook
 path: docs/ja/specdojo/rulebooks/nfr-reliability-rulebook.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-rulebook
 verdict: needs-work
-score: 93
-graded_at: "2026-11-05T20:30:02.461Z"
-graded_by: flash-high-executor
-content_hash: 16f97518cb9d239e9524c7d39b29961fb66cdd56b6e6fbb118256cfdb6e73bdf
+score: 74
+graded_at: "2026-11-21T04:48:51.223Z"
+graded_by: opus-executor
+content_hash: d4326cfb929bc787762c8c53454f2cf4f1f1cb0f506342e0cb0ca26590cd44d6
 categories:
   purpose:
-    score: 100
+    score: 75
   operations:
-    score: 100
+    score: 75
   planning:
-    score: 100
+    score: 75
   business:
-    score: 100
+    score: 75
   architecture:
-    score: 100
-  usability:
-    score: 100
-  implementation:
-    score: 100
-  quality:
     score: 83
+  usability:
+    score: 75
+  implementation:
+    score: 75
+  quality:
+    score: 67
   consistency:
     score: 75
 viewpoints:
   vp-po-purpose-alignment:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-decision-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-publication-accountability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-plan-feasibility:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-dependency-risk:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-control-reporting:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-business-value:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-requirements-completeness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-stakeholder-clarity:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-technical-constraints:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-implementation-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-change-impact:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-testability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
     level: 3
     score: 75
@@ -84,40 +85,195 @@ viewpoints:
     level: 2
     score: 50
   vp-ux-readability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-operability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-agent-boundary:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
   major: 1
-  minor: 1
+  minor: 22
   note: 0
 findings:
   - id: F001
     severity: minor
+    rule: vp-po-purpose-alignment
+    line: 5
+    anchor: 本ドキュメントは、非機能要件のうち信頼性（障害抑止・誤動作防止・継続稼働）を定義する `nfr-reliability` の作成ルールを定義する。
+    message: >-
+      冒頭の「継続稼働」とサンプルの「復旧性」が
+      `nfr-availability`（停止許容・RTO/RPO）と重なるため、「位置づけ」に可用性との責務の境界（信頼性は障害の発生抑止・誤動作防止・自動回復、停止許容・復旧目標は可用性）を明記すること。
+    message_ja: >-
+      冒頭の「継続稼働」とサンプルの「復旧性」が
+      `nfr-availability`（停止許容・RTO/RPO）と重なるため、「位置づけ」に可用性との責務の境界（信頼性は障害の発生抑止・誤動作防止・自動回復、停止許容・復旧目標は可用性）を明記すること。
+  - id: F002
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 13
+    anchor: >-
+      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status` の昇格と承認、改訂と廃止、未決事項の登録簿への引き継ぎは
+      [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従い、本書と成果物で言い直さない。文書の整形・lint はリポジトリの検証で扱い、「測定・検証方法」に含めない。
+    message: Frontmatter の `recipe`・`template` が `undecided` のままで判断の論点や時期が示されていないため、要否判断の論点を明記するか、判断して宣言を確定すること。
+    message_ja: Frontmatter の `recipe`・`template` が `undecided` のままで判断の論点や時期が示されていないため、要否判断の論点を明記するか、判断して宣言を確定すること。
+  - id: F003
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 117
+    anchor: "| nfr-rel-001 | 障害ログから月次障害率を集計 | 月次レビュー   | SRE    |"
+    message: サンプルの判定者「SRE」は共通サンプル文脈とメンバー定義の Role code に対応しないため、適用先の Role code で記述し、判定責任の主体を明確にすること。
+    message_ja: サンプルの判定者「SRE」は共通サンプル文脈とメンバー定義の Role code に対応しないため、適用先の Role code で記述し、判定責任の主体を明確にすること。
+  - id: F004
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 24
+    anchor: "- 生成対象ドキュメントIDは `nfr-reliability` を推奨する。"
+    message: 「ファイル命名・ID規則」に配置先ディレクトリとファイル名が書かれていないため、`docs-structure-guide` に沿った配置先とファイル名を明記すること。
+    message_ja: 「ファイル命名・ID規則」に配置先ディレクトリとファイル名が書かれていないため、`docs-structure-guide` に沿った配置先とファイル名を明記すること。
+  - id: F005
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 68
+    anchor: "- `nfr-index`、`sac-*`、`opd-*`、`opr-*`、`dec-*` への導線を置く。"
+    message: 「位置づけ」で検証先に挙げた `stc-*` が関連ドキュメント導線のガイドから抜けているため、両者の参照先一覧を揃えること。
+    message_ja: 「位置づけ」で検証先に挙げた `stc-*` が関連ドキュメント導線のガイドから抜けているため、両者の参照先一覧を揃えること。
+  - id: F006
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 64
+    anchor: "- 要件IDごとに、監視・テスト・レビューのどこで、いつ、誰が判定するかを明記する。"
+    message: 測定・検証方法のガイドに、判定で基準未達だった場合の転記先（課題・PJR など）と対応方針の記載要否を加えること。
+    message_ja: 測定・検証方法のガイドに、判定で基準未達だった場合の転記先（課題・PJR など）と対応方針の記載要否を加えること。
+  - id: F007
+    severity: minor
+    rule: vp-ba-business-value
+    line: 51
+    anchor: "- 業務継続に対する信頼性要求の目的を 1〜3文で示す。"
+    message: 概要のガイドが「目的を1〜3文」に留まるため、対象業務と障害時の業務影響（放置時の影響）を書くよう指示を加え、基準値の根拠をたどれるようにすること。
+    message_ja: 概要のガイドが「目的を1〜3文」に留まるため、対象業務と障害時の業務影響（放置時の影響）を書くよう指示を加え、基準値の根拠をたどれるようにすること。
+  - id: F008
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 60
+    anchor: "- 指標例：障害率（処理失敗・異常終了の発生割合）、MTBF（平均故障間隔）、再試行成功率。"
+    message: 障害率などの割合指標について、分子と分母（対象処理・期間）を定義するよう記述ガイドに明記し、サンプルの `nfr-rel-001` も分母を示すこと。
+    message_ja: 障害率などの割合指標について、分子と分母（対象処理・期間）を定義するよう記述ガイドに明記し、サンプルの `nfr-rel-001` も分母を示すこと。
+  - id: F009
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 117
+    anchor: "| nfr-rel-001 | 障害ログから月次障害率を集計 | 月次レビュー   | SRE    |"
+    message: サンプルの判定者を共通サンプル文脈の関係者または Role code に置き換え、確認者を特定できるようにすること。
+    message_ja: サンプルの判定者を共通サンプル文脈の関係者または Role code に置き換え、確認者を特定できるようにすること。
+  - id: F010
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 111
+    anchor: "| nfr-rel-002 | 障害発生時に自動再試行で復旧できること | 再試行成功率 | 95% 以上       | 3回まで再試行    |"
+    message: サンプル `nfr-rel-002` の備考「3回まで再試行」が実装設定値の列挙に当たり得るため、品質基準（再試行を含めた成功率など）として表現するか、要件として許される条件の境界を禁止事項に明記すること。
+    message_ja: サンプル `nfr-rel-002` の備考「3回まで再試行」が実装設定値の列挙に当たり得るため、品質基準（再試行を含めた成功率など）として表現するか、要件として許される条件の境界を禁止事項に明記すること。
+  - id: F011
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 6
+    anchor: 信頼性要件は、障害の予防・検知・回復を測定可能な基準で記述する。
+    message: 冒頭の「測定可能な基準で記述する」と「全体方針」の「合否判定可能にする」が同じ主張のため、どちらかに統合すること。
+    message_ja: 冒頭の「測定可能な基準で記述する」と「全体方針」の「合否判定可能にする」が同じ主張のため、どちらかに統合すること。
+  - id: F012
+    severity: minor
+    rule: vp-arc-single-responsibility
+    line: 17
+    anchor: "- `nfr-reliability`：信頼性要求の正本"
+    message: 「位置づけ」に `nfr-availability` との境界（復旧目標・停止許容は可用性側）を記載し、信頼性の責務範囲を一つに定めること。
+    message_ja: 「位置づけ」に `nfr-availability` との境界（復旧目標・停止許容は可用性側）を記載し、信頼性の責務範囲を一つに定めること。
+  - id: F013
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 24
+    anchor: "- 生成対象ドキュメントIDは `nfr-reliability` を推奨する。"
+    message: 推奨する文書 ID を `＜project-id＞:nfr-reliability` のようにプロジェクトで修飾した形で示し、サンプルの `id` と `part_of` も合わせること。
+    message_ja: 推奨する文書 ID を `＜project-id＞:nfr-reliability` のようにプロジェクトで修飾した形で示し、サンプルの `id` と `part_of` も合わせること。
+  - id: F014
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 17
+    anchor: "- `nfr-reliability`：信頼性要求の正本"
+    message: 復旧に関する定義を変更するときに `nfr-availability` へ波及することが読み取れないため、関連文書として可用性 rulebook との関係を「位置づけ」に挙げること。
+    message_ja: 復旧に関する定義を変更するときに `nfr-availability` へ波及することが読み取れないため、関連文書として可用性 rulebook との関係を「位置づけ」に挙げること。
+  - id: F015
+    severity: minor
+    rule: vp-dev-testability
+    line: 117
+    anchor: "| nfr-rel-001 | 障害ログから月次障害率を集計 | 月次レビュー   | SRE    |"
+    message: サンプルの測定・検証方法が月次レビューだけのため、少なくとも1件はテストでの判定（`sac-*`／`stc-*` との対応）を例示すること。
+    message_ja: サンプルの測定・検証方法が月次レビューだけのため、少なくとも1件はテストでの判定（`sac-*`／`stc-*` との対応）を例示すること。
+  - id: F016
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 110
+    anchor: "| nfr-rel-001 | 会計処理は障害率を基準内に保つ         | 障害率       | 月次 0.1% 以下 | 対象外: 計画停止 |"
+    message: サンプル `nfr-rel-001` の障害率は分母（会計処理件数など）が不明で pass/fail を一意に判定できないため、算出式を備考または内容に明記すること。
+    message_ja: サンプル `nfr-rel-001` の障害率は分母（会計処理件数など）が不明で pass/fail を一意に判定できないため、算出式を備考または内容に明記すること。
+  - id: F017
+    severity: minor
     rule: vp-qe-omissions-consistency
     line: 122
-    anchor: "supersedes: []"
-    message: 第8章のサンプルのFrontmatterに第4.1節で定義されていない `supersedes` キーが含まれています。
-    message_ja: 第8章のサンプルのFrontmatterに第4.1節で定義されていない `supersedes` キーが含まれています。
-  - id: F002
+    anchor: "- `nfr-index`（必須）、`sac-*`（必須）、`opr-*`（必須）、`dec-*`（任意）"
+    message: 関連ドキュメント導線の対象と必須・任意が「位置づけ」・記述ガイド・サンプルで一致しないため（`stc-*`・`opd-*` の有無、必須指定の有無）、記述ガイドに必須・任意を定義し、3か所を揃えること。
+    message_ja: 関連ドキュメント導線の対象と必須・任意が「位置づけ」・記述ガイド・サンプルで一致しないため（`stc-*`・`opd-*` の有無、必須指定の有無）、記述ガイドに必須・任意を定義し、3か所を揃えること。
+  - id: F018
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# 非機能要件 / 信頼性 作成ルール"
     message: 指定サンプル(nfr-reliability-sample.md)の構成を、第5章で定義した必須構成(順序固定)に準拠させること。
     message_ja: 指定サンプル(nfr-reliability-sample.md)の構成を、第5章で定義した必須構成(順序固定)に準拠させること。
+  - id: F019
+    severity: minor
+    rule: vp-ux-readability
+    line: 5
+    anchor: 本ドキュメントは、非機能要件のうち信頼性（障害抑止・誤動作防止・継続稼働）を定義する `nfr-reliability` の作成ルールを定義する。
+    message: 冒頭で信頼性と可用性の違いを一文で示し、読み手が記載先を判断できるようにすること。
+    message_ja: 冒頭で信頼性と可用性の違いを一文で示し、読み手が記載先を判断できるようにすること。
+  - id: F020
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 117
+    anchor: "| nfr-rel-001 | 障害ログから月次障害率を集計 | 月次レビュー   | SRE    |"
+    message: 判定者を Role code に統一し、「継続稼働」「復旧性」など信頼性の観点を表す用語をどちらか一方に揃えること。
+    message_ja: 判定者を Role code に統一し、「継続稼働」「復旧性」など信頼性の観点を表す用語をどちらか一方に揃えること。
+  - id: F021
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 13
+    anchor: >-
+      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status` の昇格と承認、改訂と廃止、未決事項の登録簿への引き継ぎは
+      [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従い、本書と成果物で言い直さない。文書の整形・lint はリポジトリの検証で扱い、「測定・検証方法」に含めない。
+    message: ready 化の前に解消すべき事項（sample の構成準拠、`recipe`・`template` の要否判断）が識別できないため、PJR などで追跡できるよう明示すること。
+    message_ja: ready 化の前に解消すべき事項（sample の構成準拠、`recipe`・`template` の要否判断）が識別できないため、PJR などで追跡できるよう明示すること。
+  - id: F022
+    severity: minor
+    rule: vp-ops-operability
+    line: 64
+    anchor: "- 要件IDごとに、監視・テスト・レビューのどこで、いつ、誰が判定するかを明記する。"
+    message: 測定・検証方法のガイドに、基準未達や重大障害の発生時に要件や基準を見直す契機と、その記録先を記述するよう加えること。
+    message_ja: 測定・検証方法のガイドに、基準未達や重大障害の発生時に要件や基準を見直す契機と、その記録先を記述するよう加えること。
+  - id: F023
+    severity: minor
+    rule: vp-ops-agent-boundary
+    line: 117
+    anchor: "| nfr-rel-001 | 障害ログから月次障害率を集計 | 月次レビュー   | SRE    |"
+    message: 判定者の例を人間の Role code で示し、agent が判定・承認を担わないことが読み取れるようにすること。
+    message_ja: 判定者の例を人間の Role code で示し、agent が判定・承認を担わないことが読み取れるようにすること。

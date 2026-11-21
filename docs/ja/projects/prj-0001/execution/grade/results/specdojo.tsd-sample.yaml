@@ -4,34 +4,35 @@ document: specdojo:tsd-sample
 path: docs/ja/specdojo/samples/tsd-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: pass
-score: 100
-graded_at: "2026-10-27T20:26:15.564Z"
-graded_by: flash-high-executor
+reference: specdojo:prj-overview-sample
+verdict: needs-work
+score: 79
+graded_at: "2026-11-21T06:06:56.147Z"
+graded_by: opus-executor
 content_hash: 82f65890dc06f75a666b165caefb0de7a36700b550e25dd1e524caf36352ed84
 categories:
   purpose:
-    score: 100
+    score: 88
   operations:
-    score: 100
+    score: 94
   planning:
-    score: 100
+    score: 83
   business:
     score: 100
   architecture:
-    score: 100
+    score: 83
   usability:
-    score: 100
+    score: 83
   implementation:
-    score: 100
+    score: 88
   quality:
-    score: 100
+    score: 75
   consistency:
-    score: 100
+    score: 50
 viewpoints:
   vp-po-purpose-alignment:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-decision-readiness:
     level: 4
     score: 100
@@ -42,11 +43,11 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-dependency-risk:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-control-reporting:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-business-value:
     level: 4
     score: 100
@@ -57,44 +58,44 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-technical-constraints:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-implementation-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-change-impact:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 4
     score: 100
   vp-ops-operability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -103,7 +104,194 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 0
-  minor: 0
+  major: 1
+  minor: 17
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-po-purpose-alignment
+    line: 10
+    anchor: "- **ビジネス価値・運用上の利点**: 店主代表の記憶や紙の帳簿に依存していた販売・つけ管理をシステム化することで、つけ残高の確認時間を1分以内に短縮し、記録漏れによる金銭トラブルや人気商品の欠品・過剰在庫を防止する。"
+    message: >-
+      1.1 は上位の目的を本文で言い直したうえで、プロジェクト概要にない「つけ残高確認1分以内」という目標値を追加している。上位文書（プロジェクト概要・非機能要件）を参照する形に改め、Frontmatter に `based_on`
+      を加えて、目的の根拠を上位文書からたどれるようにする必要がある。
+    message_ja: >-
+      1.1 は上位の目的を本文で言い直したうえで、プロジェクト概要にない「つけ残高確認1分以内」という目標値を追加している。上位文書（プロジェクト概要・非機能要件）を参照する形に改め、Frontmatter に `based_on`
+      を加えて、目的の根拠を上位文書からたどれるようにする必要がある。
+  - id: F002
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 25
+    anchor: "- `tsd-hosting.md`: Fly.io 上のアプリケーション実行環境およびネットワーク基盤の構成定義（未作成のため仮置き）。"
+    message: >-
+      1.3 の `tsd-hosting.md`・`tsd-ci.md` は「未作成のため仮置き」とだけ書かれ、`_TODO_` の目印、作成担当、本書が依存する内容（6PN 経路・`migrate deploy`
+      の実行）が示されていない。後続文書への依存とリスクを追跡できる形にする必要がある。
+    message_ja: >-
+      1.3 の `tsd-hosting.md`・`tsd-ci.md` は「未作成のため仮置き」とだけ書かれ、`_TODO_` の目印、作成担当、本書が依存する内容（6PN 経路・`migrate deploy`
+      の実行）が示されていない。後続文書への依存とリスクを追跡できる形にする必要がある。
+  - id: F003
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 107
+    anchor: "- **未決事項（検討中）**: _UNDECIDED_: 年末年始や繁忙期における一時的なメモリ拡張ポリシー（日次売上件数の実測推移をもとに運用フェーズで判断）。"
+    message: >-
+      4.2 の `_UNDECIDED_`（繁忙期のメモリ拡張ポリシー）は ISSUE-03 と同じ論点なのに課題 ID で紐付けられておらず、二重管理になっている。ISSUE-03
+      への参照に置き換えて、転記元を一つにする必要がある。
+    message_ja: >-
+      4.2 の `_UNDECIDED_`（繁忙期のメモリ拡張ポリシー）は ISSUE-03 と同じ論点なのに課題 ID で紐付けられておらず、二重管理になっている。ISSUE-03
+      への参照に置き換えて、転記元を一つにする必要がある。
+  - id: F004
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 94
+    anchor: >-
+      | DB エンジン        | バージョン                            | PostgreSQL 16.x  | 全環境           | 長期サポート版であり、JSON
+      処理性能と耐障害性に優れるため             | `SELECT version();` で確認              |
+    message: >-
+      PostgreSQL 16.x の採用理由「長期サポート版」は事実と異なる（PostgreSQL のメジャー版は一律約5年のサポートで LTS 区分はない）。また「JSON
+      処理性能」は利用目的に対応していない。決定記録や公式情報に基づく理由へ改める必要がある。
+    message_ja: >-
+      PostgreSQL 16.x の採用理由「長期サポート版」は事実と異なる（PostgreSQL のメジャー版は一律約5年のサポートで LTS 区分はない）。また「JSON
+      処理性能」は利用目的に対応していない。決定記録や公式情報に基づく理由へ改める必要がある。
+  - id: F005
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 53
+    anchor: "- **ストレージ**: 10GB 永続ボリューム（年間データ増加量予測約 100MB に対して10年分以上の容量を確保）。"
+    message: >-
+      容量 10GB の根拠「年間データ増加量予測約 100MB」に見積もりの出典（取引件数×レコードサイズや実測）が示されていない。recipe の「根拠が出ない容量は採用値に入れない」に照らすと、根拠を示すか
+      `_ASSUMPTION_` を付ける必要がある。
+    message_ja: >-
+      容量 10GB の根拠「年間データ増加量予測約 100MB」に見積もりの出典（取引件数×レコードサイズや実測）が示されていない。recipe の「根拠が出ない容量は採用値に入れない」に照らすと、根拠を示すか
+      `_ASSUMPTION_` を付ける必要がある。
+  - id: F006
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 28
+    anchor: "### 1.4. 役割と責任"
+    message: 1.4 の役割と責任は、rulebook が「適用先のメンバー定義に従う」とする内容を再掲し、1.1 も上位文書の目的を言い直している。メンバー定義・プロジェクト概要への参照に置き換え、本書固有の担当範囲だけを残せる。
+    message_ja: 1.4 の役割と責任は、rulebook が「適用先のメンバー定義に従う」とする内容を再掲し、1.1 も上位文書の目的を言い直している。メンバー定義・プロジェクト概要への参照に置き換え、本書固有の担当範囲だけを残せる。
+  - id: F007
+    severity: minor
+    rule: vp-arc-single-responsibility
+    line: 203
+    anchor: 生成されたダンプファイルは暗号化のうえ、外部クラウドストレージへ自動転送する。日次データは過去30日分、月末データは過去1年分を保持する。
+    message: >-
+      7.2 の保管ポリシー（日次30日・月末1年・外部転送）と実行時刻は、rulebook で運用設計の責務とされるバックアップ方針に当たる。TSD には `pg_dump`/`pg_restore`
+      の技術操作だけを残し、方針は運用設計文書への参照に分離する必要がある。
+    message_ja: >-
+      7.2 の保管ポリシー（日次30日・月末1年・外部転送）と実行時刻は、rulebook で運用設計の責務とされるバックアップ方針に当たる。TSD には `pg_dump`/`pg_restore`
+      の技術操作だけを残し、方針は運用設計文書への参照に分離する必要がある。
+  - id: F008
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 100
+    anchor: >-
+      | 共有バッファ       | `shared_buffers`                      | `256MB`          | 本番環境         | 割り当てメモリ 1GB のうち 25%
+      をデータキャッシュに充当するため        | `SHOW shared_buffers;`                  |
+    message: >-
+      4.1 の `shared_buffers`・`max_connections` などのサーバー設定に、Fly Postgres 上の保存先・反映方法と再起動の要否が示されていない。rulebook
+      の採用設定表のガイドに従い、反映先と再起動の要否を記す必要がある。
+    message_ja: >-
+      4.1 の `shared_buffers`・`max_connections` などのサーバー設定に、Fly Postgres 上の保存先・反映方法と再起動の要否が示されていない。rulebook
+      の採用設定表のガイドに従い、反映先と再起動の要否を記す必要がある。
+  - id: F009
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 194
+    anchor: 深夜の店舗休業時間帯（午前 3:00）に自動スクリプトで `pg_dump` を実行する。
+    message: 7.2 の日次 `pg_dump` を実行するホスト、実行ユーザー、スケジューラ、`/backups` の所在が示されておらず、実行場所を特定して再現できない。
+    message_ja: 7.2 の日次 `pg_dump` を実行するホスト、実行ユーザー、スケジューラ、`/backups` の所在が示されておらず、実行場所を特定して再現できない。
+  - id: F010
+    severity: minor
+    rule: vp-dev-testability
+    line: 228
+    anchor: >-
+      | マイグレーションロックエラー<br/>（`Migration is locked`）         | 前回のマイグレーション失敗によるロックの残留        | `_prisma_migrations` テーブルの
+      `applied_steps_count` と `finished_at` を確認         | `npx prisma migrate resolve`
+      を実行してロックを解除し、不整合のあるステップを手動で調整する                              |
+    message: >-
+      8.2 のマイグレーションロックの行は、症状のエラー文が Prisma の実際の表記として確認できない。`npx prisma migrate resolve` に必要な `—applied`/`—rolled-back`
+      とマイグレーション名も省かれ、「手動で調整」は再現できる手順になっていない。
+    message_ja: >-
+      8.2 のマイグレーションロックの行は、症状のエラー文が Prisma の実際の表記として確認できない。`npx prisma migrate resolve` に必要な `—applied`/`—rolled-back`
+      とマイグレーション名も省かれ、「手動で調整」は再現できる手順になっていない。
+  - id: F011
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 242
+    anchor: >-
+      | `ISSUE-03` | 繁忙期（駄菓子屋祭りイベント等）における一時的スケールアップ基準 | 集中アクセス時の店頭画面レスポンス遅延の防止                   | 店頭端末の会計完了待機時間が 3
+      秒を超える確率を 0% に抑制（期日: 総合リハーサル前）          | 疑似負荷テストを実施し、CPU 使用率 80% 超過時のメモリ増設手順（1GB → 2GB）を OPS が手順化             |
+      OPS / DEV |
+    message: ISSUE-03 の基準「3秒を超える確率を0%」は、負荷条件・試行回数・測定方法・判定時点が定義されておらず、有限の試験で pass/fail を判定できない。p95 などの閾値と測定条件に改める必要がある。
+    message_ja: ISSUE-03 の基準「3秒を超える確率を0%」は、負荷条件・試行回数・測定方法・判定時点が定義されておらず、有限の試験で pass/fail を判定できない。p95 などの閾値と測定条件に改める必要がある。
+  - id: F012
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 172
+    anchor: >-
+      | 確認対象                    | 実行場所・方法                                                                          |
+      期待結果                                                                         |
+      失敗時の確認先                                                                         |
+    message: 6.1 の動作確認表に確認環境・確認日・未確認の条件が記されていない。rulebook の動作確認ガイド（確認環境・未確認条件を示し、未実施を成功と扱わない）に沿って記録欄を設ける必要がある。
+    message_ja: 6.1 の動作確認表に確認環境・確認日・未確認の条件が記されていない。rulebook の動作確認ガイド（確認環境・未確認条件を示し、未実施を成功と扱わない）に沿って記録欄を設ける必要がある。
+  - id: F013
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 211
+    anchor: pg_restore -h <HOST> -U <USER> -d <DB> -v --clean --if-exists "/backups/kinuyo-db-<TARGET_DATE>.dump"
+    message: >-
+      7.2 の `pg_restore —clean —if-exists` は既存オブジェクトを削除する破壊的操作だが、事前バックアップ・アプリ停止・失われるデータ範囲・切り戻しが示されておらず、rulebook
+      の禁止事項「停止、削除、再構築を、状態やデータへの影響を示さず指示する」に抵触している。
+    message_ja: >-
+      7.2 の `pg_restore —clean —if-exists` は既存オブジェクトを削除する破壊的操作だが、事前バックアップ・アプリ停止・失われるデータ範囲・切り戻しが示されておらず、rulebook
+      の禁止事項「停止、削除、再構築を、状態やデータへの影響を示さず指示する」に抵触している。
+  - id: F014
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 218
+    anchor: >-
+      - **オフライン時の制限**: 店頭タブレットがネットワーク不通となった場合、PostgreSQL
+      への直接書き込みは行えない。端末側ブラウザの一時退避領域（IndexedDB）に販売記録を保持し、再接続時に順次同期する構成を前提とする。
+    message: >-
+      8.1 は IndexedDB への退避と再接続時の同期を「前提とする」と確定済みのように書いているが、ISSUE-01 は未解決で、プロジェクト概要もオフライン方針を `_UNDECIDED_`
+      としている。`_ASSUMPTION_` を付けるか ISSUE-01 を参照し、未採択の設計を採用済みとして書かない必要がある。
+    message_ja: >-
+      8.1 は IndexedDB への退避と再接続時の同期を「前提とする」と確定済みのように書いているが、ISSUE-01 は未解決で、プロジェクト概要もオフライン方針を `_UNDECIDED_`
+      としている。`_ASSUMPTION_` を付けるか ISSUE-01 を参照し、未採択の設計を採用済みとして書かない必要がある。
+  - id: F015
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 203
+    anchor: 生成されたダンプファイルは暗号化のうえ、外部クラウドストレージへ自動転送する。日次データは過去30日分、月末データは過去1年分を保持する。
+    message: 7.2 は外部クラウドストレージへの自動転送を決定済みとして書いているが、保管先は ISSUE-02 で選定中であり、ISSUE-02 との関係が示されていない。
+    message_ja: 7.2 は外部クラウドストレージへの自動転送を決定済みとして書いているが、保管先は ISSUE-02 で選定中であり、ISSUE-02 との関係が示されていない。
+  - id: F016
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 28
+    anchor: "### 1.4. 役割と責任"
+    message: >-
+      sample が 1.4 で独自の役割定義を持ち、7.2 でバックアップ保管方針まで定めている。これは rulebook の「役割は適用先のメンバー定義に従う」「バックアップ方針は運用設計」や、recipe
+      の「バックアップ方針は運用設計の担当へ渡す」と食い違い、Kata 内の手本として整合していない。
+    message_ja: >-
+      sample が 1.4 で独自の役割定義を持ち、7.2 でバックアップ保管方針まで定めている。これは rulebook の「役割は適用先のメンバー定義に従う」「バックアップ方針は運用設計」や、recipe
+      の「バックアップ方針は運用設計の担当へ渡す」と食い違い、Kata 内の手本として整合していない。
+  - id: F017
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 174
+    anchor: >-
+      | コンテナ起動状態            | 開発端末: `docker compose ps postgres`<br/>本番環境: `fly status --app kinuyo-db`       | 状態が `Up`
+      または `running` であり、予期せぬ再起動が発生していないこと          | Docker デーモンの稼働状態、Fly.io プラットフォームステータス、コンテナ割り当てメモリ量 |
+    message: Fly アプリ名・ダンプファイル名に `kinuyo-db` を使っており（6.1・7.2・8.2）、店名「きぬや」と表記がずれている。`kinuya-db` などに統一し、読み手が別の対象と誤認しないようにする必要がある。
+    message_ja: Fly アプリ名・ダンプファイル名に `kinuyo-db` を使っており（6.1・7.2・8.2）、店名「きぬや」と表記がずれている。`kinuya-db` などに統一し、読み手が別の対象と誤認しないようにする必要がある。
+  - id: F018
+    severity: minor
+    rule: vp-ops-operability
+    line: 205
+    anchor: "3. **リカバリ手順**:"
+    message: 7.2 のリカバリ手順に、リストア後の正常性確認（6.1 のどの確認へ戻るか）とバックアップ失敗の検知方法がなく、障害時の対応を完了まで追跡できない。
+    message_ja: 7.2 のリカバリ手順に、リストア後の正常性確認（6.1 のどの確認へ戻るか）とバックアップ失敗の検知方法がなく、障害時の対応を完了まで追跡できない。

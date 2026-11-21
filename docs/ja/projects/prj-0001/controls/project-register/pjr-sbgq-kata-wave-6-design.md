@@ -37,6 +37,8 @@ specdojo:
 - 代表の文書は、その型の sample（駄菓子屋の共通の文脈）とする。prj-0001 の製品の成果物は作らない。
 - 段: rulebook を簡潔に → sample を厚く → 簡潔さの確認（condense） → review → 人の確定。template はこの track では扱わず、PJR-WYTX（kata-slim-3）で扱う。
 - 対象外: 上に挙げていない型、非推奨の型。ifx-api・ifx-msg・sysd は sample を作るかを最初の子の todo で決める。
+- track の中の順番: grade（2026-11-21、opus）で needs-work・fail の型を先に流し、pass の型を後に流す。先に流した結果を見て、後の型の進め方を直す。
+- pass の型の直し方: grade の指摘、冗長な記述、ほかの型との重なりのように理由のある箇所だけを直し、理由のない書き換えはしない。直さなかった箇所と理由を result に残す（利用者の承認、2026-11-21。範囲は絞らない）。
 
 ## 4. 完了の判断の基準
 

@@ -4,18 +4,19 @@ document: specdojo:imp-operations-rulebook
 path: docs/ja/specdojo/rulebooks/imp-operations-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-verdict: pass
-score: 97
-graded_at: "2026-11-08T20:45:53.075Z"
-graded_by: flash-high-executor
-content_hash: f800a84e5d872393f06baa0355462591576767572a57e2d9a1ed4e09485e85ed
+reference: specdojo:prj-overview-rulebook
+verdict: needs-work
+score: 86
+graded_at: "2026-11-21T04:16:06.967Z"
+graded_by: opus-executor
+content_hash: d135e6e2c95d14b30be87fb0791834c1b7c4a2cd94dbfce252d7cf190d42bae1
 categories:
   purpose:
-    score: 100
+    score: 88
   operations:
-    score: 100
+    score: 94
   planning:
-    score: 100
+    score: 83
   business:
     score: 100
   architecture:
@@ -23,30 +24,30 @@ categories:
   usability:
     score: 92
   implementation:
-    score: 100
+    score: 88
   quality:
-    score: 92
+    score: 75
   consistency:
-    score: 100
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-publication-accountability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-plan-feasibility:
     level: 4
     score: 100
   vp-pm-dependency-risk:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-control-reporting:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-business-value:
     level: 4
     score: 100
@@ -69,26 +70,26 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-change-impact:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 2
+    score: 50
   vp-ux-readability:
-    level: 3
-    score: 75
-  vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -103,28 +104,86 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 0
-  minor: 3
+  major: 1
+  minor: 10
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-kata-conformance
-    line: 2
-    anchor: ""
-    message: Frontmatter の recipe が undecided となっており、対応する recipe への参照が定義されていない。
-    message_ja: Frontmatter の recipe が undecided となっており、対応する recipe への参照が定義されていない。
+    rule: vp-po-decision-readiness
+    line: 52
+    anchor: 運用品質・障害対応力・継続運用性・利用者影響の評価観点と高・中・低の尺度を先に示し、件数と優先対象をまとめる。監視体制、障害初動、運用負荷、統制・監査への影響を検討する。
+    message: 影響分析サマリまたは対応方針に、変更要求全体に対する運用面の結論（受入・条件付き受入・見送りの推奨）と判断者（Role code）を記載する要件を加え、承認・差し戻しの判断対象を明確にすべきである。
+    message_ja: 影響分析サマリまたは対応方針に、変更要求全体に対する運用面の結論（受入・条件付き受入・見送りの推奨）と判断者（Role code）を記載する要件を加え、承認・差し戻しの判断対象を明確にすべきである。
   - id: F002
     severity: minor
-    rule: vp-qe-kata-conformance
-    line: 2
-    anchor: ""
-    message: Frontmatter の template が undecided となっており、対応する template への参照が定義されていない。
-    message_ja: Frontmatter の template が undecided となっており、対応する template への参照が定義されていない。
+    rule: vp-po-publication-accountability
+    line: 69
+    anchor: "- 重要度が高い項目から順に、実施時期、担当、前提条件を記載する。"
+    message: 対応方針の「担当」は Role code（適用先のメンバー定義の役割）で記載し、個人名・連絡先など公開に適さない情報を載せないことを記述ガイドまたは禁止事項に明記すべきである。
+    message_ja: 対応方針の「担当」は Role code（適用先のメンバー定義の役割）で記載し、個人名・連絡先など公開に適さない情報を載せないことを記述ガイドまたは禁止事項に明記すべきである。
   - id: F003
     severity: minor
-    rule: vp-ux-readability
-    line: 13
-    anchor: ""
-    message: 委譲先として「各ドキュメント」と記載されているが、具体的にどの成果物種別に委譲すべきかの例示がなく、境界が曖昧である。
-    message_ja: 委譲先として「各ドキュメント」と記載されているが、具体的にどの成果物種別に委譲すべきかの例示がなく、境界が曖昧である。
+    rule: vp-pm-dependency-risk
+    line: 16
+    anchor: 波及の概要と判断は本書に残し、詳細はデータ仕様（`bdd-*`）、I/F 仕様（`ifx-*`）、テスト戦略・方針（`tsp-index`）などへ委譲する。「備考」に適用先カタログの対応する成果物 ID を示す。
+    message: 同一変更要求に対する他の影響調査（`imp-business`・`imp-data`・`imp-interface`・`imp-test`）との分担と相互参照の方法を位置づけに示し、領域横断の依存を識別できるようにすべきである。
+    message_ja: 同一変更要求に対する他の影響調査（`imp-business`・`imp-data`・`imp-interface`・`imp-test`）との分担と相互参照の方法を位置づけに示し、領域横断の依存を識別できるようにすべきである。
+  - id: F004
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 74
+    anchor: 論点、不足情報、運用判断への影響と当面の扱いを記載する。
+    message: 未解決事項に決定期限・担当 Role code と、課題・リスクとして PJR へ登録するかどうかの記載を求め、管理記録への転記対象を分離すべきである。
+    message_ja: 未解決事項に決定期限・担当 Role code と、課題・リスクとして PJR へ登録するかどうかの記載を求め、管理記録への転記対象を分離すべきである。
+  - id: F005
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 12
+    anchor: >-
+      - **共通の運用**: 役割は適用先のメンバー定義、`status`・承認・改訂と廃止・未決事項の引き継ぎは [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]]
+      に従う。文書の整形・lint はリポジトリの検証で扱う。
+    message: 標準が求める自系統の追従対象（変更要求の改訂時に見直す影響詳細・対応方針、関連する `imp-*` や委譲先文書）と担当 Role code を定義すべきである。
+    message_ja: 標準が求める自系統の追従対象（変更要求の改訂時に見直す影響詳細・対応方針、関連する `imp-*` や委譲先文書）と担当 Role code を定義すべきである。
+  - id: F006
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 9
+    anchor: "- 運用責任者とプロジェクト管理者が合意できる粒度で、影響と判断根拠を記載する。"
+    message: 「合意できる粒度」を、影響対象運用ごとに判定・根拠・対応方針が一対一で記載されているなど、判定できる条件に置き換えるべきである。
+    message_ja: 「合意できる粒度」を、影響対象運用ごとに判定・根拠・対応方針が一対一で記載されているなど、判定できる条件に置き換えるべきである。
+  - id: F007
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 76
+    anchor: "## 7. 禁止事項"
+    message: 禁止事項が2項目のみで、標準の「各必須章に最低3つ以上の具体項目」を満たしていないため、見送り時の再評価条件の欠落や実運用手順の詳細の記載などを禁止事項に追加すべきである。
+    message_ja: 禁止事項が2項目のみで、標準の「各必須章に最低3つ以上の具体項目」を満たしていないため、見送り時の再評価条件の欠落や実運用手順の詳細の記載などを禁止事項に追加すべきである。
+  - id: F008
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 52
+    anchor: 運用品質・障害対応力・継続運用性・利用者影響の評価観点と高・中・低の尺度を先に示し、件数と優先対象をまとめる。監視体制、障害初動、運用負荷、統制・監査への影響を検討する。
+    message: sample の影響分析サマリが高・中・低の尺度を定義しておらず、rulebook の記述ガイドと禁止事項（尺度を定義せずに高・中・低を混在させない）に反しているため、rulebook と sample を整合させるべきである。
+    message_ja: sample の影響分析サマリが高・中・低の尺度を定義しておらず、rulebook の記述ガイドと禁止事項（尺度を定義せずに高・中・低を混在させない）に反しているため、rulebook と sample を整合させるべきである。
+  - id: F009
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 52
+    anchor: 運用品質・障害対応力・継続運用性・利用者影響の評価観点と高・中・低の尺度を先に示し、件数と優先対象をまとめる。監視体制、障害初動、運用負荷、統制・監査への影響を検討する。
+    message: rulebook の評価観点（運用品質・障害対応力・継続運用性・利用者影響）と sample の評価観点（運用品質、障害対応力、運用負荷）が一致していないため、どちらかに統一すべきである。
+    message_ja: rulebook の評価観点（運用品質・障害対応力・継続運用性・利用者影響）と sample の評価観点（運用品質、障害対応力、運用負荷）が一致していないため、どちらかに統一すべきである。
+  - id: F010
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 44
+    anchor: 変更要求の識別子、対象運用領域、対象期間、判断目的を示す。
+    message: rulebook が求める対象期間（目的と適用範囲）・成功条件（変更要求の概要）・運用判断への影響（未解決事項）が sample に記載されておらず、記述ガイドと完成例が対応していない。
+    message_ja: rulebook が求める対象期間（目的と適用範囲）・成功条件（変更要求の概要）・運用判断への影響（未解決事項）が sample に記載されておらず、記述ガイドと完成例が対応していない。
+  - id: F011
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 69
+    anchor: "- 重要度が高い項目から順に、実施時期、担当、前提条件を記載する。"
+    message: 対応方針の「重要度が高い項目から順に」は影響詳細一覧の「影響度」と表記が揺れているため、「影響度」に統一するか、別の尺度であれば定義を示すべきである。
+    message_ja: 対応方針の「重要度が高い項目から順に」は影響詳細一覧の「影響度」と表記が揺れているため、「影響度」に統一するか、別の尺度であれば定義を示すべきである。

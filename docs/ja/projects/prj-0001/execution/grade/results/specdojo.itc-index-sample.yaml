@@ -4,20 +4,21 @@ document: specdojo:itc-index-sample
 path: docs/ja/specdojo/samples/itc-index-sample.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-sample
 verdict: fail
-score: 57
-graded_at: "2026-10-12T21:19:13.284Z"
-graded_by: agy-expert-executor
-content_hash: 030c4ec6dcd89e35137158a0b7ce46e88be6d8095433a460f8cbe0aa09dd840c
+score: 53
+graded_at: "2026-11-21T04:23:04.654Z"
+graded_by: opus-executor
+content_hash: ae538d59c8733b36213feedb00ce58df9963e788304d0227355d6dd249af247c
 categories:
   purpose:
-    score: 75
+    score: 63
   operations:
     score: 88
   planning:
     score: 67
   business:
-    score: 67
+    score: 58
   architecture:
     score: 75
   usability:
@@ -25,13 +26,13 @@ categories:
   implementation:
     score: 63
   quality:
-    score: 50
+    score: 42
   consistency:
     score: 0
 viewpoints:
   vp-po-purpose-alignment:
-    level: 3
-    score: 75
+    level: 2
+    score: 50
   vp-po-decision-readiness:
     level: 3
     score: 75
@@ -51,8 +52,8 @@ viewpoints:
     level: 3
     score: 75
   vp-ba-requirements-completeness:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ba-stakeholder-clarity:
     level: 3
     score: 75
@@ -72,8 +73,8 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 2
+    score: 50
   vp-qe-omissions-consistency:
     level: 0
     score: 0
@@ -100,7 +101,7 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 2
-  major: 6
+  major: 9
   minor: 13
   note: 0
 findings:
@@ -116,24 +117,31 @@ findings:
       The sample fails to reference tsp-index as the foundational test strategy document, weakening alignment with
       higher-level project test objectives.
   - id: F002
+    severity: major
+    rule: vp-po-purpose-alignment
+    line: 5
+    anchor: 本書は、内部コンポーネント間の連携を確認する観点・条件を定義するための最小サンプルである。
+    message: >-
+      目的が対象別カタログ（`itc-＜term＞`）の役割である「観点・条件の定義」になっています。rulebook の定める `itc-index`
+      の目的（対象別カタログの品質・粒度・責任範囲を揃える共通方針）と、UT/ET/ST/AT との責務分界に書き換えてください。
+    message_ja: >-
+      目的が対象別カタログ（`itc-＜term＞`）の役割である「観点・条件の定義」になっています。rulebook の定める `itc-index`
+      の目的（対象別カタログの品質・粒度・責任範囲を揃える共通方針）と、UT/ET/ST/AT との責務分界に書き換えてください。
+  - id: F003
     severity: minor
     rule: vp-po-decision-readiness
     line: 28
     anchor: "| 論点           | 処理方針                 |"
-    message: >-
-      The unresolved issues section lacks specific decision owners, impact scope, and concrete next actions required for
-      PO decision-making.
+    message: 未解決事項のセクションにおいて、POの意思決定に必要な具体的な意思決定責任者、影響範囲、および具体的な次のアクションが不足しています。
     message_ja: 未解決事項のセクションにおいて、POの意思決定に必要な具体的な意思決定責任者、影響範囲、および具体的な次のアクションが不足しています。
-  - id: F003
+  - id: F004
     severity: major
     rule: vp-pm-plan-feasibility
     line: 14
     anchor: ""
-    message: >-
-      The sample lacks concrete work breakdown criteria, role assignments, and completion conditions needed for task
-      scheduling and progress tracking.
+    message: サンプルには、タスクのスケジューリングと進捗管理に必要な具体的な作業分解基準、役割の割り当て、および完了条件が不足しています。
     message_ja: サンプルには、タスクのスケジューリングと進捗管理に必要な具体的な作業分解基準、役割の割り当て、および完了条件が不足しています。
-  - id: F004
+  - id: F005
     severity: minor
     rule: vp-pm-dependency-risk
     line: 28
@@ -144,7 +152,7 @@ findings:
     message_ja: >-
       Dependencies on upstream deliverables (tsp-index) and risks affecting downstream test catalog implementation are
       not identified.
-  - id: F005
+  - id: F006
     severity: minor
     rule: vp-pm-control-reporting
     line: 28
@@ -155,43 +163,46 @@ findings:
     message_ja: >-
       The unresolved issue lacks reporting destinations, responsible Role codes, and clear classification for transfer
       to project risk registers or decision records.
-  - id: F006
+  - id: F007
     severity: minor
     rule: vp-ba-business-value
     line: 11
     anchor: "- 参照: `../rulebooks/itc-index-rulebook.md`"
-    message: >-
-      The sample does not explain what business problems or risks in the sales management system are addressed by the
-      integration test strategy.
+    message: 統合テスト戦略によって、セールス管理システムにおけるどのようなビジネス上の問題やリスクに対処するのかが説明されていません。
     message_ja: 統合テスト戦略によって、セールス管理システムにおけるどのようなビジネス上の問題やリスクに対処するのかが説明されていません。
-  - id: F007
+  - id: F008
     severity: major
     rule: vp-ba-requirements-completeness
     line: 14
     anchor: ""
-    message: >-
-      Scope boundaries, common out-of-scope exclusions, and acceptance criteria are missing, preventing users from
-      verifying test coverage completeness.
+    message: スコープの境界、一般的な対象外事項、および受け入れ基準が欠落しており、ユーザーがテスト網羅性の完全性を検証できないようになっています。
     message_ja: スコープの境界、一般的な対象外事項、および受け入れ基準が欠落しており、ユーザーがテスト網羅性の完全性を検証できないようになっています。
-  - id: F008
+  - id: F009
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 13
+    anchor: "## 3. 記述内容"
+    message: >-
+      rulebook が必須とする「対象外・除外理由（共通）」の4点セット表（対象外・除外理由・代替レベル/代替手段・例外）がありません。駄菓子屋文脈の例（外部決済との実疎通を ET へ、性能・負荷を NFR
+      へ、など）を示してください。
+    message_ja: >-
+      rulebook が必須とする「対象外・除外理由（共通）」の4点セット表（対象外・除外理由・代替レベル/代替手段・例外）がありません。駄菓子屋文脈の例（外部決済との実疎通を ET へ、性能・負荷を NFR
+      へ、など）を示してください。
+  - id: F010
     severity: minor
     rule: vp-ba-stakeholder-clarity
     line: 14
     anchor: ""
-    message: >-
-      Stakeholders, target users, and reviewers responsible for agreeing on the test catalog index are not clearly
-      identified.
+    message: テストカタログインデックスの合意に責任を持つステークホルダー、ターゲットユーザー、およびレビュアーが明確に特定されていません。
     message_ja: テストカタログインデックスの合意に責任を持つステークホルダー、ターゲットユーザー、およびレビュアーが明確に特定されていません。
-  - id: F009
+  - id: F011
     severity: major
     rule: vp-arc-technical-constraints
     line: 14
     anchor: ""
-    message: >-
-      Technical constraints, architecture boundary policies (handling of DB, mocks, stubs), and environment execution
-      policies required for integration testing are not specified.
+    message: 結合テストに必要な技術的な制約、アーキテクチャの境界ポリシー（DB、mocks、stubsの扱い）、および環境実行ポリシーが指定されていません。
     message_ja: 結合テストに必要な技術的な制約、アーキテクチャの境界ポリシー（DB、mocks、stubsの扱い）、および環境実行ポリシーが指定されていません。
-  - id: F010
+  - id: F012
     severity: minor
     rule: vp-arc-conciseness
     line: 21
@@ -199,11 +210,9 @@ findings:
       | ------------ |
       -----------------------------------------------------------------------------------------------------------------------------------------------------------
       | ------------------------------------ |
-    message: >-
-      The table in section 4 duplicates the text of sections 1 and 3 verbatim without providing distinct decision or
-      reference information.
+    message: セクション4の表は、独自の意思決定や参照情報を提供することなく、セクション1と3のテキストをそのまま重複して記載しています。
     message_ja: セクション4の表は、独自の意思決定や参照情報を提供することなく、セクション1と3のテキストをそのまま重複して記載しています。
-  - id: F011
+  - id: F013
     severity: major
     rule: vp-dev-implementation-readiness
     line: 21
@@ -217,7 +226,7 @@ findings:
     message_ja: >-
       The sample fails to provide the case table column schema, case_id format, or implementation constraints necessary
       for developers to create concrete test catalogs.
-  - id: F012
+  - id: F014
     severity: minor
     rule: vp-dev-change-impact
     line: 21
@@ -225,9 +234,9 @@ findings:
       | ------------ |
       -----------------------------------------------------------------------------------------------------------------------------------------------------------
       | ------------------------------------ |
-    message: The impact of changing shared test index policies on downstream test catalogs and CI pipelines is not identified.
+    message: 共有テストインデックスポリシーの変更が、下流のテストカタログおよびCIパイプラインに与える影響が特定されていません。
     message_ja: 共有テストインデックスポリシーの変更が、下流のテストカタログおよびCIパイプラインに与える影響が特定されていません。
-  - id: F013
+  - id: F015
     severity: minor
     rule: vp-dev-testability
     line: 21
@@ -235,71 +244,76 @@ findings:
       | ------------ |
       -----------------------------------------------------------------------------------------------------------------------------------------------------------
       | ------------------------------------ |
-    message: >-
-      Validation commands, lint steps, and expected verification results for verifying integration test catalogs are not
-      provided.
+    message: 統合テストカタログを検証するためのバリデーションコマンド、lintステップ、および期待される検証結果が提供されていません。
     message_ja: 統合テストカタログを検証するためのバリデーションコマンド、lintステップ、および期待される検証結果が提供されていません。
-  - id: F014
+  - id: F016
     severity: minor
     rule: vp-qe-verifiability
     line: 28
     anchor: "| 論点           | 処理方針                 |"
     message: 最小記述例の具体性が不十分であり、判定可能な合格基準や設定値の記述例を示す必要がある。
     message_ja: 最小記述例の具体性が不十分であり、判定可能な合格基準や設定値の記述例を示す必要がある。
-  - id: F015
+  - id: F017
+    severity: major
+    rule: vp-qe-verifiability
+    line: 15
+    anchor: "- 主な内容: 対象コンポーネントと結合範囲、インターフェース（API/イベント/DB）観点、主要フロー/例外フロー、トランザクション・整合性、エラー処理、ログ/監視観点、合格基準"
+    message: "合格基準が語の列挙にとどまっています。rulebook の良い例の水準（観測点を含む判定可能な期待値。例: つけ残高更新APIの一意制約違反で409応答とDB差分なし）で、具体例を少なくとも1つ示してください。"
+    message_ja: "合格基準が語の列挙にとどまっています。rulebook の良い例の水準（観測点を含む判定可能な期待値。例: つけ残高更新APIの一意制約違反で409応答とDB差分なし）で、具体例を少なくとも1つ示してください。"
+  - id: F018
     severity: blocker
     rule: vp-qe-omissions-consistency
     line: 11
     anchor: "- 参照: `../rulebooks/itc-index-rulebook.md`"
     message: "rulebook で定義された必須構成（## 1 〜 ## 9 の固定見出し）が欠落している。"
     message_ja: "rulebook で定義された必須構成（## 1 〜 ## 9 の固定見出し）が欠落している。"
-  - id: F016
+  - id: F019
     severity: blocker
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# [内部結合テスト](../rulebooks/itc-index-rulebook.md) サンプル"
     message: rulebook で指定された構造および Frontmatter 定義に準拠しておらず、itc-index のサンプルとして不適切である。
     message_ja: rulebook で指定された構造および Frontmatter 定義に準拠しておらず、itc-index のサンプルとして不適切である。
-  - id: F017
+  - id: F020
     severity: major
     rule: vp-qe-kata-conformance
-    line: 4
-    anchor: ""
-    message: type は rulebook の定義に従い test とする必要がある。
-    message_ja: type は rulebook の定義に従い test とする必要がある。
-  - id: F018
+    line: 1
+    anchor: "# [内部結合テスト](../rulebooks/itc-index-rulebook.md) サンプル"
+    message: >-
+      Frontmatter に rulebook 推奨の `based_on`（`tsp-index` を含む）がありません。H1 も `# 内部結合テストカタログ: 概要（駄菓子屋きぬや 販売管理システム）`
+      の形式ではなく、rulebook へのリンクを埋め込んでいるため、両方を直してください。
+    message_ja: >-
+      Frontmatter に rulebook 推奨の `based_on`（`tsp-index` を含む）がありません。H1 も `# 内部結合テストカタログ: 概要（駄菓子屋きぬや 販売管理システム）`
+      の形式ではなく、rulebook へのリンクを埋め込んでいるため、両方を直してください。
+  - id: F021
     severity: major
     rule: vp-ux-readability
     line: 9
     anchor: "- 対象: 駄菓子屋の販売管理システム"
     message: 必須構成に従っていないため、itc-index 作成時の参照サンプルとして機能していない。
     message_ja: 必須構成に従っていないため、itc-index 作成時の参照サンプルとして機能していない。
-  - id: F019
+  - id: F022
     severity: minor
     rule: vp-ux-language-consistency
-    line: 2
-    anchor: ""
+    line: 1
+    anchor: "# [内部結合テスト](../rulebooks/itc-index-rulebook.md) サンプル"
     message: >-
       The document title and table labels use '内部結合テスト' instead of the standardized deliverable name '内部結合テストカタログ概要'
       (itc-index).
     message_ja: >-
       The document title and table labels use '内部結合テスト' instead of the standardized deliverable name '内部結合テストカタログ概要'
       (itc-index).
-  - id: F020
+  - id: F023
     severity: minor
     rule: vp-ops-release-readiness
     line: 28
     anchor: "| 論点           | 処理方針                 |"
-    message: >-
-      The sample lacks explicit readiness criteria, release prerequisites, and approver definitions required to
-      transition from draft to ready status.
+    message: このサンプルには、draftからreadyステータスへ移行するために必要な、明示的な準備基準、リリース前提条件、および承認者の定義が不足しています。
     message_ja: このサンプルには、draftからreadyステータスへ移行するために必要な、明示的な準備基準、リリース前提条件、および承認者の定義が不足しています。
-  - id: F021
+  - id: F024
     severity: minor
     rule: vp-ops-operability
     line: 28
     anchor: "| 論点           | 処理方針                 |"
-    message: >-
-      Operational instructions for continuous maintenance, regeneration triggers, and change management workflows are
-      missing.
+    message: 継続的なメンテナンスのための運用指示、再生成のトリガー、および変更管理のワークフローが欠落しています。
     message_ja: 継続的なメンテナンスのための運用指示、再生成のトリガー、および変更管理のワークフローが欠落しています。

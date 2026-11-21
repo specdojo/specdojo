@@ -4,61 +4,62 @@ document: specdojo:imp-data-sample
 path: docs/ja/specdojo/samples/imp-data-sample.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-sample
 verdict: needs-work
-score: 85
-graded_at: "2026-10-12T21:06:00.803Z"
-graded_by: agy-expert-executor
+score: 60
+graded_at: "2026-11-21T04:12:15.779Z"
+graded_by: opus-executor
 content_hash: a0afee676c959042dac6be1ecb9542100bbb675af3bc914ec1e3e5621fb14679
 categories:
   purpose:
-    score: 100
+    score: 75
   operations:
-    score: 100
+    score: 81
   planning:
-    score: 100
-  business:
-    score: 100
-  architecture:
-    score: 100
-  usability:
-    score: 100
-  implementation:
-    score: 100
-  quality:
     score: 67
-  consistency:
+  business:
     score: 50
+  architecture:
+    score: 92
+  usability:
+    score: 83
+  implementation:
+    score: 63
+  quality:
+    score: 33
+  consistency:
+    score: 25
 viewpoints:
   vp-po-purpose-alignment:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-decision-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-publication-accountability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-plan-feasibility:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-pm-dependency-risk:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-control-reporting:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-business-value:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-ba-requirements-completeness:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-ba-stakeholder-clarity:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-arc-technical-constraints:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -66,35 +67,35 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-change-impact:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-dev-testability:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-qe-verifiability:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ux-readability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-operability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -103,28 +104,206 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 3
-  minor: 0
+  major: 14
+  minor: 13
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-qe-verifiability
-    line: 24
-    anchor: "## 4. 影響詳細一覧"
-    message: 変更要求の概要に、判定可能な「成功条件」が記載されていないため、目標状態の検証ができない。
-    message_ja: 変更要求の概要に、判定可能な「成功条件」が記載されていないため、目標状態の検証ができない。
+    severity: minor
+    rule: vp-po-purpose-alignment
+    line: 12
+    anchor: "- 狙い: 集計整合性の確保と、会計処理のデータ品質向上。"
+    message: 「狙い」が抽象的で、プロジェクト目的や業務影響調査（`imp-business`）のどの課題に応えるかが示されていないため、上位根拠との対応を1文で追記すべきである。
+    message_ja: 「狙い」が抽象的で、プロジェクト目的や業務影響調査（`imp-business`）のどの課題に応えるかが示されていないため、上位根拠との対応を1文で追記すべきである。
   - id: F002
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 24
-    anchor: "## 4. 影響詳細一覧"
-    message: 記述ガイド 6.2 で必須とされている「成功条件」の記述が欠落している。
-    message_ja: 記述ガイド 6.2 で必須とされている「成功条件」の記述が欠落している。
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 44
+    anchor: >-
+      | 論点                       | 不足情報                       | 決定期限   | 担当               |
+      処理方針                                         |
+    message: 未解決事項の表に「判断や対応への影響」がなく、各論点が対応方針のどの項目や期限を左右するか判断できないため、影響の列を追加すべきである。
+    message_ja: 未解決事項の表に「判断や対応への影響」がなく、各論点が対応方針のどの項目や期限を左右するか判断できないため、影響の列を追加すべきである。
   - id: F003
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 48
+    anchor: "| 履歴保持期間の見直し       | 監査要件に基づく保持年限の確認 | 2026-05-15 | 監査担当（伊藤）   | 監査部門確認後に運用規約へ反映する。             |"
+    message: 判定と対応方針を最終承認する責任者（店主代表／PO）が示されず、架空の「監査部門」に判断を委ねているため、承認責任の所在を明記すべきである。
+    message_ja: 判定と対応方針を最終承認する責任者（店主代表／PO）が示されず、架空の「監査部門」に判断を委ねているため、承認責任の所在を明記すべきである。
+  - id: F004
     severity: major
-    rule: vp-qe-kata-conformance
+    rule: vp-pm-plan-feasibility
+    line: 35
+    anchor: "| 優先度 | 対応項目                     | 実施時期        | 担当                     | 前提条件                     |"
+    message: 対応方針の各項目に完了条件（データ検証・移行テストの確認手順と合格条件）がなく、タスクの完了判定ができないため、受入確認の条件を追記すべきである。
+    message_ja: 対応方針の各項目に完了条件（データ検証・移行テストの確認手順と合格条件）がなく、タスクの完了判定ができないため、受入確認の条件を追記すべきである。
+  - id: F005
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 26
+    anchor: >-
+      | 影響対象データ       | 変更要否 | 影響度 | 対応方針 |
+      判断根拠                                                                             | 備考                         |
+    message: 備考に波及先成果物（I/F 仕様、テスト仕様、運用設計）の ID が示されず、後続成果物への依存を追えないため、該当する成果物 ID を備考に記載すべきである。
+    message_ja: 備考に波及先成果物（I/F 仕様、テスト仕様、運用設計）の ID が示されず、後続成果物への依存を追えないため、該当する成果物 ID を備考に記載すべきである。
+  - id: F006
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 46
+    anchor: "| 値引き理由コード体系の確定 | 例外値引きの分類方針           | 2026-05-08 | 業務責任者（高橋） | 次回レビューで運用コード表を確定する。           |"
+    message: 未解決事項について、課題と決定記録のどちらへ転記するか、確定結果の報告先が示されず、管理への引き継ぎが曖昧なため、扱いを1語で明示すべきである。
+    message_ja: 未解決事項について、課題と決定記録のどちらへ転記するか、確定結果の報告先が示されず、管理への引き継ぎが曖昧なため、扱いを1語で明示すべきである。
+  - id: F007
+    severity: major
+    rule: vp-ba-business-value
+    line: 12
+    anchor: "- 狙い: 集計整合性の確保と、会計処理のデータ品質向上。"
+    message: "期待価値を判定する成功基準（例: 日次締めの差異件数0件、移行前後の売上合計差額0円）がなく、対応の効果を評価できないため、成功条件を追記すべきである。"
+    message_ja: "期待価値を判定する成功基準（例: 日次締めの差異件数0件、移行前後の売上合計差額0円）がなく、対応の効果を評価できないため、成功条件を追記すべきである。"
+  - id: F008
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 33
+    anchor: "## 5. 対応方針"
+    message: 対応方針に受入確認（業務影響の各対象と影響詳細一覧の照合、合格条件）がなく、受入条件を確認できないため、受入確認の記述を追加すべきである。
+    message_ja: 対応方針に受入確認（業務影響の各対象と影響詳細一覧の照合、合格条件）がなく、受入条件を確認できないため、受入確認の記述を追加すべきである。
+  - id: F009
+    severity: major
+    rule: vp-ba-stakeholder-clarity
+    line: 37
+    anchor: "| 高     | 商品マスタのコード整備       | 2026-05-12 まで | データ管理担当（田中）   | 対象 30 品目の合意           |"
+    message: 担当に人物名と、共通サンプル文脈にない組織的な担当（業務システム担当、監査担当など）が使われ、関係者を誤読させるため、共通登場人物の役割名または Role code に置き換えるべきである。
+    message_ja: 担当に人物名と、共通サンプル文脈にない組織的な担当（業務システム担当、監査担当など）が使われ、関係者を誤読させるため、共通登場人物の役割名または Role code に置き換えるべきである。
+  - id: F010
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 16
+    anchor: 評価観点は、データ整合性、移行影響、運用負荷の 3 点とする。
+    message: 許容停止時間などの境界値が示されず、移行時の技術的制約を判断できないため、評価の前提となる境界値を先に記載すべきである。
+    message_ja: 許容停止時間などの境界値が示されず、移行時の技術的制約を判断できないため、評価の前提となる境界値を先に記載すべきである。
+  - id: F011
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 29
+    anchor: "| 売上明細             | 要       | 高     | 実施     | 値引き理由を保持しない場合、日次締め時に差異原因を追跡できず再計算が増えるため。     | 値引き理由コードを追加する。 |"
+    message: 売上明細に追加する値引き理由コードについて、対象項目や格納先と既存集計への影響が示されず、変更作業の入力として不足するため、影響対象データ列か判断根拠に具体化すべきである。
+    message_ja: 売上明細に追加する値引き理由コードについて、対象項目や格納先と既存集計への影響が示されず、変更作業の入力として不足するため、影響対象データ列か判断根拠に具体化すべきである。
+  - id: F012
+    severity: major
+    rule: vp-dev-change-impact
     line: 28
     anchor: "| 商品マスタ           | 要       | 高     | 実施     | 商品コード未登録のままではバーコード会計時に照合失敗が発生し、会計停止が起こるため。 | 上位 30 品目を先行整備する。 |"
+    message: 判断根拠に構造・整合性、データ検証・移行テスト、実装変更への影響が示されておらず rulebook の必須記載を満たさないため、各行にこの3点を記載すべきである。
+    message_ja: 判断根拠に構造・整合性、データ検証・移行テスト、実装変更への影響が示されておらず rulebook の必須記載を満たさないため、各行にこの3点を記載すべきである。
+  - id: F013
+    severity: major
+    rule: vp-dev-testability
+    line: 35
+    anchor: "| 優先度 | 対応項目                     | 実施時期        | 担当                     | 前提条件                     |"
+    message: データ検証・移行テストの確認手順と合格条件が示されず、変更後の検証ができないため、対応項目ごとに確認手順と期待結果を追記すべきである。
+    message_ja: データ検証・移行テストの確認手順と合格条件が示されず、変更後の検証ができないため、対応項目ごとに確認手順と期待結果を追記すべきである。
+  - id: F014
+    severity: major
+    rule: vp-qe-verifiability
+    line: 12
+    anchor: "- 狙い: 集計整合性の確保と、会計処理のデータ品質向上。"
+    message: 変更要求の概要に、判定可能な「成功条件」が記載されていないため、目標状態の検証ができない。
+    message_ja: 変更要求の概要に、判定可能な「成功条件」が記載されていないため、目標状態の検証ができない。
+  - id: F015
+    severity: major
+    rule: vp-qe-verifiability
+    line: 16
+    anchor: 評価観点は、データ整合性、移行影響、運用負荷の 3 点とする。
+    message: 影響度「高・中・低」の判定基準が本文に定義されておらず、各判定の妥当性を検証できないため、尺度定義と境界値を記載すべきである。
+    message_ja: 影響度「高・中・低」の判定基準が本文に定義されておらず、各判定の妥当性を検証できないため、尺度定義と境界値を記載すべきである。
+  - id: F016
+    severity: major
+    rule: vp-qe-verifiability
+    line: 35
+    anchor: "| 優先度 | 対応項目                     | 実施時期        | 担当                     | 前提条件                     |"
+    message: 対応方針に受入確認の合格条件がなく、対応が完了したかを判定できないため、照合手順と合格条件を記載すべきである。
+    message_ja: 対応方針に受入確認の合格条件がなく、対応が完了したかを判定できないため、照合手順と合格条件を記載すべきである。
+  - id: F017
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 12
+    anchor: "- 狙い: 集計整合性の確保と、会計処理のデータ品質向上。"
+    message: 記述ガイド 6.2 で必須とされている「成功条件」の記述が欠落している。
+    message_ja: 記述ガイド 6.2 で必須とされている「成功条件」の記述が欠落している。
+  - id: F018
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 33
+    anchor: "## 5. 対応方針"
+    message: rulebook の本文構成が対応方針に求める「受入確認」の記述が欠落しているため、追加すべきである。
+    message_ja: rulebook の本文構成が対応方針に求める「受入確認」の記述が欠落しているため、追加すべきである。
+  - id: F019
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 1
+    anchor: "# 影響調査（データ）サンプル"
+    message: >-
+      Frontmatter の `based_on` が rulebook の必須とする業務影響調査（`＜project-id＞:imp-business`）ではなく `cr-2026-004`
+      になっており、根拠の規約に違反するため修正すべきである。
+    message_ja: >-
+      Frontmatter の `based_on` が rulebook の必須とする業務影響調査（`＜project-id＞:imp-business`）ではなく `cr-2026-004`
+      になっており、根拠の規約に違反するため修正すべきである。
+  - id: F020
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 44
+    anchor: >-
+      | 論点                       | 不足情報                       | 決定期限   | 担当               |
+      処理方針                                         |
+    message: 未解決事項に rulebook が求める「判断や対応への影響」の列がないため追加すべきである。
+    message_ja: 未解決事項に rulebook が求める「判断や対応への影響」の列がないため追加すべきである。
+  - id: F021
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 16
+    anchor: 評価観点は、データ整合性、移行影響、運用負荷の 3 点とする。
     message: 禁止事項（尺度定義なしの高・中・低の混在）に抵触しており、影響度の判定基準が不明確である。
     message_ja: 禁止事項（尺度定義なしの高・中・低の混在）に抵触しており、影響度の判定基準が不明確である。
+  - id: F022
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 37
+    anchor: "| 高     | 商品マスタのコード整備       | 2026-05-12 まで | データ管理担当（田中）   | 対象 30 品目の合意           |"
+    message: 担当に人物名（田中、佐藤など）と、単一店舗の共通サンプル文脈にない組織（監査部門など）を使っており sample-authoring-standard に抵触するため、役割名または Role code に置き換えるべきである。
+    message_ja: 担当に人物名（田中、佐藤など）と、単一店舗の共通サンプル文脈にない組織（監査部門など）を使っており sample-authoring-standard に抵触するため、役割名または Role code に置き換えるべきである。
+  - id: F023
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 16
+    anchor: 評価観点は、データ整合性、移行影響、運用負荷の 3 点とする。
+    message: 評価観点「データ整合性、移行影響、運用負荷」が rulebook の「整合性・可用性・移行難易度・利用者影響」と異なり手本として誤用されるため、rulebook の観点にそろえるべきである。
+    message_ja: 評価観点「データ整合性、移行影響、運用負荷」が rulebook の「整合性・可用性・移行難易度・利用者影響」と異なり手本として誤用されるため、rulebook の観点にそろえるべきである。
+  - id: F024
+    severity: minor
+    rule: vp-ux-readability
+    line: 5
+    anchor: 本書は、変更要求 `cr-2026-004` が駄菓子屋の販売管理システムのデータへ与える影響を判断するための文書である。
+    message: 目的の文に、前提とする業務影響調査と後続の波及先文書が示されず位置づけを把握しにくいため、上位と後続の文書を1文で示すべきである。
+    message_ja: 目的の文に、前提とする業務影響調査と後続の波及先文書が示されず位置づけを把握しにくいため、上位と後続の文書を1文で示すべきである。
+  - id: F025
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 37
+    anchor: "| 高     | 商品マスタのコード整備       | 2026-05-12 まで | データ管理担当（田中）   | 対象 30 品目の合意           |"
+    message: 担当の表記が役割名、Role code（PM）、人物名の混在で、「データ管理担当」と「データ担当」の表記ゆれもあるため、1つの表記体系に統一すべきである。
+    message_ja: 担当の表記が役割名、Role code（PM）、人物名の混在で、「データ管理担当」と「データ担当」の表記ゆれもあるため、1つの表記体系に統一すべきである。
+  - id: F026
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 42
+    anchor: "## 6. 未解決事項"
+    message: 未解決事項が確定するまでに何を満たせば判定を確定・承認できるか、その承認者が示されていないため、確定条件と承認者を明記すべきである。
+    message_ja: 未解決事項が確定するまでに何を満たせば判定を確定・承認できるか、その承認者が示されていないため、確定条件と承認者を明記すべきである。
+  - id: F027
+    severity: minor
+    rule: vp-ops-operability
+    line: 40
+    anchor: "| 低     | 価格履歴の見送り再評価       | 2026-07-31      | PM（中村）               | 月次監査で差異発生件数を確認 |"
+    message: 価格履歴の見送りを再評価する条件に差異発生件数の閾値がなく、再評価を発動するか判断できないため、具体的な閾値を記載すべきである。
+    message_ja: 価格履歴の見送りを再評価する条件に差異発生件数の閾値がなく、再評価を発動するか判断できないため、具体的な閾値を記載すべきである。

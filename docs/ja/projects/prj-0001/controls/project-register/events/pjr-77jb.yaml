@@ -38,3 +38,126 @@
     - field: derived_from
       from: ""
       to: '["PJR-XA6Y"]'
+- v: 1
+  id: reg_98a543d6c706430f867bb795744bf111
+  ts: "2026-11-21T06:06:34Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "影響範囲" updated
+  changes:
+    - field: section
+      from: ""
+      to: 影響範囲
+  previous_event_id: reg_80dce2152a98403aab44a1da1f81ccf5
+- v: 1
+  id: reg_b30ce7a14d2144af97b54eb167e9fc32
+  ts: "2026-11-21T06:06:38Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "対応方針" updated
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_98a543d6c706430f867bb795744bf111
+- v: 1
+  id: reg_9291b1e8329842cf8bb1699c7c5940d5
+  ts: "2026-11-21T06:07:09Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: difficulty
+      from: "-"
+      to: medium
+  previous_event_id: reg_b30ce7a14d2144af97b54eb167e9fc32
+- v: 1
+  id: reg_465fbbafe3694cc4ae07656caa3a34e7
+  ts: "2026-11-21T07:22:06Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_9291b1e8329842cf8bb1699c7c5940d5
+- v: 1
+  id: reg_4f6bd9a1a5d5481ea80031cfa5c90bd5
+  ts: "2026-11-21T07:27:21Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_465fbbafe3694cc4ae07656caa3a34e7
+- v: 1
+  id: reg_cd8bb086a32443c08dbeb23da21bd95e
+  ts: "2026-11-21T07:35:30Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: section "対応方針" updated
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_4f6bd9a1a5d5481ea80031cfa5c90bd5
+- v: 1
+  id: reg_d110771dfd934c4786ab85eefb917a87
+  ts: "2026-11-21T07:54:50Z"
+  action: start
+  actor: sonnet-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_cd8bb086a32443c08dbeb23da21bd95e
+- v: 1
+  id: reg_c8891f56d034432891789e1b21015870
+  ts: "2026-11-21T07:59:42Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_d110771dfd934c4786ab85eefb917a87
+- v: 1
+  id: reg_64bdb7d2a3a34e07b9b2ba252a5107bf
+  ts: "2026-11-21T08:02:00Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register を 2 回で対応（1 回目は報告のテストが差分に入っていなかった）。2 回目の差分で単体テスト 3 件が足されたことと、25 件が通ることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-21"
+    - field: conclusion
+      from: "-"
+      to: 起動コマンドを組み立てる resolveMemberCommand で disabled の member を断り、名前の指定・routing・strategy・fallback のどの経路でも起動の前に止める。代わりの選択では無効な member を飛ばす
+  previous_event_id: reg_c8891f56d034432891789e1b21015870

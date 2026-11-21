@@ -4,18 +4,19 @@ document: specdojo:prj-charter-rulebook
 path: docs/ja/specdojo/rulebooks/prj-charter-rulebook.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-rulebook
 verdict: pass
-score: 93
-graded_at: "2026-11-17T22:07:34.833Z"
-graded_by: sol-review-executor
+score: 91
+graded_at: "2026-11-21T05:29:34.124Z"
+graded_by: opus-executor
 content_hash: 981a89f78a336dbc96570bac9ec4d0472b2286ca443edf9f9374ba99cee634cc
 categories:
   purpose:
     score: 100
   operations:
-    score: 100
+    score: 88
   planning:
-    score: 100
+    score: 92
   business:
     score: 100
   architecture:
@@ -36,11 +37,11 @@ viewpoints:
     level: 4
     score: 100
   vp-po-publication-accountability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-plan-feasibility:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-dependency-risk:
     level: 4
     score: 100
@@ -96,18 +97,36 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-agent-boundary:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
   major: 0
-  minor: 4
+  minor: 8
   note: 0
 findings:
   - id: F001
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 111
+    anchor: "- ステークホルダー登録簿のうち、認可判断と権限委譲に関係する主要関係者だけを要約する。"
+    message: >-
+      初期ステークホルダーで関係者名を要約させる一方、個人名・連絡先など公開不適切な情報を記載しない規則が rulebook 本文・禁止事項になく recipe
+      にのみあるため、役割名・集団名で記載する規則を記述ガイドまたは禁止事項に追加してください。
+    message_ja: >-
+      初期ステークホルダーで関係者名を要約させる一方、個人名・連絡先など公開不適切な情報を記載しない規則が rulebook 本文・禁止事項になく recipe
+      にのみあるため、役割名・集団名で記載する規則を記述ガイドまたは禁止事項に追加してください。
+  - id: F002
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 136
+    anchor: "- 未決事項は論点、認可や GO / Not GO への影響、当面の扱いを記載し、後続判断までに解消が必要な条件を識別する。"
+    message: 未決事項の記載要件が論点・影響・当面の扱いのみで、解消を担う Role code と期限または判断タイミングが求められていないため、後続判断までのタスク化と進捗確認ができるよう担当と期限の記載を必須にしてください。
+    message_ja: 未決事項の記載要件が論点・影響・当面の扱いのみで、解消を担う Role code と期限または判断タイミングが求められていないため、後続判断までのタスク化と進捗確認ができるよう担当と期限の記載を必須にしてください。
+  - id: F003
     severity: minor
     rule: vp-arc-conciseness
     line: 67
@@ -118,7 +137,7 @@ findings:
     message_ja: >-
       template を骨組みの正本とする Rulebook 記述標準に対し、第5章は「次の順序」と番号列で template
       の見出し順を再掲しています。順序指定と番号列を除き、各章の目的・必須／任意・内容要件だけを残して、構成順序の二重管理を解消してください。
-  - id: F002
+  - id: F004
     severity: minor
     rule: vp-dev-change-impact
     line: 15
@@ -131,14 +150,14 @@ findings:
     message_ja: >-
       改訂・廃止を共通標準へ委譲していますが、憲章の認可範囲・予算枠・委譲権限を変更した際の具体的な追従対象と担当 Role code
       が未定義です。スコープ、組織定義、管理計画、成果物カタログなどの再確認対象と、影響分析・更新・承認の担当を対応付けてください。
-  - id: F003
+  - id: F005
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 92
     anchor: "- 本格実行や公開まで認可する場合は、計画、体制、予算枠、品質条件が確認済みであることを明記する。"
     message: 本行では条件付きで本格実行や公開まで認可できる一方、「共通」では冒頭文に本格実行開始・外部公開を承認しない旨を必ず書くよう要求しています。例外を認める場合は冒頭文と禁止事項の適用条件をそろえ、同じ憲章で認可と非認可を併記させない規則にしてください。
     message_ja: 本行では条件付きで本格実行や公開まで認可できる一方、「共通」では冒頭文に本格実行開始・外部公開を承認しない旨を必ず書くよう要求しています。例外を認める場合は冒頭文と禁止事項の適用条件をそろえ、同じ憲章で認可と非認可を併記させない規則にしてください。
-  - id: F004
+  - id: F006
     severity: minor
     rule: vp-qe-kata-conformance
     line: 129
@@ -149,3 +168,25 @@ findings:
     message_ja: >-
       観点ごとの合格条件を必須としていますが、対応 template の GO / Not GO 表は「判断観点・確認内容・記録先」のみで、合格条件の記入欄や記入指示がありません。template
       に合格条件の欄または明示的な記入指示を追加し、展開した骨組みから必須条件が抜けないよう整合させてください。
+  - id: F007
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 136
+    anchor: "- 未決事項は論点、認可や GO / Not GO への影響、当面の扱いを記載し、後続判断までに解消が必要な条件を識別する。"
+    message: >-
+      未決事項の記載要件を論点・認可や GO / Not GO への影響・当面の扱いとし sample もその列構成である一方、対応 template
+      の未決事項表は「論点・期限・担当・対応方針」で影響の列がないため、rulebook・sample・template の列構成を一致させてください。
+    message_ja: >-
+      未決事項の記載要件を論点・認可や GO / Not GO への影響・当面の扱いとし sample もその列構成である一方、対応 template
+      の未決事項表は「論点・期限・担当・対応方針」で影響の列がないため、rulebook・sample・template の列構成を一致させてください。
+  - id: F008
+    severity: minor
+    rule: vp-ops-agent-boundary
+    line: 106
+    anchor: "- AI Agent を利用するプロジェクトでは、支援対象の活動と委譲範囲を記載する。利用しない場合は記載を要しない。"
+    message: >-
+      AI Agent の支援対象と委譲範囲の記載を求めるのみで、AI Agent を承認者・決裁者・責任者に置かない規則が rulebook 本文と禁止事項になく recipe
+      にのみあるため、承認と最終判断は人間が担う境界を記述ガイドまたは禁止事項に明記してください。
+    message_ja: >-
+      AI Agent の支援対象と委譲範囲の記載を求めるのみで、AI Agent を承認者・決裁者・責任者に置かない規則が rulebook 本文と禁止事項になく recipe
+      にのみあるため、承認と最終判断は人間が担う境界を記述ガイドまたは禁止事項に明記してください。

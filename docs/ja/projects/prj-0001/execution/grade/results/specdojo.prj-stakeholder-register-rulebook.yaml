@@ -4,11 +4,12 @@ document: specdojo:prj-stakeholder-register-rulebook
 path: docs/ja/specdojo/rulebooks/prj-stakeholder-register-rulebook.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-rulebook
 verdict: pass
-score: 97
-graded_at: "2026-10-06T21:31:23.510Z"
-graded_by: agy-expert-executor
-content_hash: b2b142248bd05db51667c3a31b22e3ea6e69a160fc6b61d35d3f7992a0499381
+score: 92
+graded_at: "2026-11-21T05:38:40.804Z"
+graded_by: opus-executor
+content_hash: 96cf0938e2f0b0345a48bf171bcc452a01d5c75d43639a5be2ea7835325348d6
 categories:
   purpose:
     score: 100
@@ -21,13 +22,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 83
   implementation:
     score: 100
   quality:
     score: 92
   consistency:
-    score: 100
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -60,8 +61,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -78,17 +79,17 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
     level: 3
     score: 75
   vp-ux-readability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -104,28 +105,57 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 2
+  minor: 5
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-arc-conciseness
-    line: 85
-    anchor: "## 6. 記述ガイド"
+    rule: vp-qe-omissions-consistency
+    line: 72
+    anchor: "- High の関係者は、必要な合意または関与方針を空欄にしない。"
     message: >-
-      The "推奨表" (Recommended Table) examples in Chapter 6 merely duplicate the template structure without adding new
-      writing rules, and should be removed to avoid redundancy.
+      「High の関係者は、必要な合意または関与方針を空欄にしない」は禁止事項（必要な合意の空欄は全関係者で禁止）や recipe の仕上げチェック（High
+      は必要な合意・関与方針の両方が必要）と食い違うため、「必要な合意と関与方針の両方を空欄にしない」とするなど条件をそろえる必要がある。
     message_ja: >-
-      The "推奨表" (Recommended Table) examples in Chapter 6 merely duplicate the template structure without adding new
-      writing rules, and should be removed to avoid redundancy.
+      「High の関係者は、必要な合意または関与方針を空欄にしない」は禁止事項（必要な合意の空欄は全関係者で禁止）や recipe の仕上げチェック（High
+      は必要な合意・関与方針の両方が必要）と食い違うため、「必要な合意と関与方針の両方を空欄にしない」とするなど条件をそろえる必要がある。
   - id: F002
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# ステークホルダー登録簿 作成ルール"
+    line: 54
+    anchor: "| 影響度/関心度分析      | ○    | 関与の優先度を判断する。影響度、関心度、期待、懸念、必要な合意、評価根拠を対応付ける                    |"
+    message: 本文要件は関係者一覧に「利用場面または備考」を求めるが、template の列は「備考」のみであり、rulebook と template の欄名をどちらかに合わせる必要がある。
+    message_ja: 本文要件は関係者一覧に「利用場面または備考」を求めるが、template の列は「備考」のみであり、rulebook と template の欄名をどちらかに合わせる必要がある。
+  - id: F003
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 63
+    anchor: "- 関与区分は意思決定、実行、利用、運用、外部協力、影響受容で識別する。"
     message: >-
-      対応 template を宣言済みなのに「本文構成（標準テンプレ）」として見出し順を rulebook 側でも正本化しているため、この章を「本文要件」として各章の目的・必須性・記述規約に限定し、骨組みの正本は template
-      に統一する必要がある。
+      関与区分（意思決定、実行、利用、運用、外部協力、影響受容）が固定の語彙か例示かが定められておらず、sample が「スポンサー /
+      意思決定者」「実行担当者」など別の表記を使っているため、語彙として固定するか、併記を認める範囲を明記する必要がある。
     message_ja: >-
-      対応 template を宣言済みなのに「本文構成（標準テンプレ）」として見出し順を rulebook 側でも正本化しているため、この章を「本文要件」として各章の目的・必須性・記述規約に限定し、骨組みの正本は template
-      に統一する必要がある。
+      関与区分（意思決定、実行、利用、運用、外部協力、影響受容）が固定の語彙か例示かが定められておらず、sample が「スポンサー /
+      意思決定者」「実行担当者」など別の表記を使っているため、語彙として固定するか、併記を認める範囲を明記する必要がある。
+  - id: F004
+    severity: minor
+    rule: vp-ux-readability
+    line: 36
+    anchor: "- 関係者 ID は `STH-<KEY>` 形式とし、同じ関係者を全ての表で同じ ID で参照する。"
+    message: >-
+      「ファイル名」の節に関係者 ID の形式（`STH-＜KEY＞`）と役割名を優先する規則が置かれており、ファイル名の規則ではないため、「ドキュメントID」の節（文書 ID と関係者 ID
+      の区別）または記述ガイドの「関係者一覧」へ移す必要がある。
+    message_ja: >-
+      「ファイル名」の節に関係者 ID の形式（`STH-＜KEY＞`）と役割名を優先する規則が置かれており、ファイル名の規則ではないため、「ドキュメントID」の節（文書 ID と関係者 ID
+      の区別）または記述ガイドの「関係者一覧」へ移す必要がある。
+  - id: F005
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 106
+    anchor: "| 未採用の Role code の推測                        | 組織・責務定義と不整合になるため           |"
+    message: >-
+      禁止事項の「ステークホルダー ID」は「ドキュメントID」と「ファイル名」の節の「関係者 ID」と表記が揺れているため、「関係者
+      ID」に統一する必要がある（あわせて「エンゲージメント方針」と「関与方針」の使い分けを統一するか定義する）。
+    message_ja: >-
+      禁止事項の「ステークホルダー ID」は「ドキュメントID」と「ファイル名」の節の「関係者 ID」と表記が揺れているため、「関係者
+      ID」に統一する必要がある（あわせて「エンゲージメント方針」と「関与方針」の使い分けを統一するか定義する）。

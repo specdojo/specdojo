@@ -4,49 +4,50 @@ document: specdojo:cop-rulebook
 path: docs/ja/specdojo/rulebooks/cop-rulebook.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-rulebook
 verdict: needs-work
-score: 76
-graded_at: "2026-10-29T20:40:48.022Z"
-graded_by: flash-high-executor
-content_hash: e4c56a26bbb1fb8f5d46449bc58d2f273713a1a13e22c529f2e194ae7cdfd4a9
+score: 91
+graded_at: "2026-11-21T03:31:23.837Z"
+graded_by: opus-executor
+content_hash: 12bf8ae4a4c0b5eb09a37f9cca9a97060477f59277583a8d7fcb99a80e895c05
 categories:
   purpose:
-    score: 88
+    score: 100
   operations:
-    score: 81
+    score: 94
   planning:
-    score: 67
+    score: 92
   business:
     score: 100
   architecture:
-    score: 83
+    score: 100
   usability:
     score: 100
   implementation:
-    score: 50
+    score: 75
   quality:
-    score: 67
+    score: 75
   consistency:
-    score: 50
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-publication-accountability:
     level: 3
     score: 75
   vp-pm-plan-feasibility:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
     level: 3
     score: 75
-  vp-pm-control-reporting:
-    level: 2
-    score: 50
   vp-ba-business-value:
     level: 4
     score: 100
@@ -57,8 +58,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-technical-constraints:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -66,8 +67,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-dev-change-impact:
     level: 2
     score: 50
@@ -75,11 +76,11 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
     level: 2
     score: 50
@@ -90,11 +91,11 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-operability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -103,109 +104,50 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 6
-  minor: 8
+  major: 2
+  minor: 3
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-decision-readiness
-    line: 74
-    anchor: "| 7    | ロールバック手順             | ○    |"
-    message: 標準テンプレートに、計画自体の未決事項やPOの承認・保留を判断するための論点を示す項目が含まれていない。
-    message_ja: 標準テンプレートに、計画自体の未決事項やPOの承認・保留を判断するための論点を示す項目が含まれていない。
+    rule: vp-po-publication-accountability
+    line: 64
+    anchor: "- **判断基準**: 実施者・判断者が役割で一意に引け、個人の連絡先などの内部限定情報は「担当者/連絡系統」に閉じ、周知には利用者が判断に要る情報だけがあること。"
+    message: 前回指摘の内部情報と周知情報の分離は記述ガイドと禁止事項で解消したが、「個人の連絡先などの内部限定情報は『担当者/連絡系統』に閉じ」の記述が個人連絡先を成果物へ記載してよいと読めるため、連絡先はチャネル・当番表に限り個人連絡先は成果物に書かないと統一し、公開リポジトリへ置く場合の扱いを明示する必要がある。
+    message_ja: 前回指摘の内部情報と周知情報の分離は記述ガイドと禁止事項で解消したが、「個人の連絡先などの内部限定情報は『担当者/連絡系統』に閉じ」の記述が個人連絡先を成果物へ記載してよいと読めるため、連絡先はチャネル・当番表に限り個人連絡先は成果物に書かないと統一し、公開リポジトリへ置く場合の扱いを明示する必要がある。
   - id: F002
     severity: minor
-    rule: vp-po-publication-accountability
-    line: 127
-    anchor: "### 6.5. 実施条件（事前完了条件）"
-    message: 担当者やチャネル・電話等の連絡先を記載できる一方、内部限定情報と公開可能情報の分離、公開対象、公開前の確認責任が定義されていない。
-    message_ja: 担当者やチャネル・電話等の連絡先を記載できる一方、内部限定情報と公開可能情報の分離、公開対象、公開前の確認責任が定義されていない。
-  - id: F003
-    severity: minor
-    rule: vp-pm-plan-feasibility
-    line: 115
-    anchor: "### 6.4. 担当者/連絡系統"
-    message: 作業の「実施者」を必須としているが、`pm-roles` で定義されたRole codeを使用する規則がなく、例示の `Ops`・`Mig`・`Biz`・`Comms` を実担当へ一意に割り当てられない。
-    message_ja: 作業の「実施者」を必須としているが、`pm-roles` で定義されたRole codeを使用する規則がなく、例示の `Ops`・`Mig`・`Biz`・`Comms` を実担当へ一意に割り当てられない。
-  - id: F004
-    severity: minor
-    rule: vp-pm-dependency-risk
-    line: 180
-    anchor: "- `<doc-id>`：`<説明>`"
-    message: 関連ドキュメントの指定はあるが、他チームの後続タスクや全体スケジュールに影響するリスクや依存関係を識別して記録する規定がない。
-    message_ja: 関連ドキュメントの指定はあるが、他チームの後続タスクや全体スケジュールに影響するリスクや依存関係を識別して記録する規定がない。
-  - id: F005
-    severity: major
     rule: vp-pm-control-reporting
-    line: 115
-    anchor: "### 6.4. 担当者/連絡系統"
-    message: 作業証跡の保存だけが規定され、進捗、課題、リスク、変更要求、GO/NO-GO決定を分離して記録し、担当Role codeと報告先を付けてPJR等へ転記する手順が定義されていない。
-    message_ja: 作業証跡の保存だけが規定され、進捗、課題、リスク、変更要求、GO/NO-GO決定を分離して記録し、担当Role codeと報告先を付けてPJR等へ転記する手順が定義されていない。
-  - id: F006
-    severity: major
-    rule: vp-arc-technical-constraints
-    line: 59
-    anchor: "- `based_on` には切替判断に直接利用した成果物（例: `mip-index` / `mtp-index` / `dmd-*` / `issue-*`）のみ列挙する"
+    line: 11
+    anchor: >-
+      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status` の昇格と承認、改訂と廃止、未決事項と当日の課題の登録簿への引き継ぎは
+      [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従い、本書と成果物で言い直しません。文書の整形・lint・スキーマ検証はリポジトリの検証で扱います。
     message: >-
-      `deliverable-frontmatter.schema.yaml` は `type: migration` と `title` を許可せず、必須の `rulebook`
-      を要求するため、ここで定義されたFrontmatter制約をそのまま実装するとスキーマ違反になる。
+      前回の major は登録簿への引き継ぎをメタ情報標準へ委譲したことで主旨が解消したため minor へ引き下げるが、委譲先の規定は改訂・廃止の過程に限定されており、当日のGO/NO-GO判定結果と進捗の報告先、および
+      `pm-decision-log`・`pm-issue-log` への記録を担当Role code付きで行うことが本書から読み取れないため明記が必要である。
     message_ja: >-
-      `deliverable-frontmatter.schema.yaml` は `type: migration` と `title` を許可せず、必須の `rulebook`
-      を要求するため、ここで定義されたFrontmatter制約をそのまま実装するとスキーマ違反になる。
-  - id: F007
-    severity: major
-    rule: vp-dev-implementation-readiness
-    line: 56
-    anchor: ""
-    message: "Frontmatterの設定項目表において、スキーマ必須の `rulebook` が欠落し、許可されない `type: migration` や `title` を要求しているため、この定義から検証可能な成果物を実装できない。"
-    message_ja: "Frontmatterの設定項目表において、スキーマ必須の `rulebook` が欠落し、許可されない `type: migration` や `title` を要求しているため、この定義から検証可能な成果物を実装できない。"
-  - id: F008
+      前回の major は登録簿への引き継ぎをメタ情報標準へ委譲したことで主旨が解消したため minor へ引き下げるが、委譲先の規定は改訂・廃止の過程に限定されており、当日のGO/NO-GO判定結果と進捗の報告先、および
+      `pm-decision-log`・`pm-issue-log` への記録を担当Role code付きで行うことが本書から読み取れないため明記が必要である。
+  - id: F003
     severity: major
     rule: vp-dev-change-impact
-    line: 72
-    anchor: "| 5    | 実施条件（事前完了条件）     | ○    |"
+    line: 37
+    anchor: 本文は次の10章をこの順序で置き、すべて必須とします。
     message: 必須見出しやFrontmatter規約を変更した際に `cop-sample`、参照スキーマ、scaffold・生成処理を追従確認する規則がなく、現在も外部sampleとの構成不整合が残っている。
     message_ja: 必須見出しやFrontmatter規約を変更した際に `cop-sample`、参照スキーマ、scaffold・生成処理を追従確認する規則がなく、現在も外部sampleとの構成不整合が残っている。
-  - id: F009
+  - id: F004
     severity: minor
     rule: vp-dev-testability
-    line: 54
-    anchor: "| based_on   | 根拠となる仕様ID（ID配列。未指定は `[]` 可） | 任意 |"
+    line: 11
+    anchor: >-
+      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status` の昇格と承認、改訂と廃止、未決事項と当日の課題の登録簿への引き継ぎは
+      [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従い、本書と成果物で言い直しません。文書の整形・lint・スキーマ検証はリポジトリの検証で扱います。
     message: スキーマへの参照だけで、Frontmatter、必須10章、Markdownを検証する具体的なlint・validateコマンド、対象ファイル、成功時の期待結果、失敗時の対応が示されていない。
     message_ja: スキーマへの参照だけで、Frontmatter、必須10章、Markdownを検証する具体的なlint・validateコマンド、対象ファイル、成功時の期待結果、失敗時の対応が示されていない。
-  - id: F010
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 146
-    anchor: ""
-    message: 切替判定ポイントの判断基準について、閾値や照合対象、証跡など判定者によってpass/failが変わらない客観的な合格条件を定義するよう規定されていない。
-    message_ja: 切替判定ポイントの判断基準について、閾値や照合対象、証跡など判定者によってpass/failが変わらない客観的な合格条件を定義するよう規定されていない。
-  - id: F011
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 56
-    anchor: ""
-    message: "Frontmatter表はスキーマ必須の `rulebook` を欠落させる一方、許容されない `type: migration` と `title` を必須としており、参照先の正本と矛盾している。"
-    message_ja: "Frontmatter表はスキーマ必須の `rulebook` を欠落させる一方、許容されない `type: migration` と `title` を必須としており、参照先の正本と矛盾している。"
-  - id: F012
+  - id: F005
     severity: major
     rule: vp-qe-kata-conformance
-    line: 6
-    anchor: ""
+    line: 54
+    anchor: 完成例は Frontmatter の `sample` で宣言された sample を参照してください。
     message: 指定されているサンプル `specdojo:cop-sample` が、本ルールブックで定義した必須構成（見出し10項目など）を遵守しておらず、成果物の完成例として不適切である。
     message_ja: 指定されているサンプル `specdojo:cop-sample` が、本ルールブックで定義した必須構成（見出し10項目など）を遵守しておらず、成果物の完成例として不適切である。
-  - id: F013
-    severity: minor
-    rule: vp-ops-release-readiness
-    line: 61
-    anchor: ""
-    message: "`status` の値だけが示され、未解決事項がないこと、関係者レビュー、承認者、公開対象、リンク・連絡先の確認など `ready` 昇格前の判定条件が定義されていない。"
-    message_ja: "`status` の値だけが示され、未解決事項がないこと、関係者レビュー、承認者、公開対象、リンク・連絡先の確認など `ready` 昇格前の判定条件が定義されていない。"
-  - id: F014
-    severity: minor
-    rule: vp-ops-operability
-    line: 27
-    anchor: "`cop-<term>` と他ドキュメントの関係を示す。必要に応じて Mermaid を使用してよい。"
-    message: 運用方針に、日程・担当・システム構成変更時の更新責任、再検証、変更履歴、問い合わせ窓口、実施後の証跡保管や改訂手順が定義されていない。
-    message_ja: 運用方針に、日程・担当・システム構成変更時の更新責任、再検証、変更履歴、問い合わせ窓口、実施後の証跡保管や改訂手順が定義されていない。

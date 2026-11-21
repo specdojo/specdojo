@@ -4,18 +4,19 @@ document: specdojo:pm-communication-plan-rulebook
 path: docs/ja/specdojo/rulebooks/pm-communication-plan-rulebook.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-rulebook
 verdict: pass
-score: 97
-graded_at: "2026-11-17T21:53:53.886Z"
-graded_by: sol-review-executor
+score: 94
+graded_at: "2026-11-21T05:15:19.198Z"
+graded_by: opus-executor
 content_hash: 3bdfe6099ff61629f3d01beed7712d2f8758276539c904531741eadf73bf957b
 categories:
   purpose:
     score: 100
   operations:
-    score: 94
+    score: 88
   planning:
-    score: 100
+    score: 92
   business:
     score: 100
   architecture:
@@ -25,7 +26,7 @@ categories:
   implementation:
     score: 88
   quality:
-    score: 92
+    score: 83
   consistency:
     score: 100
 viewpoints:
@@ -45,8 +46,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-control-reporting:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-business-value:
     level: 4
     score: 100
@@ -75,8 +76,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
     level: 4
     score: 100
@@ -96,18 +97,29 @@ viewpoints:
     level: 3
     score: 75
   vp-ops-agent-boundary:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
   major: 0
-  minor: 3
+  minor: 7
   note: 0
 findings:
   - id: F001
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 66
+    anchor: 公開、限定共有、記録禁止など必要な区分を定義し、各手段で扱える情報と記録先を対応させます。
+    message: >-
+      情報管理と公開の記述ガイドは「必要な区分を定義し記録先を対応させる」とだけ書いており、判断・課題・リスク・変更要求をそれぞれ課題ログ・リスク登録簿・変更要求ログなどの管理記録へ分けて転記する要求も、口頭決定の転記責任を Role
+      code で示す要求もないため、転記先の分離と転記担当を記述させる規定を追加する。
+    message_ja: >-
+      情報管理と公開の記述ガイドは「必要な区分を定義し記録先を対応させる」とだけ書いており、判断・課題・リスク・変更要求をそれぞれ課題ログ・リスク登録簿・変更要求ログなどの管理記録へ分けて転記する要求も、口頭決定の転記責任を Role
+      code で示す要求もないため、転記先の分離と転記担当を記述させる規定を追加する。
+  - id: F002
     severity: minor
     rule: vp-dev-change-impact
     line: 70
@@ -118,7 +130,18 @@ findings:
     message_ja: >-
       共通の変更管理規則は参照されているが、連絡時期・判断経路・共有手段を変更した際に影響確認するScheduleの確認・承認タスク、責任分担、チャネル設定などの追従対象が示されていないため、適用先で該当する対象と更新担当Role
       codeを特定する要件を追記する。
-  - id: F002
+  - id: F003
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 36
+    anchor: "| コミュニケーション機会 | ○    | 情報要求に対応する実施機会と結果を追跡できること |"
+    message: >-
+      コミュニケーション機会の受入条件「情報要求に対応する実施機会と結果を追跡できること」は判定基準が曖昧で、各行が登録簿の情報要求（ステークホルダー ID）に対応し、責任に採用済み Role
+      code、証跡に記録先が必ず記入されていることを pass/fail 条件として明記する。
+    message_ja: >-
+      コミュニケーション機会の受入条件「情報要求に対応する実施機会と結果を追跡できること」は判定基準が曖昧で、各行が登録簿の情報要求（ステークホルダー ID）に対応し、責任に採用済み Role
+      code、証跡に記録先が必ず記入されていることを pass/fail 条件として明記する。
+  - id: F004
     severity: minor
     rule: vp-qe-kata-conformance
     line: 70
@@ -131,10 +154,32 @@ findings:
       Rulebook記述標準の「各 rulebook
       は自系統の成果物における具体的な追従対象と役割分担を定義する」という要件に対し、本書は共通標準への参照と見直しトリガーのみで、コミュニケーション計画の変更時に確認する管理計画・ステークホルダー登録簿・Schedule等の該当箇所と担当Role
       codeを定義していないため、系統固有の追従要件を補う。
-  - id: F003
+  - id: F005
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 71
+    anchor: "- 未決事項は `_UNDECIDED_` を付し、論点と伝達先・時期・手段への影響を示します。"
+    message: >-
+      template の未決事項は「決定時期と判断者を添える」、方針と適用範囲は「人間とAI Agentの境界を記述する」を求め sample も両方を記述しているが、rulebook
+      の記述ガイド（方針と適用範囲・見直し条件と未決事項）はどちらも要求しておらず、Kata 内で記載要件がずれているため、rulebook 側に両要件を追加して整合させる。
+    message_ja: >-
+      template の未決事項は「決定時期と判断者を添える」、方針と適用範囲は「人間とAI Agentの境界を記述する」を求め sample も両方を記述しているが、rulebook
+      の記述ガイド（方針と適用範囲・見直し条件と未決事項）はどちらも要求しておらず、Kata 内で記載要件がずれているため、rulebook 側に両要件を追加して整合させる。
+  - id: F006
     severity: minor
     rule: vp-ops-operability
     line: 70
     anchor: "- ステークホルダー、判断ゲート、公開方針、連絡手段が変わった場合に見直します。"
     message: 見直しの契機は定義されているが、本計画の更新担当と、変更後の伝達先・時期・手段が実際の連絡運用へ反映されたことを確認する担当を記載させる規定がないため、採用済みRole codeによる担当と反映確認の証跡を定める要件を追加する。
     message_ja: 見直しの契機は定義されているが、本計画の更新担当と、変更後の伝達先・時期・手段が実際の連絡運用へ反映されたことを確認する担当を記載させる規定がないため、採用済みRole codeによる担当と反映確認の証跡を定める要件を追加する。
+  - id: F007
+    severity: minor
+    rule: vp-ops-agent-boundary
+    line: 45
+    anchor: 対象プロジェクト、主要な関係者、必要な合意の種類を要約し、常設会議か作業節目の非同期確認かを示します。
+    message: >-
+      方針と適用範囲の記述ガイドに、AI Agent は記録整理や草案を支援するだけで、合意・承認・公開判断は人間の Role code が担うことを明記させる要求がなく、recipe・template
+      にのみ存在するため、rulebook 側で人間と AI Agent の判断境界の記述を必須化する。
+    message_ja: >-
+      方針と適用範囲の記述ガイドに、AI Agent は記録整理や草案を支援するだけで、合意・承認・公開判断は人間の Role code が担うことを明記させる要求がなく、recipe・template
+      にのみ存在するため、rulebook 側で人間と AI Agent の判断境界の記述を必須化する。

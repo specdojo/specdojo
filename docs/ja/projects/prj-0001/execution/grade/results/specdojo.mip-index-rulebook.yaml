@@ -4,30 +4,31 @@ document: specdojo:mip-index-rulebook
 path: docs/ja/specdojo/rulebooks/mip-index-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 86
-graded_at: "2026-11-02T20:25:04.437Z"
-graded_by: flash-high-executor
-content_hash: e6b870e9e556e52c9ff25e0b63297ce7348511fcdd896e6615f46321efcfd3fa
+reference: specdojo:prj-overview-rulebook
+verdict: pass
+score: 99
+graded_at: "2026-11-21T04:27:25.260Z"
+graded_by: opus-executor
+content_hash: ed4f35ff6f2c1a8d87d38ec4a46f5f5ed58a32b60b6e0d49b37168420f62c987
 categories:
   purpose:
     score: 100
   operations:
     score: 100
   planning:
-    score: 100
+    score: 92
   business:
     score: 100
   architecture:
-    score: 75
+    score: 100
   usability:
     score: 100
   implementation:
-    score: 100
+    score: 88
   quality:
-    score: 83
+    score: 100
   consistency:
-    score: 50
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -42,8 +43,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-dependency-risk:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-control-reporting:
     level: 4
     score: 100
@@ -57,8 +58,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-technical-constraints:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -66,8 +67,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-change-impact:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-testability:
     level: 4
     score: 100
@@ -75,11 +76,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -100,36 +101,27 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 3
-  minor: 0
+  major: 0
+  minor: 2
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-arc-technical-constraints
-    line: 41
-    anchor: "### 4.1. 設定内容"
-    message: >-
-      Section 4.1 specifies a flat Frontmatter structure lacking the specdojo: namespace and the mandatory rulebook key,
-      conflicting directly with docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml.
-    message_ja: >-
-      Section 4.1 specifies a flat Frontmatter structure lacking the specdojo: namespace and the mandatory rulebook key,
-      conflicting directly with docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml.
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 40
+    anchor: "- `based_on` には移行判断に直接利用した上位成果物を列挙する。"
+    message: "`based_on` に挙げる「上位成果物」が抽象的です。移行計画が前提にする上位成果物の種類（例: スコープ・要件・アーキテクチャ・運用設計など）を例示し、上流の依存と変更があったときの影響を特定できるようにしてください。"
+    message_ja: "`based_on` に挙げる「上位成果物」が抽象的です。移行計画が前提にする上位成果物の種類（例: スコープ・要件・アーキテクチャ・運用設計など）を例示し、上流の依存と変更があったときの影響を特定できるようにしてください。"
   - id: F002
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 45
-    anchor: "| 項目       | 説明                                         | 必須 |"
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 12
+    anchor: >-
+      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status`・承認・改訂と廃止・未決事項の引き継ぎは [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]]
+      に従う。文書の整形・lint はリポジトリの検証で扱い、移行の業務の検証に含めない。
     message: >-
-      Section 4.1 and Section 8 omit the mandatory rulebook key and specdojo: namespace required by
-      document-metadata-standard.md, while improperly defining title as a required Frontmatter field.
+      改訂と廃止を標準に委譲するだけで、自系統の追従対象と役割分担を定めていません。成功条件・判定点・スコープなどを変えたときに追従して見直す下流成果物（`dmd-*`/`mtp-*`/`cop-*`/`otp-*`）と担当 Role
+      code を明記してください。
     message_ja: >-
-      Section 4.1 と Section 8 では、document-metadata-standard.md で要求されている必須の rulebook key および specdojo: namespace
-      が省略されており、一方で title が必須の Frontmatter フィールドとして不適切に定義されています。
-  - id: F003
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 移行計画 作成ルール"
-    message: 参照先のサンプル `docs/ja/specdojo/samples/mip-index-sample.md` が、本書で定義した必須構成（1〜9章の順序固定）および命名規則に従っておらず、著者に誤読を招く。
-    message_ja: 参照先のサンプル `docs/ja/specdojo/samples/mip-index-sample.md` が、本書で定義した必須構成（1〜9章の順序固定）および命名規則に従っておらず、著者に誤読を招く。
+      改訂と廃止を標準に委譲するだけで、自系統の追従対象と役割分担を定めていません。成功条件・判定点・スコープなどを変えたときに追従して見直す下流成果物（`dmd-*`/`mtp-*`/`cop-*`/`otp-*`）と担当 Role
+      code を明記してください。

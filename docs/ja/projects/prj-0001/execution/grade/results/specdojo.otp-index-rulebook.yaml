@@ -4,16 +4,17 @@ document: specdojo:otp-index-rulebook
 path: docs/ja/specdojo/rulebooks/otp-index-rulebook.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-rulebook
 verdict: needs-work
-score: 92
-graded_at: "2026-11-07T20:22:22.548Z"
-graded_by: flash-high-executor
-content_hash: 13411be95c1fe1eddefb87129c29ff7ff289ee07b1ca826b9a5a98cc1346026e
+score: 94
+graded_at: "2026-11-21T05:05:34.601Z"
+graded_by: opus-executor
+content_hash: fac281d7389a85304859c48254b7b7a507c1c2afe751fd5474558a910c727837
 categories:
   purpose:
     score: 100
   operations:
-    score: 100
+    score: 88
   planning:
     score: 100
   business:
@@ -25,9 +26,9 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 83
   consistency:
-    score: 50
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -36,8 +37,8 @@ viewpoints:
     level: 4
     score: 100
   vp-po-publication-accountability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-plan-feasibility:
     level: 4
     score: 100
@@ -75,20 +76,20 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
     level: 2
     score: 50
-  vp-qe-kata-conformance:
+  vp-ux-readability:
     level: 4
     score: 100
-  vp-ux-readability:
+  vp-ux-language-consistency:
     level: 3
     score: 75
-  vp-ux-language-consistency:
-    level: 4
-    score: 100
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-operability:
     level: 4
     score: 100
@@ -101,27 +102,53 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 1
-  minor: 2
+  minor: 4
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 23
-    anchor: "- `id` は `otp-index` を使用する。"
-    message: ID指定が `otp-index` とのみされており、プロジェクト識別子（`＜project-id＞:`）を付与する標準的な ID 命名規則に準拠していない。
-    message_ja: ID指定が `otp-index` とのみされており、プロジェクト識別子（`＜project-id＞:`）を付与する標準的な ID 命名規則に準拠していない。
-  - id: F002
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 37
-    anchor: "| based_on | 根拠となる仕様ID（ID配列。未指定は `[]` 可） | 任意 |"
-    message: Frontmatter項目に `rulebook` キーの定義がないが、サンプルでは使用されており、必須項目の定義に漏れがある。
-    message_ja: Frontmatter項目に `rulebook` キーの定義がないが、サンプルでは使用されており、必須項目の定義に漏れがある。
+    rule: vp-po-publication-accountability
+    line: 81
+    anchor: "## 7. 禁止事項"
+    message: 初期増員体制（当番）・エスカレーション先・リストア責任者の章は個人名や電話番号などの連絡先を書き込みやすいのに、禁止事項に公開不適切情報（個人名・連絡先）の記載禁止がなく、役割名で書くという制約を足す必要がある。
+    message_ja: 初期増員体制（当番）・エスカレーション先・リストア責任者の章は個人名や電話番号などの連絡先を書き込みやすいのに、禁止事項に公開不適切情報（個人名・連絡先）の記載禁止がなく、役割名で書くという制約を足す必要がある。
+  - id: F002
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 49
+    anchor: "## 5. 本文要件"
+    message: >-
+      本文要件の受入条件と sample が合っておらず、バックアップの保管先、権限の旧新差分、問合せのエスカレーション条件、障害対応の判断・連絡・復旧・報告の流れ、クローズ判断者と最終報告物が sample
+      に欠けているため、sample を補うか受入条件を見直してそろえる必要がある。
+    message_ja: >-
+      本文要件の受入条件と sample が合っておらず、バックアップの保管先、権限の旧新差分、問合せのエスカレーション条件、障害対応の判断・連絡・復旧・報告の流れ、クローズ判断者と最終報告物が sample
+      に欠けているため、sample を補うか受入条件を見直してそろえる必要がある。
   - id: F003
     severity: minor
-    rule: vp-ux-readability
-    line: 57
-    anchor: "## 6. 記述ガイド"
-    message: 記述ガイドが項目の列挙に留まっており、良例（`prj-overview-rulebook.md`）のような「事実と仮説を混ぜない」等の具体的な記述品質への指針が不足している。
-    message_ja: 記述ガイドが項目の列挙に留まっており、良例（`prj-overview-rulebook.md`）のような「事実と仮説を混ぜない」等の具体的な記述品質への指針が不足している。
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# 運用切替計画（ハイパーケア含む） 作成ルール"
+    message: >-
+      Frontmatter の `recipe` と `template` が `undecided` のままで、rulebook・recipe・sample・template
+      の対応関係が定まっていないため、作成するか対象外にする理由を示す必要がある。
+    message_ja: >-
+      Frontmatter の `recipe` と `template` が `undecided` のままで、rulebook・recipe・sample・template
+      の対応関係が定まっていないため、作成するか対象外にする理由を示す必要がある。
+  - id: F004
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 9
+    anchor: "- `otp-index` は切替後の運用が安定するまでの共通方針と判断軸（監視・窓口・ハイパーケア体制・クローズ条件）を定義する入口とする。"
+    message: 全体方針の「ハイパーケア体制」と、必須章名「初期増員体制（期間・当番・SLA）」の関係が書かれておらず同じものか区別できないため、用語をそろえるか、両者が同じであることを明記する必要がある。
+    message_ja: 全体方針の「ハイパーケア体制」と、必須章名「初期増員体制（期間・当番・SLA）」の関係が書かれておらず同じものか区別できないため、用語をそろえるか、両者が同じであることを明記する必要がある。
+  - id: F005
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 1
+    anchor: "# 運用切替計画（ハイパーケア含む） 作成ルール"
+    message: >-
+      `recipe` と `template` が `undecided` のままで、ready にする前にそれらを決めることと sample の受入条件を満たすことが前提として示されていないため、ready
+      にする前の未解決事項として明示する必要がある。
+    message_ja: >-
+      `recipe` と `template` が `undecided` のままで、ready にする前にそれらを決めることと sample の受入条件を満たすことが前提として示されていないため、ready
+      にする前の未解決事項として明示する必要がある。

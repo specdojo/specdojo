@@ -112,6 +112,7 @@ docs だけの項目や、runner の通らないコード（kata、docs-site な
 - orchestrator の commit・merge・add・checkout などは `npx specdojo git --project prj-0001 -- <Git の引数>` で実行し、runner の統合と同じ `exec-lifecycle` ロックに並べる。例: `npx specdojo git --project prj-0001 -- commit -m "docs: update playbook"`。`status`・`log`・`diff` はロックを待たない。ロックなしの commit を検知する pre-commit 警告の設定案は [[prj-0001:pjr-30sa-specdojo-git-serialized|PJR-30SA]] にある。
 - 別の作業ツリー（`../specdojo-prj-0002`）の中で `npx specdojo` を打つと、その作業ツリー自身の `dist/` が動く（このリポジトリはパッケージ `specdojo` 自身のため）。古いブランチでは古い CLI が動くので、本体の `dist/specdojo.js` を直接使うか、その作業ツリーで build する。
 - 保護された設定（`.specdojo/`・`package.json`・`.agents/`・`.claude/`・`.codex/`・`.opencode/`・`CLAUDE.md`・`AGENTS.md`・`lefthook.yml` など）は agent が書けない。変更が要る登録簿項目は、executor に変更案を個票の対応結果と報告の `handoff` に書かせ（result へ直接書ける実行形態だけ result にも）、オーケストレーターが利用者の承認を得て feature ブランチで反映する（PJR-SAZC・PJR-EPQ3）。
+- devcontainer では、exec の worktree（`../worktrees`）と各 `node_modules` が named volume にある（PJR-TATP）。ホストからは container の worktree が見えないため、ホストで `git worktree prune` を流さない（`gc.worktreePruneExpire=never` で `git gc` には消させない）。同じ項目の run を、ホストと container で同時に流さない（worktree が環境ごとに別になる）。ホストで直接動かすときは、ホストで一度 `npm ci` を流す。
 
 ## 8. 別の project との分担
 

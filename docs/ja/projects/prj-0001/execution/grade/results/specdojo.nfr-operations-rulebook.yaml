@@ -4,79 +4,80 @@ document: specdojo:nfr-operations-rulebook
 path: docs/ja/specdojo/rulebooks/nfr-operations-rulebook.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-rulebook
 verdict: needs-work
-score: 93
-graded_at: "2026-11-05T20:25:34.560Z"
-graded_by: flash-high-executor
-content_hash: ef45b6ddcea26263d8175ebe2625a5e702d2b39895763098b6ccc7c61b4f5e46
+score: 78
+graded_at: "2026-11-21T04:44:19.296Z"
+graded_by: opus-executor
+content_hash: 5ab774e436c0715ef522dbd56c4bbd12f342719f13087e4ab42db33a68a67cfc
 categories:
   purpose:
-    score: 100
+    score: 75
   operations:
-    score: 100
+    score: 88
   planning:
-    score: 100
+    score: 75
   business:
-    score: 100
+    score: 75
   architecture:
-    score: 100
+    score: 92
   usability:
-    score: 100
+    score: 75
   implementation:
-    score: 100
+    score: 75
   quality:
-    score: 83
+    score: 75
   consistency:
     score: 75
 viewpoints:
   vp-po-purpose-alignment:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-decision-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-publication-accountability:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-dependency-risk:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-control-reporting:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-business-value:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-requirements-completeness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-stakeholder-clarity:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-technical-constraints:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-change-impact:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
     level: 3
     score: 75
@@ -84,17 +85,17 @@ viewpoints:
     level: 2
     score: 50
   vp-ux-readability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-operability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -104,20 +105,194 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 1
-  minor: 1
+  minor: 21
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-omissions-consistency
+    rule: vp-po-purpose-alignment
+    line: 15
+    anchor: "## 2. 位置づけ"
+    message: >-
+      位置づけ章が関連文書の名前を並べるだけで、`nfr-index` から見た `nfr-operations` の役割や、OPD/OPR・SAC
+      との入出力関係（何を受け取り何を渡すか）を説明していないため、関係を1〜2文か図で補ってください。
+    message_ja: >-
+      位置づけ章が関連文書の名前を並べるだけで、`nfr-index` から見た `nfr-operations` の役割や、OPD/OPR・SAC
+      との入出力関係（何を受け取り何を渡すか）を説明していないため、関係を1〜2文か図で補ってください。
+  - id: F002
+    severity: minor
+    rule: vp-po-decision-readiness
     line: 1
     anchor: "# 非機能要件 / 運用 作成ルール"
-    message: 生成対象ドキュメントの推奨配置ディレクトリ（フォルダ構成）に関する記述を追加してください。
-    message_ja: 生成対象ドキュメントの推奨配置ディレクトリ（フォルダ構成）に関する記述を追加してください。
-  - id: F002
+    message: >-
+      recipe・template が `undecided` のままの理由と判断の時期、sample 是正などの未決事項が本文に示されていないため、`_UNDECIDED_` / `_TODO_`
+      ラベルで論点と次の判断を明記してください。
+    message_ja: >-
+      recipe・template が `undecided` のままの理由と判断の時期、sample 是正などの未決事項が本文に示されていないため、`_UNDECIDED_` / `_TODO_`
+      ラベルで論点と次の判断を明記してください。
+  - id: F003
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 56
+    anchor: "### 6.1. 概要（対象・目的）"
+    message: >-
+      6.1 概要（対象・目的）と 6.2 適用範囲・体制前提の箇条書きがそれぞれ1項目だけで、authoring standard
+      の「各必須章に最低3つ以上の具体項目」を満たさず、章ごとの完了条件を判断できないため、記載必須の項目（対象システム、対象外、運用時間帯、エスカレーション段数など）を補ってください。
+    message_ja: >-
+      6.1 概要（対象・目的）と 6.2 適用範囲・体制前提の箇条書きがそれぞれ1項目だけで、authoring standard
+      の「各必須章に最低3つ以上の具体項目」を満たさず、章ごとの完了条件を判断できないため、記載必須の項目（対象システム、対象外、運用時間帯、エスカレーション段数など）を補ってください。
+  - id: F004
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 12
+    anchor: "- OPR/OPD と接続して実行可能性を担保する。"
+    message: >-
+      「OPR/OPD と接続して実行可能性を担保する」とあるが、どちらを先に作るか、OPR/OPD が未整備のときの扱い、基準値を変えたときに OPR/SAC
+      へ反映する手順が書かれていないため、依存の向きと変更時の連携を明記してください。
+    message_ja: >-
+      「OPR/OPD と接続して実行可能性を担保する」とあるが、どちらを先に作るか、OPR/OPD が未整備のときの扱い、基準値を変えたときに OPR/SAC
+      へ反映する手順が書かれていないため、依存の向きと変更時の連携を明記してください。
+  - id: F005
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 69
+    anchor: "### 6.4. 測定・検証方法"
+    message: 6.4 測定・検証方法で、判定結果が基準を満たさなかったときの記録先（課題登録簿、`dec-*`、`sac-*` のどれか）と担当 Role code が示されていないため、転記先を明記してください。
+    message_ja: 6.4 測定・検証方法で、判定結果が基準を満たさなかったときの記録先（課題登録簿、`dec-*`、`sac-*` のどれか）と担当 Role code が示されていないため、転記先を明記してください。
+  - id: F006
+    severity: minor
+    rule: vp-ba-business-value
+    line: 56
+    anchor: "### 6.1. 概要（対象・目的）"
+    message: 6.1 概要（対象・目的）で、運用要件が守る業務（例：営業時間中の販売継続）と、守れなかったときの業務影響を書くよう求めていないため、業務価値との対応を記述要件に加えてください。
+    message_ja: 6.1 概要（対象・目的）で、運用要件が守る業務（例：営業時間中の販売継続）と、守れなかったときの業務影響を書くよう求めていないため、業務価値との対応を記述要件に加えてください。
+  - id: F007
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 64
+    anchor: "### 6.3. 運用要件一覧"
+    message: 導入文で運用を「監視、バックアップ、手順、体制」と定義しているのに、6.3 運用要件一覧でこの4領域を必ず扱うことや、対象外を明記することを求めていないため、網羅すべき領域と対象外の記載を必須として明記してください。
+    message_ja: 導入文で運用を「監視、バックアップ、手順、体制」と定義しているのに、6.3 運用要件一覧でこの4領域を必ず扱うことや、対象外を明記することを求めていないため、網羅すべき領域と対象外の記載を必須として明記してください。
+  - id: F008
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 69
+    anchor: "### 6.4. 測定・検証方法"
+    message: 判定者や体制の記述に Role code を使う指定がなく、サンプルでも「SRE」「Ops」「PM」が混在しているため、適用先のメンバー定義の Role code で書くことを明記してください。
+    message_ja: 判定者や体制の記述に Role code を使う指定がなく、サンプルでも「SRE」「Ops」「PM」が混在しているため、適用先のメンバー定義の Role code で書くことを明記してください。
+  - id: F009
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 104
+    anchor: "### 8.2. 適用範囲・体制前提（例）"
+    message: >-
+      サンプルの通知経路に PagerDuty・Slack という製品名が書かれているが、本書は「達成基準だけを記述する」（本文11行目）としており、製品の選定は OPD
+      側の責務と読めるため、要件に製品名を書いてよいかの境界を記述ガイドで明記するか、サンプルを手段に依存しない表現にしてください。
+    message_ja: >-
+      サンプルの通知経路に PagerDuty・Slack という製品名が書かれているが、本書は「達成基準だけを記述する」（本文11行目）としており、製品の選定は OPD
+      側の責務と読めるため、要件に製品名を書いてよいかの境界を記述ガイドで明記するか、サンプルを手段に依存しない表現にしてください。
+  - id: F010
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 85
+    anchor: "## 8. サンプル"
+    message: 8章サンプルは表4つを含む完成例に近い内容で、authoring standard の「形式の輪郭が伝わる最小例に限る」を超えているため、完成例は sample 側に置き、ここは列構成がわかる1〜2行の最小例へ絞ってください。
+    message_ja: 8章サンプルは表4つを含む完成例に近い内容で、authoring standard の「形式の輪郭が伝わる最小例に限る」を超えているため、完成例は sample 側に置き、ここは列構成がわかる1〜2行の最小例へ絞ってください。
+  - id: F011
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 33
+    anchor: "| 項目       | 説明                               | 必須 |"
+    message: >-
+      推奨 Frontmatter 表に必須の `status` がなく、`part_of` も表ではスカラー、サンプルでは配列と書き方が一致しないため、`status` 行を追加し、`part_of`
+      の型をスキーマに合わせて統一してください。
+    message_ja: >-
+      推奨 Frontmatter 表に必須の `status` がなく、`part_of` も表ではスカラー、サンプルでは配列と書き方が一致しないため、`status` 行を追加し、`part_of`
+      の型をスキーマに合わせて統一してください。
+  - id: F012
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 13
+    anchor: >-
+      - 共通の運用: 役割の割り当ては適用先のメンバー定義に、`status` の昇格と承認、改訂と廃止、未決事項の登録簿への引き継ぎは
+      [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従い、本書と成果物で言い直さない。文書の整形・lint はリポジトリの検証で扱い、業務の受入確認に含めない。
+    message: >-
+      共通の運用を document-metadata-standard に委ねているだけで、運用要件の基準値を変えたときに追従すべき `sac-*`・`opr-*`・`opd-*` と担当 Role code
+      が定義されていないため、自系統の追従対象を明記してください。
+    message_ja: >-
+      共通の運用を document-metadata-standard に委ねているだけで、運用要件の基準値を変えたときに追従すべき `sac-*`・`opr-*`・`opd-*` と担当 Role code
+      が定義されていないため、自系統の追従対象を明記してください。
+  - id: F013
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 64
+    anchor: "### 6.3. 運用要件一覧"
+    message: 6.3 運用要件一覧の「基準」列に、数値・単位・集計期間（例：月次で 99.5% 以上）で書く要件がなく、pass / fail の判定基準が文書間でぶれるため、基準の記述形式を必須条件として明記してください。
+    message_ja: 6.3 運用要件一覧の「基準」列に、数値・単位・集計期間（例：月次で 99.5% 以上）で書く要件がなく、pass / fail の判定基準が文書間でぶれるため、基準の記述形式を必須条件として明記してください。
+  - id: F014
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 40
+    anchor: "## 5. 本文構成（標準テンプレ）"
+    message: >-
+      authoring standard の標準章構成では5章が「本文要件」で、`template: undecided`
+      の系統は各章の目的と必須・任意を記載するとしているのに、本書は見出しと必須欄だけの「本文構成（標準テンプレ）」になっているため、各章の目的を付けて本文要件として整えてください。
+    message_ja: >-
+      authoring standard の標準章構成では5章が「本文要件」で、`template: undecided`
+      の系統は各章の目的と必須・任意を記載するとしているのに、本書は見出しと必須欄だけの「本文構成（標準テンプレ）」になっているため、各章の目的を付けて本文要件として整えてください。
+  - id: F015
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 119
+    anchor: "| nfr-ops-005 | Runbook は全重要サービスに対して整備されていること | Runbook 網羅率 | 100%       | 重要サービス＝受注・在庫・会計 |"
+    message: サンプルの要件 ID が nfr-ops-001・002・005 と飛んでおり、ID 規則「`nfr-ops-＜連番＞`」の例として誤解を招くため、連番にするか、欠番を許す運用ならその旨を明記してください。
+    message_ja: サンプルの要件 ID が nfr-ops-001・002・005 と飛んでおり、ID 規則「`nfr-ops-＜連番＞`」の例として誤解を招くため、連番にするか、欠番を許す運用ならその旨を明記してください。
+  - id: F016
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# 非機能要件 / 運用 作成ルール"
     message: 参照サンプル specdojo:nfr-operations-sample の構成がルールブックで定義した標準テンプレ（第5節）に準拠しておらず、正しくない例となっている。
     message_ja: 参照サンプル specdojo:nfr-operations-sample の構成がルールブックで定義した標準テンプレ（第5節）に準拠しておらず、正しくない例となっている。
+  - id: F017
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 85
+    anchor: "## 8. サンプル"
+    message: サンプル章が見出しと表を本文に直接並べており、authoring standard の「最小例をコードブロックで本文内に自己完結して埋め込む」を満たさないため、コードブロック内に収めた最小例へ改めてください。
+    message_ja: サンプル章が見出しと表を本文に直接並べており、authoring standard の「最小例をコードブロックで本文内に自己完結して埋め込む」を満たさないため、コードブロック内に収めた最小例へ改めてください。
+  - id: F018
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 102
+    anchor: 本書は、GCS 基幹システムの運用要件を定義する。
+    message: rulebook 内のサンプルが GCS 基幹システムを題材にしており、sample の駄菓子屋の販売管理システムという共通サンプル文脈と食い違うため、題材を共通サンプル文脈に揃えてください。
+    message_ja: rulebook 内のサンプルが GCS 基幹システムを題材にしており、sample の駄菓子屋の販売管理システムという共通サンプル文脈と食い違うため、題材を共通サンプル文脈に揃えてください。
+  - id: F019
+    severity: minor
+    rule: vp-ux-readability
+    line: 17
+    anchor: "- `nfr-operations`：運用要求の正本"
+    message: 位置づけ章の `nfr-index` と `opd-*` / `opr-*` の行で読む順序や利用場面が示されておらず、初見の読者が次に見る文書を判断しにくいため、利用場面（いつ参照するか）を補ってください。
+    message_ja: 位置づけ章の `nfr-index` と `opd-*` / `opr-*` の行で読む順序や利用場面が示されておらず、初見の読者が次に見る文書を判断しにくいため、利用場面（いつ参照するか）を補ってください。
+  - id: F020
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 11
+    anchor: "- 運用手順そのものは OPR に置き、本書には満たすべき運用結果（達成基準）だけを記述する。"
+    message: 成果物の略称が「OPR/OPD」（本文11〜12行目）と `opd-*` / `opr-*`（本文19行目）で混在し、要件 ID の列名も `id`（6.3）と「要件ID」（8.4）でゆれているため、表記を統一してください。
+    message_ja: 成果物の略称が「OPR/OPD」（本文11〜12行目）と `opd-*` / `opr-*`（本文19行目）で混在し、要件 ID の列名も `id`（6.3）と「要件ID」（8.4）でゆれているため、表記を統一してください。
+  - id: F021
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 1
+    anchor: "# 非機能要件 / 運用 作成ルール"
+    message: ready 化の前提となる未解決事項（sample の構成是正、サンプル章のコードブロック化、recipe・template の要否判断）が本文に示されていないため、ready 条件として明記してください。
+    message_ja: ready 化の前提となる未解決事項（sample の構成是正、サンプル章のコードブロック化、recipe・template の要否判断）が本文に示されていないため、ready 条件として明記してください。
+  - id: F022
+    severity: minor
+    rule: vp-ops-operability
+    line: 69
+    anchor: "### 6.4. 測定・検証方法"
+    message: 6.4 で判定タイミングは求めているが、判定結果を受けて運用要件の基準値を見直す契機と担当 Role code を書く指針がないため、見直しの契機と責任者を記述要件に加えてください。
+    message_ja: 6.4 で判定タイミングは求めているが、判定結果を受けて運用要件の基準値を見直す契機と担当 Role code を書く指針がないため、見直しの契機と責任者を記述要件に加えてください。

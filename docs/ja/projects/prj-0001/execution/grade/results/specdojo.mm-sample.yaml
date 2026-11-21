@@ -4,37 +4,38 @@ document: specdojo:mm-sample
 path: docs/ja/specdojo/samples/mm-sample.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-sample
 verdict: pass
-score: 95
-graded_at: "2026-10-12T21:29:13.367Z"
-graded_by: agy-expert-executor
+score: 86
+graded_at: "2026-11-21T04:30:57.291Z"
+graded_by: opus-executor
 content_hash: 0443aec4290f714977287b7bd4a2e34904ce16753ab1a428cb00ae3b3c6fd1b9
 categories:
   purpose:
-    score: 100
+    score: 75
   operations:
-    score: 100
+    score: 88
   planning:
-    score: 100
+    score: 83
   business:
-    score: 100
+    score: 75
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 83
   implementation:
-    score: 100
+    score: 88
   quality:
     score: 92
   consistency:
     score: 75
 viewpoints:
   vp-po-purpose-alignment:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-decision-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-publication-accountability:
     level: 4
     score: 100
@@ -42,20 +43,20 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-dependency-risk:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-control-reporting:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-business-value:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-requirements-completeness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-stakeholder-clarity:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-technical-constraints:
     level: 4
     score: 100
@@ -69,8 +70,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-change-impact:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-testability:
     level: 4
     score: 100
@@ -84,17 +85,17 @@ viewpoints:
     level: 3
     score: 75
   vp-ux-readability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-operability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -104,20 +105,108 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 2
+  minor: 14
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-omissions-consistency
+    rule: vp-po-purpose-alignment
     line: 1
     anchor: "# 議事録 サンプル"
-    message: Frontmatterのidがルールブックで定義された命名規則(mm-＜yyyy-mm-dd＞-＜nn＞)に準拠していない。
-    message_ja: Frontmatterのidがルールブックで定義された命名規則(mm-＜yyyy-mm-dd＞-＜nn＞)に準拠していない。
+    message: H1 直後に導入文がなく、この会議が「駄菓子屋きぬや 販売管理システム構築」の欠品削減という目的のどこに当たるかを本文から読み取れないため、会議の目的と関連するプロジェクト概要への参照を1〜2文で加えるべきである。
+    message_ja: H1 直後に導入文がなく、この会議が「駄菓子屋きぬや 販売管理システム構築」の欠品削減という目的のどこに当たるかを本文から読み取れないため、会議の目的と関連するプロジェクト概要への参照を1〜2文で加えるべきである。
   - id: F002
     severity: minor
+    rule: vp-po-decision-readiness
+    line: 13
+    anchor: "- 次週リリース対象の最終確認"
+    message: 議題「次週リリース対象の最終確認」に対応する決定事項・保留事項がどこにもなく結論が不明なため、決定として記録するか、保留事項として次回確認日を付けて記載するべきである。
+    message_ja: 議題「次週リリース対象の最終確認」に対応する決定事項・保留事項がどこにもなく結論が不明なため、決定として記録するか、保留事項として次回確認日を付けて記載するべきである。
+  - id: F003
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 17
+    anchor: "| No. | 決定事項                                      | 決定者   |"
+    message: rulebook の「位置づけ」が求める進捗報告・課題ログとの相互参照の実例がなく、アクションや決定が後続の成果物・スケジュールへ与える影響を追えないため、関連文書への参照（仮置きのバッククォート表記でも可）を示すべきである。
+    message_ja: rulebook の「位置づけ」が求める進捗報告・課題ログとの相互参照の実例がなく、アクションや決定が後続の成果物・スケジュールへ与える影響を追えないため、関連文書への参照（仮置きのバッククォート表記でも可）を示すべきである。
+  - id: F004
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 23
+    anchor: ""
+    message: 保留事項や課題ログへの転記候補を記録する箇所がなく、決定とアクション以外の管理事項の扱いが見本として示されていないため、保留事項（次回確認日付き）の例を加えるべきである。
+    message_ja: 保留事項や課題ログへの転記候補を記録する箇所がなく、決定とアクション以外の管理事項の扱いが見本として示されていないため、保留事項（次回確認日付き）の例を加えるべきである。
+  - id: F005
+    severity: minor
+    rule: vp-ba-business-value
+    line: 27
+    anchor: "| 2   | 欠品速報運用ルールを周知する。   | 業務担当 | 2026-04-21 |"
+    message: 決定事項「補充判定のしきい値を在庫3以下に統一する」の判断理由（週次の欠品状況レビューで何が分かったか）が記録されておらず、後から決定の妥当性を確認できないため、議論要旨か理由を1行添えるべきである。
+    message_ja: 決定事項「補充判定のしきい値を在庫3以下に統一する」の判断理由（週次の欠品状況レビューで何が分かったか）が記録されておらず、後から決定の妥当性を確認できないため、議論要旨か理由を1行添えるべきである。
+  - id: F006
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 21
+    anchor: ""
+    message: rulebook 記述ガイドの「保留事項は次回確認日を記載する」に当たる実例がなく、sample として要求項目をすべて示していないため、次回確認日付きの保留事項を1件以上示すべきである。
+    message_ja: rulebook 記述ガイドの「保留事項は次回確認日を記載する」に当たる実例がなく、sample として要求項目をすべて示していないため、次回確認日付きの保留事項を1件以上示すべきである。
+  - id: F007
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 15
+    anchor: "## 3. 決定事項"
+    message: 参加者「店主」「業務担当」は共通登場人物に定義された役割名ではなく、とくに「業務担当」は誰を指すか特定できないため、「店主代表」「店舗運営アドバイザー」など共通登場人物の役割名に揃えるべきである。
+    message_ja: 参加者「店主」「業務担当」は共通登場人物に定義された役割名ではなく、とくに「業務担当」は誰を指すか特定できないため、「店主代表」「店舗運営アドバイザー」など共通登場人物の役割名に揃えるべきである。
+  - id: F008
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 27
+    anchor: "| 2   | 欠品速報運用ルールを周知する。   | 業務担当 | 2026-04-21 |"
+    message: 補充しきい値の統一が影響する成果物（要件・設定・運用ルール）が示されておらず、決定の反映漏れを追跡できないため、反映先をアクションまたは備考で明示するべきである。
+    message_ja: 補充しきい値の統一が影響する成果物（要件・設定・運用ルール）が示されておらず、決定の反映漏れを追跡できないため、反映先をアクションまたは備考で明示するべきである。
+  - id: F009
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 17
+    anchor: "| No. | 決定事項                                      | 決定者   |"
+    message: rulebook 記述ガイドの保留事項・次回確認日と、議題「次週リリース対象の最終確認」の結論が欠けており、議題と決定・アクションの対応に抜けがあるため、各議題の結論または保留を記録するべきである。
+    message_ja: rulebook 記述ガイドの保留事項・次回確認日と、議題「次週リリース対象の最終確認」の結論が欠けており、議題と決定・アクションの対応に抜けがあるため、各議題の結論または保留を記録するべきである。
+  - id: F010
+    severity: minor
     rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 議事録 サンプル"
-    message: サンプルのidがルールブックの定義する形式に準拠しておらず、正解例としての役割を十分に果たしていない。
-    message_ja: サンプルのidがルールブックの定義する形式に準拠しておらず、正解例としての役割を十分に果たしていない。
+    line: 15
+    anchor: "## 3. 決定事項"
+    message: >-
+      sample が完成例として rulebook の保留事項・相互参照の要求を示しておらず、参加者の役割名も共通登場人物の定義（店主代表など）と一致しないため、rulebook と
+      sample-authoring-standard に揃えるべきである。
+    message_ja: >-
+      sample が完成例として rulebook の保留事項・相互参照の要求を示しておらず、参加者の役割名も共通登場人物の定義（店主代表など）と一致しないため、rulebook と
+      sample-authoring-standard に揃えるべきである。
+  - id: F011
+    severity: minor
+    rule: vp-ux-readability
+    line: 9
+    anchor: "## 2. 議題"
+    message: H1 直後に会議の目的や関連文書を示す導入文がなく、初めて読む人がこの議事録の位置づけと次に見る文書を把握できないため、短い導入文を加えるべきである。
+    message_ja: H1 直後に会議の目的や関連文書を示す導入文がなく、初めて読む人がこの議事録の位置づけと次に見る文書を把握できないため、短い導入文を加えるべきである。
+  - id: F012
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 15
+    anchor: "## 3. 決定事項"
+    message: 役割名「店主」「業務担当」が共通登場人物の役割名（店主代表・開発担当など）と表記ゆれしており、決定者・担当者の表でも同じ呼称が繰り返されるため、定義済みの役割名に統一するべきである。
+    message_ja: 役割名「店主」「業務担当」が共通登場人物の役割名（店主代表・開発担当など）と表記ゆれしており、決定者・担当者の表でも同じ呼称が繰り返されるため、定義済みの役割名に統一するべきである。
+  - id: F013
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 21
+    anchor: ""
+    message: 議題「次週リリース対象の最終確認」の結果が記録されておらず、リリース判断の結論または未解決事項が議事録から読み取れないため、判断結果か保留理由と次回確認日を記載するべきである。
+    message_ja: 議題「次週リリース対象の最終確認」の結果が記録されておらず、リリース判断の結論または未解決事項が議事録から読み取れないため、判断結果か保留理由と次回確認日を記載するべきである。
+  - id: F014
+    severity: minor
+    rule: vp-ops-operability
+    line: 14
+    anchor: ""
+    message: 定例会議でありながら次回開催日やアクションの確認時期が記載されておらず、宿題の追跡導線が途切れるため、次回予定を会議情報または末尾に加えるべきである。
+    message_ja: 定例会議でありながら次回開催日やアクションの確認時期が記載されておらず、宿題の追跡導線が途切れるため、次回予定を会議情報または末尾に加えるべきである。

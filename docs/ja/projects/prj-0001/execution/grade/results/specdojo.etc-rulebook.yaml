@@ -4,11 +4,12 @@ document: specdojo:etc-rulebook
 path: docs/ja/specdojo/rulebooks/etc-rulebook.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-rulebook
 verdict: needs-work
-score: 88
-graded_at: "2026-10-31T20:40:38.986Z"
-graded_by: flash-high-executor
-content_hash: 61c2d0e9a4fd7275b32da8e38e23e82de767e9b1d7aae1039bdf0048837f01c0
+score: 90
+graded_at: "2026-11-21T03:56:38.872Z"
+graded_by: opus-executor
+content_hash: 7376a48b94a718845fc4cf5a04355e474a78a6f6872407de8ffc1925fdc42520
 categories:
   purpose:
     score: 100
@@ -23,11 +24,11 @@ categories:
   usability:
     score: 92
   implementation:
-    score: 100
+    score: 88
   quality:
     score: 83
   consistency:
-    score: 50
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -66,8 +67,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-change-impact:
     level: 4
     score: 100
@@ -78,8 +79,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
     level: 2
     score: 50
@@ -103,32 +104,50 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 2
-  minor: 1
+  major: 1
+  minor: 4
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 60
-    anchor: "| ---------- | -------------------------------------------------------------------------------- | ---- |"
-    message: >-
-      Frontmatter 必須項目へ `rulebook: specdojo:etc-rulebook` を追加し、`title` を除外したうえで、最小例を `specdojo:`
-      名前空間で包まなければ参照スキーマを満たせない。
-    message_ja: >-
-      Frontmatter 必須項目へ `rulebook: specdojo:etc-rulebook` を追加し、`title` を除外したうえで、最小例を `specdojo:`
-      名前空間で包まなければ参照スキーマを満たせない。
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 149
+    anchor: "- 観点名（見出し）は改善のため変更してよいが、`perspective_key` は原則変更しない"
+    message: "`perspective_key` は原則変更しないとされているが、観点ごとにどこで宣言するか（見出し直下の記載や意図節の項目など）が定義されておらず、最小例にも欄がないため、宣言場所と書式を本文要件に追加する必要がある。"
+    message_ja: "`perspective_key` は原則変更しないとされているが、観点ごとにどこで宣言するか（見出し直下の記載や意図節の項目など）が定義されておらず、最小例にも欄がないため、宣言場所と書式を本文要件に追加する必要がある。"
   - id: F002
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 151
+    anchor: "##### 6.6.1.1. 意図"
+    message: >-
+      「意図」「条件・ケース表」の節が H5（`##### 6.6.1.1.` / `##### 6.6.1.2.`）になっており Markdown 記述ルールの H5 禁止に反するため、`#### 6.6.1.`
+      配下を箇条書きにするか階層を組み替えて H4 以内に収める必要がある。
+    message_ja: >-
+      「意図」「条件・ケース表」の節が H5（`##### 6.6.1.1.` / `##### 6.6.1.2.`）になっており Markdown 記述ルールの H5 禁止に反するため、`#### 6.6.1.`
+      配下を箇条書きにするか階層を組み替えて H4 以内に収める必要がある。
+  - id: F003
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 145
+    anchor: "#### 6.6.1. 観点:<観点>"
+    message: >-
+      見出し `観点:＜観点＞` と本文51行目の「外部結合テストカタログ: ＜対象名＞」で山括弧付きプレースホルダがインラインコードで囲まれておらず HTML タグと誤認されるため、`観点:＜観点＞`・`外部結合テストカタログ:
+      ＜対象名＞` のようにインラインコードで記述する必要がある。
+    message_ja: >-
+      見出し `観点:＜観点＞` と本文51行目の「外部結合テストカタログ: ＜対象名＞」で山括弧付きプレースホルダがインラインコードで囲まれておらず HTML タグと誤認されるため、`観点:＜観点＞`・`外部結合テストカタログ:
+      ＜対象名＞` のようにインラインコードで記述する必要がある。
+  - id: F004
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# 外部結合テストカタログ 対象別 作成ルール"
     message: 対応 sample が本書必須の1〜6章、trace_key、条件・ケース表を欠き、独自の章構成と「責任者」など本書にない必須観点を示しているため、本書と同じ成果物形式へ同期する必要がある。
     message_ja: 対応 sample が本書必須の1〜6章、trace_key、条件・ケース表を欠き、独自の章構成と「責任者」など本書にない必須観点を示しているため、本書と同じ成果物形式へ同期する必要がある。
-  - id: F003
+  - id: F005
     severity: minor
     rule: vp-ux-language-consistency
-    line: 290
-    anchor: ""
-    message: 標準見出しの `観点:＜観点＞` と最小例の `観点：再送と冪等性` でコロン表記が異なるため、生成物で採用する表記へ統一する必要がある。
-    message_ja: 標準見出しの `観点:＜観点＞` と最小例の `観点：再送と冪等性` でコロン表記が異なるため、生成物で採用する表記へ統一する必要がある。
+    line: 71
+    anchor: "| 7    | 実行運用メモ（データ/後始末/制約） | 任意 |"
+    message: 章構成表の「実行運用メモ（データ/後始末/制約）」と記述ガイド見出し「実行運用メモ（任意）」が「同名の章に対応する」とした規定に反して一致しないため、成果物で使う見出し名に統一する必要がある。
+    message_ja: 章構成表の「実行運用メモ（データ/後始末/制約）」と記述ガイド見出し「実行運用メモ（任意）」が「同名の章に対応する」とした規定に反して一致しないため、成果物で使う見出し名に統一する必要がある。

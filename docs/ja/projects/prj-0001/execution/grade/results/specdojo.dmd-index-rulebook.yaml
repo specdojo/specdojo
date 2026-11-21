@@ -4,11 +4,12 @@ document: specdojo:dmd-index-rulebook
 path: docs/ja/specdojo/rulebooks/dmd-index-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
+reference: specdojo:prj-overview-rulebook
+verdict: pass
 score: 93
-graded_at: "2026-10-31T20:32:50.094Z"
-graded_by: flash-high-executor
-content_hash: b6d56780cf154fa0de2da59fdfd3c629b45d25f1fd90e303b3bed00c845c5c75
+graded_at: "2026-11-21T03:45:52.609Z"
+graded_by: opus-executor
+content_hash: f2461769f960170b085f5e5faefca114c93983e470a6078e8ba886b3ecb7e762
 categories:
   purpose:
     score: 100
@@ -21,13 +22,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 83
+    score: 92
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 92
   consistency:
-    score: 100
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -75,14 +76,14 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
-  vp-qe-kata-conformance:
-    level: 2
-    score: 50
-  vp-ux-readability:
     level: 3
     score: 75
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 3
     score: 75
@@ -100,28 +101,36 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 2
+  major: 0
+  minor: 3
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 36
-    anchor: "| supersedes | 置き換え関係（ID配列。未指定は `[]` 可） | 任意 |"
-    message: Frontmatter の type, title, id の定義ルールが、対応するサンプル成果物 dmd-index-sample.md の実態と矛盾している。
-    message_ja: Frontmatter の type, title, id の定義ルールが、対応するサンプル成果物 dmd-index-sample.md の実態と矛盾している。
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 19
+    anchor: "- ファイル名の例: `dmd-index.md`。"
+    message: >-
+      ファイル命名・ID規則の章にファイル名の例しかなく、プロジェクト内の配置先（どの章ディレクトリに置くか、`docs-structure-guide`
+      への参照）が定められていないため、作成者によって配置場所がばらつくおそれがある。
+    message_ja: >-
+      ファイル命名・ID規則の章にファイル名の例しかなく、プロジェクト内の配置先（どの章ディレクトリに置くか、`docs-structure-guide`
+      への参照）が定められていないため、作成者によって配置場所がばらつくおそれがある。
   - id: F002
     severity: minor
-    rule: vp-ux-readability
-    line: 38
-    anchor: "## 5. 本文構成（標準テンプレ）"
-    message: 推奨 Frontmatter 項目や本文構成の表の途中に空行が含まれており、Markdownの表として正しく描画されない箇所がある。
-    message_ja: 推奨 Frontmatter 項目や本文構成の表の途中に空行が含まれており、Markdownの表として正しく描画されない箇所がある。
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# データ移行設計 作成ルール"
+    message: >-
+      Frontmatter の `recipe` と `template` が `undecided` のままで、本文にも作成予定や未決事項の記述がないため、Kata
+      の一式（rulebook・recipe・sample・template）の対応を確かめられない。対応する recipe と template を定めるか、未決事項として扱いを明記する必要がある。
+    message_ja: >-
+      Frontmatter の `recipe` と `template` が `undecided` のままで、本文にも作成予定や未決事項の記述がないため、Kata
+      の一式（rulebook・recipe・sample・template）の対応を確かめられない。対応する recipe と template を定めるか、未決事項として扱いを明記する必要がある。
   - id: F003
     severity: minor
     rule: vp-ux-language-consistency
-    line: 23
-    anchor: "- `id` は `dmd-index` を使用する。"
-    message: "ID規則において、プロジェクトIDを含む具体的な命名パターン（例: ＜project-id＞:dmd-index）が明示されていない。"
-    message_ja: "ID規則において、プロジェクトIDを含む具体的な命名パターン（例: ＜project-id＞:dmd-index）が明示されていない。"
+    line: 39
+    anchor: "- 対象一覧の推奨列: 区分、対象（論理名）、旧→新、方針（フル/増分）、担当、対応DMD。"
+    message: 対象一覧の推奨列「担当」に書く値（適用先のメンバー定義にある Role code など）が定められておらず、sample では独自の略称 `Mig` が使われているため、表記を統一する基準を明記する必要がある。
+    message_ja: 対象一覧の推奨列「担当」に書く値（適用先のメンバー定義にある Role code など）が定められておらず、sample では独自の略称 `Mig` が使われているため、表記を統一する基準を明記する必要がある。

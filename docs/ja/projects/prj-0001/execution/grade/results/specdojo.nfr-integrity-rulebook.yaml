@@ -4,30 +4,31 @@ document: specdojo:nfr-integrity-rulebook
 path: docs/ja/specdojo/rulebooks/nfr-integrity-rulebook.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-rulebook
 verdict: needs-work
-score: 94
-graded_at: "2026-11-02T20:38:51.590Z"
-graded_by: flash-high-executor
-content_hash: cfd8d277cd8ecabf0290d96ba6a249cf477b20815345e6cf103ce4c1ded3287f
+score: 85
+graded_at: "2026-11-21T04:39:43.589Z"
+graded_by: opus-executor
+content_hash: 7c725b6a4ad6c73f0181c68385ba7019f331cca1c7dd53daae6e10f95538dcc5
 categories:
   purpose:
     score: 100
   operations:
-    score: 100
+    score: 94
   planning:
-    score: 100
+    score: 92
   business:
-    score: 100
+    score: 83
   architecture:
     score: 100
   usability:
-    score: 92
-  implementation:
-    score: 100
-  quality:
     score: 83
+  implementation:
+    score: 88
+  quality:
+    score: 75
   consistency:
-    score: 100
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -42,32 +43,32 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-dependency-risk:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-control-reporting:
     level: 4
     score: 100
   vp-ba-business-value:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-requirements-completeness:
     level: 4
     score: 100
   vp-ba-stakeholder-clarity:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-change-impact:
     level: 4
     score: 100
@@ -75,11 +76,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
     level: 2
     score: 50
@@ -90,8 +91,8 @@ viewpoints:
     level: 3
     score: 75
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-operability:
     level: 4
     score: 100
@@ -104,20 +105,120 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 1
-  minor: 1
+  minor: 13
   note: 0
 findings:
   - id: F001
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 43
+    anchor: "- 改ざん防止・監査要件は運用/監査ポリシーとの整合を取る。"
+    message: >-
+      改ざん防止・監査要件の整合先が「運用/監査ポリシー」とだけ書かれ、文書 ID が示されていない。改ざん耐性はセキュリティ系 NFR
+      と範囲が重なりやすいため、責務の境界と依存先の文書を明記して、重複や抜けのリスクを識別できるようにする必要がある。
+    message_ja: >-
+      改ざん防止・監査要件の整合先が「運用/監査ポリシー」とだけ書かれ、文書 ID が示されていない。改ざん耐性はセキュリティ系 NFR
+      と範囲が重なりやすいため、責務の境界と依存先の文書を明記して、重複や抜けのリスクを識別できるようにする必要がある。
+  - id: F002
+    severity: minor
+    rule: vp-ba-business-value
+    line: 63
+    anchor: "- どの業務データの正確性を担保するかを明記する。"
+    message: 概要の記述ガイドが「どの業務データの正確性を担保するか」だけで、完全性が損なわれたときの業務影響や、重要記録を選ぶ基準を書くよう求めていない。そのため各要件と業務価値の対応を説明できない。影響と優先度の記述を求める必要がある。
+    message_ja: 概要の記述ガイドが「どの業務データの正確性を担保するか」だけで、完全性が損なわれたときの業務影響や、重要記録を選ぶ基準を書くよう求めていない。そのため各要件と業務価値の対応を説明できない。影響と優先度の記述を求める必要がある。
+  - id: F003
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 76
+    anchor: "- 整合性チェック、監査レビュー、試験で判定する。"
+    message: >-
+      測定・検証方法のガイドが判定者・確認者の記述を求めていない。例（本文 130 行目以降）の判定者も DBA / SRE / QA という職種名で、Role code ではない。判定者の列を必須にし、メンバー定義の Role
+      code で書くよう定める必要がある。
+    message_ja: >-
+      測定・検証方法のガイドが判定者・確認者の記述を求めていない。例（本文 130 行目以降）の判定者も DBA / SRE / QA という職種名で、Role code ではない。判定者の列を必須にし、メンバー定義の Role
+      code で書くよう定める必要がある。
+  - id: F004
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 90
+    anchor: "## 8. サンプル"
+    message: >-
+      「サンプル」の章が Frontmatter で宣言した sample と役割を重複して持っている。5 章分の完成例は `specdojo:nfr-integrity-sample` へ移し、rulebook
+      からは削るか、sample 側へ委ねる形にまとめる必要がある。
+    message_ja: >-
+      「サンプル」の章が Frontmatter で宣言した sample と役割を重複して持っている。5 章分の完成例は `specdojo:nfr-integrity-sample` へ移し、rulebook
+      からは削るか、sample 側へ委ねる形にまとめる必要がある。
+  - id: F005
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 25
+    anchor: "- 生成対象ドキュメントIDは `nfr-integrity` を推奨する。"
+    message: >-
+      生成する文書の ID に `nfr-integrity` を推奨しているが、プロジェクト成果物の ID は `＜project-id＞:nfr-integrity` のように project 修飾にする必要がある。このままでは
+      ID の一意性や wikilink の解決を損なう。
+    message_ja: >-
+      生成する文書の ID に `nfr-integrity` を推奨しているが、プロジェクト成果物の ID は `＜project-id＞:nfr-integrity` のように project 修飾にする必要がある。このままでは
+      ID の一意性や wikilink の解決を損なう。
+  - id: F006
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 76
+    anchor: "- 整合性チェック、監査レビュー、試験で判定する。"
+    message: 測定・検証方法のガイドが判定のタイミング・判定者・合否条件を必須にしておらず、要件表の「基準」を数値・単位・期間で書くよう求める規定もない。pass / fail を判定できない記述を防げない。
+    message_ja: 測定・検証方法のガイドが判定のタイミング・判定者・合否条件を必須にしておらず、要件表の「基準」を数値・単位・期間で書くよう求める規定もない。pass / fail を判定できない記述を防げない。
+  - id: F007
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 67
+    anchor: "- 対象データ、整合性境界、例外条件を記述する。"
+    message: 禁止事項で監査証跡の保持基準の省略を禁じているのに、適用範囲・前提条件と要件一覧のガイドに保持期間を書く項目がない。禁止事項に対応する書き方の指示を加える必要がある。
+    message_ja: 禁止事項で監査証跡の保持基準の省略を禁じているのに、適用範囲・前提条件と要件一覧のガイドに保持期間を書く項目がない。禁止事項に対応する書き方の指示を加える必要がある。
+  - id: F008
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 34
+    anchor: "| 項目       | 説明                              | 必須 |"
+    message: "Frontmatter の表に `status` がなく、例の YAML（`status: draft`）や良い実例の項目と一致していない。"
+    message_ja: "Frontmatter の表に `status` がなく、例の YAML（`status: draft`）や良い実例の項目と一致していない。"
+  - id: F009
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 125
+    anchor: "| nfr-int-004 | 金額データの改ざんを検知できること     | 改ざん検知漏れ率 | 0%      | HMAC / デジタル署名        |"
+    message: 例の要件 ID が `nfr-int-001, 002, 004, 006` と飛んでおり、本文 26 行目の「`nfr-int-＜連番＞`」の規定と矛盾する。
+    message_ja: 例の要件 ID が `nfr-int-001, 002, 004, 006` と飛んでおり、本文 26 行目の「`nfr-int-＜連番＞`」の規定と矛盾する。
+  - id: F010
     severity: major
     rule: vp-qe-kata-conformance
     line: 2
     anchor: ""
     message: 指定されたサンプルの構成が本ルールの必須見出し構成（5章）に準拠していない。
     message_ja: 指定されたサンプルの構成が本ルールの必須見出し構成（5章）に準拠していない。
-  - id: F002
+  - id: F011
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 107
+    anchor: 本書は、GCS 基幹システムの受注・在庫・会計データについて、正確性と監査対応の追跡可能性を担保する完全性要件を定義する。
+    message: rulebook の中の例が「GCS 基幹システム」を題材にしており、共通サンプル文脈（駄菓子屋）と一致していない。sample と同じ文脈にそろえるか、例を sample へ移す必要がある。
+    message_ja: rulebook の中の例が「GCS 基幹システム」を題材にしており、共通サンプル文脈（駄菓子屋）と一致していない。sample と同じ文脈にそろえるか、例を sample へ移す必要がある。
+  - id: F012
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# 非機能要件 / 完全性 作成ルール"
+    message: Frontmatter の `recipe` / `template` が `undecided` のままで、Kata の rulebook / recipe / sample / template の対応関係が定まっていない。
+    message_ja: Frontmatter の `recipe` / `template` が `undecided` のままで、Kata の rulebook / recipe / sample / template の対応関係が定まっていない。
+  - id: F013
     severity: minor
     rule: vp-ux-language-consistency
-    line: 151
-    anchor: "| nfr-int-007 | 外部連携データの取り込みは検証済みであること | 検証バイパス率     | 0%       | スキーマ検証 + ビジネスルール |"
-    message: 「冔等キー」は「冪等キー」の誤記である。
-    message_ja: 「冔等キー」は「冪等キー」の誤記である。
+    line: 130
+    anchor: "| 要件ID      | 測定方法                                   | 判定タイミング   | 判定者    |"
+    message: 例の判定者が DBA / SRE / QA という職種名で、Role code と統一されていない。また「整合性チェック」（本文 76 行目）と「日次整合チェック」（本文 123・132 行目）で呼び名が揺れている。
+    message_ja: 例の判定者が DBA / SRE / QA という職種名で、Role code と統一されていない。また「整合性チェック」（本文 76 行目）と「日次整合チェック」（本文 123・132 行目）で呼び名が揺れている。
+  - id: F014
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 1
+    anchor: "# 非機能要件 / 完全性 作成ルール"
+    message: "`recipe` / `template` が `undecided`、sample の構成が不一致という ready 前の未解決事項が明示されておらず、ready にする前提条件を判断できない。"
+    message_ja: "`recipe` / `template` が `undecided`、sample の構成が不一致という ready 前の未解決事項が明示されておらず、ready にする前提条件を判断できない。"

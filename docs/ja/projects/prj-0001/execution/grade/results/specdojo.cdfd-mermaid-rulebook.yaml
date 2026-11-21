@@ -4,26 +4,27 @@ document: specdojo:cdfd-mermaid-rulebook
 path: docs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-rulebook
 verdict: needs-work
-score: 77
-graded_at: "2026-11-01T20:13:39.621Z"
-graded_by: flash-high-executor
-content_hash: 9a079c2f42ee18631123c145829148da533bb8016251a21e230fe39257ede83a
+score: 78
+graded_at: "2026-11-21T03:14:05.763Z"
+graded_by: opus-executor
+content_hash: 303de268a3322d4197f2bbfe188bfc298d488cfe6b2840d8a9daa5f2e73a2292
 categories:
   purpose:
-    score: 75
+    score: 88
   operations:
-    score: 69
+    score: 88
   planning:
     score: 75
   business:
-    score: 92
+    score: 100
   architecture:
     score: 92
   usability:
-    score: 100
+    score: 83
   implementation:
-    score: 63
+    score: 75
   quality:
     score: 58
   consistency:
@@ -33,11 +34,11 @@ viewpoints:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 2
-    score: 50
-  vp-po-publication-accountability:
     level: 3
     score: 75
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
   vp-pm-plan-feasibility:
     level: 3
     score: 75
@@ -54,14 +55,14 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-stakeholder-clarity:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
     level: 3
     score: 75
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -69,8 +70,8 @@ viewpoints:
     level: 3
     score: 75
   vp-dev-change-impact:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-dev-testability:
     level: 2
     score: 50
@@ -87,14 +88,14 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ops-operability:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -103,62 +104,46 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 7
-  minor: 7
+  major: 3
+  minor: 13
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-po-decision-readiness
-    line: 66
-    anchor: "## 5. 本文構成（標準テンプレ）"
-    message: "`ready` 昇格の判断に用いる完成判定、未決事項の有無、承認者、次アクションが定義されていないため、PO は承認・保留・差し戻しを一意に判断できない。"
-    message_ja: "`ready` 昇格の判断に用いる完成判定、未決事項の有無、承認者、次アクションが定義されていないため、PO は承認・保留・差し戻しを一意に判断できない。"
-  - id: F002
     severity: minor
-    rule: vp-po-publication-accountability
+    rule: vp-po-decision-readiness
     line: 5
     anchor: >-
-      Mermaid の `flowchart` 構文で CDFD
-      のプロセス、イベント、データストア、外部主体、情報・物の流れを一貫して表すための記法ルールです。`specdojo:cdfd-overview-rulebook`、`specdojo:cdfd-rulebook`、`specdojo:cdfd-uc-rulebook`
-      の `includes` から適用される共通部品です。対象プロダクトの `cdfd-overview` に「凡例（本プロダクト共通）」がある場合はその割り当てを正本とし、共通凡例がない場合は本 rulebook
-      の形状・線種と既定の色・絵文字方針に従います。
-    message: 共通記法の内容に非公開情報は見当たらないが、`draft` から公開可能な状態へ移す人間の承認責任と承認記録の所在を明示する必要がある。
-    message_ja: 共通記法の内容に非公開情報は見当たらないが、`draft` から公開可能な状態へ移す人間の承認責任と承認記録の所在を明示する必要がある。
-  - id: F003
+      Mermaid の `flowchart` で CDFD のプロセス・イベント・データストア・外部主体・受け渡しを表す記法ルールです。全体概要・プロセスグループ別・ユースケース別 CDFD の主 rulebook の
+      `includes` から適用します。プロダクト固有の割り当ては全体概要の「凡例（本プロダクト共通）」、共通凡例がなければ本書の既定凡例を使います。
+    message: >-
+      Approval and status now come from the metadata standard, so this drops from the previous major. The rulebook still
+      does not say why it stays `draft` or what is still open, so the PO cannot decide what must be fixed before
+      promotion to `ready`.
+    message_ja: >-
+      Approval and status now come from the metadata standard, so this drops from the previous major. The rulebook still
+      does not say why it stays `draft` or what is still open, so the PO cannot decide what must be fixed before
+      promotion to `ready`.
+  - id: F002
     severity: minor
     rule: vp-pm-plan-feasibility
-    line: 66
+    line: 48
     anchor: "## 5. 本文構成（標準テンプレ）"
     message: 作成順は定義されているが、必須要素、禁止事項、包含元との整合、描画確認をまとめた完了条件と確認タイミングがなく、進捗完了を一意に確認できない。
     message_ja: 作成順は定義されているが、必須要素、禁止事項、包含元との整合、描画確認をまとめた完了条件と確認タイミングがなく、進捗完了を一意に確認できない。
-  - id: F004
+  - id: F003
     severity: major
     rule: vp-pm-dependency-risk
     line: 5
     anchor: >-
-      Mermaid の `flowchart` 構文で CDFD
-      のプロセス、イベント、データストア、外部主体、情報・物の流れを一貫して表すための記法ルールです。`specdojo:cdfd-overview-rulebook`、`specdojo:cdfd-rulebook`、`specdojo:cdfd-uc-rulebook`
-      の `includes` から適用される共通部品です。対象プロダクトの `cdfd-overview` に「凡例（本プロダクト共通）」がある場合はその割り当てを正本とし、共通凡例がない場合は本 rulebook
-      の形状・線種と既定の色・絵文字方針に従います。
+      Mermaid の `flowchart` で CDFD のプロセス・イベント・データストア・外部主体・受け渡しを表す記法ルールです。全体概要・プロセスグループ別・ユースケース別 CDFD の主 rulebook の
+      `includes` から適用します。プロダクト固有の割り当ては全体概要の「凡例（本プロダクト共通）」、共通凡例がなければ本書の既定凡例を使います。
     message: >-
       `draft` の共通部品を `ready` の二つの主 CDFD rulebook が `includes` しているため、依存先の確定性、変更時の影響範囲、互換性確認をそろえてから上位文書の ready
       状態を維持する必要がある。
     message_ja: >-
       `draft` の共通部品を `ready` の二つの主 CDFD rulebook が `includes` しているため、依存先の確定性、変更時の影響範囲、互換性確認をそろえてから上位文書の ready
       状態を維持する必要がある。
-  - id: F005
-    severity: minor
-    rule: vp-ba-stakeholder-clarity
-    line: 5
-    anchor: >-
-      Mermaid の `flowchart` 構文で CDFD
-      のプロセス、イベント、データストア、外部主体、情報・物の流れを一貫して表すための記法ルールです。`specdojo:cdfd-overview-rulebook`、`specdojo:cdfd-rulebook`、`specdojo:cdfd-uc-rulebook`
-      の `includes` から適用される共通部品です。対象プロダクトの `cdfd-overview` に「凡例（本プロダクト共通）」がある場合はその割り当てを正本とし、共通凡例がない場合は本 rulebook
-      の形状・線種と既定の色・絵文字方針に従います。
-    message: 適用先は示されているが、CDFD 作成者、業務レビュー者、共通凡例の承認者と、それぞれが本 rulebook を使う場面を明示する必要がある。
-    message_ja: 適用先は示されているが、CDFD 作成者、業務レビュー者、共通凡例の承認者と、それぞれが本 rulebook を使う場面を明示する必要がある。
-  - id: F006
+  - id: F004
     severity: minor
     rule: vp-arc-technical-constraints
     line: 9
@@ -168,39 +153,53 @@ findings:
       は、対象が階層構造（組織・分類など）を表す場合にだけ使用します。以下では、プロセスグループ別とユースケース別を合わせて「詳細 CDFD」と呼びます。
     message: Mermaid の対応バージョンまたはプロジェクト標準レンダラーを明示し、絵文字、日本語ノード ID、各形状構文をどの環境で保証するか固定する必要がある。
     message_ja: Mermaid の対応バージョンまたはプロジェクト標準レンダラーを明示し、絵文字、日本語ノード ID、各形状構文をどの環境で保証するか固定する必要がある。
-  - id: F007
+  - id: F005
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 9
+    anchor: >-
+      - Mermaid の `flowchart` を使用し、方向は全体概要・プロセスグループ別・ユースケース別 CDFD を問わず `LR` を基本とします。CDFD
+      の矢印は情報・物・実行要求の受け渡しを表し、ユースケース別など包含元が明示した場合だけ業務上の順序も表します。`TB`
+      は、対象が階層構造（組織・分類など）を表す場合にだけ使用します。以下では、プロセスグループ別とユースケース別を合わせて「詳細 CDFD」と呼びます。
+    message: 定義した「詳細 CDFD」は本文で一度も使われていない。ノード形状の割当（67 行）は「全体方針」の対応表の繰り返しで、図の分け方の括弧書き（118 行）は包含元の再掲にあたる。削除するか参照に置き換えても判断情報は失われない。
+    message_ja: 定義した「詳細 CDFD」は本文で一度も使われていない。ノード形状の割当（67 行）は「全体方針」の対応表の繰り返しで、図の分け方の括弧書き（118 行）は包含元の再掲にあたる。削除するか参照に置き換えても判断情報は失われない。
+  - id: F006
     severity: minor
     rule: vp-dev-implementation-readiness
-    line: 34
-    anchor: "| ノード ID    | Mermaid コード内で要素を参照する識別子。短い日本語または英数字を使う       |"
+    line: 41
+    anchor: "- ノード ID は短い日本語または英数字で、ブロック内で一意にし、同じ対象には表と図で同じ領域 ID または名称を使用します。"
     message: ノード ID の許容文字、禁止文字、予約語、重複時の扱い、表示ラベルへ分離すべき条件を Mermaid の対応版に合わせて定義し、生成時の構文エラーを防ぐ必要がある。
     message_ja: ノード ID の許容文字、禁止文字、予約語、重複時の扱い、表示ラベルへ分離すべき条件を Mermaid の対応版に合わせて定義し、生成時の構文エラーを防ぐ必要がある。
+  - id: F007
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 15
+    anchor: >-
+      - **共通の運用**: 役割は適用先のメンバー定義に、`status`・承認・改訂と廃止・未決事項の引き継ぎは [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]]
+      に従います。整形・lint はリポジトリの検証で扱い、業務の受入確認に含めません。
+    message: >-
+      General change management now comes from the metadata standard, so this drops from the previous major. When this
+      notation changes, the rulebook still needs to say what to check for parity with `specdojo:cdfd-d2-rulebook`, for
+      Mermaid diagrams in existing CDFDs, and for generated SVG.
+    message_ja: >-
+      General change management now comes from the metadata standard, so this drops from the previous major. When this
+      notation changes, the rulebook still needs to say what to check for parity with `specdojo:cdfd-d2-rulebook`, for
+      Mermaid diagrams in existing CDFDs, and for generated SVG.
   - id: F008
     severity: major
-    rule: vp-dev-change-impact
-    line: 5
-    anchor: >-
-      Mermaid の `flowchart` 構文で CDFD
-      のプロセス、イベント、データストア、外部主体、情報・物の流れを一貫して表すための記法ルールです。`specdojo:cdfd-overview-rulebook`、`specdojo:cdfd-rulebook`、`specdojo:cdfd-uc-rulebook`
-      の `includes` から適用される共通部品です。対象プロダクトの `cdfd-overview` に「凡例（本プロダクト共通）」がある場合はその割り当てを正本とし、共通凡例がない場合は本 rulebook
-      の形状・線種と既定の色・絵文字方針に従います。
-    message: 共通記法の変更が三つの包含元、対応する template・sample、既存 CDFD、生成 SVG に波及するため、変更時の確認対象、互換性方針、移行手順を定義する必要がある。
-    message_ja: 共通記法の変更が三つの包含元、対応する template・sample、既存 CDFD、生成 SVG に波及するため、変更時の確認対象、互換性方針、移行手順を定義する必要がある。
-  - id: F009
-    severity: major
     rule: vp-dev-testability
-    line: 66
+    line: 48
     anchor: "## 5. 本文構成（標準テンプレ）"
     message: Mermaid コードブロックについて `docs:build:mermaid` 等の検証コマンド、対象ファイル、期待する終了状態、構文・描画エラー時の対応を完成判定として明示する必要がある。
     message_ja: Mermaid コードブロックについて `docs:build:mermaid` 等の検証コマンド、対象ファイル、期待する終了状態、構文・描画エラー時の対応を完成判定として明示する必要がある。
-  - id: F010
+  - id: F009
     severity: minor
     rule: vp-qe-verifiability
-    line: 66
+    line: 48
     anchor: "## 5. 本文構成（標準テンプレ）"
     message: 必須ノード、全エッジのラベル、線種、図直後の注記、ID 一意性、禁止事項、包含元との整合、構文・描画成功を網羅する完成判定を追加する必要がある。
     message_ja: 必須ノード、全エッジのラベル、線種、図直後の注記、ID 一意性、禁止事項、包含元との整合、構文・描画成功を網羅する完成判定を追加する必要がある。
-  - id: F011
+  - id: F010
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 9
@@ -210,15 +209,28 @@ findings:
       は、対象が階層構造（組織・分類など）を表す場合にだけ使用します。以下では、プロセスグループ別とユースケース別を合わせて「詳細 CDFD」と呼びます。
     message: "`TB` の条件が「組織・分類などの階層構造」とされており CDFD の目的外の図を許すように読めるため、CDFD 内での具体的な適用条件へ限定するか `TB` を禁止する必要がある。"
     message_ja: "`TB` の条件が「組織・分類などの階層構造」とされており CDFD の目的外の図を許すように読めるため、CDFD 内での具体的な適用条件へ限定するか `TB` を禁止する必要がある。"
+  - id: F011
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 20
+    anchor: >-
+      | プロセスグループ     | 角丸長方形 `("...")`（全体概要・ユースケース別 CDFD の代表ノード）                   |
+      `販売("販売<br>P-01〜P-02")`                     |
+    message: >-
+      Process and process group both use the rounded rectangle `("...")`, which conflicts with "一つの記号へ一つの意味" and with
+      the prohibition on sharing shapes. The rulebook should state as an exception that they never appear in the same
+      diagram, or give them different shapes.
+    message_ja: >-
+      Process and process group both use the rounded rectangle `("...")`, which conflicts with "一つの記号へ一つの意味" and with
+      the prohibition on sharing shapes. The rulebook should state as an exception that they never appear in the same
+      diagram, or give them different shapes.
   - id: F012
     severity: major
     rule: vp-qe-kata-conformance
     line: 5
     anchor: >-
-      Mermaid の `flowchart` 構文で CDFD
-      のプロセス、イベント、データストア、外部主体、情報・物の流れを一貫して表すための記法ルールです。`specdojo:cdfd-overview-rulebook`、`specdojo:cdfd-rulebook`、`specdojo:cdfd-uc-rulebook`
-      の `includes` から適用される共通部品です。対象プロダクトの `cdfd-overview` に「凡例（本プロダクト共通）」がある場合はその割り当てを正本とし、共通凡例がない場合は本 rulebook
-      の形状・線種と既定の色・絵文字方針に従います。
+      Mermaid の `flowchart` で CDFD のプロセス・イベント・データストア・外部主体・受け渡しを表す記法ルールです。全体概要・プロセスグループ別・ユースケース別 CDFD の主 rulebook の
+      `includes` から適用します。プロダクト固有の割り当ては全体概要の「凡例（本プロダクト共通）」、共通凡例がなければ本書の既定凡例を使います。
     message: >-
       `specdojo:cdfd-overview-rulebook` と `specdojo:cdfd-rulebook` が `ready` で本 rulebook を `includes` している一方、本 rulebook
       は `draft` のため、完成判定と承認を満たして状態を整合させるか、包含元の状態を見直す必要がある。
@@ -226,20 +238,61 @@ findings:
       `specdojo:cdfd-overview-rulebook` と `specdojo:cdfd-rulebook` が `ready` で本 rulebook を `includes` している一方、本 rulebook
       は `draft` のため、完成判定と承認を満たして状態を整合させるか、包含元の状態を見直す必要がある。
   - id: F013
-    severity: major
-    rule: vp-ops-release-readiness
-    line: 66
-    anchor: "## 5. 本文構成（標準テンプレ）"
-    message: "`draft` から `ready` へ昇格する条件、承認者、承認記録、静的検証と Mermaid 描画確認、未解決事項がないことを公開前チェックとして定義する必要がある。"
-    message_ja: "`draft` から `ready` へ昇格する条件、承認者、承認記録、静的検証と Mermaid 描画確認、未解決事項がないことを公開前チェックとして定義する必要がある。"
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 9
+    anchor: >-
+      - Mermaid の `flowchart` を使用し、方向は全体概要・プロセスグループ別・ユースケース別 CDFD を問わず `LR` を基本とします。CDFD
+      の矢印は情報・物・実行要求の受け渡しを表し、ユースケース別など包含元が明示した場合だけ業務上の順序も表します。`TB`
+      は、対象が階層構造（組織・分類など）を表す場合にだけ使用します。以下では、プロセスグループ別とユースケース別を合わせて「詳細 CDFD」と呼びます。
+    message: >-
+      `specdojo:cdfd-uc-rulebook` says to draw use-case CDFDs with Mermaid `flowchart TB`, but this rulebook says
+      use-case CDFDs are also `LR` and allows `TB` only for hierarchies. The direction for use-case CDFDs should be
+      aligned between the two rulebooks.
+    message_ja: >-
+      `specdojo:cdfd-uc-rulebook` says to draw use-case CDFDs with Mermaid `flowchart TB`, but this rulebook says
+      use-case CDFDs are also `LR` and allows `TB` only for hierarchies. The direction for use-case CDFDs should be
+      aligned between the two rulebooks.
   - id: F014
-    severity: major
-    rule: vp-ops-operability
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 69
+    anchor: "- 全体概要では一プロセスグループを一つの代表ノードとして表し、表示ラベルにグループ名と含む領域 ID の範囲を記載します。グループ内の領域や処理を別ノードとして追加しません。"
+    message: >-
+      The label for a process-group representative node is described as "含む領域 ID の範囲", and the subgraph example is named
+      "販売領域", so "領域" is used for both the group and the visual grouping. The terms 領域 and プロセスグループ should be defined
+      and used consistently.
+    message_ja: >-
+      The label for a process-group representative node is described as "含む領域 ID の範囲", and the subgraph example is named
+      "販売領域", so "領域" is used for both the group and the visual grouping. The terms 領域 and プロセスグループ should be defined
+      and used consistently.
+  - id: F015
+    severity: minor
+    rule: vp-ops-release-readiness
     line: 5
     anchor: >-
-      Mermaid の `flowchart` 構文で CDFD
-      のプロセス、イベント、データストア、外部主体、情報・物の流れを一貫して表すための記法ルールです。`specdojo:cdfd-overview-rulebook`、`specdojo:cdfd-rulebook`、`specdojo:cdfd-uc-rulebook`
-      の `includes` から適用される共通部品です。対象プロダクトの `cdfd-overview` に「凡例（本プロダクト共通）」がある場合はその割り当てを正本とし、共通凡例がない場合は本 rulebook
-      の形状・線種と既定の色・絵文字方針に従います。
-    message: 共通部品の更新手順、影響先の再検証、Mermaid 生成物の再生成方法、描画障害時の切り分けと問い合わせ先を定義しなければ、包含先を継続運用できない。
-    message_ja: 共通部品の更新手順、影響先の再検証、Mermaid 生成物の再生成方法、描画障害時の切り分けと問い合わせ先を定義しなければ、包含先を継続運用できない。
+      Mermaid の `flowchart` で CDFD のプロセス・イベント・データストア・外部主体・受け渡しを表す記法ルールです。全体概要・プロセスグループ別・ユースケース別 CDFD の主 rulebook の
+      `includes` から適用します。プロダクト固有の割り当ては全体概要の「凡例（本プロダクト共通）」、共通凡例がなければ本書の既定凡例を使います。
+    message: >-
+      The promotion condition and approver come from the metadata standard, so this drops from the previous major. The
+      rulebook should state the open issues that keep it `draft` and the release checks (static validation and Mermaid
+      render check) needed to match the `ready` parents.
+    message_ja: >-
+      The promotion condition and approver come from the metadata standard, so this drops from the previous major. The
+      rulebook should state the open issues that keep it `draft` and the release checks (static validation and Mermaid
+      render check) needed to match the `ready` parents.
+  - id: F016
+    severity: minor
+    rule: vp-ops-operability
+    line: 15
+    anchor: >-
+      - **共通の運用**: 役割は適用先のメンバー定義に、`status`・承認・改訂と廃止・未決事項の引き継ぎは [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]]
+      に従います。整形・lint はリポジトリの検証で扱い、業務の受入確認に含めません。
+    message: >-
+      The metadata standard now covers update and downstream follow-up, so this drops from the previous major. To keep
+      the parents running, the rulebook still needs to say how to regenerate Mermaid output and where to look and whom
+      to ask when rendering fails.
+    message_ja: >-
+      The metadata standard now covers update and downstream follow-up, so this drops from the previous major. To keep
+      the parents running, the rulebook still needs to say how to regenerate Mermaid output and where to look and whom
+      to ask when rendering fails.

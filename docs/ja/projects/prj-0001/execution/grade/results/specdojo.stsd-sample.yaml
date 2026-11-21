@@ -4,10 +4,11 @@ document: specdojo:stsd-sample
 path: docs/ja/specdojo/samples/stsd-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: pass
-score: 100
-graded_at: "2026-11-13T06:06:09.471Z"
-graded_by: sol-review-executor
+reference: specdojo:prj-overview-sample
+verdict: needs-work
+score: 90
+graded_at: "2026-11-21T05:55:08.555Z"
+graded_by: opus-executor
 content_hash: 96b5f167e8bb312710862b239bacc94933576bd8d5087c7af8c34a4a6266ced3
 categories:
   purpose:
@@ -17,15 +18,15 @@ categories:
   planning:
     score: 100
   business:
-    score: 100
+    score: 92
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 83
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 75
   consistency:
     score: 100
 viewpoints:
@@ -51,8 +52,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-stakeholder-clarity:
     level: 4
     score: 100
@@ -60,8 +61,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -75,20 +76,20 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-qe-omissions-consistency:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -103,7 +104,60 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 0
-  minor: 0
+  major: 1
+  minor: 4
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 74
+    anchor: >-
+      | `T-06`  | 検品済み | 返品待ち | 検品完了     | 結果が数量違いまたは品質不良で返品保管箱へ分けた |
+      店番担当は不合格理由と返品保管箱への分離を確認する。分離未完了なら販売対象へ混ぜず、店主代表へ引き継ぐ       |
+    message: >-
+      `T-06`
+      と返品待ちの意味が「数量違い」を返品理由に含めているが、数量不足のときは返品する現物がなく返品保管箱へ分ける経路が成り立たないため、過剰分だけを返品対象とするのか、不足は別の扱い（仕入先への連絡など）とするのかを条件に書き分ける。
+    message_ja: >-
+      `T-06`
+      と返品待ちの意味が「数量違い」を返品理由に含めているが、数量不足のときは返品する現物がなく返品保管箱へ分ける経路が成り立たないため、過剰分だけを返品対象とするのか、不足は別の扱い（仕入先への連絡など）とするのかを条件に書き分ける。
+  - id: F002
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 19
+    anchor: "- 未成立時の扱い: 条件の一部だけが満たされた場合は遷移元の状態を保つ。入荷受入が未成立なら状態を割り当てず、受入日時と数量の記録だけで入荷済みと判定しない"
+    message: 「未成立時の扱い」の「入荷受入が未成立なら状態を割り当てず」は一意判定（18行）の「入荷受入前は状態を割り当てず」と同じ主張の繰り返しなので、一方にまとめて残りの記述（受入日時と数量だけで入荷済みと判定しない）だけを残す。
+    message_ja: 「未成立時の扱い」の「入荷受入が未成立なら状態を割り当てず」は一意判定（18行）の「入荷受入前は状態を割り当てず」と同じ主張の繰り返しなので、一方にまとめて残りの記述（受入日時と数量だけで入荷済みと判定しない）だけを残す。
+  - id: F003
+    severity: major
+    rule: vp-qe-verifiability
+    line: 11
+    anchor: "- 対象: 店舗が仕入先へ発注し、納品を受けた商品"
+    message: 対象「納品を受けた商品」の単位（納品ロット単位か個品単位か）が定義されておらず、受入・返品は数量付きの納品単位、販売は顧客への引渡し単位で判定しているため、一部だけ販売・一部だけ不合格のときに現在状態を一意に決められない。対象の単位と、分割時の扱いを「適用範囲」または「状態の判定」に明記する。
+    message_ja: 対象「納品を受けた商品」の単位（納品ロット単位か個品単位か）が定義されておらず、受入・返品は数量付きの納品単位、販売は顧客への引渡し単位で判定しているため、一部だけ販売・一部だけ不合格のときに現在状態を一意に決められない。対象の単位と、分割時の扱いを「適用範囲」または「状態の判定」に明記する。
+  - id: F004
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 26
+    anchor: >-
+      | received       | 入荷済み | 入った品   | 店舗が納品を受け、検品結果が未確定の商品                 |
+      納品情報を発注内容へ照合して受入日時と数量を仕入記録へ記録し、検品結果をまだ記録していない   | 仕入記録、検品場所   |
+    message: >-
+      状態一覧の「値」列が template では `` `_INITIAL_STATE_CODE_` `` とインラインコードで書く骨組みなのに、sample は `received`
+      などを素のまま書いており完成例と骨組みで表記がそろっていない。どちらかに統一する。
+    message_ja: >-
+      状態一覧の「値」列が template では `` `_INITIAL_STATE_CODE_` `` とインラインコードで書く骨組みなのに、sample は `received`
+      などを素のまま書いており完成例と骨組みで表記がそろっていない。どちらかに統一する。
+  - id: F005
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 54
+    anchor: >-
+      | `T-01`  | 開始     | 入荷済み | 入荷受入     | 商品受領後に納品情報を発注内容へ照合し、受入日時と数量を仕入記録へ記録した |
+      照合未実施なら店主代表または家族利用者代表が納品情報と発注内容を確認してから受入を確定する                     |
+    message: >-
+      目的で「店番担当（店主代表または家族利用者代表）」と定義しているのに、`T-01`・`T-02`・`T-07` の補足では同じ集合を「店主代表または家族利用者代表」と書き、`T-03`・`T-04`・`T-06`
+      では「店番担当」と書いて表記がゆれているため、定義した呼称に統一する。
+    message_ja: >-
+      目的で「店番担当（店主代表または家族利用者代表）」と定義しているのに、`T-01`・`T-02`・`T-07` の補足では同じ集合を「店主代表または家族利用者代表」と書き、`T-03`・`T-04`・`T-06`
+      では「店番担当」と書いて表記がゆれているため、定義した呼称に統一する。

@@ -4,55 +4,56 @@ document: specdojo:pm-issue-log-rulebook
 path: docs/ja/specdojo/rulebooks/pm-issue-log-rulebook.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-rulebook
 verdict: needs-work
-score: 91
-graded_at: "2026-11-10T20:36:47.472Z"
-graded_by: flash-high-executor
-content_hash: 5a0a162fa02aa0af929d5f571aa0c08d11349f17896968daf0ee07bb99c3cdce
+score: 86
+graded_at: "2026-11-21T05:17:56.258Z"
+graded_by: opus-executor
+content_hash: adf3f512e2ea9a985b1e501ef203a182b08abf98509d787aeaeb5d20dff6c961
 categories:
   purpose:
-    score: 88
+    score: 100
   operations:
-    score: 94
+    score: 100
   planning:
-    score: 100
+    score: 83
   business:
-    score: 100
+    score: 83
   architecture:
     score: 100
   usability:
     score: 92
   implementation:
-    score: 100
+    score: 75
   quality:
     score: 75
   consistency:
-    score: 100
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
-  vp-po-publication-accountability:
-    level: 3
-    score: 75
-  vp-pm-plan-feasibility:
     level: 4
     score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 3
+    score: 75
   vp-pm-dependency-risk:
     level: 4
     score: 100
   vp-pm-control-reporting:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-business-value:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-requirements-completeness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-stakeholder-clarity:
     level: 4
     score: 100
@@ -66,11 +67,11 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-change-impact:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-testability:
     level: 4
     score: 100
@@ -78,8 +79,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
     level: 1
     score: 25
@@ -103,42 +104,111 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 2
-  minor: 3
+  major: 3
+  minor: 9
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-decision-readiness
-    line: 73
-    anchor: ""
-    message: 課題の優先度変更や完了判定、期限超過時のエスカレーション先において、PO等の意思決定者がどのように関与するか（承認プロセス）が定義されていない。
-    message_ja: 課題の優先度変更や完了判定、期限超過時のエスカレーション先において、PO等の意思決定者がどのように関与するか（承認プロセス）が定義されていない。
+    rule: vp-pm-plan-feasibility
+    line: 45
+    anchor: "- 課題 ID、発生日、内容、優先度、対応策、担当、期限、ステータスを一覧にする。"
+    message: 課題ログ一覧の「担当」を Role code（適用先のメンバー定義の role）で書くことが規定されておらず、個人名の混入や表記ゆれを防げないため、担当欄の記述形式を明記する。
+    message_ja: 課題ログ一覧の「担当」を Role code（適用先のメンバー定義の role）で書くことが規定されておらず、個人名の混入や表記ゆれを防げないため、担当欄の記述形式を明記する。
   - id: F002
     severity: minor
-    rule: vp-po-publication-accountability
-    line: 16
-    anchor: "- `pm-risk-register`: 潜在リスクの管理。"
-    message: 課題ログに含まれる可能性のある機密情報や個人情報の取り扱い、および公開可否の判断基準に関する言及がない。
-    message_ja: 課題ログに含まれる可能性のある機密情報や個人情報の取り扱い、および公開可否の判断基準に関する言及がない。
+    rule: vp-pm-control-reporting
+    line: 62
+    anchor: "- 根拠、影響先、課題から起票したリスク・変更要求を文書 ID で示す。なければ `（本書のみ）` と書く。"
+    message: 課題対応で生じた決定事項を決定記録（decision）へ転記する基準・参照方法がなく、課題ログ内に判断が埋もれるおそれがあるため、決定記録への転記条件を追記する。
+    message_ja: 課題対応で生じた決定事項を決定記録（decision）へ転記する基準・参照方法がなく、課題ログ内に判断が埋もれるおそれがあるため、決定記録への転記条件を追記する。
   - id: F003
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 課題ログ 作成ルール"
-    message: 参照先の template (`specdojo:pm-issue-log-template`) が異なる rulebook ID を指定しており、かつ構造（派生ビュー）が本ルールブックの記述ルールと根本的に矛盾している。
-    message_ja: 参照先の template (`specdojo:pm-issue-log-template`) が異なる rulebook ID を指定しており、かつ構造（派生ビュー）が本ルールブックの記述ルールと根本的に矛盾している。
+    severity: minor
+    rule: vp-ba-business-value
+    line: 9
+    anchor: "- 顕在化した課題ごとに、未解決かどうかと次の対応を判定できる形で残す。"
+    message: 課題ログを誰（PM・PO・担当など）がどの判断（対応順の決定、エスカレーション、完了確認）に使うかが示されておらず、各記述項目がどの利用者価値に応えるか説明できないため、利用者と利用場面を全体方針に追記する。
+    message_ja: 課題ログを誰（PM・PO・担当など）がどの判断（対応順の決定、エスカレーション、完了確認）に使うかが示されておらず、各記述項目がどの利用者価値に応えるか説明できないため、利用者と利用場面を全体方針に追記する。
   - id: F004
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 5
+    anchor: 顕在化した課題の優先度・期限・対応・状態を追跡する課題ログの記述基準を定める。
+    message: 対象外（未顕在のリスク、仕様変更要求）と課題との区別基準が明示されておらず、同じ事象を課題ログとリスク登録簿・変更要求ログの両方に記録する誤用を招くため、対象範囲と対象外を全体方針に追記する。
+    message_ja: 対象外（未顕在のリスク、仕様変更要求）と課題との区別基準が明示されておらず、同じ事象を課題ログとリスク登録簿・変更要求ログの両方に記録する誤用を招くため、対象範囲と対象外を全体方針に追記する。
+  - id: F005
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 24
+    anchor: "- 許可キーと型は [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] を正本とし、`type` は `project` とする。"
+    message: >-
+      単独の課題ログで Frontmatter の `rulebook` に何を宣言するか（生成物は `specdojo:pjr-rulebook`）が書かれておらず、作成者が値を取り違えるおそれがあるため、単独ログの
+      `rulebook` 値を明記する。
+    message_ja: >-
+      単独の課題ログで Frontmatter の `rulebook` に何を宣言するか（生成物は `specdojo:pjr-rulebook`）が書かれておらず、作成者が値を取り違えるおそれがあるため、単独ログの
+      `rulebook` 値を明記する。
+  - id: F006
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 20
+    anchor: "- 課題 ID は登録簿では `PJR-XXXX`、単独のログでは `IS-NNN` とし、再利用しない。"
+    message: 単独ログ（`IS-NNN`）から登録簿（`PJR-XXXX`）へ移行する場合の ID 対応・既存記録の扱い・単独ファイルの廃止手順が示されておらず、運用形態変更時の影響を判断できないため、移行時の扱いを追記する。
+    message_ja: 単独ログ（`IS-NNN`）から登録簿（`PJR-XXXX`）へ移行する場合の ID 対応・既存記録の扱い・単独ファイルの廃止手順が示されておらず、運用形態変更時の影響を判断できないため、移行時の扱いを追記する。
+  - id: F007
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 15
+    anchor: "- 本書の判断基準は、個票と、登録簿を使わない単独の課題ログの両方に適用する。"
+    message: >-
+      「本書の判断基準は個票と単独ログの両方に適用する」としつつ、本文構成（6章）は個票の必須節（`pjr-rulebook` の issue
+      必須節）と異なり、どの規定が個票に適用されるか曖昧なため、本文構成は単独ログ専用で個票には記述ガイドの判断基準のみ適用する等の適用範囲を明記する。
+    message_ja: >-
+      「本書の判断基準は個票と単独ログの両方に適用する」としつつ、本文構成（6章）は個票の必須節（`pjr-rulebook` の issue
+      必須節）と異なり、どの規定が個票に適用されるか曖昧なため、本文構成は単独ログ専用で個票には記述ガイドの判断基準のみ適用する等の適用範囲を明記する。
+  - id: F008
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# 課題ログ 作成ルール"
     message: 連携するテンプレートファイルの内容が、本ルールブックで定義する構成を無視して自動生成ビューとして定義されており、実効的な乖離がある。
     message_ja: 連携するテンプレートファイルの内容が、本ルールブックで定義する構成を無視して自動生成ビューとして定義されており、実効的な乖離がある。
-  - id: F005
+  - id: F009
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 46
+    anchor: "- 優先度とステータスは登録簿の `priority`・`item_status` の値を使い、言い換えない。"
+    message: sample が優先度「高/中」・ステータス「未着手/対応中」を使い、登録簿の `priority`・`item_status` の値を言い換えないという本ルールに違反しているため、sample を規定値へ修正する。
+    message_ja: sample が優先度「高/中」・ステータス「未着手/対応中」を使い、登録簿の `priority`・`item_status` の値を言い換えないという本ルールに違反しているため、sample を規定値へ修正する。
+  - id: F010
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 50
+    anchor: "- 優先度の基準、期限の決め方、期限超過時のエスカレーション先、優先度の変更を決める者を書く。"
+    message: >-
+      sample の優先度と期限・進捗レビューに、期限超過時のエスカレーション先以外の必須事項（優先度の変更を決める者、完了を判定する者と判定の観点）がなく、完了条件にも確認手段がないため、sample
+      を記述ガイドの必須事項に合わせる。
+    message_ja: >-
+      sample の優先度と期限・進捗レビューに、期限超過時のエスカレーション先以外の必須事項（優先度の変更を決める者、完了を判定する者と判定の観点）がなく、完了条件にも確認手段がないため、sample
+      を記述ガイドの必須事項に合わせる。
+  - id: F011
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 62
+    anchor: "- 根拠、影響先、課題から起票したリスク・変更要求を文書 ID で示す。なければ `（本書のみ）` と書く。"
+    message: sample の関連ドキュメントが `pm-risk-register` 等の local 名で記載され、文書 ID で示す規定と一致しないため、sample を project 修飾の文書 ID 表記へ修正する。
+    message_ja: sample の関連ドキュメントが `pm-risk-register` 等の local 名で記載され、文書 ID で示す規定と一致しないため、sample を project 修飾の文書 ID 表記へ修正する。
+  - id: F012
     severity: minor
     rule: vp-ux-language-consistency
-    line: 62
-    anchor: "- 優先度基準、期限設定ルール、期限超過時対応を明記する。"
-    message: 課題のステータスの標準値（未着手、対応中など）が定義されておらず、運用時に表記ゆれが生じるおそれがある。
-    message_ja: 課題のステータスの標準値（未着手、対応中など）が定義されておらず、運用時に表記ゆれが生じるおそれがある。
+    line: 46
+    anchor: "- 優先度とステータスは登録簿の `priority`・`item_status` の値を使い、言い換えない。"
+    message: >-
+      登録簿を使わない単独ログでも `priority`・`item_status` の値を使うとするが、値の一覧または定義元 schema への参照がなく、表記ゆれ（sample
+      の「高」「対応中」等）を防げないため、許容値の参照先を明記する。
+    message_ja: >-
+      登録簿を使わない単独ログでも `priority`・`item_status` の値を使うとするが、値の一覧または定義元 schema への参照がなく、表記ゆれ（sample
+      の「高」「対応中」等）を防げないため、許容値の参照先を明記する。
+level_corrections:
+  - viewpoint: vp-qe-kata-conformance
+    original_level: 2
+    corrected_level: 1

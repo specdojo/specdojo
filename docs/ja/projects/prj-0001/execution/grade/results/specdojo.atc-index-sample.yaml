@@ -4,28 +4,29 @@ document: specdojo:atc-index-sample
 path: docs/ja/specdojo/samples/atc-index-sample.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-sample
 verdict: needs-work
-score: 36
-graded_at: "2026-10-10T21:08:44.250Z"
-graded_by: agy-expert-executor
-content_hash: c4b1acf0644825e4d35585ad64d6c7cc74d426b223b7a55848078e3285da2709
+score: 46
+graded_at: "2026-11-21T03:04:56.532Z"
+graded_by: opus-executor
+content_hash: e8825a86741de97e239a00beb2377d7959ff509face99d3205f3eecfa87ff727
 categories:
   purpose:
-    score: 25
+    score: 38
   operations:
-    score: 56
+    score: 69
   planning:
-    score: 42
+    score: 50
   business:
-    score: 25
+    score: 33
   architecture:
-    score: 63
+    score: 75
   usability:
-    score: 42
+    score: 58
   implementation:
-    score: 25
+    score: 38
   quality:
-    score: 25
+    score: 33
   consistency:
     score: 25
 viewpoints:
@@ -33,8 +34,8 @@ viewpoints:
     level: 1
     score: 25
   vp-po-decision-readiness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-po-publication-accountability:
     level: 3
     score: 75
@@ -42,8 +43,8 @@ viewpoints:
     level: 1
     score: 25
   vp-pm-dependency-risk:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-pm-control-reporting:
     level: 3
     score: 75
@@ -54,11 +55,11 @@ viewpoints:
     level: 1
     score: 25
   vp-ba-stakeholder-clarity:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-arc-technical-constraints:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-arc-conciseness:
     level: 3
     score: 75
@@ -66,11 +67,11 @@ viewpoints:
     level: 1
     score: 25
   vp-dev-change-impact:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-dev-testability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-verifiability:
     level: 1
     score: 25
@@ -81,17 +82,17 @@ viewpoints:
     level: 1
     score: 25
   vp-ux-readability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ux-language-consistency:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ops-release-readiness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ops-operability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -101,7 +102,7 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 20
-  minor: 4
+  minor: 5
   note: 0
 findings:
   - id: F001
@@ -130,9 +131,7 @@ findings:
     rule: vp-pm-plan-feasibility
     line: 13
     anchor: "## 3. 記述内容"
-    message: >-
-      Task assignment, sequencing, time estimation, responsible Role code, and completion criteria are missing, making
-      it unusable for progress tracking and planning.
+    message: タスクの割り当て、順序付け、時間見積もり、担当するRoleコード、および完了基準が不足しているため、進捗の追跡や計画の立案に使用することができません。
     message_ja: タスクの割り当て、順序付け、時間見積もり、担当するRoleコード、および完了基準が不足しているため、進捗の追跡や計画の立案に使用することができません。
   - id: F005
     severity: major
@@ -195,18 +194,14 @@ findings:
     rule: vp-dev-change-impact
     line: 1
     anchor: "# [受入テスト](../rulebooks/atc-index-rulebook.md) サンプル"
-    message: >-
-      The impact of changes on existing deliverables, schemas, and operational procedures is not identified, making it
-      impossible to track the scope of impact.
+    message: 既存の成果物、スキーマ、および運用手順に対する変更の影響が特定されていないため、影響範囲の追跡が不可能です。
     message_ja: 既存の成果物、スキーマ、および運用手順に対する変更の影響が特定されていないため、影響範囲の追跡が不可能です。
   - id: F014
     severity: major
     rule: vp-dev-testability
     line: 13
     anchor: "## 3. 記述内容"
-    message: >-
-      Linting, schema validation, and test execution commands to be confirmed after implementation are missing, leaving
-      the verification method unclear.
+    message: 実装後に確認すべきリンティング、スキーマ検証、およびテスト実行コマンドが不足しているため、検証方法が不明確な状態です。
     message_ja: 実装後に確認すべきリンティング、スキーマ検証、およびテスト実行コマンドが不足しているため、検証方法が不明確な状態です。
   - id: F015
     severity: major
@@ -240,12 +235,15 @@ findings:
     message: ルールブックで定義された `title`、`based_on`、`supersedes` がなく、必須または推奨される上位仕様との対応を確認できない。
     message_ja: ルールブックで定義された `title`、`based_on`、`supersedes` がなく、必須または推奨される上位仕様との対応を確認できない。
   - id: F019
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# [受入テスト](../rulebooks/atc-index-rulebook.md) サンプル"
-    message: Frontmatter の type が 'project' となっており、ルールブックで指定された 'test' 固定の定義と矛盾している。
-    message_ja: Frontmatter の type が 'project' となっており、ルールブックで指定された 'test' 固定の定義と矛盾している。
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 23
+    anchor: >-
+      | 目的         |
+      業務として受け入れ可能であることを確認する観点・条件を定義する（仕様）                                                                  |
+      specdojo:deliverables-reference 準拠 |
+    message: 備考の `specdojo:deliverables-reference` が wikilink ではなく素の識別子で記載されており、参照先を辿れず参照の整合を確認できない。
+    message_ja: 備考の `specdojo:deliverables-reference` が wikilink ではなく素の識別子で記載されており、参照先を辿れず参照の整合を確認できない。
   - id: F020
     severity: major
     rule: vp-qe-kata-conformance
@@ -255,26 +253,41 @@ findings:
     message_ja: ルールブック第5章で定義された標準テンプレの見出し構成および順序に準拠していない。
   - id: F021
     severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# [受入テスト](../rulebooks/atc-index-rulebook.md) サンプル"
+    message: >-
+      sample が rulebook の「サンプル（最小）」より情報量が少なく、`based_on`・全必須章・合格基準・ケース表の共通カラムを含む完成例になっていないため、sample と rulebook
+      の責務分担が逆転している。
+    message_ja: >-
+      sample が rulebook の「サンプル（最小）」より情報量が少なく、`based_on`・全必須章・合格基準・ケース表の共通カラムを含む完成例になっていないため、sample と rulebook
+      の責務分担が逆転している。
+  - id: F022
+    severity: major
     rule: vp-ux-readability
     line: 1
     anchor: "# [受入テスト](../rulebooks/atc-index-rulebook.md) サンプル"
     message: ルールブックの必須構成を無視した形式となっており、正解例としての提示内容が不適切であるため、読者に誤解を与える。
     message_ja: ルールブックの必須構成を無視した形式となっており、正解例としての提示内容が不適切であるため、読者に誤解を与える。
-  - id: F022
+  - id: F023
     severity: major
     rule: vp-ux-language-consistency
     line: 1
     anchor: "# [受入テスト](../rulebooks/atc-index-rulebook.md) サンプル"
-    message: 成果物名が「受入テストカタログ 概要」ではなく、ID も `atc-index`、種別も `test` になっていないため、対象成果物を一意に識別できない。
-    message_ja: 成果物名が「受入テストカタログ 概要」ではなく、ID も `atc-index`、種別も `test` になっていないため、対象成果物を一意に識別できない。
-  - id: F023
+    message: >-
+      `type` は `test` に修正済みで ID もサンプル命名規約に沿うが、H1 の成果物名が「受入テスト」のままで rulebook の「受入テストカタログ
+      概要」と一致せず、対象別カタログ（`atc-＜term＞`）との区別がつかないため対象成果物を一意に識別できない。
+    message_ja: >-
+      `type` は `test` に修正済みで ID もサンプル命名規約に沿うが、H1 の成果物名が「受入テスト」のままで rulebook の「受入テストカタログ
+      概要」と一致せず、対象別カタログ（`atc-＜term＞`）との区別がつかないため対象成果物を一意に識別できない。
+  - id: F024
     severity: major
     rule: vp-ops-release-readiness
     line: 26
     anchor: "## 5. 未解決事項"
     message: 未解決事項を解消したと判定する条件、ready 化の確認項目、承認者、公開対象がなく、公開・配布の可否を判断できない。
     message_ja: 未解決事項を解消したと判定する条件、ready 化の確認項目、承認者、公開対象がなく、公開・配布の可否を判断できない。
-  - id: F024
+  - id: F025
     severity: major
     rule: vp-ops-operability
     line: 13

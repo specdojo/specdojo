@@ -4,16 +4,17 @@ document: specdojo:prj-success-criteria-and-acceptance-criteria-rulebook
 path: docs/ja/specdojo/rulebooks/prj-success-criteria-and-acceptance-criteria-rulebook.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-rulebook
 verdict: pass
-score: 97
-graded_at: "2026-11-17T22:11:19.167Z"
-graded_by: sol-review-executor
+score: 92
+graded_at: "2026-11-21T05:41:28.287Z"
+graded_by: opus-executor
 content_hash: 1921db7461745e97d2a38d20053b731904358a4eba765b919e34a1315fa0e8ad
 categories:
   purpose:
     score: 100
   operations:
-    score: 100
+    score: 88
   planning:
     score: 100
   business:
@@ -21,7 +22,7 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 75
   implementation:
     score: 88
   quality:
@@ -36,8 +37,8 @@ viewpoints:
     level: 4
     score: 100
   vp-po-publication-accountability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-plan-feasibility:
     level: 4
     score: 100
@@ -60,8 +61,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -84,11 +85,11 @@ viewpoints:
     level: 3
     score: 75
   vp-ux-readability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -96,18 +97,32 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-agent-boundary:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
   major: 0
-  minor: 2
+  minor: 7
   note: 0
 findings:
   - id: F001
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 49
+    anchor: "- **判定手順と証跡（必須）**: 条件ごとの確認順・判定時期・証跡の保存先・確認者・承認者を示し、合格基準との照合から受入可否の判断まで辿れること。否決時は是正内容、再確認する条件 ID、再判定時期を定めます。"
+    message: 「判定手順と証跡」は証跡の保存先を求めていますが、つけ残高画面のような顧客情報を含む証跡や確認者の個人名を公開文書・公開リポジトリに残さない扱い（役割名での記載、非公開保存先への参照など）が定められていないため、証跡の公開範囲と禁止事項を追記してください。
+    message_ja: 「判定手順と証跡」は証跡の保存先を求めていますが、つけ残高画面のような顧客情報を含む証跡や確認者の個人名を公開文書・公開リポジトリに残さない扱い（役割名での記載、非公開保存先への参照など）が定められていないため、証跡の公開範囲と禁止事項を追記してください。
+  - id: F002
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 9
+    anchor: "- **対象と目的**: プロジェクトの成功基準と受入条件を対象とし、業務価値に対して誰が、いつ、どの証跡で合否を判断するかを定めます。"
+    message: 「対象と目的」は導入文と同じく「業務価値に対して誰が、いつ、どの証跡で合否を判断するか」を繰り返しているため、導入文と統合するか、対象範囲の記述に絞って重複を解消してください。
+    message_ja: 「対象と目的」は導入文と同じく「業務価値に対して誰が、いつ、どの証跡で合否を判断するか」を繰り返しているため、導入文と統合するか、対象範囲の記述に絞って重複を解消してください。
+  - id: F003
     severity: minor
     rule: vp-dev-change-impact
     line: 12
@@ -120,16 +135,39 @@ findings:
     message_ja: >-
       改訂時の扱いをメタ情報標準へ委ねていますが、成功基準・閾値・初期受入の必須条件を変更した際に、業務受入条件・システム受入条件・関連テストや既存証跡のどれを再照合するか、および担当 Role code
       が未定義です。Rulebook 記述標準が求める自系統の具体的な追従対象と役割分担を補ってください。
-  - id: F002
+  - id: F004
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 12
-    anchor: >-
-      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status`・承認・改訂と廃止・未決事項の引き継ぎは [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]]
-      に従います。文書の整形・lint・見出し・wikilink の検査はリポジトリの検証で扱い、業務の検証や受入条件に含めません。
+    line: 50
+    anchor: "- **例外条件と未解決事項（任意）**: 論点、判定への影響、保留条件、当面の扱いを示します。未確定の閾値は _UNDECIDED_: で示し、初期受入を進められるかを明記します。"
     message: >-
-      本文では文書の lint を業務の検証や受入条件から除外していますが、対応する recipe の「作成前に集める情報」と「深掘り手順」は測定方法の候補に lint を含め、リポジトリ検証との区別を示していません。受入条件へ文書
-      lint を混入させないよう、recipe 側にも同じ責務境界を明示して整合させてください。
+      本文要件は例外条件と未解決事項に「判定への影響・保留条件・当面の扱い」と初期受入可否の明記を求めていますが、骨組みの正本である template の表は「扱い・解決期限・責任者」で判定への影響と保留条件の欄がなく、sample
+      の列構成とも異なるため、rulebook・template・sample の列構成を揃えてください。
     message_ja: >-
-      本文では文書の lint を業務の検証や受入条件から除外していますが、対応する recipe の「作成前に集める情報」と「深掘り手順」は測定方法の候補に lint を含め、リポジトリ検証との区別を示していません。受入条件へ文書
-      lint を混入させないよう、recipe 側にも同じ責務境界を明示して整合させてください。
+      本文要件は例外条件と未解決事項に「判定への影響・保留条件・当面の扱い」と初期受入可否の明記を求めていますが、骨組みの正本である template の表は「扱い・解決期限・責任者」で判定への影響と保留条件の欄がなく、sample
+      の列構成とも異なるため、rulebook・template・sample の列構成を揃えてください。
+  - id: F005
+    severity: minor
+    rule: vp-ux-readability
+    line: 14
+    anchor: "## 2. 位置づけ"
+    message: 「位置づけ」は図のみで、下流の業務受入条件・システム受入条件が本書の何を引き継ぎ、どこから先を担うのかが説明されていないため、図の前後に本書との責務分担と次に見る文書（wikilink）を一文で補ってください。
+    message_ja: 「位置づけ」は図のみで、下流の業務受入条件・システム受入条件が本書の何を引き継ぎ、どこから先を担うのかが説明されていないため、図の前後に本書との責務分担と次に見る文書（wikilink）を一文で補ってください。
+  - id: F006
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 48
+    anchor: "- **成功基準・受入条件（各必須）**: 業務価値から条件・判定・測定または証跡・責任者を追跡できること。具体的な記載項目は「記述ガイド」に従います。"
+    message: 本文要件の「条件・判定・測定または証跡・責任者を追跡」の「責任者」が、表で定義した「確認者」「承認者」のどちらを指すか不明なため、表の列名に合わせて「確認者・承認者」と表記を統一してください。
+    message_ja: 本文要件の「条件・判定・測定または証跡・責任者を追跡」の「責任者」が、表で定義した「確認者」「承認者」のどちらを指すか不明なため、表の列名に合わせて「確認者・承認者」と表記を統一してください。
+  - id: F007
+    severity: minor
+    rule: vp-ops-agent-boundary
+    line: 77
+    anchor: "- 確認者は条件の充足と証跡を確認し、承認者はその結果から受入可否を判断します。"
+    message: >-
+      承認者の役割は定義されていますが、承認者を人間の役割に限定し AI Agent に受入可否の最終判断を委ねない規範が rulebook にはなく template・recipe
+      にのみ記載されているため、記述ガイドまたは禁止事項に明記してください。
+    message_ja: >-
+      承認者の役割は定義されていますが、承認者を人間の役割に限定し AI Agent に受入可否の最終判断を委ねない規範が rulebook にはなく template・recipe
+      にのみ記載されているため、記述ガイドまたは禁止事項に明記してください。
