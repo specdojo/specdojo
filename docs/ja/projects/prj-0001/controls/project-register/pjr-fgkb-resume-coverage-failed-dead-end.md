@@ -56,8 +56,20 @@ specdojo:
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- A（failed にしない）: 再開時の対象の検証（`resumedTargetCoverageFailure`）に落ちたとき、evidence のプロセスの結果は `succeeded` のまま `completion_status: incomplete` にし、足りない対象と再開コマンドを `block_reason` に書くようにした。executor の段は `failed` でなく `blocked` になり、register 項目は `waiting` に戻る。再開の判定は未完了の報告を executor の再開対象にするため、`--resume --resume-from executor` で同じ worktree のまま再開できる。schedule の経路（`specdojo exec resume --task <id> --resume-from executor`）も同じ扱いにした。
+- 同じ run を再開すると `evidence.json` が上書きされ、最初の試行の `attempt_changes`（下限）が失われて 2 回目の再開で検証が素通りする問題が A の確認中に見つかった。退避済みの `evidence.attempt-<n>.json` を試行順に読み、最初の未完了の試行を下限に使うようにした。
+- B（消えたファイルを下限から外す）: plan が `targets` を宣言せず下限を使うとき、下限のパスが作業ツリーになく累積 worktree 差分（git status）にもなければ、runner が下限から外し、evidence の `excluded_coverage_targets`（schema に追加）に対象と理由を残すようにした。宣言された `targets` は外さない。`<repo>:<path>` はそのプロダクト worktree で判定する。
+- テスト: 統合テストで、下限を申告しない再開が `blocked`・`waiting` になり `block_reason` に対象が残ること、続く `--resume --resume-from executor` が拒まれず再開されること、最初の試行の生成物を消して再開すると下限から外れて `review` まで進み `excluded_coverage_targets` に残ることを確かめた。単体テストで、退避済み evidence の読み込みと下限の選択、未完了への記録、宣言済み `targets` を外さないことを確かめた。
+- [[specdojo:exec-operation-guide]] の「register実行の再開」の節を直した。
+- 残り: runner の動きを変えたため、統合の後に実際の `exec run --register` を 1 回流して確かめる（オーケストレーターが行う）。
+- 判断（_ASSUMPTION_）: 「統合先との差分にもない」は、作業ツリーにファイルがなく git status にも出ないこと（HEAD にも無いこと）で判定した。task ブランチの commit で消したファイルは対象外になるが、worktree 実行では commit が統合の時だけに作られるため、実害はないと判断した。
+
+### 5.1. CHANGELOG に書く事項
+
+- 区分: 不具合修正
+- 文案: `exec run --register --resume` で executor が下限の対象を申告しきれなかったとき、executor の段を failed にせず blocked（項目は waiting）にし、`--resume --resume-from executor` で作業を捨てずに再開できるようにした。以前の試行が作って再開前に消されたファイルは下限から外し、evidence の `excluded_coverage_targets` に残す。同じ run を繰り返し再開しても最初の試行の下限を保つ。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-ppyf-register-targets-from-first-attempt]]（下限を導入した項目）
+- [[specdojo:exec-operation-guide]]（再開の手順）

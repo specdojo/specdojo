@@ -1,4 +1,4 @@
-import { readFileSync, renameSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, sep } from "node:path";
 import {
   runLogPath,
@@ -44,6 +44,11 @@ export type EvidenceTargetCoverage = {
   reason: string;
 };
 
+export type EvidenceExcludedCoverageTarget = {
+  target: string;
+  reason: string;
+};
+
 export type ExecEvidence = {
   schema_version: 1;
   task_id: string;
@@ -67,6 +72,8 @@ export type ExecEvidence = {
   validations: EvidenceValidation[];
   /** Executor-reported disposition of plan targets. Required by the runner on executor resume. */
   target_coverage?: EvidenceTargetCoverage[];
+  /** Runner-excluded lower-bound targets that no longer exist and have no diff (PJR-FGKB). */
+  excluded_coverage_targets?: EvidenceExcludedCoverageTarget[];
   /** Runner-recorded pinned-agent rate-limit/connection recovery history for this stage. */
   rate_limit_events?: RateLimitRecoveryEvent[];
   final_message: string;
@@ -432,6 +439,52 @@ function changedEvidencePaths(changes: readonly ExecEvidence["changes"][number][
     }
   }
   return paths;
+}
+
+/**
+ * Splits lower-bound coverage targets into those that still need an executor disposition and
+ * those that vanished: every side of the path is absent from the working tree and the cumulative
+ * git status (so it is neither tracked in HEAD nor part of the diff the integration would carry).
+ * A file an interrupted attempt created by mistake and that was deleted before resume falls into
+ * the second group (PJR-FGKB). `<name>:<path>` targets resolve against the named product worktree.
+ */
+export function partitionVanishedCoverageTargets(
+  worktreePath: string,
+  productWorktrees: readonly EvidenceProductWorktree[],
+  targets: readonly string[],
+): { kept: string[]; excluded: EvidenceExcludedCoverageTarget[] } {
+  const statusPaths = changedEvidencePaths(
+    repoStatusChanges(worktreePath, productWorktrees).map(({ path, status }) => ({ path, status })),
+  );
+  const productRoots = new Map(productWorktrees.map((product) => [product.name, product.path]));
+  const existsOnDisk = (value: string): boolean => {
+    const separator = value.indexOf(":");
+    const productRoot = separator > 0 ? productRoots.get(value.slice(0, separator)) : undefined;
+    const local = productRoot ? value.slice(separator + 1) : value;
+    const normalized = normalizedEvidencePath(local);
+    // Paths that cannot be resolved safely stay in the lower bound for the executor to explain.
+    if (!normalized) return true;
+    return existsSync(join(productRoot ?? worktreePath, ...normalized.split("/")));
+  };
+  const kept: string[] = [];
+  const excluded: EvidenceExcludedCoverageTarget[] = [];
+  for (const target of targets) {
+    const sides = target.split(" -> ").map((side) => side.trim());
+    const vanished = sides.every(
+      (side) =>
+        side && !statusPaths.has(normalizedEvidencePath(side) ?? side) && !existsOnDisk(side),
+    );
+    if (vanished) {
+      excluded.push({
+        target,
+        reason:
+          "changed by an earlier attempt, but absent from the working tree and the cumulative diff at resume",
+      });
+    } else {
+      kept.push(target);
+    }
+  }
+  return { kept, excluded };
 }
 
 export type WorktreeChangeSnapshot = ReadonlyMap<string, string>;

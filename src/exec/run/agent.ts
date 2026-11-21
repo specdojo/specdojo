@@ -21,9 +21,12 @@ import { localConfigEnvironment } from "../../shared/local-config.js";
 import { loadPlan, parsePlanTaskIdentity } from "../plans.js";
 import type { ReadyTaskView, TaskMode } from "../types.js";
 import {
+  partitionVanishedCoverageTargets,
   recordParentValidationFailureOutput,
   validateResumedTargetCoverage,
   writeExecutorEvidence,
+  type EvidenceExcludedCoverageTarget,
+  type EvidenceProductWorktree,
   type ExecEvidence,
 } from "../evidence.js";
 import {
@@ -134,6 +137,39 @@ export function resolveResumedCoverageTargets(
   return initial.length > 0
     ? { source: "initial-changes", targets: initial }
     : { source: "none", targets: [] };
+}
+
+/**
+ * Drops lower-bound targets from an earlier attempt that vanished before resume (PJR-FGKB).
+ * Declared plan targets take precedence over the lower bound and are never pruned here.
+ */
+export function pruneVanishedInitialChangeTargets(params: {
+  plan: string;
+  initialChangeTargets: readonly string[];
+  worktreePath: string;
+  productWorktrees?: readonly EvidenceProductWorktree[];
+}): { targets: string[]; excluded: EvidenceExcludedCoverageTarget[] } {
+  const coverage = resolveResumedCoverageTargets(params.plan, params.initialChangeTargets);
+  if (coverage.source !== "initial-changes") {
+    return { targets: [...params.initialChangeTargets], excluded: [] };
+  }
+  const { kept, excluded } = partitionVanishedCoverageTargets(
+    params.worktreePath,
+    params.productWorktrees ?? [],
+    coverage.targets,
+  );
+  return { targets: kept, excluded };
+}
+
+/** Records runner-excluded lower-bound targets in executor evidence (no-op when none). */
+export function recordExcludedCoverageTargets(
+  evidence: ExecEvidence,
+  evidencePath: string,
+  excluded: readonly EvidenceExcludedCoverageTarget[],
+): void {
+  if (excluded.length === 0) return;
+  evidence.excluded_coverage_targets = excluded.map((entry) => ({ ...entry }));
+  writeExecutorEvidence(evidencePath, evidence);
 }
 
 function executorEvidenceContract(
@@ -296,21 +332,28 @@ export function buildExecutorPrompt(
   })}`;
 }
 
+// PJR-FGKB: a coverage gap is incomplete work, not a process failure. The evidence keeps the
+// succeeded process status and is marked incomplete with the missing targets in `block_reason`, so
+// the run stops at the executor stage as blocked and `--resume-from executor` can pick it up again
+// without discarding the worktree.
 export function resumedTargetCoverageFailure(params: {
   resumed: boolean;
   plan: string;
   evidence: ExecEvidence;
   evidencePath: string;
   initialChangeTargets?: readonly string[];
+  resumeHint?: string;
 }): string | undefined {
   if (!params.resumed) return undefined;
   const targets = resolveResumedCoverageTargets(params.plan, params.initialChangeTargets).targets;
   const coverage = validateResumedTargetCoverage(targets, params.evidence);
   if (coverage.ok) return undefined;
 
-  params.evidence.stage.status = "failed";
+  const reason = params.resumeHint ? `${coverage.reason}; ${params.resumeHint}` : coverage.reason;
+  params.evidence.completion_status = "incomplete";
+  params.evidence.block_reason = reason;
   writeExecutorEvidence(params.evidencePath, params.evidence);
-  return coverage.reason;
+  return reason;
 }
 
 export type ParentValidationRunOptions = {

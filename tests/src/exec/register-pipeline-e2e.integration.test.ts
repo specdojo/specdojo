@@ -2710,7 +2710,7 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
   );
 
   it(
-    "rejects a resumed target-less register executor that omits the first-attempt change lower bound",
+    "blocks a resumed target-less register executor that omits the first-attempt change lower bound and keeps it resumable",
     { timeout: 120_000 },
     async () => {
       await withRepo(async ({ root, worktreeBase }) => {
@@ -2762,11 +2762,113 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
         const resumedState = JSON.parse(
           readFileSync(join(evidenceDir, runIds[0], "pipeline-state.json"), "utf8"),
         ) as { stages: { executor: { status: string }; reporter: { status: string } } };
-        expect(resumedState.stages.executor.status).toBe("failed");
+        expect(resumedState.stages.executor.status).toBe("blocked");
         expect(resumedState.stages.reporter.status).toBe("pending");
+        const waitingTicket = readFileSync(
+          join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md"),
+          "utf8",
+        );
+        expect(waitingTicket).toContain("item_status: waiting");
+        expect(waitingTicket).toContain(
+          `resumed executor did not account for every plan target: ${PARTIAL_ARTIFACT}`,
+        );
+        const blockedEvidence = JSON.parse(
+          readFileSync(join(evidenceDir, runIds[0], "evidence.json"), "utf8"),
+        ) as { completion_status?: string; stage: { status: string } };
+        expect(blockedEvidence.completion_status).toBe("incomplete");
+        expect(blockedEvidence.stage.status).toBe("succeeded");
+
+        // PJR-FGKB: the blocked run stays resumable from the executor stage.
+        process.exitCode = undefined;
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-AB12",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+          "--resume",
+          "--resume-from",
+          "executor",
+        ]);
+        expect(process.exitCode).toBe(1);
+        expect(readdirSync(evidenceDir)).toEqual(runIds);
+        const reblockedState = JSON.parse(
+          readFileSync(join(evidenceDir, runIds[0], "pipeline-state.json"), "utf8"),
+        ) as { stages: { executor: { status: string } } };
+        expect(reblockedState.stages.executor.status).toBe("blocked");
+      });
+    },
+  );
+
+  it(
+    "excludes a first-attempt change deleted before resume from the lower bound and records it in evidence",
+    { timeout: 120_000 },
+    async () => {
+      await withRepo(async ({ root, worktreeBase }) => {
+        vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+        vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-AB12",
+          "--executor-by",
+          "exec-rate-limit",
+          "--reporter-by",
+          "report-1",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+        ]);
+        expect(process.exitCode).toBe(1);
+        const worktreePath = execWorktreePath(root) ?? "";
+        expect(worktreePath).not.toBe("");
+        const evidenceDir = join(worktreePath, EXECUTION_REL, "runs", "register", "PJR-AB12");
+        const [runId] = readdirSync(evidenceDir);
+
+        // The stray output of the first attempt is removed before resume.
+        rmSync(join(worktreePath, PARTIAL_ARTIFACT), { force: true });
+
+        process.exitCode = undefined;
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-AB12",
+          "--executor-by",
+          "exec-1",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+          "--resume",
+          "--resume-from",
+          "executor",
+        ]);
+
+        expect(process.exitCode ?? 0).toBe(0);
         expect(
           readFileSync(join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md"), "utf8"),
-        ).toContain(`resumed executor did not account for every plan target: ${PARTIAL_ARTIFACT}`);
+        ).toContain("item_status: review");
+        expect(execWorktreePath(root)).toBeNull();
+        const evidence = JSON.parse(
+          readFileSync(
+            join(root, EXECUTION_REL, "runs", "register", "PJR-AB12", runId, "evidence.json"),
+            "utf8",
+          ),
+        ) as { excluded_coverage_targets?: Array<{ target: string; reason: string }> };
+        expect(evidence.excluded_coverage_targets).toEqual([
+          {
+            target: PARTIAL_ARTIFACT,
+            reason:
+              "changed by an earlier attempt, but absent from the working tree and the cumulative diff at resume",
+          },
+        ]);
       });
     },
   );
