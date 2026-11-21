@@ -9,6 +9,7 @@ specdojo:
   item_type: issue
   item_status: open
   priority: low
+  difficulty: medium
   owner: DEV
   registered_at: "2026-11-21T08:16:03Z"
   derived_from:
@@ -39,12 +40,19 @@ specdojo:
 
 ## 4. 対応方針
 
-| 項目     | 内容   |
-| -------- | ------ |
-| 原因     | _TODO_ |
-| 対応策   | _TODO_ |
-| 依存事項 | _TODO_ |
-| 完了条件 | _TODO_ |
+| 項目     | 内容                                                                                                                                                                                                                                                                                                                                 |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 原因     | `src/exec/run/schedule-mode.ts` は、`generated/ready.json` にないタスクの track を、タスク ID を `-` で区切った 2 つ目（`T-KATA-WAVE-3-…` では `KATA`）と推定し、存在しない `sch-track-kata.yaml` を探す。そのため段の情報が引けず、`schedule-prepare.ts` が「Cannot resolve phase context … not found in sch-strategy files」を出す |
+| 対応策   | ready にないタスクは、状態（依存が終わっていない・done・doing・cancelled など）を調べ、本当の理由と先行のタスクを示して止める。track は ID の分解ではなく schedule の定義から引く。doing のタスクの再開は今までどおり流せるようにする                                                                                                |
+| 依存事項 | なし                                                                                                                                                                                                                                                                                                                                 |
+| 完了条件 | 下の箇条書きのすべてを満たす                                                                                                                                                                                                                                                                                                         |
+
+- 依存が終わっていないタスクを `--task` で指定すると、終わっていない先行のタスクの ID を含むエラーで止まる。
+- done のタスクを指定すると、done であることを示すエラーで止まる。
+- track の名前に `-` を含むタスク（`T-KATA-WAVE-3-…` など）で、doing のタスクの再開が今までどおり流れる。
+- 上の 3 つを単体テストで確かめる。
+- `CHANGELOG.md` は変えない。個票の対応結果の `### 5.1. CHANGELOG に書く事項` に、区分（追加・変更・不具合修正など）と行の文案を書く。
+- `npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md` を通し、親の検証を通す。
 
 ## 5. 対応結果
 
