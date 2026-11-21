@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-FGKB",
   "run_id": "pjr-fgkb-20261121T152029Z-94ed92f3",
-  "updated_at": "2026-11-21T15:32:46.876Z",
+  "updated_at": "2026-11-21T15:32:54.723Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-FGKB/pjr-fgkb-20261121T152029Z-94ed92f3/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-21T15:32:46.876Z",
-      "completed_at": null,
+      "completed_at": "2026-11-21T15:32:54.723Z",
       "artifact_ref": null
     }
   },
