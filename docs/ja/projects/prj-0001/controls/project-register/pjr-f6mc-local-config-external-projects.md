@@ -12,7 +12,7 @@ specdojo:
   difficulty: easy
   owner: DEV
   registered_at: "2026-11-21T09:03:34Z"
-  block_reason: "parent validation failed: lint-fm, validate-schema, test-unit"
+  block_reason: "parent validation failed: test-unit"
 ---
 
 # PJR-F6MC ローカル設定で external_projects を宣言できない
@@ -58,7 +58,7 @@ external_projects の path は相手のリポジトリの置き場所で、環�
 
 - `src/shared/local-config.ts` の `applyLocalConfig` で `external_projects` を許可リストへ追加した。トップレベルの許可キーが `version`・`projects`・`external_projects` となり、既存の共有 alias は `path` だけを差し替え、共有に無い alias は `path`・`project_id` ともに local から足す（`kind: external-path` / `external-added`）。
 - `LocalConfigOverride` の型を 4 種に広げた（`path`・`added`・`external-path`・`external-added`）。`formatLocalOverride`・`formatConfigShow` も各 kind に合わせて表示する。
-- `docs/specdojo/schemas/v1/exec-evidence.schema.yaml` の `local_config_overrides` を `oneOf` 形式に書き替え、`project`/`repo` 系と `external` 系の項目を同時に許すようにした。
+- `docs/specdojo/schemas/v1/exec-evidence.schema.yaml` の `local_config_overrides` を `oneOf` 形式に書き替え、`project`/`repo` 系と `external` 系の項目を同時に許すようにした。`not.properties` の禁止キーは空のサブスキーマではなくブールの `false` にし、スキーマそのものが Ajv で検証できる形に直した（lint:fm・validate:schema・test:unit の失敗原因）。
 - テスト: `tests/src/shared/local-config.test.ts` に「共有の別名の `path` 差し替え＋新規 alias の追加」「許可外のキーの拒否」「`path` が空文字の拒否」を追加した。
 - 文書: [[specdojo:specdojo-config-reference]] のトップレベルキー表・許可するキー表・7. ローカル設定へ、`external_projects.<alias>`（既存／追加）と `external-path` / `external-added` を足した。
 
