@@ -1,0 +1,14 @@
+parent validation: lint-md
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.9.2 lint:md
+> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'
+
+
+
+--- stderr ---
+docs/ja/projects/prj-0001/execution/runs/register/PJR-QTZ7/pjr-qtz7-20261121T164955Z-0cd2083e/result.md:34 error MD061/no-chinese-glyphs Detects simplified Chinese glyphs used by mistake in Japanese documents. [中国語の簡体字 '个' を検知しました。日本語の '個' などに修正してください。] [Context: "个票 PJR-QTZ7"]
+docs/ja/projects/prj-0001/execution/runs/register/PJR-QTZ7/pjr-qtz7-20261121T164955Z-0cd2083e/result.md:38 error MD061/no-chinese-glyphs Detects simplified Chinese glyphs used by mistake in Japanese documents. [中国語の簡体字 '个' を検知しました。日本語の '個' などに修正してください。] [Context: "个票 PJR-QTZ7"]
