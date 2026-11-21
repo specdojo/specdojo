@@ -160,3 +160,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_d8fe9b2937784ecfb404c74209332616
+- v: 1
+  id: reg_1e959ca17a824eb0a57f6e9a8af6ce8f
+  ts: "2026-11-21T00:50:05Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register を 2 回で対応（2 回目は agy を止めたため sonnet で最初から流し直した）。確認用の空のリポジトリでの書き込みと --commit、ビルド済みの CLI での dry-run の 3 つのエラーを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-21"
+    - field: conclusion
+      from: "-"
+      to: register update に --section と --section-file を足し、個票の 1 つの章の本文をファイルで差し替える。dry-run でも無い章・読めないファイル・見出しを含むファイルをエラーにする
+  previous_event_id: reg_4e21f6f868a74009aea2468259f89342

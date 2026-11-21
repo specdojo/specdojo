@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-7kxw-register-update-section-body
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   registered_at: "2026-11-13T14:08:21Z"
+  completed_at: "2026-11-21T00:50:04Z"
+  conclusion: register update に --section と --section-file を足し、個票の 1 つの章の本文をファイルで差し替える。dry-run でも無い章・読めないファイル・見出しを含むファイルをエラーにする
   commit_type: feat
   commit_scope: register
 ---
