@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-6998-kata-sample-catalog
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: high
   owner: BA
   registered_at: "2026-11-18T11:59:09Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-21T02:52:45Z"
+  conclusion: "案 A: kata ドメインを足して sample を成果物として載せ、第 3〜5 波と kata-slim-3 はこのドメインを対象にする。epic は今ある波の epic を使う"
   derived_from:
     - PJR-WYTX
 ---
