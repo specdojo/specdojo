@@ -125,3 +125,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_e576c4fbf3b940fe97c3eac5651a88ea
+- v: 1
+  id: reg_d808864e86e54b218466f900e1fd0ba6
+  ts: "2026-11-21T12:57:25Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（sonnet）で実装し、統合テスト 13 件の失敗を executor から再開して直した。オーケストレーターが完了条件を差分・個票の対応結果・ビルド済み CLI（各コマンドが unknown command になる）で確かめた。過去の版の移行ガイドと CHANGELOG.md は変わっていない
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-21"
+    - field: conclusion
+      from: "-"
+      to: 非推奨の 9 コマンドと exec・catalog・schedule・job・routine の where の別名を消した（3eea88005）。使われ方を確かめ、prj-0002 を含めて呼び出しがないことを確かめた
+  previous_event_id: reg_59a05d2f9140452596e2931da5810fd3
