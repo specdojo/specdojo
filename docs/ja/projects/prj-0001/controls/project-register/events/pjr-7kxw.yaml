@@ -102,3 +102,32 @@
       from: in-progress
       to: review
   previous_event_id: reg_aa9c27ba7d0646cfb65a9930dfd2d84d
+- v: 1
+  id: reg_ec141750dd6b453180523a44ab098e8b
+  ts: "2026-11-20T23:58:12Z"
+  action: start
+  actor: flash-high-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_668ac52769184926b136f9da12b4e216
+- v: 1
+  id: reg_74302bd7421e46f982085ae272c0eb17
+  ts: "2026-11-21T00:07:05Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: root agent idle; waiting for 1 background task(s) to finish"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: root agent idle; waiting for 1 background task(s) to finish"
+  previous_event_id: reg_ec141750dd6b453180523a44ab098e8b
