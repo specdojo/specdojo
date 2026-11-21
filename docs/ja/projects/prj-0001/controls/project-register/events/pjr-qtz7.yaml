@@ -90,3 +90,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_06cd9a6ee78b49bb8a50534a5c76ccbd
+- v: 1
+  id: reg_01fd27486910489eb3b8246dd62b1883
+  ts: "2026-11-21T18:04:33Z"
+  action: wait
+  actor: qwen-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-unit"
+  previous_event_id: reg_5901912eae084b0e8180bb33b59f6c41
