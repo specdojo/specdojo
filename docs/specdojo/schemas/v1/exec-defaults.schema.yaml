@@ -108,6 +108,9 @@ $defs:
         lint-ts,
         lint-fm,
         lint-md,
+        lint-fm-changed,
+        lint-md-changed,
+        test-docs,
         lint-mermaid,
         lint-d2,
         build,
@@ -160,6 +163,12 @@ $defs:
                     one of them, and records `not_applicable` otherwise. Without `paths`, or when
                     the change set is unknown or truncated, or when the integration targets were
                     merged into the worktree, the validation always runs.
+                parallel:
+                  type: boolean
+                  description: >
+                    When true, the validation runs concurrently with the directly adjacent
+                    entries that also set `parallel: true`. Other entries run one at a time in
+                    list order. Results are recorded in list order. Use it for light lint only.
       post_integration:
         type: array
         uniqueItems: true

@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-50RQ",
+  "run_id": "pjr-50rq-20261121T145643Z-8ec2e7e5",
+  "updated_at": "2026-11-21T15:05:15.943Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sonnet-executor",
+      "attempts": 1,
+      "started_at": "2026-11-21T14:57:21.142Z",
+      "completed_at": "2026-11-21T15:00:35.074Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-50RQ/pjr-50rq-20261121T145643Z-8ec2e7e5/evidence.json"
+    },
+    "reporter": {
+      "status": "failed",
+      "actor": "gemma26-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-21T15:04:04.610Z",
+      "completed_at": "2026-11-21T15:05:15.943Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-50RQ/pjr-50rq-20261121T145643Z-8ec2e7e5/result.md"
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-50RQ/pjr-50rq-20261121T145643Z-8ec2e7e5/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-50RQ/pjr-50rq-20261121T145643Z-8ec2e7e5/result.md"
+  }
+}
