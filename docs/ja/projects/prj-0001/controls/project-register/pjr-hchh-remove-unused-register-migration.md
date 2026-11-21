@@ -29,7 +29,11 @@ PJR-GV43 で register migrate を消したため、src/register/migrate-timestam
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- `register migrate` の削除（PJR-GV43）で呼び出し元がなくなった `src/register/migrate-timestamps.ts`、`src/register/register.ts` の `migrateEmbeddedRegisterEvents`・`migrateRegisterEventsFromGit`、`src/register/command-types.ts` の対応する型と、それらだけが使う関数・テストを消す。
+- 消す前に、`src`・`tests`・`tools`・`scripts` から呼ばれていないことを grep で確かめ、結果を個票の対応結果に書く。ほかから呼ばれているものは残し、理由を書く。
+- `src/exec/core.ts` のイベント型（`note`・`link`・`estimate`）は、既存のイベントファイルを読むために残す。
+- `CHANGELOG.md` は変えない。個票の対応結果の `### 5.1. CHANGELOG に書く事項` に、区分と行の文案を書く。利用者に影響がなければ「なし」と書く。
+- `npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md` を通し、親の検証を通す。
 
 ## 4. 作業内容
 
