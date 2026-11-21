@@ -1,0 +1,18 @@
+`docs/ja/specdojo/samples/utc-index-sample.md` を書き直し、rulebook の9章構成に沿った駄菓子屋きぬやの完成例にしました。prettier と `docs:build` はどちらも成功しています。変更したのはこのファイルだけで、rulebook と result は触っていません。
+
+**主な変更**
+- **frontmatter と H1:** `based_on` に `specdojo:tsp-index-sample` と `specdojo:bac-sample` を追加しました。H1 は rulebook が定める形式の「単体テストカタログ: 概要（駄菓子屋きぬや 販売管理システム）」にし、Markdown リンクを外しました（F018〜F020）。
+- **章構成:** 見出しを rulebook の「本文要件」の番号と名称にそろえ、必須8章と任意の「メモ / 将来課題」を置きました（F017・F021）。
+- **目的と適用対象:** 守る業務と、誤りが残ったときの影響を書きました。DEV・QE・ARC・PO がそれぞれ何を判断するかを表にし、合否の基準は `tsp-index` の品質ゲートと `kinuya-ci-unit` の CI 結果に結び付けました（F001・F008・F010・F016）。
+- **対象の括り方・対象外・依存の扱い:** 対象は `utc-sales-checkout`、`utc-sale-input`、`utc-credit-balance` の3つ（いずれも未同梱の架空成果物）に分け、それぞれ括った理由を付けました。対象外の5項目には、代わりにどのテストレベルで確認するかと例外を付けました。DB・記録サービス・印刷・時刻・採番の扱いは Fake / Stub / Mock の使い分けとして表にしました（F009・F011・F013）。
+- **観点・条件・分配:** 観点の型、条件の区分、主担当への分配を、BAC-01〜BAC-03 の条件 ID とつないだ実例で示しました。「TPC」などの略語はなくし、旧版で本文と同じ内容を繰り返していた表も削除しました（F005・F012・F022・F023）。
+- **ケース表と未決事項:** ケース表は列ごとの値の決め方と、`case_id` 形式に沿った代表1行を示しました。未決事項は TODO / UNDECIDED / ASSUMPTION に分け、影響する章、決定までの扱い、担当・判断者、報告先（課題・リスク・決定事項）を付けました（F003・F006・F007・F014）。
+
+**解消していない指摘**
+- **F015・F024:** 検証コマンド、lint、リリース前チェックリストは書いていません。rulebook の「共通の運用」が、文書の整形・lint は業務の受入確認に含めないと定めているためです。単体テストの実行と証跡は CI ジョブで示しています。
+- **F025:** 改訂は ARC が承認すると書きましたが、`status` の変更手順は rulebook に従ってドキュメントメタ情報標準に任せています。
+- **F004:** 承認者は書きましたが、公開対象をどう書くかは rulebook に定めがないので、再評価で判断してもらいます。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"utc-index-sample.md を rulebook の9章構成に沿って駄菓子屋きぬやの完成例へ書き直した。based_on 追加、H1 を規定形式に変更、各章に実例の表、BAC 条件 ID とのトレース、未決事項の担当・判断者・報告先を記載。prettier と docs:build は成功。","handoff":["rulebook 変更案: utc-index-rulebook の「全体方針」にある _UNDECIDED_ の「sample は「本文要件」の見出し構成へ未整合」は今回の改訂で解消したので、この一文を削除する。","F015（検証コマンド・lint）と F024（リリース前チェックリスト）は sample に書いていない。rulebook の「共通の運用」が文書の整形・lint は業務の受入確認に含めないと定めているため。単体テストの実行と証跡は CI ジョブ `kinuya-ci-unit`（架空）で示した。再評価で、rulebook の範囲外の指摘として扱えるか確認する。","F025: 改訂の承認者として ARC を明記した。`status` の変更手順は rulebook に従ってドキュメントメタ情報標準に任せている。F004: 承認者は明記したが、公開対象の書き方は rulebook に定めがない。再評価で判断する。","対象別 sample の `utc-sample.md` は旧来の薄い形式のまま。本書の term（`utc-sales-checkout` など）と `case_id` の例に合わせて、別タスクで厚くする必要がある。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/utc-index-sample.md","status":"passed","summary":"--write で整形した後の check で、Prettier のスタイルに適合"},{"command":"npm run docs:build","status":"passed","summary":"docs:generate と VitePress のビルドが完了（build complete）"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更したのは sample だけで、plan / result / 個票は変更していないため"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変更していない","reason":"変更したファイルに *.yaml / *.yml がないため"}]}
+</specdojo_executor_evidence>
