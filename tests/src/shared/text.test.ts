@@ -3,6 +3,7 @@ import {
   escapeMarkdownTableCell,
   escapeRegExp,
   redactSensitiveText,
+  unescapeBackticksWhenUniform,
 } from "../../../src/shared/text.js";
 import { sensitiveTextCases } from "../../fixtures/sensitive-text.js";
 
@@ -86,5 +87,23 @@ describe("redactSensitiveText", () => {
     "password=[REDACTED] api_key=[REDACTED]",
   ])("keeps non-secrets and already redacted text: %s", (input) => {
     expect(redactSensitiveText(input)).toBe(input);
+  });
+});
+
+describe("unescapeBackticksWhenUniform", () => {
+  it("restores backticks when every backtick is escaped", () => {
+    const actual = unescapeBackticksWhenUniform("\\`npm test\\` を実行した");
+
+    expect(actual).toBe("`npm test` を実行した");
+  });
+
+  it("keeps text unchanged when a bare backtick is mixed in", () => {
+    const text = "`a\\` と \\`b\\`";
+
+    expect(unescapeBackticksWhenUniform(text)).toBe(text);
+  });
+
+  it("keeps text without escaped backticks unchanged", () => {
+    expect(unescapeBackticksWhenUniform("`code` のまま")).toBe("`code` のまま");
   });
 });

@@ -72,7 +72,7 @@ tasks:
       - G-KATA-WAVE-3-first-pass
     owner: QE
     agent:
-      executor: sol-review-executor
+      executor: opus-review-executor
       reporter: gemma26-reporter
     description: >
       対応する rulebook と sample を読み、章構成・判断基準・例の充実度・相互整合をレビューする。sample の done_criteria だけで完了としない。成果物・型は変更せず、指摘と根拠を review
@@ -152,7 +152,7 @@ tasks:
       - G-KATA-WAVE-3-first-pass
     owner: QE
     agent:
-      executor: sol-review-executor
+      executor: opus-review-executor
       reporter: gemma26-reporter
     description: >
       対応する rulebook と sample を読み、章構成・判断基準・例の充実度・相互整合をレビューする。sample の done_criteria だけで完了としない。成果物・型は変更せず、指摘と根拠を review
@@ -232,7 +232,7 @@ tasks:
       - G-KATA-WAVE-3-first-pass
     owner: QE
     agent:
-      executor: sol-review-executor
+      executor: opus-review-executor
       reporter: gemma26-reporter
     description: >
       対応する rulebook と sample を読み、章構成・判断基準・例の充実度・相互整合をレビューする。sample の done_criteria だけで完了としない。成果物・型は変更せず、指摘と根拠を review
@@ -312,7 +312,7 @@ tasks:
       - G-KATA-WAVE-3-first-pass
     owner: QE
     agent:
-      executor: sol-review-executor
+      executor: opus-review-executor
       reporter: gemma26-reporter
     description: >
       対応する rulebook と sample を読み、章構成・判断基準・例の充実度・相互整合をレビューする。sample の done_criteria だけで完了としない。成果物・型は変更せず、指摘と根拠を review
@@ -392,7 +392,7 @@ tasks:
       - G-KATA-WAVE-3-first-pass
     owner: QE
     agent:
-      executor: sol-review-executor
+      executor: opus-review-executor
       reporter: gemma26-reporter
     description: >
       対応する rulebook と sample を読み、章構成・判断基準・例の充実度・相互整合をレビューする。sample の done_criteria だけで完了としない。成果物・型は変更せず、指摘と根拠を review
@@ -472,7 +472,7 @@ tasks:
       - G-KATA-WAVE-3-first-pass
     owner: QE
     agent:
-      executor: sol-review-executor
+      executor: opus-review-executor
       reporter: gemma26-reporter
     description: >
       対応する rulebook と sample を読み、章構成・判断基準・例の充実度・相互整合をレビューする。sample の done_criteria だけで完了としない。成果物・型は変更せず、指摘と根拠を review
@@ -552,7 +552,7 @@ tasks:
       - G-KATA-WAVE-3-first-pass
     owner: QE
     agent:
-      executor: sol-review-executor
+      executor: opus-review-executor
       reporter: gemma26-reporter
     description: >
       対応する rulebook と sample を読み、章構成・判断基準・例の充実度・相互整合をレビューする。sample の done_criteria だけで完了としない。成果物・型は変更せず、指摘と根拠を review
@@ -632,7 +632,7 @@ tasks:
       - G-KATA-WAVE-3-first-pass
     owner: QE
     agent:
-      executor: sol-review-executor
+      executor: opus-review-executor
       reporter: gemma26-reporter
     description: >
       対応する rulebook と sample を読み、章構成・判断基準・例の充実度・相互整合をレビューする。sample の done_criteria だけで完了としない。成果物・型は変更せず、指摘と根拠を review
@@ -712,7 +712,7 @@ tasks:
       - G-KATA-WAVE-3-first-pass
     owner: QE
     agent:
-      executor: sol-review-executor
+      executor: opus-review-executor
       reporter: gemma26-reporter
     description: >
       対応する rulebook と sample を読み、章構成・判断基準・例の充実度・相互整合をレビューする。sample の done_criteria だけで完了としない。成果物・型は変更せず、指摘と根拠を review
@@ -792,7 +792,7 @@ tasks:
       - G-KATA-WAVE-3-first-pass
     owner: QE
     agent:
-      executor: sol-review-executor
+      executor: opus-review-executor
       reporter: gemma26-reporter
     description: >
       対応する rulebook と sample を読み、章構成・判断基準・例の充実度・相互整合をレビューする。sample の done_criteria だけで完了としない。成果物・型は変更せず、指摘と根拠を review
@@ -872,7 +872,7 @@ tasks:
       - G-KATA-WAVE-3-first-pass
     owner: QE
     agent:
-      executor: sol-review-executor
+      executor: opus-review-executor
       reporter: gemma26-reporter
     description: >
       対応する rulebook と sample を読み、章構成・判断基準・例の充実度・相互整合をレビューする。sample の done_criteria だけで完了としない。成果物・型は変更せず、指摘と根拠を review
@@ -953,7 +953,7 @@ tasks:
       - G-KATA-WAVE-3-first-pass
     owner: QE
     agent:
-      executor: sol-review-executor
+      executor: opus-review-executor
       reporter: gemma26-reporter
     description: >
       対応する rulebook と sample を読み、章構成・判断基準・例の充実度・相互整合をレビューする。sample の done_criteria だけで完了としない。成果物・型は変更せず、指摘と根拠を review
@@ -1032,7 +1032,7 @@ tasks:
       - G-KATA-WAVE-3-first-pass
     owner: QE
     agent:
-      executor: sol-review-executor
+      executor: opus-review-executor
       reporter: gemma26-reporter
     description: >
       対応する rulebook と sample を読み、章構成・判断基準・例の充実度・相互整合をレビューする。sample の done_criteria だけで完了としない。成果物・型は変更せず、指摘と根拠を review
