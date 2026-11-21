@@ -161,7 +161,7 @@ describe("parent validation allowlist", () => {
 
   it("lists the allowed IDs when rejecting an unknown ID", () => {
     expect(() => resolveParentValidationDefinitions(["lint"])).toThrow(
-      /allowed: validate-schema, typecheck, test-unit, test-integration, lint-ts, lint-fm, lint-md, lint-mermaid, lint-d2, build, format-check/,
+      /allowed: validate-schema, typecheck, test-unit, test-integration, lint-ts, lint-fm, lint-md, lint-fm-changed, lint-md-changed, test-docs, lint-mermaid, lint-d2, build, format-check/,
     );
   });
 
@@ -388,7 +388,7 @@ describe("parent validation repository assignment", () => {
 
   it("rejects malformed entries, unknown IDs and duplicate (id, repo) pairs", () => {
     expect(() => resolveParentValidationAssignments([{ id: "test-unit" }])).toThrow(
-      /pipeline\.parent_validations\[0\] in exec-defaults must set repo or paths/,
+      /pipeline\.parent_validations\[0\] in exec-defaults must set repo, paths or parallel/,
     );
     expect(() => resolveParentValidationAssignments([{ id: "test-unit", repo: "App1" }])).toThrow(
       /\.repo must match/,
@@ -705,6 +705,63 @@ describe("parent validation selection by change type", () => {
   it("rejects empty paths", () => {
     expect(() => resolveParentValidationAssignments([{ id: "test-unit", paths: [] }])).toThrow(
       /\.paths must be a non-empty array/,
+    );
+  });
+});
+
+describe("parent validation for documentation-only changes (PJR-50RQ)", () => {
+  const entries = [
+    { id: "lint-md-changed", parallel: true },
+    { id: "lint-fm-changed", parallel: true },
+    { id: "lint-md", paths: ["packages/docs-lint/**"], parallel: true },
+    { id: "test-docs", paths: ["docs/ja/specdojo/**", "docs/specdojo/**"] },
+    { id: "test-unit", paths: ["{src,tests,tools,scripts,packages}/**", "vitest.*"] },
+    { id: "test-integration", paths: ["{src,tests,tools,scripts,packages}/**", "vitest.*"] },
+  ];
+  const statusesFor = async (changedPaths: string[]) => {
+    const invoker: ParentValidationInvoker = async () => ({ exitCode: 0, stdout: "", stderr: "" });
+    const validations = await runParentValidations(entries, "/repo", invoker, { changedPaths });
+    return Object.fromEntries(validations.map(({ id, status }) => [id, status]));
+  };
+
+  it("runs test-docs and not the full tests for a documentation change", async () => {
+    expect(await statusesFor(["docs/ja/specdojo/guides/a.md"])).toEqual({
+      "lint-md-changed": "passed",
+      "lint-fm-changed": "passed",
+      "lint-md": "not_applicable",
+      "test-docs": "passed",
+      "test-unit": "not_applicable",
+      "test-integration": "not_applicable",
+    });
+  });
+
+  it("runs the full tests for a src change and skips test-docs", async () => {
+    expect(await statusesFor(["src/exec/a.ts"])).toMatchObject({
+      "test-docs": "not_applicable",
+      "test-unit": "passed",
+      "test-integration": "passed",
+    });
+  });
+
+  it("runs adjacent parallel validations concurrently and keeps list order", async () => {
+    let running = 0;
+    let peak = 0;
+    const invoker: ParentValidationInvoker = async () => {
+      running++;
+      peak = Math.max(peak, running);
+      await new Promise((resolve) => setTimeout(resolve, 20));
+      running--;
+      return { exitCode: 0, stdout: "", stderr: "" };
+    };
+    const validations = await runParentValidations(entries, "/repo", invoker);
+
+    expect(peak).toBe(3);
+    expect(validations.map(({ id }) => id)).toEqual(entries.map(({ id }) => id));
+  });
+
+  it("rejects a non-boolean parallel", () => {
+    expect(() => resolveParentValidationAssignments([{ id: "lint-md", parallel: "yes" }])).toThrow(
+      /\.parallel must be a boolean/,
     );
   });
 });
