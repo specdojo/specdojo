@@ -1,0 +1,22 @@
+`docs/ja/specdojo/samples/tsp-index-sample.md` を、メタな説明しかない最小サンプルから、駄菓子屋きぬやのテスト戦略・方針を値で埋めた完成例に書き直しました。prettier、markdownlint、`npm run docs:build` は通っています。rulebook は変更していません。
+
+**主な変更**
+- **章立て:** rulebook の「本文要件」と同じ順にしました（概要、テストレベル一覧と観点/条件設計の共通原則、スコープ、テスト環境・テストデータ、入口／出口条件（品質ゲート）、自動化・回帰方針、不具合管理方針、メモ / 将来課題）。旧来の「目的と適用範囲／入力情報／最小記述例」の章は削除し、F019・F022〜F024 に対応しました。
+- **概要:** 守る品質、5つのテストレベルの順、判定の根拠を書きました。根拠は BAC-01〜BAC-03（`bac-sample`）と SC-01・AC-01〜AC-04（`prj-success-criteria-and-acceptance-criteria-sample`）で、`based_on` にも BAC・SAC・NFR・成功基準の sample を挙げています（F001・F002・F008）。
+- **テストレベル一覧:** 5レベルそれぞれに目的・範囲・実施ロール・やらないことを書き、隣のレベルとの分担も示しました。経路 ID（`PATH-01` など）は既存の `ifd-sample` と、印刷コマンドは `ifx-cmd-sample` と合わせています（F005・F010・F011）。
+- **品質ゲート:** 全レベルについて、入口条件・出口条件・エビデンス・判定者を表にしました。出口条件は合格率と重大度別の件数で pass / fail を判定でき、例外を承認するのは PM です（F004・F017・F018）。
+- **スコープ・環境:** 対象外の項目ごとに委ねる先を書き、環境ごとに外部との接続を実接続・スタブ・モックのどれにするかを決め、テストデータの方針も示しました（F009・F011）。
+- **回帰・不具合管理:** 回帰を必須とする領域と CI ジョブ（架空名 `kinuya-ci-unit` など）、重大度の4区分、不具合の収束基準を書きました（F014〜F016）。
+- **メモ / 将来課題:** 未決の論点ごとに、影響する章、決まるまでの扱い、担当・判断者を表にしました（F003・F007・F027）。
+
+**未解消・申し送り（result への記録が必要です）**
+- **SAC・NFR に参照できる条件 ID がない:** `sac-sample` と `nfr-index-sample` はまだ中身のない最小サンプルです。そのため総合テストの性能基準は、本書で「放課後ピーク1時間60取引で、会計確定の95%が2秒以内」と仮置きしました。両 sample が厚くなった後、出口条件をそれらの ID につなぎ直す必要があります。
+- **rulebook の記述ガイドの例が共通文脈とずれている:** 「テスト環境・テストデータ」「入口／出口条件」「メモ / 将来課題」の良い例は、決済I/F・「日次売上1,000取引」を挙げています。初期リリースは現金販売だけなので、例を共通文脈に合わせる変更案として result に書く必要があります。
+- **F028（保守手順・所有権）:** 改訂の扱いは rulebook の「共通の運用」と Sample 記述標準の「運用ルール」が受け持つため、本文に保守手順の章は足していません。
+- **F006（リスク・依存関係）:** 外部への依存とその分担はテストレベル一覧とスコープの対象外の表に書きました。独立したリスク表は rulebook の必須章にないので置いていません。
+
+lint:md・lint:fm・validate:schema などは、指示どおり実行を親 runner に任せています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"tsp-index-sample.md を rulebook の本文要件の章順に沿い、駄菓子屋きぬやの値で埋めた完成例へ書き直した（BAC-01〜03、SC-01・AC-01〜AC-04 と接続）。prettier・markdownlint・docs:build は成功。","handoff":["sac-sample と nfr-index-sample はまだ最小サンプルのままで条件 ID がない。そのため tsp-index-sample の総合テストの性能基準は『メモ / 将来課題』で仮置きした（放課後ピーク1時間60取引で会計確定の95%が2秒以内）。両 sample を厚くした後に出口条件を SAC/NFR の ID へつなぎ直す。","rulebook への変更案: tsp-index-rulebook の記述ガイド（テスト環境・テストデータ、入口／出口条件、メモ / 将来課題）の良い例が決済I/F・日次売上1,000取引を前提にしており、現金販売のみ・単一店舗という共通サンプル文脈とずれている。印刷連携や放課後ピークなど共通文脈に合う例へ差し替える案を result に記録する。","F028（sample の保守手順・所有権）は rulebook の『共通の運用』と Sample 記述標準の『運用ルール』が受け持つため、本文に保守手順の章を足していない。F006 のリスク・依存関係はテストレベル一覧・スコープの対象外の表で扱い、rulebook の必須章にない独立したリスク表は置いていない。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/tsp-index-sample.md","status":"passed","summary":"対象ファイルを整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/tsp-index-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run docs:build","status":"passed","summary":"build complete in 177.48s"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更したのは docs/ja/specdojo/samples/ 配下の sample だけで、plan・result・pjr 個票は変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML の変更なし","reason":"変更したファイルは *.md だけで、*.yaml / *.yml は変更していない"},{"command":"npm run validate:catalog","status":"not_applicable","summary":"プロジェクト成果物の変更なし","reason":"変更は docs/ja/specdojo/samples/ 配下だけで、docs/ja/projects/ 配下の成果物には及んでいない"}]}
+</specdojo_executor_evidence>
