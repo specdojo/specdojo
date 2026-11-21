@@ -189,3 +189,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_4016f532966643808d83b0941d49da27
+- v: 1
+  id: reg_be47aa92469b4eb1a179e49bf716940c
+  ts: "2026-11-21T08:57:50Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register を 3 回で対応。3 回目の差分で承認の記録が無くなり、対応結果に大きさが書かれたことを確かめ、opus で grade し直した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-21"
+    - field: conclusion
+      from: cnd-specdojo を手直しし、再 grade で pass（100 点・指摘 0 件）
+      to: cnd-specdojo を grade の指摘と PJR-76N9 の決定に合わせて直した。概要の役割の段落と 4.2 の承認・留保の表を外し、3・4 章を約 40% 短くした。grade し直して pass 93
+  previous_event_id: reg_69353825ec3d4cb08364e42e71ef078f

@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: ARC
   registered_at: "2026-11-15T11:12:33Z"
-  conclusion: cnd-specdojo を手直しし、再 grade で pass（100 点・指摘 0 件）
+  completed_at: "2026-11-21T08:57:50Z"
+  conclusion: cnd-specdojo を grade の指摘と PJR-76N9 の決定に合わせて直した。概要の役割の段落と 4.2 の承認・留保の表を外し、3・4 章を約 40% 短くした。grade し直して pass 93
   commit_type: docs
   commit_scope: cnd
   approach: fully-guided
