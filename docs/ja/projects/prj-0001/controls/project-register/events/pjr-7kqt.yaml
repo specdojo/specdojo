@@ -64,3 +64,16 @@
       from: ""
       to: 影響範囲
   previous_event_id: reg_da8680996f1646679dcd04e6739f96a9
+- v: 1
+  id: reg_7417586726984e07a459f643f4590788
+  ts: "2026-11-21T11:48:50Z"
+  action: update
+  actor: SpecDojo
+  from_status: open
+  to_status: open
+  reason: section "対応方針" updated
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_801c63bb5d3c4837a6c2e768b4dffb02
