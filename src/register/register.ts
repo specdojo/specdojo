@@ -11,6 +11,9 @@ import {
   stageCommitTargets,
   unstageCommitTargets,
   worktreeStatusPaths,
+  GitCommandError,
+  formatGitCommandFailure,
+  describeGitProcessFailure,
 } from "../shared/git.js";
 import { inlineCodeAnglePlaceholders } from "../shared/text.js";
 import type { Approach } from "../shared/agent-types.js";
@@ -291,6 +294,23 @@ export function registerCommitMessageFromParagraphs(
 const REGISTER_COMMIT_SUBJECT_MAX_LENGTH = 100;
 const REGISTER_COMMIT_STABILIZATION_ATTEMPTS = 3;
 
+// 失敗の commit で gitOutput が投げる GitCommandError は stderr のみ公開し、commitlint 等が stdout
+// へ出す理由を取りこぼす。gitResult を直接使い stdout と stderr の両方を formatGitCommandFailure
+// （内部で要約）に渡し、原因を含む GitCommandError を投げるローカルラッパー。成功時は文字を返す。
+function gitOutputCapturingFailure(repoRoot: string, args: string[]): string {
+  const result = gitResult(repoRoot, args);
+  if (result.status !== 0 || result.error) {
+    const stdout = typeof result.stdout === "string" ? result.stdout : "";
+    const stderr = typeof result.stderr === "string" ? result.stderr : "";
+    throw new GitCommandError(
+      formatGitCommandFailure(args, `${stdout}\n${stderr}`, describeGitProcessFailure(result)),
+      args,
+      `${stdout}\n${stderr}`,
+    );
+  }
+  return typeof result.stdout === "string" ? result.stdout : "";
+}
+
 function defaultRegisterCommitMessage(command: string, result: RegisterMutationResult): string {
   const prefix = `docs(register ${result.id}): ${command} `;
   const flatTitle = result.title.replace(/\s+/g, " ").trim();
@@ -382,7 +402,14 @@ async function commitRegisterMutation(
     const commitMessage =
       registerCommitMessageFromParagraphs(message) ?? defaultRegisterCommitMessage(command, result);
     // --only は初回・amend とも指定し、開始前からある staged 変更を混ぜない。
-    gitOutput(repoRoot, ["commit", "--only", "-m", commitMessage, "--", ...changed]);
+    gitOutputCapturingFailure(repoRoot, [
+      "commit",
+      "--only",
+      "-m",
+      commitMessage,
+      "--",
+      ...changed,
+    ]);
     committed = true;
     // hook の整形は一時 index にだけ入る。HEAD と一致した対象を index でも HEAD へ戻し、
     // 整形前の内容を staged のまま残さない（PJR-Y3XS）。
@@ -418,8 +445,10 @@ async function commitRegisterMutation(
     unstageCommitTargets(repoRoot, changed);
     await setImmediate();
     if (committed) throw error;
-    // 記帳は作業ツリーに残り commit だけが無い。最後の行に結果が出るよう、原因の後に状態を書く。
+    // gitOutputCapturingFailure は commitlint 等が stdout へ出す理由を stderr と併せて
+    // GitCommandError.message に含めるため、そのまま原因として使える。
     const cause = error instanceof Error ? error.message : String(error);
+    // 記帳は作業ツリーに残り commit だけが無い。最後の行に結果が出るよう、原因の後に状態を書く。
     throw new Error(
       `Register commit failed for ${result.id}: ${cause}\n` +
         `The register changes were written but not committed:\n` +

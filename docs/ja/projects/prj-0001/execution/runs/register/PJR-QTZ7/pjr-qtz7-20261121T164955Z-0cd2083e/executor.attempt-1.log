@@ -1,0 +1,202 @@
+bash には制限がありますが、読み取り系は許可されています。個票と関連ファイルを読み込みます。
+個票の完了条件を把握しました。対象のソースコードを確認します。
+個票の対応方針を理解しました。ソースコードを詳しく確認します。
+個票の対応方針を理解しました。まず関連テストと create-commands.ts の呼び出し箇所、git.ts を確認します。
+個票の完了条件と、関連テスト・git ヘルパーを確認しました。git.ts の `gitOutput`/`gitResult` とテストを確認します。
+個票の完了条件と実装を把握しました。重要な確認点として、`gitOutput` が stderr にしか注目しないため、commitlint が **stdout** へ理由を書く場合、ローカル commit でも失敗理由が取りこぼされる可能性があります。git commit の挙動を確認します。
+git の挙動を確認するため、git commit のヘルプを見ます。`git --version` がブロックされたようなので、別の方法で確認します。
+個票の完了条件と実装を把握できました。重要なのは、`gitOutput` が stderr のみに注目し、commitlint が **stdout** へ理由を書く場合、ローカル commit でも失敗理由が取りこぼせられる点です。個票の対応方針にも「実装で確かめる」とあります。
+
+まず関連テストと、register.ts を import しているテストを確認します。
+個票の完了条件（2つのテスト検証）と実装を確認しました。まず register.test.ts と git に関するテストが存在するか確認します。
+個票の実装方針を理解しました。commit の失敗の理由を取るには、`gitOutput` が stderr だけでなく stdout（commitlint は stdout）も拾う必要があります。関連する既存テストと集成テストを確認します。
+個票の完了条件を確認しました。重要な発見です。既存の集成テスト `commit.integration.test.ts` は、commit-msg hook が **stderr** に理由を書く場合 (`echo 'intentional hook failure' >&2`) を検証済みですが、本件は commitlint が **stdout** に理由を書くケースです。`gitOutput` は stderr のみを見るため取りこぼします。実装を確認します。
+実装方針が固まりました。git の挙動を正確に確認するため、一時ディレクトリで実験します。
+外部ディレクトリ操作は許可されていないため、git の実験は行いません。個票の報告（275 文字・414 文字）が確定された事実です。実装方針で進めます。
+
+`register.ts` の import を確認し、`summarizeGitStderr` を使えるか見ます。
+実装方針が固まりました。`register.ts` の import に `summarizeGitStderr` を追加し、`commitRegisterMutation` に `reason` パラメータを追加して stderr と stdout の両方を要約します。まず import を更新します。
+Now add the `reason` parameter and wire it into the catch block.
+Now add the helper type and function, and update the catch block to include the reason.
+I need to clean up that draft and implement it properly instead. Let me review what I've changed.
+Let me replace the draft helper with a clean version that matches the codebase style.
+Let me simplify the design — I'm overcomplicating with module-level variables. Let me look at the current state and rewrite cleanly.
+Let me rewrite this section cleanly. First, replace the helper with a self-contained version.
+Now update the `commitRegisterMutation` signature (remove the leftover `reason?: errorReasonFn`) and wire the reason into the catch block.
+Now update the catch block to include the git commit failure reason:
+Now implement the reason capture in the catch block. The `gitOutput` throws `GitCommandError` (from `src/shared/git.ts`) which carries `.args` and `.stderr`. I'll add a reason from re-running the commit with `--dry-run` capturing stdout+stderr, but only when the failing error is a git commit failure.
+The dry-run re-run would double-fire hooks and the `GitCommandError` already carries the stderr reason. Let me simplify — just import `GitCommandError` and append its stderr to the cause, which covers both stderr- and stdout-writing hooks without a second hook invocation. Let me revert the over-engineered helper.
+Now add the `gitFailureCause` helper and import `GitCommandError`, plus remove the now-unused imports if any. First add the helper near `defaultRegisterCommitMessage`.
+Let me look at the current state and clean up this helper — it's convoluted. I'll redesign properly using a controlled re-run that captures stdout+stderr.
+Let me rewrite the helper cleanly with a controlled re-run that captures stdout+stderr, avoiding `GitCommandError`'s private `stdout`. I'll also fix an existing latent bug: `summarizeGitStderr` is called with `GitCommandError.stderr` (a string field) but the type signature requires `string` — it's fine since `.stderr` is typed `string`. Let me verify `GitCommandError` import needs.
+I'm overcomplicating this again. Let me step back and write a clean, correct implementation from scratch by viewing the full region.
+Let me rewrite this whole block cleanly, passing the actual commit args from inside `commitRegisterMutation` (where `commitMessage`, `changed`, and pathspecs are in scope).
+Now update the catch block and add `GitCommandError` import. The catch needs `commitMessage`, `changed`, `repoRoot` from scope, which they are (in `commitRegisterMutation`).
+Update the catch block to compute the git commit failure reason with scoped args:
+Now add `GitCommandError` to the git import:
+Now the core fix — `register.ts` part. Part A is done. Now Part B: `external-project.ts` to forward `-m` as multiple `--message`. Let me apply that.
+Now replace the single `--message` push in `buildExternalRegisterAddArgs` with per-paragraph forwarding, and add the helper:
+I've made changes to both `register.ts` and `external-project.ts`, and I'm noticing that the call site in `create-commands.ts` passes commander's parsed options directly to `delegateExternalRegisterAdd`. Since the external type's `message` is now `readonly string[]` while commander's message option returns `string[] | undefined`, I need to verify whether this creates a type conflict — I'm checking the actual call signature in create-commands to see how `opts` flows through.
+The delegateExternalRegisterAdd wasn't yet made async (I haven't changed it). Let me re-read current state:
+I made a typo in that edit (`statusOnError(true): null,` is invalid). Let me fix it:
+I changed `stdio` from `"inherit"` to piped for failure capture, but successful output must still reach the user. Let me check `SpawnSyncReturns` and whether I need to forward stdout on success:
+Now forward success output to stdout/stderr so the user still sees progress, and run tests. Let me update the call site in create-commands. First check it:
+I need to forward success output and make the function async. Let me view current external-project.ts tail and fix it properly:
+Now update the call site to await, and check the `RegisterMutationOptions` type used in delegate:
+Update `delegateExternalRegisterAdd` to async since it now writes via `process.stdout`:
+Let me take a simpler approach — check if the tests really need async. They use synchronous mocks. Let me look at current external-project.ts and tests:
+Let me view the rest and clean up — use a synchronous approach with output forwarding in the same function (matching tests' synchronous mocks):
+The `+` continuation was on a new line. Let me just check current state again:
+Re-verify current state of external-project.ts:
+Now check the test file's use of `baseOptions` — it sets `message: "docs: add external item"` (a string). Tests pass this through to `buildExternalRegisterAddArgs` which now expects an array. Need to verify the type still works since tests use it directly. Let me update the test baseOptions to match new shape:
+Now let me check if other call sites use `message` as a string and update related tests/callers:
+Now revert the create-commands await since function is sync again, and run tests/typecheck:
+Now check the existing external-project integration test that uses `stdio: "inherit"` expectation (line 368 tests the second call's stdio). Let me look at it:
+This test asserts `toMatchObject({ stdio: "inherit" })` on the second call, but my change pipes the output. Let me update that expectation and capture stderr/stdout. Let me view the rest of the assert:
+Update the test expectation since we now pipe to capture commit failure output:
+Now run typecheck and the relevant tests:
+typecheck は親 runner の管理する検証なので、executor 内で実行しません。個票と register.ts の catch を最終確認します。
+The catch block uses `error.args`. Let me verify that's the correct property name on GitCommandError (it's `readonly args`):
+Now check the test that exercises hook failures in commit.integration.test.ts — it uses stderr (`echo '...failure' >&2`). With my dry-run re-exec, both stdout and stderr are now included via `summarizeGitStderr`, so the existing test should still pass. But the re-running of git with `--dry-run` is a *separate* hook invocation. Let me update `commit.integration.test.ts` to also cover the stdout commitlint case mentioned in the ticket:
+The existing test mocks stderr, not stdout, so my dry-run output goes to real stdout while the mocked process.stdout intercepts everything. I need to add a new test that validates commitlint writes to stdout and get that reason into my error instead.
+
+I should also check if there are existing tests for multiple `-m` arguments with external commands—the original issue mentions 275 characters being joined by commas, so I'll add unit tests to cover both scenarios. Let me start by adding a test to commit.integration.test.ts for stdout-based hook failures, then add unit tests to external-project.test.ts for the multiple message paragraphs.
+Now add unit tests in external-project.test.ts for repeated `-m` → multiple `--message`:
+Now run the relevant tests:
+Now update the ticket file with response section:
+Link syntax: `[[PRJ-QTZ7|...]]` should use the project-qualified id. Let me use the correct format:
+Link must not have backticks wrapping the `[[...]]`. Also, link-in-table needs escaping but this is a list, that's fine. Let me fix formatting:
+Actually the backslash only needed in tables; in a bullet list it's not needed:
+Now let me double-check the test I added. Let me re-read the new commit.integration.test for the stdout case:
+Let me clean up unused variables and verify logic:
+Now let me run the tests via the allowed `npm test` pattern:
+The parent runner owns test-unit. Let me check the specdojo config to understand catalog_path and what's applicable:
+I see that `catalog_path` is set in the prj-0001 config, which means validation checks apply to my changed files. The parent runner handles lint-ts, lint-fm, lint-md, and other tests, while I can run sandbox-safe commands like validate:catalog or prettier. Since I've modified markdown files, prettier formatting is required.
+The bash tool's general pattern is being denied. Let me check what the actual issue is — perhaps I need `git diff` to verify my changes:
+I see there's a change to the `pjr-qtz7.yaml` file in events that I need to examine more closely:
+The event file diff is pre-existing (unrelated to my changes — it's a generated event file). Let me check the `register.ts` diff to confirm all import statements are consistent and that I haven't broken syntax:
+The git diff with file arg is blocked. Let me read the files to verify consistency. First re-check the register.ts import and catch region:
+The catch uses `error.args`, but it's more correct to capture the original args in-try than rely on a class property. Let me make it robust by capturing the executed args:
+I'll capture the commit args in-try so the catch handles both the first attempt and non-GitCommandError cases robustly:
+Now I need to verify external-project.ts doesn't break when caller has `message` undefined vs array. Let me also verify that the test file's expectations align with the new behavior. Run a manual check of `external-project.test.ts`:
+Now let me check the `--amend --no-edit -- --...` line in register.ts and ensure no breakage with the `commitArgs` variable:
+Now let me ensure the test "inherits target output and propagates a failed target exit code" — it now expects `stdio: ["ignore", "pipe", "pipe"]` since we changed it. Let me confirm there are no other tests that assume `"inherit"`:
+The integration test in `external-project.integration.test.ts` uses the target CLI itself with `stdio: "inherit"` (which is fine — that's the test's own spawn, not the one being changed). Let me check if it tests the second call from external delegate:
+The integration test's `process.exitCode` assertions still hold since the new code forwards output and propagates exit codes. The unit test (line 368) now expects piped stdio, which I've updated. Now let me verify the test file line 271 still matches (it's checking the version-inspection call, which uses `["ignore", "pipe", "pipe"]` — correct). 
+
+Let me update the ticket's section 5 to be accurate and check for any remaining issues. Let me re-read the final register.ts helper once more and ensure `gitResult` import usage is fine:
+Good. Now let me check the ticket event yaml — I should not touch it since it's auto-generated (a `register add --commit` would generate it), but my diff earlier showed a pre-existing modification. Let me verify that change wasn't mine:
+The event file was already staged before my work. The git diff shows it's a pre-existing change (different quote style in the `to:` field). This is not from my edits — it's part of the runner's setup. I shouldn't touch it. Now let me verify the final ticket document and ensure frontmatter status stays draft:
+Let me clean up some minor formatting issues in the ticket (mismatched parens and inline code wrapping):
+Now let me run sandbox-safe validations that apply. Per the common convention table, since I changed `*.md` files (the ticket) and `catalog_path` is set, `validate:catalog` applies. Also prettier/markdownlint for md. Let me check which are sandbox-safe (not in parent_validations). The parent runs lint-ts, lint-fm, lint-md, lint-mermaid, lint-d2, test-integration, validate-schema, typecheck, test-unit. So I should NOT run those. `validate:catalog` is not in the parent list and applies (catalog_path set + docs/ja/projects change). Let me run it and prettier on my md/ts files.
+Prettier and validation checks are being denied by git config, so I'm going to try running a spec-dojo catalog validation instead since that's an allowed command.
+The bash tool seems to deny all commands except git. Let me test:
+Good — `npm run validate:catalog` runs fine. Most warnings are pre-existing and unrelated to my changes (they reference missing product docs). No errors that would block. Now let me also check if I have any issues with the type change — looking at create-commands.ts which calls `delegateExternalRegisterAdd(opts)`. The `opts.message` is from command parsing where commander's collector returns a `string[] | undefined` — compatible with new `readonly string[]` type.
+
+Let me verify there are no other callers of `buildExternalRegisterAddArgs` with message as string:
+None of these are usages of `ExternalRegisterAddOptions.message`. Let me verify the call site in create-commands passes commander opts which has `message?: string[]` (from `collectRegisterCommitMessage`). That's compatible with `readonly string[]` (TS allows `string[]` to `readonly string[]`). Good.
+
+Now check if the integration test uses `--message` with a value:
+Good. All callers are consistent. Now let me verify the ticket doc has no remaining `_TODO_`:
+No remaining `_TODO_`. Now let me verify the registration event file for pjrqtz7 — that earlier diff was a pre-existing uncommitted change. Since I shouldn't touch registration bookkeeping (runner handles it), and `git status` showed it staged before my edits, I'll leave it. Let me also confirm `register.ts`'s `commitArgs` typing works with `gitOutput`:
+Indentation got slightly off. Let me fix it (4 spaces, not the weird indentation):
+Now let me also ensure the `register.ts` changes don't have issues — `gitOutput(repoRoot, commitArgs)` where `commitArgs: readonly string[]`. Let me check gitOutput signature:
+`gitOutput` accepts `args: string[]`. My `commitArgs` is `readonly string[]`, which won't satisfy `string[]`. Let me fix the type:
+Now `gitCommitFailureReason` takes `readonly string[]` — fine for passing `string[]`. And `GitCommandError.args` is `readonly string[]`, also fine. Now verify the catch block uses these correctly:
+The catch logic is sound. Now let me think about whether the re-execution with `--dry-run` could itself mutate state. `git commit --only -- -pathspec` creates a temporary index, `--dry-run` just previews. But there's a subtlety: the original failed because the *commit-msg* hook rejected it. Re-running with `--dry-run` will invoke the hooks again (including pre-commit). For pre-commit hooks that *modify* and stage (PJR-Y3XS scenario), this could re-stage. But we already did `unstageCommitTargets` before, and the temporary index is isolated by `--only`. Since the reason-capture only matters when `!committed`, and we just want stdout/stderr text, it's acceptable. However an alternative cleaner approach: capture the reason from the *first* gitResult call instead of re-executing.
+
+Actually, a better approach: avoid re-execution entirely by capturing stdout+stderr from the original git command. But `gitOutput` throws `GitCommandError` exposing only `.stderr`. Let me reconsider — for the local commit path, I control the call. I can capture stdout+stderr directly with `gitResult` instead of `gitOutput`, eliminating re-execution. Let me refactor:
+Let me simplify the register.ts side — instead of re-running with `--dry-run`, capture stdout+stderr directly from the first commit using a helper that wraps `gitResult` and throws a `GitCommandError`. This avoids re-execution entirely. Let me refactor:
+Now I need `formatGitCommandFailure` and `describeGitProcessFailure` imported. Let me check git.ts exports:
+`summarizeGitStderr` already wraps the stdout+stderr combination in `formatGitCommandFailure`. I can simplify by just calling `gitResult` and reusing existing helpers. Now update imports and use the new helper at the call site:
+`summarizeGitStderr` may now be unused since `formatGitCommandFailure` already calls it internally. Let me check:
+`summarizeGitStderr` is now only referenced in a comment, not used code-wise. Remove the unused import:
+Now fix the comment that referenced `summarizeGitStderr` and update the call site to use `gitOutputCapturingFailure`:
+Now replace the commit call `gitOutput(repoRoot, commitArgs)` with `gitOutputCapturingFailure(repoRoot, commitArgs)`:
+Now I no longer need `commitArgs` for re-execution — the catch block gets `error.args` directly from the thrown `GitCommandError`. The `GitCommandError` now carries combined stdout+stderr in its `.stderr` property (I passed `${stdout}\n${stderr}`), so `error.message` already includes the reason via `formatGitCommandFailure`. So the catch can just use `error.message` directly. Let me simplify the catch:
+Typo in comment. Fix:
+Now `commitArgs` variable may be unused, and `GitCommandError` import may now be unused. Let me check:
+`commitArgs` is used (assigned and passed) — fine. `GitCommandError` is used in the helper — fine. Now there's a concern: the original code used `gitOutput` which does transient-retry; my `gitOutputCapturingFailure` calls `gitResult` directly (which also does retry). Good, consistent behavior. But the original `gitOutput` returned stdout string for success which wasn't used here. Fine.
+
+Now let me verify there are no remaining references to removed helper `gitCommitFailureReason`:
+Good. Now verify the full helper region and call site:
+Now let me verify the integration test's commit-msg hook writes to stdout. The new test I wrote uses `echo 'body-max-line-length: found 0'` (stdout, no `>&2`). With `gitOutputCapturingFailure`, `formatGitCommandFailure(args, "body-max-line-length: found 0\n", ...)` → the message includes the body text via `summarizeGitStderr`. But note `formatGitCommandFailure` calls `summarizeGitStderr(stderr)` which uses `GIT_CAUSE_LINE` regex — does `body-max-line-length: found 0` match a cause line? It matches `/(?:\berror\b...)/i`? "body-max-line-length" — no "error"/"fatal". But `summarizeGitStderr` falls back to `lines.slice(-2)` when no cause lines. The line "body-max-line-length: found 0" has no progress marker, so it's kept. Good, the reason will be captured. 
+
+Now let me also ensure the external integration test (`external-project.integration.test.ts`) still passes — it has a self/CLI scenario. It doesn't test message forwarding failure, just success path, and exitCode propagation. My external-project change forwards output on both success and failure; success path returns true with exitCode undefined → matches `process.exitCode).toBeUndefined()`. Good.
+
+Now run the unit + integration tests to verify (test-unit is parent's but I can run a targeted subset for evidence; however the instructions say don't duplicate parent validations). I'll rely on parent for test-unit/test-integration. Let me at least do a targeted sanity check via vitest for just these files — actually that would be running test:unit equivalent. Per rules, I should not duplicate. I'll mark them as not_run/parent-owned.
+
+Let me verify the ticket document section 4 完成条件 mentions `npm run lint:ts` etc — those are parent validations. 
+
+Now let me double check the final external-project.ts is coherent and run a quick grep for any syntax issue in the edited regions:
+All looks good. Now let me check the integration test setup uses `register add` with a single `-m` in one place — the existing integration tests use no `-m` (default message), so they're unaffected. 
+
+Let me verify there is a concern: my external-project change now forwards stdout/stderr via writing to process.stdout/stderr in the unit-test mock context. The "inherits target output and propagates a failed target exit code" test mocks run with `stdout: null, stderr: null` for the failure call, so `if (result.stdout)`/`if (result.stderr)` are falsy → no write. And first call `stdout: "0.4.5\n"` is written to real process.stdout — but that test doesn't mock process.stdout (it's in the precondition describe block which resets exitCode but not stdout). Minor: writing "0.4.5\n" to stdout in a test is harmless. Good.
+
+Now let me also reconsider: `delegateExternalRegisterAdd` previously had `stdio: "inherit"` so target output went directly to terminal. Now it pipes and writes via process.stdout/stderr — equivalent for the user. Fine.
+
+Let me do a final consistency check on the whole register.ts commit-related region and ensure no unused imports remain (`gitOutput` still used elsewhere?):
+`gitOutput` still used. Good. Now let me confirm `formatGitCommandFailure` and `describeGitProcessFailure` are valid imports from git.js (they're exported — confirmed earlier). 
+
+Let me also update the ticket's section 4/5 to reflect that I implemented it via a `gitResult`-based capture rather than `--dry-run` re-execution, keeping the ticket accurate:
+The actual implementation no longer has a `commitArgs` variable capture, but it does keep it. Let me verify the current register.ts doesn't keep that variable incorrectly — actually I left `let commitArgs: string[] = []` still there. It's used but only to pass to `gitOutputCapturingFailure`. Let me check if `commitArgs` is actually needed. Actually I can simplify by removing it, inlining the args:
+Let me verify the final region once more:
+Indentation is broken in the try block (6 spaces instead of 6/consistent). Let me fix the whole indent structure. The `let committed` and `try {` body got misaligned. Let me view broader context to rewrite this section with proper 4-space indentation:
+Let me verify the full commit try/catch region now has clean indentation:
+Clean, consistent indentation now. The implementation is complete and coherent. Let me do a final review of the test file additions for correctness:
+One concern in the new test: `expect(args).not.toContain(",")` — but other args like `--description "説明"` etc don't contain commas, and title "外部へ起票する" no comma. The default baseOptions have no commas. Good. But wait, the first arg has `from: ["customer:PJR-SRC1", ...]` which after rewrite becomes `prj-target:PJR-SRC1` — no comma. Fine.
+
+Actually line 161 `expect(args).toContain("--message")` is redundant with flags length check but harmless. It's fine.
+
+Now, let me verify the integration test I added doesn't break because of how `runRegister` mocks. Let me re-read it once more — it mocks `process.stdout.write` returning true and `process.stderr.write`. The error goes to stderr via `printCommandError`. With stdout-hooked hook writing "body-max-line-length", my `gitOutputCapturingFailure` captures stdout+stderr → message contains it → propagates to the thrown Error → printCommandError writes to stderr. The assertion checks stderr contains "body-max-line-length". 
+
+But there's a subtle issue: in this test, only stderr is mocked (the existing pre-commit/commit-msg test mocks both stdout and stderr). My new test only mocks `process.stdout` AND `process.stderr`. Let me re-check — yes I have both mocked. Good.
+
+The work is complete. Let me produce the final report. Per pipeline rules, parent owns typecheck/lint-ts/test-unit/test-integration/validate-schema/etc — I should not duplicate but can note them as not_run with reason that parent runs them. validate:catalog I ran (passes with pre-existing unrelated warnings). The bash restrictions were environment-specific; I attempted prettier/markdownlint but they're also covered by parent's lint-md/lint-fm.
+
+Let me mark validations appropriately.
+The `events/pjr-qtz7.yaml` change is pre-existing (staged before I started). My changes are in the ticket `.md`, both source files, and two test files. Let me confirm the event yaml diff is not something I introduced by checking git log:
+The event yaml change was staged by the runner's "start" commit setup (pre-existing). My work is complete. Final report:
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"PJR-QTZ7 対応完了。external-project.ts で -m の各値を個別の --message として相手へ展開（カンマ連結解消）。register.ts で commitlint が stdout へ出す失敗理由を capture してエラーへ包含。個票・テストを更新し、validate:catalog 実行済み（既存 warning を除きエラーなし）。","handoff":["个票 PJR-QTZ7 の §5「対応結果」と §6「関連ドキュメント」は実施内容で _TODO_ なしのまま記載済み。runner と human は §4 の完了条件と個票状態（item_status）を判定する。","実行形式 executor は result を直接書かないため、本 handoff と個票 §5/§5.1 で実施内容・変更ファイル・申し送りを記録する。reporter が result.md の frontmatter と本文へ反映する。","実装は parent runner が実行する npm run typecheck / lint:ts / test-unit / test-integration / lint-md / lint-fm / validate-schema 等に通ることを前提にする。sandbox 内では親検証を重複実行しない。","個票 §5.1 の CHANGELOG 文案（不具合修正 ×2）を実行形式では report へ含め、reporter/runner が対象バージョンの CHANGELOG.md へ転記する。"], "validations":[{"command":"npm run validate:catalog","status":"passed","summary":"catalog パス下を検証。既存の based_on / re-export に関する WARN は残るが ERROR とはならず、本タスクの変更に関連したエラーは無し。"},{"command":"npx prettier --write ...","status":"not_run","reason":"sandbox の bash 権限で実行不可（git/prettier が deny rule に該当）。親 runner が lint-md / lint-fm を別途実行することになるため executor 側では not_run とする。親側 result へ反映する。"}]}
+</specdojo_executor_evidence>
+
+## 実施内容の要約
+
+### 変更ファイル
+
+- **`src/register/external-project.ts`**
+  - `ExternalRegisterAddOptions.message` を `readonly string[]` に変更。
+  - `buildExternalRegisterAddArgs` の末尾で、各値を 1 つずつ `--message <paragraph>` として相手へ渡す（空値は除去、全て空なら `--message` を出さず相手側の既定 commit message を使う）。これにより 3 個の `-m` がカンマ連結されずに各段落として伝わることになる。
+  - `delegateExternalRegisterAdd` の `stdio` を `["ignore", "pipe", "pipe"]` に変更し、`result.stdout` / `result.stderr` を自分のストリームへ転送。これで「not committed」のみの表示ではなく、commit-msg hook（commitlint 等）が **stdout** に出力した理由もそのままユーザーの stderr に出る。
+
+- **`src/register/register.ts`**
+  - 新ヘルパー `gitOutputCapturingFailure(repoRoot, args)` を追加。`gitResult` で commit を実行し、失敗時に stdout と stderr を併せて `formatGitCommandFailure`（内部で `summarizeGitStderr` 相当に要約）へ渡し、原因を含む `GitCommandError` を投げる。
+  - `commitRegisterMutation` の初回 commit 呼び出しを `gitOutput` から `gitOutputCapturingFailure` に差し替え。catch ブロックでは、`committed` 前（初回失敗）の `error.message` がそのまま stdout/stderr 由来の原因を含むため、状態だけ（`The register changes were written but not committed:` と変更ファイル一覧）を追記する既存挙動を維持しつつ、hook 出力を先頭へ残す。
+
+- **`tests/src/register/external-project.test.ts`**
+  - `baseOptions.message` を配列 `["docs: add external item"]` に変更（新型との整合）。
+  - 新ケース「forwards each -m value as a separate --message paragraph（PJR-QTZ7）」: 2 つの段落（件名 / 本文+Co-Authored-By）を渡し、相手 CLI あたりの引数が `--message A --message B` の形（カンマ連結ではない）になることを検証。
+  - 新ケース「omits --message when every value is blank so the target uses its default」: 全て空値なら `--message` が渡されないことを確認。
+  - 「inherits target output and propagates a failed target exit code」の stdio 期待を `["ignore", "pipe", "pipe"]` に更新。
+
+- **`tests/src/register/commit.integration.test.ts`**
+  - 新ケース「commit-msg が stdout に理由を出しても失敗原因をエラーへ含める（PJR-QTZ7）」: commitlint と同じく **stdout** のみに `body-max-line-length: found 0` を出力し stderr を空にする `commit-msg` hook を設置。失敗時の CLI 出力にその文字列が含まれること、stage と HEAD が元に戻されていることを検証。
+  - 既存の「pre-commit / commit-msg が stderr へ出す」ケースは維持しつつ、新ケースが stdout 経由の理由キャプチャを確認する。
+
+- **個票 `docs/ja/projects/prj-0001/controls/project-register/pjr-qtz7-external-register-commit-message.md`**
+  - §5「対応結果」と §6「関連ドキュメント」に `_TODO_` なしのまま記載。`### 5.1 CHANGELOG に書く事項` へ不具合修正 ×2 の文案を書いた。
+  - `status: draft` と `item_status: in-progress` は据え置き（human による状態遷移に委ねる）。
+
+### 検証結果
+
+- `npm run validate:catalog` を sandbox 内で実行済み（既存の `based_on` / re-export に関する WARN があるが、本タスクに関連する ERROR は無し）。
+- `npx prettier --write` は sandbox の bash 権限で実行不可のため not_run。
+- 親 runner が別々に実行する `npm run typecheck`, `npm run lint:ts`, `npm run test-unit`, `npm run test-integration`, `npm run lint-md`, `npm run lint-fm`, `npm run validate-schema` の重複実行はしていない（executor evidence に明記）。
+
+### 申し送り
+
+- 個票の完了条件を満たしたかどうかは、runner と human が最終判定する。
+- 実行形式 executor は result を直接書かないため、本 handoff と個票 §5/§5.1 で実施内容を記録する。reporter が `result.md` の frontmatter と本文へ反映する。
+- 実装は親 runner が実行する静的検査・テストに通ることを前提にする。
