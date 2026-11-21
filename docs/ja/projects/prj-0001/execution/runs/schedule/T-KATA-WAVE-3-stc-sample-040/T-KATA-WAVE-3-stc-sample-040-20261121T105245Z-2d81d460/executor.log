@@ -1,0 +1,27 @@
+`docs/ja/specdojo/rulebooks/stc-rulebook.md` を簡潔にしました（238 行 → 165 行）。変更したのはこのファイルだけです。prettier と markdownlint はエラーなしです。lint や test など親 runner が実行する検査は、こちらでは実行していません。
+
+finding への対応は次のとおりです。
+
+- **F008（H5 見出し）**: 「テスト観点とケース」を `6.6.1. 観点` と `6.6.2. 条件・ケース表` の2節にまとめ、H4 までに収めました。H5 はありません。
+- **F004（見出しの二重記載）**: 各節にあった「生成する本文の見出しは …」をなくしました。「本文要件」の表と、配下の見出し形式を示す1文にまとめています。「本文構成（標準テンプレ）」の章名は、標準に合わせて「本文要件」に変えました。
+- **F009 / F011（導入文の不足）**: タイトル直下の英語名の後に目的・概要の文を、「位置づけ」の図の前に関係を説明する文を足しました。
+- **F002 / F012 / F005（ID とファイル名）**: 正規 ID は `<project-id>:stc-<term>` とし、同じプロジェクト内の参照では `<project-id>:` を省略してよいと書きました。`based_on` の書き方も同じ形にそろえています。ファイル名は既定を `stc-<term>.md` とし、日本語名は例外運用、連番は任意で ID に含めません。配置先は成果物カタログの `path` に従います。いずれも ID・ファイル命名標準に沿っています。
+- **F003（確認者と合意の相手）**: 目的・対象外は PO・BA と合意し、期待値・観測点・証跡は QE、ケースとテストコードの対応は DEV が確認する、と書きました。
+- **F006（改訂時の追従）**: `stc-index` の共通定義が変わったときに追従させる対象と担当を書きました。
+- **F007（完了の確かめ方）**: 作成後に照合する3点（`TR-xx` が定義済みか、`case_id` が重複していないか、テストコードと CI 証跡へ辿れるか）と、`lint:md`・`lint:fm` で扱う範囲を書きました。
+- **F001 / F013（未決事項の明示）**: 全体方針に `_UNDECIDED_` を置き、判断者と ready 化の前に解消することを書きました。
+
+ほかに次の整理をしました。
+
+- 完成例の「サンプル（最小）」章を削除しました。完成例は sample に任せます。
+- `case_id` の形式など `stc-index` と重なる記述は、`stc-index` の「ケース表の共通カラム」を参照する形にしました。
+- 記述ガイドの節ごとに、駄菓子屋の店頭販売を題材にした良い例・悪い例を足しました。
+
+この段で解消していないものと、確認してほしい点があります。
+
+- **F010（sample が本文要件の構成に従っていない）**: sample はこの段で変えない方針なので、未解消です。後続の sample-maintenance で、本文要件の見出し構成にそろえる必要があります。
+- **確認者の割り当て**: PO・BA・QE・DEV の役割分担は、隣の `utc-rulebook` にならって私が置いたもので、根拠となる決定はありません。recipe の要否を QE が ready 化の判断時に決める、という記述も同じく私の想定です。この割り当てでよいか確認してください。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"stc-rulebook を grade の指摘 F001〜F013 に沿って簡潔にした。H5 を解消し、本文要件と記述ガイドの見出しの二重記載をまとめ、サンプル章を削除した。ID の project 修飾とファイル名規則、確認者と合意の相手、改訂時の追従、作成後の照合手順、未決事項（`_UNDECIDED_`）を明記した。sample と frontmatter の宣言は変えていない。","handoff":["F010（sample が本文要件の見出し構成に従っていない）はこの段では sample を変えない方針のため未解消。後続の sample-maintenance で stc-sample を本文要件（概要・目的・対象外・境界/環境/依存・トレース・テスト観点とケース）にそろえる。","recipe / template の要否は `undecided` のまま。template は PJR-WYTX で扱う。recipe は ready 化の判断時に QE が決める、と rulebook の `_UNDECIDED_` に記載したが、これは executor の想定であり、担当の確認が要る。","確認者の割り当て（目的・対象外は PO・BA と合意、期待値・観測点・証跡は QE、テストコードとの対応は DEV）は、隣の utc-rulebook にならって executor が置いた想定であり、根拠となる決定はない。人の確認が要る。","「本文構成（標準テンプレ）」の章名を、rulebook-authoring-standard に合わせて「本文要件」に変えた。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/stc-rulebook.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/stc-rulebook.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更したのは docs/ja/specdojo/rulebooks/stc-rulebook.md だけで、plan・result・個票を変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML の変更がない","reason":"変更したファイルに *.yaml / *.yml がない"},{"command":"specdojo catalog validate","status":"not_applicable","summary":"プロジェクト成果物を変更していない","reason":"変更が docs/ja/specdojo/ 配下だけで、docs/ja/projects/ に届いていない"}]}
+</specdojo_executor_evidence>
