@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_210774183eca465ca934f5dba34c81af
+  ts: "2026-11-21T02:09:33Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: 08EK の修正と利用側の回避策の照合で、review の段の扱いの違いが見つかったため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: review の段でもプロダクトの worktree への書き込みを許している
+    - field: description
+      from: ""
+      to: exec の review の段の agent に、プロダクトの worktree への edit の許可（opencode の注入、claude の Edit など）が edit の段と同じく渡る。review は読み取りだけで足りるため、読み取りに絞るかを調べる
+    - field: input
+      from: ""
+      to: '["2026-11-21、OpenFisca-Japan-specdojo（0.7.0）の回避策との照合で見つけた。回避策では review-executor に読むための `external_directory` だけを足し、edit は許していない","src/exec/task-repos.ts の withAgentExtraRoots は mode を見ず、src/exec/run/agent.ts・src/exec/worktree-command.ts・src/exec/run/in-place.ts から、review の段でもプロダクトの worktree を書き込みの root として渡している","review の段が書き込むのは project の worktree（個票・review の result・evidence）で、これは agent の定義の edit の規則で許されており、この件の対象ではない","調べること: review の段でプロダクトの worktree を読み取りだけにできるか（provider ごと）。review の段でプロダクトに変更が出たときに runner がすでに止めているなら、それを確かめて閉じる"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-21"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-08EK"]'
