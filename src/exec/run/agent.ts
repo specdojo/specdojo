@@ -20,6 +20,7 @@ import { replaceDocIndexRefs } from "../../docs/doc-index.js";
 import { localConfigEnvironment } from "../../shared/local-config.js";
 import { loadPlan, parsePlanTaskIdentity } from "../plans.js";
 import type { ReadyTaskView, TaskMode } from "../types.js";
+import { worktreeStatusPaths } from "../worktree-ops.js";
 import {
   partitionVanishedCoverageTargets,
   recordParentValidationFailureOutput,
@@ -70,6 +71,8 @@ import {
 } from "../protection-handoff.js";
 import {
   productRepoEnvironment,
+  productAccessForMode,
+  productAccessFromEnvironment,
   productRootsFromEnvironment,
   withAgentExtraRoots,
   withoutInheritedRepoEnvironment,
@@ -622,6 +625,25 @@ function rateLimitPrefix(result: RunResult): string {
   return result === "rate_limit" ? "rate limit reached; " : "";
 }
 
+type ProductStatus = { name: string; paths: string[] };
+
+function productStatuses(roots: readonly { name: string; path: string }[]): ProductStatus[] {
+  return roots.map((root) => ({ name: root.name, paths: worktreeStatusPaths(root.path) }));
+}
+
+/** Product paths whose status differs after a read-only (review) stage, as `<repo>:<path>`. */
+export function changedProductStatuses(
+  before: readonly ProductStatus[],
+  after: readonly ProductStatus[],
+): string[] {
+  return after.flatMap((current) => {
+    const previous = new Set(before.find((entry) => entry.name === current.name)?.paths ?? []);
+    return current.paths
+      .filter((path) => !previous.has(path))
+      .map((path) => `${current.name}:${path}`);
+  });
+}
+
 export async function runWithRetry(
   candidates: AgentRunCandidate[],
   prompt: string,
@@ -647,6 +669,7 @@ export async function runWithRetry(
   // PJR-98G4: agentEnvironment が渡したプロダクト worktree を、provider の追加ディレクトリと
   // 保護設定・Git 状態の検査対象に加える。宣言の無い project では cwd だけになる。
   const productRoots = productRootsFromEnvironment(env);
+  const productAccess = productAccessFromEnvironment(env);
   const agentRepos = [
     { root: cwd },
     ...productRoots.map((root) => ({ name: root.name, root: root.path })),
@@ -683,12 +706,13 @@ export async function runWithRetry(
       lastActor = candidate.actor;
       const protectedConfigBefore = captureAgentProtectedConfigAcrossRepos(agentRepos);
       const gitStateBefore = captureAgentGitStateAcrossRepos(agentRepos);
+      const productChangesBefore = productAccess === "read" ? productStatuses(productRoots) : [];
       const attempt = await executeAgent(
         withAgentExtraRoots(
           candidate.command,
           candidate.provider,
           productRoots.map((root) => root.path),
-          { cwd, env },
+          { cwd, env, access: productAccess },
         ),
         prompt,
         detection,
@@ -714,6 +738,24 @@ export async function runWithRetry(
           }),
           resultPath,
         );
+        return {
+          result: "failure",
+          exitCode: 1,
+          stdout: attempt.stdout,
+          stderr: `${attempt.stderr}${attempt.stderr.endsWith("\n") || !attempt.stderr ? "" : "\n"}${reason}\n`,
+          protectionBlock: true,
+          actor: candidate.actor,
+        };
+      }
+      const readOnlyViolations =
+        productAccess === "read"
+          ? changedProductStatuses(productChangesBefore, productStatuses(productRoots))
+          : [];
+      if (readOnlyViolations.length > 0) {
+        const reason =
+          rateLimitPrefix(attempt.result) +
+          `review stage changed product repositories that are read-only: ${readOnlyViolations.join(", ")}`;
+        process.stderr.write(`blocked: ${reason}\n`);
         return {
           result: "failure",
           exitCode: 1,
@@ -945,13 +987,14 @@ export function agentEnvironment(
   schedulePath: string,
   executionPath: string,
   productWorktrees?: readonly ProductWorktree[],
+  mode?: TaskMode,
 ): NodeJS.ProcessEnv {
   return {
     ...withoutInheritedRepoEnvironment(gitEnvironment()),
     ...localConfigEnvironment(repoRoot),
     SPECDOJO_SCHEDULE_PATH: pathInsideWorktree(repoRoot, worktreePath, schedulePath),
     SPECDOJO_EXECUTION_PATH: pathInsideWorktree(repoRoot, worktreePath, executionPath),
-    ...productRepoEnvironment(worktreePath, productWorktrees),
+    ...productRepoEnvironment(worktreePath, productWorktrees, productAccessForMode(mode)),
   };
 }
 

@@ -43,6 +43,7 @@ export function opencodeExtraRootConfig(
   agentName: string,
   roots: readonly string[],
   cwd: string,
+  access: "write" | "read" = "write",
 ): string {
   let config: Record<string, unknown> = {};
   if (current?.trim()) {
@@ -88,7 +89,7 @@ export function opencodeExtraRootConfig(
   }
   for (const root of roots) {
     externalDirectory[opencodeExternalDirectoryPattern(root)] = "allow";
-    edit[opencodeEditPattern(root, cwd)] = "allow";
+    if (access === "write") edit[opencodeEditPattern(root, cwd)] = "allow";
   }
 
   return JSON.stringify({
@@ -100,7 +101,7 @@ export function opencodeExtraRootConfig(
         permission: {
           ...permission,
           external_directory: externalDirectory,
-          edit,
+          ...(access === "write" ? { edit } : {}),
         },
       },
     },
