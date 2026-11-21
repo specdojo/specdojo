@@ -58,6 +58,12 @@ agent-members.yaml で disabled にした member でも、exec run --executor-by
 - 迷った点は executor が決め、決めた内容と理由を個票の対応結果に書く。pipeline では報告の `handoff` にも書く。
 - `npm run typecheck`・`npm run lint:ts`・`npm run test:unit` が通り、親の検証が通る。
 
+2 回目の実行（2026-11-21）で直す点。
+
+- 1 回目は `src/exec/agent-config.ts` の `resolveMemberCommand` に `disabled` の確認を足したが、報告にある `tests/src/exec/agent-config-command.test.ts` の単体テスト 3 件は差分に入っていなかった（テストのファイルは変わっていない）。名前の指定・routing（command の上書き）・代わりの選択の 3 つの場合の単体テストを、実際にファイルへ足す。
+- 足したテストが、1 回目の実装を外すと落ち、実装があると通ることを確かめ、その確かめ方を対応結果に書く。
+- 対応結果の「確認結果」を、実際に足したテストの名前で書き直す。
+
 ## 5. 対応結果
 
 ### 5.1. 解決内容

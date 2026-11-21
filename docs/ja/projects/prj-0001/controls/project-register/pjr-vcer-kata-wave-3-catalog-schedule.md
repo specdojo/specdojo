@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-21T06:08:04Z"
+  block_reason: "parent validation failed: test-unit"
   derived_from:
     - PJR-ABY4
 ---
@@ -45,17 +46,62 @@ dct-kata.yaml を作って試験の型 13 種類の sample を成果物として
 
 ## 4. 作業内容
 
-| No  | 作業                                              | 担当 | 状態 | メモ |
-| --- | ------------------------------------------------- | ---- | ---- | ---- |
-| 1   | `dct-kata.yaml` と `dct-index.yaml` の domain     | DEV  | open | -    |
-| 2   | 13 種類の `done_criteria` を grade の結果から書く | DEV  | open | -    |
-| 3   | strategy を作り、track を生成する                 | DEV  | open | -    |
-| 4   | plan の dry-run で段の組み方を確かめる            | DEV  | open | -    |
+| No  | 作業                                              | 担当 | 状態 | メモ                               |
+| --- | ------------------------------------------------- | ---- | ---- | ---------------------------------- |
+| 1   | `dct-kata.yaml` と `dct-index.yaml` の domain     | DEV  | done | 検証の修正を含む（対応結果を参照） |
+| 2   | 13 種類の `done_criteria` を grade の結果から書く | DEV  | done | 26 件すべての grade の結果がある   |
+| 3   | strategy を作り、track を生成する                 | DEV  | done | 65 タスク                          |
+| 4   | plan の dry-run で段の組み方を確かめる            | DEV  | done | 対応結果を参照                     |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 5.1. 実施内容
+
+- `dct-kata.yaml` を作り、13 種類の sample を `kind: work`・`local_id: <name>-sample`・`rulebook: specdojo:<name>-rulebook` で載せた。`dct-index.yaml` には大分類「実践の型」を足し、domain `kata` を置いた。
+- `depends_on` はテストの型の上下関係（tsp-index → 各 `*-index` → 対象別、trc は atc・stc の後）に合わせた。imp-test は範囲内に上位の型が無いので `[]` とした。
+- `done_criteria` は、共通の 3 条件に、型に固有の条件を 2〜4 件足した。固有の条件は、13 種類 × rulebook・sample の 26 件の grade の結果（opus、2026-11-21）から、blocker と major の指摘（`vp-qe-kata-conformance`・`vp-qe-omissions-consistency`・`vp-qe-verifiability` が中心）を拾って書いた。grade の結果が無い型は無い。
+- grade が `title` を足すよう指摘した件（itc-sample）は、Markdown 記述ルールが frontmatter の `title` を禁じているので、条件に入れなかった。
+- `sch-strategy-kata-wave-3.yaml` を作り、`schedule build --track kata-wave-3` で `sch-track-kata-wave-3.yaml`（65 タスク）を生成した。track は手で編集していない。`sch-milestones.yaml` にはゲート 2 件とマイルストーン 1 件が追記された（既存の項目は値が変わっていない）。
+
+### 5.2. 決めたことと理由
+
+- 段は rulebook-maintenance（040）→ sample-maintenance（050）→ condense（080）→ review（090、`mode: review`・`fully-guided`）→ finalize（140、`execution: human`）とした。recipe を持つ型が 13 種類に無く、template は PJR-WYTX で扱うので、どちらの段も置いていない。
+- sample を厚くする段の approach は `sample-maintenance` とした。成果物と sample が同じファイルなので、`fully-guided` にすると対象の sample が自分の手本を兼ねる。`sample-maintenance` なら手本が rulebook、対象が sample になる。成果物を磨く `refine` の段は置かず、成果物の `done_criteria` はこの段で満たすよう description に書いた。
+- finalize は `bootstrap-finalize` ではなく `finalize` とした。recipe・template は `undecided` で一式の確定の対象にならないので、直した rulebook の確認は description で求めた。
+- owner は QE とした（試験の型のため）。agent は `owner_rules[].phase_overrides[].agent` で決めた。edit の段（040・050・080）は `opus-executor`、review の段は `sol-review-executor`、reporter はすべて `gemma26-reporter`。finalize は human の段なので agent を置いていない。agy の member は使っていない。
+- 書き方は kata-wave-1・project-kata に合わせた（ゲートとドメインのマイルストーン、`task_suffix` の文字列）。
+
+### 5.3. カタログ検証の修正
+
+kata ドメインに載せると、`catalog validate` が sample の `based_on`（駄菓子屋の世界の ID。例: trc の `utc-index`・`itc-index`、imp-test の `cr-2026-004`）を prj-0001 の成果物として照合し、エラーを 3 件出した。今後の sample の段で `based_on` を足す指摘（tsp-index など）に応えると、エラーはさらに増える。
+
+そこで `src/catalog/build-references.ts` の `validateBasedOn` を直した。文書の `id` が catalog の project 以外の名前空間（`specdojo:` など）で修飾されているときは、その `based_on` を照合しない。`tests/src/catalog/based-on.test.ts` にテストを 1 件足した。
+
+### 5.4. plan の dry-run の結果
+
+`exec plan --project prj-0001` で、utc-sample の 4 つの段（040・050・080・090）と trc-requirements-to-tests-sample の 050 の plan を `tmp/` へ作って確かめた。
+
+| 段                         | `targets`                                      | 編集の対象                                   | 手本・根拠                  |
+| -------------------------- | ---------------------------------------------- | -------------------------------------------- | --------------------------- |
+| 040 rulebook-maintenance   | `specdojo:utc-sample`・`specdojo:utc-rulebook` | `docs/ja/specdojo/rulebooks/utc-rulebook.md` | sample（成果物）と grade    |
+| 050 sample-maintenance     | `specdojo:utc-sample`（2 回並ぶ）              | `docs/ja/specdojo/samples/utc-sample.md`     | rulebook と sample の grade |
+| 080 condense               | `specdojo:utc-sample`                          | `docs/ja/specdojo/samples/utc-sample.md`     | -                           |
+| 090 review（fully-guided） | `specdojo:utc-sample`                          | 変更しない                                   | rulebook・sample の grade   |
+
+どの段も、対象と手本は食い違わない。050 では成果物と編集の対象が同じ ID なので、`targets` に同じ ID が 2 回並ぶ。exec-plan の schema は重複を禁じていないので、そのまま進められる。finalize は human の段なので plan を作らない（claim で result を作る）。
+
+### 5.5. 残課題
+
+- `--project` を付けないと、この worktree では `exec plan` が既存の成果物（`utc-catalog` など）も見つけられなかった。グローバルの `specdojo` コマンドはメインのリポジトリの `dist` を指す。schedule のタスクを走らせる前に、`dist` に 5.3 の修正を build しておく必要がある。
+- `targets` の重複（5.4 の 050）は、`targetDocIds` で重複を除くかを別の項目で決める。
+
+### 5.6. CHANGELOG に書く事項
+
+利用者への影響は無い。`CHANGELOG.md` は変えていない。kata の成果物カタログ・strategy・track は prj-0001 の内部の計画で、`catalog validate` の修正は、project の外の名前空間の文書の照合を外すだけ。既存の project のカタログの検証の結果は変わらない。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:dct-index]]
+- [[prj-0001:sch-strategy-kata-wave-1]]
+- [[prj-0001:sch-strategy-project-kata]]
+- `prj-0001:dct-kata`・`prj-0001:sch-strategy-kata-wave-3`・`prj-0001:sch-track-kata-wave-3`（本項目で作成）

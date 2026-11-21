@@ -7,10 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: medium
   owner: OPS
   registered_at: "2026-10-11T22:10:19Z"
+  completed_at: "2026-11-21T07:37:03Z"
+  conclusion: devcontainer で exec の worktree と 11 か所の node_modules を named volume に置いた。worktree の作成は 2 分超から 2.6 秒、npm run check は 461 秒から 281 秒になった。ホストで直接動かす場合の設定は変えていない
 ---
 
 # PJR-TATP worktrees と node_modules を共有フォルダから named volume へ移す
@@ -38,7 +40,7 @@ specdojo:
 | 3   | `gc.worktreePruneExpire` と運用メモ                 | specdojo-orchestrator | done | 設定は作り直しのときに `prepare-workspace-volumes.sh` が入れる                                                                                                                                     |
 | 4   | 途中の worktree の片付け                            | indie                 | done | 2026-11-21 に利用者の承認で 28 個を消した（取り込み済み 11、終わったタスクの残り 9、orchestrator の作業 3、agent の作業場所 3、prj-0002 の KH17 の 2）。共有の `worktrees/` は 19GB から空になった |
 | 5   | container の作り直し                                | indie                 | done | 2026-11-21                                                                                                                                                                                         |
-| 6   | 作り直しのあとの動作と時間の確認                    | specdojo-orchestrator | open | -                                                                                                                                                                                                  |
+| 6   | 作り直しのあとの動作と時間の確認                    | specdojo-orchestrator | done | PJR-77JB・PJR-N5D2 の exec run --register --worktree が統合まで通った                                                                                                                              |
 
 ## 4. 対応結果
 

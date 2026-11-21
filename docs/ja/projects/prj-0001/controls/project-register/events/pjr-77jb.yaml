@@ -103,3 +103,16 @@
       from: in-progress
       to: review
   previous_event_id: reg_465fbbafe3694cc4ae07656caa3a34e7
+- v: 1
+  id: reg_cd8bb086a32443c08dbeb23da21bd95e
+  ts: "2026-11-21T07:35:30Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: section "対応方針" updated
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_4f6bd9a1a5d5481ea80031cfa5c90bd5
