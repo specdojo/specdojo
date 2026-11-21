@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: waiting
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-21T14:02:38Z"
+  block_reason: "integrate failed: project: Result Markdown notation violation before commit: docs/ja/projects/prj-0001/execution/runs/register/PJR-G3TT/pjr-g3tt-20261121T163107Z-34c23eb6/result.md:20:178 error MD038/…"
 ---
 
 # PJR-G3TT result のバッククォートがエスケープされて書かれ、統合の前の検査で止まる
