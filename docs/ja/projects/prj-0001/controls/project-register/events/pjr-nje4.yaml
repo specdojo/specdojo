@@ -41,3 +41,29 @@
     - field: derived_from
       from: ""
       to: '["PJR-5V0T"]'
+- v: 1
+  id: reg_bd758726c32147deb505aeff9828f9ac
+  ts: "2026-11-21T00:36:26Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_e544d551b8a445cab2ad898b95ab5a2c
+- v: 1
+  id: reg_66077dcf25104f16a9d5f49b248551f9
+  ts: "2026-11-21T00:36:30Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "作業内容" updated
+  changes:
+    - field: section
+      from: ""
+      to: 作業内容
+  previous_event_id: reg_bd758726c32147deb505aeff9828f9ac
