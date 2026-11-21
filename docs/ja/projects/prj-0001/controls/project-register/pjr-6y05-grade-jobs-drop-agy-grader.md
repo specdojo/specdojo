@@ -40,9 +40,12 @@ job-grade-kata と job-grade-deliverable が grade run に --by agy-expert-execu
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                  | 担当 | 状態 | メモ                    |
+| --- | ------------------------------------- | ---- | ---- | ----------------------- |
+| 1   | 両 job に入力 `by` を足し固定を外す   | DEV  | open | 既定値なし              |
+| 2   | `description` と観点から agy を外す   | DEV  | open | `generated/` を作り直す |
+| 3   | 入力なしで止まること・実行を確かめる  | DEV  | open | 結果を対応結果に書く    |
+| 4   | routine の案と CHANGELOG の扱いを書く | DEV  | open | routine は変えない      |
 
 ## 5. 対応結果
 
