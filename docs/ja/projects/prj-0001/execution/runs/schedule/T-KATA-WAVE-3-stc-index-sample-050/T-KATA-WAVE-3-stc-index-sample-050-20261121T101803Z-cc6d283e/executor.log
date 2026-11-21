@@ -1,0 +1,23 @@
+`docs/ja/specdojo/samples/stc-index-sample.md` を、駄菓子屋きぬやを題材にした総合テストカタログ概要の完成例として全面的に書き直しました（146 行）。変更したのはこのファイルだけで、rulebook と result には手を付けていません。`prettier` と `npm run docs:build` は通っています。`lint:md` などは、このあと親 runner が実行します。
+
+**主な変更点**
+- **frontmatter:** rulebook の推奨どおり `based_on` を加え、`specdojo:tsp-index-sample` と `specdojo:bac-sample` を指定しました。（F004・F017）
+- **H1:** 「駄菓子屋きぬや 販売管理システム 総合テストカタログ 概要」に変え、Markdown リンクを外しました。（F019・F021）
+- **構成:** rulebook の標準テンプレどおり 1〜9 章に組み直しました。（F016・F018・F020）
+  - **目的と適用対象:** 守る業務価値、UT/IT・ET・AT との境界表、改訂したときに影響する `stc-<term>` を誰が追従させるかを書きました。（F001・F006・F012）
+  - **分割:** 4 つの term（`stc-cash-sale`・`stc-sale-hold`・`stc-credit-balance`・`stc-record-recovery`）と、分割・統合した理由を示しました。（F003）
+  - **対象外・除外理由:** 4 列の表で 5 件を挙げました。（F007）
+  - **観点・条件:** 観点の 5 系統、条件の 4 要素、採用基準と主担当の分配表を書きました。（F003）
+  - **境界/環境:** 環境、データ領域と後始末、外部依存、観測点、証跡、責任者（Role code）を書きました。P0/P1/P2 ごとの合格基準も入れています。（F008・F009・F013・F014・F015）
+  - **ケース表の共通カラム:** `case_id` の形式と「変えない・廃止は欠番」の規則、記入例 2 行を示しました。（F011・F023）
+  - **メモ / 将来課題:** 論点、影響、当面の扱い、確定時の見直し方針、担当の 5 列で、具体的な 4 件を書きました。（F002・F005・F022）
+- 旧版で前の節を繰り返していた「最小記述例」の表は削りました。（F010）
+
+**確認してほしい点**
+- `kinuya-ci-st`、`kinuya-st-report`、データ領域 `kinuya-st` は、この sample のために置いた架空の名前で、どの sample にも定義がありません。
+- 4 つの term の分け方は、BAC と `tsp-index-sample` をもとに私が仮に決めたものです。後で作り直す `stc-sample` と揃える必要があります。
+- 兄弟の `stc-sample.md`・`itc-index-sample.md` などは旧版と同じ薄い書き方のままです。今回の範囲外なので触れていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"stc-index-sample.md を rulebook の標準テンプレ 1〜9 章に沿った駄菓子屋きぬやの完成例へ全面改訂し、F001〜F023 に対応した。frontmatter に `based_on`（tsp-index-sample・bac-sample）を加え、H1 の Markdown リンクを外した。rulebook は変更していない。","handoff":["sample で使った架空名 `kinuya-ci-st`（CI ジョブ）・`kinuya-st-report`（ST レポート）・データ領域 `kinuya-st` は、tsp-index-sample などほかの sample に定義がない。今後 stc-sample を厚くするときは同じ名前に揃える。","分割した 4 つの term（`stc-cash-sale`・`stc-sale-hold`・`stc-credit-balance`・`stc-record-recovery`）は、BAC-01〜03・AC-02・TSP のスコープから決めた sample 上の仮定である。対象別の stc-sample を改訂するときは、この分割と `case_id` の例（`st-cash-sale-flow-success-010`）に合わせる必要がある。","兄弟の stc-sample.md・itc-index-sample.md などは、旧版と同じ薄い書き方（H1 に相対リンク、最小記述例の表）のまま残っている。本タスクの範囲外のため変更していない。","rulebook の変更案: 「総合テスト共通の境界/環境の扱い」が求める共通合格基準を、P0/P1/P2 の表形式で示す推奨フォーマットとして rulebook に加えると、sample と対象別カタログの書き方が揃う（任意）。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/stc-index-sample.md","status":"passed","summary":"prettier --write で整形した後の check がすべて通った"},{"command":"npm run docs:build","status":"passed","summary":"build complete in 168.04s。エラーはなかった（cron 言語の fallback 警告のみ）"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更したのは docs/ja/specdojo/samples/stc-index-sample.md だけで、plan・result・pjr 個票は変更していないため"},{"command":"npm run validate:catalog","status":"not_applicable","summary":"docs/ja/projects/ 配下の成果物を変更していない","reason":"変更は docs/ja/specdojo/samples/ 配下だけで、docs/ja/projects/ には及ばないため"}]}
+</specdojo_executor_evidence>
