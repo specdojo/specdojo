@@ -25,6 +25,7 @@ specdojo:
 
 - PJR-76N9 の決定（2026-11-21、indie）: 成果物と sample の本文に、文書の役割の割り当てと承認の進み具合を書かない。rulebook の「誰がどの利用場面で何を判断するか」は「どの利用場面で何を判断するための文書か」に直す。文書の中身として役割が要る型（RACI・体制など）は対象外
 - 第 3 波（kata-wave-3）は 2026-11-21 から tsp-index で試しを流している。ほかの波の strategy はまだ無い
+- 2026-11-21、直した cnd-specdojo を grade すると pass 93 だったが、minor の指摘 7 件の多くが、概要に作成担当・確認者・最終判断者の役割を書く、Person の表に「判断・確認の責務」の列を足す、ready の前の確認と PO の承認記録を書く、を求めた。型の template（cnd-template の列と「検証・承認前の確認」の節）とカタログの `done_criteria` が役割と承認の記述を求めているため。この todo の範囲に、template・`done_criteria`・grade の観点を含める
 
 ## 3. 完了条件
 
