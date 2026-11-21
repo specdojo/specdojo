@@ -1,0 +1,143 @@
+{
+  "version": 1,
+  "queue_id": "cdl-issues-2026-11-21",
+  "project_id": "prj-0001",
+  "created_at": "2026-11-21T11:51:49.963Z",
+  "updated_at": "2026-11-21T11:51:49.963Z",
+  "state": "pending",
+  "steps": [
+    {
+      "index": 1,
+      "on_failure": "continue",
+      "status": "pending",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--register",
+        "PJR-50RQ",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--project",
+        "prj-0001"
+      ]
+    },
+    {
+      "index": 2,
+      "on_failure": "continue",
+      "status": "pending",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--register",
+        "PJR-FGKB",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--project",
+        "prj-0001"
+      ]
+    },
+    {
+      "index": 3,
+      "on_failure": "continue",
+      "status": "pending",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--register",
+        "PJR-R8DM",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--project",
+        "prj-0001"
+      ]
+    },
+    {
+      "index": 4,
+      "on_failure": "continue",
+      "status": "pending",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--register",
+        "PJR-N0P1",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--project",
+        "prj-0001"
+      ]
+    },
+    {
+      "index": 5,
+      "on_failure": "continue",
+      "status": "pending",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--register",
+        "PJR-7KQT",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--project",
+        "prj-0001"
+      ]
+    },
+    {
+      "index": 6,
+      "on_failure": "continue",
+      "status": "pending",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--register",
+        "PJR-QTZ7",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--project",
+        "prj-0001"
+      ]
+    },
+    {
+      "index": 7,
+      "on_failure": "continue",
+      "status": "pending",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--register",
+        "PJR-F6MC",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--project",
+        "prj-0001"
+      ]
+    }
+  ]
+}
