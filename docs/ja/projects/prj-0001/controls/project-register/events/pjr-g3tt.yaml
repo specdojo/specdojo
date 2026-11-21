@@ -38,3 +38,16 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_1611da214b79455786d3f1fd79ef0d62
+  ts: "2026-11-21T14:10:11Z"
+  action: update
+  actor: SpecDojo
+  from_status: open
+  to_status: open
+  reason: section "影響範囲" updated
+  changes:
+    - field: section
+      from: ""
+      to: 影響範囲
+  previous_event_id: reg_dcc84d80b4c74a018aec08a20d23fbc7
