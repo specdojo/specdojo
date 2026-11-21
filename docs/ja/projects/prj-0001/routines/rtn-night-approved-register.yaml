@@ -15,7 +15,7 @@ action:
     parallel: "2"
     max_consecutive_failures: "2"
     on_rate_limit: fallback
-    fallback_executor: argon-executor
+    fallback_executor: opus-executor
 policy:
   missed_run: skip
   overlap: skip
