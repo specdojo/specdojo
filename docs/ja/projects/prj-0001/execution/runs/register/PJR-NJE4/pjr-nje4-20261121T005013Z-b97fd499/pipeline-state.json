@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-NJE4",
   "run_id": "pjr-nje4-20261121T005013Z-b97fd499",
-  "updated_at": "2026-11-21T01:18:52.231Z",
+  "updated_at": "2026-11-21T01:19:17.573Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-NJE4/pjr-nje4-20261121T005013Z-b97fd499/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-21T01:18:52.231Z",
-      "completed_at": null,
+      "completed_at": "2026-11-21T01:19:17.573Z",
       "artifact_ref": null
     }
   },
