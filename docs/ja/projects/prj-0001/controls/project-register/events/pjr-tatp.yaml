@@ -84,3 +84,22 @@
       from: ""
       to: 対応結果
   previous_event_id: reg_94df4189ff484c76b612ed5a237f0c0d
+- v: 1
+  id: reg_b50e66f5efa54ac0ade4f6db3ab7563a
+  ts: "2026-11-21T07:37:03Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: done
+  reason: orchestrator が feature ブランチで実装し、利用者の作り直しのあと、volume・持ち主・依存・git の設定と、exec run --register --worktree の統合までを確かめた
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-21"
+    - field: conclusion
+      from: "-"
+      to: devcontainer で exec の worktree と 11 か所の node_modules を named volume に置いた。worktree の作成は 2 分超から 2.6 秒、npm run check は 461 秒から 281 秒になった。ホストで直接動かす場合の設定は変えていない
+  previous_event_id: reg_e158e2ac77b64f749c42ff77886959de

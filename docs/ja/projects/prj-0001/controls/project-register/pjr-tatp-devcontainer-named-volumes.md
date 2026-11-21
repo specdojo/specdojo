@@ -7,10 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: medium
   owner: OPS
   registered_at: "2026-10-11T22:10:19Z"
+  completed_at: "2026-11-21T07:37:03Z"
+  conclusion: devcontainer で exec の worktree と 11 か所の node_modules を named volume に置いた。worktree の作成は 2 分超から 2.6 秒、npm run check は 461 秒から 281 秒になった。ホストで直接動かす場合の設定は変えていない
 ---
 
 # PJR-TATP worktrees と node_modules を共有フォルダから named volume へ移す
