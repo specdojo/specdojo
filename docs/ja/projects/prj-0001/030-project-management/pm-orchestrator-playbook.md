@@ -37,7 +37,7 @@ npx specdojo exec run --project prj-0001 --register <PJR-ID> --worktree \
 
 - 列は 2 本までにする（codex の列と agy の列など）。`.specdojo/exec-defaults.yaml` の設定（`providers.codex.max_concurrency: 2`、`providers.antigravity.max_concurrency: 2`）により codex 2 本・agy 2 本まで並べられるが、親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）は `pipeline.parent_validation_concurrency: 1` により run をまたいで 1 件ずつ流れるため、列を増やしても速くならず、待ちと負荷が増える。エージェントの選定順は `priority` で制御する。
 - 文書サイトのビルド（`npm run docs:build`）はメモリを多く使うため、並べた run と重ねず、直列に流す。複数の run や grade、build を順に流す仕組みの整備（回避策: [[prj-0001:pjr-v0fq-exec-sequential-batch|PJR-V0FQ]]）までは、`exec queue` や単独の実行で分離する。
-- grade は一度に 1 本しか流せない。別の grade が流れていると busy で即座に断られるため、終了を待ってから流す（回避策: [[prj-0001:pjr-36pw-grade-run-if-busy-wait|PJR-36PW]]）。型の一覧をまとめて grade したい場合も、現在は順次流す必要がある（回避策: [[prj-0001:pjr-sw7t-grade-kata-batch|PJR-SW7T]]）。
+- grade は一度に 1 本しか流せない。別の grade が流れていると busy で即座に断られるため、終了を待ってから流す（回避策: [[prj-0001:pjr-36pw-grade-run-if-busy-wait|PJR-36PW]]）。型の一覧をまとめて grade したい場合は、`grade run --target kata --kata <name>` を繰り返して 1 回で流せる（[[prj-0001:pjr-sw7t-grade-kata-batch|PJR-SW7T]]）。rate limit の後も続けるのは `--kata` のときだけで、代わりの agent への切り替えはない（PJR-XA6Y）。
 - 0:00 の夜間の routine は、別の run が lock を持っていると skip され、流し直されない。夜に手で長い run を流すときは、routine とぶつからないかを先に確かめる（回避策: [[prj-0001:pjr-kvwh-routine-busy-skip-not-retried|PJR-KVWH]]）。
 - 新方（PJR-EPQ3）では項目ごとに `CHANGELOG.md` を変えない。実装の範囲が重なる項目は runner が先行項目の統合まで待たせる。個票の入力・完了条件に対象の相対パスを書き、推定できない項目も直列化したい列には `--unknown-scope serialize` を付ける。推定と再開の規則は [[specdojo:exec-operation-guide|exec運用ガイド]] の「変更範囲が重なる項目の順番待ち」に従う。
 - 旧方の行（未公開の版の節へ直接書いた `CHANGELOG.md`）が残っている間は、その項目は新方と混ぜて並べる場合、まだ `CHANGELOG.md` を書くため衝突の可能性が残る。リリースまでに旧方の行を集めて `## [Unreleased]` へまとめた後（第 9 節）に列を組むのが安全である。
@@ -72,7 +72,7 @@ npx specdojo exec run --project prj-0001 --register <PJR-ID> --worktree \
 
 - review の項目は `register reopen` できない（すでに有効な状態のため）。完了条件を補って流し直すときは、個票を直して commit し、そのまま `exec run` を流す。
 - 実行中の項目を止めたいときは、見張りのスクリプトだけでなく runner のプロセスが残っていないかを確かめる。commit の途中で止めると後始末が増えるため、終わり際なら最後まで流す。
-- 再開の前に plan へ追加の指示を入れたい場合は、CLI オプションが整備されるまで手動で plan ファイルを編集して追記する（回避策: [[prj-0001:pjr-5f1y-exec-resume-instruction-option|PJR-5F1Y]]）。
+- 再開の前に追加の指示を入れたい場合は、plan を手で編集せず（worktree の plan を直すと通常の再開では統合の前に範囲外の変更として止まる）、`exec run --register <ID> --resume --resume-from executor --resume-note <text>` を使う（[[prj-0001:pjr-5f1y-exec-resume-instruction-option|PJR-5F1Y]]）。
 
 ## 6. 統合後の確認と自分で確かめること
 
@@ -104,7 +104,7 @@ docs だけの項目や、runner の通らないコード（kata、docs-site な
 - 型を整える schedule では、review の段とは別に、型そのもの（rulebook と sample の組）を grade して確かめる。review の段が代表の文書だけを grade し、型一式を評価しない場合があるため、orchestrator が手動で grade を流して品質を確認する（回避策: [[prj-0001:pjr-zzve-kata-review-grades-deliverable|PJR-ZZVE]]）。
 - strategy generate の improve-kata や bootstrap-kata-set で型を整備する際、recipe や template の手直しの段が自動生成されない場合は手作業で段を補う（回避策: [[prj-0001:pjr-j0vs-strategy-kata-phases-missing|PJR-J0VS]]）。
 - strategy の YAML を道具（スクリプトやパーサー）で書き直したときは、`task_suffix` などの文字列（例: `090`）が引用符落ちによって数値に変わっていないかを schema のテスト（`validate:schema:file` など）で確かめる（回避策: [[prj-0001:pjr-5qj5-schema-validate-yaml-version-mismatch|PJR-5QJ5]]）。
-- 個票の完了条件や作業内容などの章の本文を差し替える際、現在は手動でファイルを編集している（回避策: [[prj-0001:pjr-7kxw-register-update-section-body|PJR-7KXW]]）。
+- 個票の完了条件や作業内容などの章の本文を差し替えるときは、`register update --section <章の名前> --section-file <path>` を使う（[[prj-0001:pjr-7kxw-register-update-section-body|PJR-7KXW]]）。
 
 ## 7. 落とし穴
 

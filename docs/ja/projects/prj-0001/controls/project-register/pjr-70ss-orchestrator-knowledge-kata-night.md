@@ -110,6 +110,11 @@ index 1234567..89abcdef 100644
  - プロジェクトの文書にオーケストレーター向けの運用メモがあれば、作業を始める前に読む。
 ```
 
+- **2 回目の実行（2026-11-21）**: 運用メモの 3 点を直した。本体の変更案は 1 回目のものを維持し作り直していない。
+  - 再開指示を `--resume --resume-from executor --resume-note <text>` を使う書き方に変え、plan の手編集を案内する記述を消した。
+  - 個票の章の本文差し替えを `register update --section <章の名前> --section-file <path>` を使う書き方に変えた。
+  - 型の一括 grade を `grade run --target kata --kata <name>` の繰り返しに変え、rate limit 後に続けるのは `--kata` のときだけで agent 切り替えはない（PJR-XA6Y）ことを書いた。
+
 ### 5.2. 判断と申し送り
 
 - **判断事項**:

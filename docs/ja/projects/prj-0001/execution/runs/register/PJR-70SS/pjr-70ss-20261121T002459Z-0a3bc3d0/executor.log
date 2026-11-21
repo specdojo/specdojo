@@ -1,0 +1,12 @@
+運用メモの 3 点を直し、個票の対応結果に記録しました。`npm run lint:md` などの検証は実行していません。
+
+- **再開指示**: 「plan を手で編集して追記する」を消し、`exec run --register <ID> --resume --resume-from executor --resume-note <text>` を使うと書き換えました。worktree の plan を手で直すと、通常の再開では統合の前に範囲外の変更として止まる理由も添えています。
+- **章の本文差し替え**: `register update --section <章の名前> --section-file <path>` を使う書き方に変えました。
+- **型の一括 grade**: `grade run --target kata --kata <name>` を繰り返して 1 回で流せる書き方に変えました。rate limit の後も続けるのは `--kata` のときだけで、代わりの agent への切り替えはない（PJR-XA6Y）ことも書いています。
+- **個票**: 対応結果に「2 回目の実行（2026-11-21）」の項を足しました。本体の変更案は 1 回目のものを維持し、作り直していません。
+
+`git diff --stat` に `events/pjr-70ss.yaml` の変更が出ていますが、私は触っていません。runner 側の変更とみています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"運用メモの 3 点を `register update --section`、`--resume-note`、`grade run --target kata --kata` を使う書き方に直し、個票の対応結果に 2 回目の実行の項を追記した。本体の変更案は 1 回目のものを維持した。","handoff":["本体の変更案（`.agents/specdojo-orchestrator.agent.md`）は 1 回目のものを維持した。オーケストレーターが feature ブランチで反映し、ラッパーを作り直す必要がある（作業内容 No 2）。","`git diff --stat` に `events/pjr-70ss.yaml` の変更が出ているが、executor は編集していない。runner の記録とみている。"],"validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner の検証として実行されるため、executor では実行していない。"},{"command":"npm run validate:history-links","status":"not_run","summary":"変更した個票に Markdown リンクを追加していないが、検査自体は実行していない。"}]}
+</specdojo_executor_evidence>
