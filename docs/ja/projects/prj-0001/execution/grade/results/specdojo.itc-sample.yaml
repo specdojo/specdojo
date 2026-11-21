@@ -4,79 +4,80 @@ document: specdojo:itc-sample
 path: docs/ja/specdojo/samples/itc-sample.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-sample
 verdict: fail
-score: 76
-graded_at: "2026-10-12T21:27:50.523Z"
-graded_by: agy-expert-executor
-content_hash: baf6b958314bd6f011c4894dbac21855eb7734bcb13f65b8747e5e8e36a864fd
+score: 42
+graded_at: "2026-11-21T04:25:47.070Z"
+graded_by: opus-executor
+content_hash: b7153d03ec130f0e7dd00ed3557fdb3bfa618ba7824a10d88edb9931bc257305
 categories:
   purpose:
-    score: 100
+    score: 38
   operations:
-    score: 100
+    score: 81
   planning:
-    score: 100
+    score: 58
   business:
-    score: 100
+    score: 42
   architecture:
-    score: 100
+    score: 75
   usability:
-    score: 83
+    score: 58
   implementation:
-    score: 100
+    score: 38
   quality:
-    score: 67
+    score: 25
   consistency:
     score: 0
 viewpoints:
   vp-po-purpose-alignment:
-    level: 4
-    score: 100
+    level: 1
+    score: 25
   vp-po-decision-readiness:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-po-publication-accountability:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-pm-dependency-risk:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-pm-control-reporting:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-business-value:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-ba-requirements-completeness:
-    level: 4
-    score: 100
+    level: 1
+    score: 25
   vp-ba-stakeholder-clarity:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-arc-technical-constraints:
-    level: 4
-    score: 100
+    level: 1
+    score: 25
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 4
-    score: 100
+    level: 1
+    score: 25
   vp-dev-change-impact:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-dev-testability:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 1
+    score: 25
   vp-qe-omissions-consistency:
     level: 0
     score: 0
@@ -84,17 +85,17 @@ viewpoints:
     level: 0
     score: 0
   vp-ux-readability:
+    level: 1
+    score: 25
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-ops-release-readiness:
     level: 2
     score: 50
-  vp-ux-language-consistency:
-    level: 4
-    score: 100
-  vp-ops-release-readiness:
-    level: 4
-    score: 100
   vp-ops-operability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -103,42 +104,176 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 2
-  major: 3
-  minor: 0
+  major: 16
+  minor: 5
   note: 0
 findings:
   - id: F001
+    severity: major
+    rule: vp-po-purpose-alignment
+    line: 3
+    anchor: "## 1. 目的と適用範囲"
+    message: >-
+      sample の目的は `itc-＜term＞` の完成例を示すことだが、本文は記述項目を抽象的に説明するだけで、駄菓子屋きぬや販売管理システムの結合単位（例:
+      販売登録→在庫減算→つけ残高更新）を対象にした具体例がない。目的に合う成果を示す内容に書き直す必要がある。
+    message_ja: >-
+      sample の目的は `itc-＜term＞` の完成例を示すことだが、本文は記述項目を抽象的に説明するだけで、駄菓子屋きぬや販売管理システムの結合単位（例:
+      販売登録→在庫減算→つけ残高更新）を対象にした具体例がない。目的に合う成果を示す内容に書き直す必要がある。
+  - id: F002
+    severity: major
+    rule: vp-po-decision-readiness
+    line: 30
+    anchor: "| 要件詳細の補強 | 実案件適用時に具体化する |"
+    message: 未解決事項「要件詳細の補強／実案件適用時に具体化する」は、補強の対象・判断者（Role code）・判断の時期・影響する章がなく、判断に使えない。具体的な論点と次のアクションを書く必要がある。
+    message_ja: 未解決事項「要件詳細の補強／実案件適用時に具体化する」は、補強の対象・判断者（Role code）・判断の時期・影響する章がなく、判断に使えない。具体的な論点と次のアクションを書く必要がある。
+  - id: F003
+    severity: major
+    rule: vp-pm-plan-feasibility
+    line: 18
+    anchor: "## 4. 最小記述例"
+    message: 最小記述例が文書属性を3行並べた表だけで、`case_id`・優先度・自動化の区分を持つケース表がない。テスト実装をタスク化・見積もりする単位として使えない。
+    message_ja: 最小記述例が文書属性を3行並べた表だけで、`case_id`・優先度・自動化の区分を持つケース表がない。テスト実装をタスク化・見積もりする単位として使えない。
+  - id: F004
+    severity: major
+    rule: vp-pm-dependency-risk
+    line: 7
+    anchor: "## 2. 入力情報"
+    message: 入力情報に `tsp-index` や `itc-index`、根拠仕様（`br-*` / `bac-*` / `spec-*`）への依存が示されておらず、トレース章もない。上位方針や仕様が変わったときの影響が追えない。
+    message_ja: 入力情報に `tsp-index` や `itc-index`、根拠仕様（`br-*` / `bac-*` / `spec-*`）への依存が示されておらず、トレース章もない。上位方針や仕様が変わったときの影響が追えない。
+  - id: F005
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 30
+    anchor: "| 要件詳細の補強 | 実案件適用時に具体化する |"
+    message: 未解決事項が登録簿（PJR）への引き継ぎ候補かどうかと担当 Role code を示しておらず、管理の記録へ転記する判断ができない。
+    message_ja: 未解決事項が登録簿（PJR）への引き継ぎ候補かどうかと担当 Role code を示しておらず、管理の記録へ転記する判断ができない。
+  - id: F006
+    severity: major
+    rule: vp-ba-business-value
+    line: 9
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+    message: 対象を「駄菓子屋の販売管理システム」と書くだけで、どの業務（販売記録・在庫減算・つけ残高）の結合を保証し、どの業務リスクを防ぐのかが分からない。共通サンプル文脈に沿った具体的な対象を示す必要がある。
+    message_ja: 対象を「駄菓子屋の販売管理システム」と書くだけで、どの業務（販売記録・在庫減算・つけ残高）の結合を保証し、どの業務リスクを防ぐのかが分からない。共通サンプル文脈に沿った具体的な対象を示す必要がある。
+  - id: F007
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 18
+    anchor: "## 4. 最小記述例"
+    message: 責務（結合として保証する振る舞い）、対象外（理由・代替）、期待値つきのケースがない。保証範囲と除外範囲を利用者の視点で確認できない。
+    message_ja: 責務（結合として保証する振る舞い）、対象外（理由・代替）、期待値つきのケースがない。保証範囲と除外範囲を利用者の視点で確認できない。
+  - id: F008
+    severity: major
+    rule: vp-ba-stakeholder-clarity
+    line: 16
+    anchor: "- 必須観点: 対象、条件、判定基準、責任者"
+    message: 必須観点に「責任者」を挙げながら、本文に責任者・レビューア・テスト実装者の Role code がない。必須観点を自分で満たしていない。
+    message_ja: 必須観点に「責任者」を挙げながら、本文に責任者・レビューア・テスト実装者の Role code がない。必須観点を自分で満たしていない。
+  - id: F009
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 13
+    anchor: "## 3. 記述内容"
+    message: 結合境界（入口・出口・結合対象）、依存ごとの扱い（DB=実、時刻=固定 等）、環境前提が記述されておらず、技術的な制約が読み取れない。
+    message_ja: 結合境界（入口・出口・結合対象）、依存ごとの扱い（DB=実、時刻=固定 等）、環境前提が記述されておらず、技術的な制約が読み取れない。
+  - id: F010
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 23
+    anchor: "| 目的         | 内部結合テスト仕様を対象（機能/連携）ごとに分割して定義する                     | specdojo:deliverables-reference 準拠 |"
+    message: 最小記述例の表の「目的」「主な内容」の行が、目的と適用範囲・記述内容の章の文をそのまま繰り返している。削除するか、具体例に置き換えても情報は失われない。
+    message_ja: 最小記述例の表の「目的」「主な内容」の行が、目的と適用範囲・記述内容の章の文をそのまま繰り返している。削除するか、具体例に置き換えても情報は失われない。
+  - id: F011
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 18
+    anchor: "## 4. 最小記述例"
+    message: 条件（入力・状態・環境）、抽象手順、判定できる期待値、観測点、`case_id` を持つケース表がなく、テストコードを実装するための入力にならない。
+    message_ja: 条件（入力・状態・環境）、抽象手順、判定できる期待値、観測点、`case_id` を持つケース表がなく、テストコードを実装するための入力にならない。
+  - id: F012
+    severity: major
+    rule: vp-dev-change-impact
+    line: 18
+    anchor: "## 4. 最小記述例"
+    message: "`trace_key`（TR-xx）と仕様ID を対応づけるトレース表がなく、仕様変更がどのケースに影響するかを識別できない。"
+    message_ja: "`trace_key`（TR-xx）と仕様ID を対応づけるトレース表がなく、仕様変更がどのケースに影響するかを識別できない。"
+  - id: F013
+    severity: major
+    rule: vp-dev-testability
+    line: 18
+    anchor: "## 4. 最小記述例"
+    message: ケースごとの証跡（テストコードのパス、CI run ID）の例がなく、実装後に何を実行してどの結果を確認するかが分からない。
+    message_ja: ケースごとの証跡（テストコードのパス、CI run ID）の例がなく、実装後に何を実行してどの結果を確認するかが分からない。
+  - id: F014
+    severity: major
+    rule: vp-qe-verifiability
+    line: 13
+    anchor: "## 3. 記述内容"
+    message: 合格基準と期待値が名前として並ぶだけで、レスポンス・DB 状態・イベント等で判定できる期待値が一つもなく、pass / fail を判定できない。
+    message_ja: 合格基準と期待値が名前として並ぶだけで、レスポンス・DB 状態・イベント等で判定できる期待値が一つもなく、pass / fail を判定できない。
+  - id: F015
     severity: blocker
     rule: vp-qe-omissions-consistency
     line: 3
     anchor: "## 1. 目的と適用範囲"
     message: Rulebook 第 5 節で定義された必須見出し構成（1.概要 〜 6.テスト観点とケース）に従っておらず、必要な章がすべて不足している。
     message_ja: Rulebook 第 5 節で定義された必須見出し構成（1.概要 〜 6.テスト観点とケース）に従っておらず、必要な章がすべて不足している。
-  - id: F002
+  - id: F016
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 1
+    anchor: "# [内部結合テスト対象別](../rulebooks/itc-rulebook.md) サンプル"
+    message: "H1 が rulebook の定める `# 内部結合テストカタログ: ＜対象名＞` の形式ではなく、相対パスの Markdown リンクを含む「内部結合テスト対象別 サンプル」になっている。"
+    message_ja: "H1 が rulebook の定める `# 内部結合テストカタログ: ＜対象名＞` の形式ではなく、相対パスの Markdown リンクを含む「内部結合テスト対象別 サンプル」になっている。"
+  - id: F017
     severity: blocker
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# [内部結合テスト対象別](../rulebooks/itc-rulebook.md) サンプル"
     message: sample 種別の責務である「完成例」を提示せず、記述内容の抽象的な説明に留まっており、実例として不適切である。
     message_ja: sample 種別の責務である「完成例」を提示せず、記述内容の抽象的な説明に留まっており、実例として不適切である。
-  - id: F003
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 4
-    anchor: ""
-    message: Frontmatter `type` は `test` 固定である必要があるが `project` となっている。
-    message_ja: Frontmatter `type` は `test` 固定である必要があるが `project` となっている。
-  - id: F004
+  - id: F018
     severity: major
     rule: vp-qe-kata-conformance
     line: 7
     anchor: "## 2. 入力情報"
     message: 必須項目である `title` および `based_on` が Frontmatter に不足している。
     message_ja: 必須項目である `title` および `based_on` が Frontmatter に不足している。
-  - id: F005
+  - id: F019
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 10
+    anchor: "- 前提: プロジェクト文脈は handbook の共通方針に準拠する"
+    message: >-
+      参照が相対パス表記（`../rulebooks/itc-rulebook.md`）と、解決先が不明な「handbook の共通方針」「`specdojo:deliverables-reference`
+      準拠」になっている。`[[specdojo:itc-rulebook]]` などの id ベースの wikilink に統一する必要がある。
+    message_ja: >-
+      参照が相対パス表記（`../rulebooks/itc-rulebook.md`）と、解決先が不明な「handbook の共通方針」「`specdojo:deliverables-reference`
+      準拠」になっている。`[[specdojo:itc-rulebook]]` などの id ベースの wikilink に統一する必要がある。
+  - id: F020
     severity: major
     rule: vp-ux-readability
     line: 3
     anchor: "## 1. 目的と適用範囲"
     message: 文書構造が rulebook の定義と乖離しており, 初見の読者が正しい作成手順や構成を把握できない。
     message_ja: 文書構造が rulebook の定義と乖離しており, 初見の読者が正しい作成手順や構成を把握できない。
+  - id: F021
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 1
+    anchor: "# [内部結合テスト対象別](../rulebooks/itc-rulebook.md) サンプル"
+    message: 文書名「内部結合テスト対象別」と用語「テスト条件（シナリオ）」が、rulebook の「内部結合テストカタログ」「観点・ケース」と一致しておらず、読み手が同じものか迷う。
+    message_ja: 文書名「内部結合テスト対象別」と用語「テスト条件（シナリオ）」が、rulebook の「内部結合テストカタログ」「観点・ケース」と一致しておらず、読み手が同じものか迷う。
+  - id: F022
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: 未解決事項に ready 化の条件（必須6章とケース表の完成例を揃える等）と承認者がなく、何を満たせば公開できるかが判断できない。
+    message_ja: 未解決事項に ready 化の条件（必須6章とケース表の完成例を揃える等）と承認者がなく、何を満たせば公開できるかが判断できない。
+  - id: F023
+    severity: minor
+    rule: vp-ops-operability
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: "`case_id` や `trace_key` を採番・維持する例がなく、継続更新や改訂の運用を sample から読み取れない。"
+    message_ja: "`case_id` や `trace_key` を採番・維持する例がなく、継続更新や改訂の運用を sample から読み取れない。"

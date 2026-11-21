@@ -4,46 +4,47 @@ document: specdojo:dmd-rulebook
 path: docs/ja/specdojo/rulebooks/dmd-rulebook.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-rulebook
 verdict: pass
-score: 100
-graded_at: "2026-10-31T20:34:28.881Z"
-graded_by: flash-high-executor
-content_hash: 530f9120076b67f6450f662f2f75f839c0b7ba535c9f284044b71f265c8fe8bc
+score: 87
+graded_at: "2026-11-21T03:48:33.867Z"
+graded_by: opus-executor
+content_hash: 4daf7170013bdfe3beb02aa94cf96ab8179e0ec74516277ae364d02748781ac5
 categories:
   purpose:
-    score: 100
+    score: 88
   operations:
-    score: 100
+    score: 94
   planning:
-    score: 100
+    score: 92
   business:
-    score: 100
+    score: 92
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 83
   implementation:
-    score: 100
+    score: 88
   quality:
-    score: 100
+    score: 83
   consistency:
-    score: 100
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-publication-accountability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-plan-feasibility:
     level: 4
     score: 100
   vp-pm-dependency-risk:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-control-reporting:
     level: 4
     score: 100
@@ -54,14 +55,14 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-stakeholder-clarity:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -69,26 +70,26 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-change-impact:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -104,6 +105,98 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
-  note: 0
-findings: []
+  minor: 11
+  note: 1
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 124
+    anchor: "- 合格基準は「差分0」か「許容差（ε）」かを、理由 1 行とともに明示する"
+    message: 許容差εを採用する場合は受入判断そのものになるため、εを承認する判断者（Role code）と合意の記録先（`mip-index` の成功条件や決定記録など）を書く要件を加えるべきである。
+    message_ja: 許容差εを採用する場合は受入判断そのものになるため、εを承認する判断者（Role code）と合意の記録先（`mip-index` の成功条件や決定記録など）を書く要件を加えるべきである。
+  - id: F002
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 123
+    anchor: "- 件数照合、サンプル照合、重要値照合の方法と証跡（レポート/ログ）を示す"
+    message: 検証方法とサンプル照合では実データの記載が誘発されやすいため、本文や証跡欄に実レコード値・個人情報・接続情報を載せず、証跡は保管場所の参照に留めることを禁止事項か記述ガイドに明記するべきである。
+    message_ja: 検証方法とサンプル照合では実データの記載が誘発されやすいため、本文や証跡欄に実レコード値・個人情報・接続情報を載せず、証跡は保管場所の参照に留めることを禁止事項か記述ガイドに明記するべきである。
+  - id: F003
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 65
+    anchor: "- 概算件数は見積り根拠が分かる粒度で示す"
+    message: 概算件数・所要時間・増分基準が未確定の場合は推測値を書かず、未確定と明示して metadata standard の未決事項の引き継ぎに載せるよう、記述ガイドに書くべきである。
+    message_ja: 概算件数・所要時間・増分基準が未確定の場合は推測値を書かず、未確定と明示して metadata standard の未決事項の引き継ぎに載せるよう、記述ガイドに書くべきである。
+  - id: F004
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 124
+    anchor: "- 合格基準は「差分0」か「許容差（ε）」かを、理由 1 行とともに明示する"
+    message: 検証方法の推奨表に、照合結果を確認して合否を判定する確認者（Role code）の列を加えるか、確認者は `mtp` 側で定めると明記するべきである。
+    message_ja: 検証方法の推奨表に、照合結果を確認して合否を判定する確認者（Role code）の列を加えるか、確認者は `mtp` 側で定めると明記するべきである。
+  - id: F005
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 40
+    anchor: "| 番号 | 見出し                                            | 必須 |"
+    message: 本文要件の表は全行が必須で「必須」列に判断情報がないため、列を削って「すべて必須」と1文で示すとよい。あわせて、見出しの「関連ドキュメント（必須）」の「（必須）」も冗長である。
+    message_ja: 本文要件の表は全行が必須で「必須」列に判断情報がないため、列を削って「すべて必須」と1文で示すとよい。あわせて、見出しの「関連ドキュメント（必須）」の「（必須）」も冗長である。
+  - id: F006
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 10
+    anchor: "- **上位との分担**: 抽出方式の扱い、`run_id` 規約、冪等性、検証の種類は `dmd-index` を正とし、`dmd-<term>` には対象固有の値だけを書きます。"
+    message: マッピング・変換・除外・移行手順を変更したとき、見直しが必要な後続成果物（`mtp-＜term＞` の検証観点、`cop-＜term＞` の当日手順）を位置づけの章か記述ガイドで示すべきである。
+    message_ja: マッピング・変換・除外・移行手順を変更したとき、見直しが必要な後続成果物（`mtp-＜term＞` の検証観点、`cop-＜term＞` の当日手順）を位置づけの章か記述ガイドで示すべきである。
+  - id: F007
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 124
+    anchor: "- 合格基準は「差分0」か「許容差（ε）」かを、理由 1 行とともに明示する"
+    message: 許容差εを採る場合は、理由だけでなく ε の具体的な値・単位（件数、率、金額）と比較対象を書くよう定め、合否を機械的に判定できるようにするべきである。
+    message_ja: 許容差εを採る場合は、理由だけでなく ε の具体的な値・単位（件数、率、金額）と比較対象を書くよう定め、合否を機械的に判定できるようにするべきである。
+  - id: F008
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 133
+    anchor: "- `dmd-index`（入口SSOT）への導線を必ず記載し、分冊が無い場合でも `（本書のみ）` を明記する"
+    message: >-
+      「分冊が無い場合でも（本書のみ）を明記する」は入口文書 `dmd-index` 向けの規定であり、`dmd-＜term＞` では意味が通らない。削除するか、`dmd-＜term＞`
+      で何を「本書のみ」とするのかを明確にするべきである。
+    message_ja: >-
+      「分冊が無い場合でも（本書のみ）を明記する」は入口文書 `dmd-index` 向けの規定であり、`dmd-＜term＞` では意味が通らない。削除するか、`dmd-＜term＞`
+      で何を「本書のみ」とするのかを明確にするべきである。
+  - id: F009
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 27
+    anchor: "- **文書タイトル（H1）**: `# データ移行設計: <対象名>` とし、対象名は日本語でよいものとします。"
+    message: "H1 規則は `# データ移行設計: ＜対象名＞` だが sample の H1 は「データ移行設計 サンプル」であり、完成例と規則が合っていない。sample を規則に合わせるか、sample 用の例外を明記するべきである。"
+    message_ja: "H1 規則は `# データ移行設計: ＜対象名＞` だが sample の H1 は「データ移行設計 サンプル」であり、完成例と規則が合っていない。sample を規則に合わせるか、sample 用の例外を明記するべきである。"
+  - id: F010
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 60
+    anchor: "- 依存する前提（移行方式、移行期間、上位の成功条件）を簡潔に述べる"
+    message: 概要の記述ガイドは移行方式・移行期間・上位の成功条件の記載を求めるが、sample の概要は1文だけで前提を示しておらず、完成例として要件を満たしていない。
+    message_ja: 概要の記述ガイドは移行方式・移行期間・上位の成功条件の記載を求めるが、sample の概要は1文だけで前提を示しておらず、完成例として要件を満たしていない。
+  - id: F011
+    severity: note
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# データ移行設計 作成ルール"
+    message: >-
+      Frontmatter で `recipe`・`template` を省略しており、authoring standard 上は「必要だが未整備」を意味する。要否が未判断なら `undecided`、不要なら
+      `not-needed` を明示するとよい。
+    message_ja: >-
+      Frontmatter で `recipe`・`template` を省略しており、authoring standard 上は「必要だが未整備」を意味する。要否が未判断なら `undecided`、不要なら
+      `not-needed` を明示するとよい。
+  - id: F012
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 113
+    anchor: "| 項目         | 方針                                       |"
+    message: ログ/再実行性の推奨表で `run_id` や冪等性方式がインラインコードになっておらず、本文 line 109 の書式と揺れているため統一するべきである。あわせて「見積」と「見積り」の表記も揃えるとよい。
+    message_ja: ログ/再実行性の推奨表で `run_id` や冪等性方式がインラインコードになっておらず、本文 line 109 の書式と揺れているため統一するべきである。あわせて「見積」と「見積り」の表記も揃えるとよい。

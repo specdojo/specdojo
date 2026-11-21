@@ -4,64 +4,65 @@ document: specdojo:opd-incident-management-sample
 path: docs/ja/specdojo/samples/opd-incident-management-sample.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-sample
 verdict: needs-work
-score: 88
-graded_at: "2026-10-15T21:24:45.824Z"
-graded_by: agy-expert-executor
+score: 72
+graded_at: "2026-11-21T06:42:36.422Z"
+graded_by: opus-executor
 content_hash: c050e40e04a4721f8c90c9e754f2fbf45223d935c20dad68df6678a74aaed8fe
 categories:
   purpose:
-    score: 100
+    score: 63
   operations:
-    score: 100
+    score: 88
   planning:
-    score: 100
-  business:
-    score: 100
-  architecture:
-    score: 100
-  usability:
-    score: 92
-  implementation:
-    score: 100
-  quality:
     score: 83
+  business:
+    score: 58
+  architecture:
+    score: 92
+  usability:
+    score: 75
+  implementation:
+    score: 88
+  quality:
+    score: 67
   consistency:
     score: 50
 viewpoints:
   vp-po-purpose-alignment:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-po-decision-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-publication-accountability:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-dependency-risk:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-control-reporting:
     level: 4
     score: 100
   vp-ba-business-value:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-ba-requirements-completeness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-stakeholder-clarity:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-arc-technical-constraints:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -69,32 +70,32 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-change-impact:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
     level: 2
     score: 50
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ux-readability:
     level: 3
     score: 75
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-operability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -103,35 +104,149 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 2
-  minor: 2
+  major: 6
+  minor: 12
   note: 0
 findings:
   - id: F001
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 1
-    anchor: "# 運用方針・設計: 障害対応 サンプル"
-    message: Frontmatter の必須項目 `title` が不足している。
-    message_ja: Frontmatter の必須項目 `title` が不足している。
+    severity: major
+    rule: vp-po-purpose-alignment
+    line: 13
+    anchor: "| P1     | 全ユーザ影響/決済不可 | 30分/4h               | Ops Leadが即時→PO承認で停止可 | 全ユーザ（ステータス/メール） |"
+    message: >-
+      優先度の例「全ユーザ影響/決済不可」と周知手段「ステータス/メール」は EC/SaaS を前提としており、共通サンプル文脈（駄菓子屋きぬやの単一店舗・店頭タブレット1台・EC
+      は対象外）と矛盾する。店頭販売・在庫・つけの記録ができないなど、きぬやの業務に即した障害例へ置き換える必要がある。
+    message_ja: >-
+      優先度の例「全ユーザ影響/決済不可」と周知手段「ステータス/メール」は EC/SaaS を前提としており、共通サンプル文脈（駄菓子屋きぬやの単一店舗・店頭タブレット1台・EC
+      は対象外）と矛盾する。店頭販売・在庫・つけの記録ができないなど、きぬやの業務に即した障害例へ置き換える必要がある。
   - id: F002
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 13
+    anchor: "| P1     | 全ユーザ影響/決済不可 | 30分/4h               | Ops Leadが即時→PO承認で停止可 | 全ユーザ（ステータス/メール） |"
+    message: P1 の停止判断「Ops Leadが即時→PO承認で停止可」は、即時に何をするのか（エスカレーションか暫定停止か）と、停止する対象（業務か端末か）が不明確。判断者ごとの判断内容と停止の対象を明記する必要がある。
+    message_ja: P1 の停止判断「Ops Leadが即時→PO承認で停止可」は、即時に何をするのか（エスカレーションか暫定停止か）と、停止する対象（業務か端末か）が不明確。判断者ごとの判断内容と停止の対象を明記する必要がある。
+  - id: F003
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 15
+    anchor: "| P3     | 軽微/回避あり         | 1d/次リリース         | 停止しない                    | 原則なし                      |"
+    message: P3 の復旧目標「次リリース」は期限が定まらず、計画や進捗確認に使えない。「5営業日以内」のように期間で示す必要がある。
+    message_ja: P3 の復旧目標「次リリース」は期限が定まらず、計画や進捗確認に使えない。「5営業日以内」のように期間で示す必要がある。
+  - id: F004
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 7
+    anchor: 障害対応の優先度、停止判断、周知方針を `opd-index` の差分として具体化する。
+    message: 本書が具体化する `opd-index` の統制（一次応答 SLO・RACI）との依存箇所が明示されず、`based_on` も空のため、上位の変更時に影響を受ける箇所を追跡できない。依存する章や成果物を示す必要がある。
+    message_ja: 本書が具体化する `opd-index` の統制（一次応答 SLO・RACI）との依存箇所が明示されず、`based_on` も空のため、上位の変更時に影響を受ける箇所を追跡できない。依存する章や成果物を示す必要がある。
+  - id: F005
+    severity: major
+    rule: vp-ba-business-value
+    line: 13
+    anchor: "| P1     | 全ユーザ影響/決済不可 | 30分/4h               | Ops Leadが即時→PO承認で停止可 | 全ユーザ（ステータス/メール） |"
+    message: 優先度の区分が、きぬやの業務への影響（店頭販売を記録できない、つけ残高を確認できない、在庫を確認できない）と対応しておらず、利用者のどの業務価値を守るための分類かを説明できない。
+    message_ja: 優先度の区分が、きぬやの業務への影響（店頭販売を記録できない、つけ残高を確認できない、在庫を確認できない）と対応しておらず、利用者のどの業務価値を守るための分類かを説明できない。
+  - id: F006
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 11
+    anchor: "| 優先度 | 例                    | 目標（一次応答/復旧） | 停止判断                      | 周知                          |"
+    message: "周知列にタイミング（例: 検知から何分以内、復旧時）がなく、P2 は手段もない。rulebook が求める周知の対象・手段・タイミングをすべて記載する必要がある。"
+    message_ja: "周知列にタイミング（例: 検知から何分以内、復旧時）がなく、P2 は手段もない。rulebook が求める周知の対象・手段・タイミングをすべて記載する必要がある。"
+  - id: F007
+    severity: major
+    rule: vp-ba-stakeholder-clarity
+    line: 13
+    anchor: "| P1     | 全ユーザ影響/決済不可 | 30分/4h               | Ops Leadが即時→PO承認で停止可 | 全ユーザ（ステータス/メール） |"
+    message: 判断者「Ops Lead」と周知対象「全ユーザ」が共通登場人物の役割名・Role code に対応していない。店主代表・家族利用者代表・運用アドバイザーなどの役割名、または Role code で記述する必要がある。
+    message_ja: 判断者「Ops Lead」と周知対象「全ユーザ」が共通登場人物の役割名・Role code に対応していない。店主代表・家族利用者代表・運用アドバイザーなどの役割名、または Role code で記述する必要がある。
+  - id: F008
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 13
+    anchor: "| P1     | 全ユーザ影響/決済不可 | 30分/4h               | Ops Leadが即時→PO承認で停止可 | 全ユーザ（ステータス/メール） |"
+    message: 店頭タブレット1台という前提と、オフライン時の運用が `_UNDECIDED_` であることに触れておらず、停止時の代替運用（紙への記録など）の前提が読み取れない。
+    message_ja: 店頭タブレット1台という前提と、オフライン時の運用が `_UNDECIDED_` であることに触れておらず、停止時の代替運用（紙への記録など）の前提が読み取れない。
+  - id: F009
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 13
+    anchor: "| P1     | 全ユーザ影響/決済不可 | 30分/4h               | Ops Leadが即時→PO承認で停止可 | 全ユーザ（ステータス/メール） |"
+    message: >-
+      P1 の一次応答「30分」は `opd-index` の SLO（一次応答 P1: 30分以内）の再掲で、`opd-＜term＞` に `opd-index` と同じ統制を再掲する禁止事項に抵触する。`opd-index`
+      の参照に置き換え、差分だけを記載する必要がある。
+    message_ja: >-
+      P1 の一次応答「30分」は `opd-index` の SLO（一次応答 P1: 30分以内）の再掲で、`opd-＜term＞` に `opd-index` と同じ統制を再掲する禁止事項に抵触する。`opd-index`
+      の参照に置き換え、差分だけを記載する必要がある。
+  - id: F010
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 13
+    anchor: "| P1     | 全ユーザ影響/決済不可 | 30分/4h               | Ops Leadが即時→PO承認で停止可 | 全ユーザ（ステータス/メール） |"
+    message: 目標時間を `opd-index` と二重に持っているため、SLO の改訂時に本書も更新が必要になる影響が識別されていない。参照化するか、影響関係を明記する必要がある。
+    message_ja: 目標時間を `opd-index` と二重に持っているため、SLO の改訂時に本書も更新が必要になる影響が識別されていない。参照化するか、影響関係を明記する必要がある。
+  - id: F011
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 15
+    anchor: "| P3     | 軽微/回避あり         | 1d/次リリース         | 停止しない                    | 原則なし                      |"
+    message: P3 の「1d/次リリース」の復旧目標と、例示だけの優先度区分では判定できない。復旧期限を数値で示し、優先度の判定条件（影響範囲・回避策の有無）を明記する必要がある。
+    message_ja: P3 の「1d/次リリース」の復旧目標と、例示だけの優先度区分では判定できない。復旧期限を数値で示し、優先度の判定条件（影響範囲・回避策の有無）を明記する必要がある。
+  - id: F012
     severity: major
     rule: vp-qe-omissions-consistency
-    line: 5
-    anchor: "## 1. 概要（incident-management）"
-    message: "`opd-rulebook` の「5. 本文構成（標準テンプレ）」で定義されている必須見出し（2, 3, 4, 5, 7, 8, 9, 10, 11）が不足している。"
-    message_ja: "`opd-rulebook` の「5. 本文構成（標準テンプレ）」で定義されている必須見出し（2, 3, 4, 5, 7, 8, 9, 10, 11）が不足している。"
-  - id: F003
+    line: 19
+    anchor: "| 種別 | ドキュメントID | 目的                         | 備考 |"
+    message: 関連ドキュメント導線の表に `opr-index` への導線がなく、rulebook の「`opr-index` への導線を必ず記載し」に違反している。`opr-index` の行を追加する必要がある。
+    message_ja: 関連ドキュメント導線の表に `opr-index` への導線がなく、rulebook の「`opr-index` への導線を必ず記載し」に違反している。`opr-index` の行を追加する必要がある。
+  - id: F013
     severity: major
     rule: vp-qe-kata-conformance
     line: 13
     anchor: "| P1     | 全ユーザ影響/決済不可 | 30分/4h               | Ops Leadが即時→PO承認で停止可 | 全ユーザ（ステータス/メール） |"
-    message: "見出し番号が `opd-rulebook` の定義する順序（## 6. 障害対応方針 / ## 12. 関連ドキュメント導線）と不一致である。"
-    message_ja: "見出し番号が `opd-rulebook` の定義する順序（## 6. 障害対応方針 / ## 12. 関連ドキュメント導線）と不一致である。"
-  - id: F004
+    message: 題材が駄菓子屋きぬやの共通サンプル文脈ではなく EC/SaaS（決済不可・ステータスページ・全ユーザへのメール周知）になっており、sample 記述標準の「共通の業務文脈以外の業種題材を混在させない」に違反している。
+    message_ja: 題材が駄菓子屋きぬやの共通サンプル文脈ではなく EC/SaaS（決済不可・ステータスページ・全ユーザへのメール周知）になっており、sample 記述標準の「共通の業務文脈以外の業種題材を混在させない」に違反している。
+  - id: F014
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 21
+    anchor: "| 手順 | opr-incident   | 障害切り分け/復旧/報告の手順 | 必須 |"
+    message: 導線に `opr-incident` だけを記載し `opr-index` がないため、rulebook の関連ドキュメント導線の必須要件を満たす完成例になっていない。
+    message_ja: 導線に `opr-incident` だけを記載し `opr-index` がないため、rulebook の関連ドキュメント導線の必須要件を満たす完成例になっていない。
+  - id: F015
     severity: minor
     rule: vp-ux-readability
-    line: 5
-    anchor: "## 1. 概要（incident-management）"
-    message: 必須構成を省略しているため、`opd-＜term＞` 文書を正しく作成するためのサンプルとして不十分である。
-    message_ja: 必須構成を省略しているため、`opd-＜term＞` 文書を正しく作成するためのサンプルとして不十分である。
+    line: 13
+    anchor: "| P1     | 全ユーザ影響/決済不可 | 30分/4h               | Ops Leadが即時→PO承認で停止可 | 全ユーザ（ステータス/メール） |"
+    message: 「Ops Leadが即時→PO承認で停止可」「30分/4h」などの圧縮表記は、判断の流れや値の対応（一次応答と復旧のどちらか）を読み手の推測に委ねる。文として明記する必要がある。
+    message_ja: 「Ops Leadが即時→PO承認で停止可」「30分/4h」などの圧縮表記は、判断の流れや値の対応（一次応答と復旧のどちらか）を読み手の推測に委ねる。文として明記する必要がある。
+  - id: F016
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 13
+    anchor: "| P1     | 全ユーザ影響/決済不可 | 30分/4h               | Ops Leadが即時→PO承認で停止可 | 全ユーザ（ステータス/メール） |"
+    message: >-
+      「Ops Lead」（役割名でも Role code でもない）と「PO」（Role code）が混在し、「全ユーザ」も共通文脈の「利用者」「家族利用者代表」と表記がずれている。sample 記述標準の役割名または Role
+      code に統一する必要がある。
+    message_ja: >-
+      「Ops Lead」（役割名でも Role code でもない）と「PO」（Role code）が混在し、「全ユーザ」も共通文脈の「利用者」「家族利用者代表」と表記がずれている。sample 記述標準の役割名または Role
+      code に統一する必要がある。
+  - id: F017
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 7
+    anchor: 障害対応の優先度、停止判断、周知方針を `opd-index` の差分として具体化する。
+    message: 障害時の停止判断に関わる未決事項（オフライン時の運用など）が `_UNDECIDED_` / `_ASSUMPTION_` として明示されておらず、ready 化の前提が読み取れない。
+    message_ja: 障害時の停止判断に関わる未決事項（オフライン時の運用など）が `_UNDECIDED_` / `_ASSUMPTION_` として明示されておらず、ready 化の前提が読み取れない。
+  - id: F018
+    severity: minor
+    rule: vp-ops-operability
+    line: 11
+    anchor: "| 優先度 | 例                    | 目標（一次応答/復旧） | 停止判断                      | 周知                          |"
+    message: 周知のタイミングがなく、手順の入口である `opr-index` への導線もないため、障害時に誰がいつ何を見て動くかを追えない。
+    message_ja: 周知のタイミングがなく、手順の入口である `opr-index` への導線もないため、障害時に誰がいつ何を見て動くかを追えない。
+level_corrections:
+  - viewpoint: vp-qe-kata-conformance
+    original_level: 2
+    corrected_level: 1

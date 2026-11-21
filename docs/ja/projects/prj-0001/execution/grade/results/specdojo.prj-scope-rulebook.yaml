@@ -4,30 +4,31 @@ document: specdojo:prj-scope-rulebook
 path: docs/ja/specdojo/rulebooks/prj-scope-rulebook.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-rulebook
 verdict: pass
-score: 100
-graded_at: "2026-10-06T21:30:07.885Z"
-graded_by: agy-expert-executor
-content_hash: a139c3f362f12771c27e8815575d41cf609faed9b00a48a3c9df83403c779b0c
+score: 89
+graded_at: "2026-11-21T05:36:32.410Z"
+graded_by: opus-executor
+content_hash: 81acd2008e239472176a459983f988598798ad96fe0533b84fef07f80d6d69ae
 categories:
   purpose:
     score: 100
   operations:
-    score: 100
+    score: 94
   planning:
-    score: 100
+    score: 92
   business:
     score: 100
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 83
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 83
   consistency:
-    score: 100
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -36,14 +37,14 @@ viewpoints:
     level: 4
     score: 100
   vp-po-publication-accountability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-plan-feasibility:
     level: 4
     score: 100
   vp-pm-dependency-risk:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-control-reporting:
     level: 4
     score: 100
@@ -60,8 +61,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -75,20 +76,20 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -104,6 +105,67 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 7
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 153
+    anchor: "| スコープ外の未記載                  | 境界が曖昧になり手戻りの原因になる        |"
+    message: >-
+      禁止事項に「個人名・連絡先などの個人情報や非公開情報の記載」を追加し、recipe の仕上げチェック（個人情報・機密情報を含めない）および prj-overview-rulebook
+      の禁止事項と公開適性の基準を揃えるべきである。
+    message_ja: >-
+      禁止事項に「個人名・連絡先などの個人情報や非公開情報の記載」を追加し、recipe の仕上げチェック（個人情報・機密情報を含めない）および prj-overview-rulebook
+      の禁止事項と公開適性の基準を揃えるべきである。
+  - id: F002
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 111
+    anchor: "- マイルストーンやスケジュール定義がある場合は、期間判断の根拠として参照リンクを付けます。"
+    message: >-
+      対象期間の根拠としてスケジュール等の後続成果物へ参照リンクを付ける規定は、based_on を depends_on の推移閉包内に限定するルールと関係が不明確で逆依存を招くため、「参照のみで based_on
+      には含めない」等の扱いを明記すべきである。
+    message_ja: >-
+      対象期間の根拠としてスケジュール等の後続成果物へ参照リンクを付ける規定は、based_on を depends_on の推移閉包内に限定するルールと関係が不明確で逆依存を招くため、「参照のみで based_on
+      には含めない」等の扱いを明記すべきである。
+  - id: F003
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 86
+    anchor: "- UI、API、DB、テストケース、運用手順などの詳細は、対象となる後続文書へ委譲します。"
+    message: 記述ガイド「共通」の「UI、API、DB…の詳細は後続文書へ委譲」は全体方針の委譲記述と禁止事項の設計詳細行の繰り返しであり、削除または禁止事項への参照に置き換えられる。
+    message_ja: 記述ガイド「共通」の「UI、API、DB…の詳細は後続文書へ委譲」は全体方針の委譲記述と禁止事項の設計詳細行の繰り返しであり、削除または禁止事項への参照に置き換えられる。
+  - id: F004
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 97
+    anchor: "- 業務アプリケーション以外では、文書体系、管理台帳、サンプル、補助ツール、公開基盤などを表で示してよいです。"
+    message: 「粒度を揃えます」および禁止事項の「粒度不一致」に判定条件がないため、「対象システムの各行がいずれかの対象業務を支えることを示す」等の pass / fail を判定できる基準を記述すべきである。
+    message_ja: 「粒度を揃えます」および禁止事項の「粒度不一致」に判定条件がないため、「対象システムの各行がいずれかの対象業務を支えることを示す」等の pass / fail を判定できる基準を記述すべきである。
+  - id: F005
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 141
+    anchor: "| 項目     | 内容 |"
+    message: スコープ変更方針の記述ガイドは「影響を受ける成果物」を求めているが推奨表に該当行がなく template・sample にも反映されないため、推奨表に「影響成果物」行を追加するか箇条を影響評価に統合して整合させるべきである。
+    message_ja: スコープ変更方針の記述ガイドは「影響を受ける成果物」を求めているが推奨表に該当行がなく template・sample にも反映されないため、推奨表に「影響成果物」行を追加するか箇条を影響評価に統合して整合させるべきである。
+  - id: F006
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 68
+    anchor: 各章は次の内容を満たすものとし、見出し順と記入欄は宣言済みの template を正本とします。
+    message: >-
+      template は H1 直下に導入文を要求するが rulebook の本文構成表に導入文の規定がなく sample にも導入文がないため、導入文の要否を rulebook に定めて template・sample
+      と揃え、あわせて任意章（境界の判断基準・スコープ変更方針）の任意性を template に示すべきである。
+    message_ja: >-
+      template は H1 直下に導入文を要求するが rulebook の本文構成表に導入文の規定がなく sample にも導入文がないため、導入文の要否を rulebook に定めて template・sample
+      と揃え、あわせて任意章（境界の判断基準・スコープ変更方針）の任意性を template に示すべきである。
+  - id: F007
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 9
+    anchor: "- 対象は **プロジェクトスコープ**（対象範囲、対象外、境界判断、変更方針）です。"
+    message: 「対象外」「スコープ外」「対象（Out）」が同一概念に混在しているため、章名「スコープ外」に統一するか、両者が同義であることを全体方針で定義すべきである。
+    message_ja: 「対象外」「スコープ外」「対象（Out）」が同一概念に混在しているため、章名「スコープ外」に統一するか、両者が同義であることを全体方針で定義すべきである。

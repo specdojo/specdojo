@@ -4,58 +4,59 @@ document: specdojo:pm-change-request-log-sample
 path: docs/ja/specdojo/samples/pm-change-request-log-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: pass
-score: 95
-graded_at: "2026-10-16T20:36:17.355Z"
-graded_by: agy-expert-executor
+reference: specdojo:prj-overview-sample
+verdict: needs-work
+score: 75
+graded_at: "2026-11-21T05:14:09.445Z"
+graded_by: opus-executor
 content_hash: 44a9122b4fec0bd47d3a1e0a9020d72b93cb78926345a6ee46331fc97626c1f6
 categories:
   purpose:
-    score: 100
+    score: 50
   operations:
-    score: 100
+    score: 81
   planning:
-    score: 100
+    score: 75
   business:
-    score: 100
+    score: 67
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 83
   implementation:
-    score: 100
-  quality:
-    score: 92
-  consistency:
     score: 75
+  quality:
+    score: 75
+  consistency:
+    score: 50
 viewpoints:
   vp-po-purpose-alignment:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-decision-readiness:
-    level: 4
-    score: 100
+    level: 1
+    score: 25
   vp-po-publication-accountability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-plan-feasibility:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-dependency-risk:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-control-reporting:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-business-value:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-ba-requirements-completeness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-stakeholder-clarity:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-technical-constraints:
     level: 4
     score: 100
@@ -66,35 +67,35 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 4
-    score: 100
-  vp-dev-change-impact:
-    level: 4
-    score: 100
-  vp-dev-testability:
-    level: 4
-    score: 100
-  vp-qe-verifiability:
-    level: 4
-    score: 100
-  vp-qe-omissions-consistency:
     level: 3
     score: 75
+  vp-dev-change-impact:
+    level: 3
+    score: 75
+  vp-dev-testability:
+    level: 3
+    score: 75
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
   vp-qe-kata-conformance:
     level: 3
     score: 75
   vp-ux-readability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-operability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -103,28 +104,179 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 0
-  minor: 3
+  major: 4
+  minor: 20
   note: 0
 findings:
   - id: F001
+    severity: minor
+    rule: vp-po-purpose-alignment
+    line: 23
+    anchor: "| 変更ID | 審査結果     | 決定者 | 決定日     | 実施条件         |"
+    message: 審査・決定の表に `pm-plan` のスコープ・優先順位との対応（どのスコープ項目・優先度に照らして承認したか）が書かれておらず、決定がプロジェクト目的に沿う根拠を示せていない。
+    message_ja: 審査・決定の表に `pm-plan` のスコープ・優先順位との対応（どのスコープ項目・優先度に照らして承認したか）が書かれておらず、決定がプロジェクト目的に沿う根拠を示せていない。
+  - id: F002
+    severity: major
+    rule: vp-po-decision-readiness
+    line: 11
+    anchor: "| CR-001 | 在庫一覧にカテゴリ絞り込みを追加 | 業務PO     | 2026-04-01 | 審査中 |"
+    message: CR-001 の状態が変更要求一覧では「審査中」だが、審査・決定では 2026-04-04 に「承認」、実施追跡では「対応中」となっており、現在の判断状態が矛盾している。
+    message_ja: CR-001 の状態が変更要求一覧では「審査中」だが、審査・決定では 2026-04-04 に「承認」、実施追跡では「対応中」となっており、現在の判断状態が矛盾している。
+  - id: F003
+    severity: major
+    rule: vp-po-decision-readiness
+    line: 12
+    anchor: "| CR-002 | 日次売上CSVの列順を変更          | 店舗責任者 | 2026-04-03 | 承認   |"
+    message: CR-002 の状態が変更要求一覧では「承認」だが、審査・決定では「条件付き承認」であり、実施条件付きであることが一覧から読み取れない。
+    message_ja: CR-002 の状態が変更要求一覧では「承認」だが、審査・決定では「条件付き承認」であり、実施条件付きであることが一覧から読み取れない。
+  - id: F004
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 16
+    anchor: "| 変更ID | 影響範囲  | 工数見積 | 納期影響 | 評価 |"
+    message: 影響評価に、採否判断の材料として rulebook が求める「見送ったときの影響」と「期待効果」、および影響量の根拠がない。
+    message_ja: 影響評価に、採否判断の材料として rulebook が求める「見送ったときの影響」と「期待効果」、および影響量の根拠がない。
+  - id: F005
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 26
+    anchor: "| CR-002 | 条件付き承認 | PM     | 2026-04-05 | 連携先へ仕様通知 |"
+    message: CR-002 は納期 1 日延長を伴うのに決定者が PM のみで、スコープ・納期変更の最終承認と説明責任を PO が担う前提（承認者または合意者）が示されていない。
+    message_ja: CR-002 は納期 1 日延長を伴うのに決定者が PM のみで、スコープ・納期変更の最終承認と説明責任を PO が担う前提（承認者または合意者）が示されていない。
+  - id: F006
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 32
+    anchor: "| CR-001 | 開発リード | 2026-04-10 | 対応中 | 受入テスト合格 |"
+    message: "完了条件「受入テスト合格」「取込確認完了」が、rulebook の求める確認手段と合格基準の形（例: 受入テストで新しい列順を会計ソフトへ取り込めること）になっていない。"
+    message_ja: "完了条件「受入テスト合格」「取込確認完了」が、rulebook の求める確認手段と合格基準の形（例: 受入テストで新しい列順を会計ソフトへ取り込めること）になっていない。"
+  - id: F007
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 37
+    anchor: "- `pm-plan`: 全体管理方針"
+    message: 関連ドキュメントが文書種別の一般説明だけで、CR-002 の納期延長や連携先影響から起票したリスク・課題、影響先文書を変更 ID と結び付けて示していない。
+    message_ja: 関連ドキュメントが文書種別の一般説明だけで、CR-002 の納期延長や連携先影響から起票したリスク・課題、影響先文書を変更 ID と結び付けて示していない。
+  - id: F008
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 37
+    anchor: "- `pm-plan`: 全体管理方針"
+    message: 変更から生じたリスク・課題として `pm-risk-register`・`pm-issue-log` へ転記すべき事項が特定されず、転記先の項目 ID も示されていない。
+    message_ja: 変更から生じたリスク・課題として `pm-risk-register`・`pm-issue-log` へ転記すべき事項が特定されず、転記先の項目 ID も示されていない。
+  - id: F009
+    severity: major
+    rule: vp-ba-business-value
+    line: 9
+    anchor: "| 変更ID | 要求内容                         | 申請者     | 申請日     | 状態   |"
+    message: 変更要求一覧に rulebook 必須の変更理由（応える業務課題・期待価値）の列がなく、各変更がどの利用者のどの課題に応えるか説明できない。
+    message_ja: 変更要求一覧に rulebook 必須の変更理由（応える業務課題・期待価値）の列がなく、各変更がどの利用者のどの課題に応えるか説明できない。
+  - id: F010
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 12
+    anchor: "| CR-002 | 日次売上CSVの列順を変更          | 店舗責任者 | 2026-04-03 | 承認   |"
+    message: "CR-002 の要求内容「日次売上CSVの列順を変更」が、どの順へどう変えるか（例: 会計ソフトの取込順に合わせる）を示しておらず、受入可否を利用者視点で確認できない。"
+    message_ja: "CR-002 の要求内容「日次売上CSVの列順を変更」が、どの順へどう変えるか（例: 会計ソフトの取込順に合わせる）を示しておらず、受入可否を利用者視点で確認できない。"
+  - id: F011
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 12
+    anchor: "| CR-002 | 日次売上CSVの列順を変更          | 店舗責任者 | 2026-04-03 | 承認   |"
+    message: 申請者「店舗責任者」「業務PO」や実施担当「IF担当」が共通サンプル文脈の登場人物・Role code と対応せず、仕様通知先の「連携先」も特定されていない。
+    message_ja: 申請者「店舗責任者」「業務PO」や実施担当「IF担当」が共通サンプル文脈の登場人物・Role code と対応せず、仕様通知先の「連携先」も特定されていない。
+  - id: F012
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 27
+    anchor: ""
+    message: CR-002 の変更後の列順や対象ファイルなど実施に必要な入力がなく、実施条件「連携先へ仕様通知」の通知内容・期限も示されていないため作業を確定できない。
+    message_ja: CR-002 の変更後の列順や対象ファイルなど実施に必要な入力がなく、実施条件「連携先へ仕様通知」の通知内容・期限も示されていないため作業を確定できない。
+  - id: F013
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 19
+    anchor: "| CR-002 | 帳票・IF  | 2人日    | 1日延長  | 中   |"
+    message: CR-002 の影響範囲「帳票・IF」について、既存の取込処理や連携先との互換性への影響が評価されていない。
+    message_ja: CR-002 の影響範囲「帳票・IF」について、既存の取込処理や連携先との互換性への影響が評価されていない。
+  - id: F014
+    severity: minor
+    rule: vp-dev-testability
+    line: 33
+    anchor: "| CR-002 | IF担当     | 2026-04-09 | 完了   | 取込確認完了   |"
+    message: CR-002 の完了条件「取込確認完了」が、どの取込先で何を確認すれば合格かを示しておらず、変更後の確認手順と期待結果が分からない。
+    message_ja: CR-002 の完了条件「取込確認完了」が、どの取込先で何を確認すれば合格かを示しておらず、変更後の確認手順と期待結果が分からない。
+  - id: F015
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 18
+    anchor: "| CR-001 | 画面・API | 3人日    | なし     | 軽微 |"
+    message: 影響評価の「評価」列（軽微・中）に判定基準や尺度がなく、評価結果を再現・検証できない。
+    message_ja: 影響評価の「評価」列（軽微・中）に判定基準や尺度がなく、評価結果を再現・検証できない。
+  - id: F016
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 5
     anchor: 本書は、駄菓子屋の販売管理システム構築プロジェクトにおける変更要求の申請・審査・決定・実施追跡を管理する最小サンプルである。
     message: 概要に「運用期間」と「記録単位」の記載が不足している。
     message_ja: 概要に「運用期間」と「記録単位」の記載が不足している。
-  - id: F002
+  - id: F017
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 19
     anchor: "| CR-002 | 帳票・IF  | 2人日    | 1日延長  | 中   |"
     message: 影響評価の一覧に, rulebook で指定されている「品質」への影響項目が不足している。
     message_ja: 影響評価の一覧に, rulebook で指定されている「品質」への影響項目が不足している。
-  - id: F003
+  - id: F018
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 11
+    anchor: "| CR-001 | 在庫一覧にカテゴリ絞り込みを追加 | 業務PO     | 2026-04-01 | 審査中 |"
+    message: "変更要求一覧の状態（CR-001: 審査中、CR-002: 承認）が審査・決定の結果（CR-001: 承認、CR-002: 条件付き承認）と一致せず、章間で記録が矛盾している。"
+    message_ja: "変更要求一覧の状態（CR-001: 審査中、CR-002: 承認）が審査・決定の結果（CR-001: 承認、CR-002: 条件付き承認）と一致せず、章間で記録が矛盾している。"
+  - id: F019
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 9
+    anchor: "| 変更ID | 要求内容                         | 申請者     | 申請日     | 状態   |"
+    message: 変更要求一覧に rulebook 必須の「変更理由」列がなく、審査・決定に `pm-plan` との対応の記載もない。
+    message_ja: 変更要求一覧に rulebook 必須の「変更理由」列がなく、審査・決定に `pm-plan` との対応の記載もない。
+  - id: F020
     severity: minor
     rule: vp-qe-kata-conformance
     line: 2
     anchor: ""
     message: テンプレートで定義されている「個票から生成された派生ビュー（再生成可能）」という性質や注記が反映されておらず、手動管理のログ形式となっている。
     message_ja: テンプレートで定義されている「個票から生成された派生ビュー（再生成可能）」という性質や注記が反映されておらず、手動管理のログ形式となっている。
+  - id: F021
+    severity: minor
+    rule: vp-ux-readability
+    line: 5
+    anchor: 本書は、駄菓子屋の販売管理システム構築プロジェクトにおける変更要求の申請・審査・決定・実施追跡を管理する最小サンプルである。
+    message: 概要が一般的な 1 文のみで、対象プロジェクト名（駄菓子屋きぬや）や本ログの利用者・利用時点が分からず、文書の位置づけを初見で把握しにくい。
+    message_ja: 概要が一般的な 1 文のみで、対象プロジェクト名（駄菓子屋きぬや）や本ログの利用者・利用時点が分からず、文書の位置づけを初見で把握しにくい。
+  - id: F022
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 18
+    anchor: "| CR-001 | 画面・API | 3人日    | なし     | 軽微 |"
+    message: 影響評価の「評価」列で「軽微」と「中」という異なる尺度の語が混在し、ロール表記も Role code ではなく呼称がばらついている。
+    message_ja: 影響評価の「評価」列で「軽微」と「中」という異なる尺度の語が混在し、ロール表記も Role code ではなく呼称がばらついている。
+  - id: F023
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 11
+    anchor: "| CR-001 | 在庫一覧にカテゴリ絞り込みを追加 | 業務PO     | 2026-04-01 | 審査中 |"
+    message: ready 化の前に、状態列と審査結果の矛盾、および rulebook 必須項目（変更理由・品質影響・`pm-plan` 対応）の欠落を解消する必要がある。
+    message_ja: ready 化の前に、状態列と審査結果の矛盾、および rulebook 必須項目（変更理由・品質影響・`pm-plan` 対応）の欠落を解消する必要がある。
+  - id: F024
+    severity: minor
+    rule: vp-ops-operability
+    line: 5
+    anchor: 本書は、駄菓子屋の販売管理システム構築プロジェクトにおける変更要求の申請・審査・決定・実施追跡を管理する最小サンプルである。
+    message: 本ログの更新単位・更新タイミングや、登録簿の個票から再生成する運用か手動更新の単独ログかが示されず、継続更新の方法が読み取れない。
+    message_ja: 本ログの更新単位・更新タイミングや、登録簿の個票から再生成する運用か手動更新の単独ログかが示されず、継続更新の方法が読み取れない。
+level_corrections:
+  - viewpoint: vp-po-decision-readiness
+    original_level: 2
+    corrected_level: 1

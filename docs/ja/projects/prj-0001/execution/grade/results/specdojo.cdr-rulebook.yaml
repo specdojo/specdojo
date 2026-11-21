@@ -4,28 +4,29 @@ document: specdojo:cdr-rulebook
 path: docs/ja/specdojo/rulebooks/cdr-rulebook.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-rulebook
 verdict: pass
-score: 95
-graded_at: "2026-11-17T04:45:00.475Z"
-graded_by: sol-review-executor
-content_hash: f0ca8d6b72a15656c46f0f03cd4abc538834e12fdf8426dfef5ab107d068c338
+score: 94
+graded_at: "2026-11-21T03:21:59.927Z"
+graded_by: opus-executor
+content_hash: 0e4bb853c19bade83847e582349431aa029352989ac0b41cbae3f0f9a567d2ec
 categories:
   purpose:
-    score: 88
+    score: 100
   operations:
     score: 100
   planning:
-    score: 83
+    score: 100
   business:
     score: 100
   architecture:
     score: 100
   usability:
-    score: 100
-  implementation:
-    score: 88
-  quality:
     score: 92
+  implementation:
+    score: 100
+  quality:
+    score: 83
   consistency:
     score: 100
 viewpoints:
@@ -33,8 +34,8 @@ viewpoints:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-publication-accountability:
     level: 4
     score: 100
@@ -42,11 +43,11 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-requirements-completeness:
     level: 4
     score: 100
@@ -66,11 +67,11 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-change-impact:
-    level: 3
-    score: 75
-  vp-dev-testability:
     level: 4
     score: 100
+  vp-dev-testability:
+    level: 3
+    score: 75
   vp-qe-verifiability:
     level: 4
     score: 100
@@ -84,8 +85,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -101,72 +102,41 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 6
+  minor: 4
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-decision-readiness
-    line: 47
+    rule: vp-dev-testability
+    line: 12
     anchor: >-
-      `.github/` は文書サイトと `lint:fm` の対象外のため、Frontmatter の検査は成果物カタログの登録と grade で行う。`status` を `ready`
-      にするのは、テストと検証の章のコマンドが実行でき、使う環境のラッパーで正本の読み込みを確かめた後とする。
-    message: status の値は定義されていますが、規約を ready にする際に確認する条件がありません。上位設計・設定との一致、検証コマンドの実行可能性、ラッパーの追従、未決事項の処置を承認前の確認条件として定めてください。
-    message_ja: status の値は定義されていますが、規約を ready にする際に確認する条件がありません。上位設計・設定との一致、検証コマンドの実行可能性、ラッパーの追従、未決事項の処置を承認前の確認条件として定めてください。
+      - **共通の運用**: 役割は適用先のメンバー定義、`status`・承認・改訂と廃止・未決事項の引き継ぎは [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]]
+      に従う。文書の整形・lint はリポジトリの検証で扱い、規約の受入確認に含めない。
+    message: >-
+      `.github/instructions/` は `lint:fm`（`docs/**` 限定）の対象外のため、「整形・lint はリポジトリの検証で扱う」だけでは規約ファイルの
+      Frontmatter（`applyTo`・`specdojo.id`・`specdojo.rulebook`）の不備を検出する手段が分かりません。成果物カタログの検証（`validate:catalog` など）や grade
+      など、Frontmatter を確かめる検証とその期待結果を明記してください。
+    message_ja: >-
+      `.github/instructions/` は `lint:fm`（`docs/**` 限定）の対象外のため、「整形・lint はリポジトリの検証で扱う」だけでは規約ファイルの
+      Frontmatter（`applyTo`・`specdojo.id`・`specdojo.rulebook`）の不備を検出する手段が分かりません。成果物カタログの検証（`validate:catalog` など）や grade
+      など、Frontmatter を確かめる検証とその期待結果を明記してください。
   - id: F002
     severity: minor
-    rule: vp-pm-dependency-risk
-    line: 45
-    anchor: >-
-      | `specdojo.supersedes` | 条件付き | 既存の規約を置き換える場合の旧 ID 配列。旧正本は `deprecated` にし、同じ変更でラッパーと `AGENTS.md` の参照を新しい正本へ付け替える
-      |
-    message: >-
-      supersedes の記入要件だけでは、旧規約を参照する成果物カタログや各環境のラッパーの移行漏れを把握できません。置き換え・廃止時に追跡する参照元、移行完了条件、PM
-      が管理する未完了タスクを、この系統の具体的な依存として定めてください。
-    message_ja: >-
-      supersedes の記入要件だけでは、旧規約を参照する成果物カタログや各環境のラッパーの移行漏れを把握できません。置き換え・廃止時に追跡する参照元、移行完了条件、PM
-      が管理する未完了タスクを、この系統の具体的な依存として定めてください。
-  - id: F003
-    severity: minor
-    rule: vp-pm-control-reporting
-    line: 45
-    anchor: >-
-      | `specdojo.supersedes` | 条件付き | 既存の規約を置き換える場合の旧 ID 配列。旧正本は `deprecated` にし、同じ変更でラッパーと `AGENTS.md` の参照を新しい正本へ付け替える
-      |
-    message: >-
-      規約の置き換えで生じる未決事項・読み込み不具合・移行未完了について、課題、リスク、変更要求、決定事項の記録先と担当 Role code がありません。メタ情報標準のライフサイクル変更管理を参照し、この系統で PJR
-      へ引き継ぐ事項と担当を定めてください。
-    message_ja: >-
-      規約の置き換えで生じる未決事項・読み込み不具合・移行未完了について、課題、リスク、変更要求、決定事項の記録先と担当 Role code がありません。メタ情報標準のライフサイクル変更管理を参照し、この系統で PJR
-      へ引き継ぐ事項と担当を定めてください。
-  - id: F004
-    severity: minor
-    rule: vp-dev-change-impact
-    line: 45
-    anchor: >-
-      | `specdojo.supersedes` | 条件付き | 既存の規約を置き換える場合の旧 ID 配列。旧正本は `deprecated` にし、同じ変更でラッパーと `AGENTS.md` の参照を新しい正本へ付け替える
-      |
-    message: >-
-      規約の置き換え時に、旧 instructions ファイルの適用範囲と旧ラッパーをどう更新するかが定義されていません。supersedes や deprecated
-      の記録に加え、旧規約の読み込みを終了し、新規約への参照を有効にする変更対象と手順を明示してください。
-    message_ja: >-
-      規約の置き換え時に、旧 instructions ファイルの適用範囲と旧ラッパーをどう更新するかが定義されていません。supersedes や deprecated
-      の記録に加え、旧規約の読み込みを終了し、新規約への参照を有効にする変更対象と手順を明示してください。
-  - id: F005
-    severity: minor
     rule: vp-qe-kata-conformance
-    line: 62
+    line: 52
     anchor: "| 禁止事項            | ○        | 破ると被害の大きい書き方と理由を表で書く。表に書いた禁止は本文の章で繰り返さない                                   |"
     message: >-
-      禁止事項で本文の規則を言い換えて並べないと要求していますが、参照する cdr-sample は金額、DB
-      接続、型の強制、ログの規則を禁止事項へ再掲しています。また、本文142行で禁止する技術の版を導入文に記載しています。規範と宣言済み完成例を照合し、利用者が一貫した記載水準を判断できるよう整合させてください。
+      前回指摘のうち版の記載とログ・型の強制の再掲は解消しましたが、cdr-sample は基本方針の「金額は円単位の整数で扱う」を禁止事項の「金額を浮動小数点で計算する」で、モジュールと import の章の
+      `src/server/` 配置を「クライアントコンポーネントから DB 接続を import する」で繰り返しており、「表に書いた禁止は本文の章で繰り返さない」と完成例が一致しません。sample
+      の該当箇所を本文か禁止事項の一方へ寄せて整合させてください。
     message_ja: >-
-      禁止事項で本文の規則を言い換えて並べないと要求していますが、参照する cdr-sample は金額、DB
-      接続、型の強制、ログの規則を禁止事項へ再掲しています。また、本文142行で禁止する技術の版を導入文に記載しています。規範と宣言済み完成例を照合し、利用者が一貫した記載水準を判断できるよう整合させてください。
-  - id: F006
+      前回指摘のうち版の記載とログ・型の強制の再掲は解消しましたが、cdr-sample は基本方針の「金額は円単位の整数で扱う」を禁止事項の「金額を浮動小数点で計算する」で、モジュールと import の章の
+      `src/server/` 配置を「クライアントコンポーネントから DB 接続を import する」で繰り返しており、「表に書いた禁止は本文の章で繰り返さない」と完成例が一致しません。sample
+      の該当箇所を本文か禁止事項の一方へ寄せて整合させてください。
+  - id: F003
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 64
+    line: 54
     anchor: "- `型` を省けるのは、動的型の言語で型ヒントも使わない場合に限る。省く場合は、その理由を導入文か基本方針に 1 行で書く。"
     message: >-
       型章の省略を「動的型の言語で型ヒントも使わない場合」に限定していますが、宣言された cdr-template
@@ -174,3 +144,16 @@ findings:
     message_ja: >-
       型章の省略を「動的型の言語で型ヒントも使わない場合」に限定していますが、宣言された cdr-template
       のコメントは動的型なら理由を書いて削除できる案内のままです。テンプレートの省略条件も本行に合わせ、型ヒントを使う場合は章を残すことを明示してください。
+  - id: F004
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 114
+    anchor: >-
+      - 差し替えの対象は、成果物カタログの ID・パス、旧 instructions の `applyTo`、各環境のラッパーと `AGENTS.md`・`GEMINI.md`
+      等の参照節とする。旧正本を自動適用の対象外へ退避し、新正本の適用範囲と各参照をそろえて上記の読み込み確認を行う。旧規約が読み込まれず、新規約が指定範囲で有効になることを切替の完了条件とする。
+    message: >-
+      「差し替えの対象は」で始まりますが、どの場面（既存規約を新しい規約で置き換える
+      `supersedes`・廃止の場面か）を指すかの前置きがなく、本文115行の「切替」や本文12行の「改訂と廃止」と用語がそろっていません。適用場面を冒頭に明記し、差し替え・切替の用語をメタ情報標準の改訂・廃止の用語に統一してください。
+    message_ja: >-
+      「差し替えの対象は」で始まりますが、どの場面（既存規約を新しい規約で置き換える
+      `supersedes`・廃止の場面か）を指すかの前置きがなく、本文115行の「切替」や本文12行の「改訂と廃止」と用語がそろっていません。適用場面を冒頭に明記し、差し替え・切替の用語をメタ情報標準の改訂・廃止の用語に統一してください。

@@ -4,11 +4,12 @@ document: specdojo:sch-rulebook
 path: docs/ja/specdojo/rulebooks/sch-rulebook.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-rulebook
 verdict: needs-work
-score: 92
-graded_at: "2026-10-08T21:22:27.146Z"
-graded_by: agy-expert-executor
-content_hash: 236797af0a9aa0d807552fee5060d7ac043821e5de369c124e59931a5574547c
+score: 80
+graded_at: "2026-11-21T05:47:19.305Z"
+graded_by: opus-executor
+content_hash: 465f39f16550b65a42164fd311845fc1e8695d962886afdb3e250b33eaf2a4e0
 categories:
   purpose:
     score: 100
@@ -21,13 +22,13 @@ categories:
   architecture:
     score: 83
   usability:
-    score: 67
+    score: 58
   implementation:
-    score: 100
+    score: 88
   quality:
-    score: 100
+    score: 75
   consistency:
-    score: 100
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -63,29 +64,29 @@ viewpoints:
     level: 2
     score: 50
   vp-dev-implementation-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-change-impact:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 2
     score: 50
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -101,7 +102,7 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 3
-  minor: 0
+  minor: 7
   note: 0
 findings:
   - id: F001
@@ -109,25 +110,93 @@ findings:
     rule: vp-arc-conciseness
     line: 103
     anchor: "### 5.5. intent と grade からの strategy 生成"
-    message: >-
-      Section 5.5 describes generation flow, contradicting the statement in line 45 and 49 that refers to
-      `specdojo:schedule-design-guide`.
+    message: セクション 5.5 は生成フローについて説明しており、`specdojo:schedule-design-guide` に言及している 45行目と 49行目の記述と矛盾しています。
     message_ja: セクション 5.5 は生成フローについて説明しており、`specdojo:schedule-design-guide` に言及している 45行目と 49行目の記述と矛盾しています。
   - id: F002
     severity: major
     rule: vp-arc-single-responsibility
     line: 103
     anchor: "### 5.5. intent と grade からの strategy 生成"
-    message: >-
-      The document mixes detailed tool generator logic (Section 5.5) with authoring rules; this belongs in a design
-      guide or tool specification.
+    message: このドキュメントは、詳細なツール生成ロジック（セクション 5.5）と作成ルールが混在しています。これらは設計ガイドまたはツールの仕様書に記載すべき内容です。
     message_ja: このドキュメントは、詳細なツール生成ロジック（セクション 5.5）と作成ルールが混在しています。これらは設計ガイドまたはツールの仕様書に記載すべき内容です。
   - id: F003
+    severity: minor
+    rule: vp-arc-single-responsibility
+    line: 37
+    anchor: >-
+      - approach の目的は `sch-strategy-<track>.yaml` の `approach_rules` に成果物別 intent として宣言する。facts と導出済み approach
+      を別成果物へ保存しない。
+    message: "`approach_rules` に intent を宣言する規範はファイル名の規則ではないため、「スケジュールファイル名」の節から strategy の記述を扱う節へ移し、節の主題を一つにそろえる必要がある。"
+    message_ja: "`approach_rules` に intent を宣言する規範はファイル名の規則ではないため、「スケジュールファイル名」の節から strategy の記述を扱う節へ移し、節の主題を一つにそろえる必要がある。"
+  - id: F004
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 96
+    anchor: >-
+      - `scope.catalogs` は絶対パスで記載し、`include_kinds: [work]` で `kind: control` / `generated` を除外する。catalog
+      内の一部だけを対象にする場合は、その catalog の `local_ids` に存在する成果物 ID を重複なく指定する。`local_ids` の省略時は対象 kind の全成果物を選択する。
+    message: >-
+      「絶対パス」がファイルシステムの絶対パスか、リポジトリルートから先頭 `/` で始めるパスかが定まっていないため、例（例:
+      `/docs/ja/projects/＜project-id＞/...`）を付けて基準を明記する必要がある。
+    message_ja: >-
+      「絶対パス」がファイルシステムの絶対パスか、リポジトリルートから先頭 `/` で始めるパスかが定まっていないため、例（例:
+      `/docs/ja/projects/＜project-id＞/...`）を付けて基準を明記する必要がある。
+  - id: F005
+    severity: minor
+    rule: vp-dev-testability
+    line: 58
+    anchor: Schedule は Markdown の章構成を持たない YAML 成果物であり、ルートキー・必須キー・型は次の schema を正本とする。キー一覧は本書に複製しない。
+    message: >-
+      Schedule ファイルを手で作成・更新した後に実行する検証コマンド（schema 検証、`schedule build —dry-run` など）と期待結果が示されていないため、schema
+      対応表の近くに確認手順を追記する必要がある。
+    message_ja: >-
+      Schedule ファイルを手で作成・更新した後に実行する検証コマンド（schema 検証、`schedule build —dry-run` など）と期待結果が示されていないため、schema
+      対応表の近くに確認手順を追記する必要がある。
+  - id: F006
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 106
+    anchor: >-
+      - `approach_rules` は scope の全 work 成果物を重複なく網羅し、8 種の intent を成果物別に宣言する。`improve-kata` は
+      `kata_target`、`bootstrap-kata-set` と `confirm-with-kata-set` は `bootstrap_scope` も宣言する。
+    message: 「8 種の intent」と書きながら一覧がなく、宣言値の正否を判定できないため、8種類を列挙するか、一覧の正本（schema の enum または guide の該当節）への参照を明記する必要がある。
+    message_ja: 「8 種の intent」と書きながら一覧がなく、宣言値の正否を判定できないため、8種類を列挙するか、一覧の正本（schema の enum または guide の該当節）への参照を明記する必要がある。
+  - id: F007
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 78
+    anchor: "- タスク名（`name`）は成果物の `local_id` を含む動詞句とし、カタログとの追跡可能性を保つ（例: 「ルールブックをレビューする」）。"
+    message: >-
+      タスク名は `local_id` を含む動詞句とする規則に対し、例「ルールブックをレビューする」が `local_id` を含まず矛盾するため、`local_id` を含む例（例: 「`prj-overview`
+      をレビューする」）に直す必要がある。
+    message_ja: >-
+      タスク名は `local_id` を含む動詞句とする規則に対し、例「ルールブックをレビューする」が `local_id` を含まず矛盾するため、`local_id` を含む例（例: 「`prj-overview`
+      をレビューする」）に直す必要がある。
+  - id: F008
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 17
+    anchor: "## 2. 位置づけと用語定義"
+    message: 見出しは「位置づけと用語定義」だが位置づけの記述がなく用語表だけのため、4種類のファイルとカタログの関係を短く示すか、standard に沿って見出しを内容に合わせる必要がある。
+    message_ja: 見出しは「位置づけと用語定義」だが位置づけの記述がなく用語表だけのため、4種類のファイルとカタログの関係を短く示すか、standard に沿って見出しを内容に合わせる必要がある。
+  - id: F009
     severity: major
     rule: vp-ux-readability
     line: 103
     anchor: "### 5.5. intent と grade からの strategy 生成"
-    message: >-
-      Contradiction between line 45/49 and section 5.5 creates confusion regarding the authoritative source for
-      generation flow and logic.
+    message: 45/49行目とセクション 5.5 の矛盾により、生成フローとロジックの正当な情報源に関して混乱が生じています。
     message_ja: 45/49行目とセクション 5.5 の矛盾により、生成フローとロジックの正当な情報源に関して混乱が生じています。
+  - id: F010
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 108
+    anchor: >-
+      - 人が雛形に文脈を記入してから下書きする場合は `draft-with-context` を宣言する。必要な Kata がすべて利用可能な場合だけ `draft` profile
+      を生成し、雛形作成・文脈記入（human）、下書き（`draft`）、磨き込み（`fully-guided`）、review、finalize（human）の順とする。human の着手と完了は claim / complete
+      で記録する。
+    message: >-
+      `draft` を profile 名、phase、approach の三つの意味で区別なく使っているため、各出現に「`draft` profile」「`approach:
+      draft`」のように種別を付けて書き分ける必要がある。
+    message_ja: >-
+      `draft` を profile 名、phase、approach の三つの意味で区別なく使っているため、各出現に「`draft` profile」「`approach:
+      draft`」のように種別を付けて書き分ける必要がある。

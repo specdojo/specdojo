@@ -4,61 +4,62 @@ document: specdojo:otp-sample
 path: docs/ja/specdojo/samples/otp-sample.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-sample
 verdict: needs-work
-score: 92
-graded_at: "2026-10-16T20:34:47.990Z"
-graded_by: agy-expert-executor
-content_hash: f0b7b8a2b5623f0b3ee006a726aac5271cd6a4e65f62bc704925804ba3d4931d
+score: 69
+graded_at: "2026-11-21T05:09:56.449Z"
+graded_by: opus-executor
+content_hash: f130be997bbdc9ee214ee933a3e4092fa525991c5f12363a1d144ac5acc31ebe
 categories:
   purpose:
-    score: 100
+    score: 63
   operations:
-    score: 100
+    score: 81
   planning:
-    score: 100
+    score: 75
   business:
-    score: 100
+    score: 50
   architecture:
-    score: 100
-  usability:
-    score: 100
-  implementation:
-    score: 100
-  quality:
     score: 92
+  usability:
+    score: 83
+  implementation:
+    score: 75
+  quality:
+    score: 58
   consistency:
     score: 50
 viewpoints:
   vp-po-purpose-alignment:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-po-decision-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-publication-accountability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-plan-feasibility:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-dependency-risk:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-control-reporting:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-business-value:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-ba-requirements-completeness:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-ba-stakeholder-clarity:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-arc-technical-constraints:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -66,14 +67,14 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-change-impact:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-testability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-verifiability:
     level: 3
     score: 75
@@ -81,20 +82,20 @@ viewpoints:
     level: 2
     score: 50
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 1
+    score: 25
   vp-ux-readability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-operability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -103,49 +104,222 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 5
+  major: 7
+  minor: 22
   note: 0
 findings:
   - id: F001
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 56
-    anchor: "## 11. 関連ドキュメント（必須）"
-    message: 完了条件における「基準以下」の具体的な数値や定義を明記し、判定を可能にすること。
-    message_ja: 完了条件における「基準以下」の具体的な数値や定義を明記し、判定を可能にすること。
+    severity: major
+    rule: vp-po-purpose-alignment
+    line: 11
+    anchor: "| API      | 5xx > 1%  | #ops   | P1は30分以内一次応答 | 5分平均 |"
+    message: >-
+      監視対象・体制・連絡経路が一般的な企業システム運用（API 5xx、バッチ、Ops/Biz
+      常駐、チャットチャネル）になっており、駄菓子屋きぬやの単一店舗・タブレット1台・店主最終判断という前提と矛盾するため、共通サンプル文脈の目的（記録の継続、店主不在時の店番継続）に結び付く監視対象と体制へ書き換えること。
+    message_ja: >-
+      監視対象・体制・連絡経路が一般的な企業システム運用（API 5xx、バッチ、Ops/Biz
+      常駐、チャットチャネル）になっており、駄菓子屋きぬやの単一店舗・タブレット1台・店主最終判断という前提と矛盾するため、共通サンプル文脈の目的（記録の継続、店主不在時の店番継続）に結び付く監視対象と体制へ書き換えること。
   - id: F002
     severity: minor
-    rule: vp-qe-verifiability
-    line: 57
-    anchor: ""
-    message: 「運用引継ぎが完了」の状態を定義するチェックリストや成果物を明記し、客観的に判定可能にすること。
-    message_ja: 「運用引継ぎが完了」の状態を定義するチェックリストや成果物を明記し、客観的に判定可能にすること。
+    rule: vp-po-decision-readiness
+    line: 53
+    anchor: "- P1=0が30日、P2が収束傾向、問い合わせが基準以下"
+    message: クローズ判断の承認者（PO 等の Role code）と未決事項（_UNDECIDED_ / _ASSUMPTION_ で明示すべき運用前提）を記載し、承認・保留の判断論点を明示すること。
+    message_ja: クローズ判断の承認者（PO 等の Role code）と未決事項（_UNDECIDED_ / _ASSUMPTION_ で明示すべき運用前提）を記載し、承認・保留の判断論点を明示すること。
   - id: F003
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 1
-    anchor: "# 運用切替計画（ハイパーケア含む） サンプル"
-    message: Frontmatter に必須項目である `title` を追加すること。
-    message_ja: Frontmatter に必須項目である `title` を追加すること。
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 54
+    anchor: "- 既知不具合一覧がクローズし、運用引継ぎが完了"
+    message: "移行完了クローズの最終承認責任者を Role code（例: PO）で明記し、説明責任の所在を明確にすること。"
+    message_ja: "移行完了クローズの最終承認責任者を Role code（例: PO）で明記し、説明責任の所在を明確にすること。"
   - id: F004
     severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 48
+    anchor: "- 参照依頼は一次窓口で受付し、参照手順に従い対応する"
+    message: "旧システムの停止時期と参照期間（例: 切替後◯日まで参照可、以降アーカイブ）を具体的に記載し、作業の順序付けと期限設定を可能にすること。"
+    message_ja: "旧システムの停止時期と参照期間（例: 切替後◯日まで参照可、以降アーカイブ）を具体的に記載し、作業の順序付けと期限設定を可能にすること。"
+  - id: F005
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 56
+    anchor: "## 11. 関連ドキュメント（必須）"
+    message: Frontmatter に `based_on`（`mip-index` / `cop-index` 等）を宣言し、`otp-index` の共通方針（期間・SLA・優先度分類）との依存関係を明示すること。
+    message_ja: Frontmatter に `based_on`（`mip-index` / `cop-index` 等）を宣言し、`otp-index` の共通方針（期間・SLA・優先度分類）との依存関係を明示すること。
+  - id: F006
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 38
+    anchor: "- 連絡: #ops → #po → 利用者告知（#comms）"
+    message: 障害・既知不具合・延長判断を記録する先（登録簿や既知不具合一覧）と報告先・担当 Role code を明記し、管理事項の転記経路を分離すること。
+    message_ja: 障害・既知不具合・延長判断を記録する先（登録簿や既知不具合一覧）と報告先・担当 Role code を明記し、管理事項の転記経路を分離すること。
+  - id: F007
+    severity: major
+    rule: vp-ba-business-value
+    line: 5
+    anchor: 本書はハイパーケアの対象別運用切替計画（`otp-<term>`）として、初期不具合・問合せ増への対応体制を定義する最小サンプルである。
+    message: 概要に、運用切替で守るべき業務価値（店頭販売・在庫・つけの記録継続、家族の店番支援など）と対象利用者を記載し、各章の監視・体制がその価値に対応することを示すこと。
+    message_ja: 概要に、運用切替で守るべき業務価値（店頭販売・在庫・つけの記録継続、家族の店番支援など）と対象利用者を記載し、各章の監視・体制がその価値に対応することを示すこと。
+  - id: F008
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 5
+    anchor: 本書はハイパーケアの対象別運用切替計画（`otp-<term>`）として、初期不具合・問合せ増への対応体制を定義する最小サンプルである。
+    message: 概要に対象範囲（どの運用領域・利用者・サービスが対象か）を明記し、rulebook の記述ガイドが求める適用範囲を満たすこと。
+    message_ja: 概要に対象範囲（どの運用領域・利用者・サービスが対象か）を明記し、rulebook の記述ガイドが求める適用範囲を満たすこと。
+  - id: F009
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 21
+    anchor: "- 追加権限: ハイパーケア担当に限定付与（期間終了で剥奪）"
+    message: 権限/アカウント移行に、旧/新の権限差分、移行タイミング、切替当日の扱いを記載すること。
+    message_ja: 権限/アカウント移行に、旧/新の権限差分、移行タイミング、切替当日の扱いを記載すること。
+  - id: F010
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 37
+    anchor: "- 指揮: 運用責任者（必要に応じてPO）"
+    message: 障害対応フローに、復旧・報告の流れと、エスカレーションの判断基準（重大度、影響範囲、復旧見込み）を記載すること。
+    message_ja: 障害対応フローに、復旧・報告の流れと、エスカレーションの判断基準（重大度、影響範囲、復旧見込み）を記載すること。
+  - id: F011
+    severity: major
+    rule: vp-ba-stakeholder-clarity
+    line: 44
+    anchor: "| 切替後2週間 | 8:00-20:00は常駐（Ops2 + Biz1）/ 夜間オンコール | P1:30分一次連絡、P2:2h | 運用責任者 | 延長はクローズ条件で判断 |"
+    message: 体制・判断者・告知先を共通登場人物の役割名（店主代表、家族利用者代表、開発担当、店舗運営アドバイザー等）と Role code で記述し、Ops2/Biz1 などの独自ラベルを置き換えること。
+    message_ja: 体制・判断者・告知先を共通登場人物の役割名（店主代表、家族利用者代表、開発担当、店舗運営アドバイザー等）と Role code で記述し、Ops2/Biz1 などの独自ラベルを置き換えること。
+  - id: F012
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 16
+    anchor: "- 方式: 夜間フル + 日中差分（保持30日）"
+    message: バックアップの保管先と復旧目標（RTO/RPO）の方針を記載し、タブレット1台の構成前提と整合する技術的前提を明示すること。
+    message_ja: バックアップの保管先と復旧目標（RTO/RPO）の方針を記載し、タブレット1台の構成前提と整合する技術的前提を明示すること。
+  - id: F013
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 17
+    anchor: "- リストア責任者: 運用責任者"
+    message: リストア章に実施手順（参照先）と完了基準を記載し、作業に必要な入力を揃えること。
+    message_ja: リストア章に実施手順（参照先）と完了基準を記載し、作業に必要な入力を揃えること。
+  - id: F014
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 28
+    anchor: "| 問合せ受付 | メール | #support | 集約/可視化 | チャネル統一 | （運用手順リンク） |"
+    message: 影響列に誰の何が変わるかを具体的に書き、参照列のプレースホルダ「（運用手順リンク）」を実在する文書 ID またはバッククォートの仮置き ID に置き換えること。
+    message_ja: 影響列に誰の何が変わるかを具体的に書き、参照列のプレースホルダ「（運用手順リンク）」を実在する文書 ID またはバッククォートの仮置き ID に置き換えること。
+  - id: F015
+    severity: minor
+    rule: vp-dev-testability
+    line: 22
+    anchor: "- 検証: 当番ロールで監視/ログ参照/障害対応が可能であること"
+    message: アクセス検証の確認手順と期待結果（どのロールでどの操作が成功すれば合格か）を具体化し、リストア後の整合性確認方法も追加すること。
+    message_ja: アクセス検証の確認手順と期待結果（どのロールでどの操作が成功すれば合格か）を具体化し、リストア後の整合性確認方法も追加すること。
+  - id: F016
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 53
+    anchor: "- P1=0が30日、P2が収束傾向、問い合わせが基準以下"
+    message: 完了条件における「基準以下」の具体的な数値や定義を明記し、判定を可能にすること。
+    message_ja: 完了条件における「基準以下」の具体的な数値や定義を明記し、判定を可能にすること。
+  - id: F017
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 54
+    anchor: "- 既知不具合一覧がクローズし、運用引継ぎが完了"
+    message: 「運用引継ぎが完了」の状態を定義するチェックリストや成果物を明記し、客観的に判定可能にすること。
+    message_ja: 「運用引継ぎが完了」の状態を定義するチェックリストや成果物を明記し、客観的に判定可能にすること。
+  - id: F018
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 53
+    anchor: "- P1=0が30日、P2が収束傾向、問い合わせが基準以下"
+    message: "「P2が収束傾向」を判定可能な条件（例: 直近◯日の新規P2件数が◯件以下）に置き換えること。"
+    message_ja: "「P2が収束傾向」を判定可能な条件（例: 直近◯日の新規P2件数が◯件以下）に置き換えること。"
+  - id: F019
+    severity: minor
     rule: vp-qe-omissions-consistency
-    line: 15
-    anchor: ""
+    line: 17
+    anchor: "- リストア責任者: 運用責任者"
     message: 第3章「バックアップ/リストア」において、リストア時の完了基準（整合性確認等）を明記すること。
     message_ja: 第3章「バックアップ/リストア」において、リストア時の完了基準（整合性確認等）を明記すること。
-  - id: F005
+  - id: F020
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 32
     anchor: "- 受付: #support / 09:00-18:00（期間中は延長運用あり）"
     message: 第6章「問合せ窓口/一次対応」において、エスカレーション条件（一次で止めない条件）を明記すること。
     message_ja: 第6章「問合せ窓口/一次対応」において、エスカレーション条件（一次で止めない条件）を明記すること。
-  - id: F006
+  - id: F021
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 54
     anchor: "- 既知不具合一覧がクローズし、運用引継ぎが完了"
     message: 第10章「移行完了後のクローズ条件」において、クローズ判断者および最終報告物を明記すること。
     message_ja: 第10章「移行完了後のクローズ条件」において、クローズ判断者および最終報告物を明記すること。
+  - id: F022
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 56
+    anchor: "## 11. 関連ドキュメント（必須）"
+    message: 第11章の見出し「関連ドキュメント（必須）」を rulebook の本文構成どおり「関連ドキュメント」に揃えること。
+    message_ja: 第11章の見出し「関連ドキュメント（必須）」を rulebook の本文構成どおり「関連ドキュメント」に揃えること。
+  - id: F023
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 11
+    anchor: "| API      | 5xx > 1%  | #ops   | P1は30分以内一次応答 | 5分平均 |"
+    message: >-
+      監視/アラートの初動ルールにエスカレーション条件がなく、第4・6・7・9章でも rulebook
+      の記述ガイドが求める項目（権限差分・移行タイミング、優先度分類、復旧・報告と判断基準、停止時期）が欠けているため、各章に補完すること。
+    message_ja: >-
+      監視/アラートの初動ルールにエスカレーション条件がなく、第4・6・7・9章でも rulebook
+      の記述ガイドが求める項目（権限差分・移行タイミング、優先度分類、復旧・報告と判断基準、停止時期）が欠けているため、各章に補完すること。
+  - id: F024
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 11
+    anchor: "| API      | 5xx > 1%  | #ops   | P1は30分以内一次応答 | 5分平均 |"
+    message: sample の業務文脈が共通サンプル文脈（駄菓子屋きぬや、単一店舗・タブレット1台）に統一されていないため、監視対象・窓口・体制を同文脈に合わせて書き直し、他業種の題材を排除すること。
+    message_ja: sample の業務文脈が共通サンプル文脈（駄菓子屋きぬや、単一店舗・タブレット1台）に統一されていないため、監視対象・窓口・体制を同文脈に合わせて書き直し、他業種の題材を排除すること。
+  - id: F025
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 44
+    anchor: "| 切替後2週間 | 8:00-20:00は常駐（Ops2 + Biz1）/ 夜間オンコール | P1:30分一次連絡、P2:2h | 運用責任者 | 延長はクローズ条件で判断 |"
+    message: 関係者表記（運用責任者、Ops2 + Biz1 等）を `sample-authoring-standard.md` の共通登場人物の役割名と Role code に置き換えること。
+    message_ja: 関係者表記（運用責任者、Ops2 + Biz1 等）を `sample-authoring-standard.md` の共通登場人物の役割名と Role code に置き換えること。
+  - id: F026
+    severity: minor
+    rule: vp-ux-readability
+    line: 5
+    anchor: 本書はハイパーケアの対象別運用切替計画（`otp-<term>`）として、初期不具合・問合せ増への対応体制を定義する最小サンプルである。
+    message: 概要に対象範囲と `otp-index`（共通方針）との関係を1〜2行で補い、本書の位置づけを初見で理解できるようにすること。
+    message_ja: 概要に対象範囲と `otp-index`（共通方針）との関係を1〜2行で補い、本書の位置づけを初見で理解できるようにすること。
+  - id: F027
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 53
+    anchor: "- P1=0が30日、P2が収束傾向、問い合わせが基準以下"
+    message: 「問い合わせ」と「問合せ」の表記を rulebook の見出しに合わせて統一し、役割表記も役割名または Role code のどちらかに揃えること。
+    message_ja: 「問い合わせ」と「問合せ」の表記を rulebook の見出しに合わせて統一し、役割表記も役割名または Role code のどちらかに揃えること。
+  - id: F028
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 9
+    anchor: "| 監視対象 | 指標/閾値 | 通知先 | 初動ルール           | 備考    |"
+    message: 未確定の運用前提（オフライン時の対応、旧システム停止日など）を _UNDECIDED_ / _ASSUMPTION_ で明示し、ready 化前に解決すべき事項を読み取れるようにすること。
+    message_ja: 未確定の運用前提（オフライン時の対応、旧システム停止日など）を _UNDECIDED_ / _ASSUMPTION_ で明示し、ready 化前に解決すべき事項を読み取れるようにすること。
+  - id: F029
+    severity: minor
+    rule: vp-ops-operability
+    line: 33
+    anchor: "- 一次対応: 既知不具合案内、ログ採取依頼、再現条件ヒアリング"
+    message: 一次対応から開発担当等へ引き渡すエスカレーション条件と引継ぎ先 Role code を明記し、問い合わせ対応の運用導線を完結させること。
+    message_ja: 一次対応から開発担当等へ引き渡すエスカレーション条件と引継ぎ先 Role code を明記し、問い合わせ対応の運用導線を完結させること。
+level_corrections:
+  - viewpoint: vp-qe-kata-conformance
+    original_level: 2
+    corrected_level: 1

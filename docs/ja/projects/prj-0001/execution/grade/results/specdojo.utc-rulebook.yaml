@@ -4,16 +4,17 @@ document: specdojo:utc-rulebook
 path: docs/ja/specdojo/rulebooks/utc-rulebook.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-rulebook
 verdict: needs-work
-score: 96
-graded_at: "2026-10-10T21:07:07.566Z"
-graded_by: agy-expert-executor
-content_hash: 4bda4e72d393f09fbb6daae0e6ffcfddf746fc910d3b41e9b74bbe5ea5419532
+score: 89
+graded_at: "2026-11-21T06:14:38.752Z"
+graded_by: opus-executor
+content_hash: 6fdb447f9b97a362c4f3ce3483092f9ff90811c1d8e8184ee63cf05392395928
 categories:
   purpose:
     score: 100
   operations:
-    score: 100
+    score: 88
   planning:
     score: 100
   business:
@@ -21,13 +22,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 83
   implementation:
     score: 100
   quality:
     score: 83
   consistency:
-    score: 100
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -60,8 +61,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -78,8 +79,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
     level: 2
     score: 50
@@ -87,14 +88,14 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-operability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -104,13 +105,76 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 1
-  minor: 0
+  minor: 6
   note: 0
 findings:
   - id: F001
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 145
+    anchor: "- `case_id` は以下を推奨し、変更しない"
+    message: >-
+      `case_id` の形式・`perspective_key`・`nnn` の定義は正本の
+      `utc-index-rulebook`「ケース表の共通カラム」と重複している。本書では参照と対象別に固有の補足だけを残し、二重管理による取り残しを防ぐべきである。
+    message_ja: >-
+      `case_id` の形式・`perspective_key`・`nnn` の定義は正本の
+      `utc-index-rulebook`「ケース表の共通カラム」と重複している。本書では参照と対象別に固有の補足だけを残し、二重管理による取り残しを防ぐべきである。
+  - id: F002
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 137
+    anchor: "##### 6.6.1.1. 意図"
+    message: >-
+      「6.6.1.1. 意図」「6.6.1.2. 条件・ケース表」が H5（`#####`）見出しになっており、Markdown 記述ルールの H5 以下禁止に反する。H4
+      までに収まるよう構成を見直すか、箇条書きへ変えるべきである。
+    message_ja: >-
+      「6.6.1.1. 意図」「6.6.1.2. 条件・ケース表」が H5（`#####`）見出しになっており、Markdown 記述ルールの H5 以下禁止に反する。H4
+      までに収まるよう構成を見直すか、箇条書きへ変えるべきである。
+  - id: F003
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 47
+    anchor: >-
+      許可キー・必須項目・型は [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] と
+      `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml` を正本とする。`specdojo.type` は `test`、`specdojo.rulebook`
+      は `specdojo:utc-rulebook` とする。タイトルは H1 に「単体テストカタログ: <対象名>」と記載する。
+    message: "H1 の記載例「単体テストカタログ: ＜対象名＞」の山括弧プレースホルダがインラインコードで囲まれておらず、HTML タグと誤認されるおそれがある。`単体テストカタログ: ＜対象名＞` 全体をインラインコードで記述すべきである。"
+    message_ja: "H1 の記載例「単体テストカタログ: ＜対象名＞」の山括弧プレースホルダがインラインコードで囲まれておらず、HTML タグと誤認されるおそれがある。`単体テストカタログ: ＜対象名＞` 全体をインラインコードで記述すべきである。"
+  - id: F004
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# 単体テストカタログ 対象別 作成ルール"
     message: 指定されているサンプル `specdojo:utc-sample` が、第 5 章で定義した標準テンプレートに従っておらず、具体的な記述例として機能していない。
     message_ja: 指定されているサンプル `specdojo:utc-sample` が、第 5 章で定義した標準テンプレートに従っておらず、具体的な記述例として機能していない。
+  - id: F005
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 131
+    anchor: "#### 6.6.1. 観点:<観点>"
+    message: 見出し「観点:＜観点＞」の山括弧プレースホルダがインラインコードで囲まれておらず、全角「：」と半角「:」の区切り記号も文書内で混在している。プレースホルダをコード表記にし、区切り記号をどちらかに統一すべきである。
+    message_ja: 見出し「観点:＜観点＞」の山括弧プレースホルダがインラインコードで囲まれておらず、全角「：」と半角「:」の区切り記号も文書内で混在している。プレースホルダをコード表記にし、区切り記号をどちらかに統一すべきである。
+  - id: F006
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 1
+    anchor: "# 単体テストカタログ 対象別 作成ルール"
+    message: >-
+      ready 化の前提となる `specdojo:utc-sample` の整合が取れておらず、`recipe`・`template` も `undecided` のままのため、ready 化前に sample の改訂と
+      `recipe`・`template` の要否判断を済ませる必要がある。
+    message_ja: >-
+      ready 化の前提となる `specdojo:utc-sample` の整合が取れておらず、`recipe`・`template` も `undecided` のままのため、ready 化前に sample の改訂と
+      `recipe`・`template` の要否判断を済ませる必要がある。
+  - id: F007
+    severity: minor
+    rule: vp-ops-operability
+    line: 13
+    anchor: >-
+      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status`・承認・改訂と廃止・未決事項の引き継ぎは [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]]
+      に従う。文書の整形・lint はリポジトリの検証で扱い、業務の受入確認に含めない。
+    message: >-
+      改訂・廃止をメタ情報標準へ委譲するだけで、`utc-＜term＞` の変更時に追従すべきテストコード・CI 証跡・`utc-index`・トレース先仕様と担当 Role code が定義されておらず、authoring
+      standard の自系統固有の追従対象の定義を満たしていない。
+    message_ja: >-
+      改訂・廃止をメタ情報標準へ委譲するだけで、`utc-＜term＞` の変更時に追従すべきテストコード・CI 証跡・`utc-index`・トレース先仕様と担当 Role code が定義されておらず、authoring
+      standard の自系統固有の追従対象の定義を満たしていない。

@@ -4,37 +4,38 @@ document: specdojo:prj-overview-sample
 path: docs/ja/specdojo/samples/prj-overview-sample.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-sample
 verdict: pass
-score: 100
-graded_at: "2026-10-17T20:19:57.641Z"
-graded_by: agy-expert-executor
+score: 88
+graded_at: "2026-11-21T05:35:16.542Z"
+graded_by: opus-executor
 content_hash: ada59362dc067e999a63802e76a7a0a934602c0cc73e3343261860adfe65fd82
 categories:
   purpose:
-    score: 100
+    score: 88
   operations:
     score: 100
   planning:
-    score: 100
+    score: 92
   business:
-    score: 100
+    score: 92
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 83
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 83
   consistency:
-    score: 100
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-publication-accountability:
     level: 4
     score: 100
@@ -42,14 +43,14 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-dependency-risk:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-control-reporting:
     level: 4
     score: 100
   vp-ba-business-value:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-requirements-completeness:
     level: 4
     score: 100
@@ -60,8 +61,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-implementation-readiness:
     level: 4
     score: 100
@@ -72,20 +73,20 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -101,6 +102,106 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 8
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 20
+    anchor: とりわけ繁忙期は来店と取引が集中し、欠品・在庫・つけの確認負荷が一気に高まる。記憶と紙の運用のままでは繁忙期の負荷に対応しきれず、損失と属人化のリスクが顕在化するため、負荷が高まる前のこの時期に着手する必要がある。
+    message: >-
+      The busy season and "this period" are not given as a concrete time (for example, a month or a school-holiday
+      period), so the deadline behind "why now" is unclear. State when the busy season falls and what point the work
+      must be done by.
+    message_ja: >-
+      The busy season and "this period" are not given as a concrete time (for example, a month or a school-holiday
+      period), so the deadline behind "why now" is unclear. State when the busy season falls and what point the work
+      must be done by.
+  - id: F002
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 41
+    anchor: 下記の目標値は初期仮説であり、実測値に基づき継続的に見直す。欠品回数と在庫の無駄は、運用開始前1か月の実績をベースラインとする。季節、仕入れ条件、来店数などの影響も記録し、改善を本システムだけの成果とは断定せず寄与として評価する。
+    message: >-
+      The text says the targets are initial hypotheses but not which document confirms them. Name
+      `prj-success-criteria-and-acceptance-criteria` as the hand-off target, as rulebook Section 6.7 requires.
+    message_ja: >-
+      The text says the targets are initial hypotheses but not which document confirms them. Name
+      `prj-success-criteria-and-acceptance-criteria` as the hand-off target, as rulebook Section 6.7 requires.
+  - id: F003
+    severity: minor
+    rule: vp-ba-business-value
+    line: 11
+    anchor: "- 人気商品（うまい棒、ラムネ等）の欠品が増えている"
+    message: >-
+      The Background problems (more stockouts, uneven stock, missed credit records) give no frequency, count or impact,
+      so the size of the problem and the basis for the targets are weak. Add rough figures such as stockouts per month,
+      or label the statements as observations or hypotheses.
+    message_ja: >-
+      The Background problems (more stockouts, uneven stock, missed credit records) give no frequency, count or impact,
+      so the size of the problem and the basis for the targets are weak. Add rough figures such as stockouts per month,
+      or label the statements as observations or hypotheses.
+  - id: F004
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 39
+    anchor: 初期リリース前は、店主代表と家族利用者代表が店頭販売、在庫確認、つけ残高確認を迷わず完了できるかを確認する。リリース後の短期は日々の記録が無理なく定着するか、中長期は記録の活用が欠品、在庫の無駄、属人化の軽減と店舗運営の継続に寄与したかを確認する。
+    message: >-
+      The opening paragraph of Expected Effects repeats the checks for each time horizon that the lead sentences of
+      5.1–5.3 already state. Keep only the paragraph on baselines and contribution, and leave the per-horizon checks to
+      the subsections.
+    message_ja: >-
+      The opening paragraph of Expected Effects repeats the checks for each time horizon that the lead sentences of
+      5.1–5.3 already state. Keep only the paragraph on baselines and contribution, and leave the per-horizon checks to
+      the subsections.
+  - id: F005
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 70
+    anchor: >-
+      | 在庫適正化 | 廃棄・値引き・長期滞留による在庫の無駄                           | 年間20%削減           |
+      廃棄、値引き、長期滞留の数量と金額を月次で集計する             |
+    message: >-
+      "20% reduction per year" cannot be compared directly with the one-month pre-launch baseline, and the decision
+      timing for the medium- to long-term indicators is not stated. Add how the baseline is converted and when the
+      result is judged, for example 12 months after launch.
+    message_ja: >-
+      "20% reduction per year" cannot be compared directly with the one-month pre-launch baseline, and the decision
+      timing for the medium- to long-term indicators is not stated. Add how the baseline is converted and when the
+      result is judged, for example 12 months after launch.
+  - id: F006
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 78
+    anchor: 本プロジェクトの策定および活用にあたっては、以下を前提とする。
+    message: >-
+      The Preconditions do not separate fixed premises from dependencies and do not state the publication policy or the
+      AI Agent role (or that it does not apply). Fill these in so the sample meets every item in rulebook Section 6.8.
+    message_ja: >-
+      The Preconditions do not separate fixed premises from dependencies and do not state the publication policy or the
+      AI Agent role (or that it does not apply). Fill these in so the sample meets every item in rulebook Section 6.8.
+  - id: F007
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 57
+    anchor: >-
+      | 観点     | 指標                                                             | 初期目標              |
+      測定方法                                                   |
+    message: >-
+      The short-term table header "初期目標" in the sample (and template) does not match "目標" in the rulebook Section 6.7
+      recommended table. Align the Kata on one column name.
+    message_ja: >-
+      The short-term table header "初期目標" in the sample (and template) does not match "目標" in the rulebook Section 6.7
+      recommended table. Align the Kata on one column name.
+  - id: F008
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 45
+    anchor: 初期リリース前には、実際に店番を行う利用者が主要操作を完遂できるかを確認する。機能数ではなく、一連の業務を止まらずに終えられることを判定する。
+    message: >-
+      The heading "初期公開指標" and the text "初期リリース前" mix two names for the same time horizon. Use one term, such as "初期公開",
+      consistently in headings and text.
+    message_ja: >-
+      The heading "初期公開指標" and the text "初期リリース前" mix two names for the same time horizon. Use one term, such as "初期公開",
+      consistently in headings and text.

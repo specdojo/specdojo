@@ -4,76 +4,77 @@ document: specdojo:etc-index-sample
 path: docs/ja/specdojo/samples/etc-index-sample.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-sample
 verdict: fail
-score: 71
-graded_at: "2026-10-11T21:41:22.693Z"
-graded_by: agy-expert-executor
-content_hash: 66df3484ab2a7e958dd74c68a10cc3c143dad703d40ab28b670c753c9aa12b73
+score: 42
+graded_at: "2026-11-21T03:55:20.192Z"
+graded_by: opus-executor
+content_hash: 3fa7868aa68f6f84a12a2bcf7e7af0698ea2574b132e57b4c488a5df57d5fc77
 categories:
   purpose:
-    score: 100
+    score: 38
   operations:
-    score: 100
+    score: 75
   planning:
-    score: 100
-  business:
-    score: 100
-  architecture:
-    score: 100
-  usability:
-    score: 83
-  implementation:
-    score: 100
-  quality:
     score: 50
+  business:
+    score: 42
+  architecture:
+    score: 63
+  usability:
+    score: 67
+  implementation:
+    score: 38
+  quality:
+    score: 25
   consistency:
     score: 0
 viewpoints:
   vp-po-purpose-alignment:
-    level: 4
-    score: 100
+    level: 1
+    score: 25
   vp-po-decision-readiness:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-po-publication-accountability:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 4
-    score: 100
-  vp-pm-dependency-risk:
-    level: 4
-    score: 100
-  vp-pm-control-reporting:
-    level: 4
-    score: 100
-  vp-ba-business-value:
-    level: 4
-    score: 100
-  vp-ba-requirements-completeness:
-    level: 4
-    score: 100
-  vp-ba-stakeholder-clarity:
-    level: 4
-    score: 100
-  vp-arc-technical-constraints:
-    level: 4
-    score: 100
-  vp-arc-conciseness:
-    level: 4
-    score: 100
-  vp-dev-implementation-readiness:
-    level: 4
-    score: 100
-  vp-dev-change-impact:
-    level: 4
-    score: 100
-  vp-dev-testability:
-    level: 4
-    score: 100
-  vp-qe-verifiability:
     level: 2
     score: 50
+  vp-pm-dependency-risk:
+    level: 2
+    score: 50
+  vp-pm-control-reporting:
+    level: 2
+    score: 50
+  vp-ba-business-value:
+    level: 2
+    score: 50
+  vp-ba-requirements-completeness:
+    level: 1
+    score: 25
+  vp-ba-stakeholder-clarity:
+    level: 2
+    score: 50
+  vp-arc-technical-constraints:
+    level: 1
+    score: 25
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-dev-implementation-readiness:
+    level: 1
+    score: 25
+  vp-dev-change-impact:
+    level: 2
+    score: 50
+  vp-dev-testability:
+    level: 2
+    score: 50
+  vp-qe-verifiability:
+    level: 1
+    score: 25
   vp-qe-omissions-consistency:
     level: 0
     score: 0
@@ -84,14 +85,14 @@ viewpoints:
     level: 2
     score: 50
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-ops-operability:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -99,50 +100,224 @@ viewpoints:
     level: 4
     score: 100
 finding_counts:
-  blocker: 3
-  major: 3
-  minor: 0
+  blocker: 2
+  major: 21
+  minor: 4
   note: 0
 findings:
   - id: F001
     severity: major
-    rule: vp-qe-verifiability
-    line: 60
-    anchor: ""
-    message: 判定基準や合格基準の具体的にどのような表現を用いて定義すべきか、実例を記述してください。
-    message_ja: 判定基準や合格基準の具体的にどのような表現を用いて定義すべきか、実例を記述してください。
+    rule: vp-po-purpose-alignment
+    line: 5
+    anchor: 本書は、外部システム連携を含む結合観点・条件を定義する（仕様）ための最小サンプルである。
+    message: >-
+      目的を、rulebook の全体方針どおり「`tsp-index` を根拠に `etc-＜term＞` 共通の分割基準・観点/条件・外部依存境界・合格基準・証跡を定める SSOT」として書き直してください。あわせて、個別ケースは
+      `etc-＜term＞` に置く責務分担を明示してください。
+    message_ja: >-
+      目的を、rulebook の全体方針どおり「`tsp-index` を根拠に `etc-＜term＞` 共通の分割基準・観点/条件・外部依存境界・合格基準・証跡を定める SSOT」として書き直してください。あわせて、個別ケースは
+      `etc-＜term＞` に置く責務分担を明示してください。
   - id: F002
-    severity: blocker
-    rule: vp-qe-omissions-consistency
-    line: 43
-    anchor: ""
-    message: rulebook で規定された必須構成（1. 目的、2. 分割基準、3. 対象外、4. 観点、5. 条件、6. 採用/分配、7. 境界/依存/環境、8. 共通カラム）をすべて実装してください。
-    message_ja: rulebook で規定された必須構成（1. 目的、2. 分割基準、3. 対象外、4. 観点、5. 条件、6. 採用/分配、7. 境界/依存/環境、8. 共通カラム）をすべて実装してください。
+    severity: minor
+    rule: vp-po-purpose-alignment
+    line: 10
+    anchor: "- 前提: プロジェクト文脈は handbook の共通方針に準拠する"
+    message: 「handbook の共通方針」は参照先を特定できないため、`tsp-index` や共通サンプル文脈など、具体的な上位文書の wikilink に置き換えてください。
+    message_ja: 「handbook の共通方針」は参照先を特定できないため、`tsp-index` や共通サンプル文脈など、具体的な上位文書の wikilink に置き換えてください。
   - id: F003
-    severity: blocker
-    rule: vp-qe-kata-conformance
-    line: 4
-    anchor: ""
-    message: Frontmatter の type を `test` に修正してください。
-    message_ja: Frontmatter の type を `test` に修正してください。
+    severity: major
+    rule: vp-po-decision-readiness
+    line: 30
+    anchor: "| 要件詳細の補強 | 実案件適用時に具体化する |"
+    message: >-
+      未解決事項は「要件詳細の補強」だけで論点が特定できないため、具体的な論点ごとに外部結合テストへの影響・当面の扱い・判断の場を書いてください（例: sandbox が不安定な場合の
+      fallback、テストデータのクリーンアップ）。
+    message_ja: >-
+      未解決事項は「要件詳細の補強」だけで論点が特定できないため、具体的な論点ごとに外部結合テストへの影響・当面の扱い・判断の場を書いてください（例: sandbox が不安定な場合の
+      fallback、テストデータのクリーンアップ）。
   - id: F004
     severity: major
-    rule: vp-qe-kata-conformance
-    line: 4
-    anchor: ""
-    message: Frontmatter の type を rulebook の定義に従い `test` に修正してください。
-    message_ja: Frontmatter の type を rulebook の定義に従い `test` に修正してください。
+    rule: vp-pm-plan-feasibility
+    line: 15
+    anchor: "- 主な内容: 対象I/F（API/ファイル/メッセージ）、契約（スキーマ/コード/制約）、正常/異常（タイムアウト・リトライ・冪等・順序）、セキュリティ（認証/認可）、性能/レート制限、監査ログ、合格基準"
+    message: >-
+      分割基準と対象別への分配方針の具体例がなく、`etc-＜term＞` 作成のタスク分割や担当割当に使えません。駄菓子屋の例（例: 決済端末連携、仕入れ先への発注ファイル連携）で `＜term＞`
+      の分割と主担当の割当を示してください。
+    message_ja: >-
+      分割基準と対象別への分配方針の具体例がなく、`etc-＜term＞` 作成のタスク分割や担当割当に使えません。駄菓子屋の例（例: 決済端末連携、仕入れ先への発注ファイル連携）で `＜term＞`
+      の分割と主担当の割当を示してください。
   - id: F005
-    severity: blocker
-    rule: vp-qe-kata-conformance
-    line: 43
-    anchor: ""
-    message: "rulebook で定義された標準テンプレート構成（## 1. 〜 ## 8.）に従って構成を全面的に再構築してください。"
-    message_ja: "rulebook で定義された標準テンプレート構成（## 1. 〜 ## 8.）に従って構成を全面的に再構築してください。"
+    severity: major
+    rule: vp-pm-dependency-risk
+    line: 1
+    anchor: "# [外部結合テスト](../rulebooks/etc-index-rulebook.md) サンプル"
+    message: >-
+      上位の `tsp-index` への依存（`based_on`）と後続の `etc-＜term＞` との関係が示されていないため、Frontmatter に `based_on` を加え、本文で外部依存のリスク（sandbox
+      の不安定さ、事業者側の障害）を示してください。
+    message_ja: >-
+      上位の `tsp-index` への依存（`based_on`）と後続の `etc-＜term＞` との関係が示されていないため、Frontmatter に `based_on` を加え、本文で外部依存のリスク（sandbox
+      の不安定さ、事業者側の障害）を示してください。
   - id: F006
     severity: major
+    rule: vp-pm-control-reporting
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: 未決事項の章を rulebook の「メモ / 将来課題」に合わせ、論点・外部結合テストへの影響・当面の扱いの列を持つ形にしてください。登録簿へ転記できる粒度の論点を書いてください。
+    message_ja: 未決事項の章を rulebook の「メモ / 将来課題」に合わせ、論点・外部結合テストへの影響・当面の扱いの列を持つ形にしてください。登録簿へ転記できる粒度の論点を書いてください。
+  - id: F007
+    severity: major
+    rule: vp-ba-business-value
+    line: 9
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+    message: 駄菓子屋きぬやのどの外部連携のどの業務リスク（二重課金、在庫数の不一致など）を外部結合テストで防ぐのかを示し、観点の採用理由として業務影響を書いてください。
+    message_ja: 駄菓子屋きぬやのどの外部連携のどの業務リスク（二重課金、在庫数の不一致など）を外部結合テストで防ぐのかを示し、観点の採用理由として業務影響を書いてください。
+  - id: F008
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 13
+    anchor: "## 3. 記述内容"
+    message: 対象外・除外理由（共通）を「対象外／除外理由／代替／例外」の表で記述し、本番決済への実課金を対象外とするなど、駄菓子屋の例で責任境界を示してください。
+    message_ja: 対象外・除外理由（共通）を「対象外／除外理由／代替／例外」の表で記述し、本番決済への実課金を対象外とするなど、駄菓子屋の例で責任境界を示してください。
+  - id: F009
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 3
+    anchor: "## 1. 目的と適用範囲"
+    message: 適用対象（`etc-index` / `etc-＜term＞`）と非適用（ST/AT は `stc-index` / `atc-index` で扱う）を明記してください。
+    message_ja: 適用対象（`etc-index` / `etc-＜term＞`）と非適用（ST/AT は `stc-index` / `atc-index` で扱う）を明記してください。
+  - id: F010
+    severity: major
+    rule: vp-ba-stakeholder-clarity
+    line: 16
+    anchor: "- 必須観点: 対象、条件、判定基準、責任者"
+    message: 「責任者」を必須観点としながら関係者が示されていません。外部事業者・店主・テスト担当など、外部境界ごとの運用責任と確認者を示してください。
+    message_ja: 「責任者」を必須観点としながら関係者が示されていません。外部事業者・店主・テスト担当など、外部境界ごとの運用責任と確認者を示してください。
+  - id: F011
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 15
+    anchor: "- 主な内容: 対象I/F（API/ファイル/メッセージ）、契約（スキーマ/コード/制約）、正常/異常（タイムアウト・リトライ・冪等・順序）、セキュリティ（認証/認可）、性能/レート制限、監査ログ、合格基準"
+    message: 外部依存の扱い（sandbox とスタブの使い分け、テスト用資格情報の secret 管理、タイムアウトとリトライの規定値、テストデータの分離）を、rulebook のサンプル（最小）の水準で具体的に書いてください。
+    message_ja: 外部依存の扱い（sandbox とスタブの使い分け、テスト用資格情報の secret 管理、タイムアウトとリトライの規定値、テストデータの分離）を、rulebook のサンプル（最小）の水準で具体的に書いてください。
+  - id: F012
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 24
+    anchor: >-
+      | 主な内容     | 対象I/F（API/ファイル/メッセージ）、契約（スキーマ/コード/制約）、正常/異常（タイムアウト・リトライ・冪等・順序）、セキュリティ（認証/認可）、性能/レート制限、監査ログ、合格基準 |
+      要点のみ記載                         |
+    message: 「主な内容」と「目的」が導入部（本文5行目・15行目）と最小記述例の表で重複しています。表を削るか、完成例の本文に置き換えてください。
+    message_ja: 「主な内容」と「目的」が導入部（本文5行目・15行目）と最小記述例の表で重複しています。表を削るか、完成例の本文に置き換えてください。
+  - id: F013
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 18
+    anchor: "## 4. 最小記述例"
+    message: >-
+      ケース表の共通カラムと `case_id` の形式が示されていません。rulebook の「ケース表の共通カラム」に沿って、必須・推奨カラムと記入例（例:
+      `et-payment-gateway-idempotency-001`）を書いてください。
+    message_ja: >-
+      ケース表の共通カラムと `case_id` の形式が示されていません。rulebook の「ケース表の共通カラム」に沿って、必須・推奨カラムと記入例（例:
+      `et-payment-gateway-idempotency-001`）を書いてください。
+  - id: F014
+    severity: major
+    rule: vp-dev-change-impact
+    line: 1
+    anchor: "# [外部結合テスト](../rulebooks/etc-index-rulebook.md) サンプル"
+    message: H1 と本文22行目で rulebook を相対パスで参照しているため、H1 からリンクを外し、参照が必要な場合は id 基準の wikilink にしてください。
+    message_ja: H1 と本文22行目で rulebook を相対パスで参照しているため、H1 からリンクを外し、参照が必要な場合は id 基準の wikilink にしてください。
+  - id: F015
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 22
+    anchor: >-
+      | ドキュメント |
+      [外部結合テスト](../rulebooks/etc-index-rulebook.md)                                                                                                                             
+      | 最小サンプル                         |
+    message: 共通方針の変更が `etc-＜term＞`（ケース表、`case_id`）やテストコードに与える影響、たとえば `case_id` を変えない原則を示してください。
+    message_ja: 共通方針の変更が `etc-＜term＞`（ケース表、`case_id`）やテストコードに与える影響、たとえば `case_id` を変えない原則を示してください。
+  - id: F016
+    severity: major
+    rule: vp-dev-testability
+    line: 15
+    anchor: "- 主な内容: 対象I/F（API/ファイル/メッセージ）、契約（スキーマ/コード/制約）、正常/異常（タイムアウト・リトライ・冪等・順序）、セキュリティ（認証/認可）、性能/レート制限、監査ログ、合格基準"
+    message: 監査ログや合格基準を語として挙げるだけで、観測点と証跡（外部リクエストID・相関ID・CI run の参照方法）が示されていないため、確認方法を具体的に書いてください。
+    message_ja: 監査ログや合格基準を語として挙げるだけで、観測点と証跡（外部リクエストID・相関ID・CI run の参照方法）が示されていないため、確認方法を具体的に書いてください。
+  - id: F017
+    severity: major
+    rule: vp-qe-verifiability
+    line: 16
+    anchor: "- 必須観点: 対象、条件、判定基準、責任者"
+    message: 判定基準や合格基準の具体的にどのような表現を用いて定義すべきか、実例を記述してください。
+    message_ja: 判定基準や合格基準の具体的にどのような表現を用いて定義すべきか、実例を記述してください。
+  - id: F018
+    severity: major
+    rule: vp-qe-verifiability
+    line: 24
+    anchor: >-
+      | 主な内容     | 対象I/F（API/ファイル/メッセージ）、契約（スキーマ/コード/制約）、正常/異常（タイムアウト・リトライ・冪等・順序）、セキュリティ（認証/認可）、性能/レート制限、監査ログ、合格基準 |
+      要点のみ記載                         |
+    message: 共通合格基準の例として、タイムアウト上限・リトライ回数・冪等性の観測結果など、数値や状態で判定できる条件を書いてください。
+    message_ja: 共通合格基準の例として、タイムアウト上限・リトライ回数・冪等性の観測結果など、数値や状態で判定できる条件を書いてください。
+  - id: F019
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 3
+    anchor: "## 1. 目的と適用範囲"
+    message: rulebook で規定された必須構成（1. 目的、2. 分割基準、3. 対象外、4. 観点、5. 条件、6. 採用/分配、7. 境界/依存/環境、8. 共通カラム）をすべて実装してください。
+    message_ja: rulebook で規定された必須構成（1. 目的、2. 分割基準、3. 対象外、4. 観点、5. 条件、6. 採用/分配、7. 境界/依存/環境、8. 共通カラム）をすべて実装してください。
+  - id: F020
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 1
+    anchor: "# [外部結合テスト](../rulebooks/etc-index-rulebook.md) サンプル"
+    message: rulebook の推奨ルールに従い、Frontmatter の `based_on` に `tsp-index` を含めてください。
+    message_ja: rulebook の推奨ルールに従い、Frontmatter の `based_on` に `tsp-index` を含めてください。
+  - id: F021
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 3
+    anchor: "## 1. 目的と適用範囲"
+    message: "rulebook で定義された標準テンプレート構成（## 1. 〜 ## 8.）に従って構成を全面的に再構築してください。"
+    message_ja: "rulebook で定義された標準テンプレート構成（## 1. 〜 ## 8.）に従って構成を全面的に再構築してください。"
+  - id: F022
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# [外部結合テスト](../rulebooks/etc-index-rulebook.md) サンプル"
+    message: "H1 を、rulebook の設定内容どおり「外部結合テストカタログ: 概要（駄菓子屋きぬや 販売管理システム）」の形式にしてください。"
+    message_ja: "H1 を、rulebook の設定内容どおり「外部結合テストカタログ: 概要（駄菓子屋きぬや 販売管理システム）」の形式にしてください。"
+  - id: F023
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 7
+    anchor: "## 2. 入力情報"
+    message: sample は完成例を示す型ですが、「入力情報」「記述内容」という手引きの章になっています。駄菓子屋きぬやの `etc-index` を完成した文書として書いてください。
+    message_ja: sample は完成例を示す型ですが、「入力情報」「記述内容」という手引きの章になっています。駄菓子屋きぬやの `etc-index` を完成した文書として書いてください。
+  - id: F024
+    severity: major
     rule: vp-ux-readability
-    line: 60
-    anchor: ""
+    line: 15
+    anchor: "- 主な内容: 対象I/F（API/ファイル/メッセージ）、契約（スキーマ/コード/制約）、正常/異常（タイムアウト・リトライ・冪等・順序）、セキュリティ（認証/認可）、性能/レート制限、監査ログ、合格基準"
     message: 項目を列挙するだけでなく、各節で具体的にどのように方針や基準を記述すべきか、詳細な例文を提示してください。
     message_ja: 項目を列挙するだけでなく、各節で具体的にどのように方針や基準を記述すべきか、詳細な例文を提示してください。
+  - id: F025
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 1
+    anchor: "# [外部結合テスト](../rulebooks/etc-index-rulebook.md) サンプル"
+    message: "成果物名を「外部結合テストカタログ: 概要」に統一し、「（仕様）」の括弧書きや、地の文に埋め込まれた `specdojo:deliverables-reference` の書き方を整理してください。"
+    message_ja: "成果物名を「外部結合テストカタログ: 概要」に統一し、「（仕様）」の括弧書きや、地の文に埋め込まれた `specdojo:deliverables-reference` の書き方を整理してください。"
+  - id: F026
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 28
+    anchor: "| 論点           | 処理方針                 |"
+    message: ready 化の前に解消すべき事項（必須8章の充足、未決論点の具体化）が識別できないため、未解決事項を ready 判断に使える粒度で書いてください。
+    message_ja: ready 化の前に解消すべき事項（必須8章の充足、未決論点の具体化）が識別できないため、未解決事項を ready 判断に使える粒度で書いてください。
+  - id: F027
+    severity: major
+    rule: vp-ops-operability
+    line: 18
+    anchor: "## 4. 最小記述例"
+    message: 継続運用に必要な規律（`case_id` を変えない、テストデータの分離と廃棄、sandbox が不安定なときの代替手段、運用責任の担当）を示してください。
+    message_ja: 継続運用に必要な規律（`case_id` を変えない、テストデータの分離と廃棄、sandbox が不安定なときの代替手段、運用責任の担当）を示してください。

@@ -4,11 +4,12 @@ document: specdojo:cdfd-overview-rulebook
 path: docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-rulebook
 verdict: pass
-score: 87
-graded_at: "2026-11-05T20:16:47.489Z"
-graded_by: flash-high-executor
-content_hash: a0d603581a63bffda80c0a3eb47b01f6a5955a6164864b0ab351cc570e1e9e5c
+score: 94
+graded_at: "2026-11-21T03:15:29.878Z"
+graded_by: opus-executor
+content_hash: 40a95342cf5c62d1fdf5e70d56328d3c0c20a3843f1a12a4230c16a1c9e08b2a
 categories:
   purpose:
     score: 100
@@ -17,17 +18,17 @@ categories:
   planning:
     score: 100
   business:
-    score: 92
+    score: 100
   architecture:
     score: 100
   usability:
     score: 92
   implementation:
-    score: 75
+    score: 88
   quality:
-    score: 75
+    score: 83
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -51,8 +52,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
     level: 4
     score: 100
@@ -63,8 +64,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-change-impact:
     level: 3
     score: 75
@@ -72,11 +73,11 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
     level: 3
     score: 75
@@ -101,87 +102,55 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 9
+  minor: 5
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-ba-requirements-completeness
-    line: 184
-    anchor: "- 「主な担当」は同じ表内で採用済み Role code または組織定義にある役割名へ統一されています。"
-    message: 利用者が物の流れを扱う場合、「データストア」を2区分へ分ける受入条件と、いずれにも属さない物理保管の必須一覧化を同時に満たす本文構造が定義されておらず、物理保管をどこへ記載すれば要件を満たすか確定できない。
-    message_ja: 利用者が物の流れを扱う場合、「データストア」を2区分へ分ける受入条件と、いずれにも属さない物理保管の必須一覧化を同時に満たす本文構造が定義されておらず、物理保管をどこへ記載すれば要件を満たすか確定できない。
+    rule: vp-dev-change-impact
+    line: 52
+    anchor: 見出し順・表・記入欄の骨組みは template を正本とし、内容の要件は本書に従います。
+    message: >-
+      template を本文骨組みの正本と定めているが, rulebook の要件変更時に recipe・sample・template・包含する記法 rulebook
+      のどれを同期確認するか規定がなく、物理保管のような変更影響を取りこぼすため、変更時の同期対象と確認手順を明記する必要がある。
+    message_ja: >-
+      template を本文骨組みの正本と定めているが, rulebook の要件変更時に recipe・sample・template・包含する記法 rulebook
+      のどれを同期確認するか規定がなく、物理保管のような変更影響を取りこぼすため、変更時の同期対象と確認手順を明記する必要がある。
   - id: F002
     severity: minor
-    rule: vp-dev-implementation-readiness
-    line: 184
-    anchor: "- 「主な担当」は同じ表内で採用済み Role code または組織定義にある役割名へ統一されています。"
-    message: 図に物理保管を置く場合の一覧化を必須としている一方、物理保管の記入先となる表・列と template の追加方法が示されていないため、物の流れを含む CDFD を規則どおり作成できる骨組みを定義する必要がある。
-    message_ja: 図に物理保管を置く場合の一覧化を必須としている一方、物理保管の記入先となる表・列と template の追加方法が示されていないため、物の流れを含む CDFD を規則どおり作成できる骨組みを定義する必要がある。
-  - id: F003
-    severity: minor
-    rule: vp-dev-change-impact
-    line: 68
-    anchor: ""
-    message: >-
-      template を本文骨組みの正本と定めているが, rulebook の要件変更時に recipe・sample・template・包含する記法 rulebook
-      のどれを同期確認するか規定がなく、物理保管のような変更影響を取りこぼすため、変更時の同期対象と確認手順を明記する必要がある。
-    message_ja: >-
-      template を本文骨組みの正本と定めているが, rulebook の要件変更時に recipe・sample・template・包含する記法 rulebook
-      のどれを同期確認するか規定がなく、物理保管のような変更影響を取りこぼすため、変更時の同期対象と確認手順を明記する必要がある。
-  - id: F004
-    severity: minor
     rule: vp-dev-testability
-    line: 176
-    anchor: ""
+    line: 154
+    anchor: 次の順に業務内容を照合し、全項目が合格することを完成条件とします。
     message: 完成判定は内容の手動照合だけを正本としており、Frontmatter/schema 検証や Mermaid の構文・描画確認に用いるコマンドと期待結果がないため、変更後の機械的な検証手順を追加する必要がある。
     message_ja: 完成判定は内容の手動照合だけを正本としており、Frontmatter/schema 検証や Mermaid の構文・描画確認に用いるコマンドと期待結果がないため、変更後の機械的な検証手順を追加する必要がある。
+  - id: F003
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 150
+    anchor: 境界・名称・責務・判断者・保管先が未確定の場合だけ設け、表は「論点」「影響」の 2 列とします。本文中の `_UNDECIDED_` を論点に対応させ、決定によって変わる領域・ストア・図・詳細化先を影響に書きます。
+    message: >-
+      未決事項の表を「論点」「影響」の 2 列と定めているが、template と sample は「決定者」「決定時期」「状態」を加えた 5 列で構成しており、骨組みの正本である template
+      に従うと本書の規則に反するため、列構成を rulebook・template・sample で統一する必要がある。
+    message_ja: >-
+      未決事項の表を「論点」「影響」の 2 列と定めているが、template と sample は「決定者」「決定時期」「状態」を加えた 5 列で構成しており、骨組みの正本である template
+      に従うと本書の規則に反するため、列構成を rulebook・template・sample で統一する必要がある。
+  - id: F004
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 118
+    anchor: >-
+      - **物理保管**は商品・現金など現物の保管先であり、情報の正本であるデータストアの 2 区分には属しません。図に置く場合は、例外としてトランザクションデータ表の末尾へ同じ列で併記します。template
+      の同表に行を追加し、「データストア」列に場所名、「主な内容」に現物、「主な保管先」に所在と「物理保管」の注記を書きます。保管先列を省略する場合は「主な内容」に注記します。章冒頭または凡例で、併記と同色の使用は分類への所属を意味しないと説明します。
+    message: >-
+      物理保管をトランザクションデータ表の末尾へ例外として併記し、章冒頭または凡例で併記が分類への所属を意味しないと説明する規則に対し、recipe の「データストア」章に物理保管の問い・コツがなく、sample
+      の章冒頭にも併記の説明がないため、recipe と sample へ同規則を反映する必要がある。
+    message_ja: >-
+      物理保管をトランザクションデータ表の末尾へ例外として併記し、章冒頭または凡例で併記が分類への所属を意味しないと説明する規則に対し、recipe の「データストア」章に物理保管の問い・コツがなく、sample
+      の章冒頭にも併記の説明がないため、recipe と sample へ同規則を反映する必要がある。
   - id: F005
     severity: minor
-    rule: vp-qe-verifiability
-    line: 184
-    anchor: "- 「主な担当」は同じ表内で採用済み Role code または組織定義にある役割名へ統一されています。"
-    message: >-
-      物理保管を一覧へ含めることを必須にしながら、一覧をマスタ・構成データとトランザクションデータの2表に限定して物理保管をどちらへ置けば pass
-      か定義していないため、条件付きの物理保管表または既存表へ配置する明示的な判定規則が必要である。
-    message_ja: >-
-      物理保管を一覧へ含めることを必須にしながら、一覧をマスタ・構成データとトランザクションデータの2表に限定して物理保管をどちらへ置けば pass
-      か定義していないため、条件付きの物理保管表または既存表へ配置する明示的な判定規則が必要である。
-  - id: F006
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 184
-    anchor: "- 「主な担当」は同じ表内で採用済み Role code または組織定義にある役割名へ統一されています。"
-    message: >-
-      「データストア」を2区分へ分ける規則と物理保管も一覧化する規則を両立させる分類方法がなく, sample では「売場棚」をトランザクションデータ表へ置きながら凡例でどちらの区分にも属さないと説明しているため,
-      物理保管の所属または例外を定義する必要がある。
-    message_ja: >-
-      「データストア」を2区分へ分ける規則と物理保管も一覧化する規則を両立させる分類方法がなく, sample では「売場棚」をトランザクションデータ表へ置きながら凡例でどちらの区分にも属さないと説明しているため,
-      物理保管の所属または例外を定義する必要がある。
-  - id: F007
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 184
-    anchor: "- 「主な担当」は同じ表内で採用済み Role code または組織定義にある役割名へ統一されています。"
-    message: >-
-      「データストア」を2表に分け、図の各データストアを一覧行と一対一にする規則に対し, sample は「売場棚」をトランザクションデータ表へ置きながら凡例で同区分に属さないと説明し, template
-      にも物理保管の配置先がないため、物理保管の分類と配置先を rulebook・sample・template で統一する必要がある。
-    message_ja: >-
-      「データストア」を2表に分け、図の各データストアを一覧行と一対一にする規則に対し, sample は「売場棚」をトランザクションデータ表へ置きながら凡例で同区分に属さないと説明し, template
-      にも物理保管の配置先がないため、物理保管の分類と配置先を rulebook・sample・template で統一する必要がある。
-  - id: F008
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 108
-    anchor: ""
-    message: 対応 recipe の章別手順には必須の導入文に対する問いと、プロセス領域・データストア・概念データフロー各章の冒頭宣言を確認する問いが欠けているため、本書の記述ガイドを再現可能な作成手順へ反映する必要がある。
-    message_ja: 対応 recipe の章別手順には必須の導入文に対する問いと、プロセス領域・データストア・概念データフロー各章の冒頭宣言を確認する問いが欠けているため、本書の記述ガイドを再現可能な作成手順へ反映する必要がある。
-  - id: F009
-    severity: minor
     rule: vp-ux-language-consistency
-    line: 27
-    anchor: >-
-      | 系統の関係を描く方式    | プロセス領域の区分を代表ノードとし、区分とデータの関係を描く全体概要の構成方式。各系統の流れはユースケース別 CDFD
-      でプロセス領域の単位に詳細化する                                             |
-    message: 「物理保管」の定義と、データストア・トランザクションデータとの包含関係が用語表にないため, sample の「売場棚」がトランザクションデータなのか図示上だけ同系統として扱う別概念なのかを統一して定義する必要がある。
-    message_ja: 「物理保管」の定義と、データストア・トランザクションデータとの包含関係が用語表にないため, sample の「売場棚」がトランザクションデータなのか図示上だけ同系統として扱う別概念なのかを統一して定義する必要がある。
+    line: 15
+    anchor: 構成方式は次のいずれかを選びます。凡例または「概念データフロー（概要）」冒頭に宣言がなければ、既定は今の方式（データストアの区分による図の分割）とします。
+    message: 構成方式の正式名称に「今の方式」という時点依存の表現を用いており、方式の追加・改訂後に指す対象が曖昧になって読み手を混乱させるため、「データストア区分で分割する方式」など内容を表す固有の名称へ改める必要がある。
+    message_ja: 構成方式の正式名称に「今の方式」という時点依存の表現を用いており、方式の追加・改訂後に指す対象が曖昧になって読み手を混乱させるため、「データストア区分で分割する方式」など内容を表す固有の名称へ改める必要がある。

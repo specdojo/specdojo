@@ -4,61 +4,62 @@ document: specdojo:trc-requirements-to-specs-sample
 path: docs/ja/specdojo/samples/trc-requirements-to-specs-sample.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-sample
 verdict: needs-work
-score: 94
-graded_at: "2026-10-20T20:36:40.429Z"
-graded_by: flash-high-executor
+score: 68
+graded_at: "2026-11-21T05:58:42.447Z"
+graded_by: opus-executor
 content_hash: 7c8dff121878e967a75fe0a630bb24c80f1228ab81bc3eb2a014037543756ea1
 categories:
   purpose:
-    score: 100
+    score: 75
   operations:
-    score: 100
+    score: 94
   planning:
-    score: 100
+    score: 75
   business:
-    score: 100
+    score: 75
   architecture:
-    score: 100
-  usability:
-    score: 92
-  implementation:
-    score: 100
-  quality:
     score: 83
+  usability:
+    score: 83
+  implementation:
+    score: 63
+  quality:
+    score: 50
   consistency:
-    score: 100
+    score: 50
 viewpoints:
   vp-po-purpose-alignment:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-decision-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-publication-accountability:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-dependency-risk:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-control-reporting:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-business-value:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-requirements-completeness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-stakeholder-clarity:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-technical-constraints:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -66,26 +67,26 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 4
-    score: 100
-  vp-dev-change-impact:
-    level: 4
-    score: 100
-  vp-dev-testability:
-    level: 4
-    score: 100
-  vp-qe-verifiability:
-    level: 4
-    score: 100
-  vp-qe-omissions-consistency:
-    level: 4
-    score: 100
-  vp-qe-kata-conformance:
     level: 2
     score: 50
+  vp-dev-change-impact:
+    level: 3
+    score: 75
+  vp-dev-testability:
+    level: 3
+    score: 75
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
+    level: 1
+    score: 25
   vp-ux-readability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-language-consistency:
     level: 3
     score: 75
@@ -93,8 +94,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-operability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -103,18 +104,164 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 1
+  major: 7
+  minor: 15
   note: 0
 findings:
   - id: F001
+    severity: minor
+    rule: vp-po-purpose-alignment
+    line: 5
+    anchor: 本書は、駄菓子屋の販売管理システムにおける主要要求と対応仕様の関係を可視化し、要求漏れ・仕様漏れを防ぐためのトレーサビリティを示す。対象は 2026 年度第 1 リリースで扱う会計、在庫、値引き、監査の要求と仕様とする。
+    message: 目的と適用範囲に、本ビューを誰がどのレビュー・変更判断（仕様レビュー時の要求漏れ検出など）で使うかが書かれておらず、rulebook の判断基準「誰がどのレビュー・変更判断に使うか」を満たしていない。
+    message_ja: 目的と適用範囲に、本ビューを誰がどのレビュー・変更判断（仕様レビュー時の要求漏れ検出など）で使うかが書かれておらず、rulebook の判断基準「誰がどのレビュー・変更判断に使うか」を満たしていない。
+  - id: F002
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 31
+    anchor: 優先対応は `req-r1-004`（法令・監査影響）および `req-r1-002`（運用継続性影響）とする。
+    message: 優先対応とする判断や NFR との合意を誰が承認・判断するのかが書かれておらず、未決事項の判断者が読み取れない。
+    message_ja: 優先対応とする判断や NFR との合意を誰が承認・判断するのかが書かれておらず、未決事項の判断者が読み取れない。
+  - id: F003
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 37
+    anchor: >-
+      | req-r1-002 | 障害時の再送仕様が未確定             | IF 仕様に再送条件と重複排除条件を追記する    | IF 設計担当 | 2026-05-10 | `ifx-msg-stock`
+      に再送節が追加される   |
+    message: ギャップの担当が「IF 設計担当」「アーキ担当」という通称で、メンバー定義の Role code になっておらず、割り当てと進捗確認に使えない。
+    message_ja: ギャップの担当が「IF 設計担当」「アーキ担当」という通称で、メンバー定義の Role code になっておらず、割り当てと進捗確認に使えない。
+  - id: F004
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 21
+    anchor: >-
+      | req-r1-004 | 監査ログを 1 年保持する          | bes-audit-log                       | 未着手   | _UNDECIDED_: 保持先ストレージ方針が未決定
+      | NFR 側と整合確認が必要     |
+    message: "`req-r1-004` が依存する NFR 側の文書 ID が示されておらず `based_on` にも含まれないため、依存先と影響範囲を辿れない。"
+    message_ja: "`req-r1-004` が依存する NFR 側の文書 ID が示されておらず `based_on` にも含まれないため、依存先と影響範囲を辿れない。"
+  - id: F005
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 35
+    anchor: >-
+      | 要求ID     | ギャップ内容                         | 解消方針                                     | 担当        | 期限       |
+      判定条件                               |
+    message: ギャップの担当・期限を本ビュー内で管理しており、rulebook が求める登録簿（PJR）での追跡への転記先・参照が示されていない。
+    message_ja: ギャップの担当・期限を本ビュー内で管理しており、rulebook が求める登録簿（PJR）での追跡への転記先・参照が示されていない。
+  - id: F006
+    severity: minor
+    rule: vp-ba-business-value
+    line: 5
+    anchor: 本書は、駄菓子屋の販売管理システムにおける主要要求と対応仕様の関係を可視化し、要求漏れ・仕様漏れを防ぐためのトレーサビリティを示す。対象は 2026 年度第 1 リリースで扱う会計、在庫、値引き、監査の要求と仕様とする。
+    message: 要求漏れ・仕様漏れを防ぐことでどの関係者のどの業務リスクを下げるかが書かれておらず、本ビューの期待価値を説明できない。
+    message_ja: 要求漏れ・仕様漏れを防ぐことでどの関係者のどの業務リスクを下げるかが書かれておらず、本ビューの期待価値を説明できない。
+  - id: F007
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 12
+    anchor: "- 対象外: 次期リリース要求（`req-r2-*`）は対象外とする"
+    message: 対象外（次期リリース要求 `req-r2-*`）に理由が書かれておらず、rulebook の「対象外（理由付き）」の受入条件を満たしていない。
+    message_ja: 対象外（次期リリース要求 `req-r2-*`）に理由が書かれておらず、rulebook の「対象外（理由付き）」の受入条件を満たしていない。
+  - id: F008
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 5
+    anchor: 本書は、駄菓子屋の販売管理システムにおける主要要求と対応仕様の関係を可視化し、要求漏れ・仕様漏れを防ぐためのトレーサビリティを示す。対象は 2026 年度第 1 リリースで扱う会計、在庫、値引き、監査の要求と仕様とする。
+    message: 本ビューの利用者・確認者（仕様レビュー担当や PO など）が書かれておらず、誰が何に合意するのかが読み取れない。
+    message_ja: 本ビューの利用者・確認者（仕様レビュー担当や PO など）が書かれておらず、誰が何に合意するのかが読み取れない。
+  - id: F009
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 7
+    anchor: "## 2. トレース対象の前提"
+    message: トレース対象の前提に生成手段（コマンドまたは手順）、生成日、`relations.satisfies` からの導出が書かれておらず、rulebook の禁止事項「生成元と生成手段を書かずに表を示す」に抵触している。
+    message_ja: トレース対象の前提に生成手段（コマンドまたは手順）、生成日、`relations.satisfies` からの導出が書かれておらず、rulebook の禁止事項「生成元と生成手段を書かずに表を示す」に抵触している。
+  - id: F010
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 38
+    anchor: "| req-r1-004 | 監査ログ保持先ストレージ方針が未決定 | NFR 要件と合意し、保持先と保持期間を確定する | アーキ担当  | 2026-05-15 | `bes-audit-log` に保持方針が追記される |"
+    message: >-
+      `req-r1-004` の解消方針に、`bes-audit-log` の `relations.satisfies` へ要求 ID を持たせる変更と、再生成で `充足`
+      になることを判定条件にすることが書かれておらず、生成元の成果物で行う作業と完了条件が読み取れない。
+    message_ja: >-
+      `req-r1-004` の解消方針に、`bes-audit-log` の `relations.satisfies` へ要求 ID を持たせる変更と、再生成で `充足`
+      になることを判定条件にすることが書かれておらず、生成元の成果物で行う作業と完了条件が読み取れない。
+  - id: F011
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 40
+    anchor: "## 6. 変更履歴と更新ルール"
+    message: 変更履歴と更新ルールに生成日と前回から充足状況が変わった要求 ID が書かれておらず、rulebook の判断基準を満たしていない。
+    message_ja: 変更履歴と更新ルールに生成日と前回から充足状況が変わった要求 ID が書かれておらず、rulebook の判断基準を満たしていない。
+  - id: F012
+    severity: minor
+    rule: vp-dev-testability
+    line: 37
+    anchor: >-
+      | req-r1-002 | 障害時の再送仕様が未確定             | IF 仕様に再送条件と重複排除条件を追記する    | IF 設計担当 | 2026-05-10 | `ifx-msg-stock`
+      に再送節が追加される   |
+    message: ギャップの判定条件が生成元への追記の有無だけで、再生成したマトリクスで充足状況が変わることを確かめる検証手順になっていない。
+    message_ja: ギャップの判定条件が生成元への追記の有無だけで、再生成したマトリクスで充足状況が変わることを確かめる検証手順になっていない。
+  - id: F013
+    severity: major
+    rule: vp-qe-verifiability
+    line: 21
+    anchor: >-
+      | req-r1-004 | 監査ログを 1 年保持する          | bes-audit-log                       | 未着手   | _UNDECIDED_: 保持先ストレージ方針が未決定
+      | NFR 側と整合確認が必要     |
+    message: >-
+      `req-r1-004` は対応仕様 `bes-audit-log` があるのに充足状況が `未着手` で、「充足状況の判定」（`未着手` は対応仕様がない場合）と矛盾し、`充足` 行の備考にも参照先 `status`
+      の根拠がない。
+    message_ja: >-
+      `req-r1-004` は対応仕様 `bes-audit-log` があるのに充足状況が `未着手` で、「充足状況の判定」（`未着手` は対応仕様がない場合）と矛盾し、`充足` 行の備考にも参照先 `status`
+      の根拠がない。
+  - id: F014
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 14
+    anchor: "## 3. トレースマトリクス"
+    message: どの要求にも対応しない仕様の行・別表がなく、`based_on` の `bes-product-master` がマトリクスに現れないため、仕様漏れ（対応先のない仕様）を識別できない。
+    message_ja: どの要求にも対応しない仕様の行・別表がなく、`based_on` の `bes-product-master` がマトリクスに現れないため、仕様漏れ（対応先のない仕様）を識別できない。
+  - id: F015
     severity: major
     rule: vp-qe-kata-conformance
     line: 3
     anchor: "## 1. 目的と適用範囲"
     message: Frontmatter の `based_on` と本文のトレースマトリクスで参照されている仕様 ID が不整合である。
     message_ja: Frontmatter の `based_on` と本文のトレースマトリクスで参照されている仕様 ID が不整合である。
-  - id: F002
+  - id: F016
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 35
+    anchor: >-
+      | 要求ID     | ギャップ内容                         | 解消方針                                     | 担当        | 期限       |
+      判定条件                               |
+    message: ギャップと対応方針に担当・期限列があり、rulebook の「担当・期限は登録簿で追跡し、本ビューに列を設けません」に反している。
+    message_ja: ギャップと対応方針に担当・期限列があり、rulebook の「担当・期限は登録簿で追跡し、本ビューに列を設けません」に反している。
+  - id: F017
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 44
+    anchor: "- 更新時は備考欄に参照チケット ID を追記する。"
+    message: 更新ルール「備考欄に参照チケット ID を追記する」は生成ビューの手編集を前提とし、rulebook の派生ビューの位置づけと禁止事項「生成した表を手編集」に反している。
+    message_ja: 更新ルール「備考欄に参照チケット ID を追記する」は生成ビューの手編集を前提とし、rulebook の派生ビューの位置づけと禁止事項「生成した表を手編集」に反している。
+  - id: F018
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 10
+    anchor: "- 仕様参照元: 業務受入条件 `bac-*`、外部 IF 仕様 `ifx-*`、業務仕様 `bes-*`"
+    message: 仕様参照元に `bac-*` を含めているが、rulebook の位置づけでは `bac-*` は要求（業務の受入基準）であり、要求と仕様の区分が rulebook と食い違っている。
+    message_ja: 仕様参照元に `bac-*` を含めているが、rulebook の位置づけでは `bac-*` は要求（業務の受入基準）であり、要求と仕様の区分が rulebook と食い違っている。
+  - id: F019
+    severity: minor
+    rule: vp-ux-readability
+    line: 9
+    anchor: "- 要求参照元: 要求一覧 `req-2026-r1`"
+    message: 要求参照元 `req-2026-r1` とマトリクスの要求 ID `req-r1-*` の ID 体系の関係が説明されておらず、生成元と各行の対応が読み取りにくい。
+    message_ja: 要求参照元 `req-2026-r1` とマトリクスの要求 ID `req-r1-*` の ID 体系の関係が説明されておらず、生成元と各行の対応が読み取りにくい。
+  - id: F020
     severity: minor
     rule: vp-ux-language-consistency
     line: 19
@@ -123,3 +270,17 @@ findings:
       再送方針は IF 仕様で検討中 |
     message: ギャップ欄に rulebook で指定された `_UNDECIDED_:` ではなく `_TODO_:` が使用されており、語彙が統一されていない。
     message_ja: ギャップ欄に rulebook で指定された `_UNDECIDED_:` ではなく `_TODO_:` が使用されており、語彙が統一されていない。
+  - id: F021
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 38
+    anchor: "| req-r1-004 | 監査ログ保持先ストレージ方針が未決定 | NFR 要件と合意し、保持先と保持期間を確定する | アーキ担当  | 2026-05-15 | `bes-audit-log` に保持方針が追記される |"
+    message: 担当表記「アーキ担当」「IF 設計担当」が通称で、Role code による表記に統一されていない。
+    message_ja: 担当表記「アーキ担当」「IF 設計担当」が通称で、Role code による表記に統一されていない。
+  - id: F022
+    severity: minor
+    rule: vp-ops-operability
+    line: 42
+    anchor: "- 要求または仕様の更新が入った場合、同一レビュー単位で本トレースを更新する。"
+    message: 更新ルールに再生成の手順（コマンドまたは手順）と再生成後の照合方法がなく、継続更新を再現可能な形で運用できない。
+    message_ja: 更新ルールに再生成の手順（コマンドまたは手順）と再生成後の照合方法がなく、継続更新を再現可能な形で運用できない。

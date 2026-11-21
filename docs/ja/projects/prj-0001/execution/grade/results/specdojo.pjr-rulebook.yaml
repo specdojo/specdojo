@@ -4,11 +4,12 @@ document: specdojo:pjr-rulebook
 path: docs/ja/specdojo/rulebooks/pjr-rulebook.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-rulebook
 verdict: needs-work
-score: 82
-graded_at: "2026-11-07T20:26:36.549Z"
-graded_by: flash-high-executor
-content_hash: 4b151da8c987408591e9ebf481f53ba9753182554132184c29033914724f5af2
+score: 88
+graded_at: "2026-11-21T05:11:27.943Z"
+graded_by: opus-executor
+content_hash: 73450116fe3bf58cb56f6c1265e017bf7921ebcf9ec1acb7d829bb485e307d14
 categories:
   purpose:
     score: 100
@@ -21,11 +22,11 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 83
+    score: 92
   implementation:
     score: 100
   quality:
-    score: 67
+    score: 83
   consistency:
     score: 50
 viewpoints:
@@ -75,20 +76,20 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
     level: 2
     score: 50
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 3
     score: 75
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -103,26 +104,28 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 3
+  major: 1
   minor: 3
   note: 0
 findings:
   - id: F001
-    severity: major
+    severity: minor
     rule: vp-qe-verifiability
-    line: 111
-    anchor: "- type 固有の構成は `todo` の概要・完了条件・作業内容・対応結果など、各 type 用テンプレートに従う。"
+    line: 199
+    anchor: "### 5.4. 個票 status の遷移基準"
     message: >-
-      `ready` 昇格と終端可否は「type 固有の必須節」を満たすことに依存する一方、各 `item_type` の必須節・必須記入欄を本文で列挙せず参照 ID のない「各 type 用テンプレート」に委ねているため、必須条件の
-      pass / fail を決定できる定義または解決可能な参照を追加する必要がある。
+      個票 status の遷移基準の表は `register close` 時に必須節を満たす場合と `register reject` だけを定め、`_TODO_` が残ったまま close
+      した場合（運用ガイドは「昇格せず警告して据え置く」とする）や `register defer`・`register reopen` 後の `status` を定めていないため、各遷移で `status`
+      を維持・変更する条件を表に追加して pass / fail を判定できるようにする必要がある。
     message_ja: >-
-      `ready` 昇格と終端可否は「type 固有の必須節」を満たすことに依存する一方、各 `item_type` の必須節・必須記入欄を本文で列挙せず参照 ID のない「各 type 用テンプレート」に委ねているため、必須条件の
-      pass / fail を決定できる定義または解決可能な参照を追加する必要がある。
+      個票 status の遷移基準の表は `register close` 時に必須節を満たす場合と `register reject` だけを定め、`_TODO_` が残ったまま close
+      した場合（運用ガイドは「昇格せず警告して据え置く」とする）や `register defer`・`register reopen` 後の `status` を定めていないため、各遷移で `status`
+      を維持・変更する条件を表に追加して pass / fail を判定できるようにする必要がある。
   - id: F002
     severity: major
     rule: vp-qe-omissions-consistency
-    line: 16
-    anchor: "- type 別テンプレートの選択と初期生成は `register add` が担うため、本 rulebook は単一の template を参照しない。"
+    line: 43
+    anchor: "個票には schema が定義する次の項目を置く。未定の担当、期限、完了日時、結論はプレースホルダ（`_TODO_` など）を保存せず、該当キーを省略する（期限なしだけは `due_on: null`）。"
     message: >-
       本文と schema は未定の owner / due を省略し、`deferred` では `completed_at` を持たない規則だが、`register-operation-guide.md` は
       Frontmatter に `_TODO_` を残し、`defer` 時にも完了日時を記録すると説明しているため、関連ガイドを正本と同じ保存規則へ修正しないと schema 違反または誤った履歴を生成する。
@@ -131,45 +134,27 @@ findings:
       Frontmatter に `_TODO_` を残し、`defer` 時にも完了日時を記録すると説明しているため、関連ガイドを正本と同じ保存規則へ修正しないと schema 違反または誤った履歴を生成する。
   - id: F003
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 85
-    anchor: "- 起票と終端は瞬間として記録し、`registered_at` / `completed_at` に UTC の RFC 3339・秒精度（`YYYY-MM-DDTHH:MM:SSZ`）で保存する。"
-    message: >-
-      「起票と終端」を `registered_at` / `completed_at` に保存するとする記述は、`deferred` は終端だが `completed_at`
-      を持たないとする後段の例外規則と整合しないため、`completed_at` の対象を完了・決定・却下に限定して記述する必要がある。
-    message_ja: >-
-      「起票と終端」を `registered_at` / `completed_at` に保存するとする記述は、`deferred` は終端だが `completed_at`
-      を持たないとする後段の例外規則と整合しないため、`completed_at` の対象を完了・決定・却下に限定して記述する必要がある。
-  - id: F004
-    severity: major
     rule: vp-qe-kata-conformance
-    line: 31
-    anchor: "### 2.2. 配置規約"
+    line: 125
+    anchor: "| 生成物                               | 内容                                 | 編集可否 |"
     message: >-
-      Frontmatter の `template: not-needed` は template が不要であることを表す一方、本文は `register add` が type 別 template を選択すると定め、実在する
-      `pjr-*-template` 群もこの rulebook を参照しているため, 複数 template を表せるメタデータまたは解決可能なディスパッチ定義で対応関係を宣言する必要がある。
+      前回指摘の個票 template の対応は `本文構成（標準テンプレ）` の表で解消したが、`specdojo:pjr-rulebook` を参照する生成物用
+      template（`pjr-index-template`、`pjr-views-by-status-template`、`pjr-views-by-priority-template`、`pjr-views-by-owner-template`、`pjr-derived-items-template`、`pjr-epic-items-template`、`pjr-dependent-items-template`）が生成一覧と派生ビューの表に対応づけられておらず、生成物と
+      template の対応を rulebook から辿れないため、表に template 列を追加する必要がある。
     message_ja: >-
-      Frontmatter の `template: not-needed` は template が不要であることを表す一方、本文は `register add` が type 別 template を選択すると定め、実在する
-      `pjr-*-template` 群もこの rulebook を参照しているため, 複数 template を表せるメタデータまたは解決可能なディスパッチ定義で対応関係を宣言する必要がある。
-  - id: F005
+      前回指摘の個票 template の対応は `本文構成（標準テンプレ）` の表で解消したが、`specdojo:pjr-rulebook` を参照する生成物用
+      template（`pjr-index-template`、`pjr-views-by-status-template`、`pjr-views-by-priority-template`、`pjr-views-by-owner-template`、`pjr-derived-items-template`、`pjr-epic-items-template`、`pjr-dependent-items-template`）が生成一覧と派生ビューの表に対応づけられておらず、生成物と
+      template の対応を rulebook から辿れないため、表に template 列を追加する必要がある。
+  - id: F004
     severity: minor
     rule: vp-ux-readability
-    line: 16
-    anchor: "- type 別テンプレートの選択と初期生成は `register add` が担うため、本 rulebook は単一の template を参照しない。"
+    line: 74
+    anchor: >-
+      - `epic` は track ごとの全体計画の正本であり、自身は実行しない。`track` は英小文字・数字・ハイフンの識別子とし、先頭は英小文字または数字にする。同じ project 内の epic どうしで track
+      を重複させず、epic の `track` は削除できない。`domains` を省略した場合だけ互換用 timeline へ範囲の解決を委ね、空配列は対象なしの明示指定とする。
     message: >-
-      `register-item-frontmatter.schema.yaml` と `register-events.schema.yaml` がファイル名だけで参照先パスまたはリンクを持たず、コマンドの選択基準を扱う
-      register operation guide への案内もないため, 初見の読者が次に確認すべき正本へ直接移動できる導線を追加する必要がある。
+      epic の責務、`track` の書式・重複禁止・削除禁止、`domains` の省略時と空配列の意味という独立した 6 論点が 1 つの箇条に詰め込まれ、初見の読者が epic 固有の判断点を拾いにくいため、`track`
+      と `domains` の規則を別の箇条へ分ける必要がある。
     message_ja: >-
-      `register-item-frontmatter.schema.yaml` と `register-events.schema.yaml` がファイル名だけで参照先パスまたはリンクを持たず、コマンドの選択基準を扱う
-      register operation guide への案内もないため, 初見の読者が次に確認すべき正本へ直接移動できる導線を追加する必要がある。
-  - id: F006
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 230
-    anchor: "- `type` / `item_status` / `priority` に schema 未定義の値を使用しない。"
-    message: >-
-      `type` は文書種別 `project`、`item_type` は登録項目分類として区別しているのに、禁止事項を含む複数箇所で登録項目分類を裸の「type」と表記しており両者を混同し得るため、`item_type`
-      または「CLI の type は `item_type` を指す」という定義へ統一する必要がある。
-    message_ja: >-
-      `type` は文書種別 `project`、`item_type` は登録項目分類として区別しているのに、禁止事項を含む複数箇所で登録項目分類を裸の「type」と表記しており両者を混同し得るため、`item_type`
-      または「CLI の type は `item_type` を指す」という定義へ統一する必要がある。
+      epic の責務、`track` の書式・重複禁止・削除禁止、`domains` の省略時と空配列の意味という独立した 6 論点が 1 つの箇条に詰め込まれ、初見の読者が epic 固有の判断点を拾いにくいため、`track`
+      と `domains` の規則を別の箇条へ分ける必要がある。

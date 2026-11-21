@@ -4,10 +4,11 @@ document: specdojo:bps-rulebook
 path: docs/ja/specdojo/rulebooks/bps-rulebook.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-rulebook
 verdict: pass
-score: 98
-graded_at: "2026-11-17T21:45:14.756Z"
-graded_by: sol-review-executor
+score: 93
+graded_at: "2026-11-21T03:09:04.050Z"
+graded_by: opus-executor
 content_hash: fbee89397b029a75407c5003de0bac76c2b521ea9e2f17cf79091e328ebb8cae
 categories:
   purpose:
@@ -21,11 +22,11 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 83
   implementation:
     score: 100
   quality:
-    score: 92
+    score: 83
   consistency:
     score: 100
 viewpoints:
@@ -60,8 +61,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -81,11 +82,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-language-consistency:
     level: 4
     score: 100
@@ -104,13 +105,46 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 1
+  minor: 4
   note: 0
 findings:
   - id: F001
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 64
+    anchor: 推奨するトリガー表は次の列で構成します。
+    message: >-
+      「本文要件」で表の列は template を正本と宣言しながら、トリガー表・処理表の推奨列と例外表の列構成を再掲しており、template の列定義と二重管理になるため、列の列挙は template
+      参照に置き換え、記述ガイドには列の判断基準だけを残すべきである。
+    message_ja: >-
+      「本文要件」で表の列は template を正本と宣言しながら、トリガー表・処理表の推奨列と例外表の列構成を再掲しており、template の列定義と二重管理になるため、列の列挙は template
+      参照に置き換え、記述ガイドには列の判断基準だけを残すべきである。
+  - id: F002
     severity: minor
     rule: vp-dev-testability
     line: 124
     anchor: "### 6.9. 完成判定"
     message: 完成判定に Markdown lint や成果物 Frontmatter スキーマ検証など機械的に確認する検証手段が示されておらず、BPS 作成後にどのコマンドで形式適合を確認するかが読み取れない。
     message_ja: 完成判定に Markdown lint や成果物 Frontmatter スキーマ検証など機械的に確認する検証手段が示されておらず、BPS 作成後にどのコマンドで形式適合を確認するかが読み取れない。
+  - id: F003
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 121
+    anchor: "- 未決事項がある場合だけ章を置き、本文中の未確定ラベルに対応する論点と影響する章・ステップを示します。"
+    message: >-
+      未決事項で rulebook は論点・影響する章・ステップ・当面の扱いを求めるが、template の未決事項表は「当面の扱い」列を持たず rulebook にない区分・決定者・決定時期を列に置いており、rulebook と
+      template の記入欄を一致させるべきである。
+    message_ja: >-
+      未決事項で rulebook は論点・影響する章・ステップ・当面の扱いを求めるが、template の未決事項表は「当面の扱い」列を持たず rulebook にない区分・決定者・決定時期を列に置いており、rulebook と
+      template の記入欄を一致させるべきである。
+  - id: F004
+    severity: minor
+    rule: vp-ux-readability
+    line: 18
+    anchor: BPS は CDFD のプロセス領域と流れを詳細化し、BES の業務イベント、BR の判断・計算、STSD の状態と遷移を利用します。各仕様をいつ、何のために使うかを示します。
+    message: >-
+      位置づけで CDFD・BES・BR・STSD（および本文中の BDD・CDSD）を正式名称や対応する rulebook
+      への参照なしに略語のみで示しており、初見の読者が各仕様の内容と次に見る文書を辿れないため、初出で正式名称と参照先を示すべきである。
+    message_ja: >-
+      位置づけで CDFD・BES・BR・STSD（および本文中の BDD・CDSD）を正式名称や対応する rulebook
+      への参照なしに略語のみで示しており、初見の読者が各仕様の内容と次に見る文書を辿れないため、初出で正式名称と参照先を示すべきである。

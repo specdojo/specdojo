@@ -4,34 +4,35 @@ document: specdojo:etc-sample
 path: docs/ja/specdojo/samples/etc-sample.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-sample
 verdict: fail
-score: 46
-graded_at: "2026-10-11T21:43:55.352Z"
-graded_by: agy-expert-executor
-content_hash: 65b7d38ea38a40bba894698b9ff5ad0bedc8627077a7ab658a95485785f39574
+score: 38
+graded_at: "2026-11-21T03:57:43.999Z"
+graded_by: opus-executor
+content_hash: 10dee411eacd52bf97646b5274a8bfe351eb556a5b849d9dad993d88c6f0b6c7
 categories:
   purpose:
-    score: 50
+    score: 38
   operations:
-    score: 69
+    score: 63
   planning:
-    score: 58
+    score: 42
   business:
-    score: 50
+    score: 42
   architecture:
-    score: 67
+    score: 58
   usability:
     score: 67
   implementation:
-    score: 50
+    score: 38
   quality:
-    score: 33
+    score: 17
   consistency:
     score: 0
 viewpoints:
   vp-po-purpose-alignment:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-po-decision-readiness:
     level: 2
     score: 50
@@ -39,11 +40,11 @@ viewpoints:
     level: 3
     score: 75
   vp-pm-plan-feasibility:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-pm-dependency-risk:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-pm-control-reporting:
     level: 3
     score: 75
@@ -51,14 +52,14 @@ viewpoints:
     level: 2
     score: 50
   vp-ba-requirements-completeness:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ba-stakeholder-clarity:
     level: 2
     score: 50
   vp-arc-technical-constraints:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-arc-conciseness:
     level: 3
     score: 75
@@ -66,17 +67,17 @@ viewpoints:
     level: 2
     score: 50
   vp-dev-implementation-readiness:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-dev-change-impact:
     level: 2
     score: 50
   vp-dev-testability:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-qe-verifiability:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-qe-omissions-consistency:
     level: 0
     score: 0
@@ -93,8 +94,8 @@ viewpoints:
     level: 2
     score: 50
   vp-ops-operability:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -103,8 +104,8 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 2
-  major: 17
-  minor: 4
+  major: 27
+  minor: 5
   note: 0
 findings:
   - id: F001
@@ -112,36 +113,44 @@ findings:
     rule: vp-po-purpose-alignment
     line: 5
     anchor: 本書は、外部結合テスト仕様を連携単位で分割して定義する（仕様）ための最小サンプルである。
-    message: >-
-      The document fails to align with project goals and upstream specifications, lacking specific scope, objectives,
-      and rationale for external integration testing.
+    message: ドキュメントがプロジェクトの目標や上流の仕様と一致しておらず、外部結合テストの具体的なスコープ、目的、および根拠が不足しています。
     message_ja: ドキュメントがプロジェクトの目標や上流の仕様と一致しておらず、外部結合テストの具体的なスコープ、目的、および根拠が不足しています。
   - id: F002
+    severity: major
+    rule: vp-po-purpose-alignment
+    line: 9
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+    message: 対象が「駄菓子屋の販売管理システム」の全体に留まっている。プロジェクト概要の前提条件（EC・仕入れ先・会計連携は対象外）と矛盾しない具体的な外部境界（`＜term＞`）を選び、その理由を示す必要がある。
+    message_ja: 対象が「駄菓子屋の販売管理システム」の全体に留まっている。プロジェクト概要の前提条件（EC・仕入れ先・会計連携は対象外）と矛盾しない具体的な外部境界（`＜term＞`）を選び、その理由を示す必要がある。
+  - id: F003
     severity: major
     rule: vp-po-decision-readiness
     line: 26
     anchor: "## 5. 未解決事項"
-    message: >-
-      Unresolved issues lack clear decision criteria, decision makers, impacts, and concrete next actions required for
-      PO review.
+    message: 未解決の課題について、POのレビューに必要な明確な決定基準、意思決定者、影響、および具体的な次のアクションが不足しています。
     message_ja: 未解決の課題について、POのレビューに必要な明確な決定基準、意思決定者、影響、および具体的な次のアクションが不足しています。
-  - id: F003
+  - id: F004
     severity: minor
     rule: vp-po-publication-accountability
     line: 1
     anchor: "# [外部結合テスト対象別](../rulebooks/etc-rulebook.md) サンプル"
-    message: Publication accountability and human approval responsibilities are not explicitly defined.
+    message: 公開の責任および人的承認の責任が明示的に定義されていません。
     message_ja: 公開の責任および人的承認の責任が明示的に定義されていません。
-  - id: F004
+  - id: F005
     severity: major
     rule: vp-pm-plan-feasibility
     line: 5
     anchor: 本書は、外部結合テスト仕様を連携単位で分割して定義する（仕様）ための最小サンプルである。
-    message: >-
-      The content lacks work units, dependencies, role assignments, and completion criteria needed for task planning and
-      tracking.
+    message: タスクの計画と追跡に必要なワークユニット、依存関係、ロールの割り当て、および完了条件が不足しています。
     message_ja: タスクの計画と追跡に必要なワークユニット、依存関係、ロールの割り当て、および完了条件が不足しています。
-  - id: F005
+  - id: F006
+    severity: major
+    rule: vp-pm-plan-feasibility
+    line: 18
+    anchor: "## 4. 最小記述例"
+    message: 「最小記述例」に、`case_id`・優先度・自動化区分を持つ条件・ケース表がない。テスト実装をタスク化し、進捗を管理する単位を示せていない。
+    message_ja: 「最小記述例」に、`case_id`・優先度・自動化区分を持つ条件・ケース表がない。テスト実装をタスク化し、進捗を管理する単位を示せていない。
+  - id: F007
     severity: major
     rule: vp-pm-dependency-risk
     line: 10
@@ -152,141 +161,195 @@ findings:
     message_ja: >-
       Dependencies on upstream test plans (such as tsp-index and etc-index) and external systems, as well as associated
       risks, are not identified.
-  - id: F006
+  - id: F008
+    severity: major
+    rule: vp-pm-dependency-risk
+    line: 1
+    anchor: "# [外部結合テスト対象別](../rulebooks/etc-rulebook.md) サンプル"
+    message: "Frontmatter に、rulebook が最低限として求める `based_on: [tsp-index, etc-index]` がない。上流のテスト戦略・全体構成への依存を機械的にたどれない。"
+    message_ja: "Frontmatter に、rulebook が最低限として求める `based_on: [tsp-index, etc-index]` がない。上流のテスト戦略・全体構成への依存を機械的にたどれない。"
+  - id: F009
     severity: minor
     rule: vp-pm-control-reporting
     line: 26
     anchor: "## 5. 未解決事項"
-    message: >-
-      Reporting destinations, handling policies, and responsible role codes for progress and issue tracking are not
-      defined.
+    message: 進捗および課題の追跡に関する報告先、取り扱いポリシー、および責任ロールコードが定義されていません。
     message_ja: 進捗および課題の追跡に関する報告先、取り扱いポリシー、および責任ロールコードが定義されていません。
-  - id: F007
+  - id: F010
     severity: major
     rule: vp-ba-business-value
     line: 5
     anchor: 本書は、外部結合テスト仕様を連携単位で分割して定義する（仕様）ための最小サンプルである。
-    message: >-
-      The document does not describe the business problem, target stakeholders, or expected value of external
-      integration testing for the confectionery sales management system.
+    message: 菓子販売管理システムにおける外部結合テストのビジネス上の問題、対象となるステークホルダー、または期待される価値について記述されていません。
     message_ja: 菓子販売管理システムにおける外部結合テストのビジネス上の問題、対象となるステークホルダー、または期待される価値について記述されていません。
-  - id: F008
+  - id: F011
     severity: major
     rule: vp-ba-requirements-completeness
     line: 5
     anchor: 本書は、外部結合テスト仕様を連携単位で分割して定義する（仕様）ための最小サンプルである。
-    message: >-
-      Scope, out-of-scope boundaries, and acceptance conditions are not defined at a level that can be verified from a
-      user perspective.
+    message: スコープ、スコープ外の境界、および受け入れ条件が、ユーザーの視点から検証可能なレベルで定義されていません。
     message_ja: スコープ、スコープ外の境界、および受け入れ条件が、ユーザーの視点から検証可能なレベルで定義されていません。
-  - id: F009
+  - id: F012
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 13
+    anchor: "## 3. 記述内容"
+    message: rulebook が必須とする「責務」（動詞で始まる 3〜7 個）と「対象外」（理由・代替レベル付き）が欠落しており、検証範囲と除外範囲を確認できない。
+    message_ja: rulebook が必須とする「責務」（動詞で始まる 3〜7 個）と「対象外」（理由・代替レベル付き）が欠落しており、検証範囲と除外範囲を確認できない。
+  - id: F013
     severity: major
     rule: vp-ba-stakeholder-clarity
     line: 9
     anchor: "- 対象: 駄菓子屋の販売管理システム"
-    message: Relevant stakeholders, operational users, reviewers, and agreement targets are not identified.
+    message: 関連するステークホルダー、運用ユーザー、レビュアー、および合意の対象が特定されていません。
     message_ja: 関連するステークホルダー、運用ユーザー、レビュアー、および合意の対象が特定されていません。
-  - id: F010
+  - id: F014
     severity: major
     rule: vp-arc-technical-constraints
     line: 9
     anchor: "- 対象: 駄菓子屋の販売管理システム"
-    message: >-
-      Technical constraints, external dependencies, protocols, and sandbox/environment configurations are entirely
-      omitted.
+    message: 技術的制約、外部依存関係、プロトコル、およびサンドボックス/環境構成が完全に省略されています。
     message_ja: 技術的制約、外部依存関係、プロトコル、およびサンドボックス/環境構成が完全に省略されています。
-  - id: F011
+  - id: F015
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 15
+    anchor: "- 主な内容: I/Fごとのテスト条件一覧（入力/期待/エラー）、前提（接続先・認証・テストデータ）、合格基準、関連する外部I/F仕様ID"
+    message: 「前提（接続先・認証・テストデータ）」という項目名を挙げるだけで、境界/依存/環境章として sandbox・スタブの扱い、秘密情報のマスキング、テストデータの namespace と後始末の具体例を示していない。
+    message_ja: 「前提（接続先・認証・テストデータ）」という項目名を挙げるだけで、境界/依存/環境章として sandbox・スタブの扱い、秘密情報のマスキング、テストデータの namespace と後始末の具体例を示していない。
+  - id: F016
     severity: minor
     rule: vp-arc-conciseness
     line: 24
     anchor: "| 主な内容     | I/Fごとのテスト条件一覧（入力/期待/エラー）、前提（接続先・認証・テストデータ）、合格基準、関連する外部I/F仕様ID | 要点のみ記載                         |"
-    message: >-
-      Section 4 table redundantly repeats the exact text from Section 3 without providing concrete values or additional
-      context.
+    message: セクション4の表において、具体的な値や追加のコンテキストを提供することなく、セクション3のテキストがそのまま重複して記載されています。
     message_ja: セクション4の表において、具体的な値や追加のコンテキストを提供することなく、セクション3のテキストがそのまま重複して記載されています。
-  - id: F012
+  - id: F017
     severity: major
     rule: vp-arc-single-responsibility
     line: 1
     anchor: "# [外部結合テスト対象別](../rulebooks/etc-rulebook.md) サンプル"
     message: 「完成例（sample）」としての責務ではなく「記述ガイド」として振る舞っており、成果物の正本としての形式をなしていない。
     message_ja: 「完成例（sample）」としての責務ではなく「記述ガイド」として振る舞っており、成果物の正本としての形式をなしていない。
-  - id: F013
+  - id: F018
     severity: major
     rule: vp-dev-implementation-readiness
     line: 15
     anchor: "- 主な内容: I/Fごとのテスト条件一覧（入力/期待/エラー）、前提（接続先・認証・テストデータ）、合格基準、関連する外部I/F仕様ID"
-    message: >-
-      Concrete inputs, schema definitions, endpoints, and completion conditions necessary for test implementation are
-      absent.
+    message: テスト実施に必要な具体的な入力、スキーマ定義、エンドポイント、および完了条件が不足しています。
     message_ja: テスト実施に必要な具体的な入力、スキーマ定義、エンドポイント、および完了条件が不足しています。
-  - id: F014
+  - id: F019
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 18
+    anchor: "## 4. 最小記述例"
+    message: rulebook が正本と定めるトレース表（`trace_key`・仕様ID・要点）がない。ケースから根拠仕様をたどれず、実装時の判断根拠を示せていない。
+    message_ja: rulebook が正本と定めるトレース表（`trace_key`・仕様ID・要点）がない。ケースから根拠仕様をたどれず、実装時の判断根拠を示せていない。
+  - id: F020
     severity: major
     rule: vp-dev-change-impact
     line: 15
     anchor: "- 主な内容: I/Fごとのテスト条件一覧（入力/期待/エラー）、前提（接続先・認証・テストデータ）、合格基準、関連する外部I/F仕様ID"
-    message: Impact of changes on external interfaces, dependent schemas, and related artifacts is not identified.
+    message: 外部インターフェース、依存するスキーマ、および関連するアーティファクトに対する変更の影響が特定されていません。
     message_ja: 外部インターフェース、依存するスキーマ、および関連するアーティファクトに対する変更の影響が特定されていません。
-  - id: F015
+  - id: F021
     severity: major
     rule: vp-dev-testability
     line: 15
     anchor: "- 主な内容: I/Fごとのテスト条件一覧（入力/期待/エラー）、前提（接続先・認証・テストデータ）、合格基準、関連する外部I/F仕様ID"
-    message: Test execution commands, CI verification procedures, assertions, and error handling steps are missing.
+    message: テスト実行コマンド、CI検証手順、アサーション、およびエラーハンドリングの手順が不足しています。
     message_ja: テスト実行コマンド、CI検証手順、アサーション、およびエラーハンドリングの手順が不足しています。
-  - id: F016
+  - id: F022
+    severity: major
+    rule: vp-dev-testability
+    line: 20
+    anchor: >-
+      | 項目         |
+      値                                                                                                               |
+      備考                                 |
+    message: 最小記述例の表に、観測点（アサーション）と証跡（テストコードパス・CI run・reqId 等）の列がない。テスト結果を証跡へ接続する形を示していない。
+    message_ja: 最小記述例の表に、観測点（アサーション）と証跡（テストコードパス・CI run・reqId 等）の列がない。テスト結果を証跡へ接続する形を示していない。
+  - id: F023
     severity: major
     rule: vp-qe-verifiability
     line: 24
     anchor: "| 主な内容     | I/Fごとのテスト条件一覧（入力/期待/エラー）、前提（接続先・認証・テストデータ）、合格基準、関連する外部I/F仕様ID | 要点のみ記載                         |"
     message: 具体的な値ではなく「要点のみ記載」という記述上の指示になっており、完成例としての役割を果たしていない。
     message_ja: 具体的な値ではなく「要点のみ記載」という記述上の指示になっており、完成例としての役割を果たしていない。
-  - id: F017
+  - id: F024
+    severity: major
+    rule: vp-qe-verifiability
+    line: 30
+    anchor: "| 要件詳細の補強 | 実案件適用時に具体化する |"
+    message: 未解決事項の「実案件適用時に具体化する」は完了条件を持たない。何をもって解消とするかを判定できない。
+    message_ja: 未解決事項の「実案件適用時に具体化する」は完了条件を持たない。何をもって解消とするかを判定できない。
+  - id: F025
     severity: blocker
     rule: vp-qe-omissions-consistency
     line: 1
     anchor: "# [外部結合テスト対象別](../rulebooks/etc-rulebook.md) サンプル"
     message: rulebook で定義された必須の章構成（1〜6章）を完全に無視し、独自の章構成となっている。
     message_ja: rulebook で定義された必須の章構成（1〜6章）を完全に無視し、独自の章構成となっている。
-  - id: F018
+  - id: F026
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 1
+    anchor: "# [外部結合テスト対象別](../rulebooks/etc-rulebook.md) サンプル"
+    message: "H1 が rulebook の「外部結合テストカタログ: `＜対象名＞`」形式ではなく、rulebook への相対 Markdown リンクを含む「外部結合テスト対象別 サンプル」になっており、文書名の規約と矛盾している。"
+    message_ja: "H1 が rulebook の「外部結合テストカタログ: `＜対象名＞`」形式ではなく、rulebook への相対 Markdown リンクを含む「外部結合テスト対象別 サンプル」になっており、文書名の規約と矛盾している。"
+  - id: F027
     severity: blocker
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# [外部結合テスト対象別](../rulebooks/etc-rulebook.md) サンプル"
     message: ETC の完成例ではなく「記述のためのサンプル（ガイド）」となっており, rulebook で定義された成果物形式に準拠していない。
     message_ja: ETC の完成例ではなく「記述のためのサンプル（ガイド）」となっており, rulebook で定義された成果物形式に準拠していない。
-  - id: F019
+  - id: F028
     severity: major
     rule: vp-qe-kata-conformance
     line: 11
     anchor: "- 参照: `../rulebooks/etc-rulebook.md`"
     message: rulebook への参照はあるが、必須とされる etc-index や tsp-index への参照が不足している。
     message_ja: rulebook への参照はあるが、必須とされる etc-index や tsp-index への参照が不足している。
-  - id: F020
+  - id: F029
     severity: major
     rule: vp-ux-readability
     line: 5
     anchor: 本書は、外部結合テスト仕様を連携単位で分割して定義する（仕様）ための最小サンプルである。
     message: 具現化された例ではなく「〜するための最小サンプルである」という説明に留まっており、参照先としての価値を欠いている。
     message_ja: 具現化された例ではなく「〜するための最小サンプルである」という説明に留まっており、参照先としての価値を欠いている。
-  - id: F021
+  - id: F030
     severity: minor
     rule: vp-ux-language-consistency
     line: 16
     anchor: "- 必須観点: 対象、条件、判定基準、責任者"
     message: rulebook に定義のない「責任者」を必須観点として列挙している。
     message_ja: rulebook に定義のない「責任者」を必須観点として列挙している。
-  - id: F022
+  - id: F031
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 1
+    anchor: "# [外部結合テスト対象別](../rulebooks/etc-rulebook.md) サンプル"
+    message: 成果物名が「外部結合テスト対象別」となっており、rulebook の名称「外部結合テストカタログ」と表記が揺れている。
+    message_ja: 成果物名が「外部結合テスト対象別」となっており、rulebook の名称「外部結合テストカタログ」と表記が揺れている。
+  - id: F032
     severity: major
     rule: vp-ops-release-readiness
     line: 26
     anchor: "## 5. 未解決事項"
-    message: Prerequisites and criteria for transitioning from draft to ready status are not specified.
+    message: 下書き（draft）から準備完了（ready）ステータスへ移行するための前提条件と基準が指定されていません。
     message_ja: 下書き（draft）から準備完了（ready）ステータスへ移行するための前提条件と基準が指定されていません。
-  - id: F023
+  - id: F033
     severity: major
     rule: vp-ops-operability
     line: 1
     anchor: "# [外部結合テスト対象別](../rulebooks/etc-rulebook.md) サンプル"
-    message: Information necessary for ongoing maintenance, change management, and escalation paths is not provided.
+    message: 継続的なメンテナンス、変更管理、およびエスカレーションパスに必要な情報が提供されていません。
     message_ja: 継続的なメンテナンス、変更管理、およびエスカレーションパスに必要な情報が提供されていません。
+  - id: F034
+    severity: major
+    rule: vp-ops-operability
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: 実行運用メモ（テストデータの作成と削除、失敗時のリトライ、外部側の後始末、レート制限などの実行制約）の例がない。外部結合テストを継続して運用するための情報を示せていない。
+    message_ja: 実行運用メモ（テストデータの作成と削除、失敗時のリトライ、外部側の後始末、レート制限などの実行制約）の例がない。外部結合テストを継続して運用するための情報を示せていない。

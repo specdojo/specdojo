@@ -4,37 +4,38 @@ document: specdojo:itc-rulebook
 path: docs/ja/specdojo/rulebooks/itc-rulebook.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-rulebook
 verdict: needs-work
-score: 94
-graded_at: "2026-11-02T20:22:23.148Z"
-graded_by: flash-high-executor
-content_hash: 7f7aabaea126a57834f93f574c5bcbdfbb2c40a21db696c63b9b88f2be04fbc6
+score: 80
+graded_at: "2026-11-21T04:24:40.251Z"
+graded_by: opus-executor
+content_hash: b5ed55049d80cc8ac1ac6012b41c64decaa831b40b1ae0c90da300b8c2a69f28
 categories:
   purpose:
-    score: 100
+    score: 88
   operations:
-    score: 100
+    score: 94
   planning:
     score: 100
   business:
-    score: 100
+    score: 92
   architecture:
     score: 100
   usability:
-    score: 92
-  implementation:
-    score: 100
-  quality:
     score: 83
+  implementation:
+    score: 88
+  quality:
+    score: 67
   consistency:
-    score: 100
+    score: 50
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-publication-accountability:
     level: 4
     score: 100
@@ -51,8 +52,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-stakeholder-clarity:
     level: 4
     score: 100
@@ -60,8 +61,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -69,17 +70,17 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-change-impact:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-testability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-qe-kata-conformance:
     level: 2
     score: 50
@@ -90,8 +91,8 @@ viewpoints:
     level: 3
     score: 75
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-operability:
     level: 4
     score: 100
@@ -103,21 +104,123 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 1
+  major: 2
+  minor: 10
   note: 0
 findings:
   - id: F001
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 1
+    anchor: "# 内部結合テストカタログ 対象別 作成ルール"
+    message: >-
+      Frontmatter の `recipe` と `template` が `undecided` のままだが、未決の理由、判断者、判断時期、登録簿への引き継ぎ先が書かれていない。ready
+      化の判断材料として本文か登録簿で明示すること。
+    message_ja: >-
+      Frontmatter の `recipe` と `template` が `undecided` のままだが、未決の理由、判断者、判断時期、登録簿への引き継ぎ先が書かれていない。ready
+      化の判断材料として本文か登録簿で明示すること。
+  - id: F002
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 144
+    anchor: "- 必須カラムは `itc-index` の定義に従う"
+    message: >-
+      ケース表の必須カラムを `itc-index`
+      に委ねながら、サンプルでは10列（`case_id`・条件・手順・期待値・観測点・境界/依存・トレース・優先度・自動化・証跡）を使っており、必須と任意の区別が読み取れない。`itc-index`
+      の該当箇所の参照を示すか、サンプルのカラムとの対応を明記すること。
+    message_ja: >-
+      ケース表の必須カラムを `itc-index`
+      に委ねながら、サンプルでは10列（`case_id`・条件・手順・期待値・観測点・境界/依存・トレース・優先度・自動化・証跡）を使っており、必須と任意の区別が読み取れない。`itc-index`
+      の該当箇所の参照を示すか、サンプルのカラムとの対応を明記すること。
+  - id: F003
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 135
+    anchor: "- 観点名（見出し）は改善のため変更してよいが、`perspective_key` は原則変更しない（変更が必要なら `supersedes` 等で追跡する）"
+    message: >-
+      `perspective_key` と `case_id`
+      を変更しない規則が、記述ガイド（本文135行目・145〜148行目）と禁止事項（本文166〜167行目）で重複している。記述ガイド側は形式の定義に絞り、不変性は禁止事項に一本化すると簡潔になる。
+    message_ja: >-
+      `perspective_key` と `case_id`
+      を変更しない規則が、記述ガイド（本文135行目・145〜148行目）と禁止事項（本文166〜167行目）で重複している。記述ガイド側は形式の定義に絞り、不変性は禁止事項に一本化すると簡潔になる。
+  - id: F004
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 135
+    anchor: "- 観点名（見出し）は改善のため変更してよいが、`perspective_key` は原則変更しない（変更が必要なら `supersedes` 等で追跡する）"
+    message: >-
+      `perspective_key` を変更する場合の追跡手段として「`supersedes` 等」を挙げているが、`supersedes` は文書単位のメタ情報であり、観点キー単位の置き換えや旧 `case_id`
+      との対応をどこにどう記録するかが定まっていない。記録先と書式を具体化すること。
+    message_ja: >-
+      `perspective_key` を変更する場合の追跡手段として「`supersedes` 等」を挙げているが、`supersedes` は文書単位のメタ情報であり、観点キー単位の置き換えや旧 `case_id`
+      との対応をどこにどう記録するかが定まっていない。記録先と書式を具体化すること。
+  - id: F005
+    severity: minor
+    rule: vp-dev-testability
+    line: 12
+    anchor: >-
+      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status` の昇格と承認、改訂と廃止、未決事項の登録簿への引き継ぎは
+      [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従う。文書の整形・lint はリポジトリの検証で扱い、業務の検証に含めない。
+    message: >-
+      文書の整形・lint は「リポジトリの検証で扱う」と委ねるだけで、作成後に確認すべき検証コマンド（例: `npm run lint:md`、Frontmatter・schema
+      の検証）や委譲先の文書が示されておらず、作成者が確認手順を特定できない。
+    message_ja: >-
+      文書の整形・lint は「リポジトリの検証で扱う」と委ねるだけで、作成後に確認すべき検証コマンド（例: `npm run lint:md`、Frontmatter・schema
+      の検証）や委譲先の文書が示されておらず、作成者が確認手順を特定できない。
+  - id: F006
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 145
+    anchor: "- `case_id` は以下を推奨し、変更しない"
+    message: "`case_id` の形式を「推奨」としながら禁止事項では変更・再利用を禁じており、形式に従わない `case_id` を不適合とするか判定できない。必須の形式と任意の慣行（10刻みなど）を分けて記述すること。"
+    message_ja: "`case_id` の形式を「推奨」としながら禁止事項では変更・再利用を禁じており、形式に従わない `case_id` を不適合とするか判定できない。必須の形式と任意の慣行（10刻みなど）を分けて記述すること。"
+  - id: F007
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 137
+    anchor: "##### 6.6.1.1. 意図"
+    message: >-
+      本文137行目・141行目で H5 見出し（`##### 6.6.1.1. 意図`・`##### 6.6.1.2. 条件・ケース表`）を使っており、H5 以下を禁じる Markdown 記述ルールに違反している。階層を H4
+      以内に収めるか、構成を表や箇条書きに置き換えること。
+    message_ja: >-
+      本文137行目・141行目で H5 見出し（`##### 6.6.1.1. 意図`・`##### 6.6.1.2. 条件・ケース表`）を使っており、H5 以下を禁じる Markdown 記述ルールに違反している。階層を H4
+      以内に収めるか、構成を表や箇条書きに置き換えること。
+  - id: F008
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 131
+    anchor: "#### 6.6.1. 観点:<観点>"
+    message: 見出し `#### 6.6.1. 観点:＜観点＞` の山括弧付きプレースホルダがインラインコードで囲まれておらず、HTML タグと誤認される禁止記法に当たる。`` 観点:`＜観点＞` `` のように囲むこと。
+    message_ja: 見出し `#### 6.6.1. 観点:＜観点＞` の山括弧付きプレースホルダがインラインコードで囲まれておらず、HTML タグと誤認される禁止記法に当たる。`` 観点:`＜観点＞` `` のように囲むこと。
+  - id: F009
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# 内部結合テストカタログ 対象別 作成ルール"
     message: 参照サンプル `specdojo:itc-sample` が本ルールブックで定義した構成（第5節）に従っておらず、実例として不適切である。
     message_ja: 参照サンプル `specdojo:itc-sample` が本ルールブックで定義した構成（第5節）に従っておらず、実例として不適切である。
-  - id: F002
+  - id: F010
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 173
+    anchor: トレースとケースの対応を示す部分例です。成果物全体では「本文構成（標準テンプレ）」の必須6章を揃えます。仕様ID・証跡は例示です。
+    message: >-
+      「サンプル（最小）」章に受注（order）の例を埋め込んでおり、Frontmatter の `sample: specdojo:itc-sample` および共通サンプル文脈（駄菓子屋）と食い違っている。sample
+      文書を正とし、本文の例は sample と同じ文脈に揃えるか、sample への委譲に置き換えること。
+    message_ja: >-
+      「サンプル（最小）」章に受注（order）の例を埋め込んでおり、Frontmatter の `sample: specdojo:itc-sample` および共通サンプル文脈（駄菓子屋）と食い違っている。sample
+      文書を正とし、本文の例は sample と同じ文脈に揃えるか、sample への委譲に置き換えること。
+  - id: F011
     severity: minor
     rule: vp-ux-language-consistency
-    line: 93
-    anchor: 生成する `utc-<term>` 本文の見出しは各章で指定された **番号付き** の形式
-    message: "`utc-＜term＞` は `itc-＜term＞` の誤記である。"
-    message_ja: "`utc-＜term＞` は `itc-＜term＞` の誤記である。"
+    line: 133
+    anchor: "- 観点は `itc-index` の「観点の立て方（共通）」に従って命名する"
+    message: 記述ガイドの前半の箇条書きは「。」で結ぶのに対し、「トレース」「テスト観点とケース」配下（本文125行目・133〜156行目）は句点がなく、文体がそろっていない。表記を統一すること。
+    message_ja: 記述ガイドの前半の箇条書きは「。」で結ぶのに対し、「トレース」「テスト観点とケース」配下（本文125行目・133〜156行目）は句点がなく、文体がそろっていない。表記を統一すること。
+  - id: F012
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 1
+    anchor: "# 内部結合テストカタログ 対象別 作成ルール"
+    message: ready 化の前提となる未解決事項（`recipe`・`template` が `undecided`、sample の構成不一致）が本文にも登録簿の参照にも示されておらず、公開判断の材料が不足している。
+    message_ja: ready 化の前提となる未解決事項（`recipe`・`template` が `undecided`、sample の構成不一致）が本文にも登録簿の参照にも示されておらず、公開判断の材料が不足している。

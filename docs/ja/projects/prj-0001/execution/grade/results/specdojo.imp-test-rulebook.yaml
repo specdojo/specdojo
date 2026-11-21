@@ -4,61 +4,62 @@ document: specdojo:imp-test-rulebook
 path: docs/ja/specdojo/rulebooks/imp-test-rulebook.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-rulebook
 verdict: needs-work
-score: 86
-graded_at: "2026-11-10T20:30:01.726Z"
-graded_by: flash-high-executor
-content_hash: 536dacb91b77e81da01b6795506fa6a1e1995872320fdf1c9f334c4baa3d355f
+score: 79
+graded_at: "2026-11-21T04:19:15.227Z"
+graded_by: opus-executor
+content_hash: 8596a477360f0f5fdfd21414d37bfd6c1397156c16aff17ed35f20f6741c124a
 categories:
   purpose:
-    score: 100
+    score: 88
   operations:
-    score: 100
+    score: 88
   planning:
-    score: 100
+    score: 75
   business:
-    score: 100
+    score: 75
   architecture:
-    score: 100
+    score: 92
   usability:
-    score: 83
+    score: 75
   implementation:
     score: 100
   quality:
-    score: 58
+    score: 67
   consistency:
-    score: 100
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-publication-accountability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-plan-feasibility:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-dependency-risk:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-control-reporting:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-business-value:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-requirements-completeness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-stakeholder-clarity:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-technical-constraints:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -75,23 +76,23 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
     level: 1
     score: 25
   vp-ux-readability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-language-consistency:
     level: 2
     score: 50
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-operability:
     level: 4
     score: 100
@@ -104,52 +105,170 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 5
-  minor: 1
+  minor: 15
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-qe-verifiability
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 9
+    anchor: "- テスト責任者とプロジェクト管理者が合意できる粒度で影響と根拠を示す。"
+    message: 対応方針、とくに見送りや代替を誰が承認し、承認・保留・差し戻しのどれを判断する文書なのかが書かれていない。「合意できる粒度」に留めず、判断者の役割と判断対象を記述ガイドへ明記する必要がある。
+    message_ja: 対応方針、とくに見送りや代替を誰が承認し、承認・保留・差し戻しのどれを判断する文書なのかが書かれていない。「合意できる粒度」に留めず、判断者の役割と判断対象を記述ガイドへ明記する必要がある。
+  - id: F002
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 72
+    anchor: "- 影響度の高い順に、実施時期、担当、前提条件を記載する。"
+    message: >-
+      担当を Role code または役割名で記載することも、個人名・連絡先を書かないことも明記していない。そのため対応 sample
+      で個人名による担当表記を許している。記述ガイドか禁止事項で公開に適した担当表記を定める必要がある。
+    message_ja: >-
+      担当を Role code または役割名で記載することも、個人名・連絡先を書かないことも明記していない。そのため対応 sample
+      で個人名による担当表記を許している。記述ガイドか禁止事項で公開に適した担当表記を定める必要がある。
+  - id: F003
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 78
+    anchor: "- 論点、不足情報、判断・対応への影響と当面の扱いを記載する。該当がなければ「なし」とする。"
+    message: 未解決事項に決定期限と担当を必須にしていないため、未決事項の解消を計画に組み込めない。また本文構成表の「担当と期限」と記述ガイドの「実施時期」の対応も不明確なので、必須項目として揃える必要がある。
+    message_ja: 未解決事項に決定期限と担当を必須にしていないため、未決事項の解消を計画に組み込めない。また本文構成表の「担当と期限」と記述ガイドの「実施時期」の対応も不明確なので、必須項目として揃える必要がある。
+  - id: F004
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 15
+    anchor: 起票済みの要求・課題を含む変更要求を受け、テスト観点・条件・ケース・判定基準への影響を判断する。個別テスト手順の詳細設計は扱わない。
+    message: >-
+      入力となる変更要求の所在（PJR
+      などの登録簿）と、判断結果を反映する後続成果物（テスト計画・テスト仕様、仕様・I/F・運用の影響調査）を位置づけに示していない。依存関係とスケジュールへの影響を辿れないため、参照先を明記する必要がある。
+    message_ja: >-
+      入力となる変更要求の所在（PJR
+      などの登録簿）と、判断結果を反映する後続成果物（テスト計画・テスト仕様、仕様・I/F・運用の影響調査）を位置づけに示していない。依存関係とスケジュールへの影響を辿れないため、参照先を明記する必要がある。
+  - id: F005
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 78
+    anchor: "- 論点、不足情報、判断・対応への影響と当面の扱いを記載する。該当がなければ「なし」とする。"
+    message: 未解決事項と見送りの判断を、PJR の課題・リスク・決定記録のどれへ転記するのか、その条件と報告先を示していない。管理記録に載せる事項を分けて残せないため、転記の基準を記述ガイドへ追加する必要がある。
+    message_ja: 未解決事項と見送りの判断を、PJR の課題・リスク・決定記録のどれへ転記するのか、その条件と報告先を示していない。管理記録に載せる事項を分けて残せないため、転記の基準を記述ガイドへ追加する必要がある。
+  - id: F006
+    severity: minor
+    rule: vp-ba-business-value
+    line: 5
+    anchor: 変更要求によるテストへの影響を整理し、変更要否・影響度・対応方針・未解決事項を判断する記述基準を定めます。
+    message: テストへの影響調査を行わない場合の業務上の問題（欠陥流出、回帰漏れ、納期への影響など）と、文書がもたらす価値を説明していない。導入文か全体方針に、なぜこの判断が必要かを1〜2文で補う必要がある。
+    message_ja: テストへの影響調査を行わない場合の業務上の問題（欠陥流出、回帰漏れ、納期への影響など）と、文書がもたらす価値を説明していない。導入文か全体方針に、なぜこの判断が必要かを1〜2文で補う必要がある。
+  - id: F007
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 44
+    anchor: "- 対象変更要求の識別子、対象テスト範囲、対象期間を明記する。"
+    message: 目的と適用範囲で、対象外のテスト範囲を必須にしていない。「対象期間」が変更の適用期間・テスト実施期間・判断の有効期間のどれを指すのかも定義していないため、範囲を利用者の視点で確認できるように定義する必要がある。
+    message_ja: 目的と適用範囲で、対象外のテスト範囲を必須にしていない。「対象期間」が変更の適用期間・テスト実施期間・判断の有効期間のどれを指すのかも定義していないため、範囲を利用者の視点で確認できるように定義する必要がある。
+  - id: F008
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 9
+    anchor: "- テスト責任者とプロジェクト管理者が合意できる粒度で影響と根拠を示す。"
+    message: 「テスト責任者」「プロジェクト管理者」を Role code や役割の定義に対応づけていない。業務受入の確認者や変更要求の起票者など、合意に関わる関係者と合意の対象も示していないため、関係者と確認者を明示する必要がある。
+    message_ja: 「テスト責任者」「プロジェクト管理者」を Role code や役割の定義に対応づけていない。業務受入の確認者や変更要求の起票者など、合意に関わる関係者と合意の対象も示していないため、関係者と確認者を明示する必要がある。
+  - id: F009
+    severity: minor
+    rule: vp-arc-technical-constraints
     line: 1
     anchor: "# 影響調査（テスト）作成ルール"
     message: >-
-      成功条件に指標・状態・閾値・判定方法を求めず、影響度についても評価観点から高・中・低へ写像する条件や複数観点が割れた場合の決定規則を定めていないため、中心となる成功条件と影響度を再現可能な pass / fail
-      条件として検証できない。
+      rulebook の Frontmatter に `target_format` がなく、`recipe` と `template` は `undecided`
+      のままなので、成果物の形式と型の構成が確定していない。`target_format: markdown` を宣言し、recipe と template を作成するか、作成しない判断を記録する必要がある。
     message_ja: >-
-      成功条件に指標・状態・閾値・判定方法を求めず、影響度についても評価観点から高・中・低へ写像する条件や複数観点が割れた場合の決定規則を定めていないため、中心となる成功条件と影響度を再現可能な pass / fail
-      条件として検証できない。
-  - id: F002
+      rulebook の Frontmatter に `target_format` がなく、`recipe` と `template` は `undecided`
+      のままなので、成果物の形式と型の構成が確定していない。`target_format: markdown` を宣言し、recipe と template を作成するか、作成しない判断を記録する必要がある。
+  - id: F010
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 63
+    anchor: "| 影響対象テスト | 影響を受けるテスト対象（レベル、観点、条件、ケース、判定基準） |"
+    message: 前回の成功条件と影響度の尺度の指摘は解消されたが、影響対象テストの1行の粒度が、全体方針の「テスト対象単位」と列説明の「レベル、観点、条件、ケース、判定基準」との間で一意に定まらない。一覧が要件を満たすかを判定できないため、行の単位を明確にする必要がある。
+    message_ja: 前回の成功条件と影響度の尺度の指摘は解消されたが、影響対象テストの1行の粒度が、全体方針の「テスト対象単位」と列説明の「レベル、観点、条件、ケース、判定基準」との間で一意に定まらない。一覧が要件を満たすかを判定できないため、行の単位を明確にする必要がある。
+  - id: F011
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 53
+    anchor: "- 欠陥流出リスク・検証網羅性・実行コスト・納期など、採用する評価観点ごとに高・中・低を分ける条件（数値の境界または状態）を先に定義する。"
+    message: 影響分析サマリと未解決事項の記載形式（表の列）を定めておらず、本文構成表の「担当と期限」と記述ガイドの「実施時期」も一致していない。成果物ごとに構成がぶれるため、必須の列と用語を揃える必要がある。
+    message_ja: 影響分析サマリと未解決事項の記載形式（表の列）を定めておらず、本文構成表の「担当と期限」と記述ガイドの「実施時期」も一致していない。成果物ごとに構成がぶれるため、必須の列と用語を揃える必要がある。
+  - id: F012
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# 影響調査（テスト）作成ルール"
     message: 対応 sample は、rulebook が必須とする対象期間と成功条件を欠いており、必須要素を満たす完成最小例として成立していない。
     message_ja: 対応 sample は、rulebook が必須とする対象期間と成功条件を欠いており、必須要素を満たす完成最小例として成立していない。
-  - id: F003
+  - id: F013
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# 影響調査（テスト）作成ルール"
     message: 対応 sample は高・中・低の尺度を定義しないまま影響度を使用しており, rulebook の禁止事項に抵触している。
     message_ja: 対応 sample は高・中・低の尺度を定義しないまま影響度を使用しており, rulebook の禁止事項に抵触している。
-  - id: F004
+  - id: F014
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# 影響調査（テスト）作成ルール"
     message: 対応 sample の担当欄は「井上」「高橋」「山本」「佐藤」という個人名を使用しており、sample 本文で人物名を使用しないとする Sample 記述標準の禁止事項に抵触している。
     message_ja: 対応 sample の担当欄は「井上」「高橋」「山本」「佐藤」という個人名を使用しており、sample 本文で人物名を使用しないとする Sample 記述標準の禁止事項に抵触している。
-  - id: F005
+  - id: F015
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 67
+    anchor: "| 判断根拠       | 変更要否の理由、評価観点ごとの事実と尺度・集約規則の適用結果   |"
+    message: >-
+      対応 sample の影響詳細一覧の判断根拠に、評価観点（欠陥流出リスク・回帰範囲・実行コスト）ごとの事実と、尺度・集約規則を当てはめた結果が書かれていない。「判断根拠」列の要件を満たす例になっていないため、sample
+      を修正する必要がある。
+    message_ja: >-
+      対応 sample の影響詳細一覧の判断根拠に、評価観点（欠陥流出リスク・回帰範囲・実行コスト）ごとの事実と、尺度・集約規則を当てはめた結果が書かれていない。「判断根拠」列の要件を満たす例になっていないため、sample
+      を修正する必要がある。
+  - id: F016
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 78
+    anchor: "- 論点、不足情報、判断・対応への影響と当面の扱いを記載する。該当がなければ「なし」とする。"
+    message: 対応 sample の未解決事項には、rulebook が求める「判断・対応への影響」がない。代わりに rulebook にない決定期限・担当の列を置いており、rulebook と sample の項目が一致していない。
+    message_ja: 対応 sample の未解決事項には、rulebook が求める「判断・対応への影響」がない。代わりに rulebook にない決定期限・担当の列を置いており、rulebook と sample の項目が一致していない。
+  - id: F017
+    severity: minor
+    rule: vp-ux-readability
+    line: 15
+    anchor: 起票済みの要求・課題を含む変更要求を受け、テスト観点・条件・ケース・判定基準への影響を判断する。個別テスト手順の詳細設計は扱わない。
+    message: 位置づけに、前に見る文書（変更要求の所在）と次に見る文書（テスト計画・テスト仕様、ほかの影響調査）を示していない。初めて読む人が判断の前後の流れを辿れるよう、関連文書を明記する必要がある。
+    message_ja: 位置づけに、前に見る文書（変更要求の所在）と次に見る文書（テスト計画・テスト仕様、ほかの影響調査）を示していない。初めて読む人が判断の前後の流れを辿れるよう、関連文書を明記する必要がある。
+  - id: F018
     severity: major
     rule: vp-ux-language-consistency
     line: 1
     anchor: "# 影響調査（テスト）作成ルール"
     message: 対応 sample の担当欄は、共通人物台帳にない個人名と「テスト管理」「業務受入」などの未定義ラベルを使用しており、Sample 記述標準が要求する役割名・nickname・Role code による識別と統一されていない。
     message_ja: 対応 sample の担当欄は、共通人物台帳にない個人名と「テスト管理」「業務受入」などの未定義ラベルを使用しており、Sample 記述標準が要求する役割名・nickname・Role code による識別と統一されていない。
-  - id: F006
+  - id: F019
     severity: minor
     rule: vp-ux-language-consistency
+    line: 72
+    anchor: "- 影響度の高い順に、実施時期、担当、前提条件を記載する。"
+    message: >-
+      rulebook 本文の「重要度」は解消されたが、対応 sample の対応方針の表は「優先度」列に高・中・低を使っており、rulebook
+      の「影響度の高い順」と同じ判断軸なのかを判別できない。列名を影響度に揃えるか、優先度との対応を定義する必要がある。
+    message_ja: >-
+      rulebook 本文の「重要度」は解消されたが、対応 sample の対応方針の表は「優先度」列に高・中・低を使っており、rulebook
+      の「影響度の高い順」と同じ判断軸なのかを判別できない。列名を影響度に揃えるか、優先度との対応を定義する必要がある。
+  - id: F020
+    severity: minor
+    rule: vp-ops-release-readiness
     line: 1
     anchor: "# 影響調査（テスト）作成ルール"
-    message: 本文では並べ替え基準を未定義の「重要度」と呼ぶ一方、他節では「影響度」、対応 sample では「優先度」を使用しているため、同一概念か別の判断軸かを判別できるよう用語と対応関係を統一する必要がある。
-    message_ja: 本文では並べ替え基準を未定義の「重要度」と呼ぶ一方、他節では「影響度」、対応 sample では「優先度」を使用しているため、同一概念か別の判断軸かを判別できるよう用語と対応関係を統一する必要がある。
+    message: >-
+      `recipe` と `template` が `undecided` のままで、対応 sample にも未解消の不整合が残るため、ready にする条件が揃っていない。型の構成を確定し、sample を修正してから ready
+      判断をする必要がある。
+    message_ja: >-
+      `recipe` と `template` が `undecided` のままで、対応 sample にも未解消の不整合が残るため、ready にする条件が揃っていない。型の構成を確定し、sample を修正してから ready
+      判断をする必要がある。

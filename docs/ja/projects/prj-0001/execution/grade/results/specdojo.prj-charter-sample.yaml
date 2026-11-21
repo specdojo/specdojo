@@ -4,10 +4,11 @@ document: specdojo:prj-charter-sample
 path: docs/ja/specdojo/samples/prj-charter-sample.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-sample
 verdict: needs-work
 score: 85
-graded_at: "2026-11-17T22:48:04.818Z"
-graded_by: sol-review-executor
+graded_at: "2026-11-21T05:30:38.624Z"
+graded_by: opus-executor
 content_hash: 5ebcca4a7ff1f00db985962209670c01492b7692f8cbd0d804ac5ba15ba1435f
 categories:
   purpose:

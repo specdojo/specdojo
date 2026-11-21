@@ -4,16 +4,17 @@ document: specdojo:nfr-usability-rulebook
 path: docs/ja/specdojo/rulebooks/nfr-usability-rulebook.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-rulebook
 verdict: needs-work
-score: 91
-graded_at: "2026-11-05T20:36:04.382Z"
-graded_by: flash-high-executor
-content_hash: bd98f52c466fa468621ba20f9658007a29da1344c06879243280718b427dd339
+score: 90
+graded_at: "2026-11-21T04:53:06.310Z"
+graded_by: opus-executor
+content_hash: c56c4b8ec63c104ceae54819fb617ad5c24cd53a9a3ded72a36dc84f1bba3dc8
 categories:
   purpose:
     score: 100
   operations:
-    score: 100
+    score: 94
   planning:
     score: 100
   business:
@@ -21,11 +22,11 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 75
   consistency:
     score: 75
 viewpoints:
@@ -75,8 +76,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
     level: 3
     score: 75
@@ -84,14 +85,14 @@ viewpoints:
     level: 2
     score: 50
   vp-ux-readability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-operability:
     level: 4
     score: 100
@@ -104,32 +105,74 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 1
-  minor: 2
+  minor: 5
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 43
-    anchor: "| 項目    | 説明                             | 必須 |"
+    rule: vp-qe-verifiability
+    line: 60
+    anchor: "- **判断基準**: 1 行 1 指標とし、指標・基準値・`備考` の対象から合否を出せること。指標は完了率・完了時間・誤操作率・習熟時間・エラーメッセージの対処方法含有率・破壊的操作の確認網羅率などから選ぶ。"
     message: >-
-      The recommended frontmatter table in Section 4.1 and sample in Section 8 lack the mandatory 'rulebook' field and
-      the 'specdojo:' namespace while defining an unnecessary 'title' field, conflicting with
-      document-metadata-standard.md and deliverable-frontmatter.schema.yaml.
+      For rate metrics such as `誤操作率` or `タスク完了率`, the good example and the guidance do not say what the rate is
+      measured against (per operation, per task or per user), so measured values may not be comparable; add a rule that
+      the denominator and how to count it must be stated in `指標` or `備考`.
     message_ja: >-
-      セクション 4.1 の推奨される frontmatter テーブルおよびセクション 8 のサンプルには、必須の 'rulebook' フィールドと 'specdojo:' ネームスペースが不足している一方で、不要な
-      'title' フィールドが定義されており、document-metadata-standard.md および deliverable-frontmatter.schema.yaml と矛盾しています。
+      For rate metrics such as `誤操作率` or `タスク完了率`, the good example and the guidance do not say what the rate is
+      measured against (per operation, per task or per user), so measured values may not be comparable; add a rule that
+      the denominator and how to count it must be stated in `指標` or `備考`.
   - id: F002
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 7
-    anchor: ""
-    message: 指定サンプル `specdojo:nfr-usability-sample` が、第5節で定義された必須の見出し構成（概要、適用範囲、要件一覧、検証方法、導線）に従っていない。
-    message_ja: 指定サンプル `specdojo:nfr-usability-sample` が、第5節で定義された必須の見出し構成（概要、適用範囲、要件一覧、検証方法、導線）に従っていない。
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 61
+    anchor: "- **良い例**: 「`nfr-usb-002` ／ 誤操作を基準以下に抑える ／ 誤操作率 ／ 2% 以下 ／ 取消導線を提供」"
+    message: >-
+      In the good example of the requirements list, `備考` is "取消導線を提供", which describes how the goal is met and
+      contradicts the body line 42 rule that `備考` narrows the target users and operations; change the example `備考` to
+      name the target users or operations.
+    message_ja: >-
+      In the good example of the requirements list, `備考` is "取消導線を提供", which describes how the goal is met and
+      contradicts the body line 42 rule that `備考` narrows the target users and operations; change the example `備考` to
+      name the target users or operations.
   - id: F003
     severity: minor
-    rule: vp-ux-readability
-    line: 77
-    anchor: 生成する本文の見出しは **## 2. 適用範囲・利用者前提**
-    message: 第6節の各項目の記述ガイドが簡素であり、良質な要件を定義するための具体的な判断基準や書き方の指針が不足している。
-    message_ja: 第6節の各項目の記述ガイドが簡素であり、良質な要件を定義するための具体的な判断基準や書き方の指針が不足している。
+    rule: vp-qe-omissions-consistency
+    line: 20
+    anchor: "- 生成対象ドキュメント ID は `nfr-usability` を推奨する。"
+    message: >-
+      The recommended document ID `nfr-usability` and the example's `id` / `part_of` values have no project prefix,
+      which does not match the `＜project-id＞:＜local-id＞` pattern other rulebooks use; state the project-qualified ID
+      (for example `＜project-id＞:nfr-usability`).
+    message_ja: >-
+      The recommended document ID `nfr-usability` and the example's `id` / `part_of` values have no project prefix,
+      which does not match the `＜project-id＞:＜local-id＞` pattern other rulebooks use; state the project-qualified ID
+      (for example `＜project-id＞:nfr-usability`).
+  - id: F004
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 32
+    anchor: 見出しは次の構成で **順序固定** とする。
+    message: 指定サンプル `specdojo:nfr-usability-sample` が、第5節で定義された必須の見出し構成（概要、適用範囲、要件一覧、検証方法、導線）に従っていない。
+    message_ja: 指定サンプル `specdojo:nfr-usability-sample` が、第5節で定義された必須の見出し構成（概要、適用範囲、要件一覧、検証方法、導線）に従っていない。
+  - id: F005
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# 非機能要件 / 操作性 作成ルール"
+    message: >-
+      The Frontmatter `recipe` and `template` are both `undecided`, so the rulebook and its matching recipe and template
+      are not set up; create them or say in the body when they will be decided.
+    message_ja: >-
+      The Frontmatter `recipe` and `template` are both `undecided`, so the rulebook and its matching recipe and template
+      are not set up; create them or say in the body when they will be decided.
+  - id: F006
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 1
+    anchor: "# 非機能要件 / 操作性 作成ルール"
+    message: >-
+      Moving to `ready` depends on fixing the sample's structure and on `recipe` / `template` being `undecided`, but
+      these open items are not explained; record what remains to be done for `ready`, or hand it to the register.
+    message_ja: >-
+      Moving to `ready` depends on fixing the sample's structure and on `recipe` / `template` being `undecided`, but
+      these open items are not explained; record what remains to be done for `ready`, or hand it to the register.

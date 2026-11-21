@@ -4,58 +4,59 @@ document: specdojo:imp-test-sample
 path: docs/ja/specdojo/samples/imp-test-sample.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-sample
 verdict: needs-work
-score: 75
-graded_at: "2026-10-12T21:15:52.070Z"
-graded_by: agy-expert-executor
+score: 66
+graded_at: "2026-11-21T04:20:35.677Z"
+graded_by: opus-executor
 content_hash: 1b54b57dfc748f125c29af5c24fdd6e6fdfb2c5ab95f7816d29ddf1cbab9ae19
 categories:
   purpose:
-    score: 100
+    score: 75
   operations:
-    score: 100
+    score: 81
   planning:
-    score: 100
+    score: 75
   business:
-    score: 100
+    score: 58
   architecture:
     score: 100
   usability:
     score: 75
   implementation:
-    score: 100
+    score: 88
   quality:
-    score: 58
+    score: 50
   consistency:
     score: 25
 viewpoints:
   vp-po-purpose-alignment:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-decision-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-publication-accountability:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-pm-plan-feasibility:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-dependency-risk:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-control-reporting:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-business-value:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-requirements-completeness:
-    level: 4
-    score: 100
+    level: 1
+    score: 25
   vp-ba-stakeholder-clarity:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-technical-constraints:
     level: 4
     score: 100
@@ -66,8 +67,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-change-impact:
     level: 4
     score: 100
@@ -75,8 +76,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-qe-omissions-consistency:
     level: 1
     score: 25
@@ -90,8 +91,8 @@ viewpoints:
     level: 2
     score: 50
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-operability:
     level: 4
     score: 100
@@ -103,84 +104,230 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 9
-  minor: 2
+  major: 16
+  minor: 14
   note: 0
 findings:
   - id: F001
+    severity: minor
+    rule: vp-po-purpose-alignment
+    line: 12
+    anchor: "- 狙い: リリース前の欠陥流出リスクを抑え、期限内に必要な検証を完了する。"
+    message: 狙いの「期限内」が指す期限（リリース予定日など）が本文にないため、狙いと対応方針の期日との対応を確認できるよう期限を明記する必要がある。
+    message_ja: 狙いの「期限内」が指す期限（リリース予定日など）が本文にないため、狙いと対応方針の期日との対応を確認できるよう期限を明記する必要がある。
+  - id: F002
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 44
+    anchor: >-
+      | 論点                     | 不足情報                         | 決定期限   | 担当               |
+      処理方針                                      |
+    message: 未解決事項の表に、各論点が影響度・対応方針の判断へ与える影響と、判断を承認する役割（Role code）がなく、承認・保留の判断材料が不足している。
+    message_ja: 未解決事項の表に、各論点が影響度・対応方針の判断へ与える影響と、判断を承認する役割（Role code）がなく、承認・保留の判断材料が不足している。
+  - id: F003
+    severity: major
+    rule: vp-po-publication-accountability
+    line: 48
+    anchor: "| 連携系テストデータの準備 | 値引き条件の代表データセット     | 2026-05-14 | QE 担当（井上）    | 代表パターンを 6 件作成しレビューで確定する。 |"
+    message: 担当者欄に個人名を使用しており、sample 記述標準の禁止事項に抵触している。
+    message_ja: 担当者欄に個人名を使用しており、sample 記述標準の禁止事項に抵触している。
+  - id: F004
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 39
+    anchor: "| 中     | 回帰テスト重点化       | 2026-05-24 まで | テスト管理（山本）   | 優先順位基準の合意         |"
+    message: 回帰テスト重点化の前提条件「優先順位基準の合意」に決定期限と担当がなく、未解決事項にも載っていないため、実施時期の 2026-05-24 を守れるか判断できない。
+    message_ja: 回帰テスト重点化の前提条件「優先順位基準の合意」に決定期限と担当がなく、未解決事項にも載っていないため、実施時期の 2026-05-24 を守れるか判断できない。
+  - id: F005
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 48
+    anchor: "| 連携系テストデータの準備 | 値引き条件の代表データセット     | 2026-05-14 | QE 担当（井上）    | 代表パターンを 6 件作成しレビューで確定する。 |"
+    message: 未解決事項の各論点と「対応方針」の対応項目・前提条件の対応関係、および決定期限を過ぎた場合のスケジュールへの影響が示されていない。
+    message_ja: 未解決事項の各論点と「対応方針」の対応項目・前提条件の対応関係、および決定期限を過ぎた場合のスケジュールへの影響が示されていない。
+  - id: F006
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 44
+    anchor: >-
+      | 論点                     | 不足情報                         | 決定期限   | 担当               |
+      処理方針                                      |
+    message: 未解決事項を課題・リスク・決定記録のどれとして管理するか、また報告先の役割が示されておらず、管理記録へ転記する際の手がかりがない。
+    message_ja: 未解決事項を課題・リスク・決定記録のどれとして管理するか、また報告先の役割が示されておらず、管理記録へ転記する際の手がかりがない。
+  - id: F007
+    severity: minor
+    rule: vp-ba-business-value
+    line: 12
+    anchor: "- 狙い: リリース前の欠陥流出リスクを抑え、期限内に必要な検証を完了する。"
+    message: "狙いが「欠陥流出リスクを抑え」という定性表現にとどまり、期待価値を確認できる成功基準（例: 重大欠陥の流出 0 件）に結び付いていない。"
+    message_ja: "狙いが「欠陥流出リスクを抑え」という定性表現にとどまり、期待価値を確認できる成功基準（例: 重大欠陥の流出 0 件）に結び付いていない。"
+  - id: F008
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 7
+    anchor: ""
+    message: 対象期間の記載が漏れている。
+    message_ja: 対象期間の記載が漏れている。
+  - id: F009
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 15
+    anchor: ""
+    message: 成功条件の記述が漏れている。
+    message_ja: 成功条件の記述が漏れている。
+  - id: F010
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 29
+    anchor: "| 業務受入テスト | 要       | 高     | 実施     | 店舗運用手順の変更を反映しないと、受入判定基準を満たせないため。                     | 店舗担当の同席レビューを行う。 |"
+    message: 「店舗担当」が共通登場人物のどの役割名（店主代表・家族利用者代表など）か不明で、同席レビューの確認者・合意対象が特定できない。
+    message_ja: 「店舗担当」が共通登場人物のどの役割名（店主代表・家族利用者代表など）か不明で、同席レビューの確認者・合意対象が特定できない。
+  - id: F011
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 28
+    anchor: "| 結合テスト     | 要       | 高     | 実施     | 値引き適用と売上集計の連携確認が不足すると、本番で差異が検出される可能性が高いため。 | 新規ケース 8 件を追加する。    |"
+    message: 結合テストの新規ケース 8 件の観点・条件の内訳（値引き種別と集計項目の組み合わせ等）が示されておらず、ケース作成の入力として特定できない。
+    message_ja: 結合テストの新規ケース 8 件の観点・条件の内訳（値引き種別と集計項目の組み合わせ等）が示されておらず、ケース作成の入力として特定できない。
+  - id: F012
     severity: major
     rule: vp-qe-verifiability
     line: 15
     anchor: ""
     message: 成功条件に指標・状態・閾値などの判定基準がなく、検証不可能な状態である。
     message_ja: 成功条件に指標・状態・閾値などの判定基準がなく、検証不可能な状態である。
-  - id: F002
+  - id: F013
+    severity: major
+    rule: vp-qe-verifiability
+    line: 16
+    anchor: 評価観点は、欠陥流出リスク、回帰範囲、実行コストの 3 点とする。
+    message: 評価観点（欠陥流出リスク・回帰範囲・実行コスト）ごとの高・中・低の境界条件がなく、詳細一覧の影響度が正しいかを第三者が判定できない。
+    message_ja: 評価観点（欠陥流出リスク・回帰範囲・実行コスト）ごとの高・中・低の境界条件がなく、詳細一覧の影響度が正しいかを第三者が判定できない。
+  - id: F014
     severity: major
     rule: vp-qe-omissions-consistency
     line: 7
     anchor: ""
     message: 対象期間の記載が漏れている。
     message_ja: 対象期間の記載が漏れている。
-  - id: F003
+  - id: F015
     severity: major
     rule: vp-qe-omissions-consistency
     line: 15
     anchor: ""
     message: 成功条件の記述が漏れている。
     message_ja: 成功条件の記述が漏れている。
-  - id: F004
+  - id: F016
     severity: major
     rule: vp-qe-omissions-consistency
     line: 24
     anchor: "## 4. 影響詳細一覧"
     message: 影響度の判定尺度（高・中・低の定義）を定めずに使用しており、禁止事項に抵触している。
     message_ja: 影響度の判定尺度（高・中・低の定義）を定めずに使用しており、禁止事項に抵触している。
-  - id: F005
+  - id: F017
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 16
+    anchor: 評価観点は、欠陥流出リスク、回帰範囲、実行コストの 3 点とする。
+    message: 複数の評価観点で判定が分かれた場合の集約規則がなく、サマリ件数の集計規則と詳細一覧の判断根拠における尺度適用結果が rulebook の要求を満たしていない。
+    message_ja: 複数の評価観点で判定が分かれた場合の集約規則がなく、サマリ件数の集計規則と詳細一覧の判断根拠における尺度適用結果が rulebook の要求を満たしていない。
+  - id: F018
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 35
+    anchor: "| 優先度 | 対応項目               | 実施時期        | 担当                 | 前提条件                   |"
+    message: 対応方針に、成功条件へ判定方法を適用して全条件達成を合格とする受入確認の記述がなく、rulebook の記述ガイドが求める要素が欠けている。
+    message_ja: 対応方針に、成功条件へ判定方法を適用して全条件達成を合格とする受入確認の記述がなく、rulebook の記述ガイドが求める要素が欠けている。
+  - id: F019
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 44
+    anchor: >-
+      | 論点                     | 不足情報                         | 決定期限   | 担当               |
+      処理方針                                      |
+    message: 未解決事項の表に、rulebook が求める「判断・対応への影響」の列がなく、処理方針だけでは当面の扱いと影響が区別できない。
+    message_ja: 未解決事項の表に、rulebook が求める「判断・対応への影響」の列がなく、処理方針だけでは当面の扱いと影響が区別できない。
+  - id: F020
     severity: major
     rule: vp-qe-kata-conformance
     line: 7
     anchor: ""
     message: 必須要素である対象期間が欠落しており、完成最小例として不十分である。
     message_ja: 必須要素である対象期間が欠落しており、完成最小例として不十分である。
-  - id: F006
+  - id: F021
     severity: major
     rule: vp-qe-kata-conformance
     line: 15
     anchor: ""
     message: 必須要素である成功条件が欠落しており、完成最小例として不十分である。
     message_ja: 必須要素である成功条件が欠落しており、完成最小例として不十分である。
-  - id: F007
+  - id: F022
     severity: major
     rule: vp-qe-kata-conformance
     line: 24
     anchor: "## 4. 影響詳細一覧"
     message: 影響度の判定尺度を定義せずに使用しており、rulebook の禁止事項に抵触している。
     message_ja: 影響度の判定尺度を定義せずに使用しており、rulebook の禁止事項に抵触している。
-  - id: F008
+  - id: F023
     severity: major
     rule: vp-qe-kata-conformance
     line: 48
     anchor: "| 連携系テストデータの準備 | 値引き条件の代表データセット     | 2026-05-14 | QE 担当（井上）    | 代表パターンを 6 件作成しレビューで確定する。 |"
     message: 担当者欄に個人名を使用しており、sample 記述標準の禁止事項に抵触している。
     message_ja: 担当者欄に個人名を使用しており、sample 記述標準の禁止事項に抵触している。
-  - id: F009
+  - id: F024
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 16
+    anchor: 評価観点は、欠陥流出リスク、回帰範囲、実行コストの 3 点とする。
+    message: rulebook の影響分析サマリの記述ガイドが求める評価観点ごとの尺度定義と集約規則が sample に示されておらず、rulebook の要求を実演する完成例になっていない。
+    message_ja: rulebook の影響分析サマリの記述ガイドが求める評価観点ごとの尺度定義と集約規則が sample に示されておらず、rulebook の要求を実演する完成例になっていない。
+  - id: F025
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# 影響調査（テスト）サンプル"
+    message: "Frontmatter の `part_of: prj-0001` が汎用 sample を特定プロジェクトの構成要素として宣言しており、sample の責務境界（共通サンプル文脈の完成例）との関係が不明確である。"
+    message_ja: "Frontmatter の `part_of: prj-0001` が汎用 sample を特定プロジェクトの構成要素として宣言しており、sample の責務境界（共通サンプル文脈の完成例）との関係が不明確である。"
+  - id: F026
     severity: minor
     rule: vp-ux-readability
     line: 24
     anchor: "## 4. 影響詳細一覧"
     message: 影響度の判定基準が不明確であり、判断に曖昧さが残る。
     message_ja: 影響度の判定基準が不明確であり、判断に曖昧さが残る。
-  - id: F010
+  - id: F027
     severity: minor
     rule: vp-ux-language-consistency
     line: 46
     anchor: "| 重点回帰ケースの確定     | 変更箇所と既存障害履歴の突合結果 | 2026-05-11 | テスト管理（山本） | 障害履歴を参照して対象ケースを確定する。      |"
     message: 「影響度」と「優先度」という用語が使い分けられており、概念の整合性が不明確である。
     message_ja: 「影響度」と「優先度」という用語が使い分けられており、概念の整合性が不明確である。
-  - id: F011
+  - id: F028
     severity: major
     rule: vp-ux-language-consistency
     line: 48
     anchor: "| 連携系テストデータの準備 | 値引き条件の代表データセット     | 2026-05-14 | QE 担当（井上）    | 代表パターンを 6 件作成しレビューで確定する。 |"
     message: 定義外の役割ラベルおよび個人名が使用されており、識別子として統一されていない。
     message_ja: 定義外の役割ラベルおよび個人名が使用されており、識別子として統一されていない。
+  - id: F029
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 47
+    anchor: "| 受入判定基準の更新範囲   | 店舗運用側の必須判定項目         | 2026-05-13 | 業務受入（高橋）   | 現場ヒアリングを反映して判定基準を更新する。  |"
+    message: 同一担当が本文38行「業務受入担当（高橋）」と本文47行「業務受入（高橋）」で異なるラベルになっており、表記ゆれがある。
+    message_ja: 同一担当が本文38行「業務受入担当（高橋）」と本文47行「業務受入（高橋）」で異なるラベルになっており、表記ゆれがある。
+  - id: F030
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 42
+    anchor: "## 6. 未解決事項"
+    message: 未解決事項の解消と影響判断の承認が ready 化の条件であることや、承認する役割が示されておらず、確定に必要な前提が読み取れない。
+    message_ja: 未解決事項の解消と影響判断の承認が ready 化の条件であることや、承認する役割が示されておらず、確定に必要な前提が読み取れない。
+level_corrections:
+  - viewpoint: vp-ba-requirements-completeness
+    original_level: 2
+    corrected_level: 1
+  - viewpoint: vp-qe-verifiability
+    original_level: 2
+    corrected_level: 1

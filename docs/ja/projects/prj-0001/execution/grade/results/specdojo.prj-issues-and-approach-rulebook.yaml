@@ -4,18 +4,19 @@ document: specdojo:prj-issues-and-approach-rulebook
 path: docs/ja/specdojo/rulebooks/prj-issues-and-approach-rulebook.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-rulebook
 verdict: pass
 score: 95
-graded_at: "2026-10-06T21:27:42.274Z"
-graded_by: agy-expert-executor
-content_hash: 988f4e909acf1b495d67e836016d1c0d0e99d9b7b62a4bb584c11e3c6f0b76b2
+graded_at: "2026-11-21T05:31:42.529Z"
+graded_by: opus-executor
+content_hash: a7ef1f33abcca7f69681d9856e695a77c1127b35877b15584f2d2faa270cf2cb
 categories:
   purpose:
     score: 100
   operations:
-    score: 100
+    score: 94
   planning:
-    score: 100
+    score: 92
   business:
     score: 100
   architecture:
@@ -25,9 +26,9 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 92
+    score: 83
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -36,11 +37,11 @@ viewpoints:
     level: 4
     score: 100
   vp-po-publication-accountability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-plan-feasibility:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-dependency-risk:
     level: 4
     score: 100
@@ -75,11 +76,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 4
-    score: 100
-  vp-qe-omissions-consistency:
     level: 3
     score: 75
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
     level: 3
     score: 75
@@ -104,20 +105,42 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 2
+  minor: 4
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 1
-    anchor: "# プロジェクト課題と解決アプローチ 作成ルール"
-    message: 「最小でも課題の列挙」は課題だけでも成立すると読める一方、記述ガイドでは各課題の「影響」と「優先度」を最低要件としているため、「各課題に課題・影響・優先度を記載する」など一意な必須条件へ統一する。
-    message_ja: 「最小でも課題の列挙」は課題だけでも成立すると読める一方、記述ガイドでは各課題の「影響」と「優先度」を最低要件としているため、「各課題に課題・影響・優先度を記載する」など一意な必須条件へ統一する。
+    rule: vp-po-publication-accountability
+    line: 146
+    anchor: "## 7. 禁止事項"
+    message: >-
+      課題・原因・リスクは観察事実や聞き取りに基づくのに、禁止事項に個人や特定組織を識別できる情報・非公開の観察事実を書かない規定がなく、recipe の仕上げチェックにしか条件がないため、rulebook
+      の禁止事項に公開不適切情報の項目を追加して正本から公開可否を判定できるようにする。
+    message_ja: >-
+      課題・原因・リスクは観察事実や聞き取りに基づくのに、禁止事項に個人や特定組織を識別できる情報・非公開の観察事実を書かない規定がなく、recipe の仕上げチェックにしか条件がないため、rulebook
+      の禁止事項に公開不適切情報の項目を追加して正本から公開可否を判定できるようにする。
   - id: F002
     severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 132
+    anchor: "- 次の意思決定に必要な追加調査・確認・承認事項と、その目的を列挙します。"
+    message: 「次の検討事項（ToDo）」は目的と責任ロールしか求めておらず、recipe が問う完了条件と期限（判断タイミング）を書く欄がないため、表に完了条件と期限または判断タイミングの列を追加し、ToDo を進捗確認できる粒度にする。
+    message_ja: 「次の検討事項（ToDo）」は目的と責任ロールしか求めておらず、recipe が問う完了条件と期限（判断タイミング）を書く欄がないため、表に完了条件と期限または判断タイミングの列を追加し、ToDo を進捗確認できる粒度にする。
+  - id: F003
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 92
+    anchor: "| 課題ID | 課題 | 影響 | 優先度 | 備考 |"
+    message: "課題一覧で優先度は必須なのに、例が `High` だけで取りうる値（例: `High` / `Medium` / `Low`）が定義されていないため、値の範囲を明記し、優先度が妥当かを判定できるようにする。"
+    message_ja: "課題一覧で優先度は必須なのに、例が `High` だけで取りうる値（例: `High` / `Medium` / `Low`）が定義されていないため、値の範囲を明記し、優先度が妥当かを判定できるようにする。"
+  - id: F004
+    severity: minor
     rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# プロジェクト課題と解決アプローチ 作成ルール"
-    message: recipe・template・sample が導入部に求める承認者、利用ロールごとの利用目的、合意対象・非合意対象を rulebook の本文要件にも追加し、各成果物の必須内容を正本から追跡できるようにする。
-    message_ja: recipe・template・sample が導入部に求める承認者、利用ロールごとの利用目的、合意対象・非合意対象を rulebook の本文要件にも追加し、各成果物の必須内容を正本から追跡できるようにする。
+    line: 76
+    anchor: "| 見直しと変更管理     | 任意 | 本書の合意を見直す契機、確認する観点、対応方針。見直しの記録は共通の運用に従い、ここで定めない |"
+    message: >-
+      rulebook は見直しの記録を共通の運用に委ねて本書では定めないとする一方、template の「見直しと変更管理」は記録先と責任ロールの記述を求めており矛盾するため、rulebook と template
+      のどちらかに揃えて Kata 内の規定を一意にする。
+    message_ja: >-
+      rulebook は見直しの記録を共通の運用に委ねて本書では定めないとする一方、template の「見直しと変更管理」は記録先と責任ロールの記述を求めており矛盾するため、rulebook と template
+      のどちらかに揃えて Kata 内の規定を一意にする。

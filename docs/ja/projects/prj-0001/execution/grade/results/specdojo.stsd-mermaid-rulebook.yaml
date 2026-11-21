@@ -4,28 +4,29 @@ document: specdojo:stsd-mermaid-rulebook
 path: docs/ja/specdojo/rulebooks/stsd-mermaid-rulebook.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-rulebook
 verdict: pass
-score: 100
-graded_at: "2026-10-04T05:59:05.258Z"
-graded_by: agy-expert-executor
-content_hash: 25d0d94b3e2796a17a327831bdeba7b7736c2da2144cb85fb8559cf5837f26c3
+score: 91
+graded_at: "2026-11-21T05:53:34.025Z"
+graded_by: opus-executor
+content_hash: 77cb820dfa1c37e3c296833e68415d7161df4ef1becbadbc64cacf5df0ab963b
 categories:
   purpose:
     score: 100
   operations:
     score: 100
   planning:
-    score: 100
+    score: 92
   business:
-    score: 100
+    score: 92
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 92
   implementation:
-    score: 100
+    score: 88
   quality:
-    score: 100
+    score: 75
   consistency:
     score: 100
 viewpoints:
@@ -42,14 +43,14 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-dependency-risk:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-control-reporting:
     level: 4
     score: 100
   vp-ba-business-value:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-requirements-completeness:
     level: 4
     score: 100
@@ -60,29 +61,29 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-change-impact:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -104,6 +105,69 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 7
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 1
+    anchor: "# STSD の状態遷移図を Mermaid で記述するルール"
+    message: >-
+      Frontmatter の `based_on` に `specdojo:stsd-rulebook` がない。終了点・継続状態・遷移 ID などの規定を「状態遷移」章へ委ねて依存しているので、依存先として宣言し、上位
+      rulebook の改訂時に影響を追えるようにすべきである。
+    message_ja: >-
+      Frontmatter の `based_on` に `specdojo:stsd-rulebook` がない。終了点・継続状態・遷移 ID などの規定を「状態遷移」章へ委ねて依存しているので、依存先として宣言し、上位
+      rulebook の改訂時に影響を追えるようにすべきである。
+  - id: F002
+    severity: minor
+    rule: vp-ba-business-value
+    line: 5
+    anchor: >-
+      STSD の「状態遷移」章の図を Mermaid の `stateDiagram-v2` で一貫して記述するための記法ルールです。状態の意味と成立条件は同じ STSD
+      の「状態一覧」、各遷移の詳細は「状態遷移」の遷移表を正本とします。
+    message: 導入文と全体方針が記法を一貫させる手段だけを述べている。図を読む人（STSD の作成者・レビュー担当など）が状態遷移の全体像や分岐の漏れをどう確認しやすくなるか、という期待価値を一文で添えるべきである。
+    message_ja: 導入文と全体方針が記法を一貫させる手段だけを述べている。図を読む人（STSD の作成者・レビュー担当など）が状態遷移の全体像や分岐の漏れをどう確認しやすくなるか、という期待価値を一文で添えるべきである。
+  - id: F003
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 22
+    anchor: 同じイベントによる分岐は疑似状態を置かず、同じ遷移元から出る複数の遷移として表します。遷移元と遷移先に使用できるのは、状態一覧にある業務状態と初期点・終了点だけです。
+    message: >-
+      疑似状態の不使用（本文 22・69・110 行目）、複合状態の不使用（86・111 行目）、共有状態の表示名・`state_id` の維持（31・88・113
+      行目）が重複している。用語定義の章から分岐の規定を外して「分岐と自己遷移」へまとめ、本文側の定義を一か所に絞るべきである。
+    message_ja: >-
+      疑似状態の不使用（本文 22・69・110 行目）、複合状態の不使用（86・111 行目）、共有状態の表示名・`state_id` の維持（31・88・113
+      行目）が重複している。用語定義の章から分岐の規定を外して「分岐と自己遷移」へまとめ、本文側の定義を一か所に絞るべきである。
+  - id: F004
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 51
+    anchor: "```mermaid"
+    message: 「基本構文」の例で `return_pending` に出力遷移も終了点もなく、完成判定の「到達不能な終端は残しません」を満たさない。例が抜粋であると明記するか、終了点を加えて完成判定と矛盾しない図にすべきである。
+    message_ja: 「基本構文」の例で `return_pending` に出力遷移も終了点もなく、完成判定の「到達不能な終端は残しません」を満たさない。例が抜粋であると明記するか、終了点を加えて完成判定と矛盾しない図にすべきである。
+  - id: F005
+    severity: minor
+    rule: vp-dev-testability
+    line: 94
+    anchor: "### 6.4. 完成判定"
+    message: 完成判定は目視で確認する条件だけで、図が Mermaid として描画できるかの検証手段がない。`npm run docs:build` など描画を確認する手順と期待結果を添えるべきである。
+    message_ja: 完成判定は目視で確認する条件だけで、図が Mermaid として描画できるかの検証手段がない。`npm run docs:build` など描画を確認する手順と期待結果を添えるべきである。
+  - id: F006
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 12
+    anchor: "- 図は遷移の全体像を示し、状態の意味や条件の長い説明は図中へ埋め込みません。"
+    message: 「長い説明は図中へ埋め込みません」（本文 12 行目）と「短い業務用語」（29 行目）に判定基準がない。図中のノート禁止や遷移ラベルの構成要素の上限など、合否を判定できる表現にすべきである。
+    message_ja: 「長い説明は図中へ埋め込みません」（本文 12 行目）と「短い業務用語」（29 行目）に判定基準がない。図中のノート禁止や遷移ラベルの構成要素の上限など、合否を判定できる表現にすべきである。
+  - id: F007
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 51
+    anchor: "```mermaid"
+    message: >-
+      「基本構文」の例が `stsd-sample` と同じ商品の題材なのに「検品済み」「販売済み」を省いて `received —＞ sellable` と遷移させており、sample の状態モデルと食い違う。sample
+      と整合する状態・遷移にするか、題材を変えて構文の説明用であると明示すべきである。
+    message_ja: >-
+      「基本構文」の例が `stsd-sample` と同じ商品の題材なのに「検品済み」「販売済み」を省いて `received —＞ sellable` と遷移させており、sample の状態モデルと食い違う。sample
+      と整合する状態・遷移にするか、題材を変えて構文の説明用であると明示すべきである。

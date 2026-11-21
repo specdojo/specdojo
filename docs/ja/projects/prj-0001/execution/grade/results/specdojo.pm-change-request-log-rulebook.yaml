@@ -4,34 +4,35 @@ document: specdojo:pm-change-request-log-rulebook
 path: docs/ja/specdojo/rulebooks/pm-change-request-log-rulebook.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-rulebook
 verdict: needs-work
-score: 83
-graded_at: "2026-11-10T20:34:44.446Z"
-graded_by: flash-high-executor
-content_hash: 76157878403605c86c5774c9e0516e688d48ada0dca8df97421ee13c7dc754b1
+score: 87
+graded_at: "2026-11-21T05:13:00.790Z"
+graded_by: opus-executor
+content_hash: 441632b3051268ea3e2656879bc8b800940ae2657a7970e2ef5ee34dbbd4594e
 categories:
   purpose:
-    score: 75
+    score: 88
   operations:
-    score: 94
+    score: 81
   planning:
-    score: 92
+    score: 100
   business:
-    score: 92
+    score: 83
   architecture:
     score: 100
   usability:
-    score: 92
-  implementation:
     score: 100
+  implementation:
+    score: 88
   quality:
     score: 75
   consistency:
-    score: 50
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-decision-readiness:
     level: 3
     score: 75
@@ -42,20 +43,20 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
     level: 4
     score: 100
   vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
     level: 3
     score: 75
-  vp-ba-requirements-completeness:
-    level: 4
-    score: 100
   vp-ba-stakeholder-clarity:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-technical-constraints:
     level: 4
     score: 100
@@ -66,8 +67,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-change-impact:
     level: 4
     score: 100
@@ -78,14 +79,14 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
     level: 2
     score: 50
   vp-ux-readability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 4
     score: 100
@@ -93,80 +94,95 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-operability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-agent-boundary:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
-  major: 2
-  minor: 7
+  major: 1
+  minor: 9
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-purpose-alignment
-    line: 8
-    anchor: ""
-    message: 変更要求の審査基準や承認権限のプロジェクト目的（スコープや優先順位）との連動方針が明確化されていない。
-    message_ja: 変更要求の審査基準や承認権限のプロジェクト目的（スコープや優先順位）との連動方針が明確化されていない。
+    rule: vp-po-decision-readiness
+    line: 57
+    anchor: "- 審査結果は「承認・条件付き承認・却下・保留」のいずれかとし、決定者・決定日・実施条件と、`pm-plan` のスコープ・優先順位との対応を書く。"
+    message: 審査結果「保留」を選んだ場合に、再審査の期限または条件と、追加で必要な判断材料を記録する基準がなく、保留が未決事項として追跡されないおそれがある。
+    message_ja: 審査結果「保留」を選んだ場合に、再審査の期限または条件と、追加で必要な判断材料を記録する基準がなく、保留が未決事項として追跡されないおそれがある。
   - id: F002
     severity: minor
-    rule: vp-po-decision-readiness
-    line: 66
-    anchor: ""
-    message: POが承認判断を行うための材料（未対応時のリスクや期待効果）を記録する基準が不足している。
-    message_ja: POが承認判断を行うための材料（未対応時のリスクや期待効果）を記録する基準が不足している。
+    rule: vp-po-publication-accountability
+    line: 47
+    anchor: "- 変更 ID、要求内容、申請者、申請日、状態に加え、変更理由（応える業務課題・期待価値）を書く。"
+    message: 申請者・決定者・実施担当を個人名ではなく Role code（役割名）で記載する指定がなく、公開文書に個人名が載る余地が残っている。
+    message_ja: 申請者・決定者・実施担当を個人名ではなく Role code（役割名）で記載する指定がなく、公開文書に個人名が載る余地が残っている。
   - id: F003
     severity: minor
-    rule: vp-po-publication-accountability
-    line: 2
-    anchor: ""
-    message: 変更要求に含まれる機密情報や個人情報の取り扱い方針、および公開範囲が定義されていない。
-    message_ja: 変更要求に含まれる機密情報や個人情報の取り扱い方針、および公開範囲が定義されていない。
+    rule: vp-ba-requirements-completeness
+    line: 9
+    anchor: "- 変更要求ごとに、申請から影響評価、審査・決定、実施追跡までを判定できる形で残す。"
+    message: 変更要求として起票する対象（合意済みスコープ・スケジュール・品質基準の変更など）と対象外（不具合修正や課題対応など）の線引きがなく、`pm-issue-log` との使い分けが判断できない。
+    message_ja: 変更要求として起票する対象（合意済みスコープ・スケジュール・品質基準の変更など）と対象外（不具合修正や課題対応など）の線引きがなく、`pm-issue-log` との使い分けが判断できない。
   - id: F004
     severity: minor
-    rule: vp-pm-dependency-risk
-    line: 74
-    anchor: ""
-    message: 変更に伴う新たなリスクや課題の発生を `pm-risk-register` や `pm-issue-log` に連携する手順が定義されていない。
-    message_ja: 変更に伴う新たなリスクや課題の発生を `pm-risk-register` や `pm-issue-log` に連携する手順が定義されていない。
+    rule: vp-ba-stakeholder-clarity
+    line: 52
+    anchor: "- スコープ・工数・品質・納期の観点ごとに、影響の有無と量（人日・日数など）と根拠を書く。"
+    message: 影響評価の記録項目に評価者（Role code）がなく、工数・納期影響の見積もりと根拠の責任者や確認先が読み取れない。
+    message_ja: 影響評価の記録項目に評価者（Role code）がなく、工数・納期影響の見積もりと根拠の責任者や確認先が読み取れない。
   - id: F005
     severity: minor
-    rule: vp-ba-business-value
-    line: 62
-    anchor: ""
-    message: 変更要求がどの業務課題や期待価値に対応するかのビジネス的背景を記載する項目が不足している。
-    message_ja: 変更要求がどの業務課題や期待価値に対応するかのビジネス的背景を記載する項目が不足している。
+    rule: vp-dev-implementation-readiness
+    line: 26
+    anchor: "- 許可キーと型は [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] を正本とし、`type` は `project` とする。"
+    message: >-
+      登録簿を使わない単独の変更要求ログについて、配置ディレクトリと Frontmatter の `rulebook` 値（`specdojo:pm-change-request-log-rulebook`
+      か）が示されておらず、作成時の設定値が決まらない。
+    message_ja: >-
+      登録簿を使わない単独の変更要求ログについて、配置ディレクトリと Frontmatter の `rulebook` 値（`specdojo:pm-change-request-log-rulebook`
+      か）が示されておらず、作成時の設定値が決まらない。
   - id: F006
     severity: minor
     rule: vp-qe-verifiability
     line: 47
-    anchor: ""
-    message: 記述ガイドが項目の列挙に留まっており、「判定可能な形」にするための具体的な書き方や基準が示されていない。
-    message_ja: 記述ガイドが項目の列挙に留まっており、「判定可能な形」にするための具体的な書き方や基準が示されていない。
+    anchor: "- 変更 ID、要求内容、申請者、申請日、状態に加え、変更理由（応える業務課題・期待価値）を書く。"
+    message: 変更要求一覧の「状態」と実施追跡の「進捗」に入れる値が定義されておらず、審査結果4区分や個票の `item_status` との対応を判定できない。
+    message_ja: 変更要求一覧の「状態」と実施追跡の「進捗」に入れる値が定義されておらず、審査結果4区分や個票の `item_status` との対応を判定できない。
   - id: F007
-    severity: major
+    severity: minor
     rule: vp-qe-omissions-consistency
-    line: 2
-    anchor: ""
-    message: テンプレート側で指定されている rulebook-id (`specdojo:pjr-rulebook`) と本ルールの ID が不整合である。
-    message_ja: テンプレート側で指定されている rulebook-id (`specdojo:pjr-rulebook`) と本ルールの ID が不整合である。
+    line: 16
+    anchor: "- 本書の章ごとの判断基準は、個票の同名の節と、登録簿を使わない単独の変更要求ログの両方に適用する。"
+    message: 個票（`pjr-rulebook` の change-request）の節は「変更要求・入力」で、本書の「概要・変更要求一覧」と同名ではないため、「同名の節に適用する」という対応づけが成り立たず、当てはめる先が不明確である。
+    message_ja: 個票（`pjr-rulebook` の change-request）の節は「変更要求・入力」で、本書の「概要・変更要求一覧」と同名ではないため、「同名の節に適用する」という対応づけが成り立たず、当てはめる先が不明確である。
   - id: F008
     severity: major
     rule: vp-qe-kata-conformance
-    line: 2
-    anchor: ""
-    message: テンプレートが「生成された派生ビュー」を前提としているのに対し、本ルールは手動での「作成ルール」を定義しており、成果物の性質と生成プロセスが矛盾している。
-    message_ja: テンプレートが「生成された派生ビュー」を前提としているのに対し、本ルールは手動での「作成ルール」を定義しており、成果物の性質と生成プロセスが矛盾している。
+    line: 47
+    anchor: "- 変更 ID、要求内容、申請者、申請日、状態に加え、変更理由（応える業務課題・期待価値）を書く。"
+    message: >-
+      sample が本書の記述ガイドを満たしておらず（変更理由列なし、影響評価に品質・根拠・見送り時影響・期待効果なし、審査に `pm-plan` 対応なし、完了条件が手段と基準の形でない）、rulebook と sample
+      の整合が取れていない。
+    message_ja: >-
+      sample が本書の記述ガイドを満たしておらず（変更理由列なし、影響評価に品質・根拠・見送り時影響・期待効果なし、審査に `pm-plan` 対応なし、完了条件が手段と基準の形でない）、rulebook と sample
+      の整合が取れていない。
   - id: F009
     severity: minor
-    rule: vp-ux-readability
-    line: 14
-    anchor: ""
-    message: 「位置づけ」がドキュメント名の列挙に留まっており、他文書との関係性や参照タイミングなどのコンテキストが不足している。
-    message_ja: 「位置づけ」がドキュメント名の列挙に留まっており、他文書との関係性や参照タイミングなどのコンテキストが不足している。
+    rule: vp-ops-operability
+    line: 22
+    anchor: "- 変更 ID は登録簿では `PJR-XXXX`、単独のログでは `CR-NNN` とし、再利用しない。"
+    message: 変更要求の取下げや、決定後の内容変更による再審査の扱い（同一 ID で記録を改めるか、新しい ID で起票するか）が定義されておらず、継続運用時の変更管理が判断できない。
+    message_ja: 変更要求の取下げや、決定後の内容変更による再審査の扱い（同一 ID で記録を改めるか、新しい ID で起票するか）が定義されておらず、継続運用時の変更管理が判断できない。
+  - id: F010
+    severity: minor
+    rule: vp-ops-agent-boundary
+    line: 57
+    anchor: "- 審査結果は「承認・条件付き承認・却下・保留」のいずれかとし、決定者・決定日・実施条件と、`pm-plan` のスコープ・優先順位との対応を書く。"
+    message: 決定者を人間の役割（PO・PM など）に限る旨がなく、agent が変更要求の承認・却下を決定したと記録される余地が残っている。
+    message_ja: 決定者を人間の役割（PO・PM など）に限る旨がなく、agent が変更要求の承認・却下を決定したと記録される余地が残っている。

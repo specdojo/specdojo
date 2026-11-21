@@ -4,10 +4,11 @@ document: specdojo:cnd-sample
 path: docs/ja/specdojo/samples/cnd-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: pass
-score: 98
-graded_at: "2026-11-15T02:05:37.149Z"
-graded_by: sol-review-executor
+reference: specdojo:prj-overview-sample
+verdict: needs-work
+score: 91
+graded_at: "2026-11-21T03:26:39.950Z"
+graded_by: opus-executor
 content_hash: ac097b5703fc3a1483679c3741a4c1007a4020d1d08a8111c49a539e2343104d
 categories:
   purpose:
@@ -19,13 +20,13 @@ categories:
   business:
     score: 100
   architecture:
-    score: 100
+    score: 92
   usability:
-    score: 100
+    score: 92
   implementation:
     score: 100
   quality:
-    score: 92
+    score: 75
   consistency:
     score: 100
 viewpoints:
@@ -57,8 +58,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-technical-constraints:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -72,8 +73,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-verifiability:
     level: 4
     score: 100
@@ -81,14 +82,14 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 2
+    score: 50
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -103,11 +104,38 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 0
-  minor: 1
+  major: 1
+  minor: 4
   note: 0
 findings:
   - id: F001
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 64
+    anchor: >-
+      | 販売画面（タブレットのブラウザ） | 明細・預かり金の入力を受け、会計と印字の結果を表示する |
+      ブラウザアプリ。表示中の明細だけを販売成立の根拠にしない。構築した画面資材をタブレットから利用する                         |
+    message: >-
+      販売画面の「構築した画面資材をタブレットから利用する」は配置の前提なのに `_ASSUMPTION_` が付いておらず、資材の配信元と、その経路を図・関係表に描かない理由もないため、配置の仮定として明示し、未確定なら「メモ /
+      将来課題」の配備の論点へ含めるべきである。
+    message_ja: >-
+      販売画面の「構築した画面資材をタブレットから利用する」は配置の前提なのに `_ASSUMPTION_` が付いておらず、資材の配信元と、その経路を図・関係表に描かない理由もないため、配置の仮定として明示し、未確定なら「メモ /
+      将来課題」の配備の論点へ含めるべきである。
+  - id: F002
+    severity: minor
+    rule: vp-dev-testability
+    line: 118
+    anchor: >-
+      文書検査は [[specdojo:cnd-rulebook|C4コンテナ図作成ルール]] の「検証・承認前の確認」に従い、`<対象.md>` を `docs/ja/specdojo/samples/cnd-sample.md`
+      として実行する。QE は終了コード、全図の検査結果、生成 SVG の文字・矢印・境界の目視結果をレビューへ残す。内容面では、境界を含む全要素の定義と `REL-01`〜`REL-05` の端点・ラベルが図と表で一致すれば
+      Pass とし、欠落・余剰・不一致は Fail とする。
+    message: >-
+      文書検査で「`＜対象.md＞` を置き換えて実行する」としているが、参照先の rulebook「検証・承認前の確認」に実行コマンドも `＜対象.md＞` もないため、実行する
+      lint・描画確認のコマンドを特定できる表現（リポジトリの検証手順への参照など）に改めるべきである。
+    message_ja: >-
+      文書検査で「`＜対象.md＞` を置き換えて実行する」としているが、参照先の rulebook「検証・承認前の確認」に実行コマンドも `＜対象.md＞` もないため、実行する
+      lint・描画確認のコマンドを特定できる表現（リポジトリの検証手順への参照など）に改めるべきである。
+  - id: F003
     severity: minor
     rule: vp-qe-kata-conformance
     line: 118
@@ -123,3 +151,28 @@ findings:
       The sample omits the template's section "4.3. 検証・承認前の確認", although the rulebook makes the template authoritative
       for heading structure. Place the existing verification and approval-check material under that heading to
       demonstrate the prescribed structure; the content already exists, so this is a minor structural issue.
+  - id: F004
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 118
+    anchor: >-
+      文書検査は [[specdojo:cnd-rulebook|C4コンテナ図作成ルール]] の「検証・承認前の確認」に従い、`<対象.md>` を `docs/ja/specdojo/samples/cnd-sample.md`
+      として実行する。QE は終了コード、全図の検査結果、生成 SVG の文字・矢印・境界の目視結果をレビューへ残す。内容面では、境界を含む全要素の定義と `REL-01`〜`REL-05` の端点・ラベルが図と表で一致すれば
+      Pass とし、欠落・余剰・不一致は Fail とする。
+    message: >-
+      sample は cnd-rulebook の「検証・承認前の確認」に従って `＜対象.md＞` を置き換えて実行するとしているが、同章には実行コマンドも `＜対象.md＞` もなく、rulebook も lint
+      をリポジトリの検証に委ねているため、存在しない手順への参照を除き、rulebook の確認表（範囲と経路・要素と境界・結合対象）に対応する確認記録の形へ改めるべきである。
+    message_ja: >-
+      sample は cnd-rulebook の「検証・承認前の確認」に従って `＜対象.md＞` を置き換えて実行するとしているが、同章には実行コマンドも `＜対象.md＞` もなく、rulebook も lint
+      をリポジトリの検証に委ねているため、存在しない手順への参照を除き、rulebook の確認表（範囲と経路・要素と境界・結合対象）に対応する確認記録の形へ改めるべきである。
+  - id: F005
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 43
+    anchor: 矢印は主たる利用・依頼・参照の向きで、返される結果も同じ関係に含む。来店客への商品の引き渡しと現金授受は店番担当が行い、来店客は画面を直接操作しないため Person に含めない。
+    message: >-
+      「店番担当」が現金授受・紙面照合・保留判断の主体として繰り返し使われるが、Person 表の「店主代表」「家族利用者代表」との対応が定義されていないため、店番担当がどちらの Person
+      を指すか（両者のうち当番の者など）を明記するか、Person 名に揃えるべきである。
+    message_ja: >-
+      「店番担当」が現金授受・紙面照合・保留判断の主体として繰り返し使われるが、Person 表の「店主代表」「家族利用者代表」との対応が定義されていないため、店番担当がどちらの Person
+      を指すか（両者のうち当番の者など）を明記するか、Person 名に揃えるべきである。

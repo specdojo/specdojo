@@ -4,28 +4,29 @@ document: specdojo:tsp-index-sample
 path: docs/ja/specdojo/samples/tsp-index-sample.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-sample
 verdict: fail
-score: 40
-graded_at: "2026-10-20T20:46:27.318Z"
-graded_by: flash-high-executor
-content_hash: be7163008965e007e9ff6717d266a240b18ea7c41c0fdc28d0ecd10457b9d1f7
+score: 33
+graded_at: "2026-11-21T06:09:12.757Z"
+graded_by: opus-executor
+content_hash: c7229780cdce3b8e63dc3c19ded1d7b07023f2b54d95bc80da3e052fd501dd30
 categories:
   purpose:
     score: 25
   operations:
-    score: 69
+    score: 63
   planning:
-    score: 33
+    score: 25
   business:
     score: 25
   architecture:
     score: 63
   usability:
-    score: 58
+    score: 50
   implementation:
-    score: 38
-  quality:
     score: 25
+  quality:
+    score: 8
   consistency:
     score: 25
 viewpoints:
@@ -45,8 +46,8 @@ viewpoints:
     level: 1
     score: 25
   vp-pm-control-reporting:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ba-business-value:
     level: 1
     score: 25
@@ -66,14 +67,14 @@ viewpoints:
     level: 1
     score: 25
   vp-dev-change-impact:
-    level: 2
-    score: 50
-  vp-dev-testability:
-    level: 2
-    score: 50
-  vp-qe-verifiability:
     level: 1
     score: 25
+  vp-dev-testability:
+    level: 1
+    score: 25
+  vp-qe-verifiability:
+    level: 0
+    score: 0
   vp-qe-omissions-consistency:
     level: 1
     score: 25
@@ -81,14 +82,14 @@ viewpoints:
     level: 0
     score: 0
   vp-ux-readability:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ux-language-consistency:
     level: 3
     score: 75
   vp-ops-release-readiness:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ops-operability:
     level: 2
     score: 50
@@ -99,9 +100,9 @@ viewpoints:
     level: 4
     score: 100
 finding_counts:
-  blocker: 1
-  major: 20
-  minor: 2
+  blocker: 2
+  major: 21
+  minor: 5
   note: 0
 findings:
   - id: F001
@@ -109,157 +110,187 @@ findings:
     rule: vp-po-purpose-alignment
     line: 5
     anchor: 本書は、全体テストの考え方を示す（要件）ための最小サンプルである。
-    message: >-
-      The sample fails to specify actual testing objectives, quality goals, or scope aligned with project goals,
-      providing only meta-level descriptions.
+    message: サンプルでは、実際のテスト目的、品質目標、またはプロジェクトの目標に沿ったスコープが指定されておらず、メタレベルの記述のみが提供されています。
     message_ja: サンプルでは、実際のテスト目的、品質目標、またはプロジェクトの目標に沿ったスコープが指定されておらず、メタレベルの記述のみが提供されています。
   - id: F002
+    severity: major
+    rule: vp-po-purpose-alignment
+    line: 5
+    anchor: 本書は、全体テストの考え方を示す（要件）ための最小サンプルである。
+    message: >-
+      「概要」として、駄菓子屋販売管理システムのどの品質（販売・在庫・つけ等）をどのテストレベルで担保するかを1〜3文で示し、`based_on` に根拠の BAC/SAC/NFR
+      を挙げて目的との対応を説明できるようにする必要がある。
+    message_ja: >-
+      「概要」として、駄菓子屋販売管理システムのどの品質（販売・在庫・つけ等）をどのテストレベルで担保するかを1〜3文で示し、`based_on` に根拠の BAC/SAC/NFR
+      を挙げて目的との対応を説明できるようにする必要がある。
+  - id: F003
     severity: major
     rule: vp-po-decision-readiness
     line: 28
     anchor: "| 論点           | 処理方針                 |"
-    message: >-
-      The unresolved issues and decision criteria lack concrete trade-offs, impact analysis, or next actions needed for
-      PO approval.
+    message: 未解決の課題や決定基準において、POの承認に必要な具体的なトレードオフ、影響分析、または次のアクションが不足しています。
     message_ja: 未解決の課題や決定基準において、POの承認に必要な具体的なトレードオフ、影響分析、または次のアクションが不足しています。
-  - id: F003
+  - id: F004
     severity: minor
     rule: vp-po-publication-accountability
     line: 16
     anchor: "- 必須観点: 対象、条件、判定基準、責任者"
-    message: >-
-      The document notes that a responsible person is required but fails to define the human approver or review
-      accountability.
+    message: ドキュメントには責任者が必要であると記されていますが、実際の承認者やレビューの責任が定義されていません。
     message_ja: ドキュメントには責任者が必要であると記されていますが、実際の承認者やレビューの責任が定義されていません。
-  - id: F004
+  - id: F005
     severity: major
     rule: vp-pm-plan-feasibility
     line: 15
     anchor: "- 主な内容: テストレベルと目的、対象/対象外（スコープ）、品質目標、体制/役割、環境、使用ツール、テストデータ方針、入口/出口条件、進め方・優先度、リスクと対策"
-    message: >-
-      The test activities, phases, and dependencies are not broken down into actionable work units or assigned role
-      codes suitable for project planning.
+    message: テスト活動、フェーズ、および依存関係が、プロジェクト計画に適した実行可能なワークユニットや割り当てられたロールコードに分解されていません。
     message_ja: テスト活動、フェーズ、および依存関係が、プロジェクト計画に適した実行可能なワークユニットや割り当てられたロールコードに分解されていません。
-  - id: F005
+  - id: F006
     severity: major
     rule: vp-pm-dependency-risk
     line: 15
     anchor: "- 主な内容: テストレベルと目的、対象/対象外（スコープ）、品質目標、体制/役割、環境、使用ツール、テストデータ方針、入口/出口条件、進め方・優先度、リスクと対策"
-    message: >-
-      Key technical and schedule risks, as well as dependencies on external interfaces and downstream test catalogs, are
-      not identified.
+    message: 主要な技術的およびスケジュールのリスク、ならびに外部インターフェースや下流のテストカタログへの依存関係が特定されていません。
     message_ja: 主要な技術的およびスケジュールのリスク、ならびに外部インターフェースや下流のテストカタログへの依存関係が特定されていません。
-  - id: F006
+  - id: F007
     severity: major
     rule: vp-pm-control-reporting
     line: 30
     anchor: "| 要件詳細の補強 | 実案件適用時に具体化する |"
-    message: >-
-      Project control elements such as issue escalation paths, reporting roles, and change control items are completely
-      missing from the issue table.
+    message: 課題の深刻化ルート、レポート担当ロール、および変更管理項目などのプロジェクト管理要素が、課題テーブルから完全に欠落しています。
     message_ja: 課題の深刻化ルート、レポート担当ロール、および変更管理項目などのプロジェクト管理要素が、課題テーブルから完全に欠落しています。
-  - id: F007
+  - id: F008
     severity: major
     rule: vp-ba-business-value
     line: 9
     anchor: "- 対象: 駄菓子屋の販売管理システム"
-    message: >-
-      The document fails to articulate the business challenges, critical operational workflows, or business value that
-      the test strategy must protect.
+    message: ドキュメントでは、テスト戦略が保護すべきビジネス上の課題、重要な業務ワークフロー、またはビジネス価値が明確に述べられていません。
     message_ja: ドキュメントでは、テスト戦略が保護すべきビジネス上の課題、重要な業務ワークフロー、またはビジネス価値が明確に述べられていません。
-  - id: F008
+  - id: F009
     severity: major
     rule: vp-ba-requirements-completeness
     line: 15
     anchor: "- 主な内容: テストレベルと目的、対象/対象外（スコープ）、品質目標、体制/役割、環境、使用ツール、テストデータ方針、入口/出口条件、進め方・優先度、リスクと対策"
-    message: >-
-      Test scope, acceptance conditions, and exclusion boundaries are completely missing, preventing verification from a
-      user perspective.
+    message: テストのスコープ、受け入れ条件、および除外範囲が完全に欠落しているため、ユーザーの視点からの検証ができません。
     message_ja: テストのスコープ、受け入れ条件、および除外範囲が完全に欠落しているため、ユーザーの視点からの検証ができません。
-  - id: F009
+  - id: F010
     severity: major
     rule: vp-ba-stakeholder-clarity
     line: 15
     anchor: "- 主な内容: テストレベルと目的、対象/対象外（スコープ）、品質目標、体制/役割、環境、使用ツール、テストデータ方針、入口/出口条件、進め方・優先度、リスクと対策"
-    message: Stakeholder roles, testing participants, system operators, and agreement targets are not identified.
+    message: ステークホルダーのロール、テスト参加者、システムオペレーター、および合意の対象が特定されていません。
     message_ja: ステークホルダーのロール、テスト参加者、システムオペレーター、および合意の対象が特定されていません。
-  - id: F010
+  - id: F011
     severity: major
     rule: vp-arc-technical-constraints
     line: 15
     anchor: "- 主な内容: テストレベルと目的、対象/対象外（スコープ）、品質目標、体制/役割、環境、使用ツール、テストデータ方針、入口/出口条件、進め方・優先度、リスクと対策"
-    message: >-
-      Architectural and technical constraints, including test environments, stub/mock policies, and external interface
-      boundaries, are omitted.
+    message: テスト環境、スタブ/Mockポリシー、および外部インターフェースの境界を含む、アーキテクチャおよび技術的な制約が省略されています。
     message_ja: テスト環境、スタブ/Mockポリシー、および外部インターフェースの境界を含む、アーキテクチャおよび技術的な制約が省略されています。
-  - id: F011
+  - id: F012
     severity: major
     rule: vp-arc-conciseness
     line: 15
     anchor: "- 主な内容: テストレベルと目的、対象/対象外（スコープ）、品質目標、体制/役割、環境、使用ツール、テストデータ方針、入口/出口条件、進め方・優先度、リスクと対策"
     message: サンプルとして具体的に示すべき各項目の記載内容が欠落しており、項目名の列挙にとどまっている。
     message_ja: サンプルとして具体的に示すべき各項目の記載内容が欠落しており、項目名の列挙にとどまっている。
-  - id: F012
+  - id: F013
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 24
+    anchor: >-
+      | 主な内容     | テストレベルと目的、対象/対象外（スコープ）、品質目標、体制/役割、環境、使用ツール、テストデータ方針、入口/出口条件、進め方・優先度、リスクと対策 |
+      要点のみ記載                         |
+    message: 「最小記述例」の表の「目的」「主な内容」は「目的と適用範囲」「記述内容」の本文をそのまま繰り返しているため、どちらか一方にまとめるか、具体的な記述例に置き換える必要がある。
+    message_ja: 「最小記述例」の表の「目的」「主な内容」は「目的と適用範囲」「記述内容」の本文をそのまま繰り返しているため、どちらか一方にまとめるか、具体的な記述例に置き換える必要がある。
+  - id: F014
     severity: major
     rule: vp-dev-implementation-readiness
     line: 15
     anchor: "- 主な内容: テストレベルと目的、対象/対象外（スコープ）、品質目標、体制/役割、環境、使用ツール、テストデータ方針、入口/出口条件、進め方・優先度、リスクと対策"
-    message: >-
-      The document provides no actionable inputs, tool configurations, automation criteria, or test level constraints
-      needed by developers to implement tests.
+    message: ドキュメントには、開発者がテストを実装するために必要な実行可能なインプット、ツールの構成、自動化基準、またはテストレベルの制約が提供されていません。
     message_ja: ドキュメントには、開発者がテストを実装するために必要な実行可能なインプット、ツールの構成、自動化基準、またはテストレベルの制約が提供されていません。
-  - id: F013
+  - id: F015
     severity: major
     rule: vp-dev-change-impact
     line: 15
     anchor: "- 主な内容: テストレベルと目的、対象/対象外（スコープ）、品質目標、体制/役割、環境、使用ツール、テストデータ方針、入口/出口条件、進め方・優先度、リスクと対策"
-    message: >-
-      Change impact analysis and regression boundaries for downstream test suites and CI pipelines are completely
-      absent.
+    message: 下流のテストスイートおよびCIパイプラインに対する変更の影響分析と回帰の境界が完全に欠落しています。
     message_ja: 下流のテストスイートおよびCIパイプラインに対する変更の影響分析と回帰の境界が完全に欠落しています。
-  - id: F014
+  - id: F016
     severity: major
     rule: vp-dev-testability
     line: 15
     anchor: "- 主な内容: テストレベルと目的、対象/対象外（スコープ）、品質目標、体制/役割、環境、使用ツール、テストデータ方針、入口/出口条件、進め方・優先度、リスクと対策"
-    message: Verification commands, CI execution procedures, and expected pass/fail outputs are not documented.
+    message: 検証コマンド、CI実行手順、および期待されるPass/Failの出力がドキュメント化されていません。
     message_ja: 検証コマンド、CI実行手順、および期待されるPass/Failの出力がドキュメント化されていません。
-  - id: F015
+  - id: F017
     severity: major
     rule: vp-qe-verifiability
     line: 15
     anchor: "- 主な内容: テストレベルと目的、対象/対象外（スコープ）、品質目標、体制/役割、環境、使用ツール、テストデータ方針、入口/出口条件、進め方・優先度、リスクと対策"
     message: テストレベルの目的や出口条件など, 具体的に pass/fail を判定できる表現が一切含まれていない。
     message_ja: テストレベルの目的や出口条件など, 具体的に pass/fail を判定できる表現が一切含まれていない。
-  - id: F016
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 1
-    anchor: "# [テスト戦略・方針](../rulebooks/tsp-index-rulebook.md) サンプル"
-    message: Frontmatter の type が project になっており、ルールブック指定の test と矛盾している。
-    message_ja: Frontmatter の type が project になっており、ルールブック指定の test と矛盾している。
-  - id: F017
+  - id: F018
+    severity: blocker
+    rule: vp-qe-verifiability
+    line: 15
+    anchor: "- 主な内容: テストレベルと目的、対象/対象外（スコープ）、品質目標、体制/役割、環境、使用ツール、テストデータ方針、入口/出口条件、進め方・優先度、リスクと対策"
+    message: 入口／出口条件（品質ゲート）の表がなく、「失敗 0 件、Blocker/Critical 0 件」のような判定可能な基準が一つも示されていないため、品質ゲートを示すサンプルとして成立していない。
+    message_ja: 入口／出口条件（品質ゲート）の表がなく、「失敗 0 件、Blocker/Critical 0 件」のような判定可能な基準が一つも示されていないため、品質ゲートを示すサンプルとして成立していない。
+  - id: F019
     severity: major
     rule: vp-qe-omissions-consistency
     line: 1
     anchor: "# [テスト戦略・方針](../rulebooks/tsp-index-rulebook.md) サンプル"
     message: ルールブックで定義された必須構成（概要、テストレベル一覧、スコープ、入口／出口条件等）がすべて欠落している。
     message_ja: ルールブックで定義された必須構成（概要、テストレベル一覧、スコープ、入口／出口条件等）がすべて欠落している。
-  - id: F018
+  - id: F020
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 10
+    anchor: "- 前提: プロジェクト文脈は handbook の共通方針に準拠する"
+    message: 「handbook の共通方針」は参照先の文書 id が特定できないため、wikilink で正本を示すか、記述を削除する必要がある。
+    message_ja: 「handbook の共通方針」は参照先の文書 id が特定できないため、wikilink で正本を示すか、記述を削除する必要がある。
+  - id: F021
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 23
+    anchor: >-
+      | 目的         |
+      全体テストの考え方を示す（要件）                                                                                                                 
+      | specdojo:deliverables-reference 準拠 |
+    message: >-
+      備考の `specdojo:deliverables-reference` が wikilink になっておらず、参照として解決されないため、`[[specdojo:deliverables-reference]]`
+      の形式にする必要がある。
+    message_ja: >-
+      備考の `specdojo:deliverables-reference` が wikilink になっておらず、参照として解決されないため、`[[specdojo:deliverables-reference]]`
+      の形式にする必要がある。
+  - id: F022
     severity: blocker
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# [テスト戦略・方針](../rulebooks/tsp-index-rulebook.md) サンプル"
     message: 成果物の実例ではなく「何を書くべきか」の説明書となっており、サンプルの責務を全く果たしていない。
     message_ja: 成果物の実例ではなく「何を書くべきか」の説明書となっており、サンプルの責務を全く果たしていない。
-  - id: F019
+  - id: F023
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# [テスト戦略・方針](../rulebooks/tsp-index-rulebook.md) サンプル"
     message: 成果物の実例を示すサンプルとしての責務ではなく、構成要素を説明するガイドとしての記述となっており、役割が混同している。
     message_ja: 成果物の実例を示すサンプルとしての責務ではなく、構成要素を説明するガイドとしての記述となっており、役割が混同している。
-  - id: F020
+  - id: F024
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# [テスト戦略・方針](../rulebooks/tsp-index-rulebook.md) サンプル"
+    message: >-
+      rulebook の「サンプル（最小）」にある完成例（テストレベル一覧、入口／出口条件など）よりも sample ファイルの内容が乏しく、Kata 間で完成例の正本がどちらか矛盾しているため、sample
+      側に完成例を置き、rulebook 側との重複を整理する必要がある。
+    message_ja: >-
+      rulebook の「サンプル（最小）」にある完成例（テストレベル一覧、入口／出口条件など）よりも sample ファイルの内容が乏しく、Kata 間で完成例の正本がどちらか矛盾しているため、sample
+      側に完成例を置き、rulebook 側との重複を整理する必要がある。
+  - id: F025
     severity: major
     rule: vp-ux-readability
     line: 20
@@ -269,7 +300,7 @@ findings:
       | 備考                                 |
     message: 最小記述例として表形式で提示されているが、内容が抽象的（例：「要点のみ記載」）であり、具体的な書き方の指針が得られない。
     message_ja: 最小記述例として表形式で提示されているが、内容が抽象的（例：「要点のみ記載」）であり、具体的な書き方の指針が得られない。
-  - id: F021
+  - id: F026
     severity: minor
     rule: vp-ux-language-consistency
     line: 5
@@ -280,19 +311,17 @@ findings:
     message_ja: >-
       The parenthetical phrasing '全体テストの考え方を示す（要件）' introduces confusing terminology regarding whether this is a
       requirement or a test policy.
-  - id: F022
+  - id: F027
     severity: major
     rule: vp-ops-release-readiness
     line: 30
     anchor: "| 要件詳細の補強 | 実案件適用時に具体化する |"
-    message: >-
-      Clear prerequisites, completion conditions, and acceptance criteria required to move the sample from draft to
-      ready are not defined.
+    message: サンプルをドラフトからReadyの状態へ移行するために必要な、明確な前提条件、完了条件、および受け入れ基準が定義されていません。
     message_ja: サンプルをドラフトからReadyの状態へ移行するために必要な、明確な前提条件、完了条件、および受け入れ基準が定義されていません。
-  - id: F023
+  - id: F028
     severity: major
     rule: vp-ops-operability
     line: 11
     anchor: "- 参照: `../rulebooks/tsp-index-rulebook.md`"
-    message: Maintenance procedures, ownership, and change management guidelines for updating the sample are not specified.
+    message: サンプルを更新するためのメンテナンス手順、所有権、および変更管理のガイドラインが指定されていません。
     message_ja: サンプルを更新するためのメンテナンス手順、所有権、および変更管理のガイドラインが指定されていません。

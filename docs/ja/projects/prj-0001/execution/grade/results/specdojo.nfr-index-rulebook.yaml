@@ -4,26 +4,27 @@ document: specdojo:nfr-index-rulebook
 path: docs/ja/specdojo/rulebooks/nfr-index-rulebook.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-rulebook
 verdict: needs-work
-score: 89
-graded_at: "2026-11-02T20:36:18.898Z"
-graded_by: flash-high-executor
-content_hash: 4b81f5b7a77ee61c152935c61572764e9872a882bbf1516aa13af88e99930222
+score: 85
+graded_at: "2026-11-21T04:37:13.889Z"
+graded_by: opus-executor
+content_hash: 9fb1e685b9ced7552c7e9bdfaff5ec16e51570f4264592c2ee9e59807a209bdb
 categories:
   purpose:
-    score: 100
+    score: 88
   operations:
-    score: 100
+    score: 94
   planning:
-    score: 100
+    score: 92
   business:
     score: 100
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 92
   implementation:
-    score: 100
+    score: 88
   quality:
     score: 83
   consistency:
@@ -33,8 +34,8 @@ viewpoints:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-publication-accountability:
     level: 4
     score: 100
@@ -42,8 +43,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-dependency-risk:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-control-reporting:
     level: 4
     score: 100
@@ -63,8 +64,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-change-impact:
     level: 4
     score: 100
@@ -84,11 +85,11 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-operability:
     level: 4
     score: 100
@@ -101,27 +102,66 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 2
-  minor: 1
+  minor: 6
   note: 0
 findings:
   - id: F001
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 1
+    anchor: "# 非機能要件インデックス 作成ルール"
+    message: Frontmatter の `recipe`・`template` が `undecided` だが、本文に未決事項として扱う記述（決める時期、判断者、ready 化の前提）がなく、PO が承認・保留を判断する論点が見えない。
+    message_ja: Frontmatter の `recipe`・`template` が `undecided` だが、本文に未決事項として扱う記述（決める時期、判断者、ready 化の前提）がなく、PO が承認・保留を判断する論点が見えない。
+  - id: F002
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 1
+    anchor: "# 非機能要件インデックス 作成ルール"
+    message: recipe・template が未決で、指定サンプルも規約に沿っていない。この Kata 側の依存の未整備が、後続の成果物作成に及ぼすリスクとして本文から識別できない。
+    message_ja: recipe・template が未決で、指定サンプルも規約に沿っていない。この Kata 側の依存の未整備が、後続の成果物作成に及ぼすリスクとして本文から識別できない。
+  - id: F003
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 24
+    anchor: "- 文書 ID は `nfr-index`、ファイル名は `nfr-index.md` とします。"
+    message: 文書 ID が `nfr-index` 固定で、プロジェクトで修飾した ID（`＜project-id＞:nfr-index`）を使うかどうかと、配置するディレクトリの指定がない。作成者が配置先と ID を一意に決められない。
+    message_ja: 文書 ID が `nfr-index` 固定で、プロジェクトで修飾した ID（`＜project-id＞:nfr-index`）を使うかどうかと、配置するディレクトリの指定がない。作成者が配置先と ID を一意に決められない。
+  - id: F004
     severity: major
     rule: vp-qe-omissions-consistency
     line: 1
     anchor: "# 非機能要件インデックス 作成ルール"
     message: 指定サンプル `specdojo:nfr-index-sample` に、第5章で定義された必須見出し構成（1.概要〜5.関連導線）が含まれていない。
     message_ja: 指定サンプル `specdojo:nfr-index-sample` に、第5章で定義された必須見出し構成（1.概要〜5.関連導線）が含まれていない。
-  - id: F002
+  - id: F005
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 126
-    anchor: ""
-    message: 第8章のルール内サンプルに、第5章で定義された必須見出し「4.変更の入口」「5.関連ドキュメント導線」が欠落している。
-    message_ja: 第8章のルール内サンプルに、第5章で定義された必須見出し「4.変更の入口」「5.関連ドキュメント導線」が欠落している。
-  - id: F003
+    line: 63
+    anchor: "- 追加・削除・統合・分割ごとに、更新する文書（本書のカテゴリ一覧・分冊一覧、関連する `sac-*` / `stc-*`）を示します。"
+    message: 第5章の見出し4「変更の入口（追加・統廃合・改定）」は「改定」を対象に含むが、第6.4節は追加・削除・統合・分割しか扱わず、分冊の改定時に更新する文書と完了条件が定義されていない。
+    message_ja: 第5章の見出し4「変更の入口（追加・統廃合・改定）」は「改定」を対象に含むが、第6.4節は追加・削除・統合・分割しか扱わず、分冊の改定時に更新する文書と完了条件が定義されていない。
+  - id: F006
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# 非機能要件インデックス 作成ルール"
     message: 指定サンプル `specdojo:nfr-index-sample` がルールブックの定義に従っておらず、実例として不適切である。
     message_ja: 指定サンプル `specdojo:nfr-index-sample` がルールブックの定義に従っておらず、実例として不適切である。
+  - id: F007
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 111
+    anchor: "| ID              | 参照先               | Owner  | 備考       |"
+    message: >-
+      分冊一覧の列名が第5章とサンプルでは「Owner」、第6.3節では「更新責任（Role code）」と揺れている。サンプルの値「QA/DEV」が Role code
+      かどうかも判断できないため、列名と値の表記を統一する必要がある。
+    message_ja: >-
+      分冊一覧の列名が第5章とサンプルでは「Owner」、第6.3節では「更新責任（Role code）」と揺れている。サンプルの値「QA/DEV」が Role code
+      かどうかも判断できないため、列名と値の表記を統一する必要がある。
+  - id: F008
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 1
+    anchor: "# 非機能要件インデックス 作成ルール"
+    message: ready 化の前に解消すべき事項（recipe・template の決定、指定サンプルを規約に合わせる作業）が本文で確認できず、ready 化の前提が読み取れない。
+    message_ja: ready 化の前に解消すべき事項（recipe・template の決定、指定サンプルを規約に合わせる作業）が本文で確認できず、ready 化の前提が読み取れない。

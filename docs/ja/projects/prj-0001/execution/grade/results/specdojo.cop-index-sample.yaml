@@ -4,76 +4,77 @@ document: specdojo:cop-index-sample
 path: docs/ja/specdojo/samples/cop-index-sample.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-sample
 verdict: fail
-score: 73
-graded_at: "2026-10-11T21:16:46.923Z"
-graded_by: agy-expert-executor
-content_hash: fd31c36767e96caa3f121a95c1c912298d13fbd753b6a734a1b975983d18c6ed
+score: 35
+graded_at: "2026-11-21T03:29:19.978Z"
+graded_by: opus-executor
+content_hash: 625433b5795ee3c6bfd3bae089e78772753893bd5d579ad678b4b380ac1cf98d
 categories:
   purpose:
-    score: 100
+    score: 38
   operations:
-    score: 100
+    score: 56
   planning:
-    score: 100
+    score: 25
   business:
-    score: 100
+    score: 33
   architecture:
-    score: 100
+    score: 63
   usability:
-    score: 83
-  implementation:
-    score: 100
-  quality:
     score: 58
+  implementation:
+    score: 38
+  quality:
+    score: 17
   consistency:
     score: 0
 viewpoints:
   vp-po-purpose-alignment:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-po-decision-readiness:
-    level: 4
-    score: 100
+    level: 1
+    score: 25
   vp-po-publication-accountability:
-    level: 4
-    score: 100
-  vp-pm-plan-feasibility:
-    level: 4
-    score: 100
-  vp-pm-dependency-risk:
-    level: 4
-    score: 100
-  vp-pm-control-reporting:
-    level: 4
-    score: 100
-  vp-ba-business-value:
-    level: 4
-    score: 100
-  vp-ba-requirements-completeness:
-    level: 4
-    score: 100
-  vp-ba-stakeholder-clarity:
-    level: 4
-    score: 100
-  vp-arc-technical-constraints:
-    level: 4
-    score: 100
-  vp-arc-conciseness:
-    level: 4
-    score: 100
-  vp-dev-implementation-readiness:
-    level: 4
-    score: 100
-  vp-dev-change-impact:
-    level: 4
-    score: 100
-  vp-dev-testability:
-    level: 4
-    score: 100
-  vp-qe-verifiability:
     level: 3
     score: 75
+  vp-pm-plan-feasibility:
+    level: 0
+    score: 0
+  vp-pm-dependency-risk:
+    level: 1
+    score: 25
+  vp-pm-control-reporting:
+    level: 2
+    score: 50
+  vp-ba-business-value:
+    level: 2
+    score: 50
+  vp-ba-requirements-completeness:
+    level: 1
+    score: 25
+  vp-ba-stakeholder-clarity:
+    level: 1
+    score: 25
+  vp-arc-technical-constraints:
+    level: 1
+    score: 25
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-dev-implementation-readiness:
+    level: 1
+    score: 25
+  vp-dev-change-impact:
+    level: 2
+    score: 50
+  vp-dev-testability:
+    level: 1
+    score: 25
+  vp-qe-verifiability:
+    level: 1
+    score: 25
   vp-qe-omissions-consistency:
     level: 0
     score: 0
@@ -81,17 +82,17 @@ viewpoints:
     level: 0
     score: 0
   vp-ux-readability:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 1
+    score: 25
   vp-ops-operability:
-    level: 4
-    score: 100
+    level: 1
+    score: 25
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -99,43 +100,215 @@ viewpoints:
     level: 4
     score: 100
 finding_counts:
-  blocker: 2
-  major: 2
-  minor: 1
+  blocker: 4
+  major: 18
+  minor: 7
   note: 0
 findings:
   - id: F001
+    severity: major
+    rule: vp-po-purpose-alignment
+    line: 5
+    anchor: 本書は、カットオーバー計画の全体SSOT（`cop-index`）として、当日実行の共通判断と導線を定義する最小サンプルである。
+    message: 切替対象（旧系→新系の内容）、切替の目的、対象外のシステム・業務・作業が書かれていないため、「概要（index）」章を設けて駄菓子屋きぬやの切替対象と対象外を1〜3行で示す必要がある。
+    message_ja: 切替対象（旧系→新系の内容）、切替の目的、対象外のシステム・業務・作業が書かれていないため、「概要（index）」章を設けて駄菓子屋きぬやの切替対象と対象外を1〜3行で示す必要がある。
+  - id: F002
+    severity: major
+    rule: vp-po-decision-readiness
+    line: 15
+    anchor: "- 主な内容: 全体タイムライン、共通GO/NO-GO、共通ロールバック方針、`cop-<term>` への導線"
+    message: 共通GO/NO-GO が項目名として挙がっているだけで、「判定点 / 条件 / 判断者 / 失敗時の扱い」の表がないため、PO が切替の可否を判断する材料がない。
+    message_ja: 共通GO/NO-GO が項目名として挙がっているだけで、「判定点 / 条件 / 判断者 / 失敗時の扱い」の表がないため、PO が切替の可否を判断する材料がない。
+  - id: F003
+    severity: major
+    rule: vp-po-decision-readiness
+    line: 30
+    anchor: "| 要件詳細の補強 | 実案件適用時に具体化する |"
+    message: "未解決事項「要件詳細の補強」は対象、影響、判断者、期限が分からず、判断論点として機能しないので、具体的な未決事項（例: 切替日の確定、旧系の保持期間）に置き換える必要がある。"
+    message_ja: "未解決事項「要件詳細の補強」は対象、影響、判断者、期限が分からず、判断論点として機能しないので、具体的な未決事項（例: 切替日の確定、旧系の保持期間）に置き換える必要がある。"
+  - id: F004
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 16
+    anchor: "- 必須観点: 対象、条件、判定基準、責任者"
+    message: "「責任者」が必須観点として挙がっているだけで、判定点ごとの判断者（例: 店主）が書かれていないため、最終判断と説明責任を誰が担うかが読み取れない。"
+    message_ja: "「責任者」が必須観点として挙がっているだけで、判定点ごとの判断者（例: 店主）が書かれていないため、最終判断と説明責任を誰が担うかが読み取れない。"
+  - id: F005
+    severity: blocker
+    rule: vp-pm-plan-feasibility
+    line: 15
+    anchor: "- 主な内容: 全体タイムライン、共通GO/NO-GO、共通ロールバック方針、`cop-<term>` への導線"
+    message: 当日タイムラインと作業手順チェックリストが欠落しており、分単位の時刻・完了条件・実施者・証跡を持つ完成例になっていないため、切替作業の計画と進捗確認に使えない。
+    message_ja: 当日タイムラインと作業手順チェックリストが欠落しており、分単位の時刻・完了条件・実施者・証跡を持つ完成例になっていないため、切替作業の計画と進捗確認に使えない。
+  - id: F006
+    severity: major
+    rule: vp-pm-dependency-risk
+    line: 11
+    anchor: "- 参照: `../rulebooks/cop-index-rulebook.md`"
+    message: >-
+      参照が rulebook
+      への相対パスだけで、`mip-index`（判定点・ロールバック方針）、`dmd-index`（移行手順・所要時間）、`mtp-index`（リハーサル結果）、`otp-index`（運用引き渡し）への依存と「関連ドキュメント」章がない。
+    message_ja: >-
+      参照が rulebook
+      への相対パスだけで、`mip-index`（判定点・ロールバック方針）、`dmd-index`（移行手順・所要時間）、`mtp-index`（リハーサル結果）、`otp-index`（運用引き渡し）への依存と「関連ドキュメント」章がない。
+  - id: F007
+    severity: major
+    rule: vp-pm-dependency-risk
+    line: 28
+    anchor: "| 論点           | 処理方針                 |"
+    message: 未解決事項表に影響範囲やスケジュールへの影響がなく、リスクや後続成果物への波及を識別できない。
+    message_ja: 未解決事項表に影響範囲やスケジュールへの影響がなく、リスクや後続成果物への波及を識別できない。
+  - id: F008
+    severity: major
+    rule: vp-pm-control-reporting
+    line: 30
+    anchor: "| 要件詳細の補強 | 実案件適用時に具体化する |"
+    message: 未解決事項に担当 Role code、期限、転記先がなく「実案件適用時に具体化する」だけなので、転記すべき未決事項として分離されていない。
+    message_ja: 未解決事項に担当 Role code、期限、転記先がなく「実案件適用時に具体化する」だけなので、転記すべき未決事項として分離されていない。
+  - id: F009
+    severity: major
+    rule: vp-ba-business-value
+    line: 9
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+    message: 対象が「駄菓子屋の販売管理システム」だけで、切替が誰のどの業務に影響し、停止中の販売をどう続けるかが示されていないため、業務上の価値と影響を判断できない。
+    message_ja: 対象が「駄菓子屋の販売管理システム」だけで、切替が誰のどの業務に影響し、停止中の販売をどう続けるかが示されていないため、業務上の価値と影響を判断できない。
+  - id: F010
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 16
+    anchor: "- 必須観点: 対象、条件、判定基準、責任者"
+    message: 必須観点が見出し語の列挙にとどまり、事前完了条件・未達時の扱い（延期・代替手順）・判断者を具体例として記述していない。
+    message_ja: 必須観点が見出し語の列挙にとどまり、事前完了条件・未達時の扱い（延期・代替手順）・判断者を具体例として記述していない。
+  - id: F011
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 5
+    anchor: 本書は、カットオーバー計画の全体SSOT（`cop-index`）として、当日実行の共通判断と導線を定義する最小サンプルである。
+    message: "対象範囲と対象外（例: EC 連携や会計連携は対象外）が書かれておらず、利用者視点で切替範囲を確認できない。"
+    message_ja: "対象範囲と対象外（例: EC 連携や会計連携は対象外）が書かれておらず、利用者視点で切替範囲を確認できない。"
+  - id: F012
+    severity: major
+    rule: vp-ba-stakeholder-clarity
+    line: 16
+    anchor: "- 必須観点: 対象、条件、判定基準、責任者"
+    message: 「担当者、連絡系統」章が欠落しており、店主・家族の店番・開発担当などの役割、連絡経路、エスカレーション先が書かれていない。
+    message_ja: 「担当者、連絡系統」章が欠落しており、店主・家族の店番・開発担当などの役割、連絡経路、エスカレーション先が書かれていない。
+  - id: F013
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 15
+    anchor: "- 主な内容: 全体タイムライン、共通GO/NO-GO、共通ロールバック方針、`cop-<term>` への導線"
+    message: 共通ロールバック方針が項目名だけで、発動条件や復旧方針（旧系復帰・接続戻しなど）、旧系の保持といった技術的な前提が書かれていない。
+    message_ja: 共通ロールバック方針が項目名だけで、発動条件や復旧方針（旧系復帰・接続戻しなど）、旧系の保持といった技術的な前提が書かれていない。
+  - id: F014
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 24
+    anchor: "| 主な内容     | 全体タイムライン、共通GO/NO-GO、共通ロールバック方針、`cop-<term>` への導線 | 要点のみ記載                         |"
+    message: 15行目の「主な内容」と表の「主な内容」行が同一文言であり、23行目の目的も5行目と重複しているため、説明章と表の二重記述をまとめて完成例本文に置き換えるべきである。
+    message_ja: 15行目の「主な内容」と表の「主な内容」行が同一文言であり、23行目の目的も5行目と重複しているため、説明章と表の二重記述をまとめて完成例本文に置き換えるべきである。
+  - id: F015
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 18
+    anchor: "## 4. 最小記述例"
+    message: 「最小記述例」が項目・値・備考の3行表だけで、作業手順チェックリスト（手順 / 作業内容 / 実施者 / 証跡 / 備考）の具体例がなく、実施に必要な入力と完了条件が読み取れない。
+    message_ja: 「最小記述例」が項目・値・備考の3行表だけで、作業手順チェックリスト（手順 / 作業内容 / 実施者 / 証跡 / 備考）の具体例がなく、実施に必要な入力と完了条件が読み取れない。
+  - id: F016
+    severity: major
+    rule: vp-dev-change-impact
+    line: 15
+    anchor: "- 主な内容: 全体タイムライン、共通GO/NO-GO、共通ロールバック方針、`cop-<term>` への導線"
+    message: "`cop-＜term＞` への導線が項目名として挙がっているだけで、分冊や見直し対象を列挙する「関連ドキュメント」章（分冊がなければ `（本書のみ）`）がなく、変更時の影響先を識別できない。"
+    message_ja: "`cop-＜term＞` への導線が項目名として挙がっているだけで、分冊や見直し対象を列挙する「関連ドキュメント」章（分冊がなければ `（本書のみ）`）がなく、変更時の影響先を識別できない。"
+  - id: F017
+    severity: major
+    rule: vp-dev-testability
+    line: 15
+    anchor: "- 主な内容: 全体タイムライン、共通GO/NO-GO、共通ロールバック方針、`cop-<term>` への導線"
+    message: 手順ごとの証跡と完了条件、ロールバック完了条件、配信の証跡が書かれておらず、切替やロールバックの実施後に確認すべき項目が分からない。
+    message_ja: 手順ごとの証跡と完了条件、ロールバック完了条件、配信の証跡が書かれておらず、切替やロールバックの実施後に確認すべき項目が分からない。
+  - id: F018
     severity: minor
     rule: vp-qe-verifiability
-    line: 32
-    anchor: ""
+    line: 24
+    anchor: "| 主な内容     | 全体タイムライン、共通GO/NO-GO、共通ロールバック方針、`cop-<term>` への導線 | 要点のみ記載                         |"
     message: 「主な内容」の値が「要点のみ記載」となっており、具体的な記述例として不十分である。
     message_ja: 「主な内容」の値が「要点のみ記載」となっており、具体的な記述例として不十分である。
-  - id: F002
+  - id: F019
+    severity: major
+    rule: vp-qe-verifiability
+    line: 15
+    anchor: "- 主な内容: 全体タイムライン、共通GO/NO-GO、共通ロールバック方針、`cop-<term>` への導線"
+    message: "GO/NO-GO 条件、完了条件、ロールバック発動条件のいずれにも判定可能な条件（例: 未処理の注文が0件、T+30分）がなく、pass / fail を判定できない。"
+    message_ja: "GO/NO-GO 条件、完了条件、ロールバック発動条件のいずれにも判定可能な条件（例: 未処理の注文が0件、T+30分）がなく、pass / fail を判定できない。"
+  - id: F020
     severity: blocker
     rule: vp-qe-omissions-consistency
     line: 9
     anchor: "- 対象: 駄菓子屋の販売管理システム"
     message: ルールブックで定義された必須見出し（1.概要 〜 10.関連ドキュメント）がすべて欠落している。
     message_ja: ルールブックで定義された必須見出し（1.概要 〜 10.関連ドキュメント）がすべて欠落している。
-  - id: F003
+  - id: F021
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 15
+    anchor: "- 主な内容: 全体タイムライン、共通GO/NO-GO、共通ロールバック方針、`cop-<term>` への導線"
+    message: タイムライン・ロールバック手順・周知が書かれておらず、rulebook の禁止事項（分単位で書かない、ロールバックの発動条件や手順を省略する、周知を書かない）に該当している。
+    message_ja: タイムライン・ロールバック手順・周知が書かれておらず、rulebook の禁止事項（分単位で書かない、ロールバックの発動条件や手順を省略する、周知を書かない）に該当している。
+  - id: F022
     severity: blocker
     rule: vp-qe-kata-conformance
     line: 9
     anchor: "- 対象: 駄菓子屋の販売管理システム"
     message: 成果物の構造（必須構成）を無視した概要説明になっており、完成例としての責務を果たしていない。
     message_ja: 成果物の構造（必須構成）を無視した概要説明になっており、完成例としての責務を果たしていない。
-  - id: F004
-    severity: major
+  - id: F023
+    severity: minor
     rule: vp-qe-kata-conformance
-    line: 4
-    anchor: ""
-    message: Frontmatter の `type` が `project` となっており、ルールブックで定義された `migration` と矛盾している。
-    message_ja: Frontmatter の `type` が `project` となっており、ルールブックで定義された `migration` と矛盾している。
-  - id: F005
+    line: 11
+    anchor: "- 参照: `../rulebooks/cop-index-rulebook.md`"
+    message: 本文で rulebook を相対パス参照しているが、sample と rulebook の対応は Frontmatter の `rulebook` で宣言済みであり、完成例の本文には不要なメタ参照である。
+    message_ja: 本文で rulebook を相対パス参照しているが、sample と rulebook の対応は Frontmatter の `rulebook` で宣言済みであり、完成例の本文には不要なメタ参照である。
+  - id: F024
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 10
+    anchor: "- 前提: プロジェクト文脈は handbook の共通方針に準拠する"
+    message: 「handbook の共通方針に準拠する」とあるが、共通サンプル文脈（駄菓子屋きぬや）の店舗・登場人物・業務を使った具体的な切替場面になっていない。
+    message_ja: 「handbook の共通方針に準拠する」とあるが、共通サンプル文脈（駄菓子屋きぬや）の店舗・登場人物・業務を使った具体的な切替場面になっていない。
+  - id: F025
     severity: major
     rule: vp-ux-readability
     line: 9
     anchor: "- 対象: 駄菓子屋の販売管理システム"
     message: 必須構成が欠落し具体的記述がないため、成果物の正しい書き方を確認することができない。
     message_ja: 必須構成が欠落し具体的記述がないため、成果物の正しい書き方を確認することができない。
+  - id: F026
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 9
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+    message: 対象名「駄菓子屋の販売管理システム」が共通サンプル文脈の名称「駄菓子屋きぬや 販売管理システム」と表記ゆれしている。
+    message_ja: 対象名「駄菓子屋の販売管理システム」が共通サンプル文脈の名称「駄菓子屋きぬや 販売管理システム」と表記ゆれしている。
+  - id: F027
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 23
+    anchor: "| 目的         | 当日実行の共通判断と導線を定義する                                          | specdojo:deliverables-reference 準拠 |"
+    message: 備考の `specdojo:deliverables-reference` が wikilink にもインラインコードにもなっていない識別子のまま書かれており、参照先として解釈できない。
+    message_ja: 備考の `specdojo:deliverables-reference` が wikilink にもインラインコードにもなっていない識別子のまま書かれており、参照先として解釈できない。
+  - id: F028
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 15
+    anchor: "- 主な内容: 全体タイムライン、共通GO/NO-GO、共通ロールバック方針、`cop-<term>` への導線"
+    message: 周知章と実施条件章が欠落しており、停止告知の対象・手段・時期・問い合わせ先と、切替前に完了しているべき条件が示されていない。
+    message_ja: 周知章と実施条件章が欠落しており、停止告知の対象・手段・時期・問い合わせ先と、切替前に完了しているべき条件が示されていない。
+  - id: F029
+    severity: major
+    rule: vp-ops-operability
+    line: 15
+    anchor: "- 主な内容: 全体タイムライン、共通GO/NO-GO、共通ロールバック方針、`cop-<term>` への導線"
+    message: 障害時判断の基準（重大度・SLO逸脱・復旧見込み）と連絡経路、ロールバックの発動条件と手順が書かれていないため、当日の障害対応に使えない。
+    message_ja: 障害時判断の基準（重大度・SLO逸脱・復旧見込み）と連絡経路、ロールバックの発動条件と手順が書かれていないため、当日の障害対応に使えない。

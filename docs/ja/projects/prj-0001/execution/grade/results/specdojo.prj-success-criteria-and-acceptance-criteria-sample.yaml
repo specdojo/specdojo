@@ -4,34 +4,35 @@ document: specdojo:prj-success-criteria-and-acceptance-criteria-sample
 path: docs/ja/specdojo/samples/prj-success-criteria-and-acceptance-criteria-sample.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-sample
 verdict: needs-work
-score: 85
-graded_at: "2026-11-17T22:53:01.549Z"
-graded_by: sol-review-executor
+score: 83
+graded_at: "2026-11-21T05:42:48.838Z"
+graded_by: opus-executor
 content_hash: aa46e17f31e6178bc8dad7eec8f331b8437d6882ed85c62006cbf1823eebe12e
 categories:
   purpose:
-    score: 88
+    score: 75
   operations:
     score: 88
   planning:
-    score: 83
+    score: 75
   business:
-    score: 83
+    score: 75
   architecture:
     score: 100
   usability:
     score: 100
   implementation:
-    score: 100
+    score: 88
   quality:
     score: 67
   consistency:
     score: 75
 viewpoints:
   vp-po-purpose-alignment:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-decision-readiness:
     level: 3
     score: 75
@@ -42,14 +43,14 @@ viewpoints:
     level: 3
     score: 75
   vp-pm-dependency-risk:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-control-reporting:
     level: 3
     score: 75
   vp-ba-business-value:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-requirements-completeness:
     level: 2
     score: 50
@@ -66,8 +67,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-change-impact:
     level: 4
     score: 100
@@ -104,31 +105,66 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 3
-  minor: 10
+  minor: 17
   note: 0
 findings:
   - id: F001
+    severity: minor
+    rule: vp-po-purpose-alignment
+    line: 9
+    anchor: "| BV-01       | 店主と家族が同じ手順で販売・在庫・つけを記録・確認できる | 初期リリース |"
+    message: >-
+      BV-01 は「店主と家族が同じ手順で確認できる」ことを価値としているが、SC-01・AC-01〜AC-03 は各代表の個別完遂しか判定せず、同じ記録に対する両代表の確認結果の一致を判定する条件がないため、BV-01
+      の価値を直接確かめる判定基準を加える。
+    message_ja: >-
+      BV-01 は「店主と家族が同じ手順で確認できる」ことを価値としているが、SC-01・AC-01〜AC-03 は各代表の個別完遂しか判定せず、同じ記録に対する両代表の確認結果の一致を判定する条件がないため、BV-01
+      の価値を直接確かめる判定基準を加える。
+  - id: F002
     severity: minor
     rule: vp-po-decision-readiness
     line: 46
     anchor: "| 人気商品の対象範囲     | SC-04 の測定。初期受入は進める | _UNDECIDED_: ベースライン測定開始前に対象商品と除外条件を固定する |"
     message: 人気商品の対象範囲とオフライン時の記録方法に決定責任者がなく、PO が誰へ判断準備を依頼すべきか分からないため、各論点の担当と最終判断者を明記する。
     message_ja: 人気商品の対象範囲とオフライン時の記録方法に決定責任者がなく、PO が誰へ判断準備を依頼すべきか分からないため、各論点の担当と最終判断者を明記する。
-  - id: F002
+  - id: F003
     severity: minor
     rule: vp-pm-plan-feasibility
     line: 38
     anchor: 2. 未達なら影響、是正内容、再確認の条件 ID と日を追記して再確認する。
     message: 未達時に是正内容と再確認日を記録する手順はあるが、是正担当と再確認担当の割り当て方法がないため、担当 Role code を記録して作業を引き継ぐ手順を加える。
     message_ja: 未達時に是正内容と再確認日を記録する手順はあるが、是正担当と再確認担当の割り当て方法がないため、担当 Role code を記録して作業を引き継ぐ手順を加える。
-  - id: F003
+  - id: F004
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 20
+    anchor: >-
+      | SC-04 | BV-03            | 人気商品の欠品を減らせる   | 対象商品の月間欠品回数が運用前1か月比で50%以上減る      |
+      日次記録の欠品を月単位で比較                                     | 運用開始後6か月    | 店主代表 |
+    message: >-
+      SC-04・SC-05
+      は運用前ベースラインとの比較を前提とするが、システム運用開始前に欠品・廃棄・値引き・長期滞留を誰がどの方法で記録し始めるかという先行作業とスケジュール依存が示されておらず、測定不能のリスクが見えないため、ベースライン収集の開始時期と担当を判定前提として明記する。
+    message_ja: >-
+      SC-04・SC-05
+      は運用前ベースラインとの比較を前提とするが、システム運用開始前に欠品・廃棄・値引き・長期滞留を誰がどの方法で記録し始めるかという先行作業とスケジュール依存が示されておらず、測定不能のリスクが見えないため、ベースライン収集の開始時期と担当を判定前提として明記する。
+  - id: F005
     severity: minor
     rule: vp-pm-control-reporting
     line: 47
     anchor: "| オフライン時の記録方法 | 初期受入の対象外               | _UNDECIDED_: 初期運用開始前に運用方針を決め、受入条件を追加する   |"
     message: オフライン方針の決定と受入条件の追加について、変更要求・決定記録への引き継ぎ先がなく、受入確認記録だけでは判断経緯を追跡しにくいため、PJR 等の記録先と担当 Role code を示す。
     message_ja: オフライン方針の決定と受入条件の追加について、変更要求・決定記録への引き継ぎ先がなく、受入確認記録だけでは判断経緯を追跡しにくいため、PJR 等の記録先と担当 Role code を示す。
-  - id: F004
+  - id: F006
+    severity: minor
+    rule: vp-ba-business-value
+    line: 11
+    anchor: "| BV-03       | 記録を仕入れと引き継ぎに使い、店主不在でも運営できる     | 中長期       |"
+    message: >-
+      主要課題であるつけの記録漏れ・残高確認の手間に対する成果がどの業務価値・成功基準でも測定されず、BV-03
+      は欠品・在庫・不在時運営だけを扱っているため、つけ残高の不一致件数または確認時間を判定する成功基準を対応する業務価値に加える。
+    message_ja: >-
+      主要課題であるつけの記録漏れ・残高確認の手間に対する成果がどの業務価値・成功基準でも測定されず、BV-03
+      は欠品・在庫・不在時運営だけを扱っているため、つけ残高の不一致件数または確認時間を判定する成功基準を対応する業務価値に加える。
+  - id: F007
     severity: major
     rule: vp-ba-requirements-completeness
     line: 29
@@ -137,7 +173,16 @@ findings:
       在庫一覧、つけ残高画面     | 両代表   | 店主代表 |
     message: AC-02 は在庫数とつけ残高を表示できれば合格となり、入荷・棚卸等の在庫記録やつけ残高の記録・更新ができなくても初期受入を通過するため、スコープ内の最小限の記録操作と、その結果が在庫・残高へ正しく反映される受入条件を追加する。
     message_ja: AC-02 は在庫数とつけ残高を表示できれば合格となり、入荷・棚卸等の在庫記録やつけ残高の記録・更新ができなくても初期受入を通過するため、スコープ内の最小限の記録操作と、その結果が在庫・残高へ正しく反映される受入条件を追加する。
-  - id: F005
+  - id: F008
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 31
+    anchor: >-
+      | AC-04 | BV-01〜BV-03     | 技術的受入 | 確認結果を追跡できる             | スコープ・本書・操作メモが矛盾せず、結果ごとに条件 ID・確認日・確認者が残る |
+      文書照合記録、受入確認記録 | 開発担当 | 店主代表 |
+    message: AC-04 は「スコープ・本書・操作メモが矛盾しない」ことを合格基準とするが、操作メモの内容・作成者・作成時期が定義されておらず開発担当が準備すべき成果物を特定できないため、操作メモが何を記した文書かと作成担当を明記する。
+    message_ja: AC-04 は「スコープ・本書・操作メモが矛盾しない」ことを合格基準とするが、操作メモの内容・作成者・作成時期が定義されておらず開発担当が準備すべき成果物を特定できないため、操作メモが何を記した文書かと作成担当を明記する。
+  - id: F009
     severity: major
     rule: vp-qe-verifiability
     line: 21
@@ -150,7 +195,7 @@ findings:
     message_ja: >-
       SC-05
       は廃棄・値引き・長期滞留の数量と金額を測定する一方、20%以上削減を項目別・合算・数量・金額のどれで判定するかが不明で、運用前ベースラインの期間と年間換算方法も定まっていないため、判定指標、集計式、比較期間を明記する。
-  - id: F006
+  - id: F010
     severity: minor
     rule: vp-qe-verifiability
     line: 20
@@ -159,14 +204,23 @@ findings:
       日次記録の欠品を月単位で比較                                     | 運用開始後6か月    | 店主代表 |
     message: SC-04 は運用開始後6か月に判定するが、比較する月間欠品回数が6か月目の値か期間平均か分からないため、評価対象期間と集計方法を指定する。
     message_ja: SC-04 は運用開始後6か月に判定するが、比較する月間欠品回数が6か月目の値か期間平均か分からないため、評価対象期間と集計方法を指定する。
-  - id: F007
+  - id: F011
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 17
+    anchor: >-
+      | SC-01 | BV-01            | 主要操作を迷わず完了できる | 販売記録・在庫確認・つけ残高確認を両代表が完了する      | 説明なしで代表シナリオを行い、所要時間・質問・支援・誤操作を記録 |
+      初期リリース受入時 | 両代表   |
+    message: SC-01 は「迷わず完了できる」を条件とし質問・支援を記録するが、支援を受けて完了した場合を合格とするかが判定基準にないため、許容する支援・質問の範囲を合否条件として明記する。
+    message_ja: SC-01 は「迷わず完了できる」を条件とし質問・支援を記録するが、支援を受けて完了した場合を合格とするかが判定基準にないため、許容する支援・質問の範囲を合否条件として明記する。
+  - id: F012
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 35
     anchor: 確認者・承認者は各表に従い、結果は受入確認記録へ残す。
     message: 証跡の格納先は「受入確認記録」という名称だけで、ルールブックが求める保存先を特定できないため、記録の保管場所と、条件 ID から操作結果・文書照合記録を参照する方法を示す。
     message_ja: 証跡の格納先は「受入確認記録」という名称だけで、ルールブックが求める保存先を特定できないため、記録の保管場所と、条件 ID から操作結果・文書照合記録を参照する方法を示す。
-  - id: F008
+  - id: F013
     severity: major
     rule: vp-qe-kata-conformance
     line: 17
@@ -179,14 +233,14 @@ findings:
     message_ja: >-
       根拠とする概要 sample
       の「両代表の確認結果の一致100%」「短期の家族による自力記録3回以上」「翌月へ残るつけの記録漏れ・残高不一致0件」に対応する条件も除外理由もなく、上位の期待効果が判定対象から脱落しているため、対応する成功基準・受入条件または扱いを変更する判断根拠を示す。
-  - id: F009
+  - id: F014
     severity: minor
     rule: vp-qe-kata-conformance
     line: 46
     anchor: "| 人気商品の対象範囲     | SC-04 の測定。初期受入は進める | _UNDECIDED_: ベースライン測定開始前に対象商品と除外条件を固定する |"
     message: recipe と template は未決事項に決定時期と担当を求めるが、例外表の両論点には担当がないため、完成例として責任者を補う。
     message_ja: recipe と template は未決事項に決定時期と担当を求めるが、例外表の両論点には担当がないため、完成例として責任者を補う。
-  - id: F010
+  - id: F015
     severity: minor
     rule: vp-qe-kata-conformance
     line: 20
@@ -195,7 +249,7 @@ findings:
       日次記録の欠品を月単位で比較                                     | 運用開始後6か月    | 店主代表 |
     message: SC-04・SC-05 は運用前後の値だけを比較し、概要 sample とルールブックが求める季節・来店数・仕入れ条件等の外部要因の記録と寄与の確認が示されていないため、測定記録と判定手順にその扱いを加える。
     message_ja: SC-04・SC-05 は運用前後の値だけを比較し、概要 sample とルールブックが求める季節・来店数・仕入れ条件等の外部要因の記録と寄与の確認が示されていないため、測定記録と判定手順にその扱いを加える。
-  - id: F011
+  - id: F016
     severity: minor
     rule: vp-qe-kata-conformance
     line: 26
@@ -205,14 +259,38 @@ findings:
       |
     message: 承認者欄は役割表示名の「店主代表」だけで、Sample 記述標準が承認責任に求める Role code が示されていないため、承認責任を PO と明記し、人間の担当である店主代表との対応を示す。
     message_ja: 承認者欄は役割表示名の「店主代表」だけで、Sample 記述標準が承認責任に求める Role code が示されていないため、承認責任を PO と明記し、人間の担当である店主代表との対応を示す。
-  - id: F012
+  - id: F017
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 44
+    anchor: "| 論点                   | 判定への影響                   | 当面の扱い                                                        |"
+    message: >-
+      例外表の列が「論点・判定への影響・当面の扱い」で、正本である template の「論点・扱い・解決期限 / 判断タイミング・責任者」の骨組みと一致せず完成例として template との対応が崩れているため、template
+      の列構成に合わせる。
+    message_ja: >-
+      例外表の列が「論点・判定への影響・当面の扱い」で、正本である template の「論点・扱い・解決期限 / 判断タイミング・責任者」の骨組みと一致せず完成例として template との対応が崩れているため、template
+      の列構成に合わせる。
+  - id: F018
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 17
+    anchor: >-
+      | SC-01 | BV-01            | 主要操作を迷わず完了できる | 販売記録・在庫確認・つけ残高確認を両代表が完了する      | 説明なしで代表シナリオを行い、所要時間・質問・支援・誤操作を記録 |
+      初期リリース受入時 | 両代表   |
+    message: >-
+      共通サンプル文脈の期待効果「つけ残高を1分以内で確認可能」に対応する成功基準・受入条件がなく、値を変える場合は関連 sample と整合させるという Sample
+      記述標準の運用に沿わないため、つけ残高確認時間の判定条件を加えるか扱いを変える根拠を示す。
+    message_ja: >-
+      共通サンプル文脈の期待効果「つけ残高を1分以内で確認可能」に対応する成功基準・受入条件がなく、値を変える場合は関連 sample と整合させるという Sample
+      記述標準の運用に沿わないため、つけ残高確認時間の判定条件を加えるか扱いを変える根拠を示す。
+  - id: F019
     severity: minor
     rule: vp-ops-release-readiness
     line: 47
     anchor: "| オフライン時の記録方法 | 初期受入の対象外               | _UNDECIDED_: 初期運用開始前に運用方針を決め、受入条件を追加する   |"
     message: オフライン対応は初期受入の対象外としつつ初期運用開始前に受入条件を追加するとしているが、追加条件の確認・承認を運用開始の必須条件にするかが不明なため、初期受入後の再判定と運用開始可否の判断手順を明記する。
     message_ja: オフライン対応は初期受入の対象外としつつ初期運用開始前に受入条件を追加するとしているが、追加条件の確認・承認を運用開始の必須条件にするかが不明なため、初期受入後の再判定と運用開始可否の判断手順を明記する。
-  - id: F013
+  - id: F020
     severity: minor
     rule: vp-ops-operability
     line: 40

@@ -4,14 +4,15 @@ document: specdojo:cxd-sample
 path: docs/ja/specdojo/samples/cxd-sample.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-sample
 verdict: pass
-score: 100
-graded_at: "2026-11-15T02:01:56.237Z"
-graded_by: sol-review-executor
-content_hash: fd6977cc93800ef7eb1106d30804638dc99c5d09ad4abc854d03177b4bba35ad
+score: 96
+graded_at: "2026-11-21T03:40:34.475Z"
+graded_by: opus-executor
+content_hash: 5dddb18f016c25207c034639399890a0e768992fd64bb32db562b2607360252d
 categories:
   purpose:
-    score: 100
+    score: 88
   operations:
     score: 100
   planning:
@@ -21,17 +22,17 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 92
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 92
   consistency:
     score: 100
 viewpoints:
   vp-po-purpose-alignment:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-decision-readiness:
     level: 4
     score: 100
@@ -81,14 +82,14 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -104,6 +105,60 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 4
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-po-purpose-alignment
+    line: 5
+    anchor: >-
+      店主代表と家族利用者代表が現金販売を記録し、会計と印字の結果を次の店番へ引き継ぐための販売管理 CLI
+      を対象とする。店頭での操作、商品・売上の外部管理、レシート印刷の責任分界を定義し、通信や印字の失敗を会計のやり直しと混同しないようにする。本図は [[specdojo:clis-sample|販売管理 CLI 仕様]]
+      と同じ学習用の構成を扱い、通常利用のタブレット画面、在庫調整、つけ管理、仕入れ、キャッシュレス決済は対象外とする。
+    message: >-
+      概要が `clis-sample` だけを参照し、プロジェクト目的の正本 `specdojo:prj-overview-sample` への参照がないため、タブレット前提・本格会計連携対象外との関係（学習用 CLI
+      と本部基盤を置く理由）を上位目的から辿れない。概要に `prj-overview` への wikilink と位置づけを追記すべきである。
+    message_ja: >-
+      概要が `clis-sample` だけを参照し、プロジェクト目的の正本 `specdojo:prj-overview-sample` への参照がないため、タブレット前提・本格会計連携対象外との関係（学習用 CLI
+      と本部基盤を置く理由）を上位目的から辿れない。概要に `prj-overview` への wikilink と位置づけを追記すべきである。
+  - id: F002
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 51
+    anchor: >-
+      | ------------------ |
+      -------------------------------------------------------------------------------------------------------------- |
+    message: >-
+      システム境界・Person・外部システム・Relationship の各表の列見出し/項目名（「境界外へ委ねる範囲」「対応ロール・利用者区分」「区分・利用条件」「不在・障害時の影響と境界上の扱い」「関係 ID」）が
+      `cxd-template` の骨組み（「境界外へ委ねる範囲（対象外と委譲先）」「対応ロール」「区分・位置づけ」「不在・障害時の影響と扱い」「関係ID」）と一致しておらず、template から作った成果物と sample
+      の照合がぶれるため、どちらかに統一すべきである。
+    message_ja: >-
+      システム境界・Person・外部システム・Relationship の各表の列見出し/項目名（「境界外へ委ねる範囲」「対応ロール・利用者区分」「区分・利用条件」「不在・障害時の影響と境界上の扱い」「関係 ID」）が
+      `cxd-template` の骨組み（「境界外へ委ねる範囲（対象外と委譲先）」「対応ロール」「区分・位置づけ」「不在・障害時の影響と扱い」「関係ID」）と一致しておらず、template から作った成果物と sample
+      の照合がぶれるため、どちらかに統一すべきである。
+  - id: F003
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# 駄菓子屋きぬや 販売管理 CLI C4コンテキスト図"
+    message: >-
+      `cxd-template` の `frontmatter_template` には `supersedes: []` があるが sample の Frontmatter には含まれておらず、完成例として template
+      の生成結果と整合しないため追加すべきである。
+    message_ja: >-
+      `cxd-template` の `frontmatter_template` には `supersedes: []` があるが sample の Frontmatter には含まれておらず、完成例として template
+      の生成結果と整合しないため追加すべきである。
+  - id: F004
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 99
+    anchor: >-
+      | 確認区分           | 対象関係・境界           |
+      検証観点                                                                                                                                                  
+      | 主確認ロール |
+    message: >-
+      検証観点の「主確認ロール」と将来課題の「担当ロール」が PO/BA/QE/DEV/ARC の Role code で書かれる一方、概要・Person
+      表・解消条件では「店主代表」「開発担当」「同行レビュー担当」等の名称を使っており、両者の対応が示されていないため、Role code と対象者名の対応を注記するか表記を統一すべきである。
+    message_ja: >-
+      検証観点の「主確認ロール」と将来課題の「担当ロール」が PO/BA/QE/DEV/ARC の Role code で書かれる一方、概要・Person
+      表・解消条件では「店主代表」「開発担当」「同行レビュー担当」等の名称を使っており、両者の対応が示されていないため、Role code と対象者名の対応を注記するか表記を統一すべきである。

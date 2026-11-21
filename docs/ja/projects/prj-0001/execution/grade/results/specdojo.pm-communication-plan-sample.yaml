@@ -4,10 +4,11 @@ document: specdojo:pm-communication-plan-sample
 path: docs/ja/specdojo/samples/pm-communication-plan-sample.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-sample
 verdict: pass
-score: 100
-graded_at: "2026-11-17T22:35:14.289Z"
-graded_by: sol-review-executor
+score: 93
+graded_at: "2026-11-21T05:16:34.376Z"
+graded_by: opus-executor
 content_hash: e601d57738436cff22c270854440b1513d0156324bfa8b45c15e9eaec5ee4803
 categories:
   purpose:
@@ -15,19 +16,19 @@ categories:
   operations:
     score: 100
   planning:
-    score: 100
+    score: 92
   business:
-    score: 100
+    score: 92
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 92
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 92
   consistency:
-    score: 100
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -39,8 +40,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-dependency-risk:
     level: 4
     score: 100
@@ -54,8 +55,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-stakeholder-clarity:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-technical-constraints:
     level: 4
     score: 100
@@ -78,17 +79,17 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -104,6 +105,65 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 6
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 12
+    anchor: >-
+      | `STH-SHOP-OWNER` への進捗共有                      | 完了、次の作業、ブロック、必要な判断      |
+      節目、ブロック発生時                                             | Schedule と Issue コメント | `PM`  | `kinuya-schedule`、課題ログ  |
+    message: 進捗共有の行のタイミング「節目」が何を指すか（管理計画のマイルストーン名や Schedule 上の完了単位など）を示し、共有の実施時期を判定・タスク化できるようにする。
+    message_ja: 進捗共有の行のタイミング「節目」が何を指すか（管理計画のマイルストーン名や Schedule 上の完了単位など）を示し、共有の実施時期を判定・タスク化できるようにする。
+  - id: F002
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 16
+    anchor: >-
+      | `STH-SHOP-OWNER` の受入確認                        | 受入条件、試験結果、未解決事項            |
+      初期リリース前                                                   | Pull Request のレビュー    | `QE`  |
+      `kinuya-acceptance-record`   |
+    message: >-
+      店主の受入確認の手段を「Pull Request のレビュー」とすると店主の利用場面と合わないため、店主が実際に確認する形式（試験結果の要約を Issue で示す、対面で確認した結果を `QE` が Pull Request
+      に転記するなど）を示す。
+    message_ja: >-
+      店主の受入確認の手段を「Pull Request のレビュー」とすると店主の利用場面と合わないため、店主が実際に確認する形式（試験結果の要約を Issue で示す、対面で確認した結果を `QE` が Pull Request
+      に転記するなど）を示す。
+  - id: F003
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 11
+    anchor: >-
+      | `STH-SHOP-OWNER` への判断依頼                      | 範囲・優先機能・UI の変更、費用・時間上限 | 準備着手前、管理計画の判断ゲート「重大変更・再開」に当たる変更時 |
+      Issue（対面の結果も転記）  | `PM`  | Issue、変更要求ログの変更 ID |
+    message: 方針の「対面は試用の準備と結果の聞き取りに限る」と判断依頼の手段「Issue（対面の結果も転記）」が矛盾するため、判断依頼で対面を使う場合を方針に含めるか、手段から対面を外す。
+    message_ja: 方針の「対面は試用の準備と結果の聞き取りに限る」と判断依頼の手段「Issue（対面の結果も転記）」が矛盾するため、判断依頼で対面を使う場合を方針に含めるか、手段から対面を外す。
+  - id: F004
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 42
+    anchor: "- _UNDECIDED_: 営業時間外の緊急連絡手段。決まるまで営業時間外の停止連絡の伝達先が定まらない。店頭試用の開始前に `PO` が決定する。"
+    message: 未決事項が影響するとする「営業時間外の停止連絡」に対応する機会やエスカレーション条件が表にないため、停止連絡の行を機会またはエスカレーションに置き、未決事項がその行の伝達先を変えると分かるようにする。
+    message_ja: 未決事項が影響するとする「営業時間外の停止連絡」に対応する機会やエスカレーション条件が表にないため、停止連絡の行を機会またはエスカレーションに置き、未決事項がその行の伝達先を変えると分かるようにする。
+  - id: F005
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# コミュニケーション計画: 駄菓子屋きぬや 販売管理システム"
+    message: >-
+      template の `frontmatter_template` が `supersedes: []` を含むのに sample の Frontmatter には `supersedes` がないため、完成例として
+      template と同じ項目構成にそろえる。
+    message_ja: >-
+      template の `frontmatter_template` が `supersedes: []` を含むのに sample の Frontmatter には `supersedes` がないため、完成例として
+      template と同じ項目構成にそろえる。
+  - id: F006
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 23
+    anchor: >-
+      | 利用者価値または受入条件を登録簿・成功条件から判定できない                                           | `BA`
+      が事実と選択肢を整理する                                          | `PO`     | 課題ログ     |
+    message: 機会の表の判断依頼先 `STH-SHOP-OWNER` とエスカレーションの最終判断 `PO` の対応が読み取れないため、店主が `PO` を担うことを方針で一言示すか、どちらかの表記にそろえる。
+    message_ja: 機会の表の判断依頼先 `STH-SHOP-OWNER` とエスカレーションの最終判断 `PO` の対応が読み取れないため、店主が `PO` を担うことを方針で一言示すか、どちらかの表記にそろえる。

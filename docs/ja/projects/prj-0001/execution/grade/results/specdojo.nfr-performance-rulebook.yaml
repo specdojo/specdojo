@@ -4,37 +4,38 @@ document: specdojo:nfr-performance-rulebook
 path: docs/ja/specdojo/rulebooks/nfr-performance-rulebook.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-rulebook
 verdict: needs-work
-score: 94
-graded_at: "2026-11-05T20:27:53.190Z"
-graded_by: flash-high-executor
-content_hash: 8d0daaa51562c8468341096fbbee7d0500f22715e28ab28b1bb3e8b1025d097a
+score: 87
+graded_at: "2026-11-21T04:46:45.939Z"
+graded_by: opus-executor
+content_hash: 4afde78c8c26ed0a5f3ec5eb6c5a8d1a5df24a3d8c7644153ff7850e252b5083
 categories:
   purpose:
-    score: 88
-  operations:
-    score: 94
-  planning:
-    score: 92
-  business:
     score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 92
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 92
   implementation:
-    score: 100
+    score: 75
   quality:
-    score: 83
+    score: 75
   consistency:
-    score: 100
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-publication-accountability:
     level: 4
     score: 100
@@ -45,8 +46,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-control-reporting:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-business-value:
     level: 4
     score: 100
@@ -54,8 +55,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-stakeholder-clarity:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-technical-constraints:
     level: 4
     score: 100
@@ -66,20 +67,20 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-change-impact:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
     level: 2
     score: 50
@@ -87,11 +88,11 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
-  vp-ops-release-readiness:
     level: 3
     score: 75
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
   vp-ops-operability:
     level: 4
     score: 100
@@ -104,34 +105,62 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 1
-  minor: 3
+  minor: 7
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-decision-readiness
-    line: 56
-    anchor: "## 5. 本文構成（標準テンプレ）"
-    message: nfr-performance ドキュメントに未決事項や論点を記載する項目が必須構成に指定されていないため、POの承認判断に必要な情報が不足する可能性がある。
-    message_ja: nfr-performance ドキュメントに未決事項や論点を記載する項目が必須構成に指定されていないため、POの承認判断に必要な情報が不足する可能性がある。
+    rule: vp-ba-stakeholder-clarity
+    line: 68
+    anchor: "- 同時接続数、RPS（秒間処理件数）、データ量、時間帯を明記する。ピーク時は事前に合意した高負荷条件とする。"
+    message: ピーク時を「事前に合意した高負荷条件」とするが、合意する関係者（業務・運用側の確認者）と合意結果を記載する箇所が定義されておらず、ピーク条件の根拠を後から確認できない。
+    message_ja: ピーク時を「事前に合意した高負荷条件」とするが、合意する関係者（業務・運用側の確認者）と合意結果を記載する箇所が定義されておらず、ピーク条件の根拠を後から確認できない。
   - id: F002
     severity: minor
-    rule: vp-pm-control-reporting
-    line: 56
-    anchor: "## 5. 本文構成（標準テンプレ）"
-    message: 課題やリスクを課題管理等へ転記するための項目やルールが定義されていない。
-    message_ja: 課題やリスクを課題管理等へ転記するための項目やルールが定義されていない。
+    rule: vp-dev-implementation-readiness
+    line: 22
+    anchor: "## 3. ファイル命名・ID規則"
+    message: 「ファイル命名・ID規則」にファイル名と配置ディレクトリの規定がなく、成果物の作成先を本書から決定できない。
+    message_ja: 「ファイル命名・ID規則」にファイル名と配置ディレクトリの規定がなく、成果物の作成先を本書から決定できない。
   - id: F003
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 15
+    anchor: "## 2. 位置づけ"
+    message: 性能要件の基準値を変更した際に `sac-*`・`stc-*`・`opd-*` の受入条件・試験仕様・監視閾値を追従更新する旨が定義されておらず、変更影響の識別が読み手任せになっている。
+    message_ja: 性能要件の基準値を変更した際に `sac-*`・`stc-*`・`opd-*` の受入条件・試験仕様・監視閾値を追従更新する旨が定義されておらず、変更影響の識別が読み手任せになっている。
+  - id: F004
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 81
+    anchor: "- 要件IDごとに測定方法・判定タイミング・合格条件を示し、負荷試験と運用監視の双方で判定できる形にする。"
+    message: 測定・検証方法に測定環境（本番相当か・外部依存の扱い）と計測時間・試行回数の記載が求められておらず、P95 等の判定結果の再現性を担保できない。
+    message_ja: 測定・検証方法に測定環境（本番相当か・外部依存の扱い）と計測時間・試行回数の記載が求められておらず、P95 等の判定結果の再現性を担保できない。
+  - id: F005
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 25
+    anchor: "- 生成対象ドキュメントIDは `nfr-performance` を推奨する。"
+    message: 生成対象ドキュメントIDを `nfr-performance` としており、プロジェクト修飾ID（`＜project-id＞:nfr-performance`）を推奨する他 rulebook の ID 規則と整合しない。
+    message_ja: 生成対象ドキュメントIDを `nfr-performance` としており、プロジェクト修飾ID（`＜project-id＞:nfr-performance`）を推奨する他 rulebook の ID 規則と整合しない。
+  - id: F006
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 88
+    anchor: "- `sac-*`、`stc-*`、`opd-*`、`dec-*` への導線を記載する。"
+    message: 関連ドキュメント導線で `dec-*` を必須の導線先としているが、位置づけ章には `dec-*` が挙げられておらず、関連文書の範囲が章間で一致しない。
+    message_ja: 関連ドキュメント導線で `dec-*` を必須の導線先としているが、位置づけ章には `dec-*` が挙げられておらず、関連文書の範囲が章間で一致しない。
+  - id: F007
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# 非機能要件 / 性能 作成ルール"
     message: 参照サンプルが本ルールで定義した必須本文構成（第5節）に従っておらず、成果物の正解例として不適切である。
     message_ja: 参照サンプルが本ルールで定義した必須本文構成（第5節）に従っておらず、成果物の正解例として不適切である。
-  - id: F004
+  - id: F008
     severity: minor
-    rule: vp-ops-release-readiness
-    line: 37
-    anchor: "## 4. 推奨 Frontmatter 項目"
-    message: "`ready` 状態へ移行するための条件や、リリース判断に必要な前提事項の定義がない。"
-    message_ja: "`ready` 状態へ移行するための条件や、リリース判断に必要な前提事項の定義がない。"
+    rule: vp-ux-language-consistency
+    line: 130
+    anchor: "| 要件ID       | 測定方法                               | 判定タイミング | 合格条件                   |"
+    message: 性能要件一覧では `id`、測定・検証方法の例では `要件ID` と同一識別子の列名が揺れており、表間の対応付けで読み手が迷う。
+    message_ja: 性能要件一覧では `id`、測定・検証方法の例では `要件ID` と同一識別子の列名が揺れており、表間の対応付けで読み手が迷う。

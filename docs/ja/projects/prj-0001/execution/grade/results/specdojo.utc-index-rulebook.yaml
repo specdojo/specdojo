@@ -4,16 +4,17 @@ document: specdojo:utc-index-rulebook
 path: docs/ja/specdojo/rulebooks/utc-index-rulebook.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-rulebook
 verdict: needs-work
-score: 96
-graded_at: "2026-10-10T21:05:59.272Z"
-graded_by: agy-expert-executor
-content_hash: 07918f43270d0e4b668d93dc470dd8ab5271a915a98407a21a68d9b65f21a152
+score: 87
+graded_at: "2026-11-21T06:12:16.111Z"
+graded_by: opus-executor
+content_hash: 4d97176db8061872bc0c1c65202a8d367d4015dab314e5bb7624ae1bf21ae421
 categories:
   purpose:
     score: 100
   operations:
-    score: 100
+    score: 94
   planning:
     score: 100
   business:
@@ -21,13 +22,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 83
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 75
   consistency:
-    score: 100
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -60,8 +61,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-implementation-readiness:
     level: 4
     score: 100
@@ -72,11 +73,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
     level: 2
     score: 50
@@ -84,11 +85,11 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-operability:
     level: 4
     score: 100
@@ -101,10 +102,35 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 1
-  minor: 0
+  minor: 5
   note: 0
 findings:
   - id: F001
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 192
+    anchor: "- スキーマ/SQLそのものが責務の場合も、実接続の検証は IT へ寄せる"
+    message: 「スキーマ/SQLそのものが責務の場合も、実接続の検証は IT へ寄せる」は対象外・除外理由の典型例の表（実DB接続の行の例外欄）と同じ主張の再掲であり、一方を参照に置き換えて重複を解消する。
+    message_ja: 「スキーマ/SQLそのものが責務の場合も、実接続の検証は IT へ寄せる」は対象外・除外理由の典型例の表（実DB接続の行の例外欄）と同じ主張の再掲であり、一方を参照に置き換えて重複を解消する。
+  - id: F002
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 225
+    anchor: 推奨カラム（運用必須）：
+    message: 「推奨カラム（運用必須）」は推奨と必須が混在した表記で、欠落時に fail と判定すべきか決まらないため、必須か任意かを一つに定めるか、運用必須となる条件を明記する。
+    message_ja: 「推奨カラム（運用必須）」は推奨と必須が混在した表記で、欠落時に fail と判定すべきか決まらないため、必須か任意かを一つに定めるか、運用必須となる条件を明記する。
+  - id: F003
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 9
+    anchor: "- **目的と根拠**: `tsp-index` に基づき、対象別カタログの分割基準・観点/条件・依存境界・合格基準・証跡方針を揃える。"
+    message: >-
+      目的で「合格基準・証跡方針を揃える」と述べているが、本文構成（標準テンプレ）に共通の合格基準・証跡方針を扱う章がなく、ケース表の `期待値`／`証跡`
+      カラムだけでは対応しないため、章を追加するか目的の記述をケース表の共通カラムに合わせて修正する。
+    message_ja: >-
+      目的で「合格基準・証跡方針を揃える」と述べているが、本文構成（標準テンプレ）に共通の合格基準・証跡方針を扱う章がなく、ケース表の `期待値`／`証跡`
+      カラムだけでは対応しないため、章を追加するか目的の記述をケース表の共通カラムに合わせて修正する。
+  - id: F004
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
@@ -115,3 +141,21 @@ findings:
     message_ja: >-
       参照しているサンプル `docs/ja/specdojo/samples/utc-index-sample.md` が、本書の「5.
       本文構成（標準テンプレ）」で定義した必須見出し構成および順序と整合しておらず、ルールを逸脱している。
+  - id: F005
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 22
+    anchor: TCIndex["utc-index<br>テスト仕様-全体構成"]
+    message: 図のノード名「テスト仕様-全体構成」「テスト仕様-対象別」が H1・本文の「単体テストカタログ 概要／対象別」と表記ゆれしているため、成果物名に揃える。
+    message_ja: 図のノード名「テスト仕様-全体構成」「テスト仕様-対象別」が H1・本文の「単体テストカタログ 概要／対象別」と表記ゆれしているため、成果物名に揃える。
+  - id: F006
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 1
+    anchor: "# 単体テストカタログ概要 作成ルール"
+    message: >-
+      `recipe`・`template` が `undecided` で sample も本文構成と未整合のまま、ready 化前に解消すべき未決事項が本文から読み取れないため、残課題として明示するか解消してから ready
+      化判断に回す。
+    message_ja: >-
+      `recipe`・`template` が `undecided` で sample も本文構成と未整合のまま、ready 化前に解消すべき未決事項が本文から読み取れないため、残課題として明示するか解消してから ready
+      化判断に回す。

@@ -4,20 +4,21 @@ document: specdojo:sac-sample
 path: docs/ja/specdojo/samples/sac-sample.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-sample
 verdict: needs-work
-score: 67
-graded_at: "2026-10-17T20:28:20.096Z"
-graded_by: agy-expert-executor
-content_hash: 2c624d11fed83bfb342f69e815913cb4a41ed355d2c64632c9231613bfc71c6b
+score: 61
+graded_at: "2026-11-21T05:45:38.025Z"
+graded_by: opus-executor
+content_hash: 482a2dd6e0148efe506ae221d8ce3ce6cf67cf75ef502604569041d9af9af911
 categories:
   purpose:
-    score: 75
+    score: 63
   operations:
-    score: 88
+    score: 94
   planning:
-    score: 92
+    score: 75
   business:
-    score: 67
+    score: 58
   architecture:
     score: 92
   usability:
@@ -25,13 +26,13 @@ categories:
   implementation:
     score: 88
   quality:
-    score: 58
+    score: 42
   consistency:
     score: 25
 viewpoints:
   vp-po-purpose-alignment:
-    level: 3
-    score: 75
+    level: 2
+    score: 50
   vp-po-decision-readiness:
     level: 3
     score: 75
@@ -42,17 +43,17 @@ viewpoints:
     level: 3
     score: 75
   vp-pm-dependency-risk:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-control-reporting:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-business-value:
     level: 3
     score: 75
   vp-ba-requirements-completeness:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ba-stakeholder-clarity:
     level: 3
     score: 75
@@ -75,14 +76,14 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-verifiability:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-qe-omissions-consistency:
     level: 1
     score: 25
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ux-readability:
     level: 2
     score: 50
@@ -93,8 +94,8 @@ viewpoints:
     level: 3
     score: 75
   vp-ops-operability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -103,8 +104,8 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 6
-  minor: 12
+  major: 10
+  minor: 14
   note: 0
 findings:
   - id: F001
@@ -112,146 +113,174 @@ findings:
     rule: vp-po-purpose-alignment
     line: 5
     anchor: 本書は、システム全体としての合格基準を定義するための最小サンプルである。
-    message: >-
-      The document defines its purpose as providing a minimal sample for system acceptance criteria for a candy store
-      sales management system, but fails to provide actual acceptance criteria aligned with that purpose.
+    message: このドキュメントは、目的を菓子店販売管理システムのシステム受け入れ基準のための最小限のサンプルを提供することと定義していますが、その目的に沿った実際の受け入れ基準が提供されていません。
     message_ja: このドキュメントは、目的を菓子店販売管理システムのシステム受け入れ基準のための最小限のサンプルを提供することと定義していますが、その目的に沿った実際の受け入れ基準が提供されていません。
   - id: F002
+    severity: major
+    rule: vp-po-purpose-alignment
+    line: 5
+    anchor: 本書は、システム全体としての合格基準を定義するための最小サンプルである。
+    message: "目的に「合格基準を定義する」とあるのに受入条件が1件もないため、駄菓子屋きぬやの具体的な受入対象（例: 販売記録の性能や在庫照会）を1つ決め、その出口条件を概要と受入条件で示すべきである。"
+    message_ja: "目的に「合格基準を定義する」とあるのに受入条件が1件もないため、駄菓子屋きぬやの具体的な受入対象（例: 販売記録の性能や在庫照会）を1つ決め、その出口条件を概要と受入条件で示すべきである。"
+  - id: F003
     severity: minor
     rule: vp-po-decision-readiness
     line: 26
     anchor: "## 5. 未解決事項"
-    message: >-
-      The unresolved issues section lacks specific decision points, impacts, and next actions needed for PO evaluation,
-      only stating generic deferral to actual project implementation.
+    message: 未解決事項のセクションには、POによる評価に必要な具体的な意思決定ポイント、影響、および次にとるべきアクションが不足しており、実際のプロジェクト実装への一般的な延期のみが記載されています。
     message_ja: 未解決事項のセクションには、POによる評価に必要な具体的な意思決定ポイント、影響、および次にとるべきアクションが不足しており、実際のプロジェクト実装への一般的な延期のみが記載されています。
-  - id: F003
+  - id: F004
     severity: minor
     rule: vp-pm-plan-feasibility
     line: 16
     anchor: "- 必須観点: 対象、条件、判定基準、責任者"
-    message: >-
-      The document lists mandatory perspectives including responsible parties, but does not specify actual role codes or
-      verification completion conditions for tasks.
+    message: ドキュメントには責任者を含む必須の観点がリストされていますが、実際のロールコードやタスクの検証完了条件は指定されていません。
     message_ja: ドキュメントには責任者を含む必須の観点がリストされていますが、実際のロールコードやタスクの検証完了条件は指定されていません。
-  - id: F004
+  - id: F005
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 9
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+    message: 受入条件の根拠となる NFR・BAC への依存と、下位テスト設計（テスト条件一覧など）がこの SAC を参照する関係が示されていないため、`based_on` と後続成果物への影響を例として示すべきである。
+    message_ja: 受入条件の根拠となる NFR・BAC への依存と、下位テスト設計（テスト条件一覧など）がこの SAC を参照する関係が示されていないため、`based_on` と後続成果物への影響を例として示すべきである。
+  - id: F006
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 28
+    anchor: "| 論点           | 処理方針                 |"
+    message: "未解決事項に影響と登録簿への引き継ぎ要否が無く「実案件適用時に具体化する」のみのため、rulebook のメモ / 将来課題に沿って未確定の前提（例: ピーク時の定義）の論点と影響を書くべきである。"
+    message_ja: "未解決事項に影響と登録簿への引き継ぎ要否が無く「実案件適用時に具体化する」のみのため、rulebook のメモ / 将来課題に沿って未確定の前提（例: ピーク時の定義）の論点と影響を書くべきである。"
+  - id: F007
     severity: minor
     rule: vp-ba-business-value
     line: 9
     anchor: "- 対象: 駄菓子屋の販売管理システム"
-    message: >-
-      The sample specifies the target system as a candy store sales management system, but does not describe the
-      business problem, expected value, or how the acceptance criteria serve stakeholder needs.
+    message: サンプルでは対象システムを菓子店販売管理システムとして規定していますが、ビジネス上の課題、期待される価値、または受け入れ基準がどのようにステークホルダーのニーズに応えるのかについては説明されていません。
     message_ja: サンプルでは対象システムを菓子店販売管理システムとして規定していますが、ビジネス上の課題、期待される価値、または受け入れ基準がどのようにステークホルダーのニーズに応えるのかについては説明されていません。
-  - id: F005
+  - id: F008
     severity: major
     rule: vp-ba-requirements-completeness
     line: 15
     anchor: "- 主な内容: 機能・非機能・障害・移行などの受け入れ条件"
-    message: >-
-      Specific acceptance conditions, target scope, and out-of-scope boundaries are completely missing, only listing
-      abstract category names.
+    message: 具体的な受け入れ条件、対象スコープ、およびスコープ外の境界が完全に欠落しており、抽象的なカテゴリ名がリストされているだけです。
     message_ja: 具体的な受け入れ条件、対象スコープ、およびスコープ外の境界が完全に欠落しており、抽象的なカテゴリ名がリストされているだけです。
-  - id: F006
+  - id: F009
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 18
+    anchor: "## 4. 最小記述例"
+    message: rulebook が目安とする 2〜8 個の代表シナリオが1つもないため、1受入対象について合否判定が必要な代表パターンをシナリオとして複数示すべきである。
+    message_ja: rulebook が目安とする 2〜8 個の代表シナリオが1つもないため、1受入対象について合否判定が必要な代表パターンをシナリオとして複数示すべきである。
+  - id: F010
     severity: minor
     rule: vp-ba-stakeholder-clarity
     line: 9
     anchor: "- 対象: 駄菓子屋の販売管理システム"
-    message: >-
-      The document does not clearly identify the stakeholders, users (e.g., store clerk/owner), or approvers for the
-      acceptance criteria.
+    message: ドキュメントは、受け入れ基準に関するステークホルダー、ユーザー（例：店員/オーナー）、または承認者を明確に特定していません。
     message_ja: ドキュメントは、受け入れ基準に関するステークホルダー、ユーザー（例：店員/オーナー）、または承認者を明確に特定していません。
-  - id: F007
+  - id: F011
     severity: minor
     rule: vp-arc-technical-constraints
     line: 10
     anchor: "- 前提: プロジェクト文脈は handbook の共通方針に準拠する"
-    message: >-
-      The sample mentions adherence to the handbook policy but omits technical constraints, environment prerequisites,
-      and external dependencies necessary for system acceptance.
+    message: サンプルではハンドブックのポリシーへの準拠について言及されていますが、システムの受け入れに必要な技術的な制約、環境の前提条件、および外部依存関係は省略されています。
     message_ja: サンプルではハンドブックのポリシーへの準拠について言及されていますが、システムの受け入れに必要な技術的な制約、環境の前提条件、および外部依存関係は省略されています。
-  - id: F008
+  - id: F012
     severity: minor
     rule: vp-arc-conciseness
     line: 18
     anchor: "## 4. 最小記述例"
-    message: >-
-      Section 4 merely duplicates the points already stated in Section 3 regarding document purpose and main contents
-      without providing additional actionable information.
+    message: セクション4は、追加の実行可能な情報を提供することなく、ドキュメントの目的と主な内容に関してセクション3ですでに述べられている点を単に重複させているだけです。
     message_ja: セクション4は、追加の実行可能な情報を提供することなく、ドキュメントの目的と主な内容に関してセクション3ですでに述べられている点を単に重複させているだけです。
-  - id: F009
+  - id: F013
     severity: minor
     rule: vp-dev-implementation-readiness
     line: 15
     anchor: "- 主な内容: 機能・非機能・障害・移行などの受け入れ条件"
-    message: >-
-      Inputs, operations, constraints, and completion criteria needed to prepare or implement acceptance test cases are
-      not specified.
+    message: 受け入れテストケースの準備または実施に必要な入力、操作、制約、および完了基準が指定されていません。
     message_ja: 受け入れテストケースの準備または実施に必要な入力、操作、制約、および完了基準が指定されていません。
-  - id: F010
+  - id: F014
     severity: minor
     rule: vp-dev-testability
     line: 18
     anchor: "## 4. 最小記述例"
-    message: >-
-      The sample does not provide verification methods or pass/fail criteria necessary to test the acceptance
-      conditions.
+    message: サンプルには、受け入れ条件をテストするために必要な検証方法や合否基準が提供されていません。
     message_ja: サンプルには、受け入れ条件をテストするために必要な検証方法や合否基準が提供されていません。
-  - id: F011
+  - id: F015
     severity: major
     rule: vp-qe-verifiability
     line: 18
     anchor: "## 4. 最小記述例"
     message: 受入条件の具体例として、数値や単位を含む検証可能な判定基準（例：「3秒以内」など）を提示すべきである。
     message_ja: 受入条件の具体例として、数値や単位を含む検証可能な判定基準（例：「3秒以内」など）を提示すべきである。
-  - id: F012
+  - id: F016
     severity: major
-    rule: vp-qe-omissions-consistency
-    line: 1
-    anchor: "# [システム受入条件](../rulebooks/sac-rulebook.md) サンプル"
-    message: type は specdojo:sac-rulebook の定義に従い test とすべきである。
-    message_ja: type は specdojo:sac-rulebook の定義に従い test とすべきである。
-  - id: F013
+    rule: vp-qe-verifiability
+    line: 30
+    anchor: "| 要件詳細の補強 | 実案件適用時に具体化する |"
+    message: 未解決事項が「実案件適用時に具体化する」と判定基準の具体化をすべて先送りしており、サンプル内に検証可能な期待結果（観測点・計測値・閾値）が一つも残らないため、少なくとも1シナリオで期待結果と判定方法を確定値で示すべきである。
+    message_ja: 未解決事項が「実案件適用時に具体化する」と判定基準の具体化をすべて先送りしており、サンプル内に検証可能な期待結果（観測点・計測値・閾値）が一つも残らないため、少なくとも1シナリオで期待結果と判定方法を確定値で示すべきである。
+  - id: F017
     severity: major
     rule: vp-qe-omissions-consistency
     line: 3
     anchor: "## 1. 目的と適用範囲"
     message: rulebook の 5 節で定義された標準構成（概要、受入条件、メモ/将来課題）に従って記述すべきである。
     message_ja: rulebook の 5 節で定義された標準構成（概要、受入条件、メモ/将来課題）に従って記述すべきである。
-  - id: F014
+  - id: F018
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 1
+    anchor: "# [システム受入条件](../rulebooks/sac-rulebook.md) サンプル"
+    message: >-
+      rulebook の推奨 Frontmatter 項目は `based_on` に NFR・BAC 等の根拠 ID を必ず紐づけるとしているが、サンプルの Frontmatter に `based_on`
+      が無いため追加すべきである。
+    message_ja: >-
+      rulebook の推奨 Frontmatter 項目は `based_on` に NFR・BAC 等の根拠 ID を必ず紐づけるとしているが、サンプルの Frontmatter に `based_on`
+      が無いため追加すべきである。
+  - id: F019
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 1
+    anchor: "# [システム受入条件](../rulebooks/sac-rulebook.md) サンプル"
+    message: "H1 が rulebook のファイル命名・ID規則にある `# システム受入条件: ＜受入対象＞` 形式になっていないため、受入対象を明示した形式に揃えるべきである。"
+    message_ja: "H1 が rulebook のファイル命名・ID規則にある `# システム受入条件: ＜受入対象＞` 形式になっていないため、受入対象を明示した形式に揃えるべきである。"
+  - id: F020
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# [システム受入条件](../rulebooks/sac-rulebook.md) サンプル"
     message: SAC の具体例ではなく解説書となっているため、実際に運用可能な SAC 文書の形式で完成例を提示すべきである。
     message_ja: SAC の具体例ではなく解説書となっているため、実際に運用可能な SAC 文書の形式で完成例を提示すべきである。
-  - id: F015
+  - id: F021
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 18
+    anchor: "## 4. 最小記述例"
+    message: >-
+      rulebook の「サンプル（簡易）」の例が本サンプルより具体的で、sample が完成例の正本として機能していないため、sample 側に駄菓子屋文脈の完成した SAC を置き rulebook
+      の例と矛盾しない内容にすべきである。
+    message_ja: >-
+      rulebook の「サンプル（簡易）」の例が本サンプルより具体的で、sample が完成例の正本として機能していないため、sample 側に駄菓子屋文脈の完成した SAC を置き rulebook
+      の例と矛盾しない内容にすべきである。
+  - id: F022
     severity: major
     rule: vp-ux-readability
     line: 18
     anchor: "## 4. 最小記述例"
     message: 最小記述例として表形式ではなく, rulebook で推奨されるシナリオ形式（前提・操作・期待結果）を用いた具体例を記載すべきである。
     message_ja: 最小記述例として表形式ではなく, rulebook で推奨されるシナリオ形式（前提・操作・期待結果）を用いた具体例を記載すべきである。
-  - id: F016
+  - id: F023
     severity: minor
     rule: vp-ux-language-consistency
     line: 15
     anchor: "- 主な内容: 機能・非機能・障害・移行などの受け入れ条件"
     message: Notations for acceptance criteria are inconsistent between '受入条件' and '受け入れ条件' across sections.
     message_ja: Notations for acceptance criteria are inconsistent between '受入条件' and '受け入れ条件' across sections.
-  - id: F017
+  - id: F024
     severity: minor
     rule: vp-ops-release-readiness
     line: 26
     anchor: "## 5. 未解決事項"
-    message: >-
-      The document lacks specific exit criteria, reviewer assignments, and prerequisites required to transition status
-      from draft to ready.
+    message: ドキュメントには、ステータスを下書きから準備完了へ移行するために必要な具体的な終了基準、レビュアーの割り当て、および前提条件が不足しています。
     message_ja: ドキュメントには、ステータスを下書きから準備完了へ移行するために必要な具体的な終了基準、レビュアーの割り当て、および前提条件が不足しています。
-  - id: F018
-    severity: minor
-    rule: vp-ops-operability
-    line: 1
-    anchor: "# [システム受入条件](../rulebooks/sac-rulebook.md) サンプル"
-    message: Operational information regarding maintenance, ownership, and update triggers for the sample is not provided.
-    message_ja: サンプルのメンテナンス、所有権、および更新のトリガーに関する運用情報が提供されていません。

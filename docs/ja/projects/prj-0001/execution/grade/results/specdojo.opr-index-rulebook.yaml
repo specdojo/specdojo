@@ -4,28 +4,29 @@ document: specdojo:opr-index-rulebook
 path: docs/ja/specdojo/rulebooks/opr-index-rulebook.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-rulebook
 verdict: needs-work
-score: 79
-graded_at: "2026-11-07T20:16:12.703Z"
-graded_by: flash-high-executor
-content_hash: 77c4d8d7514636cb4ed352ae2f0f33e5f65545c2eead0f76501bf56da3ee07b4
+score: 84
+graded_at: "2026-11-21T05:00:54.983Z"
+graded_by: opus-executor
+content_hash: 9544e06a67c094da4ac8db27c5b89ced7ea7f0d2f1e691f5273108176d08be1c
 categories:
   purpose:
-    score: 88
+    score: 100
   operations:
-    score: 88
+    score: 94
   planning:
-    score: 92
+    score: 100
   business:
-    score: 92
+    score: 100
   architecture:
     score: 100
   usability:
     score: 83
   implementation:
-    score: 100
+    score: 88
   quality:
-    score: 50
+    score: 67
   consistency:
     score: 75
 viewpoints:
@@ -33,14 +34,14 @@ viewpoints:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
-  vp-po-publication-accountability:
     level: 4
     score: 100
-  vp-pm-plan-feasibility:
+  vp-po-publication-accountability:
     level: 3
     score: 75
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
     level: 4
     score: 100
@@ -51,8 +52,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
     level: 4
     score: 100
@@ -63,8 +64,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-change-impact:
     level: 4
     score: 100
@@ -72,8 +73,8 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-verifiability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
     level: 3
     score: 75
@@ -81,17 +82,17 @@ viewpoints:
     level: 1
     score: 25
   vp-ux-readability:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-ops-release-readiness:
     level: 4
     score: 100
-  vp-ops-release-readiness:
-    level: 3
-    score: 75
   vp-ops-operability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -100,112 +101,92 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 4
-  minor: 9
+  major: 2
+  minor: 7
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-decision-readiness
-    line: 1
-    anchor: "# 運用手順 全体構成 作成ルール"
-    message: >-
-      While the document status is 'draft' and related assets (recipe, template) are undecided, it does not specify
-      pending decisions, review points, or criteria required for the PO to approve and transition it to ready.
-    message_ja: >-
-      ドキュメントのステータスが 'draft' であり、関連するアセット（recipe, template）が決まっていない間、POがそれを承認して 'ready'
-      に移行するために必要な未決定事項、レビューポイント、または基準については明記されていません。
+    rule: vp-po-publication-accountability
+    line: 36
+    anchor: "| 4   | 障害対応手順（P1/P2…、切り分け、一次対応、復旧） | ○    | 優先度別の初動 SLA・段階別操作・連絡条件と先                  |"
+    message: 4章の「連絡条件と先」や9章のアカウント付与・剥奪、10章の引継ぎ先を必須としながら、公開リポジトリで個人名・連絡先・アカウント識別子を記載せずロールや窓口名で表す旨の制約が禁止事項・記述ガイドにないため、公開不適切情報の混入を防ぐ規定を追加する必要がある。
+    message_ja: 4章の「連絡条件と先」や9章のアカウント付与・剥奪、10章の引継ぎ先を必須としながら、公開リポジトリで個人名・連絡先・アカウント識別子を記載せずロールや窓口名で表す旨の制約が禁止事項・記述ガイドにないため、公開不適切情報の混入を防ぐ規定を追加する必要がある。
   - id: F002
     severity: minor
-    rule: vp-pm-plan-feasibility
-    line: 36
-    anchor: "## 5. 本文構成（標準テンプレ）"
+    rule: vp-dev-implementation-readiness
+    line: 20
+    anchor: "- ファイル名は `opr-index.md` を推奨する。"
     message: >-
-      The rulebook lists 12 required chapters but lacks guidance on authoring sequence, section dependencies, and
-      explicit completion conditions for planning authoring tasks.
-    message_ja: ルールブックには12の必須チャプターがリストされていますが、執筆の順序、セクション間の依存関係、および執筆タスクの計画における明示的な完了条件に関するガイダンスが不足しています。
+      ファイル名 `opr-index.md` は示されているが配置先ディレクトリ（`docs/ja/projects/＜project-id＞/` 配下の章ディレクトリ）や docs-structure-guide
+      への参照がなく、作成時の作業対象パスを決められないため配置規則を追加する必要がある。
+    message_ja: >-
+      ファイル名 `opr-index.md` は示されているが配置先ディレクトリ（`docs/ja/projects/＜project-id＞/` 配下の章ディレクトリ）や docs-structure-guide
+      への参照がなく、作成時の作業対象パスを決められないため配置規則を追加する必要がある。
   - id: F003
     severity: minor
-    rule: vp-ba-requirements-completeness
-    line: 36
-    anchor: "## 5. 本文構成（標準テンプレ）"
-    message: システムによってはバッチ処理（7章）や独自のアカウント管理（9章）が存在しない場合もあるため、全12章を一律に必須とすると適用先で無駄な記述を強いる可能性がある。
-    message_ja: システムによってはバッチ処理（7章）や独自のアカウント管理（9章）が存在しない場合もあるため、全12章を一律に必須とすると適用先で無駄な記述を強いる可能性がある。
+    rule: vp-dev-testability
+    line: 11
+    anchor: >-
+      - **共通の運用**: 役割は適用先のメンバー定義、`status`・承認・改訂と廃止・未決事項の引き継ぎは [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]]
+      に従う。整形・lint はリポジトリの検証で扱う。
+    message: >-
+      前回指摘のうち受入確認手順は50行目で解消したが、「整形・lint はリポジトリの検証で扱う」とするのみで、生成した opr-index の
+      Frontmatter・本文を検証する具体的なコマンド（lint:md・lint:fm・validate:schema 等）と期待結果が示されておらず、検証方法が作成者に伝わらない。
+    message_ja: >-
+      前回指摘のうち受入確認手順は50行目で解消したが、「整形・lint はリポジトリの検証で扱う」とするのみで、生成した opr-index の
+      Frontmatter・本文を検証する具体的なコマンド（lint:md・lint:fm・validate:schema 等）と期待結果が示されておらず、検証方法が作成者に伝わらない。
   - id: F004
     severity: minor
-    rule: vp-dev-testability
-    line: 55
-    anchor: "## 6. 記述ガイド"
-    message: >-
-      The rulebook does not provide validation commands or procedures (such as schema validation or lint checks) to
-      verify that the generated opr-index document conforms to the required rules.
-    message_ja: >-
-      The rulebook does not provide validation commands or procedures (such as schema validation or lint checks) to
-      verify that the generated opr-index document conforms to the required rules.
-  - id: F005
-    severity: major
-    rule: vp-qe-verifiability
-    line: 36
-    anchor: "## 5. 本文構成（標準テンプレ）"
-    message: 本文構成表に「内容（要点）」や「記述基準」の列がなく、各章で具体的に何を記述すべきかの判定条件が不明確である。
-    message_ja: 本文構成表に「内容（要点）」や「記述基準」の列がなく、各章で具体的に何を記述すべきかの判定条件が不明確である。
-  - id: F006
-    severity: minor
     rule: vp-qe-omissions-consistency
-    line: 32
-    anchor: "| `rulebook`   | `specdojo:opr-index-rulebook`    | 任意 |"
-    message: 推奨 Frontmatter 項目において `rulebook` の指定が「任意」となっているが、文書のルール準拠を機械的に判定するために必須とすることが望ましい。
-    message_ja: 推奨 Frontmatter 項目において `rulebook` の指定が「任意」となっているが、文書のルール準拠を機械的に判定するために必須とすることが望ましい。
-  - id: F007
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 運用手順 全体構成 作成ルール"
-    message: "`recipe` および `template` が `undecided` のままであり、作成支援資産が不足している。"
-    message_ja: "`recipe` および `template` が `undecided` のままであり、作成支援資産が不足している。"
-  - id: F008
+    line: 19
+    anchor: "- ID は `opr-index` とする。"
+    message: >-
+      ID を `opr-index` と定めているが、プロジェクト成果物の ID はプロジェクト修飾（`＜project-id＞:opr-index`）が標準であり、メタ情報標準や他 rulebook
+      と整合しないため、修飾形式と例を明記する必要がある。
+    message_ja: >-
+      ID を `opr-index` と定めているが、プロジェクト成果物の ID はプロジェクト修飾（`＜project-id＞:opr-index`）が標準であり、メタ情報標準や他 rulebook
+      と整合しないため、修飾形式と例を明記する必要がある。
+  - id: F005
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# 運用手順 全体構成 作成ルール"
     message: 対応サンプル `specdojo:opr-index-sample` が本ルールブックに従っておらず、Frontmatter の `rulebook` 指定が誤っている（`opd-rulebook` になっている）。
     message_ja: 対応サンプル `specdojo:opr-index-sample` が本ルールブックに従っておらず、Frontmatter の `rulebook` 指定が誤っている（`opd-rulebook` になっている）。
-  - id: F009
+  - id: F006
     severity: major
     rule: vp-qe-kata-conformance
-    line: 36
+    line: 27
     anchor: "## 5. 本文構成（標準テンプレ）"
     message: 本ルールブックで 12 章すべてを必須（○）としているが、対応サンプルでは 4 章分しか実装されておらず、整合していない。
     message_ja: 本ルールブックで 12 章すべてを必須（○）としているが、対応サンプルでは 4 章分しか実装されておらず、整合していない。
-  - id: F010
-    severity: major
-    rule: vp-ux-readability
-    line: 36
-    anchor: "## 5. 本文構成（標準テンプレ）"
-    message: 本文構成表に記述要点がなく、章タイトルから内容を推測させる形式となっており、作成者の判断に依存する。
-    message_ja: 本文構成表に記述要点がなく、章タイトルから内容を推測させる形式となっており、作成者の判断に依存する。
-  - id: F011
+  - id: F007
     severity: minor
-    rule: vp-ux-readability
-    line: 55
-    anchor: "## 6. 記述ガイド"
-    message: 12 章という広範な構成を要求していながら、記述ガイドが一部の章（障害対応、バッチ等）に限定されており、他の必須章に対するガイダンスが不足している。
-    message_ja: 12 章という広範な構成を要求していながら、記述ガイドが一部の章（障害対応、バッチ等）に限定されており、他の必須章に対するガイダンスが不足している。
-  - id: F012
-    severity: minor
-    rule: vp-ops-release-readiness
-    line: 1
-    anchor: "# 運用手順 全体構成 作成ルール"
+    rule: vp-qe-kata-conformance
+    line: 49
+    anchor: "- 手順表の標準列は「実施者・入力条件・操作・完了条件・証跡」とする。良い例:「当番・再実行済み・実行 ID で結果照合・成功かつ重複なし・実行ログ」。悪い例:「適宜再実行」。"
     message: >-
-      The rulebook is marked as 'draft' in the frontmatter, but it does not specify the ready conditions or release
-      prerequisites required to transition it to 'ready'.
-    message_ja: ルールブックのフロントマターでは 'draft' とマークされていますが、'ready' に移行するために必要な ready 条件やリリース前の要件については明記されていません。
-  - id: F013
+      手順表の標準列を「実施者・入力条件・操作・完了条件・証跡」と定めているが、対応サンプルの点検手順表には「入力条件」「操作」列がなく、12章見出しの括弧書きも rulebook
+      と食い違っているため、サンプルを標準列・章見出しに合わせる必要がある。
+    message_ja: >-
+      手順表の標準列を「実施者・入力条件・操作・完了条件・証跡」と定めているが、対応サンプルの点検手順表には「入力条件」「操作」列がなく、12章見出しの括弧書きも rulebook
+      と食い違っているため、サンプルを標準列・章見出しに合わせる必要がある。
+  - id: F008
     severity: minor
-    rule: vp-ops-operability
-    line: 1
-    anchor: "# 運用手順 全体構成 作成ルール"
-    message: >-
-      The rulebook does not describe how this rulebook itself should be maintained, updated, or who to contact for
-      questions and rule exemptions.
-    message_ja: ルールブックには、このルールブック自体をどのように維持・更新すべきか、または質問やルールの例外について誰に連絡すべきかが記載されていません。
+    rule: vp-ux-readability
+    line: 15
+    anchor: "`opr-index` は手順群の入口・共通規約、`opr-<term>` は差分（具体手順・個別判断）、`opd-index` は方針を担う。"
+    message: 位置づけが1文のみで、`opr-＜term＞` を「差分」とする意味や `opr`/`opd` の略語、どの章を index に書きどの章を分冊へ切り出すかの判断基準が示されておらず、初見の作成者が分冊の判断を読み取れない。
+    message_ja: 位置づけが1文のみで、`opr-＜term＞` を「差分」とする意味や `opr`/`opd` の略語、どの章を index に書きどの章を分冊へ切り出すかの判断基準が示されておらず、初見の作成者が分冊の判断を読み取れない。
+  - id: F009
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 56
+    anchor: "- `opd` と矛盾する手順を独自に定義しない。"
+    message: 方針文書の表記が `opd-*`（9行目）・`opd-index`（15行目・12章）・`opd`（56行目）と揺れており、禁止事項の対象範囲が文書群全体か index のみか曖昧なため統一する必要がある。
+    message_ja: 方針文書の表記が `opd-*`（9行目）・`opd-index`（15行目・12章）・`opd`（56行目）と揺れており、禁止事項の対象範囲が文書群全体か index のみか曖昧なため統一する必要がある。
+level_corrections:
+  - viewpoint: vp-qe-kata-conformance
+    original_level: 2
+    corrected_level: 1

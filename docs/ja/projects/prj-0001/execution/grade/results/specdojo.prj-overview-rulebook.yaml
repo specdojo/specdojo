@@ -4,16 +4,17 @@ document: specdojo:prj-overview-rulebook
 path: docs/ja/specdojo/rulebooks/prj-overview-rulebook.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-rulebook
 verdict: pass
-score: 95
-graded_at: "2026-10-06T21:28:55.520Z"
-graded_by: agy-expert-executor
-content_hash: 375ea094d9f3495cd8a7a9e91806c29b8dfc98b8b1da07e8489bb51449627d52
+score: 85
+graded_at: "2026-11-21T05:34:06.593Z"
+graded_by: opus-executor
+content_hash: a158501fba53cdb50fc6e4ae601551cd5bdba75f57f1723272d8eb00deae1eff
 categories:
   purpose:
     score: 100
   operations:
-    score: 100
+    score: 94
   planning:
     score: 100
   business:
@@ -21,13 +22,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 83
+    score: 75
   implementation:
-    score: 100
+    score: 88
   quality:
-    score: 92
+    score: 75
   consistency:
-    score: 100
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -66,17 +67,17 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-change-impact:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-testability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
     level: 3
     score: 75
@@ -84,14 +85,14 @@ viewpoints:
     level: 3
     score: 75
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 4
     score: 100
   vp-ops-operability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -101,31 +102,99 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 3
+  minor: 11
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-arc-conciseness
-    line: 1
-    anchor: "# プロジェクト概要 作成ルール"
+    line: 158
+    anchor: "### 6.9. プロジェクト憲章・成功基準との分担"
     message: 憲章と成功基準への委譲方針が全体方針および禁止事項と重複しているため、本節を責務境界の正本として他箇所を短い参照へ統合すると、判断情報を失わず簡潔にできる。
     message_ja: 憲章と成功基準への委譲方針が全体方針および禁止事項と重複しているため、本節を責務境界の正本として他箇所を短い参照へ統合すると、判断情報を失わず簡潔にできる。
   - id: F002
     severity: minor
+    rule: vp-arc-conciseness
+    line: 64
+    anchor: "- ドキュメント名は Frontmatter ではなく本文 H1 に記述します（例: `# プロジェクト概要: <プロジェクト名>`）。"
+    message: 「推奨ルール」の H1 直下の導入文に関する規定が「導入文」の記述ガイドと重複しているため、推奨 Frontmatter 項目の章から削除して記述ガイド側へ一本化すると、判断情報を失わず簡潔にできる。
+    message_ja: 「推奨ルール」の H1 直下の導入文に関する規定が「導入文」の記述ガイドと重複しているため、推奨 Frontmatter 項目の章から削除して記述ガイド側へ一本化すると、判断情報を失わず簡潔にできる。
+  - id: F003
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 61
+    anchor: "### 4.2. 推奨ルール"
+    message: >-
+      本文構成や期待効果の時間軸を改訂した際に追従が必要な template・sample・recipe・既存プロジェクトの `prj-overview` が示されていないため、authoring standard
+      の要求に沿って自系統の追従対象を記載する必要がある。
+    message_ja: >-
+      本文構成や期待効果の時間軸を改訂した際に追従が必要な template・sample・recipe・既存プロジェクトの `prj-overview` が示されていないため、authoring standard
+      の要求に沿って自系統の追従対象を記載する必要がある。
+  - id: F004
+    severity: minor
+    rule: vp-dev-testability
+    line: 47
+    anchor: Frontmatter は共通スキーマに従います（あわせてドキュメントのメタ情報の記述ルールも参照）。
+    message: Frontmatter の参照スキーマは示されているが、作成後に実行する `npm run lint:md`・`npm run lint:fm` 等の検証手段と期待結果が記載されていないため、適合確認の手順を追記する必要がある。
+    message_ja: Frontmatter の参照スキーマは示されているが、作成後に実行する `npm run lint:md`・`npm run lint:fm` 等の検証手段と期待結果が記載されていないため、適合確認の手順を追記する必要がある。
+  - id: F005
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 128
+    anchor: "- 可能なら、以下のような最小の計測定義を置きます（不明なら空欄ではなく「未確定」）。"
+    message: "「可能なら、以下のような最小の計測定義を置きます」は自ら全体方針で避けるとした曖昧表現に近く、計測定義を省略できる条件が判定できないため、省略可能な条件（例: 該当時間軸を置かない場合）と省略時の記載事項を明示する必要がある。"
+    message_ja: "「可能なら、以下のような最小の計測定義を置きます」は自ら全体方針で避けるとした曖昧表現に近く、計測定義を省略できる条件が判定できないため、省略可能な条件（例: 該当時間軸を置かない場合）と省略時の記載事項を明示する必要がある。"
+  - id: F006
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 52
+    anchor: "| 項目       | 説明                               | 必須 |"
+    message: >-
+      推奨 Frontmatter 項目の表が `id`/`type` 等を名前空間なしで列挙しており、`specdojo:` 配下に置く規約が明示されていないため、`specdojo.id`
+      形式で記載するか配下に置く旨を追記する必要がある。
+    message_ja: >-
+      推奨 Frontmatter 項目の表が `id`/`type` 等を名前空間なしで列挙しており、`specdojo:` 配下に置く規約が明示されていないため、`specdojo.id`
+      形式で記載するか配下に置く旨を追記する必要がある。
+  - id: F007
+    severity: minor
     rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# プロジェクト概要 作成ルール"
+    line: 67
+    anchor: "## 5. 本文構成（標準テンプレ）"
     message: >-
       対応 template を宣言済みなのに「本文構成（標準テンプレ）」として見出し順を rulebook 側でも正本化しているため、この章を「本文要件」として各章の目的・必須性・記述規約に限定し、骨組みの正本は template
       に統一する必要がある。
     message_ja: >-
       対応 template を宣言済みなのに「本文構成（標準テンプレ）」として見出し順を rulebook 側でも正本化しているため、この章を「本文要件」として各章の目的・必須性・記述規約に限定し、骨組みの正本は template
       に統一する必要がある。
-  - id: F003
+  - id: F008
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 128
+    anchor: "- 可能なら、以下のような最小の計測定義を置きます（不明なら空欄ではなく「未確定」）。"
+    message: 記述ガイドは計測定義が不明な場合に「未確定」と書くよう求める一方、recipe は「未確定」ではなく何を記録して後で判定するかを書くよう求めており矛盾しているため、どちらかに統一する必要がある。
+    message_ja: 記述ガイドは計測定義が不明な場合に「未確定」と書くよう求める一方、recipe は「未確定」ではなく何を記録して後で判定するかを書くよう求めており矛盾しているため、どちらかに統一する必要がある。
+  - id: F009
     severity: minor
     rule: vp-ux-readability
-    line: 1
-    anchor: "# プロジェクト概要 作成ルール"
+    line: 158
+    anchor: "### 6.9. プロジェクト憲章・成功基準との分担"
     message: 憲章・成功基準との分担が全体方針と禁止事項でも繰り返されているため、本節に詳細を集約し、他箇所は要約または参照にすると主要な判断点をより追いやすくできる。
     message_ja: 憲章・成功基準との分担が全体方針と禁止事項でも繰り返されているため、本節に詳細を集約し、他箇所は要約または参照にすると主要な判断点をより追いやすくできる。
+  - id: F010
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 145
+    anchor: "| 観点 | 指標 | 目標 | 測定方法 |"
+    message: 推奨表（短期指標）の列名が「目標」だが template・sample では「初期目標」であり、中長期指標とも不統一なため、初期仮説か確定値かの区別方針に合わせて列名を統一する必要がある。
+    message_ja: 推奨表（短期指標）の列名が「目標」だが template・sample では「初期目標」であり、中長期指標とも不統一なため、初期仮説か確定値かの区別方針に合わせて列名を統一する必要がある。
+  - id: F011
+    severity: minor
+    rule: vp-ops-operability
+    line: 61
+    anchor: "### 4.2. 推奨ルール"
+    message: >-
+      `supersedes` を任意項目として挙げるのみで、仮説・期待効果の見直し時の改訂・置き換え手順と担当 Role code
+      が定義されていないため、ドキュメントメタ情報標準のライフサイクル変更管理に沿って自系統の運用を記載する必要がある。
+    message_ja: >-
+      `supersedes` を任意項目として挙げるのみで、仮説・期待効果の見直し時の改訂・置き換え手順と担当 Role code
+      が定義されていないため、ドキュメントメタ情報標準のライフサイクル変更管理に沿って自系統の運用を記載する必要がある。

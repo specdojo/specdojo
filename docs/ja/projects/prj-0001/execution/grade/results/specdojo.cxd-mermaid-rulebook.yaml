@@ -4,30 +4,31 @@ document: specdojo:cxd-mermaid-rulebook
 path: docs/ja/specdojo/rulebooks/cxd-mermaid-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 68
-graded_at: "2026-10-31T20:19:16.346Z"
-graded_by: flash-high-executor
-content_hash: 49b01746d7d061ff5bacc17892837f0b6a00e875e8e7bce4932207eea225e90a
+reference: specdojo:prj-overview-rulebook
+verdict: pass
+score: 87
+graded_at: "2026-11-21T03:39:06.320Z"
+graded_by: opus-executor
+content_hash: c245929de0cbf688cab302b81d74646fe62f184741c78ef9e70d46e5f496eecd
 categories:
   purpose:
     score: 88
   operations:
-    score: 75
+    score: 88
   planning:
-    score: 67
+    score: 100
   business:
-    score: 75
+    score: 92
   architecture:
     score: 92
   usability:
-    score: 75
+    score: 92
   implementation:
-    score: 63
+    score: 88
   quality:
-    score: 50
+    score: 83
   consistency:
-    score: 50
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -36,56 +37,56 @@ viewpoints:
     level: 3
     score: 75
   vp-po-publication-accountability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-plan-feasibility:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-pm-control-reporting:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-business-value:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 2
-    score: 50
-  vp-ba-stakeholder-clarity:
     level: 3
     score: 75
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
     level: 3
     score: 75
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-dev-change-impact:
     level: 3
     score: 75
   vp-dev-testability:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-qe-verifiability:
     level: 3
     score: 75
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
-  vp-qe-kata-conformance:
-    level: 1
-    score: 25
-  vp-ux-readability:
     level: 3
     score: 75
+  vp-qe-kata-conformance:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 3
     score: 75
@@ -93,8 +94,8 @@ viewpoints:
     level: 3
     score: 75
   vp-ops-operability:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -103,8 +104,8 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 8
-  minor: 13
+  major: 0
+  minor: 11
   note: 0
 findings:
   - id: F001
@@ -116,145 +117,87 @@ findings:
     message_ja: Frontmatter の `recipe` と `template` が `undecided` のままであり、要否の判断者、判断タイミング、未決による影響、次アクションが定義されていない。
   - id: F002
     severity: minor
-    rule: vp-po-publication-accountability
-    line: 1
-    anchor: "# Mermaid を用いたC4コンテキスト図 作成ルール"
-    message: 公開対象、公開前に確認する情報、および `ready` 化を最終承認する人間の責任者が定義されていない。
-    message_ja: 公開対象、公開前に確認する情報、および `ready` 化を最終承認する人間の責任者が定義されていない。
+    rule: vp-ba-requirements-completeness
+    line: 82
+    anchor: "- **四角 `[]`** を使用する。"
+    message: >-
+      Person と外部システムが同じ `[]` 形状のため区別は class と 👤 に依存するが、例によって 👤 の有無が異なり（3.1・7 は付与、2 の表・2.1.2・4.2 は無し）、Person ラベルに 👤
+      を付けることが必須か任意かが規定されていない。
+    message_ja: >-
+      Person と外部システムが同じ `[]` 形状のため区別は class と 👤 に依存するが、例によって 👤 の有無が異なり（3.1・7 は付与、2 の表・2.1.2・4.2 は無し）、Person ラベルに 👤
+      を付けることが必須か任意かが規定されていない。
   - id: F003
     severity: minor
-    rule: vp-pm-plan-feasibility
-    line: 11
-    anchor: "## 1. 全体方針"
-    message: 入力情報の確認、要素抽出、作図、レビューという作業順序と、作図タスクを完了とする条件が定義されていない。
-    message_ja: 入力情報の確認、要素抽出、作図、レビューという作業順序と、作図タスクを完了とする条件が定義されていない。
-  - id: F004
-    severity: major
-    rule: vp-pm-dependency-risk
-    line: 1
-    anchor: "# Mermaid を用いたC4コンテキスト図 作成ルール"
-    message: Mermaid 記法だけではCXD成果物の本文要件を満たせないにもかかわらず、内容定義の正本である `specdojo:cxd-rulebook` との依存関係、適用順序、責務分担が宣言されていない。
-    message_ja: Mermaid 記法だけではCXD成果物の本文要件を満たせないにもかかわらず、内容定義の正本である `specdojo:cxd-rulebook` との依存関係、適用順序、責務分担が宣言されていない。
-  - id: F005
-    severity: minor
-    rule: vp-pm-control-reporting
-    line: 1
-    anchor: "# Mermaid を用いたC4コンテキスト図 作成ルール"
-    message: "`recipe` と `template` の未決事項について、決定記録や課題管理へ転記する条件、報告先、担当 Role code が定義されていない。"
-    message_ja: "`recipe` と `template` の未決事項について、決定記録や課題管理へ転記する条件、報告先、担当 Role code が定義されていない。"
-  - id: F006
-    severity: major
     rule: vp-ba-requirements-completeness
-    line: 1
-    anchor: "# Mermaid を用いたC4コンテキスト図 作成ルール"
-    message: CXD成果物に必要なファイルメタデータ、本文構成、入力情報、説明文、受入条件が定義されず、図の記法だけを満たした成果物でも要件適合と誤認できる。
-    message_ja: CXD成果物に必要なファイルメタデータ、本文構成、入力情報、説明文、受入条件が定義されず、図の記法だけを満たした成果物でも要件適合と誤認できる。
-  - id: F007
-    severity: minor
-    rule: vp-ba-stakeholder-clarity
-    line: 5
-    anchor: 本ドキュメントは、アーキテクチャ設計のために、**Mermaid の `flowchart` 構文を使って C4 コンテキスト図（システムコンテキスト）を描く際の標準ルール**です。
-    message: この rulebook を使用する作成者、CXDの合意を確認するレビュー担当、最終合意者、および利用場面が定義されていない。
-    message_ja: この rulebook を使用する作成者、CXDの合意を確認するレビュー担当、最終合意者、および利用場面が定義されていない。
-  - id: F008
+    line: 180
+    anchor: '- 表示ラベルは `"..."` で囲ってよい（混乱を避けるため、必要に応じて統一）。'
+    message: 「表示ラベルは `"..."` で囲ってよい（必要に応じて統一）」は統一の要否と条件が読み取れず、作成者ごとに引用符の有無が揺れるため、常に囲うかどうかを規則として確定する必要がある。
+    message_ja: 「表示ラベルは `"..."` で囲ってよい（必要に応じて統一）」は統一の要否と条件が読み取れず、作成者ごとに引用符の有無が揺れるため、常に囲うかどうかを規則として確定する必要がある。
+  - id: F004
     severity: minor
     rule: vp-arc-technical-constraints
     line: 5
-    anchor: 本ドキュメントは、アーキテクチャ設計のために、**Mermaid の `flowchart` 構文を使って C4 コンテキスト図（システムコンテキスト）を描く際の標準ルール**です。
+    anchor: Mermaid の `flowchart` 構文で C4 コンテキスト図を描くための記法を定めます。要素の選定と責任分界は [[specdojo:cxd-rulebook|C4コンテキスト図（CXD）作成ルール]] に従います。
     message: 対応する Mermaid のバージョン、レンダラー、Markdown実行環境が示されず、例示構文やスタイルの互換性を判断できない。
     message_ja: 対応する Mermaid のバージョン、レンダラー、Markdown実行環境が示されず、例示構文やスタイルの互換性を判断できない。
-  - id: F009
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 58
-    anchor: "```plainText"
-    message: 各 `mermaid` コードブロックの直後に実質同一内容の `plainText` ブロックが反復されており、コピー用途などの差異を説明しない限り一方へ統合できる。
-    message_ja: 各 `mermaid` コードブロックの直後に実質同一内容の `plainText` ブロックが反復されており、コピー用途などの差異を説明しない限り一方へ統合できる。
-  - id: F010
-    severity: major
-    rule: vp-dev-implementation-readiness
-    line: 1
-    anchor: "# Mermaid を用いたC4コンテキスト図 作成ルール"
-    message: 作業対象となる配置先、ファイル命名、Frontmatter、入力情報、期待するMarkdown出力が定義されず, 成果物ファイルの作成作業を一意に開始できない。
-    message_ja: 作業対象となる配置先、ファイル命名、Frontmatter、入力情報、期待するMarkdown出力が定義されず, 成果物ファイルの作成作業を一意に開始できない。
-  - id: F011
+  - id: F005
     severity: minor
     rule: vp-dev-change-impact
     line: 1
     anchor: "# Mermaid を用いたC4コンテキスト図 作成ルール"
     message: ノード形状、スタイル、境界、エッジ規則を変更した場合に、既存CXD、対応 sample、関連 rulebook を追従させる範囲と互換性確認方法が定義されていない。
     message_ja: ノード形状、スタイル、境界、エッジ規則を変更した場合に、既存CXD、対応 sample、関連 rulebook を追従させる範囲と互換性確認方法が定義されていない。
-  - id: F012
-    severity: major
+  - id: F006
+    severity: minor
     rule: vp-dev-testability
-    line: 1
-    anchor: "# Mermaid を用いたC4コンテキスト図 作成ルール"
-    message: Mermaid の構文検証、レンダリング、リンク確認、Frontmatter検証に使用するコマンド、対象ファイル、期待結果、エラー時対応が定義されていない。
-    message_ja: Mermaid の構文検証、レンダリング、リンク確認、Frontmatter検証に使用するコマンド、対象ファイル、期待結果、エラー時対応が定義されていない。
-  - id: F013
+    line: 14
+    anchor: >-
+      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status`・承認・改訂と廃止・未決事項の引き継ぎは [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]]
+      に従います。文書の整形・lint はリポジトリの検証で扱い、業務の受入確認には含めません。
+    message: >-
+      前回指摘の検証手順欠落は「リポジトリの検証で扱う」との委譲で方針上は解消したため severity を下げるが、Mermaid の構文・描画を確認する具体的コマンド（例: `npm run
+      docs:build`）と描画失敗時の対応が示されず、作図後の確認方法を一意に選べない。
+    message_ja: >-
+      前回指摘の検証手順欠落は「リポジトリの検証で扱う」との委譲で方針上は解消したため severity を下げるが、Mermaid の構文・描画を確認する具体的コマンド（例: `npm run
+      docs:build`）と描画失敗時の対応が示されず、作図後の確認方法を一意に選べない。
+  - id: F007
     severity: minor
     rule: vp-qe-verifiability
-    line: 11
+    line: 7
     anchor: "## 1. 全体方針"
     message: 必須ノード、対象システム数、境界、全エッジのラベル、禁止詳細、レンダリング成功をまとめて pass / fail 判定する確認手順がない。
     message_ja: 必須ノード、対象システム数、境界、全エッジのラベル、禁止詳細、レンダリング成功をまとめて pass / fail 判定する確認手順がない。
-  - id: F014
-    severity: major
+  - id: F008
+    severity: minor
     rule: vp-qe-omissions-consistency
-    line: 1
-    anchor: "# Mermaid を用いたC4コンテキスト図 作成ルール"
-    message: 成果物の配置場所、ファイル命名規則、および Frontmatter の詳細定義など, 管理上の必須ルールが欠落している。
-    message_ja: 成果物の配置場所、ファイル命名規則、および Frontmatter の詳細定義など, 管理上の必須ルールが欠落している。
-  - id: F015
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# Mermaid を用いたC4コンテキスト図 作成ルール"
-    message: rulebook としての責務（成果物の識別・管理定義）が不足しており、作図リファレンスの構成になっている。
-    message_ja: rulebook としての責務（成果物の識別・管理定義）が不足しており、作図リファレンスの構成になっている。
-  - id: F016
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# Mermaid を用いたC4コンテキスト図 作成ルール"
-    message: >-
-      Frontmatter で `specdojo:cxd-sample` を対応 sample として宣言しているが、同 sample には Mermaid のC4コンテキスト図がなく、本 rulebook
-      の必須規則を満たす完成例として機能していない。
-    message_ja: >-
-      Frontmatter で `specdojo:cxd-sample` を対応 sample として宣言しているが、同 sample には Mermaid のC4コンテキスト図がなく、本 rulebook
-      の必須規則を満たす完成例として機能していない。
-  - id: F017
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# Mermaid を用いたC4コンテキスト図 作成ルール"
-    message: サンプルのH1におけるルールブックへのリンク先ファイル名が、実際のもの（cxd-mermaid-rulebook.md）と不整合である。
-    message_ja: サンプルのH1におけるルールブックへのリンク先ファイル名が、実際のもの（cxd-mermaid-rulebook.md）と不整合である。
-  - id: F018
-    severity: minor
-    rule: vp-ux-readability
     line: 5
-    anchor: 本ドキュメントは、アーキテクチャ設計のために、**Mermaid の `flowchart` 構文を使って C4 コンテキスト図（システムコンテキスト）を描く際の標準ルール**です。
-    message: 本書がCXD成果物全体ではなく Mermaid 記法を担当する補助 rulebook であることと、本文要件を確認する次の文書が説明されていない。
-    message_ja: 本書がCXD成果物全体ではなく Mermaid 記法を担当する補助 rulebook であることと、本文要件を確認する次の文書が説明されていない。
-  - id: F019
+    anchor: Mermaid の `flowchart` 構文で C4 コンテキスト図を描くための記法を定めます。要素の選定と責任分界は [[specdojo:cxd-rulebook|C4コンテキスト図（CXD）作成ルール]] に従います。
+    message: >-
+      前回指摘の命名・Frontmatter 欠落は `cxd-rulebook` への委譲明示で実質解消したため severity を下げるが、authoring standard
+      の必須章（ファイル命名・ID規則、本文要件、記述ガイド）を省略する理由が記載されておらず、意図的な省略か欠落かを判定できない。
+    message_ja: >-
+      前回指摘の命名・Frontmatter 欠落は `cxd-rulebook` への委譲明示で実質解消したため severity を下げるが、authoring standard
+      の必須章（ファイル命名・ID規則、本文要件、記述ガイド）を省略する理由が記載されておらず、意図的な省略か欠落かを判定できない。
+  - id: F009
     severity: minor
     rule: vp-ux-language-consistency
-    line: 228
-    anchor: 店員["一店員"] -->|"売上登録"| 販売管理システム("販売管理システム")
-    message: エッジ例のノード表示名が他の箇所の「店員」と異なる「一店員」になっており、同一主体の名称統一ルールに反している。
-    message_ja: エッジ例のノード表示名が他の箇所の「店員」と異なる「一店員」になっており、同一主体の名称統一ルールに反している。
-  - id: F020
+    line: 26
+    anchor: "| Relationship（関係）                     | 依存・利用・連携（概念）   | `店員 -->\\| \"売上登録\" \\| 販売管理システム`              |"
+    message: 対応表の Relationship 例がラベル前後に空白を入れた `—＞\| "売上登録" \|` 形式で、4.1・4.2・7 の `—＞\|"売上登録"\|` 形式と表記が揃っておらず、どちらが標準記法か読み手が迷う。
+    message_ja: 対応表の Relationship 例がラベル前後に空白を入れた `—＞\| "売上登録" \|` 形式で、4.1・4.2・7 の `—＞\|"売上登録"\|` 形式と表記が揃っておらず、どちらが標準記法か読み手が迷う。
+  - id: F010
     severity: minor
     rule: vp-ops-release-readiness
     line: 1
     anchor: "# Mermaid を用いたC4コンテキスト図 作成ルール"
     message: "`recipe` と `template` が未決の状態から `ready` へ移行するための解消条件、承認者、公開前確認項目が定義されていない。"
     message_ja: "`recipe` と `template` が未決の状態から `ready` へ移行するための解消条件、承認者、公開前確認項目が定義されていない。"
-  - id: F021
-    severity: major
+  - id: F011
+    severity: minor
     rule: vp-ops-operability
-    line: 1
-    anchor: "# Mermaid を用いたC4コンテキスト図 作成ルール"
-    message: Mermaid更新時の再検証、規則変更時の既存成果物更新、問い合わせ先、レンダリング障害時の切り分け、保守担当 Role code が定義されていない。
-    message_ja: Mermaid更新時の再検証、規則変更時の既存成果物更新、問い合わせ先、レンダリング障害時の切り分け、保守担当 Role code が定義されていない。
+    line: 14
+    anchor: >-
+      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status`・承認・改訂と廃止・未決事項の引き継ぎは [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]]
+      に従います。文書の整形・lint はリポジトリの検証で扱い、業務の受入確認には含めません。
+    message: 前回指摘の保守担当・変更管理の欠落は本文14行目の委譲で解消したため severity を下げるが、Mermaid やレンダラー更新時に標準スタイル・例図を再確認する手順と、描画障害時の切り分け方法が示されていない。
+    message_ja: 前回指摘の保守担当・変更管理の欠落は本文14行目の委譲で解消したため severity を下げるが、Mermaid やレンダラー更新時に標準スタイル・例図を再確認する手順と、描画障害時の切り分け方法が示されていない。

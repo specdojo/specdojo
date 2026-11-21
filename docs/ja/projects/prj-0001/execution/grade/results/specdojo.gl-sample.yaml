@@ -4,10 +4,11 @@ document: specdojo:gl-sample
 path: docs/ja/specdojo/samples/gl-sample.yaml
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-sample
 verdict: pass
-score: 93
-graded_at: "2026-11-16T03:42:51.322Z"
-graded_by: opus-review-executor
+score: 91
+graded_at: "2026-11-21T04:00:30.250Z"
+graded_by: opus-executor
 content_hash: 74dd149a72fd5dbadb91c24a1ce73385c913b49772a0c73a92cfca8ead4af31b
 categories:
   purpose:
@@ -21,7 +22,7 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 83
   implementation:
     score: 100
   quality:
@@ -81,8 +82,8 @@ viewpoints:
     level: 3
     score: 75
   vp-ux-readability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-language-consistency:
     level: 3
     score: 75
@@ -101,7 +102,7 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 4
+  minor: 6
   note: 0
 findings:
   - id: F001
@@ -136,6 +137,30 @@ findings:
       は領域接頭辞を持たず tm-sales-credit-* と混在しているため、新規採番として規約どおりの ID に揃えるか、既存確定 ID
       として維持していることを冒頭コメント等で示し、完成例から規約の適用が読み取れるようにする。
   - id: F004
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 9
+    anchor: "# 単一店舗の販売・在庫・つけ管理を扱う。外部システムとの連携と本格会計は対象外。"
+    message: >-
+      rulebook
+      の位置づけは冒頭コメントまたは代表用語の注記で対象範囲と共通・他領域の正本を示すことを求め、分類・関連用語の判断でも別ファイルの「商品」を文書リンクで案内する例を挙げているが、冒頭コメントは対象範囲だけを示し、定義で使う「商品」（line
+      26・70・84）の正本（共通用語集など）を示していないため、冒頭コメントまたは在庫・販売の notes か source で共通の正本を案内し、完成例から規約の適用が読み取れるようにする。
+    message_ja: >-
+      rulebook
+      の位置づけは冒頭コメントまたは代表用語の注記で対象範囲と共通・他領域の正本を示すことを求め、分類・関連用語の判断でも別ファイルの「商品」を文書リンクで案内する例を挙げているが、冒頭コメントは対象範囲だけを示し、定義で使う「商品」（line
+      26・70・84）の正本（共通用語集など）を示していないため、冒頭コメントまたは在庫・販売の notes か source で共通の正本を案内し、完成例から規約の適用が読み取れるようにする。
+  - id: F005
+    severity: minor
+    rule: vp-ux-readability
+    line: 77
+    anchor: "notes: 発注を検討する基準の発注点とは区別する。"
+    message: >-
+      安全在庫の notes は「発注点とは区別する」と述べるだけで区別の内容がなく、定義も需要変動に備えるという一般論に留まるため、この店舗で誰がどの商品（定番商品など）に設定するのか、発注点との関係（例:
+      発注点は安全在庫に入荷までの販売見込みを加えた水準とする）を注記で示し、初見の読者が2語の境界を判断できるようにする。
+    message_ja: >-
+      安全在庫の notes は「発注点とは区別する」と述べるだけで区別の内容がなく、定義も需要変動に備えるという一般論に留まるため、この店舗で誰がどの商品（定番商品など）に設定するのか、発注点との関係（例:
+      発注点は安全在庫に入荷までの販売見込みを加えた水準とする）を注記で示し、初見の読者が2語の境界を判断できるようにする。
+  - id: F006
     severity: minor
     rule: vp-ux-language-consistency
     line: 16

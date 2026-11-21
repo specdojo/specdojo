@@ -4,64 +4,65 @@ document: specdojo:pm-issue-log-sample
 path: docs/ja/specdojo/samples/pm-issue-log-sample.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-sample
 verdict: needs-work
-score: 94
-graded_at: "2026-10-16T20:42:42.613Z"
-graded_by: agy-expert-executor
+score: 76
+graded_at: "2026-11-21T05:19:39.796Z"
+graded_by: opus-executor
 content_hash: 011399b7a58b370c5fb3badd887695824a576613077c037a5c0cb9ef1f5f49fb
 categories:
   purpose:
-    score: 100
+    score: 75
   operations:
-    score: 100
+    score: 94
   planning:
-    score: 100
+    score: 75
   business:
-    score: 100
+    score: 75
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 75
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 67
   consistency:
     score: 50
 viewpoints:
   vp-po-purpose-alignment:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-decision-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-publication-accountability:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-dependency-risk:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-control-reporting:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-business-value:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-requirements-completeness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-stakeholder-clarity:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -75,26 +76,26 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-qe-omissions-consistency:
     level: 2
     score: 50
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-ux-readability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 4
     score: 100
   vp-ops-operability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -103,21 +104,155 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 1
+  major: 3
+  minor: 17
   note: 0
 findings:
   - id: F001
+    severity: minor
+    rule: vp-po-purpose-alignment
+    line: 5
+    anchor: 本書は、駄菓子屋の販売管理システム構築プロジェクトで発生した課題を追跡管理する最小サンプルである。
+    message: 概要で、本サンプルが登録簿を使わない単独の課題ログ（`IS-NNN` 形式）の完成例であると書いていない。登録簿を使うプロジェクトでは個票から生成する、という使い分けと必要性を概要で示すべきである。
+    message_ja: 概要で、本サンプルが登録簿を使わない単独の課題ログ（`IS-NNN` 形式）の完成例であると書いていない。登録簿を使うプロジェクトでは個票から生成する、という使い分けと必要性を概要で示すべきである。
+  - id: F002
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 14
+    anchor: "## 3. 優先度と期限"
+    message: "優先度の変更を決める者と、エスカレーション後に対応方針を判断する者が書かれていないため、承認・保留・差し戻しの判断者が分からない。Role code（例: `PO`）で明示すべきである。"
+    message_ja: "優先度の変更を決める者と、エスカレーション後に対応方針を判断する者が書かれていないため、承認・保留・差し戻しの判断者が分からない。Role code（例: `PO`）で明示すべきである。"
+  - id: F003
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 11
+    anchor: "| IS-001 | 2026-04-02 | テストデータ不足     | 高     | データ生成スクリプト追加 | QA担当   | 2026-04-08 | 対応中     |"
+    message: 担当欄の「QA担当」「業務担当」は共通登場人物の役割名でも Role code でもない。責務を表す欄なので、`QE`・`BA` などの Role code、または共通サンプル文脈の役割名で書くべきである。
+    message_ja: 担当欄の「QA担当」「業務担当」は共通登場人物の役割名でも Role code でもない。責務を表す欄なので、`QE`・`BA` などの Role code、または共通サンプル文脈の役割名で書くべきである。
+  - id: F004
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 25
+    anchor: "| IS-001 | データ生成スクリプト追加 | DB管理者承認 | テスト全件実行可能 |"
+    message: 依存事項「DB管理者承認」は共通サンプル文脈にない役割である。満たされない場合の期限への影響やリスク起票の要否も書かれていない。共通文脈の役割か Role code に置き換え、影響を書くべきである。
+    message_ja: 依存事項「DB管理者承認」は共通サンプル文脈にない役割である。満たされない場合の期限への影響やリスク起票の要否も書かれていない。共通文脈の役割か Role code に置き換え、影響を書くべきである。
+  - id: F005
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 34
+    anchor: "## 6. 関連ドキュメント"
+    message: >-
+      関連ドキュメントが文書種別の羅列にとどまっている。各課題から起票したリスク・変更要求、根拠、影響先を、プロジェクトで修飾した文書 ID（例:
+      `＜project-id＞:pm-risk-register`）で示すべきである。起票がない場合はそのことを書くべきである。
+    message_ja: >-
+      関連ドキュメントが文書種別の羅列にとどまっている。各課題から起票したリスク・変更要求、根拠、影響先を、プロジェクトで修飾した文書 ID（例:
+      `＜project-id＞:pm-risk-register`）で示すべきである。起票がない場合はそのことを書くべきである。
+  - id: F006
+    severity: minor
+    rule: vp-ba-business-value
+    line: 18
+    anchor: "| IS-001 | 高     | 2026-04-08 | テスト遅延影響が大 |"
+    message: "判定根拠「テスト遅延影響が大」「業務確認待ち」は、どの業務やリリース判断に影響するかを示していない。優先度の妥当性を業務影響（例: 店頭販売の受入確認が止まる）で説明すべきである。"
+    message_ja: "判定根拠「テスト遅延影響が大」「業務確認待ち」は、どの業務やリリース判断に影響するかを示していない。優先度の妥当性を業務影響（例: 店頭販売の受入確認が止まる）で説明すべきである。"
+  - id: F007
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 25
+    anchor: "| IS-001 | データ生成スクリプト追加 | DB管理者承認 | テスト全件実行可能 |"
+    message: 完了条件「テスト全件実行可能」「承認済み文言反映」に確認の手段と合格の基準がない。rulebook の対応計画の記述ガイドに沿って、「代表シナリオのテストを全件実行してエラー0件」のような判定できる形にすべきである。
+    message_ja: 完了条件「テスト全件実行可能」「承認済み文言反映」に確認の手段と合格の基準がない。rulebook の対応計画の記述ガイドに沿って、「代表シナリオのテストを全件実行してエラー0件」のような判定できる形にすべきである。
+  - id: F008
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 32
+    anchor: "- 期限超過時: PMへ即時エスカレーション"
+    message: 関係者の表記（QA担当・業務担当・DB管理者・PO・PM）が役割名と Role code で混在しており、共通登場人物との対応も分からない。担当・確認者・エスカレーション先を Role code で統一すべきである。
+    message_ja: 関係者の表記（QA担当・業務担当・DB管理者・PO・PM）が役割名と Role code で混在しており、共通登場人物との対応も分からない。担当・確認者・エスカレーション先を Role code で統一すべきである。
+  - id: F009
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 16
+    anchor: "| 課題ID | 優先度 | 期限       | 判定根拠           |"
+    message: 「優先度と期限」の表が一覧の優先度・期限を課題ごとに再掲している。再掲をやめ、優先度の基準・期限の決め方・エスカレーション先・変更決定者の記述に置き換えるべきである。
+    message_ja: 「優先度と期限」の表が一覧の優先度・期限を課題ごとに再掲している。再掲をやめ、優先度の基準・期限の決め方・エスカレーション先・変更決定者の記述に置き換えるべきである。
+  - id: F010
+    severity: major
+    rule: vp-qe-verifiability
+    line: 16
+    anchor: "| 課題ID | 優先度 | 期限       | 判定根拠           |"
+    message: 優先度「高」「中」を割り当てる基準がない。「テスト遅延影響が大」は主観的な表現で、優先度の妥当性を判定できない。影響範囲や期限までの日数などで、判定できる基準を書くべきである。
+    message_ja: 優先度「高」「中」を割り当てる基準がない。「テスト遅延影響が大」は主観的な表現で、優先度の妥当性を判定できない。影響範囲や期限までの日数などで、判定できる基準を書くべきである。
+  - id: F011
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 32
+    anchor: "- 期限超過時: PMへ即時エスカレーション"
+    message: "「期限超過時: PMへ即時エスカレーション」の「即時」に時間の基準（例: 超過当日中）がなく、遵守したかどうかを判定できない。"
+    message_ja: "「期限超過時: PMへ即時エスカレーション」の「即時」に時間の基準（例: 超過当日中）がなく、遵守したかどうかを判定できない。"
+  - id: F012
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 11
     anchor: "| IS-001 | 2026-04-02 | テストデータ不足     | 高     | データ生成スクリプト追加 | QA担当   | 2026-04-08 | 対応中     |"
     message: 更新責任者が未記載である（rulebook 6.1 違反）。
     message_ja: 更新責任者が未記載である（rulebook 6.1 違反）。
-  - id: F002
+  - id: F013
     severity: major
     rule: vp-qe-omissions-consistency
-    line: 22
-    anchor: ""
+    line: 14
+    anchor: "## 3. 優先度と期限"
     message: 優先度基準および期限設定ルールが未記載である（rulebook 6.3 違反）。
     message_ja: 優先度基準および期限設定ルールが未記載である（rulebook 6.3 違反）。
+  - id: F014
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 5
+    anchor: 本書は、駄菓子屋の販売管理システム構築プロジェクトで発生した課題を追跡管理する最小サンプルである。
+    message: 概要に、rulebook 6.1 が求めるレビュー頻度と記録単位（課題1件を1行で記録するなど）が書かれていない。
+    message_ja: 概要に、rulebook 6.1 が求めるレビュー頻度と記録単位（課題1件を1行で記録するなど）が書かれていない。
+  - id: F015
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 28
+    anchor: "## 5. 進捗レビュー"
+    message: 進捗レビューに、rulebook 6.5 が求める完了を判定する者・判定の観点・状態を更新する契機が書かれていない。レビュー周期と状態の値の列挙だけになっている。
+    message_ja: 進捗レビューに、rulebook 6.5 が求める完了を判定する者・判定の観点・状態を更新する契機が書かれていない。レビュー周期と状態の値の列挙だけになっている。
+  - id: F016
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 11
+    anchor: "| IS-001 | 2026-04-02 | テストデータ不足     | 高     | データ生成スクリプト追加 | QA担当   | 2026-04-08 | 対応中     |"
+    message: >-
+      優先度「高/中」とステータス「未着手/対応中/完了」が、rulebook 6.2 の「登録簿の `priority`・`item_status` の値を使い、言い換えない」に反している。schema
+      の値（`high`・`medium`、`open`・`in-progress`・`done` など）を使うべきである。
+    message_ja: >-
+      優先度「高/中」とステータス「未着手/対応中/完了」が、rulebook 6.2 の「登録簿の `priority`・`item_status` の値を使い、言い換えない」に反している。schema
+      の値（`high`・`medium`、`open`・`in-progress`・`done` など）を使うべきである。
+  - id: F017
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 5
+    anchor: 本書は、駄菓子屋の販売管理システム構築プロジェクトで発生した課題を追跡管理する最小サンプルである。
+    message: template は個票から生成するビュー（`pjr-rulebook` 準拠）で、sample は単独の課題ログの章構成になっている。sample がどちらの形の完成例なのかを示さないと、Kata 内で形の対応が読み取れない。
+    message_ja: template は個票から生成するビュー（`pjr-rulebook` 準拠）で、sample は単独の課題ログの章構成になっている。sample がどちらの形の完成例なのかを示さないと、Kata 内で形の対応が読み取れない。
+  - id: F018
+    severity: minor
+    rule: vp-ux-readability
+    line: 5
+    anchor: 本書は、駄菓子屋の販売管理システム構築プロジェクトで発生した課題を追跡管理する最小サンプルである。
+    message: 概要が1文だけで、記録単位・レビュー頻度・利用場面（単独のログとして使うこと）と、登録簿を使う場合に参照する文書が分からない。1〜3行で補うべきである。
+    message_ja: 概要が1文だけで、記録単位・レビュー頻度・利用場面（単独のログとして使うこと）と、登録簿を使う場合に参照する文書が分からない。1〜3行で補うべきである。
+  - id: F019
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 5
+    anchor: 本書は、駄菓子屋の販売管理システム構築プロジェクトで発生した課題を追跡管理する最小サンプルである。
+    message: プロジェクト名「駄菓子屋の販売管理システム構築プロジェクト」が、共通サンプル文脈の名称「駄菓子屋きぬや 販売管理システム構築」と異なる。名称をそろえるべきである。
+    message_ja: プロジェクト名「駄菓子屋の販売管理システム構築プロジェクト」が、共通サンプル文脈の名称「駄菓子屋きぬや 販売管理システム構築」と異なる。名称をそろえるべきである。
+  - id: F020
+    severity: minor
+    rule: vp-ops-operability
+    line: 31
+    anchor: "- 状態更新: 未着手 / 対応中 / 完了"
+    message: 「状態更新」が状態の値の列挙だけになっている。更新する者（Role code）と状態を変える契機（着手、依存の解消、完了条件の確認など）を書くべきである。
+    message_ja: 「状態更新」が状態の値の列挙だけになっている。更新する者（Role code）と状態を変える契機（着手、依存の解消、完了条件の確認など）を書くべきである。
