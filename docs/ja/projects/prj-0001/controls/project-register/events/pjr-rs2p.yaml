@@ -38,3 +38,32 @@
     - field: derived_from
       from: ""
       to: '["PJR-76N9"]'
+- v: 1
+  id: reg_3a286a76ab974d01bb38e698041f25bf
+  ts: "2026-11-21T14:03:33Z"
+  action: update
+  actor: SpecDojo
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+    - field: difficulty
+      from: "-"
+      to: medium
+  previous_event_id: reg_93b0cd2a4cc54e4e828dc95780776fda
+- v: 1
+  id: reg_7c2842babb6f48e99716dd9d592e80a6
+  ts: "2026-11-21T14:04:15Z"
+  action: update
+  actor: SpecDojo
+  from_status: open
+  to_status: open
+  reason: section "作業内容" updated
+  changes:
+    - field: section
+      from: ""
+      to: 作業内容
+  previous_event_id: reg_3a286a76ab974d01bb38e698041f25bf

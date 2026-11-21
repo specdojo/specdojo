@@ -1,0 +1,69 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_7c07adf1b57d4f51a76d94c5f1f83819
+  ts: "2026-11-21T14:02:00Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: register migrate の削除で呼ばれなくなった移行の関数を消す
+    - field: description
+      from: ""
+      to: PJR-GV43 で register migrate を消したため、src/register/migrate-timestamps.ts と register.ts の migrateEmbeddedRegisterEvents・migrateRegisterEventsFromGit に呼び出し元がない。使われていないことを確かめて消す
+    - field: input
+      from: ""
+      to: '["PJR-GV43 の対応結果の残課題（2026-11-21）: migrate-timestamps.ts と migrateEmbeddedRegisterEvents・migrateRegisterEventsFromGit は、register migrate の削除で呼び出し元がなくなった。別の項目で削除を判断する","利用者の決定（2026-11-21、indie）: 夜の間に流す"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-21"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-GV43"]'
+- v: 1
+  id: reg_e9aa438ea5ae4a489d5ab076e4bafb86
+  ts: "2026-11-21T14:08:54Z"
+  action: update
+  actor: SpecDojo
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_7c07adf1b57d4f51a76d94c5f1f83819
+- v: 1
+  id: reg_2acef277aa8f45ff9a48c928d24b0dc3
+  ts: "2026-11-21T14:09:36Z"
+  action: update
+  actor: SpecDojo
+  from_status: open
+  to_status: open
+  reason: section "作業内容" updated
+  changes:
+    - field: section
+      from: ""
+      to: 作業内容
+  previous_event_id: reg_e9aa438ea5ae4a489d5ab076e4bafb86
