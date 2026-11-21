@@ -26,6 +26,7 @@ import {
 } from "./run-records.js";
 import {
   escapeMarkdownInline,
+  unescapeBackticksWhenUniform,
   expandTemplate,
   inlineCodeFrontmatterAnglePlaceholders,
   stripTerminalControlSequences,
@@ -507,7 +508,7 @@ function reporterInlineText(value: string): string {
 // 正規化したうえで、強調と解釈される `_` / `*` 入りの ASCII トークンを code span にする。
 // escapeMarkdownInline は既存の code span を保持するため、agent が意図して付けた書式は二重化しない。
 function reporterFreeText(value: string): string {
-  return escapeMarkdownInline(reporterInlineText(value));
+  return escapeMarkdownInline(unescapeBackticksWhenUniform(reporterInlineText(value)));
 }
 
 // reporter や runner の文を `- ` の箇条書きに描くとき、文が自前のリスト記号（`1.`・`1)`・
