@@ -710,6 +710,22 @@ members:
 4. claude と opencode は、`templates/<provider>/agents/` の役割ごとの定義を `config scaffold --provider <name> --force` で配置し（手を加えた定義がある場合は差分を確認してから）、`command_template` を `--agent {agent} --model {model}` と `command_params.by_mode` の形へ改めます。model ごとに複製していた定義ファイル（`claude-expert-review-executor.md` など）は、別名から参照されなくなったら削除します。
 5. `npx specdojo exec run --register <id> --executor-by <alias> --reporter-by <alias> --dry-run` などで、別名から実体が選ばれ、起動のコマンドに `--model` の値が入ることを確かめてから、変更をコミットします。event と result の actor には実体の名前が記録されます。
 
+### 7.3. claude の edit executor に許すコマンド
+
+`claude -p` は承認を求められないため、`settings.edit.json` の allow に無いコマンドは拒まれます。配布する `settings.edit.json` は `Edit(**)` に加え、`npm run`・`npm test`・`npx prettier`・`npx markdownlint-cli2`・`npx markdownlint`・`npx eslint`・`npx tsc`・`npx vitest`・`npx slidev`・`specdojo` を許します。`git push` と `gh` は deny が優先するため許されません。
+
+リポジトリごとに違う検証コマンドは、`.specdojo/exec-defaults.yaml` の `providers.claude.allow_commands` に `Bash(<command> *)` の形で書きます。edit mode の起動コマンドへ `--allowedTools` として足されるため、`config scaffold --force` で `settings.edit.json` を当て直しても残ります。review・report mode には足しません。
+
+```yaml
+providers:
+  claude:
+    allow_commands:
+      - "Bash(npx playwright test *)"
+      - "Bash(make lint)"
+```
+
+規則に引用符・バックスラッシュ・改行は使えません。
+
 ## 8. agent 権限とプロンプトインジェクション対策
 
 exec の plan は done_criteria と成果物本文から生成され、agent は無人で実行されます。成果物やレビュー対象文書に埋め込まれた指示（プロンプトインジェクション）によって、agent がタスク外のファイル書き換え・情報持ち出しを行うリスクを前提に、権限を設計します。

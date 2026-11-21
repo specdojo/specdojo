@@ -1,7 +1,21 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "permissions": {
-    "allow": ["Edit(**)"],
+    "allow": [
+      "Edit(**)",
+      "Bash(npm run *)",
+      "Bash(npm test)",
+      "Bash(npm test *)",
+      "Bash(npx prettier *)",
+      "Bash(npx markdownlint-cli2 *)",
+      "Bash(npx markdownlint *)",
+      "Bash(npx eslint *)",
+      "Bash(npx tsc *)",
+      "Bash(npx vitest *)",
+      "Bash(npx slidev *)",
+      "Bash(npx specdojo *)",
+      "Bash(specdojo *)"
+    ],
     "deny": [
       "Edit(node_modules/**)",
       "Edit(.specdojo/**)",
