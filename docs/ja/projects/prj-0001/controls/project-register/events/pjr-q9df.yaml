@@ -150,3 +150,16 @@
       from: in-progress
       to: review
   previous_event_id: reg_c33a2979c03c4b9fb5a2df439785facb
+- v: 1
+  id: reg_a8f5fc04ac8c490c9d286d21ef3df4c8
+  ts: "2026-11-21T08:44:19Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_5c47921ce39249e9b50c905e14311169
