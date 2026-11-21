@@ -54,3 +54,16 @@
       from: "-"
       to: hard
   previous_event_id: reg_44a04e0fb6eb4173a73b79b3e2fc8676
+- v: 1
+  id: reg_2821af18a9964928b4fb1a3a454a6398
+  ts: "2026-11-21T11:32:29Z"
+  action: update
+  actor: SpecDojo
+  from_status: open
+  to_status: open
+  reason: section "作業内容" updated
+  changes:
+    - field: section
+      from: ""
+      to: 作業内容
+  previous_event_id: reg_d7edc0f41b9c4d1382a68131292962a9
