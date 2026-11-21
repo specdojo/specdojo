@@ -51,16 +51,6 @@ export type RegisterAddFields = {
 export type BuildScope = "register" | "controls" | "all";
 export type ViewFile = { path: string; content: string };
 
-export type RegisterMigrationPlan = {
-  sourceCount: number;
-  createdCount: number;
-  updatedCount: number;
-  unchangedCount: number;
-  files: { path: string; content: string; originalContent?: string }[];
-  sourceIndexPath?: string;
-  sourceIndexContent?: string;
-};
-
 export type RenumberPlan = {
   writes: { path: string; content: string }[];
   ticketRename?: { from: string; to: string };
@@ -176,8 +166,6 @@ export type RegisterCommandDependencies = {
     actor?: string;
     reason?: string;
   }) => void;
-  planRegisterMigration: (paths: RegisterPaths) => RegisterMigrationPlan;
-  applyRegisterMigrationPlan: (plan: RegisterMigrationPlan) => void;
   migrateEmbeddedRegisterEvents: (
     paths: RegisterPaths,
     dryRun: boolean,

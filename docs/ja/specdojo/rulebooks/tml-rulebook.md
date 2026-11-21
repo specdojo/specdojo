@@ -28,7 +28,7 @@ Timeline Documentation Rules
 - Timeline が扱うのは**トラック粒度のマクロな順序**であり、タスク粒度の日付・依存関係は扱わない。タスク粒度は Schedule（`sch-track-<track>.yaml`）が正本とする。
 - Timeline は人間が着手前に決める**計画**である。実行結果や実績日付を書き戻さない。
 - Timeline はまだ成果物カタログ（`dct-<domain>.yaml`）が存在しないトラックも記載できる。カタログ未作成のトラックを計画へ載せられることが、Schedule との最大の違いである。
-- Timeline は `specdojo timeline build` の入力であり、後続の `catalog scaffold` / `schedule build` への入力情報を生成する一方通行の流れに置く。生成物から Timeline を逆生成しない。
+- Timeline は `dashboard build` の入力であり、後続の `catalog scaffold` / `schedule build` への入力情報を生成する一方通行の流れに置く。生成物から Timeline を逆生成しない。
 
 ## 2. 位置づけと用語定義
 
@@ -102,7 +102,7 @@ schema で機械検証できない記述規範だけを定める。トラック�
 | `draft`       | `dct-<domain>.yaml` は存在するが、エントリ・完了条件が未確定で追加変更が続く |
 | `primary`     | カタログが SSOT として確定し、`schedule build` の入力として使える状態にある  |
 
-- `not_started` のトラックは `specdojo timeline build` が `catalog scaffold` の対象候補として扱う。
+- `not_started` のトラックは `dashboard build` が `catalog scaffold` の対象候補として扱う。
 - `primary` へ上げる判断は人間が行う。トラックの実行開始（`sch-strategy-<track>.yaml` の作成）は `primary` 到達後を原則とする。
 
 ### 5.2. `order` と `parallel_group`
@@ -136,4 +136,4 @@ schema で機械検証できない記述規範だけを定める。トラック�
 - `depends_on` の向きと `order` の大小を矛盾させること。
 - `sch-milestones.yaml` のマイルストーンを `tml-index.yaml` に複製すること。
 - プロジェクトごとに `tml-index.yaml` を複数置くこと、またはトラック単位へ分割すること。
-- `specdojo timeline build` の生成物を直接編集すること。
+- `dashboard build` の生成物を直接編集すること。

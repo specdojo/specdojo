@@ -4,7 +4,6 @@ import { basename, dirname, join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { applyGradeSubmission } from "../../../src/grade/apply.js";
 import { renderGradePlan } from "../../../src/grade/plan.js";
-import { migrateInlineGrades } from "../../../src/grade/markdown.js";
 import { loadViewpoints } from "../../../src/grade/targets.js";
 import {
   gradeResultPathForDocument,
@@ -212,34 +211,5 @@ describe("grade results across repositories", () => {
     expect(gradeResultPathForDocument({ documentPath: "document.md", project: "test" })).toBe(
       join(projectRoot, "execution/grade/results/shared-document.yaml"),
     );
-  });
-
-  it("migrates inline grades into repository-specific result files", () => {
-    const legacy = markdown.replace(
-      "  rulebook: none\n",
-      `  rulebook: none
-  grade:
-    target: deliverable
-    rubric: grade-rubric-v1
-    verdict: pass
-    score: 100
-    graded_at: "2026-10-27T00:00:00Z"
-    graded_by: actual-grader
-    categories: {}
-    viewpoints: {}
-`,
-    );
-    for (const document of documents) writeFileSync(document.path, legacy);
-    migrateInlineGrades({
-      project: "test",
-      target: "deliverable",
-      paths: documents.map((document) => document.path),
-    });
-    for (const document of documents) {
-      expect(
-        readGradeResultForDocument({ documentPath: document.path, project: "test" }),
-      ).toMatchObject({ document: "shared-document", path: document.path, score: 100 });
-      expect(readFileSync(document.path, "utf8")).not.toContain("  grade:");
-    }
   });
 });

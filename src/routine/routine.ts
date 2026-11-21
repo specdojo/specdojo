@@ -1,4 +1,3 @@
-import { registerDeprecatedWhereAlias } from "../shared/where-alias.js";
 import { spawnSync } from "node:child_process";
 import { appendFileSync, existsSync, mkdirSync, readdirSync, rmSync, statSync } from "node:fs";
 import { join, resolve } from "node:path";
@@ -531,8 +530,6 @@ export function registerRoutineCommands(program: Command): void {
   const routine = program
     .command("routine")
     .description("Periodic task execution from rtn-*.yaml definitions");
-
-  registerDeprecatedWhereAlias(routine, printRoutinePaths);
 
   // --- validate ---
   const validateCmd = routine.command("validate").description("Validate rtn-*.yaml definitions");

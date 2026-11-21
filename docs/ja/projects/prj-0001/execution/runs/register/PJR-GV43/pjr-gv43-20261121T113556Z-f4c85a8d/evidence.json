@@ -1,0 +1,497 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-GV43",
+  "run_id": "pjr-gv43-20261121T113556Z-f4c85a8d",
+  "stage": {
+    "role": "executor",
+    "actor": "sonnet-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-21T12:11:20.594Z",
+    "completed_at": "2026-11-21T12:12:57.044Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/040-user-interface-model/clis-exec-commands.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/040-system-design/sysd-index.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-gv43.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-gv43-remove-deprecated-commands-0-10.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/plan-result-lifecycle-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/register-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/timeline-design-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pm-members-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/tml-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog/catalog.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/timeline-build.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/timeline.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/migrate-records.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/grade/command-inspect.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/markdown.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/job/job.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/command-types.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/maintenance-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/migration.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/register/register.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/routine/routine.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/schedule.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/specdojo-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/where-alias.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/specdojo.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/cli-verb-taxonomy.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/commands/where.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/dashboard/timeline-build.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/event-msg-default.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/migrate-records.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec/register-resume.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/grade/repo-results.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register/commands.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register/migration.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/register/track-domains.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/schedule/command.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/shared/specdojo-config.test.ts",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "tests/src/commands/where.integration.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 40,
+    "summary": ".../040-user-interface-model/clis-exec-commands.md |  28 +-\n docs/ja/product/040-system-design/sysd-index.md    |   4 +-\n .../controls/project-register/events/pjr-gv43.yaml |  20 +-\n .../pjr-gv43-remove-deprecated-commands-0-10.md    |  42 ++-\n .../pjr-gv43-20261121T113556Z-f4c85a8d/plan.md     |   6 +\n .../specdojo/guides/plan-result-lifecycle-guide.md |  13 +-\n .../ja/specdojo/guides/register-operation-guide.md |   2 +-\n docs/ja/specdojo/guides/timeline-design-guide.md   |   2 +-\n docs/ja/specdojo/references/command-reference.md   |  79 ++---\n docs/ja/specdojo/rulebooks/pm-members-rulebook.md  |   2 +-\n docs/ja/specdojo/rulebooks/tml-rulebook.md         |   6 +-\n src/catalog/catalog.ts                             |   3 -\n src/dashboard/timeline-build.ts                    |  39 ---\n src/dashboard/timeline.ts                          |  99 +-----\n src/exec/commands.ts                               |  63 +---\n src/exec/core.ts                                   |  24 +-\n src/exec/migrate-records.ts                        | 284 -----------------\n src/grade/command-inspect.ts                       |  39 +--\n src/grade/markdown.ts                              | 136 +--------\n src/job/job.ts                                     |   3 -\n src/register/command-types.ts                      |  12 -\n src/register/maintenance-commands.ts               |  88 +-----\n src/register/migration.ts                          | 338 ---------------------\n src/register/register.ts                           |   9 -\n src/routine/routine.ts                             |   3 -\n src/schedule/schedule.ts                           |   3 -\n src/shared/specdojo-config.ts                      | 148 +--------\n src/shared/where-alias.ts                          |  21 --\n src/specdojo.ts                                    |   2 -\n tests/src/cli-verb-taxonomy.test.ts                |   8 +-\n tests/src/commands/where.integration.test.ts       |  23 +-\n tests/src/dashboard/timeline-build.test.ts         |  17 --\n tests/src/exec/event-msg-default.test.ts           |  15 -\n tests/src/exec/migrate-records.test.ts             | 204 -------------\n tests/src/exec/register-resume.integration.test.ts |  82 +----\n tests/src/grade/repo-results.test.ts               |  30 --\n tests/src/register/commands.test.ts                |  73 -----\n tests/src/register/migration.test.ts               | 196 ------------\n tests/src/register/track-domains.test.ts           |  46 ---\n tests/src/schedule/command.test.ts                 |   2 +-\n tests/src/shared/specdojo-config.test.ts           |  35 +--\n 41 files changed, 140 insertions(+), 2109 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx vitest run --config vitest.integration.config.ts tests/src/commands/where.integration.test.ts",
+      "status": "passed",
+      "summary": "25 件すべて通過"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GV43/src/catalog/catalog.ts\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GV43/src/dashboard/dashboard.ts\n  1149:1  warning  File has too many lines (1067). Maximum allow\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GV43/src/schedule/strategy-generate-document.ts\n  87:8  warning  Function 'buildStrategyDocument' has too many lines (289). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GV43/src/shared/specdojo-config.ts\n  1234:1  warning  File has too many lines (1060). Maximum allowed is 1000  max-lines\n\n✖ 40 problems (0 errors, 40 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 5634 file(s), 107 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 83 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5634 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GV43\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/commands/where.integration.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/tools/commit-msg-merge.integration.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/commands/build.integration.test.ts\"}\n[parent-val\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GV43/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GV43/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GV43\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/tools/grade-per-document.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/register/catalogless-target.test.ts\"}\n ✓ tests/src/register/catalogless-target.test.ts (27 tests) 2954ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/src/regist\n… output omitted …\n/invalid.md\n\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\n[grade] attempt 1/3 failed; retrying: subject.md: exit 1: agent failed\n[grade] attempt 2/3 failed; retrying: subject.md: exit 1: agent failed\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "docs/ja/product/010-business-specs/040-user-interface-model/clis-exec-commands.md",
+      "status": "changed",
+      "path": "docs/ja/product/010-business-specs/040-user-interface-model/clis-exec-commands.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/product/040-system-design/sysd-index.md",
+      "status": "changed",
+      "path": "docs/ja/product/040-system-design/sysd-index.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-gv43-remove-deprecated-commands-0-10.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-gv43-remove-deprecated-commands-0-10.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/guides/plan-result-lifecycle-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/plan-result-lifecycle-guide.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/guides/register-operation-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/register-operation-guide.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/guides/timeline-design-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/timeline-design-guide.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/references/command-reference.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/rulebooks/pm-members-rulebook.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/rulebooks/pm-members-rulebook.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/rulebooks/tml-rulebook.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/rulebooks/tml-rulebook.md",
+      "reason": ""
+    },
+    {
+      "target": "src/catalog/catalog.ts",
+      "status": "changed",
+      "path": "src/catalog/catalog.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/dashboard/timeline-build.ts",
+      "status": "changed",
+      "path": "src/dashboard/timeline-build.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/dashboard/timeline.ts",
+      "status": "changed",
+      "path": "src/dashboard/timeline.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/commands.ts",
+      "status": "changed",
+      "path": "src/exec/commands.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/core.ts",
+      "status": "changed",
+      "path": "src/exec/core.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/migrate-records.ts",
+      "status": "changed",
+      "path": "src/exec/migrate-records.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/grade/command-inspect.ts",
+      "status": "changed",
+      "path": "src/grade/command-inspect.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/grade/markdown.ts",
+      "status": "changed",
+      "path": "src/grade/markdown.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/job/job.ts",
+      "status": "changed",
+      "path": "src/job/job.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/register/command-types.ts",
+      "status": "changed",
+      "path": "src/register/command-types.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/register/maintenance-commands.ts",
+      "status": "changed",
+      "path": "src/register/maintenance-commands.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/register/migration.ts",
+      "status": "changed",
+      "path": "src/register/migration.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/register/register.ts",
+      "status": "changed",
+      "path": "src/register/register.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/routine/routine.ts",
+      "status": "changed",
+      "path": "src/routine/routine.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/schedule/schedule.ts",
+      "status": "changed",
+      "path": "src/schedule/schedule.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/shared/specdojo-config.ts",
+      "status": "changed",
+      "path": "src/shared/specdojo-config.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/shared/where-alias.ts",
+      "status": "changed",
+      "path": "src/shared/where-alias.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/specdojo.ts",
+      "status": "changed",
+      "path": "src/specdojo.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/cli-verb-taxonomy.test.ts",
+      "status": "changed",
+      "path": "tests/src/cli-verb-taxonomy.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/dashboard/timeline-build.test.ts",
+      "status": "changed",
+      "path": "tests/src/dashboard/timeline-build.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/exec/event-msg-default.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/event-msg-default.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/exec/migrate-records.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/migrate-records.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/exec/register-resume.integration.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/register-resume.integration.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/grade/repo-results.test.ts",
+      "status": "changed",
+      "path": "tests/src/grade/repo-results.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/register/commands.test.ts",
+      "status": "changed",
+      "path": "tests/src/register/commands.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/register/migration.test.ts",
+      "status": "changed",
+      "path": "tests/src/register/migration.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/register/track-domains.test.ts",
+      "status": "changed",
+      "path": "tests/src/register/track-domains.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/schedule/command.test.ts",
+      "status": "changed",
+      "path": "tests/src/schedule/command.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/shared/specdojo-config.test.ts",
+      "status": "changed",
+      "path": "tests/src/shared/specdojo-config.test.ts",
+      "reason": ""
+    }
+  ],
+  "final_message": "where の別名と 9 コマンドを消した後に落ちていた where.integration.test.ts の 13 件を、別名が使えないことを確かめるテストへ直した。直した 13 件は通り、消したコマンドを前提にするテストは tests 配下に残っていない。",
+  "completion_status": "complete",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-GV43/pjr-gv43-20261121T113556Z-f4c85a8d/executor.log",
+      "bytes": 6292,
+      "truncated": false
+    }
+  ]
+}

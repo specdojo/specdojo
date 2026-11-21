@@ -44,4 +44,4 @@ specdojo dashboard build
 
 ## 2. 互換運用
 
-`tml-index.yaml`・`timeline build`・`timeline_path`（および `timeline where`）は非推奨であり、次の版（0.10.0）で削除予定です。全体計画は epic と `dashboard build`、保存先確認は `specdojo where timeline` を使用してください。削除までの間は警告付きで互換を維持します。epic がある project の全体計画は epic だけから作り、epic のない project は旧 timeline 表示を維持します。strategy の範囲解決は既存 strategy の scope、epic の `domains`、旧 timeline の順です。移行後も既存 scope が優先されるため、範囲が変わる場合は scope も確認してください。旧コマンドの仕様は [[specdojo:command-reference|コマンドリファレンス]] を参照してください。
+`tml-index.yaml`・`timeline_path` は非推奨です。`timeline build` と `timeline where` は 0.10.0 で削除しました。全体計画は epic と `dashboard build`、保存先確認は `specdojo where timeline` を使用してください。`tml-index.yaml` と `timeline_path` は、削除までの間は警告付きで互換を維持します。epic がある project の全体計画は epic だけから作り、epic のない project は旧 timeline 表示を維持します。strategy の範囲解決は既存 strategy の scope、epic の `domains`、旧 timeline の順です。移行後も既存 scope が優先されるため、範囲が変わる場合は scope も確認してください。コマンドの仕様は [[specdojo:command-reference|コマンドリファレンス]] を参照してください。

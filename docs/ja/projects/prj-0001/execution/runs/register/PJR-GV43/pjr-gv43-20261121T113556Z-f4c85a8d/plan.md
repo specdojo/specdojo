@@ -65,4 +65,10 @@ plan に展開された finding は、message と同じ viewpoint ID の判定�
 - 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
 - agent 自身は登録簿の状態を変更せず、終了コードと標準エラー出力で runner に結果を返す。
 
+## 再開の指示（2026-11-21T12:11:20.562Z）
+
+利用者が再開の前に足した指示である。これまでの申し送りとあわせて、この指示に従って作業を続ける。
+
+- where の別名を消したため、tests/src/commands/where.integration.test.ts の 13 件が「別名を 1 版残す」「help に出さない」を確かめたまま落ちた。消した別名と 9 コマンドについては、残っていることを確かめるテストを消すか、使えないことを確かめるテストに直す。消したコマンドを前提にするテストがほかの tests に残っていないかを grep で確かめる
+
 `共通規約 sha256:e7dd6ff2a0dec2f12ed4ffc905cd185aca2d6f9c3922c56a249c88cb45b2a14e` `docs/ja/projects/prj-0001/execution/conventions/e7dd6ff2a0dec2f12ed4ffc905cd185aca2d6f9c3922c56a249c88cb45b2a14e.txt`

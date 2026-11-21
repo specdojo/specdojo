@@ -54,12 +54,7 @@ describe("CLI generation verb taxonomy", () => {
     registerConfigCommands(program);
     registerExecCommands(program);
 
-    expect(subcommandNames(program, "config")).toEqual([
-      "init",
-      "show",
-      "migrate-members",
-      "scaffold",
-    ]);
+    expect(subcommandNames(program, "config")).toEqual(["init", "show", "scaffold"]);
     expect(subcommandNames(program, "exec")).toContain("scaffold");
   });
 
@@ -93,7 +88,6 @@ describe("CLI generation verb taxonomy", () => {
       "validate",
       "result",
       "state",
-      "migrate",
       "run",
     ]);
     const apply = program.commands

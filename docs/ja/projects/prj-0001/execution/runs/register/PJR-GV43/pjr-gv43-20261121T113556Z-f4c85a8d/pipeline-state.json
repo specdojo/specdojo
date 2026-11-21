@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-GV43",
+  "run_id": "pjr-gv43-20261121T113556Z-f4c85a8d",
+  "updated_at": "2026-11-21T12:18:32.231Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sonnet-executor",
+      "attempts": 1,
+      "started_at": "2026-11-21T12:11:20.594Z",
+      "completed_at": "2026-11-21T12:12:58.089Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-GV43/pjr-gv43-20261121T113556Z-f4c85a8d/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 0,
+      "started_at": "2026-11-21T12:18:21.036Z",
+      "completed_at": "2026-11-21T12:18:21.036Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-GV43/pjr-gv43-20261121T113556Z-f4c85a8d/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "sonnet-executor",
+      "attempts": 1,
+      "started_at": "2026-11-21T12:18:23.190Z",
+      "completed_at": "2026-11-21T12:18:32.231Z",
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-GV43/pjr-gv43-20261121T113556Z-f4c85a8d/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-GV43/pjr-gv43-20261121T113556Z-f4c85a8d/result.md"
+  },
+  "resume_notes": [
+    {
+      "at": "2026-11-21T12:11:20.562Z",
+      "notes": [
+        "where の別名を消したため、tests/src/commands/where.integration.test.ts の 13 件が「別名を 1 版残す」「help に出さない」を確かめたまま落ちた。消した別名と 9 コマンドについては、残っていることを確かめるテストを消すか、使えないことを確かめるテストに直す。消したコマンドを前提にするテストがほかの tests に残っていないかを grep で確かめる"
+      ]
+    }
+  ]
+}

@@ -9,7 +9,6 @@ import {
   collectCatalogFilesByDomain,
   loadTimelineIndex,
   renderCatalogScaffoldMarkdown,
-  renderTimelineOrderMarkdown,
   validateTimelineTracks,
   type TimelineTrackPlan,
 } from "../../../src/dashboard/timeline-build.js";
@@ -308,22 +307,6 @@ describe("buildTimeline", () => {
       expect(() => buildTimeline({ timelinePath: dir, catalogPath: null })).toThrow(
         /Timeline index not found:.*tml-index\.yaml/,
       );
-    });
-  });
-});
-
-describe("renderTimelineOrderMarkdown", () => {
-  it("wave ごとに見出しと表を出力する", async () => {
-    await withTempDir(async (dir) => {
-      await writeFile(path.join(dir, "tml-index.yaml"), MINIMAL_INDEX, "utf8");
-      const result = buildTimeline({ timelinePath: dir, catalogPath: null });
-
-      const markdown = renderTimelineOrderMarkdown(result);
-
-      expect(markdown).toContain("# トラック着手順序");
-      expect(markdown).toContain("## 1. Wave 1");
-      expect(markdown).toContain("## 2. Wave 2");
-      expect(markdown).toContain("| `data-flow` | data-flow | not_started | 2 | business-specs |");
     });
   });
 });
