@@ -56,7 +56,20 @@ specdojo:
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+### 5.1. CHANGELOG に書く事項
+
+- 区分: 不具合修正
+- 文案: `exec run --task` が、依存が終わっていないタスクや done・cancelled のタスクに対し、段の情報が見つからないという紛らわしいエラーではなく、先行のタスク ID や done であることを示して止まるようにした。
+
+### 5.2. 解決内容
+
+- `src/exec/run/schedule-mode.ts` に `explainUnrunnableTask` を追加し、`generated/ready.json` にないタスクの状態を調べて本当の理由を出す。依存が未完了なら未完了の先行タスク ID、done・cancelled ならその旨を示して終了コード 1 で止まる。doing・blocked は今までどおり再開できる。
+- ready にないタスクの `schedule_file` は、タスク ID の分解より先に schedule の定義から引く。分解は定義が引けないときの代替として残した。
+- 単体テスト `tests/src/exec/run/explain-unrunnable-task.test.ts` で、依存未完了・done・track 名に `-` を含む doing の再開を確かめた。
+
+### 5.3. 確認結果
+
+- `npm run typecheck` と `npm run lint:ts`（エラーなし）、追加した単体テストを通した。残りの検証は親 runner が実行する。
 
 ## 6. 関連ドキュメント
 
