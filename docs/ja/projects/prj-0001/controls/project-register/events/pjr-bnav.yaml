@@ -64,3 +64,16 @@
       from: ""
       to: 作業内容
   previous_event_id: reg_aaa30b78d5e14b7fa9de23e2f0be72b8
+- v: 1
+  id: reg_3d966911d4624173860cf09b71f9c942
+  ts: "2026-11-21T23:02:23Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_a0ccd2617391436bb33ee83c68becc7f
