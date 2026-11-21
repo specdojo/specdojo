@@ -77,3 +77,16 @@
       from: ""
       to: 対応方針
   previous_event_id: reg_1f2e470ab772410b8ca247a9b938e4c3
+- v: 1
+  id: reg_5901912eae084b0e8180bb33b59f6c41
+  ts: "2026-11-21T16:49:58Z"
+  action: start
+  actor: qwen-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_06cd9a6ee78b49bb8a50534a5c76ccbd
