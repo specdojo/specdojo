@@ -35,7 +35,7 @@ npx specdojo exec run --project prj-0001 --register <PJR-ID> --worktree \
   --reporter-by gemma26-reporter --fallback-reporter-by claude-reporter
 ```
 
-- 列は 2 本までにする（codex の列と agy の列など）。`.specdojo/exec-defaults.yaml` の設定（`providers.codex.max_concurrency: 2`、`providers.antigravity.max_concurrency: 2`）により codex 2 本・agy 2 本まで並べられるが、親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）は `pipeline.parent_validation_concurrency: 1` により run をまたいで 1 件ずつ流れるため、列を増やしても速くならず、待ちと負荷が増える。エージェントの選定順は `priority` で制御する。
+- 列は 2 本までにする（codex の列と Claude の列など）。`.specdojo/exec-defaults.yaml` の設定（`providers.codex.max_concurrency: 2`、`providers.claude.max_concurrency: 3`）で並べられる本数は決まるが、親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）は `pipeline.parent_validation_concurrency: 1` により run をまたいで 1 件ずつ流れるため、列を増やしても速くならず、待ちと負荷が増える。エージェントの選定順は `priority` で制御する。
 - 文書サイトのビルド（`npm run docs:build`）はメモリを多く使うため、並べた run と重ねず、直列に流す。複数の run や grade、build を順に流す仕組みの整備（回避策: [[prj-0001:pjr-v0fq-exec-sequential-batch|PJR-V0FQ]]）までは、`exec queue` や単独の実行で分離する。
 - grade は一度に 1 本しか流せない。別の grade が流れていると busy で即座に断られるため、終了を待ってから流す（回避策: [[prj-0001:pjr-36pw-grade-run-if-busy-wait|PJR-36PW]]）。型の一覧をまとめて grade したい場合は、`grade run --target kata --kata <name>` を繰り返して 1 回で流せる（[[prj-0001:pjr-sw7t-grade-kata-batch|PJR-SW7T]]）。rate limit の後も続けるのは `--kata` のときだけで、代わりの agent への切り替えはない（PJR-XA6Y）。
 - 0:00 の夜間の routine は、別の run が lock を持っていると skip され、流し直されない。夜に手で長い run を流すときは、routine とぶつからないかを先に確かめる（回避策: [[prj-0001:pjr-kvwh-routine-busy-skip-not-retried|PJR-KVWH]]）。
@@ -46,17 +46,15 @@ npx specdojo exec run --project prj-0001 --register <PJR-ID> --worktree \
 
 ## 4. agent の使い分けと癖
 
-難しさごとの既定の振り分けは `.specdojo/exec-defaults.yaml` の `routing` にある（hard は codex、medium は agy の flash-high、easy はローカルの qwen、reporter は gemma26）。表に加えて、次の癖を踏まえて選ぶ。
+難しさごとの既定の振り分けは `.specdojo/exec-defaults.yaml` の `routing` にある（hard は codex の sol で代わりは opus、medium は Claude の sonnet で代わりは sol、easy はローカルの qwen で代わりは sonnet、reporter は gemma26）。agy（Antigravity）は 2026-11-21 から使わない（PJR-5V0T。consumer plan では他社の agent や application から agy を起動することが規約で対象外のため）。表に加えて、次の癖を踏まえて選ぶ。
 
-| agent                      | 癖・制約                                                                                           | 対応                                                                                                                                                                                           |
-| -------------------------- | -------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| codex（sol-executor）      | 使用量の上限に当たると、解除の時刻（例: 「try again at 1:39 AM」）が出る                           | 実行のログで時刻を確かめ、待つか代わりの argon へ切り替える（sol → argon）。review 段の上限時の代わりは agy-opus-review。解除の後に `--resume --resume-from executor` で途中の変更を引き継げる |
-| agy（flash-high-executor） | 速いが、`any` の使用や使っていない変数を残し、足したテストが落ちたまま終わることがある（PJR-CNNT） | runner に関わる項目は codex に回す。agy で止まったら codex に切り替えて executor からやり直す                                                                                                  |
-| agy の opus                | 割り当てが数日単位で、尽きるとすぐには戻らない。argon が使えるため通常は argon を優先する          | priority を下げておき、待たずに codex や argon へ切り替える。sol-review の上限時の代わり（agy-opus-review）など限定的に使う                                                                    |
-| opencode（qwen・gemma）    | executor が編集できるのは docs・src・tests の下だけ。`templates/` や `.devcontainer/` は触れない   | easy でもこれらの下を触る項目は agy で流す                                                                                                                                                     |
-| gemma                      | 実際には変えていないのに「適用済み」と報告することがある                                           | result と差分を必ず照らす                                                                                                                                                                      |
-| ローカル LLM（Ollama）     | 母艦の Ollama が止まっていると reporter が「Cannot connect to API」で止まる                        | `--fallback-reporter-by claude-reporter` を付けておく（PJR-DKD8 で切り替わる）                                                                                                                 |
-| claude（sonnet・opus）     | セッションの上限に当たると、解除の時刻が出る                                                       | JSEY は claude-executor で流すため、上限の時刻を見て順番を決める                                                                                                                               |
+| agent                   | 癖・制約                                                                                         | 対応                                                                                                                                                                                     |
+| ----------------------- | ------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| codex（sol-executor）   | 使用量の上限に当たると、解除の時刻（例: 「try again at 1:39 AM」）が出る                         | 実行のログで時刻を確かめ、待つか代わりの opus へ切り替える（sol → opus）。review 段の上限時の代わりは opus-review。解除の後に `--resume --resume-from executor` で途中の変更を引き継げる |
+| opencode（qwen・gemma） | executor が編集できるのは docs・src・tests の下だけ。`templates/` や `.devcontainer/` は触れない | easy でもこれらの下を触る項目は sonnet で流す                                                                                                                                            |
+| gemma                   | 実際には変えていないのに「適用済み」と報告することがある                                         | result と差分を必ず照らす                                                                                                                                                                |
+| ローカル LLM（Ollama）  | 母艦の Ollama が止まっていると reporter が「Cannot connect to API」で止まる                      | `--fallback-reporter-by claude-reporter` を付けておく（PJR-DKD8 で切り替わる）                                                                                                           |
+| claude（sonnet・opus）  | セッションの上限に当たると、解除の時刻が出る                                                     | JSEY は claude-executor で流すため、上限の時刻を見て順番を決める                                                                                                                         |
 
 ## 5. 止まったときの再開の使い分け
 
