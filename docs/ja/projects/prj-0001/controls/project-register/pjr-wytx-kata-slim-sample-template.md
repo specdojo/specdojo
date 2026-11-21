@@ -30,11 +30,16 @@ PJR-DJZD で直した rulebook に合わせ、残りの sample と全ての temp
 
 ## 3. 範囲（track と domain）
 
-_TODO_: Frontmatter の `track` が担う範囲と対象 domain、対象外の境界を記載する。
+- track: `kata-slim-3`。対象の domain: `kata`（PJR-6998 の決定）。
+- 対象の sample: これまでの波（第 1・2 波、業務仕様の型、プロジェクトの型）で中身を整えた 33 種類の sample。そのうち needs-work が残る bes の sample と cpd の sample（78 点）を含む。
+- 対象の template: 全ての型の template。
+- 対象外: 第 3〜6 波（PJR-ABY4・PJR-HJ3H・PJR-JZ2F・PJR-PYS2・PJR-SBGQ・PJR-G1M8）で sample を書き直す型の sample、PJR-CPA8 の型、非推奨の型（利用者の承認、2026-11-21）。
+- br と sld の rulebook の needs-work は、この track の対象の rulebook ではないため、別の子の todo で扱う。
 
 ## 4. 完了の判断の基準
 
-- _TODO_: 子項目と schedule を確認して、人が完了を判断できる基準を記載する。
+- 対象の sample と template が、kata-slim と同じ一覧で簡潔になり、人の確定まで終わっている。
+- 対象の sample を `grade run --target kata` で評価し、pass になっている。pass にならないものは、理由と残す判断を対応結果に書いている。
 
 ## 5. 子項目
 

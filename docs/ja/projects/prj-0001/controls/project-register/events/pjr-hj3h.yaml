@@ -41,3 +41,29 @@
     - field: depends_on
       from: ""
       to: '["PJR-ABY4"]'
+- v: 1
+  id: reg_93ee0342e4ed40378b2f84bce097a36e
+  ts: "2026-11-21T03:06:46Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "範囲（track と domain）" updated
+  changes:
+    - field: section
+      from: ""
+      to: 範囲（track と domain）
+  previous_event_id: reg_7ea413e0e73644a299ff54ee58e73b43
+- v: 1
+  id: reg_46bea94900124d35901970bb7b40a966
+  ts: "2026-11-21T03:06:52Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了の判断の基準" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了の判断の基準
+  previous_event_id: reg_93ee0342e4ed40378b2f84bce097a36e

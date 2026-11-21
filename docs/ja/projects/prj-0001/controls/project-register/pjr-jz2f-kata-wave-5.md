@@ -30,11 +30,17 @@ specdojo:
 
 ## 3. 範囲（track と domain）
 
-_TODO_: Frontmatter の `track` が担う範囲と対象 domain、対象外の境界を記載する。
+- track: `kata-wave-5`。対象の domain: `kata`（`dct-kata.yaml`、PJR-6998 の決定）。
+- 対象の型: opd-index・opd（sample 4 件）・opr-index・opr（sample 8 件）・otp-index・otp・cop-index・cop・mip-index・dmd-index・dmd・mtp・imp-data の 13 種類。ntp は非推奨（PJR-HVQZ）のため外す。
+- 代表の文書は、その型の sample（駄菓子屋の共通の文脈）とする。prj-0001 の製品の成果物は作らない。
+- 段: rulebook を簡潔に → sample を厚く → 簡潔さの確認（condense） → review → 人の確定。template はこの track では扱わず、PJR-WYTX（kata-slim-3）で扱う。
+- 対象外: 上に挙げていない型、非推奨の型。代表を prj-0001 で作るか駄菓子屋の文脈で作るかは、PJR-6998 の決定により sample（駄菓子屋の文脈）とする。
 
 ## 4. 完了の判断の基準
 
-- _TODO_: 子項目と schedule を確認して、人が完了を判断できる基準を記載する。
+- 対象の型すべてで、rulebook と sample が人の確定まで終わり、`status` が ready になっている。
+- 対象の型の rulebook と sample を `grade run --target kata --kata <name>` で評価し、pass になっている。pass にならない型は、理由と残す判断を対応結果に書いている。
+- `dct-kata.yaml` に対象の型の sample が載り、`catalog validate` が通る。
 
 ## 5. 子項目
 

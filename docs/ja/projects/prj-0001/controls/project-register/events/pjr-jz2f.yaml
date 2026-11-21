@@ -41,3 +41,29 @@
     - field: depends_on
       from: ""
       to: '["PJR-HJ3H"]'
+- v: 1
+  id: reg_e476857962904e76b94d2327b19c810a
+  ts: "2026-11-21T03:06:58Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "範囲（track と domain）" updated
+  changes:
+    - field: section
+      from: ""
+      to: 範囲（track と domain）
+  previous_event_id: reg_399cc0e7e5f34094a62d9203d83ebc38
+- v: 1
+  id: reg_7bb833e2e9ea4da68599589c188daced
+  ts: "2026-11-21T03:07:06Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了の判断の基準" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了の判断の基準
+  previous_event_id: reg_e476857962904e76b94d2327b19c810a

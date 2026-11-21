@@ -44,3 +44,29 @@
     - field: derived_from
       from: ""
       to: '["PJR-6998"]'
+- v: 1
+  id: reg_d5092856811649c2bd3d352e1ad3440b
+  ts: "2026-11-21T03:07:48Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "範囲（track と domain）" updated
+  changes:
+    - field: section
+      from: ""
+      to: 範囲（track と domain）
+  previous_event_id: reg_66f2b9beeb9f4241bc4f3faeaf0d1436
+- v: 1
+  id: reg_d5147ee94b43442bb9159863e97e4f61
+  ts: "2026-11-21T03:08:28Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了の判断の基準" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了の判断の基準
+  previous_event_id: reg_d5092856811649c2bd3d352e1ad3440b
