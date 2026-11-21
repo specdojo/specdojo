@@ -112,3 +112,16 @@
       from: "parent validation failed: test-integration"
       to: "-"
   previous_event_id: reg_49b43172b205435f9a72bf1f9a9f6773
+- v: 1
+  id: reg_59a05d2f9140452596e2931da5810fd3
+  ts: "2026-11-21T12:18:31Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_e576c4fbf3b940fe97c3eac5651a88ea
