@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_93b0cd2a4cc54e4e828dc95780776fda
+  ts: "2026-11-21T08:24:27Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-76N9 の決まりを、すでにある製品の成果物にも当てるため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 製品の成果物から、文書の役割の割り当てと承認の進み具合の記述を外す
+    - field: description
+      from: ""
+      to: PJR-76N9 の決まりに合わせ、製品の成果物（約 28 件）の本文から、文書を作る・確かめる・承認する役割の割り当てと承認の進み具合を外す。承認と留保は登録簿へ移す
+    - field: input
+      from: ""
+      to: '["PJR-76N9 の決定（2026-11-21、indie）と、orchestrator の調べ（2026-11-21）: 役割の割り当ての文は bes-index・bes-task-ready-selected・cdt-register-type・cdsd-execution・stsd-routine-run・ccd-project-planning・stsd-task-execution・sf-task-execution・cpd-specdojo-cli・bac-task-completion・sysd-critical-flows・sysd-cross-cutting-policy・ifx-index・ifx-file-agent-evidence などにある。cnd-specdojo は PJR-Q9DF で直す","文書の中身として役割が要る文書（pm-raci・pm-organization・pm-roles など）は対象外"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-21"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-76N9"]'
