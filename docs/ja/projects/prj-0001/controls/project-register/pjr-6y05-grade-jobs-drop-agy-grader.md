@@ -29,7 +29,14 @@ job-grade-kata と job-grade-deliverable が grade run に --by agy-expert-execu
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- `job-grade-kata` と `job-grade-deliverable` に、評価者の入力 `by`（必須・既定値なし）を足し、`grade run --by` へ渡す。`--by agy-expert-executor` の固定をなくす。
+- `by` を渡さずに job を流すと、`grade run` を起動する前に、入力が足りないことを示すエラーで止まる。
+- 既存の入力 `fallback_by`（PJR-XA6Y）は今までどおり渡せる。
+- 両 job の `description` と判断の観点から、agy の語を外す（評価者に依らない書き方にする）。`generated/` の job の表示ページを作り直す。
+- routine（`rtn-grade-kata`・`rtn-grade-recheck`・`rtn-grade-deliverable-recheck`）は変えない。評価者が決まっていないため `enabled: false` のままにする。routine の `inputs` に `by` を足す案は、個票の対応結果と報告の `handoff` に書く。
+- job の実行を 1 回確かめる。`by` に名簿の有効な agent を渡し、`grade run` の `--dry-run` 相当で評価者が表示されることを確かめた手順と結果を、個票の対応結果に書く。
+- `CHANGELOG.md` は変えない。prj-0001 の運用だけの変更のため、個票の対応結果の `### 5.1. CHANGELOG に書く事項` に「なし」と書く。
+- `npm run lint:md`・`npm run lint:fm`・`npm run validate:schema` を通し、親の検証を通す。
 
 ## 4. 作業内容
 
