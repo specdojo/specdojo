@@ -10,6 +10,7 @@ specdojo:
   item_status: open
   priority: medium
   difficulty: medium
+  owner: DEV
   registered_at: "2026-11-21T09:00:54Z"
 ---
 

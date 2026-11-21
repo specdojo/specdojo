@@ -38,3 +38,16 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_da8680996f1646679dcd04e6739f96a9
+  ts: "2026-11-21T09:21:05Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: 利用者が担当を DEV に決めた（2026-11-21）
+  changes:
+    - field: owner
+      from: _TODO_
+      to: DEV
+  previous_event_id: reg_191d2713ba0245afb6d19e23da5f363a
