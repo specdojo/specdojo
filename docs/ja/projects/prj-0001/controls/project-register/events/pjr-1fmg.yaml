@@ -90,3 +90,22 @@
       from: ""
       to: 関連ドキュメント
   previous_event_id: reg_a305d29ed7b748b5a6435420827f92da
+- v: 1
+  id: reg_dc62117c74314e01ba07255611629c90
+  ts: "2026-11-21T01:58:41Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: done
+  reason: npm の dist-tags と provenance、タグで起動した公開と文書サイトの workflow の成功、npm から入れた 0.9.2 で agy が init と agent launch で断られ claude の init が通ることを確かめた
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-21"
+    - field: conclusion
+      from: "-"
+      to: "SpecDojo 0.9.2 を公開した（PR #42、merge commit 3bf65f9d2、タグ v0.9.2）。npm の latest は 0.9.2 で、provenance 付き"
+  previous_event_id: reg_fb2a9940de4441a6bdb551023c2370c3

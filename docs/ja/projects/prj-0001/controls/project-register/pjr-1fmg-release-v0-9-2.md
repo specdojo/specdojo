@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-1fmg-release-v0-9-2
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-11-21T01:22:11Z"
   due_on: "2026-11-21"
+  completed_at: "2026-11-21T01:58:41Z"
+  conclusion: "SpecDojo 0.9.2 を公開した（PR #42、merge commit 3bf65f9d2、タグ v0.9.2）。npm の latest は 0.9.2 で、provenance 付き"
   derived_from:
     - PJR-5V0T
 ---
