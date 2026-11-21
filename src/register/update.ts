@@ -101,6 +101,14 @@ export function applyItemUpdate(opts: {
   };
 
   if (opts.dryRun) {
+    if (opts.section !== undefined) {
+      // 通常実行と同じく、個票に無い章の名前はエラーにする（書き込みはしない）。
+      replaceTicketSection(
+        readFileSync(ticketPath, "utf8"),
+        opts.section.name,
+        opts.section.content,
+      );
+    }
     const lines = [`Would update ${ticketPath} (${opts.updated.id} ${label}):`];
     if (opts.title !== undefined) lines.push(`  title: ${opts.title}`);
     if (opts.description !== undefined) lines.push(`  description: ${opts.description}`);

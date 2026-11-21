@@ -495,4 +495,67 @@ describe("register update --section CLI", () => {
       expect(readEvents(registerDir, "PJR-AB12")).toHaveLength(1);
     });
   });
+
+  it("--dry-run でも、存在しない章・読めないファイル・見出し含むファイルはエラーになる", async () => {
+    await withRepo(async ({ root, registerDir }) => {
+      const stdoutLines: string[] = [];
+      vi.spyOn(process.stdout, "write").mockImplementation((str) => {
+        stdoutLines.push(String(str));
+        return true;
+      });
+      const stderrLines: string[] = [];
+      vi.spyOn(process.stderr, "write").mockImplementation((str) => {
+        stderrLines.push(String(str));
+        return true;
+      });
+
+      const ticket = buildSampleTicket();
+      const ticketPath = join(registerDir, "pjr-ab12-topic.md");
+      writeFileSync(ticketPath, ticket, "utf8");
+      writeInitialEvent(registerDir, "PJR-AB12", "pjr-ab12-topic.md", ticket);
+
+      const validSectionFile = join(root, "valid.md");
+      writeFileSync(validSectionFile, "- 本文のみ\n", "utf8");
+      const invalidSectionFile = join(root, "heading.md");
+      writeFileSync(invalidSectionFile, "## 見出しが含まれる\n", "utf8");
+
+      const cases: Array<{ section: string; file: string; message: string }> = [
+        {
+          section: "存在しない章",
+          file: validSectionFile,
+          message: 'Section "存在しない章" not found in ticket',
+        },
+        {
+          section: "完了条件",
+          file: join(root, "not-exist.md"),
+          message: "Cannot read section file",
+        },
+        {
+          section: "完了条件",
+          file: invalidSectionFile,
+          message: "Section file must not contain markdown headings",
+        },
+      ];
+
+      for (const testCase of cases) {
+        process.exitCode = undefined;
+        stderrLines.length = 0;
+        stdoutLines.length = 0;
+        await runRegister([
+          "update",
+          "--id",
+          "PJR-AB12",
+          "--section",
+          testCase.section,
+          "--section-file",
+          testCase.file,
+          "--dry-run",
+        ]);
+        expect(process.exitCode).toBe(1);
+        expect(stderrLines.join("")).toContain(testCase.message);
+        expect(stdoutLines.join("")).not.toContain("Would update");
+        expect(readFileSync(ticketPath, "utf8")).toBe(ticket);
+      }
+    });
+  });
 });
