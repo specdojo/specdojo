@@ -95,3 +95,32 @@
       from: "-"
       to: cnd-specdojo を手直しし、再 grade で pass（100 点・指摘 0 件）
   previous_event_id: reg_7eaa8d26e0e14b5397efe3840fa68274
+- v: 1
+  id: reg_f1da612017f249968abf862370b8d0fc
+  ts: "2026-11-21T08:21:50Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: 利用者の確定の前の指摘と PJR-76N9 の決定により、cnd-specdojo を 2 回目の実行で直すため
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-11-16"
+      to: "-"
+  previous_event_id: reg_2b2f66e8f5794c1e921926b1c7dc97d7
+- v: 1
+  id: reg_4dbe5f1d75b7450fb233a78d355666ba
+  ts: "2026-11-21T08:21:54Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_f1da612017f249968abf862370b8d0fc
