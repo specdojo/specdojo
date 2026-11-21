@@ -1,0 +1,17 @@
+`docs/ja/specdojo/samples/etc-sample.md` で冗長な箇所を 1 件整理しました。判断に要る情報は削っていません。ほかの文書と result は変更していません。
+
+**直した箇所**
+- 「実行運用メモ」の「後始末」の文は、「境界/依存/環境」の表のテストデータ欄にある削除手順を言い直していました。重複していた手順を削り、その表を指す文に置き換えました。この行で新しく伝えている「失敗したテストでも削除する」という条件は残しています。
+
+**残した箇所**
+- 「対象外」と、観点「印刷障害の店番への通知」の意図に、保管失敗の通知表示中も印刷が動くことを確かめる旨が 2 回出てきます。前者は担当範囲の線引き、後者はケース `et-receipt-print-operator-notice-020` の意図であり、どちらも判断に使うため残しました。
+- 「責務」と各観点の意図は内容が近いですが、rulebook がどちらも必須の章として定めているため残しました。
+- 「概要」の「関連I/F」には、表にない終了コードの一覧が含まれます。rulebook も記載を認めているため残しました。
+
+**検証**
+- Prettier の整形確認と `npm run docs:build` は、どちらもエラーなしで通りました。
+- lint などの検査は、このあと runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"etc-sample.md の「実行運用メモ」で、後始末の文がテストデータ欄の削除手順を言い直していたため、表を指す文に置き換えた（失敗時も削除する条件は残した）。ほかの候補3件は判断に要るため残した。","handoff":[],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/etc-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run docs:build","status":"passed","summary":"build complete in 458.88s（cron 言語のハイライト警告のみ）"}],"condense_records":[{"location":"「実行運用メモ」の後始末","category":"repetition","action":"reference","reason":"「境界/依存/環境」の表のテストデータ欄と同じ削除手順を言い直していた。表を参照する文に置き換え、ここにしかない「失敗したテストでも削除する」条件を残したため、意味は変わらない。","cause":{"type":"document"}},{"location":"「対象外」の保管サービスの行と、観点「印刷障害の店番への通知」の意図","category":"repetition","action":"retain","reason":"前者は担当範囲（従担当）の線引き、後者はケース operator-notice-020 の意図。どちらも判断に使うため残した。","cause":{"type":"document"}},{"location":"「責務」と各観点の「意図」","category":"repetition","action":"retain","reason":"rulebook の「本文要件」と「記述ガイド」が責務と観点ごとの意図をどちらも必須としているため、内容が近くても残した。","cause":{"type":"document"}},{"location":"「概要」の関連I/F","category":"table-prose","action":"retain","reason":"境界の表にない入力パスと終了コードの一覧を含み、rulebook も関連I/Fの任意の列挙を認めているため残した。","cause":{"type":"document"}}]}
+</specdojo_executor_evidence>
