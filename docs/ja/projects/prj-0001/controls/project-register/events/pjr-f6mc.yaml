@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_53a89b22290e4c13b1fc4aebceccdb20
+  ts: "2026-11-21T09:03:35Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者の依頼を受けて、利用者のプロジェクトでの設定の結果から起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: ローカル設定で external\_projects を宣言できない
+    - field: description
+      from: ""
+      to: external\_projects の path は相手のリポジトリの置き場所で、環境ごとに違う。しかし specdojo.local.config.json が許すキーは version と `projects.<id>.repos` だけで、external\_projects を書くと unknown key で止まる。利用者は環境に依存するパスを共有の specdojo.config.json に commit するしかない。ローカル設定で external\_projects を宣言・上書きできるようにするかを決める
+    - field: input
+      from: ""
+      to: "[\"発端は利用者のプロジェクト coderdojo-lessons-specdojo（SpecDojo 0.9.2、2026-11-21）。\",\"本家へ起票するため .specdojo/specdojo.local.config.json に `external_projects` だけを書いたところ、register add が「unknown key `\\\"external_projects\\\"` (allowed: version, projects)」「version must be 1」で止まった。\",\"specdojo-config-reference の `external_projects` の節は、ローカル設定で書けないことに触れていない。利用者のプロジェクトでは、共有の specdojo.config.json に `external_projects`（path: ../specdojo）を置いて回避した。\"]"
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: low
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-21"
+    - field: due
+      from: ""
+      to: _TODO_
