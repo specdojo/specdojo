@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "queue_id": "release-0-10-removals-2026-11-21",
+  "project_id": "prj-0001",
+  "created_at": "2026-11-21T11:32:56.723Z",
+  "updated_at": "2026-11-21T11:32:56.723Z",
+  "state": "pending",
+  "steps": [
+    {
+      "index": 1,
+      "on_failure": "stop",
+      "status": "pending",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--register",
+        "PJR-GV43",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--project",
+        "prj-0001"
+      ]
+    },
+    {
+      "index": 2,
+      "on_failure": "stop",
+      "status": "pending",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--register",
+        "PJR-N6FQ",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--project",
+        "prj-0001"
+      ]
+    }
+  ]
+}
