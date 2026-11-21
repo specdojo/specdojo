@@ -41,32 +41,45 @@ orchestrator の所見（決定ではない）: 漏れをなくす目的には A
 
 ## 4. 決定内容
 
-_TODO_: 採択した内容を明確に記載する。
+案 A を採る。
+
+- カタログに `kata` ドメイン（`dct-kata.yaml`、`base_path: /docs/ja/specdojo`、グループ `samples`）を足し、各 sample を `kind: work` の成果物として載せる。`rulebook` に対応の型、`local_id` に `<name>-sample` を入れる。
+- 型の見直しの track（第 3〜5 波と kata-slim-3）は `kata` ドメインだけを対象にし、代表の文書は sample そのもの（駄菓子屋の共通の文脈）とする。
+- `done_criteria` は、型に共通の条件（rulebook の章立てに沿う、sample の作成標準に沿う、共通の文脈を使う）を基本にし、型に固有の条件だけを足す。
+- sample のない型: opd・opr の sample は第 5 波で作る。sysd は第 1 波の残りで決める。記法の 2 件（cdfd-d2・cdfd-mermaid）は対象外、pjr・sch は PJR-CPA8 で扱う。非推奨の型は対象外。
+- 第 1・2 波などで製品の成果物を代表にした型は、そのままにし、移し替えない。
+- epic は新しく起票せず、今ある第 3 波（PJR-ABY4）・第 4 波（PJR-HJ3H）・第 5 波（PJR-JZ2F）の epic を、`kata` ドメインを対象にする track として進める。
 
 ## 5. 採択理由
 
-- _TODO_: 判断根拠を記載する。
+- 漏れが sample の有無だけで決まり、製品の成果物から担当を選ぶ手間と、kata-only の仮の成果物が要らなくなる。
+- 第 3〜5 波の型は prj-0001 に代表の文書がなく、とくに運用・移行は SpecDojo に実物がない。sample を代表にすれば、この問題が解ける。
+- 2026-11-21 に試しの worktree で、`dct-kata.yaml` に sample 2 件を載せ、`catalog validate`・`catalog build`・`index build`・`exec plan --deliverable` が通ることを確かめた。plan と索引は sample の frontmatter の ID（`specdojo:<name>-sample`）を使い、カタログの成果物の ID とは食い違わない。
+- 波ごとに track を分けると、1 つの track が 100 タスク前後に収まり、2026-11-16 に承認した順番（試験 → 非機能要件と受け入れ条件 → 運用・移行・影響分析）も保てる。
 
 ## 6. 承認
 
-| 項目     | 内容   |
-| -------- | ------ |
-| 決定者   | _TODO_ |
-| 決定日   | _TODO_ |
-| 承認方式 | _TODO_ |
-| 証跡     | _TODO_ |
+| 項目     | 内容                                                                                                                                       |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| 決定者   | indie                                                                                                                                      |
+| 決定日   | 2026-11-21                                                                                                                                 |
+| 承認方式 | commit                                                                                                                                     |
+| 証跡     | 2026-11-21 の対話で indie が orchestrator の推奨（案 A、epic は今ある波の epic を使う）を承認した。この個票の close の commit を証跡とする |
 
 - 承認方式は `commit` または `PR` を記載する。`PR` の場合は証跡に PR URL と merge SHA を本文テキストで記載する。
 - 不可逆・高リスク・framework schema 破壊的変更に該当する決定は `PR` 方式で承認する。
 
 ## 7. 影響範囲とフォローアップ
 
-| 項目       | 内容   |
-| ---------- | ------ |
-| 影響範囲   | _TODO_ |
-| 必要な対応 | _TODO_ |
-| 追跡先     | _TODO_ |
+| 項目       | 内容                                                                                                                                                          |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 影響範囲   | 成果物カタログ（`kata` ドメインの追加）、第 3〜5 波と kata-slim-3 の strategy・schedule                                                                       |
+| 必要な対応 | 第 3 波の最初の子の todo で `dct-kata.yaml` を作り、試験の型の sample を載せて strategy と schedule を作る。以後の波と kata-slim-3 で同じドメインに足していく |
+| 追跡先     | PJR-ABY4（第 3 波）、PJR-HJ3H（第 4 波）、PJR-JZ2F（第 5 波）、PJR-WYTX（kata-slim-3）                                                                        |
 
 ## 8. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-wytx-kata-slim-sample-template|PJR-WYTX]]
+- [[prj-0001:pjr-aby4-kata-wave-3|PJR-ABY4]]
+- [[prj-0001:pjr-hj3h-kata-wave-4|PJR-HJ3H]]
+- [[prj-0001:pjr-jz2f-kata-wave-5|PJR-JZ2F]]
