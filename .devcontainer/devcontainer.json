@@ -61,7 +61,23 @@
     "source=specdojo-gemini,target=/home/node/.gemini,type=volume",
     "source=specdojo-gh,target=/home/node/.config/gh,type=volume",
     "source=specdojo-emacs-data,target=/home/node/.local/share/emacs,type=volume",
-    "source=specdojo-nvim-data,target=/home/node/.local/share/nvim,type=volume"
+    "source=specdojo-nvim-data,target=/home/node/.local/share/nvim,type=volume",
+    // exec の worktree と node_modules は、共有フォルダ（virtiofs の bind mount）ではファイルの読み書きが
+    // 遅いため named volume に置く（PJR-TATP）。worktree_base は ../worktrees のままで、ホストで直接
+    // 実行する場合はホストの ../worktrees と node_modules が使われる。持ち主の調整と npm ci は
+    // .devcontainer/prepare-workspace-volumes.sh が行い、ここと同じ場所を並べている。
+    "source=specdojo-worktrees,target=/workspaces/specdojo-workspace/worktrees,type=volume",
+    "source=specdojo-nm-root,target=/workspaces/specdojo-workspace/specdojo/node_modules,type=volume",
+    "source=specdojo-nm-opencode,target=/workspaces/specdojo-workspace/specdojo/.opencode/node_modules,type=volume",
+    "source=specdojo-nm-docs-site,target=/workspaces/specdojo-workspace/specdojo/packages/docs-site/node_modules,type=volume",
+    "source=specdojo-nm-docs-lint,target=/workspaces/specdojo-workspace/specdojo/packages/docs-lint/node_modules,type=volume",
+    "source=specdojo-nm-vscode-specdojo,target=/workspaces/specdojo-workspace/specdojo/packages/vscode-specdojo/node_modules,type=volume",
+    "source=specdojo-prj-0002-nm-root,target=/workspaces/specdojo-workspace/specdojo-prj-0002/node_modules,type=volume",
+    "source=specdojo-prj-0002-nm-docs-site,target=/workspaces/specdojo-workspace/specdojo-prj-0002/packages/docs-site/node_modules,type=volume",
+    "source=specdojo-prj-0002-nm-docs-lint,target=/workspaces/specdojo-workspace/specdojo-prj-0002/packages/docs-lint/node_modules,type=volume",
+    "source=specdojo-prj-0002-nm-vscode-specdojo,target=/workspaces/specdojo-workspace/specdojo-prj-0002/packages/vscode-specdojo/node_modules,type=volume",
+    "source=specdojo-lp-nm-root,target=/workspaces/specdojo-workspace/specdojo-lp/node_modules,type=volume",
+    "source=specdojo-assets-nm-root,target=/workspaces/specdojo-workspace/specdojo-assets/node_modules,type=volume"
   ],
 
   "containerEnv": {
