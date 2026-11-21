@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-21T00:33:00Z"
+  block_reason: "executor reported incomplete: Removed Antigravity (agy) for 0.10.0 from the provider code, templates, init / config scaffold / devcontainer scaffold / orchestrator launch, agent launch, tools, tests, …"
   derived_from:
     - PJR-5V0T
 ---

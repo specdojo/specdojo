@@ -4,12 +4,14 @@ specdojo:
   type: exec-result
   task_id: PJR-N6FQ
   mode: edit
-  status: in_progress
+  status: blocked
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-N6FQ/pjr-n6fq-20261121T122859Z-2cdd293a/plan.md
   started_at: "2026-11-21T12:29:00.499Z"
+  completed_at: "2026-11-21T12:39:32.504Z"
   agent: sol-executor
+  block_reason: "executor reported incomplete: Removed Antigravity (agy) for 0.10.0 from the provider code, templates, init / config scaffold / devcontainer scaffold / orchestrator launch, agent launch, tools, tests, …"
 ---
 
 # Edit Result
