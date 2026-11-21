@@ -67,3 +67,19 @@
       from: "-"
       to: "executor validation failed or not run: npm run validate:history-links"
   previous_event_id: reg_3dda723058534eb78b3e2787a52cd48f
+- v: 1
+  id: reg_8cbaeec85a3a4c12b7404c2fdb0993a4
+  ts: "2026-11-21T10:50:34Z"
+  action: start
+  actor: opus-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "executor validation failed or not run: npm run validate:history-links"
+      to: "-"
+  previous_event_id: reg_744f2e5e0d8a45bea91f08a6a8cab2a4

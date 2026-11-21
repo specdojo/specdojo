@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   owner: BA
   registered_at: "2026-11-21T05:58:36Z"
   due_on: "2026-11-30"
-  block_reason: "executor validation failed or not run: npm run validate:history-links"
   derived_from:
     - PJR-WBWX
 ---
@@ -46,7 +45,7 @@ PJR-WBWX の決定を受け、分野の定義の文・近い概念との関係�
 | --- | ------------------------------------------------------------------- | ---- | ---- | -------------------------------------------------------------- |
 | 1   | 定義の文の案を作る                                                  | BA   | done | 日本語と英語の定義の文を正本の「定義」に書いた                 |
 | 2   | 近い概念との関係の表を作る                                          | BA   | done | SDD・Docs as Code・Continuous Requirements Engineering の 3 行 |
-| 3   | 略称の候補を比べて決める                                            | BA   | done | CSE・CSpE・略さない、を比べて略さないことにした                |
+| 3   | 略称の候補を比べて決める                                            | BA   | done | CSE・CSEng・ConSE・CSpE を比べ、利用者の判断で CSpE にした     |
 | 4   | 置き場所を決めて正本の文書にまとめる                                | BA   | done | `specdojo-philosophy` の新しい 1 章に置いた                    |
 | 5   | README・概要ガイド・LP への反映の範囲を決め、反映の todo を起票する | BA   | done | PJR-P8G7・PJR-KGH2・PJR-T1TH を起票した                        |
 
@@ -61,7 +60,7 @@ PJR-WBWX の決定を受け、分野の定義の文・近い概念との関係�
 - 概要ガイドは入口の文書で、詳細は他の文書に委ねる方針である。正本を置くと「SpecDojoとは」が長くなるうえ、status が `ready` で、変更は反映の todo で人間の確認を経て扱うほうがよい。
 - 定義と表だけで新しいガイドを作ると文書が増え、philosophy と内容が重なる。
 
-略称の扱い: 正式な略称は設けず、略さずに書く。短く呼ぶときは愛称の Spec道 を使う。理由は正本の「略称の扱い」に書いた（CSE は既存の略称とぶつかる、造語の略称は伝わらない、短い呼び名は愛称が担っている）。
+略称の扱い: 利用者の判断で正式な略称を CSpE（読み方はシー・スペック・イー、英語では see-spec-ee）にした。初出は「Continuous Specification Engineering（CSpE）」と書く。Spec道 は日本語での愛称として残す。理由は正本の「略称の扱い」に書いた（CSE・CSEng・ConSE は Computer Science and Engineering や Continuous Software Engineering と取り違えられる、Sp が入ることで仕様の分野だと読み取れる）。反映の todo（PJR-P8G7・PJR-KGH2・PJR-T1TH）の入力と完了条件も、この決定にそろえた。
 
 反映の範囲（直す箇所と直し方は各個票の入力と完了条件に書いた）:
 
@@ -74,6 +73,8 @@ PJR-WBWX の決定を受け、分野の定義の文・近い概念との関係�
 `package.json` の `description` は npm に出る紹介文で README と同じ役割のため、README の todo の範囲に含めた。
 
 _ASSUMPTION_: 定義の文と関係の表は、PJR-WBWX と本個票の入力から BA として起草した。`specdojo-philosophy` は `draft` のままとし、文言の確定は人間のレビューで行う。
+
+完了条件の外の修正: `npm run validate:history-links` を通すため、PJR-9TSG の個票（`pjr-9tsg-lp-changelog-release-2026-11-02.md`）と plan（`pjr-9tsg-20261102T110745Z-28a990e7-plan.md`）にあったラベル付きの外部 URL 2 か所を、URL そのままの autolink「本番の SpecDojo（<https://specdojo.org/>）」に直した（素の URL は markdownlint の MD034 に当たるため autolink にした）。PJR-9TSG の文書はこの 2 か所のほかは変えていない。
 
 残課題: 反映の 3 件（PJR-P8G7・PJR-KGH2・PJR-T1TH）。期限はまだ決めておらず `-` とした。
 

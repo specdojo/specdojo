@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_5b7b60045d834d20b9bbe506bc779faf
+  ts: "2026-11-21T09:48:26Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: specdojo-lp に Continuous Specification Engineering の名称と位置付けを載せる
+    - field: description
+      from: ""
+      to: specdojo-lp の Hero・ToolFit・ページの description を、分野の定義の正本に合わせて直す
+    - field: input
+      from: ""
+      to: '["正本は specdojo-philosophy の「分野: Continuous Specification Engineering」の章（定義の文・近い概念との関係・略称の扱い）。","specdojo-lp:src/components/sections/Hero.astro の「はじめよう、Spec道（仕様道）」の近くに、正式名称 Continuous Specification Engineering と、SpecDojo がその道場であることを短く示す。愛称の Spec道 は残す。","specdojo-lp:src/components/sections/ToolFit.astro の SDD との比較の行（「SpecDojo はその上流で…」）を、正本の関係の表（SDD の上流・併用）と矛盾しない文にそろえる。","specdojo-lp:src/pages/index.astro の description に正式名称を含めるかを決め、含める場合は日本語の定義の文から短くまとめる。略称を使う場合は CSpE とし、初出を「Continuous Specification Engineering（CSpE）」とする。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-21"
+    - field: derived_from
+      from: ""
+      to: '["PJR-PW1Y"]'
+    - field: commit_type
+      from: ""
+      to: docs

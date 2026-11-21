@@ -28,7 +28,7 @@ PR #1 の本番公開を確認できたため、LP の CHANGELOG.md の公開済
 ## 2. 入力
 
 - PR #1 は 2026-11-02 に main へマージされ、マージコミットは 5c5f91ffcf5e012a96cfccda8d7295b31ade8f6a。Workers Builds は成功した。
-- 本番の [SpecDojo](https://specdojo.org/) は HTTP 200 を返し、Kata・Waza・Ryu と小文字の `routine + job` が表示されることを確認した。
+- 本番の SpecDojo（<https://specdojo.org/>）は HTTP 200 を返し、Kata・Waza・Ryu と小文字の `routine + job` が表示されることを確認した。
 - README の運用に従い、実際の公開日 2026-11-02 で公開済み項目を記録する。
 
 ## 3. 完了条件

@@ -68,4 +68,12 @@ plan に展開された finding は、message と同じ viewpoint ID の判定�
 - 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
 - agent 自身は登録簿の状態を変更せず、終了コードと標準エラー出力で runner に結果を返す。
 
+## 再開の指示（2026-11-21T10:50:43.798Z）
+
+利用者が再開の前に足した指示である。これまでの申し送りとあわせて、この指示に従って作業を続ける。
+
+- PJR-9TSG の個票 pjr-9tsg-lp-changelog-release-2026-11-02.md と plan pjr-9tsg-20261102T110745Z-28a990e7-plan.md にある、ラベル付きの外部 URL「`[SpecDojo](https://specdojo.org/)`」の 2 か所を bare URL（例: `本番の SpecDojo（https://specdojo.org/）`）に直し、npm run validate:history-links を exit 0 で通す。この 2 か所のほかは PJR-9TSG の文書を変えない。完了条件の外の修正なので、PJR-PW1Y の個票の対応結果に記録する。
+- 利用者の判断で略称を CSpE に決めた。specdojo-philosophy の章「略称の扱い」を、正式な略称を CSpE とする内容に書き直す。初出は「Continuous Specification Engineering（CSpE）」とし、読み方を「シー・スペック・イー（英語では see-spec-ee）」と書く。理由には、CSE・CSEng・ConSE を避けた理由（Computer Science and Engineering や Continuous Software Engineering と取り違えられる）と、Sp が入ることで仕様の分野だと読み取れることを書く。Spec道 は日本語での愛称として残す。
+- PJR-PW1Y の個票の対応結果と、反映の todo PJR-P8G7・PJR-KGH2・PJR-T1TH の個票の記述を、略称 CSpE の決定にそろえる（「略称は設けない」とした記述を残さない）。
+
 `共通規約 sha256:e7dd6ff2a0dec2f12ed4ffc905cd185aca2d6f9c3922c56a249c88cb45b2a14e` `docs/ja/projects/prj-0002/execution/conventions/e7dd6ff2a0dec2f12ed4ffc905cd185aca2d6f9c3922c56a249c88cb45b2a14e.txt`
