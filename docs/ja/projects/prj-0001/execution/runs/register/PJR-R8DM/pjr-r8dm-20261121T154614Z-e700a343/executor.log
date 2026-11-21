@@ -1,0 +1,14 @@
+`exec run --task` は、流せないタスクを指定したとき、段の情報が見つからないというエラーではなく本当の理由で止まるようになりました。単体テスト、`npm run typecheck`、`npm run lint:ts`、`npm run lint:md` はこの環境で通っています。`test:unit` 全体は流していません。
+
+- **依存が終わっていないタスク:** 未完了の先行タスクの ID を示して終了コード 1 で止まります。
+- **done・cancelled のタスク:** その旨を示して止まります。
+- **doing・blocked のタスク:** 今までどおり再開できます。
+- **track の引き方:** `generated/ready.json` にないタスクの `schedule_file` は、schedule の定義から先に引きます。引けないときだけ従来の ID 分解に戻ります。
+- **実装の場所:** `src/exec/run/schedule-mode.ts` に `explainUnrunnableTask` を追加しました。
+- **テスト:** 新しい `tests/src/exec/run/explain-unrunnable-task.test.ts` で、依存未完了・done・track 名に `-` を含む doing の再開の 3 件を確かめました。
+
+個票の対応結果には、CHANGELOG に書く事項（区分は不具合修正）、解決内容、確認結果を書きました。`CHANGELOG.md` は変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"exec run --task が、ready にないタスクについて未完了の先行タスクIDや done/cancelled を示して止まるよう修正。track は schedule 定義から引く。単体テスト追加、個票更新済み。","handoff":["個票の対応結果 5.1 に CHANGELOG の区分（不具合修正）と文案を記載済み。CHANGELOG.md は未変更。","依存の判定は直接の依存のみで、cancelled の依存は完了扱いにしている。","実機の exec run --task --dry-run による再現確認は未実施（単体テストのみ）。"],"validations":[{"command":"npx vitest run tests/src/exec/run/explain-unrunnable-task.test.ts","status":"passed","summary":"3 tests passed"},{"command":"npm run typecheck","status":"passed","summary":"no errors"},{"command":"npm run lint:ts","status":"passed","summary":"0 errors, 既存の warning のみ"},{"command":"npm run lint:md","status":"passed","summary":"no errors"}]}
+</specdojo_executor_evidence>
