@@ -1,9 +1,7 @@
 import { type Command } from "commander";
-import { warnDeprecated } from "../shared/deprecation.js";
 import {
   addGradeSelectionOptions as addSelection,
   commandError,
-  collectPathOption,
   requirePipelineStatus,
   requirePositiveInteger,
   requireTarget,
@@ -14,7 +12,7 @@ import {
   readGradePipelineState,
   recordGradePipelineStage,
 } from "./pipeline-state.js";
-import { migrateInlineGrades, validateGradeResultForDocument } from "./markdown.js";
+import { validateGradeResultForDocument } from "./markdown.js";
 import { readGradeResultForDocument } from "./result.js";
 import { repoRelativePath, resolveSafeMarkdownPath } from "./targets.js";
 import { specdojoRootDir } from "../shared/specdojo-config.js";
@@ -124,41 +122,6 @@ export function registerGradeInspectionCommands(grade: Command): void {
           path: options.path,
         });
         if (state) process.stdout.write(`${JSON.stringify(state)}\n`);
-      } catch (error) {
-        commandError(error);
-      }
-    });
-
-  grade
-    .command("migrate")
-    .description(
-      "Deprecated: inline grade migration is no longer needed; result sidecars are standard (will be removed in 0.10.0)",
-    )
-    .option("--target <target>", "Restrict migration to kata or deliverable", requireTarget)
-    .option("--project <projectId>", "Project id in specdojo.config.json")
-    .option(
-      "--path <path>",
-      "Migrate only this Markdown document (repeatable)",
-      collectPathOption,
-      [],
-    )
-    .option("--dry-run", "List updates without writing", false)
-    .action((options) => {
-      try {
-        warnDeprecated(
-          "grade migrate",
-          "Inline grade migration is no longer needed as result sidecars are standard. Use grade run instead. This command will be removed in 0.10.0.",
-        );
-        const changed = migrateInlineGrades({
-          project: options.project,
-          target: options.target,
-          paths: options.path,
-          dryRun: options.dryRun,
-        });
-        for (const path of changed) {
-          process.stdout.write(`${options.dryRun ? "would update" : "updated"}: ${path}\n`);
-        }
-        process.stdout.write(`Migrated updates: ${changed.length}\n`);
       } catch (error) {
         commandError(error);
       }

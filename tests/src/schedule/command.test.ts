@@ -75,7 +75,7 @@ describe("schedule command registration", () => {
     const schedule = program.commands.find((command) => command.name() === "schedule")!;
     const commandNames = schedule.commands.map((command) => command.name());
 
-    expect(commandNames).toEqual(["where", "build", "strategy"]);
+    expect(commandNames).toEqual(["build", "strategy"]);
     expect(
       schedule
         .createHelp()

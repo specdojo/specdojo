@@ -2,12 +2,12 @@ import { warnDeprecated } from "./deprecation.js";
 import { type Command } from "commander";
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { basename, dirname, isAbsolute, join, posix, relative, resolve } from "node:path";
+import { basename, dirname, isAbsolute, join, posix, resolve } from "node:path";
 import dotenv from "dotenv";
 import { validateBranchTemplate } from "./branch-template.js";
 import { VALID_COMMIT_TYPES } from "./commit-types.js";
 import { validateCommitMessageTemplate } from "./commit-message-template.js";
-import { dump, load } from "./yaml.js";
+import { load } from "./yaml.js";
 import Ajv2020Module from "ajv/dist/2020.js";
 import type { ValidateFunction } from "ajv";
 import type { AgentStageRole, Proficiency, SchedulerStrategy, TaskMode } from "./agent-types.js";
@@ -774,7 +774,7 @@ export function loadMemberRoster(
       throw new Error(
         `Invalid members file: ${humanFullPath}: agent '${legacyAgent.nickname ?? "<unknown>"}' ` +
           `must be moved to ${resolve(baseDir, configuredAgentMembersPath(baseDir))}. ` +
-          `Run: specdojo config migrate-members --dry-run`,
+          `Edit the files by hand to move agent members.`,
       );
     }
     validateMemberFile("pm-members.schema.yaml", humanFullPath, parsed);
@@ -922,21 +922,6 @@ function validateMemberFile(schemaName: string, path: string, value: unknown): v
     .map((error) => `${error.instancePath || "/"} ${error.message ?? "is invalid"}`)
     .join("; ");
   throw new Error(`Schema validation failed: ${path}: ${details}`);
-}
-
-function dumpMemberFile(path: string, schemaName: string, value: unknown): string {
-  const schemaPath = join(
-    specdojoPackageRootDir(),
-    "docs",
-    "specdojo",
-    "schemas",
-    "v1",
-    schemaName,
-  );
-  const schemaRef = relative(dirname(path), schemaPath).replaceAll("\\", "/");
-  return (
-    `# yaml-language-server: $schema=${schemaRef}\n` + dump(value, { lineWidth: 100, noRefs: true })
-  );
 }
 
 function configuredAgentMembersPath(baseDir: string): string {
@@ -1209,26 +1194,6 @@ export function registerConfigCommands(program: Command): void {
     });
 
   cfg
-    .command("migrate-members")
-    .description(
-      "Deprecated: configure agent members directly in .specdojo/agent-members.yaml (will be removed in 0.10.0)",
-    )
-    .option("--project <projectId>", "Migrate only one project (default: all configured projects)")
-    .option("--dry-run", "Show planned changes without writing", false)
-    .action((opts: { project?: string; dryRun?: boolean }) => {
-      try {
-        warnDeprecated(
-          "config migrate-members",
-          "Configure agent members directly in .specdojo/agent-members.yaml instead. This command will be removed in 0.10.0.",
-        );
-        migrateAgentMembers({ projectId: opts.project, dryRun: !!opts.dryRun });
-      } catch (error) {
-        process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
-        process.exitCode = 1;
-      }
-    });
-
-  cfg
     .command("scaffold")
     .description("Scaffold provider settings, a VS Code multi-root workspace, Git hooks, or Slidev")
     .option("--provider <name>", "Provider template to copy (claude|codex|copilot|opencode)")
@@ -1300,113 +1265,6 @@ export function registerConfigCommands(program: Command): void {
         process.exitCode = 1;
       }
     });
-}
-
-export function migrateAgentMembers(options: {
-  projectId?: string;
-  dryRun: boolean;
-  rootDir?: string;
-}): void {
-  const rootDir = options.rootDir ? resolve(options.rootDir) : specdojoRootDir();
-  const configPath = join(rootDir, ".specdojo", "specdojo.config.json");
-  if (!existsSync(configPath)) throw new Error(`No config found: ${configPath}`);
-  const config = JSON.parse(readFileSync(configPath, "utf8")) as SpecDojoConfig;
-
-  const projectEntries: Array<[string, SpecDojoProjectConfig | undefined]> = options.projectId
-    ? [[options.projectId, config.projects[options.projectId]]]
-    : Object.entries(config.projects);
-  if (options.projectId && !config.projects[options.projectId]) {
-    throw new Error(`Unknown project: ${options.projectId}`);
-  }
-
-  const agentRelPath = config.agent_members_path?.trim() || DEFAULT_AGENT_MEMBERS_PATH;
-  assertProtectedAgentMembersPath(agentRelPath, configPath);
-  const agentPath = resolve(rootDir, agentRelPath);
-  let existingAgents: AgentMemberRoster = { version: 1, members: [] };
-  if (existsSync(agentPath)) {
-    existingAgents = readYamlFile(agentPath) as AgentMemberRoster;
-    validateMemberFile("agent-members.schema.yaml", agentPath, existingAgents);
-    validateAgentAliases(agentPath, existingAgents);
-  }
-
-  const agentNicknames = new Set([
-    ...existingAgents.members.map((member) => member.nickname),
-    ...(existingAgents.aliases ?? []).map((alias) => alias.nickname),
-  ]);
-  const moved: ProjectMember[] = [];
-  const updates: Array<{ path: string; roster: MemberRoster; count: number }> = [];
-  for (const [projectId, project] of projectEntries) {
-    if (!project) continue;
-    const relPath = getProjectMembersPath(project);
-    if (!relPath) throw new Error(`projects.${projectId}.members_path is required`);
-    const path = resolve(rootDir, relPath);
-    if (!existsSync(path)) throw new Error(`members_path not found: ${path}`);
-    const roster = readYamlFile(path) as MemberRoster;
-    if (!roster || !Array.isArray(roster.members)) {
-      throw new Error(`Invalid members file: ${path} (expected { members: [...] })`);
-    }
-    const humans = roster.members.filter((member) => member.type !== "agent");
-    const agents = roster.members.filter((member) => member.type === "agent");
-    const humanNicknames = new Set<string>();
-    for (const human of humans) {
-      if (humanNicknames.has(human.nickname)) {
-        throw new Error(`Duplicate human nickname '${human.nickname}' while migrating ${path}`);
-      }
-      humanNicknames.add(human.nickname);
-    }
-    for (const agent of agents) {
-      if (agentNicknames.has(agent.nickname)) {
-        throw new Error(
-          `Duplicate agent member or alias nickname '${agent.nickname}' while migrating ${path}`,
-        );
-      }
-      agentNicknames.add(agent.nickname);
-      moved.push(agent);
-    }
-    const humanRoster = { ...roster, members: humans };
-    validateMemberFile("pm-members.schema.yaml", path, humanRoster);
-    updates.push({ path, roster: humanRoster, count: agents.length });
-  }
-
-  const mergedAgents = {
-    ...existingAgents,
-    version: existingAgents.version || 1,
-    members: [...existingAgents.members, ...moved],
-  } satisfies AgentMemberRoster;
-  validateMemberFile("agent-members.schema.yaml", agentPath, mergedAgents);
-  validateAgentAliases(agentPath, mergedAgents);
-  for (const update of updates) {
-    for (const human of update.roster.members) {
-      if (agentNicknames.has(human.nickname)) {
-        throw new Error(
-          `Duplicate member nickname '${human.nickname}' across ${update.path} and ${agentPath}`,
-        );
-      }
-    }
-  }
-
-  const verb = options.dryRun ? "Would move" : "Moved";
-  for (const update of updates) {
-    process.stdout.write(`${verb} ${update.count} agent member(s) from ${update.path}\n`);
-  }
-  process.stdout.write(
-    `${options.dryRun ? "Would write" : "Wrote"} ${mergedAgents.members.length} agent member(s) to ${agentPath}\n`,
-  );
-  if (options.dryRun) return;
-
-  for (const update of updates) {
-    writeFileSync(
-      update.path,
-      dumpMemberFile(update.path, "pm-members.schema.yaml", update.roster),
-      "utf8",
-    );
-  }
-  mkdirSync(dirname(agentPath), { recursive: true });
-  writeFileSync(
-    agentPath,
-    dumpMemberFile(agentPath, "agent-members.schema.yaml", mergedAgents),
-    "utf8",
-  );
 }
 
 export function registerProjectCommands(program: Command): void {

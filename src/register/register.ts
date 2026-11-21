@@ -68,7 +68,6 @@ import {
   type RegisterDifficulty,
 } from "./item.js";
 import { registerMaintenanceCommands } from "./maintenance-commands.js";
-import { applyRegisterMigrationPlan, planRegisterMigration } from "./migration.js";
 import {
   planRenumber,
   planRetopic,
@@ -126,12 +125,6 @@ export {
   type TableHeading,
   type TicketStatus,
 } from "./core.js";
-export {
-  applyRegisterMigrationPlan,
-  planRegisterMigration,
-  type RegisterMigrationFile,
-  type RegisterMigrationPlan,
-} from "./migration.js";
 export {
   findItemById,
   findRegisterItem,
@@ -747,7 +740,6 @@ const REGISTER_COMMAND_DEPENDENCIES: RegisterCommandDependencies = {
   addProjectOption,
   addRegisterCommitOptions,
   applyItemUpdate,
-  applyRegisterMigrationPlan,
   assertRegisterItemCommitTargetsClean,
   assertTerminalOperationAllowed,
   atomicWriteFile,
@@ -761,7 +753,6 @@ const REGISTER_COMMAND_DEPENDENCIES: RegisterCommandDependencies = {
   parseHistoryIds,
   parseRegisterTimestampOption,
   planRegisterItem,
-  planRegisterMigration,
   planRenumber,
   planRetopic,
   printCommandError,

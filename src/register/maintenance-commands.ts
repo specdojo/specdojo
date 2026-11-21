@@ -1,12 +1,6 @@
 import type { Command } from "commander";
-import { warnDeprecated } from "../shared/deprecation.js";
-import { existsSync, writeFileSync } from "node:fs";
+import { existsSync } from "node:fs";
 import { collectRegisterHistoryEvents, formatRegisterHistoryEvents } from "./history.js";
-import {
-  createGitTimestampResolver,
-  planRegisterTimestampMigration,
-  summarizeTimestampMigration,
-} from "./migrate-timestamps.js";
 import { registerEventFilePath, validateRegisterEventDocs } from "./events.js";
 import { validateRegisterItemDocs } from "./item.js";
 import { specdojoRootDir } from "../shared/specdojo-config.js";
@@ -22,13 +16,9 @@ export function registerMaintenanceCommands(
   const {
     addProjectOption,
     addRegisterCommitOptions,
-    applyRegisterMigrationPlan,
     generateDerivedViewFiles,
     loadItemForUpdate,
-    migrateEmbeddedRegisterEvents,
-    migrateRegisterEventsFromGit,
     parseHistoryIds,
-    planRegisterMigration,
     planRenumber,
     printCommandError,
     registerEventActor,
@@ -39,82 +29,6 @@ export function registerMaintenanceCommands(
     validBuildScopes,
     writeDerivedViews,
   } = dependencies;
-
-  // --- migrate ---
-  const migrateCmd = reg
-    .command("migrate")
-    .description(
-      "Deprecated: legacy register migration is no longer needed; individual ticket files and external events are standard (will be removed in 0.10.0)",
-    );
-  addProjectOption(migrateCmd);
-  migrateCmd.option("--dry-run", "Validate and print the migration summary without writing", false);
-  migrateCmd.action((opts) => {
-    try {
-      warnDeprecated(
-        "register migrate",
-        "Legacy register migration is no longer needed as individual ticket files and external events are standard. This command will be removed in 0.10.0.",
-      );
-      const paths = resolveRegisterPaths(opts);
-      const plan = planRegisterMigration(paths);
-      const summary =
-        `items=${plan.sourceCount}, create=${plan.createdCount}, update=${plan.updatedCount}, ` +
-        `unchanged=${plan.unchangedCount}`;
-
-      if (opts.dryRun) {
-        process.stdout.write(`Would migrate register items: ${summary}\n`);
-        if (plan.sourceIndexPath) {
-          process.stdout.write(`Would remove legacy index: ${plan.sourceIndexPath}\n`);
-        }
-      } else {
-        applyRegisterMigrationPlan(plan);
-        process.stdout.write(`Migrated register items: ${summary}\n`);
-        if (plan.sourceIndexPath) {
-          process.stdout.write(`Removed legacy index: ${plan.sourceIndexPath}\n`);
-        }
-      }
-
-      const timestampPlan = planRegisterTimestampMigration({
-        projectRegisterPath: paths.projectRegisterPath,
-        timeZone: paths.registerDateTimeZone,
-        resolveGitTimestamps: createGitTimestampResolver(specdojoRootDir()),
-      });
-      const timestampSummary = summarizeTimestampMigration(timestampPlan);
-
-      if (opts.dryRun) {
-        const embeddedMigration = migrateEmbeddedRegisterEvents(paths, true);
-        const eventMigration = migrateRegisterEventsFromGit(paths, true);
-        const eventSummary = eventMigration.available
-          ? `items=${eventMigration.items}, events=${eventMigration.events}, skipped=${eventMigration.skipped}`
-          : "unavailable (Git history not found; legacy fallback remains active)";
-        process.stdout.write(`Would migrate register timestamps: ${timestampSummary}\n`);
-        process.stdout.write(
-          `Would separate embedded register events: items=${embeddedMigration.items}, events=${embeddedMigration.events}\n`,
-        );
-        process.stdout.write(`Would migrate register events: ${eventSummary}\n`);
-        return;
-      }
-
-      for (const file of timestampPlan.files) {
-        writeFileSync(file.path, file.content, "utf8");
-      }
-      process.stdout.write(`Migrated register timestamps: ${timestampSummary}\n`);
-      const embeddedMigration = migrateEmbeddedRegisterEvents(paths, false);
-      process.stdout.write(
-        `Separated embedded register events: items=${embeddedMigration.items}, events=${embeddedMigration.events}\n`,
-      );
-      const eventMigration = migrateRegisterEventsFromGit(paths, false);
-      const eventSummary = eventMigration.available
-        ? `items=${eventMigration.items}, events=${eventMigration.events}, skipped=${eventMigration.skipped}`
-        : "unavailable (Git history not found; legacy fallback remains active)";
-      process.stdout.write(`Migrated register events: ${eventSummary}\n`);
-
-      for (const view of writeDerivedViews(paths, "all")) {
-        process.stdout.write(`Generated: ${view.path}\n`);
-      }
-    } catch (error) {
-      printCommandError(error);
-    }
-  });
 
   // --- build ---
   const buildCmd = reg

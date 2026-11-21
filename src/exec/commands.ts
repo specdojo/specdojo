@@ -1,5 +1,3 @@
-import { registerDeprecatedWhereAlias } from "../shared/where-alias.js";
-import { warnDeprecated } from "../shared/deprecation.js";
 import { type Command, Option } from "commander";
 import { existsSync } from "node:fs";
 import { join, resolve as pathResolve } from "node:path";
@@ -41,7 +39,6 @@ import {
   resolveSchedulerStrategy,
   runLockedEventCommand,
   runReleaseAllBlocked,
-  runSimpleEventCommand,
   scaffoldClaimResult,
   type LockedEventAction,
 } from "./core.js";
@@ -63,7 +60,6 @@ import {
 } from "./events.js";
 import { noProductChangeWarnings } from "./executor-outcome-checks.js";
 import { registerExecHandoffCommands } from "./handoff.js";
-import { registerRecordMigrationCommand } from "./migrate-records.js";
 import {
   archivePlan,
   buildInPlaceStem,
@@ -126,7 +122,6 @@ export function printExecPaths(opts: { project?: string }): void {
 export function registerExecCommands(program: Command): void {
   const exec = program.command("exec").description("Execution helpers");
   registerExecHandoffCommands(exec);
-  registerRecordMigrationCommand(exec);
   registerExecSmokeCommand(exec);
   registerExecQueueCommands(exec);
   const lockedActions: Record<LockedEventAction["type"], LockedEventAction> = {
@@ -185,45 +180,16 @@ export function registerExecCommands(program: Command): void {
 
   const types: ExecEventType[] = [
     "claim",
-    "note",
     "block",
     "unblock",
     "complete",
     "reopen",
     "release",
     "cancel",
-    "link",
-    "estimate",
   ];
 
-  const deprecatedEventCommands: Record<string, { description: string; migration: string }> = {
-    note: {
-      description:
-        "Deprecated: record notes in tickets or execution results instead (will be removed in 0.10.0)",
-      migration:
-        "Record notes in tickets or execution results instead. This command will be removed in 0.10.0.",
-    },
-    link: {
-      description:
-        "Deprecated: declare dependencies in tickets (depends_on) or catalog instead (will be removed in 0.10.0)",
-      migration:
-        "Declare dependencies in tickets (depends_on) or catalog instead. This command will be removed in 0.10.0.",
-    },
-    estimate: {
-      description:
-        "Deprecated: manage estimates and difficulty in register tickets instead (will be removed in 0.10.0)",
-      migration:
-        "Manage estimates and difficulty in register tickets instead. This command will be removed in 0.10.0.",
-    },
-  };
-
   for (const t of types) {
-    const deprecation = deprecatedEventCommands[t];
-    const cmd = exec
-      .command(t)
-      .description(
-        deprecation ? deprecation.description : `Write ${t} event JSON into exec/events/ (UTC)`,
-      );
+    const cmd = exec.command(t).description(`Write ${t} event JSON into exec/events/ (UTC)`);
     addCommonAddOptions(cmd, {
       requireTask: t !== "release" && t !== "complete",
       msgDefault: DEFAULT_EVENT_MESSAGES[t],
@@ -246,23 +212,14 @@ export function registerExecCommands(program: Command): void {
       );
     }
 
-    if (t in lockedActions) {
-      const action = lockedActions[t as LockedEventAction["type"]];
-      cmd.action(async (opts) => {
-        if (action.type === "release" && opts.allBlocked) {
-          await runReleaseAllBlocked(opts);
-          return;
-        }
-        await runLockedEventCommand(opts, action);
-      });
-    } else {
-      cmd.action((opts) => {
-        if (deprecation) {
-          warnDeprecated(`exec ${t}`, deprecation.migration);
-        }
-        runSimpleEventCommand(opts, t);
-      });
-    }
+    const action = lockedActions[t as LockedEventAction["type"]];
+    cmd.action(async (opts) => {
+      if (action.type === "release" && opts.allBlocked) {
+        await runReleaseAllBlocked(opts);
+        return;
+      }
+      await runLockedEventCommand(opts, action);
+    });
   }
 
   const vcmd = exec
@@ -838,8 +795,6 @@ export function registerExecCommands(program: Command): void {
       printCommandError(error, false);
     }
   });
-
-  registerDeprecatedWhereAlias(exec, printExecPaths);
 }
 
 // PJR-QQRH: keep runs blocked for missing product changes visible in `exec status`, whatever

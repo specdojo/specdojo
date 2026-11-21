@@ -161,13 +161,11 @@ export function addOwnerOptions(cmd: Command): Command {
 }
 
 // Fixed default messages for routine state transitions. Events whose message carries the
-// reason itself (note / block / unblock / reopen / cancel) have no default and keep --msg required.
+// reason itself (block / unblock / reopen / cancel) have no default and keep --msg required.
 export const DEFAULT_EVENT_MESSAGES: Partial<Record<ExecEventType, string>> = {
   claim: "claim task",
   complete: "complete task",
   release: "release task",
-  link: "link refs",
-  estimate: "update estimate",
 };
 
 export function addCommonAddOptions(
@@ -419,26 +417,6 @@ export async function scaffoldClaimResult(opts: {
   });
   if (!result.created) {
     await resetResultForClaim(result.resultPath, opts.actor, opts.startedAt, execution);
-  }
-}
-
-export function runSimpleEventCommand(opts: ExecCommandOpts, type: ExecEventType): void {
-  try {
-    const { schedulePath } = resolveProjectContext(opts);
-    const actor = requireNonEmpty("by", opts.by);
-    const roster = loadRosterForOpts(opts);
-    assertValidActor(actor, roster);
-    const event = buildEvent(type, opts);
-    if (opts.dryRun) {
-      process.stdout.write(`[dry-run] ${JSON.stringify(event, null, 2)}\n`);
-      exitWithCode(true);
-      return;
-    }
-    const out = writeEventFile(schedulePath, event);
-    process.stdout.write(out + "\n");
-    exitWithCode(true);
-  } catch (error) {
-    printCommandError(error, false);
   }
 }
 

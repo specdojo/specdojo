@@ -86,7 +86,7 @@ Project Human Member Roster Documentation Rulebook
 ### 6.2. 合成名簿との整合
 
 - 人間名簿と agent 定義の合成後、全 nickname が一意であり、`--by`・実行イベントが登録値を使うことを照合します。
-- `pm-members.yaml` に `type: agent` が残る場合は、`specdojo config migrate-members --dry-run` で移行内容を確認します。
+- `pm-members.yaml` に `type: agent` が残る場合は、`.specdojo/agent-members.yaml` へ手作業で移します。
 
 ### 6.3. 運用ルール
 

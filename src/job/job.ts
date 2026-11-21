@@ -1,4 +1,3 @@
-import { registerDeprecatedWhereAlias } from "../shared/where-alias.js";
 import type { Command } from "commander";
 import { spawn, spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
@@ -730,8 +729,6 @@ export function printJobPaths(opts: { project?: string }): void {
 
 export function registerJobCommands(program: Command): void {
   const command = program.command("job").description("Reusable Job Definition and Run helpers");
-
-  registerDeprecatedWhereAlias(command, printJobPaths);
 
   command
     .command("validate")

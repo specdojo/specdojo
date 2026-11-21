@@ -42,21 +42,19 @@ specdojo:
 
 構文・引数・オプションの正本は [[specdojo:command-reference|CLIコマンドリファレンス]] の「共通オプション」の保存先の確認と「exec」「exec worktree」とする。
 
-| 操作                     | 対象コマンド                                    | 正本リファレンス                                                          |
-| ------------------------ | ----------------------------------------------- | ------------------------------------------------------------------------- |
-| 保存先・状況確認         | `where exec` / `exec status`                    | [[specdojo:command-reference#7-exec\|exec]]                               |
-| 検証・再計算             | `exec validate` / `exec refresh`                | [[specdojo:command-reference#7-exec\|exec]]                               |
-| plan の準備・保管        | `exec plan` / `exec archive`                    | [[specdojo:command-reference#7-exec\|exec]]                               |
-| 作業の選択・着手         | `exec scheduler` / `exec claim`                 | [[specdojo:command-reference#7-exec\|exec]]                               |
-| 実行                     | `exec run`                                      | [[specdojo:command-reference#7-exec\|exec]]                               |
-| 完了・完了訂正           | `exec complete` / `exec reopen`                 | [[specdojo:command-reference#7-exec\|exec]]                               |
-| 障害・再着手・中止       | `exec block` / `unblock` / `release` / `cancel` | [[specdojo:command-reference#7-exec\|exec]]                               |
-| 補足記録                 | `exec note` / `exec link` / `exec estimate`     | [[specdojo:command-reference#7-exec\|exec]]                               |
-| 再開・連続運転           | `exec resume` / `exec cycle` / `exec slots`     | [[specdojo:command-reference#7-exec\|exec]]                               |
-| 段階的な隔離実行         | `exec worktree`                                 | [[specdojo:command-reference#9-exec-worktree\|exec worktree]]             |
-| 比較試行                 | `exec trial`                                    | [[specdojo:command-reference#71-agent比較trial\|agent比較trial]]          |
-| 設定・保護設定の引き継ぎ | `exec scaffold` / `exec handoff`                | [[specdojo:command-reference#7-exec\|exec]]                               |
-| 旧記録の移行             | `exec migrate-records`                          | [[specdojo:plan-result-lifecycle-guide\|plan/resultライフサイクルガイド]] |
+| 操作                     | 対象コマンド                                    | 正本リファレンス                                                 |
+| ------------------------ | ----------------------------------------------- | ---------------------------------------------------------------- |
+| 保存先・状況確認         | `where exec` / `exec status`                    | [[specdojo:command-reference#7-exec\|exec]]                      |
+| 検証・再計算             | `exec validate` / `exec refresh`                | [[specdojo:command-reference#7-exec\|exec]]                      |
+| plan の準備・保管        | `exec plan` / `exec archive`                    | [[specdojo:command-reference#7-exec\|exec]]                      |
+| 作業の選択・着手         | `exec scheduler` / `exec claim`                 | [[specdojo:command-reference#7-exec\|exec]]                      |
+| 実行                     | `exec run`                                      | [[specdojo:command-reference#7-exec\|exec]]                      |
+| 完了・完了訂正           | `exec complete` / `exec reopen`                 | [[specdojo:command-reference#7-exec\|exec]]                      |
+| 障害・再着手・中止       | `exec block` / `unblock` / `release` / `cancel` | [[specdojo:command-reference#7-exec\|exec]]                      |
+| 再開・連続運転           | `exec resume` / `exec cycle` / `exec slots`     | [[specdojo:command-reference#7-exec\|exec]]                      |
+| 段階的な隔離実行         | `exec worktree`                                 | [[specdojo:command-reference#9-exec-worktree\|exec worktree]]    |
+| 比較試行                 | `exec trial`                                    | [[specdojo:command-reference#71-agent比較trial\|agent比較trial]] |
+| 設定・保護設定の引き継ぎ | `exec scaffold` / `exec handoff`                | [[specdojo:command-reference#7-exec\|exec]]                      |
 
 ## 5. 入力と出力の要点
 

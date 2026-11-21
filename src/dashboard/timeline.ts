@@ -1,7 +1,4 @@
-import { registerDeprecatedWhereAlias } from "../shared/where-alias.js";
-import { warnDeprecated } from "../shared/deprecation.js";
-import { type Command } from "commander";
-import { existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { existsSync } from "node:fs";
 import { join, resolve } from "node:path";
 import {
   getProjectCatalogPath,
@@ -12,12 +9,6 @@ import {
   loadEnv,
   specdojoRootDir,
 } from "../shared/specdojo-config.js";
-import {
-  buildTimeline,
-  renderCatalogScaffoldMarkdown,
-  renderTimelineOrderMarkdown,
-  type TimelineBuildResult,
-} from "./timeline-build.js";
 
 function resolveTimelinePaths(opts: { project?: string }): {
   timelinePath: string;
@@ -67,36 +58,6 @@ function printCommandError(error: unknown): void {
   process.exitCode = 1;
 }
 
-function addProjectOption(cmd: Command): Command {
-  return cmd.option("--project <projectId>", "Project id in specdojo.config.json");
-}
-
-function buildTimelineJson(result: TimelineBuildResult): string {
-  return (
-    JSON.stringify(
-      {
-        project_id: result.projectId,
-        schedule_ready_tracks: result.scheduleReadyTracks,
-        track_catalog_status: Object.fromEntries(
-          result.waves.flatMap((wave) =>
-            wave.tracks.map((track) => [track.track, track.catalog_status]),
-          ),
-        ),
-        waves: result.waves.map((wave) => ({
-          wave: wave.wave,
-          tracks: wave.tracks.map((track) => track.track),
-        })),
-        catalog_scaffold_targets: result.scaffolds.map((scaffold) => ({
-          track: scaffold.track,
-          domain: scaffold.domain,
-        })),
-      },
-      null,
-      2,
-    ) + "\n"
-  );
-}
-
 export function printTimelinePaths(opts: { project?: string }): void {
   try {
     const { timelinePath, catalogPath } = resolveTimelinePaths(opts);
@@ -110,62 +71,4 @@ export function printTimelinePaths(opts: { project?: string }): void {
   } catch (error) {
     printCommandError(error);
   }
-}
-
-export function registerTimelineCommands(program: Command): void {
-  const tml = program.command("timeline").description("Timeline build commands");
-
-  registerDeprecatedWhereAlias(tml, printTimelinePaths);
-
-  const bcmd = tml
-    .command("build")
-    .description(
-      "Deprecated: use dashboard build; move domains and dependencies to register epics (will be removed in 0.10.0)",
-    );
-  addProjectOption(bcmd);
-  bcmd.option("--dry-run", "Print generated content to stdout without writing", false);
-  bcmd.action((opts) => {
-    try {
-      warnDeprecated(
-        "timeline build",
-        "Use dashboard build; move domains and dependencies to register epics. This command will be removed in 0.10.0.",
-      );
-      const { timelinePath, ...paths } = resolveTimelinePaths(opts);
-      const result = buildTimeline({ timelinePath, ...paths });
-
-      for (const warning of result.warnings) process.stdout.write(`WARN: ${warning}\n`);
-      for (const error of result.errors) process.stdout.write(`ERROR: ${error}\n`);
-      if (result.errors.length > 0) {
-        process.exitCode = 1;
-        return;
-      }
-
-      const outputs = [
-        { name: "timeline-order.md", content: renderTimelineOrderMarkdown(result) },
-        { name: "catalog-scaffold.md", content: renderCatalogScaffoldMarkdown(result) },
-        { name: "timeline.json", content: buildTimelineJson(result) },
-      ];
-
-      if (opts.dryRun) {
-        for (const output of outputs) {
-          process.stdout.write(`\n# --- (dry-run) ${output.name} ---\n`);
-          process.stdout.write(output.content);
-        }
-        return;
-      }
-
-      const genDir = join(timelinePath, "generated");
-      mkdirSync(genDir, { recursive: true });
-      for (const output of outputs) {
-        writeFileSync(join(genDir, output.name), output.content, "utf8");
-      }
-
-      process.stdout.write(
-        `Generated: ${genDir} (${result.waves.length} waves, ` +
-          `${result.scaffolds.length} catalog scaffold targets)\n`,
-      );
-    } catch (error) {
-      printCommandError(error);
-    }
-  });
 }

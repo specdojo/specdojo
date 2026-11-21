@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-GV43",
+  "run_id": "pjr-gv43-20261121T113556Z-f4c85a8d",
+  "updated_at": "2026-11-21T11:57:06.210Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sonnet-executor",
+      "attempts": 1,
+      "started_at": "2026-11-21T11:36:34.215Z",
+      "completed_at": "2026-11-21T11:44:08.668Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-GV43/pjr-gv43-20261121T113556Z-f4c85a8d/evidence.json"
+    },
+    "reporter": {
+      "status": "failed",
+      "actor": "gemma26-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-21T11:49:01.915Z",
+      "completed_at": "2026-11-21T11:57:06.210Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-GV43/pjr-gv43-20261121T113556Z-f4c85a8d/result.md"
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-GV43/pjr-gv43-20261121T113556Z-f4c85a8d/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-GV43/pjr-gv43-20261121T113556Z-f4c85a8d/result.md"
+  }
+}

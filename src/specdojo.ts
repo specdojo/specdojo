@@ -8,7 +8,6 @@ import { registerExecCommands } from "./exec/exec.js";
 import { registerCatalogCommands } from "./catalog/catalog.js";
 import { registerDeliverableCommands } from "./deliverable/deliverable.js";
 import { registerScheduleCommands } from "./schedule/schedule.js";
-import { registerTimelineCommands } from "./dashboard/timeline.js";
 import { registerIndexCommands } from "./docs/index-command.js";
 import { registerRegisterCommands } from "./register/register.js";
 import { registerRoutineCommands } from "./routine/routine.js";
@@ -60,7 +59,6 @@ async function main(): Promise<void> {
   registerCatalogCommands(program);
   registerDeliverableCommands(program);
   registerScheduleCommands(program);
-  registerTimelineCommands(program);
   registerIndexCommands(program);
   registerRegisterCommands(program);
   registerRoutineCommands(program);
