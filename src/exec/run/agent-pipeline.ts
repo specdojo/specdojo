@@ -191,7 +191,14 @@ export async function runReporterStage(params: {
     process.stdout.write(`  Executor report rejected before the reporter: ${contractFailure}\n`);
     return { exitCode: 1, runResult: "failure", blockReason: contractFailure, state };
   }
-  const env = agentEnvironment(repoRoot, cwd, schedulePath, executionPath, params.productWorktrees);
+  const env = agentEnvironment(
+    repoRoot,
+    cwd,
+    schedulePath,
+    executionPath,
+    params.productWorktrees,
+    params.mode,
+  );
   const reporterEvidence = evidenceForReporter(params.evidence, {
     repoRoot,
     worktreePath: cwd,
@@ -467,7 +474,14 @@ export async function runAgentPipeline(params: {
   );
   writePipelineState(stateLocation.path, state);
 
-  const env = agentEnvironment(repoRoot, cwd, schedulePath, executionPath, params.productWorktrees);
+  const env = agentEnvironment(
+    repoRoot,
+    cwd,
+    schedulePath,
+    executionPath,
+    params.productWorktrees,
+    params.mode,
+  );
   // PJR-FGKB: a lower-bound path the earlier attempt created and that was removed before resume
   // has nothing left to account for; drop it and record the exclusion in the evidence.
   const resumedCoverage = params.resumedExecutor

@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: low
   difficulty: medium
   owner: DEV
@@ -56,7 +56,33 @@ exec の review の段の agent に、プロダクトの worktree への edit �
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+review の段（`mode: review`）ではプロダクトの worktree を読み取りだけで渡すようにした。`agentEnvironment` が mode から `SPECDOJO_REPO_ACCESS=read` を環境に載せ、`runWithRetry` がそれを読んで `withAgentExtraRoots` に `access: "read"` を渡す。`exec worktree agent` も task の mode から同じ access を渡す。
+
+### 5.1. CHANGELOG に書く事項
+
+- 区分: 変更
+- 行の文案: exec の review の段で、agent に渡すプロダクトの worktree を読み取りだけにした。読み取りだけにできない provider は、review の後にプロダクトの worktree へ変更が出ていたら runner が止める。
+
+### 5.2. provider ごとの権限
+
+| provider | review の段で渡す権限                                 | 読み取りだけにできたか | 補足                                                              |
+| -------- | ----------------------------------------------------- | ---------------------- | ----------------------------------------------------------------- |
+| claude   | `--add-dir` だけ。`Edit(/<abs>/**)` の許可を渡さない  | できた                 | mode の設定が許す project 側の edit は変わらない                  |
+| opencode | `external_directory` の allow だけ。`edit` を足さない | できた                 | 既存の `edit` の規則はそのまま                                    |
+| codex    | `--add-dir`                                           | できなかった           | 読み取り専用の追加ディレクトリの引数がない。runner の検出で止める |
+| copilot  | `--add-dir`                                           | できなかった           | 同上                                                              |
+
+読み取りだけにできるかどうかに関わらず、review の段の後でプロダクトの worktree に新しい未コミットの変更が出ていれば、`runWithRetry` が `blocked: review stage changed product repositories that are read-only: <repo>:<path>` で失敗にする（保護の block と同じ扱い）。Git 状態の変化（HEAD の移動など）は既存の検査が止める。
+
+### 5.3. 確認結果
+
+- `tests/src/exec/task-repos.test.ts` に、claude の引数に `Edit(` と `--allowedTools` が含まれないこと、opencode の注入に `edit` が無いこと、codex・copilot の引数、mode と環境の対応、review 中の変更の検出を追加し、通った。
+- `npm run typecheck` と `npm run lint:ts`（エラー 0）を通した。
+
+### 5.4. 申し送り
+
+- 項目が `waiting` になる点: schedule の review の段では `protectionBlock` で失敗し、既存の block の経路で止まる。register の run は mode が常に `edit` で、review の段を持たないため、register の `waiting` 遷移はこの件では足していない。
+- 「変更が出たら止まる」検査は関数（`changedProductStatuses`）の単体テストまでで、`runWithRetry` を通した block の統合テストは書いていない。必要なら別の項目にする。
 
 ## 6. 関連ドキュメント
 
