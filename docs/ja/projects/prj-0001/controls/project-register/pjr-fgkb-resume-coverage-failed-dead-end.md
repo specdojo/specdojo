@@ -9,7 +9,7 @@ specdojo:
   item_type: issue
   item_status: open
   priority: medium
-  difficulty: medium
+  difficulty: hard
   owner: DEV
   registered_at: "2026-11-21T09:02:58Z"
 ---
@@ -40,12 +40,19 @@ specdojo:
 
 ## 4. 対応方針
 
-| 項目     | 内容   |
-| -------- | ------ |
-| 原因     | _TODO_ |
-| 対応策   | _TODO_ |
-| 依存事項 | _TODO_ |
-| 完了条件 | _TODO_ |
+| 項目     | 内容                                                                                                                                                                                                                                                                                                                                  |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 原因     | 最初の試行の `attempt_changes` が再開時の `target_coverage` の下限になり（PJR-PPYF）、試行がうっかり作って後で消されたファイルも下限に残る。`validateResumedTargetCoverage` に落ちると executor の段が failed になり、failed は `--resume` でも `--resume-from executor` でも再開できない                                             |
+| 対応策   | 利用者の決定（2026-11-21、indie）で A+B とする。A: 再開時の対象の検証に落ちたときは failed にせず、項目を waiting にして `block_reason` に足りない対象を書き、`--resume --resume-from executor` で再開できるようにする。B: 下限のファイルが作業ツリーになく、統合先との差分にもないときは、下限から外し、外したことを evidence に残す |
+| 依存事項 | なし                                                                                                                                                                                                                                                                                                                                  |
+| 完了条件 | 下の箇条書きのすべてを満たす                                                                                                                                                                                                                                                                                                          |
+
+- 前の試行が作って消されたファイルは、再開時の検証の下限から外れ、外したことが evidence に残る（テストで確かめる）。
+- 再開時の対象の検証に落ちると、項目が waiting になり、足りない対象が `block_reason` に残る。その後 `--resume --resume-from executor` で再開できる（テストで確かめる）。
+- `exec-operation-guide` の再開の節を直す。
+- runner の動きを変えるため、統合の後に実際の `exec run --register` を 1 回流して確かめる（オーケストレーターが行う）。
+- `CHANGELOG.md` は変えない。個票の対応結果の `### 5.1. CHANGELOG に書く事項` に、区分（追加・変更・不具合修正など）と行の文案を書く。
+- `npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md` を通し、親の検証を通す。
 
 ## 5. 対応結果
 
