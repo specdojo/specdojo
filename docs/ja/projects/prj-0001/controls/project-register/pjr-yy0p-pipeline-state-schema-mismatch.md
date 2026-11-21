@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-yy0p-pipeline-state-schema-mismatch
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-20T23:36:40Z"
+  completed_at: "2026-11-21T07:55:57Z"
+  conclusion: pipeline-state.schema.yaml に artifacts を足し、追跡済みの pipeline-state.json がすべて schema に通るようにした。validate:schema に検査を足す package.json の案を個票に残した（反映は orchestrator が別に行う）
   derived_from:
     - PJR-5F1Y
 ---
