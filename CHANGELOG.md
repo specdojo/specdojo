@@ -4,6 +4,29 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ## [Unreleased]
 
+## [0.9.2] - 2026-11-21
+
+同梱パッケージ（`@specdojo/docs-lint` 0.5.0、`@specdojo/docs-site` 0.6.0）は変わらないため、公開しません。
+
+### 利用者から見て動きが変わる点
+
+- Antigravity CLI（`agy`）を起動しなくなりました。consumer plan では、他社の agent や application の中から agy を起動することを Antigravity の FAQ（<https://antigravity.google/docs/faq>）が対象外とし、Additional Terms の Section 6（<https://antigravity.google/terms>）が契約違反としており、アカウントの停止につながるおそれがあるためです。exec・grade・trial、`agent launch`、`orchestrator launch` は、provider が `antigravity` の指定を agy の起動前にエラーで止めます。自動選択と代わりの agent の選択では、agy の member を候補から外します。`init`・`config scaffold`・`devcontainer scaffold` でも antigravity を選べません。agy の対応は 0.10.0 で外します（PJR-NJE4）。
+- 0.9.1 までの `init` で antigravity を選んでいた場合、0.9.2 に上げると agy の member を使う `exec run` などがエラーで止まります。`.specdojo/agent-members.yaml` で agy の member に `disabled: true` を付けるか消し、`.specdojo/exec-defaults.yaml` の `routing` で agy の member を指している箇所を、ほかの provider の member に替えてください。`package.json` の `orch:argon`・`orch:flash` などのスクリプトも使えないため消してください（PJR-NJE4）。
+- 使われていない・移行用の 9 コマンド（`timeline where`・`timeline build`、`exec note`・`exec link`・`exec estimate`・`exec migrate-records`、`grade migrate`、`register migrate`、`config migrate-members`）を非推奨にしました。help と実行時に、代わりの操作と、0.10.0 で消すことを表示します。各コマンドの `where` の別名の警告も、消す版（0.10.0）を示すようにしました（PJR-BSCK）。
+- 実践の型の決定記録（dec）と移行テスト計画（ntp）を非推奨にしました。決定は登録簿の decision に、移行テストの計画は `mtp-rulebook` に記録してください（PJR-HVQZ）。
+
+### 追加
+
+- `grade run --target kata` に `--kata <name>`（繰り返し指定できる）を足しました。型の名前を並べると、その型の rulebook と sample を 1 回で順に評価し、終わったときに型ごとの結果を一覧にします。`--kata` のときは、rate limit が起きても残りの型を続けます（PJR-SW7T）。
+- `exec run --register <ID> --resume --resume-from executor` に `--resume-note <text>`（繰り返し指定できる）を足しました。再開の前に、run の plan へ再開の指示の節を足し、指示と日時を `pipeline-state.json` の `resume_notes` に残します（PJR-5F1Y）。
+- `register update` に `--section <章の名前>` と `--section-file <path>` を足しました。個票の 1 つの章の本文を、ファイルの中身で差し替えます。`--dry-run` でも、個票に無い章・読めないファイル・見出しを含むファイルはエラーになります（PJR-7KXW）。
+- オーケストレーターの本体に、型を整えるときの grade、人の確定の記録、裏での完了の待ち方、実行中の run の状態のファイルを commit に混ぜないこと、YAML の文字列の型の確かめ方を足しました。`init` が配る provider ごとのテンプレートにも反映されます（PJR-70SS）。
+
+### 不具合修正
+
+- executor が編集を拒まれたまま、またはプロダクトリポジトリを変えないまま「完了」と報告すると、runner が成功として review へ進めていた問題を修正しました。edit の executor の出力にツールの権限による拒否がある場合と、プロダクトを対象にする項目でプロダクトの worktree に変更が無い場合は、項目を `waiting` にして `block_reason` に理由を残します。「プロダクトの変更なし」は runner の要約と `exec status` に警告として出ます（PJR-QQRH）。
+- 親の検証が時間切れになったとき、vitest などの子孫のプロセスまで止め、出力の pipe を持つプロセスが残っても、runner が止まらずに次の検証へ進むようにしました（PJR-V277）。
+
 ## [0.9.1] - 2026-11-20
 
 同梱パッケージ（`@specdojo/docs-lint` 0.5.0、`@specdojo/docs-site` 0.6.0）は変わらないため、公開しません。
