@@ -102,3 +102,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_ae23d574fe3446a4bc56fb0d73fcfafc
+- v: 1
+  id: reg_80beab1b03e747b780c1b03b22adcb48
+  ts: "2026-11-21T00:52:21Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register で対応。差分（652ff53c5 の前の統合）・単体テスト・ビルド済みの CLI のエラーを確かめ、既存の再開の統合テストを写した一時のテストで、偽の agent の run を --resume-note 2 つで再開し、plan の位置と記録と review への遷移を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-21"
+    - field: conclusion
+      from: "-"
+      to: exec run --register --resume --resume-from executor に --resume-note を足し、再開の指示を plan の共通規約の参照の前へ入れ、pipeline-state.json の resume_notes に残す
+  previous_event_id: reg_3dddec312e4e494286f0fb7dd386b2f0
