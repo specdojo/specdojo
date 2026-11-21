@@ -1,0 +1,22 @@
+`docs/ja/specdojo/samples/itc-index-sample.md` だけを編集し、冗長な説明を3か所削りました。本書の内容と判断は変えておらず、新しい内容も足していません。
+
+**直した箇所（3件）**
+
+1. 「内部結合テスト共通の境界/依存の扱い」の本文で、合格基準の例を2つから1つに絞りました（`merge`）。削った「同じ取引番号で再送する」例は、「ケース表の共通カラム」の `it-sales-checkout-persistence-integrity-020` の行と同じ内容です。残した「DB が更新を拒否した場合」の例が、応答と DB の差分という観測点を含む期待値を示しているので、完了条件は満たしたままです。
+2. 「対象外・除外理由（共通）」の表で、`receipt-print` の例外の欄から「成功・失敗・無応答を返し」を削りました（`delete`）。応答の種類は「内部結合テスト共通の境界/依存の扱い」の表に書かれているためです。「なし」と「会計記録への影響だけ見る」は残しています。
+3. 「内部結合テスト共通の境界/依存の扱い」の表で、業務記録 DB の行の例外を「なし」だけにしました（`delete`）。削った「Fake は UT で使い、IT では使わない」は、テストレベルの表の UT の行と、同じ表のテストダブルの行で既に伝わっています。
+
+**残した候補（2件、`retain`）**
+
+- 「ケース表の共通カラム」のレビュー確認の段落は、rulebook の記述をほぼ繰り返していますが残しました。確認する担当（QE）を本システム向けに決めており、メモの `_TODO_` の行がこの段落を参照しているためです。
+- テストレベルの表の「非機能テスト」の行と、対象外の表の応答時間の行は重なって見えますが残しました。どちらも rulebook が求める表で、片方は分界、もう片方は除外理由と代替手段という別の役割です。
+
+**検証**
+
+- prettier での整形と確認は通りました（表の列幅が揃い直っただけです）。
+- `npm run docs:build` も通りました。
+- `lint:md` など allowlist にある検査は、この後に親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"Removed 3 redundant passages from itc-index-sample.md (an observed-value example duplicating a case table row, and 2 exception cells duplicating other tables). Kept 2 candidates with reasons. Meaning and required information are unchanged. prettier and docs:build passed.","handoff":[],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/itc-index-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run docs:build","status":"passed","summary":"build complete in 160.51s"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"No history file changed","reason":"Only the sample under docs/ja/specdojo/samples was changed; no plan/result/register ticket was changed"},{"command":"npm run validate:catalog","status":"not_applicable","summary":"Changes do not reach docs/ja/projects/","reason":"The only changed file is docs/ja/specdojo/samples/itc-index-sample.md, outside docs/ja/projects/"}],"condense_records":[{"location":"内部結合テスト共通の境界/依存の扱い 本文（合格基準の例）","category":"repetition","action":"merge","reason":"The re-send example repeated the expected value of it-sales-checkout-persistence-integrity-020 in the ケース表の共通カラム chapter. The DB update-refusal example still shows an observed-value expectation covering both the response and the DB diff, so the completion condition is kept.","cause":{"type":"document"}},{"location":"対象外・除外理由（共通） 表 receipt-print 行の例外列","category":"repetition","action":"delete","reason":"The Stub response kinds (success / failure / no response) are defined in the receipt-print row of the 内部結合テスト共通の境界/依存の扱い table. The exception decision (なし) and the observation scope (impact on the sales record only) are kept.","cause":{"type":"document"}},{"location":"内部結合テスト共通の境界/依存の扱い 表 業務記録 DB 行の例外列","category":"repetition","action":"delete","reason":"Using Fake in UT and not in IT is already conveyed by the UT row of the test-level table and the test-double row of the same table. The exception decision (なし) is kept.","cause":{"type":"document"}},{"location":"ケース表の共通カラム 末尾のレビュー確認の段落","category":"canonical-restatement","action":"retain","reason":"It assigns the checking owner (QE) for this system, and the _TODO_ row in メモ / 将来課題 references it as the interim substitute, so it is decision information that the rulebook reference alone cannot replace.","cause":{"type":"document"}},{"location":"本ドキュメントの目的と適用対象 テストレベル表の非機能テスト行 / 対象外・除外理由（共通）の応答時間行","category":"table-prose","action":"retain","reason":"Both are tables the rulebook requires, with different roles: one is the boundary between test levels, the other is the exclusion reason and alternative means.","cause":{"type":"document"}}]}
+</specdojo_executor_evidence>
