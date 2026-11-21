@@ -1,0 +1,29 @@
+レシート印刷連携を題材に、`docs/ja/specdojo/samples/etc-sample.md` を外部結合テストカタログの完成例として書き直しました。変更はこのファイルだけで、rulebook と result には手を入れていません。
+
+**直したこと**
+- **章立てと見出し**: rulebook の「本文要件」どおり、概要・責務・対象外・境界/依存/環境・トレース・テスト観点とケース・実行運用メモの7章にしました。H1 は「外部結合テストカタログ: レシート印刷連携」とし、rulebook へのリンクを外しました（F025〜F027、F031）。
+- **frontmatter**: `based_on` に `specdojo:tsp-index-sample` と `specdojo:etc-index-sample` を加えました（F008、F028）。
+- **観点とケース**: 4つの観点に、条件・ケース表を合わせて11行入れました（`etc-index` が定める10列）。観点は `contract`・`failure-handling`・`duplicate-prevention`・`operator-notice` です。各行に優先度・自動化区分・観測点・証跡を持たせ、トレース表（`TR-01`〜`TR-05`）から根拠の仕様をたどれるようにしました（F006、F019、F022）。
+- **環境と運用**: スタブと実機の分け方、10秒での打ち切り、テストデータの名前と後始末、時刻の固定、秘密情報の扱いを具体値で書きました。実行運用メモには、並列不可・再実行は1回まで・変更時の見直しを書きました（F014、F015、F034）。
+- 「要点のみ記載」のような説明の書き方と、元の未解決事項の表はなくしました（F023、F024）。
+
+**判断が要る食い違い**
+- レシート印刷コマンド連携仕様（`ifx-cmd-sample`）は上限30秒・送信前ビジーなら自動で最大3回再試行と定めています。一方、`etc-index-sample` は応答待ち10秒・自動再送なしです。
+- rulebook は `etc-index` の共通方針を対象別で上書きすることを禁じているので、本書は `etc-index` に合わせました。
+- 本文に `_UNDECIDED_` で書き、「ARC が値を揃え、PO が承認したらケースの期待値を更新する」という解消条件を付けています。どちらの値を正とするかは決めていただく必要があります。
+
+**部分的な対応にとどめた指摘**
+- **F003・F009・F032（未決事項の判断者・`ready` にする条件・報告先）**: rulebook に未決事項の章がなく、扱いを `document-metadata-standard` へ任せているためです。上の `_UNDECIDED_` の段落に判断者と解消条件を書くだけにしました。
+- **F004（公開責任）**: 概要に確認者の役割（PO・QE・DEV）を書くにとどめました。
+
+**rulebook への変更案（未適用）**
+1.「全体方針」の `_UNDECIDED_` にある「sample は本文要件へ未整合」の記述は、この改訂で解消したので更新が要ります。
+2. 未決事項の書き場所（章を持たないこと）を rulebook に明記するとよいと考えます。
+
+**検証**
+- 通ったもの: prettier（`--check`）、markdownlint（0件）、`npm run docs:build`。
+- 実行していないもの: `npm run validate:history-links` は履歴ファイルを変えていないので対象外です。lint 系・型検査・テストは親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"`docs/ja/specdojo/samples/etc-sample.md` を、rulebook の必須7章に沿ったレシート印刷連携の外部結合テストカタログの完成例へ書き直した（frontmatter の `based_on`・トレース表・観点4つ・ケース11行・境界/依存/環境・実行運用メモ）。rulebook は変更していない。","handoff":["判断待ち: `specdojo:ifx-cmd-sample` は上限30秒・送信前ビジー時の自動再試行（最大3回）、`specdojo:etc-index-sample` は応答待ち10秒・自動再送なしで食い違う。rulebook の上書き禁止に従い sample は `etc-index` に合わせ、本文の `_UNDECIDED_` に解消条件（ARC が値を揃え、PO が承認したら `et-receipt-print-failure-handling-020` の期待値を更新）を書いた。どちらを正とするかの判断と、もう一方の sample の修正が必要。","rulebook の変更案: 「全体方針」の `_UNDECIDED_` にある「sample は本文要件の見出し構成・`trace_key`・条件・ケース表へ未整合」の記述は、この改訂で解消したので更新が要る。","rulebook の変更案: 本文要件に未決事項の章がなく、扱いを `document-metadata-standard` へ任せている。F003・F009・F032（判断者・`ready` にする条件・報告先）は本文の `_UNDECIDED_` の段落だけで部分的に対応した。章を持たないことを rulebook に明記するか、任意章を設けるかの判断が必要。","F004（公開責任）は、rulebook が `document-metadata-standard` に任せているため、概要に確認者の役割（PO・QE・DEV）を書くにとどめた。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/etc-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/etc-sample.md","status":"passed","summary":"0 issues in 1 file"},{"command":"npm run docs:build","status":"passed","summary":"build complete in 183.11s"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"Changed only docs/ja/specdojo/samples/etc-sample.md; no plan/result/pjr history file was changed by the executor."}]}
+</specdojo_executor_evidence>
