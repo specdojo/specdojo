@@ -635,7 +635,7 @@ export function resolveKataDocuments(
   // 1. rulebook
   const rulebookCandidate = join(rootDir, `docs/ja/specdojo/rulebooks/${normalized}-rulebook.md`);
   if (existsSync(rulebookCandidate)) {
-    found.push(repoRelativePath(rulebookCandidate));
+    found.push(relativePathFromRoot(rulebookCandidate, rootDir));
   } else {
     const authored = resolveAuthoredKataPathIfExists(
       `${normalized}-rulebook`,
@@ -644,7 +644,7 @@ export function resolveKataDocuments(
       rootDir,
     );
     if (authored && existsSync(authored.absolutePath)) {
-      found.push(repoRelativePath(authored.absolutePath));
+      found.push(relativePathFromRoot(authored.absolutePath, rootDir));
     }
   }
 
@@ -652,28 +652,40 @@ export function resolveKataDocuments(
   let foundSample = false;
   if (found.length > 0) {
     const rulebookPath = resolve(rootDir, found[0]!);
+    let declared: unknown;
     try {
-      const content = readFileSync(rulebookPath, "utf8");
-      const fm = readSpecdojoNamespace(content);
-      if (fm.sample && typeof fm.sample === "string") {
-        if (fm.sample !== "not-needed" && fm.sample !== "none" && fm.sample !== "undecided") {
-          const sampleId = fm.sample;
-          const extensions: ("md" | "yaml" | "yml" | "json")[] = ["md", "yaml", "yml", "json"];
-          for (const ext of extensions) {
-            const authored = resolveAuthoredKataPathIfExists(sampleId, "sample", ext, rootDir);
-            if (authored && existsSync(authored.absolutePath)) {
-              found.push(repoRelativePath(authored.absolutePath));
-              foundSample = true;
-              break;
-            }
+      declared = readSpecdojoNamespace(readFileSync(rulebookPath, "utf8")).sample;
+    } catch (error) {
+      throw new Error(
+        `Failed to read rulebook ${found[0]} while resolving kata ${normalized}: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
+        { cause: error },
+      );
+    }
+    const sampleIds = (Array.isArray(declared) ? declared : [declared]).filter(
+      (item): item is string => typeof item === "string" && item.trim() !== "",
+    );
+    if (sampleIds.length > 0) {
+      foundSample = true;
+      const extensions: ("md" | "yaml" | "yml" | "json")[] = ["md", "yaml", "yml", "json"];
+      for (const sampleId of sampleIds) {
+        if (sampleId === "not-needed" || sampleId === "none" || sampleId === "undecided") continue;
+        let resolved: string | undefined;
+        for (const ext of extensions) {
+          const authored = resolveAuthoredKataPathIfExists(sampleId, "sample", ext, rootDir);
+          if (authored && existsSync(authored.absolutePath)) {
+            resolved = relativePathFromRoot(authored.absolutePath, rootDir);
+            break;
           }
-        } else {
-          // Explicitly not-needed or none
-          foundSample = true;
         }
+        if (!resolved) {
+          throw new Error(
+            `Sample file not found for '${sampleId}' declared in sample of ${found[0]} (kata ${normalized})`,
+          );
+        }
+        if (!found.includes(resolved)) found.push(resolved);
       }
-    } catch {
-      // Ignore rulebook read error and fall through to filename lookup
     }
   }
 
@@ -682,7 +694,7 @@ export function resolveKataDocuments(
     for (const ext of sampleExtensions) {
       const sampleCandidate = join(rootDir, `docs/ja/specdojo/samples/${normalized}-sample.${ext}`);
       if (existsSync(sampleCandidate)) {
-        found.push(repoRelativePath(sampleCandidate));
+        found.push(relativePathFromRoot(sampleCandidate, rootDir));
         break;
       }
     }
@@ -694,7 +706,7 @@ export function resolveKataDocuments(
     for (const ext of sampleExtensions) {
       const sampleCandidate = join(rootDir, `docs/ja/specdojo/samples/${normalized}-sample.${ext}`);
       if (existsSync(sampleCandidate)) {
-        found.push(repoRelativePath(sampleCandidate));
+        found.push(relativePathFromRoot(sampleCandidate, rootDir));
         break;
       }
     }
