@@ -51,3 +51,16 @@
       from: _TODO_
       to: DEV
   previous_event_id: reg_3a5daff14e20424a99cd9bd9bf75ce99
+- v: 1
+  id: reg_1f2e470ab772410b8ca247a9b938e4c3
+  ts: "2026-11-21T11:44:15Z"
+  action: update
+  actor: SpecDojo
+  from_status: open
+  to_status: open
+  reason: section "影響範囲" updated
+  changes:
+    - field: section
+      from: ""
+      to: 影響範囲
+  previous_event_id: reg_f094bf79ba98428ab7624d0b0639ccbb
