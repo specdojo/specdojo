@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-WAVE-3-utc-index-sample-080",
   "run_id": "T-KATA-WAVE-3-utc-index-sample-080-20261121T103040Z-e6566597",
-  "updated_at": "2026-11-21T10:35:55.556Z",
+  "updated_at": "2026-11-21T10:36:11.369Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-3-utc-index-sample-080/T-KATA-WAVE-3-utc-index-sample-080-20261121T103040Z-e6566597/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-21T10:35:55.556Z",
-      "completed_at": null,
+      "completed_at": "2026-11-21T10:36:11.369Z",
       "artifact_ref": null
     }
   },
