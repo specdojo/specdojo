@@ -24,7 +24,7 @@ Acceptance Test Catalog (ATC) Documentation Rules
 - 環境・データ・外部依存の前提は合否の再現性に直結するため、対象固有の差分を必ず書く。
 - 共通の運用: 役割の割り当ては適用先のメンバー定義に、`status` の昇格と承認、改訂と廃止、未決事項の登録簿への引き継ぎは [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従い、本書と成果物で言い直さない。文書の整形・lint はリポジトリの検証で扱い、業務の受入確認に含めない。
 - 作成した `atc-<term>` は `npm run -s lint:md` と `npm run lint:fm`（Frontmatter の schema と rulebook 宣言の照合）がともにエラーなし・終了コード 0 になることを確かめる。
-- _UNDECIDED_: `recipe`・`template` の要否は未判断である（template は PJR-WYTX で扱い、recipe は QE が ready 化の判断時に決める）。sample は「本文要件」の章構成・トレース表・条件・ケース表へ未整合であり、後続の sample の見直しで揃える。いずれも解消したうえで、`ready` への昇格は人が判断する。
+- _UNDECIDED_: `recipe`・`template` の要否は未判断である（template は PJR-WYTX で扱い、recipe は QE が ready 化の判断時に決める）。これを決めたうえで、`ready` への昇格は人が判断する。
 
 ## 2. 位置づけ
 

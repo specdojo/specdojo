@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   difficulty: medium
   owner: DEV
@@ -41,17 +41,26 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業                               | 担当                  | 状態 | メモ                     |
-| --- | ---------------------------------- | --------------------- | ---- | ------------------------ |
-| 1   | grade の指摘を読み、直し方を決める | DEV                   | open | 直さない指摘は理由を残す |
-| 2   | rulebook と sample を直す          | DEV                   | open | ほかの型は変えない       |
-| 3   | lint と親の検証を通す              | DEV                   | open | -                        |
-| 4   | 統合の後に grade で評価し直す      | specdojo-orchestrator | open | 合格しなければ回目を足す |
+| No  | 作業                               | 担当                  | 状態 | メモ                                |
+| --- | ---------------------------------- | --------------------- | ---- | ----------------------------------- |
+| 1   | grade の指摘を読み、直し方を決める | DEV                   | done | 全指摘を直す方針とした              |
+| 2   | rulebook と sample を直す          | DEV                   | done | ほかの型は変えていない              |
+| 3   | lint と親の検証を通す              | DEV                   | open | lint と親の検証は runner が実行する |
+| 4   | 統合の後に grade で評価し直す      | specdojo-orchestrator | open | 合格しなければ回目を足す            |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- sample（`atc-sample.md`）: F001・F003（major）・F002 は、`at-cash-sale-transaction-check-010` を店番の交代を伴わない照合に改めて直した（責務・観点の意図・概要も合わせた）。`atc-index-sample` は変えていない。F004 は「term」を「このカタログ（`atc-cash-sale`）」に言い換えた。
+- F005（機械的な未解決 `_ASSUMPTION_` の指摘、PJR-7C9X）は `_ASSUMPTION_` が `sample-authoring-standard` に従う残し方のため、残す。sample に `_TODO_` はない。
+- rulebook（`atc-rulebook.md`）: F001・F002（minor）は、`_UNDECIDED_` から解消済みの「sample の未整合」の記述を削り、recipe・template の要否だけに更新した。
+- 統合後の `npx specdojo grade run --target kata --kata atc` による再評価は、オーケストレーターが行う（作業 4 は open）。
+
+### 5.1. CHANGELOG に書く事項
+
+なし（文書の型の手直しのため）。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[specdojo:atc-rulebook]]
+- [[specdojo:atc-sample]]
+- [[specdojo:atc-index-sample]]

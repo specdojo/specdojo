@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-2MR5",
+  "run_id": "pjr-2mr5-20261122T061957Z-f4ce2851",
+  "updated_at": "2026-11-22T06:22:29.548Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sonnet-executor",
+      "attempts": 1,
+      "started_at": "2026-11-22T06:21:13.884Z",
+      "completed_at": "2026-11-22T06:21:40.538Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-2MR5/pjr-2mr5-20261122T061957Z-f4ce2851/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 0,
+      "started_at": "2026-11-22T06:21:56.273Z",
+      "completed_at": "2026-11-22T06:21:56.273Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-2MR5/pjr-2mr5-20261122T061957Z-f4ce2851/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "sonnet-executor",
+      "attempts": 1,
+      "started_at": "2026-11-22T06:22:21.330Z",
+      "completed_at": "2026-11-22T06:22:29.548Z",
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-2MR5/pjr-2mr5-20261122T061957Z-f4ce2851/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-2MR5/pjr-2mr5-20261122T061957Z-f4ce2851/result.md"
+  }
+}
