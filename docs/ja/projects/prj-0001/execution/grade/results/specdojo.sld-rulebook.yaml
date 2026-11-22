@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/sld-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 96
-graded_at: "2026-11-17T22:17:02.879Z"
-graded_by: sol-review-executor
-content_hash: 00bb324263676b51aa26a330faae80a1885ca172ad01e07c10e12c56bf6f78bd
+score: 93
+graded_at: "2026-11-22T12:47:38.587Z"
+graded_by: opus-review-executor
+content_hash: 2d761ea37bfc52870345624e1e5b38a80ce3395d92778b514c9b4180410fec09
 categories:
   purpose:
     score: 100
@@ -27,7 +27,7 @@ categories:
   quality:
     score: 83
   consistency:
-    score: 100
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -78,8 +78,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
     level: 2
     score: 50
@@ -104,13 +104,24 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 1
-  minor: 1
+  minor: 2
   note: 0
 findings:
   - id: F001
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 95
+    anchor: "- 依存する CDSD の各管理単位と STSD の状態が、どの保管場所に対応するか（CDSD 側で未登録の管理単位があればその扱い）を追跡できるようにします。"
+    message: >-
+      「関連仕様・実装配置との対応と検証要件」では STSD の状態と保管場所の対応を追跡するよう求めていますが、「位置づけ」の図と説明文に STSD からの入力がなく、依存関係が読み取れません。図に STSD（状態）→SLD
+      の線を加えるか、説明文で STSD との関係を示してください。
+    message_ja: >-
+      「関連仕様・実装配置との対応と検証要件」では STSD の状態と保管場所の対応を追跡するよう求めていますが、「位置づけ」の図と説明文に STSD からの入力がなく、依存関係が読み取れません。図に STSD（状態）→SLD
+      の線を加えるか、説明文で STSD との関係を示してください。
+  - id: F002
     severity: major
     rule: vp-qe-kata-conformance
-    line: 120
+    line: 121
     anchor: >-
       - **良い例**: 「`docs/**/generated/` および `.specdojo/doc-index.json` ／ 派生 Markdown ビューと文書索引 ／ `specdojo build`、`index
       build` ／ 共有なし（`.gitignore` で除外し各環境で生成） ／ ビルド時に再生成 ／ `削除可`。`specdojo build` で再生成できる」
@@ -122,10 +133,10 @@ findings:
       「良い例」が `docs/**/generated/` 全体を `削除可` かつ `specdojo build` で再生成可能としているが、実装の `src/grade/run.ts`
       はこの配下に実行ロックと再開用状態を保存し、`src/routine/storage.ts` は旧 `routines/generated/`
       の状態・履歴を移行元として扱う。これらの削除は排他の破綻や再開情報・未移行履歴の消失につながるため、例の対象を再生成可能な派生物へ限定し、実行状態と未移行データの除外条件を明記する。
-  - id: F002
+  - id: F003
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 126
+    line: 127
     anchor: >-
       - **良い例**: 「`exec run` が異常終了して `execution/exec/.locks/` にロックが残った ／ 同じリポジトリで `exec run`
       が動いていないことを確かめてから削除する。稼働中に消すと二重実行で実行記録が壊れる ／ DEV」

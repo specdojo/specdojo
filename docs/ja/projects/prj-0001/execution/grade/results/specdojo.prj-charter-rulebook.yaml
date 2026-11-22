@@ -4,11 +4,10 @@ document: specdojo:prj-charter-rulebook
 path: docs/ja/specdojo/rulebooks/prj-charter-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-rulebook
 verdict: pass
 score: 91
-graded_at: "2026-11-21T05:29:34.124Z"
-graded_by: opus-executor
+graded_at: "2026-11-22T12:41:10.238Z"
+graded_by: opus-review-executor
 content_hash: 981a89f78a336dbc96570bac9ec4d0472b2286ca443edf9f9374ba99cee634cc
 categories:
   purpose:
@@ -105,7 +104,7 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 8
+  minor: 9
   note: 0
 findings:
   - id: F001
@@ -180,6 +179,19 @@ findings:
       未決事項の記載要件を論点・認可や GO / Not GO への影響・当面の扱いとし sample もその列構成である一方、対応 template
       の未決事項表は「論点・期限・担当・対応方針」で影響の列がないため、rulebook・sample・template の列構成を一致させてください。
   - id: F008
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 15
+    anchor: >-
+      - **共通の運用**: 役割の割り当て（スポンサーと PO の対応を含む）は適用先のメンバー定義に従い、本文では認可権限を持つ役割を「承認責任者」と呼ぶ。`status`・承認・改訂と廃止・未決事項の引き継ぎは
+      [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従う。文書の整形・lint はリポジトリの検証で扱い、業務の受入確認に含めない。
+    message: >-
+      本行は役割の割り当てを適用先のメンバー定義に委ね、本文では認可権限を持つ役割を「承認責任者」と呼ぶと定めていますが、対応 template の冒頭と権限委譲の _TODO_ は「PO
+      またはスポンサー」と特定の役割名を指定しているため、template の記入指示を「承認責任者」に統一して rulebook と整合させてください。
+    message_ja: >-
+      本行は役割の割り当てを適用先のメンバー定義に委ね、本文では認可権限を持つ役割を「承認責任者」と呼ぶと定めていますが、対応 template の冒頭と権限委譲の _TODO_ は「PO
+      またはスポンサー」と特定の役割名を指定しているため、template の記入指示を「承認責任者」に統一して rulebook と整合させてください。
+  - id: F009
     severity: minor
     rule: vp-ops-agent-boundary
     line: 106

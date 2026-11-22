@@ -5,10 +5,10 @@ path: docs/ja/specdojo/samples/dec-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 93
-graded_at: "2026-10-11T21:31:29.192Z"
-graded_by: agy-expert-executor
-content_hash: ef065dd96bad6163c6f940de292c155c6e030bf81ff865c2cbbf3acee0dfefd2
+score: 100
+graded_at: "2026-11-22T12:40:00.379Z"
+graded_by: opus-review-executor
+content_hash: 04211f3b548821e5359b14dc2e1232771876bd97c0bf6436c4dfde0326a5f2af
 categories:
   purpose:
     score: 100
@@ -25,9 +25,9 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 100
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -75,14 +75,14 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -104,27 +104,6 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 3
+  minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 28
-    anchor: ""
-    message: 影響範囲の3項目に担当者・期限・完了条件または確認方法がなく、フォローアップの完了を pass / fail 判定できないため追記する必要がある。
-    message_ja: 影響範囲の3項目に担当者・期限・完了条件または確認方法がなく、フォローアップの完了を pass / fail 判定できないため追記する必要がある。
-  - id: F002
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 28
-    anchor: ""
-    message: rulebook の全体方針が求める「決定後のフォローアップ」が独立項目または影響範囲内に示されていないため、実施事項・担当・状態を追記する必要がある。
-    message_ja: rulebook の全体方針が求める「決定後のフォローアップ」が独立項目または影響範囲内に示されていないため、実施事項・担当・状態を追記する必要がある。
-  - id: F003
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 28
-    anchor: ""
-    message: 完成例でありながら決定後のフォローアップを記載しておらず、rulebook の全体方針を対象成果物へ適用する方法を sample が実演できていないため追記する必要がある。
-    message_ja: 完成例でありながら決定後のフォローアップを記載しておらず、rulebook の全体方針を対象成果物へ適用する方法を sample が実演できていないため追記する必要がある。
+findings: []

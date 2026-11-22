@@ -4,11 +4,10 @@ document: specdojo:ifx-api-rulebook
 path: docs/ja/specdojo/rulebooks/ifx-api-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-rulebook
 verdict: needs-work
 score: 72
-graded_at: "2026-11-21T04:01:46.563Z"
-graded_by: opus-executor
+graded_at: "2026-11-22T12:34:58.099Z"
+graded_by: opus-review-executor
 content_hash: aa76018a9bf8185a4ebfa6cc244bd14b6c9a2c3e9fffc8ea16afe83f28778fb6
 categories:
   purpose:
@@ -102,7 +101,7 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 5
-  minor: 19
+  minor: 21
   note: 0
 findings:
   - id: F001
@@ -221,11 +220,11 @@ findings:
     line: 1
     anchor: "# 外部API仕様（External API Specification: EAPIS）作成ルール"
     message: >-
-      Rulebook記述標準が求める独立した英語名と必須章への対応が明示されず、`## 4.1` も `## 4.`
-      と同じ見出し階層になっているため、標準章構成へ整理するか省略理由を示し、メタ情報節を適切な下位見出しにする必要がある。
+      前回指摘のうち `### 4.1.`
+      の見出し階層は解消したが、Rulebook記述標準が求めるタイトル直下の独立した英語名（1行）と、全体方針・ファイル命名・ID規則・本文要件・記述ガイド・禁止事項の標準章への対応または省略理由が依然として示されていないため、英語名を追加し章構成を標準へ対応付ける必要がある。
     message_ja: >-
-      Rulebook記述標準が求める独立した英語名と必須章への対応が明示されず、`## 4.1` も `## 4.`
-      と同じ見出し階層になっているため、標準章構成へ整理するか省略理由を示し、メタ情報節を適切な下位見出しにする必要がある。
+      前回指摘のうち `### 4.1.`
+      の見出し階層は解消したが、Rulebook記述標準が求めるタイトル直下の独立した英語名（1行）と、全体方針・ファイル命名・ID規則・本文要件・記述ガイド・禁止事項の標準章への対応または省略理由が依然として示されていないため、英語名を追加し章構成を標準へ対応付ける必要がある。
   - id: F016
     severity: major
     rule: vp-qe-kata-conformance
@@ -242,8 +241,12 @@ findings:
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# 外部API仕様（External API Specification: EAPIS）作成ルール"
-    message: Rulebook記述標準が指定するタイトル直下の独立した英語名、標準章構成、連続した章番号、適切な見出し階層を満たしていないため、規約内容を維持したままauthoring standard準拠の構成へ再編する必要がある。
-    message_ja: Rulebook記述標準が指定するタイトル直下の独立した英語名、標準章構成、連続した章番号、適切な見出し階層を満たしていないため、規約内容を維持したままauthoring standard準拠の構成へ再編する必要がある。
+    message: >-
+      前回指摘のうち章番号の連続と見出し階層は解消したが、Rulebook記述標準が指定するタイトル直下の独立した英語名と標準章構成（全体方針・ファイル命名・ID規則・本文要件・記述ガイド・禁止事項）への対応が残っているため、規約内容を維持したままauthoring
+      standard準拠の構成へ再編する必要がある。
+    message_ja: >-
+      前回指摘のうち章番号の連続と見出し階層は解消したが、Rulebook記述標準が指定するタイトル直下の独立した英語名と標準章構成（全体方針・ファイル命名・ID規則・本文要件・記述ガイド・禁止事項）への対応が残っているため、規約内容を維持したままauthoring
+      standard準拠の構成へ再編する必要がある。
   - id: F018
     severity: minor
     rule: vp-qe-kata-conformance
@@ -268,19 +271,32 @@ findings:
       を含まないため、必要な応答をsampleへ追加するか省略可能な条件をrulebookへ明記する必要がある。
   - id: F020
     severity: minor
+    rule: vp-qe-kata-conformance
+    line: 5
+    anchor: "EAPIS は ESIL（外部システムIF一覧）から参照される「詳細仕様」で、ESIL 側の `spec_ref: ifx-api-...` をこの EAPIS の ID とファイル名に対応させます。"
+    message: >-
+      ESIL に当たる ifx-index の rulebook・sample は `spec_ref` に project 修飾付きの文書 ID（例:
+      `specdojo:ifx-cmd-sample`、`prj-0001:ifx-file-...`）を置くのに対し、本書は `spec_ref: ifx-api-...` を修飾なしで
+      ID・ファイル名に対応させるとしており型の間で ID 規約が矛盾するため、project 修飾 ID とファイル名の対応規則に揃える必要がある。
+    message_ja: >-
+      ESIL に当たる ifx-index の rulebook・sample は `spec_ref` に project 修飾付きの文書 ID（例:
+      `specdojo:ifx-cmd-sample`、`prj-0001:ifx-file-...`）を置くのに対し、本書は `spec_ref: ifx-api-...` を修飾なしで
+      ID・ファイル名に対応させるとしており型の間で ID 規約が矛盾するため、project 修飾 ID とファイル名の対応規則に揃える必要がある。
+  - id: F021
+    severity: minor
     rule: vp-ux-readability
     line: 5
     anchor: "EAPIS は ESIL（外部システムIF一覧）から参照される「詳細仕様」で、ESIL 側の `spec_ref: ifx-api-...` をこの EAPIS の ID とファイル名に対応させます。"
     message: EAPISの上位参照元としてESILを示しているが文書ID・パス・参照先がなく、初見の読者が対応する一覧と `spec_ref` の正本を特定できないため、解決可能な関連文書参照を追加する必要がある。
     message_ja: EAPISの上位参照元としてESILを示しているが文書ID・パス・参照先がなく、初見の読者が対応する一覧と `spec_ref` の正本を特定できないため、解決可能な関連文書参照を追加する必要がある。
-  - id: F021
+  - id: F022
     severity: minor
     rule: vp-ux-language-consistency
     line: 56
     anchor: "外部連携では、少なくとも以下のエラーレスポンスを定義し、共通形式（例: `components/schemas/ErrorResponse`）を各 operation から参照します。"
     message: 「エラー定義（推奨）」と「少なくとも以下を定義します」が同じ節で異なる必須度を表し読み手を混乱させるため、「必須」「条件付き必須」「推奨」の用語を統一する必要がある。
     message_ja: 「エラー定義（推奨）」と「少なくとも以下を定義します」が同じ節で異なる必須度を表し読み手を混乱させるため、「必須」「条件付き必須」「推奨」の用語を統一する必要がある。
-  - id: F022
+  - id: F023
     severity: minor
     rule: vp-ux-language-consistency
     line: 11
@@ -291,14 +307,25 @@ findings:
     message_ja: >-
       ファイル名規約は `ifx-api-＜短い英小文字ハイフン＞.yaml` としながら例を拡張子なしの `ifx-api-payment` としており、ファイル名と ID の例が混同されるため、ファイル名例と ID
       例を区別して表記する必要がある。
-  - id: F023
+  - id: F024
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 5
+    anchor: "EAPIS は ESIL（外部システムIF一覧）から参照される「詳細仕様」で、ESIL 側の `spec_ref: ifx-api-...` をこの EAPIS の ID とファイル名に対応させます。"
+    message: >-
+      参照先の正本である ifx-index rulebook の名称は「外部システムI/F一覧」で ESIL
+      という略称を定義していないのに、本書は「ESIL（外部システムIF一覧）」と別表記の名称で呼んでおり成果物名がゆれるため、正本の名称と文書 ID に合わせて表記を統一する必要がある。
+    message_ja: >-
+      参照先の正本である ifx-index rulebook の名称は「外部システムI/F一覧」で ESIL
+      という略称を定義していないのに、本書は「ESIL（外部システムIF一覧）」と別表記の名称で呼んでおり成果物名がゆれるため、正本の名称と文書 ID に合わせて表記を統一する必要がある。
+  - id: F025
     severity: minor
     rule: vp-ops-release-readiness
     line: 34
     anchor: "## 4. 必須構造（OpenAPI YAML）"
     message: 必須構造の欠落と sample との不整合が未解決のまま、ready 化前に確認すべき検証（OpenAPI lint 通過など）が示されていないため、ready 条件として検証項目を明記する必要がある。
     message_ja: 必須構造の欠落と sample との不整合が未解決のまま、ready 化前に確認すべき検証（OpenAPI lint 通過など）が示されていないため、ready 条件として検証項目を明記する必要がある。
-  - id: F024
+  - id: F026
     severity: minor
     rule: vp-ops-operability
     line: 14

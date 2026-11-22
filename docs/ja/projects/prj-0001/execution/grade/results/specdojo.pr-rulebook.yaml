@@ -4,11 +4,10 @@ document: specdojo:pr-rulebook
 path: docs/ja/specdojo/rulebooks/pr-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-rulebook
 verdict: pass
 score: 80
-graded_at: "2026-11-21T05:27:22.885Z"
-graded_by: opus-executor
+graded_at: "2026-11-22T12:45:35.380Z"
+graded_by: opus-review-executor
 content_hash: 06c8cc397677ad9eed5dee40d25d5781158c086942601eeaf5e467ea9589c01e
 categories:
   purpose:
@@ -105,7 +104,7 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 24
+  minor: 29
   note: 0
 findings:
   - id: F001
@@ -124,54 +123,68 @@ findings:
     message_ja: レビュー中に誰が（例：POやマネージャー）、どのような意思決定や承認（例：次期計画の承認、リスク対応への合意）を行うべきかを明確にすることを推奨します。
   - id: F003
     severity: minor
+    rule: vp-po-decision-readiness
+    line: 23
+    anchor: "## 4. 本文構成（標準テンプレ）"
+    message: 本文構成に、PO の承認・保留・差し戻しの判断を求める事項と未決事項を示す章（例：「判断依頼事項」、任意）を設けるかどうかを定め、定期レビューで判断対象を取り出せるようにすることを推奨する。
+    message_ja: 本文構成に、PO の承認・保留・差し戻しの判断を求める事項と未決事項を示す章（例：「判断依頼事項」、任意）を設けるかどうかを定め、定期レビューで判断対象を取り出せるようにすることを推奨する。
+  - id: F004
+    severity: minor
     rule: vp-po-publication-accountability
     line: 7
     anchor: "- 報告期間の進捗、リスク、次アクションを定点観測できる形で記録する。"
     message: 報告内容の公開範囲（例：社内限定、顧客向け）と、機密情報の取り扱いに関するガイドラインを提供することを推奨します。
     message_ja: 報告内容の公開範囲（例：社内限定、顧客向け）と、機密情報の取り扱いに関するガイドラインを提供することを推奨します。
-  - id: F004
+  - id: F005
     severity: minor
     rule: vp-pm-plan-feasibility
     line: 37
     anchor: "- 次期予定は担当者と期日を設定する。"
     message: 次期予定の「担当者」を Role code で記すか個人名を許すかを定め、公開リポジトリで個人名を避けつつ担当を追跡できるようにすることを推奨する。報告周期と提出期限も明記するとよい。
     message_ja: 次期予定の「担当者」を Role code で記すか個人名を許すかを定め、公開リポジトリで個人名を避けつつ担当を追跡できるようにすることを推奨する。報告周期と提出期限も明記するとよい。
-  - id: F005
+  - id: F006
     severity: minor
     rule: vp-pm-dependency-risk
     line: 15
     anchor: "- 議事録、課題ログ、変更要求ログと整合を取る。"
     message: 「議事録、課題ログ、変更要求ログと整合を取る」の具体的な方法（PJR 項目 ID での参照、新規リスクの登録簿への起票、スケジュール影響の記載要否）を定め、依存とリスクを追跡できるようにすることを推奨する。
     message_ja: 「議事録、課題ログ、変更要求ログと整合を取る」の具体的な方法（PJR 項目 ID での参照、新規リスクの登録簿への起票、スケジュール影響の記載要否）を定め、依存とリスクを追跡できるようにすることを推奨する。
-  - id: F006
+  - id: F007
     severity: minor
     rule: vp-pm-control-reporting
     line: 36
     anchor: "- リスク・課題は影響度と対応方針を明記する。"
     message: リスク・課題の章で「区分（リスク／課題／変更要求）」を必須の列として定め、PJR や決定記録へ転記する対象と転記先を明記することを推奨する。sample の区分列と rulebook の規定もこれで揃う。
     message_ja: リスク・課題の章で「区分（リスク／課題／変更要求）」を必須の列として定め、PJR や決定記録へ転記する対象と転記先を明記することを推奨する。sample の区分列と rulebook の規定もこれで揃う。
-  - id: F007
+  - id: F008
     severity: minor
     rule: vp-ba-business-value
     line: 7
     anchor: "- 報告期間の進捗、リスク、次アクションを定点観測できる形で記録する。"
     message: 進捗報告の読み手（例：PO・定期レビューの参加者）と、解決したい業務課題（進捗の不透明さ、リスク対応の遅れなど）を一文で示し、記述ガイドの各規則がどの効果に対応するかを説明できるようにすることを推奨する。
     message_ja: 進捗報告の読み手（例：PO・定期レビューの参加者）と、解決したい業務課題（進捗の不透明さ、リスク対応の遅れなど）を一文で示し、記述ガイドの各規則がどの効果に対応するかを説明できるようにすることを推奨する。
-  - id: F008
+  - id: F009
     severity: minor
     rule: vp-ba-requirements-completeness
     line: 7
     anchor: "- 報告期間の進捗、リスク、次アクションを定点観測できる形で記録する。"
     message: 進捗報告に含まれる項目の粒度と、報告の必要がない対象外の項目（例：軽微な日次アップデート）の基準を明記することを推奨します。
     message_ja: 進捗報告に含まれる項目の粒度と、報告の必要がない対象外の項目（例：軽微な日次アップデート）の基準を明記することを推奨します。
-  - id: F009
+  - id: F010
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 27
+    anchor: "| 1    | 報告期間     | ○    |"
+    message: 「報告期間」章に記す内容（開始日・終了日の形式、週次・月次などの期間の長さ、前回報告との連続性）を定め、期間の抜けや重なりを確認できるようにすることを推奨する。
+    message_ja: 「報告期間」章に記す内容（開始日・終了日の形式、週次・月次などの期間の長さ、前回報告との連続性）を定め、期間の抜けや重なりを確認できるようにすることを推奨する。
+  - id: F011
     severity: minor
     rule: vp-ba-stakeholder-clarity
     line: 12
     anchor: "## 2. 位置づけ"
     message: 想定される読者や、レビューおよび合意形成の責任を負うロールなど、進捗報告のステークホルダーを明示することを推奨します。
     message_ja: 想定される読者や、レビューおよび合意形成の責任を負うロールなど、進捗報告のステークホルダーを明示することを推奨します。
-  - id: F010
+  - id: F012
     severity: minor
     rule: vp-dev-implementation-readiness
     line: 23
@@ -182,49 +195,73 @@ findings:
     message_ja: >-
       `template: not-needed` の系統なので、本文構成の各章に推奨表の列（例：リスク・課題は区分・内容・影響度・対応方針、次期予定は内容・担当・期日）を rulebook で定め、sample
       に頼らず作成できるようにすることを推奨する。
-  - id: F011
+  - id: F013
     severity: minor
     rule: vp-dev-change-impact
     line: 15
     anchor: "- 議事録、課題ログ、変更要求ログと整合を取る。"
     message: 進捗報告と議事録・PJR が食い違ったときにどちらを正とし、何を追従修正するか（例：PJR の状態を正とし、報告側を訂正版で更新する）を定めることを推奨する。
     message_ja: 進捗報告と議事録・PJR が食い違ったときにどちらを正とし、何を追従修正するか（例：PJR の状態を正とし、報告側を訂正版で更新する）を定めることを推奨する。
-  - id: F012
+  - id: F014
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 10
+    anchor: >-
+      - 共通の運用: Frontmatter の項目（`specdojo.type` は `project`）、`status` の昇格と承認、改訂と廃止は
+      [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従い、本書と成果物で言い直さない。
+    message: >-
+      rulebook 作成標準は各 rulebook に自系統の追従対象と役割分担の定義を求めるため、ready 化後の進捗報告を訂正するときの扱い（版を上書きするか訂正版を新規に起こすか、参照元の議事録・PJR
+      のどこを追従させるか、担当 Role code）を共通標準への参照に添えて定めることを推奨する。
+    message_ja: >-
+      rulebook 作成標準は各 rulebook に自系統の追従対象と役割分担の定義を求めるため、ready 化後の進捗報告を訂正するときの扱い（版を上書きするか訂正版を新規に起こすか、参照元の議事録・PJR
+      のどこを追従させるか、担当 Role code）を共通標準への参照に添えて定めることを推奨する。
+  - id: F015
     severity: minor
     rule: vp-dev-testability
     line: 23
     anchor: "## 4. 本文構成（標準テンプレ）"
     message: 作成後に実行する検証（`npm run lint:md`・`npm run lint:fm`）と、必須章・担当・期日の欠落を確かめるチェック項目を記述ガイドまたは禁止事項に添えることを推奨する。
     message_ja: 作成後に実行する検証（`npm run lint:md`・`npm run lint:fm`）と、必須章・担当・期日の欠落を確かめるチェック項目を記述ガイドまたは禁止事項に添えることを推奨する。
-  - id: F013
+  - id: F016
     severity: minor
     rule: vp-qe-verifiability
     line: 33
     anchor: "## 5. 記述ガイド"
     message: 記述ガイドにおいて、完了事項やリスクなどの報告における「根拠」として具体的に何を提示すべきか（成果物ID、定量値など）の基準を明記することを推奨する。
     message_ja: 記述ガイドにおいて、完了事項やリスクなどの報告における「根拠」として具体的に何を提示すべきか（成果物ID、定量値など）の基準を明記することを推奨する。
-  - id: F014
+  - id: F017
     severity: minor
     rule: vp-qe-verifiability
     line: 36
     anchor: "- リスク・課題は影響度と対応方針を明記する。"
     message: リスク・課題の「影響度」の段階（例：高・中・低）と各段階の判定基準を定め、記載の妥当性を判定できるようにすることを推奨する。
     message_ja: リスク・課題の「影響度」の段階（例：高・中・低）と各段階の判定基準を定め、記載の妥当性を判定できるようにすることを推奨する。
-  - id: F015
+  - id: F018
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 35
+    anchor: "- 完了事項は成果物IDまたはタスクIDと紐づける。"
+    message: >-
+      完了事項に紐づける「成果物ID」「タスクID」の形式（例：project 修飾の文書 ID、PJR 項目 ID、schedule のタスク ID）を定め、sample の `task-042`・`doc-018`
+      のような識別子が妥当かどうかを判定できるようにすることを推奨する。
+    message_ja: >-
+      完了事項に紐づける「成果物ID」「タスクID」の形式（例：project 修飾の文書 ID、PJR 項目 ID、schedule のタスク ID）を定め、sample の `task-042`・`doc-018`
+      のような識別子が妥当かどうかを判定できるようにすることを推奨する。
+  - id: F019
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 17
     anchor: "## 3. ファイル命名・ID規則"
     message: "ファイル命名規則だけでなく、推奨される配置ディレクトリ（例: `docs/ja/projects/＜project-id＞/progress-reports/`）を明記することを推奨する。"
     message_ja: "ファイル命名規則だけでなく、推奨される配置ディレクトリ（例: `docs/ja/projects/＜project-id＞/progress-reports/`）を明記することを推奨する。"
-  - id: F016
+  - id: F020
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 19
     anchor: "- 推奨: `pr-<yyyy-mm-dd>-<nn>.md`"
     message: ファイル名は「推奨」、文書 ID は「とする」と規範の強さが揃っていないため、ファイル名と ID の対応（ID の local 部とファイル名を一致させるかなど）と、必須か推奨かを統一して明記することを推奨する。
     message_ja: ファイル名は「推奨」、文書 ID は「とする」と規範の強さが揃っていないため、ファイル名と ID の対応（ID の local 部とファイル名を一致させるかなど）と、必須か推奨かを統一して明記することを推奨する。
-  - id: F017
+  - id: F021
     severity: minor
     rule: vp-qe-kata-conformance
     line: 25
@@ -235,7 +272,7 @@ findings:
     message_ja: >-
       `template: not-needed` の系統では rulebook
       作成標準が本文要件に各章の目的・内容を求めるため、本文構成の表に「内容（要点）」列を追加し、章名も標準の「本文要件」との対応が分かるようにすることを推奨する。
-  - id: F018
+  - id: F022
     severity: minor
     rule: vp-qe-kata-conformance
     line: 41
@@ -246,42 +283,53 @@ findings:
     message_ja: >-
       禁止事項「進捗率のみで根拠なく報告しない」に対し、`pr-sample` の進行中事項が「進捗60%」と根拠なしで書かれており、完成例が規則に反しているため、sample
       に根拠（完了した節や件数など）を添えるか、規則の適用範囲を明確にすることを推奨する。
-  - id: F019
+  - id: F023
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 33
+    anchor: "## 5. 記述ガイド"
+    message: >-
+      rulebook 作成標準の「内容充実化」は推奨表のカラム定義を少なくとも 1 つ求めるが、記述ガイドにも本文構成にも列定義がなく、sample の完了事項・リスク・課題・次期予定の表の列が rulebook
+      側に根拠を持たないため、記述ガイドに推奨表の列定義を置くことを推奨する。
+    message_ja: >-
+      rulebook 作成標準の「内容充実化」は推奨表のカラム定義を少なくとも 1 つ求めるが、記述ガイドにも本文構成にも列定義がなく、sample の完了事項・リスク・課題・次期予定の表の列が rulebook
+      側に根拠を持たないため、記述ガイドに推奨表の列定義を置くことを推奨する。
+  - id: F024
     severity: minor
     rule: vp-ux-readability
     line: 12
     anchor: "## 2. 位置づけ"
     message: 位置づけにおいて、報告のサイクル（頻度）および想定読者を明記し、運用の目的を明確にすることを推奨する。
     message_ja: 位置づけにおいて、報告のサイクル（頻度）および想定読者を明記し、運用の目的を明確にすることを推奨する。
-  - id: F020
+  - id: F025
     severity: minor
     rule: vp-ux-readability
     line: 33
     anchor: "## 5. 記述ガイド"
     message: 記述ガイドにおいて、各項目の書き方のポイントや、避けるべき具体例などを詳細に記述し、作成者の迷いを減らす工夫をすることを推奨する。
     message_ja: 記述ガイドにおいて、各項目の書き方のポイントや、避けるべき具体例などを詳細に記述し、作成者の迷いを減らす工夫をすることを推奨する。
-  - id: F021
+  - id: F026
     severity: minor
     rule: vp-ux-language-consistency
     line: 43
     anchor: "- 予定に期限や責任者を欠いたまま確定しない。"
     message: "次期予定の「担当者」（37行）と禁止事項の「責任者」の表記を統一し、「確定」が `status: ready` 化を指すのか予定の合意を指すのかを明記することを推奨する。"
     message_ja: "次期予定の「担当者」（37行）と禁止事項の「責任者」の表記を統一し、「確定」が `status: ready` 化を指すのか予定の合意を指すのかを明記することを推奨する。"
-  - id: F022
+  - id: F027
     severity: minor
     rule: vp-ux-language-consistency
     line: 15
     anchor: "- 議事録、課題ログ、変更要求ログと整合を取る。"
     message: 「課題ログ」「変更要求ログ」が指す成果物（例：PJR の項目種別）を成果物名または ID で示し、用語のぶれを防ぐことを推奨する。
     message_ja: 「課題ログ」「変更要求ログ」が指す成果物（例：PJR の項目種別）を成果物名または ID で示し、用語のぶれを防ぐことを推奨する。
-  - id: F023
+  - id: F028
     severity: minor
     rule: vp-ops-release-readiness
     line: 43
     anchor: "- 予定に期限や責任者を欠いたまま確定しない。"
     message: 進捗報告に特有の ready 条件（必須章 5 つと ID・影響度・対応方針・担当・期日がそろっていること、報告期間の終了から何日以内に ready にするか）を、共通の昇格手順への参照に添えて定めることを推奨する。
     message_ja: 進捗報告に特有の ready 条件（必須章 5 つと ID・影響度・対応方針・担当・期日がそろっていること、報告期間の終了から何日以内に ready にするか）を、共通の昇格手順への参照に添えて定めることを推奨する。
-  - id: F024
+  - id: F029
     severity: minor
     rule: vp-ops-operability
     line: 12

@@ -4,11 +4,10 @@ document: specdojo:mm-sample
 path: docs/ja/specdojo/samples/mm-sample.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-sample
 verdict: pass
 score: 86
-graded_at: "2026-11-21T04:30:57.291Z"
-graded_by: opus-executor
+graded_at: "2026-11-22T12:44:18.419Z"
+graded_by: opus-review-executor
 content_hash: 0443aec4290f714977287b7bd4a2e34904ce16753ab1a428cb00ae3b3c6fd1b9
 categories:
   purpose:
