@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   difficulty: medium
   owner: DEV
@@ -40,17 +40,42 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業                               | 担当                  | 状態 | メモ                     |
-| --- | ---------------------------------- | --------------------- | ---- | ------------------------ |
-| 1   | grade の指摘を読み、直し方を決める | DEV                   | open | 直さない指摘は理由を残す |
-| 2   | rulebook と sample を直す          | DEV                   | open | ほかの型は変えない       |
-| 3   | lint と親の検証を通す              | DEV                   | open | -                        |
-| 4   | 統合の後に grade で評価し直す      | specdojo-orchestrator | open | 合格しなければ回目を足す |
+| No  | 作業                               | 担当                  | 状態 | メモ                                                       |
+| --- | ---------------------------------- | --------------------- | ---- | ---------------------------------------------------------- |
+| 1   | grade の指摘を読み、直し方を決める | DEV                   | done | 直さない指摘はなし                                         |
+| 2   | rulebook と sample を直す          | DEV                   | done | ほかの型は変えない                                         |
+| 3   | lint と親の検証を通す              | DEV                   | done | lint:md 相当は通過、親の検証は runner が実行               |
+| 4   | 統合の後に grade で評価し直す      | specdojo-orchestrator | open | executor は grade を起動できない。合格しなければ回目を足す |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 5.0. 実施内容
+
+rulebook（F001〜F004）と sample（F001〜F009）の指摘をすべて直した。直さなかった指摘はない。
+
+- rulebook F001: 「共通の運用」に追従対象と担当（QE・DEV・PO）を追記した。
+- rulebook F002: 「不具合管理方針」を、出口条件で重大度を使う場合は必須と明記した。
+- rulebook F003: 良い例を `receipt-print` と復元用保管サービスに合わせて書き換えた。
+- rulebook F004: 「試験」を「テスト」に統一した。
+- sample F001・F009: 未決論点に引き継ぎ先（`kinuya:pjr-i003`・`kinuya:pjr-i006`・`kinuya:pjr-i007`、いずれも架空）を足し、`_TODO_` を `_ASSUMPTION_` に変えた。sample に `_TODO_` は残っていない。
+- sample F002・F005: 開発環境の保管サービスをスタブにし、実接続は内部結合テストに限ると明記した。
+- sample F003: 回帰の範囲に保管サービス連携と記録の保全・復元を加えた。
+- sample F004: 総合テストの出口条件の行に応答の閾値を書いた。
+- sample F006: 単体テストと受入テストの出口条件に重大度別の許容件数を足した。
+- sample F007: 応答欠落時の照合待ちを内部結合テスト（`PATH-02`）で確認する記述に揃えた。
+- sample F008: `based_on` に `specdojo:ifd-sample` を加えて本文でも参照し、`PATH-04`・`PATH-07` のテストレベルを書いた。
+
+rulebook の変更は sample と食い違わないことを確かめた。
+
+### 5.1. CHANGELOG に書く事項
+
+なし（文書の型の手直しのため）。
+
+### 5.2. 残課題
+
+- 統合後の `npx specdojo grade run --target kata --kata tsp-index` による再評価は、オーケストレーターが行う（作業内容の No 4）。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[specdojo:tsp-index-rulebook]]
+- [[specdojo:tsp-index-sample]]

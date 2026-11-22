@@ -54,3 +54,29 @@
       from: '["2026-11-22、T-KATA-WAVE-3-tsp-index-sample-090 の review で、型の評価は rulebook pass 93（minor 4）、sample needs-work 89（major 1・minor 8） だった。指摘は docs/ja/projects/prj-0001/execution/grade/results/specdojo.tsp-index-rulebook.yaml と specdojo.tsp-index-sample.yaml にある。","合格は、機械的な「未解決の `_TODO_` / `_ASSUMPTION_`」の指摘（PJR-7C9X）を除いて、rulebook と sample に blocker と major がないこととする（indie の判断、2026-11-22）。","`_TODO_` は sample に残さない。`_ASSUMPTION_` は docs/ja/specdojo/standards/sample-authoring-standard.md に従って残してよい。"]'
       to: '["2026-11-22、T-KATA-WAVE-3-tsp-index-sample-090 の review で、型の評価は rulebook pass 93（minor 4）、sample needs-work 89（major 1・minor 8） だった。指摘は docs/ja/projects/prj-0001/execution/grade/results/specdojo.tsp-index-rulebook.yaml と specdojo.tsp-index-sample.yaml にある。","合格は、機械的な「未解決の `_TODO_` / `_ASSUMPTION_`」の指摘（PJR-7C9X）を除いて、rulebook と sample に blocker と major がないこととする（indie の判断、2026-11-22）。","`_TODO_` は sample に残さない。`_ASSUMPTION_` は sample-authoring-standard（sample の記述の標準、読むだけで変えない）に従って残してよい。"]'
   previous_event_id: reg_2ac7f261bf4e45d7836a92cc6e07e5ce
+- v: 1
+  id: reg_34086eac28314eb1987c89b5248db944
+  ts: "2026-11-22T06:21:42Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_9a9ef4d8436a4fa7ad62d86ee7ce92ec
+- v: 1
+  id: reg_305e2e366d7b4c86a30ab185fc015249
+  ts: "2026-11-22T06:24:00Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_34086eac28314eb1987c89b5248db944

@@ -1,0 +1,175 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-R05D",
+  "run_id": "pjr-r05d-20261122T062038Z-40f0b0ba",
+  "stage": {
+    "role": "executor",
+    "actor": "sonnet-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-22T06:22:21.156Z",
+    "completed_at": "2026-11-22T06:23:37.410Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-r05d.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-r05d-kata-wave-3-tsp-index-fix.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/tsp-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/tsp-index-sample.md",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-r05d-kata-wave-3-tsp-index-fix.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/tsp-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/tsp-index-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 4,
+    "summary": ".../pjr-r05d-kata-wave-3-tsp-index-fix.md          | 41 ++++++++++++----\n docs/ja/specdojo/rulebooks/tsp-index-rulebook.md   | 17 +++----\n docs/ja/specdojo/samples/tsp-index-sample.md       | 55 +++++++++++-----------\n 3 files changed, 70 insertions(+), 43 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/samples/tsp-index-sample.md docs/ja/specdojo/rulebooks/tsp-index-rulebook.md docs/ja/projects/prj-0001/controls/project-register/pjr-r05d-kata-wave-3-tsp-index-fix.md",
+      "status": "passed",
+      "summary": "対象 3 ファイルを整形した"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2 docs/ja/specdojo/samples/tsp-index-sample.md docs/ja/specdojo/rulebooks/tsp-index-rulebook.md docs/ja/projects/prj-0001/controls/project-register/pjr-r05d-kata-wave-3-tsp-index-fix.md",
+      "status": "passed",
+      "summary": "0 issues"
+    },
+    {
+      "source": "executor",
+      "command": "npx specdojo grade run --target kata --kata tsp-index",
+      "status": "requires_human",
+      "summary": "統合後にオーケストレーターが実行する。executor の sandbox から grade は起動できない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 5801 file(s), 107 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 83 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5801 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-R05D\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (48 tests) 6ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n[parent-validation:test-file\n… output omitted …\n:\"end\",\"file\":\"tests/src/exec/plans.test.ts\"}\n\n Test Files  19 passed (19)\n      Tests  476 passed (476)\n   Start at  15:23:46\n   Duration  2.88s (transform 8.00s, setup 1.30s, import 11.00s, tests 5.68s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-R05D/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-R05D/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "tsp-index の rulebook（F001〜F004）と sample（F001〜F009）の指摘をすべて直し、個票の対応結果を更新した。",
+  "completion_status": "complete",
+  "handoff": [
+    "統合後に、オーケストレーターが `npx specdojo grade run --target kata --kata tsp-index` で評価し直し、rulebook と sample に blocker と major がないことを確かめる。機械的な指摘（PJR-7C9X）だけが残る場合は合格とする。",
+    "sample の引き継ぎ先 `kinuya:pjr-i006`・`kinuya:pjr-i007` は ifd-sample の `kinuya:pjr-i001`〜`i005` に続く架空の番号で、実在する個票ではない。",
+    "`CHANGELOG.md` は変更していない。個票の `### 5.1. CHANGELOG に書く事項` に「なし」と記載した。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-R05D/pjr-r05d-20261122T062038Z-40f0b0ba/executor.log",
+      "bytes": 3874,
+      "truncated": false
+    }
+  ]
+}
