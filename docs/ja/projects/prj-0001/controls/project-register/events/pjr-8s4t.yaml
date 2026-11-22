@@ -258,3 +258,22 @@
       from: ""
       to: 作業内容
   previous_event_id: reg_fefdcea79162425bb5d4c4f7fc400ee6
+- v: 1
+  id: reg_a5fb1d003ba74dbd944a982e889ab424
+  ts: "2026-11-22T23:50:03Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 利用者が sld-sample の 4.1・4.2 の読みやすさを確かめ、OK とした（2026-11-23）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: sld の rulebook と sample から文書の運用の記述を外し、共通の正本への参照にした。4 回の実行の後、grade は rulebook pass 95・sample pass 91。ほかの型へ広げる「外す記述・残す記述・参照の形」の一覧を個票に残した
+  previous_event_id: reg_f639f665c4604546a88bcacd16f23860

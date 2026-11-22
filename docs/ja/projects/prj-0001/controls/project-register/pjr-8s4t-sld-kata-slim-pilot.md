@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-8s4t-sld-kata-slim-pilot
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: BA
   registered_at: "2026-11-17T12:48:46Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-22T23:50:03Z"
+  conclusion: sld の rulebook と sample から文書の運用の記述を外し、共通の正本への参照にした。4 回の実行の後、grade は rulebook pass 95・sample pass 91。ほかの型へ広げる「外す記述・残す記述・参照の形」の一覧を個票に残した
   derived_from:
     - PJR-0T83
   commit_type: docs
