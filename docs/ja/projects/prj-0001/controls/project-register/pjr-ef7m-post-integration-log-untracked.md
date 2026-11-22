@@ -10,7 +10,9 @@ specdojo:
   item_status: done
   priority: medium
   difficulty: medium
+  owner: DEV
   registered_at: "2026-11-22T13:42:07Z"
+  due_on: "2026-11-30"
   completed_at: "2026-11-22T14:37:42Z"
   conclusion: post-integration.log を .gitignore と init の既定の除外に足し、作業ツリーに管理外のまま残らないようにした
 ---
