@@ -1,0 +1,43 @@
+判定は **`complete-with-findings`** です。完了を妨げる未充足事項はありませんが、sample と rulebook に minor の指摘が残っています。
+
+**評価結果の確認**
+- `npx specdojo grade list --target kata --path docs/ja/specdojo/samples/etc-sample.md --changed-only` と `--incomplete` は、どちらも何も出力せず終了コード 0 でした。
+- rulebook（`docs/ja/specdojo/rulebooks/etc-rulebook.md`）に同じ2つの確認を行った結果も同じでした。
+- 現在のファイルの `sha256sum` は、評価結果ファイルの `content_hash` と一致しました（sample は `e8e53f2f…`、rulebook は `0c270a4b…`）。
+- 判定の直前に `--changed-only` を再実行しても出力はなく、作業ツリーに成果物の変更はありません。`pipeline-state.json` だけが git 未管理の状態で増えています。
+- 評価結果：
+  - sample（[[specdojo:etc-sample]]）：`pass`、89点、blocker 0 / major 0 / minor 7（F001〜F007）
+  - rulebook（[[specdojo:etc-rulebook]]）：`pass`、96点、blocker 0 / major 0 / minor 3
+- この schedule は型の整備を含むため、sample と rulebook の両方に最新の `--target kata` の `pass` が必要です。この条件は満たしています。
+
+**判断根拠（完了条件の照合）**
+- **DC-001**：本文の見出し（`##`）は1章から7章まで、rulebook の「本文要件」の名前と順番のとおりです。「テスト観点とケース」の下は、`### 6.n. 観点:`、`perspective_key`、`意図`、`条件・ケース表` の順で4観点あります。
+- **DC-005**：H1 は「外部結合テストカタログ: レシート印刷連携」で、rulebook の `外部結合テストカタログ: <対象名>` の形式です。`based_on` は `specdojo:tsp-index-sample` と `specdojo:etc-index-sample` です。
+- **DC-004**：トレースの表は `trace_key` TR-01〜TR-05 で、rulebook の4列を持ちます。ケース表のトレース列は `TR-xx` だけを参照し、条件は `入力:` / `状態:` / `環境:` の形で書かれています。rulebook にない必須の観点は置いていません。
+- **DC-002・DC-003**：題材は駄菓子屋（店番・店主代表・`kinuya-ci`）にそろっています。期待値のあいまいな表現、UI クリック手順の羅列、直積のケースは見当たりません。
+- **DC-006**：期待値は終了コード・印字状態・回数などの判定できる値で書かれています。未解決事項を解消する条件も「ARC が値を揃え、PO が承認した時点で該当ケースを更新する」と状態で書かれています。主語の不明確さ（F003）と状態の欠落（F004）は minor として grade に記録済みで、完了条件に直結する欠落ではないと判断しました。
+- **前段の作業**：直前の condense（T-KATA-WAVE-3-etc-sample-080）は status `complete` でした。変更は「実行運用メモ」の後始末を表への参照に置き換えた1か所だけで、対象外の変更は混ざっていません。
+
+**finding が完了を妨げない理由**
+残る10件はすべて minor で、必須要素の欠落や禁止事項への抵触ではありません。ただし、rulebook の F002 は rulebook 本文の記述の誤りです。`_UNDECIDED_` に「sample は未整合」と残っていますが、sample はすでに整合しています。
+
+**改善指示**
+1. sample に、終了コード `2`（入力不正）を判別するケースを足す（F002・F005）。
+2. failure-handling-030 の期待値に主語（`receipt-print` の終了コードか、販売 CLI の終了コードか）を明記する（F003）。
+3. failure-handling-010 の期待値と観測点に、印字状態 `unknown` を加える（F004）。
+4. 結果不明のケースの警告を「結果不明の警告」と呼ぶように直す（F007）。
+5. `_UNDECIDED_` に、登録簿（PJR）へ転記する候補であることと記録先を書く（F001）。
+6. ifx-cmd-sample とのタイムアウト・再試行の値の食い違いは、ARC と PO の判断で解消する（F006）。
+7. rulebook の `_UNDECIDED_` から sample が未整合という記述を消す（rulebook F002）。
+8. rulebook のファイル名の採番規則を明記し（rulebook F001）、敬体の残る文を常体に直す（rulebook F003）。
+
+**approach に応じた確認（fully-guided）**
+宣言された文書だけを参照しました。recipe と template は未判断（`undecided`）ですが、rulebook の `_UNDECIDED_` に「ready 化前に解消する」と記録されています。
+
+**確認できなかった範囲**
+- この review と同じタスク番号の前回の実行（20261122T014434Z）の result は未記入のままでした（_TODO_ が残る状態）。そのため、その内容は判断の根拠に使っていません。
+- lint などの検査は、親 runner が後で実行するため、ここでは実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict: complete-with-findings。sample（`specdojo:etc-sample`）は `pass`・89点・minor 7件、rulebook（`specdojo:etc-rulebook`）は `pass`・96点・minor 3件。`grade list --changed-only` と `--incomplete` は両対象とも出力なし・終了コード 0 で、`content_hash` も一致した。判定直前の再確認でも変更はない。DC-001〜DC-006 を照合し、完了条件に直結する欠落や禁止事項への抵触は見つからなかった。残る finding は minor で完了を妨げない。直前の condense（etc-sample-080）は `complete` で、対象外の変更はない。確認できなかった範囲: 同タスクの前回の実行（20261122T014434Z）の result は未記入のため根拠に使っていない。lint などの検査は親 runner に委ね、実行していない。","handoff":["sample の改善: 終了コード `2`（入力不正）を判別するケースを追加する（F002・F005）。failure-handling-030 の期待値に終了コードの主語を明記する（F003）。failure-handling-010 の期待値と観測点に印字状態 `unknown` を加える（F004）。結果不明の警告の呼び方を直す（F007）。`_UNDECIDED_` に PJR へ転記する候補であることと記録先を書く（F001）。","ifx-cmd-sample（30秒・最大3回の再試行）と etc-index（10秒・自動再送なし）の値の食い違いは、ARC と PO の判断で解消する（sample F006）。","rulebook の改善: `_UNDECIDED_` の「sample は未整合」の記述を削除し、未決事項を `recipe`・`template` の要否だけにする（F002）。ファイル名の番号部の採番規則を明記する（F001）。推奨ルールと本文要件の敬体を常体に直す（F003）。"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/etc-sample.md --changed-only","status":"passed","summary":"出力なし・終了コード 0（評価結果は最新）。判定直前の再実行も同じ"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/etc-sample.md --incomplete","status":"passed","summary":"出力なし・終了コード 0（評価パイプラインは完了済み）"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/etc-rulebook.md --changed-only","status":"passed","summary":"出力なし・終了コード 0（評価結果は最新）。判定直前の再実行も同じ"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/etc-rulebook.md --incomplete","status":"passed","summary":"出力なし・終了コード 0（評価パイプラインは完了済み）"},{"command":"sha256sum docs/ja/specdojo/samples/etc-sample.md docs/ja/specdojo/rulebooks/etc-rulebook.md","status":"passed","summary":"両ファイルとも評価結果ファイルの `content_hash` と一致"}]}
+</specdojo_executor_evidence>
