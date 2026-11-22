@@ -93,3 +93,25 @@
       from: "-"
       to: "executor reported incomplete: rulebook 6 件の ID 記述を修飾形へ修正した。個票への書き込みが権限エラーで拒否されたため、作業内容・対応結果の更新が未完了。"
   previous_event_id: reg_fed72cbaaf684877a69e2ca76f76879c
+- v: 1
+  id: reg_03f71f818bc14acfb332bfb8609007ea
+  ts: "2026-11-22T23:11:15Z"
+  action: update
+  actor: indie
+  from_status: waiting
+  to_status: waiting
+  reason: 案 A（標準どおり名前空間なし）に決めた（2026-11-23）
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+    - field: title
+      from: rulebook の frontmatter の id の書き方（プロジェクト修飾の有無）を実物とそろえる
+      to: プロダクト文書の id を名前空間なしで定める型（rulebook・template・sample）をそろえる
+    - field: description
+      from: "stsd・cdfd・cdfd-uc・bps の rulebook は成果物の id を「プロジェクト修飾なし」と書くが、カタログから作る成果物は prj-0001: で修飾される。既存の成果物には修飾なしのものもある。どちらを正とするかを決め、rulebook と成果物をそろえる"
+      to: id-and-file-naming-standard のとおり、プロダクト文書の id は名前空間なしを正とする。cdt・ifx-file の rulebook と ifx の YAML template が名前空間ありで定めているので直す。1 回目の rulebook の変更は捨てる
+    - field: depends_on
+      from: "-"
+      to: '["PJR-AEKE"]'
+  previous_event_id: reg_6f67e936e7c742aaa64e3cf07f9d8e7f
