@@ -5,8 +5,8 @@ path: docs/ja/specdojo/rulebooks/utc-index-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 93
-graded_at: "2026-11-22T08:39:08.550Z"
+score: 92
+graded_at: "2026-11-22T09:01:06.804Z"
 graded_by: opus-review-executor
 content_hash: a70f02769d017ea7e35013ed484c6c62dbece025bc14079a22f157a5e9212aa7
 categories:
@@ -21,7 +21,7 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 83
   implementation:
     score: 100
   quality:
@@ -81,8 +81,8 @@ viewpoints:
     level: 3
     score: 75
   vp-ux-readability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-language-consistency:
     level: 3
     score: 75
@@ -101,7 +101,7 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 4
+  minor: 6
   note: 0
 findings:
   - id: F001
@@ -143,8 +143,24 @@ findings:
       に定めるか、sample を担保先の記載に合わせる。
   - id: F004
     severity: minor
+    rule: vp-ux-readability
+    line: 249
+    anchor: "| 手順にUI操作のクリック列挙を書く（末端表でも過剰な操作手順を書く）  | 保守性が低く、変更に弱く、テストの意図が見えなくなるため                               |"
+    message: 禁止事項の「手順にUI操作のクリック列挙を書く（末端表でも過剰な操作手順を書く）」の「末端表」は本文に定義がなく何を指すか読み手が判断できないため、「`utc-＜term＞` のケース表」など本文の用語に置き換える。
+    message_ja: 禁止事項の「手順にUI操作のクリック列挙を書く（末端表でも過剰な操作手順を書く）」の「末端表」は本文に定義がなく何を指すか読み手が判断できないため、「`utc-＜term＞` のケース表」など本文の用語に置き換える。
+  - id: F005
+    severity: minor
     rule: vp-ux-language-consistency
     line: 252
     anchor: "| 対象外・除外理由（共通） と矛盾するケースを `utc-<term>` に記載する | 責任境界が崩れるため（例外は根拠と条件を明記）                                         |"
     message: 全体方針・6.2・6.6.2 は「責務境界」を用いるが、禁止事項の最終行は「責任境界が崩れるため」、6.1 は「責任範囲」と表記しており同一概念か読み手が迷うため、「責務境界」「責務範囲」に統一する。
     message_ja: 全体方針・6.2・6.6.2 は「責務境界」を用いるが、禁止事項の最終行は「責任境界が崩れるため」、6.1 は「責任範囲」と表記しており同一概念か読み手が迷うため、「責務境界」「責務範囲」に統一する。
+  - id: F006
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 247
+    anchor: >-
+      | `utc-index` に個別ケース（条件・手順・期待値）を列挙する            | `utc-index` は共通方針のSSOTであり、個別は `utc-<term>`
+      に集約するため                 |
+    message: 全体方針は `utc-index` を「共通方針の正本」と表記する一方、禁止事項は「共通方針のSSOT」と表記しており同一概念の表記が揺れているため、「正本」に統一する。
+    message_ja: 全体方針は `utc-index` を「共通方針の正本」と表記する一方、禁止事項は「共通方針のSSOT」と表記しており同一概念の表記が揺れているため、「正本」に統一する。

@@ -4,22 +4,22 @@ document: specdojo:utc-index-sample
 path: docs/ja/specdojo/samples/utc-index-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 92
-graded_at: "2026-11-22T08:40:33.249Z"
+verdict: pass
+score: 91
+graded_at: "2026-11-22T09:02:12.611Z"
 graded_by: opus-review-executor
 content_hash: 0e8ba9621db370d6e5980cea6f2a6bd4b3b9200319a678ded14d65c633c445a8
 categories:
   purpose:
     score: 100
   operations:
-    score: 88
+    score: 94
   planning:
     score: 100
   business:
     score: 100
   architecture:
-    score: 100
+    score: 88
   usability:
     score: 92
   implementation:
@@ -57,8 +57,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-technical-constraints:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-conciseness:
     level: 3
     score: 75
@@ -87,8 +87,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ops-operability:
     level: 4
     score: 100
@@ -100,11 +100,26 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 6
+  major: 0
+  minor: 8
   note: 0
 findings:
   - id: F001
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 24
+    anchor: >-
+      | `utc-sales-checkout` | 請求額・釣銭の計算と、会計確定時の在庫引当           | 商品・在庫リポジトリは Fake       | 金額と在庫減算は BAC-01
+      で同時に確定し、同時に変更される |
+    message: >-
+      括り方の表の `utc-sales-checkout` は依存の扱いを「商品・在庫リポジトリは Fake」としか書いていないが、「単体テスト共通の境界/依存の扱い」では会計確定 1 回につき `receipt-print` の
+      Mock で要求 1 回を検証し、記録サービス Stub・採番器も注入するとしており、どの term がこれらの依存を持つかが読み取れないため、括り方の表の依存の扱いに `receipt-print` Mock・記録サービス
+      Stub・採番器のうち該当するものを書き足す。
+    message_ja: >-
+      括り方の表の `utc-sales-checkout` は依存の扱いを「商品・在庫リポジトリは Fake」としか書いていないが、「単体テスト共通の境界/依存の扱い」では会計確定 1 回につき `receipt-print` の
+      Mock で要求 1 回を検証し、記録サービス Stub・採番器も注入するとしており、どの term がこれらの依存を持つかが読み取れないため、括り方の表の依存の扱いに `receipt-print` Mock・記録サービス
+      Stub・採番器のうち該当するものを書き足す。
+  - id: F002
     severity: minor
     rule: vp-arc-conciseness
     line: 105
@@ -115,7 +130,7 @@ findings:
     message_ja: >-
       `証跡` の暫定の書き方は line 103 で定めており、line 105 の括弧書き「整備前は上記の暫定表記にする」と line 117 の「整備前は `証跡`
       を暫定のローカル実行結果とし」が同じ内容を繰り返しているため、line 105 の括弧書きを削り、line 117 は差し替えの期限と担当だけにまとめる。
-  - id: F002
+  - id: F003
     severity: minor
     rule: vp-dev-implementation-readiness
     line: 101
@@ -126,7 +141,7 @@ findings:
     message_ja: >-
       `優先度` の決め方が「誤課金・在庫の誤更新」「つけ残高」「表示の書式変換」しか扱っておらず、`utc-sale-input` が受け持つ入力検証と未確定で保留する判定（BAC-03）にどの優先度を付けるかを DEV
       が決められないため、この区分の優先度とその理由を書き足す。
-  - id: F003
+  - id: F004
     severity: minor
     rule: vp-qe-verifiability
     line: 16
@@ -139,7 +154,7 @@ findings:
     message_ja: >-
       単体テストの合否条件「境界条件の観点がすべて実装済み」は、観点の型に「境界条件」がなく境界は条件の区分であるため何を数えて判定するかが定まらず、CI ジョブ `kinuya-ci-unit`
       の整備前の判定手段も書かれていないため、「条件の立て方（共通）」の境界値の条件がすべてケース表にあり automated で実行済みであることなど判定対象を具体化し、整備前の暫定の判定方法を書き足す。
-  - id: F004
+  - id: F005
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 101
@@ -150,7 +165,7 @@ findings:
     message_ja: >-
       優先度のルールは「誤課金・在庫の誤更新につながるものを P0、つけ残高を P1」としているが、分配方針の表ではつけ残高の採用理由を「誤計算は請求・入金の誤りにつながる」（誤課金）としているため、つけ残高を P0 にするか、P1
       とする理由（例: 店頭の会計と違い請求前に照合できる）を書き足して食い違いをなくす。
-  - id: F005
+  - id: F006
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 66
@@ -161,16 +176,20 @@ findings:
     message_ja: >-
       条件の立て方の「環境」では「記録サービス Fake の保存失敗」としているが、単体テスト共通の境界/依存の扱いでは記録サービスを「保存成功・保存失敗・タイムアウトを返す
       Stub」としており、テストダブルの種類が食い違うため、条件の例を「記録サービス Stub の保存失敗」にそろえる。
-  - id: F006
-    severity: major
-    rule: vp-ops-release-readiness
-    line: 117
-    anchor: >-
-      | _ASSUMPTION_: CI ジョブ `kinuya-ci-unit` の整備 | ケース表の共通カラム                    | 整備前は `証跡` を暫定のローカル実行結果とし、整備後に全 term
-      の `証跡` を差し替える。内部結合テストの入口条件の判定までに整備する | DEV が整備、QE が差し替えを確認          | PM へ決定事項として報告 |
-    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
-    message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
   - id: F007
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 109
+    anchor: >-
+      | `ut-sales-checkout-stock-allocation-020` | 入力: 商品A×5 状態: 在庫5個 環境: なし | 会計を確定する | 請求額150円の販売が1件確定し、在庫が5個から0個になる |
+      戻り値の請求額、Fake の在庫数 | 在庫リポジトリ Fake | BAC-01 / C-02 | P0     | automated | `kinuya-ci-unit` の実行結果 |
+    message: >-
+      `証跡` の決め方では「CI ジョブ `kinuya-ci-unit` の実行結果とテストコードの位置を書く」としているが、記入例の `証跡` は「`kinuya-ci-unit`
+      の実行結果」だけでテストコードの位置がなく、共通カラムの決め方と記入例が食い違うため、記入例にテストコードの位置（例: テストファイルとテスト名）を書き足す。
+    message_ja: >-
+      `証跡` の決め方では「CI ジョブ `kinuya-ci-unit` の実行結果とテストコードの位置を書く」としているが、記入例の `証跡` は「`kinuya-ci-unit`
+      の実行結果」だけでテストコードの位置がなく、共通カラムの決め方と記入例が食い違うため、記入例にテストコードの位置（例: テストファイルとテスト名）を書き足す。
+  - id: F008
     severity: minor
     rule: vp-ops-release-readiness
     line: 119

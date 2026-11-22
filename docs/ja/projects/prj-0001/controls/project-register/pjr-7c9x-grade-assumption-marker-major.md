@@ -61,6 +61,11 @@ grade の vp-qe-config-validity の検査は本文に _TODO_ か _ASSUMPTION_ �
 
 - 区分「変更」: grade の機械的な検査（`vp-qe-config-validity`）が、`--target kata` では `_TODO_` だけを major にし、`_ASSUMPTION_` / `_UNDECIDED_` を指摘しないようにした。`--target deliverable` は変わらない。
 
+### 5.2. 統合後の確かめ
+
+- 1 回目の統合の後（2026-11-22T08:40Z）、オーケストレーターが `utc-index` を評価し直すと、sample に F006（観点 `vp-ops-release-readiness`、直す前の機械的な検査の文言）が残った。grade の plan が前回の指摘を引き継がせるためと分かり、2 回目を流した。
+- 2 回目の統合の後、`npx specdojo grade run --target kata --kata utc-index`（run id `verify-7c9x-2-2026-11-22`、opus-review-executor）で評価し直した。`utc-index-rulebook` は pass 92、`utc-index-sample` は pass 91 で、どちらも blocker と major はなかった。
+
 ## 6. 関連ドキュメント
 
 - 根拠: `docs/ja/specdojo/standards/sample-authoring-standard.md`（未確定の事項を `_UNDECIDED_:` / `_ASSUMPTION_:` で明示する）。
