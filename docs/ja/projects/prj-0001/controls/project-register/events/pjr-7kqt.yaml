@@ -103,3 +103,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_65b1d45ca41d4114b36e8fa0ad51cba1
+- v: 1
+  id: reg_3754e56aae694f47a3d267cc2938febf
+  ts: "2026-11-22T03:28:17Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register で実施し、prj-0001 の設定は indie の承認で反映した（d6bc768bb）。統合の後の PJR-ESE7 で sonnet の edit executor が npm run typecheck・lint:ts・npx vitest を拒まれずに流し通したことを確かめた。git push と gh の禁止が残ること、CHANGELOG 不変を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: 配布する settings.edit.json と exec-defaults の allow_commands で、claude の edit executor が検証のコマンドを流せるようにした。prj-0001 の設定も雛形にそろえた。
+  previous_event_id: reg_e4b59d2d3fc6402a95604aa3166ecbdf

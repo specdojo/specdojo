@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-7kqt-claude-edit-executor-bash-validation
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-21T09:00:54Z"
+  completed_at: "2026-11-22T03:28:17Z"
+  conclusion: 配布する settings.edit.json と exec-defaults の allow_commands で、claude の edit executor が検証のコマンドを流せるようにした。prj-0001 の設定も雛形にそろえた。
 ---
 
 # PJR-7KQT Claude の edit executor の権限設定がコマンドを許可せず、plan が求める検証を流せない
