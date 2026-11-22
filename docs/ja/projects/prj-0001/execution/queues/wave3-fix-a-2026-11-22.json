@@ -3,13 +3,13 @@
   "queue_id": "wave3-fix-a-2026-11-22",
   "project_id": "prj-0001",
   "created_at": "2026-11-22T06:10:40.905Z",
-  "updated_at": "2026-11-22T06:10:40.905Z",
-  "state": "pending",
+  "updated_at": "2026-11-22T06:27:01.999Z",
+  "state": "succeeded",
   "steps": [
     {
       "index": 1,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "succeeded",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -32,12 +32,16 @@
         "sonnet-reporter",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-22T06:11:00.395Z",
+      "completed_at": "2026-11-22T06:14:47.097Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
     },
     {
       "index": 2,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "succeeded",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -60,12 +64,16 @@
         "sonnet-reporter",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-22T06:14:47.099Z",
+      "completed_at": "2026-11-22T06:20:29.617Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
     },
     {
       "index": 3,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "succeeded",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -88,12 +96,16 @@
         "sonnet-reporter",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-22T06:20:29.619Z",
+      "completed_at": "2026-11-22T06:24:24.517Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
     },
     {
       "index": 4,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "succeeded",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -116,7 +128,11 @@
         "sonnet-reporter",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-22T06:24:24.519Z",
+      "completed_at": "2026-11-22T06:27:01.997Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
     }
   ]
 }
