@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-3-utc-index-sample-090
   mode: review
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-3-utc-index-sample-090/T-KATA-WAVE-3-utc-index-sample-090-20261122T072256Z-fca5000f/plan.md
   started_at: "2026-11-22T07:22:58.472Z"
+  completed_at: "2026-11-22T07:25:36.004Z"
   agent: opus-review-executor
   execution: agent
   approach: fully-guided
@@ -19,20 +20,23 @@ specdojo:
 
 ## 1. 評価結果の確認
 
-_TODO_: 評価結果サイドカーのパス、鮮度確認で実行したコマンドとその出力（`content_hash` が現在の成果物と一致するか）、grade の `verdict` / `score` / finding 件数を記入する。評価結果が最新でない、または評価不能の場合は、その事実と理由を記入する。
+評価結果の鮮度を確認するため、`npx specdojo grade list --target kata --path docs/ja/specdojo/samples/utc-index-sample.md --changed-only` および `--incomplete` を実行したところ、出力はなく `exit 0` であった。また `docs/ja/specdojo/rulebooks/utc-index-rulebook.md` についても同様の結果であったため、評価結果は最新であると判断した。\n\n- `docs/ja/specdojo/samples/utc-index-sample.md`: `verdict`: `needs-work`, `score`: 96, `findings`: 1 major / 2 minor\n- `docs/ja/specdojo/rulebooks/utc-index-rulebook.md`: `verdict`: `pass`, `score`: 95, `findings`: 2 minor
 
 ## 2. 判断根拠
 
-_TODO_: 変更内容・plan・実行記録・完了条件・最新の finding を照合した内容と、verdict を選んだ理由を記入する。finding が残るのに完了とする場合は、その finding が今回の完了を妨げない理由を記入する。参照は `[[id]]` 形式（Obsidian wikilink）で記載し、行番号アンカーや絶対パスは使わない。
+- 対象の `docs/ja/specdojo/samples/utc-index-sample.md` は、grade 判定において `needs-work` とされている。これは、未解決の `_TODO_` / `_ASSUMPTION_` (`F002`, `F003`) が含まれているためである。
+- `docs/ja/specdojo/rulebooks/utc-index-rulebook.md` は `pass` であるが、`docs/ja/specdojo/samples/utc-index-sample.md` の完了条件である「すべての型（`--target kata`）での `pass`」を満たしていない。
 
 ## 3. 未充足事項・改善指示
 
-_TODO_: 未充足事項と、再計画・成果物の改善・再評価に使う改善指示を記入する（なければ「なし」と記入する）。評価結果の内容に疑義がある場合は、再評価が必要な対象と理由もここに記入する。
+- `docs/ja/specdojo/samples/utc-index-sample.md` に残っている未解決の `_TODO_` / `_ASSUMPTION_` を解消すること。特に、CI ジョブ `kinuya-ci-unit` の整備に関する前提を PJR（決定記録または課題）へ移し、`_ASSUMPTION_` ラベルを外す作業が必要 (`F002`, `F003`)。
+- 優先度のルールにおいて、つけ残高の採用理由（「誤計算は請求・入金の誤りにつながる」）と、優先度（P1）の整合性をとるために、P0 に書き換えるか理由を補足すること (`F001`)。
+- 修正完了後、`--target kata` で再度評価を行い、`pass` を得たことを確認してから再度 review を行うこと。
 
 ## 4. approach に応じた確認
 
-_TODO_: `approach` に応じて確認した内容を記入する。fully-guided / recipe-guided / freeform では求められた作成・更新が行われたか、retrofit では実装エビデンスの対応記録と未確認範囲、`rulebook-maintenance` などの maintenance 系では見直しの動機となった finding の解消状況を記入する。
+フェーズ説明に基づき、`docs/ja/specdojo/rulebooks/utc-index-rulebook.md` の必須要素および禁止事項、ならびに `docs/ja/specdojo/samples/utc-index-sample.md` の構成と内容が、磨き込みの要求を満たしているかを確認した。先行する edit タスクの実行記録は確認していない。
 
 ## 5. decision
 
-- verdict: _TODO_（complete / complete-with-findings / incomplete / grade-stale / grade-unavailable / changed-during-review）
+- verdict: incomplete
