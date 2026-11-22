@@ -1,0 +1,18 @@
+grade の指摘 7 件（rulebook 2 件、sample 5 件）をすべて直しました。直さなかった指摘はありません。`markdownlint-cli2` は 3 ファイルとも指摘なしです。`npm run lint:md` と親の検証は runner が実行します。grade での評価し直しはまだ行っていません。
+
+**rulebook（`stc-index-rulebook.md`）**
+- F001: 推奨カラムの見出しを「省略してよい。置く場合は必須カラムの後に、この順で並べる」に改め、必須と推奨の矛盾を解消しました。
+- F002: 分割候補の閾値は rulebook の「表が60行以上」を正とし、sample 側を揃えました。
+
+**sample（`stc-index-sample.md`）**
+- F001: 印刷の用紙切れを `未確定停止` から新しい観点 `会計維持` に付け替えました。観点の系統表にも `会計維持` を足しました。
+- F002: P2 を「BAC-01〜BAC-03 に含まれない頻度の低い組合せ」に限りました。
+- F003: 分割の閾値を「60行以上」に揃えました。
+- F004: 印字結果不明（30秒タイムアウト）を、対象外の例外とスタブの一覧に加えました。
+- F005: `_TODO_` の 2 行を解消しました。証跡形式は共通方針に決定として取り込みました。スモークと回帰の分離は、P0 全件再実行の方針が既にあるため行を削除しました。`_ASSUMPTION_` と `_UNDECIDED_` は残しています。
+
+個票は作業内容の表の 1〜3 行目を `done` にしました。4 行目の grade 再評価は、executor が grade を起動できないため `open` のままです。対応結果には、CHANGELOG に書く事項を「なし」と書いたほか、実施内容と残課題も書きました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"stc-index の rulebook と sample の grade 指摘（F001〜F005 を含む全 7 件）を修正し、個票の対応結果を更新した。grade の再評価はオーケストレーターが統合後に行う。","handoff":["統合後に `npx specdojo grade run --target kata --kata stc-index` で評価し直し、rulebook と sample に blocker と major がないことを確認する。機械的な指摘（PJR-7C9X）だけが残る場合は合格とする。","sample の分配表と共通合格基準を変えたため、`stc-sample` など対象別カタログが `会計維持` 観点や P2 の範囲に影響を受けないかを再評価時に確認する。"],"validations":[{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/stc-index-sample.md docs/ja/specdojo/rulebooks/stc-index-rulebook.md docs/ja/projects/prj-0001/controls/project-register/pjr-tn50-kata-wave-3-stc-index-fix.md","status":"passed","summary":"変更した 3 ファイルで指摘なし"},{"command":"npx prettier --write docs/ja/specdojo/samples/stc-index-sample.md docs/ja/specdojo/rulebooks/stc-index-rulebook.md docs/ja/projects/prj-0001/controls/project-register/pjr-tn50-kata-wave-3-stc-index-fix.md","status":"passed","summary":"表の整形を適用した"}]}
+</specdojo_executor_evidence>
