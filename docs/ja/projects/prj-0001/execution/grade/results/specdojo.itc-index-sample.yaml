@@ -4,18 +4,18 @@ document: specdojo:itc-index-sample
 path: docs/ja/specdojo/samples/itc-index-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 92
-graded_at: "2026-11-22T03:30:24.862Z"
+verdict: pass
+score: 90
+graded_at: "2026-11-22T06:50:39.652Z"
 graded_by: opus-review-executor
-content_hash: 3fe2b5f67e14d2bb8e99aa4209e2c8fe02ff33af94e15a85fee581e558062f18
+content_hash: 26c5bac4868cc92cb7fab22ce0d8a1b0475d784af55a861e88c91adda59f03ac
 categories:
   purpose:
-    score: 75
+    score: 88
   operations:
     score: 100
   planning:
-    score: 100
+    score: 92
   business:
     score: 100
   architecture:
@@ -25,13 +25,13 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 92
   consistency:
     score: 75
 viewpoints:
   vp-po-purpose-alignment:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-po-decision-readiness:
     level: 4
     score: 100
@@ -45,8 +45,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-control-reporting:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-business-value:
     level: 4
     score: 100
@@ -60,8 +60,8 @@ viewpoints:
     level: 3
     score: 75
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-implementation-readiness:
     level: 4
     score: 100
@@ -72,8 +72,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
     level: 3
     score: 75
@@ -84,8 +84,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -100,60 +100,72 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 4
+  major: 0
+  minor: 6
   note: 0
 findings:
   - id: F001
-    severity: major
+    severity: minor
     rule: vp-po-purpose-alignment
     line: 7
     anchor: >-
-      適用対象は、[[specdojo:ifd-sample|インフラ構成図]] の店頭操作端末・販売・在庫・つけ記録サービス・業務記録 DB・保全・復元処理を結ぶ `PATH-01`〜`PATH-04` と `PATH-07`
-      である。内部結合テストで防ぐ業務リスクは次の3つで、いずれも店主代表が記録を信用できなくなり、店主不在の店番を任せられなくなる。
+      適用対象は、[[specdojo:ifd-sample|インフラ構成図]] の店頭操作端末・販売・在庫・つけ記録サービス・業務記録 DB を結ぶ `PATH-01`〜`PATH-03`
+      である（[[specdojo:tsp-index-sample|テスト戦略・方針]]
+      の内部結合テストの範囲に合わせる）。保全の取得（`PATH-04`）と復元の回復（`PATH-07`）は外部結合テストの範囲とし、本書では扱わない。内部結合テストで防ぐ業務リスクは次の2つで、いずれも店主代表が記録を信用できなくなり、店主不在の店番を任せられなくなる。
     message: >-
-      適用対象に `PATH-04`・`PATH-07`（保全・復元処理）を含めていますが、根拠とする `tsp-index-sample` では内部結合テストの範囲が `PATH-01`〜`PATH-03`
-      で、障害・回復は総合テストの範囲です。範囲を広げる根拠と tsp 側の改訂方針を書くか、`itc-record-backup` を外して上位と一致させてください。
+      tsp-index-sample は応答欠落時の照合待ちの判定（`PATH-02`
+      の遅延・無応答）を内部結合テストで確認すると定めていますが、本書の観点の型と分配表にこれに当たる観点・主担当がありません。`itc-sales-checkout`
+      の「依存障害時の挙動」に応答欠落時の照合待ちを加え、分配表にも主担当を置いてください。
     message_ja: >-
-      適用対象に `PATH-04`・`PATH-07`（保全・復元処理）を含めていますが、根拠とする `tsp-index-sample` では内部結合テストの範囲が `PATH-01`〜`PATH-03`
-      で、障害・回復は総合テストの範囲です。範囲を広げる根拠と tsp 側の改訂方針を書くか、`itc-record-backup` を外して上位と一致させてください。
+      tsp-index-sample は応答欠落時の照合待ちの判定（`PATH-02`
+      の遅延・無応答）を内部結合テストで確認すると定めていますが、本書の観点の型と分配表にこれに当たる観点・主担当がありません。`itc-sales-checkout`
+      の「依存障害時の挙動」に応答欠落時の照合待ちを加え、分配表にも主担当を置いてください。
   - id: F002
     severity: minor
-    rule: vp-arc-technical-constraints
-    line: 115
-    anchor: "| データ     | 各テストの開始時に `kinuya-test-data` を seed し、テストごとのトランザクションロールバックで独立させる      |"
+    rule: vp-pm-control-reporting
+    line: 142
+    anchor: >-
+      | _UNDECIDED_: 通信不能時の販売継続                    | 未確定取引の照合の観点が増える                      | 対象外とし、`itc-sales-checkout`
+      に保留後の再送の観点を追加しない      | BA が整理、PO が継続可否を判断    | PM へリスクとして報告   |
     message: >-
-      テストごとのトランザクションロールバックを全テストに一律で適用すると、ロック競合・ロールバック検証・保全取得の条件（別接続・コミット済みデータが必要）を再現できません。該当する条件では seed
-      の再投入やスキーマ分離で独立させるという例外を明記してください。
+      「通信不能時の販売継続」は ifd-sample で既に `kinuya:pjr-i003` へ引き継がれていますが、本書は「PM へリスクとして報告」とだけ書き、既存の個票を参照していません。報告先に
+      `kinuya:pjr-i003` を書き、二重登録を避けてください。
     message_ja: >-
-      テストごとのトランザクションロールバックを全テストに一律で適用すると、ロック競合・ロールバック検証・保全取得の条件（別接続・コミット済みデータが必要）を再現できません。該当する条件では seed
-      の再投入やスキーマ分離で独立させるという例外を明記してください。
+      「通信不能時の販売継続」は ifd-sample で既に `kinuya:pjr-i003` へ引き継がれていますが、本書は「PM へリスクとして報告」とだけ書き、既存の個票を参照していません。報告先に
+      `kinuya:pjr-i003` を書き、二重登録を避けてください。
   - id: F003
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 41
-    anchor: "- 1 term の観点が 15、ケース表が 50 行を超えた場合は分割を検討し、分割は ARC が承認する。"
-    message: 分割の閾値が「観点が 15、ケース表が 50 行を超えた場合」になっていて、rulebook の「観点が 15 以上、表が 50 行以上」と境界値が一致しません。rulebook の表現に合わせてください。
-    message_ja: 分割の閾値が「観点が 15、ケース表が 50 行を超えた場合」になっていて、rulebook の「観点が 15 以上、表が 50 行以上」と境界値が一致しません。rulebook の表現に合わせてください。
+    rule: vp-arc-technical-constraints
+    line: 101
+    anchor: "| 取引番号の採番             | 実装の採番を使い、期待値には件数と差分だけを書く                          | 再送の条件に限り、テストから同じ取引番号を指定する |"
+    message: 依存の表に、tsp が IT で求める `PATH-02` の遅延・無応答を再現する手段（遅延・無応答を返すスタブなど）がありません。応答欠落時の照合待ちを決定的に再現するための依存の扱いを1行加えてください。
+    message_ja: 依存の表に、tsp が IT で求める `PATH-02` の遅延・無応答を再現する手段（遅延・無応答を返すスタブなど）がありません。応答欠落時の照合待ちを決定的に再現するための依存の扱いを1行加えてください。
   - id: F004
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 51
-    anchor: >-
-      | 通信不能時の販売継続                     | 初期リリースで扱うか未決である                     | 「メモ / 将来課題」で決定後に再判断する |
-      なし                                                             |
+    rule: vp-arc-conciseness
+    line: 38
+    anchor: "- 保全の取得（`PATH-04`）と復元の回復（`PATH-07`）は tsp の定めで外部結合テストの範囲のため、term にしない。"
     message: >-
-      「通信不能時の販売継続」の代替レベル列が、テストレベルの略語（UT/IT/ET/ST/AT・非機能テスト）ではなく「『メモ /
-      将来課題』で決定後に再判断する」になっています。未決であることは除外理由か例外列へ移し、代替レベル列は略語で書いてください。
+      「保全の取得（`PATH-04`）と復元の回復（`PATH-07`）は…term
+      にしない」は、目的と適用対象の段落、および対象外の表の内容を繰り返しています。この箇条を削るか、「対象外・除外理由（共通）」への参照に置き換えてください。
     message_ja: >-
-      「通信不能時の販売継続」の代替レベル列が、テストレベルの略語（UT/IT/ET/ST/AT・非機能テスト）ではなく「『メモ /
-      将来課題』で決定後に再判断する」になっています。未決であることは除外理由か例外列へ移し、代替レベル列は略語で書いてください。
+      「保全の取得（`PATH-04`）と復元の回復（`PATH-07`）は…term
+      にしない」は、目的と適用対象の段落、および対象外の表の内容を繰り返しています。この箇条を削るか、「対象外・除外理由（共通）」への参照に置き換えてください。
   - id: F005
     severity: minor
-    rule: vp-ux-language-consistency
-    line: 5
-    anchor: >-
-      [[specdojo:tsp-index-sample|テスト戦略・方針]] の内部結合テストを根拠に、駄菓子屋きぬや 販売管理システムの対象別カタログ `itc-<term>`
-      が共通で使う括り方・観点と条件の立て方・依存の扱い・ケース表の書き方をそろえ、品質・粒度・責任範囲を揃える。個別の観点・条件・ケースは `itc-<term>` に置き、本書には書かない。
-    message: 「ケース表の書き方をそろえ、品質・粒度・責任範囲を揃える」で「そろえ」と「揃える」の表記がゆれ、動詞も重複しています。表記をどちらかに統一し、一文にまとめてください。
-    message_ja: 「ケース表の書き方をそろえ、品質・粒度・責任範囲を揃える」で「そろえ」と「揃える」の表記がゆれ、動詞も重複しています。表記をどちらかに統一し、一文にまとめてください。
+    rule: vp-qe-verifiability
+    line: 123
+    anchor: "- `優先度`: 二重計上・記録の欠落・在庫の誤更新につながるものを P0、つけ残高の照会を P1、通知内容を P2 とする。"
+    message: 優先度の基準にある「通知内容を P2」の「通知」が、本書の IT 範囲のどれに当たるか分かりません。P0〜P2 のいずれにも当たらないケースの扱いも決まっていないため、判定できる基準に書き直してください。
+    message_ja: 優先度の基準にある「通知内容を P2」の「通知」が、本書の IT 範囲のどれに当たるか分かりません。P0〜P2 のいずれにも当たらないケースの扱いも決まっていないため、判定できる基準に書き直してください。
+  - id: F006
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 40
+    anchor: "- 1 term の観点が 15 以上、ケース表が 50 行以上の場合は分割を検討し、分割は ARC が承認する。"
+    message: >-
+      分割基準が観点数と行数だけになっており、rulebook の「依存境界・環境要件が混在する場合は分割候補」と「1〜2
+      ケースしかない単位は原則統合する」が抜けています。本システムでの扱いを加えるか、適用しない理由を書いてください。
+    message_ja: >-
+      分割基準が観点数と行数だけになっており、rulebook の「依存境界・環境要件が混在する場合は分割候補」と「1〜2
+      ケースしかない単位は原則統合する」が抜けています。本システムでの扱いを加えるか、適用しない理由を書いてください。

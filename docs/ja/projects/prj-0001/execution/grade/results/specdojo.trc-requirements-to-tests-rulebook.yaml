@@ -4,30 +4,30 @@ document: specdojo:trc-requirements-to-tests-rulebook
 path: docs/ja/specdojo/rulebooks/trc-requirements-to-tests-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 88
-graded_at: "2026-11-22T02:09:39.807Z"
+verdict: pass
+score: 92
+graded_at: "2026-11-22T06:56:23.492Z"
 graded_by: opus-review-executor
-content_hash: 478982f73f386ef26d1edad769cae268424991bcda59bc953f226f83a2aef475
+content_hash: 898513e5bb28dcb32ad8cbe1300ecf5e0d5b0474bb2a2263900c486c5f06ec3a
 categories:
   purpose:
     score: 100
   operations:
-    score: 94
+    score: 100
   planning:
     score: 100
   business:
     score: 100
   architecture:
-    score: 92
-  usability:
     score: 100
+  usability:
+    score: 83
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 92
   consistency:
-    score: 50
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -57,11 +57,11 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-technical-constraints:
-    level: 3
-    score: 75
-  vp-arc-conciseness:
     level: 4
     score: 100
+  vp-arc-conciseness:
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -78,20 +78,20 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
-  vp-ops-release-readiness:
     level: 3
     score: 75
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
   vp-ops-operability:
     level: 4
     score: 100
@@ -103,55 +103,55 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 2
-  minor: 2
+  major: 0
+  minor: 4
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-arc-technical-constraints
-    line: 50
-    anchor: "3. 項目単位で対応づける: 各テストの「トレース」の表から、仕様ID が母集団の要求項目を指す行を拾う。その `trace_key` をケース表の `トレース` 列が参照しているかも確かめる。"
+    rule: vp-arc-conciseness
+    line: 78
+    anchor: >-
+      対応テストは手順 3 で対応づけたものを指します。`relations.verifies` の宣言が必要なのは、そのテスト種別の rulebook が宣言を定めている種別（受入テスト
+      `atc-*`）だけです。定めていない種別（総合テスト `stc-*`）は、「トレース」の表の仕様ID が要求項目を指すことを文書単位の対応とし、宣言の有無を判定に使いません。
     message: >-
-      手順3で仕様ID が要求項目を指すかを判定する際、wikilink 表記・下位項目（例: `BAC-01 の C-01`）・複数項目の併記（例:
-      `SC-01・AC-03`）をどう要求項目へ対応づけるかが未定義で再現性を欠くため、仕様ID から要求文書 ID と項目 ID を取り出す規則を定めてください。
+      `relations.verifies` を定める種別（受入テスト）と定めない種別（総合テスト）の区別が、本文 10 行目・53 行目・78 行目で繰り返されているため、充足状況の判定の前文に 1 か所だけ定義し、全体方針と手順
+      2 からはそこを参照してください。
     message_ja: >-
-      手順3で仕様ID が要求項目を指すかを判定する際、wikilink 表記・下位項目（例: `BAC-01 の C-01`）・複数項目の併記（例:
-      `SC-01・AC-03`）をどう要求項目へ対応づけるかが未定義で再現性を欠くため、仕様ID から要求文書 ID と項目 ID を取り出す規則を定めてください。
+      `relations.verifies` を定める種別（受入テスト）と定めない種別（総合テスト）の区別が、本文 10 行目・53 行目・78 行目で繰り返されているため、充足状況の判定の前文に 1 か所だけ定義し、全体方針と手順
+      2 からはそこを参照してください。
   - id: F002
-    severity: major
+    severity: minor
     rule: vp-qe-omissions-consistency
-    line: 49
-    anchor: "2. テストを抽出する: `relations.verifies` に母集団の要求文書 ID を 1 つ以上持つテスト文書を集める。"
+    line: 60
+    anchor: >-
+      4. 照合する: 母集団にない項目または文書を指す行を記録する。また、`relations.verifies` を定める種別のテストで、「トレース」の表が指す要求文書が `relations.verifies`
+      にない場合を記録する。
     message: >-
-      手順2はテストの抽出を `relations.verifies` に母集団の要求文書を持つものに限るが、判定表の「要求文書が `relations.verifies` にない」条件や本文31行目の索引を抽出に使う前提、および
-      sample が索引を走査して `relations.verifies` を欠く `stc-cash-sale`
-      を拾った手順と矛盾し、同じ前提でも抽出結果が変わるため、索引などから「トレース」の表を走査して抽出する経路と、その条件を手順2に定義してください。
+      手順 3 の規則は「要求文書だけで項目 ID がない行は手順 4 で記録する」とするが、手順 4 が記録するのは母集団にない項目・文書を指す行と `relations.verifies`
+      との不一致だけで、母集団の要求文書を指しながら項目 ID がない行の記録先（母集団外の参照の表に入れるかどうか）が定まらないため、手順 4 にこの場合の記録先と表の書き方を加えてください。
     message_ja: >-
-      手順2はテストの抽出を `relations.verifies` に母集団の要求文書を持つものに限るが、判定表の「要求文書が `relations.verifies` にない」条件や本文31行目の索引を抽出に使う前提、および
-      sample が索引を走査して `relations.verifies` を欠く `stc-cash-sale`
-      を拾った手順と矛盾し、同じ前提でも抽出結果が変わるため、索引などから「トレース」の表を走査して抽出する経路と、その条件を手順2に定義してください。
+      手順 3 の規則は「要求文書だけで項目 ID がない行は手順 4 で記録する」とするが、手順 4 が記録するのは母集団にない項目・文書を指す行と `relations.verifies`
+      との不一致だけで、母集団の要求文書を指しながら項目 ID がない行の記録先（母集団外の参照の表に入れるかどうか）が定まらないため、手順 4 にこの場合の記録先と表の書き方を加えてください。
   - id: F003
-    severity: major
+    severity: minor
     rule: vp-qe-kata-conformance
-    line: 50
-    anchor: "3. 項目単位で対応づける: 各テストの「トレース」の表から、仕様ID が母集団の要求項目を指す行を拾う。その `trace_key` をケース表の `トレース` 列が参照しているかも確かめる。"
+    line: 78
+    anchor: >-
+      対応テストは手順 3 で対応づけたものを指します。`relations.verifies` の宣言が必要なのは、そのテスト種別の rulebook が宣言を定めている種別（受入テスト
+      `atc-*`）だけです。定めていない種別（総合テスト `stc-*`）は、「トレース」の表の仕様ID が要求項目を指すことを文書単位の対応とし、宣言の有無を判定に使いません。
     message: >-
-      手順3と `充足` の条件（本文75行目）は、テストの「トレース」の表の仕様ID が要求項目を指すことと、テストが `relations.verifies` を宣言することを前提とするが、`stc-rulebook` は仕様ID
-      を「根拠仕様の文書ID」と定義し `relations.verifies` の宣言も定めていないため総合テストが `充足` になり得ず、`stc-rulebook` 側の対応を求めるか、総合テストの場合の判定規則を本
-      rulebook に定めてください。
+      前回の major のうち `relations.verifies` に関する部分は本文 10 行目と 78 行目で解消されたため minor に下げるが、`stc-rulebook` が仕様ID
+      を「根拠仕様の文書ID」と定めたままで、本 rulebook は項目 ID のない行を項目への対応としないため `stc-rulebook` どおりの総合テストは要求項目に対応せず、仕様ID に項目 ID まで書くよう
+      `stc-rulebook` 側の対応を求めるか、本 rulebook にその前提を明記してください。
     message_ja: >-
-      手順3と `充足` の条件（本文75行目）は、テストの「トレース」の表の仕様ID が要求項目を指すことと、テストが `relations.verifies` を宣言することを前提とするが、`stc-rulebook` は仕様ID
-      を「根拠仕様の文書ID」と定義し `relations.verifies` の宣言も定めていないため総合テストが `充足` になり得ず、`stc-rulebook` 側の対応を求めるか、総合テストの場合の判定規則を本
-      rulebook に定めてください。
+      前回の major のうち `relations.verifies` に関する部分は本文 10 行目と 78 行目で解消されたため minor に下げるが、`stc-rulebook` が仕様ID
+      を「根拠仕様の文書ID」と定めたままで、本 rulebook は項目 ID のない行を項目への対応としないため `stc-rulebook` どおりの総合テストは要求項目に対応せず、仕様ID に項目 ID まで書くよう
+      `stc-rulebook` 側の対応を求めるか、本 rulebook にその前提を明記してください。
   - id: F004
     severity: minor
-    rule: vp-ops-release-readiness
-    line: 46
-    anchor: 生成コマンドがない場合は次の手順で生成し、手作業で生成したことを「トレース対象の前提」に書きます。
-    message: >-
-      生成コマンドがない前提の手作業での生成や、recipe・template の要否など `ready` 化の前に判断すべき事項が本文に示されていないため、`_UNDECIDED_` などで未決事項と `ready`
-      への昇格条件を明記してください。
-    message_ja: >-
-      生成コマンドがない前提の手作業での生成や、recipe・template の要否など `ready` 化の前に判断すべき事項が本文に示されていないため、`_UNDECIDED_` などで未決事項と `ready`
-      への昇格条件を明記してください。
+    rule: vp-ux-language-consistency
+    line: 125
+    anchor: "| 要求 ID または対応テスト ID の空欄                              | 未対応なのか記入漏れなのか判別できないため           |"
+    message: 禁止事項の「要求 ID または対応テスト ID の空欄」は、標準列名の「要求ID」「対応テストID」と表記が揺れていて、同じ列を指すことが読み取りにくいため、列名と同じ表記にそろえてください。
+    message_ja: 禁止事項の「要求 ID または対応テスト ID の空欄」は、標準列名の「要求ID」「対応テストID」と表記が揺れていて、同じ列を指すことが読み取りにくいため、列名と同じ表記にそろえてください。

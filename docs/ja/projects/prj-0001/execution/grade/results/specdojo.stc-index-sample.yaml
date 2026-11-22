@@ -5,17 +5,17 @@ path: docs/ja/specdojo/samples/stc-index-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 94
-graded_at: "2026-11-22T01:34:54.158Z"
+score: 91
+graded_at: "2026-11-22T06:45:57.721Z"
 graded_by: opus-review-executor
-content_hash: ca669bd6671fec6eb756fad87b447bffa0731a7ec22a83f05deb3be7056a62a4
+content_hash: f26de182fd0222d14475587267b124604150308c2894d947cf3228cd6f91be1c
 categories:
   purpose:
     score: 100
   operations:
     score: 88
   planning:
-    score: 100
+    score: 92
   business:
     score: 100
   architecture:
@@ -25,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 92
+    score: 83
   consistency:
     score: 75
 viewpoints:
@@ -45,8 +45,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-control-reporting:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-business-value:
     level: 4
     score: 100
@@ -72,8 +72,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
     level: 3
     score: 75
@@ -106,56 +106,62 @@ finding_counts:
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 76
+    rule: vp-pm-control-reporting
+    line: 132
     anchor: >-
-      | `未確定停止` / 印刷の用紙切れ     | 会計を取り消すと現金と記録がずれる                  | `stc-cash-sale`       | `stc-sale-hold` | 引継ぎメモの書式は
-      `stc-sale-hold` を参照する  |
+      | _ASSUMPTION_: 会計確定の応答基準  | 対象外の例外、共通合格基準の P0      | TSP の仮置き（60取引/時で応答の95%が2秒以内）で判定する | NFR
+      確定後に基準値を置き換え、`会計確定応答` の期待値を更新する | ARC が NFR へ起票、QE が更新 |
     message: >-
-      分配表は「印刷の用紙切れ」を観点
-      `未確定停止`（販売を確定しない）に割り当てていますが、本文61・124行目の期待値では会計は確定して維持されます。合否命題が矛盾しているため、印刷失敗を「会計維持」などの別観点として立てるか、`販売確定成立`
-      の条件に移す必要があります。
+      メモ / 将来課題の2件（会計確定の応答基準、通信不能時の販売継続）は、TSP では `kinuya:pjr-i006`・`kinuya:pjr-i003` へ引き継ぐと明記されていますが、本書には PJR
+      の引継ぎ先がありません。担当列か見直し方針列に引継ぎ先の PJR を記載し、決定記録への転記先を追えるようにする必要があります。
     message_ja: >-
-      分配表は「印刷の用紙切れ」を観点
-      `未確定停止`（販売を確定しない）に割り当てていますが、本文61・124行目の期待値では会計は確定して維持されます。合否命題が矛盾しているため、印刷失敗を「会計維持」などの別観点として立てるか、`販売確定成立`
-      の条件に移す必要があります。
+      メモ / 将来課題の2件（会計確定の応答基準、通信不能時の販売継続）は、TSP では `kinuya:pjr-i006`・`kinuya:pjr-i003` へ引き継ぐと明記されていますが、本書には PJR
+      の引継ぎ先がありません。担当列か見直し方針列に引継ぎ先の PJR を記載し、決定記録への転記先を追えるようにする必要があります。
   - id: F002
     severity: minor
-    rule: vp-qe-kata-conformance
-    line: 100
-    anchor: "| P2     | 頻度の低い組合せ（取消後の再登録など）         | ST 期間内に80%以上を消化し、未消化分は受入テスト開始前までの実施計画を課題ログに登録する     |"
+    rule: vp-qe-verifiability
+    line: 98
+    anchor: >-
+      | P0     | 記録の欠落・誤り、販売の誤確定につながるケース | 全件 Pass。1件でも Fail なら ST
+      を完了しない                                                 |
     message: >-
-      P2 の「ST 期間内に80%以上を消化」は、tsp-index-sample の総合テスト出口条件「BAC-01〜BAC-03 の全ケースが合格」と食い違います。例の「取消後の再登録」は BAC-01
-      の範囲の取消に当たるため、P2 を BAC 範囲外のケースに限るか、BAC 範囲のケースは P0/P1 に置くと明記する必要があります。
+      P0 の対象を「記録の欠落・誤り、販売の誤確定につながるケース」とだけ定義していますが、132行目のメモと対象別の `stc-sample` は `会計確定応答`（性能）を P0 として扱っています。性能ケースが P0
+      に当たるかを優先度の定義から判定できないため、P0 の対象に「TSP 出口条件の性能基準」を加えるなどして明記する必要があります。
     message_ja: >-
-      P2 の「ST 期間内に80%以上を消化」は、tsp-index-sample の総合テスト出口条件「BAC-01〜BAC-03 の全ケースが合格」と食い違います。例の「取消後の再登録」は BAC-01
-      の範囲の取消に当たるため、P2 を BAC 範囲外のケースに限るか、BAC 範囲のケースは P0/P1 に置くと明記する必要があります。
+      P0 の対象を「記録の欠落・誤り、販売の誤確定につながるケース」とだけ定義していますが、132行目のメモと対象別の `stc-sample` は `会計確定応答`（性能）を P0 として扱っています。性能ケースが P0
+      に当たるかを優先度の定義から判定できないため、P0 の対象に「TSP 出口条件の性能基準」を加えるなどして明記する必要があります。
   - id: F003
     severity: minor
-    rule: vp-qe-kata-conformance
-    line: 28
-    anchor: 観点が15以上、またはケース表が60行を超えた term は、データ境界で分割を再検討する。
-    message: 分割再検討の閾値「ケース表が60行を超えた」は、rulebook の「表が60行以上」と境界値（60行ちょうど）の扱いが異なるため、rulebook と同じ「60行以上」に揃える必要があります。
-    message_ja: 分割再検討の閾値「ケース表が60行を超えた」は、rulebook の「表が60行以上」と境界値（60行ちょうど）の扱いが異なるため、rulebook と同じ「60行以上」に揃える必要があります。
+    rule: vp-qe-omissions-consistency
+    line: 26
+    anchor: >-
+      | `stc-record-recovery` | 応答欠落・保存失敗の検知→照合待ちの識別→記録の復元→業務再開 | TSP のスコープ（記録の保全・復元） |
+      実施者が店主代表で、運用手順と観測点（保管サービスの記録）が販売と異なるため運用境界で分ける |
+    message: >-
+      `stc-record-recovery` を分ける理由に「実施者が店主代表」とありますが、92行目の責任欄は「実施と証跡の照合は QE」としており矛盾します。記録の復元の操作者が店主代表で、照合と判定が QE
+      であるなら、分割理由と責任欄の役割分担をその内容に揃える必要があります。
+    message_ja: >-
+      `stc-record-recovery` を分ける理由に「実施者が店主代表」とありますが、92行目の責任欄は「実施と証跡の照合は QE」としており矛盾します。記録の復元の操作者が店主代表で、照合と判定が QE
+      であるなら、分割理由と責任欄の役割分担をその内容に揃える必要があります。
   - id: F004
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 35
+    line: 76
     anchor: >-
-      | 印刷コマンド・保管サービスの全障害パターン | 契約の網羅は境界の責務で、ST で重ねると環境準備の費用が倍になる | ET（`receipt-print` 連携、保管サービスの契約観点） |
-      用紙切れと保存失敗の2種だけを業務シナリオ中で再現する      |
+      | `会計維持` / 印刷の用紙切れ       | 会計を取り消すと現金と記録がずれる                  | `stc-cash-sale`       | なし            |
+      確定済みの会計を取り消さず、警告だけを出す     |
     message: >-
-      印刷の障害を「用紙切れと保存失敗の2種だけ」とし、本文88行目の外部依存もタイムアウト用のスタブを挙げていませんが、対象別の stc-sample は印字結果不明（30秒タイムアウト）も ST
-      で扱っています。概要の例外条件とスタブの一覧に印字結果不明を加えるか、対象別から外すかして整合させる必要があります。
+      分配表と観点の系統表は用紙切れを観点 `会計維持` に割り当てていますが、対象別の `stc-sample` の 6.2 節は同じケース（`perspective_key: print-failure`）を観点 `未確定停止`
+      のままにしています。概要と対象別で観点名が食い違うため、`stc-sample` 側を `会計維持` に揃える必要があります。
     message_ja: >-
-      印刷の障害を「用紙切れと保存失敗の2種だけ」とし、本文88行目の外部依存もタイムアウト用のスタブを挙げていませんが、対象別の stc-sample は印字結果不明（30秒タイムアウト）も ST
-      で扱っています。概要の例外条件とスタブの一覧に印字結果不明を加えるか、対象別から外すかして整合させる必要があります。
+      分配表と観点の系統表は用紙切れを観点 `会計維持` に割り当てていますが、対象別の `stc-sample` の 6.2 節は同じケース（`perspective_key: print-failure`）を観点 `未確定停止`
+      のままにしています。概要と対象別で観点名が食い違うため、`stc-sample` 側を `会計維持` に揃える必要があります。
   - id: F005
     severity: major
     rule: vp-ops-release-readiness
     line: 132
     anchor: >-
-      | _ASSUMPTION_: 会計確定の応答基準   | 対象外の例外、共通合格基準の P0           | TSP の仮置き（60取引/時で応答の95%が2秒以内）で判定する  | NFR
+      | _ASSUMPTION_: 会計確定の応答基準  | 対象外の例外、共通合格基準の P0      | TSP の仮置き（60取引/時で応答の95%が2秒以内）で判定する | NFR
       確定後に基準値を置き換え、`会計確定応答` の期待値を更新する | ARC が NFR へ起票、QE が更新 |
     message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
     message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。

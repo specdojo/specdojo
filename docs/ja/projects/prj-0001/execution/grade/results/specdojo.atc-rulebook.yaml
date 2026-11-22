@@ -6,14 +6,14 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 98
-graded_at: "2026-11-22T02:32:14.258Z"
+graded_at: "2026-11-22T06:54:14.991Z"
 graded_by: opus-review-executor
-content_hash: 3096fdcb1e63cb10c2b54af67685d6240acfaabd8453f31090b8ba4fd8393b02
+content_hash: 5207382190eeb516c5e4db0582c7b8eb0860c57a7136e891b642d063a5f85f15
 categories:
   purpose:
     score: 100
   operations:
-    score: 94
+    score: 100
   planning:
     score: 100
   business:
@@ -90,8 +90,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-operability:
     level: 4
     score: 100
@@ -104,34 +104,19 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 2
+  minor: 1
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 16
+    line: 127
     anchor: >-
-      - _UNDECIDED_: `recipe`・`template` の要否は未判断である（template は PJR-WYTX で扱い、recipe は QE が ready 化の判断時に決める）。sample
-      は「本文要件」の章構成・トレース表・条件・ケース表へ未整合であり、後続の sample の見直しで揃える。いずれも解消したうえで、`ready` への昇格は人が判断する。
+      - 判断基準: 観点は `atc-index` の観点の立て方に従い、条件が複数ぶら下がる粒度にまとめ、意図を 1〜2
+      行で書くこと。ケースは代表（`P0`）、重要な分岐（`P0`・`P1`）、重大なリスク（`P0`）の順に増やし、直積を避けること。
     message: >-
-      sample（atc-sample.md）は章構成・トレース表・条件・ケース表とも本文要件に整合したのに、`_UNDECIDED_` が「sample
-      は未整合であり後続の見直しで揃える」と書いたままで実態と矛盾するため、この記述を削除し、未決事項を recipe・template の要否だけに更新すること（前回の sample 不整合は解消済みのため severity を
-      minor に引き下げる）。
+      記述ガイドは観点を atc-index の観点の立て方（観点名は「名詞＋成立/保証/整合」）に従わせているのに、宣言先の sample（atc-sample.md）の観点
+      6.2「主要操作の自力完了」はこの命名に従っておらず、型の完成例が規則に反しているため、sample の観点名を「主要操作の自力完了の成立」などの形式へ揃えるか、例外を認めるなら rulebook にその条件を明記すること。
     message_ja: >-
-      sample（atc-sample.md）は章構成・トレース表・条件・ケース表とも本文要件に整合したのに、`_UNDECIDED_` が「sample
-      は未整合であり後続の見直しで揃える」と書いたままで実態と矛盾するため、この記述を削除し、未決事項を recipe・template の要否だけに更新すること（前回の sample 不整合は解消済みのため severity を
-      minor に引き下げる）。
-  - id: F002
-    severity: minor
-    rule: vp-ops-release-readiness
-    line: 16
-    anchor: >-
-      - _UNDECIDED_: `recipe`・`template` の要否は未判断である（template は PJR-WYTX で扱い、recipe は QE が ready 化の判断時に決める）。sample
-      は「本文要件」の章構成・トレース表・条件・ケース表へ未整合であり、後続の sample の見直しで揃える。いずれも解消したうえで、`ready` への昇格は人が判断する。
-    message: >-
-      ready 化の前提に挙げた「sample の未整合の解消」はすでに満たされているのに未解決のまま書かれており、ready 判断時に残作業を誤認させるため、残る条件（recipe・template
-      の要否の決定）だけに更新すること。
-    message_ja: >-
-      ready 化の前提に挙げた「sample の未整合の解消」はすでに満たされているのに未解決のまま書かれており、ready 判断時に残作業を誤認させるため、残る条件（recipe・template
-      の要否の決定）だけに更新すること。
+      記述ガイドは観点を atc-index の観点の立て方（観点名は「名詞＋成立/保証/整合」）に従わせているのに、宣言先の sample（atc-sample.md）の観点
+      6.2「主要操作の自力完了」はこの命名に従っておらず、型の完成例が規則に反しているため、sample の観点名を「主要操作の自力完了の成立」などの形式へ揃えるか、例外を認めるなら rulebook にその条件を明記すること。

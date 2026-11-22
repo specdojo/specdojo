@@ -5,10 +5,10 @@ path: docs/ja/specdojo/samples/trc-requirements-to-tests-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 93
-graded_at: "2026-11-22T02:10:32.941Z"
+score: 99
+graded_at: "2026-11-22T06:57:44.575Z"
 graded_by: opus-review-executor
-content_hash: 926b3a8f3883d4a063c7c28c7255c4b503f1f136904e0c44ff58e7b774ed7897
+content_hash: 80452756d70c8b8783456bbc0c0901a934ae3c8763bf1fb540483c6aef2ed109
 categories:
   purpose:
     score: 100
@@ -25,9 +25,9 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 92
+    score: 100
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -78,11 +78,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -104,46 +104,22 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 3
+  minor: 1
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 23
-    anchor: >-
-      - テストの抽出条件: `relations.verifies` に母集団の要求文書を 1 つ以上持つ受入テスト・総合テスト。加えて、[[specdojo:stc-index-sample|総合テストカタログ 概要]]
-      に載る総合テストの「トレース」の表を走査し、`relations.verifies` を欠くテストを照合で拾う。
-    message: >-
-      テストの抽出条件に「総合テストカタログ 概要の「トレース」の表を走査して `relations.verifies` を欠くテストを拾う」を加えており、rulebook「生成の手順」の手順
-      2（`relations.verifies` で集める）と一致しない。rulebook どおりにたどると stc-cash-sale を抽出できず、同じ表を再生成できないため、rulebook 側の抽出手順と揃える。
-    message_ja: >-
-      テストの抽出条件に「総合テストカタログ 概要の「トレース」の表を走査して `relations.verifies` を欠くテストを拾う」を加えており、rulebook「生成の手順」の手順
-      2（`relations.verifies` で集める）と一致しない。rulebook どおりにたどると stc-cash-sale を抽出できず、同じ表を再生成できないため、rulebook 側の抽出手順と揃える。
-  - id: F002
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 23
-    anchor: >-
-      - テストの抽出条件: `relations.verifies` に母集団の要求文書を 1 つ以上持つ受入テスト・総合テスト。加えて、[[specdojo:stc-index-sample|総合テストカタログ 概要]]
-      に載る総合テストの「トレース」の表を走査し、`relations.verifies` を欠くテストを照合で拾う。
-    message: >-
-      sample が rulebook「生成の手順」にない抽出手段（stc-index-sample のトレース表の走査）で stc-cash-sale を拾っており、完成例として rulebook
-      の手順を再現できないため、rulebook の手順 2 に照合での補完を加えるか、sample の stc-cash-sale を `relations.verifies` で抽出できる前提に改めて、両者を一致させる。
-    message_ja: >-
-      sample が rulebook「生成の手順」にない抽出手段（stc-index-sample のトレース表の走査）で stc-cash-sale を拾っており、完成例として rulebook
-      の手順を再現できないため、rulebook の手順 2 に照合での補完を加えるか、sample の stc-cash-sale を `relations.verifies` で抽出できる前提に改めて、両者を一致させる。
-  - id: F003
-    severity: minor
     rule: vp-ux-language-consistency
-    line: 74
+    line: 73
     anchor: >-
-      | `BAC-01`, `SC-01`, `AC-01`, `AC-03`, `AC-04`                | 対応テストが `draft`                           |
-      `atc-cash-sale`・`stc-cash-sale` を各カタログの `ready` 条件（判定に影響する前提の解消を含む）でレビューし、人が `ready` にする                     |
-      再生成で該当行が `充足` になる                                                        |
+      | `bac-sample BAC-01`, `prj-success-criteria-and-acceptance-criteria-sample SC-01`・`AC-01`・`AC-03`・`AC-04` |
+      対応テストが `draft`         | `atc-cash-sale`・`stc-cash-sale` を各カタログの `ready` 条件（判定に影響する前提の解消を含む）でレビューし、人が `ready`
+      にする                     | 再生成で該当行が `充足` になる                                                        |
     message: >-
-      優先度とギャップ表で `BAC-01`・`SC-01`・`AC-01`・`AC-03`・`AC-04` を要求文書 ID なしで書いており、rulebook の要求項目の表記 `＜要求文書ID＞ ＜項目ID＞`
-      とマトリクスの表記に揃っていないため、`bac-sample BAC-01` のように文書 ID を付けて統一する。
+      ギャップと対応方針の表の「対象」列で、`prj-success-criteria-and-acceptance-criteria-sample SC-01`・`AC-01` や `bac-sample BAC-02`,
+      `BAC-03` のように 2 件目以降の項目 ID に要求文書 ID がなく、区切りも `,` と `・` が混在しており、rulebook の要求項目の表記 `＜要求文書ID＞ ＜項目ID＞`
+      とマトリクスの要求ID列に揃っていないため、各項目に文書 ID を付けて区切りを統一する（前回の指摘は各グループの先頭に文書 ID が付いたことで大部分が解消し、残りは表記の統一だけのため minor とする）。
     message_ja: >-
-      優先度とギャップ表で `BAC-01`・`SC-01`・`AC-01`・`AC-03`・`AC-04` を要求文書 ID なしで書いており、rulebook の要求項目の表記 `＜要求文書ID＞ ＜項目ID＞`
-      とマトリクスの表記に揃っていないため、`bac-sample BAC-01` のように文書 ID を付けて統一する。
+      ギャップと対応方針の表の「対象」列で、`prj-success-criteria-and-acceptance-criteria-sample SC-01`・`AC-01` や `bac-sample BAC-02`,
+      `BAC-03` のように 2 件目以降の項目 ID に要求文書 ID がなく、区切りも `,` と `・` が混在しており、rulebook の要求項目の表記 `＜要求文書ID＞ ＜項目ID＞`
+      とマトリクスの要求ID列に揃っていないため、各項目に文書 ID を付けて区切りを統一する（前回の指摘は各グループの先頭に文書 ID が付いたことで大部分が解消し、残りは表記の統一だけのため minor とする）。

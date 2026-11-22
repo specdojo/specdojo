@@ -5,27 +5,27 @@ path: docs/ja/specdojo/samples/utc-index-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 92
-graded_at: "2026-11-22T01:26:03.510Z"
+score: 96
+graded_at: "2026-11-22T06:43:52.489Z"
 graded_by: opus-review-executor
-content_hash: 3051bace228c455935efc99db9e4f3ec3f7d4c7804a9d175bdd91a35f12e76bb
+content_hash: 0e8ba9621db370d6e5980cea6f2a6bd4b3b9200319a678ded14d65c633c445a8
 categories:
   purpose:
     score: 100
   operations:
     score: 88
   planning:
-    score: 92
+    score: 100
   business:
     score: 100
   architecture:
-    score: 88
+    score: 100
   usability:
     score: 100
   implementation:
     score: 100
   quality:
-    score: 92
+    score: 100
   consistency:
     score: 75
 viewpoints:
@@ -39,8 +39,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
     level: 4
     score: 100
@@ -57,8 +57,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-technical-constraints:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -78,8 +78,8 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -101,100 +101,37 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 1
-  minor: 7
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-pm-plan-feasibility
-    line: 111
-    anchor: >-
-      | 論点                                            | 影響する章                              |
-      決定までの扱い                                                                       | 担当・判断者                            
-      | 報告先                  |
+    rule: vp-qe-omissions-consistency
+    line: 101
+    anchor: "- `優先度`: 誤課金・在庫の誤更新につながるものを P0、つけ残高を P1、表示の書式変換を P2 とする。"
     message: >-
-      「メモ / 将来課題」の各論点（AC-02 への接続、通信が途絶えたときの扱い、`kinuya-ci-unit` の整備）に、決める時期または締め切り（例:
-      内部結合テストの入口条件の判定まで）を足し、証跡の差し替えなどの後続作業を日程に組み込めるようにする。
+      優先度のルールは「誤課金・在庫の誤更新につながるものを P0、つけ残高を P1」としているが、分配方針の表ではつけ残高の採用理由を「誤計算は請求・入金の誤りにつながる」（誤課金）としているため、つけ残高を P0 にするか、P1
+      とする理由（例: 店頭の会計と違い請求前に照合できる）を書き足して食い違いをなくす。
     message_ja: >-
-      「メモ / 将来課題」の各論点（AC-02 への接続、通信が途絶えたときの扱い、`kinuya-ci-unit` の整備）に、決める時期または締め切り（例:
-      内部結合テストの入口条件の判定まで）を足し、証跡の差し替えなどの後続作業を日程に組み込めるようにする。
+      優先度のルールは「誤課金・在庫の誤更新につながるものを P0、つけ残高を P1」としているが、分配方針の表ではつけ残高の採用理由を「誤計算は請求・入金の誤りにつながる」（誤課金）としているため、つけ残高を P0 にするか、P1
+      とする理由（例: 店頭の会計と違い請求前に照合できる）を書き足して食い違いをなくす。
   - id: F002
-    severity: minor
-    rule: vp-arc-technical-constraints
-    line: 88
-    anchor: "| 記録サービス    | 保存成功・保存失敗を返す Stub                              | Stub（失敗時の分岐を作る）                 |"
-    message: 記録サービスの Stub は保存の成功と失敗だけを返す定義で、rulebook の 6.7 が求めるタイムアウトの再現と、非同期・並行性の扱い（当てはまらないならその旨）が抜けているため、追記する。
-    message_ja: 記録サービスの Stub は保存の成功と失敗だけを返す定義で、rulebook の 6.7 が求めるタイムアウトの再現と、非同期・並行性の扱い（当てはまらないならその旨）が抜けているため、追記する。
-  - id: F003
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 79
-    anchor: >-
-      | つけ残高の加算と入金後の残高    | つけ残高を1分以内に確認する価値の前提となる    | `utc-credit-balance` | なし             | AC-02 への接続は「メモ /
-      将来課題」      |
-    message: >-
-      つけ残高の行の採用理由「つけ残高を1分以内に確認する価値の前提」は、本書が定める採用根拠（業務への影響か BAC の明示要求）に当てはまらない。また AC-02 を含む成功基準・受入条件の文書が `based_on`
-      にないため、業務への影響で根拠を書き直すか、根拠とした文書を `based_on` に加える。
-    message_ja: >-
-      つけ残高の行の採用理由「つけ残高を1分以内に確認する価値の前提」は、本書が定める採用根拠（業務への影響か BAC の明示要求）に当てはまらない。また AC-02 を含む成功基準・受入条件の文書が `based_on`
-      にないため、業務への影響で根拠を書き直すか、根拠とした文書を `based_on` に加える。
-  - id: F004
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 40
-    anchor: >-
-      | 通信不能時の販売継続                     | 初期リリースで扱うか未決である     | 「メモ / 将来課題」で決定後に再判断する |
-      なし                                                   |
-    message: >-
-      「通信不能時の販売継続」の行の代替レベル/代替手段の欄が、担保するテストレベルではなく「決定後に再判断」になっている。rulebook の 6.3.2 は担保先を必ず書くよう求めているため、未決のあいだ担保先がないこと（例:
-      どのレベルでも担保しない、受入は保留）を明記する。
-    message_ja: >-
-      「通信不能時の販売継続」の行の代替レベル/代替手段の欄が、担保するテストレベルではなく「決定後に再判断」になっている。rulebook の 6.3.2 は担保先を必ず書くよう求めているため、未決のあいだ担保先がないこと（例:
-      どのレベルでも担保しない、受入は保留）を明記する。
-  - id: F005
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 107
-    anchor: >-
-      | `ut-sales-checkout-stock-allocation-020` | 入力: 商品A×5 状態: 在庫5個 環境: なし | 会計を確定する | 請求額150円の販売が1件確定し、在庫が5個から0個になる |
-      戻り値の請求額、Fake の在庫数 | 在庫リポジトリ Fake | BAC-01 / C-02 | P0     | automated | `kinuya-ci-unit` の実行結果 |
-    message: >-
-      ケース表の共通カラムでは「CI 未整備の間は証跡を暫定と書く」と定め、「メモ / 将来課題」でも CI の整備を前提として扱っているのに、記入例の `証跡` が `kinuya-ci-unit`
-      の実行結果になっていて自分のルールと合わない。記入例を暫定の書き方にそろえるか、CI 整備後の書き方であることを注記する。
-    message_ja: >-
-      ケース表の共通カラムでは「CI 未整備の間は証跡を暫定と書く」と定め、「メモ / 将来課題」でも CI の整備を前提として扱っているのに、記入例の `証跡` が `kinuya-ci-unit`
-      の実行結果になっていて自分のルールと合わない。記入例を暫定の書き方にそろえるか、CI 整備後の書き方であることを注記する。
-  - id: F006
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 29
-    anchor: "- 1 term の観点が 15、ケース表が 50 行を超えた場合は分割を検討し、分割時は ARC が承認する。"
-    message: >-
-      分割の目安を「観点が 15、ケース表が 50 行を超えた場合」としているが、rulebook の 6.2 は「15以上／50以上」を分割候補としており、ちょうど15・50の場合の扱いが食い違うため、rulebook
-      に合わせて「以上」にそろえる。
-    message_ja: >-
-      分割の目安を「観点が 15、ケース表が 50 行を超えた場合」としているが、rulebook の 6.2 は「15以上／50以上」を分割候補としており、ちょうど15・50の場合の扱いが食い違うため、rulebook
-      に合わせて「以上」にそろえる。
-  - id: F007
-    severity: minor
-    rule: vp-ops-release-readiness
-    line: 111
-    anchor: >-
-      | 論点                                            | 影響する章                              |
-      決定までの扱い                                                                       | 担当・判断者                            
-      | 報告先                  |
-    message: >-
-      前回の major（ready にするための条件がまったくない）は、未決事項と決まるまでの扱いが書かれたことで大部分が解消したため minor に下げる。ただし「メモ / 将来課題」の各論点のうち、どれを ready
-      にする前に解消すべきかが書かれていないため、ready にする前に解消すべき論点を明記する。
-    message_ja: >-
-      前回の major（ready にするための条件がまったくない）は、未決事項と決まるまでの扱いが書かれたことで大部分が解消したため minor に下げる。ただし「メモ / 将来課題」の各論点のうち、どれを ready
-      にする前に解消すべきかが書かれていないため、ready にする前に解消すべき論点を明記する。
-  - id: F008
     severity: major
     rule: vp-ops-release-readiness
-    line: 113
+    line: 117
     anchor: >-
-      | _TODO_: AC-02 のつけ残高確認への接続            | 観点/条件の採用基準と対象別への分配方針 | `utc-credit-balance` の `トレース` は BAC がないため「暫定:
-      AC-02」と書く            | BA が条件 ID を整理、QE がトレースを更新 | PM へ課題として報告     |
+      | _ASSUMPTION_: CI ジョブ `kinuya-ci-unit` の整備 | ケース表の共通カラム                    | 整備前は `証跡` を暫定のローカル実行結果とし、整備後に全 term
+      の `証跡` を差し替える。内部結合テストの入口条件の判定までに整備する | DEV が整備、QE が差し替えを確認          | PM へ決定事項として報告 |
     message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
     message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+  - id: F003
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 119
+    anchor: ready にする前に解消する論点は、通信不能時の販売継続と AC-02 のつけ残高確認への接続とする。CI ジョブ `kinuya-ci-unit` の整備は ready 後も継続でき、整備前は暫定の `証跡` で運用する。
+    message: >-
+      CI ジョブ `kinuya-ci-unit` の整備を「ready 後も継続でき」としているが、そのままでは `_ASSUMPTION_` のラベルを残して ready にすることになり、未確定ラベルを放置せず PJR
+      へ転送先を明記して引き継ぐというドキュメントメタ情報標準と合わないため、ready にする前にこの前提を PJR（決定記録または課題）へ移すことと、そのときにラベルを外すことを明記する。
+    message_ja: >-
+      CI ジョブ `kinuya-ci-unit` の整備を「ready 後も継続でき」としているが、そのままでは `_ASSUMPTION_` のラベルを残して ready にすることになり、未確定ラベルを放置せず PJR
+      へ転送先を明記して引き継ぐというドキュメントメタ情報標準と合わないため、ready にする前にこの前提を PJR（決定記録または課題）へ移すことと、そのときにラベルを外すことを明記する。

@@ -5,15 +5,15 @@ path: docs/ja/specdojo/rulebooks/itc-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 93
-graded_at: "2026-11-22T02:18:09.988Z"
+score: 97
+graded_at: "2026-11-22T06:51:52.976Z"
 graded_by: opus-review-executor
-content_hash: 50dc293528318bcc76091e04629d5a18993efa8ca8cb4a7ae1e817fd080e553a
+content_hash: 67a8e12c0d5b5ef33bc131d4d083d0407ccd3589fa591ebd4f503ea6534441b2
 categories:
   purpose:
-    score: 88
+    score: 100
   operations:
-    score: 94
+    score: 100
   planning:
     score: 100
   business:
@@ -23,9 +23,9 @@ categories:
   usability:
     score: 83
   implementation:
-    score: 88
+    score: 100
   quality:
-    score: 92
+    score: 100
   consistency:
     score: 100
 viewpoints:
@@ -33,8 +33,8 @@ viewpoints:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-publication-accountability:
     level: 4
     score: 100
@@ -69,8 +69,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-change-impact:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-testability:
     level: 4
     score: 100
@@ -81,8 +81,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -90,8 +90,8 @@ viewpoints:
     level: 3
     score: 75
   vp-ops-release-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-operability:
     level: 4
     score: 100
@@ -104,76 +104,24 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 6
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-decision-readiness
-    line: 13
+    rule: vp-arc-conciseness
+    line: 122
     anchor: >-
-      - _UNDECIDED_: `recipe`・`template` の要否は未判断である（template は PJR-WYTX で扱う）。sample
-      は「本文要件」の見出し構成・`trace_key`・条件・ケース表へ未整合であり、後続の sample の見直しで揃える。いずれも ready 化前に解消する。
-    message: >-
-      _UNDECIDED_ で template は PJR-WYTX に引き継いだが、recipe の要否には判断者も登録簿の引き継ぎ先もない。さらに、すでに本文要件に揃った sample を「未整合」と書いたままで、ready
-      化の判断材料が実態と食い違っている。recipe の引き継ぎ先を示し、sample の記述を現状に合わせて削除または更新すること。
-    message_ja: >-
-      _UNDECIDED_ で template は PJR-WYTX に引き継いだが、recipe の要否には判断者も登録簿の引き継ぎ先もない。さらに、すでに本文要件に揃った sample を「未整合」と書いたままで、ready
-      化の判断材料が実態と食い違っている。recipe の引き継ぎ先を示し、sample の記述を現状に合わせて削除または更新すること。
+      ケース表のカラム順と必須・推奨（運用必須）の区分、`case_id` の形式（`it-<term>-<perspective_key>-<nnn>`）と付番は `itc-index`
+      の「ケース表の共通カラム」に従う。本節は対象別に固有の判断だけを定める。
+    message: 本文122行目の「本節は対象別に固有の判断だけを定める。」は、記述ガイド冒頭（本文76行目）の「本書は対象別に固有の判断だけを定める。」の繰り返しで、削っても判断情報を失わないため削除すること。
+    message_ja: 本文122行目の「本節は対象別に固有の判断だけを定める。」は、記述ガイド冒頭（本文76行目）の「本書は対象別に固有の判断だけを定める。」の繰り返しで、削っても判断情報を失わないため削除すること。
   - id: F002
     severity: minor
-    rule: vp-arc-conciseness
-    line: 132
-    anchor: "- 表の1行は1テストとし、条件×期待値を一意にする。`case_id` は対象別で一意にする。"
-    message: 「表の1行は1テスト」が全体方針（本文11行目）と条件・ケース表の節で、「共通方針は `itc-index` を正本とする」が本文9行目と76行目で重複している。どちらか一方に寄せると、判断情報を失わずに簡潔になる。
-    message_ja: 「表の1行は1テスト」が全体方針（本文11行目）と条件・ケース表の節で、「共通方針は `itc-index` を正本とする」が本文9行目と76行目で重複している。どちらか一方に寄せると、判断情報を失わずに簡潔になる。
-  - id: F003
-    severity: minor
-    rule: vp-dev-change-impact
-    line: 117
-    anchor: "- 観点・ケース表の「トレース」列は仕様IDを直書きせず `TR-01` / `TR-01,TR-02` のように記載する。根拠の追加時は先にトレース表へ行を追加する。"
-    message: >-
-      トレース表は根拠を追加するときの手順しか定めていない。根拠仕様（`br-*`・`spec-*`
-      等）が改訂・廃止されたときに、トレース表の行と対応ケースをどう追従・記録するか（行を残すか、備考に何を書くか）が書かれておらず、rulebook-authoring-standard の求める自系統の追従対象の定義が欠けている。
-    message_ja: >-
-      トレース表は根拠を追加するときの手順しか定めていない。根拠仕様（`br-*`・`spec-*`
-      等）が改訂・廃止されたときに、トレース表の行と対応ケースをどう追従・記録するか（行を残すか、備考に何を書くか）が書かれておらず、rulebook-authoring-standard の求める自系統の追従対象の定義が欠けている。
-  - id: F004
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 13
-    anchor: >-
-      - _UNDECIDED_: `recipe`・`template` の要否は未判断である（template は PJR-WYTX で扱う）。sample
-      は「本文要件」の見出し構成・`trace_key`・条件・ケース表へ未整合であり、後続の sample の見直しで揃える。いずれも ready 化前に解消する。
-    message: >-
-      sample（`specdojo:itc-sample`）は本文要件の見出し構成・`perspective_key` 宣言・`trace_key`・条件・ケース表の書式に揃っているのに、本文では「sample
-      は未整合であり、後続の見直しで揃える」と書いたままで、rulebook と sample の関係の記述が実態と食い違っている。記述を削除するか、残る差分を具体的に示すこと。
-    message_ja: >-
-      sample（`specdojo:itc-sample`）は本文要件の見出し構成・`perspective_key` 宣言・`trace_key`・条件・ケース表の書式に揃っているのに、本文では「sample
-      は未整合であり、後続の見直しで揃える」と書いたままで、rulebook と sample の関係の記述が実態と食い違っている。記述を削除するか、残る差分を具体的に示すこと。
-  - id: F005
-    severity: minor
     rule: vp-ux-language-consistency
-    line: 10
+    line: 151
     anchor: >-
-      - **検証範囲**:
-      複数コンポーネントの結合としての振る舞いを決定的に検証する。UTでMockしていた境界の一部（Repository、SQL/制約、トランザクション等）を実装に近づけ、外部サービス実疎通・実ユーザUIは原則除外する。例外には根拠と再現性対策を明記する。
-    message: >-
-      依存の扱いを本文10行目では「Mock」、本文101行目では「スタブ/モック」と表記しており、表記がそろっていない。また UT・IT・ET
-      の略語（本文10・143・145行目）が定義なしで使われている。カタカナ表記に統一し、略語は初出で正式名を添えること。
-    message_ja: >-
-      依存の扱いを本文10行目では「Mock」、本文101行目では「スタブ/モック」と表記しており、表記がそろっていない。また UT・IT・ET
-      の略語（本文10・143・145行目）が定義なしで使われている。カタカナ表記に統一し、略語は初出で正式名を添えること。
-  - id: F006
-    severity: minor
-    rule: vp-ops-release-readiness
-    line: 13
-    anchor: >-
-      - _UNDECIDED_: `recipe`・`template` の要否は未判断である（template は PJR-WYTX で扱う）。sample
-      は「本文要件」の見出し構成・`trace_key`・条件・ケース表へ未整合であり、後続の sample の見直しで揃える。いずれも ready 化前に解消する。
-    message: >-
-      ready 化前に解消すべき事項として挙げた「sample の未整合」がすでに解消しているのに記述が残り、recipe
-      の要否には判断の引き継ぎ先がない。このため公開判断の前提が実態と合っていない。残る未解決事項だけに更新し、各事項の引き継ぎ先を示すこと。
-    message_ja: >-
-      ready 化前に解消すべき事項として挙げた「sample の未整合」がすでに解消しているのに記述が残り、recipe
-      の要否には判断の引き継ぎ先がない。このため公開判断の前提が実態と合っていない。残る未解決事項だけに更新し、各事項の引き継ぎ先を示すこと。
+      | トレースや証跡を持たないケースを恒久的に残す                                                 | SSOTとして成立しないため（例外は暫定として明記）             
+      |
+    message: 禁止事項の表の理由列（本文151行目）で「SSOTとして成立しないため」と定義なしの略語を使っており、本文のほかの箇所の「正本」と表記がそろっていないため、「正本として成立しないため」に統一すること。
+    message_ja: 禁止事項の表の理由列（本文151行目）で「SSOTとして成立しないため」と定義なしの略語を使っており、本文のほかの箇所の「正本」と表記がそろっていないため、「正本として成立しないため」に統一すること。

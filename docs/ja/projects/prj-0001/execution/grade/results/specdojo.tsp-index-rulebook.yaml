@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/tsp-index-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 93
-graded_at: "2026-11-22T01:51:13.355Z"
+score: 97
+graded_at: "2026-11-22T06:47:19.365Z"
 graded_by: opus-review-executor
-content_hash: fb644a6c1e4de4b188a28066b90129582bb20f7a6f1690d2f90dcc22b6970aea
+content_hash: af3b1401f3112968e1841725b49ab8e97f3ff8b297d96a97195ad04bfc91b19a
 categories:
   purpose:
     score: 100
@@ -23,11 +23,11 @@ categories:
   usability:
     score: 92
   implementation:
-    score: 88
+    score: 100
   quality:
     score: 92
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -66,8 +66,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-change-impact:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-testability:
     level: 4
     score: 100
@@ -75,8 +75,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
     level: 3
     score: 75
@@ -101,50 +101,28 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 4
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-dev-change-impact
-    line: 13
-    anchor: >-
-      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status` の昇格と承認、改訂と廃止、未決事項の登録簿への引き継ぎは
-      [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従います。文書の整形・lint はリポジトリの検証で扱い、業務の検証に含めません。
+    rule: vp-qe-kata-conformance
+    line: 189
+    anchor: "- **良い例**: 「`_UNDECIDED_`: ピーク時の同時会計数。決まるまで総合テストの性能条件は日次売上1,000取引で仮置きする（入口／出口条件に影響）。」"
     message: >-
-      Rulebook 記述標準は各 rulebook に自系統の追従対象と役割分担の定義を求めているが、本書は改訂・廃止をメタ情報標準へ委ねるだけで、BAC・SAC・NFR の改訂時に TSP の出口条件を見直すこと、TSP
-      の改訂時に `＜level＞c-index`・`＜level＞c-＜term＞` へ反映することと、その担当 Role code が定まっていないため、具体的な追従対象と担当を追記する。
+      記述ガイド「メモ / 将来課題」の良い例は、ピーク時の「同時会計数」を論点に「日次売上1,000取引」で仮置きしている。共通サンプル文脈の sample
+      は単一店舗・タブレット1台の前提で「放課後ピーク1時間60取引、会計確定の応答 95% が2秒以内」を仮置き基準にしており、規模も指標も合わない。良い例を sample の仮置き基準に合わせて書き換える。
     message_ja: >-
-      Rulebook 記述標準は各 rulebook に自系統の追従対象と役割分担の定義を求めているが、本書は改訂・廃止をメタ情報標準へ委ねるだけで、BAC・SAC・NFR の改訂時に TSP の出口条件を見直すこと、TSP
-      の改訂時に `＜level＞c-index`・`＜level＞c-＜term＞` へ反映することと、その担当 Role code が定まっていないため、具体的な追従対象と担当を追記する。
+      記述ガイド「メモ / 将来課題」の良い例は、ピーク時の「同時会計数」を論点に「日次売上1,000取引」で仮置きしている。共通サンプル文脈の sample
+      は単一店舗・タブレット1台の前提で「放課後ピーク1時間60取引、会計確定の応答 95% が2秒以内」を仮置き基準にしており、規模も指標も合わない。良い例を sample の仮置き基準に合わせて書き換える。
   - id: F002
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 88
-    anchor: >-
-      | 不具合管理方針                            | 任意 |
-      重大度の区分と判断観点、収束基準、既知不具合の扱いと例外承認者を示すこと                                            |
-    message: >-
-      必須の出口条件の列は未解決不具合の重大度別の許容件数を求めているが、重大度の区分を定める「不具合管理方針」が任意の章で、省略すると出口条件の重大度（Blocker・Critical
-      等）が未定義になり判定できないため、出口条件で重大度を使う場合は「不具合管理方針」を必須にするか、重大度の区分の参照先を示すことを求める。
-    message_ja: >-
-      必須の出口条件の列は未解決不具合の重大度別の許容件数を求めているが、重大度の区分を定める「不具合管理方針」が任意の章で、省略すると出口条件の重大度（Blocker・Critical
-      等）が未定義になり判定できないため、出口条件で重大度を使う場合は「不具合管理方針」を必須にするか、重大度の区分の参照先を示すことを求める。
-  - id: F003
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 141
-    anchor: "- **良い例**: 「外部結合テスト ／ 外部I/F境界の担保 ／ 決済I/F（サンドボックス） ／ DEV・QE。タイムアウト時の再送で二重決済が起きないことを重視」"
-    message: >-
-      記述ガイドの良い例が「決済I/F（サンドボックス）」「二重決済」や「外部決済事業者」（スコープの良い例）を挙げているが、共通サンプル文脈の sample ではキャッシュレス決済を対象外としており、実際の外部I/Fは
-      `receipt-print` と復元用保管サービスであるため、良い例を sample の外部I/Fに合わせて書き換える。
-    message_ja: >-
-      記述ガイドの良い例が「決済I/F（サンドボックス）」「二重決済」や「外部決済事業者」（スコープの良い例）を挙げているが、共通サンプル文脈の sample ではキャッシュレス決済を対象外としており、実際の外部I/Fは
-      `receipt-print` と復元用保管サービスであるため、良い例を sample の外部I/Fに合わせて書き換える。
-  - id: F004
-    severity: minor
     rule: vp-ux-language-consistency
-    line: 49
-    anchor: "| 回帰（リグレッション） | 変更後も既存機能が成立することを確認する試験                                                    |"
-    message: 用語定義の回帰・スモーク（「〜を確認する試験」）、ID 規則の「非機能試験」、本文要件の「将来追加する試験」が「試験」で、ほかの本文の「テスト」と表記が揺れているため、「テスト」に統一する。
-    message_ja: 用語定義の回帰・スモーク（「〜を確認する試験」）、ID 規則の「非機能試験」、本文要件の「将来追加する試験」が「試験」で、ほかの本文の「テスト」と表記が揺れているため、「テスト」に統一する。
+    line: 177
+    anchor: "- **良い例**: 「Critical: 会計確定ができず回避手段がない。総合テストの出口では 0 件。既知不具合を残す場合は PM が例外承認し、課題管理簿へ引き継ぐ。」"
+    message: >-
+      記述ガイド「不具合管理方針」の良い例は、既知不具合の引き継ぎ先を「課題管理簿」としている。全体方針は「登録簿」、sample
+      は「課題ログ」で、名称が揃っていない。全体方針の「登録簿」に統一する。あわせて判定軸の「Pass/Fail基準」を、ほかの箇所と同じ「pass / fail」の表記に揃える。
+    message_ja: >-
+      記述ガイド「不具合管理方針」の良い例は、既知不具合の引き継ぎ先を「課題管理簿」としている。全体方針は「登録簿」、sample
+      は「課題ログ」で、名称が揃っていない。全体方針の「登録簿」に統一する。あわせて判定軸の「Pass/Fail基準」を、ほかの箇所と同じ「pass / fail」の表記に揃える。

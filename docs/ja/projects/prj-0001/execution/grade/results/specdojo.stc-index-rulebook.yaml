@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/stc-index-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 96
-graded_at: "2026-11-22T01:33:44.426Z"
+score: 97
+graded_at: "2026-11-22T06:44:46.190Z"
 graded_by: opus-review-executor
-content_hash: 9fb45bfdbef168afba9c42e3fe84172f79fcd69a6b33e0e2a095a1ebcab02c9c
+content_hash: 30d7596ad480abd5d755610f575711e2c37d1ff07bd0ca751ba0ce90ce522d59
 categories:
   purpose:
     score: 100
@@ -25,9 +25,9 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 83
-  consistency:
     score: 100
+  consistency:
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -72,14 +72,14 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
-  vp-qe-omissions-consistency:
     level: 4
     score: 100
-  vp-qe-kata-conformance:
+  vp-qe-omissions-consistency:
     level: 3
     score: 75
+  vp-qe-kata-conformance:
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -101,20 +101,17 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 2
+  minor: 1
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-verifiability
-    line: 177
-    anchor: "推奨カラム（運用必須、この順）:"
-    message: 「推奨カラム（運用必須、この順）」は推奨と必須が同時に書かれており、観測点・トレース・優先度などの列が欠けたケース表を違反とするかを判定できないため、必須か推奨かのどちらかに統一すべきである。
-    message_ja: 「推奨カラム（運用必須、この順）」は推奨と必須が同時に書かれており、観測点・トレース・優先度などの列が欠けたケース表を違反とするかを判定できないため、必須か推奨かのどちらかに統一すべきである。
-  - id: F002
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 91
-    anchor: 1〜2ケースしかない単位は原則統合します。観点が15以上、表が60行以上、または前提データ・権限の大きく異なる経路が混在する場合は分割候補とします。
-    message: 分割候補の閾値が本書では「表が60行以上」、サンプル `stc-index-sample.md` では「ケース表が60行を超えた」となっており、60行ちょうどの扱いが食い違うため、どちらかに揃えるべきである。
-    message_ja: 分割候補の閾値が本書では「表が60行以上」、サンプル `stc-index-sample.md` では「ケース表が60行を超えた」となっており、60行ちょうどの扱いが食い違うため、どちらかに揃えるべきである。
+    rule: vp-qe-omissions-consistency
+    line: 148
+    anchor: "- 分配は業務/価値境界→境界横断→運用境界の順で判断し、対象別のケース表とトレース列で追跡できるようにします。"
+    message: >-
+      分配方針の判断順「業務/価値境界→境界横断→運用境界」は、分割基準の「業務/価値境界→境界横断→データ境界→運用境界」からデータ境界だけが理由なく抜けており、データ境界で分けた term
+      への分配をどう判断するか読み取れないため、データ境界を加えるか、除いた理由を明記すべきである。
+    message_ja: >-
+      分配方針の判断順「業務/価値境界→境界横断→運用境界」は、分割基準の「業務/価値境界→境界横断→データ境界→運用境界」からデータ境界だけが理由なく抜けており、データ境界で分けた term
+      への分配をどう判断するか読み取れないため、データ境界を加えるか、除いた理由を明記すべきである。

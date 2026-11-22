@@ -5,10 +5,10 @@ path: docs/ja/specdojo/samples/atc-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 87
-graded_at: "2026-11-22T02:33:23.148Z"
+score: 96
+graded_at: "2026-11-22T06:55:11.379Z"
 graded_by: opus-review-executor
-content_hash: 3609bf0c26cee8e0beeba95a162097fdd6348a3c2717e32e48e147151f40074f
+content_hash: 5632702a32e81831c2ab8460078a2049170eae6fe006f1d39de1a006d35da7ca
 categories:
   purpose:
     score: 100
@@ -21,13 +21,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 100
   consistency:
-    score: 50
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -78,17 +78,17 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 2
     score: 50
@@ -103,64 +103,25 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 3
-  minor: 2
+  major: 1
+  minor: 1
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 100
-    anchor: >-
-      | `at-cash-sale-transaction-check-010` | 状態: 家族利用者代表が確定した後、店主代表へ店番を交代 / 経路: 交代後に照合 |
-      店主代表がレシートの取引番号で販売一覧を検索し、内容を読み上げる | 販売一覧で同じ取引番号の取引が1件見つかり、商品A・2個・60円とレシートが一致する。確認日と確認者が記録に残る | 販売一覧、レシート     |
-      `at-cash-sale-sale-complete-010` の確定済み取引を使う | TR-01,TR-04 | P1     | manual   | `kinuya-acceptance-record`
-      の本ケースの行（確認日・確認者） |
-    message: >-
-      `at-cash-sale-transaction-check-010` の条件「店主代表へ店番を交代 / 経路: 交代後に照合」と受入の責務（本文 15 行）が、atc-index の「店番の交代は atc-sale-hold
-      の引継ぎ経路だけで確かめる」と矛盾している。交代を伴わない照合に条件を改めるか、atc-index の条件の立て方と分配表を先に更新する必要がある。
-    message_ja: >-
-      `at-cash-sale-transaction-check-010` の条件「店主代表へ店番を交代 / 経路: 交代後に照合」と受入の責務（本文 15 行）が、atc-index の「店番の交代は atc-sale-hold
-      の引継ぎ経路だけで確かめる」と矛盾している。交代を伴わない照合に条件を改めるか、atc-index の条件の立て方と分配表を先に更新する必要がある。
-  - id: F002
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 37
-    anchor: >-
-      | 共通方針との差 |
-      なし                                                                                                                                           
-      |
-    message: >-
-      「共通方針との差」が「なし」になっているが、取引照合のケースと観点の意図（本文94行）は atc-index
-      と違う「店番交代後の照合」という条件を立てている。交代を前提にしない照合へ改めるか、差があるならこの行へ理由とともに記録する必要がある。
-    message_ja: >-
-      「共通方針との差」が「なし」になっているが、取引照合のケースと観点の意図（本文94行）は atc-index
-      と違う「店番交代後の照合」という条件を立てている。交代を前提にしない照合へ改めるか、差があるならこの行へ理由とともに記録する必要がある。
-  - id: F003
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 100
-    anchor: >-
-      | `at-cash-sale-transaction-check-010` | 状態: 家族利用者代表が確定した後、店主代表へ店番を交代 / 経路: 交代後に照合 |
-      店主代表がレシートの取引番号で販売一覧を検索し、内容を読み上げる | 販売一覧で同じ取引番号の取引が1件見つかり、商品A・2個・60円とレシートが一致する。確認日と確認者が記録に残る | 販売一覧、レシート     |
-      `at-cash-sale-sale-complete-010` の確定済み取引を使う | TR-01,TR-04 | P1     | manual   | `kinuya-acceptance-record`
-      の本ケースの行（確認日・確認者） |
-    message: >-
-      完了条件 DC-003 を満たしていない。`at-cash-sale-transaction-check-010` が店番交代を条件にしており、atc-index の「店番の交代は atc-sale-hold
-      の引継ぎ経路だけで確かめる」という共通方針を上書きしている（rulebook の禁止事項）。交代を伴わない取引照合に改めるか、atc-index の分配を先に改める必要がある。
-    message_ja: >-
-      完了条件 DC-003 を満たしていない。`at-cash-sale-transaction-check-010` が店番交代を条件にしており、atc-index の「店番の交代は atc-sale-hold
-      の引継ぎ経路だけで確かめる」という共通方針を上書きしている（rulebook の禁止事項）。交代を伴わない取引照合に改めるか、atc-index の分配を先に改める必要がある。
-  - id: F004
-    severity: minor
-    rule: vp-ux-language-consistency
     line: 5
     anchor: >-
-      店主不在の店番で、家族利用者代表が商品Aを登録して会計を確定し、レシートと販売一覧・在庫一覧で結果を確かめるまでを受け入れるかの判断に使う。確定前の取消と店番交代後の取引の照合もこの term で扱う。ローカル ID は
-      `atc-cash-sale` とし、粒度は [[specdojo:atc-index-sample|受入テストカタログ 概要]] の分割基準（商品の登録→会計確定→レシートの受け渡し）に従う。
-    message: 「確定前の取消と店番交代後の取引の照合もこの term で扱う」の「term」は説明のない内部用語で、業務読者に分かりにくい。「本カタログ（`atc-cash-sale`）で扱う」のように言い換える必要がある。
-    message_ja: 「確定前の取消と店番交代後の取引の照合もこの term で扱う」の「term」は説明のない内部用語で、業務読者に分かりにくい。「本カタログ（`atc-cash-sale`）で扱う」のように言い換える必要がある。
-  - id: F005
+      店主不在の店番で、家族利用者代表が商品Aを登録して会計を確定し、レシートと販売一覧・在庫一覧で結果を確かめるまでを受け入れるかの判断に使う。確定前の取消と確定後の取引の照合もこのカタログ（`atc-cash-sale`）で扱う。店番の交代は
+      `atc-sale-hold` の引継ぎ経路だけで確かめる。ローカル ID は `atc-cash-sale` とし、粒度は [[specdojo:atc-index-sample|受入テストカタログ 概要]]
+      の分割基準（商品の登録→会計確定→レシートの受け渡し）に従う。
+    message: >-
+      概要で引用する atc-index の分割基準が「商品の登録→会計確定→レシートの受け渡し」となっており、atc-index
+      の「商品の登録→金額の提示→会計確定→レシートの受け渡し」から「金額の提示」が抜けているため、正本どおりに揃えるか参照だけにする必要がある。
+    message_ja: >-
+      概要で引用する atc-index の分割基準が「商品の登録→会計確定→レシートの受け渡し」となっており、atc-index
+      の「商品の登録→金額の提示→会計確定→レシートの受け渡し」から「金額の提示」が抜けているため、正本どおりに揃えるか参照だけにする必要がある。
+  - id: F002
     severity: major
     rule: vp-ops-release-readiness
     line: 43

@@ -4,28 +4,28 @@ document: specdojo:tsp-index-sample
 path: docs/ja/specdojo/samples/tsp-index-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 89
-graded_at: "2026-11-22T01:52:37.276Z"
+verdict: pass
+score: 95
+graded_at: "2026-11-22T06:48:31.802Z"
 graded_by: opus-review-executor
-content_hash: 917828140a3ab54220f02d199169747837637ebeb80daff2c4f46290eb5d3d84
+content_hash: b5ecc20e2a619a05fe199f75808edf04fa59ca812566e89511e7617e7a928182
 categories:
   purpose:
     score: 100
   operations:
-    score: 88
+    score: 100
   planning:
-    score: 92
+    score: 100
   business:
     score: 100
   architecture:
-    score: 88
+    score: 100
   usability:
     score: 100
   implementation:
-    score: 88
+    score: 100
   quality:
-    score: 83
+    score: 92
   consistency:
     score: 75
 viewpoints:
@@ -45,8 +45,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-control-reporting:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-business-value:
     level: 4
     score: 100
@@ -57,8 +57,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-technical-constraints:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -66,14 +66,14 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-change-impact:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
     level: 3
     score: 75
@@ -87,8 +87,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ops-operability:
     level: 4
     score: 100
@@ -100,98 +100,34 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 8
+  major: 0
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-pm-control-reporting
-    line: 95
+    rule: vp-qe-omissions-consistency
+    line: 19
     anchor: >-
-      | _UNDECIDED_: 通信不能時の販売継続        | スコープ、テスト環境・テストデータ |
-      対象外として扱い、総合テストの合格をもって当該経路の受入とみなさない                              | BA が整理、PO が継続可否を判断        |
+      | 外部結合テスト | 自システム外の製品・サービスとの境界で契約どおり動くこと             | `receipt-print`
+      コマンド連携、復元用保管サービス（`PATH-04`〜`PATH-07`。保全の取得・転送と復元の読取・回復） | DEV・QE。店舗プリンタの検証機と保管サービスの検証用領域を使う                  |
+      業務シナリオの網羅、プリンタ・保管サービス自体の可用性                                            |
     message: >-
-      メモ / 将来課題の未決論点（通信不能時の販売継続、SAC 条件 ID への接続、応答時間の仮置き）に引き継ぎ先の登録簿の識別子がない。ifd-sample と同じ論点は `kinuya:pjr-i003`
-      などの個票へつなぎ、PJR への転記先を明示する必要がある。
+      外部結合テストの範囲に `PATH-04`〜`PATH-07` を入れているが、ifd-sample では `PATH-04`・`PATH-07` は保全・復元処理と業務記録 DB
+      の間の経路で、目的の「自システム外の製品・サービスとの境界」と合わず、utc-index-sample の外部結合テスト（`PATH-05`・`PATH-06`）ともずれるため、`PATH-04`・`PATH-07`
+      は内部結合テストで扱うか、外部結合テストで続けて確認する理由を書く必要がある。
     message_ja: >-
-      メモ / 将来課題の未決論点（通信不能時の販売継続、SAC 条件 ID への接続、応答時間の仮置き）に引き継ぎ先の登録簿の識別子がない。ifd-sample と同じ論点は `kinuya:pjr-i003`
-      などの個票へつなぎ、PJR への転記先を明示する必要がある。
+      外部結合テストの範囲に `PATH-04`〜`PATH-07` を入れているが、ifd-sample では `PATH-04`・`PATH-07` は保全・復元処理と業務記録 DB
+      の間の経路で、目的の「自システム外の製品・サービスとの境界」と合わず、utc-index-sample の外部結合テスト（`PATH-05`・`PATH-06`）ともずれるため、`PATH-04`・`PATH-07`
+      は内部結合テストで扱うか、外部結合テストで続けて確認する理由を書く必要がある。
   - id: F002
     severity: minor
-    rule: vp-arc-technical-constraints
-    line: 53
-    anchor: "| 開発環境 | 単体テスト、内部結合テスト | 印刷はスタブ、保管サービスはモック。記録サービスと DB は検証用を実接続する         |"
-    message: 開発環境で保管サービスをモックにする理由がない。rulebook の既定（外部 I/F は原則スタブ、外れる場合は理由を書く）に従い、スタブにするか、呼び出し検証が要る理由を書く必要がある。
-    message_ja: 開発環境で保管サービスをモックにする理由がない。rulebook の既定（外部 I/F は原則スタブ、外れる場合は理由を書く）に従い、スタブにするか、呼び出し検証が要る理由を書く必要がある。
-  - id: F003
-    severity: minor
-    rule: vp-dev-change-impact
-    line: 76
-    anchor: >-
-      - 販売記録と在庫・DB の一致、印刷失敗時の会計維持、応答欠落時の照合待ちは自動の回帰を必須とする。架空の CI ジョブ `kinuya-ci-sales-recovery`
-      で実行し、記録サービスまたは印刷連携を変更した場合は merge 前に実行する。
-    message: 自動化・回帰方針に、スコープ対象の「記録の保全・復元」と保管サービス連携を変更したときの回帰の必須範囲・CI ジョブがない。変更契機と回帰範囲に加える必要がある。
-    message_ja: 自動化・回帰方針に、スコープ対象の「記録の保全・復元」と保管サービス連携を変更したときの回帰の必須範囲・CI ジョブがない。変更契機と回帰範囲に加える必要がある。
-  - id: F004
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 68
-    anchor: >-
-      | 総合テスト     | 外部結合テストの出口条件を満たす                                   | BAC-01〜BAC-03
-      の全ケースが合格、会計確定の応答が仮置き基準を満たす、Blocker・Critical 0 件、Major 0 件         | 総合テスト結果、性能測定記録                   | 判定:
-      QE、例外承認: PM |
-    message: 総合テストの出口条件「会計確定の応答が仮置き基準を満たす」は閾値を別章に置いているため、表の行の中に「ピーク1時間60取引で応答 95% が2秒以内」を書く必要がある。
-    message_ja: 総合テストの出口条件「会計確定の応答が仮置き基準を満たす」は閾値を別章に置いているため、表の行の中に「ピーク1時間60取引で応答 95% が2秒以内」を書く必要がある。
-  - id: F005
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 53
-    anchor: "| 開発環境 | 単体テスト、内部結合テスト | 印刷はスタブ、保管サービスはモック。記録サービスと DB は検証用を実接続する         |"
-    message: 開発環境の行の「記録サービスと DB は検証用を実接続する」は単体テストの「モックで置き換える」と矛盾するため、内部結合テストに限ることを明記する必要がある。
-    message_ja: 開発環境の行の「記録サービスと DB は検証用を実接続する」は単体テストの「モックで置き換える」と矛盾するため、内部結合テストに限ることを明記する必要がある。
-  - id: F006
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 69
-    anchor: >-
-      | 受入テスト     | 総合テストの出口条件を満たし、受入用データ領域を準備済み           | SC-01・AC-01〜AC-04
-      がすべて合格                                                                                |
-      `kinuya-acceptance-record`                     | 判定: PO、照合: QE     |
-    message: 受入テスト（と単体テスト）の出口条件に未解決不具合の重大度別の許容件数がないため、rulebook の要件に合わせて「Blocker・Critical・Major 0 件」などを書く必要がある。
-    message_ja: 受入テスト（と単体テスト）の出口条件に未解決不具合の重大度別の許容件数がないため、rulebook の要件に合わせて「Blocker・Critical・Major 0 件」などを書く必要がある。
-  - id: F007
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 57
-    anchor: >-
-      外部I/F
-      は、外部結合テストで導通と契約（印刷失敗・タイムアウト時の結果、保管失敗時の通知）を確認し、総合テストと受入テストでは主要シナリオ中のスモークまでを対象とする。応答欠落時の照合待ちの判定は、遅延と無応答を再現できるスタブを使い外部結合テストで確認する。
-    message: >-
-      応答欠落時の照合待ちの判定を外部結合テストで確認するとしているが、ifd-sample では応答欠落は
-      `PATH-02`（内部経路）の故障であり、外部結合テストの範囲（`PATH-05`・`PATH-06`・印刷）と合わない。確認するレベルか範囲の記述を揃える必要がある。
-    message_ja: >-
-      応答欠落時の照合待ちの判定を外部結合テストで確認するとしているが、ifd-sample では応答欠落は
-      `PATH-02`（内部経路）の故障であり、外部結合テストの範囲（`PATH-05`・`PATH-06`・印刷）と合わない。確認するレベルか範囲の記述を揃える必要がある。
-  - id: F008
-    severity: minor
     rule: vp-qe-kata-conformance
-    line: 18
-    anchor: >-
-      | 内部結合テスト | 画面・記録サービス・業務記録 DB の間で記録が欠けず一致すること       | 店頭画面、販売・在庫・つけ記録サービス、業務記録 DB（`PATH-01`〜`PATH-03`） | DEV が実施し
-      QE が結果を照合。検証用 DB へ実接続し、レシート印刷はスタブにする | 印刷コマンドと復元用保管サービスの契約確認             |
+    line: 53
+    anchor: "| 開発環境 | 単体テスト、内部結合テスト | 印刷と保管サービスはスタブ（外部I/F は原則スタブ）。内部結合テストでは記録サービスと DB を検証用に実接続し、単体テストではモックにする |"
     message: >-
-      `PATH-01`〜`PATH-06` の出典である ifd-sample を `based_on` か wikilink で示す必要がある。ifd-sample にある
-      `PATH-04`・`PATH-07`（保全の取得と復元）をどのテストレベルで扱うかも、スコープの「記録の保全・復元」に合わせて書く必要がある。
+      開発環境では印刷をスタブとしているが、utc-index-sample は単体テストで `receipt-print`
+      を送信回数と内容を検証するモックとしており食い違うため、単体テストでは印刷要求の呼び出しをモックで検証すること（rulebook の既定から外れる理由）を書き分ける必要がある。
     message_ja: >-
-      `PATH-01`〜`PATH-06` の出典である ifd-sample を `based_on` か wikilink で示す必要がある。ifd-sample にある
-      `PATH-04`・`PATH-07`（保全の取得と復元）をどのテストレベルで扱うかも、スコープの「記録の保全・復元」に合わせて書く必要がある。
-  - id: F009
-    severity: major
-    rule: vp-ops-release-readiness
-    line: 94
-    anchor: >-
-      | _ASSUMPTION_: 会計確定の応答時間と処理量 | 入口／出口条件（総合テスト）       | NFR が未整備のため、放課後ピーク1時間60取引の負荷で会計確定の応答 95% が2秒以内を仮置き基準とする |
-      ARC が NFR へ起票、PO が承認          |
-    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
-    message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+      開発環境では印刷をスタブとしているが、utc-index-sample は単体テストで `receipt-print`
+      を送信回数と内容を検証するモックとしており食い違うため、単体テストでは印刷要求の呼び出しをモックで検証すること（rulebook の既定から外れる理由）を書き分ける必要がある。

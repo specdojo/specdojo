@@ -5,15 +5,15 @@ path: docs/ja/specdojo/rulebooks/utc-index-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 91
-graded_at: "2026-11-22T01:24:55.746Z"
+score: 95
+graded_at: "2026-11-22T06:42:50.256Z"
 graded_by: opus-review-executor
-content_hash: e0c9e2b72bfb62f15617d65acc7b96b5f98cebbdb30870d2af209621a0a1728b
+content_hash: a70f02769d017ea7e35013ed484c6c62dbece025bc14079a22f157a5e9212aa7
 categories:
   purpose:
     score: 100
   operations:
-    score: 94
+    score: 100
   planning:
     score: 100
   business:
@@ -21,7 +21,7 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 83
+    score: 100
   implementation:
     score: 100
   quality:
@@ -60,8 +60,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-implementation-readiness:
     level: 4
     score: 100
@@ -84,11 +84,11 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-operability:
     level: 4
     score: 100
@@ -101,68 +101,30 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 6
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-arc-conciseness
-    line: 113
-    anchor: "| 対象外（やらないこと） | 除外理由 | 代替レベル/代替手段 | 例外（UTで扱う条件） |"
-    message: 6.3.2 の空の推奨フォーマット表は 6.3.3 の典型例の表と見出し行が同一で二重の説明になっているため、典型例の表をそのままフォーマットとして示し、記載ルール（代替レベル必須・例外なしは `なし`）だけを残して統合する。
-    message_ja: 6.3.2 の空の推奨フォーマット表は 6.3.3 の典型例の表と見出し行が同一で二重の説明になっているため、典型例の表をそのままフォーマットとして示し、記載ルール（代替レベル必須・例外なしは `なし`）だけを残して統合する。
+    rule: vp-qe-omissions-consistency
+    line: 106
+    anchor: "- 形式は **「対象外（何をやらないか）」「除外理由（なぜやらないか）」「例外（UTで扱う条件）」** の3点セットを基本とする"
+    message: >-
+      6.3.1 は形式を「対象外・除外理由・例外」の3点セットと定めているが、6.3.2・6.3.3 は「代替レベル/代替手段」の記載を必須とする4列であり要件が食い違うため、6.3.1
+      を「代替レベル/代替手段」を含む4点セットに改める。
+    message_ja: >-
+      6.3.1 は形式を「対象外・除外理由・例外」の3点セットと定めているが、6.3.2・6.3.3 は「代替レベル/代替手段」の記載を必須とする4列であり要件が食い違うため、6.3.1
+      を「代替レベル/代替手段」を含む4点セットに改める。
   - id: F002
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 248
-    anchor: >-
-      | `utc-index` に個別ケース（条件・手順・期待値）を大量に列挙する      | `utc-index` は共通方針のSSOTであり、個別は `utc-<term>` に集約するため                
-      |
-    message: 禁止事項の「`utc-index` に個別ケース（条件・手順・期待値）を大量に列挙する」は全体方針の「個別ケースは列挙しない」と許容範囲が食い違うため、「大量に」を外すか、記載例として許す範囲を両方で一致させる。
-    message_ja: 禁止事項の「`utc-index` に個別ケース（条件・手順・期待値）を大量に列挙する」は全体方針の「個別ケースは列挙しない」と許容範囲が食い違うため、「大量に」を外すか、記載例として許す範囲を両方で一致させる。
-  - id: F003
-    severity: minor
     rule: vp-qe-kata-conformance
-    line: 13
+    line: 247
     anchor: >-
-      - _UNDECIDED_: `recipe`・`template` の要否は未判断である（template は PJR-WYTX で扱う）。sample は「本文要件」の見出し構成へ未整合であり、後続の sample
-      の見直しで揃える。いずれも ready 化前に解消する。
+      | `utc-index` に個別ケース（条件・手順・期待値）を列挙する            | `utc-index` は共通方針のSSOTであり、個別は `utc-<term>`
+      に集約するため                 |
     message: >-
-      `_UNDECIDED_` の「sample は『本文要件』の見出し構成へ未整合であり、後続の sample の見直しで揃える」は、現在の `utc-index-sample`
-      が本文要件の9見出し・カラム順と一致している実態と矛盾するため、sample の部分を削除して recipe・template の未決事項だけを残す（前回の major は sample
-      側の整合で解消済みのため、残る記述の更新漏れとして minor とした）。
+      禁止事項は `utc-index` に個別ケース（条件・手順・期待値）を列挙することを一律に禁じているが、`utc-index-sample`
+      の「ケース表の共通カラム」は条件・手順・期待値を持つ記入例を1行載せており食い違うため、共通カラムの書き方を示す少数の記入例は許すと 6.8 と禁止事項に明記するか、sample から記入例を外す。
     message_ja: >-
-      `_UNDECIDED_` の「sample は『本文要件』の見出し構成へ未整合であり、後続の sample の見直しで揃える」は、現在の `utc-index-sample`
-      が本文要件の9見出し・カラム順と一致している実態と矛盾するため、sample の部分を削除して recipe・template の未決事項だけを残す（前回の major は sample
-      側の整合で解消済みのため、残る記述の更新漏れとして minor とした）。
-  - id: F004
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 99
-    anchor: "- 画面テストの注意：UTの `<term>` は **UI部品よりもロジック中心**で切る（画面はE2E側で扱う）"
-    message: >-
-      6.1 でテストレベルを「IT/ET/ST/AT」と定義しているのに、6.2・6.3（典型例の表を含む）では未定義の「E2E」を代替レベルとして用いており、どのレベルを指すか揺れるため、ST/AT
-      など定義済みのレベル名に揃える。
-    message_ja: >-
-      6.1 でテストレベルを「IT/ET/ST/AT」と定義しているのに、6.2・6.3（典型例の表を含む）では未定義の「E2E」を代替レベルとして用いており、どのレベルを指すか揺れるため、ST/AT
-      など定義済みのレベル名に揃える。
-  - id: F005
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 205
-    anchor: "- 例外方針（Mock/Stub/Fakeの使い分け）："
-    message: 6.7 の「例外方針（Mock/Stub/Fakeの使い分け）」は内容が例外ではなくテストダブルの使い分けであり、6.3 の「例外（UTで扱う条件）」と用語が衝突するため、「テストダブルの使い分け」などへ改名する。
-    message_ja: 6.7 の「例外方針（Mock/Stub/Fakeの使い分け）」は内容が例外ではなくテストダブルの使い分けであり、6.3 の「例外（UTで扱う条件）」と用語が衝突するため、「テストダブルの使い分け」などへ改名する。
-  - id: F006
-    severity: minor
-    rule: vp-ops-release-readiness
-    line: 13
-    anchor: >-
-      - _UNDECIDED_: `recipe`・`template` の要否は未判断である（template は PJR-WYTX で扱う）。sample は「本文要件」の見出し構成へ未整合であり、後続の sample
-      の見直しで揃える。いずれも ready 化前に解消する。
-    message: >-
-      ready 化前の解消事項として挙げた「sample の見出し構成の未整合」は既に解消済みで、残課題が実態より多く見えるため、`_UNDECIDED_` を recipe・template
-      の要否（PJR-WYTX）だけに更新して ready 化判断の前提を正確にする。
-    message_ja: >-
-      ready 化前の解消事項として挙げた「sample の見出し構成の未整合」は既に解消済みで、残課題が実態より多く見えるため、`_UNDECIDED_` を recipe・template
-      の要否（PJR-WYTX）だけに更新して ready 化判断の前提を正確にする。
+      禁止事項は `utc-index` に個別ケース（条件・手順・期待値）を列挙することを一律に禁じているが、`utc-index-sample`
+      の「ケース表の共通カラム」は条件・手順・期待値を持つ記入例を1行載せており食い違うため、共通カラムの書き方を示す少数の記入例は許すと 6.8 と禁止事項に明記するか、sample から記入例を外す。

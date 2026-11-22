@@ -5,10 +5,10 @@ path: docs/ja/specdojo/samples/itc-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 89
-graded_at: "2026-11-22T02:19:20.934Z"
+score: 90
+graded_at: "2026-11-22T06:53:07.510Z"
 graded_by: opus-review-executor
-content_hash: 5bdae1700860b321eb7b18c3276d97f5e175d95c51c056368c0cc28bcd59d3fa
+content_hash: 19ce7d1afd2398cac60e2ed089116e54fb2711ba5d15fba6d124c4fd7f4530a3
 categories:
   purpose:
     score: 100
@@ -17,7 +17,7 @@ categories:
   planning:
     score: 100
   business:
-    score: 92
+    score: 100
   architecture:
     score: 100
   usability:
@@ -51,8 +51,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
     level: 4
     score: 100
@@ -75,14 +75,14 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 2
+    score: 50
   vp-qe-omissions-consistency:
     level: 3
     score: 75
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -104,72 +104,66 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 2
-  minor: 4
+  minor: 3
   note: 0
 findings:
   - id: F001
-    severity: minor
-    rule: vp-ba-requirements-completeness
-    line: 16
-    anchor: "- 対象商品が特定できない購入を保留として応答し、販売記録を作らず在庫を変えない。"
+    severity: major
+    rule: vp-qe-verifiability
+    line: 85
+    anchor: >-
+      | `it-sales-checkout-transaction-boundary-010` | 入力: 商品A×6・受領額180円 状態: 在庫5個 環境: なし                  |
+      会計確定ユースケースを起動する | エラー種別 `out-of-stock` を応答し、販売記録0件・在庫5個で確定前と差分がない                        | 応答のエラー種別
+      `duplicate-transaction`、販売記録件数、在庫数 | コンテナ DB 実接続、印刷は成功 Stub                   | TR-03       | P0     | automated |
+      `tests/it/sales-checkout.it.test.ts`、`kinuya-ci-sales-recovery` run 1042 |
     message: >-
-      bac-sample の BAC-03 は C-03（商品未特定）と C-04（数量不明）の2条件を持つが、本書の責務・トレース・保留観点のケースは C-03 だけを扱い、C-04 の採否と理由がない。C-04
-      のケースを追加するか、扱わない理由を書く必要がある。
+      `it-sales-checkout-transaction-boundary-010` の期待値はエラー種別 `out-of-stock` だが、観測点（アサーション）が `duplicate-transaction`
+      になっており、アサーションの一致対象が矛盾している。観測点を `out-of-stock` に直す必要がある。
     message_ja: >-
-      bac-sample の BAC-03 は C-03（商品未特定）と C-04（数量不明）の2条件を持つが、本書の責務・トレース・保留観点のケースは C-03 だけを扱い、C-04 の採否と理由がない。C-04
-      のケースを追加するか、扱わない理由を書く必要がある。
+      `it-sales-checkout-transaction-boundary-010` の期待値はエラー種別 `out-of-stock` だが、観測点（アサーション）が `duplicate-transaction`
+      になっており、アサーションの一致対象が矛盾している。観測点を `out-of-stock` に直す必要がある。
   - id: F002
     severity: minor
     rule: vp-qe-verifiability
-    line: 68
+    line: 71
     anchor: >-
-      | `it-sales-checkout-persistence-integrity-030` | 入力: 確定済みと同じ取引番号で再送 状態: 在庫3個 環境: なし | 同じ取引番号で会計確定ユースケースを起動する |
-      重複エラーを応答し、販売記録は1件・在庫は3個のまま差分がない       | 応答のエラー種別、販売記録件数、在庫数     | コンテナ DB 実接続、印刷は成功 Stub | TR-01,TR-05 | P0     |
-      automated | `tests/it/sales-checkout.it.test.ts`、`kinuya-ci-sales-recovery` run 1042 |
+      | `it-sales-checkout-persistence-integrity-030` | 入力: 商品A×5・受領額150円 状態: 在庫5個 環境: なし         |
+      会計確定ユースケースを起動する               | 確定を応答し、販売記録が1件、在庫が0個になる（負の値を保存しない）                    |
+      応答の確定結果、販売記録件数、在庫数                           | コンテナ DB 実接続、印刷は成功 Stub | TR-02       | P0     | automated |
+      `tests/it/sales-checkout.it.test.ts`、`kinuya-ci-sales-recovery` run 1042 |
     message: >-
-      観測点に「応答のエラー種別」を挙げているが、識別子があるのは `out-of-stock` だけで、重複・確定失敗・保留の応答の値が書かれていない。`out-of-stock`
-      と同じように識別子を期待値に書き、アサーションの一致対象を特定する必要がある。
+      `it-sales-checkout-persistence-integrity-030` の期待値・観測点が販売記録件数と在庫数だけで、TR-02
+      の要点（商品A・数量5・150円）にある販売記録の内容を判定できない。`-010` と同様に販売記録の内容を期待値と観測点に含める必要がある。
     message_ja: >-
-      観測点に「応答のエラー種別」を挙げているが、識別子があるのは `out-of-stock` だけで、重複・確定失敗・保留の応答の値が書かれていない。`out-of-stock`
-      と同じように識別子を期待値に書き、アサーションの一致対象を特定する必要がある。
+      `it-sales-checkout-persistence-integrity-030` の期待値・観測点が販売記録件数と在庫数だけで、TR-02
+      の要点（商品A・数量5・150円）にある販売記録の内容を判定できない。`-010` と同様に販売記録の内容を期待値と観測点に含める必要がある。
   - id: F003
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 52
-    anchor: "## 6. テスト観点とケース"
-    message: >-
-      itc-index-sample の「観点の立て方（共通）」は、採用しない観点の型の理由を `itc-＜term＞` に1行で残すよう求めているが、本書は「結合 I/F の契約」「依存障害時の挙動（DB
-      停止・接続断）」「セキュリティ境界」の扱いを書いていない。各型について、採用する観点か、理由つきの不採用かを示す必要がある。
-    message_ja: >-
-      itc-index-sample の「観点の立て方（共通）」は、採用しない観点の型の理由を `itc-＜term＞` に1行で残すよう求めているが、本書は「結合 I/F の契約」「依存障害時の挙動（DB
-      停止・接続断）」「セキュリティ境界」の扱いを書いていない。各型について、採用する観点か、理由つきの不採用かを示す必要がある。
+    line: 55
+    anchor: >-
+      [[specdojo:itc-index-sample|内部結合テストカタログ: 概要]] の観点の型のうち、「結合 I/F
+      の契約」は各観点の応答（確定結果・エラー種別）の期待値で担保し、独立した観点にしない。「状態遷移の整合性」は未確定から確定への遷移を、「未確定の購入の保留」の観点で扱う。「依存障害時の挙動」は DB
+      の更新拒否を「確定できない会計のロールバック」で扱い、DB 停止・接続断は採用しない（理由: 検証用コンテナ DB の停止は CI の他ケースを巻き込み再現性を保てない、代替: ST
+      の障害・回復）。「セキュリティ境界」は該当なし（単一店舗・端末1台）。
+    message: 「状態遷移の整合性」を「未確定から確定への遷移」として「未確定の購入の保留」で扱うとしているが、同観点のケースは保留の維持だけで、補完後に確定へ進む遷移を検証するケースがない。遷移のケースを追加するか、扱う範囲を「保留の維持」に改める必要がある。
+    message_ja: 「状態遷移の整合性」を「未確定から確定への遷移」として「未確定の購入の保留」で扱うとしているが、同観点のケースは保留の維持だけで、補完後に確定へ進む遷移を検証するケースがない。遷移のケースを追加するか、扱う範囲を「保留の維持」に改める必要がある。
   - id: F004
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 50
-    anchor: "| TR-05       | [[specdojo:itc-index-sample\\|内部結合テストカタログ: 概要]] | 確定失敗時のロールバックと再送の二重計上防止を主担当する | 「対象別への分配方針」の主担当 |"
-    message: >-
-      TR-05 の仕様ID が根拠仕様ではなく itc-index-sample（分配方針）になっている。rulebook の「トレース」は仕様ID を `br-*`・`bac-*`・`spec-*`
-      等の根拠仕様としているため、根拠仕様を示すか、分配方針への参照は備考へ移す必要がある。
-    message_ja: >-
-      TR-05 の仕様ID が根拠仕様ではなく itc-index-sample（分配方針）になっている。rulebook の「トレース」は仕様ID を `br-*`・`bac-*`・`spec-*`
-      等の根拠仕様としているため、根拠仕様を示すか、分配方針への参照は備考へ移す必要がある。
-  - id: F005
-    severity: major
     rule: vp-qe-kata-conformance
-    line: 67
+    line: 55
     anchor: >-
-      | `it-sales-checkout-persistence-integrity-020` | 入力: 商品A×5・受領額150円 状態: 在庫5個 環境: なし         |
-      会計確定ユースケースを起動する               | 確定を応答し、販売記録が1件、在庫が0個になる（負の値を保存しない） | 応答の確定結果、販売記録件数、在庫数       | コンテナ DB 実接続、印刷は成功
-      Stub | TR-02       | P0     | automated | `tests/it/sales-checkout.it.test.ts`、`kinuya-ci-sales-recovery` run 1042
-      |
+      [[specdojo:itc-index-sample|内部結合テストカタログ: 概要]] の観点の型のうち、「結合 I/F
+      の契約」は各観点の応答（確定結果・エラー種別）の期待値で担保し、独立した観点にしない。「状態遷移の整合性」は未確定から確定への遷移を、「未確定の購入の保留」の観点で扱う。「依存障害時の挙動」は DB
+      の更新拒否を「確定できない会計のロールバック」で扱い、DB 停止・接続断は採用しない（理由: 検証用コンテナ DB の停止は CI の他ケースを巻き込み再現性を保てない、代替: ST
+      の障害・回復）。「セキュリティ境界」は該当なし（単一店舗・端末1台）。
     message: >-
-      itc-index-sample の「ケース表の共通カラム」は `it-sales-checkout-persistence-integrity-020` を「同じ取引番号の再送」のケースとして示しているが、本書は同じ
-      `case_id` を「在庫と同数の購入（在庫5→0）」に使い、再送を `-030` にしている。同じ ID が別のケースを指すため、どちらかの sample に合わせて採番を揃える必要がある。
+      itc-index-sample の「観点の立て方（共通）」は `itc-sales-checkout` の「依存障害時の挙動」を「DB 停止時に未保存を成功表示しない」としているが、本書は DB
+      停止・接続断を不採用にしており、共通方針と食い違う。itc-index-sample の割り当てを更新拒否に改めるか、本書で DB 停止を扱うかのどちらかに揃える必要がある。
     message_ja: >-
-      itc-index-sample の「ケース表の共通カラム」は `it-sales-checkout-persistence-integrity-020` を「同じ取引番号の再送」のケースとして示しているが、本書は同じ
-      `case_id` を「在庫と同数の購入（在庫5→0）」に使い、再送を `-030` にしている。同じ ID が別のケースを指すため、どちらかの sample に合わせて採番を揃える必要がある。
-  - id: F006
+      itc-index-sample の「観点の立て方（共通）」は `itc-sales-checkout` の「依存障害時の挙動」を「DB 停止時に未保存を成功表示しない」としているが、本書は DB
+      停止・接続断を不採用にしており、共通方針と食い違う。itc-index-sample の割り当てを更新拒否に改めるか、本書で DB 停止を扱うかのどちらかに揃える必要がある。
+  - id: F005
     severity: major
     rule: vp-ops-release-readiness
     line: 40

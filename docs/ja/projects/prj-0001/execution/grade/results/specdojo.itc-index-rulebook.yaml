@@ -5,8 +5,8 @@ path: docs/ja/specdojo/rulebooks/itc-index-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 98
-graded_at: "2026-11-22T03:31:25.084Z"
+score: 96
+graded_at: "2026-11-22T06:49:30.105Z"
 graded_by: opus-review-executor
 content_hash: 2a5d9a9e7c305c5c9354c5d93b2f38da6622c2bb47f536ceb467138a7bafbc7e
 categories:
@@ -21,7 +21,7 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 92
   implementation:
     score: 100
   quality:
@@ -84,8 +84,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 3
     score: 75
@@ -101,10 +101,21 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 2
-  note: 0
+  minor: 3
+  note: 1
 findings:
   - id: F001
+    severity: note
+    rule: vp-arc-conciseness
+    line: 165
+    anchor: "## 7. 禁止事項"
+    message: >-
+      禁止事項の「外部サービス疎通をITの必須範囲に含める」「`case_id`
+      を後から変更する」は記述ガイドの「内部結合テスト共通の境界/依存の扱い」「ケース表の共通カラム」と主張が重なるため、記述ガイド側は手順に絞り、禁止の理由は禁止事項表に寄せると重複が減る。
+    message_ja: >-
+      禁止事項の「外部サービス疎通をITの必須範囲に含める」「`case_id`
+      を後から変更する」は記述ガイドの「内部結合テスト共通の境界/依存の扱い」「ケース表の共通カラム」と主張が重なるため、記述ガイド側は手順に絞り、禁止の理由は禁止事項表に寄せると重複が減る。
+  - id: F002
     severity: minor
     rule: vp-qe-kata-conformance
     line: 1
@@ -115,7 +126,18 @@ findings:
     message_ja: >-
       Frontmatter の `recipe` と `template` が `undecided` のままで、rulebook に対応する recipe・template の担い手が決まっておらず、Kata
       の構成要素間の責務分担を確認できないため、作成するか対象外とするかを決めて宣言すべきである。
-  - id: F002
+  - id: F003
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 22
+    anchor: TCIndex["itc-index<br>テスト仕様-全体構成"]
+    message: >-
+      位置づけの図のラベル「テスト仕様-全体構成」「テスト仕様-対象別」が
+      H1・導入文の「内部結合テストカタログ概要」「全体概要」およびサブグラフ名「テストカタログ」と表記がそろわず同一文書の呼称がゆれるため、「内部結合テストカタログ-概要」「内部結合テストカタログ-対象別」などに統一すべきである。
+    message_ja: >-
+      位置づけの図のラベル「テスト仕様-全体構成」「テスト仕様-対象別」が
+      H1・導入文の「内部結合テストカタログ概要」「全体概要」およびサブグラフ名「テストカタログ」と表記がそろわず同一文書の呼称がゆれるため、「内部結合テストカタログ-概要」「内部結合テストカタログ-対象別」などに統一すべきである。
+  - id: F004
     severity: minor
     rule: vp-ops-release-readiness
     line: 1
