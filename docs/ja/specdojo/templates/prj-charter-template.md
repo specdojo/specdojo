@@ -17,7 +17,7 @@ specdojo:
 
 # プロジェクト憲章: _PROJECT_NAME_
 
-_TODO_: 本書が、立ち上げ認可と権限委譲を記録する憲章であることを 2〜3 文で記述する。何の立ち上げを認可し、誰にどの権限を委譲するか、本格実行開始や外部公開を承認しないことを含め、PO またはスポンサーが最終判断と説明責任を担うことを明示する。
+_TODO_: 立ち上げ認可と権限委譲の記録であること、承認しない範囲を 2〜3 文で記述する。
 
 ## 1. 認可対象
 
@@ -31,11 +31,9 @@ _TODO_: 本書が、立ち上げ認可と権限委譲を記録する憲章であ
 | 承認責任        | _APPROVER_ROLE_                   |
 | 認可条件        | _AUTHORIZATION_CONDITION_OR_NONE_ |
 
-_TODO_: 承認に条件を付ける場合のみ「認可条件」行を残し、条件がない場合は行ごと削除する。
-
 ## 2. プロジェクトの目的
 
-_TODO_: プロジェクト概要に基づき、認可判断に必要な目的を 1〜2 文で要約する。背景、必要性、数値目標、測定方法、中長期指標はプロジェクト概要を正とし、本書では再掲しない。
+_TODO_: 認可判断に必要な目的を 1〜2 文で要約する。
 
 | 観点              | 認可判断で確認する期待効果 |
 | ----------------- | -------------------------- |
@@ -62,7 +60,7 @@ _TODO_: プロジェクト概要に基づき、認可判断に必要な目的を
 | `STH-_STAKEHOLDER_KEY_` | _STAKEHOLDER_NAME_ | _ENGAGEMENT_CATEGORY_ | _ROLE_CODE_OR_NONE_ | _RESPONSIBILITY_FOR_AUTHORIZATION_ |
 | `STH-_STAKEHOLDER_KEY_` | _STAKEHOLDER_NAME_ | _ENGAGEMENT_CATEGORY_ | _ROLE_CODE_OR_NONE_ | _RESPONSIBILITY_FOR_AUTHORIZATION_ |
 
-_TODO_: 関係者の詳細を正とするステークホルダー登録簿を記述する。
+_TODO_: 詳細の正本とするステークホルダー登録簿を記述する。
 
 ## 5. 権限委譲
 
@@ -74,15 +72,9 @@ _TODO_: 関係者の詳細を正とするステークホルダー登録簿を記
 
 _TODO_: PO またはスポンサーの承認を必要とする事項を箇条書きで記述する。
 
-- _TODO_: 予算枠の新設・確定・増額
-- _TODO_: 公開可否
-- _TODO_: ライセンス方針の確定
-- _TODO_: 主要スコープ変更
-- _TODO_: GO / Not GO 判断
-
 ## 6. 主要前提・制約
 
-_TODO_: 前提・制約の全量は `prj-assumptions-constraints-dependencies` を正とし、認可判断に直結する事項（予算枠、公開適性、人間の判断責任）だけを記載する。
+_TODO_: 認可判断に直結する事項だけを記載する。
 
 | 区分 | 内容                           | 詳細化先                                   |
 | ---- | ------------------------------ | ------------------------------------------ |
@@ -106,11 +98,11 @@ _TODO_: 前提・制約の全量は `prj-assumptions-constraints-dependencies` �
 | ----------- | --------------- | ---------------- | ----------- |
 | _UNDECIDED_ | _APPROVER_ROLE_ | _APPROVAL_SCOPE_ | _UNDECIDED_ |
 
-_TODO_: 未承認の場合は、正式な立ち上げ認可文書として扱わない旨を記述する。証跡リンクには、承認の意思表示と承認対象の文書状態を特定できる記録（決定記録、Pull Request など）を記載する。
+_TODO_: 未承認の場合の扱いを記述する。
 
 ## 9. 未決事項
 
-| 論点        | 期限                    | 担当         | 対応方針        |
-| ----------- | ----------------------- | ------------ | --------------- |
-| _OPEN_ITEM_ | _DUE_DATE_OR_CONDITION_ | _OWNER_ROLE_ | _ACTION_POLICY_ |
-| _OPEN_ITEM_ | _DUE_DATE_OR_CONDITION_ | _OWNER_ROLE_ | _ACTION_POLICY_ |
+| 論点        | 影響     | 当面の扱い         |
+| ----------- | -------- | ------------------ |
+| _OPEN_ITEM_ | _IMPACT_ | _INTERIM_HANDLING_ |
+| _OPEN_ITEM_ | _IMPACT_ | _INTERIM_HANDLING_ |
