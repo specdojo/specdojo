@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_45dac8ec79504071809626a11b0b903a
+  ts: "2026-11-22T05:44:27Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: skill specdojo-exec-in-session を利用者のリポジトリへ配る
+    - field: description
+      from: ""
+      to: オーケストレーターが会話の中で項目を実装する手順の skill を、templates と scaffold で利用者のリポジトリへ配る。正本は .agents/skills に置き、Claude Code などにはラッパーを置く
+    - field: input
+      from: ""
+      to: '["PJR-XZ9B で skill の正本 .agents/skills/specdojo-exec-in-session/SKILL.md と Claude Code のラッパー .claude/skills/specdojo-exec-in-session/SKILL.md を足した。配布は XZ9B の範囲外とした。","2026-11-22、indie の判断で skill も配ることにした。","配る仕組みは src/shared/provider-scaffold.ts で、templates/`<provider>`/ の agents・rules と、それ以外を .specdojo/`<provider>`/ へ写す。skills を写す経路はまだない。","Codex はリポジトリの .agents/skills を標準で読む。opencode と Copilot がどこから skill を読むかは未確認。",".agents/skills と .claude は executor が書けない保護された設定のため、正本はこの項目では変えない。配る原本は templates/ に置く。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-22"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-XZ9B"]'
