@@ -29,7 +29,16 @@ Git と GitHub CLI の連携仕様を ifx-cmd の型で作り、ifx-index と if
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- `ifx-cmd` の型（rulebook と sample）に従い、Git の外部コマンド連携仕様（`ifx-cmd-git-cli`）と GitHub CLI の外部コマンド連携仕様（`ifx-cmd-github-cli`）を新しく作る。手本は `ifx-cmd-ai-provider-cli` とする。どちらも `status: draft` で作る。
+- 中身は実装（`src/` の git と gh の呼び出し）と設定を読んで書き、根拠のファイルを示す。分からない点は `_UNDECIDED_` で残し、推測で埋めない。
+- `ifx-cmd-github-cli` に、ifd-specdojo の PATH-07 の論点（GitHub 接続の経路・認証・失敗後の保持範囲）を扱う章を置く。
+- 2 文書をカタログへ登録する（利用者の決定、2026-11-22、indie）。
+- `ifx-index` の Git と GitHub の 2 件と、ifd-specdojo の PATH-07 の留保の追跡先を、新しい 2 文書へ付け替える。変えるのは留保と参照の行だけとし、ready の文書の `status` は変えない。
+- 型の grade は統合の後に orchestrator が流す。executor は grade を実行しない。
+- `CHANGELOG.md` は変えない。個票の対応結果に「CHANGELOG に書く事項」の小節を作り、区分と行の文案を書く。影響がなければ「なし」と書く。
+- 迷った点は executor が決め、決めた内容と理由を個票の対応結果と報告の `handoff` に書く。
+- 保護された設定（`.specdojo/`・`.agents/`・`.claude/`・`.codex/`・`.opencode/`・`package.json` など）は変えない。変更が要る場合は、変更案を個票の対応結果と報告の `handoff` に書く。
+- `npm run lint:md`・`npm run lint:fm`・`npm run validate:schema` を通し、親の検証を通す。
 
 ## 4. 作業内容
 

@@ -38,3 +38,29 @@
     - field: derived_from
       from: ""
       to: '["PJR-Q9AW","PJR-00NY"]'
+- v: 1
+  id: reg_74e7da9e46f340a68436003c7a867e8c
+  ts: "2026-11-22T13:25:44Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件を利用者の承認のもとで書く
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_6274065ea07a412d91b3d10725103493
+- v: 1
+  id: reg_3ae5df3232d249c397fb142361ab8d39
+  ts: "2026-11-22T13:26:06Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 難しさを決める
+  changes:
+    - field: difficulty
+      from: "-"
+      to: medium
+  previous_event_id: reg_74e7da9e46f340a68436003c7a867e8c

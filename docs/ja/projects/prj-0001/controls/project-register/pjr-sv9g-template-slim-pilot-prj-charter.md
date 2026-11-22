@@ -31,16 +31,16 @@ template には簡潔にする手本がないため、rulebook と sample を見
 
 ## 3. 完了条件
 
-- `docs/ja/specdojo/templates/prj-charter-template.md` から、どの成果物にも共通する文書の運用の記述（役割の段落、承認と agent の段落、文書品質の検査の行、未決事項の管理台帳の列と登録の段落など）と、rulebook の判断の言い直しを外す。手本は [[prj-0001:pjr-8s4t-sld-kata-slim-pilot|PJR-8S4T]] の一覧、[[prj-0001:pjr-7m9j-recipe-slim-pilot-prj-charter|PJR-7M9J]] の recipe の一覧と、見直し済みの [[specdojo:prj-charter-sample|prj-charter-sample]] である。
-- template は記入の枠として、章の構成・必須の表の列・`_TODO_` などの目印を保つ。章と列は rulebook と sample に合わせ、記入の説明は 1 行の要点にして判断の基準は rulebook を参照する。
-- 大きさは、空白を除いた文字数で今の 7 割以下を目安にし、前後の文字数を個票の対応結果に書く。
+- `prj-charter-template` から、どの成果物にも共通する文書の運用の記述（役割の割り当て、`status` の昇格と承認、公開の承認条件、改訂と廃止の手順、文書の品質の検査など）と、rulebook の言い直しを外す。手本は PJR-8S4T の「他の型へ広げるときの一覧」と PJR-7M9J の「他の recipe へ広げるときの一覧」とする。
+- template に残すのは、章の骨組み・表の列・記入の目印など、成果物を作るときに埋める枠とする。章の構成は rulebook と合わせたまま保つ。
+- 前後の大きさ（空白を除いた文字数）を、個票の対応結果に書く。
 - 個票の対応結果に、ほかの template へ広げるときの「外す記述・残す記述・参照の形」の一覧を書く。schedule の段の指示にそのまま使える形にする。
-- 直すのは template だけとする。rulebook・sample・recipe は変えず、合わせて直すべき点は変更案として個票の対応結果に書く。
+- 直すのは template だけとする。rulebook・recipe・sample は変えず、合わせて直すべき点は変更案として個票の対応結果に書く。
 - 型の grade は統合の後に orchestrator が流す。executor は grade を実行しない。
-- 保護された設定（`lefthook.yml`・`.agents/`・`.claude/`・`.codex/`・`package.json`・`.specdojo/` など）は変えない。変更が要る場合は、変更案を個票の対応結果に書き、報告の `handoff` にも書く。反映は利用者の承認のもと feature ブランチで行う。
-- 迷った点は executor が決め、決めた内容と理由を個票の対応結果に書く。pipeline では報告の `handoff` にも書く。
-- `CHANGELOG.md` は変えず、個票の対応結果の「CHANGELOG に書く事項」の節に区分と行の文案を書く。影響がなければ「なし」と書く。
-- `npm run lint:md`・`npm run lint:fm` と親の検証が通る。
+- `CHANGELOG.md` は変えない。個票の対応結果に「CHANGELOG に書く事項」の小節を作り、区分と行の文案を書く。影響がなければ「なし」と書く。
+- 迷った点は executor が決め、決めた内容と理由を個票の対応結果と報告の `handoff` に書く。
+- 保護された設定（`.specdojo/`・`.agents/`・`.claude/`・`.codex/`・`.opencode/`・`package.json` など）は変えない。変更が要る場合は、変更案を個票の対応結果と報告の `handoff` に書く。
+- `npm run lint:md`・`npm run lint:fm` を通し、親の検証を通す。
 
 ## 4. 作業内容
 

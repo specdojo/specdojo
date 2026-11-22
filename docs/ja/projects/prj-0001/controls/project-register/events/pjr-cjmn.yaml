@@ -44,3 +44,16 @@
     - field: commit_scope
       from: ""
       to: ifx
+- v: 1
+  id: reg_c33be9d475174df2a7ba199cbea26a58
+  ts: "2026-11-22T13:25:57Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件を利用者の承認のもとで書く
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_ea262664131743818b2a5b03e5fb1b15

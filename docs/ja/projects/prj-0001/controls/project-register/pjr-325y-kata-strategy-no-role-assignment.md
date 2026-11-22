@@ -9,6 +9,7 @@ specdojo:
   item_type: todo
   item_status: open
   priority: high
+  difficulty: hard
   owner: DEV
   registered_at: "2026-11-21T08:23:42Z"
   derived_from:
@@ -29,7 +30,16 @@ specdojo:
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- 範囲は、第 3 波の strategy（`sch-strategy-kata-wave-3.yaml`）と、sample と rulebook の作成標準と、型の template・カタログの `done_criteria`・grade の観点とする。第 4〜6 波の strategy はまだ無いため扱わない（利用者の決定、2026-11-22、indie）。
+- `sample-authoring-standard` と `rulebook-authoring-standard` に、PJR-76N9 の決まりを足す。成果物と sample の本文に文書の役割の割り当てと承認の進み具合を書かない。rulebook の「誰がどの利用場面で何を判断するか」は「どの利用場面で何を判断するための文書か」とする。文書の中身として役割が要る型（RACI・体制など）は対象外とする。
+- 第 3 波の strategy の段の説明に、同じ決まりを足す。track の作り直しはオーケストレーターが行うため、executor は track を直接直さず、作り直しが要ることを個票の対応結果に書く。
+- 役割と承認の記述を求めている型の template とカタログの `done_criteria` と grade の観点を探して直す。cnd-template の列と「検証・承認前の確認」の節を含める。直した場所の一覧を個票の対応結果に書く。
+- YAML を書き直したら、`task_suffix` などの文字列が数値に変わっていないかを schema の検査で確かめる。
+- 型の grade は統合の後に orchestrator が流す。executor は grade を実行しない。
+- `CHANGELOG.md` は変えない。個票の対応結果に「CHANGELOG に書く事項」の小節を作り、区分と行の文案を書く。影響がなければ「なし」と書く。
+- 迷った点は executor が決め、決めた内容と理由を個票の対応結果と報告の `handoff` に書く。
+- 保護された設定（`.specdojo/`・`.agents/`・`.claude/`・`.codex/`・`.opencode/`・`package.json` など）は変えない。変更が要る場合は、変更案を個票の対応結果と報告の `handoff` に書く。
+- `npm run lint:md`・`npm run lint:fm`・`npm run validate:schema` を通し、親の検証を通す。
 
 ## 4. 作業内容
 

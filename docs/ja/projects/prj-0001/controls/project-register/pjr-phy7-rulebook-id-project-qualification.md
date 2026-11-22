@@ -9,6 +9,7 @@ specdojo:
   item_type: todo
   item_status: open
   priority: medium
+  difficulty: medium
   registered_at: "2026-11-05T10:45:48Z"
   derived_from:
     - PJR-Q9AW
@@ -28,7 +29,15 @@ stsd・cdfd・cdfd-uc・bps の rulebook は成果物の id を「プロジェ�
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- 成果物の frontmatter の id はプロジェクトで修飾した形（例: `prj-0001:stsd-task-execution`）を正とする（利用者の決定、2026-11-22、indie）。カタログから作る成果物が修飾され、wikilink も修飾した id で解決するため。
+- `stsd-rulebook`・`cdfd-rulebook`・`cdfd-uc-rulebook`・`bps-rulebook` の「プロジェクト修飾なし」の記述を、修飾した形に直す。ほかの rulebook に同じ記述があれば、同じく直す。
+- 対応する sample の frontmatter の書き方が rulebook と食い違えば、合わせて直す。
+- 既存の成果物で修飾していない id（`stsd-register-entry` など）は、この項目では変えない。一覧を個票の対応結果に書き、直す場合の参照の付け替えの範囲を書く。
+- 型の grade は統合の後に orchestrator が流す。executor は grade を実行しない。
+- `CHANGELOG.md` は変えない。個票の対応結果に「CHANGELOG に書く事項」の小節を作り、区分と行の文案を書く。影響がなければ「なし」と書く。
+- 迷った点は executor が決め、決めた内容と理由を個票の対応結果と報告の `handoff` に書く。
+- 保護された設定（`.specdojo/`・`.agents/`・`.claude/`・`.codex/`・`.opencode/`・`package.json` など）は変えない。変更が要る場合は、変更案を個票の対応結果と報告の `handoff` に書く。
+- `npm run lint:md`・`npm run lint:fm`・`npm run validate:schema` を通し、親の検証を通す。
 
 ## 4. 作業内容
 
