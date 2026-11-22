@@ -730,6 +730,59 @@ describe("reporter structured output", () => {
     });
   });
 
+  it("does not block review mode on a failed grade freshness check, as in kata-wave-3 090", () => {
+    const input = evidence();
+    input.validations = [
+      {
+        source: "executor",
+        command:
+          "specdojo grade list --target deliverable docs/ja/specdojo/samples/tsp-index-sample.md --changed-only",
+        status: "failed",
+        summary: "最新でない評価結果が 1 件出力された",
+      },
+    ];
+
+    expect(deriveReporterFacts(input, { mode: "review" })).toMatchObject({
+      outcome: "complete",
+      block_reason: "",
+    });
+  });
+
+  it("still blocks review mode on other failed validations next to a failed freshness check", () => {
+    const input = evidence();
+    input.validations = [
+      {
+        source: "executor",
+        command: "npx specdojo grade list --changed-only",
+        status: "failed",
+        summary: "最新でない評価結果が出力された",
+      },
+      { source: "executor", command: "npm run lint:md", status: "failed", summary: "exit 1" },
+    ];
+
+    expect(deriveReporterFacts(input, { mode: "review" })).toMatchObject({
+      outcome: "blocked",
+      block_reason: "executor validation failed or not run: npm run lint:md",
+    });
+  });
+
+  it("keeps blocking edit mode on a failed grade freshness check", () => {
+    const input = evidence();
+    input.validations = [
+      {
+        source: "executor",
+        command: "specdojo grade list --changed-only",
+        status: "failed",
+        summary: "最新でない評価結果が出力された",
+      },
+    ];
+
+    expect(deriveReporterFacts(input)).toMatchObject({
+      outcome: "blocked",
+      block_reason: "executor validation failed or not run: specdojo grade list --changed-only",
+    });
+  });
+
   it("completes when only a requires_human validation remains", () => {
     const input = evidence();
     input.validations = [

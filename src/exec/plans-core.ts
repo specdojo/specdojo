@@ -350,6 +350,45 @@ export function gradeTargetKind(approach: Approach | undefined): "kata" | "deliv
     : "deliverable";
 }
 
+const KATA_DOCUMENT_DIRS = kataDirsForKinds(["rulebook", "recipe", "sample", "template"]);
+const KATA_CATALOG_DOMAIN = "kata";
+
+/** True when the repo-relative path is a kata document (rulebook・recipe・sample・template). */
+export function isKataDocumentPath(path: string): boolean {
+  const normalized = path.replaceAll("\\", "/").replace(/^\.?\/+/u, "");
+  return KATA_DOCUMENT_DIRS.some(
+    (dir) => normalized.startsWith(`${dir}/`) || normalized.includes(`/${dir}/`),
+  );
+}
+
+/** Domain of the catalog file that declares the deliverable, e.g. `kata` for `dct-kata.yaml`. */
+export function deliverableCatalogDomain(catalogPath: string, localId: string): string | undefined {
+  if (!catalogPath || !existsSync(catalogPath)) return undefined;
+  return resolvedDeliverablesInCatalog(catalogPath).find((target) => target.localId === localId)
+    ?.domain;
+}
+
+/**
+ * grade の --target of a review (PJR-PP4X). A review of a kata document, or of a deliverable in
+ * the kata catalog, judges the grade the runner records with `--target kata`; grading it as a
+ * deliverable as well would overwrite the same sidecar and always read as stale.
+ */
+export function reviewGradeTargetKind(params: {
+  approach: Approach | undefined;
+  subjectPath: string;
+  catalogDomain?: string | undefined;
+}): ReviewGradeTarget {
+  if (gradeTargetKind(params.approach) === "kata") return "kata";
+  if (params.catalogDomain === KATA_CATALOG_DOMAIN) return "kata";
+  if (
+    params.subjectPath &&
+    params.subjectPath !== MISSING &&
+    isKataDocumentPath(params.subjectPath)
+  )
+    return "kata";
+  return "deliverable";
+}
+
 // review の前段で runner が grade を実行する評価対象（PJR-KCMH）。review plan の「評価結果」章と
 // 同じ規則で決めるため、plan 生成と runner の実行対象が食い違わない。
 export function reviewGradeSubject(
@@ -361,7 +400,13 @@ export function reviewGradeSubject(
   const refs = deliverableKataRefs(deliverable, task.approach);
   const path = gradeFindingTargetPath(task.approach, deliverable, refs);
   if (!path || path === MISSING) return undefined;
-  return { path, target: gradeTargetKind(task.approach) };
+  const catalogDomain = task.local_id
+    ? deliverableCatalogDomain(catalogPath, task.local_id)
+    : undefined;
+  return {
+    path,
+    target: reviewGradeTargetKind({ approach: task.approach, subjectPath: path, catalogDomain }),
+  };
 }
 
 // review plan に提示する評価結果。runner の grade 実行結果があれば併記する。

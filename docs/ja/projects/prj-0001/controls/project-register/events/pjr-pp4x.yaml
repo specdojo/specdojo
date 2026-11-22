@@ -80,3 +80,29 @@
       from: medium
       to: hard
   previous_event_id: reg_e62e324591d44f9c9eed4cf623318cb1
+- v: 1
+  id: reg_30397d0ee6674a4fb2c2f266829a52ce
+  ts: "2026-11-22T02:46:07Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_746d5aeaa53b43e2a55ef2e8fcaec210
+- v: 1
+  id: reg_77246c6f78ed44eca7f73a750e8c3794
+  ts: "2026-11-22T02:55:35Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_30397d0ee6674a4fb2c2f266829a52ce
