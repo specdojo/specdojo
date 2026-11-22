@@ -1,6 +1,8 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { resolveMemberCommand, type ExecDefaultsConfig } from "../../../src/exec/agent-config.js";
+import { opencodeAllowCommandsConfig } from "../../../src/exec/opencode-permissions.js";
+import { withAgentExtraRoots } from "../../../src/exec/task-repos.js";
 
 const config: ExecDefaultsConfig = {
   providers: {
@@ -55,12 +57,45 @@ describe("providers.opencode.allow_commands", () => {
     return { nickname: "worker", provider: "opencode" as const, mode };
   }
 
-  it("prefixes edit-mode commands with OPENCODE_PERMISSION bash allow rules", () => {
+  it("prefixes edit-mode commands with agent permission.bash allow rules in OPENCODE_CONFIG_CONTENT", () => {
     const actual = resolveMemberCommand(opencodeConfig, opencodeMember("edit"));
 
     expect(actual).toBe(
-      `OPENCODE_PERMISSION='{"bash":{"npx playwright test *":"allow"}}' opencode run --agent worker`,
+      `OPENCODE_CONFIG_CONTENT='{"agent":{"worker":{"permission":{"bash":{"npx playwright test *":"allow"}}}}}' opencode run --agent worker`,
     );
+    expect(actual).not.toContain("OPENCODE_PERMISSION");
+  });
+
+  it("sorts added rules after the definition's deny and keeps other commands denied", () => {
+    const definition =
+      '{"agent":{"worker":{"permission":{"bash":{"*":"deny","git push*":"deny"}}}}}';
+
+    const merged = JSON.parse(
+      opencodeAllowCommandsConfig(definition, "worker", ["npx tsc*", "make lint"]),
+    ) as { agent: { worker: { permission: { bash: Record<string, string> } } } };
+
+    const bash = merged.agent.worker.permission.bash;
+    expect(Object.keys(bash)).toEqual(["*", "git push*", "npx tsc*", "make lint"]);
+    expect(bash["*"]).toBe("deny");
+    expect(bash["git push*"]).toBe("deny");
+    expect(bash["npx tsc*"]).toBe("allow");
+  });
+
+  it("keeps allow_commands when extra roots are added to the same command", () => {
+    const command = resolveMemberCommand(opencodeConfig, opencodeMember("edit")) ?? "";
+
+    const actual = withAgentExtraRoots(command, "opencode", ["/repo/app1"], {
+      cwd: "/repo/main",
+      env: {},
+    });
+
+    const match = /^OPENCODE_CONFIG_CONTENT='(.*)' opencode run --agent worker$/.exec(actual);
+    expect(actual.match(/OPENCODE_CONFIG_CONTENT=/g)).toHaveLength(1);
+    const parsed = JSON.parse(match?.[1] ?? "{}") as {
+      agent: { worker: { permission: Record<string, Record<string, string>> } };
+    };
+    expect(parsed.agent.worker.permission.bash).toEqual({ "npx playwright test *": "allow" });
+    expect(parsed.agent.worker.permission.external_directory["/repo/app1/**"]).toBe("allow");
   });
 
   it("leaves review-mode commands unchanged", () => {
