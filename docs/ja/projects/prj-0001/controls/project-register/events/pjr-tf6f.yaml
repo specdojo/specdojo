@@ -86,3 +86,29 @@
       from: ""
       to: 作業内容
   previous_event_id: reg_7d482ac82bbd49c39830d8813abfc215
+- v: 1
+  id: reg_4e48cca738a9452bb56b5f422d824bf4
+  ts: "2026-11-22T08:03:15Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_fca7dc5e2fe04fc99303e6f2e62012c9
+- v: 1
+  id: reg_5763391ab3404a1fb676a56b1195a7ea
+  ts: "2026-11-22T08:15:21Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_4e48cca738a9452bb56b5f422d824bf4

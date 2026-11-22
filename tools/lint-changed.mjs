@@ -2,6 +2,7 @@
 // 考え方で、作業ツリーの HEAD からの追加・変更・名前の変更と、未追跡の *.md を対象にする。
 // 入口は Node 標準だけで動かし、`md` は markdownlint、`fm` は frontmatter の検査を流す。
 import { spawnSync } from "node:child_process";
+import { existsSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 
 const LINT_BIN = "packages/docs-lint/bin/specdojo-docs-lint.js";
@@ -18,6 +19,24 @@ function gitLines(args) {
   return result.stdout.split("\n").filter((line) => line.length > 0);
 }
 
+// PJR-TF6F: YAML の表示のページ（同じ階層の generated/<名前>.md）は .gitignore にあり差分に出ない。
+// 変えた YAML のページが作業ツリーにあれば検査の対象に足す。ページは commit の対象にしない。
+const YAML_SOURCE_RE = /^docs\/(?:ja|en)\/(?:.+\/)?[^/]+\.ya?ml$/;
+
+export function yamlPagePath(yamlPath) {
+  const slash = yamlPath.lastIndexOf("/");
+  const name = yamlPath.slice(slash + 1).replace(/\.ya?ml$/, ".md");
+  return `${yamlPath.slice(0, slash)}/generated/${name}`;
+}
+
+export function withYamlPages(files, pageExists = existsSync) {
+  const pages = files
+    .filter((file) => YAML_SOURCE_RE.test(file) && !file.includes("/generated/"))
+    .map(yamlPagePath)
+    .filter((page) => pageExists(page));
+  return [...files, ...pages];
+}
+
 export function selectFiles(kind, files) {
   const unique = [...new Set(files)].sort();
   if (kind === "fm") return unique.filter((file) => /^docs\/.*\.(md|mdx)$/.test(file));
@@ -29,10 +48,13 @@ function main(kind) {
     process.stderr.write("usage: node tools/lint-changed.mjs <md|fm>\n");
     return 2;
   }
-  const files = selectFiles(kind, [
-    ...gitLines(["diff", "--name-only", "--diff-filter=ACMR", "HEAD"]),
-    ...gitLines(["ls-files", "--others", "--exclude-standard"]),
-  ]);
+  const files = selectFiles(
+    kind,
+    withYamlPages([
+      ...gitLines(["diff", "--name-only", "--diff-filter=ACMR", "HEAD"]),
+      ...gitLines(["ls-files", "--others", "--exclude-standard"]),
+    ]),
+  );
   if (files.length === 0) {
     process.stdout.write(`lint:${kind}:changed: no changed files\n`);
     return 0;
