@@ -41,3 +41,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-XZ9B"]'
+- v: 1
+  id: reg_910521fd0c57490eba440ccc96554dc5
+  ts: "2026-11-22T06:25:52Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_45dac8ec79504071809626a11b0b903a
