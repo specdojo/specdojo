@@ -1300,7 +1300,7 @@ export function registerConfigCommands(program: Command): void {
     });
 }
 
-export function registerProjectCommands(program: Command): void {
+export function registerProjectCommands(program: Command): Command {
   const pj = program.command("project").description("Project registry commands");
 
   pj.command("list")
@@ -1327,4 +1327,5 @@ export function registerProjectCommands(program: Command): void {
         process.stdout.write(`${id}\t${schedulePath}${suffix}\n`);
       }
     });
+  return pj;
 }

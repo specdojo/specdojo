@@ -26,6 +26,7 @@ import { registerInitCommand } from "./commands/init.js";
 import { registerOrchestratorCommands } from "./commands/orchestrator.js";
 import { registerGitCommand } from "./commands/git.js";
 import { registerUpdateCommand } from "./commands/update.js";
+import { registerProjectMoveCommand } from "./project/command.js";
 
 /**
  * bin は dist/specdojo.js を指すため、開発チェックアウトで `npm run build` を忘れると
@@ -55,7 +56,7 @@ async function main(): Promise<void> {
 
   registerInitCommand(program);
   registerConfigCommands(program);
-  registerProjectCommands(program);
+  registerProjectMoveCommand(registerProjectCommands(program));
   registerExecCommands(program);
   registerCatalogCommands(program);
   registerDeliverableCommands(program);
