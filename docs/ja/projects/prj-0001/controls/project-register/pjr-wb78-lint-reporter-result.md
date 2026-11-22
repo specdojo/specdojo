@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-22T03:13:28Z"
+  block_reason: "parent validation failed: typecheck"
   derived_from:
     - PJR-G3TT
 ---
