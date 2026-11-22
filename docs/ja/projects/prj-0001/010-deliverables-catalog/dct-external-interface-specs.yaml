@@ -11,7 +11,7 @@ base_path: /docs/ja/product/020-external-interface-specs
 # SpecDojo自身の外部連携は AI provider CLI（Claude Code / Codex CLI / opencode 等）と
 # Git/GitHub（gh CLI）が中心で、いずれもCLIプロセス起動型のため、
 # ESIL の interfaces[].kind には「コマンド」を使用する。個別の ifx-cmd-<term> 詳細仕様は
-# 未作成のため、spec_ref は TBD とする。ifx-api/ifx-file/ifx-msg の詳細仕様は、
+# ifx-cmd-ai-provider-cli・ifx-cmd-git-cli・ifx-cmd-github-cli を作成済み。ifx-api/ifx-file/ifx-msg の詳細仕様は、
 # 対応する形式の連携が具体的に必要になった時点で追加する。
 
 groups:
@@ -102,3 +102,66 @@ groups:
           - text: 欠けた・壊れたファイルを扱うテストの設計に活用できること
             roles: [QE]
             viewpoint: vp-qe-verifiability
+
+      - local_id: ifx-cmd-git-cli
+        name: 外部コマンド連携仕様（Git CLI）
+        kind: work
+        depends_on:
+          - ifx-index
+        overview: Git CLI を外部プロセスとして起動し、作業分離（worktree）・変更履歴（commit・merge）をローカルで管理するための実行契約、入出力の約束、一時失敗の再試行、環境の隔離を定義する。リモート通信は含まない
+        path: ifx-cmd-git-cli.yaml
+        rulebook: specdojo:ifx-cmd-rulebook
+        note: Git・GitHub の外部コマンド連携仕様（PJR-CJMN、2026-11-22 に indie が登録を決定）。手本は ifx-cmd-ai-provider-cli
+        evidence_refs:
+          - kind: implementation
+            path: src/shared/git.ts
+            purpose: git の起動・index.lock などの一時失敗の再試行・失敗整形の実装
+          - kind: implementation
+            path: src/shared/git-environment.ts
+            purpose: 子プロセスへ渡さない Git 環境変数の除去
+        done_criteria:
+          - text: 連携の実行契約・入出力の約束・エラー処理が業務観点で整理されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 連携スコープと方式を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: 外部コマンド連携仕様（正本参照・入出力の約束・認証）の設計として妥当であること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 外部 CLI 起動テスト・結合テスト設計に活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: プロセス起動・連携エラー処理実装の基礎として参照できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+
+      - local_id: ifx-cmd-github-cli
+        name: 外部コマンド連携仕様（GitHub CLI）
+        kind: work
+        depends_on:
+          - ifx-index
+        overview: gh CLI による GitHub の共有状態の確認の利用境界、認証（ログインプロファイル）、失敗後の保持範囲（PATH-07）を定義する。SpecDojo が gh を起動する実装はなく、書き込み操作の方針は未決として残す
+        path: ifx-cmd-github-cli.yaml
+        rulebook: specdojo:ifx-cmd-rulebook
+        note: Git・GitHub の外部コマンド連携仕様（PJR-CJMN、2026-11-22 に indie が登録を決定）。手本は ifx-cmd-ai-provider-cli
+        evidence_refs:
+          - kind: implementation
+            path: src/devcontainer/scaffold.ts
+            purpose: devcontainer への gh の導入と認証状態の永続化（named volume）
+        done_criteria:
+          - text: 連携の実行契約・入出力の約束・エラー処理が業務観点で整理されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 連携スコープと方式を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: 外部コマンド連携仕様（正本参照・入出力の約束・認証）の設計として妥当であること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 外部 CLI 起動テスト・結合テスト設計に活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: プロセス起動・連携エラー処理実装の基礎として参照できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
