@@ -122,3 +122,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_b811e318e98342d0af214a4156a82f0e
+- v: 1
+  id: reg_f60d8bbe22114895bc490687f7ae2115
+  ts: "2026-11-22T08:30:09Z"
+  action: wait
+  actor: opus-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: typecheck"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: typecheck"
+  previous_event_id: reg_7610dcd0f5d94988847e4bb82d46cc8d

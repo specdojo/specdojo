@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-22T03:13:28Z"
+  block_reason: "parent validation failed: typecheck"
   derived_from:
     - PJR-G3TT
 ---
@@ -43,17 +44,47 @@ reporter の出力で lint に落ちる語（中国語の字など）が result 
 
 ## 4. 作業内容
 
-| No  | 作業                                            | 担当                  | 状態 | メモ                     |
-| --- | ----------------------------------------------- | --------------------- | ---- | ------------------------ |
-| 1   | result を書き込む前に検査する                   | DEV                   | open | 統合の前の検査と同じ規則 |
-| 2   | 違反を示して reporter に書き直させる            | DEV                   | open | format attempts と同じ枠 |
-| 3   | 事例の fixture のテストと文書、CHANGELOG の文案 | DEV                   | open | 簡体字の扱いは理由を残す |
-| 4   | 統合の後に JSEY で確かめる                      | specdojo-orchestrator | open | -                        |
+| No  | 作業                                            | 担当                  | 状態 | メモ                                                                        |
+| --- | ----------------------------------------------- | --------------------- | ---- | --------------------------------------------------------------------------- |
+| 1   | result を書き込む前に検査する                   | DEV                   | done | `src/exec/result-markdownlint.ts`。統合の前の検査と同じ設定で描画内容を検査 |
+| 2   | 違反を示して reporter に書き直させる            | DEV                   | done | `runReporterWithFormatRetry` の `validateOutput`。format attempts と同じ枠  |
+| 3   | 事例の fixture のテストと文書、CHANGELOG の文案 | DEV                   | done | 簡体字は MD061 を加えて検出。理由は対応結果に記載                           |
+| 4   | 統合の後に JSEY で確かめる                      | specdojo-orchestrator | open | 統合の後にオーケストレーターが PJR-JSEY で行うため executor は実行しない    |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 5.0. 実施内容
+
+- `src/exec/results.ts` の `renderReporterResult` から、書き込まずに result の Markdown を返す `renderReporterResultContent` を分けた。書き込みと整形の経路は変えていない。
+- `src/exec/result-markdownlint.ts` を追加した。reporter の出力を描画した内容を、`assertResultMarkdownlint`（`Result Markdown notation violation before commit` を出す検査）と同じ設定（リポジトリの markdownlint の設定、なければ `DEFAULT_MARKDOWNLINT_CONFIG`）で、同じ行末の空白の正規化をしてから markdownlint の API で検査する。違反は行番号・規則・描画した行の内容で示す。markdownlint が見つからない環境では、統合の前の検査と同じく検査を省く。
+- `src/exec/reporter.ts` の `runReporterWithFormatRetry` に `validateOutput` を足した。スキーマを通った出力に違反があれば、その内容を既存の再試行の指示（`The previous response failed validation: ...`）として reporter に渡し、同じ `formatAttempts` の枠で書き直させる。上限に達した場合は既存と同じ `reporter output invalid after 3 format attempts: ...` の失敗になり、理由に違反の行と規則が入る。register 実行では、既存の reporter 失敗と同じく waiting になる。
+- 呼び出し元の `src/exec/run/agent-pipeline.ts`（register・job・resume・post-review の pipeline が共用）、`src/exec/run/schedule-task.ts`、`src/exec/run/in-place.ts` で検査を渡した。result を書かない `exec trial` の reporter には足していない。reporter を使わない機械的な result（`pipeline.mechanical_result`）も対象外とした。
+- `src/exec/plan-markdownlint.ts` の `markdownlintApi`・`planLintConfig` を export して共用した。
+- `tests/src/exec/result-markdownlint.test.ts` に、入力の事例の fixture（箇条書きの中の見出しと句点で終わる見出し（MD022・MD026）、素の URL（MD034）、見出しとコードブロックが 1 行につぶれたもの（MD038）、エスケープされたバッククォートとコードの書式の混在（MD038）、中国語の簡体字（MD061））の検出と、違反を示した書き直しの指示・上限での失敗を確かめる単体テストを足した。
+- `exec-operation-guide` の reporter の段の説明と、stage 別の失敗の表に、書き込む前の検査を書いた。
+
+### 5.0.1. 中国語の簡体字の扱い
+
+統合の前の検査（`assertResultMarkdownlint`）は markdownlint-cli を規則の追加なしで動かすため、簡体字を検出しない。QTZ7 を止めたのは、親の検証の `lint:md` が加える `packages/docs-lint/src/markdownlint-rule-no-chinese-glyphs.cjs`（MD061）である。書き込む前の検査では、この規則のファイルがリポジトリにあり markdown-it を読み込めるときだけ MD061 を加える（`lint:md` と同じ規則）。U+4E2A を含む fixture で検出できることを単体テストで確かめた。規則は `@specdojo/docs-lint` の `exports` で公開されておらず、配布先のプロジェクトでは読み込めないため、その場合は統合の前の検査と同じ規則だけで検査する。
+
+エスケープされたバッククォートは、PJR-G3TT の `unescapeBackticksWhenUniform` が一律にエスケープされた文を戻すため、それだけでは違反にならない。コードの書式と混在して戻されない形が MD038 になるため、その形を fixture にした。
+
+### 5.0.2. 保護された設定
+
+`exec-defaults.yaml`・`package.json` の変更は要らない。
+
+### 5.0.3. 確認
+
+- `npx vitest run --config vitest.unit.config.ts tests/src/exec`（93 ファイル・1677 件）が通過。`npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md` などは親の検証が実行する。
+- 統合の後の runner の動作確認は、オーケストレーターが PJR-JSEY で行う（作業内容の No 4）。
+
+### 5.1. CHANGELOG に書く事項
+
+- 区分: 不具合修正
+- 文案: runner が reporter の書いた result を書き込む前に、統合の前の検査と同じ markdownlint の規則で検査し、違反があれば行と規則を示して reporter に書き直させるようにした。書き直しは出力形式の再試行と同じ回数までで、直らなければ違反を理由に止める。見出し・素の URL・コードの書式の崩れや中国語の字体で、統合の前に止まることを防ぐ。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[specdojo:exec-operation-guide|exec 運用ガイド]]
+- [[prj-0001:pjr-g3tt-escaped-backticks-in-result]]
+- `src/exec/result-markdownlint.ts`、`src/exec/reporter.ts`、`src/exec/results.ts`
