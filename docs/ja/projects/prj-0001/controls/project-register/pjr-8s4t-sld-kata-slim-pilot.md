@@ -82,7 +82,7 @@ specdojo:
 | 10  | 3 回目: 4 章の表の前の説明と列の名前を直す                                   | BA           | done | sample を 5,577 字から 5,879 字へ。結果は対応結果の「3 回目の実行の結果」                                |
 | 11  | 3 回目の統合の後に型を grade する（orchestrator）                            | orchestrator | done | 2026-11-22 に grade した。sample は pass 93、rulebook は needs-work 93（major 1 件）                     |
 | 12  | 読みやすさを改めて確かめる（利用者）                                         | 利用者       | open | -                                                                                                        |
-| 13  | 4 回目: rulebook の削除の良い例を、再生成できる派生物に限る                  | BA           | open | 完了条件の 4 回目の実行                                                                                  |
+| 13  | 4 回目: rulebook の削除の良い例を、再生成できる派生物に限る                  | BA           | done | 結果は対応結果の「4 回目の実行の結果」                                                                   |
 | 14  | 4 回目の統合の後に rulebook を grade する（orchestrator）                    | orchestrator | open | -                                                                                                        |
 
 ## 5. 対応結果
@@ -172,6 +172,8 @@ specdojo:
 
 - 3 回目（区分: 変更）。文案: 保管場所一覧（sld）の sample の「関連仕様・実装配置との対応と検証」の表に、何を示す表か・何を確かめて何を受け入れるかの説明を足し、列の名前を中身の分かる言葉にしました。rulebook の記述ガイドにも同じ書き方を足しました（PJR-8S4T）。
 
+- 4 回目（区分: 修正）。文案: 保管場所一覧（sld）の rulebook の保管場所一覧の良い例を、再生成できる派生物（YAML の表示ページと文書索引）に限り、grade の実行状態と旧 routine 状態の `generated/` を削除可から除きました（PJR-8S4T）。
+
 ### 5.9. 残課題
 
 - 統合の後に orchestrator が `grade run --target kata` を流し、前後の score と finding を本個票に書く（作業内容の 4）。
@@ -179,6 +181,7 @@ specdojo:
 - 結果を見て、他の rulebook と sample へ広げる todo を起票する（作業内容の 6）。
 - 2 回目: 統合の後に orchestrator が型を grade し（作業内容の 8）、利用者が読みやすさを改めて確かめる（作業内容の 9）。
 - 3 回目: 統合の後に orchestrator が型を grade し（作業内容の 11、作業内容の 8 とまとめて流す）、利用者が読みやすさを改めて確かめる（作業内容の 12）。
+- 4 回目: 統合の後に orchestrator が rulebook を grade する（作業内容の 14）。
 
 ### 5.10. 2 回目の実行の結果
 
@@ -202,6 +205,16 @@ specdojo:
 - 結論（保管場所、置くもの、削除可否、復旧の経路と連絡先）と、表の行の手順・合格条件・対応する保管場所は変えていない。
 - 大きさ（測り方は「大きさ」と同じ）: sld-sample は 5,577 字（22,757 B）から 5,879 字（23,746 B）へ増えた。説明の 2 文と列の分割の分である。sld-rulebook は 17,368 B から 17,713 B。
 - 迷った点と決めた内容: 全体概要の行の「その仕様が決めること」は元の表になかったため、概念データフロー図の役割から補った。rulebook の本文要件「関連仕様・実装配置との対応と検証要件」の観点名（「記録・状態の網羅」「削除・復旧判断の実効性」など）は rulebook 側の観点の名前で、完了条件が記述ガイドへの追記だけを求めているため変えていない。sample の 4.2 の行の順は rulebook の観点の順と同じにしてある。
+
+### 5.12. 4 回目の実行の結果
+
+2026-11-22 の型の grade（sld-rulebook の major 1 件）に基づき、記述ガイド「保管場所一覧」の良い例だけを直した。
+
+- 良い例の対象を、YAML の表示ページ（`docs/**/generated/*.md`）と `.specdojo/doc-index.json` に限り、生成の手段を `specdojo build`（`yaml-pages`・`index`）とした。同じ `generated/` の名前でも、grade の実行ロックと再開の状態（`execution/grade/generated/`）と移行元の旧 routine 状態（`routines/generated/`）は再生成できないため除く条件を書いた。
+- 確かめたファイル: `src/docs/yaml-pages.ts`（`yamlPageRelPath` が YAML の隣の `generated/<name>.md` を出力する）、`src/commands/build.ts`（`specdojo build` の段に `yaml-pages`・`index` がある）、`src/grade/run.ts`（`execution/grade/generated/run.lock` と `runs/<run-id>/run.json`）、`src/routine/storage.ts`（`migrateRoutineStorage` が `routines/generated/` の `routine-state.json`・`routine-runs.jsonl` を移行元として読み、ロールバック用に残す）、`.gitignore`（`docs/**/generated/*` を追跡から除く）。
+- 結論とほかの章は変えていない。sld-sample は変えていない。
+- 大きさ: sld-rulebook は 17,713 B から 17,973 B。
+- 迷った点と決めた内容: `execution/generated/ready.json`（`exec refresh` の出力）も再生成できる派生物だが、良い例を短く保つため例には足さなかった。除く対象は grade の指摘と同じ 2 か所に絞った。
 
 ## 6. 関連ドキュメント
 

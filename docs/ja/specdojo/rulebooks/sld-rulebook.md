@@ -132,7 +132,7 @@ specdojo:
 ### 6.2. 保管場所一覧
 
 - **判断基準**: 標準6列がすべて具体化され、「共有の有無」に共有手段（Git 追跡、`.gitignore`、端末固有など）、「削除・処分の可否と条件」に区分と条件が書かれていること。
-- **良い例**: 「`docs/**/generated/` および `.specdojo/doc-index.json` ／ 派生 Markdown ビューと文書索引 ／ `specdojo build`、`index build` ／ 共有なし（`.gitignore` で除外し各環境で生成） ／ ビルド時に再生成 ／ `削除可`。`specdojo build` で再生成できる」
+- **良い例**: 「YAML の表示ページ（`docs/**/generated/*.md`）と `.specdojo/doc-index.json` ／ 派生 Markdown ビューと文書索引 ／ `specdojo build`（`yaml-pages`・`index`） ／ 共有なし（`.gitignore` で除外し各環境で生成） ／ ビルド時に再生成 ／ `削除可`。`specdojo build` で再生成できる。ただし同じ `generated/` の名前でも、grade の実行ロックと再開の状態（`execution/grade/generated/`）と移行元の旧 routine 状態（`routines/generated/`）は再生成できないため除く」
 - **悪い例**: 「`generated` フォルダ ／ 生成ファイル ／ ビルド ／ なし ／ 随時 ／ 消してよい」（パス範囲、共有除外の仕組み、削除後の復旧手段が曖昧）
 
 ### 6.3. 削除・退避・復旧の判断基準
