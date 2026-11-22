@@ -5,8 +5,8 @@ path: docs/ja/specdojo/rulebooks/prj-charter-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 91
-graded_at: "2026-11-22T12:41:10.238Z"
+score: 90
+graded_at: "2026-11-22T13:08:19.148Z"
 graded_by: opus-review-executor
 content_hash: 981a89f78a336dbc96570bac9ec4d0472b2286ca443edf9f9374ba99cee634cc
 categories:
@@ -21,7 +21,7 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 83
   implementation:
     score: 88
   quality:
@@ -87,8 +87,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -104,7 +104,7 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 9
+  minor: 10
   note: 0
 findings:
   - id: F001
@@ -192,6 +192,13 @@ findings:
       本行は役割の割り当てを適用先のメンバー定義に委ね、本文では認可権限を持つ役割を「承認責任者」と呼ぶと定めていますが、対応 template の冒頭と権限委譲の _TODO_ は「PO
       またはスポンサー」と特定の役割名を指定しているため、template の記入指示を「承認責任者」に統一して rulebook と整合させてください。
   - id: F009
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 76
+    anchor: "| 6    | 主要前提・制約                  | ○    | 認可判断に直結する前提、制約、予算枠。全量は前提・制約・依存文書へ委譲 |"
+    message: 前提・制約・依存の文書名が本文構成の表では「前提・制約・依存文書」、主要前提・制約のガイドでは「前提・制約・依存関係文書」と揺れているため、同一文書を指す名称を一方に統一してください。
+    message_ja: 前提・制約・依存の文書名が本文構成の表では「前提・制約・依存文書」、主要前提・制約のガイドでは「前提・制約・依存関係文書」と揺れているため、同一文書を指す名称を一方に統一してください。
+  - id: F010
     severity: minor
     rule: vp-ops-agent-boundary
     line: 106

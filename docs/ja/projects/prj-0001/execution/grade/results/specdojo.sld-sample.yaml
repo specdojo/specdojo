@@ -5,8 +5,8 @@ path: docs/ja/specdojo/samples/sld-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 93
-graded_at: "2026-11-22T12:48:54.734Z"
+score: 91
+graded_at: "2026-11-22T13:11:35.172Z"
 graded_by: opus-review-executor
 content_hash: 8977788cc1d6644520edfc08dfad6251c3619c426be76bdcf48e974501066c4d
 categories:
@@ -21,7 +21,7 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 83
   implementation:
     score: 100
   quality:
@@ -87,8 +87,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -104,7 +104,7 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 4
+  minor: 5
   note: 0
 findings:
   - id: F001
@@ -142,6 +142,20 @@ findings:
     message: 前回の集計元とメンバー割り当ての重大な不整合、および現金と仮メモの混在は解消していますが、検品場所には破棄しない商品、保管棚へ移す納品伝票、解体処分する外箱が同じ管理行に残っています。ルールブックが求める共有範囲・寿命・削除可否の判断単位に従い、同じ検品場所内でも商品・伝票・外箱の管理区分を分けてください。個別の扱い自体は記載されているため、残る問題は区分の軽微な不整合です。
     message_ja: 前回の集計元とメンバー割り当ての重大な不整合、および現金と仮メモの混在は解消していますが、検品場所には破棄しない商品、保管棚へ移す納品伝票、解体処分する外箱が同じ管理行に残っています。ルールブックが求める共有範囲・寿命・削除可否の判断単位に従い、同じ検品場所内でも商品・伝票・外箱の管理区分を分けてください。個別の扱い自体は記載されているため、残る問題は区分の軽微な不整合です。
   - id: F004
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 78
+    anchor: >-
+      | 本書だけで消してよいかと壊れたときの対処を判断できる | 店番担当が本書だけを見て、空き容量の不足と `data/sales/`
+      の破損を模擬して対処を答える                                                                                       | 容量不足では
+      `tmp/` と条件を満たした `receipts/` だけを消すと答え、破損では新規会計を止めて DEV へ連絡すると答える                                 |
+    message: >-
+      合格条件では店番担当が破損時に新規会計を止めて DEV へ連絡すると答えますが、53行目の担当欄では同じ対処を OPS（51行目で店主代表と定義）が行うと書いており、担当の表記が店番担当と Role code
+      の間で揺れて同一場面の行為者が一致しません。店番担当を業務上の担当名として使うなら Role code との関係を明示するか、場面別の表と確認手順で同じ担当表記に揃えてください。
+    message_ja: >-
+      合格条件では店番担当が破損時に新規会計を止めて DEV へ連絡すると答えますが、53行目の担当欄では同じ対処を OPS（51行目で店主代表と定義）が行うと書いており、担当の表記が店番担当と Role code
+      の間で揺れて同一場面の行為者が一致しません。店番担当を業務上の担当名として使うなら Role code との関係を明示するか、場面別の表と確認手順で同じ担当表記に揃えてください。
+  - id: F005
     severity: minor
     rule: vp-ops-operability
     line: 31

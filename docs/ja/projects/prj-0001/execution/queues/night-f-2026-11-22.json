@@ -3,13 +3,13 @@
   "queue_id": "night-f-2026-11-22",
   "project_id": "prj-0001",
   "created_at": "2026-11-22T12:42:39.698Z",
-  "updated_at": "2026-11-22T12:49:29.948Z",
-  "state": "running",
+  "updated_at": "2026-11-22T13:02:14.339Z",
+  "state": "succeeded",
   "steps": [
     {
       "index": 1,
       "on_failure": "continue",
-      "status": "running",
+      "status": "succeeded",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -31,7 +31,10 @@
         "--project",
         "prj-0001"
       ],
-      "started_at": "2026-11-22T12:49:29.948Z"
+      "started_at": "2026-11-22T12:49:29.948Z",
+      "completed_at": "2026-11-22T13:02:14.329Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
     }
   ]
 }

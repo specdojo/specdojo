@@ -4,11 +4,11 @@ document: specdojo:sld-rulebook
 path: docs/ja/specdojo/rulebooks/sld-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 93
-graded_at: "2026-11-22T12:47:38.587Z"
+verdict: pass
+score: 95
+graded_at: "2026-11-22T13:10:16.968Z"
 graded_by: opus-review-executor
-content_hash: 2d761ea37bfc52870345624e1e5b38a80ce3395d92778b514c9b4180410fec09
+content_hash: 19ede8203fa079a395db1ba212f804f0e40acabf98c5abd2a10c6dfd9eae3586
 categories:
   purpose:
     score: 100
@@ -25,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 92
   consistency:
     score: 75
 viewpoints:
@@ -81,8 +81,8 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -103,7 +103,7 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
+  major: 0
   minor: 2
   note: 0
 findings:
@@ -119,21 +119,6 @@ findings:
       「関連仕様・実装配置との対応と検証要件」では STSD の状態と保管場所の対応を追跡するよう求めていますが、「位置づけ」の図と説明文に STSD からの入力がなく、依存関係が読み取れません。図に STSD（状態）→SLD
       の線を加えるか、説明文で STSD との関係を示してください。
   - id: F002
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 121
-    anchor: >-
-      - **良い例**: 「`docs/**/generated/` および `.specdojo/doc-index.json` ／ 派生 Markdown ビューと文書索引 ／ `specdojo build`、`index
-      build` ／ 共有なし（`.gitignore` で除外し各環境で生成） ／ ビルド時に再生成 ／ `削除可`。`specdojo build` で再生成できる」
-    message: >-
-      「良い例」が `docs/**/generated/` 全体を `削除可` かつ `specdojo build` で再生成可能としているが、実装の `src/grade/run.ts`
-      はこの配下に実行ロックと再開用状態を保存し、`src/routine/storage.ts` は旧 `routines/generated/`
-      の状態・履歴を移行元として扱う。これらの削除は排他の破綻や再開情報・未移行履歴の消失につながるため、例の対象を再生成可能な派生物へ限定し、実行状態と未移行データの除外条件を明記する。
-    message_ja: >-
-      「良い例」が `docs/**/generated/` 全体を `削除可` かつ `specdojo build` で再生成可能としているが、実装の `src/grade/run.ts`
-      はこの配下に実行ロックと再開用状態を保存し、`src/routine/storage.ts` は旧 `routines/generated/`
-      の状態・履歴を移行元として扱う。これらの削除は排他の破綻や再開情報・未移行履歴の消失につながるため、例の対象を再生成可能な派生物へ限定し、実行状態と未移行データの除外条件を明記する。
-  - id: F003
     severity: minor
     rule: vp-qe-kata-conformance
     line: 127
