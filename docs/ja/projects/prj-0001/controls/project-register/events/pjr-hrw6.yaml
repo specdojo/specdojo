@@ -112,3 +112,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_66cb1e3d1ecb4f8d9d3d58d1d10c063c
+- v: 1
+  id: reg_da3be5f6f79844819db9682269525ba3
+  ts: "2026-11-22T15:00:18Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが差分と対応結果を完了条件と照らし、統合の後の型の grade（2026-11-23、opus-review-executor）で rulebook と sample がともに pass であることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: prj-charter の sample の品質の確認の対象と GO・Not GO の判断の材料を、販売管理システムの実装・操作手順・受入結果・公開物と品質管理計画のゲートに結びつけた。型の grade は rulebook pass 90・sample pass 96
+  previous_event_id: reg_2fd56ff4398442bdaff05e1c00aa170d

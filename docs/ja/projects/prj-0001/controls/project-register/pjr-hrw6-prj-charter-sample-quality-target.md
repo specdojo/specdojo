@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-hrw6-prj-charter-sample-quality-target
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-22T12:55:52Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-22T15:00:18Z"
+  conclusion: prj-charter の sample の品質の確認の対象と GO・Not GO の判断の材料を、販売管理システムの実装・操作手順・受入結果・公開物と品質管理計画のゲートに結びつけた。型の grade は rulebook pass 90・sample pass 96
   derived_from:
     - PJR-7M9J
 ---
