@@ -1,6 +1,11 @@
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { basename, isAbsolute, join, resolve } from "node:path";
-import type { ConfigLoadResult, SpecDojoConfig, SpecDojoRepoConfig } from "./specdojo-config.js";
+import type {
+  ConfigLoadResult,
+  SpecDojoConfig,
+  SpecDojoExternalProjectConfig,
+  SpecDojoRepoConfig,
+} from "./specdojo-config.js";
 
 /**
  * Untracked per-machine overrides of `.specdojo/specdojo.config.json` (PJR-NC9R). Only the keys
@@ -14,9 +19,18 @@ export const LOCAL_CONFIG_ENV = "SPECDOJO_LOCAL_CONFIG";
 /** Keys a local entry may set on a repository already declared in the shared config. */
 const OVERRIDE_REPO_KEYS: readonly string[] = ["name", "path"];
 
+/**
+ * Local `external_projects[<alias>]` accepts only `path`. The shared alias stays as `project_id`
+ * (cross-repository target id); overriding only the local path keeps the same project binding
+ * while letting the caller point at a per-machine checkout.
+ */
+const EXTERNAL_PROJECT_OVERRIDE_KEYS: readonly string[] = ["path"];
+
 export type LocalConfigOverride =
   | { project: string; repo: string; kind: "path"; path: string; shared_path: string }
-  | { project: string; repo: string; kind: "added"; path: string };
+  | { project: string; repo: string; kind: "added"; path: string }
+  | { external: string; kind: "external-path"; path: string; shared_path: string }
+  | { external: string; kind: "external-added"; path: string };
 
 export type LocalConfigApplication = {
   config: SpecDojoConfig;
@@ -123,6 +137,11 @@ function validateRepoEntry(
  * as local repositories. Every disallowed key or type error is reported with `localPath`.
  * Semantic checks (name pattern, path existence, ...) are left to the shared validator, which
  * runs on the merged result.
+ *
+ * `external_projects` may be overridden locally: an alias declared in the shared config has only
+ * its `path` replaced, and an alias absent from the shared config is appended as a new external
+ * project after the merge. The shared validator then checks the path, aliases, and `project_id`
+ * on the merged value.
  */
 export function applyLocalConfig(
   shared: SpecDojoConfig,
@@ -145,8 +164,8 @@ export function applyLocalConfig(
     return fail();
   }
   for (const key of Object.keys(local).sort()) {
-    if (key !== "version" && key !== "projects") {
-      errors.push(`unknown key "${key}" (allowed: version, projects)`);
+    if (key !== "version" && key !== "projects" && key !== "external_projects") {
+      errors.push(`unknown key "${key}" (allowed: version, projects, external_projects)`);
     }
   }
   if (local.version !== 1) errors.push("version must be 1");
@@ -212,8 +231,70 @@ export function applyLocalConfig(
     projects[projectId] = { ...sharedProject, repos: merged };
   }
 
+  const localExternalProjects = local.external_projects;
+  // Build the merged external_projects object fresh: start from the shared entry, then
+  // apply each local entry by replacing `path` for existing aliases or appending new ones.
+  const mergedExternalProjects: Record<string, SpecDojoExternalProjectConfig> = {};
+  const sharedExternal = shared.external_projects;
+  if (sharedExternal) {
+    for (const [alias, entry] of Object.entries(sharedExternal)) {
+      mergedExternalProjects[alias] = { ...entry };
+    }
+  }
+  let localExternalApplied = false;
+  if (localExternalProjects !== undefined) {
+    if (!isRecord(localExternalProjects)) {
+      errors.push("external_projects must be an object");
+    } else {
+      for (const [alias, entry] of Object.entries(localExternalProjects)) {
+        const at = `external_projects.${alias}`;
+        if (!isRecord(entry)) {
+          errors.push(`${at} must be an object with path`);
+          continue;
+        }
+        localExternalApplied = true;
+        const isSharedAlias = mergedExternalProjects[alias] !== undefined;
+        for (const key of Object.keys(entry).sort()) {
+          // A local-only alias is a full definition; only overriding a shared alias is path-only.
+          if (isSharedAlias && !EXTERNAL_PROJECT_OVERRIDE_KEYS.includes(key)) {
+            errors.push(
+              `${at}: key "${key}" cannot override external project "${alias}" ` +
+                `(allowed: ${EXTERNAL_PROJECT_OVERRIDE_KEYS.join(", ")})`,
+            );
+          }
+        }
+        const path = entry.path;
+        if (typeof path !== "string" || path.trim().length === 0) {
+          errors.push(`${at}.path must be a non-empty string`);
+          continue;
+        }
+        const sharedEntry = mergedExternalProjects[alias];
+        if (sharedEntry) {
+          const sharedPath = sharedEntry.path;
+          sharedEntry.path = path;
+          overrides.push({
+            external: alias,
+            kind: "external-path",
+            path,
+            shared_path: sharedPath,
+          });
+        } else {
+          // Local-only alias. The shared validator (validateExternalProjects) checks the merged
+          // value: alias pattern, collision with a local project id, and path existence relative
+          // to `rootDir`.
+          mergedExternalProjects[alias] = { ...(entry as SpecDojoExternalProjectConfig) };
+          overrides.push({ external: alias, kind: "external-added", path });
+        }
+      }
+    }
+  }
+
   if (errors.length > 0) return fail();
-  return { config: { ...shared, projects }, overrides };
+
+  const config: SpecDojoConfig = localExternalApplied
+    ? { ...shared, projects, external_projects: mergedExternalProjects }
+    : { ...shared, projects };
+  return { config, overrides };
 }
 
 /** Read the local config for `rootDir`, or null when the file does not exist. */
@@ -241,18 +322,39 @@ export function readLocalConfig(
 
 /** One line per local override, for `config show` and `where exec`. */
 export function formatLocalOverride(override: LocalConfigOverride): string {
-  return override.kind === "path"
-    ? `projects.${override.project}.repos[${override.repo}].path = ${override.path} ` +
+  switch (override.kind) {
+    case "path":
+      return (
+        `projects.${override.project}.repos[${override.repo}].path = ${override.path} ` +
         `(local; shared: ${override.shared_path})`
-    : `projects.${override.project}.repos[${override.repo}] = ${override.path} (local; added)`;
+      );
+    case "added":
+      return `projects.${override.project}.repos[${override.repo}] = ${override.path} (local; added)`;
+    case "external-path":
+      return (
+        `external_projects.${override.external}.path = ${override.path} ` +
+        `(local; shared: ${override.shared_path})`
+      );
+    case "external-added":
+      return `external_projects.${override.external} = ${override.path} (local; added)`;
+  }
 }
 
 /** Lines describing the local config and its overrides, for `config show` and `where`. */
 export function formatLocalConfigLines(result: ConfigLoadResult, projectId?: string): string[] {
   if (!result.localConfigPath) return ["local-config: none"];
-  const overrides = (result.localOverrides ?? []).filter(
-    (override) => projectId === undefined || override.project === projectId,
-  );
+  const localOverrides = result.localOverrides ?? [];
+  // external-* overrides are repository-wide (not tied to a project id), so they always show
+  // up together with the project's repos.
+  const overrides =
+    projectId === undefined
+      ? localOverrides
+      : localOverrides.filter((override) =>
+          "project" in override
+            ? override.project === projectId
+            : // external-* entries are not project-scoped, always include them
+              true,
+        );
   return [
     `local-config: ${result.localConfigPath}`,
     ...overrides.map((override) => `local-override: ${formatLocalOverride(override)}`),
@@ -274,7 +376,11 @@ export function formatConfigShow(result: ConfigLoadResult, projectId?: string): 
     if (repos.length === 0) lines.push("  repos: none");
     for (const repo of repos) {
       const override = result.localOverrides?.find(
-        (candidate) => candidate.project === id && candidate.repo === repo.name,
+        (candidate): candidate is Extract<LocalConfigOverride, { kind: "path" | "added" }> =>
+          "project" in candidate &&
+          "repo" in candidate &&
+          candidate.project === id &&
+          candidate.repo === repo.name,
       );
       const source = !override
         ? "shared"
@@ -282,6 +388,31 @@ export function formatConfigShow(result: ConfigLoadResult, projectId?: string): 
           ? "local; added"
           : `local; shared: ${override.shared_path}`;
       lines.push(`  repo ${repo.name}: ${repo.path} (${source})`);
+    }
+  }
+  const externalProjects = config.external_projects;
+  if (externalProjects) {
+    lines.push("external_projects");
+    for (const alias of Object.keys(externalProjects).sort()) {
+      const entry = externalProjects[alias]!;
+      const override = result.localOverrides?.find(
+        (candidate): candidate is Extract<LocalConfigOverride, { kind: "external-path" }> =>
+          "external" in candidate &&
+          candidate.kind === "external-path" &&
+          candidate.external === alias,
+      );
+      const externalAdded = result.localOverrides?.find(
+        (candidate): candidate is Extract<LocalConfigOverride, { kind: "external-added" }> =>
+          "external" in candidate &&
+          candidate.kind === "external-added" &&
+          candidate.external === alias,
+      );
+      const source = override
+        ? `local; shared: ${override.shared_path}`
+        : externalAdded
+          ? "local; added"
+          : "shared";
+      lines.push(`  external ${alias}: ${entry.path} (${source})`);
     }
   }
   return `${lines.join("\n")}\n`;

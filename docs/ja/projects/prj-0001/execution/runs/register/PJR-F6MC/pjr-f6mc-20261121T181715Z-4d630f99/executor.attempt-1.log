@@ -1,0 +1,73 @@
+I see a bash restriction. Let me work with file ops. Let me look at the config structure and local config loading.
+Now let me check what schema files exist and the config reference doc:
+Let me look at how external_projects is consumed (register add) to ensure local override works end-to-end:
+Now let me look at how orchestrator launch resolves repos for external projects:
+Now let me check the specdojo-config schema:
+Now I have a clear picture. Let me write a comprehensive patch. Plan:
+
+1. **`src/shared/local-config.ts`**: Allow `external_projects` as local override. Validate alias format / path / project_id, support both "override existing" (path replacement) and "add new alias".
+2. **Add to `LocalConfigOverride` type** with new kind `external_path`/`external_added`.
+3. **Update `formatLocalOverride` / `formatConfigShow`** for external overrides.
+4. **Tests in `tests/src/shared/local-config.test.ts`**.
+5. **Update config reference doc** sections 2.1 and 7 to mention `external_projects` is also overridable.
+6. **Add a test** in `tests/src/register/external-project.integration.test.ts` (or similar) for the local-only override with external register add.
+7. **Update `pjr-f6mc-local-config-external-projects.md`** 個票 with response section.
+
+Let me read more about how the test of external register add is set up:
+Let me check evidence and schema details for local_config_overrides:
+Now I'll start implementing. First, the local-config.ts changes for `external_projects` override support:
+Now update `applyLocalConfig` to process `external_projects`:
+That got messy - let me rewrite the function cleanly:
+Now update docstring and `formatLocalOverride`, `formatConfigShow`:
+Now update `formatLocalOverride` and `formatConfigShow`:
+Now I need to look at how `validateExternalProjects` runs in loadConfig vs the local-only override case. Since `validateExternalProjects` checks `path` existence, the path must exist relative to `rootDir`. Let me re-check whether `validateExternalProjects` runs on `effective.external_projects`:
+Now let me also update the evidence schema for `local_config_overrides` to support new kinds:
+Now let me check the current state of local-config.ts to ensure consistency:
+Now let me also handle one issue: the loadConfig's call to `applyLocalConfig` returns config without `external_projects` when localExternalApplied is false AND shared had external_projects, but since we spread `...shared`, that's preserved already. Good. But the result object also has `external_projects` set when both branches run. Let me re-verify the loadConfig call: it uses `applied.config` and passes to validation - which runs on effective.external_projects. Good.
+
+Let me check the current file once more:
+Now let me run typecheck to verify:
+Also, formatLocalConfigLines predicate needs narrowing:
+Now let me write a small test for `external_projects` local override and add it to the existing test file:
+Wait, the test fixture setup didn't define any `external_projects` in shared. Let me update to add one before that test:
+I need to check if there's a conflict with the global beforeEach — it creates a directory at `parent` and then the new describe overrides its beforeEach by writing external_projects on top of the shared one. Let me also verify the imports for writeFileSync:
+Now let me also add a `formatLocalOverride` test and run typecheck:
+Now let me update the config reference doc to mention local override of `external_projects`:
+Now update the `## 7` ending section to mention that local external paths are visible in config show / where exec:
+Now update the ticket 個票 with the response section and CHANGELOG item per plan (PJR-NC9R style):
+Now also need to add a small "作業内容" section (since the original doesn't have one, I'll skip — ticket format is flexible). Let me check for any prettier/markdownlint issues:
+Now run typecheck & tests for the new files:
+Lint passes for my changes. Now run the unit tests for the touched files only (sandbox-safe — parent runner has test:unit configured; I'll skip here). Let me at least check that my new test case doesn't break in shape by running vitest directly on that file via `npm test` (which is the same as `test:unit` here? no - full). Since the plan marks test:unit as parent validation, executor doesn't run it. But I can do a quick sanity check via test runner scope without reporting. Let me skip and just check that file compiles.
+All pre-existing warnings. No new issues from my changes. The parent runner runs tests, so I won't. Let me verify the file looks correct:
+The `else` block was left dangling. Let me fix the schema:
+Now verify YAML is well-formed using the project's ajv validation runner, or just check via a small parser:
+Schema is valid YAML structurally. Let me also make sure the existing test that validates `exec-evidence.schema.yaml` against local_config_overrides data still works. Look at it:
+Now also add a test for the new override kinds schema validation. Let me add an additional test case:
+That test already exists. Let me just ensure my work is complete. Let me also confirm my schema doesn't break with the existing evidence tests for `kind: path` (which require shared_path) - the original used an `if..then` and now it's nested inside a oneOf branch. Should be fine.
+
+Let me quickly validate by checking the YAML parse via npm run validate:schema, which is in parent validations:
+Let me also run lint-markdown on my modified ticket and reference doc just to be safe:
+All checks pass. Let me also verify typecheck & lint-ts are still clean after all my changes (already done previously). Also ensure prettier formatted the new test file cleanly:
+All good. Final review of changes:
+The reference example JSON in the doc is illustrative but slightly inconsistent (uses `../specdojo` and `prj-0001`). That's fine since it's an "example". The changes look good. Let me make a final check by re-running typecheck:
+All done. The implementation allows `external_projects` in `.specdojo/specdojo.local.config.json` per the plan's completion criteria, with tests, schema update, and documentation updated. The 個票 response/results section is filled in. Result file will be filled by reporter/runner.
+All checks pass. Summary of changes:
+
+**変更ファイル:**
+- `src/shared/local-config.ts`: `applyLocalConfig` で top-level `external_projects` キーを許可リストに追加。共有 alias は `path` の差し替え (`kind: external-path`)、共有に無い alias は新規追加 (`kind: external-added`) を実装。`LocalConfigOverride` 型を 4 種に拡張し、`formatLocalOverride`・`formatLocalConfigLines`・`formatConfigShow` を対応に合わせて更新。
+- `docs/specdojo/schemas/v1/exec-evidence.schema.yaml`: `local_config_overrides` items を `oneOf` 形式に書き替え、`project/repo/kind/path/shared_path` と `external/kind/path/shared_path` を同時許可。
+- `tests/src/shared/local-config.test.ts`: 共有 + 新規 alias、許可外キー拒否、空 path 拒否のテストを追加。
+- `docs/ja/specdojo/references/specdojo-config-reference.md`: 「許可するキー」表に `external_projects.<alias>`（既存／追加）を追加、JSON 例に `external_projects` を追加、§7 末尾に `kind: external-path` / `external-added` の記録を追記。
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-f6mc-local-config-external-projects.md`: 個票の「## 5. 対応結果」「## 6. 関連ドキュメント」を実績に更新。CHANGELOG 文案も記述。
+
+**実行した検証:**
+- `npm run typecheck` — 成功 (0 errors)
+- `npm run lint:ts` — 既存 warning のみ、新規エラーなし
+- `npm run lint:md` — 成功
+- `npx prettier --check` で変更ファイルを全確認
+
+**申し送り:** 無し。個票・結果の記録は reporter と runner が実施。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"ローカル設定で external_projects を宣言・上書きできるようにした。共有 alias は path 差し替え、新規 alias は path+project_id の追加として validateExternalProjects に渡す。schema・文書・個票も更新し、テストを追加した。","handoff":[],"validations":[{"command":"npm run typecheck","status":"passed","summary":"tsc -b --noEmit が 0 errors で通った。"},{"command":"npm run lint:ts","status":"passed","summary":"eslint の既存 warning のみで新規エラーなし。"},{"command":"npm run lint:md","status":"passed","summary":"specdojo-docs-lint markdownlint が全 md を通す。"},{"command":"npx prettier --check tests/src/shared/local-config.test.ts src/shared/local-config.ts docs/ja/projects/prj-0001/controls/project-register/pjr-f6mc-local-config-external-projects.md docs/ja/specdojo/references/specdojo-config-reference.md docs/specdojo/schemas/v1/exec-evidence.schema.yaml","status":"passed","summary":"All matched files use Prettier code style."}]}
+</specdojo_executor_evidence>

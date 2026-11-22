@@ -338,13 +338,15 @@ exec worktree の中で設定を読む場合（agent が worktree で `specdojo`
 
 `.specdojo/specdojo.local.config.json` は、git で管理しない環境ごとの設定です。`specdojo.config.json` を読んだ後に読み、許可したキーだけを上書きします。`config init` は `.gitignore` にこのファイルを足します。
 
-| 許可するキー                            | 扱い                                                                                                          |
-| --------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| `version`                               | `1` 固定です。                                                                                                |
-| `projects.<project-id>.repos[]`（既存） | 共有の設定と同じ `name` の要素は、`path` だけを差し替えます。`name`・`path` 以外のキーはエラーです。          |
-| `projects.<project-id>.repos[]`（追加） | 共有の設定に無い `name` の要素は、ローカルのリポジトリとして末尾に足します。キーは `repos` のキーと同じです。 |
+| 許可するキー                            | 扱い                                                                                                                            |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `version`                               | `1` 固定です。                                                                                                                  |
+| `projects.<project-id>.repos[]`（既存） | 共有の設定と同じ `name` の要素は、`path` だけを差し替えます。`name`・`path` 以外のキーはエラーです。                            |
+| `projects.<project-id>.repos[]`（追加） | 共有の設定に無い `name` の要素は、ローカルのリポジトリとして末尾に足します。キーは `repos` のキーと同じです。                   |
+| `external_projects.<alias>`（既存）     | 共有の設定に同じ別名があるときだけ、その `path` を差し替えます。`project_id` は共有から引き継ぎ、ローカルで書き換えられません。 |
+| `external_projects.<alias>`（追加）     | 共有の設定に無い別名は、新規の外部 project として足します。`path` と `project_id` の両方を local に書きます。                   |
 
-上書きの後の `repos` は、共有の設定と同じ検証を受けます。共有の設定に無い project、許可していないキー、型の誤りは、ローカル設定のファイルとキーを示してエラーにします。ローカルで足したリポジトリも `repos` で宣言したリポジトリとして扱い、`<name>:<path>` の解決、プロダクト worktree の作成、commit の許可範囲の対象になります。
+上書きの後の `repos`・`external_projects` は、共有の設定と同じ検証を受けます。共有の設定に無い project、許可していないキー、型の誤りは、ローカル設定のファイルとキーを示してエラーにします。ローカルで足したリポジトリも `repos` で宣言したリポジトリとして扱い、`<name>:<path>` の解決、プロダクト worktree の作成、commit の許可範囲の対象になります。ローカルで足した外部 project も共有一体となり、`register add --project <別名> --commit` や `orchestrator launch` が引けます。
 
 ```json
 {
@@ -356,6 +358,10 @@ exec worktree の中で設定を読む場合（agent が worktree で `specdojo`
         { "name": "tools", "path": "../tools" }
       ]
     }
+  },
+  "external_projects": {
+    "customer": { "path": "../customer-specdojo" },
+    "specdojo-upstream": { "path": "../specdojo", "project_id": "prj-0001" }
   }
 }
 ```
@@ -366,7 +372,7 @@ exec worktree の中で設定を読む場合（agent が worktree で `specdojo`
 2. linked worktree では、環境変数 `SPECDOJO_LOCAL_CONFIG` があればその絶対パスを読みます。runner は worktree の中の子のプロセス（build・agent）へ主の作業ツリーのファイルのパスを渡します。
 3. linked worktree で環境変数が無ければ、主の作業ツリーのファイルを読みます。worktree の中の同じ名前のファイルは読みません。
 
-ローカル設定は worktree へコピーしません。agent の保護対象（`.specdojo/` 配下）に含まれ、executor が書き換えると統合の前に止まります。ローカル由来の値は `config show` と `where exec` に `local` と表示し、`exec run` の executor evidence の `local_config_overrides` に記録します。
+ローカル設定は worktree へコピーしません。agent の保護対象（`.specdojo/` 配下）に含まれ、executor が書き換えると統合の前に止まります。ローカル由来の値は `config show` と `where exec` に `local` と表示し、`exec run` の executor evidence の `local_config_overrides` に記録します。`external_projects.<alias>.path` の差し替え（`kind: external-path`）と新規追加（`kind: external-added`）も同様に記録されます。
 
 ## 8. catalog・schedule・execへ進む設定例
 
