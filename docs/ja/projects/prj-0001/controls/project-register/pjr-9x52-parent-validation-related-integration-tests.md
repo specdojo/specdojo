@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-9x52-parent-validation-related-integration-tests
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-22T13:34:24Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-22T14:37:19Z"
+  conclusion: "parent_validations の test-unit・test-integration に related: true を書くと、変更に依存するテストだけを流せるようにした。既定は全件で、選んだテストと理由を evidence に残す"
 ---
 
 # PJR-9X52 親の検証の統合テストを、変更に関係するテストだけに絞れるようにする
