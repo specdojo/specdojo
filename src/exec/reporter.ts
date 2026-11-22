@@ -388,6 +388,15 @@ export function deriveReporterFacts(
     ) {
       return false;
     }
+    // review の grade の鮮度の確認は、最新でない評価があると出力ありとして failed に記録されうる。
+    // 鮮度は verdict（grade-stale など）で判断するため、それだけで block にしない（PJR-PP4X）。
+    if (
+      options.mode === "review" &&
+      validation.status === "failed" &&
+      isGradeFreshnessCheck(validation.command)
+    ) {
+      return false;
+    }
     if (
       (validation.status === "not_run" || validation.status === "not_applicable") &&
       runnerOwnedValidationReason(validation.command) !== undefined
@@ -529,6 +538,19 @@ function catalogValidateCommandArgs(
     return `${bodyArgs}${suffix}`;
   }
   return undefined;
+}
+
+/**
+ * True for `specdojo grade list ... --changed-only`, the freshness check a review judges through
+ * its verdict. Other `grade list` checks keep the usual failed handling.
+ */
+export function isGradeFreshnessCheck(command: string): boolean {
+  const args = specdojoCommandArgs(command);
+  return (
+    args !== undefined &&
+    /^grade\s+list(?:\s|$)/u.test(args) &&
+    /(?:^|\s)--changed-only(?:\s|=|$)/u.test(args)
+  );
 }
 
 /**
