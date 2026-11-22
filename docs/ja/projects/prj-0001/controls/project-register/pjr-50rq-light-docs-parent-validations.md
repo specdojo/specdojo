@@ -145,6 +145,20 @@ parent_validations:
 - 保護された設定の反映と、文書だけを変える run 1 回の合計時間の比較は、統合後にオーケストレーターが行う。
 - 4 列目への引き上げは、その計測の後に判断する。
 
+### 5.7. 反映の後の比較
+
+オーケストレーターが 2026-11-22 に確かめた。5.4 の案を indie の承認で develop へ入れた（d6bc768bb）後、文書だけを変える PJR-JSEY を `exec smoke` で 1 回流した。
+
+| run                            | 流れた検証                                                               | 検証の時間（開始から終了） |
+| ------------------------------ | ------------------------------------------------------------------------ | -------------------------- |
+| 変える前: PJR-RPNF（文書だけ） | lint-fm・lint-md・lint-mermaid・lint-d2・validate-schema・test-unit      | 83 秒                      |
+| 変える前: PJR-6Y05（文書だけ） | 同上                                                                     | 87 秒                      |
+| 変えた後: PJR-JSEY（文書だけ） | lint-md-changed・lint-fm-changed・lint-mermaid・lint-d2・validate-schema | 11.6 秒                    |
+
+- 変えた後は、lint の 4 件が並べて流れ、test の 4 件は `paths` に合わず流れなかった。
+- `lint-md-changed` と `lint-fm-changed` は、worktree の HEAD からの差分と未追跡の Markdown を見る。新しい run では executor の変更は統合まで commit されないため、変えた文書を検査する。再開の run で runner の checkpoint の commit が executor の変更を含む場合に検査が空にならないかは、まだ確かめていない。
+- `parent_validation_concurrency` は 1 のままにした。4 へ上げるかは、並べた run での負荷を見てから決める。
+
 ## 6. 関連ドキュメント
 
 - `exec-config-guide`（`docs/ja/specdojo/guides/exec-config-guide.md`）に、追加した検証 ID と `parallel` を記載した。
