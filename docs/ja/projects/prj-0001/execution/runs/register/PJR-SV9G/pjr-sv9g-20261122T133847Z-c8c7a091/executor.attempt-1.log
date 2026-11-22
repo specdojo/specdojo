@@ -1,0 +1,17 @@
+`docs/ja/specdojo/templates/prj-charter-template.md` に書き込む許可が得られず、template の編集を 8 件とも実行できませんでした。作業は未完了です。
+
+Bash の `sed` などで書き込み制限を回避することはしていません。ファイルは何も変更していません。個票も未更新で、検証も実行していません。
+
+調査では次の点を確認しました。
+
+- 手本として PJR-7M9J の対応結果にある「他の recipe へ広げるときの一覧」を読みました。
+- template の外す記述は、rulebook の言い直しにあたる `_TODO_` 注記です。対象は、冒頭文の肉付け、「認可条件」行の扱い、数値目標を再掲しない注記、承認事項の例示 5 項目、前提・制約の注記、証跡リンクの書き方の説明です。
+- 残す記述は、章の骨組み、表の列、`_UPPER_SNAKE_` と `_TODO_` の記入枠、`prj-scope` や `dct-index` などへの固定の参照文です。
+- 「未決事項」表の列は、`論点`・`期限`・`担当`・`対応方針` を `論点`・`影響`・`当面の扱い` に直す方針です。rulebook と sample はすでにこの列で、template だけが管理台帳の列のまま残っています。
+- 変更前の文字数は、行頭から Python で計算する予定でした。後の文字数も同じ方法で測り、個票に書くつもりでした。
+
+編集の許可が出れば、template の 8 件の編集、前後の文字数の測定、個票の「対応結果」と作業内容の表の更新を続けます。CHANGELOG の節は「変更」区分の文案で書く予定です。
+
+<specdojo_executor_evidence>
+{"completion_status":"incomplete","final_message":"template への書き込み権限が付与されず（Edit が permission 拒否）、prj-charter-template の編集と個票の更新を実施できなかった。成果物は未変更。","handoff":["`docs/ja/specdojo/templates/prj-charter-template.md` と個票 `pjr-sv9g-template-slim-pilot-prj-charter.md` への書き込み権限が必要。権限付与後に executor を再開する。","予定した編集: 冒頭文・目的・権限委譲・前提制約・承認の `_TODO_` 注記を最小化し、承認事項の例示 5 項目と認可条件行の注記を削除する。「未決事項」表の列は `論点`・`影響`・`当面の扱い` に直す（rulebook と sample はこの列で、PJR-7M9J の変更案 2 と同じ）。","個票の対応結果に書く予定の項目: 実施内容、前後の文字数（空白と表の区切り行を除く）、迷った点、外す記述・残す記述・参照の形の一覧、変更案、保護された設定の変更なし、CHANGELOG に書く事項（変更区分）、残課題（orchestrator による型の grade）。"],"validations":[{"command":"npm run lint:md","status":"not_run","summary":"編集できなかったため未実行（親 runner が実行する検証）。"}]}
+</specdojo_executor_evidence>
