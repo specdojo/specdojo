@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: medium
   difficulty: medium
   owner: DEV
@@ -50,7 +50,14 @@ grade の vp-qe-config-validity の検査は本文に _TODO_ か _ASSUMPTION_ �
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- 解決内容: `src/grade/plan.ts` の `vp-qe-config-validity` の機械的な検査を、`--target kata` では `_TODO_` だけを major にする形へ変えた。`_ASSUMPTION_` と `_UNDECIDED_` は指摘しない。`--target deliverable` は従来どおり `_TODO_` / `_ASSUMPTION_` を major にする。`docs/ja/specdojo/references/command-reference.md` の grade の説明へ同じ条件を追記した。
+- 確認結果: `tests/src/grade/yaml.test.ts` に kata の `_ASSUMPTION_` / `_UNDECIDED_` が指摘されないこと、kata の `_TODO_` が major になること、deliverable の `_ASSUMPTION_` が major のままであることを追加し、`tests/src/grade` の単体テスト 176 件と `npm run typecheck` が通った。
+- 結果が分かれた原因: 未確定。`utc-sample` の結果は 2026-11-22T01:07Z、`itc-sample` は 07:13Z の評価で、評価の時期が違う。また `itc-sample` の指摘の `rule` は `vp-ops-release-readiness` であり、`pm-review-viewpoints.yaml` では `vp-qe-config-validity` は `grade_targets: [deliverable]` なので、kata では機械的な検査が走らないはずである。`src` 内で「未解決の」の文言を出すのは `plan.ts` だけで、経路を特定できなかった。統合の後の `utc-index` の再評価で確かめる。
+- 再発防止策: 上記のテストで kata の条件を固定した。
+
+### 5.1. CHANGELOG に書く事項
+
+- 区分「変更」: grade の機械的な検査（`vp-qe-config-validity`）が、`--target kata` では `_TODO_` だけを major にし、`_ASSUMPTION_` / `_UNDECIDED_` を指摘しないようにした。`--target deliverable` は変わらない。
 
 ## 6. 関連ドキュメント
 

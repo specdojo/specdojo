@@ -60,13 +60,18 @@ export function deterministicResults(
       }
     }
     if (viewpoint.id === "vp-qe-config-validity") {
+      // kata の sample は、sample-authoring-standard が未確定事項を _ASSUMPTION_ / _UNDECIDED_ で明示するよう求めるため、_TODO_ だけを未解決とする。
+      const isKata = target === "kata";
+      const placeholderPattern = isKata ? /_TODO_/ : /(?:_TODO_|_ASSUMPTION_)/;
       const placeholderLine = document.body
         .split("\n")
-        .findIndex((line) => /(?:_TODO_|_ASSUMPTION_)/.test(line));
+        .findIndex((line) => placeholderPattern.test(line));
       if (placeholderLine >= 0) {
         findings.push({
           severity: "major",
-          message: "未解決の _TODO_ / _ASSUMPTION_ が残っています。",
+          message: isKata
+            ? "未解決の _TODO_ が残っています。"
+            : "未解決の _TODO_ / _ASSUMPTION_ が残っています。",
           line: placeholderLine + 1,
         });
       }

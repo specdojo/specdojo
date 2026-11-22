@@ -77,3 +77,46 @@ describe("YAML grade documents", () => {
     expect(gradeDocumentId(content, "data.md")).toBe(markdownDocumentId(content, "data.md"));
   });
 });
+
+describe("vp-qe-config-validity placeholder check", () => {
+  const definitions: ReviewViewpointsDoc = {
+    id: "test:viewpoints",
+    type: "standard",
+    status: "draft",
+    viewpoints: [
+      {
+        id: "vp-qe-config-validity",
+        role: "QE",
+        category: "quality",
+        title: "Config",
+        check: "Config",
+        evidence: "Config",
+        default_severity: "major",
+        evaluation: "deterministic",
+      },
+    ],
+  };
+  const sample = (marker: string): ReturnType<typeof parseGradeDocument> =>
+    parseGradeDocument(
+      `---\nspecdojo:\n  id: test:sample\n  type: sample\n  status: draft\n---\n\n# Title\n\n- ${marker}: 未確定\n`,
+      "sample.md",
+    );
+
+  it.each(["_ASSUMPTION_", "_UNDECIDED_"])("does not flag %s for kata", (marker) => {
+    const [result] = deterministicResults(sample(marker), definitions, "kata");
+    expect(result?.findings).toEqual([]);
+  });
+
+  it("flags _TODO_ for kata as major", () => {
+    const [result] = deterministicResults(sample("_TODO_"), definitions, "kata");
+    expect(result?.findings).toEqual([
+      { severity: "major", message: "未解決の _TODO_ が残っています。", line: expect.any(Number) },
+    ]);
+  });
+
+  it("keeps flagging _ASSUMPTION_ for deliverable", () => {
+    const [result] = deterministicResults(sample("_ASSUMPTION_"), definitions, "deliverable");
+    expect(result?.findings ?? []).toHaveLength(1);
+    expect(result?.findings?.[0]?.severity).toBe("major");
+  });
+});
