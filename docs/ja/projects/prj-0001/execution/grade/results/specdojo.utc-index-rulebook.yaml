@@ -5,8 +5,8 @@ path: docs/ja/specdojo/rulebooks/utc-index-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 95
-graded_at: "2026-11-22T06:42:50.256Z"
+score: 93
+graded_at: "2026-11-22T08:39:08.550Z"
 graded_by: opus-review-executor
 content_hash: a70f02769d017ea7e35013ed484c6c62dbece025bc14079a22f157a5e9212aa7
 categories:
@@ -21,7 +21,7 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 92
   implementation:
     score: 100
   quality:
@@ -84,8 +84,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -101,7 +101,7 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 2
+  minor: 4
   note: 0
 findings:
   - id: F001
@@ -128,3 +128,23 @@ findings:
     message_ja: >-
       禁止事項は `utc-index` に個別ケース（条件・手順・期待値）を列挙することを一律に禁じているが、`utc-index-sample`
       の「ケース表の共通カラム」は条件・手順・期待値を持つ記入例を1行載せており食い違うため、共通カラムの書き方を示す少数の記入例は許すと 6.8 と禁止事項に明記するか、sample から記入例を外す。
+  - id: F003
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 115
+    anchor: "- 「代替レベル/代替手段」は、IT/ET/ST/AT/非機能テストなど **どこで担保するか** を必ず記載する"
+    message: >-
+      6.3.2 は「代替レベル/代替手段」に担保先を必ず記載すると定めるが、`utc-index-sample`
+      の対象外の表は未決の「通信不能時の販売継続」を「どのレベルでも担保しない（決定まで受入は保留）」と記載しており食い違うため、未決で担保先を決められない場合の書き方（未決である旨と「メモ / 将来課題」への記録）を 6.3.2
+      に定めるか、sample を担保先の記載に合わせる。
+    message_ja: >-
+      6.3.2 は「代替レベル/代替手段」に担保先を必ず記載すると定めるが、`utc-index-sample`
+      の対象外の表は未決の「通信不能時の販売継続」を「どのレベルでも担保しない（決定まで受入は保留）」と記載しており食い違うため、未決で担保先を決められない場合の書き方（未決である旨と「メモ / 将来課題」への記録）を 6.3.2
+      に定めるか、sample を担保先の記載に合わせる。
+  - id: F004
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 252
+    anchor: "| 対象外・除外理由（共通） と矛盾するケースを `utc-<term>` に記載する | 責任境界が崩れるため（例外は根拠と条件を明記）                                         |"
+    message: 全体方針・6.2・6.6.2 は「責務境界」を用いるが、禁止事項の最終行は「責任境界が崩れるため」、6.1 は「責任範囲」と表記しており同一概念か読み手が迷うため、「責務境界」「責務範囲」に統一する。
+    message_ja: 全体方針・6.2・6.6.2 は「責務境界」を用いるが、禁止事項の最終行は「責任境界が崩れるため」、6.1 は「責任範囲」と表記しており同一概念か読み手が迷うため、「責務境界」「責務範囲」に統一する。

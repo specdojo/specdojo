@@ -5,8 +5,8 @@ path: docs/ja/specdojo/samples/utc-index-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 96
-graded_at: "2026-11-22T06:43:52.489Z"
+score: 92
+graded_at: "2026-11-22T08:40:33.249Z"
 graded_by: opus-review-executor
 content_hash: 0e8ba9621db370d6e5980cea6f2a6bd4b3b9200319a678ded14d65c633c445a8
 categories:
@@ -21,11 +21,11 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 92
   implementation:
-    score: 100
+    score: 88
   quality:
-    score: 100
+    score: 92
   consistency:
     score: 75
 viewpoints:
@@ -60,11 +60,11 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-implementation-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-change-impact:
     level: 4
     score: 100
@@ -72,8 +72,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
     level: 3
     score: 75
@@ -101,10 +101,45 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 1
-  minor: 2
+  minor: 6
   note: 0
 findings:
   - id: F001
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 105
+    anchor: "`utc-sales-checkout` の1行の書き方は次のとおりとする（`証跡` は CI 整備後の書き方で、整備前は上記の暫定表記にする）。"
+    message: >-
+      `証跡` の暫定の書き方は line 103 で定めており、line 105 の括弧書き「整備前は上記の暫定表記にする」と line 117 の「整備前は `証跡`
+      を暫定のローカル実行結果とし」が同じ内容を繰り返しているため、line 105 の括弧書きを削り、line 117 は差し替えの期限と担当だけにまとめる。
+    message_ja: >-
+      `証跡` の暫定の書き方は line 103 で定めており、line 105 の括弧書き「整備前は上記の暫定表記にする」と line 117 の「整備前は `証跡`
+      を暫定のローカル実行結果とし」が同じ内容を繰り返しているため、line 105 の括弧書きを削り、line 117 は差し替えの期限と担当だけにまとめる。
+  - id: F002
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 101
+    anchor: "- `優先度`: 誤課金・在庫の誤更新につながるものを P0、つけ残高を P1、表示の書式変換を P2 とする。"
+    message: >-
+      `優先度` の決め方が「誤課金・在庫の誤更新」「つけ残高」「表示の書式変換」しか扱っておらず、`utc-sale-input` が受け持つ入力検証と未確定で保留する判定（BAC-03）にどの優先度を付けるかを DEV
+      が決められないため、この区分の優先度とその理由を書き足す。
+    message_ja: >-
+      `優先度` の決め方が「誤課金・在庫の誤更新」「つけ残高」「表示の書式変換」しか扱っておらず、`utc-sale-input` が受け持つ入力検証と未確定で保留する判定（BAC-03）にどの優先度を付けるかを DEV
+      が決められないため、この区分の優先度とその理由を書き足す。
+  - id: F003
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 16
+    anchor: >-
+      単体テストの合否は [[specdojo:tsp-index-sample|テスト戦略・方針]] の品質ゲートに従い、CI ジョブ `kinuya-ci-unit`（架空）の失敗 0
+      件と、境界条件の観点がすべて実装済みであることを DEV が判定する。
+    message: >-
+      単体テストの合否条件「境界条件の観点がすべて実装済み」は、観点の型に「境界条件」がなく境界は条件の区分であるため何を数えて判定するかが定まらず、CI ジョブ `kinuya-ci-unit`
+      の整備前の判定手段も書かれていないため、「条件の立て方（共通）」の境界値の条件がすべてケース表にあり automated で実行済みであることなど判定対象を具体化し、整備前の暫定の判定方法を書き足す。
+    message_ja: >-
+      単体テストの合否条件「境界条件の観点がすべて実装済み」は、観点の型に「境界条件」がなく境界は条件の区分であるため何を数えて判定するかが定まらず、CI ジョブ `kinuya-ci-unit`
+      の整備前の判定手段も書かれていないため、「条件の立て方（共通）」の境界値の条件がすべてケース表にあり automated で実行済みであることなど判定対象を具体化し、整備前の暫定の判定方法を書き足す。
+  - id: F004
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 101
@@ -115,7 +150,18 @@ findings:
     message_ja: >-
       優先度のルールは「誤課金・在庫の誤更新につながるものを P0、つけ残高を P1」としているが、分配方針の表ではつけ残高の採用理由を「誤計算は請求・入金の誤りにつながる」（誤課金）としているため、つけ残高を P0 にするか、P1
       とする理由（例: 店頭の会計と違い請求前に照合できる）を書き足して食い違いをなくす。
-  - id: F002
+  - id: F005
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 66
+    anchor: "| 環境 | 固定クロックの日付（月末・月初）、記録サービス Fake の保存失敗         |"
+    message: >-
+      条件の立て方の「環境」では「記録サービス Fake の保存失敗」としているが、単体テスト共通の境界/依存の扱いでは記録サービスを「保存成功・保存失敗・タイムアウトを返す
+      Stub」としており、テストダブルの種類が食い違うため、条件の例を「記録サービス Stub の保存失敗」にそろえる。
+    message_ja: >-
+      条件の立て方の「環境」では「記録サービス Fake の保存失敗」としているが、単体テスト共通の境界/依存の扱いでは記録サービスを「保存成功・保存失敗・タイムアウトを返す
+      Stub」としており、テストダブルの種類が食い違うため、条件の例を「記録サービス Stub の保存失敗」にそろえる。
+  - id: F006
     severity: major
     rule: vp-ops-release-readiness
     line: 117
@@ -124,7 +170,7 @@ findings:
       の `証跡` を差し替える。内部結合テストの入口条件の判定までに整備する | DEV が整備、QE が差し替えを確認          | PM へ決定事項として報告 |
     message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
     message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
-  - id: F003
+  - id: F007
     severity: minor
     rule: vp-ops-release-readiness
     line: 119
