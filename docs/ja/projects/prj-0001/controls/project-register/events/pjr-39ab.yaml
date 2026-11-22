@@ -87,3 +87,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_65463cf88945475aa34c5b2bcbdffcdf
+- v: 1
+  id: reg_35ab4919d4134d17bf1e80ea64ed8b4d
+  ts: "2026-11-22T12:19:46Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが対応結果の表・根拠・直す案を完了条件と照らして確かめた。コードと設定、sysd-cross-cutting-policy の本文は変わっていない
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: Q1・Q2・Q4 の規則を設定と実装に照らして実装済み・未実装・不明に分け、数値の境界の食い違いと直す案 6 件を個票に書いた。最優先は provider CLI に timeout がないこと（TIM-001）
+  previous_event_id: reg_832da45f9f7d43cb88fc3cf3f9e118ca

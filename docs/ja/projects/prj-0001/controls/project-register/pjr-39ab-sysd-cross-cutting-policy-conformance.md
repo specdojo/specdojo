@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-39ab-sysd-cross-cutting-policy-conformance
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-11-15T04:06:04Z"
+  completed_at: "2026-11-22T12:19:46Z"
+  conclusion: Q1・Q2・Q4 の規則を設定と実装に照らして実装済み・未実装・不明に分け、数値の境界の食い違いと直す案 6 件を個票に書いた。最優先は provider CLI に timeout がないこと（TIM-001）
 ---
 
 # PJR-39AB 横断ルールの数値の境界と実装状況を照合する（sysd-cross-cutting-policy の Q1・Q2・Q4）
