@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: in-progress
+  item_status: review
   priority: medium
   difficulty: medium
   registered_at: "2026-11-22T13:42:07Z"
