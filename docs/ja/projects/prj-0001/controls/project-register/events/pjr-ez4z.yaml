@@ -77,3 +77,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_3dfdc7033f704c86802f0fa199b5b28d
+- v: 1
+  id: reg_a378452522b84a35ba3aedcb981fab2c
+  ts: "2026-11-22T14:33:21Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが差分と対応結果を完了条件と照らして確かめた。親の検証（test-integration を含む）も通った。残りの上位ファイルは時間の大半がテスト本体で、準備の共有で縮む余地が小さいとの判断を記録として受け入れた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: 親の検証の記録にテストのファイルごとの時間を残すようにし、遅い上位 5 ファイルを特定した。1 位の register-pipeline-e2e の準備を作り置きにして 120 秒から 109 秒にした。確かめる内容と testTimeout は変えていない
+  previous_event_id: reg_ae266f5e0cea474cb7c24066b01628f0

@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-ez4z-slow-integration-tests
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-22T13:34:28Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-22T14:33:21Z"
+  conclusion: 親の検証の記録にテストのファイルごとの時間を残すようにし、遅い上位 5 ファイルを特定した。1 位の register-pipeline-e2e の準備を作り置きにして 120 秒から 109 秒にした。確かめる内容と testTimeout は変えていない
 ---
 
 # PJR-EZ4Z 遅い統合テストを見つけて速くする
