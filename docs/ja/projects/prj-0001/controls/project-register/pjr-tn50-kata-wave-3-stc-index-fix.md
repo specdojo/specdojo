@@ -30,13 +30,22 @@ specdojo:
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- 変えるのは `docs/ja/specdojo/rulebooks/stc-index-rulebook.md` と `docs/ja/specdojo/samples/stc-index-sample.md` だけとする。ほかの型の rulebook・sample・recipe・template は変えない。
+- `docs/ja/projects/prj-0001/execution/grade/results/specdojo.stc-index-rulebook.yaml` と `docs/ja/projects/prj-0001/execution/grade/results/specdojo.stc-index-sample.yaml` の `findings` を 1 件ずつ直す。直さない指摘は、ID と理由を個票の対応結果に書く。
+- sample の F005（機械的な「未解決の _TODO_ / _ASSUMPTION_」の指摘、PJR-7C9X）は、`_TODO_` を解消して扱う。sample に `_TODO_` を残さない。`_ASSUMPTION_` は `sample-authoring-standard` に従って残してよい。
+- rulebook を変えた場合は、sample が rulebook に従っていることを確かめ、食い違いがあれば sample も直す。
+- `CHANGELOG.md` は変えない。個票の対応結果の `### 5.1. CHANGELOG に書く事項` に「なし」（文書の型の手直しのため）と書く。
+- `npm run lint:md` を通し、親の検証を通す。
+- 統合の後、オーケストレーターが `npx specdojo grade run --target kata --kata stc-index` で評価し直し、rulebook と sample に blocker と major がないことを確かめる。機械的な指摘（PJR-7C9X）だけが残る場合は合格とし、そのことを個票の対応結果に書く。合格しなければ、この項目に回目の完了条件を足して流し直す。
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                               | 担当                  | 状態 | メモ                     |
+| --- | ---------------------------------- | --------------------- | ---- | ------------------------ |
+| 1   | grade の指摘を読み、直し方を決める | DEV                   | open | 直さない指摘は理由を残す |
+| 2   | rulebook と sample を直す          | DEV                   | open | ほかの型は変えない       |
+| 3   | lint と親の検証を通す              | DEV                   | open | -                        |
+| 4   | 統合の後に grade で評価し直す      | specdojo-orchestrator | open | 合格しなければ回目を足す |
 
 ## 5. 対応結果
 
