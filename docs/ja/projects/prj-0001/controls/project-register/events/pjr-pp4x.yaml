@@ -106,3 +106,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_30397d0ee6674a4fb2c2f266829a52ce
+- v: 1
+  id: reg_912a5fbbbcb64c90a7e03150a5e8a82a
+  ts: "2026-11-22T03:35:31Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register で実施（統合 3733ac64d）。統合の後に第 3 波の itc-index-sample-090 を流し、kata で鮮度を確かめて止まらずに verdict（incomplete、sample が needs-work）が記録されることを確かめた。CHANGELOG 不変を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: 型の文書と型の catalog の review では、事前の grade と plan の対象種別を kata にし、同じ文書の grade を 2 回流さないようにした。review の段では鮮度の確認を理由に止めない。
+  previous_event_id: reg_77246c6f78ed44eca7f73a750e8c3794

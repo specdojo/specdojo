@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-pp4x-review-grade-target-mismatch
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   registered_at: "2026-11-22T02:08:32Z"
+  completed_at: "2026-11-22T03:35:31Z"
+  conclusion: 型の文書と型の catalog の review では、事前の grade と plan の対象種別を kata にし、同じ文書の grade を 2 回流さないようにした。review の段では鮮度の確認を理由に止めない。
   derived_from:
     - PJR-VCER
 ---
