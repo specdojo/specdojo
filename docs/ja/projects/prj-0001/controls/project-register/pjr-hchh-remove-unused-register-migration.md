@@ -12,7 +12,7 @@ specdojo:
   difficulty: easy
   owner: DEV
   registered_at: "2026-11-21T14:01:58Z"
-  block_reason: "parent validation failed: lint-md"
+  block_reason: "agent exited with non-zero code: parent validation failed: lint-md"
   derived_from:
     - PJR-GV43
 ---
