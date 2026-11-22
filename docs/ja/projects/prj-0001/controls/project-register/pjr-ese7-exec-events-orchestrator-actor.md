@@ -36,7 +36,9 @@ exec release などの --by は名簿の人と agent だけを受け付け、オ
 - 予約名の扱いを説明している文書（`command-reference` の exec の記帳の節、`exec-operation-guide` など）を直す。
 - `CHANGELOG.md` は変えない。個票の対応結果の `### 5.1. CHANGELOG に書く事項` に、区分と行の文案を書く。
 - `npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md` を通し、親の検証を通す。
-- runner の記帳を変えるため、統合の後にオーケストレーターが第 3 波の 090 の 1 件を `exec release --by specdojo-orchestrator` で戻して流し、記帳と run が通ることを確かめる。
+- 統合の後、オーケストレーターが本体で、ready のタスク 1 件に `exec claim --by specdojo-orchestrator` と `exec release --by specdojo-orchestrator` を行い、記帳できること、`exec refresh`・`exec status` が警告なしに todo へ戻すことを確かめる。名簿にない名前が記帳の前にエラーで止まることも確かめる。
+- runner の動作確認（PJR-JSEY）の代わりに、第 3 波の 090 の run（2026-11-22 の列 `wave3-090-a-2026-11-22`・`wave3-090-b-2026-11-22`）で、agent の claim と complete が新しい検証を通って記帳されることを確かめる。
+- 2 回目の確かめ方の変更（2026-11-22）: 当初の「090 の 1 件を `exec release --by specdojo-orchestrator` で戻して流す」は、release が claim の持ち主か人の `--force` に限られるため行えない。利用者（indie）の判断で上の 2 つに差し替えた。
 
 ## 4. 作業内容
 

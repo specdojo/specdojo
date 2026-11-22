@@ -93,3 +93,16 @@
       from: in-progress
       to: review
   previous_event_id: reg_0e797051c7004746897330e508b06068
+- v: 1
+  id: reg_fafdc90294e14d41ad3872cd30169702
+  ts: "2026-11-22T04:45:42Z"
+  action: update
+  actor: indie
+  from_status: review
+  to_status: review
+  reason: release が claim の持ち主か人の --force に限られるため、統合後の確かめ方を差し替える
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_09ad8b893b6c4b55ba399eb212fb4c09
