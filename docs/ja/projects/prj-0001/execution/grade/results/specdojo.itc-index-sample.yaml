@@ -4,95 +4,94 @@ document: specdojo:itc-index-sample
 path: docs/ja/specdojo/samples/itc-index-sample.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-sample
-verdict: fail
-score: 53
-graded_at: "2026-11-21T04:23:04.654Z"
-graded_by: opus-executor
-content_hash: ae538d59c8733b36213feedb00ce58df9963e788304d0227355d6dd249af247c
+verdict: needs-work
+score: 92
+graded_at: "2026-11-22T03:30:24.862Z"
+graded_by: opus-review-executor
+content_hash: 3fe2b5f67e14d2bb8e99aa4209e2c8fe02ff33af94e15a85fee581e558062f18
 categories:
   purpose:
-    score: 63
-  operations:
-    score: 88
-  planning:
-    score: 67
-  business:
-    score: 58
-  architecture:
     score: 75
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
+  architecture:
+    score: 88
   usability:
-    score: 67
+    score: 92
   implementation:
-    score: 63
+    score: 100
   quality:
-    score: 42
+    score: 100
   consistency:
-    score: 0
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 2
     score: 50
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-publication-accountability:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-business-value:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-requirements-completeness:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-implementation-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-dev-change-impact:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
     level: 3
     score: 75
-  vp-qe-verifiability:
-    level: 2
-    score: 50
-  vp-qe-omissions-consistency:
-    level: 0
-    score: 0
   vp-qe-kata-conformance:
-    level: 0
-    score: 0
+    level: 4
+    score: 100
   vp-ux-readability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 3
     score: 75
   vp-ops-release-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-operability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -100,220 +99,61 @@ viewpoints:
     level: 4
     score: 100
 finding_counts:
-  blocker: 2
-  major: 9
-  minor: 13
+  blocker: 0
+  major: 1
+  minor: 4
   note: 0
 findings:
   - id: F001
-    severity: minor
-    rule: vp-po-purpose-alignment
-    line: 11
-    anchor: "- 参照: `../rulebooks/itc-index-rulebook.md`"
-    message: >-
-      The sample fails to reference tsp-index as the foundational test strategy document, weakening alignment with
-      higher-level project test objectives.
-    message_ja: >-
-      The sample fails to reference tsp-index as the foundational test strategy document, weakening alignment with
-      higher-level project test objectives.
-  - id: F002
     severity: major
     rule: vp-po-purpose-alignment
-    line: 5
-    anchor: 本書は、内部コンポーネント間の連携を確認する観点・条件を定義するための最小サンプルである。
+    line: 7
+    anchor: >-
+      適用対象は、[[specdojo:ifd-sample|インフラ構成図]] の店頭操作端末・販売・在庫・つけ記録サービス・業務記録 DB・保全・復元処理を結ぶ `PATH-01`〜`PATH-04` と `PATH-07`
+      である。内部結合テストで防ぐ業務リスクは次の3つで、いずれも店主代表が記録を信用できなくなり、店主不在の店番を任せられなくなる。
     message: >-
-      目的が対象別カタログ（`itc-＜term＞`）の役割である「観点・条件の定義」になっています。rulebook の定める `itc-index`
-      の目的（対象別カタログの品質・粒度・責任範囲を揃える共通方針）と、UT/ET/ST/AT との責務分界に書き換えてください。
+      適用対象に `PATH-04`・`PATH-07`（保全・復元処理）を含めていますが、根拠とする `tsp-index-sample` では内部結合テストの範囲が `PATH-01`〜`PATH-03`
+      で、障害・回復は総合テストの範囲です。範囲を広げる根拠と tsp 側の改訂方針を書くか、`itc-record-backup` を外して上位と一致させてください。
     message_ja: >-
-      目的が対象別カタログ（`itc-＜term＞`）の役割である「観点・条件の定義」になっています。rulebook の定める `itc-index`
-      の目的（対象別カタログの品質・粒度・責任範囲を揃える共通方針）と、UT/ET/ST/AT との責務分界に書き換えてください。
+      適用対象に `PATH-04`・`PATH-07`（保全・復元処理）を含めていますが、根拠とする `tsp-index-sample` では内部結合テストの範囲が `PATH-01`〜`PATH-03`
+      で、障害・回復は総合テストの範囲です。範囲を広げる根拠と tsp 側の改訂方針を書くか、`itc-record-backup` を外して上位と一致させてください。
+  - id: F002
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 115
+    anchor: "| データ     | 各テストの開始時に `kinuya-test-data` を seed し、テストごとのトランザクションロールバックで独立させる      |"
+    message: >-
+      テストごとのトランザクションロールバックを全テストに一律で適用すると、ロック競合・ロールバック検証・保全取得の条件（別接続・コミット済みデータが必要）を再現できません。該当する条件では seed
+      の再投入やスキーマ分離で独立させるという例外を明記してください。
+    message_ja: >-
+      テストごとのトランザクションロールバックを全テストに一律で適用すると、ロック競合・ロールバック検証・保全取得の条件（別接続・コミット済みデータが必要）を再現できません。該当する条件では seed
+      の再投入やスキーマ分離で独立させるという例外を明記してください。
   - id: F003
     severity: minor
-    rule: vp-po-decision-readiness
-    line: 28
-    anchor: "| 論点           | 処理方針                 |"
-    message: 未解決事項のセクションにおいて、POの意思決定に必要な具体的な意思決定責任者、影響範囲、および具体的な次のアクションが不足しています。
-    message_ja: 未解決事項のセクションにおいて、POの意思決定に必要な具体的な意思決定責任者、影響範囲、および具体的な次のアクションが不足しています。
+    rule: vp-qe-omissions-consistency
+    line: 41
+    anchor: "- 1 term の観点が 15、ケース表が 50 行を超えた場合は分割を検討し、分割は ARC が承認する。"
+    message: 分割の閾値が「観点が 15、ケース表が 50 行を超えた場合」になっていて、rulebook の「観点が 15 以上、表が 50 行以上」と境界値が一致しません。rulebook の表現に合わせてください。
+    message_ja: 分割の閾値が「観点が 15、ケース表が 50 行を超えた場合」になっていて、rulebook の「観点が 15 以上、表が 50 行以上」と境界値が一致しません。rulebook の表現に合わせてください。
   - id: F004
-    severity: major
-    rule: vp-pm-plan-feasibility
-    line: 14
-    anchor: ""
-    message: サンプルには、タスクのスケジューリングと進捗管理に必要な具体的な作業分解基準、役割の割り当て、および完了条件が不足しています。
-    message_ja: サンプルには、タスクのスケジューリングと進捗管理に必要な具体的な作業分解基準、役割の割り当て、および完了条件が不足しています。
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 51
+    anchor: >-
+      | 通信不能時の販売継続                     | 初期リリースで扱うか未決である                     | 「メモ / 将来課題」で決定後に再判断する |
+      なし                                                             |
+    message: >-
+      「通信不能時の販売継続」の代替レベル列が、テストレベルの略語（UT/IT/ET/ST/AT・非機能テスト）ではなく「『メモ /
+      将来課題』で決定後に再判断する」になっています。未決であることは除外理由か例外列へ移し、代替レベル列は略語で書いてください。
+    message_ja: >-
+      「通信不能時の販売継続」の代替レベル列が、テストレベルの略語（UT/IT/ET/ST/AT・非機能テスト）ではなく「『メモ /
+      将来課題』で決定後に再判断する」になっています。未決であることは除外理由か例外列へ移し、代替レベル列は略語で書いてください。
   - id: F005
     severity: minor
-    rule: vp-pm-dependency-risk
-    line: 28
-    anchor: "| 論点           | 処理方針                 |"
-    message: >-
-      Dependencies on upstream deliverables (tsp-index) and risks affecting downstream test catalog implementation are
-      not identified.
-    message_ja: >-
-      Dependencies on upstream deliverables (tsp-index) and risks affecting downstream test catalog implementation are
-      not identified.
-  - id: F006
-    severity: minor
-    rule: vp-pm-control-reporting
-    line: 28
-    anchor: "| 論点           | 処理方針                 |"
-    message: >-
-      The unresolved issue lacks reporting destinations, responsible Role codes, and clear classification for transfer
-      to project risk registers or decision records.
-    message_ja: >-
-      The unresolved issue lacks reporting destinations, responsible Role codes, and clear classification for transfer
-      to project risk registers or decision records.
-  - id: F007
-    severity: minor
-    rule: vp-ba-business-value
-    line: 11
-    anchor: "- 参照: `../rulebooks/itc-index-rulebook.md`"
-    message: 統合テスト戦略によって、セールス管理システムにおけるどのようなビジネス上の問題やリスクに対処するのかが説明されていません。
-    message_ja: 統合テスト戦略によって、セールス管理システムにおけるどのようなビジネス上の問題やリスクに対処するのかが説明されていません。
-  - id: F008
-    severity: major
-    rule: vp-ba-requirements-completeness
-    line: 14
-    anchor: ""
-    message: スコープの境界、一般的な対象外事項、および受け入れ基準が欠落しており、ユーザーがテスト網羅性の完全性を検証できないようになっています。
-    message_ja: スコープの境界、一般的な対象外事項、および受け入れ基準が欠落しており、ユーザーがテスト網羅性の完全性を検証できないようになっています。
-  - id: F009
-    severity: major
-    rule: vp-ba-requirements-completeness
-    line: 13
-    anchor: "## 3. 記述内容"
-    message: >-
-      rulebook が必須とする「対象外・除外理由（共通）」の4点セット表（対象外・除外理由・代替レベル/代替手段・例外）がありません。駄菓子屋文脈の例（外部決済との実疎通を ET へ、性能・負荷を NFR
-      へ、など）を示してください。
-    message_ja: >-
-      rulebook が必須とする「対象外・除外理由（共通）」の4点セット表（対象外・除外理由・代替レベル/代替手段・例外）がありません。駄菓子屋文脈の例（外部決済との実疎通を ET へ、性能・負荷を NFR
-      へ、など）を示してください。
-  - id: F010
-    severity: minor
-    rule: vp-ba-stakeholder-clarity
-    line: 14
-    anchor: ""
-    message: テストカタログインデックスの合意に責任を持つステークホルダー、ターゲットユーザー、およびレビュアーが明確に特定されていません。
-    message_ja: テストカタログインデックスの合意に責任を持つステークホルダー、ターゲットユーザー、およびレビュアーが明確に特定されていません。
-  - id: F011
-    severity: major
-    rule: vp-arc-technical-constraints
-    line: 14
-    anchor: ""
-    message: 結合テストに必要な技術的な制約、アーキテクチャの境界ポリシー（DB、mocks、stubsの扱い）、および環境実行ポリシーが指定されていません。
-    message_ja: 結合テストに必要な技術的な制約、アーキテクチャの境界ポリシー（DB、mocks、stubsの扱い）、および環境実行ポリシーが指定されていません。
-  - id: F012
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 21
-    anchor: >-
-      | ------------ |
-      -----------------------------------------------------------------------------------------------------------------------------------------------------------
-      | ------------------------------------ |
-    message: セクション4の表は、独自の意思決定や参照情報を提供することなく、セクション1と3のテキストをそのまま重複して記載しています。
-    message_ja: セクション4の表は、独自の意思決定や参照情報を提供することなく、セクション1と3のテキストをそのまま重複して記載しています。
-  - id: F013
-    severity: major
-    rule: vp-dev-implementation-readiness
-    line: 21
-    anchor: >-
-      | ------------ |
-      -----------------------------------------------------------------------------------------------------------------------------------------------------------
-      | ------------------------------------ |
-    message: >-
-      The sample fails to provide the case table column schema, case_id format, or implementation constraints necessary
-      for developers to create concrete test catalogs.
-    message_ja: >-
-      The sample fails to provide the case table column schema, case_id format, or implementation constraints necessary
-      for developers to create concrete test catalogs.
-  - id: F014
-    severity: minor
-    rule: vp-dev-change-impact
-    line: 21
-    anchor: >-
-      | ------------ |
-      -----------------------------------------------------------------------------------------------------------------------------------------------------------
-      | ------------------------------------ |
-    message: 共有テストインデックスポリシーの変更が、下流のテストカタログおよびCIパイプラインに与える影響が特定されていません。
-    message_ja: 共有テストインデックスポリシーの変更が、下流のテストカタログおよびCIパイプラインに与える影響が特定されていません。
-  - id: F015
-    severity: minor
-    rule: vp-dev-testability
-    line: 21
-    anchor: >-
-      | ------------ |
-      -----------------------------------------------------------------------------------------------------------------------------------------------------------
-      | ------------------------------------ |
-    message: 統合テストカタログを検証するためのバリデーションコマンド、lintステップ、および期待される検証結果が提供されていません。
-    message_ja: 統合テストカタログを検証するためのバリデーションコマンド、lintステップ、および期待される検証結果が提供されていません。
-  - id: F016
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 28
-    anchor: "| 論点           | 処理方針                 |"
-    message: 最小記述例の具体性が不十分であり、判定可能な合格基準や設定値の記述例を示す必要がある。
-    message_ja: 最小記述例の具体性が不十分であり、判定可能な合格基準や設定値の記述例を示す必要がある。
-  - id: F017
-    severity: major
-    rule: vp-qe-verifiability
-    line: 15
-    anchor: "- 主な内容: 対象コンポーネントと結合範囲、インターフェース（API/イベント/DB）観点、主要フロー/例外フロー、トランザクション・整合性、エラー処理、ログ/監視観点、合格基準"
-    message: "合格基準が語の列挙にとどまっています。rulebook の良い例の水準（観測点を含む判定可能な期待値。例: つけ残高更新APIの一意制約違反で409応答とDB差分なし）で、具体例を少なくとも1つ示してください。"
-    message_ja: "合格基準が語の列挙にとどまっています。rulebook の良い例の水準（観測点を含む判定可能な期待値。例: つけ残高更新APIの一意制約違反で409応答とDB差分なし）で、具体例を少なくとも1つ示してください。"
-  - id: F018
-    severity: blocker
-    rule: vp-qe-omissions-consistency
-    line: 11
-    anchor: "- 参照: `../rulebooks/itc-index-rulebook.md`"
-    message: "rulebook で定義された必須構成（## 1 〜 ## 9 の固定見出し）が欠落している。"
-    message_ja: "rulebook で定義された必須構成（## 1 〜 ## 9 の固定見出し）が欠落している。"
-  - id: F019
-    severity: blocker
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# [内部結合テスト](../rulebooks/itc-index-rulebook.md) サンプル"
-    message: rulebook で指定された構造および Frontmatter 定義に準拠しておらず、itc-index のサンプルとして不適切である。
-    message_ja: rulebook で指定された構造および Frontmatter 定義に準拠しておらず、itc-index のサンプルとして不適切である。
-  - id: F020
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# [内部結合テスト](../rulebooks/itc-index-rulebook.md) サンプル"
-    message: >-
-      Frontmatter に rulebook 推奨の `based_on`（`tsp-index` を含む）がありません。H1 も `# 内部結合テストカタログ: 概要（駄菓子屋きぬや 販売管理システム）`
-      の形式ではなく、rulebook へのリンクを埋め込んでいるため、両方を直してください。
-    message_ja: >-
-      Frontmatter に rulebook 推奨の `based_on`（`tsp-index` を含む）がありません。H1 も `# 内部結合テストカタログ: 概要（駄菓子屋きぬや 販売管理システム）`
-      の形式ではなく、rulebook へのリンクを埋め込んでいるため、両方を直してください。
-  - id: F021
-    severity: major
-    rule: vp-ux-readability
-    line: 9
-    anchor: "- 対象: 駄菓子屋の販売管理システム"
-    message: 必須構成に従っていないため、itc-index 作成時の参照サンプルとして機能していない。
-    message_ja: 必須構成に従っていないため、itc-index 作成時の参照サンプルとして機能していない。
-  - id: F022
-    severity: minor
     rule: vp-ux-language-consistency
-    line: 1
-    anchor: "# [内部結合テスト](../rulebooks/itc-index-rulebook.md) サンプル"
-    message: >-
-      The document title and table labels use '内部結合テスト' instead of the standardized deliverable name '内部結合テストカタログ概要'
-      (itc-index).
-    message_ja: >-
-      The document title and table labels use '内部結合テスト' instead of the standardized deliverable name '内部結合テストカタログ概要'
-      (itc-index).
-  - id: F023
-    severity: minor
-    rule: vp-ops-release-readiness
-    line: 28
-    anchor: "| 論点           | 処理方針                 |"
-    message: このサンプルには、draftからreadyステータスへ移行するために必要な、明示的な準備基準、リリース前提条件、および承認者の定義が不足しています。
-    message_ja: このサンプルには、draftからreadyステータスへ移行するために必要な、明示的な準備基準、リリース前提条件、および承認者の定義が不足しています。
-  - id: F024
-    severity: minor
-    rule: vp-ops-operability
-    line: 28
-    anchor: "| 論点           | 処理方針                 |"
-    message: 継続的なメンテナンスのための運用指示、再生成のトリガー、および変更管理のワークフローが欠落しています。
-    message_ja: 継続的なメンテナンスのための運用指示、再生成のトリガー、および変更管理のワークフローが欠落しています。
+    line: 5
+    anchor: >-
+      [[specdojo:tsp-index-sample|テスト戦略・方針]] の内部結合テストを根拠に、駄菓子屋きぬや 販売管理システムの対象別カタログ `itc-<term>`
+      が共通で使う括り方・観点と条件の立て方・依存の扱い・ケース表の書き方をそろえ、品質・粒度・責任範囲を揃える。個別の観点・条件・ケースは `itc-<term>` に置き、本書には書かない。
+    message: 「ケース表の書き方をそろえ、品質・粒度・責任範囲を揃える」で「そろえ」と「揃える」の表記がゆれ、動詞も重複しています。表記をどちらかに統一し、一文にまとめてください。
+    message_ja: 「ケース表の書き方をそろえ、品質・粒度・責任範囲を揃える」で「そろえ」と「揃える」の表記がゆれ、動詞も重複しています。表記をどちらかに統一し、一文にまとめてください。
