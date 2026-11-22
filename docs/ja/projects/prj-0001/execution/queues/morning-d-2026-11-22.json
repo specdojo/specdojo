@@ -3,13 +3,13 @@
   "queue_id": "morning-d-2026-11-22",
   "project_id": "prj-0001",
   "created_at": "2026-11-22T00:31:20.684Z",
-  "updated_at": "2026-11-22T00:31:20.959Z",
-  "state": "running",
+  "updated_at": "2026-11-22T00:50:57.938Z",
+  "state": "completed_with_failures",
   "steps": [
     {
       "index": 1,
       "on_failure": "continue",
-      "status": "running",
+      "status": "failed",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -28,12 +28,15 @@
         "--project",
         "prj-0001"
       ],
-      "started_at": "2026-11-22T00:31:20.959Z"
+      "started_at": "2026-11-22T00:31:20.959Z",
+      "completed_at": "2026-11-22T00:41:37.977Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
     },
     {
       "index": 2,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "succeeded",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -51,7 +54,11 @@
         "fallback",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-22T00:41:37.979Z",
+      "completed_at": "2026-11-22T00:50:57.935Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
     }
   ]
 }

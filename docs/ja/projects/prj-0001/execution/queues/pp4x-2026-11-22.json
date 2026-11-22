@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "queue_id": "pp4x-2026-11-22",
+  "project_id": "prj-0001",
+  "created_at": "2026-11-22T02:18:58.827Z",
+  "updated_at": "2026-11-22T02:38:06.031Z",
+  "state": "stopped",
+  "steps": [
+    {
+      "index": 1,
+      "on_failure": "stop",
+      "status": "failed",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--register",
+        "PJR-PP4X",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--project",
+        "prj-0001"
+      ],
+      "started_at": "2026-11-22T02:18:59.063Z",
+      "completed_at": "2026-11-22T02:38:06.029Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
+    }
+  ],
+  "stopped_step": 1,
+  "reason": "step 1 failed: exit code 1"
+}
