@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-11-22T04:05:31Z",
+  "type": "release",
+  "task_id": "T-KATA-WAVE-3-itc-sample-090",
+  "by": "indie",
+  "msg": "PJR-PP4X の修正の後に流し直すため blocked から戻す"
+}
