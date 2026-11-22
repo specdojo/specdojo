@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-Z17T",
   "run_id": "pjr-z17t-20261122T112451Z-c11a5e5b",
-  "updated_at": "2026-11-22T11:33:13.236Z",
+  "updated_at": "2026-11-22T11:33:22.709Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-Z17T/pjr-z17t-20261122T112451Z-c11a5e5b/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sonnet-executor",
       "attempts": 1,
       "started_at": "2026-11-22T11:33:13.236Z",
-      "completed_at": null,
+      "completed_at": "2026-11-22T11:33:22.709Z",
       "artifact_ref": null
     }
   },
