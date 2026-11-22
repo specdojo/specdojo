@@ -1,0 +1,56 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_e87a096e7208444ba8a1b77871ec01cb
+  ts: "2026-11-22T13:29:57Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: docs:dev では実行の記録のページを読まず、起動を速くする
+    - field: description
+      from: ""
+      to: 文書サイトの Markdown 6,979 ページのうち 5,179 ページが execution/ の下で、多くは plan と result である。docs:dev のときだけ外し、VitePress の起動を速くする。docs:build は全部のページを出す。
+    - field: input
+      from: ""
+      to: '["2026-11-22 の数え: docs の Markdown は 6,979 ページ、docs/ja/projects/prj-0001/execution の下が 5,179 ページ、controls の下が 1,181 ページ。","PJR-BNAV の測り: 作業ツリー（bind mount）での VitePress の起動は cache のある 2 回目でも 25.3 秒。生成は --skip-if-fresh でほぼ 0 秒になった。","実行の記録のページの範囲は packages/docs-site/.vitepress/exec-record-paths.ts にある。","利用者の承認（2026-11-22、indie）で起票した。担当 DEV、期限 2026-11-30。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-22"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-BNAV"]'
+- v: 1
+  id: reg_4f3d37dbca914b8aae01c42e38615173
+  ts: "2026-11-22T13:30:10Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件を利用者の承認のもとで書く
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_e87a096e7208444ba8a1b77871ec01cb
