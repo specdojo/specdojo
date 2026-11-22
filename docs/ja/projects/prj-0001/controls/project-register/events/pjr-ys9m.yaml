@@ -41,3 +41,29 @@
     - field: derived_from
       from: ""
       to: '["PJR-7KQT"]'
+- v: 1
+  id: reg_d1678ae77a264fb19c9894b35a63c486
+  ts: "2026-11-22T11:14:03Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件を利用者の承認のもとで書く
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_fb07a349600f40d49d907eea27532a99
+- v: 1
+  id: reg_1d50632a85474befbd7de17832880106
+  ts: "2026-11-22T11:14:08Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 作業内容を利用者の承認のもとで書く
+  changes:
+    - field: section
+      from: ""
+      to: 作業内容
+  previous_event_id: reg_d1678ae77a264fb19c9894b35a63c486

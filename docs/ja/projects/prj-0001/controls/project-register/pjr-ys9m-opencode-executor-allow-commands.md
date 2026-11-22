@@ -28,13 +28,24 @@ qwen（opencode）の executor は npx・rm・git rm を拒まれ、検証を流
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- 配布する opencode の executor の定義（`templates/opencode/agents/` の下）の bash の許可に、claude の `settings.edit.json`（PJR-7KQT）と同じ検証のコマンド（`npx tsc`・`npx vitest`・`npx eslint`・`npx markdownlint-cli2` など）を足す。あわせて、`docs/`・`src/`・`tests/` の下に限った `git rm` を許す（利用者の決定、2026-11-22、indie）。危ないコマンド（`git push`・`rm -rf`・`gh` など）は許さない（テストで確かめる）。
+- `exec-defaults.yaml` の `providers.<name>.allow_commands`（今は claude の edit mode だけ）を、opencode の起動時の設定にも足す（テストで確かめる）。schema を直す。
+- F6MC で `git diff*` が許されているのに `git diff <file>` が拒まれた原因を調べ、個票の対応結果に書く。配布する定義の範囲で直せるものは直す。
+- prj-0001 の `.opencode/agents/` と、easy に振る基準（`.specdojo/exec-defaults.yaml` の routing）は保護された設定のため変えない。変える案を個票の対応結果と報告の `handoff` に書く。反映は利用者の承認のもとで行う。
+- `exec-config-guide` に、opencode の executor に許すコマンドと `allow_commands` の書き方を書く。
+- `CHANGELOG.md` は変えない。個票の対応結果に「CHANGELOG に書く事項」の小節を作り、区分と行の文案を書く。
+- `npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md` を通し、親の検証を通す。
+- 保護された設定の反映の後に、オーケストレーターが qwen の executor で 1 件流し、検証のコマンドと `git rm` が拒まれないことを確かめてから close する。
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                | 担当         | 状態 | メモ                                  |
+| --- | --------------------------------------------------- | ------------ | ---- | ------------------------------------- |
+| 1   | 配布する opencode の executor の定義に許可を足す    | executor     | open | 検証のコマンドと範囲を限った `git rm` |
+| 2   | `allow_commands` を opencode にも効かせる           | executor     | open | schema とテストを含む                 |
+| 3   | `git diff <file>` が拒まれた原因を調べる            | executor     | open | -                                     |
+| 4   | prj-0001 の保護された設定の変更案を書く             | executor     | open | `.opencode/agents/` と routing        |
+| 5   | 保護された設定を反映し、qwen の executor で確かめる | orchestrator | open | 利用者の承認のもとで行う              |
 
 ## 5. 対応結果
 
