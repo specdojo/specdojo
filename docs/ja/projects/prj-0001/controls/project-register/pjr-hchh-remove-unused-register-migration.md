@@ -48,7 +48,7 @@ PJR-GV43 で register migrate を消したため、src/register/migrate-timestam
 - `register migrate` の削除（`[[prj-0001:pjr-gv43-remove-deprecated-commands-0-10|PJR-GV43 register migrate の削除で呼ばれなくなった移行の関数を消す]]`）後に呼び出し元がなくなった関数・型を、呼び出し確認の上で削除した。
 - 呼び出し元の確認: `src`・`tests`・`tools`・`scripts` から grep した結果、`migrateEmbeddedRegisterEvents`・`migrateRegisterEventsFromGit` の呼び出しは `register.ts` の `REGISTER_COMMAND_DEPENDENCIES` にのみ残っていた（`register migrate` 削除後）。`src/register/migrate-timestamps.ts` 内の `planRegisterTimestampMigration`・`summarizeTimestampMigration`・`createGitTimestampResolver` も外部からの import なし。
 - 残した関数: `legacyHistoryEventToRegisterEvent`（`register.ts`）・`collectRegisterHistoryEvents`（`history.ts`）は別用途で使われているため残す（前者には専用テスト、後者は `maintenance-commands.ts` が使用）。`src/exec/core.ts` のイベント型（`note`・`link`・`estimate`）も既存のイベントファイルを読むため残す。
-- ファイル削除: `src/register/migrate-timestamps.ts` と `tests/src/register/migrate-timestamps.test.ts` の物理的削除は、この executor sandbox ではファイル削除コマンドが利用できないため実施できていない。runner 側での `git rm` による削除を申し送る（下記）。
+- ファイル削除: `src/register/migrate-timestamps.ts` と `tests/src/register/migrate-timestamps.test.ts` は、executor の sandbox ではファイルを消せなかったため、申し送りに従いオーケストレーターが worktree で消した（2026-11-22）。ほかから参照されていないことを grep で確かめた。
 - 「それらだけが使う」関数として削除したもの: `src/register/events.ts` の `readEmbeddedRegisterEvents`・`removeEmbeddedRegisterEvents`（2 つの migrate 関数のみ使用。`updateSpecdojoFields` の unused import も除去）。
 
 ### 5.1. CHANGELOG に書く事項
