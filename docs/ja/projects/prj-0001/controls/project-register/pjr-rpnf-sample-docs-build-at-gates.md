@@ -45,15 +45,34 @@ sample の作成規則の最終チェックが docs:build を求めるため、�
 
 | No  | 作業                                          | 担当 | 状態 | メモ                      |
 | --- | --------------------------------------------- | ---- | ---- | ------------------------- |
-| 1   | sample の作成規則の最終チェックを直す         | DEV  | open | `lint:md` は残す          |
-| 2   | playbook に区切りで流す運用を書く             | DEV  | open | `exec queue` の 1 段      |
-| 3   | ほかの作成規則・guides・standards を確かめる  | DEV  | open | 変えた・変えないを記録    |
-| 4   | `check:release` の案と CHANGELOG の文案を書く | DEV  | open | `package.json` は変えない |
+| 1   | sample の作成規則の最終チェックを直す         | DEV  | done | `lint:md` は残す          |
+| 2   | playbook に区切りで流す運用を書く             | DEV  | done | `exec queue` の 1 段      |
+| 3   | ほかの作成規則・guides・standards を確かめる  | DEV  | done | 変えた・変えないを記録    |
+| 4   | `check:release` の案と CHANGELOG の文案を書く | DEV  | done | `package.json` は変えない |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 5.1. 実施内容
+
+- `.github/instructions/sample.instructions.md` の最終チェックから `docs:build` の項を外し、区切りと release の前にオーケストレーターが 1 回流す旨の 1 行へ置き換えた。`npm run -s lint:md` の項は残した。
+- `pm-orchestrator-playbook` の docs:build の項に、gate の前と release の前に `exec queue` の 1 段として 1 回流すこと、失敗時の原因タスク特定と修正方針を追記した。
+- `rulebook.instructions.md` ほかの `.github/instructions/` に、タスクごとの docs:build を求める記述はなかった。
+- `docs/ja/specdojo/` の guides・standards に、executor へタスクごとの docs:build を求める記述はなく、変更していない。対象外とした記述は次のとおり。
+  - `id-and-file-naming-standard`: 解決確認の手順例。
+  - `project-move-guide`・`release-v0-3-0-migration-guide`: 移行後の確認手順。
+  - `exec-config-guide`: `lint:mermaid` の説明での言及。
+  - `job-sequence-guide` と `job-sequence` の sample: `exec queue` の段の例。
+- `package.json`・`tools/`・`.github/workflows/`・`CHANGELOG.md` は変えていない。
+
+### 5.2. check:release の案
+
+`check:release` の末尾に `npm run docs:build` を足す案がある。deploy の workflow と二重になり時間とメモリーを使うため、採否は indie の判断とし、本タスクでは足していない。
+
+### 5.3. CHANGELOG に書く事項
+
+- 区分: Changed
+- 文案: sample の作成規則の最終チェックから `docs:build` を外し、型の schedule の区切りと release の前に 1 回流す運用にしました（PJR-RPNF）。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pm-orchestrator-playbook]]
