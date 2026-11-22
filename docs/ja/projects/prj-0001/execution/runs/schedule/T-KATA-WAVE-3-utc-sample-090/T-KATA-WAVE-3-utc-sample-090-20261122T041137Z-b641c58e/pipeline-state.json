@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-3-utc-sample-090",
+  "run_id": "T-KATA-WAVE-3-utc-sample-090-20261122T041137Z-b641c58e",
+  "updated_at": "2026-11-22T05:16:00.906Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "opus-review-executor",
+      "attempts": 1,
+      "started_at": "2026-11-22T04:12:15.789Z",
+      "completed_at": "2026-11-22T04:13:15.024Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-3-utc-sample-090/T-KATA-WAVE-3-utc-sample-090-20261122T041137Z-b641c58e/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 2,
+      "started_at": "2026-11-22T04:13:26.333Z",
+      "completed_at": "2026-11-22T04:16:07.107Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-3-utc-sample-090/T-KATA-WAVE-3-utc-sample-090-20261122T041137Z-b641c58e/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "opus-review-executor",
+      "attempts": 2,
+      "started_at": "2026-11-22T05:16:00.906Z",
+      "completed_at": null,
+      "artifact_ref": null,
+      "repos": {
+        "project": {
+          "status": "failed",
+          "commit": null,
+          "merged_at": null,
+          "error": "Result Markdown notation violation before commit: docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-3-utc-sample-090/T-KATA-WAVE-3-utc-sample-090-20261122T041137Z-b641c58e/result.md:33 error MD022/blanks-around-headings Headings should be surrounded by blank lines [Expected: 1; Actual: 0; Below] [Context: \"- ### `docs/ja/specdojo/samples/utc-sample.md` への改善指示 - `F001`, `F002`, `F008`: `TR-04` の `_ASSUMPTION_` に関して、判断者（BA/PO 等）の明記、上流（BAC-01 等）への戻し方の記述、および `ready` 化の前に解消すべき条件（仮定の確定と CI 証跡への差し替え）を追記してください。 - `F003`〜`F005`: 境界/依存の入口として扱うメソッド名の明記、および証跡の列におけるテストコードのパスと実行コマンドの記述を行ってください。 - `F006`, `F007`: `utc-index-sample.md` の共通カラムの記入例および責務の分配を、本書の記述と整合させてください。\"] docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-3-utc-sample-090/T-KATA-WAVE-3-utc-sample-090-20261122T041137Z-b641c58e/result.md:33:356 error MD026/no-trailing-punctuation Trailing punctuation in heading [Punctuation: '。'] docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-3-utc-sample-090/T-KATA-WAVE-3-utc-sample-090-20261122T041137Z-b641c58e"
+        }
+      }
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-3-utc-sample-090/T-KATA-WAVE-3-utc-sample-090-20261122T041137Z-b641c58e/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-3-utc-sample-090/T-KATA-WAVE-3-utc-sample-090-20261122T041137Z-b641c58e/result.md"
+  }
+}
