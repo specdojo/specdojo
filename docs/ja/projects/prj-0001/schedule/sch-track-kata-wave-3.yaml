@@ -28,6 +28,9 @@ tasks:
 
       [[specdojo:rulebook-authoring-standard|Rulebook
       記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+
+      PJR-76N9 の決まりに従い、rulebook
+      の「誰がどの利用場面で何を判断するか」は「どの利用場面で何を判断するための文書か」に直し、成果物の本文に文書の役割の割り当て（作る・確かめる・承認する役割）と承認の範囲・留保・差し戻しの進み具合を求めない。承認と留保は登録簿の個票で追う。RACI・体制など、文書の中身として役割を扱う型は対象外とする。
   - local_id: tsp-index-sample
     phase_suffix: "050"
     phase_set: sample-maintenance-pass
@@ -47,6 +50,9 @@ tasks:
       sample は
       [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さにし、[[specdojo:sample-authoring-standard|Sample
       記述標準]]（docs/ja/specdojo/standards/sample-authoring-standard.md）に従う。
+
+      PJR-76N9 の決まりに従い、sample の本文に文書の役割の割り当て（作る・確かめる・承認する役割）と承認の範囲・留保・差し戻しの進み具合を書かない。grade の指摘や done_criteria
+      がそれを求めても足さず、合わせて直すべき点として result に書く。RACI・体制など、文書の中身として役割を扱う型は対象外とする。
   - local_id: tsp-index-sample
     phase_suffix: "080"
     phase_set: condense-pass
@@ -108,6 +114,9 @@ tasks:
 
       [[specdojo:rulebook-authoring-standard|Rulebook
       記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+
+      PJR-76N9 の決まりに従い、rulebook
+      の「誰がどの利用場面で何を判断するか」は「どの利用場面で何を判断するための文書か」に直し、成果物の本文に文書の役割の割り当て（作る・確かめる・承認する役割）と承認の範囲・留保・差し戻しの進み具合を求めない。承認と留保は登録簿の個票で追う。RACI・体制など、文書の中身として役割を扱う型は対象外とする。
   - local_id: utc-index-sample
     phase_suffix: "050"
     phase_set: sample-maintenance-pass
@@ -127,6 +136,9 @@ tasks:
       sample は
       [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さにし、[[specdojo:sample-authoring-standard|Sample
       記述標準]]（docs/ja/specdojo/standards/sample-authoring-standard.md）に従う。
+
+      PJR-76N9 の決まりに従い、sample の本文に文書の役割の割り当て（作る・確かめる・承認する役割）と承認の範囲・留保・差し戻しの進み具合を書かない。grade の指摘や done_criteria
+      がそれを求めても足さず、合わせて直すべき点として result に書く。RACI・体制など、文書の中身として役割を扱う型は対象外とする。
   - local_id: utc-index-sample
     phase_suffix: "080"
     phase_set: condense-pass
@@ -188,6 +200,9 @@ tasks:
 
       [[specdojo:rulebook-authoring-standard|Rulebook
       記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+
+      PJR-76N9 の決まりに従い、rulebook
+      の「誰がどの利用場面で何を判断するか」は「どの利用場面で何を判断するための文書か」に直し、成果物の本文に文書の役割の割り当て（作る・確かめる・承認する役割）と承認の範囲・留保・差し戻しの進み具合を求めない。承認と留保は登録簿の個票で追う。RACI・体制など、文書の中身として役割を扱う型は対象外とする。
   - local_id: utc-sample
     phase_suffix: "050"
     phase_set: sample-maintenance-pass
@@ -207,6 +222,9 @@ tasks:
       sample は
       [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さにし、[[specdojo:sample-authoring-standard|Sample
       記述標準]]（docs/ja/specdojo/standards/sample-authoring-standard.md）に従う。
+
+      PJR-76N9 の決まりに従い、sample の本文に文書の役割の割り当て（作る・確かめる・承認する役割）と承認の範囲・留保・差し戻しの進み具合を書かない。grade の指摘や done_criteria
+      がそれを求めても足さず、合わせて直すべき点として result に書く。RACI・体制など、文書の中身として役割を扱う型は対象外とする。
   - local_id: utc-sample
     phase_suffix: "080"
     phase_set: condense-pass
@@ -268,6 +286,9 @@ tasks:
 
       [[specdojo:rulebook-authoring-standard|Rulebook
       記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+
+      PJR-76N9 の決まりに従い、rulebook
+      の「誰がどの利用場面で何を判断するか」は「どの利用場面で何を判断するための文書か」に直し、成果物の本文に文書の役割の割り当て（作る・確かめる・承認する役割）と承認の範囲・留保・差し戻しの進み具合を求めない。承認と留保は登録簿の個票で追う。RACI・体制など、文書の中身として役割を扱う型は対象外とする。
   - local_id: itc-index-sample
     phase_suffix: "050"
     phase_set: sample-maintenance-pass
@@ -287,6 +308,9 @@ tasks:
       sample は
       [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さにし、[[specdojo:sample-authoring-standard|Sample
       記述標準]]（docs/ja/specdojo/standards/sample-authoring-standard.md）に従う。
+
+      PJR-76N9 の決まりに従い、sample の本文に文書の役割の割り当て（作る・確かめる・承認する役割）と承認の範囲・留保・差し戻しの進み具合を書かない。grade の指摘や done_criteria
+      がそれを求めても足さず、合わせて直すべき点として result に書く。RACI・体制など、文書の中身として役割を扱う型は対象外とする。
   - local_id: itc-index-sample
     phase_suffix: "080"
     phase_set: condense-pass
@@ -348,6 +372,9 @@ tasks:
 
       [[specdojo:rulebook-authoring-standard|Rulebook
       記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+
+      PJR-76N9 の決まりに従い、rulebook
+      の「誰がどの利用場面で何を判断するか」は「どの利用場面で何を判断するための文書か」に直し、成果物の本文に文書の役割の割り当て（作る・確かめる・承認する役割）と承認の範囲・留保・差し戻しの進み具合を求めない。承認と留保は登録簿の個票で追う。RACI・体制など、文書の中身として役割を扱う型は対象外とする。
   - local_id: itc-sample
     phase_suffix: "050"
     phase_set: sample-maintenance-pass
@@ -367,6 +394,9 @@ tasks:
       sample は
       [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さにし、[[specdojo:sample-authoring-standard|Sample
       記述標準]]（docs/ja/specdojo/standards/sample-authoring-standard.md）に従う。
+
+      PJR-76N9 の決まりに従い、sample の本文に文書の役割の割り当て（作る・確かめる・承認する役割）と承認の範囲・留保・差し戻しの進み具合を書かない。grade の指摘や done_criteria
+      がそれを求めても足さず、合わせて直すべき点として result に書く。RACI・体制など、文書の中身として役割を扱う型は対象外とする。
   - local_id: itc-sample
     phase_suffix: "080"
     phase_set: condense-pass
@@ -428,6 +458,9 @@ tasks:
 
       [[specdojo:rulebook-authoring-standard|Rulebook
       記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+
+      PJR-76N9 の決まりに従い、rulebook
+      の「誰がどの利用場面で何を判断するか」は「どの利用場面で何を判断するための文書か」に直し、成果物の本文に文書の役割の割り当て（作る・確かめる・承認する役割）と承認の範囲・留保・差し戻しの進み具合を求めない。承認と留保は登録簿の個票で追う。RACI・体制など、文書の中身として役割を扱う型は対象外とする。
   - local_id: stc-index-sample
     phase_suffix: "050"
     phase_set: sample-maintenance-pass
@@ -447,6 +480,9 @@ tasks:
       sample は
       [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さにし、[[specdojo:sample-authoring-standard|Sample
       記述標準]]（docs/ja/specdojo/standards/sample-authoring-standard.md）に従う。
+
+      PJR-76N9 の決まりに従い、sample の本文に文書の役割の割り当て（作る・確かめる・承認する役割）と承認の範囲・留保・差し戻しの進み具合を書かない。grade の指摘や done_criteria
+      がそれを求めても足さず、合わせて直すべき点として result に書く。RACI・体制など、文書の中身として役割を扱う型は対象外とする。
   - local_id: stc-index-sample
     phase_suffix: "080"
     phase_set: condense-pass
@@ -508,6 +544,9 @@ tasks:
 
       [[specdojo:rulebook-authoring-standard|Rulebook
       記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+
+      PJR-76N9 の決まりに従い、rulebook
+      の「誰がどの利用場面で何を判断するか」は「どの利用場面で何を判断するための文書か」に直し、成果物の本文に文書の役割の割り当て（作る・確かめる・承認する役割）と承認の範囲・留保・差し戻しの進み具合を求めない。承認と留保は登録簿の個票で追う。RACI・体制など、文書の中身として役割を扱う型は対象外とする。
   - local_id: stc-sample
     phase_suffix: "050"
     phase_set: sample-maintenance-pass
@@ -527,6 +566,9 @@ tasks:
       sample は
       [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さにし、[[specdojo:sample-authoring-standard|Sample
       記述標準]]（docs/ja/specdojo/standards/sample-authoring-standard.md）に従う。
+
+      PJR-76N9 の決まりに従い、sample の本文に文書の役割の割り当て（作る・確かめる・承認する役割）と承認の範囲・留保・差し戻しの進み具合を書かない。grade の指摘や done_criteria
+      がそれを求めても足さず、合わせて直すべき点として result に書く。RACI・体制など、文書の中身として役割を扱う型は対象外とする。
   - local_id: stc-sample
     phase_suffix: "080"
     phase_set: condense-pass
@@ -588,6 +630,9 @@ tasks:
 
       [[specdojo:rulebook-authoring-standard|Rulebook
       記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+
+      PJR-76N9 の決まりに従い、rulebook
+      の「誰がどの利用場面で何を判断するか」は「どの利用場面で何を判断するための文書か」に直し、成果物の本文に文書の役割の割り当て（作る・確かめる・承認する役割）と承認の範囲・留保・差し戻しの進み具合を求めない。承認と留保は登録簿の個票で追う。RACI・体制など、文書の中身として役割を扱う型は対象外とする。
   - local_id: etc-index-sample
     phase_suffix: "050"
     phase_set: sample-maintenance-pass
@@ -607,6 +652,9 @@ tasks:
       sample は
       [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さにし、[[specdojo:sample-authoring-standard|Sample
       記述標準]]（docs/ja/specdojo/standards/sample-authoring-standard.md）に従う。
+
+      PJR-76N9 の決まりに従い、sample の本文に文書の役割の割り当て（作る・確かめる・承認する役割）と承認の範囲・留保・差し戻しの進み具合を書かない。grade の指摘や done_criteria
+      がそれを求めても足さず、合わせて直すべき点として result に書く。RACI・体制など、文書の中身として役割を扱う型は対象外とする。
   - local_id: etc-index-sample
     phase_suffix: "080"
     phase_set: condense-pass
@@ -668,6 +716,9 @@ tasks:
 
       [[specdojo:rulebook-authoring-standard|Rulebook
       記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+
+      PJR-76N9 の決まりに従い、rulebook
+      の「誰がどの利用場面で何を判断するか」は「どの利用場面で何を判断するための文書か」に直し、成果物の本文に文書の役割の割り当て（作る・確かめる・承認する役割）と承認の範囲・留保・差し戻しの進み具合を求めない。承認と留保は登録簿の個票で追う。RACI・体制など、文書の中身として役割を扱う型は対象外とする。
   - local_id: etc-sample
     phase_suffix: "050"
     phase_set: sample-maintenance-pass
@@ -687,6 +738,9 @@ tasks:
       sample は
       [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さにし、[[specdojo:sample-authoring-standard|Sample
       記述標準]]（docs/ja/specdojo/standards/sample-authoring-standard.md）に従う。
+
+      PJR-76N9 の決まりに従い、sample の本文に文書の役割の割り当て（作る・確かめる・承認する役割）と承認の範囲・留保・差し戻しの進み具合を書かない。grade の指摘や done_criteria
+      がそれを求めても足さず、合わせて直すべき点として result に書く。RACI・体制など、文書の中身として役割を扱う型は対象外とする。
   - local_id: etc-sample
     phase_suffix: "080"
     phase_set: condense-pass
@@ -748,6 +802,9 @@ tasks:
 
       [[specdojo:rulebook-authoring-standard|Rulebook
       記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+
+      PJR-76N9 の決まりに従い、rulebook
+      の「誰がどの利用場面で何を判断するか」は「どの利用場面で何を判断するための文書か」に直し、成果物の本文に文書の役割の割り当て（作る・確かめる・承認する役割）と承認の範囲・留保・差し戻しの進み具合を求めない。承認と留保は登録簿の個票で追う。RACI・体制など、文書の中身として役割を扱う型は対象外とする。
   - local_id: atc-index-sample
     phase_suffix: "050"
     phase_set: sample-maintenance-pass
@@ -767,6 +824,9 @@ tasks:
       sample は
       [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さにし、[[specdojo:sample-authoring-standard|Sample
       記述標準]]（docs/ja/specdojo/standards/sample-authoring-standard.md）に従う。
+
+      PJR-76N9 の決まりに従い、sample の本文に文書の役割の割り当て（作る・確かめる・承認する役割）と承認の範囲・留保・差し戻しの進み具合を書かない。grade の指摘や done_criteria
+      がそれを求めても足さず、合わせて直すべき点として result に書く。RACI・体制など、文書の中身として役割を扱う型は対象外とする。
   - local_id: atc-index-sample
     phase_suffix: "080"
     phase_set: condense-pass
@@ -828,6 +888,9 @@ tasks:
 
       [[specdojo:rulebook-authoring-standard|Rulebook
       記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+
+      PJR-76N9 の決まりに従い、rulebook
+      の「誰がどの利用場面で何を判断するか」は「どの利用場面で何を判断するための文書か」に直し、成果物の本文に文書の役割の割り当て（作る・確かめる・承認する役割）と承認の範囲・留保・差し戻しの進み具合を求めない。承認と留保は登録簿の個票で追う。RACI・体制など、文書の中身として役割を扱う型は対象外とする。
   - local_id: atc-sample
     phase_suffix: "050"
     phase_set: sample-maintenance-pass
@@ -847,6 +910,9 @@ tasks:
       sample は
       [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さにし、[[specdojo:sample-authoring-standard|Sample
       記述標準]]（docs/ja/specdojo/standards/sample-authoring-standard.md）に従う。
+
+      PJR-76N9 の決まりに従い、sample の本文に文書の役割の割り当て（作る・確かめる・承認する役割）と承認の範囲・留保・差し戻しの進み具合を書かない。grade の指摘や done_criteria
+      がそれを求めても足さず、合わせて直すべき点として result に書く。RACI・体制など、文書の中身として役割を扱う型は対象外とする。
   - local_id: atc-sample
     phase_suffix: "080"
     phase_set: condense-pass
@@ -909,6 +975,9 @@ tasks:
 
       [[specdojo:rulebook-authoring-standard|Rulebook
       記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+
+      PJR-76N9 の決まりに従い、rulebook
+      の「誰がどの利用場面で何を判断するか」は「どの利用場面で何を判断するための文書か」に直し、成果物の本文に文書の役割の割り当て（作る・確かめる・承認する役割）と承認の範囲・留保・差し戻しの進み具合を求めない。承認と留保は登録簿の個票で追う。RACI・体制など、文書の中身として役割を扱う型は対象外とする。
   - local_id: trc-requirements-to-tests-sample
     phase_suffix: "050"
     phase_set: sample-maintenance-pass
@@ -928,6 +997,9 @@ tasks:
       sample は
       [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さにし、[[specdojo:sample-authoring-standard|Sample
       記述標準]]（docs/ja/specdojo/standards/sample-authoring-standard.md）に従う。
+
+      PJR-76N9 の決まりに従い、sample の本文に文書の役割の割り当て（作る・確かめる・承認する役割）と承認の範囲・留保・差し戻しの進み具合を書かない。grade の指摘や done_criteria
+      がそれを求めても足さず、合わせて直すべき点として result に書く。RACI・体制など、文書の中身として役割を扱う型は対象外とする。
   - local_id: trc-requirements-to-tests-sample
     phase_suffix: "080"
     phase_set: condense-pass
@@ -988,6 +1060,9 @@ tasks:
 
       [[specdojo:rulebook-authoring-standard|Rulebook
       記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+
+      PJR-76N9 の決まりに従い、rulebook
+      の「誰がどの利用場面で何を判断するか」は「どの利用場面で何を判断するための文書か」に直し、成果物の本文に文書の役割の割り当て（作る・確かめる・承認する役割）と承認の範囲・留保・差し戻しの進み具合を求めない。承認と留保は登録簿の個票で追う。RACI・体制など、文書の中身として役割を扱う型は対象外とする。
   - local_id: imp-test-sample
     phase_suffix: "050"
     phase_set: sample-maintenance-pass
@@ -1007,6 +1082,9 @@ tasks:
       sample は
       [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さにし、[[specdojo:sample-authoring-standard|Sample
       記述標準]]（docs/ja/specdojo/standards/sample-authoring-standard.md）に従う。
+
+      PJR-76N9 の決まりに従い、sample の本文に文書の役割の割り当て（作る・確かめる・承認する役割）と承認の範囲・留保・差し戻しの進み具合を書かない。grade の指摘や done_criteria
+      がそれを求めても足さず、合わせて直すべき点として result に書く。RACI・体制など、文書の中身として役割を扱う型は対象外とする。
   - local_id: imp-test-sample
     phase_suffix: "080"
     phase_set: condense-pass
