@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-f6mc-local-config-external-projects
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: low
   difficulty: easy
   owner: DEV
   registered_at: "2026-11-21T09:03:34Z"
+  completed_at: "2026-11-22T00:30:41Z"
+  conclusion: ローカル設定で external_projects を宣言・上書きできるようにした。共有の別名は path を差し替え、新しい別名は path と project_id を足す。schema と設定リファレンスを直した。
 ---
 
 # PJR-F6MC ローカル設定で external_projects を宣言できない
