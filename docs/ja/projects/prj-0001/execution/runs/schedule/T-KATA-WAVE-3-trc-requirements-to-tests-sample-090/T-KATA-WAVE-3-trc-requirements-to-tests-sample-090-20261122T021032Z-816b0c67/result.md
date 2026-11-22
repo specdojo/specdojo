@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-3-trc-requirements-to-tests-sample-090
   mode: review
-  status: in_progress
+  status: superseded
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-3-trc-requirements-to-tests-sample-090/T-KATA-WAVE-3-trc-requirements-to-tests-sample-090-20261122T021032Z-816b0c67/plan.md
   started_at: "2026-11-22T02:10:34.702Z"
+  completed_at: "2026-11-22T04:53:53.026Z"
   agent: opus-review-executor
   execution: agent
   approach: fully-guided
