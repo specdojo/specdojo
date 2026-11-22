@@ -13,13 +13,14 @@ specdojo:
 
 ## 2. 構成
 
-| パス                         | 利用プロジェクトでの配置先 | 説明                                                                  |
-| ---------------------------- | -------------------------- | --------------------------------------------------------------------- |
-| `agents/*.md`                | `.claude/agents/`          | 役割ごとの agent 定義。`--agent <name>` で参照されるため配置先は固定  |
-| `settings.edit.json`         | `.specdojo/claude/`        | edit executor 用 permission 設定                                      |
-| `settings.orchestrator.json` | `.specdojo/claude/`        | 対話型 orchestrator 用 permission 設定                                |
-| `settings.review.json`       | `.specdojo/claude/`        | review executor 用 permission 設定。result 配下のみ書き込みを許可する |
-| `settings.report.json`       | `.specdojo/claude/`        | reporter 用 permission 設定。ファイル編集を拒否する                   |
+| パス                         | 利用プロジェクトでの配置先 | 説明                                                                                                                                                                   |
+| ---------------------------- | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `agents/*.md`                | `.claude/agents/`          | 役割ごとの agent 定義。`--agent <name>` で参照されるため配置先は固定                                                                                                   |
+| `skills/*/SKILL.md`          | `.claude/skills/`          | skill のラッパー。正本 `.agents/skills/` の同名 skill を読ませる。正本は `templates/agent-skills/` から全 provider に配る。どちらも `npm run orchestrator:sync` で作る |
+| `settings.edit.json`         | `.specdojo/claude/`        | edit executor 用 permission 設定                                                                                                                                       |
+| `settings.orchestrator.json` | `.specdojo/claude/`        | 対話型 orchestrator 用 permission 設定                                                                                                                                 |
+| `settings.review.json`       | `.specdojo/claude/`        | review executor 用 permission 設定。result 配下のみ書き込みを許可する                                                                                                  |
+| `settings.report.json`       | `.specdojo/claude/`        | reporter 用 permission 設定。ファイル編集を拒否する                                                                                                                    |
 
 ## 3. 導入手順
 

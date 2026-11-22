@@ -187,6 +187,6 @@ Claude Code の plan モードで作成される plan は、会話の中でア�
 
 1. SSOT の `.agents/specdojo-orchestrator.agent.md` を編集します。
 2. `npm run orchestrator:sync` を実行し、環境別ラッパーと配布テンプレートへ本文を生成します。
-3. `npm run lint:orchestrator-sync` を実行し、10個の同期対象が SSOT とバイト単位で一致することを確認します。
+3. `npm run lint:orchestrator-sync` を実行し、すべての同期対象が SSOT とバイト単位で一致することを確認します。
 
-同期対象の一覧は `tools/validate-orchestrator-sync.mjs` を正本とします。pre-commit hook は対象ファイルの変更時に `npm run orchestrator:sync` を実行し、本文の反映漏れを自動で補います。モデル・権限・provider の変更は本文ではなく、各ラッパーの frontmatter / TOML 側で行います。
+skill `specdojo-exec-in-session` の正本 `.agents/skills/specdojo-exec-in-session/SKILL.md` と Claude Code のラッパー `.claude/skills/specdojo-exec-in-session/SKILL.md` も、同じ `npm run orchestrator:sync` でファイル全体を `templates/agent-skills/` と `templates/claude/skills/` の配布原本へ写し、`npm run lint:orchestrator-sync` が写し漏れを検出します。配布原本は手で直しません。同期対象の一覧は `tools/validate-orchestrator-sync.mjs` を正本とします。pre-commit hook は対象ファイルの変更時に `npm run orchestrator:sync` を実行し、本文の反映漏れを自動で補います。モデル・権限・provider の変更は本文ではなく、各ラッパーの frontmatter / TOML 側で行います。
