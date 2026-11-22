@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-bnav-faster-docs-dev-startup
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-21T12:22:43Z"
+  completed_at: "2026-11-22T02:47:07Z"
+  conclusion: 閲覧用のツリーへのコピーを差分にして実行の記録を外し、dist で流す generate と --skip-if-fresh を足した。cache のある起動は 10.9 秒から 8.4 秒。package.json と .devcontainer の案は対応結果に残した。
 ---
 
 # PJR-BNAV npm run docs:dev の起動して開けるまでの時間を縮める

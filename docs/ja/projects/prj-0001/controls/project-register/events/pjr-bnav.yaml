@@ -154,3 +154,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_50f698f8a9ce4f9faee686cbb099c281
+- v: 1
+  id: reg_732b84d029514352a39278c172cbcb26
+  ts: "2026-11-22T02:47:07Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register で実施（統合 5b176e773）。段ごとの時間と docs:build（126 秒で通過）はオーケストレーターが worktree で確かめた。保護された設定と CHANGELOG の不変を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: 閲覧用のツリーへのコピーを差分にして実行の記録を外し、dist で流す generate と --skip-if-fresh を足した。cache のある起動は 10.9 秒から 8.4 秒。package.json と .devcontainer の案は対応結果に残した。
+  previous_event_id: reg_f2e09bc05c004851a670eb3323a6e911
