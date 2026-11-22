@@ -35,6 +35,20 @@ export type EvidenceValidation = {
   summary: string;
   /** Why an executor validation does not apply. Required when status is `not_applicable`. */
   reason?: string;
+  /**
+   * PJR-9X52: test files a runner validation configured with `related` ran, and why. Absent
+   * for validations that always run the full suite.
+   */
+  test_selection?: EvidenceTestSelection;
+};
+
+export type EvidenceTestSelection = {
+  mode: "related" | "full";
+  reason: string;
+  /** Test files that ran (related mode). */
+  selected_tests?: string[];
+  /** Test files of the same kind that did not run (related mode). */
+  omitted_tests?: string[];
 };
 
 export type EvidenceTargetCoverage = {

@@ -495,6 +495,11 @@ stage 別の失敗と対応は次のとおりです。
 
 YAML の表示のページ（同じ階層の `generated/<名前>.md`）は git の管理外で、worktree の準備のときに作られます。親 runner は親検証の前に、ページより新しい YAML、または変更した YAML でページがまだ無いものがあれば、worktree で `specdojo build --only yaml-pages` と同じ生成を流してページを作り直します。executor が変えた YAML も、再開で統合先から取り込んだ YAML も対象です。YAML を変えない run では作り直しません。作り直しが失敗した場合は、変えた YAML と生成の出力を `yaml-pages` の `failed` として記録し、親検証の失敗として扱います。`lint-md-changed`・`lint-fm-changed` は、変えた YAML の表示のページも検査の対象に含めます。ページは commit の対象に入りません。
 
+`test-unit`・`test-integration` に `related: true` を設定した場合（[exec設定ガイド](exec-config-guide.md) の `pipeline.parent_validations`）、親検証は変更に関係するテストだけを流すため、依存を辿れない見逃しが統合先に入り得ます。流さなかったテストは evidence の `test_selection.omitted_tests` で確かめられます。全件は次のとおり run の外で流し、失敗したら原因の run を `test_selection` で探して直します。
+
+1. 夜間: 統合先の checkout で `npm run test:integration` を流します（単体テストも含めるなら `npm test`）。routine や cron など定期の実行に載せ、結果を朝に確かめます。
+2. リリースの前: `npm run check:release` を流し、全件が通ってからリリースの手順へ進みます。`related: true` を設定していない場合も同じです。
+
 reporter で止まったタスクは、同じ claim のまま reporter だけを再開できます。再開時は `pipeline-state.json` と executor evidence の task ID / run ID の一致を確認し、一致しない場合や欠損している場合は evidence を再利用せず、新しい run として executor から実行し直します。保存済みの親 runner 検証だけが失敗している場合は、現在の worktree でその固定許可リスト検証を再実行し、結果を evidence へ反映してから reporter を起動します。`source: executor` の検証失敗は成果物側の記録なので、この経路では再評価しません。
 
 ```bash

@@ -19,11 +19,15 @@ import {
 import { acquirePoolSlot, getActiveExecLocksDir, releaseLock } from "./slot-lock.js";
 import type { EvidenceValidation, ExecEvidence } from "./evidence.js";
 import { MAX_CHANGE_FILES, redactSensitiveText } from "./evidence.js";
+import type { RelatedTestKind, RelatedTestSelection } from "./related-tests.js";
+import { buildTestDependencyGraph, selectRelatedTests } from "./related-tests.js";
 import { PROJECT_REPO_WORKTREE_DIRNAME, REPO_NAME_PATTERN } from "../shared/specdojo-config.js";
 
 export const MAX_PARENT_VALIDATION_STREAM_BYTES = 1024 * 1024;
 const MAX_SUMMARY_LENGTH = 1_000;
 const CAPTURE_MARKER_RESERVE_BYTES = 256;
+/** Upper bound of the selected and omitted test files recorded in one validation. */
+export const MAX_RECORDED_TEST_FILES = 500;
 
 export type ParentValidationId =
   | "validate-schema"
@@ -254,7 +258,8 @@ export const PARENT_VALIDATION_PROJECT_REPO = PROJECT_REPO_WORKTREE_DIRNAME;
 
 /** One element of `pipeline.parent_validations` in exec-defaults. */
 export type ParentValidationEntry =
-  string | { id: string; repo?: string; paths?: readonly string[]; parallel?: boolean };
+  | string
+  | { id: string; repo?: string; paths?: readonly string[]; parallel?: boolean; related?: boolean };
 
 export type ParentValidationAssignment = {
   definition: ParentValidationDefinition;
@@ -269,6 +274,14 @@ export type ParentValidationAssignment = {
   paths?: readonly string[];
   /** PJR-50RQ: validation may run alongside adjacent `parallel` validations (light lint). */
   parallel?: boolean;
+  /** PJR-9X52: run only the test files related to the changed files (vitest validations). */
+  related?: boolean;
+};
+
+/** Validations whose vitest run can be narrowed to the related test files, by test kind. */
+export const RELATED_TEST_VALIDATIONS: Partial<Record<ParentValidationId, RelatedTestKind>> = {
+  "test-unit": "unit",
+  "test-integration": "integration",
 };
 
 /**
@@ -309,6 +322,7 @@ type ParsedEntry = {
   repo: string;
   paths?: readonly string[];
   parallel?: boolean;
+  related?: boolean;
 };
 
 function parsePaths(value: unknown, where: string): readonly string[] | undefined {
@@ -332,7 +346,7 @@ function parseEntry(entry: unknown, index: number): ParsedEntry {
     );
   }
   const unknownKeys = Object.keys(entry)
-    .filter((key) => !["id", "repo", "paths", "parallel"].includes(key))
+    .filter((key) => !["id", "repo", "paths", "parallel", "related"].includes(key))
     .sort();
   if (unknownKeys.length > 0) {
     throw new Error(`${where}: unknown key(s) ${unknownKeys.map((key) => `"${key}"`).join(", ")}`);
@@ -344,8 +358,21 @@ function parseEntry(entry: unknown, index: number): ParsedEntry {
   if (entry.parallel !== undefined && typeof entry.parallel !== "boolean") {
     throw new Error(`${where}.parallel must be a boolean`);
   }
-  if (entry.repo === undefined && paths === undefined && entry.parallel === undefined) {
-    throw new Error(`${where} must set repo, paths or parallel when written as an object`);
+  if (entry.related !== undefined && typeof entry.related !== "boolean") {
+    throw new Error(`${where}.related must be a boolean`);
+  }
+  if (entry.related === true && !Object.hasOwn(RELATED_TEST_VALIDATIONS, entry.id)) {
+    throw new Error(
+      `${where}.related is supported only for ${Object.keys(RELATED_TEST_VALIDATIONS).join(", ")} (got ${entry.id})`,
+    );
+  }
+  if (
+    entry.repo === undefined &&
+    paths === undefined &&
+    entry.parallel === undefined &&
+    entry.related === undefined
+  ) {
+    throw new Error(`${where} must set repo, paths, parallel or related when written as an object`);
   }
   const repo = entry.repo ?? PARENT_VALIDATION_PROJECT_REPO;
   if (typeof repo !== "string" || !REPO_NAME_PATTERN.test(repo)) {
@@ -358,6 +385,7 @@ function parseEntry(entry: unknown, index: number): ParsedEntry {
     repo,
     ...(paths ? { paths } : {}),
     ...(entry.parallel === true ? { parallel: true } : {}),
+    ...(entry.related === true ? { related: true } : {}),
   };
 }
 
@@ -367,7 +395,7 @@ export function resolveParentValidationAssignments(
   if (!entries) return [];
   const seen = new Set<string>();
   return entries.map((entry, index) => {
-    const { id, repo, paths, parallel } = parseEntry(entry, index);
+    const { id, repo, paths, parallel, related } = parseEntry(entry, index);
     const label = assignmentLabel(id, repo);
     if (seen.has(label)) {
       throw new Error(`Duplicate parent validation id in exec-defaults: ${label}`);
@@ -387,6 +415,7 @@ export function resolveParentValidationAssignments(
       label,
       ...(paths ? { paths } : {}),
       ...(parallel ? { parallel } : {}),
+      ...(related ? { related } : {}),
     };
   });
 }
@@ -468,6 +497,65 @@ export function isParentValidationSkipped(
   return !changedPathsForRepo(changedPaths, assignment.repo, productRepos).some((path) =>
     matchesParentValidationPaths(path, patterns),
   );
+}
+
+/**
+ * PJR-9X52: the test files a `related` validation runs for the change set. Returns undefined for
+ * validations without `related`. A change set that is unknown, or a dependency graph that cannot
+ * be read, selects the full run.
+ */
+export async function relatedTestSelectionFor(
+  assignment: ParentValidationAssignment,
+  root: string,
+  selection: ParentValidationSelection | undefined,
+  productRepos: readonly string[] = [],
+): Promise<RelatedTestSelection | undefined> {
+  const kind = RELATED_TEST_VALIDATIONS[assignment.definition.id];
+  if (!assignment.related || !kind) return undefined;
+  const changedPaths = selection?.changedPaths;
+  if (changedPaths === undefined)
+    return { mode: "full", reason: "change set is unknown or truncated" };
+  try {
+    const graph = await buildTestDependencyGraph(root, kind);
+    return selectRelatedTests(
+      graph,
+      changedPathsForRepo(changedPaths, assignment.repo, productRepos),
+    );
+  } catch (error) {
+    return {
+      mode: "full",
+      reason: `related test selection failed: ${error instanceof Error ? error.message : String(error)}`,
+    };
+  }
+}
+
+/** The fixed argv with the selected test files appended after `--` for a related selection. */
+export function definitionForTestSelection(
+  definition: ParentValidationDefinition,
+  testSelection: RelatedTestSelection | undefined,
+): ParentValidationDefinition {
+  if (testSelection?.mode !== "related") return definition;
+  return { ...definition, args: [...definition.args, "--", ...testSelection.selected] };
+}
+
+function evidenceTestSelection(
+  testSelection: RelatedTestSelection,
+): NonNullable<EvidenceValidation["test_selection"]> {
+  const reason = truncateHead(testSelection.reason, MAX_SUMMARY_LENGTH);
+  if (testSelection.mode === "full") return { mode: "full", reason };
+  return {
+    mode: "related",
+    reason,
+    selected_tests: testSelection.selected.slice(0, MAX_RECORDED_TEST_FILES),
+    omitted_tests: testSelection.omitted.slice(0, MAX_RECORDED_TEST_FILES),
+  };
+}
+
+function testSelectionSummaryPrefix(testSelection: RelatedTestSelection | undefined): string {
+  if (!testSelection) return "";
+  return testSelection.mode === "related"
+    ? `related tests only (${testSelection.reason}): `
+    : `full run (${testSelection.reason}): `;
 }
 
 export function resolveParentValidationDefinitions(
@@ -699,6 +787,18 @@ export async function runParentValidationBatch(
         },
       };
     }
+    const testSelection = await relatedTestSelectionFor(assignment, root, selection, productRepos);
+    if (testSelection) {
+      validationMetric("validation-test-selection", {
+        id: definition.id,
+        repo,
+        mode: testSelection.mode,
+        reason: testSelection.reason,
+        ...(testSelection.mode === "related"
+          ? { selected: testSelection.selected.length, omitted: testSelection.omitted.length }
+          : {}),
+      });
+    }
     const startedAt = new Date().toISOString();
     const started = performance.now();
     validationMetric("validation-start", {
@@ -709,7 +809,7 @@ export async function runParentValidationBatch(
     });
     let result: ParentValidationProcessResult;
     try {
-      result = await invoke(definition, root);
+      result = await invoke(definitionForTestSelection(definition, testSelection), root);
     } catch (error) {
       validationMetric("validation-end", {
         id: definition.id,
@@ -736,7 +836,11 @@ export async function runParentValidationBatch(
       ...repoField,
       command: definition.displayCommand,
       status: passed ? "passed" : "failed",
-      summary: validationSummary(result),
+      summary: truncateHead(
+        `${testSelectionSummaryPrefix(testSelection)}${validationSummary(result)}`,
+        MAX_SUMMARY_LENGTH,
+      ),
+      ...(testSelection ? { test_selection: evidenceTestSelection(testSelection) } : {}),
     };
     if (passed) return { validation };
     return {

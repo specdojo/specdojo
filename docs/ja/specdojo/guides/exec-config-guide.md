@@ -398,6 +398,30 @@ pipeline:
     - { id: test-docs, paths: ["docs/ja/specdojo/**", "docs/specdojo/**"] }
 ```
 
+`test-unit` と `test-integration` の要素に `related: true` を書くと、変更したファイルに関係するテストのファイルだけを流します（PJR-9X52）。書かなければ今までどおり全件を流します。親 runner は `tests/` 配下の各テストから相対 import と、テストが子プロセスで起動するファイル（`src/specdojo.ts` など。`dist/<name>.js` は `src/<name>.ts` とみなす）を辿り、変更したファイルに依存するテストのファイルを固定の npm script の `--` の後ろへ渡します。見逃しを避けるため、次の場合は全件を流します。
+
+- 変更一覧が無い、または evidence の上限で切れた場合。
+- 関係するテストが 1 つも見つからない場合。
+- テストの基盤や設定を変えた場合（`vitest.*`・`tests/helpers/**`・`tests/setup/**`・`tests/fixtures/**`・`package.json`・`package-lock.json`・`tsconfig*.json`・`lefthook.yml`・`.specdojo/**`・`docs/specdojo/**`）。
+- `src/`・`tests/`・`tools/`・`packages/`・`scripts/` 配下でコード以外のファイル（YAML・snapshot など）を変えた場合。
+
+選んだ結果は、その検証の evidence の `test_selection` に残ります。`mode`（`related` か `full`）、`reason`（絞った・戻した理由と、どのテストにも依存されない変更したファイル）、`selected_tests`（流したテスト）、`omitted_tests`（流さなかったテスト）です。`summary` の先頭にも `related tests only (...)` または `full run (...)` を付けます。絞って `passed` になった検証も `commit_hook_skips` の `covered_by` を満たすため、統合の commit の全件の hook（`npm test` など）も流れません。
+
+```yaml
+pipeline:
+  parent_validations:
+    - {
+        id: test-integration,
+        paths: ["{src,tests,tools,scripts,packages}/**", "vitest.*"],
+        related: true,
+      }
+```
+
+`related: true` は統合の前の確認を速くするためのもので、全件の代わりにはなりません。全件は次の時機に流します。
+
+- 夜間: 統合先の checkout で `npm run test:integration`（単体テストも含めるなら `npm test`）を流します。routine や cron など、run の外の定期の実行に載せます。
+- リリースの前: `npm run check:release` で全件を流します。手順は [exec運用ガイド](exec-operation-guide.md) を参照してください。
+
 `pipeline.commit_hook_skips` は、runner の統合の commit で流し直さない Git hook（lefthook のコマンド名）を宣言します。`covered_by` に並べた親の検証がその run ですべて `passed` のときだけ、commit を `LEFTHOOK_EXCLUDE` 付きで実行します。`not_applicable` や失敗した検証は代わりにならないため、その場合は hook を流します。人が手で commit するときの hook は変わりません。
 
 ```yaml

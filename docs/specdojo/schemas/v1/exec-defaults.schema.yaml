@@ -169,6 +169,21 @@ $defs:
                     When true, the validation runs concurrently with the directly adjacent
                     entries that also set `parallel: true`. Other entries run one at a time in
                     list order. Results are recorded in list order. Use it for light lint only.
+                related:
+                  type: boolean
+                  description: >
+                    Only for `test-unit` and `test-integration`. When true, the runner follows the
+                    relative imports (and the files a test launches, such as `src/specdojo.ts`)
+                    of each test file under `tests/` and passes only the test files that depend on
+                    a changed file to the fixed npm script after `--`. It runs the full suite when
+                    the change set is unknown or truncated, when no related test is found, when a
+                    change touches the test infrastructure or settings (`vitest.*`,
+                    `tests/helpers/**`, `tests/setup/**`, `tests/fixtures/**`, `package.json`,
+                    `package-lock.json`, `tsconfig*.json`, `lefthook.yml`, `.specdojo/**`,
+                    `docs/specdojo/**`), or when a non-code file changes under `src/`, `tests/`,
+                    `tools/`, `packages/` or `scripts/`. The selected and omitted test files and
+                    the reason are recorded in the validation's `test_selection`. Without
+                    `related`, the full suite runs.
       post_integration:
         type: array
         uniqueItems: true
