@@ -35,7 +35,7 @@ specdojo:
 - 要求の母集団（8 件）:
   - [[specdojo:bac-sample|現金販売の業務受入条件]] の BAC-01〜BAC-03（3 件）。
   - [[specdojo:prj-success-criteria-and-acceptance-criteria-sample|成功基準と受入条件]] のうち初期リリースの受入に必須の SC-01・AC-01〜AC-04（5 件）。
-- テストの抽出条件: `relations.verifies` に母集団の要求文書を 1 つ以上持つ受入テスト・総合テスト。加えて、[[specdojo:stc-index-sample|総合テストカタログ 概要]] に載る総合テストの「トレース」の表を走査し、`relations.verifies` を欠くテストを照合で拾う。
+- テストの抽出条件: `relations.verifies` に母集団の要求文書を 1 つ以上持つ受入テスト。加えて、[[specdojo:stc-index-sample|総合テストカタログ 概要]] に載る総合テストのうち、「トレース」の表の仕様ID が母集団の要求文書を指すもの（総合テストは `relations.verifies` を定めないため、この経路で集める）。
 - 抽出したテスト: [[specdojo:atc-sample|受入テストカタログ: 店頭の現金販売]]（ローカル ID `atc-cash-sale`）、[[specdojo:stc-sample|総合テストカタログ: 店頭の現金販売]]（ローカル ID `stc-cash-sale`）。
 - 生成の手段と生成日: 生成コマンドがないため、rulebook の「生成の手順」による手作業で 2026-05-11 に QE が生成した。
 - 生成元の版: `main` の `4f9e2c1`。
@@ -43,16 +43,16 @@ specdojo:
 
 ## 3. トレースマトリクス
 
-| 要求ID                                                      | 要求要約                                     | 対応テストID                                 | 充足状況 | ギャップ                                                                                                    | 備考                                               |
-| ----------------------------------------------------------- | -------------------------------------------- | -------------------------------------------- | -------- | ----------------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
-| `bac-sample BAC-01`                                         | 現金販売を確定して記録を照合する             | `atc-cash-sale TR-01`, `stc-cash-sale TR-01` | 一部充足 | `atc-cash-sale`・`stc-cash-sale` が `draft`。`stc-cash-sale` の `relations.verifies` に `bac-sample` がない | `atc-cash-sale`: `draft`, `stc-cash-sale`: `draft` |
-| `bac-sample BAC-02`                                         | 在庫不足なら販売を確定せず確認へ戻る         | なし                                         | 未着手   | 対応テストがない（`atc-cash-sale`・`stc-cash-sale` は対象外とし、未作成の `*-sale-hold` へ委ねている）      | なし                                               |
-| `bac-sample BAC-03`                                         | 必須情報が不足した購入を未確定のまま引き継ぐ | なし                                         | 未着手   | 対応テストがない（BAC-02 と同じく `*-sale-hold` へ委ねている）                                              | なし                                               |
-| `prj-success-criteria-and-acceptance-criteria-sample SC-01` | 主要操作を迷わず完了できる                   | `atc-cash-sale TR-03`                        | 一部充足 | `atc-cash-sale` が `draft`                                                                                  | `atc-cash-sale`: `draft`                           |
-| `prj-success-criteria-and-acceptance-criteria-sample AC-01` | 販売を記録できる                             | `atc-cash-sale TR-02`, `stc-cash-sale TR-02` | 一部充足 | `atc-cash-sale`・`stc-cash-sale` が `draft`。`stc-cash-sale` の `relations.verifies` に要求文書がない       | `atc-cash-sale`: `draft`, `stc-cash-sale`: `draft` |
-| `prj-success-criteria-and-acceptance-criteria-sample AC-02` | 在庫とつけ残高を確認できる                   | なし                                         | 未着手   | 対応テストがない（`atc-cash-sale` は未作成の `atc-stock-credit-check` へ委ねている）                        | なし                                               |
-| `prj-success-criteria-and-acceptance-criteria-sample AC-03` | 主要操作で重大な行き詰まりがない             | `atc-cash-sale TR-03`                        | 一部充足 | `atc-cash-sale` が `draft`                                                                                  | `atc-cash-sale`: `draft`                           |
-| `prj-success-criteria-and-acceptance-criteria-sample AC-04` | 確認結果を追跡できる                         | `atc-cash-sale TR-04`                        | 一部充足 | `atc-cash-sale` が `draft`                                                                                  | `atc-cash-sale`: `draft`                           |
+| 要求ID                                                      | 要求要約                                     | 対応テストID                                 | 充足状況 | ギャップ                                                                                               | 備考                                               |
+| ----------------------------------------------------------- | -------------------------------------------- | -------------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------ | -------------------------------------------------- |
+| `bac-sample BAC-01`                                         | 現金販売を確定して記録を照合する             | `atc-cash-sale TR-01`, `stc-cash-sale TR-01` | 一部充足 | `atc-cash-sale`・`stc-cash-sale` が `draft`                                                            | `atc-cash-sale`: `draft`, `stc-cash-sale`: `draft` |
+| `bac-sample BAC-02`                                         | 在庫不足なら販売を確定せず確認へ戻る         | なし                                         | 未着手   | 対応テストがない（`atc-cash-sale`・`stc-cash-sale` は対象外とし、未作成の `*-sale-hold` へ委ねている） | なし                                               |
+| `bac-sample BAC-03`                                         | 必須情報が不足した購入を未確定のまま引き継ぐ | なし                                         | 未着手   | 対応テストがない（BAC-02 と同じく `*-sale-hold` へ委ねている）                                         | なし                                               |
+| `prj-success-criteria-and-acceptance-criteria-sample SC-01` | 主要操作を迷わず完了できる                   | `atc-cash-sale TR-03`                        | 一部充足 | `atc-cash-sale` が `draft`                                                                             | `atc-cash-sale`: `draft`                           |
+| `prj-success-criteria-and-acceptance-criteria-sample AC-01` | 販売を記録できる                             | `atc-cash-sale TR-02`, `stc-cash-sale TR-02` | 一部充足 | `atc-cash-sale`・`stc-cash-sale` が `draft`                                                            | `atc-cash-sale`: `draft`, `stc-cash-sale`: `draft` |
+| `prj-success-criteria-and-acceptance-criteria-sample AC-02` | 在庫とつけ残高を確認できる                   | なし                                         | 未着手   | 対応テストがない（`atc-cash-sale` は未作成の `atc-stock-credit-check` へ委ねている）                   | なし                                               |
+| `prj-success-criteria-and-acceptance-criteria-sample AC-03` | 主要操作で重大な行き詰まりがない             | `atc-cash-sale TR-03`                        | 一部充足 | `atc-cash-sale` が `draft`                                                                             | `atc-cash-sale`: `draft`                           |
+| `prj-success-criteria-and-acceptance-criteria-sample AC-04` | 確認結果を追跡できる                         | `atc-cash-sale TR-04`                        | 一部充足 | `atc-cash-sale` が `draft`                                                                             | `atc-cash-sale`: `draft`                           |
 
 抽出したテストの `trace_key` はすべてケース表の `トレース` 列から参照されており、検証ケース未記載による `一部充足` はない。
 
@@ -79,17 +79,16 @@ specdojo:
 
 1. `bac-sample BAC-02`・`BAC-03`: 在庫不足や情報不足の購入を誤って確定すると販売記録と在庫が食い違い、店主不在の店番で起きても気づけない。初期リリースの受入に必須で、テストが 1 件もない。
 2. `prj-success-criteria-and-acceptance-criteria-sample AC-02`: つけ残高の確認は常連客との金銭の照合に直結し、受入に必須でテストがない。
-3. `bac-sample BAC-01`・`AC-01`: テストはそろっているが、`stc-cash-sale` の `relations.verifies` の欠落は文書単位の追跡から総合テストを外すため、`ready` にする前に直す。
+3. `bac-sample BAC-01`・`prj-success-criteria-and-acceptance-criteria-sample AC-01`: テストはそろっているが対応テストが `draft` であり、`ready` にするまで受入の根拠にしない。
 
 ## 5. ギャップと対応方針
 
-| 対象                                                        | ギャップ                                       | 直す生成元の成果物と直し方                                                                                                                          | 解消の判定条件                                                                        |
-| ----------------------------------------------------------- | ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| `bac-sample BAC-01`, `AC-01`                                | `stc-cash-sale` の `relations.verifies` がない | `stc-cash-sale` の `relations.verifies` に `bac-sample` と `prj-success-criteria-and-acceptance-criteria-sample` を加える                           | 再生成でギャップ列から `relations.verifies` の不足が消える                            |
-| `BAC-01`, `SC-01`, `AC-01`, `AC-03`, `AC-04`                | 対応テストが `draft`                           | `atc-cash-sale`・`stc-cash-sale` を各カタログの `ready` 条件（判定に影響する前提の解消を含む）でレビューし、人が `ready` にする                     | 再生成で該当行が `充足` になる                                                        |
-| `bac-sample BAC-02`, `BAC-03`                               | 対応テストがない                               | `atc-sale-hold`・`stc-sale-hold` を作成し、`relations.verifies` に `bac-sample`、「トレース」の表に BAC-02・BAC-03 とそれを参照するケースを持たせる | 再生成で両行が `一部充足` 以上になる                                                  |
-| `prj-success-criteria-and-acceptance-criteria-sample AC-02` | 対応テストがない                               | `atc-stock-credit-check` を作成し、`relations.verifies` に要求文書、「トレース」の表に AC-02 とそれを参照するケースを持たせる                       | 再生成で `一部充足` 以上になる                                                        |
-| `atc-cash-sale TR-05`, `stc-cash-sale TR-04`                | 取消の要求項目が母集団にない                   | BA が `bac-sample` へ確定前の取消の受入条件を追加し、店主代表（PO）が承認する。承認後に QE が両テストの「トレース」の表を新しい項目へ差し替える     | 再生成で母集団が 9 件になり、取消の行に両テストが載り、母集団外の参照から両行が消える |
+| 対象                                                                                                        | ギャップ                     | 直す生成元の成果物と直し方                                                                                                                          | 解消の判定条件                                                                        |
+| ----------------------------------------------------------------------------------------------------------- | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| `bac-sample BAC-01`, `prj-success-criteria-and-acceptance-criteria-sample SC-01`・`AC-01`・`AC-03`・`AC-04` | 対応テストが `draft`         | `atc-cash-sale`・`stc-cash-sale` を各カタログの `ready` 条件（判定に影響する前提の解消を含む）でレビューし、人が `ready` にする                     | 再生成で該当行が `充足` になる                                                        |
+| `bac-sample BAC-02`, `BAC-03`                                                                               | 対応テストがない             | `atc-sale-hold`・`stc-sale-hold` を作成し、`relations.verifies` に `bac-sample`、「トレース」の表に BAC-02・BAC-03 とそれを参照するケースを持たせる | 再生成で両行が `一部充足` 以上になる                                                  |
+| `prj-success-criteria-and-acceptance-criteria-sample AC-02`                                                 | 対応テストがない             | `atc-stock-credit-check` を作成し、`relations.verifies` に要求文書、「トレース」の表に AC-02 とそれを参照するケースを持たせる                       | 再生成で `一部充足` 以上になる                                                        |
+| `atc-cash-sale TR-05`, `stc-cash-sale TR-04`                                                                | 取消の要求項目が母集団にない | BA が `bac-sample` へ確定前の取消の受入条件を追加し、店主代表（PO）が承認する。承認後に QE が両テストの「トレース」の表を新しい項目へ差し替える     | 再生成で母集団が 9 件になり、取消の行に両テストが載り、母集団外の参照から両行が消える |
 
 担当と期限は PM が各行を PJR 登録候補として登録簿で追跡し、本書には持たない。実案件の PJR 個票は未同梱である。
 

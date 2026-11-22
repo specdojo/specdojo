@@ -41,16 +41,33 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業                               | 担当                  | 状態 | メモ                     |
-| --- | ---------------------------------- | --------------------- | ---- | ------------------------ |
-| 1   | grade の指摘を読み、直し方を決める | DEV                   | open | 直さない指摘は理由を残す |
-| 2   | rulebook と sample を直す          | DEV                   | open | ほかの型は変えない       |
-| 3   | lint と親の検証を通す              | DEV                   | open | -                        |
-| 4   | 統合の後に grade で評価し直す      | specdojo-orchestrator | open | 合格しなければ回目を足す |
+| No  | 作業                               | 担当                  | 状態 | メモ                             |
+| --- | ---------------------------------- | --------------------- | ---- | -------------------------------- |
+| 1   | grade の指摘を読み、直し方を決める | DEV                   | done | 全指摘を直した                   |
+| 2   | rulebook と sample を直す          | DEV                   | done | ほかの型は変えていない           |
+| 3   | lint と親の検証を通す              | DEV                   | open | 親の runner が実行する           |
+| 4   | 統合の後に grade で評価し直す      | specdojo-orchestrator | open | 統合後に orchestrator が実行する |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+rulebook（`trc-requirements-to-tests-rulebook`）の指摘:
+
+- F001（minor）: 生成の手順 3 に、仕様ID から要求文書 ID と項目 ID を取り出す規則（wikilink、併記、下位項目、項目 ID なしの行）を追加した。
+- F002（major）: 手順 2 を 2 経路（`relations.verifies`、索引のテストの「トレース」の表の走査）に改め、手順 4 の照合条件を揃えた。
+- F003（major）: 総合テストは `relations.verifies` を宣言しない種別とし、「トレース」の表が要求文書を指すことを文書単位の対応とする規則を「充足状況の判定」に定めた。`stc-rulebook` は変えていない。`stc-rulebook` の改訂は不要と判断した（改訂案なし）。
+- F004（minor）: 生成コマンドと recipe・template の要否を `_UNDECIDED_` で残し、`ready` の昇格条件を明記した。
+
+sample（`trc-requirements-to-tests-sample`）の指摘:
+
+- F001・F002（minor）: 抽出条件を rulebook の手順 2 の 2 経路に揃えた。
+- F003（minor）: ギャップ表の要求項目を `<要求文書ID> <項目ID>` の表記に統一した。
+- rulebook の変更に合わせ、`stc-cash-sale` の `relations.verifies` 欠落をギャップ・優先事項・ギャップ表から除いた。`_TODO_` は残していない。
+
+直さなかった指摘はない。再評価（作業 4）は統合後に orchestrator が実行する。
+
+### 5.1. CHANGELOG に書く事項
+
+なし（文書の型の手直しのため）。
 
 ## 6. 関連ドキュメント
 
