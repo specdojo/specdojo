@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-bbtw-docs-dev-skip-exec-records
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-22T13:29:54Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-22T23:44:49Z"
+  conclusion: 実行の記録のページを docs:dev の走査から外したが、起動の時間は約 26 秒で変わらなかった。測りで見つけた原因（dashboard の記録の全走査、型の複製の時刻の判定、検索の索引の色付け、生成の段の判定）は別の 3 件の todo に分けた
   derived_from:
     - PJR-BNAV
 ---

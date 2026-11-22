@@ -80,3 +80,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_a266b79b87b24c66b42863325a6960d6
+- v: 1
+  id: reg_00ab7d193b4f43fea3d43cddb5e62c22
+  ts: "2026-11-22T23:44:49Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 測った結果を記録し、残る原因を別の todo に分けて close すると利用者が決めた（2026-11-23）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: 実行の記録のページを docs:dev の走査から外したが、起動の時間は約 26 秒で変わらなかった。測りで見つけた原因（dashboard の記録の全走査、型の複製の時刻の判定、検索の索引の色付け、生成の段の判定）は別の 3 件の todo に分けた
+  previous_event_id: reg_524c0f7ac7444930b55c34c59b1f29a8
