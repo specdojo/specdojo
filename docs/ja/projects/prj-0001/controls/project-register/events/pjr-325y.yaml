@@ -77,3 +77,32 @@
       from: "-"
       to: hard
   previous_event_id: reg_5b8e9288a3a446138553df0202ec11d9
+- v: 1
+  id: reg_69e00f55fdbe453a9f9a1b5d6eb2fa92
+  ts: "2026-11-22T13:41:10Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_cee243be86c648c5a8b524807623fafb
+- v: 1
+  id: reg_581be9f3b3104627b7a50a04f6789c27
+  ts: "2026-11-22T13:53:26Z"
+  action: wait
+  actor: opus-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /unit/ tests/src/docs/yaml-tables.test.ts > typed YAML display pages > renders tables and the entire folded…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /unit/ tests/src/docs/yaml-tables.test.ts > typed YAML display pages > renders tables and the entire folded…"
+  previous_event_id: reg_69e00f55fdbe453a9f9a1b5d6eb2fa92
