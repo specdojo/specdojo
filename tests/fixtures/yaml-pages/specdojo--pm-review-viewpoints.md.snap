@@ -32,7 +32,7 @@ specdojo:
 <!-- prettier-ignore -->
 | ID | 名称 | 説明 | 適用先 |
 | --- | --- | --- | --- |
-| stakeholder | ステークホルダー | 利用者、意思決定者、確認者、運用者、影響を受ける関係者が識別されているか。 | requirements / specification / design / operations |
+| stakeholder | ステークホルダー | 利用者、意思決定者、運用者、影響を受ける関係者が識別されているか。文書を作る・確かめる・承認する役割の割り当ては対象外とする。 | requirements / specification / design / operations |
 | `business_goal` | 業務目的・価値 | 業務目的、課題、期待効果、成功条件との対応が説明できるか。 | requirements / specification |
 | `scope_boundary` | 対象範囲・対象外 | 対象範囲、対象外、前提、制約、依存関係が判断できるか。 | requirements / specification / design |
 | `use_case` | 利用シーン | 主要な利用シーン、利用者行動、期待結果が具体化されているか。 | requirements / specification |
@@ -76,14 +76,14 @@ specdojo:
 | ID | ロール | 分類 | 観点 | 確認内容 | 根拠 | 重大度 | 評価方法 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | vp-po-purpose-alignment | PO | purpose | 目的・スコープとの整合 | 成果物の主要な定義・判断が、プロジェクト目的、スコープ、優先順位、公開方針と矛盾せず、成果物固有の目的または上位文書への参照から必要性を説明できるか。対応する目的・成果のない手段を目的として扱っていないか。 | プロジェクト概要の目的・必要性・期待効果、成果物固有の目的、対象範囲、対象外、主要な定義・判断と上位根拠との対応、判断理由、関連成果物への参照。 | major | referential |
-| vp-po-decision-readiness | PO | purpose | 承認判断に必要な情報 | PO が承認、保留、差し戻しを判断するための論点、未決事項、影響範囲が明示されているか。 | 判断対象、判断者、未決事項、前提、影響、次アクション。 | major | discretionary |
-| vp-po-publication-accountability | PO | operations | 公開可否と説明責任 | 公開してよい情報だけで構成され、最終判断と説明責任を人間の PO が担う前提になっているか。 | status、公開対象、個人情報・非公開情報の有無、承認責任の記述。 | blocker | referential |
+| vp-po-decision-readiness | PO | purpose | 承認判断に必要な情報 | PO が承認、保留、差し戻しを判断するための論点、未決事項、影響範囲が明示されているか。文書の役割の割り当てと承認の進み具合は登録簿で追うため、本文に求めない。 | 判断対象、未決事項、前提、影響、次アクション。 | major | discretionary |
+| vp-po-publication-accountability | PO | operations | 公開可否と説明責任 | 公開してよい情報だけで構成され、最終判断と説明責任を人間の PO が担う前提になっているか。 | status、公開対象、個人情報・非公開情報の有無。 | blocker | referential |
 | vp-pm-plan-feasibility | PM | planning | 計画化可能性 | 成果物の内容がタスク化、順序付け、所要時間見積もり、進捗確認に使える粒度になっているか。 | 依存関係、作業単位、完了条件、担当 Role code、期限または判断タイミング。 | major | discretionary |
 | vp-pm-dependency-risk | PM | planning | 依存関係・リスク・課題化 | 後続成果物、Schedule、PJR に影響する依存、リスク、課題、変更要求が識別されているか。 | `depends_on`、関連文書、未決事項、PJR 登録候補、スケジュール影響。 | major | referential |
 | vp-pm-control-reporting | PM | planning | 管理・報告への接続 | 進捗、課題、リスク、変更要求、決定記録へ転記すべき事項が分離されているか。 | PJR 転記候補、報告先、対応方針、担当 Role code。 | minor | referential |
 | vp-ba-business-value | BA | business | 業務価値との対応 | 主要な定義・判断がどの対象者のどの業務課題・期待価値に応えるかを説明でき、主要な成果・方針がその目的に対応しているか。 | 対象者、業務課題、放置時の影響、期待価値・効果、成功基準、判断理由、主要な成果・方針との対応、上位文書への参照。 | major | discretionary |
 | vp-ba-requirements-completeness | BA | business | 要件・受入条件の充足 | 要件、受入条件、対象範囲、対象外が利用者視点で確認できる粒度になっているか。 | 要件、受入条件、対象範囲、除外範囲、用語定義。 | major | discretionary |
-| vp-ba-stakeholder-clarity | BA | business | 関係者・利用場面の明確性 | 関係者、利用場面、確認者、合意対象が読み取れるか。 | stakeholder、利用者、店番・運用者、確認者、合意事項。 | minor | discretionary |
+| vp-ba-stakeholder-clarity | BA | business | 関係者・利用場面の明確性 | 関係者、利用場面、合意対象が読み取れるか。文書を確かめる・承認する役割の割り当ては本文に求めない。 | stakeholder、利用者、店番・運用者、合意事項。 | minor | discretionary |
 | vp-arc-document-structure | ARC | architecture | 文書構造・配置・命名 | frontmatter、ID、ファイル名、配置、見出し、リンクがプロジェクトの文書体系と整合しているか。 | id、path、rulebook、`based_on`、見出し、相対リンク、成果物カタログ。 | major | deterministic |
 | vp-arc-cross-document-consistency | ARC | consistency | 成果物間整合 | 成果物について、成果物カタログ、Schedule、RACI、組織定義、メンバー定義、生成物と矛盾していないか。不整合の finding は突き合わせ先の文書 ID またはパスと、双方の相反する記述を特定する。rulebook、recipe、sample、template の内部・相互・適用先との整合は vp-qe-kata-conformance で判定し、この観点では扱わない。 | `local_id`、`depends_on`、owner、roles、RACI、関連文書、生成元、finding ごとの突き合わせ先の文書 ID またはパスと双方の該当箇所。 | major | referential |
 | vp-arc-technical-constraints | ARC | architecture | 技術前提・制約の明確性 | 技術的な前提、制約、外部依存、構成判断が必要な範囲で明示されているか。 | 技術制約、外部依存、schema、validate 手順、構成方針。 | major | discretionary |
@@ -100,7 +100,7 @@ specdojo:
 | vp-ux-readability | UX | usability | 読みやすさ・理解しやすさ | 初見の読者が、成果物固有の目的または上位文書への参照、名称、メタデータから、なぜ扱うか、役割、利用先、対象、主要な判断、次に見る文書を理解できるか。主旨または主要な判断点を読み取れない箇所を特定できる場合は major とする。同一主張の反復や正本の過剰な再掲など冗長性の判定は vp-arc-conciseness で行い、この観点では扱わない。 | 導入文、目的・理由、主要な成果・方針との対応、上位文書への参照、見出し、表、用語、関連ドキュメント、補足説明、段落・箇条書きの長さと論点数、保持すべき背景・判断理由・例外・制約・`done_criteria`。 | minor | referential |
 | vp-ux-user-flow | UX | usability | 利用者導線 | 利用者や将来貢献者が迷わず必要情報へ到達できる構成になっているか。目次から必要な章を見つけられるか、関連成果物への参照が適切な位置にあるか、前提から結論への説明順序が守られているかのいずれかの基準に照らして判定し、情報を見失う箇所を具体的に特定できる場合のみ不備とする。 | 目次、関連リンク、手順、参照先、サンプル、説明順序。 | minor | referential |
 | vp-ux-language-consistency | UX | usability | 用語・表現の一貫性 | 用語、Role code、成果物名、状態、ラベルが読み手を混乱させない形で統一されているか。 | 用語定義、表記ゆれ、Role code、`local_id`、status、ラベル。 | minor | referential |
-| vp-ops-release-readiness | OPS | operations | リリース・公開準備 | 公開、配布、ready 化、リリース判断に必要な前提や未解決事項が明示されているか。 | status、ready 条件、公開対象、未解決指摘、承認者、公開前確認。 | major | discretionary |
+| vp-ops-release-readiness | OPS | operations | リリース・公開準備 | 公開、配布、ready 化、リリース判断に必要な前提や未解決事項が明示されているか。 | status、ready 条件、公開対象、未解決指摘、公開前確認。 | major | discretionary |
 | vp-ops-operability | OPS | operations | 運用しやすさ | 継続更新、再生成、変更管理、問い合わせ対応、障害時対応に必要な情報が読み取れるか。 | 運用手順、再生成手順、変更管理、問い合わせ導線、担当 Role code。 | minor | discretionary |
 | vp-ops-agent-boundary | OPS | operations | agent 委任境界 | agent に最終承認、公開可否判断、説明責任を委ねる記述になっていないか。 | owner、reviewer、approver、`agent_mode`、manual gate、承認責任。 | blocker | referential |
 
@@ -197,7 +197,7 @@ categories:
 coverage_types:
   - id: stakeholder
     name: ステークホルダー
-    description: 利用者、意思決定者、確認者、運用者、影響を受ける関係者が識別されているか。
+    description: 利用者、意思決定者、運用者、影響を受ける関係者が識別されているか。文書を作る・確かめる・承認する役割の割り当ては対象外とする。
     applies_to:
       - requirements
       - specification
@@ -425,8 +425,8 @@ viewpoints:
     role: PO
     category: purpose
     title: 承認判断に必要な情報
-    check: PO が承認、保留、差し戻しを判断するための論点、未決事項、影響範囲が明示されているか。
-    evidence: 判断対象、判断者、未決事項、前提、影響、次アクション。
+    check: PO が承認、保留、差し戻しを判断するための論点、未決事項、影響範囲が明示されているか。文書の役割の割り当てと承認の進み具合は登録簿で追うため、本文に求めない。
+    evidence: 判断対象、未決事項、前提、影響、次アクション。
     coverage_types:
       - stakeholder
       - permission
@@ -438,7 +438,7 @@ viewpoints:
     category: operations
     title: 公開可否と説明責任
     check: 公開してよい情報だけで構成され、最終判断と説明責任を人間の PO が担う前提になっているか。
-    evidence: status、公開対象、個人情報・非公開情報の有無、承認責任の記述。
+    evidence: status、公開対象、個人情報・非公開情報の有無。
     coverage_types:
       - permission
       - operations
@@ -624,8 +624,8 @@ viewpoints:
     role: BA
     category: business
     title: 関係者・利用場面の明確性
-    check: 関係者、利用場面、確認者、合意対象が読み取れるか。
-    evidence: stakeholder、利用者、店番・運用者、確認者、合意事項。
+    check: 関係者、利用場面、合意対象が読み取れるか。文書を確かめる・承認する役割の割り当ては本文に求めない。
+    evidence: stakeholder、利用者、店番・運用者、合意事項。
     coverage_types:
       - stakeholder
       - use_case
@@ -952,7 +952,7 @@ viewpoints:
     category: operations
     title: リリース・公開準備
     check: 公開、配布、ready 化、リリース判断に必要な前提や未解決事項が明示されているか。
-    evidence: status、ready 条件、公開対象、未解決指摘、承認者、公開前確認。
+    evidence: status、ready 条件、公開対象、未解決指摘、公開前確認。
     coverage_types:
       - permission
       - operations

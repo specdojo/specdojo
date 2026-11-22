@@ -1,0 +1,30 @@
+PJR-325Y の 2 回目の実行で、完了条件の変更をすべてやり直しました。前回（1 回目）の変更はこの worktree に残っていなかったため、最初から作り直しています。1 回目で落ちた原因の YAML 表示ページの fixture も新しい出力に合わせ、該当のテストが通ることを確かめました。
+
+**変更したもの**
+- **作成標準**: `sample-authoring-standard` と `rulebook-authoring-standard` の記述ガイドと禁止事項に PJR-76N9 の決まりを足しました。rulebook のほうには、文書の位置づけを「どの利用場面で何を判断するための文書か」で書くことも加えています。RACI・体制など、文書の中身として役割を扱う型は対象外です。
+- **第 3 波の strategy**: `sch-strategy-kata-wave-3.yaml` の `rulebook-maintenance` と `sample-maintenance` の段の説明に、同じ決まりを 1 段落ずつ足しました。track は直していません。
+- **template 6 件**（cnd・cxd・cpd・sysd-index・sysd-critical-flows・sysd-cross-cutting-policy）:
+  - 概要の作成担当・確認者・最終判断者の記入欄は、利用場面の記入に変えました。
+  - 確認ロール・担当ロール・判断者の列を外しました。
+  - cnd-template の「検証・承認前の確認」の節は節ごと外しました。
+- **grade の観点**: 共通の `pm-review-viewpoints.yaml` で、網羅種別 `stakeholder` と観点 4 件から確認者・判断者・承認者を外しました。
+- **fixture**: `specdojo--pm-review-viewpoints.md.snap` を新しい出力で作り直しました。
+- **カタログの `done_criteria`**: 直していません。「〜を承認できること」は承認の記録を求めていません。RACI と受入テストの承認者は、文書の中身として役割を扱うため対象外です。
+- **個票**: 作業内容の表と対応結果（直した場所の一覧、迷って決めたこと、残課題、CHANGELOG の文案）を書きました。
+
+**検証**
+- `yaml-tables.test.ts` 単体：38 件すべて通過
+- 変更した YAML 2 件の schema の検査：通過（`task_suffix` は文字列のまま）
+- 変更した Markdown の prettier と markdownlint：問題なし
+- `npm run validate:history-links`：違反なし
+
+`npm run test:unit` を含む全体の検査は、このあと runner が流します。
+
+**残っていること**
+- 第 3 波の track の作り直しは orchestrator が行います。tsp-index の試しに反映するかの判断も含みます。
+- 直した template と作成標準の grade は、統合の後に orchestrator が流します。
+- rulebook に残る役割の記述（cnd-rulebook の 6.1 など）と、cnd-sample などに残る役割の列は、第 3〜6 波と kata-slim-3 で直します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"PJR-76N9 の決まりを sample と rulebook の作成標準、第 3 波の strategy の 2 段の説明、template 6 件（cnd・cxd・cpd・sysd-index・sysd-critical-flows・sysd-cross-cutting-policy）、共通レビュー観点（網羅種別 `stakeholder` と観点 4 件）に入れ、YAML の表示ページの fixture `specdojo--pm-review-viewpoints.md.snap` を新しい出力に合わせた。カタログの `done_criteria` は直す行がなかった。個票の作業内容と対応結果を書いた。track の作り直しと型の grade は完了条件どおり orchestrator に残した。","handoff":["track の作り直し: `sch-strategy-kata-wave-3.yaml` の `rulebook-maintenance` と `sample-maintenance` の段の説明を変えたため、orchestrator が `kata-wave-3` の track を作り直す。tsp-index で流している試しへの反映の要否も判断する。","型の grade: 統合の後に、直した template 6 件（cnd・cxd・cpd・sysd-index・sysd-critical-flows・sysd-cross-cutting-policy）と、sample・rulebook の作成標準を orchestrator が grade する。","迷って決めたこと: 未決事項やメモの表の「担当ロール」「判断者」列は文書の作業の割り当てとして外した。cnd-template の「検証・承認前の確認」と sysd-critical-flows-template の「承認対象と公開前条件」は承認の記録の参照だけだったため節ごと外した。運用の一次対応・ルールの Owner・例外の判断者・SSOT の更新責任は文書の中身として残した。カタログの `done_criteria` の「〜を承認できること」、RACI、受入テストの承認者は対象外として直さなかった。","rulebook と sample に残る役割の記述: cnd-rulebook の 6.1 と「検証・承認前の確認」、sysd-cross-cutting-policy-rulebook の概要、prj-issues-and-approach-rulebook の承認者、prj-issues-and-approach-template・stsd-template・cdfd-template の「誰が……判断するか」、cnd-sample の Person の「判断・確認の責務」列などは、第 3〜6 波と kata-slim-3 で直す。","CHANGELOG に書く事項（個票の 5.5 にも記載）: 区分は Changed。文案は「sample と rulebook の作成標準、C4 図と SYSD の template、共通レビュー観点で、文書の役割の割り当てと承認の進み具合を本文に求めないようにした（RACI・体制など役割を扱う文書は対象外）」。","保護された設定の変更は無い。"],"validations":[{"command":"npx vitest run tests/src/docs/yaml-tables.test.ts","status":"passed","summary":"38 tests passed after regenerating specdojo--pm-review-viewpoints.md.snap"},{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/sch-strategy.schema.yaml --data docs/ja/projects/prj-0001/schedule/sch-strategy-kata-wave-3.yaml","status":"passed","summary":"valid; `task_suffix` values remain quoted strings"},{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/pm-review-viewpoints.schema.yaml --data docs/ja/specdojo/defaults/pm-review-viewpoints.yaml","status":"passed","summary":"valid"},{"command":"npx prettier --write (changed md/yaml files)","status":"passed","summary":"formatted changed templates, standards, strategy and ticket"},{"command":"npx markdownlint-cli2 (changed md files)","status":"passed","summary":"0 issues in 9 changed Markdown files"},{"command":"npm run validate:history-links","status":"passed","summary":"no invalid history files reported"}]}
+</specdojo_executor_evidence>
