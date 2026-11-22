@@ -80,3 +80,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_2acef277aa8f45ff9a48c928d24b0dc3
+- v: 1
+  id: reg_7d0060cedcfd4421961cdf06a26f31e0
+  ts: "2026-11-22T00:23:01Z"
+  action: wait
+  actor: qwen-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor reported incomplete: PJR-HCHH: register.ts の `migrateEmbeddedRegisterEvents`・`migrateRegisterEventsFromGit`、command-types.ts の対応する型、events.ts の `readEmbeddedRegisterEvents`・`removeEmbeddedReg…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor reported incomplete: PJR-HCHH: register.ts の `migrateEmbeddedRegisterEvents`・`migrateRegisterEventsFromGit`、command-types.ts の対応する型、events.ts の `readEmbeddedRegisterEvents`・`removeEmbeddedReg…"
+  previous_event_id: reg_2b0b4e9cf962432bb6868e6292c775fb

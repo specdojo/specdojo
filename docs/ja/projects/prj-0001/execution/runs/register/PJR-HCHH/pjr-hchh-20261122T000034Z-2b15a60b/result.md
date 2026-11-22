@@ -4,12 +4,14 @@ specdojo:
   type: exec-result
   task_id: PJR-HCHH
   mode: edit
-  status: in_progress
+  status: blocked
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-HCHH/pjr-hchh-20261122T000034Z-2b15a60b/plan.md
   started_at: "2026-11-22T00:00:35.404Z"
+  completed_at: "2026-11-22T00:22:58.403Z"
   agent: qwen-executor
+  block_reason: "executor reported incomplete: PJR-HCHH: register.ts の `migrateEmbeddedRegisterEvents`・`migrateRegisterEventsFromGit`、command-types.ts の対応する型、events.ts の `readEmbeddedRegisterEvents`・`removeEmbeddedReg…"
 ---
 
 # Edit Result
