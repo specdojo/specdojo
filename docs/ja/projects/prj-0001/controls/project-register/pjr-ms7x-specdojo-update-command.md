@@ -9,6 +9,7 @@ specdojo:
   item_type: todo
   item_status: open
   priority: medium
+  difficulty: hard
   owner: DEV
   registered_at: "2026-11-20T13:57:09Z"
 ---
@@ -23,8 +24,11 @@ npm i -D では版が上がるだけで、CHANGELOG の動きが変わる点や�
 
 - 利用者の提案（2026-11-20）: specdojo の更新は npm i -D で行っているが、specdojo update のようなコマンドで行えた方がよい
 - orchestrator の案（2026-11-20）: 1. 今の版と npm の latest を比べる。2. その間の CHANGELOG の「利用者から見て動きが変わる点」を表示する。3. 利用リポジトリの package manager（npm・pnpm・yarn）で更新する（--dry-run あり）。4. 更新の後に設定の検証と kata status を流し、手直しの要る点を表示する
-- 決めること（2026-11-20、未決）: 設定の手直しを自動でするか表示だけにするか。@specdojo/docs-lint・docs-site も一緒に上げるか。package.json の版の指定（^ を保つか固定か）
 - orchestrator の調べ（2026-11-20）: 0.9.1 では、repos を宣言した project の opencode の `command_template` に --agent が要る変更があり、版を上げるだけでは気づけない
+- 2026-11-22、PJR-09HA で skill specdojo-exec-in-session も config scaffold で配るようになった。scaffold は --force なしで既にあるファイルを上書きしないため、版を上げても配ったファイル（skill・agent 定義・rules）は古いまま残る。
+- 決定（2026-11-22、indie）: 手直しは対話で行う。候補ごとに差分を示して聞き、対話できないときは何も書き換えず一覧だけを出す。--yes は作らない。
+- 決定（2026-11-22、indie）: @specdojo/docs-lint・docs-site は入っているときだけ同じ回で上げる。package.json の版の指定の形（^ か固定か）は保つ。
+- 決定（2026-11-22、indie）: 難しさは hard、executor は opus-executor、代わりは sonnet-executor。
 
 ## 3. 完了条件
 
