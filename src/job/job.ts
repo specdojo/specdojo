@@ -546,7 +546,7 @@ export async function materializeJobRun(opts: {
   if (existingRun) {
     record = loadJobRunRecord(existsSync(localNoop) ? localNoop : runPath);
     if (record.idempotency_key !== idempotencyKey || record.job_id !== definition.id) {
-      throw new Error(`Job Run identity collision: ${runId}`);
+      throw new Error(`job run identity collision: ${runId}`);
     }
     if (record.state === "succeeded" || record.state === "partial" || record.state === "noop") {
       return {
@@ -650,7 +650,7 @@ export function completeJobRun(opts: {
   const completedAt = new Date().toISOString();
   const attempts = [...record.attempts];
   const current = attempts.at(-1);
-  if (!current) throw new Error(`Job Run has no attempt: ${record.run_id}`);
+  if (!current) throw new Error(`job run has no attempt: ${record.run_id}`);
   attempts[attempts.length - 1] = {
     ...current,
     completed_at: completedAt,
@@ -704,7 +704,7 @@ export function completeJobRun(opts: {
 export function recordJobSteps(runPath: string, steps: JobStepResult[]): void {
   const record = loadJobRunRecord(runPath);
   const attempt = record.attempts.at(-1);
-  if (!attempt) throw new Error(`Job Run has no attempt: ${record.run_id}`);
+  if (!attempt) throw new Error(`job run has no attempt: ${record.run_id}`);
   attempt.steps = steps;
   record.updated_at = new Date().toISOString();
   writeJson(runPath, record);

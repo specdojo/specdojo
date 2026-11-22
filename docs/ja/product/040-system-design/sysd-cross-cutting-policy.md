@@ -259,7 +259,7 @@ SpecDojo の実装・運用に共通する制約と受入条件の正本であ�
 
 - **Rule（MUST）**: 進捗・原因調査用ログと、状態変更・判断・承認を追う監査証跡を区別する。保存前に秘密値を除去し、実行対象、時刻、実行主体、処理結果と証跡参照から原因を追えるようにする。構造・保持場所は証跡 schema と運用正本へ委ねる。
 - **Rationale（意図）**: 障害時の引継ぎと判断の監査を成立させ、公開履歴への秘密流出を防ぐ。
-- **Scope（適用範囲）**: stdout / stderr の保存、plan / result / evidence / event、Job Run、Routine の失敗記録、Grade。全出力の無加工保存は許可しない。
+- **Scope（適用範囲）**: stdout / stderr の保存、plan / result / evidence / event、job run、Routine の失敗記録、Grade。全出力の無加工保存は許可しない。
 - **Enforcement（検証）**: V4 で秘密を模した値の秘匿化、失敗記録と実行の対応、状態変更の追跡、保存失敗の検知を確認する。正常終了だけでは監査可能と判定しない。
 - **Exception（例外）**: 保持・圧縮で失う情報、閲覧権限、保存期間は Q3 の判断前に自動削除の許可として解釈しない。
 - **References（参照）**: [[sysd-index|設計索引]] の Observability・保存移行、`docs/specdojo/schemas/v1/exec-evidence.schema.yaml`、`src/routine/failure.ts`、`tools/check-evidence-secrets.mjs`。

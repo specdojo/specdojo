@@ -138,4 +138,4 @@ properties:
         items:
           type: string
           minLength: 1
-        description: "Repository-relative path scopes used by a Job Run with dynamic outputs."
+        description: "Repository-relative path scopes used by a job run with dynamic outputs."

@@ -82,7 +82,7 @@ export function registerGradeInspectionCommands(grade: Command): void {
       requirePositiveInteger,
       3,
     )
-    .option("--run-id <id>", "Job Run id that observed this state")
+    .option("--run-id <id>", "job run id that observed this state")
     .option("--exhausted", "List documents whose consecutive failure limit was reached", false)
     .action((options) => {
       try {

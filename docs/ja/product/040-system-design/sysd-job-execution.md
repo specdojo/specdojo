@@ -12,7 +12,7 @@ specdojo:
 
 週報作成や更新文書の翻訳など、同じ作業定義から実行単位を繰り返し生成するためのJob実行モデルを定義する。
 
-本設計は`job-*.yaml`、`exec run --job`、routineの`action.kind: job`として実装されている。routine の action は Job 参照へ統一し、register sweep、Schedule auto、利用制限後の再開、exec cycle も command Job として扱う。Job Runは既存exec基盤を使い、通常はin-place、Job が `task.review` で統合前 review を宣言した場合（互換として routine action が `commit: true` の場合も）は exec worktree で実行される。決定論的コマンドはrunnerが直接実行し、判断が必要な処理だけをagentへ委譲する。
+本設計は`job-*.yaml`、`exec run --job`、routineの`action.kind: job`として実装されている。routine の action は Job 参照へ統一し、register sweep、Schedule auto、利用制限後の再開、exec cycle も command Job として扱う。job runは既存exec基盤を使い、通常はin-place、Job が `task.review` で統合前 review を宣言した場合（互換として routine action が `commit: true` の場合も）は exec worktree で実行される。決定論的コマンドはrunnerが直接実行し、判断が必要な処理だけをagentへ委譲する。
 
 ## 1. 目的と適用範囲
 
@@ -22,7 +22,7 @@ Scheduleは成果物を完成へ導く有限の依存グラフ、registerは課�
 | ------------- | ------------------------------------ | ------------------------------ | ---------- |
 | Schedule task | 計画済み成果物の作成・レビュー・確定 | プロジェクト計画内で有限       | exec event |
 | Register item | 課題・判断・計画外の単発対応         | 起票からcloseまで              | register   |
-| Job           | 週次・月次・変更追随などの反復作業   | Job定義は継続し、Runは毎回有限 | Job Run    |
+| Job           | 週次・月次・変更追随などの反復作業   | Job定義は継続し、Runは毎回有限 | job run    |
 | Routine       | 時刻条件による起動                   | 定義が有効な間                 | 発火状態   |
 
 Jobは新しいagent実行エンジンを持たない。`edit` / `review` Jobとcommand後の任意のanalysisは既存の`exec`実行基盤を共用し、`command` Jobのコマンドは同じrunnerが直接実行する。`task.review` を宣言した Job は、起動元（routine・手動の `exec run --job`）によらず `exec/<project-id>-<run-id>` の worktree で実行し、出力を commit・review してから統合する。宣言のない Job は、routine action の `commit: true`（互換）または `exec run --job --worktree` で起動された場合だけ同じ流れになり、それ以外は従来どおり in-place で実行する。
@@ -51,7 +51,7 @@ Jobは「runnerが直接実行するコマンド」と「agentへ委譲する判
 
 ## 2. 概念モデル
 
-Job DefinitionとJob Runを分離する。
+Job Definitionとjob runを分離する。
 
 ```mermaid
 flowchart LR
@@ -60,7 +60,7 @@ flowchart LR
     H["人による手動起動"] --> M
     J["job-*.yaml\nJob Definition"] --> M
     M --> P{"precondition\nskip?"}
-    P -->|"no"| U["Job Run\n一意な実行単位"]
+    P -->|"no"| U["job run\n一意な実行単位"]
     P -->|"yes"| K["起動元へ skipped\nRun は保存しない"]
     U --> E["exec runner\ncommand / evidence"]
     E --> A["optional analysis\nagent / result"]
@@ -83,9 +83,9 @@ Job Definitionは「毎回何をするか」を表す再利用可能なテンプ
 
 Job Definitionはプロジェクトの`jobs_path`配下へ`job-<slug>.yaml`として配置し、ファイル名と`id`を一致させる案を基本とする。
 
-### 2.2. Job Run
+### 2.2. job run
 
-Job Runは、Job Definitionへ具体的な入力を束縛して生成した1回限りの実行単位である。Run生成時にテンプレートを解決し、その後にJob Definitionが変更されても実行内容を再現できるスナップショットを保持する。
+job runは、Job Definitionへ具体的な入力を束縛して生成した1回限りの実行単位である。Run生成時にテンプレートを解決し、その後にJob Definitionが変更されても実行内容を再現できるスナップショットを保持する。
 
 Runには少なくとも次を記録する。
 
@@ -137,7 +137,7 @@ Run の出力を統合前に review するかは Job の出力の性質で決ま
 2. Job の `task.review.agent.executor` / `task.review.agent.reporter`
 3. 自動選択（executor は review mode の候補、reporter は reporter 候補の先頭）
 
-`--reporter-by` は Job Run の reporter と review の reporter の両方を差し替える。routine は CLI の指定を渡さないため、routine 起動では 2 または 3 で解決する。
+`--reporter-by` は job run の reporter と review の reporter の両方を差し替える。routine は CLI の指定を渡さないため、routine 起動では 2 または 3 で解決する。
 
 ```yaml
 task:
@@ -149,9 +149,9 @@ task:
       reporter: claude-reporter
 ```
 
-決定論的な処理は`task.mode: command`とし、入力を展開する`task.command`または`task.steps`の一方を必須にする。対象選択を伴う処理では任意の`task.precondition`をRun保存前に実行し、空出力または指定終了コードならJob Runと付随成果物を作らずskipする。runnerはmaterialize済みコマンドをPOSIX環境では`/bin/sh -eu`で直接実行し、コマンド、終了コード、標準出力、標準エラーをevidenceへ記録する。stdout / stderr はredact・上限付きログへの参照と、その参照先と同じbounded内容をevidence本体へ保持する。終了コード0は`succeeded`、`task.partial_exit_code`に明示した非0は`partial`、それ以外の非0は`failed`とする。`partial`は完了分と失敗分が混在し、reviewで統合可否を判断できる場合だけ使う。結果の解釈が必要な場合だけ`task.analysis.agent`と`task.analysis.description`を指定し、`succeeded`または`partial`のcommand evidence本体をreporterへ渡す。これによりreporterは作業ツリーや参照先ログを追加で読むことなく出力を解釈できる。analysisを省略した場合はrunnerがresultを確定する。同じprojectの`specdojo exec`を子プロセスで呼ぶcommandでは、親runnerのproject実行lock tokenとowner tokenの一致を検証してlockを継承し、自己デッドロックを避けながら排他範囲を維持する。
+決定論的な処理は`task.mode: command`とし、入力を展開する`task.command`または`task.steps`の一方を必須にする。対象選択を伴う処理では任意の`task.precondition`をRun保存前に実行し、空出力または指定終了コードならjob runと付随成果物を作らずskipする。runnerはmaterialize済みコマンドをPOSIX環境では`/bin/sh -eu`で直接実行し、コマンド、終了コード、標準出力、標準エラーをevidenceへ記録する。stdout / stderr はredact・上限付きログへの参照と、その参照先と同じbounded内容をevidence本体へ保持する。終了コード0は`succeeded`、`task.partial_exit_code`に明示した非0は`partial`、それ以外の非0は`failed`とする。`partial`は完了分と失敗分が混在し、reviewで統合可否を判断できる場合だけ使う。結果の解釈が必要な場合だけ`task.analysis.agent`と`task.analysis.description`を指定し、`succeeded`または`partial`のcommand evidence本体をreporterへ渡す。これによりreporterは作業ツリーや参照先ログを追加で読むことなく出力を解釈できる。analysisを省略した場合はrunnerがresultを確定する。同じprojectの`specdojo exec`を子プロセスで呼ぶcommandでは、親runnerのproject実行lock tokenとowner tokenの一致を検証してlockを継承し、自己デッドロックを避けながら排他範囲を維持する。
 
-テンプレート式で参照できる値は、`job_id`、`project_id`、現在のrunnerと同じCLI entryを表す`specdojo`、検証済み`inputs`、トリガーが渡した`scheduled_at`、読み取り専用の前回成功checkpointに限定する。Job Run IDの確定後に解決するtaskとcheckpointでは、これらに加えて`job_run_id`を参照できる。`run.idempotency_key`から`job_run_id`を参照すると循環するため許可しない。任意コード実行や環境変数の無制限な展開は許可しない。入力の`enum`はscalar値またはlistの各要素へ、integerの`minimum` / `maximum`は値域へ適用し、既定値と実行時入力を同じ規則で検証する。入れ子条件は検証可能なflat入力へ分解する。
+テンプレート式で参照できる値は、`job_id`、`project_id`、現在のrunnerと同じCLI entryを表す`specdojo`、検証済み`inputs`、トリガーが渡した`scheduled_at`、読み取り専用の前回成功checkpointに限定する。job run IDの確定後に解決するtaskとcheckpointでは、これらに加えて`job_run_id`を参照できる。`run.idempotency_key`から`job_run_id`を参照すると循環するため許可しない。任意コード実行や環境変数の無制限な展開は許可しない。入力の`enum`はscalar値またはlistの各要素へ、integerの`minimum` / `maximum`は値域へ適用し、既定値と実行時入力を同じ規則で検証する。入れ子条件は検証可能なflat入力へ分解する。
 
 ## 4. 起動と実行フロー
 
@@ -179,17 +179,17 @@ specdojo routine run --project <project-id> --due
 
 1. 起動元がJob ID、入力、予定時刻を渡す。
 2. Job Definitionと入力schemaを検証する。
-3. `idempotency_key`を解決してJob Run IDを確定し、既存Runとの重複を判定する。
-4. Job Definition、Job Run ID、入力、checkpointから解決済みtaskを生成する。
+3. `idempotency_key`を解決してjob run IDを確定し、既存Runとの重複を判定する。
+4. Job Definition、job run ID、入力、checkpointから解決済みtaskを生成する。
 5. 初回の command Job に precondition があれば実行する。skip 条件を満たした場合は Run を保存せず起動元へ `skipped` を返す。
-6. skip でなければ解決済みtaskをJob Runへ保存する。
-7. `edit` / `review`は既存exec基盤でagentを実行する。`command`はrunnerが解決済みコマンドを直接実行してevidenceを保存する。Job が `task.review` を宣言した場合（互換として routine action が `commit: true` の場合も）は、ここまでを Job Run 専用 worktree で行う。
+6. skip でなければ解決済みtaskをjob runへ保存する。
+7. `edit` / `review`は既存exec基盤でagentを実行する。`command`はrunnerが解決済みコマンドを直接実行してevidenceを保存する。Job が `task.review` を宣言した場合（互換として routine action が `commit: true` の場合も）は、ここまでを job run 専用 worktree で行う。
 8. commandが`succeeded`または`partial`で`task.analysis`があれば、evidenceをreporter agentへ渡す。`failed`またはanalysisなしではagentを起動しない。
 9. agent結果またはコマンド終了コードをRunへ反映する。
 10. `succeeded`または設計上成功とみなす`noop`の場合だけcheckpointを原子的に更新する。
-11. 成功した Run は実行前後のファイル内容・モードと HEAD 間の差分を比べ、その Run の記録ディレクトリ全体（plan・result・evidence・ログなど）と Run JSON、`generated/`、exec の lock を除いて変更がなければ `noop` として端末側へ保存し、今回の実行記録を Git の差分から除く。記録の置き場所は共通モジュールで解決し、既存 attempt の記録は復元する。precondition の有無や in-place / worktree によらず適用し、冪等性と checkpoint は端末側で維持する。worktree も撤去し、commit・review は行わない。それ以外の worktree Run は、Job が作った差分だけを `chore(routine): …` で exec ブランチへ commit する。本文には Job Run ID と Run の状態を含める。初回 commit 前はファイルの差分で判定し、Git 未初期化の in-place 実行は差分を確定できないため従来どおり記録する。
+11. 成功した Run は実行前後のファイル内容・モードと HEAD 間の差分を比べ、その Run の記録ディレクトリ全体（plan・result・evidence・ログなど）と Run JSON、`generated/`、exec の lock を除いて変更がなければ `noop` として端末側へ保存し、今回の実行記録を Git の差分から除く。記録の置き場所は共通モジュールで解決し、既存 attempt の記録は復元する。precondition の有無や in-place / worktree によらず適用し、冪等性と checkpoint は端末側で維持する。worktree も撤去し、commit・review は行わない。それ以外の worktree Run は、Job が作った差分だけを `chore(routine): …` で exec ブランチへ commit する。本文には job run ID と Run の状態を含める。初回 commit 前はファイルの差分で判定し、Git 未初期化の in-place 実行は差分を確定できないため従来どおり記録する。
 12. runner は `mode: review` の plan/result を作り、上記の解決順で決めた review executor と reporter で出力 commit を読み取り専用レビューする。review executor が出力を変更した場合は `changed-during-review` とする。
-13. Run が `succeeded` かつ verdict が `complete` / `complete-with-findings`、または Run が `partial` かつ verdict が `complete-with-findings` の場合だけ、runner が現在の統合先へ `--no-ff` で merge し、worktree と branch を撤去する。それ以外は review result と Job Run JSON に理由を残し、worktree を保持する。
+13. Run が `succeeded` かつ verdict が `complete` / `complete-with-findings`、または Run が `partial` かつ verdict が `complete-with-findings` の場合だけ、runner が現在の統合先へ `--no-ff` で merge し、worktree と branch を撤去する。それ以外は review result と job run JSON に理由を残し、worktree を保持する。
 
 Job worktree 内で `orchestrator night` が起動する register run は、子の worktree を主の作業ツリーと同じ配置規則で作る。設定の `run.worktree_base` と既定値の相対パスは `git worktree list --porcelain` の先頭にある主の作業ツリーを基準とし、CLI の明示的な `--worktree-base` は起動元を基準とする。子の成果物・plan・result・実行記録は起動元の Job ブランチへ統合され、その後 Job 全体の review・統合で上位の統合先へ入る。
 
@@ -222,15 +222,15 @@ policy:
 
 cronのdue判定では、実際に処理を開始した`last_run`とは別に、最後に評価した実行枠を表す`last_scheduled_for`を保持する。次の実行枠は`scheduled_at`から計算し、処理時間や外部スケジューラの起動遅延によって毎週の基準時刻がずれないようにする。`missed_run`の対象範囲も、この実行枠のcursorから求める。
 
-routine の状態・履歴・lock は `src/routine/storage.ts` で解決する端末側の保存先へ置き、CLI と dashboard が共有する。repository の識別には既存の端末用記録 `src/exec/product-branch-records.ts` と同じ Git 共通ディレクトリを使い、保存先自体は `$XDG_STATE_HOME/specdojo/`（既定 `~/.local/state/specdojo/`）以下とする。旧 `generated/` の状態・履歴はコピーして引き継ぎ、新しいファイルを上書きしない。Job Run のない routine の失敗だけは `<execution-path>/routines/failures/<routine-id>/<UUID>.json` に履歴項目と `run_id` を保存して単独で commit する。成功・skip の routine 履歴と無変更 Job の記録は端末側だけに置く。保存先と移行手順は [[specdojo:routine-operation-guide|routine 運用ガイド]] を参照する。
+routine の状態・履歴・lock は `src/routine/storage.ts` で解決する端末側の保存先へ置き、CLI と dashboard が共有する。repository の識別には既存の端末用記録 `src/exec/product-branch-records.ts` と同じ Git 共通ディレクトリを使い、保存先自体は `$XDG_STATE_HOME/specdojo/`（既定 `~/.local/state/specdojo/`）以下とする。旧 `generated/` の状態・履歴はコピーして引き継ぎ、新しいファイルを上書きしない。job run のない routine の失敗だけは `<execution-path>/routines/failures/<routine-id>/<UUID>.json` に履歴項目と `run_id` を保存して単独で commit する。成功・skip の routine 履歴と無変更 Job の記録は端末側だけに置く。保存先と移行手順は [[specdojo:routine-operation-guide|routine 運用ガイド]] を参照する。
 
 ## 5. Runポリシー
 
 ### 5.1. 冪等性
 
-冪等性の単位はroutineの`last_run`ではなくJob Runの`idempotency_key`とする。週報ではISO週、翻訳では原文revision範囲と対象言語をキーへ含める。実行枠ごとに処理するJobでは`scheduled_at`を含め、同じ実行枠の重複起動と失敗後のretryは同じJob Run、次の実行枠は別のJob Runとして扱う。手動起動で`--scheduled-at`を省略した場合は起動時刻が入るため、呼び出しごとに新しい実行枠になる。これにより、外部スケジューラの重複起動で成果物を二重生成せず、日次などの次回実行を前回の完了状態と混同しない。
+冪等性の単位はroutineの`last_run`ではなくjob runの`idempotency_key`とする。週報ではISO週、翻訳では原文revision範囲と対象言語をキーへ含める。実行枠ごとに処理するJobでは`scheduled_at`を含め、同じ実行枠の重複起動と失敗後のretryは同じjob run、次の実行枠は別のjob runとして扱う。手動起動で`--scheduled-at`を省略した場合は起動時刻が入るため、呼び出しごとに新しい実行枠になる。これにより、外部スケジューラの重複起動で成果物を二重生成せず、日次などの次回実行を前回の完了状態と混同しない。
 
-scriptが中断再開用のキーを要求する場合は、入力の期間や`scheduled_at`を再加工せず、`task.command`から`{{job_run_id}}`を渡す。同じJob Runのretryでは同じ値になり、異なる実行枠では値が変わるため、スケジュール粒度と再開状態を分離できる。
+scriptが中断再開用のキーを要求する場合は、入力の期間や`scheduled_at`を再加工せず、`task.command`から`{{job_run_id}}`を渡す。同じjob runのretryでは同じ値になり、異なる実行枠では値が変わるため、スケジュール粒度と再開状態を分離できる。
 
 ### 5.2. 取りこぼしと重複実行
 
@@ -345,9 +345,9 @@ Runの状態変更とattemptは上書きだけで失われない履歴として�
 
 ## 8. 現在の実装境界
 
-- Job Runはin-place実行と、統合前 review を伴う worktree 実行に対応する。worktree 実行は Job の `task.review`、`exec run --job --worktree`、または routine action の `commit: true`（互換）で選ばれる。worktree 内で Job を実行する子プロセスは環境変数 `SPECDOJO_JOB_REVIEW_WORKTREE_CHILD` で識別し、`task.review` による worktree 実行へ再入しない。
+- job runはin-place実行と、統合前 review を伴う worktree 実行に対応する。worktree 実行は Job の `task.review`、`exec run --job --worktree`、または routine action の `commit: true`（互換）で選ばれる。worktree 内で Job を実行する子プロセスは環境変数 `SPECDOJO_JOB_REVIEW_WORKTREE_CHILD` で識別し、`task.review` による worktree 実行へ再入しない。
 - `exec run --job --dry-run` は worktree 実行の場合、review executor / reporter の nickname と解決元（`--review-by` / `--reporter-by`、`task.review.agent.*`、`auto`）を表示する。
-- `task.agent`でexecutorとreporterを指名したJob Runは、register項目と同じexecutor/reporter pipelineで実行し、evidenceとpipeline stateを`exec/evidence/<taskId>/<runId>/`へ記録する。reporterだけが失敗したRunの`--resume`はregister経路のみが対応し、Jobでは次のattemptとして再実行する。
+- `task.agent`でexecutorとreporterを指名したjob runは、register項目と同じexecutor/reporter pipelineで実行し、evidenceとpipeline stateを`exec/evidence/<taskId>/<runId>/`へ記録する。reporterだけが失敗したRunの`--resume`はregister経路のみが対応し、Jobでは次のattemptとして再実行する。
 - `task.mode: command`はrunnerがin-placeで直接実行する。`task.analysis`を持つ場合だけ`succeeded`または`partial`のcommand後にreporterを起動し、redact・上限付きstdout/stderrを含むevidence本体を渡す。`partial`は`task.partial_exit_code`を明示したJobだけが使え、analysisの失敗はRun全体を`failed`にする。
 - cronは5フィールド形式を扱い、数値、`*`、リスト、範囲、stepを受け付ける。
 - `missed_run`は`latest`と`all`、`overlap`は`skip`に対応する。

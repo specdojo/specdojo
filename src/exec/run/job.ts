@@ -174,7 +174,7 @@ async function runCommandJobMode(params: {
     ...(record.task.targets ? { targets: record.task.targets } : {}),
   });
   const evidenceRunId = record.run_id;
-  process.stdout.write(`Running Job Run ${record.run_id} command in place.\n`);
+  process.stdout.write(`Running job run ${record.run_id} command in place.\n`);
   const commandOutcome = record.task.steps
     ? await executeJobSequence({
         task: record.task,
@@ -265,11 +265,11 @@ async function runCommandJobMode(params: {
       ...(reason ? { reason } : {}),
     });
     if (commandSucceeded) {
-      process.stdout.write(`Job Run complete: ${record.run_id}\n`);
+      process.stdout.write(`job run complete: ${record.run_id}\n`);
     } else if (commandPartial) {
-      process.stdout.write(`Job Run partial: ${record.run_id}\n`);
+      process.stdout.write(`job run partial: ${record.run_id}\n`);
     } else {
-      process.stdout.write(`Job Run failed: ${record.run_id}\n`);
+      process.stdout.write(`job run failed: ${record.run_id}\n`);
       process.exitCode = commandOutcome.exitCode || 1;
     }
     process.stdout.write(
@@ -339,9 +339,9 @@ async function runCommandJobMode(params: {
     ...(reason ? { reason } : {}),
   });
   if (reporterOutcome.exitCode === 0) {
-    process.stdout.write(`Job Run ${commandPartial ? "partial" : "complete"}: ${record.run_id}\n`);
+    process.stdout.write(`job run ${commandPartial ? "partial" : "complete"}: ${record.run_id}\n`);
   } else {
-    process.stdout.write(`Job Run failed: ${record.run_id}\n`);
+    process.stdout.write(`job run failed: ${record.run_id}\n`);
     process.exitCode = 1;
   }
   process.stdout.write(
@@ -376,14 +376,14 @@ function commitJobPaths(
   body: string,
 ): string {
   const unique = [...new Set(paths)].sort();
-  if (unique.length === 0) throw new Error("Job Run produced no tracked output to commit.");
+  if (unique.length === 0) throw new Error("job run produced no tracked output to commit.");
   stageCommitTargets(worktreePath, unique);
   const stagedArgs = ["diff", "--cached", "--quiet", "--", ...unique];
   const staged = gitResult(worktreePath, stagedArgs);
-  if (staged.status === 0) throw new Error("Job Run output has no staged changes.");
+  if (staged.status === 0) throw new Error("job run output has no staged changes.");
   if (staged.status !== 1) {
     throw new Error(
-      `Failed to inspect staged Job Run output: ${formatGitResultFailure(stagedArgs, staged)}`,
+      `Failed to inspect staged job run output: ${formatGitResultFailure(stagedArgs, staged)}`,
     );
   }
   const commit = gitResult(worktreePath, ["commit", "-m", subject, "-m", body, "--", ...unique]);
@@ -412,14 +412,14 @@ async function fillIncompleteJobReviewResult(resultPath: string, reason: string)
   content = content
     .replace(
       /_TODO_: 評価結果サイドカー[^\n]*/,
-      `Job Run の review を完了できなかった: ${safeReason}`,
+      `job run の review を完了できなかった: ${safeReason}`,
     )
     .replace(
       /_TODO_: 変更内容[^\n]*/,
       `- runner が review を完了できなかったため統合不可と判断した。`,
     )
     .replace(/_TODO_: 未充足事項[^\n]*/, `- ${stripLeadingListMarker(safeReason) || "理由なし"}`)
-    .replace(/_TODO_: `approach`[^\n]*/, "Job Run の出力は変更していない。")
+    .replace(/_TODO_: `approach`[^\n]*/, "job run の出力は変更していない。")
     .replace(/- verdict: _TODO_（[^\n]*）/, "- verdict: incomplete");
   writeFileSync(resultPath, content, "utf8");
   await formatMarkdownFile(resultPath);
@@ -506,7 +506,7 @@ function resolveJobReviewAgents(
       ? selectCandidates(requirements, roster, "review", undefined, execDefaults)[0]
       : undefined;
     const command = member ? resolveMemberCommand(execDefaults, member) : undefined;
-    if (!member || !command) throw new Error("No review executor is available for Job Run review.");
+    if (!member || !command) throw new Error("No review executor is available for job run review.");
     executor = { command, actor: member.nickname, provider: member.provider };
   }
   let reporterCandidates: AgentRunCandidate[];
@@ -530,7 +530,7 @@ function resolveJobReviewAgents(
     );
   }
   if (reporterCandidates.length === 0) {
-    throw new Error("No reporter is available for Job Run review.");
+    throw new Error("No reporter is available for job run review.");
   }
   return { executor, reporterCandidates };
 }
@@ -581,7 +581,7 @@ async function runJobWorktreeMode(opts: RunOpts): Promise<void> {
   });
   if (preview.duplicateComplete) {
     process.stdout.write(
-      `Job Run already complete: ${preview.record.run_id} (${preview.record.state})\n`,
+      `job run already complete: ${preview.record.run_id} (${preview.record.state})\n`,
     );
     if (preview.record.state === "noop") process.stdout.write(`[routine-job] noop state=noop\n`);
     if (trigger === "routine" && preview.record.state === "partial") {
@@ -640,10 +640,10 @@ async function runJobWorktreeMode(opts: RunOpts): Promise<void> {
   const worktreeTaskId = `${projectId}-${preview.record.run_id}`;
   const worktree = ensureExecWorktree({ repoRoot, worktreeBase, taskId: worktreeTaskId });
   // materializeJobRun resolves an omitted --scheduled-at to the manual launch time. Reuse that
-  // exact slot in the child so the worktree writes the Job Run that the parent previewed.
+  // exact slot in the child so the worktree writes the job run that the parent previewed.
   const childArgs = jobChildArgs(opts, projectId, preview.record.scheduled_at);
   const [executable, fullArgs] = selfRunArgs(childArgs);
-  process.stdout.write(`Running Job Run ${preview.record.run_id} in ${worktree.path}.\n`);
+  process.stdout.write(`Running job run ${preview.record.run_id} in ${worktree.path}.\n`);
   const child = spawnSync(executable, fullArgs, {
     cwd: worktree.path,
     env: {
@@ -680,7 +680,7 @@ async function runJobWorktreeMode(opts: RunOpts): Promise<void> {
     return;
   }
   if (!existsSync(runPath)) {
-    throw new Error(`Job Run record was not created in worktree: ${preview.record.run_id}`);
+    throw new Error(`job run record was not created in worktree: ${preview.record.run_id}`);
   }
   let record = loadJobRunRecord(runPath);
   // The child may fail before printing a completion marker. Its worktree still owns
@@ -691,7 +691,7 @@ async function runJobWorktreeMode(opts: RunOpts): Promise<void> {
     worktree.path,
     outputPaths,
     `chore(routine): ${preview.definition.name}`,
-    `Job Run: ${record.run_id}\nState: ${record.state}`,
+    `job run: ${record.run_id}\nState: ${record.state}`,
   );
 
   const reviewTaskId = `${record.run_id}-review`;
@@ -808,7 +808,7 @@ async function runJobWorktreeMode(opts: RunOpts): Promise<void> {
     await overrideJobReviewDecision(resultPath, verdict, reviewReason);
   }
   if (unexpected.length === 0 && record.state !== "succeeded" && record.state !== "partial") {
-    reviewReason = record.attempts.at(-1)?.reason ?? `Job Run state is ${record.state}`;
+    reviewReason = record.attempts.at(-1)?.reason ?? `job run state is ${record.state}`;
     verdict = "incomplete";
     await overrideJobReviewDecision(resultPath, verdict, reviewReason);
   }
@@ -831,16 +831,16 @@ async function runJobWorktreeMode(opts: RunOpts): Promise<void> {
     worktree.path,
     committableReviewPaths,
     `chore(routine): review ${record.run_id}`,
-    `Job Run: ${record.run_id}\nState: ${record.state}\nVerdict: ${verdict ?? "unavailable"}`,
+    `job run: ${record.run_id}\nState: ${record.state}\nVerdict: ${verdict ?? "unavailable"}`,
   );
 
   const accepted = acceptsJobReview(record, verdict) && unexpected.length === 0;
   if (!accepted) {
     const reason =
       record.state !== "succeeded" && record.state !== "partial"
-        ? `Job Run state is ${record.state}`
+        ? `job run state is ${record.state}`
         : (reviewReason ??
-          `review verdict ${verdict ?? "unavailable"} is not accepted for Job Run state ${record.state}`);
+          `review verdict ${verdict ?? "unavailable"} is not accepted for job run state ${record.state}`);
     process.stdout.write(
       `[routine-job] waiting run_id=${record.run_id} review=${verdict ?? "unavailable"} worktree=${worktree.path} reason=${reason}\n`,
     );
@@ -925,7 +925,7 @@ async function runJobModeUnchecked(
     return;
   }
   if (materialized.duplicateComplete) {
-    process.stdout.write(`Job Run already complete: ${record.run_id} (${record.state})\n`);
+    process.stdout.write(`job run already complete: ${record.run_id} (${record.state})\n`);
     if (record.state === "noop") process.stdout.write(`[routine-job] noop state=noop\n`);
     if (trigger === "routine" && record.state === "partial") {
       process.stdout.write(`[routine-job] complete run_id=${record.run_id} state=partial\n`);
@@ -1032,7 +1032,7 @@ async function runJobModeUnchecked(
   let reason: string | undefined;
   if (pipelineAgents) {
     process.stdout.write(
-      `Running Job Run ${record.run_id} in place (executor/reporter pipeline): ${command}\n`,
+      `Running job run ${record.run_id} in place (executor/reporter pipeline): ${command}\n`,
     );
     const pipelineOutcome = await runAgentPipeline({
       repoRoot,
@@ -1050,7 +1050,7 @@ async function runJobModeUnchecked(
     exitCode = pipelineOutcome.exitCode;
     reason = pipelineOutcome.blockReason;
   } else {
-    process.stdout.write(`Running Job Run ${record.run_id} in place: ${command}\n`);
+    process.stdout.write(`Running job run ${record.run_id} in place: ${command}\n`);
     const spawned = await spawnAgentInPlace(
       command,
       prompt,
@@ -1084,9 +1084,9 @@ async function runJobModeUnchecked(
     ...(reason ? { reason } : {}),
   });
   if (effectiveExit === 0) {
-    process.stdout.write(`Job Run complete: ${record.run_id}\n`);
+    process.stdout.write(`job run complete: ${record.run_id}\n`);
   } else {
-    process.stdout.write(`Job Run failed: ${record.run_id}\n`);
+    process.stdout.write(`job run failed: ${record.run_id}\n`);
     process.exitCode = effectiveExit || 1;
   }
   process.stdout.write(

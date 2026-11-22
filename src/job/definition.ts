@@ -387,7 +387,7 @@ export type JobReviewAgentSource = "cli" | "job";
 export type JobReviewAgentNomination = { nickname: string; source: JobReviewAgentSource };
 
 /**
- * Resolves the review agent nicknames of a Job Run review. The order is the CLI flag
+ * Resolves the review agent nicknames of a job run review. The order is the CLI flag
  * (`--review-by` / `--reporter-by`), then the Job's task.review.agent, then auto selection
  * (an undefined entry means the caller auto selects).
  */
@@ -415,7 +415,7 @@ export function resolveJobReviewAgentNominations(
 }
 
 /**
- * Decides whether a Job Run takes the reviewed integration path (exec worktree, runner
+ * Decides whether a job run takes the reviewed integration path (exec worktree, runner
  * commit, review, merge by verdict). The Job's task.review declaration wins over the
  * caller: a declared Job is always reviewed, and `--worktree` (passed by a routine with the
  * legacy `action.commit: true`) still opts an undeclared Job in for compatibility. The child
@@ -541,7 +541,7 @@ function isJobRunRecord(value: unknown): value is JobRunRecord {
 
 function readJobRunRecord(filePath: string): JobRunRecord {
   const raw = readJson(filePath);
-  if (!isJobRunRecord(raw)) throw new Error(`Invalid Job Run file: ${filePath}`);
+  if (!isJobRunRecord(raw)) throw new Error(`Invalid job run file: ${filePath}`);
   return raw;
 }
 

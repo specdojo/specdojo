@@ -436,7 +436,7 @@ function findJobRunId(
         return run.run_id;
       }
     } catch {
-      // Job Run の検証は job 側の責務。履歴追記では壊れた別 Run を無視する。
+      // job run の検証は job 側の責務。履歴追記では壊れた別 Run を無視する。
     }
   }
   return undefined;

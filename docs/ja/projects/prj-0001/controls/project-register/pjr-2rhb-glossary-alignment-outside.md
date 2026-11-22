@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   difficulty: medium
   owner: sol-executor
@@ -46,14 +46,36 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                                                        | 担当         | 状態 | メモ                 |
+| --- | ------------------------------------------------------------------------------------------- | ------------ | ---- | -------------------- |
+| 1   | 「Job Run」を「job run」へ統一（コード・テスト・fixture・設計書・ガイド・schema・カタログ） | sol-executor | done | 56 ファイル 225 箇所 |
+| 2   | `gl-rulebook` に英語表記の小文字の決まりと `notes` の書き方の決まりを追加                   | sol-executor | done | 6.4・6.5 の節        |
+| 3   | 検証（typecheck・lint:ts・test:unit・lint:md・lint:fm）                                     | sol-executor | done | 全件通過             |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 5.1. 実施内容
+
+- 「Job Run」を「job run」へ統一した。直す前は対象範囲に 225 箇所（56 ファイル）、直した後は 0 箇所。対象は `src`・`tools`・`tests`（メッセージを確かめるテストと表示ページの snapshot を含む）・`docs/specdojo`（schema）・`docs/ja/product`・`docs/ja/specdojo`・成果物カタログ（`dct-*.yaml` と生成ページ）・`rtn-grade-recheck.yaml`。
+- 文書の題名は「Job実行設計」など「Job Run」を含まないため変えていない。「ステータス定義（Job Run）」は「ステータス定義（job run）」へ直した。
+- `gl-rulebook` に、英語名と英語の用語は小文字で書き、概念名として大文字で定着したもの（Kata など）と固有名詞（SpecDojo など）だけを例外とする決まりを足した（6.4 の節）。`notes` に読み手向けの補足だけを書き、YAML の書き方のメモを書かない決まりも足した（6.5 の節）。
+- 直さなかったもの: 履歴（`execution/runs/`・個票・`events/`・grade の結果と条件）、`archive/`、`CHANGELOG.md`、用語集（`gl-execution.yaml` と生成ページ。PJR-960C の範囲）。保護された設定は変えていない。
+
+### 5.2. 判断と理由
+
+- 題名は変えない。「Job実行設計」は日本語の題名で、決まりの対象は英語の用語だけのため。
+- 用語集の `source` にある wikilink の表示名「ステータス定義（Job Run）」は、用語集の範囲のため直していない。表示名だけの食い違いで、リンク先は解決する。
+
+### 5.3. CHANGELOG に書く事項
+
+- 区分: Changed
+- 文案: CLI の出力・エラーメッセージの「Job Run」を「job run」へ表記統一した（文言のみで挙動は変わらない）。
+
+### 5.4. 検証
+
+- `npm run typecheck`・`npm run lint:ts`（エラー 0、既存の警告のみ）・`npm run test:unit`（4208 件）・`npm run lint:md`・`npm run lint:fm` が通った。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- `gl-rulebook`（`docs/ja/specdojo/rulebooks/gl-rulebook.md`）
+- [[prj-0001:pjr-index]]
