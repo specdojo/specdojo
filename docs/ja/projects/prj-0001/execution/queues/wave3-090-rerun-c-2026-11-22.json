@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "queue_id": "wave3-090-rerun-c-2026-11-22",
+  "project_id": "prj-0001",
+  "created_at": "2026-11-22T07:24:55.744Z",
+  "updated_at": "2026-11-22T07:24:55.744Z",
+  "state": "pending",
+  "steps": [
+    {
+      "index": 1,
+      "on_failure": "continue",
+      "status": "pending",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--task",
+        "T-KATA-WAVE-3-itc-sample-090",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--fallback-executor-by",
+        "sonnet-review-executor",
+        "--project",
+        "prj-0001"
+      ]
+    }
+  ]
+}
