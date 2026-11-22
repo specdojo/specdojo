@@ -115,3 +115,16 @@
       from: "-"
       to: '["PJR-AEKE"]'
   previous_event_id: reg_6f67e936e7c742aaa64e3cf07f9d8e7f
+- v: 1
+  id: reg_501c68397cd748cda92354e0da8451a6
+  ts: "2026-11-22T23:27:13Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: waiting
+  to_status: waiting
+  reason: ifx-file-rulebook に触れる BM07 の後に流す
+  changes:
+    - field: depends_on
+      from: '["PJR-AEKE"]'
+      to: '["PJR-AEKE","PJR-BM07"]'
+  previous_event_id: reg_03f71f818bc14acfb332bfb8609007ea

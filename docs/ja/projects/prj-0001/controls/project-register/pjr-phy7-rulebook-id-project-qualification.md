@@ -17,6 +17,7 @@ specdojo:
     - PJR-00NY
   depends_on:
     - PJR-AEKE
+    - PJR-BM07
 ---
 
 # PJR-PHY7 プロダクト文書の id を名前空間なしで定める型（rulebook・template・sample）をそろえる

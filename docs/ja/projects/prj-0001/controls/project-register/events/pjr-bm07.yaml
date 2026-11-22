@@ -1,0 +1,65 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_828f18791dc84b02b24c9a1b0f7d3f56
+  ts: "2026-11-22T23:27:00Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: ifx の型の残りの文書から古い略語（ESIL・ECIS・EFES）を外す
+    - field: description
+      from: ""
+      to: ifx-cmd・ifx-file の rulebook、ifx-cmd-recipe、prj-0001 のカタログのコメントに、今は使わない略語が残る。AEKE の 2 回目の ifx-api・ifx-msg と同じ書き方にそろえる
+    - field: input
+      from: ""
+      to: '["ifx の型の古い略語（ESIL・EAPIS・EMS・ECIS・EFES）は今は使わないので外す（利用者の依頼、2026-11-23）","ifx-api・ifx-msg の rulebook と sample は PJR-AEKE の 2 回目で直す。ほかの rulebook のタイトルの略語（BDS・CCD など）はファイルの prefix と一致するので対象外"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-AEKE"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-AEKE"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: kata
+- v: 1
+  id: reg_cfa06129f7634796accb5511578e4a9b
+  ts: "2026-11-22T23:27:08Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_828f18791dc84b02b24c9a1b0f7d3f56

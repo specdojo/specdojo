@@ -9,7 +9,7 @@ specdojo:
   item_type: todo
   item_status: review
   priority: medium
-  difficulty: medium
+  difficulty: hard
   owner: BA
   registered_at: "2026-11-22T12:55:19Z"
   due_on: "2026-11-30"
@@ -40,6 +40,18 @@ specdojo:
 - `CHANGELOG.md` は変えない。個票の対応結果に「CHANGELOG に書く事項」の小節を作り、区分と行の文案を書く。影響がなければ「なし」と書く。
 - 迷った点は executor が決め、決めた内容と理由を個票の対応結果と報告の `handoff` に書く。
 - `npm run validate:schema`・`npm run lint:md`・`npm run lint:fm` を通し、親の検証を通す。
+- 2 回目の実行（2026-11-23）。1 回目の後の型の grade（2026-11-22、opus-review-executor）は、ifx-api-rulebook が needs-work 79、ifx-api-sample が needs-work 82、ifx-msg-rulebook が needs-work 77、ifx-msg-sample が pass 86 だった。2 回目では次を直す（利用者の決定、2026-11-23、indie）。
+- `ifx-index-sample` の「本部への売上登録」の `spec_ref` を `specdojo:ifx-api-sample` にし、「レシート印刷」の行と同じ形で詳細契約への wikilink のコメントを置く。「本部の二つの詳細仕様は未同梱」のコメントと、想定のファイル名 `ifx-api-kinuya-sales.yaml` の記述を、売上登録は同梱・商品マスタの照会は未同梱（`spec_ref: TBD` のまま）に合わせて直す。この項目に限り、上の「ほかの型の rulebook と sample は変えない」の例外とする。
+- `ifx-api-rulebook` と `ifx-msg-rulebook` のタイトルと英語名から、今は使わない略語（`EAPIS`・`EMS`）を外す。タイトルは「外部API仕様 作成ルール」「外部メッセージ仕様 作成ルール」の形にし、タイトルの直下に英語名の行（例: `External API Specification Documentation Rules`）を足す。本文の `EAPIS`・`EMS`・`ESIL` は、日本語の名前か `ifx-api`・`ifx-msg`・`ifx-index` の prefix に置き換え、`ifx-index` は `[[specdojo:ifx-index-rulebook|外部システムI/F一覧 作成ルール]]` で特定する。4 文書で同じ扱いとし、sample のコメントの `ESIL` も直す。
+- 1 回目の後の grade の minor と note を、次の一覧のとおり 4 文書で直す。指摘ごとに「直した」か「直さない（理由）」を決め、個票の対応結果に表で残す。rulebook と sample の両方に関わる指摘は、両方をそろえて直す。
+  - ifx-api-rulebook: OpenAPI 3.0.3 と 3.1.x の選び方と決める人がない。対象外（ifx-msg・ifx-file・ifx-cmd）を書いていない。合意の当事者（Role）がない。`specdojo-schema: none reason=external-openapi` の前提と、代わりの OpenAPI の検証の手順がない。配置先のディレクトリがない。id を変えたときの `spec_ref` と yaml-pages の表示のページへの影響がない。「エラー定義（推奨）」と「少なくとも定義します」、必須の章の中の「推奨」で必須度が混ざる。ファイル名の例 `ifx-api-payment` に拡張子がない。互換を壊す変更の版の付け方（`info.version`・`/v1`）と改訂の手順がない。標準の章の構成（全体方針・ファイル命名・ID 規則など）とのずれ。sample の id `specdojo:ifx-api-sample` が `ifx-api-...` の規則の例外であることの説明がない（`ifx-cmd-rulebook` の「命名上の例外」と同じ書き方にする）。
+  - ifx-api-sample: 連携の前提・合意対象・未決事項（冪等性・通貨など）と、PO（店主代表）が承認と ready への昇格を判断する旨のコメントがない。`based_on` が空（`specdojo:ifx-index-sample` などを入れる）。403・404・429 がなく省略の理由もない。`SaleLine` で税区分・合計・預かり金を送るかが分からない。結果不明のときの受付の照会の手段と、409 で既存の `sale_id` を返すかがない。201 の応答の `status` に `REJECTED` を許す意味と扱いが分からない。項目の追加・必須化の互換の扱いがない。`product_code`・`transaction_id` の形式（pattern・長さ）がない。代わりの OpenAPI の検証の手段がない。本部の問い合わせの窓口がない（`_TODO_` でよい）。ready にするための残課題がない。表示のページ `samples/generated/ifx-api-sample.md` が旧版のまま（note、yaml-pages で作り直す）。
+  - ifx-msg-rulebook: AsyncAPI と CloudEvents を選ぶ理由がない。合意・承認の主体と、ready にする条件がない。`servers` に実の接続先・認証情報・契約情報を書かない禁止事項がない。`ifx-index` で `spec_ref` を決めてから作る、という作る順序がない。イベントの `type` の版（`.v1`）の上げ方、旧版の併存、廃止と変更の通知の規則がない。未決事項と仮定の書き方がない。同期の API（`ifx-api`）との責務の境界がない。publish・subscribe の向きごとの送信者・受信者の書き方がない。CloudEvents の structured・binary と `contentType`、`servers`・プロトコルの記載の要否がない。配置先と `channels`・`components/messages` の必須の項目がない。id やファイル名を変えたときの影響がない。AsyncAPI の検証の手順がない。AsyncAPI 2.6.0 以外を許す条件と「最小十分」「推奨」の判定がない。`specdojo-schema: none reason=external-asyncapi` の書き方がない。ファイル名の例 `ifx-msg-stock-changed` に拡張子がない。sample の id `specdojo:ifx-msg-sample` の例外の説明がない。`datacontenttype` の固定と sample の食い違い。禁止事項に理由がない。「メッセージング仕様」「メッセージ仕様」の用語の混在と、1 ファイルの単位の定義がない。
+  - ifx-msg-sample: `info.description` がない。配信・順序の保証と重複受信の扱い（`id` による冪等処理）がない。`based_on` が空。`current_quantity` の下限と `product_id` の書式がない。`subscribe` の意味と発行者・購読者がない。`datacontenttype` を `enum: ["application/json"]` にしていない。代わりの AsyncAPI の検証の手段がない。`id` が一意になる条件（`source` との組み合わせなど）がない。チャネルの発生の契機（販売・仕入れ・棚卸しなど）がない。`defaultContentType`・`contentType`・`datacontenttype` の使い分けの説明がない。
+- 1 回目の後の grade の rulebook の major（「sample に `info.version` がない」）は、sample に `info.version` があるので評価の誤りとして直さない。
+- プロダクト文書とプロジェクト文書の id の修飾の規則（PJR-PHY7 の範囲）は、この項目では変えない。
+- `ifx-cmd-rulebook`・`ifx-file-rulebook`・`ifx-cmd-recipe`・成果物カタログの古い略語は、後続の todo で直すので、この項目では変えない。
+- yaml-pages で表示のページを作り直してから `npm run lint:md` を流す。
 
 ## 4. 作業内容
 

@@ -112,3 +112,19 @@
       from: in-progress
       to: review
   previous_event_id: reg_d788cce7912b4a8c96ec2368dfc8a627
+- v: 1
+  id: reg_3c53416781004ecfbecb9a477b364d6a
+  ts: "2026-11-22T23:26:54Z"
+  action: update
+  actor: indie
+  from_status: review
+  to_status: review
+  reason: 2 回目の実行の範囲を決めた（ifx-index-sample の接続、4 文書の minor、古い略語、2026-11-23）
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+    - field: difficulty
+      from: medium
+      to: hard
+  previous_event_id: reg_79246a51bfff4c438a29cd0d2ec9b117
