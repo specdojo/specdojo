@@ -9,7 +9,7 @@ specdojo:
   item_type: issue
   item_status: open
   priority: high
-  difficulty: medium
+  difficulty: hard
   registered_at: "2026-11-22T02:08:32Z"
   derived_from:
     - PJR-VCER
