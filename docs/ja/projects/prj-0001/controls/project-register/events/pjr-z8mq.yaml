@@ -67,3 +67,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_89eb368fef8b4450981522d956c24ee6
+- v: 1
+  id: reg_aa7b88bc192041f3b12961f1bc338a13
+  ts: "2026-11-22T07:01:58Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分が自分の型の rulebook と sample だけであること、対応結果、統合後の grade を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: utc-index の型を grade の指摘に沿って直し、評価し直しで合格の基準（機械的な指摘を除いて blocker と major がない）を満たした
+  previous_event_id: reg_c2f78f7ae55f490da2fb5d220c3da3b1
