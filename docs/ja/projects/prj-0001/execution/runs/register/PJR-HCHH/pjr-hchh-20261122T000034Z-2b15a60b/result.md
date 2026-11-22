@@ -9,25 +9,33 @@ specdojo:
   origin: register
   plan_ref: runs/register/PJR-HCHH/pjr-hchh-20261122T000034Z-2b15a60b/plan.md
   started_at: "2026-11-22T00:00:35.404Z"
-  completed_at: "2026-11-22T00:22:58.403Z"
+  completed_at: "2026-11-22T00:34:28.988Z"
   agent: qwen-executor
-  block_reason: "executor reported incomplete: PJR-HCHH: register.ts の `migrateEmbeddedRegisterEvents`・`migrateRegisterEventsFromGit`、command-types.ts の対応する型、events.ts の `readEmbeddedRegisterEvents`・`removeEmbeddedReg…"
+  block_reason: "parent validation failed: lint-md"
 ---
 
 # Edit Result
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- PJR-HCHH に基づき、呼び出し元がなくなった `migrateEmbeddedRegisterEvents` および `migrateRegisterEventsFromGit` を含む関連コードの削除を実施した。
+- 削除対象には、`src/register/migrate-timestamps.ts`、およびそれに関連する型や関数（`readEmbeddedRegisterEvents`、`removeEmbeddedRegisterEvents` など）が含まれる。
+- また、対応するテストファイル `tests/src/register/migrate-timestamps.test.ts` も削除した。
+- 個票 `docs/ja/projects/prj-0001/controls/project-register/pjr-hchh-remove-unused-register-migration.md` の作業内容および対応結果を更新した。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `src/register/command-types.ts`: 不要になったコマンドに関連する型定義を削除した。
+- `src/register/events.ts`: 不要になった `readEmbeddedRegisterEvents` および `removeEmbeddedRegisterEvents` を削除した。
+- `src/register/migrate-timestamps.ts`: 削除、+0 / -264 行
+- `src/register/register.ts`: 不要になった `migrateEmbeddedRegisterEvents` および `migrateRegisterEventsFromGit` を削除した。
+- `tests/src/register/migrate-timestamps.test.ts`: `src/register/migrate-timestamps.ts` の削除に伴い、対応するテストファイルを削除した。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- `legacyHistoryEventToRegisterEvent`（`tests/src/register/migrate-events.test.ts`）、`collectRegisterHistoryEvents`（`maintenance-commands.ts` が使用）、`src/exec/core.ts` のイベント型 `note`・`link`・`estimate`（既存のイベントファイル読込用）は使用中のため残した。
+- `CHANGELOG.md` は変更していない。個票の `CHANGELOG に書く事項` には「なし」と記載した。
 
 ## 4. 進め方
 
-_TODO_: どう進めたか、根拠にした文書や規約を記入する。
+まず `grep` を用いて `migrate-timestamps` に関連する参照が残っていないことを確認した。その後、対象の移行関数 `migrateEmbeddedRegisterEvents`、`migrateRegisterEventsFromGit`、およびそれに関連するユーティリティ関数、型定義、テストファイルを削除した。最後に個票のステータスと内容を更新して完了とした。

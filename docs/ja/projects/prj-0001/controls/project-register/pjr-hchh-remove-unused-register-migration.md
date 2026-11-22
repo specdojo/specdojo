@@ -12,7 +12,7 @@ specdojo:
   difficulty: easy
   owner: DEV
   registered_at: "2026-11-21T14:01:58Z"
-  block_reason: "executor reported incomplete: PJR-HCHH: register.ts の `migrateEmbeddedRegisterEvents`・`migrateRegisterEventsFromGit`、command-types.ts の対応する型、events.ts の `readEmbeddedRegisterEvents`・`removeEmbeddedReg…"
+  block_reason: "parent validation failed: lint-md"
   derived_from:
     - PJR-GV43
 ---
