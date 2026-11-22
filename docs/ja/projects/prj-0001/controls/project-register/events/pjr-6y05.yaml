@@ -93,3 +93,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_46bec7e46fb9454b934095a494752a4a
+- v: 1
+  id: reg_26e84a9e7b6f451cb18f590d6abea8c6
+  ts: "2026-11-22T02:58:14Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register で実施（統合 49cd5bdee）。by なしの dry-run が grade run の前に止まり、by ありの dry-run が展開されることを確かめ、job validate と CHANGELOG 不変を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: "job-grade-kata と job-grade-deliverable に必須の入力 by を足し、agy の評価者の固定をなくした。routine は enabled: false のまま。"
+  previous_event_id: reg_67cd31e5509141678e8e7d57af4c5fa2

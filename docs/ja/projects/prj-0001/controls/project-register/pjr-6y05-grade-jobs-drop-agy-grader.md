@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-6y05-grade-jobs-drop-agy-grader
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: easy
   registered_at: "2026-11-21T22:55:36Z"
+  completed_at: "2026-11-22T02:58:14Z"
+  conclusion: "job-grade-kata と job-grade-deliverable に必須の入力 by を足し、agy の評価者の固定をなくした。routine は enabled: false のまま。"
   derived_from:
     - PJR-XA6Y
 ---
