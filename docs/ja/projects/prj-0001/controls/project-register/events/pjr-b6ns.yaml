@@ -93,3 +93,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_45f1ec7d75bb487eab8471aa616b1b18
+- v: 1
+  id: reg_0153263a2ccc4ac8b6f08539c4dc5ef8
+  ts: "2026-11-22T12:30:12Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが差分・単体テスト・ガイドの追記を確かめ、JSEY を含む統合後の run が予約に止められず、予約のファイルが残らないことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: 予約を調べるときに終端の項目の blocked の予約を読み飛ばして消すようにした。終端でない項目の予約は今までどおり後の項目を止める
+  previous_event_id: reg_e3c040bdf39c4b38aad8a609cbb097f0

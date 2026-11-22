@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-b6ns-reject-leaves-change-scope-reservation
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-22T11:41:41Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-22T12:30:12Z"
+  conclusion: 予約を調べるときに終端の項目の blocked の予約を読み飛ばして消すようにした。終端でない項目の予約は今までどおり後の項目を止める
   derived_from:
     - PJR-SGFC
 ---
