@@ -41,3 +41,19 @@
     - field: derived_from
       from: ""
       to: '["PJR-7M9J"]'
+- v: 1
+  id: reg_518771b76908492b9e3f44b356b680d2
+  ts: "2026-11-22T12:57:07Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 会話で決まっていない担当と期限を推測で入れたため、未定に戻す
+  changes:
+    - field: owner
+      from: BA
+      to: _TODO_
+    - field: due
+      from: "2026-11-30"
+      to: _TODO_
+  previous_event_id: reg_3d3e896aa39e4e3b8914db810a6d79cf
