@@ -121,6 +121,10 @@ PJR-76N9 の決まりに合わせ、製品の成果物（約 28 件）の本文�
 | `sf-index`・`sf-task-execution` | `Q-01`〜`Q-03` と未決事項 3 件                                                                 | PJR-AK5V・PJR-2GD6・PJR-BCAQ・PJR-99NS |
 | `cpd-specdojo-cli`              | 内部構成と実装の対応、正本の参照の接続、外部依頼・途中変更の回復条件                           | -                                      |
 
+### 5.5. close の後に見つかった直し
+
+- `ifx-index.yaml` のコメントの 1 行が `# #` で始まり、節の間の空行が空のコメント（`#`）になっていた。YAML から作る表示のページで H1 の見出しと空行の重なりになり、以後の run の lint-md が止まったため、オーケストレーターが直した（2026-11-22、16cedf0d6・8b9376ecb）。表示のページを作り直し、lint-md と `yaml-tables` のテストが通ることを確かめた。
+
 ## 6. 関連ドキュメント
 
 - [[prj-0001:pjr-76n9-no-role-assignment-in-documents]]
