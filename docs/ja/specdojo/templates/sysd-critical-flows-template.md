@@ -21,7 +21,7 @@ specdojo:
 - **対象・対象外**: _SCOPE_ENTRY_EXIT_AND_EXCLUSIONS_
 - **最大5件の管理方針**: _FLOW_SELECTION_CONSOLIDATION_AND_REPLACEMENT_POLICY_
 - **設計索引・状態用語の定義先**: _DESIGN_INDEX_AND_STATE_DEFINITION_SOURCE_
-- **公開範囲・除外情報・人間の最終承認責任**: _PUBLICATION_SCOPE_EXCLUSIONS_AND_HUMAN_APPROVER_
+- **公開範囲・除外情報**: _PUBLICATION_SCOPE_AND_EXCLUSIONS_
 
 ## 2. 重要フロー一覧
 
@@ -75,20 +75,12 @@ _TODO_: 共通の必須記録と trace 方針を記入する。フロー別の�
 | ----------------------------------------------------- | ---------------------------- | ---------------- | ------------------------ | ----------------------------------------------------- |
 | `_VERIFICATION_ID_` / `_FLOW_ID_` / `_ACCEPTANCE_ID_` | _TEST_REFERENCE_AND_COMMAND_ | _TEST_CONDITION_ | _PASS_AND_FAIL_CRITERIA_ | _LOCATION_COVERAGE_EXECUTION_STATUS_AND_GAP_TRACKING_ |
 
-<!-- 確認先は実在するテストパスまたはテスト ID。内部結合は ITC（itc- 系）、外部結合は ETC（etc- 系）。所在・網羅性・実行結果を区別し、不足は「未決事項と後続作業」の ID・担当へ接続する。 -->
+<!-- 確認先は実在するテストパスまたはテスト ID。内部結合は ITC（itc- 系）、外部結合は ETC（etc- 系）。所在・網羅性・実行結果を区別し、不足は「未決事項と後続作業」の ID へ接続する。 -->
 
 ### 5.3. 未決事項と後続作業
 
-| ID / 対象                       | 未充足事項・依存とScheduleへの影響   | 作業単位・依存順・担当Role code | 完了条件・判断時期・登録先                |
-| ------------------------------- | ------------------------------------ | ------------------------------- | ----------------------------------------- |
-| `_UNRESOLVED_ID_` / `_FLOW_ID_` | _GAP_DEPENDENCY_AND_SCHEDULE_IMPACT_ | _WORK_SEQUENCE_AND_OWNER_       | _CLOSURE_TIMING_AND_TRACKING_DESTINATION_ |
+| ID / 対象                       | 未充足事項・依存とScheduleへの影響   | 作業単位・依存順 | 完了条件・判断時期・登録先                |
+| ------------------------------- | ------------------------------------ | ---------------- | ----------------------------------------- |
+| `_UNRESOLVED_ID_` / `_FLOW_ID_` | _GAP_DEPENDENCY_AND_SCHEDULE_IMPACT_ | _WORK_SEQUENCE_  | _CLOSURE_TIMING_AND_TRACKING_DESTINATION_ |
 
-<!-- 未決事項がなければ行を削除し、確認した範囲と「なし」を記す。未作成参照はwikilinkにせずIDをコード表記し、追跡IDと作成担当を付ける。 -->
-
-### 5.4. 承認対象と公開前条件
-
-| 判断対象    | 設計確認担当と合意事項              | 人間の承認責任・確定条件      |
-| ----------- | ----------------------------------- | ----------------------------- |
-| `_FLOW_ID_` | _DESIGN_REVIEW_ROLES_AND_AGREEMENT_ | _HUMAN_APPROVER_AND_EVIDENCE_ |
-
-_TODO_: 公開／`ready` 昇格前の未決事項の解消または留保、人間承認の証跡、公開情報の確認、運用導線の充足条件を記入する。
+<!-- 未決事項がなければ行を削除し、確認した範囲と「なし」を記す。未作成参照はwikilinkにせずIDをコード表記し、追跡IDを付ける。 -->

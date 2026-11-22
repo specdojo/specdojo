@@ -34,7 +34,7 @@ categories:
 coverage_types:
   - id: stakeholder
     name: ステークホルダー
-    description: 利用者、意思決定者、確認者、運用者、影響を受ける関係者が識別されているか。
+    description: 利用者、意思決定者、運用者、影響を受ける関係者が識別されているか。文書を作る・確かめる・承認する役割の割り当ては対象外とする。
     applies_to:
       - requirements
       - specification
@@ -262,8 +262,8 @@ viewpoints:
     role: PO
     category: purpose
     title: 承認判断に必要な情報
-    check: PO が承認、保留、差し戻しを判断するための論点、未決事項、影響範囲が明示されているか。
-    evidence: 判断対象、判断者、未決事項、前提、影響、次アクション。
+    check: PO が承認、保留、差し戻しを判断するための論点、未決事項、影響範囲が明示されているか。文書の役割の割り当てと承認の進み具合は登録簿で追うため、本文に求めない。
+    evidence: 判断対象、未決事項、前提、影響、次アクション。
     coverage_types:
       - stakeholder
       - permission
@@ -275,7 +275,7 @@ viewpoints:
     category: operations
     title: 公開可否と説明責任
     check: 公開してよい情報だけで構成され、最終判断と説明責任を人間の PO が担う前提になっているか。
-    evidence: status、公開対象、個人情報・非公開情報の有無、承認責任の記述。
+    evidence: status、公開対象、個人情報・非公開情報の有無。
     coverage_types:
       - permission
       - operations
@@ -461,8 +461,8 @@ viewpoints:
     role: BA
     category: business
     title: 関係者・利用場面の明確性
-    check: 関係者、利用場面、確認者、合意対象が読み取れるか。
-    evidence: stakeholder、利用者、店番・運用者、確認者、合意事項。
+    check: 関係者、利用場面、合意対象が読み取れるか。文書を確かめる・承認する役割の割り当ては本文に求めない。
+    evidence: stakeholder、利用者、店番・運用者、合意事項。
     coverage_types:
       - stakeholder
       - use_case
@@ -789,7 +789,7 @@ viewpoints:
     category: operations
     title: リリース・公開準備
     check: 公開、配布、ready 化、リリース判断に必要な前提や未解決事項が明示されているか。
-    evidence: status、ready 条件、公開対象、未解決指摘、承認者、公開前確認。
+    evidence: status、ready 条件、公開対象、未解決指摘、公開前確認。
     coverage_types:
       - permission
       - operations

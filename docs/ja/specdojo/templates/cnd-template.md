@@ -23,7 +23,7 @@ _TODO_: 対象システム、上位コンテキスト図との対応、分割の
 
 _TODO_: 実行・配備の前提を示す。仮定は _ASSUMPTION_: とし、影響・確認先を「メモ / 将来課題」へ記入する。
 
-_TODO_: 承認対象とする範囲・利用場面、作成担当・確認者・最終判断者の Role code を記入する。
+_TODO_: どの利用場面で配置・結合の何を判断するための文書かを記入する。
 
 ## 2. C4コンテナ図（Mermaid）
 
@@ -65,9 +65,9 @@ _TODO_: 境界内に含める責務と、境界外へ委ねる処理を対にし
 
 ### 3.2. Person（人・ロール）
 
-| Person（図中ラベル） | 利用目的・接点  | 判断・確認の責務        |
-| -------------------- | --------------- | ----------------------- |
-| `_PERSON_NAME_`      | `_USE_PURPOSE_` | `_USER_RESPONSIBILITY_` |
+| Person（図中ラベル） | 利用目的・接点  |
+| -------------------- | --------------- |
+| `_PERSON_NAME_`      | `_USE_PURPOSE_` |
 
 ### 3.3. Container（コンテナ）
 
@@ -112,26 +112,16 @@ _TODO_: 境界内に含める責務と、境界外へ委ねる処理を対にし
 
 <!-- 正常時は下流の結合検証へ渡す全経路に対応させる。保存先・外部依存では不在・失敗・結果不明時の状態も区別する。行は対象ごとに増減し、未確定の期待結果は「メモ / 将来課題」へ引き継ぐ。 -->
 
-| 確認区分     | 対象関係・境界                     | 観測する結果                            | 主確認ロール    |
-| ------------ | ---------------------------------- | --------------------------------------- | --------------- |
-| 正常時       | `_RELATIONSHIP_OR_BOUNDARY_`       | `_NORMAL_RESULT_`                       | `_REVIEW_ROLE_` |
-| 不在・失敗時 | `_STORE_OR_EXTERNAL_RELATIONSHIP_` | `_UNAVAILABLE_OR_FAILED_RESULT_`        | `_REVIEW_ROLE_` |
-| 結果不明時   | `_STORE_OR_EXTERNAL_RELATIONSHIP_` | `_UNKNOWN_RESULT_AND_RETAINED_RECORDS_` | `_REVIEW_ROLE_` |
-
-### 4.3. 検証・承認前の確認
-
-<!-- 確認内容・合格条件は rulebook の「検証・承認前の確認」に従う。 -->
-
-- 文書検査・描画確認・内容レビューの記録: `_REVIEW_EVIDENCE_REFERENCE_`
-- 未解決指摘と後続作業の制限: `_OPEN_FINDINGS_AND_RESTRICTIONS_`
-- PO の承認・保留・差し戻しの記録: `_APPROVAL_RECORD_REFERENCE_`
-- OPS による承認対象と公開対象の照合記録: `_PUBLICATION_SCOPE_CHECK_REFERENCE_`
-- 改訂・廃止時の窓口と追従先・担当ロール: `_CHANGE_CONTACT_IMPACT_AND_ROLES_`
+| 確認区分     | 対象関係・境界                     | 観測する結果                            |
+| ------------ | ---------------------------------- | --------------------------------------- |
+| 正常時       | `_RELATIONSHIP_OR_BOUNDARY_`       | `_NORMAL_RESULT_`                       |
+| 不在・失敗時 | `_STORE_OR_EXTERNAL_RELATIONSHIP_` | `_UNAVAILABLE_OR_FAILED_RESULT_`        |
+| 結果不明時   | `_STORE_OR_EXTERNAL_RELATIONSHIP_` | `_UNKNOWN_RESULT_AND_RETAINED_RECORDS_` |
 
 ## 5. メモ / 将来課題
 
-<!-- 仮定・未確定事項がない場合だけ章ごと削除する。最終列には解消条件、PJR 等の転送先レコード、判断者の Role code と判断期限または判断時点を記入する。 -->
+<!-- 仮定・未確定事項がない場合だけ章ごと削除する。最終列には解消条件と、PJR 等の転送先レコードを記入する。判断者と承認の進み具合は転送先の個票で追う。 -->
 
-| 対象・論点     | 影響範囲   | 担当ロール     | 解消条件・引き継ぎ先                     |
-| -------------- | ---------- | -------------- | ---------------------------------------- |
-| `_OPEN_TOPIC_` | `_IMPACT_` | `_OWNER_ROLE_` | `_RESOLUTION_RECORD_DECIDER_AND_TIMING_` |
+| 対象・論点     | 影響範囲   | 解消条件・引き継ぎ先      |
+| -------------- | ---------- | ------------------------- |
+| `_OPEN_TOPIC_` | `_IMPACT_` | `_RESOLUTION_AND_RECORD_` |
