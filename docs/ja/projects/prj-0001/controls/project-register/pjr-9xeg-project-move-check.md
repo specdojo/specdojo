@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-9xeg-project-move-check
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: ARC
   registered_at: "2026-11-03T05:00:06Z"
   due_on: "2026-12-31"
+  completed_at: "2026-11-22T12:03:59Z"
+  conclusion: specdojo project move `<project-id>` --check を足した。8 つの点検を ok・needs-cleanup・check-manually で出し、片付けが要れば終了コード 1 で終わる
   derived_from:
     - PJR-8HCB
   commit_type: feat
