@@ -59,8 +59,29 @@ specdojo:
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+### 5.1. 解決内容
+
+- 方式は「予約を調べるときに終端の項目を読み飛ばす」とした。`ChangeScopeGate` に終端判定の関数を渡せるようにし、`tryAcquire` で、blocked かつ heartbeat のない先行項目が終端なら、その予約ファイルを削除して無視する。
+- 理由: reject・close は runner の外（`register reject` など）でも起こり、遷移側に予約解除を足すと `register` が `exec` に依存して循環する（`register` と `exec` の依存方向の規則に反する）。調べる側なら遷移の経路によらず確実に解け、実行中（live）の予約は消さない。
+- `exec run --register` は個票の `item_status` を読み、`TERMINAL_STATUSES_SET`（done・decided・rejected・deferred）で判定する。個票を解決できないときは終端としない（安全側）。
+- schedule 側の `ChangeScopeGate` は判定関数を渡さないため挙動は変わらない。
+- `exec-operation-guide` の「変更範囲が重なる項目の順番待ち」に、残った予約の確かめ方と解き方を追記した。
+
+### 5.2. 確認結果
+
+- 単体テストを追加した: 終端項目の blocked 予約は後続を止めず削除される。終端でない項目の blocked 予約は後続を止める。
+- 検証は親 runner が `npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md` で行う。
+- 統合の後、オーケストレーターが JSEY を流して確かめてから close する。
+
+### 5.3. CHANGELOG に書く事項
+
+- 区分: Fixed
+- 文案: `exec run --register` が、reject・done など終端にした項目の blocked の変更範囲の予約を無視して削除し、範囲の重なる後の項目を止めないようにした。終端でない項目の予約は従来どおり後続を止める。
+
+### 5.4. 作業内容の状態
+
+- 実装・テスト・運用ガイドの追記は完了。JSEY による確認は close 前にオーケストレーターが行う。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- `[[specdojo:exec-operation-guide]]`

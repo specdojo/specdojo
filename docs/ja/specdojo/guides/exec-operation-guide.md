@@ -208,6 +208,14 @@ register の worktree 実行（同じ run の `--parallel` と別 run の `--joi
 
 統合前に失敗した予約と heartbeat が止まった予約は、未統合の障害として後続をエラーにし、無期限に待ち続けません。表示された先行項目を再開・再実行し、統合してから後続を流します。保持した worktree の衝突解消は既存の再開手順に従います。統合後の撤去・post-review の失敗は予約の解放を妨げません。
 
+register の `exec run --register` は、予約を調べるときに先行項目の個票の状態を読み、終端（`done`・`decided`・`rejected`・`deferred`）の項目の blocked の予約を後続の妨げにせず、そのファイルを削除します。`waiting` など終端でない項目の blocked の予約は、従来どおり後続を止めます。
+
+残った予約の確かめ方は次のとおりです。
+
+1. `execution_path/exec/.locks/change-scopes/` の `<sha256>.json` を開き、`item` と `state: blocked` を確かめる。
+2. その項目の個票の `item_status` を確かめる。終端なら次の `exec run --register` が自動で解くので、手で消さない。
+3. 終端でなければ、表示された先行項目を再開・再実行して統合する。手で消すのは、実行中の項目と範囲が重ならないと確かめ、利用者の承認を得たときだけにする。
+
 ### 1.5. 実行eventの保存粒度
 
 Schedule taskの状態eventは、`execution_path/exec/events/`へ1 event 1 JSONファイルで保存されます。ファイル名はUTC時刻、actor、task ID、event種別、衝突回避用の乱数を含みます。`exec refresh`などの読取処理は全eventを時系列に並べ、foldして現在状態を再構成します。この保存規範の正本は[[sysd-cross-cutting-policy|SpecDojo システム設計横断ルール]]の`scp-STA-001`です。

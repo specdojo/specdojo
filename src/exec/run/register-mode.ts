@@ -18,6 +18,7 @@ import {
   type RegisterFailureMode,
   type RegisterItemSummary,
 } from "../register.js";
+import { TERMINAL_STATUSES_SET } from "../../register/item.js";
 import { findRunRecord, taskRecordPaths } from "../run-records.js";
 import { qualifyTaskId } from "../shared.js";
 import { CrossProcessMutex } from "../slot-lock.js";
@@ -293,7 +294,20 @@ export async function runRegisterMode(opts: RunOpts): Promise<void> {
   const summaries: RegisterItemSummary[] = [];
   // 再開は既存 worktree の reporter 段だけを実行する。それ以外の経路（plan 生成・executor 実行）
   // は通らないため、通常実行と同じ並列・直列の枠だけを共有する。
-  const scopeGate = new ChangeScopeGate(executionPath, parseUnknownScopePolicy(opts.unknownScope));
+  const scopeGate = new ChangeScopeGate(
+    executionPath,
+    parseUnknownScopePolicy(opts.unknownScope),
+    {},
+    (blockerId) => {
+      try {
+        return TERMINAL_STATUSES_SET.has(
+          resolveRegisterRunTarget(projectId, blockerId).item.status,
+        );
+      } catch {
+        return false;
+      }
+    },
+  );
   const runItem = async (
     pjrId: string,
     lifecycleLock?: AsyncLock,

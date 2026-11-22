@@ -299,6 +299,8 @@ export class ChangeScopeGate {
     executionPath: string,
     private readonly policy: UnknownScopePolicy = "parallel",
     private readonly options: WaitOptions = {},
+    // Items already in a terminal register status (rejected, done, ...) will never integrate.
+    private readonly isTerminal: (item: string) => boolean = () => false,
   ) {
     this.directory = join(execLocksDir(executionPath), "change-scopes");
   }
@@ -341,6 +343,15 @@ export class ChangeScopeGate {
           this.options.staleMs,
         );
         if (record.item === item && !live) continue;
+        if (
+          record.item !== item &&
+          record.state === "blocked" &&
+          !live &&
+          this.isTerminal(record.item)
+        ) {
+          rmSync(join(this.directory, name), { force: true });
+          continue;
+        }
         const overlap = record.item === item ? "same item" : scopeOverlap(effective, record.scope);
         if (!overlap) continue;
         const waits = this.waits.get(item) ?? [];
