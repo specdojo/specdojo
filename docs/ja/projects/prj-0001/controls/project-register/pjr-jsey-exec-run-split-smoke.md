@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  conclusion: PJR-TF6F・PJR-WB78 の統合の後、exec run --register --worktree が start から review まで sonnet-executor の名前で記帳されて通った
+  completed_at: "2026-11-22T12:28:48Z"
+  conclusion: VQK2・B6NS・YS9M の統合後の runner で exec run --register が start から review・統合・要約まで止まらずに通った
   autopilot: approved
 ---
 

@@ -5163,3 +5163,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_8ab380a418a84ed191aa4c671be5a217
+- v: 1
+  id: reg_97b73802d7a448db85cac6e0e09e3466
+  ts: "2026-11-22T12:28:48Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが exec smoke の結果と個票の記録を確かめた（2026-11-22）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: PJR-TF6F・PJR-WB78 の統合の後、exec run --register --worktree が start から review まで sonnet-executor の名前で記帳されて通った
+      to: VQK2・B6NS・YS9M の統合後の runner で exec run --register が start から review・統合・要約まで止まらずに通った
+  previous_event_id: reg_ca39ad015d82427b94857b983c735247
