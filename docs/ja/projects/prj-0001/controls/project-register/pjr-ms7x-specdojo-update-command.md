@@ -57,7 +57,7 @@ npm i -D では版が上がるだけで、CHANGELOG の動きが変わる点や�
 | 2   | package manager の判定と更新                                               | DEV                   | done | lockfile で判定し、`^`・`~`・固定の形を保つ。docs-lint・docs-site は入っているときだけ                            |
 | 3   | 配ったファイルの差分の検出と対話での手直し                                 | DEV                   | done | 対話できないときと `--no-interactive`・`--dry-run` は一覧だけ                                                     |
 | 4   | テストと文書、CHANGELOG の文案                                             | DEV                   | done | 単体テスト 35 件、`command-reference`・Quick Start・README、文案は「CHANGELOG に書く事項」                        |
-| 5   | 空のリポジトリで 0.9.1 から上げて確かめる                                  | specdojo-orchestrator | open | 統合の後にオーケストレーターが行う。npm の取得と実 tarball が要り、executor の sandbox では実行できないため未実施 |
+| 5   | 空のリポジトリで 0.9.1 から上げて確かめる                                  | specdojo-orchestrator | done | 2026-11-22 にオーケストレーターが確かめた（対応結果の「統合後の確かめ」）                                         |
 | 6   | `update` を持たない版からの最初の 1 回の呼び方を文書に書く（2 回目の実行） | DEV                   | done | `README.md`・Quick Start・`command-reference` の `update` の節と、CHANGELOG の文案に足した。`src/` は変えていない |
 
 ## 5. 対応結果
@@ -84,6 +84,14 @@ npm i -D では版が上がるだけで、CHANGELOG の動きが変わる点や�
 
 - 区分: 追加
 - 文案: `specdojo update` を追加しました。入っている版と上げる先の版（`--to <spec>` で版・tag・tarball のパスを指定、省くと npm の `latest`）を比べ、その間の `CHANGELOG.md` を版ごとに示してから、lockfile から決めた package manager（npm・pnpm・yarn）で版の指定の形（`^`・`~`・固定）を保って更新します。`@specdojo/docs-lint`・`@specdojo/docs-site` は入っているときだけ同じ回で上げます。更新の後、`config scaffold` で配った skill・agent 定義・rules が新しい版と違うときは、ファイルごとに差分と関係する CHANGELOG の行を示して、適用する・飛ばす・残り全部に適用するを聞きます。stdin が TTY でないときと `--no-interactive` のときは書き換えず一覧と案内だけを出し、`--dry-run` では何も書き換えません。設定ファイルは書き換えず、関係する CHANGELOG の行を示します。`update` を持たない版（0.9.2 まで）から上げる最初の 1 回は、`npx specdojo@latest update`（版を指定する場合は `npx specdojo@<版> update`）で呼びます（PJR-MS7X）。
+
+### 5.2. 統合後の確かめ
+
+- 2026-11-22、オーケストレーターが空のリポジトリに npm の 0.9.1 を入れて `config scaffold --provider claude` を流し、`npm pack` した tarball（0.9.2 の開発版）を `--to` に渡して、新しい版の CLI で `specdojo update` を流した。
+- `--dry-run`: 版の比較（0.9.1 → 0.9.2）、0.9.2 の CHANGELOG の節、手で見直す設定の行（agy の member）、実行する `npm install` のコマンド、配ったファイルの差分 4 件（新しく増えた skill の正本とラッパー、前の版の写しのままの agent 定義と `settings.edit.json`）を示し、何も書き換えなかった。
+- `--no-interactive`: `package.json` と `package-lock.json` だけを更新し、配ったファイルは一覧と `config scaffold --provider claude --force` の案内だけで書き換えなかった。
+- 対話（疑似端末で `y` と `a` を答えた）: 候補ごとに差分を示し、`y` で 1 件、`a` で残り全部を適用した。手で 1 行足した agent 定義は「配ったファイルと違う」として、足した行が消える差分を示してから聞いた。終わりに変わったファイルの一覧と commit を促す文を出した。
+- 0.9.1 の CLI では `npx specdojo update` が `unknown command` で止まった。0.9.1 の入ったリポジトリで `npx --package=<tarball> specdojo update` を流すと、新しい版の `update` が動いた。この呼び方を 2 回目の実行で文書に足した。
 
 ## 6. 関連ドキュメント
 
