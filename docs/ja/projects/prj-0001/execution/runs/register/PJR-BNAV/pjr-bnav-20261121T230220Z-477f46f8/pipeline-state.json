@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-BNAV",
   "run_id": "pjr-bnav-20261121T230220Z-477f46f8",
-  "updated_at": "2026-11-22T02:42:15.934Z",
+  "updated_at": "2026-11-22T02:42:24.240Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-BNAV/pjr-bnav-20261121T230220Z-477f46f8/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "gemma26-reporter",
       "attempts": 1,
       "started_at": "2026-11-22T02:42:15.934Z",
-      "completed_at": null,
+      "completed_at": "2026-11-22T02:42:24.240Z",
       "artifact_ref": null
     }
   },
