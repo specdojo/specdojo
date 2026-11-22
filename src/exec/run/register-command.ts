@@ -56,7 +56,7 @@ export function registerRunCommand(exec: Command): void {
     "--input <key=value...>",
     "Job input values (repeat or provide multiple key=value pairs)",
   );
-  rcmd.option("--scheduled-at <dateTime>", "Scheduled occurrence time for a Job Run");
+  rcmd.option("--scheduled-at <dateTime>", "Scheduled occurrence time for a job run");
   rcmd.option("--job-trigger <source>", "Job trigger source: manual|routine|ci", "manual");
   rcmd.option(
     "--register-commit",

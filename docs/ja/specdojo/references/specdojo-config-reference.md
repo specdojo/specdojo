@@ -106,7 +106,7 @@ exec の result の commit 前検査にも、利用リポジトリに設定が�
 | `project_register_path` | なし             | 個票、event、登録簿の配置先                        | `register *`、`exec plan/run --register`                     |
 | `catalog_path`          | なし             | `dct-*.yaml` と生成ビューの配置先                  | `catalog *`、`deliverable scaffold`、catalog を使う grade 等 |
 | `schedule_path`         | `schedule`       | strategy、track、Schedule の配置先                 | `schedule *`、schedule 対象の `exec *`                       |
-| `execution_path`        | `execution`      | plan、result、実行状態、grade / Job Run の配置先   | `exec *`、`grade *`、`job *`、`dashboard build`              |
+| `execution_path`        | `execution`      | plan、result、実行状態、grade / job run の配置先   | `exec *`、`grade *`、`job *`、`dashboard build`              |
 | `timeline_path`         | `timeline`       | 非推奨。旧 timeline の互換読み込み・生成物の配置先 | 旧 `timeline *` と範囲解決の互換処理                         |
 | `members_path`          | なし             | 人間と対応 Role code を定義する `pm-members.yaml`  | actor 検証、owner 検証、合成名簿の project 側入力            |
 | `roles_path`            | なし             | role 定義ファイルの配置先                          | `schedule strategy generate`、owner を解決する `exec plan`   |

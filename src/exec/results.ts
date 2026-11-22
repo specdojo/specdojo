@@ -280,7 +280,7 @@ export async function scaffoldResult(opts: {
   startedAt: string;
   execution?: "agent" | "human";
   approach?: Approach;
-  // 登録簿項目は "register"、Job Runは "job"。省略時はschedule由来として扱う。
+  // 登録簿項目は "register"、job runは "job"。省略時はschedule由来として扱う。
   origin?: TaskOrigin;
   jobId?: string;
   runId?: string;

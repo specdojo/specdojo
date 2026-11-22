@@ -5,7 +5,7 @@ import { gitOutput } from "../shared/git.js";
 import { redactSensitiveText } from "../shared/text.js";
 import type { RoutineRunHistoryEntry } from "./definition.js";
 
-/** Durable diagnostics only when no Job Run exists to explain a failed routine. */
+/** Durable diagnostics only when no job run exists to explain a failed routine. */
 export function recordRoutineFailure(
   repoRoot: string,
   failuresPath: string,

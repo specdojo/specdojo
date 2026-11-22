@@ -156,7 +156,7 @@ export async function runReporterStage(params: {
   statePath: string;
   providerConcurrencyGate?: ProviderConcurrencyGate;
   productWorktrees?: readonly ProductWorktree[];
-  /** reporter が返す出力の mode。省略時は edit（Job Run の review だけが review を渡す）。 */
+  /** reporter が返す出力の mode。省略時は edit（job run の review だけが review を渡す）。 */
   mode?: TaskMode;
   rateLimitOptions?: PinnedRateLimitRunOptions;
   /** Recovery command recorded when the executor evidence breaks the approach contract. */
@@ -380,7 +380,7 @@ function editOutcomeFailure(params: {
   });
 }
 
-// 1件の plan/result を executor→reporter の2段階で実行する。register 項目と Job Run の
+// 1件の plan/result を executor→reporter の2段階で実行する。register 項目と job run の
 // 双方が使い、in-place（cwd: repoRoot）・worktree（cwd: worktree.path）から共有する。
 // evidence・pipeline-state の記録先は
 // Schedule タスクの pipeline と同じ run ディレクトリにすることで、

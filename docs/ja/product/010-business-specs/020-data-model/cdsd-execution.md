@@ -21,15 +21,15 @@ specdojo:
 
 ### 1.1. 対象と隣接領域
 
-範囲の根拠は成果物カタログ `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cdsd.yaml` の `cdsd-execution`（実行 event・実行状態、plan / result、evidence、worktree、定期処理、Job Run）である。
+範囲の根拠は成果物カタログ `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cdsd.yaml` の `cdsd-execution`（実行 event・実行状態、plan / result、evidence、worktree、定期処理、job run）である。
 
 | 区分             | 管理境界と理由                                                                                                                                                                                                                                  |
 | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 本書で定義       | 実行 event、実行状態、実行 plan、実行 result、実行 evidence、task worktree、定期処理定義、routine 実行状態、Job Definition、Job Run 履歴の10単位。task の着手から完了・差し戻しまでと、定期・反復の実行を追う                                   |
+| 本書で定義       | 実行 event、実行状態、実行 plan、実行 result、実行 evidence、task worktree、定期処理定義、routine 実行状態、Job Definition、job run 履歴の10単位。task の着手から完了・差し戻しまでと、定期・反復の実行を追う                                   |
 | 隣接領域から参照 | Schedule・マイルストーンは [[prj-0001:cdsd-planning\|概念データストア定義（プロジェクトの立上と計画）]]、生成済みの state・Ready・CPM・timeline の一式は [[prj-0001:cdsd-sharing\|概念データストア定義（活用と共有）]] の計画派生情報として扱う |
 | 対象外           | 置き場所の物理的な区分・寿命・削除可否は[[prj-0001:sld-specdojo\|保管場所一覧（SpecDojo）]] に、各記録の全項目・型・許容値は schema と型定義に委ねる                                                                                            |
 
-用語は次の意味で使う。task は Schedule または登録簿の項目から生じる実行の単位、run は task を 1 回実行した単位、routine は定期処理定義の単位、Job Definition は入力を変えて繰り返し実行する単位の定義、Job Run はその 1 回の実行である。実行 event は task の状態遷移を記録した 1 件の出来事を指す。
+用語は次の意味で使う。task は Schedule または登録簿の項目から生じる実行の単位、run は task を 1 回実行した単位、routine は定期処理定義の単位、Job Definition は入力を変えて繰り返し実行する単位の定義、job run はその 1 回の実行である。実行 event は task の状態遷移を記録した 1 件の出来事を指す。
 
 ## 2. 概念データストア一覧
 
@@ -43,8 +43,8 @@ specdojo:
 | task worktree    | タスク実行                 | task 専用の作業ツリーとブランチ、未コミットの成果                                      | イベント（run の開始時・統合時・片付け時）          | task 毎             | 並行する task の成果の隔離、統合前の確認                          |
 | 定期処理定義     | 定期処理                   | routine の識別、有効・無効、間隔または cron と時間帯、取りこぼし・重複時の方針、action | 随時（定義変更時）                                  | routine 毎          | 実行機会の選択条件、委譲する action の定義                        |
 | routine 実行状態 | 定期処理                   | 直前の試行日時、直前の結果、直前に対象とした予定時刻、複数 action ごとの直前の結果     | イベント（実行試行時・結果反映時）                  | routine 毎          | 次回 due 判定、実行結果の運用確認                                 |
-| Job Definition   | 定期処理                   | 入力定義、生成する task、冪等性の規則、checkpoint の規則、事前条件                     | 随時（定義変更時）                                  | Job 毎              | Job Run の生成条件と冪等性の判定                                  |
-| Job Run 履歴     | 定期処理、タスク実行       | Job Run の識別、冪等性キー、attempt、Run の状態、解決済みの入力、checkpoint            | イベント（Run 生成時・attempt 終了時）              | Job Run・attempt 毎 | 重複実行の防止、反復位置の引き継ぎ、実行結果の監査                |
+| Job Definition   | 定期処理                   | 入力定義、生成する task、冪等性の規則、checkpoint の規則、事前条件                     | 随時（定義変更時）                                  | Job 毎              | job run の生成条件と冪等性の判定                                  |
+| job run 履歴     | 定期処理、タスク実行       | job run の識別、冪等性キー、attempt、Run の状態、解決済みの入力、checkpoint            | イベント（Run 生成時・attempt 終了時）              | job run・attempt 毎 | 重複実行の防止、反復位置の引き継ぎ、実行結果の監査                |
 
 実行状態は実行 event から判定のたびに再構成する task 単位の状態である。生成して保存した state・Ready の一式は再生成の時点を持つ別の派生情報であり、着手・完了の判定には使わないため区別する。実行 plan と実行 result は同じ run に属するが、作成者と書き換えの制約が異なるため分ける。
 
@@ -65,7 +65,7 @@ specdojo:
 | 定期処理定義     | 定期処理の選択条件の正本。人間による定義変更で更新する                      | 不正な定義は実行対象にせず、実行状態から推測で補正しない                                                                                                                                                                                                                                            | PM、OPS                          | QE       |
 | routine 実行状態 | 定期処理の実行結果の正本。定期処理が記録する                                | 委譲前に試行を記録し、結果反映で直前結果を記録する。委譲先の記録と照合して確認する                                                                                                                                                                                                                  | OPS                              | QE       |
 | Job Definition   | 反復実行単位の定義の正本。人間による定義変更で更新する                      | Run 生成前の検証に合格した定義だけを使う                                                                                                                                                                                                                                                            | Job Definition の owner、PM      | QE       |
-| Job Run 履歴     | Job Run・attempt と checkpoint の正本。定期処理とタスク実行が記録する       | 完了済みの同一 Run は変更しない。checkpoint は成功または変化なしで終わった attempt の許可された範囲だけ進める                                                                                                                                                                                       | OPS                              | QE       |
+| job run 履歴     | job run・attempt と checkpoint の正本。定期処理とタスク実行が記録する       | 完了済みの同一 Run は変更しない。checkpoint は成功または変化なしで終わった attempt の許可された範囲だけ進める                                                                                                                                                                                       | OPS                              | QE       |
 
 Job Definition の owner は定義に記載した Role code とする。
 
@@ -94,7 +94,7 @@ Job Definition の owner は定義に記載した Role code とする。
 | 実行 evidence                  | 予定辞書 `bdd-exec-evidence`。実装 `src/exec/evidence.ts`                                                                                          | run ごとの記録、検証結果の状態の値、親の検証結果の優先                             |
 | task worktree                  | 予定辞書 `bdd-worktree-branch`。実装 `src/exec/worktree.ts`                                                                                        | task の識別と worktree・ブランチの名前の対応、1 task に 1 つ                       |
 | 定期処理定義、routine 実行状態 | 予定辞書 `bdd-routine-definition`。実装 `src/routine/routine.ts`。状態の意味は [[prj-0001:stsd-routine-run\|ステータス定義（定期処理の実行結果）]] | 定義の必須項目、routine ごとの直前結果と due 判定の対応                            |
-| Job Definition、Job Run 履歴   | 予定辞書 `bdd-job-run`。実装 `src/job/job.ts`                                                                                                      | 冪等性キーと Run の識別の対応、checkpoint を進める条件、事前条件による実行の見送り |
+| Job Definition、job run 履歴   | 予定辞書 `bdd-job-run`。実装 `src/job/job.ts`                                                                                                      | 冪等性キーと Run の識別の対応、checkpoint を進める条件、事前条件による実行の見送り |
 
 ### 4.2. 照合手順と受入条件
 
@@ -109,7 +109,7 @@ Job Definition の owner は定義に記載した Role code とする。
 | task worktree                         | 統合前に worktree の名前・ブランチと task の識別を照合する                                                               | 1 task に 1 つの worktree とブランチが対応し、他の task の変更を含まない                                                                   | 統合を止め、混入した変更を元の task へ戻す                          |
 | 定期処理定義                          | `specdojo routine validate` で定義を検証する                                                                             | 終了コード 0 で、出力のエラー件数が0                                                                                                       | 定義を修正して再検証する                                            |
 | Job Definition                        | `specdojo job validate` で定義を検証する                                                                                 | 終了コード 0 で、出力のエラー件数が0                                                                                                       | 定義を修正して再検証し、合格まで Run を生成しない                   |
-| Job Run 履歴                          | `npm run validate:schema:job-run` で Job Run の記録を schema 検証する。checkpoint の前進を Run の状態と照合する          | 終了コード 0。checkpoint が成功または変化なしの attempt でだけ進んでいる                                                                   | Run と checkpoint を確認し、完了済みの Run を書き換えずに再実行する |
+| job run 履歴                          | `npm run validate:schema:job-run` で job run の記録を schema 検証する。checkpoint の前進を Run の状態と照合する          | 終了コード 0。checkpoint が成功または変化なしの attempt でだけ進んでいる                                                                   | Run と checkpoint を確認し、完了済みの Run を書き換えずに再実行する |
 
 `--records-only` が欠落としない run の配置は次の4通りであり、これ以外で plan・result・evidence のいずれかが欠けた run は欠落として報告される。
 
@@ -128,4 +128,4 @@ Job Definition の owner は定義に記載した Role code とする。
 | 実行 event ファイルの形式違反の復旧手順（留保）  | 承認された復旧手順がなく、形式違反が1件でもあると状態を変えるコマンドがすべて止まる。手順が決まるまでは「訂正・不整合時の扱い」の保留に従う                                    | 訂正・退避の方式と監査の残し方を比較して決める                                  | 未登録の PJR 候補（形式違反の event の復旧手順）                                                           |
 | 保管場所一覧の追加候補との照合（申し送り）       | 実行状態・実行 plan と実行 result・実行 evidence・task worktree は本書へ登録済みだが、[[prj-0001:sld-specdojo\|保管場所一覧（SpecDojo）]] は未登録の追加候補として記載している | 同書の追加候補の記述を本書の名称へ更新し、対応を照合する                        | [[prj-0001:sld-specdojo\|保管場所一覧（SpecDojo）]] の「CDSD 追加候補の正式登録と対応表の更新」            |
 | 生成済みの state・Ready と実行状態の分担（決定） | 判定に使う実行状態は本書、生成済みの一式は活用と共有で扱う。分担を変えると両 CDSD と生成処理の説明に波及する                                                                   | 分担を変える場合は変更要求として扱う                                            | 本書と [[prj-0001:cdsd-sharing\|概念データストア定義（活用と共有）]]                                       |
-| 記録の形式や粒度を変える場合（変更要求）         | 実行 event・evidence・Job Run の形式を変えると、状態の再構成、検証コマンド、既存の記録の移行に波及する                                                                         | schema・型・生成処理への影響、再検証範囲、移行の順序を特定してから実施する      | 登録簿の変更要求                                                                                           |
+| 記録の形式や粒度を変える場合（変更要求）         | 実行 event・evidence・job run の形式を変えると、状態の再構成、検証コマンド、既存の記録の移行に波及する                                                                         | schema・型・生成処理への影響、再検証範囲、移行の順序を特定してから実施する      | 登録簿の変更要求                                                                                           |

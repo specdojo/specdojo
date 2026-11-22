@@ -169,7 +169,7 @@ groups:
             purpose: 定期処理定義のdue判定・実行委譲
           - kind: implementation
             path: src/job/job.ts
-            purpose: Job Run生成・実行・checkpoint更新
+            purpose: job run生成・実行・checkpoint更新
         done_criteria: *utc-target-done-criteria
       - local_id: utc-index-build
         name: 単体テスト（索引・派生生成）
@@ -491,7 +491,7 @@ groups:
             purpose: exec コマンド入口から到達するroutineから委譲された実行
           - kind: implementation
             path: src/job/job.ts
-            purpose: Job Run生成・実行
+            purpose: job run生成・実行
         done_criteria: *stc-target-done-criteria
       - local_id: stc-multi-project
         name: 総合テスト（並行処理）

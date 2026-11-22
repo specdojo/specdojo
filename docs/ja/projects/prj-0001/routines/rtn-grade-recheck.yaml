@@ -11,7 +11,7 @@ action:
   kind: job
   job: job-grade-kata
   inputs:
-    # period は対象期間の表示用であり、Job Run や script の再開キーには使わない。
+    # period は対象期間の表示用であり、job run や script の再開キーには使わない。
     period: "{{scheduled_at | iso_week}}"
     kind: all
     limit: "15"

@@ -148,7 +148,7 @@ describe("command Job sequence", () => {
     const repo = fixture([
       {
         id: "wait",
-        command: "echo 'Job Run complete'; echo '{\"state\":\"running\"}' > state.json",
+        command: "echo 'job run complete'; echo '{\"state\":\"running\"}' > state.json",
         completion: {
           path: "state.json",
           field: "state",

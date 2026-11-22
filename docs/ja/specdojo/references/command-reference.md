@@ -1228,7 +1228,7 @@ watch の `--scope` は `exec`、`catalog`、`register`、`index`、`all` を指
 
 複数の exec・grade・検査を順次実行するには、command Job の `task.command` の代わりに `task.steps` を指定し、同じ `exec run --job` で起動します。各段に `on_failure: stop|continue`（既定 stop）と任意の状態ファイル判定 `completion` を指定できます。`task.lock_wait_seconds`（既定 3600 秒）は project lock の待機上限で、この Job の外側の `--if-busy` より優先します。段の結果は Run JSON の `attempts[].steps` に残り、失敗を含めば終了コード 1、延期だけなら 75、全段成功なら 0 です。retry は同じ実行枠の新 attempt で先頭から実行します。書式は [[specdojo:job-definition-standard|Job 定義標準]]、定義と cron 起動は [[specdojo:job-sequence-guide|順次実行 Job の例]] を参照してください。
 
-`job`は再利用可能な`job-*.yaml`と、その定義からmaterializeされたJob Runを扱います。実行自体は`exec run --job`を使います。
+`job`は再利用可能な`job-*.yaml`と、その定義からmaterializeされたjob runを扱います。実行自体は`exec run --job`を使います。
 
 | コマンド       | 用途                                       | 例                                         |
 | -------------- | ------------------------------------------ | ------------------------------------------ |
@@ -1236,7 +1236,7 @@ watch の `--scope` は `exec`、`catalog`、`register`、`index`、`all` を指
 | `job validate` | `job-*.yaml`を検証する                     | `specdojo job validate --project prj-0001` |
 | `where job`    | Job Definition・Run・stateのパスを表示する | `specdojo where job --project prj-0001`    |
 
-`exec run --job`の`--input <key=value...>`はJob入力を指定し、`--scheduled-at`はroutineやCIが論理実行枠を渡す場合に使います。入力定義の `enum` は string / integer / boolean の値、または list の各要素を制限し、integer の `minimum` / `maximum` は値域を制限します。command template では `{{project_id}}` で解決済みプロジェクトIDを、`{{specdojo}}` で現在のrunnerと同じCLI entryを、`{{job_run_id}}` で確定済みJob Run IDを参照できます。`job_run_id`は`run.idempotency_key`では参照できません。同じidempotency keyの完了済みRunは再実行せず、失敗済みRunは同じRun IDの次attemptとして実行します。Job Runは現在in-place実行に対応し、`--worktree`との併用は未対応です。
+`exec run --job`の`--input <key=value...>`はJob入力を指定し、`--scheduled-at`はroutineやCIが論理実行枠を渡す場合に使います。入力定義の `enum` は string / integer / boolean の値、または list の各要素を制限し、integer の `minimum` / `maximum` は値域を制限します。command template では `{{project_id}}` で解決済みプロジェクトIDを、`{{specdojo}}` で現在のrunnerと同じCLI entryを、`{{job_run_id}}` で確定済みjob run IDを参照できます。`job_run_id`は`run.idempotency_key`では参照できません。同じidempotency keyの完了済みRunは再実行せず、失敗済みRunは同じRun IDの次attemptとして実行します。job runは現在in-place実行に対応し、`--worktree`との併用は未対応です。
 
 委譲先のagentは`task.agent.executor`（および必要なら`task.agent.reporter`）にnicknameで指名します。両方を指名したRunはexecutor→reporterの2段で実行し、resultはreporterが書きます。`--by`は単一agent実行としての差し替え、`--executor-by` / `--reporter-by`は段ごとの差し替えとして、いずれも指名より優先します。`job validate`はnicknameの書式だけを検査するため、実在確認は`--dry-run`で行います。責務境界と記述規約は [Job定義標準](../standards/job-definition-standard.md) を参照します。
 
@@ -1269,7 +1269,7 @@ specdojo exec run --job job-grade-kata --project prj-0001 --input period=2026-W3
 
 `action` は単一オブジェクト、または先頭から順に実行する1件以上の配列を受け付けます。単一オブジェクトの `action.kind`、配列の各要素の `kind` は `job` または `specdojo` を受け付けます。`job` は実行内容と入力検証を参照先の Job Definition に委ね、`exec run --job` 経由で実行ロックに従います。`specdojo` は `args` に書いた specdojo サブコマンド（例: `[dashboard, build]`）へ `--project` を付けて直接起動し、実行ロックを取りません（agent を呼ばない読み取り・派生生成専用。`exec` と `--project` は `args` に書けません）。`register` / `exec-auto` / `exec-resume` / `exec-cycle` の旧 kind は廃止済みです。定義ファイルの配置、`interval`または`trigger.cron`の書式、複数 action の失敗方針、due判定は [routine運用ガイド](../guides/routine-operation-guide.md) を参照します。
 
-各 routine の実行完了時には、端末側の `routine-state.json` の最新状態とは別に、同じ保存先の `routine-runs.jsonl` へ `routine_id`、`scheduled_for`、開始・終了時刻、結果、Job Run ID（`specdojo` action・無変更の Job では空）を1実行1行で追記します。この履歴が dashboard の「routine 実行状況（昨日・本日）」の正本です。保存先は `$XDG_STATE_HOME/specdojo/`（未設定時は `~/.local/state/specdojo/`）以下で、`where routine` から確認できます。旧 `generated/` のファイルは初回利用時にコピーし、新しい状態を優先します。Job Run のない失敗だけを `<execution-path>/routines/failures/` に保存して commit し、成功・skip は Git に残しません。成功した Job が何も変更しなかった場合も Run 記録を commit せず、端末側の `noop` 記録で冪等性と checkpoint を保ちます。
+各 routine の実行完了時には、端末側の `routine-state.json` の最新状態とは別に、同じ保存先の `routine-runs.jsonl` へ `routine_id`、`scheduled_for`、開始・終了時刻、結果、job run ID（`specdojo` action・無変更の Job では空）を1実行1行で追記します。この履歴が dashboard の「routine 実行状況（昨日・本日）」の正本です。保存先は `$XDG_STATE_HOME/specdojo/`（未設定時は `~/.local/state/specdojo/`）以下で、`where routine` から確認できます。旧 `generated/` のファイルは初回利用時にコピーし、新しい状態を優先します。job run のない失敗だけを `<execution-path>/routines/failures/` に保存して commit し、成功・skip は Git に残しません。成功した Job が何も変更しなかった場合も Run 記録を commit せず、端末側の `noop` 記録で冪等性と checkpoint を保ちます。
 
 ```bash
 # due な routine をまとめて実行する（cron / CI から呼ぶ想定）

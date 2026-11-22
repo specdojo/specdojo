@@ -211,7 +211,7 @@ $defs:
         minimum: 0
       partial_exit_code:
         description: >
-          Optional non-zero exit code that records a reviewable partial Job Run. Other non-zero
+          Optional non-zero exit code that records a reviewable partial job run. Other non-zero
           exit codes remain failures.
         type: integer
         minimum: 1
