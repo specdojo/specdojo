@@ -1,0 +1,11 @@
+個票の「対応結果」の表に 1 行を追記しました。変更したのは `pjr-jsey-exec-run-split-smoke.md` だけです。
+
+- **追記した行:** 日時は 2026-11-22 21:27 JST、確認対象は PJR-YS9M、agent は `sonnet-executor` です。
+- **確認対象の根拠:** HEAD の git log を調べ、完了条件の一覧のうち最も新しく統合された項目を PJR-YS9M としました（review 遷移 commit `c0294e669`、21:21 JST）。
+- **本文の書き換え:** 表の下の説明文と作業内容の表のメモに、前回の PJR-WB78 の記述が残っていたため、PJR-YS9M の内容に書き換えました。
+
+親 runner の検証（lint 系、`typecheck`、`test:unit`、`test:integration`、`validate:schema`）は、この段階では実行していません。executor が実行しない決まりのため、結果は親 runner が evidence に追加します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"個票の対応結果の表に PJR-YS9M の行（2026-11-22 21:27 JST、sonnet-executor）を追記し、説明文と作業内容のメモも更新した。","handoff":["親 runner の検証、reporter の result 記入、統合、review 遷移の完了は後続段で確認する。"],"validations":[]}
+</specdojo_executor_evidence>
