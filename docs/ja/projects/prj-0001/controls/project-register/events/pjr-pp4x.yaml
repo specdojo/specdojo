@@ -41,3 +41,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-VCER"]'
+- v: 1
+  id: reg_7df0d474f65f450ba7e9bfbbb640e7fd
+  ts: "2026-11-22T02:18:06Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "影響範囲" updated
+  changes:
+    - field: section
+      from: ""
+      to: 影響範囲
+  previous_event_id: reg_5a73e339e4684dc0a80eef8a0f26bcd4
