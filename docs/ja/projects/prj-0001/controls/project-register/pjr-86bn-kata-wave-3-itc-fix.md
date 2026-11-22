@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: waiting
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-22T05:42:07Z"
+  block_reason: "parent validation failed: lint-md-changed"
   derived_from:
     - PJR-ABY4
 ---
