@@ -75,7 +75,7 @@ docs:dev は起動のたびに docs/ の 17,321 ファイルを共有フォル�
 
 オーケストレーターが 2026-11-22 に測った。
 
-- 変える前は、develop の HEAD（5492f6a80）から作った別の worktree で、変えた後は、この項目の worktree で測った。どちらも同じボリューム（bind mount）の上にある。
+- 変える前は、develop の HEAD（5492f6a80）から作った別の worktree で、変えた後は、この項目の worktree で測った。どちらも worktree の置き場（`../worktrees`）で、devcontainer では named volume の上にある（PJR-TATP）。作業ツリー（bind mount）とは条件が違う。
 - 測った間は、第 3 波の review の段の run（opus）が 3 本流れており、親の検証も動いていた。
 - `docs:generate` は `node --import tsx src/specdojo.ts build` を 1 回流した。`generate` の 2 行は、変えた後に足した `specdojo-docs-site generate`（dist を使う）を 1 回ずつ流した。
 - VitePress の起動は `specdojo-docs-site dev` を 2 回流した。`Local` の行が出るまでを起動、`/specdojo/` が 200 を返すまでを最初のページとした。1 回目は worktree に VitePress の cache がない状態である。
@@ -96,6 +96,7 @@ docs:dev は起動のたびに docs/ の 17,321 ファイルを共有フォル�
 - dist で流しても `docs:generate` はほぼ速くならない。時間の大半は生成そのものにかかる。生成物が新しいときに飛ばす `--skip-if-fresh` が最も効く（13 秒が 0.1 秒）。`package.json` の `docs:dev` をこの経由にする案（5.2 の保護された設定の案）を反映すると、cache のある起動は約 24 秒から約 8.5 秒になる見込みである。
 - cache のない 1 回目の 72 秒は、この項目の変更では変わらない。VitePress の依存の事前の束ね（`optimizeDeps`）と設定の読み込みにかかると見られる。`.vitepress/cache` を named volume に置く案（5.2）は、この 1 回目を減らす候補であり、反映の後に測り直す。
 - `npm run docs:build` は、この worktree で通った（126 秒）。
+- close の後に、作業ツリー（bind mount）で VitePress の起動だけを 2 回測った（2026-11-22）。1 回目は 32.2 秒、cache のある 2 回目は 25.3 秒で、named volume の worktree の 8.4 秒の約 3 倍だった。このため、`.vitepress/` を named volume に置く案を反映した（e3fde6f28）。効くのは container の作り直しの後である。`docs:dev` の生成を飛ばす案も反映した（42d5b1d9a）。
 
 ## 6. 関連ドキュメント
 
