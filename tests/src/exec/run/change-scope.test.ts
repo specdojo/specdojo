@@ -1,4 +1,12 @@
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, utimesSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  utimesSync,
+  writeFileSync,
+} from "node:fs";
 import { createHash } from "node:crypto";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -478,6 +486,26 @@ describe("change scope reservations", () => {
     const resumed = await gate.acquire("PJR-ED0K", known("src/exec/run.ts"));
     await resumed.finish(true);
     remember(await gate.acquire("PJR-1GCD", known("src/exec/run.ts")));
+  });
+
+  it("ignores and removes a blocked reservation of an item that reached a terminal status", async () => {
+    const terminal = new Set(["PJR-SGFC"]);
+    const gate = new ChangeScopeGate(root, "parallel", {}, (item) => terminal.has(item));
+    const rejected = await gate.acquire("PJR-SGFC", known("src/exec/run.ts"));
+    await rejected.finish(false);
+    const next = remember(await gate.acquire("PJR-YS9M", known("src/exec/run.ts")));
+    expect(next.waits).toEqual([]);
+    const key = createHash("sha256").update("PJR-SGFC").digest("hex");
+    expect(existsSync(join(root, "exec/.locks/change-scopes", `${key}.json`))).toBe(false);
+  });
+
+  it("keeps blocking on a blocked reservation of an item that is not terminal", async () => {
+    const gate = new ChangeScopeGate(root, "parallel", {}, () => false);
+    const waiting = await gate.acquire("PJR-WAIT", known("src/exec/run.ts"));
+    await waiting.finish(false);
+    await expect(gate.acquire("PJR-NEXT", known("src/exec/run.ts"))).rejects.toThrow(
+      /unintegrated PJR-WAIT/,
+    );
   });
 
   it("clears a failure barrier after a standalone schedule resume integrates", async () => {
