@@ -70,3 +70,16 @@
       from: in-progress
       to: review
   previous_event_id: reg_99ea23e8e5684a4d8c17237b8cfaf432
+- v: 1
+  id: reg_4f3eea6ea4cc4e0497e365139945118f
+  ts: "2026-11-22T12:07:41Z"
+  action: update
+  actor: indie
+  from_status: review
+  to_status: review
+  reason: VS Code での見た目を indie が確かめた
+  changes:
+    - field: section
+      from: ""
+      to: 作業内容
+  previous_event_id: reg_1cc031481f1e4a9da2a27fb1674404f4
