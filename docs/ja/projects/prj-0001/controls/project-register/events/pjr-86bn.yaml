@@ -41,3 +41,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-ABY4"]'
+- v: 1
+  id: reg_b96338ad2e8b43749387ddf74fad7c23
+  ts: "2026-11-22T06:14:01Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_0b08e4a4447f440c9b9b05e1f187aec8
