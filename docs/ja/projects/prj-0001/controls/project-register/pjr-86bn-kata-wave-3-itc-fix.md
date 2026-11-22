@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-22T05:42:07Z"
-  block_reason: "parent validation failed: lint-md-changed"
   derived_from:
     - PJR-ABY4
 ---
@@ -76,6 +75,16 @@ sample（`itc-sample`）の指摘:
 
 - 統合後に orchestrator が `npx specdojo grade run --target kata --kata itc` で評価し直す。blocker・major がなく機械的な指摘だけが残る場合は合格とする。
 - recipe の要否の判断は PJR-WYTX に引き継ぐ。
+
+### 5.3. 2 回目の実行（2026-11-22）
+
+- sample F001（major）: `it-sales-checkout-transaction-boundary-010` の観測点を `out-of-stock` に揃えた。
+- sample F002: `-persistence-integrity-030` の期待値と観測点に販売記録の内容（商品A・数量5・150円）を加えた。
+- sample F003: 「状態遷移の整合性」の扱いを保留の維持だけに改め、補完後の確定への遷移は扱わないと明記した。
+- sample F004: `itc-index-sample` は変えず、更新拒否で未保存を成功と応答しないことを `it-sales-checkout-transaction-boundary-020` で確かめると明記した。DB 停止は不採用のまま。
+- sample F005: 機械的な指摘（PJR-7C9X）。`_ASSUMPTION_` は `sample-authoring-standard` に従って残す。
+- rulebook F001: 重複する「本節は対象別に固有の判断だけを定める。」を削った。
+- rulebook F002: 禁止事項の表の「SSOT」を「正本」に統一した。
 
 ## 6. 関連ドキュメント
 
