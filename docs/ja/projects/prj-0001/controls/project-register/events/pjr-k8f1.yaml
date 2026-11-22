@@ -67,3 +67,16 @@
       from: ""
       to: 対応方針
   previous_event_id: reg_4f41ac21fe4e455fbb6a3a6723015613
+- v: 1
+  id: reg_8db86828a20c4ad48d9782249073cb93
+  ts: "2026-11-22T13:21:40Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_3d8009bb8ccc4ea8b0573097105056cc
