@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-ms7x-specdojo-update-command
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-20T13:57:09Z"
+  completed_at: "2026-11-22T08:20:31Z"
+  conclusion: specdojo update を足し、空のリポジトリで 0.9.1 から上げて、版の比較・CHANGELOG・更新・配ったファイルの対話での手直しと、対話できないときに書き換えないことを確かめた
 ---
 
 # PJR-MS7X specdojo update で、版の更新と移行の案内をまとめて行えるようにする

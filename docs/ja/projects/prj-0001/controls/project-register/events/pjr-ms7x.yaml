@@ -142,3 +142,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_96c038ca9b93435486f596362d939cdb
+- v: 1
+  id: reg_b005495d17874b71ae2ba8f29ad3a335
+  ts: "2026-11-22T08:20:31Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分・対応結果・2 回の統合と空のリポジトリでの確かめを照らした
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: specdojo update を足し、空のリポジトリで 0.9.1 から上げて、版の比較・CHANGELOG・更新・配ったファイルの対話での手直しと、対話できないときに書き換えないことを確かめた
+  previous_event_id: reg_82cd635bfe2945a5868a3d83ebd3a757
