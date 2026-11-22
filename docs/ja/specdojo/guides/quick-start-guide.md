@@ -119,7 +119,7 @@ provider に応じて `npm run orch:sonnet`、`npm run orch:sol`、`npm run orch
 - `package.json` に `orch:<provider>` スクリプトが追加されます。
 - オーケストレーターが対話可能になります。
 
-SpecDojo の版を上げるときは、`npm install` ではなく `npx specdojo update` を使います。版の比較、その間の `CHANGELOG.md` の表示、lockfile に合わせた package manager での更新、`config scaffold` で配ったファイルの差分の確かめと対話での手直しを 1 回で行います。先に `npx specdojo update --dry-run` で、するはずのことを確かめられます。詳細は [[specdojo:command-reference|CLIコマンドリファレンス]] の `update` を参照してください。
+SpecDojo の版を上げるときは、`npm install` ではなく `npx specdojo update` を使います。版の比較、その間の `CHANGELOG.md` の表示、lockfile に合わせた package manager での更新、`config scaffold` で配ったファイルの差分の確かめと対話での手直しを 1 回で行います。先に `npx specdojo update --dry-run` で、するはずのことを確かめられます。`update` を持たない版（0.9.2 まで）では `npx specdojo update` が `unknown command 'update'` で止まるため、そこから上げる最初の 1 回は `npx specdojo@latest update`（版を指定する場合は `npx specdojo@<版> update`）で呼びます。詳細は [[specdojo:command-reference|CLIコマンドリファレンス]] の `update` を参照してください。
 
 #### 折りたたんだコマンドと設定差分
 

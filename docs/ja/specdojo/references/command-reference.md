@@ -1458,6 +1458,13 @@ npx specdojo update --to 0.10.0
 npx specdojo update --to ../specdojo-0.10.0.tgz --no-interactive
 ```
 
+`update` を持たない版（0.9.2 まで）が入っているリポジトリでは、`npx specdojo update` が `unknown command 'update'` で止まります。この版から上げる最初の 1 回は、`update` を持つ版を npx に取りに行かせて呼びます。2 回目からは `npx specdojo update` で呼べます。
+
+```bash
+npx specdojo@latest update
+npx specdojo@<版> update
+```
+
 | オプション         | 用途                                                                                |
 | ------------------ | ----------------------------------------------------------------------------------- |
 | `--to <spec>`      | 上げる先の版・範囲・tag、または tarball のパス。省くと npm の `latest`              |

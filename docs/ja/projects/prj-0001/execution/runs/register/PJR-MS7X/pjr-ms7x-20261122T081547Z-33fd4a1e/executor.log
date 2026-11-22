@@ -1,0 +1,21 @@
+2 回目の実行で求められていた文書の追記は終わりました。`src/` と `CHANGELOG.md` は変えていません。
+
+**書き足した内容:** `update` を持たない版（0.9.2 まで）では `npx specdojo update` が `unknown command 'update'` で止まります。そのため、そこから上げる最初の 1 回は `npx specdojo@latest update`（版を指定する場合は `npx specdojo@<版> update`）で呼ぶ、と次の 3 か所に書きました。
+
+- `README.md`: 版の上げ方の段落の末尾に 1 文足しました。
+- `docs/ja/specdojo/guides/quick-start-guide.md`: 版を上げる手順の段落に 1 文足しました。
+- `docs/ja/specdojo/references/command-reference.md`: `update` の節に、止まる理由の説明とコマンドの例を足しました。2 回目からは `npx specdojo update` で呼べることも書きました。
+
+**個票:** `docs/ja/projects/prj-0001/controls/project-register/pjr-ms7x-specdojo-update-command.md` を直しました。
+
+- 作業内容の表に No.6（今回の追記、`done`）を足しました。
+- 対応結果に今回の作業を書きました。
+- 「CHANGELOG に書く事項」の文案に、最初の 1 回の呼び方を 1 文足しました。
+
+**検証:** 4 ファイルは prettier で整え、markdownlint は 0 件、`npm run validate:history-links` も通りました。
+
+**残り:** 作業内容の No.5（空のリポジトリで 0.9.1 から上げる確かめ）は、前回から `open` のままです。統合の後にオーケストレーターが行います。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"2 回目の実行の追記を終えた。`update` を持たない版（0.9.2 まで）から上げる最初の 1 回は `npx specdojo@latest update`（版を指定する場合は `npx specdojo@<版> update`）で呼ぶことを、README.md・quick-start-guide・command-reference の update の節に書いた。個票の作業内容（No.6 を追加）・対応結果・CHANGELOG の文案も直した。src/ と CHANGELOG.md は変えていない。","handoff":["作業内容 No.5（空のリポジトリで npm の 0.9.1 から npm pack した tarball へ上げる確かめ）は open のまま。統合の後にオーケストレーターが行う。","保護された設定（package.json・lefthook.yml など）の変更は要らなかった。","CHANGELOG.md は変えていない。区分「追加」の文案は個票の「CHANGELOG に書く事項」に書いた（今回、update を持たない版から上げるときの呼び方を 1 文足した）。"],"validations":[{"command":"npx prettier --write README.md docs/ja/specdojo/guides/quick-start-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-ms7x-specdojo-update-command.md","status":"passed","summary":"4 ファイルを整えた（個票だけ書き換わり、残りは変化なし）"},{"command":"npx markdownlint-cli2 README.md docs/ja/specdojo/guides/quick-start-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-ms7x-specdojo-update-command.md","status":"passed","summary":"0 issues in 4 files"},{"command":"npm run validate:history-links","status":"passed","summary":"個票を含む履歴ファイルはすべて valid"}]}
+</specdojo_executor_evidence>
