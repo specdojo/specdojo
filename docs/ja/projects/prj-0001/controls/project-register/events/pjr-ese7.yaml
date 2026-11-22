@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_8616c918025c43e693de2b9d5dc87bd4
+  ts: "2026-11-22T03:14:17Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: exec の記帳の --by に specdojo-orchestrator を使えない
+    - field: description
+      from: ""
+      to: exec release などの --by は名簿の人と agent だけを受け付け、オーケストレーターが行った release を正しい主体で記帳できない。register と同じく予約名 specdojo-orchestrator を受け付ける。
+    - field: input
+      from: ""
+      to: '["2026-11-22、第 3 波の 090 を流し直すための release を、specdojo-orchestrator でも indie でも記帳できなかった（indie での記帳は Claude Code の安全確認で止められた）。","利用者の承認（2026-11-22、indie）で起票した。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-22"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-PP4X"]'
