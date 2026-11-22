@@ -167,3 +167,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_fca1e8f76cc44c398f39bdd04c4d5452
+- v: 1
+  id: reg_87cf10c9825549a6bc03c99b9242ec3c
+  ts: "2026-11-22T00:02:40Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register で実施（統合 df5bcacb7）。完了条件をテストと差分で確かめ、CHANGELOG 不変を確認し、個票の見出しと語を直した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: 外部プロジェクトへの register add --commit で -m の各値を別の --message として渡し、commit-msg の hook が stdout に出した理由もエラーに含めるようにした。
+  previous_event_id: reg_5a1f567ca1bd4421b53bdb723d9f38eb

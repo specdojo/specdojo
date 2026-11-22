@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-qtz7-external-register-commit-message
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: easy
   owner: DEV
   registered_at: "2026-11-21T09:06:40Z"
+  completed_at: "2026-11-22T00:02:40Z"
+  conclusion: 外部プロジェクトへの register add --commit で -m の各値を別の --message として渡し、commit-msg の hook が stdout に出した理由もエラーに含めるようにした。
 ---
 
 # PJR-QTZ7 外部プロジェクトへの register add --commit で、-m の段落がカンマで件名につながる
