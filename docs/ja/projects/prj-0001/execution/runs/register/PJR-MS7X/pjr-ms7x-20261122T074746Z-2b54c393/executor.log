@@ -1,0 +1,41 @@
+`specdojo update` コマンドを足しました。`--to <spec>`、`--dry-run`、`--no-interactive` を持ち、`--yes` は作っていません。新しい単体テスト 35 件は通っています。ただし、実際の tarball を使う確かめはまだ一度も流せていません。
+
+**未確認の点**
+- 手で作った tarball で `update --dry-run` を流すスモークテストは、サンドボックスの外の実行に承認が要り、流せませんでした。そのため `tar`・`npm view`・`npm pack` を実際に呼ぶ部分（`src/update/system.ts`）は動かしていません。
+- 個票の作業内容 No.5（空のリポジトリに 0.9.1 を入れ、`npm pack` の tarball を `--to` に渡して上げる確かめ）は `open` のまま残しました。統合の後にオーケストレーターが行う作業です。
+
+**動き**
+1. `node_modules/specdojo` の版と上げる先の版を比べます。同じ版か上げる先が古いときは更新を飛ばし、配ったファイルの確かめだけを行います。
+2. 上げる先の版のパッケージを一時ディレクトリへ取り出し、その `CHANGELOG.md` から間の節を古い順に示します。設定ファイルに触れる行は「手で見直す点」として別に示し、設定ファイル自体は書き換えません。
+3. lockfile から npm・pnpm・yarn を判定して更新します。版の指定の形（`^`・`~`・固定）は保ちます。`@specdojo/docs-lint`・`@specdojo/docs-site` は入っているときだけ同じ回で上げます。
+4. 使っている provider の配ったファイルを新しい版の原本と比べ、ファイルごとに差分と関係する CHANGELOG の行を示して、適用する・飛ばす・残り全部に適用するを聞きます。
+   - 前の版の原本とも違うファイルは「手で直した可能性がある」と示してから聞きます。
+   - stdin が TTY でないとき、`--no-interactive` と `--dry-run` のときは何も書き換えず、一覧と `config scaffold --provider <name> --force` の案内だけを出します。
+5. 最後に変わったファイルを示して commit を促します。`git commit` と `git push` はしません。
+
+**CHANGELOG を読む時点**
+更新の前に取り出した新しい版のものを読むことにしました。理由は 3 つで、個票の対応結果にも書きました。
+- CHANGELOG は累積なので、新しい版のものに間の節がすべて入っています。
+- 更新の前に示せるため、`--dry-run` でも本番と同じ内容を出せます。
+- 取り出したパッケージを比べる原本にも使え、`node_modules` の作りに依りません。
+
+代わりに tarball を 1 回余分に取りに行きます。
+
+**自分で決めた点**
+- 前の版にもあったのに利用リポジトリに無いファイルは、利用者が消したものとみなして候補に出しません。
+- tarball から入れると、`package.json` には版の範囲ではなく tarball のパスが記録されます。これは package manager の動きで、実行時にその旨を表示します。
+
+**文書**
+`command-reference` に `update` の節を足し、後ろの「関連ガイド」を 19 章にずらしました。版の上げ方を専用に書いた文書は見つからなかったため、導入の手順を書いている Quick Start ガイドと `README.md` に追記しました。
+
+**個票**
+作業内容 No.1〜4 を `done` にしました。対応結果に、`### 5.1. CHANGELOG に書く事項`（区分「追加」と文案）と、設定ファイルの書き換え（`_UNDECIDED_`）の案を書きました。`package.json`・`lefthook.yml` など保護された設定の変更は要りませんでした。
+
+**検証**
+- `npm run validate:history-links`：通りました。
+- 変更したファイルの `npx prettier --check`：通りました。
+- 型チェックと新しいテストは手元でも通しました。正式な結果は親の runner の検証です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"Added `specdojo update` (`--to`, `--dry-run`, `--no-interactive`) under `src/update/` and `src/commands/update.ts`, with 35 unit tests in `tests/src/update/`. Added the `update` section to command-reference and upgrade notes to the Quick Start guide and README. Updated the ticket's work table, results (including the CHANGELOG reading decision and the CHANGELOG draft), and related documents. Row 5 (orchestrator verification with a real 0.9.1 install and an npm pack tarball) stays open. The real tar/npm calls in `src/update/system.ts` have not been run because the sandbox did not allow the smoke test.","handoff":["Work table row 5 is still open: after integration, the orchestrator should install npm specdojo 0.9.1 in an empty repository, run `config scaffold --provider claude`, then run `specdojo update --to <npm pack tarball>`. Check the version update, the CHANGELOG output, detection and interactive application of the stale skill copies, and that `--no-interactive` rewrites nothing.","The real tar / npm view / npm pack calls in `src/update/system.ts` have not been run (the sandbox did not allow the smoke test). The row 5 check covers this path.","CHANGELOG.md was not changed. The draft entry (category: 追加) is in the ticket under `### 5.1. CHANGELOG に書く事項`.","CHANGELOG reading time: read the new version's CHANGELOG from the package extracted to a temp dir before the update. The same content can be shown in `--dry-run`, and the extracted package also serves as the comparison source. Cost: one extra tarball fetch.","_UNDECIDED_: whether to propose rewrites of config files. The first version only shows the related CHANGELOG lines. A possible approach (ship machine-readable migration declarations per version and ask with a diff) is recorded in the ticket.","No protected configuration change (`package.json`, `lefthook.yml`) was needed."],"validations":[{"command":"npm run validate:history-links","status":"passed","summary":"exit 0; no invalid history files (the ticket was changed)"},{"command":"npx prettier --check src/update src/commands/update.ts src/specdojo.ts tests/src/update README.md docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/guides/quick-start-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-ms7x-specdojo-update-command.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"specdojo update --to <npm pack tarball> (real 0.9.1 install in an empty repository)","status":"requires_human","summary":"Work table row 5: needs a real npm install and an npm pack tarball outside the agent sandbox; the orchestrator runs it after integration"}]}
+</specdojo_executor_evidence>

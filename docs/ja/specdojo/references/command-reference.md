@@ -15,7 +15,7 @@ CLI Command Reference
 
 **対象範囲**
 
-- `specdojo` CLI の主要コマンド（init / config / kata / catalog / deliverable / schedule / register / exec / agent / orchestrator / grade / index / watch / build / where / routine / git）
+- `specdojo` CLI の主要コマンド（init / config / kata / catalog / deliverable / schedule / register / exec / agent / orchestrator / grade / index / watch / build / where / routine / git / update）
 
 **ここで引けるもの**
 
@@ -1442,7 +1442,35 @@ specdojo git -- status --short
 
 `specdojo git --project <id> --warn-unlocked` は pre-commit 用の警告チェックです。選択 project の primary / join run が実行中で、Git に渡された token が有効な lifecycle ロックと一致しない場合に警告します。commit は止めません。runner と `specdojo git` は保持中の token を Git 子プロセスへ渡すため警告対象になりません。新規の lefthook scaffold はこのチェックを含みます。既存リポジトリでは pre-commit への追加が必要です。生の Git コマンドや別 project のロックとは直列化されません。
 
-## 18. 関連ガイド
+## 18. update
+
+`specdojo update` は、利用リポジトリの SpecDojo の版を上げ、上げた後の手直しを案内します。次の順に進めます。
+
+1. `node_modules` に入っている `specdojo` の版と、上げる先の版を比べて示す。同じ版か、上げる先が古いときは版の更新を飛ばし、手順 4 だけを行う。
+2. 上げる先の版のパッケージを一時ディレクトリへ取り出し、その `CHANGELOG.md` から、今の版より新しく上げる先の版までの節を古い順に示す。設定ファイル（`specdojo.config.json`・`exec-defaults.yaml`・`agent-members.yaml` など）に触れる行は、手で見直す点として別に示す。設定ファイルは書き換えない。
+3. lockfile（`pnpm-lock.yaml`・`yarn.lock`・`package-lock.json`）から package manager を決めて更新する。lockfile が無いときは npm を使う。`package.json` の版の指定の形（`^`・`~`・固定）は保つ。`@specdojo/docs-lint`・`@specdojo/docs-site` は、`package.json` にあるときだけ同じ回で npm の `latest` へ上げる。
+4. `config scaffold` で配ったファイル（skill・agent 定義・rules など）を、使っている provider の分だけ、上げる先の版の原本と比べる。違うファイルと、新しい版で増えたファイルが手直しの候補になる。
+
+```bash
+npx specdojo update --dry-run
+npx specdojo update
+npx specdojo update --to 0.10.0
+npx specdojo update --to ../specdojo-0.10.0.tgz --no-interactive
+```
+
+| オプション         | 用途                                                                                |
+| ------------------ | ----------------------------------------------------------------------------------- |
+| `--to <spec>`      | 上げる先の版・範囲・tag、または tarball のパス。省くと npm の `latest`              |
+| `--dry-run`        | 何も書き換えず、実行するはずの更新のコマンドと手直しの候補を示す                    |
+| `--no-interactive` | 手直しを聞かず、候補と `config scaffold --provider <name> --force` の案内だけを出す |
+
+- 手直しは候補ごとに、差分と関係する `CHANGELOG.md` の行を示し、`y`（適用する）・`n`（飛ばす）・`a`（残り全部に適用する）を聞きます。何も入力しないときは飛ばします。前の版の原本とも違うファイルは、手で直した可能性があることを示してから聞きます。
+- stdin が TTY でないときと `--no-interactive` のときは、何も書き換えず一覧だけを出します。全部を聞かずに適用するオプションはありません。
+- 前の版にもあったのに利用リポジトリに無いファイルは、利用者が消したものとして候補にしません。
+- tarball から入れると、`package.json` には版の範囲ではなく tarball のパスが記録されます。
+- `git commit` と `git push` はしません。終わりに変わったファイルの一覧を示すので、確かめてから commit してください。
+
+## 19. 関連ガイド
 
 | 詳細                     | 参照先                                                                      |
 | ------------------------ | --------------------------------------------------------------------------- |
