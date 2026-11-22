@@ -65,7 +65,7 @@ groups:
           - bdd-worktree-branch
           - bdd-routine-definition
           - bdd-job-run
-        overview: プロジェクト実行で扱うデータストア（実行イベント・状態、plan/result、worktree、定期処理、Job Run等）を一覧で定義する
+        overview: プロジェクト実行で扱うデータストア（実行イベント・状態、plan/result、worktree、定期処理、job run等）を一覧で定義する
         path: cdsd-execution.md
         rulebook: specdojo:cdsd-rulebook
         evidence_refs:
@@ -77,7 +77,7 @@ groups:
             purpose: 定期処理ストアのスキーマ
           - kind: implementation
             path: src/job/job.ts
-            purpose: Job Runストアのスキーマ
+            purpose: job runストアのスキーマ
         done_criteria:
           - text: データストアの業務的役割・内容・粒度が記述されていること
             roles: [BA]

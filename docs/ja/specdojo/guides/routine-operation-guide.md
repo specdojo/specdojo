@@ -11,7 +11,7 @@ Routine Operation Guide
 
 `routine` は `rtn-*.yaml` の定義に基づき、Schedule の依存グラフとは独立にタスクを定期実行する、時刻条件のトリガー層です。routine 自体は実行機構を持たず、何を実行するかは Job Definition に委ねます。Job が schedule 実行または register 実行を呼び出します。実行経路の比較は [exec運用ガイド](exec-operation-guide.md) を参照します。
 
-routineは、既存の未完了Schedule/Register項目を探索するほか、再利用可能なJob Definitionから期間・revisionごとのJob Runを生成できます。週報や変更文書の翻訳は[Job実行設計](../../product/040-system-design/sysd-job-execution.md)を参照してください。
+routineは、既存の未完了Schedule/Register項目を探索するほか、再利用可能なJob Definitionから期間・revisionごとのjob runを生成できます。週報や変更文書の翻訳は[Job実行設計](../../product/040-system-design/sysd-job-execution.md)を参照してください。
 
 継続品質評価は `job-grade-kata` や `job-grade-deliverable` の Job Definition から `action.kind: job` の routine で定期起動します。Job の `task.command` は選択条件ごとの `grade list` の和集合を Run ごとに固定し、各文書の executor 実行と marker の機械変換・反映を `grade run` に任せます（PJR-R7BQ）。`grade run` は単段で評価します。Job runnerは`task.command`からその入口を直接起動してevidenceを記録し、成功後の結果判断だけを`task.analysis`のreporter agentへ委譲します。責務の切り分け基準は [Job定義標準](../standards/job-definition-standard.md) を参照します。
 
@@ -53,7 +53,7 @@ action:
     limit: "3"
 ```
 
-### Job Run 出力の commit と review
+### job run 出力の commit と review
 
 統合前レビューが必要かどうかは Job の出力の性質で決まるため、routine ではなく Job Definition の `task.review` で宣言します（[[specdojo:job-definition-standard]] の `統合前 review の宣言と review agent の規約`）。review executor と reporter も `task.review.agent` に nickname で指名します。routine は時刻条件のトリガー層であり、Job に書いた宣言と指名は、同じ Job を `exec run --job` で手動実行した場合にも同じように効きます。
 
@@ -71,11 +71,11 @@ review agent は、`exec run` の `--review-by` / `--reporter-by`、Job の `tas
 
 action の `commit: true` は互換として残しています。`task.review` を宣言していない Job でも `commit: true` なら同じ流れで実行しますが、新しい routine では推奨しません。Job が `task.review` を宣言している場合は Job を優先し、`commit` を省略しても、`false` を指定しても review を経て統合します。
 
-統合前 review を宣言した Job は本体の checkout では実行せず、`exec/<project-id>-<run-id>` の worktree で実行します。runner は Job Run の plan・result・evidence・Run JSON と Job が更新した成果物だけを `chore(routine): …` の commit にし、commit 本文へ Job Run ID と `succeeded` / `partial` / `failed` を記録します。本体 checkout にある利用者の未 commit 変更は commit 対象に入りません。
+統合前 review を宣言した Job は本体の checkout では実行せず、`exec/<project-id>-<run-id>` の worktree で実行します。runner は job run の plan・result・evidence・Run JSON と Job が更新した成果物だけを `chore(routine): …` の commit にし、commit 本文へ job run ID と `succeeded` / `partial` / `failed` を記録します。本体 checkout にある利用者の未 commit 変更は commit 対象に入りません。
 
 `precondition` の有無によらず、成功した Job が成果物を変更しなかった場合は、その Run の記録ディレクトリ全体（plan・result・evidence・ログなど）と Run JSON を Git の差分から除き、commit と統合前 review を省きます。runner は実行前後の変更ファイルの内容・モードと HEAD 間の差分を比較し、その Run 自身の記録、`generated/`、exec の lock を判定から除外します。子の exec event や grade result は成果物の変更として扱います。無変更の Run は端末側へ `noop` として保存し、同じ入力・実行枠の重複実行防止と checkpoint を維持します。以前の attempt の記録があれば復元し、既存の失敗履歴を消しません。失敗・部分完了は無変更扱いにしません。Git 未初期化の in-place 実行は従来どおり記録し、初回 commit 前のリポジトリではファイルの差分だけで判定します。
 
-出力 commit の後、runner は `mode: review` の plan/result を作ります。review executor は score・verdict・finding・失敗文書と Job の完了条件を照合しますが、Job Run 出力は修正しません。Run が `succeeded` で verdict が `complete` または `complete-with-findings` の場合に加え、Run が `partial` で verdict が `complete-with-findings` の場合も、runner は現在の統合先へ `--no-ff` で merge し、worktree と exec branch を撤去します。`partial`を統合した routine は`last_result: partial`と記録し、`routine list`でも部分成功を表示します。Run が失敗した場合、review が未完了の場合、またはそれ以外の verdict の場合は統合せず、worktree を保持して routine の `last_result: failure`、`last_reason`、review result、Job Run JSON に理由を残します。
+出力 commit の後、runner は `mode: review` の plan/result を作ります。review executor は score・verdict・finding・失敗文書と Job の完了条件を照合しますが、job run 出力は修正しません。Run が `succeeded` で verdict が `complete` または `complete-with-findings` の場合に加え、Run が `partial` で verdict が `complete-with-findings` の場合も、runner は現在の統合先へ `--no-ff` で merge し、worktree と exec branch を撤去します。`partial`を統合した routine は`last_result: partial`と記録し、`routine list`でも部分成功を表示します。Run が失敗した場合、review が未完了の場合、またはそれ以外の verdict の場合は統合せず、worktree を保持して routine の `last_result: failure`、`last_reason`、review result、job run JSON に理由を残します。
 
 #### waiting Run の確認・統合・破棄
 
@@ -95,7 +95,7 @@ git worktree remove <worktree>
 git branch -d exec/<project-id>-<run-id>
 ```
 
-破棄すると決めた場合は、review result と Job Run evidence を先に確認します。未統合の記録も不要であることを確認したうえで worktree を強制撤去し、branch を削除します。この操作は未統合 commit を失うため、人が明示的に判断した場合だけ行います。
+破棄すると決めた場合は、review result と job run evidence を先に確認します。未統合の記録も不要であることを確認したうえで worktree を強制撤去し、branch を削除します。この操作は未統合 commit を失うため、人が明示的に判断した場合だけ行います。
 
 ```bash
 git worktree remove --force <worktree>
@@ -160,7 +160,7 @@ action:
   args: [dashboard, build]
 ```
 
-Job Definition を持たないため、Job Run と evidence は作られません。成功時の実行履歴は端末側の `routine-runs.jsonl` にだけ残ります。失敗時の保存先は次節の規則に従います。agent を呼ぶ処理や成果物を変更する処理には使わず、`kind: job` を使います。
+Job Definition を持たないため、job run と evidence は作られません。成功時の実行履歴は端末側の `routine-runs.jsonl` にだけ残ります。失敗時の保存先は次節の規則に従います。agent を呼ぶ処理や成果物を変更する処理には使わず、`kind: job` を使います。
 
 ### 1.2. grade の単段評価
 
@@ -183,7 +183,7 @@ npx tsx src/specdojo.ts grade list --target kata --project prj-0001 --rubric-out
 npx tsx src/specdojo.ts grade list --target deliverable --project prj-0001 --rubric-outdated | wc -l
 ```
 
-両 routine では、Job の `task.precondition` が `grade list` を使って script の selection-v5 と同じ変更済み・未評価・再試行可能な段未完了・旧 rubric の和集合、辞書順、対象種別、件数上限を先に評価します。連続失敗上限に達した文書は `grade state --exhausted` で同じ和集合に加えてから件数上限を適用し、処理対象からは外して report-only 対象にします。処理対象も report-only 対象も0件なら Job Run、plan、result、evidence を作らず、command と analysis reporter も起動しません。routine はこの結果を `skipped` として受け取り、`routine-state.json` の `last_run` / `last_result` と、cron の場合は `last_scheduled_for` を更新します。
+両 routine では、Job の `task.precondition` が `grade list` を使って script の selection-v5 と同じ変更済み・未評価・再試行可能な段未完了・旧 rubric の和集合、辞書順、対象種別、件数上限を先に評価します。連続失敗上限に達した文書は `grade state --exhausted` で同じ和集合に加えてから件数上限を適用し、処理対象からは外して report-only 対象にします。処理対象も report-only 対象も0件なら job run、plan、result、evidence を作らず、command と analysis reporter も起動しません。routine はこの結果を `skipped` として受け取り、`routine-state.json` の `last_run` / `last_result` と、cron の場合は `last_scheduled_for` を更新します。
 
 | 段     | agent                               | 対象と役割                                                    |
 | ------ | ----------------------------------- | ------------------------------------------------------------- |
@@ -192,7 +192,7 @@ npx tsx src/specdojo.ts grade list --target deliverable --project prj-0001 --rub
 
 Job runnerは、この入口をmaterialize済みの引数で1回起動し、コマンド、終了コード、stdout/stderrをevidenceへ記録します。コマンドが成功した場合だけanalysis reporterが、未完了の段、失敗の切り分け、verdict と score の偏りを判断します。executor、reporter（既定は機械変換の `machine`）、対象種別、件数上限はscriptの引数またはJobの`inputs`から解決します。
 
-scriptの`--run-id`にはJob Run IDを渡すため、rate limitや中断後に同じJob Runをretryすると完了済みの処理を飛ばして再開します。通常の agent / apply 失敗は `<execution_path>/grade/pipeline/` に完了段、失敗段、本文ハッシュ、連続失敗回数を保存します。次の日次実行枠でも本文ハッシュが同じなら失敗段から再開し、本文が変われば古い到達状況を使わず1段目から評価します。保存済み state の `stage_total` が現在の構成と異なる場合は、古い grade の日時にかかわらず完了扱いへ移行せず、state を削除して1段目から再評価します。rate limit は失敗回数に数えません。既定で同じ段が3回連続失敗すると再試行から外し、結果の `retry_exhausted` 行で人手対応を報告します。`period`は対象期間の表示だけに使い、実行や再開の同一性には使いません。
+scriptの`--run-id`にはjob run IDを渡すため、rate limitや中断後に同じjob runをretryすると完了済みの処理を飛ばして再開します。通常の agent / apply 失敗は `<execution_path>/grade/pipeline/` に完了段、失敗段、本文ハッシュ、連続失敗回数を保存します。次の日次実行枠でも本文ハッシュが同じなら失敗段から再開し、本文が変われば古い到達状況を使わず1段目から評価します。保存済み state の `stage_total` が現在の構成と異なる場合は、古い grade の日時にかかわらず完了扱いへ移行せず、state を削除して1段目から再評価します。rate limit は失敗回数に数えません。既定で同じ段が3回連続失敗すると再試行から外し、結果の `retry_exhausted` 行で人手対応を報告します。`period`は対象期間の表示だけに使い、実行や再開の同一性には使いません。
 
 Job Definition は script を `if` の条件として起動し、終了コードを保存してそのまま Job runner へ返します。script は全件完了を0、完了文書と失敗文書の混在を2、全件失敗を1、rate limitを75で返します。grade Jobは`partial_exit_code: 2`を宣言するため、2だけが`partial`になりanalysis reporterとreviewへ進みます。Jobは0と2のどちらでも`results.tsv`をcommand evidenceへ出力します。reviewは、`passed`が1件以上あり、`failed`の文書と失敗段がpipeline stateへ記録され次回の`--incomplete`で再試行できる場合だけ`complete-with-findings`を選べます。全件失敗、rate limit、中断、未開始文書があるRunは統合せず`waiting`にします。
 
@@ -204,9 +204,9 @@ Job Definition は script を `if` の条件として起動し、終了コード
 
 保存先は `$XDG_STATE_HOME/specdojo/<repository-key>/routines/<path-key>/`、環境変数が未設定または相対パスなら `~/.local/state/specdojo/` 以下です。repository key は Git 共通ディレクトリの実パス（Git がなければリポジトリの実パス）、path key はリポジトリからの routine 定義の相対パスの SHA-256 です。linked worktree 間で共有し、別リポジトリ・別 routine ツリーを分離します。`where routine` で実際のパスを確認できます。初回の `routine list`・通常実行・dashboard 集計時に旧 `generated/` の状態と履歴をコピーし、新しいファイルがあれば上書きしません。旧ファイルは復旧用に残しますが以後は参照しません。移行前に旧版の routine プロセスを停止してください。別端末へ状態を引き継ぐ場合はこの保存先を別途コピーします。
 
-routine 自身が Git に残すのは、結果が `failure` かつ関連 Job Run ID が空の実行だけです。`<execution-path>/routines/failures/<routine-id>/<UUID>.json` に履歴と同じ項目と `run_id` を書き、理由を伏せ字処理したうえで、そのファイルだけを commit します。Job Run があればその記録を診断に使います。成功・skip・無変更の履歴は端末側にだけ保存し、dashboard も同じ状態・履歴を参照します。lock は文書ツリー外にあり、`.gitignore` の追加設定は不要です。
+routine 自身が Git に残すのは、結果が `failure` かつ関連 job run ID が空の実行だけです。`<execution-path>/routines/failures/<routine-id>/<UUID>.json` に履歴と同じ項目と `run_id` を書き、理由を伏せ字処理したうえで、そのファイルだけを commit します。job run があればその記録を診断に使います。成功・skip・無変更の履歴は端末側にだけ保存し、dashboard も同じ状態・履歴を参照します。lock は文書ツリー外にあり、`.gitignore` の追加設定は不要です。
 
-単一オブジェクトの `action.kind`、配列の各要素の `kind` とも `job` だけを受け付けます。routine は `job-*.yaml` から一意な Job Run を生成して `exec run --job` へ委譲し、コマンド、入力の型・値域、冪等キーは Job Definition が担います。旧 `register` / `exec-auto` / `exec-resume` / `exec-cycle` kind は 2026-09-09 に廃止し、同等の command Job へ移行しました。
+単一オブジェクトの `action.kind`、配列の各要素の `kind` とも `job` だけを受け付けます。routine は `job-*.yaml` から一意な job run を生成して `exec run --job` へ委譲し、コマンド、入力の型・値域、冪等キーは Job Definition が担います。旧 `register` / `exec-auto` / `exec-resume` / `exec-cycle` kind は 2026-09-09 に廃止し、同等の command Job へ移行しました。
 
 | Job                  | 動作                                                                                  |
 | -------------------- | ------------------------------------------------------------------------------------- |

@@ -609,7 +609,7 @@ describe("Job command execution", () => {
   });
 });
 
-describe("Job Run lifecycle", () => {
+describe("job run lifecycle", () => {
   it("skips an empty selection before creating Run or plan files", async () => {
     const repo = setupRepo();
     try {
@@ -919,8 +919,8 @@ describe("Job Run lifecycle", () => {
   });
 });
 
-describe("Job Run file validation", () => {
-  it("records the review verdict and waiting reason on the Job Run", async () => {
+describe("job run file validation", () => {
+  it("records the review verdict and waiting reason on the job run", async () => {
     const repo = setupRepo();
     try {
       const run = await materializeJobRun({
@@ -935,12 +935,12 @@ describe("Job Run file validation", () => {
         result_ref: "execution/exec/results/review-result.md",
         branch: "exec/test-JBR-translate-review",
         verdict: "incomplete",
-        reason: "Job Run state is failed",
+        reason: "job run state is failed",
       });
 
       expect(loadJobRunRecord(run.runPath).review).toMatchObject({
         verdict: "incomplete",
-        reason: "Job Run state is failed",
+        reason: "job run state is failed",
       });
     } finally {
       process.chdir(originalCwd);
@@ -982,7 +982,7 @@ describe("Job Run file validation", () => {
       writeFileSync(runPath, JSON.stringify({ version: 1, run_id: "JBR-translate-invalid" }));
 
       expect(() => completeJobRun({ projectId: "test", runPath, status: "succeeded" })).toThrow(
-        /Invalid Job Run file: .*JBR-translate-invalid\.json/,
+        /Invalid job run file: .*JBR-translate-invalid\.json/,
       );
     } finally {
       process.chdir(originalCwd);

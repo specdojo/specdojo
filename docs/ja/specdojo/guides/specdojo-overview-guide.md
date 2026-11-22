@@ -185,7 +185,7 @@ flowchart LR
 | ------------------------------------ | ----------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
 | register（親: 起点・承認・完了）     | 起票し、完了条件を書く。track ごとに epic を起票し子 todo でカタログ・strategy を計画する | `exec run --register` で executor が実行する                                     | reporter が result を書いて review へ進め、人が確かめる  | runner が commit・統合する。close するか、reopen・change-request で直す（epic は人が判断） |
 | schedule（子: 途中の進捗・依存実行） | 成果物カタログから Schedule へ展開する                                                    | `exec run --track` / `--auto` で実行する                                         | grade（評定）と review                                   | 統合して `ready` へ確定する。直して次の反復へ                                              |
-| routine + Job                        | Job に「何を・誰が確かめるか（`task.review`）」を、routine に「いつ」を書く               | `routine run --due` が Job Run を作り、worktree で実行して runner が commit する | Job で指名した review agent が review し、verdict を出す | verdict に従って統合し、成功したときだけ checkpoint を進める                               |
+| routine + Job                        | Job に「何を・誰が確かめるか（`task.review`）」を、routine に「いつ」を書く               | `routine run --due` が job run を作り、worktree で実行して runner が commit する | Job で指名した review agent が review し、verdict を出す | verdict に従って統合し、成功したときだけ checkpoint を進める                               |
 
 A 列はいずれも、runner が確定して commit し、次の周回の起点にする点でそろっています。C 列は、誰が確かめるかの違いとして読めます。どの行でも、タスクの流（`approach`）が型をどこまで基準にするかを決めます。
 

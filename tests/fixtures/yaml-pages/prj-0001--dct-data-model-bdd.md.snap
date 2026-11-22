@@ -313,7 +313,7 @@ specdojo:
 | 成果物 ID | 名称 | 種別 | 根拠 | 概要 |
 | --- | --- | --- | --- | --- |
 | bdd-routine-definition | 業務データ辞書（定期処理定義・実行状態） | work | - | 定期処理定義・実行状態のエンティティ・属性を定義する |
-| bdd-job-run | 業務データ辞書（Job Run） | work | - | Job Run（Job Definition、実行履歴、checkpoint）のエンティティ・属性を定義する |
+| bdd-job-run | 業務データ辞書（job run） | work | - | job run（Job Definition、実行履歴、checkpoint）のエンティティ・属性を定義する |
 
 **`bdd-routine-definition`**
 
@@ -778,15 +778,15 @@ groups:
                 roles: [DEV]
                 viewpoint: vp-dev-implementation-readiness
           - local_id: bdd-job-run
-            name: 業務データ辞書（Job Run）
+            name: 業務データ辞書（job run）
             kind: work
-            overview: Job Run（Job Definition、実行履歴、checkpoint）のエンティティ・属性を定義する
+            overview: job run（Job Definition、実行履歴、checkpoint）のエンティティ・属性を定義する
             path: bdd-job-run.yaml
             rulebook: specdojo:bdd-rulebook
             evidence_refs:
               - kind: implementation
                 path: src/job/job.ts
-                purpose: Job Definition・Job Runのスキーマ、idempotency key・attempt・checkpointの生成規則
+                purpose: Job Definition・job runのスキーマ、idempotency key・attempt・checkpointの生成規則
             done_criteria:
               - text: エンティティ・属性の業務的定義が正確に記述されていること
                 roles: [BA]

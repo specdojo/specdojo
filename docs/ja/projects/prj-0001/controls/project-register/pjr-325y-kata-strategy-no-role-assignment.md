@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-21T08:23:42Z"
+  block_reason: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /unit/ tests/src/docs/yaml-tables.test.ts > typed YAML display pages > renders tables and the entire folded…"
   derived_from:
     - PJR-76N9
 ---
@@ -40,6 +41,7 @@ specdojo:
 - 迷った点は executor が決め、決めた内容と理由を個票の対応結果と報告の `handoff` に書く。
 - 保護された設定（`.specdojo/`・`.agents/`・`.claude/`・`.codex/`・`.opencode/`・`package.json` など）は変えない。変更が要る場合は、変更案を個票の対応結果と報告の `handoff` に書く。
 - `npm run lint:md`・`npm run lint:fm`・`npm run validate:schema` を通し、親の検証を通す。
+- 2 回目の実行（2026-11-22）: 1 回目は完了条件どおりの変更を作ったが、統合の commit の hook で `tests/src/docs/yaml-tables.test.ts` が落ちた。`pm-review-viewpoints.yaml` を直したため、YAML の表示ページの fixture（`specdojo--pm-review-viewpoints.md.snap`）が古い出力のままだった。統合の段からは executor へ戻せないため、最初から流し直す。1 回目と同じ変更に加え、直した YAML の表示ページの fixture を新しい出力に合わせて直し、`npm run test:unit` で確かめる。
 
 ## 4. 作業内容
 

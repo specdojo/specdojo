@@ -161,7 +161,7 @@ docs/
 │   │   │   │   │   ├── results/                  # 実行結果
 │   │   │   │   │   ├── events/                   # イベントログ
 │   │   │   │   │   └── .locks/                   # 実行ロック
-│   │   │   │   ├── jobs/                         # Job Run履歴と派生state
+│   │   │   │   ├── jobs/                         # job run履歴と派生state
 │   │   │   │   │   ├── runs/                    # 入力・task・attempt・結果
 │   │   │   │   │   └── generated/               # checkpoint派生ビュー
 │   │   │   │   ├── grade/                        # 継続品質評価（最新状態）

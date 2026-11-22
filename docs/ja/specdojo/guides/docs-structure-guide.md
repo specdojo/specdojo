@@ -319,7 +319,7 @@ idと対応させない場合（日本語名称を使用する場合等）は、
 
 派生ビューは `controls/generated/`、`schedule/generated/` など横断ディレクトリの直下に置きます。旧 sch-assessment は廃止済みのため、専用のサブディレクトリは作りません。routine の状態・履歴・lock は [[specdojo:routine-operation-guide|routine 運用ガイド]] に従って Git の外の端末側へ保存し、exec の lock は Git が無視する `execution/exec/.locks/` に置きます。
 
-再利用可能なJob Definitionは`jobs/`、各回のJob Runは`execution/jobs/`へ置きます。詳細は[Job実行設計](../../product/040-system-design/sysd-job-execution.md)を参照してください。
+再利用可能なJob Definitionは`jobs/`、各回のjob runは`execution/jobs/`へ置きます。詳細は[Job実行設計](../../product/040-system-design/sysd-job-execution.md)を参照してください。
 
 ### 8.2. ディレクトリ構成の概観
 

@@ -1,0 +1,134 @@
+# yaml-language-server: $schema=../../../specdojo/schemas/v1/ifx-cmd.schema.yaml
+id: ifx-cmd-github-cli
+type: api
+status: draft
+title: GitHub CLI（gh）による共有状態の確認・更新のコマンド連携仕様
+rulebook: specdojo:ifx-cmd-rulebook
+version: 1
+based_on:
+  - specdojo:exec-config-guide
+  - ifx-cmd-git-cli
+
+# 現状の確認結果（根拠: src と .devcontainer の grep、exec設定ガイド）。
+# - SpecDojo の src は gh を起動しない。git push・fetch・pull・remote も呼ばない（ifx-cmd-git-cli の根拠を参照）。
+# - gh は devcontainer へ導入され（src/devcontainer/scaffold.ts の apt パッケージ gh、.devcontainer/devcontainer.json）、
+#   認証状態は named volume の /home/node/.config/gh に永続化される。
+# - 使うのは人と対話型オーケストレーターで、gh の読み取り（PR・workflow run・release）だけを許し、
+#   書き込みと gh api は拒む。executor・review executor・reporter は git push と全 gh を deny する。
+# よって本契約は、SpecDojo が呼び出す実装の記述ではなく、現行の利用境界と未決の方針を記す。
+# PR 作成・同期などの書き込み操作を SpecDojo が実行する契約は未決で、推測で埋めない。
+# 検証: npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/ifx-cmd.schema.yaml --data docs/ja/product/020-external-interface-specs/ifx-cmd-github-cli.yaml
+#
+# PATH-07 の論点（ifd-specdojo の GitHub 接続の経路・認証・失敗後の保持範囲）の整理:
+# 1. 経路: 直接接続か gh 経由か。現行の SpecDojo は gh も git のリモート操作も呼ばない。
+#    共有は利用者または対話型オーケストレーターが gh（読み取り）と git（人の手の push）で行う。
+#    SpecDojo が push・fetch を自動実行するか、その担当を git と gh のどちらにするかは _UNDECIDED_。
+# 2. 認証: gh のログイン状態（cli_profile）を使う。SpecDojo は認証値を注入しない。保管は
+#    devcontainer の named volume。agent には共有された認証を使わせない（git push・gh の deny）。
+#    トークン種別・権限範囲（スコープ）の標準は _UNDECIDED_。
+# 3. 失敗後の保持範囲: gh と git push の失敗は、ローカルの履歴・作業ツリー・worktree を変更しない。
+#    ローカル履歴（ifx-cmd-git-cli）とリモートの状態を分け、受付結果が不明なときは共有完了扱いにせず、
+#    リモート状態を gh の読み取りで照合してから再実行する。重複する共有操作を先行させない。
+
+command:
+  executable: gh（PATH から解決する）
+  purpose: >-
+    GitHub 上の共有状態（PR・workflow run・release）を gh の読み取りで確認する。
+    成功後はリモートの状態が stdout に返り、ローカルのリポジトリは変わらない。
+    書き込み（PR 作成・更新など）の実行は現行では SpecDojo の機能ではなく、_UNDECIDED_ とする。
+  reference: >-
+    gh の公式リファレンスを正本とし、本書へ引数表を転載しない。実行を許す範囲は
+    [[specdojo:exec-config-guide|exec設定ガイド]] の「agent 権限とプロンプトインジェクション対策」を参照する。
+    導入は src/devcontainer/scaffold.ts と .devcontainer/devcontainer.json、認証状態の永続化は
+    named volume（/home/node/.config/gh）とする。
+  shell: false
+
+streams:
+  stdin:
+    mode: none
+    format: text
+    description: 現行の利用では stdin を使わない。
+  stdout:
+    format: text
+    encoding: UTF-8
+    description: >-
+      gh の出力（一覧・詳細の表示、--json 指定時は JSON）。SpecDojo の実装は解析しないため、
+      形式は呼び出した人またはオーケストレーターが指定する。
+  stderr:
+    format: text
+    encoding: UTF-8
+    description: 診断・認証要求・接続失敗の文面。SpecDojo は解析しない。
+
+files:
+  inputs:
+    - path: /home/node/.config/gh（devcontainer の named volume）
+      format: gh の設定・認証状態
+      description: gh が読む。書き手は gh のログイン操作で、SpecDojo は読み書きしない。
+  outputs: []
+
+side_effects:
+  - 読み取りの利用では、ローカルのファイルとリモートの状態を変更しない
+  - GitHub API の利用枠を消費する（上限は GitHub 側の契約・設定に従う。具体値は _UNDECIDED_）
+  - 書き込み操作（PR 作成・更新、workflow 実行など）はオーケストレーター・agent に許さず、人が実行する。実行すると GitHub 上の共有状態を変更する
+
+# SpecDojo が gh を起動する実装はないため、終了コードは gh の仕様に従う。
+# 公式の終了コード表との照合は未実施で、細分の識別は _UNDECIDED_。
+exit_codes:
+  - code: 0
+    meaning: gh が正常終了した。共有操作の受付・反映の成否は stdout とリモート状態で別に確認する
+    category: success
+    retryable: false
+  - code: 1
+    meaning: >-
+      gh の失敗全般（接続失敗、認証拒否、権限不足、対象なし）。原因の細分は gh のメッセージを人が確認する。
+      SpecDojo が分類して自動分岐する実装はない
+    category: permanent_failure
+    retryable: false
+  - code: 4
+    meaning: >-
+      gh が認証を要する操作で未認証と報告する値（gh の仕様。実測・公式表との照合は未了のため _UNDECIDED_）。
+      再ログインが必要
+    category: authentication_error
+    retryable: false
+
+authentication:
+  method: gh のログイン（cli_profile）。トークン種別・権限範囲の標準は _UNDECIDED_
+  injection:
+    mechanism: cli_profile
+    names:
+      - /home/node/.config/gh（gh のログインプロファイル）
+  secret_source: >-
+    gh が認証状態を管理し、開発コンテナの named volume に永続化する。SpecDojo は認証値を起動引数・stdin・
+    環境変数へ注入しない。agent には共有された GitHub 認証を使わせない（executor・review executor・
+    reporter は全 gh と git push を deny する）。対話型オーケストレーターは読み取りだけを許し、書き込みは拒む。
+  log_policy: >-
+    コマンド引数・stdout・stderr に秘密値を含めない。GitHub のトークン（ghp_ などの形式）は
+    evidence と実行ログの保存前に伏せ字化される。対象と保存境界は
+    [[specdojo:exec-config-guide|exec設定ガイド]] の「evidence とログの引き渡し方針」を参照する。
+
+execution:
+  working_directory: 対象リポジトリのルート（gh がリポジトリを推定する場合）。指定の標準は _UNDECIDED_
+  timeout_seconds: _UNDECIDED_
+  network_required: true
+  max_parallel: _UNDECIDED_
+  idempotency:
+    guaranteed: false
+    condition: >-
+      読み取りは同じ入力で同じ状態を返すが、リモートの状態は変わり得る。書き込みの冪等性は、
+      対象操作を定めるまで保証できない。結果を確認する前に重複する共有操作を先行させない。
+
+error_handling:
+  retry:
+    on_categories: []
+    # 再試行の自動化は実装がなく、上限・待機方式は未決のまま置く。
+    max_attempts: _UNDECIDED_
+    backoff: 未定（自動再試行しない。_UNDECIDED_）
+  timeout_action: >-
+    現行は gh を起動する実装がなく、上限・終了処置は未決定（_UNDECIDED_）。人が実行する場合は
+    ターミナルで中断でき、ローカルの履歴と作業ツリーは変わらない。リモートの状態は gh の読み取りで確認する。
+  malformed_output_action: >-
+    SpecDojo は gh の出力を解析しないため、共通の処置はない（_UNDECIDED_）。--json の出力を解析する実装を
+    加える場合は、解析失敗で共有完了扱いにせず、リモート状態を照合する方針を定める。
+  authentication_failure_action: >-
+    自動再試行しない。利用者が gh を再ログインし、権限範囲を確認する。agent には認証を使わせず、
+    認証拒否や権限不足は共有完了扱いにしない。リモートの状態とローカルの記録を照合し、復旧と再開の判断を作業担当が行う。

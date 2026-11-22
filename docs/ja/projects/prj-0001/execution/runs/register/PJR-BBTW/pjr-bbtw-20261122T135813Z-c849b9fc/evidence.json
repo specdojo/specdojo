@@ -1,0 +1,194 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-BBTW",
+  "run_id": "pjr-bbtw-20261122T135813Z-c849b9fc",
+  "stage": {
+    "role": "executor",
+    "actor": "sonnet-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-22T13:58:53.210Z",
+    "completed_at": "2026-11-22T14:00:20.895Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-bbtw.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-bbtw-docs-dev-skip-exec-records.md",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/.vitepress/config.mts",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/.vitepress/exec-record-paths.ts",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/bin/specdojo-docs-site.js",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-bbtw-docs-dev-skip-exec-records.md",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/.vitepress/config.mts",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/.vitepress/exec-record-paths.ts",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/bin/specdojo-docs-site.js",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 5,
+    "summary": ".../pjr-bbtw-docs-dev-skip-exec-records.md         | 37 +++++++++++++++++++---\n packages/docs-site/.vitepress/config.mts           |  8 +++--\n packages/docs-site/.vitepress/exec-record-paths.ts | 23 ++++++++++++++\n packages/docs-site/bin/specdojo-docs-site.js       | 12 +++++--\n 4 files changed, 71 insertions(+), 9 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx vitest run tests/packages/docs-site/exec-record-paths.test.ts",
+      "status": "passed",
+      "summary": "16 件通過（追加した 4 件を含む）"
+    },
+    {
+      "source": "executor",
+      "command": "npx eslint packages/docs-site tests/packages/docs-site/exec-record-paths.test.ts",
+      "status": "passed",
+      "summary": "エラー出力なし"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write tests/packages/docs-site/exec-record-paths.test.ts packages/docs-site/bin/specdojo-docs-site.js packages/docs-site/.vitepress/config.mts packages/docs-site/.vitepress/exec-record-paths.ts packages/docs-site/README.md",
+      "status": "passed",
+      "summary": "対象 5 ファイルは unchanged"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-bbtw-docs-dev-skip-exec-records.md",
+      "status": "passed",
+      "summary": "個票を整形した"
+    },
+    {
+      "source": "executor",
+      "command": "docs:dev の起動時間の測定",
+      "status": "requires_human",
+      "summary": "executor の sandbox では測れない。統合後にオーケストレーターが変更前後を測り、個票の対応結果に書いてから close する。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BBTW/src/catalog/catalog.ts\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BBTW/src/dashboard/dashboard.ts\n  1149:1  warning  File has too many lines (1067). Maximum allow\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BBTW/src/schedule/strategy-generate-document.ts\n  87:8  warning  Function 'buildStrategyDocument' has too many lines (289). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BBTW/src/shared/specdojo-config.ts\n  1243:1  warning  File has too many lines (1091). Maximum allowed is 1000  max-lines\n\n✖ 43 problems (0 errors, 43 warnings)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: prj-0001:pjr-bbtw-docs-dev-skip-exec-records\n  type: project\n  status: draft\n  rulebook: specdojo:pjr-rulebook\n  part_of:\n    - prj-0001:pjr-index\n  item_type: todo\n  item_status: in-progress\n  priority: medium\n  difficulty: medium\n  owner: DEV\n  registered_at: \"2026-11-22T13:29:54Z\"\n  due_on: \"2026-11-30\"\n  derived_from:\n    - PJR-BNAV\n---\n\n# PJR-BBTW docs:dev では実行の記録のページを読まず、起動を速くする\n\n## 1. \n… output omitted …\nt 以外の `runs/` 配下の Markdown は 0 件だった。このため本変更で新たに減るのは、`exec/`・`grade/results/` などの少数のページで、起動時間の短縮は小さい可能性がある。測定結果次第で、`controls/project-register/pjr-*.md`（約 1,181 ページ）を dev で外す案を別項目で検討する。\n\n### 5.4. CHANGELOG に書く事項\n\n- 区分: Changed\n- 文案: `docs:dev` は実行記録のページ（`execution/` 配下の `runs/`・`exec/` など）を読まず起動を速くする。含めるときは `--with-exec-records` を付ける。`docs:build` は変わらない。\n\n### 5.5. 残課題\n\n- 統合後に、変更前後の `docs:dev` 起動時間を測り、ここへ追記してから close する。\n\n## 6. 関連ドキュメント\n\n- `PJR-BNAV`（起動時間の測り）と `PJR-T4X7`（plan・result の除外）。"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 5905 file(s), 107 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 83 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5905 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)",
+      "reason": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BBTW\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/devcontainer/scaffold.integration.test.ts\"}\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-co\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BBTW/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BBTW/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BBTW\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/grade/grade.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/register/commands.test.ts\"}\n ✓ tests/src/grade/grade.test.ts (69 tests) 251ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/src/grade/grade.test.ts\"}\n[parent-validation:t\n… output omitted …\n it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "docs:dev のときだけ実行記録を走査から外す判定と、--with-exec-records での含め方を実装した。plan と result は既に build でも dev でも外れていたため、新たに減るのは exec/ や grade/results/ などの少数のページで、短縮幅は小さい可能性がある。起動時間の測定は統合後にオーケストレーターが行う。",
+  "completion_status": "complete",
+  "handoff": [
+    "起票時の入力にある execution/ の 5,179 ページの大半（runs 配下の plan.md と result.md）は PJR-T4X7 の時点で srcExclude により dev・build とも走査から外れている。この作業ツリーで plan と result 以外の runs 配下の Markdown は 0 件だった。dev で新たに減るのは exec/、grade/results/ などの少数のページで、効果が小さい可能性がある。",
+    "判断: 含める指定の名前は --with-exec-records とした。ルートの npm run docs:dev -- --with-exec-records は末尾の npm 呼び出しに付き npm のオプション扱いになるため、npm_config_with_exec_records も受け付けるようにした。これで package.json の変更は不要。",
+    "保護された設定（package.json など）の変更は不要。CHANGELOG.md は変更しておらず、区分 Changed と文案は個票の対応結果「CHANGELOG に書く事項」に記載した。",
+    "統合後に、オーケストレーターが変更前後の docs:dev 起動時間を測って個票の対応結果へ追記してから close する。効果が小さければ、controls/project-register/pjr-*.md（約 1,181 ページ）を dev で外す案を別項目で検討する。",
+    "個票は prettier で整形した後に読み直していない。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-BBTW/pjr-bbtw-20261122T135813Z-c849b9fc/executor.log",
+      "bytes": 5598,
+      "truncated": false
+    }
+  ]
+}

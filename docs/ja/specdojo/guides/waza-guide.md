@@ -238,4 +238,4 @@ register は立ち上げ時の未整理事項と進行中の計画外事項を�
 | --------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | `routine`             | `rtn-*.yaml` の定義に基づき、時刻条件でタスクを定期実行する。外部スケジューラから `routine run --due` を冪等に呼び出す            |
 | `exec run --register` | 登録簿（`generated/pjr-index.md`）の項目を agent に実行させる。状態は register の遷移（in-progress / review / waiting）で追跡する |
-| `exec run --job`      | `job-*.yaml`から入力とcheckpointを解決し、一意なJob Runを生成してagentに実行させる                                                |
+| `exec run --job`      | `job-*.yaml`から入力とcheckpointを解決し、一意なjob runを生成してagentに実行させる                                                |

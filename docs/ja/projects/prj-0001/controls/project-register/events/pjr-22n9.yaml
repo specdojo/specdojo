@@ -93,3 +93,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_cad70ccc6dcf4ecab289d2c927ec8330
+- v: 1
+  id: reg_aa968d44ace94c00bbc1978d75566f71
+  ts: "2026-11-22T13:56:34Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが差分と単体テストを確かめ、実際の CLI の dry-run で prj-charter の recipe・template・省略時の選び方を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: grade run の --kata で --kind が効くようにした。recipe・template・all を選べ、--kind を省くと今までどおり rulebook と sample を評価する
+  previous_event_id: reg_da925ea633b549dba595a5f09da00677

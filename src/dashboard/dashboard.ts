@@ -830,7 +830,7 @@ function renderRoutineSection(paths: DashboardPaths): string[] {
   } else {
     lines.push("### 直近 24 時間に失敗した routine");
     lines.push("");
-    lines.push("| routine | 実行時刻 | 結果 | Job Run |");
+    lines.push("| routine | 実行時刻 | 結果 | job run |");
     lines.push("| --- | --- | --- | --- |");
     for (const f of recentFailures) {
       lines.push(

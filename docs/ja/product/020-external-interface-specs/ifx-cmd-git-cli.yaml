@@ -1,0 +1,143 @@
+# yaml-language-server: $schema=../../../specdojo/schemas/v1/ifx-cmd.schema.yaml
+id: ifx-cmd-git-cli
+type: api
+status: draft
+title: Git CLI によるローカルの作業分離・変更履歴管理のコマンド連携仕様
+rulebook: specdojo:ifx-cmd-rulebook
+version: 1
+based_on:
+  - specdojo:exec-config-guide
+
+# 根拠は実装の src/shared/git.ts（起動・再試行・失敗整形）と src/shared/git-environment.ts（環境の隔離）。
+# 呼び出し元は src/exec/worktree.ts・worktree-ops-commit.ts・repo-integration.ts・repo-integration-sync.ts・
+# run/register-core.ts・run/job.ts など。実装は git push・fetch・pull・clone・remote を呼ばない（grep で確認）。
+# このためリモート通信を要する操作は本契約の対象外とし、ifx-cmd-github-cli の章で扱う。
+# 検証: npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/ifx-cmd.schema.yaml --data docs/ja/product/020-external-interface-specs/ifx-cmd-git-cli.yaml
+# 未決は _UNDECIDED_ で残し、追跡先は PJR-CJMN の対応結果とする。
+
+command:
+  executable: git（PATH から解決する。呼び出しは `git -C <作業ディレクトリ> <サブコマンド> ...` の形）
+  purpose: >-
+    SpecDojo が task worktree の作成・削除、変更の stage・commit、統合先ブランチとの merge、
+    状態・差分の確認を行う。成功後は対象の作業ディレクトリに操作どおりの履歴・作業ツリーの状態が残る。
+    リモートとの通信は含まない。
+  reference: >-
+    サブコマンドと引数は呼び出し側の実装が決める。起動・再試行・失敗整形の正本は src/shared/git.ts の
+    gitResult・gitOutput・runGitWithTransientRetry・formatGitCommandFailure とする。
+    使うサブコマンドの意味は Git の公式リファレンスを参照し、本書へ引数表を転載しない。
+    agent が実行してよい git の範囲は [[specdojo:exec-config-guide|exec設定ガイド]] の
+    「agent 権限とプロンプトインジェクション対策」を参照する。
+  shell: false
+
+streams:
+  stdin:
+    mode: none
+    format: text
+    description: stdin は使わない（stdio は ignore で起動する）。
+  stdout:
+    format: text
+    encoding: UTF-8
+    description: >-
+      サブコマンドごとの結果（rev-parse の oid、status --porcelain、worktree list --porcelain、
+      diff の名前一覧など）。呼び出し元が解析するため、-z 区切りなどサブコマンド別の形式は
+      呼び出し側の実装に従う。出力の上限は 256 MiB で、超過は起動失敗として扱う。
+  stderr:
+    format: text
+    encoding: UTF-8
+    description: >-
+      診断。失敗時は stderr を要約して原因行（fatal・error・warning・CONFLICT・denied など）を
+      優先して失敗理由に採る。進捗の上書き行は捨てる。index.lock・dubious ownership などの
+      一時失敗の識別にも使う。
+
+files:
+  inputs:
+    - path: 作業ディレクトリ配下の git リポジトリ（`git -C` で指定した root）
+      format: git repository
+      description: 読み取り・更新の対象。呼び出し元が task worktree またはリポジトリルートを渡す。
+  outputs:
+    - path: 作業ディレクトリの作業ツリー・index・refs・.git 配下の履歴
+      format: git repository
+      description: >-
+        サブコマンドの副作用として git が更新する。呼び出し元は git の失敗ログ
+        （appendGitFailureLog が追記する実行記録）を別に保存するが、これは git の生成物ではない。
+
+side_effects:
+  - 作業ツリー・index・ローカルブランチ・worktree・stash・commit を作成・変更する（merge・reset --hard・clean を含む）
+  - 作業ツリーに未コミットの変更がある場合、統合先との同期で一時的に stash へ退避し、復元できない場合は stash に残す
+  - リモートへの通信・共有（push・fetch）は行わない
+  - 呼び出し元の Git 環境変数（GIT_DIR・GIT_INDEX_FILE・GIT_WORK_TREE など）は子プロセスへ渡さず除去する
+
+# code は git が返した終了コードの代表値。識別は stderr の文面で行う。
+exit_codes:
+  - code: 0
+    meaning: サブコマンドが成功した。再試行の途中で成功した場合も 0 として返す
+    category: success
+    retryable: false
+  - code: 1
+    meaning: >-
+      stderr が index.lock の取り合い（Unable to create '.../index.lock'・Another git process など）に一致した。
+      git が何も変更する前に失敗するため、同じコマンドを再実行しても安全
+    category: transient_failure
+    retryable: true
+  - code: 1
+    meaning: >-
+      stderr が dubious ownership、または .git があるのに not a git repository に一致した。
+      すぐの再試行では収まらないことがあるため、待機を長くして最大 3 回まで再試行する
+    category: transient_failure
+    retryable: true
+  - code: 1
+    meaning: >-
+      上記以外の非ゼロ終了（競合、権限不足、不正な引数・参照、hook の失敗、起動失敗、シグナル終了）。
+      merge の競合は想定する競合の経路だけ解決し、それ以外は merge を中止して失敗として停止する。
+      権限不足と競合を分ける専用の識別はなく、この汎用失敗として利用者が診断を確認する
+    category: permanent_failure
+    retryable: false
+
+authentication:
+  method: none（ローカル操作は認証を要しない）
+  injection:
+    mechanism: none
+    names:
+      - none
+  secret_source: >-
+    ローカル操作に認証情報は不要で、SpecDojo は認証値を注入しない。commit の author・committer は
+    利用者の Git 設定または実行環境の環境変数に従い、SpecDojo は git の設定を書き換えない。
+    リモート認証は本契約の対象外（ifx-cmd-github-cli を参照）。
+  log_policy: >-
+    失敗ログと失敗理由は保存前に秘匿値を伏せ字化する。対象と保存境界は
+    [[specdojo:exec-config-guide|exec設定ガイド]] の「evidence とログの引き渡し方針」を参照する。
+    commit メッセージや引数に秘密値を含めない。
+
+execution:
+  working_directory: 呼び出し元が渡す task worktree のルート（または repository_root）。`git -C` と子プロセスの cwd の両方に同じパスを指定する
+  timeout_seconds: _UNDECIDED_
+  network_required: false
+  max_parallel: _UNDECIDED_
+  idempotency:
+    guaranteed: false
+    condition: >-
+      読み取り系のサブコマンドは同じ入力で同じ結果を返す。commit・merge・worktree 追加などの更新系は
+      保証しない。再試行するのは index.lock の取り合いと dubious ownership などの一時失敗だけで、
+      mutation の完了後に所有権の失敗が出る場合は、再実行せず事後条件を確認してから成功とみなす
+      経路を呼び出し側が持つ。それ以外は既存の履歴と作業ツリーを確認して再開する。
+
+error_handling:
+  retry:
+    on_categories:
+      - transient_failure
+    # index.lock は既定で最大 20 分（exec-defaults の run.git_index_lock_wait_seconds）。
+    # 最初の 10 回は 1.5 秒間隔、その後は 5 秒間隔。dubious ownership 等は 2・5・10 秒の 3 回。
+    # 上限が 2 種類あり、schema の単一整数では表せないため未決の目印のまま置く。
+    max_attempts: _UNDECIDED_
+    backoff: 固定間隔（index.lock は 1.5 秒を 10 回、その後 5 秒）、一時失敗は 2・5・10 秒の段階
+  timeout_action: >-
+    子プロセスの実行時間に上限は設けず、終了まで待つ（spawnSync）。上限を設けるか、到達時に
+    子プロセスと index.lock をどう扱うかは未決定（_UNDECIDED_）。index.lock の待機だけは上限があり、
+    超過すると待機を止めて失敗を返す。残ったロックのファイルは削除せず、古いロックと判断した場合も
+    人が git の不在を確認してから削除する。
+  malformed_output_action: >-
+    stdout の解析失敗は呼び出し側のサブコマンドごとの扱いに従い、本契約では共通の処置を定めない
+    （_UNDECIDED_）。出力が上限を超えた場合（ENOBUFS）は起動失敗として扱い、原因を失敗理由へ残す。
+  authentication_failure_action: >-
+    ローカル操作では認証失敗は起きない。リモート認証の失敗は ifx-cmd-github-cli の
+    authentication_failure_action を参照する。

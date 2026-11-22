@@ -7,10 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   registered_at: "2026-11-22T13:16:07Z"
+  completed_at: "2026-11-22T13:56:34Z"
+  conclusion: grade run の --kata で --kind が効くようにした。recipe・template・all を選べ、--kind を省くと今までどおり rulebook と sample を評価する
   derived_from:
     - PJR-7M9J
 ---

@@ -70,7 +70,7 @@ register 実行は exec events を記録しないため、schedule の Ready・C
 
 週報作成や更新文書の翻訳は、完了済みの同一Schedule taskを再実行するのではなく、期間やrevision範囲ごとに新しい実行単位を生成する必要があります。また、定常作業の実行履歴をregisterへ起票し続けると、課題・判断の台帳という責務が曖昧になります。
 
-このため、Schedule/Registerとは別の実行対象の出どころとしてJobを使用します。Jobは再利用可能な作業定義、Job Runは入力を確定した1回限りの実行単位とし、plan生成後のagent実行は既存exec基盤を共用します。手動実行は`exec run --job <job-id> --input key=value`、定期起動はroutineの`action.kind: job`を使用します。詳細は[Job実行設計](../../product/040-system-design/sysd-job-execution.md)を参照してください。
+このため、Schedule/Registerとは別の実行対象の出どころとしてJobを使用します。Jobは再利用可能な作業定義、job runは入力を確定した1回限りの実行単位とし、plan生成後のagent実行は既存exec基盤を共用します。手動実行は`exec run --job <job-id> --input key=value`、定期起動はroutineの`action.kind: job`を使用します。詳細は[Job実行設計](../../product/040-system-design/sysd-job-execution.md)を参照してください。
 
 ### 1.3. ユースケース別の選び方
 

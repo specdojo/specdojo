@@ -96,3 +96,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_922cd52e80a5488c850d1ea7067b89a9
+- v: 1
+  id: reg_d950777b07fd409cb6bef322fcdedcef
+  ts: "2026-11-22T13:57:01Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが差分と対応結果を完了条件と照らして確かめた。既存の sample は変えていない
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: sample の作成標準に、表の前に何を示す表かを 1 文で書く決まりと、列名を中身の分かる言葉にする決まりを足し、sld の直しを材料に良い例と悪い例を書いた
+  previous_event_id: reg_a5e9f88294d34db69fbf5404319b1efd
