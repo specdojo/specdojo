@@ -5224,3 +5224,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_0e17f371d06f4c79bdf75bafb6f5d9f3
+- v: 1
+  id: reg_431e4ac5d0b64bacb2c0164b7bae89fb
+  ts: "2026-11-22T14:36:31Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが exec smoke の結果を確かめた（2026-11-22 夜）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: VQK2・B6NS・YS9M の統合後の runner で exec run --register が start から review・統合・要約まで止まらずに通った
+      to: K8F1・9X52・EF7M の統合後の runner で exec run --register が start から review・統合・要約まで止まらずに通った
+  previous_event_id: reg_802f0de903eb45fa98ddbafaed31ca3d

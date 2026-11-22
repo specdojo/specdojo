@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  conclusion: VQK2・B6NS・YS9M の統合後の runner で exec run --register が start から review・統合・要約まで止まらずに通った
+  completed_at: "2026-11-22T14:36:31Z"
+  conclusion: K8F1・9X52・EF7M の統合後の runner で exec run --register が start から review・統合・要約まで止まらずに通った
   autopilot: approved
 ---
 
