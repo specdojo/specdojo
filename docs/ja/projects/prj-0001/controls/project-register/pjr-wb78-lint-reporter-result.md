@@ -31,7 +31,15 @@ reporter の出力で lint に落ちる語（中国語の字など）が result 
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- runner は、reporter が書いた result を書き込む前に、統合の前の検査と同じ markdownlint の規則（`Result Markdown notation violation before commit` を出す検査と同じもの）で検査する。
+- 違反があれば、違反の行と規則を示して reporter に書き直させる。書き直しは、今の書式の再試行（format attempts）と同じ枠と上限で行い、別の上限を足さない。
+- 上限まで直らなければ、今と同じく waiting にし、違反の行と規則を理由に示す。
+- 入力にある事例（箇条書きの中の見出しと句点で終わる見出し、素の URL、見出しとコードブロックが 1 行につぶれたもの、エスケープされたバッククォート、中国語の簡体字）を fixture にして、検出と書き直しの指示を単体テストで確かめる。簡体字のように markdownlint の規則で検出できないものは、検出できるかを executor が確かめ、扱いと理由を個票の対応結果に書く。
+- `exec-operation-guide` の reporter の段の説明に、書き込む前の検査を書く。
+- `exec-defaults.yaml`・`package.json` などの保護された設定の変更が要る場合は、案を個票の対応結果と報告の `handoff` に書く。
+- `CHANGELOG.md` は変えない。個票の対応結果の `### 5.1. CHANGELOG に書く事項` に、区分「不具合修正」と行の文案を書く。
+- `npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md` を通し、親の検証を通す。
+- runner のコードを変えるため、統合の後にオーケストレーターが PJR-JSEY で runner の動作を確かめる。
 
 ## 4. 作業内容
 
