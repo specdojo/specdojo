@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-325y-kata-strategy-no-role-assignment
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-21T08:23:42Z"
+  completed_at: "2026-11-22T23:34:58Z"
+  conclusion: 第 3 波の strategy・作成標準・template などに PJR-76N9 の決まりを足した。直した 6 つの template のうち 5 つが pass。sysd-critical-flows-template の major は 325Y の前からある問題として別の todo に分けた
   derived_from:
     - PJR-76N9
 ---
