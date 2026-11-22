@@ -5041,3 +5041,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_b3d6124aa7c4432bb94b8b2ff10d8d7d
+- v: 1
+  id: reg_7e06f8d4c2b6400f96f17f974ff408a5
+  ts: "2026-11-22T03:20:52Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec smoke で実施（統合 946af023d）。新しい親の検証の選び方で文書だけの検証が流れ、run が review まで通った
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: PJR-QQRH・PJR-V277 の統合後に、exec smoke から sonnet-executor で start から review まで通り、actor に実体名が記録された
+      to: PJR-PP4X・PJR-50RQ・PJR-7KQT の統合の後に smoke を流し、start から review までと実体の actor（sonnet-executor）を確かめた。
+  previous_event_id: reg_af31aec188c742779a8196b72827bc64
