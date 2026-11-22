@@ -81,9 +81,9 @@ specdojo:
 | 9   | 読みやすさを改めて確かめる（利用者）                                         | 利用者       | done | 2026-11-22 に indie が確かめ、4 章の表の説明と列の名前を直す（3 回目の実行）                             |
 | 10  | 3 回目: 4 章の表の前の説明と列の名前を直す                                   | BA           | done | sample を 5,577 字から 5,879 字へ。結果は対応結果の「3 回目の実行の結果」                                |
 | 11  | 3 回目の統合の後に型を grade する（orchestrator）                            | orchestrator | done | 2026-11-22 に grade した。sample は pass 93、rulebook は needs-work 93（major 1 件）                     |
-| 12  | 読みやすさを改めて確かめる（利用者）                                         | 利用者       | open | -                                                                                                        |
+| 12  | 読みやすさを改めて確かめる（利用者）                                         | 利用者       | done | 2026-11-23 に indie が 3・4 回目の 4 章を確かめ、OK とした                                               |
 | 13  | 4 回目: rulebook の削除の良い例を、再生成できる派生物に限る                  | BA           | done | 結果は対応結果の「4 回目の実行の結果」                                                                   |
-| 14  | 4 回目の統合の後に rulebook を grade する（orchestrator）                    | orchestrator | open | -                                                                                                        |
+| 14  | 4 回目の統合の後に rulebook を grade する（orchestrator）                    | orchestrator | done | 4 回目の統合の後に grade した。rulebook は pass 95、sample は pass 91                                    |
 
 ## 5. 対応結果
 
