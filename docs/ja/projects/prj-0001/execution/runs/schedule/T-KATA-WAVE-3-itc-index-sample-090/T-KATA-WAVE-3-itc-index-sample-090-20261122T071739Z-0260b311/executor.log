@@ -1,0 +1,63 @@
+## レビュー結果: T-KATA-WAVE-3-itc-index-sample-090（完成版レビュー）
+
+判定案は `complete-with-findings` です。型の対象 2 つはどちらも評価結果が最新で `pass` でした。完了条件 DC-001〜DC-005 も満たしています。minor の finding は残っていますが、完了を妨げるものはありません。
+
+### 評価結果の確認
+
+- 次の 4 回はいずれも出力なし・終了コード 0 で、未評価・未完了の結果はありませんでした。
+  - `npx specdojo grade list --target kata --path docs/ja/specdojo/samples/itc-index-sample.md --changed-only`
+  - 同じ sample への `--incomplete`
+  - `docs/ja/specdojo/rulebooks/itc-index-rulebook.md` への `--changed-only`
+  - 同じ rulebook への `--incomplete`
+- verdict を出す直前にも `--changed-only` を 2 本とも再実行しました。出力はなく、`git status` でも `docs/ja/specdojo` 配下に変更はありません。review 中に成果物は変わっていません。
+- 評価結果サイドカーは 2 つとも存在します。
+  - sample（`specdojo.itc-index-sample.yaml`）: `verdict: pass`、score 90、blocker 0 / major 0 / minor 6 / note 0
+  - rulebook（`specdojo.itc-index-rulebook.yaml`）: `pass`、score 96、minor 3 / note 1
+
+### 判断根拠
+
+**実行記録**
+- 前回の review（`...-20261122T033125Z-fa19a02b`）は、sample が `needs-work` だったため `incomplete` でした。
+- その後、commit c13cfdefe（PJR-K32V）で sample が直されています。親 runner の検証は次のとおりで、失敗はありません。
+  - 成功: `lint:md:changed`、`lint:fm:changed`、`lint:mermaid`、`lint:d2`、`test:docs`、`validate:schema`
+  - 対象外: その他の検査
+- この修正の後、grade は `pass` に変わりました。
+
+**完了条件の照合**
+
+| ID | 確認した内容 | 結果 |
+| --- | --- | --- |
+| DC-001 | 章 1〜10 が rulebook の本文要件と同じ見出し・順序で並んでいる。必要な表（対象外、分配、依存、ケース表）もある | 満たす（F006 は minor） |
+| DC-002 | 駄菓子屋きぬやの文脈にそろっている。grade の `vp-qe-kata-conformance` は level 4 | 満たす |
+| DC-003 | 個別ケースは例示の 1 行だけで、外部サービスとの疎通も Stub に置き換えて IT の範囲から外している。禁止事項に当たらない | 満たす |
+| DC-004 | H1 が `# 内部結合テストカタログ: 概要（駄菓子屋きぬや 販売管理システム）` で rulebook の形式に一致し、`based_on` に `specdojo:tsp-index-sample` がある | 満たす |
+| DC-005 | 依存の扱いの章に「確定失敗を応答し、販売記録・在庫とも確定前と差分がない」がある。ケース表の例でも、期待値と観測点（応答のエラー種別、販売記録件数、在庫数）を示している | 満たす |
+
+- 型の追加完了条件（型の対象すべてで `--target kata` が最新の `pass`）も満たしています。
+
+### 未充足事項・改善指示（完了は妨げない）
+
+**sample の minor 6 件**
+- F001・F003: `PATH-02` の遅延・無応答（応答欠落時の照合待ち）について、観点・主担当と、再現するためのスタブがない。
+- F002: 報告先に `kinuya:pjr-i003` を参照していない。
+- F004: `PATH-04`・`PATH-07` を term にしない旨を繰り返している。
+- F005: 優先度 P2 の「通知」が何を指すか分からず、P0〜P2 のどれにも当たらないケースの扱いもない。
+- F006: rulebook の分割基準のうち、依存境界の混在と「1〜2 ケースしかない単位は統合する」が抜けている。
+
+これらは完成度と整合性を上げるための指摘で、必須章の欠落や禁止事項への抵触ではありません。次に手直しするときに対応してください。
+
+**rulebook の指摘**
+- F002・F004: `recipe` と `template` が `undecided` のままです。rulebook を `ready` にする前に、要否と方針を決める必要があります。
+- F003: 位置づけの図のラベルの呼称を統一する。
+
+### approach に応じた確認（fully-guided）
+
+前回の review が求めた手直しは PJR-K32V で行われ、grade は `pass` になりました。recipe は `_MISSING_`（rulebook では `undecided`）で、この扱いは rulebook の finding F002・F004 に残っています。改善指示として引き継ぎます。
+
+### 確認できなかった範囲
+
+- edit 記録（`-080`）の result では、検証の詳細を grep で取り出せませんでした。代わりに、最新の修正である PJR-K32V の evidence で検証結果を確認しています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict 案: complete-with-findings。評価結果の鮮度を確認した（sample と rulebook の両方で `grade list --target kata --changed-only` と `--incomplete` は出力なし・終了コード 0。verdict を出す直前の再確認でも出力なし、`docs/ja/specdojo` 配下に変更なし）。grade は sample が pass（score 90、minor 6）、rulebook が pass（score 96、minor 3 / note 1）。完了条件の照合: DC-001 は章 1〜10 が rulebook の本文要件と一致し、必要な表もある。DC-002 は駄菓子屋きぬやの文脈で、`vp-qe-kata-conformance` は level 4。DC-003 は個別ケースが例示の 1 行だけで、外部疎通も Stub に置き換えて IT の範囲外としている。DC-004 は H1 が rulebook の形式に一致し、`based_on` に `specdojo:tsp-index-sample` がある。DC-005 は依存の扱いの章とケース表の例で、観測点つきの期待値（応答と DB の差分なし）を示している。実行記録: 前回の review（`fa19a02b`）は sample が `needs-work` だったため incomplete だった。その後 PJR-K32V（commit c13cfdefe）で sample が直され、親 runner の検証は passed または not_applicable で失敗はない。そのうえで grade が pass になった。sample の finding F001〜F006 は minor の改善提案で、必須章の欠落や禁止事項への抵触ではないため完了を妨げない。確認できなかった範囲: edit 記録（`-080`）の result では検証の詳細を取り出せなかったため、最新の修正である PJR-K32V の evidence で代わりに確認した。","handoff":["改善指示（sample、次に手直しするとき）: F001・F003 `PATH-02` の遅延・無応答（応答欠落時の照合待ち）について、観点・主担当と再現用スタブを追加する。F002 報告先に `kinuya:pjr-i003` を書く。F004 `PATH-04`・`PATH-07` を term にしない旨の重複を削る。F005 優先度 P2 の基準と、P0〜P2 のどれにも当たらないケースの扱いを明確にする。F006 rulebook の分割基準（依存境界・環境要件の混在、1〜2 ケースの単位は統合）について本システムでの扱いを書く。","改善指示（rulebook）: F002・F004 `recipe` と `template` の `undecided` について、rulebook を ready にする前に要否と方針を決める。F003 位置づけの図のラベルの呼称を統一する。"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/itc-index-sample.md --changed-only","status":"passed","summary":"出力なし・終了コード 0（最新）。verdict を出す直前の再確認でも同じ"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/itc-index-sample.md --incomplete","status":"passed","summary":"出力なし・終了コード 0"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/itc-index-rulebook.md --changed-only","status":"passed","summary":"出力なし・終了コード 0（最新）。verdict を出す直前の再確認でも同じ"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/itc-index-rulebook.md --incomplete","status":"passed","summary":"出力なし・終了コード 0"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-3-itc-index-sample-090",
+  "run_id": "T-KATA-WAVE-3-itc-index-sample-090-20261122T071739Z-0260b311",
+  "updated_at": "2026-11-22T07:46:56.679Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "opus-review-executor",
+      "attempts": 1,
+      "started_at": "2026-11-22T07:18:12.733Z",
+      "completed_at": "2026-11-22T07:19:39.202Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-3-itc-index-sample-090/T-KATA-WAVE-3-itc-index-sample-090-20261122T071739Z-0260b311/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-22T07:19:50.464Z",
+      "completed_at": "2026-11-22T07:21:44.520Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-3-itc-index-sample-090/T-KATA-WAVE-3-itc-index-sample-090-20261122T071739Z-0260b311/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "opus-review-executor",
+      "attempts": 2,
+      "started_at": "2026-11-22T07:46:56.679Z",
+      "completed_at": null,
+      "artifact_ref": null,
+      "repos": {
+        "project": {
+          "status": "failed",
+          "commit": null,
+          "merged_at": null,
+          "error": "Result Markdown notation violation before commit: docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-3-itc-index-sample-090/T-KATA-WAVE-3-itc-index-sample-090-20261122T071739Z-0260b311/result.md:23:454 error MD038/no-space-in-code Spaces inside code span elements [Context: \"...x-rulebook.md --incomplete ```\"]"
+        }
+      }
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-3-itc-index-sample-090/T-KATA-WAVE-3-itc-index-sample-090-20261122T071739Z-0260b311/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-3-itc-index-sample-090/T-KATA-WAVE-3-itc-index-sample-090-20261122T071739Z-0260b311/result.md"
+  }
+}
