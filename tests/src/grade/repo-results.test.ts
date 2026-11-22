@@ -166,6 +166,52 @@ describe("grade results across repositories", () => {
     },
   );
 
+  it("omits the obsolete placeholder finding from prior findings only for kata", () => {
+    const viewpoints = loadViewpoints("test");
+    const obsolete = "未解決の _TODO_ / _ASSUMPTION_ が残っています。";
+    const apply = (target: "kata" | "deliverable") =>
+      applyGradeSubmission({
+        submission: {
+          rubric: "grade-rubric-v1",
+          documents: [
+            {
+              path: documents[0].path,
+              viewpoints: [
+                {
+                  id: "vp-content",
+                  level: 2,
+                  findings: [{ severity: "major", message: obsolete }],
+                },
+              ],
+            },
+          ],
+        },
+        target,
+        project: "test",
+        viewpoints,
+        gradedBy: "actual-grader",
+        resultsDirectory: "execution/grade/results",
+      });
+
+    apply("kata");
+    const kataPlan = renderGradePlan({
+      target: "kata",
+      path: documents[0].path,
+      projectId: "test",
+      viewpoints,
+    });
+    expect(kataPlan).not.toContain(obsolete);
+
+    apply("deliverable");
+    const deliverablePlan = renderGradePlan({
+      target: "deliverable",
+      path: documents[0].path,
+      projectId: "test",
+      viewpoints,
+    });
+    expect(deliverablePlan).toContain(obsolete);
+  });
+
   it("uses the supplied root and handles nested repositories without matching path prefixes", () => {
     const configPath = ".specdojo/specdojo.config.json";
     const config = JSON.parse(readFileSync(configPath, "utf8"));

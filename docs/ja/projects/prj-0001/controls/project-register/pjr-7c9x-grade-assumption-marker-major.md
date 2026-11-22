@@ -53,8 +53,9 @@ grade の vp-qe-config-validity の検査は本文に _TODO_ か _ASSUMPTION_ �
 
 - 解決内容: `src/grade/plan.ts` の `vp-qe-config-validity` の機械的な検査を、`--target kata` では `_TODO_` だけを major にする形へ変えた。`_ASSUMPTION_` と `_UNDECIDED_` は指摘しない。`--target deliverable` は従来どおり `_TODO_` / `_ASSUMPTION_` を major にする。`docs/ja/specdojo/references/command-reference.md` の grade の説明へ同じ条件を追記した。
 - 確認結果: `tests/src/grade/yaml.test.ts` に kata の `_ASSUMPTION_` / `_UNDECIDED_` が指摘されないこと、kata の `_TODO_` が major になること、deliverable の `_ASSUMPTION_` が major のままであることを追加し、`tests/src/grade` の単体テスト 176 件と `npm run typecheck` が通った。
-- 結果が分かれた原因: 未確定。`utc-sample` の結果は 2026-11-22T01:07Z、`itc-sample` は 07:13Z の評価で、評価の時期が違う。また `itc-sample` の指摘の `rule` は `vp-ops-release-readiness` であり、`pm-review-viewpoints.yaml` では `vp-qe-config-validity` は `grade_targets: [deliverable]` なので、kata では機械的な検査が走らないはずである。`src` 内で「未解決の」の文言を出すのは `plan.ts` だけで、経路を特定できなかった。統合の後の `utc-index` の再評価で確かめる。
-- 再発防止策: 上記のテストで kata の条件を固定した。
+- 2 回目の実行の解決内容: 原因は、grade の plan の手順 7 が前回の指摘を agent に渡し、未解消なら同じ文言で再掲させることだった。直す前の機械的な検査が付けた「未解決の _TODO_ / _ASSUMPTION_ が残っています。」が引き継がれ続け、`_ASSUMPTION_` を持つ sample が評価時期により pass / needs-work に分かれた。`src/grade/plan.ts` の `withoutObsoletePlaceholderFindings` で、`--target kata` ではこの文言の前回の指摘を plan へ渡さないようにした（`_TODO_` は現在の検査が改めて major にする）。`--target deliverable` は変えていない。`command-reference.md` の grade の説明へ追記した。`tests/src/grade/repo-results.test.ts` に kata では渡されず deliverable では渡されるテストを追加し、`tests/src/grade` の単体テスト 177 件と `npm run typecheck` が通った。統合の後の `utc-index` の評価し直し（F006 が消えて verdict `pass`）は、オーケストレーターが行う。
+- 結果が分かれた原因（1 回目の調査、2 回目で確定）: 上記のとおり前回の指摘の引き継ぎ。1 回目の時点では未確定だった。`utc-sample` の結果は 2026-11-22T01:07Z、`itc-sample` は 07:13Z の評価で、評価の時期が違う。`itc-sample` の指摘の `rule` が `vp-ops-release-readiness` だったのは、前回の指摘を agent が再掲した際に観点が付け替わったためである。統合の後の `utc-index` の再評価で確かめる。
+- 再発防止策: 上記のテストで kata の条件と、前回の指摘の除外を固定した。
 
 ### 5.1. CHANGELOG に書く事項
 
@@ -62,4 +63,5 @@ grade の vp-qe-config-validity の検査は本文に _TODO_ か _ASSUMPTION_ �
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- 根拠: `docs/ja/specdojo/standards/sample-authoring-standard.md`（未確定の事項を `_UNDECIDED_:` / `_ASSUMPTION_:` で明示する）。
+- 影響先: `docs/ja/specdojo/references/command-reference.md` の grade の説明。
