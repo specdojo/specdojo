@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-3-trc-requirements-to-tests-sample-090",
+  "run_id": "T-KATA-WAVE-3-trc-requirements-to-tests-sample-090-20261122T073308Z-5bfed45b",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-review-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-22T07:33:52.869Z",
+    "completed_at": "2026-11-22T07:34:58.180Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx specdojo grade list --target kata --path docs/ja/specdojo/samples/trc-requirements-to-tests-sample.md --changed-only",
+      "status": "passed",
+      "summary": "出力なし（最新）。判定直前の再実行でも出力なし"
+    },
+    {
+      "source": "executor",
+      "command": "npx specdojo grade list --target kata --path docs/ja/specdojo/samples/trc-requirements-to-tests-sample.md --incomplete",
+      "status": "passed",
+      "summary": "出力なし（評価は完了済み）"
+    },
+    {
+      "source": "executor",
+      "command": "npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/trc-requirements-to-tests-rulebook.md --changed-only",
+      "status": "passed",
+      "summary": "出力なし（最新）。判定直前の再実行でも出力なし"
+    },
+    {
+      "source": "executor",
+      "command": "npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/trc-requirements-to-tests-rulebook.md --incomplete",
+      "status": "passed",
+      "summary": "出力なし（評価は完了済み）"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md\n\nlint:md:changed: no changed files"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\nlint:fm:changed: no changed files"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 5821 file(s), 107 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 83 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5821 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)",
+      "reason": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\n valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-3-trc-requirements-to-tests-sample-090/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-3-trc-requirements-to-tests-sample-090/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "review の判断は complete-with-findings。sample と rulebook の kata grade はいずれも最新（`--changed-only`・`--incomplete` とも出力なし、判定直前の `--changed-only` 再確認でも出力なし）。sample は verdict pass / score 99 / minor 1、rulebook は verdict pass / score 92 / minor 4。DC-001〜007 に対応する QE 観点は sample ですべて level 4。本文でも、対応テストのある要求を未着手にしていないこと（一部充足 5・未着手 3）、生成の手段と生成日（2026-05-11）、`based_on` の 5 件、ギャップ表に担当・期限列がないことを確かめた。先行 edit（-080, condense）の result は complete で、変更は sample のみ、その検査はすべて passed または not_applicable。残る finding は表記の揺れや rulebook 側の minor だけで、完了条件に直結しない。確認できなかった範囲: 本文が言及する `tsp-index-sample`・`atc-index-sample`・`ifx-cmd-sample` は宣言外の文書のため開いておらず（生成元ではなく背景・母集団外の参照として扱った）、生成元の版 `4f9e2c1` での再生成と本書の一致も確かめていない。",
+  "completion_status": "complete",
+  "handoff": [
+    "改善指示（sample F001）: ギャップと対応方針の表の「対象」列で、2 件目以降の項目にも要求文書 ID を付け、区切りを統一する。",
+    "改善指示（rulebook F001〜F004）: 受入テストと総合テストの `relations.verifies` の違いの定義を 1 か所にまとめる。項目 ID がない行の記録先を手順 4 に加える。`stc-rulebook` の仕様ID に項目 ID まで書く前提を明記するか、`stc-rulebook` 側へ求める。禁止事項の列名の表記を「要求ID」「対応テストID」にそろえる。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-3-trc-requirements-to-tests-sample-090/T-KATA-WAVE-3-trc-requirements-to-tests-sample-090-20261122T073308Z-5bfed45b/executor.log",
+      "bytes": 6383,
+      "truncated": false
+    }
+  ]
+}

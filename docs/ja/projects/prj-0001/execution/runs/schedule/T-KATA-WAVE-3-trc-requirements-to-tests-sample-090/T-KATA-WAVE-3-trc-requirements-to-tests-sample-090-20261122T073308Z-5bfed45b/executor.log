@@ -1,0 +1,32 @@
+レビューの結論は `complete-with-findings` です。sample と rulebook はどちらも grade の評価が最新で `pass` でした。minor の finding が計 5 件残っていますが、どれも完了の妨げにはならないと判断しました。成果物と result は変更していません。
+
+**評価結果の確認**
+- `npx specdojo grade list --target kata --path <対象> --changed-only` と `--incomplete` を、sample（`docs/ja/specdojo/samples/trc-requirements-to-tests-sample.md`）と rulebook（`docs/ja/specdojo/rulebooks/trc-requirements-to-tests-rulebook.md`）に実行しました。どちらも出力なしで、終了コードは 0 でした。
+- 判定直前に `--changed-only` だけをもう一度実行し、出力なしでした。作業ツリーの未追跡ファイルは `pipeline-state.json` だけで、review 中の成果物の変更はありません。
+- 評価結果サイドカーは 2 件とも存在します。
+
+| 評価対象 | `verdict` | `score` | finding（blocker / major / minor） |
+| --- | --- | --- | --- |
+| sample | `pass` | 99 | 0 / 0 / 1 |
+| rulebook | `pass` | 92 | 0 / 0 / 4 |
+
+**判断根拠**
+- 完了条件 DC-001〜007 に対応する観点（`vp-qe-omissions-consistency`、`vp-qe-kata-conformance`、`vp-qe-verifiability`）は、sample ではすべて level 4 でした。
+- 本文でも主要な点を確かめました。
+  - DC-005: 対応テストのある要求は「一部充足」で、対応テストのない 3 件だけが「未着手」です。
+  - DC-006: 前提の章に生成の手段と生成日（2026-05-11）があり、`based_on` に要求文書 2 件とテストカタログ 3 件があります。
+  - DC-007: ギャップ表に担当・期限の列はなく、更新ルールは「再生成する」だけです。
+- 先行の edit タスク（T-KATA-WAVE-3-trc-requirements-to-tests-sample-080、condense）の result は `complete` でした。削除 2 件・保持 4 件の記録があり、変更ファイルは sample だけで、対象外の変更はありません。
+- 同タスクの検査は、`lint:md`、`lint:fm`、`lint:mermaid`、`lint:d2`、`validate:schema`、`test:unit`、`test:integration`、prettier、markdownlint がすべて passed でした。`lint:ts` と `typecheck` は not_applicable です。
+
+**残っている finding（完了を妨げない理由と直し方）**
+- sample F001（minor）: ギャップと対応方針の表の「対象」列で、2 件目以降の項目に要求文書 ID がなく、区切りも `,` と `・` が混在しています。表記の揺れだけで、どの完了条件も満たしています。各項目に文書 ID を付け、区切りを統一してください。
+- rulebook F001〜F004（minor）: rulebook 側の簡潔さ、記録先が決まっていない場合、`stc-rulebook` との前提、表記の揺れです。いずれも sample の完了条件に直結しません。それぞれ型の手直しで、grade が示した直し方で対応してください。
+
+**確認できなかった範囲**
+- `tsp-index-sample`、`atc-index-sample`、`ifx-cmd-sample` は本文に出てきますが `based_on` にはありません。生成元ではなく、背景や母集団外の参照として出ているため、DC-006 の違反とはみなしていません。宣言外の文書は開いていないので、中身との突き合わせはしていません。
+- 生成元の版 `4f9e2c1` で再生成した結果と本書が一致するかは確かめていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"review の判断は complete-with-findings。sample と rulebook の kata grade はいずれも最新（`--changed-only`・`--incomplete` とも出力なし、判定直前の `--changed-only` 再確認でも出力なし）。sample は verdict pass / score 99 / minor 1、rulebook は verdict pass / score 92 / minor 4。DC-001〜007 に対応する QE 観点は sample ですべて level 4。本文でも、対応テストのある要求を未着手にしていないこと（一部充足 5・未着手 3）、生成の手段と生成日（2026-05-11）、`based_on` の 5 件、ギャップ表に担当・期限列がないことを確かめた。先行 edit（-080, condense）の result は complete で、変更は sample のみ、その検査はすべて passed または not_applicable。残る finding は表記の揺れや rulebook 側の minor だけで、完了条件に直結しない。確認できなかった範囲: 本文が言及する `tsp-index-sample`・`atc-index-sample`・`ifx-cmd-sample` は宣言外の文書のため開いておらず（生成元ではなく背景・母集団外の参照として扱った）、生成元の版 `4f9e2c1` での再生成と本書の一致も確かめていない。","handoff":["改善指示（sample F001）: ギャップと対応方針の表の「対象」列で、2 件目以降の項目にも要求文書 ID を付け、区切りを統一する。","改善指示（rulebook F001〜F004）: 受入テストと総合テストの `relations.verifies` の違いの定義を 1 か所にまとめる。項目 ID がない行の記録先を手順 4 に加える。`stc-rulebook` の仕様ID に項目 ID まで書く前提を明記するか、`stc-rulebook` 側へ求める。禁止事項の列名の表記を「要求ID」「対応テストID」にそろえる。"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/trc-requirements-to-tests-sample.md --changed-only","status":"passed","summary":"出力なし（最新）。判定直前の再実行でも出力なし"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/trc-requirements-to-tests-sample.md --incomplete","status":"passed","summary":"出力なし（評価は完了済み）"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/trc-requirements-to-tests-rulebook.md --changed-only","status":"passed","summary":"出力なし（最新）。判定直前の再実行でも出力なし"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/trc-requirements-to-tests-rulebook.md --incomplete","status":"passed","summary":"出力なし（評価は完了済み）"}]}
+</specdojo_executor_evidence>
