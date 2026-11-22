@@ -9,7 +9,8 @@ specdojo:
   item_type: todo
   item_status: open
   priority: high
-  difficulty: medium
+  difficulty: hard
+  owner: DEV
   registered_at: "2026-11-22T03:12:37Z"
   derived_from:
     - PJR-RS2P
@@ -25,6 +26,9 @@ specdojo:
 
 - 2026-11-22、RS2P が ifx-index.yaml のコメントを「# #」にし、以後の HCHH・BNAV の lint-md が止まった。
 - 利用者の承認（2026-11-22、indie）で起票した。
+- orchestrator の調べ（2026-11-22）: 表示のページは src/exec/worktree.ts の generateWorktreeArtifacts が worktree の準備のとき（依存の install の直後）に 1 回だけ作り、executor が YAML を変えた後も、--resume で統合先を取り込んだ後も作り直されない。
+- orchestrator の調べ（2026-11-22）: lint-md-changed（tools/lint-changed.mjs）は HEAD からの差分と追跡していない `*.md`（--exclude-standard）だけを見るため、.gitignore にある表示のページは作り直しても検査されない。ページは YAML と同じ階層の generated/`<名前>.md`（src/docs/yaml-pages.ts）。
+- 決定（2026-11-22、indie）: 作り直しは YAML を変えた run だけにする。難しさは hard、executor は opus-executor、代わりは sonnet-executor。PJR-MS7X の後に流す。
 
 ## 3. 完了条件
 
