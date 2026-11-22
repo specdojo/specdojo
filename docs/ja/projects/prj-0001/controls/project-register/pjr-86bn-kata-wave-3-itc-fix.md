@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-22T05:42:07Z"
+  block_reason: "parent validation failed: lint-md-changed"
   derived_from:
     - PJR-ABY4
 ---
@@ -35,7 +36,18 @@ specdojo:
 - sample の F006（機械的な「未解決の _TODO_ / _ASSUMPTION_」の指摘、PJR-7C9X）は、`_TODO_` を解消して扱う。sample に `_TODO_` を残さない。`_ASSUMPTION_` は `sample-authoring-standard` に従って残してよい。
 - sample の F005（major）: `it-sales-checkout-persistence-integrity-020` の採番が `itc-index-sample` の「ケース表の共通カラム」と食い違う。`itc-index-sample` は変えず、本書の採番を `itc-index-sample` に揃える。
 - rulebook を変えた場合は、sample が rulebook に従っていることを確かめ、食い違いがあれば sample も直す。
-- `CHANGELOG.md` は変えない。個票の対応結果の `### 5.1. CHANGELOG に書く事項` に「なし」（文書の型の手直しのため）と書く。
+- `CHANGELOG.md` は変えない。個票の対応結果の `2 回目の実行の指摘:
+
+- sample F001（major）: `it-sales-checkout-transaction-boundary-010` の観測点を `out-of-stock` に揃えた。
+- sample F002: `-persistence-integrity-030` の期待値と観測点に販売記録の内容（商品A・数量5・150円）を加えた。
+- sample F003: 「状態遷移の整合性」の扱いを保留の維持だけに改め、補完後の確定への遷移は扱わないと明記した。
+- sample F004: `itc-index-sample` は変えず、更新拒否で未保存を成功と応答しないことを `it-sales-checkout-transaction-boundary-020` で確かめると明記した。DB 停止は不採用のまま。
+- sample F005: 機械的な指摘（PJR-7C9X）。`_ASSUMPTION_` は `sample-authoring-standard` に従って残す。
+- rulebook F001: 重複する「本節は対象別に固有の判断だけを定める。」を削った。
+- rulebook F002: 禁止事項の表の「SSOT」を「正本」に統一した。
+
+### 5.1. CHANGELOG に書く事項` に「なし」（文書の型の手直しのため）と書く。
+
 - `npm run lint:md` を通し、親の検証を通す。
 - 統合の後、オーケストレーターが `npx specdojo grade run --target kata --kata itc` で評価し直し、rulebook と sample に blocker と major がないことを確かめる。機械的な指摘（PJR-7C9X）だけが残る場合は合格とし、そのことを個票の対応結果に書く。合格しなければ、この項目に回目の完了条件を足して流し直す。
 - 2 回目の実行（2026-11-22）: 統合後の評価し直し（itc-sample は needs-work 90、major 2・minor 3）で、sample の F001（major）が残った。`it-sales-checkout-transaction-boundary-010` の期待値はエラー種別 `out-of-stock` だが、観測点（アサーション）が `duplicate-transaction` になっている。観測点を期待値に揃える。あわせて `docs/ja/projects/prj-0001/execution/grade/results/specdojo.itc-sample.yaml` と `specdojo.itc-rulebook.yaml` の新しい `findings` を 1 件ずつ確かめ、直さない指摘は ID と理由を個票の対応結果に書く。F005 は機械的な指摘（PJR-7C9X）で、`_TODO_` がなければ扱いは 1 回目と同じ。
