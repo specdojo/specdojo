@@ -10,9 +10,7 @@ specdojo:
   item_status: open
   priority: medium
   difficulty: medium
-  owner: BA
   registered_at: "2026-11-22T12:55:19Z"
-  due_on: "2026-11-30"
   derived_from:
     - PJR-0VPB
 ---
