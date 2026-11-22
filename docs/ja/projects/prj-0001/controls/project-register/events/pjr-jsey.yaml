@@ -5060,3 +5060,19 @@
       from: PJR-QQRH・PJR-V277 の統合後に、exec smoke から sonnet-executor で start から review まで通り、actor に実体名が記録された
       to: PJR-PP4X・PJR-50RQ・PJR-7KQT の統合の後に smoke を流し、start から review までと実体の actor（sonnet-executor）を確かめた。
   previous_event_id: reg_af31aec188c742779a8196b72827bc64
+- v: 1
+  id: reg_6d25c53e5c1d4e478b087b145eee5f14
+  ts: "2026-11-22T08:42:23Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-TF6F・PJR-WB78 の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-11-22"
+      to: "-"
+  previous_event_id: reg_7e06f8d4c2b6400f96f17f974ff408a5

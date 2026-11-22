@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: done
+  item_status: open
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  completed_at: "2026-11-22T03:20:52Z"
   conclusion: PJR-PP4X・PJR-50RQ・PJR-7KQT の統合の後に smoke を流し、start から review までと実体の actor（sonnet-executor）を確かめた。
   autopilot: approved
 ---
