@@ -4,31 +4,28 @@ specdojo:
   type: exec-result
   task_id: PJR-HCHH
   mode: edit
-  status: blocked
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-HCHH/pjr-hchh-20261122T000034Z-2b15a60b/plan.md
   started_at: "2026-11-22T00:00:35.404Z"
-  completed_at: "2026-11-22T00:46:20.540Z"
+  completed_at: "2026-11-22T00:54:59.855Z"
   agent: qwen-executor
-  block_reason: "agent exited with non-zero code: parent validation failed: lint-md"
 ---
 
 # Edit Result
 
 ## 1. 実施内容
 
-- PJR-HCHH: 呼び出し元のなくなった `migrateEmbeddedRegisterEvents`・`migrateRegisterEventsFromGit`、および対応する型、`readEmbeddedRegisterEvents`・`removeEmbeddedRegisterEvents` を削除しました。
-- あわせて `src/register/migrate-timestamps.ts` とそのテストファイルを削除しました。
-- 個票 `docs/ja/projects/prj-0001/controls/project-register/pjr-hchh-remove-unused-register-migration.md` の作業内容および対応結果を更新しました。
+- PJR-HCHH: 呼び出し元のない `migrateEmbeddedRegisterEvents`・`migrateRegisterEventsFromGit`、対応する型、`readEmbeddedRegisterEvents`・`removeEmbeddedRegisterEvents`、`migrate-timestamps.ts` と対応テストを削除した。個票の作業内容・対応結果も更新済み。
 
 ## 2. 変更ファイル
 
-- `src/register/command-types.ts`: 不要になったコマンド型の定義を削除しました。
-- `src/register/events.ts`: 不要になったイベント関連の関数（`readEmbeddedRegisterEvents`・`removeEmbeddedRegisterEvents`）を削除しました。
-- `src/register/migrate-timestamps.ts`: 削除対象の移行関数を含むファイルを削除しました。
-- `src/register/register.ts`: 呼び出し元がなくなった移行関数（`migrateEmbeddedRegisterEvents`・`migrateRegister-events-from-git`）の定義を削除しました。
-- `tests/src/register/migrate-timestamps.test.ts`: `src/register/migrate-timestamps.ts` に対応するテストファイルを削除しました。
+- `src/register/command-types.ts`: 変更、+1 / -9 行
+- `src/register/events.ts`: 変更、+0 / -22 行
+- `src/register/migrate-timestamps.ts`: 削除、+0 / -264 行
+- `src/register/register.ts`: 変更、+0 / -97 行
+- `tests/src/register/migrate-timestamps.test.ts`: 削除、+0 / -211 行
 
 ## 3. 申し送り
 
@@ -37,4 +34,4 @@ specdojo:
 
 ## 4. 進め方
 
-PJR-GV43 の完了に伴い、呼び出し元を失った移行処理一式を特定しました。`src/register/migrate-timestamps.ts` および `src/register/register.ts` 内の関数、それらに関連する型定義を削除し、テストコードも併せて削除することで、プロジェクトから不要な移行ロジックを排除しました。
+reporter を使わず、runner が executor の報告（`final_message`・`handoff`）と証跡から機械的に作成した（`pipeline.mechanical_result`）。

@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: easy
   owner: DEV
   registered_at: "2026-11-21T14:01:58Z"
-  block_reason: "agent exited with non-zero code: parent validation failed: lint-md"
   derived_from:
     - PJR-GV43
 ---
@@ -38,11 +37,11 @@ PJR-GV43 で register migrate を消したため、src/register/migrate-timestam
 
 ## 4. 作業内容
 
-| No  | 作業                           | 担当 | 状態 | メモ |
-| --- | ------------------------------ | ---- | ---- | ---- |
-| 1   | 呼び出し元がないことを確かめる | DEV  | done | `src`・`tests`・`tools`・`scripts` を grep。2 つの関数・対応する型は呼び出し元なし。`legacyHistoryEventToRegisterEvent` は専用テストがあるため残す |
+| No  | 作業                           | 担当 | 状態 | メモ                                                                                                                                                             |
+| --- | ------------------------------ | ---- | ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | 呼び出し元がないことを確かめる | DEV  | done | `src`・`tests`・`tools`・`scripts` を grep。2 つの関数・対応する型は呼び出し元なし。`legacyHistoryEventToRegisterEvent` は専用テストがあるため残す               |
 | 2   | 関数・型・テストを消す         | DEV  | done | 2 つの関数・`command-types.ts` の型・`events.ts` の `readEmbeddedRegisterEvents` ・`removeEmbeddedRegisterEvents` を削除。ファイル削除は実行できないため申し送り |
-| 3   | 検証を通す                     | DEV  | open | 親 runner に委ねる（この環境では executor が sandbox 検証を実行しない） |
+| 3   | 検証を通す                     | DEV  | open | 親 runner に委ねる（この環境では executor が sandbox 検証を実行しない）                                                                                          |
 
 ## 5. 対応結果
 

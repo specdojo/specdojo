@@ -1,5 +1,4 @@
 import { type Command } from "commander";
-import { existsSync, readFileSync } from "node:fs";
 import { relative, sep } from "node:path";
 import { setImmediate } from "node:timers/promises";
 import { CrossProcessMutex } from "../shared/cross-process-lock.js";
@@ -37,20 +36,13 @@ import { normalizeRegisterTimestamp } from "./date.js";
 import { validateRegisterDependencyDocs } from "./dependency.js";
 import { validateDerivedFromDocs } from "./derivation.js";
 import {
-  appendRegisterEvent,
   deterministicRegisterEventId,
-  readEmbeddedRegisterEvents,
-  readRegisterEventsFromContent,
   registerEventFilePath,
-  removeEmbeddedRegisterEvents,
-  serializeRegisterEvents,
   validateRegisterEventDocs,
   type RegisterEventAction,
   type RegisterEventV1,
 } from "./events.js";
-import { collectRegisterHistoryEvents } from "./history.js";
 import {
-  loadRegisterItemDocs,
   PJR_ID_ALPHABET,
   PJR_ID_RE,
   TERMINAL_STATUSES_SET,
@@ -672,93 +664,6 @@ export function legacyHistoryEventToRegisterEvent(
   };
 }
 
-function migrateEmbeddedRegisterEvents(
-  paths: RegisterPaths,
-  dryRun: boolean,
-): { items: number; events: number } {
-  let itemCount = 0;
-  let eventCount = 0;
-  for (const doc of loadRegisterItemDocs(paths.projectRegisterPath)) {
-    const ticketContent = readFileSync(doc.path, "utf8");
-    const embedded = readEmbeddedRegisterEvents(ticketContent, doc.filename);
-    if (embedded.length === 0) continue;
-    const eventPath = registerEventFilePath(paths.projectRegisterPath, doc.id);
-    if (existsSync(eventPath)) {
-      const existing = readRegisterEventsFromContent(readFileSync(eventPath, "utf8"), eventPath);
-      if (JSON.stringify(existing) !== JSON.stringify(embedded)) {
-        throw new Error(`${doc.filename}: embedded and external register events differ`);
-      }
-    }
-    if (!dryRun) {
-      atomicWriteFile(eventPath, serializeRegisterEvents(embedded));
-      atomicWriteFile(doc.path, removeEmbeddedRegisterEvents(ticketContent));
-    }
-    itemCount++;
-    eventCount += embedded.length;
-  }
-  return { items: itemCount, events: eventCount };
-}
-
-function migrateRegisterEventsFromGit(
-  paths: RegisterPaths,
-  dryRun: boolean,
-): { items: number; events: number; skipped: number; available: boolean } {
-  let history: ReturnType<typeof collectRegisterHistoryEvents>;
-  try {
-    history = collectRegisterHistoryEvents({
-      repoRoot: specdojoRootDir(),
-      registerPathspec: repoRelativePathspec(specdojoRootDir(), paths.projectRegisterPath),
-      timeZone: paths.registerDateTimeZone,
-    });
-  } catch {
-    return { items: 0, events: 0, skipped: 0, available: false };
-  }
-
-  const byId = new Map<string, typeof history>();
-  for (const event of history) {
-    if (event.source === "event" || event.kind === "removed") continue;
-    const entries = byId.get(event.id) ?? [];
-    entries.push(event);
-    byId.set(event.id, entries);
-  }
-
-  let itemCount = 0;
-  let eventCount = 0;
-  let skipped = 0;
-  for (const doc of loadRegisterItemDocs(paths.projectRegisterPath)) {
-    const eventPath = registerEventFilePath(paths.projectRegisterPath, doc.id);
-    const ticketContent = readFileSync(doc.path, "utf8");
-    if (
-      existsSync(eventPath) ||
-      (dryRun && readEmbeddedRegisterEvents(ticketContent, doc.filename).length > 0)
-    ) {
-      skipped++;
-      continue;
-    }
-    const legacyEvents = byId.get(doc.id) ?? [];
-    if (legacyEvents.length === 0) continue;
-
-    let currentStatus: string | null = null;
-    let appended = 0;
-    let eventContent: string | undefined;
-    for (const historyEvent of legacyEvents) {
-      const event = legacyHistoryEventToRegisterEvent(historyEvent, {
-        isFirst: appended === 0,
-        currentStatus,
-        fallbackStatus: doc.item.status,
-      });
-      eventContent = appendRegisterEvent(eventContent, event);
-      currentStatus = event.to_status;
-      appended++;
-    }
-    if (appended === 0) continue;
-    if (!dryRun && eventContent) atomicWriteFile(eventPath, eventContent);
-    itemCount++;
-    eventCount += appended;
-  }
-  return { items: itemCount, events: eventCount, skipped, available: true };
-}
-
 // ================================
 // Command Registration
 // ================================
@@ -777,8 +682,6 @@ const REGISTER_COMMAND_DEPENDENCIES: RegisterCommandDependencies = {
   generateDerivedViewFiles,
   loadItemForUpdate,
   loadRegisterItems,
-  migrateEmbeddedRegisterEvents,
-  migrateRegisterEventsFromGit,
   parseHistoryIds,
   parseRegisterTimestampOption,
   planRegisterItem,
