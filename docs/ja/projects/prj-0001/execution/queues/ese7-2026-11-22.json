@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "queue_id": "ese7-2026-11-22",
+  "project_id": "prj-0001",
+  "created_at": "2026-11-22T03:21:20.739Z",
+  "updated_at": "2026-11-22T03:27:17.305Z",
+  "state": "succeeded",
+  "steps": [
+    {
+      "index": 1,
+      "on_failure": "stop",
+      "status": "succeeded",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--register",
+        "PJR-ESE7",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--project",
+        "prj-0001"
+      ],
+      "started_at": "2026-11-22T03:21:21.280Z",
+      "completed_at": "2026-11-22T03:27:17.302Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
+    }
+  ]
+}
