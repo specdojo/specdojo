@@ -7,7 +7,7 @@ import { loadRegisterItemDocs } from "../register/item.js";
 import { commonViewpointsPath, scaffoldViewpoints } from "../review/plan.js";
 import { runProviderScaffold, specdojoPackageRootDir } from "../shared/provider-scaffold.js";
 import {
-  assertValidActor,
+  assertValidExecActor,
   getProjectRegisterPath,
   getProjectViewpointsPath,
   getProjectRoutinesPath,
@@ -485,7 +485,7 @@ export function registerExecCommands(program: Command): void {
       const { schedulePath, executionPath, catalogPath } = resolveProjectContext(opts);
       const actor = requireNonEmpty("by", opts.by);
       const roster = loadRosterForOpts(opts);
-      assertValidActor(actor, roster);
+      assertValidExecActor(actor, roster);
       const strategy = resolveSchedulerStrategy(opts, actor, roster);
       const dryRun = !!opts.dryRun;
       const msg = String(opts.msg ?? "auto-claim");

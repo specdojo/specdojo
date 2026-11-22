@@ -1,6 +1,6 @@
 import { type Command } from "commander";
 import {
-  assertValidActor,
+  assertValidExecActor,
   loadConfig,
   loadMemberRoster,
   specdojoRootDir,
@@ -430,7 +430,7 @@ export async function runLockedEventCommand(
     const { schedulePath, executionPath, catalogPath } = resolveProjectContext(opts);
     const actor = requireNonEmpty("by", opts.by);
     const roster = loadRosterForOpts(opts);
-    assertValidActor(actor, roster);
+    assertValidExecActor(actor, roster);
     let taskId = typeof opts.task === "string" ? opts.task.trim() : "";
     const allowMultipleDoing = !!opts.allowMultipleDoing;
     const lockTimeoutMs = Number(opts.lockTimeoutMs);
@@ -584,7 +584,7 @@ export async function runReleaseAllBlocked(opts: ExecCommandOpts): Promise<void>
     const { schedulePath, executionPath } = resolveProjectContext(opts);
     const actor = requireNonEmpty("by", opts.by);
     const roster = loadRosterForOpts(opts);
-    assertValidActor(actor, roster);
+    assertValidExecActor(actor, roster);
     requireNonEmpty("msg", opts.msg);
     if (opts.task) {
       process.stdout.write("Note: --all-blocked ignores --task.\n");
