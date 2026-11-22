@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-rs2p-product-docs-remove-role-assignment
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-21T08:24:25Z"
+  completed_at: "2026-11-22T00:03:24Z"
+  conclusion: docs/ja/product の 27 ファイルから、文書の作成・確認・承認の役割の割り当てと承認の進み具合を外した。未完了の承認と留保は個票の 5.4 に一覧にした。
   derived_from:
     - PJR-76N9
 ---
