@@ -7,11 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: high
   difficulty: medium
   owner: specdojo-orchestrator
   registered_at: "2026-11-21T23:16:40Z"
+  completed_at: "2026-11-22T05:16:26Z"
+  conclusion: skill specdojo-exec-in-session の正本と Claude Code のラッパーを develop に入れ、新しいセッションでラッパーから正本が読まれることを確かめた。配布は別の todo で扱う
   derived_from:
     - PJR-DEF1
 ---

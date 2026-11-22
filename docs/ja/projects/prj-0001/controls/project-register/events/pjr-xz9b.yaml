@@ -67,3 +67,22 @@
       from: ""
       to: 作業内容
   previous_event_id: reg_05cc617d6ab14905b398a4c8863ee3d3
+- v: 1
+  id: reg_0488fc55a61c466e8751c1f5345e7e8d
+  ts: "2026-11-22T05:16:26Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: done
+  reason: オーケストレーターが自分で実装し、完了条件を確かめた（start を経ずに close）
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: skill specdojo-exec-in-session の正本と Claude Code のラッパーを develop に入れ、新しいセッションでラッパーから正本が読まれることを確かめた。配布は別の todo で扱う
+  previous_event_id: reg_9b5a8385ef73409ea04ce9ce54bf6dff
