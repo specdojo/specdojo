@@ -1,0 +1,20 @@
+atc の sample と rulebook を、grade の指摘に沿って直しました。markdownlint は 2 ファイルとも問題なしです。親の検証（`npm run lint:md` ほか）はまだ流していません。
+
+**sample（`docs/ja/specdojo/samples/atc-sample.md`）**
+- F001・F003（major）と F002（minor）: `at-cash-sale-transaction-check-010` を、店番の交代を伴わない照合に改めました。条件は「家族利用者代表が店番のまま会計を確定した後 / 店番を替えずに照合」、手順の実施者は家族利用者代表です。
+- 受入の責務、観点の意図、概要も合わせて直しました。概要には、店番の交代は `atc-sale-hold` の引継ぎ経路だけで確かめると書き足しました。`atc-index-sample` は変えていません。
+- F004（minor）: 「term」を「このカタログ（`atc-cash-sale`）」に言い換えました。
+- F005（機械的な指摘、PJR-7C9X）: `_ASSUMPTION_` 2 件は `sample-authoring-standard` に従って残しました。sample に `_TODO_` はありません。
+
+**rulebook（`docs/ja/specdojo/rulebooks/atc-rulebook.md`）**
+- F001・F002（minor）: `_UNDECIDED_` から、解消済みの「sample の未整合」の記述を削りました。残る未決は recipe・template の要否だけです。
+
+**個票（`pjr-2mr5-kata-wave-3-atc-fix.md`）**
+- 作業内容の表では、作業 1 と 2 を `done` にしました。
+- 作業 3 は、lint と親の検証が runner の実行のため `open` のままです。
+- 作業 4 の grade での再評価は、オーケストレーターが行うため `open` のままです。
+- 対応結果と関連ドキュメントを埋め、`### 5.1. CHANGELOG に書く事項` に「なし」と書きました。`CHANGELOG.md` は変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"atc の sample と rulebook を grade の指摘に沿って直し、個票の対応結果を更新した。transaction-check-010 は店番の交代を伴わない照合に改めた。sample の `_ASSUMPTION_` は sample-authoring-standard に従って残した（F005、PJR-7C9X）。","handoff":["統合後に `npx specdojo grade run --target kata --kata atc` で評価し直し、rulebook と sample に blocker と major がないことを確かめる。sample の F005（機械的な指摘、PJR-7C9X）だけが残る場合は合格とし、個票の対応結果に書く。","個票の作業内容の表は、作業 3（lint と親の検証）と作業 4（grade での再評価）を `open` のままにした。作業 3 は runner、作業 4 はオーケストレーターが行う。"],"validations":[{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/atc-sample.md docs/ja/specdojo/rulebooks/atc-rulebook.md","status":"passed","summary":"2 ファイルとも 0 issues"},{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-2mr5-kata-wave-3-atc-fix.md docs/ja/specdojo/samples/atc-sample.md docs/ja/specdojo/rulebooks/atc-rulebook.md","status":"passed","summary":"変更した 3 ファイルを整形した"},{"command":"npx specdojo grade run --target kata --kata atc","status":"requires_human","summary":"統合後にオーケストレーターが評価し直す"}]}
+</specdojo_executor_evidence>
