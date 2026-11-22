@@ -104,6 +104,7 @@ import {
   type RateLimitRecoveryEvent,
   type RunOpts,
 } from "./shared.js";
+import { resultMarkdownlintValidator } from "../result-markdownlint.js";
 
 // Resolve the agent command and the actor for an in-place run, ignoring task state. Unlike the
 // worktree flow, this never requires the task to be claimable. The actor is derived the same way
@@ -644,6 +645,11 @@ export async function runInPlaceMode(opts: RunOpts): Promise<void> {
         plan: planPrompt,
         evidence: reporterEvidence,
         mode: task.mode ?? "edit",
+        validateOutput: resultMarkdownlintValidator({
+          repoRoot,
+          resultPath,
+          evidence: reporterEvidence,
+        }),
         invoke: async (reporterPrompt) => {
           const reporterOutcome = await runWithRetry(
             reporterCandidates ?? [],

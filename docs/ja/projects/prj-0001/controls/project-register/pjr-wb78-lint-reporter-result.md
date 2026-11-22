@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-22T03:13:28Z"
-  block_reason: "parent validation failed: typecheck"
   derived_from:
     - PJR-G3TT
 ---
@@ -75,6 +74,7 @@ reporter の出力で lint に落ちる語（中国語の字など）が result 
 
 ### 5.0.3. 確認
 
+- 1 回目の親の検証の `npm run typecheck` が、`markdownItFactory` の戻り値の型（`unknown`）の不一致で落ちた。`markdownlint` の `MarkdownItFactory` 型を使うように直した。
 - `npx vitest run --config vitest.unit.config.ts tests/src/exec`（93 ファイル・1677 件）が通過。`npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md` などは親の検証が実行する。
 - 統合の後の runner の動作確認は、オーケストレーターが PJR-JSEY で行う（作業内容の No 4）。
 

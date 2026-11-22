@@ -92,6 +92,7 @@ import {
 import { type AsyncLock, type RateLimitRecoveryEvent, type RunResult } from "./shared.js";
 import { execLifecyclePoolPath } from "./lock.js";
 import { CrossProcessMutex } from "../../shared/cross-process-lock.js";
+import { resultMarkdownlintValidator } from "../result-markdownlint.js";
 
 // 統合の段（commit・merge・記帳）は root の index と HEAD を書き換える。register ... --commit と
 // specdojo git -- commit は project の lifecycle ロックの下で stage・commit（hook を含む）を行う。
@@ -486,6 +487,11 @@ export async function runPreparedTask(
         plan: prepared.plan,
         evidence: reporterEvidence,
         mode: prepared.task.mode ?? "edit",
+        validateOutput: resultMarkdownlintValidator({
+          repoRoot: prepared.worktree.path,
+          resultPath: worktreeResultPath,
+          evidence: reporterEvidence,
+        }),
         invoke: async (reporterPrompt) => {
           const outcome = await runWithRetry(
             prepared.reporterCandidates ?? [],
