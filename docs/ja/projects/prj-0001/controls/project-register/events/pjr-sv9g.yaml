@@ -125,3 +125,16 @@
       from: in-progress
       to: review
   previous_event_id: reg_e967b637375345a8b210f3688c480c5e
+- v: 1
+  id: reg_e186f74c7bc54e3b99abb6f4c93f50e6
+  ts: "2026-11-22T23:30:59Z"
+  action: update
+  actor: indie
+  from_status: review
+  to_status: review
+  reason: 2 回目の実行の範囲を決めた（外しすぎた目印の復元と一覧の修正、合格条件の列など、2026-11-23）
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_288d331c7d1142c09c03a364394d1f3a

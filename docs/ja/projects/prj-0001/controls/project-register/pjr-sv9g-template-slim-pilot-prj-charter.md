@@ -41,6 +41,13 @@ template には簡潔にする手本がないため、rulebook と sample を見
 - 迷った点は executor が決め、決めた内容と理由を個票の対応結果と報告の `handoff` に書く。
 - 保護された設定（`.specdojo/`・`.agents/`・`.claude/`・`.codex/`・`.opencode/`・`package.json` など）は変えない。変更が要る場合は、変更案を個票の対応結果と報告の `handoff` に書く。
 - `npm run lint:md`・`npm run lint:fm` を通し、親の検証を通す。
+- 2 回目の実行（2026-11-23）。1 回目の後の型の grade（2026-11-22、opus-review-executor）は `prj-charter-template` が needs-work 84 だった。2 回目では次を直す（利用者の決定、2026-11-23、indie）。直すのは引き続き template だけとし、合わせてほかの型に直すべき点があれば変更案を個票の対応結果に書く。
+- 1 回目で外しすぎた目印を戻す。「権限委譲」の `_TODO_` に、rulebook が明示を求める留保の範囲（予算枠の新設・確定・増額、公開可否、ライセンス方針、主要スコープ変更、GO / Not GO 判断）が記入の目印として分かる形を戻す。「主要前提・制約」に、rulebook が求める予算枠・公開適性・人間の判断責任の 3 つを記入できる行を用意する。どちらも rulebook の言い直しにならない、短い目印にする。
+- 個票の対応結果の「他の template へ広げるときの一覧」を直す。「外す: 任意の例示」と「残す」の境目に、「rulebook が記載を求める項目（列挙された必須の項目）の目印は、例示に見えても残す」を足す。1 回目の外しすぎの例として、この 2 か所を一覧の下に書く。
+- 「本格実行開始の GO / Not GO 判断」の表に、rulebook と sample に合わせて「合格条件」の列を足す。
+- 「ハイレベルスコープ」に、AI Agent を利用する場合の支援対象の活動と委譲範囲を書く記入の目印を足す。利用しない場合は記載を要しない旨は rulebook に任せ、目印は短くする。
+- `frontmatter_template` の生成物の `specdojo.status` を `ready` から `draft` に直す。template 自身の `specdojo.status` は変えない。ほかの template で `frontmatter_template`（YAML なら `metadata_template`）の `status` が `draft` 以外のものを `rg` で探し、一覧を個票の対応結果に書く。ほかの template はこの項目では直さない。
+- 前後の大きさ（空白を除いた文字数）を、1 回目の後と 2 回目の後で個票の対応結果に書く。
 
 ## 4. 作業内容
 
