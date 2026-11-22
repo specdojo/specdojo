@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-AEKE",
   "run_id": "pjr-aeke-20261122T133418Z-173a3acc",
-  "updated_at": "2026-11-22T13:36:05.830Z",
+  "updated_at": "2026-11-22T13:36:14.272Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-AEKE/pjr-aeke-20261122T133418Z-173a3acc/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sonnet-executor",
       "attempts": 1,
       "started_at": "2026-11-22T13:36:05.830Z",
-      "completed_at": null,
+      "completed_at": "2026-11-22T13:36:14.272Z",
       "artifact_ref": null
     }
   },
