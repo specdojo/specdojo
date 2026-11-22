@@ -36,6 +36,10 @@ qwen（opencode）の executor は npx・rm・git rm を拒まれ、検証を流
 - `CHANGELOG.md` は変えない。個票の対応結果に「CHANGELOG に書く事項」の小節を作り、区分と行の文案を書く。
 - `npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md` を通し、親の検証を通す。
 - 保護された設定の反映の後に、オーケストレーターが qwen の executor で 1 件流し、検証のコマンドと `git rm` が拒まれないことを確かめてから close する。
+- 2 回目の実行（2026-11-22）: 1 回目の `OPENCODE_PERMISSION` は global の `permission` に足され、エージェントの定義の `"*": deny` より前に並ぶため効かない。オーケストレーターが opencode 1.19.6 の `opencode debug agent opencode-executor --tool bash` で、注入した `echo` の許可が拒まれることを確かめた。`OPENCODE_CONFIG_CONTENT` でエージェントの `permission.bash` に入れると定義の規則の後ろに並び、足したコマンドだけが通ることも確かめた（`whoami` は拒まれたまま）。次を直す。
+  - `allow_commands` を `OPENCODE_PERMISSION` ではなく `OPENCODE_CONFIG_CONTENT` で、起動するエージェントの `permission.bash` に入れる。既存の値（`opencode-permissions.ts` の extra roots の注入など）と混ぜて保つ。
+  - 足した規則が定義の `"*": deny` より後ろに並び、足したコマンドだけが許され、ほかは拒まれ続けることを単体テストで確かめる。
+  - 個票の対応結果の `OPENCODE_PERMISSION` の `_ASSUMPTION_` を、この確かめの結果に置き換え、`exec-config-guide` の説明を直す。
 
 ## 4. 作業内容
 
