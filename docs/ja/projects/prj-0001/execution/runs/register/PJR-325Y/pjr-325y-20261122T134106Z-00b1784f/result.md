@@ -4,14 +4,13 @@ specdojo:
   type: exec-result
   task_id: PJR-325Y
   mode: edit
-  status: blocked
+  status: superseded
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-325Y/pjr-325y-20261122T134106Z-00b1784f/plan.md
   started_at: "2026-11-22T13:41:07.644Z"
-  completed_at: "2026-11-22T13:49:51.092Z"
+  completed_at: "2026-11-22T14:13:32.231Z"
   agent: opus-executor
-  block_reason: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /unit/ tests/src/docs/yaml-tables.test.ts > typed YAML display pages > renders tables and the entire folded…"
 ---
 
 # Edit Result
