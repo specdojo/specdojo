@@ -31,7 +31,7 @@ pre-commit:
     # 比較して通り、整形後の SSOT との差分が commit へ入る」順序事故が起きるからである。
     # 生成は冪等で、prettier が整形しない .toml 側のずれもここで吸収する。
     orchestrator-sync:
-      glob: "{.agents/specdojo-orchestrator.agent.md,.claude/agents/specdojo-orchestrator.md,.github/agents/specdojo-orchestrator.md,.codex/agents/specdojo-orchestrator.toml,.opencode/agents/gemma-orchestrator.md,.opencode/agents/qwen-orchestrator.md,templates/*/agents/specdojo-orchestrator.*}"
+      glob: "{.agents/specdojo-orchestrator.agent.md,.claude/agents/specdojo-orchestrator.md,.github/agents/specdojo-orchestrator.md,.codex/agents/specdojo-orchestrator.toml,.opencode/agents/gemma-orchestrator.md,.opencode/agents/qwen-orchestrator.md,templates/*/agents/specdojo-orchestrator.*,.agents/skills/specdojo-exec-in-session/SKILL.md,.claude/skills/specdojo-exec-in-session/SKILL.md,templates/agent-skills/**,templates/claude/skills/**}"
       run: npm run orchestrator:sync
       stage_fixed: true
 
