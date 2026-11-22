@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: high
   difficulty: medium
   owner: BA
   registered_at: "2026-11-17T23:24:32Z"
   due_on: "2026-11-30"
+  block_reason: "executor reported incomplete: template への書き込み権限が付与されず（Edit が permission 拒否）、prj-charter-template の編集と個票の更新を実施できなかった。成果物は未変更。"
   derived_from:
     - PJR-WYTX
   depends_on:

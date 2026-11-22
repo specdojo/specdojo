@@ -64,3 +64,32 @@
       from: "-"
       to: medium
   previous_event_id: reg_74e7da9e46f340a68436003c7a867e8c
+- v: 1
+  id: reg_fed72cbaaf684877a69e2ca76f76879c
+  ts: "2026-11-22T13:38:52Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_3ae5df3232d249c397fb142361ab8d39
+- v: 1
+  id: reg_6f67e936e7c742aaa64e3cf07f9d8e7f
+  ts: "2026-11-22T13:40:38Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor reported incomplete: rulebook 6 件の ID 記述を修飾形へ修正した。個票への書き込みが権限エラーで拒否されたため、作業内容・対応結果の更新が未完了。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor reported incomplete: rulebook 6 件の ID 記述を修飾形へ修正した。個票への書き込みが権限エラーで拒否されたため、作業内容・対応結果の更新が未完了。"
+  previous_event_id: reg_fed72cbaaf684877a69e2ca76f76879c

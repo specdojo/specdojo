@@ -4,12 +4,14 @@ specdojo:
   type: exec-result
   task_id: PJR-SV9G
   mode: edit
-  status: in_progress
+  status: blocked
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-SV9G/pjr-sv9g-20261122T133847Z-c8c7a091/plan.md
   started_at: "2026-11-22T13:39:40.322Z"
+  completed_at: "2026-11-22T13:41:48.059Z"
   agent: sonnet-executor
+  block_reason: "executor reported incomplete: template への書き込み権限が付与されず（Edit が permission 拒否）、prj-charter-template の編集と個票の更新を実施できなかった。成果物は未変更。"
 ---
 
 # Edit Result
