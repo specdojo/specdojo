@@ -54,19 +54,19 @@ external_projects へ register add --commit -m を複数渡すと、各段落が
 
 ## 5. 対応結果
 
-### 原因
+### 5.1. 原因
 
 - `src/register/external-project.ts` の `ExternalRegisterAddOptions.message` が `string | undefined` で、caller が commander の `-m`（複数値 collector `collectRegisterCommitMessage`）から渡す配列（`string[]`）をそのまま `addValue(args, "--message", ...)` へ渡していた。複数渡しで受け取れる相手側の commander も同じ collector を持っていたため、3 つの `-m` をカンマ連結ではなく段落の列として受け取っていたが、外部経由の引数組み立ては「1 個の `--message` へ配列を 1 文字列へ落とした」挙動になり、相手側の `commitMessage` が「件名・本文・Co-Authored-By」の 1 行（275 文字 / 414 文字）として解釈されていた。
 - 失敗の表示は `src/shared/git.ts` の `gitOutput` と `GitCommandError` が `stderr` のみに注目していること。commitlint は失敗理由を **stdout** へ出すため、`error.stderr` が空になり、`register.ts` の commit catch で「The register changes were written but not committed: ...」のみのエラーになっていた。個票の報告どおり。
 
-### 対応
+### 5.2. 対応
 
 - `src/register/external-project.ts`:
   - `ExternalRegisterAddOptions.message` を `readonly string[]` に変更。
   - `buildExternalRegisterAddArgs` の末尾を `externalCommitMessageParagraphs(opts.message)` で展開し、各値を 1 つずつ `--message <paragraph>` として相手へ渡す（空値は除去、全て空なら `--message` を出さず相手側の既定 commit message を使う）。
   - `delegateExternalRegisterAdd` は `stdio` を `["ignore", "pipe", "pipe"]` に変え、実行結果の stdout / stderr を自分のストリームへ転送。`status !== 0` のとき `process.exitCode` を継承する。stderr が空の stdout 失敗（commitlint）もそのまま出力としてユーザーへ伝わる。
 - `src/register/register.ts`:
-  - 新增の `gitOutputCapturingFailure(repoRoot, args)` を追加。`gitResult` で commit を実行し、失敗時に stdout と stderr を併せて `formatGitCommandFailure`（内部で `summarizeGitStderr` 相当に要約）へ渡し、原因を含む `GitCommandError` を投げる。これにより commitlint が **stdout** へ出す理由もエラー message に残る。
+  - 新しい `gitOutputCapturingFailure(repoRoot, args)` を追加。`gitResult` で commit を実行し、失敗時に stdout と stderr を併せて `formatGitCommandFailure`（内部で `summarizeGitStderr` 相当に要約）へ渡し、原因を含む `GitCommandError` を投げる。これにより commitlint が **stdout** へ出す理由もエラー message に残る。
   - 初回 commit は `gitOutput` の代わりに `gitOutputCapturingFailure(commitMessage の args)` を呼ぶ。amend 収束の段階は従来どおり `gitOutput` のまま。catch ブロックでは、`committed` 前（初回失敗）の error.message から原因がそのまま取れるため、状態だけを追記する既存挙動を維持。
 - `tests/src/register/commit.integration.test.ts`:
   - 新ケース「commit-msg が stdout に理由を出しても失敗原因をエラーへ含める（PJR-QTZ7）」。stderr を空に、stdout へ `body-max-line-length: found 0` と出力する `commit-msg` hook を設置し、最終エラーメッセージの stderr 出力（`The register changes were written but not committed:` の前段）にその文字列が含まれることを検証。
@@ -76,7 +76,7 @@ external_projects へ register add --commit -m を複数渡すと、各段落が
   - 新ケース「omits --message when every value is blank so the target uses its default」: 全て空値なら `--message` が渡されないことを確認。
 - 個票の完了条件: 個別の完了条件をすべて満たす。
 
-### 5.1 CHANGELOG に書く事項
+### 5.3. CHANGELOG に書く事項
 
 - 不具合修正: 外部プロジェクトへの `register add --commit -m` で複数の段落をカンマ連結せず、各値を別々の `--message` として相手へ渡す。
 - 不具合修正: commit-msg hook が stdout へ失敗理由を出した場合でも、`register add` / `register update` などのエラー出力（stderr）にその理由を含める。
