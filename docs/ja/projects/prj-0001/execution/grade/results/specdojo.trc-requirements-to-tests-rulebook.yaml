@@ -4,29 +4,28 @@ document: specdojo:trc-requirements-to-tests-rulebook
 path: docs/ja/specdojo/rulebooks/trc-requirements-to-tests-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-rulebook
 verdict: needs-work
-score: 78
-graded_at: "2026-11-21T06:00:18.077Z"
-graded_by: opus-executor
-content_hash: 93826ad5099fb8739f49347802bfd8bc8ea62a8cd14ee6327ba75378d6a52533
+score: 88
+graded_at: "2026-11-22T02:09:39.807Z"
+graded_by: opus-review-executor
+content_hash: 478982f73f386ef26d1edad769cae268424991bcda59bc953f226f83a2aef475
 categories:
   purpose:
     score: 100
   operations:
-    score: 88
+    score: 94
   planning:
     score: 100
   business:
     score: 100
   architecture:
-    score: 83
+    score: 92
   usability:
-    score: 83
+    score: 100
   implementation:
-    score: 88
+    score: 100
   quality:
-    score: 67
+    score: 83
   consistency:
     score: 50
 viewpoints:
@@ -58,8 +57,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-technical-constraints:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -67,8 +66,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-change-impact:
     level: 4
     score: 100
@@ -76,26 +75,26 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
     level: 2
     score: 50
   vp-qe-kata-conformance:
-    level: 1
-    score: 25
-  vp-ux-readability:
     level: 2
     score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 4
     score: 100
   vp-ops-release-readiness:
+    level: 3
+    score: 75
+  vp-ops-operability:
     level: 4
     score: 100
-  vp-ops-operability:
-    level: 2
-    score: 50
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -104,111 +103,55 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 7
-  minor: 3
+  major: 2
+  minor: 2
   note: 0
 findings:
   - id: F001
-    severity: major
+    severity: minor
     rule: vp-arc-technical-constraints
-    line: 10
-    anchor: >-
-      - **正本と派生**: 対応の正本はテスト成果物の `relations.verifies`
-      とし、本ビューは派生ビューとして生成します。「目的と適用範囲」と「トレース対象の前提」は生成の条件として書き、「トレースマトリクス」「充足状況サマリ」「ギャップと対応方針」は生成元から導出します。充足状況やギャップを直すときは生成元の成果物を直して再生成し、本ビューへ直接書きません。
+    line: 50
+    anchor: "3. 項目単位で対応づける: 各テストの「トレース」の表から、仕様ID が母集団の要求項目を指す行を拾う。その `trace_key` をケース表の `トレース` 列が参照しているかも確かめる。"
     message: >-
-      正本を `relations.verifies` としながら行を要求項目 ID 単位で並べるが、`atc-rulebook` では `relations.verifies` は `bac-checkout` など文書単位の ID
-      で、項目単位の対応は本文の `TR-xx` が担うため、要求項目 ID ごとの対応テストを導出できず、文書 ID と項目 ID のどちらを行の単位にするか、また項目単位の対応をどの情報源から得るかを定義してください。
+      手順3で仕様ID が要求項目を指すかを判定する際、wikilink 表記・下位項目（例: `BAC-01 の C-01`）・複数項目の併記（例:
+      `SC-01・AC-03`）をどう要求項目へ対応づけるかが未定義で再現性を欠くため、仕様ID から要求文書 ID と項目 ID を取り出す規則を定めてください。
     message_ja: >-
-      正本を `relations.verifies` としながら行を要求項目 ID 単位で並べるが、`atc-rulebook` では `relations.verifies` は `bac-checkout` など文書単位の ID
-      で、項目単位の対応は本文の `TR-xx` が担うため、要求項目 ID ごとの対応テストを導出できず、文書 ID と項目 ID のどちらを行の単位にするか、また項目単位の対応をどの情報源から得るかを定義してください。
+      手順3で仕様ID が要求項目を指すかを判定する際、wikilink 表記・下位項目（例: `BAC-01 の C-01`）・複数項目の併記（例:
+      `SC-01・AC-03`）をどう要求項目へ対応づけるかが未定義で再現性を欠くため、仕様ID から要求文書 ID と項目 ID を取り出す規則を定めてください。
   - id: F002
-    severity: minor
-    rule: vp-dev-implementation-readiness
-    line: 74
-    anchor: >-
-      - **良い例**: 「要求の母集団: `bac-sales` の全受入基準。テスト: `relations.verifies` を持つ `atc-*`・`stc-*`。生成: `<生成コマンド>` で 2026-05-01
-      に生成。」
-    message: 生成手段の良い例が `＜生成コマンド＞` のプレースホルダで、該当する CLI も存在しないため、手順で生成する場合に最低限記録すべき抽出条件、列ごとの導出手順、照合方法を示してください。
-    message_ja: 生成手段の良い例が `＜生成コマンド＞` のプレースホルダで、該当する CLI も存在しないため、手順で生成する場合に最低限記録すべき抽出条件、列ごとの導出手順、照合方法を示してください。
-  - id: F003
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 58
-    anchor: "| `一部充足` | 対応テストはあるが、参照先が未作成・`draft` であるか、ギャップが残る |"
-    message: >-
-      `一部充足` の条件「参照先が未作成」は、対応テストが `relations.verifies` を持つテスト自体であるため成立せず判定に使えないので、何が未作成の状態を指すか（例:
-      検証ケースが未記載）を定義するか条件から削除してください。
-    message_ja: >-
-      `一部充足` の条件「参照先が未作成」は、対応テストが `relations.verifies` を持つテスト自体であるため成立せず判定に使えないので、何が未作成の状態を指すか（例:
-      検証ケースが未記載）を定義するか条件から削除してください。
-  - id: F004
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 46
-    anchor: "| 要求ID       | 母集団の要求 ID。母集団にない参照は `なし` とし、その参照を持つテストを対応テストIDに書く |"
-    message: 要求ID を `なし` とする母集団外参照の行について、充足状況の値と、充足状況サマリの件数（合計を母集団件数と一致させる規則）から除外するかが未定義のため、扱いを明記してください。
-    message_ja: 要求ID を `なし` とする母集団外参照の行について、充足状況の値と、充足状況サマリの件数（合計を母集団件数と一致させる規則）から除外するかが未定義のため、扱いを明記してください。
-  - id: F005
     severity: major
     rule: vp-qe-omissions-consistency
-    line: 10
-    anchor: >-
-      - **正本と派生**: 対応の正本はテスト成果物の `relations.verifies`
-      とし、本ビューは派生ビューとして生成します。「目的と適用範囲」と「トレース対象の前提」は生成の条件として書き、「トレースマトリクス」「充足状況サマリ」「ギャップと対応方針」は生成元から導出します。充足状況やギャップを直すときは生成元の成果物を直して再生成し、本ビューへ直接書きません。
-    message: 充足状況とギャップを生成元成果物または検証結果へ記録するとしているが、使用する成果物種別、フィールド、優先順位、競合時の扱いがなく派生不能なため、各出力カラムの生成元と変換規則を定義してください。
-    message_ja: 充足状況とギャップを生成元成果物または検証結果へ記録するとしているが、使用する成果物種別、フィールド、優先順位、競合時の扱いがなく派生不能なため、各出力カラムの生成元と変換規則を定義してください。
-  - id: F006
+    line: 49
+    anchor: "2. テストを抽出する: `relations.verifies` に母集団の要求文書 ID を 1 つ以上持つテスト文書を集める。"
+    message: >-
+      手順2はテストの抽出を `relations.verifies` に母集団の要求文書を持つものに限るが、判定表の「要求文書が `relations.verifies` にない」条件や本文31行目の索引を抽出に使う前提、および
+      sample が索引を走査して `relations.verifies` を欠く `stc-cash-sale`
+      を拾った手順と矛盾し、同じ前提でも抽出結果が変わるため、索引などから「トレース」の表を走査して抽出する経路と、その条件を手順2に定義してください。
+    message_ja: >-
+      手順2はテストの抽出を `relations.verifies` に母集団の要求文書を持つものに限るが、判定表の「要求文書が `relations.verifies` にない」条件や本文31行目の索引を抽出に使う前提、および
+      sample が索引を走査して `relations.verifies` を欠く `stc-cash-sale`
+      を拾った手順と矛盾し、同じ前提でも抽出結果が変わるため、索引などから「トレース」の表を走査して抽出する経路と、その条件を手順2に定義してください。
+  - id: F003
     severity: major
     rule: vp-qe-kata-conformance
-    line: 29
-    anchor: "- `specdojo.based_on` は必須とし、生成元とした要求とテストの文書 ID をすべて記載します。索引だけを挙げて要求側を省きません。"
+    line: 50
+    anchor: "3. 項目単位で対応づける: 各テストの「トレース」の表から、仕様ID が母集団の要求項目を指す行を拾う。その `trace_key` をケース表の `トレース` 列が参照しているかも確かめる。"
     message: >-
-      参考 sample の `based_on` は `utc-index` と `itc-index` のみで、本文が参照元とする `req-2026-r1` と `atc-*` を含まず、「生成元となる要求・テスト仕様の ID
-      配列」という本定義と整合しないため、全直接生成元を列挙する規則と sample を一致させてください。
+      手順3と `充足` の条件（本文75行目）は、テストの「トレース」の表の仕様ID が要求項目を指すことと、テストが `relations.verifies` を宣言することを前提とするが、`stc-rulebook` は仕様ID
+      を「根拠仕様の文書ID」と定義し `relations.verifies` の宣言も定めていないため総合テストが `充足` になり得ず、`stc-rulebook` 側の対応を求めるか、総合テストの場合の判定規則を本
+      rulebook に定めてください。
     message_ja: >-
-      参考 sample の `based_on` は `utc-index` と `itc-index` のみで、本文が参照元とする `req-2026-r1` と `atc-*` を含まず、「生成元となる要求・テスト仕様の ID
-      配列」という本定義と整合しないため、全直接生成元を列挙する規則と sample を一致させてください。
-  - id: F007
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 36
-    anchor: "| トレース対象の前提   | 必須     | 要求の母集団（`based_on` の要求文書の全要求 ID）、テストの範囲、生成の手段（コマンドまたは手順）と生成日が分かること        |"
+      手順3と `充足` の条件（本文75行目）は、テストの「トレース」の表の仕様ID が要求項目を指すことと、テストが `relations.verifies` を宣言することを前提とするが、`stc-rulebook` は仕様ID
+      を「根拠仕様の文書ID」と定義し `relations.verifies` の宣言も定めていないため総合テストが `充足` になり得ず、`stc-rulebook` 側の対応を求めるか、総合テストの場合の判定規則を本
+      rulebook に定めてください。
+  - id: F004
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 46
+    anchor: 生成コマンドがない場合は次の手順で生成し、手作業で生成したことを「トレース対象の前提」に書きます。
     message: >-
-      非手編集の派生ビューであるにもかかわらず、入力解決、状態・ギャップの導出、再生成の実行方法が rulebook・recipe・template のいずれにも定義されず、参考 sample
-      も完成した適用例になっていないため、rulebook 内に適用契約を定義するか対応 recipe/template を宣言してください。
+      生成コマンドがない前提の手作業での生成や、recipe・template の要否など `ready` 化の前に判断すべき事項が本文に示されていないため、`_UNDECIDED_` などで未決事項と `ready`
+      への昇格条件を明記してください。
     message_ja: >-
-      非手編集の派生ビューであるにもかかわらず、入力解決、状態・ギャップの導出、再生成の実行方法が rulebook・recipe・template のいずれにも定義されず、参考 sample
-      も完成した適用例になっていないため、rulebook 内に適用契約を定義するか対応 recipe/template を宣言してください。
-  - id: F008
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 85
-    anchor: "- **判断基準**: どの生成元の成果物をどう直せば解消と判定するかが分かること。担当・期限は登録簿で追跡し、本ビューに列を設けません。"
-    message: >-
-      参考 sample がギャップ表に担当・期限列を持ち、対応テスト `itc-audit-log-persist` がある `req-r1-004` を `未着手`
-      とし、前提に生成手段・生成日を欠くなど、改訂後の本文要件・充足状況の判定・禁止事項と矛盾するため、sample を本 rulebook の完成例として作り直してください。
-    message_ja: >-
-      参考 sample がギャップ表に担当・期限列を持ち、対応テスト `itc-audit-log-persist` がある `req-r1-004` を `未着手`
-      とし、前提に生成手段・生成日を欠くなど、改訂後の本文要件・充足状況の判定・禁止事項と矛盾するため、sample を本 rulebook の完成例として作り直してください。
-  - id: F009
-    severity: major
-    rule: vp-ux-readability
-    line: 39
-    anchor: >-
-      | ギャップと対応方針   | 必須     |
-      ギャップごとに、直す生成元の成果物と解消の判定条件が分かること                                                              |
-    message: 読者には充足状況・ギャップ・対応方針を記載するよう求めながら直接入力を禁止しており、どの元成果物をどの順序で更新してビューを再生成するか分からないため、入力成果物からレビューまでの手順と編集境界を明記してください。
-    message_ja: 読者には充足状況・ギャップ・対応方針を記載するよう求めながら直接入力を禁止しており、どの元成果物をどの順序で更新してビューを再生成するか分からないため、入力成果物からレビューまでの手順と編集境界を明記してください。
-  - id: F010
-    severity: major
-    rule: vp-ops-operability
-    line: 10
-    anchor: >-
-      - **正本と派生**: 対応の正本はテスト成果物の `relations.verifies`
-      とし、本ビューは派生ビューとして生成します。「目的と適用範囲」と「トレース対象の前提」は生成の条件として書き、「トレースマトリクス」「充足状況サマリ」「ギャップと対応方針」は生成元から導出します。充足状況やギャップを直すときは生成元の成果物を直して再生成し、本ビューへ直接書きません。
-    message: >-
-      参考 sample の更新規則は充足状況を状態遷移で管理して備考へチケット ID
-      を追記する手編集を前提としており、ビューへ直接入力せず再生成する本規定と矛盾するため、更新主体と手入力可能項目を明示して両文書を一致させてください。
-    message_ja: >-
-      参考 sample の更新規則は充足状況を状態遷移で管理して備考へチケット ID
-      を追記する手編集を前提としており、ビューへ直接入力せず再生成する本規定と矛盾するため、更新主体と手入力可能項目を明示して両文書を一致させてください。
+      生成コマンドがない前提の手作業での生成や、recipe・template の要否など `ready` 化の前に判断すべき事項が本文に示されていないため、`_UNDECIDED_` などで未決事項と `ready`
+      への昇格条件を明記してください。

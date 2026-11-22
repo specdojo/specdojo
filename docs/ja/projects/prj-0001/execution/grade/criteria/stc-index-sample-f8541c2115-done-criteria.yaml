@@ -1,0 +1,42 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: specdojo:stc-index-sample-grade-criteria
+document: specdojo:stc-index-sample
+path: docs/ja/specdojo/samples/stc-index-sample.md
+graded_at: "2026-11-22T01:32:48.373Z"
+graded_by: opus-review-executor
+content_hash: ca669bd6671fec6eb756fad87b447bffa0731a7ec22a83f05deb3be7056a62a4
+summary:
+  satisfied: 5
+  unsatisfied: 0
+  total: 5
+criteria:
+  - id: DC-001
+    text: rulebook の章立てと必須の表に沿っていること
+    roles:
+      - QE
+    viewpoint: vp-qe-omissions-consistency
+    status: satisfied
+  - id: DC-002
+    text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+    roles:
+      - QE
+    viewpoint: vp-qe-kata-conformance
+    status: satisfied
+  - id: DC-003
+    text: rulebook の禁止事項に当たらないこと
+    roles:
+      - QE
+    viewpoint: vp-qe-kata-conformance
+    status: satisfied
+  - id: DC-004
+    text: Frontmatter の `based_on` に tsp-index を持つこと
+    roles:
+      - QE
+    viewpoint: vp-qe-omissions-consistency
+    status: satisfied
+  - id: DC-005
+    text: 優先度（P0・P1・P2）ごとの共通の合格基準と、観測点を含む期待値の例を示していること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: satisfied

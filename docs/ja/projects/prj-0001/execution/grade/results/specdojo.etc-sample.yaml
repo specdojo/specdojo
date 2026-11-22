@@ -4,98 +4,97 @@ document: specdojo:etc-sample
 path: docs/ja/specdojo/samples/etc-sample.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-sample
-verdict: fail
-score: 38
-graded_at: "2026-11-21T03:57:43.999Z"
-graded_by: opus-executor
-content_hash: 10dee411eacd52bf97646b5274a8bfe351eb556a5b849d9dad993d88c6f0b6c7
+verdict: pass
+score: 89
+graded_at: "2026-11-22T01:44:34.221Z"
+graded_by: opus-review-executor
+content_hash: e8e53f2f9238ba9f8025dbbe76dfe434218db3aba5905ca11f23d73a66045a6e
 categories:
   purpose:
-    score: 38
+    score: 100
   operations:
-    score: 63
+    score: 100
   planning:
-    score: 42
+    score: 92
   business:
-    score: 42
+    score: 100
   architecture:
-    score: 58
+    score: 100
   usability:
-    score: 67
+    score: 92
   implementation:
-    score: 38
+    score: 100
   quality:
-    score: 17
+    score: 75
   consistency:
-    score: 0
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-po-decision-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-po-publication-accountability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-plan-feasibility:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-pm-control-reporting:
     level: 3
     score: 75
   vp-ba-business-value:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ba-requirements-completeness:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 3
     score: 75
-  vp-arc-single-responsibility:
-    level: 2
-    score: 50
-  vp-dev-implementation-readiness:
-    level: 1
-    score: 25
-  vp-dev-change-impact:
-    level: 2
-    score: 50
-  vp-dev-testability:
-    level: 1
-    score: 25
   vp-qe-verifiability:
-    level: 1
-    score: 25
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
-    level: 0
-    score: 0
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
-    level: 0
-    score: 0
+    level: 3
+    score: 75
   vp-ux-readability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 3
     score: 75
   vp-ops-release-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ops-operability:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -103,253 +102,88 @@ viewpoints:
     level: 4
     score: 100
 finding_counts:
-  blocker: 2
-  major: 27
-  minor: 5
+  blocker: 0
+  major: 0
+  minor: 7
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-po-purpose-alignment
-    line: 5
-    anchor: 本書は、外部結合テスト仕様を連携単位で分割して定義する（仕様）ための最小サンプルである。
-    message: ドキュメントがプロジェクトの目標や上流の仕様と一致しておらず、外部結合テストの具体的なスコープ、目的、および根拠が不足しています。
-    message_ja: ドキュメントがプロジェクトの目標や上流の仕様と一致しておらず、外部結合テストの具体的なスコープ、目的、および根拠が不足しています。
-  - id: F002
-    severity: major
-    rule: vp-po-purpose-alignment
-    line: 9
-    anchor: "- 対象: 駄菓子屋の販売管理システム"
-    message: 対象が「駄菓子屋の販売管理システム」の全体に留まっている。プロジェクト概要の前提条件（EC・仕入れ先・会計連携は対象外）と矛盾しない具体的な外部境界（`＜term＞`）を選び、その理由を示す必要がある。
-    message_ja: 対象が「駄菓子屋の販売管理システム」の全体に留まっている。プロジェクト概要の前提条件（EC・仕入れ先・会計連携は対象外）と矛盾しない具体的な外部境界（`＜term＞`）を選び、その理由を示す必要がある。
-  - id: F003
-    severity: major
-    rule: vp-po-decision-readiness
-    line: 26
-    anchor: "## 5. 未解決事項"
-    message: 未解決の課題について、POのレビューに必要な明確な決定基準、意思決定者、影響、および具体的な次のアクションが不足しています。
-    message_ja: 未解決の課題について、POのレビューに必要な明確な決定基準、意思決定者、影響、および具体的な次のアクションが不足しています。
-  - id: F004
-    severity: minor
-    rule: vp-po-publication-accountability
-    line: 1
-    anchor: "# [外部結合テスト対象別](../rulebooks/etc-rulebook.md) サンプル"
-    message: 公開の責任および人的承認の責任が明示的に定義されていません。
-    message_ja: 公開の責任および人的承認の責任が明示的に定義されていません。
-  - id: F005
-    severity: major
-    rule: vp-pm-plan-feasibility
-    line: 5
-    anchor: 本書は、外部結合テスト仕様を連携単位で分割して定義する（仕様）ための最小サンプルである。
-    message: タスクの計画と追跡に必要なワークユニット、依存関係、ロールの割り当て、および完了条件が不足しています。
-    message_ja: タスクの計画と追跡に必要なワークユニット、依存関係、ロールの割り当て、および完了条件が不足しています。
-  - id: F006
-    severity: major
-    rule: vp-pm-plan-feasibility
-    line: 18
-    anchor: "## 4. 最小記述例"
-    message: 「最小記述例」に、`case_id`・優先度・自動化区分を持つ条件・ケース表がない。テスト実装をタスク化し、進捗を管理する単位を示せていない。
-    message_ja: 「最小記述例」に、`case_id`・優先度・自動化区分を持つ条件・ケース表がない。テスト実装をタスク化し、進捗を管理する単位を示せていない。
-  - id: F007
-    severity: major
-    rule: vp-pm-dependency-risk
-    line: 10
-    anchor: "- 前提: プロジェクト文脈は handbook の共通方針に準拠する"
-    message: >-
-      Dependencies on upstream test plans (such as tsp-index and etc-index) and external systems, as well as associated
-      risks, are not identified.
-    message_ja: >-
-      Dependencies on upstream test plans (such as tsp-index and etc-index) and external systems, as well as associated
-      risks, are not identified.
-  - id: F008
-    severity: major
-    rule: vp-pm-dependency-risk
-    line: 1
-    anchor: "# [外部結合テスト対象別](../rulebooks/etc-rulebook.md) サンプル"
-    message: "Frontmatter に、rulebook が最低限として求める `based_on: [tsp-index, etc-index]` がない。上流のテスト戦略・全体構成への依存を機械的にたどれない。"
-    message_ja: "Frontmatter に、rulebook が最低限として求める `based_on: [tsp-index, etc-index]` がない。上流のテスト戦略・全体構成への依存を機械的にたどれない。"
-  - id: F009
     severity: minor
     rule: vp-pm-control-reporting
-    line: 26
-    anchor: "## 5. 未解決事項"
-    message: 進捗および課題の追跡に関する報告先、取り扱いポリシー、および責任ロールコードが定義されていません。
-    message_ja: 進捗および課題の追跡に関する報告先、取り扱いポリシー、および責任ロールコードが定義されていません。
-  - id: F010
-    severity: major
-    rule: vp-ba-business-value
-    line: 5
-    anchor: 本書は、外部結合テスト仕様を連携単位で分割して定義する（仕様）ための最小サンプルである。
-    message: 菓子販売管理システムにおける外部結合テストのビジネス上の問題、対象となるステークホルダー、または期待される価値について記述されていません。
-    message_ja: 菓子販売管理システムにおける外部結合テストのビジネス上の問題、対象となるステークホルダー、または期待される価値について記述されていません。
-  - id: F011
-    severity: major
-    rule: vp-ba-requirements-completeness
-    line: 5
-    anchor: 本書は、外部結合テスト仕様を連携単位で分割して定義する（仕様）ための最小サンプルである。
-    message: スコープ、スコープ外の境界、および受け入れ条件が、ユーザーの視点から検証可能なレベルで定義されていません。
-    message_ja: スコープ、スコープ外の境界、および受け入れ条件が、ユーザーの視点から検証可能なレベルで定義されていません。
-  - id: F012
-    severity: major
-    rule: vp-ba-requirements-completeness
-    line: 13
-    anchor: "## 3. 記述内容"
-    message: rulebook が必須とする「責務」（動詞で始まる 3〜7 個）と「対象外」（理由・代替レベル付き）が欠落しており、検証範囲と除外範囲を確認できない。
-    message_ja: rulebook が必須とする「責務」（動詞で始まる 3〜7 個）と「対象外」（理由・代替レベル付き）が欠落しており、検証範囲と除外範囲を確認できない。
-  - id: F013
-    severity: major
-    rule: vp-ba-stakeholder-clarity
-    line: 9
-    anchor: "- 対象: 駄菓子屋の販売管理システム"
-    message: 関連するステークホルダー、運用ユーザー、レビュアー、および合意の対象が特定されていません。
-    message_ja: 関連するステークホルダー、運用ユーザー、レビュアー、および合意の対象が特定されていません。
-  - id: F014
-    severity: major
-    rule: vp-arc-technical-constraints
-    line: 9
-    anchor: "- 対象: 駄菓子屋の販売管理システム"
-    message: 技術的制約、外部依存関係、プロトコル、およびサンドボックス/環境構成が完全に省略されています。
-    message_ja: 技術的制約、外部依存関係、プロトコル、およびサンドボックス/環境構成が完全に省略されています。
-  - id: F015
-    severity: major
-    rule: vp-arc-technical-constraints
-    line: 15
-    anchor: "- 主な内容: I/Fごとのテスト条件一覧（入力/期待/エラー）、前提（接続先・認証・テストデータ）、合格基準、関連する外部I/F仕様ID"
-    message: 「前提（接続先・認証・テストデータ）」という項目名を挙げるだけで、境界/依存/環境章として sandbox・スタブの扱い、秘密情報のマスキング、テストデータの namespace と後始末の具体例を示していない。
-    message_ja: 「前提（接続先・認証・テストデータ）」という項目名を挙げるだけで、境界/依存/環境章として sandbox・スタブの扱い、秘密情報のマスキング、テストデータの namespace と後始末の具体例を示していない。
-  - id: F016
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 24
-    anchor: "| 主な内容     | I/Fごとのテスト条件一覧（入力/期待/エラー）、前提（接続先・認証・テストデータ）、合格基準、関連する外部I/F仕様ID | 要点のみ記載                         |"
-    message: セクション4の表において、具体的な値や追加のコンテキストを提供することなく、セクション3のテキストがそのまま重複して記載されています。
-    message_ja: セクション4の表において、具体的な値や追加のコンテキストを提供することなく、セクション3のテキストがそのまま重複して記載されています。
-  - id: F017
-    severity: major
-    rule: vp-arc-single-responsibility
-    line: 1
-    anchor: "# [外部結合テスト対象別](../rulebooks/etc-rulebook.md) サンプル"
-    message: 「完成例（sample）」としての責務ではなく「記述ガイド」として振る舞っており、成果物の正本としての形式をなしていない。
-    message_ja: 「完成例（sample）」としての責務ではなく「記述ガイド」として振る舞っており、成果物の正本としての形式をなしていない。
-  - id: F018
-    severity: major
-    rule: vp-dev-implementation-readiness
-    line: 15
-    anchor: "- 主な内容: I/Fごとのテスト条件一覧（入力/期待/エラー）、前提（接続先・認証・テストデータ）、合格基準、関連する外部I/F仕様ID"
-    message: テスト実施に必要な具体的な入力、スキーマ定義、エンドポイント、および完了条件が不足しています。
-    message_ja: テスト実施に必要な具体的な入力、スキーマ定義、エンドポイント、および完了条件が不足しています。
-  - id: F019
-    severity: major
-    rule: vp-dev-implementation-readiness
-    line: 18
-    anchor: "## 4. 最小記述例"
-    message: rulebook が正本と定めるトレース表（`trace_key`・仕様ID・要点）がない。ケースから根拠仕様をたどれず、実装時の判断根拠を示せていない。
-    message_ja: rulebook が正本と定めるトレース表（`trace_key`・仕様ID・要点）がない。ケースから根拠仕様をたどれず、実装時の判断根拠を示せていない。
-  - id: F020
-    severity: major
-    rule: vp-dev-change-impact
-    line: 15
-    anchor: "- 主な内容: I/Fごとのテスト条件一覧（入力/期待/エラー）、前提（接続先・認証・テストデータ）、合格基準、関連する外部I/F仕様ID"
-    message: 外部インターフェース、依存するスキーマ、および関連するアーティファクトに対する変更の影響が特定されていません。
-    message_ja: 外部インターフェース、依存するスキーマ、および関連するアーティファクトに対する変更の影響が特定されていません。
-  - id: F021
-    severity: major
-    rule: vp-dev-testability
-    line: 15
-    anchor: "- 主な内容: I/Fごとのテスト条件一覧（入力/期待/エラー）、前提（接続先・認証・テストデータ）、合格基準、関連する外部I/F仕様ID"
-    message: テスト実行コマンド、CI検証手順、アサーション、およびエラーハンドリングの手順が不足しています。
-    message_ja: テスト実行コマンド、CI検証手順、アサーション、およびエラーハンドリングの手順が不足しています。
-  - id: F022
-    severity: major
-    rule: vp-dev-testability
-    line: 20
+    line: 40
     anchor: >-
-      | 項目         |
-      値                                                                                                               |
-      備考                                 |
-    message: 最小記述例の表に、観測点（アサーション）と証跡（テストコードパス・CI run・reqId 等）の列がない。テスト結果を証跡へ接続する形を示していない。
-    message_ja: 最小記述例の表に、観測点（アサーション）と証跡（テストコードパス・CI run・reqId 等）の列がない。テスト結果を証跡へ接続する形を示していない。
-  - id: F023
-    severity: major
+      _UNDECIDED_: [[specdojo:ifx-cmd-sample|レシート印刷コマンド連携仕様]] は上限30秒・送信前ビジー時の自動再試行（最大3回）を定めており、`etc-index`
+      の応答待ち10秒・自動再送なしと食い違う。本書は `etc-index` に従い、送信前ビジーも自動再送しない期待値にしている。ARC が両者の値を揃え、PO が承認した時点で、ケース
+      `et-receipt-print-failure-handling-020` の期待値を更新する。
+    message: "`_UNDECIDED_` の値の食い違いについて、登録簿（PJR）への転記候補であることと記録先が示されていない。進捗・課題の管理へどう引き継ぐかが読み取れない。"
+    message_ja: "`_UNDECIDED_` の値の食い違いについて、登録簿（PJR）への転記候補であることと記録先が示されていない。進捗・課題の管理へどう引き継ぐかが読み取れない。"
+  - id: F002
+    severity: minor
+    rule: vp-dev-testability
+    line: 32
+    anchor: "| 依存の扱い   | 正常・用紙切れ・権限不足・入力不正は検証機へ実接続する。無応答・応答 JSON の欠落・送信前ビジーは `receipt-print` スタブで再現する             |"
+    message: 境界表で「入力不正は検証機へ実接続する」とし、概要でも終了コード `2` を挙げているが、終了コード `2` を判別するケースが条件・ケース表にない。契約観点「印刷結果の判別」の検証に漏れがある。
+    message_ja: 境界表で「入力不正は検証機へ実接続する」とし、概要でも終了コード `2` を挙げているが、終了コード `2` を判別するケースが条件・ケース表にない。契約観点「印刷結果の判別」の検証に漏れがある。
+  - id: F003
+    severity: minor
     rule: vp-qe-verifiability
-    line: 24
-    anchor: "| 主な内容     | I/Fごとのテスト条件一覧（入力/期待/エラー）、前提（接続先・認証・テストデータ）、合格基準、関連する外部I/F仕様ID | 要点のみ記載                         |"
-    message: 具体的な値ではなく「要点のみ記載」という記述上の指示になっており、完成例としての役割を果たしていない。
-    message_ja: 具体的な値ではなく「要点のみ記載」という記述上の指示になっており、完成例としての役割を果たしていない。
-  - id: F024
-    severity: major
+    line: 85
+    anchor: >-
+      | `et-receipt-print-failure-handling-030` | 入力: 明細2件。状態: 用紙切れ。環境: 検証機                         | 会計を確定し、印刷の終了を待つ |
+      終了コード `1`、印字状態が `unknown`、会計確定の通知と釣銭表示は残る | 印字状態、販売 CLI の終了コード `0`、警告の表示 | 検証機に実接続（用紙を抜く）             |
+      TR-04       | P0     | manual    | 検証記録、取引番号、マスク済み stderr                                    |
+    message: >-
+      ケース `et-receipt-print-failure-handling-030` の期待値「終了コード `1`」の主語（`receipt-print` か販売 CLI か）が明記されていない。観測点の「販売 CLI
+      の終了コード `0`」と並ぶため、判定する対象を取り違えるおそれがある。
+    message_ja: >-
+      ケース `et-receipt-print-failure-handling-030` の期待値「終了コード `1`」の主語（`receipt-print` か販売 CLI か）が明記されていない。観測点の「販売 CLI
+      の終了コード `0`」と並ぶため、判定する対象を取り違えるおそれがある。
+  - id: F004
+    severity: minor
     rule: vp-qe-verifiability
-    line: 30
-    anchor: "| 要件詳細の補強 | 実案件適用時に具体化する |"
-    message: 未解決事項の「実案件適用時に具体化する」は完了条件を持たない。何をもって解消とするかを判定できない。
-    message_ja: 未解決事項の「実案件適用時に具体化する」は完了条件を持たない。何をもって解消とするかを判定できない。
-  - id: F025
-    severity: blocker
+    line: 83
+    anchor: >-
+      | `et-receipt-print-failure-handling-010` | 入力: 明細2件の会計確定。状態: 用紙あり。環境: 印刷コマンドが無応答 | 会計を確定し、印刷の応答を待つ |
+      10秒で打ち切り、販売記録が1件のまま、印刷失敗の警告を表示する        | 販売記録の件数、印刷要求の回数、警告の表示      | 無応答スタブ、応答待ち10秒、自動再送なし | TR-01,TR-05 |
+      P0     | automated | `tests/et/receipt-print/failure-handling.test.ts`、CI run 番号、取引番号 |
+    message: >-
+      ケース `et-receipt-print-failure-handling-010` は無応答の打ち切りを扱うが、期待値と観測点に販売記録の印字状態（ifx-cmd-sample の `timeout_action` に従えば
+      `unknown`）がなく、打ち切り後の状態を判定できない。期待値に印字状態 `unknown` を加え、観測点にも印字状態を入れる。
+    message_ja: >-
+      ケース `et-receipt-print-failure-handling-010` は無応答の打ち切りを扱うが、期待値と観測点に販売記録の印字状態（ifx-cmd-sample の `timeout_action` に従えば
+      `unknown`）がなく、打ち切り後の状態を判定できない。期待値に印字状態 `unknown` を加え、観測点にも印字状態を入れる。
+  - id: F005
+    severity: minor
     rule: vp-qe-omissions-consistency
-    line: 1
-    anchor: "# [外部結合テスト対象別](../rulebooks/etc-rulebook.md) サンプル"
-    message: rulebook で定義された必須の章構成（1〜6章）を完全に無視し、独自の章構成となっている。
-    message_ja: rulebook で定義された必須の章構成（1〜6章）を完全に無視し、独自の章構成となっている。
-  - id: F026
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 1
-    anchor: "# [外部結合テスト対象別](../rulebooks/etc-rulebook.md) サンプル"
-    message: "H1 が rulebook の「外部結合テストカタログ: `＜対象名＞`」形式ではなく、rulebook への相対 Markdown リンクを含む「外部結合テスト対象別 サンプル」になっており、文書名の規約と矛盾している。"
-    message_ja: "H1 が rulebook の「外部結合テストカタログ: `＜対象名＞`」形式ではなく、rulebook への相対 Markdown リンクを含む「外部結合テスト対象別 サンプル」になっており、文書名の規約と矛盾している。"
-  - id: F027
-    severity: blocker
+    line: 7
+    anchor: "- 関連I/F: `receipt-print` の起動（入力 `receipts/receipt-YYYYMMDD-NNNN.txt`、stdout の結果 JSON、終了コード `0`・`1`・`2`・`5`）。"
+    message: 関連I/Fに挙げた終了コード `2` に対応するケースがなく、概要・境界表の記述とケース表の範囲が一致していない。
+    message_ja: 関連I/Fに挙げた終了コード `2` に対応するケースがなく、概要・境界表の記述とケース表の範囲が一致していない。
+  - id: F006
+    severity: minor
     rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# [外部結合テスト対象別](../rulebooks/etc-rulebook.md) サンプル"
-    message: ETC の完成例ではなく「記述のためのサンプル（ガイド）」となっており, rulebook で定義された成果物形式に準拠していない。
-    message_ja: ETC の完成例ではなく「記述のためのサンプル（ガイド）」となっており, rulebook で定義された成果物形式に準拠していない。
-  - id: F028
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 11
-    anchor: "- 参照: `../rulebooks/etc-rulebook.md`"
-    message: rulebook への参照はあるが、必須とされる etc-index や tsp-index への参照が不足している。
-    message_ja: rulebook への参照はあるが、必須とされる etc-index や tsp-index への参照が不足している。
-  - id: F029
-    severity: major
-    rule: vp-ux-readability
-    line: 5
-    anchor: 本書は、外部結合テスト仕様を連携単位で分割して定義する（仕様）ための最小サンプルである。
-    message: 具現化された例ではなく「〜するための最小サンプルである」という説明に留まっており、参照先としての価値を欠いている。
-    message_ja: 具現化された例ではなく「〜するための最小サンプルである」という説明に留まっており、参照先としての価値を欠いている。
-  - id: F030
+    line: 40
+    anchor: >-
+      _UNDECIDED_: [[specdojo:ifx-cmd-sample|レシート印刷コマンド連携仕様]] は上限30秒・送信前ビジー時の自動再試行（最大3回）を定めており、`etc-index`
+      の応答待ち10秒・自動再送なしと食い違う。本書は `etc-index` に従い、送信前ビジーも自動再送しない期待値にしている。ARC が両者の値を揃え、PO が承認した時点で、ケース
+      `et-receipt-print-failure-handling-020` の期待値を更新する。
+    message: >-
+      突き合わせ先 `docs/ja/specdojo/samples/ifx-cmd-sample.yaml` の `timeout_seconds: 30`・`retry.max_attempts: 3` と、本書と
+      etc-index-sample の「応答待ち10秒・自動再送なし」が相反したままである。`_UNDECIDED_` で明示はされているが、サンプル間の値の不整合は未解消である。
+    message_ja: >-
+      突き合わせ先 `docs/ja/specdojo/samples/ifx-cmd-sample.yaml` の `timeout_seconds: 30`・`retry.max_attempts: 3` と、本書と
+      etc-index-sample の「応答待ち10秒・自動再送なし」が相反したままである。`_UNDECIDED_` で明示はされているが、サンプル間の値の不整合は未解消である。
+  - id: F007
     severity: minor
     rule: vp-ux-language-consistency
-    line: 16
-    anchor: "- 必須観点: 対象、条件、判定基準、責任者"
-    message: rulebook に定義のない「責任者」を必須観点として列挙している。
-    message_ja: rulebook に定義のない「責任者」を必須観点として列挙している。
-  - id: F031
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 1
-    anchor: "# [外部結合テスト対象別](../rulebooks/etc-rulebook.md) サンプル"
-    message: 成果物名が「外部結合テスト対象別」となっており、rulebook の名称「外部結合テストカタログ」と表記が揺れている。
-    message_ja: 成果物名が「外部結合テスト対象別」となっており、rulebook の名称「外部結合テストカタログ」と表記が揺れている。
-  - id: F032
-    severity: major
-    rule: vp-ops-release-readiness
-    line: 26
-    anchor: "## 5. 未解決事項"
-    message: 下書き（draft）から準備完了（ready）ステータスへ移行するための前提条件と基準が指定されていません。
-    message_ja: 下書き（draft）から準備完了（ready）ステータスへ移行するための前提条件と基準が指定されていません。
-  - id: F033
-    severity: major
-    rule: vp-ops-operability
-    line: 1
-    anchor: "# [外部結合テスト対象別](../rulebooks/etc-rulebook.md) サンプル"
-    message: 継続的なメンテナンス、変更管理、およびエスカレーションパスに必要な情報が提供されていません。
-    message_ja: 継続的なメンテナンス、変更管理、およびエスカレーションパスに必要な情報が提供されていません。
-  - id: F034
-    severity: major
-    rule: vp-ops-operability
-    line: 26
-    anchor: "## 5. 未解決事項"
-    message: 実行運用メモ（テストデータの作成と削除、失敗時のリトライ、外部側の後始末、レート制限などの実行制約）の例がない。外部結合テストを継続して運用するための情報を示せていない。
-    message_ja: 実行運用メモ（テストデータの作成と削除、失敗時のリトライ、外部側の後始末、レート制限などの実行制約）の例がない。外部結合テストを継続して運用するための情報を示せていない。
+    line: 68
+    anchor: >-
+      | `et-receipt-print-contract-030` | 入力: 明細2件。環境: スタブが終了コード `0` で結果 JSON を返さない | 会計を確定し、印刷の終了を待つ | 印字状態が
+      `unknown`、印刷失敗の警告を表示、販売記録は1件   | 印字状態、販売記録件数、警告の表示     | スタブ         | TR-02       | P0     | automated |
+      `tests/et/receipt-print/contract.test.ts`、CI run 番号、取引番号 |
+    message: >-
+      印字状態 `unknown`
+      のケース（`et-receipt-print-contract-030`、`et-receipt-print-failure-handling-010`）で警告を「印刷失敗の警告」と呼んでおり、責務で区別した「印刷失敗」と「結果不明」の呼び方が混同されている。結果不明の警告であることが分かる呼び方に揃える。
+    message_ja: >-
+      印字状態 `unknown`
+      のケース（`et-receipt-print-contract-030`、`et-receipt-print-failure-handling-010`）で警告を「印刷失敗の警告」と呼んでおり、責務で区別した「印刷失敗」と「結果不明」の呼び方が混同されている。結果不明の警告であることが分かる呼び方に揃える。

@@ -4,12 +4,11 @@ document: specdojo:itc-rulebook
 path: docs/ja/specdojo/rulebooks/itc-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-rulebook
-verdict: needs-work
-score: 80
-graded_at: "2026-11-21T04:24:40.251Z"
-graded_by: opus-executor
-content_hash: b5ed55049d80cc8ac1ac6012b41c64decaa831b40b1ae0c90da300b8c2a69f28
+verdict: pass
+score: 93
+graded_at: "2026-11-22T02:18:09.988Z"
+graded_by: opus-review-executor
+content_hash: 50dc293528318bcc76091e04629d5a18993efa8ca8cb4a7ae1e817fd080e553a
 categories:
   purpose:
     score: 88
@@ -18,7 +17,7 @@ categories:
   planning:
     score: 100
   business:
-    score: 92
+    score: 100
   architecture:
     score: 100
   usability:
@@ -26,9 +25,9 @@ categories:
   implementation:
     score: 88
   quality:
-    score: 67
+    score: 92
   consistency:
-    score: 50
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -52,8 +51,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
     level: 4
     score: 100
@@ -73,17 +72,17 @@ viewpoints:
     level: 3
     score: 75
   vp-dev-testability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
     level: 3
     score: 75
-  vp-qe-omissions-consistency:
-    level: 2
-    score: 50
-  vp-qe-kata-conformance:
-    level: 2
-    score: 50
   vp-ux-readability:
     level: 4
     score: 100
@@ -104,123 +103,77 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 2
-  minor: 10
+  major: 0
+  minor: 6
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-po-decision-readiness
-    line: 1
-    anchor: "# 内部結合テストカタログ 対象別 作成ルール"
+    line: 13
+    anchor: >-
+      - _UNDECIDED_: `recipe`・`template` の要否は未判断である（template は PJR-WYTX で扱う）。sample
+      は「本文要件」の見出し構成・`trace_key`・条件・ケース表へ未整合であり、後続の sample の見直しで揃える。いずれも ready 化前に解消する。
     message: >-
-      Frontmatter の `recipe` と `template` が `undecided` のままだが、未決の理由、判断者、判断時期、登録簿への引き継ぎ先が書かれていない。ready
-      化の判断材料として本文か登録簿で明示すること。
+      _UNDECIDED_ で template は PJR-WYTX に引き継いだが、recipe の要否には判断者も登録簿の引き継ぎ先もない。さらに、すでに本文要件に揃った sample を「未整合」と書いたままで、ready
+      化の判断材料が実態と食い違っている。recipe の引き継ぎ先を示し、sample の記述を現状に合わせて削除または更新すること。
     message_ja: >-
-      Frontmatter の `recipe` と `template` が `undecided` のままだが、未決の理由、判断者、判断時期、登録簿への引き継ぎ先が書かれていない。ready
-      化の判断材料として本文か登録簿で明示すること。
+      _UNDECIDED_ で template は PJR-WYTX に引き継いだが、recipe の要否には判断者も登録簿の引き継ぎ先もない。さらに、すでに本文要件に揃った sample を「未整合」と書いたままで、ready
+      化の判断材料が実態と食い違っている。recipe の引き継ぎ先を示し、sample の記述を現状に合わせて削除または更新すること。
   - id: F002
     severity: minor
-    rule: vp-ba-requirements-completeness
-    line: 144
-    anchor: "- 必須カラムは `itc-index` の定義に従う"
-    message: >-
-      ケース表の必須カラムを `itc-index`
-      に委ねながら、サンプルでは10列（`case_id`・条件・手順・期待値・観測点・境界/依存・トレース・優先度・自動化・証跡）を使っており、必須と任意の区別が読み取れない。`itc-index`
-      の該当箇所の参照を示すか、サンプルのカラムとの対応を明記すること。
-    message_ja: >-
-      ケース表の必須カラムを `itc-index`
-      に委ねながら、サンプルでは10列（`case_id`・条件・手順・期待値・観測点・境界/依存・トレース・優先度・自動化・証跡）を使っており、必須と任意の区別が読み取れない。`itc-index`
-      の該当箇所の参照を示すか、サンプルのカラムとの対応を明記すること。
+    rule: vp-arc-conciseness
+    line: 132
+    anchor: "- 表の1行は1テストとし、条件×期待値を一意にする。`case_id` は対象別で一意にする。"
+    message: 「表の1行は1テスト」が全体方針（本文11行目）と条件・ケース表の節で、「共通方針は `itc-index` を正本とする」が本文9行目と76行目で重複している。どちらか一方に寄せると、判断情報を失わずに簡潔になる。
+    message_ja: 「表の1行は1テスト」が全体方針（本文11行目）と条件・ケース表の節で、「共通方針は `itc-index` を正本とする」が本文9行目と76行目で重複している。どちらか一方に寄せると、判断情報を失わずに簡潔になる。
   - id: F003
     severity: minor
-    rule: vp-arc-conciseness
-    line: 135
-    anchor: "- 観点名（見出し）は改善のため変更してよいが、`perspective_key` は原則変更しない（変更が必要なら `supersedes` 等で追跡する）"
+    rule: vp-dev-change-impact
+    line: 117
+    anchor: "- 観点・ケース表の「トレース」列は仕様IDを直書きせず `TR-01` / `TR-01,TR-02` のように記載する。根拠の追加時は先にトレース表へ行を追加する。"
     message: >-
-      `perspective_key` と `case_id`
-      を変更しない規則が、記述ガイド（本文135行目・145〜148行目）と禁止事項（本文166〜167行目）で重複している。記述ガイド側は形式の定義に絞り、不変性は禁止事項に一本化すると簡潔になる。
+      トレース表は根拠を追加するときの手順しか定めていない。根拠仕様（`br-*`・`spec-*`
+      等）が改訂・廃止されたときに、トレース表の行と対応ケースをどう追従・記録するか（行を残すか、備考に何を書くか）が書かれておらず、rulebook-authoring-standard の求める自系統の追従対象の定義が欠けている。
     message_ja: >-
-      `perspective_key` と `case_id`
-      を変更しない規則が、記述ガイド（本文135行目・145〜148行目）と禁止事項（本文166〜167行目）で重複している。記述ガイド側は形式の定義に絞り、不変性は禁止事項に一本化すると簡潔になる。
+      トレース表は根拠を追加するときの手順しか定めていない。根拠仕様（`br-*`・`spec-*`
+      等）が改訂・廃止されたときに、トレース表の行と対応ケースをどう追従・記録するか（行を残すか、備考に何を書くか）が書かれておらず、rulebook-authoring-standard の求める自系統の追従対象の定義が欠けている。
   - id: F004
     severity: minor
-    rule: vp-dev-change-impact
-    line: 135
-    anchor: "- 観点名（見出し）は改善のため変更してよいが、`perspective_key` は原則変更しない（変更が必要なら `supersedes` 等で追跡する）"
+    rule: vp-qe-kata-conformance
+    line: 13
+    anchor: >-
+      - _UNDECIDED_: `recipe`・`template` の要否は未判断である（template は PJR-WYTX で扱う）。sample
+      は「本文要件」の見出し構成・`trace_key`・条件・ケース表へ未整合であり、後続の sample の見直しで揃える。いずれも ready 化前に解消する。
     message: >-
-      `perspective_key` を変更する場合の追跡手段として「`supersedes` 等」を挙げているが、`supersedes` は文書単位のメタ情報であり、観点キー単位の置き換えや旧 `case_id`
-      との対応をどこにどう記録するかが定まっていない。記録先と書式を具体化すること。
+      sample（`specdojo:itc-sample`）は本文要件の見出し構成・`perspective_key` 宣言・`trace_key`・条件・ケース表の書式に揃っているのに、本文では「sample
+      は未整合であり、後続の見直しで揃える」と書いたままで、rulebook と sample の関係の記述が実態と食い違っている。記述を削除するか、残る差分を具体的に示すこと。
     message_ja: >-
-      `perspective_key` を変更する場合の追跡手段として「`supersedes` 等」を挙げているが、`supersedes` は文書単位のメタ情報であり、観点キー単位の置き換えや旧 `case_id`
-      との対応をどこにどう記録するかが定まっていない。記録先と書式を具体化すること。
+      sample（`specdojo:itc-sample`）は本文要件の見出し構成・`perspective_key` 宣言・`trace_key`・条件・ケース表の書式に揃っているのに、本文では「sample
+      は未整合であり、後続の見直しで揃える」と書いたままで、rulebook と sample の関係の記述が実態と食い違っている。記述を削除するか、残る差分を具体的に示すこと。
   - id: F005
     severity: minor
-    rule: vp-dev-testability
-    line: 12
+    rule: vp-ux-language-consistency
+    line: 10
     anchor: >-
-      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status` の昇格と承認、改訂と廃止、未決事項の登録簿への引き継ぎは
-      [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従う。文書の整形・lint はリポジトリの検証で扱い、業務の検証に含めない。
+      - **検証範囲**:
+      複数コンポーネントの結合としての振る舞いを決定的に検証する。UTでMockしていた境界の一部（Repository、SQL/制約、トランザクション等）を実装に近づけ、外部サービス実疎通・実ユーザUIは原則除外する。例外には根拠と再現性対策を明記する。
     message: >-
-      文書の整形・lint は「リポジトリの検証で扱う」と委ねるだけで、作成後に確認すべき検証コマンド（例: `npm run lint:md`、Frontmatter・schema
-      の検証）や委譲先の文書が示されておらず、作成者が確認手順を特定できない。
+      依存の扱いを本文10行目では「Mock」、本文101行目では「スタブ/モック」と表記しており、表記がそろっていない。また UT・IT・ET
+      の略語（本文10・143・145行目）が定義なしで使われている。カタカナ表記に統一し、略語は初出で正式名を添えること。
     message_ja: >-
-      文書の整形・lint は「リポジトリの検証で扱う」と委ねるだけで、作成後に確認すべき検証コマンド（例: `npm run lint:md`、Frontmatter・schema
-      の検証）や委譲先の文書が示されておらず、作成者が確認手順を特定できない。
+      依存の扱いを本文10行目では「Mock」、本文101行目では「スタブ/モック」と表記しており、表記がそろっていない。また UT・IT・ET
+      の略語（本文10・143・145行目）が定義なしで使われている。カタカナ表記に統一し、略語は初出で正式名を添えること。
   - id: F006
     severity: minor
-    rule: vp-qe-verifiability
-    line: 145
-    anchor: "- `case_id` は以下を推奨し、変更しない"
-    message: "`case_id` の形式を「推奨」としながら禁止事項では変更・再利用を禁じており、形式に従わない `case_id` を不適合とするか判定できない。必須の形式と任意の慣行（10刻みなど）を分けて記述すること。"
-    message_ja: "`case_id` の形式を「推奨」としながら禁止事項では変更・再利用を禁じており、形式に従わない `case_id` を不適合とするか判定できない。必須の形式と任意の慣行（10刻みなど）を分けて記述すること。"
-  - id: F007
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 137
-    anchor: "##### 6.6.1.1. 意図"
-    message: >-
-      本文137行目・141行目で H5 見出し（`##### 6.6.1.1. 意図`・`##### 6.6.1.2. 条件・ケース表`）を使っており、H5 以下を禁じる Markdown 記述ルールに違反している。階層を H4
-      以内に収めるか、構成を表や箇条書きに置き換えること。
-    message_ja: >-
-      本文137行目・141行目で H5 見出し（`##### 6.6.1.1. 意図`・`##### 6.6.1.2. 条件・ケース表`）を使っており、H5 以下を禁じる Markdown 記述ルールに違反している。階層を H4
-      以内に収めるか、構成を表や箇条書きに置き換えること。
-  - id: F008
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 131
-    anchor: "#### 6.6.1. 観点:<観点>"
-    message: 見出し `#### 6.6.1. 観点:＜観点＞` の山括弧付きプレースホルダがインラインコードで囲まれておらず、HTML タグと誤認される禁止記法に当たる。`` 観点:`＜観点＞` `` のように囲むこと。
-    message_ja: 見出し `#### 6.6.1. 観点:＜観点＞` の山括弧付きプレースホルダがインラインコードで囲まれておらず、HTML タグと誤認される禁止記法に当たる。`` 観点:`＜観点＞` `` のように囲むこと。
-  - id: F009
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 内部結合テストカタログ 対象別 作成ルール"
-    message: 参照サンプル `specdojo:itc-sample` が本ルールブックで定義した構成（第5節）に従っておらず、実例として不適切である。
-    message_ja: 参照サンプル `specdojo:itc-sample` が本ルールブックで定義した構成（第5節）に従っておらず、実例として不適切である。
-  - id: F010
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 173
-    anchor: トレースとケースの対応を示す部分例です。成果物全体では「本文構成（標準テンプレ）」の必須6章を揃えます。仕様ID・証跡は例示です。
-    message: >-
-      「サンプル（最小）」章に受注（order）の例を埋め込んでおり、Frontmatter の `sample: specdojo:itc-sample` および共通サンプル文脈（駄菓子屋）と食い違っている。sample
-      文書を正とし、本文の例は sample と同じ文脈に揃えるか、sample への委譲に置き換えること。
-    message_ja: >-
-      「サンプル（最小）」章に受注（order）の例を埋め込んでおり、Frontmatter の `sample: specdojo:itc-sample` および共通サンプル文脈（駄菓子屋）と食い違っている。sample
-      文書を正とし、本文の例は sample と同じ文脈に揃えるか、sample への委譲に置き換えること。
-  - id: F011
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 133
-    anchor: "- 観点は `itc-index` の「観点の立て方（共通）」に従って命名する"
-    message: 記述ガイドの前半の箇条書きは「。」で結ぶのに対し、「トレース」「テスト観点とケース」配下（本文125行目・133〜156行目）は句点がなく、文体がそろっていない。表記を統一すること。
-    message_ja: 記述ガイドの前半の箇条書きは「。」で結ぶのに対し、「トレース」「テスト観点とケース」配下（本文125行目・133〜156行目）は句点がなく、文体がそろっていない。表記を統一すること。
-  - id: F012
-    severity: minor
     rule: vp-ops-release-readiness
-    line: 1
-    anchor: "# 内部結合テストカタログ 対象別 作成ルール"
-    message: ready 化の前提となる未解決事項（`recipe`・`template` が `undecided`、sample の構成不一致）が本文にも登録簿の参照にも示されておらず、公開判断の材料が不足している。
-    message_ja: ready 化の前提となる未解決事項（`recipe`・`template` が `undecided`、sample の構成不一致）が本文にも登録簿の参照にも示されておらず、公開判断の材料が不足している。
+    line: 13
+    anchor: >-
+      - _UNDECIDED_: `recipe`・`template` の要否は未判断である（template は PJR-WYTX で扱う）。sample
+      は「本文要件」の見出し構成・`trace_key`・条件・ケース表へ未整合であり、後続の sample の見直しで揃える。いずれも ready 化前に解消する。
+    message: >-
+      ready 化前に解消すべき事項として挙げた「sample の未整合」がすでに解消しているのに記述が残り、recipe
+      の要否には判断の引き継ぎ先がない。このため公開判断の前提が実態と合っていない。残る未解決事項だけに更新し、各事項の引き継ぎ先を示すこと。
+    message_ja: >-
+      ready 化前に解消すべき事項として挙げた「sample の未整合」がすでに解消しているのに記述が残り、recipe
+      の要否には判断の引き継ぎ先がない。このため公開判断の前提が実態と合っていない。残る未解決事項だけに更新し、各事項の引き継ぎ先を示すこと。

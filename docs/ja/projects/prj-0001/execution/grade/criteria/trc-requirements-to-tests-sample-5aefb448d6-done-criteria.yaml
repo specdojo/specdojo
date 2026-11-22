@@ -1,0 +1,54 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: specdojo:trc-requirements-to-tests-sample-grade-criteria
+document: specdojo:trc-requirements-to-tests-sample
+path: docs/ja/specdojo/samples/trc-requirements-to-tests-sample.md
+graded_at: "2026-11-22T02:08:14.129Z"
+graded_by: opus-review-executor
+content_hash: 926b3a8f3883d4a063c7c28c7255c4b503f1f136904e0c44ff58e7b774ed7897
+summary:
+  satisfied: 7
+  unsatisfied: 0
+  total: 7
+criteria:
+  - id: DC-001
+    text: rulebook の章立てと必須の表に沿っていること
+    roles:
+      - QE
+    viewpoint: vp-qe-omissions-consistency
+    status: satisfied
+  - id: DC-002
+    text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+    roles:
+      - QE
+    viewpoint: vp-qe-kata-conformance
+    status: satisfied
+  - id: DC-003
+    text: rulebook の禁止事項に当たらないこと
+    roles:
+      - QE
+    viewpoint: vp-qe-kata-conformance
+    status: satisfied
+  - id: DC-004
+    text: rulebook が出力の列ごとに生成元と変換規則を定め、手編集しない派生ビューとして入力の解決・充足状況とギャップの導出・再生成の方法を示していること
+    roles:
+      - QE
+    viewpoint: vp-qe-omissions-consistency
+    status: satisfied
+  - id: DC-005
+    text: 各要求の充足状況が rulebook の判定条件と一致していること（対応テストのある要求を未着手にしない）
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: satisfied
+  - id: DC-006
+    text: Frontmatter の `based_on` に本文が参照する直接の生成元をすべて持ち、前提に生成の手段と生成日を書いていること
+    roles:
+      - QE
+    viewpoint: vp-qe-omissions-consistency
+    status: satisfied
+  - id: DC-007
+    text: ギャップ表に担当・期限の列を持たず、手編集を前提にした更新ルールを書いていないこと
+    roles:
+      - QE
+    viewpoint: vp-qe-kata-conformance
+    status: satisfied
