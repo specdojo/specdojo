@@ -1,0 +1,11 @@
+個票の「対応結果」の表に 1 行追記しました。今回の確認対象は PJR-PP4X、agent は `sonnet-executor` です。
+
+- **追記した行:** 日時は 2026-11-22 12:18 JST です。
+- **PJR-PP4X を選んだ理由:** 完了条件の一覧のうち `review` か `done` の項目で、最後に統合されたのが PJR-PP4X でした。統合 commit は `3733ac64d`（2026-11-22 11:55 JST）で、前回の PJR-V277 より新しいです。PJR-50RQ・PJR-7KQT の統合は PJR-PP4X より前で、`d6bc768bb`（12:08）の merge commit 経由です。
+- **本文の更新:** 表の下の説明文と作業内容表のメモも PJR-PP4X に書き換えました。
+- **変更範囲:** 変更したのは本個票のみです。
+- **検証:** 親 runner の検証は後続段で実行されるため、executor では何も実行していません。Markdown の整形ツールは、この環境のコマンド制限で実行できませんでした。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"個票の対応結果の表に 2026-11-22 12:18 / PJR-PP4X / sonnet-executor の 1 行を追記し、説明文と作業内容のメモを PJR-PP4X に更新した。変更ファイルは個票のみ。","handoff":["確認対象は、完了条件の一覧のうち review または done の最新統合項目である PJR-PP4X（統合 commit 3733ac64d、2026-11-22 11:55 JST）とした。","executor は個票以外を変更していない。親 runner の検証、reporter の result 記入、統合、review 遷移は後続段で確認する。"],"validations":[{"command":"npm run lint:md","status":"not_applicable","reason":"親 runner が実行する allowlist 検証のため、executor では実行しない。"},{"command":"npm run lint:fm","status":"not_applicable","reason":"親 runner が実行する allowlist 検証のため、executor では実行しない。"}]}
+</specdojo_executor_evidence>
