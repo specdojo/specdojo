@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: low
   difficulty: easy
   owner: DEV
   registered_at: "2026-11-22T08:49:30Z"
+  block_reason: "reporter output invalid after 3 format attempts: result Markdown notation violation before writing (fix the JSON prose that produced these rendered lines; do not put Markdown headings, code fences, ba…"
   derived_from:
     - PJR-TF6F
 ---

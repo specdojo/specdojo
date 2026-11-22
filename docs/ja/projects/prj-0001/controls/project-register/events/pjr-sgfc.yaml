@@ -54,3 +54,32 @@
       from: ""
       to: 完了条件
   previous_event_id: reg_1fc04643dcbf4b8ba19441459a3d3062
+- v: 1
+  id: reg_2dc2c73dde0b43338484a02932b47059
+  ts: "2026-11-22T08:51:50Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_f69d78983f164f7fa978c05dad7f96d4
+- v: 1
+  id: reg_392682fee7da4a3b9b6e0f816d6b9be8
+  ts: "2026-11-22T08:57:53Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "reporter output invalid after 3 format attempts: result Markdown notation violation before writing (fix the JSON prose that produced these rendered lines; do not put Markdown headings, code fences, ba…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "reporter output invalid after 3 format attempts: result Markdown notation violation before writing (fix the JSON prose that produced these rendered lines; do not put Markdown headings, code fences, ba…"
+  previous_event_id: reg_2dc2c73dde0b43338484a02932b47059
