@@ -46,6 +46,13 @@ specdojo:
 - 迷った点は executor が決め、決めた内容と理由を個票の対応結果に書く。pipeline では報告の `handoff` にも書く。
 - `CHANGELOG.md` は変えず、個票の対応結果の「CHANGELOG に書く事項」の節に区分と行の文案を書く。影響がなければ「なし」と書く（PJR-EPQ3）。
 - `npm run lint:md`・`npm run lint:fm`・`npm run validate:schema` と親の検証が通る。
+- 2 回目の実行（2026-11-22、利用者の確認）: indie が sld-sample を読み、「関連仕様・実装配置との対応と検証」の章が要るかを指摘した。章は残し、sld にしかない対応と検証に絞る（案 A、indie の決定）。次を直す。
+  - sld-sample の「隣接仕様との分担と対応」から、対応の情報のない BDD の行と、保管場所一覧の言い直しになっている CLIS の行を外す。CDSD・STSD・全体概要の行は残し、全体概要の行は短くしてよい。
+  - sld-sample の「検証手順と受入条件」から、CLI の動作の試験（設定ファイルの欠落・破損、受付結果不明の取引）を外す。CLI 仕様との一致・日次集計の再集計・記録と状態の網羅は残す。「削除・復旧判断の実効性」は具体的な場面と合格条件を書くか、再集計の行にまとめる。
+  - sld-rulebook の「関連仕様・実装配置との対応と検証要件」に、隣接仕様の動作の試験（CLI の終了コードなど）は書かず、保管場所の結論を確かめる検証だけを書くことを 1 文で足す。章の構成と必須・条件付きの区分は変えない。
+  - 直す前後の sld-sample の大きさ（空白を除いた文字数）を、個票の対応結果に書く。
+  - 直すのは sld-rulebook と sld-sample だけとする。ほかの型の rulebook と sample は変えない。ほかの型に同じ種類の行（隣接仕様の動作の試験）があれば、型の名前を個票の対応結果に書く。
+  - 型の grade は統合の後に orchestrator が流す。読みやすさは利用者が改めて確かめる。
 
 ## 4. 作業内容
 
@@ -55,8 +62,11 @@ specdojo:
 | 2   | sld-sample（と recipe・template）を直す                                      | BA           | done | sample を 9,885 字から 5,928 字へ。recipe・template は `not-needed`、カタログ template に運用の記述なし  |
 | 3   | 広げるときの「外す記述・残す記述・参照の形」の一覧を書く                     | BA           | done | 対応結果の「他の型へ広げるときの一覧」                                                                   |
 | 4   | 統合の後に型を grade し、前後の結果を書く（orchestrator）                    | orchestrator | done | 2026-11-18 に grade した。結果は対応結果の「grade の結果」                                               |
-| 5   | 読みやすさを確かめる（利用者）                                               | 利用者       | open | 利用者の確認待ち。executor は行えない                                                                    |
+| 5   | 読みやすさを確かめる（利用者）                                               | 利用者       | done | 2026-11-22 に indie が確かめ、「関連仕様・実装配置との対応と検証」の章を絞る（2 回目の実行）             |
 | 6   | 結果を見て、他の rulebook と sample へ広げる todo を起票する（orchestrator） | orchestrator | done | [[prj-0001:pjr-mnm5-kata-slim\|PJR-MNM5]] の kata-slim の schedule で 18 の型へ広げた                    |
+| 7   | 2 回目: 「関連仕様・実装配置との対応と検証」の章を絞る                       | BA           | open | 完了条件の 2 回目の実行                                                                                  |
+| 8   | 2 回目の統合の後に型を grade する（orchestrator）                            | orchestrator | open | -                                                                                                        |
+| 9   | 読みやすさを改めて確かめる（利用者）                                         | 利用者       | open | -                                                                                                        |
 
 ## 5. 対応結果
 
