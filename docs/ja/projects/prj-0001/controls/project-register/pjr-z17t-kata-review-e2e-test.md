@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: high
   difficulty: medium
   registered_at: "2026-11-22T03:13:03Z"
@@ -41,13 +41,29 @@ PJR-E4R5 の型の grade と review の段の事前の grade の組み合わせ�
 
 | No  | 作業                                                      | 担当     | 状態 | メモ                         |
 | --- | --------------------------------------------------------- | -------- | ---- | ---------------------------- |
-| 1   | 型の schedule の fixture と review の段の統合テストを作る | executor | open | -                            |
-| 2   | テストで見つかった問題を対応結果に書く                    | executor | open | 範囲外の問題は起票を提案する |
+| 1   | 型の schedule の fixture と review の段の統合テストを作る | executor | done | 3 ケースを追加し通過した     |
+| 2   | テストで見つかった問題を対応結果に書く                    | executor | done | 範囲外の所見を対応結果に記載 |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 5.1. 実施内容
+
+- `tests/src/exec/kata-review-stage.integration.test.ts` を追加した。一時リポジトリに、intent が `improve-kata`・review の段（090）の代表が sample の型の schedule を置き、`exec run --task` で review の段を 1 回通す。agent と grade の agent は fixture のコマンド（`provider: custom` の `command`）で代え、親検証は空にした。
+- 検証内容は次の 3 ケース。
+  - sample と rulebook が `--target kata` でそれぞれ 1 回だけ grade され、サイドカーの `target` が `kata` になる。review の plan の「grade の対象種別」が `kata` になり、`complete` の verdict で run が終わる。
+  - executor が `grade list --changed-only` を `failed` と記録しても block にならず、verdict が記録される。
+  - 型の grade が `needs-work` のとき、reporter が `complete` を返しても runner が verdict を `incomplete` に制限する。
+- 本番コードの不具合は見つからず、本番コードは変更していない。
+
+### 5.2. CHANGELOG に書く事項
+
+なし（テストだけの変更）。
+
+### 5.3. 残課題・起票の提案
+
+- 型の grade が `needs-work` で verdict が `incomplete` に制限されても、in-place の run は `run done` を出して終了コード 0 になる。verdict の区別で扱う設計と読めるため、この範囲では変えていない。run の終了表示と verdict の関係を見直すかは、必要なら別項目で起票する。
+- `exec run --worktree` 経路の review の段は、このテストでは通していない（in-place のみ）。必要なら起票する。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-e4r5-kata-review-grade-kata-fix|PJR-E4R5 型の schedule の review の段で、型そのものを grade する]]
