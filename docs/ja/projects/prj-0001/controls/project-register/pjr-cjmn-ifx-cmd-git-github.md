@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-cjmn-ifx-cmd-git-github
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: ARC
   registered_at: "2026-11-15T09:55:52Z"
+  completed_at: "2026-11-22T14:07:08Z"
+  conclusion: ifx-cmd-git-cli と ifx-cmd-github-cli を draft で作り、カタログに登録し、ifx-index と ifd-specdojo の PATH-07 の留保の追跡先を付け替えた。未決の点は _UNDECIDED_ で残した
   commit_type: docs
   commit_scope: ifx
 ---
