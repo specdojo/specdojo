@@ -7,11 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-22T05:39:27Z"
+  completed_at: "2026-11-22T09:02:49Z"
+  conclusion: kata の sample では機械的な検査が _TODO_ だけを major にし、直す前の文言の前回の指摘も引き継がないようにした。utc-index の sample が verdict pass になった
   derived_from:
     - PJR-ABY4
 ---

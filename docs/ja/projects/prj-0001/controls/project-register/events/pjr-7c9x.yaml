@@ -132,3 +132,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_9a5d92a986a74541b0d9e028a84e5146
+- v: 1
+  id: reg_6498721277fa4822b0a0e5845775a477
+  ts: "2026-11-22T09:02:49Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分・対応結果・2 回の統合後の評価し直しを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: kata の sample では機械的な検査が _TODO_ だけを major にし、直す前の文言の前回の指摘も引き継がないようにした。utc-index の sample が verdict pass になった
+  previous_event_id: reg_5ffeaba9c86549a495997bca4fe6de96
