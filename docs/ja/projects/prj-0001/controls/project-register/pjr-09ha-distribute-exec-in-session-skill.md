@@ -95,6 +95,14 @@ specdojo:
 - 作業内容 5（空のリポジトリで `npm pack` の tarball から `config scaffold --provider claude` を流し、新しいセッションの Claude Code がラッパーから正本を読むことを確かめる）は、統合の後にオーケストレーターが行う。
 - 変更案 1〜5 の反映。
 
+### 5.6. 統合後の確かめと変更案の反映
+
+- 2026-11-22、オーケストレーターが `npm pack` の tarball を空のリポジトリに入れて `config scaffold --provider claude` を流した。`.agents/skills/specdojo-exec-in-session/SKILL.md` と `.claude/skills/specdojo-exec-in-session/SKILL.md` が置かれ、正本と同じ中身だった。2 回目の scaffold では、どちらも `Skipped (already exists)` で上書きされなかった。
+- 同じリポジトリで新しいセッションの Claude Code（`claude -p`、sonnet、使える道具は Read と Skill だけ）を起動すると、skill が一覧に出て、Skill の直後に正本 `.agents/skills/specdojo-exec-in-session/SKILL.md` を Read した。
+- Codex の一次情報の URL は、旧 <https://developers.openai.com/codex/skills> からの 308 の転送であることを確かめた。
+- 変更案 1〜5 は、indie の承認（2026-11-22）で、オーケストレーターが skill `specdojo-exec-in-session` の手順で `feature/prj-0001/exec-in-session-skill-generic` に反映し（7948b16e1）、develop へ取り込んだ（2689bb037）。dist の作り直しの段は `pm-orchestrator-playbook` の落とし穴へ移した。変更案 6 は変更なし。検査は `lint:orchestrator-sync`・`lint:md`・`lint:fm`・`test:unit` が通った。
+- 気づいた点: 配ったファイルは `--force` なしで上書きされないため、利用者が版を上げても skill の写しは古いまま残る。PJR-MS7X（specdojo update）で扱う。
+
 ## 6. 関連ドキュメント
 
 - [[prj-0001:pjr-xz9b-orchestrator-implement-skill]]: skill の正本とラッパーを足した項目
