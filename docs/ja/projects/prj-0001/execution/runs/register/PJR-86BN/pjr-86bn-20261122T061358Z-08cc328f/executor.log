@@ -1,0 +1,21 @@
+itc の rulebook と sample を grade の指摘に沿って直しました。`npm run validate:history-links` は通っています。`npm run lint:md` は、出力の末尾 8 行にエラーが出ていないことしか見ていません。grade での再評価と親の検証はまだ回っていません。
+
+**rulebook（`itc-rulebook`）**
+- F001・F004・F006: 「sample が未整合」という記述を削除しました。`_UNDECIDED_` は `recipe`・`template` の要否だけにして、PJR-WYTX で併せて判断すると書きました。
+- F002: 全体方針と条件・ケース表の節、記述ガイド冒頭で重複していた文を削りました。
+- F003: トレースの節に、根拠仕様が改訂・廃止されたときの追従を足しました。表の行は残して備考へ記録し、対応ケースは見直します。
+- F005: UT・IT・ET を初出で正式名とともに示し、「Mock」を「モック」に統一しました。
+
+**sample（`itc-sample`）**
+- F001: BAC-03 の C-04（数量不明）を、`TR-06` と `it-sales-checkout-pending-hold-020`（保留 `pending-quantity`）で扱いました。
+- F002: 応答の識別子 `duplicate-transaction`・`checkout-failed`・`pending-product`・`pending-quantity` を期待値と観測点に書きました。
+- F003: 「テスト観点とケース」の冒頭に、観点の型ごとの採用と不採用の理由を足しました。DB 停止・接続断は採用せず、理由と代替（ST の障害・回復）を書いています。この理由と代替は私が書いたもので、確認が要ります。
+- F004: `TR-05` の仕様 ID を BAC-01 にしました。分配方針への参照は備考へ移しました。
+- F005: `-020` を同じ取引番号の再送、`-030` を在庫と同数の購入に入れ替え、`itc-index-sample` の採番に揃えました。
+- F006: `_TODO_` は sample にありません。`_ASSUMPTION_`（分離レベル）は `sample-authoring-standard` に従って残しました。
+
+個票は作業内容の表と対応結果を更新し、`CHANGELOG` の項は「なし」としました。作業内容の行 3（親の検証）と行 4（grade の再評価）は、executor が実行できないため `open` のままです。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"itc の rulebook と sample を grade の指摘（rulebook F001〜F006、sample F001〜F006）に沿って修正し、個票の作業内容と対応結果を更新した。sample の F006 は `_ASSUMPTION_` を標準どおり残している。","handoff":["統合後、orchestrator が `npx specdojo grade run --target kata --kata itc` で評価し直し、blocker・major がないことを確認する。機械的な指摘（PJR-7C9X）だけが残る場合は合格とする。","rulebook の `recipe` の要否は PJR-WYTX で `template` と併せて判断する前提で記載した。recipe 専用の登録簿項目はないため、この引き継ぎ先でよいか確認が必要。","sample の DB 停止・接続断を採用しない理由と代替（ST の障害・回復）は、itc-index-sample の記述から推測して書いた。レビューで確認が必要。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/itc-sample.md docs/ja/specdojo/rulebooks/itc-rulebook.md","status":"passed","summary":"整形済み"},{"command":"npm run validate:history-links","status":"passed","summary":"個票を含め違反なし"}]}
+</specdojo_executor_evidence>
