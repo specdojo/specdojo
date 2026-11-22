@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-wnqj-vscode-chat-preview-blank-line
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: sol-executor
   registered_at: "2026-11-11T14:51:47Z"
+  completed_at: "2026-11-22T12:08:23Z"
+  conclusion: VS Code の Markdown のプレビューで chat と chat tui の対話を描き、発言の間に空行を置けるようにした。indie が VS Code で表示を確かめた
   commit_type: feat
   commit_scope: vscode
 ---
