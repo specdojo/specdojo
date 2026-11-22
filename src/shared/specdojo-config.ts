@@ -988,7 +988,13 @@ export function assertValidActor(actor: string, roster: MemberRoster | null): vo
 // RESERVED_REGISTER_ACTORS を受け付ける。grade の --by は agent 限定のため assertValidActor のまま。
 export function assertValidExecActor(actor: string, roster: MemberRoster | null): void {
   if ((RESERVED_REGISTER_ACTORS as readonly string[]).includes(actor)) return;
-  assertValidActor(actor, roster);
+  if (!roster) return;
+  const known = roster.members.map((m) => m.nickname);
+  if (known.includes(actor)) return;
+  throw new Error(
+    `Unknown actor: "${actor}". Must be one of: ${[...known, ...RESERVED_REGISTER_ACTORS].join(", ")}\n` +
+      `Register a human in members_path or an agent in agent_members_path before use, or use a reserved actor.`,
+  );
 }
 
 function isOmittedOrNonEmptyString(value: unknown): boolean {

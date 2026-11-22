@@ -1,0 +1,15 @@
+exec の `--by` で名簿にも予約名にもない名前を渡すと、Unknown actor のエラーの文に予約名も並ぶようにしました。`src/shared/specdojo-config.ts` の `assertValidExecActor` を直しています。
+
+- **exec:** エラーの文に名簿の nickname と予約名（`SpecDojo`・`specdojo-orchestrator`・`night-orchestrator`）の両方が出ます。
+- **register:** `resolveRegisterActor` が元から予約名を並べていたので、コードは変えていません。
+- **grade など agent 限定の `--by`:** `assertValidActor` は変えておらず、予約名は並びません。
+
+`tests/src/shared/specdojo-config.test.ts` に、exec と register で両方が並ぶことと、`assertValidActor` で予約名が出ないことのテストを足しました。このファイルは 39 件すべて通っています。prettier のチェックと `npm run validate:history-links` も問題ありませんでした。
+
+個票の対応結果に CHANGELOG 用の文案を書きました（区分は Fixed）。`CHANGELOG.md` 自体は変えていません。個票の関連ドキュメントは「なし」にしています。
+
+`typecheck`・`lint:ts`・`test:unit`・`lint:md` は、親の runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"exec の --by の Unknown actor エラーに予約名も並べるよう assertValidExecActor を修正。register は既に予約名を並べていたため変更なし。agent 限定の assertValidActor は不変。単体テストを追加し、個票の対応結果（CHANGELOG 文案を含む）を更新。","handoff":["判断: assertValidExecActor 内でエラーを独自に組み立て、assertValidActor（grade など agent 限定）には予約名を並べない。","CHANGELOG に書く事項: 区分 Fixed。exec の --by が名簿にも予約名にもない名前を拒否するとき、エラーの文に予約名も並べるようにした。","register の記帳は既に予約名を並べていたため、テストの追加のみで実装変更なし。"],"validations":[{"command":"npx vitest run tests/src/shared/specdojo-config.test.ts","status":"passed","summary":"39 件通過"},{"command":"npx prettier --check src/shared/specdojo-config.ts tests/src/shared/specdojo-config.test.ts","status":"passed","summary":"整形済み"},{"command":"npx prettier --check docs/ja/projects/prj-0001/controls/project-register/pjr-kzzm-unknown-actor-reserved-names.md","status":"passed","summary":"整形済み"},{"command":"npm run validate:history-links","status":"passed","summary":"違反なし"}]}
+</specdojo_executor_evidence>
