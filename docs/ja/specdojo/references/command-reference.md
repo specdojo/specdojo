@@ -55,6 +55,7 @@ specdojo where routine --project prj-0001
 | `config show`     | 有効な `repos` と、ローカル設定に由来する値を表示する               | `specdojo config show --project prj-0001` |
 | `config scaffold` | provider、VS Code ワークスペース、Git hook、Slidev を個別に配置する | `specdojo config scaffold --slidev`       |
 | `project list`    | 登録済み project を表示する                                         | `specdojo project list`                   |
+| `project move`    | 別リポジトリへ移す前に、読むだけの点検をする                        | `specdojo project move prj-0002 --check`  |
 
 `init` は対話できる端末で、project ID と名前、register、人の nickname と表示名、複数指定可能な
 provider、exec、Dev Container、Git hook、Slidev の順に質問します。Dev Container を選んだ場合だけ、続けて `minimal` / `recommended` / `full` の preset を質問します（既定は `recommended`）。Git hook は既定では作りません。Slidev の質問は `full` を選んだ場合だけ既定が「はい」、それ以外は「いいえ」です。成果物カタログは対話では質問せず、`--catalog <size>` を
@@ -247,6 +248,26 @@ specdojo config scaffold --workspace --force
 ```
 
 `current_project` を設定しておくと、多くのコマンドで `--project` を省略できます。
+
+`project move <project-id> --check` は、project を別のリポジトリへ移す前に、移す前に片付けるものと、移すときに写す・書き換えるものを一覧にします。ファイル・Git の refs・登録簿は書き換えません。移すこと自体はまだ自動化していないため、`--check` は必須です。付けないとエラーになります。`--json` を付けると同じ結果を JSON で出します。
+
+| 点検                   | 見るもの                                                                                                                  |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `register-items`       | 状態が `in-progress` または `waiting` の登録簿の項目                                                                      |
+| `schedule-tasks`       | 状態が `doing` または `blocked` の schedule タスク                                                                        |
+| `exec-worktrees`       | プロジェクトのリポジトリと各 `repos` の exec ブランチ（`exec/<project-id>-*`、または `branch_template`）と、その worktree |
+| `integration-branches` | project と `repos` の `integration_branch` があるか                                                                       |
+| `routines`             | `routines_path` の有効な routine                                                                                          |
+| `cross-project-links`  | 移す project とほかの project の間の wikilink と、frontmatter の `<project-id>:` 付きの参照                               |
+| `config`               | 写す設定（`specdojo.config.json` の project の項目、`repos` の相対パス、名簿、`exec-defaults`、ローカル設定）             |
+| `kata`                 | 参照する kata の数と、kata の出所（このリポジトリの `docs/ja/specdojo` か、`package.json` の `specdojo` の版）            |
+
+点検ごとに `ok`（問題なし）、`needs-cleanup`（移す前に片付けが要る）、`check-manually`（手で確かめる）のどれかを出します。`needs-cleanup` が 1 つでもあると終了コード 1 で終わります。
+
+```bash
+specdojo project move prj-0002 --check
+specdojo project move prj-0002 --check --json
+```
 
 ### 2.1. kata
 

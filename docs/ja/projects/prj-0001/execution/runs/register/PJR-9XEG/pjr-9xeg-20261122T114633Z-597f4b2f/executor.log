@@ -1,0 +1,35 @@
+`specdojo project move <project-id> --check` を追加しました。ただし、prj-0002 の出力例は 8 点検のうち 6 つだけです。sandbox が `specdojo-prj-0002` の checkout で git を流すのを許可しなかったため、git を使う `exec-worktrees` と `integration-branches` は人がその checkout で流して確かめる必要があります。
+
+**コマンドの中身**
+- 点検は 8 つあり、それぞれ `ok`（問題なし）・`needs-cleanup`（移す前に片付けが要る）・`check-manually`（手で確かめる）のどれかを出します。
+- `needs-cleanup` が 1 つでもあると終了コード 1 で終わります。`--json` で同じ結果を JSON で出せます。
+- 移すこと自体はまだ自動化していないので、`--check` を付けないとエラーにしました。
+
+**変更したファイル**
+- 新規: `src/project/move-check.ts`（点検の本体）、`src/project/command.ts`（コマンドの登録）
+- `src/shared/specdojo-config.ts`: `registerProjectCommands` が `project` コマンドを返すようにしました。
+- `src/specdojo.ts`: `move` をそこへ足しました。
+- `eslint.config.js`: 機能ディレクトリの一覧に `project` を足し、`src/shared` から import できないようにしました。
+- テスト: `tests/src/project/move-check.test.ts`（単体）、`tests/src/project/move-check.integration.test.ts`（統合）
+- 統合テストは実 Git の fixture で CLI を起動し、点検の前後でファイル・HEAD・refs・`git status`・worktree の一覧が変わらないことと、終了コード 1 と 0 の両方を確かめます。
+- `command-reference.md`: 「init / config / project」にコマンドと点検の表を足しました。
+- 個票: 作業内容の 3 行を `done` にし、対応結果に実施内容・決めたこと・prj-0002 の出力例・CHANGELOG の文案（Added）・残課題を書きました。`CHANGELOG.md` は変えていません。
+
+**prj-0002 の結果（git を使わない 6 点検）**
+- 片付けが要る項目: `waiting` の PJR-B3W9 が 1 件あります。
+- prj-0002 から prj-0001 への参照は 14 種類ありました。入力にあった wikilink の 10 種類に、frontmatter の `prj-0001:PJR-XXXX` が 4 種類加わっています。逆向きの参照は 7 種類です。
+
+**決めたこと（個票の対応結果にも記録）**
+- 名前を `project move --check` にしたのは、後で移すこと自体を自動化するときに同じ名前を使えるためです。
+- `blocked` のタスクは claim を持ったままなので片付けの対象に含めました。`review` の項目は run が終わっているので含めていません。
+- 本文中の `specdojo:build` のようなコマンド名を参照と取り違えないよう、`<project-id>:` 付きの値は frontmatter と YAML だけで拾います。wikilink はどこにあっても拾います。
+
+**検証**
+- 自分で流したもの: 新しいテストの単体・統合、`tsc`、`eslint`、`prettier --check`、`npm run validate:history-links`。すべて通りました。
+- `npm run typecheck`・`lint:ts`・`test:unit`・`lint:md` などは親 runner が流します。
+
+`controls/project-register/events/pjr-9xeg.yaml` の差分は runner が書いたもので、私は触っていません。prj-0002 の例を作るのに使ったスクリプトは `tmp/orchestrator/move-check-prj-0002.ts` にあり、commit の対象外です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"specdojo project move <project-id> --check を追加した。8 つの点検それぞれに ok・needs-cleanup・check-manually を出し、needs-cleanup があると終了コード 1 で終わる。統合テストで作業ツリー・HEAD・refs・worktree が変わらないことを確かめ、command-reference と個票の対応結果（prj-0002 の出力例と CHANGELOG の文案を含む）を書いた。","handoff":["prj-0002 の出力例は、git を使わない 6 つの点検だけを specdojo-prj-0002 の checkout に対して流したもの。sandbox がその checkout での git を許可しなかったため。人がその checkout で `specdojo project move prj-0002 --check` を流し、`exec-worktrees` と `integration-branches` を確かめる。","決めたこと: 名前は `project move <project-id> --check`。移すこと自体を後で自動化するときに同じ名前を使えるため。今は `--check` を付けないとエラーにする。","決めたこと: needs-cleanup の対象は、in-progress・waiting の登録簿の項目、doing・blocked の schedule タスク、exec ブランチと worktree。blocked は claim を持ったままなので含め、review は run が終わっているので含めない。リンク・写す設定・定期実行・kata・見つからない統合先のブランチは check-manually にした。","決めたこと: project をまたぐ参照は、wikilink はどこでも、`<project-id>:` 付きの値は frontmatter と YAML だけで拾い、`generated/` は見ない。本文の `specdojo:build` のようなコマンド名を参照と取り違えないため。","CHANGELOG に書く事項（Added）: `specdojo project move <project-id> --check` を追加しました。project を別のリポジトリへ移す前に、実行中の項目とタスク、exec のブランチと worktree、統合先のブランチ、定期実行、project をまたぐ参照、写す設定、kata の出所を、何も書き換えずに点検します。移す前に片付けが要るものがあると終了コード 1 で終わります。"],"validations":[{"command":"npm run validate:history-links","status":"passed","summary":"個票の変更後に exit 0"},{"command":"npx prettier --check src/project tests/src/project src/specdojo.ts src/shared/specdojo-config.ts eslint.config.js docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-9xeg-project-move-check.md","status":"passed","summary":"変更したファイルはすべて Prettier の形式どおり"}]}
+</specdojo_executor_evidence>
