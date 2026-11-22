@@ -3,13 +3,13 @@
   "queue_id": "wave3-090-b-2026-11-22",
   "project_id": "prj-0001",
   "created_at": "2026-11-22T04:09:16.604Z",
-  "updated_at": "2026-11-22T04:09:16.604Z",
-  "state": "pending",
+  "updated_at": "2026-11-22T05:03:52.892Z",
+  "state": "succeeded",
   "steps": [
     {
       "index": 1,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "succeeded",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -25,12 +25,16 @@
         "sonnet-review-executor",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-22T04:11:31.620Z",
+      "completed_at": "2026-11-22T04:20:51.090Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
     },
     {
       "index": 2,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "succeeded",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -46,12 +50,16 @@
         "sonnet-review-executor",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-22T04:20:51.092Z",
+      "completed_at": "2026-11-22T04:28:30.253Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
     },
     {
       "index": 3,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "succeeded",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -67,12 +75,16 @@
         "sonnet-review-executor",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-22T04:28:30.256Z",
+      "completed_at": "2026-11-22T04:36:09.389Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
     },
     {
       "index": 4,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "succeeded",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -88,12 +100,16 @@
         "sonnet-review-executor",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-22T04:36:09.393Z",
+      "completed_at": "2026-11-22T04:43:23.122Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
     },
     {
       "index": 5,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "succeeded",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -109,12 +125,16 @@
         "sonnet-review-executor",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-22T04:43:23.125Z",
+      "completed_at": "2026-11-22T04:53:48.194Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
     },
     {
       "index": 6,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "succeeded",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -130,7 +150,11 @@
         "sonnet-review-executor",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-22T04:53:48.196Z",
+      "completed_at": "2026-11-22T05:03:52.888Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
     }
   ]
 }
