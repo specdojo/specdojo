@@ -9,7 +9,8 @@ specdojo:
   item_type: todo
   item_status: open
   priority: high
-  difficulty: medium
+  difficulty: hard
+  owner: DEV
   registered_at: "2026-11-22T03:13:28Z"
   derived_from:
     - PJR-G3TT
