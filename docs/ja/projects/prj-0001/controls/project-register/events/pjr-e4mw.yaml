@@ -1,0 +1,65 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_e88f2d4843ed4157b584767c97b2129e
+  ts: "2026-11-22T23:13:49Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: プロダクト文書の名前空間ありの id を名前空間なしに直し、参照を付け替える
+    - field: description
+      from: ""
+      to: "docs/ja/product の下で prj-0001: の付いた id を持つ 7 件と、名前空間ありの based\\_on の 8 件を名前空間なしに直す。履歴のファイルを含めて参照をすべて付け替える"
+    - field: input
+      from: ""
+      to: '["プロダクト文書の id は名前空間なしを正とする（PJR-PHY7 の案 A、利用者の決定、2026-11-23）","参照の付け替えは履歴のファイルも含めてすべて行う（利用者の決定、2026-11-23）","2026-11-23 時点の対象: stsd-task-execution・stsd-deliverable・cdt-register-type・ccd-project-planning（Markdown）、bdd-register-entry・ifx-index・ifx-file-agent-evidence（YAML）。参照は延べ約 250 ファイル"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-PHY7"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-PHY7"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: product
+- v: 1
+  id: reg_464a911053724e9e803a52d6021434de
+  ts: "2026-11-22T23:13:57Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_e88f2d4843ed4157b584767c97b2129e
