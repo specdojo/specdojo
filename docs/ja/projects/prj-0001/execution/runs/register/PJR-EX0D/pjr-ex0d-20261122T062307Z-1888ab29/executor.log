@@ -1,0 +1,18 @@
+rulebook と sample を grade の指摘に沿って直し、個票の対応結果を書きました。`npm run lint:md` と親の検証はまだ走らせていません。確認したのは対象 2 ファイルへの markdownlint（問題なし）と prettier の整形だけです。再評価の `grade run` もまだなので、指摘が解消したかは未確認です。
+
+**rulebook の変更**
+- **F001（minor）**: 手順 3 に、仕様ID から要求文書 ID と項目 ID を取り出す規則を追加しました。wikilink、併記、`BAC-01 の C-01` のような下位項目、項目 ID のない行を扱います。
+- **F002（major）**: 手順 2 を 2 経路にしました。`relations.verifies` で集める経路と、索引のテストの「トレース」の表を走査する経路です。手順 4 の照合条件もそれに合わせました。
+- **F003（major）**: 総合テストは `relations.verifies` を定めない種別として扱います。「トレース」の表の仕様ID が要求文書を指していれば、文書単位の対応とみなします。宣言が必要なのは受入テストだけです。`stc-rulebook` は変えておらず、改訂も不要と判断しました。
+- **F004（minor）**: 生成コマンドと recipe・template の要否を `_UNDECIDED_` で残し、`ready` にする条件を書きました。
+
+**sample の変更**
+- **F001・F002（minor）**: 抽出条件を rulebook の手順 2 の 2 経路に揃えました。
+- **F003（minor）**: ギャップ表の要求項目を `<要求文書ID> <項目ID>` の表記に統一しました。
+- **rulebook 変更への追従**: `stc-cash-sale` の `relations.verifies` 欠落は新しい規則では指摘に当たらないため、ギャップ列、優先事項、ギャップ表の該当行から除きました。`_TODO_` は sample に残していません。
+
+個票の作業内容は 1・2 を `done`、3・4 を `open` にしました。`### 5.1. CHANGELOG に書く事項` には「なし」と書き、`CHANGELOG.md` は変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"rulebook と sample を grade の指摘（rulebook F001〜F004、sample F001〜F003）に沿って直し、個票の対応結果を記入した。直さなかった指摘はない。","handoff":["統合後に orchestrator が `npx specdojo grade run --target kata --kata trc-requirements-to-tests` で再評価し、rulebook と sample に blocker と major がないことを確かめる（機械的な PJR-7C9X だけが残る場合は合格）。","rulebook F003 は `stc-rulebook` を変えず、本 rulebook に総合テスト向けの判定規則を定めて対応した。`stc-rulebook` の改訂案はない。","rulebook に `_UNDECIDED_`（生成コマンドと recipe・template の要否）を残した。grade が機械的な未解決指摘（PJR-7C9X）として扱う想定。"],"validations":[{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/trc-requirements-to-tests-sample.md docs/ja/specdojo/rulebooks/trc-requirements-to-tests-rulebook.md","status":"passed","summary":"0 issues"},{"command":"npx prettier --write (変更した 3 ファイル)","status":"passed","summary":"整形済み"}]}
+</specdojo_executor_evidence>
