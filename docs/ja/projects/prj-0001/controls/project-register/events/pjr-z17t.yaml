@@ -41,3 +41,29 @@
     - field: derived_from
       from: ""
       to: '["PJR-PP4X"]'
+- v: 1
+  id: reg_02f2d24701e54d4583b4f12b7613d3ce
+  ts: "2026-11-22T11:13:52Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件を利用者の承認のもとで書く
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_4c53738bfbb5446893f45cdfd5db8588
+- v: 1
+  id: reg_2c1ab4aad5a24b5cacd4e087ef8ce201
+  ts: "2026-11-22T11:13:57Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 作業内容を利用者の承認のもとで書く
+  changes:
+    - field: section
+      from: ""
+      to: 作業内容
+  previous_event_id: reg_02f2d24701e54d4583b4f12b7613d3ce

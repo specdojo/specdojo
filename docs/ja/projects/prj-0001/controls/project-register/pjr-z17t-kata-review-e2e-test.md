@@ -27,13 +27,22 @@ PJR-E4R5 の型の grade と review の段の事前の grade の組み合わせ�
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- `tests/src/exec/kata-review-stage.integration.test.ts` を新しく作る。一時リポジトリに、intent が `improve-kata` で review の段の代表が sample である型の schedule の fixture を置き、review の段を 1 回通す。agent と grade は、既存の統合テストと同じく fixture のコマンドで代える。
+- このテストで次を確かめる。
+  - review の前の grade が `kata` で 1 回だけ流れる。
+  - review の plan の「grade の対象種別」が `kata` になる。
+  - executor が `grade list --changed-only` を失敗と記録しても block にならず、verdict が記録される。
+  - 型の grade が `needs-work` のとき、review が完了にならない。
+- テストで不具合が見つかっても、直すのはこの範囲だけにする。ほかの問題は個票の対応結果に書き、起票を提案する。
+- `CHANGELOG.md` は変えない。個票の対応結果に「CHANGELOG に書く事項」の小節を作り、区分と行の文案を書く。テストだけの変更なら「なし」と書く。
+- `npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md` を通し、親の検証（`test-integration` を含む）を通す。
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                      | 担当     | 状態 | メモ                         |
+| --- | --------------------------------------------------------- | -------- | ---- | ---------------------------- |
+| 1   | 型の schedule の fixture と review の段の統合テストを作る | executor | open | -                            |
+| 2   | テストで見つかった問題を対応結果に書く                    | executor | open | 範囲外の問題は起票を提案する |
 
 ## 5. 対応結果
 
