@@ -32,13 +32,26 @@ specdojo:
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- 正本 `.agents/skills/specdojo-exec-in-session/SKILL.md` を、`templates/` の配る原本へ写す。写すのは `npm run orchestrator:sync`（`tools/generate-orchestrator-wrappers.mjs`）とし、写し漏れは `tools/validate-orchestrator-sync.mjs` の系統で検出する。原本を手で 2 か所に持たない。
+- `specdojo provider scaffold`（Claude Code・Codex・opencode・Copilot）で、利用者のリポジトリに正本 `.agents/skills/specdojo-exec-in-session/SKILL.md` を置く。provider が `.agents/skills` を読まない場合は、その provider の読む場所にラッパー（Claude Code では `.claude/skills/specdojo-exec-in-session/SKILL.md`）も置く。既にあるファイルは、`--force` なしでは上書きしない。
+- opencode と Copilot が skill をどこから読むかは executor が一次情報（公式の文書）で確かめる。ラッパーが要るかを決め、確かめた URL と理由を個票の対応結果に書く。
+- 配る本文に、このリポジトリに固有の記述を残さない。`src/` のパスなど利用者のリポジトリにないものは、利用者のリポジトリでのパス（`node_modules/specdojo/dist/...` など）に書き換える。正本の変更が要る場合は、案を個票の対応結果と報告の `handoff` に書く（正本は保護された設定のため、executor は変えない）。
+- `package.json`・`lefthook.yml` などの保護された設定の変更が要る場合も、案を個票の対応結果と報告の `handoff` に書く。反映は利用者の承認のもとでオーケストレーターが行う。
+- 単体テストで、provider ごとに置かれるファイルの一覧と、既にあるファイルを上書きしないことを確かめる。
+- `command-reference` の `provider scaffold` の節と、関係するガイドの説明を直す。
+- `CHANGELOG.md` は変えない。個票の対応結果の `### 5.1. CHANGELOG に書く事項` に、区分「追加」と行の文案を書く。
+- `npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md` を通し、親の検証を通す。
+- 統合の後、オーケストレーターが `npm pack` した tarball を空のリポジトリに入れて `provider scaffold --provider claude` を流し、新しいセッションの Claude Code がラッパーから正本を読むことを確かめる。
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                       | 担当                  | 状態 | メモ                     |
+| --- | ------------------------------------------ | --------------------- | ---- | ------------------------ |
+| 1   | provider ごとの skill の読み場所を確かめる | DEV                   | open | 一次情報の URL を残す    |
+| 2   | 原本の写しと検査を足す                     | DEV                   | open | orchestrator:sync の系統 |
+| 3   | scaffold で置く                            | DEV                   | open | 上書きしない             |
+| 4   | テストと文書、CHANGELOG の文案             | DEV                   | open | -                        |
+| 5   | 空のリポジトリで確かめる                   | specdojo-orchestrator | open | npm pack                 |
 
 ## 5. 対応結果
 
