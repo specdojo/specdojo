@@ -141,3 +141,29 @@
       from: in-progress
       to: review
   previous_event_id: reg_7bd55e72b2aa4cff9a03a1ea84559c71
+- v: 1
+  id: reg_4e8ce599c6e046eb9af992f2ad3736a9
+  ts: "2026-11-22T12:16:07Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: 3 回目の実行の完了条件を利用者の確認のもとで足す
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_837d3f8214f649fd89c62b2ee7a71284
+- v: 1
+  id: reg_618aac3996884994919f95fad2adf3d4
+  ts: "2026-11-22T12:16:11Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: 3 回目の実行の完了条件を利用者の確認のもとで足す
+  changes:
+    - field: section
+      from: ""
+      to: 作業内容
+  previous_event_id: reg_4e8ce599c6e046eb9af992f2ad3736a9
