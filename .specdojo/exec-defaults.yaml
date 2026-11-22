@@ -42,8 +42,10 @@ pipeline:
       paths: ["docs/ja/specdojo/**", "docs/specdojo/**"]
     # sandbox 内では tsx の IPC ソケット作成、Vitest の終了、git の子プロセス終了が
     # 成立せず、成果物と無関係に failed となるため親プロセスで実行する（PJR-QVGX）。
+    # 変えたファイルに関係するテストだけを流す。判定できないときは全件に戻る（PJR-9X52、2026-11-23 indie の決定）。
     - id: test-integration # npm run test:integration（shell を介さず固定 argv で実行）
       paths: ["{src,tests,tools,scripts,packages}/**", "vitest.*", "tsconfig*.json"]
+      related: true
     - validate-schema # npm run validate:schema
     # 型エラーは Vitest では検出できず、統合時の pre-commit hook まで持ち越されるため、
     # test-unit の前に親検証として実行する（PJR-W66B）。docs-site の .vitepress も対象（PJR-C8J8）。
@@ -146,6 +148,8 @@ rate_limit_policy:
 # 実際の出力で検証してから確定する。
 providers:
   claude:
+    # 1 回の起動の上限。hard の項目でも 2 時間を超える起動は固まったとみなす（PJR-K8F1、2026-11-23 indie の決定）。
+    agent_timeout_seconds: 7200
     # Claude の週の枠に余裕があるため、2026-11-17 1:00 まで opus を 3 本まで使う（indie の依頼）。
     max_concurrency: 3
     # 役割の定義は .claude/agents/ の役割ごとの 1 ファイル（PJR-TSP6）を mode で選び、
@@ -171,6 +175,8 @@ providers:
         - "session limit"
 
   copilot:
+    # 1 回の起動の上限（PJR-K8F1、2026-11-23 indie の決定）。
+    agent_timeout_seconds: 7200
     # edit / review とも同一の許可リスト方式（shell は読み取り系・検証系のみ、git の
     # 変更系は deny）。write はパス単位に絞れないため許可し、成果物変更の境界は
     # specdojo CLI の commit 許可リストで作る。プレースホルダは不要のため使わない。
@@ -195,6 +201,8 @@ providers:
         - "premium request"
 
   codex:
+    # 1 回の起動の上限（PJR-K8F1、2026-11-23 indie の決定）。
+    agent_timeout_seconds: 7200
     # 同時に走らせる codex の agent を 2 本までにする（2026-11-13 indie の依頼。当時は codex と agy を 2 本ずつ並べていた）。
     max_concurrency: 2
     # codex exec には worker 名を選択するオプションがないため {nickname} は使わない。
@@ -219,6 +227,8 @@ providers:
         - "usage limit"
 
   opencode:
+    # 1 回の起動の上限。ローカルのモデルは長い起動が固まりやすいため短めにする（PJR-K8F1、2026-11-23 indie の決定）。
+    agent_timeout_seconds: 5400
     # 役割の定義は .opencode/agents/ の役割ごとの 1 ファイル（PJR-TSP6）を mode で選び、
     # モデルは実体の member の model を --model で渡す。役割に収まらない agent
     # （翻訳、thinking を有効にした executor）は by_nickname で定義を指定する。
