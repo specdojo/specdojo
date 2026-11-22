@@ -4,12 +4,11 @@ document: specdojo:etc-index-rulebook
 path: docs/ja/specdojo/rulebooks/etc-index-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-rulebook
-verdict: needs-work
-score: 88
-graded_at: "2026-11-21T03:53:57.628Z"
-graded_by: opus-executor
-content_hash: b7d5e2c684402055d0691f0c324e8a8287e8b984716b4012c20884c127ffe905
+verdict: pass
+score: 96
+graded_at: "2026-11-22T02:00:59.003Z"
+graded_by: opus-review-executor
+content_hash: c2bbdfbdc9c087ab8a0ea42ab92ff4c69a820d0880a327e2f8d8102942a5f1fb
 categories:
   purpose:
     score: 100
@@ -18,17 +17,17 @@ categories:
   planning:
     score: 100
   business:
-    score: 92
+    score: 100
   architecture:
     score: 100
   usability:
-    score: 83
+    score: 92
   implementation:
-    score: 75
+    score: 88
   quality:
-    score: 83
+    score: 92
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -52,8 +51,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
     level: 4
     score: 100
@@ -64,8 +63,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-change-impact:
     level: 3
     score: 75
@@ -76,14 +75,14 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
-  vp-ux-readability:
     level: 3
     score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 3
     score: 75
@@ -101,83 +100,51 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 7
+  major: 0
+  minor: 4
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-ba-requirements-completeness
-    line: 91
-    anchor: "- 非適用：総合/受入（ST/AT）のルールはそれぞれの `stc-index` / `atc-index` で扱う"
+    rule: vp-dev-change-impact
+    line: 46
+    anchor: "- `<term>` は用語集（GL）の論理名キー（英小文字 kebab-case）とし、日本語の表示名は本文の H1 に記載する。"
     message: >-
-      6.1節の非適用に結合テスト（`itc-index`）との分界が挙がっておらず、別運用ドメインを外部として扱う定義（6.2節）と合わせても、内部の結合テストとの責務境界を判定しにくいため、`itc-index`
-      で扱う範囲を非適用に追記すべきである。
+      `＜term＞` を用語集（GL）の論理名キーとする規定が、適用先 `dct-test-specs-template.yaml` の `etc-_TARGET_.md` の
+      note（「対象外部システム・I/F名の略称（kebab-case）」）と食い違っており、対象別ファイルの命名根拠が作成者ごとにぶれるため、どちらかに揃えるか両者の関係を明記すべきである。
     message_ja: >-
-      6.1節の非適用に結合テスト（`itc-index`）との分界が挙がっておらず、別運用ドメインを外部として扱う定義（6.2節）と合わせても、内部の結合テストとの責務境界を判定しにくいため、`itc-index`
-      で扱う範囲を非適用に追記すべきである。
+      `＜term＞` を用語集（GL）の論理名キーとする規定が、適用先 `dct-test-specs-template.yaml` の `etc-_TARGET_.md` の
+      note（「対象外部システム・I/F名の略称（kebab-case）」）と食い違っており、対象別ファイルの命名根拠が作成者ごとにぶれるため、どちらかに揃えるか両者の関係を明記すべきである。
   - id: F002
     severity: minor
-    rule: vp-dev-implementation-readiness
-    line: 221
-    anchor: "- 形式：`<level>-<term>-<perspective_key>-<nnn>`（nnnは3桁推奨）"
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# 外部結合テストカタログ概要 作成ルール"
     message: >-
-      `case_id` の構成要素 `perspective_key` の作り方（日本語の観点名から英小文字 kebab-case
-      のキーを決める規則や、どこで定義するか）が書かれておらず、作成者ごとにIDの書き方がぶれるため、規則を明記すべきである。
+      Frontmatter の `recipe` と `template` が `undecided` のままで `target_format` も宣言されておらず、kata
+      の組（rulebook・recipe・sample・template）の対応と対象形式が決まっていないため、作成するか、宣言を補うべきである。
     message_ja: >-
-      `case_id` の構成要素 `perspective_key` の作り方（日本語の観点名から英小文字 kebab-case
-      のキーを決める規則や、どこで定義するか）が書かれておらず、作成者ごとにIDの書き方がぶれるため、規則を明記すべきである。
+      Frontmatter の `recipe` と `template` が `undecided` のままで `target_format` も宣言されておらず、kata
+      の組（rulebook・recipe・sample・template）の対応と対象形式が決まっていないため、作成するか、宣言を補うべきである。
   - id: F003
     severity: minor
-    rule: vp-dev-change-impact
-    line: 50
-    anchor: "- ファイル名は `etc-010-外部結合テストカタログ-概要.md` 等、プロジェクト内で一意になるように命名します。"
+    rule: vp-qe-kata-conformance
+    line: 46
+    anchor: "- `<term>` は用語集（GL）の論理名キー（英小文字 kebab-case）とし、日本語の表示名は本文の H1 に記載する。"
     message: >-
-      3章のファイル名の例 `etc-010-外部結合テストカタログ-概要.md` が、適用先 `dct-test-specs-template.yaml` の `path: etc-index.md`
-      と合っておらず、生成物の配置名を誤る原因になるため、dct の path と揃えるか、両者の関係を明記すべきである。
+      適用先 `dct-test-specs-template.yaml` は対象別の `_TARGET_` を「対象外部システム・I/F名の略称」とし、rulebook は `＜term＞`
+      を用語集（GL）の論理名キーとしているため、rulebook と適用先の命名規則が矛盾しており、どちらを正とするかを揃えるべきである。
     message_ja: >-
-      3章のファイル名の例 `etc-010-外部結合テストカタログ-概要.md` が、適用先 `dct-test-specs-template.yaml` の `path: etc-index.md`
-      と合っておらず、生成物の配置名を誤る原因になるため、dct の path と揃えるか、両者の関係を明記すべきである。
+      適用先 `dct-test-specs-template.yaml` は対象別の `_TARGET_` を「対象外部システム・I/F名の略称」とし、rulebook は `＜term＞`
+      を用語集（GL）の論理名キーとしているため、rulebook と適用先の命名規則が矛盾しており、どちらを正とするかを揃えるべきである。
   - id: F004
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 49
-    anchor: "- 本ルールの対象ドキュメントの `id` は `etc-index` 固定。対象別は `etc-<term>` とします。"
-    message: >-
-      `id` を `etc-index` 固定としているが、生成後の文書 id はプロジェクト修飾付き（`＜project-id＞:etc-index`）で、dct では `etc-index` が `local_id`
-      に当たるため、id と local_id のどちらかを区別して書くべきである（4.1節の `id: etc-index` も同様）。
-    message_ja: >-
-      `id` を `etc-index` 固定としているが、生成後の文書 id はプロジェクト修飾付き（`＜project-id＞:etc-index`）で、dct では `etc-index` が `local_id`
-      に当たるため、id と local_id のどちらかを区別して書くべきである（4.1節の `id: etc-index` も同様）。
-  - id: F005
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 外部結合テストカタログ概要 作成ルール"
-    message: 指定の sample が mandatory と定義された本文構成（1~8章）を無視し、かつ Frontmatter の type に `project` を指定しており rulebook の定義と矛盾している。
-    message_ja: 指定の sample が mandatory と定義された本文構成（1~8章）を無視し、かつ Frontmatter の type に `project` を指定しており rulebook の定義と矛盾している。
-  - id: F006
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 外部結合テストカタログ概要 作成ルール"
-    message: >-
-      Frontmatter の `recipe` と `template` が `undecided` のままで `target_format` も宣言されておらず、kata
-      の組（rulebook・recipe・sample・template）の対応と対象形式が決まっていないため、作成するか、宣言を補うべきである。
-    message_ja: >-
-      Frontmatter の `recipe` と `template` が `undecided` のままで `target_format` も宣言されておらず、kata
-      の組（rulebook・recipe・sample・template）の対応と対象形式が決まっていないため、作成するか、宣言を補うべきである。
-  - id: F007
-    severity: minor
-    rule: vp-ux-readability
-    line: 6
-    anchor: TSPに基づき、外部結合テストに共通するルールや方針を定義します。
-    message: 導入文の「TSPに基づき」は略語の説明もなく `tsp-index`（テスト戦略・方針）との対応も書かれていないため、初見の読者が根拠文書を特定できるよう、正式名称と文書 id を示すべきである。
-    message_ja: 導入文の「TSPに基づき」は略語の説明もなく `tsp-index`（テスト戦略・方針）との対応も書かれていないため、初見の読者が根拠文書を特定できるよう、正式名称と文書 id を示すべきである。
-  - id: F008
-    severity: minor
     rule: vp-ux-language-consistency
-    line: 33
-    anchor: TCIndex["etc-index<br>テスト仕様-全体構成"]
-    message: 2章の mermaid 図のラベル「テスト仕様-全体構成」「テスト仕様-対象別」が、H1 と本文で使う「外部結合テストカタログ 概要／対象別」と呼び名が違い、別の成果物と誤読されるおそれがあるため、呼び名を揃えるべきである。
-    message_ja: 2章の mermaid 図のラベル「テスト仕様-全体構成」「テスト仕様-対象別」が、H1 と本文で使う「外部結合テストカタログ 概要／対象別」と呼び名が違い、別の成果物と誤読されるおそれがあるため、呼び名を揃えるべきである。
+    line: 1
+    anchor: "# 外部結合テストカタログ概要 作成ルール"
+    message: >-
+      rulebook の呼び名「外部結合テストカタログ 概要／対象別」が、適用先 `dct-test-specs-template.yaml` の
+      name「外部結合テスト（全体構成）」「外部結合テスト（対象別）」と一致しておらず、同じ成果物が別名で並び誤読されるため、dct 側と呼び名を揃えるか対応を明記すべきである。
+    message_ja: >-
+      rulebook の呼び名「外部結合テストカタログ 概要／対象別」が、適用先 `dct-test-specs-template.yaml` の
+      name「外部結合テスト（全体構成）」「外部結合テスト（対象別）」と一致しておらず、同じ成果物が別名で並び誤読されるため、dct 側と呼び名を揃えるか対応を明記すべきである。

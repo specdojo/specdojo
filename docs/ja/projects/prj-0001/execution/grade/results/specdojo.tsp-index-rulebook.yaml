@@ -4,12 +4,11 @@ document: specdojo:tsp-index-rulebook
 path: docs/ja/specdojo/rulebooks/tsp-index-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-rulebook
-verdict: needs-work
-score: 87
-graded_at: "2026-11-21T06:08:18.711Z"
-graded_by: opus-executor
-content_hash: ef2d48b21bc583add91862770f0795d9757e9b1b40b4a40af029510531ec2f95
+verdict: pass
+score: 93
+graded_at: "2026-11-22T01:51:13.355Z"
+graded_by: opus-review-executor
+content_hash: fb644a6c1e4de4b188a28066b90129582bb20f7a6f1690d2f90dcc22b6970aea
 categories:
   purpose:
     score: 100
@@ -18,15 +17,15 @@ categories:
   planning:
     score: 100
   business:
-    score: 92
+    score: 100
   architecture:
     score: 100
   usability:
-    score: 83
+    score: 92
   implementation:
-    score: 100
+    score: 88
   quality:
-    score: 75
+    score: 92
   consistency:
     score: 75
 viewpoints:
@@ -55,32 +54,32 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-stakeholder-clarity:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-implementation-readiness:
     level: 4
     score: 100
   vp-dev-change-impact:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
     level: 3
     score: 75
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -101,91 +100,51 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 9
+  major: 0
+  minor: 4
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-ba-stakeholder-clarity
-    line: 179
-    anchor: 各レベルの開始前提・完了条件・判定根拠を次の列で定義します。
-    message: 入口／出口条件の表と不具合管理方針に、出口判定者と例外承認者（Role code）を記載する要件がなく、品質ゲートの合意対象と確認者が読み取れないため、判定者列または記載ルールを追加する。
-    message_ja: 入口／出口条件の表と不具合管理方針に、出口判定者と例外承認者（Role code）を記載する要件がなく、品質ゲートの合意対象と確認者が読み取れないため、判定者列または記載ルールを追加する。
+    rule: vp-dev-change-impact
+    line: 13
+    anchor: >-
+      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status` の昇格と承認、改訂と廃止、未決事項の登録簿への引き継ぎは
+      [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従います。文書の整形・lint はリポジトリの検証で扱い、業務の検証に含めません。
+    message: >-
+      Rulebook 記述標準は各 rulebook に自系統の追従対象と役割分担の定義を求めているが、本書は改訂・廃止をメタ情報標準へ委ねるだけで、BAC・SAC・NFR の改訂時に TSP の出口条件を見直すこと、TSP
+      の改訂時に `＜level＞c-index`・`＜level＞c-＜term＞` へ反映することと、その担当 Role code が定まっていないため、具体的な追従対象と担当を追記する。
+    message_ja: >-
+      Rulebook 記述標準は各 rulebook に自系統の追従対象と役割分担の定義を求めているが、本書は改訂・廃止をメタ情報標準へ委ねるだけで、BAC・SAC・NFR の改訂時に TSP の出口条件を見直すこと、TSP
+      の改訂時に `＜level＞c-index`・`＜level＞c-＜term＞` へ反映することと、その担当 Role code が定まっていないため、具体的な追従対象と担当を追記する。
   - id: F002
     severity: minor
-    rule: vp-arc-conciseness
-    line: 212
-    anchor: "### 6.10. よくある誤りと対策"
+    rule: vp-qe-omissions-consistency
+    line: 88
+    anchor: >-
+      | 不具合管理方針                            | 任意 |
+      重大度の区分と判断観点、収束基準、既知不具合の扱いと例外承認者を示すこと                                            |
     message: >-
-      よくある誤りと対策の表は本文構成と記述ガイド（テストレベル一覧・スコープ・品質ゲート・自動化）の要求を言い換えた行が大半で固有の判断を加えていないため、記述ガイドにない誤り（例:
-      重大度別許容を書いても例外承認者がない）に絞るか、各章の参照に置き換えて削る。
+      必須の出口条件の列は未解決不具合の重大度別の許容件数を求めているが、重大度の区分を定める「不具合管理方針」が任意の章で、省略すると出口条件の重大度（Blocker・Critical
+      等）が未定義になり判定できないため、出口条件で重大度を使う場合は「不具合管理方針」を必須にするか、重大度の区分の参照先を示すことを求める。
     message_ja: >-
-      よくある誤りと対策の表は本文構成と記述ガイド（テストレベル一覧・スコープ・品質ゲート・自動化）の要求を言い換えた行が大半で固有の判断を加えていないため、記述ガイドにない誤り（例:
-      重大度別許容を書いても例外承認者がない）に絞るか、各章の参照に置き換えて削る。
+      必須の出口条件の列は未解決不具合の重大度別の許容件数を求めているが、重大度の区分を定める「不具合管理方針」が任意の章で、省略すると出口条件の重大度（Blocker・Critical
+      等）が未定義になり判定できないため、出口条件で重大度を使う場合は「不具合管理方針」を必須にするか、重大度の区分の参照先を示すことを求める。
   - id: F003
     severity: minor
-    rule: vp-qe-verifiability
-    line: 186
-    anchor: "- 非機能の出口条件は、可能なら NFR/SAC と接続します（例: 「全 NFR を満たす」）。"
-    message: 非機能の出口条件を「可能なら NFR/SAC と接続」としており、接続しない場合の合否基準が定まらず pass/fail を判定できないため、接続を必須とするか、接続できない場合に代わりの合格基準と根拠を記載するよう定める。
-    message_ja: 非機能の出口条件を「可能なら NFR/SAC と接続」としており、接続しない場合の合否基準が定まらず pass/fail を判定できないため、接続を必須とするか、接続できない場合に代わりの合格基準と根拠を記載するよう定める。
+    rule: vp-qe-kata-conformance
+    line: 141
+    anchor: "- **良い例**: 「外部結合テスト ／ 外部I/F境界の担保 ／ 決済I/F（サンドボックス） ／ DEV・QE。タイムアウト時の再送で二重決済が起きないことを重視」"
+    message: >-
+      記述ガイドの良い例が「決済I/F（サンドボックス）」「二重決済」や「外部決済事業者」（スコープの良い例）を挙げているが、共通サンプル文脈の sample ではキャッシュレス決済を対象外としており、実際の外部I/Fは
+      `receipt-print` と復元用保管サービスであるため、良い例を sample の外部I/Fに合わせて書き換える。
+    message_ja: >-
+      記述ガイドの良い例が「決済I/F（サンドボックス）」「二重決済」や「外部決済事業者」（スコープの良い例）を挙げているが、共通サンプル文脈の sample ではキャッシュレス決済を対象外としており、実際の外部I/Fは
+      `receipt-print` と復元用保管サービスであるため、良い例を sample の外部I/Fに合わせて書き換える。
   - id: F004
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 61
-    anchor: "- 個別方針が多数になった場合：`tsp-index` を別途置きナビゲーション用とする（オプション）"
-    message: >-
-      既定 ID を `tsp-index`（全体方針の入口・概説）としながら、個別方針が多数の場合に `tsp-index` を「別途置きナビゲーション用」とするのは同一 ID の役割が二重で矛盾するため、分割時に
-      `tsp-index` が全体方針を保持するのかナビゲーション専用になるのかを一つに定める。
-    message_ja: >-
-      既定 ID を `tsp-index`（全体方針の入口・概説）としながら、個別方針が多数の場合に `tsp-index` を「別途置きナビゲーション用」とするのは同一 ID の役割が二重で矛盾するため、分割時に
-      `tsp-index` が全体方針を保持するのかナビゲーション専用になるのかを一つに定める。
-  - id: F005
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 122
-    anchor: "例（外部I/Fの責任分界）:"
-    message: 推奨列の表で定義していない「前提（下位で保証済み）」列が例の表に現れ、必須・推奨列の定義と例が整合しないため、推奨列に追加するか例から外す。
-    message_ja: 推奨列の表で定義していない「前提（下位で保証済み）」列が例の表に現れ、必須・推奨列の定義と例が整合しないため、推奨列に追加するか例から外す。
-  - id: F006
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 304
-    anchor: "### 8.8. 成果物（エビデンス）の最小セット（例）"
-    message: サンプル章の「成果物（エビデンス）の最小セット」は本文構成（標準テンプレ）の見出しに存在せず、順序固定の章構成と矛盾するため、本文構成へ任意章として追加するか、入口／出口条件の例に統合する。
-    message_ja: サンプル章の「成果物（エビデンス）の最小セット」は本文構成（標準テンプレ）の見出しに存在せず、順序固定の章構成と矛盾するため、本文構成へ任意章として追加するか、入口／出口条件の例に統合する。
-  - id: F007
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# テスト戦略・方針 作成ルール"
-    message: 指定された sample ファイルが成果物の実例ではなく説明書となっており、サンプルの責務を満たしていない。
-    message_ja: 指定された sample ファイルが成果物の実例ではなく説明書となっており、サンプルの責務を満たしていない。
-  - id: F008
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 230
-    anchor: "## 8. サンプル（最小）"
-    message: >-
-      サンプル章が概要から将来課題までのほぼ完成例を埋め込んでおり、Rulebook 記述標準の「完成例の正本は sample」「完成例を丸ごと埋め込まない」に反するため、完成例は `tsp-index-sample`
-      へ移し、本章は形式の輪郭が伝わる最小例に縮める。
-    message_ja: >-
-      サンプル章が概要から将来課題までのほぼ完成例を埋め込んでおり、Rulebook 記述標準の「完成例の正本は sample」「完成例を丸ごと埋め込まない」に反するため、完成例は `tsp-index-sample`
-      へ移し、本章は形式の輪郭が伝わる最小例に縮める。
-  - id: F009
-    severity: minor
     rule: vp-ux-language-consistency
-    line: 108
-    anchor: "| テストレベル   | 単体/結合/システム/受け入れ等                  |"
-    message: テストレベル名が凡例の「単体・内部結合・外部結合・総合・受入」と最小列説明の「単体/結合/システム/受け入れ」、サンプルの「受け入れテスト」で揺れているため、凡例の名称に統一する。
-    message_ja: テストレベル名が凡例の「単体・内部結合・外部結合・総合・受入」と最小列説明の「単体/結合/システム/受け入れ」、サンプルの「受け入れテスト」で揺れているため、凡例の名称に統一する。
-  - id: F010
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 10
-    anchor: >-
-      - TSP は BAC/SAC 等を根拠に、テスト全体の方針・品質ゲート・観点/条件設計の共通原則を定義します。責務の境界は
-      [[specdojo:test-document-scope-standard|テストドキュメントスコープ定義標準]] に従います。
-    message: BAC/SAC/NFR/DEC の略語が用語定義になく初出で展開されていないため、用語定義表へ追加するか正本文書への参照を付ける。
-    message_ja: BAC/SAC/NFR/DEC の略語が用語定義になく初出で展開されていないため、用語定義表へ追加するか正本文書への参照を付ける。
+    line: 49
+    anchor: "| 回帰（リグレッション） | 変更後も既存機能が成立することを確認する試験                                                    |"
+    message: 用語定義の回帰・スモーク（「〜を確認する試験」）、ID 規則の「非機能試験」、本文要件の「将来追加する試験」が「試験」で、ほかの本文の「テスト」と表記が揺れているため、「テスト」に統一する。
+    message_ja: 用語定義の回帰・スモーク（「〜を確認する試験」）、ID 規則の「非機能試験」、本文要件の「将来追加する試験」が「試験」で、ほかの本文の「テスト」と表記が揺れているため、「テスト」に統一する。

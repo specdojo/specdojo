@@ -1,0 +1,48 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: specdojo:etc-sample-grade-criteria
+document: specdojo:etc-sample
+path: docs/ja/specdojo/samples/etc-sample.md
+graded_at: "2026-11-22T01:42:26.203Z"
+graded_by: opus-review-executor
+content_hash: e8e53f2f9238ba9f8025dbbe76dfe434218db3aba5905ca11f23d73a66045a6e
+summary:
+  satisfied: 6
+  unsatisfied: 0
+  total: 6
+criteria:
+  - id: DC-001
+    text: rulebook の章立てと必須の表に沿っていること
+    roles:
+      - QE
+    viewpoint: vp-qe-omissions-consistency
+    status: satisfied
+  - id: DC-002
+    text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+    roles:
+      - QE
+    viewpoint: vp-qe-kata-conformance
+    status: satisfied
+  - id: DC-003
+    text: rulebook の禁止事項に当たらないこと
+    roles:
+      - QE
+    viewpoint: vp-qe-kata-conformance
+    status: satisfied
+  - id: DC-004
+    text: rulebook にない独自の必須観点を置かず、`trace_key` と条件・ケース表を rulebook のとおりに持つこと
+    roles:
+      - QE
+    viewpoint: vp-qe-kata-conformance
+    status: satisfied
+  - id: DC-005
+    text: H1 が rulebook の定めるタイトル形式で、etc-index と tsp-index を根拠として参照していること
+    roles:
+      - QE
+    viewpoint: vp-qe-omissions-consistency
+    status: satisfied
+  - id: DC-006
+    text: 期待値と未解決事項の解消の条件を、判定できる値や状態で書いていること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: satisfied

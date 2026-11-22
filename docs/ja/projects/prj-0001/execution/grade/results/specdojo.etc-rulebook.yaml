@@ -4,12 +4,11 @@ document: specdojo:etc-rulebook
 path: docs/ja/specdojo/rulebooks/etc-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-rulebook
-verdict: needs-work
-score: 90
-graded_at: "2026-11-21T03:56:38.872Z"
-graded_by: opus-executor
-content_hash: 7376a48b94a718845fc4cf5a04355e474a78a6f6872407de8ffc1925fdc42520
+verdict: pass
+score: 96
+graded_at: "2026-11-22T01:43:23.744Z"
+graded_by: opus-review-executor
+content_hash: 0c270a4bca8440284cc3f99b2dbde1957eba74fa337ed496c568b4faa341a3e8
 categories:
   purpose:
     score: 100
@@ -26,9 +25,9 @@ categories:
   implementation:
     score: 88
   quality:
-    score: 83
+    score: 92
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -79,11 +78,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
     level: 3
     score: 75
-  vp-qe-kata-conformance:
-    level: 2
-    score: 50
   vp-ux-readability:
     level: 4
     score: 100
@@ -104,50 +103,40 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 4
+  major: 0
+  minor: 3
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-dev-implementation-readiness
-    line: 149
-    anchor: "- 観点名（見出し）は改善のため変更してよいが、`perspective_key` は原則変更しない"
-    message: "`perspective_key` は原則変更しないとされているが、観点ごとにどこで宣言するか（見出し直下の記載や意図節の項目など）が定義されておらず、最小例にも欄がないため、宣言場所と書式を本文要件に追加する必要がある。"
-    message_ja: "`perspective_key` は原則変更しないとされているが、観点ごとにどこで宣言するか（見出し直下の記載や意図節の項目など）が定義されておらず、最小例にも欄がないため、宣言場所と書式を本文要件に追加する必要がある。"
+    line: 41
+    anchor: "- ファイル名は `etc-010-外部結合テストカタログ-<term>.md` 等（例: `etc-010-外部結合テストカタログ-決済ゲートウェイ.md`）。"
+    message: >-
+      ファイル名の規則が「`etc-010-外部結合テストカタログ-＜term＞.md` 等」と例示だけで、番号部 `010`
+      の意味（並び順か連番か）と採番規則、「等」で許す変形の範囲が定義されていないため、ファイル名を一意に決められる規則を明記する必要がある。
+    message_ja: >-
+      ファイル名の規則が「`etc-010-外部結合テストカタログ-＜term＞.md` 等」と例示だけで、番号部 `010`
+      の意味（並び順か連番か）と採番規則、「等」で許す変形の範囲が定義されていないため、ファイル名を一意に決められる規則を明記する必要がある。
   - id: F002
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 151
-    anchor: "##### 6.6.1.1. 意図"
+    rule: vp-qe-kata-conformance
+    line: 14
+    anchor: >-
+      - _UNDECIDED_: `recipe`・`template` の要否は未判断である（template は PJR-WYTX で扱う）。sample
+      は「本文要件」の見出し構成・`trace_key`・条件・ケース表へ未整合であり、後続の sample の見直しで揃える。いずれも ready 化前に解消する。
     message: >-
-      「意図」「条件・ケース表」の節が H5（`##### 6.6.1.1.` / `##### 6.6.1.2.`）になっており Markdown 記述ルールの H5 禁止に反するため、`#### 6.6.1.`
-      配下を箇条書きにするか階層を組み替えて H4 以内に収める必要がある。
+      対応 sample は本書の見出し構成・`trace_key`・条件・ケース表へ整合済みで前回の major は解消したが、`_UNDECIDED_` に「sample は未整合であり、後続の sample
+      の見直しで揃える」と残っており rulebook と sample の関係の記述が実態と矛盾するため、sample の記述を削除して未決事項を `recipe`・`template`
+      の要否だけに更新する必要がある（矛盾が記述の更新漏れに限られるため severity を minor に下げる）。
     message_ja: >-
-      「意図」「条件・ケース表」の節が H5（`##### 6.6.1.1.` / `##### 6.6.1.2.`）になっており Markdown 記述ルールの H5 禁止に反するため、`#### 6.6.1.`
-      配下を箇条書きにするか階層を組み替えて H4 以内に収める必要がある。
+      対応 sample は本書の見出し構成・`trace_key`・条件・ケース表へ整合済みで前回の major は解消したが、`_UNDECIDED_` に「sample は未整合であり、後続の sample
+      の見直しで揃える」と残っており rulebook と sample の関係の記述が実態と矛盾するため、sample の記述を削除して未決事項を `recipe`・`template`
+      の要否だけに更新する必要がある（矛盾が記述の更新漏れに限られるため severity を minor に下げる）。
   - id: F003
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 145
-    anchor: "#### 6.6.1. 観点:<観点>"
-    message: >-
-      見出し `観点:＜観点＞` と本文51行目の「外部結合テストカタログ: ＜対象名＞」で山括弧付きプレースホルダがインラインコードで囲まれておらず HTML タグと誤認されるため、`観点:＜観点＞`・`外部結合テストカタログ:
-      ＜対象名＞` のようにインラインコードで記述する必要がある。
-    message_ja: >-
-      見出し `観点:＜観点＞` と本文51行目の「外部結合テストカタログ: ＜対象名＞」で山括弧付きプレースホルダがインラインコードで囲まれておらず HTML タグと誤認されるため、`観点:＜観点＞`・`外部結合テストカタログ:
-      ＜対象名＞` のようにインラインコードで記述する必要がある。
-  - id: F004
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 外部結合テストカタログ 対象別 作成ルール"
-    message: 対応 sample が本書必須の1〜6章、trace_key、条件・ケース表を欠き、独自の章構成と「責任者」など本書にない必須観点を示しているため、本書と同じ成果物形式へ同期する必要がある。
-    message_ja: 対応 sample が本書必須の1〜6章、trace_key、条件・ケース表を欠き、独自の章構成と「責任者」など本書にない必須観点を示しているため、本書と同じ成果物形式へ同期する必要がある。
-  - id: F005
-    severity: minor
     rule: vp-ux-language-consistency
-    line: 71
-    anchor: "| 7    | 実行運用メモ（データ/後始末/制約） | 任意 |"
-    message: 章構成表の「実行運用メモ（データ/後始末/制約）」と記述ガイド見出し「実行運用メモ（任意）」が「同名の章に対応する」とした規定に反して一致しないため、成果物で使う見出し名に統一する必要がある。
-    message_ja: 章構成表の「実行運用メモ（データ/後始末/制約）」と記述ガイド見出し「実行運用メモ（任意）」が「同名の章に対応する」とした規定に反して一致しないため、成果物で使う見出し名に統一する必要がある。
+    line: 55
+    anchor: "- `based_on` は原則 `[tsp-index, etc-index]` を最低限とし、対象固有の根拠（`br-*` / `bac-*` / `spec-*` / `nfr-*` 等）は本文「トレース」に集約します。"
+    message: 本文の大半は「〜する」の常体だが、「推奨ルール」（「集約します」「所属させます」）と「本文要件」（「配置します」）だけ敬体で文体が混在しているため、常体に統一する必要がある。
+    message_ja: 本文の大半は「〜する」の常体だが、「推奨ルール」（「集約します」「所属させます」）と「本文要件」（「配置します」）だけ敬体で文体が混在しているため、常体に統一する必要がある。

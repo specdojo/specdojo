@@ -4,98 +4,97 @@ document: specdojo:utc-sample
 path: docs/ja/specdojo/samples/utc-sample.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-sample
-verdict: fail
-score: 35
-graded_at: "2026-11-21T06:15:48.108Z"
-graded_by: opus-executor
-content_hash: 1bedc804e33a2944edb4bdc03a685b959c2d8a988b84fd857951f257232282a8
+verdict: pass
+score: 90
+graded_at: "2026-11-22T01:07:42.581Z"
+graded_by: opus-review-executor
+content_hash: 8d90f81a1a59c7f7a48c03be3a1468d1f53893542ce8b1ae990802c9e81f5c31
 categories:
   purpose:
-    score: 25
+    score: 88
   operations:
-    score: 75
+    score: 94
   planning:
-    score: 42
+    score: 92
   business:
-    score: 42
+    score: 100
   architecture:
-    score: 58
+    score: 100
   usability:
-    score: 58
+    score: 100
   implementation:
-    score: 25
+    score: 88
   quality:
-    score: 17
+    score: 83
   consistency:
-    score: 0
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-po-decision-readiness:
-    level: 1
-    score: 25
+    level: 3
+    score: 75
   vp-po-publication-accountability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-plan-feasibility:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
-    level: 1
-    score: 25
+    level: 3
+    score: 75
   vp-pm-control-reporting:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-business-value:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ba-requirements-completeness:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-dev-implementation-readiness:
-    level: 1
-    score: 25
+    level: 3
+    score: 75
   vp-dev-change-impact:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-dev-testability:
-    level: 1
-    score: 25
+    level: 3
+    score: 75
   vp-qe-verifiability:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
-    level: 0
-    score: 0
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
-    level: 0
-    score: 0
+    level: 3
+    score: 75
   vp-ux-readability:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
-    level: 2
-    score: 50
-  vp-ops-operability:
     level: 3
     score: 75
+  vp-ops-operability:
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -103,222 +102,95 @@ viewpoints:
     level: 4
     score: 100
 finding_counts:
-  blocker: 2
-  major: 17
-  minor: 9
+  blocker: 0
+  major: 0
+  minor: 8
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-po-purpose-alignment
-    line: 3
-    anchor: "## 1. 目的と適用範囲"
-    message: ドキュメントは対象システムの具体的なスコープとテスト目的を定義できておらず、上流プロジェクトの目標との整合性が取れていません。
-    message_ja: ドキュメントは対象システムの具体的なスコープとテスト目的を定義できておらず、上流プロジェクトの目標との整合性が取れていません。
-  - id: F002
-    severity: major
+    severity: minor
     rule: vp-po-decision-readiness
-    line: 26
-    anchor: "## 5. 未解決事項"
-    message: 未解決事項のセクションには、POの承認に必要な具体的な意思決定ポイント、影響分析、および割り当てられた意思決定者が不足しています。
-    message_ja: 未解決事項のセクションには、POの承認に必要な具体的な意思決定ポイント、影響分析、および割り当てられた意思決定者が不足しています。
+    line: 42
+    anchor: >-
+      | TR-04       | [[specdojo:bac-sample\|BAC-01]] 前提      | 合意した請求額の現金を受領してから確定する            | _ASSUMPTION_:
+      受領額不足の扱いを含めて解釈 |
+    message: >-
+      TR-04 の `_ASSUMPTION_`（受領額不足の扱いを BAC-01 の前提から解釈）について、確認する人（BA・PO など）と、確定までの confirm-reject-020
+      の扱いが書かれていないため、判断者と扱いを備考へ足す必要がある。
+    message_ja: >-
+      TR-04 の `_ASSUMPTION_`（受領額不足の扱いを BAC-01 の前提から解釈）について、確認する人（BA・PO など）と、確定までの confirm-reject-020
+      の扱いが書かれていないため、判断者と扱いを備考へ足す必要がある。
+  - id: F002
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 42
+    anchor: >-
+      | TR-04       | [[specdojo:bac-sample\|BAC-01]] 前提      | 合意した請求額の現金を受領してから確定する            | _ASSUMPTION_:
+      受領額不足の扱いを含めて解釈 |
+    message: TR-04 は bac-sample の BAC-01 にない受領額不足の条件を仮定で補っているため、BAC への条件追加か PJR 登録候補として仕様の欠けを上流へ戻す扱いを書く必要がある。
+    message_ja: TR-04 は bac-sample の BAC-01 にない受領額不足の条件を仮定で補っているため、BAC への条件追加か PJR 登録候補として仕様の欠けを上流へ戻す扱いを書く必要がある。
   - id: F003
     severity: minor
-    rule: vp-po-publication-accountability
-    line: 1
-    anchor: "# [単体テスト対象別](../rulebooks/utc-rulebook.md) サンプル"
-    message: 人間の承認責任、および公開やサンプルの採用に関する明確な基準が文書化されていません。
-    message_ja: 人間の承認責任、および公開やサンプルの採用に関する明確な基準が文書化されていません。
+    rule: vp-dev-implementation-readiness
+    line: 25
+    anchor: "- 入口: 会計確定の操作（入力は購入明細と受領額）。出口: 確定結果（取引番号・請求額）またはエラー種別。"
+    message: "入口が「会計確定の操作」という抽象的な表現だけで、rulebook の「境界/依存」が求める公開API・関数・クラスの名前がないため、テストコードから呼ぶ入口（例: 会計確定サービスのメソッド名）を書く必要がある。"
+    message_ja: "入口が「会計確定の操作」という抽象的な表現だけで、rulebook の「境界/依存」が求める公開API・関数・クラスの名前がないため、テストコードから呼ぶ入口（例: 会計確定サービスのメソッド名）を書く必要がある。"
   - id: F004
-    severity: major
-    rule: vp-pm-plan-feasibility
-    line: 7
-    anchor: "## 2. 入力情報"
-    message: ドキュメントには、ユニットテストの計画と見積もりに必要なタスク分解、作業単位、完了基準、および割り当てられたロールコードが不足しています。
-    message_ja: ドキュメントには、ユニットテストの計画と見積もりに必要なタスク分解、作業単位、完了基準、および割り当てられたロールコードが不足しています。
+    severity: minor
+    rule: vp-dev-testability
+    line: 57
+    anchor: >-
+      | `ut-sales-checkout-stock-allocation-010` | 入力: 商品A×2・受領額60円 状態: 在庫5個  | 会計を確定する | 請求額60円・取引番号 `T-0001`
+      の販売が確定し、在庫が3個になる | 戻り値の請求額・取引番号、Fake の在庫数 | 在庫リポジトリ Fake | TR-01    | P0     | automated | 暫定:
+      ローカル実行結果、`kinuya-ci-unit` 整備後に差し替え |
+    message: "証跡の列が「暫定: ローカル実行結果」だけで、テストコードのパスもローカルでの実行コマンドもないため、暫定でも辿れるようにテストファイルの位置と実行手順を書く必要がある。"
+    message_ja: "証跡の列が「暫定: ローカル実行結果」だけで、テストコードのパスもローカルでの実行コマンドもないため、暫定でも辿れるようにテストファイルの位置と実行手順を書く必要がある。"
   - id: F005
-    severity: major
-    rule: vp-pm-dependency-risk
-    line: 1
-    anchor: "# [単体テスト対象別](../rulebooks/utc-rulebook.md) サンプル"
-    message: >-
-      Upstream dependencies (e.g., tsp-index, utc-index) and downstream implementation risks are missing from both
-      Frontmatter and the body.
-    message_ja: >-
-      Upstream dependencies (e.g., tsp-index, utc-index) and downstream implementation risks are missing from both
-      Frontmatter and the body.
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 57
+    anchor: >-
+      | `ut-sales-checkout-stock-allocation-010` | 入力: 商品A×2・受領額60円 状態: 在庫5個  | 会計を確定する | 請求額60円・取引番号 `T-0001`
+      の販売が確定し、在庫が3個になる | 戻り値の請求額・取引番号、Fake の在庫数 | 在庫リポジトリ Fake | TR-01    | P0     | automated | 暫定:
+      ローカル実行結果、`kinuya-ci-unit` 整備後に差し替え |
+    message: rulebook の「条件・ケース表」が証跡にテストコードのパスを書くよう定めているのに、全ケースの証跡の列にテストコードのパスがないため、暫定表記に加えてパスを書く必要がある。
+    message_ja: rulebook の「条件・ケース表」が証跡にテストコードのパスを書くよう定めているのに、全ケースの証跡の列にテストコードのパスがないため、暫定表記に加えてパスを書く必要がある。
   - id: F006
     severity: minor
-    rule: vp-pm-control-reporting
-    line: 26
-    anchor: "## 5. 未解決事項"
-    message: 未解決事項のテーブルには、プロジェクト管理に必要な担当ロールコードと報告チャネルが不足しています。
-    message_ja: 未解決事項のテーブルには、プロジェクト管理に必要な担当ロールコードと報告チャネルが不足しています。
-  - id: F007
-    severity: major
-    rule: vp-ba-business-value
-    line: 7
-    anchor: "## 2. 入力情報"
-    message: サンプルでは、対象となるユーザーのドメインの問題や、ユニットテストによって保証されるビジネス価値について説明されていません。
-    message_ja: サンプルでは、対象となるユーザーのドメインの問題や、ユニットテストによって保証されるビジネス価値について説明されていません。
-  - id: F008
-    severity: major
-    rule: vp-ba-requirements-completeness
-    line: 3
-    anchor: "## 1. 目的と適用範囲"
-    message: 対象ドメインの機能要件と受け入れ基準が完全に欠落しています。
-    message_ja: 対象ドメインの機能要件と受け入れ基準が完全に欠落しています。
-  - id: F009
-    severity: major
-    rule: vp-ba-requirements-completeness
-    line: 7
-    anchor: "## 2. 入力情報"
-    message: スコープ内およびスコープ外の境界が、ステークホルダーによって検証可能なレベルで指定されていません。
-    message_ja: スコープ内およびスコープ外の境界が、ステークホルダーによって検証可能なレベルで指定されていません。
-  - id: F010
-    severity: minor
-    rule: vp-ba-stakeholder-clarity
-    line: 3
-    anchor: "## 1. 目的と適用範囲"
-    message: ドキュメントでは、このカタログの意図されたステークホルダー、レビュアー、または利用者が明確に特定されていません。
-    message_ja: ドキュメントでは、このカタログの意図されたステークホルダー、レビュアー、または利用者が明確に特定されていません。
-  - id: F011
-    severity: major
-    rule: vp-arc-technical-constraints
-    line: 13
-    anchor: "## 3. 記述内容"
-    message: 技術的な境界、依存関係、および分離戦略（mockやstubなど）が定義されていません。
-    message_ja: 技術的な境界、依存関係、および分離戦略（mockやstubなど）が定義されていません。
-  - id: F012
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 18
-    anchor: "## 4. 最小記述例"
-    message: セクション 3 の箇条書きが、セクション 4 のテーブル内でそのまま重複して繰り返されています。
-    message_ja: セクション 3 の箇条書きが、セクション 4 のテーブル内でそのまま重複して繰り返されています。
-  - id: F013
-    severity: major
-    rule: vp-arc-single-responsibility
-    line: 1
-    anchor: "# [単体テスト対象別](../rulebooks/utc-rulebook.md) サンプル"
-    message: ドキュメントはメタレベルの補足説明と具体的なサンプルアーティファクトを混同しており、UTCサンプルの単一責任を果たせていません。
-    message_ja: ドキュメントはメタレベルの補足説明と具体的なサンプルアーティファクトを混同しており、UTCサンプルの単一責任を果たせていません。
-  - id: F014
-    severity: major
-    rule: vp-dev-implementation-readiness
-    line: 13
-    anchor: "## 3. 記述内容"
-    message: テスト実装に必要な具体的な技術的インターフェース、関数、および入力が完全に欠落しています。
-    message_ja: テスト実装に必要な具体的な技術的インターフェース、関数、および入力が完全に欠落しています。
-  - id: F015
-    severity: major
-    rule: vp-dev-implementation-readiness
-    line: 18
-    anchor: "## 4. 最小記述例"
-    message: 開発者がテストコードを書くための、実行可能なテストケースやセットアップ条件が提供されていません。
-    message_ja: 開発者がテストコードを書くための、実行可能なテストケースやセットアップ条件が提供されていません。
-  - id: F016
-    severity: major
-    rule: vp-dev-change-impact
-    line: 7
-    anchor: "## 2. 入力情報"
-    message: 仕様書とコードコンポーネントへのトレーサビリティリンクが欠落しており、変更の影響分析ができません。
-    message_ja: 仕様書とコードコンポーネントへのトレーサビリティリンクが欠落しており、変更の影響分析ができません。
-  - id: F017
-    severity: major
-    rule: vp-dev-testability
-    line: 18
-    anchor: "## 4. 最小記述例"
-    message: 実行コマンド、テストフレームワーク、および検証手順が指定されていません。
-    message_ja: 実行コマンド、テストフレームワーク、および検証手順が指定されていません。
-  - id: F018
-    severity: major
-    rule: vp-qe-verifiability
-    line: 1
-    anchor: "# [単体テスト対象別](../rulebooks/utc-rulebook.md) サンプル"
-    message: 具体的なテストケースと判定可能な期待値の記述例がなく、検証可能性の提示がなされていない。
-    message_ja: 具体的なテストケースと判定可能な期待値の記述例がなく、検証可能性の提示がなされていない。
-  - id: F019
-    severity: blocker
-    rule: vp-qe-omissions-consistency
-    line: 3
-    anchor: "## 1. 目的と適用範囲"
-    message: ルールブックで規定された必須の本文構成 (概要〜テスト観点とケース) がすべて欠落している。
-    message_ja: ルールブックで規定された必須の本文構成 (概要〜テスト観点とケース) がすべて欠落している。
-  - id: F020
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 16
-    anchor: "- 必須観点: 対象、条件、判定基準、責任者"
-    message: >-
-      「必須観点: 対象、条件、判定基準、責任者」は utc-rulebook に定義がなく、rulebook の観点（責務を分解した切り口）やケース表の必須カラムと矛盾するため、削除するか rulebook
-      の定義に合わせる必要がある。
-    message_ja: >-
-      「必須観点: 対象、条件、判定基準、責任者」は utc-rulebook に定義がなく、rulebook の観点（責務を分解した切り口）やケース表の必須カラムと矛盾するため、削除するか rulebook
-      の定義に合わせる必要がある。
-  - id: F021
-    severity: blocker
     rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# [単体テスト対象別](../rulebooks/utc-rulebook.md) サンプル"
-    message: ルールブックの標準テンプレートに従っておらず、UTC サンプルとしての正当な構成を満たしていない。
-    message_ja: ルールブックの標準テンプレートに従っておらず、UTC サンプルとしての正当な構成を満たしていない。
-  - id: F022
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# [単体テスト対象別](../rulebooks/utc-rulebook.md) サンプル"
-    message: >-
-      前回指摘のうち type・title・ID 形式は rulebook と metadata 標準に適合しており誤りだったが、rulebook が推奨する `based_on: [tsp-index, utc-index]` が
-      Frontmatter に欠けているため追加が必要である。
-    message_ja: >-
-      前回指摘のうち type・title・ID 形式は rulebook と metadata 標準に適合しており誤りだったが、rulebook が推奨する `based_on: [tsp-index, utc-index]` が
-      Frontmatter に欠けているため追加が必要である。
-  - id: F023
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# [単体テスト対象別](../rulebooks/utc-rulebook.md) サンプル"
-    message: "H1 は rulebook の規定「単体テストカタログ: ＜対象名＞」形式に従わず rulebook への Markdown リンクを含んでいるため、駄菓子屋の具体的な対象名を用いた規定形式に改める必要がある。"
-    message_ja: "H1 は rulebook の規定「単体テストカタログ: ＜対象名＞」形式に従わず rulebook への Markdown リンクを含んでいるため、駄菓子屋の具体的な対象名を用いた規定形式に改める必要がある。"
-  - id: F024
-    severity: major
-    rule: vp-ux-readability
-    line: 1
-    anchor: "# [単体テスト対象別](../rulebooks/utc-rulebook.md) サンプル"
-    message: ルールブックの構成と乖離しており, 正しく適用する方法を理解させるためのガイドとして機能していない。
-    message_ja: ルールブックの構成と乖離しており, 正しく適用する方法を理解させるためのガイドとして機能していない。
-  - id: F025
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 20
+    line: 58
     anchor: >-
-      | 項目         | 値                                                                         |
-      備考                                 |
+      | `ut-sales-checkout-stock-allocation-020` | 入力: 商品A×5・受領額150円 状態: 在庫5個 | 会計を確定する |
+      請求額150円の販売が確定し、在庫が0個になる（負にならない）    | 戻り値の請求額、Fake の在庫数           | 在庫リポジトリ Fake | TR-02    | P0     | automated |
+      暫定: ローカル実行結果、`kinuya-ci-unit` 整備後に差し替え |
     message: >-
-      Section 4 uses non-standard table headers ('ドキュメント', '主な内容') that diverge from the standardized vocabulary in
-      utc-rulebook.
+      utc-index-sample.md の共通カラムの記入例（同じ case_id `ut-sales-checkout-stock-allocation-020`、条件に受領額がなく、トレースは「BAC-01 /
+      C-02」の直接記載）と、本書の条件「受領額150円」・トレース「TR-02」が違うため、どちらかを揃える必要がある（rulebook のトレースの規則に合うのは本書の側）。
     message_ja: >-
-      Section 4 uses non-standard table headers ('ドキュメント', '主な内容') that diverge from the standardized vocabulary in
-      utc-rulebook.
-  - id: F026
+      utc-index-sample.md の共通カラムの記入例（同じ case_id `ut-sales-checkout-stock-allocation-020`、条件に受領額がなく、トレースは「BAC-01 /
+      C-02」の直接記載）と、本書の条件「受領額150円」・トレース「TR-02」が違うため、どちらかを揃える必要がある（rulebook のトレースの規則に合うのは本書の側）。
+  - id: F007
     severity: minor
-    rule: vp-ux-language-consistency
-    line: 16
-    anchor: "- 必須観点: 対象、条件、判定基準、責任者"
-    message: 「必須観点」の「観点」が rulebook の定義（責務を分解した切り口）と異なる意味で使われているため、用語を rulebook に合わせる必要がある。
-    message_ja: 「必須観点」の「観点」が rulebook の定義（責務を分解した切り口）と異なる意味で使われているため、用語を rulebook に合わせる必要がある。
-  - id: F027
-    severity: major
+    rule: vp-qe-kata-conformance
+    line: 5
+    anchor: 会計確定サービス。店番担当が確認した購入内容（商品・数量）と受領額から請求額を計算し、在庫を引き当てて販売を1件確定する。在庫不足や受領額不足のときは確定せず、在庫を変えない。
+    message: >-
+      utc-index-sample.md は utc-sales-checkout の責務を「請求額・釣銭の計算」とし観点「釣銭計算の正しさ」にも触れているが、本書の責務とケースには釣銭の計算がないため、責務とケースを足すか
+      index 側の分配を本書に合わせる必要がある。
+    message_ja: >-
+      utc-index-sample.md は utc-sales-checkout の責務を「請求額・釣銭の計算」とし観点「釣銭計算の正しさ」にも触れているが、本書の責務とケースには釣銭の計算がないため、責務とケースを足すか
+      index 側の分配を本書に合わせる必要がある。
+  - id: F008
+    severity: minor
     rule: vp-ops-release-readiness
-    line: 26
-    anchor: "## 5. 未解決事項"
-    message: ドキュメントをドラフトから準備完了状態に移行するために必要な、明確な準備基準と前提条件のチェックポイントが不足しています。
-    message_ja: ドキュメントをドラフトから準備完了状態に移行するために必要な、明確な準備基準と前提条件のチェックポイントが不足しています。
-  - id: F028
-    severity: minor
-    rule: vp-ops-operability
-    line: 1
-    anchor: "# [単体テスト対象別](../rulebooks/utc-rulebook.md) サンプル"
-    message: 将来のルールブックの変更に合わせてサンプルを維持および同期するための運用ガイダンスが提供されていません。
-    message_ja: 将来のルールブックの変更に合わせてサンプルを維持および同期するための運用ガイダンスが提供されていません。
+    line: 42
+    anchor: >-
+      | TR-04       | [[specdojo:bac-sample\|BAC-01]] 前提      | 合意した請求額の現金を受領してから確定する            | _ASSUMPTION_:
+      受領額不足の扱いを含めて解釈 |
+    message: >-
+      TR-04 の `_ASSUMPTION_` と全ケースの暫定の証跡が残っているのに、ready 化の前に何を解消するかが書かれていないため、ready 化前に解消する条件（仮定の確定と CI
+      証跡への差し替え）を明記する必要がある。
+    message_ja: >-
+      TR-04 の `_ASSUMPTION_` と全ケースの暫定の証跡が残っているのに、ready 化の前に何を解消するかが書かれていないため、ready 化前に解消する条件（仮定の確定と CI
+      証跡への差し替え）を明記する必要がある。

@@ -4,95 +4,94 @@ document: specdojo:tsp-index-sample
 path: docs/ja/specdojo/samples/tsp-index-sample.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-sample
-verdict: fail
-score: 33
-graded_at: "2026-11-21T06:09:12.757Z"
-graded_by: opus-executor
-content_hash: c7229780cdce3b8e63dc3c19ded1d7b07023f2b54d95bc80da3e052fd501dd30
+verdict: needs-work
+score: 89
+graded_at: "2026-11-22T01:52:37.276Z"
+graded_by: opus-review-executor
+content_hash: 917828140a3ab54220f02d199169747837637ebeb80daff2c4f46290eb5d3d84
 categories:
   purpose:
-    score: 25
+    score: 100
   operations:
-    score: 63
+    score: 88
   planning:
-    score: 25
+    score: 92
   business:
-    score: 25
+    score: 100
   architecture:
-    score: 63
+    score: 88
   usability:
-    score: 50
+    score: 100
   implementation:
-    score: 25
+    score: 88
   quality:
-    score: 8
+    score: 83
   consistency:
-    score: 25
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-po-decision-readiness:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-po-publication-accountability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-plan-feasibility:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-pm-control-reporting:
-    level: 1
-    score: 25
-  vp-ba-business-value:
-    level: 1
-    score: 25
-  vp-ba-requirements-completeness:
-    level: 1
-    score: 25
-  vp-ba-stakeholder-clarity:
-    level: 1
-    score: 25
-  vp-arc-technical-constraints:
-    level: 1
-    score: 25
-  vp-arc-conciseness:
-    level: 2
-    score: 50
-  vp-dev-implementation-readiness:
-    level: 1
-    score: 25
-  vp-dev-change-impact:
-    level: 1
-    score: 25
-  vp-dev-testability:
-    level: 1
-    score: 25
-  vp-qe-verifiability:
-    level: 0
-    score: 0
-  vp-qe-omissions-consistency:
-    level: 1
-    score: 25
-  vp-qe-kata-conformance:
-    level: 0
-    score: 0
-  vp-ux-readability:
-    level: 1
-    score: 25
-  vp-ux-language-consistency:
     level: 3
     score: 75
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 3
+    score: 75
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 3
+    score: 75
+  vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
   vp-ops-release-readiness:
-    level: 1
-    score: 25
-  vp-ops-operability:
     level: 2
     score: 50
+  vp-ops-operability:
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -100,228 +99,99 @@ viewpoints:
     level: 4
     score: 100
 finding_counts:
-  blocker: 2
-  major: 21
-  minor: 5
+  blocker: 0
+  major: 1
+  minor: 8
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-po-purpose-alignment
-    line: 5
-    anchor: 本書は、全体テストの考え方を示す（要件）ための最小サンプルである。
-    message: サンプルでは、実際のテスト目的、品質目標、またはプロジェクトの目標に沿ったスコープが指定されておらず、メタレベルの記述のみが提供されています。
-    message_ja: サンプルでは、実際のテスト目的、品質目標、またはプロジェクトの目標に沿ったスコープが指定されておらず、メタレベルの記述のみが提供されています。
-  - id: F002
-    severity: major
-    rule: vp-po-purpose-alignment
-    line: 5
-    anchor: 本書は、全体テストの考え方を示す（要件）ための最小サンプルである。
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 95
+    anchor: >-
+      | _UNDECIDED_: 通信不能時の販売継続        | スコープ、テスト環境・テストデータ |
+      対象外として扱い、総合テストの合格をもって当該経路の受入とみなさない                              | BA が整理、PO が継続可否を判断        |
     message: >-
-      「概要」として、駄菓子屋販売管理システムのどの品質（販売・在庫・つけ等）をどのテストレベルで担保するかを1〜3文で示し、`based_on` に根拠の BAC/SAC/NFR
-      を挙げて目的との対応を説明できるようにする必要がある。
+      メモ / 将来課題の未決論点（通信不能時の販売継続、SAC 条件 ID への接続、応答時間の仮置き）に引き継ぎ先の登録簿の識別子がない。ifd-sample と同じ論点は `kinuya:pjr-i003`
+      などの個票へつなぎ、PJR への転記先を明示する必要がある。
     message_ja: >-
-      「概要」として、駄菓子屋販売管理システムのどの品質（販売・在庫・つけ等）をどのテストレベルで担保するかを1〜3文で示し、`based_on` に根拠の BAC/SAC/NFR
-      を挙げて目的との対応を説明できるようにする必要がある。
+      メモ / 将来課題の未決論点（通信不能時の販売継続、SAC 条件 ID への接続、応答時間の仮置き）に引き継ぎ先の登録簿の識別子がない。ifd-sample と同じ論点は `kinuya:pjr-i003`
+      などの個票へつなぎ、PJR への転記先を明示する必要がある。
+  - id: F002
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 53
+    anchor: "| 開発環境 | 単体テスト、内部結合テスト | 印刷はスタブ、保管サービスはモック。記録サービスと DB は検証用を実接続する         |"
+    message: 開発環境で保管サービスをモックにする理由がない。rulebook の既定（外部 I/F は原則スタブ、外れる場合は理由を書く）に従い、スタブにするか、呼び出し検証が要る理由を書く必要がある。
+    message_ja: 開発環境で保管サービスをモックにする理由がない。rulebook の既定（外部 I/F は原則スタブ、外れる場合は理由を書く）に従い、スタブにするか、呼び出し検証が要る理由を書く必要がある。
   - id: F003
-    severity: major
-    rule: vp-po-decision-readiness
-    line: 28
-    anchor: "| 論点           | 処理方針                 |"
-    message: 未解決の課題や決定基準において、POの承認に必要な具体的なトレードオフ、影響分析、または次のアクションが不足しています。
-    message_ja: 未解決の課題や決定基準において、POの承認に必要な具体的なトレードオフ、影響分析、または次のアクションが不足しています。
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 76
+    anchor: >-
+      - 販売記録と在庫・DB の一致、印刷失敗時の会計維持、応答欠落時の照合待ちは自動の回帰を必須とする。架空の CI ジョブ `kinuya-ci-sales-recovery`
+      で実行し、記録サービスまたは印刷連携を変更した場合は merge 前に実行する。
+    message: 自動化・回帰方針に、スコープ対象の「記録の保全・復元」と保管サービス連携を変更したときの回帰の必須範囲・CI ジョブがない。変更契機と回帰範囲に加える必要がある。
+    message_ja: 自動化・回帰方針に、スコープ対象の「記録の保全・復元」と保管サービス連携を変更したときの回帰の必須範囲・CI ジョブがない。変更契機と回帰範囲に加える必要がある。
   - id: F004
     severity: minor
-    rule: vp-po-publication-accountability
-    line: 16
-    anchor: "- 必須観点: 対象、条件、判定基準、責任者"
-    message: ドキュメントには責任者が必要であると記されていますが、実際の承認者やレビューの責任が定義されていません。
-    message_ja: ドキュメントには責任者が必要であると記されていますが、実際の承認者やレビューの責任が定義されていません。
+    rule: vp-qe-verifiability
+    line: 68
+    anchor: >-
+      | 総合テスト     | 外部結合テストの出口条件を満たす                                   | BAC-01〜BAC-03
+      の全ケースが合格、会計確定の応答が仮置き基準を満たす、Blocker・Critical 0 件、Major 0 件         | 総合テスト結果、性能測定記録                   | 判定:
+      QE、例外承認: PM |
+    message: 総合テストの出口条件「会計確定の応答が仮置き基準を満たす」は閾値を別章に置いているため、表の行の中に「ピーク1時間60取引で応答 95% が2秒以内」を書く必要がある。
+    message_ja: 総合テストの出口条件「会計確定の応答が仮置き基準を満たす」は閾値を別章に置いているため、表の行の中に「ピーク1時間60取引で応答 95% が2秒以内」を書く必要がある。
   - id: F005
-    severity: major
-    rule: vp-pm-plan-feasibility
-    line: 15
-    anchor: "- 主な内容: テストレベルと目的、対象/対象外（スコープ）、品質目標、体制/役割、環境、使用ツール、テストデータ方針、入口/出口条件、進め方・優先度、リスクと対策"
-    message: テスト活動、フェーズ、および依存関係が、プロジェクト計画に適した実行可能なワークユニットや割り当てられたロールコードに分解されていません。
-    message_ja: テスト活動、フェーズ、および依存関係が、プロジェクト計画に適した実行可能なワークユニットや割り当てられたロールコードに分解されていません。
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 53
+    anchor: "| 開発環境 | 単体テスト、内部結合テスト | 印刷はスタブ、保管サービスはモック。記録サービスと DB は検証用を実接続する         |"
+    message: 開発環境の行の「記録サービスと DB は検証用を実接続する」は単体テストの「モックで置き換える」と矛盾するため、内部結合テストに限ることを明記する必要がある。
+    message_ja: 開発環境の行の「記録サービスと DB は検証用を実接続する」は単体テストの「モックで置き換える」と矛盾するため、内部結合テストに限ることを明記する必要がある。
   - id: F006
-    severity: major
-    rule: vp-pm-dependency-risk
-    line: 15
-    anchor: "- 主な内容: テストレベルと目的、対象/対象外（スコープ）、品質目標、体制/役割、環境、使用ツール、テストデータ方針、入口/出口条件、進め方・優先度、リスクと対策"
-    message: 主要な技術的およびスケジュールのリスク、ならびに外部インターフェースや下流のテストカタログへの依存関係が特定されていません。
-    message_ja: 主要な技術的およびスケジュールのリスク、ならびに外部インターフェースや下流のテストカタログへの依存関係が特定されていません。
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 69
+    anchor: >-
+      | 受入テスト     | 総合テストの出口条件を満たし、受入用データ領域を準備済み           | SC-01・AC-01〜AC-04
+      がすべて合格                                                                                |
+      `kinuya-acceptance-record`                     | 判定: PO、照合: QE     |
+    message: 受入テスト（と単体テスト）の出口条件に未解決不具合の重大度別の許容件数がないため、rulebook の要件に合わせて「Blocker・Critical・Major 0 件」などを書く必要がある。
+    message_ja: 受入テスト（と単体テスト）の出口条件に未解決不具合の重大度別の許容件数がないため、rulebook の要件に合わせて「Blocker・Critical・Major 0 件」などを書く必要がある。
   - id: F007
-    severity: major
-    rule: vp-pm-control-reporting
-    line: 30
-    anchor: "| 要件詳細の補強 | 実案件適用時に具体化する |"
-    message: 課題の深刻化ルート、レポート担当ロール、および変更管理項目などのプロジェクト管理要素が、課題テーブルから完全に欠落しています。
-    message_ja: 課題の深刻化ルート、レポート担当ロール、および変更管理項目などのプロジェクト管理要素が、課題テーブルから完全に欠落しています。
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 57
+    anchor: >-
+      外部I/F
+      は、外部結合テストで導通と契約（印刷失敗・タイムアウト時の結果、保管失敗時の通知）を確認し、総合テストと受入テストでは主要シナリオ中のスモークまでを対象とする。応答欠落時の照合待ちの判定は、遅延と無応答を再現できるスタブを使い外部結合テストで確認する。
+    message: >-
+      応答欠落時の照合待ちの判定を外部結合テストで確認するとしているが、ifd-sample では応答欠落は
+      `PATH-02`（内部経路）の故障であり、外部結合テストの範囲（`PATH-05`・`PATH-06`・印刷）と合わない。確認するレベルか範囲の記述を揃える必要がある。
+    message_ja: >-
+      応答欠落時の照合待ちの判定を外部結合テストで確認するとしているが、ifd-sample では応答欠落は
+      `PATH-02`（内部経路）の故障であり、外部結合テストの範囲（`PATH-05`・`PATH-06`・印刷）と合わない。確認するレベルか範囲の記述を揃える必要がある。
   - id: F008
-    severity: major
-    rule: vp-ba-business-value
-    line: 9
-    anchor: "- 対象: 駄菓子屋の販売管理システム"
-    message: ドキュメントでは、テスト戦略が保護すべきビジネス上の課題、重要な業務ワークフロー、またはビジネス価値が明確に述べられていません。
-    message_ja: ドキュメントでは、テスト戦略が保護すべきビジネス上の課題、重要な業務ワークフロー、またはビジネス価値が明確に述べられていません。
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 18
+    anchor: >-
+      | 内部結合テスト | 画面・記録サービス・業務記録 DB の間で記録が欠けず一致すること       | 店頭画面、販売・在庫・つけ記録サービス、業務記録 DB（`PATH-01`〜`PATH-03`） | DEV が実施し
+      QE が結果を照合。検証用 DB へ実接続し、レシート印刷はスタブにする | 印刷コマンドと復元用保管サービスの契約確認             |
+    message: >-
+      `PATH-01`〜`PATH-06` の出典である ifd-sample を `based_on` か wikilink で示す必要がある。ifd-sample にある
+      `PATH-04`・`PATH-07`（保全の取得と復元）をどのテストレベルで扱うかも、スコープの「記録の保全・復元」に合わせて書く必要がある。
+    message_ja: >-
+      `PATH-01`〜`PATH-06` の出典である ifd-sample を `based_on` か wikilink で示す必要がある。ifd-sample にある
+      `PATH-04`・`PATH-07`（保全の取得と復元）をどのテストレベルで扱うかも、スコープの「記録の保全・復元」に合わせて書く必要がある。
   - id: F009
     severity: major
-    rule: vp-ba-requirements-completeness
-    line: 15
-    anchor: "- 主な内容: テストレベルと目的、対象/対象外（スコープ）、品質目標、体制/役割、環境、使用ツール、テストデータ方針、入口/出口条件、進め方・優先度、リスクと対策"
-    message: テストのスコープ、受け入れ条件、および除外範囲が完全に欠落しているため、ユーザーの視点からの検証ができません。
-    message_ja: テストのスコープ、受け入れ条件、および除外範囲が完全に欠落しているため、ユーザーの視点からの検証ができません。
-  - id: F010
-    severity: major
-    rule: vp-ba-stakeholder-clarity
-    line: 15
-    anchor: "- 主な内容: テストレベルと目的、対象/対象外（スコープ）、品質目標、体制/役割、環境、使用ツール、テストデータ方針、入口/出口条件、進め方・優先度、リスクと対策"
-    message: ステークホルダーのロール、テスト参加者、システムオペレーター、および合意の対象が特定されていません。
-    message_ja: ステークホルダーのロール、テスト参加者、システムオペレーター、および合意の対象が特定されていません。
-  - id: F011
-    severity: major
-    rule: vp-arc-technical-constraints
-    line: 15
-    anchor: "- 主な内容: テストレベルと目的、対象/対象外（スコープ）、品質目標、体制/役割、環境、使用ツール、テストデータ方針、入口/出口条件、進め方・優先度、リスクと対策"
-    message: テスト環境、スタブ/Mockポリシー、および外部インターフェースの境界を含む、アーキテクチャおよび技術的な制約が省略されています。
-    message_ja: テスト環境、スタブ/Mockポリシー、および外部インターフェースの境界を含む、アーキテクチャおよび技術的な制約が省略されています。
-  - id: F012
-    severity: major
-    rule: vp-arc-conciseness
-    line: 15
-    anchor: "- 主な内容: テストレベルと目的、対象/対象外（スコープ）、品質目標、体制/役割、環境、使用ツール、テストデータ方針、入口/出口条件、進め方・優先度、リスクと対策"
-    message: サンプルとして具体的に示すべき各項目の記載内容が欠落しており、項目名の列挙にとどまっている。
-    message_ja: サンプルとして具体的に示すべき各項目の記載内容が欠落しており、項目名の列挙にとどまっている。
-  - id: F013
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 24
-    anchor: >-
-      | 主な内容     | テストレベルと目的、対象/対象外（スコープ）、品質目標、体制/役割、環境、使用ツール、テストデータ方針、入口/出口条件、進め方・優先度、リスクと対策 |
-      要点のみ記載                         |
-    message: 「最小記述例」の表の「目的」「主な内容」は「目的と適用範囲」「記述内容」の本文をそのまま繰り返しているため、どちらか一方にまとめるか、具体的な記述例に置き換える必要がある。
-    message_ja: 「最小記述例」の表の「目的」「主な内容」は「目的と適用範囲」「記述内容」の本文をそのまま繰り返しているため、どちらか一方にまとめるか、具体的な記述例に置き換える必要がある。
-  - id: F014
-    severity: major
-    rule: vp-dev-implementation-readiness
-    line: 15
-    anchor: "- 主な内容: テストレベルと目的、対象/対象外（スコープ）、品質目標、体制/役割、環境、使用ツール、テストデータ方針、入口/出口条件、進め方・優先度、リスクと対策"
-    message: ドキュメントには、開発者がテストを実装するために必要な実行可能なインプット、ツールの構成、自動化基準、またはテストレベルの制約が提供されていません。
-    message_ja: ドキュメントには、開発者がテストを実装するために必要な実行可能なインプット、ツールの構成、自動化基準、またはテストレベルの制約が提供されていません。
-  - id: F015
-    severity: major
-    rule: vp-dev-change-impact
-    line: 15
-    anchor: "- 主な内容: テストレベルと目的、対象/対象外（スコープ）、品質目標、体制/役割、環境、使用ツール、テストデータ方針、入口/出口条件、進め方・優先度、リスクと対策"
-    message: 下流のテストスイートおよびCIパイプラインに対する変更の影響分析と回帰の境界が完全に欠落しています。
-    message_ja: 下流のテストスイートおよびCIパイプラインに対する変更の影響分析と回帰の境界が完全に欠落しています。
-  - id: F016
-    severity: major
-    rule: vp-dev-testability
-    line: 15
-    anchor: "- 主な内容: テストレベルと目的、対象/対象外（スコープ）、品質目標、体制/役割、環境、使用ツール、テストデータ方針、入口/出口条件、進め方・優先度、リスクと対策"
-    message: 検証コマンド、CI実行手順、および期待されるPass/Failの出力がドキュメント化されていません。
-    message_ja: 検証コマンド、CI実行手順、および期待されるPass/Failの出力がドキュメント化されていません。
-  - id: F017
-    severity: major
-    rule: vp-qe-verifiability
-    line: 15
-    anchor: "- 主な内容: テストレベルと目的、対象/対象外（スコープ）、品質目標、体制/役割、環境、使用ツール、テストデータ方針、入口/出口条件、進め方・優先度、リスクと対策"
-    message: テストレベルの目的や出口条件など, 具体的に pass/fail を判定できる表現が一切含まれていない。
-    message_ja: テストレベルの目的や出口条件など, 具体的に pass/fail を判定できる表現が一切含まれていない。
-  - id: F018
-    severity: blocker
-    rule: vp-qe-verifiability
-    line: 15
-    anchor: "- 主な内容: テストレベルと目的、対象/対象外（スコープ）、品質目標、体制/役割、環境、使用ツール、テストデータ方針、入口/出口条件、進め方・優先度、リスクと対策"
-    message: 入口／出口条件（品質ゲート）の表がなく、「失敗 0 件、Blocker/Critical 0 件」のような判定可能な基準が一つも示されていないため、品質ゲートを示すサンプルとして成立していない。
-    message_ja: 入口／出口条件（品質ゲート）の表がなく、「失敗 0 件、Blocker/Critical 0 件」のような判定可能な基準が一つも示されていないため、品質ゲートを示すサンプルとして成立していない。
-  - id: F019
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 1
-    anchor: "# [テスト戦略・方針](../rulebooks/tsp-index-rulebook.md) サンプル"
-    message: ルールブックで定義された必須構成（概要、テストレベル一覧、スコープ、入口／出口条件等）がすべて欠落している。
-    message_ja: ルールブックで定義された必須構成（概要、テストレベル一覧、スコープ、入口／出口条件等）がすべて欠落している。
-  - id: F020
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 10
-    anchor: "- 前提: プロジェクト文脈は handbook の共通方針に準拠する"
-    message: 「handbook の共通方針」は参照先の文書 id が特定できないため、wikilink で正本を示すか、記述を削除する必要がある。
-    message_ja: 「handbook の共通方針」は参照先の文書 id が特定できないため、wikilink で正本を示すか、記述を削除する必要がある。
-  - id: F021
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 23
-    anchor: >-
-      | 目的         |
-      全体テストの考え方を示す（要件）                                                                                                                 
-      | specdojo:deliverables-reference 準拠 |
-    message: >-
-      備考の `specdojo:deliverables-reference` が wikilink になっておらず、参照として解決されないため、`[[specdojo:deliverables-reference]]`
-      の形式にする必要がある。
-    message_ja: >-
-      備考の `specdojo:deliverables-reference` が wikilink になっておらず、参照として解決されないため、`[[specdojo:deliverables-reference]]`
-      の形式にする必要がある。
-  - id: F022
-    severity: blocker
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# [テスト戦略・方針](../rulebooks/tsp-index-rulebook.md) サンプル"
-    message: 成果物の実例ではなく「何を書くべきか」の説明書となっており、サンプルの責務を全く果たしていない。
-    message_ja: 成果物の実例ではなく「何を書くべきか」の説明書となっており、サンプルの責務を全く果たしていない。
-  - id: F023
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# [テスト戦略・方針](../rulebooks/tsp-index-rulebook.md) サンプル"
-    message: 成果物の実例を示すサンプルとしての責務ではなく、構成要素を説明するガイドとしての記述となっており、役割が混同している。
-    message_ja: 成果物の実例を示すサンプルとしての責務ではなく、構成要素を説明するガイドとしての記述となっており、役割が混同している。
-  - id: F024
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# [テスト戦略・方針](../rulebooks/tsp-index-rulebook.md) サンプル"
-    message: >-
-      rulebook の「サンプル（最小）」にある完成例（テストレベル一覧、入口／出口条件など）よりも sample ファイルの内容が乏しく、Kata 間で完成例の正本がどちらか矛盾しているため、sample
-      側に完成例を置き、rulebook 側との重複を整理する必要がある。
-    message_ja: >-
-      rulebook の「サンプル（最小）」にある完成例（テストレベル一覧、入口／出口条件など）よりも sample ファイルの内容が乏しく、Kata 間で完成例の正本がどちらか矛盾しているため、sample
-      側に完成例を置き、rulebook 側との重複を整理する必要がある。
-  - id: F025
-    severity: major
-    rule: vp-ux-readability
-    line: 20
-    anchor: >-
-      | 項目         |
-      値                                                                                                                                               
-      | 備考                                 |
-    message: 最小記述例として表形式で提示されているが、内容が抽象的（例：「要点のみ記載」）であり、具体的な書き方の指針が得られない。
-    message_ja: 最小記述例として表形式で提示されているが、内容が抽象的（例：「要点のみ記載」）であり、具体的な書き方の指針が得られない。
-  - id: F026
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 5
-    anchor: 本書は、全体テストの考え方を示す（要件）ための最小サンプルである。
-    message: >-
-      The parenthetical phrasing '全体テストの考え方を示す（要件）' introduces confusing terminology regarding whether this is a
-      requirement or a test policy.
-    message_ja: >-
-      The parenthetical phrasing '全体テストの考え方を示す（要件）' introduces confusing terminology regarding whether this is a
-      requirement or a test policy.
-  - id: F027
-    severity: major
     rule: vp-ops-release-readiness
-    line: 30
-    anchor: "| 要件詳細の補強 | 実案件適用時に具体化する |"
-    message: サンプルをドラフトからReadyの状態へ移行するために必要な、明確な前提条件、完了条件、および受け入れ基準が定義されていません。
-    message_ja: サンプルをドラフトからReadyの状態へ移行するために必要な、明確な前提条件、完了条件、および受け入れ基準が定義されていません。
-  - id: F028
-    severity: major
-    rule: vp-ops-operability
-    line: 11
-    anchor: "- 参照: `../rulebooks/tsp-index-rulebook.md`"
-    message: サンプルを更新するためのメンテナンス手順、所有権、および変更管理のガイドラインが指定されていません。
-    message_ja: サンプルを更新するためのメンテナンス手順、所有権、および変更管理のガイドラインが指定されていません。
+    line: 94
+    anchor: >-
+      | _ASSUMPTION_: 会計確定の応答時間と処理量 | 入口／出口条件（総合テスト）       | NFR が未整備のため、放課後ピーク1時間60取引の負荷で会計確定の応答 95% が2秒以内を仮置き基準とする |
+      ARC が NFR へ起票、PO が承認          |
+    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+    message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。

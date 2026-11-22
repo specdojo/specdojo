@@ -4,12 +4,11 @@ document: specdojo:stc-index-rulebook
 path: docs/ja/specdojo/rulebooks/stc-index-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-rulebook
-verdict: needs-work
-score: 92
-graded_at: "2026-11-21T05:48:38.888Z"
-graded_by: opus-executor
-content_hash: 908a4f9de77c789ba5cffb1e82f32653013163d406cddd3cc7a00c9f68d64de5
+verdict: pass
+score: 96
+graded_at: "2026-11-22T01:33:44.426Z"
+graded_by: opus-review-executor
+content_hash: 9fb45bfdbef168afba9c42e3fe84172f79fcd69a6b33e0e2a095a1ebcab02c9c
 categories:
   purpose:
     score: 100
@@ -22,11 +21,11 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
-    score: 88
+    score: 100
   quality:
-    score: 75
+    score: 83
   consistency:
     score: 100
 viewpoints:
@@ -67,8 +66,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-change-impact:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-testability:
     level: 4
     score: 100
@@ -79,14 +78,14 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -101,52 +100,21 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 4
+  major: 0
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-dev-change-impact
-    line: 13
-    anchor: >-
-      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status` の昇格と承認、改訂と廃止、未決事項の登録簿への引き継ぎは
-      [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従います。文書の整形・lint はリポジトリの検証で扱い、業務の検証に含めません。
-    message: >-
-      標準は各 rulebook に自系統の追従対象を定めるよう求めているが、本書は `stc-index` の共通カラム・分割基準・環境前提を改訂したときに追従させる対象（各 `stc-＜term＞`
-      のケース表、トレース、テストコード）と担当を定めていない。
-    message_ja: >-
-      標準は各 rulebook に自系統の追従対象を定めるよう求めているが、本書は `stc-index` の共通カラム・分割基準・環境前提を改訂したときに追従させる対象（各 `stc-＜term＞`
-      のケース表、トレース、テストコード）と担当を定めていない。
+    rule: vp-qe-verifiability
+    line: 177
+    anchor: "推奨カラム（運用必須、この順）:"
+    message: 「推奨カラム（運用必須、この順）」は推奨と必須が同時に書かれており、観測点・トレース・優先度などの列が欠けたケース表を違反とするかを判定できないため、必須か推奨かのどちらかに統一すべきである。
+    message_ja: 「推奨カラム（運用必須、この順）」は推奨と必須が同時に書かれており、観測点・トレース・優先度などの列が欠けたケース表を違反とするかを判定できないため、必須か推奨かのどちらかに統一すべきである。
   - id: F002
     severity: minor
-    rule: vp-qe-verifiability
-    line: 146
-    anchor: "- 複数対象に跨る場合は主担当＋従担当（参照）とし、重複割当は例外として扱います。"
-    message: "「重複割当は例外として扱います」に、例外を認める条件と記録先（例: 分配表の備考に理由を書く）がなく、重複割当が違反か許容された例外かを判定できない。"
-    message_ja: "「重複割当は例外として扱います」に、例外を認める条件と記録先（例: 分配表の備考に理由を書く）がなく、重複割当が違反か許容された例外かを判定できない。"
-  - id: F003
-    severity: major
     rule: vp-qe-kata-conformance
-    line: 57
-    anchor: "## 5. 本文構成（標準テンプレ）"
-    message: "サンプル `stc-index-sample.md` の見出し構成が、本節で定義された「順序固定」の必須構成（## 1... ## 9）と完全に乖離しており、ルールの適用例となっていない。"
-    message_ja: "サンプル `stc-index-sample.md` の見出し構成が、本節で定義された「順序固定」の必須構成（## 1... ## 9）と完全に乖離しており、ルールの適用例となっていない。"
-  - id: F004
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 214
-    anchor: "### 8.1. 本ドキュメントの目的と適用対象"
-    message: >-
-      サンプル章の `### 8.1.` と `### 8.2.` は成果物の章をコードブロックの外に rulebook
-      自身の見出しとして書いており、標準の「最小例をコードブロックで自己完結して埋め込む」に反する。記述ガイドの見出しとも重複するため、コードブロック内へ移すべきである。
-    message_ja: >-
-      サンプル章の `### 8.1.` と `### 8.2.` は成果物の章をコードブロックの外に rulebook
-      自身の見出しとして書いており、標準の「最小例をコードブロックで自己完結して埋め込む」に反する。記述ガイドの見出しとも重複するため、コードブロック内へ移すべきである。
-  - id: F005
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 23
-    anchor: TCIndex["stc-index<br>テスト仕様-全体構成"]
-    message: Mermaid 図のラベル「テスト仕様-全体構成」「テスト仕様-対象別」「テストカタログ」が、H1 と本文の「総合テストカタログ 概要」「対象別カタログ」と表記揺れしているため、成果物名を統一すべきである。
-    message_ja: Mermaid 図のラベル「テスト仕様-全体構成」「テスト仕様-対象別」「テストカタログ」が、H1 と本文の「総合テストカタログ 概要」「対象別カタログ」と表記揺れしているため、成果物名を統一すべきである。
+    line: 91
+    anchor: 1〜2ケースしかない単位は原則統合します。観点が15以上、表が60行以上、または前提データ・権限の大きく異なる経路が混在する場合は分割候補とします。
+    message: 分割候補の閾値が本書では「表が60行以上」、サンプル `stc-index-sample.md` では「ケース表が60行を超えた」となっており、60行ちょうどの扱いが食い違うため、どちらかに揃えるべきである。
+    message_ja: 分割候補の閾値が本書では「表が60行以上」、サンプル `stc-index-sample.md` では「ケース表が60行を超えた」となっており、60行ちょうどの扱いが食い違うため、どちらかに揃えるべきである。

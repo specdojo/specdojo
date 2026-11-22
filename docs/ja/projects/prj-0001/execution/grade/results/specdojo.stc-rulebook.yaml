@@ -4,38 +4,37 @@ document: specdojo:stc-rulebook
 path: docs/ja/specdojo/rulebooks/stc-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-rulebook
-verdict: needs-work
-score: 79
-graded_at: "2026-11-21T05:51:02.988Z"
-graded_by: opus-executor
-content_hash: 76b1a72da96c6b5b3d191d6c59f4149d0e814784b512d30b22b20cce8b3b23f9
+verdict: pass
+score: 97
+graded_at: "2026-11-22T01:16:18.554Z"
+graded_by: opus-review-executor
+content_hash: 39be80456e21b796edd948b7d08744b4e09d773f1516f2f850fc8f3e16ab65e9
 categories:
   purpose:
-    score: 88
+    score: 100
   operations:
     score: 94
   planning:
-    score: 92
+    score: 100
   business:
-    score: 92
+    score: 100
   architecture:
     score: 100
   usability:
-    score: 75
+    score: 100
   implementation:
-    score: 75
+    score: 88
   quality:
-    score: 75
+    score: 92
   consistency:
-    score: 50
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-publication-accountability:
     level: 4
     score: 100
@@ -43,8 +42,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
     level: 4
     score: 100
@@ -55,14 +54,14 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-stakeholder-clarity:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -70,26 +69,26 @@ viewpoints:
     level: 3
     score: 75
   vp-dev-change-impact:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-testability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-verifiability:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ux-readability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 3
     score: 75
@@ -104,126 +103,44 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 2
-  minor: 11
+  major: 0
+  minor: 3
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-decision-readiness
-    line: 1
-    anchor: "# 総合テストカタログ 対象別 作成ルール"
+    rule: vp-dev-implementation-readiness
+    line: 134
+    anchor: "- 見出しは `観点: <観点>`（半角コロンと半角空白）とする。観点名は改善のため変更してよいが、`perspective_key` は変えない（変更が必要なら `supersedes` 等で追跡する）。"
     message: >-
-      `recipe` / `template` が `undecided` のままで、sample も rulebook
-      の構成に合っていないのに、これらの未決事項と判断者・判断タイミングが本文や登録簿への引き継ぎで示されていない。`ready` 化の判断に使える論点として明記する必要がある。
+      `perspective_key` は変えないと定めているが、記載位置（観点見出しの直下など）と形式（英小文字 kebab-case など）が定義されていないため、sample の `` `perspective_key`:
+      `flow-success` `` 行に合わせて記述規則として明記する必要がある。
     message_ja: >-
-      `recipe` / `template` が `undecided` のままで、sample も rulebook
-      の構成に合っていないのに、これらの未決事項と判断者・判断タイミングが本文や登録簿への引き継ぎで示されていない。`ready` 化の判断に使える論点として明記する必要がある。
+      `perspective_key` は変えないと定めているが、記載位置（観点見出しの直下など）と形式（英小文字 kebab-case など）が定義されていないため、sample の `` `perspective_key`:
+      `flow-success` `` 行に合わせて記述規則として明記する必要がある。
   - id: F002
     severity: minor
-    rule: vp-pm-dependency-risk
-    line: 56
-    anchor: "- `specdojo.based_on` は原則 `[tsp-index, stc-index]` を最低限とする。"
+    rule: vp-qe-kata-conformance
+    line: 15
+    anchor: >-
+      - _UNDECIDED_: `recipe`・`template` の要否は未判断である（template は PJR-WYTX で扱い、recipe は QE が ready 化の判断時に決める）。sample
+      は「本文要件」の見出し構成へ未整合であり、後続の sample の見直しで揃える。いずれも `ready` 化の前に解消する。
     message: >-
-      `based_on` は原則 `[tsp-index, stc-index]` と書かれ、project 修飾（`＜project-id＞:stc-index`
-      など）が示されていない。参照が解決できない依存リスクがあるため、ID の形式を明記する必要がある。
+      sample は本文要件の見出し構成（6 章と観点配下の `####` 構成）にすでに整合しており、前回の major は解消したため severity を下げるが、`_UNDECIDED_` に「sample
+      は本文要件の見出し構成へ未整合」と古い記述が残り、authoring standard が禁じる確定済み内容のラベル放置に当たるため削除する必要がある。
     message_ja: >-
-      `based_on` は原則 `[tsp-index, stc-index]` と書かれ、project 修飾（`＜project-id＞:stc-index`
-      など）が示されていない。参照が解決できない依存リスクがあるため、ID の形式を明記する必要がある。
+      sample は本文要件の見出し構成（6 章と観点配下の `####` 構成）にすでに整合しており、前回の major は解消したため severity を下げるが、`_UNDECIDED_` に「sample
+      は本文要件の見出し構成へ未整合」と古い記述が残り、authoring standard が禁じる確定済み内容のラベル放置に当たるため削除する必要がある。
   - id: F003
     severity: minor
-    rule: vp-ba-stakeholder-clarity
-    line: 15
-    anchor: >-
-      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status` の昇格と承認、改訂と廃止、未決事項の登録簿への引き継ぎは
-      [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従う。文書の整形・lint はリポジトリの検証で扱い、ケースの期待値や証跡に含めない。
-    message: 役割の割り当てをメンバー定義へ委ねるだけで、STC 固有の確認者・合意対象（目的、対象外、期待値をだれが確認・合意するか）が示されていない。レビューの観点として最小限を明記すると利用場面がはっきりする。
-    message_ja: 役割の割り当てをメンバー定義へ委ねるだけで、STC 固有の確認者・合意対象（目的、対象外、期待値をだれが確認・合意するか）が示されていない。レビューの観点として最小限を明記すると利用場面がはっきりする。
-  - id: F004
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 60
-    anchor: "## 5. 本文構成（標準テンプレ）"
-    message: 「本文構成（標準テンプレ）」の表と、「記述ガイド」の各節の「生成する本文の見出しは …」が同じ見出し情報を二重に示している。表に生成見出しの列を設けて各節の記述をまとめれば、情報を失わずに冗長さを減らせる。
-    message_ja: 「本文構成（標準テンプレ）」の表と、「記述ガイド」の各節の「生成する本文の見出しは …」が同じ見出し情報を二重に示している。表に生成見出しの列を設けて各節の記述をまとめれば、情報を失わずに冗長さを減らせる。
-  - id: F005
-    severity: minor
-    rule: vp-dev-implementation-readiness
-    line: 42
-    anchor: "- ファイル名は `stc-010-総合テストカタログ-<term>.md` 等（例: `stc-010-総合テストカタログ-注文確定.md`）。"
-    message: ファイル名が「`stc-010-総合テストカタログ-＜term＞.md` 等」と曖昧で、連番の採番規則・配置ディレクトリ・英字名を使うか日本語名を使うかが定義されていない。生成結果が揺れないよう、規則として確定させる必要がある。
-    message_ja: ファイル名が「`stc-010-総合テストカタログ-＜term＞.md` 等」と曖昧で、連番の採番規則・配置ディレクトリ・英字名を使うか日本語名を使うかが定義されていない。生成結果が揺れないよう、規則として確定させる必要がある。
-  - id: F006
-    severity: minor
-    rule: vp-dev-change-impact
-    line: 144
-    anchor: "- 観点名（見出し）は改善のため変更してよいが、`perspective_key` は原則変更しない（変更が必要なら `supersedes` 等で追跡する）"
-    message: >-
-      `perspective_key` の変更は `supersedes` で追跡するとあるが、`stc-index` の共通定義（必須カラムや観点）が変わったときの個別
-      STC・テストコード・証跡への追従対象と担当が定義されていない。
-    message_ja: >-
-      `perspective_key` の変更は `supersedes` で追跡するとあるが、`stc-index` の共通定義（必須カラムや観点）が変わったときの個別
-      STC・テストコード・証跡への追従対象と担当が定義されていない。
-  - id: F007
-    severity: minor
-    rule: vp-dev-testability
-    line: 15
-    anchor: >-
-      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status` の昇格と承認、改訂と廃止、未決事項の登録簿への引き継ぎは
-      [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従う。文書の整形・lint はリポジトリの検証で扱い、ケースの期待値や証跡に含めない。
-    message: 作成後に実行すべき検証（`lint:md` / `lint:fm`、`case_id` の重複や `TR-xx` の未定義参照の確認）が示されておらず、作成者が完了を確かめる手段が分からない。
-    message_ja: 作成後に実行すべき検証（`lint:md` / `lint:fm`、`case_id` の重複や `TR-xx` の未定義参照の確認）が示されておらず、作成者が完了を確かめる手段が分からない。
-  - id: F008
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 146
-    anchor: "##### 6.6.1.1. 意図"
-    message: >-
-      `##### 6.6.1.1. 意図` と `##### 6.6.1.2. 条件・ケース表` が、Markdown 記述ルールで禁止された H5 見出しを使っている。`####`
-      までに収まるよう階層を見直す（「観点」の節の中を箇条書きや表で示すなど）必要がある。
-    message_ja: >-
-      `##### 6.6.1.1. 意図` と `##### 6.6.1.2. 条件・ケース表` が、Markdown 記述ルールで禁止された H5 見出しを使っている。`####`
-      までに収まるよう階層を見直す（「観点」の節の中を箇条書きや表で示すなど）必要がある。
-  - id: F009
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 3
-    anchor: System Test Catalog (STC) Documentation Rules
-    message: authoring standard はタイトル直下に英語名と目的・概要（1〜3文）を置くよう求めているが、英語名の後に導入文がない。
-    message_ja: authoring standard はタイトル直下に英語名と目的・概要（1〜3文）を置くよう求めているが、英語名の後に導入文がない。
-  - id: F010
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 総合テストカタログ 対象別 作成ルール"
-    message: 参照されるサンプル `specdojo:stc-sample` が rulebook で定義された必須構成（章番号および項目）に従っておらず, 実例としての役割を果たしていない。
-    message_ja: 参照されるサンプル `specdojo:stc-sample` が rulebook で定義された必須構成（章番号および項目）に従っておらず, 実例としての役割を果たしていない。
-  - id: F011
-    severity: minor
-    rule: vp-ux-readability
-    line: 17
-    anchor: "## 2. 位置づけ（他ドキュメントとの関係）"
-    message: >-
-      「位置づけ」の章が図だけで、本書が `stc-＜term＞` を対象とし `stc-index` と `tsp-index`
-      を根拠にするという関係を述べる文がない。良い実例のように1〜2文の説明を添えると、初見の読者が理解しやすくなる。
-    message_ja: >-
-      「位置づけ」の章が図だけで、本書が `stc-＜term＞` を対象とし `stc-index` と `tsp-index`
-      を根拠にするという関係を述べる文がない。良い実例のように1〜2文の説明を添えると、初見の読者が理解しやすくなる。
-  - id: F012
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 182
-    anchor: "id: stc-order-place"
-    message: >-
-      サンプルの `id: stc-order-place` と `based_on: [tsp-index, stc-index]` が project 修飾のない ID で、「ファイル命名・ID規則」も `stc-＜term＞`
-      としか定めていない。`＜project-id＞:stc-＜term＞` 形式との関係を明記して表記を統一する必要がある。
-    message_ja: >-
-      サンプルの `id: stc-order-place` と `based_on: [tsp-index, stc-index]` が project 修飾のない ID で、「ファイル命名・ID規則」も `stc-＜term＞`
-      としか定めていない。`＜project-id＞:stc-＜term＞` 形式との関係を明記して表記を統一する必要がある。
-  - id: F013
-    severity: minor
     rule: vp-ops-release-readiness
-    line: 1
-    anchor: "# 総合テストカタログ 対象別 作成ルール"
-    message: "`ready` 化の前提（sample の是正、`recipe` / `template` の要否判断）が未解決事項として明示されておらず、公開前に確認すべき事項を本文から把握できない。"
-    message_ja: "`ready` 化の前提（sample の是正、`recipe` / `template` の要否判断）が未解決事項として明示されておらず、公開前に確認すべき事項を本文から把握できない。"
+    line: 15
+    anchor: >-
+      - _UNDECIDED_: `recipe`・`template` の要否は未判断である（template は PJR-WYTX で扱い、recipe は QE が ready 化の判断時に決める）。sample
+      は「本文要件」の見出し構成へ未整合であり、後続の sample の見直しで揃える。いずれも `ready` 化の前に解消する。
+    message: >-
+      `ready` 化の前提に「sample の見直し」が残っているが、sample は本文要件にすでに整合しているため、公開前に実際に残る事項（`recipe` の要否判断と PJR-WYTX での `template`
+      の判断）だけに更新する必要がある。
+    message_ja: >-
+      `ready` 化の前提に「sample の見直し」が残っているが、sample は本文要件にすでに整合しているため、公開前に実際に残る事項（`recipe` の要否判断と PJR-WYTX での `template`
+      の判断）だけに更新する必要がある。
