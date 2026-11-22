@@ -41,17 +41,41 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業                               | 担当                  | 状態 | メモ                     |
-| --- | ---------------------------------- | --------------------- | ---- | ------------------------ |
-| 1   | grade の指摘を読み、直し方を決める | DEV                   | open | 直さない指摘は理由を残す |
-| 2   | rulebook と sample を直す          | DEV                   | open | ほかの型は変えない       |
-| 3   | lint と親の検証を通す              | DEV                   | open | -                        |
-| 4   | 統合の後に grade で評価し直す      | specdojo-orchestrator | open | 合格しなければ回目を足す |
+| No  | 作業                               | 担当                  | 状態 | メモ                                                     |
+| --- | ---------------------------------- | --------------------- | ---- | -------------------------------------------------------- |
+| 1   | grade の指摘を読み、直し方を決める | DEV                   | done | 直さない指摘なし（F006 は `_ASSUMPTION_` を残す）        |
+| 2   | rulebook と sample を直す          | DEV                   | done | ほかの型は変えていない                                   |
+| 3   | lint と親の検証を通す              | DEV                   | open | 親の runner が実行するため executor は未実行             |
+| 4   | 統合の後に grade で評価し直す      | specdojo-orchestrator | open | executor は grade を起動しない。合格しなければ回目を足す |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+rulebook（`itc-rulebook`）の指摘:
+
+- F001・F004・F006: 「sample が未整合」の記述を削除し、`_UNDECIDED_` を `recipe`・`template` の要否に絞って PJR-WYTX で併せて判断すると書いた。
+- F002: 全体方針と条件・ケース表の節、記述ガイド冒頭の重複を削った。
+- F003: トレースの節に、根拠仕様の改訂・廃止時の追従（行を残し備考へ記録、ケースの見直し）を追加した。
+- F005: UT・IT・ET を初出で正式名とともに示し、「Mock」を「モック」に統一した。
+
+sample（`itc-sample`）の指摘:
+
+- F001: BAC-03 の C-04 を `TR-06` と `it-sales-checkout-pending-hold-020`（`pending-quantity`）で扱った。
+- F002: 応答の識別子 `duplicate-transaction`・`checkout-failed`・`pending-product`・`pending-quantity` を期待値と観測点に明記した。
+- F003: 「テスト観点とケース」の冒頭に、観点の型ごとの採用と不採用の理由を追加した。
+- F004: `TR-05` の仕様IDを BAC-01 にし、分配方針への参照を備考へ移した。
+- F005: `-020` を同じ取引番号の再送、`-030` を在庫と同数の購入に入れ替え、`itc-index-sample` の採番に揃えた。
+- F006: `_TODO_` は sample にない。`_ASSUMPTION_`（分離レベル）は `sample-authoring-standard` に従って残す。機械的な指摘（PJR-7C9X）として残る見込み。
+
+### 5.1. CHANGELOG に書く事項
+
+なし（文書の型の手直しのため）。
+
+### 5.2. 残課題
+
+- 統合後に orchestrator が `npx specdojo grade run --target kata --kata itc` で評価し直す。blocker・major がなく機械的な指摘だけが残る場合は合格とする。
+- recipe の要否の判断は PJR-WYTX に引き継ぐ。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[specdojo:itc-rulebook]]
+- [[specdojo:itc-sample]]
