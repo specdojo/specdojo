@@ -41,6 +41,64 @@ describe("providers.claude.allow_commands", () => {
   });
 });
 
+describe("providers.opencode.allow_commands", () => {
+  const opencodeConfig: ExecDefaultsConfig = {
+    providers: {
+      opencode: {
+        command_template: "opencode run --agent {nickname}",
+        allow_commands: ["Bash(npx playwright test *)"],
+      },
+    },
+  };
+
+  function opencodeMember(mode: "edit" | "review") {
+    return { nickname: "worker", provider: "opencode" as const, mode };
+  }
+
+  it("prefixes edit-mode commands with OPENCODE_PERMISSION bash allow rules", () => {
+    const actual = resolveMemberCommand(opencodeConfig, opencodeMember("edit"));
+
+    expect(actual).toBe(
+      `OPENCODE_PERMISSION='{"bash":{"npx playwright test *":"allow"}}' opencode run --agent worker`,
+    );
+  });
+
+  it("leaves review-mode commands unchanged", () => {
+    const actual = resolveMemberCommand(opencodeConfig, opencodeMember("review"));
+
+    expect(actual).toBe("opencode run --agent worker");
+  });
+});
+
+describe("templates/opencode/agents/opencode-executor.md", () => {
+  const text = readFileSync("templates/opencode/agents/opencode-executor.md", "utf8");
+
+  it.each([
+    '"npx tsc*": allow',
+    '"npx vitest*": allow',
+    '"npx eslint*": allow',
+    '"npx markdownlint-cli2*": allow',
+    '"git rm docs/*": allow',
+    '"git rm src/*": allow',
+    '"git rm tests/*": allow',
+  ])("allows %s", (rule) => {
+    expect(text).toContain(rule);
+  });
+
+  it("denies git push, rm -rf, gh, and recursive or forced git rm", () => {
+    for (const rule of [
+      '"git push*": deny',
+      '"rm -rf*": deny',
+      '"gh *": deny',
+      '"git rm -r*": deny',
+      '"git rm -f*": deny',
+    ]) {
+      expect(text).toContain(rule);
+    }
+    expect(text).not.toMatch(/"(rm|rm \*|git rm \*|git rm\*)": allow/);
+  });
+});
+
 describe("templates/claude/settings.edit.json", () => {
   const settings = JSON.parse(readFileSync("templates/claude/settings.edit.json", "utf8")) as {
     permissions: { allow: string[]; deny: string[] };

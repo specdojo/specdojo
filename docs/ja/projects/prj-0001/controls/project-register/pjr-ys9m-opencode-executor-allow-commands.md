@@ -39,17 +39,44 @@ qwen（opencode）の executor は npx・rm・git rm を拒まれ、検証を流
 
 ## 4. 作業内容
 
-| No  | 作業                                                | 担当         | 状態 | メモ                                  |
-| --- | --------------------------------------------------- | ------------ | ---- | ------------------------------------- |
-| 1   | 配布する opencode の executor の定義に許可を足す    | executor     | open | 検証のコマンドと範囲を限った `git rm` |
-| 2   | `allow_commands` を opencode にも効かせる           | executor     | open | schema とテストを含む                 |
-| 3   | `git diff <file>` が拒まれた原因を調べる            | executor     | open | -                                     |
-| 4   | prj-0001 の保護された設定の変更案を書く             | executor     | open | `.opencode/agents/` と routing        |
-| 5   | 保護された設定を反映し、qwen の executor で確かめる | orchestrator | open | 利用者の承認のもとで行う              |
+| No  | 作業                                                | 担当         | 状態 | メモ                                    |
+| --- | --------------------------------------------------- | ------------ | ---- | --------------------------------------- |
+| 1   | 配布する opencode の executor の定義に許可を足す    | executor     | done | 検証のコマンドと範囲を限った `git rm`   |
+| 2   | `allow_commands` を opencode にも効かせる           | executor     | done | schema とテストを含む                   |
+| 3   | `git diff <file>` が拒まれた原因を調べる            | executor     | done | ログが無く仮説。対応結果 5.2 に記載     |
+| 4   | prj-0001 の保護された設定の変更案を書く             | executor     | done | 対応結果 5.3 に記載                     |
+| 5   | 保護された設定を反映し、qwen の executor で確かめる | orchestrator | open | 利用者の承認のもとで行う。executor 不可 |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 5.1. 実施内容
+
+- `templates/opencode/agents/opencode-executor.md` の bash に `npx tsc`・`npx vitest`・`npx eslint`・`npx markdownlint-cli2`・`npx specdojo`・`git diff *` と、`docs/`・`src/`・`tests/` の下に限った `git rm` を許可した。`git rm -r`・`-f`・`--force`、`rm -rf` は deny を足した。`git push`・`gh` は従来どおり deny。
+- `providers.opencode.allow_commands` を `src/exec/agent-config.ts` と `exec-defaults.schema.yaml` に足した。edit mode の起動コマンドの前に、bash の allow 規則を入れた `OPENCODE_PERMISSION` 環境変数を置く。review・report mode には足さない。
+- `exec-config-guide` に「opencode の edit executor に許すコマンド」を足した。
+- `tests/src/exec/agent-config-allow-commands.test.ts` に、起動コマンドの生成と、配布する定義の許可・拒否を確かめるテストを足した。
+
+### 5.2. `git diff <file>` が拒まれた原因
+
+- 配布する定義の `"git diff*": allow` は `git diff <file>` に一致するため、パターン自体は原因ではない。F6MC の executor のログは今回の worktree に無く、実際のコマンドは確かめられていない。
+- _ASSUMPTION_: opencode は `|`・`&&`・`;` で区切った各部分を別々に照合する。`git diff <file> | head` のような複合コマンドは、`head` などが許可に無く、全体が拒まれる可能性が高い。次のアクション: F6MC の実際の拒否時のコマンドをオーケストレーターが確かめる。
+- 配布する定義の範囲では、`"git diff *": allow` を足して引数付きを明示した。複合コマンドの回避は、定義の `bash` の注意書きで足りる範囲に留めた。
+
+### 5.3. 保護された設定の変更案（反映は利用者の承認のもとで行う）
+
+- `.opencode/agents/opencode-executor.md` は、`config scaffold --provider opencode --force` で新しい配布定義を当て直す（手を加えた箇所は差分を確認する）。
+- `.specdojo/exec-defaults.yaml` の `providers.opencode.allow_commands` は、リポジトリ固有の検証コマンドがある場合だけ足す。今は不要。
+- easy の routing（`qwen-executor`）は、検証と削除を伴う項目では外す案を出す。基準は「検証のコマンドを流す、またはファイルを削除する項目は medium 以上」とし、反映後の qwen の確認（作業 5）が通るまで easy は検査・削除を伴わない文書に限る。
+- _ASSUMPTION_: opencode の `OPENCODE_PERMISSION` が agent 定義の `"*": deny` より後に評価され allow が勝つかは、実機で未確認。作業 5 の qwen の 1 件で確かめ、勝たない場合は定義側に許可を足す方式へ切り替える。
+
+### 5.4. CHANGELOG に書く事項
+
+- 区分: Added
+- 文案: opencode の executor に検証のコマンド（`npx tsc`・`npx vitest`・`npx eslint`・`npx markdownlint-cli2`）と、`docs/`・`src/`・`tests/` の下に限った `git rm` を許した。`providers.opencode.allow_commands` で、リポジトリごとの検証コマンドを足せる。
+
+### 5.5. 残課題
+
+- 作業 5（保護された設定の反映と qwen の executor での確認）はオーケストレーターが行うため `open` のまま残す。
 
 ## 6. 関連ドキュメント
 

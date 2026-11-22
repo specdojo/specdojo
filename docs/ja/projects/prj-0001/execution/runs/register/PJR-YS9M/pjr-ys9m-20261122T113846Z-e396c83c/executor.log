@@ -1,0 +1,16 @@
+opencode の executor に検証コマンドと範囲を限った `git rm` を許し、`providers.opencode.allow_commands` を足しました。個票の作業 1〜4 は `done` にしています。作業 5（保護された設定の反映と qwen の executor での確認）は executor にはできないため `open` のままです。
+
+実行できた検証は、`tests/src/exec/agent-config-allow-commands.test.ts` の vitest 20 件（通過）と、`npx prettier --write` による整形だけです。`npx tsc --noEmit -p .` は prettier との `&&` 連結で流しましたが、出力は prettier 分だけで tsc の結果は見えていません。型エラーの有無は確認できていないので、親の `typecheck` に任せます。
+
+- **配布する定義**: `templates/opencode/agents/opencode-executor.md` の bash に次を足しました。
+  - 許可: `npx tsc`・`npx vitest`・`npx eslint`・`npx markdownlint-cli2`・`npx specdojo`・`git diff *`・`docs/`・`src/`・`tests/` の下の `git rm`。
+  - 拒否: `rm -rf`・`git rm -r`・`git rm -f`・`git rm --force`。`git push` と `gh` は従来どおり拒否です。
+- **`allow_commands`**: `src/exec/agent-config.ts` で opencode の edit mode にも効かせました。起動コマンドの前に、bash の allow 規則を入れた `OPENCODE_PERMISSION` 環境変数を置きます。schema の説明も直し、`exec-config-guide` に 7.4 節を足しました。
+- **テスト**: 起動コマンドの生成と、配布定義の許可・拒否を確かめるテストを足しました。
+- **個票**: 5 節に、実施内容、`git diff <file>` の原因、保護された設定の変更案、CHANGELOG に書く事項（区分 Added と文案）を書きました。
+
+`.opencode/agents/` と `.specdojo/exec-defaults.yaml` の routing は保護された設定のため変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"opencode executor 定義に検証コマンドと範囲限定の git rm を許可し、providers.opencode.allow_commands（OPENCODE_PERMISSION 環境変数）、schema、guide、テスト、個票の対応結果を更新した。作業 5 は orchestrator 担当のため open のまま残した。","handoff":["作業 5 は orchestrator 担当のため open のまま。保護設定（.opencode/agents/ の当て直し、easy の routing 見直し）の反映は利用者の承認が必要。変更案は個票の対応結果 5.3 に記載した。","F6MC で git diff <file> が拒まれた原因は、ログが worktree に無く未確定。複合コマンド（パイプ等）が部分ごとに照合され拒まれた仮説を個票 5.2 に記載した。実際の拒否コマンドの確認が必要。","OPENCODE_PERMISSION が agent 定義の \"*\": deny より後に評価され allow が勝つかは実機未確認。作業 5 の qwen 1 件で確かめ、勝たない場合は定義側に許可を足す方式へ切り替える。","CHANGELOG に書く事項（区分 Added と文案）は個票 5.4 に記載した。CHANGELOG.md は変更していない。","npx tsc --noEmit -p . は prettier との && 連結で実行したが出力に tsc の結果が出ておらず、型エラーの有無は未確認。親の typecheck の結果を正とする。"],"validations":[{"command":"npx vitest run tests/src/exec/agent-config-allow-commands.test.ts","status":"passed","summary":"1 ファイル 20 件通過"},{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-ys9m-opencode-executor-allow-commands.md docs/ja/specdojo/guides/exec-config-guide.md src/exec/agent-config.ts tests/src/exec/agent-config-allow-commands.test.ts","status":"passed","summary":"個票のみ整形され、ほかは変更なし"}]}
+</specdojo_executor_evidence>

@@ -297,9 +297,10 @@ $defs:
         minItems: 1
         uniqueItems: true
         description: >
-          claude only. Extra permission rules appended to edit-mode launch commands as
-          --allowedTools, so validation commands survive `config scaffold --force` of
-          settings.edit.json. Deny rules in the settings file still take precedence.
+          claude and opencode only. Extra permission rules for edit-mode launch commands.
+          claude appends them as --allowedTools (deny rules in settings.edit.json still take
+          precedence); opencode passes them as bash allow rules in the OPENCODE_PERMISSION
+          environment variable. Either way they survive `config scaffold --force`.
         items:
           type: string
           pattern: "^Bash\\([^'\\\\\\r\\n]+\\)$"
