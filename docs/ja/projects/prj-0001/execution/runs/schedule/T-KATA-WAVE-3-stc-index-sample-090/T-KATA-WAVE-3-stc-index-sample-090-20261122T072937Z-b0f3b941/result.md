@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-3-stc-index-sample-090
   mode: review
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-3-stc-index-sample-090/T-KATA-WAVE-3-stc-index-sample-090-20261122T072937Z-b0f3b941/plan.md
   started_at: "2026-11-22T07:29:38.942Z"
+  completed_at: "2026-11-22T07:32:06.659Z"
   agent: opus-review-executor
   execution: agent
   approach: fully-guided
@@ -19,20 +20,33 @@ specdojo:
 
 ## 1. 評価結果の確認
 
-_TODO_: 評価結果サイドカーのパス、鮮度確認で実行したコマンドとその出力（`content_hash` が現在の成果物と一致するか）、grade の `verdict` / `score` / finding 件数を記入する。評価結果が最新でない、または評価不能の場合は、その事実と理由を記入する。
+評価結果の鮮度を確認しました。 - `docs/ja/specdojo/samples/stc-index-sample.md`: - 実行コマンド: `npx specdojo grade list --target kata --path docs/ja/specdojo/samples/stc-index-sample.md --changed-only` - 出力: (空) - 判定: 最新 - `verdict`: `needs-work` / `score`: 91 / `finding_counts`: blocker 0 / major 1 / minor 4 - `docs/ja/specdojo/rulebooks/stc-index-rulebook.md`: - 実行コマンド: `npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/stc-index-rulebook.md --changed-only` - 出力: (空) - 判定: 最新 - `verdict`: `pass` / `score`: 97 / `finding_counts`: blocker 0 / major 0 / minor 1
 
 ## 2. 判断根拠
 
-_TODO_: 変更内容・plan・実行記録・完了条件・最新の finding を照合した内容と、verdict を選んだ理由を記入する。finding が残るのに完了とする場合は、その finding が今回の完了を妨げない理由を記入する。参照は `[[id]]` 形式（Obsidian wikilink）で記載し、行番号アンカーや絶対パスは使わない。
+- 評価結果は最新であることを確認しました。
+- 対象の `docs/ja/specdojo/samples/stc-index-sample.md` は `needs-work` であり、`major` 属性の finding (`F005`) が残っています。この finding は 143 行目の `_ASSUMPTION_` に関するものです。
+- 完了条件の照合結果:
+- `DC-001` (`vp-qe-omissions-consistency`): 評価結果の `F002`〜`F004` (`level 3`) に基づき、充足を確認しました。
+- `DC-002` / `DC-003` (`vp-qe-kata-conformance`): 評価結果の `F004` (`level 3`) に基づき、充足を確認しました。
+- `DC-004` (`vp-qe-omissions-consistency`): frontmatter の `based_on` に `specdojo:tsp-index-sample` が含まれていることを確認しました。
+- `DC-005` (`vp-qe-verifiability`): 評価結果の `F002` (`level 3`) に基づき、充足を確認しました。
+- 以上の通り、型としての `pass` が得られていないため、完了条件を満たしていません。
 
 ## 3. 未充足事項・改善指示
 
-_TODO_: 未充足事項と、再計画・成果物の改善・再評価に使う改善指示を記入する（なければ「なし」と記入する）。評価結果の内容に疑義がある場合は、再評価が必要な対象と理由もここに記入する。
+- `docs/ja/specdojo/samples/stc-index-sample.md` の `F005` ([major/`vp-ops-release-readiness`; line=132]) を解消してください。143 行目の `_ASSUMPTION_` を解消するか、残す扱いを明記する必要があります。
+- `docs/ja/specdojo/samples/stc-index-sample.md` の以下の minor finding も併せて解消を検討してください：
+- `F001`: メモの PJR 引継ぎ先を記載する。
+- `F002`: P0 の定義に性能基準に関する記述を加える。
+- `F003`: 分割理由と責任欄の役割分担を整合させる。
+- `F004`: 観点名を `会計維持` に揃える。
+- `docs/ja/specdojo/rulebooks/stc-index-rulebook.md` の `F001` ([minor/`vp-qe-omissions-consistency`; line=148]) については、分配方針の判断順にデータ境界を加えるか、除いた理由を記述してください。
 
 ## 4. approach に応じた確認
 
-_TODO_: `approach` に応じて確認した内容を記入する。fully-guided / recipe-guided / freeform では求められた作成・更新が行われたか、retrofit では実装エビデンスの対応記録と未確認範囲、`rulebook-maintenance` などの maintenance 系では見直しの動機となった finding の解消状況を記入する。
+fully-guided の方針に従い、`docs/ja/specdojo/rulebooks/stc-index-rulebook.md` の必須要素および `docs/ja/specdojo/samples/stc-index-sample.md` の記述標準・共通サンプル文脈（駄菓子屋のプロジェクト）への適合性を確認しました。先行する edit タスクの `result` に関しては、ファイルの存在と `mode: edit` であること以外は確認できていません（確認できなかった範囲）。
 
 ## 5. decision
 
-- verdict: _TODO_（complete / complete-with-findings / incomplete / grade-stale / grade-unavailable / changed-during-review）
+- verdict: incomplete
