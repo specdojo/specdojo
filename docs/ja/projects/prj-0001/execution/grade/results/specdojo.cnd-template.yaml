@@ -1,0 +1,160 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:cnd-template
+path: docs/ja/specdojo/templates/cnd-template.md
+target: kata
+rubric: grade-rubric-v2
+verdict: pass
+score: 91
+graded_at: "2026-11-22T14:48:23.696Z"
+graded_by: opus-review-executor
+content_hash: 99acbf26b096bad45fdf149ec808069dcffdeb2701b67bd0ca2e5cf56b9330d5
+categories:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
+  architecture:
+    score: 92
+  usability:
+    score: 92
+  implementation:
+    score: 100
+  quality:
+    score: 75
+  consistency:
+    score: 100
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 3
+    score: 75
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 3
+    score: 75
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 5
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 89
+    anchor: "- `_EXECUTION_AND_DEPLOYMENT_PRECONDITION_`"
+    message: >-
+      「技術前提・制約」の骨組みに、配置設計に必要な入力のうち決まっていないもの（ホスト・配信先・接続方式など）を書く欄、または「メモ / 将来課題」へ移す指示を加え、rulebook
+      の「配置設計に必要な入力と決まっていない入力を分ける」要件を template でも満たせるようにする。
+    message_ja: >-
+      「技術前提・制約」の骨組みに、配置設計に必要な入力のうち決まっていないもの（ホスト・配信先・接続方式など）を書く欄、または「メモ / 将来課題」へ移す指示を加え、rulebook
+      の「配置設計に必要な入力と決まっていない入力を分ける」要件を template でも満たせるようにする。
+  - id: F002
+    severity: minor
+    rule: vp-dev-testability
+    line: 96
+    anchor: <!-- 正常時は下流の結合検証へ渡す全経路に対応させる。保存先・外部依存では不在・失敗・結果不明時の状態も区別する。行は対象ごとに増減し、未確定の期待結果は「メモ / 将来課題」へ引き継ぐ。 -->
+    message: >-
+      「コンテナ間・外部依存の検証対象」のコメントまたは `_TODO_` に、rulebook の「検証・承認前の確認」に従って図と表を照合し、描画を確認する旨の参照を加え、sample
+      の検査に関する記述と揃えて、生成した文書の確認手順が分かるようにする。
+    message_ja: >-
+      「コンテナ間・外部依存の検証対象」のコメントまたは `_TODO_` に、rulebook の「検証・承認前の確認」に従って図と表を照合し、描画を確認する旨の参照を加え、sample
+      の検査に関する記述と揃えて、生成した文書の確認手順が分かるようにする。
+  - id: F003
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 96
+    anchor: <!-- 正常時は下流の結合検証へ渡す全経路に対応させる。保存先・外部依存では不在・失敗・結果不明時の状態も区別する。行は対象ごとに増減し、未確定の期待結果は「メモ / 将来課題」へ引き継ぐ。 -->
+    message: >-
+      検証対象表の前に、各行の結果を Pass / Fail / 未判定のどれと判定するか、未確認の期待結果を検証済みとして扱わないことを書く `_TODO_` を置き、rulebook の「検証・承認前の確認」の合格条件と
+      sample の判定文に対応させる。
+    message_ja: >-
+      検証対象表の前に、各行の結果を Pass / Fail / 未判定のどれと判定するか、未確認の期待結果を検証済みとして扱わないことを書く `_TODO_` を置き、rulebook の「検証・承認前の確認」の合格条件と
+      sample の判定文に対応させる。
+  - id: F004
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 51
+    anchor: "| Person（図中ラベル） | 利用目的・接点  |"
+    message: >-
+      sample が Person 表・検証対象表・メモ表に template にない担当ロール系の列（「判断・確認の責務」「主確認ロール」「担当ロール」）を加え、template
+      は判断者を転送先の個票で追うとしているため、列の正本である template と sample のどちらに揃えるかを決めて両者を一致させる。
+    message_ja: >-
+      sample が Person 表・検証対象表・メモ表に template にない担当ロール系の列（「判断・確認の責務」「主確認ロール」「担当ロール」）を加え、template
+      は判断者を転送先の個票で追うとしているため、列の正本である template と sample のどちらに揃えるかを決めて両者を一致させる。
+  - id: F005
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 7
+    anchor: "_TODO_: 実行・配備の前提を示す。仮定は _ASSUMPTION_: とし、影響・確認先を「メモ / 将来課題」へ記入する。"
+    message: "「仮定は _ASSUMPTION_: とし」は目印の書式を説明する文なので、`_ASSUMPTION_:` をインラインコードで囲み、表示で斜体にならず書式が正しく伝わるようにする。"
+    message_ja: "「仮定は _ASSUMPTION_: とし」は目印の書式を説明する文なので、`_ASSUMPTION_:` をインラインコードで囲み、表示で斜体にならず書式が正しく伝わるようにする。"

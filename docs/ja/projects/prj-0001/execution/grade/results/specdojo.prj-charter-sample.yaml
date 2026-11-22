@@ -4,16 +4,16 @@ document: specdojo:prj-charter-sample
 path: docs/ja/specdojo/samples/prj-charter-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 83
-graded_at: "2026-11-22T13:09:15.923Z"
+verdict: pass
+score: 96
+graded_at: "2026-11-22T14:45:42.305Z"
 graded_by: opus-review-executor
-content_hash: 5ebcca4a7ff1f00db985962209670c01492b7692f8cbd0d804ac5ba15ba1435f
+content_hash: 746a86aef7c0edfacb4eeadaf682e3e1bd815ca673a2651454bc549e5bc6f47a
 categories:
   purpose:
-    score: 50
+    score: 100
   operations:
-    score: 88
+    score: 100
   planning:
     score: 83
   business:
@@ -25,16 +25,16 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 75
+    score: 92
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-po-decision-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-po-publication-accountability:
     level: 4
     score: 100
@@ -75,14 +75,14 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
     level: 3
     score: 75
-  vp-qe-kata-conformance:
-    level: 2
-    score: 50
   vp-ux-readability:
     level: 4
     score: 100
@@ -90,8 +90,8 @@ viewpoints:
     level: 3
     score: 75
   vp-ops-release-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ops-operability:
     level: 4
     score: 100
@@ -103,108 +103,42 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 4
-  minor: 7
+  major: 0
+  minor: 4
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-po-purpose-alignment
-    line: 78
-    anchor: >-
-      | 品質     | 初期公開する rulebook、recipe、sample、template | 品質管理計画の初期公開条件をすべて満たす              |
-      [[specdojo:pm-quality-management-plan-sample\|品質管理計画]] |
-    message: >-
-      販売管理システムの開始判断で「初期公開する
-      rulebook、recipe、sample、template」を品質確認対象としており、概要・スコープの対象業務との対応がありません。対象を販売管理システムの実装、操作手順、受入結果、公開物へ改め、目的に対応する品質判断にしてください。
-    message_ja: >-
-      販売管理システムの開始判断で「初期公開する
-      rulebook、recipe、sample、template」を品質確認対象としており、概要・スコープの対象業務との対応がありません。対象を販売管理システムの実装、操作手順、受入結果、公開物へ改め、目的に対応する品質判断にしてください。
-  - id: F002
-    severity: major
-    rule: vp-po-decision-readiness
-    line: 78
-    anchor: >-
-      | 品質     | 初期公開する rulebook、recipe、sample、template | 品質管理計画の初期公開条件をすべて満たす              |
-      [[specdojo:pm-quality-management-plan-sample\|品質管理計画]] |
-    message: >-
-      GO / Not
-      GOの品質判断材料がKataの4文書種別になっているため、販売管理システムの受入結果を確認する判断になっていません。参照先の品質管理計画にある技術・公開ゲートと初期受入ゲートのうち、今回の判断で必要な材料・条件を明示してください。
-    message_ja: >-
-      GO / Not
-      GOの品質判断材料がKataの4文書種別になっているため、販売管理システムの受入結果を確認する判断になっていません。参照先の品質管理計画にある技術・公開ゲートと初期受入ゲートのうち、今回の判断で必要な材料・条件を明示してください。
-  - id: F003
     severity: minor
     rule: vp-pm-plan-feasibility
     line: 88
     anchor: "| 論点               | 影響                           | 当面の扱い                                           |"
     message: 未決事項の表に担当がなく、費用上限案の整理、目標日の調整、オフライン方針案の作成を誰の作業として計画するかが不明です。各項目に担当Role codeを付け、店主代表の決裁と案の作成・調整を区別してください。
     message_ja: 未決事項の表に担当がなく、費用上限案の整理、目標日の調整、オフライン方針案の作成を誰の作業として計画するかが不明です。各項目に担当Role codeを付け、店主代表の決裁と案の作成・調整を区別してください。
-  - id: F004
+  - id: F002
     severity: minor
     rule: vp-pm-control-reporting
     line: 88
     anchor: "| 論点               | 影響                           | 当面の扱い                                           |"
     message: 未決事項に引き継ぎ先の管理記録がなく、本文の未決事項と後続の課題・決定記録を対応づけられません。費用上限は管理計画のU-01、目標日はU-03など対応先を示し、オフライン方針も決定を追跡する記録へ接続してください。
     message_ja: 未決事項に引き継ぎ先の管理記録がなく、本文の未決事項と後続の課題・決定記録を対応づけられません。費用上限は管理計画のU-01、目標日はU-03など対応先を示し、オフライン方針も決定を追跡する記録へ接続してください。
-  - id: F005
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 78
-    anchor: >-
-      | 品質     | 初期公開する rulebook、recipe、sample、template | 品質管理計画の初期公開条件をすべて満たす              |
-      [[specdojo:pm-quality-management-plan-sample\|品質管理計画]] |
-    message: 「品質管理計画の初期公開条件」は参照先で定義されたゲート名ではなく、技術・公開、初期受入、短期利用のどれを合否判定に使うかが一意になりません。適用するゲート名または条件IDを指定し、短期利用の将来判定を開始条件へ混ぜないことを明示してください。
-    message_ja: 「品質管理計画の初期公開条件」は参照先で定義されたゲート名ではなく、技術・公開、初期受入、短期利用のどれを合否判定に使うかが一意になりません。適用するゲート名または条件IDを指定し、短期利用の将来判定を開始条件へ混ぜないことを明示してください。
-  - id: F006
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 88
-    anchor: "| 論点               | 影響                           | 当面の扱い                                           |"
-    message: recipe 4.6とtemplateの未決事項表が求める「担当」が完成例から欠落しています。現在の影響・当面の扱いを残し、各未決事項を解消する担当Role codeを追加してください。
-    message_ja: recipe 4.6とtemplateの未決事項表が求める「担当」が完成例から欠落しています。現在の影響・当面の扱いを残し、各未決事項を解消する担当Role codeを追加してください。
-  - id: F007
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 78
-    anchor: >-
-      | 品質     | 初期公開する rulebook、recipe、sample、template | 品質管理計画の初期公開条件をすべて満たす              |
-      [[specdojo:pm-quality-management-plan-sample\|品質管理計画]] |
-    message: 品質確認対象の「rulebook、recipe、sample、template」は、販売管理システムを題材とする共通サンプル文脈および参照先の品質管理計画と一致しません。Sample記述標準の共通文脈に従い、店頭利用するシステムと関連成果物を対象にした完成例へ修正してください。
-    message_ja: 品質確認対象の「rulebook、recipe、sample、template」は、販売管理システムを題材とする共通サンプル文脈および参照先の品質管理計画と一致しません。Sample記述標準の共通文脈に従い、店頭利用するシステムと関連成果物を対象にした完成例へ修正してください。
-  - id: F008
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 88
-    anchor: "| 論点               | 影響                           | 当面の扱い                                           |"
-    message: recipeとtemplateでは未決事項に担当を記載する構成ですが、sampleには担当列も項目別の担当記述もありません。影響と期限条件に加えて担当Role codeを具体値で示し、作成手順と完成例を整合させてください。
-    message_ja: recipeとtemplateでは未決事項に担当を記載する構成ですが、sampleには担当列も項目別の担当記述もありません。影響と期限条件に加えて担当Role codeを具体値で示し、作成手順と完成例を整合させてください。
-  - id: F009
+  - id: F003
     severity: minor
     rule: vp-qe-kata-conformance
     line: 74
     anchor: >-
-      | 目的整合 | 優先機能と公開対象                              | すべてが概要の目的に対応し、店主代表が確認済み        |
-      [[specdojo:pm-plan-sample\|管理計画]]、決定記録              |
+      | 目的整合 | 優先機能と公開対象                                 |
+      すべてが概要の目的に対応し、店主代表が確認済み                                                       |
+      [[specdojo:pm-plan-sample\|管理計画]]、決定記録                                                       |
     message: >-
-      GO / Not
-      GO表はrulebookに従い「合格条件」列を持つ一方、templateには合格条件列がなく、未決事項表もrulebook（論点・影響・当面の扱い）とtemplate（論点・期限・担当・対応方針）で列定義が異なるため、sampleが従う正本が一意になりません。rulebook・template・sampleの列構成を一つに揃えてください。
+      未決事項表の列定義はrulebook・template・sampleで揃い前回指摘のその部分は解消しましたが、GO / Not GO表はrulebook
+      6.8とsampleが「合格条件」列を持つ一方でtemplateに合格条件列がなく、templateから作成すると合格条件が欠落します。templateに合格条件列を追加し、rulebook・template・sampleの列構成を揃えてください。
     message_ja: >-
-      GO / Not
-      GO表はrulebookに従い「合格条件」列を持つ一方、templateには合格条件列がなく、未決事項表もrulebook（論点・影響・当面の扱い）とtemplate（論点・期限・担当・対応方針）で列定義が異なるため、sampleが従う正本が一意になりません。rulebook・template・sampleの列構成を一つに揃えてください。
-  - id: F010
+      未決事項表の列定義はrulebook・template・sampleで揃い前回指摘のその部分は解消しましたが、GO / Not GO表はrulebook
+      6.8とsampleが「合格条件」列を持つ一方でtemplateに合格条件列がなく、templateから作成すると合格条件が欠落します。templateに合格条件列を追加し、rulebook・template・sampleの列構成を揃えてください。
+  - id: F004
     severity: minor
     rule: vp-ux-language-consistency
     line: 46
     anchor: "| `STH-DEVELOPER`   | 開発担当     | 実行担当者              | `DEV`          | 認可範囲で計画を作り、変更影響を店主に示す     |"
     message: 開発担当の責任欄で「変更影響を店主に示す」と記載しており、他の箇所の「店主代表」と表記がずれているため、「店主代表（`PO`）」に統一してください。
     message_ja: 開発担当の責任欄で「変更影響を店主に示す」と記載しており、他の箇所の「店主代表」と表記がずれているため、「店主代表（`PO`）」に統一してください。
-  - id: F011
-    severity: major
-    rule: vp-ops-release-readiness
-    line: 78
-    anchor: >-
-      | 品質     | 初期公開する rulebook、recipe、sample、template | 品質管理計画の初期公開条件をすべて満たす              |
-      [[specdojo:pm-quality-management-plan-sample\|品質管理計画]] |
-    message: 公開・開始前の品質確認対象がKataの4文書種別に限定され、販売管理システムの公開候補版・操作手順・受入結果が明示されていません。品質管理計画の対象版と技術・公開／初期受入の証跡へ結び、必要な判定がそろった候補だけをPOが承認できる条件にしてください。
-    message_ja: 公開・開始前の品質確認対象がKataの4文書種別に限定され、販売管理システムの公開候補版・操作手順・受入結果が明示されていません。品質管理計画の対象版と技術・公開／初期受入の証跡へ結び、必要な判定がそろった候補だけをPOが承認できる条件にしてください。

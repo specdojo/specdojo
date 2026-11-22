@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/ifx-api-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 72
-graded_at: "2026-11-22T12:34:58.099Z"
+score: 79
+graded_at: "2026-11-22T14:39:16.414Z"
 graded_by: opus-review-executor
-content_hash: aa76018a9bf8185a4ebfa6cc244bd14b6c9a2c3e9fffc8ea16afe83f28778fb6
+content_hash: 3ffca9c9cb09d94c500573df8d95fd1f14750d0ae7e8132d64bc6f1770f46739
 categories:
   purpose:
     score: 88
@@ -19,15 +19,15 @@ categories:
   business:
     score: 75
   architecture:
-    score: 83
+    score: 92
   usability:
     score: 83
   implementation:
-    score: 63
+    score: 75
   quality:
-    score: 58
+    score: 67
   consistency:
-    score: 50
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -54,8 +54,8 @@ viewpoints:
     level: 3
     score: 75
   vp-arc-technical-constraints:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -63,8 +63,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-dev-change-impact:
     level: 3
     score: 75
@@ -72,11 +72,11 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-verifiability:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
     level: 2
     score: 50
@@ -100,7 +100,7 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 5
+  major: 1
   minor: 21
   note: 0
 findings:
@@ -122,7 +122,7 @@ findings:
     severity: minor
     rule: vp-ba-requirements-completeness
     line: 3
-    anchor: 外部システム（仕入先、会計、物流、決済など）と連携する **1つのREST APIインターフェース**を、**OpenAPI形式**（YAML 1ファイル）で定義します。
+    anchor: 外部システム（本部、仕入先、会計、物流など）と連携する **1つのREST APIインターフェース**を、**OpenAPI形式**（YAML 1ファイル）で定義します。
     message: 対象を REST API に限ると述べる一方で、ifx-msg・ifx-file・ifx-cmd など隣接 IF 種別を対象外として明示していないため、対象範囲と対象外を全体方針として整理する必要がある。
     message_ja: 対象を REST API に限ると述べる一方で、ifx-msg・ifx-file・ifx-cmd など隣接 IF 種別を対象外として明示していないため、対象範囲と対象外を全体方針として整理する必要がある。
   - id: F004
@@ -133,13 +133,6 @@ findings:
     message: 「外部との合意に必要な最小十分」とあるが、合意当事者（連携先、作成者、確認者の Role）が示されず合意対象を確認する主体が読み取れないため、関係者と合意事項を明記する必要がある。
     message_ja: 「外部との合意に必要な最小十分」とあるが、合意当事者（連携先、作成者、確認者の Role）が示されず合意対象を確認する主体が読み取れないため、関係者と合意事項を明記する必要がある。
   - id: F005
-    severity: major
-    rule: vp-arc-technical-constraints
-    line: 34
-    anchor: "## 4. 必須構造（OpenAPI YAML）"
-    message: 必須構造に OpenAPI 仕様上必須の `info.version` と Operation ごとの `responses` が含まれず技術制約と矛盾するため、必須項目として追加する必要がある。
-    message_ja: 必須構造に OpenAPI 仕様上必須の `info.version` と Operation ごとの `responses` が含まれず技術制約と矛盾するため、必須項目として追加する必要がある。
-  - id: F006
     severity: minor
     rule: vp-arc-technical-constraints
     line: 34
@@ -150,21 +143,14 @@ findings:
     message_ja: >-
       sample が `specdojo-schema: none reason=external-openapi` で SpecDojo schema 検証対象外とされている前提が本文に記述されていないため、外部 OpenAPI
       検証に委ねる旨と使用ツールを明記する必要がある。
-  - id: F007
-    severity: major
-    rule: vp-dev-implementation-readiness
-    line: 34
-    anchor: "## 4. 必須構造（OpenAPI YAML）"
-    message: 必須構造を満たしても `info.version` と `responses` を欠く無効な OpenAPI が成立し、作成完了の条件として使えないため、両項目を必須に追加する必要がある。
-    message_ja: 必須構造を満たしても `info.version` と `responses` を欠く無効な OpenAPI が成立し、作成完了の条件として使えないため、両項目を必須に追加する必要がある。
-  - id: F008
+  - id: F006
     severity: minor
     rule: vp-dev-implementation-readiness
     line: 9
     anchor: "## 1. ファイル規約"
     message: ファイル規約にファイル名はあるが配置先ディレクトリ（プロジェクト内のどの章ディレクトリか）がなく作業対象の場所を特定できないため、配置規約を追加する必要がある。
     message_ja: ファイル規約にファイル名はあるが配置先ディレクトリ（プロジェクト内のどの章ディレクトリか）がなく作業対象の場所を特定できないため、配置規約を追加する必要がある。
-  - id: F009
+  - id: F007
     severity: minor
     rule: vp-dev-change-impact
     line: 40
@@ -175,79 +161,61 @@ findings:
     message_ja: >-
       `x-spec-meta` の `id` を変更した場合の ESIL `spec_ref`、yaml-pages
       生成ページ（`samples/generated/`）への影響が示されていないため、連動して更新すべき成果物を明記する必要がある。
-  - id: F010
+  - id: F008
     severity: minor
     rule: vp-dev-testability
     line: 1
     anchor: "# 外部API仕様（External API Specification: EAPIS）作成ルール"
     message: OpenAPI YAMLの妥当性を検証するlintコマンドやschema validationの手順が記載されておらず、設定変更後の確認方法が分からないため追加する必要がある。
     message_ja: OpenAPI YAMLの妥当性を検証するlintコマンドやschema validationの手順が記載されておらず、設定変更後の確認方法が分からないため追加する必要がある。
-  - id: F011
-    severity: major
-    rule: vp-qe-verifiability
-    line: 34
-    anchor: "## 4. 必須構造（OpenAPI YAML）"
-    message: >-
-      OpenAPI 3.0.3/3.1で必須の `info.version` と各Operationの `responses`
-      が必須構造・記載方針に含まれず、このrulebookの条件をすべて満たしても無効なOpenAPI文書が成立するため、両項目の必須条件と検証方法を追加する必要がある。
-    message_ja: >-
-      OpenAPI 3.0.3/3.1で必須の `info.version` と各Operationの `responses`
-      が必須構造・記載方針に含まれず、このrulebookの条件をすべて満たしても無効なOpenAPI文書が成立するため、両項目の必須条件と検証方法を追加する必要がある。
-  - id: F012
+  - id: F009
     severity: minor
     rule: vp-qe-verifiability
     line: 56
     anchor: "外部連携では、少なくとも以下のエラーレスポンスを定義し、共通形式（例: `components/schemas/ErrorResponse`）を各 operation から参照します。"
     message: 見出しはエラー定義を「推奨」とする一方、本文は列挙した応答を「少なくとも定義します」と必須表現にしておりpass/failを一意に判定できないため、必須・条件付き必須・推奨のいずれかへ統一する必要がある。
     message_ja: 見出しはエラー定義を「推奨」とする一方、本文は列挙した応答を「少なくとも定義します」と必須表現にしておりpass/failを一意に判定できないため、必須・条件付き必須・推奨のいずれかへ統一する必要がある。
-  - id: F013
+  - id: F010
     severity: minor
     rule: vp-qe-verifiability
     line: 26
     anchor: "- **payloadのプロパティ名は snake_case を推奨**（例: `order_id`, `payment_status`）"
     message: 「記載方針（必須）」の章内で payload の snake_case を「推奨」としており必須章内の推奨事項が pass/fail で判定できないため、必須か推奨かを分けて記述する必要がある。
     message_ja: 「記載方針（必須）」の章内で payload の snake_case を「推奨」としており必須章内の推奨事項が pass/fail で判定できないため、必須か推奨かを分けて記述する必要がある。
+  - id: F011
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 1
+    anchor: "# 外部API仕様（External API Specification: EAPIS）作成ルール"
+    message: >-
+      前回指摘のうち `### 4.1.`
+      の見出し階層は解消したが、Rulebook記述標準が求めるタイトル直下の独立した英語名（1行）と、全体方針・ファイル命名・ID規則・本文要件・記述ガイド・禁止事項の標準章への対応または省略理由が依然として示されていないため、英語名を追加し章構成を標準へ対応付ける必要がある。
+    message_ja: >-
+      前回指摘のうち `### 4.1.`
+      の見出し階層は解消したが、Rulebook記述標準が求めるタイトル直下の独立した英語名（1行）と、全体方針・ファイル命名・ID規則・本文要件・記述ガイド・禁止事項の標準章への対応または省略理由が依然として示されていないため、英語名を追加し章構成を標準へ対応付ける必要がある。
+  - id: F012
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 39
+    anchor: "- `info`（`title`, `version` を含む）"
+    message: >-
+      rulebook 側は `info`（`title`, `version` を含む）を必須に改めたが、参照 sample の `info` は `title` のみで `info.version` を欠き rulebook
+      の必須構造を満たさない無効な OpenAPI 完成例のままであるため、sample に `info.version` を追加して rulebook と整合させる必要がある。
+    message_ja: >-
+      rulebook 側は `info`（`title`, `version` を含む）を必須に改めたが、参照 sample の `info` は `title` のみで `info.version` を欠き rulebook
+      の必須構造を満たさない無効な OpenAPI 完成例のままであるため、sample に `info.version` を追加して rulebook と整合させる必要がある。
+  - id: F013
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# 外部API仕様（External API Specification: EAPIS）作成ルール"
+    message: >-
+      前回指摘のうち章番号の連続と見出し階層は解消したが、Rulebook記述標準が指定するタイトル直下の独立した英語名と標準章構成（全体方針・ファイル命名・ID規則・本文要件・記述ガイド・禁止事項）への対応が残っているため、規約内容を維持したままauthoring
+      standard準拠の構成へ再編する必要がある。
+    message_ja: >-
+      前回指摘のうち章番号の連続と見出し階層は解消したが、Rulebook記述標準が指定するタイトル直下の独立した英語名と標準章構成（全体方針・ファイル命名・ID規則・本文要件・記述ガイド・禁止事項）への対応が残っているため、規約内容を維持したままauthoring
+      standard準拠の構成へ再編する必要がある。
   - id: F014
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 34
-    anchor: "## 4. 必須構造（OpenAPI YAML）"
-    message: 必須構造から `info.version` およびOperationごとの `responses` が漏れており、宣言したOpenAPIバージョンの必須事項とrulebookの受入条件が整合しないため追加する必要がある。
-    message_ja: 必須構造から `info.version` およびOperationごとの `responses` が漏れており、宣言したOpenAPIバージョンの必須事項とrulebookの受入条件が整合しないため追加する必要がある。
-  - id: F015
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 1
-    anchor: "# 外部API仕様（External API Specification: EAPIS）作成ルール"
-    message: >-
-      前回指摘のうち `### 4.1.`
-      の見出し階層は解消したが、Rulebook記述標準が求めるタイトル直下の独立した英語名（1行）と、全体方針・ファイル命名・ID規則・本文要件・記述ガイド・禁止事項の標準章への対応または省略理由が依然として示されていないため、英語名を追加し章構成を標準へ対応付ける必要がある。
-    message_ja: >-
-      前回指摘のうち `### 4.1.`
-      の見出し階層は解消したが、Rulebook記述標準が求めるタイトル直下の独立した英語名（1行）と、全体方針・ファイル命名・ID規則・本文要件・記述ガイド・禁止事項の標準章への対応または省略理由が依然として示されていないため、英語名を追加し章構成を標準へ対応付ける必要がある。
-  - id: F016
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 34
-    anchor: "## 4. 必須構造（OpenAPI YAML）"
-    message: >-
-      `target_format: yaml` の必須キー定義から `info.version` とOperationの `responses` が欠落し、参照 sample も `info.version`
-      を持たない無効なOpenAPI完成例になっているため、rulebookを正として必須条件を追加しsampleも同時に整合させる必要がある。
-    message_ja: >-
-      `target_format: yaml` の必須キー定義から `info.version` とOperationの `responses` が欠落し、参照 sample も `info.version`
-      を持たない無効なOpenAPI完成例になっているため、rulebookを正として必須条件を追加しsampleも同時に整合させる必要がある。
-  - id: F017
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 外部API仕様（External API Specification: EAPIS）作成ルール"
-    message: >-
-      前回指摘のうち章番号の連続と見出し階層は解消したが、Rulebook記述標準が指定するタイトル直下の独立した英語名と標準章構成（全体方針・ファイル命名・ID規則・本文要件・記述ガイド・禁止事項）への対応が残っているため、規約内容を維持したままauthoring
-      standard準拠の構成へ再編する必要がある。
-    message_ja: >-
-      前回指摘のうち章番号の連続と見出し階層は解消したが、Rulebook記述標準が指定するタイトル直下の独立した英語名と標準章構成（全体方針・ファイル命名・ID規則・本文要件・記述ガイド・禁止事項）への対応が残っているため、規約内容を維持したままauthoring
-      standard準拠の構成へ再編する必要がある。
-  - id: F018
     severity: minor
     rule: vp-qe-kata-conformance
     line: 48
@@ -258,7 +226,7 @@ findings:
     message_ja: >-
       参照 sample の `x-spec-meta.id` は `specdojo:ifx-api-sample` であり、ここで規定する `ifx-api-...` および ESIL の `spec_ref`
       と対応するIDの完成例になっていないため、sample 用IDの例外を規定するかESIL連携用IDを別途例示する必要がある。
-  - id: F019
+  - id: F015
     severity: minor
     rule: vp-qe-kata-conformance
     line: 56
@@ -269,7 +237,7 @@ findings:
     message_ja: >-
       参照 sample は `400`・`401`・`500` だけを定義し、ここで「少なくとも」とする `403`・`404`・`409`・`429`
       を含まないため、必要な応答をsampleへ追加するか省略可能な条件をrulebookへ明記する必要がある。
-  - id: F020
+  - id: F016
     severity: minor
     rule: vp-qe-kata-conformance
     line: 5
@@ -282,32 +250,32 @@ findings:
       ESIL に当たる ifx-index の rulebook・sample は `spec_ref` に project 修飾付きの文書 ID（例:
       `specdojo:ifx-cmd-sample`、`prj-0001:ifx-file-...`）を置くのに対し、本書は `spec_ref: ifx-api-...` を修飾なしで
       ID・ファイル名に対応させるとしており型の間で ID 規約が矛盾するため、project 修飾 ID とファイル名の対応規則に揃える必要がある。
-  - id: F021
+  - id: F017
     severity: minor
     rule: vp-ux-readability
     line: 5
     anchor: "EAPIS は ESIL（外部システムIF一覧）から参照される「詳細仕様」で、ESIL 側の `spec_ref: ifx-api-...` をこの EAPIS の ID とファイル名に対応させます。"
     message: EAPISの上位参照元としてESILを示しているが文書ID・パス・参照先がなく、初見の読者が対応する一覧と `spec_ref` の正本を特定できないため、解決可能な関連文書参照を追加する必要がある。
     message_ja: EAPISの上位参照元としてESILを示しているが文書ID・パス・参照先がなく、初見の読者が対応する一覧と `spec_ref` の正本を特定できないため、解決可能な関連文書参照を追加する必要がある。
-  - id: F022
+  - id: F018
     severity: minor
     rule: vp-ux-language-consistency
     line: 56
     anchor: "外部連携では、少なくとも以下のエラーレスポンスを定義し、共通形式（例: `components/schemas/ErrorResponse`）を各 operation から参照します。"
     message: 「エラー定義（推奨）」と「少なくとも以下を定義します」が同じ節で異なる必須度を表し読み手を混乱させるため、「必須」「条件付き必須」「推奨」の用語を統一する必要がある。
     message_ja: 「エラー定義（推奨）」と「少なくとも以下を定義します」が同じ節で異なる必須度を表し読み手を混乱させるため、「必須」「条件付き必須」「推奨」の用語を統一する必要がある。
-  - id: F023
+  - id: F019
     severity: minor
     rule: vp-ux-language-consistency
     line: 11
-    anchor: "- ファイル名: `ifx-api-<短い英小文字ハイフン>.yaml`（例: `ifx-api-payment`）"
+    anchor: "- ファイル名: `ifx-api-<短い英小文字ハイフン>.yaml`（例: `ifx-api-sales`）"
     message: >-
       ファイル名規約は `ifx-api-＜短い英小文字ハイフン＞.yaml` としながら例を拡張子なしの `ifx-api-payment` としており、ファイル名と ID の例が混同されるため、ファイル名例と ID
       例を区別して表記する必要がある。
     message_ja: >-
       ファイル名規約は `ifx-api-＜短い英小文字ハイフン＞.yaml` としながら例を拡張子なしの `ifx-api-payment` としており、ファイル名と ID の例が混同されるため、ファイル名例と ID
       例を区別して表記する必要がある。
-  - id: F024
+  - id: F020
     severity: minor
     rule: vp-ux-language-consistency
     line: 5
@@ -318,14 +286,18 @@ findings:
     message_ja: >-
       参照先の正本である ifx-index rulebook の名称は「外部システムI/F一覧」で ESIL
       という略称を定義していないのに、本書は「ESIL（外部システムIF一覧）」と別表記の名称で呼んでおり成果物名がゆれるため、正本の名称と文書 ID に合わせて表記を統一する必要がある。
-  - id: F025
+  - id: F021
     severity: minor
     rule: vp-ops-release-readiness
     line: 34
     anchor: "## 4. 必須構造（OpenAPI YAML）"
-    message: 必須構造の欠落と sample との不整合が未解決のまま、ready 化前に確認すべき検証（OpenAPI lint 通過など）が示されていないため、ready 条件として検証項目を明記する必要がある。
-    message_ja: 必須構造の欠落と sample との不整合が未解決のまま、ready 化前に確認すべき検証（OpenAPI lint 通過など）が示されていないため、ready 条件として検証項目を明記する必要がある。
-  - id: F026
+    message: >-
+      必須構造の `info.version` と `responses` は追加されたが、参照 sample が `info.version` を欠く不整合が残り、ready 化前に確認すべき検証（OpenAPI lint
+      通過、sample との整合確認など）も示されていないため、ready 条件として検証項目を明記する必要がある。
+    message_ja: >-
+      必須構造の `info.version` と `responses` は追加されたが、参照 sample が `info.version` を欠く不整合が残り、ready 化前に確認すべき検証（OpenAPI lint
+      通過、sample との整合確認など）も示されていないため、ready 条件として検証項目を明記する必要がある。
+  - id: F022
     severity: minor
     rule: vp-ops-operability
     line: 14

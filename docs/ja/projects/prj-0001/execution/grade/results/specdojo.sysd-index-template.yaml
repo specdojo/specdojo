@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 98
-graded_at: "2026-11-15T10:46:12.120Z"
-graded_by: sol-review-executor
-content_hash: fb3ea1dc2b90cb279e9a9b780a009e5e44c01894fc88522bd06ea831b2738b5c
+graded_at: "2026-11-22T14:54:13.765Z"
+graded_by: opus-review-executor
+content_hash: 34e097245df5ea6f3b31876fcfd168ce6242c6b1d164b44d3491d1b7841b4493
 categories:
   purpose:
     score: 100
@@ -101,14 +101,14 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 2
+  minor: 3
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-pm-control-reporting
-    line: 67
-    anchor: "| _DECISION_TOPIC_ | _TODO_: 現状・影響範囲・当面の扱い | _ROLE_CODE_ | _TODO_: 判断時機・解消条件・次アクション・解消後の更新先 |"
+    line: 57
+    anchor: "| _DECISION_TOPIC_ | _TODO_: 現状・影響範囲・当面の扱い | _TODO_: 判断時機・解消条件・次アクション・解消後の更新先 |"
     message: >-
       Add a reporting category and destination PJR record to the unresolved-topic entry, particularly for revision or
       retirement work, so risks, issues, change requests, and decisions can be transferred to their respective
@@ -120,8 +120,8 @@ findings:
   - id: F002
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 67
-    anchor: "| _DECISION_TOPIC_ | _TODO_: 現状・影響範囲・当面の扱い | _ROLE_CODE_ | _TODO_: 判断時機・解消条件・次アクション・解消後の更新先 |"
+    line: 57
+    anchor: "| _DECISION_TOPIC_ | _TODO_: 現状・影響範囲・当面の扱い | _TODO_: 判断時機・解消条件・次アクション・解消後の更新先 |"
     message: >-
       Extend the follow-up placeholder or its instructions to require the responsible Role code and destination PJR
       record for matters arising from revision or retirement, as required by document-metadata-standard section 6.3
@@ -132,3 +132,14 @@ findings:
       record for matters arising from revision or retirement, as required by document-metadata-standard section 6.3
       through rulebook section 7; the current update-destination prompt does not explicitly capture that management
       handoff.
+  - id: F003
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 55
+    anchor: "| 項目・対象       | 現状と影響範囲                     | 解消条件・次アクション                                   |"
+    message: >-
+      テンプレートは概要のロール表と未決事項の表の担当ロールの列を外して 3 列にしたが、sample にはロール表と「担当ロール」の列（4 列）が残り、テンプレートと sample で章の構成と表の列が一致していない。sample
+      をテンプレートの構成と役割の割り当てを書かない方針へ合わせ、Kata の相互の整合を回復する必要がある。
+    message_ja: >-
+      テンプレートは概要のロール表と未決事項の表の担当ロールの列を外して 3 列にしたが、sample にはロール表と「担当ロール」の列（4 列）が残り、テンプレートと sample で章の構成と表の列が一致していない。sample
+      をテンプレートの構成と役割の割り当てを書かない方針へ合わせ、Kata の相互の整合を回復する必要がある。

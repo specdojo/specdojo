@@ -5,10 +5,10 @@ path: docs/ja/product/010-business-specs/030-business-model/bes-index.md
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 90
-graded_at: "2026-11-16T15:51:23.727Z"
-graded_by: sol-review-executor
-content_hash: 9f4bc779b167edeb1a89c530cbfb99d5d89a2b8f173b882650b927d415eefbf8
+score: 87
+graded_at: "2026-11-22T14:55:50.162Z"
+graded_by: opus-review-executor
+content_hash: 1db08939e9aaad9652328a8344658ae3303e863893b24707302d8d48d6ef4dc3
 source_hashes:
   catalog-entry: 20a6eeaef490660be85081e564dcf588a9c6eac756e00dc654bd54c8a6d9e49b
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
@@ -16,14 +16,14 @@ source_hashes:
   dependency:cdfd-overview: 0aecdaca4ce0a56ed8f672e9882bce4023abc8d4b6ec7cb5645fc181ca6ede74
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
-  schedule: 0dfcda0848e7a3c34e36da9dfb892ca2b6a3186f870750012492f1beee3ccc56
+  schedule: fb0bbc56d951bd5d6e1534e575585cf9dcf66efc5aabbff416c2534f99161cac
 categories:
   purpose:
     score: 88
   operations:
     score: 94
   planning:
-    score: 100
+    score: 83
   business:
     score: 92
   consistency:
@@ -31,7 +31,7 @@ categories:
   architecture:
     score: 88
   usability:
-    score: 100
+    score: 88
   implementation:
     score: 100
   quality:
@@ -50,11 +50,11 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-dependency-risk:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-control-reporting:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-business-value:
     level: 3
     score: 75
@@ -71,8 +71,8 @@ viewpoints:
     level: 3
     score: 75
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-implementation-readiness:
     level: 4
     score: 100
@@ -98,8 +98,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 3
     score: 75
@@ -118,7 +118,7 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 1
-  minor: 6
+  minor: 10
   note: 0
 findings:
   - id: F001
@@ -136,6 +136,32 @@ findings:
       type: document
   - id: F002
     severity: minor
+    rule: vp-pm-dependency-risk
+    line: 86
+    anchor: >-
+      | 立ち上げと開始の境界 | 別の出来事とする。`bes-project-launched`（`P-01`）はプロジェクトの立ち上げ、`bes-project-started`（`P-14`）は PDCA
+      のサイクルの開始で、概念データフロー図でも別の領域にあたる | 個別仕様の作成時に、両者の発生条件が重ならないことを確かめる |
+    message: >-
+      「立ち上げと開始の境界」の解消時期を「個別仕様の作成時」としていますが、`bes-project-launched`・`bes-project-started` はどちらも詳細化なしで個別仕様の予定がないため、確認の契機（例:
+      対応する BPS の作成時）と記録先を実際に到来するものへ改めてください。
+    message_ja: >-
+      「立ち上げと開始の境界」の解消時期を「個別仕様の作成時」としていますが、`bes-project-launched`・`bes-project-started` はどちらも詳細化なしで個別仕様の予定がないため、確認の契機（例:
+      対応する BPS の作成時）と記録先を実際に到来するものへ改めてください。
+    cause:
+      type: document
+  - id: F003
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 91
+    anchor: >-
+      | 成果物カタログとの範囲の差 | `dct-business-model-bes.yaml` の本書の概要は 10 領域と記しており、承認された 14 領域と一致しない |
+      カタログの記述を本書の範囲に合わせる。確定の段（T-KATA-WAVE-1 の 140）の前に直す |
+    message: 「成果物カタログとの範囲の差」と「テスト設計の観点としての確認」は留保ではなく PJR-AK5V の追跡範囲にも含まれないため、確定の段の前に解消を追う登録簿項目などの追跡先を記載してください。
+    message_ja: 「成果物カタログとの範囲の差」と「テスト設計の観点としての確認」は留保ではなく PJR-AK5V の追跡範囲にも含まれないため、確定の段の前に解消を追う登録簿項目などの追跡先を記載してください。
+    cause:
+      type: document
+  - id: F004
+    severity: minor
     rule: vp-ba-business-value
     line: 5
     anchor: >-
@@ -145,13 +171,13 @@ findings:
     message_ja: BPS 作成者・イベント設計者・QE が発生時点や出来事の単位を共有できないことで生じる業務上の問題と、本一覧によって防ぎたい取りこぼし・重複判断などの期待効果を、導入に具体的に記載してください。
     cause:
       type: document
-  - id: F003
+  - id: F005
     severity: minor
     rule: vp-arc-cross-document-consistency
     line: 91
     anchor: >-
-      | 成果物カタログとの範囲の差 | `dct-business-model-bes.yaml` の本書の概要は 10 領域と記しており、承認された 14 領域と一致しない | BA がカタログの記述を本書の範囲に合わせる |
-      確定の段（T-KATA-WAVE-1 の 140）の前。PM が登録簿で追跡する |
+      | 成果物カタログとの範囲の差 | `dct-business-model-bes.yaml` の本書の概要は 10 領域と記しており、承認された 14 領域と一致しない |
+      カタログの記述を本書の範囲に合わせる。確定の段（T-KATA-WAVE-1 の 140）の前に直す |
     message: >-
       Reconcile the 14-domain scope with docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bes.yaml,
       whose bes-index overview still specifies ten process domains, and record the agreed scope.
@@ -160,29 +186,36 @@ findings:
       whose bes-index overview still specifies ten process domains, and record the agreed scope.
     cause:
       type: document
-  - id: F004
+  - id: F006
     severity: minor
     rule: vp-arc-technical-constraints
     line: 88
-    anchor: >-
-      | 事実データの照合 | 留保。正本のデータモデル・schema と未照合であり、照合までは事実データ列を設計の確定入力にしない | ARC がデータモデルとの対応を確認する |
-      イベント処理・メッセージング設計への引き渡し前。結果を本書に記録する |
+    anchor: "| 事実データの照合 | 留保。正本のデータモデル・schema と未照合であり、照合までは事実データ列を設計の確定入力にしない | イベント処理・メッセージング設計への引き渡し前。結果を本書に記録する |"
     message: fact-data フィールドを確定した設計入力として扱う前に、データモデルまたはスキーマのマッピングレビューを記録してください。
     message_ja: fact-data フィールドを確定した設計入力として扱う前に、データモデルまたはスキーマのマッピングレビューを記録してください。
     cause:
       type: document
-  - id: F005
+  - id: F007
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 42
+    anchor: >-
+      - `bes-routine-due` が `P-14` の「PDCA
+      の各サイクルが到来した」の一部を詳細化するという対応は、定期実行の期限到来がサイクルの区切りの一つにあたるとみなした仮置きであり、「未決事項」の留保に含める。個別仕様の作成時に対応を確かめる。
+    message: "`bes-routine-due` と `P-14` の対応が仮置きである旨を詳細化表の補足・網羅の確認・未決事項で重ねて説明しているため、詳細化表の補足は「未決事項」への参照だけにまとめてください。"
+    message_ja: "`bes-routine-due` と `P-14` の対応が仮置きである旨を詳細化表の補足・網羅の確認・未決事項で重ねて説明しているため、詳細化表の補足は「未決事項」への参照だけにまとめてください。"
+    cause:
+      type: document
+  - id: F008
     severity: major
     rule: vp-qe-done-criteria
     line: 92
-    anchor: >-
-      | QE による網羅の確認 | 「網羅の確認」は ARC の照合であり、QE の確認は済んでいない | QE がテスト設計の観点として使えるかを確認する | 確定の段（T-KATA-WAVE-1 の
-      140）の前。結果をそのレビュー結果に記録する |
+    anchor: "| テスト設計の観点としての確認 | 「網羅の確認」は領域との照合であり、テスト設計の観点として使えるかは確認していない | 確定の段（T-KATA-WAVE-1 の 140）の前に確認する |"
     message: 宣言された完了条件が満たされたとマークする前に、ソースドメインのマッピング、PO のスコープ承認、および QE のカバレッジチェックを確認するレビューのエビデンスを追加してください。
     message_ja: 宣言された完了条件が満たされたとマークする前に、ソースドメインのマッピング、PO のスコープ承認、および QE のカバレッジチェックを確認するレビューのエビデンスを追加してください。
     cause:
       type: document
-  - id: F006
+  - id: F009
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 76
@@ -197,24 +230,28 @@ findings:
       の対応と同様に管理対象へ追加し、第3章の未確認事項と一致させてください。
     cause:
       type: document
-  - id: F007
+  - id: F010
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 7
+    anchor: 事実データは、概念データフロー図の「データストア」と各領域の業務目的から、発生時点で観測できる業務上の情報を概念名で挙げた初版である。正本のデータモデル・schema との照合は行っていない（「未決事項と承認条件」の留保）。
+    message: 冒頭で参照する章名「未決事項と承認条件」が実際の章名「未決事項」および本文の他の参照と一致しないため、章名か参照のどちらかに統一してください。
+    message_ja: 冒頭で参照する章名「未決事項と承認条件」が実際の章名「未決事項」および本文の他の参照と一致しないため、章名か参照のどちらかに統一してください。
+    cause:
+      type: document
+  - id: F011
     severity: minor
     rule: vp-ops-release-readiness
     line: 94
-    anchor: >-
-      本書をイベント駆動設計・テスト設計への確定入力として扱う条件は、上表の論点が解消または制限事項として承認され、人間の PO
-      が一覧の範囲を承認していることである。範囲の承認と留保の承認は済んでいる。残る前提は、成果物カタログとの範囲の差の解消、QE による網羅の確認、および人間が確定の段（T-KATA-WAVE-1 の
-      140）で行う確定であり、それまで `status: draft` に据え置く。確定後も、留保した論点は解消するまで制限事項として扱う。
+    anchor: 本書をイベント駆動設計・テスト設計への確定入力として扱う条件は、上表の論点が解消または制限事項として扱われていることである。残る前提は、成果物カタログとの範囲の差の解消とテスト設計の観点としての確認である。確定後も、留保した論点は解消するまで制限事項として扱う。
     message: 確定の残条件に、派生生成要求の系統が重なった場合の数え方の確定、または人間の PO による明示的な制限事項承認を加え、未作成の個別仕様を待つ範囲を確定後に利用できる範囲と区別してください。
     message_ja: 確定の残条件に、派生生成要求の系統が重なった場合の数え方の確定、または人間の PO による明示的な制限事項承認を加え、未作成の個別仕様を待つ範囲を確定後に利用できる範囲と区別してください。
     cause:
       type: document
 done_criteria:
-  satisfied: 2
+  satisfied: 3
   total: 4
   unsatisfied:
-    DC-003:
-      - ARC
     DC-004:
       - QE
   detail_ref: bes-index-grade-criteria

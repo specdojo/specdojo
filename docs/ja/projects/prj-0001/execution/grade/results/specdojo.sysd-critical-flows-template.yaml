@@ -1,0 +1,178 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:sysd-critical-flows-template
+path: docs/ja/specdojo/templates/sysd-critical-flows-template.md
+target: kata
+rubric: grade-rubric-v2
+verdict: needs-work
+score: 90
+graded_at: "2026-11-22T14:51:50.513Z"
+graded_by: opus-review-executor
+content_hash: 24aa9fff36716eabf67c47af26d330ea4f504d823161b0dbdb8897c2a12c321a
+categories:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 92
+  business:
+    score: 100
+  architecture:
+    score: 92
+  usability:
+    score: 92
+  implementation:
+    score: 100
+  quality:
+    score: 83
+  consistency:
+    score: 75
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 3
+    score: 75
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 3
+    score: 75
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 1
+  minor: 6
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 67
+    anchor: >-
+      | ------------------------------- | ------------------------------------ | ---------------- |
+      ----------------------------------------- |
+    message: 「未決事項と後続作業」の表に担当 Role code の記入欄がなく、後続作業の担い手を計画へ転記できないため、sample と同じく「作業単位・依存順・担当Role code」の列名にして担当の記入を求めるべきである。
+    message_ja: 「未決事項と後続作業」の表に担当 Role code の記入欄がなく、後続作業の担い手を計画へ転記できないため、sample と同じく「作業単位・依存順・担当Role code」の列名にして担当の記入を求めるべきである。
+  - id: F002
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 26
+    anchor: "- **図**: _TODO_: システム内外、サービス／プロセスと保存先、主要識別子、同期・非同期の区別を表す図を記入する。"
+    message: 図の記入指示に、rulebook「本文要件」が求める「要求受付と業務完了を分ける」条件がなく、受付と完了を取り違えた図を許すため、指示文にこの区別を加えるべきである。
+    message_ja: 図の記入指示に、rulebook「本文要件」が求める「要求受付と業務完了を分ける」条件がなく、受付と完了を取り違えた図を許すため、指示文にこの区別を加えるべきである。
+  - id: F003
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 67
+    anchor: >-
+      | ------------------------------- | ------------------------------------ | ---------------- |
+      ----------------------------------------- |
+    message: 「未決事項と後続作業」の表に rulebook が必須とする「受入や運用への影響」と「当面の扱い」の記入欄がないため、列名か記入指示へ追加すべきである。
+    message_ja: 「未決事項と後続作業」の表に rulebook が必須とする「受入や運用への影響」と「当面の扱い」の記入欄がないため、列名か記入指示へ追加すべきである。
+  - id: F004
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 1
+    anchor: "# _DELIVERABLE_NAME_"
+    message: >-
+      Frontmatter 雛形の `part_of` が空配列の固定値で、rulebook「推奨 Frontmatter 項目」の所属システム設計索引の記入を促さないため、`based_on`
+      と同様のプレースホルダにすべきである。
+    message_ja: >-
+      Frontmatter 雛形の `part_of` が空配列の固定値で、rulebook「推奨 Frontmatter 項目」の所属システム設計索引の記入を促さないため、`based_on`
+      と同様のプレースホルダにすべきである。
+  - id: F005
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 67
+    anchor: >-
+      | ------------------------------- | ------------------------------------ | ---------------- |
+      ----------------------------------------- |
+    message: >-
+      rulebook の禁止事項が省略を禁じる未決事項の「当面の扱い」（および受入・運用への影響）が雛形の表の列にないため、雛形どおりに作成すると禁止事項に抵触する文書になりやすく、列を追加して rulebook
+      と一致させるべきである。
+    message_ja: >-
+      rulebook の禁止事項が省略を禁じる未決事項の「当面の扱い」（および受入・運用への影響）が雛形の表の列にないため、雛形どおりに作成すると禁止事項に抵触する文書になりやすく、列を追加して rulebook
+      と一致させるべきである。
+  - id: F006
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 58
+    anchor: >-
+      | 検証ID / フロー / 受入条件ID                          | 実在する確認先・実行方法     | 対象条件         | 期待結果・失敗判定       |
+      確認状況・不足の解消先                                |
+    message: >-
+      sample の「検証への引渡し」に雛形の「確認状況・不足の解消先」列がなく、雛形にない「承認対象と公開前条件」節や見出しの補足語もあるため、rulebook の「見出し順・表・記入欄は雛形に従う」に沿って sample
+      と雛形のどちらかを揃えるべきである。
+    message_ja: >-
+      sample の「検証への引渡し」に雛形の「確認状況・不足の解消先」列がなく、雛形にない「承認対象と公開前条件」節や見出しの補足語もあるため、rulebook の「見出し順・表・記入欄は雛形に従う」に沿って sample
+      と雛形のどちらかを揃えるべきである。
+  - id: F007
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 12
+    anchor: "| ID          | 名称        | 事故論点           | 対象者           | 業務影響          | 期待効果・選定理由                    |"
+    message: フロー ID を指す列名が一覧では「ID」、検知と責任・正本と変更影響では「Flow ID」、検証への引渡しでは「フロー」と揺れており、同じ識別子と読み取りにくいため一つの表記に統一すべきである。
+    message_ja: フロー ID を指す列名が一覧では「ID」、検知と責任・正本と変更影響では「Flow ID」、検証への引渡しでは「フロー」と揺れており、同じ識別子と読み取りにくいため一つの表記に統一すべきである。

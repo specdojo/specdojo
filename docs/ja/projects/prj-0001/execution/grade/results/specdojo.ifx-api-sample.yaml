@@ -5,33 +5,33 @@ path: docs/ja/specdojo/samples/ifx-api-sample.yaml
 target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 73
-graded_at: "2026-11-22T12:35:54.709Z"
+score: 82
+graded_at: "2026-11-22T14:40:48.676Z"
 graded_by: opus-review-executor
-content_hash: 7be824522aee93d618bd598b4bb6a8aa12eb1b100b31de522019c495b9ebe29f
+content_hash: 380ffca1c1dbdabbbeb562a3dd7d3f6b457b73abf55a81125eb25604f9c4e423
 categories:
   purpose:
-    score: 63
+    score: 88
   operations:
     score: 81
   planning:
-    score: 67
+    score: 75
   business:
-    score: 63
+    score: 88
   architecture:
     score: 92
   usability:
-    score: 92
+    score: 100
   implementation:
-    score: 63
+    score: 75
   quality:
     score: 67
   consistency:
-    score: 50
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-po-decision-readiness:
     level: 3
     score: 75
@@ -42,17 +42,17 @@ viewpoints:
     level: 3
     score: 75
   vp-pm-dependency-risk:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-pm-control-reporting:
     level: 3
     score: 75
   vp-ba-requirements-completeness:
-    level: 2
-    score: 50
-  vp-ba-stakeholder-clarity:
     level: 3
     score: 75
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
     level: 3
     score: 75
@@ -63,8 +63,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-dev-change-impact:
     level: 3
     score: 75
@@ -75,14 +75,14 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
     level: 2
     score: 50
   vp-ux-readability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 4
     score: 100
@@ -100,163 +100,161 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 6
+  major: 1
   minor: 14
-  note: 0
+  note: 1
 findings:
   - id: F001
-    severity: major
-    rule: vp-po-purpose-alignment
-    line: 4
-    anchor: "title: 決済サービスAPI"
-    message: >-
-      共通サンプル文脈（駄菓子屋きぬや）とつながらない汎用の決済サービスAPIを題材にしており、ifx-index-sample でキャッシュレス決済は対象外とされているため、ESIL が想定する本部の商品マスタ API
-      または売上登録 API などきぬやの文脈に沿った題材へ差し替える必要がある。
-    message_ja: >-
-      共通サンプル文脈（駄菓子屋きぬや）とつながらない汎用の決済サービスAPIを題材にしており、ifx-index-sample でキャッシュレス決済は対象外とされているため、ESIL が想定する本部の商品マスタ API
-      または売上登録 API などきぬやの文脈に沿った題材へ差し替える必要がある。
-  - id: F002
     severity: minor
     rule: vp-po-decision-readiness
-    line: 6
+    line: 10
     anchor: "x-spec-meta:"
     message: "x-spec-meta の前後に連携の前提、合意対象、未決事項（例: 冪等性や通貨の扱い）をコメントで示しておらず、承認・保留の判断材料が読み取れないため、前提と未決事項を追記する必要がある。"
     message_ja: "x-spec-meta の前後に連携の前提、合意対象、未決事項（例: 冪等性や通貨の扱い）をコメントで示しておらず、承認・保留の判断材料が読み取れないため、前提と未決事項を追記する必要がある。"
-  - id: F003
+  - id: F002
     severity: minor
     rule: vp-po-publication-accountability
-    line: 9
+    line: 13
     anchor: "status: draft"
     message: status が draft だが公開対象の範囲と、承認・ready 昇格を人間の PO（店主代表）が判断する旨がコメント等で示されておらず、ESIL sample と同水準の説明責任の所在が読み取れないため追記する必要がある。
     message_ja: status が draft だが公開対象の範囲と、承認・ready 昇格を人間の PO（店主代表）が判断する旨がコメント等で示されておらず、ESIL sample と同水準の説明責任の所在が読み取れないため追記する必要がある。
-  - id: F004
+  - id: F003
     severity: minor
     rule: vp-pm-plan-feasibility
-    line: 11
+    line: 15
     anchor: "based_on: []"
-    message: based_on が空で ESIL 項目や認証仕様など上位仕様との対応が示されず、作業の順序付けや完了判断の起点が読み取れないため、根拠仕様の ID を記載する必要がある。
-    message_ja: based_on が空で ESIL 項目や認証仕様など上位仕様との対応が示されず、作業の順序付けや完了判断の起点が読み取れないため、根拠仕様の ID を記載する必要がある。
-  - id: F005
-    severity: major
-    rule: vp-pm-dependency-risk
-    line: 7
-    anchor: "id: specdojo:ifx-api-sample"
     message: >-
-      ESIL（ifx-index-sample）の spec_ref から参照される EAPIS という依存関係が sample 上で示されず、ESIL 側も本 sample を参照していないため、どの ESIL
-      項目の詳細仕様かをコメントまたは based_on で明示し ESIL 側と対応させる必要がある。
+      ESIL の「本部への売上登録」との対応は description で示されたが、based_on が空のままで specdojo:ifx-index-sample などの根拠仕様 ID
+      が構造化されておらず、外部結合テスト前の合意など完了判断の起点も読み取れないため、based_on に根拠 ID を記載し残作業の順序をコメントで示す必要がある。
     message_ja: >-
-      ESIL（ifx-index-sample）の spec_ref から参照される EAPIS という依存関係が sample 上で示されず、ESIL 側も本 sample を参照していないため、どの ESIL
-      項目の詳細仕様かをコメントまたは based_on で明示し ESIL 側と対応させる必要がある。
-  - id: F006
+      ESIL の「本部への売上登録」との対応は description で示されたが、based_on が空のままで specdojo:ifx-index-sample などの根拠仕様 ID
+      が構造化されておらず、外部結合テスト前の合意など完了判断の起点も読み取れないため、based_on に根拠 ID を記載し残作業の順序をコメントで示す必要がある。
+  - id: F004
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 8
+    anchor: "`specdojo:ifx-index-sample` の「本部への売上登録」の詳細仕様にあたる。"
+    message: >-
+      sample 側で ESIL の「本部への売上登録」の詳細仕様であることは明示されたため前回の major は解消したが、ESIL 側は spec_ref: TBD・未同梱のままで相互参照が成立しておらず、ESIL
+      が挙げる二重登録・結果不明時のリスクも本 sample で識別されていないため、based_on への ESIL ID 記載とリスクのコメントを追加する必要がある。
+    message_ja: >-
+      sample 側で ESIL の「本部への売上登録」の詳細仕様であることは明示されたため前回の major は解消したが、ESIL 側は spec_ref: TBD・未同梱のままで相互参照が成立しておらず、ESIL
+      が挙げる二重登録・結果不明時のリスクも本 sample で識別されていないため、based_on への ESIL ID 記載とリスクのコメントを追加する必要がある。
+  - id: F005
     severity: minor
     rule: vp-pm-control-reporting
-    line: 30
+    line: 34
     anchor: "responses:"
     message: rulebook 推奨の 403/404/409/429 を定義しない理由や、二重決済対策などの未解決事項を課題として記録していないため、_TODO_ などで転記候補を分離して示す必要がある。
     message_ja: rulebook 推奨の 403/404/409/429 を定義しない理由や、二重決済対策などの未解決事項を課題として記録していないため、_TODO_ などで転記候補を分離して示す必要がある。
+  - id: F006
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 95
+    anchor: "required: [product_code, quantity, unit_price]"
+    message: >-
+      SaleLine が商品コード・数量・単価のみで、ESIL の商品照会が返す税区分や会計確定時の合計・預かり金を送るのか対象外なのかが示されず、売上登録の範囲を受入条件として判定できないため、対象・対象外を
+      description かコメントで明示する必要がある。
+    message_ja: >-
+      SaleLine が商品コード・数量・単価のみで、ESIL の商品照会が返す税区分や会計確定時の合計・預かり金を送るのか対象外なのかが示されず、売上登録の範囲を受入条件として判定できないため、対象・対象外を
+      description かコメントで明示する必要がある。
   - id: F007
-    severity: major
-    rule: vp-ba-requirements-completeness
-    line: 3
-    anchor: "info:"
-    message: OpenAPI 3.0.3 で必須の info.version が欠落しており、外部との合意対象となる版を特定できないため info.version を追加する必要がある。
-    message_ja: OpenAPI 3.0.3 で必須の info.version が欠落しており、外部との合意対象となる版を特定できないため info.version を追加する必要がある。
-  - id: F008
-    severity: minor
-    rule: vp-ba-requirements-completeness
-    line: 69
-    anchor: "amount:"
-    message: amount の単位と currency の許容値（enum や pattern）が未定義で、受入条件として判定できないため description や制約を追記する必要がある。
-    message_ja: amount の単位と currency の許容値（enum や pattern）が未定義で、受入条件として判定できないため description や制約を追記する必要がある。
-  - id: F009
-    severity: minor
-    rule: vp-ba-stakeholder-clarity
-    line: 3
-    anchor: "info:"
-    message: info.description がなく、API の提供者・利用者・連携元の関係が読み取れないため、関係者と利用場面を記述する必要がある。
-    message_ja: info.description がなく、API の提供者・利用者・連携元の関係が読み取れないため、関係者と利用場面を記述する必要がある。
-  - id: F010
     severity: minor
     rule: vp-arc-technical-constraints
-    line: 88
-    anchor: "enum: [PENDING, PAID, FAILED]"
-    message: PENDING を返す非同期的な状態遷移があるのに状態確認手段（GET や通知）と冪等性の扱いが示されておらず、技術的前提が読み取れないため、方針または対象外の旨を記述する必要がある。
-    message_ja: PENDING を返す非同期的な状態遷移があるのに状態確認手段（GET や通知）と冪等性の扱いが示されておらず、技術的前提が読み取れないため、方針または対象外の旨を記述する必要がある。
-  - id: F011
-    severity: major
+    line: 53
+    anchor: '"409":'
+    message: >-
+      409 で重複登録を判定する一方、結果不明時の受付照会手段や 409 応答で既存 sale_id を返すかが定義されず、ESIL
+      が前提とする「結果不明を未登録と断定しない」回復の技術的前提が読み取れないため、方針または未決である旨を記述する必要がある。
+    message_ja: >-
+      409 で重複登録を判定する一方、結果不明時の受付照会手段や 409 応答で既存 sale_id を返すかが定義されず、ESIL
+      が前提とする「結果不明を未登録と断定しない」回復の技術的前提が読み取れないため、方針または未決である旨を記述する必要がある。
+  - id: F008
+    severity: minor
     rule: vp-dev-implementation-readiness
-    line: 3
-    anchor: "info:"
-    message: info.version 欠落により OpenAPI 3.0.3 として不正な文書となり、実装・コード生成の入力に使えないため info.version を追加する必要がある。
-    message_ja: info.version 欠落により OpenAPI 3.0.3 として不正な文書となり、実装・コード生成の入力に使えないため info.version を追加する必要がある。
-  - id: F012
+    line: 118
+    anchor: "enum: [ACCEPTED, REJECTED]"
+    message: >-
+      201（登録成功）の応答で status に REJECTED を許しており、成功応答で拒否となる条件とクライアント側の扱いが読み取れないため、REJECTED の意味を description
+      で定義するか、拒否をエラー応答へ寄せる必要がある。
+    message_ja: >-
+      201（登録成功）の応答で status に REJECTED を許しており、成功応答で拒否となる条件とクライアント側の扱いが読み取れないため、REJECTED の意味を description
+      で定義するか、拒否をエラー応答へ寄せる必要がある。
+  - id: F009
     severity: minor
     rule: vp-dev-change-impact
-    line: 18
-    anchor: "/v1/payments:"
-    message: パスに v1 を持つ一方で仕様の版と改訂時の互換性方針が示されておらず、変更影響を追跡できないため版管理の情報を追記する必要がある。
-    message_ja: パスに v1 を持つ一方で仕様の版と改訂時の互換性方針が示されておらず、変更影響を追跡できないため版管理の情報を追記する必要がある。
-  - id: F013
+    line: 22
+    anchor: "/v1/sales:"
+    message: >-
+      info.version 1.0.0 と /v1 で版は特定できるようになったが、店舗端末の CLI
+      と本部の間で項目追加・必須化などの互換性をどう扱うかが示されず、変更影響を追跡できないため、互換性方針または参照先を追記する必要がある。
+    message_ja: >-
+      info.version 1.0.0 と /v1 で版は特定できるようになったが、店舗端末の CLI
+      と本部の間で項目追加・必須化などの互換性をどう扱うかが示されず、変更影響を追跡できないため、互換性方針または参照先を追記する必要がある。
+  - id: F010
     severity: minor
     rule: vp-dev-testability
     line: 1
     anchor: "# specdojo-schema: none reason=external-openapi"
     message: >-
-      schema 検証を external-openapi として除外しているが、代わりの OpenAPI 検証手段が示されず、info.version 欠落も検出されていないため、OpenAPI
-      準拠の検証方法を明示する必要がある。
+      schema 検証を external-openapi として除外したまま代わりの OpenAPI 検証手段が示されておらず、今回 info.version
+      は補われたが同種の必須キー欠落を機械的に検出できないため、OpenAPI 準拠の検証方法を明示する必要がある。
     message_ja: >-
-      schema 検証を external-openapi として除外しているが、代わりの OpenAPI 検証手段が示されず、info.version 欠落も検出されていないため、OpenAPI
-      準拠の検証方法を明示する必要がある。
-  - id: F014
+      schema 検証を external-openapi として除外したまま代わりの OpenAPI 検証手段が示されておらず、今回 info.version
+      は補われたが同種の必須キー欠落を機械的に検出できないため、OpenAPI 準拠の検証方法を明示する必要がある。
+  - id: F011
     severity: minor
     rule: vp-qe-verifiability
-    line: 72
-    anchor: "currency:"
-    message: currency が example のみで許容値が定義されておらず、入力の合否を判定できないため enum または pattern を定義する必要がある。
-    message_ja: currency が example のみで許容値が定義されておらず、入力の合否を判定できないため enum または pattern を定義する必要がある。
-  - id: F015
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 3
-    anchor: "info:"
-    message: OpenAPI 3.0.3 の必須キー info.version が欠落しており、採用仕様との整合が取れていないため追加する必要がある。
-    message_ja: OpenAPI 3.0.3 の必須キー info.version が欠落しており、採用仕様との整合が取れていないため追加する必要がある。
-  - id: F016
+    line: 97
+    anchor: "product_code:"
+    message: product_code と transaction_id に pattern・長さなどの形式が定義されておらず、400（入力不正）となる条件を合否判定できないため、形式制約を定義する必要がある。
+    message_ja: product_code と transaction_id に pattern・長さなどの形式が定義されておらず、400（入力不正）となる条件を合否判定できないため、形式制約を定義する必要がある。
+  - id: F012
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 37
+    line: 41
     anchor: '"400":'
     message: rulebook の「エラー定義（推奨）」にある 403/404/409/429 が未定義で省略理由もないため、定義するか不要理由をコメントで示す必要がある。
     message_ja: rulebook の「エラー定義（推奨）」にある 403/404/409/429 が未定義で省略理由もないため、定義するか不要理由をコメントで示す必要がある。
-  - id: F017
+  - id: F013
     severity: major
     rule: vp-qe-kata-conformance
-    line: 4
-    anchor: "title: 決済サービスAPI"
+    line: 8
+    anchor: "`specdojo:ifx-index-sample` の「本部への売上登録」の詳細仕様にあたる。"
     message: >-
-      sample-authoring-standard の共通サンプル文脈と ifx-index-sample の対象範囲（キャッシュレス決済は対象外）に反する汎用決済題材であり、Kata 相互の整合が取れていないため、ESIL
-      sample が想定する本部 API を題材に作り直す必要がある。
+      本 sample は ESIL「本部への売上登録」の詳細仕様と称するが、ifx-index-sample は本部詳細仕様を「未同梱」とし spec_ref: TBD・想定ファイル
+      ifx-api-kinuya-sales.yaml のままで、rulebook の spec_ref と ID の対応が成立せず Kata 相互で矛盾するため、ESIL の spec_ref を
+      specdojo:ifx-api-sample に接続するか本 sample を例示と位置付ける説明に揃える必要がある。
     message_ja: >-
-      sample-authoring-standard の共通サンプル文脈と ifx-index-sample の対象範囲（キャッシュレス決済は対象外）に反する汎用決済題材であり、Kata 相互の整合が取れていないため、ESIL
-      sample が想定する本部 API を題材に作り直す必要がある。
-  - id: F018
-    severity: minor
-    rule: vp-ux-readability
-    line: 3
-    anchor: "info:"
-    message: info.description や冒頭コメントで API の目的・利用先・対応する ESIL 項目を示しておらず、初見の読者が位置付けを理解できないため導入説明を追記する必要がある。
-    message_ja: info.description や冒頭コメントで API の目的・利用先・対応する ESIL 項目を示しておらず、初見の読者が位置付けを理解できないため導入説明を追記する必要がある。
-  - id: F019
+      本 sample は ESIL「本部への売上登録」の詳細仕様と称するが、ifx-index-sample は本部詳細仕様を「未同梱」とし spec_ref: TBD・想定ファイル
+      ifx-api-kinuya-sales.yaml のままで、rulebook の spec_ref と ID の対応が成立せず Kata 相互で矛盾するため、ESIL の spec_ref を
+      specdojo:ifx-api-sample に接続するか本 sample を例示と位置付ける説明に揃える必要がある。
+  - id: F014
+    severity: note
+    rule: vp-qe-kata-conformance
+    line: 4
+    anchor: "title: 本部売上登録API"
+    message: >-
+      docs/ja/specdojo/samples/generated/ifx-api-sample.md が旧版の「決済サービスAPI」のまま残っており正本 YAML と不一致のため、yaml-pages
+      で再生成する必要がある。
+    message_ja: >-
+      docs/ja/specdojo/samples/generated/ifx-api-sample.md が旧版の「決済サービスAPI」のまま残っており正本 YAML と不一致のため、yaml-pages
+      で再生成する必要がある。
+  - id: F015
     severity: minor
     rule: vp-ops-release-readiness
-    line: 9
+    line: 13
     anchor: "status: draft"
     message: status が draft のまま ready 化に必要な未解決事項が記載されていないため、残課題を _TODO_ 等で明示する必要がある。
     message_ja: status が draft のまま ready 化に必要な未解決事項が記載されていないため、残課題を _TODO_ 等で明示する必要がある。
-  - id: F020
+  - id: F016
     severity: minor
     rule: vp-ops-operability
     line: 3
     anchor: "info:"
-    message: info に version・contact がなく、外部連携先との変更管理や問い合わせ導線が読み取れないため追記する必要がある。
-    message_ja: info に version・contact がなく、外部連携先との変更管理や問い合わせ導線が読み取れないため追記する必要がある。
+    message: >-
+      info.version は追加されたが contact や問い合わせ導線がなく、ESIL で未特定とされた本部の確認窓口が本 sample では _TODO_
+      としても示されていないため、窓口または未特定である旨を追記する必要がある。
+    message_ja: >-
+      info.version は追加されたが contact や問い合わせ導線がなく、ESIL で未特定とされた本部の確認窓口が本 sample では _TODO_
+      としても示されていないため、窓口または未特定である旨を追記する必要がある。
