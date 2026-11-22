@@ -25,6 +25,7 @@ reporter の出力で lint に落ちる語（中国語の字など）が result 
 
 - 2026-11-22、QTZ7 の result に reporter（gemma）が中国語の簡体字（U+4E2A）を書き、lint-md で止まった。G3TT ではバッククォートのエスケープで止まった。
 - 利用者の承認（2026-11-22、indie）で起票した。
+- 2026-11-22、T-KATA-WAVE-3-utc-sample-090 の review result に reporter（gemma26-reporter）が、箇条書きの中の ### 見出し（文末の句点つき）と、1 行につながった ### と #### を書き、統合の前の lint で MD022・MD026 により止まった。review 自体は終わっていた。オーケストレーターが result の該当行を地の文に直し、exec resume --task で統合した。
 
 ## 3. 完了条件
 
