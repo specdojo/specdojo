@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-3-tsp-index-sample-090
   mode: review
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-3-tsp-index-sample-090/T-KATA-WAVE-3-tsp-index-sample-090-20261122T073644Z-3b44fd66/plan.md
   started_at: "2026-11-22T07:36:46.028Z"
+  completed_at: "2026-11-22T07:39:34.429Z"
   agent: opus-review-executor
   execution: agent
   approach: fully-guided
@@ -19,20 +20,27 @@ specdojo:
 
 ## 1. 評価結果の確認
 
-_TODO_: 評価結果サイドカーのパス、鮮度確認で実行したコマンドとその出力（`content_hash` が現在の成果物と一致するか）、grade の `verdict` / `score` / finding 件数を記入する。評価結果が最新でない、または評価不能の場合は、その事実と理由を記入する。
+評価結果の鮮度を確認するため、`npx specdojo grade list --target kata --path docs/ja/specdojo/samples/tsp-index-sample.md --changed-only` および `npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/tsp-index-rulebook.md --changed-only` を実行しました。いずれも出力はなく、exit 0 で最新であることを確認しました。 - `docs/ja/specdojo/samples/tsp-index-sample.md`: `verdict`: `pass`, `score`: 95, `finding_counts`: { `blocker`: 0, `major`: 0, `minor`: 2, `note`: 0 } - `docs/ja/specdojo/rulebooks/tsp-index-rulebook.md`: `verdict`: `pass`, `score`: 97, `finding_counts`: { `blocker`: 0, `major`: 0, `minor`: 2, `note`: 0 }
 
 ## 2. 判断根拠
 
-_TODO_: 変更内容・plan・実行記録・完了条件・最新の finding を照合した内容と、verdict を選んだ理由を記入する。finding が残るのに完了とする場合は、その finding が今回の完了を妨げない理由を記入する。参照は `[[id]]` 形式（Obsidian wikilink）で記載し、行番号アンカーや絶対パスは使わない。
+- 対象成果物 `docs/ja/specdojo/samples/tsp-index-sample.md` は、`rulebook` の章立てに従い、必須の 5 章と推奨・任意の 3 章で構成されています。また、駄菓子屋のプロジェクト文脈（単一店舗・タブレット 1 台）に基づいた具体的な値で埋められており、品質ゲートも `pass` / `fail` で判定可能な形式になっています。
+- `rulebook` についても、`sample` を正本とする構成になっており、禁止事項への抵触も認められません。
+- 評価結果の `finding` は、いずれも `minor` であり、タスクの完了条件（`done_criteria`）に直接影響しないため、これらを保持した状態で完了可能と判断しました。
 
 ## 3. 未充足事項・改善指示
 
-_TODO_: 未充足事項と、再計画・成果物の改善・再評価に使う改善指示を記入する（なければ「なし」と記入する）。評価結果の内容に疑義がある場合は、再評価が必要な対象と理由もここに記入する。
+- `docs/ja/specdojo/samples/tsp-index-sample.md` に関する改善指示:
+- 外部結合テストの範囲から `PATH-04`・`PATH-07` を内部結合テストへ移すか、外部結合テストで続けて確認する理由を明記すること。
+- 開発環境での印刷スタブと、単体テストにおける `receipt-print` のモック検証の食い違いについて、`rulebook` の既定から外れる理由を書き分けること。
+- `docs/ja/specdojo/rulebooks/tsp-index-rulebook.md` に関する改善指示:
+- 記述ガイド「メモ / 将来課題」の例を、`sample` の仮置き基準（放課後ピーク 1 時間 60 取引...）に合わせて書き換えること。
+- 既知不具合の引き継ぎ先を「登録簿」に統一し、判定軸の表記を「pass / fail」に揃えること。
 
 ## 4. approach に応じた確認
 
-_TODO_: `approach` に応じて確認した内容を記入する。fully-guided / recipe-guided / freeform では求められた作成・更新が行われたか、retrofit では実装エビデンスの対応記録と未確認範囲、`rulebook-maintenance` などの maintenance 系では見直しの動機となった finding の解消状況を記入する。
+`fully-guided` アプローチに基づき、`rulebook` の構成、`sample` の文脈との整合、および `done_criteria` の充足状況を確認しました。成果物の編集は行わず、評価結果の `finding` に基づく指摘事項の記録に留めています。
 
 ## 5. decision
 
-- verdict: _TODO_（complete / complete-with-findings / incomplete / grade-stale / grade-unavailable / changed-during-review）
+- verdict: complete-with-findings

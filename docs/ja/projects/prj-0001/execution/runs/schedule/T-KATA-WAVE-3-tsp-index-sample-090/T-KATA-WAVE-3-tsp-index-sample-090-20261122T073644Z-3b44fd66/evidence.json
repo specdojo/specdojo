@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-3-tsp-index-sample-090",
+  "run_id": "T-KATA-WAVE-3-tsp-index-sample-090-20261122T073644Z-3b44fd66",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-review-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-22T07:37:18.777Z",
+    "completed_at": "2026-11-22T07:38:30.722Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx specdojo grade list --target kata --path docs/ja/specdojo/samples/tsp-index-sample.md --changed-only",
+      "status": "passed",
+      "summary": "review の最初と判定直前の 2 回とも出力なし・exit 0（最新）"
+    },
+    {
+      "source": "executor",
+      "command": "npx specdojo grade list --target kata --path docs/ja/specdojo/samples/tsp-index-sample.md --incomplete",
+      "status": "passed",
+      "summary": "出力なし・exit 0（評価パイプラインは完了済み）"
+    },
+    {
+      "source": "executor",
+      "command": "npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/tsp-index-rulebook.md --changed-only",
+      "status": "passed",
+      "summary": "review の最初と判定直前の 2 回とも出力なし・exit 0（最新）"
+    },
+    {
+      "source": "executor",
+      "command": "npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/tsp-index-rulebook.md --incomplete",
+      "status": "passed",
+      "summary": "出力なし・exit 0（評価パイプラインは完了済み）"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md\n\nlint:md:changed: no changed files"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\nlint:fm:changed: no changed files"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 5823 file(s), 107 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 83 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5823 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)",
+      "reason": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nmbers-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-3-tsp-index-sample-090/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-3-tsp-index-sample-090/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "verdict: complete-with-findings。鮮度確認（`npx specdojo grade list --target kata --path <対象> --changed-only` を sample と rulebook で review の最初と判定直前の 2 回）は、どれも出力なし・exit 0 で最新。grade は sample が pass/95（minor 2）、rulebook が pass/97（minor 2）。DC-001〜DC-006 を照合した。必須 5 章と推奨・任意の 3 章が rulebook の順に並び、品質メトリクス章は任意なので無くてもよい。駄菓子屋の文脈で統一され、禁止事項に当たる記述はない。値で埋めた実例になっている。出口条件は件数・合格率・重大度の上限・判定者で pass / fail を判定できる。rulebook に完成例の章はない。直前の編集タスク 080（condense）が削除した段落は sample に残っておらず（commit 034f77f66）、その後の PJR-R05D の commit（a6a1f6ce3）の後に再評価済み。宣言外の対象への変更はない。finding 4 件はどれも minor で完了条件の判定に影響しないため、完了を妨げない。確認できなかった範囲: `utc-index-sample` は宣言外のため読んでおらず、sample F001・F002 は grade の判定を事実として使った。080 の `evidence.json` と各ログは読んでおらず、080 の検査が成功したかは確かめていない。lint などの検査は runner が実行する。",
+  "completion_status": "complete",
+  "handoff": [
+    "改善指示（sample F001）: tsp-index-sample の外部結合テストの範囲から `PATH-04`・`PATH-07` を内部結合テストへ移すか、外部結合テストで続けて確認する理由を書く。",
+    "改善指示（sample F002）: 開発環境の印刷スタブと、utc-index-sample の単体テストで使う `receipt-print` のモック検証を書き分け、rulebook の既定から外れる理由を書く。",
+    "改善指示（rulebook F001）: tsp-index-rulebook の記述ガイド「メモ / 将来課題」の良い例（日次売上1,000取引）を、sample の仮置き基準（放課後ピーク1時間60取引、会計確定の応答 95% が2秒以内）に合わせる。",
+    "改善指示（rulebook F002）: 既知不具合の引き継ぎ先の名称を「登録簿」に統一する（rulebook の良い例の「課題管理簿」、sample の「課題ログ」）。あわせて rulebook の判定軸の「Pass/Fail基準」を「pass / fail」に揃える。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-3-tsp-index-sample-090/T-KATA-WAVE-3-tsp-index-sample-090-20261122T073644Z-3b44fd66/executor.log",
+      "bytes": 7141,
+      "truncated": false
+    }
+  ]
+}
