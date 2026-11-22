@@ -68,6 +68,9 @@
     // .devcontainer/prepare-workspace-volumes.sh が行い、ここと同じ場所を並べている。
     "source=specdojo-worktrees,target=/workspaces/specdojo-workspace/worktrees,type=volume",
     "source=specdojo-nm-root,target=/workspaces/specdojo-workspace/specdojo/node_modules,type=volume",
+    // 文書サイトの閲覧用のツリー・cache・ビルドの出力（.vitepress/）も、bind mount では起動が遅いため
+    // named volume に置く。cache のある起動が bind mount の 25.3 秒に対し named volume では 8.4 秒だった（PJR-BNAV）。
+    "source=specdojo-vitepress,target=/workspaces/specdojo-workspace/specdojo/.vitepress,type=volume",
     "source=specdojo-nm-opencode,target=/workspaces/specdojo-workspace/specdojo/.opencode/node_modules,type=volume",
     "source=specdojo-nm-docs-site,target=/workspaces/specdojo-workspace/specdojo/packages/docs-site/node_modules,type=volume",
     "source=specdojo-nm-docs-lint,target=/workspaces/specdojo-workspace/specdojo/packages/docs-lint/node_modules,type=volume",

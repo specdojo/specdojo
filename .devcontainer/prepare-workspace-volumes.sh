@@ -32,6 +32,8 @@ own_mount_point() {
 }
 
 own_mount_point "$WORKTREE_DIR"
+# 文書サイトの閲覧用のツリーと cache（PJR-BNAV）。中身は docs:dev と docs:build が作り直す。
+own_mount_point "$WORKSPACE_ROOT/specdojo/.vitepress"
 
 for package_dir in "${PACKAGE_DIRS[@]}"; do
   if [ ! -f "$package_dir/package-lock.json" ]; then
