@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   difficulty: easy
   owner: DEV
   registered_at: "2026-11-21T14:01:58Z"
+  block_reason: "executor reported incomplete: PJR-HCHH: register.ts の `migrateEmbeddedRegisterEvents`・`migrateRegisterEventsFromGit`、command-types.ts の対応する型、events.ts の `readEmbeddedRegisterEvents`・`removeEmbeddedReg…"
   derived_from:
     - PJR-GV43
 ---
