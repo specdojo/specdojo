@@ -106,3 +106,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_48fea63fef414857966a1eb068459b53
+- v: 1
+  id: reg_cc288ccbbb3d42afa34040b4e2b25de1
+  ts: "2026-11-22T02:31:39Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register で実施（統合 69a647acc）。統合後に RS2P・50RQ・F6MC・HCHH・BNAV の --resume --resume-from executor が作業を残して再開できることを実際の run で確かめた。検証に落ちる経路と下限から外す経路は統合テストで確かめ、CHANGELOG 不変を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: 再開時の対象の検証に落ちたとき executor の段を failed にせず blocked（項目は waiting）にし、--resume --resume-from executor で作業を捨てずに再開できるようにした。前の試行が作って消したファイルは下限から外し、evidence に残す。
+  previous_event_id: reg_54d3780139344f4599c2893d74703c7f

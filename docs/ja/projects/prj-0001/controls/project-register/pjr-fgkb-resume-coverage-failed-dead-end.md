@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-fgkb-resume-coverage-failed-dead-end
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-21T09:02:58Z"
+  completed_at: "2026-11-22T02:31:39Z"
+  conclusion: 再開時の対象の検証に落ちたとき executor の段を failed にせず blocked（項目は waiting）にし、--resume --resume-from executor で作業を捨てずに再開できるようにした。前の試行が作って消したファイルは下限から外し、evidence に残す。
 ---
 
 # PJR-FGKB 再開時の対象の検証に失敗すると executor が failed になり、作業を捨てる --force-restart しか残らない
