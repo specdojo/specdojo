@@ -4,19 +4,18 @@ document: specdojo:atc-index-rulebook
 path: docs/ja/specdojo/rulebooks/atc-index-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-rulebook
-verdict: needs-work
-score: 93
-graded_at: "2026-11-21T03:03:52.889Z"
-graded_by: opus-executor
-content_hash: 41753da07af8a6fd90e1a6db7dab9d8782ef571f1d736c5c2b67339216072a54
+verdict: pass
+score: 100
+graded_at: "2026-11-22T04:50:11.738Z"
+graded_by: opus-review-executor
+content_hash: e527371d241a46e5794da8cf56b0e6c42560d48158086f6a94686b03814527c7
 categories:
   purpose:
     score: 100
   operations:
-    score: 94
-  planning:
     score: 100
+  planning:
+    score: 92
   business:
     score: 100
   architecture:
@@ -26,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 75
+    score: 100
   consistency:
     score: 100
 viewpoints:
@@ -40,8 +39,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-dependency-risk:
     level: 4
     score: 100
@@ -70,8 +69,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-verifiability:
     level: 4
     score: 100
@@ -79,8 +78,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -88,8 +87,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-operability:
     level: 4
     score: 100
@@ -101,30 +100,14 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 2
+  major: 0
+  minor: 1
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-dev-testability
-    line: 12
-    anchor: >-
-      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status`・承認・改訂と廃止・未決事項の登録簿への引き継ぎは
-      [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従います。文書の整形・lint はリポジトリの検証で扱い、業務の受入確認に含めません。
-    message: 生成した `atc-index` の Frontmatter・Markdown を確認する検証コマンド（`npm run lint:md` / `npm run lint:fm` 等）と期待結果が示されていないため追記する。
-    message_ja: 生成した `atc-index` の Frontmatter・Markdown を確認する検証コマンド（`npm run lint:md` / `npm run lint:fm` 等）と期待結果が示されていないため追記する。
-  - id: F002
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 受入テストカタログ 概要 作成ルール"
-    message: 指定されているサンプル `specdojo:atc-index-sample` が、本ルールブックの第5章で定義した標準テンプレ（見出し構成および順序）に準拠していない。
-    message_ja: 指定されているサンプル `specdojo:atc-index-sample` が、本ルールブックの第5章で定義した標準テンプレ（見出し構成および順序）に準拠していない。
-  - id: F003
-    severity: minor
-    rule: vp-ops-release-readiness
-    line: 1
-    anchor: "# 受入テストカタログ 概要 作成ルール"
-    message: "`recipe`/`template` が `undecided` で sample 不整合も未解消だが、ready 化に必要な未解決事項が整理されていないため、ready 条件を判断できる形で明示する。"
-    message_ja: "`recipe`/`template` が `undecided` で sample 不整合も未解消だが、ready 化に必要な未解決事項が整理されていないため、ready 条件を判断できる形で明示する。"
+    rule: vp-pm-plan-feasibility
+    line: 156
+    anchor: 未決事項がある場合、論点と受入判断への影響（当面の扱い、決定時に変わる方針）を記録します。例は証跡の保存形式、代表構成の見直し、自動化の範囲です。確定した内容は該当章へ移し、本節に残しません。
+    message: 「メモ / 将来課題」の記述条件が論点と影響だけで、担当 Role code と判断期限（または判断タイミング）を求めていない。未決事項をタスクにして追跡できるよう、サンプルの「担当・期限」列と同じく記載を必須にする。
+    message_ja: 「メモ / 将来課題」の記述条件が論点と影響だけで、担当 Role code と判断期限（または判断タイミング）を求めていない。未決事項をタスクにして追跡できるよう、サンプルの「担当・期限」列と同じく記載を必須にする。
