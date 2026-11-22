@@ -3,13 +3,13 @@
   "queue_id": "wave3-090-rerun-a-2026-11-22",
   "project_id": "prj-0001",
   "created_at": "2026-11-22T07:17:14.450Z",
-  "updated_at": "2026-11-22T07:17:14.450Z",
-  "state": "pending",
+  "updated_at": "2026-11-22T07:40:19.762Z",
+  "state": "succeeded",
   "steps": [
     {
       "index": 1,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "succeeded",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -25,12 +25,16 @@
         "sonnet-review-executor",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-22T07:17:34.055Z",
+      "completed_at": "2026-11-22T07:26:10.136Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
     },
     {
       "index": 2,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "succeeded",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -46,12 +50,16 @@
         "sonnet-review-executor",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-22T07:26:10.139Z",
+      "completed_at": "2026-11-22T07:33:02.582Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
     },
     {
       "index": 3,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "succeeded",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -67,7 +75,11 @@
         "sonnet-review-executor",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-22T07:33:02.611Z",
+      "completed_at": "2026-11-22T07:40:19.759Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
     }
   ]
 }
