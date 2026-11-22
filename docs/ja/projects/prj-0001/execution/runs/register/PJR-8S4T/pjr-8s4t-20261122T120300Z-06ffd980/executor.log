@@ -1,0 +1,23 @@
+2 回目の作業は終わりました。sld-sample の「関連仕様・実装配置との対応と検証」の章は残したまま、sld にしかない対応と検証に絞りました。保管場所、置くもの、削除可否、復旧の経路と連絡先の結論は変えていません。prettier と履歴リンクの検査は通りました。lint などの検証は親の runner が実行します。
+
+**sld-sample**
+- 「隣接仕様との分担と対応」から、BDD の行と CLIS の行を外しました。CLIS への参照は「CLI 仕様との一致」の検証の行へ wikilink で移しました。全体概要の行は短くし、CDSD・STSD の行は残しました。
+- 「検証手順と受入条件」から、CLI の動作の試験 2 行（設定ファイルの欠落・破損、受付結果不明の取引）を外しました。
+- 「削除・復旧判断の実効性」の行は、空き容量の不足と `data/sales/` の破損を模擬する具体的な場面と、その合格条件に書き直しました。
+- 大きさ（空白を除いた文字数）は 5,928 字（24,231 B）から 5,577 字（22,757 B）になりました。
+
+**sld-rulebook**
+- 「関連仕様・実装配置との対応と検証要件」に、隣接仕様の動作の試験（CLI の終了コードなど）は書かず、保管場所の結論を確かめる検証だけを書くという 1 文を足しました。
+- 章の構成と必須・条件付きの区分は変えていません。大きさは 6,388 字から 6,453 字に増えました。
+
+**個票**
+- 作業内容の 7 を `done` にしました。8（grade）と 9（読みやすさの確認）は、executor が実行できない理由をメモに書いて `open` のまま残しました。
+- 「2 回目の実行の結果」の節を足し、内容・大きさ・ほかの型の調査・迷った点を書きました。「CHANGELOG に書く事項」と「残課題」にも 2 回目の分を足しました。
+- 迷った点は次のように決めました。
+  - 本文から BDD への参照はなくなりましたが、frontmatter の `based_on` の `specdojo:bdd-sample` は残しました。
+  - rulebook の観点 1 にある欠落・破損時の挙動の確認は、仕様を読んで照らす確認で試験ではないため残しました。
+- ほかの型で同じ種類の行（隣接仕様の動作の試験）は見つかりませんでした。試験・CLI・IF の型は、自分の仕様の動作を試しているので対象外としました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"PJR-8S4T 2回目: sld-sample の隣接仕様表から BDD・CLIS 行を外し、検証表から CLI 動作試験 2 行を外して削除・復旧判断の実効性を具体化（5,928→5,577 字）。sld-rulebook の対応と検証要件に隣接仕様の動作試験を書かない旨を 1 文追加。個票の作業内容 7 を done、対応結果に 2 回目の結果を記録。","handoff":["作業内容 8: 統合の後に orchestrator が `grade run --target kata` を流し、前後の score と finding を個票へ書く。","作業内容 9: 利用者が sld-sample の読みやすさを改めて確かめる。確認まで review のまま。","決めた点: frontmatter の `based_on` の `specdojo:bdd-sample` は残した（本文の参照はなくなったが、項目の出典としての依拠は変わらない）。rulebook の観点 1 の欠落・破損時の挙動との整合は、仕様を読んで照らす確認なので残した。","ほかの型に隣接仕様の動作の試験の行はなかった（試験・CLI・IF の型は自分の仕様の動作のため対象外）。","sld-sample の大きさ: 5,928 字（24,231 B）→5,577 字（22,757 B）。sld-rulebook: 6,388 字→6,453 字。","CHANGELOG の文案は個票の「CHANGELOG に書く事項」に足した。保護された設定の変更は不要。"],"validations":[{"command":"npx prettier --check docs/ja/projects/prj-0001/controls/project-register/pjr-8s4t-sld-kata-slim-pilot.md docs/ja/specdojo/samples/sld-sample.md docs/ja/specdojo/rulebooks/sld-rulebook.md","status":"passed","summary":"sld-sample の表の幅を prettier --write で整えた後、3 ファイルとも整形済み"},{"command":"npm run validate:history-links","status":"passed","summary":"exit 0。個票を含む履歴ファイルに違反なし"}]}
+</specdojo_executor_evidence>
