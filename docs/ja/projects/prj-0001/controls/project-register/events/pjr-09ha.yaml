@@ -99,3 +99,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_28eb2ed8822d478bb097a1c15328ff79
+- v: 1
+  id: reg_af7e126ceb744ca7845b249cb6570a30
+  ts: "2026-11-22T07:23:55Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分・対応結果・空のリポジトリでの確かめ・変更案の反映を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: skill specdojo-exec-in-session を config scaffold で利用者のリポジトリへ配るようにし、空のリポジトリで配置・上書きしないこと・ラッパーから正本を読むことを確かめた。固有の記述を外す変更案も反映した
+  previous_event_id: reg_5715026809ea4298841815c9abc21a4d

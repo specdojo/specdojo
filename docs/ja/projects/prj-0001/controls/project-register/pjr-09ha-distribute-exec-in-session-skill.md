@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-09ha-distribute-exec-in-session-skill
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-22T05:44:25Z"
+  completed_at: "2026-11-22T07:23:55Z"
+  conclusion: skill specdojo-exec-in-session を config scaffold で利用者のリポジトリへ配るようにし、空のリポジトリで配置・上書きしないこと・ラッパーから正本を読むことを確かめた。固有の記述を外す変更案も反映した
   derived_from:
     - PJR-XZ9B
 ---
