@@ -1,0 +1,14 @@
+`ifx-cmd-git-cli` と `ifx-cmd-github-cli` の 2 文書を `draft` で作り、カタログ登録と `ifx-index`・ifd-specdojo の付け替えまで済ませました。新しい 2 文書は個別に `validate:schema:file` を実行し、どちらも valid でした。`lint:md`・`lint:fm`・`validate:schema` は実行しましたが、`lint:md` と `lint:fm` に出力はなく、`validate:schema` の末尾 5 行は enum coverage が valid と出力し、失敗はありませんでした。型の grade は統合後に orchestrator が流します。
+
+- **Git の文書:** `src/shared/git.ts` の `spawnSync` 起動、環境変数の隔離、index.lock などの再試行を根拠に、ローカル操作だけを契約にしました。
+- **GitHub の文書:** `src` に gh の起動はなく、git の push・fetch・pull・clone・remote の呼び出しもありませんでした。gh は devcontainer に導入され、認証は named volume にあります。そのため「SpecDojo が gh を呼ぶ契約」ではなく、現行の利用境界と未決事項を書いた文書にしています。
+- **PATH-07:** YAML に章がないため、経路・認証・失敗後の保持範囲の 3 論点を `ifx-cmd-github-cli.yaml` の先頭コメントに置きました。
+- **付け替え:** `ifx-index.yaml` の 2 件の `spec_ref` を新文書にしました。ifd-specdojo は PATH-07 の行と留保の行を「（draft）」参照に変えています。どちらも `status` は変えていません。
+- **個票:** 作業内容の表と対応結果（CHANGELOG 文案を含む）を埋めました。作業内容の表の grade 行だけは `open` のままで、理由をメモに書いています。
+- **CHANGELOG:** `CHANGELOG.md` は変更していません。
+
+保護された設定は変更していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"ifx-cmd-git-cli と ifx-cmd-github-cli を draft で作成し、カタログ登録と ifx-index・ifd-specdojo の付け替え、個票の更新を完了した。","handoff":["決定: Git の契約はローカル操作に限定した。src に git push・fetch・pull・clone・remote の呼び出しがなく、ifx-index の注記もリモートを混ぜない方針のため。","決定: src に gh を起動する実装がないため、ifx-cmd-github-cli は現行の利用境界（オーケストレーターは読み取りのみ、agent は全 gh と git push を deny、認証は named volume）と未決事項を記す文書にした。書き込み操作の許可範囲は _UNDECIDED_。","決定: PATH-07 の章は YAML に章がないため ifx-cmd-github-cli.yaml の先頭コメントに 3 論点（経路・認証・失敗後の保持範囲）として置いた。","決定: ifx-cmd-git-cli の max_attempts は上限が 2 種類で schema の単一整数で表せないため _UNDECIDED_ とした。","未決: 両文書の timeout_seconds・max_parallel、gh の終了コード 4 の公式表との照合、トークン種別・スコープの標準。","残課題: cpd-specdojo-cli・cnd-specdojo・cxd-specdojo に ifx-cmd-git-cli・ifx-cmd-github-cli の（未作成）記述が残る。本タスクの対象外（ifx-index と ifd-specdojo のみ）のため変更していない。付け替えは後続で必要。","CHANGELOG に書く事項: 区分 Documentation。Git CLI と GitHub CLI の外部コマンド連携仕様（ifx-cmd-git-cli・ifx-cmd-github-cli、draft）を追加し、外部システムI/F一覧の spec_ref を付け替えた。","型の grade は統合後に orchestrator が流す。個票の作業内容の表で grade の行は open のまま残している。","保護された設定の変更は不要だった。"],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/ifx-cmd.schema.yaml --data docs/ja/product/020-external-interface-specs/ifx-cmd-git-cli.yaml","status":"passed","summary":"valid"},{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/ifx-cmd.schema.yaml --data docs/ja/product/020-external-interface-specs/ifx-cmd-github-cli.yaml","status":"passed","summary":"valid"},{"command":"npx prettier --write","status":"passed","summary":"変更した md・yaml を整形"}]}
+</specdojo_executor_evidence>
