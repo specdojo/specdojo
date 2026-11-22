@@ -41,3 +41,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-ABY4"]'
+- v: 1
+  id: reg_4fb78c50bf7649c6a7f1cca2fa87635b
+  ts: "2026-11-22T07:52:27Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: indie が承認した案（2026-11-22）を書く
+  changes:
+    - field: section
+      from: ""
+      to: 影響範囲
+  previous_event_id: reg_6f455badd9c6489ead33a9db369e044d
