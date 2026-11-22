@@ -7,11 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-22T05:41:14Z"
+  completed_at: "2026-11-22T07:03:02Z"
+  conclusion: tsp-index の型を grade の指摘に沿って直し、評価し直しで合格の基準（機械的な指摘を除いて blocker と major がない）を満たした
   derived_from:
     - PJR-ABY4
 ---

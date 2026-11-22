@@ -80,3 +80,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_34086eac28314eb1987c89b5248db944
+- v: 1
+  id: reg_c61a29961c0b4cf2b64262dcb5000570
+  ts: "2026-11-22T07:03:02Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分が自分の型の rulebook と sample だけであること、対応結果、統合後の grade を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: tsp-index の型を grade の指摘に沿って直し、評価し直しで合格の基準（機械的な指摘を除いて blocker と major がない）を満たした
+  previous_event_id: reg_305e2e366d7b4c86a30ab185fc015249
