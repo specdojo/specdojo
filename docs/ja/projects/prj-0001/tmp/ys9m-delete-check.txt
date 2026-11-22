@@ -1,0 +1,1 @@
+PJR-YS9M の確かめで qwen の executor が git rm で消すためのファイル。消えていればよい。
