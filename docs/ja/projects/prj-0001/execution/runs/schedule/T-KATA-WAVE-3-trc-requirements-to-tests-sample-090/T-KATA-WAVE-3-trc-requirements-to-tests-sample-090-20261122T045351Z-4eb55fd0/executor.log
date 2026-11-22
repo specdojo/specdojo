@@ -1,0 +1,40 @@
+判定は `incomplete` です。sample の評価は pass ですが、型の評価対象である rulebook の評価が `needs-work`（score 88）のためです。plan の追加完了条件では、型すべてに最新の pass が必要で、`needs-work` は `incomplete` と定められています。
+
+**評価結果の確認**
+- `npx specdojo grade list --target kata --path <対象> --changed-only` と `--incomplete` を sample と rulebook の両方で実行しました。どれも出力なし・exit 0 で、評価結果は最新、評価の処理も完了しています。verdict を決める直前に `--changed-only` をもう一度実行し、やはり出力なし（review 中の変更なし）でした。
+- sample（`specdojo:trc-requirements-to-tests-sample`）のサイドカーの値は plan の記載と一致しました。
+  - `verdict: pass`、`score: 93`
+  - 指摘は minor 3 件（F001〜F003）
+- rulebook（`specdojo:trc-requirements-to-tests-rulebook`）のサイドカーの値も plan の記載と一致しました。
+  - `verdict: needs-work`、`score: 88`
+  - 指摘は major 2 件（F002・F003）、minor 2 件（F001・F004）
+
+**判断根拠**
+- sample 本文の確認:
+  - frontmatter の `based_on` に生成元の 5 文書があり、「トレース対象の前提」に生成の手段（手作業）と生成日（2026-05-11）が書かれています。
+  - ギャップ表には担当・期限の列がなく、「担当と期限は PM が登録簿で追跡し、本書には持たない」と明記されています。
+  - `未着手` の 3 件（BAC-02・BAC-03・AC-02）は、いずれも「対応テストがない」行です。
+- 先行する edit run（`-080`、冗長さの整理）の result は `status: complete` でした。sample と rulebook への直近の commit は、040・050・080 の各 run によるものです。
+- 作業ツリーの未追跡ファイルは runner の `pipeline-state.json` だけで、対象外の変更は混ざっていません。
+- 完了を妨げているのは rulebook の major 2 件です。
+  - F002: 手順 2 のテスト抽出の経路が、判定表や sample と矛盾しています。
+  - F003: 総合テストが `充足` になり得ず、`stc-rulebook` と整合していません。
+- この 2 件は sample の F001・F002 と同じ原因です。sample は rulebook の手順にない索引の走査で `stc-cash-sale` を拾っており、rulebook の手順をたどっても同じ表を再現できません。
+
+**改善指示（再計画用）**
+1. rulebook「生成の手順」の手順 2 に、索引から「トレース」の表を走査してテストを抽出する経路と条件を定めてください（rulebook F002）。
+2. 総合テストの仕様ID と `relations.verifies` の扱いを決めてください。本 rulebook に判定規則を定めるか、`stc-rulebook` 側に対応を求めます（rulebook F003）。
+3. 仕様ID から要求文書 ID と項目 ID を取り出す規則を定めてください（rulebook F001）。
+4. `_UNDECIDED_` などで、未決事項と `ready` への昇格条件を明記してください（rulebook F004）。
+5. rulebook を直したら、sample の抽出条件をそれに揃えてください（sample F001・F002）。
+6. sample の優先度とギャップ表で、要求項目に文書 ID を付けてください（sample F003）。
+7. 直した後、両方を `--target kata` で評価し直してください。
+
+**確認できなかった範囲**
+- `-080` の edit の差分の中身は詳しく照合していません。
+- 依存文書（atc・stc・bac など）の本文は読んでいません。
+- lint 系の検査は親 runner が実行するため、ここでは実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"review verdict: incomplete。sample（specdojo:trc-requirements-to-tests-sample）の評価は最新で verdict pass / score 93 / minor 3。一方、型の評価対象 rulebook（specdojo:trc-requirements-to-tests-rulebook）は最新だが verdict needs-work / score 88 / major 2・minor 2 で、plan の追加完了条件（型すべてに最新の kata pass が必要、needs-work は incomplete）を満たさない。鮮度確認: `npx specdojo grade list --target kata --path <対象> --changed-only` と `--incomplete` を sample・rulebook の両方で実行し、いずれも出力なし（exit 0）。verdict を決める直前に `--changed-only` を再実行しても出力なし（changed-during-review なし）。sidecar の verdict・score・finding 件数は plan の記載と一致した。sample 本文では DC-006（`based_on` に 5 件、生成の手段と生成日の記載あり）、DC-007（ギャップ表に担当・期限の列なし）、DC-005（未着手 3 件はいずれも対応テストなし）を確認した。先行する edit run -080 の result は status: complete。作業ツリーの未追跡ファイルは runner の pipeline-state.json のみで、対象外の変更なし。完了を妨げるのは rulebook F002（手順 2 のテスト抽出経路が判定表・sample と矛盾）と F003（stc-rulebook と不整合で総合テストが充足になり得ない）。sample F001・F002 は同じ原因に由来する。確認できなかった範囲: -080 の edit の差分の詳細照合、依存文書（atc・stc・bac など）の本文、lint 系の検査（親 runner が実行）。","handoff":["rulebook「生成の手順」の手順 2 に、索引などから「トレース」の表を走査してテストを抽出する経路と条件を定義する（rulebook F002）","総合テストの仕様ID と `relations.verifies` の扱いについて、本 rulebook に判定規則を定めるか、stc-rulebook 側に対応を求める（rulebook F003）","仕様ID（wikilink・下位項目・複数項目の併記）から要求文書 ID と項目 ID を取り出す規則を rulebook に定める（rulebook F001）","生成コマンドの未整備や recipe・template の要否などの未決事項と、ready への昇格条件を `_UNDECIDED_` で明記する（rulebook F004）","rulebook の修正後、sample の抽出条件をそれに揃え（sample F001・F002）、優先度とギャップ表の要求項目に文書 ID を付ける（sample F003）","修正後、rulebook と sample を --target kata で評価し直す"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/trc-requirements-to-tests-sample.md --changed-only","status":"passed","summary":"出力なし（評価結果は最新）。verdict を決める直前の再実行でも出力なし"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/trc-requirements-to-tests-sample.md --incomplete","status":"passed","summary":"出力なし（評価の処理は完了）"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/trc-requirements-to-tests-rulebook.md --changed-only","status":"passed","summary":"出力なし（評価結果は最新）。verdict を決める直前の再実行でも出力なし"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/trc-requirements-to-tests-rulebook.md --incomplete","status":"passed","summary":"出力なし（評価の処理は完了）"}]}
+</specdojo_executor_evidence>
