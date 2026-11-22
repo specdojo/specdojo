@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-g3tt-escaped-backticks-in-result
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-21T14:02:38Z"
+  completed_at: "2026-11-22T00:02:16Z"
+  conclusion: runner が reporter の一律にエスケープされたバッククォートを戻してから result に書くようにし、統合の前の MD038 で止まらなくした。
 ---
 
 # PJR-G3TT result のバッククォートがエスケープされて書かれ、統合の前の検査で止まる
