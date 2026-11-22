@@ -127,7 +127,7 @@ rate_limit_policy:
     retry:
       max_attempts: 3
       initial_wait_seconds: 60
-      backoff_multiplier: 3 # 60s -> 180s -> 540s
+      backoff_multiplier: 3 # 待ちは 60s -> 180s の 2 回（max_attempts: 3 の 2・3 回目の前）
       max_wait_seconds: 600
     on_exhausted: block # 全候補試行後はブロックして人間に委ねる
 
@@ -262,6 +262,6 @@ providers:
         retry:
           max_attempts: 3
           initial_wait_seconds: 120 # モデル再ロード/メモリ解放に時間がかかるため長め
-          backoff_multiplier: 2 # 120s -> 240s -> 480s
+          backoff_multiplier: 2 # 待ちは 120s -> 240s の 2 回
           max_wait_seconds: 600
         on_exhausted: block
