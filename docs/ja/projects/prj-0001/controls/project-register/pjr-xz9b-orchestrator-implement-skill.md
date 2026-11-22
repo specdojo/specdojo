@@ -68,7 +68,27 @@ specdojo:
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 5.1. 実施内容
+
+- 正本 `.agents/skills/specdojo-exec-in-session/SKILL.md` と、Claude Code 用の薄いラッパー `.claude/skills/specdojo-exec-in-session/SKILL.md` を足した（9960a5ba4、develop への取り込みは c30a8527c、indie の承認 2026-11-22）。シンボリックリンクは使っていない。
+- 正本に、範囲（最初の版は登録簿の項目の edit だけ）、使ってよい条件、手順 1〜8（項目を読む・worktree を作る・実装する・検査を流す・保護された設定を確かめる・commit する・承認を得て merge する・記帳して片付ける）を書いた。
+- `.agents/specdojo-orchestrator.agent.md` に、自分で実装するときはこの skill に従うと 1 行足し、`npm run orchestrator:sync` で各環境のラッパーと `templates/` に反映した。
+- feature の worktree とブランチは片付けた（ブランチは 2026-11-22 に削除）。
+
+### 5.2. 確かめた結果
+
+- 2026-11-22、新しいセッションの Claude Code（`claude -p`、2.1.330、sonnet、使える道具は Read と Skill だけ）に、実装者にオーケストレーターを指定して手順を尋ねた。起動の時点で skill の一覧に `specdojo-exec-in-session` があり、Skill（ラッパー）を呼んだ直後に正本 `.agents/skills/specdojo-exec-in-session/SKILL.md` を Read した。答えた最初の 3 段は、正本の見出しと一致した。記録は `tmp/orchestrator/xz9b/fresh-session.jsonl`（git 管理外）。
+- 読み落としは起きていないため、本文を写して lefthook で一致を保つ方式には移さない。
+- 別の項目での利用は、PJR-50RQ・PJR-7KQT の設定の反映（249149b45、11:49）で行った。ただし skill の merge（12:08）より前で、feature ブランチ上の skill を使った。「merge の後に使う」の目的（ラッパーから正本を読むか）は、上の新しいセッションでの確かめで満たしたと判断した。
+- `npm run lint:md`（対象の 2 ファイル）と `npm run lint:fm` は通った。
+
+### 5.3. 配布の案
+
+- 利用者のリポジトリへの配布は、indie の判断（2026-11-22）で行うことにした。この項目の範囲外のため、別の todo（`--from PJR-XZ9B`）で扱う。
+
+### 5.4. CHANGELOG に書く事項
+
+- なし。skill そのものは配っておらず、配る orchestrator の本文の 1 行は「skill があればその手順に従う」のため、利用者のリポジトリでの動きは変わらない。配布の todo で「追加」として書く。
 
 ## 6. 関連ドキュメント
 
