@@ -41,3 +41,29 @@
     - field: derived_from
       from: ""
       to: '["PJR-ABY4"]'
+- v: 1
+  id: reg_89eb368fef8b4450981522d956c24ee6
+  ts: "2026-11-22T06:11:11Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_bc29ecf6ca0548228df78f019f7bbda1
+- v: 1
+  id: reg_c2f78f7ae55f490da2fb5d220c3da3b1
+  ts: "2026-11-22T06:13:40Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_89eb368fef8b4450981522d956c24ee6

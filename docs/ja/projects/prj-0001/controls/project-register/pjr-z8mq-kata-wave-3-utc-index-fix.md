@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   difficulty: medium
   owner: DEV
@@ -40,17 +40,27 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業                               | 担当                  | 状態 | メモ                     |
-| --- | ---------------------------------- | --------------------- | ---- | ------------------------ |
-| 1   | grade の指摘を読み、直し方を決める | DEV                   | open | 直さない指摘は理由を残す |
-| 2   | rulebook と sample を直す          | DEV                   | open | ほかの型は変えない       |
-| 3   | lint と親の検証を通す              | DEV                   | open | -                        |
-| 4   | 統合の後に grade で評価し直す      | specdojo-orchestrator | open | 合格しなければ回目を足す |
+| No  | 作業                               | 担当                  | 状態 | メモ                                       |
+| --- | ---------------------------------- | --------------------- | ---- | ------------------------------------------ |
+| 1   | grade の指摘を読み、直し方を決める | DEV                   | done | 直さない指摘なし                           |
+| 2   | rulebook と sample を直す          | DEV                   | done | ほかの型は変えていない                     |
+| 3   | lint と親の検証を通す              | DEV                   | done | lint:md 通過                               |
+| 4   | 統合の後に grade で評価し直す      | specdojo-orchestrator | open | executor は grade を起動できないため未実施 |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+rulebook 6 件・sample 8 件の指摘をすべて直した。直さない指摘はない。
+
+- rulebook: F001 は 6.3.2 の空の表を外して典型例の表に統合。F002 は禁止事項から「大量に」を削除。F003・F006 は `_UNDECIDED_` を recipe・template の要否だけに更新。F004 は「E2E」を ST/AT に統一。F005 は「テストダブルの使い分け」へ改名。
+- sample: F001・F007 は各論点に決める時期を足し、ready 前に解消する論点を明記。F002 はタイムアウトと非同期・並行性の扱いを追記。F003 は採用理由を業務影響で書き直し。F004 は通信不能時の担保先を明記。F005 は記入例の `証跡` が CI 整備後の書き方である旨を注記。F006 は「以上」にそろえた。F008 は `_TODO_` を解消した（`_ASSUMPTION_` と `_UNDECIDED_` は残す）。
+- rulebook の変更後も sample は本文要件の9見出し・10カラムに従っている。
+- 統合後の `npx specdojo grade run --target kata --kata utc-index` による再評価は未実施（オーケストレーターが行う）。機械的な指摘（PJR-7C9X）だけが残る場合は合格とする。
+
+### 5.1. CHANGELOG に書く事項
+
+なし（文書の型の手直しのため）。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[specdojo:utc-index-rulebook]]
+- [[specdojo:utc-index-sample]]
