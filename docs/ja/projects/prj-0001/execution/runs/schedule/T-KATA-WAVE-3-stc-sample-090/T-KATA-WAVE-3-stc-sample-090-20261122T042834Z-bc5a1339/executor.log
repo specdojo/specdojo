@@ -1,0 +1,48 @@
+レビューの判定案は `complete-with-findings` です。2つの型（rulebook と sample）はどちらも `pass` の評価が最新で、完了を妨げる finding はありません。ただし sample の minor 5件と rulebook の minor 3件が残っています。私は成果物と result を変更していません。
+
+**評価結果の鮮度**
+- sample（`docs/ja/specdojo/samples/stc-sample.md`）と rulebook（`docs/ja/specdojo/rulebooks/stc-rulebook.md`）のそれぞれに、`specdojo grade list --target kata --path <対象> --changed-only` と `--incomplete` を実行しました。出力はどれも空（exit=0）で、評価結果は最新、評価の処理も完了しています。
+- verdict を決める直前にも `--changed-only` をもう一度実行し、どちらも出力は空でした。review 中に成果物は変わっていません。
+- 評価結果サイドカーは2つとも存在します。
+  - sample: `verdict: pass`、`score: 92`、finding は blocker 0 / major 0 / minor 5 / note 0
+  - rulebook: `verdict: pass`、`score: 97`、finding は blocker 0 / major 0 / minor 3 / note 0
+
+**判断根拠**
+- **型の追加完了条件:** sample・rulebook とも、最新の `--target kata` の評価が `pass` です。
+- **完了条件（DC）の照合:**
+  - DC-001〜006 に対応する観点（`vp-qe-omissions-consistency`、`vp-qe-kata-conformance`、`vp-qe-verifiability`）はすべて level 3 以上です。
+  - finding はすべて minor で、rulebook の必須要素の欠落や禁止事項への抵触はありません。
+- **見出しの実物確認:**
+  - DC-004: sample に H5 以下の見出しは0件で、H4 までに収まっています。
+  - DC-005: H1 は1つだけで、「総合テストカタログ: 店頭の現金販売」と駄菓子屋の具体的な対象名を使っています。
+- **先行の edit タスクの実行記録（T-KATA-WAVE-3-stc-sample-080）:**
+  - approach は condense で、status は complete です。
+  - 削除1件と保持6件の記録が、理由付きで残っています。
+  - その commit で変わった成果物は `stc-sample.md` の2行だけで、対象外の成果物の変更は混入していません。
+- **対象外のファイル:** ワークツリーで未追跡なのは、runner が置いた `pipeline-state.json` だけです。
+
+**未充足事項・改善指示**
+完了を妨げる未充足事項はありません。次回の手直しの候補として残します。
+- sample の F001〜F005:
+  - 共通方針の再掲を参照に置き換える。
+  - 印字結果不明の例外を「共通方針との差」行に書く。
+  - 観点「販売確定成立」を1つの合否命題に分ける。
+  - `stc-index-sample` とトレースの記述を揃える。
+  - 観点名「未確定停止」を、内容（確定済みの会計を取り消さない）に合う名前へ見直す。
+- rulebook の F001〜F003:
+  - `perspective_key` の記載位置と形式を記述規則に明記する。
+  - 古い `_UNDECIDED_` の記述を削除する。
+  - `ready` 化の前提を、公開前に実際に残る事項だけに更新する。
+
+**fully-guided の進め方として確認したこと**
+- recipe が `_MISSING_` で、宣言されていません。
+- 先行の実行記録に、この扱いについての記載はありません。recipe が要るかどうかは、rulebook の F003 の改善指示（`ready` 化の前に残る事項として recipe の要否を判断する）で扱います。
+
+**確認できなかった範囲**
+- 判定は grade の評価結果を事実として使い、観点ごとの評価はし直していません。
+- H1 が rulebook の定めるタイトル形式に合っているかは、grade の `vp-qe-kata-conformance` の判定（level 3、H1 に関する finding なし）に頼っており、rulebook の記述規則とは自分で突き合わせていません。
+- 同じタスクの前回の run（20261122T011750Z-ba4f50cf）の result は、記入欄が `_TODO_` のまま残っています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"Review verdict: complete-with-findings. 鮮度確認: `specdojo grade list --target kata --path docs/ja/specdojo/samples/stc-sample.md --changed-only` / `--incomplete` と、rulebook docs/ja/specdojo/rulebooks/stc-rulebook.md の同じ確認は、どれも出力が空（exit=0）。判定直前の再確認でも空で、changed-during-review なし。sample は pass/92（minor 5）、rulebook は pass/97（minor 3）で、blocker・major は0件。DC-001〜006 の観点は level 3 以上で、finding はすべて minor（必須要素の欠落・禁止事項への抵触なし）。DC-004: H5 以下の見出し0件。DC-005: H1『総合テストカタログ: 店頭の現金販売』で、駄菓子屋の具体的な対象名を使っている。先行 edit（T-KATA-WAVE-3-stc-sample-080、condense、status complete）は削除1件・保持6件を理由付きで記録。commit b8067d6c8 での成果物の変更は stc-sample.md の2行だけで、対象外の変更なし。完了を妨げない理由: 残る finding はすべて minor で、型の追加完了条件（kata pass）と DC を満たす。確認できなかった範囲: 観点の再評価はしていない（grade を事実として使用）。H1 のタイトル形式の照合は grade の kata-conformance 判定に頼った。recipe は _MISSING_ で、先行の実行記録に扱いの記載なし。同じタスクの前回 run（20261122T011750Z-ba4f50cf）の result は _TODO_ のまま。","handoff":["sample の minor F001〜F005 を次回の手直しで直す: 共通方針の再掲を参照に置き換える、印字結果不明の例外を『共通方針との差』行に書く、観点『販売確定成立』を1つの合否命題に分ける、stc-index-sample とトレース TR の記述を揃える、観点名『未確定停止』を内容に合う名前へ見直す。","rulebook の minor F001〜F003 を直す: `perspective_key` の記載位置と形式を明記する、古い `_UNDECIDED_` を削除する、ready 化の前提を recipe の要否と PJR-WYTX での template の判断だけに更新する。","recipe が未宣言（_MISSING_）。要否の判断を rulebook の ready 化の前に済ませる。"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/stc-sample.md --changed-only","status":"passed","summary":"出力が空（exit=0）。評価結果は最新。判定直前の再確認でも空"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/stc-sample.md --incomplete","status":"passed","summary":"出力が空（exit=0）。評価の処理は完了"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/stc-rulebook.md --changed-only","status":"passed","summary":"出力が空（exit=0）。評価結果は最新。判定直前の再確認でも空"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/stc-rulebook.md --incomplete","status":"passed","summary":"出力が空（exit=0）。評価の処理は完了"}]}
+</specdojo_executor_evidence>
