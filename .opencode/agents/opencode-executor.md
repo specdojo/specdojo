@@ -26,6 +26,19 @@ permission:
       "ls *": allow,
       "grep *": allow,
       "sed -n *": allow,
+      "npx tsc*": allow,
+      "npx vitest*": allow,
+      "npx eslint*": allow,
+      "npx markdownlint-cli2*": allow,
+      "npx specdojo*": allow,
+      "git diff *": allow,
+      "git rm docs/*": allow,
+      "git rm src/*": allow,
+      "git rm tests/*": allow,
+      "git rm -r*": deny,
+      "git rm -f*": deny,
+      "git rm --force*": deny,
+      "rm -rf*": deny,
     }
   edit:
     {
