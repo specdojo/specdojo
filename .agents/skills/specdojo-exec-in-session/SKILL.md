@@ -17,7 +17,7 @@ description: SpecDojo の登録簿の項目を、runner（exec run）に渡さ�
 次のどちらかに当たるときだけ使う。どちらにも当たらなければ `npx specdojo exec run --register <PJR-XXXX> --worktree` を使う。
 
 - 利用者が、その項目の実装者にオーケストレーターを指定した。「着手してください」は実行経路の指示であり、実装者の指定として扱わない。
-- 変える先が、executor が書けない保護された設定である。runner と同じ一覧は `src/exec/agent-protected-config.ts`（利用リポジトリでは `node_modules/specdojo/dist/exec/agent-protected-config.js`）にある。主なものは `.specdojo/`・`.agents/rules/`・`.agents/skills/`・`.claude/`・`.codex/`・`.opencode/`・`.github/agents/`・`.github/workflows/`・`package.json`・`lefthook.yml`・`AGENTS.md`・`CLAUDE.md` である。
+- 変える先が、executor が書けない保護された設定である。runner と同じ一覧は `node_modules/specdojo/dist/exec/agent-protected-config.js` にある。主なものは `.specdojo/`・`.agents/rules/`・`.agents/skills/`・`.claude/`・`.codex/`・`.opencode/`・`.github/agents/`・`.github/workflows/`・`package.json`・`lefthook.yml`・`AGENTS.md`・`CLAUDE.md` である。
 
 ## 手順
 
@@ -27,7 +27,7 @@ description: SpecDojo の登録簿の項目を、runner（exec run）に渡さ�
 
 1. 個票（`pjr-<id>-<topic>.md`）の `完了条件`・`作業内容`・`入力` を読む。完了条件が検証できる形でなければ、着手せずに利用者と直す。
 2. 実装者の指定が会話で確かめられることを確認する。確かめられなければ利用者に聞く。
-3. 現在のブランチを確かめる。作業ツリー（対象 project の `develop`）は runner の統合と記帳に使うため、切り替えない。
+3. 現在のブランチを確かめる。作業ツリーは、対象 project の統合ブランチ（`specdojo.config.json` の project の `integration_branch`。既定は `project/<project-id>/develop`）を出したまま、runner の統合と記帳に使う。切り替えない。
 
 ### 2. worktree と feature ブランチを作る
 
@@ -40,7 +40,7 @@ npx specdojo git --project <project-id> -- worktree add -b feature/<project-id>/
 - リンクは commit しない。`packages/*/node_modules` のリンクは `.gitignore` に当たらず未追跡として出るため、手順 6 では対象のファイルを名前で指定して `add` する。
 - `.gitignore` にある生成物（`docs/**/generated/` など）は worktree にない。検査の前に必要な生成物を作る（YAML の成果物を変えたら `npx specdojo build --only yaml-pages`）。
 
-着手の記帳は develop で行う。自分で対応した項目は `start` を経ずに close してよい。
+着手の記帳は統合ブランチで行う。自分で対応した項目は `start` を経ずに close してよい。
 
 ### 3. 実装する
 
@@ -65,7 +65,7 @@ subagent に渡すときは、次を守る。
 - 検査の ID は、`-` を `:` に替えた npm の script に当たる（`lint-md` は `npm run lint:md`、`test-integration` は `npm run test:integration`）。
 - `paths` を書いた検査は、変えたファイルに合うときだけ流す。
 - ほかの run が流れているときは、負荷で統合テストが時間切れになりやすい。時間切れは失敗と分けて記録し、負荷を下げて流し直す。
-- 文書サイトのビルド（`npm run docs:build`）は、項目の完了条件が求めるときだけ流す。メモリーを多く使うため、並べた run と重ねない。
+- 文書サイトのビルドは、項目の完了条件が求めるときだけ流す。メモリーを多く使うため、並べた run と重ねない。
 
 ### 5. 保護された設定を確かめる
 
@@ -90,14 +90,13 @@ npx specdojo git --project <project-id> -- -C <worktree> commit -m "<subject>" -
 ### 7. 承認を得て merge する
 
 1. 差分の要約（変えたファイル、検査の結果、保護された設定の有無）を日本語で示し、merge の承認を得る。
-2. 作業ツリー（develop）で merge する。
+2. 統合ブランチの作業ツリーで merge する。
 
    ```bash
    npx specdojo git --project <project-id> -- merge --no-ff feature/<project-id>/<topic> -m "<subject>" -m "<body>"
    ```
 
-3. `src` を変えた場合は、merge の後に `npm run build` で dist を作り直す。dist が古いと、次の run は始まる前に止まる。
-4. `git push` と PR は行わない。必要なら、コマンドを示して利用者へ引き渡す。
+3. `git push` と PR は行わない。必要なら、コマンドを示して利用者へ引き渡す。
 
 ### 8. 記帳して片付ける
 
@@ -119,7 +118,7 @@ npx specdojo git --project <project-id> -- -C <worktree> commit -m "<subject>" -
 
 ## してはいけないこと
 
-- 作業ツリー（develop）のブランチを切り替える。
+- 作業ツリー（統合ブランチ）のブランチを切り替える。
 - `git push`、履歴の書き換え、承認のない merge。
 - subagent の報告だけで close する。
 - 認証情報・秘密鍵・`.env`・`secrets/` を読む。
