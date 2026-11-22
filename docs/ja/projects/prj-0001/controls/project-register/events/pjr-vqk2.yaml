@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_27c64b024475451eaaae892c64ff36be
+  ts: "2026-11-22T11:15:39Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: exec run の要約の commit= に、その run のものではない commit の ID が出ることがある
+    - field: description
+      from: ""
+      to: exec run --register の要約（Register run summary）の commit= に、その run の統合の commit ではなく HEAD の commit の ID が出ることがある。記録だけの問題で、統合そのものには影響しない。
+    - field: input
+      from: ""
+      to: '["2026-11-22 の運用で観測した。例の run の記録は手元に残っておらず、再現の手順の特定も調査に含める。","要約の整形は formatRegisterRunSummary（src/exec/register.ts）。","利用者の承認（2026-11-22、indie）で起票した。担当 DEV、期限 2026-11-30。"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-22"
+    - field: due
+      from: ""
+      to: "2026-11-30"
