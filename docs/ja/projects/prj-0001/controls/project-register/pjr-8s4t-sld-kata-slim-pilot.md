@@ -61,6 +61,10 @@ specdojo:
   - sld-rulebook の記述ガイドの「関連仕様・実装配置との対応と検証」に、表の前に何と何の対応か・何を確かめて何を受け入れるかを 1 文で書くこと、列の名前と観点は読み手が中身を推測しなくて済む言葉にすることを足す。
   - 結論（保管場所、置くもの、削除可否、復旧の経路と連絡先）と表の行の中身は変えない。直す前後の sld-sample の大きさを個票の対応結果に書く。
   - 直すのは sld-rulebook と sld-sample だけとする。型の grade は統合の後に orchestrator が流す。読みやすさは利用者が改めて確かめる。
+- 4 回目の実行（2026-11-22、型の grade）: 3 回目の後の型の grade で、sld-sample は pass 93、sld-rulebook は needs-work 93（major 1 件）だった。major は、保管場所一覧の標準列の「良い例」が `docs/**/generated/` 全体を削除可・`specdojo build` で再生成可としているが、実装はこの配下に grade の実行の lock や再開の状態を置き、旧 `routines/generated/` を移行元として扱うため、消すと排他の破綻や再開の情報の消失につながる、という指摘である。次を直す。
+  - sld-rulebook の「良い例」の対象を、再生成できる派生物（派生の Markdown のビューと文書の索引など）に限り、実行の状態と移行前のデータを除く条件を書く。実際の置き場所は実装を読んで確かめ、確かめたファイルを個票の対応結果に書く。
+  - 結論と、ほかの章は変えない。sld-sample は変えない。
+  - 型の grade は統合の後に orchestrator が流す。
 
 ## 4. 作業内容
 
@@ -76,8 +80,10 @@ specdojo:
 | 8   | 2 回目の統合の後に型を grade する（orchestrator）                            | orchestrator | open | executor は grade を実行しない。統合の後に orchestrator が流す                                           |
 | 9   | 読みやすさを改めて確かめる（利用者）                                         | 利用者       | done | 2026-11-22 に indie が確かめ、4 章の表の説明と列の名前を直す（3 回目の実行）                             |
 | 10  | 3 回目: 4 章の表の前の説明と列の名前を直す                                   | BA           | done | sample を 5,577 字から 5,879 字へ。結果は対応結果の「3 回目の実行の結果」                                |
-| 11  | 3 回目の統合の後に型を grade する（orchestrator）                            | orchestrator | open | 2 回目の grade（作業内容の 8）とまとめて流す                                                             |
+| 11  | 3 回目の統合の後に型を grade する（orchestrator）                            | orchestrator | done | 2026-11-22 に grade した。sample は pass 93、rulebook は needs-work 93（major 1 件）                     |
 | 12  | 読みやすさを改めて確かめる（利用者）                                         | 利用者       | open | -                                                                                                        |
+| 13  | 4 回目: rulebook の削除の良い例を、再生成できる派生物に限る                  | BA           | open | 完了条件の 4 回目の実行                                                                                  |
+| 14  | 4 回目の統合の後に rulebook を grade する（orchestrator）                    | orchestrator | open | -                                                                                                        |
 
 ## 5. 対応結果
 
