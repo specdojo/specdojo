@@ -32,7 +32,15 @@ specdojo:
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- 親の検証の前に、executor が YAML（表示のページを作る対象）を変えた run では、worktree で表示のページを作り直す（`specdojo build --only yaml-pages` と同じ生成）。`--resume` で統合先を取り込んだ後も、YAML が変わっていれば同じく作り直す。作り直しが失敗したときは、どの YAML の生成で止まったかを示して、親の検証の失敗として扱う。
+- YAML を変えない run では作り直さず、親の検証の時間を増やさない（indie の判断、2026-11-22）。
+- `lint-md-changed`（`tools/lint-changed.mjs`）の対象に、変えた YAML の表示のページ（同じ階層の `generated/<名前>.md`）を足す。ページは git の管理外のままとし、commit の対象に入れない。
+- RS2P と同じ壊れ方（YAML のコメントを `# #` にする）を、統合の前の親の検証で止めることをテストで確かめる。対象のページを選ぶ処理は単体テスト、runner の流れ（作り直しと検証の失敗）は統合テストで確かめる。
+- `exec-operation-guide` の親の検証の節に、表示のページを作り直して検査することを書く。
+- `exec-defaults.yaml`・`package.json` などの保護された設定の変更が要る場合は、案を個票の対応結果と報告の `handoff` に書く。反映は利用者の承認のもとでオーケストレーターが行う。
+- `CHANGELOG.md` は変えない。個票の対応結果の `### 5.1. CHANGELOG に書く事項` に、区分「不具合修正」と行の文案を書く。
+- `npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md` を通し、親の検証を通す。
+- runner のコードを変えるため、統合の後にオーケストレーターが PJR-JSEY で runner の動作を確かめる。加えて、YAML を壊した run が統合の前の親の検証で止まることを、実際の `exec run --register` で 1 回確かめる。
 
 ## 4. 作業内容
 
