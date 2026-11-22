@@ -38,3 +38,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-RS2P"]'
+- v: 1
+  id: reg_a741a5f3719e4a6eb0a65f935d0a858d
+  ts: "2026-11-22T00:10:54Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "背景" updated
+  changes:
+    - field: section
+      from: ""
+      to: 背景
+  previous_event_id: reg_8adde423dcbf487897f83faa43823e35
