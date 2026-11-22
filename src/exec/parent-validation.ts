@@ -631,6 +631,9 @@ export async function invokeParentValidation(
       killSent = signalValidationProcessTree(child, "SIGKILL") || killSent;
     };
     const settle = (exitCode: number | null, pipesClosed: boolean): void => {
+      const fileDurations = testFiles.durationsSnapshot();
+      if (fileDurations.length > 0)
+        validationMetric("validation-test-files", { id: definition.id, files: fileDurations });
       const stdout = capturedOutput(stdoutCapture);
       const stderr = capturedOutput(stderrCapture);
       finish(

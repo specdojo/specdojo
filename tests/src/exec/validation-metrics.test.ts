@@ -130,6 +130,18 @@ describe("parent validation diagnostics", () => {
     expect(tracker.snapshot().active_test_files).toEqual([]);
   });
 
+  it("collects per-file durations from end notifications, slowest first", () => {
+    const tracker = new ValidationTestFiles();
+    const line = (value: object) => `[parent-validation:test-file] ${JSON.stringify(value)}\n`;
+    tracker.observe(line({ event: "end", file: "tests/a.test.ts", duration_ms: 10 }));
+    tracker.observe(line({ event: "end", file: "tests/b.test.ts", duration_ms: 30 }));
+    tracker.observe(line({ event: "end", file: "tests/c.test.ts" }));
+    expect(tracker.durationsSnapshot()).toEqual([
+      { file: "tests/b.test.ts", duration_ms: 30 },
+      { file: "tests/a.test.ts", duration_ms: 10 },
+    ]);
+  });
+
   it("persists both queued batches, measures wait, and appends validation outcomes in order", async () => {
     const path = join(directory(), "metrics.jsonl");
     const gate = new ParentValidationGate(1, () => undefined);
