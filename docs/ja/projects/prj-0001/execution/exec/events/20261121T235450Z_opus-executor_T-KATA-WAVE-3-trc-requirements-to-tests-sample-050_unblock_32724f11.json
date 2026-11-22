@@ -1,0 +1,18 @@
+{
+  "v": 1,
+  "ts": "2026-11-21T23:54:50Z",
+  "type": "unblock",
+  "task_id": "T-KATA-WAVE-3-trc-requirements-to-tests-sample-050",
+  "by": "opus-executor",
+  "msg": "resume executor from persisted pipeline state (--resume-from executor)",
+  "meta": {
+    "limit_deferred": "false",
+    "claim_actor": "opus-executor",
+    "stage_actor": "gemma26-reporter",
+    "pipeline_stage": "executor",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-3-trc-requirements-to-tests-sample-050/T-KATA-WAVE-3-trc-requirements-to-tests-sample-050-20261121T192714Z-f0df27e5/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-3-trc-requirements-to-tests-sample-050/T-KATA-WAVE-3-trc-requirements-to-tests-sample-050-20261121T192714Z-f0df27e5/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-3-trc-requirements-to-tests-sample-050-20261121T192714Z-f0df27e5",
+    "pipeline_resume_claimed": "true"
+  }
+}
