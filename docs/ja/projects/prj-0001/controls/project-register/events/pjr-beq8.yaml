@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_a24b999a9675495aaa1e2b691e01d233
+  ts: "2026-11-22T23:45:21Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: dashboard の生成で run の記録を項目ごとに全走査しない
+    - field: description
+      from: ""
+      to: findRunRecord が記録の置き場のない項目で execution/runs/ を全部たどり、dashboard build 42 秒のうち約 33 秒を使う。1 回の生成で一覧を 1 回だけ読む
+    - field: input
+      from: ""
+      to: '["docs:dev の起動を速くする（利用者の依頼、2026-11-23）。devcontainer を作り直した後の 2 回目の起動で 58.4 秒だった"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-BBTW"]'
+    - field: commit_type
+      from: ""
+      to: perf
+    - field: commit_scope
+      from: ""
+      to: dashboard
+- v: 1
+  id: reg_499a0b363e034d4397d791e2cab5d62d
+  ts: "2026-11-22T23:45:40Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_a24b999a9675495aaa1e2b691e01d233
