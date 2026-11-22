@@ -16,6 +16,7 @@ import {
   resolveDeliverableDoneCriteria,
   resolveGradeSourceHashes,
   resolveKataBatchTargets,
+  type KataDocumentKind,
   resolveProject,
   resolveSafeMarkdownPath,
   resolveSafeRepositoryPath,
@@ -158,7 +159,13 @@ async function runGradeUnlocked(
     throw new Error("Use either --path or --kata");
   let documentsByKata: Map<string, string[]> | undefined;
   if (opts.kata && opts.kata.length > 0) {
-    documentsByKata = resolveKataBatchTargets(opts.kata, specdojoRootDir()).documentsByKata;
+    const resolved = resolveKataBatchTargets(
+      opts.kata,
+      specdojoRootDir(),
+      opts.kind === undefined ? undefined : (kind as KataDocumentKind),
+    );
+    documentsByKata = resolved.documentsByKata;
+    for (const note of resolved.notes) process.stderr.write(`grade run: ${note}\n`);
   }
   const maxFailures = opts.maxStageFailures ?? 3;
   if (!Number.isSafeInteger(maxFailures) || maxFailures < 1)

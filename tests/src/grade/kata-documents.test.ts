@@ -2,7 +2,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { resolveKataDocuments } from "../../../src/grade/targets.js";
+import { resolveKataBatchTargets, resolveKataDocuments } from "../../../src/grade/targets.js";
 
 let root: string;
 
@@ -82,5 +82,52 @@ describe("resolveKataDocuments", () => {
     expect(() => resolveKataDocuments("opr", root)).toThrow(
       /opr-missing-sample.*declared in sample of docs\/ja\/specdojo\/rulebooks\/opr-rulebook\.md/,
     );
+  });
+});
+
+describe("resolveKataDocuments with kind", () => {
+  beforeEach(() => {
+    root = mkdtempSync(join(tmpdir(), "specdojo-kata-kind-"));
+    rulebook("abc", [
+      "  recipe: specdojo:abc-recipe",
+      "  sample: specdojo:abc-sample",
+      "  template: not-needed",
+    ]);
+    sample("abc-sample");
+    write(
+      "docs/ja/specdojo/recipes/abc-recipe.md",
+      "---\nspecdojo:\n  id: specdojo:abc-recipe\n---\n\n# R\n",
+    );
+  });
+  afterEach(() => {
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  it("selects only the recipe when kind is recipe", () => {
+    expect(resolveKataDocuments("abc", root, "recipe")).toEqual([
+      "docs/ja/specdojo/recipes/abc-recipe.md",
+    ]);
+  });
+
+  it("selects rulebook and sample when kind is omitted", () => {
+    expect(resolveKataDocuments("abc", root)).toEqual([
+      "docs/ja/specdojo/rulebooks/abc-rulebook.md",
+      "docs/ja/specdojo/samples/abc-sample.md",
+    ]);
+  });
+
+  it("selects every defined kind for all and skips a not-needed template", () => {
+    expect(resolveKataDocuments("abc", root, "all")).toEqual([
+      "docs/ja/specdojo/rulebooks/abc-rulebook.md",
+      "docs/ja/specdojo/recipes/abc-recipe.md",
+      "docs/ja/specdojo/samples/abc-sample.md",
+    ]);
+  });
+
+  it("returns no documents and a note when the kind is not-needed", () => {
+    expect(resolveKataDocuments("abc", root, "template")).toEqual([]);
+    const batch = resolveKataBatchTargets(["abc"], root, "template");
+    expect(batch.allDocuments).toEqual([]);
+    expect(batch.notes).toEqual([expect.stringMatching(/kata abc: no template document/)]);
   });
 });

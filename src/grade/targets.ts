@@ -8,7 +8,7 @@ import { isTrashedPath, resolveBasePath } from "../catalog/paths.js";
 import { listFilesRecursive } from "../shared/fs.js";
 import { gradeContentHash } from "./result.js";
 import { readSpecdojoNamespace } from "../docs/frontmatter-namespace.js";
-import { resolveAuthoredKataPathIfExists } from "../kata/authoring.js";
+import { resolveAuthoredKataPathIfExists, type AuthoringKind } from "../kata/authoring.js";
 import {
   GRADE_TARGETS,
   KATA_DIRS,
@@ -622,12 +622,83 @@ export function sourceHashesChanged(
   return Object.entries(current).some(([key, hash]) => stored?.[key] !== hash);
 }
 
-/** Resolve rulebook and sample documents for a single kata name or prefix. */
+/** Kata document kinds accepted by `--kind` (`all` selects every kind). */
+export type KataDocumentKind = AuthoringKind | "all";
+
+const KATA_DOCUMENT_KINDS: readonly AuthoringKind[] = ["rulebook", "recipe", "sample", "template"];
+const NOT_DECLARED_IDS = new Set(["not-needed", "none", "undecided"]);
+
+function resolveRulebookDeclaredDocuments(
+  normalized: string,
+  kind: "recipe" | "template",
+  rootDir: string,
+): string[] {
+  const rulebook = resolveRulebookAndSample(normalized, rootDir)[0];
+  let declared: unknown;
+  if (rulebook?.includes("-rulebook")) {
+    try {
+      declared = readSpecdojoNamespace(readFileSync(resolve(rootDir, rulebook), "utf8"))[kind];
+    } catch (error) {
+      throw new Error(
+        `Failed to read rulebook ${rulebook} while resolving kata ${normalized}: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
+        { cause: error },
+      );
+    }
+  }
+  const ids = (Array.isArray(declared) ? declared : [declared]).filter(
+    (item): item is string => typeof item === "string" && item.trim() !== "",
+  );
+  const candidates = ids.length > 0 ? ids : [`${normalized}-${kind}`];
+  const found: string[] = [];
+  for (const id of candidates) {
+    if (NOT_DECLARED_IDS.has(id)) continue;
+    for (const ext of ["md", "yaml", "yml", "json"] as const) {
+      const authored = resolveAuthoredKataPathIfExists(id, kind, ext, rootDir);
+      if (authored && existsSync(authored.absolutePath)) {
+        const relative = relativePathFromRoot(authored.absolutePath, rootDir);
+        if (!found.includes(relative)) found.push(relative);
+        break;
+      }
+    }
+    if (ids.length > 0 && found.length === 0) {
+      throw new Error(
+        `${kind} file not found for '${id}' declared in ${kind} of ${rulebook} (kata ${normalized})`,
+      );
+    }
+  }
+  return found;
+}
+
+/**
+ * Resolve the documents of one kata name or prefix.
+ * Without `kind` the rulebook and sample are selected; with `kind` only that kind
+ * (`all` selects rulebook, recipe, sample and template). A missing kind yields no documents.
+ */
 export function resolveKataDocuments(
   kataName: string,
   rootDir: string = specdojoRootDir(),
+  kind?: KataDocumentKind,
 ): string[] {
   const normalized = kataName.trim().replace(/-rulebook(\.md)?$/, "");
+  if (!normalized) return [];
+  if (kind === undefined) return resolveRulebookAndSample(normalized, rootDir);
+
+  const kinds = kind === "all" ? KATA_DOCUMENT_KINDS : [kind];
+  const documents: string[] = [];
+  const baseline = resolveRulebookAndSample(normalized, rootDir);
+  for (const each of kinds) {
+    const found =
+      each === "recipe" || each === "template"
+        ? resolveRulebookDeclaredDocuments(normalized, each, rootDir)
+        : baseline.filter((path) => path.split("/").includes(`${each}s`));
+    for (const path of found) if (!documents.includes(path)) documents.push(path);
+  }
+  return documents;
+}
+
+function resolveRulebookAndSample(normalized: string, rootDir: string): string[] {
   if (!normalized) return [];
 
   const found: string[] = [];
@@ -722,7 +793,9 @@ export function resolveKataDocuments(
 export function resolveKataBatchTargets(
   kataNames: string[],
   rootDir: string = specdojoRootDir(),
-): { documentsByKata: Map<string, string[]>; allDocuments: string[] } {
+  kind?: KataDocumentKind,
+): { documentsByKata: Map<string, string[]>; allDocuments: string[]; notes: string[] } {
+  const notes: string[] = [];
   const documentsByKata = new Map<string, string[]>();
   const unknown: string[] = [];
 
@@ -730,8 +803,10 @@ export function resolveKataBatchTargets(
     const name = rawName.trim();
     if (!name) continue;
     if (documentsByKata.has(name)) continue;
-    const docs = resolveKataDocuments(name, rootDir);
-    if (docs.length === 0) {
+    const docs = resolveKataDocuments(name, rootDir, kind);
+    if (docs.length === 0 && resolveKataDocuments(name, rootDir).length > 0) {
+      notes.push(`kata ${name}: no ${kind} document to grade (not-needed or not defined)`);
+    } else if (docs.length === 0) {
       unknown.push(name);
     } else {
       documentsByKata.set(name, docs);
@@ -751,5 +826,5 @@ export function resolveKataBatchTargets(
     }
   }
 
-  return { documentsByKata, allDocuments };
+  return { documentsByKata, allDocuments, notes };
 }

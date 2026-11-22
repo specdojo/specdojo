@@ -84,7 +84,7 @@ export function addGradeSelectionOptions(command: Command): Command {
     )
     .option(
       "--kata <name>",
-      "Grade rulebook and sample for this kata name or prefix (repeatable)",
+      "Grade this kata name or prefix (repeatable); rulebook and sample unless --kind is given",
       collectKataOption,
       [],
     )
