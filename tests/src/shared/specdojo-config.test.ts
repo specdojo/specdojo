@@ -15,6 +15,7 @@ import {
   loadConfig,
   loadMemberRoster,
   resolveAgentMember,
+  resolveRegisterActor,
 } from "../../../src/shared/specdojo-config.js";
 import type {
   MemberRoster,
@@ -455,5 +456,32 @@ describe("assertValidExecActor", () => {
 
   it("名簿にも予約名にもない名前はエラーを投げる", () => {
     expect(() => assertValidExecActor("charlie", makeRoster(["alice"]))).toThrow("charlie");
+  });
+
+  it("エラーの文に名簿の nickname と予約名の両方を並べる", () => {
+    expect(() => assertValidExecActor("charlie", makeRoster(["alice"]))).toThrow(
+      /alice.*SpecDojo.*specdojo-orchestrator.*night-orchestrator/,
+    );
+  });
+
+  it("register の記帳のエラーの文にも名簿の nickname と予約名の両方を並べる", () => {
+    const roster = makeRoster(["alice"]);
+
+    for (const name of ["alice", "SpecDojo", "specdojo-orchestrator", "night-orchestrator"]) {
+      expect(() => resolveRegisterActor("charlie", roster)).toThrow(name);
+    }
+  });
+
+  it("agent 限定の assertValidActor のエラーの文には予約名を並べない", () => {
+    let message = "";
+    try {
+      assertValidActor("charlie", makeRoster(["alice"]));
+    } catch (error) {
+      message = error instanceof Error ? error.message : String(error);
+    }
+
+    expect(message).toContain("alice");
+    expect(message).not.toContain("SpecDojo");
+    expect(message).not.toContain("night-orchestrator");
   });
 });

@@ -52,8 +52,30 @@ exec などの --by は予約名（SpecDojo・specdojo-orchestrator・night-orch
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+### 5.1. 解決内容
+
+- `assertValidExecActor`（exec の `--by`）が、名簿にも予約名にもない名前に対して、名簿の nickname と予約名（`SpecDojo`・`specdojo-orchestrator`・`night-orchestrator`）の両方を並べたエラーの文を投げるようにした（`src/shared/specdojo-config.ts`）。
+- register の記帳は `resolveRegisterActor` が既に予約名を並べていたため変更していない。
+- grade など agent 限定の `assertValidActor` は変更せず、予約名を並べない。
+
+### 5.2. 確認結果
+
+- `tests/src/shared/specdojo-config.test.ts` に、exec・register の両方で nickname と予約名が並ぶこと、`assertValidActor` では予約名が並ばないことの単体テストを追加し、通過した。
+- `npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md` は親の検証が実行する。
+
+### 5.3. CHANGELOG に書く事項
+
+- 区分: Fixed
+- 文案: exec の `--by` が名簿にも予約名にもない名前を拒否するとき、エラーの文に予約名（`SpecDojo`・`specdojo-orchestrator`・`night-orchestrator`）も並べるようにした。
+
+### 5.4. 判断した点
+
+- `assertValidActor` を呼ばず、`assertValidExecActor` 内でエラーを組み立てた。grade などの agent 限定の経路に予約名を出さないため。
+
+### 5.5. 再発防止策
+
+- 予約名を受け付ける検査のエラーの文は、受け付ける集合と同じ定数（`RESERVED_REGISTER_ACTORS`）から作る。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- なし
