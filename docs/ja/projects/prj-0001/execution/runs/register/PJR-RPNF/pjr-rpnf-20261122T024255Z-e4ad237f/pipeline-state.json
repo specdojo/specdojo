@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-RPNF",
   "run_id": "pjr-rpnf-20261122T024255Z-e4ad237f",
-  "updated_at": "2026-11-22T02:45:20.887Z",
+  "updated_at": "2026-11-22T02:45:28.815Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-RPNF/pjr-rpnf-20261122T024255Z-e4ad237f/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sonnet-executor",
       "attempts": 1,
       "started_at": "2026-11-22T02:45:20.887Z",
-      "completed_at": null,
+      "completed_at": "2026-11-22T02:45:28.815Z",
       "artifact_ref": null
     }
   },
