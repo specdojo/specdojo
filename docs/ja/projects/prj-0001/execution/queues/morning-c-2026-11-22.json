@@ -3,13 +3,13 @@
   "queue_id": "morning-c-2026-11-22",
   "project_id": "prj-0001",
   "created_at": "2026-11-21T22:46:12.344Z",
-  "updated_at": "2026-11-21T22:46:12.344Z",
-  "state": "pending",
+  "updated_at": "2026-11-21T23:49:55.650Z",
+  "state": "stopped",
   "steps": [
     {
       "index": 1,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "succeeded",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -26,12 +26,16 @@
         "fallback",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-21T22:47:17.978Z",
+      "completed_at": "2026-11-21T23:02:15.637Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
     },
     {
       "index": 2,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "failed",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -48,12 +52,16 @@
         "fallback",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-21T23:02:15.640Z",
+      "completed_at": "2026-11-21T23:49:55.175Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
     },
     {
       "index": 3,
       "on_failure": "stop",
-      "status": "pending",
+      "status": "failed",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -74,7 +82,11 @@
         "fallback",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-21T23:49:55.183Z",
+      "completed_at": "2026-11-21T23:49:55.647Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
     },
     {
       "index": 4,
@@ -99,5 +111,7 @@
         "prj-0001"
       ]
     }
-  ]
+  ],
+  "stopped_step": 3,
+  "reason": "step 3 failed: exit code 1"
 }

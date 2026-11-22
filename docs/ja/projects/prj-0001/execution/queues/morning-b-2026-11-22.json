@@ -3,13 +3,13 @@
   "queue_id": "morning-b-2026-11-22",
   "project_id": "prj-0001",
   "created_at": "2026-11-21T22:46:12.110Z",
-  "updated_at": "2026-11-21T22:46:12.110Z",
-  "state": "pending",
+  "updated_at": "2026-11-21T23:05:14.720Z",
+  "state": "stopped",
   "steps": [
     {
       "index": 1,
       "on_failure": "stop",
-      "status": "pending",
+      "status": "succeeded",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -26,12 +26,16 @@
         "fallback",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-21T22:46:57.990Z",
+      "completed_at": "2026-11-21T22:57:03.095Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
     },
     {
       "index": 2,
       "on_failure": "stop",
-      "status": "pending",
+      "status": "failed",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -45,7 +49,13 @@
         "fallback",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-21T22:57:03.098Z",
+      "completed_at": "2026-11-21T23:05:14.720Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
     }
-  ]
+  ],
+  "stopped_step": 2,
+  "reason": "step 2 failed: exit code 1"
 }
