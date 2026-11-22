@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-tf6f-lint-generated-yaml-pages
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-22T03:12:37Z"
+  completed_at: "2026-11-22T08:59:39Z"
+  conclusion: executor が変えた YAML と再開で取り込んだ YAML の表示のページを親の検証の前に作り直し、lint-md-changed の対象に入れた。YAML を壊した実際の run が統合の前に止まることを確かめた
   derived_from:
     - PJR-RS2P
 ---
