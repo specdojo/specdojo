@@ -25,7 +25,7 @@ import { mermaidAssets } from "./mermaid-assets";
 import { mermaidSvgAutoGenerate } from "./mermaid-auto-generate";
 import { resolveExecRecordWikilink, rewriteExecRecordMarkdownHref } from "./exec-record-links";
 import {
-  EXEC_RECORD_SRC_EXCLUDE,
+  resolveExecRecordSrcExclude,
   isExecPlanLink,
   isExecResultLink,
   isExecRecordPath,
@@ -847,7 +847,11 @@ export default defineConfig({
     "templates/**",
     "logs/**",
     "packages/**",
-    ...EXEC_RECORD_SRC_EXCLUDE,
+    // dev では plan / result 以外の実行記録も外す（--with-exec-records で含める）。build は変えない。
+    ...resolveExecRecordSrcExclude({
+      command: process.env.SPECDOJO_DOCS_COMMAND,
+      includeExecRecords: process.env.SPECDOJO_DOCS_WITH_EXEC_RECORDS === "1",
+    }),
   ],
 
   // サイト設定（サイドバーを含む）とページのハッシュ表は、既定では全ページの HTML へ

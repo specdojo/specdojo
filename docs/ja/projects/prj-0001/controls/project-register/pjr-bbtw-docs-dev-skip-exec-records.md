@@ -45,14 +45,41 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                         | 担当 | 状態 | メモ                                                               |
+| --- | -------------------------------------------- | ---- | ---- | ------------------------------------------------------------------ |
+| 1   | dev だけ実行記録を走査から外す判定を実装する | DEV  | done | `resolveExecRecordSrcExclude` を追加し `config.mts` で使う         |
+| 2   | `--with-exec-records` の指定を追加する       | DEV  | done | `bin/specdojo-docs-site.js` が環境変数でコンフィグへ渡す           |
+| 3   | 単体テストと README を更新する               | DEV  | done | `tests/packages/docs-site/exec-record-paths.test.ts`、README       |
+| 4   | 変更前後の起動時間を測る                     | DEV  | open | executor の sandbox では測れない。統合後にオーケストレーターが測る |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 5.1. 実施内容
+
+- `packages/docs-site/.vitepress/exec-record-paths.ts` に `DEV_EXEC_RECORD_SRC_EXCLUDE` と `resolveExecRecordSrcExclude` を追加した。`dev` で `--with-exec-records` が無いときだけ、`execution/` 配下の `runs/`・`exec/`・`jobs/runs/`・`routines/failures/`・`grade/results/` を `srcExclude` へ足す。`build` の除外は変えない。
+- `config.mts` は環境変数 `SPECDOJO_DOCS_COMMAND` と `SPECDOJO_DOCS_WITH_EXEC_RECORDS` から判定する。`bin/specdojo-docs-site.js` がこれらを設定し、`--with-exec-records` を VitePress へ渡さず取り除く。
+- 指定名は `--with-exec-records` とした。「何を含めるか」が名前で分かり、既定（外す）を変えずに足せるため。ルートの `npm run docs:dev -- --with-exec-records` は末尾の npm 呼び出しに付き npm のオプション扱いになるので、`npm_config_with_exec_records` も受け付ける。これで `package.json` を変えずに済む。
+- 単体テストで、dev・build・含める指定の 3 通りの除外と、dev での実ファイル走査（付随ページを外し `generated/` と `grade/criteria/` を残す）を確かめた。
+- README に、dev で外すページと含め方、リンク切れの扱いを書いた。
+
+### 5.2. 外したページへのリンクの扱い
+
+- dev では VitePress は dead link を検査しない。外したページへのリンクはクリック時に 404 になるだけで、表示は崩れない。plan・result へのリンクは従来どおり GitHub の正本へ付け替わる。dead link の検査は `build` が担い、`build` の出力は変えていない。
+- サイドバーと検索は走査ではなくパスの判定（`isExecRecordPath`）で除外済みで、変更していない。
+
+### 5.3. 判断した点
+
+- 起票時の入力にある「execution/ の 5,179 ページ」の大半（`runs/*/*/*/plan.md` と `result.md`）は、PJR-T4X7 の時点で `srcExclude` により dev・build とも走査から外れている。この作業ツリーで plan と result 以外の `runs/` 配下の Markdown は 0 件だった。このため本変更で新たに減るのは、`exec/`・`grade/results/` などの少数のページで、起動時間の短縮は小さい可能性がある。測定結果次第で、`controls/project-register/pjr-*.md`（約 1,181 ページ）を dev で外す案を別項目で検討する。
+
+### 5.4. CHANGELOG に書く事項
+
+- 区分: Changed
+- 文案: `docs:dev` は実行記録のページ（`execution/` 配下の `runs/`・`exec/` など）を読まず起動を速くする。含めるときは `--with-exec-records` を付ける。`docs:build` は変わらない。
+
+### 5.5. 残課題
+
+- 統合後に、変更前後の `docs:dev` 起動時間を測り、ここへ追記してから close する。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- `PJR-BNAV`（起動時間の測り）と `PJR-T4X7`（plan・result の除外）。
