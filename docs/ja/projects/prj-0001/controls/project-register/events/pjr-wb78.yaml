@@ -96,3 +96,16 @@
       from: ""
       to: 完了条件
   previous_event_id: reg_316e0a01a7784c66bc397c9fbf5743a4
+- v: 1
+  id: reg_b811e318e98342d0af214a4156a82f0e
+  ts: "2026-11-22T07:51:53Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: indie が承認した案（2026-11-22）を書く
+  changes:
+    - field: section
+      from: ""
+      to: 作業内容
+  previous_event_id: reg_d4b36f1136624e1ba821fcca9f9a5dfd
