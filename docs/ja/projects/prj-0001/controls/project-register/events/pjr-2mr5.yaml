@@ -41,3 +41,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-ABY4"]'
+- v: 1
+  id: reg_1312c461dca140d485ea9f25015f25cd
+  ts: "2026-11-22T06:19:59Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 読むだけの標準のパスが変更の範囲と推定され、並べた項目が順番待ちになったため名前だけにする
+  changes:
+    - field: input
+      from: '["2026-11-22、T-KATA-WAVE-3-atc-sample-090 の review で、型の評価は rulebook pass 98（minor 2）、sample needs-work 87（major 3・minor 2） だった。指摘は docs/ja/projects/prj-0001/execution/grade/results/specdojo.atc-rulebook.yaml と specdojo.atc-sample.yaml にある。","合格は、機械的な「未解決の `_TODO_` / `_ASSUMPTION_`」の指摘（PJR-7C9X）を除いて、rulebook と sample に blocker と major がないこととする（indie の判断、2026-11-22）。","`_TODO_` は sample に残さない。`_ASSUMPTION_` は docs/ja/specdojo/standards/sample-authoring-standard.md に従って残してよい。"]'
+      to: '["2026-11-22、T-KATA-WAVE-3-atc-sample-090 の review で、型の評価は rulebook pass 98（minor 2）、sample needs-work 87（major 3・minor 2） だった。指摘は docs/ja/projects/prj-0001/execution/grade/results/specdojo.atc-rulebook.yaml と specdojo.atc-sample.yaml にある。","合格は、機械的な「未解決の `_TODO_` / `_ASSUMPTION_`」の指摘（PJR-7C9X）を除いて、rulebook と sample に blocker と major がないこととする（indie の判断、2026-11-22）。","`_TODO_` は sample に残さない。`_ASSUMPTION_` は sample-authoring-standard（sample の記述の標準、読むだけで変えない）に従って残してよい。"]'
+  previous_event_id: reg_d797cafab0b1436d97871237eea4c7a4
