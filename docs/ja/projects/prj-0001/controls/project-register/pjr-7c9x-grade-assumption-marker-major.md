@@ -1,0 +1,57 @@
+---
+specdojo:
+  id: prj-0001:pjr-7c9x-grade-assumption-marker-major
+  type: project
+  status: draft
+  rulebook: specdojo:pjr-rulebook
+  part_of:
+    - prj-0001:pjr-index
+  item_type: issue
+  item_status: open
+  priority: medium
+  difficulty: medium
+  owner: DEV
+  registered_at: "2026-11-22T05:39:27Z"
+  derived_from:
+    - PJR-ABY4
+---
+
+# PJR-7C9X grade の機械的な検査が、sample の標準が求める _ASSUMPTION_ まで major にする
+
+## 1. 課題内容
+
+grade の vp-qe-config-validity の検査は本文に _TODO_ か _ASSUMPTION_ があると major にするが、sample-authoring-standard は未確定の事項を _ASSUMPTION_ で明示するよう求めており、同じ状態の sample でも結果が分かれる
+
+## 2. 入力
+
+- 2026-11-22、第 3 波の 090 で、utc-index・stc-index・tsp-index・itc・atc の sample に「未解決の `_TODO_` / `_ASSUMPTION_` が残っています。」の major が付き、verdict が needs-work になった。utc-index・stc-index・tsp-index は、major がこの 1 件だけだった。
+- 同じく `_ASSUMPTION_` を 1 つ持つ utc-sample と imp-test-sample は pass で、この指摘が付いていない。付く条件がぶれている。
+- 検査の実装は src/grade/plan.ts の vp-qe-config-validity（本文の最初の `_TODO_` / `_ASSUMPTION_` の行を major とする）。sample の標準は docs/ja/specdojo/standards/sample-authoring-standard.md（未確定の事項は `_UNDECIDED_:` または `_ASSUMPTION_:` として明示する）。
+- 利用者（indie）の判断（2026-11-22）: 第 3 波の手直しの合格は、この機械的な指摘を除いて blocker と major がないこととする。この issue が直れば、次の回からは verdict pass をそのまま合格に使う。
+
+## 3. 影響範囲
+
+| 観点         | 影響   |
+| ------------ | ------ |
+| スコープ     | _TODO_ |
+| スケジュール | _TODO_ |
+| コスト       | _TODO_ |
+| 品質         | _TODO_ |
+| 関係者       | _TODO_ |
+
+## 4. 対応方針
+
+| 項目     | 内容   |
+| -------- | ------ |
+| 原因     | _TODO_ |
+| 対応策   | _TODO_ |
+| 依存事項 | _TODO_ |
+| 完了条件 | _TODO_ |
+
+## 5. 対応結果
+
+_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+
+## 6. 関連ドキュメント
+
+- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
