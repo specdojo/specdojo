@@ -44,17 +44,34 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業                                         | 担当                  | 状態 | メモ                      |
-| --- | -------------------------------------------- | --------------------- | ---- | ------------------------- |
-| 1   | YAML を変えた run で表示のページを作り直す   | DEV                   | open | 再開で取り込んだ後も      |
-| 2   | `lint-md-changed` の対象に表示のページを足す | DEV                   | open | commit の対象には入れない |
-| 3   | テストと文書、CHANGELOG の文案               | DEV                   | open | RS2P と同じ壊れ方を止める |
-| 4   | JSEY と、YAML を壊した run での確かめ        | specdojo-orchestrator | open | 統合の後                  |
+| No  | 作業                                         | 担当                  | 状態 | メモ                                                                                                                      |
+| --- | -------------------------------------------- | --------------------- | ---- | ------------------------------------------------------------------------------------------------------------------------- |
+| 1   | YAML を変えた run で表示のページを作り直す   | DEV                   | done | `src/exec/worktree-yaml-pages.ts`。親検証の前に、ページより新しい YAML を時刻で見つけるため、再開で取り込んだ YAML も対象 |
+| 2   | `lint-md-changed` の対象に表示のページを足す | DEV                   | done | `tools/lint-changed.mjs` の `withYamlPages`。ページは .gitignore のままで commit の対象に入らない                         |
+| 3   | テストと文書、CHANGELOG の文案               | DEV                   | done | 単体テスト・統合テストで `# #` の壊れ方を `lint-md-changed` で止める。`exec-operation-guide` に追記                       |
+| 4   | JSEY と、YAML を壊した run での確かめ        | specdojo-orchestrator | open | 統合の後にオーケストレーターが行うため、executor では実施しない                                                           |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+実施内容:
+
+- 親検証の前の作り直し: `src/exec/worktree-yaml-pages.ts` を追加し、`runConfiguredParentValidationBatch`（`src/exec/run/agent.ts`）が親検証の gate の中で、検証を流す前に呼ぶ。対象は `docs/ja`・`docs/en` の YAML のうち、表示のページ（マーカー付き）より更新時刻が新しいもの、または変更・未追跡でページがまだ無いもの。executor の変更も、`--resume` で統合先から取り込んだ変更も、時刻で見つける。該当があるときだけ worktree の CLI で `specdojo build --only yaml-pages` を流す。該当がなければ作り直さない。
+- 作り直しの失敗: runner の検証 `yaml-pages`（コマンド `specdojo build --only yaml-pages`）を `failed` として記録し、生成の出力を失敗の出力のログに残す。`failedParentValidationReason` が `yaml-pages` を挙げ、親検証の失敗になる。どの YAML の生成で止まったかを示すため、`buildYamlPages` はページの描画の例外に YAML のパスを付ける（`Failed to render YAML page: <path>`）。成功のときは記録を足さず、記録済みの親検証の並びは変わらない。worktree に SpecDojo の CLI が無い場合は、準備のときと同じく作り直しを飛ばす。
+- `lint-md-changed`・`lint-fm-changed`: `tools/lint-changed.mjs` が、変えた YAML の表示のページが作業ツリーにあれば検査の対象に足す。ページは .gitignore のままで、commit の対象に入らない。
+- テスト: 単体テスト（`tests/src/exec/worktree-yaml-pages.test.ts`、`tests/tools/lint-changed.test.ts`）で対象の選び方と失敗の記録を、統合テスト（`tests/src/exec/worktree-yaml-pages.integration.test.ts`）で、YAML のコメントを `# #` にした run が作り直しの後の `lint-md-changed` で MD025 の失敗になること、YAML を変えない run では作り直さないこと、commit 済みの取り込みの変更も見つけることを確かめる。
+- 文書: `exec-operation-guide` の executor / reporter pipeline の節に、親検証の前に表示のページを作り直して検査することを書いた。
+
+制約と残課題:
+
+- 統合先から取り込んだ新しい YAML（ページがまだ無いもの）は、ほかの YAML が変わっていなければ作り直しの対象にならない。変更していないページは作り直しで書き換わらないため、内容が同じまま更新時刻だけが古いページは、以後の親検証で作り直しが重ねて走ることがある（YAML を変えた run に限る）。
+- 保護された設定（`exec-defaults.yaml`・`package.json`）の変更は要らない。
+- 作業内容の No 4（PJR-JSEY での runner の確かめと、YAML を壊した実際の `exec run --register` での確かめ）は、統合の後にオーケストレーターが行う。
+
+### 5.1. CHANGELOG に書く事項
+
+- 区分: 不具合修正
+- 文案: `exec run` の親検証の前に、executor が変えた YAML や再開で取り込んだ YAML の表示のページを作り直し、`lint:md:changed`・`lint:fm:changed` の対象に含めるようにした。古い表示のページのまま検査して、壊れたページを統合の後まで見逃すことがなくなる（PJR-TF6F）。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[specdojo:exec-operation-guide|exec運用ガイド]]: 親検証の前の表示のページの作り直しを追記した。

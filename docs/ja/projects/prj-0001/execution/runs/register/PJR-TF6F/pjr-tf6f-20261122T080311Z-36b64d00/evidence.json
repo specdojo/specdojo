@@ -1,0 +1,228 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-TF6F",
+  "run_id": "pjr-tf6f-20261122T080311Z-36b64d00",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-22T08:04:00.247Z",
+    "completed_at": "2026-11-22T08:12:00.711Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-tf6f.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-tf6f-lint-generated-yaml-pages.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/docs/yaml-pages.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/parent-validation.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/agent.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/tools/lint-changed.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tools/lint-changed.mjs",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-yaml-pages.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/worktree-yaml-pages.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/worktree-yaml-pages.test.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-tf6f-lint-generated-yaml-pages.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/docs/yaml-pages.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/parent-validation.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/agent.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/tools/lint-changed.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tools/lint-changed.mjs",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-yaml-pages.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/worktree-yaml-pages.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/worktree-yaml-pages.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 11,
+    "summary": ".../pjr-tf6f-lint-generated-yaml-pages.md          | 33 ++++++++++++++++------\n docs/ja/specdojo/guides/exec-operation-guide.md    |  2 ++\n src/docs/yaml-pages.ts                             |  9 +++++-\n src/exec/parent-validation.ts                      |  3 +-\n src/exec/run/agent.ts                              | 23 ++++++++++++++-\n tests/tools/lint-changed.test.ts                   | 22 ++++++++++++++-\n tools/lint-changed.mjs                             | 30 +++++++++++++++++---\n 7 files changed, 106 insertions(+), 16 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx vitest run tests/src/exec/worktree-yaml-pages.test.ts tests/src/exec/worktree-yaml-pages.integration.test.ts tests/tools/lint-changed.test.ts tests/src/docs/yaml-pages.test.ts tests/src/exec/run/parent-validation-gate.test.ts",
+      "status": "passed",
+      "summary": "5 files, 61 tests passed（変更に関わるテストだけを流した。全件は親 runner の test-unit / test-integration が正）"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "exit 0。変更した個票を含め違反なし"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write (changed md/ts/mjs files)",
+      "status": "passed",
+      "summary": "変更したファイルを整形した"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TF6F/src/catalog/catalog.ts\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TF6F/src/dashboard/dashboard.ts\n  1149:1  warning  File has too many lines (1067). Maximum allow\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TF6F/src/schedule/strategy-generate-document.ts\n  87:8  warning  Function 'buildStrategyDocument' has too many lines (289). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TF6F/src/shared/specdojo-config.ts\n  1243:1  warning  File has too many lines (1084). Maximum allowed is 1000  max-lines\n\n✖ 40 problems (0 errors, 40 warnings)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 5829 file(s), 107 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 83 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5829 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TF6F\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (48 tests) 8ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n[parent-validation:test-file\n… output omitted …\n\":\"end\",\"file\":\"tests/src/exec/plans.test.ts\"}\n\n Test Files  19 passed (19)\n      Tests  476 passed (476)\n   Start at  17:12:19\n   Duration  2.45s (transform 5.53s, setup 1.33s, import 7.29s, tests 5.27s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TF6F\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/devcontainer/scaffold.integration.test.ts\"}\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-co\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TF6F/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TF6F/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TF6F\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/register/commands.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/exec/plans.test.ts\"}\n ✓ tests/src/register/commands.test.ts (79 tests) 1398ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/src/register/commands.test.ts\"}\n ✓ tests\n… output omitted …\n it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "親の検証の前に、YAML を変えた run だけ worktree で表示のページを作り直すようにした（`src/exec/worktree-yaml-pages.ts`、`runConfiguredParentValidationBatch` から呼ぶ）。作り直しの失敗は `yaml-pages` の `failed` として記録し、`buildYamlPages` は止まった YAML のパスを示す。`tools/lint-changed.mjs` は変えた YAML の表示のページを検査の対象に足す。単体テスト・統合テスト（`# #` の壊れ方を `lint-md-changed` で止める）、`exec-operation-guide`、個票の対応結果と CHANGELOG の文案を更新した。",
+  "completion_status": "complete",
+  "handoff": [
+    "作業内容 No 4（統合の後の PJR-JSEY での runner の動作の確かめと、YAML を壊した実際の `exec run --register` で統合の前の親の検証で止まることの確かめ）は specdojo-orchestrator が行う。",
+    "CHANGELOG.md は変えていない。個票の `### 5.1. CHANGELOG に書く事項` に、区分「不具合修正」と行の文案を書いた。",
+    "保護された設定（`exec-defaults.yaml`・`package.json`）の変更は要らない。",
+    "制約: 統合先から取り込んだ新しい YAML でまだページが無いものは、ほかの YAML が変わっていなければ作り直しの対象にならない。内容の変わらないページは書き換えないため、更新時刻だけ古いページがあると、YAML を変えた run では以後の親の検証でも作り直しが走ることがある。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-TF6F/pjr-tf6f-20261122T080311Z-36b64d00/executor.log",
+      "bytes": 5643,
+      "truncated": false
+    }
+  ]
+}

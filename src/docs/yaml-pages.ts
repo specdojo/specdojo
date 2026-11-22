@@ -512,7 +512,14 @@ export function buildYamlPages(rootDir: string, repoRoot: string): YamlPagesResu
 
     const pageRelPath = yamlPageRelPath(yamlRelPath);
     const pagePath = join(repoRoot, pageRelPath);
-    const page = renderYamlPage(yamlRelPath, content);
+    let page: string;
+    try {
+      page = renderYamlPage(yamlRelPath, content);
+    } catch (error) {
+      // どの YAML の生成で止まったかを、呼び出し元（worktree の作り直しなど）へ伝える（PJR-TF6F）。
+      const message = error instanceof Error ? error.message : String(error);
+      throw new Error(`Failed to render YAML page: ${yamlRelPath} (${message})`, { cause: error });
+    }
 
     if (existsSync(pagePath)) {
       const existing = readFileSync(pagePath, "utf8");

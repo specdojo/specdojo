@@ -22,6 +22,10 @@ import { loadPlan, parsePlanTaskIdentity } from "../plans.js";
 import type { ReadyTaskView, TaskMode } from "../types.js";
 import { worktreeStatusPaths } from "../worktree-ops.js";
 import {
+  refreshYamlPagesBeforeParentValidations,
+  type YamlPagesRefresh,
+} from "../worktree-yaml-pages.js";
+import {
   partitionVanishedCoverageTargets,
   recordParentValidationFailureOutput,
   validateResumedTargetCoverage,
@@ -366,6 +370,8 @@ export type ParentValidationRunOptions = {
   invoke?: ParentValidationInvoker;
   // 変更の種類で選ぶ検証（`paths` あり）の判定に使う変更一覧。省略時はすべて流す（PJR-T01P）。
   selection?: ParentValidationSelection;
+  // 親の検証の前に YAML の表示のページを作り直す処理（PJR-TF6F）。テストで差し替える。
+  refreshYamlPages?: (worktreePath: string) => YamlPagesRefresh;
 };
 
 // 同じ exec run 内の親検証は run 全体の gate（既定 1 本）で直列化する。executor と reporter は
@@ -382,8 +388,23 @@ export async function runConfiguredParentValidationBatch(
   const label = options.label ?? basename(typeof cwd === "string" ? cwd : cwd.project);
   const batch = await withValidationMetrics(label, options.metricsPath, () =>
     parentValidationGateFor(execDefaults).run(label, labels, async () => {
+      // YAML を変えた run だけ、古い表示のページを作り直してから検査する。作り直しの失敗は
+      // 親の検証の失敗として記録し、残りの検証は従来どおり流す。
+      const refreshed = refreshYamlPagesBeforeParentValidations(
+        typeof cwd === "string" ? { project: cwd } : cwd,
+        options.refreshYamlPages,
+      );
       process.stdout.write(`  Running parent validations (${label}): ${labels.join(", ")}\n`);
-      return await runParentValidationBatch(entries, cwd, options.invoke, options.selection);
+      const validated = await runParentValidationBatch(
+        entries,
+        cwd,
+        options.invoke,
+        options.selection,
+      );
+      return {
+        validations: [...refreshed.validations, ...validated.validations],
+        failureOutputs: [...refreshed.failureOutputs, ...validated.failureOutputs],
+      };
     }),
   );
   for (const validation of batch.validations) {

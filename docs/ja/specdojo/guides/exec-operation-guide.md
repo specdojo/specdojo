@@ -481,6 +481,8 @@ stage 別の失敗と対応は次のとおりです。
 | evidence の機械判定が blocked | result が `blocked` になり `block_reason` に理由が残る | executor または親検証の理由を読み、成果物側の不足を解消してから再実行する                          |
 | commit / merge / 撤去の失敗   | executor・reporter が `succeeded`、統合が `failed`     | `exec resume --task <task-id>` で統合段だけ再開する                                                |
 
+YAML の表示のページ（同じ階層の `generated/<名前>.md`）は git の管理外で、worktree の準備のときに作られます。親 runner は親検証の前に、ページより新しい YAML、または変更した YAML でページがまだ無いものがあれば、worktree で `specdojo build --only yaml-pages` と同じ生成を流してページを作り直します。executor が変えた YAML も、再開で統合先から取り込んだ YAML も対象です。YAML を変えない run では作り直しません。作り直しが失敗した場合は、変えた YAML と生成の出力を `yaml-pages` の `failed` として記録し、親検証の失敗として扱います。`lint-md-changed`・`lint-fm-changed` は、変えた YAML の表示のページも検査の対象に含めます。ページは commit の対象に入りません。
+
 reporter で止まったタスクは、同じ claim のまま reporter だけを再開できます。再開時は `pipeline-state.json` と executor evidence の task ID / run ID の一致を確認し、一致しない場合や欠損している場合は evidence を再利用せず、新しい run として executor から実行し直します。保存済みの親 runner 検証だけが失敗している場合は、現在の worktree でその固定許可リスト検証を再実行し、結果を evidence へ反映してから reporter を起動します。`source: executor` の検証失敗は成果物側の記録なので、この経路では再評価しません。
 
 ```bash

@@ -60,7 +60,8 @@ export type ParentValidationProcessResult = {
 };
 
 export type ParentValidationFailureOutput = ParentValidationProcessResult & {
-  id: ParentValidationId;
+  // `yaml-pages` は親の検証の前の表示のページの作り直しの失敗を表す（PJR-TF6F）。
+  id: ParentValidationId | "yaml-pages";
   repo?: string;
   label: string;
 };
