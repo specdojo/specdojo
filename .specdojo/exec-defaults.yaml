@@ -22,22 +22,28 @@ pipeline:
     # lint は短時間で終わるため先に実行し、executor が残した ESLint・frontmatter・Markdown の
     # エラーを統合前に検出する（PJR-K1Z5）。
     # paths を書いた検証は、executor が変えたファイルに合うときだけ流す（PJR-T01P）。
+    # 軽い lint は parallel: true で並べて流し、test は 1 本ずつにする（PJR-50RQ）。
     - id: lint-ts # npm run lint:ts
       paths: ["{src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}", "eslint.config.js"]
-    - lint-fm # npm run lint:fm
-    - lint-md # npm run lint:md
+    # 変えた Markdown だけに流す。lint の規則や設定を変えた run では下の全体の lint を流す（PJR-50RQ）。
+    - { id: lint-md-changed, parallel: true } # npm run lint:md:changed
+    - { id: lint-fm-changed, parallel: true } # npm run lint:fm:changed
+    - id: lint-md # npm run lint:md
+      paths: ["packages/docs-lint/**", ".markdownlint*", "package.json"]
+      parallel: true
+    - id: lint-fm # npm run lint:fm
+      paths: ["packages/docs-lint/**", ".remarkrc*", "package.json"]
+      parallel: true
     # Mermaid の構文エラーは docs:build まで分からないため、統合前に検出する（PJR-B5TY）。
-    - lint-mermaid # npm run lint:mermaid
-    - lint-d2 # npm run lint:d2
+    - { id: lint-mermaid, parallel: true } # npm run lint:mermaid
+    - { id: lint-d2, parallel: true } # npm run lint:d2
+    # 実際の文書を読むテストは unit・integration から分けて、文書を変えた run で流す（PJR-50RQ）。
+    - id: test-docs # npm run test:docs
+      paths: ["docs/ja/specdojo/**", "docs/specdojo/**"]
     # sandbox 内では tsx の IPC ソケット作成、Vitest の終了、git の子プロセス終了が
     # 成立せず、成果物と無関係に failed となるため親プロセスで実行する（PJR-QVGX）。
     - id: test-integration # npm run test:integration（shell を介さず固定 argv で実行）
-      paths:
-        - "{src,tests,tools,scripts,packages}/**"
-        - "docs/ja/specdojo/**"
-        - "docs/specdojo/**"
-        - "vitest.*"
-        - "tsconfig*.json"
+      paths: ["{src,tests,tools,scripts,packages}/**", "vitest.*", "tsconfig*.json"]
     - validate-schema # npm run validate:schema
     # 型エラーは Vitest では検出できず、統合時の pre-commit hook まで持ち越されるため、
     # test-unit の前に親検証として実行する（PJR-W66B）。docs-site の .vitepress も対象（PJR-C8J8）。
@@ -49,8 +55,9 @@ pipeline:
           "packages/docs-site/**",
           "tsconfig*.json",
         ]
-    # 型のメニューや catalog のテストが実際の文書を読むため、paths を書かず毎回流す。
-    - test-unit # npm run test:unit
+    # 実際の文書を読むテストを test-docs に分けたため、コードを変えた run だけで流す（PJR-50RQ）。
+    - id: test-unit # npm run test:unit
+      paths: ["{src,tests,tools,scripts,packages}/**", "vitest.*", "tsconfig*.json"]
   # 親の検証が passed のとき、統合の commit で同じ hook を流し直さない（PJR-T01P）。
   commit_hook_skips:
     - { hook: typecheck, covered_by: [typecheck] }
