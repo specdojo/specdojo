@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   difficulty: medium
   owner: DEV
@@ -40,17 +40,41 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業                               | 担当                  | 状態 | メモ                     |
-| --- | ---------------------------------- | --------------------- | ---- | ------------------------ |
-| 1   | grade の指摘を読み、直し方を決める | DEV                   | open | 直さない指摘は理由を残す |
-| 2   | rulebook と sample を直す          | DEV                   | open | ほかの型は変えない       |
-| 3   | lint と親の検証を通す              | DEV                   | open | -                        |
-| 4   | 統合の後に grade で評価し直す      | specdojo-orchestrator | open | 合格しなければ回目を足す |
+| No  | 作業                               | 担当                  | 状態 | メモ                                                               |
+| --- | ---------------------------------- | --------------------- | ---- | ------------------------------------------------------------------ |
+| 1   | grade の指摘を読み、直し方を決める | DEV                   | done | 全指摘を直した                                                     |
+| 2   | rulebook と sample を直す          | DEV                   | done | ほかの型は変えていない                                             |
+| 3   | lint と親の検証を通す              | DEV                   | done | markdownlint は通過。親の検証は runner が実行                      |
+| 4   | 統合の後に grade で評価し直す      | specdojo-orchestrator | open | executor は grade を起動できない。統合後にオーケストレーターが実施 |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 5.1. CHANGELOG に書く事項
+
+なし（文書の型の手直しのため）
+
+### 5.2. 実施内容
+
+rulebook（`stc-index-rulebook`）:
+
+- F001: 推奨カラムの見出しを「省略してよい。置く場合は必須カラムの後に、この順で並べる」に改め、必須と推奨の矛盾を解消した。
+- F002: 分割候補の閾値は rulebook の「表が60行以上」を正とし、sample を揃えた。
+
+sample（`stc-index-sample`）:
+
+- F001: 印刷の用紙切れを観点 `会計維持` に付け替え、観点の系統表にも追加した。
+- F002: P2 を「BAC-01〜BAC-03 に含まれない頻度の低い組合せ」に限った。
+- F003: 閾値を「60行以上」に揃えた。
+- F004: 印字結果不明（30秒タイムアウト）を対象外の例外とスタブの一覧に加えた。
+- F005: `_TODO_` の2行を解消した。証跡形式は共通方針へ決定として取り込み、スモークと回帰の分離は P0 全件再実行の方針があるため行を削除した。`_ASSUMPTION_` と `_UNDECIDED_` は残した。
+
+直さなかった指摘はない。
+
+### 5.3. 残課題
+
+- 統合後の `npx specdojo grade run --target kata --kata stc-index` による再評価は、オーケストレーターが行う。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[specdojo:stc-index-rulebook]]
+- [[specdojo:stc-index-sample]]
