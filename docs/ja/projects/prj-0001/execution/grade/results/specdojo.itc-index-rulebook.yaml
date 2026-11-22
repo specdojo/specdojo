@@ -4,12 +4,11 @@ document: specdojo:itc-index-rulebook
 path: docs/ja/specdojo/rulebooks/itc-index-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-rulebook
-verdict: needs-work
-score: 87
-graded_at: "2026-11-21T04:21:53.677Z"
-graded_by: opus-executor
-content_hash: a828c66eedd9267f82e72db4fb06e0bf5ce11770ff5a56435cdedc25b2f76877
+verdict: pass
+score: 98
+graded_at: "2026-11-22T03:31:25.084Z"
+graded_by: opus-review-executor
+content_hash: 2a5d9a9e7c305c5c9354c5d93b2f38da6622c2bb47f536ceb467138a7bafbc7e
 categories:
   purpose:
     score: 100
@@ -22,13 +21,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 67
+    score: 92
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -70,23 +69,23 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
     level: 3
     score: 75
-  vp-qe-kata-conformance:
-    level: 2
-    score: 50
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 3
     score: 75
@@ -101,72 +100,29 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 6
+  major: 0
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-dev-testability
-    line: 243
-    anchor: "- 検討候補は fixture生成・匿名化・seed戦略、環境起動時間短縮（コンテナ最適化・キャッシュ）、flaky対策（リトライ方針・タイムアウト基準）、証跡リンク形式、ケースID重複・必須列の検査などとする。"
-    message: ケースIDの重複や必須列の欠落の検査は将来課題として挙げられているだけで、当面の確認手段（レビュー時のチェック項目や検証コマンド）が示されておらず、作成後に何で合否を確認するかが読み取れないため、当面の扱いを明記すべきである。
-    message_ja: ケースIDの重複や必須列の欠落の検査は将来課題として挙げられているだけで、当面の確認手段（レビュー時のチェック項目や検証コマンド）が示されておらず、作成後に何で合否を確認するかが読み取れないため、当面の扱いを明記すべきである。
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# 内部結合テストカタログ概要 作成ルール"
+    message: >-
+      Frontmatter の `recipe` と `template` が `undecided` のままで、rulebook に対応する recipe・template の担い手が決まっておらず、Kata
+      の構成要素間の責務分担を確認できないため、作成するか対象外とするかを決めて宣言すべきである。
+    message_ja: >-
+      Frontmatter の `recipe` と `template` が `undecided` のままで、rulebook に対応する recipe・template の担い手が決まっておらず、Kata
+      の構成要素間の責務分担を確認できないため、作成するか対象外とするかを決めて宣言すべきである。
   - id: F002
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 222
-    anchor: "`itc-<term>` のケース表は、次の共通カラム順とする。「推奨（運用必須）」の列も運用時には揃える。"
-    message: >-
-      共通カラムの区分「推奨（運用必須）」は、省略可否がいつの時点（ドラフト作成時か、ready
-      化時か、運用開始時か）で必須に切り替わるのかが定義されていないため、どの段階で列の欠落を不合格とするかが判定できない。区分の切り替え条件を明記すべきである。
-    message_ja: >-
-      共通カラムの区分「推奨（運用必須）」は、省略可否がいつの時点（ドラフト作成時か、ready
-      化時か、運用開始時か）で必須に切り替わるのかが定義されていないため、どの段階で列の欠落を不合格とするかが判定できない。区分の切り替え条件を明記すべきである。
-  - id: F003
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 174
-    anchor: "- 分配結果は `itc-<term>` 側のケース表とトレース列で追跡可能にする"
-    message: 分配結果を「ケース表とトレース列で追跡可能にする」としているが、共通カラムのトレース列は「根拠仕様への対応」と定義されており、主担当・従担当の分配を記録する列として定義されていないため、どちらかの記述を揃えるべきである。
-    message_ja: 分配結果を「ケース表とトレース列で追跡可能にする」としているが、共通カラムのトレース列は「根拠仕様への対応」と定義されており、主担当・従担当の分配を記録する列として定義されていないため、どちらかの記述を揃えるべきである。
-  - id: F004
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 内部結合テストカタログ概要 作成ルール"
-    message: 参照サンプル `specdojo:itc-index-sample` が、本文第5章で定義した必須構成（固定見出し順）に従っておらず、完成例として不整合である。
-    message_ja: 参照サンプル `specdojo:itc-index-sample` が、本文第5章で定義した必須構成（固定見出し順）に従っておらず、完成例として不整合である。
-  - id: F005
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 内部結合テストカタログ概要 作成ルール"
-    message: >-
-      Frontmatter の `recipe` と `template` が `undecided` のままで、rulebook に対応する recipe・template の担い手が決まっておらず、Kata
-      の構成要素間の責務分担を確認できないため、作成するか対象外とするかを決めて宣言すべきである。
-    message_ja: >-
-      Frontmatter の `recipe` と `template` が `undecided` のままで、rulebook に対応する recipe・template の担い手が決まっておらず、Kata
-      の構成要素間の責務分担を確認できないため、作成するか対象外とするかを決めて宣言すべきである。
-  - id: F006
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 105
-    anchor: "- 「対象外」は **テストレベルの責務分界**（IT/ET/E2E/NFR）に紐づけて書く"
-    message: >-
-      対象外の紐づけ先を「IT/ET/E2E/NFR」としているが、責務分界の説明では「UT/ET/ST/AT」を使っており、テストレベルの略語体系（E2E・NFR と ST・AT の関係、IT
-      の定義）が統一されていないため、読み手が分界先を誤読しうる。
-    message_ja: >-
-      対象外の紐づけ先を「IT/ET/E2E/NFR」としているが、責務分界の説明では「UT/ET/ST/AT」を使っており、テストレベルの略語体系（E2E・NFR と ST・AT の関係、IT
-      の定義）が統一されていないため、読み手が分界先を誤読しうる。
-  - id: F007
     severity: minor
     rule: vp-ops-release-readiness
     line: 1
     anchor: "# 内部結合テストカタログ概要 作成ルール"
     message: >-
-      `recipe` と `template` が `undecided`、サンプルが規定構成と不整合という未解決事項が残っているのに、本文や Frontmatter から ready
-      化の前提（いつ誰が決めるか）が読み取れないため、ready 化の前に解消方針を明示すべきである。
+      sample は規定の章構成と一致して前回の不整合は解消したが、`recipe` と `template` は `undecided` のままで、rulebook を `ready`
+      にする前に要否を決めるのか、`undecided` のまま `ready` にしてよいのかが本文と Frontmatter から読み取れないため、ready 化の前提として解消方針を明示すべきである。
     message_ja: >-
-      `recipe` と `template` が `undecided`、サンプルが規定構成と不整合という未解決事項が残っているのに、本文や Frontmatter から ready
-      化の前提（いつ誰が決めるか）が読み取れないため、ready 化の前に解消方針を明示すべきである。
+      sample は規定の章構成と一致して前回の不整合は解消したが、`recipe` と `template` は `undecided` のままで、rulebook を `ready`
+      にする前に要否を決めるのか、`undecided` のまま `ready` にしてよいのかが本文と Frontmatter から読み取れないため、ready 化の前提として解消方針を明示すべきである。
