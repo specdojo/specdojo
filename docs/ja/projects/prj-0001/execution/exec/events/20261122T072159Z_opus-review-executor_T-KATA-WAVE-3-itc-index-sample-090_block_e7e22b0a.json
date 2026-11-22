@@ -1,0 +1,16 @@
+{
+  "v": 1,
+  "ts": "2026-11-22T07:21:59Z",
+  "type": "block",
+  "task_id": "T-KATA-WAVE-3-itc-index-sample-090",
+  "by": "opus-review-executor",
+  "msg": "integration failed: project: Result Markdown notation violation before commit: docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-3-itc-index-sample-090/T-KATA-WAVE-3-itc-index-sample-090-20261122T071739Z-0260b311/result.md:23:454 error MD038/no-space-in-code Spaces inside code span elements [Context: \"...x-rulebook.md --incomplete ```\"]; integrated repositories: none; not integrated: project; worktree kept: /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-3-itc-index-sample-090; next: fix the artifacts with exec resume --task T-KATA-WAVE-3-itc-index-sample-090 --resume-from executor (syncs the integration target first), or retry only the integration with exec resume --task T-KATA-WAVE-3-itc-index-sample-090",
+  "meta": {
+    "pipeline_stage": "integrate",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-3-itc-index-sample-090/T-KATA-WAVE-3-itc-index-sample-090-20261122T071739Z-0260b311/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-3-itc-index-sample-090/T-KATA-WAVE-3-itc-index-sample-090-20261122T071739Z-0260b311/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-3-itc-index-sample-090-20261122T071739Z-0260b311",
+    "claim_actor": "opus-review-executor",
+    "stage_actor": "opus-review-executor"
+  }
+}
