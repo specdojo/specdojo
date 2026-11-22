@@ -93,3 +93,16 @@
       from: in-progress
       to: review
   previous_event_id: reg_27d2f82956b1404cac4356f759088f63
+- v: 1
+  id: reg_e6a4253f5a024f8787a03613a01da86d
+  ts: "2026-11-22T08:43:59Z"
+  action: update
+  actor: indie
+  from_status: review
+  to_status: review
+  reason: 前回の指摘の引き継ぎで機械的な指摘が残ると分かったため、2 回目の条件を足す
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_e211f064ba03426991c54c7818ffb2c1
