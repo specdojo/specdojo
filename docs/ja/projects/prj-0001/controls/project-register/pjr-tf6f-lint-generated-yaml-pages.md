@@ -49,7 +49,7 @@ specdojo:
 | 1   | YAML を変えた run で表示のページを作り直す   | DEV                   | done | `src/exec/worktree-yaml-pages.ts`。親検証の前に、ページより新しい YAML を時刻で見つけるため、再開で取り込んだ YAML も対象 |
 | 2   | `lint-md-changed` の対象に表示のページを足す | DEV                   | done | `tools/lint-changed.mjs` の `withYamlPages`。ページは .gitignore のままで commit の対象に入らない                         |
 | 3   | テストと文書、CHANGELOG の文案               | DEV                   | done | 単体テスト・統合テストで `# #` の壊れ方を `lint-md-changed` で止める。`exec-operation-guide` に追記                       |
-| 4   | JSEY と、YAML を壊した run での確かめ        | specdojo-orchestrator | open | 統合の後にオーケストレーターが行うため、executor では実施しない                                                           |
+| 4   | JSEY と、YAML を壊した run での確かめ        | specdojo-orchestrator | done | 統合の後にオーケストレーターが行うため、executor では実施しない                                                           |
 
 ## 5. 対応結果
 
@@ -71,6 +71,11 @@ specdojo:
 
 - 区分: 不具合修正
 - 文案: `exec run` の親検証の前に、executor が変えた YAML や再開で取り込んだ YAML の表示のページを作り直し、`lint:md:changed`・`lint:fm:changed` の対象に含めるようにした。古い表示のページのまま検査して、壊れたページを統合の後まで見逃すことがなくなる（PJR-TF6F）。
+
+### 5.2. 統合後の確かめ
+
+- 2026-11-22、オーケストレーターが PJR-JSEY を `exec smoke --targets PJR-TF6F,PJR-WB78` で流し、start から review までの記帳と実体の actor（sonnet-executor）の照合が通った。
+- 同じ日、確かめ用の PJR-SGFC で `docs/ja/specdojo/samples/ifx-index-sample.yaml` の最初のコメントを RS2P と同じ形に壊して `exec run --register --worktree` を流した。親の検証の `lint-md-changed` が、作り直した表示のページ `docs/ja/specdojo/samples/generated/ifx-index-sample.md` の MD025（H1 が 2 つ）で止め、`validate-schema` も失敗して、統合されずに waiting になった。SGFC は reject し、worktree と exec のブランチを消した。develop の YAML は変わっていない。
 
 ## 6. 関連ドキュメント
 
