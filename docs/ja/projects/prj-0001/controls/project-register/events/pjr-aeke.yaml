@@ -57,3 +57,19 @@
       from: "2026-11-30"
       to: _TODO_
   previous_event_id: reg_0da86ef9726a42b186d8de2d59214404
+- v: 1
+  id: reg_600501182626468e8e6c1a5ecc984490
+  ts: "2026-11-22T13:02:22Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: 担当と期限を indie が決めた（2026-11-22）
+  changes:
+    - field: owner
+      from: _TODO_
+      to: BA
+    - field: due
+      from: _TODO_
+      to: "2026-11-30"
+  previous_event_id: reg_971a49553073402ea671e6a5271ffc34
