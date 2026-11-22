@@ -23,6 +23,7 @@ import { selfRunArgs } from "../../shared/spawn-self.js";
 import { specdojoRootDir, type MemberRoster } from "../../shared/specdojo-config.js";
 import {
   loadExecDefaultsConfig,
+  resolveAgentTimeout,
   resolveMemberCommand,
   type ExecDefaultsConfig,
 } from "../agent-config.js";
@@ -983,8 +984,12 @@ async function runJobModeUnchecked(
     !opts.by?.trim() && executorBy && reporterBy
       ? resolvePipelineAgents(roster, { executorBy, reporterBy }, execDefaults)
       : undefined;
-  const { command, actor } = pipelineAgents
-    ? { command: pipelineAgents.executor.command, actor: pipelineAgents.executor.actor }
+  const { command, actor, provider } = pipelineAgents
+    ? {
+        command: pipelineAgents.executor.command,
+        actor: pipelineAgents.executor.actor,
+        provider: pipelineAgents.executor.provider,
+      }
     : resolveInPlaceCommand(
         task,
         roster,
@@ -1046,7 +1051,18 @@ async function runJobModeUnchecked(
     reason = pipelineOutcome.blockReason;
   } else {
     process.stdout.write(`Running Job Run ${record.run_id} in place: ${command}\n`);
-    exitCode = await spawnAgentInPlace(command, prompt, repoRoot, schedulePath, executionPath);
+    const spawned = await spawnAgentInPlace(
+      command,
+      prompt,
+      repoRoot,
+      schedulePath,
+      executionPath,
+      undefined,
+      provider,
+      resolveAgentTimeout(execDefaults, provider),
+    );
+    exitCode = spawned.exitCode;
+    reason = spawned.blockReason;
   }
   let effectiveExit = exitCode;
   if (exitCode === 0 && isResultUnfilled(resultPath, record.task.mode, resultScaffold)) {

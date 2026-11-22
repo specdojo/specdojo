@@ -433,6 +433,7 @@ provider ごとに挙動が異なる設定は `providers.<provider>` に置き�
 - `rate_limit_policy`: provider 固有のリトライ／フォールバック／block ポリシー。
 - `rate_limit_policy.cooldown_seconds`: reset / retry-after が無い retryable signal にだけ使う明示的な延期秒数。未指定の kind は再開時刻を推定しません。
 - `max_concurrency`: その provider の agent を 1 ラウンドで同時に走らせる上限（正の整数）。未指定・0 以下・非整数は「上限なし」として扱います。register の worktree 実行では、`--join` で合流した run を跨いで数えます。
+- `agent_timeout_seconds`: その provider の agent の CLI を 1 回起動してから終わるまでの時間の上限（秒、1〜2147483 の整数）。未指定なら上限はなく、CLI が終わるまで待ちます。範囲外や整数でない値は起動前にエラーで止めます。
 
 `{nickname}` のような `{lower_snake}` は実行のたびに展開される実行時変数であり、ファイルに記法のまま残った状態が完成形です。テンプレート成果物の記入プレースホルダ `_UPPER_SNAKE_`（一度埋めたら消える）とは別の記法で、使い分けは [Template 記述標準](../standards/template-authoring-standard.md) の `他のプレースホルダ記法との使い分け` を正本とします。
 
@@ -468,6 +469,15 @@ providers:
   opencode:
     # opencode は現在実行中の数を同時 1 つに制限する（他 provider は --parallel のまま並列）。
     max_concurrency: 1
+```
+
+`agent_timeout_seconds` は、固まった agent が run と実行枠を占め続けるのを防ぎます。上限を設定した provider の CLI は、runner が専用のプロセスグループで起動します。上限に達すると、そのグループへ SIGTERM を送り、10 秒後もプロセスが残れば SIGKILL を送ります。CLI が起動した孫のプロセスも同じグループに入るため、残りません。止めた後は rate limit・接続エラーの検出に掛けず、別の agent への切り替えや再試行もしません。run は block になり、理由に `agent timed out after <秒>s (providers.<provider>.agent_timeout_seconds)` が残ります。対象は executor・reporter・in-place・Job の agent の起動です。上限を設定しない provider は従来どおり、runner と同じプロセスグループで起動します。
+
+```yaml
+providers:
+  claude:
+    # 1 回の起動が 2 時間を超えたら止めて block にする。
+    agent_timeout_seconds: 7200
 ```
 
 ## 6. executor / reporter pipeline の構成

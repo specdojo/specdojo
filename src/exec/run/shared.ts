@@ -144,6 +144,8 @@ export type AgentExecution = {
   stdout: string;
   stderr: string;
   limit?: AgentLimitSignal;
+  // The runner stopped the agent at its configured time limit (PJR-K8F1).
+  timedOut?: true;
 };
 
 // Mode-specific agent overrides from --edit-by / --review-by. Each value is an agent

@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: high
   difficulty: hard
   registered_at: "2026-11-22T12:24:42Z"
@@ -60,8 +60,40 @@ executeAgent は provider の CLI を起動したあと終了を待つだけで�
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+### 5.1. 実施内容
+
+| 作業                                                      | 状態 | メモ                                                                                                                                                                                                  |
+| --------------------------------------------------------- | ---- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| provider ごとの上限のキーと schema                        | done | `providers.<provider>.agent_timeout_seconds`（1〜2147483 の整数）を `ExecDefaultsConfig` と `exec-defaults.schema.yaml` に足した。未指定は上限なし。不正な値は `resolveAgentTimeout` が起動前に止める |
+| 上限でのプロセスグループの停止                            | done | 新しい `src/exec/run/agent-timeout.ts` の `waitForAgentExit`。上限ありの起動だけ `detached` で専用 group にし、SIGTERM、10 秒後に SIGKILL。close 後も group に残る孫は SIGKILL で止める               |
+| 起動の経路への適用                                        | done | `executeAgent`（`runWithRetry` 経由の executor・reporter）、`src/exec/agent-plan.ts` の起動、`spawnAgentInPlace`（in-place・register・Job の in-place 起動）                                          |
+| 上限で止めた run の block と理由                          | done | stderr に `blocked: agent timed out after <秒>s (<キー>)` を出し、`extractBlockReason` はこの行を優先する。rate limit・接続エラーの検出に掛けず、別の agent への切り替えもしない                      |
+| 単体テストと統合テスト                                    | done | `tests/src/exec/run/agent-timeout.test.ts`（14 件）と `tests/src/exec/run/agent-timeout.integration.test.ts`（3 件、眠り続ける偽の agent と孫、上限なしで待ち続ける場合）                             |
+| `exec-config-guide` と `specdojo-config-reference` の記述 | done | provider のキーの一覧と、動き・例を書いた                                                                                                                                                             |
+| prj-0001 の `.specdojo/exec-defaults.yaml` に値を入れる案 | open | 保護された設定のため executor は変えない。下の申し送りの案を人が判断して入れる                                                                                                                        |
+| 統合の後の JSEY での確認                                  | open | 完了条件どおり統合の後にオーケストレーターが流す。executor からは実行できない                                                                                                                         |
+
+### 5.2. executor が決めた点
+
+- 猶予は親の検証と同じ 10 秒（SIGTERM から SIGKILL まで）、SIGKILL の後に出力の pipe の close を待つのは 5 秒に固定し、設定のキーは足さない。猶予を変えたい要望が出てから足す方が、キーを増やすより単純なため。
+- キーは provider 別だけに置き、全体の既定は置かない。完了条件と 39AB の案が provider 別を求めており、全体の値を足すと既定が上限なしという決定とずれる余地が生じるため。
+- 上限なしの起動は従来どおり runner と同じ process group で起動する。専用 group にすると端末の Ctrl-C が届かなくなるため、上限があるときだけ専用 group にし、runner への SIGINT・SIGTERM・SIGHUP は既存の `trackValidationProcessGroup` で転送する。
+- 不正な値は上限なしへ戻さず、エラーで止める。誤記で上限が黙って外れるのを避けるため（`run.git_index_lock_wait_seconds` と同じ扱い）。
+- Job の in-place 起動は、これまで provider を渡していなかったため、`resolveInPlaceCommand` が返す provider を渡すようにした。
+
+### 5.3. 申し送り
+
+- prj-0001 の `.specdojo/exec-defaults.yaml` に入れる値の案: `providers.claude.agent_timeout_seconds: 7200`、`providers.codex.agent_timeout_seconds: 7200`、`providers.copilot.agent_timeout_seconds: 7200`、`providers.opencode.agent_timeout_seconds: 5400`。根拠は実測ではなく、hard の項目の executor でも 2 時間を超える起動は固まったとみなせるという仮定（_ASSUMPTION_）。人が過去の run の所要時間を見て決める。
+- `src/exec/run/job.ts` は変更前から 1,000 行を超えており（ESLint の `max-lines` の warn）、今回 16 行増えた。分割は本件の範囲外とする。
+
+### 5.4. CHANGELOG に書く事項
+
+- 区分: 追加
+- 文案: `exec-defaults.yaml` の `providers.<provider>.agent_timeout_seconds` で、agent の CLI の 1 回の起動の時間の上限を設定できるようにしました。上限に達すると、runner は CLI とその子のプロセスを SIGTERM、10 秒後に SIGKILL で止め、run を block にして理由に設定のキーを残します。未設定なら従来どおり上限はありません（PJR-K8F1）。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[specdojo:exec-config-guide|exec設定ガイド]]: キーの書き方と動きを追記した。
+- [[specdojo:specdojo-config-reference|specdojo設定リファレンス]]: `exec_defaults` の説明にキーを追記した。
+- `docs/specdojo/schemas/v1/exec-defaults.schema.yaml`: `ProviderOverride` に `agent_timeout_seconds` を足した。
+- 起票の元: PJR-39AB。

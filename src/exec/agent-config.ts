@@ -109,6 +109,9 @@ export type ProviderOverride = {
   // local single-model Ollama host) without lowering the global `--parallel` for other
   // providers. Absent or non-positive means no per-provider limit.
   max_concurrency?: number;
+  // Seconds an agent CLI of this provider may run before the runner stops its process group and
+  // blocks the run (PJR-K8F1). Absent means no limit: the runner waits for the CLI to exit.
+  agent_timeout_seconds?: number;
 };
 
 export type RegisterDifficulty = "hard" | "medium" | "easy";
@@ -354,6 +357,38 @@ export function resolveRateLimitPolicy(
 ): RateLimitPolicy | undefined {
   const override = provider ? config.providers?.[provider]?.rate_limit_policy : undefined;
   return override ?? config.rate_limit_policy;
+}
+
+// Largest limit Node's setTimeout accepts (2^31 - 1 ms), rounded down to whole seconds.
+export const MAX_AGENT_TIMEOUT_SECONDS = 2_147_483;
+
+export type AgentTimeout = {
+  seconds: number;
+  // The exec-defaults key the limit came from, quoted in the block reason.
+  key: string;
+};
+
+// Resolve a provider's agent time limit. Absent means no limit. An invalid value throws instead
+// of falling back so a typo cannot silently remove the limit.
+export function resolveAgentTimeout(
+  config: ExecDefaultsConfig,
+  provider?: AgentProvider,
+): AgentTimeout | undefined {
+  if (!provider) return undefined;
+  const raw = config.providers?.[provider]?.agent_timeout_seconds;
+  if (raw === undefined) return undefined;
+  const key = `providers.${provider}.agent_timeout_seconds`;
+  if (
+    typeof raw !== "number" ||
+    !Number.isInteger(raw) ||
+    raw < 1 ||
+    raw > MAX_AGENT_TIMEOUT_SECONDS
+  ) {
+    throw new Error(
+      `${key} in exec-defaults must be an integer from 1 to ${MAX_AGENT_TIMEOUT_SECONDS}: ${String(raw)}`,
+    );
+  }
+  return { seconds: raw, key };
 }
 
 export const DEFAULT_PINNED_RATE_LIMIT_MAX_WAIT_SECONDS = 8 * 60 * 60;

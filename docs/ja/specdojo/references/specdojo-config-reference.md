@@ -143,6 +143,8 @@ project の `integration_branch` は、`repos[].integration_branch` とは別の
 | `worktree_base`              | `../worktrees` | `exec run --worktree` / `--auto` と `exec trial` が作る worktree の親です。リポジトリ外を指定します。                        |
 | `register_date_timezone`     | `UTC`          | 登録簿の「登録日」「完了日」を日時から暦日へ変換する IANA タイムゾーン名です。例は `Asia/Tokyo` です。                       |
 
+`exec_defaults` のファイルには、provider ごとの `providers.<provider>.agent_timeout_seconds` で agent の CLI の 1 回の起動の時間の上限（秒）を書けます。未指定なら上限はありません。上限に達すると、runner は CLI のプロセスグループを SIGTERM、10 秒後に SIGKILL で止め、run を block にして理由にこのキーを残します。書き方と動きは [[specdojo:exec-config-guide|exec設定ガイド]] の「exec-defaults」を参照してください。
+
 `parent_validations` の要素は、共有 defaults と同じく検証 ID、または `{ "id": "<id>", "repo": "<repo>" }` です。共有 defaults を複製せず、プロダクトリポジトリを持つ project だけに検証を追加できます。たとえば `prj-0002` だけで `specdojo-lp` の型と lint を検査する設定は次のとおりです。
 
 ```json

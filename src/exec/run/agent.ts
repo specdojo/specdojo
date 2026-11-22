@@ -3,13 +3,21 @@ import { existsSync } from "node:fs";
 import { basename, dirname, join, relative, resolve, sep } from "node:path";
 import { trackExecutor, withValidationMetrics } from "../validation-metrics.js";
 import {
+  resolveAgentTimeout,
   resolveConnectionErrorDetection,
   resolveMemberCommand,
   resolveRateLimitDetection,
   resolveRateLimitPolicy,
+  type AgentTimeout,
   type ExecDefaultsConfig,
   type RateLimitDetection,
 } from "../agent-config.js";
+import {
+  AGENT_TIMEOUT_REASON_PREFIX,
+  agentTimeoutReason,
+  usesAgentProcessGroup,
+  waitForAgentExit,
+} from "./agent-timeout.js";
 import {
   decidePinnedWait,
   normalizeAgentLimit,
@@ -558,6 +566,7 @@ export async function executeAgent(
   env: NodeJS.ProcessEnv,
   quiet = false,
   stageRole: "executor" | "reporter" = "executor",
+  timeout?: AgentTimeout,
 ): Promise<AgentExecution> {
   if (!agentCommand.trim()) {
     return { result: "failure", exitCode: null, stdout: "", stderr: "Empty agent command" };
@@ -571,6 +580,8 @@ export async function executeAgent(
     env,
     shell: true,
     stdio: ["pipe", "pipe", "pipe"],
+    // PJR-K8F1: 時間の上限があるときは、孫まで止められるよう agent を自分の process group で起動する。
+    detached: usesAgentProcessGroup(timeout),
   });
   const stopTracking = stageRole === "executor" ? trackExecutor(child.pid, cwd) : () => undefined;
   // stdin を読まずに即終了するコマンドへの書き込みは EPIPE になる。未処理だと
@@ -591,14 +602,18 @@ export async function executeAgent(
   });
   child.stdin.end(prompt);
 
-  const exitCode = await new Promise<number | null>((resolveExit) => {
-    child.once("error", (error) => {
-      stderr += `${error.message}\n`;
-      resolveExit(null);
-    });
-    child.once("close", (code) => resolveExit(code));
-  });
+  const exit = await waitForAgentExit(child, timeout);
   stopTracking();
+  const { exitCode } = exit;
+  if (exit.spawnError) stderr += `${exit.spawnError}\n`;
+
+  // 時間切れは rate limit や接続の失敗の検出より先に判定する。止めた後の出力を検出に掛けない。
+  if (exit.timedOut && timeout) {
+    const line = `blocked: ${agentTimeoutReason(timeout)}\n`;
+    process.stderr.write(line);
+    stderr += `${stderr.endsWith("\n") || !stderr ? "" : "\n"}${line}`;
+    return { result: "failure", exitCode, stdout, stderr, timedOut: true };
+  }
 
   const combinedOutput = `${stdout}\n${stderr}`;
   if (isRateLimitError(exitCode, combinedOutput, detection)) {
@@ -743,6 +758,7 @@ export async function runWithRetry(
         env,
         false,
         stageRole,
+        resolveAgentTimeout(execDefaults, candidate.provider),
       );
       const protectedConfigChanges = changedAgentProtectedConfigAcrossRepos(protectedConfigBefore);
       if (protectedConfigChanges.length > 0) {
@@ -816,6 +832,7 @@ export async function runWithRetry(
       lastLimit = attempt.limit;
       const connectionError =
         attempt.result === "failure" &&
+        !attempt.timedOut &&
         isConnectionError(
           attempt.exitCode,
           `${attempt.stdout}\n${attempt.stderr}`,
@@ -1030,7 +1047,10 @@ export function extractBlockReason(stderr: string): string {
     .split("\n")
     .map((line) => line.trim())
     .filter((line) => line.length > 0);
-  const tagged = lines.find((line) => /^(blocked|review-blocked):/i.test(line));
+  // runner が時間切れで止めた理由は、agent が先に出した block 行より優先する。
+  const tagged =
+    lines.find((line) => line.startsWith(`blocked: ${AGENT_TIMEOUT_REASON_PREFIX}`)) ??
+    lines.find((line) => /^(blocked|review-blocked):/i.test(line));
   const reason = tagged ?? lines.at(-1);
   if (!reason) return fallback;
   const trimmed =
