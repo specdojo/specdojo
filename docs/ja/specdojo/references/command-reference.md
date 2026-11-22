@@ -111,7 +111,7 @@ provider 設定、登録簿作成の順に次のコマンドを案内します�
 追記した行と飛ばした行を表示し、追記があった場合は管理済みの `node_modules/` や生成物を
 `git rm -r --cached` で外す手順を案内します。`config init --dry-run` は設定と `.gitignore` を
 書き込まず、予定の内容だけを表示します。`config scaffold` の `--provider` には
-`claude`、`codex`、`copilot`、`opencode` を指定でき、`--dry-run` と `--force` も利用できます。`--global` は 0.10.0 では対応する provider がなく、指定するとリポジトリへ書き込む前にエラーになります。
+`claude`、`codex`、`copilot`、`opencode` を指定でき、`--dry-run` と `--force` も利用できます。どの provider でも、skill `specdojo-exec-in-session` の正本を `.agents/skills/specdojo-exec-in-session/SKILL.md` へ置きます。`.agents/skills` を読まない Claude Code には、正本を読ませるラッパーを `.claude/skills/specdojo-exec-in-session/SKILL.md` へ置きます。既にあるファイルは `--force` なしでは上書きしません。`--global` は 0.10.0 では対応する provider がなく、指定するとリポジトリへ書き込む前にエラーになります。
 
 `config show` は、`specdojo.config.json` とローカル設定 `.specdojo/specdojo.local.config.json` のパス、ローカルで上書きした項目、project ごとの `repos` を表示します。各リポジトリには `shared`（共有の設定）、`local; shared: <path>`（パスの差し替え）、`local; added`（ローカルで追加）のいずれかを付けます。`--project <id>` で対象を絞れます。ローカル設定の許可キーと優先順位は [[specdojo:specdojo-config-reference|SpecDojo設定リファレンス]] の「ローカル設定」を参照してください。
 

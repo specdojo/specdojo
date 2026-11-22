@@ -36,10 +36,25 @@ export const ORCHESTRATOR_NPM_SCRIPTS: Record<string, Record<string, string>> = 
 // repository 内の配置規則は provider 名から機械的に決まる。
 //   templates/<provider>/agents/**        -> .<provider>/agents/**   （--agent の自動発見位置）
 //   templates/<provider>/rules/**         -> .<provider>/rules/**    （command rule の自動発見位置）
+//   templates/<provider>/skills/**        -> .<provider>/skills/**   （.agents/skills を読まない provider の skill ラッパー）
 //   templates/<provider>/README.md        -> コピーしない（配布原本の説明書）
 //   templates/opencode/opencode.json      -> opencode.json           （リポジトリ直下の接続・モデル設定）
 //   templates/<provider>/ 配下のその他    -> .specdojo/<provider>/** （--settings 等で明示参照）
+//   templates/agent-skills/**             -> .agents/skills/**       （skill の正本。SKILL_PROVIDERS のすべてに配る）
 // Copilot の orchestrator だけは native の探索先 .github/agents/ に同梱 wrapper を配置する。
+
+// provider ではない、全 provider が共有する skill 正本の置き場。
+export const SHARED_SKILL_TEMPLATE_DIR = "agent-skills";
+
+// skill の正本 .agents/skills/** を配る provider。Codex・opencode・Copilot は .agents/skills を
+// そのまま読む。Claude Code は .claude/skills しか読まないため、templates/claude/skills の
+// ラッパーを併せて配る。
+export const SKILL_PROVIDERS: ReadonlySet<string> = new Set([
+  "claude",
+  "codex",
+  "copilot",
+  "opencode",
+]);
 
 export interface ProviderScaffoldEntry {
   sourcePath: string;
@@ -73,7 +88,7 @@ export async function listProviderTemplates(packageRoot: string): Promise<string
   if (!existsSync(templatesDir)) return [];
   const entries = await readdir(templatesDir, { withFileTypes: true });
   return entries
-    .filter((entry) => entry.isDirectory())
+    .filter((entry) => entry.isDirectory() && entry.name !== SHARED_SKILL_TEMPLATE_DIR)
     .map((entry) => entry.name)
     .sort();
 }
@@ -104,7 +119,7 @@ export async function buildProviderScaffoldPlan(opts: {
   const { packageRoot, repoRoot, provider } = opts;
 
   const templateDir = path.join(packageRoot, "templates", provider);
-  if (!existsSync(templateDir)) {
+  if (provider === SHARED_SKILL_TEMPLATE_DIR || !existsSync(templateDir)) {
     const available = await listProviderTemplates(packageRoot);
     const availableLabel = available.length > 0 ? available.join(", ") : "(none)";
     throw new Error(
@@ -121,7 +136,9 @@ export async function buildProviderScaffoldPlan(opts: {
     const destinationRelPath =
       provider === "opencode" && relFile === "opencode.json"
         ? "opencode.json"
-        : relFile.startsWith("agents/") || relFile.startsWith("rules/")
+        : relFile.startsWith("agents/") ||
+            relFile.startsWith("rules/") ||
+            relFile.startsWith("skills/")
           ? `.${provider}/${relFile}`
           : `.specdojo/${provider}/${relFile}`;
     entries.push({
@@ -129,6 +146,19 @@ export async function buildProviderScaffoldPlan(opts: {
       destinationPath: path.join(repoRoot, ...destinationRelPath.split("/")),
       destinationRelPath,
     });
+  }
+
+  const sharedSkillDir = path.join(packageRoot, "templates", SHARED_SKILL_TEMPLATE_DIR);
+  if (SKILL_PROVIDERS.has(provider) && existsSync(sharedSkillDir)) {
+    const skillFiles = (await collectFilesRecursively(sharedSkillDir)).map(toPosix).sort();
+    for (const relFile of skillFiles) {
+      const destinationRelPath = `.agents/skills/${relFile}`;
+      entries.push({
+        sourcePath: path.join(sharedSkillDir, ...relFile.split("/")),
+        destinationPath: path.join(repoRoot, ...destinationRelPath.split("/")),
+        destinationRelPath,
+      });
+    }
   }
 
   // GitHub Copilot CLI discovers custom agents under .github/agents rather than

@@ -630,7 +630,7 @@ executor の出力は、そのまま reporter へ渡さずに run 単位の evid
 
 agent が exec 実行時に読み込む provider 固有の設定（agent 定義・permission 設定）は、npm package 内の `templates/<provider>/` を配布原本とし、利用プロジェクトへコピーして使います。worktree 実行はコミット済み内容から worktree を作るため、コピーした設定は必ずコミットします。
 
-配置規則は provider 名から機械的に決まります（`agents/` 配下 → `.<provider>/agents/`、`rules/` 配下 → `.<provider>/rules/`、`opencode.json` → リポジトリ直下の `opencode.json`、それ以外のファイル → `.specdojo/<provider>/`、`README.md` はコピーしません）。provider ごとの配布内容は次のとおりです。
+配置規則は provider 名から機械的に決まります（`agents/` 配下 → `.<provider>/agents/`、`rules/` 配下 → `.<provider>/rules/`、`skills/` 配下 → `.<provider>/skills/`、`opencode.json` → リポジトリ直下の `opencode.json`、それ以外のファイル → `.specdojo/<provider>/`、`README.md` はコピーしません）。provider ごとの配布内容は次のとおりです。
 
 | provider | 配布内容                                                                                                                                              | 配置先                                 |
 | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
@@ -638,6 +638,8 @@ agent が exec 実行時に読み込む provider 固有の設定（agent 定義�
 | codex    | `agents/*.toml`（親 Codex が spawn する subagent 定義）、`rules/*.rules`（command rule）                                                              | `.codex/agents/`、`.codex/rules/`      |
 | opencode | `agents/*.md`（permission frontmatter 込みの agent 定義）、`opencode.json`（Ollama 接続・モデル設定）                                                 | `.opencode/agents/`、`opencode.json`   |
 | copilot  | `agent-members-snippet.yaml`（agent 定義）と `exec-defaults-snippet.yaml`（`providers.copilot` の command template・rate limit 検出）の参照スニペット | `.specdojo/copilot/`                   |
+
+4 つの provider には、skill `specdojo-exec-in-session`（オーケストレーターが会話の中で登録簿の項目を実装する手順）も配ります。正本 `templates/agent-skills/specdojo-exec-in-session/SKILL.md` を `.agents/skills/specdojo-exec-in-session/SKILL.md` へ置きます。Codex・OpenCode・Copilot は `.agents/skills` を読むため、正本だけを置きます。Claude Code は `.claude/skills` だけを読むため、正本を読ませるラッパー `templates/claude/skills/specdojo-exec-in-session/SKILL.md` を `.claude/skills/specdojo-exec-in-session/SKILL.md` へ併せて置きます。どちらも、既にあるファイルは `--force` なしでは上書きしません。
 
 導入手順と手動設定（`.codex/config.toml` や接続先 URL の調整、Modelfile によるローカル派生タグの作成など）は各 `templates/<provider>/README.md` を参照します。
 

@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
@@ -23,6 +23,19 @@ export const ORCHESTRATOR_WRAPPERS = [
   { path: "templates/opencode/agents/specdojo-orchestrator.md", format: "markdown" },
   { path: "templates/codex/agents/specdojo-orchestrator.toml", format: "toml" },
   { path: "templates/codex/orchestrator.md", format: "raw" },
+];
+
+// 利用者へ配る skill の写し。正本のファイル全体をそのまま templates/ の配布原本へ写す。
+// source は保護された設定のため executor は変えず、写しだけを orchestrator:sync で作り直す。
+export const SKILL_COPIES = [
+  {
+    source: ".agents/skills/specdojo-exec-in-session/SKILL.md",
+    path: "templates/agent-skills/specdojo-exec-in-session/SKILL.md",
+  },
+  {
+    source: ".claude/skills/specdojo-exec-in-session/SKILL.md",
+    path: "templates/claude/skills/specdojo-exec-in-session/SKILL.md",
+  },
 ];
 
 export function extractMarkdownBody(source, filePath = "Markdown wrapper") {
@@ -70,8 +83,23 @@ export function validateOrchestratorSync(rootDir = process.cwd()) {
     }
   }
 
+  for (const copy of SKILL_COPIES) {
+    const expected = readFileSync(resolve(rootDir, copy.source), "utf8");
+    const copyPath = resolve(rootDir, copy.path);
+    if (!existsSync(copyPath)) {
+      mismatches.push({ path: copy.path, line: 1, offset: 0, missing: true });
+      continue;
+    }
+    const actual = readFileSync(copyPath, "utf8");
+    if (actual !== expected) {
+      mismatches.push({ path: copy.path, ...firstDifference(expected, actual) });
+    }
+  }
+
   return mismatches;
 }
+
+const TARGET_COUNT = () => ORCHESTRATOR_WRAPPERS.length + SKILL_COPIES.length;
 
 export function runValidateOrchestratorSync({
   rootDir = process.cwd(),
@@ -81,11 +109,17 @@ export function runValidateOrchestratorSync({
   try {
     const mismatches = validateOrchestratorSync(rootDir);
     if (mismatches.length === 0) {
-      confirm(`orchestrator body sync: OK (${ORCHESTRATOR_WRAPPERS.length} targets)\n`);
+      confirm(`orchestrator body sync: OK (${TARGET_COUNT()} targets)\n`);
       return 0;
     }
 
     for (const mismatch of mismatches) {
+      if (mismatch.missing) {
+        report(
+          `orchestrator body sync: MISSING ${mismatch.path} (run npm run orchestrator:sync)\n`,
+        );
+        continue;
+      }
       report(
         `orchestrator body sync: MISMATCH ${mismatch.path} ` +
           `(line ${mismatch.line}, byte ${mismatch.offset})\n`,

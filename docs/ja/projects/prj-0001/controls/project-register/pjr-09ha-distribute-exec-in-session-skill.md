@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-22T05:44:25Z"
-  block_reason: "integrate failed: project: Result Markdown notation violation before commit: docs/ja/projects/prj-0001/execution/runs/register/PJR-09HA/pjr-09ha-20261122T062549Z-40297868/result.md:42:26 error MD034/n…"
   derived_from:
     - PJR-XZ9B
 ---

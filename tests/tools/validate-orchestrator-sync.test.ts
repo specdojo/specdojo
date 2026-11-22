@@ -6,6 +6,7 @@ import { pathToFileURL } from "node:url";
 import { afterEach, beforeAll, describe, expect, it } from "vitest";
 
 type Wrapper = { path: string; format: "markdown" | "toml" | "raw" };
+type SkillCopy = { source: string; path: string };
 type ValidateOrchestratorSync = (rootDir: string) => Array<{
   path: string;
   line: number;
@@ -19,6 +20,8 @@ type RunValidateOrchestratorSync = (options: {
 
 let orchestratorSource: string;
 let orchestratorWrappers: Wrapper[];
+let skillCopies: SkillCopy[];
+let generateOrchestratorWrappers: (rootDir: string) => string[];
 let validateOrchestratorSync: ValidateOrchestratorSync;
 let runValidateOrchestratorSync: RunValidateOrchestratorSync;
 const temporaryDirectories: string[] = [];
@@ -28,13 +31,20 @@ beforeAll(async () => {
   const entryModule = (await import(moduleUrl)) as {
     ORCHESTRATOR_SOURCE: string;
     ORCHESTRATOR_WRAPPERS: Wrapper[];
+    SKILL_COPIES: SkillCopy[];
     validateOrchestratorSync: ValidateOrchestratorSync;
     runValidateOrchestratorSync: RunValidateOrchestratorSync;
   };
   orchestratorSource = entryModule.ORCHESTRATOR_SOURCE;
   orchestratorWrappers = entryModule.ORCHESTRATOR_WRAPPERS;
+  skillCopies = entryModule.SKILL_COPIES;
   validateOrchestratorSync = entryModule.validateOrchestratorSync;
   runValidateOrchestratorSync = entryModule.runValidateOrchestratorSync;
+  const generatorUrl = pathToFileURL(path.resolve("tools/generate-orchestrator-wrappers.mjs")).href;
+  const generatorModule = (await import(generatorUrl)) as {
+    generateOrchestratorWrappers: (rootDir: string) => string[];
+  };
+  generateOrchestratorWrappers = generatorModule.generateOrchestratorWrappers;
 });
 
 afterEach(async () => {
@@ -50,7 +60,10 @@ function wrapperFixtureContent(wrapper: Wrapper, body: string): string {
   return `name = "fixture"\ndeveloper_instructions = """\n${body}"""\n`;
 }
 
-async function createFixture(body = "# Shared body\n\nSame instructions.\n") {
+async function createFixture(
+  body = "# Shared body\n\nSame instructions.\n",
+  writeSkillCopies = true,
+) {
   const rootDir = await mkdtemp(path.join(tmpdir(), "orchestrator-sync-"));
   temporaryDirectories.push(rootDir);
 
@@ -63,6 +76,10 @@ async function createFixture(body = "# Shared body\n\nSame instructions.\n") {
   write(orchestratorSource, body);
   for (const wrapper of orchestratorWrappers) {
     write(wrapper.path, wrapperFixtureContent(wrapper, body));
+  }
+  for (const copy of skillCopies) {
+    write(copy.source, `---\nname: skill\n---\n\n# ${copy.source}\n`);
+    if (writeSkillCopies) write(copy.path, `---\nname: skill\n---\n\n# ${copy.source}\n`);
   }
 
   return { rootDir, write };
@@ -115,5 +132,53 @@ describe("tools/validate-orchestrator-sync.mjs", () => {
 
     expect(exitCode).toBe(1);
     expect(errors.join("\n")).toContain(target!.path);
+  });
+
+  it("skill の配布原本が正本の .agents/skills と Claude Code のラッパーを templates へ写す", () => {
+    expect(skillCopies).toEqual([
+      {
+        source: ".agents/skills/specdojo-exec-in-session/SKILL.md",
+        path: "templates/agent-skills/specdojo-exec-in-session/SKILL.md",
+      },
+      {
+        source: ".claude/skills/specdojo-exec-in-session/SKILL.md",
+        path: "templates/claude/skills/specdojo-exec-in-session/SKILL.md",
+      },
+    ]);
+  });
+
+  it("skill の写しが無いと写し漏れとして終了コード1を返す", async () => {
+    const fixture = await createFixture(undefined, false);
+    const errors: string[] = [];
+
+    const exitCode = runValidateOrchestratorSync({
+      rootDir: fixture.rootDir,
+      report: (message) => errors.push(message),
+      confirm: () => undefined,
+    });
+
+    expect(exitCode).toBe(1);
+    for (const copy of skillCopies) {
+      expect(errors.join("")).toContain(`MISSING ${copy.path}`);
+    }
+  });
+
+  it("skill の写しが正本と食い違うと不一致を検出する", async () => {
+    const fixture = await createFixture();
+    const target = skillCopies[0]!;
+    fixture.write(target.path, "---\nname: skill\n---\n\n# Stale\n");
+
+    expect(validateOrchestratorSync(fixture.rootDir)).toEqual([
+      expect.objectContaining({ path: target.path }),
+    ]);
+  });
+
+  it("orchestrator:sync の生成は skill の写しを作り、検査を通す", async () => {
+    const fixture = await createFixture(undefined, false);
+
+    const updated = generateOrchestratorWrappers(fixture.rootDir);
+
+    expect(updated).toEqual(skillCopies.map((copy) => copy.path));
+    expect(validateOrchestratorSync(fixture.rootDir)).toEqual([]);
   });
 });

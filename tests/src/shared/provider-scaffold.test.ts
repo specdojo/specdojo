@@ -340,6 +340,7 @@ describe("buildProviderScaffoldPlan", () => {
 
       expect(plan.provider).toBe("opencode");
       expect(plan.entries.map((entry) => entry.destinationRelPath)).toEqual([
+        ".agents/skills/specdojo-exec-in-session/SKILL.md",
         ".opencode/agents/opencode-executor.md",
         ".opencode/agents/opencode-reporter.md",
         ".opencode/agents/opencode-review-executor.md",
@@ -362,6 +363,85 @@ describe("buildProviderScaffoldPlan", () => {
       await expect(
         buildProviderScaffoldPlan({ packageRoot, repoRoot: dir, provider: "codex" }),
       ).rejects.toThrow(/Unknown provider template: codex\. Available: claude/);
+    } finally {
+      await rm(dir, { recursive: true, force: true });
+    }
+  });
+});
+
+describe("buildProviderScaffoldPlan skill distribution", () => {
+  const SKILL_CANONICAL = ".agents/skills/specdojo-exec-in-session/SKILL.md";
+  const CLAUDE_SKILL_WRAPPER = ".claude/skills/specdojo-exec-in-session/SKILL.md";
+
+  it.each([
+    ["claude", [SKILL_CANONICAL, CLAUDE_SKILL_WRAPPER]],
+    ["codex", [SKILL_CANONICAL]],
+    ["opencode", [SKILL_CANONICAL]],
+    ["copilot", [SKILL_CANONICAL]],
+  ])("places the skill files that %s reads", async (provider, expected) => {
+    const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));
+    try {
+      const plan = await buildProviderScaffoldPlan({
+        packageRoot: specdojoPackageRootDir(),
+        repoRoot: dir,
+        provider,
+      });
+
+      const skillPaths = plan.entries
+        .map((entry) => entry.destinationRelPath)
+        .filter((relPath) => relPath.includes("/skills/"));
+      expect(skillPaths).toEqual(expected);
+    } finally {
+      await rm(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("ships the canonical skill and the Claude Code wrapper unchanged from their sources", async () => {
+    const packageRoot = specdojoPackageRootDir();
+    const read = (relPath: string) => readFile(path.join(packageRoot, relPath), "utf8");
+
+    expect(await read("templates/agent-skills/specdojo-exec-in-session/SKILL.md")).toBe(
+      await read(SKILL_CANONICAL),
+    );
+    expect(await read("templates/claude/skills/specdojo-exec-in-session/SKILL.md")).toBe(
+      await read(CLAUDE_SKILL_WRAPPER),
+    );
+  });
+
+  it("does not list or accept the shared skill directory as a provider", async () => {
+    const packageRoot = specdojoPackageRootDir();
+
+    expect(await listProviderTemplates(packageRoot)).not.toContain("agent-skills");
+    await expect(
+      buildProviderScaffoldPlan({ packageRoot, repoRoot: packageRoot, provider: "agent-skills" }),
+    ).rejects.toThrow(/Unknown provider template: agent-skills/);
+  });
+
+  it("keeps an existing skill without force and replaces it with force", async () => {
+    const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));
+    try {
+      const packageRoot = specdojoPackageRootDir();
+      const existingPath = path.join(dir, ...SKILL_CANONICAL.split("/"));
+      await mkdir(path.dirname(existingPath), { recursive: true });
+      await writeFile(existingPath, "# customized\n", "utf8");
+      const plan = await buildProviderScaffoldPlan({
+        packageRoot,
+        repoRoot: dir,
+        provider: "claude",
+      });
+
+      const outcomes = await applyProviderScaffoldPlan(plan, { force: false });
+
+      const skipped = outcomes.filter((outcome) => !outcome.written);
+      expect(skipped.map((outcome) => outcome.entry.destinationRelPath)).toEqual([SKILL_CANONICAL]);
+      expect(await readFile(existingPath, "utf8")).toBe("# customized\n");
+      expect(existsSync(path.join(dir, ...CLAUDE_SKILL_WRAPPER.split("/")))).toBe(true);
+
+      await applyProviderScaffoldPlan(plan, { force: true });
+
+      expect(await readFile(existingPath, "utf8")).toBe(
+        await readFile(path.join(packageRoot, ...SKILL_CANONICAL.split("/")), "utf8"),
+      );
     } finally {
       await rm(dir, { recursive: true, force: true });
     }
