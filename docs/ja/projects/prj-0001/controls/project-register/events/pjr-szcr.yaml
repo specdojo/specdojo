@@ -67,3 +67,29 @@
       from: ""
       to: 作業内容
   previous_event_id: reg_8cccb901795d4abb96e784cd1f08bc29
+- v: 1
+  id: reg_82e5b416505c4a58a6b2e7b1fb1f7052
+  ts: "2026-11-22T12:49:43Z"
+  action: start
+  actor: qwen-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_f83b859aa5904d498b3bd3ba839fdef6
+- v: 1
+  id: reg_e201402f85d04e50ade2c9b4c43e2ee6
+  ts: "2026-11-22T13:00:08Z"
+  action: review
+  actor: qwen-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_82e5b416505c4a58a6b2e7b1fb1f7052

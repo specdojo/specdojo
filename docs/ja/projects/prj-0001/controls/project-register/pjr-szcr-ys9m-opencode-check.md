@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   difficulty: easy
   owner: DEV
@@ -39,15 +39,34 @@ PJR-YS9M で prj-0001 の opencode の executor に許したコマンドが、qw
 
 ## 4. 作業内容
 
-| No  | 作業                                       | 担当     | 状態 | メモ |
-| --- | ------------------------------------------ | -------- | ---- | ---- |
-| 1   | `git rm` で確かめ用のファイルを消す        | executor | open | -    |
-| 2   | 検証のコマンドを流し、結果を対応結果に書く | executor | open | -    |
+| No  | 作業                                       | 担当     | 状態 | メモ                                                                                                                                                   |
+| --- | ------------------------------------------ | -------- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 1   | `git rm` で確かめ用のファイルを消す        | executor | done | `git rm docs/ja/projects/prj-0001/tmp/ys9m-delete-check.txt` が拒まれず実行され、ファイル（と空の `tmp/` 配下）が消えた。編集・`rm` では消していない。 |
+| 2   | 検証のコマンドを流し、結果を対応結果に書く | executor | done | 3 コマンドとも拒まれず流れた。出力は下「コマンド実行結果」の表。                                                                                       |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+qwen の executor で、PJR-YS9M が許可した 4 コマンド（`git rm docs/*` と検証コマンド）を流して拒否されないことを確かめた。完了条件の各コマンドはすべて拒まれず実行できた。
+
+### コマンド実行結果
+
+| 対象コマンド                                                        | 実行 | 結果                                                                                                                                   |
+| ------------------------------------------------------------------- | ---- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `git rm docs/ja/projects/prj-0001/tmp/ys9m-delete-check.txt`        | 成功 | `rm 'docs/ja/projects/prj-0001/tmp/ys9m-delete-check.txt'`。ファイルが追跡から外れ、`tmp/` 配下も消えた。編集・`rm` では消していない。 |
+| `npx vitest run tests/src/exec/agent-config-allow-commands.test.ts` | 成功 | RUN v4.1.12、Test Files 1 passed (1)、Tests 22 passed (22)。                                                                           |
+| `npx tsc --version`                                                 | 成功 | `Version 6.0.3`。                                                                                                                      |
+| `npx eslint --version`                                              | 成功 | `v10.15.0`。                                                                                                                           |
+
+### 成果物
+
+- 削除: `docs/ja/projects/prj-0001/tmp/ys9m-delete-check.txt`（`git rm` で）。
+- 更新: 本個票の作業状態・対応結果。
+
+### CHANGELOG に書く事項
+
+なし。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[pjr-ys9m-opencode-executor-allow-commands|PJR-YS9M opencode の executor が sandbox で検証のコマンドとファイルの削除を流せない]]（起票元。反映した 4 コマンドの許可を確かめる対象）
+- `docs/ja/projects/prj-0001/execution/runs/register/PJR-SZCR/pjr-szcr-20261122T124938Z-5c80a3f4/result.md`（未作成。報告・申し送りの宛先）
