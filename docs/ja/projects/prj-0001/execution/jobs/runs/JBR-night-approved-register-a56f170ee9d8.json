@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "run_id": "JBR-night-approved-register-a56f170ee9d8",
+  "job_id": "job-night-approved-register",
+  "idempotency_key": "job-night-approved-register:2026-11-22T15:00:00.000Z",
+  "project_id": "prj-0001",
+  "trigger": "routine",
+  "scheduled_at": "2026-11-22T15:00:00.000Z",
+  "created_at": "2026-11-22T15:01:52.133Z",
+  "updated_at": "2026-11-22T15:03:32.723Z",
+  "state": "succeeded",
+  "inputs": {
+    "max_items": 10,
+    "parallel": 2,
+    "max_consecutive_failures": 2,
+    "on_rate_limit": "fallback",
+    "fallback_executor": "opus-executor"
+  },
+  "task": {
+    "mode": "command",
+    "command": "'/usr/local/bin/node' '/workspaces/specdojo-workspace/specdojo/dist/specdojo.js' orchestrator night --project \"prj-0001\" --scheduled-at \"2026-11-22T15:00:00.000Z\" --max-items \"10\" --parallel \"2\" --max-consecutive-failures \"2\" --on-rate-limit \"fallback\" --fallback-executor-by \"opus-executor\"",
+    "partial_exit_code": 2,
+    "owner": "ARC",
+    "review": {
+      "agent": {
+        "executor": "claude-expert-review-executor",
+        "reporter": "claude-reporter"
+      }
+    }
+  },
+  "checkpoint_before": {},
+  "plan_ref": "runs/job/JBR-night-approved-register-a56f170ee9d8/JBR-night-approved-register-a56f170ee9d8/plan.md",
+  "result_ref": "runs/job/JBR-night-approved-register-a56f170ee9d8/JBR-night-approved-register-a56f170ee9d8/result.md",
+  "attempts": [
+    {
+      "attempt": 1,
+      "started_at": "2026-11-22T15:01:52.133Z",
+      "status": "succeeded",
+      "completed_at": "2026-11-22T15:01:53.439Z",
+      "result_ref": "runs/job/JBR-night-approved-register-a56f170ee9d8/JBR-night-approved-register-a56f170ee9d8/result.md",
+      "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/job/JBR-night-approved-register-a56f170ee9d8/JBR-night-approved-register-a56f170ee9d8/evidence.json",
+      "exit_code": 0
+    }
+  ],
+  "review": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/job/JBR-night-approved-register-a56f170ee9d8/JBR-night-approved-register-a56f170ee9d8-review/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/job/JBR-night-approved-register-a56f170ee9d8/JBR-night-approved-register-a56f170ee9d8-review/result.md",
+    "branch": "exec/prj-0001-JBR-night-approved-register-a56f170ee9d8",
+    "verdict": "complete",
+    "reviewed_at": "2026-11-22T15:03:32.723Z"
+  }
+}

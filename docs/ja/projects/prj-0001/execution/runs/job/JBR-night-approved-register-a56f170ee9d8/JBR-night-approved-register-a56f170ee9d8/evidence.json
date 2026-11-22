@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-night-approved-register-a56f170ee9d8",
+  "run_id": "JBR-night-approved-register-a56f170ee9d8",
+  "stage": {
+    "role": "executor",
+    "actor": "specdojo-runner",
+    "status": "succeeded",
+    "started_at": "2026-11-22T15:01:52.321Z",
+    "completed_at": "2026-11-22T15:01:53.304Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-night-approved-register-a56f170ee9d8.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/reports/night-orchestrator/night-orchestrator-20261122T150000000Z.md",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 2,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "id": "job-command",
+      "source": "runner",
+      "command": "'/usr/local/bin/node' '/workspaces/specdojo-workspace/specdojo/dist/specdojo.js' orchestrator night --project \"prj-0001\" --scheduled-at \"2026-11-22T15:00:00.000Z\" --max-items \"10\" --parallel \"2\" --max-consecutive-failures \"2\" --on-rate-limit \"fallback\" --fallback-executor-by \"opus-executor\"",
+      "status": "passed",
+      "summary": "exit 0"
+    }
+  ],
+  "final_message": "Runner command exit 0.",
+  "command": {
+    "shell": "/bin/sh -eu",
+    "value": "'/usr/local/bin/node' '/workspaces/specdojo-workspace/specdojo/dist/specdojo.js' orchestrator night --project \"prj-0001\" --scheduled-at \"2026-11-22T15:00:00.000Z\" --max-items \"10\" --parallel \"2\" --max-consecutive-failures \"2\" --on-rate-limit \"fallback\" --fallback-executor-by \"opus-executor\"",
+    "exit_code": 0,
+    "stdout_ref": "docs/ja/projects/prj-0001/execution/runs/job/JBR-night-approved-register-a56f170ee9d8/JBR-night-approved-register-a56f170ee9d8/command.stdout.log",
+    "stderr_ref": "docs/ja/projects/prj-0001/execution/runs/job/JBR-night-approved-register-a56f170ee9d8/JBR-night-approved-register-a56f170ee9d8/command.stderr.log",
+    "stdout": "[night] approved queue (0/10): none\n[night] morning report: docs/ja/projects/prj-0001/execution/reports/night-orchestrator/night-orchestrator-20261122T150000000Z.md\n",
+    "stderr": ""
+  },
+  "log_refs": [
+    {
+      "kind": "command-stdout",
+      "path": "docs/ja/projects/prj-0001/execution/runs/job/JBR-night-approved-register-a56f170ee9d8/JBR-night-approved-register-a56f170ee9d8/command.stdout.log",
+      "bytes": 165,
+      "truncated": false
+    },
+    {
+      "kind": "command-stderr",
+      "path": "docs/ja/projects/prj-0001/execution/runs/job/JBR-night-approved-register-a56f170ee9d8/JBR-night-approved-register-a56f170ee9d8/command.stderr.log",
+      "bytes": 0,
+      "truncated": false
+    }
+  ]
+}
