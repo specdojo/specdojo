@@ -1,0 +1,36 @@
+このタスクは完了と判定できません。verdict は `incomplete` です。2つの型の評価結果はどちらも最新でしたが、sample の grade が `needs-work` で、この schedule では両方の `pass` が必要なためです。
+
+**評価結果の確認**
+- 鮮度：sample と rulebook の両方で `npx specdojo grade list --target kata --path <対象> --changed-only` と `--incomplete` を実行し、どちらも出力なしでした。verdict を出す直前にもう一度確かめ、変化はありませんでした。`git status` で見えるのは runner の `pipeline-state.json` だけで、成果物は変わっていません。
+- sample（[[specdojo:utc-index-sample]]）：verdict は `needs-work`、score は 92、finding は blocker 0 / major 1 / minor 7 です。
+- rulebook（[[specdojo:utc-index-rulebook]]）：verdict は `pass`、score は 91、finding は blocker 0 / major 0 / minor 6 です。
+
+**判断根拠**
+- 不足しているのは sample の `pass` だけです。major の F008（未解決の目印が残っている）が `needs-work` の原因です。
+- sample の「メモ / 将来課題」の表に、次の3つの目印が実際に残っています。
+  - `_TODO_`：AC-02 への接続
+  - `_UNDECIDED_`：通信が途絶えたときの販売継続
+  - `_ASSUMPTION_`：`kinuya-ci-unit` の整備
+- 完了条件 DC-001〜005 の判定は grade の結果をそのまま使いました。DC-004（H1 の形式と `based_on` の tsp-index）は、frontmatter と H1 が条件どおりであることを読んで確かめました。
+- 先行タスク 080 の実行記録は `status: complete` でした。変更は「ケース表の共通カラム」の再掲1件を参照に置き換えたものだけで、対象外の変更はありません。
+
+**未充足事項と改善指示**
+1. 「メモ / 将来課題」の3つの目印を解消し、残すものには ready にする前に解消すべきかと決める時期を書く（F008・F007・F001）。
+2. minor の F002〜F006 を直す。
+   - F002：記録サービスの Stub に、タイムアウトの再現と非同期・並行性の扱いを足す。
+   - F003：つけ残高の行の採用理由を業務への影響で書き直すか、根拠の文書を `based_on` に加える。
+   - F004：通信不能時の行の代替レベルの欄に、未決のあいだ担保先がないことを書く。
+   - F005：記入例の `証跡` を暫定の書き方にそろえるか、CI 整備後の書き方だと注記する。
+   - F006：分割の目安を rulebook に合わせて「15以上／50以上」にする。
+3. 直したあとで、もう一度 `--target kata` の grade を実行する。
+4. 別件ですが、rulebook の F003 / F006 では `_UNDECIDED_` に解消済みの「sample の見出し構成の未整合」が残っています。recipe・template の要否（PJR-WYTX）だけに更新することを勧めます。
+
+**approach に応じた確認（fully-guided）**
+宣言された文書だけを参照しました。recipe は `_MISSING_` で、PJR-WYTX が未決事項として rulebook 側に記録されています。
+
+**確認できなかった範囲**
+`based_on` の bac-sample とプロジェクト概要の本文は照合していません。grade の結果を事実として使ったためです。lint などの検査は親 runner が実行するので、ここでは実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict: incomplete。sample・rulebook とも評価結果は最新（`grade list --changed-only` / `--incomplete` は出力なし、判定直前の再確認でも変化なし）。rulebook は `pass`（91、minor 6）、sample は `needs-work`（92、major 1 / minor 7）で、型の整備を含む schedule の追加完了条件（両方の型に最新の `pass`）を満たさない。主因は F008（「メモ / 将来課題」に `_TODO_` / `_UNDECIDED_` / `_ASSUMPTION_` が残る）。DC-001〜005 の判定は grade の結果を使い、DC-004 は frontmatter と H1 を読んで確認した。先行の edit 080（condense、`status: complete`）は再掲1件を参照に置き換えただけで、対象外の変更はない。確認できなかった範囲: `based_on` の bac-sample とプロジェクト概要の本文は照合していない（grade の結果を事実として使ったため）。lint などは親 runner の担当のため実行していない。","handoff":["sample の「メモ / 将来課題」に残る `_TODO_`（AC-02 への接続）・`_UNDECIDED_`（通信が途絶えたときの販売継続）・`_ASSUMPTION_`（`kinuya-ci-unit` の整備）を解消する。残すものには、ready にする前に解消すべきかと決める時期を明記する（F008・F007・F001）","sample の minor を直す: F002 記録サービスの Stub にタイムアウトの再現と非同期・並行性の扱いを足す / F003 つけ残高の行の採用理由を業務への影響で書き直すか、根拠の文書を `based_on` に加える / F004 通信不能時の行の代替レベルの欄に、未決のあいだ担保先がないことを書く / F005 記入例の `証跡` を暫定の書き方にそろえるか、CI 整備後の書き方だと注記する / F006 分割の目安を「15以上／50以上」にする","直したあとで `specdojo grade` の `--target kata` を sample にもう一度実行し、`pass` を得てから review をやり直す","別件の改善候補: rulebook の `_UNDECIDED_` に解消済みの「sample の見出し構成の未整合」が残っている（rulebook の F003 / F006）。recipe・template の要否（PJR-WYTX）だけに更新する"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/utc-index-sample.md --changed-only","status":"passed","summary":"出力なし（評価結果は最新）。判定直前に再実行しても出力なし"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/utc-index-sample.md --incomplete","status":"passed","summary":"出力なし（評価パイプラインは完了済み）"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/utc-index-rulebook.md --changed-only","status":"passed","summary":"出力なし（評価結果は最新）。判定直前に再実行しても出力なし"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/utc-index-rulebook.md --incomplete","status":"passed","summary":"出力なし（評価パイプラインは完了済み）"}]}
+</specdojo_executor_evidence>
