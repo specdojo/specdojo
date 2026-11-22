@@ -4,11 +4,10 @@ document: specdojo:ifx-msg-sample
 path: docs/ja/specdojo/samples/ifx-msg-sample.yaml
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-sample
 verdict: needs-work
 score: 74
-graded_at: "2026-11-21T04:05:43.389Z"
-graded_by: opus-executor
+graded_at: "2026-11-22T12:37:46.723Z"
+graded_by: opus-review-executor
 content_hash: 903df2a2cae645f4937ae607a0488a2d2fdab7ce859dce6ad08eb247627b2b1b
 categories:
   purpose:

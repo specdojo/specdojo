@@ -4,15 +4,14 @@ document: specdojo:ifx-msg-rulebook
 path: docs/ja/specdojo/rulebooks/ifx-msg-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-rulebook
 verdict: needs-work
-score: 78
-graded_at: "2026-11-21T04:04:25.411Z"
-graded_by: opus-executor
+score: 77
+graded_at: "2026-11-22T12:36:48.961Z"
+graded_by: opus-review-executor
 content_hash: bb8142c837028e52c6ed1d465d1159d10da02921e5597f1e983d84417fc5a320
 categories:
   purpose:
-    score: 88
+    score: 75
   operations:
     score: 81
   planning:
@@ -31,8 +30,8 @@ categories:
     score: 75
 viewpoints:
   vp-po-purpose-alignment:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-decision-readiness:
     level: 3
     score: 75
@@ -102,59 +101,66 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 1
-  minor: 20
+  minor: 21
   note: 0
 findings:
   - id: F001
+    severity: minor
+    rule: vp-po-purpose-alignment
+    line: 3
+    anchor: 外部システム（物流、決済、会計など）との非同期連携のメッセージング仕様を、**AsyncAPI + CloudEvents**（YAML 1ファイル）で定義します。
+    message: AsyncAPI + CloudEvents を採用する理由（外部連携先との合意容易性・標準準拠・ツール互換性など上位の目的との対応）が示されておらず、手段の選定根拠を説明できないため、導入文に採用理由を1文追記する必要がある。
+    message_ja: AsyncAPI + CloudEvents を採用する理由（外部連携先との合意容易性・標準準拠・ツール互換性など上位の目的との対応）が示されておらず、手段の選定根拠を説明できないため、導入文に採用理由を1文追記する必要がある。
+  - id: F002
     severity: minor
     rule: vp-po-decision-readiness
     line: 7
     anchor: "`status` の昇格と承認、改訂と廃止は [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従い、本書では言い直しません。"
     message: EMSの合意や承認を行う主体（POや外部システム担当者など）に関する言及がない。
     message_ja: EMSの合意や承認を行う主体（POや外部システム担当者など）に関する言及がない。
-  - id: F002
+  - id: F003
     severity: minor
     rule: vp-po-publication-accountability
     line: 26
     anchor: "禁止（書かない）:"
     message: AsyncAPIの`servers`に実接続先URL・認証情報・取引先の契約情報など公開不適切な情報を書かないことが禁止事項に含まれておらず、公開リポジトリでの利用時に判断がぶれるため追記が必要である。
     message_ja: AsyncAPIの`servers`に実接続先URL・認証情報・取引先の契約情報など公開不適切な情報を書かないことが禁止事項に含まれておらず、公開リポジトリでの利用時に判断がぶれるため追記が必要である。
-  - id: F003
+  - id: F004
     severity: minor
     rule: vp-pm-plan-feasibility
     line: 5
     anchor: "EMS は ESIL（外部システムIF一覧）から参照される「詳細仕様」で、ESIL 側の `spec_ref: ifx-msg-...` をこの EMS の ID とファイル名に対応させます。"
     message: ESILとEMSの作成順序（ESILで`spec_ref`を確定してからEMSを作るのか等）とEMS作成作業の完了条件が示されておらず、タスク化・順序付けに使いにくい。
     message_ja: ESILとEMSの作成順序（ESILで`spec_ref`を確定してからEMSを作るのか等）とEMS作成作業の完了条件が示されておらず、タスク化・順序付けに使いにくい。
-  - id: F004
+  - id: F005
     severity: minor
     rule: vp-pm-dependency-risk
     line: 57
     anchor: "- `type`: イベント種別（例: `com.kinuya.stock.changed.v1`）"
     message: イベント`type`のバージョン接尾辞（`.v1`）が例示のみで、破壊的変更時の版上げ・旧版併存・外部連携先への影響確認のルールがなく、変更時の依存リスクを識別できない。
     message_ja: イベント`type`のバージョン接尾辞（`.v1`）が例示のみで、破壊的変更時の版上げ・旧版併存・外部連携先への影響確認のルールがなく、変更時の依存リスクを識別できない。
-  - id: F005
+  - id: F006
     severity: minor
     rule: vp-pm-control-reporting
     line: 20
     anchor: "- **外部との合意に必要な最小十分**を記載する"
     message: 外部との合意が未了の項目（未決事項・仮定）をYAML内でどう明示し、どこへ転記・管理するか（`_UNDECIDED_`相当の記法やPJR登録など）が示されていない。
     message_ja: 外部との合意が未了の項目（未決事項・仮定）をYAML内でどう明示し、どこへ転記・管理するか（`_UNDECIDED_`相当の記法やPJR登録など）が示されていない。
-  - id: F006
+  - id: F007
     severity: minor
     rule: vp-ba-requirements-completeness
     line: 3
     anchor: 外部システム（物流、決済、会計など）との非同期連携のメッセージング仕様を、**AsyncAPI + CloudEvents**（YAML 1ファイル）で定義します。
     message: 同期API仕様（`ifx-api-*`）との責務境界（どの連携をEMSで扱い、どれを同期API仕様で扱うか）が明示されておらず、対象範囲の判断がぶれる。
     message_ja: 同期API仕様（`ifx-api-*`）との責務境界（どの連携をEMSで扱い、どれを同期API仕様で扱うか）が明示されておらず、対象範囲の判断がぶれる。
-  - id: F007
+  - id: F008
     severity: minor
     rule: vp-ba-stakeholder-clarity
     line: 22
     anchor: "- チャネル（topic/queue）や方向（publish/subscribe）を明確にする"
     message: publish/subscribeの方向を明確にするとしているが、各方向で自システム側と外部システム側のどちらが送信者・受信者・確認者になるかの記載ルールがなく、合意対象の関係者を読み取れない。
     message_ja: publish/subscribeの方向を明確にするとしているが、各方向で自システム側と外部システム側のどちらが送信者・受信者・確認者になるかの記載ルールがなく、合意対象の関係者を読み取れない。
-  - id: F008
+  - id: F009
     severity: minor
     rule: vp-arc-technical-constraints
     line: 61
@@ -165,91 +171,91 @@ findings:
     message_ja: >-
       CloudEventsのコンテンツモード（structured /
       binary）とメッセージの`contentType`（sampleの`application/cloudevents+json`）の関係、および`servers`・プロトコルの記載要否が示されておらず、技術的前提が不足している。
-  - id: F009
+  - id: F010
     severity: minor
     rule: vp-dev-implementation-readiness
     line: 11
     anchor: "- ファイル名: `ifx-msg-<短い英小文字ハイフン>.yaml`（例: `ifx-msg-stock-changed`）"
     message: 配置ディレクトリと、`channels`配下（description・publish/subscribe）および`components/messages`配下（name・contentType・payload）の必須項目が示されておらず、作業対象と入力の粒度が不足している。
     message_ja: 配置ディレクトリと、`channels`配下（description・publish/subscribe）および`components/messages`配下（name・contentType・payload）の必須項目が示されておらず、作業対象と入力の粒度が不足している。
-  - id: F010
+  - id: F011
     severity: minor
     rule: vp-dev-change-impact
     line: 11
     anchor: "- ファイル名: `ifx-msg-<短い英小文字ハイフン>.yaml`（例: `ifx-msg-stock-changed`）"
     message: EMSのIDやファイル名を変更した場合のESIL側`spec_ref`の追従、yaml-pagesによる表示用ページの再生成など、変更時の影響範囲が識別されていない。
     message_ja: EMSのIDやファイル名を変更した場合のESIL側`spec_ref`の追従、yaml-pagesによる表示用ページの再生成など、変更時の影響範囲が識別されていない。
-  - id: F011
+  - id: F012
     severity: minor
     rule: vp-dev-testability
     line: 42
     anchor: "### 4.1. メタ情報（x-spec-meta）"
     message: AsyncAPI YAMLの妥当性を検証する手順（lintコマンドやバリデーション方法）についての言及がない。
     message_ja: AsyncAPI YAMLの妥当性を検証する手順（lintコマンドやバリデーション方法）についての言及がない。
-  - id: F012
+  - id: F013
     severity: minor
     rule: vp-qe-verifiability
     line: 16
     anchor: "- ツール互換性のため **AsyncAPI 2.6.0** を第一候補とし、CloudEvents は **1.0** を前提とします。"
     message: 「AsyncAPI 2.6.0 を第一候補」とあるが他バージョンを許容する条件が示されておらず、準拠のpass/failを判定できない（「最小十分」「推奨」も同様に判定基準がない）。
     message_ja: 「AsyncAPI 2.6.0 を第一候補」とあるが他バージョンを許容する条件が示されておらず、準拠のpass/failを判定できない（「最小十分」「推奨」も同様に判定基準がない）。
-  - id: F013
+  - id: F014
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 20
     anchor: "- **外部との合意に必要な最小十分**を記載する"
     message: "sampleにあるスキーマ検証回避のディレクティブ（`# specdojo-schema: none reason=external-asyncapi`）に関する記載ルールが欠落している。"
     message_ja: "sampleにあるスキーマ検証回避のディレクティブ（`# specdojo-schema: none reason=external-asyncapi`）に関する記載ルールが欠落している。"
-  - id: F014
+  - id: F015
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 11
     anchor: "- ファイル名: `ifx-msg-<短い英小文字ハイフン>.yaml`（例: `ifx-msg-stock-changed`）"
     message: ファイル名の例`ifx-msg-stock-changed`に拡張子`.yaml`がなく、直前の命名規則`ifx-msg-＜短い英小文字ハイフン＞.yaml`と一致していない。
     message_ja: ファイル名の例`ifx-msg-stock-changed`に拡張子`.yaml`がなく、直前の命名規則`ifx-msg-＜短い英小文字ハイフン＞.yaml`と一致していない。
-  - id: F015
+  - id: F016
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 46
     anchor: "| id       | メッセージ仕様ID（`ifx-msg-...`）                    | ○    |"
     message: "`id`の説明が`ifx-msg-...`のみで、sampleの`specdojo:ifx-msg-sample`のようなプロジェクト修飾IDの形式が示されておらず、記載形式に矛盾がある。"
     message_ja: "`id`の説明が`ifx-msg-...`のみで、sampleの`specdojo:ifx-msg-sample`のようなプロジェクト修飾IDの形式が示されておらず、記載形式に矛盾がある。"
-  - id: F016
+  - id: F017
     severity: major
     rule: vp-qe-kata-conformance
     line: 37
     anchor: "- `info`（`title`, `version` を含む）"
     message: 必須構造で`info`に`version`を含めるとしているが、対応sampleの`info`には`title`しかなく`version`が欠落しており、rulebookとsampleの必須キーが矛盾している（sampleへ`version`を追加するか必須条件を見直す必要がある）。
     message_ja: 必須構造で`info`に`version`を含めるとしているが、対応sampleの`info`には`title`しかなく`version`が欠落しており、rulebookとsampleの必須キーが矛盾している（sampleへ`version`を追加するか必須条件を見直す必要がある）。
-  - id: F017
+  - id: F018
     severity: minor
     rule: vp-ux-readability
     line: 5
     anchor: "EMS は ESIL（外部システムIF一覧）から参照される「詳細仕様」で、ESIL 側の `spec_ref: ifx-msg-...` をこの EMS の ID とファイル名に対応させます。"
     message: 成果物の位置づけについて言及があるが、関連するルールブック（ESIL等）へのリンクがなく、ナビゲーションが不十分である。（前回の未解消指摘）
     message_ja: 成果物の位置づけについて言及があるが、関連するルールブック（ESIL等）へのリンクがなく、ナビゲーションが不十分である。（前回の未解消指摘）
-  - id: F018
+  - id: F019
     severity: minor
     rule: vp-ux-readability
     line: 28
     anchor: "- DB物理テーブル名・物理カラム名・SQL全文"
     message: 禁止事項に理由（例：詳細設計への委譲のためなど）が記載されていないため、記述範囲の境界判断が困難である。（前回の未解消指摘）
     message_ja: 禁止事項に理由（例：詳細設計への委譲のためなど）が記載されていないため、記述範囲の境界判断が困難である。（前回の未解消指摘）
-  - id: F019
+  - id: F020
     severity: minor
     rule: vp-ux-language-consistency
     line: 12
     anchor: "- 1ファイル = 1つのメッセージング仕様（1つのイベント群/チャネル群）"
     message: 「メッセージング仕様」「メッセージ仕様」「EMS」が混在し、1ファイルの単位（イベント群/チャネル群）の定義も曖昧なため、用語を統一し単位を定義する必要がある。
     message_ja: 「メッセージング仕様」「メッセージ仕様」「EMS」が混在し、1ファイルの単位（イベント群/チャネル群）の定義も曖昧なため、用語を統一し単位を定義する必要がある。
-  - id: F020
+  - id: F021
     severity: minor
     rule: vp-ops-release-readiness
     line: 7
     anchor: "`status` の昇格と承認、改訂と廃止は [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従い、本書では言い直しません。"
     message: statusを `ready` にするための完了条件（例：外部システム担当者との合意完了など）が明示されていない。
     message_ja: statusを `ready` にするための完了条件（例：外部システム担当者との合意完了など）が明示されていない。
-  - id: F021
+  - id: F022
     severity: minor
     rule: vp-ops-operability
     line: 57

@@ -5,10 +5,10 @@ path: docs/ja/specdojo/samples/sld-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 96
-graded_at: "2026-11-17T23:00:37.271Z"
-graded_by: sol-review-executor
-content_hash: 5be45036fe09ecd0b38118bc0c8a52af119c0c6899bd819eaa9758b306d7569e
+score: 93
+graded_at: "2026-11-22T12:48:54.734Z"
+graded_by: opus-review-executor
+content_hash: 8977788cc1d6644520edfc08dfad6251c3619c426be76bdcf48e974501066c4d
 categories:
   purpose:
     score: 100
@@ -27,7 +27,7 @@ categories:
   quality:
     score: 92
   consistency:
-    score: 100
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -78,8 +78,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
     level: 3
     score: 75
@@ -104,7 +104,7 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 3
+  minor: 4
   note: 0
 findings:
   - id: F001
@@ -118,6 +118,20 @@ findings:
     message_ja: 第5章の販売記録・紙記録の処分禁止と日次集計の削除禁止は、保管場所一覧の22・32・33行目にある保持・削除条件の再掲です。削除条件の正本を一覧に保つため、第5章では該当行への参照と決定後の変更影響を示す形にまとめてください。
   - id: F002
     severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 67
+    anchor: >-
+      | [[specdojo:stsd-sample\|商品のステータス定義]]                               | 商品が入荷から販売・返品までにとる状態と、状態の移り変わり方 |
+      入荷済み（`received`）・検品済み（`inspected`）は検品場所、販売可能（`sellable`）は売場棚、返品待ち（`return-pending`）は返品保管箱。撤去品保留箱に当たる状態はない         
+      |
+    message: >-
+      隣接仕様の対応表の STSD 行に販売済み（`sold`）の置き場所がなく、STSD が `sold` を販売記録に対応づけていることと、77行目の「STSD の全状態を一覧と照合する」確認手順との対応が取れません。`sold`
+      は販売記録として `data/sales/`（現金）と販売ノート（つけ）に対応することを同じ行に追記してください。
+    message_ja: >-
+      隣接仕様の対応表の STSD 行に販売済み（`sold`）の置き場所がなく、STSD が `sold` を販売記録に対応づけていることと、77行目の「STSD の全状態を一覧と照合する」確認手順との対応が取れません。`sold`
+      は販売記録として `data/sales/`（現金）と販売ノート（つけ）に対応することを同じ行に追記してください。
+  - id: F003
+    severity: minor
     rule: vp-qe-kata-conformance
     line: 15
     anchor: >-
@@ -127,7 +141,7 @@ findings:
       `条件付き処分可`。検品結果を仕入ノートへ記録し、商品を売場棚か返品保管箱へ移してから外箱を処分する。伝票は店頭台帳保管棚へ移す |
     message: 前回の集計元とメンバー割り当ての重大な不整合、および現金と仮メモの混在は解消していますが、検品場所には破棄しない商品、保管棚へ移す納品伝票、解体処分する外箱が同じ管理行に残っています。ルールブックが求める共有範囲・寿命・削除可否の判断単位に従い、同じ検品場所内でも商品・伝票・外箱の管理区分を分けてください。個別の扱い自体は記載されているため、残る問題は区分の軽微な不整合です。
     message_ja: 前回の集計元とメンバー割り当ての重大な不整合、および現金と仮メモの混在は解消していますが、検品場所には破棄しない商品、保管棚へ移す納品伝票、解体処分する外箱が同じ管理行に残っています。ルールブックが求める共有範囲・寿命・削除可否の判断単位に従い、同じ検品場所内でも商品・伝票・外箱の管理区分を分けてください。個別の扱い自体は記載されているため、残る問題は区分の軽微な不整合です。
-  - id: F003
+  - id: F004
     severity: minor
     rule: vp-ops-operability
     line: 31

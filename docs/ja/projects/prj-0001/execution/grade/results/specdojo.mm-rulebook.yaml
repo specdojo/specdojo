@@ -4,11 +4,10 @@ document: specdojo:mm-rulebook
 path: docs/ja/specdojo/rulebooks/mm-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-rulebook
 verdict: pass
 score: 80
-graded_at: "2026-11-21T04:29:54.797Z"
-graded_by: opus-executor
+graded_at: "2026-11-22T12:43:22.768Z"
+graded_by: opus-review-executor
 content_hash: efa7673912f82d4e69a11beff8b7fd444eb25823d1607c07f2c6d1950ee3bd39
 categories:
   purpose:
@@ -16,7 +15,7 @@ categories:
   operations:
     score: 88
   planning:
-    score: 83
+    score: 75
   business:
     score: 75
   architecture:
@@ -40,8 +39,8 @@ viewpoints:
     level: 3
     score: 75
   vp-pm-plan-feasibility:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-dependency-risk:
     level: 3
     score: 75
@@ -105,7 +104,7 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 19
+  minor: 21
   note: 0
 findings:
   - id: F001
@@ -131,75 +130,97 @@ findings:
     message_ja: 議事録に記載すべきでない情報（非公開情報や個人情報）の扱いや公開方針に関する記述がない。
   - id: F004
     severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 35
+    anchor: "- アクションには担当者と期限を必ず付与する。"
+    message: >-
+      アクションアイテムに担当者・期限以外の完了条件や状態（未着手・完了など）の記録項目が定義されておらず、「追跡可能に記録する」方針に対して進捗確認で完了を判定できない。担当者を人名と Role code
+      のどちらで記すかも定めるべきである。
+    message_ja: >-
+      アクションアイテムに担当者・期限以外の完了条件や状態（未着手・完了など）の記録項目が定義されておらず、「追跡可能に記録する」方針に対して進捗確認で完了を判定できない。担当者を人名と Role code
+      のどちらで記すかも定めるべきである。
+  - id: F005
+    severity: minor
     rule: vp-pm-dependency-risk
     line: 1
     anchor: "# 議事録 作成ルール"
     message: 後続成果物への影響や依存関係、および導入時のリスクが識別されていない。
     message_ja: 後続成果物への影響や依存関係、および導入時のリスクが識別されていない。
-  - id: F005
+  - id: F006
     severity: minor
     rule: vp-pm-control-reporting
     line: 12
     anchor: "## 2. 位置づけ"
     message: 議事録から進捗報告や課題管理表（PJRなど）へ転記すべき事項の分離基準が示されていない。
     message_ja: 議事録から進捗報告や課題管理表（PJRなど）へ転記すべき事項の分離基準が示されていない。
-  - id: F006
+  - id: F007
     severity: minor
     rule: vp-ba-business-value
     line: 5
     anchor: "## 1. 全体方針"
     message: 誰のどのような課題を解決するためにこの議事録ルールが存在するのか（業務課題や期待効果）が明記されていない。
     message_ja: 誰のどのような課題を解決するためにこの議事録ルールが存在するのか（業務課題や期待効果）が明記されていない。
-  - id: F007
+  - id: F008
     severity: minor
     rule: vp-ba-requirements-completeness
     line: 5
     anchor: "## 1. 全体方針"
     message: 対象範囲（どのような会議でこの議事録が必須となるか）や対象外の会議の定義がない。
     message_ja: 対象範囲（どのような会議でこの議事録が必須となるか）や対象外の会議の定義がない。
-  - id: F008
+  - id: F009
     severity: minor
     rule: vp-ba-stakeholder-clarity
     line: 32
     anchor: "## 5. 記述ガイド"
     message: 議事録の確認者や承認者、および合意事項に関する記述が不足している。
     message_ja: 議事録の確認者や承認者、および合意事項に関する記述が不足している。
-  - id: F009
+  - id: F010
     severity: minor
     rule: vp-arc-technical-constraints
     line: 17
     anchor: "## 3. ファイル命名・ID規則"
     message: Markdown 以外のフォーマットの使用可否や技術的な制約が明示されていない。
     message_ja: Markdown 以外のフォーマットの使用可否や技術的な制約が明示されていない。
-  - id: F010
+  - id: F011
     severity: minor
     rule: vp-dev-implementation-readiness
     line: 23
     anchor: "## 4. 本文構成（標準テンプレ）"
     message: 自動生成やツール連携を行う場合に必要な、入力・出力の制約や作業対象が読み取れない。
     message_ja: 自動生成やツール連携を行う場合に必要な、入力・出力の制約や作業対象が読み取れない。
-  - id: F011
+  - id: F012
     severity: minor
     rule: vp-dev-change-impact
     line: 17
     anchor: "## 3. ファイル命名・ID規則"
     message: ファイル命名規則やID規則を変更した場合の既存成果物への影響が識別されていない。
     message_ja: ファイル命名規則やID規則を変更した場合の既存成果物への影響が識別されていない。
-  - id: F012
+  - id: F013
     severity: minor
     rule: vp-dev-testability
     line: 32
     anchor: "## 5. 記述ガイド"
-    message: 作成された議事録がルールに準拠しているかを検証する手段（lint、検証コマンドなど）が示されていない。
-    message_ja: 作成された議事録がルールに準拠しているかを検証する手段（lint、検証コマンドなど）が示されていない。
-  - id: F013
+    message: 作成された議事録がルールに準拠しているかを検証する手段（lint、検証コマンドなど）が示されていません。
+    message_ja: 作成された議事録がルールに準拠しているかを検証する手段（lint、検証コマンドなど）が示されていません。
+  - id: F014
     severity: minor
     rule: vp-qe-verifiability
     line: 38
     anchor: "## 6. 禁止事項"
     message: 「結論不明の議論のみを羅列しない」「過度に記載しない」といった禁止事項が主観的で、客観的に判定しづらい。
     message_ja: 「結論不明の議論のみを羅列しない」「過度に記載しない」といった禁止事項が主観的で、客観的に判定しづらい。
-  - id: F014
+  - id: F015
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 19
+    anchor: "- 推奨: `mm-<yyyy-mm-dd>-<nn>.md`"
+    message: >-
+      ファイル名規則が「推奨」とされ、21行目の文書 ID 形式（必須）との関係も不明なため、`mm-＜yyyy-mm-dd＞-＜nn＞.md` に従わないファイル名が違反か否かを pass / fail
+      で判定できない。必須か任意かを明記すべきである。
+    message_ja: >-
+      ファイル名規則が「推奨」とされ、21行目の文書 ID 形式（必須）との関係も不明なため、`mm-＜yyyy-mm-dd＞-＜nn＞.md` に従わないファイル名が違反か否かを pass / fail
+      で判定できない。必須か任意かを明記すべきである。
+  - id: F016
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 23
@@ -210,35 +231,35 @@ findings:
     message_ja: >-
       `template: not-needed` の系統だが本文構成の表が見出しと必須の印だけで、会議情報の項目（会議名・日時・参加者）、決定事項・アクションアイテムの表の列などの本文要件が定義されておらず、sample
       にしか現れていない。
-  - id: F015
+  - id: F017
     severity: minor
     rule: vp-qe-kata-conformance
     line: 23
     anchor: "## 4. 本文構成（標準テンプレ）"
     message: rulebook-authoring-standard の要件（第4章を「本文要件」として各章の目的を記載、必須章ごとに3項目以上、推奨表のカラム定義の提示、自系統の改訂追従対象と担当 Role code）を満たしていない。
     message_ja: rulebook-authoring-standard の要件（第4章を「本文要件」として各章の目的を記載、必須章ごとに3項目以上、推奨表のカラム定義の提示、自系統の改訂追従対象と担当 Role code）を満たしていない。
-  - id: F016
+  - id: F018
     severity: minor
     rule: vp-ux-readability
     line: 32
     anchor: "## 5. 記述ガイド"
     message: 「記述ガイド」の内容が簡潔すぎるため、具体的にどのような記述が「良い/悪い」のかを判断するための例示や詳細な基準が不足している。
     message_ja: 「記述ガイド」の内容が簡潔すぎるため、具体的にどのような記述が「良い/悪い」のかを判断するための例示や詳細な基準が不足している。
-  - id: F017
+  - id: F019
     severity: minor
     rule: vp-ux-readability
     line: 3
     anchor: Meeting Minutes Documentation Rulebook
     message: H1 直下に本書の対象と目的を一文で示す導入文がなく、初見の読者が本書の役割を把握しにくい。
     message_ja: H1 直下に本書の対象と目的を一文で示す導入文がなく、初見の読者が本書の役割を把握しにくい。
-  - id: F018
+  - id: F020
     severity: minor
     rule: vp-ux-language-consistency
     line: 32
     anchor: "## 5. 記述ガイド"
     message: 「記述ガイド」で言及されている「保留事項」が、本文構成の標準テンプレには含まれておらず、一貫性がない。
     message_ja: 「記述ガイド」で言及されている「保留事項」が、本文構成の標準テンプレには含まれておらず、一貫性がない。
-  - id: F019
+  - id: F021
     severity: minor
     rule: vp-ops-operability
     line: 1

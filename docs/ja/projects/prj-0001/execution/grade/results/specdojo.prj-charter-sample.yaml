@@ -4,11 +4,10 @@ document: specdojo:prj-charter-sample
 path: docs/ja/specdojo/samples/prj-charter-sample.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-sample
 verdict: needs-work
-score: 85
-graded_at: "2026-11-21T05:30:38.624Z"
-graded_by: opus-executor
+score: 83
+graded_at: "2026-11-22T12:42:13.561Z"
+graded_by: opus-review-executor
 content_hash: 5ebcca4a7ff1f00db985962209670c01492b7692f8cbd0d804ac5ba15ba1435f
 categories:
   purpose:
@@ -22,7 +21,7 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 92
   implementation:
     score: 100
   quality:
@@ -88,8 +87,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 2
     score: 50
@@ -105,7 +104,7 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 4
-  minor: 5
+  minor: 7
   note: 0
 findings:
   - id: F001
@@ -181,6 +180,26 @@ findings:
     message: recipeとtemplateでは未決事項に担当を記載する構成ですが、sampleには担当列も項目別の担当記述もありません。影響と期限条件に加えて担当Role codeを具体値で示し、作成手順と完成例を整合させてください。
     message_ja: recipeとtemplateでは未決事項に担当を記載する構成ですが、sampleには担当列も項目別の担当記述もありません。影響と期限条件に加えて担当Role codeを具体値で示し、作成手順と完成例を整合させてください。
   - id: F009
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 74
+    anchor: >-
+      | 目的整合 | 優先機能と公開対象                              | すべてが概要の目的に対応し、店主代表が確認済み        |
+      [[specdojo:pm-plan-sample\|管理計画]]、決定記録              |
+    message: >-
+      GO / Not
+      GO表はrulebookに従い「合格条件」列を持つ一方、templateには合格条件列がなく、未決事項表もrulebook（論点・影響・当面の扱い）とtemplate（論点・期限・担当・対応方針）で列定義が異なるため、sampleが従う正本が一意になりません。rulebook・template・sampleの列構成を一つに揃えてください。
+    message_ja: >-
+      GO / Not
+      GO表はrulebookに従い「合格条件」列を持つ一方、templateには合格条件列がなく、未決事項表もrulebook（論点・影響・当面の扱い）とtemplate（論点・期限・担当・対応方針）で列定義が異なるため、sampleが従う正本が一意になりません。rulebook・template・sampleの列構成を一つに揃えてください。
+  - id: F010
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 46
+    anchor: "| `STH-DEVELOPER`   | 開発担当     | 実行担当者              | `DEV`          | 認可範囲で計画を作り、変更影響を店主に示す     |"
+    message: 開発担当の責任欄で「変更影響を店主に示す」と記載しており、他の箇所の「店主代表」と表記がずれているため、「店主代表（`PO`）」に統一してください。
+    message_ja: 開発担当の責任欄で「変更影響を店主に示す」と記載しており、他の箇所の「店主代表」と表記がずれているため、「店主代表（`PO`）」に統一してください。
+  - id: F011
     severity: major
     rule: vp-ops-release-readiness
     line: 78

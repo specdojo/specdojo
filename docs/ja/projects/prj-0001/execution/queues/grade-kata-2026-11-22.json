@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "queue_id": "grade-kata-2026-11-22",
+  "project_id": "prj-0001",
+  "created_at": "2026-11-22T12:32:45.963Z",
+  "updated_at": "2026-11-22T12:48:54.762Z",
+  "state": "succeeded",
+  "steps": [
+    {
+      "index": 1,
+      "on_failure": "continue",
+      "status": "succeeded",
+      "kind": "grade",
+      "argv": [
+        "grade",
+        "run",
+        "--target",
+        "kata",
+        "--kata",
+        "ifx-api",
+        "--kata",
+        "ifx-msg",
+        "--kata",
+        "dec",
+        "--kata",
+        "prj-charter",
+        "--kata",
+        "mm",
+        "--kata",
+        "pr",
+        "--kata",
+        "sld",
+        "--if-busy",
+        "wait",
+        "--run-id",
+        "kata-slim-review-20261122b",
+        "--by",
+        "opus-review-executor",
+        "--project",
+        "prj-0001"
+      ],
+      "started_at": "2026-11-22T12:33:27.446Z",
+      "completed_at": "2026-11-22T12:48:54.758Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
+    }
+  ]
+}
