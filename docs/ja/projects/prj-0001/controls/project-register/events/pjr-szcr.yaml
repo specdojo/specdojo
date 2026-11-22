@@ -1,0 +1,69 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_400f83bf3cb24075b936e33e9b7df0d1
+  ts: "2026-11-22T12:41:48Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: opencode の executor で検証のコマンドと git rm を流せるかを確かめる
+    - field: description
+      from: ""
+      to: PJR-YS9M で prj-0001 の opencode の executor に許したコマンドが、qwen の executor の実際の run で拒まれないことを確かめる確認用の todo。
+    - field: input
+      from: ""
+      to: '["YS9M の反映（070630934）の後に、オーケストレーターが qwen-executor で流す（indie の承認、2026-11-22）。","消す対象のファイルは 55e17ba32 で置いた。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-22"
+    - field: due
+      from: ""
+      to: "2026-11-23"
+    - field: derived_from
+      from: ""
+      to: '["PJR-YS9M"]'
+- v: 1
+  id: reg_8cccb901795d4abb96e784cd1f08bc29
+  ts: "2026-11-22T12:42:05Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 確認用の完了条件を書く
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_400f83bf3cb24075b936e33e9b7df0d1
+- v: 1
+  id: reg_f83b859aa5904d498b3bd3ba839fdef6
+  ts: "2026-11-22T12:42:09Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 確認用の完了条件を書く
+  changes:
+    - field: section
+      from: ""
+      to: 作業内容
+  previous_event_id: reg_8cccb901795d4abb96e784cd1f08bc29
