@@ -744,6 +744,19 @@ providers:
 
 規則に引用符・バックスラッシュ・改行は使えません。
 
+### 7.4. opencode の edit executor に許すコマンド
+
+opencode の executor は `templates/opencode/agents/opencode-executor.md` の `permission.bash` に無いコマンドを拒みます。配布する定義は、読み取り系の git、`npm run`・`npm test`、`npx prettier`・`npx markdownlint`・`npx markdownlint-cli2`・`npx eslint`・`npx tsc`・`npx vitest`・`npx ajv`・`npx specdojo`、`specdojo` に加え、`docs/`・`src/`・`tests/` の下に限った `git rm` を許します。`git rm -r`・`-f`・`--force`、`git push`、`rm -rf`、`gh` は許しません。
+
+リポジトリごとに違う検証コマンドは、`providers.opencode.allow_commands` に claude と同じ `Bash(<command> *)` の形で書きます。edit mode の起動コマンドの前に、bash の allow 規則を入れた環境変数 `OPENCODE_PERMISSION` として足されるため、`.opencode/agents/` を当て直しても残ります。review・report mode には足しません。
+
+```yaml
+providers:
+  opencode:
+    allow_commands:
+      - "Bash(npx playwright test *)"
+```
+
 ## 8. agent 権限とプロンプトインジェクション対策
 
 exec の plan は done_criteria と成果物本文から生成され、agent は無人で実行されます。成果物やレビュー対象文書に埋め込まれた指示（プロンプトインジェクション）によって、agent がタスク外のファイル書き換え・情報持ち出しを行うリスクを前提に、権限を設計します。

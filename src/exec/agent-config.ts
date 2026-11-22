@@ -93,8 +93,8 @@ export type ProviderOverride = {
   // from command_params.
   command_template?: string;
   command_params?: CommandParams;
-  // claude only: extra `Bash(...)` permission rules appended to edit-mode launch commands as
-  // `--allowedTools`. They survive `config scaffold --force`; deny rules still take precedence.
+  // claude / opencode: extra `Bash(...)` permission rules for edit-mode launch commands (claude:
+  // `--allowedTools`; opencode: `OPENCODE_PERMISSION` env). They survive `config scaffold --force`.
   allow_commands?: string[];
   rate_limit_detection?: RateLimitDetection;
   connection_error_detection?: ConnectionErrorDetection;
@@ -282,7 +282,8 @@ export function resolveMemberCommand(
 
 const ALLOW_COMMAND_PATTERN = /^Bash\([^'\\\r\n]+\)$/;
 
-// Append providers.claude.allow_commands to an edit-mode command as `--allowedTools`.
+// Apply providers.<claude|opencode>.allow_commands to an edit-mode command. claude gets
+// `--allowedTools`; opencode gets an `OPENCODE_PERMISSION` environment prefix.
 // Rules are single-quoted for the shell, so quotes, backslashes, and newlines are rejected.
 function appendAllowedCommands(
   command: string,
@@ -291,7 +292,12 @@ function appendAllowedCommands(
   override: ProviderOverride | undefined,
 ): string {
   const rules = override?.allow_commands;
-  if (provider !== "claude" || member.mode !== "edit" || !rules || rules.length === 0) {
+  if (
+    (provider !== "claude" && provider !== "opencode") ||
+    member.mode !== "edit" ||
+    !rules ||
+    rules.length === 0
+  ) {
     return command;
   }
   for (const rule of rules) {
@@ -300,6 +306,11 @@ function appendAllowedCommands(
         `exec-defaults providers.${provider}.allow_commands entry must look like Bash(<command> *) without quotes or backslashes: ${JSON.stringify(rule)}`,
       );
     }
+  }
+  if (provider === "opencode") {
+    const bash: Record<string, "allow"> = {};
+    for (const rule of rules) bash[rule.slice("Bash(".length, -1)] = "allow";
+    return `OPENCODE_PERMISSION='${JSON.stringify({ bash })}' ${command}`;
   }
   return `${command} --allowedTools ${rules.map((rule) => `'${rule}'`).join(" ")}`;
 }
