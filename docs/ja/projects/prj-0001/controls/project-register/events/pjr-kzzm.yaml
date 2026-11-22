@@ -35,3 +35,29 @@
     - field: due
       from: ""
       to: "2026-11-30"
+- v: 1
+  id: reg_a2e1450f69bf44cd8f342bcdaf228134
+  ts: "2026-11-22T11:39:18Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件と影響範囲を利用者の承認のもとで書く
+  changes:
+    - field: section
+      from: ""
+      to: 影響範囲
+  previous_event_id: reg_f120b1e301ce454280d8169602faf267
+- v: 1
+  id: reg_4c6cd5fb46274424909dfe4eb1c70d5b
+  ts: "2026-11-22T11:39:22Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件と影響範囲を利用者の承認のもとで書く
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_a2e1450f69bf44cd8f342bcdaf228134

@@ -47,3 +47,29 @@
     - field: commit_scope
       from: ""
       to: project
+- v: 1
+  id: reg_a39cbd77afc44d759a30b19e16de055c
+  ts: "2026-11-22T11:39:47Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件と影響範囲を利用者の承認のもとで書く
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_f6db75ecc23440af8b5f6536db190e6c
+- v: 1
+  id: reg_178668b0a8414c62881090b08075ffd3
+  ts: "2026-11-22T11:39:53Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件と影響範囲を利用者の承認のもとで書く
+  changes:
+    - field: section
+      from: ""
+      to: 作業内容
+  previous_event_id: reg_a39cbd77afc44d759a30b19e16de055c
