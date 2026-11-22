@@ -7,10 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   registered_at: "2026-11-22T03:13:50Z"
+  completed_at: "2026-11-22T13:06:36Z"
+  conclusion: opencode の executor に検証のコマンドと docs・src・tests の下に限った git rm を許した。allow_commands はエージェントの permission.bash に OPENCODE_CONFIG_CONTENT で入れる。prj-0001 の定義に反映し、qwen の実際の run で確かめた
   derived_from:
     - PJR-7KQT
 ---
