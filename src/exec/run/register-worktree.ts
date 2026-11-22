@@ -326,7 +326,7 @@ async function integrateRegisterWorktreeRun(
         rebuildRootRegisterViews(projectId, item.id);
         const reviewed = await postReview(baseCommit, outputCommit);
         if (reviewed) return reviewed;
-        const sha = gitOutput(repoRoot, ["rev-parse", "--short", "HEAD"]).trim();
+        const sha = outputCommit.slice(0, 12);
         process.stdout.write(
           `run done: ${item.id} (status: review — confirm and close with "register close")\n`,
         );

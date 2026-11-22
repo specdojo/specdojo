@@ -188,6 +188,18 @@ export type RegisterItemSummary = {
   uncommittedFiles?: number;
 };
 
+// 要約の commit= に出す ID を選ぶ。run が commit を作った（HEAD が動いた）場合だけ
+// その HEAD を使い、作っていなければ統合の commit を使う。作っていないのに HEAD を読むと、
+// 別の run や無関係な commit の ID が出る。
+export function selectRunCommitId(params: {
+  headBefore: string;
+  headAfter: string;
+  integrationCommit: string;
+}): string {
+  const id = params.headAfter !== params.headBefore ? params.headAfter : params.integrationCommit;
+  return id.slice(0, 12);
+}
+
 // 全ID処理後にID別の成否・状態遷移・commit結果・理由を一覧表示するための整形。
 export function formatRegisterRunSummary(summaries: readonly RegisterItemSummary[]): string {
   const lines = ["Register run summary:"];

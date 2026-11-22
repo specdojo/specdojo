@@ -14,7 +14,11 @@ import { resolveMemberCommand, type ExecDefaultsConfig } from "../agent-config.j
 import type { ExecEvidence } from "../evidence.js";
 import { readPipelineState } from "../pipeline-state.js";
 import { execTemplatePath } from "../plans.js";
-import { sanitizeRegisterConclusion, type RegisterItemTransition } from "../register.js";
+import {
+  sanitizeRegisterConclusion,
+  selectRunCommitId,
+  type RegisterItemTransition,
+} from "../register.js";
 import { scaffoldResult, stripLeadingListMarker, updateResultStatus } from "../results.js";
 import { runLogPath, taskRecordPaths } from "../run-records.js";
 import { worktreeStatusPaths } from "../worktree-ops.js";
@@ -566,6 +570,7 @@ export async function runRegisterPostReview(params: {
     })
     .map((path) => resolve(context.repoRoot, path));
   const commitFailureLogPath = runLogPath(reviewStatePath, "post-review-commit.log");
+  const headBeforeCommit = gitOutput(context.repoRoot, ["rev-parse", "HEAD"]).trim();
   try {
     commitRegisterState(
       context.repoRoot,
@@ -585,7 +590,11 @@ export async function runRegisterPostReview(params: {
     });
     throw error;
   }
-  const commit = gitOutput(context.repoRoot, ["rev-parse", "--short", "HEAD"]).trim();
+  const commit = selectRunCommitId({
+    headBefore: headBeforeCommit,
+    headAfter: gitOutput(context.repoRoot, ["rev-parse", "HEAD"]).trim(),
+    integrationCommit: params.outputCommit,
+  });
   const introduced = worktreeStatusPaths(context.repoRoot).filter(
     (path) => !preexisting.includes(path),
   );
