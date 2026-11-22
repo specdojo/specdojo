@@ -31,7 +31,15 @@ specdojo:
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- `ifx-api-sample` と `ifx-msg-sample` の `info` に `version` を足す。
+- `ifx-api-rulebook` の必須の構造に、`info.version` と各操作の `responses` を足す。`ifx-msg-rulebook` の必須の構造と sample が合っていることを確かめる。
+- `ifx-api-sample` の題材を、共通サンプル文脈（駄菓子屋きぬや）と `ifx-index-sample` の外部連携の一覧に合う本部の API（商品マスタや売上の登録など）に差し替える。`ifx-index-sample` の対象外（キャッシュレス決済）を題材にしない。`ifx-index-sample` のどの項目の詳しい仕様かを sample に示す。
+- OpenAPI と AsyncAPI の標準の構造は守る。
+- ほかの型の rulebook と sample は変えない。`ifx-index-sample` を直す必要があれば、変更案を個票の対応結果に書く。
+- 型の grade は統合の後に orchestrator が流す。executor は grade を実行しない。
+- `CHANGELOG.md` は変えない。個票の対応結果に「CHANGELOG に書く事項」の小節を作り、区分と行の文案を書く。影響がなければ「なし」と書く。
+- 迷った点は executor が決め、決めた内容と理由を個票の対応結果と報告の `handoff` に書く。
+- `npm run validate:schema`・`npm run lint:md`・`npm run lint:fm` を通し、親の検証を通す。
 
 ## 4. 作業内容
 

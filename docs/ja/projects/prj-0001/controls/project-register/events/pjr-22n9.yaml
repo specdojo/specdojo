@@ -41,3 +41,29 @@
     - field: derived_from
       from: ""
       to: '["PJR-7M9J"]'
+- v: 1
+  id: reg_1125c17cd7074e86839fa56f3fc95bd6
+  ts: "2026-11-22T13:20:43Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件を利用者の承認のもとで書く
+  changes:
+    - field: section
+      from: ""
+      to: 影響範囲
+  previous_event_id: reg_dcde7ecc96ac4f78a3b99e3c4f36f107
+- v: 1
+  id: reg_2d831d473fdc4bd8af44acaa8839b11a
+  ts: "2026-11-22T13:20:47Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件を利用者の承認のもとで書く
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_1125c17cd7074e86839fa56f3fc95bd6

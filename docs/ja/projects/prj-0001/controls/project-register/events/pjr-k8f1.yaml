@@ -41,3 +41,29 @@
     - field: derived_from
       from: ""
       to: '["PJR-39AB"]'
+- v: 1
+  id: reg_4f41ac21fe4e455fbb6a3a6723015613
+  ts: "2026-11-22T13:20:35Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件を利用者の承認のもとで書く
+  changes:
+    - field: section
+      from: ""
+      to: 影響範囲
+  previous_event_id: reg_bbac9bffd37f43bc9276e7ef2c8fb902
+- v: 1
+  id: reg_3d8009bb8ccc4ea8b0573097105056cc
+  ts: "2026-11-22T13:20:39Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件を利用者の承認のもとで書く
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_4f41ac21fe4e455fbb6a3a6723015613

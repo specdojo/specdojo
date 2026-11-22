@@ -73,3 +73,16 @@
       from: _TODO_
       to: "2026-11-30"
   previous_event_id: reg_518771b76908492b9e3f44b356b680d2
+- v: 1
+  id: reg_e6b5028a71f14220a05b7b3d1ba3c05b
+  ts: "2026-11-22T13:20:59Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件を利用者の承認のもとで書く
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_f440369da68e497aa6e12d1fd094ac9d
