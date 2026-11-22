@@ -1,0 +1,36 @@
+レビューの結論は `incomplete` です。sample の最新評価が `needs-work` のため、このタスクはまだ完了できません。
+
+**評価の鮮度**
+- sample と rulebook の両方で `grade list --target kata` を `--changed-only` と `--incomplete` で実行しました。4回とも何も出力されず、終了コードは0でした。
+- 評価結果ファイルは `specdojo.itc-sample.yaml` と `specdojo.itc-rulebook.yaml` の両方が揃っています。
+- よって評価結果は最新で、評価の処理も終わっています（`grade-stale` / `grade-unavailable` には当たりません）。
+
+**評価結果**
+
+| 対象 | verdict | score | finding |
+| --- | --- | --- | --- |
+| `itc-rulebook` | `pass` | 93 | blocker 0 / major 0 / minor 3 |
+| `itc-sample` | `needs-work` | 97 | blocker 0 / major 1 / minor 1 |
+
+- plan の追加完了条件は、型すべてに最新の `pass` を求めています。`needs-work` は `incomplete` とする決まりです。
+- sample の F002（major、未解決の `_ASSUMPTION_` が残っている）が完了を妨げています。成果物の本文52行目に `_ASSUMPTION_`（トランザクション分離レベルを `READ COMMITTED` とする仮定）が残っているのを確認しました。grade は41行目付近としていますが、内容は同じです。
+- 次の点は条件を満たしています。
+  - frontmatter の `based_on` に tsp-index-sample、itc-index-sample、bac-sample があり、DC-005 の根拠になります。
+  - `status` は `draft` のままです。
+  - worktree に成果物の変更はなく、未追跡ファイルは runner の `pipeline-state.json` だけで、対象外の変更は入っていません。
+
+**直すこと**
+1. sample 本文52行目の `_ASSUMPTION_` を、確定した記述にするか除去してください。確定できない論点は itc-index 側へ移します。そのうえで `--target kata` を再評価し、`pass` を得る必要があります。
+2. sample の F001（minor）は、itc-index-sample の「依存障害時の挙動」と本書の不採用方針（DB 停止・接続断）が食い違う件です。どちらかに揃えてください。
+3. rulebook は `pass` ですが minor が3件残っています。次の手直しで対応してください。
+   - F001：137行目の再掲
+   - F002：118・128行目で備考を書く先が決まっていない
+   - F003：87行目の「動詞で始まる箇条書き」という表現
+
+**確認できなかった範囲**
+- 先行する磨き込みタスクの実行記録（result）は、宣言された文書から特定できず、確認していません。
+- 実行したのは鮮度確認と、成果物・評価結果ファイルの読み取りだけです。lint などの検査は runner が行うため実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"review verdict: incomplete。評価結果の鮮度確認（npx specdojo grade list --target kata --path <対象> --changed-only / --incomplete）は sample・rulebook の両方で出力なし・exit 0、サイドカー2件あり（最新・評価完了）。itc-rulebook は pass/93（minor 3）。itc-sample は needs-work/97（major 1: F002 未解決の `_ASSUMPTION_` が本文52行目に残る、minor 1: F001 itc-index-sample の依存障害の割り当てとの食い違い）。plan の追加完了条件（型すべてに最新の kata pass が必要、needs-work は incomplete）を満たさない。frontmatter の `based_on` は tsp-index-sample・itc-index-sample・bac-sample を含み status は draft、worktree に成果物の変更なし（未追跡は runner の pipeline-state.json のみ）。確認できなかった範囲: 先行する磨き込みタスクの実行記録（result）は宣言文書から特定できず未確認。lint 等は runner の担当のため未実行。","handoff":["itc-sample の本文52行目にある `_ASSUMPTION_`（トランザクション分離レベル READ COMMITTED）を確定記述にするか除去し（確定できない論点は itc-index 側へ移す）、--target kata を再評価して pass を得る","itc-sample F001: itc-index-sample の「観点の立て方（共通）」の itc-sales-checkout「依存障害時の挙動」（DB 停止）と本書の DB 停止不採用を、itc-index-sample 側を更新拒否に改めるか本書で DB 停止を扱うかのどちらかに揃える","itc-rulebook の minor F001（137行目の再掲）・F002（118・128行目で備考を書く先が未定）・F003（87行目「動詞で始まる箇条書き」の表現）を次の手直しで対応する"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/itc-sample.md --changed-only","status":"passed","summary":"出力なし・exit 0（評価結果は最新）"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/itc-sample.md --incomplete","status":"passed","summary":"出力なし・exit 0（評価は完了）"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/itc-rulebook.md --changed-only","status":"passed","summary":"出力なし・exit 0（評価結果は最新）"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/itc-rulebook.md --incomplete","status":"passed","summary":"出力なし・exit 0（評価は完了）"}]}
+</specdojo_executor_evidence>
