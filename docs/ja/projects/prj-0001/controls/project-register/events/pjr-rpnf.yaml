@@ -93,3 +93,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_835b3c66c6c94c048514731823ccfa04
+- v: 1
+  id: reg_01fc1ffb4b7f4426a894b83bbfbcce97
+  ts: "2026-11-22T02:47:30Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register で実施（統合 38c8380e9）。作成規則と playbook の差分、ほかの作成規則と guides・standards の確認結果、package.json と CHANGELOG の不変を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: sample の作成規則の最終チェックから docs:build を外し、型の schedule の gate の前と release の前に exec queue の 1 段として 1 回流す運用を playbook に書いた。
+  previous_event_id: reg_a3aad6e3e2f043759d5ffd2faa641e92

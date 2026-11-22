@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-rpnf-sample-docs-build-at-gates
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: easy
   registered_at: "2026-11-21T23:03:49Z"
+  completed_at: "2026-11-22T02:47:30Z"
+  conclusion: sample の作成規則の最終チェックから docs:build を外し、型の schedule の gate の前と release の前に exec queue の 1 段として 1 回流す運用を playbook に書いた。
   derived_from:
     - PJR-50RQ
 ---
