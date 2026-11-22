@@ -41,3 +41,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-PP4X"]'
+- v: 1
+  id: reg_7d660437ea9b4951ad75001cc994fdfd
+  ts: "2026-11-22T03:16:35Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_8616c918025c43e693de2b9d5dc87bd4

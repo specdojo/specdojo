@@ -28,7 +28,15 @@ exec release などの --by は名簿の人と agent だけを受け付け、オ
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- `exec claim`・`release`・`block`・`unblock`・`complete`・`reopen`・`cancel` の `--by` で、登録簿と同じ予約名 `specdojo-orchestrator` を受け付ける。名簿の人と agent は今までどおり受け付ける。
+- 予約名のうち、ほかの 2 つ（`SpecDojo`・`night-orchestrator`）を exec の記帳でも受け付けるかは executor が決め、理由を個票の対応結果に書く。予約名の一覧は `src/shared/specdojo-config.ts` の `RESERVED_REGISTER_ACTORS` と同じ正本を使い、別の一覧を作らない。
+- 予約名で記帳したイベントを読んで state を組み立てるとき（`exec refresh`・`exec status`）、エラーにも警告にもならない。
+- 名簿にも予約名にもない名前は、今までどおり記帳の前にエラーで止まる。
+- 上の 3 つを単体テストで確かめる。
+- 予約名の扱いを説明している文書（`command-reference` の exec の記帳の節、`exec-operation-guide` など）を直す。
+- `CHANGELOG.md` は変えない。個票の対応結果の `### 5.1. CHANGELOG に書く事項` に、区分と行の文案を書く。
+- `npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md` を通し、親の検証を通す。
+- runner の記帳を変えるため、統合の後にオーケストレーターが第 3 波の 090 の 1 件を `exec release --by specdojo-orchestrator` で戻して流し、記帳と run が通ることを確かめる。
 
 ## 4. 作業内容
 
