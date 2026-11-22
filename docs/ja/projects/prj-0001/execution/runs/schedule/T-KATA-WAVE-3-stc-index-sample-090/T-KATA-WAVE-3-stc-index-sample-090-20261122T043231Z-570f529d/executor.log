@@ -1,0 +1,39 @@
+review の判定は `incomplete` です。対象は `stc-index-sample` の完成版です。sample の評価結果が `needs-work` で、型を整える schedule の完了条件「型すべてに最新の `pass`」を満たしていません。
+
+**評価結果の鮮度**
+
+- sample（`docs/ja/specdojo/samples/stc-index-sample.md`）と rulebook（`docs/ja/specdojo/rulebooks/stc-index-rulebook.md`）について、`specdojo grade list --target kata --path <対象> --changed-only` と `--incomplete` を実行しました。どちらも出力はなく、終了コードは 0 です。
+- verdict を決める直前にもう一度 `--changed-only` を実行し、同じく出力はありませんでした。`git status` でも `docs/ja/specdojo` 配下の変更はありません。
+- sample の評価結果サイドカーは存在します（`content_hash: ca669bd6…`）。
+
+**評価結果**
+
+| 対象 | `verdict` | `score` | finding |
+| --- | --- | --- | --- |
+| sample | `needs-work` | 94 | blocker 0 / major 1（F005）/ minor 4（F001〜F004） |
+| rulebook | `pass` | 96 | minor 2 |
+
+**判断根拠**
+
+- plan の完了条件では、`needs-work` は `incomplete` と扱い、`complete-with-findings` にもできません。
+- 完了条件のうち、評価結果が扱わない次の点は sample の本文で確認できました。
+  - DC-004: frontmatter の `based_on` に `specdojo:tsp-index-sample` があります。
+  - DC-005: 優先度 P0・P1・P2 ごとの共通の合格基準の表と、観測点の列を含む記入例 2 行があります。
+- 直前の 080（condense）の実行記録は `status: complete` です。sample の変更は 1 か所（AT に委ねる記述を「対象外・除外理由（共通）」への参照に置き換え）で、検証は成功しています。他の文書への変更は混ざっていません。
+
+**改善指示**
+
+1. F001: 分配表で「印刷の用紙切れ」を `未確定停止` に割り当てていますが、期待値では会計を維持しています。別の観点（例: 「会計維持」）を立てるか、`販売確定成立` の条件へ移します。
+2. F002: P2 の「80%以上を消化」が、TSP の出口条件「BAC-01〜BAC-03 の全ケースが合格」と食い違っています。BAC の範囲のケースは P0/P1 に置くと明記します。
+3. F003: 分割を見直す閾値を「60行を超えた」から rulebook と同じ「60行以上」に揃えます。
+4. F004: 印刷の障害の例外とスタブの一覧に「印字結果不明（タイムアウト）」を加えるか、対象別の `stc-sample` 側と揃えます。
+5. F005（major）: 「メモ / 将来課題」の表に `_TODO_` / `_ASSUMPTION_` が残っています。ただ、この表は未決事項を置く場所として作られているので、grade が sample に何を求めるかに疑義があります。印を残したままの再評価が要るかどうかの判断も含めて、改善指示として渡します。
+6. 修正したら `--target kata` で sample を grade し直し、`pass` を確認してから review し直します。
+
+**確認できなかった範囲**
+
+なし。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"review の判定は incomplete。sample と rulebook の評価結果は最新（grade list の --changed-only と --incomplete はどちらも出力なし。verdict を決める直前にもう一度確かめた）。sample の評価結果は needs-work（score 94、major 1 / minor 4）で、型を整える schedule の完了条件「型すべてに最新の pass」を満たさない。rulebook は pass（96）。DC-004（`based_on` に tsp-index がある）と DC-005（P0〜P2 の合格基準と観測点を含む例がある）は本文で確かめた。直前の 080（condense）の記録は complete で、変更は sample の 1 か所、検証は成功、他の文書への変更なし。確認できなかった範囲: なし。","handoff":["sample の F001〜F005 を直す edit をもう一度回す。F001 は印刷の用紙切れの観点の割り当て、F002 は P2 の合格基準と BAC の出口条件のずれ、F003 は閾値を「60行以上」に揃える、F004 は印字結果不明（タイムアウト）を例外とスタブに入れる。","F005（_TODO_ / _ASSUMPTION_ が残っている）には評価への疑義がある。「メモ / 将来課題」の表は未決事項の印を置く場所なので、sample にこの観点（vp-ops-release-readiness）をどう当てるか確かめる必要がある。","直したら --target kata で sample を grade し直し、pass を確かめてから review し直す。"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/stc-index-sample.md --changed-only","status":"passed","summary":"出力なし（exit 0）。評価結果は最新。verdict の前にもう一度実行しても同じ"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/stc-index-sample.md --incomplete","status":"passed","summary":"出力なし（exit 0）。評価は完了している"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/stc-index-rulebook.md --changed-only","status":"passed","summary":"出力なし（exit 0）。評価結果は最新。verdict の前にもう一度実行しても同じ"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/stc-index-rulebook.md --incomplete","status":"passed","summary":"出力なし（exit 0）。評価は完了している"}]}
+</specdojo_executor_evidence>
