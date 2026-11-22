@@ -67,3 +67,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_c227a3fb93d7414a83b5bac4c7e7746d
+- v: 1
+  id: reg_08a2a9d9b25a4e50b25b40fc58f1e805
+  ts: "2026-11-22T13:12:39Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが差分と対応結果を完了条件と照らし、recipe の grade（2026-11-22、opus-review-executor）が pass 100 であることを確かめた。sample の needs-work は範囲の外のため PJR-HRW6 で扱う（indie の判断）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: prj-charter の recipe から共通の運用の記述を外し、3,899 字から 2,700 字（69%）にした。他の recipe へ広げるときの一覧を書いた。recipe の grade は pass 100
+  previous_event_id: reg_a047afec6c1840fe876842f92b8a2b34

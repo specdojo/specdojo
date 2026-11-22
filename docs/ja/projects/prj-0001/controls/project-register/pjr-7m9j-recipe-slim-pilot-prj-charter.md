@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-7m9j-recipe-slim-pilot-prj-charter
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   owner: BA
   registered_at: "2026-11-17T23:21:08Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-22T13:12:39Z"
+  conclusion: prj-charter の recipe から共通の運用の記述を外し、3,899 字から 2,700 字（69%）にした。他の recipe へ広げるときの一覧を書いた。recipe の grade は pass 100
   derived_from:
     - PJR-DJZD
 ---
