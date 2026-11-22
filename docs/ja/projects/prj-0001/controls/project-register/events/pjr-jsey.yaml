@@ -5182,3 +5182,19 @@
       from: PJR-TF6F・PJR-WB78 の統合の後、exec run --register --worktree が start から review まで sonnet-executor の名前で記帳されて通った
       to: VQK2・B6NS・YS9M の統合後の runner で exec run --register が start から review・統合・要約まで止まらずに通った
   previous_event_id: reg_ca39ad015d82427b94857b983c735247
+- v: 1
+  id: reg_3020cddf98934b34857c985c72cf865f
+  ts: "2026-11-22T14:33:44Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-K8F1・PJR-9X52・PJR-EF7M の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-11-22"
+      to: "-"
+  previous_event_id: reg_97b73802d7a448db85cac6e0e09e3466
