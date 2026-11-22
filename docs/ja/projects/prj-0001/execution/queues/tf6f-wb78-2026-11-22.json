@@ -3,13 +3,13 @@
   "queue_id": "tf6f-wb78-2026-11-22",
   "project_id": "prj-0001",
   "created_at": "2026-11-22T07:54:29.891Z",
-  "updated_at": "2026-11-22T07:54:29.891Z",
-  "state": "pending",
+  "updated_at": "2026-11-22T08:30:34.896Z",
+  "state": "completed_with_failures",
   "steps": [
     {
       "index": 1,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "succeeded",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -32,12 +32,16 @@
         "sonnet-reporter",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-22T08:03:03.156Z",
+      "completed_at": "2026-11-22T08:15:53.803Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
     },
     {
       "index": 2,
       "on_failure": "continue",
-      "status": "pending",
+      "status": "failed",
       "kind": "exec-run",
       "argv": [
         "exec",
@@ -60,7 +64,11 @@
         "sonnet-reporter",
         "--project",
         "prj-0001"
-      ]
+      ],
+      "started_at": "2026-11-22T08:15:53.805Z",
+      "completed_at": "2026-11-22T08:30:34.893Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
     }
   ]
 }
