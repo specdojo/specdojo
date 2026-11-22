@@ -96,3 +96,35 @@
       from: "-"
       to: "executor reported incomplete: PJR-HCHH: register.ts の `migrateEmbeddedRegisterEvents`・`migrateRegisterEventsFromGit`、command-types.ts の対応する型、events.ts の `readEmbeddedRegisterEvents`・`removeEmbeddedReg…"
   previous_event_id: reg_2b0b4e9cf962432bb6868e6292c775fb
+- v: 1
+  id: reg_f0ec5bcb8a254511acebdfa51478e3a6
+  ts: "2026-11-22T00:29:20Z"
+  action: start
+  actor: sonnet-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "executor reported incomplete: PJR-HCHH: register.ts の `migrateEmbeddedRegisterEvents`・`migrateRegisterEventsFromGit`、command-types.ts の対応する型、events.ts の `readEmbeddedRegisterEvents`・`removeEmbeddedReg…"
+      to: "-"
+  previous_event_id: reg_7d0060cedcfd4421961cdf06a26f31e0
+- v: 1
+  id: reg_4a0e5fffbdcc40d4a7ef42dd1d6468c2
+  ts: "2026-11-22T00:34:30Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-md"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-md"
+  previous_event_id: reg_f0ec5bcb8a254511acebdfa51478e3a6
