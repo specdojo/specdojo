@@ -106,3 +106,22 @@
       from: ""
       to: 完了条件
   previous_event_id: reg_09ad8b893b6c4b55ba399eb212fb4c09
+- v: 1
+  id: reg_cd568ca40c514976a9e4ddb440bc2f5a
+  ts: "2026-11-22T05:18:44Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票・統合後の確かめで照らした
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: exec の記帳の --by が予約名を受け付けるようになり、統合の後に予約名での claim と release、agent の記帳の両方を確かめた
+  previous_event_id: reg_fafdc90294e14d41ad3872cd30169702

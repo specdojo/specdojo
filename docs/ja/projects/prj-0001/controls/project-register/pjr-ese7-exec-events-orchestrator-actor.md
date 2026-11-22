@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-ese7-exec-events-orchestrator-actor
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   registered_at: "2026-11-22T03:14:14Z"
+  completed_at: "2026-11-22T05:18:44Z"
+  conclusion: exec の記帳の --by が予約名を受け付けるようになり、統合の後に予約名での claim と release、agent の記帳の両方を確かめた
   derived_from:
     - PJR-PP4X
 ---
