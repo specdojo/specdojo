@@ -103,3 +103,16 @@
       from: in-progress
       to: review
   previous_event_id: reg_17cbd3772e52485ea7dc0b66d74d1c3b
+- v: 1
+  id: reg_fa7bca3e9fe64bb78e4f119dd2a48e9d
+  ts: "2026-11-22T08:04:42Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: 統合後の確かめで、update を持たない版からの最初の呼び方が文書にないと分かったため
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_645376babd8840d4a0103761a0fd86c8

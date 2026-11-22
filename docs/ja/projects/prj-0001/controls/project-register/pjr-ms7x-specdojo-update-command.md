@@ -47,6 +47,7 @@ npm i -D では版が上がるだけで、CHANGELOG の動きが変わる点や�
 - `package.json`・`lefthook.yml` などの保護された設定の変更が要る場合は、案を個票の対応結果と報告の `handoff` に書く。
 - `npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md` を通し、親の検証を通す。
 - 統合の後、オーケストレーターが空のリポジトリに npm の 0.9.1 を入れて `config scaffold --provider claude` を流し、`npm pack` した tarball を `--to` に渡して `specdojo update` を流す。版の更新、CHANGELOG の表示、skill の写しが古いことの検出と対話での適用、`--no-interactive` で書き換えないことを確かめる。
+- 2 回目の実行（2026-11-22）: 統合の後の確かめで、`update` を持たない版（0.9.2 まで）では `npx specdojo update` が `unknown command 'update'` で止まることが分かった。`README.md`・`quick-start-guide`・`command-reference` の `update` の節に、`update` を持たない版から上げる最初の 1 回は `npx specdojo@latest update`（版を指定する場合は `npx specdojo@<版> update`）で呼ぶことを書く。オーケストレーターは、0.9.1 の入ったリポジトリで `npx --package=<tarball> specdojo update` が新しい版の `update` として動くことを確かめた。個票の `### 5.1. CHANGELOG に書く事項` の文案にも、この呼び方を 1 文足す。`src/` は変えない。
 
 ## 4. 作業内容
 
