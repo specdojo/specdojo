@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-3-atc-sample-090
   mode: review
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-3-atc-sample-090/T-KATA-WAVE-3-atc-sample-090-20261122T044327Z-5a8fdee0/plan.md
   started_at: "2026-11-22T04:43:28.936Z"
+  completed_at: "2026-11-22T04:46:23.821Z"
   agent: opus-review-executor
   execution: agent
   approach: fully-guided
@@ -19,20 +20,27 @@ specdojo:
 
 ## 1. 評価結果の確認
 
-_TODO_: 評価結果サイドカーのパス、鮮度確認で実行したコマンドとその出力（`content_hash` が現在の成果物と一致するか）、grade の `verdict` / `score` / finding 件数を記入する。評価結果が最新でない、または評価不能の場合は、その事実と理由を記入する。
+評価結果の鮮度を確認するため、`specdojo grade list --target kata --path docs/ja/specdojo/samples/atc-sample.md --changed-only` および `--incomplete` を実行しました。出力はなく、評価結果は最新であることを確認しました。また、`docs/ja/specdojo/rulebooks/atc-rulebook.md` についても同様に最新であることを確認しました。
 
 ## 2. 判断根拠
 
-_TODO_: 変更内容・plan・実行記録・完了条件・最新の finding を照合した内容と、verdict を選んだ理由を記入する。finding が残るのに完了とする場合は、その finding が今回の完了を妨げない理由を記入する。参照は `[[id]]` 形式（Obsidian wikilink）で記載し、行番号アンカーや絶対パスは使わない。
+- 評価対象の `docs/ja/specdojo/samples/atc-sample.md` は、`grade` の `verdict` が `needs-work`（score: 87）であり、複数の `major` finding が存在するため、完了条件を満たしていません。
+- 具体的な不整合として、`at-cash-sale-transaction-check-010` の条件が「店番の交代」を前提としており、`at-index-sample` の共通方針と矛盾していること（`F001`, `F003`, `DC-003` 未充足）が挙げられます。
+- また、`term` という内部用語の使用（`F004`）や、未解決の `_ASSUMPTION_` が残っていること（`F005`）も指摘されています。
+- `docs/ja/specdojo/rulebooks/atc-rulebook.md` は `pass` ですが、`sample` の不整合に関する記述が残っている指摘（`F001`）があります。
 
 ## 3. 未充足事項・改善指示
 
-_TODO_: 未充足事項と、再計画・成果物の改善・再評価に使う改善指示を記入する（なければ「なし」と記入する）。評価結果の内容に疑義がある場合は、再評価が必要な対象と理由もここに記入する。
+- atc-sample において、`at-cash-sale-transaction-check-010` の条件を「店番の交代を前提としない取引照合」に改めるか、`atc-index-sample` の共通方針を先に更新してください。
+- atc-sample 内の `term` という用語を「本カタログ（`atc-cash-sale`）」などの説明的な表現に言い換えてください。
+- atc-sample 内に残っている `_ASSUMPTION_`（58, 59 行）を解消してください。
+- atc-rulebook 内の `_UNDECIDED_` に関する記述（sample の未整合に関する記述）を、recipe・template の要否に関する記述のみに更新してください。
+- これらの修正後、`--target kata` で再度 `grade` を実行し、全ての型で `pass` を得ることが完了の条件です。
 
 ## 4. approach に応じた確認
 
-_TODO_: `approach` に応じて確認した内容を記入する。fully-guided / recipe-guided / freeform では求められた作成・更新が行われたか、retrofit では実装エビデンスの対応記録と未確認範囲、`rulebook-maintenance` などの maintenance 系では見直しの動機となった finding の解消状況を記入する。
+Rulebook の必須要素、禁止事項、および Sample の形式との整合性を、最新の `grade` 結果（finding）に基づいて照合しました。構成や責務の観点では高いスコアを得ていますが、共通方針との整合性と、未解決の事項（`_ASSUMPTION_` や用語の定義）が残っていることを確認しました。
 
 ## 5. decision
 
-- verdict: _TODO_（complete / complete-with-findings / incomplete / grade-stale / grade-unavailable / changed-during-review）
+- verdict: incomplete
