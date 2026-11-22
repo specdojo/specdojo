@@ -15,7 +15,7 @@ import {
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, relative, sep } from "node:path";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
 import { registerExecCommands } from "../../../src/exec/exec.js";
 import { reserveProductBranch } from "../../../src/exec/product-branch-records.js";
 import { listRunRecords } from "../../../src/exec/run-records.js";
@@ -496,6 +496,259 @@ function expectIntegratedProduct(repoRoot: string, target: string, repo: string)
   return mergeCommit;
 }
 
+const FIXTURE_ROOT_TOKEN = "__FIXTURE_ROOT__";
+let preparedFixture: string | undefined;
+
+/**
+ * 全 fixture で同一の初期リポジトリ（ファイル作成・git init・commit）を一度だけ作り置きし、
+ * テストごとには cpSync で複製する。各テストは複製先の独立した .git を持つため、
+ * テスト間で状態は共有されない。
+ */
+function getPreparedFixture(): string {
+  if (preparedFixture) return preparedFixture;
+  const root = mkdtempSync(join(tmpdir(), "specdojo-register-pipeline-e2e-base-"));
+  populateFixture(root);
+  git(root, "init");
+  git(root, "add", "-A");
+  git(root, "commit", "-m", "initial");
+  preparedFixture = root;
+  return root;
+}
+
+afterAll(() => {
+  if (preparedFixture) rmSync(preparedFixture, { recursive: true, force: true });
+  preparedFixture = undefined;
+});
+
+function populateFixture(root: string): void {
+  mkdirSync(join(root, ".specdojo"), { recursive: true });
+  mkdirSync(join(root, ".specdojo", "claude"), { recursive: true });
+  writeFileSync(
+    join(root, ".specdojo", "specdojo.config.json"),
+    `${JSON.stringify(CONFIG, null, 2)}\n`,
+    "utf8",
+  );
+  writeFileSync(join(root, "package.json"), ORIGINAL_PACKAGE, "utf8");
+  mkdirSync(join(root, REGISTER_REL, "generated"), { recursive: true });
+  mkdirSync(join(root, `${PROJECT_BASE}/controls/generated`), { recursive: true });
+  mkdirSync(join(root, SCHEDULE_REL), { recursive: true });
+  mkdirSync(join(root, EXECUTION_REL, "exec", "events"), { recursive: true });
+  writeFileSync(join(root, REGISTER_REL, "pjr-index.md"), buildIndex(), "utf8");
+  writeFileSync(
+    join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md"),
+    buildTicket("PJR-AB12"),
+    "utf8",
+  );
+  // config init より前から生成物を追跡していた利用者の移行経路を fixture 自身で再現する。
+  // 実リポジトリに無視済みの生成物が残っているかどうかには依存させない。
+  writeFileSync(
+    join(root, REGISTER_REL, "generated", "pjr-index.md"),
+    buildGeneratedIndex(),
+    "utf8",
+  );
+  cpSync(
+    join(REAL_REPO_ROOT, "docs/ja/specdojo/exec-templates"),
+    join(root, "docs/ja/specdojo/exec-templates"),
+    {
+      recursive: true,
+    },
+  );
+  // register add は個票の雛形として templates 配下の pjr-*-template.md を読む。
+  // exec-templates とは別ディレクトリのため、両方を用意する必要がある。
+  const templatesRoot = join(REAL_REPO_ROOT, "docs/ja/specdojo/templates");
+  cpSync(templatesRoot, join(root, "docs/ja/specdojo/templates"), {
+    recursive: true,
+    filter: (source) => !relative(templatesRoot, source).split(sep).includes("generated"),
+  });
+  // spawnSelf は specdojoRootDir()（= 一時リポジトリ）配下の node_modules/.bin/tsx を
+  // 探すため、実リポジトリの node_modules をシンボリックリンクして解決可能にする。
+  symlinkSync(join(REAL_REPO_ROOT, "node_modules"), join(root, "node_modules"));
+
+  writeFileSync(join(root, "fake-agent.mjs"), FAKE_PIPELINE_AGENT_SCRIPT, "utf8");
+  cpSync(
+    join(REAL_REPO_ROOT, "templates", "claude", "settings.report.json"),
+    join(root, ".specdojo", "claude", "settings.report.json"),
+  );
+  writeFileSync(
+    join(root, PROJECT_BASE, "pm-members.yaml"),
+    [
+      "id: test:pm-members",
+      "type: project",
+      "status: draft",
+      "title: Members",
+      "rulebook: specdojo:pm-members-rulebook",
+      "version: 1",
+      "project_id: test",
+      "members: []",
+      "",
+    ].join("\n"),
+    "utf8",
+  );
+  writeFileSync(
+    join(root, ".specdojo", "agent-members.yaml"),
+    [
+      "version: 1",
+      "members:",
+      "  - nickname: exec-incomplete",
+      "    display_name: exec-incomplete",
+      "    email: null",
+      "    roles: []",
+      "    type: agent",
+      "    provider: opencode",
+      "    mode: edit",
+      "    stage_role: executor",
+      "    capabilities: []",
+      "    proficiency: normal",
+      "    priority: 99",
+      "  - nickname: exec-1",
+      "    display_name: exec-1",
+      "    email: null",
+      "    roles: []",
+      "    type: agent",
+      "    provider: opencode",
+      "    mode: edit",
+      "    stage_role: executor",
+      "    capabilities: []",
+      "    proficiency: normal",
+      "    priority: 1",
+      "  - nickname: exec-2",
+      "    display_name: exec-2",
+      "    email: null",
+      "    roles: []",
+      "    type: agent",
+      "    provider: codex",
+      "    mode: edit",
+      "    stage_role: executor",
+      "    capabilities: []",
+      "    proficiency: normal",
+      "    priority: 1",
+      "  - nickname: exec-multi-repo",
+      "    display_name: exec-multi-repo",
+      "    email: null",
+      "    roles: []",
+      "    type: agent",
+      "    provider: opencode",
+      "    mode: edit",
+      "    stage_role: executor",
+      "    capabilities: []",
+      "    proficiency: normal",
+      "    priority: 1",
+      ...["exec-no-product", "exec-denied"].flatMap((nickname) => [
+        `  - nickname: ${nickname}`,
+        `    display_name: ${nickname}`,
+        "    email: null",
+        "    roles: []",
+        "    type: agent",
+        "    provider: opencode",
+        "    mode: edit",
+        "    stage_role: executor",
+        "    capabilities: []",
+        "    proficiency: normal",
+        "    priority: 5",
+      ]),
+      "  - nickname: exec-advance-root",
+      "    display_name: exec-advance-root",
+      "    email: null",
+      "    roles: []",
+      "    type: agent",
+      "    provider: opencode",
+      "    mode: edit",
+      "    stage_role: executor",
+      "    capabilities: []",
+      "    proficiency: normal",
+      "    priority: 1",
+      "  - nickname: report-1",
+      "    display_name: report-1",
+      "    email: null",
+      "    roles: []",
+      "    type: agent",
+      "    provider: claude",
+      "    mode: report",
+      "    stage_role: reporter",
+      "    capabilities: []",
+      "    proficiency: normal",
+      "    priority: 1",
+      "  - nickname: exec-codex-protected-write",
+      "    display_name: exec-codex-protected-write",
+      "    email: null",
+      "    roles: []",
+      "    type: agent",
+      "    provider: codex",
+      "    mode: edit",
+      "    stage_role: executor",
+      "    capabilities: []",
+      "    proficiency: normal",
+      "    priority: 2",
+      "  - nickname: exec-rate-limit",
+      "    display_name: exec-rate-limit",
+      "    email: null",
+      "    roles: []",
+      "    type: agent",
+      "    provider: opencode",
+      "    mode: edit",
+      "    stage_role: executor",
+      "    capabilities: []",
+      "    proficiency: normal",
+      "    priority: 2",
+      "  - nickname: exec-parent-validation-fail",
+      "    display_name: exec-parent-validation-fail",
+      "    email: null",
+      "    roles: []",
+      "    type: agent",
+      "    provider: opencode",
+      "    mode: edit",
+      "    stage_role: executor",
+      "    capabilities: []",
+      "    proficiency: normal",
+      "    priority: 2",
+      "  - nickname: exec-claude-protected-write",
+      "    display_name: exec-claude-protected-write",
+      "    email: null",
+      "    roles: []",
+      "    type: agent",
+      "    provider: claude",
+      "    mode: edit",
+      "    stage_role: executor",
+      "    capabilities: []",
+      "    proficiency: normal",
+      "    priority: 3",
+      "  - nickname: report-lock",
+      "    display_name: report-lock",
+      "    email: null",
+      "    roles: []",
+      "    type: agent",
+      "    provider: claude",
+      "    mode: report",
+      "    stage_role: reporter",
+      "    capabilities: []",
+      "    proficiency: normal",
+      "    priority: 4",
+      "",
+    ].join("\n"),
+    "utf8",
+  );
+  writeFileSync(
+    join(root, ".specdojo", "exec-defaults.yaml"),
+    [
+      "providers:",
+      "  opencode:",
+      // PJR-08EK: opencode は --agent の名前に product worktree の許可を注入するため、名前を渡す。
+      `    command_template: "node ${join(FIXTURE_ROOT_TOKEN, "fake-agent.mjs")} --nickname {nickname} --agent fake-opencode-agent"`,
+      "  claude:",
+      `    command_template: "node ${join(FIXTURE_ROOT_TOKEN, "fake-agent.mjs")} --nickname {nickname} --settings .specdojo/claude/settings.{mode}.json"`,
+      "  codex:",
+      `    command_template: "node ${join(FIXTURE_ROOT_TOKEN, "fake-agent.mjs")} --nickname {nickname}"`,
+      "pipeline:",
+      "  parent_validations:",
+      "    - test-integration",
+      "rate_limit_detection:",
+      "  exit_codes: [75]",
+      "",
+    ].join("\n"),
+    "utf8",
+  );
+}
+
 function withRepo(fn: (fixture: Fixture) => Promise<void> | void): Promise<void> {
   return (async () => {
     const root = mkdtempSync(join(tmpdir(), "specdojo-register-pipeline-e2e-"));
@@ -504,236 +757,15 @@ function withRepo(fn: (fixture: Fixture) => Promise<void> | void): Promise<void>
     // 共有パスのままだと孤児 worktree が後続テストの checkpoint を壊す。
     const worktreeBase = mkdtempSync(join(tmpdir(), "specdojo-register-pipeline-e2e-wt-"));
     try {
-      mkdirSync(join(root, ".specdojo"), { recursive: true });
-      mkdirSync(join(root, ".specdojo", "claude"), { recursive: true });
+      cpSync(getPreparedFixture(), root, { recursive: true, verbatimSymlinks: true });
+      // 作り置きの exec-defaults.yaml は仮のルートを指すため、複製先の実パスへ直して commit に取り込む。
+      const defaultsPath = join(root, ".specdojo", "exec-defaults.yaml");
       writeFileSync(
-        join(root, ".specdojo", "specdojo.config.json"),
-        `${JSON.stringify(CONFIG, null, 2)}\n`,
+        defaultsPath,
+        readFileSync(defaultsPath, "utf8").split(FIXTURE_ROOT_TOKEN).join(root),
         "utf8",
       );
-      writeFileSync(join(root, "package.json"), ORIGINAL_PACKAGE, "utf8");
-      mkdirSync(join(root, REGISTER_REL, "generated"), { recursive: true });
-      mkdirSync(join(root, `${PROJECT_BASE}/controls/generated`), { recursive: true });
-      mkdirSync(join(root, SCHEDULE_REL), { recursive: true });
-      mkdirSync(join(root, EXECUTION_REL, "exec", "events"), { recursive: true });
-      writeFileSync(join(root, REGISTER_REL, "pjr-index.md"), buildIndex(), "utf8");
-      writeFileSync(
-        join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md"),
-        buildTicket("PJR-AB12"),
-        "utf8",
-      );
-      // config init より前から生成物を追跡していた利用者の移行経路を fixture 自身で再現する。
-      // 実リポジトリに無視済みの生成物が残っているかどうかには依存させない。
-      writeFileSync(
-        join(root, REGISTER_REL, "generated", "pjr-index.md"),
-        buildGeneratedIndex(),
-        "utf8",
-      );
-      cpSync(
-        join(REAL_REPO_ROOT, "docs/ja/specdojo/exec-templates"),
-        join(root, "docs/ja/specdojo/exec-templates"),
-        {
-          recursive: true,
-        },
-      );
-      // register add は個票の雛形として templates 配下の pjr-*-template.md を読む。
-      // exec-templates とは別ディレクトリのため、両方を用意する必要がある。
-      const templatesRoot = join(REAL_REPO_ROOT, "docs/ja/specdojo/templates");
-      cpSync(templatesRoot, join(root, "docs/ja/specdojo/templates"), {
-        recursive: true,
-        filter: (source) => !relative(templatesRoot, source).split(sep).includes("generated"),
-      });
-      // spawnSelf は specdojoRootDir()（= 一時リポジトリ）配下の node_modules/.bin/tsx を
-      // 探すため、実リポジトリの node_modules をシンボリックリンクして解決可能にする。
-      symlinkSync(join(REAL_REPO_ROOT, "node_modules"), join(root, "node_modules"));
-
-      writeFileSync(join(root, "fake-agent.mjs"), FAKE_PIPELINE_AGENT_SCRIPT, "utf8");
-      cpSync(
-        join(REAL_REPO_ROOT, "templates", "claude", "settings.report.json"),
-        join(root, ".specdojo", "claude", "settings.report.json"),
-      );
-      writeFileSync(
-        join(root, PROJECT_BASE, "pm-members.yaml"),
-        [
-          "id: test:pm-members",
-          "type: project",
-          "status: draft",
-          "title: Members",
-          "rulebook: specdojo:pm-members-rulebook",
-          "version: 1",
-          "project_id: test",
-          "members: []",
-          "",
-        ].join("\n"),
-        "utf8",
-      );
-      writeFileSync(
-        join(root, ".specdojo", "agent-members.yaml"),
-        [
-          "version: 1",
-          "members:",
-          "  - nickname: exec-incomplete",
-          "    display_name: exec-incomplete",
-          "    email: null",
-          "    roles: []",
-          "    type: agent",
-          "    provider: opencode",
-          "    mode: edit",
-          "    stage_role: executor",
-          "    capabilities: []",
-          "    proficiency: normal",
-          "    priority: 99",
-          "  - nickname: exec-1",
-          "    display_name: exec-1",
-          "    email: null",
-          "    roles: []",
-          "    type: agent",
-          "    provider: opencode",
-          "    mode: edit",
-          "    stage_role: executor",
-          "    capabilities: []",
-          "    proficiency: normal",
-          "    priority: 1",
-          "  - nickname: exec-2",
-          "    display_name: exec-2",
-          "    email: null",
-          "    roles: []",
-          "    type: agent",
-          "    provider: codex",
-          "    mode: edit",
-          "    stage_role: executor",
-          "    capabilities: []",
-          "    proficiency: normal",
-          "    priority: 1",
-          "  - nickname: exec-multi-repo",
-          "    display_name: exec-multi-repo",
-          "    email: null",
-          "    roles: []",
-          "    type: agent",
-          "    provider: opencode",
-          "    mode: edit",
-          "    stage_role: executor",
-          "    capabilities: []",
-          "    proficiency: normal",
-          "    priority: 1",
-          ...["exec-no-product", "exec-denied"].flatMap((nickname) => [
-            `  - nickname: ${nickname}`,
-            `    display_name: ${nickname}`,
-            "    email: null",
-            "    roles: []",
-            "    type: agent",
-            "    provider: opencode",
-            "    mode: edit",
-            "    stage_role: executor",
-            "    capabilities: []",
-            "    proficiency: normal",
-            "    priority: 5",
-          ]),
-          "  - nickname: exec-advance-root",
-          "    display_name: exec-advance-root",
-          "    email: null",
-          "    roles: []",
-          "    type: agent",
-          "    provider: opencode",
-          "    mode: edit",
-          "    stage_role: executor",
-          "    capabilities: []",
-          "    proficiency: normal",
-          "    priority: 1",
-          "  - nickname: report-1",
-          "    display_name: report-1",
-          "    email: null",
-          "    roles: []",
-          "    type: agent",
-          "    provider: claude",
-          "    mode: report",
-          "    stage_role: reporter",
-          "    capabilities: []",
-          "    proficiency: normal",
-          "    priority: 1",
-          "  - nickname: exec-codex-protected-write",
-          "    display_name: exec-codex-protected-write",
-          "    email: null",
-          "    roles: []",
-          "    type: agent",
-          "    provider: codex",
-          "    mode: edit",
-          "    stage_role: executor",
-          "    capabilities: []",
-          "    proficiency: normal",
-          "    priority: 2",
-          "  - nickname: exec-rate-limit",
-          "    display_name: exec-rate-limit",
-          "    email: null",
-          "    roles: []",
-          "    type: agent",
-          "    provider: opencode",
-          "    mode: edit",
-          "    stage_role: executor",
-          "    capabilities: []",
-          "    proficiency: normal",
-          "    priority: 2",
-          "  - nickname: exec-parent-validation-fail",
-          "    display_name: exec-parent-validation-fail",
-          "    email: null",
-          "    roles: []",
-          "    type: agent",
-          "    provider: opencode",
-          "    mode: edit",
-          "    stage_role: executor",
-          "    capabilities: []",
-          "    proficiency: normal",
-          "    priority: 2",
-          "  - nickname: exec-claude-protected-write",
-          "    display_name: exec-claude-protected-write",
-          "    email: null",
-          "    roles: []",
-          "    type: agent",
-          "    provider: claude",
-          "    mode: edit",
-          "    stage_role: executor",
-          "    capabilities: []",
-          "    proficiency: normal",
-          "    priority: 3",
-          "  - nickname: report-lock",
-          "    display_name: report-lock",
-          "    email: null",
-          "    roles: []",
-          "    type: agent",
-          "    provider: claude",
-          "    mode: report",
-          "    stage_role: reporter",
-          "    capabilities: []",
-          "    proficiency: normal",
-          "    priority: 4",
-          "",
-        ].join("\n"),
-        "utf8",
-      );
-      writeFileSync(
-        join(root, ".specdojo", "exec-defaults.yaml"),
-        [
-          "providers:",
-          "  opencode:",
-          // PJR-08EK: opencode は --agent の名前に product worktree の許可を注入するため、名前を渡す。
-          `    command_template: "node ${join(root, "fake-agent.mjs")} --nickname {nickname} --agent fake-opencode-agent"`,
-          "  claude:",
-          `    command_template: "node ${join(root, "fake-agent.mjs")} --nickname {nickname} --settings .specdojo/claude/settings.{mode}.json"`,
-          "  codex:",
-          `    command_template: "node ${join(root, "fake-agent.mjs")} --nickname {nickname}"`,
-          "pipeline:",
-          "  parent_validations:",
-          "    - test-integration",
-          "rate_limit_detection:",
-          "  exit_codes: [75]",
-          "",
-        ].join("\n"),
-        "utf8",
-      );
-
-      git(root, "init");
-      git(root, "add", "-A");
-      git(root, "commit", "-m", "initial");
+      git(root, "commit", "-a", "--amend", "--no-edit");
 
       process.chdir(root);
       // register start/review の再帰的な specdojo CLI 呼び出し（spawnSelf）を、実リポジトリの
