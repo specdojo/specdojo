@@ -388,7 +388,7 @@ describe("parent validation repository assignment", () => {
 
   it("rejects malformed entries, unknown IDs and duplicate (id, repo) pairs", () => {
     expect(() => resolveParentValidationAssignments([{ id: "test-unit" }])).toThrow(
-      /pipeline\.parent_validations\[0\] in exec-defaults must set repo, paths or parallel/,
+      /pipeline\.parent_validations\[0\] in exec-defaults must set repo, paths, parallel or related/,
     );
     expect(() => resolveParentValidationAssignments([{ id: "test-unit", repo: "App1" }])).toThrow(
       /\.repo must match/,

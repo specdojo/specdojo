@@ -134,6 +134,34 @@ properties:
           type: string
           minLength: 1
           maxLength: 1000
+        test_selection:
+          type: object
+          additionalProperties: false
+          required: [mode, reason]
+          description: >
+            Recorded by the runner for a parent validation configured with `related`: whether it
+            ran only the related test files or the full suite, why, and which test files ran or
+            did not run.
+          properties:
+            mode:
+              type: string
+              enum: [related, full]
+            reason:
+              type: string
+              minLength: 1
+              maxLength: 1000
+            selected_tests:
+              type: array
+              maxItems: 500
+              items:
+                type: string
+                minLength: 1
+            omitted_tests:
+              type: array
+              maxItems: 500
+              items:
+                type: string
+                minLength: 1
       allOf:
         - if:
             required: [source]

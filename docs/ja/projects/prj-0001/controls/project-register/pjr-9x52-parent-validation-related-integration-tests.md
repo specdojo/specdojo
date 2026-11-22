@@ -42,14 +42,62 @@ src か tests を変えた run では、親の検証が毎回 42 ファイルの
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                                                                      | 担当               | 状態 | メモ                                                      |
+| --- | --------------------------------------------------------------------------------------------------------- | ------------------ | ---- | --------------------------------------------------------- |
+| 1   | 関係するテストを選ぶ処理（`src/exec/related-tests.ts`）と、`parent_validations` の `related` の設定を作る | DEV                | done | 既定は全件のまま                                          |
+| 2   | 選んだテストと理由を evidence の `test_selection` に残し、2 つの schema を直す                            | DEV                | done | `exec-defaults`・`exec-evidence`                          |
+| 3   | 単体テストを足す（変更したファイルの例ごとの選び方・全件へ戻す条件・設定を書かないときの全件）            | DEV                | done | `tests/src/exec/related-tests.test.ts`                    |
+| 4   | 夜間とリリースの前に全件を流す手順を `exec-config-guide`・`exec-operation-guide` に書く                   | DEV                | done | -                                                         |
+| 5   | 今日の run の変更の例で、選ばれるテストの数と時間を見込む                                                 | DEV                | done | 対応結果に記載                                            |
+| 6   | 統合の後に JSEY を流して runner の動きを確かめる                                                          | オーケストレーター | open | executor は流せない。close の前にオーケストレーターが行う |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 5.1. 実施内容
+
+- `pipeline.parent_validations` の要素に `related: true` を足した（`test-unit`・`test-integration` だけに書ける）。書かなければ今までどおり全件を流す。
+- 親 runner は `tests/` 配下の各テストから相対 import と、テストが子プロセスで起動するファイル（`src/specdojo.ts` など、`dist/<name>.js` は `src/<name>.ts` とみなす）を辿り、変更したファイルに依存するテストだけを固定の npm script の `--` の後ろへ渡す。
+- 次の場合は全件に戻す: 変更一覧が無い・切れた、関係するテストが無い、テストの基盤や設定（`vitest.*`・`tests/helpers/**`・`tests/setup/**`・`tests/fixtures/**`・`package.json`・`package-lock.json`・`tsconfig*.json`・`lefthook.yml`・`.specdojo/**`・`docs/specdojo/**`）を変えた、`src/` などの配下でコード以外のファイルを変えた。
+- evidence の検証に `test_selection`（`mode`・`reason`・`selected_tests`・`omitted_tests`）を残し、`summary` の先頭にも `related tests only (...)` / `full run (...)` を付ける。
+- prj-0001 の設定（`.specdojo/exec-defaults.yaml`）は変えていない。
+
+### 5.2. 決めた点と理由
+
+- 選び方は `vitest related` ではなく、runner が import を辿って自分で選ぶ形にした。流す前に選んだテストと流さないテストが分かり、evidence に残せること、単体テストで選び方を確かめられることが理由。
+- テストが子プロセスで起動するファイルのパスも依存として辿る。統合テストの多くは `tsx src/specdojo.ts` で CLI を起動しており、import だけでは見逃すため。
+- 変更したコードのうちどのテストにも依存されないファイルがあっても、関係するテストが 1 つでもあれば絞る。全件に戻すと単体テストだけを持つ src の変更のたびに全件になり、絞る意味が無くなるため。どのテストにも依存されないファイルは `reason` に挙げる。
+- `docs/specdojo/**` の schema・template はテストが実行時に読むため、変えたら全件に戻す。
+- 絞って `passed` になった検証も `commit_hook_skips` を満たす扱いのままにした。統合の commit で `npm test` の全件を流すと時間が減らないため。その分の見逃しは夜間とリリースの前の全件で拾う。ガイドにも書いた。
+
+### 5.3. 今日の run での見込み
+
+全件は 43 ファイル。時間は各 run の親の検証の実測（`parent-validation-metrics.jsonl`）に、選ばれる数の割合を掛けた見込み。重い e2e のテストは多くの変更で選ばれるため、実際の短縮はこれより小さい。
+
+| run の変更の例                                                          | 全件の実測  | 選ばれる数       | 時間の見込み |
+| ----------------------------------------------------------------------- | ----------- | ---------------- | ------------ |
+| PJR-Z17T（`tests/src/exec/kata-review-stage.integration.test.ts` だけ） | 139 秒      | 1                | 数秒〜十数秒 |
+| PJR-MS7X（`src/update/**`・`src/specdojo.ts`）                          | 127 秒      | 9                | 約 27 秒     |
+| PJR-7C9X（`src/grade/plan.ts`）                                         | 130〜138 秒 | 10               | 約 31 秒     |
+| PJR-VQK2（`src/exec/register.ts` など）                                 | 153 秒      | 20               | 約 71 秒     |
+| PJR-KZZM（`src/shared/specdojo-config.ts`）                             | 145 秒      | 36               | 約 121 秒    |
+| PJR-K8F1（`exec-defaults.schema.yaml` を含む）                          | 126 秒      | 43（全件に戻る） | 変わらない   |
+
+src か tests を変えた今日の 19 run では、選ばれる数の中央値は 26（4 run は全件に戻る）で、中央値 130 秒が約 80 秒になる見込み。使うかは利用者が決める。使う場合の設定の案は次の「保護された設定の変更案」に書いた。
+
+### 5.4. 保護された設定の変更案
+
+`.specdojo/exec-defaults.yaml` の `test-integration` の要素に `related: true` を足す（今の `paths` はそのまま）。夜間に `npm run test:integration` を流す routine などを併せて用意してから入れる。
+
+### 5.5. CHANGELOG に書く事項
+
+- 区分: 追加
+- 行の文案: 親の検証の `test-unit`・`test-integration` に `related: true` を書くと、変更したファイルに関係するテストだけを流せるようにした。既定は今までどおり全件。選んだテストと理由は evidence の `test_selection` に残る（PJR-9X52）。
+
+### 5.6. 残課題
+
+- 統合の後にオーケストレーターが JSEY を流して確かめてから close する。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[specdojo:exec-config-guide|exec設定ガイド]]: `related` の設定と全件を流す時機。
+- [[specdojo:exec-operation-guide|exec運用ガイド]]: 夜間とリリースの前に全件を流す手順。
