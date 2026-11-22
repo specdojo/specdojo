@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   difficulty: medium
   owner: DEV
@@ -41,17 +41,43 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業                               | 担当                  | 状態 | メモ                     |
-| --- | ---------------------------------- | --------------------- | ---- | ------------------------ |
-| 1   | grade の指摘を読み、直し方を決める | DEV                   | open | 直さない指摘は理由を残す |
-| 2   | rulebook と sample を直す          | DEV                   | open | ほかの型は変えない       |
-| 3   | lint と親の検証を通す              | DEV                   | open | -                        |
-| 4   | 統合の後に grade で評価し直す      | specdojo-orchestrator | open | 合格しなければ回目を足す |
+| No  | 作業                               | 担当                  | 状態 | メモ                                                       |
+| --- | ---------------------------------- | --------------------- | ---- | ---------------------------------------------------------- |
+| 1   | grade の指摘を読み、直し方を決める | DEV                   | done | 直さない指摘は rulebook の F001・F002（対応結果に理由）    |
+| 2   | rulebook と sample を直す          | DEV                   | done | sample のみ変更。rulebook は変更なし                       |
+| 3   | lint と親の検証を通す              | DEV                   | open | 親 runner が実行する。executor は実行しない                |
+| 4   | 統合の後に grade で評価し直す      | specdojo-orchestrator | open | 統合後にオーケストレーターが実行。合格しなければ回目を足す |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 5.1. CHANGELOG に書く事項
+
+なし（文書の型の手直しのため）。
+
+### 5.2. 実施内容
+
+変更は `docs/ja/specdojo/samples/itc-index-sample.md` のみ。rulebook は変更していない。
+
+sample の指摘への対応は次のとおり。
+
+- F001（major）: `tsp-index-sample` が保全の取得（`PATH-04`）と復元の回復（`PATH-07`）を外部結合テストの範囲としているため、範囲を上位に合わせた。適用対象を `PATH-01`〜`PATH-03` に絞り、`itc-record-backup`、関連する業務リスク、観点の列、分配表の行、依存の行を削除した。保全・復元は対象外の表で ET・ST へ送る。tsp 側の改訂は不要と判断した。
+- F002: データの方針に、別接続やコミット済みデータが要る条件（ロック競合・ロールバック検証）は seed の再投入とスキーマ分離で独立させる例外を足した。
+- F003: 分割の閾値を rulebook に合わせて「観点が 15 以上、ケース表が 50 行以上」にした。
+- F004: 「通信不能時の販売継続」の代替レベルを `ST` にし、未決であることは除外理由へ移した。
+- F005: 「そろえ」「揃える」の重複を解消し、「統一する」に改めた。
+- `_TODO_` のあった将来課題の行は、マーカーを外して論点として残した。`_ASSUMPTION_` と `_UNDECIDED_` は残している。
+
+rulebook の指摘のうち、次は直していない。
+
+- F001・F002（minor）: Frontmatter の `recipe` と `template` が `undecided`。完了条件が rulebook・sample 以外の型の成果物を変えないとしており、recipe・template は型の schedule の後続の段で作成または対象外を決めるため、本項目では扱わない。
+
+### 5.3. 残課題
+
+- 統合後に、オーケストレーターが `npx specdojo grade run --target kata --kata itc-index` で再評価し、blocker と major がないことを確かめる。機械的な指摘（PJR-7C9X）だけが残る場合は合格とする。
+- 親 runner の `npm run lint:md` などの検証結果は runner の evidence に残る。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- `specdojo:itc-index-rulebook`
+- `specdojo:itc-index-sample`
+- `specdojo:tsp-index-sample`
