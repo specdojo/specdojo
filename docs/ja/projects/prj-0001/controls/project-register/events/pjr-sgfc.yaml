@@ -41,3 +41,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-TF6F"]'
+- v: 1
+  id: reg_f69d78983f164f7fa978c05dad7f96d4
+  ts: "2026-11-22T08:50:27Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 確かめ用の手順を書く
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_1fc04643dcbf4b8ba19441459a3d3062
