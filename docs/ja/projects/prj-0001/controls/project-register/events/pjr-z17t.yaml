@@ -93,3 +93,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_430601afa2194d1294f8343c0e93e90b
+- v: 1
+  id: reg_8bf3d418f5584adbadbd06cfea6d81e5
+  ts: "2026-11-22T11:38:00Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが差分・個票の対応結果・result を完了条件と照らして確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: 型の schedule の review の段を通しで試す統合テストを足した。kata の grade が 1 回だけ流れること、plan の対象種別、鮮度の確認で止まらないこと、needs-work で完了にならないことを確かめる
+  previous_event_id: reg_24b0ca794c114d2796480112fa46e506

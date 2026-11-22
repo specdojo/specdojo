@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-z17t-kata-review-e2e-test
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   registered_at: "2026-11-22T03:13:03Z"
+  completed_at: "2026-11-22T11:38:00Z"
+  conclusion: 型の schedule の review の段を通しで試す統合テストを足した。kata の grade が 1 回だけ流れること、plan の対象種別、鮮度の確認で止まらないこと、needs-work で完了にならないことを確かめる
   derived_from:
     - PJR-PP4X
 ---
