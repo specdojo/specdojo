@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "run_id": "JBR-exec-cycle-eb11b9add2df",
+  "job_id": "job-exec-cycle",
+  "idempotency_key": "job-exec-cycle:2026-11-22T21:00:00.000Z:critical-first:1:true:100:sol-executor:sol-review-executor",
+  "project_id": "prj-0001",
+  "trigger": "routine",
+  "scheduled_at": "2026-11-22T21:00:00.000Z",
+  "created_at": "2026-11-22T21:00:44.100Z",
+  "updated_at": "2026-11-22T21:01:49.806Z",
+  "state": "failed",
+  "inputs": {
+    "strategy": "critical-first",
+    "parallel": 1,
+    "loop": true,
+    "max_rounds": 100,
+    "edit_by": "sol-executor",
+    "review_by": "sol-review-executor"
+  },
+  "task": {
+    "mode": "command",
+    "command": "set -- exec cycle --project \"prj-0001\" --strategy \"critical-first\" --parallel \"1\" --if-busy skip\nif [ \"true\" = \"true\" ]; then\n  set -- \"$@\" --loop\n  if [ -n \"100\" ]; then\n    set -- \"$@\" --max-rounds \"100\"\n  fi\nfi\nif [ -n \"sol-executor\" ]; then\n  set -- \"$@\" --edit-by \"sol-executor\"\nfi\nif [ -n \"sol-review-executor\" ]; then\n  set -- \"$@\" --review-by \"sol-review-executor\"\nfi\n'/usr/local/bin/node' '/workspaces/specdojo-workspace/specdojo/dist/specdojo.js' \"$@\"",
+    "owner": "ARC"
+  },
+  "checkpoint_before": {},
+  "plan_ref": "runs/job/JBR-exec-cycle-eb11b9add2df/JBR-exec-cycle-eb11b9add2df/plan.md",
+  "result_ref": "runs/job/JBR-exec-cycle-eb11b9add2df/JBR-exec-cycle-eb11b9add2df/result.md",
+  "attempts": [
+    {
+      "attempt": 1,
+      "started_at": "2026-11-22T21:00:44.100Z",
+      "status": "failed",
+      "completed_at": "2026-11-22T21:01:49.806Z",
+      "result_ref": "runs/job/JBR-exec-cycle-eb11b9add2df/JBR-exec-cycle-eb11b9add2df/result.md",
+      "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/job/JBR-exec-cycle-eb11b9add2df/JBR-exec-cycle-eb11b9add2df/evidence.json",
+      "exit_code": 1,
+      "reason": "command exited with code 1"
+    }
+  ]
+}

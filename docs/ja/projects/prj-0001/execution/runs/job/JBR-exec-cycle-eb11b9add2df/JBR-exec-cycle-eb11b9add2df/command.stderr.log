@@ -1,0 +1,13 @@
+[run] setup error for T-KATA-WAVE-3-atc-index-sample-140: Task T-KATA-WAVE-3-atc-index-sample-140 has execution: human; claim it to create and use its result instead of a plan.
+[run] setup error for T-KATA-WAVE-3-atc-sample-140: Task T-KATA-WAVE-3-atc-sample-140 has execution: human; claim it to create and use its result instead of a plan.
+[run] setup error for T-KATA-WAVE-3-etc-index-sample-140: Task T-KATA-WAVE-3-etc-index-sample-140 has execution: human; claim it to create and use its result instead of a plan.
+[run] setup error for T-KATA-WAVE-3-etc-sample-140: Task T-KATA-WAVE-3-etc-sample-140 has execution: human; claim it to create and use its result instead of a plan.
+[run] setup error for T-KATA-WAVE-3-imp-test-sample-140: Task T-KATA-WAVE-3-imp-test-sample-140 has execution: human; claim it to create and use its result instead of a plan.
+[run] setup error for T-KATA-WAVE-3-itc-index-sample-140: Task T-KATA-WAVE-3-itc-index-sample-140 has execution: human; claim it to create and use its result instead of a plan.
+[run] setup error for T-KATA-WAVE-3-itc-sample-140: Task T-KATA-WAVE-3-itc-sample-140 has execution: human; claim it to create and use its result instead of a plan.
+[run] setup error for T-KATA-WAVE-3-stc-index-sample-140: Task T-KATA-WAVE-3-stc-index-sample-140 has execution: human; claim it to create and use its result instead of a plan.
+[run] setup error for T-KATA-WAVE-3-stc-sample-140: Task T-KATA-WAVE-3-stc-sample-140 has execution: human; claim it to create and use its result instead of a plan.
+[run] setup error for T-KATA-WAVE-3-trc-requirements-to-tests-sample-140: Task T-KATA-WAVE-3-trc-requirements-to-tests-sample-140 has execution: human; claim it to create and use its result instead of a plan.
+[run] setup error for T-KATA-WAVE-3-tsp-index-sample-140: Task T-KATA-WAVE-3-tsp-index-sample-140 has execution: human; claim it to create and use its result instead of a plan.
+[run] setup error for T-KATA-WAVE-3-utc-index-sample-140: Task T-KATA-WAVE-3-utc-index-sample-140 has execution: human; claim it to create and use its result instead of a plan.
+[run] setup error for T-KATA-WAVE-3-utc-sample-140: Task T-KATA-WAVE-3-utc-sample-140 has execution: human; claim it to create and use its result instead of a plan.
