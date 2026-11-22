@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-hchh-remove-unused-register-migration
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: easy
   owner: DEV
   registered_at: "2026-11-21T14:01:58Z"
+  completed_at: "2026-11-22T00:56:58Z"
+  conclusion: register migrate の削除で呼ばれなくなった移行の関数・型・ファイルとそのテストを消した。ほかの用途で使う関数は残した。
   derived_from:
     - PJR-GV43
 ---

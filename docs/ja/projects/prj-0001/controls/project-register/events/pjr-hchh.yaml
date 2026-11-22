@@ -189,3 +189,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_c70849c0da66431e87cae921b5dee67f
+- v: 1
+  id: reg_02e24a000f0a4db696f8ebd2160620c4
+  ts: "2026-11-22T00:56:58Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register で実施（統合 dc1b95405）。qwen が消せなかった 2 ファイルはオーケストレーターが worktree で消し、sonnet で再開した。参照が残っていないこと、core.ts のイベント型の不変、CHANGELOG 不変を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: register migrate の削除で呼ばれなくなった移行の関数・型・ファイルとそのテストを消した。ほかの用途で使う関数は残した。
+  previous_event_id: reg_52d30950ecf3426db3bef82568a4c410
