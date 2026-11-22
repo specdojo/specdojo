@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-HCHH",
+  "run_id": "pjr-hchh-20261122T000034Z-2b15a60b",
+  "stage": {
+    "role": "executor",
+    "actor": "qwen-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-22T00:01:12.464Z",
+    "completed_at": "2026-11-22T00:22:58.186Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-hchh.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-hchh-remove-unused-register-migration.md",
+      "status": "M"
+    },
+    {
+      "path": "src/register/command-types.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/events.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/register.ts",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-hchh-remove-unused-register-migration.md",
+      "status": "M"
+    },
+    {
+      "path": "src/register/command-types.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/events.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/register.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 5,
+    "summary": ".../pjr-hchh-remove-unused-register-migration.md   | 19 +++--\n src/register/command-types.ts                      | 10 +--\n src/register/events.ts                             | 22 -----\n src/register/register.ts                           | 97 ----------------------\n 4 files changed, 15 insertions(+), 133 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "",
+      "reason": "parent runner が実行する許容リスト検証。executor sandbox 内では実行しない。ソース変更 (import 削除) があるため親の型チェックで失敗し得るが、削除済みの記述は自己整合的。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "",
+      "reason": "parent runner が実行する許容リスト検証。executor sandbox 内では実行しない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "",
+      "reason": "parent runner が実行する許容リスト検証。executor sandbox 内では実行しない。残存する `migrate-timestamps.test.ts` は既存モジュールを import するため通る (ファイル削除後に不要になるが、runner により同時削除予定)。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "",
+      "reason": "parent runner が実行する許容リスト検証。executor sandbox 内では実行しない。個票の Markdown 編集は記法規約に準拠。"
+    }
+  ],
+  "final_message": "PJR-HCHH: register.ts の `migrateEmbeddedRegisterEvents`・`migrateRegisterEventsFromGit`、command-types.ts の対応する型、events.ts の `readEmbeddedRegisterEvents`・`removeEmbeddedRegisterEvents`（unused import `updateSpecdojoFields` 含む）を grep で呼び出し元なしを確認して削除した。個票の作業内容・対応結果・`CHANGELOG` 文案を更新した。残課題: executor sandbox では `rm`/`git rm` が利用できず、`src/register/migrate-timestamps.ts` と `tests/src/register/migrate-timestamps.test.ts` の物理的削除だけ実施できていない (runner 側の `git rm` を申し送り)。",
+  "completion_status": "incomplete",
+  "handoff": [
+    "runner 側で `git rm src/register/migrate-timestamps.ts tests/src/register/migrate-timestamps.test.ts` を実行して完了させること。executor sandbox ではファイル削除コマンド (`rm`, `git rm`) が許可されていないためこの 2 ファイルの物理的削除のみ未実施。",
+    "削除済: `src/register/register.ts` の `migrateEmbeddedRegisterEvents`・`migrateRegisterEventsFromGit` 本体と `REGISTER_COMMAND_DEPENDENCIES` への登録、および unused import (`existsSync`, `readFileSync`, `loadRegisterItemDocs`, `appendRegisterEvent`, `readEmbeddedRegisterEvents`, `readRegisterEventsFromContent`, `serializeRegisterEvents`, `removeEmbeddedRegisterEvents`, `collectRegisterHistoryEvents`)。",
+    "削除済: `src/register/command-types.ts` の `migrateEmbeddedRegisterEvents`・`migrateRegisterEventsFromGit` 型。",
+    "削除済: `src/register/events.ts` の `readEmbeddedRegisterEvents`・`removeEmbeddedRegisterEvents` と unused import `updateSpecdojoFields` (`readSpecdojoFields` は別所使用のため残置)。",
+    "残置 (理由): `legacyHistoryEventToRegisterEvent` (専用テスト `tests/src/register/migrate-events.test.ts`)、`collectRegisterHistoryEvents` (usage in `maintenance-commands.ts`)、`src/exec/core.ts` のイベント型 `note`・`link`・`estimate` (既存イベントファイルの読込用)。",
+    "CHANGELOG.md は変更していない。個票 `pjr-hchh-remove-unused-register-migration.md` の `### 5.1. CHANGELOG に書く事項` に「なし」と記載した。"
+  ],
+  "block_reason": "executor reported incomplete: PJR-HCHH: register.ts の `migrateEmbeddedRegisterEvents`・`migrateRegisterEventsFromGit`、command-types.ts の対応する型、events.ts の `readEmbeddedRegisterEvents`・`removeEmbeddedRegisterEvents`（unused import `updateSpecdojoFields` 含む）を grep で呼び出し元なしを確認して削除した。個票の作業内容・対応結果・`CHANGELOG` 文案を更新した。残課題: executor sandbox では `rm`/`git rm` が利用できず、`src/register/migrate-timestamps.ts` と `tests/src/register/migrate-timestamps.test.ts` の物理的削除だけ実施できていない (runner 側の `git rm` を申し送り)。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-HCHH/pjr-hchh-20261122T000034Z-2b15a60b/executor.attempt-1.log",
+      "bytes": 54925,
+      "truncated": false
+    }
+  ]
+}

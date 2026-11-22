@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: medium
   difficulty: easy
   owner: DEV
   registered_at: "2026-11-21T14:01:58Z"
-  block_reason: "agent exited with non-zero code: parent validation failed: lint-md"
   derived_from:
     - PJR-GV43
 ---

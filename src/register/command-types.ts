@@ -166,14 +166,6 @@ export type RegisterCommandDependencies = {
     actor?: string;
     reason?: string;
   }) => void;
-  migrateEmbeddedRegisterEvents: (
-    paths: RegisterPaths,
-    dryRun: boolean,
-  ) => { items: number; events: number };
-  migrateRegisterEventsFromGit: (
-    paths: RegisterPaths,
-    dryRun: boolean,
-  ) => { items: number; events: number; skipped: number; available: boolean };
   parseHistoryIds: (values: string[] | undefined) => string[] | undefined;
   repoRelativePathspec: (repoRoot: string, target: string) => string;
   planRenumber: (paths: RegisterPaths, fromId: string, toId: string) => RenumberPlan;

@@ -11,7 +11,6 @@ import {
   readRegisterItemContent,
   readSpecdojoFields,
   toDisplayItem,
-  updateSpecdojoFields,
   VALID_STATUSES,
 } from "./item.js";
 import { isUtcIsoSeconds, nowUtcIsoSeconds } from "../shared/time.js";
@@ -320,27 +319,6 @@ export function appendRegisterEvent(content: string | undefined, event: Register
     ? { ...event, previous_event_id: previous.id }
     : { ...event };
   return serializeRegisterEvents([...events, next]);
-}
-
-export function readEmbeddedRegisterEvents(content: string, source: string): RegisterEventV1[] {
-  const fields = readSpecdojoFields(content);
-  if (fields.register_events === undefined) return [];
-  if (!Array.isArray(fields.register_events)) {
-    throw new Error(`${source}: register_events must be an array`);
-  }
-  const events: RegisterEventV1[] = [];
-  fields.register_events.forEach((event, index) => {
-    const errors = validateRegisterEventShape(event, `${source}: register_events[${index}]`);
-    if (errors.length > 0) throw new Error(errors.join("; "));
-    events.push(event as RegisterEventV1);
-  });
-  return events;
-}
-
-export function removeEmbeddedRegisterEvents(content: string): string {
-  return updateSpecdojoFields(content, (fields) => {
-    delete fields.register_events;
-  });
 }
 
 export function validateRegisterEventLog(
