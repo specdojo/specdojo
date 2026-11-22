@@ -44,11 +44,11 @@ recipe には簡潔にする手本がないため、rulebook と sample を見�
 
 ## 4. 作業内容
 
-| No  | 作業                                       | 担当         | 状態 | メモ                                                           |
-| --- | ------------------------------------------ | ------------ | ---- | -------------------------------------------------------------- |
-| 1   | prj-charter の recipe から運用の記述を外す | BA           | done | 3,899 字から 2,700 字（69.2%）へ。対応結果の「実施内容」       |
-| 2   | recipe へ広げるときの一覧を書く            | BA           | done | 対応結果の「他の recipe へ広げるときの一覧」                   |
-| 3   | 統合の後に型を grade し、結果を書く        | orchestrator | open | 統合の後に orchestrator が流す。executor は grade を実行しない |
+| No  | 作業                                       | 担当         | 状態 | メモ                                                                                    |
+| --- | ------------------------------------------ | ------------ | ---- | --------------------------------------------------------------------------------------- |
+| 1   | prj-charter の recipe から運用の記述を外す | BA           | done | 3,899 字から 2,700 字（69.2%）へ。対応結果の「実施内容」                                |
+| 2   | recipe へ広げるときの一覧を書く            | BA           | done | 対応結果の「他の recipe へ広げるときの一覧」                                            |
+| 3   | 統合の後に型を grade し、結果を書く        | orchestrator | done | recipe は pass 100（2026-11-20）。結果は対応結果の「grade の結果と close の記録の訂正」 |
 
 ## 5. 対応結果
 
@@ -132,6 +132,12 @@ schedule の段の指示にそのまま使える形で書く。
 
 - 統合の後に orchestrator が型の grade を流し、結果を本個票に書く（作業内容の 3）。
 - 変更案の 1・2 を採るかは利用者が決める。
+
+### 5.9. grade の結果と close の記録の訂正
+
+- 直した recipe の grade は pass 100（2026-11-20、flash-high-executor）。recipe が最後に変わったのは統合の 2026-11-18 で、この結果は今の recipe に合っている。
+- 訂正（2026-11-22、オーケストレーター）: close の理由に「recipe の grade（2026-11-22、opus-review-executor）が pass 100」と書いたが、誤りである。2026-11-22 の `grade run --target kata --kata prj-charter --kind recipe` は `--kind` が効かず、rulebook（pass 90）と sample（needs-work 83）だけを評価した。close の判断の根拠は上の 2026-11-20 の結果である。`--kind` が効かない問題は別に起票した。
+- sample の needs-work は範囲の外のため、[[prj-0001:pjr-hrw6-prj-charter-sample-quality-target|PJR-HRW6]] で扱う（indie の判断）。
 
 ## 6. 関連ドキュメント
 
