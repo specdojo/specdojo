@@ -153,6 +153,97 @@ describe("loadConfig with a local config", () => {
   });
 });
 
+describe("loadConfig with a local external_projects override", () => {
+  function writeExternalLocal(value: unknown): string {
+    return writeLocal(root, value);
+  }
+
+  beforeEach(() => {
+    // Add a shared external project so the "replace path" branch has something to merge against.
+    mkdirSync(join(root, ".specdojo"), { recursive: true });
+    mkdirSync(join(root, "..", "customer"), { recursive: true });
+    mkdirSync(join(root, "..", "customer-alt"), { recursive: true });
+    writeFileSync(
+      join(root, ".specdojo/specdojo.config.json"),
+      `${JSON.stringify(
+        {
+          version: 1,
+          current_project: "prj-0001",
+          projects: {
+            "prj-0001": {
+              base_path: "docs/ja/projects/prj-0001",
+              repos: [{ name: "app1", path: "../app1", integration_branch: "main" }],
+            },
+          },
+          external_projects: {
+            customer: { path: "../customer", project_id: "prj-target" },
+          },
+        },
+        null,
+        2,
+      )}\n`,
+    );
+  });
+
+  it("replaces a shared external project path by alias and appends a local-only alias", () => {
+    const localPath = writeExternalLocal({
+      version: 1,
+      external_projects: {
+        customer: { path: "../customer-alt" },
+        "specdojo-upstream": {
+          path: "../app1",
+          project_id: "prj-target",
+        },
+      },
+    });
+
+    const result = loadConfig(root);
+
+    expect(result.localConfigPath).toBe(localPath);
+    expect(result.config?.external_projects).toEqual(
+      expect.objectContaining({
+        customer: { path: "../customer-alt", project_id: "prj-target" },
+        "specdojo-upstream": { path: "../app1", project_id: "prj-target" },
+      }),
+    );
+    expect(result.localOverrides).toEqual([
+      {
+        external: "customer",
+        kind: "external-path",
+        path: "../customer-alt",
+        shared_path: "../customer",
+      },
+      {
+        external: "specdojo-upstream",
+        kind: "external-added",
+        path: "../app1",
+      },
+    ]);
+  });
+
+  it("rejects a key outside the allowlist on an external project", () => {
+    writeExternalLocal({
+      version: 1,
+      external_projects: { customer: { path: "../customer-alt", extra: true } },
+    });
+
+    expect(() => loadConfig(root)).toThrow(
+      /external_projects\.customer: key "extra" cannot override external project "customer" \(allowed: path\)/,
+    );
+  });
+
+  it("rejects an empty or non-string path on the local override", () => {
+    writeExternalLocal({
+      version: 1,
+      external_projects: { customer: { path: "   " } },
+    });
+
+    expect(() => loadConfig(root)).toThrow(
+      /external_projects\.customer\.path must be a non-empty string/,
+    );
+  });
+});
+
 describe("resolveLocalConfigPath", () => {
   it("never trusts a file of the same name inside a linked worktree", () => {
     const mainLocal = writeLocal(root, { version: 1, projects: {} });

@@ -1,0 +1,11 @@
+`external_projects` をローカル設定で宣言・上書きできるようにする変更は完了し、前回失敗した `test-unit` の原因 2 件を直しました。`tests/src/shared/local-config.test.ts` の 17 件は通り、`npm run typecheck`、`npm run validate:schema` も通りました。`npm run test:unit` 全体はこの回では再実行していません。
+
+- **スキーマ**: `exec-evidence.schema.yaml` の `local_config_overrides` で、`oneOf` の各分岐に誤った `not` 条件が入っていて、正しい証跡でも通らない状態でした。この `not` 条件を取り除き、各分岐に `additionalProperties: false` を付けました。
+- **実装**: `src/shared/local-config.ts` が、ローカルにだけある別名の `project_id` まで「上書きできるキーは `path` のみ」として弾いていました。キー制限は共有設定にある別名の上書きにだけ適用し、ローカル専用の別名は完全な定義として受け付けます。
+- **テスト**: 共有側とローカル側の外部パスのディレクトリが存在せず、`path` の存在検査で落ちていました。fixture にその 2 ディレクトリの作成を追加しました。
+
+`npm run test:integration`、`lint:*` は親 runner が実行する前提で、ここでは走らせていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"ローカル設定で `external_projects` を宣言・上書きできるようにし、前回の test-unit 失敗（スキーマの `oneOf` 分岐の誤った `not` 条件、ローカル専用別名の `project_id` 拒否、テスト fixture のディレクトリ不足）を修正した。","handoff":["ローカル専用の `external_projects` 別名は `path` 以外のキー（`project_id` など）も受け付ける。共有の別名の上書きは `path` のみ。","設定リファレンスと個票の更新は初回の試行で済んでおり、この再開では再編集していない。"],"validations":[{"command":"npx vitest run --config vitest.unit.config.ts tests/src/shared/local-config.test.ts","status":"passed","summary":"17 件すべて成功"},{"command":"npx prettier --check src/shared/local-config.ts docs/specdojo/schemas/v1/exec-evidence.schema.yaml tests/src/shared/local-config.test.ts","status":"passed","summary":"整形に問題なし"},{"command":"npm run typecheck","status":"passed","summary":"型エラーなし"},{"command":"npm run validate:schema","status":"passed","summary":"エラーなし"}],"target_coverage":[{"target":"docs/ja/projects/prj-0001/controls/project-register/pjr-f6mc-local-config-external-projects.md","status":"changed","path":"docs/ja/projects/prj-0001/controls/project-register/pjr-f6mc-local-config-external-projects.md"},{"target":"docs/specdojo/schemas/v1/exec-evidence.schema.yaml","status":"changed","path":"docs/specdojo/schemas/v1/exec-evidence.schema.yaml"}]}
+</specdojo_executor_evidence>
