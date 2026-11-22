@@ -12,6 +12,7 @@ import {
   type ProjectMember,
 } from "../../shared/specdojo-config.js";
 import {
+  resolveAgentTimeout,
   resolveMemberCommand,
   type ExecDefaultsConfig,
   type ProviderConcurrencyGate,
@@ -543,7 +544,7 @@ export async function runSingleRegisterItem(
     }
   } else {
     process.stdout.write(`Running ${item.id} in place: ${command}\n`);
-    exitCode = await spawnAgentInPlace(
+    const spawned = await spawnAgentInPlace(
       command,
       prompt,
       repoRoot,
@@ -551,7 +552,10 @@ export async function runSingleRegisterItem(
       executionPath,
       resultPath,
       resolvedProvider,
+      resolveAgentTimeout(context.execDefaults, resolvedProvider),
     );
+    exitCode = spawned.exitCode;
+    pipelineBlockReason = spawned.blockReason;
   }
 
   // in-place 実行と同じ補助判定: agent が result 必須節を埋めずに終了コード 0 で

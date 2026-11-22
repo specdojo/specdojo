@@ -325,6 +325,15 @@ $defs:
           local single-model Ollama host) without lowering the global --parallel for other
           providers. When a round would exceed this, the extra tasks are deferred to a later
           round. Absent means no per-provider limit.
+      agent_timeout_seconds:
+        type: integer
+        minimum: 1
+        maximum: 2147483
+        description: >
+          Seconds one launch of this provider's agent CLI may run. When the limit is reached
+          the runner stops the CLI's process group with SIGTERM, then SIGKILL after 10
+          seconds, and blocks the run with a reason that names this key. Absent means no
+          limit: the runner waits until the CLI exits.
 
   CommandParams:
     type: object
