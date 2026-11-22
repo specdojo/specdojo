@@ -55,8 +55,34 @@ exec run --register の要約（Register run summary）の commit= に、その 
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+### 5.1. 原因の経路
+
+要約の `commit=` は 2 経路で root の `HEAD` を読んでいた。
+
+- `src/exec/run/register-post-review.ts`: `commitRegisterState` は staged 差分が無いと commit を作らずに戻る。その後の `git rev-parse --short HEAD` が、その run のものではない commit の ID を返した。
+- `src/exec/run/register-worktree.ts`: post-review が無い経路で、統合後の `HEAD` を読んでいた。並行 run や他の commit で `HEAD` が動くと、統合の commit と食い違う。
+
+例の run の記録が無く、実際にどちらで起きたかは断定できない。ただし、どちらも `HEAD` が run の commit とは限らない点で同じ原因である。
+
+### 5.2. 修正
+
+- `selectRunCommitId`（`src/exec/register.ts`）を追加した。run の前後で `HEAD` が動いた場合だけその `HEAD` を使い、動かなければ統合の commit（`outputCommit`）を使う。
+- post-review は `selectRunCommitId` を使う。post-review が無い経路は `outputCommit` を直接使う。
+- 単体テストを `tests/src/exec/register-multiple-ids.test.ts` に追加した。`HEAD` が動かない場合と動いた場合を確かめる。
+
+### 5.3. 確認
+
+親 runner の検証（`npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md`）に委ねる。runner の出力を変えるため、統合の後にオーケストレーターが JSEY を流して確かめてから close する。
+
+### 5.4. CHANGELOG に書く事項
+
+- 区分: Fixed
+- 文案: `exec run --register` の要約の `commit=` が、その run の統合の commit ではない `HEAD` の ID を出すことがあった問題を修正した。
+
+### 5.5. 判断
+
+- 要約の ID は `--short` の長さが環境で変わるため、12 桁に揃えた。既存の経路（`outputCommit.slice(0, 12)`）に合わせた。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- なし
