@@ -59,7 +59,29 @@ exec run の統合の後に書く post-integration.log は、統合の commit �
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+### 5.1. 決定
+
+後者（git の管理外）を採った。ログは統合の後に書かれ、冪等性の確認（`recorded`）が同じ場所を読むため、場所は変えず `.gitignore` で除外する。commit に含める案は、ログのためだけに統合の後へ commit を足す必要があり、runner の動きが増えるため採らなかった。失敗時の案内が指す場所は変わらず、作業ツリーに残って辿れる。
+
+### 5.2. 変更
+
+- `.gitignore` に `docs/**/execution/runs/**/post-integration.log` を追加した。register・schedule・job の run は同じ置き場に書くため、すべて覆う。
+- `src/shared/specdojo-gitignore.ts` の既定パターンに同じ行を追加した。init が作る利用者のリポジトリの雛形にも配る。docs/ の外の execution_path には `<executionPath>/runs/**/post-integration.log` を派生させる。
+- `tests/src/shared/specdojo-gitignore.test.ts` に、実 git で `post-integration.log` だけが管理外になることの確認と、派生パターンの期待値を足した。
+
+### 5.3. 既存のログの扱い
+
+executor は既存のログを消していない。`.gitignore` の追加後は git status に出なくなるため、消さずに残してよい。もし古いログが不要なら、利用者の判断で消してよい。すでに commit 済みのものがあれば `git rm --cached` で追跡を外す。
+
+### 5.4. CHANGELOG に書く事項
+
+- 区分: Fixed
+- 文案: exec run の統合の後の検査のログ（`post-integration.log`）が git の管理外のまま作業ツリーに残る問題を、`.gitignore` と `config init` の既定の除外に加えて解消した。
+
+### 5.5. 確認
+
+- 保護された設定は変えていない。
+- 統合テストは追加していない。除外は `.gitignore` の規則であり、実 git を使う単体テストで確かめた。runner の動きは変えていないが、完了条件に従い、統合の後にオーケストレーターが JSEY を流して確かめてから close する。
 
 ## 6. 関連ドキュメント
 

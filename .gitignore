@@ -114,6 +114,10 @@ docs/**/generated/*
 # 実行時状態で、commitすると別マシン/別実行の状態と衝突するため tracking しない。
 docs/**/execution/exec/.locks/
 
+# exec run の統合の後の検査のログ。統合の commit の後に書かれ commit に入らないため tracking しない。
+# 失敗時の案内は同じ場所のファイルを指し、作業ツリーに残して辿れるようにする。
+docs/**/execution/runs/**/post-integration.log
+
 /*.log
 /logs/**
 

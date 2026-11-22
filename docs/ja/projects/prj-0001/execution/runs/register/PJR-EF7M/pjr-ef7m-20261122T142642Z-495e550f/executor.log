@@ -1,0 +1,17 @@
+`post-integration.log` は `.gitignore` で除外する方式にしました。統合の commit の後に書かれ、同じ場所を冪等性の確認が読むため、場所は変えていません。`tests/src/shared/specdojo-gitignore.test.ts` の 17 件は通りました。`npm run typecheck`・`lint:ts`・`lint:md`・`test:unit` は親 runner が流すので、ここでは実行していません。
+
+統合テストは足していません。除外は `.gitignore` の規則なので、実 git を使う単体テストで `result.md` は見えて `post-integration.log` だけが見えなくなることを確かめました。register・schedule・job は同じ置き場に書くため、1 行でまとめて覆えます。
+
+変更したファイルは次のとおりです。
+- **`.gitignore`**: `docs/**/execution/runs/**/post-integration.log` を追加しました。
+- **`src/shared/specdojo-gitignore.ts`**: 同じ行を既定パターンに足し、`config init` が作る利用者のリポジトリにも配るようにしました。`docs/` の外の `execution_path` には `<executionPath>/runs/**/post-integration.log` を派生させます。
+- **`tests/src/shared/specdojo-gitignore.test.ts`**: 上の確認テストを追加し、派生パターンの期待値を更新しました。
+- **個票 `pjr-ef7m-post-integration-log-untracked.md`**: 対応結果に決定理由、変更点、既存ログの扱い、CHANGELOG に書く事項を書きました。
+
+commit に含める案は採りませんでした。ログのためだけに統合の後へ commit を足す必要があり、runner の動きが増えるためです。
+
+保護された設定は変えていません。既存のログは消していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"post-integration.log を .gitignore（と config init の既定パターン）で git の管理外にした。個票の対応結果に決定理由・既存ログの扱い・CHANGELOG 文案を記載済み。","handoff":["決定: 統合の後の検査のログは commit に含めず、.gitignore で除外した。ログの場所は変えないため、失敗時の案内と冪等性の確認は影響を受けない。理由は、commit に含める案だと統合の後に commit を足す必要があり、runner の動きが増えるため。","既存の作業ツリーのログ（61 件）は executor が消していない。.gitignore により git status には出なくなる。不要なら利用者の判断で消してよい。commit 済みのものがあれば git rm --cached で追跡を外す。","CHANGELOG に書く事項（区分 Fixed）: exec run の統合の後の検査のログ（post-integration.log）が git の管理外のまま作業ツリーに残る問題を、.gitignore と config init の既定の除外に加えて解消した。CHANGELOG.md 自体は変えていない。","runner の動きに関わる修正のため、統合の後にオーケストレーターが JSEY を流して確かめてから close すること。統合テストは足しておらず、除外は実 git を使う単体テストで確かめた。","保護された設定の変更はない。"],"validations":[{"command":"npx vitest run tests/src/shared/specdojo-gitignore.test.ts","status":"passed","summary":"17 件すべて通過"},{"command":"npx prettier --write tests/src/shared/specdojo-gitignore.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-ef7m-post-integration-log-untracked.md","status":"passed","summary":"整形済み"}]}
+</specdojo_executor_evidence>
