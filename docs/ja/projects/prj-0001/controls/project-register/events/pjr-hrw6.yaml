@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_3d3e896aa39e4e3b8914db810a6d79cf
+  ts: "2026-11-22T12:55:55Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: prj-charter の sample の品質の確認の対象を、販売管理システムに合わせる
+    - field: description
+      from: ""
+      to: 型の grade で prj-charter-sample が needs-work だった。販売管理システムの開始判断なのに、品質の確認の対象が rulebook・recipe・sample・template になっていて、題材と合っていない。
+    - field: input
+      from: ""
+      to: '["2026-11-22 の型の grade（opus-review-executor）: prj-charter-rulebook pass 91、prj-charter-sample needs-work 83（major 4 件）。","major 4 件はどれも同じ内容: GO・Not GO の判断の材料と品質の確認の対象が型の 4 種類の文書になっており、販売管理システムの実装・操作手順・受入結果・公開物と、参照先の品質管理計画のゲートに結びついていない。","PJR-7M9J は recipe だけを直したため、sample の問題はこの項目で扱う（indie の承認、2026-11-22）。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-22"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-7M9J"]'
