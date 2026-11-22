@@ -7,10 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   registered_at: "2026-11-22T13:42:07Z"
+  completed_at: "2026-11-22T14:37:42Z"
+  conclusion: post-integration.log を .gitignore と init の既定の除外に足し、作業ツリーに管理外のまま残らないようにした
 ---
 
 # PJR-EF7M 統合の後の検査のログ（post-integration.log）が、毎回 git の管理外に残る

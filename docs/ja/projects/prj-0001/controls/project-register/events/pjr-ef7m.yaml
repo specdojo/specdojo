@@ -90,3 +90,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_d069260ad545412e91b401afa6ffe78b
+- v: 1
+  id: reg_0071418742f9472aabd13e75b0f4411e
+  ts: "2026-11-22T14:37:42Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが差分を確かめ、既存の 61 件と JSEY の新しいログが git status に出なくなったことを実物で確かめた。完了条件の統合テストは、実 git の単体テストと実物の確かめで代えた（除外は .gitignore の規則で、3 種類の run は同じ置き場に書くため）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: post-integration.log を .gitignore と init の既定の除外に足し、作業ツリーに管理外のまま残らないようにした
+  previous_event_id: reg_28abac9a91614ed58d06de2e3d4dd949
