@@ -26,7 +26,7 @@ specdojo:
 
 - 2026-11-22、T-KATA-WAVE-3-trc-requirements-to-tests-sample-090 の review で、型の評価は rulebook needs-work 88（major 2・minor 2）、sample pass 93（minor 3） だった。指摘は docs/ja/projects/prj-0001/execution/grade/results/specdojo.trc-requirements-to-tests-rulebook.yaml と specdojo.trc-requirements-to-tests-sample.yaml にある。
 - 合格は、機械的な「未解決の `_TODO_` / `_ASSUMPTION_`」の指摘（PJR-7C9X）を除いて、rulebook と sample に blocker と major がないこととする（indie の判断、2026-11-22）。
-- `_TODO_` は sample に残さない。`_ASSUMPTION_` は docs/ja/specdojo/standards/sample-authoring-standard.md に従って残してよい。
+- `_TODO_` は sample に残さない。`_ASSUMPTION_` は sample-authoring-standard（sample の記述の標準、読むだけで変えない）に従って残してよい。
 
 ## 3. 完了条件
 
