@@ -56,7 +56,34 @@ grade run --target kata --kata prj-charter --kind recipe は、recipe ではな�
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+### 5.1. 解決内容
+
+- `resolveKataDocuments` と `resolveKataBatchTargets`（`src/grade/targets.ts`）に `kind` を足し、`grade run` が `--kind` を渡すようにした。`--kind` を省くと従来どおり rulebook と sample を評価する。
+- recipe と template は rulebook の frontmatter 宣言（`recipe` / `template`）で解決し、宣言がなければ `<名前>-recipe` などのファイル名で探す。`all` は 4 種類すべてを評価する。
+- 指定した種類が型に無い（`not-needed` など）ときは評価せず、標準エラーに `grade run: kata <名前>: no <kind> document to grade ...` を出す。型そのものが無い場合は従来どおり `Unknown kata` で失敗する。
+- `--kata` のヘルプと `command-reference` の `grade run` の説明を直した。
+- テスト 4 件を `tests/src/grade/kata-documents.test.ts` に追加した。
+
+### 5.2. 確認結果
+
+- `npx vitest run tests/src/grade/kata-documents.test.ts`、`npm run typecheck`、`npx eslint src/grade` は成功（警告のみ）。`lint:md` や `test:unit` などは親の検証が実行する。
+
+### 5.3. 判断した点
+
+- 宣言された recipe・template のファイルが無い場合は、sample と同様にエラーにした。宣言が `not-needed` / `none` / `undecided` のときは評価しない扱い。
+- `--kind` 未指定と `--kind all` は別の扱い（未指定は rulebook と sample のみ）。`all` は 4 種類すべて。
+
+### 5.4. CHANGELOG に書く事項
+
+- 区分: Fixed
+- 文案: `grade run --target kata` で `--kata` と `--kind` を併用すると `--kind` が無視され、常に rulebook と sample を評価していた問題を修正した。`--kind recipe` や `--kind template` を指定できる。
+
+### 5.5. 作業内容
+
+| 作業                          | 状態 | メモ                               |
+| ----------------------------- | ---- | ---------------------------------- |
+| 実装・テスト・説明の修正      | done | 上記のとおり                       |
+| 実際の grade の起動での再確認 | open | agent の起動は executor が行えない |
 
 ## 6. 関連ドキュメント
 

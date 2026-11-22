@@ -1001,7 +1001,7 @@ specdojo grade validate --target kata --project prj-0001
 
 宣言済み `project.repos` 配下の Markdown は、プロジェクトリポジトリから `../product/docs/document.md` のように指定できます。宣言外のリポジトリや symlink による範囲外への参照は拒否します。
 
-`--kata <name>` は `--target kata` 専用で、繰り返し指定できます。指定した型の名前（`pjr`・`sld` などの接頭辞）ごとに、対応する rulebook と sample の組を 1 回の実行で順に評価します。存在しない型の名前は実行前にまとめてエラーにします。1 つの型の失敗や rate limit で残りの型をスキップせず、終了時に型ごとの結果（完了・失敗・未実行）を一覧表示します。完了と失敗が混在すると終了コード 2、rate limit に当たった場合は終了コード 75 を返します。`--path` とは併用できません。
+`--kata <name>` は `--target kata` 専用で、繰り返し指定できます。指定した型の名前（`pjr`・`sld` などの接頭辞）ごとに、対応する rulebook と sample の組を 1 回の実行で順に評価します。`--kind` を一緒に指定すると、その種類（`rulebook` / `recipe` / `sample` / `template`）だけを評価し、`all` は 4 種類すべてを評価します。recipe と template は rulebook の frontmatter 宣言（なければ `<名前>-recipe` などのファイル名）で解決し、型に無い種類（`not-needed` など）は評価せず、標準エラーにその旨を出します。存在しない型の名前は実行前にまとめてエラーにします。1 つの型の失敗や rate limit で残りの型をスキップせず、終了時に型ごとの結果（完了・失敗・未実行）を一覧表示します。完了と失敗が混在すると終了コード 2、rate limit に当たった場合は終了コード 75 を返します。`--path` とは併用できません。
 
 `--target` は `kata` または `deliverable` です。`--path` は繰り返し指定でき、明示した Markdown 文書だけを対象にします。ただし、パス要素に `generated` を含む生成文書と `trash` を含む退避済み文書は自動探索から除外し、`--path` で明示した場合も入力エラーとして拒否します。`--changed-only` は grade result サイドカーの `content_hash` と現在の成果物ファイル全体の SHA-256 を比較します。`grade apply` はサイドカーだけを更新するため、評価結果の書き込み自体で成果物が変更扱いになることはありません。
 
