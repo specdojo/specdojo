@@ -1,0 +1,41 @@
+判定は `incomplete`（未完了）です。stc-index-sample の評価結果は最新ですが、grade の判定が `needs-work` だからです。この型の整備を含む schedule では、型すべてに `--target kata` の `pass` が必要です。`needs-work` は `incomplete` と扱い、`complete-with-findings` でも完了にできません。
+
+**評価結果の鮮度**
+- 次の4つのコマンドを実行し、どれも出力は空、終了コードは 0 でした。
+  - `npx specdojo grade list --target kata --path docs/ja/specdojo/samples/stc-index-sample.md --changed-only`
+  - 同じ対象に `--incomplete`
+  - `docs/ja/specdojo/rulebooks/stc-index-rulebook.md` に `--changed-only`
+  - 同じ対象に `--incomplete`
+- 評価結果サイドカー `specdojo.stc-index-sample.yaml` と `specdojo.stc-index-rulebook.yaml` は両方あります。
+- `--changed-only` の2本は判定の直前にもう一度実行し、どちらも出力は空でした。review 中に成果物は変わっていません。
+
+**grade の結果**
+
+| 対象 | `verdict` | `score` | finding |
+| --- | --- | --- | --- |
+| sample | `needs-work` | 91 | blocker 0 / major 1 / minor 4 |
+| rulebook | `pass` | 97 | minor 1（F001：分配方針の判断順に「データ境界」がない） |
+
+**完了条件との照合**
+- **DC-001（章立てと必須の表）：** grade が観点 `vp-qe-omissions-consistency` を level 3 と判定しています。F003 の役割の矛盾（分割理由の「実施者が店主代表」と責任欄の「実施と証跡の照合は QE」）が残っています。
+- **DC-002 / DC-003（記述標準・禁止事項）：** 観点 `vp-qe-kata-conformance` は level 3 です。F004 は stc-sample の 6.2 節で観点名が `未確定停止` のままで、概要の `会計維持` と食い違っているという指摘です。
+- **DC-004（`based_on` に tsp-index を持つ）：** sample の frontmatter を読み、`based_on` に `specdojo:tsp-index-sample` と `specdojo:bac-sample` があることを確認しました。満たしています。
+- **DC-005（優先度ごとの合格基準と期待値の例）：** 観点 `vp-qe-verifiability` は level 3 です。F002 は、性能ケースが P0 に当たるかを優先度の定義から判定できないという指摘です。
+- **F005（major、観点 `vp-ops-release-readiness` が level 2）：** 未解決の `_ASSUMPTION_` が残っています。sample の143行目に `_ASSUMPTION_: 会計確定の応答基準` があることを grep で確かめました。
+
+**改善指示**
+- sample の F001〜F005 を直し、`--target kata` で grade をやり直して `pass` を得てから、再び review する。
+  - F001：メモの2件に引継ぎ先の PJR（`kinuya:pjr-i006`・`kinuya:pjr-i003`）を書く。
+  - F002：P0 の定義に TSP 出口条件の性能基準を含めると明記する。
+  - F003：分割理由と責任欄の役割分担を揃える。
+  - F004：stc-sample 6.2 節の観点名を `会計維持` に揃える。
+  - F005：143行目の `_ASSUMPTION_` を解くか、残す扱いを型の側で明示する。
+- rulebook の F001 は `pass` を妨げませんが、データ境界を判断順に加えるか、除く理由を書くのが望ましいです。
+
+**確認できなかった範囲**
+- 先行する edit タスク（T-KATA-WAVE-3-stc-index-sample-080）の result は、ファイルがあることと `mode: edit` だけを確認しました。検証結果の中身や変更差分までは読んでいません。
+- 成果物の観点ごとの再評価は、規約どおり行っていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict は incomplete（review result は reporter が記録する）。stc-index-sample と stc-index-rulebook の評価結果はどちらも最新（`--changed-only` と `--incomplete` の出力は空、判定直前の再確認でも変化なし）。rulebook は `pass`（97 点、minor 1）、sample は `needs-work`（91 点、blocker 0 / major 1 / minor 4）。型の整備を含む schedule は型すべてに `--target kata` の `pass` が必要なため incomplete とした。DC-004（`based_on` に `specdojo:tsp-index-sample`）は frontmatter で確認し、満たしている。DC-001 / DC-002 / DC-003 / DC-005 は grade が level 3（F002〜F004）。F005（major）の `_ASSUMPTION_` は sample の143行目に残っている。確認できなかった範囲: 先行 edit タスク 080 の result は、ファイルの存在と `mode: edit` だけを確認し、検証結果と差分の中身は読んでいない。","handoff":["sample の F001〜F005 を修正する。F001: メモ 2 件に引継ぎ先の PJR（`kinuya:pjr-i006`・`kinuya:pjr-i003`）を書く。F002: P0 の定義に TSP 出口条件の性能基準を加える。F003: 分割理由と責任欄の役割分担（店主代表の操作、QE の照合と判定）を揃える。F004: stc-sample 6.2 節の観点名を `会計維持` に揃える。F005: 143行目の `_ASSUMPTION_` を解くか、残す扱いを明示する。その後 `--target kata` で再 grade して `pass` を得てから、再び review する。","rulebook の F001（minor）: 分配方針の判断順にデータ境界を加えるか、除く理由を書く（`pass` は妨げない）。"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/stc-index-sample.md --changed-only","status":"passed","summary":"出力は空、終了コード 0（最新）。判定直前の再実行でも同じ"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/stc-index-sample.md --incomplete","status":"passed","summary":"出力は空、終了コード 0（評価パイプラインは完了済み）"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/stc-index-rulebook.md --changed-only","status":"passed","summary":"出力は空、終了コード 0（最新）。判定直前の再実行でも同じ"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/stc-index-rulebook.md --incomplete","status":"passed","summary":"出力は空、終了コード 0（評価パイプラインは完了済み）"}]}
+</specdojo_executor_evidence>
