@@ -67,3 +67,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_c8f2d33a7d8346228a3cbf1d387e1b23
+- v: 1
+  id: reg_a9bec97e7a4647fc8fe4beb1b537f7df
+  ts: "2026-11-22T12:51:01Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが差分と対応結果を完了条件と照らし、統合の後の型の grade（2026-11-22、opus-review-executor）で rulebook と sample がすべて pass であることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: mm と pr の rulebook から共通の運用の記述を外した。型の grade は 4 文書とも pass（mm-rulebook 80・mm-sample 86・pr-rulebook 80・pr-sample 90）
+  previous_event_id: reg_86e04b6df5744a139ec12686f6313f1f
