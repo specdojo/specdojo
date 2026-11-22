@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-BBTW",
   "run_id": "pjr-bbtw-20261122T135813Z-c849b9fc",
-  "updated_at": "2026-11-22T14:03:37.248Z",
+  "updated_at": "2026-11-22T14:03:45.489Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-BBTW/pjr-bbtw-20261122T135813Z-c849b9fc/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sonnet-executor",
       "attempts": 1,
       "started_at": "2026-11-22T14:03:37.248Z",
-      "completed_at": null,
+      "completed_at": "2026-11-22T14:03:45.489Z",
       "artifact_ref": null
     }
   },
