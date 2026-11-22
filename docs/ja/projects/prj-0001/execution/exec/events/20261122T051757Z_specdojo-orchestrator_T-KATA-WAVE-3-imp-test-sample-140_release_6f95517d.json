@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-11-22T05:17:57Z",
+  "type": "release",
+  "task_id": "T-KATA-WAVE-3-imp-test-sample-140",
+  "by": "specdojo-orchestrator",
+  "msg": "PJR-ESE7 の確かめ: 予約名で release する"
+}

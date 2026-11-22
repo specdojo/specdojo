@@ -63,9 +63,12 @@ exec release などの --by は名簿の人と agent だけを受け付け、オ
 - 区分: Changed
 - 文案: `exec claim` / `release` / `block` / `unblock` / `complete` / `reopen` / `cancel` の `--by` が、`register` と同じ予約 actor（`SpecDojo`・`specdojo-orchestrator`・`night-orchestrator`）を受け付けるようにした。
 
-### 5.2. 残課題
+### 5.2. 統合後の確かめ
 
-- 統合後にオーケストレーターが第 3 波の 090 の 1 件を `exec release --by specdojo-orchestrator` で戻して流し、記帳と run が通ることを確かめる（executor では実行しない）。
+- 2026-11-22、本体で `T-KATA-WAVE-3-imp-test-sample-140` に `exec claim --by specdojo-orchestrator` と `exec release --by specdojo-orchestrator` を行い、どちらも記帳できた。`exec refresh` の後の state は `todo`（`last_by: specdojo-orchestrator`）で、予約名についての警告は出なかった（出た警告は、今の schedule にない昔のタスクのイベントについてのものだけ）。
+- 名簿にない名前（`not-a-member`）での `exec claim` は、記帳の前に `Unknown actor` で止まった（exit 1）。
+- PJR-JSEY の代わりに、第 3 波の 090 の列（`wave3-090-a-2026-11-22`・`wave3-090-b-2026-11-22`）で、opus-review-executor の claim 12 件・complete 12 件（utc-sample は統合の再開の後）・block 1 件が、新しい検証を通って記帳されたことを確かめた。
+- 気づいた点: `Unknown actor` のエラーの「Must be one of」の一覧に予約名が出ない。動きには影響しないため、この項目では扱わない。
 
 ## 6. 関連ドキュメント
 
