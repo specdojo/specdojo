@@ -1,8 +1,12 @@
 # yaml-language-server: $schema=../../../../specdojo/schemas/v1/job.schema.yaml
 id: job-grade-deliverable
 name: 成果物の継続品質評価
-description: 成果物を文書単位の agy 単段評価へ流し、最新の品質と done_criteria 充足状況を更新する。
+description: 成果物を、入力 `by` で指定した評価者による文書単位の単段評価へ流し、最新の品質と done_criteria 充足状況を更新する。
 inputs:
+  # grade run の --by に渡す評価者（名簿の agent）。既定値なし。未指定なら grade run を起動する前に止まる。
+  by:
+    type: string
+    required: true
   # grade run の --by が rate limit のときに切り替える評価者（PJR-XA6Y）。空なら切り替えない。
   fallback_by:
     type: string
@@ -154,7 +158,7 @@ task:
       exit 0
     fi
     # grade run は、完了した成果物と失敗した成果物が混在すると 2、rate limit で止まると 75 を返す。
-    if {{specdojo}} grade run --run-id {{job_run_id}} --target deliverable --project {{project_id}} --by agy-expert-executor $fallback_args "$@"; then
+    if {{specdojo}} grade run --run-id {{job_run_id}} --target deliverable --project {{project_id}} --by {{inputs.by}} $fallback_args "$@"; then
       :
     else
       grade_status=$?
@@ -181,7 +185,7 @@ task:
         pipeline state に記録されて次の Run の `--incomplete` で選択できるかを確認する。
       - `retry exhausted:` の成果物があるか。ある場合は `grade state --path` で連続失敗回数を
         確かめ、人手での原因解消または state の再開判断を促す。
-      - agy 単段の verdict と score に、評価設定の見直しを要する偏りがあるか。
+      - 単段評価の verdict と score に、評価設定の見直しを要する偏りがあるか。
       - 未充足の done_criteria がある成果物と、その確認担当ロールを特定する。
 
       選択された成果物が0件の場合は no-op と判断する。判断できない事象は推測で埋めず、

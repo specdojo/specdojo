@@ -122,3 +122,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_53d54d2abc13415dad218c989dafbeb1
+- v: 1
+  id: reg_f6e721db13d945ae91eeb12156872141
+  ts: "2026-11-22T00:02:16Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register で実施し、result の 1 か所を手で直して統合から再開した。完了条件・単体テスト 3 件・CHANGELOG 不変を確かめ、統合後の run（QTZ7 ほか）が result の検査で止まらないことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: runner が reporter の一律にエスケープされたバッククォートを戻してから result に書くようにし、統合の前の MD038 で止まらなくした。
+  previous_event_id: reg_b8ebcfbf8ac24aba8d92f627832c3060

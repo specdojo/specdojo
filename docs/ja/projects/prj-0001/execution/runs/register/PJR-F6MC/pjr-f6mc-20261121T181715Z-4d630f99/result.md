@@ -4,35 +4,33 @@ specdojo:
   type: exec-result
   task_id: PJR-F6MC
   mode: edit
-  status: blocked
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-F6MC/pjr-f6mc-20261121T181715Z-4d630f99/plan.md
   started_at: "2026-11-21T18:17:16.466Z"
-  completed_at: "2026-11-21T19:00:52.550Z"
+  completed_at: "2026-11-22T00:28:32.329Z"
   agent: qwen-executor
-  block_reason: "parent validation failed: lint-fm, validate-schema, test-unit"
 ---
 
 # Edit Result
 
 ## 1. 実施内容
 
-- ローカル設定 (`specdojo.local.config.json`) で `external_projects` を宣言・上書きできるように変更しました。
-- 共有の `specdojo.config.json` を使わずに、環境依存のパスをローカル設定で直接定義できるようになりました。
-- `src/shared/local-config.ts` のロジック更新、`tests/src/shared/local-config.test.ts` へのテスト追加、および `docs/ja/specdojo/references/specdojo-config-reference.md` の更新を行いました。
+- ローカル設定で `external_projects` を宣言・上書きできるようにし、前回の test-unit 失敗（スキーマの `oneOf` 分岐の誤った `not` 条件、ローカル専用別名の `project_id` 拒否、テスト fixture のディレクトリ不足）を修正した。
 
 ## 2. 変更ファイル
 
-- `docs/ja/specdojo/references/specdojo-config-reference.md`: `external_projects` に関する説明を追加しました。
-- `docs/specdojo/schemas/v1/exec-evidence.schema.yaml`: スキーマの変更を行いました。
-- `src/shared/local-config.ts`: `external_projects` を扱えるよう、`local-config.ts` 内のバリデーションおよび処理ロジックを更新しました。
-- `tests/src/shared/local-config.test.ts`: `external_projects` の上書き動作を検証するテストケースを追加しました。
+- `docs/ja/specdojo/references/specdojo-config-reference.md`: 変更、+13 / -7 行
+- `docs/specdojo/schemas/v1/exec-evidence.schema.yaml`: 変更、+48 / -28 行
+- `src/shared/local-config.ts`: 変更、+143 / -12 行
+- `tests/src/shared/local-config.test.ts`: 変更、+91 / -0 行
 
 ## 3. 申し送り
 
-- ローカル設定での `external_projects` の定義が可能な状態になっています。
+- ローカル専用の `external_projects` 別名は `path` 以外のキー（`project_id` など）も受け付ける。共有の別名の上書きは `path` のみ。
+- 設定リファレンスと個票の更新は初回の試行で済んでおり、この再開では再編集していない。
 
 ## 4. 進め方
 
-``specdojo.local.config.json`` において、`external_projects` を新しいキーとして許容するように `src/shared/local-config.ts` を修正しました。これにより、既存の共有 alias（パスの単純な差し替え）と、新しいプロジェクト用 alias（パス + プロジェクト ID の追加）の両方を `validateExternalProjects` 関数を通じて適切に処理できるようになりました。また、設定の変更を反映するためにリファレンスドキュメントの更新とユニットテストの拡充を行いました。
+reporter を使わず、runner が executor の報告（`final_message`・`handoff`）と証跡から機械的に作成した（`pipeline.mechanical_result`）。

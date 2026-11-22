@@ -1,5 +1,4 @@
 import { type Command } from "commander";
-import { existsSync, readFileSync } from "node:fs";
 import { relative, sep } from "node:path";
 import { setImmediate } from "node:timers/promises";
 import { CrossProcessMutex } from "../shared/cross-process-lock.js";
@@ -11,6 +10,9 @@ import {
   stageCommitTargets,
   unstageCommitTargets,
   worktreeStatusPaths,
+  GitCommandError,
+  formatGitCommandFailure,
+  describeGitProcessFailure,
 } from "../shared/git.js";
 import { inlineCodeAnglePlaceholders } from "../shared/text.js";
 import type { Approach } from "../shared/agent-types.js";
@@ -34,20 +36,13 @@ import { normalizeRegisterTimestamp } from "./date.js";
 import { validateRegisterDependencyDocs } from "./dependency.js";
 import { validateDerivedFromDocs } from "./derivation.js";
 import {
-  appendRegisterEvent,
   deterministicRegisterEventId,
-  readEmbeddedRegisterEvents,
-  readRegisterEventsFromContent,
   registerEventFilePath,
-  removeEmbeddedRegisterEvents,
-  serializeRegisterEvents,
   validateRegisterEventDocs,
   type RegisterEventAction,
   type RegisterEventV1,
 } from "./events.js";
-import { collectRegisterHistoryEvents } from "./history.js";
 import {
-  loadRegisterItemDocs,
   PJR_ID_ALPHABET,
   PJR_ID_RE,
   TERMINAL_STATUSES_SET,
@@ -291,6 +286,23 @@ export function registerCommitMessageFromParagraphs(
 const REGISTER_COMMIT_SUBJECT_MAX_LENGTH = 100;
 const REGISTER_COMMIT_STABILIZATION_ATTEMPTS = 3;
 
+// 失敗の commit で gitOutput が投げる GitCommandError は stderr のみ公開し、commitlint 等が stdout
+// へ出す理由を取りこぼす。gitResult を直接使い stdout と stderr の両方を formatGitCommandFailure
+// （内部で要約）に渡し、原因を含む GitCommandError を投げるローカルラッパー。成功時は文字を返す。
+function gitOutputCapturingFailure(repoRoot: string, args: string[]): string {
+  const result = gitResult(repoRoot, args);
+  if (result.status !== 0 || result.error) {
+    const stdout = typeof result.stdout === "string" ? result.stdout : "";
+    const stderr = typeof result.stderr === "string" ? result.stderr : "";
+    throw new GitCommandError(
+      formatGitCommandFailure(args, `${stdout}\n${stderr}`, describeGitProcessFailure(result)),
+      args,
+      `${stdout}\n${stderr}`,
+    );
+  }
+  return typeof result.stdout === "string" ? result.stdout : "";
+}
+
 function defaultRegisterCommitMessage(command: string, result: RegisterMutationResult): string {
   const prefix = `docs(register ${result.id}): ${command} `;
   const flatTitle = result.title.replace(/\s+/g, " ").trim();
@@ -382,7 +394,14 @@ async function commitRegisterMutation(
     const commitMessage =
       registerCommitMessageFromParagraphs(message) ?? defaultRegisterCommitMessage(command, result);
     // --only は初回・amend とも指定し、開始前からある staged 変更を混ぜない。
-    gitOutput(repoRoot, ["commit", "--only", "-m", commitMessage, "--", ...changed]);
+    gitOutputCapturingFailure(repoRoot, [
+      "commit",
+      "--only",
+      "-m",
+      commitMessage,
+      "--",
+      ...changed,
+    ]);
     committed = true;
     // hook の整形は一時 index にだけ入る。HEAD と一致した対象を index でも HEAD へ戻し、
     // 整形前の内容を staged のまま残さない（PJR-Y3XS）。
@@ -418,8 +437,10 @@ async function commitRegisterMutation(
     unstageCommitTargets(repoRoot, changed);
     await setImmediate();
     if (committed) throw error;
-    // 記帳は作業ツリーに残り commit だけが無い。最後の行に結果が出るよう、原因の後に状態を書く。
+    // gitOutputCapturingFailure は commitlint 等が stdout へ出す理由を stderr と併せて
+    // GitCommandError.message に含めるため、そのまま原因として使える。
     const cause = error instanceof Error ? error.message : String(error);
+    // 記帳は作業ツリーに残り commit だけが無い。最後の行に結果が出るよう、原因の後に状態を書く。
     throw new Error(
       `Register commit failed for ${result.id}: ${cause}\n` +
         `The register changes were written but not committed:\n` +
@@ -643,93 +664,6 @@ export function legacyHistoryEventToRegisterEvent(
   };
 }
 
-function migrateEmbeddedRegisterEvents(
-  paths: RegisterPaths,
-  dryRun: boolean,
-): { items: number; events: number } {
-  let itemCount = 0;
-  let eventCount = 0;
-  for (const doc of loadRegisterItemDocs(paths.projectRegisterPath)) {
-    const ticketContent = readFileSync(doc.path, "utf8");
-    const embedded = readEmbeddedRegisterEvents(ticketContent, doc.filename);
-    if (embedded.length === 0) continue;
-    const eventPath = registerEventFilePath(paths.projectRegisterPath, doc.id);
-    if (existsSync(eventPath)) {
-      const existing = readRegisterEventsFromContent(readFileSync(eventPath, "utf8"), eventPath);
-      if (JSON.stringify(existing) !== JSON.stringify(embedded)) {
-        throw new Error(`${doc.filename}: embedded and external register events differ`);
-      }
-    }
-    if (!dryRun) {
-      atomicWriteFile(eventPath, serializeRegisterEvents(embedded));
-      atomicWriteFile(doc.path, removeEmbeddedRegisterEvents(ticketContent));
-    }
-    itemCount++;
-    eventCount += embedded.length;
-  }
-  return { items: itemCount, events: eventCount };
-}
-
-function migrateRegisterEventsFromGit(
-  paths: RegisterPaths,
-  dryRun: boolean,
-): { items: number; events: number; skipped: number; available: boolean } {
-  let history: ReturnType<typeof collectRegisterHistoryEvents>;
-  try {
-    history = collectRegisterHistoryEvents({
-      repoRoot: specdojoRootDir(),
-      registerPathspec: repoRelativePathspec(specdojoRootDir(), paths.projectRegisterPath),
-      timeZone: paths.registerDateTimeZone,
-    });
-  } catch {
-    return { items: 0, events: 0, skipped: 0, available: false };
-  }
-
-  const byId = new Map<string, typeof history>();
-  for (const event of history) {
-    if (event.source === "event" || event.kind === "removed") continue;
-    const entries = byId.get(event.id) ?? [];
-    entries.push(event);
-    byId.set(event.id, entries);
-  }
-
-  let itemCount = 0;
-  let eventCount = 0;
-  let skipped = 0;
-  for (const doc of loadRegisterItemDocs(paths.projectRegisterPath)) {
-    const eventPath = registerEventFilePath(paths.projectRegisterPath, doc.id);
-    const ticketContent = readFileSync(doc.path, "utf8");
-    if (
-      existsSync(eventPath) ||
-      (dryRun && readEmbeddedRegisterEvents(ticketContent, doc.filename).length > 0)
-    ) {
-      skipped++;
-      continue;
-    }
-    const legacyEvents = byId.get(doc.id) ?? [];
-    if (legacyEvents.length === 0) continue;
-
-    let currentStatus: string | null = null;
-    let appended = 0;
-    let eventContent: string | undefined;
-    for (const historyEvent of legacyEvents) {
-      const event = legacyHistoryEventToRegisterEvent(historyEvent, {
-        isFirst: appended === 0,
-        currentStatus,
-        fallbackStatus: doc.item.status,
-      });
-      eventContent = appendRegisterEvent(eventContent, event);
-      currentStatus = event.to_status;
-      appended++;
-    }
-    if (appended === 0) continue;
-    if (!dryRun && eventContent) atomicWriteFile(eventPath, eventContent);
-    itemCount++;
-    eventCount += appended;
-  }
-  return { items: itemCount, events: eventCount, skipped, available: true };
-}
-
 // ================================
 // Command Registration
 // ================================
@@ -748,8 +682,6 @@ const REGISTER_COMMAND_DEPENDENCIES: RegisterCommandDependencies = {
   generateDerivedViewFiles,
   loadItemForUpdate,
   loadRegisterItems,
-  migrateEmbeddedRegisterEvents,
-  migrateRegisterEventsFromGit,
   parseHistoryIds,
   parseRegisterTimestampOption,
   planRegisterItem,

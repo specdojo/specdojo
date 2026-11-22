@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_5a73e339e4684dc0a80eef8a0f26bcd4
+  ts: "2026-11-22T02:08:34Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 型の schedule の review の段で、sample の grade の鮮度が対象種別の食い違いで常に最新でないと出て止まる
+    - field: description
+      from: ""
+      to: 第 3 波の 090 で、runner が review の対象（deliverable）と型の追加の完了条件（kata）の 2 回 grade を流し、同じサイドカーを kata が上書きする。executor が --target deliverable で鮮度を確かめると常に最新でないと出て、それを検証の失敗として記録し、runner が止める。
+    - field: input
+      from: ""
+      to: '["2026-11-22 の第 3 波の 090 で、流した 7 件がすべて block（executor validation failed or not run: specdojo grade list --target deliverable ... --changed-only）。","第 3 波の strategy の review の段は approach: fully-guided で、gradeTargetKind（src/exec/plans-core.ts）は deliverable を返す。plan の評価対象は docs/ja/specdojo/samples の sample で、サイドカー `specdojo.<sample>.yaml` は target: kata で記録されていた。","plan は「評価結果が最新でないことは異常終了の理由にせず verdict として記録する」と書くが、executor は grade list の出力ありを failed の検証として evidence に残し、runner は review の段でも failed の検証を block にする（src/exec/reporter.ts）。","第 1・2 波の review の段は approach: retrofit。同じ食い違いが起きなかった理由は未確認。"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-22"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-VCER"]'
+- v: 1
+  id: reg_7df0d474f65f450ba7e9bfbbb640e7fd
+  ts: "2026-11-22T02:18:06Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "影響範囲" updated
+  changes:
+    - field: section
+      from: ""
+      to: 影響範囲
+  previous_event_id: reg_5a73e339e4684dc0a80eef8a0f26bcd4
+- v: 1
+  id: reg_e62e324591d44f9c9eed4cf623318cb1
+  ts: "2026-11-22T02:18:33Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "対応方針" updated
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_7df0d474f65f450ba7e9bfbbb640e7fd
+- v: 1
+  id: reg_746d5aeaa53b43e2a55ef2e8fcaec210
+  ts: "2026-11-22T02:19:36Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: difficulty
+      from: medium
+      to: hard
+  previous_event_id: reg_e62e324591d44f9c9eed4cf623318cb1

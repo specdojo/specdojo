@@ -106,3 +106,83 @@
       from: "-"
       to: "parent validation failed: lint-fm, validate-schema, test-unit"
   previous_event_id: reg_2a7d51024cdb47fd919720b3b4d94530
+- v: 1
+  id: reg_cfb2ab994bc740708288d72baefc6813
+  ts: "2026-11-21T23:24:14Z"
+  action: start
+  actor: qwen-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-fm, validate-schema, test-unit"
+      to: "-"
+  previous_event_id: reg_d73218dabed94cf0b2c7f7968c1712a0
+- v: 1
+  id: reg_6e70e39ad9bc4065b83035fac7e0b6cb
+  ts: "2026-11-21T23:49:31Z"
+  action: wait
+  actor: qwen-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-unit"
+  previous_event_id: reg_cfb2ab994bc740708288d72baefc6813
+- v: 1
+  id: reg_72f3ab04c4df4efe8ef6834e18c4e32f
+  ts: "2026-11-22T00:23:34Z"
+  action: start
+  actor: sonnet-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_6e70e39ad9bc4065b83035fac7e0b6cb
+- v: 1
+  id: reg_3a45f1684108431d925339942a4bc4c1
+  ts: "2026-11-22T00:28:39Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_72f3ab04c4df4efe8ef6834e18c4e32f
+- v: 1
+  id: reg_c789173c2b4747d0b7d9c63df5eb6b95
+  ts: "2026-11-22T00:30:41Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register で実施（統合 7d9af4480、3 回目に sonnet で再開）。空のリポジトリ 2 つで、ローカル設定だけに書いた外部プロジェクトへ register add --commit が通ることを確かめ、テストと CHANGELOG 不変を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: ローカル設定で external_projects を宣言・上書きできるようにした。共有の別名は path を差し替え、新しい別名は path と project_id を足す。schema と設定リファレンスを直した。
+  previous_event_id: reg_3a45f1684108431d925339942a4bc4c1

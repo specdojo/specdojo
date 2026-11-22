@@ -1,0 +1,69 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_988209e76a7a49adb8fa70f58805b04d
+  ts: "2026-11-21T23:16:46Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: オーケストレーターが自分で、または subagent で項目を実装する手順を skill にする
+    - field: description
+      from: ""
+      to: オーケストレーターが自分で実装する手順が playbook と判断に頼り、回ごとにぶれる。worktree と feature ブランチを作り、自分か subagent で実装し、検査・保護された設定の確認・commit・承認後の merge・片付けまでを skill に固定する。
+    - field: input
+      from: ""
+      to: '["skill の正本は .agents/skills/`<skill-name>`/SKILL.md に置く。Codex はリポジトリの .agents/skills を標準で読む（https://developers.openai.com/codex/skills）。",".claude/skills/`<skill-name>`/SKILL.md は、frontmatter と正本を最初に読んで従う指示だけの薄いラッパーにする。シンボリックリンクは Windows と npm の配布で動きが怪しいため使わない（indie の決定、2026-11-22）。読み落としが起きたら、本文を写して lefthook で一致を保つ方式へ移す。","subagent での実装は Claude Code の skill の context: fork と agent で指定できる（https://code.claude.com/docs/en/skills）。skill 全体は fork させず、実装の段だけを subagent に渡し、検査と確認はオーケストレーターが行う。","作業は worktree を作り feature/`<project-id>`/`<topic>` で行う。いまの作業ツリー（develop）は runner の統合と記帳に使うため切り替えない（indie の決定、2026-11-22）。","SpecDojo のコマンドには、register の項目を worktree で準備・commit・統合する段のコマンドがない（exec worktree prepare/commit/merge は --task のみ）。段のコマンドは DEF1 の続きとして別に扱う。","実装者は specdojo-orchestrator（indie の指定、2026-11-22）。.agents/skills と .claude は executor が書けない保護された場所のため、この項目を skill の最初の利用例にする。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: specdojo-orchestrator
+    - field: registered
+      from: ""
+      to: "2026-11-22"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-DEF1"]'
+- v: 1
+  id: reg_05cc617d6ab14905b398a4c8863ee3d3
+  ts: "2026-11-21T23:37:54Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_988209e76a7a49adb8fa70f58805b04d
+- v: 1
+  id: reg_9b5a8385ef73409ea04ce9ce54bf6dff
+  ts: "2026-11-21T23:38:30Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "作業内容" updated
+  changes:
+    - field: section
+      from: ""
+      to: 作業内容
+  previous_event_id: reg_05cc617d6ab14905b398a4c8863ee3d3

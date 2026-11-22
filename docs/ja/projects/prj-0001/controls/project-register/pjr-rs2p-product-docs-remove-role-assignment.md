@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-rs2p-product-docs-remove-role-assignment
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-21T08:24:25Z"
+  completed_at: "2026-11-22T00:03:24Z"
+  conclusion: docs/ja/product の 27 ファイルから、文書の作成・確認・承認の役割の割り当てと承認の進み具合を外した。未完了の承認と留保は個票の 5.4 に一覧にした。
   derived_from:
     - PJR-76N9
 ---
@@ -118,6 +120,10 @@ PJR-76N9 の決まりに合わせ、製品の成果物（約 28 件）の本文�
 | `br-task-selection-strategy`    | `U-01`〜`U-07` の採用方針                                                                      | -                                      |
 | `sf-index`・`sf-task-execution` | `Q-01`〜`Q-03` と未決事項 3 件                                                                 | PJR-AK5V・PJR-2GD6・PJR-BCAQ・PJR-99NS |
 | `cpd-specdojo-cli`              | 内部構成と実装の対応、正本の参照の接続、外部依頼・途中変更の回復条件                           | -                                      |
+
+### 5.5. close の後に見つかった直し
+
+- `ifx-index.yaml` のコメントの 1 行が `# #` で始まり、節の間の空行が空のコメント（`#`）になっていた。YAML から作る表示のページで H1 の見出しと空行の重なりになり、以後の run の lint-md が止まったため、オーケストレーターが直した（2026-11-22、16cedf0d6・8b9376ecb）。表示のページを作り直し、lint-md と `yaml-tables` のテストが通ることを確かめた。
 
 ## 6. 関連ドキュメント
 

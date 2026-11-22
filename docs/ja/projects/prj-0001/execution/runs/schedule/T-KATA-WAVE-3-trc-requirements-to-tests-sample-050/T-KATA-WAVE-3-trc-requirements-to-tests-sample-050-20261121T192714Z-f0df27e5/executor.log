@@ -1,0 +1,19 @@
+前回の試行で入った sample の修正を見直し、これで完成としました。追加の編集はしていません。
+
+**変更ファイル:** `docs/ja/specdojo/samples/trc-requirements-to-tests-sample.md`
+
+**内容の要点:**
+- 前回は旧サンプルの架空の `req-r1-*` / `utc-*` / `itc-*` を、共通サンプル文脈（駄菓子屋きぬや）の実例に置き換えていました。要求は `bac-sample` の BAC-01〜03 と、`prj-success-criteria-and-acceptance-criteria-sample` の SC-01・AC-01〜04 です。テストは `atc-sample` と `stc-sample` です。
+- 生成元の表と突き合わせ、記載が一致することを確かめました。照合したのは、両方の「トレース」の表（TR-01〜05）、ケース表の `トレース` 列、`status`（どちらも `draft`）、`relations.verifies` です。`stc-sample` に `relations.verifies` がないことも元の文書と一致しています。
+- grade の指摘 F001〜F025 は、すべて本文で対応済みでした。
+  - **前提と依存:** `based_on` を補い、母集団の件数、テストの抽出条件、生成の手段・生成日・版、別の人が照合する手順を「トレース対象の前提」に書きました（F004・F009・F010・F012・F015・F016）。
+  - **充足状況の判定:** rulebook と矛盾していた `req-r1-004` を削除しました。各行の判定根拠は備考に書き、母集団外を参照するテストは別の表に分けました（F013・F014・F017・F020）。
+  - **ギャップ表:** 担当・期限の列をなくして登録簿で追跡する形にし、解消の判定を「再生成の結果」で書きました（F003・F005・F019・F022）。
+  - **更新ルール:** 手で直す運用をやめ、再生成の契機と前回からの差分を書く形にしました（F011・F018・F025）。
+  - **導入部と表記:** 誰がどの判断に使うか、テスト漏れの影響、対象外の理由、派生ビューであることを書き、表記と `_TODO_` などの目印を整えました（F001・F002・F006〜F008・F021・F023・F024）。
+
+**検証:** `npx prettier --check` は通りました。lint などの検査は、この後に親の runner が実行します。rulebook は変更していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"trc-requirements-to-tests-sample を駄菓子屋きぬやの完成例として厚くした変更を見直し、F001〜F025 の解消と、生成元 sample（atc-sample・stc-sample・bac-sample・prj-success-criteria-and-acceptance-criteria-sample）との整合を確認した。rulebook は変更していない。","handoff":["生成元側のギャップ: `stc-sample` に `relations.verifies` がない。trc sample ではこれをギャップとして完成例に使っているが、`stc-sample` 側を直すかどうかは別のタスクで判断する。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/trc-requirements-to-tests-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを executor が変更していない","reason":"変更は docs/ja/specdojo/samples 配下の sample だけで、plan・result・pjr 個票を executor が変更していないため"}],"target_coverage":[{"target":"specdojo:trc-requirements-to-tests-sample","status":"changed","path":"docs/ja/specdojo/samples/trc-requirements-to-tests-sample.md"}]}
+</specdojo_executor_evidence>

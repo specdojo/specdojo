@@ -125,3 +125,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_6add16185ce646d4b12f79dda445cdfb
+- v: 1
+  id: reg_3ff678710c724c81954677903e356d81
+  ts: "2026-11-22T00:03:24Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register で実施（統合 2bdb5a00b）。対象と対象外の表、frontmatter と型の不変、5.4 の一覧を確かめた。追跡先のない 5 件の起票は利用者と決める
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: docs/ja/product の 27 ファイルから、文書の作成・確認・承認の役割の割り当てと承認の進み具合を外した。未完了の承認と留保は個票の 5.4 に一覧にした。
+  previous_event_id: reg_2c4d8220a9404822b9746bfc67d775f4

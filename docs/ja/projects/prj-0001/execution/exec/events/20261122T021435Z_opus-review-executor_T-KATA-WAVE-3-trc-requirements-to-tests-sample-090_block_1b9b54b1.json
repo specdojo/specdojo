@@ -1,0 +1,17 @@
+{
+  "v": 1,
+  "ts": "2026-11-22T02:14:35Z",
+  "type": "block",
+  "task_id": "T-KATA-WAVE-3-trc-requirements-to-tests-sample-090",
+  "by": "opus-review-executor",
+  "msg": "executor validation failed or not run: specdojo grade list --target deliverable --path docs/ja/specdojo/samples/trc-requirements-to-tests-sample.md --changed-only, specdojo grade list --target deliverable --path docs/ja/specdojo/samples/trc-requirements-to-tests-sample.md --dependency-changed",
+  "meta": {
+    "limit_deferred": "false",
+    "claim_actor": "opus-review-executor",
+    "stage_actor": "gemma26-reporter",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-3-trc-requirements-to-tests-sample-090/T-KATA-WAVE-3-trc-requirements-to-tests-sample-090-20261122T021032Z-816b0c67/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-3-trc-requirements-to-tests-sample-090/T-KATA-WAVE-3-trc-requirements-to-tests-sample-090-20261122T021032Z-816b0c67/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-3-trc-requirements-to-tests-sample-090-20261122T021032Z-816b0c67"
+  }
+}

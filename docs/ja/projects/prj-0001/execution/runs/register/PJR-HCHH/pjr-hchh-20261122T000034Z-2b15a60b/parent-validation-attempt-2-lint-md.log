@@ -1,0 +1,17 @@
+parent validation: lint-md
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.9.2 lint:md
+> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'
+
+
+
+--- stderr ---
+docs/ja/product/020-external-interface-specs/generated/ifx-index.md:109 error MD012/no-multiple-blanks Multiple consecutive blank lines [Expected: 1; Actual: 2]
+docs/ja/product/020-external-interface-specs/generated/ifx-index.md:117 error MD022/blanks-around-headings Headings should be surrounded by blank lines [Expected: 1; Actual: 0; Above] [Context: "# 公開対象は本一覧と対応する詳細仕様ドキュメント。社外へは当面公開しない。"]
+docs/ja/product/020-external-interface-specs/generated/ifx-index.md:117 error MD022/blanks-around-headings Headings should be surrounded by blank lines [Expected: 1; Actual: 0; Below] [Context: "# 公開対象は本一覧と対応する詳細仕様ドキュメント。社外へは当面公開しない。"]
+docs/ja/product/020-external-interface-specs/generated/ifx-index.md:117 error MD025/single-title/single-h1 Multiple top-level headings in the same document [Context: "公開対象は本一覧と対応する詳細仕様ドキュメント。社外へは当面..."]
+docs/ja/product/020-external-interface-specs/generated/ifx-index.md:117:38 error MD026/no-trailing-punctuation Trailing punctuation in heading [Punctuation: '。']

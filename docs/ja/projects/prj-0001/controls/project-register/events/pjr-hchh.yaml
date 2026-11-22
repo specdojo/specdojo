@@ -67,3 +67,144 @@
       from: ""
       to: 作業内容
   previous_event_id: reg_e9aa438ea5ae4a489d5ab076e4bafb86
+- v: 1
+  id: reg_2b0b4e9cf962432bb6868e6292c775fb
+  ts: "2026-11-22T00:00:37Z"
+  action: start
+  actor: qwen-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_2acef277aa8f45ff9a48c928d24b0dc3
+- v: 1
+  id: reg_7d0060cedcfd4421961cdf06a26f31e0
+  ts: "2026-11-22T00:23:01Z"
+  action: wait
+  actor: qwen-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor reported incomplete: PJR-HCHH: register.ts の `migrateEmbeddedRegisterEvents`・`migrateRegisterEventsFromGit`、command-types.ts の対応する型、events.ts の `readEmbeddedRegisterEvents`・`removeEmbeddedReg…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor reported incomplete: PJR-HCHH: register.ts の `migrateEmbeddedRegisterEvents`・`migrateRegisterEventsFromGit`、command-types.ts の対応する型、events.ts の `readEmbeddedRegisterEvents`・`removeEmbeddedReg…"
+  previous_event_id: reg_2b0b4e9cf962432bb6868e6292c775fb
+- v: 1
+  id: reg_f0ec5bcb8a254511acebdfa51478e3a6
+  ts: "2026-11-22T00:29:20Z"
+  action: start
+  actor: sonnet-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "executor reported incomplete: PJR-HCHH: register.ts の `migrateEmbeddedRegisterEvents`・`migrateRegisterEventsFromGit`、command-types.ts の対応する型、events.ts の `readEmbeddedRegisterEvents`・`removeEmbeddedReg…"
+      to: "-"
+  previous_event_id: reg_7d0060cedcfd4421961cdf06a26f31e0
+- v: 1
+  id: reg_4a0e5fffbdcc40d4a7ef42dd1d6468c2
+  ts: "2026-11-22T00:34:30Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-md"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-md"
+  previous_event_id: reg_f0ec5bcb8a254511acebdfa51478e3a6
+- v: 1
+  id: reg_cb80c721df3b4bd4a0fb6fddd1593883
+  ts: "2026-11-22T00:41:45Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-md"
+      to: "-"
+  previous_event_id: reg_4a0e5fffbdcc40d4a7ef42dd1d6468c2
+- v: 1
+  id: reg_a32b7758a899428a9749d95b02ccf5ad
+  ts: "2026-11-22T00:46:22Z"
+  action: wait
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: lint-md"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: lint-md"
+  previous_event_id: reg_cb80c721df3b4bd4a0fb6fddd1593883
+- v: 1
+  id: reg_c70849c0da66431e87cae921b5dee67f
+  ts: "2026-11-22T00:51:06Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: lint-md"
+      to: "-"
+  previous_event_id: reg_a32b7758a899428a9749d95b02ccf5ad
+- v: 1
+  id: reg_52d30950ecf3426db3bef82568a4c410
+  ts: "2026-11-22T00:55:07Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_c70849c0da66431e87cae921b5dee67f
+- v: 1
+  id: reg_02e24a000f0a4db696f8ebd2160620c4
+  ts: "2026-11-22T00:56:58Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register で実施（統合 dc1b95405）。qwen が消せなかった 2 ファイルはオーケストレーターが worktree で消し、sonnet で再開した。参照が残っていないこと、core.ts のイベント型の不変、CHANGELOG 不変を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: register migrate の削除で呼ばれなくなった移行の関数・型・ファイルとそのテストを消した。ほかの用途で使う関数は残した。
+  previous_event_id: reg_52d30950ecf3426db3bef82568a4c410

@@ -40,7 +40,7 @@ export type ExternalRegisterAddOptions = {
   force?: boolean;
   dryRun?: boolean;
   commit?: boolean;
-  message?: string;
+  message?: readonly string[];
 };
 
 type SpawnSync = (
@@ -115,8 +115,21 @@ export function buildExternalRegisterAddArgs(
   if (opts.force) args.push("--force");
   if (opts.dryRun) args.push("--dry-run");
   args.push("--commit");
-  addValue(args, "--message", opts.message);
+  // `-m` の各値を 1 つずつ `--message` として渡す。相手側で段落として連結するため、
+  // 複数渡すとカンマ連結ではなく 1 行の件名にならない（PJR-QTZ7）。help の -m の説明
+  // 「each value becomes a paragraph, as in git commit -m」と同じ挙動にする。
+  for (const paragraph of externalCommitMessageParagraphs(opts.message)) {
+    addValue(args, "--message", paragraph);
+  }
   return args;
+}
+
+// `git commit -m` と同様、空でない各値を段落として保持する。全て空なら空配列を返し、
+// 相手側が既定の commit message を組み立てるよう `--message` を渡さない。
+function externalCommitMessageParagraphs(message: readonly string[] | undefined): string[] {
+  return (message ?? [])
+    .map((paragraph) => paragraph.trim())
+    .filter((paragraph) => paragraph !== "");
 }
 
 function versionParts(version: string): [number, number, number] | undefined {
@@ -229,12 +242,19 @@ export function delegateExternalRegisterAdd(
     {
       cwd: repoRoot,
       encoding: "utf8",
-      stdio: "inherit",
+      stdio: ["ignore", "pipe", "pipe"],
     },
   );
   if (result.error) {
     throw new Error(`Failed to run SpecDojo in external project ${alias}: ${result.error.message}`);
   }
-  if (result.status !== 0) process.exitCode = result.status ?? 1;
+  // 相手側の stdout / stderr を自分の出力へ流し、実行の進捗や失敗の告知を隠さない。
+  if (result.stdout) process.stdout.write(result.stdout);
+  if (result.stderr) process.stderr.write(result.stderr);
+  if (result.status !== 0) {
+    // git commit が stdout と stderr の双方へ失敗理由を書くことがある（commitlint は stdout）。
+    // 相手側の register コマンド自身で原因を出すようにしているので、ここは終了コードを継承する。
+    process.exitCode = result.status ?? 1;
+  }
   return true;
 }
