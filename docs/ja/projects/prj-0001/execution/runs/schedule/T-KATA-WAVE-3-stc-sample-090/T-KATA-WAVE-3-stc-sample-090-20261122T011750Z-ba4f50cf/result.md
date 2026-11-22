@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-3-stc-sample-090
   mode: review
-  status: in_progress
+  status: superseded
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-3-stc-sample-090/T-KATA-WAVE-3-stc-sample-090-20261122T011750Z-ba4f50cf/plan.md
   started_at: "2026-11-22T01:17:51.872Z"
+  completed_at: "2026-11-22T04:28:35.777Z"
   agent: opus-review-executor
   execution: agent
   approach: fully-guided
