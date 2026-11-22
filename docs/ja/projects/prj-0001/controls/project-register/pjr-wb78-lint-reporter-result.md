@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-wb78-lint-reporter-result
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-22T03:13:28Z"
+  completed_at: "2026-11-22T08:47:57Z"
+  conclusion: reporter の result を書き込む前に統合の前と同じ規則で検査し、違反を書式の再試行で reporter に直させるようにした。統合の後の JSEY も通った
   derived_from:
     - PJR-G3TT
 ---

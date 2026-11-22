@@ -167,3 +167,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_a6c96ed2a4ae4ff388b66c09ba8f376f
+- v: 1
+  id: reg_2e99f9f0d0a8486b829b5ee45e6abeaf
+  ts: "2026-11-22T08:47:57Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分・対応結果・JSEY を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: reporter の result を書き込む前に統合の前と同じ規則で検査し、違反を書式の再試行で reporter に直させるようにした。統合の後の JSEY も通った
+  previous_event_id: reg_31818926518a40be82d7792f59b6984b
