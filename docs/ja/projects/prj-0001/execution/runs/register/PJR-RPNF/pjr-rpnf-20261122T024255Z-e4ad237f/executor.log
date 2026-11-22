@@ -1,0 +1,15 @@
+PJR-RPNF の対応は完了しました。docs:build をタスクごとのチェックから外し、区切りと release の前に 1 回流す運用へ変えました。`npm run lint:md` と `npm run lint:fm` は親の runner が流すため、ここでは実行していません。Prettier の整形チェックだけ通りました。
+
+- **sample の最終チェック:** `.github/instructions/sample.instructions.md` から docs:build の項を外し、「区切り（gate の前）と release の前にオーケストレーターが 1 回流すため、タスクごとには流さない」と 1 行で書きました。`npm run -s lint:md` の項は残しています。
+- **playbook:** `pm-orchestrator-playbook.md` の docs:build の項に 2 点を追記しました。
+  - gate の前と release の前に、`exec queue` の 1 段として 1 回流す。並べた run と重ねない。
+  - 失敗したら、出力の対象ファイルから原因のタスクを特定し、同じ型の todo か新しい項目で直す。
+- **ほかの規則・guides・standards:** `rulebook.instructions.md` などの `.github/instructions/` にも、`docs/ja/specdojo/` の guides・standards にも、executor にタスクごとの docs:build を求める記述はありませんでした。docs:build に触れていた手順例の記述は、`id-and-file-naming-standard` を含めてすべて変えていません。変えなかった記述は個票の対応結果に列挙しました。
+- **個票:** `pjr-rpnf-sample-docs-build-at-gates.md` の作業内容 4 行を `done` にし、対応結果と関連ドキュメントを埋めました。
+- **変更していないもの:** `package.json`・`tools/`・`.github/workflows/`・`CHANGELOG.md` は触っていません。
+
+`check:release` に docs:build を足す案と、CHANGELOG の区分（Changed）・文案は個票の対応結果に書きました。`check:release` への追加は deploy の workflow と二重になるため、採否は indie の判断としています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"sample.instructions の docs:build を区切り運用の1行へ置換、playbook に運用追記、個票の対応結果・作業表を更新。他の規則・guides・standards に変更対象はなし。","handoff":["`check:release` へ docs:build を足す案は個票 5.2 に記載。採否は indie の判断（本タスクでは未変更）。","CHANGELOG の文案（区分 Changed）は個票 5.3 に記載。CHANGELOG.md は未変更。"],"validations":[{"command":"npx prettier --check .github/instructions/sample.instructions.md docs/ja/projects/prj-0001/030-project-management/pm-orchestrator-playbook.md docs/ja/projects/prj-0001/controls/project-register/pjr-rpnf-sample-docs-build-at-gates.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_run","summary":"個票の変更は Markdown リンクを含まず wikilink のみ。"}]}
+</specdojo_executor_evidence>

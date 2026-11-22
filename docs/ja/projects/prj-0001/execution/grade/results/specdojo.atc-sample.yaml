@@ -4,89 +4,88 @@ document: specdojo:atc-sample
 path: docs/ja/specdojo/samples/atc-sample.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-sample
-verdict: fail
-score: 41
-graded_at: "2026-11-21T03:07:41.371Z"
-graded_by: opus-executor
-content_hash: 3304c03e9ec7066802da5285d215ba48a5b8fea25fb7f9cf1951c19a6b4eb38c
+verdict: needs-work
+score: 87
+graded_at: "2026-11-22T02:33:23.148Z"
+graded_by: opus-review-executor
+content_hash: 3609bf0c26cee8e0beeba95a162097fdd6348a3c2717e32e48e147151f40074f
 categories:
   purpose:
-    score: 50
+    score: 100
   operations:
-    score: 75
+    score: 88
   planning:
-    score: 42
+    score: 100
   business:
-    score: 33
+    score: 100
   architecture:
-    score: 83
+    score: 100
   usability:
-    score: 58
+    score: 92
   implementation:
-    score: 38
+    score: 100
   quality:
-    score: 17
+    score: 83
   consistency:
-    score: 0
+    score: 50
 viewpoints:
   vp-po-purpose-alignment:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-po-decision-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-po-publication-accountability:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-pm-control-reporting:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ba-business-value:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ba-requirements-completeness:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-dev-change-impact:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
     level: 2
     score: 50
-  vp-qe-verifiability:
-    level: 0
-    score: 0
-  vp-qe-omissions-consistency:
-    level: 0
-    score: 0
   vp-qe-kata-conformance:
-    level: 0
-    score: 0
+    level: 2
+    score: 50
   vp-ux-readability:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 3
     score: 75
@@ -94,8 +93,8 @@ viewpoints:
     level: 2
     score: 50
   vp-ops-operability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -103,221 +102,70 @@ viewpoints:
     level: 4
     score: 100
 finding_counts:
-  blocker: 3
-  major: 22
-  minor: 4
+  blocker: 0
+  major: 3
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: major
-    rule: vp-po-purpose-alignment
-    line: 5
-    anchor: 本書は、受入テスト仕様を業務シナリオ/受入条件単位で分割して定義する（仕様）ための最小サンプルである。
-    message: Frontmatter に based_on が存在せず、上位文書（tsp-index, atc-index）との目的整合を確認できない。
-    message_ja: Frontmatter に based_on が存在せず、上位文書（tsp-index, atc-index）との目的整合を確認できない。
+    rule: vp-qe-omissions-consistency
+    line: 100
+    anchor: >-
+      | `at-cash-sale-transaction-check-010` | 状態: 家族利用者代表が確定した後、店主代表へ店番を交代 / 経路: 交代後に照合 |
+      店主代表がレシートの取引番号で販売一覧を検索し、内容を読み上げる | 販売一覧で同じ取引番号の取引が1件見つかり、商品A・2個・60円とレシートが一致する。確認日と確認者が記録に残る | 販売一覧、レシート     |
+      `at-cash-sale-sale-complete-010` の確定済み取引を使う | TR-01,TR-04 | P1     | manual   | `kinuya-acceptance-record`
+      の本ケースの行（確認日・確認者） |
+    message: >-
+      `at-cash-sale-transaction-check-010` の条件「店主代表へ店番を交代 / 経路: 交代後に照合」と受入の責務（本文 15 行）が、atc-index の「店番の交代は atc-sale-hold
+      の引継ぎ経路だけで確かめる」と矛盾している。交代を伴わない照合に条件を改めるか、atc-index の条件の立て方と分配表を先に更新する必要がある。
+    message_ja: >-
+      `at-cash-sale-transaction-check-010` の条件「店主代表へ店番を交代 / 経路: 交代後に照合」と受入の責務（本文 15 行）が、atc-index の「店番の交代は atc-sale-hold
+      の引継ぎ経路だけで確かめる」と矛盾している。交代を伴わない照合に条件を改めるか、atc-index の条件の立て方と分配表を先に更新する必要がある。
   - id: F002
-    severity: major
-    rule: vp-po-decision-readiness
-    line: 26
-    anchor: "## 5. 未解決事項"
-    message: 未解決事項の論点に判断者、影響範囲、次アクションが記載されておらず、PO が承認判断を行えない。
-    message_ja: 未解決事項の論点に判断者、影響範囲、次アクションが記載されておらず、PO が承認判断を行えない。
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 37
+    anchor: >-
+      | 共通方針との差 |
+      なし                                                                                                                                           
+      |
+    message: >-
+      「共通方針との差」が「なし」になっているが、取引照合のケースと観点の意図（本文94行）は atc-index
+      と違う「店番交代後の照合」という条件を立てている。交代を前提にしない照合へ改めるか、差があるならこの行へ理由とともに記録する必要がある。
+    message_ja: >-
+      「共通方針との差」が「なし」になっているが、取引照合のケースと観点の意図（本文94行）は atc-index
+      と違う「店番交代後の照合」という条件を立てている。交代を前提にしない照合へ改めるか、差があるならこの行へ理由とともに記録する必要がある。
   - id: F003
     severity: major
-    rule: vp-pm-plan-feasibility
-    line: 1
-    anchor: "# [受入テスト対象別](../rulebooks/atc-rulebook.md) サンプル"
-    message: 完了条件、担当 Role code、依存関係が未記載で、タスク化や進捗確認に使える粒度になっていない。
-    message_ja: 完了条件、担当 Role code、依存関係が未記載で、タスク化や進捗確認に使える粒度になっていない。
+    rule: vp-qe-kata-conformance
+    line: 100
+    anchor: >-
+      | `at-cash-sale-transaction-check-010` | 状態: 家族利用者代表が確定した後、店主代表へ店番を交代 / 経路: 交代後に照合 |
+      店主代表がレシートの取引番号で販売一覧を検索し、内容を読み上げる | 販売一覧で同じ取引番号の取引が1件見つかり、商品A・2個・60円とレシートが一致する。確認日と確認者が記録に残る | 販売一覧、レシート     |
+      `at-cash-sale-sale-complete-010` の確定済み取引を使う | TR-01,TR-04 | P1     | manual   | `kinuya-acceptance-record`
+      の本ケースの行（確認日・確認者） |
+    message: >-
+      完了条件 DC-003 を満たしていない。`at-cash-sale-transaction-check-010` が店番交代を条件にしており、atc-index の「店番の交代は atc-sale-hold
+      の引継ぎ経路だけで確かめる」という共通方針を上書きしている（rulebook の禁止事項）。交代を伴わない取引照合に改めるか、atc-index の分配を先に改める必要がある。
+    message_ja: >-
+      完了条件 DC-003 を満たしていない。`at-cash-sale-transaction-check-010` が店番交代を条件にしており、atc-index の「店番の交代は atc-sale-hold
+      の引継ぎ経路だけで確かめる」という共通方針を上書きしている（rulebook の禁止事項）。交代を伴わない取引照合に改めるか、atc-index の分配を先に改める必要がある。
   - id: F004
-    severity: major
-    rule: vp-pm-plan-feasibility
-    line: 18
-    anchor: "## 4. 最小記述例"
-    message: 「最小記述例」が目的と主な内容の言い直しにとどまり、case_id・優先度・実施形態・証跡を持つケース行がないため、受入実施の作業単位と進捗判定の手本を示せていない。
-    message_ja: 「最小記述例」が目的と主な内容の言い直しにとどまり、case_id・優先度・実施形態・証跡を持つケース行がないため、受入実施の作業単位と進捗判定の手本を示せていない。
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 5
+    anchor: >-
+      店主不在の店番で、家族利用者代表が商品Aを登録して会計を確定し、レシートと販売一覧・在庫一覧で結果を確かめるまでを受け入れるかの判断に使う。確定前の取消と店番交代後の取引の照合もこの term で扱う。ローカル ID は
+      `atc-cash-sale` とし、粒度は [[specdojo:atc-index-sample|受入テストカタログ 概要]] の分割基準（商品の登録→会計確定→レシートの受け渡し）に従う。
+    message: 「確定前の取消と店番交代後の取引の照合もこの term で扱う」の「term」は説明のない内部用語で、業務読者に分かりにくい。「本カタログ（`atc-cash-sale`）で扱う」のように言い換える必要がある。
+    message_ja: 「確定前の取消と店番交代後の取引の照合もこの term で扱う」の「term」は説明のない内部用語で、業務読者に分かりにくい。「本カタログ（`atc-cash-sale`）で扱う」のように言い換える必要がある。
   - id: F005
     severity: major
-    rule: vp-pm-dependency-risk
-    line: 1
-    anchor: "# [受入テスト対象別](../rulebooks/atc-rulebook.md) サンプル"
-    message: depends_on/based_on が未定義で、後続成果物・スケジュールへの影響やリスクが識別されていない。
-    message_ja: depends_on/based_on が未定義で、後続成果物・スケジュールへの影響やリスクが識別されていない。
-  - id: F006
-    severity: major
-    rule: vp-pm-control-reporting
-    line: 1
-    anchor: "# [受入テスト対象別](../rulebooks/atc-rulebook.md) サンプル"
-    message: PJR 転記候補、報告先、対応方針、担当 Role code が未記載で、進捗管理や課題追跡に使えない。
-    message_ja: PJR 転記候補、報告先、対応方針、担当 Role code が未記載で、進捗管理や課題追跡に使えない。
-  - id: F007
-    severity: major
-    rule: vp-ba-business-value
-    line: 5
-    anchor: 本書は、受入テスト仕様を業務シナリオ/受入条件単位で分割して定義する（仕様）ための最小サンプルである。
-    message: 対象者の業務課題、期待価値、成功基準が明示されておらず、ビジネス価値の説明が不十分。
-    message_ja: 対象者の業務課題、期待価値、成功基準が明示されておらず、ビジネス価値の説明が不十分。
-  - id: F008
-    severity: major
-    rule: vp-ba-business-value
-    line: 13
-    anchor: "## 3. 記述内容"
-    message: 受入の責務（観測できる成果 3〜7 個、正常系と代表的な失敗・復帰）がなく、受入で保証する業務価値を示せていない。
-    message_ja: 受入の責務（観測できる成果 3〜7 個、正常系と代表的な失敗・復帰）がなく、受入で保証する業務価値を示せていない。
-  - id: F009
-    severity: major
-    rule: vp-ba-requirements-completeness
-    line: 15
-    anchor: "- 主な内容: 個別受入シナリオの前提、テスト条件、期待結果、合格基準、関連する業務受入条件ID/システム受入条件ID"
-    message: rulebook が求める受入条件・対象範囲・対象外の具体的記述例が欠落しており、サンプルとして要件の完成像を示せていない。
-    message_ja: rulebook が求める受入条件・対象範囲・対象外の具体的記述例が欠落しており、サンプルとして要件の完成像を示せていない。
-  - id: F010
-    severity: major
-    rule: vp-ba-requirements-completeness
-    line: 1
-    anchor: "# [受入テスト対象別](../rulebooks/atc-rulebook.md) サンプル"
-    message: 用語定義が存在せず、受入テスト固有の概念（観点、ケース、trace_key等）の定義がサンプル内で確認できない。
-    message_ja: 用語定義が存在せず、受入テスト固有の概念（観点、ケース、trace_key等）の定義がサンプル内で確認できない。
-  - id: F011
-    severity: major
-    rule: vp-ba-stakeholder-clarity
-    line: 1
-    anchor: "# [受入テスト対象別](../rulebooks/atc-rulebook.md) サンプル"
-    message: 関係者（PO、QA、利用部門等）、確認者、合意対象がサンプル内に記載されていない。
-    message_ja: 関係者（PO、QA、利用部門等）、確認者、合意対象がサンプル内に記載されていない。
-  - id: F012
-    severity: minor
-    rule: vp-arc-technical-constraints
-    line: 11
-    anchor: "- 参照: `../rulebooks/atc-rulebook.md`"
-    message: schema 参照（deliverable-frontmatter.schema.yaml）や validate 手順への言及がなく、技術的な前提の確認が困難。
-    message_ja: schema 参照（deliverable-frontmatter.schema.yaml）や validate 手順への言及がなく、技術的な前提の確認が困難。
-  - id: F013
-    severity: major
-    rule: vp-arc-technical-constraints
-    line: 13
-    anchor: "## 3. 記述内容"
-    message: 必須章「環境/データ/外部依存」が欠落し、環境・データセット ID・外部依存の確認手段と判定保留条件の記述例がない。
-    message_ja: 必須章「環境/データ/外部依存」が欠落し、環境・データセット ID・外部依存の確認手段と判定保留条件の記述例がない。
-  - id: F014
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 20
-    anchor: >-
-      | 項目         | 値                                                                                                |
-      備考                                 |
-    message: 「## 4. 最小記述例」の表の内容が「## 1. 目的と適用範囲」「## 3. 記述内容」と重複しており、統合可能。
-    message_ja: 「## 4. 最小記述例」の表の内容が「## 1. 目的と適用範囲」「## 3. 記述内容」と重複しており、統合可能。
-  - id: F015
-    severity: major
-    rule: vp-dev-implementation-readiness
-    line: 1
-    anchor: "# [受入テスト対象別](../rulebooks/atc-rulebook.md) サンプル"
-    message: "rulebook 標準テンプレ（## 1. 概要 〜 ## 6. 受入観点とケース）に沿った具体的な記述例がなく、作成者が参照して ATC を実装できない。"
-    message_ja: "rulebook 標準テンプレ（## 1. 概要 〜 ## 6. 受入観点とケース）に沿った具体的な記述例がなく、作成者が参照して ATC を実装できない。"
-  - id: F016
-    severity: major
-    rule: vp-dev-implementation-readiness
-    line: 15
-    anchor: "- 主な内容: 個別受入シナリオの前提、テスト条件、期待結果、合格基準、関連する業務受入条件ID/システム受入条件ID"
-    message: 入力情報にケース表の具体例、trace_key の使い方、case_id の採番方法等の実装に必要な詳細がない。
-    message_ja: 入力情報にケース表の具体例、trace_key の使い方、case_id の採番方法等の実装に必要な詳細がない。
-  - id: F017
-    severity: major
-    rule: vp-dev-change-impact
-    line: 1
-    anchor: "# [受入テスト対象別](../rulebooks/atc-rulebook.md) サンプル"
-    message: 変更時の影響範囲（関連する schema、生成物、コマンド、他成果物）が識別されていない。
-    message_ja: 変更時の影響範囲（関連する schema、生成物、コマンド、他成果物）が識別されていない。
-  - id: F018
-    severity: major
-    rule: vp-dev-testability
-    line: 1
-    anchor: "# [受入テスト対象別](../rulebooks/atc-rulebook.md) サンプル"
-    message: lint、schema validation、生成コマンド等の検証手段と期待結果が記載されておらず、成果物の正しさを確認できない。
-    message_ja: lint、schema validation、生成コマンド等の検証手段と期待結果が記載されておらず、成果物の正しさを確認できない。
-  - id: F019
-    severity: blocker
-    rule: vp-qe-verifiability
-    line: 15
-    anchor: "- 主な内容: 個別受入シナリオの前提、テスト条件、期待結果、合格基準、関連する業務受入条件ID/システム受入条件ID"
-    message: 受入カタログのサンプルでありながら、判定基準やテストケースの具体的記述例が全く含まれておらず、pass/fail判定の手本を示せていない。
-    message_ja: 受入カタログのサンプルでありながら、判定基準やテストケースの具体的記述例が全く含まれておらず、pass/fail判定の手本を示せていない。
-  - id: F020
-    severity: blocker
-    rule: vp-qe-omissions-consistency
-    line: 1
-    anchor: "# [受入テスト対象別](../rulebooks/atc-rulebook.md) サンプル"
-    message: "rulebook で定義された必須構成（## 1. 概要 〜 ## 6. 受入観点とケース）がすべて欠落している。"
-    message_ja: "rulebook で定義された必須構成（## 1. 概要 〜 ## 6. 受入観点とケース）がすべて欠落している。"
-  - id: F021
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 1
-    anchor: "# [受入テスト対象別](../rulebooks/atc-rulebook.md) サンプル"
-    message: >-
-      Frontmatter に based_on（tsp-index・atc-index）が欠落している。前回指摘の title は Markdown 規約で Frontmatter 記載禁止のため不成立とし、based_on
-      欠落のみが残るため blocker から major に引き下げる。
-    message_ja: >-
-      Frontmatter に based_on（tsp-index・atc-index）が欠落している。前回指摘の title は Markdown 規約で Frontmatter 記載禁止のため不成立とし、based_on
-      欠落のみが残るため blocker から major に引き下げる。
-  - id: F022
-    severity: blocker
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# [受入テスト対象別](../rulebooks/atc-rulebook.md) サンプル"
-    message: "本文構成が rulebook の標準テンプレ（## 1. 概要 〜 ## 6. 受入観点とケース）に準拠していない。"
-    message_ja: "本文構成が rulebook の標準テンプレ（## 1. 概要 〜 ## 6. 受入観点とケース）に準拠していない。"
-  - id: F023
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# [受入テスト対象別](../rulebooks/atc-rulebook.md) サンプル"
-    message: >-
-      Frontmatter の relations.verifies に指定した bac-order-registration に対応する sample が存在せず、対応する業務受入条件
-      sample（specdojo:bac-sample、現金販売）と整合していない。
-    message_ja: >-
-      Frontmatter の relations.verifies に指定した bac-order-registration に対応する sample が存在せず、対応する業務受入条件
-      sample（specdojo:bac-sample、現金販売）と整合していない。
-  - id: F024
-    severity: major
-    rule: vp-ux-readability
-    line: 5
-    anchor: 本書は、受入テスト仕様を業務シナリオ/受入条件単位で分割して定義する（仕様）ための最小サンプルである。
-    message: ATCの具体的な書き方を示すサンプルとして機能しておらず、初見の読者が作成方法を理解できない。
-    message_ja: ATCの具体的な書き方を示すサンプルとして機能しておらず、初見の読者が作成方法を理解できない。
-  - id: F025
-    severity: major
-    rule: vp-ux-readability
-    line: 18
-    anchor: "## 4. 最小記述例"
-    message: 本文の見出し構成が rulebook と異なるため、読者が rulebook との対応関係を把握できない。
-    message_ja: 本文の見出し構成が rulebook と異なるため、読者が rulebook との対応関係を把握できない。
-  - id: F026
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 1
-    anchor: "# [受入テスト対象別](../rulebooks/atc-rulebook.md) サンプル"
-    message: "成果物タイトルが「受入テスト対象別 サンプル」であり、rulebook で定義された「受入テストカタログ: ＜対象名＞」形式に準拠していない。"
-    message_ja: "成果物タイトルが「受入テスト対象別 サンプル」であり、rulebook で定義された「受入テストカタログ: ＜対象名＞」形式に準拠していない。"
-  - id: F027
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 5
-    anchor: 本書は、受入テスト仕様を業務シナリオ/受入条件単位で分割して定義する（仕様）ための最小サンプルである。
-    message: 「定義する（仕様）」の括弧書きが意味不明瞭で、rulebook の用語（受入テストカタログ 対象別）とも表記がそろっていない。
-    message_ja: 「定義する（仕様）」の括弧書きが意味不明瞭で、rulebook の用語（受入テストカタログ 対象別）とも表記がそろっていない。
-  - id: F028
-    severity: major
     rule: vp-ops-release-readiness
-    line: 1
-    anchor: "# [受入テスト対象別](../rulebooks/atc-rulebook.md) サンプル"
-    message: ready 化の条件、承認者、公開前確認事項が明示されておらず、リリース判断に必要な前提が不足している。
-    message_ja: ready 化の条件、承認者、公開前確認事項が明示されておらず、リリース判断に必要な前提が不足している。
-  - id: F029
-    severity: major
-    rule: vp-ops-operability
-    line: 1
-    anchor: "# [受入テスト対象別](../rulebooks/atc-rulebook.md) サンプル"
-    message: 継続更新・再生成手順・変更管理・問い合わせ導線・担当 Role code が未記載で、運用に必要な情報が不足している。
-    message_ja: 継続更新・再生成手順・変更管理・問い合わせ導線・担当 Role code が未記載で、運用に必要な情報が不足している。
+    line: 43
+    anchor: >-
+      | _ASSUMPTION_: 確定前の取消の期待結果         | `at-cash-sale-sale-complete-020`                                       |
+      業務受入条件に取消の条件がないため、`atc-index` の分割判断を根拠に測る | BA が取消の業務受入条件の追加を PM へ PJR 登録候補として渡し、PO が承認する。承認後に QE がトレースを差し替える |
+    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+    message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。

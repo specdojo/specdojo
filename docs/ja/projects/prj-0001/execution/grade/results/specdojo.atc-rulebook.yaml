@@ -4,15 +4,14 @@ document: specdojo:atc-rulebook
 path: docs/ja/specdojo/rulebooks/atc-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-rulebook
-verdict: needs-work
-score: 92
-graded_at: "2026-11-21T03:06:17.225Z"
-graded_by: opus-executor
-content_hash: 2963fd3ba80f7c8436d110ec3297d77d5bf20ece1792aa3bb8990ad5fac9462c
+verdict: pass
+score: 98
+graded_at: "2026-11-22T02:32:14.258Z"
+graded_by: opus-review-executor
+content_hash: 3096fdcb1e63cb10c2b54af67685d6240acfaabd8453f31090b8ba4fd8393b02
 categories:
   purpose:
-    score: 88
+    score: 100
   operations:
     score: 94
   planning:
@@ -26,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 75
+    score: 92
   consistency:
     score: 100
 viewpoints:
@@ -34,8 +33,8 @@ viewpoints:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-publication-accountability:
     level: 4
     score: 100
@@ -73,8 +72,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-verifiability:
     level: 4
     score: 100
@@ -82,8 +81,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -104,37 +103,35 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 3
+  major: 0
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-decision-readiness
-    line: 1
-    anchor: "# 受入テストカタログ 対象別 作成ルール"
-    message: status が draft で recipe と template が undecided なのに、未決事項・ready 化の条件・判断者が本文に書かれていないため、未決論点と判断者を明記すること。
-    message_ja: status が draft で recipe と template が undecided なのに、未決事項・ready 化の条件・判断者が本文に書かれていないため、未決論点と判断者を明記すること。
+    rule: vp-qe-kata-conformance
+    line: 16
+    anchor: >-
+      - _UNDECIDED_: `recipe`・`template` の要否は未判断である（template は PJR-WYTX で扱い、recipe は QE が ready 化の判断時に決める）。sample
+      は「本文要件」の章構成・トレース表・条件・ケース表へ未整合であり、後続の sample の見直しで揃える。いずれも解消したうえで、`ready` への昇格は人が判断する。
+    message: >-
+      sample（atc-sample.md）は章構成・トレース表・条件・ケース表とも本文要件に整合したのに、`_UNDECIDED_` が「sample
+      は未整合であり後続の見直しで揃える」と書いたままで実態と矛盾するため、この記述を削除し、未決事項を recipe・template の要否だけに更新すること（前回の sample 不整合は解消済みのため severity を
+      minor に引き下げる）。
+    message_ja: >-
+      sample（atc-sample.md）は章構成・トレース表・条件・ケース表とも本文要件に整合したのに、`_UNDECIDED_` が「sample
+      は未整合であり後続の見直しで揃える」と書いたままで実態と矛盾するため、この記述を削除し、未決事項を recipe・template の要否だけに更新すること（前回の sample 不整合は解消済みのため severity を
+      minor に引き下げる）。
   - id: F002
     severity: minor
-    rule: vp-dev-testability
-    line: 46
-    anchor: >-
-      許可キー・必須項目・型制約は [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] と
-      `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml` を正本とする。
-    message: 作成した `atc-＜term＞` を確かめるコマンド（`npm run -s lint:md` や schema validate）と期待結果が書かれていないため、検証手順を追記すること。
-    message_ja: 作成した `atc-＜term＞` を確かめるコマンド（`npm run -s lint:md` や schema validate）と期待結果が書かれていないため、検証手順を追記すること。
-  - id: F003
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 受入テストカタログ 対象別 作成ルール"
-    message: 指定サンプル `docs/ja/specdojo/samples/atc-sample.md` が、本ルールで定義した構成（見出し1〜6）および type (`test`) に準拠しておらず、整合性が取れていない。
-    message_ja: 指定サンプル `docs/ja/specdojo/samples/atc-sample.md` が、本ルールで定義した構成（見出し1〜6）および type (`test`) に準拠しておらず、整合性が取れていない。
-  - id: F004
-    severity: minor
     rule: vp-ops-release-readiness
-    line: 1
-    anchor: "# 受入テストカタログ 対象別 作成ルール"
-    message: draft のまま recipe と template が undecided で、sample との不整合も未解消なのに、ready 化の条件と承認者が書かれていないため明記すること。
-    message_ja: draft のまま recipe と template が undecided で、sample との不整合も未解消なのに、ready 化の条件と承認者が書かれていないため明記すること。
+    line: 16
+    anchor: >-
+      - _UNDECIDED_: `recipe`・`template` の要否は未判断である（template は PJR-WYTX で扱い、recipe は QE が ready 化の判断時に決める）。sample
+      は「本文要件」の章構成・トレース表・条件・ケース表へ未整合であり、後続の sample の見直しで揃える。いずれも解消したうえで、`ready` への昇格は人が判断する。
+    message: >-
+      ready 化の前提に挙げた「sample の未整合の解消」はすでに満たされているのに未解決のまま書かれており、ready 判断時に残作業を誤認させるため、残る条件（recipe・template
+      の要否の決定）だけに更新すること。
+    message_ja: >-
+      ready 化の前提に挙げた「sample の未整合の解消」はすでに満たされているのに未解決のまま書かれており、ready 判断時に残作業を誤認させるため、残る条件（recipe・template
+      の要否の決定）だけに更新すること。

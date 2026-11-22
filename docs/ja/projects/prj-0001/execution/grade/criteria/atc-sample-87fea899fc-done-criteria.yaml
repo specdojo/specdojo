@@ -1,0 +1,45 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: specdojo:atc-sample-grade-criteria
+document: specdojo:atc-sample
+path: docs/ja/specdojo/samples/atc-sample.md
+graded_at: "2026-11-22T02:30:58.120Z"
+graded_by: opus-review-executor
+content_hash: 3609bf0c26cee8e0beeba95a162097fdd6348a3c2717e32e48e147151f40074f
+summary:
+  satisfied: 4
+  unsatisfied: 1
+  total: 5
+criteria:
+  - id: DC-001
+    text: rulebook の章立てと必須の表に沿っていること
+    roles:
+      - QE
+    viewpoint: vp-qe-omissions-consistency
+    status: satisfied
+  - id: DC-002
+    text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+    roles:
+      - QE
+    viewpoint: vp-qe-kata-conformance
+    status: satisfied
+  - id: DC-003
+    text: rulebook の禁止事項に当たらないこと
+    roles:
+      - QE
+    viewpoint: vp-qe-kata-conformance
+    status: unsatisfied
+    reason: >-
+      ケース at-cash-sale-transaction-check-010 と責務（本文 15 行）が店番交代を扱い、atc-index の「店番の交代は atc-sale-hold
+      の引継ぎ経路だけで確かめる」という共通方針を上書きしている。
+  - id: DC-004
+    text: Frontmatter の `based_on` に tsp-index と atc-index を持ち、検証する業務受入条件が bac の完成例（現金販売）と一致していること
+    roles:
+      - QE
+    viewpoint: vp-qe-kata-conformance
+    status: satisfied
+  - id: DC-005
+    text: 判定基準とテストケースが、pass / fail を判定できる期待値で書かれていること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: satisfied

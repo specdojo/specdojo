@@ -37,6 +37,8 @@ npx specdojo exec run --project prj-0001 --register <PJR-ID> --worktree \
 
 - 列は 2 本までにする（codex の列と Claude の列など）。`.specdojo/exec-defaults.yaml` の設定（`providers.codex.max_concurrency: 2`、`providers.claude.max_concurrency: 3`）で並べられる本数は決まるが、親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）は `pipeline.parent_validation_concurrency: 1` により run をまたいで 1 件ずつ流れるため、列を増やしても速くならず、待ちと負荷が増える。エージェントの選定順は `priority` で制御する。
 - 文書サイトのビルド（`npm run docs:build`）はメモリを多く使うため、並べた run と重ねず、直列に流す。複数の run や grade、build を順に流す仕組みの整備（回避策: [[prj-0001:pjr-v0fq-exec-sequential-batch|PJR-V0FQ]]）までは、`exec queue` や単独の実行で分離する。
+  - 型の schedule では、gate（例: `G-KATA-WAVE-3-first-pass`）の前と release の前に、`exec queue` の 1 段として `npm run docs:build` を 1 回流す。並べた run と重ねない。sample の executor にはタスクごとに流させない。
+  - 失敗したら、出力の対象ファイルから原因のタスクを特定し、同じ型の todo か新しい項目で直す。
 - grade は一度に 1 本しか流せない。別の grade が流れていると busy で即座に断られるため、終了を待ってから流す（回避策: [[prj-0001:pjr-36pw-grade-run-if-busy-wait|PJR-36PW]]）。型の一覧をまとめて grade したい場合は、`grade run --target kata --kata <name>` を繰り返して 1 回で流せる（[[prj-0001:pjr-sw7t-grade-kata-batch|PJR-SW7T]]）。rate limit の後も続けるのは `--kata` のときだけで、代わりの agent への切り替えはない（PJR-XA6Y）。
 - 0:00 の夜間の routine は、別の run が lock を持っていると skip され、流し直されない。夜に手で長い run を流すときは、routine とぶつからないかを先に確かめる（回避策: [[prj-0001:pjr-kvwh-routine-busy-skip-not-retried|PJR-KVWH]]）。
 - 新方（PJR-EPQ3）では項目ごとに `CHANGELOG.md` を変えない。実装の範囲が重なる項目は runner が先行項目の統合まで待たせる。個票の入力・完了条件に対象の相対パスを書き、推定できない項目も直列化したい列には `--unknown-scope serialize` を付ける。推定と再開の規則は [[specdojo:exec-operation-guide|exec運用ガイド]] の「変更範囲が重なる項目の順番待ち」に従う。
