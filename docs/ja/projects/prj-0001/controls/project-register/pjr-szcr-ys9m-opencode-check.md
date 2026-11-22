@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-szcr-ys9m-opencode-check
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: easy
   owner: DEV
   registered_at: "2026-11-22T12:41:46Z"
   due_on: "2026-11-23"
+  completed_at: "2026-11-22T13:06:06Z"
+  conclusion: qwen の executor の実際の run で、git rm と npx vitest・npx tsc・npx eslint が拒まれずに流れた。拒まれたのはパイプや && でつないだコマンドだけだった
   derived_from:
     - PJR-YS9M
 ---

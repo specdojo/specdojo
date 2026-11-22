@@ -93,3 +93,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_82e5b416505c4a58a6b2e7b1fb1f7052
+- v: 1
+  id: reg_de532d307d88422980d1a3ac0af31ed9
+  ts: "2026-11-22T13:06:06Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが evidence のコマンドの記録、executor のログの実際の出力、統合の commit の削除を照らして確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: qwen の executor の実際の run で、git rm と npx vitest・npx tsc・npx eslint が拒まれずに流れた。拒まれたのはパイプや && でつないだコマンドだけだった
+  previous_event_id: reg_e201402f85d04e50ade2c9b4c43e2ee6
