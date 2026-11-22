@@ -5,6 +5,7 @@ import { dirname, join } from "node:path";
 import { specdojoPackageRootDir } from "../../../src/shared/package-paths.js";
 import {
   assertValidActor,
+  assertValidExecActor,
   getProjectCatalogPath,
   getKataAuthority,
   getProjectContext,
@@ -437,5 +438,22 @@ describe("resolveAgentMember", () => {
         "old-a",
       ),
     ).toBeUndefined();
+  });
+});
+
+describe("assertValidExecActor", () => {
+  it("予約名は名簿になくても受け付ける", () => {
+    const roster = makeRoster(["alice"]);
+    for (const name of ["SpecDojo", "specdojo-orchestrator", "night-orchestrator"]) {
+      expect(() => assertValidExecActor(name, roster)).not.toThrow();
+    }
+  });
+
+  it("名簿の人は受け付ける", () => {
+    expect(() => assertValidExecActor("alice", makeRoster(["alice"]))).not.toThrow();
+  });
+
+  it("名簿にも予約名にもない名前はエラーを投げる", () => {
+    expect(() => assertValidExecActor("charlie", makeRoster(["alice"]))).toThrow("charlie");
   });
 });

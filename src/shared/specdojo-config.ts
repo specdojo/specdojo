@@ -984,6 +984,13 @@ export function assertValidActor(actor: string, roster: MemberRoster | null): vo
   }
 }
 
+// exec の記帳（claim・release など）の --by 用。名簿の人・agent に加え、登録簿と同じ
+// RESERVED_REGISTER_ACTORS を受け付ける。grade の --by は agent 限定のため assertValidActor のまま。
+export function assertValidExecActor(actor: string, roster: MemberRoster | null): void {
+  if ((RESERVED_REGISTER_ACTORS as readonly string[]).includes(actor)) return;
+  assertValidActor(actor, roster);
+}
+
 function isOmittedOrNonEmptyString(value: unknown): boolean {
   if (value === undefined) return true;
   return typeof value === "string" && value.trim().length > 0;

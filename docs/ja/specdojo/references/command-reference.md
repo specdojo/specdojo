@@ -647,6 +647,8 @@ kata authoring は register 専用です。Schedule の task は対象成果物�
 | `exec plan`     | plan だけを生成する                                                                                                                              | `specdojo exec plan --project prj-0001 --task <task-id>`                                                |
 | `exec archive`  | 完了済み plan を同じ run に保持する                                                                                                              | `specdojo exec archive --project prj-0001 --task <task-id>`                                             |
 
+`exec claim`・`release`・`block`・`unblock`・`complete`・`reopen`・`cancel` などの記帳コマンドの `--by` は、名簿の人と agent に加え、`register` と同じ予約 actor（`SpecDojo`・`specdojo-orchestrator`・`night-orchestrator`）を受け付けます。予約 actor で記帳した event も `exec refresh`・`exec status` はそのまま読みます。名簿にも予約 actor にもない名前は、記帳の前にエラーで止まります。`reopen` と `--take-over` は人の actor に限ります。
+
 次のコマンドは runner・job・orchestrator が部品として呼ぶ内部用のコマンドです。help の一覧には表示しませんが、呼び出しは従来どおり動きます。
 
 | コマンド         | 用途                                                                                            | 例                                                                                 |

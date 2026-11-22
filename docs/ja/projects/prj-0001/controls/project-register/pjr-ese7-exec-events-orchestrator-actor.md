@@ -40,16 +40,31 @@ exec release などの --by は名簿の人と agent だけを受け付け、オ
 
 ## 4. 作業内容
 
-| No  | 作業                                 | 担当 | 状態 | メモ                              |
-| --- | ------------------------------------ | ---- | ---- | --------------------------------- |
-| 1   | exec の記帳で予約名を受け付ける      | DEV  | open | 正本は `RESERVED_REGISTER_ACTORS` |
-| 2   | state の組み立てで予約名を受け付ける | DEV  | open | refresh・status                   |
-| 3   | テストと文書、CHANGELOG の文案       | DEV  | open | -                                 |
+| No  | 作業                                 | 担当 | 状態 | メモ                                                         |
+| --- | ------------------------------------ | ---- | ---- | ------------------------------------------------------------ |
+| 1   | exec の記帳で予約名を受け付ける      | DEV  | done | `assertValidExecActor` を追加                                |
+| 2   | state の組み立てで予約名を受け付ける | DEV  | done | `foldEventsToState` は名簿を見ないため変更不要。テストで確認 |
+| 3   | テストと文書、CHANGELOG の文案       | DEV  | done | 単体テスト・文書・CHANGELOG 文案を記載                       |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 5.0. 実施内容
+
+- `src/shared/specdojo-config.ts` に `assertValidExecActor` を追加した。`RESERVED_REGISTER_ACTORS` に含まれる名前は名簿なしで受け付け、それ以外は従来の `assertValidActor` に委ねる。`exec` の `src/exec/core.ts`・`src/exec/commands.ts` の `--by` 検証（claim・release・block・unblock・complete・reopen・cancel・scheduler）をこちらへ切り替えた。
+- 予約名 3 つ（`SpecDojo`・`specdojo-orchestrator`・`night-orchestrator`）をすべて受け付ける。理由は、`register` と同じ正本を使い、別の一覧や例外を作らないため。`grade` の `--by` は agent 限定のため `assertValidActor` のまま。
+- state の組み立て（`foldEventsToState`）は名簿を参照しないため、予約名の event はエラーにも警告にもならない。単体テストで確認した。
+- テスト: `tests/src/shared/specdojo-config.test.ts`・`tests/src/exec/events.test.ts` に追加。
+- 文書: `command-reference` の exec の記帳の節、`exec-operation-guide` の blocked 復帰の節に追記した。
+
+### 5.1. CHANGELOG に書く事項
+
+- 区分: Changed
+- 文案: `exec claim` / `release` / `block` / `unblock` / `complete` / `reopen` / `cancel` の `--by` が、`register` と同じ予約 actor（`SpecDojo`・`specdojo-orchestrator`・`night-orchestrator`）を受け付けるようにした。
+
+### 5.2. 残課題
+
+- 統合後にオーケストレーターが第 3 波の 090 の 1 件を `exec release --by specdojo-orchestrator` で戻して流し、記帳と run が通ることを確かめる（executor では実行しない）。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- `docs/ja/specdojo/references/command-reference.md`・`docs/ja/specdojo/guides/exec-operation-guide.md`（本タスクで更新）
