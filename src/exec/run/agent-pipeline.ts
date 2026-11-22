@@ -57,6 +57,7 @@ import type {
   RateLimitRecoveryEvent,
   RunResult,
 } from "./shared.js";
+import { resultMarkdownlintValidator } from "../result-markdownlint.js";
 
 export async function refreshParentValidationsForReporterResume(params: {
   execDefaults: ExecDefaultsConfig;
@@ -260,6 +261,11 @@ export async function runReporterStage(params: {
       plan: params.planPrompt,
       evidence: reporterEvidence,
       mode: params.mode ?? "edit",
+      validateOutput: resultMarkdownlintValidator({
+        repoRoot: cwd,
+        resultPath: params.resultPath,
+        evidence: reporterEvidence,
+      }),
       invoke: async (reporterPrompt) => {
         const reporterOutcome = await runWithRetry(
           reporterCandidates,

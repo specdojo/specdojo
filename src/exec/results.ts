@@ -918,6 +918,25 @@ export async function renderReporterResult(
   evidence: ExecEvidence,
   options?: RenderEditReporterOptions,
 ): Promise<void> {
+  writeFileSync(
+    resultPath,
+    renderReporterResultContent(resultPath, output, evidence, options),
+    "utf8",
+  );
+  await formatMarkdownFile(resultPath);
+}
+
+/**
+ * Builds the result Markdown that renderReporterResult writes, without touching the file.
+ * The runner lints this content before writing so reporter prose that breaks the commit
+ * check is sent back to the reporter instead of blocking integration.
+ */
+export function renderReporterResultContent(
+  resultPath: string,
+  output: ReporterOutput,
+  evidence: ExecEvidence,
+  options?: RenderEditReporterOptions,
+): string {
   if (!existsSync(resultPath)) throw new Error(`Result not found: ${resultPath}`);
   const content = readFileSync(resultPath, "utf8");
   const parsed = parseSpecdojoDocument(content);
@@ -958,8 +977,7 @@ export async function renderReporterResult(
     output.mode === "edit"
       ? renderEditReporterBody(output, evidence, resolvedOptions)
       : renderReviewReporterBody(output, evidence);
-  writeFileSync(resultPath, frontmatterWithBody(frontmatter, body + recordsBody), "utf8");
-  await formatMarkdownFile(resultPath);
+  return frontmatterWithBody(frontmatter, body + recordsBody);
 }
 
 export async function updateResultStatus(

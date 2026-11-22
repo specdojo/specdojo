@@ -138,3 +138,32 @@
       from: "-"
       to: "parent validation failed: typecheck"
   previous_event_id: reg_7610dcd0f5d94988847e4bb82d46cc8d
+- v: 1
+  id: reg_a6c96ed2a4ae4ff388b66c09ba8f376f
+  ts: "2026-11-22T08:32:00Z"
+  action: start
+  actor: opus-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: typecheck"
+      to: "-"
+  previous_event_id: reg_f60d8bbe22114895bc490687f7ae2115
+- v: 1
+  id: reg_31818926518a40be82d7792f59b6984b
+  ts: "2026-11-22T08:37:08Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_a6c96ed2a4ae4ff388b66c09ba8f376f

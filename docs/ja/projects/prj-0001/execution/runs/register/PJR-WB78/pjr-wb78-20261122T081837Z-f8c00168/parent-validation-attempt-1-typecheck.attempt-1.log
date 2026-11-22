@@ -1,0 +1,22 @@
+parent validation: typecheck
+exit code: 2
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.9.2 typecheck
+> tsc -b --noEmit
+
+src/exec/result-markdownlint.ts(76,14): error TS2345: Argument of type '{ customRules?: Rule[] | undefined; markdownItFactory?: MarkdownItFactory | undefined; strings: { [x: string]: string; }; config: Configuration; configParsers: ConfigurationParser[]; }' is not assignable to parameter of type 'Options'.
+  Types of property 'markdownItFactory' are incompatible.
+    Type 'MarkdownItFactory | undefined' is not assignable to type 'import("/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-WB78/node_modules/markdownlint/lib/markdownlint", { with: { "resolution-mode": "import" } }).MarkdownItFactory | undefined'.
+      Type 'MarkdownItFactory' is not assignable to type 'import("/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-WB78/node_modules/markdownlint/lib/markdownlint", { with: { "resolution-mode": "import" } }).MarkdownItFactory'.
+        Type 'unknown' is not assignable to type 'MarkdownIt | Promise<MarkdownIt>'.
+src/exec/result-markdownlint.ts(76,14): error TS2345: Argument of type '{ customRules?: Rule[] | undefined; markdownItFactory?: MarkdownItFactory | undefined; strings: { [x: string]: string; }; config: Configuration; configParsers: ConfigurationParser[]; }' is not assignable to parameter of type 'Options'.
+  Types of property 'markdownItFactory' are incompatible.
+    Type 'MarkdownItFactory | undefined' is not assignable to type 'import("/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-WB78/node_modules/markdownlint/lib/markdownlint", { with: { "resolution-mode": "import" } }).MarkdownItFactory | undefined'.
+      Type 'MarkdownItFactory' is not assignable to type 'import("/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-WB78/node_modules/markdownlint/lib/markdownlint", { with: { "resolution-mode": "import" } }).MarkdownItFactory'.
+        Type 'unknown' is not assignable to type 'MarkdownIt | Promise<MarkdownIt>'.
+
+
+--- stderr ---

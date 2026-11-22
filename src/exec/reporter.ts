@@ -1215,6 +1215,12 @@ export async function runReporterWithFormatRetry(opts: {
   mode: TaskMode;
   invoke: ReporterInvocation;
   maxFormatAttempts?: number;
+  /**
+   * Checks a schema-valid output before the runner writes it (for example, markdownlint on
+   * the rendered result). A returned message is fed back as a format retry within the same
+   * attempt limit.
+   */
+  validateOutput?: (output: ReporterOutput) => Promise<string | undefined>;
 }): Promise<
   | { result: "success"; output: ReporterOutput; formatAttempts: number }
   | {
@@ -1246,7 +1252,12 @@ export async function runReporterWithFormatRetry(opts: {
       };
     }
     const parsed = parseReporterOutput(attempt.stdout, opts.mode);
-    if (parsed.output) return { result: "success", output: parsed.output, formatAttempts };
+    if (parsed.output) {
+      const outputError = await opts.validateOutput?.(parsed.output);
+      if (!outputError) return { result: "success", output: parsed.output, formatAttempts };
+      validationError = outputError;
+      continue;
+    }
     validationError = parsed.error ?? "unknown schema validation error";
   }
   return {
