@@ -122,3 +122,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_adf34632b1e949ae85a847170412fc74
+- v: 1
+  id: reg_0c3b90d877e24348b309600dc4510114
+  ts: "2026-11-22T03:20:21Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register で実施し、保護された設定は indie の承認で feature ブランチから反映した（d6bc768bb）。PJR-JSEY の smoke で新しい検証の選び方と時間を確かめ、CHANGELOG 不変を確認した。再開の run での lint-changed の範囲は未確認として個票に残した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: 文書だけを変えた run の親の検証を、変えた Markdown だけの lint と文書を読むテストの分離、軽い lint の並列で軽くした。文書だけの run の検証は 83〜87 秒から 11.6 秒になった。
+  previous_event_id: reg_aa0cc9317f704731af208bf7e54b171e

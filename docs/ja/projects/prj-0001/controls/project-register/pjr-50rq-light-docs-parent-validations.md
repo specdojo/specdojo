@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-50rq-light-docs-parent-validations
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-21T11:49:51Z"
+  completed_at: "2026-11-22T03:20:21Z"
+  conclusion: 文書だけを変えた run の親の検証を、変えた Markdown だけの lint と文書を読むテストの分離、軽い lint の並列で軽くした。文書だけの run の検証は 83〜87 秒から 11.6 秒になった。
 ---
 
 # PJR-50RQ 文書だけを変えた run の親の検証を軽くし、並列を増やせるようにする
