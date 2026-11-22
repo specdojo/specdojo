@@ -128,3 +128,35 @@
       from: "-"
       to: "parent validation failed: lint-md"
   previous_event_id: reg_f0ec5bcb8a254511acebdfa51478e3a6
+- v: 1
+  id: reg_cb80c721df3b4bd4a0fb6fddd1593883
+  ts: "2026-11-22T00:41:45Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-md"
+      to: "-"
+  previous_event_id: reg_4a0e5fffbdcc40d4a7ef42dd1d6468c2
+- v: 1
+  id: reg_a32b7758a899428a9749d95b02ccf5ad
+  ts: "2026-11-22T00:46:22Z"
+  action: wait
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: lint-md"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: lint-md"
+  previous_event_id: reg_cb80c721df3b4bd4a0fb6fddd1593883
