@@ -87,3 +87,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_84b9f17567e446488f53b8a6eb35641f
+- v: 1
+  id: reg_db301f7013904ac582c425bb106f5a03
+  ts: "2026-11-22T12:19:15Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが差分・単体テスト・個票の対応結果を完了条件と照らして確かめた。親の検証は統合で通った
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: exec の --by のエラーの文に、名簿の nickname と予約名の両方を並べるようにした。register は既に並べており、agent 限定の検査には予約名を出さない
+  previous_event_id: reg_56389c472f30440cbc6676e3ffdce48c

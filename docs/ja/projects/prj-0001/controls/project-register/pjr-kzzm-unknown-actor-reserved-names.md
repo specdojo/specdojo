@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-kzzm-unknown-actor-reserved-names
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-11-22T11:16:18Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-22T12:19:15Z"
+  conclusion: exec の --by のエラーの文に、名簿の nickname と予約名の両方を並べるようにした。register は既に並べており、agent 限定の検査には予約名を出さない
 ---
 
 # PJR-KZZM Unknown actor のエラーの文に、受け付ける予約名が並ばない
