@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-c7wd-sample-table-lead-sentence
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-22T12:17:48Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-22T13:57:01Z"
+  conclusion: sample の作成標準に、表の前に何を示す表かを 1 文で書く決まりと、列名を中身の分かる言葉にする決まりを足し、sld の直しを材料に良い例と悪い例を書いた
   derived_from:
     - PJR-8S4T
 ---
