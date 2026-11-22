@@ -80,3 +80,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_f008fc71082843079dc27cbd43a3be0f
+- v: 1
+  id: reg_ae151000cce14eb3b502cb5a753ad1c6
+  ts: "2026-11-22T07:03:26Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分が自分の型の rulebook と sample だけであること、対応結果、統合後の grade を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: itc-index の型を grade の指摘に沿って直し、評価し直しで合格の基準（機械的な指摘を除いて blocker と major がない）を満たした
+  previous_event_id: reg_2ad2a49f6181420998ed4695bfb448b4
