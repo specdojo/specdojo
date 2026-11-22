@@ -1,7 +1,11 @@
 # specdojo-schema: none reason=external-openapi
 openapi: 3.0.3
 info:
-  title: 決済サービスAPI
+  title: 本部売上登録API
+  version: 1.0.0
+  description: >-
+    駄菓子屋きぬやの店舗端末の販売管理 CLI が、会計確定した売上を本部へ登録する API。
+    `specdojo:ifx-index-sample` の「本部への売上登録」の詳細仕様にあたる。
 
 x-spec-meta:
   id: specdojo:ifx-api-sample
@@ -11,14 +15,14 @@ x-spec-meta:
   based_on: []
 
 servers:
-  - url: https://api.payment.example.com
-    description: 本番
+  - url: https://api.hq.kinuya.example.com
+    description: 本部（本番）
 
 paths:
-  /v1/payments:
+  /v1/sales:
     post:
-      operationId: createPayment
-      summary: 決済を作成する
+      operationId: createSale
+      summary: 売上を登録する
       security:
         - ApiKeyAuth: []
       requestBody:
@@ -26,14 +30,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreatePaymentRequest"
+              $ref: "#/components/schemas/CreateSaleRequest"
       responses:
         "201":
-          description: 作成成功
+          description: 登録成功
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CreatePaymentResponse"
+                $ref: "#/components/schemas/CreateSaleResponse"
         "400":
           description: 入力不正
           content:
@@ -42,6 +46,12 @@ paths:
                 $ref: "#/components/schemas/ErrorResponse"
         "401":
           description: 認証エラー
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: 同じ取引IDの売上が登録済み
           content:
             application/json:
               schema:
@@ -61,31 +71,51 @@ components:
       name: X-API-Key
 
   schemas:
-    CreatePaymentRequest:
+    CreateSaleRequest:
       type: object
       additionalProperties: false
-      required: [amount, currency, order_id]
+      required: [transaction_id, sold_at, lines]
       properties:
-        amount:
+        transaction_id:
+          type: string
+          description: 取引ID（店舗端末側の識別子。重複登録の判定に使う）
+        sold_at:
+          type: string
+          format: date-time
+          description: 会計確定時刻
+        lines:
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/SaleLine"
+
+    SaleLine:
+      type: object
+      additionalProperties: false
+      required: [product_code, quantity, unit_price]
+      properties:
+        product_code:
+          type: string
+          description: 商品コード
+        quantity:
           type: integer
           minimum: 1
-        currency:
-          type: string
-          example: JPY
-        order_id:
-          type: string
-          description: 注文ID（連携元の識別子）
+        unit_price:
+          type: integer
+          minimum: 0
+          description: 販売単価（円）
 
-    CreatePaymentResponse:
+    CreateSaleResponse:
       type: object
       additionalProperties: false
-      required: [payment_id, status]
+      required: [sale_id, status]
       properties:
-        payment_id:
+        sale_id:
           type: string
+          description: 本部が採番した売上ID
         status:
           type: string
-          enum: [PENDING, PAID, FAILED]
+          enum: [ACCEPTED, REJECTED]
 
     ErrorResponse:
       type: object
