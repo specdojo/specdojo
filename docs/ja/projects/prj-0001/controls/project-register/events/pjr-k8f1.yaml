@@ -93,3 +93,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_8db86828a20c4ad48d9782249073cb93
+- v: 1
+  id: reg_cbcdb3efe2c34901847cb8ef311cf9d5
+  ts: "2026-11-22T14:36:55Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが差分・単体と統合のテスト・ガイドを確かめ、JSEY で既定（上限なし）の動きが変わらないことを確かめた。prj-0001 に値を入れる案（claude・codex 7200 秒、opencode 5400 秒）は利用者が決める
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: provider ごとの agent_timeout_seconds を足し、上限に達したらプロセスのグループを SIGTERM・10 秒後に SIGKILL で止めて block にする。既定は上限なし
+  previous_event_id: reg_b1037fe89bf34ed68fc09849b6da12a1

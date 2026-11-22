@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-k8f1-provider-cli-timeout
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   registered_at: "2026-11-22T12:24:42Z"
+  completed_at: "2026-11-22T14:36:55Z"
+  conclusion: provider ごとの agent_timeout_seconds を足し、上限に達したらプロセスのグループを SIGTERM・10 秒後に SIGKILL で止めて block にする。既定は上限なし
   derived_from:
     - PJR-39AB
 ---
