@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-vqk2-run-summary-commit-id
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-11-22T11:15:38Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-22T12:29:15Z"
+  conclusion: 要約の commit= は HEAD ではなくその run の統合の commit を出す。修正の後の B6NS・39AB・JSEY の要約が、それぞれ自分の commit を指した
 ---
 
 # PJR-VQK2 exec run の要約の commit= に、その run のものではない commit の ID が出ることがある

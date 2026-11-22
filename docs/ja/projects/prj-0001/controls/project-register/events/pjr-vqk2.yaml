@@ -87,3 +87,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_595cb4797ac54007929d4cf8782f63a7
+- v: 1
+  id: reg_796689b33fab4e4a9ec2712f50af2231
+  ts: "2026-11-22T12:29:15Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: "オーケストレーターが差分と単体テストを確かめ、JSEY と今晩の run の要約を実際の commit と照らした。残課題: 記帳の commit の前後で HEAD を読む間に並行の run が commit するとずれうる。commit の関数が自分の ID を返す形にすれば消せる"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: 要約の commit= は HEAD ではなくその run の統合の commit を出す。修正の後の B6NS・39AB・JSEY の要約が、それぞれ自分の commit を指した
+  previous_event_id: reg_b55ec7c1e3154bbd88263149a44534cb
