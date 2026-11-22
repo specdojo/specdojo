@@ -20,6 +20,11 @@ import {
 } from "./parent-validation.js";
 import { resolveCommitHookSkips, type CommitHookSkip } from "./commit-hook-skips.js";
 import { configureIndexLockWait, DEFAULT_INDEX_LOCK_WAIT_MS } from "../shared/git.js";
+import {
+  OPENCODE_CONFIG_CONTENT_ENV,
+  opencodeAgentNameFromCommand,
+  opencodeAllowCommandsConfig,
+} from "./opencode-permissions.js";
 import { resolvePostIntegrationEntries, type PostIntegrationEntry } from "./post-integration.js";
 
 // ── Types for .specdojo/exec-defaults.yaml (global + per-provider) ─────────────
@@ -94,7 +99,7 @@ export type ProviderOverride = {
   command_template?: string;
   command_params?: CommandParams;
   // claude / opencode: extra `Bash(...)` permission rules for edit-mode launch commands (claude:
-  // `--allowedTools`; opencode: `OPENCODE_PERMISSION` env). They survive `config scaffold --force`.
+  // `--allowedTools`; opencode: the agent's `permission.bash` via `OPENCODE_CONFIG_CONTENT`). They survive `config scaffold --force`.
   allow_commands?: string[];
   rate_limit_detection?: RateLimitDetection;
   connection_error_detection?: ConnectionErrorDetection;
@@ -283,7 +288,7 @@ export function resolveMemberCommand(
 const ALLOW_COMMAND_PATTERN = /^Bash\([^'\\\r\n]+\)$/;
 
 // Apply providers.<claude|opencode>.allow_commands to an edit-mode command. claude gets
-// `--allowedTools`; opencode gets an `OPENCODE_PERMISSION` environment prefix.
+// `--allowedTools`; opencode gets an `OPENCODE_CONFIG_CONTENT` environment prefix.
 // Rules are single-quoted for the shell, so quotes, backslashes, and newlines are rejected.
 function appendAllowedCommands(
   command: string,
@@ -308,9 +313,17 @@ function appendAllowedCommands(
     }
   }
   if (provider === "opencode") {
-    const bash: Record<string, "allow"> = {};
-    for (const rule of rules) bash[rule.slice("Bash(".length, -1)] = "allow";
-    return `OPENCODE_PERMISSION='${JSON.stringify({ bash })}' ${command}`;
+    const agentName = opencodeAgentNameFromCommand(command);
+    if (!agentName) {
+      throw new Error(
+        `exec-defaults providers.opencode.allow_commands needs --agent <name> in command_template: ${command}`,
+      );
+    }
+    // OPENCODE_PERMISSION sorts before the agent definition's `"*": deny` and is ignored, so the
+    // rules go to the agent's own permission.bash through OPENCODE_CONFIG_CONTENT.
+    const patterns = rules.map((rule) => rule.slice("Bash(".length, -1));
+    const config = opencodeAllowCommandsConfig(undefined, agentName, patterns);
+    return `${OPENCODE_CONFIG_CONTENT_ENV}='${config}' ${command}`;
   }
   return `${command} --allowedTools ${rules.map((rule) => `'${rule}'`).join(" ")}`;
 }

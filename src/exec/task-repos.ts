@@ -29,6 +29,7 @@ import {
   OPENCODE_CONFIG_CONTENT_ENV,
   opencodeAgentNameFromCommand,
   opencodeExtraRootConfig,
+  splitLeadingOpencodeConfig,
 } from "./opencode-permissions.js";
 
 import {
@@ -835,14 +836,16 @@ export function withAgentExtraRoots(
         `OpenCode command needs --agent <name> to scope the product worktree permissions: ${command}`,
       );
     }
+    // A leading assignment from `allow_commands` would shadow ours, so merge into it and drop it.
+    const split = splitLeadingOpencodeConfig(command);
     const config = opencodeExtraRootConfig(
-      (options.env ?? process.env)[OPENCODE_CONFIG_CONTENT_ENV],
+      split.config ?? (options.env ?? process.env)[OPENCODE_CONFIG_CONTENT_ENV],
       agentName,
       dirs,
       options.cwd ?? process.cwd(),
       options.access ?? "write",
     );
-    return `${OPENCODE_CONFIG_CONTENT_ENV}=${shellQuote(config)} ${command}`;
+    return `${OPENCODE_CONFIG_CONTENT_ENV}=${shellQuote(config)} ${split.command}`;
   }
   const args = agentExtraRootArguments(provider, dirs, options.access ?? "write");
   if (args.length === 0) return command;

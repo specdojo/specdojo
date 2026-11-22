@@ -748,7 +748,7 @@ providers:
 
 opencode の executor は `templates/opencode/agents/opencode-executor.md` の `permission.bash` に無いコマンドを拒みます。配布する定義は、読み取り系の git、`npm run`・`npm test`、`npx prettier`・`npx markdownlint`・`npx markdownlint-cli2`・`npx eslint`・`npx tsc`・`npx vitest`・`npx ajv`・`npx specdojo`、`specdojo` に加え、`docs/`・`src/`・`tests/` の下に限った `git rm` を許します。`git rm -r`・`-f`・`--force`、`git push`、`rm -rf`、`gh` は許しません。
 
-リポジトリごとに違う検証コマンドは、`providers.opencode.allow_commands` に claude と同じ `Bash(<command> *)` の形で書きます。edit mode の起動コマンドの前に、bash の allow 規則を入れた環境変数 `OPENCODE_PERMISSION` として足されるため、`.opencode/agents/` を当て直しても残ります。review・report mode には足しません。
+リポジトリごとに違う検証コマンドは、`providers.opencode.allow_commands` に claude と同じ `Bash(<command> *)` の形で書きます。edit mode の起動コマンドの前に、起動するエージェントの `permission.bash` へ allow 規則を入れた環境変数 `OPENCODE_CONFIG_CONTENT` として足されるため、`.opencode/agents/` を当て直しても残ります。規則は定義の `"*": deny` より後ろに並び、足したコマンドだけが通ります。global の `OPENCODE_PERMISSION` は定義の `"*": deny` より前に並んで効かないため使いません。追加ディレクトリの許可（`OPENCODE_CONFIG_CONTENT`）とは 1 つの値に混ぜて保ちます。review・report mode には足しません。
 
 ```yaml
 providers:

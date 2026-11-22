@@ -34,17 +34,17 @@ export function opencodeEditPattern(root: string, cwd: string): string {
   return relativePath ? `${relativePath}/**` : "**";
 }
 
-/**
- * Merge the extra-root permissions for `agentName` into the current `OPENCODE_CONFIG_CONTENT`.
- * Other keys and agents are preserved. Throws when the current value is not a valid config object.
- */
-export function opencodeExtraRootConfig(
+type AgentPermissionContext = {
+  config: Record<string, unknown>;
+  agents: Record<string, unknown>;
+  selectedAgent: Record<string, unknown>;
+  permission: Record<string, unknown>;
+};
+
+function parseAgentPermission(
   current: string | undefined,
   agentName: string,
-  roots: readonly string[],
-  cwd: string,
-  access: "write" | "read" = "write",
-): string {
+): AgentPermissionContext {
   let config: Record<string, unknown> = {};
   if (current?.trim()) {
     let parsed: unknown;
@@ -74,6 +74,73 @@ export function opencodeExtraRootConfig(
       `Invalid ${OPENCODE_CONFIG_CONTENT_ENV}: agent.${agentName}.permission must be an object`,
     );
   }
+  return { config, agents, selectedAgent, permission };
+}
+
+/**
+ * Add `allow` rules to `agent.<agentName>.permission.bash` in the current `OPENCODE_CONFIG_CONTENT`.
+ * The agent-level value is merged after the agent definition, so the added rules sort after the
+ * definition's `"*": deny` and win for the matching commands only. A global `OPENCODE_PERMISSION`
+ * sorts before it and cannot override the deny. Existing bash rules and other keys are preserved.
+ */
+export function opencodeAllowCommandsConfig(
+  current: string | undefined,
+  agentName: string,
+  patterns: readonly string[],
+): string {
+  const { config, agents, selectedAgent, permission } = parseAgentPermission(current, agentName);
+  const currentBash = permission.bash;
+  let bash: Record<string, unknown> = {};
+  if (isRecord(currentBash)) {
+    bash = { ...currentBash };
+  } else if (typeof currentBash === "string") {
+    bash = { "*": currentBash };
+  } else if (currentBash !== undefined) {
+    throw new Error(
+      `Invalid ${OPENCODE_CONFIG_CONTENT_ENV}: agent.${agentName}.permission.bash must be a string or object`,
+    );
+  }
+  for (const pattern of patterns) {
+    // Re-insert so a repeated pattern moves after earlier rules.
+    delete bash[pattern];
+    bash[pattern] = "allow";
+  }
+  return JSON.stringify({
+    ...config,
+    agent: {
+      ...agents,
+      [agentName]: { ...selectedAgent, permission: { ...permission, bash } },
+    },
+  });
+}
+
+const LEADING_CONFIG_ASSIGNMENT = new RegExp(`^${OPENCODE_CONFIG_CONTENT_ENV}='([^']*)' `);
+
+/**
+ * Split a leading `OPENCODE_CONFIG_CONTENT='<json>' ` assignment (made by `allow_commands`) off a
+ * resolved command so later layers can merge into it instead of being shadowed by it.
+ */
+export function splitLeadingOpencodeConfig(command: string): {
+  config?: string;
+  command: string;
+} {
+  const match = LEADING_CONFIG_ASSIGNMENT.exec(command);
+  if (!match) return { command };
+  return { config: match[1], command: command.slice(match[0].length) };
+}
+
+/**
+ * Merge the extra-root permissions for `agentName` into the current `OPENCODE_CONFIG_CONTENT`.
+ * Other keys and agents are preserved. Throws when the current value is not a valid config object.
+ */
+export function opencodeExtraRootConfig(
+  current: string | undefined,
+  agentName: string,
+  roots: readonly string[],
+  cwd: string,
+  access: "write" | "read" = "write",
+): string {
+  const { config, agents, selectedAgent, permission } = parseAgentPermission(current, agentName);
 
   const externalDirectory: Record<string, PermissionAction> = { "*": "deny" };
   const currentEdit = permission.edit;

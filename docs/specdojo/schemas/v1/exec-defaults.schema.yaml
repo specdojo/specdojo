@@ -299,8 +299,9 @@ $defs:
         description: >
           claude and opencode only. Extra permission rules for edit-mode launch commands.
           claude appends them as --allowedTools (deny rules in settings.edit.json still take
-          precedence); opencode passes them as bash allow rules in the OPENCODE_PERMISSION
-          environment variable. Either way they survive `config scaffold --force`.
+          precedence); opencode adds them as bash allow rules to the launched agent's permission.bash through
+          the OPENCODE_CONFIG_CONTENT environment variable, after the agent definition's
+          "*": deny. Either way they survive `config scaffold --force`.
         items:
           type: string
           pattern: "^Bash\\([^'\\\\\\r\\n]+\\)$"

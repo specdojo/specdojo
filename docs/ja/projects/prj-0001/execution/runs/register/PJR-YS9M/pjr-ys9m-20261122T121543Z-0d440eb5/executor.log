@@ -1,0 +1,21 @@
+`allow_commands` を `OPENCODE_CONFIG_CONTENT` 経由でエージェントの `permission.bash` に入れる方式に直しました。ただし `typecheck`・`lint:ts`・`test:unit` はこのセッションでは実行しておらず、新しいテストも未実行です。Bash が拒まれたため、Prettier を通しただけです。
+
+**変更内容**
+- `src/exec/opencode-permissions.ts`:
+  - `opencodeAllowCommandsConfig` を追加しました。定義の `"*": deny` の後ろに allow 規則を足し、既存の bash 規則と他のキーは保ちます。
+  - `splitLeadingOpencodeConfig` を追加しました。先頭の `OPENCODE_CONFIG_CONTENT='...'` を切り出します。
+  - 設定の解析部分は共通の関数にまとめました。
+- `src/exec/agent-config.ts`: opencode の edit mode で `OPENCODE_PERMISSION` をやめ、`OPENCODE_CONFIG_CONTENT='…' <command>` を前置します。起動コマンドに `--agent <name>` が無い場合はエラーにします。
+- `src/exec/task-repos.ts`: `withAgentExtraRoots` が先頭の `OPENCODE_CONFIG_CONTENT` を読み、追加ディレクトリの許可と同じ値に混ぜます。混ぜないと代入が二重に並び、シェルでは後ろ（内側）の代入だけが残って、`allow_commands` か追加ディレクトリのどちらかが消えるためです。
+- `tests/src/exec/agent-config-allow-commands.test.ts`:
+  - 生成コマンドの期待値を更新しました。
+  - 足した規則が `"*": deny` の後ろに並び、ほかのコマンドは拒まれ続けることを確かめるテストを足しました。
+  - `allow_commands` と追加ディレクトリを併用しても `OPENCODE_CONFIG_CONTENT` が 1 つにまとまることを確かめるテストを足しました。
+- `exec-defaults.schema.yaml` の説明、`exec-config-guide` の 7.4 節、個票の 5.1 と 5.3 を直しました。個票の `OPENCODE_PERMISSION` の `_ASSUMPTION_` は、オーケストレーターが opencode 1.19.6 で確かめた結果に置き換えました。
+
+**未完了**
+- 作業 5（保護された設定の反映と、qwen の executor での実機確認）は個票で `open` のままです。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"allow_commands を OPENCODE_PERMISSION から OPENCODE_CONFIG_CONTENT（エージェントの permission.bash）方式へ直した。追加ディレクトリの許可と 1 つの値に混ぜて保ち、足した規則が定義の deny より後ろに並ぶことを単体テストに足した。schema の説明・exec-config-guide・個票の対応結果も更新した。Bash の複合コマンドが拒まれたため、本セッションでは Prettier の整形のみ実行し、テストと静的検査は実行していない。","handoff":["作業 5（保護された設定の反映と qwen の executor での確認）は executor が実行できないため個票で open のまま。オーケストレーターが利用者の承認のもとで行う。","新しい単体テスト（opencodeAllowCommandsConfig の順序、withAgentExtraRoots との併用）は書いたが実行していない。親の test:unit・typecheck・lint:ts の結果を確認すること。","個票 5.3 の `.opencode/agents/` 反映案と easy の routing 見直し案は前回記載のまま。反映は利用者の承認のもとで行う。","CHANGELOG に書く事項は個票 5.4 に記載済み（CHANGELOG.md は未変更）。"],"validations":[{"command":"npx prettier --write src/exec/opencode-permissions.ts src/exec/agent-config.ts src/exec/task-repos.ts tests/src/exec/agent-config-allow-commands.test.ts docs/ja/specdojo/guides/exec-config-guide.md docs/specdojo/schemas/v1/exec-defaults.schema.yaml","status":"passed","summary":"整形は成功。テストファイルのみ整形で変更された。"},{"command":"npm run validate:history-links","status":"not_run","summary":"履歴蓄積ファイル（個票）を変更したが、Bash の複合コマンドの制限もあり実行できていない。個票には Markdown リンクを足していない。"}]}
+</specdojo_executor_evidence>
