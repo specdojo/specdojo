@@ -43,14 +43,30 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                           | 担当 | 状態 | メモ                                    |
+| --- | -------------------------------------------------------------- | ---- | ---- | --------------------------------------- |
+| 1   | ifx-api-sample と ifx-msg-sample の info に version を足す     | BA   | done | 1.0.0                                   |
+| 2   | ifx-api-rulebook の必須構造に info.version と responses を足す | BA   | done | ifx-msg-rulebook は既に version を要求  |
+| 3   | ifx-api-sample を本部の売上登録 API に差し替える               | BA   | done | ifx-index-sample の本部への売上登録対応 |
+| 4   | 型の grade の再実行                                            | BA   | open | executor は grade を実行しないため      |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `ifx-api-sample` を決済 API から本部売上登録 API（`createSale`、`POST /v1/sales`）へ差し替え、`info.version: 1.0.0` と、`ifx-index-sample` の「本部への売上登録」の詳細仕様であることを `info.description` に追加した。取引ID重複の `409` を含む。
+- `ifx-msg-sample` に `info.version: 1.0.0` を追加した。`ifx-msg-rulebook` は `info` に `version` を既に要求しており、sample と整合する。変更なし。
+- `ifx-api-rulebook` の必須構造に `info.version` と各操作の `responses` を追加し、例の決済題材（`ifx-api-payment`・`createPayment`）を売上登録に置き換えた。
+- 決めた点: version は `1.0.0`。`ifx-msg-rulebook` の「決済」は外部システムの一般例のため残した。
+- `ifx-index-sample` の変更案: なし（`spec_ref` は TBD で、`ifx-api-kinuya-sales.yaml` を想定する記述と整合する）。
+
+### 5.1. CHANGELOG に書く事項
+
+- 区分: Changed
+- 文案: ifx-api の rulebook で `info.version` と各操作の `responses` を必須構造に追加し、ifx-api-sample を本部売上登録 API へ、ifx-api・ifx-msg の sample に `info.version` を追加した。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- `specdojo:ifx-api-rulebook`
+- `specdojo:ifx-api-sample`
+- `specdojo:ifx-msg-rulebook`
+- `specdojo:ifx-msg-sample`
+- `specdojo:ifx-index-sample`

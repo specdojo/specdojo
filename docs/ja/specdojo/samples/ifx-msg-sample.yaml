@@ -2,6 +2,7 @@
 asyncapi: 2.6.0
 info:
   title: 在庫変更イベント仕様
+  version: 1.0.0
 
 x-spec-meta:
   id: specdojo:ifx-msg-sample
