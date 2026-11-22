@@ -1,0 +1,35 @@
+判定は **`complete-with-findings`** です。`utc-sample` と `utc-rulebook` の評価はどちらも最新の `pass` で、完了条件 DC-001〜DC-006 は満たしています。minor の finding が残っていますが、完了は妨げません。成果物と result はどちらも変更していません。
+
+**評価結果の確認**
+- `npx specdojo grade list --target kata --path <対象> --changed-only` と `--incomplete` を、sample と rulebook の両方で最初に実行しました。どちらも何も出力せず、終了コードは 0 でした。判定の前に `--changed-only` をもう一度実行し、同じ結果でした。
+- サイドカーは両方あります。`specdojo.utc-sample.yaml` は `pass`、`score` 90、minor 8 件、blocker と major はありません。`specdojo.utc-rulebook.yaml` は `pass`、`score` 94、minor 5 件、blocker と major はありません。
+- 型の整備を含む schedule は「型すべてに最新の `pass`」を追加の完了条件にしていますが、これも満たしています。
+
+**判断根拠**
+- **DC-001:** `##` の見出しは 1〜6 で、rulebook の「本文要件」の順序（概要（`sales-checkout`）／責務／対象外／境界/依存／トレース／テスト観点とケース）と一致します。観点の配下も `### 6.n. 観点:`、`#### 6.n.1. 意図`、`#### 6.n.2. 条件・ケース表` の順です。
+- **DC-004:** H1 は「単体テストカタログ: 会計確定（駄菓子屋きぬや 販売管理システム）」で、rulebook の `単体テストカタログ: <対象名>` の形式です。`based_on` には `specdojo:tsp-index-sample` と `specdojo:utc-index-sample` があります。
+- **DC-006:** 6 ケースすべてに、入力と在庫状態の前提、具体的な期待値（請求額・在庫数・エラー種別・Mock の呼び出し回数）、観測点があります。
+- **DC-002・DC-003・DC-005:** grade の該当観点はレベル 3〜4 で、blocker と major はありません。
+- **禁止事項:** 証跡はすべて「暫定: …、`kinuya-ci-unit` 整備後に差し替え」と暫定であることを明記しています。rulebook は暫定と明記した場合を例外として認めているので、禁止事項には当たりません。
+- **実行記録:** 先行する edit（`T-KATA-WAVE-3-utc-sample-080`、`condense`）の `evidence.json` を見ました。変更は `utc-sample.md` の 1 ファイルだけで、対象外の変更は入っていません。executor の prettier と markdownlint、runner の `lint:md`、`lint:fm`、`lint:mermaid` はすべて成功していました。
+- **作業ツリー:** 未追跡のファイルは runner の `pipeline-state.json` だけです。
+
+**完了を妨げない理由と改善指示**
+- **sample（F001〜F008）:** 必須の章や表の欠落ではなく、書き足しや揃え直しの指摘です。次の改訂で対応するよう申し送ります。
+  - TR-04 の仮定について、判断する人、上流の BAC へ戻す扱い、ready にする前に解消する条件を書く（F001・F002・F008）。
+  - 入口にメソッド名を書き、証跡にテストコードのパスと実行コマンドを書く（F003〜F005）。
+  - `utc-index-sample` との食い違いを揃える。対象はケース `stock-allocation-020` の条件とトレース、および釣銭計算の責務（F006・F007）。
+- **rulebook（F001〜F005）:** ready にする前に次を片付ける必要があります。
+  - `recipe` と `template` の要否を決め、`recipe` の起票先を書く（F001・F005）。
+  - 実態と合わなくなった `_UNDECIDED_` の sample に関する記述を消す（F002）。
+  - 例に出てくる具体クラス名 `OutOfStockError` を実装に依存しない表現に置き換える（F003）。
+  - トレース列の定義を `utc-index-rulebook` と揃える（F004）。
+- **recipe:** `_MISSING_` なのは rulebook の `recipe: undecided` のためで、この扱いは rulebook の `_UNDECIDED_` に残っています。
+
+**確認できなかった範囲**
+- 宣言された文書に限る方針に従い、`utc-index-sample`、`tsp-index-sample`、`bac-sample`、`prj-overview` の本文は読み直していません。DC-002 と DC-005（列名と用語の一致、共通サンプル文脈）は grade の判定に頼りました。
+- lint などの検査は親 runner に任せ、ここでは実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict は complete-with-findings。utc-sample（pass/90、minor 8）と utc-rulebook（pass/94、minor 5）の評価はともに最新（--changed-only と --incomplete は最初の確認で空、判定前の --changed-only の再確認でも空）で、blocker と major はない。DC-001（章構成 1〜6 と観点配下の見出し）、DC-004（H1 の形式と based_on の tsp-index-sample・utc-index-sample）、DC-006（6 ケースすべてに前提・具体的な期待値・観測点）を本文で確認した。DC-002・DC-003・DC-005 は grade の判定を事実として用いた。証跡は暫定と明記されており、禁止事項の例外に当たる。先行する edit（T-KATA-WAVE-3-utc-sample-080、condense）は utc-sample.md の 1 ファイルだけを変え、executor と runner の検査は成功していた。確認できなかった範囲: 宣言された文書に限る方針で utc-index-sample・tsp-index-sample・bac-sample・prj-overview の本文は読み直しておらず、DC-002 と DC-005 は grade に頼った。lint などの検査は親 runner に任せた。","handoff":["sample の F001・F002・F008: TR-04 の _ASSUMPTION_ について、判断する人（BA・PO）、BAC-01 へ条件を足すか PJR で上流へ戻すか、ready にする前に解消する条件（仮定の確定と CI 証跡への差し替え）を書く","sample の F003〜F005: 境界/依存の入口に会計確定サービスのメソッド名を書き、証跡の列にテストコードのパスとローカルでの実行コマンドを書く","sample の F006・F007: utc-index-sample の共通カラムの記入例（ut-sales-checkout-stock-allocation-020 の条件とトレース）と、釣銭計算の責務の分配を utc-sample と揃える","rulebook の F001〜F005: ready にする前に、recipe と template の要否を決めて recipe の起票先を書く、実態と合わない _UNDECIDED_ の sample に関する記述を消す、OutOfStockError を実装に依存しない表現に置き換える、トレース列の定義を utc-index-rulebook と揃える"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/utc-sample.md --changed-only","status":"passed","summary":"最初の確認でも判定前の再確認でも出力なし（exit 0）。評価結果は最新"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/utc-sample.md --incomplete","status":"passed","summary":"出力なし（exit 0）。評価パイプラインは完了済み"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/utc-rulebook.md --changed-only","status":"passed","summary":"最初の確認でも判定前の再確認でも出力なし（exit 0）。評価結果は最新"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/utc-rulebook.md --incomplete","status":"passed","summary":"出力なし（exit 0）。評価パイプラインは完了済み"}]}
+</specdojo_executor_evidence>
