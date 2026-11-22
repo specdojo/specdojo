@@ -88,7 +88,7 @@ SpecDojo は開発時に使う文書・実行管理ツールなので、`--save-
 
 あわせて、`node_modules/` と SpecDojo の生成物（`docs/**/generated/*`、`.specdojo/doc-index.json` など）を Git の管理から外す行が `.gitignore` に用意されます。すでに `node_modules/` や生成物を Git で管理している場合は、表示される案内に従って管理から外し、コミットします。
 
-版を上げるときは `npx specdojo update` を使います。今の版と上げる先の版の間の `CHANGELOG.md` を示してから更新し、`config scaffold` で配ったファイルが新しい版と違うときは、差分を示して適用するかを聞きます。`--dry-run` で先に確かめられます。
+版を上げるときは `npx specdojo update` を使います。今の版と上げる先の版の間の `CHANGELOG.md` を示してから更新し、`config scaffold` で配ったファイルが新しい版と違うときは、差分を示して適用するかを聞きます。`--dry-run` で先に確かめられます。`update` を持たない版（0.9.2 まで）から上げる最初の 1 回は、`npx specdojo@latest update`（版を指定する場合は `npx specdojo@<版> update`）で呼びます。
 
 `@specdojo/docs-lint` は必須ではありません。SpecDojo 文書向けの検査を使う場合だけ、[ドキュメント編集ガイド](https://specdojo.github.io/specdojo/ja/specdojo/guides/docs-editing-guide.html)に従って追加します。
 
