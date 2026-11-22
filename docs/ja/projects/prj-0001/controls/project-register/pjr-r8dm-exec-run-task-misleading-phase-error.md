@@ -7,11 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: low
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-21T08:16:03Z"
+  completed_at: "2026-11-22T02:57:51Z"
+  conclusion: exec run --task が、流せないタスクに対し、依存が終わっていない先行のタスク ID や done であることを示して止まるようにした。
   derived_from:
     - PJR-VCER
 ---
