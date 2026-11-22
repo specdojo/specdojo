@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-2rhb-glossary-alignment-outside
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: sol-executor
   registered_at: "2026-11-12T23:14:58Z"
+  completed_at: "2026-11-22T14:06:42Z"
+  conclusion: 用語集の外の「Job Run」を「job run」に統一した（225 箇所・56 ファイル）。gl-rulebook に英語の用語を小文字で書く決まりと notes に書く内容の決まりを足した。履歴と用語集そのものは変えていない
   derived_from:
     - PJR-6XQ4
   commit_type: docs
