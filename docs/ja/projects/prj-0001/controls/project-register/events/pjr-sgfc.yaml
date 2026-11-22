@@ -83,3 +83,25 @@
       from: "-"
       to: "reporter output invalid after 3 format attempts: result Markdown notation violation before writing (fix the JSON prose that produced these rendered lines; do not put Markdown headings, code fences, ba…"
   previous_event_id: reg_2dc2c73dde0b43338484a02932b47059
+- v: 1
+  id: reg_45c26164a5074c4f8f78905ff8dd5280
+  ts: "2026-11-22T08:58:39Z"
+  action: reject
+  actor: specdojo-orchestrator
+  from_status: waiting
+  to_status: rejected
+  reason: PJR-TF6F の統合後の確かめが済んだ
+  changes:
+    - field: status
+      from: waiting
+      to: rejected
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: 確かめ用の項目。YAML を壊した run が、親の検証の lint-md-changed（作り直した表示のページの MD025）と validate-schema で止まり、統合されないことを確かめたため、統合せずに閉じる
+    - field: block_reason
+      from: "reporter output invalid after 3 format attempts: result Markdown notation violation before writing (fix the JSON prose that produced these rendered lines; do not put Markdown headings, code fences, ba…"
+      to: "-"
+  previous_event_id: reg_392682fee7da4a3b9b6e0f816d6b9be8

@@ -2,17 +2,18 @@
 specdojo:
   id: prj-0001:pjr-sgfc-tf6f-broken-yaml-check
   type: project
-  status: draft
+  status: deprecated
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: rejected
   priority: low
   difficulty: easy
   owner: DEV
   registered_at: "2026-11-22T08:49:30Z"
-  block_reason: "reporter output invalid after 3 format attempts: result Markdown notation violation before writing (fix the JSON prose that produced these rendered lines; do not put Markdown headings, code fences, ba…"
+  completed_at: "2026-11-22T08:58:38Z"
+  conclusion: 確かめ用の項目。YAML を壊した run が、親の検証の lint-md-changed（作り直した表示のページの MD025）と validate-schema で止まり、統合されないことを確かめたため、統合せずに閉じる
   derived_from:
     - PJR-TF6F
 ---
