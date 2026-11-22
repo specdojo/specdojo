@@ -61,3 +61,16 @@
       from: ""
       to: 対応方針
   previous_event_id: reg_a63e582d94e74aab96337b47c72ca924
+- v: 1
+  id: reg_65463cf88945475aa34c5b2bcbdffcdf
+  ts: "2026-11-22T12:11:53Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_7f85fd41bf2548a9b668e084cd06d40f
