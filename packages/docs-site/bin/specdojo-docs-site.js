@@ -16,6 +16,7 @@ function usage() {
 Commands:
   build     Build the VitePress site
   dev       Start the VitePress development server
+            --with-exec-records  include execution records (excluded by default in dev)
   mermaid   Generate Mermaid SVG files only
   d2        Generate D2 SVG files only (requires d2 v0.9.0)
   preview   Preview the built site
@@ -72,8 +73,15 @@ if (!command || !COMMANDS.has(command)) {
 } else {
   const hasRoot = maybeRoot !== undefined && !maybeRoot.startsWith("-");
   const workspaceRoot = path.resolve(hasRoot ? maybeRoot : process.cwd());
-  const forwardedArgs = hasRoot ? rest : [maybeRoot, ...rest].filter(Boolean);
-  const env = { ...process.env, SPECDOJO_DOCS_ROOT: workspaceRoot };
+  const allArgs = hasRoot ? rest : [maybeRoot, ...rest].filter(Boolean);
+  const withExecRecords = allArgs.includes("--with-exec-records");
+  const forwardedArgs = allArgs.filter((arg) => arg !== "--with-exec-records");
+  const env = {
+    ...process.env,
+    SPECDOJO_DOCS_ROOT: workspaceRoot,
+    SPECDOJO_DOCS_COMMAND: command,
+    SPECDOJO_DOCS_WITH_EXEC_RECORDS: withExecRecords ? "1" : "0",
+  };
 
   let executable;
   let args;
