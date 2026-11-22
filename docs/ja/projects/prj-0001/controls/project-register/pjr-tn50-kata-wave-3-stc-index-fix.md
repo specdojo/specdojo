@@ -74,6 +74,13 @@ sample（`stc-index-sample`）:
 
 - 統合後の `npx specdojo grade run --target kata --kata stc-index` による再評価は、オーケストレーターが行う。
 
+### 5.4. 統合後の評価し直し
+
+- 2026-11-22、オーケストレーターが `npx specdojo grade run --target kata --kata stc-index`（run id `regrade-wave3-fix-2026-11-22`、opus-review-executor）で評価し直した。
+- `stc-index-rulebook`: pass、score 97（minor 1、2026-11-22T06:44:46.190Z）
+- `stc-index-sample`: needs-work、score 91（minor 4・major 1、2026-11-22T06:45:57.721Z）
+- 残った major は sample の F005（機械的な「未解決の _TODO_ / _ASSUMPTION_」の指摘、PJR-7C9X）だけで、sample の `_TODO_` は 0 件、`_ASSUMPTION_` だけが残る。合格の基準（この指摘を除いて blocker と major がない）を満たすため、合格とした。
+
 ## 6. 関連ドキュメント
 
 - [[specdojo:stc-index-rulebook]]

@@ -75,6 +75,13 @@ rulebook の変更は sample と食い違わないことを確かめた。
 
 - 統合後の `npx specdojo grade run --target kata --kata tsp-index` による再評価は、オーケストレーターが行う（作業内容の No 4）。
 
+### 5.3. 統合後の評価し直し
+
+- 2026-11-22、オーケストレーターが `npx specdojo grade run --target kata --kata tsp-index`（run id `regrade-wave3-fix-2026-11-22`、opus-review-executor）で評価し直した。
+- `tsp-index-rulebook`: pass、score 97（minor 2、2026-11-22T06:47:19.365Z）
+- `tsp-index-sample`: pass、score 95（minor 2、2026-11-22T06:48:31.802Z）
+- rulebook と sample に blocker と major がないため、合格とした。
+
 ## 6. 関連ドキュメント
 
 - [[specdojo:tsp-index-rulebook]]

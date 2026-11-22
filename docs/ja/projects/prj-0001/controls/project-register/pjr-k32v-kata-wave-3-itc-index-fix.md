@@ -76,6 +76,13 @@ rulebook の指摘のうち、次は直していない。
 - 統合後に、オーケストレーターが `npx specdojo grade run --target kata --kata itc-index` で再評価し、blocker と major がないことを確かめる。機械的な指摘（PJR-7C9X）だけが残る場合は合格とする。
 - 親 runner の `npm run lint:md` などの検証結果は runner の evidence に残る。
 
+### 5.4. 統合後の評価し直し
+
+- 2026-11-22、オーケストレーターが `npx specdojo grade run --target kata --kata itc-index`（run id `regrade-wave3-fix-2026-11-22`、opus-review-executor）で評価し直した。
+- `itc-index-rulebook`: pass、score 96（note 1・minor 3、2026-11-22T06:49:30.105Z）
+- `itc-index-sample`: pass、score 90（minor 6、2026-11-22T06:50:39.652Z）
+- rulebook と sample に blocker と major がないため、合格とした。
+
 ## 6. 関連ドキュメント
 
 - `specdojo:itc-index-rulebook`

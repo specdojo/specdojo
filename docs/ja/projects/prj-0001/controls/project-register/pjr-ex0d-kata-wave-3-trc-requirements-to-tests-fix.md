@@ -69,6 +69,13 @@ sample（`trc-requirements-to-tests-sample`）の指摘:
 
 なし（文書の型の手直しのため）。
 
+### 5.2. 統合後の評価し直し
+
+- 2026-11-22、オーケストレーターが `npx specdojo grade run --target kata --kata trc-requirements-to-tests`（run id `regrade-wave3-fix-2026-11-22`、opus-review-executor）で評価し直した。
+- `trc-requirements-to-tests-rulebook`: pass、score 92（minor 4、2026-11-22T06:56:23.492Z）
+- `trc-requirements-to-tests-sample`: pass、score 99（minor 1、2026-11-22T06:57:44.575Z）
+- rulebook と sample に blocker と major がないため、合格とした。
+
 ## 6. 関連ドキュメント
 
 - _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
