@@ -1,0 +1,12 @@
+個票の作業内容の表を実績に合わせ、残りの完了条件を整えた。`kata-staging-old.ts` は、`packages/docs-site/.vitepress/` の一覧に出ないことで削除済みを確認した。`npm run docs:build` の通過は、オーケストレーターが個票 5.3 に書いた結果（126 秒）を使い、こちらでは流していない。
+
+- **個票の更新**: 作業内容の表の行 1 と行 6 を `done` にした。`_TODO_` は 6 章にも残っていたため、影響先の記述に置き換えた。表を直したあと、prettier で個票を整形した。
+- **測り直しなし**: 指示どおり、段ごとの時間は 5.3 を正とした。
+- **protected 設定の案**: `package.json` と `.devcontainer/devcontainer.json` は変えていない。案は 5.2 に書いてあり、下の `handoff` にも入れた。
+- **CHANGELOG の文案**: 5.1 に書いた。`CHANGELOG.md` は変えていない。
+
+5.3 の数字では、cache のある 2 回目の起動が 10.9 秒から 8.4 秒になった。`docs:generate` は dist で流しても 13 秒のままで、`--skip-if-fresh` で飛ばすと 0.1 秒になった。cache のない 1 回目の 72 秒は変わっていない。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"kata-staging の差分コピーと execution/ の除外、bin の generate コマンド、単体テスト、個票の更新が完了した。段ごとの時間と docs:build はオーケストレーターが測り、個票 5.3 に記載済み。個票の作業内容の表を全て done にし、_TODO_ を解消した。","handoff":["保護された設定の案（変更していない）: package.json の docs:generate を `specdojo-docs-site generate --skip-if-fresh` 経由にする案。個票 5.3 の測定では、cache のある起動が約 24 秒から約 8.5 秒になる見込み。","保護された設定の案（変更していない）: .devcontainer/devcontainer.json でツリーと .vitepress/cache を named volume に置く案。cache のない 1 回目の起動（約 72 秒）を減らす候補で、反映後に測り直す。","上記 2 件の反映は、利用者の承認のもと feature ブランチで行う。","CHANGELOG.md は変えていない。区分と行の文案は個票 5.1 に記載済み。","npm run docs:build の通過（126 秒）はオーケストレーターが個票 5.3 に記録した。executor は流していない。"],"validations":[{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-bnav-faster-docs-dev-startup.md","status":"passed","summary":"個票を整形した。"}],"target_coverage":[{"target":"docs/ja/projects/prj-0001/controls/project-register/pjr-bnav-faster-docs-dev-startup.md","status":"changed","path":"docs/ja/projects/prj-0001/controls/project-register/pjr-bnav-faster-docs-dev-startup.md"},{"target":"packages/docs-site/.vitepress/kata-staging.ts","status":"changed","path":"packages/docs-site/.vitepress/kata-staging.ts"},{"target":"packages/docs-site/bin/specdojo-docs-site.js","status":"changed","path":"packages/docs-site/bin/specdojo-docs-site.js"},{"target":"tests/packages/docs-site/kata-staging.test.ts","status":"changed","path":"tests/packages/docs-site/kata-staging.test.ts"}]}
+</specdojo_executor_evidence>

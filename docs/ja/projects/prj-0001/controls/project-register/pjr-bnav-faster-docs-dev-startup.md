@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-21T12:22:43Z"
-  block_reason: "parent validation failed: lint-md"
 ---
 
 # PJR-BNAV npm run docs:dev の起動して開けるまでの時間を縮める
