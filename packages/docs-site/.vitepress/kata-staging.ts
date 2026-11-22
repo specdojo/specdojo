@@ -6,10 +6,13 @@ import {
   readdirSync,
   realpathSync,
   rmSync,
+  statSync,
+  utimesSync,
   writeFileSync,
 } from "node:fs";
 import * as path from "node:path";
 import { writeDefaultIndexPages } from "./default-index-pages.js";
+import { isExecRecordPath } from "./exec-record-paths.js";
 
 // package 参照中（eject していない）の kata は利用リポジトリの docs/ 配下に存在しない。
 // VitePress の srcDir は 1 つしか指定できないため、ビルド前に利用側 docs と package 側文書を
@@ -114,26 +117,78 @@ function relativeFilesBelow(root: string): string[] {
   return files.sort();
 }
 
-function copyDocs(source: string, destination: string): void {
+const PAGE_ASSET_EXTENSIONS = new Set([".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp"]);
+
+// 実行の記録（execution/ 配下）のうち、ページとして出さない log・json・plan・result などは
+// 閲覧用ツリーへ複製しない。ページ（plan / result 以外の .md）と画像は今までどおり複製する。
+export function isStagingSkippedFile(relativeToDocs: string): boolean {
+  const normalized = relativeToDocs.split(path.sep).join("/");
+  if (!/(^|\/)execution\//.test(normalized)) return false;
+  if (isExecRecordPath(normalized)) return true;
+  const extension = path.extname(normalized).toLowerCase();
+  return extension !== ".md" && !PAGE_ASSET_EXTENSIONS.has(extension);
+}
+
+function collectDocs(source: string, relative: string, files: Map<string, string>): void {
   if (!existsSync(source)) return;
-  mkdirSync(destination, { recursive: true });
   for (const entry of readdirSync(source, { withFileTypes: true })) {
     const from = path.join(source, entry.name);
-    const to = path.join(destination, entry.name);
-    if (entry.isDirectory()) copyDocs(from, to);
-    else if (entry.isFile()) copyFileSync(from, to);
+    const rel = path.join(relative, entry.name);
+    if (entry.isDirectory()) collectDocs(from, rel, files);
+    else if (entry.isFile() && !isStagingSkippedFile(rel)) files.set(rel, from);
   }
 }
 
-// package 側の kata をステージングへ複製する。前回のステージングは毎回作り直し、
-// package の更新や eject で消えた kata が古いまま残らないようにする。
+// 複製元と同じ大きさ・更新時刻のファイルは複製し直さない（共有フォルダ上のコピーが遅いため）。
+function copyIfChanged(source: string, destination: string): void {
+  const sourceStat = statSync(source);
+  try {
+    const destinationStat = statSync(destination);
+    if (
+      destinationStat.size === sourceStat.size &&
+      destinationStat.mtimeMs === sourceStat.mtimeMs
+    ) {
+      return;
+    }
+  } catch {
+    // 無ければ複製する
+  }
+  mkdirSync(path.dirname(destination), { recursive: true });
+  copyFileSync(source, destination);
+  utimesSync(destination, sourceStat.atime, sourceStat.mtime);
+}
+
+// 期待する一覧に無いファイルと空ディレクトリを消す。
+function pruneStaging(directory: string, root: string, expected: Set<string>): boolean {
+  let isEmpty = true;
+  for (const entry of readdirSync(directory, { withFileTypes: true })) {
+    const absolutePath = path.join(directory, entry.name);
+    if (entry.isDirectory()) {
+      if (pruneStaging(absolutePath, root, expected)) rmSync(absolutePath, { recursive: true });
+      else isEmpty = false;
+    } else if (expected.has(path.relative(root, absolutePath))) {
+      isEmpty = false;
+    } else {
+      rmSync(absolutePath, { force: true });
+    }
+  }
+  return isEmpty;
+}
+
+// package 側の kata をステージングへ複製する。前回のステージングは差分だけ更新し、
+// package の更新や eject で消えた kata は期待一覧との差で削除して古いまま残らないようにする。
 // eject 済み（利用リポジトリ側に同じ相対パスがある）ファイルは複製せず、利用リポジトリ側を採用する。
 export function stageBundledKata(workspaceRoot: string): KataStagingResult {
   const stagingRoot = path.join(workspaceRoot, KATA_STAGING_DIR_NAME);
-  rmSync(stagingRoot, { recursive: true, force: true });
   mkdirSync(path.join(stagingRoot, "docs"), { recursive: true });
   const workspaceDocs = path.join(workspaceRoot, "docs");
-  copyDocs(workspaceDocs, path.join(stagingRoot, "docs"));
+  const expected = new Set<string>([".gitignore"]);
+  const workspaceFiles = new Map<string, string>();
+  collectDocs(workspaceDocs, "docs", workspaceFiles);
+  for (const [relativePath, from] of workspaceFiles) {
+    expected.add(relativePath);
+    copyIfChanged(from, path.join(stagingRoot, relativePath));
+  }
 
   const packageRoot = resolveKataPackageRoot(workspaceRoot);
   const bundledFiles = new Map<string, string>();
@@ -150,14 +205,15 @@ export function stageBundledKata(workspaceRoot: string): KataStagingResult {
         ejected += 1;
         continue;
       }
-      const destination = path.join(stagingRoot, relativeDir, file);
-      mkdirSync(path.dirname(destination), { recursive: true });
-      copyFileSync(path.join(bundledDir, file), destination);
+      expected.add(path.join(relativeDir, file));
+      copyIfChanged(path.join(bundledDir, file), path.join(stagingRoot, relativeDir, file));
       staged += 1;
     }
   }
 
   const defaultPages = writeDefaultIndexPages(workspaceRoot, stagingRoot);
+  for (const relativePath of defaultPages.keys()) expected.add(path.normalize(relativePath));
+  pruneStaging(stagingRoot, stagingRoot, expected);
 
   // 利用リポジトリの .gitignore を書き換えずに Git 管理対象から外す。
   writeFileSync(

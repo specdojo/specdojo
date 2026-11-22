@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-21T12:22:43Z"
-  block_reason: "parent validation failed: lint-md"
 ---
 
 # PJR-BNAV npm run docs:dev の起動して開けるまでの時間を縮める
@@ -44,14 +43,14 @@ docs:dev は起動のたびに docs/ の 17,321 ファイルを共有フォル�
 
 ## 4. 作業内容
 
-| No  | 作業                                         | 担当 | 状態 | メモ                                                                 |
-| --- | -------------------------------------------- | ---- | ---- | -------------------------------------------------------------------- |
-| 1   | 段ごとの時間を測る                           | DEV  | open | コピー段のみ測定。ほかの段は sandbox で VitePress を起動できず未測定 |
-| 2   | ツリーへのコピーから実行の記録を外す         | DEV  | done | `isStagingSkippedFile` を追加し、単体テストで確認                    |
-| 3   | 重ねる型がないときのコピーを減らす           | DEV  | done | 全削除・全コピーをやめ、差分コピーと期待一覧による削除へ変更         |
-| 4   | `docs:generate` を `dist` で流せるようにする | DEV  | done | bin に `generate` コマンドを追加                                     |
-| 5   | 保護された設定の案と CHANGELOG の文案を書く  | DEV  | done | 下記 5.1・5.2 に記載                                                 |
-| 6   | 測り直して検証を通す                         | DEV  | open | コピー段は測り直し済み。`docs:build` と親の検証は executor が未実行  |
+| No  | 作業                                         | 担当 | 状態 | メモ                                                                |
+| --- | -------------------------------------------- | ---- | ---- | ------------------------------------------------------------------- |
+| 1   | 段ごとの時間を測る                           | DEV  | done | オーケストレーターが全段を測り、5.3 に記載                          |
+| 2   | ツリーへのコピーから実行の記録を外す         | DEV  | done | `isStagingSkippedFile` を追加し、単体テストで確認                   |
+| 3   | 重ねる型がないときのコピーを減らす           | DEV  | done | 全削除・全コピーをやめ、差分コピーと期待一覧による削除へ変更        |
+| 4   | `docs:generate` を `dist` で流せるようにする | DEV  | done | bin に `generate` コマンドを追加                                    |
+| 5   | 保護された設定の案と CHANGELOG の文案を書く  | DEV  | done | 下記 5.1・5.2 に記載                                                |
+| 6   | 測り直して検証を通す                         | DEV  | done | 5.3 に測り直しを記載。`docs:build` 通過済み。親の検証は runner 実行 |
 
 ## 5. 対応結果
 
@@ -98,4 +97,4 @@ docs:dev は起動のたびに docs/ の 17,321 ファイルを共有フォル�
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- 影響先: `@specdojo/docs-site` の `kata-staging.ts` と `bin/specdojo-docs-site.js`。
