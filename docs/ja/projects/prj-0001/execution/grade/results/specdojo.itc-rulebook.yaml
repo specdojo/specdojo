@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/itc-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 97
-graded_at: "2026-11-22T06:51:52.976Z"
+score: 93
+graded_at: "2026-11-22T07:12:47.242Z"
 graded_by: opus-review-executor
-content_hash: 67a8e12c0d5b5ef33bc131d4d083d0407ccd3589fa591ebd4f503ea6534441b2
+content_hash: 6df1cd9beb95c5e17c1a6586ec1b9d239229332b70558ffce276102b9ff75d2d
 categories:
   purpose:
     score: 100
@@ -21,13 +21,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 83
+    score: 92
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 92
   consistency:
-    score: 100
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -78,17 +78,17 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -104,24 +104,39 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 2
+  minor: 3
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-arc-conciseness
-    line: 122
-    anchor: >-
-      ケース表のカラム順と必須・推奨（運用必須）の区分、`case_id` の形式（`it-<term>-<perspective_key>-<nnn>`）と付番は `itc-index`
-      の「ケース表の共通カラム」に従う。本節は対象別に固有の判断だけを定める。
-    message: 本文122行目の「本節は対象別に固有の判断だけを定める。」は、記述ガイド冒頭（本文76行目）の「本書は対象別に固有の判断だけを定める。」の繰り返しで、削っても判断情報を失わないため削除すること。
-    message_ja: 本文122行目の「本節は対象別に固有の判断だけを定める。」は、記述ガイド冒頭（本文76行目）の「本書は対象別に固有の判断だけを定める。」の繰り返しで、削っても判断情報を失わないため削除すること。
+    line: 137
+    anchor: "- ケースは代表→境界→重大例外の順で増やし、直積は作らない。"
+    message: >-
+      本文137行目の「ケースは代表→境界→重大例外の順で増やし、直積は作らない。」は itc-index の「条件の立て方（共通）」の再掲で、直積の禁止は本書の禁止事項（本文150行目）とも重なるため、削除するか itc-index
+      への参照に置き換えること。
+    message_ja: >-
+      本文137行目の「ケースは代表→境界→重大例外の順で増やし、直積は作らない。」は itc-index の「条件の立て方（共通）」の再掲で、直積の禁止は本書の禁止事項（本文150行目）とも重なるため、削除するか itc-index
+      への参照に置き換えること。
   - id: F002
     severity: minor
-    rule: vp-ux-language-consistency
-    line: 151
-    anchor: >-
-      | トレースや証跡を持たないケースを恒久的に残す                                                 | SSOTとして成立しないため（例外は暫定として明記）             
-      |
-    message: 禁止事項の表の理由列（本文151行目）で「SSOTとして成立しないため」と定義なしの略語を使っており、本文のほかの箇所の「正本」と表記がそろっていないため、「正本として成立しないため」に統一すること。
-    message_ja: 禁止事項の表の理由列（本文151行目）で「SSOTとして成立しないため」と定義なしの略語を使っており、本文のほかの箇所の「正本」と表記がそろっていないため、「正本として成立しないため」に統一すること。
+    rule: vp-qe-omissions-consistency
+    line: 128
+    anchor: "- 観点の分割・統合で保証内容が変わる場合は、新しい `perspective_key` と `case_id` を採番し、旧ケースの行は残して備考に移行先の `case_id` を書く。"
+    message: >-
+      本文128行目の「旧ケースの行は残して備考に移行先の `case_id` を書く」と本文118行目の「備考へ理由を残す」は、itc-index
+      の「ケース表の共通カラム」に備考列がないため書く先が定まらない。トレース表の備考に書くのか、ケース表に列を足すのかを明記すること。
+    message_ja: >-
+      本文128行目の「旧ケースの行は残して備考に移行先の `case_id` を書く」と本文118行目の「備考へ理由を残す」は、itc-index
+      の「ケース表の共通カラム」に備考列がないため書く先が定まらない。トレース表の備考に書くのか、ケース表に列を足すのかを明記すること。
+  - id: F003
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 87
+    anchor: "- 結合として保証する振る舞いを、動詞で始まる箇条書きで3〜7個程度示す（例: API入力を永続化モデルへ変換する／同一要求の冪等性を保証する）。"
+    message: >-
+      本文87行目の「動詞で始まる箇条書き」は、同じ行の例「API入力を永続化モデルへ変換する」や itc-sample
+      の責務の各行（目的語から始まり動詞で終わる）と食い違うため、「振る舞いを表す述語で終わる箇条書き」など日本語の語順に合う表現に改めること。
+    message_ja: >-
+      本文87行目の「動詞で始まる箇条書き」は、同じ行の例「API入力を永続化モデルへ変換する」や itc-sample
+      の責務の各行（目的語から始まり動詞で終わる）と食い違うため、「振る舞いを表す述語で終わる箇条書き」など日本語の語順に合う表現に改めること。

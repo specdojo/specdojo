@@ -86,6 +86,13 @@ sample（`itc-sample`）の指摘:
 - rulebook F001: 重複する「本節は対象別に固有の判断だけを定める。」を削った。
 - rulebook F002: 禁止事項の表の「SSOT」を「正本」に統一した。
 
+### 5.4. 統合後の評価し直し
+
+- 1 回目の後（2026-11-22T06:53Z）: `itc-rulebook` pass 93（minor 2）、`itc-sample` needs-work 90（major 2・minor 3）。sample の F001（観測点の食い違い）が本物の major として残ったため、2 回目を流した。
+- 2 回目の実行では、executor が対応の記録を完了条件の中へ書き込み、親の検証（lint-md-changed、MD026）で止まった。オーケストレーターが worktree で完了条件を develop の版に戻し、記録を「5.3. 2 回目の実行」へ移して、親の検証から再開した。
+- 2 回目の後（`npx specdojo grade run --target kata --kata itc`、run id `regrade-wave3-itc-2-2026-11-22`、opus-review-executor）: `itc-rulebook` pass 93（minor 3、2026-11-22T07:12:47Z）、`itc-sample` needs-work 97（major 1・minor 1、2026-11-22T07:13:37Z）。
+- 残った major は sample の F002（機械的な「未解決の _TODO_ / _ASSUMPTION_」の指摘、PJR-7C9X）だけで、sample の `_TODO_` は 0 件。合格の基準を満たすため、合格とした。
+
 ## 6. 関連ドキュメント
 
 - [[specdojo:itc-rulebook]]
