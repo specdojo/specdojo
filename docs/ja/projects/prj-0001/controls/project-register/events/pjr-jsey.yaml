@@ -5198,3 +5198,29 @@
       from: "2026-11-22"
       to: "-"
   previous_event_id: reg_97b73802d7a448db85cac6e0e09e3466
+- v: 1
+  id: reg_0e17f371d06f4c79bdf75bafb6f5d9f3
+  ts: "2026-11-22T14:34:14Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_3020cddf98934b34857c985c72cf865f
+- v: 1
+  id: reg_802f0de903eb45fa98ddbafaed31ca3d
+  ts: "2026-11-22T14:35:26Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_0e17f371d06f4c79bdf75bafb6f5d9f3
