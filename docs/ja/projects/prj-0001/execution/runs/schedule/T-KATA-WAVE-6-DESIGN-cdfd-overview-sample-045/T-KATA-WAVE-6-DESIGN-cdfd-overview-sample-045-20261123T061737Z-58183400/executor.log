@@ -1,0 +1,14 @@
+recipe（`docs/ja/specdojo/recipes/cdfd-overview-recipe.md`）の「仕上げチェック」に確認項目を 2 つ足しました。F001 が指摘した 3 つの漏れのうち 2 つはこれで埋まります。残る 1 つ（PO の承認記録）は、わざと足していません。Prettier と markdownlint はどちらもこのファイルで通りました。親 runner が流す検査は実行していません。
+
+追加した項目:
+
+- **Frontmatter:** `id`・`type`（`flow`）・`rulebook` があり、`based_on` には目的・範囲の直接の根拠にした先行成果物だけを書いているか。rulebook の「推奨 Frontmatter 項目」に合わせました。
+- **導入文・目的・適用範囲:** H1 直下の導入文が対象業務を一文で定義し、目的が領域のまとまりとデータの関係を 1〜2 文で述べ、適用範囲が対象・対象外と詳細化先を示しているか。rulebook の「本文要件」「記述ガイド」と完成判定の項目 1 に合わせました。
+
+**承認記録を入れなかった理由:** PJR-76N9 で、承認の進み具合を書かせる問いや手順は残さないと決まっています。rulebook の「全体方針」も、承認をドキュメントメタ情報標準の扱いとしています。
+
+rulebook と sample、frontmatter の `status` には手を付けていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"recipe の「仕上げチェック」に Frontmatter と導入文・目的・適用範囲の確認項目を追加し、F001 の 3 点のうち 2 点を解消した。PO の承認記録は PJR-76N9 と rulebook の「全体方針」に従い追加しなかった。rulebook と sample は変更していない。","handoff":["F001 のうち PO の承認記録の確認項目は、PJR-76N9（文書の役割の割り当てと承認の進み具合を書かせる問い・手順を残さない）と rulebook の「全体方針」（承認はドキュメントメタ情報標準に従う）に従い追加していない。再評価で同じ指摘が出た場合は、viewpoint 側の判定根拠を見直す必要がある。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/recipes/cdfd-overview-recipe.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/recipes/cdfd-overview-recipe.md","status":"passed","summary":"0 issues in 0 files"}]}
+</specdojo_executor_evidence>
