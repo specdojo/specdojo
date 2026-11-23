@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-BEQ8",
   "run_id": "pjr-beq8-20261123T001207Z-ddb0f4f3",
-  "updated_at": "2026-11-23T01:17:01.372Z",
+  "updated_at": "2026-11-23T01:17:10.195Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-BEQ8/pjr-beq8-20261123T001207Z-ddb0f4f3/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sonnet-executor",
       "attempts": 1,
       "started_at": "2026-11-23T01:17:01.372Z",
-      "completed_at": null,
+      "completed_at": "2026-11-23T01:17:10.195Z",
       "artifact_ref": null
     }
   },
