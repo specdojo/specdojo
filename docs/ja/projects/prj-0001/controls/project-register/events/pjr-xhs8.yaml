@@ -60,3 +60,45 @@
       from: ""
       to: 完了条件
   previous_event_id: reg_244ab7357edb4778b2ba03352e727412
+- v: 1
+  id: reg_9cea2326ca444fb2abe9e5979f4c83e9
+  ts: "2026-11-23T00:17:16Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_3cafe50a11564385a0704142bf8fc218
+- v: 1
+  id: reg_1e40a059a61d438c9b17d3f4e49cdd98
+  ts: "2026-11-23T00:19:00Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor reported incomplete: copyIfChanged の 1ms 許容、dev 時の索引描画での Shiki 省略、単体テスト追加、個票更新は完了。索引の文字の前後比較と起動時間の 3 回測定は dev サーバーを起動できず未実施。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor reported incomplete: copyIfChanged の 1ms 許容、dev 時の索引描画での Shiki 省略、単体テスト追加、個票更新は完了。索引の文字の前後比較と起動時間の 3 回測定は dev サーバーを起動できず未実施。"
+  previous_event_id: reg_9cea2326ca444fb2abe9e5979f4c83e9
+- v: 1
+  id: reg_d0fe28a376c44b51b97bbb9e103b21b6
+  ts: "2026-11-23T01:01:56Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: waiting
+  to_status: waiting
+  reason: 比較と測りを orchestrator が行い、2 回目の実行の条件を足した
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_1e40a059a61d438c9b17d3f4e49cdd98

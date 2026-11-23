@@ -89,3 +89,16 @@
       from: "-"
       to: "executor reported incomplete: RunRecordIndex を追加し dashboard の生成で 1 回だけ読むようにした。typecheck、lint:ts、単体テストは通過。修正前後の出力比較と時間の測定は sandbox で tsx 実行が承認待ちになり未実施のため、個票の作業内容 No.4 は open のまま残した。"
   previous_event_id: reg_cd0ef824369840ca93d1eb7e63ea7147
+- v: 1
+  id: reg_01a5c7e0c7fd4a8db82f4637fd47c48a
+  ts: "2026-11-23T01:01:52Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: waiting
+  to_status: waiting
+  reason: 比較と測りを orchestrator が行い、2 回目の実行の条件を足した
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_0a901899a4844675a7bbb6f29af112a8

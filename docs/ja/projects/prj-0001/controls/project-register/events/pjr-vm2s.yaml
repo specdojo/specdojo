@@ -1,0 +1,65 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_8e5eb3092c754f15bc109bcd93c6157a
+  ts: "2026-11-23T00:22:06Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: register のブランチへ移る手順を書いて試す
+    - field: description
+      from: ""
+      to: prj-0001 と external\_projects で起票している別のプロジェクトで、register のブランチへ移る手順を試し、既定に切り替える判断の条件を決める
+    - field: input
+      from: ""
+      to: '["PJR-2TX0 の決定（D、1b・2a・3a・4a）を展開する。個人の運用でも、別のプロジェクトから specdojo へ起票することが多いため、早めに着手する（利用者の依頼、2026-11-23）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-2TX0"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-4VD6","PJR-1JF6","PJR-FBP0"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: register
+- v: 1
+  id: reg_63819038b9b343598e6ec13c442cef7b
+  ts: "2026-11-23T00:22:49Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_8e5eb3092c754f15bc109bcd93c6157a

@@ -74,7 +74,13 @@ C を採る（2026-11-15、利用者がお勧めのとおり承認）。
 - 承認方式は既定で `commit`（`register close` により `decided` へ遷移）を用いる。
 - 回答が不可逆・高リスク・framework schema 破壊的変更を伴う場合は `PR` 方式で承認し、証跡に PR URL と merge SHA を記載する。
 
-## 7. 関連ドキュメント
+## 7. 置き換えの記録
+
+PJR-2TX0（2026-11-21、D）が、この決定（C: GitHub App の統合専用 actor）を置き換えた。`git-branching-standard` は PJR-SJC7 で 2TX0 の方式（register 専用ブランチ）へ改訂済みである。この項目の状態は変えない。
+
+## 8. 関連ドキュメント
+
+- [[prj-0001:pjr-2tx0-register-branch-remote-ssot|PJR-2TX0]]
 
 - [[specdojo:git-branching-standard]]
 - [[prj-0001:pjr-pqg3-sidebar-kata-menus]]

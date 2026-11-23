@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-22T23:45:22Z"
   due_on: "2026-11-30"
+  block_reason: "executor reported incomplete: copyIfChanged の 1ms 許容、dev 時の索引描画での Shiki 省略、単体テスト追加、個票更新は完了。索引の文字の前後比較と起動時間の 3 回測定は dev サーバーを起動できず未実施。"
   derived_from:
     - PJR-BBTW
   commit_type: perf
@@ -40,6 +41,9 @@ kata-staging の更新時刻の比較で端数が落ちて毎回複製する。d
 - 迷った点は executor が決め、決めた内容と理由を個票の対応結果と報告の `handoff` に書く。
 - 保護された設定（`.specdojo/`・`.agents/`・`.claude/`・`.codex/`・`.opencode/`・`package.json` など）は変えない。変更が要る場合は、変更案を個票の対応結果と報告の `handoff` に書く。
 - `npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を通し、親の検証を通す。
+- 2 回目の実行（2026-11-23）: 1 回目は直しと単体テストを終えたが、検索の索引の比較と起動の時間の測りを sandbox の中で流せず、waiting になった。比較と測りはオーケストレーターが行った。結果は次のとおりで、executor はこれを個票の対応結果に書き写し、作業内容の表の比較と測りの行を done にする。executor は比較と測りを流し直さない。
+  - 本体の作業ツリーの文書に向けて dev サーバーを起動し、`/specdojo/` が 200 を返すまでを、温めの 1 回の後に 3 回ずつ測った。直す前（develop の docs-site）は 23.9・23.4・23.9 秒（平均 23.7 秒）、直した後（この worktree の docs-site）は 16.3・15.7・15.8 秒（平均 15.9 秒）だった。worktree の中の文書だけでは、直す前も直した後も約 6 秒で差が出なかった（git 管理外の生成のページがないため）。
+  - 両方の dev サーバーから日本語の検索の索引（`@localSearchIndexja`）を取り出して比べた。文書の数（15,472）と文書の id は同じだった。語の違いは、測りの合間に dashboard が作り直された時刻の 3 語と、直す前だけにある `x26`・`x3c`（Shiki の色付けが出す HTML の文字参照）の 2 語だけで、本文の文字は変わっていない。
 
 ## 4. 作業内容
 

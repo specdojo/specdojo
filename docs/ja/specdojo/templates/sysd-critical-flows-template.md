@@ -10,7 +10,7 @@ specdojo:
       status: draft
       owner: ARC
       rulebook: specdojo:sysd-critical-flows-rulebook
-      part_of: []
+      part_of: _PART_OF_
       based_on: _BASED_ON_
 ---
 
@@ -39,7 +39,7 @@ _TODO_: 図の矢印・同期／非同期・境界の凡例を記入する。以
 
 - **目的・起動**: _PURPOSE_AND_TRIGGER_
 - **範囲・入出力**: _SCOPE_INPUT_OUTPUT_AND_EXCLUSIONS_
-- **図**: _TODO_: システム内外、サービス／プロセスと保存先、主要識別子、同期・非同期の区別を表す図を記入する。
+- **図**: _TODO_: システム内外、サービス／プロセスと保存先、主要識別子、同期・非同期の区別を表す図を記入する。要求の受付と業務の完了は分ける。
 - **永続化点・成功の確定**: _PERSISTENCE_AND_SUCCESS_CONFIRMATION_
 - **整合性・冪等・再実行**: _CONSISTENCY_IDEMPOTENCY_AND_REPLAY_CONDITIONS_
 - **失敗・保持・補償・再開**: _FAILURE_RETENTION_COMPENSATION_AND_RESUME_CONDITIONS_
@@ -57,9 +57,9 @@ _TODO_: 共通の必須記録と trace 方針を記入する。フロー別の�
 
 ### 4.2. 管理記録への引渡し
 
-| 条件・対象        | 記録種別      | 担当Role code・対応方針 | 報告・判断先                     |
-| ----------------- | ------------- | ----------------------- | -------------------------------- |
-| _CONTROL_TRIGGER_ | _RECORD_TYPE_ | _OWNER_AND_RESPONSE_    | _REPORT_OR_DECISION_DESTINATION_ |
+| 条件・対象        | 記録種別      | 担当の対応方針    | 報告・判断先                     |
+| ----------------- | ------------- | ----------------- | -------------------------------- |
+| _CONTROL_TRIGGER_ | _RECORD_TYPE_ | _RESPONSE_POLICY_ | _REPORT_OR_DECISION_DESTINATION_ |
 
 ## 5. 関連ドキュメント導線
 
@@ -79,8 +79,8 @@ _TODO_: 共通の必須記録と trace 方針を記入する。フロー別の�
 
 ### 5.3. 未決事項と後続作業
 
-| ID / 対象                       | 未充足事項・依存とScheduleへの影響   | 作業単位・依存順 | 完了条件・判断時期・登録先                |
-| ------------------------------- | ------------------------------------ | ---------------- | ----------------------------------------- |
-| `_UNRESOLVED_ID_` / `_FLOW_ID_` | _GAP_DEPENDENCY_AND_SCHEDULE_IMPACT_ | _WORK_SEQUENCE_  | _CLOSURE_TIMING_AND_TRACKING_DESTINATION_ |
+| ID / 対象                       | 未充足事項・依存とScheduleへの影響   | 受入や運用への影響          | 当面の扱い             | 作業単位・依存順 | 完了条件・判断時期・登録先                |
+| ------------------------------- | ------------------------------------ | --------------------------- | ---------------------- | ---------------- | ----------------------------------------- |
+| `_UNRESOLVED_ID_` / `_FLOW_ID_` | _GAP_DEPENDENCY_AND_SCHEDULE_IMPACT_ | _ACCEPTANCE_AND_OPS_IMPACT_ | _PROVISIONAL_HANDLING_ | _WORK_SEQUENCE_  | _CLOSURE_TIMING_AND_TRACKING_DESTINATION_ |
 
-<!-- 未決事項がなければ行を削除し、確認した範囲と「なし」を記す。未作成参照はwikilinkにせずIDをコード表記し、追跡IDを付ける。 -->
+<!-- 未決事項がなければ行を削除し、確認した範囲と「なし」を記す。「受入や運用への影響」「当面の扱い」は省かない。未作成参照はwikilinkにせずIDをコード表記し、追跡IDを付ける。 -->

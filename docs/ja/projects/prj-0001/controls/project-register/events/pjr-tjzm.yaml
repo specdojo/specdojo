@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_01dbd313551b485c81694c7ba47402a1
+  ts: "2026-11-23T00:36:50Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: OpenFisca-Japan の作業（利用側の prj-0001）で見つけた
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: runner のログの Register item の行で、項目のタイトルの \_ が \_ と表示される
+    - field: description
+      from: ""
+      to: exec run と dry-run の Register item の行に、一覧向けに Markdown のエスケープをしたタイトルが出る。commit のタイトルでは直っているが、ログでは frontend\_test\_note.md のように見える
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-23"

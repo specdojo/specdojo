@@ -1,0 +1,65 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_812b403bde054dab9f884e927d3f265b
+  ts: "2026-11-23T00:21:38Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: register の記帳を register のブランチへ書いて push する
+    - field: description
+      from: ""
+      to: register --commit と schedule の実行のイベント、external\_projects からの起票を、設定で register のブランチへ commit して push する。non-fast-forward は pull --rebase で解く
+    - field: input
+      from: ""
+      to: '["PJR-2TX0 の決定（D、1b・2a・3a・4a）を展開する。個人の運用でも、別のプロジェクトから specdojo へ起票することが多いため、早めに着手する（利用者の依頼、2026-11-23）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-2TX0"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-SJC7"]'
+    - field: commit_type
+      from: ""
+      to: feat
+    - field: commit_scope
+      from: ""
+      to: register
+- v: 1
+  id: reg_7d459758aa234da39e9d41add36314f8
+  ts: "2026-11-23T00:22:25Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_812b403bde054dab9f884e927d3f265b
