@@ -1,0 +1,44 @@
+レビュー結果: 鮮度は最新で、verdict は `complete-with-findings` と判断します。
+
+**評価結果の確認**
+- 次の4対象で `specdojo grade list --target kata --path <対象> --changed-only` を実行しました。
+  - `opd-incident-management-sample`
+  - `opd-rulebook`
+  - `opd-access-control-sample`
+  - `opd-monitoring-sample`
+- いずれも出力はなく、終了コードは 0 でした。つまり評価結果は最新です。
+- 対象サンプルに対しては `--incomplete` も実行し、出力はなく終了コードは 0 でした。評価パイプラインは完了しています。
+- 4対象とも `verdict` は `pass` です。
+  - 対象サンプル（`opd-incident-management-sample`）: score 96、minor 2。
+  - `opd-rulebook`: score 98、minor 2。
+  - `opd-access-control-sample`: score 100、finding なし。
+  - `opd-monitoring-sample`: score 95、minor 2。
+- 作業ツリーの未追跡ファイルは runner の `pipeline-state.json` だけです。成果物への変更は混入していません。
+
+**判断根拠**
+
+照合には、対象サンプルの本文と plan に示された grade 結果を使いました。
+
+- DC-001: 章構成が概要、障害対応方針、関連ドキュメント導線の順で、必須の表がそろっています。grade の `vp-qe-kata-conformance` は level 4 です。
+- DC-002 / DC-003: 駄菓子屋きぬやの文脈に沿っています。禁止事項への抵触は、grade の評価結果に指摘がありません。
+- DC-004: 「優先度の判定」の表が、守る業務ごとに障害の例と回避策を示し、P1〜P3 に対応付けています。店頭販売を記録できない場合とつけ残高を確かめられない場合は、どちらも P1 です。
+- DC-005: 周知の対象は `PO`、店番担当、次の店番担当、来店客など、共通サンプル文脈の役割名で書かれています。
+- 対象サンプルの `depends_on` は `opd-index` と `opd-access-control` です。本文は `opd-access-control-sample` へ wikilink しており、`opd-index` へは名前で参照しています。
+
+**未充足事項・改善指示**
+
+完了条件に未充足はありません。次の minor finding は完了を妨げないため、再評価せず改善指示として残します。
+
+- サンプル `F001`: 停止・切替の表の P1「紙の販売控えへ切り替える」で、判断者が `PO` で時機が「切替の期限を過ぎても再開を確かめられない」となっています。周知の表では「切り替えた時点」で来店客へ周知するため、初動の切替の担当と時機が読み取れません。初動の切替（店番担当）と再開の判断（`PO`）を分けて明記してください。
+- サンプル `F002`: `opd-monitoring` が P2 とする夜間バックアップ失敗の行が、優先度・停止・周知の各表にありません。行を追加するか、扱いを明記してください。
+- `opd-rulebook` の `F001` / `F002`: `opr-*` サンプル7件の `rulebook` 宣言と、旧来の `opd-sample` の整理です。どちらも本タスクの対象外で、型の整備として別途扱ってください。
+- `opd-monitoring-sample` の `F001` / `F002`: 閾値の参照先の明記と、営業時間外の判定・記録の扱いです。どちらもそのサンプル側の手直しです。
+
+**確認できなかった範囲**
+- 先行する edit タスクの result は特定していません。実行記録の検証結果の成否は確認していません。
+- 親 runner が実行する lint 系・test 系の検証は、ここでは実行していません。
+- 人による確定は、plan の方針どおり対象外としています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"鮮度確認: 4対象（対象サンプル・opd-rulebook・opd-access-control-sample・opd-monitoring-sample）で `grade list --changed-only` の出力なし（終了コード0、最新）。対象サンプルは `--incomplete` も出力なし。verdict は complete-with-findings。完了条件 DC-001〜DC-005 は充足。grade の minor finding（対象サンプル F001: 初動の切替と再開の判断の分離、F002: バックアップ失敗 P2 の行の追加／扱いの明記）は完了を妨げない改善指示として残す。rulebook・monitoring サンプルの minor finding はタスク範囲外。確認できなかった範囲: 先行 edit result の特定と検証結果の成否、親 runner が実行する lint・test 系の検証、人による確定。","handoff":["対象サンプル F001: 停止・切替の表で、初動の切替（店番担当）と再開の判断（PO）を分けて明記する。","対象サンプル F002: 夜間バックアップ失敗（P2）の行を優先度・停止・周知の表に追加する、または扱いを明記する。","opd-rulebook の F001・F002（opr サンプル7件の rulebook 宣言、旧 opd-sample の整理）は別途、型の整備として扱う。","opd-monitoring-sample の F001（閾値の参照付き明記）・F002（営業時間外の判定・記録）は同サンプル側で手直しする。"],"validations":[]}
+</specdojo_executor_evidence>
