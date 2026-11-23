@@ -11,8 +11,9 @@ base_path: /docs/ja/specdojo
 # 実践の型（rulebook・sample）を成果物として整える段の対象を載せる（PJR-6998）。
 # 代表は sample そのもの（駄菓子屋の共通サンプル文脈）で、rulebook は対応する型を指す。
 # done_criteria は型に共通の 3 条件に、grade のし直し（run id regrade-kata-2026-11-21）の
-# 大きい指摘から拾った型に固有の条件を足す。depends_on はテストの型の上下関係
-# （tsp-index → 各 *-index → 対象別）に合わせ、上位の完成例と食い違わないよう順に整える。
+# 大きい指摘から拾った型に固有の条件を足す。第 3 波の depends_on はテストの型の上下関係
+# （tsp-index → 各 *-index → 対象別）に合わせた。第 4〜6 波の depends_on は、型ごとの段を並べて
+# 流せるよう、sample が本文で参照する関係と、同じ rulebook を直す代表の sample を待つ関係だけにする（PJR-BHFG）。
 
 groups:
   - name: サンプル
@@ -365,3 +366,1478 @@ groups:
           - text: 影響詳細の判断根拠に、評価観点ごとの事実と尺度・集約規則を当てはめた結果を書いていること
             roles: [QE]
             viewpoint: vp-qe-omissions-consistency
+
+      # 第 4 波（非機能要件と受け入れ条件、PJR-HJ3H）
+
+      - local_id: nfr-index-sample
+        name: 非機能要件（全体構成）の完成例
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋の販売管理システムを題材に、非機能要件の全体構成の完成例を示す
+        path: nfr-index-sample.md
+        rulebook: specdojo:nfr-index-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の必須見出しをそろえ、カテゴリ別の非機能要件（nfr-availability など）への導線を一覧で示していること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: カテゴリ別の文書を足す・まとめるときに見直す範囲を示していること
+            roles: [DEV]
+            viewpoint: vp-dev-change-impact
+
+      - local_id: nfr-availability-sample
+        name: 可用性要件の完成例
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋の販売管理システムを題材に、可用性要件の完成例を示す
+        path: nfr-availability-sample.md
+        rulebook: specdojo:nfr-availability-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 可用性の要件を、営業時間中に店頭販売を止めないといった目的と結び付け、稼働時間や復旧時間を判定できる値で示していること。利用者が決める値は推測で埋めず `_UNDECIDED_` で残していること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: テーマの列挙ではなく、要件・受け入れ基準・対象外を rulebook の必須見出しに沿って書いていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+
+      - local_id: nfr-integrity-sample
+        name: データ整合性要件の完成例
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋の販売管理システムを題材に、データ整合性要件の完成例を示す
+        path: nfr-integrity-sample.md
+        rulebook: specdojo:nfr-integrity-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 販売記録・在庫残高・つけ残高のうち、どの正確性を担保するかを概要で示していること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: 整合の要件を、照合の対象と判定できる条件で書いていること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+
+      - local_id: nfr-maintainability-sample
+        name: 保守性要件の完成例
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋の販売管理システムを題材に、保守性要件の完成例を示す
+        path: nfr-maintainability-sample.md
+        rulebook: specdojo:nfr-maintainability-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 保守性の中核の要件を未決に回さず、変更・障害対応の効率を判定できる基準で示していること。利用者が決める値は推測で埋めず `_UNDECIDED_` で残していること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 店主不在時の運用など、プロジェクトの目的のどれに応える要件かを概要で示していること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+
+      - local_id: nfr-operations-sample
+        name: 運用要件の完成例
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋の販売管理システムを題材に、運用要件の完成例を示す
+        path: nfr-operations-sample.md
+        rulebook: specdojo:nfr-operations-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 運用要件を、サービス停止や店主不在時の店舗運営への影響と結び付けていること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+          - text: rulebook の必須見出しに沿い、要件ごとに確認の方法を示していること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+
+      - local_id: nfr-performance-sample
+        name: 性能要件の完成例
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋の販売管理システムを題材に、性能要件の完成例を示す
+        path: nfr-performance-sample.md
+        rulebook: specdojo:nfr-performance-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 性能の目標を、レジの操作や在庫の照会など業務の場面ごとに、測定の条件と判定できる値で示していること。利用者が決める値は推測で埋めず `_UNDECIDED_` で残していること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 性能の目標が、プロジェクトの目的と範囲のどれに応えるかを示していること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+
+      - local_id: nfr-reliability-sample
+        name: 信頼性要件の完成例
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋の販売管理システムを題材に、信頼性要件の完成例を示す
+        path: nfr-reliability-sample.md
+        rulebook: specdojo:nfr-reliability-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 信頼性の要件を、障害の種類と許容の条件で判定できるように書いていること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 試験・運用など、要件を受け取る後続の成果物との関係を示していること
+            roles: [PM]
+            viewpoint: vp-pm-dependency-risk
+
+      - local_id: nfr-security-safety-sample
+        name: セキュリティ・安全性要件の完成例
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋の販売管理システムを題材に、セキュリティ・安全性要件の完成例を示す
+        path: nfr-security-safety-sample.md
+        rulebook: specdojo:nfr-security-safety-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 守る情報と操作（つけ残高・販売記録・在庫）を概要で具体的に示し、目的と対応付けていること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: 要件ごとに、対策が満たされたかを判定できる条件を示していること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+
+      - local_id: nfr-usability-sample
+        name: 操作性要件の完成例
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋の販売管理システムを題材に、操作性要件の完成例を示す
+        path: nfr-usability-sample.md
+        rulebook: specdojo:nfr-usability-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 操作性要件の一覧・測定と検証の方法・関連ドキュメントの導線をそろえ、指標ごとに判定の基準値を示していること。利用者が決める値は推測で埋めず `_UNDECIDED_` で残していること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 利用者の視点での対象範囲と対象外を示していること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+
+      - local_id: sac-sample
+        name: システム受入条件仕様の完成例
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋の販売管理システムを題材に、システム受入条件の完成例を示す
+        path: sac-sample.md
+        rulebook: specdojo:sac-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 解説ではなく、受入対象を決めた SAC の実例になっていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook が目安とする数の代表シナリオを示し、出口条件を判定できる基準で書いていること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+
+      - local_id: trc-requirements-to-specs-sample
+        name: トレーサビリティ（要求→仕様）の完成例
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋の販売管理システムを題材に、要求から仕様へのトレーサビリティの完成例を示す
+        path: trc-requirements-to-specs-sample.md
+        rulebook: specdojo:trc-requirements-to-specs-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: トレース表の前提に、生成元・生成手段・生成日を書いていること（rulebook の禁止事項）
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 表の各行で、要求と仕様の対応と抜けを判定できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+
+      # 第 5 波（運用・移行・影響分析、PJR-JZ2F）
+
+      - local_id: opd-index-sample
+        name: 運用方針・設計（全体構成）の完成例
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋の販売管理システムを題材に、運用方針・設計の全体構成の完成例を示す
+        path: opd-index-sample.md
+        rulebook: specdojo:opd-index-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: Frontmatter の `rulebook` が opd-index-rulebook を指し、rulebook が必須とする章をそろえていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 恒常運用の方針を、店頭販売・在庫・つけの記録を続けるという業務の価値と結び付けていること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+
+      - local_id: opd-access-control-sample
+        name: 運用方針・設計（権限・アカウント運用）の完成例
+        kind: work
+        depends_on:
+          - opd-index-sample
+        overview: 駄菓子屋の販売管理システムを題材に、権限・アカウント運用の方針の完成例を示す
+        path: opd-access-control-sample.md
+        rulebook: specdojo:opd-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 付与と剥奪のルールと、監査ログの方針（記録対象・保持期間）を示していること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 権限の付与対象を共通サンプル文脈の役割名で書き、opr-index への導線を持つこと
+            roles: [BA]
+            viewpoint: vp-ba-stakeholder-clarity
+
+      - local_id: opd-incident-management-sample
+        name: 運用方針・設計（障害管理）の完成例
+        kind: work
+        depends_on:
+          - opd-index-sample
+          - opd-access-control-sample
+        overview: 駄菓子屋の販売管理システムを題材に、障害管理の方針の完成例を示す
+        path: opd-incident-management-sample.md
+        rulebook: specdojo:opd-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 優先度の区分を、店頭販売を記録できない・つけ残高を確かめられないなど、きぬやの業務への影響と対応付けていること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+          - text: 周知の対象を共通サンプル文脈の役割名で書いていること
+            roles: [BA]
+            viewpoint: vp-ba-stakeholder-clarity
+
+      - local_id: opd-monitoring-sample
+        name: 運用方針・設計（監視）の完成例
+        kind: work
+        depends_on:
+          - opd-index-sample
+          - opd-access-control-sample
+        overview: 駄菓子屋の販売管理システムを題材に、監視の方針の完成例を示す
+        path: opd-monitoring-sample.md
+        rulebook: specdojo:opd-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 監視の対象を業務の価値と結び付け、検知しなかった場合の影響を示していること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+          - text: opd-index の差分として書き、opd-index の方針を言い直していないこと
+            roles: [ARC]
+            viewpoint: vp-arc-cross-document-consistency
+
+      - local_id: opr-index-sample
+        name: 運用手順（全体構成）の完成例
+        kind: work
+        depends_on:
+          - opd-index-sample
+        overview: 駄菓子屋の販売管理システムを題材に、運用手順の全体構成の完成例を示す
+        path: opr-index-sample.md
+        rulebook: specdojo:opr-index-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: Frontmatter の `rulebook` が opr-index-rulebook を指し、rulebook が必須とする章をそろえていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 点検の対象と手順を、第三者が再現できる粒度で書いていること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+
+      - local_id: opr-sample
+        name: 運用手順の完成例
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋の販売管理システムを題材に、運用手順の完成例を示す
+        path: opr-sample.md
+        rulebook: specdojo:opr-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 概要で、opr-index との関係と、店主一人の運用・家族の店番を続けるといった目的との対応を示していること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: 運用手順を、手順・判断・証跡の値で示していること
+            roles: [OPS]
+            viewpoint: vp-ops-operability
+
+      - local_id: opr-access-control-sample
+        name: 運用手順（権限・アカウント）の完成例
+        kind: work
+        depends_on:
+          - opd-index-sample
+          - opr-sample
+        overview: 駄菓子屋の販売管理システムを題材に、権限・アカウントの運用手順の完成例を示す
+        path: opr-access-control-sample.md
+        rulebook: specdojo:opr-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: Frontmatter の `rulebook` が opr-rulebook を指し、opr-rulebook が個別の手順に求める構成に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 適用範囲と対象外（特権アカウントなど）と、申請を受け付ける条件を示していること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+
+      - local_id: opr-backup-restore-sample
+        name: 運用手順（バックアップ・リストア）の完成例
+        kind: work
+        depends_on:
+          - opd-index-sample
+          - opr-sample
+        overview: 駄菓子屋の販売管理システムを題材に、バックアップ・リストアの運用手順の完成例を示す
+        path: opr-backup-restore-sample.md
+        rulebook: specdojo:opr-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: Frontmatter の `rulebook` が opr-rulebook を指し、opr-rulebook が個別の手順に求める構成に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 演習で復旧の目標を満たさないときの判断の基準とエスカレーションの条件を示していること。利用者が決める値は推測で埋めず `_UNDECIDED_` で残していること
+            roles: [OPS]
+            viewpoint: vp-ops-operability
+
+      - local_id: opr-batch-sample
+        name: 運用手順（バッチ再実行）の完成例
+        kind: work
+        depends_on:
+          - opd-index-sample
+          - opr-sample
+        overview: 駄菓子屋の販売管理システムを題材に、バッチ再実行の運用手順の完成例を示す
+        path: opr-batch-sample.md
+        rulebook: specdojo:opr-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: Frontmatter の `rulebook` が opr-rulebook を指し、opr-rulebook が個別の手順に求める構成に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 再実行のコマンド・入力・前提の確認・完了の条件を示していること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+
+      - local_id: opr-change-sample
+        name: 運用手順（運用変更）の完成例
+        kind: work
+        depends_on:
+          - opd-index-sample
+          - opr-sample
+        overview: 駄菓子屋の販売管理システムを題材に、運用変更の手順の完成例を示す
+        path: opr-change-sample.md
+        rulebook: specdojo:opr-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: Frontmatter の `rulebook` が opr-rulebook を指し、opr-rulebook が個別の手順に求める構成に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 目的と範囲、変更の判断の基準と影響の範囲を示していること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+
+      - local_id: opr-incident-sample
+        name: 運用手順（障害対応）の完成例
+        kind: work
+        depends_on:
+          - opr-index-sample
+          - opr-sample
+        overview: 駄菓子屋の販売管理システムを題材に、障害対応の運用手順の完成例を示す
+        path: opr-incident-sample.md
+        rulebook: specdojo:opr-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: Frontmatter の `rulebook` が opr-rulebook を指し、opr-rulebook が個別の手順に求める構成に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 対象のシステムと業務の範囲、対象外を示していること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+
+      - local_id: opr-monitoring-sample
+        name: 運用手順（アラート対応）の完成例
+        kind: work
+        depends_on:
+          - opr-index-sample
+          - opr-sample
+        overview: 駄菓子屋の販売管理システムを題材に、アラート対応の運用手順の完成例を示す
+        path: opr-monitoring-sample.md
+        rulebook: specdojo:opr-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: Frontmatter の `rulebook` が opr-rulebook を指し、opr-rulebook が個別の手順に求める構成に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: アラート対応の対象のシステムと環境、機能を止める判断の条件を示していること
+            roles: [OPS]
+            viewpoint: vp-ops-operability
+
+      - local_id: opr-support-sample
+        name: 運用手順（問い合わせ一次対応）の完成例
+        kind: work
+        depends_on:
+          - opd-index-sample
+          - opr-sample
+        overview: 駄菓子屋の販売管理システムを題材に、問い合わせ一次対応の運用手順の完成例を示す
+        path: opr-support-sample.md
+        rulebook: specdojo:opr-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: Frontmatter の `rulebook` が opr-rulebook を指し、opr-rulebook が個別の手順に求める構成に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 目的と範囲を示し、条件で分かれる手順と完了の基準を書いていること
+            roles: [OPS]
+            viewpoint: vp-ops-operability
+
+      - local_id: otp-index-sample
+        name: 運用切替計画（全体構成）の完成例
+        kind: work
+        depends_on:
+          - mip-index-sample
+        overview: 駄菓子屋の販売管理システムを題材に、運用切替計画の全体構成の完成例を示す
+        path: otp-index-sample.md
+        rulebook: specdojo:otp-index-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook が必須とする章をそろえていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: mip-index・cop-index との分担を示し、同じ内容を言い直していないこと
+            roles: [ARC]
+            viewpoint: vp-arc-cross-document-consistency
+
+      - local_id: otp-sample
+        name: 運用切替計画（対象別）の完成例
+        kind: work
+        depends_on:
+          - otp-index-sample
+        overview: 駄菓子屋の販売管理システムを題材に、運用切替計画の対象別の完成例を示す
+        path: otp-sample.md
+        rulebook: specdojo:otp-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 概要に、運用切替で守る業務の価値（店頭販売・在庫・つけの記録を続ける）と対象の範囲を示していること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+
+      - local_id: cop-index-sample
+        name: カットオーバー計画（全体構成）の完成例
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋の販売管理システムを題材に、カットオーバー計画の全体構成の完成例を示す
+        path: cop-index-sample.md
+        rulebook: specdojo:cop-index-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 切替の対象と対象外を概要で示していること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: 共通の GO/NO-GO を、判定点・条件・失敗時の扱いの表で示していること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+
+      - local_id: cop-sample
+        name: カットオーバー計画（対象別）の完成例
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋の販売管理システムを題材に、カットオーバー計画の対象別の完成例を示す
+        path: cop-sample.md
+        rulebook: specdojo:cop-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 当日のタイムラインを、分単位の作業・判定ポイント・ロールバックで示していること
+            roles: [OPS]
+            viewpoint: vp-ops-release-readiness
+
+      - local_id: mip-index-sample
+        name: 移行計画の完成例
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋の販売管理システムを題材に、移行計画の完成例を示す
+        path: mip-index-sample.md
+        rulebook: specdojo:mip-index-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook が必須とする章をそろえ、移行の成功条件と GO/NO-GO の最低条件を判定できる基準で示していること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+
+      - local_id: dmd-index-sample
+        name: データ移行設計（全体構成）の完成例
+        kind: work
+        depends_on:
+          - mip-index-sample
+        overview: 駄菓子屋の販売管理システムを題材に、データ移行設計の全体構成の完成例を示す
+        path: dmd-index-sample.md
+        rulebook: specdojo:dmd-index-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 移行の対象を、共通サンプル文脈（ノートの販売記録・在庫・つけ台帳を移す）に合わせていること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+          - text: 件数・サンプル・重要値の照合の手順と、証跡の保管先を示していること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+
+      - local_id: dmd-sample
+        name: データ移行設計（対象別）の完成例
+        kind: work
+        depends_on:
+          - dmd-index-sample
+        overview: 駄菓子屋の販売管理システムを題材に、データ移行設計の対象別の完成例を示す
+        path: dmd-sample.md
+        rulebook: specdojo:dmd-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 移行から外す対象の理由と業務への影響を、販売・在庫・つけの業務で説明していること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+
+      - local_id: mtp-sample
+        name: 移行テスト計画の完成例
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋の販売管理システムを題材に、移行テスト計画の完成例を示す
+        path: mtp-sample.md
+        rulebook: specdojo:mtp-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 何を移行し、何を事前に検証するかを目的で示していること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: GO・条件付き GO・NO-GO を判断する手順と、集める証跡を示していること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+
+      - local_id: imp-data-sample
+        name: データへの影響調査の完成例
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋の販売管理システムを題材に、データへの影響調査の完成例を示す
+        path: imp-data-sample.md
+        rulebook: specdojo:imp-data-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 対応方針ごとに、完了の条件と成功の基準（差異の件数など）を示していること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+
+      # 第 6 波（プロジェクトの型の残り、PJR-G1M8）。prj-charter-sample は直し済みのため track に入れない
+
+      - local_id: prj-charter-sample
+        name: プロジェクト憲章の完成例
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋の販売管理システムを題材に、プロジェクト憲章の完成例を示す
+        path: prj-charter-sample.md
+        rulebook: specdojo:prj-charter-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+
+      - local_id: prj-overview-sample
+        name: プロジェクト概要の完成例
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋の販売管理システムを題材に、プロジェクト概要の完成例を示す
+        path: prj-overview-sample.md
+        rulebook: specdojo:prj-overview-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+
+      - local_id: prj-scope-sample
+        name: プロジェクトスコープの完成例
+        kind: work
+        depends_on:
+          - prj-overview-sample
+        overview: 駄菓子屋の販売管理システムを題材に、プロジェクトスコープの完成例を示す
+        path: prj-scope-sample.md
+        rulebook: specdojo:prj-scope-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+
+      - local_id: prj-issues-and-approach-sample
+        name: プロジェクト課題と解決アプローチの完成例
+        kind: work
+        depends_on:
+          - prj-overview-sample
+          - prj-scope-sample
+        overview: 駄菓子屋の販売管理システムを題材に、プロジェクト課題と解決アプローチの完成例を示す
+        path: prj-issues-and-approach-sample.md
+        rulebook: specdojo:prj-issues-and-approach-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook と sample に、文書を承認する役割と承認の進み具合を求める記述を残していないこと（PJR-76N9）
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+
+      - local_id: prj-stakeholder-register-sample
+        name: ステークホルダー登録簿の完成例
+        kind: work
+        depends_on:
+          - prj-overview-sample
+        overview: 駄菓子屋の販売管理システムを題材に、ステークホルダー登録簿の完成例を示す
+        path: prj-stakeholder-register-sample.md
+        rulebook: specdojo:prj-stakeholder-register-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: つけを管理される常連の顧客（子ども・近所の大人）を、影響を受ける関係者として一覧と後続の章に含めていること
+            roles: [BA]
+            viewpoint: vp-ba-stakeholder-clarity
+
+      - local_id: prj-success-criteria-and-acceptance-criteria-sample
+        name: 成功基準と受入条件の完成例
+        kind: work
+        depends_on:
+          - prj-overview-sample
+          - prj-scope-sample
+        overview: 駄菓子屋の販売管理システムを題材に、成功基準と受入条件の完成例を示す
+        path: prj-success-criteria-and-acceptance-criteria-sample.md
+        rulebook: specdojo:prj-success-criteria-and-acceptance-criteria-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 在庫とつけ残高を記録する操作と、その結果が残高へ正しく反映されることを受入条件に含めていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 受入条件ごとに、合否を判定できる基準を示していること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+
+      - local_id: pm-change-request-log-sample
+        name: 変更要求ログの完成例
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋の販売管理システムを題材に、変更要求ログの完成例を示す
+        path: pm-change-request-log-sample.md
+        rulebook: specdojo:pm-change-request-log-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 一覧・審査・追跡の章で、各変更要求の状態が食い違わないこと
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: 変更要求ごとに、応える業務の課題と期待する価値を示していること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+
+      - local_id: pm-issue-log-sample
+        name: 課題ログの完成例
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋の販売管理システムを題材に、課題ログの完成例を示す
+        path: pm-issue-log-sample.md
+        rulebook: specdojo:pm-issue-log-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 優先度と状態に登録簿の `priority`・`item_status` の値を使い、優先度の判定基準と期限の決め方を示していること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+
+      - local_id: pm-risk-register-sample
+        name: リスク登録簿の完成例
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋の販売管理システムを題材に、リスク登録簿の完成例を示す
+        path: pm-risk-register-sample.md
+        rulebook: specdojo:pm-risk-register-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 発生確率と影響度の段階ごとの条件と、組み合わせから優先度を決める対応表を示していること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 対応の完了条件を、確認の手段と合格の基準で書いていること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+
+      - local_id: pm-communication-plan-sample
+        name: コミュニケーション計画の完成例
+        kind: work
+        depends_on:
+          - prj-stakeholder-register-sample
+          - pm-change-request-log-sample
+          - pm-issue-log-sample
+          - pm-risk-register-sample
+        overview: 駄菓子屋の販売管理システムを題材に、コミュニケーション計画の完成例を示す
+        path: pm-communication-plan-sample.md
+        rulebook: specdojo:pm-communication-plan-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+
+      - local_id: pm-members-sample
+        name: プロジェクトメンバー定義の完成例
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋の販売管理システムを題材に、プロジェクトメンバー定義の完成例を示す
+        path: pm-members-sample.yaml
+        rulebook: specdojo:pm-members-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: pm-members の schema に沿い、rulebook の必須項目をそろえていること
+            roles: [QE]
+            viewpoint: vp-qe-config-validity
+
+      - local_id: dct-sample
+        name: 成果物カタログ（ドメイン別）の完成例
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋の販売管理システムを題材に、成果物カタログ（ドメイン別）の完成例を示す
+        path: dct-sample.yaml
+        rulebook: specdojo:dct-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: dct の schema に沿い、rulebook が定める work・control・generated の書き分けを示していること
+            roles: [QE]
+            viewpoint: vp-qe-config-validity
+
+      # 第 6 波（設計と業務の残り、PJR-SBGQ）。ifx-api・ifx-msg は直し済みのため track に入れない
+
+      - local_id: bps-sample
+        name: 業務プロセス仕様の完成例
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋の販売管理システムを題材に、業務プロセス仕様の完成例を示す
+        path: bps-sample.md
+        rulebook: specdojo:bps-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+
+      - local_id: imp-business-sample
+        name: 業務への影響調査の完成例
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋の販売管理システムを題材に、業務への影響調査の完成例を示す
+        path: imp-business-sample.md
+        rulebook: specdojo:imp-business-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の章立てと影響の評価の観点に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+
+      - local_id: imp-interface-sample
+        name: I/F への影響調査の完成例
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋の販売管理システムを題材に、I/F への影響調査の完成例を示す
+        path: imp-interface-sample.md
+        rulebook: specdojo:imp-interface-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の章立てと影響の評価の観点に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+
+      - local_id: imp-operations-sample
+        name: 運用への影響調査の完成例
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋の販売管理システムを題材に、運用への影響調査の完成例を示す
+        path: imp-operations-sample.md
+        rulebook: specdojo:imp-operations-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 影響度の高・中・低の尺度を定義し、rulebook の 4 観点（運用品質・障害対応力・継続運用性・利用者影響）で評価していること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+
+      - local_id: gl-sample
+        name: 用語集の完成例
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋の販売管理システムを題材に、用語集の完成例を示す
+        path: gl-sample.yaml
+        rulebook: specdojo:gl-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+
+      - local_id: mm-sample
+        name: 議事録の完成例
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋の販売管理システムを題材に、議事録の完成例を示す
+        path: mm-sample.md
+        rulebook: specdojo:mm-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+
+      - local_id: pr-sample
+        name: 進捗報告の完成例
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋の販売管理システムを題材に、進捗報告の完成例を示す
+        path: pr-sample.md
+        rulebook: specdojo:pr-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+
+      - local_id: uis-sample
+        name: 画面仕様の完成例
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋の販売管理システムを題材に、画面仕様の完成例を示す
+        path: uis-sample.md
+        rulebook: specdojo:uis-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+
+      - local_id: dss-sample
+        name: デザインシステムの完成例
+        kind: work
+        depends_on:
+          - uis-sample
+        overview: 駄菓子屋の販売管理システムを題材に、デザインシステムの完成例を示す
+        path: dss-sample.md
+        rulebook: specdojo:dss-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+
+      - local_id: tsd-index-sample
+        name: 技術スタック一覧の完成例
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋の販売管理システムを題材に、技術スタック一覧の完成例を示す
+        path: tsd-index-sample.md
+        rulebook: specdojo:tsd-index-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+
+      - local_id: tsd-sample
+        name: 技術スタック詳細定義の完成例
+        kind: work
+        depends_on:
+          - tsd-index-sample
+        overview: 駄菓子屋の販売管理システムを題材に、技術スタック詳細定義の完成例を示す
+        path: tsd-sample.md
+        rulebook: specdojo:tsd-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook が必須とする章と表をそろえ、tsd-index と食い違わないこと
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+
+      - local_id: cdr-sample
+        name: コーディング規約の完成例
+        kind: work
+        depends_on:
+          - tsd-index-sample
+        overview: 駄菓子屋の販売管理システムを題材に、コーディング規約の完成例を示す
+        path: cdr-sample.md
+        rulebook: specdojo:cdr-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+
+      - local_id: cdfd-overview-sample
+        name: 概念データフロー図（全体概要）の完成例
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋の販売管理システムを題材に、概念データフロー図の全体概要の完成例を示す
+        path: cdfd-overview-sample.md
+        rulebook: specdojo:cdfd-overview-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 入荷数量を在庫記録へ反映する責務を 1 つのプロセスに定め、図のエッジと本文の受け渡しが一致していること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 冗長な説明を削り、図と表の二重の説明をしていないこと
+            roles: [ARC]
+            viewpoint: vp-arc-conciseness
+
+      - local_id: cdfd-sample
+        name: 概念データフロー図（プロセスグループ別）の完成例
+        kind: work
+        depends_on:
+          - cdfd-overview-sample
+        overview: 駄菓子屋の販売管理システムを題材に、概念データフロー図のプロセスグループ別の完成例を示す
+        path: cdfd-sample.md
+        rulebook: specdojo:cdfd-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 冗長な説明を削り、図と表の二重の説明をしていないこと
+            roles: [ARC]
+            viewpoint: vp-arc-conciseness
+
+      - local_id: ifx-api-sample
+        name: 外部 API 仕様の完成例
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋の販売管理システムを題材に、外部 API 仕様の完成例を示す
+        path: ifx-api-sample.yaml
+        rulebook: specdojo:ifx-api-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+
+      - local_id: ifx-msg-sample
+        name: 外部メッセージ仕様の完成例
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋の販売管理システムを題材に、外部メッセージ仕様の完成例を示す
+        path: ifx-msg-sample.yaml
+        rulebook: specdojo:ifx-msg-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+
+      # 第 6 波（記法の型、PJR-PYS2）。記法の rulebook は親の型の rulebook の includes から直す
+
+      - local_id: cxd-sample
+        name: C4 コンテキスト図の完成例
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋の販売管理システムを題材に、C4 コンテキスト図の完成例を示す
+        path: cxd-sample.md
+        rulebook: specdojo:cxd-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 図のコードが cxd-mermaid-rulebook の記法に沿い、検証の手順で構文と描画を確かめられること
+            roles: [DEV]
+            viewpoint: vp-dev-testability
+
+      - local_id: cnd-sample
+        name: C4 コンテナ図の完成例
+        kind: work
+        depends_on:
+          - cxd-sample
+        overview: 駄菓子屋の販売管理システムを題材に、C4 コンテナ図の完成例を示す
+        path: cnd-sample.md
+        rulebook: specdojo:cnd-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: Person の表などに、文書の役割の割り当ての列を残していないこと（PJR-76N9）
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 図のコードが cnd-mermaid-rulebook の記法に沿い、検証の手順で構文と描画を確かめられること
+            roles: [DEV]
+            viewpoint: vp-dev-testability
+
+      - local_id: cpd-sample
+        name: C4 コンポーネント図の完成例
+        kind: work
+        depends_on:
+          - cnd-sample
+        overview: 駄菓子屋の販売管理システムを題材に、C4 コンポーネント図の完成例を示す
+        path: cpd-sample.md
+        rulebook: specdojo:cpd-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 図のコードが cpd-mermaid-rulebook の記法と、その rulebook が定める Mermaid の前提に沿っていること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+
+      - local_id: stsd-sample
+        name: ステータス定義の完成例
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋の販売管理システムを題材に、ステータス定義の完成例を示す
+        path: stsd-sample.md
+        rulebook: specdojo:stsd-rulebook
+        done_criteria:
+          - text: rulebook の章立てと必須の表に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: rulebook の禁止事項に当たらないこと
+            roles: [QE]
+            viewpoint: vp-qe-kata-conformance
+          - text: 状態を判定する対象の単位と、分割したときの扱いを示していること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 状態遷移図のコードが stsd-mermaid-rulebook の記法に沿っていること
+            roles: [DEV]
+            viewpoint: vp-dev-testability
