@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-5-otp-index-sample-040
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-5-otp-index-sample-040/T-KATA-WAVE-5-otp-index-sample-040-20261123T065210Z-bdd6fbb0/plan.md
   started_at: "2026-11-23T06:52:19.653Z"
+  completed_at: "2026-11-23T07:03:20.980Z"
   agent: opus-executor
   execution: agent
   approach: rulebook-maintenance
@@ -20,16 +21,22 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- rulebook `docs/ja/specdojo/rulebooks/otp-index-rulebook.md` を簡潔に整えました。
+- F001 に基づき、禁止事項に「個人名・連絡先の記載禁止（役割名と窓口のチャネル名で書く）」を追加しました。
+- F004 に基づき、全体方針の用語を「初期増員体制」に統一し、ハイパーケア期間の当番と SLA を指す旨を明記しました。
+- 冗長性を排除するため、全体方針の判定可能性に関する記述を削除しました。
+- F002 (受入条件の不足) は sample 側の不備として維持し、F003/F005 (`recipe` / `template` の未決定) は `undecided` のままとしています。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/rulebooks/otp-index-rulebook.md`: findings に基づく修正を行いました。具体的には、禁止事項への個人情報記載禁止の追加、全体方針における「初期増員体制」の用語定義の明文化、および冗長な記述の整理を行いました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- F002: 本文要件の受入条件は維持した。sample にはバックアップの保管先、権限の旧新差分、問合せのエスカレーション条件、障害対応の判断・連絡・復旧・報告の流れと指揮系統、クローズ判断者と最終報告物がない。後続の T-KATA-WAVE-5-otp-index-sample-050（sample を厚くする段）で補う。
+- F003/F005: rulebook の frontmatter の `recipe`・`template` は `undecided` のまま。要否は推測で決めず、ready にする前に not-needed にするか作成するかを決める必要がある（同じ段の mip-index-rulebook も undecided のまま）。
+- 維持した記述: 位置づけ、ファイル命名・ID規則、推奨 Frontmatter 項目、本文要件の11章と受入条件、記述ガイドの良い例・悪い例の表、既存の禁止事項。grade の指摘も冗長さもないため変更していない。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+grading による指摘事項を中心として、rulebook を簡潔に整備しました。特に、個人情報の取り扱いに関する制約の追加と、用語の定義の明確化を行いました。また、rulebook の責務を定義に留め、成果物の具体的な中身（受入条件の不足分など）については、次工程の sample 更新へ申し送る形をとっています。

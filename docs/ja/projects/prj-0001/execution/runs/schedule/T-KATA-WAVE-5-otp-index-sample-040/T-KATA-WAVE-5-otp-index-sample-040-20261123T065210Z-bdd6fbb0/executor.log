@@ -1,0 +1,15 @@
+ルールブック `docs/ja/specdojo/rulebooks/otp-index-rulebook.md` の直しは終わりました。F001 と F004 は解消しました。F002・F003・F005 はこの段では片づかないため、後の段への申し送りにしています。編集したのはこのファイルだけで、sample・recipe・template と結果ファイルには触れていません。Prettier と markdownlint はエラーなしです。残りの検査はこの後 runner が実行します。
+
+**直した箇所**
+- **F001**: 禁止事項に「個人名・電話番号・個人のメールアドレスを書くこと」を足しました。理由は、公開・配布できなくなることと、異動時に直し忘れが起きることです。代わりに役割名と窓口のチャネル名で書くよう添えています。
+- **F004**: 全体方針の「ハイパーケア体制」を必須章の名前に合わせて「初期増員体制」にしました。あわせて、初期増員体制はハイパーケア期間の当番と SLA を指すと書き添えました。
+- **冗長さの整理**: 全体方針の「一次応答条件・SLA・クローズ条件は数値・期限・判断者で書く」を削りました。記述ガイドの「判断者を書く」「閾値と期限で書く」と同じことを言っていたためです。
+
+**直さなかった箇所**
+- **F002**（sample が本文要件を満たしていない）: 受入条件は運用切替計画として妥当と判断し、変えていません。sample はこの段では変更できないため、次の段（`T-KATA-WAVE-5-otp-index-sample-050`）で補います。
+- **F003・F005**（recipe・template が `undecided` のまま）: 要るかどうかは推測で決めず、`undecided` のままにしています。同じ段の `mip-index` も `undecided` のままです。ready にする前に決める必要があります。
+- 上記以外の章（位置づけ、命名・ID、Frontmatter、本文要件、良い例・悪い例の表など）は、grade の指摘も冗長さもないためそのままにしました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"otp-index-rulebook を簡潔にした。F001 は禁止事項に個人名・連絡先の記載禁止（役割名と窓口のチャネル名で書く）を追加して解消した。F004 は全体方針の用語を「初期増員体制」にそろえ、ハイパーケア期間の当番と SLA を指すと明記して解消した。全体方針の判定可能性の記述は記述ガイドと重なるため削った。F002 は sample 側の不足として受入条件を維持し、F003・F005 は recipe・template の要否を推測で決めず `undecided` のまま申し送った。","handoff":["F002: 本文要件の受入条件は維持した。sample にはバックアップの保管先、権限の旧新差分、問合せのエスカレーション条件、障害対応の判断・連絡・復旧・報告の流れと指揮系統、クローズ判断者と最終報告物がない。後続の T-KATA-WAVE-5-otp-index-sample-050（sample を厚くする段）で補う。","F003/F005: rulebook の frontmatter の `recipe`・`template` は `undecided` のまま。要否は推測で決めず、ready にする前に not-needed にするか作成するかを決める必要がある（同じ段の mip-index-rulebook も undecided のまま）。","維持した記述: 位置づけ、ファイル命名・ID規則、推奨 Frontmatter 項目、本文要件の11章と受入条件、記述ガイドの良い例・悪い例の表、既存の禁止事項。grade の指摘も冗長さもないため変更していない。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/rulebooks/otp-index-rulebook.md","status":"passed","summary":"整形済み"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/otp-index-rulebook.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>
