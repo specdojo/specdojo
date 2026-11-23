@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "mode": "review",
+  "grade_check": "### 評価結果の確認\n\n`specdojo grade list --target kata --path docs/ja/specdojo/samples/nfr-index-sample.md --changed-only` を実行し、出力なし（最新）であることを確認。\n`specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/nfr-index-rulebook.md --changed-only` を実行し、出力なし（最新）であることを確認。\n\n- **サンプル (`docs/ja/specdojo/samples/nfr-index-sample.md`)**: `verdict`: `pass`, `score`: 98, `finding_counts`: minor 2\n- **rulebook (`docs/ja/specdojo/rulebooks/nfr-index-rulebook.md`)**: `verdict`: `pass`, `score`: 95, `finding_counts`: minor 3",
+  "rationale": [
+    "評価結果の鮮度は、`specdojo grade list` コマンドの結果により最新であることを確認済みです。",
+    "成果物カタログの完了条件 `DC-001`〜`DC-005` について、成果物を確認しました：",
+    "- `DC-001` (`vp-qe-omissions-consistency`): `rulebook` の章立てと必須の表に沿っていることを確認しました。",
+    "- `DC-002` (`vp-qe-kata-conformance`): 駄菓子屋のプロジェクトという共通文脈に沿っていることを確認しました。",
+    "- `DC-003` (`vp-qe-kata-conformance`): `rulebook` の禁止事項に抵触していないことを確認しました。",
+    "- `DC-004` (`vp-qe-omissions-consistency`): カテゴリ別の非機能要件への導線が一覧として示されていることを確認しました。",
+    "- `DC-005` (`vp-dev-change-impact`): カテゴリ別の文書を扱う際に見直すべき範囲が示されていることを確認しました。",
+    "以上のことから、成果物の磨き込みおよび完了条件は充足されています。残っている `finding` は品質に関するものであり、本タスクの完了を妨げるものではありません。"
+  ],
+  "improvements": [
+    "サンプル (`docs/ja/specdojo/samples/nfr-index-sample.md`) に関する改善指示：",
+    "- `F001`: 備考欄の `_UNDECIDED_`（営業時間外の緊急連絡手段）に、決定のタイミングや同時に決めるべき文書を追加し、PO が判断しやすくしてください。",
+    "- `F002`: 分冊一覧の備考欄における「監査ログの保管期間 1 年」のような具体的な値の再掲を削除するか、運用方針との整合に留める記述に変更してください。",
+    "",
+    "rulebook (`docs/ja/specdojo/rulebooks/nfr-index-rulebook.md`) に関する改善指示：",
+    "- `F001`: 作成後に実行すべき検証コマンド（`npm run lint:md` 等）への参照を追加してください。",
+    "- `F002`: `recipe` や `template` が `undecided` の状態であることへの補足として、決定時期と判断者を明記してください。",
+    "- `F003`: `ready` 化を行う際の前提条件（recipe・template の要否決定）を明示してください。"
+  ],
+  "approach": "### approach に応じた確認\n\n- **磨き込みの実施**: `rulebook` の必須要素、禁止事項、および `sample` の形式に基づいた磨き込みが行われていることを確認しました。\n- **実行記録の検証**: 実行記録（`executor evidence`）において、`lint-md` や `lint-fm` 等の検証が `not_applicable` となっているのは、変更されたファイルが対象外であるためであり、正常な動作です。また、`validate:schema` によってスキーマの整合性が確認されています。",
+  "verdict": "complete-with-findings"
+}
