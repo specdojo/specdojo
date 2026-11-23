@@ -4,12 +4,11 @@ document: specdojo:stsd-recipe
 path: docs/ja/specdojo/recipes/stsd-recipe.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-recipe
 verdict: pass
-score: 98
-graded_at: "2026-11-20T20:42:11.590Z"
-graded_by: flash-high-executor
-content_hash: 63c8e21d00304de7abff450ab84be6b8887c14279003f2fa213ac70c10bfeca4
+score: 99
+graded_at: "2026-11-23T20:28:02.879Z"
+graded_by: sonnet-review-executor
+content_hash: 403d417608840a46f6d7e1703a8e772a745182920dd2295cd2206f10117a937f
 categories:
   purpose:
     score: 100
@@ -22,11 +21,11 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 92
   implementation:
     score: 100
   quality:
-    score: 92
+    score: 100
   consistency:
     score: 100
 viewpoints:
@@ -82,11 +81,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
-  vp-ux-readability:
     level: 4
     score: 100
+  vp-ux-readability:
+    level: 3
+    score: 75
   vp-ux-language-consistency:
     level: 4
     score: 100
@@ -110,12 +109,8 @@ finding_counts:
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-kata-conformance
+    rule: vp-ux-readability
     line: 8
     anchor: ""
-    message: >-
-      前回の指摘（Why, What, How, Trace の明記）は解消されているが、「1. このレシピの使い方」において recipe-authoring-standard
-      が求める「このレシピを使う順序と確認の進め方」の記述が不足しており、必須章に求められる最低3つ以上の具体項目（箇条書き等）を満たしていない（1項目のみにとどまる）。
-    message_ja: >-
-      前回の指摘（Why, What, How, Trace の明記）は解消されているが、「1. このレシピの使い方」において recipe-authoring-standard
-      が求める「このレシピを使う順序と確認の進め方」の記述が不足しており、必須章に求められる最低3つ以上の具体項目（箇条書き等）を満たしていない（1項目のみにとどまる）。
+    message: 「このレシピの使い方」の先頭項目が Why・What・How・Trace を一文に詰めており初見では読み取りにくいため、2〜3文または箇条書きに分けると主旨を追いやすくなる。
+    message_ja: 「このレシピの使い方」の先頭項目が Why・What・How・Trace を一文に詰めており初見では読み取りにくいため、2〜3文または箇条書きに分けると主旨を追いやすくなる。
