@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-5-opr-backup-restore-sample-090
   mode: review
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-5-opr-backup-restore-sample-090/T-KATA-WAVE-5-opr-backup-restore-sample-090-20261123T184758Z-3414b40d/plan.md
   started_at: "2026-11-23T18:48:00.613Z"
+  completed_at: "2026-11-23T18:58:28.988Z"
   agent: sonnet-review-executor
   execution: agent
   approach: fully-guided
@@ -19,20 +20,24 @@ specdojo:
 
 ## 1. 評価結果の確認
 
-_TODO_: 評価結果サイドカーのパス、鮮度確認で実行したコマンドとその出力（`content_hash` が現在の成果物と一致するか）、grade の `verdict` / `score` / finding 件数を記入する。評価結果が最新でない、または評価不能の場合は、その事実と理由を記入する。
+評価結果の鮮度を確認するため、`npx specdojo grade list --target kata --path docs/ja/specdojo/samples/opr-backup-restore-sample.md --changed-only` を実行したところ、出力なし。評価結果は最新である。また、`npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/opr-rulebook.md --changed-only` も出力なしであり、同様に最新であることを確認した。
 
 ## 2. 判断根拠
 
-_TODO_: 変更内容・plan・実行記録・完了条件・最新の finding を照合した内容と、verdict を選んだ理由を記入する。finding が残るのに完了とする場合は、その finding が今回の完了を妨げない理由を記入する。参照は `[[id]]` 形式（Obsidian wikilink）で記載し、行番号アンカーや絶対パスは使わない。
+- 対象の `docs/ja/specdojo/samples/opr-backup-restore-sample.md` は、grade 判定で `pass`（score 98）であり、鮮度も最新であることを確認した。
+- しかし、型の追加完了条件である「型すべてに最新の `--target kata` の `pass` が必要」という条件を満たしていない。具体的には、`opr-batch-sample` が `needs-work`、`opr-support-sample` が `fail` の状態であるため。
+- 確認できなかった範囲として、対象 sample の 6.2 以降の本文、差分の混入確認、および先行 edit の result が挙げられている。
 
 ## 3. 未充足事項・改善指示
 
-_TODO_: 未充足事項と、再計画・成果物の改善・再評価に使う改善指示を記入する（なければ「なし」と記入する）。評価結果の内容に疑義がある場合は、再評価が必要な対象と理由もここに記入する。
+- `opr-batch-sample` と `opr-support-sample` の `rulebook` を `specdojo:opr-rulebook` に修正し、template の 12 章構成へ作り直して再評価すること。
+- `opr-rulebook` の finding `F001`（template と重複する記述）を解消して `pass` にすること。
+- 対象 sample (`opr-backup-restore-sample.md`) については、finding `F001`（6.1 の重複）および `F002`（ホスティング環境の入口の明示）は任意の改善事項である。
 
 ## 4. approach に応じた確認
 
-_TODO_: `approach` に応じて確認した内容を記入する。fully-guided / recipe-guided / freeform では求められた作成・更新が行われたか、retrofit では実装エビデンスの対応記録と未確認範囲、`rulebook-maintenance` などの maintenance 系では見直しの動機となった finding の解消状況を記入する。
+review 前に runner が実施した grade 評価結果を事実として受け取り、先行する edit タスクの成果物および型の完了条件（全ての型が `pass` であること）を照合した。
 
 ## 5. decision
 
-- verdict: _TODO_（complete / complete-with-findings / incomplete / grade-stale / grade-unavailable / changed-during-review）
+- verdict: incomplete
