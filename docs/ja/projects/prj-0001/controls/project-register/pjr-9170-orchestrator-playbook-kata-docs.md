@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-9170-orchestrator-playbook-kata-docs
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: BA
   registered_at: "2026-11-23T02:38:48Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-23T04:14:38Z"
+  conclusion: オーケストレーターの運用メモの型（pm-orchestrator-playbook の rulebook・template・sample）を作った。章立ては prj-0001 の運用メモを手本にし、知見の育て方と handoff・question との分け方を rulebook に書いた。grade は rulebook pass 89・sample pass 90・template pass 95
   derived_from:
     - PJR-2P7C
   depends_on:

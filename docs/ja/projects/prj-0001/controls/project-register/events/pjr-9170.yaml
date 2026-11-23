@@ -105,3 +105,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_08e2af6f4cae437caef4a094cb326166
+- v: 1
+  id: reg_7a0700eed9bf442dafd9c24bf72a50d8
+  ts: "2026-11-23T04:14:38Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分と対応結果を確かめ、型の grade が 3 文書とも pass だった（2026-11-23）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: オーケストレーターの運用メモの型（pm-orchestrator-playbook の rulebook・template・sample）を作った。章立ては prj-0001 の運用メモを手本にし、知見の育て方と handoff・question との分け方を rulebook に書いた。grade は rulebook pass 89・sample pass 90・template pass 95
+  previous_event_id: reg_f46bd511a4f8458988fb865103284517
