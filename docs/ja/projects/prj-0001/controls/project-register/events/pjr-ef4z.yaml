@@ -192,3 +192,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_30dc90ac06f9497ba28a3341ac08f293
+- v: 1
+  id: reg_1c17d54e701949fa9a322e3abe229839
+  ts: "2026-11-23T04:59:58Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 2 回目の差分と単体テストを確かめ、2026-11-23 の朝の報告が markdownlint を通ることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: 統合テストの全件を固定の引数で流す specdojo orchestrator integration-tests と、job・routine（毎晩 4 時）を足した。結果を朝の報告に残す。任意のシェルのコマンドを流す action は足していない
+      to: 統合テストの全件を毎晩流す orchestrator integration-tests と job・routine を足した。2 回目で、朝の報告が成功・失敗・JSON を読めないときのどの場合でも lint を通るように書き出しを直し、2026-11-23 の報告も直した
+  previous_event_id: reg_fa38c966c03c42228996a6742e045a6b

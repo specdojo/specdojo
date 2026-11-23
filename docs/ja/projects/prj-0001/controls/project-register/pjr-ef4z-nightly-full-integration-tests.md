@@ -7,13 +7,14 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-23T00:16:11Z"
   due_on: "2026-11-30"
-  conclusion: 統合テストの全件を固定の引数で流す specdojo orchestrator integration-tests と、job・routine（毎晩 4 時）を足した。結果を朝の報告に残す。任意のシェルのコマンドを流す action は足していない
+  completed_at: "2026-11-23T04:59:58Z"
+  conclusion: 統合テストの全件を毎晩流す orchestrator integration-tests と job・routine を足した。2 回目で、朝の報告が成功・失敗・JSON を読めないときのどの場合でも lint を通るように書き出しを直し、2026-11-23 の報告も直した
   derived_from:
     - PJR-9X52
   commit_type: feat
