@@ -246,6 +246,25 @@ describe("delegateExternalRegisterAdd preconditions", () => {
     }));
   }
 
+  it("requires a sync-capable target CLI when the external project enables register_sync", () => {
+    const source = createFixture();
+    const target = join(source, "../target");
+    mkdirSync(join(target, ".specdojo"), { recursive: true });
+    writeFileSync(
+      join(target, ".specdojo/specdojo.config.json"),
+      JSON.stringify({
+        version: 1,
+        projects: { target: { register_sync: { enabled: true } } },
+      }),
+    );
+    const oldRun = successfulRun("0.9.2");
+    expect(() => delegateExternalRegisterAdd(baseOptions, oldRun)).toThrow("0.10.0 or newer");
+    expect(oldRun).toHaveBeenCalledTimes(1);
+    const currentRun = successfulRun("0.10.0");
+    expect(delegateExternalRegisterAdd(baseOptions, currentRun)).toBe(true);
+    expect(currentRun).toHaveBeenCalledTimes(2);
+  });
+
   it("uses Node and the self repository's dist entrypoint for version inspection and add", () => {
     const target = createSelfRepository();
     const run = successfulRun();

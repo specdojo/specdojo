@@ -112,3 +112,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_c885ea85fed64c0ead0ee1871bc7426c
+- v: 1
+  id: reg_cec58d216675416480d88ee1cf4f7cec
+  ts: "2026-11-23T23:23:01Z"
+  action: wait
+  actor: opus-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-unit"
+  previous_event_id: reg_4ca3061d5ddf4382a288ba82abf22fca

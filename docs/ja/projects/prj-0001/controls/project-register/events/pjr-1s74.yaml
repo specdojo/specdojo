@@ -70,3 +70,32 @@
       from: _TODO_
       to: "2026-11-30"
   previous_event_id: reg_d0acdd096c1945fa8c62be66be2e057f
+- v: 1
+  id: reg_70c2515625b34e5d80749bcf3695247f
+  ts: "2026-11-23T23:05:29Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_55bde70d29d240a991fc95e360f85df9
+- v: 1
+  id: reg_4e754b8f9893431190cda94cef7386b7
+  ts: "2026-11-23T23:13:31Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-fm-changed"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-fm-changed"
+  previous_event_id: reg_70c2515625b34e5d80749bcf3695247f

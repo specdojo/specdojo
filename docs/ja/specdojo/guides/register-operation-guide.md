@@ -90,7 +90,7 @@ specdojo register add --project prj-0002 --type todo \
   --from prj-0001:PJR-AB12 --commit
 ```
 
-この経路は対象 project の `integration_branch`（省略時は `project/<project-id>/develop`）を開いている worktree を使い、無ければ一時 worktree を作ります。対象 project の名簿で `--by` を検証し、`register lifecycle` 枠の内側で起票、派生ビュー再生成、1 件の commit を行います。対象登録簿に未 commit 変更がある場合、または統合ブランチが存在しない場合は書き込みません。`--commit` のない別 project への起票と、別 project の項目に対する状態遷移は行えません。状態遷移は対象 project の作業ツリーで実行してください。
+対象 project の `register_sync.enabled` が有効なら、後述の専用ブランチへ記帳して push します。未設定なら `integration_branch`（省略時は `project/<project-id>/develop`）を開いている worktree を使い、無ければ一時 worktree を作ります。対象 project の名簿で `--by` を検証し、`register lifecycle` 枠の内側で起票、派生ビュー再生成、1 件の commit を行います。対象登録簿に未 commit 変更がある場合、または記帳先のブランチが存在しない場合は書き込みません。`--commit` のない別 project への起票と、別 project の項目に対する状態遷移は行えません。状態遷移は対象 project の作業ツリーで実行してください。
 
 別リポジトリの project へ起票する場合は、`specdojo.config.json` のトップレベルに別名を宣言し、その別名を `--project` に指定します。
 
@@ -291,6 +291,31 @@ specdojo register close \
 ほかのファイルがすでに stage されていても、初回 commit と hook 整形後の amend は対象パスだけを記録し、既存の staged 変更を保持します。実行中に別タスクの exec event が増えても対象へ取り込みません。stage 後の検査や commit・amend が失敗した場合、または `SIGINT`・`SIGTERM`・`SIGHUP` で中断された場合は、そのコマンドが stage した対象だけを unstage し、作業ツリーの本文を残します。Git の実行中に届いた中断は Git が戻ってから処理します。初回 commit 後の失敗・中断では commit が残るため、本文と HEAD の差分を確認してから再実行してください。
 
 別 project への起票では、対象登録簿全体が clean であることを追加で確認します。元の作業ツリーのブランチと HEAD は変更しません。
+
+#### 専用ブランチへの同期（v0.10.0）
+
+[[specdojo:specdojo-config-reference|設定リファレンス]] の `projects.<project-id>.register_sync.enabled` を `true` にすると、`--commit` は専用 worktree で記帳・commit し、設定したリモートへ push します。ブランチ名の既定値は `project/<project-id>/register`、リモートは `origin` です。初回は設定を含む develop の commit からブランチを用意してください。
+
+```bash
+git branch project/prj-0001/register project/prj-0001/develop
+git push origin project/prj-0001/register
+```
+
+ほかの利用者は初回の同期時にリモートからローカルブランチと worktree を作れます。既存の専用 worktree は再利用し、無ければ Git 共通ディレクトリ配下に作成して保持します。hook が使う依存関係や、追跡外の名簿などが必要な環境では、事前に専用 worktree を用意して必要なセットアップを行ってください。元の worktree の未 commit 変更は専用ブランチへコピーしません。
+
+同期は fetch と `pull --rebase` の後に記帳し、non-fast-forward なら再び `pull --rebase` して push し直します。push は最大 3 回です。同じリポジトリの同期処理は共通のロックで直列化します。schedule の同期処理が busy になった場合は、処理の終了後にコマンドを再実行してください。
+
+schedule の claim・complete なども、`execution_path/exec/events/` のイベントだけを専用 worktree へ commit・push します。イベントの読み取りも同期先を参照し、既に claim されたタスクへの claim を拒否します。run の記録・grade・成果物は元の実行経路に残ります。`external_projects` 経由の起票では相手側を v0.10.0 以上に更新し、相手の project で同期を有効にしてください。
+
+失敗すると終了コード 1 で原因・worktree・ブランチ・復旧手順を表示します。記帳済みファイルやローカル commit は削除しません。表示された worktree で次の順に復旧してください。
+
+1. 通信・権限を直すか、衝突を解いて `git rebase --continue` を行います。rebase を取り消す場合は `git rebase --abort` で元のローカル commit に戻れます。
+2. 未 commit の記帳があれば内容を確認して commit します。並行 claim で停止した場合は、採用する claim を確認し、未公開の重複 claim を解消します。
+3. `git pull --rebase <remote> <branch>` と `git push <remote> HEAD:refs/heads/<branch>` で共有します。失敗した `add` を push の代わりに再実行しないでください。
+
+未解消の記帳がある間は後続の同期を停止します。復旧後、worktree が clean でローカル HEAD がリモートに含まれることを次の同期が確認し、再開します。
+
+register の内容を文書サイトや `exec plan` へ見せるには、通常の統合手順で register ブランチを develop へ一方向に merge します。この設定だけでは自動 merge、register の runner が書く対応結果の転送、hook・CI の保護は有効になりません。それらの移行準備は [[specdojo:git-branching-standard|Git ブランチ運用標準]] に従って行います。参照文書を register の外で書き換える改名・再採番は、専用ブランチでは書き込み前に停止するため、通常の feature と PR で扱ってください。
 
 ### 2.2. 個票の作成
 
