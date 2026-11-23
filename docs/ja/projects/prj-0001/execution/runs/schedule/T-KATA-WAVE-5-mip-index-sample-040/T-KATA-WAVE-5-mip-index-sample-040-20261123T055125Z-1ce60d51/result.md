@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-5-mip-index-sample-040
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-5-mip-index-sample-040/T-KATA-WAVE-5-mip-index-sample-040-20261123T055125Z-1ce60d51/plan.md
   started_at: "2026-11-23T05:51:33.577Z"
+  completed_at: "2026-11-23T06:02:57.079Z"
   agent: opus-executor
   execution: agent
   approach: rulebook-maintenance
@@ -20,16 +21,26 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- rulebook を簡潔に整理しました。
+- 完成例の章を削除し、`based_on` の具体的な例示や、下流成果物（`dmd-*`/`mtp-*`/`cop-*`/`otp-*`）への追従・担当 Role code を明記することで、grade の指摘（F001, F002）に対応しました。
+- 記述ガイドの冗長な説明を、本文要件の表を用いて整理しました（`vp-arc-conciseness`）。
+- 禁止事項の整理も併せて実施しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/rulebooks/mip-index-rulebook.md`: rulebook を簡潔に整理しました。完成例の章を削除し、`based_on` の具体的な例示や、下流成果物（`dmd-*`/`mtp-*`/`cop-*`/`otp-*`）への追従・担当 Role code を追加して、grade の指摘事項を解消しました。また、記述ガイドの冗長な説明を、本文要件の表を用いて整理しました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- F001 は、推奨 Frontmatter 項目に `based_on` の上流の例（`prj-scope`・`nfr-*`・`bac-*`/`sac-*`・`opd-index`）を挙げて解消した。
+- F002 は、位置づけの表に下流ごとの追従の担当（ARC・DEV／QE／OPS）と改訂時の追従の規則（PM が個票で追う）を足して解消した。
+- 根拠は `document-metadata-standard` の『文書の改訂・廃止とライフサイクル変更管理』、`rulebook-authoring-standard`、先例の `cop-index-rulebook` と `stc-index-rulebook` である。
+- サンプル（最小）の章は plan と先例の rulebook に合わせて削除し、良い例・悪い例は記述ガイドへ移した。
+- 記述ガイドの章ごとの箇条書きは本文要件の表と重なるためまとめた（`vp-arc-conciseness`）。
+- 禁止事項のうち必須の章を省略しないという行は、本文要件の『すべて必須』と重なるため統合・削除した。
+- result の『進め方と実践の型の適用』に書く内容: F001 は、推奨 Frontmatter 項目に `based_on` の上流の例（`prj-scope`・`nfr-*`・`bac-*`/`sac-*`・`opd-index`）を挙げて解消した。F002 は、位置づけの表に下流ごとの追従の担当（ARC・DEV／QE／OPS）と改訂時の追従の規則（PM が個票で追う）を足して解消した。根拠は document-metadata-standard の『文書の改訂・廃止とライフサイクル変更管理』、rulebook-authoring-standard、先例の cop-index-rulebook と stc-index-rulebook。
+- 削除・統合した箇所と理由: サンプル（最小）の章は plan と先例の rulebook に合わせて削除し、良い例・悪い例は記述ガイドへ移した。記述ガイドの章ごとの箇条書きは本文要件の表と重なるためまとめた（`vp-arc-conciseness`）。禁止事項のうち必須の章を省略しないという行は、本文要件の『すべて必須』と重なるため統合・削除した。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+既存の rulebook を見直し、grade の指摘事項（`based_on` の具体例、下流成果物への追従と担当）を反映させつつ、冗長な記述を削って簡潔な構成に整理しました。完成例の章は削除し、ルールとしての記述に特化させています。
