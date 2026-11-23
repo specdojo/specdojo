@@ -4,12 +4,11 @@ document: specdojo:cdfd-overview-rulebook
 path: docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-rulebook
 verdict: pass
-score: 94
-graded_at: "2026-11-21T03:15:29.878Z"
-graded_by: opus-executor
-content_hash: 40a95342cf5c62d1fdf5e70d56328d3c0c20a3843f1a12a4230c16a1c9e08b2a
+score: 98
+graded_at: "2026-11-23T20:17:05.777Z"
+graded_by: sonnet-review-executor
+content_hash: 50bf5b72aabcb4d71c5d15b6010dab9110a7542a166e3865ac90de2089c1ca05
 categories:
   purpose:
     score: 100
@@ -22,11 +21,11 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
-    score: 88
+    score: 100
   quality:
-    score: 83
+    score: 92
   consistency:
     score: 100
 viewpoints:
@@ -67,11 +66,11 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-change-impact:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-testability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-verifiability:
     level: 4
     score: 100
@@ -85,8 +84,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -102,39 +101,10 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 5
+  minor: 2
   note: 0
 findings:
   - id: F001
-    severity: minor
-    rule: vp-dev-change-impact
-    line: 52
-    anchor: 見出し順・表・記入欄の骨組みは template を正本とし、内容の要件は本書に従います。
-    message: >-
-      template を本文骨組みの正本と定めているが, rulebook の要件変更時に recipe・sample・template・包含する記法 rulebook
-      のどれを同期確認するか規定がなく、物理保管のような変更影響を取りこぼすため、変更時の同期対象と確認手順を明記する必要がある。
-    message_ja: >-
-      template を本文骨組みの正本と定めているが, rulebook の要件変更時に recipe・sample・template・包含する記法 rulebook
-      のどれを同期確認するか規定がなく、物理保管のような変更影響を取りこぼすため、変更時の同期対象と確認手順を明記する必要がある。
-  - id: F002
-    severity: minor
-    rule: vp-dev-testability
-    line: 154
-    anchor: 次の順に業務内容を照合し、全項目が合格することを完成条件とします。
-    message: 完成判定は内容の手動照合だけを正本としており、Frontmatter/schema 検証や Mermaid の構文・描画確認に用いるコマンドと期待結果がないため、変更後の機械的な検証手順を追加する必要がある。
-    message_ja: 完成判定は内容の手動照合だけを正本としており、Frontmatter/schema 検証や Mermaid の構文・描画確認に用いるコマンドと期待結果がないため、変更後の機械的な検証手順を追加する必要がある。
-  - id: F003
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 150
-    anchor: 境界・名称・責務・判断者・保管先が未確定の場合だけ設け、表は「論点」「影響」の 2 列とします。本文中の `_UNDECIDED_` を論点に対応させ、決定によって変わる領域・ストア・図・詳細化先を影響に書きます。
-    message: >-
-      未決事項の表を「論点」「影響」の 2 列と定めているが、template と sample は「決定者」「決定時期」「状態」を加えた 5 列で構成しており、骨組みの正本である template
-      に従うと本書の規則に反するため、列構成を rulebook・template・sample で統一する必要がある。
-    message_ja: >-
-      未決事項の表を「論点」「影響」の 2 列と定めているが、template と sample は「決定者」「決定時期」「状態」を加えた 5 列で構成しており、骨組みの正本である template
-      に従うと本書の規則に反するため、列構成を rulebook・template・sample で統一する必要がある。
-  - id: F004
     severity: minor
     rule: vp-qe-kata-conformance
     line: 118
@@ -143,14 +113,18 @@ findings:
       の同表に行を追加し、「データストア」列に場所名、「主な内容」に現物、「主な保管先」に所在と「物理保管」の注記を書きます。保管先列を省略する場合は「主な内容」に注記します。章冒頭または凡例で、併記と同色の使用は分類への所属を意味しないと説明します。
     message: >-
       物理保管をトランザクションデータ表の末尾へ例外として併記し、章冒頭または凡例で併記が分類への所属を意味しないと説明する規則に対し、recipe の「データストア」章に物理保管の問い・コツがなく、sample
-      の章冒頭にも併記の説明がないため、recipe と sample へ同規則を反映する必要がある。
+      の章冒頭にも併記の説明がないため、recipe と sample へ同規則を反映する必要がある。（sample は反映済みだが recipe は未反映）
     message_ja: >-
       物理保管をトランザクションデータ表の末尾へ例外として併記し、章冒頭または凡例で併記が分類への所属を意味しないと説明する規則に対し、recipe の「データストア」章に物理保管の問い・コツがなく、sample
-      の章冒頭にも併記の説明がないため、recipe と sample へ同規則を反映する必要がある。
-  - id: F005
+      の章冒頭にも併記の説明がないため、recipe と sample へ同規則を反映する必要がある。（sample は反映済みだが recipe は未反映）
+  - id: F002
     severity: minor
-    rule: vp-ux-language-consistency
+    rule: vp-qe-kata-conformance
     line: 15
-    anchor: 構成方式は次のいずれかを選びます。凡例または「概念データフロー（概要）」冒頭に宣言がなければ、既定は今の方式（データストアの区分による図の分割）とします。
-    message: 構成方式の正式名称に「今の方式」という時点依存の表現を用いており、方式の追加・改訂後に指す対象が曖昧になって読み手を混乱させるため、「データストア区分で分割する方式」など内容を表す固有の名称へ改める必要がある。
-    message_ja: 構成方式の正式名称に「今の方式」という時点依存の表現を用いており、方式の追加・改訂後に指す対象が曖昧になって読み手を混乱させるため、「データストア区分で分割する方式」など内容を表す固有の名称へ改める必要がある。
+    anchor: 構成方式は次のいずれかを選びます。凡例または「概念データフロー（概要）」冒頭に宣言がなければ、既定はプロセスグループ方式とします。
+    message: >-
+      rulebook は既定の構成方式を「プロセスグループ方式」と定めているが、recipe（作成前に集める情報・各章の書き方）、sample（概念データフロー章冒頭）、template（コメントと
+      TODO）は「今の方式」を使い続けており、Kata 間で方式名が食い違って読み手が混乱するため、「プロセスグループ方式」へ統一する必要がある。
+    message_ja: >-
+      rulebook は既定の構成方式を「プロセスグループ方式」と定めているが、recipe（作成前に集める情報・各章の書き方）、sample（概念データフロー章冒頭）、template（コメントと
+      TODO）は「今の方式」を使い続けており、Kata 間で方式名が食い違って読み手が混乱するため、「プロセスグループ方式」へ統一する必要がある。
