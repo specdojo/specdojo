@@ -4,62 +4,61 @@ document: specdojo:imp-operations-sample
 path: docs/ja/specdojo/samples/imp-operations-sample.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-sample
-verdict: needs-work
-score: 72
-graded_at: "2026-11-21T04:17:41.967Z"
-graded_by: opus-executor
-content_hash: 73bf5ed2ed037d2038632ecdece3e811755f466b8bd0dbda4e455b349a46a30d
+verdict: pass
+score: 96
+graded_at: "2026-11-23T15:50:21.438Z"
+graded_by: sonnet-review-executor
+content_hash: da3014f7066ef1f21568f6b7b792b020b23dc7b62bdf41e4b113490912dee88b
 categories:
   purpose:
-    score: 75
+    score: 100
   operations:
-    score: 81
+    score: 100
   planning:
-    score: 75
+    score: 100
   business:
-    score: 75
+    score: 100
   architecture:
-    score: 92
+    score: 100
   usability:
-    score: 83
+    score: 100
   implementation:
-    score: 75
+    score: 100
   quality:
-    score: 58
+    score: 83
   consistency:
-    score: 50
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-publication-accountability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-plan-feasibility:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-business-value:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-requirements-completeness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -67,35 +66,35 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-change-impact:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 1
-    score: 25
+    level: 3
+    score: 75
   vp-ux-readability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-operability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -104,184 +103,24 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 4
-  minor: 20
+  major: 0
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-purpose-alignment
-    line: 37
-    anchor: "| 高     | 監視項目追加としきい値調整 | 2026-05-15 まで | SRE 担当（井上） | 監視基盤への設定権限確認 |"
-    message: 「SRE 担当」「監視基盤」「当番体制のシフト」「夜間体制」は、店主が一人でタブレット 1 台を使う単一店舗という共通サンプル文脈と合わない。店主代表や家族利用者代表が担える運用体制に書き換える必要がある。
-    message_ja: 「SRE 担当」「監視基盤」「当番体制のシフト」「夜間体制」は、店主が一人でタブレット 1 台を使う単一店舗という共通サンプル文脈と合わない。店主代表や家族利用者代表が担える運用体制に書き換える必要がある。
+    rule: vp-qe-verifiability
+    line: 24
+    anchor: "| 値引き適用エラーの検知から初動開始までが上限時間以内           | 警告の記録と初動の記録     | 同じ期間の全件で、警告の表示時刻と初動の記録時刻の差が上限以内                   |"
+    message: "成功条件 2 の上限時間が未決で、判定ができない。決定までは暫定の判定基準（例: 当日の閉店までに初動を開始）を成功条件の欄にも併記する必要がある。"
+    message_ja: "成功条件 2 の上限時間が未決で、判定ができない。決定までは暫定の判定基準（例: 当日の閉店までに初動を開始）を成功条件の欄にも併記する必要がある。"
   - id: F002
     severity: minor
-    rule: vp-po-decision-readiness
-    line: 44
+    rule: vp-qe-kata-conformance
+    line: 69
     anchor: >-
-      | 論点                     | 不足情報                       | 決定期限   | 担当             |
-      処理方針                                     |
-    message: 未解決事項の表に、rulebook が求める「運用判断への影響」の列がない。各論点が未決のままだと、どの対応方針や影響度判断に影響するかを判断できない。
-    message_ja: 未解決事項の表に、rulebook が求める「運用判断への影響」の列がない。各論点が未決のままだと、どの対応方針や影響度判断に影響するかを判断できない。
-  - id: F003
-    severity: minor
-    rule: vp-po-publication-accountability
-    line: 37
-    anchor: "| 高     | 監視項目追加としきい値調整 | 2026-05-15 まで | SRE 担当（井上） | 監視基盤への設定権限確認 |"
-    message: 担当欄に人物の姓（井上・山本・高橋・中村）が書かれている。sample-authoring-standard に従って役割名または Role code に置き換え、対応方針を承認する PO を明記する必要がある。
-    message_ja: 担当欄に人物の姓（井上・山本・高橋・中村）が書かれている。sample-authoring-standard に従って役割名または Role code に置き換え、対応方針を承認する PO を明記する必要がある。
-  - id: F004
-    severity: minor
-    rule: vp-pm-plan-feasibility
-    line: 35
-    anchor: "| 優先度 | 対応項目                   | 実施時期        | 担当             | 前提条件                 |"
-    message: 対応方針の各項目に完了条件がなく、担当も Role code になっていないため、進捗確認や完了判定に使いにくい。
-    message_ja: 対応方針の各項目に完了条件がなく、担当も Role code になっていないため、進捗確認や完了判定に使いにくい。
-  - id: F005
-    severity: minor
-    rule: vp-pm-dependency-risk
-    line: 26
-    anchor: >-
-      | 影響対象運用       | 変更要否 | 影響度 | 対応方針 |
-      判断根拠                                                                               |
-      備考                             |
-    message: rulebook の位置づけの章に反し、影響詳細一覧の備考欄に影響を受ける成果物 ID（運用手順書や監視設計など）が書かれていない。そのため後続成果物への依存を追えない。
-    message_ja: rulebook の位置づけの章に反し、影響詳細一覧の備考欄に影響を受ける成果物 ID（運用手順書や監視設計など）が書かれていない。そのため後続成果物への依存を追えない。
-  - id: F006
-    severity: minor
-    rule: vp-pm-control-reporting
-    line: 42
-    anchor: "## 6. 未解決事項"
-    message: 未解決事項のうち、PJR の課題やリスクとして登録すべきものと、報告先が区別されていない。
-    message_ja: 未解決事項のうち、PJR の課題やリスクとして登録すべきものと、報告先が区別されていない。
-  - id: F007
-    severity: minor
-    rule: vp-ba-business-value
-    line: 16
-    anchor: 評価観点は、運用品質、障害対応力、運用負荷の 3 点とする。
-    message: 評価観点に、rulebook が定める「利用者影響」が含まれていない。バーコード会計や値引きの変更が店頭の利用者・顧客の運用に与える影響が評価されていない。
-    message_ja: 評価観点に、rulebook が定める「利用者影響」が含まれていない。バーコード会計や値引きの変更が店頭の利用者・顧客の運用に与える影響が評価されていない。
-  - id: F008
-    severity: minor
-    rule: vp-ba-requirements-completeness
-    line: 12
-    anchor: "- 狙い: 変更後も運用品質を維持し、障害時の初動遅延を防止する。"
-    message: 変更要求の概要に、rulebook が求める成功条件（受け入れの判定条件）がなく、狙いが達成されたかを利用者の視点で確認できない。
-    message_ja: 変更要求の概要に、rulebook が求める成功条件（受け入れの判定条件）がなく、狙いが達成されたかを利用者の視点で確認できない。
-  - id: F009
-    severity: minor
-    rule: vp-ba-stakeholder-clarity
-    line: 46
-    anchor: "| 監視しきい値の最終値     | 新仕様適用後 1 週間の実測値    | 2026-05-22 | SRE 担当（井上） | 実測データを確認してしきい値を確定する。     |"
-    message: 担当や合意の相手が、共通登場人物の役割（店主代表・店舗運営アドバイザーなど）と対応しておらず、影響判断を誰と合意するのかが分からない。
-    message_ja: 担当や合意の相手が、共通登場人物の役割（店主代表・店舗運営アドバイザーなど）と対応しておらず、影響判断を誰と合意するのかが分からない。
-  - id: F010
-    severity: minor
-    rule: vp-arc-technical-constraints
-    line: 37
-    anchor: "| 高     | 監視項目追加としきい値調整 | 2026-05-15 まで | SRE 担当（井上） | 監視基盤への設定権限確認 |"
-    message: 「監視基盤」が何を指すのか、タブレット 1 台の構成でどう監視を実現するのかが書かれておらず、技術的な前提が判断できない。
-    message_ja: 「監視基盤」が何を指すのか、タブレット 1 台の構成でどう監視を実現するのかが書かれておらず、技術的な前提が判断できない。
-  - id: F011
-    severity: minor
-    rule: vp-dev-implementation-readiness
-    line: 28
-    anchor: "| 監視運用           | 要       | 高     | 実施     | 値引き適用エラー監視がないと、売上差異を早期検知できず日次締めで手戻りが発生するため。 | 新規監視 3 項目を追加する。      |"
-    message: "「新規監視 3 項目」の内容（例: 値引き適用エラーなど）が挙げられておらず、監視を設定する作業の入力にならない。"
-    message_ja: "「新規監視 3 項目」の内容（例: 値引き適用エラーなど）が挙げられておらず、監視を設定する作業の入力にならない。"
-  - id: F012
-    severity: minor
-    rule: vp-dev-change-impact
-    line: 16
-    anchor: 評価観点は、運用品質、障害対応力、運用負荷の 3 点とする。
-    message: rulebook が検討を求める統制・監査への影響（値引き適用の記録や日次締めの証跡など）が評価されておらず、影響範囲の識別が不完全である。
-    message_ja: rulebook が検討を求める統制・監査への影響（値引き適用の記録や日次締めの証跡など）が評価されておらず、影響範囲の識別が不完全である。
-  - id: F013
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 12
-    anchor: "- 狙い: 変更後も運用品質を維持し、障害時の初動遅延を防止する。"
-    message: 「運用品質を維持」「初動遅延を防止」を達成したと判定するための指標、閾値、確認時点が定義されていない。
-    message_ja: 「運用品質を維持」「初動遅延を防止」を達成したと判定するための指標、閾値、確認時点が定義されていない。
-  - id: F014
-    severity: major
-    rule: vp-qe-verifiability
-    line: 30
-    anchor: "| 日次締め運用       | 要       | 中     | 代替     | 全手順を即時更新すると教育負荷が高いため、当面は差分手順書を併用して段階移行する。     | 2 週間後に一本化判断を行う。     |"
-    message: 影響度（高・中・低）を判定するための具体的な尺度（判定基準）が定義されていない。rulebook の禁止事項「影響度の尺度を定義せずに高・中・低を混在させない」に当たるため、severity を major に上げる。
-    message_ja: 影響度（高・中・低）を判定するための具体的な尺度（判定基準）が定義されていない。rulebook の禁止事項「影響度の尺度を定義せずに高・中・低を混在させない」に当たるため、severity を major に上げる。
-  - id: F015
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 31
-    anchor: "| 問い合わせ一次対応 | 否       | 低     | 見送り   | 問い合わせ分類に大きな変更がなく、既存テンプレートで対応可能なため。                   | 想定外問い合わせ増加時に再評価。 |"
-    message: 「想定外問い合わせ増加時」の増加を判定する基準値または比較期間がなく、再評価条件の成立を客観的に判定できない。
-    message_ja: 「想定外問い合わせ増加時」の増加を判定する基準値または比較期間がなく、再評価条件の成立を客観的に判定できない。
-  - id: F016
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 6
-    anchor: 対象は「監視運用」「アラート初動」「日次締め運用」「問い合わせ一次対応」の 4 運用領域とする。
-    message: 「目的と適用範囲」に、rulebook 6.1 が明記を求める対象期間が記載されていない。
-    message_ja: 「目的と適用範囲」に、rulebook 6.1 が明記を求める対象期間が記載されていない。
-  - id: F017
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 16
-    anchor: 評価観点は、運用品質、障害対応力、運用負荷の 3 点とする。
-    message: 影響度の高・中・低の尺度が定義されておらず、rulebook の禁止事項に違反している。評価観点も rulebook の 4 観点（運用品質・障害対応力・継続運用性・利用者影響）と合っていない。
-    message_ja: 影響度の高・中・低の尺度が定義されておらず、rulebook の禁止事項に違反している。評価観点も rulebook の 4 観点（運用品質・障害対応力・継続運用性・利用者影響）と合っていない。
-  - id: F018
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 20
-    anchor: "| 高     | 2    | 監視運用、アラート初動 | 要       |"
-    message: 影響度の尺度を定義しないまま高・中・低を使っている。これは sample-authoring-standard の禁止事項「対応 rulebook の禁止事項に抵触する記述を含めない」に当たり、手本として誤用を招く。
-    message_ja: 影響度の尺度を定義しないまま高・中・低を使っている。これは sample-authoring-standard の禁止事項「対応 rulebook の禁止事項に抵触する記述を含めない」に当たり、手本として誤用を招く。
-  - id: F019
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 37
-    anchor: "| 高     | 監視項目追加としきい値調整 | 2026-05-15 まで | SRE 担当（井上） | 監視基盤への設定権限確認 |"
-    message: 担当欄に人物の姓（井上・山本・高橋・中村）を使っている。役割名・nickname・Role code で書くという sample-authoring-standard の規定に反する。
-    message_ja: 担当欄に人物の姓（井上・山本・高橋・中村）を使っている。役割名・nickname・Role code で書くという sample-authoring-standard の規定に反する。
-  - id: F020
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 12
-    anchor: "- 狙い: 変更後も運用品質を維持し、障害時の初動遅延を防止する。"
-    message: rulebook の記述ガイド 6.2 の成功条件と、6.6 の「運用判断への影響」が sample に反映されておらず、rulebook の要求する項目を完成例として示しきれていない。
-    message_ja: rulebook の記述ガイド 6.2 の成功条件と、6.6 の「運用判断への影響」が sample に反映されておらず、rulebook の要求する項目を完成例として示しきれていない。
-  - id: F021
-    severity: minor
-    rule: vp-ux-readability
-    line: 16
-    anchor: 評価観点は、運用品質、障害対応力、運用負荷の 3 点とする。
-    message: 挙げた 3 つの評価観点が、影響分析サマリや影響詳細一覧のどの判定に対応するのか示されておらず、観点と判定の関係が読み取れない。
-    message_ja: 挙げた 3 つの評価観点が、影響分析サマリや影響詳細一覧のどの判定に対応するのか示されておらず、観点と判定の関係が読み取れない。
-  - id: F022
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 35
-    anchor: "| 優先度 | 対応項目                   | 実施時期        | 担当             | 前提条件                 |"
-    message: 対応方針の「優先度」が影響度と同じ高・中・低を使いながら、両者の関係が定義されていない。担当欄も部署名・職種・Role code が混在している。
-    message_ja: 対応方針の「優先度」が影響度と同じ高・中・低を使いながら、両者の関係が定義されていない。担当欄も部署名・職種・Role code が混在している。
-  - id: F023
-    severity: minor
-    rule: vp-ops-release-readiness
-    line: 33
-    anchor: "## 5. 対応方針"
-    message: 対応方針を確定させる承認者と、それを承認する前に確認すべき事項（未解決事項のうちどれを解消すれば実施に入れるか）が示されていない。
-    message_ja: 対応方針を確定させる承認者と、それを承認する前に確認すべき事項（未解決事項のうちどれを解消すれば実施に入れるか）が示されていない。
-  - id: F024
-    severity: minor
-    rule: vp-ops-operability
-    line: 30
-    anchor: "| 日次締め運用       | 要       | 中     | 代替     | 全手順を即時更新すると教育負荷が高いため、当面は差分手順書を併用して段階移行する。     | 2 週間後に一本化判断を行う。     |"
-    message: 差分手順書を併用している期間の問い合わせ導線と、一本化を判断する人が書かれておらず、移行期間中の運用を継続できるかが読み取れない。
-    message_ja: 差分手順書を併用している期間の問い合わせ導線と、一本化を判断する人が書かれておらず、移行期間中の運用を継続できるかが読み取れない。
-level_corrections:
-  - viewpoint: vp-qe-kata-conformance
-    original_level: 2
-    corrected_level: 1
+      | 影響度 | 対応項目                               | 期限       | 担当  |
+      前提条件                                                                          |
+      完了条件                                                                        |
+    message: 対応方針の表の「完了条件」列は rulebook の必須列にない。sample が rulebook に先行しないよう、rulebook の必須列へ追記するか、sample 側で列の扱いを揃える必要がある。
+    message_ja: 対応方針の表の「完了条件」列は rulebook の必須列にない。sample が rulebook に先行しないよう、rulebook の必須列へ追記するか、sample 側で列の扱いを揃える必要がある。
