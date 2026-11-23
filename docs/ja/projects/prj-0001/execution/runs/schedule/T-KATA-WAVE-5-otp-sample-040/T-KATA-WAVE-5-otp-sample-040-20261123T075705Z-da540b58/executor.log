@@ -1,0 +1,23 @@
+`docs/ja/specdojo/rulebooks/otp-rulebook.md` を書き直し、grade の指摘 F001〜F009 のうち F007 以外の 8 件を rulebook 側で解消しました。F007 は sample の不足が原因で、この段では sample を変更しない決まりのため、申し送りに残しています。Prettier と markdownlint は 0 件で通りました。lint・schema の各検査はこのあと runner が実行します。
+
+| 指摘 | 対応 |
+| --- | --- |
+| F001 | 禁止事項に「個人名・電話番号・個人のメールアドレス」を追加し、Role code とチャネル名で書く例を記述ガイドに置いた |
+| F002 | 概要の要件に、対象外として `cop-*`・`otp-index` へ委ねる範囲を加えた |
+| F003 | `type` と rulebook の宣言の食い違いは `npm run lint:fm` で検出すると明記した |
+| F004 | クローズ条件の要件と良い例・悪い例に、判定値と測定方法を加えた |
+| F005 | ファイル名を、成果物カタログの `path` に従う `otp-<term>.md` に確定した |
+| F006 | 期間・SLA・優先度分類・クローズ条件は「`otp-index` に従う」と書き、上書きする場合だけ値と理由を書く形にそろえた。全体方針・本文要件・記述ガイド・禁止事項で同じ扱いにしている |
+| F008 | 本文構成の表を「目的・受入条件」の列を持つ本文要件の表に作り替えた |
+| F009 | 表記を「問合せ」「クローズ条件」に統一した |
+
+全体の構成は、同じ系統の `otp-index-rulebook`・`cop-rulebook` に合わせました。
+- 記述ガイドを章ごとの箇条書きから、判断の基準と良い例・悪い例による 4 つの観点（共通方針との差分、監視と障害時の判断、クローズ条件、当番と窓口の書き方）に絞りました。
+- 推奨フォーマットの空の表は削り、各表の列は本文要件の表に移しました。
+- 役割の割り当てや承認の進み具合を成果物に求める記述はもともとありませんでした（PJR-76N9 の決まりの点では変更不要）。見出しは H3 までで、完成例の章も置いていません。
+
+「関連ドキュメント」の見出しは、rulebook の名前を正として据え置きました。sample は「関連ドキュメント（必須）」になっているため、sample 側を直す必要があります。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"`docs/ja/specdojo/rulebooks/otp-rulebook.md` を書き直し、grade の指摘 F001〜F006・F008・F009 を rulebook 側で解消した。F007 は sample の不足が原因のため、sample を変更しないこの段では直さず申し送った。","handoff":["F007（major）: `otp-sample` に rulebook が求める項目が欠けている。足りないのは、9 章の停止時期とデータ保持・アーカイブ方針、3 章の保管先とリストアの完了基準、6 章のエスカレーション条件、7 章の判断基準、10 章の判定値・測定方法・クローズ判断者・最終報告物、1 章の対象範囲・対象外。11 章の見出し「関連ドキュメント（必須）」も rulebook の「関連ドキュメント」と異なる。この段は sample を変更しないため直していない。次のアクション: sample の段で rulebook の本文要件に合わせて補う。","F009 の表記の統一は、`otp-index-rulebook` と sample の見出し「問合せ窓口/一次対応」に合わせて「問合せ」にそろえた。「問い合わせ」へ統一する場合は、`otp-index` 系統とあわせて判断する。","直さなかった箇所: 位置づけと Frontmatter の方針は grade の指摘がなく、`otp-index-rulebook` とも整合しているため、表の形への整理以外は変えていない。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/rulebooks/otp-rulebook.md","status":"passed","summary":"整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/otp-rulebook.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルは変更していない","reason":"変更は rulebook だけで、plan・result・個票は変更していない"}]}
+</specdojo_executor_evidence>

@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-5-otp-sample-040
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-5-otp-sample-040/T-KATA-WAVE-5-otp-sample-040-20261123T075705Z-da540b58/plan.md
   started_at: "2026-11-23T07:57:12.988Z"
+  completed_at: "2026-11-23T16:43:12.107Z"
   agent: opus-executor
   execution: agent
   approach: rulebook-maintenance
@@ -20,16 +21,22 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- `docs/ja/specdojo/rulebooks/otp-rulebook.md` を簡潔に書き直した。差分は 55 行追加、117 行削除。grade の指摘 F001〜F006・F008・F009 は rulebook 側で解消した。
+- F007 は `otp-sample` の項目不足が原因のため、sample を変更しないこの段では直さず申し送った。
+- 整形と markdownlint は通った。runner の `lint:md:changed`、`lint:fm:changed`、`lint:mermaid`、`lint:d2`、`test:docs`、`validate:schema` も通った。`validate:history-links` は履歴ファイルを変更していないため `not_applicable` とした。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/rulebooks/otp-rulebook.md`: rulebook を簡潔に整理した。冗長な記述を削り、本文構成の表を目的列つきに整えた。executor の記録による解消内容は次のとおり。F001（個人名・連絡先等の公開不適切情報の扱い）、F002（対象外の明記）、F003（確認手順）、F004（クローズ条件の判定値と測定方法）、F005（命名パターンの確定）、F006（`otp-index` との重複の整理）、F008（章ごとの目的列）、F009（「問合せ」への表記統一）。位置づけと Frontmatter の方針は、grade の指摘がなく `otp-index-rulebook` とも整合しているため、表の形への整理以外は変えていない。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- F007 は executor の申し送りどおり、sample の段で `otp-sample` を rulebook の本文要件に合わせて補う必要がある。
+- F007（major）: `otp-sample` に rulebook が求める項目が欠けている。足りないのは、9 章の停止時期とデータ保持・アーカイブ方針、3 章の保管先とリストアの完了基準、6 章のエスカレーション条件、7 章の判断基準、10 章の判定値・測定方法・クローズ判断者・最終報告物、1 章の対象範囲・対象外。11 章の見出し「関連ドキュメント（必須）」も rulebook の「関連ドキュメント」と異なる。この段は sample を変更しないため直していない。次のアクション: sample の段で rulebook の本文要件に合わせて補う。
+- F009 の表記の統一は、`otp-index-rulebook` と sample の見出し「問合せ窓口/一次対応」に合わせて「問合せ」にそろえた。「問い合わせ」へ統一する場合は、`otp-index` 系統とあわせて判断する。
+- 直さなかった箇所: 位置づけと Frontmatter の方針は grade の指摘がなく、`otp-index-rulebook` とも整合しているため、表の形への整理以外は変えていない。
+- 適用外の検証: `npm run validate:history-links`（変更は rulebook だけで、plan・result・個票は変更していない）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+rulebook-maintenance の手順で、grade の指摘 F001〜F009 を根拠に `docs/ja/specdojo/rulebooks/otp-rulebook.md` だけを見直した。F007 は sample 側の不足が原因だった。plan に sample・recipe・template をこの段で変更しないとあるため、rulebook は直さず申し送った。位置づけと Frontmatter の方針は指摘がなく整合していたため維持した。表記は `otp-index-rulebook` と sample の見出しに合わせて「問合せ」にそろえた。
