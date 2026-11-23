@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 96
-graded_at: "2026-11-23T18:26:14.645Z"
+graded_at: "2026-11-23T18:42:17.972Z"
 graded_by: sonnet-review-executor
-content_hash: 9fa5f595318000d1bbc5d78d6f7edd87bb9734cfeb280db8da9630d94380cc9b
+content_hash: 3bf2083a4cd00435cb10025a77216fe65bc0408d3cc46b5a68c9cf42ab3eb767
 categories:
   purpose:
     score: 100
@@ -126,8 +126,8 @@ findings:
   - id: F003
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 33
-    anchor: "`opr-index` 参照。変更の適用件数とロールバックの件数は、`opr-index` の月次点検で変更記録から集計する。"
+    line: 97
+    anchor: "`OPS` は、`opr-index` の月次点検で変更記録から集計した当月の変更件数・ロールバックの件数とその理由を `PO` へ報告する。"
     message: >-
       「変更の適用件数とロールバックの件数は `opr-index` の月次点検で集計する」とあるが、`opr-sample` の月次点検の行にその項目はない。集計の責任を本書の運用変更作業に寄せるか、`opr-index`
       側に項目を追加すること。
