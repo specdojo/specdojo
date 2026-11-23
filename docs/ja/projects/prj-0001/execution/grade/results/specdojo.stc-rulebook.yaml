@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/stc-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 97
-graded_at: "2026-11-22T01:16:18.554Z"
+score: 95
+graded_at: "2026-11-23T01:51:08.812Z"
 graded_by: opus-review-executor
-content_hash: 39be80456e21b796edd948b7d08744b4e09d773f1516f2f850fc8f3e16ab65e9
+content_hash: e2cd124123b75fb142b74de68220829f89862134dd89c388b0709ed4ecf53677
 categories:
   purpose:
     score: 100
@@ -21,7 +21,7 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 92
   implementation:
     score: 88
   quality:
@@ -60,8 +60,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -104,10 +104,17 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 3
+  minor: 4
   note: 0
 findings:
   - id: F001
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 80
+    anchor: 共通方針は `stc-index` を正本とし、本書は対象別に固有の判断だけを定める。作成後は次を順に照合して完了を確かめる。
+    message: 記述ガイド冒頭の「共通方針は `stc-index` を正本とし、本書は対象別に固有の判断だけを定める」は導入文と全体方針の「正本と責務境界」の繰り返しのため、この文を削って完了照合の手順だけを残す必要がある。
+    message_ja: 記述ガイド冒頭の「共通方針は `stc-index` を正本とし、本書は対象別に固有の判断だけを定める」は導入文と全体方針の「正本と責務境界」の繰り返しのため、この文を削って完了照合の手順だけを残す必要がある。
+  - id: F002
     severity: minor
     rule: vp-dev-implementation-readiness
     line: 134
@@ -118,26 +125,26 @@ findings:
     message_ja: >-
       `perspective_key` は変えないと定めているが、記載位置（観点見出しの直下など）と形式（英小文字 kebab-case など）が定義されていないため、sample の `` `perspective_key`:
       `flow-success` `` 行に合わせて記述規則として明記する必要がある。
-  - id: F002
+  - id: F003
     severity: minor
     rule: vp-qe-kata-conformance
     line: 15
     anchor: >-
-      - _UNDECIDED_: `recipe`・`template` の要否は未判断である（template は PJR-WYTX で扱い、recipe は QE が ready 化の判断時に決める）。sample
-      は「本文要件」の見出し構成へ未整合であり、後続の sample の見直しで揃える。いずれも `ready` 化の前に解消する。
+      - _UNDECIDED_: `recipe`・`template` の要否は未判断である（template は PJR-WYTX で扱う）。sample は「本文要件」の見出し構成へ未整合であり、後続の sample
+      の見直しで揃える。いずれも `ready` 化の前に解消する。
     message: >-
       sample は本文要件の見出し構成（6 章と観点配下の `####` 構成）にすでに整合しており、前回の major は解消したため severity を下げるが、`_UNDECIDED_` に「sample
       は本文要件の見出し構成へ未整合」と古い記述が残り、authoring standard が禁じる確定済み内容のラベル放置に当たるため削除する必要がある。
     message_ja: >-
       sample は本文要件の見出し構成（6 章と観点配下の `####` 構成）にすでに整合しており、前回の major は解消したため severity を下げるが、`_UNDECIDED_` に「sample
       は本文要件の見出し構成へ未整合」と古い記述が残り、authoring standard が禁じる確定済み内容のラベル放置に当たるため削除する必要がある。
-  - id: F003
+  - id: F004
     severity: minor
     rule: vp-ops-release-readiness
     line: 15
     anchor: >-
-      - _UNDECIDED_: `recipe`・`template` の要否は未判断である（template は PJR-WYTX で扱い、recipe は QE が ready 化の判断時に決める）。sample
-      は「本文要件」の見出し構成へ未整合であり、後続の sample の見直しで揃える。いずれも `ready` 化の前に解消する。
+      - _UNDECIDED_: `recipe`・`template` の要否は未判断である（template は PJR-WYTX で扱う）。sample は「本文要件」の見出し構成へ未整合であり、後続の sample
+      の見直しで揃える。いずれも `ready` 化の前に解消する。
     message: >-
       `ready` 化の前提に「sample の見直し」が残っているが、sample は本文要件にすでに整合しているため、公開前に実際に残る事項（`recipe` の要否判断と PJR-WYTX での `template`
       の判断）だけに更新する必要がある。

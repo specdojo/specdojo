@@ -6,7 +6,7 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 93
-graded_at: "2026-11-22T07:12:47.242Z"
+graded_at: "2026-11-23T01:49:13.812Z"
 graded_by: opus-review-executor
 content_hash: 6df1cd9beb95c5e17c1a6586ec1b9d239229332b70558ffce276102b9ff75d2d
 categories:
@@ -104,7 +104,7 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 3
+  minor: 4
   note: 0
 findings:
   - id: F001
@@ -140,3 +140,14 @@ findings:
     message_ja: >-
       本文87行目の「動詞で始まる箇条書き」は、同じ行の例「API入力を永続化モデルへ変換する」や itc-sample
       の責務の各行（目的語から始まり動詞で終わる）と食い違うため、「振る舞いを表す述語で終わる箇条書き」など日本語の語順に合う表現に改めること。
+  - id: F004
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 117
+    anchor: "- 観点・ケース表の「トレース」列は仕様IDを直書きせず `TR-01` / `TR-01,TR-02` のように記載する。根拠の追加時は先にトレース表へ行を追加する。"
+    message: >-
+      本文117行目はケース表のトレース列に仕様IDを直書きせず `TR-xx` を書くと定めるが、itc-index-rulebook の「ケース表の共通カラム」はトレース列を「根拠仕様（BAC・NFR・BR 等）の
+      ID。従担当の場合は主担当側の `case_id` も記す」と定義しており食い違うため、どちらかに揃え、従担当の場合に `TR-xx` と主担当 `case_id` をどう併記するかを本書に明記すること。
+    message_ja: >-
+      本文117行目はケース表のトレース列に仕様IDを直書きせず `TR-xx` を書くと定めるが、itc-index-rulebook の「ケース表の共通カラム」はトレース列を「根拠仕様（BAC・NFR・BR 等）の
+      ID。従担当の場合は主担当側の `case_id` も記す」と定義しており食い違うため、どちらかに揃え、従担当の場合に `TR-xx` と主担当 `case_id` をどう併記するかを本書に明記すること。

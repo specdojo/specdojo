@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/atc-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 98
-graded_at: "2026-11-22T06:54:14.991Z"
+score: 95
+graded_at: "2026-11-23T01:43:42.652Z"
 graded_by: opus-review-executor
-content_hash: 5207382190eeb516c5e4db0582c7b8eb0860c57a7136e891b642d063a5f85f15
+content_hash: 2a2e0e954e7aac824ed446b0d61d7389c25f5ae543e29603e5ebafa9b12a0902
 categories:
   purpose:
     score: 100
@@ -27,7 +27,7 @@ categories:
   quality:
     score: 92
   consistency:
-    score: 100
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -78,8 +78,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
     level: 3
     score: 75
@@ -104,10 +104,21 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 1
+  minor: 2
   note: 0
 findings:
   - id: F001
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 79
+    anchor: "| 受入観点とケース            | 観点ごとに `### 6.n. 観点：<観点名>`、その下に `#### 6.n.1. 意図` と `#### 6.n.2. 条件・ケース表` を置く       |"
+    message: >-
+      本文要件は観点見出しの下に意図と条件・ケース表だけを定めており、perspective_key をどこに宣言するか（sample は観点見出しの直下に「`perspective_key`: `＜key＞`」行を置いている）が
+      rulebook にも atc-index-rulebook にも定められていないため、観点見出しの直下に perspective_key の宣言行を置くことを見出し構成の受入条件に加えること。
+    message_ja: >-
+      本文要件は観点見出しの下に意図と条件・ケース表だけを定めており、perspective_key をどこに宣言するか（sample は観点見出しの直下に「`perspective_key`: `＜key＞`」行を置いている）が
+      rulebook にも atc-index-rulebook にも定められていないため、観点見出しの直下に perspective_key の宣言行を置くことを見出し構成の受入条件に加えること。
+  - id: F002
     severity: minor
     rule: vp-qe-kata-conformance
     line: 127
