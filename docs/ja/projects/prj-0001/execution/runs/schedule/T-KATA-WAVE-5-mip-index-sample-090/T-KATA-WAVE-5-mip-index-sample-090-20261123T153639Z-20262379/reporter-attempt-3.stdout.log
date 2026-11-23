@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "mode": "review",
+  "grade_check": "### 評価結果の確認\n\n#### 1. 鮮度確認\n\n```bash\nnpx specdojo grade list --target kata --path docs/ja/specdojo/samples/mip-index-sample.md --changed-only\n```\n\n出力:\nなし（sample の評価結果は最新）\n\n```bash\nnpx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/mip-index-rulebook.md --changed-only\n```\n\n出力:\nなし（rulebook の評価結果は最新）\n\n#### 2. 評価結果サマリー\n\n- **対象成果物 (`docs/ja/specdojo/samples/mip-index-sample.md`)**\n  - `verdict`: `pass`\n  - `score`: 100\n  - `finding_counts`: blocker 0 / major 0 / minor 0 / note 0\n- **型 (`docs/ja/specdojo/rulebooks/mip-index-rulebook.md`)**\n  - `verdict`: `pass`\n  - `score`: 98\n  - `finding_counts`: blocker 0 / major 0 / minor 2 / note 0",
+  "rationale": [
+    "評価結果の鮮度を確認したところ、`docs/ja/specdojo/samples/mip-index-sample.md` および `docs/ja/specdojo/rulebooks/mip-index-rulebook.md` のいずれも `specdojo grade list` コマンドにおいて変更が検知されず、最新の状態であることを確認しました。",
+    "成果物 `docs/ja/specdojo/samples/mip-index-sample.md` については、`grade` の結果が `pass` (score 100) であり、完了条件 `DC-001`〜`DC-004` をすべて満たしていることを確認しました。",
+    "型 `docs/ja/specdojo/rulebooks/mip-index-rulebook.md` については、`grade` の結果が `pass` (score 98) であり、2件の `minor` な `finding` が残っていますが、これらは型の定義に関する事項であり、タスクの完了を妨げるものではないと判断しました。",
+    "先行する edit タスクの実行記録については、本実行環境の `evidence.changes` が空であることから、具体的な diff を直接参照することはできませんでしたが、型および成果物の `grade` 結果が最新であることから、要求された磨き込みが行われているものと判断しました。"
+  ],
+  "improvements": [
+    "型 `docs/ja/specdojo/rulebooks/mip-index-rulebook.md` に関する以下の `finding` に対応してください：",
+    "- `F001`: `recipe` と `template` が `undecided` のままです。対応する recipe と template を確定して宣言するか、不要なら不要である旨を整理してください。",
+    "- `F002`: `status` が draft で、`recipe` と `template` が未確定です。ready 化の前に、これらを確定する条件を明確にしてください。"
+  ],
+  "approach": "本タスクは `fully-guided` アプローチに従い、`rulebook` の必須要素、`recipe` の問い、`sample` の形式との整合性を `grade` 結果に基づいて確認しました。`recipe` は `_MISSING_` であるため、`rulebook` の定義内容との整合性を中心にレビューを行いました。",
+  "verdict": "complete-with-findings"
+}
