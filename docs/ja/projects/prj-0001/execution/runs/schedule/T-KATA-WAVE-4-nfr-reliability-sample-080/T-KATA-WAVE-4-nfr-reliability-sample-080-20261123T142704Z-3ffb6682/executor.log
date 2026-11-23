@@ -1,0 +1,7 @@
+`docs/ja/specdojo/samples/nfr-reliability-sample.md` から重複する文を 3 か所削りました。意味と必須情報は変えていません。静的検査は実行していません。`npm run lint:md` などは親 runner が実行します。
+
+`condense_records` の 4 件のうち、直したのは `table-prose`、`repetition`、`table-prose` の 3 件です。残りの 1 件は `retain` です。`cause` はすべて `document` です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"3 件の冗長な文を削除・まとめ、1 件は理由を付けて保持した。意味と必須情報は維持した。","handoff":[],"condense_records":[{"location":"4. 測定・検証方法 の導入文","category":"table-prose","action":"delete","reason":"「基準値は信頼性要件一覧を参照する」は、同じ id 列で表が対応していることを繰り返すだけだった。削除しても判定の意味は変わらない。","cause":{"type":"document"}},{"location":"4. 測定・検証方法 の表の後の判定文","category":"repetition","action":"reference","reason":"基準が `_UNDECIDED_` の間は件数・回数の記録だけを行うという説明は、3 章の `nfr-rel-001`・`nfr-rel-004` の備考と同じ内容だった。本文は備考への参照に置き換えた。","cause":{"type":"document"}},{"location":"5. 関連ドキュメント導線 の表の前の説明文","category":"table-prose","action":"delete","reason":"表の内容を言い換えただけの文だった。基準値を変えたときの見直し指示は残した。","cause":{"type":"document"}},{"location":"1. 概要 の停止・復旧の除外の段落（可用性要件への言及）","category":"repetition","action":"retain","reason":"2 章の表や 5 章の導線にも可用性要件への言及があるが、対象範囲の境界を最初に示す判断の根拠なので残した。","cause":{"type":"document"}}],"validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する検査のため、ここでは実行していない。"}]}
+</specdojo_executor_evidence>
