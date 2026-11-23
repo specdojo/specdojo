@@ -86,3 +86,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_f10a2f050bac4e06ab68af37bd9f8ca9
+- v: 1
+  id: reg_390e3bf563c94bd6afaedbf447fb6849
+  ts: "2026-11-23T01:16:02Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分と対応結果を確かめ、使い捨ての worktree で新しいプロダクト文書とプロジェクト文書の雛形を作って id を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: 雛形の based_on と自分の id を deliverableDocId で決め、プロダクト文書は名前空間なし、プロジェクト文書は修飾した id にした。既存の文書は frontmatter の id を正とする
+  previous_event_id: reg_a14635afcb8a456b81cad05dc0340064

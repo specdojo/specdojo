@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-kyg4-based-on-product-bare-id
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-22T23:13:32Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-23T01:16:02Z"
+  conclusion: 雛形の based_on と自分の id を deliverableDocId で決め、プロダクト文書は名前空間なし、プロジェクト文書は修飾した id にした。既存の文書は frontmatter の id を正とする
   derived_from:
     - PJR-PHY7
   commit_type: fix
