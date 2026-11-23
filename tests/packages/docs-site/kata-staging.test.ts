@@ -161,4 +161,26 @@ describe("docs-site kata staging", () => {
     expect(readFileSync(join(second.stagingRoot, "docs/b.md"), "utf8")).toBe("bb");
     expect(existsSync(stagedA)).toBe(false);
   });
+
+  it("更新時刻の 1 ミリ秒未満の端数が違うだけのファイルは複製し直さない", () => {
+    root = mkdtempSync(join(tmpdir(), "specdojo-kata-staging-"));
+    mkdirSync(join(root, "docs"));
+    writeFileSync(join(root, "docs/a.md"), "a");
+    process.env.SPECDOJO_PACKAGE_ROOT = root;
+    const first = stageBundledKata(root);
+    const stagedA = join(first.stagingRoot, "docs/a.md");
+    const sourceMtimeSeconds = Math.floor(statSync(join(root, "docs/a.md")).mtimeMs / 1000);
+    utimesSync(join(root, "docs/a.md"), sourceMtimeSeconds, sourceMtimeSeconds + 0.0006);
+    utimesSync(stagedA, sourceMtimeSeconds, sourceMtimeSeconds + 0.0001);
+    writeFileSync(stagedA, "a", "utf8");
+    utimesSync(stagedA, sourceMtimeSeconds, sourceMtimeSeconds + 0.0001);
+    utimesSync(join(root, "docs/a.md"), sourceMtimeSeconds, sourceMtimeSeconds + 0.0006);
+    // 内容の違いを目印にして、複製されないことを確かめる
+    writeFileSync(stagedA, "S", "utf8");
+    utimesSync(stagedA, sourceMtimeSeconds, sourceMtimeSeconds + 0.0001);
+
+    stageBundledKata(root);
+
+    expect(readFileSync(stagedA, "utf8")).toBe("S");
+  });
 });

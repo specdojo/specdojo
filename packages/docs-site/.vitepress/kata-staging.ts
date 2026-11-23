@@ -146,7 +146,8 @@ function copyIfChanged(source: string, destination: string): void {
     const destinationStat = statSync(destination);
     if (
       destinationStat.size === sourceStat.size &&
-      destinationStat.mtimeMs === sourceStat.mtimeMs
+      // 書き戻した更新時刻は 1 ミリ秒未満の端数が落ちるため、1 ミリ秒の幅を持たせて比べる
+      Math.abs(destinationStat.mtimeMs - sourceStat.mtimeMs) < 1
     ) {
       return;
     }
