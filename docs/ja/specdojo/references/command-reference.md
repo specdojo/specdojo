@@ -1332,6 +1332,14 @@ specdojo orchestrator night --project prj-0001 \
 
 各 wave は worktree と post-review を必須にし、成功は close、未完了は `waiting` にします。`--max-items` は一晩の件数、`--parallel` は wave の同時数、`--max-consecutive-failures` は次の wave を止める閾値です。`--on-rate-limit fallback` では fallback executor の指定が必須です。失敗を含む朝報告を保存できた場合は部分成功を表す終了コード 2、コマンド自体の異常は 1 を返します。
 
+`orchestrator integration-tests` は統合テストの全件（`npm run test:integration`）を固定の引数で流し、結果を `execution/reports/nightly-integration-tests/` の朝報告 1 文書へ残します。親の検証の `test-integration` は変えたファイルに関係するテストだけを流すため、その取りこぼしを毎晩 1 回の全件実行で補います。報告には成功・失敗の件数と、失敗したテストのファイル・名前・メッセージの要約を表で残します。Vitest の JSON 報告を読めない場合は出力の末尾を残します。全件成功は終了コード 0、失敗・異常は 1 を返します。
+
+```bash
+specdojo orchestrator integration-tests --project prj-0001
+```
+
+routine `rtn-nightly-integration-tests`（毎晩 4 時）が `job-nightly-integration-tests` を起動します。job は `task.steps` と `lock_wait_seconds` を使い、実行中の run がプロジェクト実行ロックを持つ間は最大 3 時間待ちます。時間切れは失敗ではなく延期として記録されます。任意のシェルのコマンドを流せる routine の action は用意していません。
+
 Job worktree 内から起動しても、子 run の worktree は主の作業ツリーから起動した場合と同じ場所へ作られます。子の plan・result・実行記録は Job のブランチへ統合されます。Job の worktree 再起動用の内部印と Git の repository 固有環境変数は子の処理へ引き継がれません。配置の指定方法は [[specdojo:exec-worktree-guide|exec worktree運用ガイド]] を参照してください。
 
 ## 16. devcontainer

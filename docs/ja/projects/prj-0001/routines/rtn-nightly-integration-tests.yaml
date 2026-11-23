@@ -1,0 +1,17 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/routine.schema.yaml
+# 親の検証の test-integration は related: true（PJR-9X52）で関係するテストだけを流すため、
+# 毎晩 1 回、全件を流して朝報告に残す（PJR-EF4Z）。4 時は 0 時の夜間実行・1 時の grade・
+# 3 時の翻訳の後、5 時の grade-recheck の前で、実行中の run がある間は job がロックを待つ。
+id: rtn-nightly-integration-tests
+name: 統合テストの全件を夜間に実行
+description: 毎晩 4 時（Asia/Tokyo）に統合テストの全件を流し、成功・失敗と失敗したテストを朝報告に残す。
+enabled: true
+trigger:
+  cron: "0 4 * * *"
+  timezone: Asia/Tokyo
+action:
+  kind: job
+  job: job-nightly-integration-tests
+policy:
+  missed_run: skip
+  overlap: skip
