@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "mode": "review",
+  "grade_check": "### 評価結果の確認\n\n#### 成果物: `docs/ja/specdojo/samples/dmd-sample.md`\n- コマンド: `npx specdojo grade list --target kata --path docs/ja/specdojo/samples/dmd-sample.md --changed-only`\n- 出力: \n```\noutput: (none)\nexit code: 0\n```\n- `verdict`: `pass`\n- `score`: 100\n- `finding_counts`: blocker: 0, major: 0, minor: 1, note: 0\n\n#### rulebook: `docs/ja/specdojo/rulebooks/dmd-rulebook.md`\n- コマンド: `npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/dmd-rulebook.md --changed-only`\n- 出力: \n```\noutput: (none)\nexit code: 0\n```\n- `verdict`: `pass`\n- `score`: 100\n- `finding_counts`: blocker: 0, major: 0, minor: 0, note: 0",
+  "rationale": [
+    "評価結果の鮮度は最新であることを確認済み。`docs/ja/specdojo/samples/dmd-sample.md` において `minor` な finding (`F001`) が 1 件存在することを確認した。",
+    "完了条件 `DC-001`〜`DC-004` について、成果物を確認した結果、充足していることを確認した。",
+    "先行する `edit` タスクの実行結果については、`plan` 内に具体的なパスの指定がなく、実行記録として参照できなかったため、未確認としている。"
+  ],
+  "improvements": [
+    "F001 (`minor`/`vp-pm-plan-feasibility`): 移行手順表において、手順 1・3・4・5 の実行担当（役割名または Role code）が示されていない。タスクの割当てと進捗確認を可能にするため、備考欄などに担当を補う必要がある。"
+  ],
+  "approach": "#### approach に応じた確認\n\n- フェーズ説明で求められた磨き込み（`rulebook` の必須要素・禁止事項、`recipe` の問い、`sample` の形式との整合）は、`grade` によって既に評価済みであることを確認した。",
+    "成果物には、`plan` で意図されていない予期せぬ変更は含まれていない。",
+    "実行記録の検証結果は、先行する `edit` の `result` が特定できなかったため、確認を見送った。"
+  ],
+  "verdict": "complete-with-findings"
+}
