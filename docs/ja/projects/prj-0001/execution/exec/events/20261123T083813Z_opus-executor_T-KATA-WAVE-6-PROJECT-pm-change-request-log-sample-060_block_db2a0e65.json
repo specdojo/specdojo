@@ -1,0 +1,17 @@
+{
+  "v": 1,
+  "ts": "2026-11-23T08:38:13Z",
+  "type": "block",
+  "task_id": "T-KATA-WAVE-6-PROJECT-pm-change-request-log-sample-060",
+  "by": "opus-executor",
+  "msg": "executor reported incomplete: テンプレートは編集せずに止めた。pm-change-request-log-template.md は rulebook が宣言する単独のログ用の雛形であると同時に、src/register/views.ts の register build が生成ビュー controls/generated/pm-change-request-log.md の外枠として読み込んでいる。F001 に合わせて 6 章の骨組みにすると生成ビューに記入欄だけの章が入り、view-slot 行を外すと injectViewSlots が失敗する。直すには src の変更が必要で、このタスクの範囲外。",
+  "meta": {
+    "limit_deferred": "false",
+    "claim_actor": "opus-executor",
+    "stage_actor": "gemma26-reporter",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-pm-change-request-log-sample-060/T-KATA-WAVE-6-PROJECT-pm-change-request-log-sample-060-20261123T081023Z-4402b1f0/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-pm-change-request-log-sample-060/T-KATA-WAVE-6-PROJECT-pm-change-request-log-sample-060-20261123T081023Z-4402b1f0/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-6-PROJECT-pm-change-request-log-sample-060-20261123T081023Z-4402b1f0"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "v": 1,
+  "ts": "2026-11-23T15:20:23Z",
+  "type": "block",
+  "task_id": "T-KATA-WAVE-4-nfr-index-sample-090",
+  "by": "sonnet-review-executor",
+  "msg": "reporter output invalid after 3 format attempts: result Markdown notation violation before writing (fix the JSON prose that produced these rendered lines; do not put Markdown headings, code fences, bare URLs, escaped backticks, or Chinese simplified glyphs in free-text fields):\nline 22 MD038/no-space-in-code Spaces inside code span elements: \"評価結果の鮮度を確認するため、以下のコマンドを実行しました。 ```bash specdojo grade list --target kata --path docs/ja/specdojo/samples/nfr-index-sample.md --changed-only specdojo grade list --target kata --path docs/ja/specdojo/ru\"",
+  "meta": {
+    "limit_deferred": "false",
+    "claim_actor": "sonnet-review-executor",
+    "stage_actor": "gemma26-reporter",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-4-nfr-index-sample-090/T-KATA-WAVE-4-nfr-index-sample-090-20261123T151059Z-071e7578/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-4-nfr-index-sample-090/T-KATA-WAVE-4-nfr-index-sample-090-20261123T151059Z-071e7578/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-4-nfr-index-sample-090-20261123T151059Z-071e7578"
+  }
+}
