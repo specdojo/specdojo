@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-22T23:13:46Z"
   due_on: "2026-11-30"
+  block_reason: "integrate failed: uncommitted=139; log=docs/ja/projects/prj-0001/execution/runs/register/PJR-E4MW/pjr-e4mw-20261123T051333Z-56465bdc/integrate.log; files=docs/ja/projects/prj-0001/execution/runs/register/PJR-1799/20261104T233955857Z-159d621b/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-1799/20261104T233955857Z-159d621b/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-2C9W/pjr-2c9w-20261115T183258Z-931d41d7/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-2C9W/pjr-2c9w-20261115T183258Z-931d41d7/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-2C9W/pjr-2c9w-20261116T135145Z-ab537c28/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-2C9W/pjr-2c9w-20261116T135145Z-ab537c28/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-6SFB/20261105T173506708Z-28a71896/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-6SFB/20261105T173506708Z-28a71896/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-7ZZR/pjr-7zzr-20261110T150224Z-75308872/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-7ZZR/pjr-7zzr-20261110T150224Z-75308872/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-7ZZR/pjr-7zzr-20261111T120908Z-69c6b460/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-7ZZR/pjr-7zzr-20261111T120908Z-69c6b460/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-8TMF/20261106T122824356Z-c7d8bf65/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-DDAC/pjr-ddac-20261110T233722Z-1225f10b/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-DDAC/pjr-ddac-20261110T233722Z-1225f10b/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-ER6J/20261106T131528102Z-d5856211/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-ER6J/20261106T131528102Z-d5856211/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-KFMB/20261105T165904580Z-c7930dab/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-KFMB/20261105T165904580Z-c7930dab/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-MC63/20261105T101827515Z-ee101aec/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-MC63/20261105T101827515Z-ee101aec/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-PHY7/pjr-phy7-20261122T133845Z-1142c0d4/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-PHY7/pjr-phy7-20261123T045902Z-e16364ff/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-PW4Z/20261106T141348485Z-8e7e1eb2/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-PW4Z/20261106T141348485Z-8e7e1eb2/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-Q9AW/20261105T100217610Z-77e188ab/evidence.json, docs/ja/projects/prj-0001/execution/runs/register/PJR-Q9AW/20261105T100217610Z-77e188ab/executor.log, docs/ja/projects/prj-0001/execution/runs/register/PJR-Q9AW/20261105T100217610Z-77e188ab/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-Q9AW/20261105T100217610Z-77e188ab/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-Q9AW/pjr-q9aw-20261104T235442Z-979daaf1/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-Q9AW/pjr-q9aw-20261104T235442Z-979daaf1/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-RAPC/20261105T115425531Z-98fd24fb/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-RAPC/20261105T115425531Z-98fd24fb/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-SBNB/pjr-sbnb-20261115T191518Z-bab2a414/executor.attempt-1.log, docs/ja/projects/prj-0001/execution/runs/register/PJR-SBNB/pjr-sbnb-20261115T191518Z-bab2a414/executor.log, docs/ja/projects/prj-0001/execution/runs/register/PJR-SMW7/pjr-smw7-20261110T232405Z-e9fc5759/plan.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-SMW7/pjr-smw7-20261110T232405Z-e9fc5759/result.md, docs/ja/projects/prj-0001/execution/runs/register/PJR-T6P6/20261105T171121491Z-eb50de33/…"
   derived_from:
     - PJR-PHY7
   depends_on:
@@ -48,14 +49,42 @@ docs/ja/product の下で prj-0001: の付いた id を持つ 7 件と、名前�
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                     | 担当 | 状態 | メモ                                                                  |
+| --- | -------------------------------------------------------- | ---- | ---- | --------------------------------------------------------------------- |
+| 1   | 旧 id を `rg` で数え直す                                 | DEV  | done | 7 件の id はいずれも名前空間ありで残っていた（増減なし）              |
+| 2   | 7 件の id と参照を名前空間なしへ付け替える               | DEV  | done | `docs/` 配下の 215 ファイル・328 箇所。履歴・ログも id の部分のみ書換 |
+| 3   | yaml-pages・exec・dashboard を作り直し、索引を再構築する | DEV  | done | `specdojo build --only` と `specdojo index build`                     |
+| 4   | 旧 id の残存と索引の引き当てを確認する                   | DEV  | done | 残存なし。7 件とも `specdojo index lookup` で引ける                   |
+| 5   | `lint:md`・`lint:fm`・`validate:schema` と親の検証       | DEV  | open | executor は親の検証を実行しない。runner が実行する                    |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 5.1. 実施内容
+
+- 7 件の id（`stsd-task-execution`・`stsd-deliverable`・`cdt-register-type`・`ccd-project-planning`・`bdd-register-entry`・`ifx-index`・`ifx-file-agent-evidence`）から `prj-0001:` を外した。正本は各ファイルの frontmatter `id` と YAML の `id`。
+- 参照は wikilink・`based_on`・`depends_on`・`spec_ref`・`targets` などを問わず、`docs/` 配下の追跡ファイル（過去の個票・plan・result・evidence・ログ・grade の結果を含む）で id の部分だけを置換した。`CHANGELOG.md` とファイル名は変えていない。
+- 置換は `prj-0001:<id>` の直後が英数字・`-`・`_` でない場合に限った。`prj-0001:ifx-index-grade-criteria` のような別の id は変えていない。
+- 数え直しの結果: 対象 7 件に増減はない。置換は 215 ファイル・328 箇所。個票の「約 250 ファイル」より少ないのは、表示のページ（`generated/`）を作り直しに任せたため。
+- `docs/ja/product/` の `based_on` で、7 件の id を名前空間ありで指していたのは 3 件（`ccd-project-planning`・`ifx-file-agent-evidence`・`bes-task-ready-selected`）だった。個票の「8 件」とは合わない。残りの `based_on`（`bdd-exec-state`・`bdd-exec-event`・`bdd-deliverable`・`bps-task-selection-preparation`・`prj-success-criteria-and-acceptance-criteria`）は 7 件の外にある id のため変えていない。
+- `tests/` の `yaml-pages.test.ts` の疑似入力と `tests/fixtures/yaml-pages/*.snap` は、実文書を読まない固定の入力のため変えていない。
+
+### 5.2. 確認に使ったコマンドと結果
+
+- `rg -c "prj-0001:(<7 件の id>)[^-]" docs`: 出力なし（旧 id の残存なし）。`prj-0001:<id>-grade-criteria` は別の id のため残る。
+- `npx specdojo build --only yaml-pages` / `--only exec` / `--only dashboard`: 成功。
+- `npx specdojo index build`: 5963 件。`npx specdojo index lookup <id>` で 7 件とも `docs/ja/product/` のファイルに引けた。
+- `npm run validate:history-links`: 履歴のファイルはすべて valid。
+
+### 5.3. CHANGELOG に書く事項
+
+- 区分: Changed
+- 文案: プロダクト文書 7 件の id から名前空間 `prj-0001:` を外し、参照を付け替えた。
+
+### 5.4. 残課題
+
+- `based_on` の件数差（個票 8 件・実際 3 件）の確認は、レビューで行う。
+- 保護された設定の変更はない。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-phy7-rulebook-id-project-qualification]]
