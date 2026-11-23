@@ -1,0 +1,5 @@
+`docs/ja/specdojo/samples/opr-change-sample.md` の冗長な箇所を3件整理しました。修正前後で意味と必須情報は変わっていません。Prettier の整形検査は通りました。markdownlint は出力が空でした。その他の検査は親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"opr-change-sample の冗長箇所3件を削除・まとめで整理し、意味と必須情報は維持した。変更前後で内容は変わらない。","handoff":[],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/opr-change-sample.md","status":"passed","summary":"整形済み"},{"command":"npx markdownlint docs/ja/specdojo/samples/opr-change-sample.md","status":"passed","summary":"エラー出力なし"}],"condense_records":[{"location":"8.1. 変更種別と承認・実施条件 の導入文","category":"repetition","action":"delete","reason":"承認者と戻す条件が運用方針の変更管理に従うことは概要で既に述べており、同じ主張の繰り返しだったため削除した。","cause":{"type":"document"}},{"location":"8.3. 適用の手順 の手順6（確認）","category":"table-prose","action":"delete","reason":"価格の一括変更の翌朝の照合は変更種別の表の完了条件に書かれており、本文と表で二重に説明していたため本文側を削除した。","cause":{"type":"document"}},{"location":"3. 日次・週次・月次点検手順 と 8.4. ロールバックとエスカレーション末尾","category":"repetition","action":"merge","reason":"月次点検での件数集計を2か所で述べていたため、8.4 の報告文へ集約した。集計元（変更記録）と `opr-index` の月次点検という情報は保った。","cause":{"type":"document"}}]}
+</specdojo_executor_evidence>
