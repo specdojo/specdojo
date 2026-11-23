@@ -1,44 +1,55 @@
 # yaml-language-server: $schema=../../../specdojo/schemas/v1/dct.schema.yaml
 # dct-sample.yaml
-# 成果物カタログ（ドメイン別）の完成例。
-# 駄菓子屋きぬや販売管理システム構築プロジェクトのプロジェクト定義ドメインを題材とする。
-# 構造・必須キー・型制約は docs/specdojo/schemas/v1/dct.schema.yaml に従う。
-# work / control / generated の3種別と、done_criteria、および brief（YAML アンカー共有）の記述例を示す。
+# 駄菓子屋きぬや 販売管理システム構築のプロジェクト定義ドメインの成果物カタログ。
+# 背景・対象範囲は [[specdojo:sample-authoring-standard|Sample 記述標準]] の共通サンプル文脈に従う。
+# 構造・必須キー・型制約は先頭の schema を正本とする。
+#
+# _ASSUMPTION_: `project_id`・`base_path` の prj-0001 は [[specdojo:dct-index-sample|成果物カタログ索引]] と同じ例示値で、
+# SpecDojo 本体のプロジェクトを表さない。親は同梱の索引 sample とする。
 id: specdojo:dct-sample
 type: project
 status: draft
 title: 成果物カタログ（プロジェクト定義）
 rulebook: specdojo:dct-rulebook
 part_of:
-  - prj-0001:dct-index
+  - specdojo:dct-index-sample
 project_id: prj-0001
 domain: project-definition
 base_path: /docs/ja/projects/prj-0001/020-project-definition
+# サブドメインに分かれないため、単一の葉グループに並べる。
 groups:
   - deliverables:
+      # 規模 small の既定（概要・スコープ・成功基準と受入条件）に、2件を追加している。
+      # _ASSUMPTION_: 夏休み前の初期公開という制約と、ノートからの記録移行の課題を計画前に整理するため、
+      # 前提・制約・依存関係と課題と方針を追加採用した。ほかの medium 既定の成果物は採用しない。
       - local_id: prj-overview
         name: プロジェクト概要
         kind: work
         depends_on: []
-        overview: 駄菓子屋きぬや販売管理システムの目的・背景・ゴールを定義する
+        overview: 販売管理システムを導入する目的・背景・ゴールを定義する
+        # 定義系の成果物すべてに渡す前提をアンカーで共有する。
         brief: &project_baseline_brief |
-          - 駄菓子屋の既存店舗業務を止めない段階的な移行を前提とする
-          - POS 端末および在庫管理端末はタブレット Web アプリケーションとする
+          - 単一店舗の現行の販売手順を止めず、販売・在庫・つけの記録を段階的に移す
+          - 店内のタブレット 1 台で動く Web アプリケーションとする
+          - EC、本格会計、仕入れ先とのシステム連携は初期リリースの対象外とする
         path: prj-overview.md
         rulebook: specdojo:prj-overview-rulebook
         done_criteria:
-          - text: プロジェクトの目的・背景・ゴールが業務観点で確認できる粒度で記述されていること
+          - text: 欠品・在庫のムラ・つけの記録漏れなどの問題と、導入の目的・ゴールの対応が確認できること
             roles: [BA]
             viewpoint: vp-ba-business-value
           - text: プロジェクトの目的・スコープを承認できる情報が含まれていること
             roles: [PO]
             viewpoint: vp-po-purpose-alignment
-          - text: 技術的前提・制約を読み取れる情報が含まれていること
+          - text: 端末・運用体制など技術的前提・制約を読み取れること
             roles: [ARC]
             viewpoint: vp-arc-technical-constraints
-          - text: 成功判定の輪郭が確認できること
+          - text: 成功基準の観点と測定方法が識別できること
             roles: [QE]
             viewpoint: vp-qe-verifiability
+          - text: 初期公開に向けた計画立案の前提（目的・対象範囲・時期の制約）が識別できること
+            roles: [PM]
+            viewpoint: vp-pm-plan-feasibility
       - local_id: prj-scope
         name: スコープ定義
         kind: work
@@ -49,7 +60,7 @@ groups:
         path: prj-scope.md
         rulebook: specdojo:prj-scope-rulebook
         done_criteria:
-          - text: 業務スコープ・除外範囲・利用者影響が業務観点で確認できること
+          - text: 店頭販売・在庫・つけの業務スコープ、除外範囲、利用者への影響が確認できること
             roles: [BA]
             viewpoint: vp-ba-requirements-completeness
           - text: 対象範囲・対象外を承認できること
@@ -58,11 +69,53 @@ groups:
           - text: テスト対象・対象外の境界が判断できること
             roles: [QE]
             viewpoint: vp-qe-verifiability
+          - text: 対象範囲の各項目を作業へ分解でき、対象外の項目が計画に含まれていないことが確認できること
+            roles: [PM]
+            viewpoint: vp-pm-plan-feasibility
+      - local_id: prj-success-criteria-and-acceptance-criteria
+        name: 成功基準と受入条件
+        kind: work
+        depends_on:
+          - prj-scope
+        overview: 期待効果の判定基準と初期リリースの受入条件を定める
+        brief: *project_baseline_brief
+        path: prj-success-criteria-and-acceptance-criteria.md
+        rulebook: specdojo:prj-success-criteria-and-acceptance-criteria-rulebook
+        done_criteria:
+          - text: 欠品削減・在庫適正化・つけ確認時間・記録継続の各指標が、業務価値と受入条件に対応していること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 成功基準と受入の判定時期を承認できる情報が含まれていること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+          - text: 各受入条件に測定方法・測定期間・合格の閾値が記載されていること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+      - local_id: prj-assumptions-constraints-dependencies
+        name: 前提・制約・依存関係
+        kind: work
+        depends_on:
+          - prj-scope
+        overview: 計画と設計が依拠する前提・制約・外部依存を整理する
+        brief: *project_baseline_brief
+        path: prj-assumptions-constraints-dependencies.md
+        rulebook: specdojo:prj-assumptions-constraints-dependencies-rulebook
+        done_criteria:
+          - text: 店舗の営業時間・店番の体制など業務上の前提・制約が識別できること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 端末・通信環境など技術的制約と外部依存が識別できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 前提が崩れた場合に影響を受ける後続の成果物と、確認する時期が識別できること
+            roles: [PM]
+            viewpoint: vp-pm-dependency-risk
       - local_id: prj-issues-and-approach
         name: 課題と方針
         kind: work
         depends_on:
           - prj-scope
+          - prj-assumptions-constraints-dependencies
         overview: 初期課題と対応方針を整理し、計画立案の前提を明示する
         path: prj-issues-and-approach.md
         rulebook: specdojo:prj-issues-and-approach-rulebook
@@ -73,23 +126,27 @@ groups:
           - text: 主要課題と方針を計画立案の前提として確認できること
             roles: [PM]
             viewpoint: vp-pm-plan-feasibility
-          - text: 解決アプローチが検証可能な形で記述されていること
+          - text: 解決アプローチごとに、効果を確かめる方法が記載されていること
             roles: [QE]
             viewpoint: vp-qe-verifiability
+      # 用語集は 1 ページの一覧で足り、専用の実践の型を設けないと判断したため not-needed とする。
       - local_id: prj-glossary
-        name: 用語集
+        name: プロジェクト用語集
         kind: control
         depends_on:
           - prj-overview
-        overview: 業務用語と略語の定義を統一し、文書間の解釈差を防ぐ
+        overview: 定義系の成果物で使う指標名と略語の意味をそろえる
         path: prj-glossary.md
-        note: 統制文書のためスケジュール展開対象外。work ではないため done_criteria は持たない
+        rulebook: not-needed
+        note: つけ・商品区分など店舗の業務用語は glossary ドメインで定義し、本書では重複して定義しない
+      # generated は kind から実践の型を適用しないため、rulebook を書かない。
       - local_id: prj-definition-summary
         name: 定義サマリー
         kind: generated
         depends_on:
           - prj-overview
           - prj-scope
-        overview: 定義系成果物の要点を参照用に集約した派生文書を提供する
+          - prj-success-criteria-and-acceptance-criteria
+        overview: 定義系の成果物の要点を参照用に集約した派生文書を提供する
         path: prj-definition-summary.md
-        note: 派生・自動生成成果物のためスケジュール展開対象外
+        note: 概要・スコープ・成功基準の更新時に再生成し、直接編集しない
