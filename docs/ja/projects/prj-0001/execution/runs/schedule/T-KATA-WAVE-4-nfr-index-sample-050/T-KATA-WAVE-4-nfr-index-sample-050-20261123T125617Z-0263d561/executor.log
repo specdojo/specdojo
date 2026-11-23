@@ -1,0 +1,21 @@
+`docs/ja/specdojo/samples/nfr-index-sample.md` を書き直し、`nfr-index-rulebook` の本文要件どおりの 5 章（概要／カテゴリ一覧／分冊一覧／変更の入口／関連導線）で、駄菓子屋の文脈を入れた完成例にしました。prettier と markdownlint（対象ファイルのみ）は 0 件です。lint や schema などの検査は親 runner に任せていて、まだ実行していません。
+
+**直した主な点**
+- **H1 と目的**: H1 を「非機能要件インデックス」に揃えました。概要には、要求本文の正本は分冊にあることと、分冊に分ける業務上の理由を書きました（F001、F006、F022）。
+- **根拠の文書**: Frontmatter の `based_on` に、プロジェクト概要、横断ルール、運用方針の各 sample を入れました（F010）。
+- **8 カテゴリ**: 目的と測れる代表指標を表にしました（F008、F016、F018）。
+- **分冊一覧**: 分冊 ID と参照先を一覧にし、未定の目標値は備考に `_UNDECIDED_` として残しました（F012）。
+- **変更の入口**: 追加・削除・統合・分割・改定ごとに、更新する文書と完了条件を書きました（F013）。
+- **関連導線**: カテゴリごとに SAC/STC、OPD/OPR、DEC への導線を表にし、ない所は `（なし）` と明示しました（F015）。
+- **古い章の削除**: 説明だけの章と「未解決事項」を削り、重複していた要約表もなくしました（F007、F011、F017、F019〜F021）。
+
+**本文に足さなかった指摘と、残した値**
+- F003・F005・F009・F014・F023・F024 が求める内容は入れていません。担当ロール、報告先、レビュアー、ready にする条件、問い合わせ窓口、lint コマンドが該当します。役割の割り当てと承認の進み具合を書かない決まり（PJR-76N9）と、rulebook の「lint は成果物の検証に含めない」に従ったためです。
+- F002・F004 は、未定の値を分冊一覧の備考に `_UNDECIDED_` で示す形にとどめました。rulebook が見出しを 5 章に固定しているため、未決事項の章は作っていません。
+- 利用者が決める値は推測で埋めていません。稼働率・RTO・RPO、会計確定の応答時間、営業時間外の緊急連絡手段、オフライン時の記録方法がこれにあたります。
+
+`sac-store-sales` と `dec-offline-recording` は、この sample のために作った架空の ID です。8 つのカテゴリ別 sample はまだ薄い旧形式のままで、本書の代表指標と揃っていません。rulebook 自体は変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"nfr-index-sample.md を rulebook の本文要件（5章固定）に沿った駄菓子屋きぬやの完成例へ全面改訂した。8カテゴリの目的・代表指標、分冊ID/参照先、変更の入口（追加・削除・統合・分割・改定）、カテゴリ別のSAC/STC/OPD/OPR/DEC導線を記載し、based_on を追加した。利用者が決める目標値は _UNDECIDED_ で残した。","handoff":["PJR-76N9 と sample-authoring-standard の決まりにより、F003・F005・F009・F014・F023・F024 が求める担当ロール、報告先、レビュアー・合意者、ready の条件、問い合わせ窓口、lint/schema の検証コマンドは本文に足していない。F014 は rulebook の『共通の運用』でも成果物の業務の検証から除外されている。合わせて直す点として、これらの viewpoint が kata の sample に役割・承認の記述を求めないよう判定根拠の見直しを提案する。","F002・F004: rulebook の本文要件は見出しを5章に固定しており未決事項の章がないため、未定の値は分冊一覧の備考に _UNDECIDED_ で示した。rulebook の変更案として、未決の目標値の扱い（分冊一覧の備考に書くか、登録簿へ引き継ぐか）を『分冊ドキュメント一覧』の記述ガイドに1行足すことを提案する。","利用者が決める必要のある値（_UNDECIDED_ で残した値）: 営業時間内の稼働率の目標、RTO・RPO（可用性）、会計確定の応答時間の目標（性能）、営業時間外の緊急連絡手段（運用）、オフライン時の記録方法（判断記録 `dec-offline-recording`）。いずれも opd-index-sample の未決事項と揃えている。","`sac-store-sales` と `dec-offline-recording` はこの sample のために置いた架空の ID である。sac-sample には条件 ID がなく、dec-sample は非推奨のため。`stc-cash-sale`・`stc-sale-hold`・`stc-record-recovery` は stc-index-sample の term に揃えた。","8つのカテゴリ別 sample（nfr-reliability-sample など）はまだ薄い旧形式のままで、本書の代表指標と整合していない。後続の型タスクで、本書のカテゴリ一覧の代表指標に揃えて厚くする必要がある。","rulebook の変更案: 本文要件の『分冊ドキュメント一覧』は ID と参照先の列を要求しているが、参照先の基準ディレクトリ（`docs/ja/product/060-non-functional-requirements/` からの相対か、リポジトリ相対か）を明記するとよい。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/nfr-index-sample.md","status":"passed","summary":"対象 sample を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/nfr-index-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/ 配下の sample だけで、plan/result/個票などの履歴蓄積ファイルを変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML の変更がない","reason":"変更ファイルに *.yaml / *.yml が含まれない"}]}
+</specdojo_executor_evidence>
