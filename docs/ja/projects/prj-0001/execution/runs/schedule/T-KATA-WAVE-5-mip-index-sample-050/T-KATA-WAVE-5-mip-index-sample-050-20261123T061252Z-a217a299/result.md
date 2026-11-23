@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-5-mip-index-sample-050
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-5-mip-index-sample-050/T-KATA-WAVE-5-mip-index-sample-050-20261123T061252Z-a217a299/plan.md
   started_at: "2026-11-23T06:13:04.152Z"
+  completed_at: "2026-11-23T06:26:51.565Z"
   agent: opus-executor
   execution: agent
   approach: sample-maintenance
@@ -20,16 +21,26 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- sample 文書である `docs/ja/specdojo/samples/mip-index-sample.md` を、grade による指摘事項（F001〜F006）に基づいて更新し、完成例としての厚みを持たせました。
+- 主な修正内容は以下の通りです：
+- 業務停止時間に関する前提と成功条件の矛盾を解消するため、切替日の午前を臨時休業（正午開店）とする前提を `_ASSUMPTION_` として追加
+- 業務停止時間の証跡を、開始・終了時刻から「通常の開店時刻どおりに販売を受け付けたかの記録」へ変更
+- 個人情報の取り扱い（転記用表の保管・廃棄）に関する法務/セキュリティ制約を追加
+- 対象一覧の表に「機能」および「I/F（なし）」の行を追加
+- ハイパーケア体制に「店舗運営アドバイザー」の役割と責務、連絡先を追加
+- 正本切替の伝達先を、体制表の役割名に合わせて「家族利用者代表」に統一
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/samples/mip-index-sample.md`: grade による指摘（F001〜F006）に基づき、切替日の午前休業の前提追加、業務停止時間の証跡変更、個人情報保護の制約追加、対象一覧の機能/I/F行の追加、ハイパーケア体制の拡充、および正本切替の伝達先名称の統一を行いました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 切替日の午前を臨時休業にして正午に開店するという前提は `_ASSUMPTION_` として置いた仮の値。利用者が店の営業時間に合わせて確定する必要がある。
+- 切替日は `_UNDECIDED_` のまま残した（移行リハーサルの結果を見て店主代表が決める値）。
+- rulebook と合わせて直すべき点はない。
+- 適用外の検証: `npm run validate:history-links`（変更は docs/ja/specdojo/samples/ 配下の sample だけで、pjr 個票・plan・result を変更していない）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+sample を共通サンプルの完成例として厚くするため、grade の指摘事項をすべて解消し、実現的な値（一部 `_UNDECIDED_` を含む）で構成された成果物を作成しました。
