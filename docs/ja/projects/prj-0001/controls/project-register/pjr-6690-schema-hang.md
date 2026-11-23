@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: in-progress
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-23T22:24:22Z"
   due_on: "2026-11-30"
-  block_reason: "parent validation failed: test-unit"
   commit_type: fix
   commit_scope: validate
 ---
@@ -66,6 +65,7 @@ specdojo:
 - 親の検証の標準出力・標準エラーを pipe ではなく一時ファイルへ書かせ、runner は終了時（と時間切れの時点）にファイルから読むようにした（`src/exec/parent-validation-output.ts`、`src/exec/parent-validation.ts`）。event loop が止まっても子は止まらない。出力の上限（1 MiB の head と tail）と Vitest のファイル通知の読み取りは従来どおり。
 - 時間切れのとき、止まった npm script の段と経過時間を evidence の summary と block の理由に出す。例: `parent validation failed: validate-schema (timed out after 649s (stage: validate:schema:glossary))`。失敗ログには `elapsed`・`stage` の行を、`validation-timeout` の記録には `stage`・`timer_lag_ms` を足した。
 - 出力がファイルになったため、group の外へ出た子孫が出力を握ったまま残っても close を待たなくなった（PJR-V277 の `pipes_closed: false` の経路は、直下の子が SIGKILL の後も close しない場合だけに残る）。`tests/src/exec/parent-validation-timeout.integration.test.ts` の期待をこの挙動に合わせた。
+- 1 回目の親の検証の `test-unit` で、`tests/src/exec/validation-metrics.test.ts` の時間切れのテストが失敗した（`validation-timeout` の `active_test_files` が空）。原因は今回の変更で、テストの偽の子が `child.stdout`（pipe）へ Vitest の通知を書いていたが、runner は pipe ではなく渡したファイルから読むようになったためである。期待（`["tests/hanging.test.ts"]`）は変えず、偽の子が `spawn` に渡された標準出力のファイル記述子へ書くように直した。実際の子と同じ経路で通知を読むことを確かめるテストのままである。
 - 運用ガイド（`docs/ja/specdojo/guides/exec-operation-guide.md`）の計測の記録の表と説明を更新した。
 
 ### 5.3. 計測
@@ -83,7 +83,7 @@ specdojo:
 
 ### 5.4. 確認結果
 
-- 対象を絞って実行した: 修正した integration テスト 2 ファイル（5 件 passed）、`tests/src/exec/parent-validation.test.ts` などの unit テスト（passed）、変更したファイルへの ESLint・Prettier（エラーなし）、`src` と `tools/e2e` の `tsc --noEmit`（エラーなし）。
+- 対象を絞って実行した: 修正した integration テスト 2 ファイル（5 件 passed）、`tests/src/exec/parent-validation.test.ts`・`tests/src/exec/validation-metrics.test.ts` などの unit テスト（passed）、変更したファイルへの ESLint・Prettier（エラーなし）、`src` と `tools/e2e` の `tsc --noEmit`（エラーなし）。
 - `npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`test-integration` は親の runner の検証で確認する。
 
 ### 5.5. CHANGELOG に書く事項

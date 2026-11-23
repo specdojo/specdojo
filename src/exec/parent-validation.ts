@@ -1,4 +1,4 @@
-import { spawn } from "node:child_process";
+import { spawn, type ChildProcess } from "node:child_process";
 import { join } from "node:path";
 import { performance } from "node:perf_hooks";
 import { StringDecoder } from "node:string_decoder";
@@ -8,6 +8,7 @@ import {
   ValidationTestFiles,
 } from "./validation-metrics.js";
 import { gitEnvironment } from "./worktree.js";
+import { NpmScriptStageTracker, ValidationOutputFiles } from "./parent-validation-output.js";
 import {
   hasValidationProcessTreeSurvivors,
   signalValidationProcessTree,
@@ -61,6 +62,10 @@ export type ParentValidationProcessResult = {
   timedOut?: boolean;
   stdoutTruncated?: boolean;
   stderrTruncated?: boolean;
+  /** Time from spawn to the end of the validation. */
+  durationMs?: number;
+  /** Last npm script the validation started (`validate:schema:glossary`), from npm's banners. */
+  stage?: string;
 };
 
 export type ParentValidationFailureOutput = ParentValidationProcessResult & {
@@ -598,6 +603,7 @@ export async function invokeParentValidation(
 ): Promise<ParentValidationProcessResult> {
   const killGraceMs = options.killGraceMs ?? VALIDATION_KILL_GRACE_MS;
   const closeGraceMs = options.closeGraceMs ?? VALIDATION_CLOSE_GRACE_MS;
+  const output = new ValidationOutputFiles();
   return await new Promise((resolve) => {
     const stdoutCapture: BoundedCapture = { chunks: [], totalBytes: 0 };
     const stderrCapture: BoundedCapture = { chunks: [], totalBytes: 0 };
@@ -609,61 +615,83 @@ export async function invokeParentValidation(
     let killTimer: NodeJS.Timeout | undefined;
     let closeTimer: NodeJS.Timeout | undefined;
     const testFiles = new ValidationTestFiles();
+    const stage = new NpmScriptStageTracker();
     const stdoutDecoder = new StringDecoder("utf8");
-    const child = spawn(definition.command, [...definition.args], {
-      cwd,
-      env: { ...gitEnvironment(), SPECDOJO_PARENT_VALIDATION_METRICS: "1" },
-      shell: false,
-      stdio: ["ignore", "pipe", "pipe"],
-      windowsHide: true,
-      detached: VALIDATION_USES_PROCESS_GROUP,
-    });
+    const spawnedAt = performance.now();
+    let child: ChildProcess;
+    try {
+      child = spawn(definition.command, [...definition.args], {
+        cwd,
+        env: { ...gitEnvironment(), SPECDOJO_PARENT_VALIDATION_METRICS: "1" },
+        shell: false,
+        // PJR-6690: pipe ではなくファイルへ書かせる。runner の event loop が他のタスクの
+        // spawnSync で止まっても、検証の子は出力の書き込みで止まらない。
+        stdio: ["ignore", output.stdoutFd, output.stderrFd],
+        windowsHide: true,
+        detached: VALIDATION_USES_PROCESS_GROUP,
+      });
+    } catch (error) {
+      output.dispose();
+      throw error;
+    }
     const untrack = trackValidationProcessGroup(child);
-    child.stdout.on("data", (chunk: Buffer) => {
-      appendBounded(stdoutCapture, chunk);
-      testFiles.observe(stdoutDecoder.write(chunk));
-    });
-    child.stderr.on("data", (chunk: Buffer) => {
-      appendBounded(stderrCapture, chunk);
-    });
+    const drainOutput = (): void => {
+      output.drain("stdout", (chunk) => {
+        appendBounded(stdoutCapture, chunk);
+        const text = stdoutDecoder.write(chunk);
+        testFiles.observe(text);
+        stage.observe(text);
+      });
+      output.drain("stderr", (chunk) => {
+        appendBounded(stderrCapture, chunk);
+      });
+    };
     const forceKill = (): void => {
       survivorsAfterTerm = hasValidationProcessTreeSurvivors(child) || child.exitCode === null;
       killSent = signalValidationProcessTree(child, "SIGKILL") || killSent;
     };
+    const capturedResult = (exitCode: number | null): ParentValidationProcessResult => {
+      drainOutput();
+      const stdout = capturedOutput(stdoutCapture);
+      const stderr = capturedOutput(stderrCapture);
+      return {
+        exitCode,
+        stdout: stdout.output,
+        stderr: stderr.output,
+        timedOut,
+        stdoutTruncated: stdout.truncated,
+        stderrTruncated: stderr.truncated,
+        durationMs: performance.now() - spawnedAt,
+        ...(stage.stage ? { stage: stage.stage } : {}),
+      };
+    };
     const settle = (exitCode: number | null, pipesClosed: boolean): void => {
+      if (settled) return;
+      const result = capturedResult(exitCode);
       const fileDurations = testFiles.durationsSnapshot();
       if (fileDurations.length > 0)
         validationMetric("validation-test-files", { id: definition.id, files: fileDurations });
-      const stdout = capturedOutput(stdoutCapture);
-      const stderr = capturedOutput(stderrCapture);
-      finish(
-        {
-          exitCode,
-          stdout: stdout.output,
-          stderr: stderr.output,
-          timedOut,
-          stdoutTruncated: stdout.truncated,
-          stderrTruncated: stderr.truncated,
-        },
-        pipesClosed,
-      );
+      finish(result, pipesClosed);
     };
     const timer = setTimeout(() => {
       timedOut = true;
       timeoutStartedAt = performance.now();
+      drainOutput();
       validationMetric("validation-timeout", {
         id: definition.id,
         cwd,
         timeout_ms: definition.timeoutMs,
+        // 時間切れの timer が遅れた分は、runner の event loop が止まっていた時間を表す。
+        timer_lag_ms: Math.max(0, timeoutStartedAt - spawnedAt - definition.timeoutMs),
+        ...(stage.stage ? { stage: stage.stage } : {}),
         ...testFiles.snapshot(),
       });
       signalValidationProcessTree(child, "SIGTERM");
       killTimer = setTimeout(() => {
         forceKill();
         closeTimer = setTimeout(() => {
-          // group の外へ出た子孫が pipe を持ち続けても、close を待たずに時間切れとして返す。
-          child.stdout.destroy();
-          child.stderr.destroy();
+          // 出力はファイルなので、group の外へ出た子孫は close を止めない。直下の子が SIGKILL の
+          // 後も close しない場合に限り、待たずに時間切れとして返す。
           settle(child.exitCode, false);
         }, closeGraceMs);
       }, killGraceMs);
@@ -690,29 +718,37 @@ export async function invokeParentValidation(
       clearTimeout(closeTimer);
       recordStop(pipesClosed);
       untrack();
+      output.dispose();
       resolve(result);
     };
     child.on("error", (error) => {
-      const stdout = capturedOutput(stdoutCapture);
-      const stderr = capturedOutput(stderrCapture);
-      finish({
-        exitCode: null,
-        stdout: stdout.output,
-        stderr: stderr.output,
-        error: error.message,
-        timedOut,
-        stdoutTruncated: stdout.truncated,
-        stderrTruncated: stderr.truncated,
-      });
+      if (settled) return;
+      finish({ ...capturedResult(null), error: error.message });
     });
     child.on("close", (exitCode) => settle(exitCode, true));
   });
 }
 
+// PJR-6690: 時間切れは経過時間と止まった段を summary の先頭に置き、block の理由へ引き継ぐ。
+function timedOutSummaryPrefix(result: ParentValidationProcessResult): string {
+  const elapsed =
+    result.durationMs !== undefined ? ` after ${Math.round(result.durationMs / 1_000)}s` : "";
+  return `timed out${elapsed}${result.stage ? ` (stage: ${result.stage})` : ""}`;
+}
+
+const TIMED_OUT_SUMMARY_PATTERN =
+  /(?:^|: )(timed out(?: after \d+s)?(?: \(stage: [^)\n]+\))?)(?::|$)/u;
+
+function failedValidationReasonLabel(validation: EvidenceValidation): string {
+  const label = recordedParentValidationLabel(validation);
+  const timedOut = TIMED_OUT_SUMMARY_PATTERN.exec(validation.summary)?.[1];
+  return timedOut ? `${label} (${timedOut})` : label;
+}
+
 function validationSummary(result: ParentValidationProcessResult): string {
   const output = [result.stdout, result.stderr].filter(Boolean).join("\n").trim();
   const prefix = result.timedOut
-    ? "timed out"
+    ? timedOutSummaryPrefix(result)
     : result.error
       ? `spawn failed: ${result.error}`
       : `exit ${result.exitCode ?? "unknown"}`;
@@ -1024,7 +1060,7 @@ export function failedParentValidationReason(
       validation.status !== "not_applicable",
   );
   if (failed.length === 0) return undefined;
-  return `parent validation failed: ${failed.map(recordedParentValidationLabel).join(", ")}`;
+  return `parent validation failed: ${failed.map(failedValidationReasonLabel).join(", ")}`;
 }
 
 // PJR-Q2AT: executor が親検証をまとめて 1 行（例: `parent runner: lint-ts, lint-fm`、
