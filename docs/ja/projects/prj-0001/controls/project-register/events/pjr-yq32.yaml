@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_3aaf04c16a814ff4bf039e38fdb7d9bf
+  ts: "2026-11-23T04:56:17Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 準備の段で失敗した run が変更範囲の予約を blocked のまま残す
+    - field: description
+      from: ""
+      to: 朝の cycle で人の確定の 13 件が予約を残し、後の run が blocked by unintegrated で止まった。準備の段の失敗で予約を外し、古い予約を片付ける
+    - field: input
+      from: ""
+      to: '["利用者の決定（2026-11-23）: オーケストレーターの推奨どおり起票する"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-0JVB"]'
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: exec
+- v: 1
+  id: reg_8b3f84837368436cb38a8d349e8fe281
+  ts: "2026-11-23T04:57:01Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "対応方針" updated
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_3aaf04c16a814ff4bf039e38fdb7d9bf

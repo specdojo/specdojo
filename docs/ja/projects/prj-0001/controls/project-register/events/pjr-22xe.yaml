@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_41b9d0ec7ba84da0b08ce45050819c4e
+  ts: "2026-11-23T04:56:07Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: etc-index-sample の外部結合テストの経路を tsp-index・itc-index とそろえる
+    - field: description
+      from: ""
+      to: PATH-04〜07 の扱いが based\_on の 2 つの sample と食い違い、保全の取得と復元の回復をどのカタログも扱わない。PJR-30PT の後の grade の major
+    - field: input
+      from: ""
+      to: '["利用者の決定（2026-11-23）: オーケストレーターの推奨どおり起票する"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-30PT"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: kata
+- v: 1
+  id: reg_e88f2c1bc2b34eb5b77e7a1482945831
+  ts: "2026-11-23T04:56:37Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_41b9d0ec7ba84da0b08ce45050819c4e

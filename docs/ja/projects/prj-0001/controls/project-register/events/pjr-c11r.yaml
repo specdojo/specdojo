@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ad887c2278084d50bb134c6415abf700
+  ts: "2026-11-23T04:56:32Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: register の run の変更範囲が docs 全体と読まれて並べられない
+    - field: description
+      from: ""
+      to: 個票の本文の docs/ などの語から project:docs と読まれ、ほかの docs を変える run とすべてぶつかる
+    - field: input
+      from: ""
+      to: '["利用者の決定（2026-11-23）: オーケストレーターの推奨どおり起票する"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-E73Z"]'
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: exec
+- v: 1
+  id: reg_76e45f66e1954720bc4a60046c4cd0ff
+  ts: "2026-11-23T04:57:10Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "対応方針" updated
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_ad887c2278084d50bb134c6415abf700

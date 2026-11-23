@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ae96bf00fc0247469b6f9d8589c424fb
+  ts: "2026-11-23T04:56:26Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: rulebook の grade が YAML の sample の古い表示のページを読む
+    - field: description
+      from: ""
+      to: rulebook の grade が samples/generated の古いページを読み、sample に入っている項目を「ない」と誤って評価した
+    - field: input
+      from: ""
+      to: '["利用者の決定（2026-11-23）: オーケストレーターの推奨どおり起票する"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-AEKE"]'
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: grade
+- v: 1
+  id: reg_72abd13c491140fabe1989a4eaa3ef55
+  ts: "2026-11-23T04:57:05Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "対応方針" updated
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_ae96bf00fc0247469b6f9d8589c424fb
