@@ -1,0 +1,10 @@
+サンプル文書の冗長な前置きを2か所削除しました。`lint:md` などの検査は親 runner に任せ、実行していません。
+
+- **第2章の冒頭:** 「一つの課題に原因を一つだけ置かず、手順・情報・判断基準の別に分けた。」を削除しました。表の内容を言い直す記述でした。
+- **第7章の冒頭:** 「原因の仮説ごとに反証されたときの見直しを決め、前提とスコープの変化も契機に加えた。」を削除しました。同じ内容が表の行に書かれています。
+
+ほかの箇所は判断に要る内容なので残しました。導入部の合意対象、第3章の代替・補完の関係、第4章の判断軸の説明です。文書の意味と必須情報は変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"sample の冗長な前置き2文（第2章・第7章）を削除。他は判断に要る内容のため保持。","handoff":[],"condense_records":[{"location":"第2章 原因（仮説でも可）の冒頭「一つの課題に原因を一つだけ置かず、手順・情報・判断基準の別に分けた。」","category":"repetition","action":"delete","reason":"表の原因区分と内容の列が同じ分け方を示しており、メタな説明は判断に不要。意味は表で維持される。","cause":{"type":"document"}},{"location":"第7章 見直しと変更管理の冒頭「原因の仮説ごとに反証されたときの見直しを決め、前提とスコープの変化も契機に加えた。」","category":"table-prose","action":"delete","reason":"表の各行（契機・観点・対応方針）が同じ内容を示す二重の説明。表で意味は維持される。","cause":{"type":"document"}},{"location":"第3章 解決策候補の冒頭（代替・補完の関係の説明）","category":"table-prose","action":"retain","reason":"A-01 と A-02 が代替、A-03 が補完である理由は表の「関係」列に書かれておらず、採用判断の根拠になるため残す。","cause":{"type":"document"}},{"location":"第4章 採用アプローチと理由の冒頭段落","category":"repetition","action":"retain","reason":"併用の理由と実行順序は rulebook が求める補完策の組み合わせ理由であり、表には載らない。","cause":{"type":"document"}}],"validations":[{"command":"npm run lint:md","status":"not_run","reason":"親 runner が実行する allowlist 検査のため、executor では実行しない"}]}
+</specdojo_executor_evidence>
