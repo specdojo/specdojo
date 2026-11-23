@@ -86,3 +86,16 @@
       from: in-progress
       to: review
   previous_event_id: reg_732ec81bc04b457d9ba890958636d3de
+- v: 1
+  id: reg_b1171927808946348717f824127386ce
+  ts: "2026-11-23T04:03:40Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: prj-0001 で流して見つけた 2 点を 2 回目の実行の条件に足した
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_8a1ce0bf1d7142c7bc44ce6947cccc59

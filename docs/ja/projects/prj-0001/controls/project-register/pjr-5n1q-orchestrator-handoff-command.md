@@ -45,6 +45,10 @@ specdojo:
 - 保護された設定（`.specdojo/`・`.agents/`・`.claude/`・`.codex/`・`.opencode/`・`package.json`・`CLAUDE.md`・`AGENTS.md` など）は変えない。変更が要る場合は、変更案を個票の対応結果と報告の `handoff` に書く。
 - 関連する設計・ガイド・CLI リファレンスを直す。
 - `npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md`・`npm run validate:schema` を通し、親の検証を通す。
+- 2 回目の実行（2026-11-23）: 1 回目の後に prj-0001 で `orchestrator handoff` を流すと、次の 2 点が見つかった。
+  - 「進行中」の章の列（`exec queue`）に、2026-11-21・22 に止まった古い列まで 11 件が並び、今流している列が埋もれる。流している列（running・pending）と、前回の handoff より後（なければ直近 24 時間）に止まった列だけを出す。それより古い止まった列は、件数だけを 1 行で出す。
+  - `--dry-run` のときだけ、表示される個票の ID（例: PJR-F9JS）と event のファイル名（例: `pjr-2gpa.yaml`）が食い違う。実際に起票したときはそろっていた。dry-run でも同じ ID を表示する。
+  - どちらも単体テストで確かめる。
 
 ## 4. 作業内容
 
