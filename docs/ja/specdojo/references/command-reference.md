@@ -502,21 +502,23 @@ specdojo schedule strategy generate \
 
 `register` は個票を正本とするプロジェクト登録簿と、その生成ビューを扱います。
 
-| コマンド                | 用途                                           | 例                                                                          |
-| ----------------------- | ---------------------------------------------- | --------------------------------------------------------------------------- |
-| `register scaffold`     | 登録簿ディレクトリと生成ビューを初期化する     | `specdojo register scaffold --project prj-0001`                             |
-| `register add`          | issue / todo / question などの項目を追加する   | `specdojo register add --project prj-0001 --type issue --title "確認事項"`  |
-| `build --only register` | 個票から登録項目一覧と派生ビューを生成する     | `specdojo build --only register --project prj-0001`                         |
-| `register update`       | 登録項目を更新する                             | `specdojo register update --project prj-0001 --id PJR-001 --owner PM`       |
-| `register start`        | 項目を対応中へ変更する                         | `specdojo register start --project prj-0001 --id PJR-001`                   |
-| `register wait`         | 項目を待ち状態へ変更する                       | `specdojo register wait --project prj-0001 --id PJR-001`                    |
-| `register review`       | 項目をレビュー状態へ変更する                   | `specdojo register review --project prj-0001 --id PJR-001`                  |
-| `register close`        | 項目を完了にし、個票を `ready` へ昇格する      | `specdojo register close --project prj-0001 --id PJR-001`                   |
-| `register reject`       | 項目を却下にし、個票を `deprecated` にする     | `specdojo register reject --project prj-0001 --id PJR-001`                  |
-| `register defer`        | 項目を延期にする                               | `specdojo register defer --project prj-0001 --id PJR-001`                   |
-| `register reopen`       | 終了済み項目を再オープンする                   | `specdojo register reopen --project prj-0001 --id PJR-001`                  |
-| `register renumber`     | 重複・衝突した PJR-ID を未使用の ID へ移す     | `specdojo register renumber --project prj-0001 --id PJR-0137 --to PJR-0140` |
-| `register history`      | 追記型 event と旧 Git 履歴から変更を再構成する | `specdojo register history --project prj-0001 --since 2026-08-01`           |
+| コマンド                | 用途                                                  | 例                                                                          |
+| ----------------------- | ----------------------------------------------------- | --------------------------------------------------------------------------- |
+| `register scaffold`     | 登録簿ディレクトリと生成ビューを初期化する            | `specdojo register scaffold --project prj-0001`                             |
+| `register add`          | issue / todo / question などの項目を追加する          | `specdojo register add --project prj-0001 --type issue --title "確認事項"`  |
+| `build --only register` | 個票から登録項目一覧と派生ビューを生成する            | `specdojo build --only register --project prj-0001`                         |
+| `register update`       | 登録項目を更新する                                    | `specdojo register update --project prj-0001 --id PJR-001 --owner PM`       |
+| `register start`        | 項目を対応中へ変更する                                | `specdojo register start --project prj-0001 --id PJR-001`                   |
+| `register wait`         | 項目を待ち状態へ変更する                              | `specdojo register wait --project prj-0001 --id PJR-001`                    |
+| `register review`       | 項目をレビュー状態へ変更する                          | `specdojo register review --project prj-0001 --id PJR-001`                  |
+| `register close`        | 項目を完了にし、個票を `ready` へ昇格する             | `specdojo register close --project prj-0001 --id PJR-001`                   |
+| `register reject`       | 項目を却下にし、個票を `deprecated` にする            | `specdojo register reject --project prj-0001 --id PJR-001`                  |
+| `register defer`        | 項目を延期にする                                      | `specdojo register defer --project prj-0001 --id PJR-001`                   |
+| `register reopen`       | 終了済み項目を再オープンする                          | `specdojo register reopen --project prj-0001 --id PJR-001`                  |
+| `register renumber`     | 重複・衝突した PJR-ID を未使用の ID へ移す            | `specdojo register renumber --project prj-0001 --id PJR-0137 --to PJR-0140` |
+| `register history`      | 追記型 event と旧 Git 履歴から変更を再構成する        | `specdojo register history --project prj-0001 --since 2026-08-01`           |
+| `register branch-merge` | register のブランチを現在のブランチへ一方向に取り込む | `specdojo register branch-merge --project prj-0001`                         |
+| `register branch-guard` | register のファイルの直接の変更を検出する             | `specdojo register branch-guard --project prj-0001 --staged`                |
 
 `register add` は ID を省略すると自動採番し、現在の project では現在の作業ツリーに type 別の個票を作成します。別 project を `--project` で指定して `--commit` を付けると、対象 project の統合ブランチを開いている worktree、または CLI が作る一時 worktree で起票・再生成・commit を完了します。ID は乱数部分を持ち、曖昧文字（`I` / `L` / `O` / `U`）を除いた英大文字+数字の 32 文字セットによる 4 桁（例: `PJR-4B7K`）です。個票 Frontmatter が分類、処理状態、優先度、担当、日付、結論の正本であり、`register build` は個票から一覧と派生ビューを生成します。`register` 系コマンドはすべて、成功時の通常出力を標準出力へ、エラーメッセージを標準エラー出力へ書きます。
 
@@ -648,6 +650,10 @@ kata authoring は register 専用です。Schedule の task は対象成果物�
 一覧・派生ビューの「登録日」「完了日」は、保存した日時を config の `run.register_date_timezone`（IANA タイムゾーン名、既定 `UTC`）へ変換して導出する表示値です。
 
 `register_sync.enabled: true` の project では、`--commit` は既定の `project/<project-id>/register` を別 worktree で更新して push します。別 project への起票と `external_projects` 経由の起票も対象 project の設定に従います。schedule の実行イベントも同じ経路で同期し、読み取りは同期先を参照します。non-fast-forward は `pull --rebase` 後に再 push し、最大 3 回で停止します。通信・権限・衝突などの失敗時は記帳をローカルに残し、復旧先を標準エラー出力へ表示して終了コード 1 を返します。`--commit` のない register 操作と `--dry-run --commit` は同期しません。設定は [[specdojo:specdojo-config-reference|設定リファレンス]]、初期作成・復旧は [[specdojo:register-operation-guide|登録簿運用ガイド]] を参照してください。
+
+`register branch-merge` は、`register_sync.enabled: true` の project で、リモートの register のブランチを fetch し、現在のブランチへ `--no-ff` で merge します（件名は `chore(register): merge <register-branch> into <branch>`）。取り込み済みなら何もしません。staged の変更・進行中の merge・register のファイルの未 commit 変更があるとき、HEAD が detached のとき、register のブランチが記帳の範囲の外のファイルを変えているときは、merge せずに終了コード 1 で止まります。衝突したときは merge を中止し、develop で register のファイルを直接変えたことを原因として案内します。register のブランチ上と `register_sync` が未設定のときは何もしません。`exec run --register --worktree` も、worktree を作る前に同じ取り込みを行います。
+
+`register branch-guard` は、register のブランチの外で register のファイル（`project_register_path` と `execution_path/exec/events/` の配下）を直接変えた変更を検出し、終了コード 1 で一覧を出します。`--staged` は index を（pre-commit 向け）、`--range <range>` は範囲の commit を（pre-push・CI 向け）調べます。変更は、merge で取り込んだ親が register のブランチから受け取った内容と一致する場合だけ許します。register のブランチ自身の commit と、develop を経由して feature に入った取り込みも許します。`register_sync` が未設定の project では検査しません。
 
 `register history` は `events/pjr-XXXX.yaml` を読み、個票単位の追加（`added`）と変更（`updated`）を発生順に出力します。event 導入前または未移行の期間だけ Git 履歴を読み、削除（`removed`）を含む従来の履歴と統合します。event は発生日時・actor・action・reason・遷移前後状態・変更フィールドを保持するため、複数遷移を1コミットへまとめても粒度を失いません。比較対象は登録項目一覧の列と `block_reason`、`approach`、`targets`、`sources`、`target_path`、`target_rulebook`、`derived_from`、`depends_on` です。
 
