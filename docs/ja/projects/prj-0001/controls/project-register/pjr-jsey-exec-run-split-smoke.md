@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  conclusion: PJR-0JVB の 1 回目の統合の後、exec smoke で runner の start → review の記帳を確かめた
+  completed_at: "2026-11-23T01:32:11Z"
+  conclusion: PJR-0JVB の 2 回目の統合の後、exec smoke で runner の start → review の記帳を確かめた
   autopilot: approved
 ---
 

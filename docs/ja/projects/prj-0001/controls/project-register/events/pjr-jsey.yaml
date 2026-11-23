@@ -5346,3 +5346,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_a2f45d208225434891fc75c22ec8771a
+- v: 1
+  id: reg_ce619285641944abbf7c836ce4eb8f3f
+  ts: "2026-11-23T01:32:11Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec smoke が成功した（2026-11-23、2 回目）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: PJR-0JVB の 1 回目の統合の後、exec smoke で runner の start → review の記帳を確かめた
+      to: PJR-0JVB の 2 回目の統合の後、exec smoke で runner の start → review の記帳を確かめた
+  previous_event_id: reg_d2fc67a2501c4b6298e0b4ce4befbaca
