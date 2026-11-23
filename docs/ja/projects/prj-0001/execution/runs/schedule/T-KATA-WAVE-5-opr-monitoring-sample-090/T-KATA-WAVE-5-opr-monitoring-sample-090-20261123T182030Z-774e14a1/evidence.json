@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-5-opr-monitoring-sample-090",
+  "run_id": "T-KATA-WAVE-5-opr-monitoring-sample-090-20261123T182030Z-774e14a1",
+  "stage": {
+    "role": "executor",
+    "actor": "sonnet-review-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-23T22:44:22.175Z",
+    "completed_at": "2026-11-23T22:44:42.343Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ".../executor.log                                   | 45 ----------------------\n .../pipeline-state.json                            |  8 ++--\n .../result.md                                      |  4 +-\n 3 files changed, 7 insertions(+), 50 deletions(-)"
+  },
+  "validations": [
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: prj-0001:xrr-t-kata-wave-5-opr-monitoring-sample-090-20261123t182030z-774e14a1\n  type: exec-result\n  task_id: T-KATA-WAVE-5-opr-monitoring-sample-090\n  mode: review\n  status: blocked\n  project_id: prj-0001\n  plan_ref: runs/schedule/T-KATA-WAVE-5-opr-monitoring-sample-090/T-KATA-WAVE-5-opr-monitoring-sample-090-20261123T182030Z-774e14a1/plan.md\n  started_at: \"2026-11-23T18:20:32.687Z\"\n  comple\n… output omitted …\nカーや絶対パスは使わない。\n\n## 3. 未充足事項・改善指示\n\n*TODO*: 未充足事項と、再計画・成果物の改善・再評価に使う改善指示を記入する（なければ「なし」と記入する）。評価結果の内容に疑義がある場合は、再評価が必要な対象と理由もここに記入する。\n\n## 4. approach に応じた確認\n\n*TODO*: `approach` に応じて確認した内容を記入する。fully-guided / recipe-guided / freeform では求められた作成・更新が行われたか、retrofit では実装エビデンスの対応記録と未確認範囲、`rulebook-maintenance` などの maintenance 系では見直しの動機となった finding の解消状況を記入する。\n\n## 5. decision\n\n- verdict: *TODO*（complete / complete-with-findings / incomplete / grade-stale / grade-unavailable / changed-during-review）"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6583 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6583 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)",
+      "reason": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nbook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-5-opr-monitoring-sample-090/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-5-opr-monitoring-sample-090/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "specdojo:opr-monitoring-sample",
+      "status": "unchanged",
+      "reason": "review タスクのため成果物は変更しない。grade は pass(92)で最新、完了条件を満たす。"
+    }
+  ],
+  "final_message": "verdict=incomplete。対象 opr-monitoring-sample は pass(92)・完了条件充足だが、型の追加完了条件として opr-rulebook が needs-work(major 1)、opr-support-sample が fail(57, 古い評価)で pass 未達。鮮度は monitoring-sample と rulebook で最新を確認。確認できなかった範囲: 成果物の再評価、opr-sample/opr-index/opr-template 本文の通読、先行 edit の実行記録の確認は行っていない。",
+  "completion_status": "complete",
+  "handoff": [
+    "opr-support-sample を opr-rulebook と template に沿って作り直し(rulebook 宣言を specdojo:opr-rulebook へ修正、必須章を追加)、再 grade で pass を得る",
+    "opr-rulebook の F002(batch/change/support sample の rulebook 宣言不整合)を解消し再 grade する。F001(template との重複)は minor で任意整理",
+    "対象 opr-monitoring-sample の minor 6 件は完了を妨げないが、F002 暫定対応時限の数値化、F003/F005 の opr-sample との閾値・時刻の整合を改善候補とする"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-opr-monitoring-sample-090/T-KATA-WAVE-5-opr-monitoring-sample-090-20261123T182030Z-774e14a1/executor.log",
+      "bytes": 3714,
+      "truncated": false
+    }
+  ]
+}
