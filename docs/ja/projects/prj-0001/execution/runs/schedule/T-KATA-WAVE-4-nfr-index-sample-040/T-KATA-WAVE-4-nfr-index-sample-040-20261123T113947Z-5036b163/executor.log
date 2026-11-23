@@ -1,0 +1,21 @@
+`nfr-index` の rulebook（`docs/ja/specdojo/rulebooks/nfr-index-rulebook.md`）を簡潔にしました。変更はこのファイルだけで、sample・recipe・template と result には触れていません。指定サンプルが規約に合っていないという2件の major 指摘（F004・F006）は、sample がこの段の編集対象外のため未解決です。
+
+検証は Prettier による整形と、追加した wikilink の参照先 `specdojo:docs-structure-guide` が実在することの確認だけです。lint などの検査は親 runner に任せています。
+
+**主な変更点:**
+- **完成例の章を削除:** 「サンプル」章をなくし、完成例は sample に任せました。
+- **文書の役割:** 冒頭の概要に「どの利用場面で何を判断するための文書か」を加えました（PJR-76N9）。
+- **未決事項の明記（F001・F002・F008）:** `recipe`・`template` が未決であることを `_UNDECIDED_` 行として全体方針に足しました。決めるときの論点（sample を見出し構成に揃えた後、NFR 分冊と共通の template にできるか）と、それまでの拠り所も書いています。書き方は姉妹の `nfr-reliability` rulebook に合わせました。
+- **配置先と ID（F003）:** 配置先 `docs/ja/product/060-non-functional-requirements/nfr-index.md` を指定しました。ID はプロダクト文書のため名前空間を付けない、と明記しています。
+- **改定の扱い（F005）:** 変更の入口に「改定」を加え、改定の完了条件と、分冊一覧を更新しない条件を書きました。
+- **担当の列を削除（F007）:** 分冊一覧から Owner・更新責任の列を削りました。成果物の本文に担当の割り当てを求めない決まり（PJR-76N9）に合わせたものです。列名の揺れもこれで解消します。
+
+**理由をもって残した箇所:**
+- 禁止事項、カテゴリ一覧の良い例・悪い例、関連ドキュメント導線の記述は、指摘も冗長さもないため手を入れていません。
+- 位置づけの章は、分冊が `part_of` で本書に属すると補足しただけです。
+
+**次の段で必要なこと:** sample は目的・入力情報など独自の章立てになっており、rulebook の見出し構成（概要〜関連導線）に揃える必要があります。H1 にある Markdown リンクの削除も必要です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"nfr-index-rulebook を簡潔化した。サンプル章を削除し、recipe・template の未決事項（_UNDECIDED_）、配置先と ID 規則、改定時の完了条件を追加し、分冊一覧から Owner 列を削除した。sample・recipe・template は変更していない。","handoff":["F004・F006（major）: specdojo:nfr-index-sample が rulebook の本文要件（1.概要〜5.関連ドキュメント導線、8カテゴリ、ID/参照先の分冊一覧）に従っていない。この段は sample を編集しないため未解決。次の sample 改訂の段で、見出し構成を揃えること、H1 の Markdown リンクを削除すること、分冊一覧に Owner 列を置かないことを反映する必要がある。","F001・F002・F008: recipe・template の要否は、全体方針の _UNDECIDED_ 行に論点として記載した。決定そのものは登録簿の個票で追う。","F007: PJR-76N9 に従い、分冊一覧から担当列（Owner・更新責任）を削除して列名の揺れを解消した。","直さなかった箇所: 禁止事項、6.1・6.2・6.5 の記述ガイドは、指摘も冗長さもないため維持した。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/rulebooks/nfr-index-rulebook.md","status":"passed","summary":"変更した rulebook を整形した"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルは変更していない","reason":"変更ファイルは docs/ja/specdojo/rulebooks/nfr-index-rulebook.md だけで、plan・result・個票を含まない"}]}
+</specdojo_executor_evidence>
