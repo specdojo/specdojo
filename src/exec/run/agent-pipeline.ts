@@ -266,6 +266,32 @@ export async function runReporterStage(params: {
         resultPath: params.resultPath,
         evidence: reporterEvidence,
       }),
+      // 形式のやり直しの上限に達したら、設定した代わりの reporter（fallback_reporter_by）で 1 回だけやり直す。
+      ...(params.rateLimitOptions?.fallbackCandidate
+        ? {
+            fallbackInvoke: async (reporterPrompt: string) => {
+              const fallback = params.rateLimitOptions?.fallbackCandidate;
+              if (!fallback) throw new Error("fallback reporter candidate is not configured");
+              const outcome = await runWithRetry(
+                [fallback],
+                reporterPrompt,
+                execDefaults,
+                cwd,
+                env,
+                params.resultPath,
+                undefined,
+                "reporter",
+              );
+              reporterAttempts += outcome.attempts;
+              reporterActor = outcome.actor ?? fallback.actor;
+              rateLimitEvents.push(...outcome.rateLimitEvents);
+              process.stdout.write(
+                `  Reporter format retries exhausted; retried once with fallback reporter: ${fallback.actor}\n`,
+              );
+              return { result: outcome.result, stdout: outcome.stdout, stderr: outcome.stderr };
+            },
+          }
+        : {}),
       invoke: async (reporterPrompt) => {
         const reporterOutcome = await runWithRetry(
           reporterCandidates,

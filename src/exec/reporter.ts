@@ -20,6 +20,7 @@ import {
   reporterOutputSchemaForMode,
   type ReporterOutput,
 } from "./reporter-output.js";
+import { repairReporterOutput } from "./reporter-repair.js";
 import { isRunRecordPath, runnerRecordPrefixes } from "./run-records.js";
 import { repoEnvironmentVariableName } from "./task-repos.js";
 import type { TaskMode } from "./types.js";
@@ -1209,6 +1210,20 @@ export type ReporterInvocationOutput = {
   stderr: string;
 };
 
+async function checkReporterAttempt(
+  stdout: string,
+  opts: {
+    mode: TaskMode;
+    validateOutput?: (output: ReporterOutput) => Promise<string | undefined>;
+  },
+): Promise<{ output: ReporterOutput; error?: undefined } | { output?: undefined; error: string }> {
+  const parsed = parseReporterOutput(stdout, opts.mode);
+  if (!parsed.output) return { error: parsed.error ?? "unknown schema validation error" };
+  const repaired = repairReporterOutput(parsed.output);
+  const outputError = await opts.validateOutput?.(repaired);
+  return outputError ? { error: outputError } : { output: repaired };
+}
+
 export async function runReporterWithFormatRetry(opts: {
   plan: string;
   evidence: ExecEvidence;
@@ -1221,8 +1236,13 @@ export async function runReporterWithFormatRetry(opts: {
    * attempt limit.
    */
   validateOutput?: (output: ReporterOutput) => Promise<string | undefined>;
+  /**
+   * Invoked once with the last format error when the format attempts are exhausted
+   * (a different reporter agent). Not used for rate limits or exit failures.
+   */
+  fallbackInvoke?: ReporterInvocation;
 }): Promise<
-  | { result: "success"; output: ReporterOutput; formatAttempts: number }
+  | { result: "success"; output: ReporterOutput; formatAttempts: number; usedFormatFallback?: true }
   | {
       result: "failure" | "rate_limit";
       reason: string;
@@ -1251,14 +1271,38 @@ export async function runReporterWithFormatRetry(opts: {
         invocationOutputs,
       };
     }
-    const parsed = parseReporterOutput(attempt.stdout, opts.mode);
-    if (parsed.output) {
-      const outputError = await opts.validateOutput?.(parsed.output);
-      if (!outputError) return { result: "success", output: parsed.output, formatAttempts };
-      validationError = outputError;
-      continue;
+    const checked = await checkReporterAttempt(attempt.stdout, opts);
+    if (checked.output) return { result: "success", output: checked.output, formatAttempts };
+    validationError = checked.error;
+  }
+  if (opts.fallbackInvoke) {
+    const attempt = await opts.fallbackInvoke(
+      buildReporterPrompt({
+        plan: opts.plan,
+        evidence: opts.evidence,
+        mode: opts.mode,
+        ...(validationError ? { validationError } : {}),
+      }),
+    );
+    invocationOutputs.push({ stdout: attempt.stdout, stderr: attempt.stderr });
+    if (attempt.result !== "success") {
+      return {
+        result: attempt.result,
+        reason: attempt.stderr.trim() || `fallback reporter exited with ${attempt.result}`,
+        formatAttempts: maxAttempts + 1,
+        invocationOutputs,
+      };
     }
-    validationError = parsed.error ?? "unknown schema validation error";
+    const checked = await checkReporterAttempt(attempt.stdout, opts);
+    if (checked.output) {
+      return {
+        result: "success",
+        output: checked.output,
+        formatAttempts: maxAttempts + 1,
+        usedFormatFallback: true,
+      };
+    }
+    validationError = checked.error;
   }
   return {
     result: "failure",

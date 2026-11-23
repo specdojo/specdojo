@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: high
   difficulty: medium
   owner: DEV
@@ -44,7 +44,29 @@ specdojo:
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+### 5.1. 解決内容
+
+- 代わりの reporter: 形式のやり直し（既定 3 回）が尽きたら、固定した reporter の代わりの reporter で 1 回だけやり直す。設定の名前は既存の `fallback_reporter_by`（`--fallback-reporter-by` と exec-defaults の `routing.<difficulty>.fallback_reporter_by`、`rate_limit_policy.pinned.fallback_reporter_by`）を共用する。既定値は `.specdojo/exec-defaults.yaml` の routing の `sonnet-reporter`。未設定なら従来どおり止まる。rate limit や終了コードの失敗には使わない。
+- 機械的な修正: reporter の出力が JSON Schema を通った後、検査の前に自由記述の文字列を次の範囲で直す。`src/exec/reporter-repair.ts` に実装した。
+  - MD038: コードの書式の内側の前後の空白を除く。意味が変わらないため。
+  - MD026: 見出し行の末尾の句読点を除く。意味が変わらないため。
+  - 自由記述の中のコードブロック: 囲みの行（3 つのバッククォートまたはチルダ）だけを除き、中身を残す。内容を失わないため。
+  - `path`・`verdict`・`mode` の値は変えない。`verdict` の欠けのような構造の違反は直さず、代わりの reporter に回す。
+- 実装: `runReporterWithFormatRetry` に `fallbackInvoke` を足し、`src/exec/run/agent-pipeline.ts` で `rateLimitOptions.fallbackCandidate` から渡した。
+
+### 5.2. 確認結果
+
+- `tests/src/exec/reporter-repair.test.ts` を追加した。直せる違反は 1 回で通り、`verdict` の欠けは代わりの reporter に回り、代わりも不正なら失敗することを確かめた。
+- `npx vitest run` の対象の単体テストと `npm run lint:ts`（error 0）を通した。`npm run typecheck`・`npm run test:unit` と親の `test-integration` は runner の検証に任せる。
+
+### 5.3. CHANGELOG に書く事項
+
+- 区分: Fixed
+- 文案: exec の reporter の出力が形式のやり直しを使い切ったとき、`fallback_reporter_by` の reporter で 1 回やり直すようにした。MD038・MD026・コードブロックの囲みは検査の前に機械的に直す。
+
+### 5.4. 作業内容の状態
+
+- 実装・単体テスト・個票の更新は完了した。grade の起動は executor が実行できないため行っていない。
 
 ## 6. 関連ドキュメント
 
