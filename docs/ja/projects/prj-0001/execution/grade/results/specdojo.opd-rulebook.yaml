@@ -4,38 +4,37 @@ document: specdojo:opd-rulebook
 path: docs/ja/specdojo/rulebooks/opd-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-rulebook
-verdict: needs-work
-score: 85
-graded_at: "2026-11-21T04:58:22.029Z"
-graded_by: opus-executor
-content_hash: 7be045cc46b3e5d63b2d24f835b3dc78c14d07fc549e339b7d81fe3faf7aa454
+verdict: pass
+score: 98
+graded_at: "2026-11-23T17:39:03.588Z"
+graded_by: sonnet-review-executor
+content_hash: 10e78e4d5d9671fae7a8ba9880e1bc6ba27418dc09f5e821dc84f4b7e297dced
 categories:
   purpose:
-    score: 88
+    score: 100
   operations:
-    score: 94
+    score: 100
   planning:
-    score: 92
+    score: 100
   business:
     score: 100
   architecture:
-    score: 92
+    score: 100
   usability:
-    score: 83
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 75
+    score: 92
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-publication-accountability:
     level: 4
     score: 100
@@ -43,8 +42,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
     level: 4
     score: 100
@@ -61,11 +60,11 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-implementation-readiness:
     level: 4
     score: 100
@@ -76,23 +75,23 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
-  vp-ux-readability:
     level: 3
     score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-operability:
     level: 4
     score: 100
@@ -104,137 +103,33 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 11
+  major: 0
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-decision-readiness
-    line: 7
-    anchor: "## 1. 全体方針"
+    rule: vp-qe-kata-conformance
+    line: 36
+    anchor: "- `specdojo.type` は `operations`、`specdojo.rulebook` は `specdojo:opd-rulebook` とする。"
     message: >-
-      Frontmatter の `recipe` と `template` が `undecided` のままで、必要か不要かの判断理由と判断時期が全体方針にない。同系の `opd-index-rulebook` は
-      `not-needed` の理由を記しているので、それに合わせて判断を確定するか、未決である旨と判断条件を明記する。
+      OPR
+      のサンプル7件（`opr-access-control-sample`・`opr-backup-restore-sample`・`opr-batch-sample`・`opr-change-sample`・`opr-incident-sample`・`opr-monitoring-sample`・`opr-support-sample`）が
+      Frontmatter で `rulebook: specdojo:opd-rulebook` と宣言しており、本書が手順の正本とする `opr-rulebook` と矛盾している。宣言を
+      `specdojo:opr-rulebook` に改め、OPD と OPR の対応を正す。
     message_ja: >-
-      Frontmatter の `recipe` と `template` が `undecided` のままで、必要か不要かの判断理由と判断時期が全体方針にない。同系の `opd-index-rulebook` は
-      `not-needed` の理由を記しているので、それに合わせて判断を確定するか、未決である旨と判断条件を明記する。
+      OPR
+      のサンプル7件（`opr-access-control-sample`・`opr-backup-restore-sample`・`opr-batch-sample`・`opr-change-sample`・`opr-incident-sample`・`opr-monitoring-sample`・`opr-support-sample`）が
+      Frontmatter で `rulebook: specdojo:opd-rulebook` と宣言しており、本書が手順の正本とする `opr-rulebook` と矛盾している。宣言を
+      `specdojo:opr-rulebook` に改め、OPD と OPR の対応を正す。
   - id: F002
     severity: minor
-    rule: vp-pm-dependency-risk
-    line: 9
-    anchor: "`opd-index`（必要に応じて `opd-<term>`）は、恒常運用の方針と統制基準を一元化する SSOT とする。"
-    message: >-
-      `opd-index` の構成を別に定義する `specdojo:opd-index-rulebook` との関係（どちらが `opd-index`
-      の正本か、改訂をどう連動させるか）が書かれていないため、位置づけまたは全体方針で依存先として明記する。
-    message_ja: >-
-      `opd-index` の構成を別に定義する `specdojo:opd-index-rulebook` との関係（どちらが `opd-index`
-      の正本か、改訂をどう連動させるか）が書かれていないため、位置づけまたは全体方針で依存先として明記する。
-  - id: F003
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 41
-    anchor: "| 番号 | 見出し                                             | `opd-index` | `opd-<term>` |"
-    message: >-
-      本文構成の表の `opd-index` 列は、`specdojo:opd-index-rulebook` の本文構成と同じ12章の必須構成を繰り返している。`opd-index` の構成は同 rulebook
-      への参照に置き換え、本書は `opd-＜term＞` との差分の扱いに絞る。
-    message_ja: >-
-      本文構成の表の `opd-index` 列は、`specdojo:opd-index-rulebook` の本文構成と同じ12章の必須構成を繰り返している。`opd-index` の構成は同 rulebook
-      への参照に置き換え、本書は `opd-＜term＞` との差分の扱いに絞る。
-  - id: F004
-    severity: minor
-    rule: vp-arc-single-responsibility
-    line: 9
-    anchor: "`opd-index`（必要に応じて `opd-<term>`）は、恒常運用の方針と統制基準を一元化する SSOT とする。"
-    message: >-
-      本書は `opd-index` と `opd-＜term＞` の両方を扱うが、`opd-index` には `specdojo:opd-index-rulebook` が別にあり、責務境界が重複している。本書の対象を
-      `opd-＜term＞` に絞り、`opd-index-sample` を `opd-index-rulebook` だけの sample にするなど、境界と sample の対応を一つに定める。
-    message_ja: >-
-      本書は `opd-index` と `opd-＜term＞` の両方を扱うが、`opd-index` には `specdojo:opd-index-rulebook` が別にあり、責務境界が重複している。本書の対象を
-      `opd-＜term＞` に絞り、`opd-index-sample` を `opd-index-rulebook` だけの sample にするなど、境界と sample の対応を一つに定める。
-  - id: F005
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 138
-    anchor: "| 手順（コマンド/チェックリスト）を OPD に大量記載する | OPR と二重管理になり、更新不整合を起こすため |"
-    message: 禁止事項の「大量記載する」は判定基準がない曖昧語である。「手順の逐次記述は OPR へ寄せ、OPD には参照だけを置く」など、判定できる表現に改める。
-    message_ja: 禁止事項の「大量記載する」は判定基準がない曖昧語である。「手順の逐次記述は OPR へ寄せ、OPD には参照だけを置く」など、判定できる表現に改める。
-  - id: F006
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 28
-    anchor: "- ファイル名はプロジェクト内で一意にする（日本語可。例: `運用方針・設計-監視.md`）。"
-    message: >-
-      ファイル名の規則（日本語可）と配置先の欠落が、同じ `opd-index` を定義する `specdojo:opd-index-rulebook`（ID と同名の `.md`
-      を推奨、`docs/ja/product/090-operations/` に配置）と食い違っている。命名と配置の基準をそろえる。
-    message_ja: >-
-      ファイル名の規則（日本語可）と配置先の欠落が、同じ `opd-index` を定義する `specdojo:opd-index-rulebook`（ID と同名の `.md`
-      を推奨、`docs/ja/product/090-operations/` に配置）と食い違っている。命名と配置の基準をそろえる。
-  - id: F007
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 34
-    anchor: "- `specdojo.type` は `operations`、`specdojo.rulebook` は `specdojo:opd-rulebook` とする"
-    message: >-
-      `opd-index` について、本書は `specdojo.rulebook: specdojo:opd-rulebook` を求めるが、`specdojo:opd-index-rulebook` は
-      `specdojo:opd-index-rulebook` を求めており、`opd-index-sample` も両 rulebook の `sample` に重複して載っている。`opd-index` を担当する
-      rulebook を一つに定め、型宣言と sample の対応を一致させる。
-    message_ja: >-
-      `opd-index` について、本書は `specdojo.rulebook: specdojo:opd-rulebook` を求めるが、`specdojo:opd-index-rulebook` は
-      `specdojo:opd-index-rulebook` を求めており、`opd-index-sample` も両 rulebook の `sample` に重複して載っている。`opd-index` を担当する
-      rulebook を一つに定め、型宣言と sample の対応を一致させる。
-  - id: F008
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 39
-    anchor: 見出しは次の順序で配置します。`opd-<term>` の条件付きの章は、`opd-index` との差分がある章だけを置き、章番号は詰めます。
-    message: >-
-      Frontmatter の `sample` に載る `specdojo:opd-index-sample` は、本書が `opd-index`
-      で必須とする12章のうち、運用の範囲・前提、監視、障害対応、変更管理、バックアップ、権限、定期運用、問い合わせの8章を欠いており、完成例として本ルールに準拠していない。
-    message_ja: >-
-      Frontmatter の `sample` に載る `specdojo:opd-index-sample` は、本書が `opd-index`
-      で必須とする12章のうち、運用の範囲・前提、監視、障害対応、変更管理、バックアップ、権限、定期運用、問い合わせの8章を欠いており、完成例として本ルールに準拠していない。
-  - id: F009
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 22
-    anchor: "- `opr-index` / `opr-<term>`: 運用手順・Runbook。手順と証跡（再現可能な作業）を責務とする"
-    message: >-
-      OPR のサンプル（`opr-index-sample`・`opr-incident-sample` など7件）が Frontmatter で `rulebook: specdojo:opd-rulebook`
-      と宣言しており、本文で参照する `opr-rulebook` やその `sample` の宣言と矛盾している。OPD と OPR の Kata の対応を正す。
-    message_ja: >-
-      OPR のサンプル（`opr-index-sample`・`opr-incident-sample` など7件）が Frontmatter で `rulebook: specdojo:opd-rulebook`
-      と宣言しており、本文で参照する `opr-rulebook` やその `sample` の宣言と矛盾している。OPD と OPR の Kata の対応を正す。
-  - id: F010
-    severity: minor
     rule: vp-qe-kata-conformance
     line: 7
     anchor: "## 1. 全体方針"
     message: >-
-      `sample` から外した `specdojo:opd-sample` が、まだ `rulebook: specdojo:opd-rulebook` と宣言したまま残っており、rulebook と sample
-      の対応が片方向になっている。廃止するか、対応関係を整理する。
+      `sample` から外れた `specdojo:opd-sample` が `rulebook: specdojo:opd-rulebook` を宣言したまま残り、旧来の最小サンプルとして `opd-＜term＞`
+      の差分構成に準拠していない。廃止するか、対応関係を整理する。
     message_ja: >-
-      `sample` から外した `specdojo:opd-sample` が、まだ `rulebook: specdojo:opd-rulebook` と宣言したまま残っており、rulebook と sample
-      の対応が片方向になっている。廃止するか、対応関係を整理する。
-  - id: F011
-    severity: minor
-    rule: vp-ux-readability
-    line: 121
-    anchor: "- 分冊がない場合でも `（本書のみ）` または `（なし）` を明記する"
-    message: >-
-      「分冊がない場合でも `（本書のみ）` または `（なし）` を明記」の「分冊」が `opd-＜term＞` と `opr-＜term＞` のどちらを指すのかが曖昧で、必須である `opr-index`
-      の導線と矛盾して読める。対象を明示する。
-    message_ja: >-
-      「分冊がない場合でも `（本書のみ）` または `（なし）` を明記」の「分冊」が `opd-＜term＞` と `opr-＜term＞` のどちらを指すのかが曖昧で、必須である `opr-index`
-      の導線と矛盾して読める。対象を明示する。
-  - id: F012
-    severity: minor
-    rule: vp-ops-release-readiness
-    line: 7
-    anchor: "## 1. 全体方針"
-    message: >-
-      ready にする前に解消すべき事項（`recipe` と `template` の `undecided`、`opd-index-rulebook` との責務の重複）が本文に未解決事項として示されていない。ready
-      にする前提条件を明記する。
-    message_ja: >-
-      ready にする前に解消すべき事項（`recipe` と `template` の `undecided`、`opd-index-rulebook` との責務の重複）が本文に未解決事項として示されていない。ready
-      にする前提条件を明記する。
+      `sample` から外れた `specdojo:opd-sample` が `rulebook: specdojo:opd-rulebook` を宣言したまま残り、旧来の最小サンプルとして `opd-＜term＞`
+      の差分構成に準拠していない。廃止するか、対応関係を整理する。
