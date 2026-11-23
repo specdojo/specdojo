@@ -269,6 +269,39 @@ describe("parent validation allowlist", () => {
     }
   });
 
+  it("names the elapsed time and the npm script stage of a timed-out validation", async () => {
+    const root = await mkdtemp(path.join(tmpdir(), "specdojo-parent-validation-timeout-"));
+    try {
+      const evidenceDir = path.join(root, "execution", "exec", "evidence", "task", "run");
+      await mkdir(evidenceDir, { recursive: true });
+      const batch = await runParentValidationBatch(["validate-schema"], root, async () => ({
+        exitCode: null,
+        stdout: "> specdojo@0.9.2 validate:schema:glossary",
+        stderr: "",
+        timedOut: true,
+        durationMs: 648_895,
+        stage: "validate:schema:glossary",
+      }));
+
+      expect(batch.validations[0].summary).toMatch(
+        /^timed out after 649s \(stage: validate:schema:glossary\): /u,
+      );
+      expect(failedParentValidationReason(batch.validations)).toBe(
+        "parent validation failed: validate-schema (timed out after 649s (stage: validate:schema:glossary))",
+      );
+      const recorded = recordParentValidationFailureOutput({
+        worktreePath: root,
+        evidencePath: path.join(evidenceDir, "evidence.json"),
+        evidence: { ...evidenceWithRunnerStatus("failed"), validations: batch.validations },
+        failureOutputs: batch.failureOutputs,
+      });
+      const log = await readFile(path.join(root, recorded.log_refs.at(-1)?.path ?? ""), "utf8");
+      expect(log).toContain("timed out: yes\nelapsed: 649s\nstage: validate:schema:glossary\n");
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
+  });
+
   it("accepts persisted validations only when they match the current configured IDs", () => {
     const recorded = [
       {

@@ -126,20 +126,21 @@ describe.skipIf(process.platform === "win32")("parent validation timeout stop", 
     });
   });
 
-  it("returns after the close grace when a descendant outside the group keeps the pipes open", async () => {
+  // PJR-6690 から出力はファイルへ書くため、group の外の子孫が残っても close を待たない。
+  it("returns when the direct child stops even if a descendant outside the group keeps writing", async () => {
     const { definition, metrics } = await fixture("escape");
     const started = performance.now();
 
     const result = await withValidationMetrics("escape", metrics, () =>
-      invokeParentValidation(definition, process.cwd(), { killGraceMs: 500, closeGraceMs: 500 }),
+      invokeParentValidation(definition, process.cwd(), { killGraceMs: 500, closeGraceMs: 5_000 }),
     );
 
-    expect(performance.now() - started).toBeLessThan(8_000);
+    expect(performance.now() - started).toBeLessThan(5_000);
     expect(result.timedOut).toBe(true);
     expect(isRunning(grandchildPid(result.stdout))).toBe(true);
     expect(
       (await metricRows(metrics)).find((row) => row.event === "validation-timeout-stop"),
-    ).toMatchObject({ id: "test-integration", pipes_closed: false });
+    ).toMatchObject({ id: "test-integration", pipes_closed: true });
   });
 
   it("keeps exit code, output and metrics unchanged when the validation finishes in time", async () => {
@@ -156,6 +157,7 @@ describe.skipIf(process.platform === "win32")("parent validation timeout stop", 
       timedOut: false,
       stdoutTruncated: false,
       stderrTruncated: false,
+      durationMs: expect.any(Number),
     });
     expect(await metricRows(metrics)).toEqual([]);
   });
