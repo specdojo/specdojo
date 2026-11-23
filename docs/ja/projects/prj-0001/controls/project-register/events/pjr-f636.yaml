@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_d6e42665be42470aa88b1453dabb8223
+  ts: "2026-11-23T13:17:09Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 導入のパターンを CI で確かめる（Linux の Dev Container と macOS）
+    - field: description
+      from: ""
+      to: Linux の Dev Container と macOS の手元の導入を GitHub Actions で確かめ、WSL はリリースの前のチェックリストにする
+    - field: input
+      from: ""
+      to: '["利用者の依頼（2026-11-23）: 多くの人に使ってもらうため、Dev Container・Dev Container ＋ tmux・mac・mac ＋ tmux・WSL・WSL ＋ tmux のパターンですぐに使えるようにする","次の版に回す（2026-11-23）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: depends_on
+      from: ""
+      to: '["PJR-B6M3"]'
+    - field: commit_type
+      from: ""
+      to: ci
+    - field: commit_scope
+      from: ""
+      to: onboarding
+- v: 1
+  id: reg_daaf41f487a942dca0a0fb14c73f104e
+  ts: "2026-11-23T13:17:36Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_d6e42665be42470aa88b1453dabb8223

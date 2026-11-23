@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_d5249279b5c648ac93ae5b9da48424ae
+  ts: "2026-11-23T13:16:55Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: specdojo init で使う環境のパターン（Dev Container・手元 × tmux）を選べるようにする
+    - field: description
+      from: ""
+      to: init で Dev Container か手元かと tmux を選び、パターンに合う設定・tmux のスクリプト・次の手順を出す。PJR-8PXJ の本体スクリプトの件を含む
+    - field: input
+      from: ""
+      to: '["利用者の依頼（2026-11-23）: 多くの人に使ってもらうため、Dev Container・Dev Container ＋ tmux・mac・mac ＋ tmux・WSL・WSL ＋ tmux のパターンですぐに使えるようにする","v0.10.0 に入れる。実装はオーケストレーターが会話の中で行う（利用者の指定）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-8PXJ"]'
+    - field: commit_type
+      from: ""
+      to: feat
+    - field: commit_scope
+      from: ""
+      to: init
+- v: 1
+  id: reg_99124a41cd754b19acbdcdb2da821f18
+  ts: "2026-11-23T13:17:14Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_d5249279b5c648ac93ae5b9da48424ae
