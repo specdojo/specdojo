@@ -1,0 +1,41 @@
+レビュー結果です。
+
+**評価結果の確認（鮮度）**
+- 次の2つのコマンドを実行しました。どちらも出力なしで、終了コードは 0 でした。評価結果は最新です。
+  - `specdojo grade list --target kata --path docs/ja/specdojo/samples/mip-index-sample.md --changed-only`
+  - `specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/mip-index-rulebook.md --changed-only`
+- sample に対する `--incomplete` も出力なしで、評価パイプラインは完了しています。
+- sample の grade は `verdict` が pass、score が 100 で、finding は 0 件です。
+- rulebook の grade は `verdict` が pass、score が 98 で、minor が 2 件（F001、F002）です。
+- 作業ツリーの未追跡ファイルは、runner の `pipeline-state.json` だけでした。成果物の変更は混入していません。
+
+**判断根拠（完了条件の照合）**
+- DC-001: sample は rulebook の本文要件にある9章を同じ順序でそろえています。各章の表の列も rulebook の指定どおりです。
+- DC-002: 題材は駄菓子屋きぬやで、役割は店主代表、家族利用者代表、開発担当などです。共通サンプル文脈に沿っています。
+- DC-003: rulebook の禁止事項に当たる記述は見つかりませんでした。
+  - 対象と非対象は表で明示しています。
+  - 成功条件の表と GO/NO-GO の最低条件があります。
+  - カットオーバーは判定点 GO1〜GO4 と失敗時の扱いまでで、分単位の手順は `cop-index` に委ねています。
+  - テーブルレベルのマッピングは `dmd-index` に委ねています。
+- DC-004: 成功条件の表は5項目あり、測定対象にデータ種別と期間または業務を2つ以上入れています。判定者と失敗時の扱いも書いてあります。GO/NO-GO の最低条件も3点を判定できる基準で示しています。
+- カットオーバー表の判定点は、成功条件の表の失敗時の扱い（延期、取り込み直し）と矛盾していません。
+
+**未充足事項・改善指示**
+- 完了を妨げる未充足事項はありません。
+- rulebook の finding F001 と F002 は minor です。`recipe` と `template` が `undecided` で、`status` が draft のままという内容です。
+  - これは型の整備段階の課題で、sample の完了条件には直結しません。
+  - schedule の追加完了条件は、型の `--target kata` が `pass` であることで、rulebook は pass（98）です。
+  - 改善指示として、recipe と template を確定するか不要と整理し、rulebook を ready にする前に条件を明確にしてください。
+- sample 内の `_UNDECIDED_`（切替日）は、sample の性質上の意図的な未決事項です。
+
+**確認できなかった範囲**
+- 実行記録（先行する edit タスクの result）は宣言された参照に含まれず、特定できませんでした。そのため、検証結果の成否は確認していません。
+- `lint:md` などの検査は親 runner の担当で、私は実行していません。
+- recipe は `_MISSING_` です。
+
+**decision**
+- verdict は `complete-with-findings` です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"review 完了。評価結果は最新（sample pass/100、rulebook pass/98 で minor 2件）。完了条件 DC-001〜004 は充足。verdict 案: complete-with-findings。rulebook の F001/F002（recipe・template が undecided、status draft）は完了を妨げない minor で、改善指示として recipe・template の確定または不要整理を残す。確認できなかった範囲: 先行 edit タスクの実行記録は特定できず、lint 類は親 runner 担当のため未実行、recipe は MISSING。","handoff":["rulebook の recipe・template を確定するか不要と整理し、ready 化前の条件を明確にする（F001/F002）","sample 内の _UNDECIDED_（切替日）は意図的な未決事項であり、横串の確認で扱う"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/mip-index-sample.md --changed-only","status":"passed","summary":"出力なし。sample の評価結果は最新"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/mip-index-rulebook.md --changed-only","status":"passed","summary":"出力なし。rulebook の評価結果は最新"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/mip-index-sample.md --incomplete","status":"passed","summary":"出力なし。評価パイプラインは完了"}]}
+</specdojo_executor_evidence>

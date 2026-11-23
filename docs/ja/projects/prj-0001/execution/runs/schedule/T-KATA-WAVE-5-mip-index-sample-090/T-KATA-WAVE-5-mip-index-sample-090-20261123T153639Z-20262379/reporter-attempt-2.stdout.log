@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "mode": "review",
+  "grade_check": "### 評価結果の確認\n\n#### 1. 鮮度確認\n\n```bash\nnpx specdojo grade list --target kata --path docs/ja/specdojo/samples/mip-index-sample.md --changed-only\n```\n\n出力: なし（sample の評価結果は最新）\n\n```bash\nnpx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/mip-index-rulebook.md --changed-only\n```\n\n出力: なし（rulebook の評価結果は最新）\n\n#### 2. 評価結果の集計\n\n- **Sample (`docs/ja/specdojo/samples/mip-index-sample.md`)**\n  - `verdict`: `pass`\n  - `score`: 100\n  - `finding` 件数: 0\n- **Rulebook (`docs/ja/specdojo/rulebooks/mip-index-rulebook.md`)**\n  - `verdict`: `pass`\n  - `score`: 98\n  - `finding` 件数: 2 (minor: 2)\n",
+  "rationale": [
+    "評価結果の鮮度は最新であることを確認しました。`docs/ja/specdojo/samples/mip-index-sample.md` および `docs/ja/specdojo/rulebooks/mip-index-rulebook.md` の双方について、`specdojo grade list` コマンドによって変更が検知されなかったため、最新の評価結果を使用しています。",
+    "Sample に関しては、`done_criteria` (DC-001〜DC-004) を満たしていることを確認しました。`rulebook` の章立てに従い、駄菓子屋のプロジェクトコンテキストに沿った記述がなされています。",
+    "Rulebook に関しては、`recipe` と `template` が `undecided` であること、および `status` が `draft` であることについての `minor` な `finding` が 2 件残っていますが、これは本タスクの完了を妨げるものではありません。",
+    "先行する `edit` タスクの実行記録は、提供されたエビデンスからは特定できませんでした。また、`recipe` は `_MISSING_` となっていました。"
+  ],
+  "improvements": [
+    "Rulebook (`docs/ja/specdojo/rulebooks/mip-index-rulebook.md`) の `F001`: `recipe` と `template` が `undecided` のままです。これらを確定して宣言するか、不要であれば整理してください。",
+    "Rulebook (`docs/ja/specdojo/rulebooks/mip-index-rulebook.md`) の `F002`: `status` が `draft` で `recipe` と `template` が未確定です。`ready` 化する前に、これらを確定する条件を明確にしてください。"
+  ],
+  "approach": "磨き込みのプロセスにおいて、`rulebook` の必須要素や `sample` の形式との整合性は `grade` によって評価済みであることを確認しました。今回の `review` フェーズでは、評価結果に示された `finding` を踏まえつつ、タスクの完了可否を判断しました。",
+  "verdict": "complete-with-findings"
+}
