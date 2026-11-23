@@ -1,0 +1,26 @@
+`docs/ja/specdojo/samples/pm-issue-log-sample.md` を書き直しました。20 件の指摘はすべて sample の中で対応し、この段では rulebook を変えていません。prettier をかけたあとの markdownlint はエラー 0 件でした。親 runner が流す検査はここでは実行していません。result も書いていません。
+
+**直した内容**
+
+- **概要:** プロジェクト名を「駄菓子屋きぬや 販売管理システム構築」にそろえました。管理する期間、記録単位（課題 1 件 1 行、`IS-NNN`）、週 2 回（月曜・木曜）のレビュー、記載時点を書きました。登録簿を使わない単独の課題ログの完成例であることと、登録簿を使う場合は個票から生成し `pjr-rulebook` を見ることも足しました。
+- **課題ログ一覧:** 優先度は `high`・`medium`、ステータスは `in-progress`・`waiting`・`done` と schema の値にしました。担当は `QE`・`BA`・`UX` の Role code です。`done` の例を見せるため、課題を 1 件足して 3 件にしました。
+- **優先度と期限:** 課題ごとの再掲をやめました。代わりに、初期受入の必須条件（SC-01・AC-01〜AC-04）への影響で決める優先度の基準、期限の決め方を書きました。エスカレーションは「担当がその日のうちに `PM` へ、`PM` が翌営業日までに `PO` へ」です。優先度の変更は `PM` が決め、初期リリース候補日が動く場合だけ `PO` が決めます。候補日は未決なので `_UNDECIDED_` で残しました。
+- **対応計画:** 依存事項を `PO` の確認・参加に置き換えました。依存が満たされないときの影響の列を足し、完了条件は確認の手段と合格の基準で書きました（例: 受入テスト 24 件でデータ不足による中断 0 件）。
+- **進捗レビュー:** 完了は `QE` が 3 つの観点で判定すると書きました。ステータスを変える契機と記録する Role を表にしました。決定記録の ID も 1 つ書いています。
+- **関連ドキュメント:** 根拠・影響先・決定記録を wikilink で表にし、課題から起票したリスクと変更要求はないことも明記しました。
+
+**sample に入れた値と確認が要る点**
+
+- 変更要求ログの sample が IS-001 と CR-002 を参照しているので、課題の内容と日付はそれに合わせました。
+- 記載時点は 2026-04-07 にしました。変更要求ログの sample（2026-04-09 時点）と 2 日ずれています。
+- 例として私が置いた値があります。どれも関連 sample に根拠はありません。
+  - 受入テスト 24 件
+  - 商品 30 件・常連顧客 10 件
+  - 表示倍率 125%
+  - 決定記録 `kinuya-decision-log` の DR-001（文書がないのでバッククォートで仮置き）
+- F012 の「更新責任者」は、今の rulebook の記述ガイドに見当たりません。ステータスの更新を記録する Role を進捗レビューに書いて対応しました。この扱いでよいかは判断が要ります。
+- リスク登録簿の sample は、まだ旧い書き方のままです（「高」「対応中」、「開発リード」、プロジェクト名の不一致）。合わせて直す候補です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"pm-issue-log-sample を、駄菓子屋きぬやの単独の課題ログの完成例として書き直した。F001〜F020 は sample の中で対応し、rulebook は変更していない。npx prettier --write の整形後、npx markdownlint-cli2 のエラーは 0 件。","handoff":["F012 の『更新責任者』は今の pm-issue-log-rulebook の記述ガイドに見当たらない。ステータスの更新を記録する Role を進捗レビューの表に書いて対応した。この扱いでよいかは判断が要る。","sample に例として置いた値: 受入テスト 24 件、商品 30 件・常連顧客 10 件、表示倍率 125%、決定記録 `kinuya-decision-log` の DR-001（文書がないのでバッククォートで仮置き）。関連 sample に根拠はない。","初期リリース候補日は pm-plan-sample の U-03 に合わせて `_UNDECIDED_` で残した。U-03 が決まったら、`high` の判定に使う候補日を確定する。","記載時点を 2026-04-07 にした。IS-001 の期限が 2026-04-08 で、変更要求ログの sample の記載時点（2026-04-09）とは 2 日ずれる。","pm-risk-register-sample が旧い書き方のまま（「高」「対応中」、「開発リード」、プロジェクト名の不一致）。課題ログと揃えて直す候補。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/pm-issue-log-sample.md","status":"passed","summary":"変更した sample を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/pm-issue-log-sample.md","status":"passed","summary":"0 issues in 0 files"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更したのは docs/ja/specdojo/samples/ 配下の sample だけで、plan・result・個票は変更していない"}]}
+</specdojo_executor_evidence>
