@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-TAHV
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-TAHV/pjr-tahv-20261123T224707Z-7c2ff764/plan.md
   started_at: "2026-11-23T22:47:08.693Z"
+  completed_at: "2026-11-23T22:53:37.979Z"
   agent: terra-executor
 ---
 
@@ -16,16 +17,19 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- 変更範囲の予約待ちを再評価し、待機理由と件数を表示するよう修正。単体テストと運用ガイド、個票を更新した。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/guides/schedule-operation-guide.md`: 変更、+2 / -0 行
+- `src/exec/run/change-scope.ts`: 変更、+3 / -1 行
+- `src/exec/run/schedule-mode.ts`: 変更、+23 / -2 行
+- `tests/src/exec/run/human-task-skip.test.ts`: 変更、+21 / -0 行
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- CHANGELOG の不具合修正文案: `exec run --auto --loop` で変更範囲の待ちが解除されたタスクを次の回に再選択し、待ちの理由と件数を表示する。
 
 ## 4. 進め方
 
-_TODO_: どう進めたか、根拠にした文書や規約を記入する。
+reporter を使わず、runner が executor の報告（`final_message`・`handoff`）と証跡から機械的に作成した（`pipeline.mechanical_result`）。

@@ -46,6 +46,7 @@ import {
 import { spawnIndexBuild, spawnRefresh, spawnScheduleBuild } from "./mode-shared.js";
 import {
   ChangeScopeGate,
+  ChangeScopeBlockedError,
   inferChangeScope,
   parseUnknownScopePolicy,
   scopePlanMetadata,
@@ -157,6 +158,9 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
     capacity: ReturnType<typeof createProviderCapacityTracker>,
     limit: number,
   ): Promise<{ preparedTasks: PreparedTask[]; readyCount: number; humanWaiting: number }> => {
+    const deferred = new Map<string, number>();
+    const recordDeferred = (reason: string) =>
+      deferred.set(reason, (deferred.get(reason) ?? 0) + 1);
     if (!existsSync(readyJsonPath)) {
       process.stdout.write(`ready.json not found: ${readyJsonPath}\nRun: specdojo exec refresh\n`);
       process.exitCode = 1;
@@ -181,7 +185,10 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
             const file = basename(task.schedule_file);
             return file === `sch-track-${track}.yaml` || file === `sch-track-${track}.yml`;
           });
-    if (orderedIds.length === 0) return { preparedTasks: [], readyCount: 0, humanWaiting: 0 };
+    if (orderedIds.length === 0) {
+      if (loop) process.stdout.write("  [run] deferred this round: none (0)\n");
+      return { preparedTasks: [], readyCount: 0, humanWaiting: 0 };
+    }
 
     const preparedTasks: PreparedTask[] = [];
     let humanWaiting = 0;
@@ -222,7 +229,10 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
             schedulePath,
           });
           const acquired = await scopeGate.tryAcquire(taskId, scope);
-          if (!acquired) continue;
+          if (!acquired) {
+            recordDeferred("change scope busy");
+            continue;
+          }
           lease = acquired;
         }
         const prepared = await prepareSingleTask(
@@ -249,6 +259,7 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
         );
         // "deferred": every candidate provider is at its cap; try it again after a slot frees.
         if (prepared === "deferred") {
+          recordDeferred("provider capacity");
           await lease?.finish(true);
           continue;
         }
@@ -267,12 +278,22 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
           if (prepared === "failure") process.exitCode = 1;
         }
       } catch (error) {
+        if (loop && error instanceof ChangeScopeBlockedError) {
+          recordDeferred("change scope blocked");
+          process.stdout.write(`  [run] deferred: ${taskId} — ${error.message}\n`);
+          continue;
+        }
         attempted.add(taskId);
         await lease?.finish(false);
         const message = error instanceof Error ? error.message : String(error);
         process.stderr.write(`[run] setup error for ${task.id}: ${message}\n`);
         process.exitCode = 1;
       }
+    }
+
+    if (loop) {
+      const details = [...deferred].map(([reason, count]) => `${reason}: ${count}`).join(", ");
+      process.stdout.write(`  [run] deferred this round: ${details || "none (0)"}\n`);
     }
 
     // Skipped human tasks are waiting for a person, not unexecutable, so they do not count as ready.

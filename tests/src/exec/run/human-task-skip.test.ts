@@ -7,6 +7,7 @@ import { prepareSingleTask, type PreparedTask } from "../../../../src/exec/run/s
 import { runPreparedTaskSafely } from "../../../../src/exec/run/schedule-task.js";
 import { spawnRefresh } from "../../../../src/exec/run/mode-shared.js";
 import type { ReadyTaskView } from "../../../../src/exec/types.js";
+import { ChangeScopeBlockedError, ChangeScopeGate } from "../../../../src/exec/run/change-scope.js";
 
 vi.mock(import("../../../../src/exec/run/schedule-prepare.js"), async (importOriginal) => ({
   ...(await importOriginal()),
@@ -112,6 +113,26 @@ afterEach(() => {
 });
 
 describe("exec run --auto with human tasks", () => {
+  it("retries a scope-blocked task after another task settles", async () => {
+    writeReady([task("A-1"), task("B-1")]);
+    let blocked = true;
+    const finish = vi.fn(async () => {});
+    vi.spyOn(ChangeScopeGate.prototype, "tryAcquire").mockImplementation(async (id) => {
+      if (id === "A-1" && blocked) throw new ChangeScopeBlockedError("waiting for B-1");
+      return { waits: [], finish };
+    });
+    vi.mocked(runPreparedTaskSafely).mockImplementation(async (p) => {
+      blocked = false;
+      return { prepared: p, result: "success" };
+    });
+
+    await runBatchMode({ project: "test", loop: true, parallel: "2" });
+
+    expect(vi.mocked(prepareSingleTask).mock.calls.map(([t]) => t.id)).toEqual(["B-1", "A-1"]);
+    expect(output.join("")).toContain("change scope blocked: 1");
+    expect(output.join("")).toContain("deferred this round: none (0)");
+    expect(process.exitCode).toBeUndefined();
+  });
   it("skips human tasks even when --edit-by is given and runs the agent task", async () => {
     writeReady([task("H-1", "human"), task("A-1")]);
 
