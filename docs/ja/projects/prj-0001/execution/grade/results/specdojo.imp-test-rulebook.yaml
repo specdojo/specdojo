@@ -5,17 +5,17 @@ path: docs/ja/specdojo/rulebooks/imp-test-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 93
-graded_at: "2026-11-22T05:00:16.483Z"
+score: 92
+graded_at: "2026-11-23T01:48:17.980Z"
 graded_by: opus-review-executor
-content_hash: c2761e7563a9c22d92d4e90accf7045aae4ca12a21cecae936d6d4843becdbef
+content_hash: 30154633aa44b664f8bc03ef14e14d3aed9e80f775800fced969822cea459b82
 categories:
   purpose:
     score: 100
   operations:
     score: 94
   planning:
-    score: 100
+    score: 92
   business:
     score: 100
   architecture:
@@ -23,7 +23,7 @@ categories:
   usability:
     score: 100
   implementation:
-    score: 100
+    score: 88
   quality:
     score: 92
   consistency:
@@ -45,8 +45,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-control-reporting:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-business-value:
     level: 4
     score: 100
@@ -69,8 +69,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-change-impact:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-testability:
     level: 4
     score: 100
@@ -104,10 +104,17 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 4
+  minor: 6
   note: 0
 findings:
   - id: F001
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 109
+    anchor: "- 次の条件に当てはまる事項はプロジェクト登録簿へ転記し、転記先の登録項目 ID（`PJR-XXXX`）を記載する。"
+    message: 転記条件の文から「転記と `PM` への報告は担当が行う」が削られ、誰が登録簿へ転記するのか、転記後の報告先がどこかが書かれていない。未解決事項表の担当（Role code）が転記と報告を行うことを明記する必要がある。
+    message_ja: 転記条件の文から「転記と `PM` への報告は担当が行う」が削られ、誰が登録簿へ転記するのか、転記後の報告先がどこかが書かれていない。未解決事項表の担当（Role code）が転記と報告を行うことを明記する必要がある。
+  - id: F002
     severity: minor
     rule: vp-arc-technical-constraints
     line: 1
@@ -118,21 +125,34 @@ findings:
     message_ja: >-
       rulebook の Frontmatter に `target_format` がなく、`recipe` と `template` は `undecided`
       のままなので、成果物の形式と型の構成が確定していない。`target_format: markdown` を宣言し、recipe と template を作成するか、作成しない判断を記録する必要がある。
-  - id: F002
+  - id: F003
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 10
+    anchor: >-
+      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status`・承認・改訂と廃止・未決事項の引き継ぎは [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]]
+      に従う。文書の整形・lint はリポジトリの検証で扱う。
+    message: >-
+      改訂・廃止の扱いを上位の標準へ委ねるだけで、この系統の具体的な追従対象と担当 Role code が書かれていない（例: 変更要求が改訂・取り下げられたときの、テスト戦略・方針、`＜level＞c-index`、並行する
+      imp-* 文書の更新）。rulebook-authoring-standard の要求どおり、追従対象と担当を記載する必要がある。
+    message_ja: >-
+      改訂・廃止の扱いを上位の標準へ委ねるだけで、この系統の具体的な追従対象と担当 Role code が書かれていない（例: 変更要求が改訂・取り下げられたときの、テスト戦略・方針、`＜level＞c-index`、並行する
+      imp-* 文書の更新）。rulebook-authoring-standard の要求どおり、追従対象と担当を記載する必要がある。
+  - id: F004
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 110
-    anchor: "- 次の条件に当てはまる事項はプロジェクト登録簿へ転記し、転記先の登録項目 ID（`PJR-XXXX`）を記載する。転記と `PM` への報告は担当が行う。"
+    line: 109
+    anchor: "- 次の条件に当てはまる事項はプロジェクト登録簿へ転記し、転記先の登録項目 ID（`PJR-XXXX`）を記載する。"
     message: >-
       未解決事項の転記条件表に、判断済みの「`PO` が見送り・代替を判断した → `decision`」が含まれており、判断済みの事項を未解決事項と対応方針のどちらに書くかが曖昧である（sample
       は対応方針に決定記録を書いている）。また、必須列「転記先の登録項目」について、転記条件に当てはまらない行に何を書くか（「なし」など）が定められていないため、decision の記載章と非該当時の値を明記する必要がある。
     message_ja: >-
       未解決事項の転記条件表に、判断済みの「`PO` が見送り・代替を判断した → `decision`」が含まれており、判断済みの事項を未解決事項と対応方針のどちらに書くかが曖昧である（sample
       は対応方針に決定記録を書いている）。また、必須列「転記先の登録項目」について、転記条件に当てはまらない行に何を書くか（「なし」など）が定められていないため、decision の記載章と非該当時の値を明記する必要がある。
-  - id: F003
+  - id: F005
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 28
+    line: 27
     anchor: >-
       共通項目・必須性・型制約は [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従う。`type` は `project`、`rulebook` は
       `specdojo:imp-test-rulebook` とし、`based_on` に入力の変更要求を記載する。
@@ -144,7 +164,7 @@ findings:
       rulebook は入力を PJR の change-request 個票とし、`based_on` に入力の変更要求を記載するよう求めているが、対応 sample の `based_on` と本文は `cr-2026-004`
       を使っており、PJR の登録項目 ID の形式（sample 内のほかの参照は `PJR-T5D1` 形式）と一致しない。変更要求の識別子の形式を rulebook で定めるか、sample を PJR の ID
       に揃える必要がある。
-  - id: F004
+  - id: F006
     severity: minor
     rule: vp-ops-release-readiness
     line: 1

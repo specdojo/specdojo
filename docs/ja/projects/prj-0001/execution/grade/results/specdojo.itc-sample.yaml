@@ -4,16 +4,16 @@ document: specdojo:itc-sample
 path: docs/ja/specdojo/samples/itc-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 97
-graded_at: "2026-11-22T07:13:37.512Z"
+verdict: pass
+score: 93
+graded_at: "2026-11-23T02:00:44.630Z"
 graded_by: opus-review-executor
-content_hash: c5989d795f76f0b030f6f1308b65b8970d9245ed2d4ab4a269b9d0248d831f88
+content_hash: 1bf7cde120a4641db6c3f828ebc3f97fdf2017c9218c76a3fa811b86e8ade02c
 categories:
   purpose:
     score: 100
   operations:
-    score: 88
+    score: 100
   planning:
     score: 100
   business:
@@ -21,13 +21,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 92
   implementation:
     score: 100
   quality:
     score: 92
   consistency:
-    score: 100
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -78,20 +78,20 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
     level: 3
     score: 75
   vp-ux-readability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-language-consistency:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ops-operability:
     level: 4
     score: 100
@@ -103,11 +103,28 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 1
+  major: 0
+  minor: 3
   note: 0
 findings:
   - id: F001
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 55
+    anchor: >-
+      [[specdojo:itc-index-sample|内部結合テストカタログ: 概要]] の観点の型のうち、「結合 I/F
+      の契約」は各観点の応答（確定結果・エラー種別）の期待値で担保し、独立した観点にしない。「状態遷移の整合性」は未確定のまま確定へ進まない保留の維持だけを「未確定の購入の保留」の観点で扱い、補完後の確定への遷移は扱わない。「依存障害時の挙動」は
+      DB の更新拒否を「確定できない会計のロールバック」で扱い、未保存を成功と応答しないことを `it-sales-checkout-transaction-boundary-020` で確かめる。DB
+      停止・接続断は採用しない（理由: 検証用コンテナ DB の停止は CI の他ケースを巻き込み再現性を保てない、代替: ST の障害・回復）。「セキュリティ境界」は該当なし（単一店舗・端末1台）。
+    message: >-
+      itc-index-sample は「状態遷移の整合性」を `itc-sales-checkout`
+      で「未確定から確定への遷移」と割り当て、該当しない型には理由を1行残すよう求めているが、本書は「補完後の確定への遷移は扱わない」とするだけで理由も代わりに担うケースもない。補完後の確定は通常の会計確定と同じため
+      `it-sales-checkout-persistence-integrity-010` で担う、などの理由と代わりのケースを書き添える必要がある。
+    message_ja: >-
+      itc-index-sample は「状態遷移の整合性」を `itc-sales-checkout`
+      で「未確定から確定への遷移」と割り当て、該当しない型には理由を1行残すよう求めているが、本書は「補完後の確定への遷移は扱わない」とするだけで理由も代わりに担うケースもない。補完後の確定は通常の会計確定と同じため
+      `it-sales-checkout-persistence-integrity-010` で担う、などの理由と代わりのケースを書き添える必要がある。
+  - id: F002
     severity: minor
     rule: vp-qe-kata-conformance
     line: 55
@@ -122,12 +139,18 @@ findings:
     message_ja: >-
       itc-index-sample の「観点の立て方（共通）」は `itc-sales-checkout` の「依存障害時の挙動」を「DB 停止時に未保存を成功表示しない」としているが、本書は DB
       停止・接続断を不採用にしており、共通方針と食い違う。itc-index-sample の割り当てを更新拒否に改めるか、本書で DB 停止を扱うかのどちらかに揃える必要がある。
-  - id: F002
-    severity: major
-    rule: vp-ops-release-readiness
-    line: 40
+  - id: F003
+    severity: minor
+    rule: vp-ux-readability
+    line: 55
     anchor: >-
-      - _ASSUMPTION_: トランザクション分離レベルは `READ COMMITTED` とする。`kinuya-record-schema` の確定時に ARC が見直し、変わる場合は DEV
-      が同時確定の観点を追加する。PJR への引き継ぎは itc-index 側の同じ論点に集約し、本書では起票しない。
-    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
-    message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+      [[specdojo:itc-index-sample|内部結合テストカタログ: 概要]] の観点の型のうち、「結合 I/F
+      の契約」は各観点の応答（確定結果・エラー種別）の期待値で担保し、独立した観点にしない。「状態遷移の整合性」は未確定のまま確定へ進まない保留の維持だけを「未確定の購入の保留」の観点で扱い、補完後の確定への遷移は扱わない。「依存障害時の挙動」は
+      DB の更新拒否を「確定できない会計のロールバック」で扱い、未保存を成功と応答しないことを `it-sales-checkout-transaction-boundary-020` で確かめる。DB
+      停止・接続断は採用しない（理由: 検証用コンテナ DB の停止は CI の他ケースを巻き込み再現性を保てない、代替: ST の障害・回復）。「セキュリティ境界」は該当なし（単一店舗・端末1台）。
+    message: >-
+      「テスト観点とケース」の導入段落が4つの観点の型の扱い（I/F
+      の契約、状態遷移、依存障害、セキュリティ境界）と不採用の理由・代わりのテストを1段落に詰め込んでおり、型と観点・ケースの対応を読み取りにくい。観点の型ごとに1項目の箇条書きか「観点の型／本書での扱い／理由・代わり」の表に分けると読みやすくなる。
+    message_ja: >-
+      「テスト観点とケース」の導入段落が4つの観点の型の扱い（I/F
+      の契約、状態遷移、依存障害、セキュリティ境界）と不採用の理由・代わりのテストを1段落に詰め込んでおり、型と観点・ケースの対応を読み取りにくい。観点の型ごとに1項目の箇条書きか「観点の型／本書での扱い／理由・代わり」の表に分けると読みやすくなる。

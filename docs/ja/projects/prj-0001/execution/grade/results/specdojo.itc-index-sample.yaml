@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 90
-graded_at: "2026-11-22T06:50:39.652Z"
+graded_at: "2026-11-23T02:01:39.453Z"
 graded_by: opus-review-executor
-content_hash: 26c5bac4868cc92cb7fab22ce0d8a1b0475d784af55a861e88c91adda59f03ac
+content_hash: 5fcafb9001ca810790cb837ad3ee112344cba003efe603b7837509e9156d6803
 categories:
   purpose:
     score: 88
@@ -123,10 +123,10 @@ findings:
   - id: F002
     severity: minor
     rule: vp-pm-control-reporting
-    line: 142
+    line: 140
     anchor: >-
-      | _UNDECIDED_: 通信不能時の販売継続                    | 未確定取引の照合の観点が増える                      | 対象外とし、`itc-sales-checkout`
-      に保留後の再送の観点を追加しない      | BA が整理、PO が継続可否を判断    | PM へリスクとして報告   |
+      | _UNDECIDED_: 通信不能時の販売継続                    | 未確定取引の照合の観点が増える                       | 対象外とし、`itc-sales-checkout`
+      に保留後の再送の観点を追加しない      | PM へリスクとして報告   |
     message: >-
       「通信不能時の販売継続」は ifd-sample で既に `kinuya:pjr-i003` へ引き継がれていますが、本書は「PM へリスクとして報告」とだけ書き、既存の個票を参照していません。報告先に
       `kinuya:pjr-i003` を書き、二重登録を避けてください。
@@ -162,7 +162,7 @@ findings:
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 40
-    anchor: "- 1 term の観点が 15 以上、ケース表が 50 行以上の場合は分割を検討し、分割は ARC が承認する。"
+    anchor: "- 1 term の観点が 15 以上、ケース表が 50 行以上の場合は分割を検討する。"
     message: >-
       分割基準が観点数と行数だけになっており、rulebook の「依存境界・環境要件が混在する場合は分割候補」と「1〜2
       ケースしかない単位は原則統合する」が抜けています。本システムでの扱いを加えるか、適用しない理由を書いてください。

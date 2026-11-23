@@ -4,30 +4,30 @@ document: specdojo:sysd-critical-flows-template
 path: docs/ja/specdojo/templates/sysd-critical-flows-template.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 90
-graded_at: "2026-11-22T14:51:50.513Z"
+verdict: pass
+score: 96
+graded_at: "2026-11-23T01:42:43.998Z"
 graded_by: opus-review-executor
-content_hash: 24aa9fff36716eabf67c47af26d330ea4f504d823161b0dbdb8897c2a12c321a
+content_hash: e5b56d197a936a3f310d851a487eb574c8089da8c3c32274e830f719a2a9cc4b
 categories:
   purpose:
     score: 100
   operations:
     score: 100
   planning:
-    score: 92
+    score: 83
   business:
     score: 100
   architecture:
-    score: 92
+    score: 100
   usability:
     score: 92
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 92
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -45,8 +45,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-control-reporting:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-business-value:
     level: 4
     score: 100
@@ -57,8 +57,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-technical-constraints:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -78,11 +78,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
     level: 3
     score: 75
-  vp-qe-kata-conformance:
-    level: 2
-    score: 50
   vp-ux-readability:
     level: 4
     score: 100
@@ -103,8 +103,8 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 6
+  major: 0
+  minor: 5
   note: 0
 findings:
   - id: F001
@@ -112,51 +112,22 @@ findings:
     rule: vp-pm-plan-feasibility
     line: 67
     anchor: >-
-      | ------------------------------- | ------------------------------------ | ---------------- |
-      ----------------------------------------- |
+      | ------------------------------- | ------------------------------------ | --------------------------- |
+      ---------------------- | ---------------- | ----------------------------------------- |
     message: 「未決事項と後続作業」の表に担当 Role code の記入欄がなく、後続作業の担い手を計画へ転記できないため、sample と同じく「作業単位・依存順・担当Role code」の列名にして担当の記入を求めるべきである。
     message_ja: 「未決事項と後続作業」の表に担当 Role code の記入欄がなく、後続作業の担い手を計画へ転記できないため、sample と同じく「作業単位・依存順・担当Role code」の列名にして担当の記入を求めるべきである。
   - id: F002
     severity: minor
-    rule: vp-arc-technical-constraints
-    line: 26
-    anchor: "- **図**: _TODO_: システム内外、サービス／プロセスと保存先、主要識別子、同期・非同期の区別を表す図を記入する。"
-    message: 図の記入指示に、rulebook「本文要件」が求める「要求受付と業務完了を分ける」条件がなく、受付と完了を取り違えた図を許すため、指示文にこの区別を加えるべきである。
-    message_ja: 図の記入指示に、rulebook「本文要件」が求める「要求受付と業務完了を分ける」条件がなく、受付と完了を取り違えた図を許すため、指示文にこの区別を加えるべきである。
+    rule: vp-pm-control-reporting
+    line: 44
+    anchor: "| 条件・対象        | 記録種別      | 担当の対応方針    | 報告・判断先                     |"
+    message: >-
+      「管理記録への引渡し」の表の列名「担当の対応方針」は担当 Role code の記入を求めておらず、sample の「担当Role code・対応方針」とも異なるため、転記先で担い手が欠けないよう列名を「担当Role
+      code・対応方針」にすべきである。
+    message_ja: >-
+      「管理記録への引渡し」の表の列名「担当の対応方針」は担当 Role code の記入を求めておらず、sample の「担当Role code・対応方針」とも異なるため、転記先で担い手が欠けないよう列名を「担当Role
+      code・対応方針」にすべきである。
   - id: F003
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 67
-    anchor: >-
-      | ------------------------------- | ------------------------------------ | ---------------- |
-      ----------------------------------------- |
-    message: 「未決事項と後続作業」の表に rulebook が必須とする「受入や運用への影響」と「当面の扱い」の記入欄がないため、列名か記入指示へ追加すべきである。
-    message_ja: 「未決事項と後続作業」の表に rulebook が必須とする「受入や運用への影響」と「当面の扱い」の記入欄がないため、列名か記入指示へ追加すべきである。
-  - id: F004
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 1
-    anchor: "# _DELIVERABLE_NAME_"
-    message: >-
-      Frontmatter 雛形の `part_of` が空配列の固定値で、rulebook「推奨 Frontmatter 項目」の所属システム設計索引の記入を促さないため、`based_on`
-      と同様のプレースホルダにすべきである。
-    message_ja: >-
-      Frontmatter 雛形の `part_of` が空配列の固定値で、rulebook「推奨 Frontmatter 項目」の所属システム設計索引の記入を促さないため、`based_on`
-      と同様のプレースホルダにすべきである。
-  - id: F005
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 67
-    anchor: >-
-      | ------------------------------- | ------------------------------------ | ---------------- |
-      ----------------------------------------- |
-    message: >-
-      rulebook の禁止事項が省略を禁じる未決事項の「当面の扱い」（および受入・運用への影響）が雛形の表の列にないため、雛形どおりに作成すると禁止事項に抵触する文書になりやすく、列を追加して rulebook
-      と一致させるべきである。
-    message_ja: >-
-      rulebook の禁止事項が省略を禁じる未決事項の「当面の扱い」（および受入・運用への影響）が雛形の表の列にないため、雛形どおりに作成すると禁止事項に抵触する文書になりやすく、列を追加して rulebook
-      と一致させるべきである。
-  - id: F006
     severity: minor
     rule: vp-qe-kata-conformance
     line: 58
@@ -169,7 +140,20 @@ findings:
     message_ja: >-
       sample の「検証への引渡し」に雛形の「確認状況・不足の解消先」列がなく、雛形にない「承認対象と公開前条件」節や見出しの補足語もあるため、rulebook の「見出し順・表・記入欄は雛形に従う」に沿って sample
       と雛形のどちらかを揃えるべきである。
-  - id: F007
+  - id: F004
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 66
+    anchor: >-
+      | ID / 対象                       | 未充足事項・依存とScheduleへの影響   | 受入や運用への影響          | 当面の扱い             | 作業単位・依存順 |
+      完了条件・判断時期・登録先                |
+    message: >-
+      雛形の「未決事項と後続作業」に追加された「受入や運用への影響」「当面の扱い」列が sample の同表になく、一覧の列名（Flow ID／フロー名／利用者・運用者（Role
+      code）／放置時の業務影響）も雛形と異なるため、rulebook の「見出し順・表・記入欄は雛形に従う」に沿って sample を雛形の列に揃えるべきである。
+    message_ja: >-
+      雛形の「未決事項と後続作業」に追加された「受入や運用への影響」「当面の扱い」列が sample の同表になく、一覧の列名（Flow ID／フロー名／利用者・運用者（Role
+      code）／放置時の業務影響）も雛形と異なるため、rulebook の「見出し順・表・記入欄は雛形に従う」に沿って sample を雛形の列に揃えるべきである。
+  - id: F005
     severity: minor
     rule: vp-ux-language-consistency
     line: 12

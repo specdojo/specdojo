@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/itc-index-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 96
-graded_at: "2026-11-22T06:49:30.105Z"
+score: 95
+graded_at: "2026-11-23T01:50:17.051Z"
 graded_by: opus-review-executor
-content_hash: 2a5d9a9e7c305c5c9354c5d93b2f38da6622c2bb47f536ceb467138a7bafbc7e
+content_hash: 670ba9c58b780c99934f1c5d74025c5ee10db6c072c44866af9ee356dc85364d
 categories:
   purpose:
     score: 100
@@ -21,7 +21,7 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 83
   implementation:
     score: 100
   quality:
@@ -60,8 +60,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-implementation-readiness:
     level: 4
     score: 100
@@ -101,7 +101,7 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 3
+  minor: 4
   note: 1
 findings:
   - id: F001
@@ -117,6 +117,21 @@ findings:
       を後から変更する」は記述ガイドの「内部結合テスト共通の境界/依存の扱い」「ケース表の共通カラム」と主張が重なるため、記述ガイド側は手順に絞り、禁止の理由は禁止事項表に寄せると重複が減る。
   - id: F002
     severity: minor
+    rule: vp-arc-conciseness
+    line: 116
+    anchor: >-
+      - 分配表は「観点/条件」「採用理由」「主担当 `itc-<term>`」「従担当（任意）」「備考」の列で書く。従担当の `itc-<term>` は、ケース表のトレース列に主担当側の `case_id`
+      を記して分配結果を追跡できるようにする。
+    message: >-
+      「観点/条件の採用基準と対象別への分配方針（共通）」の「従担当の `itc-＜term＞` は、ケース表のトレース列に主担当側の `case_id`
+      を記して」は「ケース表の共通カラム」のトレース列の内容「従担当の場合は主担当側の `case_id`
+      も記す」と同じ規定を二重に述べているため、分配方針側は「ケース表の共通カラム」のトレース列への参照に置き換えると判断情報を失わずに重複を減らせる。
+    message_ja: >-
+      「観点/条件の採用基準と対象別への分配方針（共通）」の「従担当の `itc-＜term＞` は、ケース表のトレース列に主担当側の `case_id`
+      を記して」は「ケース表の共通カラム」のトレース列の内容「従担当の場合は主担当側の `case_id`
+      も記す」と同じ規定を二重に述べているため、分配方針側は「ケース表の共通カラム」のトレース列への参照に置き換えると判断情報を失わずに重複を減らせる。
+  - id: F003
+    severity: minor
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# 内部結合テストカタログ概要 作成ルール"
@@ -126,7 +141,7 @@ findings:
     message_ja: >-
       Frontmatter の `recipe` と `template` が `undecided` のままで、rulebook に対応する recipe・template の担い手が決まっておらず、Kata
       の構成要素間の責務分担を確認できないため、作成するか対象外とするかを決めて宣言すべきである。
-  - id: F003
+  - id: F004
     severity: minor
     rule: vp-ux-language-consistency
     line: 22
@@ -137,7 +152,7 @@ findings:
     message_ja: >-
       位置づけの図のラベル「テスト仕様-全体構成」「テスト仕様-対象別」が
       H1・導入文の「内部結合テストカタログ概要」「全体概要」およびサブグラフ名「テストカタログ」と表記がそろわず同一文書の呼称がゆれるため、「内部結合テストカタログ-概要」「内部結合テストカタログ-対象別」などに統一すべきである。
-  - id: F004
+  - id: F005
     severity: minor
     rule: vp-ops-release-readiness
     line: 1

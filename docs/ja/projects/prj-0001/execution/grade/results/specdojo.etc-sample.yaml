@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 89
-graded_at: "2026-11-22T01:44:34.221Z"
+graded_at: "2026-11-23T01:57:22.417Z"
 graded_by: opus-review-executor
-content_hash: e8e53f2f9238ba9f8025dbbe76dfe434218db3aba5905ca11f23d73a66045a6e
+content_hash: ea47f3f19e591b99ff7fbcd593c4095f33e2f86ef796df4e3d858ee5ff1491bc
 categories:
   purpose:
     score: 100
@@ -110,24 +110,24 @@ findings:
   - id: F001
     severity: minor
     rule: vp-pm-control-reporting
-    line: 40
+    line: 39
     anchor: >-
       _UNDECIDED_: [[specdojo:ifx-cmd-sample|レシート印刷コマンド連携仕様]] は上限30秒・送信前ビジー時の自動再試行（最大3回）を定めており、`etc-index`
-      の応答待ち10秒・自動再送なしと食い違う。本書は `etc-index` に従い、送信前ビジーも自動再送しない期待値にしている。ARC が両者の値を揃え、PO が承認した時点で、ケース
+      の応答待ち10秒・自動再送なしと食い違う。本書は `etc-index` に従い、送信前ビジーも自動再送しない期待値にしている。両者の値が揃った時点で、ケース
       `et-receipt-print-failure-handling-020` の期待値を更新する。
     message: "`_UNDECIDED_` の値の食い違いについて、登録簿（PJR）への転記候補であることと記録先が示されていない。進捗・課題の管理へどう引き継ぐかが読み取れない。"
     message_ja: "`_UNDECIDED_` の値の食い違いについて、登録簿（PJR）への転記候補であることと記録先が示されていない。進捗・課題の管理へどう引き継ぐかが読み取れない。"
   - id: F002
     severity: minor
     rule: vp-dev-testability
-    line: 32
+    line: 31
     anchor: "| 依存の扱い   | 正常・用紙切れ・権限不足・入力不正は検証機へ実接続する。無応答・応答 JSON の欠落・送信前ビジーは `receipt-print` スタブで再現する             |"
     message: 境界表で「入力不正は検証機へ実接続する」とし、概要でも終了コード `2` を挙げているが、終了コード `2` を判別するケースが条件・ケース表にない。契約観点「印刷結果の判別」の検証に漏れがある。
     message_ja: 境界表で「入力不正は検証機へ実接続する」とし、概要でも終了コード `2` を挙げているが、終了コード `2` を判別するケースが条件・ケース表にない。契約観点「印刷結果の判別」の検証に漏れがある。
   - id: F003
     severity: minor
     rule: vp-qe-verifiability
-    line: 85
+    line: 84
     anchor: >-
       | `et-receipt-print-failure-handling-030` | 入力: 明細2件。状態: 用紙切れ。環境: 検証機                         | 会計を確定し、印刷の終了を待つ |
       終了コード `1`、印字状態が `unknown`、会計確定の通知と釣銭表示は残る | 印字状態、販売 CLI の終了コード `0`、警告の表示 | 検証機に実接続（用紙を抜く）             |
@@ -141,7 +141,7 @@ findings:
   - id: F004
     severity: minor
     rule: vp-qe-verifiability
-    line: 83
+    line: 82
     anchor: >-
       | `et-receipt-print-failure-handling-010` | 入力: 明細2件の会計確定。状態: 用紙あり。環境: 印刷コマンドが無応答 | 会計を確定し、印刷の応答を待つ |
       10秒で打ち切り、販売記録が1件のまま、印刷失敗の警告を表示する        | 販売記録の件数、印刷要求の回数、警告の表示      | 無応答スタブ、応答待ち10秒、自動再送なし | TR-01,TR-05 |
@@ -162,10 +162,10 @@ findings:
   - id: F006
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 40
+    line: 39
     anchor: >-
       _UNDECIDED_: [[specdojo:ifx-cmd-sample|レシート印刷コマンド連携仕様]] は上限30秒・送信前ビジー時の自動再試行（最大3回）を定めており、`etc-index`
-      の応答待ち10秒・自動再送なしと食い違う。本書は `etc-index` に従い、送信前ビジーも自動再送しない期待値にしている。ARC が両者の値を揃え、PO が承認した時点で、ケース
+      の応答待ち10秒・自動再送なしと食い違う。本書は `etc-index` に従い、送信前ビジーも自動再送しない期待値にしている。両者の値が揃った時点で、ケース
       `et-receipt-print-failure-handling-020` の期待値を更新する。
     message: >-
       突き合わせ先 `docs/ja/specdojo/samples/ifx-cmd-sample.yaml` の `timeout_seconds: 30`・`retry.max_attempts: 3` と、本書と
@@ -176,7 +176,7 @@ findings:
   - id: F007
     severity: minor
     rule: vp-ux-language-consistency
-    line: 68
+    line: 67
     anchor: >-
       | `et-receipt-print-contract-030` | 入力: 明細2件。環境: スタブが終了コード `0` で結果 JSON を返さない | 会計を確定し、印刷の終了を待つ | 印字状態が
       `unknown`、印刷失敗の警告を表示、販売記録は1件   | 印字状態、販売記録件数、警告の表示     | スタブ         | TR-02       | P0     | automated |
