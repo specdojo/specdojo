@@ -1,0 +1,49 @@
+## レビュー結果
+
+verdict は `complete-with-findings` です。評価結果は最新で、完了を妨げる未充足事項はありません。grade の finding が 1 件残っているため、`complete` にはしません。
+
+### 評価結果の確認
+
+- 次の 2 つを実行し、どちらも出力なし・終了コード 0 でした。評価結果は最新です。
+  - `npx specdojo grade list --target kata --path docs/ja/specdojo/samples/imp-interface-sample.md --changed-only`
+  - `npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/imp-interface-rulebook.md --changed-only`
+- sample の grade は `verdict` が `pass`、`score` が 98 です。finding は minor 1 件（`F001`）です。
+- rulebook の grade は `verdict` が `pass`、`score` が 100 です。finding は minor 1 件（`F001`）です。
+
+### 判断根拠
+
+- sample の `based_on` は `specdojo:imp-business-sample` と `cr-2026-004` です。plan が示す `based_on` とも一致します。
+- 本文は 1 章で目的・適用範囲・対象外を示し、2 章で変更要求の概要を述べています。評価結果には、章構成・必須の表・禁止事項・共通サンプル文脈（駄菓子屋）への不適合という finding はありません。このため DC-001〜DC-004 は満たしていると扱いました。
+- sample の `F001`（`vp-qe-kata-conformance`、`based_on` の形式）を、rulebook で確認しました。
+  - rulebook の 38 行目は、`based_on` に変更要求の個票 ID（`PJR-XXXX`）を書くよう求めています。
+  - sample は `cr-2026-004` を使っており、形式が合っていません。
+  - ただし grade の評価は level 3 の `pass` で、章構成・必須の表・禁止事項には関わりません。必須要素の欠落や禁止事項への抵触ではないため、完了は妨げません。
+- rulebook の `F001`（`vp-ops-release-readiness`）は、`recipe` と `template` が undecided のままで、`target_format` の宣言もないという指摘です。
+  - この plan の参照ファイルでも recipe は `_MISSING_` です。
+  - sample のタスクの完了条件ではないため、完了は妨げません。
+
+### 未充足事項・改善指示
+
+- sample の `based_on` の `cr-2026-004` を、実在する個票 ID（`PJR-XXXX`）に直すか、この形式を許す旨を rulebook に追記してください。判断は rulebook の改善タスクか、横串の人の確認で行います。
+- rulebook の `recipe`・`template`・`target_format` を決めるか、作らないと明記してください。rulebook を `ready` にする前に行います。
+
+### approach に応じた確認
+
+fully-guided の観点で、確認できたのは次の点です。
+
+- 宣言された文書だけを参照し、frontmatter の `based_on` と plan の記載が一致していること。
+- 先頭 30 行まで読んで、磨き込み後の本文の構成が崩れていないこと。
+
+### 確認できなかった範囲
+
+- sample の 31 行目以降は読んでいません。表や章ごとの内容は grade の結果に依拠しました。
+- 先行する edit タスクの result は特定していません。
+- `lint:md` などの検査は親 runner が実行するため、実行していません。
+
+### decision
+
+`verdict: complete-with-findings`
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict は complete-with-findings。鮮度確認（sample・rulebook とも grade list --changed-only が出力なし・終了コード 0）で評価結果は最新。grade は両方 pass（sample 98、rulebook 100）。sample の based_on が cr-2026-004 で、rulebook が求める PJR-XXXX 形式と合わないという minor finding F001 は、完了を妨げないと判断した。rulebook の recipe・template・target_format が未決という minor finding F001 も同様。確認できなかった範囲: sample の 31 行目以降の本文は読まず、grade の結果に依拠した。先行する edit タスクの result は特定していない。","handoff":["sample の based_on の cr-2026-004 を実在の個票 ID（PJR-XXXX）へ直すか、この形式を許す旨を rulebook に追記する。","rulebook の recipe・template・target_format を決めるか、作らないと明記する（ready にする前）。"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/imp-interface-sample.md --changed-only","status":"passed","summary":"出力なし、終了コード 0。評価結果は最新。"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/imp-interface-rulebook.md --changed-only","status":"passed","summary":"出力なし、終了コード 0。評価結果は最新。"}]}
+</specdojo_executor_evidence>

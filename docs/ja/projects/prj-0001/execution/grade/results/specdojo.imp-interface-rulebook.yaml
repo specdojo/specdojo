@@ -4,47 +4,46 @@ document: specdojo:imp-interface-rulebook
 path: docs/ja/specdojo/rulebooks/imp-interface-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-rulebook
-verdict: needs-work
-score: 84
-graded_at: "2026-11-21T04:13:33.249Z"
-graded_by: opus-executor
-content_hash: ca1a42467f56ee366ea435b78ecb25f2ece7b421c59b4c63436affd3da13a3b2
+verdict: pass
+score: 100
+graded_at: "2026-11-23T15:48:09.857Z"
+graded_by: sonnet-review-executor
+content_hash: c8c0838b40eb06425d49dcfc031f6e0abf2b03429639580bcda960110be71833
 categories:
   purpose:
-    score: 88
+    score: 100
   operations:
-    score: 88
+    score: 94
   planning:
-    score: 83
+    score: 100
   business:
-    score: 83
+    score: 100
   architecture:
     score: 100
   usability:
-    score: 83
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 75
+    score: 100
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-publication-accountability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-plan-feasibility:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
     level: 4
     score: 100
@@ -52,11 +51,11 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
     level: 4
     score: 100
@@ -73,23 +72,23 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-verifiability:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-readability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 3
     score: 75
@@ -104,121 +103,14 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 13
+  major: 0
+  minor: 1
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-decision-readiness
-    line: 87
-    anchor: ""
-    message: >-
-      未解決事項に「判断者（Role code）」と「決定期限」を必須項目として加えるべきである。現状の論点・不足情報・影響・当面の扱いだけでは、誰がいつまでに承認・保留を判断するのかが読み取れず、sample
-      の決定期限・担当の列とも食い違う。
-    message_ja: >-
-      未解決事項に「判断者（Role code）」と「決定期限」を必須項目として加えるべきである。現状の論点・不足情報・影響・当面の扱いだけでは、誰がいつまでに承認・保留を判断するのかが読み取れず、sample
-      の決定期限・担当の列とも食い違う。
-  - id: F002
-    severity: minor
-    rule: vp-po-publication-accountability
-    line: 91
-    anchor: ""
-    message: 対応方針・未解決事項の担当欄に個人名や連絡先を書かず、Role code やメンバー定義の役割で表すことを禁止事項か記述ガイドで明記すべきである。今のままでは公開に不適切な情報が混ざっても防げない。
-    message_ja: 対応方針・未解決事項の担当欄に個人名や連絡先を書かず、Role code やメンバー定義の役割で表すことを禁止事項か記述ガイドで明記すべきである。今のままでは公開に不適切な情報が混ざっても防げない。
-  - id: F003
-    severity: minor
-    rule: vp-pm-plan-feasibility
-    line: 82
-    anchor: "- 影響度の尺度を定義せずに高・中・低を混在させない。"
-    message: "対応方針の各項目に完了条件（例: 互換試験の合格、連携先の受入確認）を書くよう求めるべきである。実施時期・担当・前提条件だけでは進捗と完了を判定できない。"
-    message_ja: "対応方針の各項目に完了条件（例: 互換試験の合格、連携先の受入確認）を書くよう求めるべきである。実施時期・担当・前提条件だけでは進捗と完了を判定できない。"
-  - id: F004
-    severity: minor
-    rule: vp-pm-dependency-risk
-    line: 26
-    anchor: >-
-      共通項目・必須性・型制約は [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従う。`type` は `project`、`rulebook` は
-      `specdojo:imp-interface-rulebook` とする。
-    message: 位置づけに、入力となる変更要求（登録簿の個票など）と、波及を委ねる後続文書（データ仕様・テスト仕様・運用手順にあたる成果物）の ID か名称を示すべきである。依存先が特定できず、スケジュールへの影響を追いにくい。
-    message_ja: 位置づけに、入力となる変更要求（登録簿の個票など）と、波及を委ねる後続文書（データ仕様・テスト仕様・運用手順にあたる成果物）の ID か名称を示すべきである。依存先が特定できず、スケジュールへの影響を追いにくい。
-  - id: F005
-    severity: minor
-    rule: vp-ba-requirements-completeness
-    line: 56
-    anchor: "### 6.4. 影響詳細一覧"
-    message: 目的と適用範囲に、対象外とする I/F や判断対象外の事項を書くよう加えるべきである。対象範囲だけでは、調べていないのか影響がないのかを読み手が区別できない。
-    message_ja: 目的と適用範囲に、対象外とする I/F や判断対象外の事項を書くよう加えるべきである。対象範囲だけでは、調べていないのか影響がないのかを読み手が区別できない。
-  - id: F006
-    severity: minor
-    rule: vp-ba-stakeholder-clarity
-    line: 82
-    anchor: "- 影響度の尺度を定義せずに高・中・低を混在させない。"
-    message: 対応方針の担当は適用先のメンバー定義にある Role code で書くと明記し、調整が必要な連携先（接続先）も書くよう求めるべきである。担当と調整相手が書き手ごとにばらつく。
-    message_ja: 対応方針の担当は適用先のメンバー定義にある Role code で書くと明記し、調整が必要な連携先（接続先）も書くよう求めるべきである。担当と調整相手が書き手ごとにばらつく。
-  - id: F007
-    severity: minor
-    rule: vp-dev-testability
-    line: 37
-    anchor: "| 4   | 影響詳細一覧   | ○    | 影響対象 I/F ごとの変更要否・影響度を記録する |"
-    message: >-
-      Frontmatter の検証に使う
-      schema（`docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml`）か検証手順への参照を示すべきである。今のままでは、作成後に何で適合を確かめればよいか分からない。
-    message_ja: >-
-      Frontmatter の検証に使う
-      schema（`docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml`）か検証手順への参照を示すべきである。今のままでは、作成後に何で適合を確かめればよいか分からない。
-  - id: F008
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 37
-    anchor: "| 4   | 影響詳細一覧   | ○    | 影響対象 I/F ごとの変更要否・影響度を記録する |"
-    message: 推奨 Frontmatter に、対象の変更要求を `based_on` で宣言することを明記すべきである。6.1 の変更要求識別子と sample の `based_on` の使い方を rulebook から説明できない。
-    message_ja: 推奨 Frontmatter に、対象の変更要求を `based_on` で宣言することを明記すべきである。6.1 の変更要求識別子と sample の `based_on` の使い方を rulebook から説明できない。
-  - id: F009
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 65
-    anchor: "| 対応方針    | 実施・代替・見送りなどの方針                           |"
-    message: >-
-      対応する sample の影響分析サマリが高・中・低の尺度を定義しておらず、6.3 と禁止事項「影響度の尺度を定義せずに高・中・低を混在させない」に反している。完成例が規則違反を手本として示しているため、sample を直すか
-      rulebook の要件を見直して整合させるべきである。
-    message_ja: >-
-      対応する sample の影響分析サマリが高・中・低の尺度を定義しておらず、6.3 と禁止事項「影響度の尺度を定義せずに高・中・低を混在させない」に反している。完成例が規則違反を手本として示しているため、sample を直すか
-      rulebook の要件を見直して整合させるべきである。
-  - id: F010
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 56
-    anchor: "### 6.4. 影響詳細一覧"
-    message: 6.1 は対象期間の明記を求めているが、sample の目的と適用範囲に対象期間がない。rulebook と sample のどちらかを直して整合させるべきである。
-    message_ja: 6.1 は対象期間の明記を求めているが、sample の目的と適用範囲に対象期間がない。rulebook と sample のどちらかを直して整合させるべきである。
-  - id: F011
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 87
-    anchor: ""
-    message: 6.6 は判断・対応への影響を求めているが、sample の未解決事項の表には影響の列がなく、代わりに決定期限・担当がある。rulebook と sample で項目をそろえるべきである。
-    message_ja: 6.6 は判断・対応への影響を求めているが、sample の未解決事項の表には影響の列がなく、代わりに決定期限・担当がある。rulebook と sample で項目をそろえるべきである。
-  - id: F012
-    severity: minor
-    rule: vp-ux-readability
-    line: 26
-    anchor: >-
-      共通項目・必須性・型制約は [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従う。`type` は `project`、`rulebook` は
-      `specdojo:imp-interface-rulebook` とする。
-    message: 位置づけに、この文書の前後にある成果物（変更要求の記録、データやテストの影響調査など）を wikilink か名称で示し、初めて読む人が次に見る文書をたどれるようにすべきである。
-    message_ja: 位置づけに、この文書の前後にある成果物（変更要求の記録、データやテストの影響調査など）を wikilink か名称で示し、初めて読む人が次に見る文書をたどれるようにすべきである。
-  - id: F013
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 82
-    anchor: "- 影響度の尺度を定義せずに高・中・低を混在させない。"
-    message: 対応方針の「重要度が高い項目から順に」の「重要度」を、6.3 と 6.4 で定義した「影響度」にそろえるべきである。別の尺度があるように読めてしまう。
-    message_ja: 対応方針の「重要度が高い項目から順に」の「重要度」を、6.3 と 6.4 で定義した「影響度」にそろえるべきである。別の尺度があるように読めてしまう。
-  - id: F014
-    severity: minor
     rule: vp-ops-release-readiness
-    line: 12
-    anchor: ""
+    line: 1
+    anchor: "# 影響調査（I/F）作成ルール"
     message: "`recipe` と `template` が undecided のままで、`target_format` の宣言もない。ready にする前に、これらを決めるか、作らないなら作らないと明記すべきである。"
     message_ja: "`recipe` と `template` が undecided のままで、`target_format` の宣言もない。ready にする前に、これらを決めるか、作らないなら作らないと明記すべきである。"
