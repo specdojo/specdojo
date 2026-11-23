@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 91
-graded_at: "2026-11-15T11:56:31.995Z"
-graded_by: sol-review-executor
-content_hash: 62f875108f284e098a9475bf5be682fa7cb7444bd6cf0dd84a9ea8cba81873a1
+graded_at: "2026-11-23T04:04:56.218Z"
+graded_by: opus-review-executor
+content_hash: 4c400ae1888916ef51dd34a7afb37d359f50f11a275e4d6fa21a6110d5cbcba2
 categories:
   purpose:
     score: 100
@@ -110,24 +110,25 @@ findings:
   - id: F001
     severity: minor
     rule: vp-arc-conciseness
-    line: 206
-    anchor: "```yaml"
+    line: 170
+    anchor: >-
+      - 同一システム内のランナーとエージェント間の契約など、TypeScript 型定義や JSON Schema が正本として存在する場合は、`files[].schema_ref` および `schema.references`
+      で正本パスを指し、`files[].required_fields` に必須キーを列挙して二重管理を防ぎます。
     message: >-
-      Shorten the good example to the writer/reader, canonical-schema reference, required-field, and recovery fragments
-      that demonstrate its stated decisions; the complete x-spec-meta, source/target, format, timing, and transport
-      boilerplate repeats definitions already supplied in sections 4 and 5 without adding a distinct judgment.
+      6.2「インライン定義と正本参照の選択」の後半（schema_ref・references で正本を指し、required_fields を列挙して二重管理を防ぐ）は、1.2 の 3 項目め、5.6 の 3
+      項目め、禁止事項の行と同じ主張の繰り返しです。6.2 は選択の判断基準（外部取引先かどうか、正本が存在するかどうか）に絞り、記述方法は 5.6 を参照する形にまとめてください。6.1 の 2 項目めの file・files
+      の使い分けも、3.1 の 3 項目めとの重複を整理してください。
     message_ja: >-
-      Shorten the good example to the writer/reader, canonical-schema reference, required-field, and recovery fragments
-      that demonstrate its stated decisions; the complete x-spec-meta, source/target, format, timing, and transport
-      boilerplate repeats definitions already supplied in sections 4 and 5 without adding a distinct judgment.
+      6.2「インライン定義と正本参照の選択」の後半（schema_ref・references で正本を指し、required_fields を列挙して二重管理を防ぐ）は、1.2 の 3 項目め、5.6 の 3
+      項目め、禁止事項の行と同じ主張の繰り返しです。6.2 は選択の判断基準（外部取引先かどうか、正本が存在するかどうか）に絞り、記述方法は 5.6 を参照する形にまとめてください。6.1 の 2 項目めの file・files
+      の使い分けも、3.1 の 3 項目めとの重複を整理してください。
   - id: F002
     severity: minor
     rule: vp-dev-testability
-    line: 310
+    line: 242
     anchor: >-
-      1. **構文・メタ情報・整形の検証**: 作成・更新時は Prettier による整形確認、YAML 構文および先頭 modeline（`# specdojo-schema: none
-      reason=no-ifx-file-schema` または対象スキーマ指定）の確認、ならびに `x-spec-meta` の必須項目（`type: api`、`status: draft`、`rulebook:
-      specdojo:ifx-file-rulebook`）を検査します。
+      1. **一覧・正本との照合**: `ifx-index` の `spec_ref` と `x-spec-meta.id` が一致し、`schema_ref` / `references`
+      の参照先が実在して、`files[].required_fields` が正本の必須項目と矛盾しないことを確かめます。欠落や不一致が 1 件でもあれば不合格とし、正本に合わせて直します。
     message: >-
       Add runnable formatting and YAML-validation commands with target-path placeholders, expected exit codes, and
       correction/retry instructions; explain how metadata declaration checking is invoked when the no-ifx-file-schema
@@ -139,28 +140,21 @@ findings:
   - id: F003
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 310
+    line: 147
     anchor: >-
-      1. **構文・メタ情報・整形の検証**: 作成・更新時は Prettier による整形確認、YAML 構文および先頭 modeline（`# specdojo-schema: none
-      reason=no-ifx-file-schema` または対象スキーマ指定）の確認、ならびに `x-spec-meta` の必須項目（`type: api`、`status: draft`、`rulebook:
-      specdojo:ifx-file-rulebook`）を検査します。
+      - `schema.references`（または `schema.schema_ref`、`files[].schema_ref`）に正本ファイルパスを記載し、各ファイルの契約上の必須項目は
+      `files[].required_fields` で宣言します。正本に定義済みの全フィールド構造を YAML 内へ重複転記しません。
     message: >-
-      The previous missing-key, file-structure, and api/file inconsistencies are resolved; the remaining minor issue is
-      that section 8.1 requires status: draft during creation and updates although section 4.2 permits ready and
-      deprecated. Restrict draft to initial authoring or define lifecycle-aware update checks consistent with
-      human-controlled status transitions.
+      5.6 の 3 項目めで代替として挙げる `schema.schema_ref` は、5.1・5.2 の表と 1.2 のどこにも定義がありません。`schema.references`
+      も型（オブジェクトのキーと値か、配列か）と要素の構造が定義されていません。参照キーを一つに統一するか、型と使い分けを表に追加してください。
     message_ja: >-
-      The previous missing-key, file-structure, and api/file inconsistencies are resolved; the remaining minor issue is
-      that section 8.1 requires status: draft during creation and updates although section 4.2 permits ready and
-      deprecated. Restrict draft to initial authoring or define lifecycle-aware update checks consistent with
-      human-controlled status transitions.
+      5.6 の 3 項目めで代替として挙げる `schema.schema_ref` は、5.1・5.2 の表と 1.2 のどこにも定義がありません。`schema.references`
+      も型（オブジェクトのキーと値か、配列か）と要素の構造が定義されていません。参照キーを一つに統一するか、型と使い分けを表に追加してください。
   - id: F004
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 105
-    anchor: >-
-      - 同梱の完成例（sample）は、業務背景・運用手順・異常系リカバリの解説を伴う Markdown 文書（Frontmatter の `type: api`、`rulebook:
-      specdojo:ifx-file-rulebook`）として構成し、その本文中に本章および第5章の必須構造を満たす YAML 定義を掲載します。
+    line: 1
+    anchor: "# 外部ファイル連携仕様作成ルール"
     message: >-
       This rulebook prescribes a Markdown companion sample for target_format: yaml, whereas document-metadata-standard
       requires samples to use the deliverable format and rulebook-authoring-standard ties sample extensions to
