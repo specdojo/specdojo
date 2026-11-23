@@ -62,6 +62,9 @@ Register item: PJR-7WPD — テストの文書を frontend\_test\_note.md に改
 - 原因は、登録簿の表から読んだエスケープ済みの `item.title` を `Register item:` の行へそのまま出していたこと。
 - `src/shared/text.ts` に `unescapeMarkdownCell` を追加し、`src/exec/run/register-worktree.ts` と `src/exec/run/register-resume.ts` の `Register item:` の行（4 か所）で使うようにした。一覧と個票のエスケープは変えていない。
 - `tests/src/shared/text.test.ts` に `_`・`*`・`|` の復元のテストを追加した。
+- 2 回目の実行: `src/exec/run/register-mode.ts` の `[dry-run] register item:` の行と、`src/exec/run/register-core.ts` の `Register item:` の行（1 回目に漏れていた箇所）でも `unescapeMarkdownCell` を使うようにした。
+- 探した方法と結果: `grep -rnE "(write|log|error|warn)\(.*\.title" src` で、`unescapeMarkdownCell` を通さずタイトルを出力する箇所を探した。上の 2 か所以外に該当はなかった。commit の題と plan の `name` は元のタイトルまたは別経路で、対象外とした。
+- テスト: `tests/src/exec/register-pipeline-e2e.integration.test.ts` の dry-run のテストで、索引のタイトルを `pipeline\_test item` にして、`[dry-run] register item:` の行が `pipeline_test item` と出ることを確かめるようにした（統合テストは親 runner が実行する）。
 - 検証は親 runner の `npm run test:unit` などに委ねる。
 
 ### 5.1. CHANGELOG に書く事項
