@@ -4,74 +4,73 @@ document: specdojo:pm-risk-register-sample
 path: docs/ja/specdojo/samples/pm-risk-register-sample.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-sample
-verdict: fail
-score: 63
-graded_at: "2026-11-21T05:25:33.402Z"
-graded_by: opus-executor
-content_hash: 4f988167bf337bd56344365e99b203a13bb930a82ed05ccec17c8fc79d6878a2
+verdict: needs-work
+score: 93
+graded_at: "2026-11-23T18:55:48.630Z"
+graded_by: sonnet-review-executor
+content_hash: f75b50ff081a3b30b2e21bee5015a474574f549727d474dc0b442ac261b6d1aa
 categories:
   purpose:
-    score: 63
+    score: 100
   operations:
-    score: 81
+    score: 88
   planning:
-    score: 67
-  business:
-    score: 67
-  architecture:
     score: 92
+  business:
+    score: 100
+  architecture:
+    score: 100
   usability:
-    score: 75
+    score: 92
   implementation:
-    score: 75
+    score: 100
   quality:
-    score: 50
+    score: 83
   consistency:
-    score: 25
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-decision-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-po-publication-accountability:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-business-value:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-requirements-completeness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-change-impact:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-testability:
     level: 4
     score: 100
@@ -79,14 +78,14 @@ viewpoints:
     level: 2
     score: 50
   vp-qe-omissions-consistency:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 0
-    score: 0
+    level: 4
+    score: 100
   vp-ux-readability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 3
     score: 75
@@ -94,8 +93,8 @@ viewpoints:
     level: 2
     score: 50
   vp-ops-operability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -103,198 +102,44 @@ viewpoints:
     level: 4
     score: 100
 finding_counts:
-  blocker: 1
-  major: 7
-  minor: 18
+  blocker: 0
+  major: 2
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-purpose-alignment
-    line: 35
-    anchor: "- `pm-change-request-log`"
-    message: "関連ドキュメントに、リスクの根拠となるプロジェクト概要やスケジュール（例: `prj-overview`）への参照がなく、各リスクがどの目的・目標に影響するかを辿れない。"
-    message_ja: "関連ドキュメントに、リスクの根拠となるプロジェクト概要やスケジュール（例: `prj-overview`）への参照がなく、各リスクがどの目的・目標に影響するかを辿れない。"
+    rule: vp-pm-plan-feasibility
+    line: 68
+    anchor: >-
+      | RK-001   | 低減     | 2026-04-15                    | 連続会計の試行で _UNDECIDED_ 件を続けて記録し、販売記録の漏れが 0 件、1 件の会計確定が
+      _UNDECIDED_ 秒以内に終わる |
+    message: RK-001 の完了条件の試行件数と会計確定の秒数が `_UNDECIDED_` のままで、完了を判定できない。具体値を入れる。
+    message_ja: RK-001 の完了条件の試行件数と会計確定の秒数が `_UNDECIDED_` のままで、完了を判定できない。具体値を入れる。
   - id: F002
     severity: major
-    rule: vp-po-decision-readiness
-    line: 18
-    anchor: "- 優先度: 発生確率と影響度の積で判定"
-    message: 評価基準に、再評価の条件と評価を変える判断をする者が記載されておらず、優先度や対応方針を誰が承認・変更するかを判断できない。
-    message_ja: 評価基準に、再評価の条件と評価を変える判断をする者が記載されておらず、優先度や対応方針を誰が承認・変更するかを判断できない。
+    rule: vp-qe-verifiability
+    line: 68
+    anchor: >-
+      | RK-001   | 低減     | 2026-04-15                    | 連続会計の試行で _UNDECIDED_ 件を続けて記録し、販売記録の漏れが 0 件、1 件の会計確定が
+      _UNDECIDED_ 秒以内に終わる |
+    message: RK-001 の完了条件の件数と秒数が `_UNDECIDED_` のままで、rulebook 6.4 の「確認の手段と合格の基準」を満たさず合否を判定できない。具体値を確定する。
+    message_ja: RK-001 の完了条件の件数と秒数が `_UNDECIDED_` のままで、rulebook 6.4 の「確認の手段と合格の基準」を満たさず合否を判定できない。具体値を確定する。
   - id: F003
-    severity: major
-    rule: vp-pm-plan-feasibility
-    line: 24
-    anchor: "| RK-001   | 低減     | 負荷試験追加     | 2026-04-15 | 閾値以内 |"
-    message: "完了条件「閾値以内」に確認手段と合格基準（例: 負荷試験で想定ピーク時の応答時間 N 秒以内）がなく、rulebook の「完了条件は確認の手段と合格の基準で書く」を満たさないため、タスク完了を判定できない。"
-    message_ja: "完了条件「閾値以内」に確認手段と合格基準（例: 負荷試験で想定ピーク時の応答時間 N 秒以内）がなく、rulebook の「完了条件は確認の手段と合格の基準で書く」を満たさないため、タスク完了を判定できない。"
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 71
+    anchor: >-
+      | RK-004   | 低減     | 2026-04-04（移管済み）        | 課題 IS-002
+      へ移管し、追跡を課題ログに任せた                                                                      |
+    message: RK-004 の対応方針が「低減」なのに、完了条件は課題 IS-002 への移管で、方針区分と内容が一致しない。移管した旨を方針の側でも分かる表記にそろえる。
+    message_ja: RK-004 の対応方針が「低減」なのに、完了条件は課題 IS-002 への移管で、方針区分と内容が一致しない。移管した旨を方針の側でも分かる表記にそろえる。
   - id: F004
-    severity: minor
-    rule: vp-pm-dependency-risk
-    line: 30
-    anchor: "- 更新トリガー: 新規兆候発生、期限超過、影響度変更"
-    message: 顕在化を判定するトリガーと、顕在化時に `pm-issue-log` へ起票する条件が書かれておらず、リスクから課題・スケジュールへの影響の連携を判断できない。
-    message_ja: 顕在化を判定するトリガーと、顕在化時に `pm-issue-log` へ起票する条件が書かれておらず、リスクから課題・スケジュールへの影響の連携を判断できない。
-  - id: F005
-    severity: minor
-    rule: vp-pm-control-reporting
-    line: 30
-    anchor: "- 更新トリガー: 新規兆候発生、期限超過、影響度変更"
-    message: モニタリングに、見直しが行われなかったときの連絡先（報告先の Role code）が記載されていない。
-    message_ja: モニタリングに、見直しが行われなかったときの連絡先（報告先の Role code）が記載されていない。
-  - id: F006
-    severity: minor
-    rule: vp-ba-business-value
-    line: 11
-    anchor: "| RK-001   | 繁忙期の性能劣化 | 中       | 高     | 高     | 負荷試験追加     | 開発リード | 対応中     |"
-    message: 影響度「高」とした理由（どの業務がどう止まるか）が記載されておらず、リスクの業務上の重大さを利用者視点で確認できない。
-    message_ja: 影響度「高」とした理由（どの業務がどう止まるか）が記載されておらず、リスクの業務上の重大さを利用者視点で確認できない。
-  - id: F007
-    severity: major
-    rule: vp-ba-requirements-completeness
-    line: 18
-    anchor: "- 優先度: 発生確率と影響度の積で判定"
-    message: 「発生確率と影響度の積で判定」としているが、低/中/高の段階ごとの判定条件と、組み合わせから優先度を決める対応表がなく、rulebook 6.3 の要求を満たさず優先度を再現できない。
-    message_ja: 「発生確率と影響度の積で判定」としているが、低/中/高の段階ごとの判定条件と、組み合わせから優先度を決める対応表がなく、rulebook 6.3 の要求を満たさず優先度を再現できない。
-  - id: F008
-    severity: minor
-    rule: vp-ba-stakeholder-clarity
-    line: 12
-    anchor: "| RK-002   | 業務側確認の遅延 | 高       | 中     | 高     | 合意期限の前倒し | PM         | 監視中     |"
-    message: RK-002 の「業務側」が誰か（店主代表・家族利用者代表など）が記載されておらず、確認・合意の相手を特定できない。
-    message_ja: RK-002 の「業務側」が誰か（店主代表・家族利用者代表など）が記載されておらず、確認・合意の相手を特定できない。
-  - id: F009
-    severity: minor
-    rule: vp-arc-technical-constraints
-    line: 5
-    anchor: 本書は、駄菓子屋の販売管理システム構築プロジェクトの潜在リスクと対応策を管理する最小サンプルである。
-    message: "本書がプロジェクト登録簿を使わない単独のリスク登録簿の例であり、登録簿を使う場合は `item_type: risk` の個票から `register build` で生成する、という前提が概要に示されていない。"
-    message_ja: "本書がプロジェクト登録簿を使わない単独のリスク登録簿の例であり、登録簿を使う場合は `item_type: risk` の個票から `register build` で生成する、という前提が概要に示されていない。"
-  - id: F010
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 11
-    anchor: "| RK-001   | 繁忙期の性能劣化 | 中       | 高     | 高     | 負荷試験追加     | 開発リード | 対応中     |"
-    message: リスク登録簿一覧と対応計画の両方に同じ「対応策」が書かれ二重管理になっているため、一方に寄せる。
-    message_ja: リスク登録簿一覧と対応計画の両方に同じ「対応策」が書かれ二重管理になっているため、一方に寄せる。
-  - id: F011
-    severity: minor
-    rule: vp-dev-implementation-readiness
-    line: 11
-    anchor: "| RK-001   | 繁忙期の性能劣化 | 中       | 高     | 高     | 負荷試験追加     | 開発リード | 対応中     |"
-    message: 優先度「高」やステータス「対応中」「監視中」が `priority`・`item_status` の値ではなく、このまま転用すると値の不一致を招く。
-    message_ja: 優先度「高」やステータス「対応中」「監視中」が `priority`・`item_status` の値ではなく、このまま転用すると値の不一致を招く。
-  - id: F012
-    severity: minor
-    rule: vp-dev-change-impact
-    line: 5
-    anchor: 本書は、駄菓子屋の販売管理システム構築プロジェクトの潜在リスクと対応策を管理する最小サンプルである。
-    message: 登録簿を使うプロジェクトでは `pm-risk-register.md` が生成物で直接編集しないことへの言及がなく、sample を手本に生成物を手修正する誤用を招く。
-    message_ja: 登録簿を使うプロジェクトでは `pm-risk-register.md` が生成物で直接編集しないことへの言及がなく、sample を手本に生成物を手修正する誤用を招く。
-  - id: F013
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 24
-    anchor: "| RK-001   | 低減     | 負荷試験追加     | 2026-04-15 | 閾値以内 |"
-    message: 「閾値以内」という表現は具体的数値や判定基準が不明確であり、客観的な検証可能性が低い。
-    message_ja: 「閾値以内」という表現は具体的数値や判定基準が不明確であり、客観的な検証可能性が低い。
-  - id: F014
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 25
-    anchor: "| RK-002   | 回避     | 合意期限の前倒し | 2026-04-10 | 合意完了 |"
-    message: 「合意完了」という表現は、誰が誰に、何を合意すれば完了とするのかが不明確である。
-    message_ja: 「合意完了」という表現は、誰が誰に、何を合意すれば完了とするのかが不明確である。
-  - id: F015
-    severity: major
-    rule: vp-qe-verifiability
-    line: 18
-    anchor: "- 優先度: 発生確率と影響度の積で判定"
-    message: 低/中/高の値に対して「積」で優先度を判定するとしているが、段階の数値化や対応表がなく、優先度が正しいかを判定できない。
-    message_ja: 低/中/高の値に対して「積」で優先度を判定するとしているが、段階の数値化や対応表がなく、優先度が正しいかを判定できない。
-  - id: F016
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 5
-    anchor: 本書は、駄菓子屋の販売管理システム構築プロジェクトの潜在リスクと対応策を管理する最小サンプルである。
-    message: 概要に「見直し頻度」と「責任者」の記述が不足している。
-    message_ja: 概要に「見直し頻度」と「責任者」の記述が不足している。
-  - id: F017
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 17
-    anchor: "- 影響度: 低/中/高"
-    message: 評価基準に「再評価条件」の記述が不足している。
-    message_ja: 評価基準に「再評価条件」の記述が不足している。
-  - id: F018
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 30
-    anchor: "- 更新トリガー: 新規兆候発生、期限超過、影響度変更"
-    message: モニタリングに「状態更新ルール」の記述が不足している。
-    message_ja: モニタリングに「状態更新ルール」の記述が不足している。
-  - id: F019
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 11
-    anchor: "| RK-001   | 繁忙期の性能劣化 | 中       | 高     | 高     | 負荷試験追加     | 開発リード | 対応中     |"
-    message: 優先度「高」、ステータス「対応中」「監視中」は rulebook 6.2 が求める `priority`・`item_status` の値ではなく、言い換え禁止に反する。
-    message_ja: 優先度「高」、ステータス「対応中」「監視中」は rulebook 6.2 が求める `priority`・`item_status` の値ではなく、言い換え禁止に反する。
-  - id: F020
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 34
-    anchor: "- `pm-issue-log`"
-    message: 関連ドキュメントが文書 ID（wikilink）ではなく `pm-issue-log` 等の名称で記載され、rulebook 6.6 の「文書 ID で示す」に合わない。
-    message_ja: 関連ドキュメントが文書 ID（wikilink）ではなく `pm-issue-log` 等の名称で記載され、rulebook 6.6 の「文書 ID で示す」に合わない。
-  - id: F021
-    severity: blocker
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# リスク登録簿 サンプル"
-    message: >-
-      本書は rulebook
-      に基づき手動作成の形式をとっているが、対応するテンプレート（specdojo:pm-risk-register-template）では自動生成ビューとして定義されており、成果物の種別と責務が根本的に矛盾している。
-    message_ja: >-
-      本書は rulebook
-      に基づき手動作成の形式をとっているが、対応するテンプレート（specdojo:pm-risk-register-template）では自動生成ビューとして定義されており、成果物の種別と責務が根本的に矛盾している。
-  - id: F022
-    severity: minor
-    rule: vp-ux-readability
-    line: 5
-    anchor: 本書は、駄菓子屋の販売管理システム構築プロジェクトの潜在リスクと対応策を管理する最小サンプルである。
-    message: 概要が管理対象の 1 文のみで、記録単位・見直し頻度・形態（単独登録簿）が示されず、初見の読者が本書の使いどころを把握しにくい。
-    message_ja: 概要が管理対象の 1 文のみで、記録単位・見直し頻度・形態（単独登録簿）が示されず、初見の読者が本書の使いどころを把握しにくい。
-  - id: F023
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 11
-    anchor: "| RK-001   | 繁忙期の性能劣化 | 中       | 高     | 高     | 負荷試験追加     | 開発リード | 対応中     |"
-    message: "`担当` 列が「開発リード」「PM」と表記ゆれしており、メンバー定義の Role code に統一されていない。"
-    message_ja: "`担当` 列が「開発リード」「PM」と表記ゆれしており、メンバー定義の Role code に統一されていない。"
-  - id: F024
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 25
-    anchor: "| RK-002   | 回避     | 合意期限の前倒し | 2026-04-10 | 合意完了 |"
-    message: RK-002 の対応方針「回避」に対し、対応策「合意期限の前倒し」はリスク要因を除去せず発生確率を下げる低減策であり、方針区分と内容が一致しない。
-    message_ja: RK-002 の対応方針「回避」に対し、対応策「合意期限の前倒し」はリスク要因を除去せず発生確率を下げる低減策であり、方針区分と内容が一致しない。
-  - id: F025
     severity: major
     rule: vp-ops-release-readiness
-    line: 1
-    anchor: "# リスク登録簿 サンプル"
-    message: rulebook・template との種別不整合や評価基準の不足が未解消であり、ready 化の前提が満たされていない。
-    message_ja: rulebook・template との種別不整合や評価基準の不足が未解消であり、ready 化の前提が満たされていない。
-  - id: F026
-    severity: minor
-    rule: vp-ops-operability
-    line: 29
-    anchor: "- 監視周期: 週次"
-    message: 週次の見直しが行われなかった場合の連絡先と、顕在化時に課題ログへ起票する手順がなく、運用の例外時の対応が分からない。
-    message_ja: 週次の見直しが行われなかった場合の連絡先と、顕在化時に課題ログへ起票する手順がなく、運用の例外時の対応が分からない。
-level_corrections:
-  - viewpoint: vp-qe-omissions-consistency
-    original_level: 2
-    corrected_level: 1
+    line: 68
+    anchor: >-
+      | RK-001   | 低減     | 2026-04-15                    | 連続会計の試行で _UNDECIDED_ 件を続けて記録し、販売記録の漏れが 0 件、1 件の会計確定が
+      _UNDECIDED_ 秒以内に終わる |
+    message: RK-001 の完了条件に `_UNDECIDED_` が残っており、ready 化の前提である未解決事項の解消が済んでいない。
+    message_ja: RK-001 の完了条件に `_UNDECIDED_` が残っており、ready 化の前提である未解決事項の解消が済んでいない。

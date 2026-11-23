@@ -4,31 +4,30 @@ document: specdojo:pm-risk-register-rulebook
 path: docs/ja/specdojo/rulebooks/pm-risk-register-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-rulebook
-verdict: needs-work
-score: 80
-graded_at: "2026-11-21T05:24:16.808Z"
-graded_by: opus-executor
-content_hash: 83eb6d06155aa903b84a045007abde91d95499593c6a857b601632d1fadd6331
+verdict: pass
+score: 97
+graded_at: "2026-11-23T18:56:20.719Z"
+graded_by: sonnet-review-executor
+content_hash: f34b835d52cfd8386af52c7cbf4539192015f31a7611ee7684675963925fa1f9
 categories:
   purpose:
     score: 100
   operations:
-    score: 75
+    score: 100
   planning:
-    score: 83
+    score: 100
   business:
-    score: 92
+    score: 100
   architecture:
     score: 100
   usability:
     score: 92
   implementation:
-    score: 75
+    score: 100
   quality:
-    score: 67
+    score: 92
   consistency:
-    score: 50
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -37,23 +36,23 @@ viewpoints:
     level: 4
     score: 100
   vp-po-publication-accountability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-pm-plan-feasibility:
     level: 4
     score: 100
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-business-value:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
     level: 4
     score: 100
@@ -67,23 +66,23 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-change-impact:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-testability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-verifiability:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 1
-    score: 25
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -94,137 +93,35 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-operability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
-  major: 4
-  minor: 9
+  major: 0
+  minor: 2
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-po-publication-accountability
-    line: 46
-    anchor: "- リスクID、内容、発生確率、影響度、優先度、対応策、担当、ステータスを一覧にする。"
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 66
+    anchor: "- 回避・低減・受容・移転のどれを採るかと、具体の対応、期限、完了条件を書く。完了条件は確認の手段と合格の基準で書く。"
     message: >-
-      承認責任はドキュメントメタ情報標準に任せることで解消したが、担当列を必須にしながら個人名・連絡先・非公開のリスク内容（要員や取引先に関する情報など）を書かない制限も、担当を Role code
-      で書く指定もないため、公開リポジトリに不適切な情報が載るおそれがある。禁止事項か記述ガイドに公開してよい情報の範囲を加える必要がある。
+      sample の対応計画で、RK-001 の完了条件に `_UNDECIDED_` が残り、RK-004
+      の完了条件も確認の手段と合格の基準になっていない。完成例として、本書の完了条件の規定（確認の手段と合格の基準）と整合していない。
     message_ja: >-
-      承認責任はドキュメントメタ情報標準に任せることで解消したが、担当列を必須にしながら個人名・連絡先・非公開のリスク内容（要員や取引先に関する情報など）を書かない制限も、担当を Role code
-      で書く指定もないため、公開リポジトリに不適切な情報が載るおそれがある。禁止事項か記述ガイドに公開してよい情報の範囲を加える必要がある。
+      sample の対応計画で、RK-001 の完了条件に `_UNDECIDED_` が残り、RK-004
+      の完了条件も確認の手段と合格の基準になっていない。完成例として、本書の完了条件の規定（確認の手段と合格の基準）と整合していない。
   - id: F002
     severity: minor
-    rule: vp-pm-dependency-risk
-    line: 51
-    anchor: "- 発生確率と影響度の段階ごとの判定条件と、その組み合わせから優先度を決める対応表を書く。"
-    message: 導入文で抑えるべき影響に納期を挙げているが、影響度の判定条件にスケジュールや後続成果物への影響を観点として含める指定がなく、リスクのスケジュールへの影響を一貫して識別できない。判定観点の例として明記する必要がある。
-    message_ja: 導入文で抑えるべき影響に納期を挙げているが、影響度の判定条件にスケジュールや後続成果物への影響を観点として含める指定がなく、リスクのスケジュールへの影響を一貫して識別できない。判定観点の例として明記する必要がある。
-  - id: F003
-    severity: minor
-    rule: vp-pm-control-reporting
-    line: 57
-    anchor: "- 受容する場合は、受容を判断した者と、許容する残存影響を書く。"
-    message: 受容の判断を決定記録へ転記するかと、課題・変更要求へ移したあとの元のリスクの扱い（ステータスをクローズにするか継続監視するか）が定義されておらず、リスクと決定・課題の記録が重複したり宙に浮いたりするおそれがある。
-    message_ja: 受容の判断を決定記録へ転記するかと、課題・変更要求へ移したあとの元のリスクの扱い（ステータスをクローズにするか継続監視するか）が定義されておらず、リスクと決定・課題の記録が重複したり宙に浮いたりするおそれがある。
-  - id: F004
-    severity: minor
-    rule: vp-ba-requirements-completeness
-    line: 15
-    anchor: "- 本書の判断基準は、個票と、登録簿を使わない単独のリスク登録簿の両方に適用する。"
-    message: 判断基準を個票にも適用するとしながら、本文構成 6 章（とくに共通の評価基準・モニタリング・概要）を個票運用ではどこに書くかの対応が示されておらず、個票運用の利用者が満たすべき要件を確認できない。
-    message_ja: 判断基準を個票にも適用するとしながら、本文構成 6 章（とくに共通の評価基準・モニタリング・概要）を個票運用ではどこに書くかの対応が示されておらず、個票運用の利用者が満たすべき要件を確認できない。
-  - id: F005
-    severity: minor
-    rule: vp-dev-implementation-readiness
-    line: 14
-    anchor: >-
-      - プロジェクト登録簿を使うプロジェクトでは、リスク 1 件を `item_type: risk` の個票に書き、`controls/generated/pm-risk-register.md` は `register
-      build` が個票から生成する。生成物の Frontmatter は `rulebook: specdojo:pjr-rulebook` とし、直接編集しない（[[specdojo:pjr-rulebook|プロジェクト登録簿
-      作成ルール]] に従う）。
-    message: 個票で発生確率・影響度・対応策・期限・完了条件・受容判断者を、どの Frontmatter フィールドまたは本文の章に書くかが示されておらず、pjr-rulebook への参照だけでは個票作成時の入力先を特定できない。
-    message_ja: 個票で発生確率・影響度・対応策・期限・完了条件・受容判断者を、どの Frontmatter フィールドまたは本文の章に書くかが示されておらず、pjr-rulebook への参照だけでは個票作成時の入力先を特定できない。
-  - id: F006
-    severity: minor
-    rule: vp-dev-change-impact
-    line: 21
-    anchor: "- リスク ID は登録簿では `PJR-XXXX`、単独の登録簿では `RK-NNN` とし、再利用しない。"
-    message: >-
-      単独の登録簿（`RK-NNN`）からプロジェクト登録簿（`PJR-XXXX`）へ移るときの ID の対応付け、既存の `pm-risk-register.md`
-      と生成ビューの衝突の扱いが定義されておらず、運用を切り替える際の影響を判断できない。
-    message_ja: >-
-      単独の登録簿（`RK-NNN`）からプロジェクト登録簿（`PJR-XXXX`）へ移るときの ID の対応付け、既存の `pm-risk-register.md`
-      と生成ビューの衝突の扱いが定義されておらず、運用を切り替える際の影響を判断できない。
-  - id: F007
-    severity: minor
-    rule: vp-dev-testability
-    line: 14
-    anchor: >-
-      - プロジェクト登録簿を使うプロジェクトでは、リスク 1 件を `item_type: risk` の個票に書き、`controls/generated/pm-risk-register.md` は `register
-      build` が個票から生成する。生成物の Frontmatter は `rulebook: specdojo:pjr-rulebook` とし、直接編集しない（[[specdojo:pjr-rulebook|プロジェクト登録簿
-      作成ルール]] に従う）。
-    message: >-
-      文書の lint はリポジトリの検証に任せて解消したが、個票を変えたあとに `register build`
-      を再実行して生成物の差分がないことを確認する手順と、`item_type`・`priority`・`item_status` の値を検証するコマンドと期待結果が示されていない。
-    message_ja: >-
-      文書の lint はリポジトリの検証に任せて解消したが、個票を変えたあとに `register build`
-      を再実行して生成物の差分がないことを確認する手順と、`item_type`・`priority`・`item_status` の値を検証するコマンドと期待結果が示されていない。
-  - id: F008
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 1
-    anchor: "# リスク登録簿 作成ルール"
-    message: テンプレートに、本節で定義されている必須本文構成（概要〜関連ドキュメント）が含まれておらず、整合性が取れていない。
-    message_ja: テンプレートに、本節で定義されている必須本文構成（概要〜関連ドキュメント）が含まれておらず、整合性が取れていない。
-  - id: F009
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 14
-    anchor: >-
-      - プロジェクト登録簿を使うプロジェクトでは、リスク 1 件を `item_type: risk` の個票に書き、`controls/generated/pm-risk-register.md` は `register
-      build` が個票から生成する。生成物の Frontmatter は `rulebook: specdojo:pjr-rulebook` とし、直接編集しない（[[specdojo:pjr-rulebook|プロジェクト登録簿
-      作成ルール]] に従う）。
-    message: >-
-      14〜15 行目で 2 つの運用（生成ビューと単独の登録簿）を説明したため前回の blocker の根本的な矛盾は解消したが、Frontmatter の `template` が pjr-rulebook
-      に従う生成ビューを指したままで、6 章構成の単独の登録簿に対応するテンプレートがなく、rulebook とテンプレートの対応がまだ一致していない。
-    message_ja: >-
-      14〜15 行目で 2 つの運用（生成ビューと単独の登録簿）を説明したため前回の blocker の根本的な矛盾は解消したが、Frontmatter の `template` が pjr-rulebook
-      に従う生成ビューを指したままで、6 章構成の単独の登録簿に対応するテンプレートがなく、rulebook とテンプレートの対応がまだ一致していない。
-  - id: F010
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 51
-    anchor: "- 発生確率と影響度の段階ごとの判定条件と、その組み合わせから優先度を決める対応表を書く。"
-    message: >-
-      sample が改訂後のルールを満たしていない（評価基準の対応表と判定条件、再評価の条件と判断者、確認の手段と合格の基準を備えた完了条件、`item_status` の値によるステータス、見直しが行われなかったときの連絡先、文書
-      ID による関連ドキュメントと影響を受ける成果物がない）ため、完成例として rulebook と整合していない。
-    message_ja: >-
-      sample が改訂後のルールを満たしていない（評価基準の対応表と判定条件、再評価の条件と判断者、確認の手段と合格の基準を備えた完了条件、`item_status` の値によるステータス、見直しが行われなかったときの連絡先、文書
-      ID による関連ドキュメントと影響を受ける成果物がない）ため、完成例として rulebook と整合していない。
-  - id: F011
-    severity: minor
     rule: vp-ux-language-consistency
-    line: 74
-    anchor: "| 対応責任者を未記載にする                     | 対応遅延が発生するため           |"
-    message: 禁止事項の「対応責任者」と一覧の必須列の「担当」が同じ責務を指しているのに表記が異なり、さらに「リスクID」と「リスク ID」も混在しているため、用語を統一する必要がある。
-    message_ja: 禁止事項の「対応責任者」と一覧の必須列の「担当」が同じ責務を指しているのに表記が異なり、さらに「リスクID」と「リスク ID」も混在しているため、用語を統一する必要がある。
-  - id: F012
-    severity: minor
-    rule: vp-ops-operability
-    line: 62
-    anchor: "- 見直しが行われなかったときの連絡先を書く。"
-    message: 見直しが行われなかったときの連絡先は求めるようになったが、期限超過や見直し漏れのあとに取る是正（再評価の実施、担当の再割り当て、ステータスの更新）が規定されておらず、連絡を受けた側の対応が決まらない。
-    message_ja: 見直しが行われなかったときの連絡先は求めるようになったが、期限超過や見直し漏れのあとに取る是正（再評価の実施、担当の再割り当て、ステータスの更新）が規定されておらず、連絡を受けた側の対応が決まらない。
-  - id: F013
-    severity: minor
-    rule: vp-ops-agent-boundary
-    line: 57
-    anchor: "- 受容する場合は、受容を判断した者と、許容する残存影響を書く。"
-    message: 受容の判断者と評価変更の判断者を人間の役割（PO や PM など）に限る規定がなく、agent が残存リスクの受容を判断して記録する余地が残っているため、受容の最終判断は人間が担うと明記する必要がある。
-    message_ja: 受容の判断者と評価変更の判断者を人間の役割（PO や PM など）に限る規定がなく、agent が残存リスクの受容を判断して記録する余地が残っているため、受容の最終判断は人間が担うと明記する必要がある。
+    line: 50
+    anchor: "- リスク ID、内容、発生確率、影響度、優先度、対応策、担当、ステータスを一覧にする。"
+    message: 「リスク ID」（本書）と sample の列名「リスクID」の表記が揺れているため、どちらかに統一する必要がある。
+    message_ja: 「リスク ID」（本書）と sample の列名「リスクID」の表記が揺れているため、どちらかに統一する必要がある。
