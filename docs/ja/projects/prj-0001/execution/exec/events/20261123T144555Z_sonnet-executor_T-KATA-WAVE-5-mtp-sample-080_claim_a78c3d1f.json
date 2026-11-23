@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-23T14:45:55Z",
+  "type": "claim",
+  "task_id": "T-KATA-WAVE-5-mtp-sample-080",
+  "by": "sonnet-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "QE"
+  }
+}
