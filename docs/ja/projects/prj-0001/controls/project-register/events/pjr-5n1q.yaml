@@ -60,3 +60,29 @@
       from: ""
       to: 完了条件
   previous_event_id: reg_ed9e415387f44cc1a8522b92418959d7
+- v: 1
+  id: reg_732ec81bc04b457d9ba890958636d3de
+  ts: "2026-11-23T03:47:26Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_dfc6a74375a746aaaaf58b892c71c0fa
+- v: 1
+  id: reg_8a1ce0bf1d7142c7bc44ce6947cccc59
+  ts: "2026-11-23T04:00:25Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_732ec81bc04b457d9ba890958636d3de

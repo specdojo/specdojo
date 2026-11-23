@@ -181,9 +181,13 @@ specdojo dashboard build
 オーケストレーターがセッションや LLM を切り替えるときは、引き継ぎを `handoff` として起票します。git で管理されるため、ほかのマシンや LLM からも同じ手順で読めます。開いている handoff は、まだ読まれていない引き継ぎを表します。
 
 ```bash
-specdojo register add --type handoff --title "夜のセッションから朝のセッションへ" --topic night-to-morning
+specdojo orchestrator handoff --title "夜のセッションから朝のセッションへ" --topic night-to-morning --dry-run
+specdojo orchestrator handoff --title "夜のセッションから朝のセッションへ" --topic night-to-morning --commit
 specdojo register close --id PJR-AB12 --by <受け取った主体>
 ```
+
+- 終えるセッションは `orchestrator handoff` で起票します。「進行中」と「判断待ち」の章は登録簿と exec の状態から組み立てるため書き写しません。引き継ぎ元と先・有効な承認の範囲・注意点は `_TODO_` のまま起票されるので、起票の後に `register update --section` で書きます。章を手で全部書く場合は `register add --type handoff` も使えます。
+- 始めるセッションは、`generated/pjr-handoffs.md` で開いている handoff を探して読み、受け取った主体を `--by` にして close します。開いている handoff があるまま `orchestrator handoff` を流すと、その ID を標準エラー出力に示します。
 
 - 個票の章（引き継ぎ元と先・有効な承認の範囲・進行中・判断待ち・注意点）の書き方は [プロジェクト登録簿 作成ルール](../rulebooks/pjr-rulebook.md) に従います。利用者の返事を待っていることは `question` として別に起票し、判断待ちの章には参照だけを書きます。
 - 状態は `open`（受け取り待ち）と `done`（受け取った）だけです。次のセッションが読んだら、受け取った主体を `--by` にして `register close` します。`start` / `wait` / `review` / `reject` / `defer` はエラー終了します。

@@ -31,6 +31,8 @@ export type ExternalRegisterAddOptions = {
   approach?: string;
   target?: string[];
   source?: string[];
+  section?: string[];
+  sectionFile?: string[];
   from?: string[];
   dependsOn?: string[];
   id?: string;
@@ -200,6 +202,11 @@ export function delegateExternalRegisterAdd(
   if (!opts.commit) {
     throw new Error(
       `Cross-repository register add for external project ${alias} requires --commit.`,
+    );
+  }
+  if ((opts.section?.length ?? 0) > 0 || (opts.sectionFile?.length ?? 0) > 0) {
+    throw new Error(
+      `Cross-repository register add for external project ${alias} does not support --section.`,
     );
   }
 

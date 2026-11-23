@@ -532,8 +532,8 @@ specdojo schedule strategy generate \
 | `--commit-type <type>`       | Conventional Commits の type を指定（`update` は `-` で削除）       | `add` / `update`                                 |
 | `--commit-scope <scope>`     | Conventional Commits の scope を指定（`update` は `-` で削除）      | `add` / `update`                                 |
 | `--topic <slug>`             | 個票ファイル名と文書 ID の論点部分を指定・更新する                  | `add` / `update`                                 |
-| `--section <name>`           | 差し替える個票の章の名前（見出し番号を除いた名前）                  | `update`                                         |
-| `--section-file <path>`      | 差し替え後の章の本文を含む Markdown ファイルのパス                  | `update`                                         |
+| `--section <name>`           | 差し替える個票の章の名前（見出し番号を除いた名前）                  | `add` / `update`                                 |
+| `--section-file <path>`      | 差し替え後の章の本文を含む Markdown ファイルのパス                  | `add` / `update`                                 |
 | `--commit`                   | `register lifecycle` 枠内で記帳・再生成・commitを行う               | `add` / `update` / `renumber` / 遷移             |
 | `-m, --message <message>`    | `--commit` のcommitメッセージを上書きする（繰り返し可）             | `add` / `update` / `renumber` / 遷移             |
 | `--dry-run`                  | 書き込みを行わず変更対象を表示する                                  | `add` / `update` / `renumber` / 遷移 / `migrate` |
@@ -596,6 +596,8 @@ specdojo register update --project prj-0001 --id PJR-AB12 \
 specdojo register update --project prj-0001 --id PJR-AB12 \
   --section 作業内容 --section-file tmp/new-tasks.md --commit
 ```
+
+`register add` でも `--section` と `--section-file` を指定でき、template から作った個票の章を起票と同時に埋めます。どちらも繰り返し指定でき、指定した順に組にします。数が合わない場合や、template にない章名・読み込めないファイル・Markdown 見出しを含むファイルを指定した場合は、個票を作らずにエラーになります。外部 project への `register add` では使えません。
 
 `register add --from <ID>` は、起票の元になった登録項目を個票 Frontmatter の `derived_from` へ記録します。`--from` は複数回指定でき、同じ project の項目は `PJR-XXXX`、別 project の項目は `<project-id>:PJR-XXXX` を使います。自己参照、未設定の project、存在しない項目は書き込み前に拒否します。別 project の項目は、その project の `integration_branch`（省略時は `project/<project-id>/develop`）の Git tree を読んで存在を確認します。`register update --from <ID>` は一覧を置換し、`--from -` で削除します。`register build` は `generated/pjr-derived-items.md` を生成し、元の項目から派生先を逆引きできるようにします。decision から todo を起票するときも、この関係を追跡先として使います。
 
@@ -1337,6 +1339,27 @@ specdojo orchestrator night --project prj-0001 \
 ```bash
 specdojo orchestrator integration-tests --project prj-0001
 ```
+
+`orchestrator handoff` は、セッションや LLM を切り替えるときの引き継ぎを `handoff` の個票として起票します。「進行中」の章は、終わっていない `exec queue` の列、exec run のロックを持つ実行中の run、`in-progress`・`review`・`waiting` の register 項目から組み立てます。「判断待ち」の章には、開いている `question` と `waiting` の項目への参照を入れます。引き継ぎ元と先・有効な承認の範囲・注意点の章は `_TODO_` のまま残すため、起票した後に手で書きます。
+
+```bash
+specdojo orchestrator handoff --project prj-0001 --dry-run
+specdojo orchestrator handoff --project prj-0001 --by specdojo-orchestrator --commit
+```
+
+| オプション                | 内容                                                                                 |
+| ------------------------- | ------------------------------------------------------------------------------------ |
+| `--title <title>`         | 題。省略時は `オーケストレーターの引き継ぎ（YYYY-MM-DD HH:MM UTC）`                  |
+| `--topic <topic>`         | 個票ファイル名の論点部分。省略時は `orchestrator-handoff-YYYYMMDD-HHMM`（UTC）       |
+| `--owner <owner>`         | 担当                                                                                 |
+| `--priority <priority>`   | 優先度。既定は `medium`                                                              |
+| `--by <actor>`            | event に記録する actor                                                               |
+| `--reason <text>`         | event の理由                                                                         |
+| `--dry-run`               | 書き込まずに個票の中身を表示する                                                     |
+| `--commit`                | `register add --commit` と同じく、register lifecycle 枠内で起票・再生成・commit する |
+| `-m, --message <message>` | `--commit` の commit メッセージを上書きする（繰り返し可）                            |
+
+起票は `register add --type handoff` に組み立てた章を `--section` / `--section-file` で渡して行うため、ID の採番・event・生成ビュー・commit の扱いは `register add` と同じです。開いている（受け取り待ちの）handoff がほかにあるときは、その ID と題を標準エラー出力に示してから起票します。受け取った側は、読んだ後に受け取った主体を `--by` にして `register close` します。
 
 routine `rtn-nightly-integration-tests`（毎晩 4 時）が `job-nightly-integration-tests` を起動します。job は `task.steps` と `lock_wait_seconds` を使い、実行中の run がプロジェクト実行ロックを持つ間は最大 3 時間待ちます。時間切れは失敗ではなく延期として記録されます。任意のシェルのコマンドを流せる routine の action は用意していません。
 
