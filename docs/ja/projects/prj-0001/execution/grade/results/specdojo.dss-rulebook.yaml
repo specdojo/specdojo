@@ -4,19 +4,18 @@ document: specdojo:dss-rulebook
 path: docs/ja/specdojo/rulebooks/dss-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-rulebook
 verdict: pass
-score: 94
-graded_at: "2026-11-21T03:51:04.606Z"
-graded_by: opus-executor
-content_hash: 2a9f67f24a13d8e42aab35317da1d40b700818775e6455485c0d200726cd9e52
+score: 99
+graded_at: "2026-11-23T17:43:47.336Z"
+graded_by: sonnet-review-executor
+content_hash: d1fb217ab35efdb382e2f645bd239c4d30e1091ca42e23b34125ef0fe74cc8d7
 categories:
   purpose:
-    score: 88
+    score: 100
   operations:
     score: 100
   planning:
-    score: 92
+    score: 100
   business:
     score: 100
   architecture:
@@ -24,9 +23,9 @@ categories:
   usability:
     score: 92
   implementation:
-    score: 88
+    score: 100
   quality:
-    score: 92
+    score: 100
   consistency:
     score: 100
 viewpoints:
@@ -34,8 +33,8 @@ viewpoints:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-publication-accountability:
     level: 4
     score: 100
@@ -46,8 +45,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-control-reporting:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-business-value:
     level: 4
     score: 100
@@ -67,8 +66,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-change-impact:
     level: 4
     score: 100
@@ -82,8 +81,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -105,51 +104,13 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 5
+  minor: 1
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-decision-readiness
-    line: 141
-    anchor: "- 変更時はトークン・部品・適用画面・検証への影響を示します。例外には対象規則、理由、影響範囲、検証結果、期限、判断記録と失効時の扱いを残します。"
-    message: 例外や設計採用について判断記録は求めているが、承認・却下を担う判断者（Role code）の明記を求めていないため、記述ガイドの例外の項目に判断者を加え、採用判断の責任者を読み取れるようにする。
-    message_ja: 例外や設計採用について判断記録は求めているが、承認・却下を担う判断者（Role code）の明記を求めていないため、記述ガイドの例外の項目に判断者を加え、採用判断の責任者を読み取れるようにする。
-  - id: F002
-    severity: minor
-    rule: vp-pm-control-reporting
-    line: 141
-    anchor: "- 変更時はトークン・部品・適用画面・検証への影響を示します。例外には対象規則、理由、影響範囲、検証結果、期限、判断記録と失効時の扱いを残します。"
-    message: 変更時の影響と例外の記録は求めているが、検証不適合・規則変更・例外をそれぞれ登録簿の課題・変更要求・決定のどれへ転記するかの区別を求めていないため、転記先と担当を書く要求を加える。
-    message_ja: 変更時の影響と例外の記録は求めているが、検証不適合・規則変更・例外をそれぞれ登録簿の課題・変更要求・決定のどれへ転記するかの区別を求めていないため、転記先と担当を書く要求を加える。
-  - id: F003
-    severity: minor
-    rule: vp-dev-implementation-readiness
-    line: 31
-    anchor: >-
-      - プロダクト成果物は `docs/ja/product/040-system-design/`、プロジェクト限定なら設計ドメイン配下に置き、ID は `<project-id>:dss-<term>`
-      とします。分冊時は共通定義を参照します。
-    message: >-
-      プロジェクト限定の DSS の配置先が「設計ドメイン配下」とだけ書かれ、docs-structure-guide
-      に定義のない語のため具体的なディレクトリを決められないので、プロジェクト配下の章ディレクトリを明記するか、配置規則の正本を参照する。
-    message_ja: >-
-      プロジェクト限定の DSS の配置先が「設計ドメイン配下」とだけ書かれ、docs-structure-guide
-      に定義のない語のため具体的なディレクトリを決められないので、プロジェクト配下の章ディレクトリを明記するか、配置規則の正本を参照する。
-  - id: F004
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 139
-    anchor: "- 推奨列: 対象の規則・正本キー / 対応する要求 / 確認方法 / 合格条件 / 担当。トークンの静的確認・部品表示・試作操作・利用者評価を使い分け、規則への適合と操作性目標の達成を別に確かめます。"
-    message: >-
-      検証の推奨列に合格条件を挙げているが、sample の検証の表に合格条件の列がなく型と完成例が対応していないため、合格条件を規則の表の確認条件で代替してよいかを rulebook に明記するか、sample
-      の検証の表に合格条件を加えて整合させる。
-    message_ja: >-
-      検証の推奨列に合格条件を挙げているが、sample の検証の表に合格条件の列がなく型と完成例が対応していないため、合格条件を規則の表の確認条件で代替してよいかを rulebook に明記するか、sample
-      の検証の表に合格条件を加えて整合させる。
-  - id: F005
-    severity: minor
     rule: vp-ux-language-consistency
-    line: 10
-    anchor: "- 各決まりに適用条件・必須または禁止する内容・検証方法を示します。"
-    message: DSS で定める対象を「決まり」と「規則」（規則 ID）で混在して呼んでおり、同じ概念か読み手が迷うため、どちらかに統一するか、「決まり」と「規則」の関係を定義する。
-    message_ja: DSS で定める対象を「決まり」と「規則」（規則 ID）で混在して呼んでおり、同じ概念か読み手が迷うため、どちらかに統一するか、「決まり」と「規則」の関係を定義する。
+    line: 124
+    anchor: "- 悪い例: 「失敗時は赤くし、一定時間後に消す。」（色依存で回復前に情報を失う）"
+    message: 「決まり」と「規則」が列名などで併用されており、読み手が迷う余地が残っているため、列名を「規則」に統一するか、使い分けを一文で補う。
+    message_ja: 「決まり」と「規則」が列名などで併用されており、読み手が迷う余地が残っているため、列名を「規則」に統一するか、使い分けを一文で補う。
