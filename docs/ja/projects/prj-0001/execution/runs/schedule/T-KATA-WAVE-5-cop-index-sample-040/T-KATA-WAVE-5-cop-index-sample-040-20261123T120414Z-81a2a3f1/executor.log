@@ -1,0 +1,15 @@
+grade の指摘 F001・F002・F003・F005 に沿って `cop-index-rulebook.md` を直しました。F004 は sample の問題で、この段では sample を編集できないため直していません。変更したのは `docs/ja/specdojo/rulebooks/cop-index-rulebook.md` だけで、Prettier で整形済みです。lint と schema の検査は、このあと親 runner が流すので、ここでは実行していません。
+
+| finding | 対応 |
+| --- | --- |
+| F001 | 「担当者、連絡系統」の連絡先はロールの窓口で書くことにしました。個人の電話番号などはリポジトリの外の内部連絡網に置き、本書にはその名称だけを書きます。記述ガイドに「担当者、連絡系統」の節を足し、判断基準と良い例・悪い例を書きました。 |
+| F002 | 全体方針に「当日の決定と課題の引き継ぎ」を足しました。GO/NO-GO の判定結果とロールバックの発動は `pm-decision-log`、当日の障害と積み残しは `pm-issue-log` へ、各判定点の判断者が切替の終了報告までに転記します。あわせて「共通の運用」からこの事項を外しました。 |
+| F003 | 「推奨 Frontmatter 項目」に、編集後は `npm run lint:fm` で rulebook の宣言と照合すること、終了コード 0 で合格、エラーは示された宣言値・許可キーに合わせて直すことを書きました。 |
+| F005 | 記述ガイドに「ロールバック手順」と「障害時判断、エスカレーション」の節を足しました。全体方針に「記載レベル」を足し、具体項目を 4 つにしました。 |
+| F004 | 未対応です。sample が 10 章の構成を満たしていないという指摘で、sample を書き直す後の段で扱う必要があります。 |
+
+必須章のうち「ファイル命名・ID規則」は項目が 2 つのままです。今回の指摘の対象ではなく、`cop-<term>` の命名は `cop-rulebook` 側の扱いなので、理由なく書き換えないことにしました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"cop-index-rulebook を grade の指摘 F001・F002・F003・F005 に沿って直した。全体方針に記載レベルと当日の決定・課題の転記先（`pm-decision-log`・`pm-issue-log`、判定点の判断者が終了報告までに転記）を足した。Frontmatter の検証手順（`npm run lint:fm`、終了コード 0、エラー時の直し方）を書いた。連絡先はロールの窓口に限り、個人情報はリポジトリ外の内部連絡網を参照させることにした。記述ガイドに「担当者、連絡系統」「ロールバック手順」「障害時判断、エスカレーション」の節を足した。F004 は sample の不備で、この段では sample を変更しないため申し送った。","handoff":["F004（major/vp-qe-kata-conformance）は未対応。specdojo:cop-index-sample が rulebook の 10 章（概要（index）〜関連ドキュメント）を持たず、目的と適用範囲・入力情報など旧形式のままになっている。sample を書き直す段で、駄菓子屋の販売管理システムの切替を題材に 10 章を具体化する必要がある（この段は rulebook だけが対象のため見送った）。","直さなかった箇所: 「ファイル命名・ID規則」は具体項目が 2 つのまま。grade の指摘対象ではなく、`cop-<term>` の命名は specdojo:cop-rulebook 側の扱いなので、理由のない書き換えはしなかった。","specdojo:cop-rulebook の「共通の運用」にも「未決事項と当日の課題の登録簿への引き継ぎは document-metadata-standard に従う」という同じ文言が残っている。F002 と同じ指摘を受けうるため、cop-rulebook を見直すときに cop-index の「当日の決定と課題の引き継ぎ」を参照する形にそろえることを検討する。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/rulebooks/cop-index-rulebook.md","status":"passed","summary":"Prettier で整形した。エラーはない。"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更したのは docs/ja/specdojo/rulebooks/cop-index-rulebook.md だけで、plan・result・個票は変更していないため"}]}
+</specdojo_executor_evidence>
