@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-PROJECT-prj-overview-sample-060
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-PROJECT-prj-overview-sample-060/T-KATA-WAVE-6-PROJECT-prj-overview-sample-060-20261123T063235Z-b5cbb9d2/plan.md
   started_at: "2026-11-23T06:32:43.631Z"
+  completed_at: "2026-11-23T19:47:14.519Z"
   agent: opus-executor
   execution: agent
   approach: template-maintenance
@@ -20,16 +21,19 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- prd-overview-template を rulebook および sample に合わせて更新しました。
+- 説明文を骨組みに絞り込み、背景における問題表、価値仮説のリスト、および 3 組の前提条件（背景、依存関係、判断責任等）の構造を揃えました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/templates/prj-overview-template.md`: rulebook と sample の構造に合わせ、説明文を骨組み（プレースホルダ形式）に絞り込みました。具体的には、背景における問題を表形式、価値仮説をリスト形式、前提条件を 3 つのセクション（現状の背景、依存条件、判断責任・方針）に整理しました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- テンプレート自身の `specdojo.status` は既存の `ready` のまま。template-authoring-standard は `draft` と定めているが、状態の変更は人が判断する。
+- 適用外の検証: `npm run validate:history-links`（変更したのは template だけで、plan・result・個票は変更していない）
+- 適用外の検証: `npm run validate:schema:file`（変更したファイルは Markdown だけ）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+rulebook と sample の内容に基づき、`docs/ja/specdojo/templates/prj-overview-template.md` の構造を同期しました。詳細な説明を排除してプレースホルダとしての骨組みに特化させ、文書の役割の割り当てや承認に関する記述を除外する等の rulebook に沿った調整を行っています。
