@@ -26,6 +26,13 @@ import {
   gitignorePatternsForLayouts,
 } from "../shared/specdojo-gitignore.js";
 import { specdojoPackageRootDir } from "../shared/package-paths.js";
+import { runDevcontainerHostScript } from "../devcontainer/host-script.js";
+import {
+  detectHostOs,
+  environmentNextSteps,
+  presetIncludesTmux,
+  writeLocalTmuxScript,
+} from "../init/environment.js";
 
 const PROVIDERS = ["claude", "codex", "opencode", "copilot"] as const;
 type InitProvider = (typeof PROVIDERS)[number];
@@ -58,6 +65,7 @@ export type InitOptions = {
   lefthook?: boolean;
   slidev?: boolean;
   devcontainerPreset?: string;
+  tmux?: boolean;
   workspaceName?: string;
   dryRun?: boolean;
 };
@@ -75,6 +83,8 @@ export type InitAnswers = {
   lefthook: boolean;
   slidev: boolean;
   devcontainerPreset?: DevcontainerPreset;
+  /** tmux でセッションを保つ（Dev Container なら tmux とホストの本体スクリプト、手元なら local-tmux.sh）。 */
+  tmux: boolean;
 };
 
 export interface InitPrompter {
@@ -223,6 +233,7 @@ export async function collectInitAnswers(
       lefthook: !!options.lefthook,
       slidev: options.slidev ?? (devcontainer && devcontainerPreset === "full"),
       ...(devcontainerPreset ? { devcontainerPreset } : {}),
+      tmux: options.tmux ?? (devcontainer && presetIncludesTmux(devcontainerPreset)),
     });
     for (const [label, used] of [
       ["project", !options.project],
@@ -237,6 +248,7 @@ export async function collectInitAnswers(
       ["lefthook=no", !options.lefthook],
       [`slidev=${answers.slidev ? "yes" : "no"}`, options.slidev === undefined],
       ["devcontainer-preset=recommended", devcontainer && options.devcontainerPreset === undefined],
+      [`tmux=${answers.tmux ? "yes" : "no"}`, options.tmux === undefined],
     ] as const) {
       if (used) process.stdout.write(`Using default: ${label}\n`);
     }
@@ -308,6 +320,12 @@ export async function collectInitAnswers(
             (answer) => parseDevcontainerPreset(answer.trim() || "recommended")!,
           )
         : explicitDevcontainerPreset;
+    const tmuxDefault = options.tmux ?? (devcontainer && presetIncludesTmux(devcontainerPreset));
+    const tmux = await promptUntilValid(
+      prompter,
+      `Keep agent sessions running with tmux (${devcontainer ? "Dev Container" : "macOS / WSL / Linux"})? [${tmuxDefault ? "Y/n" : "y/N"}]: `,
+      (answer) => parseBoolean(answer, tmuxDefault),
+    );
     const lefthook = await promptUntilValid(
       prompter,
       `Create Git hooks with lefthook? [${lefthookDefault ? "Y/n" : "y/N"}]: `,
@@ -332,6 +350,7 @@ export async function collectInitAnswers(
       lefthook,
       slidev,
       ...(devcontainerPreset ? { devcontainerPreset } : {}),
+      tmux,
     });
   } finally {
     prompter.close();
@@ -785,10 +804,13 @@ export async function runInit(
       editors: [],
       ollama: false,
       cron: false,
-      tmux: false,
+      tmux: answers.tmux,
       force: false,
       dryRun,
     });
+    if (answers.tmux) await runDevcontainerHostScript({ packageRoot, repoRoot, dryRun });
+  } else if (answers.tmux) {
+    await writeLocalTmuxScript({ packageRoot, repoRoot, dryRun });
   }
   if (answers.lefthook) {
     await runLefthookScaffold({
@@ -823,7 +845,14 @@ export async function runInit(
       `  ${execAgents ? "3" : "2"}. Review and commit the files created by specdojo init.\n` +
       (answers.catalog
         ? ""
-        : "When deliverables are ready, configure catalog_path in .specdojo/specdojo.config.json and run npx specdojo catalog scaffold (see docs/ja/specdojo/guides/quick-start-guide.md).\n"),
+        : "When deliverables are ready, configure catalog_path in .specdojo/specdojo.config.json and run npx specdojo catalog scaffold (see docs/ja/specdojo/guides/quick-start-guide.md).\n") +
+      "Environment:\n" +
+      environmentNextSteps(
+        { devcontainer: answers.devcontainer, tmux: answers.tmux },
+        detectHostOs(),
+      )
+        .map((step) => `  - ${step}\n`)
+        .join(""),
   );
 }
 
@@ -850,6 +879,8 @@ export function registerInitCommand(program: Command): void {
       "--devcontainer-preset <name>",
       "Apply a Dev Container preset when creating it (minimal|recommended|full; none aliases minimal)",
     )
+    .option("--tmux", "Keep agent sessions with tmux (default with the recommended or full preset)")
+    .option("--no-tmux", "Do not set up tmux, including with the recommended or full preset")
     .option(
       "--workspace-name <name>",
       "Override the Dev Container workspace parent name used under /workspaces",
