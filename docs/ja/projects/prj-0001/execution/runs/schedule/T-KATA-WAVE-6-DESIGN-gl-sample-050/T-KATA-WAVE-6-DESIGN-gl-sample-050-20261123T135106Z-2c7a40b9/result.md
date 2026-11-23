@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-DESIGN-gl-sample-050
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-DESIGN-gl-sample-050/T-KATA-WAVE-6-DESIGN-gl-sample-050-20261123T135106Z-2c7a40b9/plan.md
   started_at: "2026-11-23T13:51:20.375Z"
+  completed_at: "2026-11-23T14:05:43.798Z"
   agent: opus-executor
   execution: agent
   approach: sample-maintenance
@@ -20,16 +21,20 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- 用語集の完成例である `docs/ja/specdojo/samples/gl-sample.yaml` を、`grade` による指摘事項（F001〜F006）に基づいて拡充・修正しました。
+- 具体的には、'顧客' および '常連客' の用語追加、全用語における `status` の一貫性の確保、`id` 命名規則の修正、および『商品』の正本に関する案内を追加しました。
+- また、'安全在庫' と '発注点' の境界に関する注記の追加、および用語の表記（'店主代表'）の統一を行っています。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/samples/gl-sample.yaml`: `grade` の指摘事項 F001〜F006 に基づき、用語の追加（顧客・常連客）、`status` の記述の統一、`id` 規則への適合、および「商品」の正本（`gl-common`）への案内、安全在庫と発注点の境界に関する注記の追加、および店主に関する表記の統一を行いました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 冒頭のコメントで「商品」の正本として挙げた gl-common（`tm-common-product`）は、同梱の sample にはない。rulebook の「記述ガイド」にある「別ファイルの商品は文書リンクで案内する」に合わせた仮の名前。共通用語集の sample を作るか、コメントの書き方を変えるかを今後判断する。
+- rulebook の変更案（任意）: 用語の `status` をすべての用語に付けるのか、`candidate` と `deprecated` だけに付けて unspecifed を採用済みとみなすのかを rulebook の「terms の項目」に書くと、今回の F002 のような揺れを防げる。
+- rulebook の変更案（任意）: 用語の status をすべての用語に付けるのか、candidate と deprecated だけに付けて無指定を採用済みとみなすのかを rulebook の「terms の項目」に書くと、今回の F002 のような揺れを防げる。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+`grade` の指摘に基づき、単一店舗の販売・在庫・つけ管理を扱う sample としての厚みを出し、完成例としての有用性を高めました。
