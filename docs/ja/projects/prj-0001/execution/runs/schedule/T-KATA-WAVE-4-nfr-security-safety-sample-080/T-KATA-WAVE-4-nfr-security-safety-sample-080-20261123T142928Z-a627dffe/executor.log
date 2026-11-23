@@ -1,0 +1,9 @@
+`docs/ja/specdojo/samples/nfr-security-safety-sample.md` から、重複していた 1 文を削りました。判断に要る内容は何も落としていません。
+
+- **削った箇所:** 「2. 適用範囲・脅威前提」の主体の表の導入段落にあった「権限区分の付与と剥奪の運用は〜に従う」の文です。同じ参照が「6. 関連ドキュメント導線」の運用方針の行に残っています。
+- **残した箇所:** 概要の目的リンクは、導線表の「根拠」行と重なりますが、判断の根拠なので残しました。要件の `備考` と節冒頭の `_UNDECIDED_` の説明も、役割が違うので残しました。
+- **検証:** `markdownlint-cli2` と Prettier のチェックは通りました。`lint:md` などの親 runner の検査は実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"重複していた 1 文（権限区分運用の参照）を削除。意味と必須情報は維持。","handoff":[],"validations":[{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/nfr-security-safety-sample.md","status":"passed","summary":"0 issues"},{"command":"npx prettier --check docs/ja/specdojo/samples/nfr-security-safety-sample.md","status":"passed","summary":"formatted"}],"condense_records":[{"location":"2. 適用範囲・脅威前提 の主体の表の導入段落","category":"repetition","action":"delete","reason":"権限区分の付与・剥奪の運用方針への参照は、6. 関連ドキュメント導線の運用方針の行に同じリンクと目的があり、重複のため削除。意味・判断情報は維持","cause":{"type":"document"}},{"location":"1. 概要 のプロジェクト概要リンク","category":"canonical-restatement","action":"retain","reason":"概要の目的との対応付けに必要な根拠で、判断に要るため残す","cause":{"type":"document"}},{"location":"3. 機密性・安全性要件一覧の導入文と nfr-sec-012 の備考","category":"repetition","action":"retain","reason":"導入文は一般規則、備考は当該要件固有の暫定判定で役割が異なるため残す","cause":{"type":"document"}}]}
+</specdojo_executor_evidence>
