@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-PROJECT-pm-issue-log-sample-090
   mode: review
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-PROJECT-pm-issue-log-sample-090/T-KATA-WAVE-6-PROJECT-pm-issue-log-sample-090-20261123T113817Z-f8c5eb3d/plan.md
   started_at: "2026-11-23T11:38:19.784Z"
+  completed_at: "2026-11-23T11:43:37.795Z"
   agent: sonnet-review-executor
   execution: agent
   approach: fully-guided
@@ -19,20 +20,27 @@ specdojo:
 
 ## 1. 評価結果の確認
 
-_TODO_: 評価結果サイドカーのパス、鮮度確認で実行したコマンドとその出力（`content_hash` が現在の成果物と一致するか）、grade の `verdict` / `score` / finding 件数を記入する。評価結果が最新でない、または評価不能の場合は、その事実と理由を記入する。
+### 評価結果の確認 1. `docs/ja/specdojo/samples/pm-issue-log-sample.md` (`--target kata`) - コマンド: `specdojo grade list --target kata --path docs/ja/specdojo/samples/pm-issue-log-sample.md --changed-only / --incomplete` - 出力: `出力なし、終了コード 0(最新・完了)` - verdict: `pass`, score: 96, finding 件数: 2 2. `docs/ja/specdojo/rulebooks/pm-issue-log-rulebook.md` (`--target kata`) - コマンド: `specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/pm-issue-log-rulebook.md --changed-only / --incomplete` - 出力: `出力なし、終了コード 0(最新・完了)` - verdict: `pass`, score: 98, finding 件数: 2 3. `docs/ja/specdojo/templates/pm-issue-log-template.md` (`--target kata`) - コマンド: `specdojo grade list --target kata --path docs/ja/specdojo/templates/pm-issue-log-template.md --changed-only / --incomplete` - 出力: `出力なし、終了コード 0(最新・完了)` - verdict: `pass`, score: 100, finding 件数: 1
 
 ## 2. 判断根拠
 
-_TODO_: 変更内容・plan・実行記録・完了条件・最新の finding を照合した内容と、verdict を選んだ理由を記入する。finding が残るのに完了とする場合は、その finding が今回の完了を妨げない理由を記入する。参照は `[[id]]` 形式（Obsidian wikilink）で記載し、行番号アンカーや絶対パスは使わない。
+- 評価結果の鮮度は、すべての対象（`sample`, `rulebook`, `template`）において `specdojo grade list` の出力が空であることを確認したため、最新であることを確認した。
+- `docs/ja/specdojo/samples/pm-issue-log-sample.md` について、`done_criteria` の `DC-001`〜`DC-004` を grade 結果に基づき照合したところ、`grade` の finding が品質に関するものであり、完了条件を満たしていることを確認した。
+- `docs/ja/specdojo/rulebooks/pm-issue-log-rulebook.md` について、`done_criteria` を照合し、内容が充足していることを確認した。
+- 先行する edit タスクの実行記録については、実行記録が `result.md` に示されているものの、具体的な変更プロセスを詳細に辿ることはできなかったが、成果物の状態と `grade` 結果から妥当であると判断した。
 
 ## 3. 未充足事項・改善指示
 
-_TODO_: 未充足事項と、再計画・成果物の改善・再評価に使う改善指示を記入する（なければ「なし」と記入する）。評価結果の内容に疑義がある場合は、再評価が必要な対象と理由もここに記入する。
+- [[docs/ja/specdojo/samples/pm-issue-log-sample.md]] への指摘: 決定記録 `kinuya-decision-log` を `project-id` 修飾の文書 ID または wikilink 形式に修正すること (F001)。
+- [[docs/ja/specdojo/samples/pm-issue-log-sample.md]] への指摘: IS-002 における優先度 `medium` と、影響欄の記述（AC-01 の確認不可）の不整合を解消すること (F002)。
+- [[docs/ja/specdojo/rulebooks/pm-issue-log-rulebook.md]] への指摘: 単独の課題ログ用の template またはその所在を明記すること (F001)。
+- [[docs/ja/specdoj/templates/pm-issue-log-template.md]] への指摘: `template` の `status` (`ready`) と、`rulebook`・`sample` の `status` (`draft`) の不一致を、確定時に解消すること (F001)。
+- 確認できなかった範囲: recipe が `_MISSING_` であるため、recipe に基づく磨き込みの検証は行っていない。
 
 ## 4. approach に応じた確認
 
-_TODO_: `approach` に応じて確認した内容を記入する。fully-guided / recipe-guided / freeform では求められた作成・更新が行われたか、retrofit では実装エビデンスの対応記録と未確認範囲、`rulebook-maintenance` などの maintenance 系では見直しの動機となった finding の解消状況を記入する。
+完全誘導（fully-guided）に基づき、`rulebook` の章立て、`template` の構成、および `sample` の内容が、定義された基準に沿っているかを `grade` 結果を用いて検証した。
 
 ## 5. decision
 
-- verdict: _TODO_（complete / complete-with-findings / incomplete / grade-stale / grade-unavailable / changed-during-review）
+- verdict: complete-with-findings
