@@ -4,62 +4,61 @@ document: specdojo:opd-monitoring-sample
 path: docs/ja/specdojo/samples/opd-monitoring-sample.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-sample
-verdict: needs-work
-score: 74
-graded_at: "2026-11-21T06:44:07.997Z"
-graded_by: opus-executor
-content_hash: b31cf6371dcb1159ed2ae518afab2900629bd7ca15411b9d16cebd3237119a1c
+verdict: pass
+score: 95
+graded_at: "2026-11-23T17:39:58.178Z"
+graded_by: sonnet-review-executor
+content_hash: d9ecf954179de3638169974c1967f110973055ce2223f56eebd02b55a010a25d
 categories:
   purpose:
-    score: 63
+    score: 100
   operations:
-    score: 94
+    score: 100
   planning:
-    score: 83
+    score: 100
   business:
-    score: 58
+    score: 100
   architecture:
-    score: 83
+    score: 100
   usability:
-    score: 83
+    score: 100
   implementation:
-    score: 75
+    score: 100
   quality:
-    score: 75
+    score: 92
   consistency:
-    score: 50
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-publication-accountability:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
     level: 4
     score: 100
   vp-ba-business-value:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ba-requirements-completeness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -67,11 +66,11 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-change-impact:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-testability:
     level: 4
     score: 100
@@ -79,23 +78,23 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-readability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 4
     score: 100
   vp-ops-operability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -104,157 +103,23 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 6
-  minor: 12
+  major: 0
+  minor: 2
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-po-purpose-alignment
-    line: 11
-    anchor: "| 監視対象 | 指標/閾値             | 通知先 | 初動（誰が何をするか）                       | 備考             |"
-    message: >-
-      監視対象・指標・通知先が一般的な Web サービス運用（API 5xx・DB レプリカ・`#ops`）を前提にしており、駄菓子屋きぬやの前提（単一店舗・タブレット 1
-      台・店主が最終判断）と合わない。店頭端末・記録データ・バックアップなど、共通文脈に沿った監視対象と閾値に置き換え、`opd-index` の SLO との対応を示すべきである。
-    message_ja: >-
-      監視対象・指標・通知先が一般的な Web サービス運用（API 5xx・DB レプリカ・`#ops`）を前提にしており、駄菓子屋きぬやの前提（単一店舗・タブレット 1
-      台・店主が最終判断）と合わない。店頭端末・記録データ・バックアップなど、共通文脈に沿った監視対象と閾値に置き換え、`opd-index` の SLO との対応を示すべきである。
-  - id: F002
-    severity: minor
-    rule: vp-po-decision-readiness
-    line: 13
-    anchor: "| API      | 5xx率 > 1%（5分）     | #ops   | Ops当番がダッシュボード確認→切り分け開始     | 誤検知は閾値調整 |"
-    message: >-
-      閾値（5xx 率 ＞ 1%、遅延 ＞ 30s、+15 分）が仮置きか確定かと、営業時間外の通知などの未決事項を `_ASSUMPTION_` / `_UNDECIDED_` で明示し、PO
-      が承認・保留を判断する論点を示すべきである。
-    message_ja: >-
-      閾値（5xx 率 ＞ 1%、遅延 ＞ 30s、+15 分）が仮置きか確定かと、営業時間外の通知などの未決事項を `_ASSUMPTION_` / `_UNDECIDED_` で明示し、PO
-      が承認・保留を判断する論点を示すべきである。
-  - id: F003
-    severity: minor
-    rule: vp-pm-plan-feasibility
-    line: 13
-    anchor: "| API      | 5xx率 > 1%（5分）     | #ops   | Ops当番がダッシュボード確認→切り分け開始     | 誤検知は閾値調整 |"
-    message: "各行の初動に時限と完了条件（例: 15 分以内に切り分けを終え、未解決ならエスカレーション）がなく、対応の進捗と完了を判定できないので追記すべきである。"
-    message_ja: "各行の初動に時限と完了条件（例: 15 分以内に切り分けを終え、未解決ならエスカレーション）がなく、対応の進捗と完了を判定できないので追記すべきである。"
-  - id: F004
-    severity: minor
-    rule: vp-pm-dependency-risk
-    line: 14
-    anchor: "| DB       | レプリカ遅延 > 30s    | #ops   | Ops当番が負荷/ジョブ確認→Devへ連絡（P2以上） |                  |"
-    message: >-
-      「P2以上」は障害対応方針の優先度定義に依存し、閾値は `opd-index` の SLO
-      に依存するが、参照がない。依存先（`opd-index`、`opd-incident-management`）への導線を示し、依存先が変わったときの影響を追えるようにすべきである。
-    message_ja: >-
-      「P2以上」は障害対応方針の優先度定義に依存し、閾値は `opd-index` の SLO
-      に依存するが、参照がない。依存先（`opd-index`、`opd-incident-management`）への導線を示し、依存先が変わったときの影響を追えるようにすべきである。
-  - id: F005
-    severity: major
-    rule: vp-ba-business-value
-    line: 11
-    anchor: "| 監視対象 | 指標/閾値             | 通知先 | 初動（誰が何をするか）                       | 備考             |"
-    message: 監視対象が店頭販売・在庫・つけ記録の継続という業務価値と結びついておらず、どの業務を守るための監視かを説明できない。共通文脈の業務課題に対応する監視対象と、検知しなかった場合の影響を示すべきである。
-    message_ja: 監視対象が店頭販売・在庫・つけ記録の継続という業務価値と結びついておらず、どの業務を守るための監視かを説明できない。共通文脈の業務課題に対応する監視対象と、検知しなかった場合の影響を示すべきである。
-  - id: F006
-    severity: minor
-    rule: vp-ba-requirements-completeness
-    line: 15
-    anchor: "| Batch    | 予定時刻+15分で未完了 | #ops   | Ops当番がジョブ状態確認→再実行可否を判断     | 詳細は opr-batch |"
-    message: Batch の「予定時刻」が具体値か参照先で定義されておらず、DB 行の「P2以上」の判定条件も示されていないため、利用者視点で検知条件を確認できない。具体値か参照先を明記すべきである。
-    message_ja: Batch の「予定時刻」が具体値か参照先で定義されておらず、DB 行の「P2以上」の判定条件も示されていないため、利用者視点で検知条件を確認できない。具体値か参照先を明記すべきである。
-  - id: F007
-    severity: major
-    rule: vp-ba-stakeholder-clarity
-    line: 13
-    anchor: "| API      | 5xx率 > 1%（5分）     | #ops   | Ops当番がダッシュボード確認→切り分け開始     | 誤検知は閾値調整 |"
-    message: >-
-      初動の担い手「Ops当番」と連絡先「Dev」が共通登場人物の役割名・Role code（店主代表、開発担当 `DEV` など）と対応しておらず、駄菓子屋の体制で誰が通知を受けて動くのかが読み取れない。役割名か Role code
-      で記述すべきである。
-    message_ja: >-
-      初動の担い手「Ops当番」と連絡先「Dev」が共通登場人物の役割名・Role code（店主代表、開発担当 `DEV` など）と対応しておらず、駄菓子屋の体制で誰が通知を受けて動くのかが読み取れない。役割名か Role code
-      で記述すべきである。
-  - id: F008
-    severity: major
-    rule: vp-arc-technical-constraints
-    line: 14
-    anchor: "| DB       | レプリカ遅延 > 30s    | #ops   | Ops当番が負荷/ジョブ確認→Devへ連絡（P2以上） |                  |"
-    message: DB レプリカ遅延の監視はレプリカ構成を暗黙の前提にしており、共通文脈の技術前提（店頭タブレット 1 台・オフライン運用は未決）と食い違う。構成前提と指標の測定元を明示し、前提に合う監視対象にすべきである。
-    message_ja: DB レプリカ遅延の監視はレプリカ構成を暗黙の前提にしており、共通文脈の技術前提（店頭タブレット 1 台・オフライン運用は未決）と食い違う。構成前提と指標の測定元を明示し、前提に合う監視対象にすべきである。
-  - id: F009
-    severity: minor
-    rule: vp-dev-implementation-readiness
-    line: 13
-    anchor: "| API      | 5xx率 > 1%（5分）     | #ops   | Ops当番がダッシュボード確認→切り分け開始     | 誤検知は閾値調整 |"
-    message: 5xx 率・レプリカ遅延・ジョブ完了状態をどの監視手段から取得し、`#ops` がどの通知手段かが書かれておらず、設定作業の入力として足りないので明記すべきである。
-    message_ja: 5xx 率・レプリカ遅延・ジョブ完了状態をどの監視手段から取得し、`#ops` がどの通知手段かが書かれておらず、設定作業の入力として足りないので明記すべきである。
-  - id: F010
-    severity: minor
-    rule: vp-dev-change-impact
-    line: 13
-    anchor: "| API      | 5xx率 > 1%（5分）     | #ops   | Ops当番がダッシュボード確認→切り分け開始     | 誤検知は閾値調整 |"
-    message: 「誤検知は閾値調整」について、調整の承認者と、変更が `opr-monitoring` の手順へ波及することが示されておらず、変更の影響を追えないので追記すべきである。
-    message_ja: 「誤検知は閾値調整」について、調整の承認者と、変更が `opr-monitoring` の手順へ波及することが示されておらず、変更の影響を追えないので追記すべきである。
-  - id: F011
     severity: minor
     rule: vp-qe-verifiability
-    line: 15
-    anchor: "| Batch    | 予定時刻+15分で未完了 | #ops   | Ops当番がジョブ状態確認→再実行可否を判断     | 詳細は opr-batch |"
-    message: Batch の検知条件「予定時刻+15分」は予定時刻が定義されておらず、アラートの成否を判定できないので、対象ジョブの予定時刻か参照先を示すべきである。
-    message_ja: Batch の検知条件「予定時刻+15分」は予定時刻が定義されておらず、アラートの成否を判定できないので、対象ジョブの予定時刻か参照先を示すべきである。
-  - id: F012
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 19
-    anchor: "| 種別 | ドキュメントID | 目的                     | 備考   |"
-    message: 関連ドキュメント導線に `opr-index` への導線がない。rulebook の「関連ドキュメント導線（`opr` 等）」の必須要件を満たしていないので、`opr-index` の行を追加すべきである。
-    message_ja: 関連ドキュメント導線に `opr-index` への導線がない。rulebook の「関連ドキュメント導線（`opr` 等）」の必須要件を満たしていないので、`opr-index` の行を追加すべきである。
-  - id: F013
+    line: 58
+    anchor: >-
+      - 死活の誤検知が月 3 件以上ある場合、`OPS` は閾値の変更案（例: 5 分を 10 分に延ばす）を作る。閾値は `opd-index` の統制のため、`opd-index` の変更管理に従い `PO` の承認を得て
+      `opd-index` 側を改訂してから適用する。
+    message: 閾値の見直し例の「5 分を 10 分に延ばす」は、対象の閾値の定義が本書になく `opd-index` のどの値かも示されていないので、対象の閾値を参照付きで明記して判定できるようにすべきである。
+    message_ja: 閾値の見直し例の「5 分を 10 分に延ばす」は、対象の閾値の定義が本書になく `opd-index` のどの値かも示されていないので、対象の閾値を参照付きで明記して判定できるようにすべきである。
+  - id: F002
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 21
-    anchor: "| 手順 | opr-monitoring | アラート対応の手順・証跡 | 必須   |"
-    message: "`opr-monitoring` / `opr-batch` は実在しない文書だが、バッククォートでの仮置きにも wikilink にもなっておらず、sample 標準のリンク規則に合わないので表記をそろえるべきである。"
-    message_ja: "`opr-monitoring` / `opr-batch` は実在しない文書だが、バッククォートでの仮置きにも wikilink にもなっておらず、sample 標準のリンク規則に合わないので表記をそろえるべきである。"
-  - id: F014
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 11
-    anchor: "| 監視対象 | 指標/閾値             | 通知先 | 初動（誰が何をするか）                       | 備考             |"
-    message: >-
-      監視方針の題材が駄菓子屋きぬやの共通サンプル文脈ではなく一般的な Web サービス運用になっており、sample-authoring-standard
-      の禁止事項（共通文脈以外の題材を混在させない）に抵触するので、共通文脈に沿った例に置き換えるべきである。
-    message_ja: >-
-      監視方針の題材が駄菓子屋きぬやの共通サンプル文脈ではなく一般的な Web サービス運用になっており、sample-authoring-standard
-      の禁止事項（共通文脈以外の題材を混在させない）に抵触するので、共通文脈に沿った例に置き換えるべきである。
-  - id: F015
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 13
-    anchor: "| API      | 5xx率 > 1%（5分）     | #ops   | Ops当番がダッシュボード確認→切り分け開始     | 誤検知は閾値調整 |"
-    message: >-
-      初動の担い手「Ops当番」が opd-index-sample の体制（Ops / Ops Lead）と対応しておらず、`opd-＜term＞` が `opd-index`
-      の差分であるという関係が読み取れないので、表記をそろえるべきである。
-    message_ja: >-
-      初動の担い手「Ops当番」が opd-index-sample の体制（Ops / Ops Lead）と対応しておらず、`opd-＜term＞` が `opd-index`
-      の差分であるという関係が読み取れないので、表記をそろえるべきである。
-  - id: F016
-    severity: minor
-    rule: vp-ux-readability
-    line: 7
-    anchor: 監視・アラートの方針を `opd-index` の差分として定義する（指標・閾値・通知先・初動の具体化）。
-    message: 概要で `opd-index` の差分と書いているが、差分の基準となる `opd-index` への参照（wikilink か導線表の行）がなく、初見の読者が基準を確かめられないので追加すべきである。
-    message_ja: 概要で `opd-index` の差分と書いているが、差分の基準となる `opd-index` への参照（wikilink か導線表の行）がなく、初見の読者が基準を確かめられないので追加すべきである。
-  - id: F017
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 14
-    anchor: "| DB       | レプリカ遅延 > 30s    | #ops   | Ops当番が負荷/ジョブ確認→Devへ連絡（P2以上） |                  |"
-    message: 「Ops当番」「Dev」が Role code と共通役割名のどちらとも違う独自表記で、opd-index-sample の「Ops / Ops Lead」とも一致しないので、Role code か役割名に統一すべきである。
-    message_ja: 「Ops当番」「Dev」が Role code と共通役割名のどちらとも違う独自表記で、opd-index-sample の「Ops / Ops Lead」とも一致しないので、Role code か役割名に統一すべきである。
-  - id: F018
-    severity: minor
-    rule: vp-ops-operability
-    line: 13
-    anchor: "| API      | 5xx率 > 1%（5分）     | #ops   | Ops当番がダッシュボード確認→切り分け開始     | 誤検知は閾値調整 |"
-    message: 初動で解決しなかった場合のエスカレーション先と時限が書かれておらず、継続して対応するときの判断ができないので、行ごとに追記すべきである。
-    message_ja: 初動で解決しなかった場合のエスカレーション先と時限が書かれておらず、継続して対応するときの判断ができないので、行ごとに追記すべきである。
+    line: 40
+    anchor: "- 営業時間外の死活の通知は、未決事項の扱いが決まるまで受けても初動を始めない。9:30 の確認で、閉店後の応答なしの記録があれば、開店前に店番担当へ記録できるかを確かめてもらう。"
+    message: 死活の判定は営業時間内に限ると表にあるのに、本文は営業時間外の死活通知と閉店後の応答なしの記録を前提にしているので、時間外にも判定または記録を行うかをそろえて明記すべきである。
+    message_ja: 死活の判定は営業時間内に限ると表にあるのに、本文は営業時間外の死活通知と閉店後の応答なしの記録を前提にしているので、時間外にも判定または記録を行うかをそろえて明記すべきである。
