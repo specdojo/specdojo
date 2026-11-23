@@ -1,0 +1,31 @@
+レビューを実施しました。成果物とサイドカーは変更していません。
+
+**評価結果の確認**
+- `specdojo grade list --target kata --changed-only` を sample と rulebook の両方に実行しました。出力は空で、終了コードは 0 でした。両方とも評価結果は最新です。
+- sample の結果は `pass`、score 96、finding は minor 2 件（blocker/major は 0）です。
+- rulebook の結果は `pass`、score 98、finding は minor 1 件（blocker/major は 0）です。
+
+**判断根拠**
+- DC-001 と DC-002: sample の章構成は、目的と適用範囲、変更要求の概要、影響分析サマリ、影響詳細一覧、対応方針の順になっています。題材は駄菓子屋の販売管理システムで、共通サンプル文脈に沿っています。観点 `vp-qe-omissions-consistency` は level 4 です。
+- DC-003: 禁止事項への抵触を示す finding はありません。
+- DC-004: 影響分析サマリに、高・中・低の尺度を表で定義しています。評価は運用品質、障害対応力、運用負荷、利用者影響の 4 観点で行い、集約規則も示しています。
+- 変更範囲: `git status` の差分は run ディレクトリの `pipeline-state.json` だけで、対象外の変更の混入はありません。
+- 実行記録: 先行する edit タスクの result は特定していません。
+
+**未充足事項・改善指示（いずれも完了を妨げない）**
+- sample の `F001`: 初動開始の上限時間が未決（`PJR-O4Q1`）で、成功条件 2 を判定できません。暫定の判定基準「当日の閉店までに把握する」を、成功条件の欄にも併記してください。影響分析サマリには同じ暫定基準がすでに書いてあります。
+- sample の `F002`: 対応方針の表の「完了条件」列は、rulebook の必須列にありません。rulebook の必須列へ追記するか、sample 側で列の扱いを揃えてください。
+- rulebook の `F001`: 「リポジトリの検証で扱う」を、`lint:md` などの具体的な検証と期待結果に書き換えてください。
+- 今回の finding は minor のみで、rulebook の必須要素の欠落や禁止事項への抵触ではありません。そのため完了を妨げないと判断しました。
+- 人による確定の前に、`PJR-O4Q1`（初動開始の上限時間）の決定が必要です。
+
+**確認できなかった範囲**
+- sample の第 5 章以降（再評価条件など）は、grade の評価に委ね、本 review では読んでいません。
+- recipe は `_MISSING_` で、宣言されていません。
+- 検証コマンドは、親 runner の allowlist 検査に委ねたため実行していません。
+
+**verdict**: `complete-with-findings`（記録直前の鮮度確認は、上記の空出力が最終確認です）。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict: complete-with-findings。grade は sample・rulebook とも最新で pass（96/98、minor のみ）。DC-001〜004 は評価結果と sample 第1〜5章で充足を確認。差分は pipeline-state.json のみ。改善指示: 成功条件2に暫定基準を併記、完了条件列と rulebook の必須列の整合、rulebook の検証手順の具体化、PJR-O4Q1 の決定。確認できなかった範囲: sample 第5章後半以降の通読、recipe は MISSING、検証コマンドは親 runner に委ねた。","handoff":["PJR-O4Q1（初動開始の上限時間）を店主代表が決める","sample F002: 完了条件列を rulebook 必須列へ追記するか sample 側で整合させる","rulebook F001: 検証コマンドと期待結果を具体化する"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/imp-operations-sample.md --changed-only","status":"passed","summary":"出力なし。評価結果は最新"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/imp-operations-rulebook.md --changed-only","status":"passed","summary":"出力なし。評価結果は最新"}]}
+</specdojo_executor_evidence>
