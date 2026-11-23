@@ -2,6 +2,7 @@ import { registerDependencyBlockReason } from "../../register/dependency.js";
 import { existsSync, readFileSync } from "node:fs";
 import { loadRegisterItems, resolveRegisterPaths } from "../../register/register.js";
 import { specdojoRootDir } from "../../shared/specdojo-config.js";
+import { unescapeMarkdownCell } from "../../shared/text.js";
 import { loadExecDefaultsConfig, ProviderConcurrencyGate } from "../agent-config.js";
 import { buildInPlaceStem } from "../plans.js";
 import { activateResolvedProjectPaths, resolveProjectPaths } from "../project.js";
@@ -224,7 +225,7 @@ export async function runRegisterMode(opts: RunOpts): Promise<void> {
       const category = requireRunnableRegisterItem(item);
       const stem = buildInPlaceStem(pjrId.toLowerCase());
       process.stdout.write(
-        `[dry-run] register item: ${item.id} — ${item.title}  [${item.type}/${category}]\n`,
+        `[dry-run] register item: ${item.id} — ${unescapeMarkdownCell(item.title)}  [${item.type}/${category}]\n`,
       );
       if (pipelineMode) {
         const { executor, reporterCandidates } = resolveRegisterPipelineCommand(

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-TJZM",
+  "run_id": "pjr-tjzm-20261123T023733Z-7d3cedb1",
+  "updated_at": "2026-11-23T02:55:48.419Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sonnet-executor",
+      "attempts": 1,
+      "started_at": "2026-11-23T02:48:04.253Z",
+      "completed_at": "2026-11-23T02:48:19.398Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-TJZM/pjr-tjzm-20261123T023733Z-7d3cedb1/evidence.json"
+    },
+    "reporter": {
+      "status": "failed",
+      "actor": "sonnet-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-23T02:55:42.282Z",
+      "completed_at": "2026-11-23T02:55:48.419Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-TJZM/pjr-tjzm-20261123T023733Z-7d3cedb1/result.md"
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-TJZM/pjr-tjzm-20261123T023733Z-7d3cedb1/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-TJZM/pjr-tjzm-20261123T023733Z-7d3cedb1/result.md"
+  },
+  "resume_notes": [
+    {
+      "at": "2026-11-23T02:48:04.230Z",
+      "notes": [
+        "親の検証のtest-integrationでtests/src/exec/register-pipeline-e2e.integration.test.tsのdry-runの期待値が、エスケープ付きのタイトルのままで落ちた。dry-runの行はエスケープする前のタイトルを出すように直したので、テストの期待値を新しい出力に合わせる。ほかにエスケープ付きのタイトルを期待するテストがないかをrgで探して直す。"
+      ]
+    }
+  ]
+}

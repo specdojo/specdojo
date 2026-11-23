@@ -1,0 +1,11 @@
+`--dry-run` の行も、エスケープ前のタイトルを出すように直しました。ただし、テストと検証は一度も実行していません。`typecheck`、`test:unit`、`test:integration` は親 runner の担当で、残りのコマンドも実行していません。
+
+- **`register-mode.ts`**: `[dry-run] register item:` の行で `unescapeMarkdownCell(item.title)` を使うようにし、import を足しました。1 回目にこの行が直っていなかった原因です。
+- **`register-core.ts`**: `Register item:` の行にも同じ処理を入れました。1 回目に直した 4 か所以外に、もう 1 か所ありました。
+- **ほかの箇所**: `grep -rnE "(write|log|error|warn)\(.*\.title" src` で、`unescapeMarkdownCell` を通さずタイトルを出す箇所を探しました。上の 2 か所以外には見つかりませんでした。
+- **テスト**: `register-pipeline-e2e.integration.test.ts` の dry-run のテストを広げました。索引のタイトルを `pipeline\_test item` にして、出力が `pipeline_test item` になることを確かめます。
+- **個票**: 対応結果に、2 回目の対応・探した方法と結果・テストを追記しました。「CHANGELOG に書く事項」の小節は 1 回目のものがそのまま残っています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"`[dry-run] register item:` の行（register-mode.ts）と `Register item:` の行（register-core.ts）で `unescapeMarkdownCell` を使うようにした。dry-run の統合テストを拡張し、個票の対応結果を更新した。テストと検証は実行していない。","handoff":["追加したアサーションは `tests/src/exec/register-pipeline-e2e.integration.test.ts` にあり、実行は親 runner の `npm run test:integration` に委ねる。このテストは `pjr-index.md` のタイトルを書き換えて dry-run の出力を確かめるため、タイトルの読み込み元が `pjr-index.md` でなければ失敗する。落ちた場合はその点を確認する。","CHANGELOG に書く事項は個票の対応結果 5.1 に記載済み（区分: Fixed）。"],"validations":[{"command":"npm run typecheck","status":"not_run","summary":"親 runner の検証に委ねる"},{"command":"npm run test:unit","status":"not_run","summary":"親 runner の検証に委ねる"},{"command":"npm run test:integration","status":"not_run","summary":"親 runner の検証に委ねる"}]}
+</specdojo_executor_evidence>

@@ -70,4 +70,10 @@ plan に展開された finding は、message と同じ viewpoint ID の判定�
 
 - 親の検証のtest-integrationでtests/src/exec/register-pipeline-e2e.integration.test.tsのdry-runの期待値が、エスケープ付きのタイトルのままで落ちた。dry-runの行はエスケープする前のタイトルを出すように直したので、テストの期待値を新しい出力に合わせる。ほかにエスケープ付きのタイトルを期待するテストがないかをrgで探して直す。
 
+## 再開の指示（2026-11-23T03:36:27.261Z）
+
+利用者が再開の前に足した指示である。これまでの申し送りとあわせて、この指示に従って作業を続ける。
+
+- register-pipeline-e2e.integration.test.tsで足したdry-runの期待値は、下線を含むタイトルを期待しているが、fixtureのPJR-AB12のタイトルには下線がないため落ちている。コードの直し（unescapeMarkdownCell）は正しいので変えない。fixtureに下線を含むタイトルの項目を用意して、下線がエスケープされずに出ることを確かめるテストにする。test:integrationの該当のファイルを流して通ることを確かめてから報告する。
+
 `共通規約 sha256:e7dd6ff2a0dec2f12ed4ffc905cd185aca2d6f9c3922c56a249c88cb45b2a14e` `docs/ja/projects/prj-0001/execution/conventions/e7dd6ff2a0dec2f12ed4ffc905cd185aca2d6f9c3922c56a249c88cb45b2a14e.txt`

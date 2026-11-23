@@ -17,6 +17,7 @@ import {
   type ExecDefaultsConfig,
   type ProviderConcurrencyGate,
 } from "../agent-config.js";
+import { unescapeMarkdownCell } from "../../shared/text.js";
 import { buildInPlaceStem } from "../plans.js";
 import {
   generateRegisterPlan,
@@ -484,7 +485,9 @@ export async function runSingleRegisterItem(
   });
   const resultScaffold = readResultFrontmatterSnapshot(resultPath);
 
-  process.stdout.write(`Register item: ${item.id} — ${item.title}  [${item.type}]\n`);
+  process.stdout.write(
+    `Register item: ${item.id} — ${unescapeMarkdownCell(item.title)}  [${item.type}]\n`,
+  );
   process.stdout.write(`  Agent: ${actor}${pipelineAgents ? " (executor)" : ""}\n`);
   if (pipelineAgents) {
     process.stdout.write(`  Agent: ${pipelineAgents.reporterCandidates[0]?.actor} (reporter)\n`);
