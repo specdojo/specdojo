@@ -5,10 +5,10 @@ path: docs/ja/specdojo/samples/opr-access-control-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 98
-graded_at: "2026-11-23T18:18:26.271Z"
+score: 95
+graded_at: "2026-11-23T18:41:14.858Z"
 graded_by: sonnet-review-executor
-content_hash: a71cf847cf13c782c86a63e1eed6500f25b8233c95536eda4385a0edd966a65b
+content_hash: 325c3268caecf12af147aff475f21198ddd1c807c2702286da639d71b30d7dda
 categories:
   purpose:
     score: 100
@@ -27,7 +27,7 @@ categories:
   quality:
     score: 92
   consistency:
-    score: 100
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -78,8 +78,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
     level: 3
     score: 75
@@ -104,10 +104,21 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 1
+  minor: 2
   note: 0
 findings:
   - id: F001
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 107
+    anchor: "### 9.4. 緊急権限"
+    message: >-
+      本書の緊急権限と `OPS` による付与の実施は、`opr-sample` の「アカウントは店番担当と `DEV` に限る・緊急権限は置かない・`DEV` が実施」と食い違うため、`opr-sample`
+      側を本書に合わせて更新するか、差分であることを概要で明示して整合させるべきである。
+    message_ja: >-
+      本書の緊急権限と `OPS` による付与の実施は、`opr-sample` の「アカウントは店番担当と `DEV` に限る・緊急権限は置かない・`DEV` が実施」と食い違うため、`opr-sample`
+      側を本書に合わせて更新するか、差分であることを概要で明示して整合させるべきである。
+  - id: F002
     severity: minor
     rule: vp-qe-kata-conformance
     line: 107
