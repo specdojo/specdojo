@@ -176,3 +176,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_4af2f8f52a7d4bb08c3b3335bcc9836d
+- v: 1
+  id: reg_1a9327b2c843480999e71e2a8a92917e
+  ts: "2026-11-23T01:18:23Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分・対応結果・orchestrator の比較と測りで確かめ、run-records のテストを 5 回続けて通した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: dashboard の 1 回の生成で run の記録の一覧を 1 回だけ読む RunRecordIndex を足し、started_at を日付の値でも文字列でも時刻として扱うようにした。本体のデータで dashboard build が 52.2 秒から 13 秒になり、生成物は生成時刻の行を除いて同じだった
+  previous_event_id: reg_094eb7c02f7e430899aebad168ed331d

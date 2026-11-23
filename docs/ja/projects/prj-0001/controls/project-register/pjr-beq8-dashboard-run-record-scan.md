@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-beq8-dashboard-run-record-scan
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-22T23:45:18Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-23T01:18:23Z"
+  conclusion: dashboard の 1 回の生成で run の記録の一覧を 1 回だけ読む RunRecordIndex を足し、started_at を日付の値でも文字列でも時刻として扱うようにした。本体のデータで dashboard build が 52.2 秒から 13 秒になり、生成物は生成時刻の行を除いて同じだった
   derived_from:
     - PJR-BBTW
   commit_type: perf
