@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-xhs8-docs-dev-staging-search-index
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-22T23:45:22Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-23T01:14:29Z"
+  conclusion: 型の複製の時刻の比較に 1 ミリ秒の幅を持たせ、dev の検索の索引の描画で Shiki の色付けを省いた。本体の文書で dev の起動が平均 23.7 秒から 15.9 秒になり、索引の本文の文字は変わらなかった
   derived_from:
     - PJR-BBTW
   commit_type: perf

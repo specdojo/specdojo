@@ -131,3 +131,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_1075150797424ef58734066aa1c6f733
+- v: 1
+  id: reg_1354ee2a8def49f3825e4aeef6ee5918
+  ts: "2026-11-23T01:14:29Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果・orchestrator の比較と測りで確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: 型の複製の時刻の比較に 1 ミリ秒の幅を持たせ、dev の検索の索引の描画で Shiki の色付けを省いた。本体の文書で dev の起動が平均 23.7 秒から 15.9 秒になり、索引の本文の文字は変わらなかった
+  previous_event_id: reg_b68befb629d34cb18939668009511154
