@@ -4,62 +4,61 @@ document: specdojo:opr-change-sample
 path: docs/ja/specdojo/samples/opr-change-sample.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-sample
-verdict: fail
-score: 38
-graded_at: "2026-11-21T06:48:45.052Z"
-graded_by: opus-executor
-content_hash: 5b73860cf218b7196df45421107fd1958a5975a929a12647abc732dfb536bf63
+verdict: pass
+score: 96
+graded_at: "2026-11-23T18:26:14.645Z"
+graded_by: sonnet-review-executor
+content_hash: 9fa5f595318000d1bbc5d78d6f7edd87bb9734cfeb280db8da9630d94380cc9b
 categories:
   purpose:
-    score: 25
+    score: 100
   operations:
-    score: 56
+    score: 100
   planning:
-    score: 25
+    score: 100
   business:
-    score: 25
+    score: 100
   architecture:
-    score: 75
+    score: 100
   usability:
-    score: 67
+    score: 100
   implementation:
-    score: 25
+    score: 88
   quality:
-    score: 25
+    score: 100
   consistency:
-    score: 0
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-po-decision-readiness:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-po-publication-accountability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-plan-feasibility:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-pm-control-reporting:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ba-business-value:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ba-requirements-completeness:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -67,35 +66,35 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-dev-change-impact:
-    level: 1
-    score: 25
-  vp-dev-testability:
-    level: 1
-    score: 25
-  vp-qe-verifiability:
-    level: 1
-    score: 25
-  vp-qe-omissions-consistency:
-    level: 0
-    score: 0
-  vp-qe-kata-conformance:
-    level: 1
-    score: 25
-  vp-ux-readability:
-    level: 1
-    score: 25
-  vp-ux-language-consistency:
     level: 3
     score: 75
+  vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
   vp-ops-release-readiness:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ops-operability:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -103,202 +102,35 @@ viewpoints:
     level: 4
     score: 100
 finding_counts:
-  blocker: 1
-  major: 23
-  minor: 2
+  blocker: 0
+  major: 0
+  minor: 3
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-po-purpose-alignment
-    line: 1
-    anchor: "# 運用手順: 運用変更（設定変更・デプロイ） サンプル"
-    message: 成果物に目的、範囲、またはプロジェクト目標との整合性に関する記述がなく、運用の変更がなぜ、どのように管理されるのかが説明されていません。
-    message_ja: 成果物に目的、範囲、またはプロジェクト目標との整合性に関する記述がなく、運用の変更がなぜ、どのように管理されるのかが説明されていません。
-  - id: F002
-    severity: major
-    rule: vp-po-purpose-alignment
-    line: 3
-    anchor: "- 参照: `../rulebooks/opr-rulebook.md`"
-    message: >-
-      概要章がなく、本書が `opr-index` の変更作業を具体化する `opr-＜term＞`
-      分冊であることも、駄菓子屋きぬや販売管理システムのどの変更（設定変更・デプロイ）を対象にするかも書かれていないため、概要章を追加して対象・目的・`opr-index` との関係を1〜3行で明記する必要がある。
-    message_ja: >-
-      概要章がなく、本書が `opr-index` の変更作業を具体化する `opr-＜term＞`
-      分冊であることも、駄菓子屋きぬや販売管理システムのどの変更（設定変更・デプロイ）を対象にするかも書かれていないため、概要章を追加して対象・目的・`opr-index` との関係を1〜3行で明記する必要がある。
-  - id: F003
-    severity: major
-    rule: vp-po-decision-readiness
-    line: 5
-    anchor: "## 1. 運用変更作業（設定変更・デプロイ・ロールバック）"
-    message: ドキュメントには、POが十分な情報に基づいた承認またはエスカレーションの決定を行うために必要な、決定基準、未解決の問題、影響範囲、または次のアクションが提供されていません。
-    message_ja: ドキュメントには、POが十分な情報に基づいた承認またはエスカレーションの決定を行うために必要な、決定基準、未解決の問題、影響範囲、または次のアクションが提供されていません。
-  - id: F004
     severity: minor
-    rule: vp-po-publication-accountability
-    line: 1
-    anchor: "# 運用手順: 運用変更（設定変更・デプロイ） サンプル"
-    message: 成果物に、運用のリリースに関するターゲットオーディエンスまたは公開の責任フレームワークが明示的に文書化されていません。
-    message_ja: 成果物に、運用のリリースに関するターゲットオーディエンスまたは公開の責任フレームワークが明示的に文書化されていません。
-  - id: F005
-    severity: major
-    rule: vp-pm-plan-feasibility
-    line: 5
-    anchor: "## 1. 運用変更作業（設定変更・デプロイ・ロールバック）"
-    message: 運用の変更タスクに、プロジェクトのスケジューリングに必要な具体的な作業単位、実行順序、完了基準、および予定されるタイムフレームが不足しています。
-    message_ja: 運用の変更タスクに、プロジェクトのスケジューリングに必要な具体的な作業単位、実行順序、完了基準、および予定されるタイムフレームが不足しています。
-  - id: F006
-    severity: major
-    rule: vp-pm-dependency-risk
-    line: 5
-    anchor: "## 1. 運用変更作業（設定変更・デプロイ・ロールバック）"
-    message: デプロイおよび構成変更に関連するリスク、運用の依存関係、および未解決の問題が特定または評価されていません。
-    message_ja: デプロイおよび構成変更に関連するリスク、運用の依存関係、および未解決の問題が特定または評価されていません。
-  - id: F007
-    severity: major
-    rule: vp-pm-control-reporting
-    line: 12
-    anchor: "- ロールバック:"
-    message: 異常や変更結果に関する報告先、エスカレーション先、およびプロジェクト記録の転記項目が定義されていません。
-    message_ja: 異常や変更結果に関する報告先、エスカレーション先、およびプロジェクト記録の転記項目が定義されていません。
-  - id: F008
-    severity: major
-    rule: vp-ba-business-value
-    line: 1
-    anchor: "# 運用手順: 運用変更（設定変更・デプロイ） サンプル"
-    message: 成果物に、運用の変更管理におけるターゲットユーザー、ビジネス上の問題、期待される価値、および成功基準の説明が不足しています。
-    message_ja: 成果物に、運用の変更管理におけるターゲットユーザー、ビジネス上の問題、期待される価値、および成功基準の説明が不足しています。
-  - id: F009
-    severity: major
-    rule: vp-ba-requirements-completeness
-    line: 5
-    anchor: "## 1. 運用変更作業（設定変更・デプロイ・ロールバック）"
-    message: 構成変更およびデプロイに関する要件、範囲、スコープ外の境界、および受け入れ基準が不足しています。
-    message_ja: 構成変更およびデプロイに関する要件、範囲、スコープ外の境界、および受け入れ基準が不足しています。
-  - id: F010
-    severity: major
-    rule: vp-ba-requirements-completeness
-    line: 7
-    anchor: "- 事前:"
-    message: rulebook の「運用変更作業（設定変更・デプロイ・ロールバック）」が必須とする変更種別、実施条件（時間帯・凍結期間）、重大変更の事前周知の要否と手段が記載されておらず、サンプルとして記述例を示せていない。
-    message_ja: rulebook の「運用変更作業（設定変更・デプロイ・ロールバック）」が必須とする変更種別、実施条件（時間帯・凍結期間）、重大変更の事前周知の要否と手段が記載されておらず、サンプルとして記述例を示せていない。
-  - id: F011
-    severity: major
-    rule: vp-ba-stakeholder-clarity
-    line: 5
-    anchor: "## 1. 運用変更作業（設定変更・デプロイ・ロールバック）"
-    message: 変更管理ライフサイクルに関与するステークホルダー、オペレーターの役割、レビュアー、および合意の対象が十分に定義されていません。
-    message_ja: 変更管理ライフサイクルに関与するステークホルダー、オペレーターの役割、レビュアー、および合意の対象が十分に定義されていません。
-  - id: F012
-    severity: major
-    rule: vp-arc-technical-constraints
-    line: 5
-    anchor: "## 1. 運用変更作業（設定変更・デプロイ・ロールバック）"
-    message: 変更およびロールバックに関する技術的な前提条件、実行の制約、ツールの依存関係、および検証方法が完全に省略されています。
-    message_ja: 変更およびロールバックに関する技術的な前提条件、実行の制約、ツールの依存関係、および検証方法が完全に省略されています。
-  - id: F013
-    severity: major
-    rule: vp-dev-implementation-readiness
-    line: 10
-    anchor: "- 実施:"
-    message: 変更を実行するために必要な入力パラメータ、ターゲットとなる構成アイテム、実行ステップ、および完了の検証条件が指定されていません。
-    message_ja: 変更を実行するために必要な入力パラメータ、ターゲットとなる構成アイテム、実行ステップ、および完了の検証条件が指定されていません。
-  - id: F014
-    severity: major
     rule: vp-dev-change-impact
-    line: 8
-    anchor: "- 変更チケット起票（承認者: Ops Lead）"
-    message: 成果物は影響評価に言及しているだけで、システム、スキーマ、および運用の影響を評価するための基準や範囲が定義されていません。
-    message_ja: 成果物は影響評価に言及しているだけで、システム、スキーマ、および運用の影響を評価するための基準や範囲が定義されていません。
-  - id: F015
-    severity: major
-    rule: vp-dev-testability
-    line: 10
-    anchor: "- 実施:"
-    message: 変更後およびロールバック時の検証ステップ、検証コマンド、および期待されるテスト結果が提供されていません。
-    message_ja: 変更後およびロールバック時の検証ステップ、検証コマンド、および期待されるテスト結果が提供されていません。
-  - id: F016
-    severity: major
-    rule: vp-qe-verifiability
-    line: 11
-    anchor: "- 実施ログ（誰が/いつ/何を）を残す"
-    message: 「実施ログ（誰が/いつ/何を）を残す」という表現のみでは, 証跡として十分な内容であるかを判定できず, 再現性を担保できない。
-    message_ja: 「実施ログ（誰が/いつ/何を）を残す」という表現のみでは, 証跡として十分な内容であるかを判定できず, 再現性を担保できない。
-  - id: F017
-    severity: major
-    rule: vp-qe-verifiability
-    line: 13
-    anchor: "- 異常（P1/P2）発生時は即時戻し、報告"
-    message: ロールバック条件が「異常（P1/P2）発生時は即時戻し」だけで、異常の判定基準、「即時」の時間目標、戻し完了の判定条件がないため、ロールバックすべきかどうかと完了したかどうかを判定できない。
-    message_ja: ロールバック条件が「異常（P1/P2）発生時は即時戻し」だけで、異常の判定基準、「即時」の時間目標、戻し完了の判定条件がないため、ロールバックすべきかどうかと完了したかどうかを判定できない。
-  - id: F018
-    severity: blocker
-    rule: vp-qe-omissions-consistency
-    line: 1
-    anchor: "# 運用手順: 運用変更（設定変更・デプロイ） サンプル"
-    message: "`opr-rulebook` 第5章で定義された必須構成（概要、適用範囲・前提、証跡、関連文書導線等）がほぼすべて欠落しており、文書として不成立である。"
-    message_ja: "`opr-rulebook` 第5章で定義された必須構成（概要、適用範囲・前提、証跡、関連文書導線等）がほぼすべて欠落しており、文書として不成立である。"
-  - id: F019
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 13
-    anchor: "- 異常（P1/P2）発生時は即時戻し、報告"
-    message: >-
-      ロールバック条件の判定基準と、`opd-index`・`opr-incident` への関連ドキュメント導線が欠けており、rulebook
-      の禁止事項「変更作業の承認・ロールバック条件を未記載にする」に実質的に抵触し、`opd-index` への導線必須にも違反している。
-    message_ja: >-
-      ロールバック条件の判定基準と、`opd-index`・`opr-incident` への関連ドキュメント導線が欠けており、rulebook
-      の禁止事項「変更作業の承認・ロールバック条件を未記載にする」に実質的に抵触し、`opd-index` への導線必須にも違反している。
-  - id: F020
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 運用手順: 運用変更（設定変更・デプロイ） サンプル"
-    message: Frontmatter の `rulebook` 指定が `specdojo:opd-rulebook` となっており、成果物種別と矛盾している。
-    message_ja: Frontmatter の `rulebook` 指定が `specdojo:opd-rulebook` となっており、成果物種別と矛盾している。
-  - id: F021
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 運用手順: 運用変更（設定変更・デプロイ） サンプル"
-    message: "`opr-template.md` の構成に従っておらず、サンプルとしてあるべき「rulebook に準拠した具体的な記述例」を提示できていない。"
-    message_ja: "`opr-template.md` の構成に従っておらず、サンプルとしてあるべき「rulebook に準拠した具体的な記述例」を提示できていない。"
-  - id: F022
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 5
-    anchor: "## 1. 運用変更作業（設定変更・デプロイ・ロールバック）"
-    message: "`opr-template` の「運用変更作業」表（変更種別・承認者・実施条件・完了条件・ロールバック条件・証跡）の形式を使わず箇条書きで記述しているため、template の骨組みと sample の完成例が対応しない。"
-    message_ja: "`opr-template` の「運用変更作業」表（変更種別・承認者・実施条件・完了条件・ロールバック条件・証跡）の形式を使わず箇条書きで記述しているため、template の骨組みと sample の完成例が対応しない。"
-  - id: F023
-    severity: major
-    rule: vp-ux-readability
-    line: 1
-    anchor: "# 運用手順: 運用変更（設定変更・デプロイ） サンプル"
-    message: 記載内容が極めて不十分であり、初見の読者が OPR の具体的な記述水準や構成を把握し、模倣するためのリファレンスとして機能していない。
-    message_ja: 記載内容が極めて不十分であり、初見の読者が OPR の具体的な記述水準や構成を把握し、模倣するためのリファレンスとして機能していない。
-  - id: F024
+    line: 87
+    anchor: >-
+      ロールバック条件に当たったら、`DEV`
+      は原因を調べる前に直前の版や変更前の価格へ戻す。戻した後に適用の確認と同じ操作をして、変更前と同じく記録できれば戻しの完了とし、戻した理由を変更記録に書く。データの形が変わる版で戻せない場合は、適用前の手動バックアップから復元する。
+    message: 手動バックアップから復元する手順の参照先（`opr-index` のバックアップ・リストア手順または `opr-backup-restore`）を明記し、導線表にも追加すると、変更が復元手順へ与える影響を追えるようになる。
+    message_ja: 手動バックアップから復元する手順の参照先（`opr-index` のバックアップ・リストア手順または `opr-backup-restore`）を明記し、導線表にも追加すると、変更が復元手順へ与える影響を追えるようになる。
+  - id: F002
     severity: minor
-    rule: vp-ux-language-consistency
-    line: 13
-    anchor: "- 異常（P1/P2）発生時は即時戻し、報告"
-    message: 「P1/P2」と「Ops Lead」の定義や参照先（`opd-incident-management` の優先度定義、適用先のメンバー定義）が示されておらず、優先度と役割の意味を本書単体で確定できない。
-    message_ja: 「P1/P2」と「Ops Lead」の定義や参照先（`opd-incident-management` の優先度定義、適用先のメンバー定義）が示されておらず、優先度と役割の意味を本書単体で確定できない。
-  - id: F025
-    severity: major
-    rule: vp-ops-release-readiness
-    line: 1
-    anchor: "# 運用手順: 運用変更（設定変更・デプロイ） サンプル"
+    rule: vp-qe-omissions-consistency
+    line: 81
+    anchor: "5. 適用: `DEV` が閉店後に、データの形が変わる版なら手動のバックアップを取ってから適用し、適用の開始・終了の時刻と版を変更記録に書く。"
+    message: 適用の手順 step 5 が「閉店後」としており、変更種別の表の緊急変更（営業時間中も可、電話承認）と矛盾する。緊急変更の例外（事前周知を省略、検証と承認の扱い）を明記すること。
+    message_ja: 適用の手順 step 5 が「閉店後」としており、変更種別の表の緊急変更（営業時間中も可、電話承認）と矛盾する。緊急変更の例外（事前周知を省略、検証と承認の扱い）を明記すること。
+  - id: F003
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 33
+    anchor: "`opr-index` 参照。変更の適用件数とロールバックの件数は、`opr-index` の月次点検で変更記録から集計する。"
     message: >-
-      Criteria, prerequisites, and unresolved review issues required to advance the document status from draft to ready
-      are not defined.
+      「変更の適用件数とロールバックの件数は `opr-index` の月次点検で集計する」とあるが、`opr-sample` の月次点検の行にその項目はない。集計の責任を本書の運用変更作業に寄せるか、`opr-index`
+      側に項目を追加すること。
     message_ja: >-
-      Criteria, prerequisites, and unresolved review issues required to advance the document status from draft to ready
-      are not defined.
-  - id: F026
-    severity: major
-    rule: vp-ops-operability
-    line: 1
-    anchor: "# 運用手順: 運用変更（設定変更・デプロイ） サンプル"
-    message: このランブックのメンテナンス手順、運用の問い合わせに関する連絡窓口、およびアップデート管理のガイドラインが不足しています。
-    message_ja: このランブックのメンテナンス手順、運用の問い合わせに関する連絡窓口、およびアップデート管理のガイドラインが不足しています。
+      「変更の適用件数とロールバックの件数は `opr-index` の月次点検で集計する」とあるが、`opr-sample` の月次点検の行にその項目はない。集計の責任を本書の運用変更作業に寄せるか、`opr-index`
+      側に項目を追加すること。

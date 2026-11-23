@@ -4,12 +4,11 @@ document: specdojo:opr-rulebook
 path: docs/ja/specdojo/rulebooks/opr-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-rulebook
 verdict: needs-work
-score: 86
-graded_at: "2026-11-21T05:03:10.387Z"
-graded_by: opus-executor
-content_hash: 077958e36bbcf40cc96d1cbe9a2240e2f0f998a098582f647ad2dc30a6509cf3
+score: 94
+graded_at: "2026-11-23T18:17:04.191Z"
+graded_by: sonnet-review-executor
+content_hash: 909e618fdaf7a2d0429262970ef2d41265fb8e443b75b7fcc882da9744298a8e
 categories:
   purpose:
     score: 100
@@ -22,13 +21,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 75
+    score: 92
   implementation:
     score: 100
   quality:
-    score: 75
+    score: 83
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -76,20 +75,20 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
     level: 2
     score: 50
   vp-ux-readability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -105,84 +104,28 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 1
-  minor: 7
+  minor: 1
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-arc-conciseness
-    line: 131
-    anchor: "推奨フォーマット（表）:"
+    line: 97
+    anchor: "### 6.4. 障害対応手順（P1/P2…、切り分け、一次対応、復旧）"
     message: >-
-      6.11 の推奨フォーマット表は template の「証跡」章と同じ列構成の再掲であり、列は template を正本とする第5章・第6章冒頭の方針と重複するため、表を削除して template
-      参照と必須識別子の指示に置き換えるべきである。
+      6.4 の「停止判断・ロールバックが関わる場合は判断条件と承認者を書く」は template の障害対応手順の注記と同文の再掲であり、6.6 の RTO/RPO 達成可否の判定の記述も template と重複するため、正本の
+      template 参照に置き換えるか差分だけに絞るべきである。
     message_ja: >-
-      6.11 の推奨フォーマット表は template の「証跡」章と同じ列構成の再掲であり、列は template を正本とする第5章・第6章冒頭の方針と重複するため、表を削除して template
-      参照と必須識別子の指示に置き換えるべきである。
+      6.4 の「停止判断・ロールバックが関わる場合は判断条件と承認者を書く」は template の障害対応手順の注記と同文の再掲であり、6.6 の RTO/RPO 達成可否の判定の記述も template と重複するため、正本の
+      template 参照に置き換えるか差分だけに絞るべきである。
   - id: F002
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 146
-    anchor: "### 6.13. 運用作業の受入確認"
-    message: >-
-      6.13 の合格条件「完了条件と OPD の基準を満たせば合格」は照合する OPD の項目と結果の記録先が未定義で pass / fail
-      を判定しにくいため、照合対象（優先度・RTO/RPO・承認基準など）と記録先の章（証跡など）を明記すべきである。
-    message_ja: >-
-      6.13 の合格条件「完了条件と OPD の基準を満たせば合格」は照合する OPD の項目と結果の記録先が未定義で pass / fail
-      を判定しにくいため、照合対象（優先度・RTO/RPO・承認基準など）と記録先の章（証跡など）を明記すべきである。
-  - id: F003
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 41
-    anchor: "- `<term>` は用語集(GL)の論理名キー（英小文字kebab-case）を用いる（表示名は title / ファイル名で日本語を使用してよい）。"
-    message: 「表示名は title / ファイル名で日本語を使用してよい」は Frontmatter に `title:` を書かない規約と矛盾して誤読を招くため、「表示名は H1 / ファイル名」に改めるべきである。
-    message_ja: 「表示名は title / ファイル名で日本語を使用してよい」は Frontmatter に `title:` を書かない規約と矛盾して誤読を招くため、「表示名は H1 / ファイル名」に改めるべきである。
-  - id: F004
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 37
-    anchor: "- `id` は `opr-index` または `opr-<term>`（kebab-case。例: `opr-incident`）。"
-    message: >-
-      `id` 規則が `opr-index` / `opr-＜term＞` のみで project 修飾 ID（例: `＜project-id＞:opr-index`）に触れておらず、他の rulebook の ID
-      規則と粒度が揃わないため、修飾形を明記すべきである。
-    message_ja: >-
-      `id` 規則が `opr-index` / `opr-＜term＞` のみで project 修飾 ID（例: `＜project-id＞:opr-index`）に触れておらず、他の rulebook の ID
-      規則と粒度が揃わないため、修飾形を明記すべきである。
-  - id: F005
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# 運用手順 作成ルール"
     message: >-
-      Frontmatter で宣言した sample のうち 7 件が `rulebook: specdojo:opd-rulebook` を宣言して対応が一致せず、`opr-incident-sample` は template
-      と異なる列名「初動SLA」、`opr-sample` は template の章構成と異なる独自構成になっているため、sample の `rulebook` と構成を opr-rulebook・opr-template
-      に揃えるか宣言を見直すべきである。
+      `opr-batch-sample`・`opr-change-sample`・`opr-support-sample` の 3 件が `rulebook: specdojo:opd-rulebook` を宣言し、template
+      の12章構成にもなっていないため、`rulebook` を `specdojo:opr-rulebook` に直して template 構成に揃えるか、Frontmatter の sample 宣言から外すべきである。
     message_ja: >-
-      Frontmatter で宣言した sample のうち 7 件が `rulebook: specdojo:opd-rulebook` を宣言して対応が一致せず、`opr-incident-sample` は template
-      と異なる列名「初動SLA」、`opr-sample` は template の章構成と異なる独自構成になっているため、sample の `rulebook` と構成を opr-rulebook・opr-template
-      に揃えるか宣言を見直すべきである。
-  - id: F006
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 146
-    anchor: "### 6.13. 運用作業の受入確認"
-    message: >-
-      6.13「運用作業の受入確認」は記述ガイド内にあるが第5章の必須章にも template の章にもなく、成果物に章として書くのか運用上の確認手順なのかが曖昧なため、記述ガイドから分離するか
-      template・必須章との関係を明記すべきである。
-    message_ja: >-
-      6.13「運用作業の受入確認」は記述ガイド内にあるが第5章の必須章にも template の章にもなく、成果物に章として書くのか運用上の確認手順なのかが曖昧なため、記述ガイドから分離するか
-      template・必須章との関係を明記すべきである。
-  - id: F007
-    severity: minor
-    rule: vp-ux-readability
-    line: 139
-    anchor: "### 6.12. 関連ドキュメント導線（`opd` 参照、`mip` / `otp` / `cop` 連携）"
-    message: 6.12 の `mip-*` / `otp-*` / `cop-*` は本書のどこにも成果物名や役割の説明がなく初見の読者が連携先を判断できないため、2.1 の位置づけに成果物名と関係を追記すべきである。
-    message_ja: 6.12 の `mip-*` / `otp-*` / `cop-*` は本書のどこにも成果物名や役割の説明がなく初見の読者が連携先を判断できないため、2.1 の位置づけに成果物名と関係を追記すべきである。
-  - id: F008
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 20
-    anchor: "- `opr-index` を入口とし、証跡・作業承認・優先度・エスカレーション・手順テンプレの共通規約を置く"
-    message: 1.1 の「手順テンプレの共通規約」は Kata の template（`specdojo:opr-template`）と語が衝突して意味が曖昧なため、「手順の記述書式」など別の語に改めるか、どちらを指すか明記すべきである。
-    message_ja: 1.1 の「手順テンプレの共通規約」は Kata の template（`specdojo:opr-template`）と語が衝突して意味が曖昧なため、「手順の記述書式」など別の語に改めるか、どちらを指すか明記すべきである。
+      `opr-batch-sample`・`opr-change-sample`・`opr-support-sample` の 3 件が `rulebook: specdojo:opd-rulebook` を宣言し、template
+      の12章構成にもなっていないため、`rulebook` を `specdojo:opr-rulebook` に直して template 構成に揃えるか、Frontmatter の sample 宣言から外すべきである。
