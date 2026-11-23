@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-qhes-sysd-critical-flows-template-open-items
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: easy
   owner: BA
   registered_at: "2026-11-22T23:35:35Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-23T02:09:58Z"
+  conclusion: sysd-critical-flows-template の未決事項の表に影響と当面の扱いの列を足し、図の記入指示・part_of・フロー ID の列名を直した。担当 Role code の列は足していない。template の grade は pass 96
   derived_from:
     - PJR-325Y
   commit_type: docs
