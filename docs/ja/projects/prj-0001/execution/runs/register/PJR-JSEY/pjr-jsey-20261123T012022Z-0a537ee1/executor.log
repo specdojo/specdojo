@@ -1,0 +1,10 @@
+個票 `pjr-jsey-exec-run-split-smoke.md` だけを更新しました。
+
+- **追記内容:** 対応結果の表に 1 行追加しました（2026-11-23 10:21 JST、確認対象 PJR-0JVB、`sonnet-executor`）。
+- **確認対象の根拠:** 完了条件の一覧のうち、git log の review 遷移が最も新しいのは PJR-0JVB でした（commit `b98a462d0`、2026-11-23 09:10 JST）。ただし、一覧の他の項目との新旧は個別に照合していません。末尾にあることと git log を根拠に選びました。
+- **本文の更新:** 表の下の説明文と作業内容表のメモも、PJR-EF7M の記述から PJR-0JVB に直しました。
+- **未実行:** 親の検証は runner が実行するため、executor は検証コマンドを走らせていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"個票の対応結果の表に PJR-0JVB の行を追記し、説明文と作業内容表のメモを更新した。個票以外のファイルは変更していない。","handoff":["確認対象は git log で review 遷移が最も新しかった PJR-0JVB とした。完了条件の一覧の他の項目との新旧は個別に照合しておらず、一覧の末尾であることと git log を根拠にしている。","親 runner の検証、reporter の result 記入、統合、review 遷移は後続段で確認する。"],"validations":[{"command":"npm run validate:history-links","status":"not_run","summary":"個票を変更したため適用対象だが、実行していない。追記は Markdown リンクを含まず、対応結果の表と本文は既存の wikilink 記法のままにしている。"}]}
+</specdojo_executor_evidence>
