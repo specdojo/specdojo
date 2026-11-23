@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-4-nfr-security-safety-sample-040
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-4-nfr-security-safety-sample-040/T-KATA-WAVE-4-nfr-security-safety-sample-040-20261123T053209Z-b007262b/plan.md
   started_at: "2026-11-23T05:32:18.021Z"
+  completed_at: "2026-11-23T05:40:58.944Z"
   agent: opus-executor
   execution: agent
   approach: rulebook-maintenance
@@ -20,16 +21,24 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- nfr-security-safety-rulebook を、本文の要件・判断基準と「良い例」「悪い例」の形式に簡潔化しました。
+- rulebook 内に含まれていたサンプル（最小例）の章を削除し、成果物としての `docs/ja/specdojo/samples/nfr-security-safety-sample.md` にその責務を譲る構成に変更しました。
+- grade の指摘事項（F001〜F005, F008）に基づき、記述ガイドと禁止事項を更新しました。具体的には、測定方法と判定時期の記述指示、例外運用の集約ルール、適用範囲における権限定義の要求、および用語の統一を行いました。
+- 検証担当の Role code を直接記載させるのではなく、「検証先」を用いて検証タスクへ繋ぐ方針に整理しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/rulebooks/nfr-security-safety-rulebook.md`: rulebook を簡潔化するために、サンプルによる最小例の章を削除し、要件の記述ガイド、禁止事項、および関連ドキュメントの導線に焦点を当てた構成へ変更しました。これにより、F001〜F005 および F008 の指摘に対応しました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- F006/F007/F009 未解消: `specdojo:nfr-security-safety-sample` の構成が rulebook の本文要件（概要・適用範囲・脅威前提・機密性・安全性要件一覧・測定・検証方法・例外運用・関連ドキュメント導線）と乖離しています。後続の sample 改訂タスクにおいて、新しい rulebook の構成に合わせてサンプルを改訂する必要があります。rulebook の `status` を `ready` に変更する判断は、sample の改訂完了後に行う必要があります。
+- F001: 検証担当の Role code は、本書に書かせるのではなく、「検証先」の列（`stc-*`, `sac-*`, `opr-*` 等）を用いて検証タスクへ繋ぐ方針としました。具体的な担当の割り当ては、検証先の計画およびメンバー定義で行います。
+- rulebook からサンプル章を削除したため、`sample` を改訂するまで参照できる完成例がありません。なお、`良い例` に記載されている `stc-security` は、例示用の仮の ID です。
+- F006/F007/F009 未解消: specdojo:nfr-security-safety-sample の構成が rulebook の本文要件（概要・適用範囲・脅威前提・機密性・安全性要件一覧・測定・検証方法・例外運用・関連ドキュメント導線の6章）と乖離している。後続の sample 改訂タスクで rulebook に合わせて作り直す必要がある。rulebook を ready にする判断は sample 改訂の完了後に行う。
+- F001: 検証担当の Role code は「共通の運用」と PJR-76N9 に合わせて本書に書かせず、「検証先」列（`stc-*/sac-*/opr-*`）で検証タスクへ繋ぐ方針にした。担当の割り当ては検証先の計画とメンバー定義で行う。
+- rulebook からサンプル章（最小例）を削除したため、sample を改訂するまで参照できる完成例がない。良い例の `stc-security` は例示用の仮の ID である。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+rulebook を、成果物の完成例（sample）を直接含む形式から、記述の規範を示す形式へと移行しました。検討の結果、rulebook は「何を書くべきか」「何を禁止すべきか」の基準に特化させ、具体的な構成例は sample に任せることで、文書の責務を単一化しました。
