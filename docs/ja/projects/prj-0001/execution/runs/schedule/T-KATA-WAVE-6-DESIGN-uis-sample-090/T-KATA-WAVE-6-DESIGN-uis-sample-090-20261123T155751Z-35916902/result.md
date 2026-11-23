@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-DESIGN-uis-sample-090
   mode: review
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-DESIGN-uis-sample-090/T-KATA-WAVE-6-DESIGN-uis-sample-090-20261123T155751Z-35916902/plan.md
   started_at: "2026-11-23T15:57:53.386Z"
+  completed_at: "2026-11-23T16:02:17.090Z"
   agent: sonnet-review-executor
   execution: agent
   approach: fully-guided
@@ -19,20 +20,21 @@ specdojo:
 
 ## 1. 評価結果の確認
 
-_TODO_: 評価結果サイドカーのパス、鮮度確認で実行したコマンドとその出力（`content_hash` が現在の成果物と一致するか）、grade の `verdict` / `score` / finding 件数を記入する。評価結果が最新でない、または評価不能の場合は、その事実と理由を記入する。
+### 評価結果の確認 #### 1. `docs/ja/specdojo/samples/uis-sample.md` の鮮度確認 `npx specdojo grade list --target kata --path docs/ja/specdojo/samples/uis-sample.md --changed-only` を実行した結果、出力なし（最新）。 - `verdict`: `pass` - `score`: 98 - `finding_counts`: blocker 0 / major 0 / minor 1 / note 0 #### 2. `docs/ja/specdojo/rulebooks/uis-rulebook.md` の鮮度確認 `npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/uis-rulebook.md --changed-only` を実行した結果、出力なし（最新）。 - `verdict`: `pass` - `score`: 100 - `finding_counts`: blocker 0 / major 0 / minor 0 / note 0
 
 ## 2. 判断根拠
 
-_TODO_: 変更内容・plan・実行記録・完了条件・最新の finding を照合した内容と、verdict を選んだ理由を記入する。finding が残るのに完了とする場合は、その finding が今回の完了を妨げない理由を記入する。参照は `[[id]]` 形式（Obsidian wikilink）で記載し、行番号アンカーや絶対パスは使わない。
+- 評価結果の鮮度を確認したところ、`docs/ja/specdojo/samples/uis-sample.md` および `docs/ja/specdojo/rulebooks/uis-rulebook.md` ともに最新である。`uis-sample.md` には `finding` `F001` が存在するが、これは `vp-qe-verifiability` に関する `minor` な指摘であり、完了要件である `DC-001`〜`DC-003` の充足を妨げるものではないと判断した。
+- 先行する `edit` タスクの `result` は特定できず、実行記録の詳細は未確認である。
 
 ## 3. 未充足事項・改善指示
 
-_TODO_: 未充足事項と、再計画・成果物の改善・再評価に使う改善指示を記入する（なければ「なし」と記入する）。評価結果の内容に疑義がある場合は、再評価が必要な対象と理由もここに記入する。
+- `F001`: 「現在庫数」の更新契機が曖昧であるため、商品追加・数量変更・会計確定のうちどの操作の成功時または失敗時に更新するかを明記すること。
 
 ## 4. approach に応じた確認
 
-_TODO_: `approach` に応じて確認した内容を記入する。fully-guided / recipe-guided / freeform では求められた作成・更新が行われたか、retrofit では実装エビデンスの対応記録と未確認範囲、`rulebook-maintenance` などの maintenance 系では見直しの動機となった finding の解消状況を記入する。
+「磨き込み」の観点では、`uis-rulebook.md` の章立てや必須要素、および `uis-sample.md` の形式が `grade` によって満たされていることを確認した。成果物の品質に関する `finding` は既知の事実として受け入れ、タスクの完了を判断した。
 
 ## 5. decision
 
-- verdict: _TODO_（complete / complete-with-findings / incomplete / grade-stale / grade-unavailable / changed-during-review）
+- verdict: complete-with-findings
