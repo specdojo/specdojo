@@ -48,7 +48,17 @@ specdojo:
 | 原因     | `--edit-by` / `--review-by` で agent 候補が作られると、`prepareSingleTask` の人のタスク判定が候補なしの分岐にしか無く、素通りして plan 生成で失敗した |
 | 対応策   | 自動選択で `--by`・`--executor-by`・タスク固定 agent の無い人のタスクを skip し、`prepareSingleTask` でも同条件を override 解決の前に判定する         |
 | 依存事項 | なし                                                                                                                                                  |
-| 完了条件 | agent を `--edit-by` で指定した自動実行が `execution: human` のタスクを拾わず、failure にならないこと                                                 |
+| 完了条件 | 下の箇条書きのすべてを満たす                                                                                                                          |
+
+- `exec cycle` と `exec run --auto` で、`--edit-by`・`--review-by` で agent を指定していても、`execution: human` のタスクを自動の実行の対象から外す。人が `--by <nickname>` で明示したときの動きは変えない（1 回目で済み）。
+- 人のタスクだけが残って実行できるタスクがないときは、`exec run --auto`（dry-run を含む）と `exec cycle` を失敗にせず、実行できるタスクがない旨と、人の確定を待つタスクの数を出して終了コード 0 で終える。人のタスクのほかに実行できないタスク（準備の失敗など）があるときは、今までどおり失敗にする。
+- 単体テストを足す（agent を指定した自動の実行で人のタスクを飛ばすこと、人のタスクだけが残ったときに終了コード 0 で終えること、準備の失敗があるときは失敗にすること）。
+- 2 回目の実行（2026-11-23）: 1 回目は人のタスクを飛ばすようにしたが、飛ばしたタスクも ready の数（`readyCount`・`lastReadyCount`）に数えるため、人のタスクだけが残ると「no executable tasks」で終了コード 1 のままだった（prj-0001 の dry-run で確かめた）。また単体テストを足していなかった。上の 2 つ目と 3 つ目を満たす。起票のときの完了条件がこの個票に入っていなかったのはオーケストレーターの誤りで、この回で入れ直した。
+- runner の動きを変えるため、統合の後に orchestrator が `exec smoke` を流し、prj-0001 で `exec run --auto --dry-run --edit-by sol-executor` が終了コード 0 で終わることを確かめてから close する。
+- `CHANGELOG.md` は変えない。個票の対応結果に「CHANGELOG に書く事項」の小節を作り、区分と行の文案を書く。
+- 迷った点は executor が決め、決めた内容と理由を個票の対応結果と報告の `handoff` に書く。
+- 保護された設定（`.specdojo/`・`.agents/`・`.claude/`・`.codex/`・`.opencode/`・`package.json` など）は変えない。
+- `npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を通し、親の検証を通す。
 
 ## 5. 対応結果
 

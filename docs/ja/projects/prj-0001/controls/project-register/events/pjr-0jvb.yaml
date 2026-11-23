@@ -73,3 +73,16 @@
       from: in-progress
       to: review
   previous_event_id: reg_ff97dd3bc0d147bea50b2d2d99f87748
+- v: 1
+  id: reg_2def4816ccd946fdba306a5ff7b28511
+  ts: "2026-11-23T01:20:34Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: 2 回目の実行の条件を足し、起票のときに入らなかった完了条件を入れ直した
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_d9b73cccb3194f48b847582a54011243
