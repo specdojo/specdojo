@@ -5,10 +5,10 @@ path: docs/ja/specdojo/recipes/tsd-recipe.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 98
-graded_at: "2026-10-31T20:03:45.698Z"
-graded_by: flash-high-executor
-content_hash: 1c3df94adc0eea6217583485aa64550536e87fa9d0521ebc9d03de866f5bfee0
+score: 99
+graded_at: "2026-11-23T17:33:42.531Z"
+graded_by: sonnet-review-executor
+content_hash: 0af81faf2b48d690f1e0ce21837ed57b5fb04985bbde066db89ca6f417415dd1
 categories:
   purpose:
     score: 100
@@ -21,11 +21,11 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 92
   implementation:
     score: 100
   quality:
-    score: 92
+    score: 100
   consistency:
     score: 100
 viewpoints:
@@ -60,8 +60,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -81,8 +81,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -109,15 +109,10 @@ finding_counts:
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-kata-conformance
-    line: 36
+    rule: vp-arc-conciseness
+    line: 192
     anchor: >-
-      - **成果物内の `_CONTEXT_:`**: `deliverable scaffold --project <project-id> --target <doc-id>`
-      で生成した雛形の各章見出し直下に書く局所的な指示（カタログにない成果物は `--target-path` と `--target-rulebook` を指定。例: 第 4 章で `_CONTEXT_:
-      主流のフレームワークを比較し、選定理由と採用値を提案してください`）。`draft` が本文へ反映後に削除する。
-    message: >-
-      In section 2.1, the example references a section by chapter number alone ("例: 第 4 章で") instead of by section title
-      (e.g., "「採用技術・設定」で"), violating recipe-authoring-standard.md which prohibits chapter-number-only references.
-    message_ja: >-
-      In section 2.1, the example references a section by chapter number alone ("例: 第 4 章で") instead of by section title
-      (e.g., "「採用技術・設定」で"), violating recipe-authoring-standard.md which prohibits chapter-number-only references.
+      | 観点             | 良い例                                                         |
+      悪い例                                              |
+    message: 「良い例 / 悪い例」の表は rulebook 6 章の良い例・悪い例と重複している。rulebook への参照に置き換えるか、recipe 固有の観点だけに絞れば、判断情報を失わずに短くできる。
+    message_ja: 「良い例 / 悪い例」の表は rulebook 6 章の良い例・悪い例と重複している。rulebook への参照に置き換えるか、recipe 固有の観点だけに絞れば、判断情報を失わずに短くできる。
