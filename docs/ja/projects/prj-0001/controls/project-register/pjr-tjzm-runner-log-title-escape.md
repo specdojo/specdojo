@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-tjzm-runner-log-title-escape
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-11-23T00:36:48Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-23T04:20:20Z"
+  conclusion: "Register item: の行と --dry-run の行で、エスケープする前のタイトルを出すようにし、下線を含むタイトルのテストを足した"
 ---
 
 # PJR-TJZM runner のログの Register item の行で、項目のタイトルの _ が \_ と表示される

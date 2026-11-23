@@ -203,3 +203,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_131735f1a70a4a25bf1c4ca8b75340c2
+- v: 1
+  id: reg_6cd46b680ffa4f9a8f28abbe08f6e4db
+  ts: "2026-11-23T04:20:20Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分を確かめ、prj-0001 の exec run --register PJR-EKGQ --dry-run で external_projects がエスケープされずに出ることと、exec smoke の成功を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: "Register item: の行と --dry-run の行で、エスケープする前のタイトルを出すようにし、下線を含むタイトルのテストを足した"
+  previous_event_id: reg_a16aac275d2c490b95717700a46b5e47
