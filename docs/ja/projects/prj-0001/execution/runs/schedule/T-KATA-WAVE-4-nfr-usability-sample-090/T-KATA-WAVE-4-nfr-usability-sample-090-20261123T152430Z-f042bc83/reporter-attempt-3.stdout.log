@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "mode": "review",
+  "grade_check": "### 評価結果の確認\n\n#### 1. 鮮度確認\n`npx specdojo grade list --target kata --path docs/ja/specdojo/samples/nfr-usability-sample.md --changed-only` を実行。出力なし。成果物は最新。\n\n`npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/nfr-usability-rulebook.md --changed-only` を実行。出力なし。成果物は最新。\n\n#### 2. 評価結果の集約\n- **Sample (`docs/ja/specdojo/samples/nfr-usability-sample.md`)**\n  - `verdict`: `pass`\n  - `score`: 97\n  - `finding_counts`: blocker 0 / major 0 / minor 2 / note 0\n  - Findings:\n    - `F001`: `sac-store-sales` を wikilink 化するか未作成と明記する\n    - `F002`: 判定者列の「利用者代表」を役割名から Role code に合わせる\n- **Rulebook (`docs/ja/specdojo/rulebooks/nfr-usability-rulebook.md`)**\n  - `verdict`: `pass`\n  - `score`: 98\n  - `finding_counts`: blocker 0 / major 0 / minor 2 / note 0\n  - Findings:\n    - `F001`: Frontmatter の `recipe` と `template` が `undecided` であることへの説明不足\n    - `F002`: `ready` に移行するための残作業の記録不足",
+  "rationale": [
+    "評価結果の鮮度を確認し、最新であることを確認した。[[docs/ja/specdojo/samples/nfr-usability-sample.md]] および [[docs/ja/specdojo/rulebooks/nfr-usability-rulebook.md]] の両者について、`grade` による評価結果は `pass` であった。",
+    "Sample について、完了条件 `DC-001`〜`DC-005` を確認したところ、`grade` の結果からこれらは充足されていると判断した。ただし、`F001`（wikilink 形式の不備）および `F002`（Role code 表記の不整合）の minor finding が残っている。",
+    "Rulebook についても、`grade` により `pass` 判定を受けており、完了条件を満たしていると判断した。ただし、`F001`（未定義の recipe/template への対処）および `F002`（`ready` への移行に向けた残作業の記録）の minor finding が残っている。",
+    "確認できなかった範囲として、先行する edit タスクの実行記録および検証結果、ならびに `sac-store-sales` が実在する文書であるかの確認が挙げられる。"
+  ],
+  "improvements": [
+    "Sample `F001`: `sac-store-sales` を wikilink 形式にするか、未作成である旨を明示すること。",
+    "Sample `F002`: 判定者列の表記を、メンバー定義の Role code に合わせること。",
+    "Rulebook `F001`: `recipe` と `template` が `undecided` である背景、あるいは今後どのように定義するかを記述すること。",
+    "Rulebook `F002`: `ready` 状態へ移行するために必要な残作業を記録すること。"
+  ],
+  "approach": "### approach に応じた確認\n\n- **磨き込みの確認**: `grade` の結果および finding に基づき、`rulebook` の必須要素の整備および `sample` の形式への適合が確認された。両者ともに `pass` であるため、計画された磨き込みは完了している。\n- **findings の扱い**: 検出された finding はすべて `minor` であり、タスクの完了（`complete` または `complete-with-findings`）を妨げる性質のものではないため、これらを付帯させた状態で完了とする。",
+  "verdict": "complete-with-findings"
+}
