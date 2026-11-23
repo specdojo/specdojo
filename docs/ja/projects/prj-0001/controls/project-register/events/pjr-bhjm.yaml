@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c208e39626a54accae732c8e70aa8030
+  ts: "2026-11-23T22:53:02Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 英語版の版と最初の範囲を決める
+    - field: description
+      from: ""
+      to: v0.10.0 の後の英語版を v0.11.0（マイナー）で出すか、最初にどこまで英語にするかを決める
+    - field: input
+      from: ""
+      to: '["利用者の依頼（2026-11-24）: v0.10.0 のリリースの後に英語版に着手したい","オーケストレーターの推奨: 英語の kata や CLI の言語の選択を入れるならマイナー（v0.11.0）。README と文書サイトの文章だけなら版を上げないかパッチ","v0.10.0 の後に機能追加を止める方針（PJR-6XYD）の例外として位置づける"]'
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-24"
+    - field: due
+      from: ""
+      to: "2026-12-31"
+    - field: derived_from
+      from: ""
+      to: '["PJR-6XYD"]'
+- v: 1
+  id: reg_d0a801329f0f4469aca36bca274341e1
+  ts: "2026-11-23T22:53:06Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "検討した選択肢" updated
+  changes:
+    - field: section
+      from: ""
+      to: 検討した選択肢
+  previous_event_id: reg_c208e39626a54accae732c8e70aa8030
