@@ -118,3 +118,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_fd199259c6a54f71a2f2daed6e80409d
+- v: 1
+  id: reg_6a18c40722414d919fe0f14cfb31179f
+  ts: "2026-11-23T23:36:06Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果・親の検証（test-integration を含む全件 passed）で確かめ、統合の後に新しい runner で PJR-6690 の run が統合まで通ることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-24"
+    - field: conclusion
+      from: "-"
+      to: register_sync の設定で、register の記帳・schedule のイベント・外部からの起票を register のブランチへ commit・push できるようにした。既定は無効
+  previous_event_id: reg_8eb242d6135e4b958558ea6b7dea6363

@@ -1,7 +1,7 @@
 import { EventEmitter } from "node:events";
 import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
 import type * as ChildProcessModule from "node:child_process";
-import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync, writeSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { PassThrough } from "node:stream";
@@ -198,12 +198,23 @@ describe("parent validation diagnostics", () => {
         return true;
       }),
     });
-    vi.mocked(spawn).mockReturnValueOnce(child as unknown as ChildProcessWithoutNullStreams);
-    const batch = await withValidationMetrics("timeout", path, async () => {
-      const pending = runParentValidationBatch(["test-unit"], ".");
-      child.stdout.write(
+    // PJR-6690: the parent validation hands the child file descriptors instead of pipes, so the
+    // fake child writes its reporter line to the stdout descriptor as a real child would.
+    vi.mocked(spawn).mockImplementationOnce(((
+      _command: string,
+      _args: readonly string[],
+      options: { stdio: unknown[] },
+    ) => {
+      const stdoutFd = options.stdio[1];
+      if (typeof stdoutFd !== "number") throw new Error("expected a file descriptor for stdout");
+      writeSync(
+        stdoutFd,
         '[parent-validation:test-file] {"event":"start","file":"tests/hanging.test.ts"}\n',
       );
+      return child as unknown as ChildProcessWithoutNullStreams;
+    }) as unknown as typeof spawn);
+    const batch = await withValidationMetrics("timeout", path, async () => {
+      const pending = runParentValidationBatch(["test-unit"], ".");
       // Fake timers run callbacks in the advancing caller's async context, unlike real timers.
       await vi.advanceTimersByTimeAsync(600_000);
       return await pending;

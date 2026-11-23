@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-n5j8-register-commit-to-register-branch
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-23T00:21:36Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-23T23:36:06Z"
+  conclusion: register_sync の設定で、register の記帳・schedule のイベント・外部からの起票を register のブランチへ commit・push できるようにした。既定は無効
   derived_from:
     - PJR-2TX0
   depends_on:

@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-q723-reporter-format-failures
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-23T22:25:23Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-23T23:37:03Z"
+  conclusion: reporter の形式のやり直しが尽きたら代わりの reporter で 1 回やり直し、MD038・MD026・コードブロックの囲みを検査の前に機械的に直すようにした
   commit_type: fix
   commit_scope: exec
 ---

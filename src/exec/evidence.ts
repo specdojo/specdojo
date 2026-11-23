@@ -200,6 +200,8 @@ export type RecordParentValidationFailureOutputInput = {
     timedOut?: boolean;
     stdoutTruncated?: boolean;
     stderrTruncated?: boolean;
+    durationMs?: number;
+    stage?: string;
   }[];
 };
 
@@ -945,6 +947,16 @@ export function writeExecutorEvidence(path: string, evidence: ExecEvidence): voi
  * Persists failed parent-validation output beside executor evidence. A new numbered set is added
  * for every validation batch so reporter/integration resume never overwrites the prior failure.
  */
+// PJR-6690: 時間切れの検証は、経過時間と止まった npm script の段をログに残す。
+function timeoutLogLines(output: { durationMs?: number; stage?: string }): string[] {
+  return [
+    ...(output.durationMs !== undefined
+      ? [`elapsed: ${Math.round(output.durationMs / 1_000)}s`]
+      : []),
+    ...(output.stage ? [`stage: ${output.stage}`] : []),
+  ];
+}
+
 export function recordParentValidationFailureOutput(
   input: RecordParentValidationFailureOutputInput,
 ): ExecEvidence {
@@ -968,6 +980,7 @@ export function recordParentValidationFailureOutput(
         `parent validation: ${output.label}`,
         `exit code: ${output.exitCode ?? "unknown"}`,
         `timed out: ${output.timedOut === true ? "yes" : "no"}`,
+        ...(output.timedOut === true ? timeoutLogLines(output) : []),
         ...(output.error ? [`spawn error: ${output.error}`] : []),
         "",
         "--- stdout ---",

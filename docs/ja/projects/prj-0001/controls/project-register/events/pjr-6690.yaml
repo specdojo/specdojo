@@ -128,3 +128,32 @@
       from: "-"
       to: "parent validation failed: test-unit"
   previous_event_id: reg_4ca3061d5ddf4382a288ba82abf22fca
+- v: 1
+  id: reg_3569fc6b8293485ba7b2b6ea4d3687c5
+  ts: "2026-11-23T23:27:17Z"
+  action: start
+  actor: opus-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_cec58d216675416480d88ee1cf4f7cec
+- v: 1
+  id: reg_9d8ad4473c44456ca86b8c35879a2fe2
+  ts: "2026-11-23T23:34:05Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_3569fc6b8293485ba7b2b6ea4d3687c5
