@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: waiting
   priority: medium
   difficulty: easy
   owner: DEV
   registered_at: "2026-11-23T22:26:08Z"
   due_on: "2026-11-30"
+  block_reason: "parent validation failed: test-integration"
   commit_type: fix
   commit_scope: exec
 ---
