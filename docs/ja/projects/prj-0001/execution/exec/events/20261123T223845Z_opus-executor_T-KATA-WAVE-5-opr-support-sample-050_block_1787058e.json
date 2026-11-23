@@ -1,0 +1,17 @@
+{
+  "v": 1,
+  "ts": "2026-11-23T22:38:45Z",
+  "type": "block",
+  "task_id": "T-KATA-WAVE-5-opr-support-sample-050",
+  "by": "opus-executor",
+  "msg": "agent exited 0 but result is incomplete or its frontmatter differs from the scaffold (treated as blocked)",
+  "meta": {
+    "limit_deferred": "false",
+    "claim_actor": "opus-executor",
+    "stage_actor": "opus-executor",
+    "pipeline_stage": "executor",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-opr-support-sample-050/T-KATA-WAVE-5-opr-support-sample-050-20261123T182405Z-ad9ea488/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-opr-support-sample-050/T-KATA-WAVE-5-opr-support-sample-050-20261123T182405Z-ad9ea488/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-5-opr-support-sample-050-20261123T182405Z-ad9ea488"
+  }
+}
