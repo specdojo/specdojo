@@ -64,3 +64,68 @@
       from: ""
       to: 検討した選択肢
   previous_event_id: reg_e7a324ca59d248c0ae5d781f1fea6fb6
+- v: 1
+  id: reg_a8fee62123a044428ff00d99d92af9de
+  ts: "2026-11-23T23:03:32Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "決定内容" updated
+  changes:
+    - field: section
+      from: ""
+      to: 決定内容
+  previous_event_id: reg_a8bba96ba14c467881879b4a96615c3e
+- v: 1
+  id: reg_14a78b73b134458b9d70267a5683d45b
+  ts: "2026-11-23T23:03:35Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "採択理由" updated
+  changes:
+    - field: section
+      from: ""
+      to: 採択理由
+  previous_event_id: reg_a8fee62123a044428ff00d99d92af9de
+- v: 1
+  id: reg_3e7c334fd0f5463383b01a69d40957c0
+  ts: "2026-11-23T23:03:39Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "承認" updated
+  changes:
+    - field: section
+      from: ""
+      to: 承認
+  previous_event_id: reg_14a78b73b134458b9d70267a5683d45b
+- v: 1
+  id: reg_c56db07f38564fa79592282610491b0f
+  ts: "2026-11-23T23:03:43Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "影響範囲とフォローアップ" updated
+  changes:
+    - field: section
+      from: ""
+      to: 影響範囲とフォローアップ
+  previous_event_id: reg_3e7c334fd0f5463383b01a69d40957c0
+- v: 1
+  id: reg_993d82b1cd0a477c960d8de32349d77b
+  ts: "2026-11-23T23:03:50Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "関連ドキュメント" updated
+  changes:
+    - field: section
+      from: ""
+      to: 関連ドキュメント
+  previous_event_id: reg_c56db07f38564fa79592282610491b0f

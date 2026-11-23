@@ -63,3 +63,16 @@
       from: ""
       to: 完了条件
   previous_event_id: reg_f89d3acaeade4c7a9d74293014f5992d
+- v: 1
+  id: reg_73f027db5f5845018cd379ff5a99a0ae
+  ts: "2026-11-23T23:03:56Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: 目合わせの型を利用者が決めた（2026-11-24）
+  changes:
+    - field: input
+      from: '["v0.10.0 に入れる（利用者の指定、2026-11-24）","sample の横串の確認（段 2）のやり方として使う"]'
+      to: '["v0.10.0 に入れる（利用者の指定、2026-11-24）","sample の横串の確認（段 2）のやり方として使う","目合わせの型は prj-overview・opr・stsd の sample（利用者の決定、2026-11-24）"]'
+  previous_event_id: reg_d0ac0ae79aba4767ba80efde1b2e84e7
