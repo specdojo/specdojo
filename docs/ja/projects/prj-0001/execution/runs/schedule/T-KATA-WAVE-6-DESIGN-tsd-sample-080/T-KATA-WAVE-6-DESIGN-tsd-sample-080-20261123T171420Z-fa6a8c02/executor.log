@@ -1,0 +1,15 @@
+`docs/ja/specdojo/samples/tsd-sample.md` の冗長な 3 箇所を削り、意味と必須情報は変えていません。静的検査は実行していません。`lint:md` などは親 runner が実行します。
+
+- **接続経路の箇条書き:** 「全体構成と接続経路」の 2 項目から、図の矢印をなぞる語句（「HTTPS で」「5432 番へ」）を削りました。
+- **バックアップの導入文:** 「バックアップの取得」の冒頭で、運用方針・設計への参照と節名の再掲を、「他文書との関係」への参照に置き換えました。節名は「対象範囲と責務境界」の表に残っています。
+- **同時接続数:** 「既知の制約事項」から、採用設定一覧と重複する数値（上限 50、プール 10）の説明を削りました。作業用の余裕を表す 40 という制約は残しています。
+
+残したもの（`retain`）は 3 つです。
+
+- 「採用値・推奨値・未決事項の区別」は、表にない区分の根拠を示すので残しました。
+- 「設定値の反映先」は、表にない実行コマンドを含むので残しました。
+- 「動作確認一覧」の 2 つの表は、段階ごとの合否と実施状況という別の情報なので、残しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"tsd-sample.md の冗長な 3 箇所を削除・参照置換で整理した。意味と必須情報は維持した。","handoff":[],"validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する検査のため executor では実行しない"}],"condense_records":[{"location":"3. 全体構成と接続経路 の箇条書き 1・2 項目","category":"figure-prose","action":"delete","reason":"図の矢印と同じ内容の語句（HTTPS、5432 番）を削った。直接接続しないという制約とホスト名は残した","cause":{"type":"document"}},{"location":"7.2. バックアップの取得 の導入文","category":"canonical-restatement","action":"reference","reason":"運用方針の wikilink と節名の再掲を、他文書との関係への参照に置き換えた。節名は 1.2 の表に残っている","cause":{"type":"document"}},{"location":"8.1. 既知の制約事項 の同時接続数","category":"table-prose","action":"merge","reason":"採用設定一覧と重複する数値の説明を削り、40 を超えない制約に合わせた","cause":{"type":"document"}},{"location":"4.2. 採用値・推奨値・未決事項の区別","category":"repetition","action":"retain","reason":"表にない区分と見直しの根拠を示すため残した","cause":{"type":"document"}},{"location":"4.1. 設定値の反映先","category":"table-prose","action":"retain","reason":"表にない実行コマンドと手順を含むため残した","cause":{"type":"document"}},{"location":"6.1. 動作確認一覧 の 2 つの表","category":"table-prose","action":"retain","reason":"段階ごとの合否と実施状況という別の情報のため残した","cause":{"type":"document"}}]}
+</specdojo_executor_evidence>
