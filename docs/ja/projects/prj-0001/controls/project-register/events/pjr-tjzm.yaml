@@ -87,3 +87,16 @@
       from: "integrate failed: Grade sidecar changed after checkpoint; reconcile before merge: docs/ja/projects/prj-0001/execution/grade/results/specdojo.ifx-api-rulebook.yaml"
       to: "-"
   previous_event_id: reg_a3fa93e7f78c43b68e3615272edccd69
+- v: 1
+  id: reg_5926fab83d0844c695a1b53dcd7bb11f
+  ts: "2026-11-23T02:21:17Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_33f923853ebb473e8f2e9fb5661bfdb6
