@@ -5,10 +5,10 @@ path: docs/ja/specdojo/templates/cnd-template.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 91
-graded_at: "2026-11-22T14:48:23.696Z"
-graded_by: opus-review-executor
-content_hash: 99acbf26b096bad45fdf149ec808069dcffdeb2701b67bd0ca2e5cf56b9330d5
+score: 98
+graded_at: "2026-11-23T09:29:53.606Z"
+graded_by: sonnet-review-executor
+content_hash: db590dc949b0621bb960b3def788367e4750450450f4eb1891a6570213fcbcfb
 categories:
   purpose:
     score: 100
@@ -19,13 +19,13 @@ categories:
   business:
     score: 100
   architecture:
-    score: 92
+    score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 75
+    score: 92
   consistency:
     score: 100
 viewpoints:
@@ -57,8 +57,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-technical-constraints:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -72,11 +72,11 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
     level: 4
     score: 100
@@ -87,8 +87,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -104,57 +104,17 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 5
+  minor: 1
   note: 0
 findings:
   - id: F001
-    severity: minor
-    rule: vp-arc-technical-constraints
-    line: 89
-    anchor: "- `_EXECUTION_AND_DEPLOYMENT_PRECONDITION_`"
-    message: >-
-      「技術前提・制約」の骨組みに、配置設計に必要な入力のうち決まっていないもの（ホスト・配信先・接続方式など）を書く欄、または「メモ / 将来課題」へ移す指示を加え、rulebook
-      の「配置設計に必要な入力と決まっていない入力を分ける」要件を template でも満たせるようにする。
-    message_ja: >-
-      「技術前提・制約」の骨組みに、配置設計に必要な入力のうち決まっていないもの（ホスト・配信先・接続方式など）を書く欄、または「メモ / 将来課題」へ移す指示を加え、rulebook
-      の「配置設計に必要な入力と決まっていない入力を分ける」要件を template でも満たせるようにする。
-  - id: F002
-    severity: minor
-    rule: vp-dev-testability
-    line: 96
-    anchor: <!-- 正常時は下流の結合検証へ渡す全経路に対応させる。保存先・外部依存では不在・失敗・結果不明時の状態も区別する。行は対象ごとに増減し、未確定の期待結果は「メモ / 将来課題」へ引き継ぐ。 -->
-    message: >-
-      「コンテナ間・外部依存の検証対象」のコメントまたは `_TODO_` に、rulebook の「検証・承認前の確認」に従って図と表を照合し、描画を確認する旨の参照を加え、sample
-      の検査に関する記述と揃えて、生成した文書の確認手順が分かるようにする。
-    message_ja: >-
-      「コンテナ間・外部依存の検証対象」のコメントまたは `_TODO_` に、rulebook の「検証・承認前の確認」に従って図と表を照合し、描画を確認する旨の参照を加え、sample
-      の検査に関する記述と揃えて、生成した文書の確認手順が分かるようにする。
-  - id: F003
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 96
-    anchor: <!-- 正常時は下流の結合検証へ渡す全経路に対応させる。保存先・外部依存では不在・失敗・結果不明時の状態も区別する。行は対象ごとに増減し、未確定の期待結果は「メモ / 将来課題」へ引き継ぐ。 -->
-    message: >-
-      検証対象表の前に、各行の結果を Pass / Fail / 未判定のどれと判定するか、未確認の期待結果を検証済みとして扱わないことを書く `_TODO_` を置き、rulebook の「検証・承認前の確認」の合格条件と
-      sample の判定文に対応させる。
-    message_ja: >-
-      検証対象表の前に、各行の結果を Pass / Fail / 未判定のどれと判定するか、未確認の期待結果を検証済みとして扱わないことを書く `_TODO_` を置き、rulebook の「検証・承認前の確認」の合格条件と
-      sample の判定文に対応させる。
-  - id: F004
     severity: minor
     rule: vp-qe-kata-conformance
     line: 51
     anchor: "| Person（図中ラベル） | 利用目的・接点  |"
     message: >-
-      sample が Person 表・検証対象表・メモ表に template にない担当ロール系の列（「判断・確認の責務」「主確認ロール」「担当ロール」）を加え、template
-      は判断者を転送先の個票で追うとしているため、列の正本である template と sample のどちらに揃えるかを決めて両者を一致させる。
+      sample の Person 表には template にない「判断・確認の責務」列が残っている。rulebook は Person を利用接点とし、設計の確認者一覧とは区別するとしている。列の正本である template と
+      sample のどちらに揃えるかを決め、両者を一致させる。
     message_ja: >-
-      sample が Person 表・検証対象表・メモ表に template にない担当ロール系の列（「判断・確認の責務」「主確認ロール」「担当ロール」）を加え、template
-      は判断者を転送先の個票で追うとしているため、列の正本である template と sample のどちらに揃えるかを決めて両者を一致させる。
-  - id: F005
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 7
-    anchor: "_TODO_: 実行・配備の前提を示す。仮定は _ASSUMPTION_: とし、影響・確認先を「メモ / 将来課題」へ記入する。"
-    message: "「仮定は _ASSUMPTION_: とし」は目印の書式を説明する文なので、`_ASSUMPTION_:` をインラインコードで囲み、表示で斜体にならず書式が正しく伝わるようにする。"
-    message_ja: "「仮定は _ASSUMPTION_: とし」は目印の書式を説明する文なので、`_ASSUMPTION_:` をインラインコードで囲み、表示で斜体にならず書式が正しく伝わるようにする。"
+      sample の Person 表には template にない「判断・確認の責務」列が残っている。rulebook は Person を利用接点とし、設計の確認者一覧とは区別するとしている。列の正本である template と
+      sample のどちらに揃えるかを決め、両者を一致させる。
