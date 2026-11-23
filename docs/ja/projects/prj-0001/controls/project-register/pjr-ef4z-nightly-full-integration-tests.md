@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-23T00:16:11Z"
   due_on: "2026-11-30"
-  block_reason: "integrate failed: Grade sidecar changed after checkpoint; reconcile before merge: docs/ja/projects/prj-0001/execution/grade/results/specdojo.ifx-api-rulebook.yaml"
   derived_from:
     - PJR-9X52
   commit_type: feat
@@ -47,14 +46,41 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                | 担当 | 状態 | メモ                                                                                                |
+| --- | --------------------------------------------------- | ---- | ---- | --------------------------------------------------------------------------------------------------- |
+| 1   | 方式の決定（job か specdojo コマンドか）            | DEV  | done | specdojo コマンドを足し job から呼ぶ方式に決定                                                      |
+| 2   | `orchestrator integration-tests` の実装と単体テスト | DEV  | done | `src/commands/nightly-integration-tests.ts`、`tests/src/commands/nightly-integration-tests.test.ts` |
+| 3   | job と routine の定義の追加                         | DEV  | done | `job-nightly-integration-tests`、`rtn-nightly-integration-tests`                                    |
+| 4   | コマンドリファレンスと運用ガイドの更新              | DEV  | done | `command-reference.md`、`register-operation-guide.md`                                               |
+| 5   | 統合後に `routine run --id` で 1 回流して確かめる   | ARC  | open | executor は統合前で実行できない。orchestrator が統合後に行う                                        |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 5.1. 方式の決定と理由
+
+- 任意のシェルのコマンドを流せる action は足さず、`specdojo orchestrator integration-tests` を足した。固定の引数で `npm run test:integration` だけを流すため、routine の action の範囲を広げずに済む。
+- routine の action は既存の `job` を使う。job の `task.steps` と `lock_wait_seconds`（10800 秒）により、実行中の run がプロジェクト実行ロックを持つ間は待ち、時間切れは偽の失敗ではなく延期として記録される。
+- 時刻は毎晩 4 時（Asia/Tokyo）。0 時の夜間実行、1 時の grade、3 時の翻訳の後、5 時の grade-recheck、6 時の exec-cycle の前で、重ならない。
+- 結果は Vitest の JSON 報告から読み、成功・失敗の件数と失敗したテストのファイル・名前・メッセージの要約を `execution/reports/nightly-integration-tests/` の朝報告へ残す。JSON を読めない場合は出力の末尾を残す。失敗時は終了コード 1 で、job の実行記録にも失敗が残る。
+- 既定は `enabled: true`。
+
+### 5.2. 成果物
+
+- `src/commands/nightly-integration-tests.ts`、`src/commands/orchestrator.ts`（登録）
+- `tests/src/commands/nightly-integration-tests.test.ts`（引数の組み立て、結果の解析、報告の描画）
+- `docs/ja/projects/prj-0001/jobs/job-nightly-integration-tests.yaml`、`docs/ja/projects/prj-0001/routines/rtn-nightly-integration-tests.yaml`
+- `docs/ja/specdojo/references/command-reference.md`、`docs/ja/specdojo/guides/register-operation-guide.md`
+
+### 5.3. 残課題
+
+- 枠の待ち合わせ（ロック待ちの延期）は job の既存機構に任せており、本タスクでは単体テストを足していない。ロックの組み立ては既存の job の試験が対象である。
+- 統合後に orchestrator が `routine run --id rtn-nightly-integration-tests` を 1 回流して確かめる。
+
+### 5.4. CHANGELOG に書く事項
+
+- 区分: Added
+- 文案: `specdojo orchestrator integration-tests` を追加し、routine `rtn-nightly-integration-tests` で統合テストの全件を毎晩 1 回流して朝報告へ結果を残すようにした。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- `prj-0001:pjr-index`（PJR-9X52 の派生元）

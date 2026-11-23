@@ -126,3 +126,19 @@
       from: review
       to: in-progress
   previous_event_id: reg_be002008fe424b378579a3cffbbd7ae8
+- v: 1
+  id: reg_23d20960db0748d5bc02beffb1fcf1ba
+  ts: "2026-11-23T02:45:45Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-integration"
+  previous_event_id: reg_0028366223b84ef19ef51e15ca791cf9

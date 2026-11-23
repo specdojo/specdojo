@@ -4,14 +4,13 @@ specdojo:
   type: exec-result
   task_id: PJR-EF4Z
   mode: edit
-  status: blocked
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-EF4Z/pjr-ef4z-20261123T020148Z-5e942a5b/plan.md
   started_at: "2026-11-23T02:02:25.579Z"
-  completed_at: "2026-11-23T02:12:50.820Z"
+  completed_at: "2026-11-23T02:41:06.442Z"
   agent: sonnet-executor
-  block_reason: "integrate failed: Grade sidecar changed after checkpoint; reconcile before merge: docs/ja/projects/prj-0001/execution/grade/results/specdojo.ifx-api-rulebook.yaml"
 ---
 
 # Edit Result

@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_9ca203ea543242a187efda7b785c3c9c
+  ts: "2026-11-23T02:38:34Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: オーケストレーターの運用メモ（playbook）を正式な型にし、見つけ方を決める
+    - field: description
+      from: ""
+      to: prj-0001 の pm-orchestrator-playbook は型も置き場所もない約束事で、別のプロジェクトでは見つけられない。正式な型にし、specdojo where で引けるようにするかを決める
+    - field: input
+      from: ""
+      to: '["利用者の問い（2026-11-23）: オーケストレーターのプロジェクトごとの知見を playbook にまとめているが、正式な機能か。オーケストレーターの答えは、正式ではない（型・置き場所・見つけ方が決まっていない）"]'
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_92d819cd541d491d89f31aed0438b042
+  ts: "2026-11-23T02:38:39Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "背景" updated
+  changes:
+    - field: section
+      from: ""
+      to: 背景
+    - field: description
+      from: prj-0001 の pm-orchestrator-playbook は型も置き場所もない約束事で、別のプロジェクトでは見つけられない。正式な型にし、specdojo where で引けるようにするかを決める
+      to: "オーケストレーターがプロジェクトごとに積み上げる知見（agent の使い分けと止まり方、実行の運び方、close の判断、保護された設定、リリースの手順など）を、prj-0001 では `030-project-management/pm-orchestrator-playbook.md` にまとめている。ただし正式な機能ではない。型（rulebook・template・sample）がなく（frontmatter は `rulebook: none`）、置き場所も決まっていない。配布するオーケストレーターの指示は「プロジェクトの文書にオーケストレーター向けの運用メモがあれば読む」とだけ書き、prj-0001 は `CLAUDE.md` と `AGENTS.md` にパスを直接書いて読ませている。別のプロジェクトでは、同じ知見を一から作ることになる。"
+  previous_event_id: reg_9ca203ea543242a187efda7b785c3c9c
+- v: 1
+  id: reg_c29fb40340194819870d2691134d5dae
+  ts: "2026-11-23T02:38:45Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "検討した選択肢" updated
+  changes:
+    - field: section
+      from: ""
+      to: 検討した選択肢
+  previous_event_id: reg_92d819cd541d491d89f31aed0438b042
+- v: 1
+  id: reg_ff3d632f560846bd988499225c7080a9
+  ts: "2026-11-23T02:40:06Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: 担当と期限を決めた（2026-11-23）
+  changes:
+    - field: owner
+      from: _TODO_
+      to: BA
+    - field: due
+      from: _TODO_
+      to: "2026-11-30"
+  previous_event_id: reg_c29fb40340194819870d2691134d5dae

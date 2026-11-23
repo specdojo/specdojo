@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: waiting
   priority: medium
   owner: DEV
   registered_at: "2026-11-23T00:36:14Z"
   due_on: "2026-11-30"
+  block_reason: "reporter output invalid after 3 format attempts: result Markdown notation violation before writing (fix the JSON prose that produced these rendered lines; do not put Markdown headings, code fences, ba…"
 ---
 
 # PJR-N4D0 同じ項目を何回か流すと、プロダクトの commit のタイトルがすべて同じになる
