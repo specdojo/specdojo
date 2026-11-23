@@ -1,0 +1,40 @@
+sample と rulebook はどちらも評価結果が最新で、`pass` でした。review 中に成果物の変更はありません。
+
+**鮮度確認（E-01）**
+- `specdojo grade list --target kata --changed-only` を sample と rulebook の両方に実行しました。出力は空で、終了コードは 0 でした。
+- `git status` に出た未追跡ファイルは `pipeline-state.json` だけです。成果物への変更はありません。
+
+**grade の結果**
+
+| 対象 | verdict | score | finding |
+| --- | --- | --- | --- |
+| sample | `pass` | 93 | minor 5 件 |
+| rulebook | `pass` | 94 | minor 3 件 |
+
+**完了条件との照合**
+- 5 条件（DC-001〜DC-005）は、評価結果の観点判定に沿って判断しました。成果物は再評価していません。
+- DC-001 と DC-005 は、観点 `vp-qe-omissions-consistency` と `vp-qe-verifiability` が level 3 でした。
+
+**finding が完了を妨げるかの判断**
+- いずれも minor で、rulebook の必須要素の欠落や禁止事項への抵触ではありません。blocker と major は 0 件です。
+- 該当 finding は次のとおりです。
+  - sample の `F001`（`nfr-sec-012` の決定者と期限）と `F005`（暫定運用を終える条件）。
+  - sample の `F002`（`nfr-sec-ex-001` の期限が相対表現）。
+  - sample の `F003`（`nfr-sec-003` の測定対象に管理と本部連携が漏れている）。
+  - sample の `F004`（`stc-*` の導線がない）。
+  - rulebook の `F002` と `F003`（`recipe` と `template` が `undecided`）。
+  - rulebook の `F001`（検証先の `opr-*` の役割）。
+- 以上から、verdict は `complete-with-findings` と判断します。
+
+**改善指示**
+- sample の `F001`、`F002`、`F005` は、`nfr-sec-012` の未決（`○○` 日数）と `nfr-sec-ex-001` の期限を、ready 化の前に具体的な値へ確定する。決定者の Role code と時期も備考に追記する。
+- sample の `F003` と `F004` は、`nfr-sec-003` の測定方法に管理と本部連携を加える。導線の表には `stc-*` の行を足すか、置かない旨を書く。
+- rulebook は、対応する recipe と template を決めてから ready 化する。`opr-*` の役割も揃える。
+
+**確認できなかった範囲**
+- 先行する edit タスクの result は参照していません。plan で宣言された文書の範囲で判断しています。
+- 成果物の本文は読んでいません。判断は grade のサイドカーと plan の記述に基づいています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"評価結果は sample・rulebook とも最新（grade list --changed-only は空出力）で、どちらも pass（93／94）。finding は minor のみ（sample 5件、rulebook 3件）で、完了を妨げない。verdict は complete-with-findings。改善指示: sample の nfr-sec-012 と nfr-sec-ex-001 の確定、nfr-sec-003 の測定対象の補完、stc-* の導線の追加または不要の明記、rulebook の recipe と template の決定、opr-* の役割の整合。確認できなかった範囲: 先行 edit タスクの result は参照していない。成果物本文は読んでいない。","handoff":["verdict: complete-with-findings","ready 化前に sample の F001〜F005 と rulebook の F001〜F003（recipe と template の決定を含む）を解消すること"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/nfr-security-safety-sample.md --changed-only","status":"passed","summary":"出力なし。評価結果は最新。"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/nfr-security-safety-rulebook.md --changed-only","status":"passed","summary":"出力なし。評価結果は最新。"}]}
+</specdojo_executor_evidence>
