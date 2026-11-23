@@ -1,4 +1,6 @@
 import { describe, expect, it } from "vitest";
+import { lint } from "markdownlint/sync";
+import { format } from "prettier";
 import {
   integrationTestArgs,
   parseVitestJsonReport,
@@ -70,7 +72,7 @@ describe("renderNightlyIntegrationReport", () => {
     });
 
     expect(actual).toContain("結果: failure");
-    expect(actual).toContain("| `tests/a.integration.test.ts` | a breaks \\| pipe |");
+    expect(actual).toContain("| `tests/a.integration.test.ts` | a breaks \\| pipe ");
   });
 
   it("reports success without a failure section", () => {
@@ -93,5 +95,32 @@ describe("renderNightlyIntegrationReport", () => {
 
     expect(actual).toContain("取得できなかった");
     expect(actual).toContain("boom happened");
+  });
+
+  describe("lint compliance", () => {
+    const cases = {
+      success: {
+        exitCode: 0,
+        summary: { total: 2, passed: 2, failed: 0, skipped: 0, failures: [] },
+      },
+      failure: { exitCode: 1, summary: parseVitestJsonReport(report, "/repo") },
+      unreadable: { exitCode: 1, outputTail: "boom happened\n\n\n" },
+    };
+
+    it.each(Object.entries(cases))(
+      "renders a %s report that markdownlint and prettier accept",
+      async (_name, extra) => {
+        const actual = renderNightlyIntegrationReport({ ...base, ...extra });
+
+        const problems = lint({
+          strings: { report: actual },
+          config: { default: true, MD013: false, MD033: false, MD041: false, MD060: false },
+        });
+        const formatted = await format(actual, { parser: "markdown" });
+
+        expect(problems.report).toEqual([]);
+        expect(actual).toBe(formatted);
+      },
+    );
   });
 });

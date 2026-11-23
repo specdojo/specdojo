@@ -104,6 +104,37 @@ function cell(value: string): string {
   return value.replace(/\|/gu, "\\|").replace(/\r?\n/gu, " ");
 }
 
+function displayWidth(text: string): number {
+  let width = 0;
+  for (const char of text) {
+    const code = char.codePointAt(0) ?? 0;
+    const isWide =
+      (code >= 0x1100 && code <= 0x115f) ||
+      (code >= 0x2e80 && code <= 0xa4cf) ||
+      (code >= 0xac00 && code <= 0xd7a3) ||
+      (code >= 0xf900 && code <= 0xfaff) ||
+      (code >= 0xfe30 && code <= 0xfe6f) ||
+      (code >= 0xff00 && code <= 0xff60) ||
+      (code >= 0xffe0 && code <= 0xffe6);
+    width += isWide ? 2 : 1;
+  }
+  return width;
+}
+
+// Pads columns the way Prettier does so the report passes `npm run lint:md`.
+function alignedTable(header: string[], rows: string[][]): string {
+  const widths = header.map((title, column) =>
+    Math.max(3, displayWidth(title), ...rows.map((row) => displayWidth(row[column] ?? ""))),
+  );
+  const line = (cells: string[]) =>
+    `| ${cells.map((value, column) => value + " ".repeat(widths[column]! - displayWidth(value))).join(" | ")} |`;
+  return [
+    line(header),
+    `| ${widths.map((width) => "-".repeat(width)).join(" | ")} |`,
+    ...rows.map(line),
+  ].join("\n");
+}
+
 export type NightlyIntegrationReportOptions = {
   projectId: string;
   startedAt: string;
@@ -123,9 +154,10 @@ export function renderNightlyIntegrationReport(options: NightlyIntegrationReport
   const failureSection = summary?.failures.length
     ? `## 2. 失敗したテスト
 
-| ファイル | テスト | 要約 |
-| -------- | ------ | ---- |
-${summary.failures.map((item) => `| \`${cell(item.file)}\` | ${cell(item.name)} | ${cell(item.message)} |`).join("\n")}
+${alignedTable(
+  ["ファイル", "テスト", "要約"],
+  summary.failures.map((item) => [`\`${cell(item.file)}\``, cell(item.name), cell(item.message)]),
+)}
 `
     : "";
   const tailSection =
@@ -161,7 +193,10 @@ ${
     : "失敗した。朝にオーケストレーターが登録簿へ項目を起票して直す。"
 }
 
-${failureSection}${tailSection}`.replace(/\n{3,}/gu, "\n\n");
+${failureSection}${tailSection}`
+    .replace(/\n{3,}/gu, "\n\n")
+    .trimEnd()
+    .concat("\n");
 }
 
 async function runIntegrationSuite(

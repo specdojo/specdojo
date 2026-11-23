@@ -1,0 +1,14 @@
+朝報告の書き出しを直し、成功・失敗・JSON を読めない場合の 3 通りが markdownlint と prettier を通るようにしました。変更後の `nightly-integration-tests.test.ts` は 9 件すべて通り、`npm run typecheck` と prettier の確認も通っています。`npm run lint:ts` は error 0 でしたが、今回触っていない既存ファイルの warning が 43 件出ています。
+
+- **書き出しの修正（`src/commands/nightly-integration-tests.ts`）**:
+  - 3 行以上続く空行を 1 行にまとめ、末尾を改行 1 つにそろえました。
+  - 失敗の表を Prettier と同じ列幅に整えました（全角は幅 2）。表の列幅が揃っていないと prettier の確認に通らないことが、テストで分かりました。
+- **単体テスト**: 3 通りの報告を markdownlint と prettier にかけるテストを足しました。表の列幅の変更に合わせて、既存の失敗表のテストも直しています。
+- **2026-11-23 の報告のファイル**: すでに直した書き出しの形（空行 1 行、末尾改行 1 つ）と一致していたため、変更していません。
+- **個票**: 対応結果に 2 回目の実行の内容を追記しました。
+
+`npm run lint:md` と `npm run test:unit` は親の runner が実行します。作業内容の表の No.5（統合後に `routine run --id rtn-nightly-integration-tests` を 1 回流して確かめる）は、統合前で executor が実行できないため `open` のままです。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"朝報告の書き出しを修正（空行の圧縮、末尾改行、Prettier 準拠の表整列）し、3 通りの報告が markdownlint と prettier を通る単体テストを追加した。個票の対応結果を更新した。","handoff":["作業内容 No.5（統合後に orchestrator が `routine run --id rtn-nightly-integration-tests` を 1 回流して確かめる）は executor が実行できないため `open` のまま。","2026-11-23 の報告のファイルは、すでに直した書き出しの形と一致していたため変更していない。","CHANGELOG に書く事項は個票の対応結果 5.4 に記載済み（区分: Added）。CHANGELOG.md は変更していない。"],"validations":[{"command":"npx vitest run tests/src/commands/nightly-integration-tests.test.ts","status":"passed","summary":"9 件すべて成功"},{"command":"npm run typecheck","status":"passed","summary":"型エラーなし"},{"command":"npm run lint:ts","status":"passed","summary":"error 0（既存の warning のみ）"},{"command":"npx prettier --check src/commands/nightly-integration-tests.ts tests/src/commands/nightly-integration-tests.test.ts","status":"passed","summary":"整形済み"}]}
+</specdojo_executor_evidence>
