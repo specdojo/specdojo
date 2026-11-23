@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-23T21:03:15Z"
   due_on: "2026-11-30"
+  block_reason: "parent validation failed: lint-fm-changed"
   commit_type: fix
   commit_scope: exec
 ---

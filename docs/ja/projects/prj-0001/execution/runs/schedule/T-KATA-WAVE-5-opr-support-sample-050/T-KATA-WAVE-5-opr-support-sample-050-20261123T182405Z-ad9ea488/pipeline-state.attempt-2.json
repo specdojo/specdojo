@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-5-opr-support-sample-050",
+  "run_id": "T-KATA-WAVE-5-opr-support-sample-050-20261123T182405Z-ad9ea488",
+  "updated_at": "2026-11-23T22:43:10.226Z",
+  "stages": {
+    "executor": {
+      "status": "blocked",
+      "actor": "opus-executor",
+      "attempts": 2,
+      "started_at": "2026-11-23T22:42:34.334Z",
+      "completed_at": "2026-11-23T22:43:10.226Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-opr-support-sample-050/T-KATA-WAVE-5-opr-support-sample-050-20261123T182405Z-ad9ea488/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-23T18:29:54.103Z",
+      "completed_at": "2026-11-23T18:33:30.759Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-opr-support-sample-050/T-KATA-WAVE-5-opr-support-sample-050-20261123T182405Z-ad9ea488/result.md"
+    },
+    "integrate": {
+      "status": "failed",
+      "actor": "opus-executor",
+      "attempts": 2,
+      "started_at": "2026-11-23T19:50:21.184Z",
+      "completed_at": "2026-11-23T19:51:20.767Z",
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-opr-support-sample-050/T-KATA-WAVE-5-opr-support-sample-050-20261123T182405Z-ad9ea488/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-opr-support-sample-050/T-KATA-WAVE-5-opr-support-sample-050-20261123T182405Z-ad9ea488/result.md"
+  }
+}

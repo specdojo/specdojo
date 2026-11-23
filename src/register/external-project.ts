@@ -10,6 +10,7 @@ import {
 
 export const MINIMUM_EXTERNAL_REGISTER_VERSION = "0.4.2";
 export const MINIMUM_EXTERNAL_SOURCE_VERSION = "0.4.5";
+export const MINIMUM_EXTERNAL_REGISTER_SYNC_VERSION = "0.10.0";
 
 export type ExternalRegisterAddOptions = {
   project?: string;
@@ -234,6 +235,16 @@ export function delegateExternalRegisterAdd(
     throw new Error(
       `External project ${alias} uses SpecDojo ${version || "with an unknown version"}; ` +
         `${MINIMUM_EXTERNAL_REGISTER_VERSION} or newer is required for cross-project register add.`,
+    );
+  }
+  const targetProject = loadConfig(repoRoot).config?.projects[externalProject.project_id];
+  if (
+    targetProject?.register_sync?.enabled &&
+    !versionAtLeast(version, MINIMUM_EXTERNAL_REGISTER_SYNC_VERSION)
+  ) {
+    throw new Error(
+      `External project ${alias} enables register_sync but uses SpecDojo ${version}; ` +
+        `${MINIMUM_EXTERNAL_REGISTER_SYNC_VERSION} or newer is required to avoid writing to develop.`,
     );
   }
   if ((opts.source?.length ?? 0) > 0 && !versionAtLeast(version, MINIMUM_EXTERNAL_SOURCE_VERSION)) {
