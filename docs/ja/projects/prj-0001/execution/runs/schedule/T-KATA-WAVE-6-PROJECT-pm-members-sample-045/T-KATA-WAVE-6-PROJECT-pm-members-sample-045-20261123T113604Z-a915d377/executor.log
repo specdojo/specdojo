@@ -1,0 +1,14 @@
+F001 に対応して recipe を直しました。prettier の検査は通りました。lint などの残りの検査は、この後に親 runner が実行します。
+
+**変更したファイル:** `docs/ja/specdojo/recipes/pm-members-recipe.md` だけです。rulebook と sample には手を入れていません。
+
+**直した内容:** F001 は「`members` の問いで、必須項目の `display_name` を確かめていない」という指摘です。rulebook と schema の両方で `display_name` が必須かつ「公開可能な表示名」とされていることを確かめてから、「4.1. members」を次のように直しました。
+
+- **問いを 1 つ追加:** 「公開文書に載せてよい `display_name` は何か。」
+- **コツを補足:** 個人名が要らない場合は、nickname だけでなく `display_name` も役割の名前（`po`・「店主代表」など）にする、と書き足しました。
+
+**直さなかった箇所:** 残りの記述は rulebook と食い違いがないので、そのまま残しました。PJR-76N9 で禁止している「文書の役割の割り当て」や「承認の進み具合」を書かせる問いはありません。Role code の記述は名簿そのものの中身を扱うもので、対象外の扱いです。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"F001 に対応し、pm-members-recipe の「4.1. members」に `display_name` の問いを追加し、コツに `display_name` も役割の名前にする補足を加えた。rulebook と sample は変更していない。","handoff":[],"validations":[{"command":"npx prettier --check docs/ja/specdojo/recipes/pm-members-recipe.md","status":"passed","summary":"All matched files use Prettier code style!"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML の変更なし","reason":"変更したのは Markdown の recipe だけで、*.yaml / *.yml は変更していない"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルの変更なし","reason":"plan / result / 個票を変更していない"}]}
+</specdojo_executor_evidence>
