@@ -1,0 +1,9 @@
+`docs/ja/specdojo/samples/nfr-integrity-sample.md` の表の導入文 2 か所を短くしました。内容と完了条件の意味は変えていません。静的検査は、親 runner が実行する `npm run lint:md` と `npm run lint:fm` に任せ、この sandbox では実行していません。
+
+- **概要の導入文:** 表の列の中身を言い直していた部分を削り、「重要記録ごとの業務影響と対応する要件は次の表のとおりとする。」にしました。
+- **測定・検証方法の導入文:** 同じく列の列挙を削り、「要件ごとの検証方法は次の表のとおりとする。」にしました。
+- **残した箇所:** 概要末尾の「違反を 0 件とする基準」の文は、表にない理由（毎営業日の判断への影響と顧客との信頼関係）を述べているので `retain` としました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"表の導入文2か所の列挙を削り簡潔化。意味・必須情報は維持。","handoff":[],"condense_records":[{"location":"1. 概要（対象・目的）の表の導入文","category":"table-prose","action":"merge","reason":"表の列内容を本文で言い直していたため、表の参照のみに短縮。意味は表で保たれる","cause":{"type":"document"}},{"location":"4. 測定・検証方法の表の導入文","category":"table-prose","action":"merge","reason":"表の列見出しの列挙を本文で繰り返していたため短縮。内容は表で保たれる","cause":{"type":"document"}},{"location":"1. 概要の「違反を 0 件とする基準」の文","category":"repetition","action":"retain","reason":"表にない基準の理由（営業日の判断・顧客との信頼関係への影響）を述べており、判断に要るため残す","cause":{"type":"document"}}],"validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する allowlist 検査のため executor では実行しない"}]}
+</specdojo_executor_evidence>
