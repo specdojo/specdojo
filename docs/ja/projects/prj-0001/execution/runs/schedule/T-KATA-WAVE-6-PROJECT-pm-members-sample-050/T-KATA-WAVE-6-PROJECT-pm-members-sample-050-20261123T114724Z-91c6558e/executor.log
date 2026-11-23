@@ -1,0 +1,15 @@
+`docs/ja/specdojo/samples/pm-members-sample.yaml` を書き直しました。grade の指摘 6 件のうち 5 件は対応し、F005（「同行レビュー担当」という表示名）だけは表示名を変えていません。schema 検査と Prettier の整形チェックは通っています。変更したのはこの 1 ファイルだけです。
+
+- **F001（稼働条件がない）**: 家族利用者代表（週末の店番の日だけ、1回30分以内）と技術メンター（月2回の定例）の `note` に参加できる時間帯と頻度を足しました。ほかの3人の `note` にも稼働条件を1文ずつ足しています。この値は共通サンプル文脈にないため、私が置いた仮の値です。
+- **F002（置き場所の説明が重複）**: agent 定義の置き場所を書いた先頭コメントと、標準を再掲していた `rules` の行を消しました。
+- **F003（`rules` が共通標準の写し）**: `rules` をこのプロジェクト固有の3行に絞りました。表示名に個人名や所属を書かないこと、未成年メンバーの `email` は `null` のままにして連絡は店主代表を通すこと、交代時は旧メンバーを残して後任を新しい nickname で足すことです。
+- **F004（「条件 ID」が曖昧）**: 「受入条件 ID（AC・BAC）」と書き換えました。
+- **F005（表示名が独立性を伝えない）**: 表示名は「同行レビュー担当」のままです。この名前は共通サンプル文脈の正本の表で決まっていて、ほかの sample でも同じ名前を使っているため、ここだけ変えると食い違います。代わりに `note` を「実装に加わらない第三者として」確かめる、という書き方にして独立性を表しました。
+- **F006（交代時の扱いがない）**: F003 で書き直した `rules` に交代時のルールを入れました。
+- **厚くした分**: 店主代表と開発担当に、任意項目の `persona` と `scheduler_strategy` を足しました。
+
+rulebook は変えていません。rulebook の禁止事項と F006 の指摘は交代時の扱いを `rules` で補う前提に合っているため、直す案はありません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"Rewrote pm-members-sample.yaml for grade findings F001–F006. F001–F004 and F006 are fixed. For F005 the display name stays per the shared sample context; independence is now stated in the note. Schema validation and the Prettier check passed.","handoff":["F005: the display name stays '同行レビュー担当' because it is fixed in the 共通登場人物 table of sample-authoring-standard.md and used across other samples. Independence is now stated in the `note`. If the name itself must change, change the shared sample context first and update all samples together.","F001: the participation times and frequencies in the `note` fields (weekly decisions after closing, after school and weekends, weekends, twice-monthly sessions, weekend shop shifts within 30 minutes) are assumed sample values. They are not in the shared sample context. If the sample context adopts them, consider adding them to the standard.","F003/F006: `rules` is now limited to three project-specific lines: public display names, contact routing for minors, and member replacement. The rulebook needs no change. pm-members-template.yaml still has generic `rules` that restate the common standard, which conflicts with rulebook section 6.3. Consider fixing the template in a separate task."],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/pm-members.schema.yaml --data docs/ja/specdojo/samples/pm-members-sample.yaml","status":"passed","summary":"docs/ja/specdojo/samples/pm-members-sample.yaml: valid"},{"command":"npx prettier --check docs/ja/specdojo/samples/pm-members-sample.yaml","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"No history file changed","reason":"Only the sample YAML changed; no plan, result, or register file was edited"}]}
+</specdojo_executor_evidence>
