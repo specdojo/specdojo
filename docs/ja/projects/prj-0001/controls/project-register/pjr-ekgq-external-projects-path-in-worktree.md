@@ -64,7 +64,14 @@ dry-run は worktree を作らないため、このエラーは出ない。
 
 ## 5. 対応結果
 
--
+- 対応策は (a) を採用した。`resolveExternalProjectRoot` が `repositoryIdentityRoot` を通し、linked worktree では主の作業ツリーのルートから `path` を解決する。検証（`validateExternalProjects`）も同じ解決を使う。理由は、`repos` の解決と同様に利用者の宣言を変えずに済み、(b) のように検証を弱めず、(c) のように利用者へ設定の追加を求めないため。主の作業ツリーの解決は変わらず、相手が無い場合は従来どおり検証で停止する。
+- テスト: `tests/src/shared/specdojo-config-external-projects.test.ts` に linked worktree の 2 ケース（主から解決できる場合、相手が無く停止する場合）を追加した。
+- 設定リファレンスの `external_projects` の節に、worktree での `path` の扱いを追記した。
+
+### 5.1. CHANGELOG に書く事項
+
+- 区分: Fixed
+- 行の文案: `external_projects` の `path` を、linked worktree では主の作業ツリーのルートから解決する。`exec run --register --worktree` の worktree の準備が止まる問題を修正（PJR-EKGQ）。
 
 ## 6. 関連ドキュメント
 
