@@ -1,0 +1,25 @@
+`dct-rulebook.md` を更新し、12 件の指摘をすべて扱いました。rulebook の中で直せた指摘は直しました。F001、F003、F007〜F009 の 5 件はほかのファイルを変えないと完全には閉じないため、申し送りに残しています。完了条件は rulebook の範囲で満たしています。Prettier と markdownlint はエラー 0 件でした。親 runner の検査はまだ結果が出ていません。変更したファイルは `docs/ja/specdojo/rulebooks/dct-rulebook.md` だけで、sample・recipe・template・schema には触れていません。
+
+**rulebook の中で解消した指摘**
+
+| 指摘 | 対応 |
+| --- | --- |
+| F002 | 「`brief`・`overview` の使い分けと YAML アンカー」の節で、5.3 の表と同じ説明と、ほかの節を指すだけの行を削りました。表示や展開のされ方とアンカーの使い方だけを残しています。 |
+| F004 | 「編集後の検査」の節を新設しました。schema 検査、`catalog validate`、`build --only catalog`、レビューの 4 つについて、確認内容と通過の条件を表にしています。 |
+| F005 | 「推奨メタ項目」の表に `supersedes` の行を加えました。 |
+| F006 | テンプレートの `id` を `specdojo:dct-<domain>-template` に直しました。 |
+| F010 | `done_criteria` は `work` だけに書くと決めました。`control` と `generated` には書きません。実装も `work` 以外では使っていません。 |
+| F011 | 正本の YAML を削除・改名したら、`generated/` に残る古い表示ページも消すと明記しました。表示ページを作る処理が古いページを消さないことは、実装で確かめています。 |
+| F012 | 本文の「template」を「テンプレート」に統一しました。frontmatter の項目名として使う箇所だけ英語のままです。 |
+
+**残っている課題（申し送り）**
+
+- **F001**：`groups` と `deliverables` の排他、`type: project` での `min_size` の禁止は、schema では検出できません。rulebook では確認先を「編集後の検査」のレビュー行にまとめました。根本的に直すには `dct.schema.yaml` の修正が要ります。登録簿に起票する候補です。
+- **F003**：判定計画の 2 つの節は 1 つにまとめて短くしました。コマンドの細かな動作はコマンドリファレンスに任せ、入力の選び方などの判断の規則は残しています。ただし、`dct-plan-rulebook` に分けて外へ出すかどうかは決めていません。新しい rulebook を作り、カタログの対応やレビュー観点も直す作業になるため、別の起票が要ります。
+- **F007・F008**：rulebook の規則（`sch-track-<track>` と `sch-milestones` は生成元の `sch-strategy-<track>` を `depends_on` に宣言する）は正しいと判断し、例を足しました。違反しているのは `dct-project-management-template.yaml` 側です。`sch-track-launch` と `sch-milestones` の `depends_on` に `sch-strategy-launch` を加える必要があります。テンプレートはこの段では変えられないため、次の段で直してください。
+- **F009**：frontmatter の `template` を省くのは「未整備」ではなく、ドメイン別テンプレートを使う例外だと本文に書きました。frontmatter の schema の `template` 欄は ID を 1 つしか持てないため、それ以上は rulebook だけでは直せません。schema で配列を認めるか、記述標準に例外を書き足すか、判断が要ります。
+- **template と sample の食い違い**：テンプレートの `generated` 項目（`sch-milestones` と `sch-track-launch`）には `done_criteria` があります。F010 で決めた規則に合わせて削る必要があります。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"Simplified dct-rulebook.md and handled all 12 findings. F002, F004, F005, F006, F010, F011 and F012 are fixed in the rulebook. F001, F003, F007, F008 and F009 also need changes to the template, schema, standard or a new rulebook, so they are recorded in handoff.","handoff":["F001: `groups`/`deliverables` exclusivity and the ban on `min_size` under `type: project` cannot be detected by `dct.schema.yaml`. The rulebook now points to the review row of the post-edit checks. The root fix is to change the schema (for example, make `groups` and `deliverables` exclusive with `oneOf`, and forbid `min_size` under project). Candidate for a register ticket.","F003: The decision-plan sections were condensed into one, but moving them out to a separate `dct-plan-rulebook` is not decided. That needs a new rulebook, catalog mapping and changes to `pm-review-viewpoints.yaml` `document_kinds`, so it needs a separate ticket.","F007/F008: The rulebook rule is correct. Fix `docs/ja/specdojo/templates/dct-project-management-template.yaml` so that `sch-track-launch` and `sch-milestones` have `depends_on: [sch-strategy-launch]` (not changed here because the template cannot be edited in this stage).","F010 follow-up: The rulebook now forbids `done_criteria` on non-`work` items. Remove `done_criteria` from the `generated` items `sch-milestones` and `sch-track-launch` in `dct-project-management-template.yaml`.","F009: The rulebook-frontmatter schema allows only one ID for `template`, so the per-domain templates cannot be declared. The body now states that the omission is an exception, not a missing template. Decide whether to change the schema (allow arrays) or add the exception to rulebook-authoring-standard."],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/dct-rulebook.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/dct-rulebook.md","status":"passed","summary":"0 issues in 0 files"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"No YAML file changed","reason":"Only the Markdown rulebook was changed; no *.yaml or *.yml file was changed"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"No history file changed","reason":"No plan, result or register ticket file was changed"}]}
+</specdojo_executor_evidence>
