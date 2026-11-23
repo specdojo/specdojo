@@ -5304,3 +5304,19 @@
       from: K8F1・9X52・EF7M の統合後の runner で exec run --register が start から review・統合・要約まで止まらずに通った
       to: PJR-0JVB の 1 回目の統合の後、exec smoke で runner の start → review の記帳を確かめた
   previous_event_id: reg_26ef302dad144f61ab07c6e99a91b8d6
+- v: 1
+  id: reg_4b9a5efbb9f341289b339713a086d458
+  ts: "2026-11-23T01:29:40Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-0JVB の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-11-23"
+      to: "-"
+  previous_event_id: reg_e987f925b98544629fa318347f9fe77f
