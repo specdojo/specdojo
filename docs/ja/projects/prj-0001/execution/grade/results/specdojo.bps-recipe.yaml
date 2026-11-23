@@ -4,12 +4,11 @@ document: specdojo:bps-recipe
 path: docs/ja/specdojo/recipes/bps-recipe.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-recipe
 verdict: pass
 score: 97
-graded_at: "2026-11-19T20:12:22.267Z"
-graded_by: flash-high-executor
-content_hash: 71f2133fa8a561caee7abb9f121a0d5017e70811a4d378e683a3b965d4227542
+graded_at: "2026-11-23T20:07:13.442Z"
+graded_by: sonnet-review-executor
+content_hash: f2e46376ee3e9da9ede6be4bb72274e650198ae91dbd1f2bd7c65d732ebcbc20
 categories:
   purpose:
     score: 100
@@ -22,13 +21,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 92
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 92
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -79,17 +78,17 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
-  vp-qe-kata-conformance:
     level: 4
     score: 100
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -105,13 +104,24 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 1
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 153
-    anchor: "- 個人情報、秘密情報、非公開の組織情報を含めていない。"
-    message: rulebookの完成判定で要求されているFrontmatterやファイル名の一致確認が、仕上げチェックから漏れているため追加してください。
-    message_ja: rulebookの完成判定で要求されているFrontmatterやファイル名の一致確認が、仕上げチェックから漏れているため追加してください。
+    rule: vp-qe-kata-conformance
+    line: 133
+    anchor: "| 前提条件 | 商品が販売中でない場合は補充不要として記録し、処理を開始しない       | 商品を確認して問題がなければ開始する |"
+    message: >-
+      良い例の前提条件は「販売中でない場合は補充不要として記録し、処理を開始しない」ですが、sample では販売停止・終売を `S-01`
+      の処理で判断し、補充不要記録を確定して終了します。起動後の確定成果として扱っているため、正常な非起動と補充不要記録の線引きが sample と食い違っています。例を sample に合わせて直してください。
+    message_ja: >-
+      良い例の前提条件は「販売中でない場合は補充不要として記録し、処理を開始しない」ですが、sample では販売停止・終売を `S-01`
+      の処理で判断し、補充不要記録を確定して終了します。起動後の確定成果として扱っているため、正常な非起動と補充不要記録の線引きが sample と食い違っています。例を sample に合わせて直してください。
+  - id: F002
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 136
+    anchor: "| 受入観点 | 未完了依頼がある場合は新規依頼を作らず、重複確認記録を確認できる     | 重複が正しく処理される               |"
+    message: 良い例の受入観点が「重複確認記録」と書いていますが、sample と rulebook 系の出力名は「重複不要記録」です。成果物名を揃えてください。
+    message_ja: 良い例の受入観点が「重複確認記録」と書いていますが、sample と rulebook 系の出力名は「重複不要記録」です。成果物名を揃えてください。
