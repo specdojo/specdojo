@@ -1,0 +1,35 @@
+2 つの rulebook を簡潔にしました。markdownlint は 0 件、Prettier の整形も済んでいます。それ以外の検査は親 runner が実行します。
+
+**`cnd-mermaid-rulebook`**（7 章 → 5 章）
+- 完成例の章（「サンプル（最小）」）と凡例のコードブロックを削除し、完成例は sample に任せました。
+- 色の定義（`classDef` と境界の `style`）が 3 か所にあったので 1 か所にまとめ、そこを参照する形にしました（F005）。
+- 要素ごとの節と例を 1 つの対応表にまとめ、見出しは H4 以下を使わない構成にしました。
+- grade（`regrade-kata-2026-11-21`）の指摘に次のように対応しました。
+
+| 指摘 | 対応 |
+| --- | --- |
+| F003 | 構築時だけ成立する関係や任意の外部依存は点線 `-.->` で描き、ラベルに条件を括弧で添える規則と、良い例・悪い例を追加 |
+| F004・F008 | 構文の確認は `npm run lint:mermaid`、描画の確認は主 rulebook の「検証・承認前の確認」を参照する形にした |
+| F006 | 境界のラベルに具体的なシステム名を書く規則を追加 |
+| F007・F014 | 色を変えるときに同時に見直す文書（sample、`cxd-mermaid-rulebook`、`cpd-mermaid-rulebook`）を明記 |
+| F009 | 色分けは推奨、適用するなら全ノードに付けると揃え、凡例を置く条件も書いた |
+| F010・F012 | 要素名を主 rulebook に合わせ、Database は Data Store、外部システムは External Software System に統一 |
+| F011 | Person のラベルは `👤` と半角空白で始める規則を明記（sample の書き方と一致） |
+
+**`cnd-rulebook`**（grade は pass のため 2 か所だけ直しました）
+- 「誰がどの利用場面で…判断するか」を「どの利用場面で…判断するための図か」に直しました（PJR-76N9）。
+- 共通の運用の段落から、役割の割り当てと承認の記述を外しました。
+
+**直さなかった箇所**
+- `cnd-rulebook` の章名「検証・承認前の確認」は、一度「検証前の確認」に変えましたが元に戻しました。sample がこの章名を参照しており、sample はこの段では変更できないためです。
+- `cnd-rulebook` のほかの記述は、pass の型で直す理由がないためそのままです。
+- F001・F013（`recipe: undecided` / `template: undecided` の扱い）は、方針を決める必要があるため申し送りに回しました。
+
+**標準との食い違い**
+- 執筆標準は「サンプル章を個別の改訂で先に削除しない」としていますが、plan の「完成例の章を置かない」を優先して削除しました。この扱いでよいかの確認を申し送りに入れています。
+
+変更したファイルは `docs/ja/specdojo/rulebooks/cnd-mermaid-rulebook.md` と `docs/ja/specdojo/rulebooks/cnd-rulebook.md` です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"cnd-mermaid-rulebook を 5 章に簡潔化し（完成例の章・凡例の例と色の定義の重複を削除、要素の対応表への統合、点線の条件付き関係・境界名・👤 表記・用語統一・色を変えるときに見直す文書を追加）、cnd-rulebook は PJR-76N9 に沿って位置づけの文と共通の運用の役割・承認の記述だけを直した。","handoff":["cnd-sample の概要の段落（「ARC が構成案を担当し…PO を担う店主代表が…判断する」）と末尾の変更時の窓口の段落は、文書の役割の割り当てと承認の進み具合を本文に書いており PJR-76N9 に反する。sample を直す段で削除または書き直す必要がある。","cnd-rulebook の章名「検証・承認前の確認」は、cnd-sample が章名で参照しているため変えなかった。sample を直すときに章名を「検証前の確認」へ変え、sample の参照も合わせて直すかを判断する。","cnd-mermaid-rulebook のサンプル章を plan の指示に従って削除した。rulebook-authoring-standard は「個別の改訂で先行して削除しない」としているため、この扱いでよいかを確認する。","cnd-mermaid-rulebook の `recipe: undecided` / `template: undecided`（grade F001・F013）は、記法部品として不要（`not-needed`）とするか、主 rulebook のものを共用するかの判断が要るため変えなかった。","grade F002（作成手順と完了チェック）は、作成手順は recipe、完了チェックは主 rulebook の「検証・承認前の確認」が扱うため、記法の rulebook には足さなかった。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/rulebooks/cnd-mermaid-rulebook.md docs/ja/specdojo/rulebooks/cnd-rulebook.md","status":"passed","summary":"整形済み（cnd-mermaid-rulebook の表の列幅を揃えた）"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/cnd-mermaid-rulebook.md docs/ja/specdojo/rulebooks/cnd-rulebook.md","status":"passed","summary":"0 issues in 0 files"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更は docs/ja/specdojo/rulebooks 配下の 2 ファイルだけで、plan・result・個票を変更していない"}]}
+</specdojo_executor_evidence>
