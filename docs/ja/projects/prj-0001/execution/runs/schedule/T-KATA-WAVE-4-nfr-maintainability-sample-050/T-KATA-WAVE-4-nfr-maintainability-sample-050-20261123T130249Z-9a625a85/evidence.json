@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-4-nfr-maintainability-sample-050",
+  "run_id": "T-KATA-WAVE-4-nfr-maintainability-sample-050-20261123T130249Z-9a625a85",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-23T13:03:57.309Z",
+    "completed_at": "2026-11-23T13:08:22.460Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/nfr-maintainability-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../specdojo/samples/nfr-maintainability-sample.md | 87 +++++++++++++++++-----\n 1 file changed, 67 insertions(+), 20 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/samples/nfr-maintainability-sample.md",
+      "status": "passed",
+      "summary": "対象の sample を整形した"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2 docs/ja/specdojo/samples/nfr-maintainability-sample.md",
+      "status": "passed",
+      "summary": "0 issues"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴蓄積ファイルを変更していない",
+      "reason": "変更は docs/ja/specdojo/samples/ 配下の sample のみで、plan・result・個票を変更していない"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "YAML を変更していない",
+      "reason": "変更ファイルに *.yaml / *.yml がない"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "docs/ja/projects/ 配下の成果物を変更していない",
+      "reason": "変更は docs/ja/specdojo/samples/ のみで docs/ja/projects/ に及ばない"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:nfr-maintainability-sample\n  type: requirement\n  status: draft\n  rulebook: specdojo:nfr-maintainability-rulebook\n  part_of:\n    - specdojo:nfr-index-sample\n  based_on:\n    - specdojo:opd-index-sample\n  supersedes: []\n---\n\n# 駄菓子屋きぬや 販売管理システム 非機能要件 / 保守性\n\n## 1. 概要（対象・目的）\n\n店主不在の日も家族が店番を続けられるよう、レジ代わりのタブレットで販売・つけを記録できなくなったときの切り分けと切り戻しを、紙の販売控えへ切り替える前に終える。切り分けや切り戻しが長引くと、その間の販売とつけは紙に書いて後で転記す\n… output omitted …\n|\n| - | - | - |\n| 非機能要件 | \\[\\[specdojo:nfr-availability-sample\\|非機能要件 / 可用性]] | RTO/RPO の正本。一次切り分けと切り戻しの時間が RTO に収まるか確かめる |\n| 受入判定 | \\[\\[specdojo:sac-sample\\|システム受入条件]] | `nfr-mnt-001`・`002`・`005` の判定基準を同じ値で参照する |\n| 運用方針 | \\[\\[specdojo:opd-index-sample\\|運用方針・設計（全体構成）]] | 優先度・切替の判断時刻・変更の時間帯の正本 |\n| 運用手順 | \\[\\[specdojo:opr-incident-sample\\|障害対応手順]] | 一次切り分けの手順と所要時間の訓練の基準 |\n| 運用手順 | \\[\\[specdojo:opr-change-sample\\|運用変更手順]] | 閉店後の変更と切り戻しの手順 |\n| 判断記録 | 登録簿の decision | 閾値・測定方法を決めた・見直した判断を残す |"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6233 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6233 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-4-nfr-maintainability-sample-050\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (48 tests) 8ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.te\n… output omitted …\ns/src/exec/plans.test.ts\",\"duration_ms\":2107}\n\n Test Files  19 passed (19)\n      Tests  480 passed (480)\n   Start at  22:15:30\n   Duration  3.24s (transform 7.63s, setup 1.29s, import 10.74s, tests 7.33s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nnum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-4-nfr-maintainability-sample-050/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-4-nfr-maintainability-sample-050/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "nfr-maintainability-sample を rulebook の本文要件 5 章（概要（対象・目的）／適用範囲・前提条件／保守性要件一覧／測定・検証方法／関連ドキュメント導線）で書き直し、駄菓子屋きぬやの値で埋めた完成例にした。frontmatter に part_of（specdojo:nfr-index-sample）と based_on（specdojo:opd-index-sample）を追加した。nfr-mnt-001〜005 に集計方法・集計期間付きの基準と、測定方法・判定タイミング・判定者（Role code）を置いた。値は opd-index-sample の営業時間 10:00〜18:00、P1 から 30 分で紙の販売控えへ切替を判断する運用、閉店後に変更を適用する運用に揃えた。MTTR の上限と商品マスタ・価格変更のリードタイムは利用者の判断が要るため `_UNDECIDED_` にした。非推奨の dec-sample へのリンクは登録簿の decision に置き換えた。対象ファイルは prettier と markdownlint-cli2 で指摘 0 件。",
+  "completion_status": "complete",
+  "handoff": [
+    "`_UNDECIDED_` のまま残した値（PO の判断が要る）: (1) P1 障害の MTTR の上限（nfr-mnt-003。可用性の RTO を超えない値で決める）、(2) 商品マスタ・価格変更の変更リードタイムの上限（nfr-mnt-004）。決まるまでは測った値の報告だけ行い、pass / fail を判定しない。",
+    "rulebook の変更案: 本書の位置づけ、測定・検証方法の記述ガイド、関連ドキュメント導線は、閾値の判断の記録先を `dec-*` としている。しかし specdojo:dec-sample は deprecated で、登録簿の decision へ移っている。sample では「登録簿の decision」と書いたので、rulebook の `dec-*` 参照も登録簿の decision に置き換える必要がある。",
+    "rulebook の変更案: `based_on` に監視・ログ・Runbook の水準の根拠となる文書を書くよう求めているが、opd-monitoring-sample・opr-incident-sample・opr-change-sample はまだ薄い最小サンプルで具体値を持たない。今回は値を持つ opd-index-sample だけを `based_on` にした。opr-* の sample を厚くするときは、nfr-mnt-001（一次切り分け 30 分）と nfr-mnt-002（翌営業日 10:00 までの切り戻し）に所要時間・訓練の基準を揃える必要がある。",
+    "sample の本文に足さなかった grade の指摘: F005（承認・公開の責任）、F006（作業項目・役割の割り当て・スケジュール）、F011（確認担当者と合意対象）は、文書の役割の割り当てと承認の進み具合を sample の本文に書かないという PJR-76N9 の決まりに当たるため対応しなかった。再評価で同じ指摘が出る場合は、viewpoint 側で sample を対象外にするよう見直すことを提案する。保守作業を担う役割（OPS・DEV・PO・店番担当）は、文書の中身として適用範囲・前提条件に書いた。",
+    "兄弟の nfr-*-sample（availability、performance、index など）は旧形式の 38 行の最小サンプルのままで、RTO/RPO なども持たない。nfr-availability-sample を厚くするときは、RTO を nfr-mnt-001・002・003 と矛盾しない値にする必要がある。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-4-nfr-maintainability-sample-050/T-KATA-WAVE-4-nfr-maintainability-sample-050-20261123T130249Z-9a625a85/executor.log",
+      "bytes": 7729,
+      "truncated": false
+    }
+  ]
+}
