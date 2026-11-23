@@ -1,0 +1,42 @@
+レビューの結果は `complete-with-findings` です。この sample は plan の範囲と完了条件を満たしています。ただし grade の minor finding が 3 件残っています。
+
+**評価結果の確認**
+- 鮮度確認として次の 2 つを実行しました。どちらも出力は空で、終了コードは 0 でした。
+  - `specdojo grade list --target kata --path docs/ja/specdojo/samples/opr-change-sample.md --changed-only`
+  - 同じコマンドの `--incomplete` 版
+- 評価結果は最新で、評価パイプラインも完了しています。
+- 対象の評価結果は `verdict` が `pass`、`score` が 96 です。finding は blocker 0 / major 0 / minor 3 / note 0 です。
+- 型の整備に必要な `--target kata` の結果は次のとおりです。
+  - template、`opr-sample`、`opr-access-control-sample`、`opr-backup-restore-sample`、`opr-incident-sample`、`opr-monitoring-sample` は `pass` です。
+  - `opr-rulebook` は `needs-work` です（score 94、major 1 / minor 1）。
+  - `opr-batch-sample` は `needs-work` です（score 66）。
+  - `opr-support-sample` は `fail` です（score 57）。
+- この 3 件は `opr-change-sample` の完了条件には含めません。理由は次の 3 点です。
+  - `opr-rulebook` の major は `opr-batch-sample`、`opr-change-sample`、`opr-support-sample` の 3 件が `rulebook: specdojo:opd-rulebook` を宣言しているという指摘です。`opr-change-sample` の frontmatter は `rulebook: specdojo:opr-rulebook` になっており、この指摘は当たりません。`opr-change-sample` については、先行する task の `opr-change-sample-050` と `-080` で解消済みと見られます。
+  - `opr-batch-sample` と `opr-support-sample` は、同じ型に属する別 sample の未整備です。
+  - この 2 件の評価は 2026-11-21 付けで、古いものの `content_hash` は一致しています。再整備は別タスクで行うものとして扱います。
+
+**判断根拠**
+- DC-001（章立て）: 章は `1.` から `12.` まで opr-rulebook の構成で揃っており、`8. 運用変更作業` が主章です。
+- DC-002（共通サンプル文脈）: 駄菓子屋きぬやの文脈に統一されています。
+- DC-003（禁止事項）: grade の `vp-qe-kata-conformance` が level 4 で、禁止事項への抵触は指摘されていません。
+- DC-004（Frontmatter）: `rulebook` は `specdojo:opr-rulebook` です。
+- DC-005（目的と範囲）: 目的と範囲は概要で示されています。変更の判断基準は、承認者と戻す条件を `opd-index-sample` の変更管理に従うと明記しています。`vp-po-purpose-alignment` は level 4 です。
+- 残る minor finding 3 件は、いずれも完了を妨げません。
+- 実行記録の確認: `git log` で先行 task（`-050`、`-080`）の変更を確認しました。status は `draft` のままです。
+
+**未充足事項・改善指示**
+完了を妨げる未充足事項はありません。次は任意の改善です。
+- F001: 手動バックアップからの復元手順の参照先（`opr-index` のバックアップ・リストア手順、または `opr-backup-restore`）を明記し、導線表にも追加します。
+- F002: step 5 の「閉店後」が、変更種別の表にある緊急変更（営業時間中も可、電話承認）と矛盾しています。緊急変更の例外を明記します。
+- F003: 変更件数とロールバック件数の月次集計が、`opr-sample` の月次点検の行にありません。集計の責任を本書に寄せるか、`opr-index` 側に項目を足します。
+- 型の整備として、`opr-batch-sample` と `opr-support-sample` の再整備、および `opr-rulebook` の minor finding（`F001`、本書の template 参照への置き換え）への対応が別途必要です。
+- `opr-access-control-sample` と `opr-sample` の緊急権限の食い違いは、横串の確認で人が確定します。
+
+**確認できなかった範囲**
+- 本文全体の再評価は行っていません（review の範囲外）。
+- `npm run` 系の検査は、親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict=complete-with-findings。評価結果は最新（grade list --changed-only / --incomplete とも出力なし）。opr-change-sample は pass(96)、minor 3件（F001 復元手順の参照先、F002 緊急変更と閉店後の矛盾、F003 月次集計の責任）で完了条件 DC-001〜005 を満たし、完了を妨げない。型側は opr-rulebook が needs-work、opr-batch-sample が needs-work、opr-support-sample が fail。opr-rulebook の major（3 sample が opd-rulebook を宣言）は opr-change-sample には該当せず、frontmatter は opr-rulebook を指している。batch/support の再整備は別タスク。確認できなかった範囲: 本文全体の再評価（review 範囲外）、parent validations。","handoff":["任意の改善: opr-change-sample の F001（復元手順の参照先）、F002（緊急変更と閉店後の矛盾）、F003（月次集計の責任）","型の整備: opr-batch-sample（needs-work 66）と opr-support-sample（fail 57）の再整備、opr-rulebook の F001（template 重複の解消）が別途必要","opr-access-control-sample と opr-sample の緊急権限の食い違いは、横串の確認で人が確定する"],"validations":[]}
+</specdojo_executor_evidence>

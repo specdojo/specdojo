@@ -5,10 +5,10 @@ path: docs/ja/specdojo/samples/opr-backup-restore-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 99
-graded_at: "2026-11-23T18:18:59.001Z"
+score: 98
+graded_at: "2026-11-23T18:41:40.623Z"
 graded_by: sonnet-review-executor
-content_hash: 5f74b81f692a9e35a5c6ae3d4935207567f035daf22d737a209c4775b109476e
+content_hash: 81d3e582c1cddbe65b033a4392fd7e15351211042ffef08da225b93510e81c8f
 categories:
   purpose:
     score: 100
@@ -21,7 +21,7 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 92
   implementation:
     score: 88
   quality:
@@ -60,8 +60,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -104,13 +104,20 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 1
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
+    rule: vp-arc-conciseness
+    line: 55
+    anchor: "### 6.1. 確認"
+    message: 6.1 の確認の実施条件・手順・完了条件は、点検手順の表の日次（開店前）の行とほぼ重複している。どちらかを他方への参照に置き換えれば、判断情報を失わずにまとめられる。
+    message_ja: 6.1 の確認の実施条件・手順・完了条件は、点検手順の表の日次（開店前）の行とほぼ重複している。どちらかを他方への参照に置き換えれば、判断情報を失わずにまとめられる。
+  - id: F002
+    severity: minor
     rule: vp-dev-implementation-readiness
     line: 53
-    anchor: "## 6. バックアップ確認・リストア手順"
+    anchor: 取得は夜間バックアップが閉店後の日次締めの後に自動で 1 日 1 回行い、同じ日付の取得は同じ世代を上書きする。確認・復元・演習は次のとおりとする。
     message: 復元と取得確認に使うホスティング環境の機能名または操作の入口（別紙への参照でも可）を一言示すと、第三者が復元手順を再現しやすくなる。
     message_ja: 復元と取得確認に使うホスティング環境の機能名または操作の入口（別紙への参照でも可）を一言示すと、第三者が復元手順を再現しやすくなる。

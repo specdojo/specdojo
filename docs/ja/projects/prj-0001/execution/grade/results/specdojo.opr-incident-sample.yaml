@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 91
-graded_at: "2026-11-23T18:20:04.055Z"
+graded_at: "2026-11-23T18:25:32.007Z"
 graded_by: sonnet-review-executor
-content_hash: 0e4cd62e18940140b162ef4c7c5705c12ebc07b8a7f07650c855db6d1f173502
+content_hash: 3cc58ac1c8dd2de1e929664ce65add7549dae17f301b48a6bf864f985fa85a77
 categories:
   purpose:
     score: 100
@@ -110,10 +110,10 @@ findings:
   - id: F001
     severity: minor
     rule: vp-arc-conciseness
-    line: 54
-    anchor: "- 復旧の期限は未決のため、達成・未達を判定しない（概要の未決事項の表を参照）。"
-    message: 4.1 末尾の箇条書き 2 点（「気付いた時刻を障害記録に書く」と「復旧の期限は未決」）は、直前の導入文と概要の未決事項の表に既出のため、1 点にまとめるか参照に置き換えて重複を除く。
-    message_ja: 4.1 末尾の箇条書き 2 点（「気付いた時刻を障害記録に書く」と「復旧の期限は未決」）は、直前の導入文と概要の未決事項の表に既出のため、1 点にまとめるか参照に置き換えて重複を除く。
+    line: 53
+    anchor: "- 店番担当は、気付いた時刻・画面の状態・優先度を障害記録の用紙に書いてから連絡する。"
+    message: 4.1 末尾の箇条書き（「気付いた時刻を障害記録に書く」）は、直前の導入文で初動期限の起点として既に述べられているため、導入文に統合するか参照に置き換えて重複を除く。
+    message_ja: 4.1 末尾の箇条書き（「気付いた時刻を障害記録に書く」）は、直前の導入文で初動期限の起点として既に述べられているため、導入文に統合するか参照に置き換えて重複を除く。
   - id: F002
     severity: minor
     rule: vp-dev-implementation-readiness
@@ -139,7 +139,7 @@ findings:
   - id: F004
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 133
+    line: 132
     anchor: >-
       | 障害記録       | プロジェクトの課題管理                 | _UNDECIDED_ | `OPS`、`DEV`、`PO`    |
       `ticket_id`、優先度、気付いた時刻、復旧した時刻      |

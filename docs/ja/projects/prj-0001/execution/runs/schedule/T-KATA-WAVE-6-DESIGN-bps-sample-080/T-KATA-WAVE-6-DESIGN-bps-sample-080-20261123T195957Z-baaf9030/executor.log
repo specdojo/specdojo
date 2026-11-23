@@ -1,0 +1,5 @@
+`docs/ja/specdojo/samples/bps-sample.md` の重複 2 箇所を削りました。どちらも同じ内容が別の箇所に残っているので、意味と必須情報は変わりません。`lint:md` などの検査は、親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"bps-sample.md の重複 2 箇所を削除した。意味と必須情報は維持した。","handoff":[],"condense_records":[{"location":"1. 概要 / プロセス領域","category":"repetition","action":"delete","reason":"「現在庫の算出と基準との比較は `P-05` に残す」は、同じ章の対象外にある「現在庫の算出（`P-05`）」と同じ内容なので削った。","cause":{"type":"document"}},{"location":"6. 出力 / 末尾の段落","category":"repetition","action":"delete","reason":"「承認済みのまま `S-04` が完了していない依頼は保留記録で追い、出力として確定しない」は、概要の終了点と `E-05` の処置にある内容と同じなので削った。","cause":{"type":"document"}}],"validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner の検査が正本なので、ここでは実行しなかった。"}]}
+</specdojo_executor_evidence>

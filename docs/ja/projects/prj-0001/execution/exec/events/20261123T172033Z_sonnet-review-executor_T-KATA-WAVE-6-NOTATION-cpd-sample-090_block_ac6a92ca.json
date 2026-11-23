@@ -1,0 +1,17 @@
+{
+  "v": 1,
+  "ts": "2026-11-23T17:20:33Z",
+  "type": "block",
+  "task_id": "T-KATA-WAVE-6-NOTATION-cpd-sample-090",
+  "by": "sonnet-review-executor",
+  "msg": "reporter output invalid after 3 format attempts: result Markdown notation violation before writing (fix the JSON prose that produced these rendered lines; do not put Markdown headings, code fences, bare URLs, escaped backticks, or Chinese simplified glyphs in free-text fields):\nline 39 MD026/no-trailing-punctuation Trailing punctuation in heading [Punctuation: '。']: \"### approach に応じた確認 `node tools/lint-mermaid.mjs docs/ja/specdojo/samples/cpd-sample.md` による構文チェックを実行し、`passed` であることを確認しました。\"",
+  "meta": {
+    "limit_deferred": "false",
+    "claim_actor": "sonnet-review-executor",
+    "stage_actor": "gemma26-reporter",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-NOTATION-cpd-sample-090/T-KATA-WAVE-6-NOTATION-cpd-sample-090-20261123T170746Z-7673b777/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-NOTATION-cpd-sample-090/T-KATA-WAVE-6-NOTATION-cpd-sample-090-20261123T170746Z-7673b777/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-6-NOTATION-cpd-sample-090-20261123T170746Z-7673b777"
+  }
+}
