@@ -121,3 +121,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_3d0c14f384734365be1dfbec6a5a3fdb
+- v: 1
+  id: reg_558934b9f06a4a7cb7362d751ae81a99
+  ts: "2026-11-23T05:20:27Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合の後に rg で旧 id が成果物と Markdown の文書に残っていないこと（grade の記録・生の記録・fixture を除く）と、index build の後に 7 件が名前空間なしの id で引けることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: docs/ja/product の下の 7 件の id と、名前空間ありの based_on を名前空間なしに直し、参照を過去の個票・plan・result も含めて付け替えた。過去の run の生の記録（evidence・log・pipeline-state）と grade の記録は、書かれたときのまま残した
+  previous_event_id: reg_c21df022c0714aa1a2b0a4adddbe3c37

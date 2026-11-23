@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-e4mw-product-doc-bare-id-migration
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-22T23:13:46Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-23T05:20:27Z"
+  conclusion: docs/ja/product の下の 7 件の id と、名前空間ありの based_on を名前空間なしに直し、参照を過去の個票・plan・result も含めて付け替えた。過去の run の生の記録（evidence・log・pipeline-state）と grade の記録は、書かれたときのまま残した
   derived_from:
     - PJR-PHY7
   depends_on:
