@@ -333,6 +333,7 @@ viewpoints:
         - specdojo:ifx-index-rulebook
         - specdojo:ifx-msg-rulebook
         - specdojo:pm-members-rulebook
+        - specdojo:pm-orchestrator-playbook-rulebook
         - specdojo:pm-roles-rulebook
         - specdojo:sch-rulebook
         - specdojo:tml-rulebook
@@ -623,6 +624,7 @@ viewpoints:
         - specdojo:pm-communication-plan-rulebook
         - specdojo:pm-issue-log-rulebook
         - specdojo:pm-members-rulebook
+        - specdojo:pm-orchestrator-playbook-rulebook
         - specdojo:pm-organization-rulebook
         - specdojo:pm-plan-rulebook
         - specdojo:pm-quality-management-plan-rulebook
