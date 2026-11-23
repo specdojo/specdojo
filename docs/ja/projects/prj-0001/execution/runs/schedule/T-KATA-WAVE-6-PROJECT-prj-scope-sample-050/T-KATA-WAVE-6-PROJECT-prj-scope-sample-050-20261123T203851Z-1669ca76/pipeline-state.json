@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-WAVE-6-PROJECT-prj-scope-sample-050",
   "run_id": "T-KATA-WAVE-6-PROJECT-prj-scope-sample-050-20261123T203851Z-1669ca76",
-  "updated_at": "2026-11-23T20:47:07.982Z",
+  "updated_at": "2026-11-23T20:47:56.038Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-prj-scope-sample-050/T-KATA-WAVE-6-PROJECT-prj-scope-sample-050-20261123T203851Z-1669ca76/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-23T20:47:07.982Z",
-      "completed_at": null,
+      "completed_at": "2026-11-23T20:47:56.038Z",
       "artifact_ref": null
     }
   },
