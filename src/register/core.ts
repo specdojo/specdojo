@@ -22,6 +22,7 @@ import {
   CELL_NONE,
   CELL_TODO,
   isPlaceholderCell,
+  ITEM_TYPE_ALLOWED_STATUSES,
   PJR_ID_ALPHABET,
   PJR_ID_RE,
   registerItemFieldsFromItem,
@@ -392,6 +393,12 @@ export function validateFields(opts: {
   }
   if (!(VALID_TYPES as readonly string[]).includes(opts.type)) {
     errors.push(`Invalid type: "${opts.type}". Must be one of: ${VALID_TYPES.join(", ")}`);
+  }
+  const allowedStatuses = ITEM_TYPE_ALLOWED_STATUSES[opts.type];
+  if (allowedStatuses && !allowedStatuses.includes(opts.status)) {
+    errors.push(
+      `Invalid status: "${opts.status}". Item type "${opts.type}" allows only: ${allowedStatuses.join(", ")}`,
+    );
   }
   if (!(VALID_PRIORITIES as readonly string[]).includes(opts.priority)) {
     errors.push(

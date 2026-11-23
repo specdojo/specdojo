@@ -109,6 +109,16 @@ properties:
                   finalize,
                   bootstrap-finalize,
                 ]
+      # handoff は受け取り待ち（open）と受け取った（done）だけを持つ。
+      - if:
+          required: [item_type]
+          properties:
+            item_type:
+              const: handoff
+        then:
+          properties:
+            item_status:
+              enum: [open, done]
       - if:
           required: [item_type]
           properties:
@@ -352,6 +362,7 @@ $defs:
       - change-request
       - decision
       - note
+      - handoff
     description: "Register item classification."
 
   ItemStatus:

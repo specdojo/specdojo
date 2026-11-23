@@ -212,7 +212,7 @@ register の worktree 実行では、`exec run --integration-branch <repo>=<bran
 
 `commit_types` は項目の type ごとに既定の commit type を上書きします。値は個票の `commit_type` と同じ 11 種類（`feat`・`fix`・`docs`・`refactor`・`test`・`chore`・`perf`・`build`・`ci`・`style`・`revert`）です。空文字や一覧外の値は設定読み込み時にエラーになります。未指定のキーは「個票の `commit_type` → `repos[].commit_types` → `projects.<project-id>.commit_types` → 既定対応」の順に解決します。`commit_scope` は個票で指定した場合だけ使います。
 
-既定対応は `issue` が `fix`、`todo`・`change-request`・`epic` が `feat`、`decision`・`note`・`question`・`risk` が `docs` です。未知の type は `chore` にフォールバックします。たとえば、project に `"commit_types": { "todo": "chore", "issue": "fix" }`、ドキュメント用の repo に `"commit_types": { "todo": "docs" }` を設定すると、その repo の todo は `docs`、他の repo の todo は `chore` になります。個票で `commit_type` を明示すれば、設定より優先されます。
+既定対応は `issue` が `fix`、`todo`・`change-request`・`epic` が `feat`、`decision`・`note`・`handoff`・`question`・`risk` が `docs` です。未知の type は `chore` にフォールバックします。たとえば、project に `"commit_types": { "todo": "chore", "issue": "fix" }`、ドキュメント用の repo に `"commit_types": { "todo": "docs" }` を設定すると、その repo の todo は `docs`、他の repo の todo は `chore` になります。個票で `commit_type` を明示すれば、設定より優先されます。
 
 `commit_subject_template` と `merge_message_template` はプロダクトリポジトリごとに独立して指定できます。設定がない場合は commit・merge とも従来の `exec(register <ID>): <タイトル>` を保ちます。SpecDojo の記録のリポジトリの start・review・wait・merge などの記帳には適用しません。
 

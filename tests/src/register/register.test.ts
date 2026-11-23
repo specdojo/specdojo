@@ -9,6 +9,7 @@ import { buildValidator, formatErrors } from "../../helpers/schema.js";
 import { specdojoRootDir } from "../../../src/shared/specdojo-config.js";
 import { flattenTemplateFrontmatter } from "../../../src/docs/template-frontmatter.js";
 import { parseTableCells } from "../../../src/register/core.js";
+import { assertStatusAllowedForType } from "../../../src/register/item.js";
 import {
   type RegisterAddFields,
   PJR_ID_RE,
@@ -147,6 +148,67 @@ describe("PJR-ID の乱数衝突救済", () => {
     expect(result.assignedId).toMatch(PJR_ID_RE);
     expect(result.assignedId).not.toBe("PJR-0001");
     expect(result.ticketFilename).toBe(`${result.assignedId.toLowerCase()}-sample.md`);
+  });
+});
+
+describe("handoff の状態の制限", () => {
+  it("handoff を open 以外・done 以外の状態で起票しようとすると書き込み前に拒否する", () => {
+    expect(() =>
+      planRegisterItem({
+        existingIds: [],
+        fields: { ...DEFAULT_ADD_FIELDS, type: "handoff", status: "in-progress" },
+        topic: "sample",
+      }),
+    ).toThrow(/Item type "handoff" allows only: open, done/);
+  });
+
+  it("handoff を open で起票できる", () => {
+    const result = planRegisterItem({
+      existingIds: [],
+      fields: { ...DEFAULT_ADD_FIELDS, type: "handoff", status: "open" },
+      topic: "sample",
+    });
+
+    expect(result.ticketFilename).toBe(`${result.assignedId.toLowerCase()}-sample.md`);
+  });
+
+  it("handoff の open と done は許し、それ以外の状態への変更を拒否する", () => {
+    expect(() => assertStatusAllowedForType("handoff", "open", "PJR-AB12")).not.toThrow();
+    expect(() => assertStatusAllowedForType("handoff", "done", "PJR-AB12")).not.toThrow();
+    expect(() => assertStatusAllowedForType("handoff", "review", "PJR-AB12")).toThrow(
+      /Cannot set PJR-AB12 to "review": item type "handoff" only allows status "open" or "done"/,
+    );
+    expect(() => assertStatusAllowedForType("handoff", "decided", "PJR-AB12")).toThrow(
+      /item type "handoff"/,
+    );
+  });
+
+  it("状態の制限がない種類はすべての状態を許す", () => {
+    expect(() => assertStatusAllowedForType("todo", "waiting")).not.toThrow();
+  });
+
+  it("schema は handoff の open / done 以外の状態を拒否する", () => {
+    const validator = buildValidator(
+      "docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml",
+    );
+    const base = {
+      id: "prj-test-0001:pjr-ab12-sample",
+      type: "project",
+      status: "draft",
+      rulebook: "specdojo:pjr-rulebook",
+      part_of: ["prj-test-0001:pjr-index"],
+      item_type: "handoff",
+      priority: "medium",
+    };
+
+    expect(validator({ specdojo: { ...base, item_status: "open" } })).toBe(true);
+    expect(
+      validator({
+        specdojo: { ...base, item_status: "done", completed_at: "2026-11-23T00:00:00Z" },
+      }),
+      formatErrors(validator.errors),
+    ).toBe(true);
+    expect(validator({ specdojo: { ...base, item_status: "waiting" } })).toBe(false);
   });
 });
 
@@ -745,8 +807,56 @@ describe("generateDerivedViewFiles — 個票を入力とする生成ビュー",
         join(paths.generatedPath, "pjr-derived-items.md"),
         join(paths.generatedPath, "pjr-dependent-items.md"),
         join(paths.generatedPath, "pjr-epic-items.md"),
+        join(paths.generatedPath, "pjr-handoffs.md"),
       ]);
       expect(existsSync(paths.pjrIndexPath)).toBe(false);
+    });
+  });
+
+  it("handoff だけを受け取り待ちと受け取り済みに分けた一覧を生成する", () => {
+    withRegisterDir((paths, dir) => {
+      writeTwoTickets(dir);
+      writeFileSync(
+        join(dir, "pjr-cd34-topic.md"),
+        buildTicket("PJR-CD34", "夜の引き継ぎ", [
+          "item_status: open",
+          "priority: medium",
+          'registered_at: "2026-08-03T12:00:00Z"',
+        ]).replace("  item_type: todo", "  item_type: handoff"),
+        "utf8",
+      );
+      writeFileSync(
+        join(dir, "pjr-ef56-topic.md"),
+        buildTicket("PJR-EF56", "朝の引き継ぎ", [
+          "item_status: done",
+          "priority: medium",
+          'registered_at: "2026-08-02T12:00:00Z"',
+          'completed_at: "2026-08-02T13:00:00Z"',
+        ]).replace("  item_type: todo", "  item_type: handoff"),
+        "utf8",
+      );
+
+      const content = findView(generateDerivedViewFiles(paths, "register"), "pjr-handoffs.md");
+
+      const [openPart, donePart] = content.split("## 2. 受け取り済み");
+      expect(openPart).toContain("| PJR-CD34 | open | 夜の引き継ぎ |");
+      expect(openPart).not.toContain("PJR-EF56");
+      expect(donePart).toContain("| PJR-EF56 | done | 朝の引き継ぎ |");
+      expect(content).not.toContain("PJR-AB12");
+      expect(content).not.toContain("PJR-ZZ99");
+      expect(markdownlintErrors(content)).toEqual([]);
+    });
+  });
+
+  it("handoff がない場合は受け取り待ちと受け取り済みに該当なしを書く", () => {
+    withRegisterDir((paths, dir) => {
+      writeTwoTickets(dir);
+
+      const content = findView(generateDerivedViewFiles(paths, "register"), "pjr-handoffs.md");
+
+      expect(content).toContain(
+        "## 1. 受け取り待ち\n\n該当なし\n\n## 2. 受け取り済み\n\n該当なし\n",
+      );
     });
   });
 
@@ -826,7 +936,8 @@ describe("generateDerivedViewFiles — 個票を入力とする生成ビュー",
         (view) =>
           !view.path.endsWith("pjr-derived-items.md") &&
           !view.path.endsWith("pjr-dependent-items.md") &&
-          !view.path.endsWith("pjr-epic-items.md"),
+          !view.path.endsWith("pjr-epic-items.md") &&
+          !view.path.endsWith("pjr-handoffs.md"),
       )) {
         expect(view.content).toContain("`prefix-<term>-suffix`");
         expect(view.content).toContain("`Array<string>`");

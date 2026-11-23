@@ -1,0 +1,22 @@
+`handoff` 種類を追加しました。状態は open（受け取り待ち）と done（受け取った）の 2 つだけで、`register add --type handoff` で起票し、`register close` で done にします。関係する単体テストは通っています。register・dashboard の範囲と `exec/register`・`night-orchestrator` の 32 ファイル・651 件です。全件のテスト・`typecheck`・lint・`validate:schema` はまだ流しておらず、このあと親の runner が流します。
+
+**主な変更**
+- **CLI**: `src/register/item.ts` に `handoff` と状態の制限を足しました。起票時は `core.ts`、状態遷移と `register update` は `update.ts` で、書き込む前に止めます。commit type の既定は `docs` です。
+- **schema**: `register-item-frontmatter.schema.yaml` の種類の一覧に `handoff` を足しました。`item_type: handoff` のときは `item_status` を open / done に限ります。
+- **個票の template**: `pjr-handoff-template.md` を新しく作りました。章は PJR-5RY7 の決定のとおり、引き継ぎ元と先・有効な承認の範囲・進行中・判断待ち・注意点・関連ドキュメントです。
+- **一覧**: `register build` が `generated/pjr-handoffs.md` を作り、受け取り待ちと受け取り済みを分けて表示します（template は `pjr-handoffs-template.md`）。`pjr-index-template.md` の派生ビューの案内と、文書サイトの目次（`sidebar-kata-config.ts`）にも足しました。
+- **exec と夜の実行**: どちらも実行してよい種類を列挙して選ぶ作りなので、コードを変えずに `handoff` は対象外になります。外れることを単体テストで確かめました。
+- **文書**: `pjr-rulebook`・登録簿運用ガイド（節「セッションの引き継ぎを handoff で受け渡す」を新設）・CLI リファレンス・設定リファレンス・クイックスタートを直しました。
+- **個票**: 作業内容の表と、対応結果（実施内容・決めた点・CHANGELOG に書く事項・残課題）を書きました。
+
+**決めた点**
+- `handoff` の `start` / `wait` / `review` / `reject` / `defer` と `close --status decided` はエラーにし、個票も event も書きません。例外の終わり方を許すと「開いている handoff = まだ読まれていない引き継ぎ」が崩れるためです。
+- 開いている handoff は、状態別ビューに足さず専用の一覧で見せます。状態別ビューの open にはほかの種類が混ざり、一目で見つけにくいためです。
+
+`CHANGELOG.md` は変えていません。区分は Added で、文案は個票の「CHANGELOG に書く事項」にあります。保護された設定の変更は要りませんでした。
+
+イベントファイル `events/pjr-2q86.yaml` の引用符の書式に、私の操作によらない差分が出ています。runner の起動時に付いたものと見ていますが、確かめていません。触らずに残してあります。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"register に種類 handoff（状態は open / done）を追加した。CLI の状態の制限、schema、個票の template、生成ビュー generated/pjr-handoffs.md、pjr-rulebook とガイド・リファレンスを直し、exec と夜の実行から外れることを単体テストで確かめた。","handoff":["handoff の状態は open と done だけに限り、start / wait / review / reject / defer と close --status decided は個票・event を書く前にエラーにした。理由: PJR-5RY7 が状態を受け取り待ち・受け取ったの 2 つと決めており、例外終端を許すと『開いている handoff = まだ読まれていない引き継ぎ』が崩れるため。","開いている handoff を見つける手段として、状態別ビューへの追加ではなく専用の生成ビュー `generated/pjr-handoffs.md`（受け取り待ち / 受け取り済み）を足した。理由: 状態別ビューの open にはほかの種類が混ざり見つけにくいため。","`exec run --register`（`registerItemCategory`）と `orchestrator night`（`selectApprovedNightItems`）は許可リストで選ぶため、コードを変えずに handoff は外れる。除外を単体テストで確認した。","CHANGELOG に書く事項（区分 Added）: `register` に新しい種類 `handoff` を追加。セッションや LLM を切り替えるときの引き継ぎを起票し、受け取ったら `register close` で `done` にする。状態は `open` と `done` だけで、`exec run --register` と `orchestrator night` の対象外。`register build` が受け取り待ちと受け取り済みの一覧 `generated/pjr-handoffs.md` を生成する。","保護された設定の変更は不要だった。`specdojo orchestrator handoff` と playbook・オーケストレーター指示の修正は PJR-5RY7 の後続のもう 1 件の todo で扱う。","`events/pjr-2q86.yaml` に executor が行っていない引用符書式の差分（runner の start 時のもの）があり、触らずに残した。"],"validations":[{"command":"npx vitest run tests/src/register tests/src/exec/register.test.ts tests/src/commands/night-orchestrator.test.ts tests/src/dashboard","status":"passed","summary":"32 files, 651 tests passed（追加した handoff のテストを含む）"},{"command":"npx prettier --write (changed files)","status":"passed","summary":"変更した md / ts / yaml を整形した"},{"command":"npm run validate:history-links","status":"passed","summary":"違反なし（変更した個票 pjr-2q86 も valid）"}]}
+</specdojo_executor_evidence>

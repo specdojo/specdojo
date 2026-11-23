@@ -1654,6 +1654,74 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
     },
   );
 
+  it("handoff を template の章で起票し、受け取った主体で close して done にする", async () => {
+    await withRepo(async ({ registerDir }) => {
+      writeFileSync(join(registerDir, "pjr-index.md"), buildIndex([]), "utf8");
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+      await runRegister([
+        "add",
+        "--type",
+        "handoff",
+        "--title",
+        "夜のセッションから朝のセッションへ",
+        "--topic",
+        "night-to-morning",
+        "--id",
+        "PJR-AB12",
+      ]);
+
+      const ticketPath = join(registerDir, "pjr-ab12-night-to-morning.md");
+      const ticket = readFileSync(ticketPath, "utf8");
+      expect(ticket).toContain("  item_type: handoff");
+      expect(ticket).toContain("  item_status: open");
+      expect(ticket.match(/^## \d+\. .+$/gm)).toEqual([
+        "## 1. 引き継ぎ元と先",
+        "## 2. 有効な承認の範囲",
+        "## 3. 進行中",
+        "## 4. 判断待ち",
+        "## 5. 注意点",
+        "## 6. 関連ドキュメント",
+      ]);
+
+      await runRegister(["close", "--id", "PJR-AB12", "--by", "codex"]);
+
+      expect(readFileSync(ticketPath, "utf8")).toContain("  item_status: done");
+      expect(readEvents(registerDir, "PJR-AB12").at(-1)).toMatchObject({
+        action: "close",
+        actor: "codex",
+        from_status: "open",
+        to_status: "done",
+      });
+    });
+  });
+
+  it.each([["start"], ["wait"], ["review"], ["reject"], ["defer"]])(
+    "%s は handoff を書き換えず終了コード 1 で拒否する",
+    async (command) => {
+      await withRepo(async ({ registerDir }) => {
+        const ticketPath = join(registerDir, "pjr-ab12-topic.md");
+        writeFileSync(join(registerDir, "pjr-index.md"), buildIndex([]), "utf8");
+        const original = buildTicket("PJR-AB12", ["item_status: open", "priority: high"]).replace(
+          "  item_type: todo",
+          "  item_type: handoff",
+        );
+        writeFileSync(ticketPath, original, "utf8");
+        vi.spyOn(process.stdout, "write").mockReturnValue(true);
+        const stderr = vi.spyOn(process.stderr, "write").mockReturnValue(true);
+
+        await runRegister([command, "--id", "PJR-AB12"]);
+
+        expect(process.exitCode).toBe(1);
+        expect(stderr.mock.calls.map((call) => String(call[0])).join("")).toContain(
+          'item type "handoff" only allows status "open" or "done"',
+        );
+        expect(readFileSync(ticketPath, "utf8")).toBe(original);
+        expect(existsSync(registerEventFilePath(registerDir, "PJR-AB12"))).toBe(false);
+      });
+    },
+  );
+
   it("close は作業内容の表に理由のない open の行が残る個票を書き換えず終了コード 1 で拒否する", async () => {
     await withRepo(async ({ registerDir }) => {
       const ticketPath = join(registerDir, "pjr-ab12-topic.md");

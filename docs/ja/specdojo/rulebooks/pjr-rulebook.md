@@ -22,7 +22,7 @@ Project Register Documentation Rules
 
 ## 1. 全体方針
 
-- epic、TODO、要確認事項、リスク、課題、変更要求、決定事項、備忘の全登録項目は、それぞれ 1 件の個票を持つ。
+- epic、TODO、要確認事項、リスク、課題、変更要求、決定事項、備忘、引き継ぎの全登録項目は、それぞれ 1 件の個票を持つ。
 - 個票 Frontmatter の現在値は、分類、処理状態、優先度、担当、日付、結論、起票元の唯一の正本である。
 - `events/pjr-XXXX.yaml` は、起票・状態遷移・更新を追う監査履歴の正本である。現在値の再計算には使わず、個票の現在値との整合を検証する。
 - 個票の H1 と本文は、それぞれタイトルと説明・根拠・経緯・対応内容の正本である。
@@ -125,6 +125,7 @@ Project Register Documentation Rules
 | `question`       | `specdojo:pjr-question-template`       | 確認事項、入力、背景、回答候補、回答・結論、承認、関連ドキュメント                         |
 | `decision`       | `specdojo:pjr-decision-template`       | 背景、検討した選択肢、決定内容、採択理由、承認、影響範囲とフォローアップ、関連ドキュメント |
 | `note`           | `specdojo:pjr-note-template`           | メモ、背景・文脈、フォローアップ、関連ドキュメント                                         |
+| `handoff`        | `specdojo:pjr-handoff-template`        | 引き継ぎ元と先、有効な承認の範囲、進行中、判断待ち、注意点、関連ドキュメント               |
 | `risk`           | `specdojo:pjr-risk-template`           | リスク内容、入力、影響評価、対応方針、モニタリング、関連ドキュメント                       |
 | `issue`          | `specdojo:pjr-issue-template`          | 課題内容、入力、影響範囲、対応方針、対応結果、関連ドキュメント                             |
 | `change-request` | `specdojo:pjr-change-request-template` | 変更要求、入力、影響評価、審査・決定、実施追跡、関連ドキュメント                           |
@@ -133,6 +134,7 @@ Project Register Documentation Rules
 - 承認の節には承認者・承認方式・証跡を記録する。承認方式の選び方は登録簿運用ガイドに従う。
 - `epic` の範囲には domain と境界、完了の判断の基準には子項目と schedule を確認する判断条件、対応結果には人が完了を判断した根拠を記録する。
 - 子 todo は epic から起票し、`derived_from` に epic を記録する。epic 別ビューは直接の子だけを表示し、状態の自動集約や自動 close は行わない。
+- `handoff` の進行中は登録簿と `exec status` から組み立て、判断待ちには別に起票した `question` などの項目への参照だけを書く。有効な承認の範囲と注意点のうち長く効くものは、playbook や個票の入力へ移す。
 - 関連ドキュメントには、根拠、影響先、追跡先を文書 ID で示す。
 - 終端前に未確定の結果・結論がある場合は、`-` または共通ラベルを用い、確定済みの記述と混在させない。
 
@@ -146,6 +148,7 @@ Project Register Documentation Rules
 | `generated/pjr-views-by-owner.md`    | 担当者別の補助一覧                   | 不可     |
 | `generated/pjr-derived-items.md`     | 元項目と派生先の一覧                 | 不可     |
 | `generated/pjr-epic-items.md`        | epic ごとの直接の子項目と状態        | 不可     |
+| `generated/pjr-handoffs.md`          | 受け取り待ちと受け取り済みの handoff | 不可     |
 | `generated/pjr-dependent-items.md`   | 先行項目から後続項目を逆引きする一覧 | 不可     |
 | `controls/generated/pm-*.md`         | `item_type` 別の管理ビュー           | 不可     |
 
@@ -185,16 +188,19 @@ Project Register Documentation Rules
 | `question`       | `decided` | 問いへの回答を確認し、後続作業の要否を判断できる                       | 確定した回答                 |
 | `decision`       | `decided` | 選択肢、採択理由、影響を記録し、必要な承認を得た                       | 決定内容                     |
 | `note`           | なし      | 終端させず、`open` のまま新しい事実・知見を追記する                    | 終端しないため使用しない     |
+| `handoff`        | `done`    | 次のセッション・LLM・人が引き継ぎを読んで受け取った                    | 受け取った内容の要約         |
 | `risk`           | `done`    | リスクが顕在化しないまま消滅した、または対応を終えて追跡が不要になった | 消滅・対応完了の根拠         |
 | `issue`          | `done`    | 問題を解消し、必要な確認を終えた                                       | 解決内容と確認結果           |
 | `change-request` | `done`    | 採択した変更を対象へ反映し、必要な確認を終えた                         | 反映内容と確認結果           |
 
 - `epic` は todo と同じ処理状態と例外終端を使用する。`exec run --register` の実行対象にはせず、filter と夜間 queue も飛ばす。具体的な作業は子 todo で実行する。
+- `handoff` はセッションや LLM を切り替えるときに起票し、状態は `open`（受け取り待ち）と `done`（受け取った）だけを使う。受け取った主体を `--by` にして `register close` する。開いている handoff は、まだ読まれていない引き継ぎを表す。`exec run --register` の実行対象にはせず、filter と夜間 queue も飛ばす。
+- 利用者の返事を待っていることは handoff の本文に抱えず、`question` として別に起票する。handoff を close しても、待っていることは閉じない。
 - `note` の `open` は未対応を意味せず、継続して更新できる記録であることを示す。対応・回答・判断が必要になった場合は目的に合う別項目を起票し、陳腐化・置換された場合はその事実と参照先を追記する。note 自体は終端させない。
 
 #### 5.3.2. 例外的な追跡終了
 
-`note` 以外では、通常終端に達していなくても、次の条件で追跡を終了できる。
+`note` と `handoff` 以外では、通常終端に達していなくても、次の条件で追跡を終了できる。
 
 | `item_status` | 使用条件                                                                   | 記録要件                                         |
 | ------------- | -------------------------------------------------------------------------- | ------------------------------------------------ |
