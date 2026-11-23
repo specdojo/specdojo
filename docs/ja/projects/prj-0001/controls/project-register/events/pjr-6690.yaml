@@ -99,3 +99,16 @@
       from: ""
       to: 関連ドキュメント
   previous_event_id: reg_2920d5659dcb4634a4488ae330307174
+- v: 1
+  id: reg_4ca3061d5ddf4382a288ba82abf22fca
+  ts: "2026-11-23T23:07:57Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_c885ea85fed64c0ead0ee1871bc7426c
