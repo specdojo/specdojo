@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-WAVE-6-PROJECT-pm-risk-register-sample-090",
   "run_id": "T-KATA-WAVE-6-PROJECT-pm-risk-register-sample-090-20261123T185620Z-a220ca99",
-  "updated_at": "2026-11-23T19:14:11.127Z",
+  "updated_at": "2026-11-23T19:14:14.881Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-pm-risk-register-sample-090/T-KATA-WAVE-6-PROJECT-pm-risk-register-sample-090-20261123T185620Z-a220ca99/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sonnet-review-executor",
       "attempts": 1,
       "started_at": "2026-11-23T19:14:11.127Z",
-      "completed_at": null,
+      "completed_at": "2026-11-23T19:14:14.881Z",
       "artifact_ref": null
     }
   },
