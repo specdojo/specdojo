@@ -1,0 +1,13 @@
+ステークホルダー登録簿サンプルを読み、冗長さの候補を洗い出しました。どの候補も判断に要る情報を持つか、他の章との対応に必要だったため、文書は変更していません。
+
+そのため `lint:md` などの検査対象になる変更はなく、親 runner の検査は変更なしのファイルに対して走ります。
+
+検討した候補は次の3件で、いずれも `retain` としました。
+
+- **1章の備考と3章の対応方針:** 家族利用者・常連顧客の備考は、3章の対応方針と一部重なります。ただし、備考は関与の前提として一覧で読める短い注記です。3章は期限・責任者・証跡を伴う行動の定義で、役割が異なります。
+- **各章の導入文:** 各章の導入文は表の読み方と判断の節目を示します。表の内容をなぞる文ではないため残しました。
+- **冒頭の説明:** 冒頭の2段落は、目的と対象外（個人情報の扱い）を述べています。両者は重複しないため残しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"対象文書を精査したが、削除・統合・参照置換すべき冗長箇所は見つからず、変更なし。保持理由を condense_records に記録した。","handoff":[],"condense_records":[{"location":"1章 備考列（家族利用者・常連顧客）","category":"repetition","action":"retain","reason":"3章の対応方針と一部重なるが、備考は関与の前提を一覧で示す短い注記である。3章は期限・責任者・証跡を伴う行動を定める。役割が異なり、削ると一覧単体で関与の前提が読めなくなる。","cause":{"type":"document"}},{"location":"各章の導入文（1〜5章）","category":"table-prose","action":"retain","reason":"表の読み方、判断の節目、未決事項（_UNDECIDED_ / _TODO_）を示しており、表の内容をなぞる文ではない。","cause":{"type":"document"}},{"location":"冒頭2段落","category":"unneeded-background","action":"retain","reason":"目的、対象範囲、個人情報（氏名・つけ残高）を扱わない制約を述べており、判断に要る背景と制約に当たる。","cause":{"type":"document"}}],"validations":[{"command":"npm run lint:md","status":"not_applicable","reason":"文書を変更していないため、executor では実行しない。親 runner の検査結果を正とする。"}]}
+</specdojo_executor_evidence>
