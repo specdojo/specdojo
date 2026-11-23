@@ -1,0 +1,141 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-6-DESIGN-cdfd-sample-045",
+  "run_id": "T-KATA-WAVE-6-DESIGN-cdfd-sample-045-20261123T203213Z-94d446c6",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-23T20:32:57.554Z",
+    "completed_at": "2026-11-23T20:36:08.353Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/recipes/cdfd-recipe.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/recipes/cdfd-recipe.md | 19 +++++++++++--------\n 1 file changed, 11 insertions(+), 8 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/recipes/cdfd-recipe.md",
+      "status": "passed",
+      "summary": "最初の check で見つかった整形ずれを --write で直した。"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2 docs/ja/specdojo/recipes/cdfd-recipe.md",
+      "status": "passed",
+      "summary": "0 issues"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:cdfd-recipe\n  type: recipe\n  status: ready\n  rulebook: specdojo:cdfd-rulebook\n  sample: specdojo:cdfd-sample\n---\n\n# 概念データフロー図（プロセスグループ別）作成レシピ\n\nConceptual Data Flow Diagram Process Group Writing Recipe\n\n全体概要から一つのプロセスグループを引き継ぎ、領域内と領域間のプロセス、主要例外、グループ外への委譲を、関係者が再現できる形で具体化するための作り方を示す。\n\n## 1. このレシピの使い方\n\n- この CDFD は、全体概要のグループの目的（Why）を参照で引き継ぎ、グループ内でそろえる出力と境界（What）を定め、プロセス・例外対応・委譲（How）を決める。領域\n… output omitted …\n明できるか |\n| 必須性境界 | 条件付き・選択のプロセスを起動しない場合の正常な扱いを判定できるか |\n| 設計入力 | 各プロセスの起動条件・入出力・委譲先を、後続設計の入力として使えるか |\n| 例外 | 例外ごとに止める範囲と再開の位置を判定できるか |\n\n## 8. 仕上げチェック\n\n- Frontmatter の `id` が `cdfd-<group>`、`type` が `flow` で、`based_on` に全体概要など直接の根拠とした文書だけを挙げている。\n- 目的が利用場面と判断を示し、役割の割り当てを書いていない。適用範囲の責任分担は全体概要またはプロジェクト方針への参照で示している。\n- 各プロセスが、グループの最終出力のどれかにつながる。\n- 条件付き・選択のプロセスを起動しなくても、領域を正常に終えられる。\n- 状態の定義と遷移を CDFD で書かず、状態を変えるプロセスから STSD をたどれる。\n- 他グループの内部処理を描かず、委譲先が引き渡す情報で次の行動を始められる。\n- 個人名、秘密情報、非公開の組織情報を含めていない。"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6520 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6520 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-DESIGN-cdfd-sample-045\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (48 tests) 12ms\n[\n… output omitted …\n/src/exec/plans.test.ts\",\"duration_ms\":2191}\n\n Test Files  19 passed (19)\n      Tests  480 passed (480)\n   Start at  05:40:04\n   Duration  4.00s (transform 15.40s, setup 8.66s, import 12.39s, tests 8.36s, environment 5ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\ns-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-DESIGN-cdfd-sample-045/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-DESIGN-cdfd-sample-045/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "cdfd-recipe の仕上げチェックに Frontmatter（`id`・`type`・`based_on`）と、責任分担を参照で示す確認項目を足し、F001 を解消した。目的の問い・コツとレビュー観点に残っていた、役割の割り当てと承認を書かせる言い回しも rulebook と PJR-76N9 に合わせて改めた。rulebook と sample は変更していない。",
+  "completion_status": "complete",
+  "handoff": [
+    "sample（docs/ja/specdojo/samples/cdfd-sample.md）の「目的」は役割ごとの箇条書き、プロセス領域には主要入力・主要出力・データストアの箇条書きが残っている。どちらも cdfd-rulebook の記述ガイドと禁止事項に合わない。sample を直すタスクで扱う必要がある。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-DESIGN-cdfd-sample-045/T-KATA-WAVE-6-DESIGN-cdfd-sample-045-20261123T203213Z-94d446c6/executor.log",
+      "bytes": 3017,
+      "truncated": false
+    }
+  ]
+}
