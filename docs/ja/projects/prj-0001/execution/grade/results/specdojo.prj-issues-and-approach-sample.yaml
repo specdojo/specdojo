@@ -4,19 +4,18 @@ document: specdojo:prj-issues-and-approach-sample
 path: docs/ja/specdojo/samples/prj-issues-and-approach-sample.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-sample
 verdict: pass
-score: 95
-graded_at: "2026-11-21T05:32:48.493Z"
-graded_by: opus-executor
-content_hash: beba19946b24b3afda6879d457f26b0cc4234236c9fccd12811b904aaad781ba
+score: 97
+graded_at: "2026-11-23T22:34:12.370Z"
+graded_by: sonnet-review-executor
+content_hash: e4b190592949166002b993d6d718be398ac92f3a3f6b1441261b408076034849
 categories:
   purpose:
     score: 100
   operations:
-    score: 94
+    score: 100
   planning:
-    score: 92
+    score: 100
   business:
     score: 100
   architecture:
@@ -26,9 +25,9 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 83
-  consistency:
     score: 100
+  consistency:
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -40,8 +39,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
     level: 4
     score: 100
@@ -76,14 +75,14 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
-  vp-qe-omissions-consistency:
     level: 4
     score: 100
-  vp-qe-kata-conformance:
+  vp-qe-omissions-consistency:
     level: 3
     score: 75
+  vp-qe-kata-conformance:
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -94,8 +93,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-operability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -105,59 +104,15 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 5
+  minor: 1
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-pm-plan-feasibility
-    line: 54
-    anchor: "| 初期リリースに含める最小機能を確定する | 記録継続に必要な範囲を実行可能にする | 店主代表   |"
-    message: >-
-      次の検討事項（ToDo）の各項目に完了条件（何が決まれば完了か）と判断タイミング（例: 初期リリース計画の確定前）が示されておらず、recipe
-      の問いに対応した完成例として順序付け・進捗確認に使えないため、目的欄または表の直後の文で補うべきである。
-    message_ja: >-
-      次の検討事項（ToDo）の各項目に完了条件（何が決まれば完了か）と判断タイミング（例: 初期リリース計画の確定前）が示されておらず、recipe
-      の問いに対応した完成例として順序付け・進捗確認に使えないため、目的欄または表の直後の文で補うべきである。
-  - id: F002
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 21
-    anchor: "| P-03   | 仮説     | 在庫確認のタイミングが決まっておらず属人的になっている | 品切れ発生時の状況からの推測 |"
-    message: >-
-      P-03 の仮説「在庫確認のタイミングが決まっておらず属人的」に確認方法（例: 一定期間の在庫確認の実施日時と品切れ発生日を記録して照合する）が添えられておらず、recipe・rulebook
-      が求める仮説の検証可能性を完成例として示せていないため、根拠 / 補足欄に確認方法を追記すべきである。
-    message_ja: >-
-      P-03 の仮説「在庫確認のタイミングが決まっておらず属人的」に確認方法（例: 一定期間の在庫確認の実施日時と品切れ発生日を記録して照合する）が添えられておらず、recipe・rulebook
-      が求める仮説の検証可能性を完成例として示せていないため、根拠 / 補足欄に確認方法を追記すべきである。
-  - id: F003
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 54
-    anchor: "| 初期リリースに含める最小機能を確定する | 記録継続に必要な範囲を実行可能にする | 店主代表   |"
-    message: 次の検討事項（ToDo）の項目に、Recipe で指定された `_TODO_:` または `_UNDECIDED` ラベルが付与されていない。
-    message_ja: 次の検討事項（ToDo）の項目に、Recipe で指定された `_TODO_:` または `_UNDECIDED` ラベルが付与されていない。
-  - id: F004
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 3
+    rule: vp-qe-omissions-consistency
+    line: 38
     anchor: >-
-      本書は、店主代表と家族利用者代表が、単一店舗の店頭販売における販売・在庫・つけ管理を同じ手順で確認しやすくするための主要課題と解決アプローチを示す最小の完成例である。プロジェクト概要で示した、記憶と紙の運用による属人化と確認負荷を起点に、店頭販売・在庫・つけ管理を初期対象とするスコープと、単一店舗・タブレット
-      1 台・店主代表の最終判断という前提を踏まえて記述する。
-    message: >-
-      template の導入部は概要・スコープ・前提・制約・依存関係を wikilink で参照する骨組みだが、sample の導入部は名称を記すだけで参照になっていないため、template
-      と完成例の対応が崩れており、based_on の sample への wikilink を導入部に置くべきである。
-    message_ja: >-
-      template の導入部は概要・スコープ・前提・制約・依存関係を wikilink で参照する骨組みだが、sample の導入部は名称を記すだけで参照になっていないため、template
-      と完成例の対応が崩れており、based_on の sample への wikilink を導入部に置くべきである。
-  - id: F005
-    severity: minor
-    rule: vp-ops-operability
-    line: 61
-    anchor: "| つけ残高の移行が完了した                 | P-02 の残高確認課題が解消したか    | 解消した課題を閉じ、残る課題と優先度を見直す         |"
-    message: >-
-      見直しと変更管理の契機に、原因で仮説とした P-03（在庫確認タイミングの属人化）が反証された場合の契機と対応方針がなく、rulebook・recipe が挙げる「仮説の反証」による見直しを完成例として示せていないため、A-03
-      の採否を見直す行を追加すべきである。
-    message_ja: >-
-      見直しと変更管理の契機に、原因で仮説とした P-03（在庫確認タイミングの属人化）が反証された場合の契機と対応方針がなく、rulebook・recipe が挙げる「仮説の反証」による見直しを完成例として示せていないため、A-03
-      の採否を見直す行を追加すべきである。
+      | A-01 | タブレットで最小機能の記録を行う             | 代替 | 販売・在庫・つけを同じ手順で記録し、在庫一覧とつけ残高を顧客別に引ける最小機能を作る     |
+      店番が交代しても同じ記録を見られ、残高確認の足し上げがなくなる | P-01、P-02、P-04 |
+    message: A-01 の対応課題に P-04 が含まれる一方、直後の本文では P-04 の解決策候補を立てず先送りとしているため、対応課題を「P-04（記録の蓄積のみ）」と限定するか P-04 を外して扱いをそろえるべきである。
+    message_ja: A-01 の対応課題に P-04 が含まれる一方、直後の本文では P-04 の解決策候補を立てず先送りとしているため、対応課題を「P-04（記録の蓄積のみ）」と限定するか P-04 を外して扱いをそろえるべきである。

@@ -1,0 +1,21 @@
+template を rulebook と sample に合わせて直しました。編集したのは `docs/ja/specdojo/templates/prj-issues-and-approach-template.md` だけで、rulebook・recipe・sample と template の frontmatter（`status` も含む）は変えていません。
+
+**finding F001 への対応**
+- 「次の検討事項（ToDo）」の記入指示に、各 ToDo の先頭へ付けるラベルを書き足しました。後で記入・判断する事項には `_TODO_:`、判断が決まっていない事項には `_UNDECIDED_:` を付けます。rulebook の「記述ガイド」の決まりと、sample の ToDo 表の書き方に合わせています。
+
+**rulebook との差を直した箇所**
+- **ToDo 表の列:** 「完了条件」「期限 / 判断タイミング」の 2 列を足し、rulebook と sample の 5 列にそろえました。
+- **導入部:** 承認者と利用ロールを書かせる指示を消しました。rulebook がこれらを書かないと定めており、PJR-76N9 の決まりにも沿っています。
+- **見直しと変更管理:** 「記録先と責任ロールを添える」という指示を消しました。rulebook が「記録先と記録の責任は書かない」と定めているためです。
+- **記入指示の補足:** 次の 3 か所に、rulebook の受入条件と合う指示を足しました。
+  - 課題一覧：優先度の値（`High` / `Medium` / `Low`）
+  - 採用アプローチ：採用しない代替案の判定と理由
+  - トレードオフ/リスク：区分の値（`トレードオフ` / `リスク`）と、前提が崩れた場合の対応
+
+**検査**
+- Prettier と markdownlint を変更ファイルに流し、どちらも問題なしでした。
+- 他の lint・テストは、この後 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"`prj-issues-and-approach-template.md` を rulebook と sample に合わせて直した。F001 に対応して ToDo の先頭に付ける `_TODO_:` / `_UNDECIDED_:` ラベルの指示を足し、ToDo 表を 5 列にした。rulebook と食い違っていた導入部の承認者・利用ロール欄と、見直し章の記録先・責任ロールの指示を消した。優先度・区分の値、採用しない案の扱い、前提が崩れた場合の対応を記入指示に足した。rulebook・recipe・sample は変更していない。","handoff":[],"validations":[{"command":"npx prettier --check docs/ja/specdojo/templates/prj-issues-and-approach-template.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/templates/prj-issues-and-approach-template.md","status":"passed","summary":"0 issues in 0 files"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルの変更なし","reason":"plan / result / 個票などの履歴蓄積ファイルを変更していない"}]}
+</specdojo_executor_evidence>

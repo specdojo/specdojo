@@ -12,6 +12,7 @@ specdojo:
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-23T00:21:44Z"
+  due_on: "2026-11-30"
   derived_from:
     - PJR-2TX0
   depends_on:
@@ -29,6 +30,7 @@ register のブランチを develop へ merge し続け、develop で register �
 ## 2. 入力
 
 - PJR-2TX0 の決定（D、1b・2a・3a・4a）を展開する。個人の運用でも、別のプロジェクトから specdojo へ起票することが多いため、早めに着手する（利用者の依頼、2026-11-23）
+- v0.10.0 に入れる（利用者の指定、2026-11-24）
 
 ## 3. 完了条件
 

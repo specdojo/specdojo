@@ -12,6 +12,7 @@ specdojo:
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-23T13:17:07Z"
+  due_on: "2026-11-30"
   depends_on:
     - PJR-B6M3
   commit_type: ci
@@ -27,7 +28,7 @@ Linux の Dev Container と macOS の手元の導入を GitHub Actions で確か
 ## 2. 入力
 
 - 利用者の依頼（2026-11-23）: 多くの人に使ってもらうため、Dev Container・Dev Container ＋ tmux・mac・mac ＋ tmux・WSL・WSL ＋ tmux のパターンですぐに使えるようにする
-- 次の版に回す（2026-11-23）
+- v0.10.0 に入れる（利用者の指定、2026-11-24）
 
 ## 3. 完了条件
 

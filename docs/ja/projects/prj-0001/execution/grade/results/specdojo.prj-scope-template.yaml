@@ -5,19 +5,19 @@ path: docs/ja/specdojo/templates/prj-scope-template.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 100
-graded_at: "2026-10-23T20:08:58.365Z"
-graded_by: flash-high-executor
-content_hash: 643bd9f933196df08a3c088bf2332be77835f94d1a3e923eb7e937029c1bd8c5
+score: 99
+graded_at: "2026-11-23T21:57:52.334Z"
+graded_by: sonnet-review-executor
+content_hash: fb69e9717538dc07900d7e737620d1a0ac8a3859d8ac09002033b36b2e1a3cfc
 categories:
   purpose:
-    score: 100
+    score: 88
   operations:
     score: 100
   planning:
     score: 100
   business:
-    score: 100
+    score: 92
   architecture:
     score: 100
   usability:
@@ -33,8 +33,8 @@ viewpoints:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-publication-accountability:
     level: 4
     score: 100
@@ -54,8 +54,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-stakeholder-clarity:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-technical-constraints:
     level: 4
     score: 100
@@ -104,6 +104,27 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 3
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 33
+    anchor: "_TODO_: 今回扱わない対象を、外す理由と後続で扱う条件とともに記述する。"
+    message: スコープ外の章に、含めるか外すかが未決の項目を `_UNDECIDED_` と決定時期で書く欄がありません。sample のオフライン運用の例に倣い、欄を足してください。
+    message_ja: スコープ外の章に、含めるか外すかが未決の項目を `_UNDECIDED_` と決定時期で書く欄がありません。sample のオフライン運用の例に倣い、欄を足してください。
+  - id: F002
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 7
+    anchor: "_TODO_: 対象とする業務または活動領域を、対象者、利用場面、利用者影響とともに記述する。"
+    message: 利用者・関係者ごとの関わる場面と利用者影響を書く表の骨組みがありません。sample のように表を足すか、箇条書きの書き方の案内を足してください。
+    message_ja: 利用者・関係者ごとの関わる場面と利用者影響を書く表の骨組みがありません。sample のように表を足すか、箇条書きの書き方の案内を足してください。
+  - id: F003
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 56
+    anchor: "| 承認者   | _TODO_ |"
+    message: 承認者の欄に、Role code で書く案内がありません。Role code での記述を促す注記を足してください。
+    message_ja: 承認者の欄に、Role code で書く案内がありません。Role code での記述を促す注記を足してください。
