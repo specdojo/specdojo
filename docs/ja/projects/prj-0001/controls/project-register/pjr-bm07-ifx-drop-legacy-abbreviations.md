@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-bm07-ifx-drop-legacy-abbreviations
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: easy
   owner: BA
   registered_at: "2026-11-22T23:26:56Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-23T04:58:24Z"
+  conclusion: ifx-cmd・ifx-file の rulebook、ifx-cmd-recipe、カタログのコメントから古い略語を外した。grade は ifx-cmd の 3 文書と ifx-file-rulebook が pass。ifx-file-sample の needs-work は範囲の外で、PJR-QR23 に分けた
   derived_from:
     - PJR-AEKE
   depends_on:

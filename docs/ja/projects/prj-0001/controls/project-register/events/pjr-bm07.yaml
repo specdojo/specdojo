@@ -89,3 +89,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_1063f212ce6e4fd4b4e22fa7ec0fb98f
+- v: 1
+  id: reg_d677267eb9ba4f38b29d8171b0ab7de0
+  ts: "2026-11-23T04:58:24Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 範囲の外の不合格を別に起票して close すると利用者が決めた（2026-11-23）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: ifx-cmd・ifx-file の rulebook、ifx-cmd-recipe、カタログのコメントから古い略語を外した。grade は ifx-cmd の 3 文書と ifx-file-rulebook が pass。ifx-file-sample の needs-work は範囲の外で、PJR-QR23 に分けた
+  previous_event_id: reg_1059e7614fe74080b2288e613261d021
