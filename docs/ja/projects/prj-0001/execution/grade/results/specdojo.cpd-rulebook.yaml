@@ -5,15 +5,15 @@ path: docs/ja/specdojo/rulebooks/cpd-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 100
-graded_at: "2026-11-14T17:34:25.614Z"
-graded_by: qwen-review-executor
-content_hash: db2c8e612574a88c3176f3565ebae32817182bee323445b08702b05ec827357c
+score: 94
+graded_at: "2026-11-23T17:07:46.013Z"
+graded_by: sonnet-review-executor
+content_hash: 594128e3957a3a56f5a82eb2bac71e965ff7aab8c93ecafd7fa56d1a4c9c46a2
 categories:
   purpose:
     score: 100
   operations:
-    score: 100
+    score: 94
   planning:
     score: 100
   business:
@@ -21,11 +21,11 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 92
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 83
   consistency:
     score: 100
 viewpoints:
@@ -36,8 +36,8 @@ viewpoints:
     level: 4
     score: 100
   vp-po-publication-accountability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-plan-feasibility:
     level: 4
     score: 100
@@ -60,8 +60,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -72,11 +72,11 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
     level: 4
     score: 100
@@ -104,6 +104,36 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 4
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 42
+    anchor: "| 概要                 | 必須     | 上位図の対象コンテナ、業務目的との対応、分割の目的、利用する設計判断、対象外、確定度                         |"
+    message: 概要の必須内容に公開する相手・媒体・範囲がなく、template と sample の概要は公開範囲を書いています。rulebook の概要行にも公開範囲を加えてください。
+    message_ja: 概要の必須内容に公開する相手・媒体・範囲がなく、template と sample の概要は公開範囲を書いています。rulebook の概要行にも公開範囲を加えてください。
+  - id: F002
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 60
+    anchor: ""
+    message: 6.1〜6.7 の良い例・悪い例は、recipe の「良い例 / 悪い例」表と同じ主張（`REL-08` の応答欠落など）を繰り返しています。rulebook は判断基準だけに絞り、例は recipe へ寄せる余地があります。
+    message_ja: 6.1〜6.7 の良い例・悪い例は、recipe の「良い例 / 悪い例」表と同じ主張（`REL-08` の応答欠落など）を繰り返しています。rulebook は判断基準だけに絞り、例は recipe へ寄せる余地があります。
+  - id: F003
+    severity: minor
+    rule: vp-dev-testability
+    line: 12
+    anchor: >-
+      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status` の昇格と承認、改訂と廃止、未決事項の登録簿への引き継ぎは
+      [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従います。文書の整形・lint はリポジトリの検証で扱い、業務の受入確認に含めません。
+    message: 検証手順が「リポジトリの検証」とだけあり、Mermaid の構文検査や lint の具体コマンドと期待結果が rulebook にありません。参照先または手順を示してください。
+    message_ja: 検証手順が「リポジトリの検証」とだけあり、Mermaid の構文検査や lint の具体コマンドと期待結果が rulebook にありません。参照先または手順を示してください。
+  - id: F004
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 91
+    anchor: 2. 上位図と内外配置・依存方向を比較し、説明のない差異が残らないことを確認します。描画した図で要素名・関係ラベルが欠けず、境界内外と矢印の端点を判読できることも確かめます。
+    message: 「要素名・関係ラベルが欠けず、境界内外と矢印の端点を判読できる」は判定条件が主観的です。確認項目を列挙するか、確認者と確認方法を示して pass / fail を判断できる表現にしてください。
+    message_ja: 「要素名・関係ラベルが欠けず、境界内外と矢印の端点を判読できる」は判定条件が主観的です。確認項目を列挙するか、確認者と確認方法を示して pass / fail を判断できる表現にしてください。
