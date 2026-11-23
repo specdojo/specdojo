@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-NOTATION-stsd-sample-040
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-NOTATION-stsd-sample-040/T-KATA-WAVE-6-NOTATION-stsd-sample-040-20261123T104831Z-2fad03bd/plan.md
   started_at: "2026-11-23T10:48:39.188Z"
+  completed_at: "2026-11-23T11:07:03.886Z"
   agent: opus-executor
   execution: agent
   approach: rulebook-maintenance
@@ -20,16 +21,25 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- stsd-rulebook.md を簡潔に整えました。
+- PJR-76N9 の規定に基づき、判断の主語を排除して文書の責務を明確にしました。
+- F001 および F002 の指摘事項については、既に解消済みであることを確認しました。
+- condense による 4 件の保持要件（遷移表の正本性、図の投影、分割基準、共有状態の宣言）に基づき、必要な規定を維持しました。
+- stsd-mermaid-rulebook.md、sample、recipe、template は変更していません。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/rulebooks/stsd-rulebook.md`: 冗長な記述を削除し、他の rulebook への参照に置き換えることで簡潔にしました。具体的には、状態値の一意性に関する再掲を削除して命名規則への参照にまとめ、分岐時のイベント条件に関する記述を `stsd-mermaid-rulebook` への参照に整理しました。また、文書の責務を「誰が判断するか」から「何を判断するための文書か」という観点に修正しました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- F001(状態値の一意性の再掲)と F002(分岐の同じイベントの限定)は、編集前の `stsd-rulebook.md` で既に解消済み（状態一覧の注記で「ファイル命名・ID規則」を参照し、「図」の節で同じイベントによる分岐に限定している）です。
+- condense の記録 4 件(`stsd-job-run`, `stsd-register-entry` x2, `stsd-routine-run`, すべて `retain`)は、遷移表を正本・図を投影とする規定と、図の分割基準・共有状態の宣言による必要な保持と判断し、規定を変更しませんでした。
+- `stsd-mermaid-rulebook.md` は新たな指摘も冗長な記述もないため変更していません。
+- F001(状態値の一意性の再掲)と F002(分岐の同じイベントの限定)は、編集前の stsd-rulebook.md で既に解消済み(状態一覧の注記で「ファイル命名・ID規則」を参照し、「図」の節で同じイベントによる分岐に限定している)。result の `進め方と実践の型の適用` に解消済みとして記録すること。
+- condense の記録 4 件(stsd-job-run, stsd-register-entry x2, stsd-routine-run、すべて retain)は、遷移表を正本・図を投影とする規定と、図の分割基準・共有状態の宣言による必要な保持と判断し、規定を変更しなかった。
+- stsd-mermaid-rulebook.md は新たな指摘も冗長な記述もないため変更しなかった。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+rulebook-maintenance
