@@ -1,0 +1,22 @@
+`docs/ja/specdojo/rulebooks/cdr-rulebook.md` だけを編集しました。指摘 4 件のうち F001 と F004 は rulebook で解消しました。F002 と F003 は sample・template を直さないと解消しないため、後の段に回します（この段では sample・recipe・template を変更しない決まりのため）。Prettier と markdownlint は対象ファイルで通りました。
+
+**rulebook で直したこと**
+
+- **F001（Frontmatter の確かめ方）**: 「全体方針」の「規約の受入確認に含めない」をやめ、「テストと検証の書き方」を参照する文にしました。その章には次の 2 点を合格条件として加えました。
+  - `specdojo catalog validate` で `based_on` が解決すること。
+  - `applyTo`・`specdojo.id`・`specdojo.rulebook` が「推奨 Frontmatter 項目」と成果物カタログの ID・パスに一致すること。
+  - 実装を読むと、catalog validate が検査するのは `based_on` の解決だけでした。そのため、ほかの 3 項目は表とカタログへの照合で確かめる、と書き分けています。
+- **F004（差し替えの場面と用語）**: 冒頭に「既存の規約を新しい規約で置き換える改訂（`supersedes`）や廃止（`deprecated`）では」と場面を書きました。「差し替え」「切替」はメタ情報標準の「改訂・廃止」にそろえ、完了条件も「改訂・廃止の完了条件」としました。
+- **F002 の補足**: 「本文要件」に、禁止事項の表に書いた内容を本文の章で肯定形に言い換えて書かない、という基準を足しました。例は「整数で扱う」と「浮動小数点で計算しない」です。
+- **F003 の補足**: 型ヒントを使う場合は `型` の章を残して型ヒントの方針を書く、と書き足しました。
+
+**後の段で必要な作業**
+
+- **F002（sample）**: `cdr-sample` の「金額は円単位の整数で扱う」と禁止事項の「金額を浮動小数点で計算する」が重なっています。`src/server/` の配置と「クライアントコンポーネントから DB 接続を import する」も同じです。どちらも一方へ寄せる必要があります。
+- **F003（template）**: `cdr-template` の `型` の章のコメントを、rulebook の省略条件に合わせる必要があります。「動的型の言語で型ヒントも使わない場合に限り削除し、型ヒントを使う場合は章を残す」という内容です。
+
+ほかの記述は指摘も冗長さも見当たらなかったため、そのままにしています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"cdr-rulebook を更新した。F001（Frontmatter の確かめ方と合格条件）と F004（改訂・廃止の場面の前置きと用語の統一）を解消した。F002・F003 の基準も rulebook に足したが、sample・template はこの段で変更しないため後の段に回した。","handoff":["F002: `cdr-sample` の基本方針「金額は円単位の整数で扱う」と禁止事項「金額を浮動小数点で計算する」が重なっている。モジュールと import の章の `src/server/` 配置と禁止事項「クライアントコンポーネントから DB 接続を import する」も同じ。sample の段で、どちらも本文か禁止事項の一方へ寄せる。","F003: `cdr-template` の `型` の章のコメントを rulebook の省略条件に合わせる。動的型の言語で型ヒントも使わない場合に限り削除して理由を書き、型ヒントを使う場合は章を残して型ヒントの方針を書く、という内容にする。template の段で対応する。","result の『直さなかった箇所と理由』: 上記以外の記述は grade の指摘がなく、冗長な記述やほかの型との重なりも見つからなかったため変更していない。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/cdr-rulebook.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/cdr-rulebook.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:catalog","status":"not_applicable","summary":"docs/ja/projects/ 配下の成果物の変更はない","reason":"変更したのは docs/ja/specdojo/rulebooks/ だけで、docs/ja/projects/ に届く変更がない"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"plan・result・個票を変更していない"}]}
+</specdojo_executor_evidence>
