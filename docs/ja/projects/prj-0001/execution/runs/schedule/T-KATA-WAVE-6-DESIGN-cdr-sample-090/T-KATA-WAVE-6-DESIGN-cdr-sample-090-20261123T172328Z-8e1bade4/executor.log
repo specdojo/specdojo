@@ -1,0 +1,36 @@
+cdr-sample のレビュー結果は、完了を妨げる未充足事項がなく、`complete-with-findings` です。
+
+**評価結果の確認**
+- 鮮度確認として、`specdojo grade list --target kata --changed-only` を sample・rulebook・template の3つに実行しました。どれも出力は空で終了コードは 0 でした。3つとも評価結果は最新です。
+- sample: `verdict` は `pass`、`score` は 97 です。finding は minor 2 件です。
+- rulebook: `verdict` は `pass`、`score` は 98 です。finding は minor 2 件です。
+- template: `verdict` は `pass`、`score` は 100 です。finding はありません。
+- 作業ツリーに成果物の変更はなく、未追跡の `pipeline-state.json` が1件あるだけでした。review 中の成果物変更はありません。
+
+**判断根拠**
+- 残った finding は sample に2件、rulebook に2件で、すべて minor です。内容は次の2点です。
+  - sample の7章（禁止事項）の「クライアントコンポーネントから DB 接続を import する」と、8章（Next.js のサーバーとクライアントの境界）104行目の `server-only` の記述が、同じ規則を重複して述べています。
+  - template の型章の省略条件が、rulebook の「動的型の言語で型ヒントも使わない場合」の限定と食い違っています。
+- sample の該当箇所は実際に読んで確かめました。
+  - 7章（禁止事項）の表に DB 接続の禁止があります。
+  - 8章（Next.js のサーバーとクライアントの境界）104行目に `server-only` の手順があります。
+- 完了条件 DC-001〜003 に直結する欠落や禁止事項への抵触は、blocker・major ともに 0 件です。
+- 実行記録（先行する edit タスクの result）は特定できませんでした。確認できなかった範囲として記録します。
+
+**未充足事項・改善指示**
+- 未充足事項はありません。次の3点は改善指示として残します。
+- 重複の解消: 8章の `server-only` の記述は、表への再掲をやめて手順だけに絞ります。または表と一箇所に統合します。
+- template の整合: 型章の省略条件を rulebook に合わせます。型ヒントを使う場合は章を残すと明記します。
+- 人の確定: sample がひととおりそろった後の横串の確認でまとめて行います。確定前に確かめる点は、上の2つの改善指示です。
+
+**approach に応じた確認**
+- fully-guided の方針に従い、宣言された文書だけを参照しました。
+- 成果物は変更していません。
+
+**確認できなかった範囲**
+- 先行 edit タスクの result は特定できず、実行記録の検証結果は確認できませんでした。
+- sample の本文全体の再評価は、評価結果を事実として受け取ったため行っていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict=complete-with-findings。3対象（sample/rulebook/template）の鮮度確認は空出力で最新。grade は全て pass（97/98/100）、minor finding のみ（sample と rulebook の表・本章重複、template の省略条件不一致）で完了条件 DC-001〜003 を妨げない。改善指示: sample 8章の server-only 記述を表と一本化、template の型章省略条件を rulebook に合わせる。確認できなかった範囲: 先行 edit タスクの実行記録は特定できず未確認。","handoff":["改善指示: cdr-sample の 8章の server-only 記述と禁止事項表の重複を一箇所に集約する","改善指示: cdr-template の型章省略条件を rulebook の限定（動的型かつ型ヒントなし）に合わせる","人の確定は sample 横串確認でまとめて行う"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/cdr-sample.md --changed-only","status":"passed","summary":"出力なし。評価結果は最新"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/cdr-rulebook.md --changed-only","status":"passed","summary":"出力なし。評価結果は最新"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/templates/cdr-template.md --changed-only","status":"passed","summary":"出力なし。評価結果は最新"}]}
+</specdojo_executor_evidence>
