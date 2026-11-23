@@ -4,12 +4,11 @@ document: specdojo:gl-rulebook
 path: docs/ja/specdojo/rulebooks/gl-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-rulebook
 verdict: pass
-score: 95
-graded_at: "2026-11-21T03:59:30.782Z"
-graded_by: opus-executor
-content_hash: 3156906af63350466c5356d2ca411f375c5d72ab50f2694a52cddff88909548a
+score: 94
+graded_at: "2026-11-23T15:43:25.279Z"
+graded_by: sonnet-review-executor
+content_hash: 6b446c70284f65f2b27e0869ab4dab4d286d0eb071e3649ded6577e5f62be25d
 categories:
   purpose:
     score: 100
@@ -26,9 +25,9 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 83
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -70,17 +69,17 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-verifiability:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
-  vp-qe-kata-conformance:
     level: 4
     score: 100
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 3
     score: 75
@@ -102,24 +101,27 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 2
+  minor: 3
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 46
-    anchor: "| `status`   | 文書成熟度。`draft` / `ready` / `deprecated` | ○    |"
-    message: >-
-      `status` を必須（○）としているが、正本と宣言した `gl.schema.yaml` のルート `required` には `status` がないため、schema
-      上は任意だがメタ情報標準により記載必須とする根拠を表または直後の文に示し、正本との食い違いを解消する。
-    message_ja: >-
-      `status` を必須（○）としているが、正本と宣言した `gl.schema.yaml` のルート `required` には `status` がないため、schema
-      上は任意だがメタ情報標準により記載必須とする根拠を表または直後の文に示し、正本との食い違いを解消する。
+    rule: vp-dev-testability
+    line: 51
+    anchor: ""
+    message: 参照検査の範囲と用語集を横断する受入確認の合格条件が、構造検査・参照検査を示した段落とは別の段落で読み取りにくいため、検証方針として 1 つにまとめ、検査対象と手動確認の区分を明確にする。
+    message_ja: 参照検査の範囲と用語集を横断する受入確認の合格条件が、構造検査・参照検査を示した段落とは別の段落で読み取りにくいため、検証方針として 1 つにまとめ、検査対象と手動確認の区分を明確にする。
   - id: F002
     severity: minor
+    rule: vp-qe-kata-conformance
+    line: 17
+    anchor: "- 冒頭のコメントまたは代表用語の注記で、対象範囲と共通・他領域の正本を示す。"
+    message: 見出し直下の英語名の行が、正本の rulebook-authoring-standard の規定する体裁に沿っているかを確認し、不要であれば削除する。
+    message_ja: 見出し直下の英語名の行が、正本の rulebook-authoring-standard の規定する体裁に沿っているかを確認し、不要であれば削除する。
+  - id: F003
+    severity: minor
     rule: vp-ux-readability
-    line: 118
-    anchor: "- 参照検査が扱うのはファイル内の ID 重複と参照先の存在だけで、BDD・BR の参照は検査しない。業務の受入確認では用語集を横断して ID の一意性・翻訳以外の概念重複を照合し、参照元で意味と呼び方が一致すれば合格とする。"
-    message: 参照検査の範囲と用語集を横断する受入確認の合格条件が「分類・関連用語の判断」の例示の箇条に埋もれているため、構造検査・参照検査を示した節の近くなど検証方針として読み取れる位置へ移し、分類・関連用語に限った規則と誤読されないようにする。
-    message_ja: 参照検査の範囲と用語集を横断する受入確認の合格条件が「分類・関連用語の判断」の例示の箇条に埋もれているため、構造検査・参照検査を示した節の近くなど検証方針として読み取れる位置へ移し、分類・関連用語に限った規則と誤読されないようにする。
+    line: 51
+    anchor: ""
+    message: 検査コマンドの段落の末尾に modeline の指定方法が混在し、論点が 2 つになっているため、modeline は schema の指定を述べた直前の文に移して段落を分ける。
+    message_ja: 検査コマンドの段落の末尾に modeline の指定方法が混在し、論点が 2 つになっているため、modeline は schema の指定を述べた直前の文に移して段落を分ける。
