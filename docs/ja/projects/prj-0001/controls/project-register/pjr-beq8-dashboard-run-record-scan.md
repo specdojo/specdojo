@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-22T23:45:18Z"
   due_on: "2026-11-30"
-  block_reason: "parent validation failed: test-unit"
   derived_from:
     - PJR-BBTW
   commit_type: perf
@@ -48,12 +47,12 @@ findRunRecord が記録の置き場のない項目で execution/runs/ を全部�
 
 ## 4. 作業内容
 
-| No  | 作業                                                                                         | 担当 | 状態 | メモ                                                                          |
-| --- | -------------------------------------------------------------------------------------------- | ---- | ---- | ----------------------------------------------------------------------------- |
-| 1   | `RunRecordIndex` を `src/shared/run-records.ts` に追加し、一覧と frontmatter を 1 回だけ読む | DEV  | done | `findRunRecord` に任意の第 4 引数を追加。省略時の動きは従来どおり             |
-| 2   | `buildDashboardMarkdown` で生成ごとに索引を作り、`formatTaskLink` へ渡す                     | DEV  | done | 索引は `paths.runRecordIndex` に持ち、生成の外へ持ち越さない                  |
-| 3   | 単体テストを追加                                                                             | DEV  | done | 置き場のない項目、複数 run の最新選択                                         |
-| 4   | 前後の出力比較と時間の測定                                                                   | DEV  | done | オーケストレーターが実施。結果は対応結果の検証に書き写した                    |
+| No  | 作業                                                                                         | 担当 | 状態 | メモ                                                              |
+| --- | -------------------------------------------------------------------------------------------- | ---- | ---- | ----------------------------------------------------------------- |
+| 1   | `RunRecordIndex` を `src/shared/run-records.ts` に追加し、一覧と frontmatter を 1 回だけ読む | DEV  | done | `findRunRecord` に任意の第 4 引数を追加。省略時の動きは従来どおり |
+| 2   | `buildDashboardMarkdown` で生成ごとに索引を作り、`formatTaskLink` へ渡す                     | DEV  | done | 索引は `paths.runRecordIndex` に持ち、生成の外へ持ち越さない      |
+| 3   | 単体テストを追加                                                                             | DEV  | done | 置き場のない項目、複数 run の最新選択                             |
+| 4   | 前後の出力比較と時間の測定                                                                   | DEV  | done | オーケストレーターが実施。結果は対応結果の検証に書き写した        |
 
 ## 5. 対応結果
 

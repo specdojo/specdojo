@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-BEQ8",
+  "run_id": "pjr-beq8-20261123T001207Z-ddb0f4f3",
+  "updated_at": "2026-11-23T00:16:06.822Z",
+  "stages": {
+    "executor": {
+      "status": "blocked",
+      "actor": "sonnet-executor",
+      "attempts": 1,
+      "started_at": "2026-11-23T00:13:45.981Z",
+      "completed_at": "2026-11-23T00:16:06.822Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-BEQ8/pjr-beq8-20261123T001207Z-ddb0f4f3/evidence.json"
+    },
+    "reporter": {
+      "status": "pending",
+      "actor": "gemma26-reporter",
+      "attempts": 0,
+      "started_at": null,
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-BEQ8/pjr-beq8-20261123T001207Z-ddb0f4f3/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-BEQ8/pjr-beq8-20261123T001207Z-ddb0f4f3/result.md"
+  }
+}

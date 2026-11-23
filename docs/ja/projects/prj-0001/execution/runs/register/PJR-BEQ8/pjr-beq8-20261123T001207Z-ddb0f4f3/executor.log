@@ -1,0 +1,10 @@
+`test-unit` が落ちた原因を直しました。`started_at` を引用符なしで書くと YAML が日付として読み、文字列だけを受け付ける判定が外れて、最新の run を選べていませんでした。
+
+- **修正:** `src/shared/run-records.ts` に、日付でも文字列でも時刻（ミリ秒）にする `startedAtMillis` を追加しました。`RunRecordIndex` の時刻取得と、`findRunRecord` の索引なしの経路の両方で使っています。
+- **テスト:** `tests/src/exec/run-records.test.ts` の最新選択テストを `it.each` にして、引用符なし（日付）と引用符あり（文字列）の両方を確かめます。
+- **検証:** 変更したテストファイルは 19 件すべて通り、`npm run typecheck` もエラーなしでした。`test:unit` 全体はこの環境では流さず、親 runner の結果を正とします。
+- **個票:** 前の実行で更新済みなので、今回は触っていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"started_at が Date でも文字列でも時刻として扱うようにし、両形を単体テストで確認した。typecheck も通過。","handoff":[],"validations":[{"command":"npx vitest run --config vitest.unit.config.ts tests/src/exec/run-records.test.ts","status":"passed","summary":"19 tests passed"},{"command":"npx prettier --write tests/src/exec/run-records.test.ts src/shared/run-records.ts","status":"passed","summary":"整形済み"}],"target_coverage":[{"target":"docs/ja/projects/prj-0001/controls/project-register/pjr-beq8-dashboard-run-record-scan.md","status":"changed","path":"docs/ja/projects/prj-0001/controls/project-register/pjr-beq8-dashboard-run-record-scan.md"},{"target":"src/dashboard/dashboard.ts","status":"changed","path":"src/dashboard/dashboard.ts"},{"target":"src/shared/run-records.ts","status":"changed","path":"src/shared/run-records.ts"},{"target":"tests/src/exec/run-records.test.ts","status":"changed","path":"tests/src/exec/run-records.test.ts"}]}
+</specdojo_executor_evidence>
