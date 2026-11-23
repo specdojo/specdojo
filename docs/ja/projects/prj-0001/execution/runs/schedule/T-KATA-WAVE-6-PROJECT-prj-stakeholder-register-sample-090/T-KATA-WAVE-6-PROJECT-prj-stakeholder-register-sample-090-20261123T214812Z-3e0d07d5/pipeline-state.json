@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-6-PROJECT-prj-stakeholder-register-sample-090",
+  "run_id": "T-KATA-WAVE-6-PROJECT-prj-stakeholder-register-sample-090-20261123T214812Z-3e0d07d5",
+  "updated_at": "2026-11-23T21:58:35.719Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sonnet-review-executor",
+      "attempts": 1,
+      "started_at": "2026-11-23T21:48:50.322Z",
+      "completed_at": "2026-11-23T21:50:12.871Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-prj-stakeholder-register-sample-090/T-KATA-WAVE-6-PROJECT-prj-stakeholder-register-sample-090-20261123T214812Z-3e0d07d5/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 2,
+      "started_at": "2026-11-23T21:53:24.798Z",
+      "completed_at": "2026-11-23T21:55:16.343Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-prj-stakeholder-register-sample-090/T-KATA-WAVE-6-PROJECT-prj-stakeholder-register-sample-090-20261123T214812Z-3e0d07d5/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "sonnet-review-executor",
+      "attempts": 1,
+      "started_at": "2026-11-23T21:58:32.248Z",
+      "completed_at": "2026-11-23T21:58:35.719Z",
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-prj-stakeholder-register-sample-090/T-KATA-WAVE-6-PROJECT-prj-stakeholder-register-sample-090-20261123T214812Z-3e0d07d5/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-prj-stakeholder-register-sample-090/T-KATA-WAVE-6-PROJECT-prj-stakeholder-register-sample-090-20261123T214812Z-3e0d07d5/result.md"
+  }
+}

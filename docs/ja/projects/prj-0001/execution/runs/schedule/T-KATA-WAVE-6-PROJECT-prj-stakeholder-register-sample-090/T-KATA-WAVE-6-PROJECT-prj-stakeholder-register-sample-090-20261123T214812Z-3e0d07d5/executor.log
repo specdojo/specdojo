@@ -1,0 +1,42 @@
+レビューの結果、verdict は `complete-with-findings` です。型の 4 文書はすべて最新の `--target kata` で `pass` でした。grade が出した minor finding 3 件は残りますが、このタスクの完了は妨げません。
+
+**評価結果の確認**
+- sample、rulebook、recipe、template の 4 文書で `specdojo grade list --target kata --path <対象> --changed-only` を実行しました。どれも出力は空で終了コードは 0 でした。つまり評価結果は最新です。
+- sample に対する `--incomplete` も出力は空で、評価パイプラインは完了しています。
+- 評価結果は次のとおりです。
+
+| 対象 | verdict | score | finding |
+| --- | --- | --- | --- |
+| sample | `pass` | 100 | なし |
+| rulebook | `pass` | 98 | minor 1 件 |
+| recipe | `pass` | 100 | なし |
+| template | `pass` | 97 | minor 2 件 |
+
+- 確認中に、`git status` で `pipeline-state.json`（未追跡）のほかに変更は見えませんでした。レビュー中に対象が変更された形跡はありません。
+
+**判断根拠（完了条件との照合）**
+- DC-001: sample は `## 1.` から `## 5.` まで、関係者一覧、影響度/関心度分析、エンゲージメント方針、コミュニケーション要件、見直し条件の 5 章で構成されています。各章に表があり、ID `STH-*` が全章でそろっています。grade の `vp-qe-omissions-consistency` も level 4 です。
+- DC-002 と DC-003: grade の `vp-qe-kata-conformance` は level 4 で、finding もありません。本文は駄菓子屋きぬやの文脈に統一されています。人物名、連絡先、顧客の氏名やつけ残高は扱っていません。
+- DC-004: 常連顧客 `STH-REGULAR-CUSTOMER` が、関係者一覧では影響受容者（地域の子どもと近所の大人）として載っています。影響度/関心度分析、エンゲージメント方針、コミュニケーション要件の各章にも同じ ID の行があります。見直し条件でも言及されています。
+- sample の frontmatter は `rulebook` と `based_on` を宣言しています。`based_on` は `prj-overview-sample` で、plan の `depends_on` と一致します。
+- sample は未確定事項を `_UNDECIDED_`（初期公開日）と `_TODO_`（定期見直しの周期）で示しています。どちらも rulebook の運用の範囲内と読めます。
+- 先行する edit タスクの実行記録は、このレビューでは参照していません。plan の確認範囲外のため、先行 edit の検証結果は確認できていません。
+
+**finding が完了を妨げない理由**
+- rulebook の `F001`（minor、`vp-qe-verifiability`、71 行付近）は、「High の関係者」が影響度と関心度のどちらを指すか未定義という指摘です。sample 自体は全章がそろっていて、grade は pass です。
+- template の `F001` と `F002`（minor、`vp-qe-kata-conformance` と `vp-ux-language-consistency`、11 行付近）は、備考列のプレースホルダに `_TODO_` が使われていて、記述指示と区別がつかないという指摘です。これも型の改善事項で、sample の完了条件には影響しません。
+
+**未充足事項・改善指示**
+- 完了を妨げる未充足事項はありません。
+- 型の改善案は次の 2 点です（review では grade の finding を再評価していません）。
+  - rulebook は、「High の関係者」を「影響度または関心度のいずれかが High」のように条件を明記する。
+  - template は、備考列の `_TODO_` を、備考に書く内容（利用場面など）を示す専用のプレースホルダ（例: `_NOTE_`）に置き換える。
+- 人の確定は plan のとおりこの track には入れていません。sample 群がそろった後の横串確認で扱います。その際は上記 3 件の minor を合わせて確認してください。
+
+**確認できなかった範囲**
+- 先行する edit タスクの result（実行記録）は確認していません。
+- `lint:md` などの親 runner が実行する検査は、runner の結果を正とします。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict: complete-with-findings。sample・rulebook・recipe・template の4文書とも評価結果は最新（--changed-only が空出力・終了コード0、--incomplete も空）で、verdict はすべて pass（sample 100、rulebook 98、recipe 100、template 97）。DC-001〜DC-004 は、5章構成と表の整合、駄菓子屋文脈、禁止事項への非抵触、常連顧客 STH-REGULAR-CUSTOMER が全章に含まれることを確認した。残る finding は rulebook F001 の「High の関係者」の条件未定義（minor）と、template F001・F002 の備考列 _TODO_ プレースホルダの重複（minor）の計3件で、sample の完了を妨げない。改善指示は、rulebook で影響度または関心度のいずれかが High と明記すること、template で備考列に専用プレースホルダを使うこと。確認できなかった範囲: 先行 edit タスクの実行記録、親 runner が実行する検査。","handoff":["改善指示（rulebook）: 71行付近の「High の関係者」を「影響度または関心度のいずれかが High」のように条件を明記する（grade F001, minor）","改善指示（template）: 関係者一覧の備考列の _TODO_ を、備考に書く内容を示す専用プレースホルダへ置き換える（grade F001・F002, minor）","sample 群がそろった後の横串確認で、上記3件の minor を合わせて人が確認する"],"validations":[]}
+</specdojo_executor_evidence>
