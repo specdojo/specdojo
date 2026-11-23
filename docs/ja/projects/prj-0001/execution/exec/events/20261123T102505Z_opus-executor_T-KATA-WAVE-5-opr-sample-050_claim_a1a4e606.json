@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-23T10:25:05Z",
+  "type": "claim",
+  "task_id": "T-KATA-WAVE-5-opr-sample-050",
+  "by": "opus-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "OPS"
+  }
+}
