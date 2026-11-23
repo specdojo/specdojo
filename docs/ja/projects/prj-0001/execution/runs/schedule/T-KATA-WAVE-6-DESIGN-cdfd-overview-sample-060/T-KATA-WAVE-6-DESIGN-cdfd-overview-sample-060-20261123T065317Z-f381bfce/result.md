@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-DESIGN-cdfd-overview-sample-060
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-DESIGN-cdfd-overview-sample-060/T-KATA-WAVE-6-DESIGN-cdfd-overview-sample-060-20261123T065317Z-f381bfce/plan.md
   started_at: "2026-11-23T06:53:26.502Z"
+  completed_at: "2026-11-23T19:44:16.128Z"
   agent: opus-executor
   execution: agent
   approach: template-maintenance
@@ -20,16 +21,22 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- cdfd-overview-template を rulebook および sample に同期させました。
+- 第4章「データストア」において、トランザクションデータ表への物理保管の例外行（条件付き）の追加と、保管先を共有・包含する場合の注記指示を追加しました。
+- 図の直後に、図から省略された主要な参加者入力を列挙するための記入指示を追加しました。
+- 凡例における物理保管の説明を、rulebook の定義に合わせて修正しました。
+- 未決事項の表を、rulebook およびプロジェクトの決まり（PJR-76N9）に従い、論点と影響の 2 列構成に変更しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/templates/cdfd-overview-template.md`: rulebook と sample の変更（物理保管の例外併記および未決事項表の列構成）に合わせて、第4章のデータストアにおける指示事項と、図の後の注記指示、および未決事項表の構成を更新しました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- F001〜F007 は template 側で直した。rulebook と sample はすでに例外の併記と 2 列の未決事項表になっており、変更していない。
+- F004 の anchor が指す文は今の template になかったため、rulebook の `6.6`、recipe の「概念データフロー（概要）」のコツ、D2 記法ルールの「凡例と可読性」を根拠に、5章の図の後の記入指示へ足した。
+- finding 以外に、rulebook の「未決事項」と PJR-76N9 に合わせて、未決事項表から決定者・決定時期・状態の列を外した。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+直した rulebook と厚くした sample に沿って template を同期しました。骨組みに責務を絞り、必須の章・項目・表の列名をそろえ、説明や完成例は写さないように整理しました。また、PJR-76N9 に基づき、文書の役割の割り当てや承認の進み具合の記入欄を削除し、未決事項表を論点・影響の 2 列に修正しています。

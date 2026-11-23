@@ -1,0 +1,16 @@
+F001 を直しました。ほかに rulebook と食い違っていた箇所も、同じ recipe（`docs/ja/specdojo/recipes/cdfd-recipe.md`）の中で直しています。rulebook と sample は触っていません。
+
+- **仕上げチェック（F001）**: 2 項目を足しました。
+  - Frontmatter の `id` が `cdfd-<group>`、`type` が `flow` で、`based_on` に直接の根拠とした文書だけを挙げていること。
+  - 目的に役割の割り当てを書かず、責任分担は全体概要またはプロジェクト方針への参照で示していること。
+- **目的の問いとコツ**: 「誰が使うか」「承認する人と設計へ使う人を一人ずつ聞く」という書き方は、rulebook が悪い例にしている「役割の割り当て」を目的に書かせてしまいます。そこで「どの利用場面で何を判断するか」を聞く形に変えました。
+- **適用範囲のコツ**: 人間と AI Agent の責任分担は、参照で済ませる旨を足しました。
+- **レビュー観点の表**: 「店主代表が承認できるか」など、特定の役割と承認を前提にした書き方をやめました（PJR-76N9 に合わせるため）。判定の中身は変えていません。
+
+**確認したこと**: Prettier の整形ずれは `--write` で直しました。markdownlint は 0 件です。runner が実行する検査は実行していません。
+
+**sample との食い違い**: sample（`docs/ja/specdojo/samples/cdfd-sample.md`）の「目的」は、今も役割ごとの箇条書きです。プロセス領域にも主要入力・主要出力・データストアの箇条書きがあります。どちらも rulebook の今のルールと合いませんが、この段では sample を変えないので、別のタスクで直す必要があります。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"cdfd-recipe の仕上げチェックに Frontmatter（`id`・`type`・`based_on`）と、責任分担を参照で示す確認項目を足し、F001 を解消した。目的の問い・コツとレビュー観点に残っていた、役割の割り当てと承認を書かせる言い回しも rulebook と PJR-76N9 に合わせて改めた。rulebook と sample は変更していない。","handoff":["sample（docs/ja/specdojo/samples/cdfd-sample.md）の「目的」は役割ごとの箇条書き、プロセス領域には主要入力・主要出力・データストアの箇条書きが残っている。どちらも cdfd-rulebook の記述ガイドと禁止事項に合わない。sample を直すタスクで扱う必要がある。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/recipes/cdfd-recipe.md","status":"passed","summary":"最初の check で見つかった整形ずれを --write で直した。"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/recipes/cdfd-recipe.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,15 @@
+`docs/ja/specdojo/samples/cdfd-overview-sample.md` の凡例の章（「7. 凡例（本プロダクト共通）」）で、重複していた 2 箇所を整理しました。`lint:md` などの検査は親 runner が実行するため、自分では実行していません。
+
+- **線種の説明を削除:** 凡例の本文にあった「通常線は情報、太線は商品の物の流れ、売場棚は物理保管」という一文を削りました。同じ内容が凡例の対応表の「情報の流れ」「物の流れ」「物理保管」の行にあり、二重の説明になっていたためです。
+- **物理保管の例外を参照に置き換え:** 凡例末尾の段落にあった「トランザクションデータ表への併記」の説明を、「データストア」の章で述べた例外への参照に変えました。例外の趣旨は「データストア」の章に残してあり、区分に属さないという注意は凡例にも残しています。
+
+次の候補は、rulebook が必須とする記述または判断に要る内容なので `retain` としました。
+
+- 「プロセス領域」の章冒頭の正本の所在は、rulebook が章冒頭に置くよう求めています。
+- 「詳細 CDFD 一覧」の章冒頭の役割分担は、rulebook が章冒頭に置くよう求めています。
+- 図の 1 文の説明は、rulebook が各図に 1 文の説明を求めています。
+- 「データストア」の章の入荷数量と販売数量の反映担当は、受け渡しの責務を定めた判断に要る記述です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"凡例章の重複 2 箇所を整理した（線種の説明を削除、物理保管の例外説明を参照に置き換え）。必須記述と判断に要る内容は残した。lint 系の検査は親 runner が実行する。","handoff":[],"validations":[],"condense_records":[{"location":"7. 凡例（本プロダクト共通） 本文第2段落「`->` の通常線は情報…売場棚は物理保管として描く」","category":"table-prose","action":"delete","reason":"同じ内容が直後の凡例対応表（情報の流れ・物の流れ・物理保管の行）にあり二重の説明だったため。凡例の意味は表で保たれる。","cause":{"type":"document"}},{"location":"7. 凡例（本プロダクト共通） データストアの色分けの段落末尾「併記とトランザクションデータと同じ色の使用は…」","category":"repetition","action":"reference","reason":"物理保管の併記が例外である旨は「データストア」の章で既に述べており、重複する説明を同章への参照に置き換えた。区分に属さないという意味は維持している。","cause":{"type":"document"}},{"location":"3. プロセス領域 章冒頭（正本の所在）","category":"canonical-restatement","action":"retain","reason":"rulebook の記述ガイド（プロセス領域）が章冒頭で正本の所在を示すよう要求しているため。","cause":{"type":"document"}},{"location":"6. 詳細 CDFD 一覧 章冒頭（役割分担）","category":"canonical-restatement","action":"retain","reason":"rulebook の記述ガイド（詳細 CDFD 一覧）が章冒頭で詳細化の分担と状態定義の正本を示すよう要求しているため。","cause":{"type":"document"}},{"location":"5. 概念データフロー（概要） 図の後の 1 文の説明","category":"figure-prose","action":"retain","reason":"rulebook の本文要件が各図に業務の題と 1 文の説明を要求しているため。","cause":{"type":"document"}},{"location":"4. データストア 章冒頭（入荷数量と販売数量の反映担当）","category":"repetition","action":"retain","reason":"在庫記録への反映責務を 1 つのプロセスに定める判断に要る記述で、図のエッジとの一致を担保しているため。","cause":{"type":"document"}}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,17 @@
+{
+  "v": 1,
+  "ts": "2026-11-23T21:40:34Z",
+  "type": "block",
+  "task_id": "T-KATA-WAVE-5-opr-batch-sample-050",
+  "by": "opus-executor",
+  "msg": "executor reported incomplete: opr-batch-sample の本文は前回の試行で plan の `done_criteria` を満たしている（Frontmatter の `rulebook` は opr-rulebook、opr-rulebook の 12 章構成、再実行のコマンド・入力・前提の確認・完了の条件）。ただし `tests/src/grade/grade.test.ts` が直す前の誤った `rulebook: specdojo:opd-rulebook` を前提に opd-rulebook.md の参照を期待しているため `test-docs` が失敗する。テストは対象外なので変更せず、修正を申し送る。",
+  "meta": {
+    "limit_deferred": "false",
+    "claim_actor": "opus-executor",
+    "stage_actor": "sonnet-reporter",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-opr-batch-sample-050/T-KATA-WAVE-5-opr-batch-sample-050-20261123T180329Z-b5aca654/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-opr-batch-sample-050/T-KATA-WAVE-5-opr-batch-sample-050-20261123T180329Z-b5aca654/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-5-opr-batch-sample-050-20261123T180329Z-b5aca654"
+  }
+}

@@ -1,0 +1,40 @@
+鮮度確認は2件とも出力なしでした。つまり最新で、sample と rulebook のどちらも評価結果は有効です。
+
+レビューの結論は、評価結果が最新で、完了条件を満たしているため、verdict は `complete-with-findings` です。
+
+**評価結果の確認**
+- `npx specdojo grade list --target kata --path docs/ja/specdojo/samples/otp-sample.md --changed-only` は出力なしで、終了コードは 0 でした。
+- `npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/otp-rulebook.md --changed-only` も出力なしで、終了コードは 0 でした。
+- sample の評価結果は `verdict` が `pass`、`score` が 100 で、finding は 0 件です。
+- rulebook の評価結果は `verdict` が `pass`、`score` が 98 で、minor の finding が 1 件（`F001`）あります。
+- ワークツリーの未追跡ファイルは、runner の `pipeline-state.json` だけです。成果物への変更は混入していません。
+
+**判断根拠**
+- DC-001（章立てと必須の表）: `otp-sample.md` を読み、11 章が連番で並んでいることを確認しました。監視、権限、手順変更、問合せ記録、障害対応、体制、クローズ条件の各表もそろっています。
+- DC-002 と DC-003（Sample 記述標準・共通サンプル文脈・禁止事項）: 題材は駄菓子屋きぬやの販売管理で、役割名は店主代表、家族利用者代表、開発担当、店舗運営アドバイザーに統一されています。禁止事項への抵触は見当たりませんでした。
+- DC-004（概要の価値と範囲）: 1 章に、店番が販売・在庫・つけを記録し続けること、単一店舗の店頭タブレット 1 台という対象範囲が書かれています。
+- 共通部分は `otp-index` に委ね、本書は差分だけを書く構成になっています。
+- 評価結果が扱わない点として、`_UNDECIDED_` が 9 章の旧ノート参照期間に 1 件あります。クローズ判定までに `dmd-index` で決めると期限と決定元が示されています。
+- `_ASSUMPTION_` は 2 件あります（開発担当の来店時間、RTO/RPO）。どちらも sample の仮定として明示されています。
+- frontmatter の `status` は `draft` のままです。
+
+**未充足事項・改善指示**
+- 完了を妨げる未充足事項はありません。
+- rulebook の `F001`（minor）は `vp-dev-testability` の指摘で、`npm run lint:md` などの確認手順が未記載というものです。sample 側の完了条件には影響しないため、このタスクの完了は妨げません。次回の rulebook 手直しで反映してください。
+- 横串の人の確認で見る点は、9 章の `_UNDECIDED_`（旧ノート参照期間）の確定と、3 章の RTO/RPO の仮定の妥当性です。
+
+**approach に応じた確認（fully-guided）**
+- 宣言された文書だけを参照し、評価結果、sample 本文、plan を確認しました。
+- recipe は `_MISSING_` で、rulebook の frontmatter に recipe の宣言がありません。型の整備として rulebook が最新の `pass` であることは確認済みです。
+- 実行記録（先行 edit タスクの result）は読んでいません。そのため、先行 edit の検証結果が成功していたかは確認できていません。
+
+**確認できなかった範囲**
+- 先行する edit タスクの実行記録の中身。
+- 親 runner が実行する lint や validate の結果。
+- 記録直前の鮮度の再確認は、上記の最初の確認と同じ時点の結果です。
+
+**decision**: `complete-with-findings`
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict: complete-with-findings。鮮度確認（sample・rulebook とも changed-only 出力なし、最新）。sample は pass/100 で finding なし、rulebook は pass/98 で minor F001（lint:md など確認手順の追記）が 1 件。DC-001〜DC-004 は本文の確認で充足。recipe は _MISSING_。確認できなかった範囲: 先行 edit の実行記録の中身、親 runner の検証結果、記録直前の鮮度の再確認。","handoff":["rulebook の minor F001（vp-dev-testability）: npm run lint:md などの確認手順を次回の手直しで追記する","横串の人の確認: 9 章の _UNDECIDED_（旧ノート参照期間は dmd-index で決める）と 3 章の RTO/RPO の仮定を確かめる","recipe が未宣言のため、必要なら型の整備として別途検討する"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/otp-sample.md --changed-only","status":"passed","summary":"出力なし、終了コード 0。評価結果は最新"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/otp-rulebook.md --changed-only","status":"passed","summary":"出力なし、終了コード 0。評価結果は最新"}]}
+</specdojo_executor_evidence>

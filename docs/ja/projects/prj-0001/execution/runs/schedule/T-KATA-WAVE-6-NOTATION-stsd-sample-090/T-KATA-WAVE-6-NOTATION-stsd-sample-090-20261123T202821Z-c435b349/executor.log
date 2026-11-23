@@ -1,0 +1,63 @@
+## レビュー結果（T-KATA-WAVE-6-NOTATION-stsd-sample-090）
+
+**verdict 案: `complete-with-findings`**
+
+### 1. 評価結果の確認（E-01 / E-02）
+
+次の 4 件について `specdojo grade list --target kata --path <対象> --changed-only` を実行しました。4 件とも出力は空でした。このため、評価結果は最新と判断します。
+
+- `docs/ja/specdojo/samples/stsd-sample.md`
+- `docs/ja/specdojo/rulebooks/stsd-rulebook.md`
+- `docs/ja/specdojo/recipes/stsd-recipe.md`
+- `docs/ja/specdojo/templates/stsd-template.md`
+
+sample には `--incomplete` も実行し、出力は空でした。評価パイプラインは完了済みです。rulebook・recipe・template の `--incomplete` は実行していません。
+
+`git status` で未追跡と出たのは、runner が作る `pipeline-state.json` だけでした。成果物の変更は混入していません。
+
+grade の結果（runner 提示値）は次のとおりです。
+
+| 対象 | verdict | score | finding |
+| --- | --- | --- | --- |
+| sample | `pass` | 97 | minor 2 |
+| rulebook | `pass` | 97 | minor 2 |
+| recipe | `pass` | 99 | minor 1 |
+| template | `pass` | 94 | minor 3 |
+
+blocker と major の finding はありません。
+
+### 2. 判断根拠
+
+`stsd-sample.md` を読み、完了条件 DC-001〜005 を次のように照合しました。
+
+- **DC-001（章立て・必須の表）**: 目的、適用範囲、状態の判定、状態一覧、状態遷移の各章があります。状態一覧と遷移表も揃っています。
+- **DC-002（共通サンプル文脈）**: 題材は駄菓子屋きぬやの商品です。担当は店番担当と店主代表で、共通サンプル文脈に沿っています。
+- **DC-003（禁止事項）**: grade の `vp-qe-kata-conformance` は level 4 で、禁止事項への抵触は指摘されていません。
+- **DC-004（判定単位と分割時の扱い）**:
+  - 判定の単位は個品です。
+  - 一部の個品だけが進んだ場合は、進んだ数量だけを遷移先の状態にし、残りは遷移元に留めます。
+  - 図は通常系（`T-01`〜`T-05`）と例外系（`T-06`〜`T-08`）に分けています。共有状態は `inspected` と明記しています。
+- **DC-005（Mermaid の記法）**: `stateDiagram-v2` を使っています。`state "名称<br>値" as id` の形式で、遷移ラベルは `ID イベント / 条件` です。状態遷移図は 2 図とも `stateDiagram-v2` で、`stsd-mermaid-rulebook.md` の記法との照合は読んでいません。`lint-mermaid` は親 runner の検証に任せます。
+
+### 3. 未充足事項・改善指示
+
+完了を妨げる未充足事項はありません。次の finding は完了を妨げません。grade 済みの事実なので、再評価はしていません。
+
+- **sample F001（minor）**: 「品質不良」の判定基準が未定義です。次回の手直しで、基準（破損・期限切れ・包装不良など）または参照先を補足します。
+- **sample F002（minor）**: 「店番担当は…店主代表へ引き継ぐ」の記述は、店番担当が店主代表を含む定義と食い違います。引き継ぎ元を店番担当（家族利用者代表の場合）に限るなど、表現を統一します。
+- **rulebook F001（minor）**: 6.4 節が 3 章の規則を重複して述べています。参照に置き換えます。
+- **rulebook F002（minor）**: 6.5.1 節の「同じイベント」の限定が、template のコメントと食い違います。template 側に同じ限定を足します。
+- **recipe F001（minor）**: 「このレシピの使い方」の先頭項目が長いので、分割します。
+- **template F001〜F003（minor）**: rulebook との重複を参照に置き換えます。`-` を複数行で使える旨を明記します。記入指示コメントを 2 つに整理します。
+
+実践の型に `_MISSING_` はなく、欠落はありません。
+
+### 4. 確認できなかった範囲
+
+- 先行する edit タスクの result は、このレビューでは読んでいません。実行記録の検証結果は確認していません。
+- `lint-md`、`lint-mermaid` などは親 runner の検証に任せます。
+- 人による確定は plan の方針どおり、sample が揃った後にまとめて行います。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict案: complete-with-findings。4つの型（sample・rulebook・recipe・template）の grade 鮮度は `grade list --target kata --changed-only` の出力が空で、最新と確認した。sample の `--incomplete` も空で、評価は完了済み。4件とも verdict は pass（score 97/97/99/94）で、blocker・major は 0 件。minor の finding が残るが、DC-001〜005 は満たす。sample の minor 2件（品質不良の基準未定義、店番担当と店主代表の表現）、rulebook 2件、recipe 1件、template 3件は改善指示として残す。確認できなかった範囲: 先行 edit タスクの result と実行記録の検証結果は読んでいない。rulebook・recipe・template の `--incomplete` は未実行。`stsd-mermaid-rulebook.md` は直接読んでいない（図の記法は目視確認のみ）。親 runner の lint 系検証の結果も確認していない。","handoff":["sample F001: 「品質不良」の判定基準（破損・期限切れ・包装不良など）または参照先を補足する","sample F002: 店番担当と店主代表の引き継ぎ表現を統一する","rulebook F001/F002 と template F001〜F003: 重複した規則の参照化、同じイベントの限定の揃え、`-` 複数行使用の明記、記入指示コメントの整理を行う","recipe F001: 使い方の先頭項目を分割する","人による確定は sample が揃った後の横串確認で行う"],"validations":[]}
+</specdojo_executor_evidence>

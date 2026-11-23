@@ -1,0 +1,40 @@
+レビューの結果、判定は `complete-with-findings` です。評価結果は最新で、完了条件も満たしています。残る finding は完了を妨げません。
+
+**評価結果の確認（鮮度）**
+- 次のコマンドを実行しました。どちらも出力は空で、終了コードは 0 でした。
+  - `specdojo grade list --target kata --path docs/ja/specdojo/samples/trc-requirements-to-specs-sample.md --changed-only`
+  - `specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/trc-requirements-to-specs-rulebook.md --changed-only`
+- 空の出力は、sample と rulebook のどちらの評価結果も最新であることを示します。
+- 評価結果サイドカーは、sample と rulebook の両方が存在します。
+- 判断の直前に再確認する時点でも、成果物に変更はありませんでした。git status で未追跡だったのは `pipeline-state.json` だけです。
+- sample は `pass`、score 99、minor 1 件です。
+- rulebook は `pass`、score 92、minor 4 件です。
+- どちらも型の整備に必要な最新の `pass` を満たしています。
+
+**判断根拠**
+- sample を読み、完了条件 DC-001〜DC-005 を照合しました。
+  - DC-001: 目的と適用範囲、トレース対象の前提、トレースマトリクス、充足状況サマリ、ギャップと対応方針、変更履歴と更新ルールの各章があります。
+  - DC-002: 題材は駄菓子屋きぬやで、共通サンプル文脈に沿っています。
+  - DC-003: grade は禁止事項への抵触を指摘していません。
+  - DC-004: 「トレース対象の前提」に、生成の手段（手作業）、生成日（2026-05-08）、生成元の版（`7c41e9d`）が書かれています。
+  - DC-005: マトリクスの全 4 要求に、対応仕様、充足状況、ギャップが付いています。要求に対応しない仕様は別表にあり、サマリの件数（2 / 1 / 1 / 計 4 / 対応なし 2）もマトリクスと一致します。
+- sample の frontmatter は `status: draft` のままで、`ready` に昇格していません。
+- 実行記録（先行 edit タスクの result）は特定していません。そのため、検証結果の成否は確認できていません。
+
+**未充足事項・改善指示（完了を妨げない finding）**
+- sample `F001`（minor）: 使う人の欄が通称（開発担当・店主代表・同行レビュー担当）で、メンバー定義の Role code に揃っていません。割り当てと照合できる表記へ統一してください。
+- rulebook `F001`〜`F004`（いずれも minor）:
+  - 要求に対応しない仕様の表を、別表か同表かのどちらか 1 つの方式に定めてください。
+  - 要求に対応しない仕様のギャップ記入条件を規定してください。
+  - 判定表に `draft` と `ready` 以外の status（`deprecated` など）の扱いを足してください。
+  - sample 第 2 表の `bes-audit-log` が、マトリクス備考の扱いと二重になっています。表の対象を定義の語で絞るか、sample を見直してください。
+- これらは rulebook の必須要素の欠落や禁止事項への抵触ではありません。sample 側の完了条件にも影響しないため、別途の手直しで扱えます。
+
+**確認できなかった範囲**
+- rulebook 本文は再読していません。rulebook は grade の finding を事実として受け取りました。
+- 先行 edit タスクの result は参照していません。
+- 人による確定は plan 上、横串確認に回します。第 2 表の `bes-audit-log` の二重化と、`bes-product-master` の要求漏れか対象外かの判断を、その場で確かめてください。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict: complete-with-findings。sample・rulebook とも grade は最新（--changed-only 出力なし）で pass（sample 99 / minor1、rulebook 92 / minor4）。DC-001〜005 は sample 本文で確認し、DC-004 の生成の手段・生成日・生成元の版が前提に記載されている。finding は minor のみで完了を妨げない。改善指示: sample F001 の Role code 統一、rulebook F001〜F004（表方式の一本化、ギャップ記入条件、deprecated 等の status の扱い、bes-audit-log の二重化の解消）。確認できなかった範囲: rulebook 本文の再読、先行 edit タスク result の参照。","handoff":["横串確認で、第 2 表の bes-audit-log の二重化と bes-product-master の要求漏れ/対象外の判断を確かめる","sample F001（使う人の欄を Role code に統一）と rulebook F001〜F004 は別の手直しで扱う"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/trc-requirements-to-specs-sample.md --changed-only","status":"passed","summary":"出力なし、評価結果は最新"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/trc-requirements-to-specs-rulebook.md --changed-only","status":"passed","summary":"出力なし、評価結果は最新"}]}
+</specdojo_executor_evidence>

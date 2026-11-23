@@ -1,0 +1,32 @@
+レビューの結果、このタスクは `incomplete` と判断します。sample は pass ですが、同じ型の rulebook が `needs-work` のため、型の整備を含む schedule の完了条件を満たしません。
+
+**評価結果の確認（`E-01`）**
+- `specdojo grade list --target kata --path <対象> --changed-only` を sample（`docs/ja/specdojo/samples/dct-sample.yaml`）と rulebook（`docs/ja/specdojo/rulebooks/dct-rulebook.md`）の両方に実行しました。どちらも出力は空で、評価結果は最新です。
+- rulebook に `--incomplete` も実行しましたが、出力は空で、評価パイプラインは完了しています。
+- 作業ツリーの変更は未追跡の `pipeline-state.json` だけで、成果物の変更はありません。
+
+**sample の評価**
+- `verdict` は `pass`、`score` は 99 です。
+- minor が 1 件あります（`F001`）。コメントは `brief` を定義系の成果物すべてに渡す前提としていますが、`prj-issues-and-approach` には `brief` がありません。
+- 完了条件 DC-001〜DC-004 の充足状況に、sample の評価結果から確認できる問題はありません。この finding だけでは、完了を妨げません。
+
+**rulebook の評価**
+- `verdict` は `needs-work`、`score` は 93 です。finding は blocker 0、major 2、minor 2 です。
+- `F002`（major）: `sch-track-launch` が `depends_on: []` で、生成元 `sch-strategy-launch` へ辿れません。`dct-project-management-template` が規則に反しています。
+- `F003`（major）: `sch-milestones` も `depends_on: []` で、生成元へ辿れません。
+- `F004`（minor）: 6.7 は `generated` に `done_criteria` を書かないと定めていますが、template の `sch-milestones` と `sch-track-launch` は持っています。
+- `F001`（minor）: `dct-plan-＜domain＞.yaml` の規則を、別の `dct-plan` rulebook へ切り出すことを検討してください。
+
+**未確認の範囲**
+- 先行する edit タスクの実行記録は、plan に提示がなく特定できませんでした。
+- sample と rulebook の内容は再評価していません。判断は grade のサイドカーと plan の記載だけに基づきます。
+
+**改善指示**
+1. `dct-rulebook` の major 2 件（`F002`・`F003`）を解消します。template で `sch-track-launch` と `sch-milestones` に `depends_on` を宣言するか、rulebook の規定を実態に合わせます。
+2. minor の `F004`、`F001` も併せて整理します。
+3. rulebook を再評価し、`pass` を得ます。
+4. sample の `F001`（`brief` の共有対象とコメントの不一致）を直します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict=incomplete。評価結果は両対象とも最新(--changed-only/--incomplete 出力なし)。sample は pass(99, minor1)だが、型の rulebook が needs-work(93, major2: F002 sch-track-launch / F003 sch-milestones の depends_on 欠落、minor2)で、型の整備を含む schedule の追加完了条件(最新の kata pass)を満たさない。改善指示: template の depends_on 補完または rulebook 規定の整合、F004/F001 の整理、rulebook の再 grade。sample F001(brief 共有対象とコメントの不一致)も修正推奨。確認できなかった範囲: 先行 edit タスクの実行記録は plan に提示がなく特定できなかった。成果物の再評価は行っていない。","handoff":["rulebook dct-rulebook の major finding F002/F003 を解消し再 grade で pass を得るまで、型の整備を含む schedule は完了扱いにしない"],"validations":[]}
+</specdojo_executor_evidence>
