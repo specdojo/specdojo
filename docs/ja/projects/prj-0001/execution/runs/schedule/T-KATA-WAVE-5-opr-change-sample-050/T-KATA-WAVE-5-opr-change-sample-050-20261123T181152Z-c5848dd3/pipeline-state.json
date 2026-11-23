@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-5-opr-change-sample-050",
+  "run_id": "T-KATA-WAVE-5-opr-change-sample-050-20261123T181152Z-c5848dd3",
+  "updated_at": "2026-11-23T18:22:37.107Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-23T18:12:32.117Z",
+      "completed_at": "2026-11-23T18:15:49.453Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-opr-change-sample-050/T-KATA-WAVE-5-opr-change-sample-050-20261123T181152Z-c5848dd3/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-23T18:16:13.504Z",
+      "completed_at": "2026-11-23T18:17:46.311Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-opr-change-sample-050/T-KATA-WAVE-5-opr-change-sample-050-20261123T181152Z-c5848dd3/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-23T18:22:37.107Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-opr-change-sample-050/T-KATA-WAVE-5-opr-change-sample-050-20261123T181152Z-c5848dd3/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-opr-change-sample-050/T-KATA-WAVE-5-opr-change-sample-050-20261123T181152Z-c5848dd3/result.md"
+  }
+}
