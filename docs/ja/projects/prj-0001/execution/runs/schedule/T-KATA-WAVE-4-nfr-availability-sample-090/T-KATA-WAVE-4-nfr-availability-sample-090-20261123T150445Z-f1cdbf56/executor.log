@@ -1,0 +1,63 @@
+**review の判断: `complete-with-findings`**
+
+評価結果は最新で、sample も rulebook も `pass`（97 点）でした。残る minor finding は完了を妨げません。
+
+**評価結果の確認**
+- 次のコマンドを sample と rulebook のそれぞれで実行しました。どちらも出力は空で終了コードは 0 でした。評価結果は最新です。
+  - `specdojo grade list --target kata --path <対象> --changed-only`
+- `git status` の差分は、runner が作る `pipeline-state.json`（未追跡）だけでした。review 中に成果物は変更されていません。
+- sample（`specdojo:nfr-availability-sample`）の評価結果は次のとおりです。
+  - `verdict` は `pass`、`score` は 97 です。
+  - finding は minor が 2 件（`F001`・`F002`）で、blocker と major はありません。
+- rulebook（`specdojo:nfr-availability-rulebook`）の評価結果は次のとおりです。
+  - `verdict` は `pass`、`score` は 97 です。
+  - finding は minor が 1 件（`F001`）で、blocker と major はありません。
+
+**判断根拠**
+sample の本文（92 行）を読み、完了条件と照合しました。DC-001〜DC-003 は rulebook との照合を含むため、grade の判定（`vp-qe-omissions-consistency`・`vp-qe-kata-conformance` とも level 4）を事実として使いました。
+
+- DC-001（章立てと必須の表）: 次の 6 章があり、各章に表があります。grade の判定も満たしています。
+  1. 概要
+  2. 適用範囲・除外条件
+  3. 可用性要件一覧
+  4. 測定・検証方法
+  5. 関連ドキュメント導線
+  6. 未決事項
+- DC-002 / DC-003: grade が level 4 と判定済みです。本文も駄菓子屋きぬやの文脈に統一されています。
+- DC-004（目的との結び付きと判定できる値）:
+  - 1 章で、営業時間中の停止による業務影響と、記録を営業日の 90% 以上で続けるという初期目標を結び付けています。
+  - 対象時間帯は 10:00〜18:00 としています。
+  - `nfr-avl-004` は転記漏れ 0 件と書いています。
+  - 稼働率・RTO・RPO の値は `_UNDECIDED_` のまま残し、暫定の判定を併記しています。推測で埋めていません。
+- DC-005（要件・受け入れ基準・対象外）:
+  - 要件は 3 章に書いています。
+  - 受け入れ基準は 4 章の測定と判定、および 5 章の受入条件の行に書いています。
+  - 対象外は 2 章に書いています。
+- 暫定判定の `pass` / `fail`: 4 章末尾に判定ルールがあり、暫定判定が確定後に判定し直される前提になっています。
+- 対象外の変更: 対象外の変更は見当たりません。
+
+**finding が完了を妨げない理由**
+- sample の `F001`（未決事項の「当面の扱い」が一覧の基準欄と重複）は、簡潔さの改善です。必須要素の欠落や禁止事項への抵触ではありません。
+- sample の `F002`（暫定判定の基準が 6 章に集約されていない）は、確認のしやすさの改善です。暫定判定そのものは 3 章と 4 章に記載されています。
+- rulebook の `F001`（6.6「未決事項」の記述ガイドに判断基準と良い例・悪い例を加える）は、型の整備に関する minor です。型の `pass` 条件は満たしています。
+
+**未充足事項・改善指示**
+- 完了を妨げる未充足事項はありません。
+- 任意の改善として、次の 2 点があります。
+  - sample の `F001` と `F002` に対応し、6 章を暫定判定の正本にして 3 章の基準欄を参照にします。
+  - rulebook の 6.6 に判断基準と例を足します。
+- 実践の型の `recipe` は `_MISSING_` です。実行記録（先行する edit タスクの result）は特定できていません。
+
+**approach に応じた確認（fully-guided）**
+- 宣言された文書だけを参照しました。
+- 磨き込みの内容は、本文の整合を確認した範囲では行われていました。
+- 前述の finding 以外に、rulebook の必須要素の欠落や禁止事項への抵触は見当たりません。
+
+**確認できなかった範囲**
+- rulebook の本文は読み直していません。rulebook との整合は grade の判定に依拠しました。
+- 先行 edit タスクの実行記録とその検証結果は確認していません。
+- 人による確定は plan のとおりこの track に含めていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict: complete-with-findings。sample・rulebook とも最新の grade で pass（97）。鮮度確認（grade list --changed-only）は両対象で出力なし。minor finding（sample F001/F002、rulebook F001）は完了条件を妨げない。確認できなかった範囲: rulebook 本文の再読（grade 依拠）、先行 edit の実行記録と検証結果（特定できず）、recipe は _MISSING_。","handoff":["任意改善: sample の 6 章を暫定判定の正本にして 3 章基準欄を参照化（F001/F002）","任意改善: rulebook 6.6 に判断基準と良い例・悪い例を追加（F001）"],"validations":[{"command":"specdojo grade list --target kata --path docs/ja/specdojo/samples/nfr-availability-sample.md --changed-only","status":"passed","summary":"出力なし。評価結果は最新"},{"command":"specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/nfr-availability-rulebook.md --changed-only","status":"passed","summary":"出力なし。評価結果は最新"}]}
+</specdojo_executor_evidence>
