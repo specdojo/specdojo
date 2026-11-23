@@ -1,0 +1,20 @@
+PJR-0JVB の 2 回目の対応を終えました。人のタスクだけが残った場合は、実行できるタスクがない旨と待ちの数を出して終了コード 0 で終わります。追加した単体テストと `tsc -b` は通っています。`exec smoke` と `exec run --auto --dry-run --edit-by sol-executor` の確認は未実施です。
+
+- **コード変更**:
+  - `src/exec/run/schedule-mode.ts` で、飛ばした人のタスクを ready の数から除きました。
+  - 飛ばした数は `humanWaiting` として別に数え、メッセージは `noTaskMessage` にまとめました。
+  - 準備の失敗など実行できないタスクが残るときは、従来どおり終了コード 1 です。
+- **単体テスト**: `tests/src/exec/run/human-task-skip.test.ts` を追加しました（4 件）。内容は次の 3 点です。
+  - `--edit-by` を指定しても人のタスクを飛ばす。
+  - 人のタスクだけが残ったとき、dry-run と通常実行のどちらも終了コード 0 で終わる。
+  - 準備の失敗があるときは終了コード 1 になる。
+- **個票**: 個票の対応結果を更新し、「CHANGELOG に書く事項」の小節を足しました。
+- **ローカル検査**:
+  - 追加したテストと既存の `track-filter.test.ts` は通過しました。
+  - 追加したテストの eslint は通過しました。`schedule-mode.ts` の eslint は警告 1 件（`runBatchMode` が 200 行超）で、エラーはありません。
+  - 個票とテストの prettier 整形は実行済みです。
+  - 親 runner の検証は未実行です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"飛ばした人のタスクを ready の数から除き、人のタスクだけが残ったときは待ちの数を出して終了コード 0 で終えるようにした。準備の失敗があるときは従来どおり失敗にする。単体テストを追加し、個票の対応結果と CHANGELOG 案を更新した。","handoff":["判断: 人のタスクだけが残ったとき、dry-run と通常実行のどちらも「no executable tasks — N task(s) waiting for human completion — exit」を出して終了コード 0 にした。理由は個票の完了条件の 2 つ目に従うため。","判断: 飛ばしたタスクは `attempted` に入れず、loop の各 round で再判定して `humanWaiting` に数える。","統合後に orchestrator が `exec smoke` を流し、prj-0001 で `exec run --auto --dry-run --edit-by sol-executor` が終了コード 0 になることを確かめてから close する。","CHANGELOG に書く事項（区分: Fixed）: `exec cycle` と `exec run --auto` が `--edit-by` / `--review-by` 指定時に `execution: human` のタスクを拾って失敗する問題を修正した。人のタスクだけが残ったときは、待ちの数を表示して終了コード 0 で終える。","eslint は `schedule-mode.ts` の `runBatchMode` が 200 行超という警告を 1 件出す。エラーではなく、今回の変更で行数は増えたため、分割は別項目で扱うのがよい。"],"validations":[{"command":"npx vitest run tests/src/exec/run/human-task-skip.test.ts tests/src/exec/run/track-filter.test.ts","status":"passed","summary":"2 ファイル 20 件が通過した"},{"command":"npx tsc -b","status":"passed","summary":"型エラーなし"},{"command":"npx eslint src/exec/run/schedule-mode.ts tests/src/exec/run/human-task-skip.test.ts","status":"passed","summary":"エラーなし。`runBatchMode` が 200 行超という警告のみ"},{"command":"npx prettier --write tests/src/exec/run/human-task-skip.test.ts src/exec/run/schedule-mode.ts docs/ja/projects/prj-0001/controls/project-register/pjr-0jvb-exec-cycle-skip-human-tasks.md","status":"passed","summary":"整形済み"},{"command":"exec smoke","status":"requires_human","summary":"orchestrator が統合後に流す。executor の sandbox では実行しない"}]}
+</specdojo_executor_evidence>

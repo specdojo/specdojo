@@ -64,8 +64,15 @@ specdojo:
 
 - `schedule-mode.ts` の準備ループで、明示 agent の無い人のタスクを skip（ログ出力）するようにした。
 - `schedule-prepare.ts` の人のタスク判定を override 解決の前へ移し、mode 単位の `--edit-by` / `--review-by` は明示 agent に数えないようにした。
-- 確認: 型・単体テストは親 runner の検証に委ねる。専用の回帰テストは未追加（申し送り）。
+- 2 回目: 飛ばした人のタスクを `readyCount`（dry-run）・`lastReadyCount` から除き、`humanWaiting` として別に数えるようにした（`schedule-mode.ts`）。人のタスクだけが残ったときは「no executable tasks — N task(s) waiting for human completion — exit」を出して終了コード 0 で終える。準備の失敗など実行できないタスクがあるときは従来どおり失敗にする。メッセージは `noTaskMessage` に集約した。
+- 単体テスト `tests/src/exec/run/human-task-skip.test.ts` を追加した（`--edit-by` 指定でも人のタスクを飛ばすこと、人のタスクだけが残ったとき dry-run・通常とも終了コード 0 になること、準備の失敗があるときは終了コード 1 になること）。ローカルで vitest・`tsc -b`・eslint は通過した。
+- 確認: 型・単体テスト・lint の全件は親 runner の検証に委ねる。`exec smoke` は統合後に orchestrator が流す（executor は実行しない）。
 - 再発防止: mode 単位の override は人のタスクの許可にならない、という規則をコードコメントに残した。
+
+### 5.1. CHANGELOG に書く事項
+
+- 区分: Fixed
+- 文案: `exec cycle` と `exec run --auto` が `--edit-by` / `--review-by` 指定時に `execution: human` のタスクを拾って失敗する問題を修正した。人のタスクだけが残ったときは、待ちの数を表示して終了コード 0 で終える。
 
 ## 6. 関連ドキュメント
 
