@@ -13,7 +13,7 @@ specdojo:
   owner: DEV
   registered_at: "2026-11-23T21:03:15Z"
   due_on: "2026-11-30"
-  block_reason: "parent validation failed: lint-fm-changed"
+  block_reason: "agent exited with non-zero code: parent validation failed: lint-fm, test-unit"
   commit_type: fix
   commit_scope: exec
 ---
@@ -53,7 +53,7 @@ runner は変えた YAML すべてに validate:schema:file を求め、validate=
 - `src/exec/reporter.ts` で、`npm run validate:schema:file` を求める YAML の判定から、先頭に `specdojo-schema:` の directive と `reason=` を持つ YAML を外した。変更が印付き YAML だけなら、検査は適用外として扱う。
 - `specdojo-schema: none` も同じ扱いにした。`validate:schema:file` はどちらも `reason=` があれば検査を飛ばして終了コード 0 で終えるため、求めても止めるだけになる。`reason=` のない directive は同コマンドが失敗するので、今までどおり検査を求める。
 - YAML の先頭は `ReporterFactOptions.repoRoot`（未指定は `process.cwd()`）を基準に読む。読めない・存在しない場合は今までどおり求める。
-- 確かめた結果: `validate:schema:file` は `validate=false` の YAML に「validation skipped: <reason>」を出して終了コード 0 で終える（`packages/docs-lint/src/validate-yaml-schema.ts`）。変更は不要だった。
+- 確かめた結果: `validate:schema:file` は `validate=false` の YAML に「validation skipped: `<reason>`」を出して終了コード 0 で終える（`packages/docs-lint/src/validate-yaml-schema.ts`）。変更は不要だった。
 - 単体テスト（`tests/src/exec/reporter-schema-check-skip.test.ts`）で、印付き YAML だけの変更は求めず、ふつうの YAML・`reason=` なしの directive・混在の変更は求めることを確かめた。
 
 ### 5.2. CHANGELOG に書く事項

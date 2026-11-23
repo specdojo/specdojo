@@ -69,6 +69,6 @@ plan に展開された finding は、message と同じ viewpoint ID の判定�
 
 利用者が再開の前に足した指示である。これまでの申し送りとあわせて、この指示に従って作業を続ける。
 
-- 親の検証の lint-fm-changed が、個票 pjr-1s74 の対応結果の 55 行目の山括弧のプレースホルダ <reason> を未エスケープとして検出した。インラインコードにして直す。ほかの変更は保つ。
+- 親の検証の lint-fm-changed が、個票 pjr-1s74 の対応結果の 55 行目の山括弧のプレースホルダ `<reason>` を未エスケープとして検出した。インラインコードにして直す。ほかの変更は保つ。
 
 `共通規約 sha256:e7dd6ff2a0dec2f12ed4ffc905cd185aca2d6f9c3922c56a249c88cb45b2a14e` `docs/ja/projects/prj-0001/execution/conventions/e7dd6ff2a0dec2f12ed4ffc905cd185aca2d6f9c3922c56a249c88cb45b2a14e.txt`
