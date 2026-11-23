@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-4-nfr-security-safety-sample-050",
+  "run_id": "T-KATA-WAVE-4-nfr-security-safety-sample-050-20261123T131429Z-034e7759",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-23T13:15:17.230Z",
+    "completed_at": "2026-11-23T13:21:27.044Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/nfr-security-safety-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../specdojo/samples/nfr-security-safety-sample.md | 107 +++++++++++++++++----\n 1 file changed, 87 insertions(+), 20 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/samples/nfr-security-safety-sample.md",
+      "status": "passed",
+      "summary": "対象 sample を整形した"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/samples/nfr-security-safety-sample.md",
+      "status": "passed",
+      "summary": "0 件"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "対象外",
+      "reason": "履歴蓄積ファイル（plan・result・個票）を変更していないため"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:nfr-security-safety-sample\n  type: requirement\n  status: draft\n  rulebook: specdojo:nfr-security-safety-rulebook\n  part_of:\n    - specdojo:nfr-index-sample\n  based_on:\n    - specdojo:prj-overview-sample\n    - specdojo:prj-assumptions-constraints-dependencies-sample\n    - specdojo:opd-access-control-sample\n---\n\n# 駄菓子屋きぬや 販売管理システム 機密性・安全性要件\n\n## 1. 概要（対象・目的）\n\n常連顧客の氏名とつけ残高、販売・在庫の記録、価格・商品\n… output omitted …\ncross-cutting-policy-sample\\|横断ルール]] | 認証値の秘匿（`scp-SEC-001`）と診断ログの記録範囲 |\n| 受入条件 | `sac-store-sales` | `nfr-sec-001`〜`nfr-sec-003`、`nfr-sec-006`〜`nfr-sec-008`、`nfr-sec-010` の合否 |\n| 運用方針 | \\[\\[specdojo:opd-access-control-sample\\|運用方針・設計（権限・アカウント）]] | 権限区分、付与・剥奪、棚卸し、監査ログ、緊急権限 |\n| 運用方針 | \\[\\[specdojo:opd-incident-management-sample\\|障害対応の運用方針]] | `nfr-sec-005` の紛失・漏えいの疑いの扱い |\n| 運用手順 | \\[\\[specdojo:opr-access-control-sample\\|アカウント付与・剥奪]] | `nfr-sec-004`・`nfr-sec-009`〜`nfr-sec-012` の月次点検の手順 |"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6244 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6244 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-4-nfr-security-safety-sample-050\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/d\n… output omitted …\ner-plan-escape.test.ts\",\"duration_ms\":1851}\n\n Test Files  19 passed (19)\n      Tests  480 passed (480)\n   Start at  22:22:24\n   Duration  4.07s (transform 19.08s, setup 10.82s, import 14.64s, tests 6.90s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nnum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-4-nfr-security-safety-sample-050/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-4-nfr-security-safety-sample-050/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "nfr-security-safety-sample を rulebook の順序固定 6 章（概要・適用範囲と脅威前提・要件一覧 5 列・測定と検証方法・例外運用・関連導線）で駄菓子屋きぬやの完成例に再構成した。主体ごとの権限表、要件 12 行（`nfr-sec-001`〜`012`、件数・時間・期限の判定基準）、例外 1 行を追加し、`part_of` / `based_on` を付けて H1 の相対リンクと特定できない handbook 参照を削除した。値は opd-index・opd-access-control・sysd-cross-cutting-policy・ACD の既存 sample に揃え、脆弱性の修正期限は推測せず `_UNDECIDED_` とした。役割の割り当て・承認者・報告先を求める finding（F004・F005・F007・F024 と F003・F006・F014 の該当部分）は PJR-76N9 と sample 記述標準に従い本文には足さなかった。",
+  "completion_status": "complete",
+  "handoff": [
+    "F004・F005・F007・F024 と、F003・F006・F014 の責任者・役割を求める部分は、文書の役割の割り当て・承認・報告先を本文へ書くよう求めている。PJR-76N9 と sample-authoring-standard の記述ガイドが禁じているため本文には足さなかった。下流との依存は関連ドキュメント導線の表で示している。rulebook 側の変更案: 例外運用の `承認者` 列は例外を認める業務上の権限者であり、文書の承認とは別だと sample でも読み取れるよう、rulebook の記述ガイドの例を維持する（変更は不要）。",
+    "利用者が決める値: `nfr-sec-012` の脆弱性の修正期限（CVSS 7.0 以上を公表から何日以内に直すか）を `_UNDECIDED_` のままにした。決めたら nfr-index sample の機密性の行と `sac-store-sales` の基準もそろえる。",
+    "`nfr-sec-ex-001` は記入例として、自動ログアウトを 20 分に緩める例外を置いた（期限は初期リリースの 30 日後、承認者は店主代表）。opd-access-control sample の 10 分と食い違う例外になるため、例として残すか「なし」や別の例に替えるかを判断してほしい。",
+    "主体の表で opd-access-control sample にない要素として、店番の「顧客情報の出力」の不許可と「本部連携（外部システム）」の行を足した。運用方針の sample に反映するかを判断してほしい。",
+    "`sac-store-sales` と opr-access-control の手順は sample が未作成または未整備のため、バッククォートで仮置きした。opr-access-control-sample は役割名（Ops Lead 等）が共通サンプル文脈と合っておらず、作り直しの候補。同じ型の nfr-integrity・maintainability・operations・performance・reliability・usability の 6 本も旧来の最小サンプルのまま。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-4-nfr-security-safety-sample-050/T-KATA-WAVE-4-nfr-security-safety-sample-050-20261123T131429Z-034e7759/executor.log",
+      "bytes": 7962,
+      "truncated": false
+    }
+  ]
+}
