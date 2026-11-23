@@ -1,0 +1,27 @@
+`docs/ja/specdojo/rulebooks/nfr-availability-rulebook.md` を書き直しました。grade の指摘は F001〜F017 の17件で、そのうち F013・F017 はこの段では解消できず、sample の手直しが残っています。sample・recipe・template は変更していません。変更したのはこのファイルだけです。prettier で整形し、markdownlint は 0 件でした。lint や schema 検査など親 runner が流す検査は実行していません。
+
+主な変更点は次のとおりです。
+
+- **サンプル章を削除（F009・F012）:** GCS 基幹システムを題材にした最小例を消し、完成例は sample に任せました。
+- **recipe・template を宣言（F014）:** どちらも `undecided` から `not-needed` に改め、理由を「全体方針」に書きました。
+- **章立て:** 「本文構成（標準テンプレ）」を執筆標準に合わせて「本文要件」にし、各章の内容の列を足しました。未確定の値があるときだけ置く「未決事項」章も追加しました。
+- **記述ガイド（F003）:** 必須の章すべてに3項目以上の書き方・判断基準・良い例・悪い例を書きました。
+- **可用性要件一覧（F002・F005・F006・F008）:** 列を `要件ID` / `対象範囲` / `指標` / `基準` / `根拠・業務影響` / `技術前提` にしました。基準には単位と比較方向を付け、初期仮説の値には `_ASSUMPTION_` を付けて確定値と区別します。技術前提には対応する設計文書か `dec-*` を書きます。
+- **測定・検証方法（F011）:** 稼働率の算出式と測定期間、RTO・RPO の起点と終点を求めるようにしました。
+- **その他:**
+  - 「全体方針」に基準値の根拠の出し方を書きました（F001）。
+  - 外部サービスの SLA との整合確認を足しました（F004）。
+  - 基準値を変えたら `sac-*` / `stc-*` / `opr-*` を見直すことを明記しました（F010）。
+  - RTO・RPO の定義を補いました（F015）。
+  - 表記ゆれを「要件ID」「計画停止」「判定時期」にそろえました（F016）。
+
+**F007 は一部だけ反映しました。** 復旧の判断を担う運用者を Role code で示す指示は入れました。基準値の合意者は承認の担当にあたり、PJR-76N9 で成果物の本文に求めないと決まっているため入れていません。
+
+**残っている作業:**
+
+- **F013:** sample の見出しが新しい章立てと一致しないため、次の sample の段で書き直しが要ります。
+- **F017:** ready にしてよいかは、その書き直しと再 grade の後に判断します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"nfr-availability-rulebook.md を簡潔にし、grade の指摘 F001〜F017 に対応した。サンプル章を削除し、recipe・template は not-needed と宣言した。章を本文要件にそろえ、記述ガイドに判断基準と良い例・悪い例を書いた。F013・F017 は sample の手直しが必要なため次の段へ申し送る。","handoff":["F013: `specdojo:nfr-availability-sample` が rulebook の「本文要件」の章（概要（対象・目的）／適用範囲・除外条件／可用性要件一覧／測定・検証方法／関連ドキュメント導線／条件付きの未決事項）に沿っていない。sample はこの段の対象外のため、次の sample の段で駄菓子屋きぬやの文脈に合わせて書き直す。","F017: ready にしてよいかは、sample の書き直しと再 grade の後に判断する。recipe・template は `not-needed` と宣言済み。","F007 は一部だけ反映した: 復旧の判断を担う運用者の Role code は求めたが、基準値の合意者は承認の担当にあたり PJR-76N9 で成果物の本文に求めないため入れていない。承認は登録簿の個票で追う。","F009・F012: rulebook-authoring-standard の経過措置であるサンプル章は、plan の指示（rulebook に完成例の章を置かない）に従って削除し、完成例は sample に任せた。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/rulebooks/nfr-availability-rulebook.md","status":"passed","summary":"変更した rulebook を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/nfr-availability-rulebook.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>
