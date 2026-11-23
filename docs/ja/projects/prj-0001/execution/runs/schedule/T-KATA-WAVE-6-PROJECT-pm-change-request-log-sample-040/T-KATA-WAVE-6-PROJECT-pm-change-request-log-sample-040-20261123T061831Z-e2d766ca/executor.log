@@ -1,0 +1,21 @@
+変更要求ログの rulebook（`docs/ja/specdojo/rulebooks/pm-change-request-log-rulebook.md`）を直し、grade の指摘 10 件のうち 9 件をこのファイルで解消しました。残る F008 は sample 側の不足なので、この段では直していません。Prettier と markdownlint は通過し、ほかの検査は runner が実行します。
+
+| 指摘 | 直した内容 |
+| --- | --- |
+| F001 | 審査結果が `保留` のときは、再審査の期限または条件と、追加で必要な判断材料を書く決まりにしました。良い例・悪い例も付けています。 |
+| F002 | 申請者・評価者・決定者・実施担当は Role code で書くと全体方針に足しました。禁止事項にも「個人名などの個人情報」を明記しています。 |
+| F003 | 変更要求として起票する範囲を、合意済みのスコープ・スケジュール・品質基準・成果物の変更に限りました。不具合は `pm-issue-log` で扱います。 |
+| F004 | 影響評価に評価者（Role code）を足しました。 |
+| F005 | 登録簿を使わない場合の置き場所 `030-project-management/pm-change-request-log.md` と、Frontmatter の `rulebook` の値を明記しました。 |
+| F006 | 状態と進捗の値を決めました。登録簿では `item_status` をそのまま使います。単独のログでは `審査中`・`保留`・`実施中`・`完了`・`却下`・`取下げ` を使い、`done`・`rejected` との対応を書きました。 |
+| F007 | 「同名の節」という書き方をやめ、個票の「変更要求」節には `変更要求一覧` の基準を当てると明記しました。 |
+| F009 | 取下げは同じ ID のまま状態を変えます。決定後に内容を変えて審査し直すときは新しい ID で起票し、元の ID を関連ドキュメントに書きます。 |
+| F010 | 決定者は人間の役割に限り、agent を決定者にしないと書きました。禁止事項にも足しています。 |
+
+そのほか、要求内容・保留・完了条件の各章に良い例と悪い例を付けました。章立ては変えておらず、見出しは H3 までです。
+
+**F008（sample が rulebook を満たしていない）：** 今回の rulebook の決まりは過剰ではなく、不足は sample 側だと判断しました。sample には変更理由の列がありません。影響評価に品質・根拠・見送ったときの影響・期待効果・評価者が欠けています。審査に `pm-plan` との対応がなく、完了条件も確認の手段と合格の基準で書かれていません。さらに今回足した状態の値や `保留` の扱いも反映が必要なので、次の sample の段で直す必要があります。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"pm-change-request-log-rulebook を grade の指摘 F001〜F007・F009・F010 に沿って更新した。保留の扱い、Role code での記載、起票対象の線引き、単独ログの配置と rulebook 値、状態値と item_status の対応、個票の節との対応、取下げ・再審査の ID 規則、決定者を人間に限る規則を足し、良い例・悪い例を加えた。F008（sample の不整合）は sample 側の不備と判断し、この段では sample を変更していない。","handoff":["F008: 規定は過剰ではなく、sample 側の不備と判断した。sample（docs/ja/specdojo/samples/pm-change-request-log-sample.md）を後の段で直す必要がある。直す点: 変更要求一覧への変更理由列の追加、影響評価への品質・根拠・見送り時影響・期待効果・評価者（Role code）の追加、審査・決定への `pm-plan` 対応の追加、完了条件を確認手段と合格基準の形に改めること、状態値を `審査中`・`保留`・`実施中`・`完了`・`却下`・`取下げ` に揃えること。","直さなかった箇所と理由: 概要・関連ドキュメント・推奨 Frontmatter 項目・本文構成の表は指摘がなく冗長でもないため据え置いた。審査・決定の決定者は文書の承認役割ではなく変更の決定内容そのものなので、PJR-76N9 の対象外と判断して残した。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/pm-change-request-log-rulebook.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/pm-change-request-log-rulebook.md","status":"passed","summary":"0 issues in 1 file"}]}
+</specdojo_executor_evidence>
