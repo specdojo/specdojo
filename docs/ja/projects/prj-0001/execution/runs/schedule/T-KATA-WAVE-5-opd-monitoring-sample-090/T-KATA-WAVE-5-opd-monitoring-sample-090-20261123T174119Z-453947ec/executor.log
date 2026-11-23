@@ -1,0 +1,39 @@
+レビューの結果、このタスクは `complete-with-findings` と判断しました。評価結果はすべて最新で、監視サンプルの grade に完了を妨げる finding はありません。
+
+**鮮度確認**
+- `specdojo grade list --target kata --changed-only` を、監視サンプル、`opd-rulebook`、`opd-access-control-sample`、`opd-incident-management-sample` の4件で実行しました。
+- どの対象のパスも出力されず、終了コードは 0 でした。4件とも最新です。
+- 作業ツリーに成果物の変更はありません。未追跡のファイルは `pipeline-state.json` だけです。この確認を verdict の直前の再確認とします。
+- 実行記録（先行する edit タスクの result）は特定できませんでした。確認できなかったことは `decision` の判断根拠に残します。
+
+**評価結果**
+- `[[specdojo:opd-monitoring-sample]]`: pass、95 点、minor 2 件です。
+- `opd-rulebook`: pass、98 点、minor 2 件です。
+- `opd-access-control-sample`: pass、100 点、finding はありません。
+- `opd-incident-management-sample`: pass、96 点、minor 2 件です。
+- 型の整備を含む schedule の追加完了条件である「各型に最新の `--target kata` の pass」は、4件とも満たしています。
+
+**完了条件の照合**
+- DC-001 と DC-003（rulebook の章立て・必須の表・禁止事項）: 本文は「概要」「監視・アラート方針」「関連ドキュメント導線」の3章構成です。未決事項の表も置かれています。grade では `vp-qe-kata-conformance` が level 4 です。
+- DC-002（Sample 記述標準と駄菓子屋の文脈）: 駄菓子屋「きぬや」の文脈で書かれており、grade でも level 4 です。
+- DC-004（業務価値と検知しなかった場合の影響）: 「監視対象と守る業務」の表で、3つの監視対象ごとに守る業務と検知しなかった場合の影響を示しています。`vp-ba-business-value` は level 4 です。
+- DC-005（`opd-index` の差分）: 概要で `opd-index` を正と明記しています。「測定元と通知の手段」の表の「差分の種類」列は具体化と補足で書き分けています。優先度と連絡の期限、停止判断は `opd-index` と `opd-incident-management` に委ねており、方針の言い直しは見当たりません。
+
+**残る finding（完了を妨げない）**
+- `F001`（`vp-qe-verifiability`）: 閾値の見直し例「5 分を 10 分に延ばす」の対象が、`opd-index` のどの値か示されていません。
+- `F002`（`vp-qe-omissions-consistency`）: 死活の判定は営業時間内に限ると表にあります。一方、本文は営業時間外の死活通知と閉店後の応答なしの記録を前提にしており、そろっていません。
+- どちらも例文の参照と時間外の扱いの明記で直せる記述上の補足です。必須要素の欠落や禁止事項への抵触ではありません。
+
+**改善指示**
+- `F001` と `F002` を次回の手直しで解消します。`F001` は対象の閾値を `opd-index` の参照付きで明記し、`F002` は営業時間外の判定または記録の扱いを表と本文でそろえます。
+- `opd-rulebook` の finding は、OPR のサンプル7件が `opr-rulebook` ではなく `opd-rulebook` を宣言している点と、旧 `opd-sample` が残っている点です。いずれも本タスクの範囲外なので、型の整備として別途扱います。
+- `opd-incident-management-sample` では、バックアップ失敗の P2 の扱い（`F002`）が、本サンプルの 2.3 節の「P2 として扱う」と対応しています。incident 側に行を追加する必要があります。
+
+**確認できなかった範囲**
+- 先行する edit タスクの result は特定できず、実行記録の検証結果は確認していません。
+- 本文を読んで確認したのは、完了条件との照合と、grade の `F001`・`F002` が実際に本文にあることです。`opd-index-sample` の閾値の値そのものは `depends_on` 先を開いて照合していません。
+- 親 runner の検証は、私は実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict 案: complete-with-findings。評価結果は4対象（監視サンプル、opd-rulebook、opd-access-control-sample、opd-incident-management-sample）とも最新で pass でした。specdojo grade list --target kata --changed-only は4件とも出力なし、終了コード 0 です。DC-001〜005 は本文と grade の結果で満たしています。残る finding は監視サンプルの F001（閾値の見直し例の参照）と F002（営業時間外の死活の扱い）で、どちらも minor で完了を妨げません。opd-rulebook の finding と、incident サンプルの P2（バックアップ失敗）の行の追加は別途扱いとします。確認できなかった範囲: 先行する edit タスクの result は特定できませんでした。opd-index-sample の閾値の値は照合していません。親 runner の検証は未実行です。","handoff":["監視サンプルの F001: 閾値の見直し例の対象を opd-index の値として参照付きで明記する","監視サンプルの F002: 営業時間外の死活の判定・記録の扱いを表と本文でそろえる","opd-rulebook の F001・F002（OPR のサンプルの rulebook 宣言と旧 opd-sample）は型の整備として別途扱う","opd-incident-management-sample に、バックアップ失敗（P2）の行を追加する"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/opd-monitoring-sample.md --changed-only","status":"passed","summary":"出力なし、終了コード 0。評価結果は最新です。"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/opd-rulebook.md --changed-only","status":"passed","summary":"出力なし。評価結果は最新です。"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/opd-access-control-sample.md --changed-only","status":"passed","summary":"出力なし。評価結果は最新です。"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/opd-incident-management-sample.md --changed-only","status":"passed","summary":"出力なし。評価結果は最新です。"}]}
+</specdojo_executor_evidence>
