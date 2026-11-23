@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-6-PROJECT-pm-change-request-log-sample-050",
+  "run_id": "T-KATA-WAVE-6-PROJECT-pm-change-request-log-sample-050-20261123T072251Z-159d7365",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-23T07:23:49.732Z",
+    "completed_at": "2026-11-23T07:29:07.037Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/pm-change-request-log-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../samples/pm-change-request-log-sample.md        | 92 +++++++++++++++++-----\n 1 file changed, 72 insertions(+), 20 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/samples/pm-change-request-log-sample.md",
+      "status": "passed",
+      "summary": "All matched files use Prettier code style"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "No history file changed",
+      "reason": "Only docs/ja/specdojo/samples/pm-change-request-log-sample.md changed; no pjr-*.md, plan.md, or result.md was edited"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "Changes are outside docs/ja/projects/",
+      "reason": "The deliverable change is under docs/ja/specdojo/samples/, not docs/ja/projects/"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:pm-change-request-log-sample\n  type: project\n  status: draft\n  rulebook: specdojo:pm-change-request-log-rulebook\n---\n\n# 変更要求ログ サンプル\n\n## 1. 概要\n\n駄菓子屋きぬや 販売管理システム構築で、初期リリースのスコープ・スケジュール・品質基準に対する変更要求を、準備着手から2週間の店頭試用終了まで管理する。記録単位は変更要求 1 件 1 行（`CR-NNN`）とし、本書は登録簿を使わない単独のログとして、申請・評価・決定・進捗が変わった時点で該当行を更新する。記載は 2026-04-09 時点である。\n\n## 2. 変更要求一覧\n\n次の表は、受け付けた変更要求ごとに、何をどう変えるかと、応える業務課題・期待価値を示す。\n\n| 変更ID\n… output omitted …\n-scope-sample\\|プロジェクトスコープ]] の境界の判断基準・スコープ外 | CR-003・CR-004 | 保留と却下の判断根拠 |\n| 影響先 | \\[\\[specdojo:prj-success-criteria-and-acceptance-criteria-sample\\|成功基準と受入条件]] の AC-02 | CR-001 | 受入済みの確認結果を変更後の在庫一覧でやり直す |\n| 影響先 | 操作メモ（スコープの「運用補助」） | CR-001・CR-002 | 絞り込みと小計行の見方を追記する |\n| リスクの更新 | \\[\\[specdojo:pm-risk-register-sample\\|リスク登録簿]] の RK-002 | CR-001・CR-002 | 家族利用者代表による操作メモ確認の遅れを、業務側確認の遅延として監視 |\n| 課題の更新 | \\[\\[specdojo:pm-issue-log-sample\\|課題ログ]] の IS-001 | CR-002 | 現金・つけ混在の 1 営業日分のデータを生成対象へ追加 |"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6102 file(s), 92 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 68 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6102 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-PROJECT-pm-change-request-log-sample-050\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-site/kata-staging.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo\n… output omitted …\n/src/exec/plans.test.ts\",\"duration_ms\":2417}\n\n Test Files  19 passed (19)\n      Tests  480 passed (480)\n   Start at  16:30:48\n   Duration  4.02s (transform 10.99s, setup 1.74s, import 15.61s, tests 9.00s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-PROJECT-pm-change-request-log-sample-050/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-PROJECT-pm-change-request-log-sample-050/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "Rewrote pm-change-request-log-sample to the rulebook structure, addressing grade findings F001-F019 and F021-F024. F020 (generated-view template nature) was left as a rulebook/template follow-up. Prettier passed.",
+  "completion_status": "complete",
+  "handoff": [
+    "F020 not applied: the template `pm-change-request-log-template` assumes the register-generated view (`rulebook: specdojo:pjr-rulebook`), while the rulebook forbids editing generated files and defines the standalone `CR-NNN` log. The sample keeps the standalone form. Proposed rulebook/template change: state which form the sample illustrates, and consider adding a standalone-log template.",
+    "Proposed rulebook change: in the 影響評価 guide, require stating the 影響度 scale (e.g., `小`/`中`/`大` with criteria) so evaluations are reproducible (grade F015/F022).",
+    "Undecided value left as `_UNDECIDED_`: whether CR effort is within the per-participant work-time cap depends on U-02 in the pm-plan sample; the user must decide U-02.",
+    "CR-002 (CSV column order for accounting software) was replaced with a daily-sales subtotal row because the original conflicted with the scope sample's out-of-scope 本格的な会計連携. The rulebook's good examples still mention 会計ソフト; consider aligning them with the common sample context."
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-pm-change-request-log-sample-050/T-KATA-WAVE-6-PROJECT-pm-change-request-log-sample-050-20261123T072251Z-159d7365/executor.log",
+      "bytes": 5385,
+      "truncated": false
+    }
+  ]
+}

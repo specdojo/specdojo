@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-PROJECT-pm-change-request-log-sample-050
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-PROJECT-pm-change-request-log-sample-050/T-KATA-WAVE-6-PROJECT-pm-change-request-log-sample-050-20261123T072251Z-159d7365/plan.md
   started_at: "2026-11-23T07:23:01.823Z"
+  completed_at: "2026-11-23T07:44:38.561Z"
   agent: opus-executor
   execution: agent
   approach: sample-maintenance
@@ -20,16 +21,24 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- rulebook に基づき、`docs/ja/specdojo/samples/pm-change-request-log-sample.md` を厚みのある完成例として更新しました。
+- grade の指摘（F001-F019, F021-F024）に対応し、変更要求一覧に「変更理由」列を追加、状態の矛盾を解消し、影響評価の形式を整えるなどの修正を行いました。
+- 不確定な要素（工数に関する一部の値）については、計画の `_UNDECIDED_` を維持する形で構成しています。
+- Prettier による整形を確認済みです。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/samples/pm-change-request-log-sample.md`: 変更要求の「理由」列の追加、状態の整合性確保、影響評価の記述改善、および概要欄へのプロジェクト詳細情報の拡充を行いました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- F020 not applied: the template `pm-change-request-log-template` assumes the register-generated view (`rulebook: specdojo:pjr-rulebook`), while the rulebook forbids editing generated files and defines the standalone `CR-NNN` log. The sample keeps the standalone form. Proposed rulebook/template change: state which form the sample illustrates, and consider adding a standalone-log template.
+- Proposed rulebook change: in the 影響評価 guide, require stating the 影響度 scale (e.g., `小`/`中`/`大` with criteria) so evaluations are reproducible (grade F015/F022).
+- Undecided value left as `_UNDECIDED_`: whether CR effort is within the per-participant work-time cap depends on U-02 in the pm-plan sample; the user must decide U-02.
+- CR-002 (CSV column order for accounting software) was replaced with a daily-sales subtotal row because the original conflicted with the scope sample's out-of-scope 本格的な会計連携. The rulebook's good examples still mention 会計ソフト; consider aligning them with the common sample context.
+- 適用外の検証: `npm run validate:history-links`（Only docs/ja/specdojo/samples/pm-change-request-log-sample.md changed; no `pjr-*.md,` plan.md, or result.md was edited）
+- 適用外の検証: `npm run validate:catalog`（The deliverable change is under docs/ja/specdojo/samples/, not docs/ja/projects/）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+既存の `docs/ja/specdojo/samples/pm-change-request-log-sample.md` を調査し、grade の指摘内容を解消するように実例としての厚みを加えました。単なる説明ではなく、具体的な変更要求（`CR-001` 等）のデータを用いて、rulebook が求める要素（変更理由、品質への影響、`pm-plan` との対応関係など）を網羅した完成例を作成しました。
