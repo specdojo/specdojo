@@ -43,14 +43,37 @@ catalog から雛形を作るとき、based_on の依存先がプロダクト文
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                                                             | 担当 | 状態 | メモ                                                 |
+| --- | ------------------------------------------------------------------------------------------------ | ---- | ---- | ---------------------------------------------------- |
+| 1   | `src/catalog/generate.ts` の `_BASED_ON_` と最小雛形の依存先 id を `deliverableDocId` にそろえる | DEV  | done | プロダクト文書は名前空間なし、プロジェクト文書は修飾 |
+| 2   | 同種の生成経路を `src` で探して直す                                                              | DEV  | done | 対応結果に探索方法と結果を記載                       |
+| 3   | プロダクト文書・プロジェクト文書の両依存先の単体テストを足す                                     | DEV  | done | `tests/src/catalog/generate.test.ts`                 |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 5.1. 実施内容
+
+- `src/catalog/generate.ts`: 依存先 id を `deliverableDocId`（既存文書の frontmatter を正とし、ない場合は置き場所で決める）で解決する。`runGenerate` は同じ dct 内の解決済みパス、単一対象の生成（scaffold）は catalog から引いたパスを使う。解決できない依存先は従来どおり `<project-id>:` で修飾する。
+- 同じ経路の自 id: 最小雛形（Markdown・YAML）の `id` と、雛形の `_PROJECT_ID_:_LOCAL_ID_` を `deliverableDocId` の結果に置き換え、単一対象生成で `ensureFrontmatterProperties` へ渡す `id` も同じ決め方にした。プロダクト文書を先に生成すると、その自 id が修飾付きになり、依存元の `based_on` を引くときに修飾付きで読まれてしまうため。
+- テスト: `tests/src/catalog/generate.test.ts` に、`based_on` へ product 文書（名前空間なし）と project 文書（`prjx:` 修飾）の両方が入るケースを追加した。
+
+### 5.2. 同種の生成経路の探索
+
+- 方法: `src` で `${projectId}:${...}` 形式の id 組み立てを grep し、結果を確認した。
+- 直したもの: `src/catalog/generate.ts` の `_BASED_ON_`、最小雛形の `based_on` と自 id、単一対象生成の `id`。
+- 直していないもの: `src/exec/` の exec plan・result の doc id、`src/job/job.ts`、`src/register/*` はプロダクト文書の id ではない。`src/catalog/build-references.ts` の依存グラフ（`fullId`・`dependsOn`）と `src/catalog/scaffold.ts` の dct 自身の id は検証用の内部キー・catalog 文書の id で、成果物の frontmatter へ出ない。
+
+### 5.3. CHANGELOG に書く事項
+
+- 区分: Fixed
+- 行の文案: `catalog generate` が雛形の `based_on` と自 id にプロダクト文書の名前空間（`<project-id>:`）を付けていたのを、名前空間なしの id にした。
+
+### 5.4. 判断・申し送り
+
+- 既存の成果物の id と `based_on` は変えていない（PJR-PHY7 の後続の todo）。
+- 自 id も合わせて直したのは、依存先 id の解決が既存文書の frontmatter を正とするため（5.1 参照）。
+- 検証: `npm run typecheck`・`npm run lint:ts`（error 0）・`npm run test:unit` が通った。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- PJR-PHY7（プロダクト文書の id は名前空間なしとする案 A）

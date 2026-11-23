@@ -1,0 +1,13 @@
+catalog から雛形を作るとき、`based_on` の依存先はプロダクト文書なら名前空間なし、プロジェクト文書なら `<project-id>:` 付きになりました。
+
+`npm run typecheck`、`npm run lint:ts`（error 0）、`npm run test:unit`（4234 件）は通っています。`lint:md:changed` の実行は出力が空でした。
+
+- **依存先 id**: `src/catalog/generate.ts` で、`deliverableDocId` と同じ決め方にそろえました。解決できない依存先は従来どおり `<project-id>:` で修飾します。`runGenerate` と単一対象の生成の両方に入れています。
+- **自 id**: 最小雛形（Markdown・YAML）、雛形の `_PROJECT_ID_:_LOCAL_ID_`、単一対象生成で渡す `id` も、プロダクト文書なら名前空間なしにしました。これを直さないと、先に生成したプロダクト文書が修飾付きの id になり、依存元の `based_on` が修飾付きで読まれてしまいました。
+- **テスト**: `tests/src/catalog/generate.test.ts` に、プロダクト文書（名前空間なし）とプロジェクト文書（`prjx:` 付き）の両方を `based_on` に入れるケースを足しました。
+- **ほかの生成経路の探索**: `src` で `${projectId}:${...}` の組み立てを grep しました。残りは exec の plan・result の id、`src/job/job.ts`、`src/register/*`、`src/catalog/build-references.ts` の内部キー、`src/catalog/scaffold.ts` の catalog 自身の id です。プロダクト文書の frontmatter には出ないため直していません。
+- **個票**: 作業内容の表、対応結果、探索方法と結果、CHANGELOG に書く事項（区分 Fixed と行の文案）を更新しました。`CHANGELOG.md`、既存成果物の id と `based_on`、保護された設定は変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"catalog 生成の `based_on` 依存先 id と自 id をプロダクト文書は名前空間なし、プロジェクト文書は修飾付きにした。単体テストを追加し、個票の対応結果（探索結果・CHANGELOG 文案を含む）を更新した。","handoff":["自 id も合わせて直した理由: `deliverableDocId` が既存文書の frontmatter を正とするため、先に生成したプロダクト文書の自 id が修飾付きだと依存元の `based_on` も修飾付きで解決されてしまう。","`src/catalog/build-references.ts` の依存グラフの内部キーと `src/catalog/scaffold.ts` の catalog 自身の id は成果物 frontmatter に出ないため変更していない。","既存成果物の id と `based_on` は変更していない（PJR-PHY7 の後続 todo）。`CHANGELOG.md` は未変更で、区分 Fixed と行の文案を個票の対応結果に記載した。","保護された設定の変更案はなし。"],"validations":[{"command":"npx prettier --check src/catalog/generate.ts tests/src/catalog/generate.test.ts","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx vitest run tests/src/catalog","status":"passed","summary":"249 件すべて通過"}]}
+</specdojo_executor_evidence>

@@ -16,7 +16,7 @@ import {
   resolveSpecdojoPathIfExists,
   type SpecdojoResolutionRoots,
 } from "../docs/template-resolution.js";
-import { resolveDeliverableByDocId } from "./document-target.js";
+import { deliverableDocId, resolveDeliverableByDocId } from "./document-target.js";
 import { validateDeliverableTargetPath } from "../register/deliverable-target.js";
 
 const PROJECT_ID_PLACEHOLDER = "_PROJECT_ID_";
@@ -37,6 +37,20 @@ const TEMPLATE_OWN_META_KEYS = new Set([
   "metadata_template",
 ]);
 
+// Product docs (docs/<lang>/product/) take a bare id; project docs are project-qualified.
+function resolveBasedOnIds(
+  item: DctDeliverableItem,
+  projectId: string,
+  dependencyPaths: ReadonlyMap<string, string>,
+  repoRoot: string,
+): string[] {
+  return (item.depends_on ?? []).map((dependency) =>
+    deliverableDocId(projectId, dependency, dependencyPaths.get(dependency), repoRoot),
+  );
+}
+
+type GeneratedIds = { ownId: string; basedOn: string[] };
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
@@ -45,25 +59,26 @@ function replaceGeneratedPlaceholders(
   value: unknown,
   item: DctDeliverableItem,
   projectId: string,
+  ids: GeneratedIds,
 ): unknown {
   if (typeof value === "string") {
-    const basedOn = (item.depends_on ?? []).map((dependency) => `${projectId}:${dependency}`);
-    if (value === BASED_ON_PLACEHOLDER) return basedOn;
+    if (value === BASED_ON_PLACEHOLDER) return ids.basedOn;
     return value
+      .replaceAll(`${PROJECT_ID_PLACEHOLDER}:${LOCAL_ID_PLACEHOLDER}`, ids.ownId)
       .replaceAll(PROJECT_ID_PLACEHOLDER, projectId)
       .replaceAll(LOCAL_ID_PLACEHOLDER, item.local_id)
       .replaceAll(DELIVERABLE_NAME_PLACEHOLDER, item.name)
       .replaceAll(DELIVERABLE_OVERVIEW_PLACEHOLDER, item.overview)
-      .replaceAll(BASED_ON_PLACEHOLDER, JSON.stringify(basedOn));
+      .replaceAll(BASED_ON_PLACEHOLDER, JSON.stringify(ids.basedOn));
   }
   if (Array.isArray(value)) {
-    return value.map((nested) => replaceGeneratedPlaceholders(nested, item, projectId));
+    return value.map((nested) => replaceGeneratedPlaceholders(nested, item, projectId, ids));
   }
   if (isRecord(value)) {
     return Object.fromEntries(
       Object.entries(value).map(([key, nested]) => [
         key,
-        replaceGeneratedPlaceholders(nested, item, projectId),
+        replaceGeneratedPlaceholders(nested, item, projectId, ids),
       ]),
     );
   }
@@ -187,18 +202,18 @@ function findTemplate(
 function fallbackMarkdown(
   item: DctDeliverableItem,
   projectId: string,
+  ids: GeneratedIds,
   deliverableType = "project",
 ): string {
   const inner: Record<string, unknown> = {
-    id: `${projectId}:${item.local_id}`,
+    id: ids.ownId,
     type: deliverableType,
     status: "draft",
   };
   if (item.rulebook && item.rulebook !== "undecided") {
     inner.rulebook = item.rulebook === "not-needed" ? "none" : item.rulebook;
   }
-  const basedOn = (item.depends_on ?? []).map((dep) => `${projectId}:${dep}`);
-  if (basedOn.length > 0) inner.based_on = basedOn;
+  if (ids.basedOn.length > 0) inner.based_on = ids.basedOn;
 
   const innerLines = dump(inner, { lineWidth: 120, noRefs: true }).replace(/\n+$/, "").split("\n");
   const frontmatter = buildSpecdojoFrontmatter(innerLines);
@@ -210,10 +225,11 @@ function fallbackMarkdown(
 function fallbackYaml(
   item: DctDeliverableItem,
   projectId: string,
+  ids: GeneratedIds,
   deliverableType = "project",
 ): string {
   const doc: Record<string, unknown> = {
-    id: `${projectId}:${item.local_id}`,
+    id: ids.ownId,
     type: deliverableType,
     status: "draft",
   };
@@ -229,6 +245,7 @@ function expandYamlTemplate(
   templatePath: string,
   item: DctDeliverableItem,
   projectId: string,
+  ids: GeneratedIds,
 ): string {
   const loaded = load(readFileSync(templatePath, "utf8"));
   if (!isRecord(loaded)) {
@@ -239,7 +256,7 @@ function expandYamlTemplate(
     Object.entries(loaded).filter(([key]) => !TEMPLATE_OWN_META_KEYS.has(key)),
   );
   const merged = isRecord(metadataTemplate) ? { ...metadataTemplate, ...body } : body;
-  const doc = replaceGeneratedPlaceholders(merged, item, projectId);
+  const doc = replaceGeneratedPlaceholders(merged, item, projectId, ids);
   return dump(doc, { lineWidth: 120, noRefs: true });
 }
 
@@ -247,11 +264,16 @@ function generateContent(
   item: DctDeliverableItem,
   resolvedPath: string,
   projectId: string,
+  dependencyPaths: ReadonlyMap<string, string>,
   templatesPath: string,
   rulebooksPath: string,
   repoRoot: string,
   resourceRoots?: SpecdojoResolutionRoots,
 ): string {
+  const ids: GeneratedIds = {
+    ownId: deliverableDocId(projectId, item.local_id, resolvedPath, repoRoot),
+    basedOn: resolveBasedOnIds(item, projectId, dependencyPaths, repoRoot),
+  };
   if (isYamlPath(resolvedPath)) {
     const template = findTemplate(
       templatesPath,
@@ -262,7 +284,7 @@ function generateContent(
       resourceRoots,
     );
     if (template) {
-      return expandYamlTemplate(template, item, projectId);
+      return expandYamlTemplate(template, item, projectId, ids);
     }
     const deliverableType = resolveDeliverableType(
       rulebooksPath,
@@ -270,7 +292,7 @@ function generateContent(
       item.rulebook,
       resourceRoots,
     );
-    return fallbackYaml(item, projectId, deliverableType);
+    return fallbackYaml(item, projectId, ids, deliverableType);
   }
   const template = findTemplate(
     templatesPath,
@@ -282,7 +304,12 @@ function generateContent(
   );
   if (template) {
     const raw = readFileSync(template, "utf8");
-    return replaceGeneratedPlaceholders(flattenTemplateFrontmatter(raw), item, projectId) as string;
+    return replaceGeneratedPlaceholders(
+      flattenTemplateFrontmatter(raw),
+      item,
+      projectId,
+      ids,
+    ) as string;
   }
   const deliverableType = resolveDeliverableType(
     rulebooksPath,
@@ -290,7 +317,7 @@ function generateContent(
     item.rulebook,
     resourceRoots,
   );
-  return fallbackMarkdown(item, projectId, deliverableType);
+  return fallbackMarkdown(item, projectId, ids, deliverableType);
 }
 
 // Materialize the deliverable files a project's catalog points to. Only `kind: work`
@@ -366,6 +393,10 @@ export function runGenerate(opts: {
     const resolved: ResolvedDeliverable[] = [];
     collectResolvedDeliverables(doc.groups, resolveBasePath("", doc.base_path), resolved);
 
+    const dependencyPaths = new Map(
+      resolved.map((entry) => [entry.item.local_id, entry.resolvedPath]),
+    );
+
     for (const { item, resolvedPath } of resolved) {
       if (item.kind !== "work" || !item.path) continue;
 
@@ -380,6 +411,7 @@ export function runGenerate(opts: {
           item,
           resolvedPath,
           projectId,
+          dependencyPaths,
           templatesPath,
           rulebooksPath,
           repoRoot,
@@ -527,11 +559,24 @@ export function runGenerateTarget(opts: GenerateTargetOptions): {
     return { written, skipped, errors };
   }
 
+  const dependencyPaths = new Map<string, string>();
+  if (catalogPath && existsSync(catalogPath)) {
+    for (const dependency of item.depends_on ?? []) {
+      try {
+        const found = resolveDeliverableByDocId(catalogPath, projectId, dependency, repoRoot);
+        dependencyPaths.set(dependency, found.info.resolvedPath);
+      } catch {
+        // Dependencies outside this catalog fall back to a project-qualified id.
+      }
+    }
+  }
+
   try {
     let content = generateContent(
       item,
       resolvedPath,
       projectId,
+      dependencyPaths,
       templatesPath,
       rulebooksPath,
       repoRoot,
@@ -539,7 +584,9 @@ export function runGenerateTarget(opts: GenerateTargetOptions): {
     );
 
     content = ensureFrontmatterProperties(content, isYamlPath(resolvedPath), {
-      id: canonicalDocId,
+      id: targetId.includes(":")
+        ? canonicalDocId
+        : deliverableDocId(projectId, item.local_id, resolvedPath, repoRoot),
       status: "draft",
       rulebook: item.rulebook,
     });
