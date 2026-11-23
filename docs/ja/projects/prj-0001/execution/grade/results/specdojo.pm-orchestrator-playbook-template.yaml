@@ -1,0 +1,131 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:pm-orchestrator-playbook-template
+path: docs/ja/specdojo/templates/pm-orchestrator-playbook-template.md
+target: kata
+rubric: grade-rubric-v2
+verdict: pass
+score: 95
+graded_at: "2026-11-23T04:11:50.886Z"
+graded_by: opus-review-executor
+content_hash: 47e47ba22f8085cac74e01e3ef03e463056f4686e822a6d154961ff985df8014
+categories:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
+  architecture:
+    score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
+  quality:
+    score: 92
+  consistency:
+    score: 75
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 3
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 29
+    anchor: "| 止まり方 | 原因の例 | 再開の仕方 |"
+    message: >-
+      「止まったときの再開」の表の前に記入指示がなく、rulebook「本文要件」が求める原因の見分け方の記述も、「章ごとの書き方」にある再開のオプションの意味はコマンドリファレンスを参照して再掲しないという決まりも促していないため、`_TODO_`
+      の記入指示を追加する。
+    message_ja: >-
+      「止まったときの再開」の表の前に記入指示がなく、rulebook「本文要件」が求める原因の見分け方の記述も、「章ごとの書き方」にある再開のオプションの意味はコマンドリファレンスを参照して再掲しないという決まりも促していないため、`_TODO_`
+      の記入指示を追加する。
+  - id: F002
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 51
+    anchor: "_TODO_: 成果物を公開・配布するプロジェクトでは必須。公開・配布しなければ章を消し、番号を詰める。"
+    message: 「リリースの手順」の記入指示が各手順の進む条件だけで、rulebook「本文要件」が求める範囲の決め方・集め方・漏れの確かめ方・公開と公開後の確認の手順を挙げていないため、書くべき手順の要素を指示に加える。
+    message_ja: 「リリースの手順」の記入指示が各手順の進む条件だけで、rulebook「本文要件」が求める範囲の決め方・集め方・漏れの確かめ方・公開と公開後の確認の手順を挙げていないため、書くべき手順の要素を指示に加える。
+  - id: F003
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 47
+    anchor: "- _TODO_: 任意。ほかの章に属さない、起きた事例と避け方を書く。書くことがなければ章を消し、番号を詰める。"
+    message: 「落とし穴」の記入指示が「起きた事例と避け方」だけで、rulebook「全体方針」と「知見の育て方」が求める根拠の項目 ID・日付と、回避策なら直す側の項目 ID を添える決まりを促していないため、指示に追記する。
+    message_ja: 「落とし穴」の記入指示が「起きた事例と避け方」だけで、rulebook「全体方針」と「知見の育て方」が求める根拠の項目 ID・日付と、回避策なら直す側の項目 ID を添える決まりを促していないため、指示に追記する。

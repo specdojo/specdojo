@@ -1,0 +1,187 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:pm-orchestrator-playbook-sample
+path: docs/ja/specdojo/samples/pm-orchestrator-playbook-sample.md
+target: kata
+rubric: grade-rubric-v2
+verdict: pass
+score: 90
+graded_at: "2026-11-23T04:10:57.869Z"
+graded_by: opus-review-executor
+content_hash: 69c184d21751f3e72ac2edd5882c016db3ea355a1b2797ee13664c0b066b6880
+categories:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 83
+  business:
+    score: 88
+  architecture:
+    score: 100
+  usability:
+    score: 92
+  implementation:
+    score: 100
+  quality:
+    score: 83
+  consistency:
+    score: 75
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 3
+    score: 75
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
+  vp-ba-requirements-completeness:
+    level: 3
+    score: 75
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 9
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 63
+    anchor: "- 待機が自分自身を数える: `pgrep -f` のパターンで相手の run を探すと、待機のコマンドの文字列も一致して終わらない。プロセスの番号か `exec queue` で待つ。"
+    message: >-
+      落とし穴「待機が自分自身を数える」と commit メッセージの行に、根拠の事例（項目 ID・日付）と回避策を直す側の登録簿項目 ID がないため、rulebook
+      の全体方針と禁止事項「直す側の項目を添えずに回避策を書く」に沿って添えるべきである。
+    message_ja: >-
+      落とし穴「待機が自分自身を数える」と commit メッセージの行に、根拠の事例（項目 ID・日付）と回避策を直す側の登録簿項目 ID がないため、rulebook
+      の全体方針と禁止事項「直す側の項目を添えずに回避策を書く」に沿って添えるべきである。
+  - id: F002
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 80
+    anchor: "- _UNDECIDED_: 営業時間外にタブレットが通信できないときの検証の扱い。決まるまでは、タブレットに接続する検証を `requires_human` として残し、翌朝の開店前に流す。"
+    message: >-
+      タブレットが営業時間外に通信できないときの未決事項に、回答を待っている登録簿の `question` の項目 ID がなく、記録先が分からないため、項目 ID を添えて rulebook の handoff と question
+      の扱いとの関係を示すべきである。
+    message_ja: >-
+      タブレットが営業時間外に通信できないときの未決事項に、回答を待っている登録簿の `question` の項目 ID がなく、記録先が分からないため、項目 ID を添えて rulebook の handoff と question
+      の扱いとの関係を示すべきである。
+  - id: F003
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 70
+    anchor: 1. 範囲の項目がすべて close されていることを登録簿で確かめる。close されていない項目があれば、次の版へ回すか待つかを店主代表（`PO`）に確かめる。
+    message: リリースの手順に、版に含める項目の範囲をどう決めるか（誰が、何を基準に）がなく、rulebook の本文要件「範囲の決め方」を満たしていないため、手順 1 の前に範囲の決め方を足すべきである。
+    message_ja: リリースの手順に、版に含める項目の範囲をどう決めるか（誰が、何を基準に）がなく、rulebook の本文要件「範囲の決め方」を満たしていないため、手順 1 の前に範囲の決め方を足すべきである。
+  - id: F004
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 63
+    anchor: "- 待機が自分自身を数える: `pgrep -f` のパターンで相手の run を探すと、待機のコマンドの文字列も一致して終わらない。プロセスの番号か `exec queue` で待つ。"
+    message: >-
+      `pgrep -f` の自己一致と commitlint の `body-max-line-length` は、このプロジェクトに固有でない一般的な知見のため、rulebook
+      の知見の育て方に従って本体への変更案に回し、運用メモからは外すべきである。
+    message_ja: >-
+      `pgrep -f` の自己一致と commitlint の `body-max-line-length` は、このプロジェクトに固有でない一般的な知見のため、rulebook
+      の知見の育て方に従って本体への変更案に回し、運用メモからは外すべきである。
+  - id: F005
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 72
+    anchor: 3. 開発用の PC で全件の検査を流し、すべて通ったら配布物を作る。
+    message: リリースの手順 3 の「全件の検査」が、どのコマンドや検査を流すのか特定されておらず pass / fail を判定できないため、流す検査を具体的に書くべきである。
+    message_ja: リリースの手順 3 の「全件の検査」が、どのコマンドや検査を流すのか特定されておらず pass / fail を判定できないため、流す検査を具体的に書くべきである。
+  - id: F006
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 10
+    anchor: "`PJR-KN11` などの項目 ID と `kinuya-*` の記録は未同梱の架空の参照名で、記録先は [[specdojo:pm-plan-sample|プロジェクト管理計画]] に従う。"
+    message: 未同梱の参照名の例として挙げた `PJR-KN11` が本文で使われておらず、読み手が参照先を探してしまうため、本文で実際に使う `PJR-KN12` などに直すべきである。
+    message_ja: 未同梱の参照名の例として挙げた `PJR-KN11` が本文で使われておらず、読み手が参照先を探してしまうため、本文で実際に使う `PJR-KN12` などに直すべきである。
+  - id: F007
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 14
+    anchor: >-
+      難しさごとの既定の振り分けは `.specdojo/exec-defaults.yaml` の `routing` を正本とする。開発用の PC のメモリが足りないため、ローカル LLM の
+      executor（`local-executor`）は easy の項目だけに使う。表に加えて、次の癖を踏まえて選ぶ。
+    message: rulebook の本文要件が「agent の使い分けと癖」に求める「使わない agent と理由」がなく、該当がなければないことも書かれていないため、補うべきである。
+    message_ja: rulebook の本文要件が「agent の使い分けと癖」に求める「使わない agent と理由」がなく、該当がなければないことも書かれていないため、補うべきである。
+  - id: F008
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# 駄菓子屋きぬや 販売管理システムのオーケストレーター運用メモ"
+    message: >-
+      Frontmatter の `based_on` が rulebook の定める「決まりの直接の根拠になる決定（decision の個票）」ではなく pm-plan-sample を指し、template の
+      `supersedes` もないため、Kata の間で揃えるべきである。
+    message_ja: >-
+      Frontmatter の `based_on` が rulebook の定める「決まりの直接の根拠になる決定（decision の個票）」ではなく pm-plan-sample を指し、template の
+      `supersedes` もないため、Kata の間で揃えるべきである。
+  - id: F009
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 37
+    anchor: "- 個票の入力・完了条件には、変える対象の相対パスを書く。読むだけの文書はパスで書かず名前で書く。runner はパスを変更の範囲と推定し、同じパスを書いた項目を順番待ちにする。"
+    message: 個票の入力・完了条件に変える対象のパスを書く決まりは、template の任意章「登録簿項目の完了条件の書き方」が受け持つ内容のため、その章を立てて移すべきである。
+    message_ja: 個票の入力・完了条件に変える対象のパスを書く決まりは、template の任意章「登録簿項目の完了条件の書き方」が受け持つ内容のため、その章を立てて移すべきである。
