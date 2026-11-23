@@ -7,11 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   owner: DEV
   registered_at: "2026-11-23T01:51:40Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-23T01:55:18Z"
+  conclusion: D を採る。受け取ったら close する新しい種類 handoff を足し、進行中はコマンドで組み立て、判断待ちは question として別に起票する。起票と close は register、組み立ては specdojo orchestrator handoff が受け持つ
 ---
 
 # PJR-5RY7 オーケストレーターの引き継ぎ（hand off）を register の新しい種類 handoff で扱う
@@ -50,6 +52,7 @@ D を採る。register に新しい種類 `handoff` を足す。
 | 注意点           | 会話の中で気づいたこと                             | 手で書く。決まりになるものは playbook へ移す                       |
 
 - 判断待ちを `question` として起票する運用は、型を足す前の 2026-11-23 から始める。
+- コマンドは役割で分ける。個票の起票と close は `register add --type handoff`・`register close`（ほかの種類と同じ素の操作）。進行中と判断待ちを組み立てて起票するのは `specdojo orchestrator handoff` とする。register は exec を import しない決まり（ESLint の `no-restricted-imports`）があるため、exec の状態を読む組み立てを register に入れない（利用者の確認、2026-11-23）。
 
 ## 5. 採択理由
 

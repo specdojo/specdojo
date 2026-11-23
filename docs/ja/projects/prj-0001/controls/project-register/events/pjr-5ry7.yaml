@@ -116,3 +116,35 @@
       from: ""
       to: 影響範囲とフォローアップ
   previous_event_id: reg_2992279a3c52415e80292f306c81b544
+- v: 1
+  id: reg_ac4188ddabed404c87d3299f02c886dd
+  ts: "2026-11-23T01:55:06Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "決定内容" updated
+  changes:
+    - field: section
+      from: ""
+      to: 決定内容
+  previous_event_id: reg_14e2ece735e946d7ad48e12b5e662955
+- v: 1
+  id: reg_836f7c5d37da4d56832b43b092ff7943
+  ts: "2026-11-23T01:55:18Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: 利用者がオーケストレーターの案（D・章の形・コマンドの分け方）を承認した（2026-11-23）
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: D を採る。受け取ったら close する新しい種類 handoff を足し、進行中はコマンドで組み立て、判断待ちは question として別に起票する。起票と close は register、組み立ては specdojo orchestrator handoff が受け持つ
+  previous_event_id: reg_ac4188ddabed404c87d3299f02c886dd
