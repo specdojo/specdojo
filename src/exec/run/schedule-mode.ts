@@ -156,11 +156,11 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
   const prepareReadyTasks = async (
     capacity: ReturnType<typeof createProviderCapacityTracker>,
     limit: number,
-  ): Promise<{ preparedTasks: PreparedTask[]; readyCount: number }> => {
+  ): Promise<{ preparedTasks: PreparedTask[]; readyCount: number; humanWaiting: number }> => {
     if (!existsSync(readyJsonPath)) {
       process.stdout.write(`ready.json not found: ${readyJsonPath}\nRun: specdojo exec refresh\n`);
       process.exitCode = 1;
-      return { preparedTasks: [], readyCount: 0 };
+      return { preparedTasks: [], readyCount: 0, humanWaiting: 0 };
     }
 
     const readySnapshot = readReadySnapshot(readyJsonPath);
@@ -181,9 +181,10 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
             const file = basename(task.schedule_file);
             return file === `sch-track-${track}.yaml` || file === `sch-track-${track}.yml`;
           });
-    if (orderedIds.length === 0) return { preparedTasks: [], readyCount: 0 };
+    if (orderedIds.length === 0) return { preparedTasks: [], readyCount: 0, humanWaiting: 0 };
 
     const preparedTasks: PreparedTask[] = [];
+    let humanWaiting = 0;
 
     for (const taskId of orderedIds) {
       if (preparedTasks.length >= limit || (!loop && batchBudget <= 0)) break;
@@ -196,6 +197,7 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
         !(opts.by || opts.executorBy || pinnedExecutor(task))
       ) {
         process.stdout.write(`  [run] skipped: ${taskId} — execution: human\n`);
+        humanWaiting++;
         continue;
       }
 
@@ -273,17 +275,16 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
       }
     }
 
-    return { preparedTasks, readyCount: orderedIds.length };
+    // Skipped human tasks are waiting for a person, not unexecutable, so they do not count as ready.
+    return { preparedTasks, readyCount: orderedIds.length - humanWaiting, humanWaiting };
   };
 
   if (dryRun) {
     const capacity = createProviderCapacityTracker(execDefaults);
-    const { preparedTasks, readyCount } = await prepareReadyTasks(capacity, parallel);
+    const { preparedTasks, readyCount, humanWaiting } = await prepareReadyTasks(capacity, parallel);
 
     if (preparedTasks.length === 0) {
-      process.stdout.write(
-        readyCount === 0 ? "[run] no ready tasks — exit\n" : "[run] no executable tasks — exit\n",
-      );
+      process.stdout.write(noTaskMessage(readyCount, humanWaiting));
       if (readyCount > 0 || process.exitCode) process.exitCode = 1;
       return;
     }
@@ -316,6 +317,7 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
   let schedulingPass = 0;
   let stopNewTasks = false;
   let lastReadyCount = 0;
+  let lastHumanWaiting = 0;
 
   const scheduleAvailable = async (openSlots: number): Promise<PreparedTask[]> => {
     if (stopNewTasks || openSlots <= 0) return [];
@@ -359,8 +361,12 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
       }
     }
 
-    const { preparedTasks, readyCount } = await prepareReadyTasks(capacity, openSlots);
+    const { preparedTasks, readyCount, humanWaiting } = await prepareReadyTasks(
+      capacity,
+      openSlots,
+    );
     lastReadyCount = readyCount;
+    lastHumanWaiting = humanWaiting;
     return preparedTasks;
   };
 
@@ -397,9 +403,7 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
   });
 
   if (poolResult.launched === 0) {
-    process.stdout.write(
-      lastReadyCount > 0 ? "[run] no executable tasks — exit\n" : "[run] no ready tasks — exit\n",
-    );
+    process.stdout.write(noTaskMessage(lastReadyCount, lastHumanWaiting));
     if (lastReadyCount > 0 || process.exitCode) process.exitCode = 1;
     return;
   }
@@ -407,6 +411,14 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
   process.stdout.write(
     `[run] all ${poolResult.completed} of ${poolResult.launched} launched instance(s) completed\n`,
   );
+}
+
+export function noTaskMessage(readyCount: number, humanWaiting: number): string {
+  if (readyCount > 0) return "[run] no executable tasks — exit\n";
+  if (humanWaiting > 0) {
+    return `[run] no executable tasks — ${humanWaiting} task(s) waiting for human completion — exit\n`;
+  }
+  return "[run] no ready tasks — exit\n";
 }
 
 // For a task already in "doing" state, resume with the actor who claimed it so a re-run does not

@@ -86,3 +86,29 @@
       from: ""
       to: 対応方針
   previous_event_id: reg_d9b73cccb3194f48b847582a54011243
+- v: 1
+  id: reg_5f61c35efd09405987c7db0e839f608d
+  ts: "2026-11-23T01:22:57Z"
+  action: start
+  actor: sonnet-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_2def4816ccd946fdba306a5ff7b28511
+- v: 1
+  id: reg_0460cfd83c6945c4b590ce5803a47739
+  ts: "2026-11-23T01:27:57Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_5f61c35efd09405987c7db0e839f608d

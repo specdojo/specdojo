@@ -1,0 +1,237 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-0JVB",
+  "run_id": "pjr-0jvb-20261123T012254Z-e3f2a1fd",
+  "stage": {
+    "role": "executor",
+    "actor": "sonnet-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-23T01:23:32.961Z",
+    "completed_at": "2026-11-23T01:24:41.217Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0jvb.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0jvb-exec-cycle-skip-human-tasks.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/schedule-mode.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/run/human-task-skip.test.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0jvb-exec-cycle-skip-human-tasks.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/schedule-mode.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/run/human-task-skip.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 4,
+    "summary": ".../pjr-0jvb-exec-cycle-skip-human-tasks.md        |  9 +++++-\n src/exec/run/schedule-mode.ts                      | 36 ++++++++++++++--------\n 2 files changed, 32 insertions(+), 13 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx vitest run tests/src/exec/run/human-task-skip.test.ts tests/src/exec/run/track-filter.test.ts",
+      "status": "passed",
+      "summary": "2 ファイル 20 件が通過した"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsc -b",
+      "status": "passed",
+      "summary": "型エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npx eslint src/exec/run/schedule-mode.ts tests/src/exec/run/human-task-skip.test.ts",
+      "status": "passed",
+      "summary": "エラーなし。`runBatchMode` が 200 行超という警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write tests/src/exec/run/human-task-skip.test.ts src/exec/run/schedule-mode.ts docs/ja/projects/prj-0001/controls/project-register/pjr-0jvb-exec-cycle-skip-human-tasks.md",
+      "status": "passed",
+      "summary": "整形済み"
+    },
+    {
+      "source": "executor",
+      "command": "exec smoke",
+      "status": "requires_human",
+      "summary": "orchestrator が統合後に流す。executor の sandbox では実行しない"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0JVB/src/catalog/catalog.ts\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0JVB/src/dashboard/dashboard.ts\n  1150:1  warning  File has too many lines (1073). Maximum allow\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0JVB/src/schedule/strategy-generate-document.ts\n  87:8  warning  Function 'buildStrategyDocument' has too many lines (289). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0JVB/src/shared/specdojo-config.ts\n  1243:1  warning  File has too many lines (1091). Maximum allowed is 1000  max-lines\n\n✖ 43 problems (0 errors, 43 warnings)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: prj-0001:pjr-0jvb-exec-cycle-skip-human-tasks\n  type: project\n  status: draft\n  rulebook: specdojo:pjr-rulebook\n  part_of:\n    - prj-0001:pjr-index\n  item_type: issue\n  item_status: in-progress\n  priority: high\n  difficulty: medium\n  owner: DEV\n  registered_at: \"2026-11-22T23:53:44Z\"\n  due_on: \"2026-11-30\"\n  derived_from:\n    - PJR-561Q\n  commit_type: fix\n  commit_scope: exec\n---\n\n# PJR-0JVB \n… output omitted …\nタスクを飛ばすこと、人のタスクだけが残ったとき dry-run・通常とも終了コード 0 になること、準備の失敗があるときは終了コード 1 になること）。ローカルで vitest・`tsc -b`・eslint は通過した。\n- 確認: 型・単体テスト・lint の全件は親 runner の検証に委ねる。`exec smoke` は統合後に orchestrator が流す（executor は実行しない）。\n- 再発防止: mode 単位の override は人のタスクの許可にならない、という規則をコードコメントに残した。\n\n### 5.1. CHANGELOG に書く事項\n\n- 区分: Fixed\n- 文案: `exec cycle` と `exec run --auto` が `--edit-by` / `--review-by` 指定時に `execution: human` のタスクを拾って失敗する問題を修正した。人のタスクだけが残ったときは、待ちの数を表示して終了コード 0 で終える。\n\n## 6. 関連ドキュメント\n\n- `PJR-561Q`（派生元）"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 5970 file(s), 107 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 83 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5970 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)",
+      "reason": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "related tests only (18 of 43 test files depend on the changed files): exit 0: > specdojo@0.9.2 test:integration\n> vitest run --config vitest.integration.config.ts tests/src/commands/git.integration.test.ts tests/src/commands/where.integration.test.ts tests/src/exec/catalogless-register.integration.test.ts tests/src/exec/cycle.integration.test.ts tests/src/exec/job-sequence.integration.test.ts tests/src/exec/pipeline-e2e.integration.test.ts tests/src/exec/plan-markdownlint.integration.test.ts tests/src/exec/register-multiple-ids.integration.test.ts tests/\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match f…",
+      "test_selection": {
+        "mode": "related",
+        "reason": "18 of 43 test files depend on the changed files",
+        "selected_tests": [
+          "tests/src/commands/git.integration.test.ts",
+          "tests/src/commands/where.integration.test.ts",
+          "tests/src/exec/catalogless-register.integration.test.ts",
+          "tests/src/exec/cycle.integration.test.ts",
+          "tests/src/exec/job-sequence.integration.test.ts",
+          "tests/src/exec/pipeline-e2e.integration.test.ts",
+          "tests/src/exec/plan-markdownlint.integration.test.ts",
+          "tests/src/exec/register-multiple-ids.integration.test.ts",
+          "tests/src/exec/register-pipeline-e2e.integration.test.ts",
+          "tests/src/exec/register-resume.integration.test.ts",
+          "tests/src/exec/register-worktree.integration.test.ts",
+          "tests/src/exec/release-reset-worktree.integration.test.ts",
+          "tests/src/exec/worktree-command.integration.test.ts",
+          "tests/src/exec/worktree-ops.integration.test.ts",
+          "tests/src/exec/worktree.integration.test.ts",
+          "tests/src/grade/yaml.integration.test.ts",
+          "tests/src/register/external-project.integration.test.ts",
+          "tests/src/shared/local-config.integration.test.ts"
+        ],
+        "omitted_tests": [
+          "tests/src/commands/build.integration.test.ts",
+          "tests/src/commands/init-agent-roster.integration.test.ts",
+          "tests/src/deliverable/trash.integration.test.ts",
+          "tests/src/devcontainer/scaffold.integration.test.ts",
+          "tests/src/exec/agent-git-state.integration.test.ts",
+          "tests/src/exec/job-worktree.integration.test.ts",
+          "tests/src/exec/kata-authoring.integration.test.ts",
+          "tests/src/exec/kata-review-stage.integration.test.ts",
+          "tests/src/exec/parent-validation-timeout.integration.test.ts",
+          "tests/src/exec/run/agent-timeout.integration.test.ts",
+          "tests/src/exec/run/change-scope.integration.test.ts",
+          "tests/src/exec/task-repos.integration.test.ts",
+          "tests/src/exec/trailing-records.integration.test.ts",
+          "tests/src/exec/validate-records-commit.integration.test.ts",
+          "tests/src/exec/worktree-yaml-pages.integration.test.ts",
+          "tests/src/project/move-check.integration.test.ts",
+          "tests/src/register/commit.integration.test.ts",
+          "tests/src/register/cross-project.integration.test.ts",
+          "tests/src/shared/lefthook-scaffold.integration.test.ts",
+          "tests/test-environment.integration.test.ts",
+          "tests/tools/check-evidence-secrets.integration.test.ts",
+          "tests/tools/commit-msg-merge.integration.test.ts",
+          "tests/tools/d2-cli.integration.test.ts",
+          "tests/tools/open-agent-worktree.integration.test.ts",
+          "tests/tools/src-move-codemod.integration.test.ts"
+        ]
+      }
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0JVB/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0JVB/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0JVB\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/grade/grade.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/register/commands.test.ts\"}\n ✓ tests/src/grade/grade.test.ts (69 tests) 266ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/src/grade/grade.test.ts\",\"duration_ms\":266}\n[p\n… output omitted …\n it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "飛ばした人のタスクを ready の数から除き、人のタスクだけが残ったときは待ちの数を出して終了コード 0 で終えるようにした。準備の失敗があるときは従来どおり失敗にする。単体テストを追加し、個票の対応結果と CHANGELOG 案を更新した。",
+  "completion_status": "complete",
+  "handoff": [
+    "判断: 人のタスクだけが残ったとき、dry-run と通常実行のどちらも「no executable tasks — N task(s) waiting for human completion — exit」を出して終了コード 0 にした。理由は個票の完了条件の 2 つ目に従うため。",
+    "判断: 飛ばしたタスクは `attempted` に入れず、loop の各 round で再判定して `humanWaiting` に数える。",
+    "統合後に orchestrator が `exec smoke` を流し、prj-0001 で `exec run --auto --dry-run --edit-by sol-executor` が終了コード 0 になることを確かめてから close する。",
+    "CHANGELOG に書く事項（区分: Fixed）: `exec cycle` と `exec run --auto` が `--edit-by` / `--review-by` 指定時に `execution: human` のタスクを拾って失敗する問題を修正した。人のタスクだけが残ったときは、待ちの数を表示して終了コード 0 で終える。",
+    "eslint は `schedule-mode.ts` の `runBatchMode` が 200 行超という警告を 1 件出す。エラーではなく、今回の変更で行数は増えたため、分割は別項目で扱うのがよい。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-0JVB/pjr-0jvb-20261123T012254Z-e3f2a1fd/executor.log",
+      "bytes": 4048,
+      "truncated": false
+    }
+  ]
+}
