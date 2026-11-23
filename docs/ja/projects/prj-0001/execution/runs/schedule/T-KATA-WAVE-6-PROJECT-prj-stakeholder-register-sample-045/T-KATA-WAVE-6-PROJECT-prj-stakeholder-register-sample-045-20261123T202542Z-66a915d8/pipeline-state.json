@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-WAVE-6-PROJECT-prj-stakeholder-register-sample-045",
   "run_id": "T-KATA-WAVE-6-PROJECT-prj-stakeholder-register-sample-045-20261123T202542Z-66a915d8",
-  "updated_at": "2026-11-23T20:33:35.085Z",
+  "updated_at": "2026-11-23T20:34:24.828Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-prj-stakeholder-register-sample-045/T-KATA-WAVE-6-PROJECT-prj-stakeholder-register-sample-045-20261123T202542Z-66a915d8/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-23T20:33:35.085Z",
-      "completed_at": null,
+      "completed_at": "2026-11-23T20:34:24.828Z",
       "artifact_ref": null
     }
   },
