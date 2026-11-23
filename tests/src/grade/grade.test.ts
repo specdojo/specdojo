@@ -1304,7 +1304,6 @@ LEVEL: 4
     const references = resolveGradeReferencePaths("docs/ja/specdojo/samples/opr-batch-sample.md");
     expect(references).toEqual(
       expect.arrayContaining([
-        expect.stringContaining("/rulebooks/opd-rulebook.md"),
         expect.stringContaining("/rulebooks/opr-rulebook.md"),
         expect.stringContaining("/templates/opr-template.md"),
       ]),

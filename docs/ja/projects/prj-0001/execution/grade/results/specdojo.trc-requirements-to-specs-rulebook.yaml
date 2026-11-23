@@ -4,12 +4,11 @@ document: specdojo:trc-requirements-to-specs-rulebook
 path: docs/ja/specdojo/rulebooks/trc-requirements-to-specs-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-rulebook
-verdict: needs-work
-score: 89
-graded_at: "2026-11-21T05:57:29.895Z"
-graded_by: opus-executor
-content_hash: aa7ab12ba64083f0cf7570bf529c7389a4bc9d4d84a3626e365a86471e7f0b24
+verdict: pass
+score: 92
+graded_at: "2026-11-23T19:23:47.094Z"
+graded_by: sonnet-review-executor
+content_hash: 9cb293d7cffc3cb3a162ab4c5382c3316c3879d481135f12f882289fc2b697e6
 categories:
   purpose:
     score: 100
@@ -18,7 +17,7 @@ categories:
   planning:
     score: 100
   business:
-    score: 100
+    score: 92
   architecture:
     score: 100
   usability:
@@ -26,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 67
+    score: 83
   consistency:
     score: 75
 viewpoints:
@@ -52,8 +51,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-stakeholder-clarity:
     level: 4
     score: 100
@@ -73,8 +72,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-verifiability:
     level: 3
     score: 75
@@ -82,8 +81,8 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -104,52 +103,39 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 3
+  major: 0
+  minor: 4
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-dev-testability
-    line: 76
-    anchor: "- **良い例**: 「生成元: `bac-*` と、`relations.satisfies` を持つ `sf-*`・`bes-*`。生成: `<生成コマンド>` で 2026-05-01 に生成。」"
-    message: ルールブックには更新時に派生ビューを再生成するよう指示されていますが、再生成を実行するための特定のコマンドやスクリプトへの参照がないため、変更の検証が困難です。
-    message_ja: ルールブックには更新時に派生ビューを再生成するよう指示されていますが、再生成を実行するための特定のコマンドやスクリプトへの参照がないため、変更の検証が困難です。
+    rule: vp-ba-requirements-completeness
+    line: 53
+    anchor: ""
+    message: 手順4で記録した仕様は別表で示すとの規定（72行）はあるが、本文要件の表は「別の表」のみで、同じ表に`なし`で並べる選択肢の記述（前回指摘の箇所）と整合させ、1つの方式に定める必要がある。
+    message_ja: 手順4で記録した仕様は別表で示すとの規定（72行）はあるが、本文要件の表は「別の表」のみで、同じ表に`なし`で並べる選択肢の記述（前回指摘の箇所）と整合させ、1つの方式に定める必要がある。
   - id: F002
     severity: minor
     rule: vp-qe-verifiability
     line: 53
-    anchor: どの要求にも対応しない仕様は、同じ表の末尾に要求ID を `なし` として並べるか、別の表で示します。
-    message: >-
-      どの要求にも対応しない仕様を同じ表に要求ID `なし` として並べる場合に、充足状況とギャップ列の記入値（例:
-      充足状況は対象外、ギャップに仕様漏れと記す）が「充足状況の判定」で定義されておらず、行ごとの判定ができないため値を定める必要がある。
-    message_ja: >-
-      どの要求にも対応しない仕様を同じ表に要求ID `なし` として並べる場合に、充足状況とギャップ列の記入値（例:
-      充足状況は対象外、ギャップに仕様漏れと記す）が「充足状況の判定」で定義されておらず、行ごとの判定ができないため値を定める必要がある。
+    anchor: ""
+    message: "本文要件はマトリクスで母集団の全要求を並べ、要求に対応しない仕様は別表とするため、前回の矛盾は縮小した。ただし要求に対応しない仕様のギャップ記入条件（例: 空の宣言をどう書くか）は未規定で、判定が書き手に依存する。"
+    message_ja: "本文要件はマトリクスで母集団の全要求を並べ、要求に対応しない仕様は別表とするため、前回の矛盾は縮小した。ただし要求に対応しない仕様のギャップ記入条件（例: 空の宣言をどう書くか）は未規定で、判定が書き手に依存する。"
   - id: F003
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 60
-    anchor: "| `一部充足` | 対応仕様はあるが、参照先が未作成・`draft` であるか、ギャップが残る |"
-    message: >-
-      `一部充足` の条件「参照先が未作成」は、仕様側の `relations.satisfies` を正本とする生成方式では未作成の仕様が対応仕様として現れないため `未着手`
-      の条件と重なっており、何が未作成の場合を指すか（要求側から参照される仕様 ID など）を明確にする必要がある。
-    message_ja: >-
-      `一部充足` の条件「参照先が未作成」は、仕様側の `relations.satisfies` を正本とする生成方式では未作成の仕様が対応仕様として現れないため `未着手`
-      の条件と重なっており、何が未作成の場合を指すか（要求側から参照される仕様 ID など）を明確にする必要がある。
+    line: 79
+    anchor: "- **判断基準**: どのレビュー・変更判断に使い、どのリリースや領域の要求を対象とするかが分かること。"
+    message: 判定表は `draft` と `ready` だけを扱い、`deprecated` など他の status の対応仕様がある場合の充足状況が定義されていないため、規定する必要がある。
+    message_ja: 判定表は `draft` と `ready` だけを扱い、`deprecated` など他の status の対応仕様がある場合の充足状況が定義されていないため、規定する必要がある。
   - id: F004
-    severity: major
+    severity: minor
     rule: vp-qe-kata-conformance
-    line: 17
-    anchor: >-
-      本ビューは、要求（業務の受入基準 `bac-*` など）と、それを充足する仕様（システム化機能 `sf-*`、業務仕様 `bes-*`
-      など）の作成後に生成し、仕様のレビュー時と要求・仕様の変更時に再生成します。要求→テストの対応は
-      [[specdojo:trc-requirements-to-tests-rulebook|トレーサビリティ（要求→テスト）作成ルール]] が扱います。
+    line: 72
+    anchor: ""
     message: >-
-      宣言 sample が rulebook と矛盾している（`bac-*` を仕様参照元として扱う、前提に生成手段・生成日がない、対応仕様があるのに `未着手`
-      とする、ギャップ表に担当・期限列がある、備考へ手で追記させる、`based_on` がマトリクスの生成元と一致しない）ため、sample を rulebook に合わせて改訂するか rulebook
-      側の規定を見直して整合させる必要がある。
+      sample の2つ目の表は、`bes-audit-log` が空の宣言なのに req-r1-004 の対応仕様から外れる説明をしており、rulebook の手順4（要求 ID
+      を1つも持たない仕様）と重なる行と、マトリクス備考の `bes-audit-log` の扱いが二重になっている。表の対象を定義の語で絞る、または sample を見直して整合させる必要がある。
     message_ja: >-
-      宣言 sample が rulebook と矛盾している（`bac-*` を仕様参照元として扱う、前提に生成手段・生成日がない、対応仕様があるのに `未着手`
-      とする、ギャップ表に担当・期限列がある、備考へ手で追記させる、`based_on` がマトリクスの生成元と一致しない）ため、sample を rulebook に合わせて改訂するか rulebook
-      側の規定を見直して整合させる必要がある。
+      sample の2つ目の表は、`bes-audit-log` が空の宣言なのに req-r1-004 の対応仕様から外れる説明をしており、rulebook の手順4（要求 ID
+      を1つも持たない仕様）と重なる行と、マトリクス備考の `bes-audit-log` の扱いが二重になっている。表の対象を定義の語で絞る、または sample を見直して整合させる必要がある。

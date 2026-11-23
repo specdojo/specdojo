@@ -1,0 +1,155 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-6-PROJECT-prj-overview-sample-090",
+  "run_id": "T-KATA-WAVE-6-PROJECT-prj-overview-sample-090-20261123T204253Z-ae9ecdfa",
+  "stage": {
+    "role": "executor",
+    "actor": "sonnet-review-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-23T20:43:34.716Z",
+    "completed_at": "2026-11-23T20:44:17.475Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx specdojo grade list --target kata --path docs/ja/specdojo/samples/prj-overview-sample.md --changed-only",
+      "status": "passed",
+      "summary": "出力なし、終了コード 0。評価結果は最新"
+    },
+    {
+      "source": "executor",
+      "command": "npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/prj-overview-rulebook.md --changed-only",
+      "status": "passed",
+      "summary": "出力なし、終了コード 0。評価結果は最新"
+    },
+    {
+      "source": "executor",
+      "command": "npx specdojo grade list --target kata --path docs/ja/specdojo/recipes/prj-overview-recipe.md --changed-only",
+      "status": "passed",
+      "summary": "出力なし、終了コード 0。評価結果は最新"
+    },
+    {
+      "source": "executor",
+      "command": "npx specdojo grade list --target kata --path docs/ja/specdojo/templates/prj-overview-template.md --changed-only",
+      "status": "passed",
+      "summary": "出力なし、終了コード 0。評価結果は最新"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md\n\nlint:md:changed: no changed files"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\nlint:fm:changed: no changed files"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6526 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6526 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)",
+      "reason": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nm coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-PROJECT-prj-overview-sample-090/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-PROJECT-prj-overview-sample-090/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "review 結果: verdict=complete-with-findings。4 つの型（sample・rulebook・recipe・template）の kata 評価結果は最新（--changed-only の出力は空、終了コード 0）で、すべて pass（score は順に 100・97・95・94）。finding はすべて minor（sample 1、rulebook 2、recipe 3、template 3）で、完了条件 DC-001〜003 と範囲を妨げない。sample 6 章の前提条件と 5 章の成功基準表を読み、範囲限定と駄菓子屋文脈の統一を確認した。改善指示は型の整備として記録する。確認できなかった範囲: 先行 edit タスクの result と実行記録の検証結果は特定していない。--incomplete は実行していないが、4 つのサイドカーは読み取れて verdict が確定している。",
+  "completion_status": "complete",
+  "handoff": [
+    "sample F001: 90 行目付近に、依存前提（タブレット、ベースライン記録、家族利用者代表の参加）が成立しなかった場合の影響と、リスク・未決事項として渡す後続文書を一文で追記する",
+    "rulebook F001: 3.2 の「付ける場合」を削り、4.1 の Frontmatter 必須に揃える",
+    "rulebook F002: 6.8 に未決事項（_UNDECIDED_ と決定タイミング）の記述規約を追記する",
+    "recipe F001・F003: 原則に「プロジェクト上の意味」を書く問いと手順を追加する",
+    "recipe F002: 推測値に根拠と置き換え方を添える指示を背景の節に追加する",
+    "template F001: 実現したいことの欄に対象利用者・適用領域を書く指示を追加する",
+    "template F002・F003: 前提条件に適用範囲の記入欄を追加する"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-prj-overview-sample-090/T-KATA-WAVE-6-PROJECT-prj-overview-sample-090-20261123T204253Z-ae9ecdfa/executor.log",
+      "bytes": 6392,
+      "truncated": false
+    }
+  ]
+}

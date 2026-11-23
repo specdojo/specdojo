@@ -1,0 +1,36 @@
+レビューの結果、判定は `incomplete` です。対象の sample 自体は pass ですが、型の評価対象のうち 3 件が pass ではありません。
+
+**鮮度確認**
+- `specdojo grade list --target kata --path docs/ja/specdojo/samples/opr-backup-restore-sample.md --changed-only` と、同じ形で `docs/ja/specdojo/rulebooks/opr-rulebook.md` を実行しました。どちらも出力は空でした。評価結果は最新です。
+- 他の型の評価対象は、plan の記載（鮮度は最新）を事実として受け取りました。この環境では個別に再確認していません。
+
+**対象 sample の確認**
+- grade は `verdict` が `pass`、`score` が 98、finding は minor 2 件（F001 の重複、F002 のホスティング環境の操作の入口）です。完了を妨げません。
+- 先頭の一部（章 1〜6.1）だけを読みました。Frontmatter の `rulebook` は `specdojo:opr-rulebook` で、`status` は `draft` のままです。章構成は template 順です。
+- 未決の値（RTO、RPO、保管期間、検証環境のデータの扱い）は `_UNDECIDED_` / `_ASSUMPTION_` のまま、決まるまでの判定の扱いと一緒に示されています。これは DC-005 の方針に合います。
+- 演習で復旧の目標を満たさないときの判断の基準とエスカレーションの条件は、この範囲では確認していません。DC-005 の充足は 6.1 以降の本文を読まないと確かめられず、grade の `vp-ops-operability` が 100 点であることを根拠にしています。
+
+**未充足事項（完了を妨げるもの）**
+
+plan の追加完了条件は、型の評価対象すべてに最新の `--target kata` の `pass` を求めています。次の 3 件が満たしていません。
+- `specdojo:opr-rulebook` は `needs-work`（score 94）です。
+  - major の F002 は、`opr-batch-sample`、`opr-change-sample`、`opr-support-sample` が `rulebook: specdojo:opd-rulebook` を宣言し、template の構成にもなっていないという指摘です。
+  - minor の F001 は、template と重複する記述を参照に置き換えるべきという指摘です。
+- `specdojo:opr-batch-sample` は `needs-work`（score 66）です。major が 8 件あります。
+- `specdojo:opr-support-sample` は `fail`（score 57）です。blocker が 1 件、major が 14 件あります。
+
+**改善指示**
+- `opr-batch-sample` と `opr-support-sample` の `rulebook` を `specdojo:opr-rulebook` に直します。あわせて template の 12 章構成に作り直し、再評価します。
+- `opr-rulebook` の F001 を解消して再評価し、`pass` にします。
+- 対象 sample の minor 2 件は任意です。直す場合は F001 を参照に統合し、F002 にホスティング環境の操作の入口を一言足します。
+- `opr-sample` の minor 4 件と他の sample の minor は、完了を妨げません。
+
+**確認できなかった範囲**
+- 対象 sample の章 6.2 以降。
+- 「対象外の変更が混入していないか」の確認（`git status` と差分は実行していません）。
+- 先行する edit タスクの result。
+- 人の確定が必要な点（RTO、RPO、保管期間など）は、横串の確認に回します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict 案: incomplete。対象 sample は pass（score 98）で鮮度も最新。ただし型の評価対象の opr-rulebook が needs-work、opr-batch-sample が needs-work、opr-support-sample が fail で、型すべて pass の追加完了条件を満たさない。確認できなかった範囲: 対象 sample の 6.2 以降の本文、差分の混入確認、先行 edit の result。","handoff":["opr-batch-sample と opr-support-sample の rulebook を specdojo:opr-rulebook に直し、template の12章構成へ作り直して再評価する","opr-rulebook の F001（template と重複する記述）を解消して再評価し pass にする","対象 sample の minor 2件（6.1 の重複、ホスティング環境の操作の入口）は任意の改善","RTO・RPO・保管期間などの _UNDECIDED_ は横串の人の確認で確定する"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/opr-backup-restore-sample.md --changed-only","status":"passed","summary":"出力なし。評価結果は最新"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/opr-rulebook.md --changed-only","status":"passed","summary":"出力なし。評価結果は最新"}]}
+</specdojo_executor_evidence>

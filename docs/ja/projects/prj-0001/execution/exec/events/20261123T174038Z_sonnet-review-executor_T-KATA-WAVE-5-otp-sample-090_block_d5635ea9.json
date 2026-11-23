@@ -1,0 +1,17 @@
+{
+  "v": 1,
+  "ts": "2026-11-23T17:40:38Z",
+  "type": "block",
+  "task_id": "T-KATA-WAVE-5-otp-sample-090",
+  "by": "sonnet-review-executor",
+  "msg": "reporter output invalid after 3 format attempts: response does not match reporter JSON Schema: / required: must have required property 'verdict'",
+  "meta": {
+    "limit_deferred": "false",
+    "claim_actor": "sonnet-review-executor",
+    "stage_actor": "gemma26-reporter",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-otp-sample-090/T-KATA-WAVE-5-otp-sample-090-20261123T173056Z-93011832/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-otp-sample-090/T-KATA-WAVE-5-otp-sample-090-20261123T173056Z-93011832/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-5-otp-sample-090-20261123T173056Z-93011832"
+  }
+}

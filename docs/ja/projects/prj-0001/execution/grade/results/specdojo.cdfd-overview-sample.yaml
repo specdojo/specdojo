@@ -4,12 +4,11 @@ document: specdojo:cdfd-overview-sample
 path: docs/ja/specdojo/samples/cdfd-overview-sample.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-sample
-verdict: needs-work
-score: 82
-graded_at: "2026-11-21T03:17:09.724Z"
-graded_by: opus-executor
-content_hash: 73ba5edbc52c769547c18ab97162c8340aace21fb39219d1168ab6f464082efd
+verdict: pass
+score: 97
+graded_at: "2026-11-23T20:16:33.116Z"
+graded_by: sonnet-review-executor
+content_hash: d7100fd9b9827040dabec4864ad815632c17b574f9771e5eaf444c3a1365b50a
 categories:
   purpose:
     score: 100
@@ -18,17 +17,17 @@ categories:
   planning:
     score: 100
   business:
-    score: 92
+    score: 100
   architecture:
     score: 100
   usability:
     score: 92
   implementation:
-    score: 75
+    score: 100
   quality:
-    score: 67
+    score: 92
   consistency:
-    score: 50
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -55,17 +54,17 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-stakeholder-clarity:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-dev-implementation-readiness:
     level: 4
     score: 100
-  vp-dev-implementation-readiness:
-    level: 2
-    score: 50
   vp-dev-change-impact:
     level: 4
     score: 100
@@ -73,20 +72,20 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -101,103 +100,23 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 4
-  minor: 8
+  major: 0
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-ba-stakeholder-clarity
-    line: 14
-    anchor: "- 店主と家族の店番担当、およびシステムの責任分担は [[specdojo:prj-overview-sample|プロジェクト概要]] に従う。補充の判断、つけの承認、締めの確定は店主が担い、システムは記録と確認を支援する。"
-    message: 共通 sample 文脈と参照先のプロジェクト概要では家族の店番利用者を「家族利用者代表」としているが、本書は未定義の「店番担当」を使用しているため、正式な役割名へ統一するか両者の対応を明記する必要がある。
-    message_ja: 共通 sample 文脈と参照先のプロジェクト概要では家族の店番利用者を「家族利用者代表」としているが、本書は未定義の「店番担当」を使用しているため、正式な役割名へ統一するか両者の対応を明記する必要がある。
+    rule: vp-arc-conciseness
+    line: 242
+    anchor: >-
+      - プロセスグループ別 CDFD は、グループに属する領域の内部プロセス、起点イベント、例外・復旧、データストアの読み書きを定める正本である。状態の定義と遷移は STSD を正本とし、プロセスグループ別 CDFD
+      は参照に留める。各領域はちょうど一つのプロセスグループ別 CDFD に属する。
+    message: プロセスグループ別 CDFD とユースケース別 CDFD の役割分担の2項目は rulebook の分担定義の再掲であり、参照を添えた短い要約に圧縮できる。
+    message_ja: プロセスグループ別 CDFD とユースケース別 CDFD の役割分担の2項目は rulebook の分担定義の再掲であり、参照を添えた短い要約に圧縮できる。
   - id: F002
-    severity: major
-    rule: vp-dev-implementation-readiness
-    line: 41
-    anchor: "| `P-05` | 在庫確認 | 販売と入荷を在庫記録へ反映し、現在庫を確認できる状態に保つ。 | 店番担当（管理責任: 店主代表） | 販売または入荷が記録された |"
-    message: 仕入側の `P-02` が在庫記録へ入荷数量を直接反映する一方、`P-05` も販売と入荷を同じ在庫記録へ反映するとされ、実装担当が入荷更新の単一責務・呼出順・重複更新防止条件を確定できない。
-    message_ja: 仕入側の `P-02` が在庫記録へ入荷数量を直接反映する一方、`P-05` も販売と入荷を同じ在庫記録へ反映するとされ、実装担当が入荷更新の単一責務・呼出順・重複更新防止条件を確定できない。
-  - id: F003
-    severity: major
-    rule: vp-qe-verifiability
-    line: 41
-    anchor: "| `P-05` | 在庫確認 | 販売と入荷を在庫記録へ反映し、現在庫を確認できる状態に保つ。 | 店番担当（管理責任: 店主代表） | 販売または入荷が記録された |"
-    message: 仕入の `P-02` と在庫の `P-05` がともに入荷数量を在庫記録へ反映すると定義されているため、入荷時の更新責務を一方へ定め、他方を受け渡しまたは参照として表現しなければ更新の成否を一意に判定できない。
-    message_ja: 仕入の `P-02` と在庫の `P-05` がともに入荷数量を在庫記録へ反映すると定義されているため、入荷時の更新責務を一方へ定め、他方を受け渡しまたは参照として表現しなければ更新の成否を一意に判定できない。
-  - id: F004
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 33
-    anchor: "| `P-03` | 店頭販売 | 現金販売を記録し、商品を顧客へ渡す。 | 店番担当（管理責任: 店主代表） | 顧客が商品を購入した |"
-    message: "`P-03` の起点イベントを「顧客が商品を購入した」と完了後の表現にしているため、主要入力の「購入依頼と支払」のどの時点で店頭販売が開始したかを判定できるイベントへ修正する必要がある。"
-    message_ja: "`P-03` の起点イベントを「顧客が商品を購入した」と完了後の表現にしているため、主要入力の「購入依頼と支払」のどの時点で店頭販売が開始したかを判定できるイベントへ修正する必要がある。"
-  - id: F005
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 206
-    anchor: 'purchasing -> inventory_record: "入荷数量"'
-    message: 主要入力の「仕入からの入荷数量」に対応する図のエッジが在庫グループへ到達せず `仕入 → 在庫記録` となり、さらに在庫グループも同じ在庫記録を更新しているため、単一の更新責務とそれに対応する受け渡し経路へ修正する必要がある。
-    message_ja: 主要入力の「仕入からの入荷数量」に対応する図のエッジが在庫グループへ到達せず `仕入 → 在庫記録` となり、さらに在庫グループも同じ在庫記録を更新しているため、単一の更新責務とそれに対応する受け渡し経路へ修正する必要がある。
-  - id: F006
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 83
-    anchor: "| 売場棚 | 店頭に陳列した商品の現物 | 店内の売場棚（物理保管） |"
-    message: 「売場棚」をトランザクションデータ表へ配置している一方、凡例では物理保管はいずれのデータストア区分にも属さないと定義しているため、物理保管用の区分を設けるかトランザクションデータ表へ置く例外規則を明記する必要がある。
-    message_ja: 「売場棚」をトランザクションデータ表へ配置している一方、凡例では物理保管はいずれのデータストア区分にも属さないと定義しているため、物理保管用の区分を設けるかトランザクションデータ表へ置く例外規則を明記する必要がある。
-  - id: F007
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 26
-    anchor: "| `P-02` | 入荷検品 | 納品された商品を検品し、売場棚へ出して仕入記録と在庫記録を更新する。 | 店番担当（管理責任: 店主代表） | 仕入先から商品が納品された |"
-    message: >-
-      下位の `cdfd-sample` は `P-02-03` が入荷数量を在庫記録へ直接反映する正本になっている一方、本書は `P-05` にも入荷反映を割り当てているため、概要とプロセスグループ別 CDFD
-      で更新責務を一方へ統一する必要がある。
-    message_ja: >-
-      下位の `cdfd-sample` は `P-02-03` が入荷数量を在庫記録へ直接反映する正本になっている一方、本書は `P-05` にも入荷反映を割り当てているため、概要とプロセスグループ別 CDFD
-      で更新責務を一方へ統一する必要がある。
-  - id: F008
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 373
-    anchor: データストアの色分けは、大分類「データストア」の中の業務上のサブ分類を表す。マスタ・構成データは、他のプロセスから参照される比較的安定した基準情報（商品台帳、顧客台帳）を指す。トランザクションデータは、業務活動に伴い都度更新される記録（販売記録、仕入記録、在庫記録、つけ台帳、締めの記録）を指す。物理保管は現物の保管先であり、いずれの区分にも属さないため、便宜上トランザクションデータと同じ色を用いる。
-    message: 完成例が「売場棚」をトランザクションデータ表へ置きながら凡例で同区分に属さないと説明しているため、rulebook・template と合わせて物理保管の配置規則を確定し、その規則に従う完成例へ修正する必要がある。
-    message_ja: 完成例が「売場棚」をトランザクションデータ表へ置きながら凡例で同区分に属さないと説明しているため、rulebook・template と合わせて物理保管の配置規則を確定し、その規則に従う完成例へ修正する必要がある。
-  - id: F009
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 380
-    anchor: "| 論点 | 影響 | 決定者 | 決定時期 | 状態 |"
-    message: >-
-      rulebook の「未決事項」記述ガイドは表を「論点」「影響」の2列と定めているが、sample と template は決定者・決定時期・状態を加えた5列で示しているため、rulebook の列定義と
-      sample・template の表構成を一致させる必要がある。
-    message_ja: >-
-      rulebook の「未決事項」記述ガイドは表を「論点」「影響」の2列と定めているが、sample と template は決定者・決定時期・状態を加えた5列で示しているため、rulebook の列定義と
-      sample・template の表構成を一致させる必要がある。
-  - id: F010
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 26
-    anchor: "| `P-02` | 入荷検品 | 納品された商品を検品し、売場棚へ出して仕入記録と在庫記録を更新する。 | 店番担当（管理責任: 店主代表） | 仕入先から商品が納品された |"
-    message: >-
-      下位の `cdfd-sample` が担当を「家族利用者代表（管理責任: 店主代表）」としている一方、本書は同じ仕入の領域を「店番担当（管理責任: 店主代表）」としており、全体概要と詳細 CDFD
-      で領域の担当名を引き継ぐ規則に合わせて役割名を統一する必要がある。
-    message_ja: >-
-      下位の `cdfd-sample` が担当を「家族利用者代表（管理責任: 店主代表）」としている一方、本書は同じ仕入の領域を「店番担当（管理責任: 店主代表）」としており、全体概要と詳細 CDFD
-      で領域の担当名を引き継ぐ規則に合わせて役割名を統一する必要がある。
-  - id: F011
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 14
-    anchor: "- 店主と家族の店番担当、およびシステムの責任分担は [[specdojo:prj-overview-sample|プロジェクト概要]] に従う。補充の判断、つけの承認、締めの確定は店主が担い、システムは記録と確認を支援する。"
-    message: 「店主代表」「家族利用者代表」を用いる共通 sample 文脈に対して「店主」「店番担当」を併用しているため、正式な役割名へ統一するか用語の対応を定義する必要がある。
-    message_ja: 「店主代表」「家族利用者代表」を用いる共通 sample 文脈に対して「店主」「店番担当」を併用しているため、正式な役割名へ統一するか用語の対応を定義する必要がある。
-  - id: F012
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 373
-    anchor: データストアの色分けは、大分類「データストア」の中の業務上のサブ分類を表す。マスタ・構成データは、他のプロセスから参照される比較的安定した基準情報（商品台帳、顧客台帳）を指す。トランザクションデータは、業務活動に伴い都度更新される記録（販売記録、仕入記録、在庫記録、つけ台帳、締めの記録）を指す。物理保管は現物の保管先であり、いずれの区分にも属さないため、便宜上トランザクションデータと同じ色を用いる。
-    message: 第4章では売場棚を「トランザクションデータ」に含めている一方、本段落では物理保管を「いずれの区分にも属さない」と定義しており、売場棚の分類を読み手が一意に識別できないため表現を統一する必要がある。
-    message_ja: 第4章では売場棚を「トランザクションデータ」に含めている一方、本段落では物理保管を「いずれの区分にも属さない」と定義しており、売場棚の分類を読み手が一意に識別できないため表現を統一する必要がある。
+    line: 236
+    anchor: 仕入・販売・在庫・顧客・締めの五つのグループが、商品と支払を受け渡し、台帳や記録を読み書きして店舗運営を支える関係を示す。
+    message: 店主代表など領域の担当から直接受け取る入力を図から省いているため、recipe と template が求める省略の注記を図の直後に1文で追加する必要がある。
+    message_ja: 店主代表など領域の担当から直接受け取る入力を図から省いているため、recipe と template が求める省略の注記を図の直後に1文で追加する必要がある。

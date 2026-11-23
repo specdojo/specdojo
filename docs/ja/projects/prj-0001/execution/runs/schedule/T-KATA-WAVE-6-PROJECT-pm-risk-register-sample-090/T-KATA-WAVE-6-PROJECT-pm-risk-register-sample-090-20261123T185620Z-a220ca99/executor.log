@@ -1,0 +1,36 @@
+鮮度は最新。完了条件の充足を判断します。DC-005（確認の手段と合格の基準）は RK-001 の `_UNDECIDED_` で未充足です。
+
+評価結果は最新です。`grade list --changed-only` と `--incomplete` は、どちらも出力が空でした。
+
+**verdict: `incomplete`**（対象は sample `specdojo:pm-risk-register-sample`）
+
+照合の結果
+- sample の grade は `needs-work`（score 93）です。major が 2 件あります。
+  - F002 は `vp-qe-verifiability` の指摘です。
+  - F004 は `vp-ops-release-readiness` の指摘です。
+- 2 件とも、対応計画の表にある RK-001 の完了条件が原因です。この条件では、試行件数と会計確定の秒数が `_UNDECIDED_` のままになっています。
+- この指摘は完了条件 DC-005 に直結します。DC-005 は、完了条件を確認の手段と合格の基準で書くことを求めています。RK-001 は合否を判定できないため、DC-005 は未充足です。
+- RK-004 の対応方針は「低減」ですが、完了条件は IS-002 への移管です。F003 はこの不一致を指摘しています。
+- 型の整備を含む schedule の完了には、型すべてに最新の `pass` が必要です。次の 2 件が満たしていません。
+  - sample は `needs-work` です。
+  - template は `fail` で、blocker が 1 件あります。graded_at は 2026-10-22 です。
+    - F013 は、rulebook が定める手動作成の構成と、自動生成ビューという template の位置づけが矛盾していると指摘しています。
+    - F014 は、frontmatter の `rulebook` が `specdojo:pjr-rulebook` になっていると指摘しています。
+- rulebook は `pass`（score 97）です。minor が 2 件あります。
+  - 「リスク ID」と「リスクID」の表記が揺れています。
+  - RK-001 と RK-004 の完了条件が、確認の手段と合格の基準になっていません。
+
+改善指示
+1. RK-001 の完了条件の `_UNDECIDED_`（連続記録の件数、会計確定の秒数）を具体値に確定します。値の確定は PO と PM の判断事項です。
+2. RK-004 の方針区分を、移管した旨が分かる表記にそろえます。完了条件も、確認の手段と合格の基準で書き直します。
+3. template を rulebook の必須本文構成に合わせて作り直します。frontmatter の `rulebook` は `specdojo:pm-risk-register-rulebook` に直します。
+4. rulebook 側の「リスク ID」と sample 側の「リスクID」の表記を統一します。
+
+確認できなかった範囲
+- 成果物は再評価していません。判断は grade の結果を事実として使いました。
+- 先行する edit タスクの result は特定していません。
+- `npm run lint:md` などの検査は、親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"review 完了。verdict=incomplete。評価結果は最新（changed-only/incomplete とも出力なし）。sample は needs-work（major 2 件。RK-001 の完了条件に `_UNDECIDED_` が残り DC-005 が未充足）、template は fail（blocker 1 件）で、型すべてに pass という schedule の追加条件を満たさない。確認できなかった範囲: 成果物の再評価、先行 edit result の特定、親 runner が実行する検査。","handoff":["RK-001 の完了条件にある `_UNDECIDED_`（連続記録の件数、会計確定の秒数）を、PO と PM の判断で具体値に確定する","RK-004 の対応方針区分を、移管済みと分かる表記にそろえる。完了条件も、確認の手段と合格の基準で書き直す","`pm-risk-register-template` を rulebook の必須本文構成に合わせて作り直し、frontmatter の `rulebook` を `specdojo:pm-risk-register-rulebook` に直す","rulebook の「リスク ID」と sample の「リスクID」の表記を統一する"],"validations":[]}
+</specdojo_executor_evidence>

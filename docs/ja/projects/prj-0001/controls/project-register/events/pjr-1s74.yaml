@@ -1,0 +1,72 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ff2f9f93c6294324b8336174780fd9aa
+  ts: "2026-11-23T21:03:18Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: YAML の変更に求める schema の検査から、検査しない印の付いた template を外す
+    - field: description
+      from: ""
+      to: runner は変えた YAML すべてに validate:schema:file を求め、validate=false の template（pm-members-template.yaml）でも検査が無いとして止める。印の付いた YAML を外す
+    - field: input
+      from: ""
+      to: '["第 6 波の T-KATA-WAVE-6-PROJECT-pm-members-sample-060 が、template に validate=false があるのに「executor validation failed or not run: npm run validate:schema:file」で止まった（2026-11-24）","pm-members の template の `scheduler_strategy` は固定の値に戻す（利用者の判断、2026-11-24）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-24"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: exec
+- v: 1
+  id: reg_d0acdd096c1945fa8c62be66be2e057f
+  ts: "2026-11-23T21:03:22Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_ff2f9f93c6294324b8336174780fd9aa
+- v: 1
+  id: reg_55bde70d29d240a991fc95e360f85df9
+  ts: "2026-11-23T21:11:12Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: 利用者が期限を 11 月末と決めた（2026-11-24）
+  changes:
+    - field: due
+      from: _TODO_
+      to: "2026-11-30"
+  previous_event_id: reg_d0acdd096c1945fa8c62be66be2e057f

@@ -1,0 +1,11 @@
+`docs/ja/specdojo/samples/prj-scope-sample.md` の冗長な1文を1箇所だけ削りました。Prettier の整形チェックは通っています。`lint:md` などは親 runner が実行します。
+
+削った文は「店主代表以外が店番する場合でも、同じ手順で販売・在庫・つけ残高を確認できる状態を目指す。」です。導入文の「店主不在でも販売・在庫・つけを同じ手順で扱う」と同じ主張で、直後の箇条書きと「利用者・関係者」の表の「利用者影響」列にも同じ内容があります。文書の意味や完了条件は変わっていません。
+
+残した候補は次の2件です。
+- **`PO` と `BA` の役割説明**: 「利用者・関係者」の表の前の段落と、「スコープ変更方針」の承認者の行の両方にあります。前者は Role code の初出で、後者は変更判断の手順です。それぞれ別の判断に使うため残しました。
+- **「境界の判断基準」の例文**: 在庫の廃棄登録は判断基準の 2. で含め、仕入れ数量の自動提案は 4. で次フェーズに回す例です。基準の使い方を示す内容なので残しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"対象文書の重複1文を削除。他は判断に要る内容のため保持。","handoff":[],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/prj-scope-sample.md","status":"passed","summary":"整形チェック通過"}],"condense_records":[{"location":"1. 対象業務 導入段落の2文目「店主代表以外が店番する場合でも、同じ手順で…目指す。」","category":"repetition","action":"delete","reason":"冒頭の導入文（店主不在でも同じ手順で扱う）と、利用者・関係者の表の利用者影響列で同じ主張が示されており、削っても対象業務の範囲と意味は変わらない。","cause":{"type":"document"}},{"location":"1. 対象業務の表前段落と 6. スコープ変更方針の承認者の行（PO / BA の役割説明）","category":"repetition","action":"retain","reason":"前者は Role code の初出定義、後者は変更判断の手順で用途が異なり、判断に要る情報のため残す。","cause":{"type":"document"}},{"location":"5. 境界の判断基準 末尾の例文","category":"unneeded-background","action":"retain","reason":"判断基準 2. と 4. の適用例を示し、判断に要るため残す。","cause":{"type":"document"}}]}
+</specdojo_executor_evidence>
