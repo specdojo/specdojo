@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-DESIGN-tsd-index-sample-090
   mode: review
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-DESIGN-tsd-index-sample-090/T-KATA-WAVE-6-DESIGN-tsd-index-sample-090-20261123T155547Z-1d61b055/plan.md
   started_at: "2026-11-23T15:55:49.901Z"
+  completed_at: "2026-11-23T16:01:18.254Z"
   agent: sonnet-review-executor
   execution: agent
   approach: fully-guided
@@ -19,20 +20,23 @@ specdojo:
 
 ## 1. 評価結果の確認
 
-_TODO_: 評価結果サイドカーのパス、鮮度確認で実行したコマンドとその出力（`content_hash` が現在の成果物と一致するか）、grade の `verdict` / `score` / finding 件数を記入する。評価結果が最新でない、または評価不能の場合は、その事実と理由を記入する。
+評価結果の確認 `npx specdojo grade list --target kata --path docs/ja/specdojo/samples/tsd-index-sample.md --changed-only` を実行した結果、出力はありません。評価結果は最新です。 - `verdict`: `pass` - `score`: 99 - `finding_counts`: minor 1 `npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/tsd-index-rulebook.md --changed-only` を実行した結果、出力はありません。評価結果は最新です。 - `verdict`: `pass` - `score`: 98 - `finding_counts`: minor 1
 
 ## 2. 判断根拠
 
-_TODO_: 変更内容・plan・実行記録・完了条件・最新の finding を照合した内容と、verdict を選んだ理由を記入する。finding が残るのに完了とする場合は、その finding が今回の完了を妨げない理由を記入する。参照は `[[id]]` 形式（Obsidian wikilink）で記載し、行番号アンカーや絶対パスは使わない。
+- 対象成果物 `[[docs/ja/specdojo/samples/tsd-index-sample.md|tsd-index-sample.md]]` について、`grade` による評価結果は `pass` (score 99) であり、`F001` ([minor/`vp-arc-conciseness` @ line 48]) の finding が 1 件記録されています。この finding はホスティングと CI/CD の `_TODO_` が複数箇所に冗長に記載されていることに関する指摘です。
+- `rulebook` である `[[docs/ja/specdojo/rulebooks/tsd-index-rulebook.md|tsd-index-rulebook.md]]` について、`grade` による評価結果は `pass` (score 98) であり、`F001` ([minor/`vp-qe-kata-conformance` @ line 3]) の finding が 1 件記録されています。これは sample の status が `draft` のままであることに関する整合性の指摘です。
+- 完了条件 `DC-001`〜`DC-003` について、`grade` の結果に基づき、すべての条件が充足されていることを確認しました。
 
 ## 3. 未充足事項・改善指示
 
-_TODO_: 未充足事項と、再計画・成果物の改善・再評価に使う改善指示を記入する（なければ「なし」と記入する）。評価結果の内容に疑義がある場合は、再評価が必要な対象と理由もここに記入する。
+- sample (`[[docs/ja/specdojo/samples/tsd-index-sample.md|tsd-index-sample.md]]`) の `F001` 指摘への対応: ホスティングと CI/CD に関する `_TODO_` の記載を、一覧の備考列か参照先の表のいずれかに一本化し、記述の冗長性を排除してください。
+- rulebook (`[[docs/ja/specdojo/rulebooks/tsd-index-rulebook.md|tsd-index-rulebook.md]]`) の `F001` 指摘への対応: sample が `draft` 状態のまま提示されていることへの懸念に対し、sample の `status` を `ready` へ昇格させる条件を明文化するか、状態の整合性を確保してください。
 
 ## 4. approach に応じた確認
 
-_TODO_: `approach` に応じて確認した内容を記入する。fully-guided / recipe-guided / freeform では求められた作成・更新が行われたか、retrofit では実装エビデンスの対応記録と未確認範囲、`rulebook-maintenance` などの maintenance 系では見直しの動機となった finding の解消状況を記入する。
+磨き込みの確認 - `grade` 実行の結果、`rulebook` と `sample` はともに `pass` と判定されており、指定された磨き込みが適切に行われたことを確認しました。 - `sample` の `F001` にある冗長な `_TODO_` の整理について、エディタ段階での修正が求められます。 - `rulebook` の `F001` にある `status` の不整合について、人間による確定が必要であるという `executor` の見解を承知しました。
 
 ## 5. decision
 
-- verdict: _TODO_（complete / complete-with-findings / incomplete / grade-stale / grade-unavailable / changed-during-review）
+- verdict: complete-with-findings
