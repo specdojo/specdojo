@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-WAVE-6-NOTATION-cpd-sample-050",
   "run_id": "T-KATA-WAVE-6-NOTATION-cpd-sample-050-20261123T091231Z-93689613",
-  "updated_at": "2026-11-23T09:33:57.980Z",
+  "updated_at": "2026-11-23T09:35:29.023Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-NOTATION-cpd-sample-050/T-KATA-WAVE-6-NOTATION-cpd-sample-050-20261123T091231Z-93689613/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-23T09:33:57.980Z",
-      "completed_at": null,
+      "completed_at": "2026-11-23T09:35:29.023Z",
       "artifact_ref": null
     }
   },
