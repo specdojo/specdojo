@@ -7,11 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-11-23T00:35:38Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-23T04:22:03Z"
+  conclusion: 配布の claude の edit 設定に、作業場所を保つ env と git の読み取り・rm・mv の許可（再帰・強制は禁止）を足し、prj-0001 自身の設定にも当てた
 ---
 
 # PJR-1HJH Claude の edit executor の既定の設定に、作業場所を保つ設定と git の読み取り・rm・mv の許可がない
