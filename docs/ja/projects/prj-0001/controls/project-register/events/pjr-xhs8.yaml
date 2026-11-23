@@ -102,3 +102,32 @@
       from: ""
       to: 完了条件
   previous_event_id: reg_1e40a059a61d438c9b17d3f4e49cdd98
+- v: 1
+  id: reg_1075150797424ef58734066aa1c6f733
+  ts: "2026-11-23T01:03:20Z"
+  action: start
+  actor: sonnet-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "executor reported incomplete: copyIfChanged の 1ms 許容、dev 時の索引描画での Shiki 省略、単体テスト追加、個票更新は完了。索引の文字の前後比較と起動時間の 3 回測定は dev サーバーを起動できず未実施。"
+      to: "-"
+  previous_event_id: reg_d0fe28a376c44b51b97bbb9e103b21b6
+- v: 1
+  id: reg_b68befb629d34cb18939668009511154
+  ts: "2026-11-23T01:10:40Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_1075150797424ef58734066aa1c6f733

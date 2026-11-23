@@ -267,7 +267,18 @@ function renderSearchHtml(
 ): string {
   if (env.frontmatter?.search === false || isExcludedSearchPath(env.relativePath)) return "";
 
-  const html = md.render(src, env);
+  // dev の起動を速くするため、索引の描画ではコードブロックの色付け（Shiki）を省く。
+  // 検索で引ける文字は変わらない（色付けは span の包みだけを足す）。
+  const options = (md as { options?: { highlight?: unknown } }).options;
+  const originalHighlight = options?.highlight;
+  const skipHighlight = process.env.SPECDOJO_DOCS_COMMAND === "dev" && options !== undefined;
+  if (skipHighlight) options.highlight = undefined;
+  let html: string;
+  try {
+    html = md.render(src, env);
+  } finally {
+    if (skipHighlight) options.highlight = originalHighlight;
+  }
   const docId = getSpecdojoDocId(env.frontmatter);
   return docId ? injectSearchDocId(html, docId) : html;
 }
