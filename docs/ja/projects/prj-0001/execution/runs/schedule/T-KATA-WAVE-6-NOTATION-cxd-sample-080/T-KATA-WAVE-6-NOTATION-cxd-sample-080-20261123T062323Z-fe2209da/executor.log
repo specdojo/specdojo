@@ -1,0 +1,13 @@
+`docs/ja/specdojo/samples/cxd-sample.md` から冗長な 1 文を削除しました。それ以外は、内容を変えないために残しています。Prettier と markdownlint はこのファイルで通りました。
+
+削除したのは、`3.3. External Software System（外部システム）` の表の後の「印刷基盤は販売管理 CLI と同じ端末で動くが、物理印字を担う別のソフトウェアとして境界外に置く」です。同じ内容が、同じ表の「レシート印刷基盤」の行（区分・位置づけと責任分界の列）に既にあります。
+
+残した箇所は次の 2 つです。
+- `3.2. Person（人・ロール）` 末尾の「関係者は直接操作者としては描かない」は、Person に含めない範囲を示す文なので残しました。
+- `4.1. 技術前提・制約` の「会計確定と物理印字の成否を分ける」は、概要や `3.3` の表と近い内容ですが、制約として判断に要るので残しました。
+
+親 runner の検証は実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"cxd-sample.md の冗長な 1 文を削除し、それ以外は意味維持のため保持した。","handoff":[],"condense_records":[{"location":"3.3. External Software System の表の後の段落「印刷基盤は販売管理 CLI と同じ端末で動くが…境界外に置く」","category":"repetition","action":"delete","reason":"同じ表の「レシート印刷基盤」の行（区分・位置づけ、責任分界）に同内容があり、削除しても意味は変わらない","cause":{"type":"document"}},{"location":"3.2. Person（人・ロール）末尾の段落「技術メンター・開発担当と同行レビュー担当は…描かない」","category":"repetition","action":"retain","reason":"Person に含めない範囲を示す境界の判断に要る文なので残した","cause":{"type":"document"}},{"location":"4.1. 技術前提・制約の「会計確定と物理印字の成否を分ける」の項目","category":"repetition","action":"retain","reason":"概要や 3.3 の表と近い内容だが、制約として判断に要るため残した","cause":{"type":"document"}}],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/cxd-sample.md","status":"passed","summary":"整形は問題なし"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/cxd-sample.md","status":"passed","summary":"指摘 0 件"}]}
+</specdojo_executor_evidence>
