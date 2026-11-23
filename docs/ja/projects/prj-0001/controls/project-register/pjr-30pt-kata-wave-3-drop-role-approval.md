@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-30pt-kata-wave-3-drop-role-approval
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: BA
   registered_at: "2026-11-23T00:01:39Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-23T04:57:54Z"
+  conclusion: 第 3 波の 12 種類の rulebook と sample から文書の役割と承認の記述を外した。grade は 24 文書のうち 23 文書が pass。etc-index-sample の needs-work は直す前からある経路の食い違いで、PJR-22XE に分けた
   derived_from:
     - PJR-325Y
   commit_type: docs

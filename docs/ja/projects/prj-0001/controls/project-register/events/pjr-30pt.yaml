@@ -86,3 +86,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_ab94fd8b36ec4f87b5e555c2ecd9ef4e
+- v: 1
+  id: reg_20f5c89cb0274fafb0d15b09233b9690
+  ts: "2026-11-23T04:57:54Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 範囲の外の不合格を別に起票して close すると利用者が決めた（2026-11-23）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: 第 3 波の 12 種類の rulebook と sample から文書の役割と承認の記述を外した。grade は 24 文書のうち 23 文書が pass。etc-index-sample の needs-work は直す前からある経路の食い違いで、PJR-22XE に分けた
+  previous_event_id: reg_ecb7f7bef79b4d65a1a17612151ae764
