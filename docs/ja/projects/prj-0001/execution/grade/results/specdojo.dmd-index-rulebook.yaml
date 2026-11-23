@@ -4,17 +4,16 @@ document: specdojo:dmd-index-rulebook
 path: docs/ja/specdojo/rulebooks/dmd-index-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-rulebook
 verdict: pass
-score: 93
-graded_at: "2026-11-21T03:45:52.609Z"
-graded_by: opus-executor
-content_hash: f2461769f960170b085f5e5faefca114c93983e470a6078e8ba886b3ecb7e762
+score: 94
+graded_at: "2026-11-23T09:44:56.595Z"
+graded_by: sonnet-review-executor
+content_hash: e9dc1094bf1bbff3e408e9a5d7478f31b9cae86ae2b8591b67ddb0028fb14826
 categories:
   purpose:
-    score: 100
+    score: 88
   operations:
-    score: 100
+    score: 94
   planning:
     score: 100
   business:
@@ -22,20 +21,20 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 92
+    score: 83
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-publication-accountability:
     level: 4
     score: 100
@@ -70,14 +69,14 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-verifiability:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
     level: 3
     score: 75
@@ -85,11 +84,11 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
-  vp-ops-release-readiness:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
   vp-ops-operability:
     level: 4
     score: 100
@@ -102,35 +101,38 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 3
+  minor: 4
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 19
-    anchor: "- ファイル名の例: `dmd-index.md`。"
-    message: >-
-      ファイル命名・ID規則の章にファイル名の例しかなく、プロジェクト内の配置先（どの章ディレクトリに置くか、`docs-structure-guide`
-      への参照）が定められていないため、作成者によって配置場所がばらつくおそれがある。
-    message_ja: >-
-      ファイル命名・ID規則の章にファイル名の例しかなく、プロジェクト内の配置先（どの章ディレクトリに置くか、`docs-structure-guide`
-      への参照）が定められていないため、作成者によって配置場所がばらつくおそれがある。
+    rule: vp-po-decision-readiness
+    line: 12
+    anchor: "- _UNDECIDED_: `recipe`・`template` の要否は未判断である（template は PJR-WYTX で扱う）。判断までは「本文要件」を作成時の構成の正とし、ready 化前に解消する。"
+    message: "`recipe`・`template` の未決事項について、判断者と判断期限が示されていません。PJR-WYTX への参照だけでは、承認や差し戻しの判断に使えません。"
+    message_ja: "`recipe`・`template` の未決事項について、判断者と判断期限が示されていません。PJR-WYTX への参照だけでは、承認や差し戻しの判断に使えません。"
   - id: F002
     severity: minor
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# データ移行設計 作成ルール"
-    message: >-
-      Frontmatter の `recipe` と `template` が `undecided` のままで、本文にも作成予定や未決事項の記述がないため、Kata
-      の一式（rulebook・recipe・sample・template）の対応を確かめられない。対応する recipe と template を定めるか、未決事項として扱いを明記する必要がある。
-    message_ja: >-
-      Frontmatter の `recipe` と `template` が `undecided` のままで、本文にも作成予定や未決事項の記述がないため、Kata
-      の一式（rulebook・recipe・sample・template）の対応を確かめられない。対応する recipe と template を定めるか、未決事項として扱いを明記する必要がある。
+    rule: vp-dev-testability
+    line: 7
+    anchor: "## 1. 全体方針"
+    message: 作成後に実行する検証コマンド（`npm run lint:md` や `validate:schema` など）と、エラー時の対応が示されていません。
+    message_ja: 作成後に実行する検証コマンド（`npm run lint:md` や `validate:schema` など）と、エラー時の対応が示されていません。
   - id: F003
     severity: minor
-    rule: vp-ux-language-consistency
-    line: 39
-    anchor: "- 対象一覧の推奨列: 区分、対象（論理名）、旧→新、方針（フル/増分）、担当、対応DMD。"
-    message: 対象一覧の推奨列「担当」に書く値（適用先のメンバー定義にある Role code など）が定められておらず、sample では独自の略称 `Mig` が使われているため、表記を統一する基準を明記する必要がある。
-    message_ja: 対象一覧の推奨列「担当」に書く値（適用先のメンバー定義にある Role code など）が定められておらず、sample では独自の略称 `Mig` が使われているため、表記を統一する基準を明記する必要がある。
+    rule: vp-qe-kata-conformance
+    line: 23
+    anchor: "- ID はプロダクト仕様では `dmd-index`、プロジェクトでは `<project-id>:dmd-index`（例: `prj-0001:dmd-index`）。sample の ID は共通標準に従う。"
+    message: >-
+      `recipe` と `template` が undecided のままで、Kata の一式（rulebook・recipe・sample・template）が揃っていません。PJR-WYTX で解消するまで、ready
+      化できない状態です。
+    message_ja: >-
+      `recipe` と `template` が undecided のままで、Kata の一式（rulebook・recipe・sample・template）が揃っていません。PJR-WYTX で解消するまで、ready
+      化できない状態です。
+  - id: F004
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 23
+    anchor: "- ID はプロダクト仕様では `dmd-index`、プロジェクトでは `<project-id>:dmd-index`（例: `prj-0001:dmd-index`）。sample の ID は共通標準に従う。"
+    message: ready 化の条件が「ready 化前に解消する」とだけ書かれています。未決事項のほかに満たすべき条件は、列挙されていません。
+    message_ja: ready 化の条件が「ready 化前に解消する」とだけ書かれています。未決事項のほかに満たすべき条件は、列挙されていません。

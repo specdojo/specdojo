@@ -4,68 +4,67 @@ document: specdojo:dmd-index-sample
 path: docs/ja/specdojo/samples/dmd-index-sample.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-sample
-verdict: needs-work
-score: 80
-graded_at: "2026-11-21T03:46:58.248Z"
-graded_by: opus-executor
-content_hash: f3c8fd50e37090922b6682ebc64e25bdd6060cb0a0d6c39d67f3c4837e6a327c
+verdict: pass
+score: 100
+graded_at: "2026-11-23T09:44:33.840Z"
+graded_by: sonnet-review-executor
+content_hash: 49ff7a1429be971e4de192b376d16b212cd65287a679a66abff58061b1e594ca
 categories:
   purpose:
-    score: 75
+    score: 100
   operations:
-    score: 94
+    score: 100
   planning:
-    score: 83
+    score: 100
   business:
-    score: 58
+    score: 92
   architecture:
-    score: 88
+    score: 100
   usability:
-    score: 83
+    score: 100
   implementation:
-    score: 88
+    score: 100
   quality:
-    score: 75
+    score: 100
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-publication-accountability:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
     level: 4
     score: 100
   vp-ba-business-value:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ba-requirements-completeness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
     level: 3
     score: 75
   vp-arc-technical-constraints:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-change-impact:
     level: 4
     score: 100
@@ -73,23 +72,23 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-readability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-operability:
     level: 4
     score: 100
@@ -101,130 +100,14 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 3
-  minor: 14
+  major: 0
+  minor: 1
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-purpose-alignment
-    line: 5
-    anchor: 本書はデータ移行設計の入口（`dmd-index`）として、共通方針と対象別DMDへの導線を定義する最小サンプルである。
-    message: 概要が文書の役割（入口・導線）しか述べておらず、rulebook の受入条件である移行の目的（再現性・品質担保）と対象範囲（どのシステムからどのシステムへの移行か）を1〜3行で示していない。
-    message_ja: 概要が文書の役割（入口・導線）しか述べておらず、rulebook の受入条件である移行の目的（再現性・品質担保）と対象範囲（どのシステムからどのシステムへの移行か）を1〜3行で示していない。
-  - id: F002
-    severity: minor
-    rule: vp-po-decision-readiness
-    line: 20
-    anchor: "| 記録先   | 移行ログ基盤（例: S3/logs）      |"
-    message: "記録先が「移行ログ基盤（例: S3/logs）」と例示のままで、確定値か `_UNDECIDED_` か区別されておらず、承認者が判断対象を特定できない。"
-    message_ja: "記録先が「移行ログ基盤（例: S3/logs）」と例示のままで、確定値か `_UNDECIDED_` か区別されておらず、承認者が判断対象を特定できない。"
-  - id: F003
-    severity: minor
-    rule: vp-pm-plan-feasibility
-    line: 33
-    anchor: "| データ | 受注           | old.orders → new.orders   | フル              | Mig  | dmd-order-data   |"
-    message: 対象一覧の担当列「Mig」はメンバー定義や共通登場人物の Role code に対応しない略称で、作業の担当割り当てに使えないため、定義済みの Role code に置き換える必要がある。
-    message_ja: 対象一覧の担当列「Mig」はメンバー定義や共通登場人物の Role code に対応しない略称で、作業の担当割り当てに使えないため、定義済みの Role code に置き換える必要がある。
-  - id: F004
-    severity: minor
-    rule: vp-pm-dependency-risk
-    line: 31
-    anchor: "| 区分   | 対象（論理名） | 旧→新                     | 方針（フル/増分） | 担当 | 対応DMD          |"
-    message: 対象一覧が `mip-index` の移行対象・成功条件とどう整合するか（どの対象を受けたか、非対象の判断根拠）を示しておらず、rulebook の受入条件「`mip-index` との整合」を満たしていない。
-    message_ja: 対象一覧が `mip-index` の移行対象・成功条件とどう整合するか（どの対象を受けたか、非対象の判断根拠）を示しておらず、rulebook の受入条件「`mip-index` との整合」を満たしていない。
-  - id: F005
-    severity: major
-    rule: vp-ba-business-value
-    line: 33
-    anchor: "| データ | 受注           | old.orders → new.orders   | フル              | Mig  | dmd-order-data   |"
-    message: 移行対象が受注・請求・監査ログという汎用の業務システム題材で、共通サンプル文脈（駄菓子屋きぬやの販売記録・在庫・つけ台帳をノートから移行する）と対応せず、移行の業務上の価値を説明できない。
-    message_ja: 移行対象が受注・請求・監査ログという汎用の業務システム題材で、共通サンプル文脈（駄菓子屋きぬやの販売記録・在庫・つけ台帳をノートから移行する）と対応せず、移行の業務上の価値を説明できない。
-  - id: F006
-    severity: major
-    rule: vp-ba-requirements-completeness
-    line: 25
-    anchor: "- 検証種別: 件数照合 / サンプル照合 / 重要値照合"
-    message: 検証の共通方針が種別名の列挙にとどまり、rulebook の受入条件である件数・サンプル・重要値それぞれの照合手順（何と何を比べるか）と、証跡の保管先・命名を欠いている。
-    message_ja: 検証の共通方針が種別名の列挙にとどまり、rulebook の受入条件である件数・サンプル・重要値それぞれの照合手順（何と何を比べるか）と、証跡の保管先・命名を欠いている。
-  - id: F007
-    severity: minor
-    rule: vp-ba-requirements-completeness
-    line: 12
-    anchor: "- ログ: 抽出/変換/投入/照合レポートに run_id を付与する"
-    message: "ログ方針が run_id の付与だけで、rulebook の受入条件「ログ必須項目」（例: 実行日時、件数、エラー件数、対象）を定義していない。"
-    message_ja: "ログ方針が run_id の付与だけで、rulebook の受入条件「ログ必須項目」（例: 実行日時、件数、エラー件数、対象）を定義していない。"
-  - id: F008
-    severity: minor
     rule: vp-ba-stakeholder-clarity
-    line: 27
-    anchor: "- 証跡: 照合レポート/検証ログを run_id 単位で保管する"
-    message: 検証の合否を誰が確認し承認するか（確認者の Role code）が示されておらず、照合結果の合意者が読み取れない。
-    message_ja: 検証の合否を誰が確認し承認するか（確認者の Role code）が示されておらず、照合結果の合意者が読み取れない。
-  - id: F009
-    severity: minor
-    rule: vp-arc-technical-constraints
-    line: 11
-    anchor: "- 冪等性: run_id を識別キーとして管理し、再実行時は別run_idを採番する"
-    message: 冪等性の記述が run_id の採番規則にとどまり、再実行で同一結果となる条件（投入先の初期化や上書きの方式）を定義していないため、rulebook の全体方針を満たしていない。
-    message_ja: 冪等性の記述が run_id の採番規則にとどまり、再実行で同一結果となる条件（投入先の初期化や上書きの方式）を定義していないため、rulebook の全体方針を満たしていない。
-  - id: F010
-    severity: minor
-    rule: vp-dev-implementation-readiness
-    line: 18
-    anchor: "| 命名     | `DMD-YYYYMMDD-<term>-NN`         |"
-    message: "run_id の命名で `＜term＞` に入る具体値（例: 対象の論理名）と NN の桁数・開始値が示されておらず、sample として採番結果の完成例が読み取れない。"
-    message_ja: "run_id の命名で `＜term＞` に入る具体値（例: 対象の論理名）と NN の桁数・開始値が示されておらず、sample として採番結果の完成例が読み取れない。"
-  - id: F011
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 26
-    anchor: "- 合格基準: 原則 差分0。許容差εを用いる場合は理由を明記する"
-    message: 許容差εを用いる場合の具体例（対象・値・理由）が示されておらず、sample として差分0以外の合否判定の書き方を読み取れない。
-    message_ja: 許容差εを用いる場合の具体例（対象・値・理由）が示されておらず、sample として差分0以外の合否判定の書き方を読み取れない。
-  - id: F012
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 35
-    anchor: "| 非対象 | 監査ログ       | old.audit_log → -         | -                 | -    | -                |"
-    message: 非対象行（監査ログ）に除外の理由が記載されておらず、対象外の判断根拠が読み取れない。
-    message_ja: 非対象行（監査ログ）に除外の理由が記載されておらず、対象外の判断根拠が読み取れない。
-  - id: F013
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 33
-    anchor: "| データ | 受注           | old.orders → new.orders   | フル              | Mig  | dmd-order-data   |"
-    message: >-
-      sample-authoring-standard
-      の「共通の業務文脈以外の業種題材を混在させない」に反し、移行対象（受注・請求・監査ログ）と記録先（S3）が駄菓子屋きぬやの共通サンプル文脈（販売記録・在庫・つけ台帳）に統一されていない。
-    message_ja: >-
-      sample-authoring-standard
-      の「共通の業務文脈以外の業種題材を混在させない」に反し、移行対象（受注・請求・監査ログ）と記録先（S3）が駄菓子屋きぬやの共通サンプル文脈（販売記録・在庫・つけ台帳）に統一されていない。
-  - id: F014
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 5
-    anchor: 本書はデータ移行設計の入口（`dmd-index`）として、共通方針と対象別DMDへの導線を定義する最小サンプルである。
-    message: sample が rulebook の受入条件（概要の目的と範囲、検証の照合手順・証跡保管先、`mip-index` との整合）を完成例として満たしておらず、型の手本として不足している。
-    message_ja: sample が rulebook の受入条件（概要の目的と範囲、検証の照合手順・証跡保管先、`mip-index` との整合）を完成例として満たしておらず、型の手本として不足している。
-  - id: F015
-    severity: minor
-    rule: vp-ux-readability
-    line: 5
-    anchor: 本書はデータ移行設計の入口（`dmd-index`）として、共通方針と対象別DMDへの導線を定義する最小サンプルである。
-    message: 概要から移行元・移行先と移行の目的が読み取れず、初見の読者が文書の対象と主要な判断を把握できないため、目的と範囲を1〜3行で追記する必要がある。
-    message_ja: 概要から移行元・移行先と移行の目的が読み取れず、初見の読者が文書の対象と主要な判断を把握できないため、目的と範囲を1〜3行で追記する必要がある。
-  - id: F016
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 11
-    anchor: "- 冪等性: run_id を識別キーとして管理し、再実行時は別run_idを採番する"
-    message: "`run_id` の表記がインラインコードあり・なし・「別run_id」の連結で揺れているため、識別子として一貫してインラインコードで表記する必要がある。"
-    message_ja: "`run_id` の表記がインラインコードあり・なし・「別run_id」の連結で揺れているため、識別子として一貫してインラインコードで表記する必要がある。"
-  - id: F017
-    severity: minor
-    rule: vp-ops-release-readiness
-    line: 1
-    anchor: "# データ移行設計 サンプル"
-    message: ready 化の前に残る未解決事項（共通サンプル文脈への統一、検証手順の補完）が本文に `_TODO_` / `_UNDECIDED_` として示されておらず、公開判断の前提が読み取れない。
-    message_ja: ready 化の前に残る未解決事項（共通サンプル文脈への統一、検証手順の補完）が本文に `_TODO_` / `_UNDECIDED_` として示されておらず、公開判断の前提が読み取れない。
+    line: 40
+    anchor: "- 合否の判定: 照合の結果は、`mip-index` の成功条件に定めた判定者が照合表を見て決める。"
+    message: 合否の判定者が `mip-index` への参照だけで、本書から誰が確認し承認するかが読み取れない。判定者の役割（Role code）を併記すること。
+    message_ja: 合否の判定者が `mip-index` への参照だけで、本書から誰が確認し承認するかが読み取れない。判定者の役割（Role code）を併記すること。
