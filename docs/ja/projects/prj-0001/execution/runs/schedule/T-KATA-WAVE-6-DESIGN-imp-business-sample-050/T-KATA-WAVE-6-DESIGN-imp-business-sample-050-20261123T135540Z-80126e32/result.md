@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-DESIGN-imp-business-sample-050
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-DESIGN-imp-business-sample-050/T-KATA-WAVE-6-DESIGN-imp-business-sample-050-20261123T135540Z-80126e32/plan.md
   started_at: "2026-11-23T13:55:51.171Z"
+  completed_at: "2026-11-23T14:08:14.680Z"
   agent: opus-executor
   execution: agent
   approach: sample-maintenance
@@ -20,16 +21,21 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- 業務への影響調査の sample (`docs/ja/specdojo/samples/imp-business-sample.md`) を、`rulebook` および `sample-authoring-standard` に準拠するよう大幅に更新しました。
+- 具体的には、F001〜F016 の全ての指摘に対応しました：影響度の判定基準の定義、成功条件への現状値と計測方法の追記、バーコード運用の前提条件の明示、共通登場人物（店主代表・家族利用者代表）への役割名の統一、未解決事項の表への『判断・対応への影響』列の追加、および `_UNDECIDED_` を用いた記述への修正を行いました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/samples/imp-business-sample.md`: rulebook と `sample-authoring-standard` に従い、共通サンプル文脈（駄菓子屋）に整合するように内容を再構成しました。影響度の尺度定義、成功条件の計測方法、Role code を用いた担当表記、および 7 列構成の未解決事項の表を追加し、各 findings で指摘された不整合を解消しました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 成功条件の現状値（平日 16:00-18:00 の 1 会計あたり平均処理時間）は `_UNDECIDED_` のまま。2026-05-07〜2026-05-13 に計測して記入する必要がある。
+- リリース予定日 2026-06-01 は `imp-test-sample` の `_ASSUMPTION_` に合わせた。実施時期（〜2026-05-27 / 2026-05-31）はこの日付から決めた。在庫補充の再評価のきっかけ『未登録商品の手入力が 1 営業日に 10 件超』は executor が仮に置いた値。
+- 登録簿の転記先 ID（`PJR-B4D1`, `PJR-B4Q1`〜`PJR-B4Q3`, `PJR-B4R1`）は sample 用の架空の値。
+- rulebook の変更案: `imp-business-rulebook` の良い例・悪い例の表にある『ツケ管理』を共通サンプル文脈の『つけ管理』へ、完了条件の良い例『レジ担当全員が訓練を受けた』を『店主代表と家族利用者代表が訓練を受けた』へ直す。
+- 関連 sample の申し送り: `imp-data-sample` に人物名と独自の役割名が残り、未解決事項も古い 5 列のまま。`imp-test-sample` の対応方針にある『`PO` の承認を受ける』は PJR-76N9 の決まり（承認の進み具合を本文に書かない）に反している可能性がある。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+`rulebook` と `sample-authoring-standard` を正として、`imp-business-sample.md` を「完成例として厚い」状態へメンテナンスしました。findings で指摘された不整合（役職名の独自利用、影響度の定義不足、未解決事項の列不足など）をすべて解消し、共通サンプル文脈の前提に沿った記述に整えています。
