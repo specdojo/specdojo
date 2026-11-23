@@ -4,29 +4,28 @@ document: specdojo:mtp-rulebook
 path: docs/ja/specdojo/rulebooks/mtp-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-rulebook
-verdict: needs-work
-score: 88
-graded_at: "2026-11-21T04:32:24.773Z"
-graded_by: opus-executor
-content_hash: 16c4c4a0257c58d971399e1e4fa37ba20aed3157ac7b37eaace855a6cbff2ac0
+verdict: pass
+score: 98
+graded_at: "2026-11-23T15:39:08.204Z"
+graded_by: sonnet-review-executor
+content_hash: 528eda5b96cf59fb5ef99f90f4e75d2b6ef23c8f7f52801b1b4d5e1fc691b49b
 categories:
   purpose:
     score: 100
   operations:
-    score: 100
+    score: 94
   planning:
-    score: 92
+    score: 100
   business:
     score: 100
   architecture:
     score: 100
   usability:
-    score: 83
+    score: 100
   implementation:
-    score: 88
+    score: 100
   quality:
-    score: 67
+    score: 92
   consistency:
     score: 100
 viewpoints:
@@ -46,8 +45,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-control-reporting:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-business-value:
     level: 4
     score: 100
@@ -61,8 +60,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -70,29 +69,29 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-change-impact:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-testability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
-  vp-ops-release-readiness:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
   vp-ops-operability:
     level: 4
     score: 100
@@ -104,75 +103,25 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 7
+  major: 0
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-pm-control-reporting
-    line: 98
-    anchor: "- 許容できる差異、修正が必要な差異、再実行条件を明記する"
-    message: 差異発生時の扱いに、許容差超の差異・未解決原因・再実行判断を課題/リスク（PJR）へ転記する条件と担当 Role code を追記し、リハーサル結果記録と管理記録の分離を明確にする。
-    message_ja: 差異発生時の扱いに、許容差超の差異・未解決原因・再実行判断を課題/リスク（PJR）へ転記する条件と担当 Role code を追記し、リハーサル結果記録と管理記録の分離を明確にする。
-  - id: F002
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 131
-    anchor: "## 8. サンプル（最小・整合版）"
-    message: >-
-      サンプル章は完成文書2本（各9章）を丸ごと埋め込んでおり、rulebook-authoring-standard の「形式の輪郭が伝わる最小例に限る」を超えているため、index と term
-      の関係が分かる抜粋（Frontmatter と数章）へ絞り、完成例は sample へ寄せる。
-    message_ja: >-
-      サンプル章は完成文書2本（各9章）を丸ごと埋め込んでおり、rulebook-authoring-standard の「形式の輪郭が伝わる最小例に限る」を超えているため、index と term
-      の関係が分かる抜粋（Frontmatter と数章）へ絞り、完成例は sample へ寄せる。
-  - id: F003
-    severity: minor
-    rule: vp-dev-change-impact
-    line: 11
-    anchor: >-
-      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status`・承認・改訂と廃止・未決事項の引き継ぎは [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]]
-      に従う。文書の整形・lint はリポジトリの検証で扱う。
-    message: 改訂・廃止をドキュメントメタ情報標準へ委譲するだけでなく、mip-index・dmd-*・cop-* 変更時に MTP で追従すべき箇所（合否基準・検証観点・判定点）と担当 Role code を定義する。
-    message_ja: 改訂・廃止をドキュメントメタ情報標準へ委譲するだけでなく、mip-index・dmd-*・cop-* 変更時に MTP で追従すべき箇所（合否基準・検証観点・判定点）と担当 Role code を定義する。
-  - id: F004
-    severity: minor
-    rule: vp-dev-testability
-    line: 11
-    anchor: >-
-      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status`・承認・改訂と廃止・未決事項の引き継ぎは [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]]
-      に従う。文書の整形・lint はリポジトリの検証で扱う。
-    message: 「リポジトリの検証で扱う」だけでは作成後の確認手順が分からないため、lint:fm（type / rulebook 照合）や lint:md など実行すべき検証と期待結果を示すか、その手順を定める文書を明示する。
-    message_ja: 「リポジトリの検証で扱う」だけでは作成後の確認手順が分からないため、lint:fm（type / rulebook 照合）や lint:md など実行すべき検証と期待結果を示すか、その手順を定める文書を明示する。
-  - id: F005
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 99
-    anchor: "- 再実行の上限（回数/期限）と判断者を可能な限り明記する"
-    message: 「可能な限り明記する」（再実行上限・判断者、報告先）は記載有無の pass/fail を判定できないため、必須とするか、未確定時は _UNDECIDED_ で明示するなど判定可能な条件に置き換える。
-    message_ja: 「可能な限り明記する」（再実行上限・判断者、報告先）は記載有無の pass/fail を判定できないため、必須とするか、未確定時は _UNDECIDED_ で明示するなど判定可能な条件に置き換える。
-  - id: F006
-    severity: major
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# 移行テスト計画 作成ルール"
-    message: 参照しているサンプルファイル (specdojo:mtp-sample) が、本ルールブックで定義した Frontmatter 設定や本文構成に従っておらず, 具体例としての責務を果たしていない。
-    message_ja: 参照しているサンプルファイル (specdojo:mtp-sample) が、本ルールブックで定義した Frontmatter 設定や本文構成に従っておらず, 具体例としての責務を果たしていない。
-  - id: F007
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 131
-    anchor: "## 8. サンプル（最小・整合版）"
     message: >-
-      rulebook のサンプル章（受注システムの完成2文書）と sample（駄菓子屋の汎用構成）で題材と完成度が食い違い「完成例の正本は sample」の分担が逆転しているため、完成例を sample 側へ移し rulebook
-      は最小例に留める。
+      Frontmatter の `recipe` と `template` が `undecided` のままで、rulebook・recipe・sample・template
+      の対応を確認できないため、作成する、または不要なら不要と明示する。
     message_ja: >-
-      rulebook のサンプル章（受注システムの完成2文書）と sample（駄菓子屋の汎用構成）で題材と完成度が食い違い「完成例の正本は sample」の分担が逆転しているため、完成例を sample 側へ移し rulebook
-      は最小例に留める。
-  - id: F008
+      Frontmatter の `recipe` と `template` が `undecided` のままで、rulebook・recipe・sample・template
+      の対応を確認できないため、作成する、または不要なら不要と明示する。
+  - id: F002
     severity: minor
-    rule: vp-ux-language-consistency
-    line: 93
-    anchor: "| 項目 | 基準 | 判定者 |"
-    message: 「判断者」「判定者」「判断主体」の表記ゆれを統一し、判定者欄には適用先メンバー定義の Role code（または Role code で書く旨）を指定して業務責任者・運用責任者・移行責任者等の自由表記を避ける。
-    message_ja: 「判断者」「判定者」「判断主体」の表記ゆれを統一し、判定者欄には適用先メンバー定義の Role code（または Role code で書く旨）を指定して業務責任者・運用責任者・移行責任者等の自由表記を避ける。
+    rule: vp-ops-release-readiness
+    line: 1
+    anchor: "# 移行テスト計画 作成ルール"
+    message: "`status: draft` かつ `recipe` と `template` が未決だが、ready 化の前提条件が示されていないため、未解決事項と ready 条件を明記する。"
+    message_ja: "`status: draft` かつ `recipe` と `template` が未決だが、ready 化の前提条件が示されていないため、未解決事項と ready 条件を明記する。"
