@@ -21,7 +21,7 @@ Commands:
   d2        Generate D2 SVG files only (requires d2 v0.9.0)
   preview   Preview the built site
   generate  Run specdojo build in the workspace (uses dist when it is newer than src)
-            --skip-if-fresh  skip when .specdojo/doc-index.json is newer than docs/`);
+            --skip-if-fresh  rerun only the build steps whose inputs changed (specdojo build --skip-fresh)`);
 }
 
 function newestMtime(directory) {
@@ -36,23 +36,15 @@ function newestMtime(directory) {
 }
 
 // dist が src より古いときは tsx で流す（古い dist で生成物が古い実装のままになるのを防ぐ）。
+// --skip-if-fresh は段ごとの判定を build --skip-fresh に任せる（PJR-E73Z）。
 function runGenerate(workspaceRoot, args, env) {
-  if (args.includes("--skip-if-fresh")) {
-    const index = path.join(workspaceRoot, ".specdojo", "doc-index.json");
-    if (
-      existsSync(index) &&
-      statSync(index).mtimeMs >= newestMtime(path.join(workspaceRoot, "docs"))
-    ) {
-      console.log("specdojo-docs-site: generated files are newer than docs/, skip generate");
-      return 0;
-    }
-  }
+  const buildArgs = args.includes("--skip-if-fresh") ? ["build", "--skip-fresh"] : ["build"];
   const dist = path.join(workspaceRoot, "dist", "specdojo.js");
   const source = path.join(workspaceRoot, "src");
   const useDist = existsSync(dist) && statSync(dist).mtimeMs >= newestMtime(source);
   const generateArgs = useDist
-    ? [dist, "build"]
-    : ["--import", require.resolve("tsx"), path.join(source, "specdojo.ts"), "build"];
+    ? [dist, ...buildArgs]
+    : ["--import", require.resolve("tsx"), path.join(source, "specdojo.ts"), ...buildArgs];
   if (!useDist) console.log("specdojo-docs-site: dist is missing or older than src, using tsx");
   const result = spawnSync(process.execPath, generateArgs, {
     cwd: workspaceRoot,

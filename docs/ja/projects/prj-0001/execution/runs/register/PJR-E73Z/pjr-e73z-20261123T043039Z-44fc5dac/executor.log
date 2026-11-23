@@ -1,0 +1,39 @@
+PJR-E73Z の実装を終えました。`docs:generate:fresh` は、入力が変わった段だけを作り直すようになりました。`--skip-fresh` を付けない `specdojo build` は変えておらず、段を流す処理を関数に切り出しただけです。
+
+**変えたこと**
+- `specdojo build --skip-fresh` を足しました。段ごとに、入力ファイルのパス・サイズ・更新時刻、CLI の実装、`.specdojo/` の設定、`SPECDOJO_*` 環境変数、依存する前段の鍵から鍵を作ります。exec・register・dashboard の 3 段は日付も鍵に入れます。鍵が前回成功した時と違う段だけを流します。
+- 判定できないときはその段を作り直します（記録が無い・壊れている、記録した出力が欠けた、前段を作り直した、`repos` か `external_projects` がある、など）。
+- 記録は `node_modules/.cache/specdojo/build-steps.json` に置きます。段を流す前にその段の記録を消し、成功した後に書きます。途中で止まった段は次回作り直されます。
+- `specdojo-docs-site generate --skip-if-fresh` は、`doc-index.json` と `docs/` の更新時刻の比較をやめ、`build --skip-fresh` を呼びます。
+- 段ごとの入力・依存・出力の表、判断した点、CHANGELOG の文案（区分 Changed）は個票の対応結果に書きました。
+
+**時間**（`dist` なしで tsx で流れる状態、各 2 回）
+
+| 場合 | 直す前 | 直した後 |
+| --- | --- | --- |
+| 何も変えていない | 0.15 秒 | 0.58 秒 |
+| 個票を 1 件直した | 約 13.7 秒 | 約 11.1〜11.4 秒 |
+
+- 個票を直した後は register・dashboard・index だけが流れ、exec・catalog・yaml-pages の約 2.3 秒が減りました。残りの大半は register（4.4 秒）と dashboard（5.2 秒）そのものにかかります。
+- 何も変えていない場合は約 0.4 秒遅くなりました。CLI の起動と約 17,000 ファイルの走査にかかります。前の判定はファイルの削除・日付の変わり目・生成物の欠けを取り違えていたので、古い生成物で起動しないことを優先してこの差を受け入れました。
+- `dist` がある場合は測っていません。run の最中に `npm run build` をしない運用のためです。
+
+**検証**
+- 関係する単体テスト 3 ファイル（46 件）は通りました。足したテストは 13 件で、段ごとの判定と、判定できないときに作り直すことを確かめています。
+- `npm run check:src-imports` は通りました。prettier で整形しました。
+- 変えたファイルへの eslint は何も出力しませんでした。ただ、`packages/docs-site/bin/specdojo-docs-site.js` は `lint:ts` の対象に入っていません。
+- `npm run validate:history-links` は通らなかった行が出ていません。ただ、終了コードは確かめていません。
+- `typecheck`・`lint:ts`・`test:unit`・`lint:md` などは親の runner が流します。
+
+**変えたファイル**
+- `src/commands/build-freshness.ts`（新規）、`src/commands/build.ts`
+- `packages/docs-site/bin/specdojo-docs-site.js`
+- `tests/src/commands/build-freshness.test.ts`（新規）
+- `docs/ja/specdojo/references/command-reference.md`
+- 個票 `pjr-e73z-docs-generate-fresh-per-step.md`
+
+保護された設定（`package.json` など）と `CHANGELOG.md` は変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"specdojo build --skip-fresh を追加し、docs:generate:fresh（specdojo-docs-site generate --skip-if-fresh）を段ごとの判定にした。個票を 1 件直した後は 13.7 秒から 11.1〜11.4 秒、何も変えていない後は 0.15 秒から 0.58 秒。全段を流す specdojo build は変えていない。","handoff":["判断: 判定の方法は内容のハッシュでなく、入力ファイルのパス・サイズ・更新時刻の一覧のハッシュにした。約 17,000 ファイルを毎回読むと速くならないため。更新時刻は同じかどうかで比べるので、消したファイルや checkout で戻ったファイルも変化として拾う。","判断: catalog・register・dashboard・index の入力は docs/ 全体にした（狭めると取り違える恐れがあるため）。catalog だけは登録簿のディレクトリを外した。yaml-pages の入力は YAML だけ。CLI の実装が変わると全段を作り直す。exec・register・dashboard は日付が変わると作り直す。","判断: 記録は node_modules/.cache/specdojo/build-steps.json に置いた。保護された .specdojo/ と .gitignore を変えずに済むため。node_modules の無い repo では記録せず、毎回全段を流す。","判断: repos か external_projects を宣言した構成では入力が repo の外に及ぶので、毎回全段を作り直す。","何も変えていない場合は 0.15 秒から 0.58 秒になった（tsx の起動と走査）。前の判定はファイルの削除・日付の変わり目・生成物の欠けを取り違えていたため、この差は受け入れた。dist がある場合の時間は測っていない（run の最中に npm run build をしない運用のため）。","保護された設定の変更は不要。package.json の docs:generate:fresh はそのままで新しい判定を使う。CHANGELOG.md は変えず、文案（区分 Changed）は個票の対応結果に書いた。"],"validations":[{"command":"npx vitest run tests/src/commands/build-freshness.test.ts tests/src/commands/build.test.ts tests/src/commands/build-command.test.ts","status":"passed","summary":"3 files, 46 tests passed"},{"command":"npx eslint src/commands/build.ts src/commands/build-freshness.ts tests/src/commands/build-freshness.test.ts packages/docs-site/bin/specdojo-docs-site.js","status":"passed","summary":"no output; the docs-site bin is outside the lint:ts globs, so it may not have been linted"},{"command":"npm run check:src-imports","status":"passed","summary":"src runtime imports are declared in dependencies"},{"command":"npx prettier --write (changed ts/js/md files)","status":"passed","summary":"formatted; only the new test and the ticket table changed"},{"command":"npm run validate:history-links","status":"passed","summary":"no non-valid lines in the output; the exit code itself was not captured"},{"command":"node tmp/e73z/measure.mjs","status":"passed","summary":"docs:generate:fresh before/after timings recorded in the ticket"}]}
+</specdojo_executor_evidence>
