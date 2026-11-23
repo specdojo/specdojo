@@ -1,0 +1,27 @@
+{
+  "v": 1,
+  "ts": "2026-11-23T16:33:13Z",
+  "type": "unblock",
+  "task_id": "T-KATA-WAVE-6-NOTATION-cpd-sample-080",
+  "by": "sonnet-executor",
+  "msg": "resume executor from persisted pipeline state",
+  "meta": {
+    "limit_deferred": "false",
+    "limit_availability_state": "transient_failure",
+    "limit_retryable": "true",
+    "limit_auto_resume": "false",
+    "limit_kind": "overloaded",
+    "limit_provider": "claude",
+    "limit_observed_at": "2026-11-23T09:41:47.979Z",
+    "limit_raw_message": "API Error: 529 Overloaded. This is a server-side issue, usually temporary — try again in a moment. If it persists, check https://status.claude.com.",
+    "limit_attempts": "1",
+    "limit_worktree": "/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-NOTATION-cpd-sample-080",
+    "claim_actor": "sonnet-executor",
+    "stage_actor": "sonnet-executor",
+    "pipeline_stage": "executor",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-NOTATION-cpd-sample-080/T-KATA-WAVE-6-NOTATION-cpd-sample-080-20261123T093837Z-40df539d/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-NOTATION-cpd-sample-080/T-KATA-WAVE-6-NOTATION-cpd-sample-080-20261123T093837Z-40df539d/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-6-NOTATION-cpd-sample-080-20261123T093837Z-40df539d",
+    "pipeline_resume_claimed": "true"
+  }
+}
