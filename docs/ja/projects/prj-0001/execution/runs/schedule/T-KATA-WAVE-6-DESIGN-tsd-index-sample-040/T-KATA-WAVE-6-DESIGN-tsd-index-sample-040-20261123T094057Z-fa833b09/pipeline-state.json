@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-WAVE-6-DESIGN-tsd-index-sample-040",
   "run_id": "T-KATA-WAVE-6-DESIGN-tsd-index-sample-040-20261123T094057Z-fa833b09",
-  "updated_at": "2026-11-23T09:50:31.236Z",
+  "updated_at": "2026-11-23T09:51:28.481Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-DESIGN-tsd-index-sample-040/T-KATA-WAVE-6-DESIGN-tsd-index-sample-040-20261123T094057Z-fa833b09/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-23T09:50:31.236Z",
-      "completed_at": null,
+      "completed_at": "2026-11-23T09:51:28.481Z",
       "artifact_ref": null
     }
   },
