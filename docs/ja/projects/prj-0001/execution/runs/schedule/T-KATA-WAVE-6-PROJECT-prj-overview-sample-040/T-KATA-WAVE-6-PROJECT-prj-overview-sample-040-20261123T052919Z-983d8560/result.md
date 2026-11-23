@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-PROJECT-prj-overview-sample-040
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-PROJECT-prj-overview-sample-040/T-KATA-WAVE-6-PROJECT-prj-overview-sample-040-20261123T052919Z-983d8560/plan.md
   started_at: "2026-11-23T05:29:26.333Z"
+  completed_at: "2026-11-23T05:46:48.234Z"
   agent: opus-executor
   execution: agent
   approach: rulebook-maintenance
@@ -20,16 +21,25 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- rulebook `docs/ja/specdojo/rulebooks/prj-overview-rulebook.md` を整理し、`grade` からの指摘事項 `F001` 〜 `F011` をすべて反映しました。
+- 「推奨 Frontmatter 項目」の表における `id` 等の指定を `specdojo:` 名前空間を用いて記載するように修正し、導入文の規定を「記述ガイド」へ移しました。
+- 「本文構成（標準テンプレ）」の章を「本文要件」へ改めて、骨組みは `template` に委譲する形に整理しました。
+- 「推奨表（短期指標）」の列名について、`template` や `sample` との整合性を取るため、指針を統一しました。
+- 「禁止事項」のセクションにおいて、憲章・成功基準との分担に関する重複した記述を削除し、整理しました。
+- `sample`, `recipe`, `template` の各ファイルには変更を加えていません。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/rulebooks/prj-overview-rulebook.md`: `grade` の指摘事項に基づき、推奨 Frontmatter 項目の記述形式（`specdojo:` プレフィックスの付与）の修正、本文構成の章を「本文要件」として整理、および指標の列名の統一を行いました。また、憲章・成功基準との分担に関する重複記述を削除し、内容を簡潔にしました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 直さなかった箇所と理由: 全体方針の「数値目標は測定方法・判定時期・初期仮説か確定目標かを明示」は方針、記述ガイドの判定時期の項目は具体的な判定時点として残した（`grade` の指摘なし）。前提条件の「人間の判断責任、AI Agent の役割」は、PJR-76N9 の対象である文書の役割の割り当てではなくプロジェクトの中身のため残した。
+- F008 は `recipe` の「未確定ではなく何を記録して後で判定するかを書く」に rulebook を合わせて解いた。F010 は `template`・`sample` の実際の列名（初期公開指標が「目標」、短期・中長期指標が「初期目標」）を `rulebook` に規則として書いて統一した。
+- 直さなかった箇所と理由: 全体方針の「数値目標は測定方法・判定時期・初期仮説か確定目標かを明示」は方針、記述ガイドの判定時期の項目は具体的な判定時点として残した（grade の指摘なし）。前提条件の「人間の判断責任、AI Agent の役割」は、PJR-76N9 の対象である文書の役割の割り当てではなくプロジェクトの中身のため残した。
+- F008 は recipe の「未確定ではなく何を記録して後で判定するかを書く」に rulebook を合わせて解いた。F010 は template・sample の実際の列名（初期公開指標が「目標」、短期・中長期指標が「初期目標」）を rulebook に規則として書いて統一した。
+- 適用外の検証: `npm run validate:history-links`（変更したのは rulebook だけで、plan・result・個票などの履歴ファイルは変更していない）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+対象の `sample` が従う `rulebook` を、`grade` の指摘と `done_criteria` に沿って簡潔に整えました。`rulebook` 内に完成例の章を置かず、`template` や `sample` へ委譲する方針を徹底し、`docs/ja/specdojo/standards/rulebook-authoring-standard.md` の章立てに準拠した記述が行われています。
