@@ -8,7 +8,7 @@ specdojo:
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-PROJECT-prj-stakeholder-register-sample-060/T-KATA-WAVE-6-PROJECT-prj-stakeholder-register-sample-060-20261123T205545Z-087d2655/plan.md
   started_at: "2026-11-23T20:55:53.410Z"
-  completed_at: "2026-11-23T21:03:50.272Z"
+  completed_at: "2026-11-23T21:31:21.915Z"
   agent: opus-executor
   execution: agent
   approach: template-maintenance
