@@ -108,3 +108,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_55fa86a806374e198b7f0362458b3205
+- v: 1
+  id: reg_f24959c98983427f8519acff3f388209
+  ts: "2026-11-23T03:53:58Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分と対応結果を確かめ、track の段・agent・型の間の依存を数え、exec validate・catalog validate・exec refresh が通った
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: 第 4〜6 波の sample 65 件を dct-kata.yaml に足し、5 つの strategy と track を作った（262 タスク）。型ごとの段の鎖は参照のある所だけでつなぎ、人の確定は入れず、型の grade は review の段で runner が行う。漏れた 9 種類は第 5・6 波に割り振った
+  previous_event_id: reg_48cc0923d1b54f48b0ac6fc390a196c2

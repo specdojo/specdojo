@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-bhfg-kata-wave-4-catalog-schedule
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: BA
   registered_at: "2026-11-23T01:46:11Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-23T03:53:58Z"
+  conclusion: 第 4〜6 波の sample 65 件を dct-kata.yaml に足し、5 つの strategy と track を作った（262 タスク）。型ごとの段の鎖は参照のある所だけでつなぎ、人の確定は入れず、型の grade は review の段で runner が行う。漏れた 9 種類は第 5・6 波に割り振った
   derived_from:
     - PJR-HJ3H
     - PJR-JZ2F
