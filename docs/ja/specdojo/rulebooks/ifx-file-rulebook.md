@@ -38,9 +38,9 @@ External File Exchange Specification Authoring Rulebook
 
 ```mermaid
 flowchart LR
-    ESIL["外部システムI/F一覧 (ifx-index)"] -->|"spec_ref で参照"| EFES["外部ファイル連携仕様 (ifx-file-*)"]
-    IFXCMD["外部コマンド連携仕様 (ifx-cmd-*)"] -.->|"受け渡しファイル契約を参照"| EFES
-    EFES -->|"schema_ref / references で参照"| SCHEMA["正本スキーマ / 型定義"]
+    IFXIDX["外部システムI/F一覧 (ifx-index)"] -->|"spec_ref で参照"| IFXFILE["外部ファイル連携仕様 (ifx-file-*)"]
+    IFXCMD["外部コマンド連携仕様 (ifx-cmd-*)"] -.->|"受け渡しファイル契約を参照"| IFXFILE
+    IFXFILE -->|"schema_ref / references で参照"| SCHEMA["正本スキーマ / 型定義"]
 ```
 
 1. **一覧からの詳細化**: 本仕様は [[specdojo:ifx-index-rulebook|外部システムI/F一覧作成ルール]] に従う `ifx-index` に登録されたファイル連携（`kind: ファイル`、または外部コマンド連携等で授受するファイル契約）の詳細仕様として位置づけます。

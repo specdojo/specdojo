@@ -10,9 +10,9 @@ specdojo:
   template: specdojo:ifx-cmd-template
 ---
 
-# 外部コマンド連携仕様作成ルール
+# 外部コマンド連携仕様 作成ルール
 
-External Command Interface Specification (ECIS) Documentation Rules
+External Command Interface Specification Documentation Rules
 
 外部 CLI プロセスとの実行契約、入出力、終了判定、副作用、失敗処置、認証注入を YAML 1 ファイルで定義する基準を定めます。
 
@@ -25,15 +25,15 @@ External Command Interface Specification (ECIS) Documentation Rules
 
 ## 2. 位置づけ
 
-- ESIL（外部システム I/F 一覧）の `spec_ref` の先でプロセス境界の契約を定める。API・ファイル・メッセージ連携の操作手段として CLI を使う場合は、各方式の仕様を正本とする。
+- `ifx-index`（外部システム I/F 一覧）の `spec_ref` の先でプロセス境界の契約を定める。API・ファイル・メッセージ連携の操作手段として CLI を使う場合は、各方式の仕様を正本とする。
 - 起動方法の正本は対象によって選ぶ。SpecDojo 自身のコマンドはコマンドリファレンス、SpecDojo が起動する AI provider CLI は起動設定の `command_template` と [[specdojo:exec-config-guide|exec 設定ガイド]]、その他の外部 CLI は公式リファレンスや製品マニュアルを参照する。
 
 ## 3. ファイル命名・ID規則
 
 - ファイル名は `ifx-cmd-<term>.yaml`、ID のローカル部分は `ifx-cmd-<term>` とする。`<term>` は連携目的または外部 CLI を表す kebab-case とし、配置と ID の所有範囲は [[specdojo:docs-structure-guide|ドキュメント構成ガイド]] に従う。
-- ESIL の `interfaces[].kind` は `コマンド` とし、`interfaces[].spec_ref` から本仕様の ID を一意に解決できるようにする。詳細仕様が未作成の間だけ `TBD` を使用できる。
+- `ifx-index` の `interfaces[].kind` は `コマンド` とし、`interfaces[].spec_ref` から本仕様の ID を一意に解決できるようにする。詳細仕様が未作成の間だけ `TBD` を使用できる。
 - 同じ CLI の読取・更新など、契約を分ける場合は `ifx-cmd-git-read` / `ifx-cmd-git-write` のように目的を付ける。バージョンや状態は ID に含めない。
-- 同梱の完成例の ID `specdojo:ifx-cmd-sample` は命名上の例外であり、実際の ESIL の参照先には使用しない。
+- 同梱の完成例の ID `specdojo:ifx-cmd-sample` は命名上の例外であり、実際の `ifx-index` の参照先には使用しない。
 
 ## 4. 先頭メタ項目
 
@@ -63,8 +63,8 @@ External Command Interface Specification (ECIS) Documentation Rules
 
 ### 6.1. 連携単位とメタ情報
 
-- **判断基準**: ESIL の目的と成功後の状態が対応し、1 ファイルを一つの契約として検証できること。provider 一覧や設定値を複数キーへ繰り返さない。
-- **影響の照合先**: ESIL の参照行、呼び出し元の業務完了・回復条件、起動設定・入出力処理、正常・異常・再試行の検証を照合する。
+- **判断基準**: `ifx-index` の目的と成功後の状態が対応し、1 ファイルを一つの契約として検証できること。provider 一覧や設定値を複数キーへ繰り返さない。
+- **影響の照合先**: `ifx-index` の参照行、呼び出し元の業務完了・回復条件、起動設定・入出力処理、正常・異常・再試行の検証を照合する。
 - **良い例**: 読取と更新を別 ID にし、`title` に対象と目的を書く。provider ごとに実行ファイルが変わるときは、`executable` に設定の該当キーから解決する旨を示し、一覧自体は設定へ委ねる。
 - **悪い例**: 一つの仕様に読取・登録・削除を混在させる。設定の provider 一覧を目的・実行ファイル・コメントへそれぞれ転載する。
 
