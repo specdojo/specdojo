@@ -4,19 +4,18 @@ document: specdojo:cop-rulebook
 path: docs/ja/specdojo/rulebooks/cop-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-rulebook
-verdict: needs-work
-score: 91
-graded_at: "2026-11-21T03:31:23.837Z"
-graded_by: opus-executor
-content_hash: 12bf8ae4a4c0b5eb09a37f9cca9a97060477f59277583a8d7fcb99a80e895c05
+verdict: pass
+score: 99
+graded_at: "2026-11-23T15:32:01.362Z"
+graded_by: sonnet-review-executor
+content_hash: 64c0afe0051c788a7417f3178085519ee528e3341c3c51b2d8e6671ecf08bdcb
 categories:
   purpose:
     score: 100
   operations:
-    score: 94
+    score: 100
   planning:
-    score: 92
+    score: 100
   business:
     score: 100
   architecture:
@@ -24,9 +23,9 @@ categories:
   usability:
     score: 100
   implementation:
-    score: 75
+    score: 88
   quality:
-    score: 75
+    score: 100
   consistency:
     score: 100
 viewpoints:
@@ -37,8 +36,8 @@ viewpoints:
     level: 4
     score: 100
   vp-po-publication-accountability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-plan-feasibility:
     level: 4
     score: 100
@@ -46,8 +45,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-control-reporting:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-business-value:
     level: 4
     score: 100
@@ -70,11 +69,11 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-change-impact:
-    level: 2
-    score: 50
-  vp-dev-testability:
     level: 3
     score: 75
+  vp-dev-testability:
+    level: 4
+    score: 100
   vp-qe-verifiability:
     level: 4
     score: 100
@@ -82,8 +81,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -104,50 +103,18 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 2
-  minor: 3
+  major: 0
+  minor: 1
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-publication-accountability
-    line: 64
-    anchor: "- **判断基準**: 実施者・判断者が役割で一意に引け、個人の連絡先などの内部限定情報は「担当者/連絡系統」に閉じ、周知には利用者が判断に要る情報だけがあること。"
-    message: 前回指摘の内部情報と周知情報の分離は記述ガイドと禁止事項で解消したが、「個人の連絡先などの内部限定情報は『担当者/連絡系統』に閉じ」の記述が個人連絡先を成果物へ記載してよいと読めるため、連絡先はチャネル・当番表に限り個人連絡先は成果物に書かないと統一し、公開リポジトリへ置く場合の扱いを明示する必要がある。
-    message_ja: 前回指摘の内部情報と周知情報の分離は記述ガイドと禁止事項で解消したが、「個人の連絡先などの内部限定情報は『担当者/連絡系統』に閉じ」の記述が個人連絡先を成果物へ記載してよいと読めるため、連絡先はチャネル・当番表に限り個人連絡先は成果物に書かないと統一し、公開リポジトリへ置く場合の扱いを明示する必要がある。
-  - id: F002
-    severity: minor
-    rule: vp-pm-control-reporting
-    line: 11
-    anchor: >-
-      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status` の昇格と承認、改訂と廃止、未決事項と当日の課題の登録簿への引き継ぎは
-      [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従い、本書と成果物で言い直しません。文書の整形・lint・スキーマ検証はリポジトリの検証で扱います。
-    message: >-
-      前回の major は登録簿への引き継ぎをメタ情報標準へ委譲したことで主旨が解消したため minor へ引き下げるが、委譲先の規定は改訂・廃止の過程に限定されており、当日のGO/NO-GO判定結果と進捗の報告先、および
-      `pm-decision-log`・`pm-issue-log` への記録を担当Role code付きで行うことが本書から読み取れないため明記が必要である。
-    message_ja: >-
-      前回の major は登録簿への引き継ぎをメタ情報標準へ委譲したことで主旨が解消したため minor へ引き下げるが、委譲先の規定は改訂・廃止の過程に限定されており、当日のGO/NO-GO判定結果と進捗の報告先、および
-      `pm-decision-log`・`pm-issue-log` への記録を担当Role code付きで行うことが本書から読み取れないため明記が必要である。
-  - id: F003
-    severity: major
     rule: vp-dev-change-impact
-    line: 37
-    anchor: 本文は次の10章をこの順序で置き、すべて必須とします。
-    message: 必須見出しやFrontmatter規約を変更した際に `cop-sample`、参照スキーマ、scaffold・生成処理を追従確認する規則がなく、現在も外部sampleとの構成不整合が残っている。
-    message_ja: 必須見出しやFrontmatter規約を変更した際に `cop-sample`、参照スキーマ、scaffold・生成処理を追従確認する規則がなく、現在も外部sampleとの構成不整合が残っている。
-  - id: F004
-    severity: minor
-    rule: vp-dev-testability
-    line: 11
-    anchor: >-
-      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status` の昇格と承認、改訂と廃止、未決事項と当日の課題の登録簿への引き継ぎは
-      [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従い、本書と成果物で言い直しません。文書の整形・lint・スキーマ検証はリポジトリの検証で扱います。
-    message: スキーマへの参照だけで、Frontmatter、必須10章、Markdownを検証する具体的なlint・validateコマンド、対象ファイル、成功時の期待結果、失敗時の対応が示されていない。
-    message_ja: スキーマへの参照だけで、Frontmatter、必須10章、Markdownを検証する具体的なlint・validateコマンド、対象ファイル、成功時の期待結果、失敗時の対応が示されていない。
-  - id: F005
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 54
-    anchor: 完成例は Frontmatter の `sample` で宣言された sample を参照してください。
-    message: 指定されているサンプル `specdojo:cop-sample` が、本ルールブックで定義した必須構成（見出し10項目など）を遵守しておらず、成果物の完成例として不適切である。
-    message_ja: 指定されているサンプル `specdojo:cop-sample` が、本ルールブックで定義した必須構成（見出し10項目など）を遵守しておらず、成果物の完成例として不適切である。
+    line: 25
+    anchor: 関係先が変わったとき、または本書の判定点・時刻・手順を変えたときは、影響を受ける側を「関連ドキュメント」に挙げて見直す。本書の必須章や Frontmatter の規約を変えたときは、同じ変更で sample の構成を合わせる。
+    message: >-
+      必須章や Frontmatter 規約の変更時に追従確認する対象が sample
+      だけで、参照スキーマ（`deliverable-frontmatter.schema.yaml`）、scaffold・生成処理、成果物カタログの宣言への影響確認も加える必要がある。
+    message_ja: >-
+      必須章や Frontmatter 規約の変更時に追従確認する対象が sample
+      だけで、参照スキーマ（`deliverable-frontmatter.schema.yaml`）、scaffold・生成処理、成果物カタログの宣言への影響確認も加える必要がある。
