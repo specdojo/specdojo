@@ -32,7 +32,7 @@ runner・register・exec のコード変更を統合した後に exec run --regi
 
 | No  | 作業                        | 担当 | 状態 | メモ                              |
 | --- | --------------------------- | ---- | ---- | --------------------------------- |
-| 1   | 対応結果の表に 1 行追記する | DEV  | done | PJR-0JVB の統合後の実行を記録した |
+| 1   | 対応結果の表に 1 行追記する | DEV  | done | PJR-TJZM の統合後の実行を記録した |
 
 ## 4. 対応結果
 
@@ -127,8 +127,9 @@ runner・register・exec のコード変更を統合した後に exec run --regi
 | 2026-11-22 23:35 | PJR-EF7M | sonnet-executor        |
 | 2026-11-23 10:21 | PJR-0JVB | sonnet-executor        |
 | 2026-11-23 10:32 | PJR-0JVB | sonnet-executor        |
+| 2026-11-23 13:19 | PJR-TJZM | sonnet-executor        |
 
-今回の確認対象は、対象一覧のうち最も新しく統合された PJR-0JVB とした（2 回目の review 遷移 commit `1eaed0c60`、2026-11-23 10:27 JST。実行時点で `review`）。この worktree の HEAD に含まれることを確認した。実行した executor は `sonnet-executor` である。
+今回の確認対象は、対象一覧のうち最も新しく統合された PJR-TJZM とした（review 遷移 commit `6b95e1ad1`、2026-11-23 12:42 JST。実行時点で `review`）。この worktree の HEAD に含まれることを確認した。実行した executor は `sonnet-executor` である。
 
 申し送り: executor が変更した成果物は本個票のみ。親 runner の検証（lint-ts・lint-fm・lint-md・lint-mermaid・lint-d2・typecheck・test-unit・test-integration・validate-schema）、reporter の result 記入、統合、`review` 遷移の完了は後続段で確認する。
 
