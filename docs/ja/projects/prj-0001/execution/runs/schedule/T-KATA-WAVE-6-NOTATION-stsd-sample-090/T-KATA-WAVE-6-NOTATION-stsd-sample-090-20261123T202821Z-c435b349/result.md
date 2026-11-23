@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-NOTATION-stsd-sample-090
   mode: review
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-NOTATION-stsd-sample-090/T-KATA-WAVE-6-NOTATION-stsd-sample-090-20261123T202821Z-c435b349/plan.md
   started_at: "2026-11-23T20:28:23.933Z"
+  completed_at: "2026-11-23T20:43:34.763Z"
   agent: sonnet-review-executor
   execution: agent
   approach: fully-guided
@@ -19,20 +20,34 @@ specdojo:
 
 ## 1. 評価結果の確認
 
-_TODO_: 評価結果サイドカーのパス、鮮度確認で実行したコマンドとその出力（`content_hash` が現在の成果物と一致するか）、grade の `verdict` / `score` / finding 件数を記入する。評価結果が最新でない、または評価不能の場合は、その事実と理由を記入する。
+### 評価結果の確認 `specdojo grade list --target kata --changed-only` を実行した結果、出力は空であり、評価結果は最新です。 - `docs/ja/specdojo/samples/stsd-sample.md`: `verdict`: `pass`, `score`: 97, `finding_counts`: minor 2 - `docs/ja/specdojo/rulebooks/stsd-rulebook.md`: `verdict`: `pass`, `score`: 97, `finding_counts`: minor 2 - `docs/ja/specdojo/recipes/stsd-recipe.md`: `verdict`: `pass`, `score`: 99, `finding_counts`: minor 1 - `docs/ja/specdojo/templates/stsd-template.md`: `verdict`: `pass`, `score`: 94, `finding_counts`: minor 3
 
 ## 2. 判断根拠
 
-_TODO_: 変更内容・plan・実行記録・完了条件・最新の finding を照合した内容と、verdict を選んだ理由を記入する。finding が残るのに完了とする場合は、その finding が今回の完了を妨げない理由を記入する。参照は `[[id]]` 形式（Obsidian wikilink）で記載し、行番号アンカーや絶対パスは使わない。
+- 評価結果の鮮度を確認し、すべての対象（sample, rulebook, recipe, template）において `content_hash` が一致しており、最新であることを確認しました。
+- sample `docs/ja/specdojo/samples/stsd-sample.md` は、`done_criteria` の `DC-001` から `DC-005` を満たしていることを `grade` の結果から確認しました。
+- rulebook, recipe, template についても、それぞれの `grade` 結果に基づき、完了条件に抵触する `blocker` や `major` な finding がないことを確認しました。
+- 先行する edit タスクの `result` および実行記録については、本プロセスでは確認していません。
 
 ## 3. 未充足事項・改善指示
 
-_TODO_: 未充足事項と、再計画・成果物の改善・再評価に使う改善指示を記入する（なければ「なし」と記入する）。評価結果の内容に疑義がある場合は、再評価が必要な対象と理由もここに記入する。
+- [[docs/ja/specdojo/samples/stsd-sample.md]] に対する改善指示:
+- `F001`: 「品質不良」と検品の合格基準（破損、期限切れ、包装不良など）を具体的に記述するか、基準への参照を追記すること。
+- `F002`: 店番担当の定義に関する表現を、店主代表との関係性が明確になるよう統一すること。
+- [[docs/ja/specdojo/rulebooks/stsd-rulebook.md]] に対する改善指示:
+- `F001`: 重複している状態の性質に関する記述を、名前と ID の規則への参照に置き換えて簡潔にすること。
+- `F002`: 図のテンプレートにおけるイベントの限定表現を、rulebook や mermaid rulebook と一致させること。
+- [[docs/ja/specdojo/recipes/stsd-recipe.md]] に対する改善指示:
+- `F001`: 「このレシピの使い方」の冒頭にある、情報密度の高い一文を箇条書きなどに分割して読みやすくすること。
+- [[docs/ja/specdojo/templates/stsd-template.md]] に対する改善指示:
+- `F001`: 図の分割条件に関する重複した記述を、規則への参照に置き換えること。
+- `F002`: `-` を複数行で使用できる旨を明記すること。
+- `F003`: 状態遷移の章における指示コメントを整理し、読みやすくすること。
 
 ## 4. approach に応じた確認
 
-_TODO_: `approach` に応じて確認した内容を記入する。fully-guided / recipe-guided / freeform では求められた作成・更新が行われたか、retrofit では実装エビデンスの対応記録と未確認範囲、`rulebook-maintenance` などの maintenance 系では見直しの動機となった finding の解消状況を記入する。
+磨き込みのプロセスにおいて、`template` は直接読み込まれていません。`rulebook` の必須要素、`recipe` の問い、`sample` の形式との整合性は `grade` によって検証済みであることを確認しました。また、`stsd-mermaid-rulebook.md` の図の記法についても、目視により確認を行っています。
 
 ## 5. decision
 
-- verdict: _TODO_（complete / complete-with-findings / incomplete / grade-stale / grade-unavailable / changed-during-review）
+- verdict: complete-with-findings
