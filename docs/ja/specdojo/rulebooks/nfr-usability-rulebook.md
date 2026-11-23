@@ -28,7 +28,7 @@ Non-Functional Requirements Usability Documentation Rules
 
 ## 3. ファイル命名・ID規則
 
-- 生成対象ドキュメント ID は `nfr-usability` を推奨する。
+- 生成対象ドキュメント ID は、プロダクト文書なら `nfr-usability`、プロジェクト文書なら `<project-id>:nfr-usability` とし、カタログの宣言に合わせる。
 - 要件 ID は `nfr-usb-<連番>`（3 桁）を推奨する。
 
 ## 4. 推奨 Frontmatter 項目
@@ -36,7 +36,7 @@ Non-Functional Requirements Usability Documentation Rules
 許可キー・必須項目・型制約は [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] と `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml` を正本とします。
 
 - `specdojo.type` は `requirement`、`specdojo.rulebook` は `specdojo:nfr-usability-rulebook` とする。
-- `specdojo.part_of` は `nfr-index` とする（任意）。
+- `specdojo.part_of` は `nfr-index` とする（任意）。プロジェクト文書では ID と同じく `<project-id>:nfr-index` と修飾する。
 
 ## 5. 本文要件
 
@@ -50,7 +50,7 @@ Non-Functional Requirements Usability Documentation Rules
 | 4    | 測定・検証方法       | ○    | 全要件 ID に測定方法・判定タイミング・判定者がある             |
 | 5    | 関連ドキュメント導線 | ○    | `nfr-index`・`sac-*`・`stc-*`・`uis-*` への導線がある          |
 
-「操作性要件一覧」の標準 5 列は `id` / `内容` / `指標` / `基準` / `備考` の順とする。`基準` は数値と単位、または網羅条件（`100%`）で書き、`備考` に対象利用者・対象操作を絞り込む。
+「操作性要件一覧」の標準 5 列は `id` / `内容` / `指標` / `基準` / `備考` の順とする。`基準` は数値と単位、または網羅条件（`100%`）で書き、`備考` に対象利用者・対象操作を絞り込む。率の指標は、分母（操作回数・タスク数・利用者数のどれか）と数え方を `指標` または `備考` に書く。
 
 ## 6. 記述ガイド
 
@@ -68,9 +68,9 @@ Non-Functional Requirements Usability Documentation Rules
 
 ### 6.3. 操作性要件一覧
 
-- **判断基準**: 1 行 1 指標とし、指標・基準値・`備考` の対象から合否を出せること。指標は完了率・完了時間・誤操作率・習熟時間・エラーメッセージの対処方法含有率・破壊的操作の確認網羅率などから選ぶ。
-- **良い例**: 「`nfr-usb-002` ／ 誤操作を基準以下に抑える ／ 誤操作率 ／ 2% 以下 ／ 取消導線を提供」
-- **悪い例**: 「レジ画面は使いやすいこと ／ 操作性 ／ 良好」（指標も基準値もなく判定できない）
+- **判断基準**: 1 行 1 指標とし、指標・基準値・`備考` の対象から合否を出せること。指標は完了率・完了時間・誤操作率・習熟時間・エラーメッセージの対処方法含有率・破壊的操作の確認網羅率などから選ぶ。率の指標は分母が分かり、測定値を比べられること。
+- **良い例**: 「`nfr-usb-002` ／ 会計の誤操作を基準以下に抑える ／ 誤操作率（取消・修正した会計数 ÷ 全会計数） ／ 2% 以下 ／ 新任利用者の会計操作」
+- **悪い例**: 「`nfr-usb-002` ／ 誤操作を抑える ／ 誤操作率 ／ 2% 以下 ／ 取消導線を提供」（分母がなく操作単位か利用者単位かで値が変わる。`備考` が対象ではなく実現手段になっている）
 
 ### 6.4. 測定・検証方法
 
@@ -90,28 +90,3 @@ Non-Functional Requirements Usability Documentation Rules
 | 画面詳細仕様を丸ごと再掲する   | `uis-*` と二重管理になるため               |
 | 利用者前提を書かない           | 評価条件が揃わないため                     |
 | 測定方法のない要件 ID を置く   | 受入試験で合否を出せず要件が形骸化するため |
-
-## 8. サンプル
-
-注: 形式の輪郭を示す最小例（一部の章のみ）。
-
-```markdown
----
-specdojo:
-  id: nfr-usability
-  type: requirement
-  status: draft
-  rulebook: specdojo:nfr-usability-rulebook
-  part_of:
-    - nfr-index
----
-
-# 非機能要件: 操作性
-
-## 3. 操作性要件一覧
-
-| id          | 内容                                 | 指標         | 基準       | 備考           |
-| ----------- | ------------------------------------ | ------------ | ---------- | -------------- |
-| nfr-usb-001 | 主要業務タスクを迷わず完了できること | タスク完了率 | 95% 以上   | 新任利用者対象 |
-| nfr-usb-003 | 新任利用者が基本操作を習得できること | 習得時間     | 2 時間以内 | ガイド付き     |
-```
