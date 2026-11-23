@@ -1,0 +1,45 @@
+第 4〜6 波の kata ドメインと、波ごとの strategy・track を用意しました。schedule のタスクは実行していません。
+
+**結果**
+- **カタログ**: `dct-kata.yaml` に sample 65 件を足しました。`done_criteria` は共通の 3 条件に、grade の大きい指摘（blocker・major）から拾った型ごとの条件を足しています。承認者や判断者を求める指摘は PJR-76N9 に当たるので外しました。
+- **strategy と track**: 5 件作り、`schedule build` で生成しました。track は手で編集していません。
+
+| track | タスク数 |
+| --- | --- |
+| `kata-wave-4` | 44 |
+| `kata-wave-5` | 80 |
+| `kata-wave-6-project` | 61 |
+| `kata-wave-6-design` | 64 |
+| `kata-wave-6-notation` | 20 |
+
+- **段**: 040 rulebook → 045 recipe → 050 sample → 060 template → 080 condense → 090 review の順です。recipe・template の段は、実在の recipe・template を持つ型にだけ置きました。finalize の段・`phase_gates`・`group_milestones` は置いていないので、型ごとの鎖は互いを待ちません。
+- **agent**: 040〜060 が `opus-executor`、080 が `sonnet-executor`、090 が `sonnet-review-executor`、reporter はすべて `gemma26-reporter` です。編集の段の説明に PJR-76N9 の決まりと「利用者が決める値は `_UNDECIDED_` で残す」を書きました。
+- **個票**: 作業内容の表と対応結果を書きました（対象の型の決め方、足した `depends_on` の一覧と理由、迷って決めたこと、plan の dry-run の結果、利用者が決める値、残課題、CHANGELOG は「なし」）。
+
+**検証**: 次は通りました。`npm run lint:md` や `npm run validate:schema` などの親の検証は、指示どおり実行していません。
+- 変更した YAML 11 件の `validate:schema:file`（`task_suffix` が文字列のままであることを含む）
+- `npx specdojo catalog validate`
+- `npx specdojo exec validate`
+- prettier
+- `npm run validate:history-links`
+- 個票の markdownlint
+
+**変更したファイル**
+- `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-kata.yaml`
+- `docs/ja/projects/prj-0001/schedule/sch-strategy-kata-wave-{4,5,6-project,6-design,6-notation}.yaml`（新規）
+- `docs/ja/projects/prj-0001/schedule/sch-track-kata-wave-{4,5,6-project,6-design,6-notation}.yaml`（新規）
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-bhfg-kata-wave-4-catalog-schedule.md`
+
+`events/pjr-bhfg.yaml` は、私が触る前から引用符の書き方が変わっていました。私の変更ではないので、そのまま残しています。
+
+**決めたこと**（詳しくは個票と handoff）
+- **型の grade の段**: schedule には grade の段を作る approach がありません。代わりに、kata ドメインの review の段では、runner が review の前に rulebook と sample の組を grade します。そこで「型の grade → review」を 090 の 1 段にまとめました。
+- **同じ rulebook を持つ複数の sample**（opd-rulebook・opr-rulebook）: rulebook を直す段は代表の 1 件にだけ置き、残りの sample は代表を待ちます。残りの sample の 050 は `fully-guided` にしました。`sample-maintenance` のままだと、rulebook が先頭に宣言する sample を直してしまうからです。
+- **track に入れなかった型**:
+  - prj-charter・ifx-api・ifx-msg は直し済みで grade が pass なので、カタログにだけ載せました。
+  - sysd は sample が undecided、ntp は非推奨、opd-sample はどの rulebook も宣言していないため外しました。
+- **どの epic にもなかった型**: pm-change-request-log・pm-issue-log・pm-risk-register・dct は第 6 波（プロジェクト）、cnd・stsd は第 6 波（記法）に入れました。dmd・opd・otp はもともと第 5 波の範囲にあります。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"dct-kata.yaml に第 4〜6 波の sample 65 件を足し、strategy 5 件と track 5 件（計 269 タスク、track は schedule build で生成）を作った。段は rulebook → recipe → sample → template → condense → review（型の grade は review の前段で runner が実行）で、finalize・phase_gates は置かず型ごとの鎖を並べて流せる組み方にした。個票の作業内容と対応結果を記入した。schedule のタスクは実行していない。","handoff":["型の grade の段: schedule の phase に grade の approach がないため独立の段にしなかった。kata ドメインの review の段（090、`intent: improve-kata`）では、runner が review の前に rulebook と、rulebook が宣言する sample・recipe・template を `--target kata` で grade するので、「型の grade → review」を 090 の 1 段にまとめ、段の説明に書いた。","複数の sample を持つ opd-rulebook・opr-rulebook は、rulebook の段を代表（opd-access-control-sample・opr-sample）にだけ置き、残りの sample は代表に `depends_on` して待つ。代表でない sample の 050 を `sample-maintenance` にすると rulebook の宣言の先頭の sample を対象にしてしまうため、`phase_overrides` で `approach: fully-guided` にした（dry-run で対象が自分の sample になることを確認）。","track に入れなかった型: prj-charter（rulebook 90・sample 96）と ifx-api・ifx-msg（PJR-AEKE 後に 4 文書とも pass）はカタログにだけ載せた。sysd は sample が undecided、ntp は非推奨、opd-sample はどの rulebook も宣言しておらず opd-index-sample と役割が重なるため外した。","どの epic にもなかった型: dmd・opd・otp はもともと PJR-JZ2F の範囲なので第 5 波。pm-change-request-log・pm-issue-log・pm-risk-register・dct は第 6 波（プロジェクト）。cnd・stsd は記法の rulebook を `includes` する親の型なので第 6 波（記法）。cdfd-mermaid・cdfd-d2 は cdfd・cdfd-overview の rulebook の段で `includes` から直す。","次のアクション（人・オーケストレーター）: opd-sample を消すか rulebook に宣言するかを決める。opd-index-sample を opd-index-rulebook と opd-rulebook の両方が宣言している件と、opr の個別の手順の sample・opr-index-sample の frontmatter の `rulebook` が opd-rulebook を指している件も合わせて扱う（後者は `done_criteria` で sample の段に直させる）。","ツールの差（別の項目で扱う案）: `includes` の記法の rulebook は plan の `targets` に入らない（rulebook の段の commit は rulebooks の置き場全体を許すので commit はできる）。YAML の sample（pm-members・gl・dct）は `targets` の先頭が `prj-0001:<local_id>` になる。","`events/pjr-bhfg.yaml` は executor が触る前から引用符の書き方が変わっていた（runner 側の変更とみて残した）。保護された設定の変更は無い。CHANGELOG に書く事項は「なし」。"],"validations":[{"command":"npm run validate:schema:file -- --schema <sch-strategy/sch-track/dct schema> --data <changed YAML 11 files>","status":"passed","summary":"dct-kata.yaml と strategy 5 件・track 5 件がすべて valid（task_suffix は文字列のまま）"},{"command":"npx specdojo catalog validate --project prj-0001","status":"passed","summary":"exit 0、dct-kata.yaml は OK（既存の警告と opd-sample が未宣言という警告のみ）"},{"command":"npx specdojo exec validate --project prj-0001","status":"passed","summary":"exit 0（過去のイベントと run 中の evidence 未作成の警告のみ）"},{"command":"npx prettier --check (changed YAML) / --write (ticket)","status":"passed","summary":"変更した YAML は整形済み、個票を整形した"},{"command":"npm run validate:history-links","status":"passed","summary":"exit 0"},{"command":"node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-bhfg-kata-wave-4-catalog-schedule.md","status":"passed","summary":"エラーなし"}]}
+</specdojo_executor_evidence>
