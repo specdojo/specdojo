@@ -47,7 +47,7 @@ Project Human Member Roster Documentation Rulebook
 | `id`         | ○    | `<project-id>:pm-members`        |
 | `type`       | ○    | `project`                        |
 | `status`     | ○    | `draft` / `ready` / `deprecated` |
-| `title`      | ○    | 名簿の表示名                     |
+| `title`      | ○    | `メンバー定義: <プロジェクト名>` |
 | `rulebook`   | ○    | `specdojo:pm-members-rulebook`   |
 | `based_on`   | 任意 | 根拠文書 ID の配列               |
 | `supersedes` | 任意 | 置き換える旧文書 ID の配列       |
@@ -61,14 +61,14 @@ Project Human Member Roster Documentation Rulebook
 | `members` | ○    | 人間 member の配列                    |
 | `rules`   | 任意 | 名簿利用時の project 固有の運用ルール |
 
-`members[]` の必須性は対応 schema を優先します。上位の人と組織の定義標準では任意の `roles` も、本形式では必須です。
+`members[]` の必須性は対応 schema を優先します。上位の人と組織の定義標準では任意の `roles` も、本形式では必須かつ 1 件以上です。schema は `[]` を通しますが、`[]` は上位標準で汎用 agent 用と定義されており、人間 member には使いません。
 
 | フィールド           | 必須 | 内容                                                      |
 | -------------------- | ---- | --------------------------------------------------------- |
 | `nickname`           | ○    | CLI と履歴で使う安定識別子                                |
 | `display_name`       | ○    | 公開可能な表示名                                          |
 | `email`              | 任意 | 公開可能な連絡先または `null`                             |
-| `roles`              | ○    | `pm-roles.yaml` に存在する Role code の重複なし配列       |
+| `roles`              | ○    | `pm-roles.yaml` に存在する Role code を1件以上、重複なし  |
 | `type`               | ○    | `human` 固定                                              |
 | `persona`            | 任意 | 作業姿勢を示す短いラベル                                  |
 | `focus`              | 任意 | 重視する観点の配列                                        |
@@ -83,9 +83,11 @@ Project Human Member Roster Documentation Rulebook
 - 兼務は `roles: [PO, BA]` のように記載します。
 - 連絡先を公開できない場合は推測で補わず `email: null` とします。
 
-### 6.2. 合成名簿との整合
+### 6.2. 検証と合成名簿との整合
 
-- 人間名簿と agent 定義の合成後、全 nickname が一意であり、`--by`・実行イベントが登録値を使うことを照合します。
+- schema 適合は `npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/pm-members.schema.yaml --data <pm-members.yaml のパス>` が終了コード 0 で終わることで確かめます。
+- 合成後の nickname の一意性は、specdojo CLI が名簿を読み込むときに検査します。`--by` を取る exec コマンドが `Duplicate member nickname '<nickname>' across ...` で止まらなければ合格、止まれば一方の nickname を変えます。
+- `--by`・実行イベントには `members[].nickname` の登録値だけを使います。
 - `pm-members.yaml` に `type: agent` が残る場合は、`.specdojo/agent-members.yaml` へ手作業で移します。
 
 ### 6.3. 運用ルール
@@ -99,3 +101,4 @@ Project Human Member Roster Documentation Rulebook
 | `type: agent` の member を記載する                               | 保護設定との責務境界が崩れるため         |
 | `provider`、`command`、`mode`、`stage_role` を記載する           | agent 実行設定を成果物から変更できるため |
 | 実行ログ記録後の nickname を変更する（交代時は新 member を追加） | 履歴の参照先が不明になるため             |
+| 人間 member を `roles: []` で記載する                            | 汎用 agent の表記と区別できなくなるため  |
