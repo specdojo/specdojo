@@ -1,0 +1,45 @@
+対象成果物 `opr-incident-sample` の評価結果は最新で、`pass`（91 点）でした。ただし、plan が追加で求める「型すべてに最新の `--target kata` の `pass`」は満たしていません。このため verdict は `incomplete` です。
+
+**評価結果の確認**
+- `npx specdojo grade list --target kata --path docs/ja/specdojo/samples/opr-incident-sample.md --changed-only` は出力なし（終了コード 0）でした。対象成果物は最新です。
+- 同じ確認を `docs/ja/specdojo/rulebooks/opr-rulebook.md` でも実行し、出力なし（終了コード 0）でした。こちらも最新です。
+- 他の型（`opr-batch-sample` と `opr-support-sample` など）の鮮度確認は実行していません。ループ変数を使うコマンドが sandbox で拒否されました。この 2 件の鮮度は plan に記載の runner 確認結果（最新）に依拠しています。
+- 対象成果物の grade は `pass`、91 点で、finding は minor 7 件（blocker 0、major 0）です。内容は次のとおりです。
+  - `F001`: 4.1 末尾の箇条書きが導入文と重複している。
+  - `F002`: P1 の切り分けに判定基準がない。
+  - `F003`: 4.1 と 4.2 で、紙への切替を誰が行うかの記述が食い違っている。
+  - `F004`: 証跡表のうち、連絡帳・変更記録・月次点検の記録の扱いが書かれていない。
+  - `F005`: 4.1 の表の列が template の列名と異なる。
+  - `F006`: `based_on` に `opd-index`・`opd-access-control` がない。
+  - `F007`: 「障害記録」が紙と課題管理で同じ語になっている。
+
+**判断根拠**
+- 対象成果物の `Frontmatter` は `rulebook: specdojo:opr-rulebook` を指しており、`DC-004` の前半を満たしています。`status` は `draft` のままです。
+- 冒頭の章構成（概要、手順適用範囲・前提）は rulebook どおりです。駄菓子屋文脈に統一されており、対象と対象外の範囲の記述もあります（`DC-005`）。読んだのは冒頭 40 行までで、それ以降は grade の評価結果に依拠しています。
+- grade では、`vp-qe-omissions-consistency`、`vp-qe-kata-conformance` ともに level 3 です。blocker と major の finding はなく、`DC-001` から `DC-004` は満たしていると判断します。
+- 型の grade に未達があります。
+  - `opr-rulebook`: `needs-work`（94 点）。major 1 件は、`opr-batch-sample`・`opr-change-sample`・`opr-support-sample` の `rulebook` 宣言が誤っているという指摘です。
+  - `opr-batch-sample`: `needs-work`（66 点、2026-11-21 評価）。
+  - `opr-support-sample`: `fail`（57 点、blocker 1 件、2026-11-21 評価）。
+- plan の規定では、これらは `incomplete` になります。`complete-with-findings` でも完了扱いにはできません。
+
+**未充足事項・改善指示**
+1. `opr-batch-sample` と `opr-support-sample` を作り直します。`rulebook` を `specdojo:opr-rulebook` に直し、template の 12 章構成と見出し番号に揃えたうえで、再度 grade を実行します。
+2. `opr-rulebook` の major finding（`rulebook` 宣言の誤り）を解消したうえで、`needs-work` を `pass` にします。
+3. 対象成果物の minor 7 件のうち、`F003`（切替の判断者の統一）、`F006`（`based_on` の追加）、`F007`（用語の分離と転記者の明記）を優先して対応します。
+4. 人の確定は sample 全体の横串確認で行います。確定前に確かめる点は、未決事項 4 件の扱いと、`opr-sample` 側の記述との整合です。
+
+**approach に応じた確認**（fully-guided）
+- 磨き込みの結果として、対象成果物の構成と範囲は完了条件を満たしています。
+- `recipe` は `_MISSING_` です。ほかの記録も確認できていません。先行する edit タスクの result は未特定で、実行記録の検証結果は確認できていません。
+
+**decision**
+- verdict: `incomplete`
+
+**確認できなかった範囲**
+- 対象成果物の 41 行目以降は、自分では読んでいません。
+- 最終確認時点での `opr-batch-sample`・`opr-support-sample` の鮮度は、再確認できていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict=incomplete。対象 sample は grade pass(91, minor 7)で最新だが、型の追加完了条件として opr-rulebook が needs-work、opr-batch-sample が needs-work、opr-support-sample が fail のため未充足。確認できなかった範囲: sample の 41 行目以降の自力通読、opr-batch/support-sample の鮮度再確認、先行 edit の result。","handoff":["opr-batch-sample と opr-support-sample を opr-rulebook・template に合わせて作り直し、再 grade する","opr-rulebook の major finding（3 sample の rulebook 宣言誤り）を解消し pass にする","対象 sample の minor 7 件のうち F003・F006・F007 を優先して修正する"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/opr-incident-sample.md --changed-only","status":"passed","summary":"出力なし（最新）"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/opr-rulebook.md --changed-only","status":"passed","summary":"出力なし（最新）"}]}
+</specdojo_executor_evidence>
