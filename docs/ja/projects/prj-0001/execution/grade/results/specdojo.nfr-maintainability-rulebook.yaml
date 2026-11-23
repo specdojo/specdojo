@@ -4,35 +4,34 @@ document: specdojo:nfr-maintainability-rulebook
 path: docs/ja/specdojo/rulebooks/nfr-maintainability-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-rulebook
-verdict: needs-work
-score: 77
-graded_at: "2026-11-21T04:41:57.160Z"
-graded_by: opus-executor
-content_hash: 5451877e91bbf9aab1cd8ed86a9a68e34b51f0f8acaea002c66b01421e70a8e3
+verdict: pass
+score: 94
+graded_at: "2026-11-23T15:15:11.270Z"
+graded_by: sonnet-review-executor
+content_hash: dd6836363223927aaaa85f4c74f148b7c45c36044171b61815f7415fba8a0e7b
 categories:
   purpose:
-    score: 75
+    score: 88
   operations:
-    score: 81
+    score: 94
   planning:
-    score: 75
+    score: 100
   business:
-    score: 75
+    score: 100
   architecture:
-    score: 92
+    score: 100
   usability:
-    score: 83
+    score: 100
   implementation:
-    score: 75
+    score: 100
   quality:
-    score: 67
+    score: 83
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-decision-readiness:
     level: 3
     score: 75
@@ -40,26 +39,26 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-business-value:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-requirements-completeness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -67,197 +66,81 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-change-impact:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-testability:
     level: 3
     score: 75
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ux-readability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 3
     score: 75
   vp-ops-operability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 20
+  major: 0
+  minor: 5
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-purpose-alignment
-    line: 5
-    anchor: 非機能要件のうち保守性（変更容易性・障害解析容易性）を定義する `nfr-maintainability` の作成ルールを定めます。
-    message: 導入文と全体方針に、保守性要件を定める目的（受入判定 `sac-*` や運用設計 `opd-*` の前提を揃えるなど）と利用先を明記し、成果物の必要性を上位文書との対応で説明できるようにする。
-    message_ja: 導入文と全体方針に、保守性要件を定める目的（受入判定 `sac-*` や運用設計 `opd-*` の前提を揃えるなど）と利用先を明記し、成果物の必要性を上位文書との対応で説明できるようにする。
+    rule: vp-po-decision-readiness
+    line: 12
+    anchor: "- _UNDECIDED_: `recipe`・`template` の要否は未判断である。sample を「本文要件」の構成に揃えた後、同じ構成を NFR 分冊で共通の template にできるかを論点として判断する。"
+    message: "`recipe` / `template` の要否判断について、判断者と次アクション（登録簿への起票、判断時期）を示し、PO が承認や差し戻しを判断できるようにする。"
+    message_ja: "`recipe` / `template` の要否判断について、判断者と次アクション（登録簿への起票、判断時期）を示し、PO が承認や差し戻しを判断できるようにする。"
   - id: F002
     severity: minor
-    rule: vp-po-decision-readiness
-    line: 1
-    anchor: "# 非機能要件 / 保守性 作成ルール"
-    message: >-
-      `recipe` / `template` が `undecided` のままで sample も標準テンプレに未整合なので、要否の判断対象と次アクションを PJR に登録し、PO
-      が承認や差し戻しを判断する材料が分かるようにする。
-    message_ja: >-
-      `recipe` / `template` が `undecided` のままで sample も標準テンプレに未整合なので、要否の判断対象と次アクションを PJR に登録し、PO
-      が承認や差し戻しを判断する材料が分かるようにする。
-  - id: F003
-    severity: minor
-    rule: vp-pm-plan-feasibility
-    line: 73
-    anchor: "- 要件 ID ごとに、測定方法（監視記録、障害レポート、訓練、CI の計測など）・判定タイミング・判定者を示す。"
-    message: 測定・検証方法の判定者は適用先メンバー定義の Role code で記述すると明記し、サンプル例の「SRE / PM」「テックリード」などの職名も Role code の表記にそろえる。
-    message_ja: 測定・検証方法の判定者は適用先メンバー定義の Role code で記述すると明記し、サンプル例の「SRE / PM」「テックリード」などの職名も Role code の表記にそろえる。
-  - id: F004
-    severity: minor
-    rule: vp-pm-dependency-risk
-    line: 77
-    anchor: "- `opd-*`、`opr-*`、`dec-*` への導線を必ず置く。"
-    message: 関連ドキュメント導線で必須とする `dec-*` を位置づけにも加え、保守性要件の閾値を変えたときに `sac-*` や `opd-*`/`opr-*` へ波及する依存の扱いを明記する。
-    message_ja: 関連ドキュメント導線で必須とする `dec-*` を位置づけにも加え、保守性要件の閾値を変えたときに `sac-*` や `opd-*`/`opr-*` へ波及する依存の扱いを明記する。
-  - id: F005
-    severity: minor
-    rule: vp-pm-control-reporting
-    line: 73
-    anchor: "- 要件 ID ごとに、測定方法（監視記録、障害レポート、訓練、CI の計測など）・判定タイミング・判定者を示す。"
-    message: 測定・検証で閾値未確定や基準未達が判明した場合に、課題・リスク・決定記録（`dec-*`）のどれへ転記するかを記述ガイドで区別する。
-    message_ja: 測定・検証で閾値未確定や基準未達が判明した場合に、課題・リスク・決定記録（`dec-*`）のどれへ転記するかを記述ガイドで区別する。
-  - id: F006
-    severity: minor
-    rule: vp-ba-business-value
-    line: 60
-    anchor: "- どの変更・障害対応の効率を担保するかを示す。"
-    message: 概要（対象・目的）の記述ガイドに、対象者と業務影響（障害で業務が止まる時間、変更待ちの影響など）を書き、閾値の根拠と結び付けることを求める。
-    message_ja: 概要（対象・目的）の記述ガイドに、対象者と業務影響（障害で業務が止まる時間、変更待ちの影響など）を書き、閾値の根拠と結び付けることを求める。
-  - id: F007
-    severity: minor
-    rule: vp-ba-requirements-completeness
-    line: 63
-    anchor: ""
-    message: 適用範囲・前提条件に対象外（可用性・性能など他の NFR との境界）を記載するよう記述ガイドで求め、要件の重複や漏れを防ぐ。
-    message_ja: 適用範囲・前提条件に対象外（可用性・性能など他の NFR との境界）を記載するよう記述ガイドで求め、要件の重複や漏れを防ぐ。
-  - id: F008
-    severity: minor
-    rule: vp-ba-stakeholder-clarity
-    line: 64
-    anchor: "- 対象システム、対象運用時間、チーム体制前提を記述する。"
-    message: 適用範囲・前提条件に、閾値の合意者と、保守作業を担う運用者・開発者を Role code で記載するよう求める。
-    message_ja: 適用範囲・前提条件に、閾値の合意者と、保守作業を担う運用者・開発者を Role code で記載するよう求める。
-  - id: F009
-    severity: minor
-    rule: vp-arc-technical-constraints
-    line: 40
-    anchor: "- `specdojo.type` は `requirement`、`specdojo.rulebook` は `specdojo:nfr-maintainability-rulebook` とする。"
-    message: "`deliverable_type` と生成物の `specdojo.type` の関係を明記し、監視・ログ基盤など測定の前提となる外部依存を適用範囲・前提条件に記載するよう求める。"
-    message_ja: "`deliverable_type` と生成物の `specdojo.type` の関係を明記し、監視・ログ基盤など測定の前提となる外部依存を適用範囲・前提条件に記載するよう求める。"
-  - id: F010
-    severity: minor
-    rule: vp-dev-implementation-readiness
-    line: 73
-    anchor: "- 要件 ID ごとに、測定方法（監視記録、障害レポート、訓練、CI の計測など）・判定タイミング・判定者を示す。"
-    message: 測定・検証方法の記述ガイドに、表形式の列（`要件ID` / `測定方法` / `判定タイミング` / `判定者`）を保守性要件一覧と同じように明記する。
-    message_ja: 測定・検証方法の記述ガイドに、表形式の列（`要件ID` / `測定方法` / `判定タイミング` / `判定者`）を保守性要件一覧と同じように明記する。
-  - id: F011
-    severity: minor
-    rule: vp-dev-change-impact
-    line: 34
-    anchor: "- 要件IDは `nfr-mnt-<連番>` を推奨する。"
-    message: 要件 ID を廃止・改訂したときに連番を再利用しないことと、参照元（`sac-*`、`opr-*`）の追従方法を ID 規則に明記する。
-    message_ja: 要件 ID を廃止・改訂したときに連番を再利用しないことと、参照元（`sac-*`、`opr-*`）の追従方法を ID 規則に明記する。
-  - id: F012
-    severity: minor
     rule: vp-dev-testability
-    line: 12
+    line: 11
     anchor: >-
       - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status` の昇格と承認、改訂と廃止、未決事項の登録簿への引き継ぎは
       [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従い、本書と成果物で言い直さない。文書の整形・lint はリポジトリの検証で扱い、「測定・検証方法」に含めない。
-    message: 成果物作成後に確認する検証コマンド（`npm run -s lint:md`、`npm run lint:fm` など）の所在を、正本への参照として1行示す。
-    message_ja: 成果物作成後に確認する検証コマンド（`npm run -s lint:md`、`npm run lint:fm` など）の所在を、正本への参照として1行示す。
-  - id: F013
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 68
-    anchor: "- 表形式（`id` / `内容` / `指標` / `基準` / `備考`）で記述する。"
-    message: 保守性要件一覧の基準に、集計方法（平均・最大・パーセンタイル）と集計期間を併記するよう求め、判定のぶれを防ぐ。
-    message_ja: 保守性要件一覧の基準に、集計方法（平均・最大・パーセンタイル）と集計期間を併記するよう求め、判定のぶれを防ぐ。
-  - id: F014
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 14
-    anchor: "## 2. 位置づけと用語定義（必要に応じて）"
-    message: 2章の見出しから「（必要に応じて）」を外して必須性を本文で明示し、位置づけの一覧へ関連ドキュメント導線で必須とする `dec-*` を加えて章間の不整合を解消する。
-    message_ja: 2章の見出しから「（必要に応じて）」を外して必須性を本文で明示し、位置づけの一覧へ関連ドキュメント導線で必須とする `dec-*` を加えて章間の不整合を解消する。
-  - id: F015
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 非機能要件 / 保守性 作成ルール"
-    message: 指定されているサンプル成果物 `specdojo:nfr-maintainability-sample` が、本書で定義した標準テンプレの構成に従っていない。
-    message_ja: 指定されているサンプル成果物 `specdojo:nfr-maintainability-sample` が、本書で定義した標準テンプレの構成に従っていない。
-  - id: F016
+    message: 成果物作成後に実行する検証コマンド（`npm run -s lint:md`、`npm run lint:fm`）の所在を、正本への参照として1行で示す。
+    message_ja: 成果物作成後に実行する検証コマンド（`npm run -s lint:md`、`npm run lint:fm`）の所在を、正本への参照として1行で示す。
+  - id: F003
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 87
-    anchor: "## 8. サンプル"
-    message: 「サンプル」章の 8.1・8.2 は H3 見出しと表を本文に直接置いているので、authoring standard に従い最小例をコードブロック内に自己完結させる。
-    message_ja: 「サンプル」章の 8.1・8.2 は H3 見出しと表を本文に直接置いているので、authoring standard に従い最小例をコードブロック内に自己完結させる。
-  - id: F017
+    line: 26
+    anchor: "| `dec-*`            | 閾値・測定方法を決めた・見直した判断の記録         | 見直しの判断を新しい `dec-*` に残す                   |"
+    message: rulebook の `dec-*` と sample の「登録簿の decision」の呼称を統一する。または、ID を持たない導線の書き方を記述ガイドに明記する。
+    message_ja: rulebook の `dec-*` と sample の「登録簿の decision」の呼称を統一する。または、ID を持たない導線の書き方を記述ガイドに明記する。
+  - id: F004
     severity: minor
-    rule: vp-ux-readability
-    line: 18
-    anchor: "- `nfr-maintainability`：保守性要求の正本"
-    message: 位置づけの各項目に本書との関係（上位の入口、運用手順への入力、受入判定での参照など）を一言添え、初見の読者が次に見る文書を判断できるようにする。
-    message_ja: 位置づけの各項目に本書との関係（上位の入口、運用手順への入力、受入判定での参照など）を一言添え、初見の読者が次に見る文書を判断できるようにする。
-  - id: F018
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 25
-    anchor: "| 用語             | 定義                           |"
-    message: 用語定義に「一次切り分け時間」「ロールバック時間」を加え、サンプル内の判定者表記を Role code に統一する。
-    message_ja: 用語定義に「一次切り分け時間」「ロールバック時間」を加え、サンプル内の判定者表記を Role code に統一する。
-  - id: F019
+    rule: vp-qe-kata-conformance
+    line: 12
+    anchor: "- _UNDECIDED_: `recipe`・`template` の要否は未判断である。sample を「本文要件」の構成に揃えた後、同じ構成を NFR 分冊で共通の template にできるかを論点として判断する。"
+    message: "`recipe` / `template` が `undecided` のままなので、Kata 一式が揃うまでの判断期限を示し、型の対応関係を確定させる。"
+    message_ja: "`recipe` / `template` が `undecided` のままなので、Kata 一式が揃うまでの判断期限を示し、型の対応関係を確定させる。"
+  - id: F005
     severity: minor
     rule: vp-ops-release-readiness
-    line: 1
-    anchor: "# 非機能要件 / 保守性 作成ルール"
-    message: ready 化の前に、sample の標準テンプレ準拠への改訂と `recipe` / `template` の要否判断を未解決事項として PJR で管理し、解消条件を明確にする。
-    message_ja: ready 化の前に、sample の標準テンプレ準拠への改訂と `recipe` / `template` の要否判断を未解決事項として PJR で管理し、解消条件を明確にする。
-  - id: F020
-    severity: minor
-    rule: vp-ops-operability
-    line: 73
-    anchor: "- 要件 ID ごとに、測定方法（監視記録、障害レポート、訓練、CI の計測など）・判定タイミング・判定者を示す。"
-    message: 測定・検証方法の記述ガイドに、測定結果に基づいて閾値を見直すきっかけと、見直し結果の記録先（`dec-*`）を記載するよう求める。
-    message_ja: 測定・検証方法の記述ガイドに、測定結果に基づいて閾値を見直すきっかけと、見直し結果の記録先（`dec-*`）を記載するよう求める。
-  - id: F021
-    severity: minor
-    rule: vp-ops-agent-boundary
-    line: 73
-    anchor: "- 要件 ID ごとに、測定方法（監視記録、障害レポート、訓練、CI の計測など）・判定タイミング・判定者を示す。"
-    message: 測定・検証方法の判定者は人間の Role code とし、agent には測定値の集計補助までを担わせることを明記する。
-    message_ja: 測定・検証方法の判定者は人間の Role code とし、agent には測定値の集計補助までを担わせることを明記する。
+    line: 12
+    anchor: "- _UNDECIDED_: `recipe`・`template` の要否は未判断である。sample を「本文要件」の構成に揃えた後、同じ構成を NFR 分冊で共通の template にできるかを論点として判断する。"
+    message: ready 化の前に、`recipe` / `template` の要否判断を完了させる条件（判断者と時期）を明記する。
+    message_ja: ready 化の前に、`recipe` / `template` の要否判断を完了させる条件（判断者と時期）を明記する。
