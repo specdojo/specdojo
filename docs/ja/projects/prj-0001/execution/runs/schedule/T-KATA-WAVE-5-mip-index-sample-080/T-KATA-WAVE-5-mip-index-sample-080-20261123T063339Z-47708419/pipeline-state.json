@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-WAVE-5-mip-index-sample-080",
   "run_id": "T-KATA-WAVE-5-mip-index-sample-080-20261123T063339Z-47708419",
-  "updated_at": "2026-11-23T06:42:28.088Z",
+  "updated_at": "2026-11-23T06:42:59.928Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-mip-index-sample-080/T-KATA-WAVE-5-mip-index-sample-080-20261123T063339Z-47708419/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sonnet-executor",
       "attempts": 1,
       "started_at": "2026-11-23T06:42:28.088Z",
-      "completed_at": null,
+      "completed_at": "2026-11-23T06:42:59.928Z",
       "artifact_ref": null
     }
   },
