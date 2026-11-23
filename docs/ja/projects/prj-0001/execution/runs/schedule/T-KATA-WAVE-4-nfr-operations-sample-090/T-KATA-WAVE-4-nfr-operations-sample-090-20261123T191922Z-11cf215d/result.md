@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-4-nfr-operations-sample-090
   mode: review
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-4-nfr-operations-sample-090/T-KATA-WAVE-4-nfr-operations-sample-090-20261123T191922Z-11cf215d/plan.md
   started_at: "2026-11-23T19:19:24.561Z"
+  completed_at: "2026-11-23T19:26:08.143Z"
   agent: sonnet-review-executor
   execution: agent
   approach: fully-guided
@@ -19,20 +20,25 @@ specdojo:
 
 ## 1. 評価結果の確認
 
-_TODO_: 評価結果サイドカーのパス、鮮度確認で実行したコマンドとその出力（`content_hash` が現在の成果物と一致するか）、grade の `verdict` / `score` / finding 件数を記入する。評価結果が最新でない、または評価不能の場合は、その事実と理由を記入する。
+### 評価結果の確認 #### 1. 評価対象: `[[docs/ja/specdojo/samples/nfr-operations-sample.md|nfr-operations-sample]]` - コマンド: `npx specdojo grade list --target kata --path docs/ja/specdojo/samples/nfr-operations-sample.md --changed-only` - 結果: 出力なし、終了コード 0。評価結果は最新 - `verdict`: `pass` - `score`: 94 - `finding_counts`: blocker 0 / major 0 / minor 4 / note 0 #### 2. 評価対象: `[[docs/ja/specdojo/rulebooks/nfr-operations-rulebook.md|nfr-operations-rulebook]]` - コマンド: `npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/nfr-operations-rulebook.md --changed-only` - 結果: 出力なし、終了コード 0。評価結果は最新 - `verdict`: `pass` - `score`: 98 - `finding_counts`: blocker 0 / major 0 / minor 2 / note 0
 
 ## 2. 判断根拠
 
-_TODO_: 変更内容・plan・実行記録・完了条件・最新の finding を照合した内容と、verdict を選んだ理由を記入する。finding が残るのに完了とする場合は、その finding が今回の完了を妨げない理由を記入する。参照は `[[id]]` 形式（Obsidian wikilink）で記載し、行番号アンカーや絶対パスは使わない。
+- 評価結果の鮮度を確認したところ、両方の `_target` に対する `grade` は最新であることを確認した。
+- `[[docs/ja/specdojo/samples/nfr-operations-sample.md|nfr-operations-sample]]` は 5 章構成となっており、`nfr-ops-001` から `nfr-ops-009` のすべてにおいて確認方法が記述されているため、完了条件 `DC-001`〜`DC-005` を満たしている。
+- `[[docs/ja/specdojo/rulebooks/nfr-operations-rulebook.md|nfr-operations-rulebook]]` にも `grade` が `pass` であることを確認済みである。
+- 先行する edit タスクの実行記録および `recipe` は、提示された `evidence` 内で確認できなかった。
 
 ## 3. 未充足事項・改善指示
 
-_TODO_: 未充足事項と、再計画・成果物の改善・再評価に使う改善指示を記入する（なければ「なし」と記入する）。評価結果の内容に疑義がある場合は、再評価が必要な対象と理由もここに記入する。
+- Sample における未決事項 `_UNDECIDED_`（`nfr-ops-003` の基準値、および営業時間外の緊急連絡手段）に対し、決定者・決定時期の明示、あるいは `_ASSUMPTION_` としての暫定値を設定すること。
+- Sample に、`draft` から `ready` へ移行するための条件を一行で追記すること。
+- Rulebook 内の、sample が 5 章に揃っていないという誤った前提記述や、ready 前提としての sample 整備要求を、現状に合わせて更新すること。なお、`recipe` の要否や `template` の共通化判断は、人の確定フェーズで確認すること。
 
 ## 4. approach に応じた確認
 
-_TODO_: `approach` に応じて確認した内容を記入する。fully-guided / recipe-guided / freeform では求められた作成・更新が行われたか、retrofit では実装エビデンスの対応記録と未確認範囲、`rulebook-maintenance` などの maintenance 系では見直しの動機となった finding の解消状況を記入する。
+fully-guided に基づき、`rulebook` の必須要素および `sample` の形式との整合性を確認した。`grade` 実行により、品質に関する finding は既に抽出されているため、これらを解決すべき事項として整理した。
 
 ## 5. decision
 
-- verdict: _TODO_（complete / complete-with-findings / incomplete / grade-stale / grade-unavailable / changed-during-review）
+- verdict: complete-with-findings
