@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-XHS8",
+  "run_id": "pjr-xhs8-20261123T001711Z-710bb75b",
+  "updated_at": "2026-11-23T01:10:32.039Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sonnet-executor",
+      "attempts": 1,
+      "started_at": "2026-11-23T01:03:28.333Z",
+      "completed_at": "2026-11-23T01:03:44.878Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-XHS8/pjr-xhs8-20261123T001711Z-710bb75b/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 0,
+      "started_at": "2026-11-23T01:10:29.650Z",
+      "completed_at": "2026-11-23T01:10:29.650Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-XHS8/pjr-xhs8-20261123T001711Z-710bb75b/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "sonnet-executor",
+      "attempts": 1,
+      "started_at": "2026-11-23T01:10:32.039Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-XHS8/pjr-xhs8-20261123T001711Z-710bb75b/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-XHS8/pjr-xhs8-20261123T001711Z-710bb75b/result.md"
+  },
+  "resume_notes": [
+    {
+      "at": "2026-11-23T01:03:28.322Z",
+      "notes": [
+        "完了条件の2回目の実行にある、オーケストレーターが行った比較と測りの結果を個票の対応結果に書き写し、作業内容の表の該当の行をdoneにして完了として報告する。比較と測りは流し直さない。"
+      ]
+    }
+  ]
+}
