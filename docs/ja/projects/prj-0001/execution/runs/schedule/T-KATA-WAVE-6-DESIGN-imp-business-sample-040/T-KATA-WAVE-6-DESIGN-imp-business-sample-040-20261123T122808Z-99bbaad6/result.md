@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-DESIGN-imp-business-sample-040
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-DESIGN-imp-business-sample-040/T-KATA-WAVE-6-DESIGN-imp-business-sample-040-20261123T122808Z-99bbaad6/plan.md
   started_at: "2026-11-23T12:28:22.825Z"
+  completed_at: "2026-11-23T12:46:39.120Z"
   agent: opus-executor
   execution: agent
   approach: rulebook-maintenance
@@ -20,16 +21,23 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- rulebook である `docs/ja/specdojo/rulebooks/imp-business-rulebook.md` を簡潔に整えました。
+- grade の指摘事項（F001〜F006, F008, F009）に基づき、記述ガイドの更新を行いました。
+- 具体的には、未解決事項の転記と報告先に関する記述の追加、対応方針の列挙値の限定、および判断・対応への影響に関する良い例・悪い例の追加を行いました。
+- sample（F007, F002, F008, F009 に関わる修正）および Frontmatter の `recipe` / `template` の要否判断（F010）については、このフェーズの制約により、次回のタスクへ申し送りにしています。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/rulebooks/imp-business-rulebook.md`: rulebook の章立てを `rulebook-authoring-standard` に合わせ、記述ガイドを整備しました。未解決事項の転記ルール（`question`, `risk`, `issue`, `decision` への分類）の追加や、対応方針の記述における「影響」の記載に関するガイドライン、および禁止事項（個人名の記載禁止など）を追記しました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- F007・F002・F008・F009 は sample の修正が要る。この段では sample を変更しないため、次の段で直す: 3章に影響度の尺度と集約規則を定義する、5章の『優先度』列を『影響度』にし、担当の個人名を Role code にし、『完了条件』列を足す、6章に『判断・対応への影響』『当面の扱い』『転記先の登録項目』列を足す。
+- F010: Frontmatter の `recipe` と `template` は `undecided` のまま。ready にする前に、型の schedule の recipe・template の段で `not-needed` か整備対象かを人が決める。
+- F001 は PJR-76N9 に合わせて一部だけ反映した。決定期限と担当（Role code）は本文に求めるが、承認・保留・差し戻しの進み具合は登録簿の個票で追う。
+- 章立てを `rulebook-authoring-standard` に合わせ、『本文構成（標準テンプレ）』を『本文要件』に改めた。書き方は改訂済みの `imp-test-rulebook` に揃えた。全体方針にあった『業務担当者とプロジェクト管理者が合意できる粒度』は PJR-76N9 の方針に合わないため削った。
+- 章立てを rulebook-authoring-standard に合わせ、『本文構成（標準テンプレ）』を『本文要件』に改めた。書き方は改訂済みの imp-test-rulebook に揃えた。全体方針にあった『業務担当者とプロジェクト管理者が合意できる粒度』は PJR-76N9 の方針に合わないため削った。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+対象の sample が従う rulebook を、grade の指摘と `done_criteria` に沿って簡潔に整える方針で実施しました。rulebook の章立てを `rulebook-authoring-standard` に準拠させ、記述ガイドとしての精度を高めるために、指示された findings を反映しました。一方で, sample 自体の変更は本タスクの範囲外として扱っています。
