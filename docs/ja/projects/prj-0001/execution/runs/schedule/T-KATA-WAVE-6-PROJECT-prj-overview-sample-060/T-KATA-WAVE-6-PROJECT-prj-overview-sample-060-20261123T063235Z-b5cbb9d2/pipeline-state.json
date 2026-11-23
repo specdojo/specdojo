@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-WAVE-6-PROJECT-prj-overview-sample-060",
   "run_id": "T-KATA-WAVE-6-PROJECT-prj-overview-sample-060-20261123T063235Z-b5cbb9d2",
-  "updated_at": "2026-11-23T16:56:46.418Z",
+  "updated_at": "2026-11-23T19:47:24.181Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -23,8 +23,8 @@
     "integrate": {
       "status": "running",
       "actor": "opus-executor",
-      "attempts": 2,
-      "started_at": "2026-11-23T16:56:46.418Z",
+      "attempts": 3,
+      "started_at": "2026-11-23T19:47:24.181Z",
       "completed_at": null,
       "artifact_ref": null,
       "repos": {
