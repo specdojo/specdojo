@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-ef4z-nightly-full-integration-tests
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-23T00:16:11Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-23T04:31:22Z"
+  conclusion: 統合テストの全件を固定の引数で流す specdojo orchestrator integration-tests と、job・routine（毎晩 4 時）を足した。結果を朝の報告に残す。任意のシェルのコマンドを流す action は足していない
   derived_from:
     - PJR-9X52
   commit_type: feat

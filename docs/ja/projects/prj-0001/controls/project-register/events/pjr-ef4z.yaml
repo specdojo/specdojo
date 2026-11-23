@@ -118,3 +118,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_8889f8001cf8421ea3c8c92a22260022
+- v: 1
+  id: reg_1f31668d3185450ea4758b2308cdeac1
+  ts: "2026-11-23T04:31:22Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分と単体テストを確かめ、routine run --id rtn-nightly-integration-tests を 1 回流して 443 件の全件成功と朝の報告の作成を確かめた（2026-11-23）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: 統合テストの全件を固定の引数で流す specdojo orchestrator integration-tests と、job・routine（毎晩 4 時）を足した。結果を朝の報告に残す。任意のシェルのコマンドを流す action は足していない
+  previous_event_id: reg_8f0c9a0202a447d4aff3e66ddc8e23a2
