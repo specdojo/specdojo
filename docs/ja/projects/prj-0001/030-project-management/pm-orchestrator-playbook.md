@@ -191,3 +191,12 @@ PJR-P318 で入れた定期の検査と、その扱いである。workflow の�
 
 - 公開の workflow は Trusted Publishing（`id-token: write`）を使う。公開リポジトリから Trusted Publishing で公開すると、provenance は自動で付く。
 - staged publishing（`npm stage publish`）でも provenance は付く（0.9.0 で確かめた。公開の workflow のログに `Signed provenance statement` が出る）。公開の後は `npm view <package> dist.attestations.provenance.predicateType` で確かめる。
+
+## 11. セッションの引き継ぎ
+
+配布するオーケストレーターの指示の「セッションの始めと終わり」の手順に従う。prj-0001 の事情は次のとおり。
+
+- 夜の間の承認の範囲（close してよい条件・使わない agent など）は、`handoff` の「有効な承認の範囲」に書く。長く効くものは、この運用メモの該当する章へ移す。
+- `handoff` の起票と close は、登録簿の記帳として `develop` へ `--commit` で直接 commit してよい。
+- これまでの `tmp/orchestrator/handoff-*.md` は、最初の `orchestrator handoff` の起票で置き換え、以後は使わない。
+- 利用者の返事を待っていることは、会話の中に残さず `question` として起票する（PJR-5RY7、2026-11-23 から）。
