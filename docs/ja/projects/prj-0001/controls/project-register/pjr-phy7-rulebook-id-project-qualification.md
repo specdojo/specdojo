@@ -7,10 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   registered_at: "2026-11-05T10:45:48Z"
+  completed_at: "2026-11-23T05:13:02Z"
+  conclusion: プロダクト文書の id を名前空間なしで定めるよう、cdt と ifx-file の rulebook の id の規則と、ifx-cmd・ifx-index の template の id を直した。1 回目の 6 つの rulebook の変更は捨てた。grade は rulebook が pass 94・90、template が pass 94・90
   derived_from:
     - PJR-Q9AW
     - PJR-00NY

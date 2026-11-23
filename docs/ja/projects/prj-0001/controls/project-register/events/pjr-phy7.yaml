@@ -157,3 +157,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_fcd1b157f38d47dc9d9b2face8066b2e
+- v: 1
+  id: reg_b59b2865954d4894857de84f225254ba
+  ts: "2026-11-23T05:13:02Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分と対応結果（rg で探した一覧）を確かめ、表示のページを作り直したうえでの型の grade が pass だった（2026-11-23）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: プロダクト文書の id を名前空間なしで定めるよう、cdt と ifx-file の rulebook の id の規則と、ifx-cmd・ifx-index の template の id を直した。1 回目の 6 つの rulebook の変更は捨てた。grade は rulebook が pass 94・90、template が pass 94・90
+  previous_event_id: reg_c695bf60ecbd4943a90af4abb544ade7
