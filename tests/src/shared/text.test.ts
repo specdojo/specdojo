@@ -4,6 +4,7 @@ import {
   escapeRegExp,
   redactSensitiveText,
   unescapeBackticksWhenUniform,
+  unescapeMarkdownCell,
 } from "../../../src/shared/text.js";
 import { sensitiveTextCases } from "../../fixtures/sensitive-text.js";
 
@@ -105,5 +106,17 @@ describe("unescapeBackticksWhenUniform", () => {
 
   it("keeps text without escaped backticks unchanged", () => {
     expect(unescapeBackticksWhenUniform("`code` のまま")).toBe("`code` のまま");
+  });
+});
+
+describe("unescapeMarkdownCell", () => {
+  it("restores underscores, asterisks and pipes escaped for a table cell", () => {
+    const actual = unescapeMarkdownCell("frontend\\_test\\_note.md と a\\*b と c\\|d");
+
+    expect(actual).toBe("frontend_test_note.md と a*b と c|d");
+  });
+
+  it("keeps a title without escapes unchanged", () => {
+    expect(unescapeMarkdownCell("docs/test_note.md")).toBe("docs/test_note.md");
   });
 });

@@ -117,6 +117,12 @@ export function escapeMarkdownInline(text: string): string {
   return replaceOutsideMarkdownCodeSpans(inlineCodeAnglePlaceholders(text), codeSpanRiskyTokens);
 }
 
+// 登録簿の表セルへ書くために toCell がエスケープした `\*` `\_` `\|` を元の文字へ戻す。
+// ログなど Markdown ではない出力に項目のタイトルを出すときに使う。
+export function unescapeMarkdownCell(text: string): string {
+  return text.replace(/\\([*_|])/g, "$1");
+}
+
 function codeSpanRiskyTokens(segment: string): string {
   return segment.replace(ASCII_RUN, (run) => (/[_*]/.test(run) ? `\`${run}\`` : run));
 }
