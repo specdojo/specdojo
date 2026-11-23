@@ -4,19 +4,18 @@ document: specdojo:prj-issues-and-approach-rulebook
 path: docs/ja/specdojo/rulebooks/prj-issues-and-approach-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-rulebook
 verdict: pass
-score: 95
-graded_at: "2026-11-21T05:31:42.529Z"
-graded_by: opus-executor
-content_hash: a7ef1f33abcca7f69681d9856e695a77c1127b35877b15584f2d2faa270cf2cb
+score: 98
+graded_at: "2026-11-23T22:34:29.294Z"
+graded_by: sonnet-review-executor
+content_hash: 2877caf1b7ad2b10c0ec9d2a5073f58225c54dfdc4ab1ca3efa8ed8599304ced
 categories:
   purpose:
     score: 100
   operations:
-    score: 94
+    score: 100
   planning:
-    score: 92
+    score: 100
   business:
     score: 100
   architecture:
@@ -26,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 92
   consistency:
     score: 100
 viewpoints:
@@ -37,11 +36,11 @@ viewpoints:
     level: 4
     score: 100
   vp-po-publication-accountability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-plan-feasibility:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
     level: 4
     score: 100
@@ -76,8 +75,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
     level: 4
     score: 100
@@ -105,42 +104,13 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 4
+  minor: 1
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-publication-accountability
-    line: 146
-    anchor: "## 7. 禁止事項"
-    message: >-
-      課題・原因・リスクは観察事実や聞き取りに基づくのに、禁止事項に個人や特定組織を識別できる情報・非公開の観察事実を書かない規定がなく、recipe の仕上げチェックにしか条件がないため、rulebook
-      の禁止事項に公開不適切情報の項目を追加して正本から公開可否を判定できるようにする。
-    message_ja: >-
-      課題・原因・リスクは観察事実や聞き取りに基づくのに、禁止事項に個人や特定組織を識別できる情報・非公開の観察事実を書かない規定がなく、recipe の仕上げチェックにしか条件がないため、rulebook
-      の禁止事項に公開不適切情報の項目を追加して正本から公開可否を判定できるようにする。
-  - id: F002
-    severity: minor
-    rule: vp-pm-plan-feasibility
-    line: 132
-    anchor: "- 次の意思決定に必要な追加調査・確認・承認事項と、その目的を列挙します。"
-    message: 「次の検討事項（ToDo）」は目的と責任ロールしか求めておらず、recipe が問う完了条件と期限（判断タイミング）を書く欄がないため、表に完了条件と期限または判断タイミングの列を追加し、ToDo を進捗確認できる粒度にする。
-    message_ja: 「次の検討事項（ToDo）」は目的と責任ロールしか求めておらず、recipe が問う完了条件と期限（判断タイミング）を書く欄がないため、表に完了条件と期限または判断タイミングの列を追加し、ToDo を進捗確認できる粒度にする。
-  - id: F003
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 92
-    anchor: "| 課題ID | 課題 | 影響 | 優先度 | 備考 |"
-    message: "課題一覧で優先度は必須なのに、例が `High` だけで取りうる値（例: `High` / `Medium` / `Low`）が定義されていないため、値の範囲を明記し、優先度が妥当かを判定できるようにする。"
-    message_ja: "課題一覧で優先度は必須なのに、例が `High` だけで取りうる値（例: `High` / `Medium` / `Low`）が定義されていないため、値の範囲を明記し、優先度が妥当かを判定できるようにする。"
-  - id: F004
-    severity: minor
     rule: vp-qe-kata-conformance
-    line: 76
-    anchor: "| 見直しと変更管理     | 任意 | 本書の合意を見直す契機、確認する観点、対応方針。見直しの記録は共通の運用に従い、ここで定めない |"
-    message: >-
-      rulebook は見直しの記録を共通の運用に委ねて本書では定めないとする一方、template の「見直しと変更管理」は記録先と責任ロールの記述を求めており矛盾するため、rulebook と template
-      のどちらかに揃えて Kata 内の規定を一意にする。
-    message_ja: >-
-      rulebook は見直しの記録を共通の運用に委ねて本書では定めないとする一方、template の「見直しと変更管理」は記録先と責任ロールの記述を求めており矛盾するため、rulebook と template
-      のどちらかに揃えて Kata 内の規定を一意にする。
+    line: 99
+    anchor: "- 原因は分解して書きます（例: 情報不足、判断基準の不在、手順のばらつき、システム制約）。"
+    message: rulebook は導入部に承認者・利用ロールを書かないとする一方、recipe の手順6とレビュー観点は承認者と利用ロールの記述・確認を求めて矛盾するため、recipe 側を rulebook に揃える。
+    message_ja: rulebook は導入部に承認者・利用ロールを書かないとする一方、recipe の手順6とレビュー観点は承認者と利用ロールの記述・確認を求めて矛盾するため、recipe 側を rulebook に揃える。
