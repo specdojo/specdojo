@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-DESIGN-tsd-index-sample-040
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-DESIGN-tsd-index-sample-040/T-KATA-WAVE-6-DESIGN-tsd-index-sample-040-20261123T094057Z-fa833b09/plan.md
   started_at: "2026-11-23T09:41:07.175Z"
+  completed_at: "2026-11-23T09:50:15.660Z"
   agent: opus-executor
   execution: agent
   approach: rulebook-maintenance
@@ -20,16 +21,21 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- rulebook である `docs/ja/specdojo/rulebooks/tsd-index-rulebook.md` を簡潔化し、grade による複数の指摘事項を反映しました。
+- 具体的には、F001 Through F006, F009, F010 の指摘に基づき、位置づけの明示、定義の整理、配置規則の明文化、更新基準の追加を行いました。
+- F007 および F008 に関しては、sample 側の修正を要する内容であったため、rulebook の改訂は行わず継続案件として handoff に残しています。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/rulebooks/tsd-index-rulebook.md`: grade の指摘（F001, F002, F003, F005, F006, F009, F010）を反映し、記述の簡潔化と、技術の配置規則や更新における確認基準を明文化しました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- F007: sample `docs/ja/specdojo/samples/tsd-index-sample.md` の補足で未作成の `tsd-hosting.md`・`tsd-ci.md` を「仮置き」と記載しており共通ラベルがない。`_TODO_` 等で示す形へ sample を直す（本段は sample 変更不可のため未対応）。
+- F008: sample の ESLint・Mermaid・Sentry 行の適用範囲が「（任意）」のみ。rulebook の版と採用状態の規定に合わせ、採用済みであることと利用条件を sample の適用範囲列へ記載する（本段は sample 変更不可のため未対応）。
+- 直さなかった箇所: 区分と網羅範囲・禁止事項・推奨 Frontmatter 項目は finding がなく重複もないため維持。
+- 適用外の検証: `npm run validate:history-links`（変更は rulebook のみで、plan / result / 個票を変更していない）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+rulebook-maintenance
