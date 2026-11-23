@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-6-PROJECT-prj-stakeholder-register-sample-060",
+  "run_id": "T-KATA-WAVE-6-PROJECT-prj-stakeholder-register-sample-060-20261123T205545Z-087d2655",
+  "updated_at": "2026-11-23T21:32:19.411Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-23T20:56:29.147Z",
+      "completed_at": "2026-11-23T20:57:21.841Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-prj-stakeholder-register-sample-060/T-KATA-WAVE-6-PROJECT-prj-stakeholder-register-sample-060-20261123T205545Z-087d2655/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-23T20:57:49.280Z",
+      "completed_at": "2026-11-23T21:03:38.193Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-prj-stakeholder-register-sample-060/T-KATA-WAVE-6-PROJECT-prj-stakeholder-register-sample-060-20261123T205545Z-087d2655/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 2,
+      "started_at": "2026-11-23T21:31:31.401Z",
+      "completed_at": "2026-11-23T21:32:19.411Z",
+      "artifact_ref": null,
+      "repos": {
+        "project": {
+          "status": "failed",
+          "commit": null,
+          "merged_at": null,
+          "error": "git commit failed: test: error: unknown option '--reserve'; FAIL  |unit| tests/src/docs/yaml-tables.test.ts > typed YAML display pages > renders tables and the entire folded source for specdojo--dct-sample.md.snap; Test Files  1 failed | 291 passed (292); Tests  1 failed | 4793 passed (4794)"
+        }
+      }
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-prj-stakeholder-register-sample-060/T-KATA-WAVE-6-PROJECT-prj-stakeholder-register-sample-060-20261123T205545Z-087d2655/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-prj-stakeholder-register-sample-060/T-KATA-WAVE-6-PROJECT-prj-stakeholder-register-sample-060-20261123T205545Z-087d2655/result.md"
+  }
+}
