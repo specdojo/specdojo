@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-23T19:11:04Z",
+  "type": "claim",
+  "task_id": "T-KATA-WAVE-4-trc-requirements-to-specs-sample-080",
+  "by": "sonnet-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA"
+  }
+}
