@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-DESIGN-gl-sample-040
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-DESIGN-gl-sample-040/T-KATA-WAVE-6-DESIGN-gl-sample-040-20261123T122144Z-cc2b4c3b/plan.md
   started_at: "2026-11-23T12:21:53.798Z"
+  completed_at: "2026-11-23T12:32:35.006Z"
   agent: opus-executor
   execution: agent
   approach: rulebook-maintenance
@@ -20,16 +21,20 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- rulebook `docs/ja/specdojo/rulebooks/gl-rulebook.md` を、grade の指摘内容に基づいて修正しました。
+- F001 に対し、`status` が必須である根拠をメタ情報標準として追記しました。
+- F002 に対し、参照検査の範囲に関する記述を、検証方針として読み取れる適切な位置（節の近く）へ移動しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/rulebooks/gl-rulebook.md`: F001（`status` を必須とする根拠をメタ情報標準として明記）および F002（参照検査の範囲と受入確認の合格条件を検証の段落の近くへ移動）を修正しました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 直さなかった箇所: F001・F002 以外の記述は grade 指摘・冗長・ほかの型との重なりに当たらないため維持した。PJR-76N9 に該当する役割割り当てや承認の進み具合の要求も本文になかった。
+- 適用外の検証: `npm run validate:schema:file`（変更したのは Markdown の rulebook だけで、`*.yaml` / `*.yml` は変更していない）
+- 適用外の検証: `npm run validate:history-links`（plan・result・個票を変更していない）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+grade の指摘に基づき、`gl-rulebook.md` の記述を整理・補足しました。`status` に関する正本（schema）との整合性を取るための根拠を追記し、検証方針に関する記述を構造的な位置へと移動することで、読み手が検証の範囲を正しく理解できるように調整しました。また、指示に従い `sample`・`recipe`・`template` は変更していません。

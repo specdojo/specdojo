@@ -1,0 +1,10 @@
+`docs/ja/specdojo/rulebooks/gl-rulebook.md` だけを編集し、grade の指摘 2 件（F001・F002）を直しました。`npx prettier --check` は通っています。lint などの検査は、このあと親 runner が実行します。
+
+- **F001（`status` の必須の根拠）**: 推奨 Frontmatter 項目の表のすぐ後に、1 文を足しました。`status` は `gl.schema.yaml` のルート `required` には入っていませんが、ドキュメントメタ情報標準が全種別で必須としているので記載する、という内容です。これで「必須（○）」と schema との食い違いの理由が読めます。
+- **F002（参照検査の範囲と受入確認の合格条件）**: この箇条は「分類・関連用語の判断」の例示に埋もれていました。構造検査・参照検査を書いた段落の直後へ、独立した段落として移しています。
+
+指摘のなかった箇所は、grade 指摘のような直す理由がないので変更していません。PJR-76N9 で対象になる、文書の役割の割り当てや承認の進み具合を本文に求める記述もありませんでした。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"gl-rulebook.md で F001（`status` を必須とする根拠をメタ情報標準として明記）と F002（参照検査の範囲と受入確認の合格条件を検証の段落の近くへ移動）を直した。sample・recipe・template は変更していない。","handoff":["直さなかった箇所: F001・F002 以外の記述は grade 指摘・冗長・ほかの型との重なりに当たらないため維持した。PJR-76N9 に該当する役割割り当てや承認の進み具合の要求も本文になかった。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/gl-rulebook.md","status":"passed","summary":"Prettier の書式に合っている"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変更していない","reason":"変更したのは Markdown の rulebook だけで、*.yaml / *.yml は変更していない"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"plan・result・個票を変更していない"}]}
+</specdojo_executor_evidence>
