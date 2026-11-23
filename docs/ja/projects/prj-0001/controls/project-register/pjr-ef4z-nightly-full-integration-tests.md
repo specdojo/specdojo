@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: done
+  item_status: review
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-23T00:16:11Z"
   due_on: "2026-11-30"
-  completed_at: "2026-11-23T04:59:58Z"
   conclusion: 統合テストの全件を毎晩流す orchestrator integration-tests と job・routine を足した。2 回目で、朝の報告が成功・失敗・JSON を読めないときのどの場合でも lint を通るように書き出しを直し、2026-11-23 の報告も直した
   derived_from:
     - PJR-9X52
@@ -46,6 +45,8 @@ specdojo:
 - 関連する設計・ガイド・CLI リファレンスを直す。
 - `npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md` を通し、親の検証を通す。
 - 2 回目の実行（2026-11-23）: 1 回目の後に `routine run --id rtn-nightly-integration-tests` を流すと、443 件の全件成功で朝の報告も作られたが、報告（`execution/reports/nightly-integration-tests/nightly-integration-tests-20261123T042751Z.md`）の 21 行目に markdownlint の MD012（空行が 2 行続く）が出た。commit の hook は `execution/` の下を検査しないため止まらなかった。報告を書き出す処理を直し、成功・失敗・JSON を読めないときのどの場合でも、作る報告が `npm run lint:md` の規則（markdownlint と prettier）を通るようにする。3 つの場合の報告が lint を通ることを単体テストで確かめる。2026-11-23 の報告のファイルも、直した書き出しの形に合わせて直す。
+- 3 回目の実行（2026-11-23）: `routine run --id rtn-nightly-integration-tests` が作った job の記録のうち、段のディレクトリ（`execution/runs/job/JBR-nightly-integration-tests-<id>/JBR-nightly-integration-tests-<id>-attempt-1-step-integration-tests/`）に `evidence.json` と log だけがあり、`plan.md` と `result.md` がなかった。commit すると pre-push の `exec validate --records-only` と CI の Check execution record layout で止まる（オーケストレーターがこのディレクトリを管理から外した、`892de711e`）。毎晩の routine で同じ記録ができるため、job の段が作る記録を、配置の検査が求める形（plan・result・evidence がそろう、または段のディレクトリを作らない）にする。ほかの job（`job-exec-cycle` など）の段の記録とそろえる。どちらにするかを executor が決め、理由を個票の対応結果に書く。
+- 統合テストの全件の job の記録が `exec validate --records-only` を通ることを、単体テストか統合テストで確かめる。統合の後に orchestrator が routine を 1 回流し、作った記録を commit した tree で `exec validate --records-only --commit` が通ることを確かめる。
 
 ## 4. 作業内容
 

@@ -211,3 +211,32 @@
       from: 統合テストの全件を固定の引数で流す specdojo orchestrator integration-tests と、job・routine（毎晩 4 時）を足した。結果を朝の報告に残す。任意のシェルのコマンドを流す action は足していない
       to: 統合テストの全件を毎晩流す orchestrator integration-tests と job・routine を足した。2 回目で、朝の報告が成功・失敗・JSON を読めないときのどの場合でも lint を通るように書き出しを直し、2026-11-23 の報告も直した
   previous_event_id: reg_fa38c966c03c42228996a6742e045a6b
+- v: 1
+  id: reg_3de47128c8d941ae9934355e03e0d448
+  ts: "2026-11-23T06:12:17Z"
+  action: reopen
+  actor: indie
+  from_status: done
+  to_status: review
+  reason: routine の job の段の記録に plan と result がなく push が止まったため、3 回目の実行で直す（利用者の承認の範囲、2026-11-23）
+  changes:
+    - field: status
+      from: done
+      to: review
+    - field: completed
+      from: "2026-11-23"
+      to: "-"
+  previous_event_id: reg_1c17d54e701949fa9a322e3abe229839
+- v: 1
+  id: reg_26a0147350f440be9e25f905aff9d416
+  ts: "2026-11-23T06:12:24Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: 3 回目の実行の条件を足した
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_3de47128c8d941ae9934355e03e0d448
