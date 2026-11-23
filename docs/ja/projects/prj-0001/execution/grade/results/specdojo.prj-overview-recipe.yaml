@@ -4,46 +4,46 @@ document: specdojo:prj-overview-recipe
 path: docs/ja/specdojo/recipes/prj-overview-recipe.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 81
-graded_at: "2026-10-08T21:11:38.191Z"
-graded_by: agy-expert-executor
-content_hash: 4aa02110d26564fa1200a6031bd9c54575e7e7cdaec4fe8b448511a19915456c
+verdict: pass
+score: 95
+graded_at: "2026-11-23T20:42:33.699Z"
+graded_by: sonnet-review-executor
+content_hash: dfdcbc694773308b2336269bf10eb0ff75954942a3f8b62aeb5ff0a4b70f21d5
 categories:
   purpose:
-    score: 75
+    score: 100
   operations:
-    score: 63
+    score: 100
   planning:
-    score: 83
+    score: 100
   business:
     score: 100
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 75
+    score: 92
   consistency:
-    score: 50
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-po-decision-readiness:
     level: 4
     score: 100
   vp-po-publication-accountability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-pm-plan-feasibility:
     level: 4
     score: 100
   vp-pm-dependency-risk:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-pm-control-reporting:
     level: 4
     score: 100
@@ -72,136 +72,56 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
     level: 3
     score: 75
-  vp-qe-omissions-consistency:
-    level: 2
-    score: 50
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ops-operability:
     level: 4
     score: 100
   vp-ops-agent-boundary:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
-  major: 7
-  minor: 4
+  major: 0
+  minor: 3
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-po-purpose-alignment
-    line: 215
-    anchor: ""
-    message: 「前提条件」に公開方針を導出する問いがなく、主要な対象範囲・判断が公開対象および再利用方針と整合するかを説明できないため、公開範囲と公開・再利用上の判断理由を確認する問いを追加する必要がある。
-    message_ja: 「前提条件」に公開方針を導出する問いがなく、主要な対象範囲・判断が公開対象および再利用方針と整合するかを説明できないため、公開範囲と公開・再利用上の判断理由を確認する問いを追加する必要がある。
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 132
+    anchor: "- 各原則は「名称 + 一文説明」にする。"
+    message: rulebook 6.5 と template は原則に「名称・短い説明・プロジェクト上の意味」を求めているが、recipe は「名称 + 一文説明」のみのため、プロジェクト上の意味を書く指示を追加する必要がある。
+    message_ja: rulebook 6.5 と template は原則に「名称・短い説明・プロジェクト上の意味」を求めているが、recipe は「名称 + 一文説明」のみのため、プロジェクト上の意味を書く指示を追加する必要がある。
   - id: F002
-    severity: major
-    rule: vp-po-publication-accountability
-    line: 215
-    anchor: ""
-    message: >-
-      「誰が最終判断を行うか」と「AI Agent
-      やシステムはどこまで支援するか」を問うだけで、人間が最終判断と説明責任を担うこと、および公開対象・非公開対象を明示する記入指示がないため、人間の承認責任と公開範囲を明記する手順を追加する必要がある。
-    message_ja: >-
-      「誰が最終判断を行うか」と「AI Agent
-      やシステムはどこまで支援するか」を問うだけで、人間が最終判断と説明責任を担うこと、および公開対象・非公開対象を明示する記入指示がないため、人間の承認責任と公開範囲を明記する手順を追加する必要がある。
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 85
+    anchor: "- まず 1〜2 段落で文脈を説明する。"
+    message: template は推測による頻度・影響の値に根拠と置き換え方を添えるよう求めているが、recipe の背景の節に同じ指示がないため、追加する必要がある。
+    message_ja: template は推測による頻度・影響の値に根拠と置き換え方を添えるよう求めているが、recipe の背景の節に同じ指示がないため、追加する必要がある。
   - id: F003
-    severity: major
-    rule: vp-pm-dependency-risk
-    line: 215
-    anchor: ""
-    message: >-
-      依存前提は作成前情報の「前提・制約」に一括されるだけで、「前提条件」の問い・書き方・レビュー観点に依存先、成立条件、未成立時の影響を具体化する手順がないため,
-      後続成果物やスケジュールに影響する依存を識別できる問いを追加する必要がある。
-    message_ja: >-
-      依存前提は作成前情報の「前提・制約」に一括されるだけで、「前提条件」の問い・書き方・レビュー観点に依存先、成立条件、未成立時の影響を具体化する手順がないため,
-      後続成果物やスケジュールに影響する依存を識別できる問いを追加する必要がある。
-  - id: F004
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 197
-    anchor: ""
-    message: 推奨表に具体的な「判定時期」と「初期仮説／確定値」の記入欄または記入指示がなく、本文177行目および仕上げチェック276行目の確認事項を表の適用だけでは判定できないため、これらを各指標へ記録できるようにする必要がある。
-    message_ja: 推奨表に具体的な「判定時期」と「初期仮説／確定値」の記入欄または記入指示がなく、本文177行目および仕上げチェック276行目の確認事項を表の適用だけでは判定できないため、これらを各指標へ記録できるようにする必要がある。
-  - id: F005
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 215
-    anchor: ""
-    message: >-
-      「前提条件」の問いと書き方が対象・対象外・判断責任・未決事項に偏り、rulebook と template
-      が要求する「変えない前提」「依存前提」「公開方針」「取捨選択方針」を成果物へ反映する問いと確認項目が欠けているため、各項目の記述手順を追加する必要がある。
-    message_ja: >-
-      「前提条件」の問いと書き方が対象・対象外・判断責任・未決事項に偏り、rulebook と template
-      が要求する「変えない前提」「依存前提」「公開方針」「取捨選択方針」を成果物へ反映する問いと確認項目が欠けているため、各項目の記述手順を追加する必要がある。
-  - id: F006
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 169
-    anchor: ""
-    message: >-
-      期待効果を三つの時間軸に分け、欠落がないか確認する書き方になっている一方、rulebook と template
-      が許容する不要な時間軸の省略理由または別の判定時期を記載する分岐がないため、適用不要な指標を無理に作らせない例外手順を追加する必要がある。
-    message_ja: >-
-      期待効果を三つの時間軸に分け、欠落がないか確認する書き方になっている一方、rulebook と template
-      が許容する不要な時間軸の省略理由または別の判定時期を記載する分岐がないため、適用不要な指標を無理に作らせない例外手順を追加する必要がある。
-  - id: F007
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 215
-    anchor: ""
-    message: >-
-      recipe-guided でも成果物を組み立てられるという Recipe 記述標準に対し、「前提条件」の問いが rulebook・template
-      の変えない前提、依存前提、公開方針、取捨選択方針を導出しないため、対応する問い・具体化手順・レビュー項目を追加する必要がある。
-    message_ja: >-
-      recipe-guided でも成果物を組み立てられるという Recipe 記述標準に対し、「前提条件」の問いが rulebook・template
-      の変えない前提、依存前提、公開方針、取捨選択方針を導出しないため、対応する問い・具体化手順・レビュー項目を追加する必要がある。
-  - id: F008
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 169
-    anchor: ""
-    message: 三つの時間軸を一律に作成・確認させる記述が、不要な時間軸は省略理由または別の判定時期を示して省略できるとする rulebook・template と整合しないため、recipe に同じ省略条件を追加する必要がある。
-    message_ja: 三つの時間軸を一律に作成・確認させる記述が、不要な時間軸は省略理由または別の判定時期を示して省略できるとする rulebook・template と整合しないため、recipe に同じ省略条件を追加する必要がある。
-  - id: F009
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 249
-    anchor: "| 実現したいこと | 家族が店番する場合でも在庫とつけを同じ手順で確認できる                     | 在庫画面を作る               |"
-    message: 第6章の「基本方針」は本文見出しおよび対応資料の「基本的な考え方」と表記が異なり、別の項目と誤読され得るため、正式な章名へ統一する必要がある。
-    message_ja: 第6章の「基本方針」は本文見出しおよび対応資料の「基本的な考え方」と表記が異なり、別の項目と誤読され得るため、正式な章名へ統一する必要がある。
-  - id: F010
-    severity: major
-    rule: vp-ops-release-readiness
-    line: 215
-    anchor: ""
-    message: 「前提条件」に公開方針を導出する問いがなく、公開対象、公開上の制約、未解決事項をリリース判断へ引き渡せないため、公開範囲と公開前に人間が確認すべき前提を記述する手順を追加する必要がある。
-    message_ja: 「前提条件」に公開方針を導出する問いがなく、公開対象、公開上の制約、未解決事項をリリース判断へ引き渡せないため、公開範囲と公開前に人間が確認すべき前提を記述する手順を追加する必要がある。
-  - id: F011
-    severity: major
-    rule: vp-ops-agent-boundary
-    line: 219
-    anchor: "- AI Agent やシステムは、どこまで支援する位置づけか。"
-    message: >-
-      「誰が最終判断を行うか」という問いだけでは AI Agent を最終判断者とする回答も排除できず、rulebook・template が要求する人間の判断責任を保証できないため、AI Agent
-      は支援に限定し最終承認と説明責任は人間が担うという記入指示とレビュー項目を追加する必要がある。
-    message_ja: >-
-      「誰が最終判断を行うか」という問いだけでは AI Agent を最終判断者とする回答も排除できず、rulebook・template が要求する人間の判断責任を保証できないため、AI Agent
-      は支援に限定し最終承認と説明責任は人間が担うという記入指示とレビュー項目を追加する必要がある。
+    line: 132
+    anchor: "- 各原則は「名称 + 一文説明」にする。"
+    message: template の `_PRINCIPLE_MEANING_` 欄を導く問いと書き方が recipe にないため、原則に「プロジェクト上の意味」を書く手順を追加する必要がある。
+    message_ja: template の `_PRINCIPLE_MEANING_` 欄を導く問いと書き方が recipe にないため、原則に「プロジェクト上の意味」を書く手順を追加する必要がある。
