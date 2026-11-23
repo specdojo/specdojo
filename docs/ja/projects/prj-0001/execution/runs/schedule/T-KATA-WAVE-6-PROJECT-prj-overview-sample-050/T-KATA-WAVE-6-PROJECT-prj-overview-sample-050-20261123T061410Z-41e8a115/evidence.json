@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-6-PROJECT-prj-overview-sample-050",
+  "run_id": "T-KATA-WAVE-6-PROJECT-prj-overview-sample-050-20261123T061410Z-41e8a115",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-23T06:14:54.849Z",
+    "completed_at": "2026-11-23T06:17:41.904Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/prj-overview-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/prj-overview-sample.md | 79 +++++++++++++++----------\n 1 file changed, 48 insertions(+), 31 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/samples/prj-overview-sample.md",
+      "status": "passed",
+      "summary": "All matched files use Prettier code style"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2 docs/ja/specdojo/samples/prj-overview-sample.md",
+      "status": "passed",
+      "summary": "0 issues in 1 file"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "No history file changed",
+      "reason": "Only a sample under docs/ja/specdojo/samples was changed; no plan/result/pjr history file was edited by the executor"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:prj-overview-sample\n  type: project\n  status: ready\n  rulebook: specdojo:prj-overview-rulebook\n  based_on: []\n  supersedes: []\n---\n\n# プロジェクト概要: 駄菓子屋きぬや 販売管理システム\n\n駄菓子屋きぬや 販売管理システムは、店頭販売、在庫、常連顧客のつけを一元管理し、店主一人でも日々の運用を続けやすくするための小規模店舗向け業務支援システムである。\n\n## 1. 背景\n\n地域の子どもたちに長年親しまれている「駄菓子屋きぬや」では、販売記録や在庫管理をノートと記憶に頼っている。店主の高齢化により、仕入れ判断や在庫確認、つけ残高の確認に時間がかかる場面が増えている。店番は主に店主が行い、店主の不在時は家族が交代で入る。\n\n現在、次の\n… output omitted …\n用に近い入力手順を優先する。\n\n本プロジェクトが成り立つために、次の条件に依存する。\n\n- 店内で使うタブレットを1台用意できること。\n- 運用開始前1か月のベースラインとして、欠品と廃棄・値引き・長期滞留を手書きの記録で残せること。\n- 家族利用者代表が、初期公開前の試行と運用開始後の店番に参加できること。\n\n判断責任、AI Agent の役割、公開方針、取捨選択方針は次のとおりとする。\n\n- 店主が最終的な業務判断を行い、システムは記録と確認を支援する位置づけとする。仕入れ数量やつけの扱いをシステムが自動で決めることはしない。\n- AI Agent は、成果物の下書き作成と点検の補助に使ってよい。採否と業務上の判断は人が行い、AI Agent の出力をそのまま確定としない。\n- 顧客の氏名、連絡先、つけ残高は店内の記録にのみ置き、本書を含む共有する文書には記載しない。\n- 初期公開の範囲に入らない要望は記録だけ残し、短期指標の判定後に、記録の継続を妨げないかを基準に採否を決める。\n- オフライン時の運用方針は *UNDECIDED*: 初期公開の計画で決定する。"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6074 file(s), 99 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 75 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6074 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-PROJECT-prj-overview-sample-050\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (48 tests) 7ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.t\n… output omitted …\ns/src/exec/plans.test.ts\",\"duration_ms\":1967}\n\n Test Files  19 passed (19)\n      Tests  480 passed (480)\n   Start at  15:19:23\n   Duration  2.99s (transform 6.87s, setup 979ms, import 10.07s, tests 6.45s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nm coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-PROJECT-prj-overview-sample-050/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-PROJECT-prj-overview-sample-050/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "Revised docs/ja/specdojo/samples/prj-overview-sample.md for grade findings F001-F006 and F008: added rough problem figures labeled as interview estimates, the busy season (an assumption) and the deadline, value hypotheses, links to the success criteria and scope samples, and judgment timings and the annualized baseline conversion for the medium- to long-term indicators; removed the repeated paragraph; split the preconditions into fixed premises, dependencies, and judgment/AI Agent/publication/selection policy; unified the term to 初期公開. F007 was not changed because the rulebook Expected Effects section specifies 初期目標 for the short- and medium- to long-term columns.",
+  "completion_status": "complete",
+  "handoff": [
+    "F007 not applied: the rulebook (Expected Effects, last bullet) specifies the column name 目標 for initial publication indicators and 初期目標 for short- and medium- to long-term indicators, and the sample and template already follow it. The rulebook is authoritative; no Kata change is needed. If the reviewer wants to unify the column names, the rulebook must be changed first.",
+    "Undecided values left as _UNDECIDED_: the initial publication (初期公開) date and the offline operation policy (both to be decided in the initial publication plan).",
+    "_ASSUMPTION_: the busy season is the school summer holiday (late July to end of August). The PO should decide whether to add this to the shared sample context in sample-authoring-standard.",
+    "Term consistency proposal: this sample now uses 初期公開 (defined in its Basic Principles section), while prj-success-criteria-and-acceptance-criteria-sample and prj-scope-sample use 初期リリース. Consider aligning the sibling samples in a later task.",
+    "Background frequencies (stockouts about once a week, discrepancies a few times a month) are labeled as interview estimates within the shared fictional context and are to be replaced by the one-month pre-launch baseline."
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-prj-overview-sample-050/T-KATA-WAVE-6-PROJECT-prj-overview-sample-050-20261123T061410Z-41e8a115/executor.log",
+      "bytes": 5992,
+      "truncated": false
+    }
+  ]
+}
