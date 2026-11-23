@@ -16,6 +16,7 @@ import {
   type SpecDojoConfig,
 } from "../shared/specdojo-config.js";
 import { registerNightOrchestratorCommand } from "./night-orchestrator.js";
+import { registerNightlyIntegrationTestsCommand } from "./nightly-integration-tests.js";
 
 export type OrchestratorProvider = Exclude<AgentProvider, "custom">;
 
@@ -195,6 +196,7 @@ export function registerOrchestratorCommands(program: Command): void {
     .description("Launch an interactive orchestrator with declared repository access");
 
   registerNightOrchestratorCommand(orchestrator);
+  registerNightlyIntegrationTestsCommand(orchestrator);
 
   orchestrator
     .command("launch")

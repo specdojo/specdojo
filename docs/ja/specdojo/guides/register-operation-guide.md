@@ -513,6 +513,8 @@ specdojo register update --project <project-id> --id PJR-0012 \
 
 夜間実行は `specdojo orchestrator night` が担います。worktree 隔離、post-review、自動 close / `waiting` への復帰を必須とし、件数、並列数、連続失敗停止、rate limit 時の fallback をオプションで制限します。承認範囲外の操作が必要になった失敗は、元項目を `derived_from` に持つ issue として起票します。結果は `execution/reports/night-orchestrator/` の朝報告 1 文書へ集約します。
 
+親の検証は変えたファイルに関係する統合テストだけを流すため、毎晩 4 時の routine `rtn-nightly-integration-tests` が統合テストの全件を流し、結果を `execution/reports/nightly-integration-tests/` の朝報告へ残します。失敗した朝は、報告の失敗テストの表から登録簿へ項目を起票して直します。
+
 朝報告は `type: project`・`status: draft`・`rulebook: none` の管理文書として生成し、番号付きの「1. 集計」「2. 実行結果」を記録します。Job の review 前に、通常の成果物と同じ frontmatter・Markdown 検査の対象になります。
 
 merge に commit-msg hook を使うリポジトリでは、Git が hook に渡すメッセージファイルを検査してください。Lefthook の設定例は `run: npx commitlint --edit "{1}"` です。`$1` は Lefthook の引数置換ではないため、ファイル名が渡らず `COMMIT_EDITMSG` を検査する場合があります。merge で渡される `MERGE_MSG` と異なり、linked worktree では未作成、主の作業ツリーでは古い内容が残っていることがあります。検査を省略せず、両方の作業ツリーで有効な merge メッセージの受理と無効なメッセージの拒否を確かめてください。

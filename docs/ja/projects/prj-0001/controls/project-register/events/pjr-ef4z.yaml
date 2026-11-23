@@ -60,3 +60,61 @@
       from: ""
       to: 完了条件
   previous_event_id: reg_bd75bd64779144bc925f0f9633f7ba1d
+- v: 1
+  id: reg_9f6884dd8f68475fb18077045ddcc5b8
+  ts: "2026-11-23T02:02:38Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_0fdc9f5b54ee4a96bc6d82ced0dc4eae
+- v: 1
+  id: reg_0f84f45de387466e8abf6bfdf277968f
+  ts: "2026-11-23T02:13:14Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: Grade sidecar changed after checkpoint; reconcile before merge: docs/ja/projects/prj-0001/execution/grade/results/specdojo.ifx-api-rulebook.yaml"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: Grade sidecar changed after checkpoint; reconcile before merge: docs/ja/projects/prj-0001/execution/grade/results/specdojo.ifx-api-rulebook.yaml"
+  previous_event_id: reg_9f6884dd8f68475fb18077045ddcc5b8
+- v: 1
+  id: reg_8889f8001cf8421ea3c8c92a22260022
+  ts: "2026-11-23T02:36:40Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: Grade sidecar changed after checkpoint; reconcile before merge: docs/ja/projects/prj-0001/execution/grade/results/specdojo.ifx-api-rulebook.yaml"
+      to: "-"
+  previous_event_id: reg_0f84f45de387466e8abf6bfdf277968f
+- v: 1
+  id: reg_8f0c9a0202a447d4aff3e66ddc8e23a2
+  ts: "2026-11-23T02:41:16Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_8889f8001cf8421ea3c8c92a22260022

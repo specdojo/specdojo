@@ -1,0 +1,13 @@
+`Register item:` の行に、`_`・`*`・`|` をエスケープしていない元のタイトルが出るようにしました。
+
+テストは `tests/src/shared/text.test.ts` だけ実行し、53 件が通りました。`npm run -s typecheck` は出力が何も出ませんでした。親 runner の検証は未実施です。
+
+- **原因:** 登録簿の表セル用にエスケープ済みの `item.title` を、そのままログに出していました。
+- **修正:** `src/shared/text.ts` に `unescapeMarkdownCell` を追加し、`Register item:` の行を出す 4 か所で使うようにしました。変更したのは `src/exec/run/register-worktree.ts` の 1 か所と `src/exec/run/register-resume.ts` の 3 か所です。一覧と個票のエスケープは変えていません。
+- **dry-run:** `--dry-run` 専用の `Register item:` の行は見つかりませんでした。dry-run もこの 4 か所のどれかを通ると見ていますが、確認していません。
+- **テスト:** `_`・`*`・`|` が元に戻ることと、エスケープのないタイトルが変わらないことを `tests/src/shared/text.test.ts` に追加しました。実際のログ行を出力して確かめるテストは書いていません。
+- **個票:** `pjr-tjzm-runner-log-title-escape.md` の原因・スケジュール・対応結果を埋め、「CHANGELOG に書く事項」の小節（区分 Fixed と文案）を追加しました。`CHANGELOG.md` は変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"`Register item:` の行でエスケープ済みタイトルを元に戻して出すようにした（`unescapeMarkdownCell` を追加し 4 か所で使用）。テストと個票の対応結果を更新した。","handoff":["`--dry-run` 専用の `Register item:` の行は見つからなかった。dry-run も修正した 4 か所のどれかを通ると見ているが、確認していない。","`Register item:` の行そのものを出力して確かめるテストは書いていない。`unescapeMarkdownCell` の単体テストのみ。","CHANGELOG に書く事項（区分 Fixed と文案）は個票の対応結果 5.1 に記載した。`CHANGELOG.md` は変更していない。"],"validations":[{"command":"npx vitest run tests/src/shared/text.test.ts","status":"passed","summary":"53 件が通った"},{"command":"npm run typecheck","status":"not_run","summary":"親 runner が実行する検証のため executor では報告しない"}]}
+</specdojo_executor_evidence>

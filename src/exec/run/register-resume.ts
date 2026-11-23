@@ -1,3 +1,4 @@
+import { unescapeMarkdownCell } from "../../shared/text.js";
 import { readPlanFile } from "../../shared/plan-conventions.js";
 import { executorStageResumeHint } from "../evidence.js";
 import { existsSync } from "node:fs";
@@ -199,7 +200,9 @@ export async function resumeRegisterIntegration(params: {
 }): Promise<RegisterItemSummary> {
   const { item, worktree, target, worktreeResultPath, actor } = params;
 
-  process.stdout.write(`Register item: ${item.id} — ${item.title}  [${item.type}]\n`);
+  process.stdout.write(
+    `Register item: ${item.id} — ${unescapeMarkdownCell(item.title)}  [${item.type}]\n`,
+  );
   process.stdout.write(
     `  Resuming integration from run ${target.runId} (reporter result: ${params.stem}-result.md)\n` +
       `  CWD: ${worktree.path}\n  Actor: ${actor} (runner-owned integration)\n`,
@@ -582,7 +585,9 @@ export async function resumeSingleRegisterItemWorktree(
     );
     if (reporter.kind === "error") return refuse(reporter.message);
 
-    process.stdout.write(`Register item: ${item.id} — ${item.title}  [${item.type}]\n`);
+    process.stdout.write(
+      `Register item: ${item.id} — ${unescapeMarkdownCell(item.title)}  [${item.type}]\n`,
+    );
     process.stdout.write(
       `  Resuming executor from run ${target.runId} in the existing run directory\n` +
         `  CWD: ${worktree.path}\n  Agent: ${executor.candidate.actor} (executor)\n`,
@@ -672,7 +677,9 @@ export async function resumeSingleRegisterItemWorktree(
   );
   if (reporter.kind === "error") return refuse(reporter.message);
 
-  process.stdout.write(`Register item: ${item.id} — ${item.title}  [${item.type}]\n`);
+  process.stdout.write(
+    `Register item: ${item.id} — ${unescapeMarkdownCell(item.title)}  [${item.type}]\n`,
+  );
   process.stdout.write(
     `  Resuming reporter from run ${target.runId} (executor evidence: ${target.evidenceRef})\n` +
       `  CWD: ${worktree.path}\n  Agent: ${reporter.candidate.actor} (reporter)\n`,

@@ -55,3 +55,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_0acfbdfe35b6471b9ae8e7d0b9a0aa56
+- v: 1
+  id: reg_e489e032d8304ff4bc08619efcf38870
+  ts: "2026-11-23T02:38:51Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "reporter output invalid after 3 format attempts: result Markdown notation violation before writing (fix the JSON prose that produced these rendered lines; do not put Markdown headings, code fences, ba…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "reporter output invalid after 3 format attempts: result Markdown notation violation before writing (fix the JSON prose that produced these rendered lines; do not put Markdown headings, code fences, ba…"
+  previous_event_id: reg_c7830d401e424a0c8eba37cf4b539ecf
