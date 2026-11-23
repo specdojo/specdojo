@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-PROJECT-dct-sample-050
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-PROJECT-dct-sample-050/T-KATA-WAVE-6-PROJECT-dct-sample-050-20261123T140733Z-8d35405d/plan.md
   started_at: "2026-11-23T14:07:40.551Z"
+  completed_at: "2026-11-23T14:16:22.485Z"
   agent: opus-executor
   execution: agent
   approach: sample-maintenance
@@ -20,16 +21,23 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- sample 文書の厚みを増し、完成例としての基準を満たすように更新しました。
+- grade による指摘事項（F001〜F006）をすべて解消しました。
+- 具体的には、端末に関する前提の整合性、説明の簡潔化、成功基準の具体化、用語集の扱い、sample 間の親子関係、およびプロジェクトの前提条件に関する記述の修正を行いました。
+- 成果物一覧には、前提・制約・依存関係、および課題とアプローチを追加し、合計 7 件としています。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/samples/dct-sample.yaml`: grade の指摘に従い、以下の点を修正・追加しました。1. 「POS 端末および在庫管理端末」の記述を、プロジェクトの前提に合わせ「店内のタブレット 1 台で動く Web アプリケーションとする」へ変更。2. `note` フィールドから、構造化フィールドの役割を超える補足説明を削除。3. 成功基準を「成功基準の観点と測定方法が識別できること」へ具体化。4. `prj-glossary` について、`rulebook: not-needed` を明示。5. `part_of` を `specdojo:dct-index-sample` に合わせ、sample 間の親子関係を整合。6. `_ASSUMPTION_` コメントによる共通サンプル文脈への参照を追加。また、`prj-assumptions-constraints-dependencies` と `prj-issues-and-approach` を追加しました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- `_ASSUMPTION_`: `dct-index-sample` は規模を `small` としているが、`dct-sample` には `medium` が既定の `prj-assumptions-constraints-dependencies` と `prj-issues-and-approach` を足した。理由（夏休み前の初期公開という制約と、ノートからの記録の移し替えの課題を計画前に整理するため）は仮の判断であり、このまま採用するか利用者が決める必要がある。
+- テンプレート `dct-project-definition-template.yaml` の `prj-overview` の QE 完了条件にも「成功判定の輪郭が確認できること」が残っている。この段ではテンプレートを変えていないので、同じ言い換え（成功基準の観点と測定方法が識別できること）を入れるか検討が必要。
+- rulebook の変更案: 実践の型の要否宣言の節に「`kind: generated` では `rulebook` を省いても未整備とみなさない」と明記する。現在の記述では、省略は必要だが未整備と読める。
+- `prj-glossary` は索引の sample の glossary ドメインと用語の定義が重ならないよう、扱う範囲を指標名と略語に絞り、`rulebook: not-needed` を明示した。
+- `_ASSUMPTION_`: dct-index-sample は規模を small としているが、dct-sample には medium が既定の `prj-assumptions-constraints-dependencies` と `prj-issues-and-approach` を足した。理由（夏休み前の初期公開という制約と、ノートからの記録の移し替えの課題を計画前に整理するため）は仮の判断であり、このまま採用するか利用者が決める必要がある。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+`docs/ja/specdojo/standards/sample-authoring-standard.md` に従い、`grade` による指摘事項を一つずつ解消する形で編集を行いました。`_ASSUMPTION_` を用いたコンテキストの明示や、`_UNDECIDED_` を活用した実例としての構成を重視しています。

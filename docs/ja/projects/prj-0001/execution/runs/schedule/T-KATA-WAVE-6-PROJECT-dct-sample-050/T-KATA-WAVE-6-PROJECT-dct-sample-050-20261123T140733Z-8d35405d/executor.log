@@ -1,0 +1,29 @@
+sample `docs/ja/specdojo/samples/dct-sample.yaml` を書き直しました。grade の指摘 6 件はすべて直しています。schema 検査と Prettier の検査は通りました。result は編集していません。
+
+**指摘への対応**
+
+- **F001（端末の表現）:** 共有している `brief` の端末の書き方を「店内のタブレット 1 台で動く Web アプリケーションとする」に変え、プロジェクト概要の sample の前提と同じ表現にそろえました。対象外の範囲も `brief` に 1 行足しました。
+- **F002（`note` の再掲）:** 用語集の `note` から rulebook の規則の言い直しを消し、この成果物だけの補足（店舗の業務用語は glossary ドメインで定義し、ここでは重複させない）に置き換えました。
+- **F003（「輪郭」が曖昧）:** 「成功基準の観点と測定方法が識別できること」に変えました。
+- **F004（`rulebook` の省略）:** 用語集に `rulebook: not-needed` を明示し、理由をコメントで書きました。定義サマリーは `generated` なので実践の型を適用せず、`rulebook` を書かない理由をコメントに残しました。
+- **F005（`part_of`）:** 親を `specdojo:dct-index-sample` に変えました。
+- **F006（例示値の誤読）:** 例示値の prj-0001 が SpecDojo 本体を指さないことを `_ASSUMPTION_` コメントで書き、共通サンプル文脈への参照を足しました。
+
+**厚くした内容**
+
+- 成功基準と受入条件、前提・制約・依存関係の 2 件を `work` に足しました。課題と方針の `depends_on` は、テンプレートに合わせて前提・制約・依存関係を含めました。
+- 成果物は `work` 5 件、`control` 1 件、`generated` 1 件の計 7 件です。`brief` は YAML アンカーで共有しています。
+- `done_criteria` は駄菓子屋の題材に合わせて具体的に書き、PM の観点（`vp-pm-plan-feasibility`、`vp-pm-dependency-risk`）を足しました。
+- 用語集は名前を「プロジェクト用語集」に変え、扱う範囲を指標名と略語に絞りました。索引の sample には別に glossary ドメインがあり、用語の定義が二重になるためです。
+
+**決めてほしいこと**
+
+1. 索引の sample は規模を small としていますが、この sample には medium が既定の成果物を 2 件足しています。理由（夏休み前の初期公開という制約と、ノートからの記録の移し替えの課題を計画前に整理するため）は `_ASSUMPTION_` で書いた仮の判断です。このまま採用するか、決めてください。
+2. 「成功判定の輪郭が確認できること」はテンプレート `dct-project-definition-template.yaml` の側にも残っています。この段ではテンプレートを変えていないので、同じ言い換えを入れるか検討が必要です。
+3. この段では rulebook を変えていません。合わせて直すべき点として、rulebook の実践の型の要否宣言の節に「`generated` では `rulebook` を省いても未整備とみなさない」と明記する案を挙げます。
+
+`npm run lint:*` などの検査は、この後の段で自動で実行されます。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"docs/ja/specdojo/samples/dct-sample.yaml を書き直し、grade の指摘 F001〜F006 をすべて直した。成功基準と受入条件、前提・制約・依存関係の 2 件を足し、成果物は work 5 件・control 1 件・generated 1 件の計 7 件になった。schema 検査と Prettier の検査は通過。","handoff":["`_ASSUMPTION_`: dct-index-sample は規模を small としているが、dct-sample には medium が既定の `prj-assumptions-constraints-dependencies` と `prj-issues-and-approach` を足した。理由（夏休み前の初期公開という制約と、ノートからの記録の移し替えの課題を計画前に整理するため）は仮の判断であり、このまま採用するか利用者が決める必要がある。","テンプレート `dct-project-definition-template.yaml` の `prj-overview` の QE 完了条件にも「成功判定の輪郭が確認できること」が残っている。この段ではテンプレートを変えていないので、同じ言い換え（成功基準の観点と測定方法が識別できること）を入れるか検討が必要。","rulebook の変更案: 実践の型の要否宣言の節に「`kind: generated` では `rulebook` を省いても未整備とみなさない」と明記する。現在の記述では、省略は必要だが未整備と読める。","`prj-glossary` は索引の sample の glossary ドメインと用語の定義が重ならないよう、扱う範囲を指標名と略語に絞り、`rulebook: not-needed` を明示した。"],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/dct.schema.yaml --data docs/ja/specdojo/samples/dct-sample.yaml","status":"passed","summary":"docs/ja/specdojo/samples/dct-sample.yaml: valid"},{"command":"npx prettier --check docs/ja/specdojo/samples/dct-sample.yaml","status":"passed","summary":"All matched files use Prettier code style"}]}
+</specdojo_executor_evidence>
