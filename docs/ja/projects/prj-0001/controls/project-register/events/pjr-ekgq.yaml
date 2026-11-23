@@ -71,3 +71,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_37cd45d93a9a4aaabd00e7ca6ffbf3ae
+- v: 1
+  id: reg_ddde9dd4ee0240c296b363000c6767e1
+  ts: "2026-11-23T04:21:34Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分と単体テストを確かめ、使い捨てのリポジトリの linked worktree で設定の読み込みが通ることと、exec smoke の成功を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: linked worktree では external_projects の path を主の作業ツリーのルートから解決するようにした（案 a）。設定リファレンスと単体テストを足した
+  previous_event_id: reg_73af01e55c7044619bb8bbae00e54ce3

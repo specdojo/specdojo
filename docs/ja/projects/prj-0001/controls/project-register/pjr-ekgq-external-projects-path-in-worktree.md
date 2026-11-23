@@ -7,11 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-11-23T01:37:52Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-23T04:21:34Z"
+  conclusion: linked worktree では external_projects の path を主の作業ツリーのルートから解決するようにした（案 a）。設定リファレンスと単体テストを足した
   commit_type: fix
 ---
 
