@@ -4,38 +4,68 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-PROJECT-prj-issues-and-approach-sample-080
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-PROJECT-prj-issues-and-approach-sample-080/T-KATA-WAVE-6-PROJECT-prj-issues-and-approach-sample-080-20261123T222947Z-1db04a9c/plan.md
   started_at: "2026-11-23T22:29:52.939Z"
+  completed_at: "2026-11-23T22:31:49.144Z"
   agent: sonnet-executor
   execution: agent
   approach: condense
   targets:
     - specdojo:prj-issues-and-approach-sample
-  condense_records: []
+  condense_records:
+    - location: 第2章 原因（仮説でも可）の冒頭「一つの課題に原因を一つだけ置かず、手順・情報・判断基準の別に分けた。」
+      category: repetition
+      action: delete
+      reason: 表の原因区分と内容の列が同じ分け方を示しており、メタな説明は判断に不要。意味は表で維持される。
+      cause:
+        type: document
+    - location: 第7章 見直しと変更管理の冒頭「原因の仮説ごとに反証されたときの見直しを決め、前提とスコープの変化も契機に加えた。」
+      category: table-prose
+      action: delete
+      reason: 表の各行（契機・観点・対応方針）が同じ内容を示す二重の説明。表で意味は維持される。
+      cause:
+        type: document
+    - location: 第3章 解決策候補の冒頭（代替・補完の関係の説明）
+      category: table-prose
+      action: retain
+      reason: A-01 と A-02 が代替、A-03 が補完である理由は表の「関係」列に書かれておらず、採用判断の根拠になるため残す。
+      cause:
+        type: document
+    - location: 第4章 採用アプローチと理由の冒頭段落
+      category: repetition
+      action: retain
+      reason: 併用の理由と実行順序は rulebook が求める補完策の組み合わせ理由であり、表には載らない。
+      cause:
+        type: document
 ---
 
 # Condense Result
 
 ## 1. 実施内容
 
-_TODO_: 冗長さの整理内容と、内容・決定・完了条件の意味および必須情報を維持した確認結果を書く。変更不要の場合は根拠を書く。
+- 対象文書 `docs/ja/specdojo/samples/prj-issues-and-approach-sample.md` の冗長さを整理しました。
+- 第2章および第7章において、表の内容を補足するだけの重複した説明文（`repetition` および `table-prose`）を削除しました。
+- 第3章および第4章の記述については、採用判断の根拠となる重要な背景情報が含まれているため、保持（`retain`）と判断しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 対象文書と変更内容を書く。
+- `docs/ja/specdojo/samples/prj-issues-and-approach-sample.md`: 第2章および第7章の冒頭における、表の内容を繰り返す冗長な説明文を削除し、文書を簡潔にしました。第3章および第4章の重要な背景記述は保持しています。
 
 ## 3. 申し送り
 
-_TODO_: 後続への申し送りを書く。なければ「なし」。
+- なし
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `vp-arc-conciseness` と宣言済み Kata の適用、意味の維持の根拠を書く。
+文書内の冗長な説明を削り、表（テーブル）による記述への集約を図りました。一方で、採用判断や補完策の組み合わせ理由など、表には現れない重要な判断基準や背景情報は、意味を維持するために保持しています。
 
 ## 5. 修正・保持の記録
 
-frontmatter の `condense_records` と 1 対 1 に対応する表を記入する。場所は修正前の見出し・行・引用、種類は 5 種類、直し方は `delete` / `merge` / `reference` / `retain`、理由は意味を保った根拠または保持の必要性、原因は `FindingCause`。Kata が原因なら種類と根拠の箇所も示す。候補がなければ表の代わりに「なし」と記入する。
-
-_TODO_: 場所・種類・直し方・残した理由／意味の維持・原因の表。
+| 場所（修正前） | 種類 | 直し方 | 残した理由／意味の維持 | 原因 |
+| --- | --- | --- | --- | --- |
+| `第2章 原因（仮説でも可）の冒頭「一つの課題に原因を一つだけ置かず、手順・情報・判断基準の別に分けた。」` | `repetition` | `delete` | `表の原因区分と内容の列が同じ分け方を示しており、メタな説明は判断に不要。意味は表で維持される。` | `document` |
+| `第7章 見直しと変更管理の冒頭「原因の仮説ごとに反証されたときの見直しを決め、前提とスコープの変化も契機に加えた。」` | `table-prose` | `delete` | `表の各行（契機・観点・対応方針）が同じ内容を示す二重の説明。表で意味は維持される。` | `document` |
+| `第3章 解決策候補の冒頭（代替・補完の関係の説明）` | `table-prose` | `retain` | `A-01 と A-02 が代替、A-03 が補完である理由は表の「関係」列に書かれておらず、採用判断の根拠になるため残す。` | `document` |
+| `第4章 採用アプローチと理由の冒頭段落` | `repetition` | `retain` | `併用の理由と実行順序は rulebook が求める補完策の組み合わせ理由であり、表には載らない。` | `document` |
