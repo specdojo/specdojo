@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-WAVE-4-nfr-operations-sample-040",
   "run_id": "T-KATA-WAVE-4-nfr-operations-sample-040-20261123T115622Z-9c570a24",
-  "updated_at": "2026-11-23T16:25:38.640Z",
+  "updated_at": "2026-11-23T16:26:26.494Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-4-nfr-operations-sample-040/T-KATA-WAVE-4-nfr-operations-sample-040-20261123T115622Z-9c570a24/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 2,
       "started_at": "2026-11-23T16:25:38.640Z",
-      "completed_at": null,
+      "completed_at": "2026-11-23T16:26:26.494Z",
       "artifact_ref": null
     }
   },
