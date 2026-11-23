@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-NOTATION-cnd-sample-090
   mode: review
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-NOTATION-cnd-sample-090/T-KATA-WAVE-6-NOTATION-cnd-sample-090-20261123T092953Z-2bef720c/plan.md
   started_at: "2026-11-23T09:29:56.197Z"
+  completed_at: "2026-11-23T09:56:11.217Z"
   agent: sonnet-review-executor
   execution: agent
   approach: fully-guided
@@ -19,20 +20,24 @@ specdojo:
 
 ## 1. 評価結果の確認
 
-_TODO_: 評価結果サイドカーのパス、鮮度確認で実行したコマンドとその出力（`content_hash` が現在の成果物と一致するか）、grade の `verdict` / `score` / finding 件数を記入する。評価結果が最新でない、または評価不能の場合は、その事実と理由を記入する。
+評価結果の鮮度は以下の通り確認された： `npx specdojo grade list --target kata --path docs/ja/specdojo/samples/cnd-sample.md --changed-only` 出力なし。評価結果は最新。 - `verdict`: `pass` - `score`: 100 - `finding_counts`: なし。 続いて `npx specdojo grade list --target kata --path docs/ja/specdojo/samples/cnd-sample.md --incomplete` を実行し、評価パイプラインが完了していることを確認した。
 
 ## 2. 判断根拠
 
-_TODO_: 変更内容・plan・実行記録・完了条件・最新の finding を照合した内容と、verdict を選んだ理由を記入する。finding が残るのに完了とする場合は、その finding が今回の完了を妨げない理由を記入する。参照は `[[id]]` 形式（Obsidian wikilink）で記載し、行番号アンカーや絶対パスは使わない。
+- 対象成果物 `docs/ja/specdojo/samples/cnd-sample.md` の grade は `pass`（score: 100）であり、最新であることが確認された。
+- しかし、完了条件 `DC-004` (Person の表などに、文書の役割の割り当ての列を残していないこと) が未充足である。具体的には、`docs/ja/specdojo/samples/cnd-sample.md` の 3.2 章にある Person 表に「判断・確認の責務」列が残っているため、これは `incomplete` と判断する。
+- なお、先行する edit タスクの result および図コードの具体的な描画確認については、実行記録が確認できなかったため、確認できなかった範囲として記録する。
 
 ## 3. 未充足事項・改善指示
 
-_TODO_: 未充足事項と、再計画・成果物の改善・再評価に使う改善指示を記入する（なければ「なし」と記入する）。評価結果の内容に疑義がある場合は、再評価が必要な対象と理由もここに記入する。
+- `docs/ja/specdojo/samples/cnd-sample.md` の Person 表から、「判断・確認の責務」列を削除し、`DC-004` を充足させること。
+- `docs/ja/specdojo/templates/cnd-template.md` の Person 表の構成と、`docs/ja/specdojo/rulebooks/cnd-rulebook.md` の要件を一致させること。
+- これらが完了した後、`docs/ja/specdojo/rulebooks/cnd-rulebook.md` および `docs/ja/specdojo/recipes/cnd-recipe.md` に残っている `minor` な finding について検討を行うこと。
 
 ## 4. approach に応じた確認
 
-_TODO_: `approach` に応じて確認した内容を記入する。fully-guided / recipe-guided / freeform では求められた作成・更新が行われたか、retrofit では実装エビデンスの対応記録と未確認範囲、`rulebook-maintenance` などの maintenance 系では見直しの動機となった finding の解消状況を記入する。
+フェーズ説明に基づき、`docs/ja/specdojo/rulebooks/cnd-rulebook.md`、`docs/ja/specdojo/recipes/cnd-recipe.md`、`docs/ja/specdojo/samples/cnd-sample.md` の整合性を確認した。`doc_criteria` に基づく検証を行った結果、`DC-004` が未達成であることを特定した。
 
 ## 5. decision
 
-- verdict: _TODO_（complete / complete-with-findings / incomplete / grade-stale / grade-unavailable / changed-during-review）
+- verdict: incomplete

@@ -1,0 +1,36 @@
+**review 結果: `incomplete`（DC-004 が未充足）**
+
+**評価結果の確認**
+- `specdojo grade list --target kata --path docs/ja/specdojo/samples/cnd-sample.md --changed-only` は出力なし（終了コード 0）で、評価結果は最新です。
+- 同じ対象で `--incomplete` を実行しても出力なし（終了コード 0）で、評価パイプラインは完了しています。
+- 型の評価結果は次のとおりで、いずれも `pass` です。
+  - sample: score 100、finding 0 件。
+  - rulebook: score 92、minor 4 件。
+  - recipe: score 89、minor 5 件。
+  - template: score 98、minor 1 件。
+- 確認できたのは sample の鮮度です。rulebook、recipe、template の鮮度は plan に記載の runner の確認結果を用いました。
+- 作業ツリーには未追跡の `pipeline-state.json` だけがあり、成果物の変更はありません。
+
+**判断根拠**
+- DC-004 は「Person の表などに、文書の役割の割り当ての列を残していないこと（PJR-76N9）」です。
+- `docs/ja/specdojo/samples/cnd-sample.md` の 3.2 章「Person（人・ロール）」の表には、3 列目に「判断・確認の責務」が残っています。「現金と記録を照合し、結果不明や確定後の訂正を判断する」のように、人ごとの判断・確認の役割を割り当てる内容です。
+- template の grade の `F001` と rulebook の grade の `F004` も、この列が template と rulebook にないことを指摘しています。
+- rulebook は Person を利用接点とし、設計の確認者一覧とは区別すると定めています。
+- sample の grade は 100 点ですが、この列は DC-004 の記述に当たるため、完了条件を満たしていないと判断しました。grade の判定は置き換えていません。
+- DC-001〜003 と DC-005 は、sample の grade（`vp-qe-omissions-consistency`、`vp-qe-kata-conformance`、`vp-dev-testability` はいずれも 100 点）を事実として用いました。review では再評価していません。
+
+**未充足事項・改善指示**
+1. sample の Person 表から「判断・確認の責務」列を削除し、「利用目的・接点」だけにします。判断・確認の内容が必要なら、本文の別の箇所に置きます。
+2. 削除に合わせて、template の Person 表と rulebook の要件を揃えます。これは rulebook の grade の `F004` と template の grade の `F001` への対応です。
+3. rulebook の grade の `F001`〜`F003` と recipe の grade の `F001`〜`F005` は minor です。DC-004 の解消が済めば、完了を妨げるものではありません。
+
+**approach（fully-guided）に応じた確認**
+- 磨き込みが行われたかの確認は、先行する edit の result を特定していないため、できていません。
+
+**確認できなかった範囲**
+- 先行する edit タスクの result（実行記録）。
+- 図のコードの構文と描画の実機確認（DC-005）。親 runner の `lint:mermaid` に委ねます。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict=incomplete。評価結果は最新で、sample の grade は pass（100 点、finding 0 件）。ただし DC-004 が未充足で、cnd-sample.md の 3.2 章の Person 表に「判断・確認の責務」列が残っている。template の grade の F001 と rulebook の grade の F004 も同じ点を指摘している。確認できなかった範囲: 先行する edit タスクの result、図コードの実機の構文・描画確認（親 runner の lint:mermaid に委ねる）。","handoff":["sample の Person 表から「判断・確認の責務」列を削除する（DC-004、PJR-76N9）","template の Person 表と rulebook の要件を揃える（rulebook の grade の F004、template の grade の F001）","rulebook の grade の F001〜F003 と recipe の grade の F001〜F005（minor）は、DC-004 解消後に検討する"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/cnd-sample.md --changed-only","status":"passed","summary":"出力なし。評価結果は最新。"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/cnd-sample.md --incomplete","status":"passed","summary":"出力なし。評価パイプラインは完了。"}]}
+</specdojo_executor_evidence>
