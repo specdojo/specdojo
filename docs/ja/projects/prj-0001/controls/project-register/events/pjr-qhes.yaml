@@ -19,7 +19,7 @@
       to: PJR-325Y の後の grade で、未決事項と後続作業の表に rulebook が省略を禁じる当面の扱いと影響の列がないことが major になった。minor 3 件とあわせて template を直す
     - field: input
       from: ""
-      to: "[\"2026-11-22 の grade（opus-review-executor）で sysd-critical-flows-template は needs-work 90。major は未決事項の表の列の不足で、325Y の前からある\",\"担当 Role code の列を足す指摘は、PJR-76N9 の決まりとぶつかるので採らない（利用者の決定、2026-11-23）\"]"
+      to: '["2026-11-22 の grade（opus-review-executor）で sysd-critical-flows-template は needs-work 90。major は未決事項の表の列の不足で、325Y の前からある","担当 Role code の列を足す指摘は、PJR-76N9 の決まりとぶつかるので採らない（利用者の決定、2026-11-23）"]'
     - field: type
       from: ""
       to: todo
@@ -40,7 +40,7 @@
       to: "2026-11-30"
     - field: derived_from
       from: ""
-      to: "[\"PJR-325Y\"]"
+      to: '["PJR-325Y"]'
     - field: commit_type
       from: ""
       to: docs
@@ -86,3 +86,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_fd93826490d14d0d862bf49cd1d5bb28
+- v: 1
+  id: reg_79c102433b52447d9036e2bd60aab44c
+  ts: "2026-11-23T02:09:58Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分と対応結果で確かめ、template の grade が pass 96 だった（2026-11-23）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: sysd-critical-flows-template の未決事項の表に影響と当面の扱いの列を足し、図の記入指示・part_of・フロー ID の列名を直した。担当 Role code の列は足していない。template の grade は pass 96
+  previous_event_id: reg_1b2429afe6674dfd8a72174eabc93eac
