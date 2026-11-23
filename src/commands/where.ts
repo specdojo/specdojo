@@ -3,6 +3,7 @@ import { printCatalogPaths } from "../catalog/catalog.js";
 import { printTimelinePaths } from "../dashboard/timeline.js";
 import { printExecPaths } from "../exec/commands.js";
 import { printJobPaths } from "../job/job.js";
+import { printPlaybookPaths } from "../project/playbook.js";
 import { printRoutinePaths } from "../routine/routine.js";
 import { printSchedulePaths } from "../schedule/schedule.js";
 
@@ -13,6 +14,7 @@ const pathPrinters = {
   timeline: printTimelinePaths,
   job: printJobPaths,
   routine: printRoutinePaths,
+  playbook: printPlaybookPaths,
 };
 
 export function registerWhereCommand(program: Command): void {

@@ -95,6 +95,8 @@ $defs:
         type: string
       routines_path:
         type: string
+      playbook_path:
+        type: string
       jobs_path:
         type: string
       project_context:

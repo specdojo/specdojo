@@ -1,0 +1,235 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-G6NT",
+  "run_id": "pjr-g6nt-20261123T041517Z-7f592de5",
+  "stage": {
+    "role": "executor",
+    "actor": "sonnet-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-23T04:17:01.122Z",
+    "completed_at": "2026-11-23T04:20:17.388Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-g6nt.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-g6nt-orchestrator-playbook-where.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/specdojo-config-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/specdojo-config.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/where.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/specdojo-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/specdojo.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/commands/where.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/project/playbook.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/project/playbook.test.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-g6nt-orchestrator-playbook-where.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/specdojo-config-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/specdojo-config.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/where.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/specdojo-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/specdojo.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/commands/where.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/project/playbook.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/project/playbook.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 11,
+    "summary": ".../pjr-g6nt-orchestrator-playbook-where.md        | 70 ++++++++++++++++++++--\n docs/ja/specdojo/references/command-reference.md   |  7 ++-\n .../references/specdojo-config-reference.md        | 27 +++++----\n .../schemas/v1/specdojo-config.schema.yaml         |  2 +\n src/commands/where.ts                              |  2 +\n src/shared/specdojo-config.ts                      |  8 +++\n src/specdojo.ts                                    |  2 +\n tests/src/commands/where.integration.test.ts       |  8 ++-\n 8 files changed, 105 insertions(+), 21 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "error 0、warning は既存分のみ"
+    },
+    {
+      "source": "executor",
+      "command": "npx vitest run tests/src/project tests/src/shared/specdojo-config",
+      "status": "passed",
+      "summary": "8 ファイル・133 件が通過"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-G6NT/src/catalog/catalog.ts\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-G6NT/src/dashboard/dashboard.ts\n  1150:1  warning  File has too many lines (1073). Maximum allow\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-G6NT/src/schedule/strategy-generate-document.ts\n  87:8  warning  Function 'buildStrategyDocument' has too many lines (289). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-G6NT/src/shared/specdojo-config.ts\n  1250:1  warning  File has too many lines (1096). Maximum allowed is 1000  max-lines\n\n✖ 43 problems (0 errors, 43 warnings)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6034 file(s), 107 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 83 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6034 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-G6NT\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (48 tests) 6ms\n[parent-validation:test-file] \n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1737}\n\n Test Files  19 passed (19)\n      Tests  480 passed (480)\n   Start at  13:20:38\n   Duration  2.46s (transform 4.55s, setup 667ms, import 6.93s, tests 5.42s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "full run (test infrastructure or settings changed: docs/specdojo/schemas/v1/specdojo-config.schema.yaml): exit 0: > specdojo@0.9.2 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-G6NT\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/devcontainer/scaffold.integration.test.ts\"}\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-co\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pip…",
+      "test_selection": {
+        "mode": "full",
+        "reason": "test infrastructure or settings changed: docs/specdojo/schemas/v1/specdojo-config.schema.yaml"
+      }
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-G6NT/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-G6NT/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-G6NT\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/grade/grade.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/register/commands.test.ts\"}\n ✓ tests/src/grade/grade.test.ts (69 tests) 279ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/src/grade/grade.test.ts\",\"duration_ms\":279}\n[p\n… output omitted …\n it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "`where playbook`・`playbook scaffold`・設定 `playbook_path`（既定 `030-project-management/pm-orchestrator-playbook.md`）を実装した。単体テスト（新規 6 件を含む 133 件）・`typecheck`・`lint:ts` は通った。設定・コマンドリファレンスを直し、指示の本文の案・移し方・CHANGELOG の文案を個票の対応結果に書いた。",
+  "completion_status": "complete",
+  "handoff": [
+    "保護された設定の変更案: `.agents/specdojo-orchestrator.agent.md`（SSOT と 4 つのラッパー、本文はバイト一致で保つ）の「プロジェクトの文書にオーケストレーター向けの運用メモがあれば、作業を始める前に読む。」を「作業を始める前に `specdojo where playbook --project <id>` を実行する。表示されたパスにファイルがあれば（`(does not exist)` が付かなければ）、そのオーケストレーター運用メモを読む。無ければ読まずに進める。運用メモの雛形は `specdojo playbook scaffold` で作れる。」へ差し替える。反映は利用者の承認のもとでオーケストレーターが行う。",
+    "保護された設定の変更案: `CLAUDE.md` と `AGENTS.md` の 11 行目（運用メモのパスの直書き）を「prj-0001 を扱う対話型オーケストレーターは、作業の前に `specdojo where playbook --project prj-0001` で引いた運用メモを読む。」へ差し替えるか削除する。",
+    "決めた内容: 雛形の作り方は `config scaffold` の一部ではなく独立した `playbook scaffold` にした（`config` は設定を扱うコマンドで責務が違うため）。置き場所は `playbook_path`（`base_path` 相対、既定 `030-project-management/pm-orchestrator-playbook.md`）で、prj-0001 の今の場所と一致するため移行は要らない。`_PROJECT_NAME_` はプロジェクト ID で埋める。",
+    "移し方: 既定と違う場所にある運用メモは、`playbook_path` を設定に足す（保護された設定のため承認のもとで行う）か、既定のパスへ `git mv` する。文書 ID は変えず、`[[id]]` の参照は直さない。",
+    "CHANGELOG に書く事項（区分 Added、v0.10.0）: `specdojo where playbook` と `specdojo playbook scaffold` を追加。オーケストレーターの運用メモの場所を設定 `playbook_path`（既定 `030-project-management/pm-orchestrator-playbook.md`）から引き、雛形を作れるようにした。",
+    "`tests/src/commands/where.integration.test.ts` に `playbook` の種類を足したが、統合テストは親 runner が実行する。",
+    "`src/shared/specdojo-config.ts` は `max-lines` の warning（1000 行超）が出ている。今回の追加は 8 行で、元から超えていた。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-G6NT/pjr-g6nt-20261123T041517Z-7f592de5/executor.log",
+      "bytes": 5939,
+      "truncated": false
+    }
+  ]
+}

@@ -73,6 +73,8 @@ export type SpecDojoProjectConfig = {
   viewpoints_path?: string;
   project_register_path?: string;
   routines_path?: string;
+  /** Orchestrator playbook file (relative to base_path). Defaults to DEFAULT_PLAYBOOK_PATH. */
+  playbook_path?: string;
   jobs_path?: string;
   /**
    * Project-level document ids supplied to deliverable edit/review plans independently from
@@ -465,6 +467,12 @@ export function getProjectRegisterPath(project: SpecDojoProjectConfig): string |
 
 export function getProjectRoutinesPath(project: SpecDojoProjectConfig): string | undefined {
   return withOptionalBasePath(project, project.routines_path);
+}
+
+export const DEFAULT_PLAYBOOK_PATH = "030-project-management/pm-orchestrator-playbook.md";
+
+export function getProjectPlaybookPath(project: SpecDojoProjectConfig): string {
+  return withBasePath(project, project.playbook_path?.trim() || DEFAULT_PLAYBOOK_PATH);
 }
 
 export function getProjectJobsPath(project: SpecDojoProjectConfig): string | undefined {
