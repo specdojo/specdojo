@@ -1,0 +1,25 @@
+オーケストレーターの運用メモの型（rulebook・template・sample）を作りました。3 つとも `status: draft` のままで、rulebook の frontmatter の `template`・`sample` で対応を宣言しています。親の検証はまだ流れていません。手元では、関係する Vitest 2 件（44 テスト）、viewpoints の schema 検証、markdownlint、prettier、`validate:history-links` が通りました。
+
+**作ったもの**
+- `docs/ja/specdojo/rulebooks/pm-orchestrator-playbook-rulebook.md`
+  - 章立ては prj-0001 の運用メモが手本です。必須は「目的と適用範囲」「agent の使い分けと癖」「実行の運び方」「止まったときの再開」「close の前の確かめ方」「保護された設定の扱い」の 6 章です。
+  - 「完了条件の書き方」「落とし穴」とプロジェクトに固有の章は任意です。「リリースの手順」は公開・配布するプロジェクトだけ必須にしました。
+  - 情報の種類ごとの置き場所（本体・運用メモ・回避策とコマンドの項目・`handoff`・`question`・個票・実行状態）を表にしました。
+  - 知見の育て方（本体 → 運用メモ → コマンド。手作業の回避策が 2 回以上出たらコマンドにする項目を起票）と、`handoff`・`question` から運用メモへの移し方も書きました。
+  - PJR-76N9 の決まりを禁止事項に入れました。
+- `docs/ja/specdojo/templates/pm-orchestrator-playbook-template.md`
+- `docs/ja/specdojo/samples/pm-orchestrator-playbook-sample.md`: 駄菓子屋きぬやの文脈で書きました。prj-0001 の項目 ID・日付・agent 名は使わず、架空の `PJR-KN11` 系の ID と `cloud-executor` などの架空の agent 名を使っています。
+
+**完了条件の外で直したファイル**
+- `docs/ja/specdojo/defaults/pm-review-viewpoints.yaml`: rulebook を足すと、観点の `document_kinds` の判断漏れの検証が error になるため、新しい rulebook を載せました。`vp-ba-business-value` は `exclude`、`vp-arc-single-responsibility` は `confirmed_default` です。
+- `tests/fixtures/yaml-pages/specdojo--pm-review-viewpoints.md.snap`: 上の YAML を変えたため、表示の snapshot を作り直しました。
+- 個票 `pjr-9170-orchestrator-playbook-kata-docs.md`: 作業内容、対応結果、「迷った点と決めたこと」、「CHANGELOG に書く事項」、関連ドキュメントを書きました。型の grade の行だけは、orchestrator が流すため `open` のままです。
+
+**残っていること**
+- 型の grade は統合の後に orchestrator が流します。
+- prj-0001 の既存の運用メモは変えていません（`rulebook: none` のまま）。型への切り替えと、`deliverables-reference`・`dct-project-management-template.yaml` への追加は PJR-G6NT か別の項目に回します。
+- 作業用のスクリプト `tmp/regen-snap.ts` が残っています。削除が承認されなかったためですが、`tmp/` は commit の対象外です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"運用メモの型（`pm-orchestrator-playbook` の rulebook・template・sample）を draft で作り、frontmatter で対応を宣言した。rulebook の追加に合わせて観点の `document_kinds` と表示の snapshot を直し、個票の作業内容・対応結果（CHANGELOG に書く事項を含む）を更新した。型の grade は完了条件どおり orchestrator に残した。","handoff":["迷った点の決定: prefix を `pm-orchestrator-playbook` にした。理由: prj-0001 の既存の文書（`prj-0001:pm-orchestrator-playbook`、`030-project-management/`）の id と置き場所をそのまま型に合わせられるため。","迷った点の決定: rulebook の `recipe` を `undecided` にした。理由: 完了条件が rulebook・template・sample の 3 つだけを求め、recipe の要否は決まっていないため。","迷った点の決定: `docs/ja/specdojo/defaults/pm-review-viewpoints.yaml` で `vp-ba-business-value` は `exclude`、`vp-arc-single-responsibility` は `confirmed_default` にした。理由: rulebook の追加で判断漏れの検証が error になるため。運用メモは作業の手順の文書で、業務価値との対応を判定する対象ではない（`pm-members`・`sch` と同じ扱い）。表示の snapshot `tests/fixtures/yaml-pages/specdojo--pm-review-viewpoints.md.snap` も作り直した。","迷った点の決定: sample の「リリースの手順」は、店頭のタブレットへの閉店後の入れ替えを例にした。理由: 駄菓子屋きぬやには配布するパッケージがないため。","型の grade（`grade run --target kata --kata pm-orchestrator-playbook`）は統合の後に orchestrator が流す。executor は実行していない。","申し送り: prj-0001 の既存の運用メモ（`rulebook: none`）は変えていない。型への切り替え（`rulebook` の宣言と章の並べ替え）、`deliverables-reference` への行の追加、`dct-project-management-template.yaml` への追加は、PJR-G6NT か別の項目で扱う。","CHANGELOG に書く事項: 区分は「追加」。行の文案は「オーケストレーターの運用メモ（playbook）の型（`pm-orchestrator-playbook` の rulebook・template・sample）を追加した。章立てと、知見を本体 → 運用メモ → コマンドの順に育てる決まり、`handoff`・`question` との分け方を定める。」"],"validations":[{"command":"npx tsx src/docs/viewpoint-document-kinds-check.ts","status":"passed","summary":"document_kinds decisions cover all 113 rulebooks"},{"command":"npx vitest run tests/src/docs/yaml-tables.test.ts tests/src/docs/viewpoint-document-kinds-check.test.ts","status":"passed","summary":"2 files, 44 tests passed (snapshot updated)"},{"command":"npm run -s validate:schema:file -- --schema docs/specdojo/schemas/v1/pm-review-viewpoints.schema.yaml --data docs/ja/specdojo/defaults/pm-review-viewpoints.yaml","status":"passed","summary":"valid"},{"command":"npm run -s validate:history-links","status":"passed","summary":"all history files valid (0 non-valid lines)"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/pm-orchestrator-playbook-rulebook.md docs/ja/specdojo/templates/pm-orchestrator-playbook-template.md docs/ja/specdojo/samples/pm-orchestrator-playbook-sample.md docs/ja/projects/prj-0001/controls/project-register/pjr-9170-orchestrator-playbook-kata-docs.md","status":"passed","summary":"0 issues in 4 files"},{"command":"npx prettier --check docs/ja/specdojo/defaults/pm-review-viewpoints.yaml docs/ja/specdojo/rulebooks/pm-orchestrator-playbook-rulebook.md docs/ja/specdojo/templates/pm-orchestrator-playbook-template.md docs/ja/specdojo/samples/pm-orchestrator-playbook-sample.md","status":"passed","summary":"All matched files use Prettier code style (ticket formatted with --write)"}]}
+</specdojo_executor_evidence>
