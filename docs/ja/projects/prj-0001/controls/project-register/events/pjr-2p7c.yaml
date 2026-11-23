@@ -80,3 +80,61 @@
       from: _TODO_
       to: "2026-11-30"
   previous_event_id: reg_c29fb40340194819870d2691134d5dae
+- v: 1
+  id: reg_b97a65d8bd6c4a229d924db5010397b6
+  ts: "2026-11-23T03:22:56Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "決定内容" updated
+  changes:
+    - field: section
+      from: ""
+      to: 決定内容
+  previous_event_id: reg_ff3d632f560846bd988499225c7080a9
+- v: 1
+  id: reg_77ca9d1f43b94b0e871764e76753335b
+  ts: "2026-11-23T03:23:03Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "採択理由" updated
+  changes:
+    - field: section
+      from: ""
+      to: 採択理由
+  previous_event_id: reg_b97a65d8bd6c4a229d924db5010397b6
+- v: 1
+  id: reg_e73ff1d898294c698130bdd10976318e
+  ts: "2026-11-23T03:23:08Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "承認" updated
+  changes:
+    - field: section
+      from: ""
+      to: 承認
+  previous_event_id: reg_77ca9d1f43b94b0e871764e76753335b
+- v: 1
+  id: reg_d965e75a96f64631a094e819a7ebee23
+  ts: "2026-11-23T03:23:12Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: 利用者がオーケストレーターの推奨を承認した（2026-11-23）
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: B を採る。運用メモを正式な型にし、specdojo where playbook で引けるようにする。v0.10.0 に入れる
+  previous_event_id: reg_e73ff1d898294c698130bdd10976318e
