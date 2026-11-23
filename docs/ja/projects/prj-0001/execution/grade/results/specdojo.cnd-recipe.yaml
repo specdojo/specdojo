@@ -4,12 +4,11 @@ document: specdojo:cnd-recipe
 path: docs/ja/specdojo/recipes/cnd-recipe.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-recipe
 verdict: pass
-score: 100
-graded_at: "2026-11-19T20:26:56.302Z"
-graded_by: flash-high-executor
-content_hash: 8bef3a57b87c97d65ee70d27ce4255217443bde4703951b75b9f3273125d0a7f
+score: 89
+graded_at: "2026-11-23T09:29:29.753Z"
+graded_by: sonnet-review-executor
+content_hash: fce538099044acca55bd8d7b814dee717a8918ea667ffb2803b8e64158d1c7d7
 categories:
   purpose:
     score: 100
@@ -22,13 +21,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 83
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 83
   consistency:
-    score: 100
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -61,8 +60,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -76,17 +75,17 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-language-consistency:
     level: 4
     score: 100
@@ -105,6 +104,47 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 5
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 101
+    anchor: "## 6. 良い例 / 悪い例"
+    message: >-
+      良い例 / 悪い例の表の「分割の目的」「関係のラベル」「未確定の配置」の各行が rulebook 6.1・6.2・6.5 の例と重複しているため、recipe 固有の観点（作る手順で迷う点）に絞るか、rulebook
+      への参照に置き換えるとよい。
+    message_ja: >-
+      良い例 / 悪い例の表の「分割の目的」「関係のラベル」「未確定の配置」の各行が rulebook 6.1・6.2・6.5 の例と重複しているため、recipe 固有の観点（作る手順で迷う点）に絞るか、rulebook
+      への参照に置き換えるとよい。
+  - id: F002
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 124
+    anchor: "- 各コンテナが一つ以上の利用結果につながっている。"
+    message: 仕上げチェックの各項目に、図・定義表・関係表を双方向に照合するといった確認手順と、Pass / Fail / 未判定の判定の考え方が示されておらず、pass / fail を判定しにくい。
+    message_ja: 仕上げチェックの各項目に、図・定義表・関係表を双方向に照合するといった確認手順と、Pass / Fail / 未判定の判定の考え方が示されておらず、pass / fail を判定しにくい。
+  - id: F003
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 124
+    anchor: "- 各コンテナが一つ以上の利用結果につながっている。"
+    message: 仕上げチェックに、rulebook の「検証・承認前の確認」にある結合対象の確認（全経路の正常時の結果と、保存先・外部依存の異常時状態の区別）と、関係 ID の付与の確認が入っていない。
+    message_ja: 仕上げチェックに、rulebook の「検証・承認前の確認」にある結合対象の確認（全経路の正常時の結果と、保存先・外部依存の異常時状態の区別）と、関係 ID の付与の確認が入っていない。
+  - id: F004
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 58
+    anchor: "### 4.3. 要素と境界の定義"
+    message: 要素と境界の定義の章（4.3）に、関係 ID（`REL-01`）の付与と、図の全ノード・全関係を定義表と対応させる作り方がない。rulebook・template の関係表と対応づけて追記するとよい。
+    message_ja: 要素と境界の定義の章（4.3）に、関係 ID（`REL-01`）の付与と、図の全ノード・全関係を定義表と対応させる作り方がない。rulebook・template の関係表と対応づけて追記するとよい。
+  - id: F005
+    severity: minor
+    rule: vp-ux-readability
+    line: 9
+    anchor: >-
+      - コンテナ図は、上位のコンテキスト図の利用目的と外部への委譲を引き継ぎ（Why）、それを担う実行単位・ストア・関係を定め（What）、配置の前提と結合で観測する結果までを扱う（How）。要素名と関係 ID
+      で、図・定義・検証観点・仮定をたどれるようにする（Trace）。
+    message: 「このレシピの使い方」が 1 本の長い箇条書きに Why / What / How / Trace を詰め込んでいるため、読み方（どの章で何を決めるか）を段落か短い項目に分けて示すと初見でも理解しやすい。
+    message_ja: 「このレシピの使い方」が 1 本の長い箇条書きに Why / What / How / Trace を詰め込んでいるため、読み方（どの章で何を決めるか）を段落か短い項目に分けて示すと初見でも理解しやすい。
