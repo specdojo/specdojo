@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-ga72-doctor-command
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-23T13:16:57Z"
+  completed_at: "2026-11-23T13:50:31Z"
+  conclusion: specdojo doctor を足し、パターンに応じた前提を確かめて、足りないものの入れ方を出すようにした
   commit_type: feat
   commit_scope: cli
 ---
