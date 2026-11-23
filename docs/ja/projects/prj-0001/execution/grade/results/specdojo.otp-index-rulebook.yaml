@@ -4,17 +4,16 @@ document: specdojo:otp-index-rulebook
 path: docs/ja/specdojo/rulebooks/otp-index-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-rulebook
-verdict: needs-work
-score: 94
-graded_at: "2026-11-21T05:05:34.601Z"
-graded_by: opus-executor
-content_hash: fac281d7389a85304859c48254b7b7a507c1c2afe751fd5474558a910c727837
+verdict: pass
+score: 98
+graded_at: "2026-11-23T10:00:32.297Z"
+graded_by: sonnet-review-executor
+content_hash: b83501bc9143dbb1b558ed41a645dffc55c458c1121b91ef15ea05a77666af7f
 categories:
   purpose:
     score: 100
   operations:
-    score: 88
+    score: 94
   planning:
     score: 100
   business:
@@ -22,11 +21,11 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 92
   consistency:
     score: 100
 viewpoints:
@@ -37,8 +36,8 @@ viewpoints:
     level: 4
     score: 100
   vp-po-publication-accountability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-plan-feasibility:
     level: 4
     score: 100
@@ -79,14 +78,14 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 3
     score: 75
@@ -101,29 +100,11 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 4
+  major: 0
+  minor: 2
   note: 0
 findings:
   - id: F001
-    severity: minor
-    rule: vp-po-publication-accountability
-    line: 81
-    anchor: "## 7. 禁止事項"
-    message: 初期増員体制（当番）・エスカレーション先・リストア責任者の章は個人名や電話番号などの連絡先を書き込みやすいのに、禁止事項に公開不適切情報（個人名・連絡先）の記載禁止がなく、役割名で書くという制約を足す必要がある。
-    message_ja: 初期増員体制（当番）・エスカレーション先・リストア責任者の章は個人名や電話番号などの連絡先を書き込みやすいのに、禁止事項に公開不適切情報（個人名・連絡先）の記載禁止がなく、役割名で書くという制約を足す必要がある。
-  - id: F002
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 49
-    anchor: "## 5. 本文要件"
-    message: >-
-      本文要件の受入条件と sample が合っておらず、バックアップの保管先、権限の旧新差分、問合せのエスカレーション条件、障害対応の判断・連絡・復旧・報告の流れ、クローズ判断者と最終報告物が sample
-      に欠けているため、sample を補うか受入条件を見直してそろえる必要がある。
-    message_ja: >-
-      本文要件の受入条件と sample が合っておらず、バックアップの保管先、権限の旧新差分、問合せのエスカレーション条件、障害対応の判断・連絡・復旧・報告の流れ、クローズ判断者と最終報告物が sample
-      に欠けているため、sample を補うか受入条件を見直してそろえる必要がある。
-  - id: F003
     severity: minor
     rule: vp-qe-kata-conformance
     line: 1
@@ -134,14 +115,7 @@ findings:
     message_ja: >-
       Frontmatter の `recipe` と `template` が `undecided` のままで、rulebook・recipe・sample・template
       の対応関係が定まっていないため、作成するか対象外にする理由を示す必要がある。
-  - id: F004
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 9
-    anchor: "- `otp-index` は切替後の運用が安定するまでの共通方針と判断軸（監視・窓口・ハイパーケア体制・クローズ条件）を定義する入口とする。"
-    message: 全体方針の「ハイパーケア体制」と、必須章名「初期増員体制（期間・当番・SLA）」の関係が書かれておらず同じものか区別できないため、用語をそろえるか、両者が同じであることを明記する必要がある。
-    message_ja: 全体方針の「ハイパーケア体制」と、必須章名「初期増員体制（期間・当番・SLA）」の関係が書かれておらず同じものか区別できないため、用語をそろえるか、両者が同じであることを明記する必要がある。
-  - id: F005
+  - id: F002
     severity: minor
     rule: vp-ops-release-readiness
     line: 1
