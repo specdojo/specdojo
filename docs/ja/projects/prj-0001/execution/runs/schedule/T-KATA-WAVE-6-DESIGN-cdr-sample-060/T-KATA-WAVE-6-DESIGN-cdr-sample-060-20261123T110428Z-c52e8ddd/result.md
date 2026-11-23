@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-DESIGN-cdr-sample-060
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-DESIGN-cdr-sample-060/T-KATA-WAVE-6-DESIGN-cdr-sample-060-20261123T110428Z-c52e8ddd/plan.md
   started_at: "2026-11-23T11:04:38.681Z"
+  completed_at: "2026-11-23T11:17:53.389Z"
   agent: opus-executor
   execution: agent
   approach: template-maintenance
@@ -20,16 +21,19 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- template としての `docs/ja/specdojo/templates/cdr-template.md` を更新しました。
+- plan で指摘されていた `F001` および `F002` について、現在のテンプレートには既に `エラー 処理` 章に `- 例外の握りつぶしの禁止: _TODO_` が含まれていることを確認したため、追加の項目作成は行っていません。
+- `cdr-sample` で使用されている習慣に基づき、`禁止事項` 章の後ろに、枠組み固有の章を追加するための HTML コメントを追加しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/templates/cdr-template.md`: `禁止事項` 章の末尾に、必要に応じて追加の章を記述するための HTML コメント (`&lt;!-- 枠組み固有の章が要る場合は、この後ろに 1〜2 章まで追加する。不要なら書かない。 --&gt;`) を追加しました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- F001/F002 の行番号（22・25）は、記入欄が入る前のテンプレートの版を指しているとみられる。現在の版では `エラー 処理` 章の 41 行目に `- 例外の握りつぶしの禁止: _TODO_` があるので、再評価で解消済みかを確かめてほしい。
+- F001/F002 の行番号（22・25）は、記入欄が入る前のテンプレートの版を指しているとみられる。現在の版ではエラー処理章の 41 行目に `- 例外の握りつぶしの禁止: _TODO_` があるので、再評価で解消済みかを確かめてほしい。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+指示に従い、`cdr-sample` の内容を同期しつつ、`template` の骨組みを維持するメンテナンスを行いました。`F001` / `F002` の指摘事項については、テンプレートの既存の項目（`例外の握りつぶしの禁止`）によって実質的に解消されていると判断し、構造の微調整（HTML コメントの追加）に留めています。
