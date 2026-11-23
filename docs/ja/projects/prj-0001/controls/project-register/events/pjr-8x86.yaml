@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_d453ad7bacbc4f219ca80cd2ef6d6916
+  ts: "2026-11-23T01:41:12Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 型の grade のし直し（2026-11-21）の後の、薄い型の直り具合
+    - field: description
+      from: ""
+      to: 11-21 に pass でなかった 100 文書のうち、11-23 時点で 25 文書が pass、6 文書が点が上がった。残る 69 文書は第 4〜6 波と CPA8 で進める
+    - field: input
+      from: ""
+      to: '["利用者の依頼（2026-11-23）: 以前洗い出した内容の薄い型がどこまで直るかを、忘れないように note に残す"]'
+    - field: type
+      from: ""
+      to: note
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_4aa9ae0af2b849529d4c2b397b389f8d
+  ts: "2026-11-23T01:43:34Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "メモ" updated
+  changes:
+    - field: section
+      from: ""
+      to: メモ
+    - field: description
+      from: 11-21 に pass でなかった 100 文書のうち、11-23 時点で 25 文書が pass、6 文書が点が上がった。残る 69 文書は第 4〜6 波と CPA8 で進める
+      to: 2026-11-21 の型の grade のし直し（run id `regrade-kata-2026-11-21`、opus）で pass でなかった文書が、2026-11-23 時点でどこまで直ったかの観測。続きは第 4〜6 波の epic（PJR-HJ3H・PJR-JZ2F・PJR-G1M8・PJR-SBGQ・PJR-PYS2）と PJR-CPA8 で進める。新しい grade が出たら、この個票に追記する。
+  previous_event_id: reg_d453ad7bacbc4f219ca80cd2ef6d6916
+- v: 1
+  id: reg_4a974ff9aad040bb969d74e752a17e71
+  ts: "2026-11-23T01:43:37Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "背景・文脈" updated
+  changes:
+    - field: section
+      from: ""
+      to: 背景・文脈
+  previous_event_id: reg_4aa9ae0af2b849529d4c2b397b389f8d
+- v: 1
+  id: reg_02af863f0c464150851c440565f995de
+  ts: "2026-11-23T01:43:41Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "フォローアップ" updated
+  changes:
+    - field: section
+      from: ""
+      to: フォローアップ
+  previous_event_id: reg_4a974ff9aad040bb969d74e752a17e71
