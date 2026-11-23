@@ -87,7 +87,7 @@ terms:
     englishName: customer
     aliases: [お客さん]
     definition: 店頭で商品を買う人。
-    notes: 子どもと大人を区別しない。つけを利用できるのは顧客のうち常連客だけである。
+    notes: 子どもと大人を区別しない。
     category: tm-actor
     relatedTerms: [tm-sales-regular-customer]
     status: official
@@ -107,7 +107,7 @@ terms:
     englishName: shop owner representative
     aliases: [店主]
     definition: 店舗の業務要件と運用方針を決め、最終判断を担う店舗側の代表者。
-    notes: 主なシステム利用者でもある。家族が店番をする場合も、常連客や定番商品の選定は店主代表が決める。
+    notes: 主なシステム利用者でもある。
     category: tm-actor
     status: official
 
