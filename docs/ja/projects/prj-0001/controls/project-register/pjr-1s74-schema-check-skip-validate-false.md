@@ -13,7 +13,7 @@ specdojo:
   owner: DEV
   registered_at: "2026-11-23T21:03:15Z"
   due_on: "2026-11-30"
-  block_reason: "parent validation failed: lint-fm-changed"
+  block_reason: "agent exited with non-zero code: parent validation failed: lint-fm, test-unit"
   commit_type: fix
   commit_scope: exec
 ---
