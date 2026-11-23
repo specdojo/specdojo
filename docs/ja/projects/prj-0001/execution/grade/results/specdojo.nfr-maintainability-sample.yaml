@@ -4,98 +4,97 @@ document: specdojo:nfr-maintainability-sample
 path: docs/ja/specdojo/samples/nfr-maintainability-sample.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-sample
-verdict: fail
-score: 50
-graded_at: "2026-11-21T04:42:56.613Z"
-graded_by: opus-executor
-content_hash: 5e310a56b416e78e0c621cc91be72289fb3183c9c5f82138becb73a6ae9cf063
+verdict: pass
+score: 97
+graded_at: "2026-11-23T15:14:42.166Z"
+graded_by: sonnet-review-executor
+content_hash: 8120c9f53e0fa161d6940a79a47c6ac492ffdb32bc765561e89597c2a73ac4ae
 categories:
   purpose:
-    score: 38
+    score: 100
   operations:
-    score: 81
+    score: 100
   planning:
-    score: 58
+    score: 100
   business:
-    score: 42
+    score: 100
   architecture:
-    score: 92
+    score: 100
   usability:
-    score: 67
+    score: 92
   implementation:
-    score: 50
+    score: 100
   quality:
-    score: 25
+    score: 92
   consistency:
-    score: 25
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-po-decision-readiness:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-po-publication-accountability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-plan-feasibility:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-business-value:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ba-requirements-completeness:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
     level: 3
     score: 75
-  vp-dev-testability:
-    level: 2
-    score: 50
-  vp-qe-verifiability:
-    level: 1
-    score: 25
-  vp-qe-omissions-consistency:
-    level: 1
-    score: 25
-  vp-qe-kata-conformance:
-    level: 0
-    score: 0
   vp-ux-readability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 3
     score: 75
   vp-ops-release-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-operability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -103,176 +102,26 @@ viewpoints:
     level: 4
     score: 100
 finding_counts:
-  blocker: 1
-  major: 11
-  minor: 12
+  blocker: 0
+  major: 0
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-purpose-alignment
-    line: 7
-    anchor: "## 2. 入力情報"
-    message: ドキュメントには、具体的なプロジェクトスコープ、除外事項、または保守性目標とプロジェクトゴールの整合性が定義されていません。
-    message_ja: ドキュメントには、具体的なプロジェクトスコープ、除外事項、または保守性目標とプロジェクトゴールの整合性が定義されていません。
-  - id: F002
-    severity: major
-    rule: vp-po-purpose-alignment
-    line: 5
-    anchor: 本書は、変更容易性と復旧容易性を定義するための最小サンプルである。
-    message: 概要が「最小サンプル」という自己言及だけで、きぬやの店舗継続・店主不在時の運用といったプロジェクト目的に、どの変更・障害対応の効率を担保するかが対応付けられていない。
-    message_ja: 概要が「最小サンプル」という自己言及だけで、きぬやの店舗継続・店主不在時の運用といったプロジェクト目的に、どの変更・障害対応の効率を担保するかが対応付けられていない。
-  - id: F003
-    severity: major
-    rule: vp-po-decision-readiness
-    line: 26
-    anchor: "## 5. 未解決事項"
-    message: 未解決の項目には、POの意思決定に必要な意思決定者、影響分析、具体的な基準、および次のアクションが不足しています。
-    message_ja: 未解決の項目には、POの意思決定に必要な意思決定者、影響分析、具体的な基準、および次のアクションが不足しています。
-  - id: F004
-    severity: major
-    rule: vp-po-decision-readiness
-    line: 29
-    anchor: "| -------------- | ------------------------ |"
-    message: 保守性要件そのものを「実案件適用時に具体化する」と未決扱いにしており、見本として示すべき中核の判断を放棄している。
-    message_ja: 保守性要件そのものを「実案件適用時に具体化する」と未決扱いにしており、見本として示すべき中核の判断を放棄している。
-  - id: F005
-    severity: minor
-    rule: vp-po-publication-accountability
-    line: 1
-    anchor: "# [非機能要件 / 保守性](../rulebooks/nfr-maintainability-rulebook.md) サンプル"
-    message: ドキュメントのメタデータおよびコンテンツには、承認責任と公開に関する責任の明示的な指定が不足しています。
-    message_ja: ドキュメントのメタデータおよびコンテンツには、承認責任と公開に関する責任の明示的な指定が不足しています。
-  - id: F006
-    severity: major
-    rule: vp-pm-plan-feasibility
-    line: 18
-    anchor: "## 4. 最小記述例"
-    message: ドキュメントには、プロジェクト計画に必要な実行可能なワークアイテム、役割の割り当て、完了基準、およびスケジュールが不足しています。
-    message_ja: ドキュメントには、プロジェクト計画に必要な実行可能なワークアイテム、役割の割り当て、完了基準、およびスケジュールが不足しています。
-  - id: F007
-    severity: minor
-    rule: vp-pm-dependency-risk
-    line: 26
-    anchor: "## 5. 未解決事項"
-    message: 未解決の保守性要件に関連する、ダウンストリームの成果物への依存関係、スケジュールの影響、およびリスクが特定されていません。
-    message_ja: 未解決の保守性要件に関連する、ダウンストリームの成果物への依存関係、スケジュールの影響、およびリスクが特定されていません。
-  - id: F008
-    severity: minor
-    rule: vp-pm-control-reporting
-    line: 26
-    anchor: "## 5. 未解決事項"
-    message: オープンな課題に対する報告先、追跡メカニズム、および担当ロールコードが定義されていません。
-    message_ja: オープンな課題に対する報告先、追跡メカニズム、および担当ロールコードが定義されていません。
-  - id: F009
-    severity: major
-    rule: vp-ba-business-value
-    line: 5
-    anchor: 本書は、変更容易性と復旧容易性を定義するための最小サンプルである。
-    message: ターゲットとなるステークホルダーのビジネス上の課題、何もしなかった場合の結果、および期待されるビジネス価値が記載されていません。
-    message_ja: ターゲットとなるステークホルダーのビジネス上の課題、何もしなかった場合の結果、および期待されるビジネス価値が記載されていません。
-  - id: F010
-    severity: major
-    rule: vp-ba-requirements-completeness
-    line: 13
-    anchor: "## 3. 記述内容"
-    message: 具体的な保守性要件、受け入れ基準、および明示的なスコープの境界/除外事項が完全に欠落しています。
-    message_ja: 具体的な保守性要件、受け入れ基準、および明示的なスコープの境界/除外事項が完全に欠落しています。
-  - id: F011
-    severity: minor
-    rule: vp-ba-stakeholder-clarity
-    line: 13
-    anchor: "## 3. 記述内容"
-    message: 関連するステークホルダー、確認担当者、および合意の対象が明確に特定されていません。
-    message_ja: 関連するステークホルダー、確認担当者、および合意の対象が明確に特定されていません。
-  - id: F012
-    severity: minor
-    rule: vp-arc-technical-constraints
-    line: 7
-    anchor: "## 2. 入力情報"
-    message: 技術的な制約、アーキテクチャの前提条件、および外部インフラの依存関係が指定されていません。
-    message_ja: 技術的な制約、アーキテクチャの前提条件、および外部インフラの依存関係が指定されていません。
-  - id: F013
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 18
-    anchor: "## 4. 最小記述例"
-    message: セクション4は、追加の具体的な詳細を提供することなく、セクション1およびセクション3の要約文を単に重複させているだけです。
-    message_ja: セクション4は、追加の具体的な詳細を提供することなく、セクション1およびセクション3の要約文を単に重複させているだけです。
-  - id: F014
-    severity: major
-    rule: vp-dev-implementation-readiness
-    line: 13
-    anchor: "## 3. 記述内容"
-    message: 保守性要件に関する具体的な実装入力、設定パラメータ、および完了条件が提供されていません。
-    message_ja: 保守性要件に関する具体的な実装入力、設定パラメータ、および完了条件が提供されていません。
-  - id: F015
-    severity: minor
-    rule: vp-dev-change-impact
-    line: 26
-    anchor: "## 5. 未解決事項"
-    message: 保守性の変更によって生じる既存のコンポーネント、スキーマ、および運用手順への影響が特定されていません。
-    message_ja: 保守性の変更によって生じる既存のコンポーネント、スキーマ、および運用手順への影響が特定されていません。
-  - id: F016
-    severity: major
-    rule: vp-dev-testability
-    line: 18
-    anchor: "## 4. 最小記述例"
-    message: 保守性メトリクスのテスト方法、検証コマンド、および期待される基準が指定されていません。
-    message_ja: 保守性メトリクスのテスト方法、検証コマンド、および期待される基準が指定されていません。
-  - id: F017
-    severity: major
-    rule: vp-qe-verifiability
-    line: 18
-    anchor: "## 4. 最小記述例"
-    message: 要件の判定基準に定量的な閾値が記載されておらず、rulebook の禁止事項に抵触している。
-    message_ja: 要件の判定基準に定量的な閾値が記載されておらず、rulebook の禁止事項に抵触している。
-  - id: F018
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 3
-    anchor: "## 1. 目的と適用範囲"
-    message: rulebook で必須と定義されている「保守性要件一覧」「測定・検証方法」「関連ドキュメント導線」の各章が欠落している。
-    message_ja: rulebook で必須と定義されている「保守性要件一覧」「測定・検証方法」「関連ドキュメント導線」の各章が欠落している。
-  - id: F019
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 1
-    anchor: "# [非機能要件 / 保守性](../rulebooks/nfr-maintainability-rulebook.md) サンプル"
-    message: "rulebook が推奨する Frontmatter の `part_of: [nfr-index]` と、監視・ログ・Runbook 水準の根拠を示す `based_on` が記載されていない。"
-    message_ja: "rulebook が推奨する Frontmatter の `part_of: [nfr-index]` と、監視・ログ・Runbook 水準の根拠を示す `based_on` が記載されていない。"
-  - id: F020
-    severity: blocker
     rule: vp-qe-kata-conformance
-    line: 3
-    anchor: "## 1. 目的と適用範囲"
-    message: rulebook で定義された標準テンプレの見出し構成および順序を完全に無視しており、成果物の型に従っていない。
-    message_ja: rulebook で定義された標準テンプレの見出し構成および順序を完全に無視しており、成果物の型に従っていない。
-  - id: F021
-    severity: major
-    rule: vp-ux-readability
-    line: 3
-    anchor: "## 1. 目的と適用範囲"
-    message: 対応する rulebook の必須構造や制約を反映しておらず、正解例としての役割を果たしていないため、利用者に誤解を与える。
-    message_ja: 対応する rulebook の必須構造や制約を反映しておらず、正解例としての役割を果たしていないため、利用者に誤解を与える。
-  - id: F022
+    line: 23
+    anchor: >-
+      | 対象外               | 停止許容時間と
+      RTO/RPO（`nfr-availability`）、画面の応答時間（`nfr-performance`）、EC・本格会計・複数店舗                            |
+    message: "`nfr-mnt-004`(軽微変更の反映)が `_UNDECIDED_` のままで、rulebook の「中核の要件は未決に回さない」と食い違う。暫定値を置くか、未決を許す理由を rulebook と揃えて示すこと。"
+    message_ja: "`nfr-mnt-004`(軽微変更の反映)が `_UNDECIDED_` のままで、rulebook の「中核の要件は未決に回さない」と食い違う。暫定値を置くか、未決を許す理由を rulebook と揃えて示すこと。"
+  - id: F002
     severity: minor
     rule: vp-ux-language-consistency
-    line: 15
-    anchor: "- 主な内容: 平均修復時間(MTTR)、変更リードタイム、ログ粒度"
-    message: MTTR を「平均修復時間」と表記しており、rulebook の用語定義「平均復旧時間」と表記が揺れている。
-    message_ja: MTTR を「平均修復時間」と表記しており、rulebook の用語定義「平均復旧時間」と表記が揺れている。
-  - id: F023
-    severity: minor
-    rule: vp-ops-release-readiness
-    line: 26
-    anchor: "## 5. 未解決事項"
-    message: ステータスをドラフトからレディへ移行するために必要な具体的な基準と前提条件のチェックが指定されていません。
-    message_ja: ステータスをドラフトからレディへ移行するために必要な具体的な基準と前提条件のチェックが指定されていません。
-  - id: F024
-    severity: minor
-    rule: vp-ops-operability
-    line: 18
-    anchor: "## 4. 最小記述例"
-    message: 保守性メトリクスを更新するためのメンテナンス手順、運用レビューサイクル、および担当ロールが不足しています。
-    message_ja: 保守性メトリクスを更新するためのメンテナンス手順、運用レビューサイクル、および担当ロールが不足しています。
+    line: 33
+    anchor: >-
+      | `nfr-mnt-001` | P1 障害で、原因の範囲（アプリ・データ・端末・通信）を絞る | 一次切り分け時間         | 各 P1 障害で最大 30
+      分以内（障害ごとに判定）                                        | 紙の販売控えへの切替を判断する時刻（P1 検知から 30 分）と揃える |
+    message: 一次切り分けで絞る原因の範囲が「アプリ・データ・端末・通信」で、rulebook の用語定義は「アプリ・データ・端末・外部」。表記を揃えること。
+    message_ja: 一次切り分けで絞る原因の範囲が「アプリ・データ・端末・通信」で、rulebook の用語定義は「アプリ・データ・端末・外部」。表記を揃えること。
