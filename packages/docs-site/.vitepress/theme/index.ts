@@ -4,12 +4,14 @@ import { h } from "vue";
 import SidebarToggle from "./SidebarToggle.vue";
 import FrontmatterTable from "./FrontmatterTable.vue";
 import GradeSummary from "./GradeSummary.vue";
+import NextChannelBanner from "./NextChannelBanner.vue";
 import "./custom.css";
 
 export default {
   ...DefaultTheme,
   Layout: () =>
     h(DefaultTheme.Layout, null, {
+      "layout-top": () => h(NextChannelBanner),
       "nav-bar-title-after": () => h(SidebarToggle),
       "doc-before": () => h("div", [h(GradeSummary), h(FrontmatterTable)]),
     }),
