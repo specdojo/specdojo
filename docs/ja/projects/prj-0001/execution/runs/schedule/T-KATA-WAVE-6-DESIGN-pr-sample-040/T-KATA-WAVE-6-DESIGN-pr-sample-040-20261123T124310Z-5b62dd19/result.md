@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-DESIGN-pr-sample-040
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-DESIGN-pr-sample-040/T-KATA-WAVE-6-DESIGN-pr-sample-040-20261123T124310Z-5b62dd19/plan.md
   started_at: "2026-11-23T12:43:19.163Z"
+  completed_at: "2026-11-23T12:58:52.752Z"
   agent: opus-executor
   execution: agent
   approach: rulebook-maintenance
@@ -20,16 +21,23 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- 進捗報告の `rulebook` である `docs/ja/specdojo/rulebooks/pr-rulebook.md` を更新しました。
+- grade の指摘事項（F001〜F029）に基づき、内容の具体化、表の列定義、および `PJR-76N9` に基づく役割の扱いの適正化を行いました。
+- 「誰が判断するか」という役割の割り当てに関する記述を削り、判断事項を `question` や `decision` の個票 ID で追跡する形式に改めました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/rulebooks/pr-rulebook.md`: grade の指摘に対応するため、報告の目的、想定読者、報告周期（週次または期間終了から 2 営業日以内）、および表の具体的な列定義（リスク・課題における 区分・影響度・対応方針、次期予定における 担当・期日）を追記しました。また、担当を Role code で記述するルールや、判断事項を個票の ID で管理する運用を定め、`status: ready` の条件を明確にしました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- pr-sample は新しい rulebook と食い違う: 根拠 ID が独自の `task-042` / `doc-018` 、進み具合が「進捗60%」の割合だけ（F022）、担当が「店主」「業務担当」で Role code でない、リスク・課題の表に `個票 ID` 列がない、次期予定の列名「担当者」は rulebook では「担当」。後続の段で sample を合わせる。
+- 報告周期を「適用先のコミュニケーション計画に従い、定めがなければ週次」、`ready` の期限を「期間終了から 2 営業日以内」と既定値で定めた（F005・F028）。既定値が妥当か確認が必要。
+- F002・F011・F029（承認者・読み手・作成責任者の明示）は PJR-76N9 に従い、役割の割り当てを本文で求めない形で対応した。判断待ちは `question` / `decision` の個票 ID で示し、役割はメンバー定義の Role code に委ねる。F004 は公開範囲の規定を設けず、個人名・顧客情報・認証情報の記載禁止で対応した。
+- F015（`npm run lint:md` など検証コマンドの記載）は、リポジトリの検証を共通の運用として扱う方針のため rulebook 本文には加えていない。
+- pr-sample は新しい rulebook と食い違う: 根拠 ID が独自の `task-042` / `doc-018`、進み具合が「進捗60%」の割合だけ（F022）、担当が「店主」「業務担当」で Role code でない、リスク・課題の表に `個票 ID` 列がない、次期予定の列名「担当者」は rulebook では「担当」。後続の段で sample を合わせる。
+- F015（npm run lint:md など検証コマンドの記載）は、リポジトリの検証を共通の運用として扱う方針のため rulebook 本文には加えていない。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+grade の指摘事項を `rulebook` に反映させ、成果物（`pr-sample.md`）の記述基準を整えました。特に役割の割り当てに関する記述を `PJR-76N9` に沿って整理し、判断の追跡方法を個票の ID 参照に集約しました。
