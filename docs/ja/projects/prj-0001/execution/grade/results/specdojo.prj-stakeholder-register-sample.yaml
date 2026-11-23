@@ -4,65 +4,64 @@ document: specdojo:prj-stakeholder-register-sample
 path: docs/ja/specdojo/samples/prj-stakeholder-register-sample.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-sample
-verdict: needs-work
-score: 70
-graded_at: "2026-11-21T05:40:11.403Z"
-graded_by: opus-executor
-content_hash: aeaef86957a567c2e6920bbc4b674c949ee3aa644263943e274a6bc799774260
+verdict: pass
+score: 100
+graded_at: "2026-11-23T21:46:58.446Z"
+graded_by: sonnet-review-executor
+content_hash: 92f5476b5304b80a9b27c5fe87855fa84af17cd3e07b3882fdfbed2b800d4899
 categories:
   purpose:
-    score: 75
+    score: 100
   operations:
-    score: 88
+    score: 100
   planning:
-    score: 75
+    score: 100
   business:
-    score: 67
+    score: 100
   architecture:
     score: 100
   usability:
-    score: 67
+    score: 100
   implementation:
-    score: 88
+    score: 100
   quality:
-    score: 67
+    score: 100
   consistency:
-    score: 25
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-publication-accountability:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-business-value:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-requirements-completeness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -70,32 +69,32 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-change-impact:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ux-readability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-operability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -104,279 +103,7 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 7
-  minor: 25
+  major: 0
+  minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: minor
-    rule: vp-po-purpose-alignment
-    line: 20
-    anchor: >-
-      | `STH-SHOP-OWNER`  | 店主代表     | High   | High   | 日常的な操作だけで在庫と販売管理を行える | システムが複雑になり、日々の記録が行われなくなる |
-      システムの目的、優先機能、リリース範囲 | プロジェクト全体の方向性を決定し判断する   |
-    message: 店主代表の主な期待が「在庫と販売管理」だけで、上位概要が一元管理の対象とする常連顧客のつけ管理が抜けており、合意対象と目的の対応を説明しきれないため、つけ残高の記録・確認を期待に含める必要がある。
-    message_ja: 店主代表の主な期待が「在庫と販売管理」だけで、上位概要が一元管理の対象とする常連顧客のつけ管理が抜けており、合意対象と目的の対応を説明しきれないため、つけ残高の記録・確認を期待に含める必要がある。
-  - id: F002
-    severity: minor
-    rule: vp-po-decision-readiness
-    line: 32
-    anchor: >-
-      | `STH-FAMILY-USER` | 家族利用者   | ソフト使用経験なし         | システムで店番を行える               |
-      リリース後に試利用させる                                       | `PO`   | リリース準備完了後 | Issue               |
-    message: 家族利用者の試利用が「リリース後」となっており、その結果を PO がリリース可否の判断材料にするのかどうかが読み取れないため、試利用結果を承認判断に使う時点と判断者を明記する必要がある。
-    message_ja: 家族利用者の試利用が「リリース後」となっており、その結果を PO がリリース可否の判断材料にするのかどうかが読み取れないため、試利用結果を承認判断に使う時点と判断者を明記する必要がある。
-  - id: F003
-    severity: minor
-    rule: vp-pm-plan-feasibility
-    line: 29
-    anchor: >-
-      | `STH-SHOP-OWNER`  | 店主代表     | データや記録に頼っている   | システム利用へ切り替わる             | 優先機能ごとに確認・承認を行い、操作方法を簡易手順書で共有する |
-      `PO`   | イテレーション末   | Issue, Pull Request |
-    message: 期限「イテレーション末」「タスク単位」は、どの判断の節目までに合意を取るかを示さず、イテレーションの定義もないため、初期リリース前などの判断の節目で期限を書く必要がある。
-    message_ja: 期限「イテレーション末」「タスク単位」は、どの判断の節目までに合意を取るかを示さず、イテレーションの定義もないため、初期リリース前などの判断の節目で期限を書く必要がある。
-  - id: F004
-    severity: minor
-    rule: vp-pm-dependency-risk
-    line: 32
-    anchor: >-
-      | `STH-FAMILY-USER` | 家族利用者   | ソフト使用経験なし         | システムで店番を行える               |
-      リリース後に試利用させる                                       | `PO`   | リリース準備完了後 | Issue               |
-    message: 家族利用者の試利用を「リリース準備完了後」に置くと、上位概要の初期公開指標がリリース前に要求する家族利用者代表の作業完遂確認と順序が合わず、リリース遅延のリスクが識別されないため、リリース前の確認として予定に組み込む必要がある。
-    message_ja: 家族利用者の試利用を「リリース準備完了後」に置くと、上位概要の初期公開指標がリリース前に要求する家族利用者代表の作業完遂確認と順序が合わず、リリース遅延のリスクが識別されないため、リリース前の確認として予定に組み込む必要がある。
-  - id: F005
-    severity: minor
-    rule: vp-pm-control-reporting
-    line: 39
-    anchor: >-
-      | `STH-DEVELOPER`   | 開発担当     | 機能定義とテスト完了確認         | チャット, Pull Request | デザイン方針と実装結果を共有       | Pull
-      Request          | イテレーション末               |
-    message: 「コミュニケーション計画への反映」列の「イテレーション末」「週次相談」は時期や会議体で、計画へ渡す入力内容ではないため、判断依頼・報告事項など転記対象の内容に統一する必要がある。
-    message_ja: 「コミュニケーション計画への反映」列の「イテレーション末」「週次相談」は時期や会議体で、計画へ渡す入力内容ではないため、判断依頼・報告事項など転記対象の内容に統一する必要がある。
-  - id: F006
-    severity: minor
-    rule: vp-ba-business-value
-    line: 7
-    anchor: "## 1. 関係者一覧"
-    message: 上位概要でつけ管理の改善価値を受ける常連顧客の期待・懸念が登録簿にないため、つけ残高の正確な記録・確認という期待価値を誰に提供するかを説明できるよう、該当集団を追加する必要がある。
-    message_ja: 上位概要でつけ管理の改善価値を受ける常連顧客の期待・懸念が登録簿にないため、つけ残高の正確な記録・確認という期待価値を誰に提供するかを説明できるよう、該当集団を追加する必要がある。
-  - id: F007
-    severity: minor
-    rule: vp-ba-requirements-completeness
-    line: 23
-    anchor: >-
-      | `STH-FAMILY-USER` | 家族利用者   | High   | Medium | 習熟なしでも既存手順に近い操作ができる   | システムに慣れることができなくなる               | UI
-      の操作性検証結果と手順書            | 導入後の継続利用を左右する                 |
-    message: 家族利用者の必要な合意「UI の操作性検証結果と手順書」は、対象操作と合意できる結果が示されず受入条件として確認できないため、販売記録・在庫確認・つけ残高確認の完遂など上位概要の初期公開指標と対応付ける必要がある。
-    message_ja: 家族利用者の必要な合意「UI の操作性検証結果と手順書」は、対象操作と合意できる結果が示されず受入条件として確認できないため、販売記録・在庫確認・つけ残高確認の完遂など上位概要の初期公開指標と対応付ける必要がある。
-  - id: F008
-    severity: major
-    rule: vp-ba-stakeholder-clarity
-    line: 7
-    anchor: "## 1. 関係者一覧"
-    message: 上位概要でつけ情報を管理される常連顧客である子どもや近所の大人が関係者一覧になく、影響受容者の期待・懸念・合意対象を読み取れないため、関与区分「影響受容者」として追加する必要がある。
-    message_ja: 上位概要でつけ情報を管理される常連顧客である子どもや近所の大人が関係者一覧になく、影響受容者の期待・懸念・合意対象を読み取れないため、関与区分「影響受容者」として追加する必要がある。
-  - id: F009
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 31
-    anchor: >-
-      | `STH-TECH-MENTOR` | 技術メンター | メンター参加レベルの支援中 | スコープに影響しない範囲で助言を行う | 週次相談を行い、判断と責務を開発担当に委譲する                 |
-      `DEV`  | 週次               | チャット, Issue     |
-    message: 技術メンターの「週次相談／週次」が関係者一覧、エンゲージメント方針、コミュニケーション要件で反復され、同じ行でも対応方針と期限に頻度を重ねているため、登録簿には期限条件を一か所だけ残し詳細頻度はコミュニケーション計画へ委譲する必要がある。
-    message_ja: 技術メンターの「週次相談／週次」が関係者一覧、エンゲージメント方針、コミュニケーション要件で反復され、同じ行でも対応方針と期限に頻度を重ねているため、登録簿には期限条件を一か所だけ残し詳細頻度はコミュニケーション計画へ委譲する必要がある。
-  - id: F010
-    severity: minor
-    rule: vp-dev-change-impact
-    line: 43
-    anchor: "## 5. 見直し条件"
-    message: 見直し条件の見直し内容に、関係者の追加・削除・関与変更が同じ ID を使う各章とコミュニケーション計画へ及ぼす影響の更新が含まれず、変更の影響範囲を辿れないため追記する必要がある。
-    message_ja: 見直し条件の見直し内容に、関係者の追加・削除・関与変更が同じ ID を使う各章とコミュニケーション計画へ及ぼす影響の更新が含まれず、変更の影響範囲を辿れないため追記する必要がある。
-  - id: F011
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 30
-    anchor: >-
-      | `STH-DEVELOPER`   | 開発担当     | 実装を行う                 | 要件に基づいた着実な進捗             |
-      機能範囲と確認方法を明確にし、設計・結果を店主に提示する       | `DEV`  | タスク単位         | Pull Request        |
-    message: "`STH-DEVELOPER` の目標「要件に基づいた着実な進捗」は、完了状態、判定時点、確認対象のいずれも特定できず pass / fail を判定できないため、観測可能な進捗状態に置き換える必要がある。"
-    message_ja: "`STH-DEVELOPER` の目標「要件に基づいた着実な進捗」は、完了状態、判定時点、確認対象のいずれも特定できず pass / fail を判定できないため、観測可能な進捗状態に置き換える必要がある。"
-  - id: F012
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 32
-    anchor: >-
-      | `STH-FAMILY-USER` | 家族利用者   | ソフト使用経験なし         | システムで店番を行える               |
-      リリース後に試利用させる                                       | `PO`   | リリース準備完了後 | Issue               |
-    message: >-
-      `STH-FAMILY-USER`
-      の目標「システムで店番を行える」と証跡「Issue」だけでは、どの操作をどの支援条件で完了すれば達成か判定できないため、上位概要の販売記録・在庫確認・つけ残高確認の初期公開指標に対応付ける必要がある。
-    message_ja: >-
-      `STH-FAMILY-USER`
-      の目標「システムで店番を行える」と証跡「Issue」だけでは、どの操作をどの支援条件で完了すれば達成か判定できないため、上位概要の販売記録・在庫確認・つけ残高確認の初期公開指標に対応付ける必要がある。
-  - id: F013
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 29
-    anchor: >-
-      | `STH-SHOP-OWNER`  | 店主代表     | データや記録に頼っている   | システム利用へ切り替わる             | 優先機能ごとに確認・承認を行い、操作方法を簡易手順書で共有する |
-      `PO`   | イテレーション末   | Issue, Pull Request |
-    message: "`STH-SHOP-OWNER` の目標「システム利用へ切り替わる」は、どの記録をどの時点までに切り替えれば達成かを判定できないため、販売・在庫・つけの記録をシステムで行う状態と判定時点を明記する必要がある。"
-    message_ja: "`STH-SHOP-OWNER` の目標「システム利用へ切り替わる」は、どの記録をどの時点までに切り替えれば達成かを判定できないため、販売・在庫・つけの記録をシステムで行う状態と判定時点を明記する必要がある。"
-  - id: F014
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 7
-    anchor: "## 1. 関係者一覧"
-    message: 上位概要でつけ情報を管理される常連顧客である子どもや近所の大人が影響受容者として欠落しており、当該集団の期待、懸念、必要な合意、情報要求を管理できないため、関係者一覧と後続各章へ追加する必要がある。
-    message_ja: 上位概要でつけ情報を管理される常連顧客である子どもや近所の大人が影響受容者として欠落しており、当該集団の期待、懸念、必要な合意、情報要求を管理できないため、関係者一覧と後続各章へ追加する必要がある。
-  - id: F015
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 32
-    anchor: >-
-      | `STH-FAMILY-USER` | 家族利用者   | ソフト使用経験なし         | システムで店番を行える               |
-      リリース後に試利用させる                                       | `PO`   | リリース準備完了後 | Issue               |
-    message: >-
-      `STH-FAMILY-USER` の対応方針は「リリース後に試利用させる」だが、同じ ID
-      の備考は「リリース時点」、コミュニケーション要件は「リリース前の試利用」としており、受入確認をいつ実施するか一意に判断できないため、時点を統一する必要がある。
-    message_ja: >-
-      `STH-FAMILY-USER` の対応方針は「リリース後に試利用させる」だが、同じ ID
-      の備考は「リリース時点」、コミュニケーション要件は「リリース前の試利用」としており、受入確認をいつ実施するか一意に判断できないため、時点を統一する必要がある。
-  - id: F016
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 43
-    anchor: "## 5. 見直し条件"
-    message: rulebook と template が見直し対象とする体制、公開・利用方針、主要な利用者影響の変更トリガーがなく、該当変更時に登録簿を更新する責務と証跡が欠落しているため、見直し条件に追加する必要がある。
-    message_ja: rulebook と template が見直し対象とする体制、公開・利用方針、主要な利用者影響の変更トリガーがなく、該当変更時に登録簿を更新する責務と証跡が欠落しているため、見直し条件に追加する必要がある。
-  - id: F017
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 47
-    anchor: "| プロジェクトの目的やスコープを変更した   | 関係者の追加・削除と合意対象の見直し             | `PO`   | -      | Issue, Pull Request |"
-    message: 目的・スコープ変更時の見直しの承認者が「-」で、見直し条件に承認者を記載するという rulebook の要件を満たさないため、`PO` など承認する役割を明記する必要がある。
-    message_ja: 目的・スコープ変更時の見直しの承認者が「-」で、見直し条件に承認者を記載するという rulebook の要件を満たさないため、`PO` など承認する役割を明記する必要がある。
-  - id: F018
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 29
-    anchor: >-
-      | `STH-SHOP-OWNER`  | 店主代表     | データや記録に頼っている   | システム利用へ切り替わる             | 優先機能ごとに確認・承認を行い、操作方法を簡易手順書で共有する |
-      `PO`   | イテレーション末   | Issue, Pull Request |
-    message: 店主代表の現状「データや記録に頼っている」は、上位概要の「ノートと記憶に頼っている」と食い違い、システム化前の状態を誤認させるため、概要と同じ現状表現に揃える必要がある。
-    message_ja: 店主代表の現状「データや記録に頼っている」は、上位概要の「ノートと記憶に頼っている」と食い違い、システム化前の状態を誤認させるため、概要と同じ現状表現に揃える必要がある。
-  - id: F019
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 5
-    anchor: 単一店舗・小規模開発のため、責任を負う個人または組織だけを記載し、「人物名」や連絡先は扱わない。
-    message: 対象を「責任を負う個人または組織だけ」と限定する説明は、rulebook が対象とする影響受容者・集団および本書自身の家族利用者と矛盾するため、関与または影響を受ける役割・組織・集団を対象とする説明へ修正する必要がある。
-    message_ja: 対象を「責任を負う個人または組織だけ」と限定する説明は、rulebook が対象とする影響受容者・集団および本書自身の家族利用者と矛盾するため、関与または影響を受ける役割・組織・集団を対象とする説明へ修正する必要がある。
-  - id: F020
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 7
-    anchor: "## 1. 関係者一覧"
-    message: rulebook が成果から影響を受ける集団の登録を要求しているのに、上位概要でつけ情報を管理される常連顧客である子どもや近所の大人がなく、sample が影響受容者を洗い出す完成例として機能しないため追加する必要がある。
-    message_ja: rulebook が成果から影響を受ける集団の登録を要求しているのに、上位概要でつけ情報を管理される常連顧客である子どもや近所の大人がなく、sample が影響受容者を洗い出す完成例として機能しないため追加する必要がある。
-  - id: F021
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 43
-    anchor: "## 5. 見直し条件"
-    message: rulebook と template が要求する体制、公開・利用方針、主要な利用者影響の変更に対する見直し条件が欠落しており、必須要件を満たす完成例になっていないため追加する必要がある。
-    message_ja: rulebook と template が要求する体制、公開・利用方針、主要な利用者影響の変更に対する見直し条件が欠落しており、必須要件を満たす完成例になっていないため追加する必要がある。
-  - id: F022
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 47
-    anchor: "| プロジェクトの目的やスコープを変更した   | 関係者の追加・削除と合意対象の見直し             | `PO`   | -      | Issue, Pull Request |"
-    message: recipe が承認者を空欄や「-」にしないよう求めているのに sample の承認者が「-」になっており、recipe と矛盾する例を示しているため、承認する役割名を記載する必要がある。
-    message_ja: recipe が承認者を空欄や「-」にしないよう求めているのに sample の承認者が「-」になっており、recipe と矛盾する例を示しているため、承認する役割名を記載する必要がある。
-  - id: F023
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 31
-    anchor: >-
-      | `STH-TECH-MENTOR` | 技術メンター | メンター参加レベルの支援中 | スコープに影響しない範囲で助言を行う | 週次相談を行い、判断と責務を開発担当に委譲する                 |
-      `DEV`  | 週次               | チャット, Issue     |
-    message: >-
-      recipe は期限を「週次」のような会議頻度ではなく判断の節目で書くよう求めているのに、sample の期限が「週次」「イテレーション末」「タスク単位」になっており、recipe
-      と矛盾する例になっているため判断の節目へ書き換える必要がある。
-    message_ja: >-
-      recipe は期限を「週次」のような会議頻度ではなく判断の節目で書くよう求めているのに、sample の期限が「週次」「イテレーション末」「タスク単位」になっており、recipe
-      と矛盾する例になっているため判断の節目へ書き換える必要がある。
-  - id: F024
-    severity: minor
-    rule: vp-ux-readability
-    line: 5
-    anchor: 単一店舗・小規模開発のため、責任を負う個人または組織だけを記載し、「人物名」や連絡先は扱わない。
-    message: 「責任を負う個人または組織だけ」という対象説明と、影響受容者である家族利用者を掲載する本文が一致せず、登録対象の識別基準を誤読させるため、影響を受ける集団も含む説明に修正する必要がある。
-    message_ja: 「責任を負う個人または組織だけ」という対象説明と、影響受容者である家族利用者を掲載する本文が一致せず、登録対象の識別基準を誤読させるため、影響を受ける集団も含む説明に修正する必要がある。
-  - id: F025
-    severity: major
-    rule: vp-ux-readability
-    line: 32
-    anchor: >-
-      | `STH-FAMILY-USER` | 家族利用者   | ソフト使用経験なし         | システムで店番を行える               |
-      リリース後に試利用させる                                       | `PO`   | リリース準備完了後 | Issue               |
-    message: 家族利用者の操作性確認が「リリース時点」「リリース後」「リリース前」と章ごとに異なり、読者が試利用を受入確認としていつ実施すべきか判断できないため、初期リリース前の一つの時点へ統一する必要がある。
-    message_ja: 家族利用者の操作性確認が「リリース時点」「リリース後」「リリース前」と章ごとに異なり、読者が試利用を受入確認としていつ実施すべきか判断できないため、初期リリース前の一つの時点へ統一する必要がある。
-  - id: F026
-    severity: minor
-    rule: vp-ux-readability
-    line: 23
-    anchor: >-
-      | `STH-FAMILY-USER` | 家族利用者   | High   | Medium | 習熟なしでも既存手順に近い操作ができる   | システムに慣れることができなくなる               | UI
-      の操作性検証結果と手順書            | 導入後の継続利用を左右する                 |
-    message: 家族利用者の懸念「システムに慣れることができなくなる」は意味が取りにくく、どの困りごとを防ぐのか読み取れないため、「操作に迷って店番中に記録できない」など具体的な困りごとに書き換える必要がある。
-    message_ja: 家族利用者の懸念「システムに慣れることができなくなる」は意味が取りにくく、どの困りごとを防ぐのか読み取れないため、「操作に迷って店番中に記録できない」など具体的な困りごとに書き換える必要がある。
-  - id: F027
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 48
-    anchor: "| 新しい利害団体や利用者群体が登場した場合 | 新しいステークホルダーを登録し関与方針を整備する | `BA`   | `PO`   | Issue               |"
-    message: 見直し条件の責任者に、関係者一覧で定義されていない Role code `BA` が指定されているため、定義済みの Role code に統一する必要がある。
-    message_ja: 見直し条件の責任者に、関係者一覧で定義されていない Role code `BA` が指定されているため、定義済みの Role code に統一する必要がある。
-  - id: F028
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 48
-    anchor: "| 新しい利害団体や利用者群体が登場した場合 | 新しいステークホルダーを登録し関与方針を整備する | `BA`   | `PO`   | Issue               |"
-    message: 「利害団体」「利用者群体」は、他章と rulebook で用いる「関係者」「利用者」「影響受容者」「集団」と一致しない未定義語で更新対象を誤読させるため、定義済みの用語に統一する必要がある。
-    message_ja: 「利害団体」「利用者群体」は、他章と rulebook で用いる「関係者」「利用者」「影響受容者」「集団」と一致しない未定義語で更新対象を誤読させるため、定義済みの用語に統一する必要がある。
-  - id: F029
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 39
-    anchor: >-
-      | `STH-DEVELOPER`   | 開発担当     | 機能定義とテスト完了確認         | チャット, Pull Request | デザイン方針と実装結果を共有       | Pull
-      Request          | イテレーション末               |
-    message: 開発担当の合意・報告の必要性で「デザイン方針」と書いているが、他の行では「設計方針」「設計」を使っており同じ対象か判別しにくいため、「設計方針」に統一する必要がある。
-    message_ja: 開発担当の合意・報告の必要性で「デザイン方針」と書いているが、他の行では「設計方針」「設計」を使っており同じ対象か判別しにくいため、「設計方針」に統一する必要がある。
-  - id: F030
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 13
-    anchor: >-
-      | `STH-TECH-MENTOR` | 技術メンター | 外部協力者              | きぬや（外部） | -              |
-      設計方針の助言を行う                             | 週次相談                     |
-    message: 外部協力者である技術メンターの所属を「きぬや（外部）」と書くと、店舗内部か外部かが矛盾して読めるため、「外部」など所属を一意に示すラベルにする必要がある。
-    message_ja: 外部協力者である技術メンターの所属を「きぬや（外部）」と書くと、店舗内部か外部かが矛盾して読めるため、「外部」など所属を一意に示すラベルにする必要がある。
-  - id: F031
-    severity: minor
-    rule: vp-ops-release-readiness
-    line: 41
-    anchor: >-
-      | `STH-FAMILY-USER` | 家族利用者   | システム操作方法と変更による影響 | 簡易手順書, Issue      | リリース前の試利用に参加           | Issue, フィードバック |
-      リリース準備                   |
-    message: 家族利用者の試利用結果がリリース判断の前提条件かどうか示されず、リリース前に何を確認して承認するか読み取れないため、試利用結果を `PO` のリリース承認の前提として明記する必要がある。
-    message_ja: 家族利用者の試利用結果がリリース判断の前提条件かどうか示されず、リリース前に何を確認して承認するか読み取れないため、試利用結果を `PO` のリリース承認の前提として明記する必要がある。
-  - id: F032
-    severity: minor
-    rule: vp-ops-operability
-    line: 43
-    anchor: "## 5. 見直し条件"
-    message: 定期見直しを行うかどうかが示されず、周期が未定なら _TODO_ で決める時期を残すという recipe の指示も反映されていないため、継続運用での見直し時期を明記するか _TODO_ を付ける必要がある。
-    message_ja: 定期見直しを行うかどうかが示されず、周期が未定なら _TODO_ で決める時期を残すという recipe の指示も反映されていないため、継続運用での見直し時期を明記するか _TODO_ を付ける必要がある。
+findings: []

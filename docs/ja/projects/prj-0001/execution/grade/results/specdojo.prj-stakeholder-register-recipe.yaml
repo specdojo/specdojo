@@ -4,12 +4,11 @@ document: specdojo:prj-stakeholder-register-recipe
 path: docs/ja/specdojo/recipes/prj-stakeholder-register-recipe.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-recipe
-verdict: needs-work
-score: 96
-graded_at: "2026-11-20T20:35:41.689Z"
-graded_by: flash-high-executor
-content_hash: 26fccd2e382283afe059b8409df4b27ec820b2c8268cd18e170ac01d7110ed85
+verdict: pass
+score: 100
+graded_at: "2026-11-23T21:47:48.535Z"
+graded_by: sonnet-review-executor
+content_hash: 01ea96f79584f30e6df7b3a6763bf3d8c2da6c5bae5a1a4991de740a58293043
 categories:
   purpose:
     score: 100
@@ -26,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 100
   consistency:
     score: 100
 viewpoints:
@@ -82,8 +81,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -104,36 +103,7 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 2
+  major: 0
+  minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 60
-    anchor: "- その行動は、必要な合意を取る時点に間に合うか。"
-    message: >-
-      期待、懸念、必要な合意を対応させる手順に対し, sample の `STH-FAMILY-USER` は「リリース前の試利用」への参加を必要としながらエンゲージメント方針を「リリース後に試利用」としており,
-      リリース判断前に操作性を確認できないため, 試利用の実施時点と合意取得順序を統一する必要がある。
-    message_ja: >-
-      期待、懸念、必要な合意を対応させる手順に対し, sample の `STH-FAMILY-USER` は「リリース前の試利用」への参加を必要としながらエンゲージメント方針を「リリース後に試利用」としており,
-      リリース判断前に操作性を確認できないため, 試利用の実施時点と合意取得順序を統一する必要がある。
-  - id: F002
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 64
-    anchor: "- 期限は「週次」のような会議の頻度ではなく、初期公開前などの判断の節目で書く。会議の日時や頻度はコミュニケーション計画へ渡す。"
-    message: >-
-      会議日時や配信頻度を重複管理しない方針に対し, 対応 sample は「週次相談」を関係者一覧・エンゲージメント方針・コミュニケーション計画への反映へ重複記載しているため, 期限条件として許容する範囲を明示するか sample
-      と方針を統一する必要がある。
-    message_ja: >-
-      会議日時や配信頻度を重複管理しない方針に対し, 対応 sample は「週次相談」を関係者一覧・エンゲージメント方針・コミュニケーション計画への反映へ重複記載しているため, 期限条件として許容する範囲を明示するか sample
-      と方針を統一する必要がある。
-  - id: F003
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 87
-    anchor: "- 承認者を空欄や「-」にしない。見直し責任者が自分で承認してよい場合は、その役割名を承認者に書く。"
-    message: 変更時と定期確認時の見直し条件に承認者を定める手順に対し, sample はプロジェクトの目的・スコープ変更行の承認者を「-」としているため, 自己承認を許容する条件を明示するか承認者を記載して統一する必要がある。
-    message_ja: 変更時と定期確認時の見直し条件に承認者を定める手順に対し, sample はプロジェクトの目的・スコープ変更行の承認者を「-」としているため, 自己承認を許容する条件を明示するか承認者を記載して統一する必要がある。
+findings: []
