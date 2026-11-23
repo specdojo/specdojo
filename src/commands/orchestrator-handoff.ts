@@ -11,7 +11,7 @@ import {
   type QueueRecord,
 } from "../exec/queue.js";
 import { execRunJoinPoolPath, execRunLockPath } from "../exec/run/lock.js";
-import { loadRegisterItems, resolveRegisterPaths } from "../register/register.js";
+import { generatePjrId, loadRegisterItems, resolveRegisterPaths } from "../register/register.js";
 import {
   isLiveLock,
   livePoolHolders,
@@ -37,6 +37,8 @@ export type HandoffQueue = {
   current?: string;
   stoppedStep?: number;
   reason?: string;
+  // 列の記録の最終更新時刻。止まった列では止まった時刻にあたる。
+  updatedAt?: string;
 };
 
 export type HandoffRun = {
@@ -55,13 +57,58 @@ export type HandoffItem = {
   status: string;
   // 個票の project 修飾 doc id。個票の無い項目は undefined（ID だけを出す）。
   docId?: string;
+  registeredAt?: string;
 };
 
 export type HandoffSnapshot = {
   queues: HandoffQueue[];
   runs: HandoffRun[];
   items: HandoffItem[];
+  // 境目より前に止まり、件数だけを出す列の数。
+  olderStoppedQueues?: number;
 };
+
+const DEFAULT_STOPPED_QUEUE_WINDOW_MS = 24 * 60 * 60 * 1000;
+
+function parseTime(value: string | undefined): number | undefined {
+  if (!value) return undefined;
+  const time = Date.parse(value);
+  return Number.isNaN(time) ? undefined : time;
+}
+
+/** 止まった列を出す境目。前回の handoff の起票時刻、なければ直近 24 時間。 */
+export function stoppedQueueCutoff(items: readonly HandoffItem[], now: Date): number {
+  const handoffTimes = items
+    .filter((item) => item.type === "handoff")
+    .flatMap((item) => {
+      const time = parseTime(item.registeredAt);
+      return time === undefined ? [] : [time];
+    });
+  return handoffTimes.length > 0
+    ? Math.max(...handoffTimes)
+    : now.getTime() - DEFAULT_STOPPED_QUEUE_WINDOW_MS;
+}
+
+/**
+ * 終わっていない列のうち、流している列（stopped 以外）と境目より後に止まった列を残す。
+ * 境目より前に止まった列は件数だけを返す。
+ */
+export function selectHandoffQueues(
+  queues: readonly HandoffQueue[],
+  cutoff: number,
+): { queues: HandoffQueue[]; olderStoppedQueues: number } {
+  const shown: HandoffQueue[] = [];
+  let olderStoppedQueues = 0;
+  for (const queue of queues) {
+    const updatedAt = parseTime(queue.updatedAt);
+    if (queue.state === "stopped" && updatedAt !== undefined && updatedAt <= cutoff) {
+      olderStoppedQueues += 1;
+    } else {
+      shown.push(queue);
+    }
+  }
+  return { queues: shown, olderStoppedQueues };
+}
 
 function itemReference(item: HandoffItem): string {
   const link = item.docId ? `[[${item.docId}|${item.id}]]` : item.id;
@@ -95,8 +142,14 @@ function itemsWithStatus(snapshot: HandoffSnapshot, status: string): HandoffItem
 
 /** 「進行中」の章の本文。流している列・実行中の run・in-progress / review / waiting の項目。 */
 export function buildInProgressSection(snapshot: HandoffSnapshot): string {
+  const queueLines = snapshot.queues.map(queueLine);
+  if (snapshot.olderStoppedQueues) {
+    queueLines.push(
+      `それより前に止まった列: ${snapshot.olderStoppedQueues} 件（\`exec queue status\` で見る）`,
+    );
+  }
   const lines = [
-    ...group("流している列（`exec queue`）", snapshot.queues.map(queueLine)),
+    ...group("流している列（`exec queue`）", queueLines),
     ...group("実行中の run（exec run のロック）", snapshot.runs.map(runLine)),
     ...group("in-progress の項目", itemsWithStatus(snapshot, "in-progress").map(itemReference)),
     ...group("review の項目", itemsWithStatus(snapshot, "review").map(itemReference)),
@@ -151,6 +204,7 @@ function toHandoffQueue(record: QueueRecord, lockDir: string): HandoffQueue {
     ...(running ? { current: queueStepDisplay(running) } : {}),
     ...(record.stopped_step !== undefined ? { stoppedStep: record.stopped_step } : {}),
     ...(record.reason ? { reason: record.reason } : {}),
+    updatedAt: record.updated_at,
   };
 }
 
@@ -165,7 +219,10 @@ function toHandoffRun(slot: string, owner: LockOwner): HandoffRun {
 }
 
 /** 登録簿・列・exec run のロックから引き継ぎの材料を集める。 */
-export function collectHandoffSnapshot(opts: { project?: string }): {
+export function collectHandoffSnapshot(
+  opts: { project?: string },
+  now: Date = new Date(),
+): {
   projectId: string;
   snapshot: HandoffSnapshot;
 } {
@@ -176,7 +233,7 @@ export function collectHandoffSnapshot(opts: { project?: string }): {
   }
 
   const { records } = listQueueRecords(executionPath);
-  const queues = records
+  const unfinishedQueues = records
     .filter((record) => !isQueueFinished(record))
     .map((record) => toHandoffQueue(record, queueLockPath(executionPath, record.queue_id)));
 
@@ -196,13 +253,19 @@ export function collectHandoffSnapshot(opts: { project?: string }): {
     ...(view.ticketFilename
       ? { docId: `${paths.projectId}:${basename(view.ticketFilename, ".md")}` }
       : {}),
+    registeredAt: view.item.registeredAt,
   }));
 
-  return { projectId: paths.projectId, snapshot: { queues, runs, items } };
+  const { queues, olderStoppedQueues } = selectHandoffQueues(
+    unfinishedQueues,
+    stoppedQueueCutoff(items, now),
+  );
+  return { projectId: paths.projectId, snapshot: { queues, runs, items, olderStoppedQueues } };
 }
 
 export type OrchestratorHandoffOptions = {
   project?: string;
+  id?: string;
   title?: string;
   topic?: string;
   owner?: string;
@@ -238,6 +301,7 @@ export function buildHandoffRegisterAddArgs(
   const args = [
     "register",
     "add",
+    ...(opts.id?.trim() ? ["--id", opts.id.trim()] : []),
     "--type",
     "handoff",
     "--title",
@@ -271,9 +335,13 @@ export function runOrchestratorHandoff(
   opts: OrchestratorHandoffOptions,
   spawn: (args: string[], cwd: string) => boolean = spawnSelf,
 ): number {
-  const { snapshot } = collectHandoffSnapshot(opts);
+  const now = new Date();
+  const { snapshot } = collectHandoffSnapshot(opts, now);
   const notice = formatOpenHandoffNotice(findOpenHandoffs(snapshot.items));
   if (notice) process.stderr.write(notice);
+  // ID はここで 1 回だけ決めて `--id` で渡す。dry-run でも個票と event のファイル名が同じ ID になり、
+  // dry-run で示した ID を `--id` で本番の起票へ引き継げる。
+  const id = opts.id?.trim() || generatePjrId(snapshot.items.map((item) => item.id));
 
   const directory = mkdtempSync(join(tmpdir(), "specdojo-handoff-"));
   try {
@@ -283,7 +351,8 @@ export function runOrchestratorHandoff(
     };
     writeFileSync(sectionFiles.inProgress, buildInProgressSection(snapshot), "utf8");
     writeFileSync(sectionFiles.pending, buildPendingDecisionsSection(snapshot), "utf8");
-    const ok = spawn(buildHandoffRegisterAddArgs(opts, sectionFiles), specdojoRootDir());
+    const args = buildHandoffRegisterAddArgs({ ...opts, id }, sectionFiles, now);
+    const ok = spawn(args, specdojoRootDir());
     return ok ? 0 : 1;
   } finally {
     rmSync(directory, { recursive: true, force: true });
@@ -301,6 +370,7 @@ export function registerOrchestratorHandoffCommand(orchestrator: Command): void 
       "Open a handoff item whose in-progress and pending sections are built from the register and exec state",
     )
     .option("--project <projectId>", "Project id in specdojo.config.json")
+    .option("--id <id>", "Handoff ID (for example, the ID shown by a previous --dry-run)")
     .option("--title <title>", "Handoff title (defaults to the current UTC time)")
     .option("--topic <topic>", "Topic slug for the ticket filename")
     .option("--owner <owner>", "Owner or role")

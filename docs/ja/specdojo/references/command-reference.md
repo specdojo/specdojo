@@ -1340,26 +1340,27 @@ specdojo orchestrator night --project prj-0001 \
 specdojo orchestrator integration-tests --project prj-0001
 ```
 
-`orchestrator handoff` は、セッションや LLM を切り替えるときの引き継ぎを `handoff` の個票として起票します。「進行中」の章は、終わっていない `exec queue` の列、exec run のロックを持つ実行中の run、`in-progress`・`review`・`waiting` の register 項目から組み立てます。「判断待ち」の章には、開いている `question` と `waiting` の項目への参照を入れます。引き継ぎ元と先・有効な承認の範囲・注意点の章は `_TODO_` のまま残すため、起票した後に手で書きます。
+`orchestrator handoff` は、セッションや LLM を切り替えるときの引き継ぎを `handoff` の個票として起票します。「進行中」の章は、流している `exec queue` の列（`running`・`pending`）と前回の handoff の起票より後（handoff がなければ直近 24 時間）に止まった列、exec run のロックを持つ実行中の run、`in-progress`・`review`・`waiting` の register 項目から組み立てます。それより前に止まった列は件数だけを 1 行で示します。「判断待ち」の章には、開いている `question` と `waiting` の項目への参照を入れます。引き継ぎ元と先・有効な承認の範囲・注意点の章は `_TODO_` のまま残すため、起票した後に手で書きます。
 
 ```bash
 specdojo orchestrator handoff --project prj-0001 --dry-run
 specdojo orchestrator handoff --project prj-0001 --by specdojo-orchestrator --commit
 ```
 
-| オプション                | 内容                                                                                 |
-| ------------------------- | ------------------------------------------------------------------------------------ |
-| `--title <title>`         | 題。省略時は `オーケストレーターの引き継ぎ（YYYY-MM-DD HH:MM UTC）`                  |
-| `--topic <topic>`         | 個票ファイル名の論点部分。省略時は `orchestrator-handoff-YYYYMMDD-HHMM`（UTC）       |
-| `--owner <owner>`         | 担当                                                                                 |
-| `--priority <priority>`   | 優先度。既定は `medium`                                                              |
-| `--by <actor>`            | event に記録する actor                                                               |
-| `--reason <text>`         | event の理由                                                                         |
-| `--dry-run`               | 書き込まずに個票の中身を表示する                                                     |
-| `--commit`                | `register add --commit` と同じく、register lifecycle 枠内で起票・再生成・commit する |
-| `-m, --message <message>` | `--commit` の commit メッセージを上書きする（繰り返し可）                            |
+| オプション                | 内容                                                                                            |
+| ------------------------- | ----------------------------------------------------------------------------------------------- |
+| `--id <id>`               | 個票の ID。省略時はコマンドが採番する。`--dry-run` で示した ID を本番の起票に使う場合に指定する |
+| `--title <title>`         | 題。省略時は `オーケストレーターの引き継ぎ（YYYY-MM-DD HH:MM UTC）`                             |
+| `--topic <topic>`         | 個票ファイル名の論点部分。省略時は `orchestrator-handoff-YYYYMMDD-HHMM`（UTC）                  |
+| `--owner <owner>`         | 担当                                                                                            |
+| `--priority <priority>`   | 優先度。既定は `medium`                                                                         |
+| `--by <actor>`            | event に記録する actor                                                                          |
+| `--reason <text>`         | event の理由                                                                                    |
+| `--dry-run`               | 書き込まずに個票の中身を表示する                                                                |
+| `--commit`                | `register add --commit` と同じく、register lifecycle 枠内で起票・再生成・commit する            |
+| `-m, --message <message>` | `--commit` の commit メッセージを上書きする（繰り返し可）                                       |
 
-起票は `register add --type handoff` に組み立てた章を `--section` / `--section-file` で渡して行うため、ID の採番・event・生成ビュー・commit の扱いは `register add` と同じです。開いている（受け取り待ちの）handoff がほかにあるときは、その ID と題を標準エラー出力に示してから起票します。受け取った側は、読んだ後に受け取った主体を `--by` にして `register close` します。
+起票は `register add --type handoff` に組み立てた章を `--section` / `--section-file` で渡して行うため、event・生成ビュー・commit の扱いは `register add` と同じです。ID はコマンドが 1 回だけ決めて `--id` で渡すため、`--dry-run` でも個票と event のファイル名は同じ ID を示します。開いている（受け取り待ちの）handoff がほかにあるときは、その ID と題を標準エラー出力に示してから起票します。受け取った側は、読んだ後に受け取った主体を `--by` にして `register close` します。
 
 routine `rtn-nightly-integration-tests`（毎晩 4 時）が `job-nightly-integration-tests` を起動します。job は `task.steps` と `lock_wait_seconds` を使い、実行中の run がプロジェクト実行ロックを持つ間は最大 3 時間待ちます。時間切れは失敗ではなく延期として記録されます。任意のシェルのコマンドを流せる routine の action は用意していません。
 

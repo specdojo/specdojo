@@ -61,6 +61,7 @@ specdojo:
 | 5   | オーケストレーターの指示と playbook の変更案を書く                                | DEV  | done | 保護された設定のため案だけ。対応結果の「保護された設定の変更案」に書いた    |
 | 6   | 統合の後に prj-0001 で `orchestrator handoff --dry-run` を流して確かめる          | PM   | open | 統合の後に orchestrator が行う。executor の worktree での事前の確認は済んだ |
 | 7   | 静的検査と単体テストを通す                                                        | DEV  | done | 関係する単体テストを実行。全件と lint・typecheck は親の検証で流す           |
+| 8   | 2 回目: 止まった古い列を件数だけにし、dry-run の ID をそろえる                    | DEV  | done | 対応結果の「2 回目の実行」に書いた                                          |
 
 ## 5. 対応結果
 
@@ -106,7 +107,16 @@ specdojo:
 - 区分: Added
 - 文案: `register add` に `--section` / `--section-file`（繰り返し可）を追加。template から作った個票の章を起票と同時にファイルの本文で埋める。
 
-### 5.5. 残課題
+### 5.5. 2 回目の実行
+
+- 列の絞り込み: `running`・`pending` の列はいつ止まったかに関係なく出し、`stopped` の列は記録の `updated_at` が境目より後のものだけを出す。境目は、状態を問わずいちばん新しい handoff の `registered_at`、handoff がなければ実行時刻の 24 時間前とした。それより前に止まった列は「それより前に止まった列: N 件（`exec queue status` で見る）」の 1 行にまとめる（`selectHandoffQueues`・`stoppedQueueCutoff`）。
+- dry-run の ID: コマンドがすでにある ID を避けて ID を 1 回だけ採番し、`register add` へ `--id` で渡すようにした。`orchestrator handoff --id` も足したので、dry-run で示した ID を本番の起票に使える。executor の worktree では食い違いを再現できなかった（1 回の dry-run の中では、個票と event のファイル名は同じ ID だった）。別々の dry-run の出力を見比べた、または dry-run と実際の起票を見比べたことが原因と推定する。`register add` の内部での採番に頼らず ID を 1 か所で決めることで、どちらの場合にも ID が 1 つに決まるようにした。
+- 単体テスト: `stoppedQueueCutoff`（前回の handoff がある場合とない場合）、`selectHandoffQueues`、件数の 1 行、`--id` の受け渡し、fixture での起動（古い止まった列が件数になる、採番した ID を `--id` で渡す）、`register add --dry-run` で個票の見出し・個票のファイル名・event のファイル名が同じ ID になること。
+- CLI リファレンスの `orchestrator handoff` の節に、列の絞り込みと `--id` を足した。
+- この worktree で `orchestrator handoff --project prj-0001 --dry-run` を流し、列が 2 件と「それより前に止まった列: 9 件」になり、個票と event のファイル名の ID がそろうことを確かめた。残った 2 件は 2026-11-21 の `pending` の列と、runner が生きていない `running` の列で、完了条件どおり流している列として出る。
+- CHANGELOG に書く事項の 1 件目の文案に「流している列と前回の handoff より後に止まった列を出す」を加える場合は、次の文案を使う: `specdojo orchestrator handoff` を追加。登録簿と `exec queue`（流している列と前回の handoff より後に止まった列）・exec run のロックから「進行中」と「判断待ち」の章を組み立てて `handoff` の個票を起票する。`--dry-run` で書き込まずに中身を表示し、`--id` で dry-run と同じ ID を使える。開いている handoff がほかにあるときは知らせる。
+
+### 5.6. 残課題
 
 - 統合の後に orchestrator が prj-0001 で `orchestrator handoff --dry-run` を流して確かめてから close する（作業内容の 6 行目）。
 - 保護された設定の変更案（指示の本文・ラッパー・playbook）の反映は、利用者の承認のもとでオーケストレーターが行う。
