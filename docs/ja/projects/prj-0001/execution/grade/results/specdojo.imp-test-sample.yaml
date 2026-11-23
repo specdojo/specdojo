@@ -5,10 +5,10 @@ path: docs/ja/specdojo/samples/imp-test-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 95
-graded_at: "2026-11-22T04:58:40.949Z"
+score: 94
+graded_at: "2026-11-23T01:59:37.875Z"
 graded_by: opus-review-executor
-content_hash: 4d7eed593fa1663996672ff628fca086af1a1776a99fa4499cb7289ca87b7dfe
+content_hash: bb68a67407a0e9514ae6839523cab014bce3ac0bb8983d00147e1234faf4c8ef
 categories:
   purpose:
     score: 100
@@ -21,7 +21,7 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 83
   implementation:
     score: 88
   quality:
@@ -87,8 +87,8 @@ viewpoints:
     level: 3
     score: 75
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -104,7 +104,7 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 4
+  minor: 5
   note: 0
 findings:
   - id: F001
@@ -112,7 +112,7 @@ findings:
     rule: vp-pm-plan-feasibility
     line: 65
     anchor: >-
-      - 回帰テストの代替（重点 20 ケースへの絞り込み）と単体テストの見送りは `PO` が判断した（決定記録 `PJR-T5D1`）。回帰テストは、重点ケースで欠陥が 1 件でも見つかれば残り 100
+      - 回帰テストの代替（重点 20 ケースへの絞り込み）と単体テストの見送りは決定記録 `PJR-T5D1` で決めた。回帰テストは、重点ケースで欠陥が 1 件でも見つかれば残り 100
       ケースを受入判定前に実行する。単体テストは、値引き計算の分岐が 3 件を超えたら 2026-07-31 までに再評価する。
     message: >-
       重点回帰で欠陥が見つかった場合に残り100ケースを受入判定前に実行するとしているが、全120ケースの再実行は期限内に終わらないという本文53行目の判断と食い違う。2026-05-24〜05-28
@@ -141,3 +141,16 @@ findings:
     anchor: "_ASSUMPTION_: リリース予定日を 2026-06-01 とし、受入判定日はその営業日前の 2026-05-28 とする。"
     message: 「その営業日前の 2026-05-28」は営業日数が抜けており、受入判定日をどう決めたか読み取れないため、「2 営業日前」のように日数を明記する必要がある。
     message_ja: 「その営業日前の 2026-05-28」は営業日数が抜けており、受入判定日をどう決めたか読み取れないため、「2 営業日前」のように日数を明記する必要がある。
+  - id: F005
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 74
+    anchor: >-
+      | 連携系テストデータの準備     | 値引き条件の代表データセット     | 確定しないと結合テスト 8 ケースの期待値を作れず、2026-05-16 の期限を守れない       | 定額・定率の各 1
+      件で先行してケースを作成する            | 2026-05-14 | `QE` | `PJR-T5Q4`（`question`） |
+    message: >-
+      論点名「連携系テストデータの準備」は本文中ほかに出てこない呼称で、I/F 連携のテスト（`imp-interface`
+      の範囲）とも読めるため、影響詳細一覧・対応方針と同じく「結合テストの値引き条件データの準備」など既存の呼び方にそろえる必要がある。
+    message_ja: >-
+      論点名「連携系テストデータの準備」は本文中ほかに出てこない呼称で、I/F 連携のテスト（`imp-interface`
+      の範囲）とも読めるため、影響詳細一覧・対応方針と同じく「結合テストの値引き条件データの準備」など既存の呼び方にそろえる必要がある。

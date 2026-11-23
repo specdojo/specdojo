@@ -4,28 +4,28 @@ document: specdojo:ifx-api-sample
 path: docs/ja/specdojo/samples/ifx-api-sample.yaml
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 82
-graded_at: "2026-11-22T14:40:48.676Z"
+verdict: pass
+score: 93
+graded_at: "2026-11-23T01:37:27.405Z"
 graded_by: opus-review-executor
-content_hash: 380ffca1c1dbdabbbeb562a3dd7d3f6b457b73abf55a81125eb25604f9c4e423
+content_hash: 0bf0a6ba75ee13891842b243af7bb3fc80c0f1dd0631b760d29172c196e476b5
 categories:
   purpose:
-    score: 88
-  operations:
-    score: 81
-  planning:
-    score: 75
-  business:
-    score: 88
-  architecture:
-    score: 92
-  usability:
     score: 100
+  operations:
+    score: 100
+  planning:
+    score: 92
+  business:
+    score: 100
+  architecture:
+    score: 100
+  usability:
+    score: 83
   implementation:
-    score: 75
+    score: 88
   quality:
-    score: 67
+    score: 100
   consistency:
     score: 75
 viewpoints:
@@ -33,32 +33,32 @@ viewpoints:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-publication-accountability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-plan-feasibility:
     level: 3
     score: 75
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-requirements-completeness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
     level: 4
     score: 100
   vp-arc-technical-constraints:
-    level: 3
-    score: 75
-  vp-arc-conciseness:
     level: 4
     score: 100
+  vp-arc-conciseness:
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -66,32 +66,32 @@ viewpoints:
     level: 3
     score: 75
   vp-dev-change-impact:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-testability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
     level: 3
     score: 75
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-ops-release-readiness:
     level: 4
     score: 100
-  vp-ops-release-readiness:
-    level: 3
-    score: 75
   vp-ops-operability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -100,161 +100,73 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 14
+  major: 0
+  minor: 5
   note: 1
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-decision-readiness
-    line: 10
-    anchor: "x-spec-meta:"
-    message: "x-spec-meta の前後に連携の前提、合意対象、未決事項（例: 冪等性や通貨の扱い）をコメントで示しておらず、承認・保留の判断材料が読み取れないため、前提と未決事項を追記する必要がある。"
-    message_ja: "x-spec-meta の前後に連携の前提、合意対象、未決事項（例: 冪等性や通貨の扱い）をコメントで示しておらず、承認・保留の判断材料が読み取れないため、前提と未決事項を追記する必要がある。"
+    rule: vp-pm-plan-feasibility
+    line: 6
+    anchor: "# _UNDECIDED_: ready にするための残課題は次のとおり。"
+    message: >-
+      _UNDECIDED_ の残課題（受付照会・税と合計の送信要否・通貨の仮定・検証器と接続確認）に担当 Role code と解消の期限（例: 外部結合テスト着手前）がなく、5 行の _TODO_
+      と同じ粒度でタスク化・順序付けできないため、各項目に担当と解消時期を追記する必要がある。
+    message_ja: >-
+      _UNDECIDED_ の残課題（受付照会・税と合計の送信要否・通貨の仮定・検証器と接続確認）に担当 Role code と解消の期限（例: 外部結合テスト着手前）がなく、5 行の _TODO_
+      と同じ粒度でタスク化・順序付けできないため、各項目に担当と解消時期を追記する必要がある。
   - id: F002
     severity: minor
-    rule: vp-po-publication-accountability
-    line: 13
-    anchor: "status: draft"
-    message: status が draft だが公開対象の範囲と、承認・ready 昇格を人間の PO（店主代表）が判断する旨がコメント等で示されておらず、ESIL sample と同水準の説明責任の所在が読み取れないため追記する必要がある。
-    message_ja: status が draft だが公開対象の範囲と、承認・ready 昇格を人間の PO（店主代表）が判断する旨がコメント等で示されておらず、ESIL sample と同水準の説明責任の所在が読み取れないため追記する必要がある。
+    rule: vp-arc-conciseness
+    line: 3
+    anchor: "# 詳細契約の参照元: [[specdojo:ifx-index-sample|駄菓子屋きぬや 販売管理CLIの外部システムI/F一覧]] の「本部への売上登録」。"
+    message: >-
+      3 行のコメントの「詳細契約の参照元: ifx-index-sample の『本部への売上登録』」は 17 行の info.description と同じ主張の繰り返しで、rulebook が連携名の記載先とする
+      info.description に一本化しても判断情報を失わないため、コメント側を削る必要がある。
+    message_ja: >-
+      3 行のコメントの「詳細契約の参照元: ifx-index-sample の『本部への売上登録』」は 17 行の info.description と同じ主張の繰り返しで、rulebook が連携名の記載先とする
+      info.description に一本化しても判断情報を失わないため、コメント側を削る必要がある。
   - id: F003
     severity: minor
-    rule: vp-pm-plan-feasibility
-    line: 15
-    anchor: "based_on: []"
+    rule: vp-dev-implementation-readiness
+    line: 182
+    anchor: "details:"
     message: >-
-      ESIL の「本部への売上登録」との対応は description で示されたが、based_on が空のままで specdojo:ifx-index-sample などの根拠仕様 ID
-      が構造化されておらず、外部結合テスト前の合意など完了判断の起点も読み取れないため、based_on に根拠 ID を記載し残作業の順序をコメントで示す必要がある。
+      400 の description が「details の項目を直して送り直す」と指示する一方、ErrorResponse.details が構造のない type: object
+      で、不正な項目名や商品コード未登録を店舗端末が機械的に判別できないため、details の構造（項目名・理由など）を定義するか、形式が未決である旨を示す必要がある。
     message_ja: >-
-      ESIL の「本部への売上登録」との対応は description で示されたが、based_on が空のままで specdojo:ifx-index-sample などの根拠仕様 ID
-      が構造化されておらず、外部結合テスト前の合意など完了判断の起点も読み取れないため、based_on に根拠 ID を記載し残作業の順序をコメントで示す必要がある。
+      400 の description が「details の項目を直して送り直す」と指示する一方、ErrorResponse.details が構造のない type: object
+      で、不正な項目名や商品コード未登録を店舗端末が機械的に判別できないため、details の構造（項目名・理由など）を定義するか、形式が未決である旨を示す必要がある。
   - id: F004
     severity: minor
-    rule: vp-pm-dependency-risk
-    line: 8
-    anchor: "`specdojo:ifx-index-sample` の「本部への売上登録」の詳細仕様にあたる。"
-    message: >-
-      sample 側で ESIL の「本部への売上登録」の詳細仕様であることは明示されたため前回の major は解消したが、ESIL 側は spec_ref: TBD・未同梱のままで相互参照が成立しておらず、ESIL
-      が挙げる二重登録・結果不明時のリスクも本 sample で識別されていないため、based_on への ESIL ID 記載とリスクのコメントを追加する必要がある。
-    message_ja: >-
-      sample 側で ESIL の「本部への売上登録」の詳細仕様であることは明示されたため前回の major は解消したが、ESIL 側は spec_ref: TBD・未同梱のままで相互参照が成立しておらず、ESIL
-      が挙げる二重登録・結果不明時のリスクも本 sample で識別されていないため、based_on への ESIL ID 記載とリスクのコメントを追加する必要がある。
-  - id: F005
-    severity: minor
-    rule: vp-pm-control-reporting
-    line: 34
-    anchor: "responses:"
-    message: rulebook 推奨の 403/404/409/429 を定義しない理由や、二重決済対策などの未解決事項を課題として記録していないため、_TODO_ などで転記候補を分離して示す必要がある。
-    message_ja: rulebook 推奨の 403/404/409/429 を定義しない理由や、二重決済対策などの未解決事項を課題として記録していないため、_TODO_ などで転記候補を分離して示す必要がある。
-  - id: F006
-    severity: minor
-    rule: vp-ba-requirements-completeness
-    line: 95
-    anchor: "required: [product_code, quantity, unit_price]"
-    message: >-
-      SaleLine が商品コード・数量・単価のみで、ESIL の商品照会が返す税区分や会計確定時の合計・預かり金を送るのか対象外なのかが示されず、売上登録の範囲を受入条件として判定できないため、対象・対象外を
-      description かコメントで明示する必要がある。
-    message_ja: >-
-      SaleLine が商品コード・数量・単価のみで、ESIL の商品照会が返す税区分や会計確定時の合計・預かり金を送るのか対象外なのかが示されず、売上登録の範囲を受入条件として判定できないため、対象・対象外を
-      description かコメントで明示する必要がある。
-  - id: F007
-    severity: minor
-    rule: vp-arc-technical-constraints
-    line: 53
-    anchor: '"409":'
-    message: >-
-      409 で重複登録を判定する一方、結果不明時の受付照会手段や 409 応答で既存 sale_id を返すかが定義されず、ESIL
-      が前提とする「結果不明を未登録と断定しない」回復の技術的前提が読み取れないため、方針または未決である旨を記述する必要がある。
-    message_ja: >-
-      409 で重複登録を判定する一方、結果不明時の受付照会手段や 409 応答で既存 sale_id を返すかが定義されず、ESIL
-      が前提とする「結果不明を未登録と断定しない」回復の技術的前提が読み取れないため、方針または未決である旨を記述する必要がある。
-  - id: F008
-    severity: minor
-    rule: vp-dev-implementation-readiness
-    line: 118
-    anchor: "enum: [ACCEPTED, REJECTED]"
-    message: >-
-      201（登録成功）の応答で status に REJECTED を許しており、成功応答で拒否となる条件とクライアント側の扱いが読み取れないため、REJECTED の意味を description
-      で定義するか、拒否をエラー応答へ寄せる必要がある。
-    message_ja: >-
-      201（登録成功）の応答で status に REJECTED を許しており、成功応答で拒否となる条件とクライアント側の扱いが読み取れないため、REJECTED の意味を description
-      で定義するか、拒否をエラー応答へ寄せる必要がある。
-  - id: F009
-    severity: minor
-    rule: vp-dev-change-impact
-    line: 22
-    anchor: "/v1/sales:"
-    message: >-
-      info.version 1.0.0 と /v1 で版は特定できるようになったが、店舗端末の CLI
-      と本部の間で項目追加・必須化などの互換性をどう扱うかが示されず、変更影響を追跡できないため、互換性方針または参照先を追記する必要がある。
-    message_ja: >-
-      info.version 1.0.0 と /v1 で版は特定できるようになったが、店舗端末の CLI
-      と本部の間で項目追加・必須化などの互換性をどう扱うかが示されず、変更影響を追跡できないため、互換性方針または参照先を追記する必要がある。
-  - id: F010
-    severity: minor
-    rule: vp-dev-testability
-    line: 1
-    anchor: "# specdojo-schema: none reason=external-openapi"
-    message: >-
-      schema 検証を external-openapi として除外したまま代わりの OpenAPI 検証手段が示されておらず、今回 info.version
-      は補われたが同種の必須キー欠落を機械的に検出できないため、OpenAPI 準拠の検証方法を明示する必要がある。
-    message_ja: >-
-      schema 検証を external-openapi として除外したまま代わりの OpenAPI 検証手段が示されておらず、今回 info.version
-      は補われたが同種の必須キー欠落を機械的に検出できないため、OpenAPI 準拠の検証方法を明示する必要がある。
-  - id: F011
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 97
-    anchor: "product_code:"
-    message: product_code と transaction_id に pattern・長さなどの形式が定義されておらず、400（入力不正）となる条件を合否判定できないため、形式制約を定義する必要がある。
-    message_ja: product_code と transaction_id に pattern・長さなどの形式が定義されておらず、400（入力不正）となる条件を合否判定できないため、形式制約を定義する必要がある。
-  - id: F012
-    severity: minor
     rule: vp-qe-omissions-consistency
-    line: 41
-    anchor: '"400":'
-    message: rulebook の「エラー定義（推奨）」にある 403/404/409/429 が未定義で省略理由もないため、定義するか不要理由をコメントで示す必要がある。
-    message_ja: rulebook の「エラー定義（推奨）」にある 403/404/409/429 が未定義で省略理由もないため、定義するか不要理由をコメントで示す必要がある。
-  - id: F013
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 8
-    anchor: "`specdojo:ifx-index-sample` の「本部への売上登録」の詳細仕様にあたる。"
+    line: 9
+    anchor: "#   - 通貨は日本円のみとする仮定の確認。"
     message: >-
-      本 sample は ESIL「本部への売上登録」の詳細仕様と称するが、ifx-index-sample は本部詳細仕様を「未同梱」とし spec_ref: TBD・想定ファイル
-      ifx-api-kinuya-sales.yaml のままで、rulebook の spec_ref と ID の対応が成立せず Kata 相互で矛盾するため、ESIL の spec_ref を
-      specdojo:ifx-api-sample に接続するか本 sample を例示と位置付ける説明に揃える必要がある。
+      8〜9 行の「本部が計算する仮定」「通貨は日本円のみとする仮定」は rulebook の記述ガイドで _ASSUMPTION_ とすべき仮置きなのに _UNDECIDED_ の下にあり、18 行・131
+      行では確定した前提として書かれていて扱いが矛盾するため、_ASSUMPTION_ に分けて本文の前提と対応させる必要がある。
     message_ja: >-
-      本 sample は ESIL「本部への売上登録」の詳細仕様と称するが、ifx-index-sample は本部詳細仕様を「未同梱」とし spec_ref: TBD・想定ファイル
-      ifx-api-kinuya-sales.yaml のままで、rulebook の spec_ref と ID の対応が成立せず Kata 相互で矛盾するため、ESIL の spec_ref を
-      specdojo:ifx-api-sample に接続するか本 sample を例示と位置付ける説明に揃える必要がある。
-  - id: F014
+      8〜9 行の「本部が計算する仮定」「通貨は日本円のみとする仮定」は rulebook の記述ガイドで _ASSUMPTION_ とすべき仮置きなのに _UNDECIDED_ の下にあり、18 行・131
+      行では確定した前提として書かれていて扱いが矛盾するため、_ASSUMPTION_ に分けて本文の前提と対応させる必要がある。
+  - id: F005
     severity: note
     rule: vp-qe-kata-conformance
-    line: 4
+    line: 13
     anchor: "title: 本部売上登録API"
     message: >-
-      docs/ja/specdojo/samples/generated/ifx-api-sample.md が旧版の「決済サービスAPI」のまま残っており正本 YAML と不一致のため、yaml-pages
-      で再生成する必要がある。
+      docs/ja/specdojo/samples/generated/ifx-api-sample.md が based_on: []・REJECTED・403/429 なしの旧版のままで正本 YAML
+      と一致しないため、yaml-pages で再生成する必要がある。
     message_ja: >-
-      docs/ja/specdojo/samples/generated/ifx-api-sample.md が旧版の「決済サービスAPI」のまま残っており正本 YAML と不一致のため、yaml-pages
-      で再生成する必要がある。
-  - id: F015
+      docs/ja/specdojo/samples/generated/ifx-api-sample.md が based_on: []・REJECTED・403/429 なしの旧版のままで正本 YAML
+      と一致しないため、yaml-pages で再生成する必要がある。
+  - id: F006
     severity: minor
-    rule: vp-ops-release-readiness
-    line: 13
-    anchor: "status: draft"
-    message: status が draft のまま ready 化に必要な未解決事項が記載されていないため、残課題を _TODO_ 等で明示する必要がある。
-    message_ja: status が draft のまま ready 化に必要な未解決事項が記載されていないため、残課題を _TODO_ 等で明示する必要がある。
-  - id: F016
-    severity: minor
-    rule: vp-ops-operability
-    line: 3
-    anchor: "info:"
+    rule: vp-ux-language-consistency
+    line: 64
+    anchor: "description: 認証失敗。送り直さず、開発担当が API キーを確認する。"
     message: >-
-      info.version は追加されたが contact や問い合わせ導線がなく、ESIL で未特定とされた本部の確認窓口が本 sample では _TODO_
-      としても示されていないため、窓口または未特定である旨を追記する必要がある。
+      5 行は Role code「BA」、4 行は「PO（店主代表）」と書く一方、64 行・70 行は Role code のない「開発担当」で、rulebook の「DEV（開発担当）」と表記が揃わないため、Role code
+      を付けて統一する必要がある。
     message_ja: >-
-      info.version は追加されたが contact や問い合わせ導線がなく、ESIL で未特定とされた本部の確認窓口が本 sample では _TODO_
-      としても示されていないため、窓口または未特定である旨を追記する必要がある。
+      5 行は Role code「BA」、4 行は「PO（店主代表）」と書く一方、64 行・70 行は Role code のない「開発担当」で、rulebook の「DEV（開発担当）」と表記が揃わないため、Role code
+      を付けて統一する必要がある。

@@ -514,12 +514,16 @@ export type ResolvedExternalProject = SpecDojoExternalProjectConfig & {
   repoRoot: string;
 };
 
-/** Resolve a configured external-project repository from the SpecDojo root. */
+/**
+ * Resolve a configured external-project repository from the SpecDojo root. A linked worktree
+ * resolves `path` from the main working tree root, because the sibling repository sits next to
+ * the main checkout, not next to the task worktree.
+ */
 export function resolveExternalProjectRoot(
   rootDir: string,
   project: Pick<SpecDojoExternalProjectConfig, "path">,
 ): string {
-  return resolve(rootDir, project.path);
+  return resolve(repositoryIdentityRoot(rootDir), project.path);
 }
 
 /** Return external projects in configuration order with absolute repository roots. */
@@ -568,7 +572,7 @@ export function validateExternalProjects(
     } else if (isAbsolute(path)) {
       errors.push(`${at}.path must be relative to the SpecDojo root (got absolute "${path}")`);
     } else {
-      const absolutePath = resolve(rootDir, path);
+      const absolutePath = resolveExternalProjectRoot(rootDir, { path });
       if (!existsSync(absolutePath)) {
         errors.push(`${at}.path "${path}" does not exist (resolved to ${absolutePath})`);
       } else if (!statSync(absolutePath).isDirectory()) {
