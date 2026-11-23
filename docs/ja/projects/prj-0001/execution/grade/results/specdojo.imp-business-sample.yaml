@@ -4,47 +4,46 @@ document: specdojo:imp-business-sample
 path: docs/ja/specdojo/samples/imp-business-sample.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-sample
-verdict: needs-work
-score: 83
-graded_at: "2026-11-21T04:08:39.368Z"
-graded_by: opus-executor
-content_hash: a7336657f78d7f564d32d5d275c1bbbc7ca296a2e1827ec7304644f68519c6b0
+verdict: pass
+score: 100
+graded_at: "2026-11-23T15:45:04.796Z"
+graded_by: sonnet-review-executor
+content_hash: 4dea58d2ea1e56f4626beba3c25da005fb56a63a90d2bde3f5f44dcd0e4393e5
 categories:
   purpose:
-    score: 75
+    score: 100
   operations:
-    score: 94
+    score: 100
   planning:
-    score: 83
+    score: 100
   business:
-    score: 83
+    score: 92
   architecture:
-    score: 92
+    score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
-    score: 88
+    score: 100
   quality:
-    score: 75
+    score: 100
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-publication-accountability:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
     level: 4
     score: 100
@@ -55,11 +54,11 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-stakeholder-clarity:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -70,29 +69,29 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-change-impact:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-operability:
     level: 4
     score: 100
@@ -104,130 +103,16 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 15
+  major: 0
+  minor: 1
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-purpose-alignment
-    line: 41
-    anchor: "| 高     | 店頭販売の新手順適用       | 2026-05-15 まで | 業務設計担当（佐藤）       | レジ担当 3 名の訓練日程確保      |"
-    message: 前提条件「レジ担当 3 名の訓練日程確保」は、店主一人での運用を前提とする共通サンプル文脈・プロジェクト概要と矛盾するため、店主代表と家族利用者代表による店番体制に合わせて書き直す必要がある。
-    message_ja: 前提条件「レジ担当 3 名の訓練日程確保」は、店主一人での運用を前提とする共通サンプル文脈・プロジェクト概要と矛盾するため、店主代表と家族利用者代表による店番体制に合わせて書き直す必要がある。
-  - id: F002
-    severity: minor
-    rule: vp-po-decision-readiness
-    line: 50
-    anchor: >-
-      | 論点                     | 不足情報                   | 決定期限   | 担当                 |
-      処理方針                                                   |
-    message: 未解決事項の表に、rulebook が求める「判断・対応への影響」（どの影響対象業務・対応項目の判断を左右するか）の列がなく、未決のままの場合に何が止まるか判断できないため、影響の列を追加する必要がある。
-    message_ja: 未解決事項の表に、rulebook が求める「判断・対応への影響」（どの影響対象業務・対応項目の判断を左右するか）の列がなく、未決のままの場合に何が止まるか判断できないため、影響の列を追加する必要がある。
-  - id: F003
-    severity: minor
-    rule: vp-pm-plan-feasibility
-    line: 39
-    anchor: "| 優先度 | 対応項目                   | 実施時期        | 担当                       | 前提条件                         |"
-    message: 対応方針の担当が Role code ではなく独自の役割名と人物名で書かれ、完了条件もないため、Schedule の owner に使える Role code と各項目の完了条件を記載する必要がある。
-    message_ja: 対応方針の担当が Role code ではなく独自の役割名と人物名で書かれ、完了条件もないため、Schedule の owner に使える Role code と各項目の完了条件を記載する必要がある。
-  - id: F004
-    severity: minor
-    rule: vp-pm-dependency-risk
-    line: 42
-    anchor: "| 高     | 日次締め確認項目の更新     | 2026-05-20 まで | 運用管理担当（田中）       | 値引き内訳レポート定義の確定     |"
-    message: 日次締めの前提条件「値引き内訳レポート定義の確定」が未解決事項に登録されておらず、値引き例外ルールの確定と各対応項目の依存関係も示されていないため、スケジュールへの影響が追えない。
-    message_ja: 日次締めの前提条件「値引き内訳レポート定義の確定」が未解決事項に登録されておらず、値引き例外ルールの確定と各対応項目の依存関係も示されていないため、スケジュールへの影響が追えない。
-  - id: F005
-    severity: minor
     rule: vp-ba-business-value
-    line: 14
-    anchor: "- 成功条件: 平日 16:00-18:00 の 1 会計あたり平均処理時間を 90 秒以内にする。"
-    message: 成功条件「1 会計あたり平均処理時間を 90 秒以内」に現状値（ベースライン）と測定方法がなく、期待価値の大きさと達成判定ができないため、現状値と計測方法を併記する必要がある。
-    message_ja: 成功条件「1 会計あたり平均処理時間を 90 秒以内」に現状値（ベースライン）と測定方法がなく、期待価値の大きさと達成判定ができないため、現状値と計測方法を併記する必要がある。
-  - id: F006
-    severity: minor
-    rule: vp-ba-stakeholder-clarity
-    line: 41
-    anchor: "| 高     | 店頭販売の新手順適用       | 2026-05-15 まで | 業務設計担当（佐藤）       | レジ担当 3 名の訓練日程確保      |"
-    message: 担当に共通登場人物にない役割（業務設計担当、運用管理担当、店舗運用担当、プロジェクト管理者、業務責任者）が使われ、駄菓子屋きぬやの誰が確認・合意するか読み取れないため、共通登場人物の役割名へ置き換える必要がある。
-    message_ja: 担当に共通登場人物にない役割（業務設計担当、運用管理担当、店舗運用担当、プロジェクト管理者、業務責任者）が使われ、駄菓子屋きぬやの誰が確認・合意するか読み取れないため、共通登場人物の役割名へ置き換える必要がある。
-  - id: F007
-    severity: minor
-    rule: vp-arc-technical-constraints
-    line: 12
-    anchor: "- 要求内容: バーコード読取による会計時間短縮と、キャンペーン値引き適用の業務ルール追加。"
-    message: バーコード読取の前提（タブレット 1 台で読み取るか、読取機器を追加するか）が示されず、店頭販売の手順変更や訓練の前提が判断できないため、業務運用上の前提を記載する必要がある。
-    message_ja: バーコード読取の前提（タブレット 1 台で読み取るか、読取機器を追加するか）が示されず、店頭販売の手順変更や訓練の前提が判断できないため、業務運用上の前提を記載する必要がある。
-  - id: F008
-    severity: minor
-    rule: vp-dev-change-impact
-    line: 30
+    line: 22
     anchor: >-
-      | 影響対象業務 | 変更要否 | 影響度 | 対応方針 |
-      判断根拠                                                                                                                
-      | 備考                                             |
-    message: rulebook がプロセス・データ・テスト仕様への波及について概要と判断を求めているのに、商品コード登録・値引き内訳・売上集計項目の追加がどの関連仕様に波及するかが示されていないため、備考などに波及先を記載する必要がある。
-    message_ja: rulebook がプロセス・データ・テスト仕様への波及について概要と判断を求めているのに、商品コード登録・値引き内訳・売上集計項目の追加がどの関連仕様に波及するかが示されていないため、備考などに波及先を記載する必要がある。
-  - id: F009
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 20
-    anchor: "| 影響度 | 件数 | 主な対象業務       | 優先対応 |"
-    message: 影響度の高・中・低を分ける条件がなく、影響詳細一覧の各業務に付けた影響度の妥当性を検証できないため、評価観点ごとの判定条件と集約方法を定義する必要がある。
-    message_ja: 影響度の高・中・低を分ける条件がなく、影響詳細一覧の各業務に付けた影響度の妥当性を検証できないため、評価観点ごとの判定条件と集約方法を定義する必要がある。
-  - id: F010
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 20
-    anchor: "| 影響度 | 件数 | 主な対象業務       | 優先対応 |"
-    message: 影響度（高・中・低）の判定尺度（基準）が定義されておらず、rulebook の禁止事項に抵触している。
-    message_ja: 影響度（高・中・低）の判定尺度（基準）が定義されておらず、rulebook の禁止事項に抵触している。
-  - id: F011
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 50
-    anchor: >-
-      | 論点                     | 不足情報                   | 決定期限   | 担当                 |
-      処理方針                                                   |
-    message: 未解決事項に rulebook の記述ガイドが求める「判断・対応への影響」の記載がなく、必須の記載項目が欠けている。
-    message_ja: 未解決事項に rulebook の記述ガイドが求める「判断・対応への影響」の記載がなく、必須の記載項目が欠けている。
-  - id: F012
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 20
-    anchor: "| 影響度 | 件数 | 主な対象業務       | 優先対応 |"
-    message: 影響度の尺度定義を必須とする rulebook の禁止事項に従っていない。
-    message_ja: 影響度の尺度定義を必須とする rulebook の禁止事項に従っていない。
-  - id: F013
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 41
-    anchor: "| 高     | 店頭販売の新手順適用       | 2026-05-15 まで | 業務設計担当（佐藤）       | レジ担当 3 名の訓練日程確保      |"
-    message: >-
-      担当欄に共通サンプル文脈にない人物名（佐藤・田中・山本・中村・高橋）と未定義の役割名を使っており、共通登場人物の役割名・nickname・Role code で記述するという sample-authoring-standard
-      の規約に反しているため、置き換える必要がある。
-    message_ja: >-
-      担当欄に共通サンプル文脈にない人物名（佐藤・田中・山本・中村・高橋）と未定義の役割名を使っており、共通登場人物の役割名・nickname・Role code で記述するという sample-authoring-standard
-      の規約に反しているため、置き換える必要がある。
-  - id: F014
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 41
-    anchor: "| 高     | 店頭販売の新手順適用       | 2026-05-15 まで | 業務設計担当（佐藤）       | レジ担当 3 名の訓練日程確保      |"
-    message: 「レジ担当 3 名」は、店主一人で運用し運用体制を大きく変えないという共通サンプル文脈の前提と矛盾するため、共通の前提に合わせて書き直す必要がある。
-    message_ja: 「レジ担当 3 名」は、店主一人で運用し運用体制を大きく変えないという共通サンプル文脈の前提と矛盾するため、共通の前提に合わせて書き直す必要がある。
-  - id: F015
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 6
-    anchor: 対象は「店頭販売」「在庫補充」「日次締め」「ツケ管理」の 4 業務とし、判断対象期間は 2026-05-01 から 2026-07-31 とする。
-    message: 業務名「ツケ管理」が共通サンプル文脈・関連 sample の「つけ管理」と表記ゆれしており、また担当欄で役割名と人物名の組み合わせと「店主代表」だけの表記が混在しているため、どちらも統一する必要がある。
-    message_ja: 業務名「ツケ管理」が共通サンプル文脈・関連 sample の「つけ管理」と表記ゆれしており、また担当欄で役割名と人物名の組み合わせと「店主代表」だけの表記が混在しているため、どちらも統一する必要がある。
-  - id: F016
-    severity: minor
-    rule: vp-ops-release-readiness
-    line: 20
-    anchor: "| 影響度 | 件数 | 主な対象業務       | 優先対応 |"
-    message: 影響度の尺度が未定義で rulebook の禁止事項に抵触したままのため、sample を ready にする前に尺度の定義を追加する必要がある。
-    message_ja: 影響度の尺度が未定義で rulebook の禁止事項に抵触したままのため、sample を ready にする前に尺度の定義を追加する必要がある。
+      | 平日 16:00-18:00 の 1 会計あたり平均処理時間が 90 秒以内    | _UNDECIDED_: 2026-05-07〜2026-05-13 の平日 16:00-18:00
+      に計測して記入する                | 会計記録の開始時刻から会計確定時刻までを平均する。リリース前後で同じ時間帯・同じ方法で計測する |
+    message: 1 つ目の成功条件の現状値が `_UNDECIDED_` のままで、未解決事項にも計測の論点として登録されていません。計測日（2026-05-07〜13）と担当を持つ項目を未解決事項に追加するか、現状値を確定する必要があります。
+    message_ja: 1 つ目の成功条件の現状値が `_UNDECIDED_` のままで、未解決事項にも計測の論点として登録されていません。計測日（2026-05-07〜13）と担当を持つ項目を未解決事項に追加するか、現状値を確定する必要があります。

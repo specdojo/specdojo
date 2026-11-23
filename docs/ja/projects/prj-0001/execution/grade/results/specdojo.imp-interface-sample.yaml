@@ -4,38 +4,37 @@ document: specdojo:imp-interface-sample
 path: docs/ja/specdojo/samples/imp-interface-sample.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-sample
 verdict: pass
-score: 89
-graded_at: "2026-11-21T04:14:45.003Z"
-graded_by: opus-executor
-content_hash: 1cdb0b45217a9389c17d968569f4760b1f40a5b3fd9c955376bf6278a96a5248
+score: 98
+graded_at: "2026-11-23T15:47:45.950Z"
+graded_by: sonnet-review-executor
+content_hash: b5a76a7d9baf8f0cb71328e3c61cd2987ca595dd5ec837e88c2763c26a086bcb
 categories:
   purpose:
-    score: 88
+    score: 100
   operations:
     score: 100
   planning:
-    score: 92
+    score: 100
   business:
-    score: 92
+    score: 100
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
-    score: 88
+    score: 100
   quality:
-    score: 83
+    score: 92
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-publication-accountability:
     level: 4
     score: 100
@@ -43,8 +42,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
     level: 4
     score: 100
@@ -52,8 +51,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
     level: 4
     score: 100
@@ -70,17 +69,17 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-change-impact:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
     level: 3
     score: 75
@@ -88,8 +87,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -105,70 +104,22 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 8
+  minor: 1
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-decision-readiness
-    line: 5
-    anchor: 本書は、変更要求 `cr-2026-004` が駄菓子屋の販売管理システムのインターフェースへ与える影響を判断するための文書である。
-    message: "本書が何を判断する文書かは示されているが、影響判定と対応方針を誰がいつ合意・承認するか（例: I/F 責任者と PM の合意時期）が書かれていないため、目的と適用範囲に承認者と判断タイミングを追記すべきである。"
-    message_ja: "本書が何を判断する文書かは示されているが、影響判定と対応方針を誰がいつ合意・承認するか（例: I/F 責任者と PM の合意時期）が書かれていないため、目的と適用範囲に承認者と判断タイミングを追記すべきである。"
-  - id: F002
-    severity: minor
-    rule: vp-pm-dependency-risk
-    line: 44
-    anchor: >-
-      | 論点                     | 不足情報                         | 決定期限   | 担当             |
-      処理方針                                           |
-    message: 未解決事項の表に、期限までに決まらなかった場合の判断・対応への影響（第5章の実施時期への波及など）と当面の扱いがなく、rulebook の記述ガイド「未解決事項」の要求を満たしていないため、影響列を追加すべきである。
-    message_ja: 未解決事項の表に、期限までに決まらなかった場合の判断・対応への影響（第5章の実施時期への波及など）と当面の扱いがなく、rulebook の記述ガイド「未解決事項」の要求を満たしていないため、影響列を追加すべきである。
-  - id: F003
-    severity: minor
-    rule: vp-ba-requirements-completeness
-    line: 12
-    anchor: "- 狙い: 既存連携停止を避けながら、必要な項目を段階的に導入する。"
-    message: "変更要求の概要に rulebook が求める成功条件がない（例: 既存クライアントが改修なしで動き続けること、日次締めで値引き内訳が一致すること）ため、受入を判断できる成功条件を追記すべきである。"
-    message_ja: "変更要求の概要に rulebook が求める成功条件がない（例: 既存クライアントが改修なしで動き続けること、日次締めで値引き内訳が一致すること）ため、受入を判断できる成功条件を追記すべきである。"
-  - id: F004
-    severity: minor
-    rule: vp-dev-change-impact
-    line: 26
-    anchor: >-
-      | 影響対象I/F       | 変更要否 | 影響度 | 対応方針 | 判断根拠                                                                 |
-      備考                                   |
-    message: 影響詳細一覧の備考に、データ仕様・テスト仕様・運用手順など波及の詳細を委ねる関連文書が書かれておらず（「再実行手順を併記」の記載先も不明）、rulebook の全体方針に沿って委ねる先を示すべきである。
-    message_ja: 影響詳細一覧の備考に、データ仕様・テスト仕様・運用手順など波及の詳細を委ねる関連文書が書かれておらず（「再実行手順を併記」の記載先も不明）、rulebook の全体方針に沿って委ねる先を示すべきである。
-  - id: F005
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 40
-    anchor: "| 低     | Webhook 見送り再評価     | 2026-07-31      | PM（中村）             | 障害件数推移の確認           |"
-    message: 通知 Webhook の再評価条件が第4章（監視アラート増加時）と第5章（障害件数推移の確認）で食い違い、閾値もないため、再評価を始める条件を一つに統一し、件数などで判定できる形にすべきである。
-    message_ja: 通知 Webhook の再評価条件が第4章（監視アラート増加時）と第5章（障害件数推移の確認）で食い違い、閾値もないため、再評価を始める条件を一つに統一し、件数などで判定できる形にすべきである。
-  - id: F006
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 6
-    anchor: 対象は「POS 連携 API」「商品マスタ連携 CSV」「通知 Webhook」「売上集計バッチ連携」の 4 I/F とする。
-    message: 「目的と適用範囲」において、ルールブックで求められている「対象期間」の記載が不足している。
-    message_ja: 「目的と適用範囲」において、ルールブックで求められている「対象期間」の記載が不足している。
-  - id: F007
-    severity: minor
     rule: vp-qe-kata-conformance
-    line: 16
-    anchor: 評価観点は、契約互換性、障害波及、運用調整負荷の 3 点とする。
-    message: ルールブックの禁止事項に基づき、影響度（高・中・低）を判定するための尺度定義を明記すべきである。
-    message_ja: ルールブックの禁止事項に基づき、影響度（高・中・低）を判定するための尺度定義を明記すべきである。
-  - id: F008
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 30
-    anchor: "| 商品マスタ連携CSV | 要       | 中     | 代替     | 全取引先への即時通知は負荷が高いため、先行対象のみ適用して段階拡張する。 | 先行対象は主要取引先 2 社。            |"
+    line: 5
+    anchor: >-
+      本書は、変更要求 `cr-2026-004`（バーコード会計とキャンペーン値引きの導入）が駄菓子屋の販売管理システムの外部 I/F へ与える影響を判断し、I/F ごとの変更要否・影響度・対応方針と連携先との調整を、I/F
+      の改修に着手する 2026-05-11 より前に決めるための文書である。業務への影響は [[specdojo:imp-business-sample|影響調査（業務）サンプル]]
+      で判断済みであり、本書はその判断を前提とする。データ・テスト・運用への波及の詳細は
+      [[specdojo:imp-data-sample|影響調査（データ）サンプル]]・[[specdojo:imp-test-sample|影響調査（テスト）サンプル]]・[[specdojo:imp-operations-sample|影響調査（運用）サンプル]]
+      へ委ね、本書は結論だけを「影響詳細一覧」の備考に示す。
     message: >-
-      I/F 名の表記が章によって揃っていない（「商品マスタ連携
-      CSV」と「商品マスタ連携CSV」、「売上集計バッチ連携」「売上集計バッチ」「集計バッチ連携」）うえ、担当名も「連携運用担当（山本）」と「連携運用（山本）」で揺れているため、一つの名称に統一すべきである。
+      rulebook は `based_on` に変更要求の個票 ID（`PJR-XXXX`）を求めているが、sample は `cr-2026-004` を使っているため、個票 ID
+      の形式に合わせるか、この形式が許される根拠を示すべきである。
     message_ja: >-
-      I/F 名の表記が章によって揃っていない（「商品マスタ連携
-      CSV」と「商品マスタ連携CSV」、「売上集計バッチ連携」「売上集計バッチ」「集計バッチ連携」）うえ、担当名も「連携運用担当（山本）」と「連携運用（山本）」で揺れているため、一つの名称に統一すべきである。
+      rulebook は `based_on` に変更要求の個票 ID（`PJR-XXXX`）を求めているが、sample は `cr-2026-004` を使っているため、個票 ID
+      の形式に合わせるか、この形式が許される根拠を示すべきである。
