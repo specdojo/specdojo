@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-5-opr-monitoring-sample-050
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-5-opr-monitoring-sample-050/T-KATA-WAVE-5-opr-monitoring-sample-050-20261123T175503Z-4713967b/plan.md
   started_at: "2026-11-23T17:55:05.413Z"
+  completed_at: "2026-11-23T18:04:07.888Z"
   agent: opus-executor
   execution: agent
   approach: fully-guided
@@ -19,16 +20,20 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- 既存の数行の表のみの状態から、駄菓子屋きぬやの販売管理システムにおけるアラート対応の完成例（12章構成）へと大幅に拡充しました。
+- Frontmatter の `rulebook` を `specdojo:opd-rulebook` から `specdojo:opr-rulebook` へ修正し、`based_on` に `specdojo:opd-monitoring-sample` と `specdojo:opd-index-sample` を指定しました。
+- アラート対応手順として、確認・暫定対応・恒久対応の各段階における役割・時限・完了条件を定義しました。また、誤検知時の処理フローも追加しました。
+- 機能を停止する際の判断基準、役割、および再開の条件を明記しました。
+- P1/P2 などの重要アラート発生時の `opr-incident` への引継ぎ手順を定義しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/samples/opr-monitoring-sample.md`: 駄菓子屋きぬやの販売管理システムを題材とした、12章構成の運用手順（アラート対応）の完成例を作成しました。対象のシステム（ホスティング環境、バックアップ、日次締め）の定義、アラート対応の具体的な手順（役割・時限・完了条件）、および機能停止・再開の判断基準を記述しています。また、未決事項として `_UNDECIDED_` を用いて値を残しています。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 営業時間外の通知、外部の死活監視サービスと費用、稼働率の目標、証跡の保管期間については、根拠となる資料がないため `_UNDECIDED_` / `_ASSUMPTION_` のまま残しています。これらは今後、具体的な値の決定が必要です。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+`fully-guided` に基づき、`opr-rulebook` の要求する12章の構成を維持しつつ、既存の `opr-monitoring-sample.md` を詳細な完成例へと磨き上げました。`_UNDECIDED_` を用いることで、推測による不正確な具体化を避けつつ、型（章立て・記述粒度）を提示しています。
