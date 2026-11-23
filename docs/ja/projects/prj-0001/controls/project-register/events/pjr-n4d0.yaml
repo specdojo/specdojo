@@ -132,3 +132,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_f7addeb40aca4da68bc63383e3f015c7
+- v: 1
+  id: reg_daeeca6475cb4d83939d1d8b41239b80
+  ts: "2026-11-23T04:21:01Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分と単体テストを確かめ、exec smoke が成功した。prj-0001 にはプロダクトのリポジトリがないため、実際の 1 行目は利用側で確かめる
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: 同じ項目の 2 回目以降のプロダクトの commit の 1 行目の末尾に、空白と (run N) を付けるようにした（案 c）。1 回目と merge メッセージは従来どおり
+  previous_event_id: reg_b33efbe4560841edad13e8562867ff63

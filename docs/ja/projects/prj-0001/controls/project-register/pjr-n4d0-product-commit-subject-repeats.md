@@ -7,11 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-11-23T00:36:14Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-23T04:21:01Z"
+  conclusion: 同じ項目の 2 回目以降のプロダクトの commit の 1 行目の末尾に、空白と (run N) を付けるようにした（案 c）。1 回目と merge メッセージは従来どおり
 ---
 
 # PJR-N4D0 同じ項目を何回か流すと、プロダクトの commit のタイトルがすべて同じになる
