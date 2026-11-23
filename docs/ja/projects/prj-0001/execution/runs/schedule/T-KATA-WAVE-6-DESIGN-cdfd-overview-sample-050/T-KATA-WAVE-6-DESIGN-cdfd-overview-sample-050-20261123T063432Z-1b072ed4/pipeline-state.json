@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-6-DESIGN-cdfd-overview-sample-050",
+  "run_id": "T-KATA-WAVE-6-DESIGN-cdfd-overview-sample-050-20261123T063432Z-1b072ed4",
+  "updated_at": "2026-11-23T06:49:24.627Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-23T06:35:13.805Z",
+      "completed_at": "2026-11-23T06:38:00.508Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-DESIGN-cdfd-overview-sample-050/T-KATA-WAVE-6-DESIGN-cdfd-overview-sample-050-20261123T063432Z-1b072ed4/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-23T06:42:28.020Z",
+      "completed_at": "2026-11-23T06:48:30.900Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-DESIGN-cdfd-overview-sample-050/T-KATA-WAVE-6-DESIGN-cdfd-overview-sample-050-20261123T063432Z-1b072ed4/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-23T06:48:43.770Z",
+      "completed_at": "2026-11-23T06:49:24.627Z",
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-DESIGN-cdfd-overview-sample-050/T-KATA-WAVE-6-DESIGN-cdfd-overview-sample-050-20261123T063432Z-1b072ed4/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-DESIGN-cdfd-overview-sample-050/T-KATA-WAVE-6-DESIGN-cdfd-overview-sample-050-20261123T063432Z-1b072ed4/result.md"
+  }
+}
