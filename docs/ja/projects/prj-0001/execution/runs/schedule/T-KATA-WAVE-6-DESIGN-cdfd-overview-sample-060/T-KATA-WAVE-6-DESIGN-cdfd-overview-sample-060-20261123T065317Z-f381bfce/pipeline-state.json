@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-WAVE-6-DESIGN-cdfd-overview-sample-060",
   "run_id": "T-KATA-WAVE-6-DESIGN-cdfd-overview-sample-060-20261123T065317Z-f381bfce",
-  "updated_at": "2026-11-23T16:52:26.992Z",
+  "updated_at": "2026-11-23T19:44:25.976Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -23,8 +23,8 @@
     "integrate": {
       "status": "running",
       "actor": "opus-executor",
-      "attempts": 2,
-      "started_at": "2026-11-23T16:52:26.992Z",
+      "attempts": 3,
+      "started_at": "2026-11-23T19:44:25.976Z",
       "completed_at": null,
       "artifact_ref": null,
       "repos": {
