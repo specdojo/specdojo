@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-NOTATION-cpd-sample-050
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-NOTATION-cpd-sample-050/T-KATA-WAVE-6-NOTATION-cpd-sample-050-20261123T091231Z-93689613/plan.md
   started_at: "2026-11-23T09:12:42.315Z"
+  completed_at: "2026-11-23T09:33:45.260Z"
   agent: opus-executor
   execution: agent
   approach: sample-maintenance
@@ -20,16 +21,21 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- sample である `docs/ja/specdojo/samples/cpd-sample.md` を、共通サンプル文脈（駄菓子屋のプロジェクト）の完成例として拡充・修正しました。
+- grade による指摘事項（F001〜F012）に対し、業務への影響の明記、用語の統一、冗長な記述の集約、検証手順の具体化などを行い、すべて解消しました。
+- PJR-76N9 の規約に従い、本文中の役割の割り当てや承認の進み具合に関する記述を削除し、5章の表の構成を `template` と整合させました。
+- 利用者が決定すべき値（日付など）については、推測せずに `_UNDECIDED_` として残しています。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/samples/cpd-sample.md`: grade の指摘（F001〜F012）に基づき、業務課題への影響の追記、用語（「保存」と「記録アクセス」）の統一、役割割当と公開判断に関する冗長な記述の整理、および `cpd-rulebook` に基づく検証コマンド（`node tools/lint-mermaid.mjs`）と期待される出力形式の追記を行いました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- sample 本文の後続作業の日付は `_UNDECIDED_`（詳細設計の計画で決める）として残した。利用者が決める値である。
+- rulebook への変更案: `cpd-rulebook` の「メモ / 将来課題」の記録項目は「対象・論点 / 影響と後続成果物 / 当面の扱い・解消条件」の3つだが、`cpd-template` は「引き継ぎ先」を足した4列になっている。sample は template に合わせたので、rulebook 側に「引き継ぎ先」を足すと3つがそろう。
+- `cnd-sample` は `status: draft` で本文に「`draft` を維持する」と書いており、PJR-76N9 の承認の進み具合にあたる可能性がある。この段の対象外なので、別の段で見直すとよい。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+rulebook に沿い、sample を完成例として厚くした。F001〜F012 の指摘を解消し、PJR-76N9 に基づく記述の整理と `template` との整合性確保を実施した。
