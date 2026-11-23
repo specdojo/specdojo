@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-PROJECT-prj-scope-sample-090
   mode: review
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-PROJECT-prj-scope-sample-090/T-KATA-WAVE-6-PROJECT-prj-scope-sample-090-20261123T215752Z-d7669873/plan.md
   started_at: "2026-11-23T21:57:54.458Z"
+  completed_at: "2026-11-23T22:06:51.030Z"
   agent: sonnet-review-executor
   execution: agent
   approach: fully-guided
@@ -19,20 +20,26 @@ specdojo:
 
 ## 1. 評価結果の確認
 
-_TODO_: 評価結果サイドカーのパス、鮮度確認で実行したコマンドとその出力（`content_hash` が現在の成果物と一致するか）、grade の `verdict` / `score` / finding 件数を記入する。評価結果が最新でない、または評価不能の場合は、その事実と理由を記入する。
+### 評価結果の確認 `specdojo grade list --target kata --changed-only (sample/rulebook/recipe/template)` を実行した結果、4 パスとも出力は空であり、評価結果は最新であることを確認しました。 - `[[docs/ja/specdojo/samples/prj-scope-sample.md]]`: `verdict` = `pass`, `score` = 100, finding: なし - `[[docs/ja/specdojo/rulebooks/prj-scope-rulebook.md]]`: `verdict` = `pass`, `score` = 97, finding: 1 件 - `[[docs/ja/specdojo/recipes/prj-scope-recipe.md]]`: `verdict` = `pass`, `score` = 99, finding: 1 件 - `[[docs/ja/specdojo/templates/prj-scope-template.md]]`: `verdict` = `pass`, `score` = 99, finding: 3 件
 
 ## 2. 判断根拠
 
-_TODO_: 変更内容・plan・実行記録・完了条件・最新の finding を照合した内容と、verdict を選んだ理由を記入する。finding が残るのに完了とする場合は、その finding が今回の完了を妨げない理由を記入する。参照は `[[id]]` 形式（Obsidian wikilink）で記載し、行番号アンカーや絶対パスは使わない。
+- 評価結果はすべて最新であり、`verdict` は `pass` です。
+- `[[docs/ja/specdojo/samples/prj-scope-sample.md]]` は、`[[docs/ja/specdojo/rulebooks/prj-scope-rulebook.md]]` の章立ておよび `[[docs/ja/specdojo/templates/prj-scope-template.md]]` の形式に沿っています。
+- `outputs` の `done_criteria` に基づく品質の確認は `grade` によって実行済みであることを確認しました。
 
 ## 3. 未充足事項・改善指示
 
-_TODO_: 未充足事項と、再計画・成果物の改善・再評価に使う改善指示を記入する（なければ「なし」と記入する）。評価結果の内容に疑義がある場合は、再評価が必要な対象と理由もここに記入する。
+- rulebook `F001`: スコープ変更方針に、初期リリース前のトレードオフ確認方針を追記してください。
+- recipe `F001`: 使い方の説明を観点ごとに分けるか平易な文に直してください。
+- template `F001`: スコープ外の `_UNDECIDED_` 欄を追加してください。
+- template `F002`: 利用者・関係者の表の骨組みを追加してください。
+- template `F003`: 承認者の欄に Role code で書く案内を足してください。
 
 ## 4. approach に応じた確認
 
-_TODO_: `approach` に応じて確認した内容を記入する。fully-guided / recipe-guided / freeform では求められた作成・更新が行われたか、retrofit では実装エビデンスの対応記録と未確認範囲、`rulebook-maintenance` などの maintenance 系では見直しの動機となった finding の解消状況を記入する。
+本タスクは `fully-guided` であり、`template` を読み込むのではなく、既存の `rulebook` / `recipe` / `sample` との整合性を `grade` の結果を用いて確認しました。先行する `edit` タスクの `result` については、実行記録が特定できなかったため、検証結果の詳細は未確認です。
 
 ## 5. decision
 
-- verdict: _TODO_（complete / complete-with-findings / incomplete / grade-stale / grade-unavailable / changed-during-review）
+- verdict: complete-with-findings
