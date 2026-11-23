@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-EKGQ",
   "run_id": "pjr-ekgq-20261123T020026Z-09dc4ae5",
-  "updated_at": "2026-11-23T02:05:37.577Z",
+  "updated_at": "2026-11-23T02:05:47.875Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-EKGQ/pjr-ekgq-20261123T020026Z-09dc4ae5/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sonnet-executor",
       "attempts": 1,
       "started_at": "2026-11-23T02:05:37.577Z",
-      "completed_at": null,
+      "completed_at": "2026-11-23T02:05:47.875Z",
       "artifact_ref": null
     }
   },
