@@ -86,3 +86,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_003f04522ba84f1bacbb90804f3c6323
+- v: 1
+  id: reg_c3debb24ba764b899dc7960310a157c2
+  ts: "2026-11-23T03:46:35Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分と対応結果を確かめ、register add --type handoff --dry-run で章の雛形を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: register に種類 handoff を足した。章は引き継ぎ元と先・有効な承認の範囲・進行中・判断待ち・注意点で、exec と夜の実行の対象から外し、一覧に受け取り待ちの handoff を分けて出す view を足した
+  previous_event_id: reg_37a216424115432fbdabe8e55da3f469

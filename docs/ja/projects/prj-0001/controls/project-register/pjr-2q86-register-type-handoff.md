@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-2q86-register-type-handoff
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-23T01:52:50Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-23T03:46:35Z"
+  conclusion: register に種類 handoff を足した。章は引き継ぎ元と先・有効な承認の範囲・進行中・判断待ち・注意点で、exec と夜の実行の対象から外し、一覧に受け取り待ちの handoff を分けて出す view を足した
   derived_from:
     - PJR-5RY7
   depends_on:
