@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-PROJECT-pm-change-request-log-sample-040
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-PROJECT-pm-change-request-log-sample-040/T-KATA-WAVE-6-PROJECT-pm-change-request-log-sample-040-20261123T061831Z-e2d766ca/plan.md
   started_at: "2026-11-23T06:18:38.158Z"
+  completed_at: "2026-11-23T06:35:13.832Z"
   agent: opus-executor
   execution: agent
   approach: rulebook-maintenance
@@ -20,16 +21,20 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- rulebook `docs/ja/specdojo/rulebooks/pm-change-request-log-rulebook.md` を grade の指摘に基づいて更新しました。
+- 指摘された事項（保留の扱い、Role code の使用、起票対象の線引き、単独ログの配置と `rulebook` 値の設定、状態値と `item_status` の対応、個票の節との対応、ID の再利用禁止、決定者を人間に限定する規則）を反映し、記述ガイドに良い例・悪い例を追加しました。
+- F008（sample との整合性）については、sample 側の不備と判断し、本タスクでは sample の変更は行っていません。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/rulebooks/pm-change-request-log-rulebook.md`: grade の指摘に基づき、仕様の明確化（保留の基準、Role code の適用、起票対象の定義、単独ログの設定値、状態値の定義、決定者の役割範囲）および、判断基準となる良い例・悪い例の追記を行いました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- F008: 規定は過剰ではなく、sample 側の不備と判断した。sample (`docs/ja/specdojo/samples/pm-change-request-log-sample.md`) を後の段で直す必要がある。直す点: 変更要求一覧への変更理由列の追加、影響評価への品質・根拠・見送り時影響・期待効果・評価者 (Role code) の追加、審査・決定への `pm-plan` 対応の追加、完了条件を確認手段と合格基準の形に改めること、状態値を `審査中`・`保留`・`実施中`・`完了`・`却下`・`取下げ` に揃えること。
+- 直さなかった箇所と理由: 概要・関連ドキュメント・推奨 Frontmatter 項目・本文構成の表は指摘がなく冗長でもないため据え置いた。審査・決定の決定者は文書の承認役割ではなく変更の決定内容そのものなので、PJR-76N9 の対象外と判断して残した。
+- F008: 規定は過剰ではなく、sample 側の不備と判断した。sample（docs/ja/specdojo/samples/pm-change-request-log-sample.md）を後の段で直す必要がある。直す点: 変更要求一覧への変更理由列の追加、影響評価への品質・根拠・見送り時影響・期待効果・評価者（Role code）の追加、審査・決定への `pm-plan` 対応の追加、完了条件を確認手段と合格基準の形に改めること、状態値を `審査中`・`保留`・`実施中`・`完了`・`却下`・`取下げ` に揃えること。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+rulebook-maintenance
