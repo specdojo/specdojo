@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-WAVE-6-NOTATION-stsd-sample-060",
   "run_id": "T-KATA-WAVE-6-NOTATION-stsd-sample-060-20261123T183502Z-e51ba9e6",
-  "updated_at": "2026-11-23T18:48:49.899Z",
+  "updated_at": "2026-11-23T19:41:39.075Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -23,10 +23,18 @@
     "integrate": {
       "status": "running",
       "actor": "opus-executor",
-      "attempts": 1,
-      "started_at": "2026-11-23T18:48:49.899Z",
+      "attempts": 2,
+      "started_at": "2026-11-23T19:41:39.075Z",
       "completed_at": null,
-      "artifact_ref": null
+      "artifact_ref": null,
+      "repos": {
+        "project": {
+          "status": "failed",
+          "commit": null,
+          "merged_at": null,
+          "error": "git commit failed: test: error: unknown option '--reserve'; FAIL  |unit| tests/src/docs/yaml-tables.test.ts > typed YAML display pages > renders tables and the entire folded source for specdojo--dct-sample.md.snap; Test Files  1 failed | 291 passed (292); Tests  1 failed | 4793 passed (4794)"
+        }
+      }
     }
   },
   "artifacts": {
