@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-PROJECT-pm-issue-log-sample-040
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-PROJECT-pm-issue-log-sample-040/T-KATA-WAVE-6-PROJECT-pm-issue-log-sample-040-20261123T063755Z-63f9fb35/plan.md
   started_at: "2026-11-23T06:38:02.344Z"
+  completed_at: "2026-11-23T06:54:02.747Z"
   agent: opus-executor
   execution: agent
   approach: rulebook-maintenance
@@ -20,16 +21,22 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- rulebook である `docs/ja/specdojo/rulebooks/pm-issue-log-rulebook.md` を、grade の指摘（F001〜F008, F012）および `done_criteria` に基づいて簡潔に整備しました。
+- 「事項の利用者と利用場面」の追記、対象範囲（課題と対象外の区別）の明記、単独ログの `rulebook` 値の定義、および単独ログから登録簿への移行手順、担当の Role code による記述、`priority`・`item_status` の参照先、決定記録への転記基準を整備しました。
+- `docs/ja/specdojo/rulebooks/pm-issue-log-rulebook.md` は、見出しを H3 までに制限し、完成例の章を持たない簡潔な構成に整えています。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/rulebooks/pm-issue-log-rulebook.md`: grade の指摘に基づき、以下の内容を追記・更新しました： - 利用場面（対応順の決定、エスカレーション、完了確認）の定義 - 対象範囲（発生済みの課題）と対象外（未顕在のリスク・変更要求）の区別 - 単独ログにおける `rulebook` 値の指定 - 単独ログ（`IS-NNN`）から登録簿（`PJR-XXXX`）への移行・扱いに関する規定 - 担当欄における Role code の使用 - `priority` および `item_status` の許容値の参照先 - 決定事項の決定記録（`decision`）への転記基準
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- F009: sample の優先度「高/中」とステータス「未着手/対応中」を schema の `Priority`・`ItemStatus` の値（`high`/`medium`、`in-progress`/`open`）へ直す。この段は sample を変更しない plan のため未対応。
+- F010: sample に、優先度の変更を決める者（Role code）、完了を判定する者と判定の観点、確認の手段を含む完了条件を補う。担当欄も `QA担当`・`業務担当` から Role code（例: `QE`、`PO`）へ直す。
+- F011: sample の関連ドキュメントを project 修飾の文書 ID 表記へ直し、決定記録への参照の扱いも反映する。
+- 直さなかった箇所: 概要・優先度と期限・禁止事項は、指摘も冗長さもないため据え置いた。完成例の章はもともとなく、見出しは H3 まで。
+- template の `frontmatter_template` で生成物の `status` が `ready` になっている。直すかどうかは別途判断する（template はこの段の変更範囲外）。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+rulebook を「成果物 → rulebook」の向きで整備しました。grade からの指摘（F001~F008, F012）を解消するため、利用場面、対象範囲、適用範囲、単独ログの `rulebook` 値の明記、および移行や転記のルールを追記しました。なお、sample に関する指摘（F009, F010, F011）は本段の変更範囲外であるため、そのまま据え置いています。
