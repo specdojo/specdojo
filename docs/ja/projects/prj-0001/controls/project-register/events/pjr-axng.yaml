@@ -63,3 +63,22 @@
       from: ""
       to: 完了条件
   previous_event_id: reg_1bc729bf0d7d48c09fd17a61144aba75
+- v: 1
+  id: reg_529e0917af4f42ee8853fe36a0ad1988
+  ts: "2026-11-23T03:24:55Z"
+  action: reject
+  actor: indie
+  from_status: open
+  to_status: rejected
+  reason: 5 件を 1 件にまとめると利用者が決めた（2026-11-23）
+  changes:
+    - field: status
+      from: open
+      to: rejected
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: 第 4〜6 波の strategy は PJR-BHFG にまとめて作る（dct-kata.yaml を同時に書き換えてぶつかるため）
+  previous_event_id: reg_ac724bf4b97c4d27b397e795ea4c1bd2
