@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-5-mtp-sample-050
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-5-mtp-sample-050/T-KATA-WAVE-5-mtp-sample-050-20261123T134207Z-b9881329/plan.md
   started_at: "2026-11-23T13:42:36.592Z"
+  completed_at: "2026-11-23T13:56:31.771Z"
   agent: opus-executor
   execution: agent
   approach: sample-maintenance
@@ -20,16 +21,28 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- 移行テスト計画の sample 文書（`docs/ja/specdojo/samples/mtp-sample.md`）を、rulebook の必須構成に従って、駄菓子屋きぬやの具体的な移行リハーサルの完成例として再構成しました。
+- `mip-index-sample` や `dmd-index-sample` との整合性を高めるため、`based_on` による参照の追加、および停止許容・許容差・判定者などの値の具体化を行いました。
+- grading によって指摘された構成の欠落（`## 1. 概要` から `## 9. 関連ドキュメント` まで）および、内容の具体性（業務シナリオ、環境、合否基準の記述）の不足を解消しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/samples/mtp-sample.md`: rulebook の必須 9 章構成（概要から関連ドキュメントまで）に則り、駄菓子屋の販売管理システムにおける移行リハーサルの具体的な設定値（回数、判定基準、対象範囲、環境、判定者など）を盛り込んだ完成例へと書き換えました。`based_on` による上位文書への参照も追加し、`Prettier` による整形を適用しています。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- `_UNDECIDED_:` 仮置きの切替日と定休日の曜日（第1回リハーサルの予定日が決まらないため、店主代表が準備フェーズの開始前に決める）。
+- `_UNDECIDED_:` 臨時休業の開始時刻（合否基準の所要時間の基準になる。店主代表が第1回の実測を見て第2回の前までに決める）。
+- `_ASSUMPTION_:` 定休日は週1日あり、リハーサルはその午前に行う。販売管理システムは本番の台帳と分けたリハーサル用の保存先を持つ。
+- rulebook の変更案: 6.1 合否基準の良い例は件数の判定者を QE にしているが、`mip-index-sample` の成功条件では件数の判定者が開発担当（DEV）。sample は `mip` に合わせて DEV にした。rulebook の例と `mip` のどちらに揃えるか決める必要がある。
+- rulebook の変更案: 「関連ドキュメント」章は分冊への導線だけを求めている。F018 は上位文書（`mip`/`dmd`/`cop`/`otp`）への参照を求めているため、上位文書への導線も書いてよいと rulebook に明記するか検討する。
+- rulebook の frontmatter で `recipe` と `template` が `undecided` のまま残っている。
+- PJR-76N9 に従い、文書を作る・確かめる・承認する役割の割り当ては本文に書いていない。合否判定者・GO/NO-GO の判断者・データ準備の担当は、rulebook が求める文書の中身として Role code で書いた。
+- rulebook の変更案: 6.1 合否基準の良い例は件数の判定者を QE にしているが、mip-index-sample の成功条件では件数の判定者が開発担当（DEV）。sample は mip に合わせて DEV にした。rulebook の例と mip のどちらに揃えるか決める必要がある。
+- rulebook の変更案: 「関連ドキュメント」章は分冊への導線だけを求めている。F018 は上位文書（mip/dmd/cop/otp）への参照を求めているため、上位文書への導線も書いてよいと rulebook に明記するか検討する。
+- rulebook の frontmatter で recipe と template が undecided のまま残っている。
+- 適用外の検証: `npm run validate:history-links`（変更は docs/ja/specdojo/samples/mtp-sample.md だけで、plan・result・個票などの履歴ファイルを変更していない）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+Rulebook の必須構成（`## 1. 概要` から `## 9. 関連ドキュメント`）に従い、`docs/ja/specdojo/samples/mtp-sample.md` を「駄菓子屋きぬや」の具体的な移行リハーサル計画の完成例として書き直しました。`mip-index-sample` や `dmd-index-sample` との整合性を保つため、`based_on` による参照や、具体的な判定基準・環境・役割の割り当てを記述しました。また、未決定事項については `_UNDECIDED_` を使用して残しています。
