@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_642097de29f34c9785d752311ccdd82a
+  ts: "2026-11-23T01:37:54Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: OpenFisca-Japan の作業（利用側の prj-0001）で見つけた
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: external\_projects の path が worktree から解決され、exec run の worktree の準備が止まる
+    - field: description
+      from: ""
+      to: 利用側の設定に external\_projects を宣言すると、exec run --worktree の準備の specdojo build が、worktree から解決した path が存在しないとして設定の検証で止まり、すべての項目が waiting になる。ローカル設定では external\_projects を上書きできず、宣言を外すしかない
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+    - field: commit_type
+      from: ""
+      to: fix
