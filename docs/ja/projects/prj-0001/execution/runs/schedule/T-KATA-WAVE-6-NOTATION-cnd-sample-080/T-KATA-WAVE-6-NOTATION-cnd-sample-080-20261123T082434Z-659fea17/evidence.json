@@ -1,0 +1,171 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-6-NOTATION-cnd-sample-080",
+  "run_id": "T-KATA-WAVE-6-NOTATION-cnd-sample-080-20261123T082434Z-659fea17",
+  "stage": {
+    "role": "executor",
+    "actor": "sonnet-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-23T08:25:31.485Z",
+    "completed_at": "2026-11-23T08:25:49.101Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/cnd-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/cnd-sample.md | 6 +++---\n 1 file changed, 3 insertions(+), 3 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "",
+      "reason": "親 runner が実行する許可リスト検査のため、executor では実行しない"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:cnd-sample\n  type: architecture\n  status: draft\n  rulebook: specdojo:cnd-rulebook\n  part_of: []\n  based_on: []\n  supersedes: []\n---\n\n# 駄菓子屋きぬや 販売管理システム C4コンテナ図\n\n## 1. 概要\n\nノートと店主の記憶に頼る販売記録は、家族が店番を代わると記録漏れや確認の手間が生じる。\\[\\[specdojo:prj-overview-sample|プロジェクト概要]] の「まず記録する」方針を受け、店主代表と家族利用者代表が同じ手順で現金販売を記録し、販売結果とレシート発行状況を引き継ぐための構成を示す。入力、永続記録、物理印字の境界を定義し、配備設計と結合検証へ渡す。\n\n単一店舗・タブレット1台を対象とする学習用の完成\n… output omitted …\n003-sales-recovery` へ引き継ぐ。契約整備後、受入開始前に照合・回復方式を定め、受付済み・未受付・不明の期待結果を検証設計へ反映する。解消までは結果不明の取引を自動再送せず、当該経路の受入を保留する |\n| 運用と接続条件 | 商品情報の更新、バックアップ、HTTP の保護、機器接続、通信不能時の店頭対応 | `kinuya:pjr-a004-sales-operations` へ引き継ぐ。店舗試行前に `kinuya-infra-design`・`kinuya-sales-operations` を整え、復元・接続不能・二重印字の確認結果と店番担当の引き継ぎ手順を示す。それまで実運用を開始しない |\n\n表の文書名と課題 ID は未同梱の架空の引き継ぎ先である。本例では未決事項が残り、構成案として `draft` を維持する。\n\n構成・接続を変更するときは、上位図、`cpd-kinuya-sales-service`、`kinuya-infra-design`、関係表の詳細契約、「コンテナ間・外部依存の検証対象」の該当行を本図と照合して追従させる。"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6124 file(s), 92 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 68 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6124 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-NOTATION-cnd-sample-080\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (48 tests) 9ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\",\n… output omitted …\nster-plan-escape.test.ts\",\"duration_ms\":1876}\n\n Test Files  19 passed (19)\n      Tests  480 passed (480)\n   Start at  17:37:18\n   Duration  3.30s (transform 8.82s, setup 1.31s, import 11.92s, tests 7.42s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nrulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-NOTATION-cnd-sample-080/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-NOTATION-cnd-sample-080/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "condense_records": [
+    {
+      "location": "3.5. External Software System 末尾の段落「外部決済・会計サービスへの接続は本図にはない。」",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "概要の対象外の記述（キャッシュレス決済・本格会計は対象外）と同じ主張のため。意味は概要に残る。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "4.2. 検証対象の確認結果「結合対象」末尾の「途中保存の照合・回復方式は未確定で、「メモ / 将来課題」へ引き継ぐ。」",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "同じ内容が検証対象表の保存先の障害の行と、メモ / 将来課題の表の応答欠落・保存中断の行にあるため。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "3.3. Container 直後の段落「画面資材の配信は営業中の販売経路ではなく配備時の前提であり、配信元が決まるまで図と関係表に描かない。」",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "営業中と配備時の区別は技術前提・制約に、描かない経路の理由は確認結果の範囲と経路に、配信元の未確定はメモ / 将来課題にあり、3 箇所で重複していたため。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "1. 概要 第3段落、2. 図直後の矢印の説明段落、3.4 Data Store 直後の引き継ぎ先の記述",
+      "category": "canonical-restatement",
+      "action": "retain",
+      "reason": "上位図が未接続であることと別構成との関係、来店客を Person に含めない理由、引き継ぎ先の示し方は、判断に要る背景・例外であり他の箇所と重複しないため。",
+      "cause": {
+        "type": "document"
+      }
+    }
+  ],
+  "final_message": "cnd-sample.md の重複 3 件を削除した。残した記述で意味は維持されている。",
+  "completion_status": "complete",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-NOTATION-cnd-sample-080/T-KATA-WAVE-6-NOTATION-cnd-sample-080-20261123T082434Z-659fea17/executor.log",
+      "bytes": 2334,
+      "truncated": false
+    }
+  ]
+}
