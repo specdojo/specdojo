@@ -5243,3 +5243,19 @@
       from: VQK2・B6NS・YS9M の統合後の runner で exec run --register が start から review・統合・要約まで止まらずに通った
       to: K8F1・9X52・EF7M の統合後の runner で exec run --register が start から review・統合・要約まで止まらずに通った
   previous_event_id: reg_802f0de903eb45fa98ddbafaed31ca3d
+- v: 1
+  id: reg_ab870d37cbbc42d3993e02f4f4313737
+  ts: "2026-11-23T01:19:44Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-0JVB の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-11-22"
+      to: "-"
+  previous_event_id: reg_431e4ac5d0b64bacb2c0164b7bae89fb
