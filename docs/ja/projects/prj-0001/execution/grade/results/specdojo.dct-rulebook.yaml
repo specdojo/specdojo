@@ -4,31 +4,30 @@ document: specdojo:dct-rulebook
 path: docs/ja/specdojo/rulebooks/dct-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-rulebook
 verdict: needs-work
-score: 84
-graded_at: "2026-11-21T03:43:07.063Z"
-graded_by: opus-executor
-content_hash: 102673f9aba0b7e3e83c882edfe1bfd4b90965e00c23415cd6d5b43744f5261b
+score: 93
+graded_at: "2026-11-23T20:02:22.191Z"
+graded_by: sonnet-review-executor
+content_hash: a35d734b2fc29a9009b714b692c5e5564b78d80e0719f508f8e9c566cbfdb90c
 categories:
   purpose:
     score: 100
   operations:
     score: 100
   planning:
-    score: 92
+    score: 100
   business:
     score: 100
   architecture:
     score: 92
   usability:
-    score: 83
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 67
-  consistency:
     score: 75
+  consistency:
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -43,8 +42,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
     level: 4
     score: 100
@@ -58,8 +57,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
     level: 3
     score: 75
@@ -70,14 +69,14 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-verifiability:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
     level: 1
     score: 25
@@ -85,8 +84,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -102,41 +101,13 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 2
-  minor: 10
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-pm-dependency-risk
-    line: 71
-    anchor: >-
-      各グループは Markdown カタログの章に対応する。葉グループは `deliverables` を、親グループは子 `groups`
-      を持ち、両方を同時に持たない。schema（`anyOf`）は両方を持つ構造も受理するため、この境界はレビューで確認する。
-    message: >-
-      The rulebook leaves the schema/rulebook gaps for `groups`/`deliverables` exclusivity and `min_size` to review, but
-      does not list them as known issues, PJR candidates or a schema fix plan, so it is unclear who closes these gaps
-      and when.
-    message_ja: >-
-      The rulebook leaves the schema/rulebook gaps for `groups`/`deliverables` exclusivity and `min_size` to review, but
-      does not list them as known issues, PJR candidates or a schema fix plan, so it is unclear who closes these gaps
-      and when.
-  - id: F002
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 213
-    anchor: "- `overview`: 成果物の目的・責務を 1 文で書く。カタログの表示ページの一覧に載り、ドメインの俯瞰に用いる。"
-    message: >-
-      The "`overview`" and "`brief`" bullets in section 6.14 restate the 5.3 table ("1 文で記述" and "成果物の外から継続して渡す前提"), and
-      the "`done_criteria`" bullet only points elsewhere; keeping the new information (how the fields are displayed and
-      expanded, YAML anchors) and cutting the rest loses nothing.
-    message_ja: >-
-      The "`overview`" and "`brief`" bullets in section 6.14 restate the 5.3 table ("1 文で記述" and "成果物の外から継続して渡す前提"), and
-      the "`done_criteria`" bullet only points elsewhere; keeping the new information (how the fields are displayed and
-      expanded, YAML anchors) and cutting the rest loses nothing.
-  - id: F003
-    severity: minor
     rule: vp-arc-single-responsibility
-    line: 193
+    line: 195
     anchor: "### 6.12. 成果物カタログ判定計画（`dct-plan-<domain>.yaml`）"
     message: >-
       The rules for the decision plan `dct-plan-＜domain＞.yaml` (sections 6.12 and 6.13) have their own schema, location,
@@ -148,130 +119,47 @@ findings:
       author and point of use, and the plan is listed as a separate `work` deliverable in section 6.2. Consider moving
       them into a `dct-plan` rulebook so the catalog can map it with a `rulebook` field (this rulebook would keep only a
       reference).
+  - id: F002
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 132
+    anchor: >-
+      - `sch-track-<track>` と `sch-milestones` は strategy から再生成できるため `generated` とし、生成元の `sch-strategy-<track>` を
+      `depends_on` に宣言する。テンプレートでも同じとする（例: `sch-track-launch` は `depends_on: [sch-strategy-launch]`）。
+    message: >-
+      `sch-track-＜track＞` は対応する `sch-strategy-＜track＞` を `depends_on` に宣言すると規定しているが、`dct-project-management-template` の
+      `sch-track-launch` は `depends_on: []` であり、生成元 `sch-strategy-launch` へのトレーサビリティが欠落しているため。
+    message_ja: >-
+      `sch-track-＜track＞` は対応する `sch-strategy-＜track＞` を `depends_on` に宣言すると規定しているが、`dct-project-management-template` の
+      `sch-track-launch` は `depends_on: []` であり、生成元 `sch-strategy-launch` へのトレーサビリティが欠落しているため。
+  - id: F003
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 132
+    anchor: >-
+      - `sch-track-<track>` と `sch-milestones` は strategy から再生成できるため `generated` とし、生成元の `sch-strategy-<track>` を
+      `depends_on` に宣言する。テンプレートでも同じとする（例: `sch-track-launch` は `depends_on: [sch-strategy-launch]`）。
+    message: >-
+      Section 6.2 says `sch-milestones` is also `generated` and must declare its source `sch-strategy-＜track＞` in
+      `depends_on`, but in `dct-project-management-template` `sch-milestones` has `depends_on: []`, so it cannot be
+      traced to its source.
+    message_ja: >-
+      Section 6.2 says `sch-milestones` is also `generated` and must declare its source `sch-strategy-＜track＞` in
+      `depends_on`, but in `dct-project-management-template` `sch-milestones` has `depends_on: []`, so it cannot be
+      traced to its source.
   - id: F004
     severity: minor
-    rule: vp-dev-testability
-    line: 5
-    anchor: >-
-      ドメイン別成果物カタログ（`dct-<domain>.yaml`）に、成果物の `local_id`・`kind`・`depends_on`・配置先・`done_criteria` を machine-readable
-      に一覧化し、スケジュール展開・レビュー計画生成・トレーサビリティの基礎とするためのルールを定める。構造の詳細は `docs/specdojo/schemas/v1/dct.schema.yaml` を SSOT とし、本ルールは
-      schema で表せない運用方針を補う。
-    message: >-
-      The checks are scattered (`catalog validate` appears separately in sections 6.4 and 6.5), and the rulebook does
-      not list the checks to run after editing a catalog (schema validation, `catalog validate`, `catalog build`), their
-      expected results, or what to do on failure, so completion cannot be judged in one pass.
-    message_ja: >-
-      The checks are scattered (`catalog validate` appears separately in sections 6.4 and 6.5), and the rulebook does
-      not list the checks to run after editing a catalog (schema validation, `catalog validate`, `catalog build`), their
-      expected results, or what to do on failure, so completion cannot be judged in one pass.
-  - id: F005
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 51
-    anchor: "| キー         | 説明                                                        | 必須           |"
-    message: >-
-      The "推奨メタ項目" table lacks `supersedes`, which `dct.schema.yaml` allows and `dct-data-model-cdt-template` actually
-      uses, so authors cannot tell how to write a replacement relationship.
-    message_ja: >-
-      The "推奨メタ項目" table lacks `supersedes`, which `dct.schema.yaml` allows and `dct-data-model-cdt-template` actually
-      uses, so authors cannot tell how to write a replacement relationship.
-  - id: F006
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 41
-    anchor: >-
-      - `id` は `type: project` では `<project-id>:dct-<domain>`、テンプレートでは `dct-<domain>-template` とする。物理分割時は末尾に `-<part>`
-      を付ける（例: `prj-0001:dct-data-model-bdd`、`specdojo:dct-data-model-bdd-template`）。
-    message: >-
-      Section 3.2 writes the template `id` rule as `dct-＜domain＞-template` without the authority prefix, while the
-      example (`specdojo:dct-data-model-bdd-template`) and every real template use `specdojo:dct-＜domain＞-template`.
-    message_ja: >-
-      Section 3.2 writes the template `id` rule as `dct-＜domain＞-template` without the authority prefix, while the
-      example (`specdojo:dct-data-model-bdd-template`) and every real template use `specdojo:dct-＜domain＞-template`.
-  - id: F007
-    severity: major
     rule: vp-qe-kata-conformance
-    line: 131
+    line: 168
     anchor: >-
-      - `sch-track-<track>` と `sch-milestones` は strategy から再生成できるため `generated` とし、生成元の `sch-strategy-<track>` を
-      `depends_on` に宣言する。テンプレートでも同じとする。
+      - `work` 成果物には 1 件以上の完了条件を記載する。`control`・`generated` には書かない。スケジュール展開・表示ページ・plan のいずれも `work`
+      以外の完了条件を使わないため、書いても確認されない。
     message: >-
-      `sch-track-＜track＞` は対応する `sch-strategy-＜track＞` を `depends_on` に宣言すると規定しているが、`dct-project-management-template` の
-      `sch-track-launch` は `depends_on: []` であり、生成元 `sch-strategy-launch` へのトレーサビリティが欠落しているため。
+      6.7 は `control`・`generated` に `done_criteria` を書かないと規定するが、`dct-project-management-template` の `generated` である
+      `sch-milestones` と `sch-track-launch` は `done_criteria` を持っており、規則とテンプレートが食い違っているため。
     message_ja: >-
-      `sch-track-＜track＞` は対応する `sch-strategy-＜track＞` を `depends_on` に宣言すると規定しているが、`dct-project-management-template` の
-      `sch-track-launch` は `depends_on: []` であり、生成元 `sch-strategy-launch` へのトレーサビリティが欠落しているため。
-  - id: F008
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 131
-    anchor: >-
-      - `sch-track-<track>` と `sch-milestones` は strategy から再生成できるため `generated` とし、生成元の `sch-strategy-<track>` を
-      `depends_on` に宣言する。テンプレートでも同じとする。
-    message: >-
-      Section 6.2 says `sch-milestones` is also `generated` and must declare its source `sch-strategy-＜track＞` in
-      `depends_on`, but in `dct-project-management-template` `sch-milestones` has `depends_on: []`, so it cannot be
-      traced to its source.
-    message_ja: >-
-      Section 6.2 says `sch-milestones` is also `generated` and must declare its source `sch-strategy-＜track＞` in
-      `depends_on`, but in `dct-project-management-template` `sch-milestones` has `depends_on: []`, so it cannot be
-      traced to its source.
-  - id: F009
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 12
-    anchor: >-
-      - 実践の型の構成: template はドメインごとの `dct-<domain>-template.yaml`（物理分割時は `dct-<domain>-<part>-template.yaml`）で、`catalog
-      scaffold` が `domain` から選ぶ。1 つの ID しか持てない frontmatter の `template` では表せないため宣言しない。
-    message: >-
-      The body says the frontmatter `template` is not declared, but `rulebook-authoring-standard` treats an omitted
-      field as "必要だが未整備", so the frontmatter misstates the template state; either declare it explicitly or define an
-      exception for templates chosen per domain.
-    message_ja: >-
-      The body says the frontmatter `template` is not declared, but `rulebook-authoring-standard` treats an omitted
-      field as "必要だが未整備", so the frontmatter misstates the template state; either declare it explicitly or define an
-      exception for templates chosen per domain.
-  - id: F010
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 166
-    anchor: "- `work` 成果物には 1 件以上の完了条件を記載する。"
-    message: >-
-      `done_criteria` is only defined for `work`, and the rulebook does not say whether non-`work` items may carry it;
-      `dct-sample` says non-`work` items do not have it, while the template's `generated` items `sch-milestones` and
-      `sch-track-launch` do, so the sample and template disagree.
-    message_ja: >-
-      `done_criteria` is only defined for `work`, and the rulebook does not say whether non-`work` items may carry it;
-      `dct-sample` says non-`work` items do not have it, while the template's `generated` items `sch-milestones` and
-      `sch-track-launch` do, so the sample and template disagree.
-  - id: F011
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 134
-    anchor: "- `dct-<domain>.yaml` 自身と `generated/` 配下の表示用生成物は、二重管理を避けるため登録しない。"
-    message: >-
-      The rulebook does not cover what to do with orphaned display pages under `generated/` when their source YAML is
-      deleted or renamed; `dct-business-specs-common-template.md`, `dct-data-model-dictionary-template.md` and others
-      remain with `rulebook: specdojo:dct-rulebook` and old content, so they can be mistaken for live templates.
-    message_ja: >-
-      The rulebook does not cover what to do with orphaned display pages under `generated/` when their source YAML is
-      deleted or renamed; `dct-business-specs-common-template.md`, `dct-data-model-dictionary-template.md` and others
-      remain with `rulebook: specdojo:dct-rulebook` and old content, so they can be mistaken for live templates.
-  - id: F012
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 12
-    anchor: >-
-      - 実践の型の構成: template はドメインごとの `dct-<domain>-template.yaml`（物理分割時は `dct-<domain>-<part>-template.yaml`）で、`catalog
-      scaffold` が `domain` から選ぶ。1 つの ID しか持てない frontmatter の `template` では表せないため宣言しない。
-    message: >-
-      The same concept is written both as "template" (全体方針, 実践の型の要否宣言) and as "テンプレート" (ファイル命名規約, グループ構成, テンプレート固有項目),
-      so a reader may wonder whether "the kata's template" and "the template file" are different things; use one form
-      throughout.
-    message_ja: >-
-      The same concept is written both as "template" (全体方針, 実践の型の要否宣言) and as "テンプレート" (ファイル命名規約, グループ構成, テンプレート固有項目),
-      so a reader may wonder whether "the kata's template" and "the template file" are different things; use one form
-      throughout.
+      6.7 は `control`・`generated` に `done_criteria` を書かないと規定するが、`dct-project-management-template` の `generated` である
+      `sch-milestones` と `sch-track-launch` は `done_criteria` を持っており、規則とテンプレートが食い違っているため。
 level_corrections:
   - viewpoint: vp-qe-kata-conformance
     original_level: 2
