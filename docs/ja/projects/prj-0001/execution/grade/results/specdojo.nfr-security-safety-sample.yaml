@@ -4,98 +4,97 @@ document: specdojo:nfr-security-safety-sample
 path: docs/ja/specdojo/samples/nfr-security-safety-sample.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-sample
-verdict: fail
-score: 37
-graded_at: "2026-11-21T04:52:02.487Z"
-graded_by: opus-executor
-content_hash: 9faee239768c6e4e00515a3fc7d0f0a240f12875867cbb8ada3a61f1ffaee341
+verdict: pass
+score: 93
+graded_at: "2026-11-23T15:21:13.554Z"
+graded_by: sonnet-review-executor
+content_hash: 871d4f3d17378c2c828c8a0667c7e4de8e5bf729be6e0ef0b970c739abd8c231
 categories:
   purpose:
-    score: 25
+    score: 88
   operations:
-    score: 56
+    score: 94
   planning:
-    score: 25
+    score: 100
   business:
-    score: 17
+    score: 100
   architecture:
-    score: 75
+    score: 100
   usability:
-    score: 58
+    score: 100
   implementation:
-    score: 25
+    score: 100
   quality:
-    score: 17
+    score: 92
   consistency:
-    score: 25
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-po-decision-readiness:
-    level: 1
-    score: 25
+    level: 3
+    score: 75
   vp-po-publication-accountability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-plan-feasibility:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-pm-control-reporting:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ba-business-value:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ba-requirements-completeness:
-    level: 0
-    score: 0
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-dev-change-impact:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-dev-testability:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-qe-verifiability:
-    level: 1
-    score: 25
-  vp-qe-omissions-consistency:
-    level: 1
-    score: 25
-  vp-qe-kata-conformance:
-    level: 0
-    score: 0
-  vp-ux-readability:
-    level: 1
-    score: 25
-  vp-ux-language-consistency:
     level: 3
     score: 75
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
   vp-ops-release-readiness:
-    level: 1
-    score: 25
+    level: 3
+    score: 75
   vp-ops-operability:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -103,180 +102,53 @@ viewpoints:
     level: 4
     score: 100
 finding_counts:
-  blocker: 2
-  major: 17
+  blocker: 0
+  major: 0
   minor: 5
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-po-purpose-alignment
-    line: 9
-    anchor: "- 対象: 駄菓子屋の販売管理システム"
-    message: >-
-      Specific scope boundaries and objective alignment for the target system (駄菓子屋の販売管理システム) are missing, leaving
-      priority and necessity unclear.
-    message_ja: >-
-      Specific scope boundaries and objective alignment for the target system (駄菓子屋の販売管理システム) are missing, leaving
-      priority and necessity unclear.
-  - id: F002
-    severity: major
-    rule: vp-po-purpose-alignment
-    line: 5
-    anchor: 本書は、不正利用防止とセキュリティを定義するための最小サンプルである。
-    message: 目的が「不正利用防止とセキュリティを定義する」の一般論だけで、守る情報・操作（つけ残高、販売記録、在庫）とプロジェクト目的との対応がない。概要（対象・目的）の章で保護対象と目的を具体的に示す必要がある。
-    message_ja: 目的が「不正利用防止とセキュリティを定義する」の一般論だけで、守る情報・操作（つけ残高、販売記録、在庫）とプロジェクト目的との対応がない。概要（対象・目的）の章で保護対象と目的を具体的に示す必要がある。
-  - id: F003
-    severity: major
+    severity: minor
     rule: vp-po-decision-readiness
-    line: 30
-    anchor: "| 要件詳細の補強 | 実案件適用時に具体化する |"
-    message: 保留中の課題テーブルでは、意思決定の責任者、基準、または影響が指定されず、作業を実際の実装に先送りしているだけです。
-    message_ja: 保留中の課題テーブルでは、意思決定の責任者、基準、または影響が指定されず、作業を実際の実装に先送りしているだけです。
+    line: 47
+    anchor: >-
+      | `nfr-sec-012` | 本番のホスティング環境と利用ライブラリの、CVSS 7.0 以上の脆弱性を期限内に修正する            | 公表から修正までの日数                       |
+      _UNDECIDED_: ○○ 日以内 | 情報保護。決まるまでは月次点検で件数と経過日数を記録するだけとし、達成・未達を判定しない |
+    message: "`nfr-sec-012` の基準が `_UNDECIDED_: ○○ 日以内` のままで、決定者と決定期限が書かれていない。確定の担当（Role code）と判断時期を備考に追記すること。"
+    message_ja: "`nfr-sec-012` の基準が `_UNDECIDED_: ○○ 日以内` のままで、決定者と決定期限が書かれていない。確定の担当（Role code）と判断時期を備考に追記すること。"
+  - id: F002
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 76
+    anchor: >-
+      | `nfr-sec-ex-001` | `nfr-sec-002` | 初期リリース直後は会計の操作に慣れず、10 分で自動ログアウトすると会計が途中で止まる | 自動ログアウトを 20
+      分にし、店番の交代時は手でログアウトする。交代時のログアウト忘れを日次締めで確かめる | 初期リリースの 30 日後 | 店主代表（`PO`） |
+    message: "`nfr-sec-ex-001` の期限が「初期リリースの 30 日後」と相対表現で、期限切れを表から判別できない。リリース日が決まった時点で具体的な日付に置き換えるか、起算日を明記すること。"
+    message_ja: "`nfr-sec-ex-001` の期限が「初期リリースの 30 日後」と相対表現で、期限切れを表から判別できない。リリース日が決まった時点で具体的な日付に置き換えるか、起算日を明記すること。"
+  - id: F003
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 57
+    anchor: >-
+      | `nfr-sec-003` | 店番・運用・保守のアカウントで、主体の表の「許可しない操作」をすべて試す                                 | 受入前、権限区分を変えたとき |
+      `sac-store-sales`                         |
+    message: "`nfr-sec-003` の母数は主体の表の「許可しない操作」すべてだが、測定方法の対象に店番・運用・保守しかなく、管理（監査ログの削除）と本部連携（顧客情報の受け渡し）が漏れている。"
+    message_ja: "`nfr-sec-003` の母数は主体の表の「許可しない操作」すべてだが、測定方法の対象に店番・運用・保守しかなく、管理（監査ログの削除）と本部連携（顧客情報の受け渡し）が漏れている。"
   - id: F004
     severity: minor
-    rule: vp-po-publication-accountability
-    line: 1
-    anchor: "# [非機能要件 / 機密性・安全性](../rulebooks/nfr-security-safety-rulebook.md) サンプル"
-    message: ドキュメントには、最終的な決定および公開に対して責任を負う、明確な人間の責任者または承認者の指定が欠けています。
-    message_ja: ドキュメントには、最終的な決定および公開に対して責任を負う、明確な人間の責任者または承認者の指定が欠けています。
+    rule: vp-qe-omissions-consistency
+    line: 82
+    anchor: >-
+      | 種別             | ドキュメントID                                                                 |
+      目的                                                                             |
+    message: rulebook は `stc-*` への導線を求めているが、導線の表に `stc-*` の行も、`stc-*` を置かない旨の記述もない。
+    message_ja: rulebook は `stc-*` への導線を求めているが、導線の表に `stc-*` の行も、`stc-*` を置かない旨の記述もない。
   - id: F005
-    severity: major
-    rule: vp-pm-plan-feasibility
-    line: 15
-    anchor: "- 主な内容: 認証・認可、脆弱性対応SLA、暗号化、アクセス制御"
-    message: ドキュメントには抽象的なトピックのキーワードのみがリストされており、実行可能な作業単位、完了基準、役割の割り当て、または工数見積もりがありません。
-    message_ja: ドキュメントには抽象的なトピックのキーワードのみがリストされており、実行可能な作業単位、完了基準、役割の割り当て、または工数見積もりがありません。
-  - id: F006
-    severity: major
-    rule: vp-pm-dependency-risk
-    line: 30
-    anchor: "| 要件詳細の補強 | 実案件適用時に具体化する |"
-    message: Dependencies on downstream deliverables (such as sac-* or stc-*) and implementation risks are not identified.
-    message_ja: Dependencies on downstream deliverables (such as sac-* or stc-*) and implementation risks are not identified.
-  - id: F007
-    severity: major
-    rule: vp-pm-control-reporting
-    line: 30
-    anchor: "| 要件詳細の補強 | 実案件適用時に具体化する |"
-    message: ドキュメントには、プロジェクトジャーナルの報告先、責任ある役割のコード、および追跡対象が欠けています。
-    message_ja: ドキュメントには、プロジェクトジャーナルの報告先、責任ある役割のコード、および追跡対象が欠けています。
-  - id: F008
-    severity: major
-    rule: vp-ba-business-value
-    line: 9
-    anchor: "- 対象: 駄菓子屋の販売管理システム"
-    message: サンプルでは、キャンディストアの販売管理システムにおける対象となるビジネスステークホルダー、ビジネス上の課題、または期待されるセキュリティ価値について説明されていません。
-    message_ja: サンプルでは、キャンディストアの販売管理システムにおける対象となるビジネスステークホルダー、ビジネス上の課題、または期待されるセキュリティ価値について説明されていません。
-  - id: F009
-    severity: blocker
-    rule: vp-ba-requirements-completeness
-    line: 15
-    anchor: "- 主な内容: 認証・認可、脆弱性対応SLA、暗号化、アクセス制御"
-    message: セキュリティ要件、受け入れ基準、およびスコープ内・スコープ外の境界が完全に欠落しています。
-    message_ja: セキュリティ要件、受け入れ基準、およびスコープ内・スコープ外の境界が完全に欠落しています。
-  - id: F010
-    severity: major
-    rule: vp-ba-stakeholder-clarity
-    line: 9
-    anchor: "- 対象: 駄菓子屋の販売管理システム"
-    message: 対象となるシステムについて、ステークホルダー、運用担当者、および検証者が特定されていません。
-    message_ja: 対象となるシステムについて、ステークホルダー、運用担当者、および検証者が特定されていません。
-  - id: F011
-    severity: major
-    rule: vp-arc-technical-constraints
-    line: 15
-    anchor: "- 主な内容: 認証・認可、脆弱性対応SLA、暗号化、アクセス制御"
-    message: 技術的な制約、アーキテクチャの仮定、およびセキュリティプロトコルの標準が指定されていません。
-    message_ja: 技術的な制約、アーキテクチャの仮定、およびセキュリティプロトコルの標準が指定されていません。
-  - id: F012
     severity: minor
-    rule: vp-arc-conciseness
-    line: 24
-    anchor: "| 主な内容     | 認証・認可、脆弱性対応SLA、暗号化、アクセス制御                             | 要点のみ記載                         |"
-    message: セクション3とセクション4では、異なる情報を提供することなく、セキュリティトピックのキーワードの同一リストを重複して記載しています。
-    message_ja: セクション3とセクション4では、異なる情報を提供することなく、セキュリティトピックのキーワードの同一リストを重複して記載しています。
-  - id: F013
-    severity: major
-    rule: vp-dev-implementation-readiness
-    line: 15
-    anchor: "- 主な内容: 認証・認可、脆弱性対応SLA、暗号化、アクセス制御"
-    message: 具体的な設定値、実装入力、および完了基準が欠落しています。
-    message_ja: 具体的な設定値、実装入力、および完了基準が欠落しています。
-  - id: F014
-    severity: major
-    rule: vp-dev-change-impact
-    line: 30
-    anchor: "| 要件詳細の補強 | 実案件適用時に具体化する |"
-    message: 既存の成果物、下流のスキーマ、および運用手順への影響が特定されていません。
-    message_ja: 既存の成果物、下流のスキーマ、および運用手順への影響が特定されていません。
-  - id: F015
-    severity: major
-    rule: vp-dev-testability
-    line: 15
-    anchor: "- 主な内容: 認証・認可、脆弱性対応SLA、暗号化、アクセス制御"
-    message: 検証コマンド、期待されるテスト結果、およびテスト可能性の手順が指定されていません。
-    message_ja: 検証コマンド、期待されるテスト結果、およびテスト可能性の手順が指定されていません。
-  - id: F016
-    severity: major
-    rule: vp-qe-verifiability
-    line: 23
-    anchor: "| 目的         | 不正利用防止とセキュリティを定義する                                        | specdojo:deliverables-reference 準拠 |"
-    message: 判定基準や具体的数値などの検証可能な表現が欠落しており、非機能要件のサンプルとして機能していない。
-    message_ja: 判定基準や具体的数値などの検証可能な表現が欠落しており、非機能要件のサンプルとして機能していない。
-  - id: F017
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 3
-    anchor: "## 1. 目的と適用範囲"
-    message: ルールブックで定義された必須構成（見出し 1〜5）がすべて欠落している。
-    message_ja: ルールブックで定義された必須構成（見出し 1〜5）がすべて欠落している。
-  - id: F018
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 1
-    anchor: "# [非機能要件 / 機密性・安全性](../rulebooks/nfr-security-safety-rulebook.md) サンプル"
-    message: 推奨 Frontmatter の `part_of`（`nfr-index`）が未設定で、rulebook の推奨 Frontmatter 項目と整合していない。
-    message_ja: 推奨 Frontmatter の `part_of`（`nfr-index`）が未設定で、rulebook の推奨 Frontmatter 項目と整合していない。
-  - id: F019
-    severity: blocker
-    rule: vp-qe-kata-conformance
-    line: 3
-    anchor: "## 1. 目的と適用範囲"
-    message: ルールブックで指定された順序固定の必須見出し構成に全く準拠していない。
-    message_ja: ルールブックで指定された順序固定の必須見出し構成に全く準拠していない。
-  - id: F020
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# [非機能要件 / 機密性・安全性](../rulebooks/nfr-security-safety-rulebook.md) サンプル"
-    message: H1 と表のセル（22行目）が相対パスの Markdown リンクで rulebook を参照しており、id ベースの参照（Frontmatter の rulebook 宣言、または wikilink）に統一されていない。
-    message_ja: H1 と表のセル（22行目）が相対パスの Markdown リンクで rulebook を参照しており、id ベースの参照（Frontmatter の rulebook 宣言、または wikilink）に統一されていない。
-  - id: F021
-    severity: major
-    rule: vp-ux-readability
-    line: 18
-    anchor: "## 4. 最小記述例"
-    message: 具体的な記述例ではなく抽象的な項目リストとなっており、実装ガイドとしての役割を果たしていない。
-    message_ja: 具体的な記述例ではなく抽象的な項目リストとなっており、実装ガイドとしての役割を果たしていない。
-  - id: F022
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 10
-    anchor: "- 前提: プロジェクト文脈は handbook の共通方針に準拠する"
-    message: 「handbook の共通方針」が指す文書が特定できない。参照先の文書 ID を明示するか、記述を削除する必要がある。
-    message_ja: 「handbook の共通方針」が指す文書が特定できない。参照先の文書 ID を明示するか、記述を削除する必要がある。
-  - id: F023
-    severity: major
     rule: vp-ops-release-readiness
-    line: 30
-    anchor: "| 要件詳細の補強 | 実案件適用時に具体化する |"
-    message: ドラフト状態から移行するための、保留事項の準備完了基準および解決条件が指定されていません。
-    message_ja: ドラフト状態から移行するための、保留事項の準備完了基準および解決条件が指定されていません。
-  - id: F024
-    severity: major
-    rule: vp-ops-operability
-    line: 30
-    anchor: "| 要件詳細の補強 | 実案件適用時に具体化する |"
-    message: 継続的なメンテナンス、変更管理、および責任ある役割に必要な情報が完全に欠落しています。
-    message_ja: 継続的なメンテナンス、変更管理、および責任ある役割に必要な情報が完全に欠落しています。
+    line: 47
+    anchor: >-
+      | `nfr-sec-012` | 本番のホスティング環境と利用ライブラリの、CVSS 7.0 以上の脆弱性を期限内に修正する            | 公表から修正までの日数                       |
+      _UNDECIDED_: ○○ 日以内 | 情報保護。決まるまでは月次点検で件数と経過日数を記録するだけとし、達成・未達を判定しない |
+    message: ready 化前に解消すべき未決（`nfr-sec-012` の `○○` 日数）の解消条件が書かれていない。暫定運用を終える条件を明記すること。
+    message_ja: ready 化前に解消すべき未決（`nfr-sec-012` の `○○` 日数）の解消条件が書かれていない。暫定運用を終える条件を明記すること。
