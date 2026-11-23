@@ -54,6 +54,8 @@
     "typescript": "^6.0.3"
   },
   "overrides": {
-    "vite": "^6.4.4"
+    "vite": "^6.4.4",
+    "minimatch": "^11.0.1",
+    "glob": "^14.0.2"
   }
 }
