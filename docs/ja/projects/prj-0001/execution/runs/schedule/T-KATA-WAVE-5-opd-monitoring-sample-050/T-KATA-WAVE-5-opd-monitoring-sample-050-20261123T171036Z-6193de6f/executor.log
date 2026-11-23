@@ -1,0 +1,33 @@
+`opd-monitoring-sample.md` を、駄菓子屋きぬやを題材にした `opd-index` の差分として書き直しました。変更したファイルはこの 1 つだけで、rulebook と result には手を入れていません。Prettier での整形と markdownlint は通りました（0 件）。それ以外の lint・test・schema の検査は、このあと親 runner が実行するので結果はまだ出ていません。
+
+**書き直した内容**
+
+- **題材の置き換え:** API の 5xx、DB レプリカ、`#ops` を前提にした Web サービス運用の例をやめました。監視対象は `opd-index` が定める 3 つ（ホスティング環境の死活・夜間バックアップ・日次締めの差異）にそろえ、レプリカを置かない構成であることも本文に書きました。
+- **概要:** `opd-index` のどの章を具体化する分冊かを書き、`opd-index-sample` と `prj-overview-sample` へ wikilink で参照しています。決まっていない 3 点は `_UNDECIDED_` の表にし、それぞれ決まるまでの扱いを添えました。
+- **監視・アラート方針の章:** `opd-index` と同じ見出しで、次の 4 節を置きました。
+  - **守る業務と影響:** 監視対象ごとに守る業務、検知しなかった場合の影響、対応する `opd-index` の SLO・KPI・RPO を示しました。
+  - **測定元と通知:** 測定元、判定の時刻、通知の手段を書きました。差分の種類が具体化か補足かも示しています。
+  - **初動:** 時限、完了条件、時限までに解決しない場合の P1・P2 への引き継ぎを書きました。
+  - **閾値の見直し:** 誤検知の数え方、`opd-index` の変更管理に沿った閾値の改訂、`opr-monitoring` への波及を書きました。
+- **役割の表記:** 「Ops当番」「Dev」をやめ、`OPS`・`DEV`・`PO`・店番担当に統一しました。
+- **関連ドキュメント導線:** `opr-index` と `opd-incident-management` の行を足しました。`opr-batch` は `opd-index` にバッチ監視がないので削り、`opr-monitoring` で扱う形にしました。どの行も、まだない文書としてバッククォートの仮置きにしています。
+- **削除:** 本文の「参照: rulebook」の行を消しました。どの必須要素にも寄与していないためです。
+
+grade の指摘 F001〜F018 には、この書き直しで対応しています。文書の役割の割り当てや承認の進み具合は本文に書いていません。
+
+**後で確認が必要な点**
+
+- **仮置きの値:** 次の値は宣言された資料に根拠がなく、私が置いたものです。`_ASSUMPTION_` と付けたのは外部の死活監視サービスだけで、残りは仮置きの印を付けずに本文に入っています。
+  - 外部の死活監視サービスを無料の範囲で使い、1 分ごとに確かめる。
+  - バックアップの成功記録を開店 30 分前の 9:30 に確かめる。
+  - 死活の通知から 10 分以内に初動を終える。
+  - 死活の誤検知が月 3 件以上あれば閾値の変更案を作る。
+- **利用者が決める値:** 次の 3 点は `PO` が決める値として `_UNDECIDED_` で残しています。
+  - 営業時間外の通知をすぐ受けるか
+  - 外部の監視サービスを使うかと、その費用額
+  - 営業時間内の稼働率の目標（`opd-index` と共通）
+- **rulebook への申し送り:** 差分の章の中で、測定元・通知の手段・初動の時限をどこまで書けばよいかの例が rulebook にありません。直し方の案として申し送ります。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"opd-monitoring-sample を駄菓子屋きぬやの共通サンプル文脈で opd-index の差分として書き直した。守る業務と検知しなかった場合の影響、測定元と通知の手段、初動の時限・完了条件・引き継ぎ、閾値の見直し、opr-index を含む導線を備え、grade の指摘 F001〜F018 に対応した。","handoff":["`PO` が決める必要のある値: 営業時間外の通知をすぐ受けるか、死活の監視に外部の監視サービスを使うかとその費用額、営業時間内の稼働率の目標（`opd-index` と共通）。sample では `_UNDECIDED_` と決まるまでの扱いを書いて残した。","宣言された資料に根拠がなく executor が置いた値: 外部の死活監視サービスを無料の範囲で使い 1 分ごとに確かめる（`_ASSUMPTION_` 付き）、バックアップの成功記録を開店 30 分前の 9:30 に確かめる、死活の通知から 10 分以内に初動を終える、死活の誤検知が月 3 件以上で閾値の変更案を作る。後の 3 つは仮置きの印を付けずに本文に入っているので、関連する sample（`opr-monitoring-sample` など）との整合を確かめる必要がある。","既存記述の扱い: Web サービス運用の 3 行（API・DB レプリカ・Batch）は共通サンプル文脈の禁止事項に当たるため、`opd-index-sample` の監視対象 3 つに置き換えた。本文の「参照: rulebook」の行は必須要素にも `done_criteria` にも寄与しないため削除した。`opr-batch` の行は `opd-index` にバッチ監視がないため削除し、`opr-monitoring` で扱う形にした。","参照した文書: `opd-rulebook`、`opd-index-sample`、`opd-access-control-sample`（形式の参照に限る）、`sample-authoring-standard`、`prj-overview`。`opd-incident-management-sample` と `opr-*-sample` は宣言されていないため本文を読まず、存在と ID だけを確かめた。導線ではバッククォートの仮置きで書いた。","PJR-76N9 の決まり: 文書の役割の割り当てや承認の進み具合は本文に書いていない。閾値の変更に `PO` の承認が要ることは、運用の変更管理の中身として書いた。","rulebook の変更案: 差分の章の中で、測定元・通知の手段・初動の時限と完了条件をどこまで具体化するかの良い例を、`opd-rulebook` の「差分を持つ章」の記述ガイドに足すとよい。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/opd-monitoring-sample.md","status":"passed","summary":"対象ファイルの表を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/opd-monitoring-sample.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>
