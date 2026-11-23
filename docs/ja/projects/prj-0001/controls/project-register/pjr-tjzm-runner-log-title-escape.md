@@ -11,7 +11,7 @@ specdojo:
   priority: low
   owner: DEV
   registered_at: "2026-11-23T00:36:48Z"
-  due_on: null
+  due_on: "2026-11-30"
 ---
 
 # PJR-TJZM runner のログの Register item の行で、項目のタイトルの _ が \_ と表示される
@@ -53,7 +53,7 @@ Register item: PJR-7WPD — テストの文書を frontend\_test\_note.md に改
 
 - タイトルに `_`・`*` などを含む項目で、`Register item:` の行にエスケープしないタイトルが出る（テストで確かめる）。
 - 一覧と個票の Markdown のエスケープは今のまま。
-- `CHANGELOG.md` は未公開の版の節に書き、公開済みの版の節を変えない。
+- `CHANGELOG.md` は変えない。個票の対応結果に「CHANGELOG に書く事項」の小節を作り、区分と行の文案を書く（prj-0001 の運用。並べて流したときの統合の衝突を避けるため）。
 
 ## 5. 対応結果
 

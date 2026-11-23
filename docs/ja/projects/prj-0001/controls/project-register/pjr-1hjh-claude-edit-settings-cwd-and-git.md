@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: DEV
   registered_at: "2026-11-23T00:35:38Z"
-  due_on: null
+  due_on: "2026-11-30"
 ---
 
 # PJR-1HJH Claude の edit executor の既定の設定に、作業場所を保つ設定と git の読み取り・rm・mv の許可がない
@@ -75,7 +75,8 @@ project ごとのコマンド（`python -m pytest *` など）は `exec-defaults
 - 既定で許す git のコマンドを決め、許さないもの（`git push`・`git reset --hard`・`git checkout` など）は拒まれる（テストで確かめる）。
 - exec 設定ガイドに、作業場所の扱いと、既定で許すコマンドを書く。
 - prj-0001 の `.specdojo` の保護された設定は変えない。変える案があれば個票の対応結果と報告の `handoff` に書く。
-- `CHANGELOG.md` は未公開の版の節に書き、公開済みの版の節を変えない。
+- 直すのは配布の `templates/claude/settings.edit.json` とその読み込み・テスト・ガイドとする。prj-0001 自身の `.specdojo/claude/settings.edit.json` への反映は、統合の後に利用者の承認のもとでオーケストレーターが feature ブランチで行う。
+- `CHANGELOG.md` は変えない。個票の対応結果に「CHANGELOG に書く事項」の小節を作り、区分と行の文案を書く（prj-0001 の運用。並べて流したときの統合の衝突を避けるため）。
 
 ## 5. 対応結果
 
