@@ -60,3 +60,16 @@
       from: ""
       to: 完了条件
   previous_event_id: reg_b63d496841ea457cb302822b7ad086bd
+- v: 1
+  id: reg_ab94fd8b36ec4f87b5e555c2ecd9ef4e
+  ts: "2026-11-23T00:37:51Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_e41c671ac14040e4853c115e87732c6f
