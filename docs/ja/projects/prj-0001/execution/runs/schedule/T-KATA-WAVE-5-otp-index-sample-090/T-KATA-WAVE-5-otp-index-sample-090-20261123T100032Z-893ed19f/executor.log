@@ -1,0 +1,38 @@
+レビュー結果: 運用切替計画（全体構成）の完成例 `otp-index-sample` は、`complete-with-findings` で完了してよいと判断しました。
+
+**評価結果の鮮度確認**
+- sample と rulebook のそれぞれに `specdojo grade list --target kata --path <対象> --changed-only` を実行しました。どちらも出力なし、終了コード 0 で、評価結果は最新です。
+- サイドカーは存在し、plan 記載の content_hash と一致しています。
+
+**grade の結果（plan の記載どおり）**
+- sample は pass、97 点、minor 1 件（F001）です。
+- rulebook は pass、98 点、minor 2 件（F001 と F002）です。
+
+**照合した内容**
+- sample の見出しは 1 から 11 まで連番で、概要、監視/アラート、バックアップ、権限、運用手順の変更点、問合せ窓口、障害対応、増員体制、旧システム停止、クローズ条件、関連ドキュメントがそろっています（DC-001、DC-004）。
+- 内容は駄菓子屋きぬやの販売管理システムで、店主代表と家族利用者代表を主語にしています（DC-002）。
+- 冒頭の概要で `mip-index` と `cop-index` を引いています。関連ドキュメントにも両者と `otp-hypercare`・`dmd-index`・`opr-index` が挙がっています。切替日の午前の手順は `cop-index` に任せています。重複の指摘は grade にもありません（DC-005）。
+- 禁止事項への抵触は grade が評価済みで、指摘はありません（DC-003）。
+- frontmatter の `status` は `draft` のままです。
+- `_UNDECIDED_` が 2 か所残っています。画面応答の閾値と旧ノートの保管期間です。どちらも決める担当が示されていて、sample として許容できます。
+- 作業ツリーの未追跡ファイルは `pipeline-state.json` だけで、対象外の変更の混入はありません。
+
+**finding が完了を妨げない理由**
+- sample F001 は、`opr-sales` などの分冊が「関連ドキュメント」に導線として挙がっていない点です。`opr-index` は挙がっているため、必須章の欠落や禁止事項への抵触ではありません。
+- rulebook F001 と F002 は、`recipe` と `template` が `undecided` のままという点です。型の整備に関する指摘で、sample の完了条件には直結しません。ただし、rulebook を ready にする前に recipe と template を決めて、sample の受入条件を満たす必要があります。
+
+**改善指示**
+- sample F001 は、`opr-index` から分冊へ辿れることを 1 行足して解消します。
+- recipe と template の段を足して `undecided` を解消します。
+- rulebook を ready にする前に `validate:schema` で enum coverage を確認します。
+
+**確認できなかった範囲**
+- 先行する edit タスクの result は plan に示されておらず、確認していません。
+- 成果物の再評価は、手順どおり行っていません。
+
+**verdict**
+`complete-with-findings`
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict: complete-with-findings。鮮度確認は sample・rulebook ともに最新（grade list --changed-only は出力なし、終了コード 0）。grade は sample が pass 97 点（minor 1）、rulebook が pass 98 点（minor 2）。DC-001〜DC-005 は章構成・文脈・mip-index/cop-index との分担を照合し、完了を妨げる未充足なし。minor finding は完了を妨げない。改善指示: sample に opr-index 経由で分冊へ辿れる旨を追記する。recipe と template の段を整備して undecided を解消する。rulebook を ready にする前に validate:schema を確認する。確認できなかった範囲: 先行 edit タスクの result は plan に示されておらず未確認。","handoff":["改善指示: sample F001 は、opr-index 経由で opr-sales などの分冊へ辿れる旨を関連ドキュメントに 1 行追記して解消する。","改善指示: rulebook の recipe と template が undecided。recipe・template の段を足して決める。rulebook を ready にする前に validate:schema で enum coverage を確認する。","確定前の確認点: 画面応答の閾値と旧ノートの保管期間は _UNDECIDED_ のまま。横串の確認で人が確定する。"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/otp-index-sample.md --changed-only","status":"passed","summary":"出力なし、終了コード 0。評価結果は最新。"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/otp-index-rulebook.md --changed-only","status":"passed","summary":"出力なし、終了コード 0。評価結果は最新。"}]}
+</specdojo_executor_evidence>

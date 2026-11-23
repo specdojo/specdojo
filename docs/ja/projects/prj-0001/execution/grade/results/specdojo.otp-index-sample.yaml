@@ -4,59 +4,58 @@ document: specdojo:otp-index-sample
 path: docs/ja/specdojo/samples/otp-index-sample.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-sample
-verdict: needs-work
-score: 84
-graded_at: "2026-11-21T05:06:45.165Z"
-graded_by: opus-executor
-content_hash: dd75f8f7a6fd4b83e0c535d7f920650924ac7b1add14638f1373530f83e273c9
+verdict: pass
+score: 97
+graded_at: "2026-11-23T10:00:02.565Z"
+graded_by: sonnet-review-executor
+content_hash: 39e5ef3b56c3fdd4113508fff5f78a79f24e6cf7badf172d0dd708b6ff89bf9e
 categories:
   purpose:
-    score: 75
+    score: 100
   operations:
-    score: 94
+    score: 100
   planning:
-    score: 83
+    score: 100
   business:
-    score: 75
+    score: 100
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
-    score: 88
+    score: 100
   quality:
-    score: 75
+    score: 100
   consistency:
     score: 75
 viewpoints:
   vp-po-purpose-alignment:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-publication-accountability:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
     level: 4
     score: 100
   vp-ba-business-value:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-requirements-completeness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
     level: 4
     score: 100
@@ -64,8 +63,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-change-impact:
     level: 4
     score: 100
@@ -73,26 +72,26 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
     level: 3
     score: 75
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 4
     score: 100
   vp-ops-operability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -101,137 +100,14 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 17
+  major: 0
+  minor: 1
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-purpose-alignment
-    line: 5
-    anchor: 本書は運用切替計画の入口（`otp-index`）として、共通運用方針と対象別計画への導線を定義する最小サンプルである。
-    message: 「1. 概要（index）」に運用安定化の目的と適用範囲（対象システム・対象業務・期間）が書かれておらず、rulebook 本文要件の受入条件「運用安定化の目的と適用範囲を 1〜3 行で示す」を満たしていない。
-    message_ja: 「1. 概要（index）」に運用安定化の目的と適用範囲（対象システム・対象業務・期間）が書かれておらず、rulebook 本文要件の受入条件「運用安定化の目的と適用範囲を 1〜3 行で示す」を満たしていない。
-  - id: F002
-    severity: minor
-    rule: vp-po-decision-readiness
-    line: 51
-    anchor: "- 重大障害0件が30日継続"
-    message: "クローズ条件に判定タイミング（例: 切替後30日経過時点の判定会議）と承認者が書かれておらず、条件を満たしたあと誰がいつ承認するのかを判断できない。"
-    message_ja: "クローズ条件に判定タイミング（例: 切替後30日経過時点の判定会議）と承認者が書かれておらず、条件を満たしたあと誰がいつ承認するのかを判断できない。"
-  - id: F003
-    severity: minor
-    rule: vp-pm-plan-feasibility
-    line: 36
-    anchor: "- エスカレーション: 一次対応 → 運用責任者 → PO"
-    message: 「7. 障害対応フロー」がエスカレーション経路の1行だけで、rulebook が求める判断・連絡・復旧・報告の各段階と指揮系統が書かれていないため、作業単位として扱えない。
-    message_ja: 「7. 障害対応フロー」がエスカレーション経路の1行だけで、rulebook が求める判断・連絡・復旧・報告の各段階と指揮系統が書かれていないため、作業単位として扱えない。
-  - id: F004
-    severity: minor
-    rule: vp-pm-dependency-risk
-    line: 1
-    anchor: "# 運用切替計画（ハイパーケア含む） サンプル"
-    message: "Frontmatter に `based_on` がなく、rulebook の推奨 Frontmatter 例（`based_on: [prj-0001:cop-index]`）の完成例として、前段成果物への依存を示せていない。"
-    message_ja: "Frontmatter に `based_on` がなく、rulebook の推奨 Frontmatter 例（`based_on: [prj-0001:cop-index]`）の完成例として、前段成果物への依存を示せていない。"
-  - id: F005
-    severity: minor
-    rule: vp-ba-business-value
-    line: 42
-    anchor: "| 切替後2週間 | Ops 2名 + Biz 1名（8:00-20:00）/ 夜間はオンコール | P1:30分以内一次連絡 | 運用責任者 | 期間延長はクローズ条件で判断 |"
-    message: 初期増員体制の「Ops 2名 + Biz 1名」など、運用の例が駄菓子屋きぬやの共通サンプル文脈（店主一人・家族の店番）と対応しておらず、どの利用者のどの業務課題を安定させる計画かが読み取れない。
-    message_ja: 初期増員体制の「Ops 2名 + Biz 1名」など、運用の例が駄菓子屋きぬやの共通サンプル文脈（店主一人・家族の店番）と対応しておらず、どの利用者のどの業務課題を安定させる計画かが読み取れない。
-  - id: F006
-    severity: minor
-    rule: vp-ba-requirements-completeness
-    line: 15
-    anchor: "- バックアップ: 夜間フル、日中差分（保持30日）"
-    message: 「3. バックアップ/リストア」に保管先とリストアの検証方法がなく、利用者視点でバックアップ要件を受け入れ確認できる粒度になっていない。
-    message_ja: 「3. バックアップ/リストア」に保管先とリストアの検証方法がなく、利用者視点でバックアップ要件を受け入れ確認できる粒度になっていない。
-  - id: F007
-    severity: minor
-    rule: vp-ba-stakeholder-clarity
-    line: 42
-    anchor: "| 切替後2週間 | Ops 2名 + Biz 1名（8:00-20:00）/ 夜間はオンコール | P1:30分以内一次連絡 | 運用責任者 | 期間延長はクローズ条件で判断 |"
-    message: 「Ops」「Biz」が誰（どの役割）を指すのか、問合せ窓口の受付担当と同じかどうかが書かれておらず、当番の関係者と確認者を特定できない。
-    message_ja: 「Ops」「Biz」が誰（どの役割）を指すのか、問合せ窓口の受付担当と同じかどうかが書かれておらず、当番の関係者と確認者を特定できない。
-  - id: F008
-    severity: minor
-    rule: vp-dev-implementation-readiness
-    line: 27
-    anchor: "| 障害連絡 | 電話 | チャット | 初動短縮 | 連絡経路変更 | （手順書リンク） |"
-    message: 「5. 運用手順の変更点」の参照列が「（手順書リンク）」の仮置きのままで、新手順の参照先（文書 ID など）が示されておらず、完成例として変更作業の入力を確認できない。
-    message_ja: 「5. 運用手順の変更点」の参照列が「（手順書リンク）」の仮置きのままで、新手順の参照先（文書 ID など）が示されておらず、完成例として変更作業の入力を確認できない。
-  - id: F009
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 21
-    anchor: "- 検証: 主要ロールでログイン/代表操作を確認"
-    message: "権限移行の検証が「主要ロールでログイン/代表操作を確認」にとどまり、対象ロールと合格条件（例: 全ロールで代表操作が成功）が書かれていないため pass / fail を判定できない。"
-    message_ja: "権限移行の検証が「主要ロールでログイン/代表操作を確認」にとどまり、対象ロールと合格条件（例: 全ロールで代表操作が成功）が書かれていないため pass / fail を判定できない。"
-  - id: F010
-    severity: minor
     rule: vp-qe-omissions-consistency
-    line: 15
-    anchor: "- バックアップ: 夜間フル、日中差分（保持30日）"
-    message: 「3. バックアップ/リストア」において、記述ガイド 6.3 で求められている「保管先」の明記が不足している。
-    message_ja: 「3. バックアップ/リストア」において、記述ガイド 6.3 で求められている「保管先」の明記が不足している。
-  - id: F011
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 20
-    anchor: "- 移行タイミング: 切替前日 20:00"
-    message: 「4. 権限/アカウント移行」において、記述ガイド 6.4 で求められている「旧/新の拳限差分」の明記が不足している。
-    message_ja: 「4. 権限/アカウント移行」において、記述ガイド 6.4 で求められている「旧/新の拳限差分」の明記が不足している。
-  - id: F012
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 31
-    anchor: "- 受付: #support（09:00-18:00）"
-    message: 「6. 問合せ窓口/一次対応」において、記述ガイド 6.6 で求められている「エスカレーション条件」の明記が不足している。
-    message_ja: 「6. 問合せ窓口/一次対応」において、記述ガイド 6.6 で求められている「エスカレーション条件」の明記が不足している。
-  - id: F013
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 51
-    anchor: "- 重大障害0件が30日継続"
-    message: 「10. 移行完了後のクローズ条件」において、記述ガイド 6.10 で求められている「クローズ判断者」および「最終報告物」の明記が不足している。
-    message_ja: 「10. 移行完了後のクローズ条件」において、記述ガイド 6.10 で求められている「クローズ判断者」および「最終報告物」の明記が不足している。
-  - id: F014
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 36
-    anchor: "- エスカレーション: 一次対応 → 運用責任者 → PO"
-    message: 「7. 障害対応フロー」に、rulebook 本文要件の受入条件「判断・連絡・復旧・報告の流れ」のうち連絡・復旧・報告の段階が書かれていない。
-    message_ja: 「7. 障害対応フロー」に、rulebook 本文要件の受入条件「判断・連絡・復旧・報告の流れ」のうち連絡・復旧・報告の段階が書かれていない。
-  - id: F015
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 42
-    anchor: "| 切替後2週間 | Ops 2名 + Biz 1名（8:00-20:00）/ 夜間はオンコール | P1:30分以内一次連絡 | 運用責任者 | 期間延長はクローズ条件で判断 |"
-    message: >-
-      業務文脈が sample 作成規約の共通サンプル文脈（駄菓子屋きぬや・店主一人と家族の店番・店内タブレット1台）に統一されておらず、Ops 2名 + Biz 1名の体制など汎用 IT 運用の例になっていて、他の sample と
-      Kata 相互で矛盾する。
-    message_ja: >-
-      業務文脈が sample 作成規約の共通サンプル文脈（駄菓子屋きぬや・店主一人と家族の店番・店内タブレット1台）に統一されておらず、Ops 2名 + Biz 1名の体制など汎用 IT 運用の例になっていて、他の sample と
-      Kata 相互で矛盾する。
-  - id: F016
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 運用切替計画（ハイパーケア含む） サンプル"
-    message: rulebook の推奨 Frontmatter 項目で示された `based_on`（実際に根拠とした `cop-index` などの ID）が sample の Frontmatter にない。
-    message_ja: rulebook の推奨 Frontmatter 項目で示された `based_on`（実際に根拠とした `cop-index` などの ID）が sample の Frontmatter にない。
-  - id: F017
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 42
-    anchor: "| 切替後2週間 | Ops 2名 + Biz 1名（8:00-20:00）/ 夜間はオンコール | P1:30分以内一次連絡 | 運用責任者 | 期間延長はクローズ条件で判断 |"
-    message: 体制表の「Ops」「Biz」と、本文の「運用責任者」「一次対応」の表記が混在し、どれが同じ役割かを判断できないため、役割名を統一するか対応を示す必要がある。
-    message_ja: 体制表の「Ops」「Biz」と、本文の「運用責任者」「一次対応」の表記が混在し、どれが同じ役割かを判断できないため、役割名を統一するか対応を示す必要がある。
-  - id: F018
-    severity: minor
-    rule: vp-ops-operability
-    line: 32
-    anchor: "- 優先度: P1/P2/P3"
-    message: 問合せ受付が 09:00-18:00 なのに対し、ハイパーケア当番は 8:00-20:00 と夜間オンコールで、受付時間外（とくに P1）の問合せ導線が書かれておらず、時間外の一次対応の流れを読み取れない。
-    message_ja: 問合せ受付が 09:00-18:00 なのに対し、ハイパーケア当番は 8:00-20:00 と夜間オンコールで、受付時間外（とくに P1）の問合せ導線が書かれておらず、時間外の一次対応の流れを読み取れない。
+    line: 100
+    anchor: "## 11. 関連ドキュメント（必須）"
+    message: 「5. 運用手順の変更点」の参照列にある `opr-sales` などの分冊が「関連ドキュメント」に導線として挙がっておらず、`opr-index` 経由で辿れることも書かれていない。
+    message_ja: 「5. 運用手順の変更点」の参照列にある `opr-sales` などの分冊が「関連ドキュメント」に導線として挙がっておらず、`opr-index` 経由で辿れることも書かれていない。
