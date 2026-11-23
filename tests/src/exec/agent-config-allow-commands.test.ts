@@ -136,8 +136,10 @@ describe("templates/opencode/agents/opencode-executor.md", () => {
 
 describe("templates/claude/settings.edit.json", () => {
   const settings = JSON.parse(readFileSync("templates/claude/settings.edit.json", "utf8")) as {
+    env: Record<string, string>;
     permissions: { allow: string[]; deny: string[] };
   };
+  const settingsEnv = settings.env;
 
   it.each([
     "Bash(npm run *)",
@@ -150,11 +152,46 @@ describe("templates/claude/settings.edit.json", () => {
     expect(settings.permissions.allow).toContain(rule);
   });
 
-  it("does not allow destructive commands and keeps deny for git push and gh", () => {
+  it("keeps the Bash working directory at the project root after cd", () => {
+    expect(settingsEnv.CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR).toBe("1");
+  });
+
+  it.each([
+    "Bash(git status*)",
+    "Bash(git diff*)",
+    "Bash(git log*)",
+    "Bash(git show*)",
+    "Bash(git grep *)",
+    "Bash(git rm *)",
+    "Bash(git mv *)",
+  ])("allows %s", (rule) => {
+    expect(settings.permissions.allow).toContain(rule);
+  });
+
+  it("does not allow push, reset, checkout, commit, rm, or gh and denies forced or recursive removal", () => {
     const bashAllows = settings.permissions.allow.filter((rule) => rule.startsWith("Bash("));
 
-    expect(bashAllows.some((rule) => /git|rm |gh /.test(rule))).toBe(false);
-    expect(settings.permissions.deny).toContain("Bash(git push *)");
-    expect(settings.permissions.deny).toContain("Bash(gh *)");
+    expect(
+      bashAllows.some((rule) =>
+        /git (push|reset|checkout|commit|add|clean)|rm |gh /.test(rule.replace("git rm *", "")),
+      ),
+    ).toBe(false);
+    expect(bashAllows).not.toContain("Bash(rm *)");
+    expect(bashAllows).not.toContain("Bash(*)");
+    for (const rule of [
+      "Bash(git push *)",
+      "Bash(gh *)",
+      "Bash(git rm -r *)",
+      "Bash(git rm -f *)",
+      "Bash(git rm --force *)",
+      "Bash(git mv -f *)",
+    ]) {
+      expect(settings.permissions.deny).toContain(rule);
+    }
+  });
+
+  it("keeps protected configuration Edit denied", () => {
+    expect(settings.permissions.deny).toContain("Edit(.specdojo/**)");
+    expect(settings.permissions.deny).toContain("Edit(.claude/**)");
   });
 });
