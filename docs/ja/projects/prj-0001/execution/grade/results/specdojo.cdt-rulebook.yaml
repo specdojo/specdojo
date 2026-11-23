@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/cdt-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 100
-graded_at: "2026-11-10T20:27:58.185Z"
-graded_by: flash-high-executor
-content_hash: 03780b07382e457fbe2d5336c6fe463f656e0d02cd0f75430272fdcb21e4f189
+score: 94
+graded_at: "2026-11-23T05:07:12.249Z"
+graded_by: opus-review-executor
+content_hash: fc1a7661f33b895a818ce4efe5c803eccb78d13a47add198b29cab78318d1bc1
 categories:
   purpose:
     score: 100
@@ -17,15 +17,15 @@ categories:
   planning:
     score: 100
   business:
-    score: 100
+    score: 92
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 83
   implementation:
-    score: 100
+    score: 88
   quality:
-    score: 100
+    score: 92
   consistency:
     score: 100
 viewpoints:
@@ -51,8 +51,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-stakeholder-clarity:
     level: 4
     score: 100
@@ -60,8 +60,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -69,8 +69,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-change-impact:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-testability:
     level: 4
     score: 100
@@ -81,14 +81,14 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -104,6 +104,64 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 6
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 52
+    anchor: "| 正本参照（SSOT） | スキーマのパスと定義位置、型のパスと識別子、動的分類の管理元、または「なし（スタンドアロン定義）」 |"
+    message: >-
+      分類種別「コード表」（外部連携の識別体系）について、正本が外部の標準規格やコード体系にある場合の正本参照の書き方（規格名・版・取得元）が 5.1 と 6.2
+      のどちらにもないため、参照方式に追加するか、対象外と明記する必要がある。
+    message_ja: >-
+      分類種別「コード表」（外部連携の識別体系）について、正本が外部の標準規格やコード体系にある場合の正本参照の書き方（規格名・版・取得元）が 5.1 と 6.2
+      のどちらにもないため、参照方式に追加するか、対象外と明記する必要がある。
+  - id: F002
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 100
+    anchor: "- **推奨表**: `値`（コード）、`分類名`（正式名称）、`表示名`（利用者向け名称）、`説明・成立条件`（選定条件）。"
+    message: 6.3.2 の推奨表の列（値・分類名・表示名・説明・成立条件）が 5.2 のスタンドアロンの必須内容と重なっているため、どちらかに集約して参照へ置き換え、二重管理を避ける。
+    message_ja: 6.3.2 の推奨表の列（値・分類名・表示名・説明・成立条件）が 5.2 のスタンドアロンの必須内容と重なっているため、どちらかに集約して参照へ置き換え、二重管理を避ける。
+  - id: F003
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 120
+    anchor: "3. **変更影響**: BDD・用語・画面・業務ルール・関連実装の利用箇所を辿り、意味・表示に不整合がないことを確認する。未解消の不一致は論点と影響を実行結果に残す。"
+    message: >-
+      分類を変更・廃止したときの追従対象（BDD・用語・画面・業務ルール・実装）は挙げているが、記述標準が rulebook に求める追従の役割分担（担当 Role code）がないため、追従を担う Role code
+      を示す必要がある。
+    message_ja: >-
+      分類を変更・廃止したときの追従対象（BDD・用語・画面・業務ルール・実装）は挙げているが、記述標準が rulebook に求める追従の役割分担（担当 Role code）がないため、追従を担う Role code
+      を示す必要がある。
+  - id: F004
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 38
+    anchor: "| 概要                     | ○    | 業務目的、対象エンティティ、適用範囲、誰がどの判断に使うかを示す                                    |"
+    message: >-
+      概要の要件「誰がどの判断に使うかを示す」が記述標準の「どの利用場面で何を判断するための文書か」とずれており、sample
+      の主担当ロールに文書作成・確認の役割（BA・QE）が書かれているため、業務上の選定主体に限ると明記して、文書の役割割り当てを求めない表現に直す必要がある。
+    message_ja: >-
+      概要の要件「誰がどの判断に使うかを示す」が記述標準の「どの利用場面で何を判断するための文書か」とずれており、sample
+      の主担当ロールに文書作成・確認の役割（BA・QE）が書かれているため、業務上の選定主体に限ると明記して、文書の役割割り当てを求めない表現に直す必要がある。
+  - id: F005
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 60
+    anchor: "| スタンドアロン | 値・分類名・表示名・説明と成立条件を定義する。表示名が分類名と同じならその旨を示す              |"
+    message: スタンドアロンの要件「表示名が分類名と同じならその旨を示す」を sample の商品区分（表示名＝分類名）が満たしていないため、sample をこの要件に合わせるか、同一の場合は表示名列を省略できるなど要件を見直す必要がある。
+    message_ja: スタンドアロンの要件「表示名が分類名と同じならその旨を示す」を sample の商品区分（表示名＝分類名）が満たしていないため、sample をこの要件に合わせるか、同一の場合は表示名列を省略できるなど要件を見直す必要がある。
+  - id: F006
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 57
+    anchor: "| 定義方式       | 必須内容                                                                                        |"
+    message: >-
+      「定義方式」（5.2）と「参照方式」（6.2）の 2
+      語が説明なしに並んでいる。さらに「動的分類」が分類種別と方式の両方に出てくるため、「分類種別と参照方式は別に判断する」と食い違って読めるので、語を統一するか関係を明記する必要がある。
+    message_ja: >-
+      「定義方式」（5.2）と「参照方式」（6.2）の 2
+      語が説明なしに並んでいる。さらに「動的分類」が分類種別と方式の両方に出てくるため、「分類種別と参照方式は別に判断する」と食い違って読めるので、語を統一するか関係を明記する必要がある。

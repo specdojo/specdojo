@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/ifx-file-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 91
-graded_at: "2026-11-23T04:04:56.218Z"
+score: 90
+graded_at: "2026-11-23T05:08:29.326Z"
 graded_by: opus-review-executor
-content_hash: 4c400ae1888916ef51dd34a7afb37d359f50f11a275e4d6fa21a6110d5cbcba2
+content_hash: 0241eaf01b7764c59e76fdb63ebdc4bcde343734cbc747e9d33ae75ba504cfd0
 categories:
   purpose:
     score: 100
@@ -23,7 +23,7 @@ categories:
   usability:
     score: 92
   implementation:
-    score: 100
+    score: 88
   quality:
     score: 83
   consistency:
@@ -69,8 +69,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-change-impact:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-testability:
     level: 3
     score: 75
@@ -104,7 +104,7 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 4
+  minor: 6
   note: 0
 findings:
   - id: F001
@@ -124,6 +124,19 @@ findings:
       の使い分けも、3.1 の 3 項目めとの重複を整理してください。
   - id: F002
     severity: minor
+    rule: vp-dev-change-impact
+    line: 238
+    anchor: "## 8. 運用ルール"
+    message: >-
+      rulebook-authoring-standard と document-metadata-standard は具体的な追従対象と役割分担を各 rulebook
+      で定めるよう求めていますが、本書は改訂・廃止を上位標準へ委ねるだけで、ifx-file の変更・廃止時に追従させる対象（ifx-index の spec_ref、参照元の ifx-cmd、schema_ref
+      の正本、reader・writer の実装とテスト）と担当 Role code を定めていません。運用ルールに追従対象を列挙してください。
+    message_ja: >-
+      rulebook-authoring-standard と document-metadata-standard は具体的な追従対象と役割分担を各 rulebook
+      で定めるよう求めていますが、本書は改訂・廃止を上位標準へ委ねるだけで、ifx-file の変更・廃止時に追従させる対象（ifx-index の spec_ref、参照元の ifx-cmd、schema_ref
+      の正本、reader・writer の実装とテスト）と担当 Role code を定めていません。運用ルールに追従対象を列挙してください。
+  - id: F003
+    severity: minor
     rule: vp-dev-testability
     line: 242
     anchor: >-
@@ -137,7 +150,7 @@ findings:
       Add runnable formatting and YAML-validation commands with target-path placeholders, expected exit codes, and
       correction/retry instructions; explain how metadata declaration checking is invoked when the no-ifx-file-schema
       modeline skips structural validation.
-  - id: F003
+  - id: F004
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 147
@@ -150,7 +163,7 @@ findings:
     message_ja: >-
       5.6 の 3 項目めで代替として挙げる `schema.schema_ref` は、5.1・5.2 の表と 1.2 のどこにも定義がありません。`schema.references`
       も型（オブジェクトのキーと値か、配列か）と要素の構造が定義されていません。参照キーを一つに統一するか、型と使い分けを表に追加してください。
-  - id: F004
+  - id: F005
     severity: minor
     rule: vp-qe-kata-conformance
     line: 1
@@ -165,3 +178,18 @@ findings:
       requires samples to use the deliverable format and rulebook-authoring-standard ties sample extensions to
       target_format. Align the canonical sample format or document an authorized exception in the governing standards;
       alternate-format resolver support does not reconcile the written requirements.
+  - id: F006
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 242
+    anchor: >-
+      1. **一覧・正本との照合**: `ifx-index` の `spec_ref` と `x-spec-meta.id` が一致し、`schema_ref` / `references`
+      の参照先が実在して、`files[].required_fields` が正本の必須項目と矛盾しないことを確かめます。欠落や不一致が 1 件でもあれば不合格とし、正本に合わせて直します。
+    message: >-
+      8.1 と「位置づけ」の ID の対応は ifx-index の spec_ref と x-spec-meta.id の一致を例外なく求めていますが、sample の ifx-file-kinuya-sales-evidence
+      は ifx-index に登録せず CLI 仕様から辿る契約として示されており、照合手順では不合格になります。ifx-index に登録しないファイル契約（CLI
+      内部の状態・証跡ファイルなど）の可否と、そのときの照合先（参照元の仕様）を rulebook に定めるか、sample を ifx-index に登録する形に揃えてください。
+    message_ja: >-
+      8.1 と「位置づけ」の ID の対応は ifx-index の spec_ref と x-spec-meta.id の一致を例外なく求めていますが、sample の ifx-file-kinuya-sales-evidence
+      は ifx-index に登録せず CLI 仕様から辿る契約として示されており、照合手順では不合格になります。ifx-index に登録しないファイル契約（CLI
+      内部の状態・証跡ファイルなど）の可否と、そのときの照合先（参照元の仕様）を rulebook に定めるか、sample を ifx-index に登録する形に揃えてください。

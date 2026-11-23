@@ -1,0 +1,142 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:ifx-cmd-template
+path: docs/ja/specdojo/templates/ifx-cmd-template.yaml
+target: kata
+rubric: grade-rubric-v2
+verdict: pass
+score: 94
+graded_at: "2026-11-23T05:11:08.229Z"
+graded_by: opus-review-executor
+content_hash: 1836d1175ea6a18786aea431e155abe2e5ee39eb5d0158cc167bf0ae8928e9bd
+categories:
+  purpose:
+    score: 100
+  operations:
+    score: 94
+  planning:
+    score: 100
+  business:
+    score: 100
+  architecture:
+    score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
+  quality:
+    score: 92
+  consistency:
+    score: 75
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 3
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 84
+    anchor: "# 制約は根拠に従って埋める。未決定なら現在動作・必要な判断・確認先をコメント等に残す。"
+    message: >-
+      未決定の制約の残し方が「コメント等に残す」だけで、rulebook と recipe が定める共通ラベル `_UNDECIDED_` を示していないため、`_UNDECIDED_`
+      で現在動作・必要な判断・確認先を残すよう記入指示を揃えるべきである。
+    message_ja: >-
+      未決定の制約の残し方が「コメント等に残す」だけで、rulebook と recipe が定める共通ラベル `_UNDECIDED_` を示していないため、`_UNDECIDED_`
+      で現在動作・必要な判断・確認先を残すよう記入指示を揃えるべきである。
+  - id: F002
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 36
+    anchor: "encoding: UTF-8"
+    message: >-
+      stdin の `encoding: UTF-8` が固定値のため、stdin を使わない連携（sample の `mode: none` / `format: none`）でも文字コードが宣言されたまま残り sample
+      と食い違う。stdin を使わない場合は `encoding` を省略する旨のコメントを添えるか、プレースホルダにすべきである。
+    message_ja: >-
+      stdin の `encoding: UTF-8` が固定値のため、stdin を使わない連携（sample の `mode: none` / `format: none`）でも文字コードが宣言されたまま残り sample
+      と食い違う。stdin を使わない場合は `encoding` を省略する旨のコメントを添えるか、プレースホルダにすべきである。
+  - id: F003
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 8
+    anchor: "status: ready"
+    message: >-
+      テンプレートが `status: ready` だが、`metadata_template.rulebook` で参照する `specdojo:ifx-cmd-rulebook` が `status: draft`
+      のままで、依拠する rulebook より先に ready 化している。rulebook の ready 化と順序を揃えるか、未確定の前提を明示すべきである。
+    message_ja: >-
+      テンプレートが `status: ready` だが、`metadata_template.rulebook` で参照する `specdojo:ifx-cmd-rulebook` が `status: draft`
+      のままで、依拠する rulebook より先に ready 化している。rulebook の ready 化と順序を揃えるか、未確定の前提を明示すべきである。
