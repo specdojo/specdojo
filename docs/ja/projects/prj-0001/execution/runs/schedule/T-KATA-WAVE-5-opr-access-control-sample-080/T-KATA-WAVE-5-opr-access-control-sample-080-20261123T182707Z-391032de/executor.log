@@ -1,0 +1,10 @@
+対象文書の冗長な 2 箇所を直しました。`opr-access-control-sample.md` だけを編集しています。静的検査はまだ実行していません。`lint-md` などは親 runner が実行します。
+
+- **セクション 12 の導入文:** 「本書に分冊はなく、移行・切替の計画とは連携しない」を削除しました。同じ内容が表の「計画」行（移行・切替の計画は初期リリースで扱わない）にあるためです。
+- **セクション 9.2 の導入文:** 「不正な付与として差異の是正で扱う」を「「差異の是正」で扱う」に短くしました。承認のない付与の扱いはセクション 9.5 に書いてあるため、導入文では参照にとどめています。
+
+セクション 1 末尾の「なし／`opr-index` 参照」の注記は、rulebook が求める構成に関わるため残しました。理由は他の `retain` 候補と同じく、`condense_records` の `reason` に書いています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"2 箇所の冗長さを修正（表と本文の二重説明の削除・参照化）。意味は維持。","handoff":[],"validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する allowlist 検査"}],"condense_records":[{"location":"12. 関連ドキュメント導線 導入文","category":"table-prose","action":"delete","reason":"「分冊なし・移行計画と連携しない」は表の「計画」行と重複するため削除。意味は表に残る","cause":{"type":"document"}},{"location":"9.2. 付与・区分の変更・剥奪 導入文","category":"repetition","action":"reference","reason":"承認のない付与の扱いは 9.5 差異の是正に記載済みのため、参照に短縮","cause":{"type":"document"}},{"location":"1. 概要 末尾の「なし／opr-index 参照」注記","category":"canonical-restatement","action":"retain","reason":"rulebook の章構成運用に必要な記載規則で、判断に要る","cause":{"type":"document"}}]}
+</specdojo_executor_evidence>
