@@ -6,7 +6,7 @@ status: ready
 title: 外部システムI/F一覧テンプレート
 rulebook: none
 metadata_template:
-  id: _PROJECT_ID_:_LOCAL_ID_
+  id: _LOCAL_ID_
   type: api
   title: _DELIVERABLE_NAME_
   status: draft
