@@ -1,0 +1,126 @@
+---
+specdojo:
+  id: prj-0001:xep-t-kata-wave-6-project-pm-issue-log-sample-060-20261123t082639z-4f1dbe6b
+  type: exec-plan
+  rulebook: none
+  task_id: T-KATA-WAVE-6-PROJECT-pm-issue-log-sample-060
+  name: "template を rulebook に合わせる"
+  mode: edit
+  status: ready
+  project_id: prj-0001
+  owner: PM
+  approach: template-maintenance
+  targets:
+    - specdojo:pm-issue-log-sample
+    - specdojo:pm-issue-log-template
+---
+
+# Edit Plan: T-KATA-WAVE-6-PROJECT-pm-issue-log-sample-060
+
+## 1. このフェーズで行うこと
+
+直した rulebook と厚くした sample に沿って template を同期する。骨組みに責務を絞り、必須の章・項目・表の列名をそろえ、説明や完成例を写さない。rulebook と sample はこの段で変更しない。template が not-needed・undecided なら変更せず、その旨を result に書いて完了する。
+PJR-76N9 の決まりに従い、文書の役割の割り当てと承認の進み具合の記入欄を置かない。RACI・体制など、文書の中身として役割を扱う型は対象外とする。
+
+## 2. 根拠となる成果物と編集対象
+
+根拠となる成果物:
+
+- `name`: 課題ログの完成例
+- `depends_on`:  -
+- `overview`: 駄菓子屋の販売管理システムを題材に、課題ログの完成例を示す
+- `path`: `docs/ja/specdojo/samples/pm-issue-log-sample.md`
+- `result`: `docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-pm-issue-log-sample-060/T-KATA-WAVE-6-PROJECT-pm-issue-log-sample-060-20261123T082639Z-4f1dbe6b/result.md`
+
+編集対象（rulebook frontmatter の template 宣言から解決）:
+
+- `kind`: template
+- `path`: `docs/ja/specdojo/templates/pm-issue-log-template.md`
+- `state`: `existing`
+
+`existing` は既存文書を編集し、`missing` は宣言されたパスへ新規作成する。`unresolved` は宣言からパスを解決できない状態であり、命名規則から推測して作成せず異常終了する。
+
+## 3. owner ロールとしての記述ポイント
+
+frontmatter の `owner` に記載された role の視点で成果物を記述する。owner ロールの責務と、そのロールが重視するレビュー観点は次のとおり。
+
+- owner role: **PM（Project Manager）**
+- 責務: 参考資料整備と成果物作成の計画・進捗・課題・リスクを管理する。小規模運用では専任化せず、実行主体は pm-members.yaml で管理する。
+
+このロールが重視するレビュー観点:
+
+- 計画化可能性: 成果物の内容がタスク化、順序付け、所要時間見積もり、進捗確認に使える粒度になっているか。
+- 依存関係・リスク・課題化: 後続成果物、Schedule、PJR に影響する依存、リスク、課題、変更要求が識別されているか。
+- 管理・報告への接続: 進捗、課題、リスク、変更要求、決定記録へ転記すべき事項が分離されているか。
+
+## 4. 進め方
+
+参照の向きを「成果物 → template」に切り替え、対象成果物に紐づく template を「見直す対象」として編集する。根拠となる成果物・review result・対象領域の慣行に加え、finding が指す規範も実際に読み込んだうえで判断する。読み込まずに記憶や推測で代替しない。
+
+### grade result から展開された finding
+
+- F001 \[major/vp-po-purpose-alignment; line=1; anchor=`"# 課題ログ"`\]: `このテンプレートは、マテリアライズされた課題を追跡するための作成用テンプレートを提供するのではなく、PJRチケットから生成されたビューとして定義されており、その本来の目的から逸脱しています。`
+- F002 \[major/vp-po-decision-readiness; line=1; anchor=`"# 課題ログ"`\]: `このテンプレートには、決定ポイント、保留中の課題、およびPO評価のためのエスカレーション基準を記録するためのプレースホルダーやガイダンスが不足しています。`
+- F003 \[major/vp-pm-plan-feasibility; line=1; anchor=`"# 課題ログ"`\]: `このテンプレートには、タスクの分解、役割の割り当て、解決の期限、または完了条件に関する構造やガイダンスがありません。`
+- F004 \[major/vp-pm-dependency-risk; line=1; anchor=`"# 課題ログ"`\]: `このテンプレートには、依存関係、スケジュールの影響、またはリスクレジスターへのリンクを特定するためのセクションやガイダンスが含まれていません。`
+- F005 \[major/vp-pm-control-reporting; line=1; anchor=`"# 課題ログ"`\]: `このテンプレートには、進捗の追跡、ステータス更新のルール、および報告のエスカレーションパスのためのフィールドやセクションが不足しています。`
+- F006 \[major/vp-ba-business-value; line=1; anchor=`"# 課題ログ"`\]: `このテンプレートには、ビジネスへの影響、何もしなかった場合のリスク、および課題解決の期待値を記録するための構造やガイダンスが不足しています。`
+- F007 \[major/vp-ba-requirements-completeness; line=1; anchor=`"# 課題ログ"`\]: `このテンプレートには、解決要件、受け入れ基準、および課題の範囲を定義するためのプレースホルダーやガイダンスが不足しています。`
+- F008 \[major/vp-ba-stakeholder-clarity; line=1; anchor=`"# 課題ログ"`\]: `このテンプレートには、課題のオーナー、影響を受けるステークホルダー、またはレビューアーを特定するためのフィールドやガイダンスがありません。`
+- F009 \[minor/vp-arc-technical-constraints; line=5; anchor=`"<!-- specdojo:view-slot=table -->"`\]: ``このテンプレートは、技術的な制約、ジェネレーターのツール、または構文ルールを指定せずに、カスタムスロット `＜!— specdojo:view-slot=table —＞` に依存しています。``
+- F010 \[major/vp-dev-implementation-readiness; line=1; anchor=`"# 課題ログ"`\]: `このテンプレートは、課題ログを作成するために必要な実行可能な入力フィールド、スキーマ構造、またはプレースホルダーを提供できていません。`
+- F011 \[major/vp-qe-verifiability; line=1; anchor=`"# 課題ログ"`\]: `このテンプレートには、課題を解決するための検証可能な完了条件および客観的な合否基準が不足しています。`
+- F012 \[blocker/vp-qe-omissions-consistency; line=1; anchor=`"# 課題ログ"`\]: `rulebook で必須とされている 6 つの構成章（概要、課題ログ一覧、優先度と期限、対応計画、進捗レビュー、関連ドキュメント）がすべて欠落している。`
+- F013 \[blocker/vp-qe-kata-conformance; line=3; anchor=``"> このファイルは各 `pjr-XXXX-<topic>.md`（個票）から生成された派生ビューです。正本は個票の Frontmatter であり、このファイルは再生成可能です。"``\]: `rulebook で定義された構成を無視し, 自動生成ビューとしての定義となっているため, 作成用テンプレートとしての責務を果たしていない。`
+- F014 \[major/vp-qe-kata-conformance; line=1; anchor=`"# 課題ログ"`\]: ``Frontmatter の rulebook ID が `specdojo:pjr-rulebook` となっており, 正しくは `specdojo:pm-issue-log-rulebook` である。``
+- F015 \[major/vp-qe-kata-conformance; line=3; anchor=``"> このファイルは各 `pjr-XXXX-<topic>.md`（個票）から生成された派生ビューです。正本は個票の Frontmatter であり、このファイルは再生成可能です。"``\]: `本文中で文書を「派生ビュー」と定義しているが, 対応する rulebook および sample では手動作成の構造化文書として定義されており, 成果物間の整合性が取れていない。`
+- F016 \[major/vp-ux-readability; line=1; anchor=`"# 課題ログ"`\]: `べきある構成要素や入力ガイド（_TODO_ 等）が一切なく, 初見の読者が rulebook に沿って内容を記述するための手段が提供されていない。`
+- F017 \[minor/vp-ux-language-consistency; line=3; anchor=``"> このファイルは各 `pjr-XXXX-<topic>.md`（個票）から生成された派生ビューです。正本は個票の Frontmatter であり、このファイルは再生成可能です。"``\]: `Terminology such as '派生ビュー' and '個票' introduces confusion by departing from the standard issue log vocabulary defined in the rulebook.`
+- F018 \[major/vp-ops-release-readiness; line=1; anchor=`"# 課題ログ"`\]: `このテンプレートは、使用に適さない重大なブロッカーとなる欠陥を含んでいるにもかかわらず、ステータスが 'ready' とマークされています。`
+- F019 \[minor/vp-ops-operability; line=3; anchor=``"> このファイルは各 `pjr-XXXX-<topic>.md`（個票）から生成された派生ビューです。正本は個票の Frontmatter であり、このファイルは再生成可能です。"``\]: `このドキュメントには再生成可能である旨が記載されていますが、再生成を実行するための操作コマンドや手順が提供されていません。`
+
+### 成果物から届いた Kata が原因の finding
+
+- なし
+
+各記録の `source=grade` / `source=condense` を確認する。grade は成果物・行・viewpoint・内容、condense は result・修正前の場所・種類・直し方・理由を読み、`cause.location` と照合して、見直し対象の Kata の該当箇所を確認する。この節の condense の記録も Kata の見直しの根拠とし、判定は `vp-arc-conciseness` を参照する。以下の手順は、この節と Kata そのものの grade の finding に適用する。
+
+1. 見直し対象の template を読み込み、現状の章構成の骨組みとプレースホルダの配置・網羅性を把握する。
+2. plan に展開された finding は severity にかかわらず、message と同じ viewpoint ID の判定根拠を修正要件として読み取る。message と判定根拠から指摘の根拠となる規範を特定し、対象 template の frontmatter から辿れる rulebook / recipe / sample、該当する執筆標準のうち必要な文書を読み、指摘された問題を解消するよう該当箇所を修正する。
+3. 修正後、各 finding の問題が判定根拠に照らして解消したことを確認する。未解消、根拠不足、または判断不能の finding は、理由と次のアクションを result の `進め方と実践の型の適用` セクションに記録する。grade result サイドカーは再評価時に更新されるため、本タスクでは直接編集しない。
+4. 複数の成果物・review result・対象領域の慣行を根拠に、それらが成果物作成の開始点として適切かを見直す。
+5. 成果物間で共通する定型部分は雛形の本文に取り込み、成果物ごとに内容が異なる部分は _TODO_ などのプレースホルダとして配置する。
+6. 既存記述のうち、根拠と整合しない・陳腐化したものは見直し、整合するものは維持する。
+
+finding の修正後は、再評価で構造・整合性が劣化していないことを確認する。
+
+見直した template は [[specdojo:template-authoring-standard]]（構成・プレースホルダ規約・禁止事項の正本）に従う。rulebook / recipe / sample と記述が矛盾しないように更新する（構造・必須項目・禁止事項は rulebook を正とする）。
+
+approach 全体の定義は [[specdojo:ryu-guide]] の「実践の型メンテナンスの進め方」を参照する。本タスクの実行に必要な template メンテナンスの進め方は、このセクションで完結する。
+
+### 4.1. 見直しの根拠が不足する場合
+
+- finding の message と判定根拠、対象 template から辿れる rulebook / recipe / sample、該当する執筆標準、利用可能な成果物・review result・対象領域の慣行を確認しても改訂を判断できない場合に限り、根拠不足として見送る。成果物または review result がないことだけを理由に見送らない。
+- 見送る場合は、確認した資料、判断できなかった理由、不足している根拠、次のアクションを result の `進め方と実践の型の適用` セクションに記録する。
+- 根拠不足のまま推測で template を改訂しない。確証が得られた範囲に改訂を限定し、残りは申し送りに残す。
+- 見直し対象の template が存在しない場合は、根拠とした成果物群から新規に作成する。
+
+### 4.2. 判断根拠の記録
+
+見直しの根拠とした規範・成果物・review result と判断根拠を result に残す。記録先は次のとおり。
+
+- 根拠とした規範・成果物・review result、改訂・維持した記述とその根拠、矛盾時に rulebook を正とした箇所: result の `進め方と実践の型の適用` セクション。
+
+## 5. 完了手順
+
+1. 「このフェーズで行うこと」に従って template を更新する。
+2. 共通規約に従って、必要な整形・静的検査を実行する。
+3. result の `実施内容`・`変更ファイル`・`進め方と実践の型の適用` セクションを記入する。これはタスク完了に必須であり、_TODO_ を残したまま終了しない（詳細は共通規約を参照）。
+
+## 6. 異常終了の条件
+
+- 依存未解決・対象ファイル不明・lint/test 未解消の場合は異常終了する（終了コード 1）。
+- 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
+- agent 自身は claim / complete / reopen / block を記録せず、終了コードと標準エラー出力で runner に結果を返す。
+
+`共通規約 sha256:e7dd6ff2a0dec2f12ed4ffc905cd185aca2d6f9c3922c56a249c88cb45b2a14e` `docs/ja/projects/prj-0001/execution/conventions/e7dd6ff2a0dec2f12ed4ffc905cd185aca2d6f9c3922c56a249c88cb45b2a14e.txt`
