@@ -62,4 +62,5 @@ rulebook と sample の 142 文書を、11-21 の判定と 11-23 時点の最新
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- 追跡先: 第 4〜6 波の epic（PJR-HJ3H・PJR-JZ2F・PJR-G1M8・PJR-SBGQ・PJR-PYS2）と PJR-CPA8。
+- 根拠: `execution/grade/results/` の run `regrade-kata-2026-11-21` と、その後の各型の grade の結果。

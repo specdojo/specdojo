@@ -77,3 +77,16 @@
       from: ""
       to: フォローアップ
   previous_event_id: reg_4a974ff9aad040bb969d74e752a17e71
+- v: 1
+  id: reg_605f58ba8e7e4d0d9f5f6472306ac942
+  ts: "2026-11-23T13:52:00Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 追跡先と根拠を記録した
+  changes:
+    - field: section
+      from: ""
+      to: 関連ドキュメント
+  previous_event_id: reg_02af863f0c464150851c440565f995de
