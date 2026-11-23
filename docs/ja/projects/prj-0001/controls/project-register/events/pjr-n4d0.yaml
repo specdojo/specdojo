@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_6dd35ce953a34a6b9ef4516b6746c083
+  ts: "2026-11-23T00:36:16Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: OpenFisca-Japan の作業（利用側の prj-0001）で見つけた
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 同じ項目を何回か流すと、プロダクトの commit のタイトルがすべて同じになる
+    - field: description
+      from: ""
+      to: --force-restart や --resume で同じ項目を流し直すたびに、プロダクトの commit の 1 行目が項目のタイトルのままになり、履歴で回ごとの変更を区別できない。push の前に利用者が rebase の reword で直す必要がある
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-23"

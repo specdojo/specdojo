@@ -1,0 +1,59 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_6260055c07554689867d5ea21d3ccd95
+  ts: "2026-11-23T00:25:59Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: Dependabot が示す依存の脆弱性 17 件を直す
+    - field: description
+      from: ""
+      to: docs-site の vite・esbuild と、各パッケージの minimatch・glob・katex を直る版まで上げる。大半は docs:dev の dev サーバーの問題で、vite を 6.4.4 にすると 8 件が直る
+    - field: input
+      from: ""
+      to: '["2026-11-23 の push で GitHub が 17 件（high 1・medium 13・low 3）を示した。一覧は gh api repos/specdojo/specdojo/dependabot/alerts で取れる","docs:dev は --host 0.0.0.0 で起動するため、同じネットワークから dev サーバーに届く"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: commit_type
+      from: ""
+      to: build
+    - field: commit_scope
+      from: ""
+      to: deps
+- v: 1
+  id: reg_f3ba197f19674115a0e839c0ce48d113
+  ts: "2026-11-23T00:26:07Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_6260055c07554689867d5ea21d3ccd95

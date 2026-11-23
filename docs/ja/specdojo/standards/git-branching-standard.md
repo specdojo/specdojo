@@ -26,16 +26,18 @@ SpecDojo Unit を管理するリポジトリで、プロジェクト単位の変
 
 ## 3. ブランチの種類と命名
 
-| 種類             | 命名パターン                   | 必須 | 分岐元                     | 統合先                     | 管理主体         |
-| ---------------- | ------------------------------ | ---- | -------------------------- | -------------------------- | ---------------- |
-| 安定統合         | `main`                         | ○    | -                          | -                          | リポジトリ管理者 |
-| プロジェクト統合 | `project/<project-id>/develop` | ○    | `main`                     | `main`                     | プロジェクト     |
-| feature          | `feature/<project-id>/<topic>` | ○    | 対象 project の `develop`  | 対象 project の `develop`  | 人               |
-| exec             | `exec/<project-id>-<task-id>`  | ○    | 実行時の project `develop` | 実行時の project `develop` | SpecDojo CLI     |
+| 種類             | 命名パターン                    | 必須          | 分岐元                     | 統合先                     | 管理主体         |
+| ---------------- | ------------------------------- | ------------- | -------------------------- | -------------------------- | ---------------- |
+| 安定統合         | `main`                          | ○             | -                          | -                          | リポジトリ管理者 |
+| プロジェクト統合 | `project/<project-id>/develop`  | ○             | `main`                     | `main`                     | プロジェクト     |
+| feature          | `feature/<project-id>/<topic>`  | ○             | 対象 project の `develop`  | 対象 project の `develop`  | 人               |
+| exec             | `exec/<project-id>-<task-id>`   | ○             | 実行時の project `develop` | 実行時の project `develop` | SpecDojo CLI     |
+| register         | `project/<project-id>/register` | 複数人運用で○ | `develop`                  | `develop`（一方向）        | SpecDojo CLI     |
 
 - `<project-id>` は対象プロジェクトの ID と一致させます。
 - `<topic>` は英小文字、数字、ハイフンを使い、変更の目的を識別できる名前にします。
 - `<task-id>` は対象 schedule task の ID から機械的に導出します。
+- register ブランチは、複数人運用で register の記帳を共有するための専用ブランチです。置くもの、書き手、統合方向は `4.1. developへ入る3層の変更経路` と `4.2. 運用規模ごとの必須条件` に従います。
 - 既存の `feature/<topic>` は進行中の作業が完了するまで使用できます。新規作成する feature には project ID を含めます。
 
 ### 3.1. 対話型 agent の常設 worktree
@@ -55,6 +57,8 @@ main
 └─ project/<project-id>/develop
    ├─ feature/<project-id>/<topic>
    └─ exec/<project-id>-<task-id>
+
+project/<project-id>/register ──(一方向 merge)──> project/<project-id>/develop
 ```
 
 | 操作                                     | 判定基準                                                                  |
@@ -73,13 +77,22 @@ main
 
 project `develop` へ入る変更は、変更の作成主体と事前レビューの要否により次の3層へ分けます。
 
-| 層  | 変更の種類                                                    | 作業ブランチ                   | `develop` への統合方法                                      |
-| --- | ------------------------------------------------------------- | ------------------------------ | ----------------------------------------------------------- |
-| 1   | SpecDojo exec が task 単位で自動実行する変更                  | `exec/<project-id>-<task-id>`  | 統合専用 actor が `--no-ff` で merge し、保護を bypass する |
-| 2   | 人または対話型 agent が内容を書いた実装、設定、規範・設計文書 | `feature/<project-id>/<topic>` | Pull Request で差分の承認を得てから merge する              |
-| 3   | register の起票・close・状態遷移と、それに伴う生成物の再構築  | project `develop`              | 統合専用 actor による直接 commit を許容する                 |
+| 層  | 変更の種類                                                    | 作業ブランチ                                                               | `develop` への統合方法                                                                                |
+| --- | ------------------------------------------------------------- | -------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| 1   | SpecDojo exec が task 単位で自動実行する変更                  | `exec/<project-id>-<task-id>`                                              | 単独運用は runner が `--no-ff` で merge する。複数人運用は Pull Request で統合する                    |
+| 2   | 人または対話型 agent が内容を書いた実装、設定、規範・設計文書 | `feature/<project-id>/<topic>`                                             | Pull Request で差分の承認を得てから merge する                                                        |
+| 3   | register の起票・close・状態遷移と、schedule の実行のイベント | 単独運用は project `develop`、複数人運用は `project/<project-id>/register` | 単独運用は直接 commit する。複数人運用は register ブランチへ push し、`develop` へ一方向に merge する |
 
 層2と層3の境界は、変更内容に事前レビューの価値があるかで判断します。実装、設定、本文、判断内容のようにレビューで誤りを発見できる変更は、コマンドで生成・記録した場合でも層2です。層3は、既に決まった実行事実を register へ記帳するだけで、内容の判断を伴わない変更に限定します。記帳と内容変更が同じ作業に含まれる場合は、全体を層2として扱います。
+
+複数人運用の層3は、次の方式で扱います（PJR-2TX0 の決定。PJR-11EX の統合専用 actor の方式は置き換えられました）。
+
+- register ブランチは `project/<project-id>/register` とし、リモートを正本とします。
+- register ブランチに置くものは、登録簿の個票とイベント（`controls/project-register/`）と、schedule の実行のイベント（`execution/exec/events/` の claim・complete など）です。run の記録と grade の結果は exec の成果と組で生まれるため `develop` 側に残します。
+- runner は、状態の遷移（start・review・waiting など）と対応結果を register ブランチへ直接書いて push します。exec ブランチには個票の変更を含めません。agent が exec の worktree に書いた対応結果は、統合の段で register ブランチへ写します。
+- register ブランチは `develop` へ一方向に merge し、`develop` では register のファイルを直接変えません（hook と CI で止めます）。個票を読む文書の wikilink、文書サイトの build、`exec plan` は `develop` のファイルを読むため変わりません。
+- `register ... --commit` は commit に続けて register ブランチへ push し、non-fast-forward のときは `pull --rebase` して push し直します。CI は push のたびに記録の形と schema を検査し、register の範囲の外のファイルを含む commit を止めます。
+- 別のプロジェクトから `external_projects` で specdojo へ起票する場合も、register ブランチへ push する経路になります。`develop` へ直接 push しません。
 
 層3を例外にできるのは、register ID が連番ではなく乱数で採番され、index と view の生成物が `.gitignore` で Git 管理対象外になっており、Git 管理する実体が項目単位の個票と event に分かれているためです。これらの前提が成立しない register や、同じ正本ファイルを複数人が更新する記帳には例外を適用せず、層2として扱います。
 
@@ -89,14 +102,14 @@ exec に流す `todo` の個票と実行に必要な記帳は、実行前に pro
 
 3層の分類、feature と exec の分岐元・統合先、および exec 対象を事前に `develop` へ入れる制約は、運用規模にかかわらず適用します。運用基盤に関する条件は次のように区別します。
 
-| 条件                                                | 単独運用                                                                                                                                        | 複数人・複数 actor 運用                                                                        |
-| --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| 層2の統合レビュー                                   | 作成者と独立した承認者が参加していない期間は、ローカルの差分確認と `--no-ff` merge を Pull Request の代替にできる。リモートの有無では判断しない | Pull Request を必須とし、作成者以外が参加できるレビュー単位を `develop` へ入る前に作る         |
-| project `develop` の branch protection              | 省略できる                                                                                                                                      | 必須。人の直接 push、force-push、削除を禁止する                                                |
-| 統合専用 actor                                      | 作業者と分離できない場合は省略できる                                                                                                            | 必須。exec の merge と層3の直接 commit だけに bypass を許可し、人の層2変更には使わない         |
-| feature を切る前の project `develop` のリモート反映 | リモートや Pull Request を使わない場合は省略できる                                                                                              | 必須。ローカル先端を push し、リモートの `develop` と一致することを確認してから feature を切る |
+| 条件                                                | 単独運用                                                                                                                                        | 複数人・複数 actor 運用                                                                                                |
+| --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| 層2の統合レビュー                                   | 作成者と独立した承認者が参加していない期間は、ローカルの差分確認と `--no-ff` merge を Pull Request の代替にできる。リモートの有無では判断しない | Pull Request を必須とし、作成者以外が参加できるレビュー単位を `develop` へ入る前に作る                                 |
+| project `develop` の branch protection              | 省略できる                                                                                                                                      | 必須。人の直接 push、force-push、削除を禁止する                                                                        |
+| register ブランチ                                   | 使わず、層3の記帳を project `develop` へ直接 commit する今の方式でよい                                                                          | 必須。層3の記帳は register ブランチへ push し、`develop` へ一方向に merge する。人の直接 push は register の範囲に限る |
+| feature を切る前の project `develop` のリモート反映 | リモートや Pull Request を使わない場合は省略できる                                                                                              | 必須。ローカル先端を push し、リモートの `develop` と一致することを確認してから feature を切る                         |
 
-単独運用から複数人・複数 actor 運用へ移る前に、統合専用 actor と branch protection を準備します。準備できない猶予期間は単独運用の条件を複数人運用へ流用せず、対象、理由、期間、復帰条件を project register に記録します。
+単独運用の間は、層3の記帳を `develop` へ直接 commit する今の方式でよいです。複数人・複数 actor 運用へ移る準備（register ブランチの作成、CLI と runner の対応、hook と CI。PJR-2TX0 の後続の項目）が終わってから、既定を register ブランチへ切り替えます。移る前に branch protection と register ブランチを準備します。準備できない猶予期間は単独運用の条件を複数人運用へ流用せず、対象、理由、期間、復帰条件を project register に記録します。
 
 ### 4.3. developからmainへの昇格方式
 
@@ -135,7 +148,7 @@ git log --first-parent --oneline main
 - 複数プロジェクトを並行する場合、main worktree の現在ブランチによるベース自動判定だけに依存せず、対象 project の `develop` を指定します。
 - `main` には branch protection を設定し、直接 push を禁止し、Pull Request と最低 1 名の承認、必須 CI の成功を merge 条件にします。
 - GitHub のリポジトリ設定では merge commit だけを許可し、squash merge と rebase merge を無効にします。これは Pull Request 画面で誤った昇格方式を選べないようにするサーバ側の設定です。
-- 複数人・複数 actor 運用の `project/<project-id>/develop` には branch protection を設定します。人または対話型 agent が内容を書いた feature は Pull Request を必須とし、exec の merge と register の記帳だけは統合専用 actor による bypass を許可します（承認ゲートの適用範囲は `承認ゲートと PR 強制条件` を参照）。
+- 複数人・複数 actor 運用の `project/<project-id>/develop` には branch protection を設定します。人または対話型 agent が内容を書いた feature は Pull Request を必須とし、exec の成果も Pull Request で統合し、bypass を許可する actor は置きません。register の記帳は register ブランチで扱い、`develop` へは一方向の merge で入ります（承認ゲートの適用範囲は `承認ゲートと PR 強制条件` を参照）。
 - 承認者は `CODEOWNERS` で宣言し、branch protection の "Require review from Code Owners" で強制します。`main` はリポジトリ管理者、各 project の承認対象は当該 project の承認権限者（PO / CCB）を owner に割り当てます。
 
 ### 5.1. mainへの直接pushを防ぐ防護柵
