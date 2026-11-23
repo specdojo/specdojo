@@ -86,6 +86,13 @@ import {
 import { specdojoRootDir } from "../shared/specdojo-config.js";
 import { registerLifecyclePoolPath } from "./lifecycle-lock.js";
 import { inCrossProjectWorktree, resolveCrossProjectMutationTarget } from "./cross-project.js";
+import {
+  assertRegisterBranchPaths,
+  inRegisterBranch,
+  pushRegisterBranch,
+  resolveRegisterBranchTarget,
+  type RegisterBranchTarget,
+} from "../shared/register-branch.js";
 
 export {
   PJR_ID_ALPHABET,
@@ -256,7 +263,7 @@ function addRegisterCommitOptions(cmd: Command): Command {
   return cmd
     .option(
       "--commit",
-      "Take the register lifecycle lock, rebuild views, and commit only this command's changes",
+      "Lock, rebuild views, and commit this command's changes; push when register_sync is enabled",
       false,
     )
     .option(
@@ -459,6 +466,30 @@ export async function runRegisterMutationInCurrentWorktree(
   mutate: (context: RegisterMutationContext) => RegisterMutationResult,
   requireCleanRegister = false,
 ): Promise<void> {
+  const target =
+    opts.commit && !opts.dryRun
+      ? resolveRegisterBranchTarget(resolveRegisterPaths(opts).projectId)
+      : undefined;
+  if (!target) return runRegisterMutationLocally(command, opts, mutate, requireCleanRegister);
+  await inRegisterBranch(target, async (worktree) => {
+    const originalDirectory = process.cwd();
+    try {
+      process.chdir(worktree);
+      await runRegisterMutationLocally(command, opts, mutate, true, target);
+      pushRegisterBranch(target, worktree);
+    } finally {
+      process.chdir(originalDirectory);
+    }
+  });
+}
+
+async function runRegisterMutationLocally(
+  command: string,
+  opts: RegisterMutationOptions,
+  mutate: (context: RegisterMutationContext) => RegisterMutationResult,
+  requireCleanRegister: boolean,
+  syncTarget?: RegisterBranchTarget,
+): Promise<void> {
   const paths = resolveRegisterPaths(opts);
   if (!opts.commit || opts.dryRun) {
     mutate({ paths, assertCommitTargetsClean: () => undefined });
@@ -501,6 +532,7 @@ export async function runRegisterMutationInCurrentWorktree(
     // an ownership boundary for this commit.
     const assertCommitTargetsClean = (targets: readonly string[]): void => {
       const relativeTargets = targets.map((target) => repoRelative(repoRoot, target));
+      if (syncTarget) assertRegisterBranchPaths(syncTarget, relativeTargets);
       const overlapping = relativeTargets.filter((target) => preexisting.has(target));
       if (overlapping.length === 0) {
         relativeTargets.forEach((target) => commitTargets.add(target));

@@ -139,6 +139,9 @@ export function resolveCrossProjectMutationTarget(
   if (configuredCurrentProject(config, branchNow) === projectId) return undefined;
 
   assertCrossProjectMutationAllowed(command, projectId, opts.commit);
+  // The dedicated register route resolves/fetches its own branch. Preserve the cross-project
+  // add-only policy without requiring a local develop branch for that route.
+  if (project.register_sync?.enabled) return undefined;
   requireLocalBranch(repoRoot, projectId, branch);
   return { projectId, branch };
 }
