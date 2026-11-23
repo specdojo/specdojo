@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-WAVE-6-NOTATION-cxd-sample-050",
   "run_id": "T-KATA-WAVE-6-NOTATION-cxd-sample-050-20261123T060205Z-6aea9f75",
-  "updated_at": "2026-11-23T06:20:29.634Z",
+  "updated_at": "2026-11-23T06:21:22.569Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-NOTATION-cxd-sample-050/T-KATA-WAVE-6-NOTATION-cxd-sample-050-20261123T060205Z-6aea9f75/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-23T06:20:29.634Z",
-      "completed_at": null,
+      "completed_at": "2026-11-23T06:21:22.569Z",
       "artifact_ref": null
     }
   },
