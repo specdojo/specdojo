@@ -159,4 +159,5 @@ Business Process Specification Writing Recipe
 - 導入文の起点・業務成果と、トリガー・出力の内容が一致している。
 - トリガーから業務成果または代替成果まで、どの分岐でも途切れない。
 - 出力の各成果と、主要例外がある場合は各例外が、受入観点のいずれかの行で確かめられる。主要例外がない場合は、確かめた範囲と結論がある。
+- ファイル名・Frontmatter の `id`・`type`・`rulebook` が rulebook の「ファイル命名・ID規則」と「推奨 Frontmatter 項目」に一致し、`npm run lint:md` と `npm run lint:fm` が通る。
 - 個人情報、秘密情報、非公開の組織情報を含めていない。

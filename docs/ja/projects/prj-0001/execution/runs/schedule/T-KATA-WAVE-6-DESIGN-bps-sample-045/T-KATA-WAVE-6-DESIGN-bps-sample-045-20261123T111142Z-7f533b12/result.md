@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-DESIGN-bps-sample-045
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-DESIGN-bps-sample-045/T-KATA-WAVE-6-DESIGN-bps-sample-045-20261123T111142Z-7f533b12/plan.md
   started_at: "2026-11-23T11:11:52.310Z"
+  completed_at: "2026-11-23T16:16:17.053Z"
   agent: opus-executor
   execution: agent
   approach: recipe-maintenance
@@ -20,16 +21,18 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- grade の finding F001（minor）に対応し、`bps-recipe` の「仕上げチェック」に、ファイル名と Frontmatter の確認項目を1行追加した。
+- rulebook の完成判定と照合した。recipe 内の「承認」は業務の流れの中の判断であり、PJR-76N9 の対象外と判断した。
+- 上記以外の記述は rulebook と矛盾しないため維持した。rulebook と sample は変更していない。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/recipes/bps-recipe.md`: 「仕上げチェック」に1行追加した。ファイル名と Frontmatter の `id`・`type`・`rulebook` が rulebook の「ファイル命名・ID規則」「推奨 Frontmatter 項目」に一致し、`npm run lint:md` と `npm run lint:fm` が通ることを確かめる項目である。rulebook の規則は再掲せず、参照だけにしている。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- grade result のサイドカーは再評価時に更新されるため直接編集していない。F001 の解消は再評価で確認する。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+根拠は grade の finding F001、rulebook の完成判定、recipe 執筆標準である。F001 は、rulebook が完成判定で求めるファイル名と Frontmatter の一致確認が仕上げチェックに欠けているという指摘だった。そこで、rulebook の章を名指しで参照する1行を追加し、規則の本文は再掲しなかった。PJR-76N9 については、recipe に文書の役割割り当てや承認の進み具合を書かせる問いや手順がないことを確かめた。「承認」は業務プロセス内の判断を指すので対象外とした。それ以外の記述は rulebook と整合するため維持した。矛盾はなく、rulebook を正とする判断が必要な箇所はなかった。根拠不足で見送った finding はない。
