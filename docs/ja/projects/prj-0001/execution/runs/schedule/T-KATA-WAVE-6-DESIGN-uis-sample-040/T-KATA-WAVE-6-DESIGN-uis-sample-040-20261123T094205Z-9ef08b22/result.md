@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-DESIGN-uis-sample-040
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-DESIGN-uis-sample-040/T-KATA-WAVE-6-DESIGN-uis-sample-040-20261123T094205Z-9ef08b22/plan.md
   started_at: "2026-11-23T09:42:17.340Z"
+  completed_at: "2026-11-23T09:53:16.884Z"
   agent: opus-executor
   execution: agent
   approach: rulebook-maintenance
@@ -20,16 +21,18 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- uis-rulebook を修正し、grade による指摘事項（F001〜F004）をすべて解消しました。
+- 「共通の運用」セクションにおいて、改訂時の変更追従対象（画面索引、接続先画面の遷移と受け渡し情報、実装、受入条件、および担当 Role code）を具体的に明記しました。
+- 「バリデーション」の判断基準から、失敗時の保持状態（前の値の保持など）に関する記述を削除し、代わりに「エラー表示と利用者の次の手」の章を参照する形式に変更しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/rulebooks/uis-rulebook.md`: 「共通の運用」に改訂時の追従対象（画面索引、接続先画面の遷移と受け渡し情報、実装、受入条件、担当 Role code）を追加し、また「バリデーション」の判断基準から保持状態に関する記述を削除してエラー章への参照に修正しました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- なし
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+「全体方針」に、変更時に追従すべき対象（画面索引・接続先画面の遷移と受け渡し情報・受入条件・実装・担当 Role code）を追記しました。また、「バリデーション」の項目において、失敗時の保持状態に関する記述を削除し、エラー時の振る舞いについては別途「エラー表示と利用者の次の手」の章を正本とすることを明記しました。これにより、状態に関する記述の重複を解消し、rulebook の簡潔性と一貫性を向上させました。指摘のなかった箇所については変更を行っていません。

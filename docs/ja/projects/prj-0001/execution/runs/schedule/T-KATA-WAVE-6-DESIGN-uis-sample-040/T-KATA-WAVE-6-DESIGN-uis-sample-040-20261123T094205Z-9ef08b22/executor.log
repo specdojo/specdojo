@@ -1,0 +1,18 @@
+uis rulebook（`docs/ja/specdojo/rulebooks/uis-rulebook.md`）を直し、grade の指摘 4 件（F001〜F004）をすべて解消しました。Prettier のチェックと markdownlint はどちらもエラーなしです。
+
+**F001・F003（改訂時の追従先が分からない）**
+- 「全体方針」に「改訂時の追従」の項目を足しました。
+- 表示項目・操作・遷移・入力の条件・回復を変えたときや画面を廃止するときに確認するものを並べています。所属する画面索引、当該画面へ出入りする他画面の遷移と受け渡し情報、受入条件、実装の 4 つです。
+- 担当は、画面仕様と画面索引が UX、受入条件が QE、実装が DEV としました。共通標準の規則は言い直していません。
+
+**F002・F004（保持状態を書く章が 2 か所に分かれていた）**
+- 「本文要件」の表で、バリデーションの記述要件を「違反時の扱い」から「対応エラー」に変えました。
+- 記述ガイドの判断基準を、対応するエラー名を示し、保持される状態はエラーの章に置く、という書き方に改めました。
+- 良い例は「数量形式・範囲不正」というエラー名を示す形にしました。
+- sample のバリデーション表はもともと「対応エラー」列の形なので、今回の変更と食い違いません。
+
+grade の指摘がない箇所は書き換えていません。sample・recipe・template は変更していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"uis-rulebook を修正し F001〜F004 を解消した。全体方針に改訂時の追従（画面索引・接続先画面の遷移と受け渡し情報・受入条件・実装と担当 UX/QE/DEV）を追加し、バリデーションは対応エラー名を示す要件に改めて保持状態はエラーの章を正とした。指摘以外の箇所は変更していない。","handoff":[],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/uis-rulebook.md","status":"passed","summary":"Prettier の整形チェックで差分なし"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/uis-rulebook.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>
