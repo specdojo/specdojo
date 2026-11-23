@@ -1,0 +1,11 @@
+dry-run のテストを直し、該当テストが通ることを確認しました。
+
+dry-run の行のタイトルは、登録簿の一覧ではなく個票の H1 から読まれていました。前回の fixture 変更は一覧の `pjr-index.md` を書き換えていたため、効いていませんでした。今回は `pjr-ab12-pipeline-test.md` の H1 を `pipeline\_test item` に書き換えるようにしました。`unescapeMarkdownCell` を使うコードは変えていません。出力が `pipeline_test item` になることを検証しています。
+
+実行したのは該当テスト1件だけです。`register-pipeline-e2e.integration.test.ts` の全件は流していません。直前の全件実行では、このテスト1件だけが落ちていました（53 件は通過）。
+
+「ほかにエスケープ付きのタイトルを期待するテストがないか」の `rg` 探索は、この再開では行っていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"dry-run の期待値テストが使う fixture を、一覧ではなく個票の H1 を `pipeline\\_test` に書き換える形へ直した。該当テストは通った。","handoff":["`register-pipeline-e2e.integration.test.ts` の全件は再実行していない。全件の確認は親 runner の `npm run test:integration` に任せる。","エスケープ付きタイトルを期待する他のテストを探す `rg` 探索は、この再開では実施していない。"],"validations":[{"command":"npx vitest run --config vitest.integration.config.ts tests/src/exec/register-pipeline-e2e.integration.test.ts -t \"per-item --executor-by assignments in dry-run\"","status":"passed","summary":"1 passed, 53 skipped"}],"target_coverage":[{"target":"src/exec/run/register-core.ts","status":"changed","path":"src/exec/run/register-core.ts"}]}
+</specdojo_executor_evidence>

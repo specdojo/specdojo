@@ -1480,6 +1480,12 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
           buildTicket("PJR-CD34"),
           "utf8",
         );
+        const ticketPath = join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md");
+        writeFileSync(
+          ticketPath,
+          readFileSync(ticketPath, "utf8").replace("pipeline test item", "pipeline\\_test item"),
+          "utf8",
+        );
         const stdout: string[] = [];
         vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
           stdout.push(String(chunk));
@@ -1508,6 +1514,7 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
 
         const dryRunOutput = stdout.join("");
         expect(dryRunOutput).toMatch(/PJR-AB12[\s\S]*executor: exec-1/);
+        expect(dryRunOutput).toContain("[dry-run] register item: PJR-AB12 — pipeline_test item");
         expect(dryRunOutput).toMatch(/PJR-CD34[\s\S]*executor: exec-claude-protected-write/);
         expect(process.exitCode ?? 0).toBe(0);
 
