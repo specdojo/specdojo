@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-DESIGN-mm-sample-040
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-DESIGN-mm-sample-040/T-KATA-WAVE-6-DESIGN-mm-sample-040-20261123T123721Z-59f7e799/plan.md
   started_at: "2026-11-23T12:37:30.854Z"
+  completed_at: "2026-11-23T16:46:24.548Z"
   agent: opus-executor
   execution: agent
   approach: rulebook-maintenance
@@ -20,16 +21,22 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- 議事録の rulebook `mm-rulebook.md` を、grade の指摘（F001〜F021）と plan の方針に沿って簡潔に整えた。本文要件を表にまとめ、記述ガイドに判断の基準と良い例・悪い例を加え、禁止事項を判定できる形にし、個票と進捗報告への引き継ぎとファイル名の必須化を明記した。
+- sample・recipe・template は変更していない。executor の検査では prettier と markdownlint が成功し、runner の `lint:md:changed`、`lint:fm:changed`、`lint:mermaid`、`lint:d2`、`test:docs`、`validate:schema` も成功した。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/rulebooks/mm-rulebook.md`: 議事録の rulebook を簡潔に書き直した（38 行追加、21 行削除）。本文構成を、章ごとの目的を示す本文要件の表にした。記述ガイドには章ごとの判断の基準と良い例・悪い例を加えた。禁止事項は客観的に判定できる書き方にした。ファイル名の規則は必須とし、議事録から個票と進捗報告へ引き継ぐ事項も明記した。完成例の章は置かず、完成例は sample に任せている。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 再評価の grade で、F001〜F021 が解消したか確認してほしい。executor が見送った指摘の理由は、上記の executor の申し送りにある。
+- F009: 文書の承認者を書かせる要件は PJR-76N9 の決まりで追加していない（決定者は記載必須のまま）。承認と留保は登録簿の個票で追う。
+- F004 の一部: アクションの状態の列は必須にしていない。現在の mm-sample に状態の列がないため。進み具合は進捗報告で追う。
+- F011, F013: 議事録はツールで生成する対象ではない。lint の手順は共通の手順書が正本なので rulebook には書いていない。
+- F002, F005, F021: 未決事項・リスク・改訂の担当は rulebook 本文には書かず、frontmatter と登録簿で扱う。改訂時の追従は、ファイル名と ID を変えない規定（F012 への対応）で一部カバーした。
+- 適用外の検証: `npm run validate:history-links`（changed file is a rulebook, not a plan/result/pjr history file）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+rulebook-maintenance の進め方に従い、grade の finding を根拠に `mm-rulebook.md` だけを見直した。実装・schema・リファレンスと同じことを書かない方針を保ち、値や構文の詳細は正本を参照する形にした。PJR-76N9 の決まりに従い、文書の承認者や役割の割り当てを求める記述は追加していない。承認と留保は登録簿の個票で追う。F004 の状態列は、現在の sample に状態の列がないため必須にしなかった。F011 と F013 は、議事録がツールで生成する対象ではなく、lint の手順は共通の手順書が正本であるため、rulebook に書いていない。
