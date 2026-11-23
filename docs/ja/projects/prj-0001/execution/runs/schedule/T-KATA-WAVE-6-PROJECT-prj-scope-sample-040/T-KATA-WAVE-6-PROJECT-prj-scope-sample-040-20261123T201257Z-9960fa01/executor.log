@@ -1,0 +1,24 @@
+`prj-scope-rulebook.md` を更新して、grade の指摘 7 件（F001〜F007）をすべて rulebook 側で直しました。prettier と markdownlint は通っています。その他の検査は親 runner が実行するので、ここでは走らせていません。変更したのは `docs/ja/specdojo/rulebooks/prj-scope-rulebook.md` の 1 ファイルだけで、sample・recipe・template は触っていません。
+
+| 指摘 | 直した内容 |
+| --- | --- |
+| F001 | 禁止事項に「個人名・連絡先などの個人情報や非公開情報」の行を足しました。 |
+| F002 | スケジュールやマイルストーンを期間の根拠にするときは本文から参照するだけとし、`based_on` には含めないと書きました（後続文書への逆依存を防ぐため）。 |
+| F003 | 記述ガイド「共通」の「後続文書へ委譲」の行を消し、禁止事項を参照する一文にまとめました。 |
+| F004 | 「粒度を揃えます」を判定できる基準に置き換えました。対象システムの各行は対象業務のどれかを支えるものとし、どの対象業務も支えない行は置きません。禁止事項の行も同じ基準にしました。 |
+| F005 | スコープ変更方針の箇条書きと空の推奨表を「項目・書く内容」の表 1 つにまとめ、影響を受ける成果物は「影響評価」の行に含めました。 |
+| F006 | 本文構成に「H1 直下の導入文は任意。置く場合は何の境界を定める文書かを 1 文で書く」と定めました。 |
+| F007 | 「対象外」を「スコープ外」に揃え、全体方針で表の列名「対象（Out）」も同じ意味だと書きました。 |
+
+このほか plan の指示に合わせて、対象業務とスコープ外の記述ガイドに、駄菓子屋の題材で良い例と悪い例を 1 つずつ足しました。
+
+スコープ変更方針の「承認者」は残しています。文書そのものの承認役割ではなく、スコープ変更の手続きの中身なので、PJR-76N9 の対象外と判断しました。見出しはもともと H3 までで、完成例の章もないので手を入れていません。
+
+sample・template はこの段では変えないので、次の 2 点を申し送りに回します。
+
+- template の 5 章・6 章（境界の判断基準・スコープ変更方針）が任意だと template に書かれていません。template 側で示す必要があります。
+- template は導入文を `_TODO_` で求めていますが、rulebook では任意にしました。template の書き方をこれに合わせるかどうかの判断が残っています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"prj-scope-rulebook.md を grade の指摘 F001〜F007 に沿って簡潔に整えた（禁止事項に個人情報の行を追加、based_on の扱いを明記、委譲の重複を削除、粒度を判定できる基準に置換、変更方針の表を統合、導入文を任意と規定、用語をスコープ外に統一、良い例と悪い例を追加）。sample・recipe・template は変更していない。","handoff":["F006: template の章 5（境界の判断基準）・章 6（スコープ変更方針）が任意だと template に示されていない。template 側で任意性を示す改訂が必要。","F006: rulebook では H1 直下の導入文を任意と定めた。template は導入文を `_TODO_` で求めているため、任意であることを示すかどうかを template の段で判断する（sample は導入文なしのままで rulebook と整合）。","F005: 影響を受ける成果物は推奨表の「影響評価」行に統合した。sample の影響評価の行に影響成果物の記載を足すかは sample の段で判断する。","PJR-76N9: スコープ変更方針の「承認者」は文書の承認役割ではなくスコープ変更の手続きの中身として残した。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/rulebooks/prj-scope-rulebook.md","status":"passed","summary":"変更した rulebook を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/prj-scope-rulebook.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更は rulebook のみで、plan・result・個票を変更していないため"}]}
+</specdojo_executor_evidence>
