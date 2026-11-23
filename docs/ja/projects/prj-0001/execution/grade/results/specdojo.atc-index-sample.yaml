@@ -5,10 +5,10 @@ path: docs/ja/specdojo/samples/atc-index-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 97
-graded_at: "2026-11-22T04:49:05.014Z"
+score: 93
+graded_at: "2026-11-23T01:56:24.675Z"
 graded_by: opus-review-executor
-content_hash: 06cc2c15279dd362e2a9815fc999fd34725b4e4e94a02ebaa83e6965bd7aaf83
+content_hash: 07a6d4f02a81bcad76149b00016881148ba484ec07770a469599c188cd83580e
 categories:
   purpose:
     score: 100
@@ -27,7 +27,7 @@ categories:
   quality:
     score: 92
   consistency:
-    score: 100
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -75,8 +75,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
     level: 3
     score: 75
@@ -101,10 +101,21 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 2
+  minor: 3
   note: 0
 findings:
   - id: F001
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 75
+    anchor: "| 運用可能性       | 迷った操作を引継ぎメモと取引番号から店主代表が後で確認できる       | `取引照合の保証`   | `atc-cash-sale`、`atc-sale-hold` |"
+    message: >-
+      受入観点の立て方の表で `取引照合の保証` の「主に立てる term」に `atc-cash-sale`・`atc-sale-hold` の2つを並べており、分配方針の「同じ観点を複数の term
+      で主担当にしない」と食い違って読める。主担当を1つに絞って他方は従担当とするか、分配表に `取引照合の保証` の行を足して主担当と従担当を明示する必要がある。
+    message_ja: >-
+      受入観点の立て方の表で `取引照合の保証` の「主に立てる term」に `atc-cash-sale`・`atc-sale-hold` の2つを並べており、分配方針の「同じ観点を複数の term
+      で主担当にしない」と食い違って読める。主担当を1つに絞って他方は従担当とするか、分配表に `取引照合の保証` の行を足して主担当と従担当を明示する必要がある。
+  - id: F002
     severity: minor
     rule: vp-qe-kata-conformance
     line: 100
@@ -113,7 +124,7 @@ findings:
       | 測定記録は両 term とも同じ項目で残す          |
     message: 分配表の観点名「主要操作の自力完了」が、rulebook と本書の受入観点の立て方で定めた「名詞＋成立/保証/整合」の命名規則に従っていないため、`主要操作の自力完了の成立` などに直し、規則と完成例を一致させる必要がある。
     message_ja: 分配表の観点名「主要操作の自力完了」が、rulebook と本書の受入観点の立て方で定めた「名詞＋成立/保証/整合」の命名規則に従っていないため、`主要操作の自力完了の成立` などに直し、規則と完成例を一致させる必要がある。
-  - id: F002
+  - id: F003
     severity: minor
     rule: vp-ux-language-consistency
     line: 18

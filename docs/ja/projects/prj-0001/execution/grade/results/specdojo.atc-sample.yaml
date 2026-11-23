@@ -4,16 +4,16 @@ document: specdojo:atc-sample
 path: docs/ja/specdojo/samples/atc-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 96
-graded_at: "2026-11-22T06:55:11.379Z"
+verdict: pass
+score: 97
+graded_at: "2026-11-23T01:55:35.095Z"
 graded_by: opus-review-executor
-content_hash: 5632702a32e81831c2ab8460078a2049170eae6fe006f1d39de1a006d35da7ca
+content_hash: 8868d59b69e763661ea0b0e6f504bfe156c4137d2b516cc57627e068ff76068b
 categories:
   purpose:
     score: 100
   operations:
-    score: 88
+    score: 100
   planning:
     score: 100
   business:
@@ -90,8 +90,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ops-operability:
     level: 4
     score: 100
@@ -103,7 +103,7 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
+  major: 0
   minor: 1
   note: 0
 findings:
@@ -121,12 +121,3 @@ findings:
     message_ja: >-
       概要で引用する atc-index の分割基準が「商品の登録→会計確定→レシートの受け渡し」となっており、atc-index
       の「商品の登録→金額の提示→会計確定→レシートの受け渡し」から「金額の提示」が抜けているため、正本どおりに揃えるか参照だけにする必要がある。
-  - id: F002
-    severity: major
-    rule: vp-ops-release-readiness
-    line: 43
-    anchor: >-
-      | _ASSUMPTION_: 確定前の取消の期待結果         | `at-cash-sale-sale-complete-020`                                       |
-      業務受入条件に取消の条件がないため、`atc-index` の分割判断を根拠に測る | BA が取消の業務受入条件の追加を PM へ PJR 登録候補として渡し、PO が承認する。承認後に QE がトレースを差し替える |
-    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
-    message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。

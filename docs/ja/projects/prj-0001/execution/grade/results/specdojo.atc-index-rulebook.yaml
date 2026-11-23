@@ -5,8 +5,8 @@ path: docs/ja/specdojo/rulebooks/atc-index-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 100
-graded_at: "2026-11-22T04:50:11.738Z"
+score: 98
+graded_at: "2026-11-23T01:44:37.548Z"
 graded_by: opus-review-executor
 content_hash: e527371d241a46e5794da8cf56b0e6c42560d48158086f6a94686b03814527c7
 categories:
@@ -25,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 92
   consistency:
     score: 100
 viewpoints:
@@ -78,8 +78,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -101,7 +101,7 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 1
+  minor: 2
   note: 0
 findings:
   - id: F001
@@ -111,3 +111,10 @@ findings:
     anchor: 未決事項がある場合、論点と受入判断への影響（当面の扱い、決定時に変わる方針）を記録します。例は証跡の保存形式、代表構成の見直し、自動化の範囲です。確定した内容は該当章へ移し、本節に残しません。
     message: 「メモ / 将来課題」の記述条件が論点と影響だけで、担当 Role code と判断期限（または判断タイミング）を求めていない。未決事項をタスクにして追跡できるよう、サンプルの「担当・期限」列と同じく記載を必須にする。
     message_ja: 「メモ / 将来課題」の記述条件が論点と影響だけで、担当 Role code と判断期限（または判断タイミング）を求めていない。未決事項をタスクにして追跡できるよう、サンプルの「担当・期限」列と同じく記載を必須にする。
+  - id: F002
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 77
+    anchor: "- 1〜2 ケースだけの単位は原則統合します。50 ケース以上、または別の業務成果が混在する単位は分割候補とします。"
+    message: 分割候補の閾値が rulebook では「50 ケース以上」、sample では「50件を超えた」となっており、ちょうど50件の扱いが Kata 内で一致しない。どちらかに揃え、境界の扱いを一意にする。
+    message_ja: 分割候補の閾値が rulebook では「50 ケース以上」、sample では「50件を超えた」となっており、ちょうど50件の扱いが Kata 内で一致しない。どちらかに揃え、境界の扱いを一意にする。

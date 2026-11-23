@@ -5,36 +5,36 @@ path: docs/ja/specdojo/samples/ifx-msg-sample.yaml
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 86
-graded_at: "2026-11-22T14:42:24.502Z"
+score: 92
+graded_at: "2026-11-23T01:38:45.629Z"
 graded_by: opus-review-executor
-content_hash: c8547b25ad57ae1b95eeff3bc3b694c0e0996b71a97c68df809a83fb0d43d691
+content_hash: 99062efce596b26a7774efff9d1472715b85baa81d764ee97f14f77480e2a867
 categories:
   purpose:
-    score: 75
+    score: 100
   operations:
     score: 100
   planning:
-    score: 92
+    score: 100
   business:
-    score: 75
+    score: 88
   architecture:
     score: 100
   usability:
-    score: 83
-  implementation:
-    score: 88
-  quality:
-    score: 75
-  consistency:
     score: 100
+  implementation:
+    score: 100
+  quality:
+    score: 83
+  consistency:
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-publication-accountability:
     level: 4
     score: 100
@@ -42,8 +42,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
     level: 4
     score: 100
@@ -51,8 +51,8 @@ viewpoints:
     level: 3
     score: 75
   vp-ba-stakeholder-clarity:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
     level: 4
     score: 100
@@ -63,29 +63,29 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-change-impact:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-verifiability:
     level: 3
     score: 75
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
     level: 3
     score: 75
   vp-ux-readability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -101,107 +101,46 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 11
+  minor: 4
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-purpose-alignment
-    line: 3
-    anchor: "info:"
-    message: "`info` に `description` がなく、在庫変更イベントをどの外部システム（物流・会計など）へ何の目的で通知するかが書かれていないため、連携先と目的を1〜2文で追記して必要性を説明できるようにする。"
-    message_ja: "`info` に `description` がなく、在庫変更イベントをどの外部システム（物流・会計など）へ何の目的で通知するかが書かれていないため、連携先と目的を1〜2文で追記して必要性を説明できるようにする。"
+    rule: vp-ba-requirements-completeness
+    line: 87
+    anchor: "description: 対象識別子（任意）"
+    message: >-
+      順序保証の単位として14行で使う `subject` が任意で書式の制約もないため、`required` に加えて `pattern`（例 `^product/PROD-[0-9]{4}$`）で `product_id`
+      との対応を固定するか、順序の単位を `data.product_id` に改める。
+    message_ja: >-
+      順序保証の単位として14行で使う `subject` が任意で書式の制約もないため、`required` に加えて `pattern`（例 `^product/PROD-[0-9]{4}$`）で `product_id`
+      との対応を固定するか、順序の単位を `data.product_id` に改める。
   - id: F002
     severity: minor
-    rule: vp-po-decision-readiness
-    line: 22
-    anchor: "channels:"
-    message: チャネル定義に配信保証・順序保証・重複受信時の扱い（`id` による冪等処理など）の記述がなく、外部との合意で判断すべき論点が読み取れないため、`description` などで前提か未決事項として明示する。
-    message_ja: チャネル定義に配信保証・順序保証・重複受信時の扱い（`id` による冪等処理など）の記述がなく、外部との合意で判断すべき論点が読み取れないため、`description` などで前提か未決事項として明示する。
+    rule: vp-qe-verifiability
+    line: 15
+    anchor: 購読者は `source` と `id` の組で重複を捨て、同じ商品で `time` が古いイベントは無視する。
+    message: 古いイベントを捨てる判定の「同じ商品」が任意の `subject` と `data.product_id` のどちらで決まるか分からず、`subject` のないイベントの扱いを判定できないため、比べる単位の項目を明記する。
+    message_ja: 古いイベントを捨てる判定の「同じ商品」が任意の `subject` と `data.product_id` のどちらで決まるか分からず、`subject` のないイベントの扱いを判定できないため、比べる単位の項目を明記する。
   - id: F003
     severity: minor
-    rule: vp-pm-dependency-risk
-    line: 12
-    anchor: "based_on: []"
-    message: "`based_on: []` が空で、rulebook が定める ESIL（外部システムIF一覧）の `spec_ref` との対応や根拠仕様の例が示されていないため、参照関係が読み取れる例を入れるか、空である理由を示す。"
-    message_ja: "`based_on: []` が空で、rulebook が定める ESIL（外部システムIF一覧）の `spec_ref` との対応や根拠仕様の例が示されていないため、参照関係が読み取れる例を入れるか、空である理由を示す。"
+    rule: vp-qe-omissions-consistency
+    line: 39
+    anchor: "在庫数が変わった通知。発行者: 店舗端末の在庫管理。購読者: 本部の在庫集計。"
+    message: >-
+      rulebook の本文要件はチャネルの `description` に発生の契機を求めているが、sample では販売の確定・仕入れの登録・棚卸しの訂正が
+      `info.description`（13行）にしかないため、チャネルの `description` にも発生の契機を書くか、rulebook 側で置き場所を `info.description` に揃える。
+    message_ja: >-
+      rulebook の本文要件はチャネルの `description` に発生の契機を求めているが、sample では販売の確定・仕入れの登録・棚卸しの訂正が
+      `info.description`（13行）にしかないため、チャネルの `description` にも発生の契機を書くか、rulebook 側で置き場所を `info.description` に揃える。
   - id: F004
     severity: minor
-    rule: vp-ba-requirements-completeness
-    line: 79
-    anchor: "required: [product_id, delta, current_quantity]"
-    message: >-
-      `StockChangedData` に `current_quantity` の下限（`minimum: 0` など）や `product_id` の書式（`subject` 例の `PROD-0001`
-      との対応）がなく、受け手が値の妥当性を確認できないため、制約を追記する。
-    message_ja: >-
-      `StockChangedData` に `current_quantity` の下限（`minimum: 0` など）や `product_id` の書式（`subject` 例の `PROD-0001`
-      との対応）がなく、受け手が値の妥当性を確認できないため、制約を追記する。
-  - id: F005
-    severity: minor
-    rule: vp-ba-stakeholder-clarity
-    line: 25
-    anchor: "subscribe:"
-    message: >-
-      `subscribe` の意味（AsyncAPI 2.x ではこのアプリケーションが発行し外部が購読する）と発行者・購読者が書かれておらず、rulebook の「方向を明確にする」を満たしきれないため、`description`
-      に発行元と受信者を明示する。
-    message_ja: >-
-      `subscribe` の意味（AsyncAPI 2.x ではこのアプリケーションが発行し外部が購読する）と発行者・購読者が書かれておらず、rulebook の「方向を明確にする」を満たしきれないため、`description`
-      に発行元と受信者を明示する。
-  - id: F006
-    severity: minor
-    rule: vp-dev-implementation-readiness
-    line: 68
-    anchor: "example: application/json"
-    message: >-
-      `datacontenttype` は rulebook で `application/json` と定められているのに `example` だけで示されており、他の値も許容されると誤読されるため、`enum:
-      ["application/json"]` か `const` で固定する。
-    message_ja: >-
-      `datacontenttype` は rulebook で `application/json` と定められているのに `example` だけで示されており、他の値も許容されると誤読されるため、`enum:
-      ["application/json"]` か `const` で固定する。
-  - id: F007
-    severity: minor
-    rule: vp-dev-testability
-    line: 1
-    anchor: "# specdojo-schema: none reason=external-asyncapi"
-    message: >-
-      `specdojo-schema: none` で schema 検証の対象外になっているが、代わりの AsyncAPI 検証（AsyncAPI CLI の validate
-      など）が示されず、必須キーの欠落を検出できないため、検証手段を rulebook か sample のコメントで示す。
-    message_ja: >-
-      `specdojo-schema: none` で schema 検証の対象外になっているが、代わりの AsyncAPI 検証（AsyncAPI CLI の validate
-      など）が示されず、必須キーの欠落を検出できないため、検証手段を rulebook か sample のコメントで示す。
-  - id: F008
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 62
-    anchor: "description: イベントID"
-    message: "`id` の `description` が「イベントID」だけで、rulebook の「重複しない」という条件（`source` と組み合わせて一意など）が判定条件として示されていないため、一意性の範囲を明記する。"
-    message_ja: "`id` の `description` が「イベントID」だけで、rulebook の「重複しない」という条件（`source` と組み合わせて一意など）が判定条件として示されていないため、一意性の範囲を明記する。"
-  - id: F009
-    severity: minor
     rule: vp-qe-kata-conformance
-    line: 8
-    anchor: "id: specdojo:ifx-msg-sample"
+    line: 26
+    anchor: "- specdojo:ifx-index-sample"
     message: >-
-      rulebook の「メタ情報（x-spec-meta）」は `id` を `ifx-msg-...` と定めているが、sample は `specdojo:ifx-msg-sample`
-      で、形式の違いが説明されていないため、rulebook に sample の id の例外を記すか sample にコメントで補足する。
+      `based_on` の `specdojo:ifx-index-sample` にはこの連携の行がなく（4行）、rulebook が `info.description` に求める `ifx-index`
+      の連携名も書けていないため、ifx-index-sample に在庫変更通知の行を足して連携名を `info.description` に入れるか、rulebook に sample の例外として記す。
     message_ja: >-
-      rulebook の「メタ情報（x-spec-meta）」は `id` を `ifx-msg-...` と定めているが、sample は `specdojo:ifx-msg-sample`
-      で、形式の違いが説明されていないため、rulebook に sample の id の例外を記すか sample にコメントで補足する。
-  - id: F010
-    severity: minor
-    rule: vp-ux-readability
-    line: 24
-    anchor: "description: 在庫が変更された通知"
-    message: チャネルの `description` が「在庫が変更された通知」だけで、どの業務操作（販売・仕入れ・棚卸しなど）で発生するかが分からないため、発生契機を追記する。
-    message_ja: チャネルの `description` が「在庫が変更された通知」だけで、どの業務操作（販売・仕入れ・棚卸しなど）で発生するかが分からないため、発生契機を追記する。
-  - id: F011
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 34
-    anchor: "contentType: application/cloudevents+json"
-    message: >-
-      `defaultContentType`、`contentType`（`application/cloudevents+json`）、`datacontenttype`
-      の使い分け（エンベロープとペイロードの区別）が説明されておらず読み手が混同しやすいため、structured mode であることをコメントか `description` で補足する。
-    message_ja: >-
-      `defaultContentType`、`contentType`（`application/cloudevents+json`）、`datacontenttype`
-      の使い分け（エンベロープとペイロードの区別）が説明されておらず読み手が混同しやすいため、structured mode であることをコメントか `description` で補足する。
+      `based_on` の `specdojo:ifx-index-sample` にはこの連携の行がなく（4行）、rulebook が `info.description` に求める `ifx-index`
+      の連携名も書けていないため、ifx-index-sample に在庫変更通知の行を足して連携名を `info.description` に入れるか、rulebook に sample の例外として記す。
