@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_fe4e13167261437eb95847b973e27c9f
+  ts: "2026-11-23T00:21:35Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: git-branching-standard を register のブランチの方式（PJR-2TX0）に改訂する
+    - field: description
+      from: ""
+      to: 標準が置き換え前の PJR-11EX の方式（統合専用 actor）のままなので、2TX0 の方式に直し、11EX に置き換えを記録する
+    - field: input
+      from: ""
+      to: '["PJR-2TX0 の決定（D、1b・2a・3a・4a）を展開する。個人の運用でも、別のプロジェクトから specdojo へ起票することが多いため、早めに着手する（利用者の依頼、2026-11-23）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-2TX0"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: standard
+- v: 1
+  id: reg_c97b2ed5dbf44d3bab3fc98f07f33af6
+  ts: "2026-11-23T00:22:18Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_fe4e13167261437eb95847b973e27c9f
