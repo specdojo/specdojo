@@ -15,6 +15,7 @@ import { fileURLToPath } from "node:url";
 import { afterEach, describe, expect, it } from "vitest";
 import { dump } from "../../../src/shared/yaml.js";
 import { type JobRunRecord, type JobCommandStepDefinition } from "../../../src/job/job.js";
+import { validateRunRecordLayout } from "../../../src/exec/validate-records.js";
 import {
   acquireExecRunLock,
   EXEC_RUN_LOCK_TOKEN_ENV,
@@ -123,6 +124,12 @@ describe("command Job sequence", () => {
     expect(saved.attempts[0].steps?.map((step) => step.status)).toEqual(["succeeded", "succeeded"]);
     for (const step of saved.attempts[0].steps ?? [])
       expect(existsSync(join(repo, step.evidence_ref!))).toBe(true);
+    const issues = validateRunRecordLayout({
+      executionPath: join(repo, "execution"),
+      repoRoot: repo,
+      lockPolicy: "tracked",
+    });
+    expect(issues).toEqual([]);
   });
 
   it.each(["stop", "continue"] as const)(
