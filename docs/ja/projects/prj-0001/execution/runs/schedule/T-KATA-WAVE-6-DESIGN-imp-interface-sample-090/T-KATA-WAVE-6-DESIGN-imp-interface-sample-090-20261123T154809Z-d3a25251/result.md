@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-DESIGN-imp-interface-sample-090
   mode: review
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-DESIGN-imp-interface-sample-090/T-KATA-WAVE-6-DESIGN-imp-interface-sample-090-20261123T154809Z-d3a25251/plan.md
   started_at: "2026-11-23T15:48:12.008Z"
+  completed_at: "2026-11-23T15:54:14.103Z"
   agent: sonnet-review-executor
   execution: agent
   approach: fully-guided
@@ -19,20 +20,24 @@ specdojo:
 
 ## 1. 評価結果の確認
 
-_TODO_: 評価結果サイドカーのパス、鮮度確認で実行したコマンドとその出力（`content_hash` が現在の成果物と一致するか）、grade の `verdict` / `score` / finding 件数を記入する。評価結果が最新でない、または評価不能の場合は、その事実と理由を記入する。
+### 評価結果の確認 `specdojo grade list --target kata --path docs/ja/specdojo/samples/imp-interface-sample.md --changed-only` を実行した結果、出力なし、終了コード 0。評価結果は最新。 `specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/imp-interface-rulebook.md --changed-only` を実行した結果、出力なし、終了コード 0。評価結果は最新。 - 評価対象: `docs/ja/specdojo/samples/imp-interface-sample.md` - `verdict`: `pass` - `score`: 98 - `finding_count`: minor 1 - 評価対象: `docs/ja/specdojo/rulebooks/imp-interface-rulebook.md` - `verdict`: `pass` - `score`: 100 - `finding_count`: minor 1
 
 ## 2. 判断根拠
 
-_TODO_: 変更内容・plan・実行記録・完了条件・最新の finding を照合した内容と、verdict を選んだ理由を記入する。finding が残るのに完了とする場合は、その finding が今回の完了を妨げない理由を記入する。参照は `[[id]]` 形式（Obsidian wikilink）で記載し、行番号アンカーや絶対パスは使わない。
+- 評価結果は最新であることを確認済み。`docs/ja/specdojo/samples/imp-interface-sample.md` の `verdict` は `pass`、`docs/ja/specdojo/rulebooks/imp-interface-rulebook.md` の `verdict` は `pass` である。
+- `docs/ja/specdojo/samples/imp-interface-sample.md` は、`based_on` に `cr-2026-004` を用いているが、これは `rulebook` が求める `PJR-XXXX` 形式と一致しないという `minor` 規模の finding (`F001`) がある。しかし、これは完了を妨げるものではない。
+- `docs/ja/specdojo/rulebooks/imp-interface-rulebook.md` についても、`recipe`、`template`、`target_format` が未定義であるという `minor` 規模の finding (`F001`) があるが、同様に完了を妨げるものではない。
+- 先行する edit タスクの実行記録（`result`）の検証については、本タスクのスコープ外（`review` は成果物の品質を評価するものではない）であるため、特定していない。また、`sample` の本文の内容については、`grade` の結果に依拠しているため、詳細な読解は行っていない。
 
 ## 3. 未充足事項・改善指示
 
-_TODO_: 未充足事項と、再計画・成果物の改善・再評価に使う改善指示を記入する（なければ「なし」と記入する）。評価結果の内容に疑義がある場合は、再評価が必要な対象と理由もここに記入する。
+- `docs/ja/specdojo/samples/imp-interface-sample.md` の `based_on` に指定されている `cr-2026-004` を、実在の個票 ID（`PJR-XXXX` 形式）へ修正するか、この形式が許容される旨を `rulebook` に追記すること。
+- `docs/ja/specdojo/rulebooks/imp-interface-rulebook.md` において、`recipe`、`template`、`target_format` を決定して記述するか、あるいは作成しない旨を明記すること。
 
 ## 4. approach に応じた確認
 
-_TODO_: `approach` に応じて確認した内容を記入する。fully-guided / recipe-guided / freeform では求められた作成・更新が行われたか、retrofit では実装エビデンスの対応記録と未確認範囲、`rulebook-maintenance` などの maintenance 系では見直しの動機となった finding の解消状況を記入する。
+fully-guided に従い、`rulebook` の必須要素・禁止事項、`recipe` の問い、`sample` の形式との整合性を `grade` の結果に基づいて確認した。`sample` の本文については `grade` の結果から判断している。
 
 ## 5. decision
 
-- verdict: _TODO_（complete / complete-with-findings / incomplete / grade-stale / grade-unavailable / changed-during-review）
+- verdict: complete-with-findings
