@@ -1,0 +1,34 @@
+`docs/ja/specdojo/samples/dmd-index-sample.md` を駄菓子屋きぬやの完成例として書き直しました。rulebook とほかの sample は変えておらず、`status` は `draft` のままです。prettier による整形と markdownlint は通りました（指摘 0 件）。lint・schema などの検査は、このあと runner が実行します。
+
+**主な変更**
+
+- **題材:** 受注・請求・監査ログ・S3 の題材をやめ、`mip-index` sample に合わせました。ノートから転記用の表へ書き写し、店頭タブレットへ取り込む流れです（F005・F013）。
+- **概要:** 目的（取り込み直しても同じ結果になること、元ノートとの一致を照合で示すこと）と範囲を、2 行で書きました（F001・F014・F015）。
+- **共通方針:**
+  - 全対象をフルで取り込む理由を書きました。増分の基準にできる項目がないためです。
+  - 変換・除外の原則と、除外の根拠の残し方を書きました。
+  - 冪等性は、台帳を空にしてから全件を入れる方式とし、取り込み直しは正午の開店前に限りました（F009）。
+  - ログに必ず書く項目を決めました（F007）。
+- **`run_id` 規約:** `<term>` に入る値（`item`・`stock`・`credit`）、`NN` が 2 桁の 01 始まりであること、例、記録先、紐付け方を書きました（F002・F010）。表記はすべてインラインコードにそろえました（F016）。
+- **検証の共通方針:**
+  - 件数・サンプル・重要値の照合で、何と何を比べ、何を満たせば合格かを表にしました（F006）。
+  - 許容差の例として、商品名の表記ゆれを許す理由を書きました（F011）。
+  - 照合表の命名と保管先を書きました。
+  - 合否を決める人は、`mip-index` の成功条件で決めた判定者を参照する形にしました（F008）。
+- **対象一覧:** 担当を `DEV` にしました（F003）。`mip-index` のどの行を受けたかと、非対象の理由を書く列を足しました（F004・F012）。
+- **未決事項:** 利用者が決める値は推測で埋めず、本文に `_UNDECIDED_` で残しました（F017）。
+
+**店主代表が決める値**
+
+- 移行作業フォルダの控えをタブレットの外に残すか、残すならどこに置くか。
+- 照合表と旧ノートを残す期間。`mip-index` が本書に決定を任せた値です。
+
+**申し送り**
+
+- 対象別の `dmd-item-data`・`dmd-stock-data`・`dmd-credit-data` はまだないので、バッククォートで仮置きしています。
+- 既存の `dmd-sample.md` は受注データの題材のままで、本 sample とつながりません。直す場合は別タスクです。
+- rulebook の推奨列には、`mip-index` との対応や除外の理由を書く列がありません。本 sample では列を 1 つ足しました。rulebook に加えるかを判断してほしいです。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"`dmd-index-sample.md` を駄菓子屋きぬやの完成例として書き直し、F001〜F017 に対応した。利用者が決める値は `_UNDECIDED_` で残した。prettier と markdownlint は通った。","handoff":["_UNDECIDED_ の値 2 件は店主代表が決める: 移行作業フォルダ `migration/<run_id>/` の控えをタブレットの外に残すかとその置き場所、照合表と旧ノートを残す期間（`mip-index` が `dmd-index` に決定を任せた値）。","rulebook への変更案: 対象一覧の推奨列には、`mip-index` との対応や除外の理由を書く列がない。sample では「`mip-index` との対応・除外の理由」列を足した。rulebook の推奨列に加えるか判断が必要。","対象別の `dmd-item-data`・`dmd-stock-data`・`dmd-credit-data` は未作成のため、バッククォートで仮置きした。既存の `dmd-sample.md` は受注データの題材のままで、本 sample と題材がそろっていない。直す場合は別タスクで扱う。","F008（照合の合否を誰が決めるか）: PJR-76N9 の決まりを守るため、文書を作る・確かめる・承認する役割は書かず、`mip-index` の成功条件にある判定者を参照する形にした。判定者は移行の業務の役割であり、文書の承認ではない。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/dmd-index-sample.md","status":"passed","summary":"変更した sample を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/dmd-index-sample.md","status":"passed","summary":"指摘 0 件"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更したのは `docs/ja/specdojo/samples/` 配下の sample だけで、plan・result・個票を変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"変更した YAML がない","reason":"変更したのは Markdown だけで、`*.yaml` / `*.yml` を変更していない"}]}
+</specdojo_executor_evidence>
