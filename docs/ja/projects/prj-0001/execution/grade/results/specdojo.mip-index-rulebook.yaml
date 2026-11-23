@@ -4,19 +4,18 @@ document: specdojo:mip-index-rulebook
 path: docs/ja/specdojo/rulebooks/mip-index-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-rulebook
 verdict: pass
-score: 99
-graded_at: "2026-11-21T04:27:25.260Z"
-graded_by: opus-executor
-content_hash: ed4f35ff6f2c1a8d87d38ec4a46f5f5ed58a32b60b6e0d49b37168420f62c987
+score: 98
+graded_at: "2026-11-23T15:36:39.173Z"
+graded_by: sonnet-review-executor
+content_hash: 6e60913cb6848f89fb5d5a92248c80e7cfeac8aaa0561d71c1ed73265962ad68
 categories:
   purpose:
     score: 100
   operations:
-    score: 100
+    score: 94
   planning:
-    score: 92
+    score: 100
   business:
     score: 100
   architecture:
@@ -24,9 +23,9 @@ categories:
   usability:
     score: 100
   implementation:
-    score: 88
-  quality:
     score: 100
+  quality:
+    score: 92
   consistency:
     score: 100
 viewpoints:
@@ -43,8 +42,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
     level: 4
     score: 100
@@ -67,8 +66,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-change-impact:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-testability:
     level: 4
     score: 100
@@ -79,8 +78,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -88,8 +87,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-operability:
     level: 4
     score: 100
@@ -107,21 +106,15 @@ finding_counts:
 findings:
   - id: F001
     severity: minor
-    rule: vp-pm-dependency-risk
-    line: 40
-    anchor: "- `based_on` には移行判断に直接利用した上位成果物を列挙する。"
-    message: "`based_on` に挙げる「上位成果物」が抽象的です。移行計画が前提にする上位成果物の種類（例: スコープ・要件・アーキテクチャ・運用設計など）を例示し、上流の依存と変更があったときの影響を特定できるようにしてください。"
-    message_ja: "`based_on` に挙げる「上位成果物」が抽象的です。移行計画が前提にする上位成果物の種類（例: スコープ・要件・アーキテクチャ・運用設計など）を例示し、上流の依存と変更があったときの影響を特定できるようにしてください。"
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# 移行計画 作成ルール"
+    message: "`recipe` と `template` が `undecided` のままです。対応する recipe と template を確定して宣言するか、不要なら不要である旨を整理してください。"
+    message_ja: "`recipe` と `template` が `undecided` のままです。対応する recipe と template を確定して宣言するか、不要なら不要である旨を整理してください。"
   - id: F002
     severity: minor
-    rule: vp-dev-change-impact
-    line: 12
-    anchor: >-
-      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status`・承認・改訂と廃止・未決事項の引き継ぎは [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]]
-      に従う。文書の整形・lint はリポジトリの検証で扱い、移行の業務の検証に含めない。
-    message: >-
-      改訂と廃止を標準に委譲するだけで、自系統の追従対象と役割分担を定めていません。成功条件・判定点・スコープなどを変えたときに追従して見直す下流成果物（`dmd-*`/`mtp-*`/`cop-*`/`otp-*`）と担当 Role
-      code を明記してください。
-    message_ja: >-
-      改訂と廃止を標準に委譲するだけで、自系統の追従対象と役割分担を定めていません。成功条件・判定点・スコープなどを変えたときに追従して見直す下流成果物（`dmd-*`/`mtp-*`/`cop-*`/`otp-*`）と担当 Role
-      code を明記してください。
+    rule: vp-ops-release-readiness
+    line: 1
+    anchor: "# 移行計画 作成ルール"
+    message: "`status` が draft で、`recipe` と `template` が未確定です。ready 化の前に、これらを確定する条件を明確にしてください。"
+    message_ja: "`status` が draft で、`recipe` と `template` が未確定です。ready 化の前に、これらを確定する条件を明確にしてください。"
