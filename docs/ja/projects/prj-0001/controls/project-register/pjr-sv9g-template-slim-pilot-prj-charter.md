@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-sv9g-template-slim-pilot-prj-charter
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   owner: BA
   registered_at: "2026-11-17T23:24:32Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-23T02:08:35Z"
+  conclusion: prj-charter の template から文書の運用の記述を外す試行を終え、ほかの template へ広げる一覧（rulebook が記載を求める項目の目印は残す境目を含む）を作った。2 回目で外しすぎた目印を戻し、合格条件の列・AI Agent の目印・生成物の status を直した。template の grade は pass 92
   derived_from:
     - PJR-WYTX
   depends_on:
