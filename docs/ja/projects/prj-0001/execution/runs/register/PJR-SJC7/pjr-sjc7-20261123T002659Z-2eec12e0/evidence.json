@@ -1,0 +1,171 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-SJC7",
+  "run_id": "pjr-sjc7-20261123T002659Z-2eec12e0",
+  "stage": {
+    "role": "executor",
+    "actor": "sonnet-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-23T00:28:02.440Z",
+    "completed_at": "2026-11-23T00:29:40.307Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-sjc7.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-11ex-multi-user-integration-actor.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-sjc7-branching-standard-register-branch.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/git-branching-standard.md",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-11ex-multi-user-integration-actor.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-sjc7-branching-standard-register-branch.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/git-branching-standard.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 4,
+    "summary": ".../pjr-11ex-multi-user-integration-actor.md       |  8 +++-\n .../pjr-sjc7-branching-standard-register-branch.md | 44 ++++++++++++++++---\n .../specdojo/standards/git-branching-standard.md   | 51 ++++++++++++++--------\n 3 files changed, 78 insertions(+), 25 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/standards/git-branching-standard.md docs/ja/projects/prj-0001/controls/project-register/pjr-sjc7-branching-standard-register-branch.md docs/ja/projects/prj-0001/controls/project-register/pjr-11ex-multi-user-integration-actor.md",
+      "status": "passed",
+      "summary": "3 ファイルを整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "出力の末尾 5 行はすべて valid だった。失敗の有無は末尾しか確認していない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 5957 file(s), 107 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 83 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5957 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-SJC7\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-site/kata-staging.test.ts\"}\n ✓ tests/packages/docs-site/kata-staging.test.ts (5 tests) 117ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/packages/docs-site/kata-staging.test.ts\",\"duration_ms\":117}\n[parent-validation:test-file] {\"event\":\"start\",\"\n… output omitted …\nr-plan-escape.test.ts\",\"duration_ms\":4159}\n\n Test Files  19 passed (19)\n      Tests  476 passed (476)\n   Start at  09:30:07\n   Duration  10.17s (transform 33.47s, setup 6.10s, import 43.60s, tests 20.42s, environment 2ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-SJC7/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-SJC7/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "git-branching-standard を PJR-2TX0（1b・2a・3a・4a）の方式へ改訂し、PJR-11EX に置き換えを追記、PJR-SJC7 の個票に対応結果を記入した。",
+  "completion_status": "complete",
+  "handoff": [
+    "層1（exec の成果）は複数人運用では PR で統合すると書いた（2TX0 の「自動の統合は PR に置き換わる」に従う）。単独運用の --no-ff merge は残した。",
+    "register から develop への merge の仕組み（Actions か runner と CLI か）は 2TX0 が後続へ回したため標準では固定せず、一方向 merge とだけ書いた。",
+    "ガイドとの食い違い（直していない。個票の対応結果に詳細）: branch-workflow-guide の統合専用 GitHub App の bypass 記述と確認手順 4、branch-workflow-guide の exec の記帳が exec ブランチに残るという説明、register-operation-guide の別 project 起票が develop の worktree で行われるという説明、register-operation-guide の external_projects の説明（register-operation-guide の 2 点は切り替え後の話）。",
+    "CHANGELOG に書く事項: 区分 Changed（Documentation）。文案は git-branching-standard を register 専用ブランチ（project/<project-id>/register）の方式（PJR-2TX0）へ改訂し、統合専用 actor の方式（PJR-11EX）を置き換えた、とする。",
+    "保護された設定の変更は不要だった。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-SJC7/pjr-sjc7-20261123T002659Z-2eec12e0/executor.log",
+      "bytes": 4882,
+      "truncated": false
+    }
+  ]
+}
