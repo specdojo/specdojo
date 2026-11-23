@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-YCMR",
   "run_id": "pjr-ycmr-20261123T234900Z-ec325fef",
-  "updated_at": "2026-11-23T23:54:47.495Z",
+  "updated_at": "2026-11-23T23:54:57.010Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-YCMR/pjr-ycmr-20261123T234900Z-ec325fef/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sonnet-executor",
       "attempts": 1,
       "started_at": "2026-11-23T23:54:47.495Z",
-      "completed_at": null,
+      "completed_at": "2026-11-23T23:54:57.010Z",
       "artifact_ref": null
     }
   },
