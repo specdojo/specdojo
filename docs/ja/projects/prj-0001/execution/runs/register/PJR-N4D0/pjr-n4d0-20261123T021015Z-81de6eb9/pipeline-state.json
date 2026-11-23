@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-N4D0",
+  "run_id": "pjr-n4d0-20261123T021015Z-81de6eb9",
+  "updated_at": "2026-11-23T03:34:56.356Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sonnet-executor",
+      "attempts": 1,
+      "started_at": "2026-11-23T02:11:27.227Z",
+      "completed_at": "2026-11-23T02:12:24.407Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-N4D0/pjr-n4d0-20261123T021015Z-81de6eb9/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "sonnet-reporter",
+      "attempts": 5,
+      "started_at": "2026-11-23T02:59:07.022Z",
+      "completed_at": "2026-11-23T02:59:07.022Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-N4D0/pjr-n4d0-20261123T021015Z-81de6eb9/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "sonnet-reporter",
+      "attempts": 2,
+      "started_at": "2026-11-23T03:34:56.356Z",
+      "completed_at": null,
+      "artifact_ref": null,
+      "repos": {
+        "project": {
+          "status": "failed",
+          "commit": null,
+          "merged_at": null,
+          "error": "Result Markdown notation violation before commit: docs/ja/projects/prj-0001/execution/runs/register/PJR-N4D0/pjr-n4d0-20261123T021015Z-81de6eb9/result.md:20:62 error MD038/no-space-in-code Spaces inside code span elements [Context: \"` (run N)`\"]"
+        }
+      }
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-N4D0/pjr-n4d0-20261123T021015Z-81de6eb9/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-N4D0/pjr-n4d0-20261123T021015Z-81de6eb9/result.md"
+  }
+}

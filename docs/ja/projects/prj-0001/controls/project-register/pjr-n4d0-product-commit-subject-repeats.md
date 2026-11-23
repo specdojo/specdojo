@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   owner: DEV
   registered_at: "2026-11-23T00:36:14Z"
   due_on: "2026-11-30"
-  block_reason: "integrate failed: project: Result Markdown notation violation before commit: docs/ja/projects/prj-0001/execution/runs/register/PJR-N4D0/pjr-n4d0-20261123T021015Z-81de6eb9/result.md:20:62 error MD038/n…"
 ---
 
 # PJR-N4D0 同じ項目を何回か流すと、プロダクトの commit のタイトルがすべて同じになる

@@ -1,0 +1,15 @@
+parent validation: lint-md-changed
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.9.2 lint:md:changed
+> node tools/lint-changed.mjs md
+
+
+
+--- stderr ---
+docs/ja/projects/prj-0001/controls/project-register/pjr-n4d0-product-commit-subject-repeats.md:72:162 error MD038/no-space-in-code Spaces inside code span elements [Context: "` (run N)`"]
+docs/ja/projects/prj-0001/controls/project-register/pjr-n4d0-product-commit-subject-repeats.md:82:74 error MD038/no-space-in-code Spaces inside code span elements [Context: "` (run N)`"]
+docs/ja/specdojo/references/specdojo-config-reference.md:232:358 error MD038/no-space-in-code Spaces inside code span elements [Context: "` (run N)`"]

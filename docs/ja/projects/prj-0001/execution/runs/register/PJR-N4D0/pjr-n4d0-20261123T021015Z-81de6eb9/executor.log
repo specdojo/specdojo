@@ -1,0 +1,13 @@
+PJR-N4D0 の対応は終わりました。同じ項目を流し直すと、プロダクトの commit の 1 行目が回ごとに区別できます。
+
+親 runner の検証（`lint:ts` / `typecheck` / `test:unit` など）は私の側では実行していません。`tsc --noEmit` は出力なしで通り、`tests/src/exec/register-product-message.test.ts` の 28 件は通りました。ただし、prettier の整形は上のテスト実行の後で行ったため、整形後のテストは再実行していません。
+
+- **方針:** 案 (c) を採りました。作業 worktree の履歴にある、同じ項目の `Refs:` を持つ merge でない commit を数え、1 件以上あれば commit の 1 行目の末尾に ` (run N)` を付けます。テンプレートの有無にかかわらず付き、1 回目と merge メッセージには付きません。末尾の `Refs:` の行は今までどおりです。
+- **長い 1 行目:** 100 文字を超える場合は、title 側を切り詰めて番号を残します。
+- **コード:** `src/exec/register-product-message.ts`、`src/exec/run/mode-shared.ts`（`commitSubject` に `suffix` を追加）、`src/exec/run/register-worktree.ts` を変更しました。
+- **テスト:** 1 回目は不変、2 回目の区別、長い 1 行目、merge 不変の 4 件を追加しました。
+- **ドキュメント:** 設定リファレンスの `commit_subject_template` の節に、流し直したときの 1 行目を書きました。個票の対応結果には決定の理由と「CHANGELOG に書く事項」の小節を書きました。`CHANGELOG.md` は変更していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"案 (c) を実装した。同じ項目の過去の commit を数え、2 回目以降の commit の 1 行目の末尾に ` (run N)` を付ける。1 回目と merge メッセージは従来どおり。テスト・設定リファレンス・個票の対応結果を更新した。","handoff":["対応策は案 (c) を採用した。案 (a)・(b) は executor の要約の品質に依存し、設定の追加も要るため見送った。","前の回の commit が作業 worktree の履歴に含まれる場合だけ数える。`--force-restart` で前の回が統合先に入っていないと 1 回目として扱われる。","CHANGELOG は変更していない。個票の対応結果の「CHANGELOG に書く事項」に区分 Fixed と文案を書いた。","prettier の整形（`src/exec/register-product-message.ts`）はテスト実行の後に行ったため、整形後のテストは再実行していない。"],"validations":[{"command":"npx vitest run tests/src/exec/register-product-message.test.ts","status":"passed","summary":"28 件が通った"},{"command":"npx tsc --noEmit -p tsconfig.json","status":"passed","summary":"型エラーなし"},{"command":"npx prettier --check","status":"passed","summary":"変更した src・tests・docs を確認し、指摘のあった src/exec/register-product-message.ts は --write で整形した"}]}
+</specdojo_executor_evidence>
