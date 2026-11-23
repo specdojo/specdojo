@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-WAVE-6-PROJECT-pm-change-request-log-sample-040",
   "run_id": "T-KATA-WAVE-6-PROJECT-pm-change-request-log-sample-040-20261123T061831Z-e2d766ca",
-  "updated_at": "2026-11-23T06:35:24.618Z",
+  "updated_at": "2026-11-23T06:36:14.956Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-pm-change-request-log-sample-040/T-KATA-WAVE-6-PROJECT-pm-change-request-log-sample-040-20261123T061831Z-e2d766ca/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-23T06:35:24.618Z",
-      "completed_at": null,
+      "completed_at": "2026-11-23T06:36:14.956Z",
       "artifact_ref": null
     }
   },
