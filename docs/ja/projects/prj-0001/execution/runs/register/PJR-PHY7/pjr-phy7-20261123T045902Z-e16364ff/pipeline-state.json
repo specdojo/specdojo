@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-PHY7",
   "run_id": "pjr-phy7-20261123T045902Z-e16364ff",
-  "updated_at": "2026-11-23T05:00:48.204Z",
+  "updated_at": "2026-11-23T05:04:34.969Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-PHY7/pjr-phy7-20261123T045902Z-e16364ff/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sonnet-executor",
       "attempts": 1,
       "started_at": "2026-11-23T05:00:48.204Z",
-      "completed_at": null,
+      "completed_at": "2026-11-23T05:04:34.969Z",
       "artifact_ref": null
     }
   },
