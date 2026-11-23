@@ -1,0 +1,46 @@
+型 5 件の評価結果は最新で、`complete-with-findings` と判断しました。完了を妨げる未充足事項はありません。
+
+**鮮度確認（成果物は読んだだけで、変更していません）**
+- `specdojo grade list --target kata --path docs/ja/specdojo/samples/cdfd-sample.md --changed-only` を実行しました。出力は空だったので、sample の評価結果は最新です。
+- `npx` 経由の同じコマンドはサンドボックスに拒否されたため、`specdojo` を直接呼んでいます。
+- rulebook・recipe・template は鮮度確認コマンドを実行していません。plan の「評価結果」章が示す「最新」を、runner の確認結果としてそのまま採用しました。
+
+**評価結果（grade が確定済みの事実）**
+
+| 対象 | verdict | score | finding |
+| --- | --- | --- | --- |
+| sample | `pass` | 95 | minor 2 |
+| rulebook | `pass` | 97 | minor 3 |
+| recipe | `pass` | 93 | minor 4 |
+| template | `pass` | 98 | minor 1 |
+
+5 型のうち rulebook・recipe・sample・template の 4 つは、いずれも `pass` で blocker と major はありません。
+
+**判断根拠**
+- 実際に読んだのは、sample の章構成と 6.1 の入出力表です。
+- sample は rulebook の章立て（目的・適用範囲・プロセス領域・データストア・概念データフロー・主要入出力・状態遷移・例外）に沿っています。
+- 6.2 の入出力表は、plan の記載から `P-02-04` と `P-02-05` の行が F001・F002 の対象です。この 2 行は未確認です。
+- DC-001〜DC-003（章立てと必須の表、駄菓子屋の共通サンプル文脈、禁止事項）は、grade の `vp-qe-omissions-consistency` と `vp-qe-kata-conformance` に基づいて判断しました。
+- sample の `vp-qe-kata-conformance` は level 4 です。
+- DC-004（図と表の二重の説明をしていないこと）は、sample の F001（`vp-arc-conciseness`）が一部該当します。完了条件を満たさないほどの重大さではありません。
+- 対象外の変更の混入はありません。
+
+**finding が完了を妨げない理由と改善指示**
+- sample F001: `P-02-04` の入力「仕入記録の確定結果」と「確定済みの入荷数量・受入結果」が重複しています。どちらかに統一し、図の線と合わせてください。
+- sample F002: `P-02-05` の入力「不一致・不良情報」に対応する線が図にありません。図へ追加するか、入力から外してください。
+- rulebook F001〜F003: `status: ready` の rulebook が、`status: draft` の `specdojo:cdfd-mermaid-rulebook` を `includes` しています。依存先の ready 化か、未確定依存の扱いの明記が必要です。
+- recipe F001〜F004:
+  - 仕上げチェックに `lint:fm` と図の lint を加える。
+  - `status` と `rulebook` の確認、ID と名称の照合を加える。
+  - 任意章「未決事項」の扱いを書く。
+  - プロセス ID と例外 ID の形式を書く。
+- template F001: 図の雛形が D2 のみです。既定記法の Mermaid 雛形の併記、または理由の明記が必要です。
+
+**確認できなかった範囲**
+- 実行記録（先行する edit タスクの result）は特定していません。plan が宣言する文書の範囲で判断しています。
+- 評価結果のサイドカー YAML の中身は直接読んでいません。plan 記載の値に依拠しています。
+- verdict を記録する直前の鮮度再確認は、sample のみ再実行しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict: complete-with-findings。5型の評価結果は最新（sampleは specdojo grade list --changed-only が空出力で確認）で、いずれも pass、blocker/major なし。sample minor2（P-02-04入力重複、P-02-05入力と図の不一致）、rulebook minor3（draftのmermaid rulebook依存）、recipe minor4、template minor1 は完了条件を妨げないため改善指示として記録。確認できなかった範囲：rulebook/recipe/template の鮮度コマンド再実行、サイドカーYAML直読、先行edit実行記録の特定。","handoff":["sample F001: P-02-04 主要入力の重複を統一し図の線と対応させる","sample F002: P-02-05 の「不一致・不良情報」を図へ追加するか入力から外す","rulebook F001-F003: draft の cdfd-mermaid-rulebook への依存を ready 化または明示的に許容する","recipe F001-F004: 仕上げチェックに lint:fm・図 lint・status/rulebook・ID名称照合、未決事項、ID形式を追加","template F001: Mermaid雛形併記または D2 雛形の位置付けを明記"],"validations":[{"command":"specdojo grade list --target kata --path docs/ja/specdojo/samples/cdfd-sample.md --changed-only","status":"passed","summary":"出力なし（sampleの評価結果は最新）"}]}
+</specdojo_executor_evidence>
