@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_d6a221bb18cc4d68bb05ec98591cbc64
+  ts: "2026-11-23T00:35:40Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: OpenFisca-Japan の作業（利用側の prj-0001）で見つけた
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: Claude の edit executor の既定の設定に、作業場所を保つ設定と git の読み取り・rm・mv の許可がない
+    - field: description
+      from: ""
+      to: cd でプロダクトの worktree に移ると相対パスの Edit の規則がずれて個票を書けず、git status・diff・log・show・grep・rm・mv も承認待ちで拒まれる。配布の settings.edit.json に CLAUDE\_BASH\_MAINTAIN\_PROJECT\_WORKING\_DIR と git の許可を足すかを決める
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-23"
