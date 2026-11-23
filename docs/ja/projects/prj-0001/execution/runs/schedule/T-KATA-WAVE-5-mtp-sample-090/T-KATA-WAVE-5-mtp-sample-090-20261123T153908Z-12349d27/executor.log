@@ -1,0 +1,46 @@
+Review を完了した。verdict は `complete-with-findings` で、成果物と result は変更していない。
+
+**評価結果の確認**
+- `specdojo grade list --target kata --changed-only` を、sample（`docs/ja/specdojo/samples/mtp-sample.md`）と rulebook（`docs/ja/specdojo/rulebooks/mtp-rulebook.md`）の両方に実行した。どちらも出力は空で終了コードは 0 だった。評価結果は最新で、成果物が変更された形跡はない。
+- sample は `verdict: pass`、`score` 96、finding は minor 3 件（blocker と major は 0）だった。
+- rulebook は `verdict: pass`、`score` 98、finding は minor 2 件（blocker と major は 0）だった。
+- どちらも plan に示された値と一致している。
+
+**判断根拠**
+
+完了条件 DC-001〜DC-005 を、評価結果と sample 本文で照合した。
+
+- DC-001: 概要、リハーサル回数とスケジュール、テスト環境/データ準備、検証観点、合否基準、差異発生時の扱い、結果報告フォーマット、GO/NO-GO判断プロセス、関連ドキュメントの章が揃っている。`vp-qe-omissions-consistency` は 100 点だった。
+- DC-002・DC-003: `vp-qe-kata-conformance` は 100 点で、舞台は駄菓子屋きぬやに統一されている。
+- DC-004: 概要で、3 対象（商品台帳・現在庫・顧客台帳とつけ残高）の移行と、事前に検証する 3 点を示している。対象に含まないものも明記している。
+- DC-005: GO・条件付き GO・NO-GO の判断条件を示している。第 7 章の結果報告フォーマットが集める証跡を定めている。
+
+フェーズが求めた磨き込みは行われている。対象外の変更の混入は見当たらず、作業ツリーの未追跡ファイルは runner の `pipeline-state.json` だけだった。
+
+先行する edit タスクの result は、この review では確認していない。
+
+**未充足事項・改善指示**
+
+未充足事項はなく、次の minor finding が残っている。いずれも完了条件に直結しないので完了を妨げない。
+
+- sample の `F001`: `based_on` に `specdojo:dmd-sample` がない。第 9 章では参照している。`based_on` に追加するか、参照だけに留める理由を示す。
+- sample の `F002`: 合否基準の所要時間（第 5 章）は「臨時休業の開始から正午まで」で、分数などの値がない。ただし開始時刻は `_UNDECIDED_` として担当者と期限つきで残されており、仮値を添えるのが望ましい。
+- sample の `F003`: 第 8 章の条件付き GO の記述が「決定記録」となっていて、他の章の `pm-decision-log` と呼称が揺れている。`pm-decision-log` に統一する。
+- rulebook の `F001`・`F002`: `recipe` と `template` が未決のままで、`status: draft` の ready 条件も示されていない。型の整備として扱う。
+
+評価結果の内容に疑義はなく、再評価の依頼もない。
+
+**確認できなかった範囲**
+- rulebook の本文は読んでいない。対応は grade の結果に依拠している。
+- 先行 edit の実行記録は確認していない。
+- `recipe` は plan 上 `_MISSING_` で、template も読んでいない。
+- 人の確定は plan のとおり対象外としている。
+
+**人の確定の前に確かめる点**
+- 仮置きの切替日と定休日の曜日
+- 臨時休業の開始時刻
+- `dmd-sample` の `based_on` 追加の要否
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"review 結論: complete-with-findings。鮮度確認（specdojo grade list --target kata --changed-only を sample と rulebook に実行）はいずれも出力なしで終了コード 0、評価結果は最新。sample は pass/96、minor 3 件。rulebook は pass/98、minor 2 件。DC-001〜DC-005 は評価結果と sample 本文で照合し、充足している。finding は完了条件に直結しないため完了を妨げない。改善指示は次のとおり。sample は based_on への specdojo:dmd-sample 追加、所要時間への仮値の付与、「決定記録」から pm-decision-log への呼称統一。rulebook は recipe と template の整備、および ready 条件の明記。確認できなかった範囲は、rulebook 本文の直接読み取り、先行 edit の実行記録、recipe（plan 上 _MISSING_）と template の内容、人の確定。","handoff":["sample F001: based_on に specdojo:dmd-sample を追加するか、参照のみとする理由を示す","sample F002: 所要時間の合否基準に分数などの仮値を添える。臨時休業の開始時刻は _UNDECIDED_ のまま残してよい","sample F003: 第8章の「決定記録」を pm-decision-log に統一する","rulebook F001・F002: recipe と template の整備（または不要の明示）と、ready 化条件の明記が必要","横串確認で人が確定する点: 仮置きの切替日と定休日の曜日、臨時休業の開始時刻、dmd-sample の based_on 追加の要否"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/mtp-sample.md --changed-only","status":"passed","summary":"出力なし、終了コード 0。評価結果は最新。"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/mtp-rulebook.md --changed-only","status":"passed","summary":"出力なし、終了コード 0。評価結果は最新。"}]}
+</specdojo_executor_evidence>
