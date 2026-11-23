@@ -1,0 +1,31 @@
+`docs/ja/specdojo/samples/nfr-operations-sample.md` を作り直しました。以前は作り方の説明だけの短い文書でしたが、rulebook が決める 5 章の順に、駄菓子屋きぬやの値で埋めた運用要件の完成例になっています。変更したファイルはこの 1 つだけで、rulebook と result には手を付けていません。確認は prettier と markdownlint を流し、指摘は 0 件でした。
+
+**中身**
+- **frontmatter**: `part_of` と `based_on` を足しました。`status` は `draft` のままです。
+- **概要（対象・目的）**: 店主代表が不在の日も記録を続けるという目的と、要件を満たせないときの業務影響 4 つを書きました（F001・F006）。
+- **適用範囲・体制前提**: 対象と対象外、監視時間帯、時間外の扱い、体制（`OPS` / `PO` / `DEV`）、技術前提を表にしました。通知とエスカレーションは 3 段にし、次の段へ上げる条件を付けています（F008・F009・F012・F022）。
+- **運用要件一覧**: `nfr-ops-001`〜`nfr-ops-009` を監視・バックアップ・手順・体制の 4 領域で並べ、指標と、数値・期間付きの判定基準を書きました（F007・F011・F014）。
+- **測定・検証方法**: 要件ごとに測定方法、判定時期、判定者の Role code、未達のときの扱いを書き、`sac-*` と `dec-*` への残し方と基準値を見直すきっかけも書きました（F013・F002・F005）。
+- **関連ドキュメント導線**: 実在する sample には wikilink を張り、まだない `sac-operations` はバッククォートで仮置きしました（F004）。
+
+既存の運用方針・手順の sample と数値を揃えました。営業時間 10:00〜18:00、P1 は 15 分以内に一次連絡、無応答 5 分で通知、誤検知が月 3 件以上なら見直し、月次の復元演習、の 5 点です。PJR-76N9 に従い、文書を作る・確かめる・承認する役割の割り当ては書いていません（F021 は意図的に満たしていません）。
+
+**決める必要がある値**
+次の値は推測で埋めず、`_UNDECIDED_` と暫定の扱いを書いて残しています。
+- バックアップ成功率の目標（`nfr-ops-003`）
+- 営業時間外の緊急連絡手段（`nfr-ops-009`）
+
+次の値はいったん `_ASSUMPTION_` で置いたので、確認が必要です。
+- 営業時間 10:00〜18:00
+- `OPS` は 1 名
+- 外部の死活監視が 1 分ごとに確かめる
+- MTTD は 10 分以内（`nfr-ops-001`）
+- 切替訓練は年 2 回（`nfr-ops-007`）
+
+**rulebook の変更案（この段では直していません）**
+- rulebook は 5 章固定のため、可用性の sample にある「未決事項」の章を置けませんでした。未決の値は表の中で示しています。任意章として認めるか、登録簿へ引き継ぐ手順を本文要件に書くかを判断してください。
+- 判定者の欄は文書の中身として扱う役割（業務の担当）ですが、PJR-76N9 との境界を記述ガイドに明記すると迷いが減ります。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"nfr-operations-sample を rulebook の必須 5 章に沿った駄菓子屋きぬやの運用要件の完成例へ作り直した（`nfr-ops-001`〜`nfr-ops-009`、通知・エスカレーションの段階、測定・検証方法、関連文書導線）。prettier と markdownlint はエラーなし。","handoff":["利用者が決める値として `_UNDECIDED_` で残した: バックアップ成功率の目標（`nfr-ops-003`）、営業時間外の緊急連絡手段（`nfr-ops-009`）。","`_ASSUMPTION_` で置いた値の確認が必要: 営業時間 10:00〜18:00（`opd-index` と同じ）、`OPS` は 1 名、外部の死活監視が 1 分ごとに確かめる、MTTD は 10 分以内（`nfr-ops-001`）、切替訓練は年 2 回（`nfr-ops-007`）。","rulebook の変更案: 本文要件が 5 章固定のため「未決事項」の章を置けず、未決の値は表の中に `_UNDECIDED_` として書いた。可用性の sample のように任意章として認めるか、登録簿へ引き継ぐ手順を本文要件に書くかを判断する（F002・F005 に関係）。","rulebook の変更案: 判定者の欄（Role code）は文書の中身として扱う役割（業務の担当）だが、PJR-76N9 の文書の役割の割り当てとの境界を記述ガイドに明記するとよい。F021（リリース承認者のロール）は PJR-76N9 に従い本文に足していない。","rulebook の `_UNDECIDED_` にある「sample が 5 章に揃っていない」は今回解消したので、`recipe`・`template` の要否の判断に進める。","`sac-operations` はまだないためバッククォートで仮置きした。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/nfr-operations-sample.md","status":"passed","summary":"表を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/nfr-operations-sample.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>
