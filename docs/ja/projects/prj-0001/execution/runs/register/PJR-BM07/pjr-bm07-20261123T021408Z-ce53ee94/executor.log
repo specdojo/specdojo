@@ -1,0 +1,103 @@
+I'll read the common conventions and survey the legacy abbreviations in parallel.
+The bash tool is restricted to an allowlist. I have `grep` and `ls` allowed as bash patterns, but my regex with pipes/alternation got denied. Let me use the dedicated `grep` tool instead.
+The dedicated `grep` tool works. Let me also check for `EAPIS` and `EMS` specifically (the plan mentions 5 abbreviations but I've only found ESIL, ECIS, EFES so far), and read the relevant files completely.
+Now let me look at how the already-fixed `ifx-api-rulebook` and `ifx-msg-rulebook` are written, to learn the target style. Let me also check for any other files in the two directories I should be aware of.
+Now I understand the target style by comparing with `ifx-api-rulebook.md` and `ifx-msg-rulebook.md`:
+- Title `# 外部API仕様 作成ルール` then English name on next line: `External API Specification Documentation Rules`
+- Body abbreviations replaced by Japanese names or `ifx-*` prefixes.
+- File-prefix matching abbreviations like `BDS`, `CCD`, `BDD`, `CDSD` are out of scope (input 2 confirms this).
+- `EAPIS` and `EMS` have no current matches in the target scopes — already removed by PJR-AEKE 2nd pass.
+
+Let me plan edits with a todo list, then apply them:
+Now apply the edits to `ifx-cmd-rulebook.md`:
+Now `ifx-cmd-recipe.md` — replace all 6 occurrences of ESIL with the `ifx-index` prefix form (matching `ifx-api-rulebook`/`ifx-msg-rulebook` style):
+Now `dct-external-interface-specs.yaml`:
+Now let me verify the changes and run prettier/lint checks on the modified files:
+Prettier adjusted one file. Let me check the diff to ensure my `ifx-cmd-recipe.md` edits look right:
+The diff pattern requires a space. Let me try a different approach — read the file and verify visually:
+Good. Now run the lint:md, lint:mermaid checks on these files and verify the recipe file diff is clean:
+The allowlist patterns seem case-sensitive or strict. Let me try with capital "N" and exact command forms:
+`ls` works. The pipe in `cat package.json | head -5` may be the issue. Let me try just `cat package.json`:
+I see — the `|` pipe character is rejected by the bash allowlist since commands are checked verbatim. Let me try the commands without pipes. The parent runner will run all the listed validations (lint-md, lint-mermaid, etc.), so I only need to confirm Prettier didn't break things. Since the parent validates these, let me update the ticket now and proceed.
+markdownlint passes on the 3 changed md files (no error output). Now let me also confirm mermaid lint works:
+The mermaid lint isn't in the allowlist — I'll skip that and let the parent runner run `lint-mermaid`. Now let me update todos and move to updating the ticket. First, let me re-read it and plan its new content:
+Let me look at pjr-aeke's completed ticket as reference for the format:
+Now I understand the full format. Let me update the ticket with my findings, decisions, and results. First the 作業内容 table:
+Now the 対応結果 section:
+The reference `[[pjr-aeke-ifx-api-msg-spec-content|...]]` should be project-prefixed (per the conventions: "`id` は project 修飾 doc id"). Let me fix it:
+Wait — that's a list item, not a table cell, so the `|` doesn't need escaping. Let me revert to the proper list form:
+Also, in 5.4 I wrote "`BDS`・`CCD` 同様に prefix と一致させる" which is factually wrong (BDS/CCD are title abbreviations matching the file **prefix**, but `IFXIDX`/`IFXFILE` don't match the file prefix `ifx-file`). Let me rephrase:
+Now run prettier on the ticket to make sure formatting is clean:
+Prettier adjusted the ticket. Let me verify the post-prettier state and also check if it accidentally broke the table:
+Now run prettier + markdownlint one more time on the ticket to lock in the final formatting:
+Let me check whether the "16 matches" count and "5 occurrences" claim are accurate by verifying via grep on a backup copy or counting manually:
+
+Looking back at original grep output: 3 (ifx-file-rulebook) + 5 (ifx-cmd-rulebook) + 6 (ifx-cmd-recipe) + 1 (dct yaml) = 15, not 16. Let me fix that discrepancy and remove the count from row 4:
+Already fine — row 4 just says "5.2" not the count. The 5.1 entries say "5箇所" for ifx-cmd-rulebook. Let me verify by re-grepping the original via git show:
+Counts match: `ifx-cmd-rulebook` 5, `ifx-cmd-recipe` 6, `ifx-file-rulebook` 3 (ESIL+EFES), `dct` 1 = total 15 matches across files. My ticket says "5 箇所" and "6 箇所" which are correct per-file. Now let me verify the final state of all changes:
+All target-scope matches are gone (0 in both `docs/ja/specdojo` and `dct`), and the changes look clean. Let me also check `ifx-cmd-recipe.md` final and run prettier once more:
+All 4 changed files are clean and Prettier-stable. Now I need to check the `ifx-file-rulebook.md` — its frontmatter has `status: ready`. The user rule says not to change status, and I'm not changing it (I only changed the Mermaid body). Good.
+
+Let me also verify nothing was missed by re-running the grep with all 5 patterns across both dirs:
+The 17 matches are all template placeholders like `_DECISION_TIMING_` containing the substring "EMS" — not real legacy abbreviations. The task regex uses `\b...\b` word boundaries, which won't match these substrings. Let me verify by using the dedicated grep tool (which does support word boundary matching via regex engine):
+Confirmed — `\bEMS\b` returns 0 matches. The earlier 17 hits were substring false positives from `_DECISION_TIMING_` (no word boundary because of surrounding underscores). The target completion criteria explicitly uses `\b(ESIL|EAPIS|EMS|ECIS|EFES)\b`, so 0 matches satisfies it.
+
+Now let me look at ifx-cmd-recipe.md tail (where line 162 used to be):
+All looks good. Let me update todos and write the final report. Note: This is an executor pipeline task, so per the plan instructions: `executor` does NOT edit result. It reports implementation/validation via the envelope, and the reporter handles `result.md`. Let me re-read the task's step 4 vs the pipeline instruction carefully to confirm:
+
+Re-reading the bottom of plan §4:
+> pipeline の executor は実施内容・変更ファイル・検証結果を報告し、申し送りを `handoff` に記載する。
+
+So the executor reports via envelope, not result.md. Also the ticket's "対応結果" should be updated by executor (it's a ticket-level writeable document, not a runner-managed exec/results file). I've done that.
+
+Let me do one final check — verify that no protected config was actually changed:
+The changed files are exactly:
+- `dct-external-interface-specs.yaml` — task target
+- `pjr-bm07-ifx-drop-legacy-abbreviations.md` — ticket update
+- `ifx-cmd-recipe.md`, `ifx-cmd-rulebook.md`, `ifx-file-rulebook.md` — task targets
+- (Plus runner-managed `events/pjr-bm07.yaml` and `pipeline-state.json`, which I did NOT touch — they're auto-written by the runner)
+
+No protected config was changed. The changes are confined to `docs/ja/specdojo/rulebooks/`, `docs/ja/specdojo/recipes/`, `docs/ja/projects/prj-0001/010-deliverables-catalog/`, and `docs/ja/projects/prj-0001/controls/project-register/pjr-bm07-ifx-drop-legacy-abbreviations.md`. 
+
+Let me mark the final todos complete:
+All work is done. Per the pipeline instructions, the executor does not write `result.md` — only reports via envelope, and the reporter/runner handles that. I'll summarize changes for the user and emit the envelope.
+
+---
+
+## 実施結果のまとめ
+
+PJR-BM07「ifx の型の残りの文書から古い略語を外す」を完了した。変更ファイルは 4 つ（成果物）+ 1 つ（個票）。
+
+### 変更内容
+
+| ファイル | 変更 |
+| --- | --- |
+| `docs/ja/specdojo/rulebooks/ifx-cmd-rulebook.md` | 標題「外部コマンド連携仕様 作成ルール」に空間を入れる。英語名行から `(ECIS)` を除去。本文の `ESIL`（5 箇所）を `ifx-index` に置換。 |
+| `docs/ja/specdojo/rulebooks/ifx-file-rulebook.md` | Mermaid 図のノード ID `ESIL` → `IFXIDX`、`EFES` → `IFXFILE`（3 エッジ）。ラベルは日本語のまま維持。 |
+| `docs/ja/specdojo/recipes/ifx-cmd-recipe.md` | 本文・表の `ESIL`（6 箇所）を `ifx-index` に置換。Prettier で table 列幅を整形。 |
+| `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-external-interface-specs.yaml` | 冒頭コメントの `ESIL` を `ifx-index` に置換（1 箇所）。 |
+| `docs/ja/projects/prj-0001/controls/project-register/pjr-bm07-ifx-drop-legacy-abbreviations.md` | 作業内容表を done/open で記入。対応結果に実施内容・略語検索結果・決めた点・CHANGELOG 事項・関連文書を記載。 |
+
+### 書き方の根拠
+PJR-AEKE 2 回目で直した `ifx-api-rulebook`・`ifx-msg-rulebook`（`# 外部API仕様 作成ルール` / `External API Specification Documentation Rules` の形、本文は `ifx-index` prefix を使う）を正本とし、同じ書き方に合わせた。
+
+### 略語検索結果
+`rg -n '\b(ESIL|EAPIS|EMS|ECIS|EFES)\b' docs/ja/specdojo docs/ja/projects/prj-0001/010-deliverables-catalog`:
+- 直前: `ifx-file-rulebook` 3、`ifx-cmd-rulebook` 5、`ifx-cmd-recipe` 6、`dct` 1 = 全 15 件
+- 修正後: **0 件**（`\bEMS\b` は `_DECISION_TIMING_` などの下位文字列と誤マッチするため別 grep で確認。0 件）
+
+### 検証済み
+- `npx prettier --write` 4 ファイル: 最終で unchanged。
+- `npx markdownlint` 3 md ファイル: エラーなし。
+- `npx prettier --write` 個票: 整形が確定。
+- `npx markdownlint` 個票: エラーなし。
+- `git status --short`: 保護された設定は変更なし（`.specdojo/`・`.agents/`・`.claude/`・`.opencode/`・`package.json` 等は未触）。
+
+### 残
+- 型の grade の再実行: executor は実行しないため open（個票作業 6、対応結果 5.8）。統合後に orchestrator が実施。
+- `CHANGELOG.md`: 影響なしと判断（5.7。PJR-AEKE の同区分に吸収されるため）。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"ifx-cmd-rulebook・ifx-file-rulebook・ifx-cmd-recipe・dct-external-interface-specs.yaml から旧略語 ESIL・ECIS・EFES を除去し、PJR-AEKE 2 回目の書き方（ifx-index・ifx-cmd・ifx-file prefix + 英語名行）に揃えた。個票の作業内容表と対応結果を done/open で記入した。保護設定は未変更。略語検索で 0 件を確認。","handoff":["個票の作業 6「型の grade の再実行」は完了条件 41 行（型 grade は統合後に orchestrator が流す）により executor が実施できないため open とした。統合後に orchestrator が実施する。","CHANGELOG.md への追加文言はなし。ifx 型の rulebook・recipe・カタログコメントの略語除去は運用上の修正であり、PJR-AEKE の `Changed` 区分（rulebook を標準の章構成に組み直しタイトルから略語を外して英語名の行を足した）に含まれるため、追加の行は置かないこととした。個票の 5.7 で記録済み。","ifx-file-rulebook の Mermaid ノード ID は IFXIDX・IFXFILE に修正済み。ラベルは日本語のまま（外部システムI/F一覧 (ifx-index) / 外部ファイル連携仕様 (ifx-file-*)）。SCHEMA・IFXCMD ノード名は対象の ESIL/ECIS/EFES ではないため変更不要として残した。"]
+}
+</specdojo_executor_evidence>
