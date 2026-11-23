@@ -150,6 +150,21 @@ docs だけの項目や、runner の通らないコード（kata、docs-site な
 9. 利用者が PR を merge commit でマージし、タグを付けて push し、`npm stage` で公開を承認する。stage の ID は公開の workflow のログ（`staged with id`）にある。承認は 2FA を通した経路で行う（npmjs.com、または手元の端末で `npx -y npm@^11.15.0 login` の後に `npx -y npm@^11.15.0 stage approve <stage-id>`）。npm 11.15 より前には `npm stage` が無く、2FA を迂回する token では 401 になる。
 10. npm の `latest`、タグで起動した workflow の結果、npm から入れた版での導入を確かめ、リリースの todo を close する。
 
+### 9.1. 文書サイトの 2 つの版
+
+文書サイトは、本番（`/specdojo/`）と開発中の版（`/specdojo/next/`）を並べて公開する（PJR-98HS）。
+
+- 本番は、`main` に入っている最新のリリースタグの文書を公開する。リリースのタグを push すると、`.github/workflows/deploy.yml` が本番と開発中の版の両方をビルドして公開する。
+- 開発中の版は、公開用のブランチ `site/next` の文書を公開する。開発中の機能の文書を見せたいときに、develop から fast-forward して push する（develop の commit のたびには更新しない）。
+
+```bash
+git push origin project/prj-0001/develop:site/next
+```
+
+- push は利用者が行う。`site/next` を fast-forward できないとき（develop の履歴が書き換わったなど）は、利用者に確かめてから扱いを決める。
+- 開発中の版は全ページに帯を出し、`noindex` で検索エンジンに載せない。docs-site の環境変数 `SPECDOJO_DOCS_CHANNEL=next`・`SPECDOJO_DOCS_BASE=/specdojo/next/` でビルドする。
+- GitHub Pages の環境 `github-pages` の公開を許すブランチに、`site/next` を足してある（`main` と `v*` のタグに加えて）。
+
 ## 10. 依存とコードのセキュリティ検査
 
 PJR-P318 で入れた定期の検査と、その扱いである。workflow の定義（`security-audit.yml`・`codeql.yml`）は保護された設定のため、変えるときは利用者の承認のもと feature ブランチで行う。

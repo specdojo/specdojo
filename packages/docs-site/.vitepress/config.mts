@@ -31,6 +31,7 @@ import {
   isExecRecordPath,
 } from "./exec-record-paths";
 import { loadArchiveLinks, resolveArchiveWikilink } from "./archive-links";
+import { channelHeadTags, resolveSiteChannel } from "./site-channel";
 import * as path from "path";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 
@@ -294,7 +295,9 @@ const specdojoItems = {
 };
 
 // GitHub Pages の公開パス: https://specdojo.github.io/specdojo/
-const base = "/specdojo/";
+// 開発中の版は SPECDOJO_DOCS_CHANNEL=next と SPECDOJO_DOCS_BASE=/specdojo/next/ でビルドする（PJR-98HS）。
+const siteChannel = resolveSiteChannel();
+const base = siteChannel.base;
 
 // 日本語トップ（docs/ja/index.md）が無い利用リポジトリでは、「ホーム」と言語メニューを
 // ステージングに必ずあるサイトのトップへ向け、404 にしない。
@@ -876,6 +879,7 @@ export default defineConfig({
       {},
       `(function(){try{if(localStorage.getItem('vp-sidebar-collapsed')==='true'){document.documentElement.classList.add('vp-sidebar-collapsed')}}catch(e){}})()`,
     ],
+    ...channelHeadTags(siteChannel),
   ],
 
   // 物理パスは docs/ja, docs/en のままで、
@@ -892,6 +896,9 @@ export default defineConfig({
   ...(kataStaging.staged > 0 ? { ignoreDeadLinks: [...STAGED_PACKAGE_DEAD_LINK_PATTERNS] } : {}),
 
   themeConfig: {
+    // 開発中の版の帯とリリースの版へのリンクに使う（theme/index.ts の NextChannelBanner）。
+    specdojoChannel: siteChannel.channel,
+    specdojoStableUrl: siteChannel.stableUrl,
     // ビルド時に生成したインデックスでブラウザ内検索を行う（外部サービス不要）
     search: {
       provider: "local",
@@ -945,6 +952,9 @@ export default defineConfig({
             text: "プロジェクト",
             link: "/ja/projects/prj-0001/020-project-definition/prj-overview",
           },
+          ...(siteChannel.channel === "next"
+            ? [{ text: "リリースの版", link: siteChannel.stableUrl }]
+            : []),
         ],
         sidebar: sidebarJa,
         langMenuLabel: "言語",
