@@ -128,3 +128,16 @@
       from: medium
       to: hard
   previous_event_id: reg_79246a51bfff4c438a29cd0d2ec9b117
+- v: 1
+  id: reg_b26508f2bee042ccaaa8c1e4aada9922
+  ts: "2026-11-23T00:03:35Z"
+  action: start
+  actor: opus-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_3c53416781004ecfbecb9a477b364d6a
