@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-PROJECT-prj-stakeholder-register-sample-040
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-PROJECT-prj-stakeholder-register-sample-040/T-KATA-WAVE-6-PROJECT-prj-stakeholder-register-sample-040-20261123T201354Z-fed856c2/plan.md
   started_at: "2026-11-23T20:14:03.279Z"
+  completed_at: "2026-11-23T20:21:55.498Z"
   agent: opus-executor
   execution: agent
   approach: rulebook-maintenance
@@ -20,16 +21,20 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- ステークホルダー登録簿の `rulebook` を改訂し、`grade` からの指摘事項（F001〜F005）に基づいた整合性の確保を行いました。
+- 主な修正内容として、'High' の関係者における『合意と関与方針』の記述条件の統一、テンプレートの列名（`備考`）への適合、関与区分の語彙定義、関係者 ID 規則の適切な場所（`ドキュメントID` の節）への移動、および表記の統一（`関係者 ID`）を実施しました。
+- `sample`、`recipe`、`template` は変更していません。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/rulebooks/prj-stakeholder-register-rulebook.md`: `grade` の指摘事項（F001〜F005）を解消するために `rulebook` を更新しました。具体的には、High の関係者に対する合意と関与方針の条件を整理し、テンプレートの `備考` 列に合わせて記述を調整、関与区分の語彙を固定化、関係者 ID 規則を `ドキュumentID` の節へ移管し、表記を `関係者 ID` に統一しました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 見直し条件の「見直し責任者・承認者」列は登録簿そのものの承認役割の割り当てにあたり、PJR-76N9 に触れるおそれがある。template の骨組みに関わるため本段では変えず、template・rulebook を合わせて見直すか判断が要る。
+- plan は記述ガイドへ章ごとの良い例・悪い例を書くよう求めるが、recipe の「良い例 / 悪い例」表と重なるため（`vp-arc-conciseness`）rulebook には足していない。
+- 維持した記述: 全体方針・位置づけ・Frontmatter・本文要件（備考の欄名以外）・影響度/関心度の評価表・コミュニケーション要件・見直し条件の記述ガイドは、grade の指摘がなく冗長でもないため変えていない。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+`grade` の指摘事項を一つずつ解消し、`rulebook` の整合性を高めるアプローチを取りました。特に、用語の不整合や、不適切な箇所に置かれていた記述（関係者 ID の規則）の整理に重点を置きました。また、`vp-arc-conciseness` を考慮し、`plan` にあった記述ガイドの追加は、既存の `recipe` との重複を避けるため実施していません。
