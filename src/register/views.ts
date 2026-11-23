@@ -171,6 +171,27 @@ function generateViewsByStatusFile(
   });
 }
 
+// 開いている handoff（まだ読まれていない引き継ぎ）を次のセッションが一目で見つけられるよう、
+// handoff だけを受け取り待ちと受け取り済みに分けて並べる。
+function generateHandoffsFile(
+  items: PjrDisplayItem[],
+  projectId: string,
+  heading: TableHeading,
+): string {
+  const handoffs = items.filter((it) => it.type === "handoff");
+  const tableOf = (status: string): string => {
+    const selected = handoffs.filter((it) => it.status === status);
+    return selected.length === 0
+      ? "該当なし"
+      : ["<!-- prettier-ignore -->", makeTable(selected, heading)].join("\n");
+  };
+  const template = loadViewTemplate("pjr-handoffs-template.md", projectId);
+  return injectViewSlots(template, {
+    "open-handoffs": tableOf("open"),
+    "done-handoffs": tableOf("done"),
+  });
+}
+
 function generateViewsByPriorityFile(
   items: PjrDisplayItem[],
   projectId: string,
@@ -359,6 +380,10 @@ export function generateDerivedViewFiles(paths: RegisterPaths, scope: BuildScope
       {
         path: join(paths.generatedPath, "pjr-epic-items.md"),
         content: generateEpicItemsFile(paths, itemViews),
+      },
+      {
+        path: join(paths.generatedPath, "pjr-handoffs.md"),
+        content: generateHandoffsFile(viewItems, paths.projectId, heading),
       },
     );
   }

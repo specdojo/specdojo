@@ -149,6 +149,7 @@ register 経由の plan では、approach がある成果物の plan と approac
 | `change-request` | 成果物・仕様・計画に対する変更の要望   | 実施が確定済みの作業なら `todo`                                                                             |
 | `decision`       | 記録・追跡する意思決定                 | 判断材料が足りず確認が先なら `question`                                                                     |
 | `note`           | 共有・備忘のための記録                 | 回答や結論が必要なら `question`                                                                             |
+| `handoff`        | セッション・LLM の切り替えの引き継ぎ   | 利用者の返事を待つことは `question` に分け、長く効く決まりは playbook や個票の入力へ移す                    |
 
 外部の対応・提供物への依存（外部待ち）には専用 type を設けない。対応が必要なら `todo` / `issue` として登録し、外部待ちで止まっている状態は `register wait` の `waiting` ステータスで表す。計画上の前提・制約・依存関係は `prj-assumptions-constraints-dependencies` 成果物へ整理する。
 
@@ -175,7 +176,21 @@ specdojo dashboard build
 
 `register build` は `generated/pjr-epic-items.md` に、epic ごとの直接の子項目とその type・現在の状態を表示します。別 project の子も project 修飾 ID で表示し、子がない epic も残します。孫は再帰的に表示しません。子の状態から epic を自動 close せず、完了基準を満たしたことを人が確認して `register close --id <epic-id> --conclusion "判断の根拠"` で `done` にします。`reject` / `defer` / `reopen` も todo と同じように使用できます。
 
-### 1.5. 全体計画を確認する
+### 1.5. セッションの引き継ぎを handoff で受け渡す
+
+オーケストレーターがセッションや LLM を切り替えるときは、引き継ぎを `handoff` として起票します。git で管理されるため、ほかのマシンや LLM からも同じ手順で読めます。開いている handoff は、まだ読まれていない引き継ぎを表します。
+
+```bash
+specdojo register add --type handoff --title "夜のセッションから朝のセッションへ" --topic night-to-morning
+specdojo register close --id PJR-AB12 --by <受け取った主体>
+```
+
+- 個票の章（引き継ぎ元と先・有効な承認の範囲・進行中・判断待ち・注意点）の書き方は [プロジェクト登録簿 作成ルール](../rulebooks/pjr-rulebook.md) に従います。利用者の返事を待っていることは `question` として別に起票し、判断待ちの章には参照だけを書きます。
+- 状態は `open`（受け取り待ち）と `done`（受け取った）だけです。次のセッションが読んだら、受け取った主体を `--by` にして `register close` します。`start` / `wait` / `review` / `reject` / `defer` はエラー終了します。
+- `register build` は `generated/pjr-handoffs.md` に、受け取り待ちと受け取り済みの handoff を分けて表示します。
+- `exec run --register` と夜間 orchestrator の対象にはなりません。
+
+### 1.6. 全体計画を確認する
 
 `dashboard build` は epic の依存順に全体計画の表とガントを `execution/generated/` へ出力します。カレンダーは `sch-defaults.yaml` を使います。
 
@@ -200,8 +215,8 @@ specdojo dashboard build
 | 他者・外部の対応を待つ   | `register wait`   | `waiting`                                                             |
 | 確認・レビューに回す     | `register review` | `review`                                                              |
 | 完了する                 | `register close`  | `done`（`decision` / `question` は `decided`。`note` は終端させない） |
-| 対応しないと判断する     | `register reject` | `rejected`（`note` は拒否）                                           |
-| 延期する                 | `register defer`  | `deferred`（`note` は拒否）                                           |
+| 対応しないと判断する     | `register reject` | `rejected`（`note` と `handoff` は拒否）                              |
+| 延期する                 | `register defer`  | `deferred`（`note` と `handoff` は拒否）                              |
 | 終了済み項目を再開する   | `register reopen` | `open`                                                                |
 | 担当・期限などを変更する | `register update` | （状態は変えずフィールドを更新）                                      |
 
@@ -369,7 +384,7 @@ specdojo register update --id PJR-EF56 --depends-on -
 specdojo register build --project <project-id>
 ```
 
-- `project-register/generated/` には登録項目一覧（`pjr-index.md`）と登録簿内の補助一覧（状態別・優先度別・担当者別）が生成されます。
+- `project-register/generated/` には登録項目一覧（`pjr-index.md`）と登録簿内の補助一覧（状態別・優先度別・担当者別、受け取り待ちと受け取り済みの handoff）が生成されます。
 - 個票の `part_of` と本文のwikilinkが参照する `<project-id>:pjr-index` は、生成された `project-register/generated/pjr-index.md` へ解決されます。
 - `controls/generated/` には controls 全体の type 別管理ビュー（リスク登録簿、課題ログ、変更要求ログ、決定記録）が生成されます。
 - `generated/` 配下は追跡対象外の生成物です。生成ファイルを手編集しても次回の `register build` で失われるため、内容を直したい場合は個票を修正して再生成します。
@@ -475,7 +490,7 @@ specdojo exec run --project <project-id> --register PJR-0012 --in-place
 specdojo exec run --project <project-id> --register PJR-0012 PJR-0013 --worktree --parallel 2
 ```
 
-- type が `todo` / `issue` / `change-request` の項目は成果物・実装を変更する対応、`question` / `risk` の項目は調査して結論案を result に記録する対応になります。`epic` / `decision` / `note` は実行対象外です。
+- type が `todo` / `issue` / `change-request` の項目は成果物・実装を変更する対応、`question` / `risk` の項目は調査して結論案を result に記録する対応になります。`epic` / `decision` / `note` / `handoff` は実行対象外です。
 - 状態は register の遷移（`in-progress` / `review` / `waiting`）で追跡され、agent は項目を終端化しません。成功後は人が内容を確認して `register close` します。
 - todo 個票に `approach` と `targets` を指定した場合、成果物カタログの `done_criteria` や kata 参照を取り込んだ schedule と共通の plan が生成されます（詳細は [exec運用ガイド](exec-operation-guide.md) の「register の todo から approach で成果物・kata を作る・直す手順」を参照してください）。
 - 個票 Frontmatter の `targets` に宣言した変更対象文書は、plan 生成時に直近の自動評価（grade）結果があれば `_GRADE_FINDINGS_` として plan に展開されます。`targets` がない場合は finding を展開しません。「関連ドキュメント」は根拠や参考への導線であり、そこに wikilink があるだけでは解消対象になりません。表示は最大10文書・各20件までに制限され、超過分はサイドカーを参照するよう促します。サイドカーがない場合は「finding なし」と表示されます。
@@ -509,7 +524,7 @@ specdojo register update --project <project-id> --id PJR-0012 \
   --autopilot - --by <approver> --reason "夜間 queue から除外"
 ```
 
-`autopilot: approved` は「現在の個票に書かれた完了条件」の承認です。夜間 orchestrator は印のある `open` の todo・issue だけを ID 順に選びます。epic、decision、印のない項目、`waiting` の項目は実行しません。完了条件を変更した場合は一度承認を取り消し、変更後の条件を再確認して承認します。
+`autopilot: approved` は「現在の個票に書かれた完了条件」の承認です。夜間 orchestrator は印のある `open` の todo・issue だけを ID 順に選びます。epic、decision、handoff、印のない項目、`waiting` の項目は実行しません。完了条件を変更した場合は一度承認を取り消し、変更後の条件を再確認して承認します。
 
 夜間実行は `specdojo orchestrator night` が担います。worktree 隔離、post-review、自動 close / `waiting` への復帰を必須とし、件数、並列数、連続失敗停止、rate limit 時の fallback をオプションで制限します。承認範囲外の操作が必要になった失敗は、元項目を `derived_from` に持つ issue として起票します。結果は `execution/reports/night-orchestrator/` の朝報告 1 文書へ集約します。
 
