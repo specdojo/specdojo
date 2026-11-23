@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-b6m3-quick-start-environment-patterns
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-23T13:17:02Z"
+  completed_at: "2026-11-23T13:51:07Z"
+  conclusion: クイックスタートに 6 つの環境のパターンの表と最初の 10 分の手順を足した
   depends_on:
     - PJR-7EZR
     - PJR-GA72
