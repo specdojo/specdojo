@@ -1,0 +1,18 @@
+`docs/ja/specdojo/samples/cxd-sample.md` を直し、grade の指摘 4 件（F001〜F004）はすべて対応しました。変更したのはこのファイルだけです。Prettier と markdownlint は通りました（0 件）。plan の決まりどおり、result の記入と frontmatter の `status` には触れていません。
+
+| 指摘 | 内容 | 対応 |
+| --- | --- | --- |
+| F001 | 上位目的への参照がない | 概要に [[specdojo:prj-overview-sample\|プロジェクト概要]] への参照を足し、「タブレット 1 台での運用の前に、学習用 CLI で境界を確かめる」という位置づけを書きました。概要は「目的の 1〜3 文 → 表 → 対象外と委譲先」の template の並びに組み直し、`_ASSUMPTION_` の文はプロジェクト概要の初期範囲外（複数店舗管理・本格会計連携）とそろえました |
+| F002 | 表の列名が template と違う | 「境界外へ委ねる範囲（対象外と委譲先）」「対応ロール」「区分・位置づけ」「不在・障害時の影響と扱い」「関係ID」に合わせました |
+| F003 | frontmatter に `supersedes` がない | `supersedes: []` を足しました |
+| F004 | Role code と役割名が混ざっている | 検証観点の「主確認ロール」列と将来課題の「担当ロール」列を消しました。template の骨組みにない列で、PJR-76N9 で禁じている役割の割り当てにもあたるためです。解消条件の文からも「QE が…まで保留」「開発担当と店番担当が…」のような役割と保留の書き方を外しました |
+
+あわせて、執筆標準が求める「表の前の 1 文」を、3.1〜3.4・概要・メモ / 将来課題の各表に足しました。
+
+**確認していないこと:** 親 runner が実行する検査（`npm run lint:md` ほか）は、ここでは実行していません。
+
+**別途決めてほしいこと:** Person 表の 4 列目は、rulebook の「境界上の接点・確認責務」を正として残しました。template は「境界上の接点」なので、template を rulebook に合わせる直しが要ります。この段では template を変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"cxd-sample.md を直し、F001〜F004 に対応した。プロジェクト概要への参照、template に合わせた列名、supersedes の追加、役割の列と割り当ての記述の削除、表の前の 1 文を加えた。prettier と markdownlint は通った。","handoff":["rulebook と template の食い違い: cxd-rulebook の「Person（人・ロール）」は推奨列を「境界上の接点・確認責務」としているが、cxd-template では「境界上の接点」になっている。sample は rulebook を正として「境界上の接点・確認責務」のまま残した。template の列名を rulebook に合わせる直しを提案する（この段では template を変えていない）。","F004 は、検証観点の「主確認ロール」列と将来課題の「担当ロール」列を消して対応した。どちらも template の骨組みにない列で、PJR-76N9（役割の割り当てを本文に書かない）にもあたる。解消条件の文から、役割が受入を保留すると読める書き方も外した。","決める必要のある値はなし（性能・日程などの _UNDECIDED_ にあたる値は、この sample には出てこない）。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/cxd-sample.md","status":"passed","summary":"変更した sample を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/cxd-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/cxd-sample.md だけで、plan・result・個票を変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変更していない","reason":"*.yaml / *.yml を変更していない"}]}
+</specdojo_executor_evidence>
