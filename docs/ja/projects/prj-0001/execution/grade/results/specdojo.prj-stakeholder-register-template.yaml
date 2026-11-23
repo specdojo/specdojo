@@ -5,10 +5,10 @@ path: docs/ja/specdojo/templates/prj-stakeholder-register-template.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 100
-graded_at: "2026-10-23T20:10:59.573Z"
-graded_by: flash-high-executor
-content_hash: b5c0920f94bdeb1e5f57e9f0dd591b9d9aef632912da79de10ed916b3e042d4f
+score: 97
+graded_at: "2026-11-23T21:48:12.017Z"
+graded_by: sonnet-review-executor
+content_hash: 16ffb9dc6dbf0b38e9e89f6a6f719a563627e3531ea9387a1f08277bbd287d06
 categories:
   purpose:
     score: 100
@@ -21,11 +21,11 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 92
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 92
   consistency:
     score: 100
 viewpoints:
@@ -81,14 +81,14 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -104,6 +104,28 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 2
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 11
+    anchor: >-
+      | `STH-_STAKEHOLDER_KEY_` | _STAKEHOLDER_NAME_ | _ENGAGEMENT_CATEGORY_ | _ORGANIZATION_ | _ROLE_CODE_OR_NONE_ |
+      _PRIMARY_RESPONSIBILITY_ | _TODO_ |
+    message: >-
+      関係者一覧の備考列だけが他列の `_PLACEHOLDER_` 形式（`_NOTE_` など）ではなく、各章冒頭の記述指示と同じ `_TODO_`
+      の目印になっています。備考に書く内容（利用場面など）を示すプレースホルダへ置き換えてください。
+    message_ja: >-
+      関係者一覧の備考列だけが他列の `_PLACEHOLDER_` 形式（`_NOTE_` など）ではなく、各章冒頭の記述指示と同じ `_TODO_`
+      の目印になっています。備考に書く内容（利用場面など）を示すプレースホルダへ置き換えてください。
+  - id: F002
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 11
+    anchor: >-
+      | `STH-_STAKEHOLDER_KEY_` | _STAKEHOLDER_NAME_ | _ENGAGEMENT_CATEGORY_ | _ORGANIZATION_ | _ROLE_CODE_OR_NONE_ |
+      _PRIMARY_RESPONSIBILITY_ | _TODO_ |
+    message: "`_TODO_` が章冒頭の記述指示と備考列のプレースホルダの両方に使われており、未記入の目印と記入欄の区別が曖昧です。備考列には専用のプレースホルダを使ってください。"
+    message_ja: "`_TODO_` が章冒頭の記述指示と備考列のプレースホルダの両方に使われており、未記入の目印と記入欄の区別が曖昧です。備考列には専用のプレースホルダを使ってください。"

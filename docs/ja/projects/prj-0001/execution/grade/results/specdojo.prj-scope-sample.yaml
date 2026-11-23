@@ -4,31 +4,30 @@ document: specdojo:prj-scope-sample
 path: docs/ja/specdojo/samples/prj-scope-sample.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-sample
 verdict: pass
-score: 89
-graded_at: "2026-11-21T05:37:35.608Z"
-graded_by: opus-executor
-content_hash: c976bc6f907d733fcd87f28ecc2de2cf923afec0c6a1cc3cfa3d8ca41b32dd4c
+score: 100
+graded_at: "2026-11-23T21:56:37.186Z"
+graded_by: sonnet-review-executor
+content_hash: 117a15ae895d7ba84bbcbd1565eb7144284c9f0b74b40a91fcfc71aa51bf5a38
 categories:
   purpose:
     score: 100
   operations:
     score: 100
   planning:
-    score: 92
+    score: 100
   business:
-    score: 92
+    score: 100
   architecture:
     score: 100
   usability:
-    score: 83
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 100
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -43,8 +42,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
     level: 4
     score: 100
@@ -55,8 +54,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-stakeholder-clarity:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
     level: 4
     score: 100
@@ -76,20 +75,20 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -105,62 +104,6 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 8
+  minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: minor
-    rule: vp-pm-dependency-risk
-    line: 56
-    anchor: "| 影響評価 | 店頭手順、操作時間、初期リリース時期、データ移行、再説明の必要性を確認する |"
-    message: スコープ変更方針の影響評価または表に、rulebook が推奨する「影響を受ける成果物」（成功基準と受入条件、前提・制約・依存関係、スケジュールなど）がなく、スコープ変更時に見直す後続成果物とスケジュールへの影響を識別できない。
-    message_ja: スコープ変更方針の影響評価または表に、rulebook が推奨する「影響を受ける成果物」（成功基準と受入条件、前提・制約・依存関係、スケジュールなど）がなく、スコープ変更時に見直す後続成果物とスケジュールへの影響を識別できない。
-  - id: F002
-    severity: minor
-    rule: vp-ba-stakeholder-clarity
-    line: 57
-    anchor: "| 承認者   | PO が最終判断し、BA は利用者影響と受入観点を整理する                       |"
-    message: 合意・承認を担う関係者（PO・BA）が第1章の対象利用者・関係者として示されておらず、スコープの合意対象者と確認者をこの文書の中で特定できない。
-    message_ja: 合意・承認を担う関係者（PO・BA）が第1章の対象利用者・関係者として示されておらず、スコープの合意対象者と確認者をこの文書の中で特定できない。
-  - id: F003
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 25
-    anchor: "- 初期対象期間は、最小機能の初期リリースから、販売・在庫・つけ管理の記録が2週間継続できることを確認するまでとする。"
-    message: 対象期間の終わりである「記録が2週間継続できることを確認する」の判定基準が示されておらず、成功基準と受入条件または概要の短期指標（営業日の90%以上で記録あり等）への参照もないため、期間が終わったかどうかを判定できない。
-    message_ja: 対象期間の終わりである「記録が2週間継続できることを確認する」の判定基準が示されておらず、成功基準と受入条件または概要の短期指標（営業日の90%以上で記録あり等）への参照もないため、期間が終わったかどうかを判定できない。
-  - id: F004
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 8
-    anchor: "- 入荷、棚卸、廃棄を含む店頭在庫を管理する。"
-    message: 対象業務では店頭在庫の管理に「廃棄」を含めているが、対象システムの在庫管理の行（入荷登録、棚卸、在庫一覧、在庫低下の確認）に廃棄の登録がなく、対象業務と対象システムの範囲が一致していない。
-    message_ja: 対象業務では店頭在庫の管理に「廃棄」を含めているが、対象システムの在庫管理の行（入荷登録、棚卸、在庫一覧、在庫低下の確認）に廃棄の登録がなく、対象業務と対象システムの範囲が一致していない。
-  - id: F005
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# プロジェクトスコープ: 駄菓子屋きぬや 販売管理システム"
-    message: template が H1 直後に置く導入文の欄（概要の期待効果を受けて、対象範囲と対象外を合意するための一文）が sample では省かれており、template の骨組みと sample の完成例が一致していない。
-    message_ja: template が H1 直後に置く導入文の欄（概要の期待効果を受けて、対象範囲と対象外を合意するための一文）が sample では省かれており、template の骨組みと sample の完成例が一致していない。
-  - id: F006
-    severity: minor
-    rule: vp-ux-readability
-    line: 57
-    anchor: "| 承認者   | PO が最終判断し、BA は利用者影響と受入観点を整理する                       |"
-    message: 第6章で突然登場する「PO」「BA」という役割が第1章の定義（店主代表等）と対応付けられておらず、読者が役割を識別できない。
-    message_ja: 第6章で突然登場する「PO」「BA」という役割が第1章の定義（店主代表等）と対応付けられておらず、読者が役割を識別できない。
-  - id: F007
-    severity: minor
-    rule: vp-ux-readability
-    line: 58
-    anchor: "| 記録先   | DEC、課題一覧、または変更要求ログへ、判断理由と影響範囲を残す              |"
-    message: 記録先の「DEC」が説明も参照もない略語で、初めて読む人が決定記録を指すと理解できないため、「決定記録（DEC）」のように補う必要がある。
-    message_ja: 記録先の「DEC」が説明も参照もない略語で、初めて読む人が決定記録を指すと理解できないため、「決定記録（DEC）」のように補う必要がある。
-  - id: F008
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 57
-    anchor: "| 承認者   | PO が最終判断し、BA は利用者影響と受入観点を整理する                       |"
-    message: 役割の呼称が第1章では「店主代表」等、第6章（承認者）では「PO」「BA」と表記ゆれしており、統一されていない。
-    message_ja: 役割の呼称が第1章では「店主代表」等、第6章（承認者）では「PO」「BA」と表記ゆれしており、統一されていない。
+findings: []
