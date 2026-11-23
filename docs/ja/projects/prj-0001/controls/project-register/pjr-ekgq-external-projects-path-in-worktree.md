@@ -11,7 +11,7 @@ specdojo:
   priority: high
   owner: DEV
   registered_at: "2026-11-23T01:37:52Z"
-  due_on: null
+  due_on: "2026-11-30"
   commit_type: fix
 ---
 
@@ -60,7 +60,7 @@ dry-run は worktree を作らないため、このエラーは出ない。
 - `external_projects` を宣言したリポジトリで、`exec run --register --worktree` の worktree の準備（`specdojo build`）が通る（テストで確かめる）。
 - 主の作業ツリーからの `register add --project <別名> --commit` は、今までどおり相手へ起票できる。相手がない場合の停止の動きは変えない。
 - 設定リファレンスの `external_projects` の節に、worktree での `path` の扱いを書く。
-- `CHANGELOG.md` は未公開の版の節に書き、公開済みの版の節を変えない。
+- `CHANGELOG.md` は変えない。個票の対応結果に「CHANGELOG に書く事項」の小節を作り、区分と行の文案を書く（prj-0001 の運用。並べて流したときの統合の衝突を避けるため）。
 
 ## 5. 対応結果
 

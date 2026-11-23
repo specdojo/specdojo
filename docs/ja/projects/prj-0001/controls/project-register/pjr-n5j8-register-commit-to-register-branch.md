@@ -16,6 +16,7 @@ specdojo:
     - PJR-2TX0
   depends_on:
     - PJR-SJC7
+    - PJR-EKGQ
   commit_type: feat
   commit_scope: register
 ---

@@ -63,3 +63,16 @@
       from: ""
       to: 完了条件
   previous_event_id: reg_812b403bde054dab9f884e927d3f265b
+- v: 1
+  id: reg_cbdb644155d84df58e1dc0b58a2cc547
+  ts: "2026-11-23T01:59:00Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: external_projects が worktree で止まる PJR-EKGQ を先に直す（2026-11-23）
+  changes:
+    - field: depends_on
+      from: '["PJR-SJC7"]'
+      to: '["PJR-SJC7","PJR-EKGQ"]'
+  previous_event_id: reg_7d459758aa234da39e9d41add36314f8
