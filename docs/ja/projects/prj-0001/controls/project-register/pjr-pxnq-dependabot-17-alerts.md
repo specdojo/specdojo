@@ -89,6 +89,20 @@ npm audit
 - 区分: Security
 - 文案: Dependabot が示した依存の脆弱性を、`vite`・`esbuild`・`minimatch`・`glob`・`katex` の更新で解消した（`docs:dev` の dev サーバーに関するものを含む）。
 
+### 5.5. 反映の結果（オーケストレーター、2026-11-23）
+
+feature ブランチ `feature/prj-0001/deps-dependabot-17` で 1 つずつ当て、当てるたびに確かめた。develop への merge は利用者の承認を待つ。
+
+| 段                                                | 当てた版                      | 確かめたこと                                                                                                                        | commit      |
+| ------------------------------------------------- | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| vite（docs-site の `overrides`）                  | vite 6.4.6、esbuild 0.25.12   | `docs:build`（207 秒）と `docs:dev` の起動が通った                                                                                  | `7b3d16adc` |
+| minimatch・glob（4 つのパッケージの `overrides`） | minimatch 11.0.9、glob 14.0.6 | `lint:md`・`lint:fm`・`lint:ts`・`typecheck`・`test:unit`（4,281 件）・VS Code 拡張の `compile`・`build`・`docs:dev` の起動が通った | `734a5d11d` |
+| katex（ルートと docs-lint の `overrides`）        | katex 0.18.10                 | `lint:md`・`test:docs`、`npm test` の全件（4,721 件）が通った                                                                       | `36b1405e0` |
+
+- 4 つのパッケージの `npm audit` は、どれも 0 件になった。
+- 版の実在は `npm view` で確かめた（vite 6.4.4・minimatch 11.0.1・glob 14.0.2・katex 0.18.2・esbuild 0.25.0）。
+- Dependabot の件数は、develop に merge して push した後に数え直す。
+
 ### 5.4. 残課題
 
 - `package.json` と lock の変更、`npm run docs:build`・`npm run docs:dev` の起動・`npm test`・`packages/vscode-specdojo` の build、Dependabot の警告が消えたことの確認は、orchestrator が行う。
