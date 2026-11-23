@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-7ezr-init-environment-patterns
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-23T13:16:51Z"
+  completed_at: "2026-11-23T13:49:54Z"
+  conclusion: init で Dev Container・手元と tmux の組み合わせを選べるようにし、tmux のスクリプトとパターン別の次の手順を出すようにした
   derived_from:
     - PJR-8PXJ
   commit_type: feat
