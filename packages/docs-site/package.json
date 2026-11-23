@@ -52,5 +52,8 @@
   "devDependencies": {
     "@types/node": "^25.9.2",
     "typescript": "^6.0.3"
+  },
+  "overrides": {
+    "vite": "^6.4.4"
   }
 }
