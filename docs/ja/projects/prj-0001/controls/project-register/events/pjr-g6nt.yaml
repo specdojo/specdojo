@@ -63,3 +63,19 @@
       from: ""
       to: 完了条件
   previous_event_id: reg_8dda26380fd74510a50d4310242c0435
+- v: 1
+  id: reg_be148797ebd641538833f4e782dccb4e
+  ts: "2026-11-23T02:40:16Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: 担当と期限を決めた（2026-11-23）
+  changes:
+    - field: owner
+      from: _TODO_
+      to: BA
+    - field: due
+      from: _TODO_
+      to: "2026-11-30"
+  previous_event_id: reg_c9fa5672d698443ca655d8e70c816a2c

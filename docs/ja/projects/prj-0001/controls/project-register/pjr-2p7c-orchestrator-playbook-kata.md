@@ -9,7 +9,9 @@ specdojo:
   item_type: decision
   item_status: open
   priority: medium
+  owner: BA
   registered_at: "2026-11-23T02:38:31Z"
+  due_on: "2026-11-30"
 ---
 
 # PJR-2P7C オーケストレーターの運用メモ（playbook）を正式な型にし、見つけ方を決める

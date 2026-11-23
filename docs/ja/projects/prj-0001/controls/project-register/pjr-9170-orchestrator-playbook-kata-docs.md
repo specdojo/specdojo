@@ -10,7 +10,9 @@ specdojo:
   item_status: open
   priority: medium
   difficulty: hard
+  owner: BA
   registered_at: "2026-11-23T02:38:48Z"
+  due_on: "2026-11-30"
   derived_from:
     - PJR-2P7C
   depends_on:
