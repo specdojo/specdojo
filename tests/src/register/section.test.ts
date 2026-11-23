@@ -645,6 +645,30 @@ describe("register add --section CLI", () => {
     });
   });
 
+  it("--dry-run では個票の見出し・個票のファイル名・event のファイル名が同じ ID を示し、何も書かない", async () => {
+    await withRepo(async ({ root, registerDir }) => {
+      const stdout = vi.spyOn(process.stdout, "write").mockReturnValue(true);
+      const body = join(root, "body.md");
+      writeFileSync(body, "-\n", "utf8");
+
+      await runRegister([
+        ...ADD_HANDOFF_ARGS,
+        "--section",
+        "進行中",
+        "--section-file",
+        body,
+        "--dry-run",
+      ]);
+
+      const output = stdout.mock.calls.map((call) => String(call[0])).join("");
+      expect(output).toContain(`Would create ${join(registerDir, "pjr-ab34-handoff-test.md")}:`);
+      expect(output).toContain("# PJR-AB34 引き継ぎ");
+      expect(output).toContain(`Would create ${join(registerDir, "events", "pjr-ab34.yaml")}:`);
+      expect(existsSync(join(registerDir, "pjr-ab34-handoff-test.md"))).toBe(false);
+      expect(process.exitCode).toBeUndefined();
+    });
+  });
+
   it("存在しない章を指定すると個票を作らずにエラーにする", async () => {
     await withRepo(async ({ root, registerDir }) => {
       vi.spyOn(process.stdout, "write").mockReturnValue(true);
