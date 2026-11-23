@@ -4,12 +4,11 @@ document: specdojo:cdr-sample
 path: docs/ja/specdojo/samples/cdr-sample.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-sample
 verdict: pass
-score: 94
-graded_at: "2026-11-21T03:23:03.624Z"
-graded_by: opus-executor
-content_hash: 86d0f5af1856182d03d32cf375a2babf3a7aabcf594f8094d815c39cc21544a0
+score: 97
+graded_at: "2026-11-23T17:22:38.190Z"
+graded_by: sonnet-review-executor
+content_hash: 03862734dcd205c3f23cb2d5c04af374b6cccb1820ab84d96fb4afb60a437521
 categories:
   purpose:
     score: 100
@@ -26,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 92
   consistency:
     score: 100
 viewpoints:
@@ -73,8 +72,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
     level: 4
     score: 100
@@ -102,46 +101,28 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 4
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-arc-conciseness
-    line: 63
-    anchor: "| 金額を浮動小数点で計算する                           | 端数の誤差でつけ残高が合わなくなるため     |"
+    line: 93
+    anchor: "- DB 接続とつけ残高の更新を行うファイルは、先頭で `server-only` を import し、クライアントから読み込まれた場合にビルドを失敗させる。"
     message: >-
-      禁止事項表の金額計算、クライアントからの DB import、未検証の
-      as、顧客情報のログ出力は、それぞれ本文10・17・24・39行目の規則と重複している。理由を本文側へ統合するなどして各規則の記載箇所を一つにし、禁止事項表には重複しない事項を残す。
+      禁止事項表の「クライアントコンポーネントから DB 接続を import する」と、本章の「`server-only` を import
+      してクライアントから読み込まれた場合にビルドを失敗させる」が同じ規則を二重に述べている。理由は表に置き、本章は `server-only` を使う手順の記述に絞るか、記載箇所を一つに統合する。
     message_ja: >-
-      禁止事項表の金額計算、クライアントからの DB import、未検証の
-      as、顧客情報のログ出力は、それぞれ本文10・17・24・39行目の規則と重複している。理由を本文側へ統合するなどして各規則の記載箇所を一つにし、禁止事項表には重複しない事項を残す。
+      禁止事項表の「クライアントコンポーネントから DB 接続を import する」と、本章の「`server-only` を import
+      してクライアントから読み込まれた場合にビルドを失敗させる」が同じ規則を二重に述べている。理由は表に置き、本章は `server-only` を使う手順の記述に絞るか、記載箇所を一つに統合する。
   - id: F002
     severity: minor
-    rule: vp-qe-verifiability
-    line: 57
-    anchor: "- 金額の計算やつけ残高の更新を変えた場合は、境界値（残高 0 円、上限額ちょうど）の単体テストを追加する。"
-    message: 境界値として挙げた「上限額ちょうど」が指す上限（つけ残高の上限など）とその定義元が本書から特定できず、追加すべき単体テストの値を判定できない。対象の上限名と、値を定める設計文書への参照を示す。
-    message_ja: 境界値として挙げた「上限額ちょうど」が指す上限（つけ残高の上限など）とその定義元が本書から特定できず、追加すべき単体テストの値を判定できない。対象の上限名と、値を定める設計文書への参照を示す。
-  - id: F003
-    severity: minor
     rule: vp-qe-kata-conformance
-    line: 17
-    anchor: "- サーバー専用の処理（Prisma による DB 接続、つけ残高の更新）は `src/server/` に置く。"
+    line: 93
+    anchor: "- DB 接続とつけ残高の更新を行うファイルは、先頭で `server-only` を import し、クライアントから読み込まれた場合にビルドを失敗させる。"
     message: >-
-      サーバー専用処理を src/server/ に配置する判断と、37行目の API ルート境界で Sentry へ送る方針について、設計上の正本への参照がない。cdr-rulebook が配置・境界・横断ルールの正本とする
-      cpd・sysd-* への参照を示し、本書では選定済みの設計に従う実装・検証方法として記述する。
+      rulebook の本文要件（禁止事項の表に書いた内容を本文の章で言い換えて繰り返さない）に反し、DB 接続のクライアント import の禁止が表と本章に重複している。sample
+      は要件の完成例なので、表か本章のどちらか一方に集約する。
     message_ja: >-
-      サーバー専用処理を src/server/ に配置する判断と、37行目の API ルート境界で Sentry へ送る方針について、設計上の正本への参照がない。cdr-rulebook が配置・境界・横断ルールの正本とする
-      cpd・sysd-* への参照を示し、本書では選定済みの設計に従う実装・検証方法として記述する。
-  - id: F004
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 63
-    anchor: "| 金額を浮動小数点で計算する                           | 端数の誤差でつけ残高が合わなくなるため     |"
-    message: >-
-      cdr-rulebook の本文要件「表に書いた禁止は本文の章で繰り返さない」に反し、禁止事項表の浮動小数点計算・未検証の as の禁止が本文10行目（円単位の整数）・22行目（unknown
-      で受けて型ガードで検証）と同じ規則を繰り返している。sample が完成例として要件を示せるよう、どちらか一方に集約する。
-    message_ja: >-
-      cdr-rulebook の本文要件「表に書いた禁止は本文の章で繰り返さない」に反し、禁止事項表の浮動小数点計算・未検証の as の禁止が本文10行目（円単位の整数）・22行目（unknown
-      で受けて型ガードで検証）と同じ規則を繰り返している。sample が完成例として要件を示せるよう、どちらか一方に集約する。
+      rulebook の本文要件（禁止事項の表に書いた内容を本文の章で言い換えて繰り返さない）に反し、DB 接続のクライアント import の禁止が表と本章に重複している。sample
+      は要件の完成例なので、表か本章のどちらか一方に集約する。
