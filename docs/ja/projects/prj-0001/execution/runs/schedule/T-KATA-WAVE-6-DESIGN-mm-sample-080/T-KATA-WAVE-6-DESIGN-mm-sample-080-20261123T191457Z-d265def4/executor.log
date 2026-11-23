@@ -1,0 +1,11 @@
+対象文書 `docs/ja/specdojo/samples/mm-sample.md` は変更していません。冗長さの候補は 3 件見つかりましたが、どれも判断に要る内容か、構成上の導入文だったため残しました。
+
+- 第 3 章の導入文は、欠品 7 回のうち 5 回という根拠と、しきい値が店番ごとに違うという背景を述べています。決定 1 の理由に当たり、表には載っていません。
+- 第 3〜5 章の表の導入文は、表の役割を 1 文で示すだけです。表の中身を言い換えておらず、サンプルとして章の目的を読み手に伝える働きがあります。
+- 保留事項の理由欄は、アクション 1 と 3 を参照しています。再掲ではなく、別の表の内容を指す参照です。
+
+実行した検査はありません。親 runner の検査は、変更がないため結果に影響しません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"対象文書に削る・まとめる・参照に置き換えるべき冗長さはなく、変更不要と判断した。保持した候補 3 件を condense_records に記録した。","handoff":[],"condense_records":[{"location":"第3章 決定事項の導入文","category":"table-prose","action":"retain","reason":"欠品7回中5回という根拠としきい値が店番ごとに違う背景を述べており、表には載っていない。決定1の理由として判断に要る。","cause":{"type":"document"}},{"location":"第3〜5章の表の導入文","category":"table-prose","action":"retain","reason":"各表の役割を1文で示すのみで、表の中身を言い換えていない。サンプルとして章の目的を読み手に伝える。","cause":{"type":"document"}},{"location":"第5章 保留事項の保留の理由欄","category":"repetition","action":"retain","reason":"アクション1と3を参照して保留の理由を述べている。別の表の内容を指す参照であり、再掲ではない。","cause":{"type":"document"}}],"validations":[{"command":"npm run lint:md","status":"not_applicable","reason":"対象文書を変更していないため。親 runner の検査対象でもある。"}]}
+</specdojo_executor_evidence>
