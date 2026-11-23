@@ -4,12 +4,14 @@ specdojo:
   type: exec-result
   task_id: PJR-XHS8
   mode: edit
-  status: in_progress
+  status: blocked
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-XHS8/pjr-xhs8-20261123T001711Z-710bb75b/plan.md
   started_at: "2026-11-23T00:17:12.154Z"
+  completed_at: "2026-11-23T00:18:58.657Z"
   agent: sonnet-executor
+  block_reason: "executor reported incomplete: copyIfChanged の 1ms 許容、dev 時の索引描画での Shiki 省略、単体テスト追加、個票更新は完了。索引の文字の前後比較と起動時間の 3 回測定は dev サーバーを起動できず未実施。"
 ---
 
 # Edit Result
