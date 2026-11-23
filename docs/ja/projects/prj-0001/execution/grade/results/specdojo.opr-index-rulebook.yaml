@@ -4,17 +4,16 @@ document: specdojo:opr-index-rulebook
 path: docs/ja/specdojo/rulebooks/opr-index-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-rulebook
-verdict: needs-work
-score: 84
-graded_at: "2026-11-21T05:00:54.983Z"
-graded_by: opus-executor
-content_hash: 9544e06a67c094da4ac8db27c5b89ced7ea7f0d2f1e691f5273108176d08be1c
+verdict: pass
+score: 98
+graded_at: "2026-11-23T10:11:00.205Z"
+graded_by: sonnet-review-executor
+content_hash: da767a327365b0a3d423b9ece32af89e4e358926624f66614469c654002f4428
 categories:
   purpose:
     score: 100
   operations:
-    score: 94
+    score: 100
   planning:
     score: 100
   business:
@@ -22,13 +21,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 83
+    score: 100
   implementation:
-    score: 88
+    score: 100
   quality:
-    score: 67
+    score: 92
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -37,8 +36,8 @@ viewpoints:
     level: 4
     score: 100
   vp-po-publication-accountability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-plan-feasibility:
     level: 4
     score: 100
@@ -64,29 +63,29 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-change-impact:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-verifiability:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 1
-    score: 25
+    level: 3
+    score: 75
   vp-ux-readability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -101,92 +100,14 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 2
-  minor: 7
+  major: 0
+  minor: 1
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-publication-accountability
-    line: 36
-    anchor: "| 4   | 障害対応手順（P1/P2…、切り分け、一次対応、復旧） | ○    | 優先度別の初動 SLA・段階別操作・連絡条件と先                  |"
-    message: 4章の「連絡条件と先」や9章のアカウント付与・剥奪、10章の引継ぎ先を必須としながら、公開リポジトリで個人名・連絡先・アカウント識別子を記載せずロールや窓口名で表す旨の制約が禁止事項・記述ガイドにないため、公開不適切情報の混入を防ぐ規定を追加する必要がある。
-    message_ja: 4章の「連絡条件と先」や9章のアカウント付与・剥奪、10章の引継ぎ先を必須としながら、公開リポジトリで個人名・連絡先・アカウント識別子を記載せずロールや窓口名で表す旨の制約が禁止事項・記述ガイドにないため、公開不適切情報の混入を防ぐ規定を追加する必要がある。
-  - id: F002
-    severity: minor
-    rule: vp-dev-implementation-readiness
-    line: 20
-    anchor: "- ファイル名は `opr-index.md` を推奨する。"
-    message: >-
-      ファイル名 `opr-index.md` は示されているが配置先ディレクトリ（`docs/ja/projects/＜project-id＞/` 配下の章ディレクトリ）や docs-structure-guide
-      への参照がなく、作成時の作業対象パスを決められないため配置規則を追加する必要がある。
-    message_ja: >-
-      ファイル名 `opr-index.md` は示されているが配置先ディレクトリ（`docs/ja/projects/＜project-id＞/` 配下の章ディレクトリ）や docs-structure-guide
-      への参照がなく、作成時の作業対象パスを決められないため配置規則を追加する必要がある。
-  - id: F003
-    severity: minor
-    rule: vp-dev-testability
-    line: 11
-    anchor: >-
-      - **共通の運用**: 役割は適用先のメンバー定義、`status`・承認・改訂と廃止・未決事項の引き継ぎは [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]]
-      に従う。整形・lint はリポジトリの検証で扱う。
-    message: >-
-      前回指摘のうち受入確認手順は50行目で解消したが、「整形・lint はリポジトリの検証で扱う」とするのみで、生成した opr-index の
-      Frontmatter・本文を検証する具体的なコマンド（lint:md・lint:fm・validate:schema 等）と期待結果が示されておらず、検証方法が作成者に伝わらない。
-    message_ja: >-
-      前回指摘のうち受入確認手順は50行目で解消したが、「整形・lint はリポジトリの検証で扱う」とするのみで、生成した opr-index の
-      Frontmatter・本文を検証する具体的なコマンド（lint:md・lint:fm・validate:schema 等）と期待結果が示されておらず、検証方法が作成者に伝わらない。
-  - id: F004
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 19
-    anchor: "- ID は `opr-index` とする。"
-    message: >-
-      ID を `opr-index` と定めているが、プロジェクト成果物の ID はプロジェクト修飾（`＜project-id＞:opr-index`）が標準であり、メタ情報標準や他 rulebook
-      と整合しないため、修飾形式と例を明記する必要がある。
-    message_ja: >-
-      ID を `opr-index` と定めているが、プロジェクト成果物の ID はプロジェクト修飾（`＜project-id＞:opr-index`）が標準であり、メタ情報標準や他 rulebook
-      と整合しないため、修飾形式と例を明記する必要がある。
-  - id: F005
-    severity: major
     rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 運用手順 全体構成 作成ルール"
-    message: 対応サンプル `specdojo:opr-index-sample` が本ルールブックに従っておらず、Frontmatter の `rulebook` 指定が誤っている（`opd-rulebook` になっている）。
-    message_ja: 対応サンプル `specdojo:opr-index-sample` が本ルールブックに従っておらず、Frontmatter の `rulebook` 指定が誤っている（`opd-rulebook` になっている）。
-  - id: F006
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 27
-    anchor: "## 5. 本文構成（標準テンプレ）"
-    message: 本ルールブックで 12 章すべてを必須（○）としているが、対応サンプルでは 4 章分しか実装されておらず、整合していない。
-    message_ja: 本ルールブックで 12 章すべてを必須（○）としているが、対応サンプルでは 4 章分しか実装されておらず、整合していない。
-  - id: F007
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 49
-    anchor: "- 手順表の標準列は「実施者・入力条件・操作・完了条件・証跡」とする。良い例:「当番・再実行済み・実行 ID で結果照合・成功かつ重複なし・実行ログ」。悪い例:「適宜再実行」。"
-    message: >-
-      手順表の標準列を「実施者・入力条件・操作・完了条件・証跡」と定めているが、対応サンプルの点検手順表には「入力条件」「操作」列がなく、12章見出しの括弧書きも rulebook
-      と食い違っているため、サンプルを標準列・章見出しに合わせる必要がある。
-    message_ja: >-
-      手順表の標準列を「実施者・入力条件・操作・完了条件・証跡」と定めているが、対応サンプルの点検手順表には「入力条件」「操作」列がなく、12章見出しの括弧書きも rulebook
-      と食い違っているため、サンプルを標準列・章見出しに合わせる必要がある。
-  - id: F008
-    severity: minor
-    rule: vp-ux-readability
-    line: 15
-    anchor: "`opr-index` は手順群の入口・共通規約、`opr-<term>` は差分（具体手順・個別判断）、`opd-index` は方針を担う。"
-    message: 位置づけが1文のみで、`opr-＜term＞` を「差分」とする意味や `opr`/`opd` の略語、どの章を index に書きどの章を分冊へ切り出すかの判断基準が示されておらず、初見の作成者が分冊の判断を読み取れない。
-    message_ja: 位置づけが1文のみで、`opr-＜term＞` を「差分」とする意味や `opr`/`opd` の略語、どの章を index に書きどの章を分冊へ切り出すかの判断基準が示されておらず、初見の作成者が分冊の判断を読み取れない。
-  - id: F009
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 56
-    anchor: "- `opd` と矛盾する手順を独自に定義しない。"
-    message: 方針文書の表記が `opd-*`（9行目）・`opd-index`（15行目・12章）・`opd`（56行目）と揺れており、禁止事項の対象範囲が文書群全体か index のみか曖昧なため統一する必要がある。
-    message_ja: 方針文書の表記が `opd-*`（9行目）・`opd-index`（15行目・12章）・`opd`（56行目）と揺れており、禁止事項の対象範囲が文書群全体か index のみか曖昧なため統一する必要がある。
-level_corrections:
-  - viewpoint: vp-qe-kata-conformance
-    original_level: 2
-    corrected_level: 1
+    line: 48
+    anchor: "| 8   | 運用変更作業（設定変更・デプロイ・ロールバック） | ○    | 承認者・実施条件・切戻し条件と操作                            |"
+    message: 手順表の標準列を実施者・入力条件・操作・完了条件・証跡と定めているが、サンプル7章のバッチ再実行表が項目・手順の2列で標準列と合っていないため、サンプルを標準列に合わせるか、標準列の適用範囲を例外として明記する必要がある。
+    message_ja: 手順表の標準列を実施者・入力条件・操作・完了条件・証跡と定めているが、サンプル7章のバッチ再実行表が項目・手順の2列で標準列と合っていないため、サンプルを標準列に合わせるか、標準列の適用範囲を例外として明記する必要がある。
