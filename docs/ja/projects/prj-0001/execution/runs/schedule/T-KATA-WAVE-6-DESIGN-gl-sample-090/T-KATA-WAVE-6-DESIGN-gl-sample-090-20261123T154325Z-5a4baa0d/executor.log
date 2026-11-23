@@ -1,0 +1,40 @@
+レビューの結果、verdict は `complete-with-findings` です。評価結果は最新で、sample も rulebook も grade は `pass` でした。
+
+**評価結果の確認**
+- 次の 3 つを実行しました。どれも対象パスを出力せず、終了コードは 0 でした。
+  - sample に対する `specdojo grade list --target kata --path docs/ja/specdojo/samples/gl-sample.yaml --changed-only`
+  - rulebook に対する `specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/gl-rulebook.md --changed-only`
+  - sample に対する `specdojo grade list --target kata --path docs/ja/specdojo/samples/gl-sample.yaml --incomplete`
+- そのため、sample と rulebook の評価結果はどちらも最新で、評価パイプラインは完了済みです。
+- sample の grade は `pass` で、score は 100、finding は 0 件です。
+- rulebook の grade は `pass` で、score は 94、minor の finding が 3 件です。
+- 最初の確認の後に成果物が変わった形跡はありません。ワークツリーの未追跡ファイルは `pipeline-state.json` だけでした。
+
+**判断根拠**
+- `gl-sample.yaml` の本文を全文読みました。内容は plan の完了条件と食い違いません。
+  - frontmatter 相当の項目（`id`、`type`、`rulebook`、`title`、`locale`、`status`）と、`terms` の各項目（`definition`、`notes`、`relatedTerms`、`status` など）が揃っています。
+  - 題材は、駄菓子屋きぬやの販売・在庫・つけ管理で統一されています。常連客、店主代表、つけ限度額などの用語があり、共通サンプル文脈に沿っています。
+  - 領域接頭辞のない ID は既存 ID として維持する旨を、コメントで明示しています。
+  - `relatedTerms` が指す ID はすべて同ファイル内に定義されています。
+  - 商品は共通用語集 `gl-common` を正本とし、本書では定義していません。
+- 完了条件の充足は grade の判定を事実として用いました。
+  - DC-001（章立てと必須項目）、DC-002（共通サンプル文脈）、DC-003（禁止事項）は、`vp-qe-omissions-consistency` と `vp-qe-kata-conformance` の level 4 に対応します。
+  - 対象外の変更が混入した形跡もありません。
+- rulebook の minor finding 3 件は F001、F002、F003 です。
+  - F001 は検証方針の記述が分散している点、F002 は見出し直下の英語名の行の体裁、F003 は検査コマンド段落への modeline の混在です。
+  - これらは型の記述品質に関する指摘です。sample の必須要素の欠落でも、禁止事項への抵触でもありません。rulebook の評価も `pass` で、このタスクの完了を妨げません。
+- 実践の型の `recipe` は `_MISSING_` です。plan が rulebook から解決した宣言どおりで、sample の品質評価には影響しませんでした。
+
+**未充足事項・改善指示**
+- このタスクに未充足事項はありません。
+- 改善指示は 1 点です。次に rulebook を手直しする機会に、F001（検証方針の一本化）、F002（英語名の行の体裁確認）、F003（modeline 記述の分離）を反映してください。
+- rulebook を `ready` にする前には、`validate:schema` の enum coverage を確認してください。
+- 人の確定は、sample がひととおり揃った後の横串の確認でまとめて行います。
+
+**確認できなかった範囲**
+- sample 自体の `lint`、`schema` 検証、docs ビルドは、親 runner の検査に任せたため実行していません。
+- 先行する edit タスクの result（`result.md`）の内容は読んでいません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict は complete-with-findings。sample（gl-sample）は score 100 の pass、rulebook（gl-rulebook）は score 94 の pass（minor 3 件：F001・F002・F003）で、どちらも鮮度は最新。gl-sample.yaml の本文を全文読み、完了条件 DC-001〜003 と食い違いがないことを確認した。rulebook の minor は型の記述品質に関する指摘で、タスクの完了を妨げない。改善指示は、次回の rulebook 手直し時に F001〜F003 を反映すること。確認できなかった範囲：sample の lint・schema 検証・docs ビルド（親 runner に任せた）、先行 edit タスクの result.md の内容。","handoff":["rulebook gl-rulebook の minor finding F001（検証方針の一本化）、F002（見出し直下の英語名の行の体裁）、F003（modeline 記述の分離）を、次回の rulebook 手直し時に反映する","rulebook を ready にする前に validate:schema（enum coverage）を確認する","人の確定は sample 一式が揃った後の横串確認でまとめて行う"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/gl-sample.yaml --changed-only","status":"passed","summary":"出力なし（終了コード 0）。評価結果は最新"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/gl-rulebook.md --changed-only","status":"passed","summary":"出力なし（終了コード 0）。評価結果は最新"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/gl-sample.yaml --incomplete","status":"passed","summary":"出力なし（終了コード 0）。評価パイプラインは完了済み"}]}
+</specdojo_executor_evidence>
