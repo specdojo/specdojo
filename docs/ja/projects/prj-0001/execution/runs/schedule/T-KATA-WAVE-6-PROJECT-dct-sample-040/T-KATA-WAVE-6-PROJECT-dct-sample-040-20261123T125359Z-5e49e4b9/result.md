@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-PROJECT-dct-sample-040
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-PROJECT-dct-sample-040/T-KATA-WAVE-6-PROJECT-dct-sample-040-20261123T125359Z-5e49e4b9/plan.md
   started_at: "2026-11-23T12:54:08.832Z"
+  completed_at: "2026-11-23T13:03:57.356Z"
   agent: opus-executor
   execution: agent
   approach: rulebook-maintenance
@@ -20,16 +21,24 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- rulebook としての `docs/ja/specdojo/rulebooks/dct-rulebook.md` を、grade の指摘に基づき簡潔に整備しました。
+- F002 (overview/brief の冗長な記述), F004 (post-edit チェックの一覧欠如), F005 (推奨メタ項目への `supersedes` の欠落), F006 (テンプレート ID 規約の誤り), F010 (non-`work` 項目への `done_criteria` 許容), F011 (生成物の管理), F012 (用語の一貫性) の各 finding に対する修正を行いました。
+- F001, F003, F007, F008, F009 に関しては、schema や template 等の他の領域への変更が必要なため、handoff にて継続的なアクションとして記録しています。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/rulebooks/dct-rulebook.md`: grade の指摘事項に基づき、冗長な説明の削除、推奨メタ項目への `supersedes` の追加、テンプレート ID 規約の修正、および `done_criteria` の適用範囲の限定を行いました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- F001: `groups`/`deliverables` exclusivity and the ban on `min_size` under `type: project` cannot be detected by `dct.schema.yaml`. The rulebook now points to the review row of the post-edit checks. The root fix is to change the schema (for example, make `groups` and `deliverables` exclusive with `oneOf`, and forbid `min_size` under project). Candidate for a register ticket.
+- F003: The decision-plan sections were condensed into one, but moving them out to a separate `dct-plan-rulebook` is not decided. That needs a new rulebook, catalog mapping and changes to `pm-review-viewpoints.yaml` `document_kinds`, so it needs a separate ticket.
+- F007/F008: The rulebook rule is correct. Fix `docs/ja/specdojo/templates/dct-project-management-template.yaml` so that `sch-track-launch` and `sch-milestones` have `depends_on: [sch-strategy-launch]` (not changed here because the template cannot be edited in this stage).
+- F010 follow-up: The rulebook now forbids `done_criteria` on non-`work` items. Remove `done_criteria` from the `generated` items `sch-milestones` and `sch-track-launch` in `dct-project-management-template.yaml`.
+- F009: The rulebook-frontmatter schema allows only one ID for `template`, so the per-domain templates cannot be declared. The body now states that the omission is an exception, not a missing template. Decide whether to change the schema (allow arrays) or add the exception to rulebook-authoring-standard.
+- 適用外の検証: `npm run validate:schema:file`（Only the Markdown rulebook was changed; no `*.yaml` or `*.yml` file was changed）
+- 適用外の検証: `npm run validate:history-links`（No plan, result or register ticket file was changed）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+rulebook-maintenance

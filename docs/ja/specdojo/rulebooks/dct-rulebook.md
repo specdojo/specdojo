@@ -19,7 +19,7 @@ Deliverables Catalog (Domain) Documentation Rulebook
 - カタログはメタ情報（ID・種別・依存・配置先・概要・完了条件）の管理に専念し、個別成果物の本文は各成果物ファイルを正とする。
 - 漏れ・重複・所在不明を防ぐため、プロジェクトで発生するすべての成果物をいずれかのドメインカタログに記載する。
 - 共通事項は `dct-index` の「共通ルール」を SSOT とし、本ルールと成果物で再定義しない。
-- 実践の型の構成: template はドメインごとの `dct-<domain>-template.yaml`（物理分割時は `dct-<domain>-<part>-template.yaml`）で、`catalog scaffold` が `domain` から選ぶ。1 つの ID しか持てない frontmatter の `template` では表せないため宣言しない。
+- 実践の型の構成: テンプレートはドメインごとの `dct-<domain>-template.yaml`（物理分割時は `dct-<domain>-<part>-template.yaml`）で、`catalog scaffold` が `domain` から選ぶ。frontmatter の `template` は 1 つの ID しか持てないため、本書では省略する。この省略は未整備ではなく、ドメイン別テンプレートを使う例外を表す。
 - 共通の運用: 役割の割り当ては適用先のメンバー定義に、`status` の昇格と承認、改訂と廃止、未決事項の引き継ぎは [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従い、本書と成果物で言い直さない。文書の整形・lint はリポジトリの検証で扱う。
 
 ## 2. 位置づけ
@@ -48,7 +48,7 @@ flowchart LR
 
 ### 3.2. ID・識別子規約
 
-- `id` は `type: project` では `<project-id>:dct-<domain>`、テンプレートでは `dct-<domain>-template` とする。物理分割時は末尾に `-<part>` を付ける（例: `prj-0001:dct-data-model-bdd`、`specdojo:dct-data-model-bdd-template`）。
+- `id` は `type: project` では `<project-id>:dct-<domain>`、テンプレートでは `specdojo:dct-<domain>-template` とする。物理分割時は末尾に `-<part>` を付ける（例: `prj-0001:dct-data-model-bdd`、`specdojo:dct-data-model-bdd-template`）。
 - `domain` は kebab-case で、先頭は英小文字または数字、最大 63 文字とする。
 - `project_id` は `type: project` で必須とし、配置先プロジェクト ID と一致させる。
 - `local_id` は `type: project` では英小文字・数字・ハイフンのみとし、プロジェクト内で一意にする。
@@ -66,6 +66,7 @@ YAML 成果物のため、ファイル先頭のトップレベルキーとして
 | `title`      | ドキュメント名。表示ページの見出しになる                    | ○              |
 | `rulebook`   | `specdojo:dct-rulebook`                                     | ○              |
 | `part_of`    | 親となる `dct-index` の `id`（配列）                        | 任意           |
+| `supersedes` | 置き換え前のカタログの `id`（配列）                         | 任意           |
 | `project_id` | プロジェクト ID（例: `prj-0001`）                           | ○（`project`） |
 | `domain`     | ドメイン識別子。ファイル名 `dct-<domain>.yaml` と一致させる | ○              |
 | `base_path`  | ドメインの既定ディレクトリ。先頭 `/` の絶対パスで記載する   | 任意           |
@@ -78,7 +79,7 @@ YAML 成果物のため、ファイル先頭のトップレベルキーとして
 
 ### 5.2. `groups[]`（グループ）
 
-各グループは Markdown カタログの章に対応する。葉グループは `deliverables` を、親グループは子 `groups` を持ち、両方を同時に持たない。schema（`anyOf`）は両方を持つ構造も受理するため、この境界はレビューで確認する。
+各グループは Markdown カタログの章に対応する。葉グループは `deliverables` を、親グループは子 `groups` を持ち、両方を同時に持たない（schema で検出できないため「編集後の検査」でレビューする）。
 
 | フィールド     | 必須 | 内容                                              |
 | -------------- | ---- | ------------------------------------------------- |
@@ -138,10 +139,11 @@ YAML 成果物のため、ファイル先頭のトップレベルキーとして
 計画成果物は生成方法ではなくライフサイクルで区別する。
 
 - 人または agent が判断して更新する `dct-index`、`dct-plan-<domain>`、`sch-strategy-<track>`、`sch-defaults` は `work` とする。
-- `sch-track-<track>` と `sch-milestones` は strategy から再生成できるため `generated` とし、生成元の `sch-strategy-<track>` を `depends_on` に宣言する。テンプレートでも同じとする。
+- `sch-track-<track>` と `sch-milestones` は strategy から再生成できるため `generated` とし、生成元の `sch-strategy-<track>` を `depends_on` に宣言する。テンプレートでも同じとする（例: `sch-track-launch` は `depends_on: [sch-strategy-launch]`）。
 - 計画成果物を所有するトラック自身の `sch-strategy` は、自己生成の循環を避けるため `control` とするか、そのトラックの scope 外へ置く。
 - 全体計画は登録簿の epic を正本とする（[[specdojo:register-operation-guide|登録簿運用ガイド]]）。非推奨の `tml-index` は新しく登録せず、移行時に旧エントリと不要な依存を外す。
 - `dct-<domain>.yaml` 自身と `generated/` 配下の表示用生成物は、二重管理を避けるため登録しない。
+- 正本の YAML を削除・改名したら、`generated/` に残る旧名の表示ページも削除する。表示ページの生成は古いページを消さないため、残すと現役のカタログやテンプレートと取り違える。
 - トラック別の strategy・track の `local_id` は、対象 epic の範囲のカタログを人間が確認し、`catalog-planning` の子 todo を完了させてから追加する。未着手トラックの分を先行登録しない。
 
 ### 6.3. `depends_on`
@@ -173,7 +175,7 @@ YAML 成果物のため、ファイル先頭のトップレベルキーとして
 
 ### 6.7. `done_criteria`
 
-- `work` 成果物には 1 件以上の完了条件を記載する。
+- `work` 成果物には 1 件以上の完了条件を記載する。`control`・`generated` には書かない。スケジュール展開・表示ページ・plan のいずれも `work` 以外の完了条件を使わないため、書いても確認されない。
 - `text` は「確認できること」「識別できること」など検証可能な形で書き、前提や指示ではなく成果物が達成した振る舞い・状態を記載する。
 - `roles` には条件を確認する責務を持つロールコードだけを記載し、`viewpoint` には `vp-*` の ID を 1 つ記載する。
 
@@ -184,7 +186,7 @@ YAML 成果物のため、ファイル先頭のトップレベルキーとして
 
 ### 6.9. テンプレート固有項目
 
-- `min_size`（`small` / `medium` / `large`）は規模に応じた取捨選択のための項目で、`type: template` だけに書く。scaffold 時に除去される。schema は `type: project` でも受理するため、レビューで確認する。
+- `min_size`（`small` / `medium` / `large`）は規模に応じた取捨選択のための項目で、`type: template` だけに書く。scaffold 時に除去される（`type: project` への記載は schema で検出できないため「編集後の検査」でレビューする）。
 - テンプレートでは `local_id` や `part_of` にアンダースコアで囲んだプレースホルダ（例: `_PROJECT_ID_:dct-index`）を使用できる。
 
 ### 6.10. 業務領域テンプレートの反復方針（`_TERM_` の使い分け）
@@ -202,28 +204,31 @@ YAML 成果物のため、ファイル先頭のトップレベルキーとして
 
 ### 6.12. 成果物カタログ判定計画（`dct-plan-<domain>.yaml`）
 
-- 上流成果物からどの成果物インスタンスが必要かを agent が判定した結果は、`dct-plan-<domain>.yaml` に保存する。構造の SSOT は `docs/specdojo/schemas/v1/dct-plan.schema.yaml` とする。
-- 配置先は成果物カタログディレクトリ配下の `plans/` とし、`catalog validate` / `catalog build` の対象と混同しないよう `dct-*.yaml` と同じ階層に置かない。`generated/` の派生ビューとは異なり、バージョン管理対象の正本である。
-- 書くのは、必要な成果物インスタンス・placeholder 値・採用しない候補・未確定事項・判定根拠・確度に限る。`groups`・`base_path`・`done_criteria` などのカタログ構造はテンプレートとジェネレーターの責務であり、複製しない。
-- `iteration_pattern` はパターンAを `pattern-a`、パターンBを `pattern-b` とする。`pattern-a` では placeholder ごとに値と根拠を `variables` へ書き、`local_id` を展開結果と一致させる。`pattern-b` では `variables` を使わず固定の `local_id` を記載する。
-- 上流成果物から根拠を得られない placeholder・要否・名称・依存関係は確定させず、`open_questions` に理由と次のアクションを残す。
-- 入力は epic の `domains` が示す対象ドメインの上流成果物とし、関係する data-flow 成果物をすべて含める。data-flow がないドメインでは入力文書を明示する。既存カタログがあれば基準線として含め、既存 `local_id` を落とす場合は `exclusions` に理由を残す。
-- 既存の判定計画は再判定時に差分をレビューし、上書きは `--force` で明示する。判定計画の存在だけで、カタログの内容確認や `catalog-planning` の完了を代替しない。
+判定計画は上流成果物から必要な成果物インスタンスを agent が判定した結果であり、カタログとは別の `work` 成果物である。構造は `docs/specdojo/schemas/v1/dct-plan.schema.yaml`、コマンドの構文は [[specdojo:command-reference|コマンドリファレンス]] の「catalog / deliverable」を正本とし、本節はカタログとの境界だけを定める。
 
-### 6.13. 判定計画からの決定論的生成
+- 配置先はカタログディレクトリ配下の `plans/` とし、`dct-*.yaml` と同じ階層に置かない。`generated/` と異なりバージョン管理対象の正本である。
+- 書くのは必要な成果物インスタンス・placeholder 値・採用しない候補・未確定事項・判定根拠・確度に限り、`groups`・`base_path`・`done_criteria` などのカタログ構造を複製しない。
+- `iteration_pattern` は「業務領域テンプレートの反復方針」のパターンAを `pattern-a`、パターンBを `pattern-b` とする。`pattern-a` では placeholder ごとの値と根拠を `variables` に書き、`pattern-b` では `variables` を使わず固定の `local_id` を書く。
+- 入力は epic の `domains` が示す対象ドメインの上流成果物とし、関係する data-flow 成果物をすべて含める。data-flow がないドメインでは入力文書を明示し、既存カタログがあれば基準線として含める。
+- 上流成果物から根拠を得られない placeholder・要否・名称・依存関係は確定させず、`open_questions` に理由と次のアクションを残す。既存カタログの `local_id` を落とす場合は `exclusions` に理由を残す。
+- 判定計画がある domain は `catalog scaffold --plan --domain <domain>` で生成し、`--var` を併用しない。生成されたカタログは `draft` のまま人間が内容を確認し、判定計画の存在だけで `catalog-planning` の完了を代替しない。
 
-- 判定計画からの生成は `catalog scaffold --plan --domain <domain>` を使い、`--var` は併用しない。placeholder 値は根拠付きの `variables` を正本とする。
-- `min_size`・placeholder 展開・`part_of`・`domain`・`base_path`・group 構造・物理分割は scaffold と共通の処理で適用する。
-- blocking な `open_questions`、未解決 placeholder、重複 `local_id`、存在しない `depends_on`、schema 違反が 1 件でもあれば、その domain のファイルを書き込まない。
-- 差分は `--dry-run` で確認し、内容の異なる既存ファイルの上書きには `--force` を要する。
-- 生成されたカタログの `status` は template に従い `draft` のままとし、人間の内容確認を経て `catalog-planning` の完了を記録する。
+### 6.13. `brief`・`overview` の使い分けと YAML アンカー
 
-### 6.14. `brief`・`overview`・`done_criteria` の使い分けと YAML アンカー
-
-- `overview`: 成果物の目的・責務を 1 文で書く。カタログの表示ページの一覧に載り、ドメインの俯瞰に用いる。
-- `brief`: 採用する技術スタック、アーキテクチャ上の制約、設計・選定方針など、成果物の外から継続して渡す前提を書く。schedule・register の plan に「前提」として展開され、未指定なら載らない。
-- `done_criteria`: 「`done_criteria`」の記述ガイドに従う。
+- `overview` は表示ページの一覧に載り、ドメインの俯瞰に使う。目的以外の前提や制約を混ぜない。
+- `brief` は schedule・register の plan に「前提」として展開される。成果物ごとに変わらない前提だけを書き、完了条件は `done_criteria` に分ける。
 - 複数の成果物で前提を共有する場合は、同一ファイル内で YAML のアンカー（`&anchor`）を定義し、各 `brief` からエイリアス（`*anchor`）で参照する。
+
+### 6.14. 編集後の検査
+
+カタログを編集したら次の検査をすべて通し、失敗時は該当箇所を直して再実行する。コマンドの構文は [[specdojo:command-reference|コマンドリファレンス]] の「catalog / deliverable」を参照する。
+
+| 検査                   | 確認内容                                                                                             | 通過の条件                             |
+| ---------------------- | ---------------------------------------------------------------------------------------------------- | -------------------------------------- |
+| schema 検査            | `dct.schema.yaml` に対する必須キー・型・列挙値                                                       | エラー 0 件                            |
+| `catalog validate`     | `rulebook` の完全 ID と `evidence_refs.path` の実在、re-export だけのファイル                        | エラー 0 件、警告は理由を確認済み      |
+| `build --only catalog` | 物理分割のマージ、`local_id` の重複、`work` の `done_criteria` の有無                                | `generated/dct-<domain>.md` が生成済み |
+| レビュー               | `groups` と `deliverables` の排他、`type: project` に `min_size` がないこと（schema で検出できない） | 該当 0 件                              |
 
 ## 7. 禁止事項
 
