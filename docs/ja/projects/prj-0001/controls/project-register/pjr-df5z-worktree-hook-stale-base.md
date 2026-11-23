@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-df5z-worktree-hook-stale-base
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-23T22:25:09Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-23T23:36:36Z"
+  conclusion: 統合だけの再試行で、commit の前に統合先と同期するようにした
   commit_type: fix
   commit_scope: exec
 ---

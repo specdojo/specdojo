@@ -125,3 +125,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_7aff3a101ffa446eb257762479a3f2c7
+- v: 1
+  id: reg_be5a7c675f184888a4bbeba18aee3fa4
+  ts: "2026-11-23T23:36:36Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果・親の検証（test-integration を含む全件 passed）で確かめ、統合の後に新しい runner で PJR-6690 の run が統合まで通ることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-24"
+    - field: conclusion
+      from: "-"
+      to: 統合だけの再試行で、commit の前に統合先と同期するようにした
+  previous_event_id: reg_88c13921f6e9413a95d0e1a3503be292
