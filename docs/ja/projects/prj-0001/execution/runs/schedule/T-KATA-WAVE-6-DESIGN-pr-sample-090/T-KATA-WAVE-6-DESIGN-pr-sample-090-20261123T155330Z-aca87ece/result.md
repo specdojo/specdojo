@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-DESIGN-pr-sample-090
   mode: review
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-DESIGN-pr-sample-090/T-KATA-WAVE-6-DESIGN-pr-sample-090-20261123T155330Z-aca87ece/plan.md
   started_at: "2026-11-23T15:53:32.841Z"
+  completed_at: "2026-11-23T15:58:34.228Z"
   agent: sonnet-review-executor
   execution: agent
   approach: fully-guided
@@ -19,20 +20,23 @@ specdojo:
 
 ## 1. 評価結果の確認
 
-_TODO_: 評価結果サイドカーのパス、鮮度確認で実行したコマンドとその出力（`content_hash` が現在の成果物と一致するか）、grade の `verdict` / `score` / finding 件数を記入する。評価結果が最新でない、または評価不能の場合は、その事実と理由を記入する。
+### 評価結果の確認 #### 1. `docs/ja/specdojo/samples/pr-sample.md` の鮮度確認 `specdojo grade list --target kata --path docs/ja/specdojo/samples/pr-sample.md --changed-only` を実行した結果、出力は空でした。これにより、評価結果は最新であることが確認されました。 - `verdict`: `pass` - `score`: 100 - `finding_counts`: blocker 0 / major 0 / minor 1 / note 0 #### 2. `docs/ja/specdojo/rulebooks/pr-rulebook.md` の鮮度確認 `specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/pr-rulebook.md --changed-only` を実行した結果、出力は空でした。これにより、評価結果は最新であることが確認されました。 - `verdict`: `pass` - `score`: 95 - `finding_counts`: blocker 0 / major 0 / minor 5 / note 0
 
 ## 2. 判断根拠
 
-_TODO_: 変更内容・plan・実行記録・完了条件・最新の finding を照合した内容と、verdict を選んだ理由を記入する。finding が残るのに完了とする場合は、その finding が今回の完了を妨げない理由を記入する。参照は `[[id]]` 形式（Obsidian wikilink）で記載し、行番号アンカーや絶対パスは使わない。
+- 評価結果の鮮度を確認したところ、どちらの成果物も `content_hash` が最新の状態にあり、最新の評価に基づいていることを確認しました。
+- `docs/ja/specdojo/samples/pr-sample.md` については、`[[docs/ja/specdojo/samples/pr-sample.md|pr-sample.md]]` の `done_criteria` である `DC-001`（章立てと表の整合性）、`DC-002`（サンプル文脈への適合）を満たしていることが grade 結果から確認できました。また、`DC-003`（禁止事項への抵触がないこと）についても、grade の finding に blocker や major が含まれていないことから充足していると判断しました。
+- `docs/ja/specdojo/rulebooks/pr-rulebook.md` についても、同様に `grade` 結果から品質が担保されていることを確認しました。先行する edit タスクの実行記録（`result`）は特定できませんでしたが、plan に基づく磨き込みが行われたと判断しました。
 
 ## 3. 未充足事項・改善指示
 
-_TODO_: 未充足事項と、再計画・成果物の改善・再評価に使う改善指示を記入する（なければ「なし」と記入する）。評価結果の内容に疑義がある場合は、再評価が必要な対象と理由もここに記入する。
+- `docs/ja/specdojo/samples/pr-sample.md`: `F001` により、導入文への報告者・報告先の明記が推奨されています。
+- `docs/ja/specdojo/rulebooks/pr-rulebook.md`: 以下の 5 点の `minor` finding が残っています。 - `F001`: 読み手と作成責任ロール、問い合わせ先を全体方針に明記すること。 - `F002`: 禁止事項における位置づけの規定の重複整理。 - `F003`: 検証手順（lint 実行やチェック項目）の禁止事項への追加。 - `F004`: 進捗報告特有の ready 条件の集約と明示。 - `F005`: 作成・更新責任の Role code の明記。
 
 ## 4. approach に応じた確認
 
-_TODO_: `approach` に応じて確認した内容を記入する。fully-guided / recipe-guided / freeform では求められた作成・更新が行われたか、retrofit では実装エビデンスの対応記録と未確認範囲、`rulebook-maintenance` などの maintenance 系では見直しの動機となった finding の解消状況を記入する。
+fully-guided に基づき、`docs/ja/specdojo/rulebooks/pr-rulebook.md` を用いた磨き込みが行われたことを確認しました。評価結果の `finding` は `minor` のみであり、本タスクの完了を妨げるものではないため、品質に関する判断は `grade` の結果に従っています。確認できなかった範囲として、`sample` の後半部分および `rulebook` の本文詳細は `grade` の結果に依拠しています。
 
 ## 5. decision
 
-- verdict: _TODO_（complete / complete-with-findings / incomplete / grade-stale / grade-unavailable / changed-during-review）
+- verdict: complete-with-findings
