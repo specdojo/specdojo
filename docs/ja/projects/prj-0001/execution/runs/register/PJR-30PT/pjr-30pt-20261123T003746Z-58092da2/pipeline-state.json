@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-30PT",
   "run_id": "pjr-30pt-20261123T003746Z-58092da2",
-  "updated_at": "2026-11-23T00:47:29.351Z",
+  "updated_at": "2026-11-23T00:47:38.116Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-30PT/pjr-30pt-20261123T003746Z-58092da2/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-23T00:47:29.351Z",
-      "completed_at": null,
+      "completed_at": "2026-11-23T00:47:38.116Z",
       "artifact_ref": null
     }
   },
