@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-KYG4",
   "run_id": "pjr-kyg4-20261123T001942Z-9194fa3c",
-  "updated_at": "2026-11-23T00:28:55.416Z",
+  "updated_at": "2026-11-23T00:29:19.515Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-KYG4/pjr-kyg4-20261123T001942Z-9194fa3c/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sonnet-executor",
       "attempts": 1,
       "started_at": "2026-11-23T00:28:55.416Z",
-      "completed_at": null,
+      "completed_at": "2026-11-23T00:29:19.515Z",
       "artifact_ref": null
     }
   },
