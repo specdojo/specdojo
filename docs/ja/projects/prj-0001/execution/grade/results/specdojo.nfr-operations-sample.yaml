@@ -4,98 +4,97 @@ document: specdojo:nfr-operations-sample
 path: docs/ja/specdojo/samples/nfr-operations-sample.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-sample
-verdict: needs-work
-score: 56
-graded_at: "2026-11-21T04:45:31.419Z"
-graded_by: opus-executor
-content_hash: 10e12064364097a4235b34f5cd04b7b0956089a5f39ce757238b0bfee525a292
+verdict: pass
+score: 94
+graded_at: "2026-11-23T19:18:51.469Z"
+graded_by: sonnet-review-executor
+content_hash: 9231eeda3b9d09dcd5164c78c743ac669c8cf597039cf2d92fc5901c0f416e03
 categories:
   purpose:
-    score: 50
+    score: 88
   operations:
-    score: 81
+    score: 94
   planning:
-    score: 75
+    score: 100
   business:
-    score: 42
+    score: 100
   architecture:
-    score: 83
+    score: 100
   usability:
-    score: 67
+    score: 100
   implementation:
-    score: 50
+    score: 100
   quality:
-    score: 33
+    score: 83
   consistency:
-    score: 50
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-po-decision-readiness:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-po-publication-accountability:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-business-value:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ba-requirements-completeness:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-dev-change-impact:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-testability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-verifiability:
-    level: 1
-    score: 25
-  vp-qe-omissions-consistency:
-    level: 2
-    score: 50
-  vp-qe-kata-conformance:
-    level: 1
-    score: 25
-  vp-ux-readability:
-    level: 2
-    score: 50
-  vp-ux-language-consistency:
     level: 3
     score: 75
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 3
     score: 75
   vp-ops-operability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -104,177 +103,45 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 14
-  minor: 8
+  major: 0
+  minor: 4
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-po-purpose-alignment
-    line: 5
-    anchor: 本書は、監視・手順・継続運用を定義するための最小サンプルである。
-    message: >-
-      目的が「最小サンプル」の 1
-      文しかなく、駄菓子屋きぬやの目的（店主一人での運用継続、店主不在時も店番を続けられること）と運用要件（監視・復旧・手順）のつながりが書かれていないので、主要な定義の必要性を上位の目的から説明できない。
-    message_ja: >-
-      目的が「最小サンプル」の 1
-      文しかなく、駄菓子屋きぬやの目的（店主一人での運用継続、店主不在時も店番を続けられること）と運用要件（監視・復旧・手順）のつながりが書かれていないので、主要な定義の必要性を上位の目的から説明できない。
-  - id: F002
-    severity: major
+    severity: minor
     rule: vp-po-decision-readiness
-    line: 28
-    anchor: "| 論点           | 処理方針                 |"
-    message: 未解決課題のテーブルにおいて、要件詳細化の延期による意思決定者や運用への影響が特定されていません。
-    message_ja: 未解決課題のテーブルにおいて、要件詳細化の延期による意思決定者や運用への影響が特定されていません。
+    line: 23
+    anchor: >-
+      | 時間外     | 休業日と閉店後の異常は記録だけ残し、翌営業日の 9:30 の確認で扱う。_UNDECIDED_:
+      営業時間外の緊急連絡手段                                                               |
+    message: 未決事項（営業時間外の緊急連絡手段、バックアップ成功率の基準値）の決定者と決定時期、および未決のままの影響範囲が示されていません。PO が保留か承認かを判断するために、未決事項を一覧にして書く必要があります。
+    message_ja: 未決事項（営業時間外の緊急連絡手段、バックアップ成功率の基準値）の決定者と決定時期、および未決のままの影響範囲が示されていません。PO が保留か承認かを判断するために、未決事項を一覧にして書く必要があります。
+  - id: F002
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 43
+    anchor: >-
+      | `nfr-ops-003` | バックアップ | 夜間バックアップを毎日取る                           | バックアップ成功率                           |
+      _UNDECIDED_: 月次で ○○% 以上                                               | 算出は「測定・検証方法」の測定方法に従う    |
+    message: nfr-ops-003 の基準が `_UNDECIDED_`（○○%）のままで pass / fail を判定できません。暫定値を `_ASSUMPTION_` として置くか、決定期限を明示する必要があります。
+    message_ja: nfr-ops-003 の基準が `_UNDECIDED_`（○○%）のままで pass / fail を判定できません。暫定値を `_ASSUMPTION_` として置くか、決定期限を明示する必要があります。
   - id: F003
     severity: minor
-    rule: vp-pm-plan-feasibility
-    line: 16
-    anchor: "- 必須観点: 対象、条件、判定基準、責任者"
-    message: タスクの分解と進捗管理に必要な作業単位、完了基準（done criteria）、および割り当てられたロールコードが不足しています。
-    message_ja: タスクの分解と進捗管理に必要な作業単位、完了基準（done criteria）、および割り当てられたロールコードが不足しています。
+    rule: vp-qe-kata-conformance
+    line: 23
+    anchor: >-
+      | 時間外     | 休業日と閉店後の異常は記録だけ残し、翌営業日の 9:30 の確認で扱う。_UNDECIDED_:
+      営業時間外の緊急連絡手段                                                               |
+    message: >-
+      rulebook 第1章の「sample は本文要件の5章に揃っていない」という記述が、5章に揃った現在の sample と食い違っています。rulebook の前提条件の記述を更新し、sample
+      と型宣言の整合を取る必要があります。（rulebook の該当記述は本文の行番号を基準にできないため、sample 側の未決事項の章位置を参照行としました。）
+    message_ja: >-
+      rulebook 第1章の「sample は本文要件の5章に揃っていない」という記述が、5章に揃った現在の sample と食い違っています。rulebook の前提条件の記述を更新し、sample
+      と型宣言の整合を取る必要があります。（rulebook の該当記述は本文の行番号を基準にできないため、sample 側の未決事項の章位置を参照行としました。）
   - id: F004
     severity: minor
-    rule: vp-pm-dependency-risk
-    line: 11
-    anchor: "- 参照: `../rulebooks/nfr-operations-rulebook.md`"
-    message: >-
-      Downstream artifact dependencies (such as opd-*, opr-*, and sac-*) and schedule risks resulting from unresolved
-      requirements are not identified.
-    message_ja: >-
-      Downstream artifact dependencies (such as opd-*, opr-*, and sac-*) and schedule risks resulting from unresolved
-      requirements are not identified.
-  - id: F005
-    severity: minor
-    rule: vp-pm-control-reporting
-    line: 28
-    anchor: "| 論点           | 処理方針                 |"
-    message: 未解決課題のテーブルにおいて、オープンな課題を追跡するための報告対象または責任ロールコードが指定されていません。
-    message_ja: 未解決課題のテーブルにおいて、オープンな課題を追跡するための報告対象または責任ロールコードが指定されていません。
-  - id: F006
-    severity: major
-    rule: vp-ba-business-value
-    line: 9
-    anchor: "- 対象: 駄菓子屋の販売管理システム"
-    message: candy storeの販売管理システムにおける、具体的なビジネス上の問題、サービス中断の影響、または期待される運用上の価値が記載されていません。
-    message_ja: candy storeの販売管理システムにおける、具体的なビジネス上の問題、サービス中断の影響、または期待される運用上の価値が記載されていません。
-  - id: F007
-    severity: major
-    rule: vp-ba-requirements-completeness
-    line: 15
-    anchor: "- 主な内容: アラート検知率、復旧達成率、運用手順充実度"
-    message: 具体的な運用要件、受け入れ基準、およびスコープの境界が不足しており、上位レベルのカテゴリ名のみが提供されています。
-    message_ja: 具体的な運用要件、受け入れ基準、およびスコープの境界が不足しており、上位レベルのカテゴリ名のみが提供されています。
-  - id: F008
-    severity: major
-    rule: vp-ba-stakeholder-clarity
-    line: 9
-    anchor: "- 対象: 駄菓子屋の販売管理システム"
-    message: 対象となるcandy storeシステムの実際のステークホルダー、システム運用者、および検証者が特定されていません。
-    message_ja: 対象となるcandy storeシステムの実際のステークホルダー、システム運用者、および検証者が特定されていません。
-  - id: F009
-    severity: major
-    rule: vp-arc-technical-constraints
-    line: 10
-    anchor: "- 前提: プロジェクト文脈は handbook の共通方針に準拠する"
-    message: 技術的な制約、監視インフラの依存関係、およびアーキテクチャ上の仮定が指定されていません。
-    message_ja: 技術的な制約、監視インフラの依存関係、およびアーキテクチャ上の仮定が指定されていません。
-  - id: F010
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 20
-    anchor: "| 項目         | 値                                                           | 備考                                 |"
-    message: セクション4のテーブルは、独自の運用情報を提供することなく、セクション1の目的とセクション3のメトリック名を冗長に重複しています。
-    message_ja: セクション4のテーブルは、独自の運用情報を提供することなく、セクション1の目的とセクション3のメトリック名を冗長に重複しています。
-  - id: F011
-    severity: major
-    rule: vp-dev-implementation-readiness
-    line: 15
-    anchor: "- 主な内容: アラート検知率、復旧達成率、運用手順充実度"
-    message: 実装パラメータ、監視構成項目、目標のしきい値、および完了条件が欠落しており、運用実装ができない状態です。
-    message_ja: 実装パラメータ、監視構成項目、目標のしきい値、および完了条件が欠落しており、運用実装ができない状態です。
-  - id: F012
-    severity: minor
-    rule: vp-dev-change-impact
-    line: 10
-    anchor: "- 前提: プロジェクト文脈は handbook の共通方針に準拠する"
-    message: 既存の運用手順、スキーマ、またはシステム構成に対する変更の影響が特定されていません。
-    message_ja: 既存の運用手順、スキーマ、またはシステム構成に対する変更の影響が特定されていません。
-  - id: F013
-    severity: major
-    rule: vp-dev-testability
-    line: 15
-    anchor: "- 主な内容: アラート検知率、復旧達成率、運用手順充実度"
-    message: 運用要件を確認するための検証方法、妥当性確認の手順、または期待されるテスト結果が指定されていません。
-    message_ja: 運用要件を確認するための検証方法、妥当性確認の手順、または期待されるテスト結果が指定されていません。
-  - id: F014
-    severity: major
-    rule: vp-qe-verifiability
-    line: 15
-    anchor: "- 主な内容: アラート検知率、復旧達成率、運用手順充実度"
-    message: "「アラート検知率」などの指標が挙げられているが、pass/fail を判定できる具体的な基準値（例: 10分以内）が記述されておらず、検証可能性が示せていない。"
-    message_ja: "「アラート検知率」などの指標が挙げられているが、pass/fail を判定できる具体的な基準値（例: 10分以内）が記述されておらず、検証可能性が示せていない。"
-  - id: F015
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 3
-    anchor: "## 1. 目的と適用範囲"
-    message: >-
-      rulebook の必須 5 章（概要（対象・目的）、適用範囲・体制前提、運用要件一覧、測定・検証方法、関連ドキュメント導線）がすべてなく、禁止事項「監視指標を定義しない」「通知先や判定条件を曖昧にする」にも当たるので、必須章を
-      rulebook の順に揃えて指標・基準・通知先を定義する必要がある。
-    message_ja: >-
-      rulebook の必須 5 章（概要（対象・目的）、適用範囲・体制前提、運用要件一覧、測定・検証方法、関連ドキュメント導線）がすべてなく、禁止事項「監視指標を定義しない」「通知先や判定条件を曖昧にする」にも当たるので、必須章を
-      rulebook の順に揃えて指標・基準・通知先を定義する必要がある。
-  - id: F016
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 5
-    anchor: 本書は、監視・手順・継続運用を定義するための最小サンプルである。
-    message: ルールブック第5節で定義された必須の見出し構成（概要、適用範囲・体制前提、運用要件一覧、測定・検証方法、関連ドキュメント導線）に一切準拠しておらず、サンプルとして不適切である。
-    message_ja: ルールブック第5節で定義された必須の見出し構成（概要、適用範囲・体制前提、運用要件一覧、測定・検証方法、関連ドキュメント導線）に一切準拠しておらず、サンプルとして不適切である。
-  - id: F017
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 7
-    anchor: "## 2. 入力情報"
-    message: >-
-      「入力情報」「記述内容」「最小記述例」の章は作成手順のメタ記述で、sample に要る完成例（共通サンプル文脈に沿って実例を埋めた運用要件書）になっておらず、sample-authoring-standard
-      の内容充実化の要求に反する。
-    message_ja: >-
-      「入力情報」「記述内容」「最小記述例」の章は作成手順のメタ記述で、sample に要る完成例（共通サンプル文脈に沿って実例を埋めた運用要件書）になっておらず、sample-authoring-standard
-      の内容充実化の要求に反する。
-  - id: F018
-    severity: major
-    rule: vp-ux-readability
-    line: 5
-    anchor: 本書は、監視・手順・継続運用を定義するための最小サンプルである。
-    message: 参照ルールブックの構成を無視した記述となっており、初見の読者が正しい運用要件書の書き方を理解できず、サンプルとしての目的を果たしていない。
-    message_ja: 参照ルールブックの構成を無視した記述となっており、初見の読者が正しい運用要件書の書き方を理解できず、サンプルとしての目的を果たしていない。
-  - id: F019
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 5
-    anchor: 本書は、監視・手順・継続運用を定義するための最小サンプルである。
-    message: 見出し名称（例：「目的と適用範囲」）が、ルールブックで指定された標準名称（例：「概要（対象・目的）」）と乖離しており、統一されていない。
-    message_ja: 見出し名称（例：「目的と適用範囲」）が、ルールブックで指定された標準名称（例：「概要（対象・目的）」）と乖離しており、統一されていない。
-  - id: F020
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 10
-    anchor: "- 前提: プロジェクト文脈は handbook の共通方針に準拠する"
-    message: 「handbook の共通方針」が何を指すのか定義・参照がなく、共通サンプル文脈（sample-authoring-standard）との関係が読み手に分からない。
-    message_ja: 「handbook の共通方針」が何を指すのか定義・参照がなく、共通サンプル文脈（sample-authoring-standard）との関係が読み手に分からない。
-  - id: F021
-    severity: minor
     rule: vp-ops-release-readiness
-    line: 28
-    anchor: "| 論点           | 処理方針                 |"
-    message: ドラフト状態からの移行に向けた、準備完了基準、リリース承認者のロール、およびリリース前の検証要件が定義されていません。
-    message_ja: ドラフト状態からの移行に向けた、準備完了基準、リリース承認者のロール、およびリリース前の検証要件が定義されていません。
-  - id: F022
-    severity: major
-    rule: vp-ops-operability
-    line: 15
-    anchor: "- 主な内容: アラート検知率、復旧達成率、運用手順充実度"
-    message: 運用要件を維持するための運用保守手順、連絡の段階的なエスカレーションパス、および責任ロールコードが指定されていません。
-    message_ja: 運用要件を維持するための運用保守手順、連絡の段階的なエスカレーションパス、および責任ロールコードが指定されていません。
+    line: 37
+    anchor: 次の表は、4 領域の要件と、pass / fail を判定する基準を示す。基準が `_UNDECIDED_` の要件は、決まるまで「測定・検証方法」の暫定の扱いで判定する。
+    message: draft から ready へ移行する条件（`_UNDECIDED_` の解消と、`_ASSUMPTION_` の基準値の確認）が示されていません。公開前確認の観点で、ready 条件を一行で示す必要があります。
+    message_ja: draft から ready へ移行する条件（`_UNDECIDED_` の解消と、`_ASSUMPTION_` の基準値の確認）が示されていません。公開前確認の観点で、ready 条件を一行で示す必要があります。
