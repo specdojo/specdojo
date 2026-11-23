@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-DESIGN-bps-sample-040
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-DESIGN-bps-sample-040/T-KATA-WAVE-6-DESIGN-bps-sample-040-20261123T102601Z-275fc4a2/plan.md
   started_at: "2026-11-23T10:26:09.373Z"
+  completed_at: "2026-11-23T10:45:22.868Z"
   agent: opus-executor
   execution: agent
   approach: rulebook-maintenance
@@ -20,16 +21,23 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- rulebook である `docs/ja/specdojo/rulebooks/bps-rulebook.md` を更新し、`grade` による 4 つの指摘（F001〜F004）に対応しました。
+- F001 に基づき、推奨列の再掲を廃止して、記述ガイドには列の判断基準のみを記載するよう変更しました。
+- F002 に基づき、完成判定の項目に Markdown lint や Frontmatter スキーマ検証などの形式適合を確認するためのコマンドを追加しました。
+- F003 に基づき、未決事項に関する rulebook の要件（「当面の扱い」を求めること）を明確化しました。
+- F004 に基づき、位置づけの説明において、略語（CDFD, BES, BR, STSD）の正式名称と各 rulebook への参照を追加しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/rulebooks/bps-rulebook.md`: `grade` の指摘に基づき、列定義の再掲を判断基準への置き換え（F001）、形式検査コマンドの追加（F002）、未決事項の要件明確化（F003）、および略語の正式名称と参照先の追記（F004）を行いました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- F003 の残り: `bps-template` の未決事項表には「当面の扱い」の列がなく、rulebook にない「区分」「決定者」「決定時期」の列がある。rulebook は「当面の扱い」を要件とし、決定の担当と期限は登録簿の個票で追うと定めた。template を直す段で「区分」「決定者」「決定時期」を消し、「当の扱い」の列を足す必要がある。
+- 直さなかった箇所: 全体方針、ファイル命名・ID規則、推奨 Frontmatter 項目、本文要件の表、記述ガイドの導入文と概要・入力・出力・検証・受入観点、禁止事項。grade の指摘や冗長な記述にあたらないため、そのまま残した。
+- 全体方針にあった「文書の整形・lint・Frontmatter 検証はリポジトリの検証で扱い、業務の受入確認に含めない」の文は、完成判定に移した記述と重なるため消した。
+- F003 の残り: `bps-template` の未決事項表には「当面の扱い」の列がなく、rulebook にない「区分」「決定者」「決定時期」の列がある。rulebook は「当面の扱い」を要件とし、決定の担当と期限は登録簿の個票で追うと定めた。template を直す段で「区分」「決定者」「決定時期」を消し、「当面の扱い」の列を足す必要がある。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+rulebook-maintenance
