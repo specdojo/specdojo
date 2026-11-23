@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-6-DESIGN-bps-sample-045",
+  "run_id": "T-KATA-WAVE-6-DESIGN-bps-sample-045-20261123T111142Z-7f533b12",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-23T16:12:38.326Z",
+    "completed_at": "2026-11-23T16:13:02.859Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/recipes/bps-recipe.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/recipes/bps-recipe.md | 1 +\n 1 file changed, 1 insertion(+)"
+  },
+  "validations": [
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:bps-recipe\n  type: recipe\n  status: draft\n  rulebook: specdojo:bps-rulebook\n  sample: specdojo:bps-sample\n---\n\n# 業務プロセス仕様 作成レシピ\n\nBusiness Process Specification Writing Recipe\n\n共通の起点から一つの業務成果へ至る流れを、業務担当者が合意でき、設計者とテスト担当者が後続作業に使える内容に仕上げるための作り方を示す。\n\n## 1. このレシピの使い方\n\n- BPS は、CDFD のプロセス領域が担う業務目的（Why）を引き継ぎ、起点と確定する業務成果（What）を定め、担当・処理・例外対応（How）を決める。トリガー ID・ステップ ID・例外 ID と CDFD プロセス ID・参照仕様 ID\n… output omitted …\n 開始の判定 | 業務担当者が、記録を見て始めるかどうかを判定できるか |\n| 責任と完了 | 各ステップで、誰が何を見て完了と判断するかが分かるか |\n| 例外の線引き | 業務判断を要する事象だけを扱い、例外がない場合はその結論の範囲が分かるか |\n| 受入の判定 | テスト担当者が、画面や実装を仮定せずに受入シナリオを作れるか |\n\n## 8. 仕上げチェック\n\n- 導入文の起点・業務成果と、トリガー・出力の内容が一致している。\n- トリガーから業務成果または代替成果まで、どの分岐でも途切れない。\n- 出力の各成果と、主要例外がある場合は各例外が、受入観点のいずれかの行で確かめられる。主要例外がない場合は、確かめた範囲と結論がある。\n- ファイル名・Frontmatter の `id`・`type`・`rulebook` が rulebook の「ファイル命名・ID規則」と「推奨 Frontmatter 項目」に一致し、`npm run lint:md` と `npm run lint:fm` が通る。\n- 個人情報、秘密情報、非公開の組織情報を含めていない。"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6190 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6190 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-DESIGN-bps-sample-045\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-site/kata-staging.test.ts\"}\n ✓ tests/packages/docs-site/kata-staging.test.ts (6 tests) 25ms\n[parent-validation:test-file]\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1809}\n\n Test Files  19 passed (19)\n      Tests  480 passed (480)\n   Start at  01:14:52\n   Duration  2.65s (transform 5.65s, setup 1.11s, import 7.90s, tests 5.72s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\ners-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-DESIGN-bps-sample-045/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-DESIGN-bps-sample-045/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "F001 対応として bps-recipe の「仕上げチェック」に、ファイル名と Frontmatter の `id`・`type`・`rulebook` が rulebook の「ファイル命名・ID規則」「推奨 Frontmatter 項目」に一致し、`npm run lint:md` と `npm run lint:fm` が通ることを確かめる1行を足した。rulebook の「完成判定」と照合した。レシピ内の「承認」は業務の流れの中の判断で、PJR-76N9 の対象外。それ以外の記述は rulebook と食い違いがなく維持した。rulebook と sample は変更していない。",
+  "completion_status": "complete",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-DESIGN-bps-sample-045/T-KATA-WAVE-6-DESIGN-bps-sample-045-20261123T111142Z-7f533b12/executor.log",
+      "bytes": 2568,
+      "truncated": false
+    }
+  ]
+}
