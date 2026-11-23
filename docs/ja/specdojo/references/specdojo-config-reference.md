@@ -126,12 +126,37 @@ linked worktree（`exec run --worktree` の作業場所など）では、`path` 
 | キー                 | 既定値                         | 役割・利用箇所                                                                                                                                      |
 | -------------------- | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `integration_branch` | `project/<project-id>/develop` | 別 project の作業ツリーから `register add --project <project-id> --commit` で直接記帳する統合ブランチです。                                         |
+| `register_sync`      | `{ "enabled": false }`         | register の `--commit` と schedule の実行イベントを専用ブランチへ同期します。詳細は次節を参照してください。                                         |
 | `project_context`    | `["prj-overview"]`             | edit / review plan へ常に渡す project 共通文書のローカル ID です。空配列 `[]` で無効化できます。`depends_on` や成果物の `based_on` は変更しません。 |
 | `commit_types`       | なし                           | 登録項目 type（`todo`・`issue` 等）から Conventional Commits type への対応マッピングです。                                                          |
 | `run`                | `{}`                           | agent 実行、worktree、登録日の表示に関する project 単位の設定です。                                                                                 |
 | `repos`              | なし                           | project のタスクが変更するプロダクトリポジトリの宣言です。詳細は「`repos`のキー」を参照してください。                                               |
 
 project の `integration_branch` は、`repos[].integration_branch` とは別の設定です。前者は project リポジトリ内の登録簿へ直接記帳するブランチ、後者は exec が各プロダクトリポジトリへ変更を統合するブランチを表します。指定した project の統合ブランチはローカルに存在していなければなりません。
+
+### 4.1. `register_sync` のキー
+
+`projects.<project-id>.register_sync` は v0.10.0 からの任意設定です。
+
+| キー      | 既定値                          | 役割                                                                                                                                   |
+| --------- | ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `enabled` | `false`                         | `true` なら register の `--commit` と schedule のイベントを専用 worktree に書き、commit・push します。未設定・`false` は従来動作です。 |
+| `branch`  | `project/<project-id>/register` | 記帳専用の Git ブランチ名です。                                                                                                        |
+| `remote`  | `origin`                        | fetch・pull・push に使う登録済みのリモート名です。URL とオプション形式は指定できません。                                               |
+
+```json
+{
+  "register_sync": {
+    "enabled": true,
+    "branch": "project/prj-0001/register",
+    "remote": "origin"
+  }
+}
+```
+
+有効時は `integration_branch` よりこの同期先を優先します。`external_projects` 経由の起票も、相手の CLI と project の設定に従います。相手も v0.10.0 以上に更新してください。`--commit` のない register 操作は現在の worktree に書き、`--dry-run --commit` は同期しません。
+
+同期範囲は `project_register_path` と `execution_path/exec/events/` です。専用 worktree は既存のものを再利用し、無ければ Git 共通ディレクトリの `specdojo/register/<識別子>/worktree` に作成します。設定とパスはブランチ上でも解決できる状態にしてください。schedule のイベント読み取りは同期先を更新して参照するため、通信が必要です。初期ブランチの作成、競合の復旧、develop への取り込みは [[specdojo:register-operation-guide|登録簿運用ガイド]] を参照してください。
 
 ## 5. `run`のキー
 

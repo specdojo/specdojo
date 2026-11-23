@@ -77,6 +77,21 @@ $defs:
           Branch that receives direct project-register commits. Defaults to
           project/<project-id>/develop.
         $ref: "#/$defs/NonEmptyString"
+      register_sync:
+        description: Opt-in register and schedule-event synchronization through a dedicated branch.
+        type: object
+        additionalProperties: false
+        properties:
+          enabled:
+            type: boolean
+            default: false
+          branch:
+            description: Defaults to project/<project-id>/register.
+            $ref: "#/$defs/NonEmptyString"
+          remote:
+            type: string
+            pattern: "^(?!-)(?!.*[\\s:])\\S+$"
+            default: origin
       catalog_path:
         type: string
       schedule_path:

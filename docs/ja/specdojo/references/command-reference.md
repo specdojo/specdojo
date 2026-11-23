@@ -545,7 +545,7 @@ specdojo schedule strategy generate \
 | `--topic <slug>`             | 個票ファイル名と文書 ID の論点部分を指定・更新する                  | `add` / `update`                                 |
 | `--section <name>`           | 差し替える個票の章の名前（見出し番号を除いた名前）                  | `add` / `update`                                 |
 | `--section-file <path>`      | 差し替え後の章の本文を含む Markdown ファイルのパス                  | `add` / `update`                                 |
-| `--commit`                   | `register lifecycle` 枠内で記帳・再生成・commitを行う               | `add` / `update` / `renumber` / 遷移             |
+| `--commit`                   | 記帳・再生成・commit（同期設定が有効なら push）                     | `add` / `update` / `renumber` / 遷移             |
 | `-m, --message <message>`    | `--commit` のcommitメッセージを上書きする（繰り返し可）             | `add` / `update` / `renumber` / 遷移             |
 | `--dry-run`                  | 書き込みを行わず変更対象を表示する                                  | `add` / `update` / `renumber` / 遷移 / `migrate` |
 | `--since <date>`             | 対象コミットの開始日（`YYYY-MM-DD`、当日を含む）                    | `history`                                        |
@@ -646,6 +646,8 @@ kata authoring は register 専用です。Schedule の task は対象成果物�
 別リポジトリへの起票も `--commit` が必須です。起動する CLI は相手の `node_modules/.bin/specdojo` を優先します。これがなく、相手の `package.json` の `name` が `specdojo` の場合は、呼び出し元と同じ Node.js で `node <相手>/dist/specdojo.js` を起動します。SpecDojo 自身の clone では、先に `npm install` と `npm run build` を実行してください。`dist/specdojo.js` がない場合は `npm run build` を案内して停止します。相手のリポジトリ、起動する CLI、0.4.2 以上の版のいずれかを確認できない場合は、相手を変更せず停止します。相手の起票が失敗した場合は相手の標準出力・標準エラー出力と終了コードをそのまま引き継ぎ、push は行いません。外部 project の `close` などの状態遷移は委譲しないため、案内された相手のリポジトリで実行してください。
 
 一覧・派生ビューの「登録日」「完了日」は、保存した日時を config の `run.register_date_timezone`（IANA タイムゾーン名、既定 `UTC`）へ変換して導出する表示値です。
+
+`register_sync.enabled: true` の project では、`--commit` は既定の `project/<project-id>/register` を別 worktree で更新して push します。別 project への起票と `external_projects` 経由の起票も対象 project の設定に従います。schedule の実行イベントも同じ経路で同期し、読み取りは同期先を参照します。non-fast-forward は `pull --rebase` 後に再 push し、最大 3 回で停止します。通信・権限・衝突などの失敗時は記帳をローカルに残し、復旧先を標準エラー出力へ表示して終了コード 1 を返します。`--commit` のない register 操作と `--dry-run --commit` は同期しません。設定は [[specdojo:specdojo-config-reference|設定リファレンス]]、初期作成・復旧は [[specdojo:register-operation-guide|登録簿運用ガイド]] を参照してください。
 
 `register history` は `events/pjr-XXXX.yaml` を読み、個票単位の追加（`added`）と変更（`updated`）を発生順に出力します。event 導入前または未移行の期間だけ Git 履歴を読み、削除（`removed`）を含む従来の履歴と統合します。event は発生日時・actor・action・reason・遷移前後状態・変更フィールドを保持するため、複数遷移を1コミットへまとめても粒度を失いません。比較対象は登録項目一覧の列と `block_reason`、`approach`、`targets`、`sources`、`target_path`、`target_rulebook`、`derived_from`、`depends_on` です。
 
