@@ -4,14 +4,13 @@ specdojo:
   type: exec-result
   task_id: PJR-PHY7
   mode: edit
-  status: blocked
+  status: superseded
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-PHY7/pjr-phy7-20261122T133845Z-1142c0d4/plan.md
   started_at: "2026-11-22T13:38:46.336Z"
-  completed_at: "2026-11-22T13:40:36.758Z"
+  completed_at: "2026-11-23T04:59:04.761Z"
   agent: sonnet-executor
-  block_reason: "executor reported incomplete: rulebook 6 件の ID 記述を修飾形へ修正した。個票への書き込みが権限エラーで拒否されたため、作業内容・対応結果の更新が未完了。"
 ---
 
 # Edit Result
