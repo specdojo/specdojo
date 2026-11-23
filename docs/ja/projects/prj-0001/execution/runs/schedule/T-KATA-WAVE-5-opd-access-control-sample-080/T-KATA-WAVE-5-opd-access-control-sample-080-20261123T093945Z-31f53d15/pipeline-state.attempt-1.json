@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-5-opd-access-control-sample-080",
+  "run_id": "T-KATA-WAVE-5-opd-access-control-sample-080-20261123T093945Z-31f53d15",
+  "updated_at": "2026-11-23T09:43:08.737Z",
+  "stages": {
+    "executor": {
+      "status": "rate_limited",
+      "actor": "sonnet-executor",
+      "attempts": 1,
+      "started_at": "2026-11-23T09:40:36.177Z",
+      "completed_at": "2026-11-23T09:43:08.737Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-opd-access-control-sample-080/T-KATA-WAVE-5-opd-access-control-sample-080-20261123T093945Z-31f53d15/evidence.json"
+    },
+    "reporter": {
+      "status": "pending",
+      "actor": "gemma26-reporter",
+      "attempts": 0,
+      "started_at": null,
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-opd-access-control-sample-080/T-KATA-WAVE-5-opd-access-control-sample-080-20261123T093945Z-31f53d15/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-opd-access-control-sample-080/T-KATA-WAVE-5-opd-access-control-sample-080-20261123T093945Z-31f53d15/result.md"
+  }
+}
