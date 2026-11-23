@@ -82,3 +82,16 @@
       from: '["PJR-HJ3H","PJR-8X86"]'
       to: '["PJR-HJ3H","PJR-JZ2F","PJR-G1M8","PJR-SBGQ","PJR-PYS2","PJR-8X86"]'
   previous_event_id: reg_608cf4ae7dcc4ec48b670c656a8d0833
+- v: 1
+  id: reg_55fa86a806374e198b7f0362458b3205
+  ts: "2026-11-23T03:27:12Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_08ca5a817d6545f7af83ffb2d0fc107b
