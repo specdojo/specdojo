@@ -1,0 +1,59 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_10fd4e8e72fc402bacc194f33e97ee87
+  ts: "2026-11-23T22:38:17Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: v0.10.0 の CHANGELOG と移行の注意をまとめる
+    - field: description
+      from: ""
+      to: v0.10.0 に入れた項目の CHANGELOG に書く事項を集めて CHANGELOG.md にまとめ、既存の利用者向けの移行の注意を書く
+    - field: input
+      from: ""
+      to: '["v0.10.0 に入れる（利用者の指定、2026-11-24）","リリースは 12 月の第 1 週を目標にする（利用者の判断、2026-11-24）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-24"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: release
+- v: 1
+  id: reg_9738af59da894eaeb75cca0cac850f95
+  ts: "2026-11-23T22:38:25Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_10fd4e8e72fc402bacc194f33e97ee87

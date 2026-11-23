@@ -60,3 +60,16 @@
       from: ""
       to: 完了条件
   previous_event_id: reg_63794c0f5f8f4234bce9029114ca70f5
+- v: 1
+  id: reg_e6e923de4ae34aa88a4d42383ed6275d
+  ts: "2026-11-23T22:37:48Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: 利用者が v0.10.0 に入れると決めた（2026-11-24）
+  changes:
+    - field: input
+      from: '["PJR-52EE を 4 件に分ける。決まった手当ては規則で行い、判断が要るものは agent に診断の案だけを書かせ（案 C）、立ち上げたままのオーケストレーターのために待つコマンドを足す（案 A）。MCP を使う案は採らない（利用者の決定、2026-11-23）"]'
+      to: '["PJR-52EE を 4 件に分ける。決まった手当ては規則で行い、判断が要るものは agent に診断の案だけを書かせ（案 C）、立ち上げたままのオーケストレーターのために待つコマンドを足す（案 A）。MCP を使う案は採らない（利用者の決定、2026-11-23）","v0.10.0 に入れる（利用者の指定、2026-11-24）"]'
+  previous_event_id: reg_e2919a456fb6452ebe6876f6843ab69f
