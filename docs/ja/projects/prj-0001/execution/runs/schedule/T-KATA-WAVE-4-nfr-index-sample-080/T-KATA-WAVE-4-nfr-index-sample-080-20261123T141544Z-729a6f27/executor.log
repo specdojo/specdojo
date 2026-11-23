@@ -1,0 +1,9 @@
+冗長な箇所は1件だけでした。その1文を削り、markdownlint は通っています。
+
+`docs/ja/specdojo/samples/nfr-index-sample.md` の「カテゴリ一覧」冒頭にあった「指標の目標値・測定方法は分冊が定める」を削りました。同じ内容が「概要」の「要求・合否基準・検証方法の正本は各分冊」で既に述べられているためです。意味と必須情報は変わっていません。
+
+他の候補は、判断に要る情報なので残しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"nfr-index-sample.md の冗長な1文を削除した。他の候補は判断に要る内容のため保持した。","handoff":[],"condense_records":[{"location":"2. カテゴリ一覧（8カテゴリ）の導入文「指標の目標値・測定方法は分冊が定める。」","category":"repetition","action":"delete","reason":"1. 概要の「要求・合否基準・検証方法の正本は各分冊」と同内容の繰り返し。削除しても意味は変わらない","cause":{"type":"document"}},{"location":"4. 変更の入口の「改定で分冊 ID と参照先が変わらない場合…更新しない」","category":"table-prose","action":"retain","reason":"表にない例外条件で、更新範囲の判断に要る","cause":{"type":"document"}},{"location":"5. 関連ドキュメント導線の末尾段落","category":"table-prose","action":"retain","reason":"（なし）の理由と dec-offline-recording の位置づけは表から読み取れず、判断に要る","cause":{"type":"document"}}],"validations":[{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/nfr-index-sample.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>
