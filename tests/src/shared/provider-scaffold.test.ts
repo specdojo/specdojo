@@ -32,6 +32,15 @@ async function makeClaudeTemplateFixture(packageRoot: string): Promise<void> {
   await writeFile(path.join(templateDir, "README.md"), "# readme\n", "utf8");
 }
 
+const CLAUDE_EDIT_GIT_REMOVE_DENIES = [
+  "Bash(git rm -r *)",
+  "Bash(git rm -f *)",
+  "Bash(git rm --force *)",
+  "Bash(git rm --cached *)",
+  "Bash(git mv -f *)",
+  "Bash(git mv --force *)",
+];
+
 const CLAUDE_REMOTE_WRITE_DENIES = [
   "Bash(git push)",
   "Bash(git push *)",
@@ -116,6 +125,7 @@ describe("specdojoPackageRootDir", () => {
     expect(settings.permissions?.deny).toEqual([
       ...PROTECTED_DIRECTORY_PREFIXES.map((prefix) => `Edit(${prefix}**)`),
       ...[...PROTECTED_EXACT_PATHS].map((protectedPath) => `Edit(./${protectedPath})`),
+      ...CLAUDE_EDIT_GIT_REMOVE_DENIES,
       ...CLAUDE_REMOTE_WRITE_DENIES,
     ]);
   });

@@ -764,7 +764,9 @@ members:
 
 ### 7.3. claude の edit executor に許すコマンド
 
-`claude -p` は承認を求められないため、`settings.edit.json` の allow に無いコマンドは拒まれます。配布する `settings.edit.json` は `Edit(**)` に加え、`npm run`・`npm test`・`npx prettier`・`npx markdownlint-cli2`・`npx markdownlint`・`npx eslint`・`npx tsc`・`npx vitest`・`npx slidev`・`specdojo` を許します。`git push` と `gh` は deny が優先するため許されません。
+`claude -p` は承認を求められないため、`settings.edit.json` の allow に無いコマンドは拒まれます。配布する `settings.edit.json` は `Edit(**)` に加え、`npm run`・`npm test`・`npx prettier`・`npx markdownlint-cli2`・`npx markdownlint`・`npx eslint`・`npx tsc`・`npx vitest`・`npx slidev`・`specdojo` を許します。読み取りの `git status`・`git diff`・`git log`・`git show`・`git grep` と、差分に残る削除・移動の `git rm`・`git mv` も許します。`git rm` の `-r`・`-f`・`--force`・`--cached`、`git mv` の `-f`・`--force`、`git push`、`gh` は deny が優先して拒みます。`git reset`・`git checkout`・`git commit`・`rm` は allow に無いため拒まれます。
+
+`settings.edit.json` は `env` に `CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR=1` を持ちます。executor が `cd <プロダクトの worktree>` で検査を流しても、Bash の作業場所は次の呼び出しで project の worktree に戻ります。これがないと `Edit(**)` や deny の `Edit(.specdojo/**)` などの相対パスの規則が `cd` 後の場所から照合され、project の worktree の個票への Edit が拒まれます。
 
 リポジトリごとに違う検証コマンドは、`.specdojo/exec-defaults.yaml` の `providers.claude.allow_commands` に `Bash(<command> *)` の形で書きます。edit mode の起動コマンドへ `--allowedTools` として足されるため、`config scaffold --force` で `settings.edit.json` を当て直しても残ります。review・report mode には足しません。
 
