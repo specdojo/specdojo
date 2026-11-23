@@ -1,0 +1,24 @@
+`docs/ja/specdojo/samples/nfr-reliability-sample.md` を書き直し、rulebook の構成どおりの完成例にしました。題材は駄菓子屋きぬやで、構成は全 5 章（概要・適用範囲・要件一覧・測定・検証方法・関連ドキュメント導線）です。Prettier と markdownlint はエラーなしでした。それ以外の lint・schema 検査はこのあと親 runner が実行します。rulebook は変更していません。
+
+主な変更点:
+
+- **frontmatter**: `part_of` に `nfr-index-sample`、`based_on` にプロジェクト概要と前提・制約・依存の sample を足しました。H1 は rulebook へのリンクを外し、成果物の名前だけにしました。
+- **概要と適用範囲**: 記録が失敗したときの業務影響と、可用性要件との分担を書きました。対象・対象外の処理、対象時間帯、計画停止、通信の瞬断の扱いを表にし、技術前提（タブレット 1 台・冗長化しない構成、前提条件 ACD-A02・ACD-D03）を明示しました。
+- **要件一覧**: `nfr-rel-001`〜`nfr-rel-005` の 5 件（会計の障害率、二重記録 0 件、瞬断からの自動回復の成功率、MTBF、不正な入力値の受け付け 0 件）です。割合の指標は分子と分母を定義し、再試行の回数は基準にしていません。
+- **測定・検証方法**: 要件ごとに方法・判定時期・判定する Role code・検証先を表にしました。基準未達・重大障害の記録先と、基準を見直す契機も書きました。
+- **関連ドキュメント導線**: rulebook が求める `nfr-index`・可用性要件・`sac`/`stc`・`opd`/`opr`・`dec` への導線を置きました。まだない文書（`sac-reliability`・`stc-reliability`・`dec-reliability-criteria`）はバッククォートで仮置きしています。
+
+24 件の finding のうち、本文で直したのは F001・F005・F006・F008〜F013・F015〜F022 です。それ以外は本文では直していません。
+
+- **F003・F023・F024**（承認・ready 昇格・保守の担当）: PJR-76N9 の決まりで本文に書けないため、対応していません。
+- **F002・F004・F007・F014**（未決事項の決定者・作業計画・追跡・変更の影響）: 旧来の「未解決事項」章を消して `_UNDECIDED_` を各要件に書いたことと、見直す契機の記述で一部だけ対応しました。決定者や作業計画は書いていません。
+
+利用者が決める値は推測で埋めず `_UNDECIDED_` で残しています。決める必要があるのは次の 3 つです。
+
+1. 会計の障害率の上限（`nfr-rel-001`）
+2. MTBF の下限（`nfr-rel-004`）
+3. ホスティング環境の障害率をどう判断するか
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"nfr-reliability-sample を rulebook の本文構成（全5章）に沿い、駄菓子屋きぬやを題材とした完成例に書き直した。要件 nfr-rel-001〜005、要件ごとの測定・検証方法と判定 Role code、未達時の扱いと見直す契機、関連ドキュメント導線を記述した。利用者が決める値は _UNDECIDED_ で残した。","handoff":["利用者が決める値: `nfr-rel-001` の会計障害率の上限（_UNDECIDED_）、`nfr-rel-004` の MTBF の下限（_UNDECIDED_）、ホスティング環境の障害率の判断（試用実績から判断する _UNDECIDED_）。`nfr-rel-002` の 0 件と `nfr-rel-003` の 100%、対象時間帯 10:00〜18:00、瞬断を 1 分未満とする前提は _ASSUMPTION_ である。","F003・F023・F024（承認・ready 昇格・保守担当）は PJR-76N9 とサンプル記述標準により本文へ書かず、未対応とした。","F002・F004・F007・F014（未決事項の決定者・作業計画・追跡属性・変更影響）は、各要件への _UNDECIDED_ と暫定判定、「測定・検証方法」の見直し契機で部分的に対応した。決定者・作業計画は文書の役割の割り当てに当たるため書いていない。","rulebook への変更案1: 本文構成に任意の「未決事項」章がない。可用性 sample は「未決事項」章を持つため、NFR 分冊で未決の基準値の置き場をそろえるかを検討する（今回は rulebook どおり5章とし、未決は要件表の備考に置いた）。","rulebook への変更案2: 記述ガイドの指標の例に入力値検証（データ検証ルール）がなく、完全性要件との境界があいまいである。sample では `nfr-rel-005` を「不正値で記録を誤らない」とし、値の正しさの継続的な保証は完全性要件に委ねた。境界を rulebook の「位置づけ」に足すかを検討する。","関連: `nfr-index-sample` は旧形式の最小サンプルのままで、可用性・信頼性 sample からの導線先として内容が薄い。","導線の仮置き: `sac-reliability`・`stc-reliability`・`dec-reliability-criteria` は未作成のためバッククォートで仮置きした。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/nfr-reliability-sample.md","status":"passed","summary":"整形済み"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/nfr-reliability-sample.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>
