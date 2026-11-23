@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-WAVE-5-opr-monitoring-sample-090",
   "run_id": "T-KATA-WAVE-5-opr-monitoring-sample-090-20261123T182030Z-774e14a1",
-  "updated_at": "2026-11-23T19:52:39.081Z",
+  "updated_at": "2026-11-23T19:52:48.843Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-opr-monitoring-sample-090/T-KATA-WAVE-5-opr-monitoring-sample-090-20261123T182030Z-774e14a1/result.md"
     },
     "integrate": {
-      "status": "succeeded",
+      "status": "failed",
       "actor": "sonnet-review-executor",
       "attempts": 2,
       "started_at": "2026-11-23T19:52:36.191Z",
-      "completed_at": "2026-11-23T19:52:39.081Z",
+      "completed_at": "2026-11-23T19:52:48.843Z",
       "artifact_ref": null
     }
   },

@@ -4,7 +4,7 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-5-opr-monitoring-sample-090
   mode: review
-  status: complete
+  status: blocked
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-5-opr-monitoring-sample-090/T-KATA-WAVE-5-opr-monitoring-sample-090-20261123T182030Z-774e14a1/plan.md
   started_at: "2026-11-23T18:20:32.687Z"
@@ -14,6 +14,7 @@ specdojo:
   approach: fully-guided
   targets:
     - specdojo:opr-monitoring-sample
+  block_reason: "integration failed: git merge failed: CONFLICT (content): Merge conflict in docs/ja/projects/prj-0001/execution/grade/results/specdojo.opr-access-control-sample.yaml; worktree kept: /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-5-opr-monitoring-sample-090; next: fix the artifacts with exec resume --task T-KATA-WAVE-5-opr-monitoring-sample-090 --resume-from executor (syncs the integration target first), or retry only the integration with exec resume --task T-KATA-WAVE-5-opr-monitoring-sample-090"
 ---
 
 # Review Result
