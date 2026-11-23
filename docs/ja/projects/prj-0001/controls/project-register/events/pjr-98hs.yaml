@@ -70,3 +70,48 @@
       from: 本番はリリースの版のまま、site/next ブランチの文書を <https://specdojo.github.io/specdojo/next/> に公開し、開発中の機能の文書を見せる。帯と noindex で本番と見分ける
       to: 本番はリリースの版のまま、site/next ブランチの文書を /specdojo/next/ に公開し、開発中の機能の文書を見せる。帯と noindex で本番と見分ける
   previous_event_id: reg_f289ad74ec3d40468edc51e757e0ec6c
+- v: 1
+  id: reg_d9f01167e19a47c6bde1cc52f10180ae
+  ts: "2026-11-23T13:02:14Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "作業内容" updated
+  changes:
+    - field: section
+      from: ""
+      to: 作業内容
+  previous_event_id: reg_85bd9a61f36d45539f495435a944b64a
+- v: 1
+  id: reg_4f2ecd61de6a4db490154e4568c707db
+  ts: "2026-11-23T13:02:32Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "対応結果" updated
+  changes:
+    - field: section
+      from: ""
+      to: 対応結果
+  previous_event_id: reg_d9f01167e19a47c6bde1cc52f10180ae
+- v: 1
+  id: reg_3a1588d28f404cb6b94b115223509968
+  ts: "2026-11-23T13:02:44Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: done
+  reason: 公開のワークフロー（run 45177442046）が成功し、本番が今までどおり表示され、/next/ のページに帯と noindex が出てリンクが /specdojo/next/ の下で解決することを確かめた（2026-11-23）
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: 本番（リリースの版、/specdojo/）はそのまま、公開用のブランチ site/next の文書を /specdojo/next/ に並べて公開した。deploy.yml はタグ・site/next の push・手動の実行のどれでも 2 つの版をビルドしてまとめる。開発中の版は帯とリリースの版へのリンクを出し、noindex にする。github-pages の環境に site/next を足した
+  previous_event_id: reg_4f2ecd61de6a4db490154e4568c707db
