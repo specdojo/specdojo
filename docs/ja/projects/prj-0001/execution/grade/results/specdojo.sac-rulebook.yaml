@@ -4,38 +4,37 @@ document: specdojo:sac-rulebook
 path: docs/ja/specdojo/rulebooks/sac-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-rulebook
-verdict: needs-work
-score: 78
-graded_at: "2026-11-21T05:44:22.417Z"
-graded_by: opus-executor
-content_hash: c5a00c3c12c71ac4c47a7c077c97973f8c88dab8ce86dedd2074711a61bddbb1
+verdict: pass
+score: 96
+graded_at: "2026-11-23T15:27:00.730Z"
+graded_by: sonnet-review-executor
+content_hash: a7fc32690b09f350eaa8a817e6ed095cd077341720d5f0eabb986d4ecfc1092e
 categories:
   purpose:
-    score: 88
+    score: 100
   operations:
     score: 94
   planning:
     score: 100
   business:
-    score: 83
+    score: 100
   architecture:
     score: 100
   usability:
-    score: 75
+    score: 92
   implementation:
-    score: 88
+    score: 100
   quality:
-    score: 67
+    score: 92
   consistency:
-    score: 50
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-publication-accountability:
     level: 4
     score: 100
@@ -52,41 +51,41 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-change-impact:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-verifiability:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 1
-    score: 25
-  vp-ux-readability:
     level: 3
     score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 3
     score: 75
@@ -104,142 +103,32 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 2
-  minor: 13
+  major: 0
+  minor: 3
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-decision-readiness
-    line: 49
-    anchor: "### 6.2. 受入条件"
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# システム受入条件仕様（SAC）作成ルール"
     message: >-
-      受入条件の合否を誰が判断するか（判定者の Role code、または判定責任の参照先）を書く項目がない。sample が必須観点とする「責任者」と rulebook
-      の構成が合っていないため、判定方法の項目か概要に判定者の扱いを定めるべきである。
+      Frontmatter の `recipe` と `template` が `undecided` のままで、rulebook・recipe・sample・template
+      の対応が揃っていないため、作成の要否と予定を確定して宣言すべきである。
     message_ja: >-
-      受入条件の合否を誰が判断するか（判定者の Role code、または判定責任の参照先）を書く項目がない。sample が必須観点とする「責任者」と rulebook
-      の構成が合っていないため、判定方法の項目か概要に判定者の扱いを定めるべきである。
+      Frontmatter の `recipe` と `template` が `undecided` のままで、rulebook・recipe・sample・template
+      の対応が揃っていないため、作成の要否と予定を確定して宣言すべきである。
   - id: F002
     severity: minor
-    rule: vp-ba-requirements-completeness
-    line: 52
-    anchor: "- 非機能は「指標＋基準（閾値）」まで書きます（例: 応答時間（P95）/ 稼働率 / エラー率 / RTO / RPO / 監査ログの保持期間）。"
-    message: 指標と閾値の例が非機能に偏っており、導入文が対象に含める機能、障害、移行の受入条件で何を期待結果・観測点とするかの指針がない。BAC との境界も明示されていないため、対象範囲と対象外を区分ごとに示すべきである。
-    message_ja: 指標と閾値の例が非機能に偏っており、導入文が対象に含める機能、障害、移行の受入条件で何を期待結果・観測点とするかの指針がない。BAC との境界も明示されていないため、対象範囲と対象外を区分ごとに示すべきである。
-  - id: F003
-    severity: minor
-    rule: vp-ba-stakeholder-clarity
-    line: 18
-    anchor: SAC は非機能要件（NFR）や業務受入条件（BAC）を根拠に、システム全体の合格基準を定めます。下位のテスト設計（テスト条件一覧、システムテスト仕様など）は SAC の受入条件を分解して参照するため、ID は安定させます。
-    message: 位置づけの章で、下位のテスト設計が参照すること以外に、SAC を作成・確認・受入判定する関係者（Role code）と利用場面が示されていないため、想定する読み手と合意相手を明記すべきである。
-    message_ja: 位置づけの章で、下位のテスト設計が参照すること以外に、SAC を作成・確認・受入判定する関係者（Role code）と利用場面が示されていないため、想定する読み手と合意相手を明記すべきである。
-  - id: F004
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 86
-    anchor: "- 期待結果が曖昧（「性能が良い」） → 指標と基準（数値/単位）に分解する"
-    message: 「期待結果が曖昧 → 指標と基準に分解する」は、受入条件のガイドの「指標＋基準（閾値）」と禁止事項の「曖昧表現」をもう一度言っているだけなので、どちらかへまとめても判断情報は失われない。
-    message_ja: 「期待結果が曖昧 → 指標と基準に分解する」は、受入条件のガイドの「指標＋基準（閾値）」と禁止事項の「曖昧表現」をもう一度言っているだけなので、どちらかへまとめても判断情報は失われない。
-  - id: F005
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 91
-    anchor: "## 9. サンプル（簡易）"
-    message: サンプル（簡易）の章は、Frontmatter の `sample` で宣言した sample の役割と重なっている。完成例は sample 側にまとめ、rulebook 側の埋め込み例は削るか最小限にすべきである。
-    message_ja: サンプル（簡易）の章は、Frontmatter の `sample` で宣言した sample の役割と重なっている。完成例は sample 側にまとめ、rulebook 側の埋め込み例は削るか最小限にすべきである。
-  - id: F006
-    severity: minor
-    rule: vp-dev-implementation-readiness
-    line: 56
-    anchor: "- `### シナリオ: <短い条件名>`"
-    message: >-
-      シナリオの標準テンプレの見出し（`### シナリオ:`、`#### 前提`、`#### 操作`、`#### 期待結果`、`#### 判定方法`）に番号の付け方がないため、連番を必須とする Markdown
-      規約に沿った成果物を作成者が組み立てられない。
-    message_ja: >-
-      シナリオの標準テンプレの見出し（`### シナリオ:`、`#### 前提`、`#### 操作`、`#### 期待結果`、`#### 判定方法`）に番号の付け方がないため、連番を必須とする Markdown
-      規約に沿った成果物を作成者が組み立てられない。
-  - id: F007
-    severity: minor
-    rule: vp-dev-testability
-    line: 29
-    anchor: >-
-      許可キー・必須項目・型制約は [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] と
-      `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml` を正本とします。
-    message: >-
-      Frontmatter の正本として schema を示しているが、SAC ファイルの作成・更新後に実行する検証コマンド（`npm run -s lint:md` や schema 検証など）と、`based_on`
-      の参照先が存在するかの確認方法が示されていない。
-    message_ja: >-
-      Frontmatter の正本として schema を示しているが、SAC ファイルの作成・更新後に実行する検証コマンド（`npm run -s lint:md` や schema 検証など）と、`based_on`
-      の参照先が存在するかの確認方法が示されていない。
-  - id: F008
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 56
-    anchor: "- `### シナリオ: <短い条件名>`"
-    message: >-
-      シナリオの標準テンプレとサンプル（簡易）が番号のない見出し（`### シナリオ:`、`#### 前提` など）を使っており、`##` 以下に連番を必須とする Markdown 規約と矛盾するため、このとおりに書いた SAC
-      が規約違反になる。
-    message_ja: >-
-      シナリオの標準テンプレとサンプル（簡易）が番号のない見出し（`### シナリオ:`、`#### 前提` など）を使っており、`##` 以下に連番を必須とする Markdown 規約と矛盾するため、このとおりに書いた SAC
-      が規約違反になる。
-  - id: F009
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 23
-    anchor: "- 文書 ID: ファイル名と同じ `sac-<term>` とし、成果物カタログの宣言と一致させます。"
-    message: >-
-      文書 ID を `sac-＜term＞` としているが、プロジェクト成果物で使う project 修飾 ID（`＜project-id＞:sac-＜term＞`）と形式が揃っておらず、wikilink
-      の解決と成果物カタログの宣言で食い違うおそれがある。
-    message_ja: >-
-      文書 ID を `sac-＜term＞` としているが、プロジェクト成果物で使う project 修飾 ID（`＜project-id＞:sac-＜term＞`）と形式が揃っておらず、wikilink
-      の解決と成果物カタログの宣言で食い違うおそれがある。
-  - id: F010
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# システム受入条件仕様（SAC）作成ルール"
-    message: 参照している `specdojo:sac-sample` が SAC の具体例ではなくサンプルの解説書となっており、定義した構成に従っていない。
-    message_ja: 参照している `specdojo:sac-sample` が SAC の具体例ではなくサンプルの解説書となっており、定義した構成に従っていない。
-  - id: F011
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# システム受入条件仕様（SAC）作成ルール"
-    message: >-
-      Frontmatter の `recipe` と `template` が `undecided` のままで、Kata 内部の rulebook、recipe、sample、template
-      の対応が揃っていないため、作成の要否と予定を確定すべきである。
-    message_ja: >-
-      Frontmatter の `recipe` と `template` が `undecided` のままで、Kata 内部の rulebook、recipe、sample、template
-      の対応が揃っていないため、作成の要否と予定を確定すべきである。
-  - id: F012
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 91
-    anchor: "## 9. サンプル（簡易）"
-    message: rulebook の中のサンプル（簡易）と宣言した sample が別々の完成例になっており、片方だけが rulebook の構成に従っているため、完成例の正本を sample に一本化すべきである。
-    message_ja: rulebook の中のサンプル（簡易）と宣言した sample が別々の完成例になっており、片方だけが rulebook の構成に従っているため、完成例の正本を sample に一本化すべきである。
-  - id: F013
-    severity: minor
-    rule: vp-ux-readability
-    line: 18
-    anchor: SAC は非機能要件（NFR）や業務受入条件（BAC）を根拠に、システム全体の合格基準を定めます。下位のテスト設計（テスト条件一覧、システムテスト仕様など）は SAC の受入条件を分解して参照するため、ID は安定させます。
-    message: 位置づけの章で、根拠とする NFR・BAC と、下位のテスト条件一覧・システムテスト仕様に、rulebook や成果物リファレンスへの参照がないため、初見の読者が次に見る文書を辿れない。
-    message_ja: 位置づけの章で、根拠とする NFR・BAC と、下位のテスト条件一覧・システムテスト仕様に、rulebook や成果物リファレンスへの参照がないため、初見の読者が次に見る文書を辿れない。
-  - id: F014
-    severity: minor
     rule: vp-ux-language-consistency
-    line: 27
+    line: 33
     anchor: "## 4. 推奨 Frontmatter 項目"
-    message: 見出しは「推奨 Frontmatter 項目」なのに `based_on` を「必ず紐づけます」として必須にしており、推奨と必須の区別が読み手に伝わらない。必須項目と推奨項目を分けて示すべきである。
-    message_ja: 見出しは「推奨 Frontmatter 項目」なのに `based_on` を「必ず紐づけます」として必須にしており、推奨と必須の区別が読み手に伝わらない。必須項目と推奨項目を分けて示すべきである。
-  - id: F015
+    message: 見出しが「推奨 Frontmatter 項目」なのに表では必須（○）の項目を含んでおり、推奨と必須の区別が読み手に伝わらないため、見出しを「Frontmatter 項目」とするなどして必須と任意を揃えるべきである。
+    message_ja: 見出しが「推奨 Frontmatter 項目」なのに表では必須（○）の項目を含んでおり、推奨と必須の区別が読み手に伝わらないため、見出しを「Frontmatter 項目」とするなどして必須と任意を揃えるべきである。
+  - id: F003
     severity: minor
     rule: vp-ops-release-readiness
     line: 1
     anchor: "# システム受入条件仕様（SAC）作成ルール"
-    message: >-
-      `status: draft` で `recipe` と `template` が `undecided`、sample が構成に従っていないのに、ready
-      にする前提となる未解決事項がどこにも示されていないため、公開判断の材料が不足している。
-    message_ja: >-
-      `status: draft` で `recipe` と `template` が `undecided`、sample が構成に従っていないのに、ready
-      にする前提となる未解決事項がどこにも示されていないため、公開判断の材料が不足している。
+    message: "`status: draft` で `recipe` と `template` が未定なのに、ready にする前提となる未解決事項がどこにも示されていないため、公開判断の材料が不足している。"
+    message_ja: "`status: draft` で `recipe` と `template` が未定なのに、ready にする前提となる未解決事項がどこにも示されていないため、公開判断の材料が不足している。"
