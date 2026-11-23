@@ -4,98 +4,94 @@ document: specdojo:opr-index-sample
 path: docs/ja/specdojo/samples/opr-index-sample.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-sample
-verdict: needs-work
-score: 67
-graded_at: "2026-11-21T05:01:57.587Z"
-graded_by: opus-executor
-content_hash: fb7d1232ddeaa53f4aab4e2732f91067211de2662c69f19451620f8e8a9a52d5
+verdict: pass
+score: 98
+graded_at: "2026-11-23T10:10:35.096Z"
+graded_by: sonnet-review-executor
+content_hash: 6135d5c5bcb253813af42e04121782f86c5b9b948472f63bc2029bee8d01559a
 categories:
   purpose:
-    score: 75
+    score: 100
   operations:
-    score: 81
+    score: 100
   planning:
-    score: 75
+    score: 100
   business:
-    score: 67
+    score: 100
   architecture:
-    score: 92
+    score: 100
   usability:
-    score: 83
+    score: 100
   implementation:
-    score: 63
+    score: 100
   quality:
-    score: 58
+    score: 92
   consistency:
-    score: 25
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-publication-accountability:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-business-value:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-requirements-completeness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
-  vp-arc-single-responsibility:
+  vp-dev-implementation-readiness:
     level: 4
     score: 100
-  vp-dev-implementation-readiness:
-    level: 2
-    score: 50
   vp-dev-change-impact:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-testability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-verifiability:
     level: 3
     score: 75
   vp-qe-omissions-consistency:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ux-readability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-operability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -104,187 +100,16 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 7
-  minor: 17
+  major: 0
+  minor: 1
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-purpose-alignment
-    line: 1
-    anchor: "# 運用手順: 全体 サンプル"
-    message: ドキュメントには、標準化された手順における明確な運用の範囲（スコープ内およびスコープ外のシステムまたは運用環境）が定義されていません。
-    message_ja: ドキュメントには、標準化された手順における明確な運用の範囲（スコープ内およびスコープ外のシステムまたは運用環境）が定義されていません。
-  - id: F002
-    severity: minor
-    rule: vp-po-purpose-alignment
-    line: 5
-    anchor: "## 1. 概要（index）"
-    message: 1章「概要（index）」に rulebook の受入条件である対象運用と利用者（店番・運用担当など）が書かれておらず、どの運用の手順群の入口なのかを読み取れないため、対象運用・目的・利用者を明記する必要がある。
-    message_ja: 1章「概要（index）」に rulebook の受入条件である対象運用と利用者（店番・運用担当など）が書かれておらず、どの運用の手順群の入口なのかを読み取れないため、対象運用・目的・利用者を明記する必要がある。
-  - id: F003
-    severity: minor
-    rule: vp-po-decision-readiness
-    line: 1
-    anchor: "# 運用手順: 全体 サンプル"
-    message: POの承認またはレビューに必要な未解決の課題、前提条件、および運用の影響範囲が文書化されていません。
-    message_ja: POの承認またはレビューに必要な未解決の課題、前提条件、および運用の影響範囲が文書化されていません。
-  - id: F004
-    severity: minor
-    rule: vp-pm-plan-feasibility
-    line: 9
-    anchor: "## 2. 日次/週次/月次点検手順"
-    message: 日常的な点検手順において、運用のスケジューリングと追跡に必要な詳細な実行ステップ、具体的なタイミングや期限、および所要時間の見積もりが不足しています。
-    message_ja: 日常的な点検手順において、運用のスケジューリングと追跡に必要な詳細な実行ステップ、具体的なタイミングや期限、および所要時間の見積もりが不足しています。
-  - id: F005
-    severity: minor
-    rule: vp-pm-dependency-risk
-    line: 9
-    anchor: "## 2. 日次/週次/月次点検手順"
-    message: 運用のリスク、外部ツールへの依存関係、および点検やレビューの遅延がその後の運用スケジュールに与える影響が特定されていません。
-    message_ja: 運用のリスク、外部ツールへの依存関係、および点検やレビューの遅延がその後の運用スケジュールに与える影響が特定されていません。
-  - id: F006
-    severity: minor
-    rule: vp-pm-control-reporting
-    line: 17
-    anchor: "## 3. 証跡（ログ、チケット、チェックリスト、実施記録）"
-    message: 具体的な報告先、エスカレーションのワークフロー、および運用のリスクや変更要求をプロジェクト管理の追跡に転送するための基準が明記されていません。
-    message_ja: 具体的な報告先、エスカレーションのワークフロー、および運用のリスクや変更要求をプロジェクト管理の追跡に転送するための基準が明記されていません。
-  - id: F007
-    severity: minor
-    rule: vp-ba-business-value
-    line: 5
-    anchor: "## 1. 概要（index）"
-    message: ドキュメントには、具体的なビジネス上の問題、影響を受けるビジネスステークホルダー、運用の放置による結果、または提供されたビジネス価値を測定するための基準が記載されていません。
-    message_ja: ドキュメントには、具体的なビジネス上の問題、影響を受けるビジネスステークホルダー、運用の放置による結果、または提供されたビジネス価値を測定するための基準が記載されていません。
-  - id: F008
-    severity: major
-    rule: vp-ba-requirements-completeness
-    line: 9
-    anchor: "## 2. 日次/週次/月次点検手順"
-    message: ドキュメントには、必要な運用ドメイン全体における運用の範囲、システムの前提条件、および手順の受け入れ基準が欠落しており、手順の完全性の検証ができません。
-    message_ja: ドキュメントには、必要な運用ドメイン全体における運用の範囲、システムの前提条件、および手順の受け入れ基準が欠落しており、手順の完全性の検証ができません。
-  - id: F009
-    severity: minor
-    rule: vp-ba-stakeholder-clarity
-    line: 9
-    anchor: "## 2. 日次/週次/月次点検手順"
-    message: 外部ステークホルダー、ビジネスシステムの所有者、検証の承認者、および役割をまたいだ合意された運用のインターフェースの詳細が不十分です。
-    message_ja: 外部ステークホルダー、ビジネスシステムの所有者、検証の承認者、および役割をまたいだ合意された運用のインターフェースの詳細が不十分です。
-  - id: F010
-    severity: minor
-    rule: vp-arc-technical-constraints
-    line: 17
-    anchor: "## 3. 証跡（ログ、チケット、チェックリスト、実施記録）"
-    message: 具体的な技術プラットフォーム、ツールチェーンの依存関係、ログスキーマ、およびストレージシステムの制約が明記されていません。
-    message_ja: 具体的な技術プラットフォーム、ツールチェーンの依存関係、ログスキーマ、およびストレージシステムの制約が明記されていません。
-  - id: F011
-    severity: major
-    rule: vp-dev-implementation-readiness
-    line: 9
-    anchor: "## 2. 日次/週次/月次点検手順"
-    message: 手順には、オペレーターが日常的なタスクを実行するために必要な具体的な点検対象、ツールの設定、入出力仕様、およびステップバイステップの指示が不足しています。
-    message_ja: 手順には、オペレーターが日常的なタスクを実行するために必要な具体的な点検対象、ツールの設定、入出力仕様、およびステップバイステップの指示が不足しています。
-  - id: F012
-    severity: minor
-    rule: vp-dev-change-impact
-    line: 25
-    anchor: "## 4. 関連ドキュメント導線（`opd` 参照、`mip` / `otp` / `cop` 連携）"
-    message: 日常的な手順や証跡保持ルールの変更が、既存のシステム、ツール、および運用のワークフローに与える影響が特定されていません。
-    message_ja: 日常的な手順や証跡保持ルールの変更が、既存のシステム、ツール、および運用のワークフローに与える影響が特定されていません。
-  - id: F013
-    severity: minor
-    rule: vp-dev-testability
-    line: 9
-    anchor: "## 2. 日次/週次/月次点検手順"
-    message: 運用の実行と証跡の記録を検証するための検証方法、テスト手順、および期待される結果が提供されていません。
-    message_ja: 運用の実行と証跡の記録を検証するための検証方法、テスト手順、および期待される結果が提供されていません。
-  - id: F014
-    severity: minor
     rule: vp-qe-verifiability
-    line: 11
-    anchor: "| 頻度 | 手順                         | 実施者   | 完了条件                           | 証跡               |"
-    message: 週次の「誤検知が棚卸し済み」と月次の「棚卸し完了」には完了と判定する基準（対象範囲、記録項目、差異があったときの扱い）がなく pass / fail を判定できないため、判定可能な条件へ具体化する必要がある。
-    message_ja: 週次の「誤検知が棚卸し済み」と月次の「棚卸し完了」には完了と判定する基準（対象範囲、記録項目、差異があったときの扱い）がなく pass / fail を判定できないため、判定可能な条件へ具体化する必要がある。
-  - id: F015
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 11
-    anchor: "| 頻度 | 手順                         | 実施者   | 完了条件                           | 証跡               |"
-    message: ルールブックで必須とされている本文構成（2, 4-10章）が欠落しており、サンプルとして不完全である。
-    message_ja: ルールブックで必須とされている本文構成（2, 4-10章）が欠落しており、サンプルとして不完全である。
-  - id: F016
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 9
-    anchor: "## 2. 日次/週次/月次点検手順"
-    message: rulebook の禁止事項「優先度別障害対応を未定義のまま確定しない」に対し、障害対応手順（P1/P2 の初動 SLA・段階別操作・連絡条件）の章も分冊への参照による充足も示されていないため、障害対応手順の章を置く必要がある。
-    message_ja: rulebook の禁止事項「優先度別障害対応を未定義のまま確定しない」に対し、障害対応手順（P1/P2 の初動 SLA・段階別操作・連絡条件）の章も分冊への参照による充足も示されていないため、障害対応手順の章を置く必要がある。
-  - id: F017
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 25
-    anchor: "## 4. 関連ドキュメント導線（`opd` 参照、`mip` / `otp` / `cop` 連携）"
-    message: >-
-      4章の見出しが rulebook の「関連ドキュメント導線（`opd-index` 参照）」と一致せず、`mip` / `otp` / `cop` 連携という rulebook
-      にない範囲を見出しに含めているため、rulebook の見出しにそろえる必要がある。
-    message_ja: >-
-      4章の見出しが rulebook の「関連ドキュメント導線（`opd-index` 参照）」と一致せず、`mip` / `otp` / `cop` 連携という rulebook
-      にない範囲を見出しに含めているため、rulebook の見出しにそろえる必要がある。
-  - id: F018
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 運用手順: 全体 サンプル"
-    message: Frontmatter の `rulebook` 指定が `opd-rulebook` になっており、対象成果物の種別と不整合である。
-    message_ja: Frontmatter の `rulebook` 指定が `opd-rulebook` になっており、対象成果物の種別と不整合である。
-  - id: F019
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 3
-    anchor: "- 参照: `../rulebooks/opr-rulebook.md`"
-    message: 参照先のパスおよびファイル名（`opr-rulebook.md`）が、実際のルールブック（`opr-index-rulebook.md`）と一致していない。
-    message_ja: 参照先のパスおよびファイル名（`opr-rulebook.md`）が、実際のルールブック（`opr-index-rulebook.md`）と一致していない。
-  - id: F020
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 11
-    anchor: "| 頻度 | 手順                         | 実施者   | 完了条件                           | 証跡               |"
-    message: >-
-      sample の業務文脈が共通サンプル文脈（駄菓子屋きぬや）ではなく Ops/Sec/Dev 体制や監視ダッシュボードを持つ一般的な Web サービスになっており、sample-authoring-standard
-      の文脈統一に反するため、きぬやの店頭運用（店番・タブレット 1 台など）に合わせて書き直す必要がある。
-    message_ja: >-
-      sample の業務文脈が共通サンプル文脈（駄菓子屋きぬや）ではなく Ops/Sec/Dev 体制や監視ダッシュボードを持つ一般的な Web サービスになっており、sample-authoring-standard
-      の文脈統一に反するため、きぬやの店頭運用（店番・タブレット 1 台など）に合わせて書き直す必要がある。
-  - id: F021
-    severity: minor
-    rule: vp-ux-readability
-    line: 27
-    anchor: "| 種別 | ドキュメントID     | 目的                                  | 備考       |"
-    message: 導線表の備考「該当時」「必要時のみ」がどの条件で該当するかを示しておらず、初見の読者が次に読む分冊を判断できないため、参照する条件を具体的に記す必要がある。
-    message_ja: 導線表の備考「該当時」「必要時のみ」がどの条件で該当するかを示しておらず、初見の読者が次に読む分冊を判断できないため、参照する条件を具体的に記す必要がある。
-  - id: F022
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 11
-    anchor: "| 頻度 | 手順                         | 実施者   | 完了条件                           | 証跡               |"
-    message: >-
-      実施者・参照権限が「Ops当番」「Ops Lead」「Sec/Ops」「Ops/Dev」と表記ゆれしており Role code との対応も示されていないため、Role code
-      にそろえ、「監視ダッシュ」の略記も正式名へ統一する必要がある。
-    message_ja: >-
-      実施者・参照権限が「Ops当番」「Ops Lead」「Sec/Ops」「Ops/Dev」と表記ゆれしており Role code との対応も示されていないため、Role code
-      にそろえ、「監視ダッシュ」の略記も正式名へ統一する必要がある。
-  - id: F023
-    severity: minor
-    rule: vp-ops-release-readiness
-    line: 1
-    anchor: "# 運用手順: 全体 サンプル"
-    message: 未解決の課題、前提条件の検証項目、およびドキュメントをドラフトから準備完了へと昇格させるための基準が明記されていません。
-    message_ja: 未解決の課題、前提条件の検証項目、およびドキュメントをドラフトから準備完了へと昇格させるための基準が明記されていません。
-  - id: F024
-    severity: major
-    rule: vp-ops-operability
-    line: 9
-    anchor: "## 2. 日次/週次/月次点検手順"
-    message: インシデント対応、変更の実行、および問い合わせのエスカレーションを含む不可欠な運用のランブック手順がインデックスから漏れており、運用の実行を妨げています。
-    message_ja: インシデント対応、変更の実行、および問い合わせのエスカレーションを含む不可欠な運用のランブック手順がインデックスから漏れており、運用の実行を妨げています。
+    line: 46
+    anchor: >-
+      | 日次 | 店番担当 | 閉店後、日次締めを終えた           | 人気商品の在庫数を棚と照らし、欠品した商品を記録する                     |
+      対象商品すべてで在庫数が一致するか、差を調整して記録した     | 欠品記録       |
+    message: 日次の在庫確認の対象「人気商品」の範囲(品目の一覧や選定基準)が定義されておらず、「対象商品すべて」の一致を判定できないため、対象品目を具体化する必要がある。
+    message_ja: 日次の在庫確認の対象「人気商品」の範囲(品目の一覧や選定基準)が定義されておらず、「対象商品すべて」の一致を判定できないため、対象品目を具体化する必要がある。
