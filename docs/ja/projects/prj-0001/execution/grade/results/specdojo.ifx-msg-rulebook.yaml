@@ -4,9 +4,9 @@ document: specdojo:ifx-msg-rulebook
 path: docs/ja/specdojo/rulebooks/ifx-msg-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 96
-graded_at: "2026-11-23T01:36:11.750Z"
+verdict: pass
+score: 95
+graded_at: "2026-11-23T02:10:12.210Z"
 graded_by: opus-review-executor
 content_hash: a0e4f6a3966c4bc4b75e575955294d28643fa8c93a74fcbce767d2ebe7762a33
 categories:
@@ -25,9 +25,9 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 92
   consistency:
-    score: 100
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -75,11 +75,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -100,41 +100,21 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 3
+  major: 0
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-kata-conformance
-    line: 68
-    anchor: "| `datacontenttype` | 必須   | `data` の形式。`enum` で値を固定する（例: `application/json`）      |"
-    message: rulebookは`datacontenttype`を`application/json`固定としているが、sampleのschemaでは`example`扱いでenum制約がなく、固定値の要求とsampleの完成例が一致していないため、固定か例示かを揃える必要がある。
-    message_ja: rulebookは`datacontenttype`を`application/json`固定としているが、sampleのschemaでは`example`扱いでenum制約がなく、固定値の要求とsampleの完成例が一致していないため、固定か例示かを揃える必要がある。
+    rule: vp-qe-omissions-consistency
+    line: 51
+    anchor: "| `info.description`    | 必須             | 対応する `ifx-index` の連携名、発行者と購読者、配信と順序の保証、重複受信の扱い、未決事項     |"
+    message: 本文要件の表では`info.description`に「未決事項」を書くとし、未決事項と検証の節ではコメントで書くとしており記述先が食い違っているため、どちらに書くか（コメントを正とし`info.description`では要約のみ等）を一つに揃える必要がある。
+    message_ja: 本文要件の表では`info.description`に「未決事項」を書くとし、未決事項と検証の節ではコメントで書くとしており記述先が食い違っているため、どちらに書くか（コメントを正とし`info.description`では要約のみ等）を一つに揃える必要がある。
   - id: F002
-    severity: major
+    severity: minor
     rule: vp-qe-kata-conformance
     line: 51
     anchor: "| `info.description`    | 必須             | 対応する `ifx-index` の連携名、発行者と購読者、配信と順序の保証、重複受信の扱い、未決事項     |"
-    message: rulebookは`info.description`を必須とし連携名・発行者と購読者・配信と順序の保証・重複受信の扱いを書くよう定めているが、対応sampleの`info`には`description`がなく必須キーを満たさない完成例になっているため、sampleへ`info.description`を追加する必要がある。
-    message_ja: rulebookは`info.description`を必須とし連携名・発行者と購読者・配信と順序の保証・重複受信の扱いを書くよう定めているが、対応sampleの`info`には`description`がなく必須キーを満たさない完成例になっているため、sampleへ`info.description`を追加する必要がある。
-  - id: F003
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 40
-    anchor: "| based_on | 根拠となる文書の ID リスト。参照元の `ifx-index` の ID を最低限入れる | ○    |"
-    message: >-
-      rulebookは`based_on`を必須とし参照元の`ifx-index`のIDを最低限入れるとしているが、sampleは`based_on:
-      []`で例外の注記もないため、sampleに例示のIDを入れるか、空でよい例外をrulebookに明記する必要がある。
-    message_ja: >-
-      rulebookは`based_on`を必須とし参照元の`ifx-index`のIDを最低限入れるとしているが、sampleは`based_on:
-      []`で例外の注記もないため、sampleに例示のIDを入れるか、空でよい例外をrulebookに明記する必要がある。
-  - id: F004
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 76
-    anchor: >-
-      - AsyncAPI 2.6.0 の `subscribe` は「アプリケーションが発行し、利用者が購読できる」、`publish` は「利用者が送り、アプリケーションが受け取る」を表す。向きの誤読を防ぐため、チャネルの
-      `description` に発行者と購読者を名前で書く。
-    message: rulebookはチャネルの`description`に発行者と購読者を名前で書くとしているが、sampleのチャネルの`description`は「在庫が変更された通知」のみで発行者・購読者がなく、記述ガイドの完成例になっていない。
-    message_ja: rulebookはチャネルの`description`に発行者と購読者を名前で書くとしているが、sampleのチャネルの`description`は「在庫が変更された通知」のみで発行者・購読者がなく、記述ガイドの完成例になっていない。
+    message: rulebookは`info.description`に対応する`ifx-index`の連携名と未決事項を書くと定めているが、sampleの`info.description`にはいずれもなく、コメントで「ifx-index-sampleには未掲載の連携」としたまま`based_on`で同一覧を参照しているため、sampleに連携名（または未掲載である旨と未決事項）を`info.description`へ書くか、学習用の例外をrulebookに明記する必要がある。
+    message_ja: rulebookは`info.description`に対応する`ifx-index`の連携名と未決事項を書くと定めているが、sampleの`info.description`にはいずれもなく、コメントで「ifx-index-sampleには未掲載の連携」としたまま`based_on`で同一覧を参照しているため、sampleに連携名（または未掲載である旨と未決事項）を`info.description`へ書くか、学習用の例外をrulebookに明記する必要がある。

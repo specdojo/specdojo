@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 92
-graded_at: "2026-11-22T01:17:50.209Z"
+graded_at: "2026-11-23T02:02:49.603Z"
 graded_by: opus-review-executor
-content_hash: 57dd590486dcbf6832b1ad1e15a07290f7cb949654cb8ba9af4197f20d1d3c89
+content_hash: 89b357db75d4de67f85b7ea1a4e451089b71be6c12c698fe58a68eba375d868c
 categories:
   purpose:
     score: 100
@@ -110,7 +110,7 @@ findings:
   - id: F001
     severity: minor
     rule: vp-arc-conciseness
-    line: 35
+    line: 33
     anchor: >-
       | 実施           | 環境とデータの準備は DEV、実施と証跡の照合・合否判定は
       QE                                                                                                                                       
@@ -124,18 +124,7 @@ findings:
   - id: F002
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 21
-    anchor: "- 対象外: 印刷コマンドの全終了コードと再試行の分類（理由: 契約の網羅は境界の責務、代替: ET の `receipt-print` 連携。ST は用紙切れと結果不明の2種だけを扱う）"
-    message: >-
-      stc-index の対象外例外は ST で再現する障害を「用紙切れと保存失敗の2種だけ」としているが、本書は対象外・外部依存・`st-cash-sale-print-failure-020`
-      で印字結果不明（30秒タイムアウトスタブ）を追加しており、rulebook の「共通方針から外れる場合は理由と影響を書く」に従って「共通方針との差」行へ理由を記すか、stc-index 側の例外を改訂して揃える必要がある。
-    message_ja: >-
-      stc-index の対象外例外は ST で再現する障害を「用紙切れと保存失敗の2種だけ」としているが、本書は対象外・外部依存・`st-cash-sale-print-failure-020`
-      で印字結果不明（30秒タイムアウトスタブ）を追加しており、rulebook の「共通方針から外れる場合は理由と影響を書く」に従って「共通方針との差」行へ理由を記すか、stc-index 側の例外を改訂して揃える必要がある。
-  - id: F003
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 63
+    line: 61
     anchor: 会計確定と同時に、販売記録1件と在庫減算が同じ取引番号で残り、確定前に取り消した取引は何も残さないことを保証する。
     message: >-
       観点「販売確定成立」の意図が「確定で記録が残る」と「確定前の取消で何も残らない」の2つの合否命題を含み、stc-index の「1観点＝1合否命題」と食い違うため、取消ケース
@@ -143,10 +132,23 @@ findings:
     message_ja: >-
       観点「販売確定成立」の意図が「確定で記録が残る」と「確定前の取消で何も残らない」の2つの合否命題を含み、stc-index の「1観点＝1合否命題」と食い違うため、取消ケース
       `st-cash-sale-flow-success-030` を別観点へ分けるか、両方を1つの命題として言い表せる意図に改める必要がある。
+  - id: F003
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 19
+    anchor: "- 対象外: 印刷コマンドの全終了コードと再試行の分類（理由: 契約の網羅は境界の責務、代替: ET の `receipt-print` 連携。ST は用紙切れと結果不明の2種だけを扱う）"
+    message: >-
+      対象外「印刷コマンドの全終了コードと再試行の分類」は `stc-index-sample` の「対象外・除外理由（共通）」の「印刷コマンド・保管サービスの全障害パターン」行と除外内容・代替（ET の
+      `receipt-print` 連携）が重複しており、rulebook の「共通の対象外と重複させず対象固有の除外だけを示す」に反するため、共通行への参照に置き換え、本 term
+      で再現する2種（用紙切れ・印字結果不明）の限定だけを例外として残す必要がある。
+    message_ja: >-
+      対象外「印刷コマンドの全終了コードと再試行の分類」は `stc-index-sample` の「対象外・除外理由（共通）」の「印刷コマンド・保管サービスの全障害パターン」行と除外内容・代替（ET の
+      `receipt-print` 連携）が重複しており、rulebook の「共通の対象外と重複させず対象固有の除外だけを示す」に反するため、共通行への参照に置き換え、本 term
+      で再現する2種（用紙切れ・印字結果不明）の限定だけを例外として残す必要がある。
   - id: F004
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 69
+    line: 67
     anchor: >-
       | `st-cash-sale-flow-success-010` | 入力: 商品A 2個 / 状態: 在庫5個              | 商品Aを2個登録し、60円で会計を確定する           |
       販売記録が1件（数量2・60円）でき、在庫が5個から3個になる                   | 販売記録、在庫記録                 | `kinuya-st`、プリンタ検証機 | TR-01,TR-02
@@ -162,7 +164,7 @@ findings:
   - id: F005
     severity: minor
     rule: vp-ux-language-consistency
-    line: 73
+    line: 71
     anchor: "### 6.2. 観点: 未確定停止"
     message: >-
       観点名「未確定停止」に対して意図は「会計確定後に印刷だけが失敗しても会計を取り消さず」であり、確定済みの会計を「未確定」と呼ぶ名称が内容と逆になって読み手を混乱させるため、`print-failure` に即した観点名（例:
