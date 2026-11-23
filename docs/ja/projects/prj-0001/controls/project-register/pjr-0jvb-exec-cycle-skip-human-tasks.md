@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-0jvb-exec-cycle-skip-human-tasks
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-22T23:53:44Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-23T01:32:37Z"
+  conclusion: "agent を指定した自動の実行でも execution: human のタスクを飛ばし、人のタスクだけが残ったときは待つ数を出して終了コード 0 で終えるようにした。単体テスト 4 件を足した"
   derived_from:
     - PJR-561Q
   commit_type: fix

@@ -112,3 +112,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_5f61c35efd09405987c7db0e839f608d
+- v: 1
+  id: reg_02cbae8e0de74a5498af564fcf7aef1d
+  ts: "2026-11-23T01:32:37Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分と単体テストを確かめ、prj-0001 の exec run --auto --dry-run --edit-by sol-executor が 13 件を飛ばして終了コード 0 で終わることと、exec smoke の成功を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: "agent を指定した自動の実行でも execution: human のタスクを飛ばし、人のタスクだけが残ったときは待つ数を出して終了コード 0 で終えるようにした。単体テスト 4 件を足した"
+  previous_event_id: reg_0460cfd83c6945c4b590ce5803a47739
