@@ -1,0 +1,175 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:ifx-index-template
+path: docs/ja/specdojo/templates/ifx-index-template.yaml
+target: kata
+rubric: grade-rubric-v2
+verdict: pass
+score: 90
+graded_at: "2026-11-23T05:12:24.422Z"
+graded_by: opus-review-executor
+content_hash: 77b282322e93c0cfdbe9d7e53c1d13d5f2fd8238be677f30b41ba162e864a80c
+categories:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
+  architecture:
+    score: 100
+  usability:
+    score: 75
+  implementation:
+    score: 100
+  quality:
+    score: 92
+  consistency:
+    score: 75
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 6
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 37
+    anchor: "# _TODO_: 残作業は Schedule の作業 ID と引き継ぎ時点の未完了事項を記す。"
+    message: >-
+      連携要素ごとに Schedule・PJR・PM 登録依頼・PO 判断を記させる形のみで、rulebook が許す「複数 IF
+      に共通なら連携名を明示して冒頭または末尾にまとめてよい」選択肢が示されておらず、連携数に比例して同一文の反復を招くため、まとめ記述の選択肢を一行添える。
+    message_ja: >-
+      連携要素ごとに Schedule・PJR・PM 登録依頼・PO 判断を記させる形のみで、rulebook が許す「複数 IF
+      に共通なら連携名を明示して冒頭または末尾にまとめてよい」選択肢が示されておらず、連携数に比例して同一文の反復を招くため、まとめ記述の選択肢を一行添える。
+  - id: F002
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 40
+    anchor: "# 採否・公開条件が未決なら、PO へ渡す判断対象と保留範囲を記す。"
+    message: >-
+      interfaces の後ろに一覧全体の末尾コメント欄がなく、sample が末尾にまとめている外部窓口・Schedule/PJR
+      登録依頼・変更時の引き継ぎの置き場所がテンプレートから読み取れないため、行頭コメントで一覧全体の注記欄を追加する。
+    message_ja: >-
+      interfaces の後ろに一覧全体の末尾コメント欄がなく、sample が末尾にまとめている外部窓口・Schedule/PJR
+      登録依頼・変更時の引き継ぎの置き場所がテンプレートから読み取れないため、行頭コメントで一覧全体の注記欄を追加する。
+  - id: F003
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 33
+    anchor: "# 論点・担当 Role code・解消条件・期限または判断するマイルストーン、"
+    message: >-
+      「期限または判断するマイルストーン」は rulebook が禁じる計画・管理簿の期日の複製を誘発しうるため、sample と同様に判断するマイルストーン（例: 外部結合テスト着手前）を基本とし、期日は Schedule
+      参照とする旨に改める。
+    message_ja: >-
+      「期限または判断するマイルストーン」は rulebook が禁じる計画・管理簿の期日の複製を誘発しうるため、sample と同様に判断するマイルストーン（例: 外部結合テスト着手前）を基本とし、期日は Schedule
+      参照とする旨に改める。
+  - id: F004
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 17
+    anchor: "# _TODO_: 対象システム・利用場面・連携境界・主要な対象外を記す。"
+    message: >-
+      同系統の ifx-cmd-template が冒頭で recipe・sample を wikilink 参照しているのに対し本テンプレートには参照がなく、Kata 内で記入判断・完成例への導線が不統一なため、冒頭コメントに
+      ifx-index-recipe と ifx-index-sample への参照を加える。
+    message_ja: >-
+      同系統の ifx-cmd-template が冒頭で recipe・sample を wikilink 参照しているのに対し本テンプレートには参照がなく、Kata 内で記入判断・完成例への導線が不統一なため、冒頭コメントに
+      ifx-index-recipe と ifx-index-sample への参照を加える。
+  - id: F005
+    severity: minor
+    rule: vp-ux-readability
+    line: 20
+    anchor: "# 連携ごとに要素を複製する。値域・構文は先頭 modeline の schema を参照する。"
+    message: >-
+      direction・kind・format の選び方は schema ではなく rulebook「本文要件」と recipe に依存するが、本行は値域・構文の schema
+      参照のみを示し次に見る文書が分からないため、選択判断の参照先（rulebook・recipe）を併記する。
+    message_ja: >-
+      direction・kind・format の選び方は schema ではなく rulebook「本文要件」と recipe に依存するが、本行は値域・構文の schema
+      参照のみを示し次に見る文書が分からないため、選択判断の参照先（rulebook・recipe）を併記する。
+  - id: F006
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 19
+    anchor: "# 仮定・意思決定待ちは rulebook の共通ラベルで区別する。"
+    message: >-
+      「rulebook の共通ラベル」とあるが、_ASSUMPTION_・_UNDECIDED_ 等の共通ラベルは ifx-index-rulebook ではなく document-metadata-standard
+      が定義しており正本の所在を誤認させるため、ラベル名を明示するかドキュメントメタ情報標準を参照する表現に改める。
+    message_ja: >-
+      「rulebook の共通ラベル」とあるが、_ASSUMPTION_・_UNDECIDED_ 等の共通ラベルは ifx-index-rulebook ではなく document-metadata-standard
+      が定義しており正本の所在を誤認させるため、ラベル名を明示するかドキュメントメタ情報標準を参照する表現に改める。
