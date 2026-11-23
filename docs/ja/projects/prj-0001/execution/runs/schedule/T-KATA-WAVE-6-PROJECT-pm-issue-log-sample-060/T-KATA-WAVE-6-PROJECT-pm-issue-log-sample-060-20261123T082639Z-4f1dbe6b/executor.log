@@ -1,0 +1,18 @@
+課題ログの template（`docs/ja/specdojo/templates/pm-issue-log-template.md`）は、前置きの1行だけを書き換えました。指摘19件のうち対応したのは1件（F019）だけで、残りは rulebook と食い違うため採用していません。Prettier の確認は通りました。lint などのほかの検査は、このあと親 runner が実行します。
+
+**変えた箇所**
+「再生成可能です」としか書かれていなかった前置きを、次の内容に置き換えました（F019 への対応）。
+- `item_type: issue` の個票から `register build` で生成すること
+- 直接編集せず、個票を直して `register build` で再生成すること
+
+**変えなかった理由**
+この template は、登録簿を使うプロジェクトで `register build` が `pm-issue-log.md` を生成するときの枠組みです（`src/register/views.ts` が読み込んでいます）。rulebook の「位置づけ」章もそう定めています。指摘の大半は、これを単独の課題ログの作成用の雛形として評価していました。
+- **F001〜F013、F015、F016（6章構成・記入欄の追加など）**：6章構成は単独のログにだけ求められる要件です。表を差し込む位置（`view-slot=table`）を書き換えると、生成される一覧が壊れます。
+- **F014（rulebook ID の誤り）**：rulebook は生成物に `rulebook: specdojo:pjr-rulebook` を明示しており、今の値で正しいです。
+- **F017（「派生ビュー」「個票」の用語）**：登録簿の作成ルールで定義された用語なので残しました。
+- **F018（status が `ready`）**：status の変更は人が判断する事柄のため、触っていません。
+- rulebook と sample は、このタスクの範囲外なので変更していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"pm-issue-log-template の前置き1行を書き換え、`register build` で再生成する手順と `item_type: issue` の個票が元であることを明記した（F019）。template は rulebook の「位置づけ」章が定める登録簿の生成物の枠組みで、`src/register/views.ts` が読み込むため、6章構成の追加など構造を変える指摘（F001〜F016）は rulebook を正として採用しなかった。F018 の status は人の判断に回した。","handoff":["F001〜F013・F015・F016 は不採用。template は登録簿の生成物 `controls/generated/pm-issue-log.md` の枠組みで（rulebook の「位置づけ」章、`src/register/views.ts`）、6章構成は単独の課題ログだけに求められる要件である。`view-slot=table` を書き換えると `register build` の出力が壊れる。","F014 は不採用。rulebook の「位置づけ」章が生成物の rulebook を `specdojo:pjr-rulebook` と明示しており、今の値で正しい。`specdojo:pm-issue-log-rulebook` を使うのは単独のログだけである。","F017 は不採用。「派生ビュー」「個票」はプロジェクト登録簿 作成ルール（`specdojo:pjr-rulebook`）で定義された用語であり、同系統の template（risk-register・change-request-log・decision-log）とも同じ表現である。","F018: template の status は `ready` のまま。変更は人が判断する事柄である。","次のアクションの案: 登録簿の生成ビュー用 template を単独の文書の作成用雛形として採点しないよう、grade の観点か rulebook 側の明示を見直すことを検討する。同じ枠組みの pm-risk-register / pm-change-request-log / pm-decision-log の template にも、再生成の手順を書く同じ修正を広げるかどうかは別のタスクで判断する。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/templates/pm-issue-log-template.md","status":"passed","summary":"All matched files use Prettier code style!"}]}
+</specdojo_executor_evidence>
