@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-PHY7",
+  "run_id": "pjr-phy7-20261123T045902Z-e16364ff",
+  "updated_at": "2026-11-23T05:00:48.204Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sonnet-executor",
+      "attempts": 1,
+      "started_at": "2026-11-23T04:59:44.250Z",
+      "completed_at": "2026-11-23T05:00:31.262Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-PHY7/pjr-phy7-20261123T045902Z-e16364ff/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 0,
+      "started_at": "2026-11-23T05:00:48.193Z",
+      "completed_at": "2026-11-23T05:00:48.193Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-PHY7/pjr-phy7-20261123T045902Z-e16364ff/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "sonnet-executor",
+      "attempts": 1,
+      "started_at": "2026-11-23T05:00:48.204Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-PHY7/pjr-phy7-20261123T045902Z-e16364ff/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-PHY7/pjr-phy7-20261123T045902Z-e16364ff/result.md"
+  }
+}

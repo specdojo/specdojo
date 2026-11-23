@@ -48,13 +48,33 @@ id-and-file-naming-standard のとおり、プロダクト文書の id は名前
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                      | 担当     | 状態 | メモ                                                          |
+| --- | ------------------------- | -------- | ---- | ------------------------------------------------------------- |
+| 1   | 対象の探索                | executor | done | `rg` で rulebook・template・sample の名前空間付き id を探した |
+| 2   | rulebook・template の修正 | executor | done | cdt・ifx-file・ifx-index・ifx-cmd と生成ページを直した        |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 5.1. 実施内容
+
+- `cdt-rulebook` の ID を `cdt-<term>`（例 `cdt-register-type`）に直した。
+- `ifx-file-rulebook` の仕様 ID を置き場所で決まる形（プロダクト `ifx-file-<kebab-case>`、プロジェクト `<project-id>:ifx-file-<kebab-case>`）に書き直し、frontmatter と `x-spec-meta` の例、ID 対応の例を名前空間なしにした。
+- `ifx-index-template.yaml`・`ifx-cmd-template.yaml` の id を `_LOCAL_ID_` にし、`templates/generated/` の対応ページは同じ置換で更新した（yaml-pages の出力と同じ内容）。
+- stsd・cdfd・cdfd-uc・bps・sf・cdfd-overview の rulebook は 1 回目の変更を統合せず、変えていない。
+
+### 5.2. 探した方法と一覧
+
+- `rg` で `prj-0001:(ifx|cdt|stsd|cdfd|bps|sf)-`、`<project-id>:<型>-`、`_PROJECT_ID_:_LOCAL_ID_` を rulebooks・templates・samples から探した。
+- 残った `<project-id>:imp-*` は `docs/ja/projects/<project-id>/` の下に置くプロジェクト文書の記述なので変えていない。cdt・ifx の sample には名前空間付きの id はなかった。
+
+### 5.3. CHANGELOG に書く事項
+
+- 区分: Changed
+- 文案: `cdt`・`ifx-file` の rulebook と `ifx-index`・`ifx-cmd` の template で、プロダクト文書の id を名前空間なしの形に改めた。
+
+### 5.4. 残課題
+
+- `docs/ja/product/` の既存成果物の id と `based_on` は後続の todo で直す。
 
 ## 6. 関連ドキュメント
 

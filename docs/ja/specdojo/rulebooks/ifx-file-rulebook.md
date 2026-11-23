@@ -44,7 +44,7 @@ flowchart LR
 ```
 
 1. **一覧からの詳細化**: 本仕様は [[specdojo:ifx-index-rulebook|外部システムI/F一覧作成ルール]] に従う `ifx-index` に登録されたファイル連携（`kind: ファイル`、または外部コマンド連携等で授受するファイル契約）の詳細仕様として位置づけます。
-2. **ID の対応**: `ifx-index` 側の `spec_ref` に記載された文書 ID（例: `prj-0001:ifx-file-agent-evidence`）と、本仕様の `x-spec-meta.id` を一致させます。
+2. **ID の対応**: `ifx-index` 側の `spec_ref` に記載された文書 ID（例: `ifx-file-agent-evidence`）と、本仕様の `x-spec-meta.id` を一致させます。
 3. **契約の主体とファイルの主体**: `source` / `target` は連携契約全体の送信元・受信先、`writer` / `reader` は個別ファイルを実際に書く・読む主体です。報告内容の作り手とファイルの書き手が異なる場合は、`writer` にファイルの書き手を書きます。
 
 ## 3. ファイル命名・ID規則
@@ -59,7 +59,7 @@ flowchart LR
 
 ### 3.2. 仕様 ID 規則
 
-1. **仕様 ID**: プロダクト文書は `ifx-file-<kebab-case>`、プロジェクト修飾を伴う場合は `<project-id>:ifx-file-<kebab-case>` とします。
+1. **仕様 ID**: 置き場所で決まります。プロダクト文書（`docs/ja/product/` の下）は名前空間なしの `ifx-file-<kebab-case>`、プロジェクト文書は `<project-id>:ifx-file-<kebab-case>` とします。
 2. **一意性**: ファイル名の stem（拡張子を除いた部分）と ID のローカル部を一致させ、文書インデックス全体で一意にします。
 
 ## 4. 推奨 Frontmatter・メタ情報項目
@@ -73,13 +73,13 @@ YAML 成果物の先頭にはスキーマ検証用の modeline コメント（�
 ```yaml
 # specdojo-schema: none reason=no-ifx-file-schema
 x-spec-meta:
-  id: prj-0001:ifx-file-agent-evidence
+  id: ifx-file-agent-evidence
   type: api
   status: draft
   title: 外部ファイル連携仕様（agent の evidence）
   rulebook: specdojo:ifx-file-rulebook
   based_on:
-    - prj-0001:ifx-index
+    - ifx-index
 ```
 
 ### 4.2. メタ情報の各フィールド定義
