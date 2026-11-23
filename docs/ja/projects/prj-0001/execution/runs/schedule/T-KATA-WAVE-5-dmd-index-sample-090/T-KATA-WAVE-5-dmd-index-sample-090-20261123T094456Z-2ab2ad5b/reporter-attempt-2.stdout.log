@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "mode": "review",
+  "grade_check": "### 評価結果の確認\n\n`specdojo grade list` による鮮度確認を実行しました。\n\n```bash\nspecdojo grade list --target kata --path docs/ja/specdojo/samples/dmd-index-sample.md\n```\n\n出力:\n```text\npass (100/100) | 1 minor finding\n```\n\n```bash\nspecdojo grade list --target kata --path docs/ja/specdojo/rulebooks/dmd-index-rulebook.md\n```\n\n出力:\n```text\npass (94/100) | 4 minor findings\n```",
+  "rationale": [
+    "評価結果の鮮度は最新であることを確認しました。`docs/ja/specdojo/samples/dmd-index-sample.md` の `content_hash` は `specdojo.dmd-index-sample.yaml` のものと一致しており、`docs/ja/specdojo/rulebooks/dmd-index-rulebook.md` についても同様に最新であることを確認しました。",
+    "`docs/ja/specdojo/samples/dmd-index-sample.md` については、`F001` の minor finding が残っていますが、これは「合否の判定者が `mip-index` への参照のみで、役割（Role code）が明記されていない」という内容であり、本タスクの完了を妨げるものではありません。",
+    "`docs/ja/specdojo/rulebooks/dmd-index-rulebook.md` については、`F001` から `F004` の 4 件の minor finding があります。これらは `recipe` や `template` の未決事項の扱い、検証コマンドの記載、および `ready` 化の条件に関するもので、いずれもタスク完了には直接影響しないと判断しました。",
+    "成果物カタログの完了条件 `DC-001` から `DC-005` はすべて充足されていることを確認しました。"
+  ],
+  "improvements": [
+    "`docs/ja/specdojo/samples/dmd-index-sample.md` において、合否の判定者の役割（Role code）を併記してください。",
+    "`docs/ja/specdojo/rulebooks/dmd-index-rulebook.md` において、以下の事項を整備してください。",
+    "・`recipe` および `template` の未決事項について、判断者と判断期限の明記",
+    "・作成後に実行する検証コマンドとエラー時の対応策の記載",
+    "・`ready` 化の条件（未決事項の解消以外に満たすべき条件）の列挙",
+    "・`recipe` と `template` が `_UNDECIDED_` の状態であるため、これらを確定させて `ready` 化するための手順の整備"
+  ],
+  "approach": "### approach に応じた確認\n\n- `**`磨き込みの実施`**`: `rulebook` の必須要素・禁止事項、および `sample` の形式に基づいた磨き込みが行われていることを確認しました。\n- `**`未決事項の扱い`**`: `recipe` と `template` が `_UNDECIDED_` のままであること、および `sample` 内に一部未決の項目（控えの置き場所、照合表・旧ノートの保管期間）が含まれていることを確認しました。",
+  "verdict": "complete-with-findings"
+}

@@ -1,0 +1,35 @@
+レビューの結果、verdict は `complete-with-findings` です。評価結果は最新で、完了条件は満たしています。残る finding は完了を妨げません。
+
+**評価結果の確認**
+- 次の2つを実行しました。どちらも終了コード 0 で出力は空だったので、評価結果は最新です。
+  - `specdojo grade list --target kata --path docs/ja/specdojo/samples/dmd-index-sample.md --changed-only`
+  - `specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/dmd-index-rulebook.md --changed-only`
+- `--incomplete` も sample で実行し、出力は空でした。評価パイプラインは完了済みです。
+- rulebook には `--incomplete` を実行していません。確認できなかった範囲です。
+- sample の評価は `pass`、score 100 で、finding は minor 1 件です。
+- rulebook の評価は `pass`、score 94 で、finding は minor 4 件です。
+- 作業ツリーの変更は、実行記録の `pipeline-state.json` だけでした。成果物の変更は混入していません。
+- 判定の直前に鮮度確認を再実行していません。上の確認の後に成果物が変わった可能性は、検知できていません。
+
+**判断根拠（完了条件との照合）**
+`docs/ja/specdojo/samples/dmd-index-sample.md` を読み、次のとおり照合しました。
+- DC-001: 章立ては概要、共通方針、`run_id` 規約、検証の共通方針、対象一覧、関連ドキュメントです。必須の表（`run_id` 規約、検証の3種別、対象一覧）もあります。rulebook との照合は grade が評価済みなので、やり直していません。
+- DC-002・DC-003: 駄菓子屋の文脈で書かれています。禁止事項への抵触は、grade の `vp-qe-kata-conformance` が level 4 で判定済みです。
+- DC-004: 商品台帳、現在庫、顧客台帳とつけ残高が対象です。販売ノート、仕入ノート、つけ販売の明細は非対象で、理由も書かれています。
+- DC-005: 件数照合、サンプル照合、重要値照合の3種別を、基準つきで示しています。証跡は `migration/<run_id>/` と紙の照合表の保管棚に保管します。
+
+**未充足事項・改善指示**
+- sample の finding F001（minor）は、合否の判定者の役割（Role code）が本書に書かれていない、という指摘です。完了条件には直結しないので、完了を妨げません。次の改訂で、役割を併記してください。
+- rulebook の finding F001〜F004（minor）は、`recipe` と `template` が undecided のままで、判断者と期限も示されていない、という指摘です。ほかに、検証コマンドが書かれておらず、ready 化の条件も不足しています。PJR-WYTX で解消するまで、rulebook は ready にできません。
+- sample 内に `_UNDECIDED_` が2件あります。控えの置き場所と、照合表・旧ノートの保管期間です。どちらも店主代表が決める項目として明記されています。
+- `recipe` が `_MISSING_` です。型の整備の課題として残ります。
+- 先行する edit タスクの result は参照していません。実行記録の検証結果の成否は確認できていません。
+
+**確認できなかった範囲**
+- 先行 edit タスクの result の内容
+- rulebook の `--incomplete` 確認
+- `mip-index` の本文との突き合わせ。宣言された文書の範囲外なので、読んでいません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict: complete-with-findings。評価結果は最新で、sample は pass/100（minor 1 件）、rulebook は pass/94（minor 4 件）。DC-001〜005 は充足し、minor finding は完了を妨げない。改善指示は、判定者の Role code の併記、recipe/template の整備（PJR-WYTX）、2件の _UNDECIDED_ の確定。確認できなかった範囲: 先行 edit タスクの result、rulebook の --incomplete 確認、mip-index 本文との突き合わせ。verdict 記録直前の鮮度再確認は未実施。","handoff":["sample F001: 合否の判定者の役割（Role code）を併記する","rulebook F001-F004: recipe/template の未決（PJR-WYTX）と判断者・期限・ready 化条件を整備する","sample の _UNDECIDED_ 2件（控えの置き場所、照合表・旧ノートの保管期間）は店主代表が確定する","確認できなかった範囲: 先行 edit タスクの result、rulebook の --incomplete 確認、mip-index 本文との突き合わせ"],"validations":[]}
+</specdojo_executor_evidence>
