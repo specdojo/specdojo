@@ -1,0 +1,10 @@
+今回は recipe（`docs/ja/specdojo/recipes/tsd-recipe.md`）を変更していません。直す必要のある箇所が、いまの recipe には残っていなかったためです。
+
+- **F001（章番号だけで章を指している）**: 指摘された「例: 第 4 章で」という書き方は、いまの recipe にはもうありません。該当の箇所はいまは38行目にあり、「例: 「採用技術・設定」に `_CONTEXT_: …`」のように章のタイトルで指しています。この「採用技術・設定」は rulebook（`docs/ja/specdojo/rulebooks/tsd-rulebook.md`）の本文要件にある章名と同じです。ほかに本文から参照している「全体構成・接続経路」「概要・位置づけ」も rulebook の章名と一致しています。
+- **PJR-76N9（役割の割り当てや承認の進み具合を書かせる問い）**: recipe の中を探しましたが、該当する問いや手順はありませんでした。「構築担当者への確認」などの記述はありますが、情報をどこから取るかや再現性を確かめる観点を書いたもので、役割の割り当てではありません。
+
+rulebook と sample も変更していません。この段で私が実行した検査はありません。lint などの検査は、このあと親 runner がまとめて実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"`docs/ja/specdojo/recipes/tsd-recipe.md` は変更していない。F001（章番号だけで章を指している）は現行の recipe で解消済みだった（38行目は rulebook の章名「採用技術・設定」で指している）。PJR-76N9 にあたる役割の割り当てや承認の進み具合を書かせる問い・手順もなかった。rulebook と sample は変更していない。","handoff":["result の `進め方と実践の型の適用` への記録: F001 は現行の recipe 38行目で章タイトル「採用技術・設定」による参照に直っていて解消済み（`tsd-rulebook` の本文要件の章名と一致）。PJR-76N9 の観点では、「構築担当者への確認」などは情報の取り出し元と再現性の観点の記述で、役割の割り当てではないため維持した。recipe は変更していない。"],"validations":[]}
+</specdojo_executor_evidence>
