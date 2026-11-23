@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c6b53d020dc349089266a35dbd7f019f
+  ts: "2026-11-23T13:11:19Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: v0.10.0 の後の普及の計画を作る
+    - field: description
+      from: ""
+      to: 対象のコミュニティ、伝える事例、届け方、時期、成否の指標と方向を変える目安をまとめ、README と文書サイトの概要の位置づけの案を書く
+    - field: input
+      from: ""
+      to: '["PJR-Y5RD の決定（2026-11-23）: kata による理解の負債の解消で、シビックテックを持続可能にすることを中核の位置づけにする"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: PO
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-Y5RD"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: project
+- v: 1
+  id: reg_e1d231074131439a8cb8169a2b9378cf
+  ts: "2026-11-23T13:11:40Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_c6b53d020dc349089266a35dbd7f019f

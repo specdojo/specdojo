@@ -1,0 +1,140 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_1354525c979746f8975670de34dfae57
+  ts: "2026-11-23T13:09:35Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: kata による理解の負債の解消で、シビックテックを持続可能にする位置づけとする
+    - field: description
+      from: ""
+      to: SpecDojo を OSS として広め、kata で仕様と要件を復元し、確認状態と人の確定と記録で理解の負債を解消することを中核の位置づけにする。最初の実証の場は OpenFisca-Japan
+    - field: input
+      from: ""
+      to: '["利用者の意図（2026-11-23）: SpecDojo を OSS で広めたい。prj-overview のとおり、シビックテックを持続可能にするために、kata による理解の負債の解消を目指す。kata が整備できれば、理解の負債がある人や agent でも仕様や要件を復元して中身が分かるようになる"]'
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: PO
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-36QG"]'
+- v: 1
+  id: reg_bf14f046200d4a40ae04e42c2816ec7f
+  ts: "2026-11-23T13:09:43Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "背景" updated
+  changes:
+    - field: section
+      from: ""
+      to: 背景
+    - field: description
+      from: SpecDojo を OSS として広め、kata で仕様と要件を復元し、確認状態と人の確定と記録で理解の負債を解消することを中核の位置づけにする。最初の実証の場は OpenFisca-Japan
+      to: SpecDojo は OSS として広め、シビックテックを持続可能にすることを目指す（[[prj-0001:prj-overview\|プロジェクト概要]] の CH-01・BV-03）。2026-11-23 の位置づけの見直し（PJR-36QG の `3.16.`）では、価値の中心を「kata による成果物の標準化」と「プロダクトから分けた環境での記録と継続」に寄せた。BMAD・Spec Kit・Kiro などの競合は主に「AI で速く作る」を解いており、シビックテックで先に詰まる「作った後に理解が失われ、引き継げなくなる」問題（理解の負債）を正面から扱うものは少ない。AI がコードを速く書くほど、この負債は速くたまる。
+  previous_event_id: reg_1354525c979746f8975670de34dfae57
+- v: 1
+  id: reg_1966ae64447d4026be09ddab71975c87
+  ts: "2026-11-23T13:09:52Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "決定内容" updated
+  changes:
+    - field: section
+      from: ""
+      to: 決定内容
+  previous_event_id: reg_bf14f046200d4a40ae04e42c2816ec7f
+- v: 1
+  id: reg_ae41c3c23d814053ac3b2785234fad93
+  ts: "2026-11-23T13:09:59Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "採択理由" updated
+  changes:
+    - field: section
+      from: ""
+      to: 採択理由
+  previous_event_id: reg_1966ae64447d4026be09ddab71975c87
+- v: 1
+  id: reg_d4541c855b1747e48cb2e8b978a74104
+  ts: "2026-11-23T13:10:08Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "承認" updated
+  changes:
+    - field: section
+      from: ""
+      to: 承認
+  previous_event_id: reg_ae41c3c23d814053ac3b2785234fad93
+- v: 1
+  id: reg_f749b5b04f9e4997a585d64f22f05461
+  ts: "2026-11-23T13:10:39Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "検討した選択肢" updated
+  changes:
+    - field: section
+      from: ""
+      to: 検討した選択肢
+  previous_event_id: reg_d4541c855b1747e48cb2e8b978a74104
+- v: 1
+  id: reg_a618a3926bad4c4e845a572d11f30cce
+  ts: "2026-11-23T13:10:49Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "影響範囲とフォローアップ" updated
+  changes:
+    - field: section
+      from: ""
+      to: 影響範囲とフォローアップ
+  previous_event_id: reg_f749b5b04f9e4997a585d64f22f05461
+- v: 1
+  id: reg_0075d6001f734745bccb7a67d51c8f4d
+  ts: "2026-11-23T13:11:49Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: 利用者が方向を承認した（2026-11-23）
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: B を採る。kata による理解の負債の解消で、シビックテックを持続可能にすることを中核の位置づけにし、復元・確認状態・人の確定・記録の流れを中核にする。最初の実証の場は OpenFisca-Japan
+  previous_event_id: reg_a618a3926bad4c4e845a572d11f30cce
