@@ -1,0 +1,21 @@
+`pm-risk-register-rulebook.md` を書き直し、13 件の finding のうち 11 件を rulebook の中で直しました。残る 2 件（F009 と F010）は template と sample を変えないと直らないので、この段では直さず次の作業として残します。確認した検査は `npx prettier --check` だけです。lint などの検査は親 runner が実行します。
+
+**直した内容**
+- 「誰が判断するか」ではなく「何を判断するための文書か」が分かるように方針を書き直しました。
+- 章の名前を rulebook の記述標準に合わせて「本文要件」に改めました。表に「個票で書く場所」の列を足し、`priority`・`item_status`・`owner`・`due_on`・`影響評価`・`対応方針`・`conclusion` などとの対応を示しました。全リスクに共通する評価基準と監視の周期は、管理計画（`pm-plan` など）に置くと決めました（F004・F005）。
+- 単独の登録簿（`RK-NNN`）から登録簿（`PJR-XXXX`）へ移る手順を足しました。旧 ID は個票の `入力` 節に残し、同じパスに生成ビューが出るため、単独の登録簿は `register build` の前に取り除きます（F006）。
+- 個票の検証手順は `pjr-rulebook` に任せる、と明記しました（F007）。同じ手順をここに書き写さない方針（PJR-2GD6）を守るためです。
+- 担当は Role code で書き、個人名・連絡先・公開できないリスクの内容は書かない、と決めました。良い例・悪い例を添え、禁止事項にも加えました（F001）。
+- 影響度を判定する観点に、納期・品質・後続成果物への影響を入れ、良い例・悪い例を添えました（F002）。
+- 受容が計画を変える場合は決定記録にも起票すること、課題・変更要求へ移したあと元のリスクを終えるか監視を続けるかの条件を書きました（F003）。
+- 評価の変更と受容は人間の役割が判断すると書き、agent が判断することを禁止事項に加えました（F013）。
+- 期限を過ぎたときや見直しが漏れたときの是正（再評価、担当の再割り当て、ステータスの更新）を書きました（F012）。
+- 「対応責任者」を「担当」に、「リスクID」を「リスク ID」にそろえました（F011）。
+
+**残した 2 件**
+- **F008/F009:** 6 章構成の単独の登録簿には、対応する template がありません。rulebook には「`template` は生成ビューの骨組みを指す」「単独の登録簿は本文要件の 6 章で作る」と書いて食い違いを示しただけです。単独用の template を作るか、単独の運用をやめるかは、決めてもらう必要があります。
+- **F010:** sample が改訂後のルールをまだ満たしていません。足りないのは、評価基準の対応表、再評価の条件、確かめ方と合格の基準を書いた完了条件、`item_status` の値、是正、文書 ID での参照です。この段では sample を変えないため、sample を直すタスクで対応します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"pm-risk-register-rulebook を書き直し、F001〜F007・F011〜F013 を rulebook の中で直した。章名を記述標準に合わせて「本文要件」にし、個票で書く場所の対応表、公開してよい情報の範囲、影響度の観点、受容と移管の扱い、人間が判断すること、見直し漏れのときの是正、ID の移し方を足した。F009（単独の登録簿に対応する template がない）と F010（sample が改訂後のルールを満たしていない）は template・sample を変える必要があるため、この段では直さず handoff に残した。","handoff":["F008/F009: 6 章構成の単独のリスク登録簿に対応する template がない。Frontmatter の `template`（`specdojo:pm-risk-register-template`）は `register build` の生成ビューを指している。rulebook には、`template` が生成ビュー用であることと、単独の登録簿は本文要件の 6 章で作ることを書いた。単独用の template を作るか、単独の運用をやめるかを決める必要がある。","F010: sample（`specdojo:pm-risk-register-sample`）が改訂後の rulebook を満たしていない。足りないのは、評価基準の判定条件と対応表、再評価の条件と判断する Role code、確かめ方と合格の基準を書いた完了条件、`item_status` の値によるステータス、見直し漏れのときの連絡先と是正、文書 ID による関連ドキュメントと影響を受ける成果物。sample を直すタスクで対応する。","F007: 個票の値の検証と `register build` を再実行する手順は、同じ内容を書き写さない方針（PJR-2GD6）のため `pjr-rulebook` を正本として参照するだけにした。手順を本書にも書くべきだという指摘が続く場合は、`pjr-rulebook` 側に確認手順を足すか検討する。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/pm-risk-register-rulebook.md","status":"passed","summary":"All matched files use Prettier code style"}]}
+</specdojo_executor_evidence>
