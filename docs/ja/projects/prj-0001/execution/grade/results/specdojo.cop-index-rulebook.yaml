@@ -4,19 +4,18 @@ document: specdojo:cop-index-rulebook
 path: docs/ja/specdojo/rulebooks/cop-index-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-rulebook
-verdict: needs-work
-score: 93
-graded_at: "2026-11-21T03:28:08.471Z"
-graded_by: opus-executor
-content_hash: 0df5e7a01a927f331bdb5c930ab99df4f1157a10383a6ce47fa2815123d4e061
+verdict: pass
+score: 98
+graded_at: "2026-11-23T15:29:50.567Z"
+graded_by: sonnet-review-executor
+content_hash: 9709fd9dedfa9d7e679b20e37da394343a7051867bdb400487a30e2f97be691f
 categories:
   purpose:
     score: 100
   operations:
-    score: 94
+    score: 100
   planning:
-    score: 92
+    score: 100
   business:
     score: 100
   architecture:
@@ -26,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 75
+    score: 92
   consistency:
     score: 100
 viewpoints:
@@ -37,8 +36,8 @@ viewpoints:
     level: 4
     score: 100
   vp-po-publication-accountability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-plan-feasibility:
     level: 4
     score: 100
@@ -46,8 +45,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-control-reporting:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-business-value:
     level: 4
     score: 100
@@ -70,8 +69,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-verifiability:
     level: 4
     score: 100
@@ -79,8 +78,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -101,64 +100,18 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 4
+  major: 0
+  minor: 1
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-publication-accountability
-    line: 44
-    anchor: "| 担当者、連絡系統             | 列は「役割 / 担当 / 連絡先 / 備考」。エスカレーション先を含める。個人名に代えてロールでもよい |"
-    message: >-
-      前回指摘した公開承認者と周知の分離は解消したが、必須の「連絡先」列に個人の電話番号などを書いてよいかの規則がなく、公開リポジトリに置く成果物へ個人情報が載るおそれがある。そのため、ロールの窓口に限定するか、内部の別管理先を参照させる規則が必要である（残る問題がこの点だけのため
-      minor とする）。
-    message_ja: >-
-      前回指摘した公開承認者と周知の分離は解消したが、必須の「連絡先」列に個人の電話番号などを書いてよいかの規則がなく、公開リポジトリに置く成果物へ個人情報が載るおそれがある。そのため、ロールの窓口に限定するか、内部の別管理先を参照させる規則が必要である（残る問題がこの点だけのため
-      minor とする）。
-  - id: F002
-    severity: minor
-    rule: vp-pm-control-reporting
-    line: 10
-    anchor: >-
-      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status` の昇格と承認、改訂と廃止、未決事項と当日の課題の登録簿への引き継ぎは
-      [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従い、本書と成果物で言い直しません。文書の整形・lint・スキーマ検証はリポジトリの検証で扱います。
-    message: >-
-      当日の課題の登録簿への引き継ぎを委譲した先のメタ情報標準は、改訂・廃止の過程で生じた事項を対象にしているため、GO/NO-GO
-      の判定結果やロールバックの発動など当日の決定・課題を、どの登録簿へいつ誰が転記するかが読み取れない（区分の欠落は解消し、この点だけが残るため minor とする）。
-    message_ja: >-
-      当日の課題の登録簿への引き継ぎを委譲した先のメタ情報標準は、改訂・廃止の過程で生じた事項を対象にしているため、GO/NO-GO
-      の判定結果やロールバックの発動など当日の決定・課題を、どの登録簿へいつ誰が転記するかが読み取れない（区分の欠落は解消し、この点だけが残るため minor とする）。
-  - id: F003
-    severity: minor
-    rule: vp-dev-testability
-    line: 30
-    anchor: >-
-      許可キー・必須項目は [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] と
-      `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml` を正本とします。
-    message: 共通スキーマへの参照だけで、対象ファイルに対する検証コマンド、成功時の期待結果、検証失敗時の修正手順が明記されていない。
-    message_ja: 共通スキーマへの参照だけで、対象ファイルに対する検証コマンド、成功時の期待結果、検証失敗時の修正手順が明記されていない。
-  - id: F004
-    severity: major
     rule: vp-qe-kata-conformance
-    line: 37
-    anchor: 本文は次の10章をこの順序で置き、すべて必須とします。
-    message: >-
-      Frontmatterで完成例として宣言された specdojo:cop-index-sample
-      は、順序固定かつ全項目必須とされた10章を持たず、タイムライン、手順、連絡系統、実施条件、GO/NO-GO、ロールバック、障害対応、周知を具体化していないため、rulebook準拠の完成例として機能していない。
-    message_ja: >-
-      Frontmatterで完成例として宣言された specdojo:cop-index-sample
-      は、順序固定かつ全項目必須とされた10章を持たず、タイムライン、手順、連絡系統、実施条件、GO/NO-GO、ロールバック、障害対応、周知を具体化していないため、rulebook準拠の完成例として機能していない。
-  - id: F005
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 52
+    line: 55
     anchor: "## 6. 記述ガイド"
     message: >-
-      template が undecided
-      なのに、記述ガイドは10章のうち当日タイムラインと周知の2章しか扱っていない。ロールバック手順と障害時判断・エスカレーションに判断基準と良い例・悪い例がなく、全体方針の具体項目も2つで、rulebook-authoring-standard
-      の「章ごとの書き方」と「各必須章3項目以上」に届いていない。
+      記述ガイドが 概要、作業手順チェックリスト、実施条件、関連ドキュメントの4章を扱っておらず、判断基準と良い例・悪い例がない（前回指摘した記述ガイドの不足は大きく改善し、残るのはこの点だけのため minor
+      とする）。特に実施条件は、未達時の扱いと判断者の書き方に誤用の余地があるため、ガイドを足すことを勧める。
     message_ja: >-
-      template が undecided
-      なのに、記述ガイドは10章のうち当日タイムラインと周知の2章しか扱っていない。ロールバック手順と障害時判断・エスカレーションに判断基準と良い例・悪い例がなく、全体方針の具体項目も2つで、rulebook-authoring-standard
-      の「章ごとの書き方」と「各必須章3項目以上」に届いていない。
+      記述ガイドが 概要、作業手順チェックリスト、実施条件、関連ドキュメントの4章を扱っておらず、判断基準と良い例・悪い例がない（前回指摘した記述ガイドの不足は大きく改善し、残るのはこの点だけのため minor
+      とする）。特に実施条件は、未達時の扱いと判断者の書き方に誤用の余地があるため、ガイドを足すことを勧める。
