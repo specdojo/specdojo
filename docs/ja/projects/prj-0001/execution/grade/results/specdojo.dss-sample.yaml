@@ -4,12 +4,11 @@ document: specdojo:dss-sample
 path: docs/ja/specdojo/samples/dss-sample.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-sample
 verdict: pass
-score: 93
-graded_at: "2026-11-21T03:52:29.016Z"
-graded_by: opus-executor
-content_hash: edf5c45946630d8521ba4fafe786668c50a16d8e846e8a51b42f7cde96121be8
+score: 100
+graded_at: "2026-11-23T17:43:28.072Z"
+graded_by: sonnet-review-executor
+content_hash: b9d4e2ffd9e9796289bfcba9e453dc8e8912d9c311d14c39284eab9dcdf01605
 categories:
   purpose:
     score: 100
@@ -22,11 +21,11 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 83
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 100
   consistency:
     score: 100
 viewpoints:
@@ -61,8 +60,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -76,20 +75,20 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -105,53 +104,6 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 4
+  minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 153
-    anchor: >-
-      現在の例外はなし。基準版・例外の記録先は利用先のプロジェクト登録簿（[[specdojo:pjr-rulebook|プロジェクト登録簿作成ルール]]）の decision（個票）とする。PM は規則 ID
-      から判断記録（個票）と元の登録項目へ相互参照を置き、承認・却下・失効の状態を追跡する。却下された案は適用せず、期限切れの例外は元の規則へ戻すか、期限前に再検証して PO の再判断を受ける。
-    message: >-
-      「基準版・例外の記録先は利用先のプロジェクト登録簿の
-      decision（個票）とする」は、「検証の節目と基準版の採用」の実装への採用の行と、例外判断の行の再掲になっています。この段落は相互参照と失効時の扱いだけに絞ると、判断情報を失わずに短くできます。
-    message_ja: >-
-      「基準版・例外の記録先は利用先のプロジェクト登録簿の
-      decision（個票）とする」は、「検証の節目と基準版の採用」の実装への採用の行と、例外判断の行の再掲になっています。この段落は相互参照と失効時の扱いだけに絞ると、判断情報を失わずに短くできます。
-  - id: F002
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 127
-    anchor: >-
-      | 対象                                              | 対応する要求・仕様                                 |
-      確認方法                                                                                                             |
-      担当    |
-    message: >-
-      検証の表に合格条件の列がなく、`dss-comp-*`・`dss-layout-*` の行は確認方法しか示していないため、pass / fail を判定できません。「金額が省略されない」「UIS
-      の全操作が型に割り当たる」のような合格条件を列として加えてください。
-    message_ja: >-
-      検証の表に合格条件の列がなく、`dss-comp-*`・`dss-layout-*` の行は確認方法しか示していないため、pass / fail を判定できません。「金額が省略されない」「UIS
-      の全操作が型に割り当たる」のような合格条件を列として加えてください。
-  - id: F003
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 駄菓子屋きぬや 販売管理 GUI デザインシステム"
-    message: >-
-      本文で `specdojo:uis-sample` を入力とする仕様として参照していますが、Frontmatter の `based_on` が空です。rulebook の「推奨 Frontmatter 項目」に沿って直接根拠の
-      ID を宣言してください。
-    message_ja: >-
-      本文で `specdojo:uis-sample` を入力とする仕様として参照していますが、Frontmatter の `based_on` が空です。rulebook の「推奨 Frontmatter 項目」に沿って直接根拠の
-      ID を宣言してください。
-  - id: F004
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 26
-    anchor: >-
-      UIS と本書を入力として agent が試作を作り、プロダクトリポジトリの `prototypes/store-gui/` に置く。試作は文書のワイヤーフレームとして保守しない。確認した差分は業務仕様なら
-      UIS、共通表現なら本書へ反映してから実装に適用する。検証記録には入力文書と試作・実装の commit を残す。
-    message: 試作の作成主体が、本文 26 行目では「agent」、本文 138 行目では「DEV」となっています。「DEV の指示で agent が作る」など、どちらか一つの表記に統一してください。
-    message_ja: 試作の作成主体が、本文 26 行目では「agent」、本文 138 行目では「DEV」となっています。「DEV の指示で agent が作る」など、どちらか一つの表記に統一してください。
+findings: []
