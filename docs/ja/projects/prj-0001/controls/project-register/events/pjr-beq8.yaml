@@ -73,3 +73,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_499a0b363e034d4397d791e2cab5d62d
+- v: 1
+  id: reg_0a901899a4844675a7bbb6f29af112a8
+  ts: "2026-11-23T00:16:08Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor reported incomplete: RunRecordIndex を追加し dashboard の生成で 1 回だけ読むようにした。typecheck、lint:ts、単体テストは通過。修正前後の出力比較と時間の測定は sandbox で tsx 実行が承認待ちになり未実施のため、個票の作業内容 No.4 は open のまま残した。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor reported incomplete: RunRecordIndex を追加し dashboard の生成で 1 回だけ読むようにした。typecheck、lint:ts、単体テストは通過。修正前後の出力比較と時間の測定は sandbox で tsx 実行が承認待ちになり未実施のため、個票の作業内容 No.4 は open のまま残した。"
+  previous_event_id: reg_cd0ef824369840ca93d1eb7e63ea7147

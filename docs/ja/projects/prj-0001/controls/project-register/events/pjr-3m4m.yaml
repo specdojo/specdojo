@@ -1,0 +1,65 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c09bd96d12ce4ed4875270dc2a022aa9
+  ts: "2026-11-23T00:13:22Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 見張りが分けた種類ごとに決まった手当てを打つ
+    - field: description
+      from: ""
+      to: 使用量の上限・負荷の時間切れ・統合先の同期に、exec-defaults で選べる手当てを打つ。判断が要るものには手を打たない（PJR-52EE の子の 2）
+    - field: input
+      from: ""
+      to: '["PJR-52EE を 4 件に分ける。決まった手当ては規則で行い、判断が要るものは agent に診断の案だけを書かせ（案 C）、立ち上げたままのオーケストレーターのために待つコマンドを足す（案 A）。MCP を使う案は採らない（利用者の決定、2026-11-23）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-52EE"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-40EE"]'
+    - field: commit_type
+      from: ""
+      to: feat
+    - field: commit_scope
+      from: ""
+      to: exec
+- v: 1
+  id: reg_88a9523877be43a483f69a22ea2d0da2
+  ts: "2026-11-23T00:13:41Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_c09bd96d12ce4ed4875270dc2a022aa9

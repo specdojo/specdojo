@@ -4,12 +4,14 @@ specdojo:
   type: exec-result
   task_id: PJR-BEQ8
   mode: edit
-  status: in_progress
+  status: blocked
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-BEQ8/pjr-beq8-20261123T001207Z-ddb0f4f3/plan.md
   started_at: "2026-11-23T00:12:42.934Z"
+  completed_at: "2026-11-23T00:16:06.827Z"
   agent: sonnet-executor
+  block_reason: "executor reported incomplete: RunRecordIndex を追加し dashboard の生成で 1 回だけ読むようにした。typecheck、lint:ts、単体テストは通過。修正前後の出力比較と時間の測定は sandbox で tsx 実行が承認待ちになり未実施のため、個票の作業内容 No.4 は open のまま残した。"
 ---
 
 # Edit Result

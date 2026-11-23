@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-22T23:45:18Z"
   due_on: "2026-11-30"
+  block_reason: "executor reported incomplete: RunRecordIndex を追加し dashboard の生成で 1 回だけ読むようにした。typecheck、lint:ts、単体テストは通過。修正前後の出力比較と時間の測定は sandbox で tsx 実行が承認待ちになり未実施のため、個票の作業内容 No.4 は open のまま残した。"
   derived_from:
     - PJR-BBTW
   commit_type: perf
@@ -43,13 +44,40 @@ findRunRecord が記録の置き場のない項目で execution/runs/ を全部�
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                                                         | 担当 | 状態 | メモ                                                                          |
+| --- | -------------------------------------------------------------------------------------------- | ---- | ---- | ----------------------------------------------------------------------------- |
+| 1   | `RunRecordIndex` を `src/shared/run-records.ts` に追加し、一覧と frontmatter を 1 回だけ読む | DEV  | done | `findRunRecord` に任意の第 4 引数を追加。省略時の動きは従来どおり             |
+| 2   | `buildDashboardMarkdown` で生成ごとに索引を作り、`formatTaskLink` へ渡す                     | DEV  | done | 索引は `paths.runRecordIndex` に持ち、生成の外へ持ち越さない                  |
+| 3   | 単体テストを追加                                                                             | DEV  | done | 置き場のない項目、複数 run の最新選択                                         |
+| 4   | 前後の出力比較と時間の測定                                                                   | DEV  | open | sandbox で `tsx` の実行が承認待ちになり実行できなかった。手順は対応結果に記載 |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 5.1. 実施内容
+
+- `RunRecordIndex`（`src/shared/run-records.ts`）を追加した。生成時に `execution/runs/` の一覧を 1 回だけ作り、frontmatter と時刻は path ごとに初回だけ読んで使い回す。
+- `findRunRecord` は任意の第 4 引数 `index` を受ける。省略時は従来の実装のままで、ほかの呼び出し元（`register-mode`・`schedule-mode`・`schedule-prepare` など）の動きは変わらない。
+- `buildDashboardMarkdown` が生成の都度 `RunRecordIndex` を作り、`formatTaskLink` が使う。索引は生成が終わると捨てる。
+- 項目の置き場がない場合は全体を対象とし、置き場がある場合はその下だけを対象とする選び方は従来と同じ。
+- 単体テストを `tests/src/exec/run-records.test.ts` に 2 件追加した。
+
+### 5.2. 検証
+
+- `npm run typecheck` と、`tests/src/exec/run-records.test.ts`・`tests/src/dashboard` の単体テストは通過した。
+- 前後の出力比較と時間の測定は、sandbox で `tsx` の実行が承認待ちになり未実施。次の手順で行う（`tmp/compare.sh` に用意した）。
+  1. 旧 `dashboard.ts`（`git show HEAD:src/dashboard/dashboard.ts`）で `specdojo dashboard build --project prj-0001` を実行して時間を測り、生成物をコピーする。
+  2. 新しい版で同じ手順を行う。
+  3. `generated_at` の行を除いて `diff` し、一致を確かめる。
+
+### 5.3. CHANGELOG に書く事項
+
+- 区分: Performance
+- 文案: `dashboard build` が run の記録を項目ごとに全走査していたのをやめ、1 回の生成で一覧を 1 回だけ読むようにした。
+
+### 5.4. 判断
+
+- キャッシュは `DashboardPaths` の任意項目として生成ごとに作り、モジュールの大域には置かない。理由は、生成の外へ持ち越さないという完了条件のため。
+- 前後の測定は実行できなかったため、完了条件のうち時間と出力同一の確認が残る（`handoff` に記載）。
 
 ## 6. 関連ドキュメント
 

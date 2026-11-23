@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_63794c0f5f8f4234bce9029114ca70f5
+  ts: "2026-11-23T00:13:18Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 見張りで止まった理由を分類し、イベントの記録と朝の報告に残す
+    - field: description
+      from: ""
+      to: routine の間隔で止まったタスク・register 項目・列を見つけ、理由の種類に分けてイベントの記録と朝の報告に残す。手は打たない（PJR-52EE の子の 1）
+    - field: input
+      from: ""
+      to: '["PJR-52EE を 4 件に分ける。決まった手当ては規則で行い、判断が要るものは agent に診断の案だけを書かせ（案 C）、立ち上げたままのオーケストレーターのために待つコマンドを足す（案 A）。MCP を使う案は採らない（利用者の決定、2026-11-23）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-52EE"]'
+    - field: commit_type
+      from: ""
+      to: feat
+    - field: commit_scope
+      from: ""
+      to: exec
+- v: 1
+  id: reg_e2919a456fb6452ebe6876f6843ab69f
+  ts: "2026-11-23T00:13:34Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_63794c0f5f8f4234bce9029114ca70f5
