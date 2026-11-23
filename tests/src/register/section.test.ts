@@ -1,9 +1,18 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { Command } from "commander";
-import { cpSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import {
+  cpSync,
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import {
+  pairSectionOptions,
   replaceTicketSection,
   stripSectionNumber,
   validateSectionFile,
@@ -556,6 +565,100 @@ describe("register update --section CLI", () => {
         expect(stdoutLines.join("")).not.toContain("Would update");
         expect(readFileSync(ticketPath, "utf8")).toBe(ticket);
       }
+    });
+  });
+});
+
+describe("pairSectionOptions", () => {
+  it("--section と --section-file を指定順に組にする", () => {
+    expect(pairSectionOptions(["進行中", " 判断待ち "], ["a.md", "b.md"])).toEqual([
+      { name: "進行中", file: "a.md" },
+      { name: "判断待ち", file: "b.md" },
+    ]);
+  });
+
+  it("指定がなければ空の配列を返す", () => {
+    expect(pairSectionOptions(undefined, undefined)).toEqual([]);
+  });
+
+  it("数が合わない場合は数を含めてエラーにする", () => {
+    expect(() => pairSectionOptions(["進行中"], undefined)).toThrow(
+      /got 1 --section and 0 --section-file/,
+    );
+  });
+});
+
+describe("register add --section CLI", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+    process.exitCode = undefined;
+  });
+
+  async function runRegister(args: string[]): Promise<void> {
+    const program = new Command();
+    program.exitOverride();
+    registerRegisterCommands(program);
+    await program.parseAsync(["node", "specdojo", "register", ...args]);
+  }
+
+  const ADD_HANDOFF_ARGS = [
+    "add",
+    "--type",
+    "handoff",
+    "--title",
+    "引き継ぎ",
+    "--topic",
+    "handoff-test",
+    "--id",
+    "PJR-AB34",
+    "--due",
+    "-",
+  ];
+
+  it("起票時に複数の章をファイルの本文で埋め、ほかの章は template のまま残す", async () => {
+    await withRepo(async ({ root, registerDir }) => {
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+      const inProgress = join(root, "in-progress.md");
+      const pending = join(root, "pending.md");
+      writeFileSync(inProgress, "- review の項目:\n  - PJR-AB12 テスト\n", "utf8");
+      writeFileSync(pending, "-\n", "utf8");
+
+      await runRegister([
+        ...ADD_HANDOFF_ARGS,
+        "--section",
+        "進行中",
+        "--section-file",
+        inProgress,
+        "--section",
+        "判断待ち",
+        "--section-file",
+        pending,
+      ]);
+
+      const ticket = readFileSync(join(registerDir, "pjr-ab34-handoff-test.md"), "utf8");
+      expect(ticket).toContain(
+        "## 3. 進行中\n\n- review の項目:\n  - PJR-AB12 テスト\n\n## 4. 判断待ち",
+      );
+      expect(ticket).toContain("## 4. 判断待ち\n\n-\n\n## 5. 注意点");
+      expect(ticket).toContain("## 1. 引き継ぎ元と先\n\n_TODO_:");
+      expect(process.exitCode).toBeUndefined();
+    });
+  });
+
+  it("存在しない章を指定すると個票を作らずにエラーにする", async () => {
+    await withRepo(async ({ root, registerDir }) => {
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+      const stderr = vi.spyOn(process.stderr, "write").mockReturnValue(true);
+      const body = join(root, "body.md");
+      writeFileSync(body, "本文\n", "utf8");
+
+      await runRegister([...ADD_HANDOFF_ARGS, "--section", "存在しない章", "--section-file", body]);
+
+      expect(process.exitCode).toBe(1);
+      expect(stderr.mock.calls.map((call) => String(call[0])).join("")).toContain(
+        'Section "存在しない章" not found in ticket',
+      );
+      expect(existsSync(join(registerDir, "pjr-ab34-handoff-test.md"))).toBe(false);
     });
   });
 });
