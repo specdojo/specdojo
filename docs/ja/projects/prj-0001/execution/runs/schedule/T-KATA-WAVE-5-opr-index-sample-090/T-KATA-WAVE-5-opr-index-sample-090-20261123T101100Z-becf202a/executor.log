@@ -1,0 +1,18 @@
+レビュー結果です。確認した範囲は、鮮度確認、grade の finding 2件、sample の冒頭です。
+
+- **鮮度:** sample と rulebook のどちらについても、`specdojo grade list --target kata --changed-only` の出力は空で終了コードは 0 でした。評価結果は最新です。review 中の成果物変更もありません。
+- **評価結果:** sample は `pass`・98点、rulebook は `pass`・98点でした。finding は minor が各1件で、blocker と major はありません。
+- **完了条件の判断:** DC-001〜005 のうち、grade が判定済みの観点はすべて level 4 でした。sample の minor（`vp-qe-verifiability`）は DC-005 に関係します。rulebook の minor（`vp-qe-kata-conformance`）は DC-002・DC-003 に関係します。ただし必須章の欠落や禁止事項への抵触ではないため、完了は妨げません。
+- **finding の内容:**
+  - **sample の F001:** 日次の在庫確認の対象「人気商品」の範囲が未定義です。
+  - **rulebook の F001:** 手順表の標準列が7章のバッチ再実行表（項目・手順の2列）と合っていません。
+- **改善指示:**
+  - 人気商品の品目または選定基準を具体化します。
+  - 標準列の適用範囲を例外として明記するか、7章の表を標準列に合わせます。
+- **確認できなかった範囲:** 実行記録（先行する edit タスクの result）は読んでいません。recipe は `_MISSING_` で未宣言です。sample は冒頭から5章まで（約80行）しか読んでいません。
+
+verdict は `complete-with-findings` が妥当です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict 案: complete-with-findings。鮮度は sample・rulebook とも最新（grade list --changed-only の出力が空）。grade は両方 pass/98、minor が各1件で、完了を妨げない。改善指示は、人気商品の対象範囲の具体化と、手順表の標準列の適用範囲の明記または7章の表の修正。確認できなかった範囲: 実行記録（edit result）は未確認。recipe は _MISSING_。sample は5章途中までの通読。","handoff":["sample F001: 日次在庫確認の「人気商品」の品目または選定基準を定義する","rulebook F001: 手順表の標準列の適用範囲を例外として明記する、または sample 7章のバッチ再実行表を標準列に合わせる"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/opr-index-sample.md --changed-only","status":"passed","summary":"出力なし。評価結果は最新"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/opr-index-rulebook.md --changed-only","status":"passed","summary":"出力なし。評価結果は最新"}]}
+</specdojo_executor_evidence>
