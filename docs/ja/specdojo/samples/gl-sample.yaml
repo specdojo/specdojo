@@ -7,15 +7,17 @@ locale: ja
 status: draft
 
 # 単一店舗の販売・在庫・つけ管理を扱う。外部システムとの連携と本格会計は対象外。
+# 「商品」は共通用語集 gl-common（tm-common-product）を正本とし、本書では定義しない。
+# tm-reorder-point など領域接頭辞のない ID は参照済みの既存 ID として維持し、新規は tm-<領域>-<概念> で採番する。
 terms:
   - id: tm-reorder-point
     term: 発注点
     englishName: reorder point
     aliases: [発注基準点]
     definition: 在庫数量がこの値を下回ったときに、発注候補とみなす基準数量。
-    notes: 定番商品だけに設定し、発注候補に挙がった後の発注数量と発注先は店主が判断する。
+    notes: 定番商品だけに設定し、発注候補に挙がった後の発注数量と発注先は店主代表が判断する。
     category: tm-inventory
-    relatedTerms: [tm-standard-product, tm-safety-stock]
+    relatedTerms: [tm-standard-product, tm-safety-stock, tm-inventory-stockout]
     status: official
     example: "発注点を下回ったため、追加発注を行う。"
 
@@ -23,69 +25,109 @@ terms:
     term: 定番商品
     englishName: regular product
     aliases: [レギュラー商品, 定番]
-    definition: 店主が継続して棚に置くと決め、在庫を補充しながら販売する商品。
+    definition: 店主代表が継続して棚に置くと決め、在庫を補充しながら販売する商品。
     notes: 一時的によく売れるだけの人気商品や、期間限定の商品とは区別する。
     category: tm-inventory
     relatedTerms: [tm-reorder-point]
+    status: official
+
+  - id: tm-safety-stock
+    term: 安全在庫
+    englishName: safety stock
+    definition: 入荷の遅れや急な売れ行きに備えて、定番商品ごとに切らさず残しておく在庫数量。
+    notes: 店主代表が定番商品ごとに決める。発注点は、安全在庫に発注から入荷までの販売見込み数量を加えた水準とするため、安全在庫を下回る前に発注候補に挙がる。
+    category: tm-inventory
+    relatedTerms: [tm-reorder-point]
+    status: official
+
+  - id: tm-inventory-stockout
+    term: 欠品
+    englishName: stockout
+    aliases: [品切れ]
+    definition: 販売すると決めている商品の在庫数量が0になり、来店した顧客に販売できない状態。
+    notes: 取り扱いをやめた商品や、季節外で棚に置いていない商品は含めない。欠品の回数は日ごとに記録する。
+    category: tm-inventory
+    relatedTerms: [tm-reorder-point]
+    status: official
+    example: きなこ棒が欠品したため、入荷までは代わりの商品を案内する。
 
   - id: tm-accounts-receivable
     term: つけ
     englishName: sale on credit
     aliases: [ツケ, 掛け売り]
-    definition: 顧客が代金を後払いにする販売形態。
-    notes: 店主が認めた常連客だけが利用する。店頭では現金による販売と区別して記録する。
+    definition: 常連客が代金を後払いにする販売形態。
+    notes: 店頭では現金による販売と区別して記録する。
     category: tm-sales
-    relatedTerms: [tm-sales-credit-balance, tm-sales-credit-limit]
+    relatedTerms: [tm-sales-regular-customer, tm-sales-credit-balance, tm-sales-credit-limit]
+    status: official
     example: 今日の買い物をつけにして、次回来店時に支払う。
 
   - id: tm-sales-credit-balance
     term: つけ残高
     englishName: outstanding credit balance
-    definition: 顧客ごとに集計した、つけによる販売代金のうち未払いの金額。
-    notes: 顧客から受け取った支払いを差し引く。現金で支払い済みの販売代金は含めない。
+    definition: 常連客ごとに集計した、つけによる販売代金のうち未払いの金額。
+    notes: 常連客から受け取った支払いを差し引く。現金で支払い済みの販売代金は含めない。
     category: tm-sales
     relatedTerms: [tm-accounts-receivable, tm-sales-credit-limit]
+    status: official
     example: つけ残高を確認して、今回支払う金額を伝える。
 
   - id: tm-sales-credit-limit
     term: つけ限度額
     englishName: credit limit
     aliases: [つけ上限額]
-    definition: 店主が顧客ごとに認める、未払いのつけ残高の上限金額。
+    definition: 店主代表が常連客ごとに認める、未払いのつけ残高の上限金額。
     notes: 新たな買い物で限度額を超える場合は、現金での支払いを案内する。
     category: tm-sales
     relatedTerms: [tm-accounts-receivable, tm-sales-credit-balance]
+    status: official
+
+  - id: tm-sales-customer
+    term: 顧客
+    englishName: customer
+    aliases: [お客さん]
+    definition: 店頭で商品を買う人。
+    notes: 子どもと大人を区別しない。つけを利用できるのは顧客のうち常連客だけである。
+    category: tm-actor
+    relatedTerms: [tm-sales-regular-customer]
+    status: official
+
+  - id: tm-sales-regular-customer
+    term: 常連客
+    englishName: regular customer
+    definition: 顧客のうち、店主代表がつけの利用を認めた人。
+    notes: 来店回数が多いだけでは常連客にならない。店番をする家族は、店主代表が認めていない顧客のつけを受け付けない。
+    category: tm-actor
+    relatedTerms: [tm-sales-customer, tm-accounts-receivable, tm-sales-credit-limit]
+    status: official
+    example: 店番の家族が、常連客の買い物をつけとして記録する。
 
   - id: tm-shop-owner
     term: 店主代表
     englishName: shop owner representative
     aliases: [店主]
     definition: 店舗の業務要件と運用方針を決め、最終判断を担う店舗側の代表者。
-    notes: 主なシステム利用者でもある。家族が店番をする場合も、つけを認める顧客や定番商品の選定は店主代表が決める。
+    notes: 主なシステム利用者でもある。家族が店番をする場合も、常連客や定番商品の選定は店主代表が決める。
     category: tm-actor
+    status: official
 
   - id: tm-inventory
     term: 在庫
     englishName: inventory
     definition: 店舗が販売するために保有している商品の数量。
     notes: 店頭と保管場所の数量を合わせて把握する。廃棄した商品は含めない。
-
-  - id: tm-safety-stock
-    term: 安全在庫
-    englishName: safety stock
-    definition: 需要変動に備えて保持する最小限の在庫量。
-    notes: 発注を検討する基準の発注点とは区別する。
-    category: tm-inventory
-    relatedTerms: [tm-reorder-point]
+    status: official
 
   - id: tm-sales
     term: 販売
     englishName: sales
     definition: 商品を顧客に提供し、代金を受け取ること。
     notes: 代金をその場で受け取る場合と、つけとして後から受け取る場合がある。
+    status: official
 
   - id: tm-actor
     term: アクター
     englishName: actor
     definition: システムの利用者または外部システム。
     notes: この店舗の初期リリースでは、人が販売・在庫・つけの記録と確認を行う。外部システムとの連携は扱わない。
+    status: official
