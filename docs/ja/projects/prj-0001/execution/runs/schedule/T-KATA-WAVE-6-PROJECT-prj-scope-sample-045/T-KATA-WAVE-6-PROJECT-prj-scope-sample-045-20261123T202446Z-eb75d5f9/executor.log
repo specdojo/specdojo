@@ -1,0 +1,19 @@
+`docs/ja/specdojo/recipes/prj-scope-recipe.md` の「深掘り手順」4 を書き直し、grade の指摘 F001 と F002 を解消しました。markdownlint と Prettier の確認は通っています。
+
+指摘は「移す先が『後続の成果物』とだけ書かれていて、どの文書か分からない」というものでした。移す先を内容ごとに分け、それぞれの文書を ID で書きました。
+
+| 移す内容 | 移す先 |
+| --- | --- |
+| 詳細な成功判定・受入条件 | `prj-success-criteria-and-acceptance-criteria` |
+| 前提・制約・依存 | `prj-assumptions-constraints-dependencies` |
+| 課題と解決方針 | `prj-issues-and-approach` |
+| 設計・実装の詳細 | プロダクトの仕様・設計の文書 |
+
+- **根拠:** 上の 3 つの ID は rulebook の委譲先の記述どおりで、rulebook も揃っています。設計の詳細の移す先は、rulebook の禁止事項（「プロダクト仕様/設計ドキュメントへ委譲する」）に合わせました。
+- **書き方:** Recipe 記述標準は本文に rulebook / sample へのリンクを置くことを禁じているため、wikilink ではなくインラインコードの ID にしました。
+- **維持した記述:** 「スコープ変更方針」の「誰が決めるか」は、文書の役割の割り当てではなくスコープの中身の問いなので、PJR-76N9 の削除対象に当たらないと判断して残しました。
+- **触っていないもの:** rulebook、sample、frontmatter はこの段で変更していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"prj-scope-recipe の深掘り手順4で委譲先を具体的な文書 ID（prj-success-criteria-and-acceptance-criteria / prj-assumptions-constraints-dependencies / prj-issues-and-approach）と設計文書に分けて明示し、F001・F002 を解消した。","handoff":[],"validations":[{"command":"npx markdownlint-cli2 docs/ja/specdojo/recipes/prj-scope-recipe.md","status":"passed","summary":"0 issues"},{"command":"npx prettier --check docs/ja/specdojo/recipes/prj-scope-recipe.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルの変更なし","reason":"plan/result/個票などの履歴蓄積ファイルを変更していないため"}]}
+</specdojo_executor_evidence>

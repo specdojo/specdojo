@@ -116,7 +116,7 @@ Project Scope Writing Recipe
 1. 対象業務の各行が、概要のどの期待効果に応えるかを確かめ、対応のない行を外すかスコープ外へ移す。
 2. 対象システムの各行が、どの対象業務を支えるかを確かめる。
 3. スコープ外の各行に、外す理由と再検討条件があるかを確かめる。
-4. 受入条件・設計・実装の詳細を書いた箇所を見つけ、後続の成果物へ移す。
+4. 詳細な成功判定や受入条件を書いた箇所は `prj-success-criteria-and-acceptance-criteria` へ、前提・制約・依存を書いた箇所は `prj-assumptions-constraints-dependencies` へ、課題と解決方針を書いた箇所は `prj-issues-and-approach` へ移す。設計・実装の詳細はプロダクトの仕様・設計の文書へ移す。
 
 ## 6. 良い例 / 悪い例
 
