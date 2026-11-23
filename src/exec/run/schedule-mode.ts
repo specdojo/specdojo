@@ -31,6 +31,7 @@ import {
   buildTaskPhaseMap,
   configuredWorktreeBase,
   parseParallel,
+  pinnedExecutor,
   resolveExecDefaultsPath,
   runCompletionDrivenWorkerPool,
   type RunOpts,
@@ -188,6 +189,15 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
       if (preparedTasks.length >= limit || (!loop && batchBudget <= 0)) break;
       const task = taskMap.get(taskId);
       if (!task || attempted.has(taskId) || scopeLeases.has(taskId)) continue;
+      // Automatic selection leaves human tasks alone unless an explicit per-task agent is given;
+      // --edit-by / --review-by are mode-wide and do not count.
+      if (
+        (task.execution ?? "agent") === "human" &&
+        !(opts.by || opts.executorBy || pinnedExecutor(task))
+      ) {
+        process.stdout.write(`  [run] skipped: ${taskId} — execution: human\n`);
+        continue;
+      }
 
       let lease: ChangeScopeLease | undefined;
       try {

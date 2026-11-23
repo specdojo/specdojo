@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: high
   difficulty: medium
   owner: DEV
@@ -33,27 +33,30 @@ specdojo:
 
 ## 3. 影響範囲
 
-| 観点         | 影響   |
-| ------------ | ------ |
-| スコープ     | _TODO_ |
-| スケジュール | _TODO_ |
-| コスト       | _TODO_ |
-| 品質         | _TODO_ |
-| 関係者       | _TODO_ |
+| 観点         | 影響                                                                 |
+| ------------ | -------------------------------------------------------------------- |
+| スコープ     | `src/exec/run/schedule-mode.ts`、`src/exec/run/schedule-prepare.ts`  |
+| スケジュール | 影響なし                                                             |
+| コスト       | 人のタスクで plan 生成が失敗し cycle が failure になる無駄がなくなる |
+| 品質         | 自動選択が人のタスクを拾わない。`--by` 等の明示指定は従来どおり      |
+| 関係者       | DEV                                                                  |
 
 ## 4. 対応方針
 
-| 項目     | 内容   |
-| -------- | ------ |
-| 原因     | _TODO_ |
-| 対応策   | _TODO_ |
-| 依存事項 | _TODO_ |
-| 完了条件 | _TODO_ |
+| 項目     | 内容                                                                                                                                                  |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 原因     | `--edit-by` / `--review-by` で agent 候補が作られると、`prepareSingleTask` の人のタスク判定が候補なしの分岐にしか無く、素通りして plan 生成で失敗した |
+| 対応策   | 自動選択で `--by`・`--executor-by`・タスク固定 agent の無い人のタスクを skip し、`prepareSingleTask` でも同条件を override 解決の前に判定する         |
+| 依存事項 | なし                                                                                                                                                  |
+| 完了条件 | agent を `--edit-by` で指定した自動実行が `execution: human` のタスクを拾わず、failure にならないこと                                                 |
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- `schedule-mode.ts` の準備ループで、明示 agent の無い人のタスクを skip（ログ出力）するようにした。
+- `schedule-prepare.ts` の人のタスク判定を override 解決の前へ移し、mode 単位の `--edit-by` / `--review-by` は明示 agent に数えないようにした。
+- 確認: 型・単体テストは親 runner の検証に委ねる。専用の回帰テストは未追加（申し送り）。
+- 再発防止: mode 単位の override は人のタスクの許可にならない、という規則をコードコメントに残した。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- `PJR-561Q`（派生元）
