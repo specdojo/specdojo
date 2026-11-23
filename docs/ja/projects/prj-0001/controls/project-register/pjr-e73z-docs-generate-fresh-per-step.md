@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-e73z-docs-generate-fresh-per-step
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-22T23:45:26Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-23T04:51:29Z"
+  conclusion: specdojo build --skip-fresh を足し、docs:generate:fresh が段ごとに入力（パス・サイズ・更新時刻の一覧のハッシュ）を見て、変わった段だけを作り直すようにした。判定できないときは作り直す
   derived_from:
     - PJR-BBTW
   depends_on:

@@ -89,3 +89,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_7cd11d7765654c5fb6410d18923974ed
+- v: 1
+  id: reg_0f630bf77ce544c7a298e35078471ba3
+  ts: "2026-11-23T04:51:29Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分と単体テストと対応結果の測りを確かめ、本体で個票の更新時刻だけを変えた run が exec refresh・catalog・yaml-pages を飛ばすことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: specdojo build --skip-fresh を足し、docs:generate:fresh が段ごとに入力（パス・サイズ・更新時刻の一覧のハッシュ）を見て、変わった段だけを作り直すようにした。判定できないときは作り直す
+  previous_event_id: reg_924b60a425204efd8c7f80ddc92ceb7f
