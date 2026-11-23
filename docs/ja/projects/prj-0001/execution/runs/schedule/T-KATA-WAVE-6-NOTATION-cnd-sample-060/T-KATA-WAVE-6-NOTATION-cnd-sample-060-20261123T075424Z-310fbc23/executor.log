@@ -1,0 +1,11 @@
+`docs/ja/specdojo/templates/cnd-template.md` を直しました。指摘 5 件のうち 4 件は template の修正で解消し、F004 は template を変えずに申し送りにしています。rulebook と sample は変更していません。Prettier と markdownlint はどちらも問題なしで、親 runner が流す検査はまだ結果が出ていません。
+
+- **F001**: 「技術前提・制約」に `_TODO_` を足しました。決まっていない配置設計の入力（ホスト・配信先・接続方式など）を確定事項と分けて書き、影響と解消条件を「メモ / 将来課題」へ移す欄です。
+- **F002**: 検証対象表の後に `_TODO_` を足しました。rulebook の「検証・承認前の確認」に従い、描画した図と定義表・関係表・検証対象表を照合し、確認区分ごとに一致・不一致・未判定と理由を書く欄です。
+- **F003**: 検証対象表の前に `_TODO_` を置きました。各行を Pass / Fail / 未判定のどれと判定するか条件を書き、実機で確かめていない期待結果は検証済みとして扱わない旨を添えています。
+- **F004**: 現在の sample で template にない担当ロール系の列は、Person 表の「判断・確認の責務」だけでした。ほかの 2 列は見当たりません。rulebook は「表の列は template が正本」と定めており、PJR-76N9 は役割の割り当て欄を置かないと決めています。この段では sample を変えられないので、template の列は今のままにしました。
+- **F005**: 概要の `_ASSUMPTION_:` をインラインコードで囲み、斜体にならないようにしました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"cnd-template.md を更新し、F001（決まっていない配置入力の欄）、F002（rulebook の「検証・承認前の確認」に沿った照合結果の欄）、F003（Pass / Fail / 未判定の判定条件の欄）、F005（`_ASSUMPTION_:` をインラインコード化）を解消した。F004 は template を変えず、sample 側の修正を申し送りにした。rulebook と sample は変更していない。","handoff":["F004: 現在の sample で template にない担当ロール系の列は、Person 表の「判断・確認の責務」だけである（主確認ロール・担当ロールの列は見当たらない）。rulebook の「本文要件」は表の列を template が正本と定め、PJR-76N9 は役割の割り当て欄を置かないと決めている。このため template の列は変えていない。sample の Person 表からこの列を外し、必要な内容を表の後の補足文へ移す見直しを、sample 側の後続タスクで行う必要がある。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/templates/cnd-template.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/templates/cnd-template.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"history file unchanged","reason":"変更したのは template だけで、履歴蓄積ファイル（plan / result / 個票）は変更していない"}]}
+</specdojo_executor_evidence>
