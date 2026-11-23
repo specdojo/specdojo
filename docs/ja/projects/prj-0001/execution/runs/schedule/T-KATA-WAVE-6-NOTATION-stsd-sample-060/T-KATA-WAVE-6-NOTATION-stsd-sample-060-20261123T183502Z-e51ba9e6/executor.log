@@ -1,0 +1,14 @@
+`stsd-template.md` を rulebook と sample に合わせ、2 箇所を直しました。変更したのはこのファイルだけで、rulebook と sample には手を入れていません。prettier の整形確認は通りました。lint などのリポジトリ検証は、このあと親 runner が実行するので、まだ結果は出ていません。
+
+**直した箇所**
+- **「目的」の記入指示:** 「誰が…何を判断するために使うか」を「状態で対象の何を管理し、その状態でどの業務判断を行うか」に変えました。rulebook の記述ガイドが「目的に文書の読み手や使い方は書かない」と定めているためです。
+- **「今後の検討メモ」の表の列:** 「決定者」「決定時期」の列を外し、「論点／影響する状態・遷移／決まるまでの扱い」の 3 列にしました。rulebook はこの章に論点・影響・決まるまでの扱いを書くよう求めています。「決定者」は PJR-76N9 で置かないと決めた役割の割り当て欄にあたります。
+  - この表は HTML コメントの中にあり prettier の対象外なので、列の幅は手で揃えました。
+
+**変えなかった箇所**
+- **図の分割に関するコメント:** 分割理由・各図が扱う遷移 ID・共有状態を図の前に書く、という指示です。届いていた condense の finding（`retain`）とその理由どおり、分割した図から到達性を判断するのに必要なので残しました。
+- **それ以外の章・状態一覧の列・遷移表の列・図の骨組み:** rulebook の本文要件と sample の構成に合っていたので、そのままです。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"stsd-template.md を rulebook に合わせ、目的の記入指示を rulebook の記述ガイドに合わせ、今後の検討メモの表を『論点／影響する状態・遷移／決まるまでの扱い』の3列にして役割の割り当て欄（決定者）を外した。condense の finding（`retain`）の対象である図の分割に関するコメントは残した。rulebook と sample は変更していない。","handoff":["根拠: specdojo:stsd-rulebook の記述ガイド（目的・今後の検討メモ）、PJR-76N9（役割の割り当て欄を置かない）、specdojo:template-authoring-standard。condense の finding（`prj-0001:xer-pjr-mc63-20261105t101827z-3b1bbb8b`, `figure-prose`, `retain`）の対象である図の分割コメントは、rulebook の『状態遷移』と stsd-mermaid-rulebook の『図の分割』に合っているため残した。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/templates/stsd-template.md","status":"passed","summary":"All matched files use Prettier code style"}]}
+</specdojo_executor_evidence>

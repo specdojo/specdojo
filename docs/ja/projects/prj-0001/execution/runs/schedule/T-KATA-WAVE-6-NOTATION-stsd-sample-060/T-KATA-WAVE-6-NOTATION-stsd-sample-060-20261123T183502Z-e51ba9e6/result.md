@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-NOTATION-stsd-sample-060
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-NOTATION-stsd-sample-060/T-KATA-WAVE-6-NOTATION-stsd-sample-060-20261123T183502Z-e51ba9e6/plan.md
   started_at: "2026-11-23T18:35:11.539Z"
+  completed_at: "2026-11-23T19:41:29.386Z"
   agent: opus-executor
   execution: agent
   approach: template-maintenance
@@ -20,16 +21,20 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- stsd-template.md を rulebook に基づいて更新しました。
+- 「目的」のセクションにおける記入指示を rulebook の記述ガイドに合わせ、テンプレートの構造を最適化しました。
+- 「今後の検討メモ」の表を、rulebook の規定に従い『論点／影響する状態・遷移／決まるまでの扱い』の 3 列に変更し、PJR-76N9 に基づいて役割の割り当て（決定者）の欄を削除しました。
+- condense から届いた図の分割に関するコメントについては、rulebook の『状態遷移』および `stsd-mermaid-rulebook` の『図の分割』の要件に適合するため、そのまま保持しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/templates/stsd-template.md`: rulebook の記述ガイドに合わせて「目的」の指示を修正し、「今後の検討メモ」の表の列構成を 3 列に更新（役割の割り当て欄を削除）しました。また、図の分割に関するコメントを保持しています。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 根拠: `specdojo:stsd-rulebook` の記述ガイド（目的・今後の検討メモ）、PJR-76N9（役割の割り当て欄を置かない）、`specdojo:template-authoring-standard`。condense の finding（`prj-0001:xer-pjr-mc63-20261105t101827z-3b1bbb8b`, `figure-prose`, `retain`）の対象である図の分割コメントは、rulebook の『状態遷移』と `stsd-mermaid-rulebook` の『図の分割』に合っているため残した。
+- 根拠: specdojo:stsd-rulebook の記述ガイド（目的・今後の検討メモ）、PJR-76N9（役割の割り当て欄を置かない）、specdojo:template-authoring-standard。condense の finding（`prj-0001:xer-pjr-mc63-20261105t101827z-3b1bbb8b`, `figure-prose`, `retain`）の対象である図の分割コメントは、rulebook の『状態遷移』と stsd-mermaid-rulebook の『図の分割』に合っているため残した。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+rulebook と sample に沿って template を同期しました。`stsd-template.md` を編集し、必須項目や表の構造を rulebook と整合させ、説明や完成例は含めないように構成しました。
