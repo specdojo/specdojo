@@ -154,3 +154,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_b26508f2bee042ccaaa8c1e4aada9922
+- v: 1
+  id: reg_c725a1b5267b40d982044e732eb3a659
+  ts: "2026-11-23T02:12:23Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 2 回目の完了条件を差分と対応結果で確かめ、表示のページを作り直したうえでの型の grade が 5 文書とも pass だった（2026-11-23）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: ifx-api と ifx-msg の rulebook と sample を直し、ifx-index-sample の本部への売上登録を specdojo:ifx-api-sample につないだ。古い略語を外し、4 文書の minor を仕分けた。grade は rulebook が pass 91・95、sample が pass 93・92、ifx-index-sample が pass 98
+  previous_event_id: reg_2d390d11c8b1472995225e5ddd8ab317

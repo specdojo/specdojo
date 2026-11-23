@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-aeke-ifx-api-msg-spec-content
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: BA
   registered_at: "2026-11-22T12:55:19Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-23T02:12:23Z"
+  conclusion: ifx-api と ifx-msg の rulebook と sample を直し、ifx-index-sample の本部への売上登録を specdojo:ifx-api-sample につないだ。古い略語を外し、4 文書の minor を仕分けた。grade は rulebook が pass 91・95、sample が pass 93・92、ifx-index-sample が pass 98
   derived_from:
     - PJR-0VPB
 ---
