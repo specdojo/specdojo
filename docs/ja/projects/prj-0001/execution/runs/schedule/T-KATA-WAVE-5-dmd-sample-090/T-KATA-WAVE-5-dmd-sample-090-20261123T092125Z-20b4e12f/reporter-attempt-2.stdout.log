@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "mode": "review",
+  "grade_check": "### 評価結果の確認\n\n`npx specdojo grade list --target kata --path docs/ja/specdojo/samples/dmd-sample.md --changed-only` を実行した結果、出力はありません（最新）。\n\n- **target `docs/ja/specdojo/samples/dmd-sample.md`**: `pass` / 100 (finding: 1件 [minor])\n- **target `docs/ja/specdojo/rulebooks/dmd-rulebook.md`**: `pass` / 100 (finding: なし)\n\n`npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/dmd-rulebook.md --changed-only` を実行した結果、出力はありません（最新）。",
+  "rationale": [
+    "評価結果の鮮度を確認したところ、`docs/ja/specdojo/samples/dmd-sample.md` および `docs/ja/specdojo/rulebooks/dmd-rulebook.md` の双方において `content_hash` が一致しており、最新の状態であることを確認した。",
+    "成果物 `docs/ja/specdojo/samples/dmd-sample.md` は、`rulebook` の章立ておよび必須要素に沿っており、また共通サンプル文脈（駄菓子屋のプロジェクト）に従っているため、完了条件 `DC-001` \[`[[id|DC-001]]`\]、`DC-002` \[`[[id|DC-002]]`\]、`DC-003` \[`[[id|text|DC-003]]`\] を満たしている。",
+    "また、移行対象外となる対象の理由（販売・在庫・つけの業務）についても記述されており、`DC-004` \[`[[id|DC-004]]`\] を満たしている。",
+    "先行する `edit` の実行記録については、本 `plan` 内で特定のパスとして明示されていなかったため、詳細な変更内容は未確認である。"
+  ],
+  "improvements": [
+    "`F001` (minor): 移行手順表において、手順 1・3・4・5 の実行担当（役割名または Role code）が示されていない。タスク管理の観点から、備考欄などに担当を補うことを推奨する。"
+  ],
+  "approach": "### approach に応じた確認\n\n- `docs/ja/specdojo/rulebooks/dmd-rulebook.md` の必須要素および禁止事項に抵触しない内容であることを確認した。\n- 成果物は `plan` の指示に基づき、`rulebook` の構成および `sample` の形式に従って整備されていることを確認した。",
+  "verdict": "complete-with-findings"
+}

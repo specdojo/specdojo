@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "mode": "review",
+  "grade_check": "#### 評価結果の確認\n\n`npx specdojo grade list --target kata --path docs/ja/specdojo/samples/dmd-sample.md --changed-only` を実行:\n```\n出力なし（評価結果は最新）\n```\n\n`npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/dmd-rulebook.md --changed-only` を実行:\n```\n出力なし（評価結果は最新）\n```\n\n- **評価対象**: `[[docs/ja/specdojo/samples/dmd-sample.md|dmd-sample.md]]` / `[[docs/ja/specdojo/rulebooks/dmd-rulebook.md|dmd-rulebook.md]]`\n- **grade `verdict`**: `pass` / `pass`\n- **grade `score`**: 100 / 100\n- **finding 件数**: 1件 (minor) / 0件",
+  "rationale": [
+    "評価結果の鮮度は最新であることを確認済み。",
+    "完了条件 `DC-001` (章立ての整合性)、`DC-002` (共通文脈への適合)、`DC-003` (禁止事項の回避)、`DC-004` (業務影響の説明) のすべてについて、成果物 `[[docs/ja/specdojo/samples/dmd-sample.md|dmd-sample.md]]` を参照した結果、充足されていることを確認した。",
+    "先行する edit タスクの実行記録（result）については、本 plan 内に特定可能なパスの記載がないため、確認できていない。"
+  ],
+  "improvements": [
+    "`F001` [minor/`vp-pm-plan-feasibility`]: 移行手順表において、手順 1・3・4・5 の実行担当（役割名または Role code）が示されていないため、備考欄などで補完することを推奨する。"
+  ],
+  "approach": "#### approach に応じた確認\n\n- **磨き込みの確認**: 成果物は `[[docs/ja/specdojo/rulebooks/dmd-rulebook.md|dmd-rulebook.md]]` の構成および `[[docs/ja/specdojo/samples/dmd-sample.md|dmd-sample.md]]` の形式に則って整備されていることを確認した。",
+    "**対象外の変更**: 成果物の変更は、本タスクの目的である磨き込みの範囲内に留まっている。"
+  ],
+  "verdict": "complete-with-findings"
+}
