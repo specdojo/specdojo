@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-DESIGN-cdfd-overview-sample-050
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-DESIGN-cdfd-overview-sample-050/T-KATA-WAVE-6-DESIGN-cdfd-overview-sample-050-20261123T063432Z-1b072ed4/plan.md
   started_at: "2026-11-23T06:34:39.436Z"
+  completed_at: "2026-11-23T06:48:33.808Z"
   agent: opus-executor
   execution: agent
   approach: sample-maintenance
@@ -20,16 +21,26 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- cdfd-overview-sample の `grade` 指摘事項（F001〜F012）をすべて解消し、共通 sample 文脈として完成度を高めました。
+- 役割名を「店主代表」および「家族利用者代表」に統一し、プロセス間の更新責務（入荷数量の反映先）を整理しました。
+- 「売場棚」の分類に関する記述を、図に置くための例外規則として明記することで `rulebook` との整合性を確保しました。
+- 未決事項の表を `rulebook` の記述ガイドに従い 2 列の構成に修正しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/samples/cdfd-overview-sample.md`: `grade` 指摘事項に基づき、以下の修正を行いました： - 役割名の統一（「店番担当」を「家族利用者代表」等へ） - プロセス `P-02` と `P-05` における入荷数量の更新責務の単一化 - プロセス `P-03` の起点イベントの修正 - 「売場棚」の分類に関する例外規則の追加 - 未決事項の表を 2 列構成（論点 | 影響）へ修正
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- template (`docs/ja/specdojo/templates/cdfd-overview-template.md`) の未決事項の表は「論点 | 影響 | 決定者 | 決定時期 | 状態」の 5 列のままで、rulebook の「未決事項」の記述ガイド（2 列）と食い違う。template を 2 列へ直す変更が必要（F009 の残り）。
+- template の凡例の段落は「物理保管はいずれの区分にも属さないため、便宜上トランザクションデータと同じ色を用いる」のままで、併記と同色が区分への所属を意味しないという説明（rulebook の「データストア」の記述ガイド）が入っていない。sample に合わせて直すことを推奨する（F008 の残り）。
+- cdfd-sample の仕入計画の説明は「在庫グループが発注単位に合わせて確定した補充依頼」としているが、全体概要の P-01 は「補充対象と数量を発動単位に合わせて確定する」としている。発注単位に合わせる役目をどちらが持つかを今後そろえる必要がある（今回の finding の対象外のため未変更）。
+- 作業用の `tmp/fix-cdfd-overview.py` が worktree に残っている（削除の承認が得られなかった）。`tmp/` 配下は commit 対象外。
+- template（docs/ja/specdojo/templates/cdfd-overview-template.md）の未決事項の表は「論点 | 影響 | 決定者 | 決定時期 | 状態」の 5 列のままで、rulebook の「未決事項」の記述ガイド（2 列）と食い違う。template を 2 列へ直す変更が必要（F009 の残り）。
+- cdfd-sample の仕入計画の説明は「在庫グループが発注単位に合わせて確定した補充依頼」としているが、全体概要の P-01 は「補充対象と数量を発注単位に合わせて確定する」としている。発注単位に合わせる役目をどちらが持つかを今後そろえる必要がある（今回の finding の対象外のため未変更）。
+- 作業用の tmp/fix-cdfd-overview.py が worktree に残っている（削除の承認が得られなかった）。tmp/ 配下は commit 対象外。
+- 適用外の検証: `npm run validate:history-links`（変更は docs/ja/specdojo/samples/ 配下の sample のみで、plan・result・個票を変更していない）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+参照方向を「成果物 → sample」に切り替え、対象成果物に紐づく sample を見直しました。`grade` から展開された finding を検証し、`rulebook` や `template` との整合性を確保しながら、`sample-authoring-standard` に従い、判断に要る背景や制約を保持した状態で、冗長性を排除した完成例へと構成しました。

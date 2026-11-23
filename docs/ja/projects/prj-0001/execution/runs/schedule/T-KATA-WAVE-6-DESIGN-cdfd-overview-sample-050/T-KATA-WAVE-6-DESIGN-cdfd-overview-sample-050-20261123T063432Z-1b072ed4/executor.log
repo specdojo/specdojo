@@ -1,0 +1,19 @@
+`docs/ja/specdojo/samples/cdfd-overview-sample.md` を直し、grade の指摘 F001〜F012 をすべて解消しました。Prettier と markdownlint はこのファイル単体でエラーなしです。lint や schema 検証などの残りの検査は親 runner が実行します。
+
+- **役割名の統一（F001・F010・F011）**: 「店番担当」「店主」を、共通サンプル文脈とプロセスグループ別の CDFD の sample（`cdfd-sample`）に合わせて「家族利用者代表」「店主代表」に直しました。「家族利用者代表は店番業務を担う」という一文も足しています。対象は適用範囲、領域表の `P-02`・`P-03`・`P-05`、凡例の本文です。
+- **在庫記録の入荷を誰が書くか（F002・F003・F005・F007）**: `cdfd-sample` の `P-02-03` と同じく、入荷数量を在庫記録へ反映するのは仕入の `P-02` だけにしました。
+  - `P-05` の業務目的は「販売数量を反映し、仕入グループが反映した入荷数量と合わせて現在庫を確認できる状態に保つ」としました。
+  - `P-05` の起点イベントは「販売が記録された」としました。
+  - 図の在庫グループから在庫記録への線は「販売による出庫数量」に変えました。仕入から在庫記録への「入荷数量」の線は、そのまま唯一の入荷経路として残しています。
+  - データストアの章の冒頭に、入荷と販売で書き込む役目を分け、同じ数量を両方から反映しないことを明記しました。
+- **`P-03` の起点イベント（F004）**: 「顧客が商品を購入した」を「顧客が売場の商品を持って会計を申し出た」に直しました。
+- **売場棚の扱い（F006・F008・F012）**: rulebook の「データストア」の記述ガイドに合わせました。データストアの章の冒頭と凡例に、売場棚をトランザクションデータ表に並べるのは図に置くための例外で、区分には属さないと書きました。同じ色を使っても所属を意味しないことも凡例に入れています。あわせて、凡例の「締めの記録」をデータストア名どおり「日次締め記録、月次報告」に直しました。
+- **未決事項の表（F009）**: rulebook に合わせて「論点」「影響」の 2 列にしました。
+
+frontmatter の `status`（`ready`）はそのままにしてあります。template の未決事項の表はまだ 5 列のままです。template はこの段の編集対象ではないので触っておらず、合わせて直すべき点として handoff に書きました。
+
+作業用の `tmp/fix-cdfd-overview.py` は削除の承認が得られず残っています。`tmp/` 配下は commit されません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"cdfd-overview-sample の grade 指摘 F001〜F012 を解消した。役割名を店主代表・家族利用者代表に統一し、入荷数量の在庫記録への反映を仕入 P-02 に限定して P-05 は販売数量の反映とした。P-03 の起点イベントを修正し、売場棚の併記は図に置くための例外と明記し、未決事項の表を rulebook どおり 2 列にした。","handoff":["template（docs/ja/specdojo/templates/cdfd-overview-template.md）の未決事項の表は「論点 | 影響 | 決定者 | 決定時期 | 状態」の 5 列のままで、rulebook の「未決事項」の記述ガイド（2 列）と食い違う。template を 2 列へ直す変更が必要（F009 の残り）。","template の凡例の段落は「物理保管はいずれの区分にも属さないため、便宜上トランザクションデータと同じ色を用いる」のままで、併記と同色が区分への所属を意味しないという説明（rulebook の「データストア」の記述ガイド）が入っていない。sample に合わせて直すことを推奨する（F008 の残り）。","cdfd-sample の仕入計画の説明は「在庫グループが発注単位に合わせて確定した補充依頼」としているが、全体概要の P-01 は「補充対象と数量を発注単位に合わせて確定する」としている。発注単位に合わせる役目をどちらが持つかを今後そろえる必要がある（今回の finding の対象外のため未変更）。","作業用の tmp/fix-cdfd-overview.py が worktree に残っている（削除の承認が得られなかった）。tmp/ 配下は commit 対象外。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/cdfd-overview-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/cdfd-overview-sample.md","status":"passed","summary":"0 issues in 0 files"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/ 配下の sample のみで、plan・result・個票を変更していない"}]}
+</specdojo_executor_evidence>
