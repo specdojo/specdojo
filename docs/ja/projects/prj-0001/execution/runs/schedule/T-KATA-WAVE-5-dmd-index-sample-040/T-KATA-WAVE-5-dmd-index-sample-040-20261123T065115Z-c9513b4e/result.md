@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-5-dmd-index-sample-040
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-5-dmd-index-sample-040/T-KATA-WAVE-5-dmd-index-sample-040-20261123T065115Z-c9513b4e/plan.md
   started_at: "2026-11-23T06:51:21.904Z"
+  completed_at: "2026-11-23T07:12:23.243Z"
   agent: opus-executor
   execution: agent
   approach: rulebook-maintenance
@@ -20,16 +21,22 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- rulebook を簡潔に整え、F001（配置先 060-migration-planning/ と `docs-structure-guide` への参照）、F002（`recipe`・`template` の `undecided` を PJR-WYTX とともに明記）、F003（「担当」列は Role code）を解消しました。
+- 章立てを標準に揃え、記述ガイドを章ごとの判断の基準と良い例・悪い例に構成し直しました。
+- 「位置づけ」「推奨 Frontmatter 項目」「禁止事項」は、冗長さや他の型との重複の指摘がなかったため、そのまま維持しています。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/rulebooks/dmd-index-rulebook.md`: rulebook の章構成を `rulebook-authoring-standard.md` に準拠した形式に整え、各章に判断の基準、良い例、悪い例を追加しました。また、`recipe` と `template` が `undecided` であることを明記し、対象一覧の「担当」列に記載すべき値（Role code）の基準を定義しました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- sample (`docs/ja/specdojo/samples/dmd-index-sample.md`) の対象一覧の「担当」列が独自の略称 `Mig` のままです。このフェーズでは sample を変更しない制約があるため、後の sample 見直し工程で Role code（例: `DEV`）へ修正する必要があります。
+- 「位置づけ」「推奨 Frontmatter 項目」「禁止事項」は、grade の指摘や冗長さの観点から修正の必要がないと判断し、維持しました。
+- sample（docs/ja/specdojo/samples/dmd-index-sample.md）の対象一覧の「担当」列が独自の略称 `Mig` のまま。この段では sample を変えない決まりのため、後の sample の見直しで Role code（例: `DEV`）へ直す。
+- 変えなかった箇所と理由: 「位置づけ」「推奨 Frontmatter 項目」「禁止事項」は grade の指摘も冗長さもほかの型との重なりもないため維持した。
+- 適用外の検証: `npm run validate:history-links`（変更は docs/ja/specdojo/rulebooks/ 配下の rulebook のみで、pjr 個票・plan・result を変更していない）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+rulebook-maintenance

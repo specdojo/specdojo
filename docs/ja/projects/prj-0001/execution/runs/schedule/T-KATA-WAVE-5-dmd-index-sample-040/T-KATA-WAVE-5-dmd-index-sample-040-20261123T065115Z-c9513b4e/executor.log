@@ -1,0 +1,25 @@
+`dmd-index-rulebook.md` を書き直しました。grade の指摘 3 件（F001〜F003）はすべて rulebook 側で解消しています。lint などの検査は親 runner がこのあと実行するため、ここでは回していません。
+
+**指摘への対応**
+
+- **F001（配置先が決まっていない）**: 「ファイル命名・ID規則」の冒頭で、命名と配置はドキュメント構成ガイド（`[[specdojo:docs-structure-guide|ドキュメント構成ガイド]]`）に従うと書きました。あわせて、プロジェクトでは `060-migration-planning/` に置くと明記しました。置き場所は構成ガイドとディレクトリ構成のリファレンスの記載に合わせています。
+- **F002（recipe・template が `undecided` のまま説明がない）**: 「全体方針」に `_UNDECIDED_` の行を足しました。要否は未判断で、template は PJR-WYTX で扱い、ready 化の前に解消します。それまでは「本文要件」を作るときの構成の正とします。書き方は `atc`・`utc-index` など同じ状況の rulebook に揃えました。
+- **F003（「担当」列に何を書くかが決まっていない）**: 記述ガイドに「対象一覧」の節を新しく作りました。「担当」には適用先のメンバー定義にある Role code（例: `DEV`）を書き、独自の略称や個人名は悪い例としました。`DEV` が Role code として実在することは確認済みです。
+
+**それ以外の変更**
+
+- 章のタイトル「本文構成（標準テンプレ）」を、標準の章立てに合わせて「本文要件」にしました。全章が必須なので「必須」列は消し、その旨を一文で書いています。
+- 記述ガイドは、章ごとに判断の基準と良い例・悪い例を書く形（H3）に直しました。対象は `run_id` 規約・検証の共通方針・対象一覧の 3 章です。
+- 冒頭の概要は「どの場面で何を判断するための文書か」が分かる書き方にしました。完成例は sample を参照するとだけ書き、rulebook には置いていません。見出しは H3 までです。
+
+位置づけ・推奨 Frontmatter 項目・禁止事項は、指摘も重複もないためそのまま残しました。
+
+**残っていること**
+
+sample の「対象一覧」の「担当」列は今も独自の略称 `Mig` のままです。この段では sample を変えない決まりのため、後の sample を見直す段で Role code（例: `DEV`）に直す必要があります。
+
+変更したファイル: `docs/ja/specdojo/rulebooks/dmd-index-rulebook.md`
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"dmd-index-rulebook を簡潔に整え、F001（配置先 060-migration-planning/ と docs-structure-guide への参照）、F002（recipe・template の _UNDECIDED_ を PJR-WYTX とともに明記）、F003（「担当」列は Role code）を解消した。章立てを標準に揃え（本文要件）、記述ガイドを章ごとの判断の基準と良い例・悪い例にした。位置づけ・推奨 Frontmatter 項目・禁止事項は理由がないため維持した。変更ファイル: docs/ja/specdojo/rulebooks/dmd-index-rulebook.md","handoff":["sample（docs/ja/specdojo/samples/dmd-index-sample.md）の対象一覧の「担当」列が独自の略称 `Mig` のまま。この段では sample を変えない決まりのため、後の sample の見直しで Role code（例: `DEV`）へ直す。","変えなかった箇所と理由: 「位置づけ」「推奨 Frontmatter 項目」「禁止事項」は grade の指摘も冗長さもほかの型との重なりもないため維持した。"],"validations":[{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更は docs/ja/specdojo/rulebooks/ 配下の rulebook のみで、pjr 個票・plan・result を変更していない"}]}
+</specdojo_executor_evidence>
