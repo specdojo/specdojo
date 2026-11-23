@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "mode": "review",
+  "grade_check": "### 評価結果の確認\n\n`npx specdojo grade list --target kata --path docs/ja/specdojo/samples/opd-access-control-sample.md --changed-only` を実行した結果、出力なし（rc=0）であり、評価結果は最新である。\n\n- `verdict`: `pass`\n- `score`: 100\n- `finding_counts`: blocker 0 / major 0 / minor 0 / note 0",
+  "rationale": [
+    "評価結果の鮮度は、`specdojo grade list` の実行結果に基づき最新であることを確認した。",
+    "`done_criteria` の照合結果は以下の通りである：\n  - `DC-001` (`vp-qe-omissions-consistency`): `grade` の結果により充足を確認。\n  - `DC-002` (`vp-qe-kata-conformance`): `grade` の結果により充足を確認。\n  - `DC-003` (`vp-qe-kata-conformance`): `grade` の結果により充足を確認。\n  - `DC-004` (`vp-ba-requirements-completeness`): 本文の内容（付与・剥奪のルール、監査ログの方針）を確認し、充足していることを確認。\n  - `DC-005` (`vp-ba-stakeholder-clarity`): 権限の付与対象が共通サンプル文脈の役割名で記述され、`opr-index` への導線があることを確認。",
+    "対象の `sample` に対する `grade` の結果は `pass` であり、`finding` も存在しない。"
+  ],
+  "improvements": [
+    "`opd-rulebook` に関する Finding (`F001`, `F002`) は、本タスクの範囲外であるため、別タスクにて対応が必要。",
+    "`opd-incident-management-sample` および `opd-monitoring-sample` に関する Finding は、各 sample の別タスクにて対応が必要。"
+  ],
+  "approach": "### approach に応じた確認 - 磨き込みの実施\n\n- `plan` で求められた `rulebook` の必須要素の反映および `done_criteria` の充足状況を、`grade` の結果および本文の記述から確認した。\n- 対象外の変更の混入: なし。"
+  ,
+  "verdict": "complete"
+}
