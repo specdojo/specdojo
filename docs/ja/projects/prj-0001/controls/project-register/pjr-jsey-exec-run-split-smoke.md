@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  conclusion: K8F1・9X52・EF7M の統合後の runner で exec run --register が start から review・統合・要約まで止まらずに通った
+  completed_at: "2026-11-23T01:22:19Z"
+  conclusion: PJR-0JVB の 1 回目の統合の後、exec smoke で runner の start → review の記帳を確かめた
   autopilot: approved
 ---
 

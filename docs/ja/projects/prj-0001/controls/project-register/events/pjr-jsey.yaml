@@ -5285,3 +5285,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_ac7d1dc0aeea4c2d90111dabc6be8f66
+- v: 1
+  id: reg_e987f925b98544629fa318347f9fe77f
+  ts: "2026-11-23T01:22:19Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec smoke が成功した（2026-11-23）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: K8F1・9X52・EF7M の統合後の runner で exec run --register が start から review・統合・要約まで止まらずに通った
+      to: PJR-0JVB の 1 回目の統合の後、exec smoke で runner の start → review の記帳を確かめた
+  previous_event_id: reg_26ef302dad144f61ab07c6e99a91b8d6
