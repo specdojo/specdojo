@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-5-otp-index-sample-090
   mode: review
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-5-otp-index-sample-090/T-KATA-WAVE-5-otp-index-sample-090-20261123T100032Z-893ed19f/plan.md
   started_at: "2026-11-23T10:00:37.191Z"
+  completed_at: "2026-11-23T10:16:29.062Z"
   agent: sonnet-review-executor
   execution: agent
   approach: fully-guided
@@ -19,20 +20,22 @@ specdojo:
 
 ## 1. 評価結果の確認
 
-_TODO_: 評価結果サイドカーのパス、鮮度確認で実行したコマンドとその出力（`content_hash` が現在の成果物と一致するか）、grade の `verdict` / `score` / finding 件数を記入する。評価結果が最新でない、または評価不能の場合は、その事実と理由を記入する。
+### 評価結果の確認 #### 1. `docs/ja/specdojo/samples/otp-index-sample.md` の鮮度確認 `npx specdojo grade list --target kata --path docs/ja/specdojo/samples/otp-index-sample.md --changed-only` を実行した結果、出力はありませんでした（終了コード 0）。評価結果は最新です。 - `verdict`: `pass` - `score`: 97 - `finding_counts`: blocker 0 / major 0 / minor 1 / note 0 #### 2. `docs/ja/specdojo/rulebooks/otp-index-rulebook.md` の鮮度確認 `npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/otp-index-rulebook.md --changed-only` を実行した結果、出力はありませんでした（終了コード 0）。評価結果は最新です。 - `verdict`: `pass` - `score`: 98 - `finding_counts`: blocker 0 / major 0 / minor 2 / note 0
 
 ## 2. 判断根拠
 
-_TODO_: 変更内容・plan・実行記録・完了条件・最新の finding を照合した内容と、verdict を選んだ理由を記入する。finding が残るのに完了とする場合は、その finding が今回の完了を妨げない理由を記入する。参照は `[[id]]` 形式（Obsidian wikilink）で記載し、行番号アンカーや絶対パスは使わない。
+- 評価結果に基づき、`docs/ja/specdojo/samples/otp-index-sample.md` は `pass`（スコア 97）であり、`docs/ja/specdojo/rulebooks/otp-index-rulebook.md` は `pass`（スコア 98）であることを確認した。\n\n`docs/ja/specdojo/samples/otp-index-sample.md` については、完了条件 `DC-001`〜`DC-005` を照合した。章構成において `rulebook` の必須要素（「5. 運用手順の変更点」など）が含まれており、`mip-index`・`cop-index` との分担も示されている。`grade` の finding `F001`（関連ドキュメントへの導線不足）は `minor` であり、タスクの完了を妨げない。\n\n`docs/ja/specdojo/rulebooks/otp-index-rulebook.md` についても、`grade` の finding `F001`（`recipe` と `template` が `undecided`）および `F002`（`ready` にするための前提条件の明示不足）は `minor` であり、本レビューの範囲における完了を妨げるものではない。
+- 先行する `edit` タスクの `result` については、`plan` に示されていないため、内容の確認ができていない。
 
 ## 3. 未充足事項・改善指示
 
-_TODO_: 未充足事項と、再計画・成果物の改善・再評価に使う改善指示を記入する（なければ「なし」と記入する）。評価結果の内容に疑義がある場合は、再評価が必要な対象と理由もここに記入する。
+- `docs/ja/specdojo/samples/otp-index-sample.md` に対して：\n- 「5. 運用手順の変更点」の参照列にある `opr-sales` などの分冊について、`opr-index` を経由して辿れる旨を「関連ドキュメント」の項目に追記すること。
+- `docs/ja/specdojo/rulebooks/otp-index-rulebook.md` に対して：\n- `recipe` と `template` が `undecided` のままになっているため、これらを確定させるための記述（段）を追加すること。\n- `ready` に昇格させる前に、`validate:schema` を実行して enum coverage を確認すること。
 
 ## 4. approach に応じた確認
 
-_TODO_: `approach` に応じて確認した内容を記入する。fully-guided / recipe-guided / freeform では求められた作成・更新が行われたか、retrofit では実装エビデンスの対応記録と未確認範囲、`rulebook-maintenance` などの maintenance 系では見直しの動機となった finding の解消状況を記入する。
+`fully-guided` に従い、`rulebook` の必須要素、`recipe` の問い、`sample` の形式との整合性を `grade` の結果を用いて確認した。`plan` で求められていた磨き込みが、成果物に対して適切に行われていることを確認した。
 
 ## 5. decision
 
-- verdict: _TODO_（complete / complete-with-findings / incomplete / grade-stale / grade-unavailable / changed-during-review）
+- verdict: complete-with-findings
