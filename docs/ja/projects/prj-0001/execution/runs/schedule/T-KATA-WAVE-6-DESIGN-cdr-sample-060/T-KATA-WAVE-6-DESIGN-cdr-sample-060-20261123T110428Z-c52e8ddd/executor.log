@@ -1,0 +1,10 @@
+`cdr-template.md` を直しました。2 件の finding の内容は、作業を始めた時点でテンプレートにもう入っていました。
+
+- **F001 と F002（エラー処理章に「握りつぶしの禁止」の記入欄がない）:** 現在のテンプレートでは、エラー処理章に `- 例外の握りつぶしの禁止: _TODO_` が既にあります。finding が指す行番号（22・25）は、この欄が入る前の版のものとみられます。rulebook の本文要件（エラー処理：使い分け・文脈・握りつぶしの禁止）とも、sample の「空の `catch` で握りつぶさない」とも対応が取れているので、この 2 件では何も変えていません。
+- **追加した変更:** rulebook は必須の章の後ろに枠組み固有の章を 1〜2 章まで足してよいとしていて、sample にも「8. Next.js のサーバーとクライアントの境界」があります。これに合わせ、禁止事項の表の後ろに追加できる場所を示すコメント 1 行を入れました。
+
+ほかの章構成と表の列名は、rulebook・sample とそろっていたので変えていません。rulebook と sample には手を入れていません。prettier と markdownlint はどちらも通りました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"cdr-template.md を確認した。F001/F002 が求める「例外の握りつぶしの禁止」の記入欄はエラー処理章に既にあり、rulebook の本文要件と cdr-sample に対応しているので変更不要と判断した。rulebook が認め sample でも使われている枠組み固有の章について、禁止事項の後ろに追加位置を示す HTML コメント 1 行を足した。rulebook と sample は変更していない。","handoff":["F001/F002 の行番号（22・25）は、記入欄が入る前のテンプレートの版を指しているとみられる。現在の版ではエラー処理章の 41 行目に `- 例外の握りつぶしの禁止: _TODO_` があるので、再評価で解消済みかを確かめてほしい。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/templates/cdr-template.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/templates/cdr-template.md","status":"passed","summary":"0 issues in 0 files"}]}
+</specdojo_executor_evidence>
