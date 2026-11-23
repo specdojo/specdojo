@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-g6nt-orchestrator-playbook-where
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-23T02:38:54Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-23T04:26:25Z"
+  conclusion: specdojo where playbook と playbook scaffold を足した。既定の置き場所は 030-project-management/pm-orchestrator-playbook.md で、設定 1 キーで変えられる。オーケストレーターの指示の本文を where で引いた運用メモを読む形に直す案を対応結果に書いた（反映は利用者の承認待ち）
   derived_from:
     - PJR-2P7C
   depends_on:
