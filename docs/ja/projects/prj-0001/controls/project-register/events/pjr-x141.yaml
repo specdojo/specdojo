@@ -116,3 +116,22 @@
       from: ""
       to: 関連ドキュメント
   previous_event_id: reg_2339ad0ad5ab40d291ffdb9c06a3fbe5
+- v: 1
+  id: reg_6600d348311e4b1da47e075e823ccdc9
+  ts: "2026-11-23T21:13:48Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: 利用者が会話で案 A を承認した（2026-11-24）
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-11-24"
+    - field: conclusion
+      from: "-"
+      to: 単独で書く pm-* のログの型を非推奨にし、register build の一覧の枠は登録簿の内部の template として残す（案 A）
+  previous_event_id: reg_3f0094af860b418cb1f78f1f024d12c5

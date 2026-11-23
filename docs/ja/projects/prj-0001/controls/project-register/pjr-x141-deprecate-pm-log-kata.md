@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-x141-deprecate-pm-log-kata
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: high
   owner: PO
   registered_at: "2026-11-23T21:12:10Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-23T21:13:48Z"
+  conclusion: 単独で書く pm-* のログの型を非推奨にし、register build の一覧の枠は登録簿の内部の template として残す（案 A）
   derived_from:
     - PJR-CPA8
 ---
