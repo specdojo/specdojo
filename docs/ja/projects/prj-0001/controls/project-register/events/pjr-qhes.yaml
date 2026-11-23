@@ -60,3 +60,16 @@
       from: ""
       to: 完了条件
   previous_event_id: reg_1c93e25ff0cf4c749c57887f8c53354f
+- v: 1
+  id: reg_fd93826490d14d0d862bf49cd1d5bb28
+  ts: "2026-11-23T00:11:58Z"
+  action: start
+  actor: qwen-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_34016cb2203b4e0ea990b61f4436a815
