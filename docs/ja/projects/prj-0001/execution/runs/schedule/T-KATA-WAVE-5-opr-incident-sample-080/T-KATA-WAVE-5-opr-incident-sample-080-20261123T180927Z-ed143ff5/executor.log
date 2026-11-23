@@ -1,0 +1,12 @@
+冗長さの整理として、`docs/ja/specdojo/samples/opr-incident-sample.md` の 1 箇所を削りました。静的検査は親 runner が実行するため、この実行では走らせていません。
+
+削ったのは「4.1. 優先度別の初動と復旧」の箇条書き「復旧の期限は未決のため、達成・未達を判定しない」です。「1. 概要」の未決事項の表にある「優先度ごとの復旧の期限」の行と同じ内容でした。
+
+次の 3 件は残しました。
+- 「4.3」手順 6 の「照合前に反映しないことで二重の反映を防ぐ」: 手順の理由なので残しました。
+- 「4.3」末尾の不一致時の扱い: 不一致の場合の条件と対応を示しており、「4.4」の日次締めの記述とは役割が違うため残しました。
+- 「4.2」末尾の段落: 表にない「15 分以内に連絡がつかない場合」の例外を含むため残しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"概要の未決事項の表と重複する箇条書き 1 件を削除。判断に要る記述は保持。","handoff":[],"validations":[],"condense_records":[{"location":"4.1. 優先度別の初動と復旧 の箇条書き「復旧の期限は未決のため、達成・未達を判定しない」","category":"repetition","action":"delete","reason":"1. 概要の未決事項の表（優先度ごとの復旧の期限）と同じ内容の繰り返し。削除しても扱いは概要の表で維持される。","cause":{"type":"document"}},{"location":"4.3. 紙の販売控えへの切替と転記・照合 手順 6「照合前に反映しないことで二重の反映を防ぐ」","category":"repetition","action":"retain","reason":"手順の理由を示す判断に要る背景であり、残した。","cause":{"type":"document"}},{"location":"4.3. 末尾の不一致時の扱いと 4.4. の日次締めの記述","category":"repetition","action":"retain","reason":"4.3 は不一致時の条件と対応、4.4 は切替中の一般的な扱いで役割が異なるため残した。","cause":{"type":"document"}},{"location":"4.2. 末尾の段落","category":"table-prose","action":"retain","reason":"15 分以内に連絡がつかない場合の例外を含み、表にない情報のため残した。","cause":{"type":"document"}}]}
+</specdojo_executor_evidence>
