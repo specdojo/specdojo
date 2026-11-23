@@ -60,3 +60,25 @@
       from: ""
       to: 完了条件
   previous_event_id: reg_5791ea4ca9b545d8b0150d835ab3a091
+- v: 1
+  id: reg_08ca5a817d6545f7af83ffb2d0fc107b
+  ts: "2026-11-23T03:24:34Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: 第 4〜6 波の 5 件を 1 件にまとめ、並べて流せる組み方にした（2026-11-23）
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+    - field: title
+      from: 第 4 波の kata ドメインと strategy・schedule を用意する（非機能要件と受け入れ条件）
+      to: 第 4〜6 波の kata ドメインと strategy・schedule をまとめて用意する
+    - field: description
+      from: PJR-HJ3H の 11 種類の sample を dct-kata.yaml に足し、sch-strategy-kata-wave-4.yaml を作って track を生成する
+      to: 第 4〜6 波の型の sample を dct-kata.yaml に足し、波ごとの strategy と track を作る。型ごとの段の鎖を並べて流せるようにし、人の確定は横串の確認に回す
+    - field: derived_from
+      from: '["PJR-HJ3H","PJR-8X86"]'
+      to: '["PJR-HJ3H","PJR-JZ2F","PJR-G1M8","PJR-SBGQ","PJR-PYS2","PJR-8X86"]'
+  previous_event_id: reg_608cf4ae7dcc4ec48b670c656a8d0833

@@ -150,8 +150,8 @@ providers:
   claude:
     # 1 回の起動の上限。hard の項目でも 2 時間を超える起動は固まったとみなす（PJR-K8F1、2026-11-23 indie の決定）。
     agent_timeout_seconds: 7200
-    # Claude の週の枠に余裕があるため、2026-11-17 1:00 まで opus を 3 本まで使う（indie の依頼）。
-    max_concurrency: 3
+    # 型の sample をまとめて作るため、claude の agent を 5 本まで並べる（2026-11-23 indie の決定）。
+    max_concurrency: 5
     # 役割の定義は .claude/agents/ の役割ごとの 1 ファイル（PJR-TSP6）を mode で選び、
     # モデルは実体の member の model を --model で渡す。permission は mode 別 settings で分離する。
     command_template: "claude -p --verbose --agent {agent} --model {model} --settings .specdojo/claude/settings.{mode}.json"

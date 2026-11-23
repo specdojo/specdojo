@@ -3,10 +3,32 @@ import { resolveItemCommitTypeAndScope } from "../register/item.js";
 import type { PjrItem } from "../register/register.js";
 import { expandCommitMessageTemplate } from "../shared/commit-message-template.js";
 import type { SpecDojoProjectConfig, SpecDojoRepoConfig } from "../shared/specdojo-config.js";
+import { gitResult } from "../shared/git.js";
 import { commitSubject } from "./run/mode-shared.js";
 import { refsTrailer } from "./repo-trace.js";
 import { productIntegrationTarget } from "./task-repos.js";
 import type { ProductWorktree } from "./worktree.js";
+
+function runSuffix(priorCommitCount: number | undefined): string {
+  return priorCommitCount !== undefined && priorCommitCount > 0
+    ? ` (run ${priorCommitCount + 1})`
+    : "";
+}
+
+/** Count earlier non-merge product commits that carry this item's `Refs:` trailer. */
+export function countPriorItemCommits(repoPath: string, projectId: string, itemId: string): number {
+  const result = gitResult(repoPath, [
+    "log",
+    "HEAD",
+    "--no-merges",
+    "--format=%H",
+    `--grep=^${refsTrailer(projectId, itemId)}$`,
+  ]);
+  if (result.status !== 0) return 0;
+  return String(result.stdout)
+    .split("\n")
+    .filter((line) => line.trim() !== "").length;
+}
 
 /** Build only product messages; project bookkeeping keeps its existing subjects. */
 export function registerProductMessage(params: {
@@ -17,6 +39,8 @@ export function registerProductMessage(params: {
   repoConfig?: SpecDojoRepoConfig;
   product: ProductWorktree;
   kind: "commit" | "merge";
+  /** Earlier product commits of this item; a commit subject gets a run number when above 0. */
+  priorCommitCount?: number;
 }): string {
   const { item, projectId, repoConfig, product } = params;
   const template =
@@ -49,7 +73,7 @@ export function registerProductMessage(params: {
   const [first = "", ...body] = expanded.replace(/\r\n?/g, "\n").trim().split("\n");
   const message =
     params.kind === "commit"
-      ? commitSubject("", expanded)
+      ? commitSubject("", expanded, runSuffix(params.priorCommitCount))
       : [commitSubject("", first), ...body].join("\n");
   const trailer = refsTrailer(projectId, item.id);
   // Keep exactly one required trailer at the end, even if the template supplied it earlier.

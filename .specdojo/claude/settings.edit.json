@@ -1,8 +1,18 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {
+    "CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR": "1"
+  },
   "permissions": {
     "allow": [
       "Edit(**)",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git show*)",
+      "Bash(git grep *)",
+      "Bash(git rm *)",
+      "Bash(git mv *)",
       "Bash(npm run *)",
       "Bash(npm test)",
       "Bash(npm test *)",
@@ -41,6 +51,12 @@
       "Edit(./azure-pipelines.yml)",
       "Edit(./azure-pipelines.yaml)",
       "Edit(./Jenkinsfile)",
+      "Bash(git rm -r *)",
+      "Bash(git rm -f *)",
+      "Bash(git rm --force *)",
+      "Bash(git rm --cached *)",
+      "Bash(git mv -f *)",
+      "Bash(git mv --force *)",
       "Bash(git push)",
       "Bash(git push *)",
       "Bash(gh *)",

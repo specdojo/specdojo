@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-11-23T00:36:14Z"
   due_on: "2026-11-30"
-  block_reason: "reporter output invalid after 3 format attempts: result Markdown notation violation before writing (fix the JSON prose that produced these rendered lines; do not put Markdown headings, code fences, ba…"
 ---
 
 # PJR-N4D0 同じ項目を何回か流すと、プロダクトの commit のタイトルがすべて同じになる
@@ -67,7 +66,20 @@ b583aa6 feat: テストのレポートの Markdown をサマリーと集計だ�
 
 ## 5. 対応結果
 
--
+### 5.1. 決定と実装
+
+- 案 (c) を採用した。案 (a)・(b) は executor の要約を commit の 1 行目に使うため、要約の品質と長さに依存し、設定の追加も要る。回の番号は履歴から決定的に数えられる。
+- `src/exec/register-product-message.ts` に `countPriorItemCommits` を追加した。作業 worktree の HEAD から、同じ項目の `Refs:` を持つ merge でない commit を数える。1 以上なら commit の 1 行目の末尾に空白と `(run N)` を付ける。テンプレートの有無を問わない。
+- `commitSubject` に `suffix` を足し、100 文字を超える場合は title を切り詰めて番号を残す。
+- merge メッセージには付けない。`Refs:` の末尾の行は従来どおり付く。
+- 設定リファレンスの `commit_subject_template` の節に、流し直したときの 1 行目を書いた。
+- テストは `tests/src/exec/register-product-message.test.ts` に追加した（1 回目は不変、2 回目の区別、長い 1 行目、merge 不変）。
+- 前提: 前の回の commit が作業 worktree の履歴に含まれる場合だけ数える（統合済み、または再開）。`--force-restart` で前の回が統合先に入っていない場合は 1 回目として扱う。
+
+### 5.2. CHANGELOG に書く事項
+
+- 区分: Fixed
+- 文案: `exec run --register` がプロダクトへ作る commit の 1 行目に、同じ項目を流し直した 2 回目以降は空白と `(run N)` を付け、回ごとに区別できるようにした。
 
 ## 6. 関連ドキュメント
 

@@ -229,7 +229,7 @@ register の worktree 実行では、`exec run --integration-branch <repo>=<bran
 | `{branch}`  | そのプロダクトの実際の作業ブランチ名                                                    |
 | `{target}`  | run の上書きを含む、そのプロダクトの実際の統合先                                        |
 
-commit／merge の scope が空のときは、テンプレートに書いた `({scope})` を括弧ごと取り除きます。たとえば `{type}({scope}): {title}` は `feat: 機能追加` になります。commit のテンプレートは空白と改行を 1 つの空白にまとめて 1 行にします。merge のテンプレートは本文の改行を保ちます。どちらも 1 行目は従来どおり最大 100 文字（超過時は末尾を `…` にして切り詰める）です。本文の末尾には設定にかかわらず `Refs: <project-id>:<ID>` を付けます。テンプレート自身に同じ `Refs:` 行があっても、末尾に 1 回だけ置きます。
+commit／merge の scope が空のときは、テンプレートに書いた `({scope})` を括弧ごと取り除きます。たとえば `{type}({scope}): {title}` は `feat: 機能追加` になります。commit のテンプレートは空白と改行を 1 つの空白にまとめて 1 行にします。merge のテンプレートは本文の改行を保ちます。どちらも 1 行目は従来どおり最大 100 文字（超過時は末尾を `…` にして切り詰める）です。同じ項目を `--force-restart` や `--resume` で流し直したときは、作業 worktree の履歴に同じ項目の `Refs:` を持つ merge でない commit がすでにあれば、commit の 1 行目の末尾に空白と `(run N)`（N は 2 回目以降の通番）を付けます。テンプレートの有無にかかわらず付き、1 行目が 100 文字を超える場合は title 側を切り詰めて番号を残します。1 回目の commit と merge メッセージには付きません。本文の末尾には設定にかかわらず `Refs: <project-id>:<ID>` を付けます。テンプレート自身に同じ `Refs:` 行があっても、末尾に 1 回だけ置きます。
 
 git-flow で develop へローカル統合する場合の `repos` 要素の例です。作業ブランチは `feature/{topic}` とし、`ff` で早送りだけを許可する例です。`merge_message_template` は `integration_strategy` を `merge` にした場合に使います。
 

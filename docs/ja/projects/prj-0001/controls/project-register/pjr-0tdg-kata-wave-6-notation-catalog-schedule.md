@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-0tdg-kata-wave-6-notation-catalog-schedule
   type: project
-  status: draft
+  status: deprecated
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: rejected
   priority: medium
   difficulty: hard
   owner: BA
   registered_at: "2026-11-23T01:46:46Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-23T03:24:58Z"
+  conclusion: 第 4〜6 波の strategy は PJR-BHFG にまとめて作る（dct-kata.yaml を同時に書き換えてぶつかるため）
   derived_from:
     - PJR-PYS2
     - PJR-8X86

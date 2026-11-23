@@ -71,3 +71,64 @@
       from: "-"
       to: "reporter output invalid after 3 format attempts: result Markdown notation violation before writing (fix the JSON prose that produced these rendered lines; do not put Markdown headings, code fences, ba…"
   previous_event_id: reg_c7830d401e424a0c8eba37cf4b539ecf
+- v: 1
+  id: reg_e0d64967874e4916b7b4508e5c00cf9b
+  ts: "2026-11-23T02:43:23Z"
+  action: start
+  actor: sonnet-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "reporter output invalid after 3 format attempts: result Markdown notation violation before writing (fix the JSON prose that produced these rendered lines; do not put Markdown headings, code fences, ba…"
+      to: "-"
+  previous_event_id: reg_e489e032d8304ff4bc08619efcf38870
+- v: 1
+  id: reg_3f0eba584d954043b9d3944a6389d377
+  ts: "2026-11-23T02:59:11Z"
+  action: wait
+  actor: sonnet-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: project: Result Markdown notation violation before commit: docs/ja/projects/prj-0001/execution/runs/register/PJR-N4D0/pjr-n4d0-20261123T021015Z-81de6eb9/result.md:20:62 error MD038/n…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: project: Result Markdown notation violation before commit: docs/ja/projects/prj-0001/execution/runs/register/PJR-N4D0/pjr-n4d0-20261123T021015Z-81de6eb9/result.md:20:62 error MD038/n…"
+  previous_event_id: reg_e0d64967874e4916b7b4508e5c00cf9b
+- v: 1
+  id: reg_f7addeb40aca4da68bc63383e3f015c7
+  ts: "2026-11-23T03:30:46Z"
+  action: start
+  actor: sonnet-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: project: Result Markdown notation violation before commit: docs/ja/projects/prj-0001/execution/runs/register/PJR-N4D0/pjr-n4d0-20261123T021015Z-81de6eb9/result.md:20:62 error MD038/n…"
+      to: "-"
+  previous_event_id: reg_3f0eba584d954043b9d3944a6389d377
+- v: 1
+  id: reg_b33efbe4560841edad13e8562867ff63
+  ts: "2026-11-23T03:35:04Z"
+  action: review
+  actor: sonnet-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_f7addeb40aca4da68bc63383e3f015c7

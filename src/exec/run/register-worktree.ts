@@ -17,7 +17,7 @@ import { pipelineStateLocation, readPipelineState } from "../pipeline-state.js";
 import { integratedCommitRange, runPostIntegration } from "../post-integration.js";
 import { buildInPlaceStem } from "../plans.js";
 import { resolveProductBranches } from "../product-branches.js";
-import { registerProductMessage } from "../register-product-message.js";
+import { countPriorItemCommits, registerProductMessage } from "../register-product-message.js";
 import { findResumableRegisterRun } from "../register-resume.js";
 import {
   generateRegisterPlan,
@@ -426,6 +426,8 @@ async function integrateRegisterWorktreeRun(
         projectConfig,
         product,
         kind,
+        priorCommitCount:
+          kind === "commit" ? countPriorItemCommits(product.path, projectId, item.id) : 0,
         repoConfig: projectConfig?.repos?.find((repo) => repo.name === product.name),
       });
     const integrateStartedAt = new Date().toISOString();
