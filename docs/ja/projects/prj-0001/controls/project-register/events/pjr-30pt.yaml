@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_b63d496841ea457cb302822b7ad086bd
+  ts: "2026-11-23T00:01:41Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 第 3 波の型の rulebook と sample から文書の役割と承認の記述を外す
+    - field: description
+      from: ""
+      to: 第 3 波の 13 種類は PJR-76N9 の決まりを strategy に足す前に 040・050 を終えていた。rg で 12 種類に文書の役割・承認・未決事項の承認の記述が見つかったので外す
+    - field: input
+      from: ""
+      to: '["第 3 波の 13 種類の 040・050・080・090 は 2026-11-21〜22 の朝に done。325Y で strategy に決まりを足したのはその後（2026-11-22 夜）","直してから grade を 1 回だけ流し、その後に 140 の人の確定へ進む（利用者の決定、2026-11-23）","未決事項の当面の扱いの承認も外す対象に含める（利用者の決定、2026-11-23）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-325Y"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: kata
+- v: 1
+  id: reg_e41c671ac14040e4853c115e87732c6f
+  ts: "2026-11-23T00:01:45Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_b63d496841ea457cb302822b7ad086bd
