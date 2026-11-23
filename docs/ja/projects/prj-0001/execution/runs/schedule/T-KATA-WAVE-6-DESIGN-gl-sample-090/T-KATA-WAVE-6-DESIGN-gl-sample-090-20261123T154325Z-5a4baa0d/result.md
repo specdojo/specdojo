@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-DESIGN-gl-sample-090
   mode: review
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-DESIGN-gl-sample-090/T-KATA-WAVE-6-DESIGN-gl-sample-090-20261123T154325Z-5a4baa0d/plan.md
   started_at: "2026-11-23T15:43:27.753Z"
+  completed_at: "2026-11-23T15:48:51.889Z"
   agent: sonnet-review-executor
   execution: agent
   approach: fully-guided
@@ -19,20 +20,25 @@ specdojo:
 
 ## 1. 評価結果の確認
 
-_TODO_: 評価結果サイドカーのパス、鮮度確認で実行したコマンドとその出力（`content_hash` が現在の成果物と一致するか）、grade の `verdict` / `score` / finding 件数を記入する。評価結果が最新でない、または評価不能の場合は、その事実と理由を記入する。
+### 評価結果の確認 #### `docs/ja/specdojo/samples/gl-sample.yaml` `npx specdojo grade list --target kata --path docs/ja/specdojo/samples/gl-sample.yaml --changed-only` を実行した結果: ``` 出力なし（終了コード 0）。評価結果は最新 ``` - `verdict`: `pass` - `score`: 100 - `finding_counts`: blocker 0 / major 0 / minor 0 / note 0 #### `docs/ja/specdojo/rulebooks/gl-rulebook.md` `npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/gl-rulebook.md --changed-only` を実行した結果: ``` 出力なし（終了コード 0）。評価結果は最新 ``` - `verdict`: `pass` - `score`: 94 - `finding_counts`: blocker 0 / major 0 / minor 3 / note 0
 
 ## 2. 判断根拠
 
-_TODO_: 変更内容・plan・実行記録・完了条件・最新の finding を照合した内容と、verdict を選んだ理由を記入する。finding が残るのに完了とする場合は、その finding が今回の完了を妨げない理由を記入する。参照は `[[id]]` 形式（Obsidian wikilink）で記載し、行番号アンカーや絶対パスは使わない。
+- 対象の `docs/ja/specdojo/samples/gl-sample.yaml` について、`grade` の結果が `pass` であり、完了条件 `DC-001`〜`DC-003` を満たしていることを全文確認した。
+- `docs/ja/specdojo/rulebooks/gl-rulebook.md` についても、`grade` の結果が `pass` であることを確認した。提示されている 3 件の `minor` finding は、検証方針の集約や体裁、modeline の記述に関するものであり、本タスクの完了（型としての整備）を妨げるものではないと判断した。
+- 実行記録として、`gl-sample.yaml` の lint・schema 検証・docs ビルド、および先行する edit タスクの `result.md` の内容は、本 runner の責務外として確認できていない。
 
 ## 3. 未充足事項・改善指示
 
-_TODO_: 未充足事項と、再計画・成果物の改善・再評価に使う改善指示を記入する（なければ「なし」と記入する）。評価結果の内容に疑義がある場合は、再評価が必要な対象と理由もここに記入する。
+- `docs/ja/specdojo/rulebooks/gl-rulebook.md` の品質向上のため、以下の `minor` finding を次回の手直し時に反映すること：
+- `F001`: 参照検査の範囲と用語集を横断する受入確認の合格条件を 1 つの段落にまとめ、検査対象と手動確認の区分を明確にする。
+- `F002`: 見出し直下の英語名の行が、`rulebook-authoring-standard` の規定に沿っているか確認し、不要であれば削除する。
+- `F003`: 検査コマンドの段落末尾の modeline 指定を、schema 指定の直前の文へ移動して段落を分ける。
 
 ## 4. approach に応じた確認
 
-_TODO_: `approach` に応じて確認した内容を記入する。fully-guided / recipe-guided / freeform では求められた作成・更新が行われたか、retrofit では実装エビデンスの対応記録と未確認範囲、`rulebook-maintenance` などの maintenance 系では見直しの動機となった finding の解消状況を記入する。
+fully-guided の方針に基づき、`docs/ja/specdojo/samples/gl-sample.yaml` が `docs/ja/specdojo/rulebooks/gl-rulebook.md` の要求事項を満たし、かつ `grade` によって品質が担保されていることを確認した。また、`rulebook` に残された `minor` finding は、型としての完成度に関するものであり、タスクの完了には影響しないことを確認した。
 
 ## 5. decision
 
-- verdict: _TODO_（complete / complete-with-findings / incomplete / grade-stale / grade-unavailable / changed-during-review）
+- verdict: complete-with-findings
