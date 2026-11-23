@@ -138,3 +138,16 @@
       from: "-"
       to: B を採る。kata による理解の負債の解消で、シビックテックを持続可能にすることを中核の位置づけにし、復元・確認状態・人の確定・記録の流れを中核にする。最初の実証の場は OpenFisca-Japan
   previous_event_id: reg_a618a3926bad4c4e845a572d11f30cce
+- v: 1
+  id: reg_f384c6e968b24b649c58ec7a63c339da
+  ts: "2026-11-23T13:24:17Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: decided
+  to_status: decided
+  reason: 36QG の 3.17. と後続の項目への参照を足した
+  changes:
+    - field: section
+      from: ""
+      to: 関連ドキュメント
+  previous_event_id: reg_0075d6001f734745bccb7a67d51c8f4d

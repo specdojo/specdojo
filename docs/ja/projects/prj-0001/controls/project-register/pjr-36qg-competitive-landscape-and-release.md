@@ -25,6 +25,7 @@ specdojo:
 2026-10-24 に BMAD・AI-DLC との比較を `3.14.` へ追加した。開発方式全体の直接競合として両者を扱う。
 2026-11-18 に長期タスクの実行力の比較を `3.15.` へ追加した。
 2026-11-23 に、外部の分析（ChatGPT）との突き合わせと、同じ日の実測からの評価を `3.16.` へ追加した。
+同じ日に、理解の負債という課題の一般性と既存の取り組みとの比較を `3.17.` へ追加した。
 それ以前の「独自」「確認できず」という評価は、各節に掲げた比較対象と調査日の範囲に限る。
 BMAD・AI-DLC を含む市場全体での独自性を示すものではない。
 
@@ -872,6 +873,41 @@ SpecDojo の値は prj-0001 の登録簿と実行の記録から数えた実測�
 3. 長い仕事を、検証できる完了条件を持つ task の連なりとして流すこと。ただし信頼性はまだオーケストレーターの確認に支えられている。
 
 次に比較実行するなら、外部の分析の構成 A（Claude Code + GitHub Issues + Markdown + Git）・B（Claude Code + SpecDojo）・C（競合の方式 + 同じモデル）で、複数の PR と外部のレビューを伴う題材を流し、人の介入時間、セッションを変えた後の再開の成功率、未対応の課題の取りこぼし、成果物の一貫性を測る。`3.14.5.` と `3.15.4.` の比較の案と合わせ、題材をそろえて 1 回にまとめる。
+
+### 3.17. 理解の負債という課題の一般性（2026-11-23）
+
+利用者から「理解の負債をなくすことは、シビックテックの文脈を除けば一般的な課題ではないか。競合は取り組んでいないか」という問いを受け、公開情報を確かめた。位置づけの決定は [[prj-0001:pjr-y5rd-civic-tech-comprehension-debt|PJR-Y5RD]] にある。
+
+#### 3.17.1. 課題の一般性
+
+理解の負債（comprehension debt）は、2026 年に AI が書くコードの文脈で広く論じられている一般的な課題である。言葉は 2025 年に Jason Gorman が使い始め、2026 年に Addy Osmani や O'Reilly が「システムが持つコードの量と、誰かが理解している量の差」として広めた。2026 年 4 月の論文は、学生のプロジェクトでのたまり方の型を調べ、AI を使った群は作業時間が変わらないのに理解度のテストの点が低かったという試験を引用している。
+
+#### 3.17.2. 既存の取り組みとの比較
+
+| 取り組み                   | 例                                     | 解いている範囲                         | 足りない点                                                                                                                   |
+| -------------------------- | -------------------------------------- | -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| コードから文書を自動で作る | Google Code Wiki、DeepWiki など        | 既存のコードの「何をしているか」の説明 | AI が書いた文書はもっともらしいが実際の設計とずれうると指摘されている。「なぜ」は戻らない                                    |
+| 仕様駆動開発で予防する     | Spec Kit、Kiro、Augment Code など      | これから作るものの仕様を正本として残す | 予防が中心で、たまった負債からの復元は主な対象でない。十分に細かい仕様はプログラムそのものになる、という限界も指摘されている |
+| 文書を整える               | OSS の維持者や Linux Foundation の提言 | 人と AI の両方が読める文書             | 方法論が中心で、決まった型や確認の仕組みは持たない                                                                           |
+
+#### 3.17.3. 評価
+
+- 課題そのものを SpecDojo の独自性として主張しない。課題が一般的であることは、むしろ市場が大きいことを示す。
+- 独自性の候補は、(1) kata による復元と確認状態・人の確定・記録を組にすること（自動で文書を作る道具の「もっともらしいが確かめていない説明」と対になる）、(2) 予防（新しく作る）と復元（既存から起こす）を同じ型で扱うこと、(3) 最初の相手をシビックテックにすること、の組み合わせである。
+- シビックテックは、資金と人が少なく、当事者が非エンジニアで、入れ替わりが多いため、この課題がとくに深刻である。成功した後に止まるシビックテックのプロジェクトや、ボランティア頼みで人が減る状況が報告されている。一般の開発組織向けの道具は、ここを狙っていない。
+- 説明は「理解の負債は AI 時代の一般的な課題である。SpecDojo は kata による復元と確認状態・人の確定・記録の流れでそれを解き、もっとも深刻なシビックテックから始める」とする。シビックテックを最初の市場（足場）とし、既存のシステムの改修、OSS の引き継ぎ、受託開発の引き渡しなど、同じ課題を持つ一般の開発へ広げる。
+- 本節は公開情報からの観測で、競合の道具を導入して比べた結果ではない。
+
+参照した情報（2026-11-23 確認。実践者のブログや事業者の記事を含み、数値は元の研究で確かめていない）:
+
+- Comprehension debt（Addy Osmani）: <https://addyosmani.com/blog/comprehension-debt/>
+- Comprehension debt: the hidden cost of AI generated code（O'Reilly）: <https://www.oreilly.com/radar/comprehension-debt-the-hidden-cost-of-ai-generated-code/>
+- GenAI を使った学生のプロジェクトの理解の負債（arXiv 2604.13277）: <https://arxiv.org/html/2604.13277>
+- Comprehension debt: the silent risk of AI-accelerated delivery（Versent）: <https://versent.com.au/blog/comprehension-debt-the-silent-risk-of-ai-accelerated-delivery/>
+- AI technical debt compounds（Augment Code）: <https://www.augmentcode.com/guides/ai-technical-debt-compounds-spec-driven-development>
+- Comprehension debt（DEV Community）: <https://dev.to/vibecodiq/comprehension-debt-when-your-ai-generated-codebase-outgrows-your-understanding-2fcl>
+- Rewiring Democracy: AI & the Struggle for Open Knowledge in Brazil（Schneier）: <https://www.schneier.com/essays/archives/2026/05/rewiring-democracy-ai-the-struggle-for-open-knowledge-in-brazil.html>
+- AI-generated abandonware is hollowing out open source（LeadDev）: <https://leaddev.com/software-quality/ai-generated-abandonware-is-hollowing-out-open-source>
 
 ## 4. 関連ドキュメント
 
