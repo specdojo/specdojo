@@ -1,0 +1,11 @@
+個票の「対応結果」に 1 行を追記しました。確認対象は PJR-TJZM、日時は 2026-11-23 13:19 JST、agent は `sonnet-executor` です。変更したのは個票 `pjr-jsey-exec-run-split-smoke.md` だけです。
+
+対象一覧のうち最後に `review` へ遷移したのが PJR-TJZM でした（commit `6b95e1ad1`、2026-11-23 12:42 JST）。この commit が worktree の HEAD に含まれることまでは確認していません。
+
+追記に合わせて、個票の確認対象の説明文と作業内容の表のメモも PJR-0JVB から PJR-TJZM に直しました。
+
+実行した検証は個票への `prettier --check` で、通りました。lint 系・typecheck・test 系・validate-schema の検証は親 runner の担当のため、ここでは実行していません。統合と `review` 遷移も後続段の担当です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"個票の対応結果の表に PJR-TJZM（最後に review へ遷移した対象）の 1 行を追記し、説明文とメモも合わせて更新した。変更は個票のみ。","handoff":["親 runner の検証、reporter の result 記入、統合、`review` 遷移の完了は後続段で確認する。"],"validations":[{"command":"npx prettier --check docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md","status":"passed","summary":"個票は Prettier の整形規約に適合している。"}]}
+</specdojo_executor_evidence>
