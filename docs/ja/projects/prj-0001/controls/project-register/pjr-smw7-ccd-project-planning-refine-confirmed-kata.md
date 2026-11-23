@@ -19,7 +19,7 @@ specdojo:
   autopilot: approved
   approach: fully-guided
   targets:
-    - prj-0001:ccd-project-planning
+    - ccd-project-planning
 ---
 
 # PJR-SMW7 代表の ccd-project-planning を、確定した型で磨き込む
@@ -35,7 +35,7 @@ business-specs-kata で確定した型（specdojo:ccd-mermaid-rulebook と sampl
 
 ## 3. 完了条件
 
-- 代表の [[prj-0001:ccd-project-planning]] を、確定した型 [[specdojo:ccd-mermaid-rulebook]] と [[specdojo:ccd-sample]] に合わせて磨き込んでいる。型の本文要件の章立て・必須の項目・記述ガイドの判断の基準に沿い、型が禁止することを書いていない。
+- 代表の [[ccd-project-planning]] を、確定した型 [[specdojo:ccd-mermaid-rulebook]] と [[specdojo:ccd-sample]] に合わせて磨き込んでいる。型の本文要件の章立て・必須の項目・記述ガイドの判断の基準に沿い、型が禁止することを書いていない。
 - 冗長さを整理している（判断に要る背景・制約・例外と意味は保ち、新しい内容を足さない）。
 - 実装・schema・リファレンスと同じことを書かず、正本を参照する方針（PJR-2GD6）を保っている。
 - 決められない点は `_UNDECIDED_` か `_ASSUMPTION_` のまま、理由（どの成果物がない、誰の判断が要る）を書いて残してよい。依存の成果物がないことを理由に未完了としない。
@@ -57,8 +57,8 @@ business-specs-kata で確定した型（specdojo:ccd-mermaid-rulebook と sampl
 
 ### 5.1. 実施内容・変更ファイル
 
-- [[prj-0001:ccd-project-planning|概念クラス図（プロジェクトの立上と計画）]] の第2〜4章で、キー継承・一意性の説明を第4章へ集約した。成果物定義のカタログ横断の一意性、計画要素のタスク・マイルストーン共通の識別範囲を保持した。
-- 第3章の登録項目とエピックの責務分担・完了判断を [[prj-0001:bdd-register-entry|業務データ辞書（登録項目個票）]] への参照に整理した。起票元と先行依存の区別、通常・横断タスクの違いは関連表に集約した。
+- [[ccd-project-planning|概念クラス図（プロジェクトの立上と計画）]] の第2〜4章で、キー継承・一意性の説明を第4章へ集約した。成果物定義のカタログ横断の一意性、計画要素のタスク・マイルストーン共通の識別範囲を保持した。
+- 第3章の登録項目とエピックの責務分担・完了判断を [[bdd-register-entry|業務データ辞書（登録項目個票）]] への参照に整理した。起票元と先行依存の区別、通常・横断タスクの違いは関連表に集約した。
 - 第4章で全クラスの主キーの対応名・識別範囲を明示し、第5章で未作成辞書との照合範囲と文書間の未確認事項を明確にした。
 - 本個票の作業内容と対応結果を記入した。
 
@@ -93,5 +93,5 @@ business-specs-kata で確定した型（specdojo:ccd-mermaid-rulebook と sampl
 ## 6. 関連ドキュメント
 
 - 親: [[prj-0001:pjr-2gd6-business-specs-reps]]、[[prj-0001:pjr-t88p-business-specs-kata]]
-- 対象: [[prj-0001:ccd-project-planning]]
+- 対象: [[ccd-project-planning]]
 - 型: [[specdojo:ccd-mermaid-rulebook]]

@@ -21,7 +21,7 @@ specdojo:
 
 公開対象は本設計と一般化した検証条件であり、本文に個人情報・秘密値は含めない。PR の actor、raw provider signal、作業パス、実行証跡には個人情報・非公開情報が混入し得るため公開版へ転記しない。公開可能性は非公開情報の除外と構造整合で確かめる。
 
-状態用語の正本は [[prj-0001:stsd-task-execution|タスク実行状態遷移仕様]] とし、Ready は実行候補、成果物の `status: ready` は人間が確定する成熟度として区別する。claim、block、unblock、release の遷移と権限は同仕様へ委ね、resume は保持した試行を継続する実行操作を指す。
+状態用語の正本は [[stsd-task-execution|タスク実行状態遷移仕様]] とし、Ready は実行候補、成果物の `status: ready` は人間が確定する成熟度として区別する。claim、block、unblock、release の遷移と権限は同仕様へ委ね、resume は保持した試行を継続する実行操作を指す。
 
 ## 2. 重要フロー一覧（最大5件）
 

@@ -88,6 +88,6 @@ Git と GitHub CLI の連携仕様を ifx-cmd の型で作り、ifx-index と if
 
 ## 6. 関連ドキュメント
 
-- [[prj-0001:ifx-index]]
+- [[ifx-index]]
 - [[ifd-specdojo]]
 - [[prj-0001:dct-external-interface-specs]]

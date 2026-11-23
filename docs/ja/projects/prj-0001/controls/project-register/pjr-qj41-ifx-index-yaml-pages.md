@@ -83,4 +83,4 @@ YAML を正本のまま、用語集と同じく yaml-pages で表形式の Markd
 ## 6. 関連ドキュメント
 
 - [[specdojo:ifx-index-rulebook]]
-- [[prj-0001:ifx-index]]
+- [[ifx-index]]

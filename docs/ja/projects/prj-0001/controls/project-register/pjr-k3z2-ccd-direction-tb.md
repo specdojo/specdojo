@@ -52,7 +52,7 @@ ccd の sample と ccd-project-planning が direction LR で描かれている�
 ### 5.1. 実施内容
 
 - [[specdojo:ccd-mermaid-rulebook|ccd-mermaid-rulebook]] の概念クラス図の記述ガイドに「図の向き」の節を足した。既定は上→下（`direction` を書かないか `direction TB`）で親を上・子を下に置くこと、横に並べた方が読みやすい場合だけ `direction LR` とし理由を図の直後の本文に書くこと、交差や重なりは向きを変える前に宣言・関連の順番で整えることを定めた。
-- [[specdojo:ccd-sample]] と [[prj-0001:ccd-project-planning]] の図から `direction LR` を外し、上→下にした。クラス・関連・多重度・役割名、宣言と関連の順番は変えていない。
+- [[specdojo:ccd-sample]] と [[ccd-project-planning]] の図から `direction LR` を外し、上→下にした。クラス・関連・多重度・役割名、宣言と関連の順番は変えていない。
 
 ### 5.2. 描画の確かめ方と結果
 

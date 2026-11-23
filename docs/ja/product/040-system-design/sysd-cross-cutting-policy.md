@@ -77,7 +77,7 @@ SpecDojo の実装・運用に共通する制約と受入条件の正本であ�
 - **Scope（適用範囲）**: 全provider、edit / review、register item実行、schedule task実行。
 - **Enforcement（検証）**: agent指示、runner統合テスト、event actorと状態遷移の検証。
 - **Exception（例外）**: 人間が明示的に行うin-place操作は対象外だが、状態を追跡する場合は同じevent規則に従う。
-- **References（参照）**: [[sysd-agent-settings|agent 実行設計 hub]]、[[prj-0001:stsd-task-execution|状態遷移仕様（タスク実行）]]。
+- **References（参照）**: [[sysd-agent-settings|agent 実行設計 hub]]、[[stsd-task-execution|状態遷移仕様（タスク実行）]]。
 
 ### 3.2. scp-EXE-002: edit / review分離
 
@@ -124,7 +124,7 @@ SpecDojo の実装・運用に共通する制約と受入条件の正本であ�
 - **Scope（適用範囲）**: claim、note、block、unblock、complete、reopen、release、cancel、link、estimate。
 - **Enforcement（検証）**: eventごとのschema検証、全eventの時系列fold、状態遷移検証、project lock。
 - **Exception（例外）**: 破損ファイルの復旧は人間判断と別の監査記録を要求する。
-- **References（参照）**: [[prj-0001:stsd-task-execution|状態遷移仕様（タスク実行）]]、[[specdojo:exec-operation-guide|exec運用ガイド]]の「実行eventの保存粒度」。
+- **References（参照）**: [[stsd-task-execution|状態遷移仕様（タスク実行）]]、[[specdojo:exec-operation-guide|exec運用ガイド]]の「実行eventの保存粒度」。
 
 ### 3.7. scp-STA-002: reopen
 
@@ -133,7 +133,7 @@ SpecDojo の実装・運用に共通する制約と受入条件の正本であ�
 - **Scope（適用範囲）**: 完了判定の訂正。
 - **Enforcement（検証）**: actor type、遷移元、下流状態、理由の検証。
 - **Exception（例外）**: 通常の再試行はreopenではなくblock / resume経路を使う。
-- **References（参照）**: [[prj-0001:stsd-task-execution|状態遷移仕様（タスク実行）]]、[[specdojo:register-operation-guide|登録簿運用ガイド]]。
+- **References（参照）**: [[stsd-task-execution|状態遷移仕様（タスク実行）]]、[[specdojo:register-operation-guide|登録簿運用ガイド]]。
 
 ### 3.8. scp-RET-001: 利用制限検出
 
@@ -312,15 +312,15 @@ SpecDojo の実装・運用に共通する制約と受入条件の正本であ�
 
 ### 5.1. 正本と運用への入口
 
-| 対象                        | 参照                                                                                                                                                                           | 用途・状態                                                        |
-| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------- |
-| 全規則                      | [[sysd-index\|設計索引]]                                                                                                                                                       | 実装・schema・設定・生成物・検査コマンドの所在を確認              |
-| EXE / SEL / CFG / RET / SEC | [[sysd-agent-settings\|agent 実行設計 hub]]、[[ifx-cmd-ai-provider-cli\|AI CLI 連携契約]]、[[opr-agent-cli-update\|外部 CLI 更新手順]]                                         | provider 別起動・認証・更新の詳細へ進む                           |
-| STA / GIT / IDM             | [[prj-0001:stsd-task-execution\|タスク状態遷移]]、[[cdfd-uc-register\|登録簿フロー]]、[[cdfd-uc-schedule\|Schedule フロー]]、[[specdojo:exec-worktree-guide\|Worktree ガイド]] | 現行の状態・統合契約へ進む                                        |
-| ERR / IDM / TIM / LOG / TRC | [[sysd-job-execution\|Job 設計]]、[[sysd-critical-flows\|重要フロー]]、[[specdojo:exec-operation-guide\|exec 運用]]、[[specdojo:routine-operation-guide\|Routine 運用]]        | 失敗・保存・再開経路の確認                                        |
-| NFR                         | `nfr-index`（未作成）、[[prj-0001:dct-non-functional-requirements\|非機能要件カタログ]]                                                                                        | Q1 / Q2 の上限・Q3 の運用目標を接続する                           |
-| OPD / OPR                   | `opd-index`、`opd-access-management`、`opr-index`、`opr-incident-response`（未作成）、[[prj-0001:dct-operations\|運用カタログ]]                                                | Q3 の通知・権限・一次対応を接続する。当面は上記の運用ガイドを使用 |
-| DEC / PJR                   | [[prj-0001:pjr-index\|登録簿索引]]、[[prj-0001:pm-decision-log\|決定ログ]]                                                                                                     | 専用 DEC の代わりに登録簿の decision を正とする                   |
+| 対象                        | 参照                                                                                                                                                                    | 用途・状態                                                        |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| 全規則                      | [[sysd-index\|設計索引]]                                                                                                                                                | 実装・schema・設定・生成物・検査コマンドの所在を確認              |
+| EXE / SEL / CFG / RET / SEC | [[sysd-agent-settings\|agent 実行設計 hub]]、[[ifx-cmd-ai-provider-cli\|AI CLI 連携契約]]、[[opr-agent-cli-update\|外部 CLI 更新手順]]                                  | provider 別起動・認証・更新の詳細へ進む                           |
+| STA / GIT / IDM             | [[stsd-task-execution\|タスク状態遷移]]、[[cdfd-uc-register\|登録簿フロー]]、[[cdfd-uc-schedule\|Schedule フロー]]、[[specdojo:exec-worktree-guide\|Worktree ガイド]]   | 現行の状態・統合契約へ進む                                        |
+| ERR / IDM / TIM / LOG / TRC | [[sysd-job-execution\|Job 設計]]、[[sysd-critical-flows\|重要フロー]]、[[specdojo:exec-operation-guide\|exec 運用]]、[[specdojo:routine-operation-guide\|Routine 運用]] | 失敗・保存・再開経路の確認                                        |
+| NFR                         | `nfr-index`（未作成）、[[prj-0001:dct-non-functional-requirements\|非機能要件カタログ]]                                                                                 | Q1 / Q2 の上限・Q3 の運用目標を接続する                           |
+| OPD / OPR                   | `opd-index`、`opd-access-management`、`opr-index`、`opr-incident-response`（未作成）、[[prj-0001:dct-operations\|運用カタログ]]                                         | Q3 の通知・権限・一次対応を接続する。当面は上記の運用ガイドを使用 |
+| DEC / PJR                   | [[prj-0001:pjr-index\|登録簿索引]]、[[prj-0001:pm-decision-log\|決定ログ]]                                                                                              | 専用 DEC の代わりに登録簿の decision を正とする                   |
 
 ### 5.2. 変更影響と再検証
 

@@ -19,7 +19,7 @@ specdojo:
   autopilot: approved
   approach: fully-guided
   targets:
-    - prj-0001:cdt-register-type
+    - cdt-register-type
 ---
 
 # PJR-7ZZR 代表の cdt-register-type を、確定した型で磨き込む
@@ -35,7 +35,7 @@ business-specs-kata で確定した型（specdojo:cdt-rulebook と sample）に�
 
 ## 3. 完了条件
 
-- 代表の [[prj-0001:cdt-register-type]] を、確定した型 [[specdojo:cdt-rulebook]] と [[specdojo:cdt-sample]] に合わせて磨き込んでいる。型の本文要件の章立て・必須の項目・記述ガイドの判断の基準に沿い、型が禁止することを書いていない。
+- 代表の [[cdt-register-type]] を、確定した型 [[specdojo:cdt-rulebook]] と [[specdojo:cdt-sample]] に合わせて磨き込んでいる。型の本文要件の章立て・必須の項目・記述ガイドの判断の基準に沿い、型が禁止することを書いていない。
 - 冗長さを整理している（判断に要る背景・制約・例外と意味は保ち、新しい内容を足さない）。
 - 実装・schema・リファレンスと同じことを書かず、正本を参照する方針（PJR-2GD6）を保っている。
 - 決められない点は `_UNDECIDED_` か `_ASSUMPTION_` のまま、理由（どの成果物がない、誰の判断が要る）を書いて残してよい。依存の成果物がないことを理由に未完了としない。
@@ -60,12 +60,12 @@ business-specs-kata で確定した型（specdojo:cdt-rulebook と sample）に�
 
 ### 5.1. 実施内容と成果物
 
-[[prj-0001:cdt-register-type|分類一覧（登録項目の種別）]] を、確定した [[specdojo:cdt-rulebook|分類一覧 作成ルール]] に合わせて磨き込んだ。既存の4章と分類定義表を維持し、分類の意味・選定条件・境界・通常の終端を残した。変更ファイルは同成果物と本個票だけであり、型・他の成果物・カタログ・CHANGELOG は変更していない。
+[[cdt-register-type|分類一覧（登録項目の種別）]] を、確定した [[specdojo:cdt-rulebook|分類一覧 作成ルール]] に合わせて磨き込んだ。既存の4章と分類定義表を維持し、分類の意味・選定条件・境界・通常の終端を残した。変更ファイルは同成果物と本個票だけであり、型・他の成果物・カタログ・CHANGELOG は変更していない。
 
 ### 5.2. 進め方と実践の型の適用
 
 - rulebook は必須章・正本参照方式・責務境界・禁止事項の判断に使用した。recipe と template は `not-needed` のため読み込んでいない。sample は章と表の形式だけを確認し、別業務の値や管理規約は取り込んでいない。実践の型の欠落・不足、既存本文の `_CONTEXT_:` はなかった。
-- [[prj-0001:bdd-register-entry|業務データ辞書（登録項目個票）]] を属性・分類の根拠、[[prj-0001:prj-overview|プロジェクト概要]] を判断と継承を正本に残す Why の根拠として読んだ。共通規約2本、orchestrator playbook、`vp-arc-conciseness` と各 finding の該当観点、検査設定も確認した。実装エビデンスの `src/register/register.ts` は現在動作の入口として読み取り専用で参照した。
+- [[bdd-register-entry|業務データ辞書（登録項目個票）]] を属性・分類の根拠、[[prj-0001:prj-overview|プロジェクト概要]] を判断と継承を正本に残す Why の根拠として読んだ。共通規約2本、orchestrator playbook、`vp-arc-conciseness` と各 finding の該当観点、検査設定も確認した。実装エビデンスの `src/register/register.ts` は現在動作の入口として読み取り専用で参照した。
 - 冒頭の説明は概要・分類定義と重複するため削除した。第3章の5項目の選定手順は分類表へ統合し、判断順序を表の行順と冒頭の一文で保持した。分類の条件・例外は各行に残し、表と手順の二重説明を解消した。
 - 第2章でスキーマを許容値の正本、CLI を対応確認先として区別した。第3章冒頭の正本の再説明と、未照合の CLI の動作断定を削除した。第4章の辞書リンクの重複を第1章への参照に置き換えた。
 - `risk`・`issue`・`change-request` の終了承認者・PR approve 条件は状態定義へ委ね、受容・対応完了・変更承認という分類選定に必要な違いは維持した。派生ビューの振り分け一覧は実装参照に置き換え、既定の commit 種別の対応表は分類選定に寄与しない実装の再掲のため削除した。業務上の規則自体を変更したものではない。
@@ -109,7 +109,7 @@ business-specs-kata で確定した型（specdojo:cdt-rulebook と sample）に�
 
 第5.1〜5.5節は1回目の実行記録として保持する。以下は2026-11-11追加条件と今回の plan の F001〜F016 に対する編集対応であり、指摘番号は今回の plan に従う。
 
-- 変更ファイルは [[prj-0001:cdt-register-type|分類一覧（登録項目の種別）]] と本個票。成果物の既存4章・分類表・正本参照・`draft` を維持した。型・カタログ・実装・grade サイドカー・CHANGELOG・result は編集していない。result は reporter が本記録と `handoff` から作成する。
+- 変更ファイルは [[cdt-register-type|分類一覧（登録項目の種別）]] と本個票。成果物の既存4章・分類表・正本参照・`draft` を維持した。型・カタログ・実装・grade サイドカー・CHANGELOG・result は編集していない。result は reporter が本記録と `handoff` から作成する。
 - [[specdojo:cdt-rulebook|分類一覧 作成ルール]] を必須要素・判断境界・正本との照合・変更影響の基準として読み、[[specdojo:cdt-sample|商品区分]] は既存構成で判断できない形式の参考として確認した。既存構成は型の許容範囲にあり維持した。矛盾・実践の型の不足・本文の `_CONTEXT_:` はない。recipe・併用 rulebook は指定がなく、template は磨き込みでは読まない指示に従い参照していない。
 - 辞書を属性と分類名・意味の根拠、プロジェクト概要を継承可能な記録と人間の判断責任の根拠として読んだ。追加完了条件で指定された [[specdojo:pjr-rulebook|プロジェクト登録簿 作成ルール]] は種別別の追跡終了条件の根拠として読んだ。共通規約2本・orchestrator playbook・`vp-arc-conciseness` と今回の指摘に対応する観点の判定根拠・検査設定も確認した。
 - 第3章の「表の上から順に判断する」を削除した。これは1回目に統合した際に生じた、既存合意の変更要求を `decision` にも分類できる競合である。境界は分類表の該当行を正本とし、`decision` は既存合意の変更要求を除き、`change-request` は選択肢の比較を伴っても承認済みの成果物・仕様・計画の変更を扱うと明示した。追加の優先順位表や例示による二重説明は置いていない。
@@ -157,5 +157,5 @@ business-specs-kata で確定した型（specdojo:cdt-rulebook と sample）に�
 ## 6. 関連ドキュメント
 
 - 親: [[prj-0001:pjr-2gd6-business-specs-reps]]、[[prj-0001:pjr-t88p-business-specs-kata]]
-- 対象: [[prj-0001:cdt-register-type]]
+- 対象: [[cdt-register-type]]
 - 型: [[specdojo:cdt-rulebook]]

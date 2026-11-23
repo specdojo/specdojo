@@ -160,7 +160,7 @@ findings:
     rule: vp-ba-requirements-completeness
     line: 89
     anchor: >-
-      _UNDECIDED_: 「並列選択要求識別子」の正本上の対応項目は未確定である。[[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]]
+      _UNDECIDED_: 「並列選択要求識別子」の正本上の対応項目は未確定である。[[stsd-task-execution|ステータス定義（タスク実行）]]
       が根拠（`based_on`）に挙げる実行記録モデル（`prj-0001:bdd-exec-event` および
       `prj-0001:bdd-exec-state`）は、同書の「今後の検討メモ」で未作成とされている。両辞書の本文と対応 schema
       は本タスクの参照範囲に宣言されていないため、要求単位の項目の有無は確認できていない。正本に対応項目がないと確認したものではない。照合先候補は `prj-0001:bdd-exec-event`（実行イベント）とし、実行 1 回の
@@ -194,7 +194,7 @@ findings:
     rule: vp-arc-technical-constraints
     line: 89
     anchor: >-
-      _UNDECIDED_: 「並列選択要求識別子」の正本上の対応項目は未確定である。[[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]]
+      _UNDECIDED_: 「並列選択要求識別子」の正本上の対応項目は未確定である。[[stsd-task-execution|ステータス定義（タスク実行）]]
       が根拠（`based_on`）に挙げる実行記録モデル（`prj-0001:bdd-exec-event` および
       `prj-0001:bdd-exec-state`）は、同書の「今後の検討メモ」で未作成とされている。両辞書の本文と対応 schema
       は本タスクの参照範囲に宣言されていないため、要求単位の項目の有無は確認できていない。正本に対応項目がないと確認したものではない。照合先候補は `prj-0001:bdd-exec-event`（実行イベント）とし、実行 1 回の
@@ -224,7 +224,7 @@ findings:
     rule: vp-dev-implementation-readiness
     line: 89
     anchor: >-
-      _UNDECIDED_: 「並列選択要求識別子」の正本上の対応項目は未確定である。[[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]]
+      _UNDECIDED_: 「並列選択要求識別子」の正本上の対応項目は未確定である。[[stsd-task-execution|ステータス定義（タスク実行）]]
       が根拠（`based_on`）に挙げる実行記録モデル（`prj-0001:bdd-exec-event` および
       `prj-0001:bdd-exec-state`）は、同書の「今後の検討メモ」で未作成とされている。両辞書の本文と対応 schema
       は本タスクの参照範囲に宣言されていないため、要求単位の項目の有無は確認できていない。正本に対応項目がないと確認したものではない。照合先候補は `prj-0001:bdd-exec-event`（実行イベント）とし、実行 1 回の
@@ -257,7 +257,7 @@ findings:
     rule: vp-qe-done-criteria
     line: 89
     anchor: >-
-      _UNDECIDED_: 「並列選択要求識別子」の正本上の対応項目は未確定である。[[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]]
+      _UNDECIDED_: 「並列選択要求識別子」の正本上の対応項目は未確定である。[[stsd-task-execution|ステータス定義（タスク実行）]]
       が根拠（`based_on`）に挙げる実行記録モデル（`prj-0001:bdd-exec-event` および
       `prj-0001:bdd-exec-state`）は、同書の「今後の検討メモ」で未作成とされている。両辞書の本文と対応 schema
       は本タスクの参照範囲に宣言されていないため、要求単位の項目の有無は確認できていない。正本に対応項目がないと確認したものではない。照合先候補は `prj-0001:bdd-exec-event`（実行イベント）とし、実行 1 回の
@@ -275,7 +275,7 @@ findings:
     rule: vp-qe-done-criteria
     line: 17
     anchor: >-
-      _ASSUMPTION_: 本書は、[[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]] で発生条件を説明できる schedule
+      _ASSUMPTION_: 本書は、[[stsd-task-execution|ステータス定義（タスク実行）]] で発生条件を説明できる schedule
       系（スケジュール帳票のタスク）の対象確定に適用する前提で記述する。3 系統が共用する実行サイクル全体への適用は、確定の段で判断する。register 系・routine
       系は適用未判定とし、本書の条件をそのまま適用しない。恒久的な対象外とはしない。
     message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
@@ -311,7 +311,7 @@ findings:
     rule: vp-qe-config-validity
     line: 17
     anchor: >-
-      _ASSUMPTION_: 本書は、[[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]] で発生条件を説明できる schedule
+      _ASSUMPTION_: 本書は、[[stsd-task-execution|ステータス定義（タスク実行）]] で発生条件を説明できる schedule
       系（スケジュール帳票のタスク）の対象確定に適用する前提で記述する。3 系統が共用する実行サイクル全体への適用は、確定の段で判断する。register 系・routine
       系は適用未判定とし、本書の条件をそのまま適用しない。恒久的な対象外とはしない。
     message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。

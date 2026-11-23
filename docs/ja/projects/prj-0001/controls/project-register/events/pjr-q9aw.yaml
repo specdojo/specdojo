@@ -43,7 +43,7 @@
       to: fully-guided
     - field: targets
       from: ""
-      to: '["prj-0001:stsd-task-execution"]'
+      to: '["stsd-task-execution"]'
     - field: derived_from
       from: ""
       to: '["PJR-3APD"]'

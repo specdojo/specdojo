@@ -26,7 +26,7 @@ specdojo:
     - PJR-FS9A
   approach: retrofit
   targets:
-    - prj-0001:stsd-deliverable
+    - stsd-deliverable
 ---
 
 # PJR-PW4Z stsd-deliverable を新しい Kata に合わせる
@@ -44,7 +44,7 @@ stsd-deliverable を新しい章立てと遷移 ID 入りのラベルに合わ�
 
 ## 3. 完了条件
 
-- [[prj-0001:stsd-deliverable]] が、PJR-S8EF〜PJR-93NK で直した Kata（[[specdojo:stsd-rulebook]]・[[specdojo:stsd-mermaid-rulebook]]）の必須の章・表・図の規則を満たしている。目的は状態が何を管理し何のために使われるかを書き、文書の読み手や使い方を書いていない。状態の正本と判定の規則は「状態の判定」の章にある。
+- [[stsd-deliverable]] が、PJR-S8EF〜PJR-93NK で直した Kata（[[specdojo:stsd-rulebook]]・[[specdojo:stsd-mermaid-rulebook]]）の必須の章・表・図の規則を満たしている。目的は状態が何を管理し何のために使われるかを書き、文書の読み手や使い方を書いていない。状態の正本と判定の規則は「状態の判定」の章にある。
 - 「現行実装（AS-IS）」などのスコープの表記を、TO-BE の文書と並ばない限り書いていない。
 - 図の遷移ラベルが `T-<nn> イベント / 条件` で、分けた図ごとにすぐ下へその図の遷移の表がある。図の全遷移が、その図の下の表へ一度ずつ対応している。
 - 状態と遷移の中身は、カタログの `evidence_refs` の実装で確かめられる。実装で確かめられないことは推測で埋めず、`_UNDECIDED_` か今後の検討メモで残す。
@@ -68,7 +68,7 @@ stsd-deliverable を新しい章立てと遷移 ID 入りのラベルに合わ�
 
 ### 5.1. 反映内容
 
-- [[prj-0001:stsd-deliverable|ステータス定義（成果物）]] の目的を、成果物の確定状況・利用可能性を管理し、参加者が参照先を選ぶための記述へ整理した。
+- [[stsd-deliverable|ステータス定義（成果物）]] の目的を、成果物の確定状況・利用可能性を管理し、参加者が参照先を選ぶための記述へ整理した。
 - 「適用範囲」には対象・業務範囲・対象外・到達点を残し、正本・一意判定・互換の扱いを新設した「状態の判定」へまとめた。スコープの表記を削除した。
 - 「状態遷移図」と「遷移の説明」を「状態遷移」に統合し、図の直下へ遷移表を配置した。全 4 遷移のラベルを `T-<nn> イベント / 条件` にそろえた。
 - `status: draft` を維持し、図と表の出現順で `T-01` から欠番なく採番した。遷移の追加・削除・並べ替えがないため、旧 ID と新 ID の数値は同じである。
@@ -99,6 +99,6 @@ stsd-deliverable を新しい章立てと遷移 ID 入りのラベルに合わ�
 
 ## 6. 関連ドキュメント
 
-- [[prj-0001:stsd-deliverable]]: retrofit の対象
+- [[stsd-deliverable]]: retrofit の対象
 - [[specdojo:stsd-rulebook]]・[[specdojo:stsd-mermaid-rulebook]]: そろえる先
-- [[prj-0001:stsd-task-execution]]: レビューした代表の 1 件
+- [[stsd-task-execution]]: レビューした代表の 1 件

@@ -22,7 +22,7 @@ specdojo:
     - PJR-P9SW
   approach: fully-guided
   targets:
-    - prj-0001:stsd-deliverable
+    - stsd-deliverable
 ---
 
 # PJR-6SFB stsd-deliverable の冒頭と図の表示名を新しい Kata に合わせる
@@ -52,7 +52,7 @@ stsd-deliverable の「概要」を頭書き・目的・適用範囲に分け、
 
 ## 5. 対応結果
 
-- 実施内容: [[prj-0001:stsd-deliverable|ステータス定義（成果物）]] の冒頭を頭書き・目的・適用範囲へ再構成し、図の表示名 3 件を `状態名<br>値` にした。本文に番号による章参照はなかった。
+- 実施内容: [[stsd-deliverable|ステータス定義（成果物）]] の冒頭を頭書き・目的・適用範囲へ再構成し、図の表示名 3 件を `状態名<br>値` にした。本文に番号による章参照はなかった。
 - 確かめたこと（orchestrator）: 編集の前後で状態一覧・遷移表・図の矢印が一致し、図の表示名がすべて状態一覧と一致する。変更は対象文書のみ。markdownlint と Prettier に合格。
 - 残課題: review の指摘（`T-02` の承認者・受入条件、降格・復帰・廃止の扱い、値検証の根拠）は内容保持の条件により未解消で、確定の段（人）の材料として申し送る。
 

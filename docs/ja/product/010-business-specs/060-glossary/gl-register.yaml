@@ -13,7 +13,7 @@ terms:
     definition: 登録簿で作業・課題・懸念・問い・判断・記録を個別に追跡する管理単位。
     notes: 登録簿・起票・記帳の基本定義は [[gl-common|用語集（共通）]] を正本とする。Schedule の計画済みタスクを重複登録しない。
     relatedTerms: [tm-register-ticket, tm-register-item-type, tm-register-item-status]
-    source: "[[prj-0001:bdd-register-entry|業務データ辞書（登録項目個票）]]"
+    source: "[[bdd-register-entry|業務データ辞書（登録項目個票）]]"
   - id: tm-register-ticket
     term: 登録項目個票
     englishName: register ticket
@@ -39,7 +39,7 @@ terms:
     definition: 何を追跡し、どの結果をもって通常の追跡を終えるかを分ける登録項目の区分。
     notes: "`item_type` に保持し、CLI では `--type` で指定する。分類ごとの使い分けは分類一覧、終了判断は状態定義を参照する。許容値の正本は schema の `ItemType` とする。"
     category: tm-register-entry
-    source: "[[prj-0001:cdt-register-type|分類一覧（登録項目の種別）]]、`docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml#/$defs/ItemType`"
+    source: "[[cdt-register-type|分類一覧（登録項目の種別）]]、`docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml#/$defs/ItemType`"
   - id: tm-register-todo
     term: todo
     englishName: todo
@@ -264,7 +264,7 @@ terms:
     notes: "`priority` に保持し、`--priority` で `high`・`medium`・`low` を指定する。作業難易度とは区別する。"
     category: tm-register-entry
     relatedTerms: [tm-register-difficulty]
-    source: "[[prj-0001:bdd-register-entry|業務データ辞書（登録項目個票）]]、`docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml#/$defs/Priority`"
+    source: "[[bdd-register-entry|業務データ辞書（登録項目個票）]]、`docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml#/$defs/Priority`"
   - id: tm-register-difficulty
     term: 作業難易度
     englishName: difficulty

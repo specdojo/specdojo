@@ -1,12 +1,12 @@
 # specdojo-schema: none reason=no-ifx-file-schema
 x-spec-meta:
-  id: prj-0001:ifx-file-agent-evidence
+  id: ifx-file-agent-evidence
   type: api
   status: ready
   title: 外部ファイル連携仕様（agent の evidence）
   rulebook: specdojo:ifx-file-rulebook
   based_on:
-    - prj-0001:ifx-index
+    - ifx-index
 
 # 本仕様は SpecDojo のタスク実行パイプライン（specdojo exec run / job）において、
 # executor agent が報告し runner が管理・検証・統合するための実行エビデンスおよび

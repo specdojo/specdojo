@@ -21,7 +21,7 @@ specdojo:
     - PJR-PT5N
   approach: retrofit
   targets:
-    - prj-0001:stsd-deliverable
+    - stsd-deliverable
 ---
 
 # PJR-RAPC stsd-deliverable を確定した Kata と実装に合わせる（retrofit）

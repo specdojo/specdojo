@@ -132,7 +132,7 @@ findings:
     line: 29
     anchor: >-
       | BAC-01      | `src/grade/grade.ts`（評価の実行と結果の確定。結果に `content_hash`・観点ごとの判定・`graded_by` が残る）   |
-      [[prj-0001:stsd-deliverable\|ステータス定義（成果物）]]（評価・完了で成果物の状態を変えない）                                                                                                                                 
+      [[stsd-deliverable\|ステータス定義（成果物）]]（評価・完了で成果物の状態を変えない）                                                                                                                                 
       | 評価結果の確定は確認済み。評価結果を保持する概念データストアは [[cdsd-execution\|概念データストア定義（プロジェクト実行）]] で未定義 |
     message: >-
       BAC-01 identifies an undefined evaluation-result data store, but Section 3 limits design follow-up to BAC-02–04

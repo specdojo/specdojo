@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
 id: prj-0001:ifx-file-agent-evidence-grade-criteria
-document: prj-0001:ifx-file-agent-evidence
+document: ifx-file-agent-evidence
 path: docs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml
 graded_at: "2026-11-16T14:53:01.683Z"
 graded_by: sol-review-executor
