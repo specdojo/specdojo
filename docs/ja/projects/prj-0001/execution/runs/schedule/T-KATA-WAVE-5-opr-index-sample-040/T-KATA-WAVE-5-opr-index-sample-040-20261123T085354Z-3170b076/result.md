@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-5-opr-index-sample-040
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-5-opr-index-sample-040/T-KATA-WAVE-5-opr-index-sample-040-20261123T085354Z-3170b076/plan.md
   started_at: "2026-11-23T08:54:08.682Z"
+  completed_at: "2026-11-23T09:13:23.690Z"
   agent: opus-executor
   execution: agent
   approach: rulebook-maintenance
@@ -20,16 +21,26 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- rulebook である `docs/ja/specdojo/rulebooks/opr-index-rulebook.md` を、grade の指摘事項に基づき更新しました。
+- F001 に基づき、禁止事項として個人名・個人の連絡先・個人のアカウント識別子の記載を禁止する規定を追加しました。
+- F002 に基づき、配置先ディレクトリに関する記述を追加しました。
+- F004 に基づき、ID の修飾形式に関する規定を追加しました。
+- F008 に基づき、`opr-` プレフィックスの意味や分冊の判断基準に関する説明を拡充しました。
+- F009 に基づき、`opd-*` との整合性に関する記述を整理しました。
+- PJR-76N9 の方針に従い、役割の割り当てに関する記述を、文書の役割の定義へと修正しました。
+- 既存の 12 章構成および手順表の標準列に関する規定は、成果物との整合性を保つため維持しています。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/rulebooks/opr-index-rulebook.md`: grade の指摘（F001, F002, F004, F008, F009）および PJR-76N9 に基づき、公開不適切情報の混入防止、配置規則、ID 修飾形式、および `opr-` プレフィックスの定義に関する記述を追加・修正しました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- F005 (major): the sample's frontmatter says `rulebook: specdojo:opd-rulebook`, and the text body refers to `../rulebooks/opr-rulebook.md`. Both should point to `specdojo:opr-index-rulebook`. The sample is fixed in the sample-update stage.
+- F006 (major): the rulebook requires all 12 chapters, but the sample has only 4. The sibling `opd-index` also requires all 12 chapters, and a chapter that was split out can be satisfied by a reference, so the rulebook keeps the rule. The sample should get the missing chapters, either as references to `opr-&lt;term&gt;` or as not applicable with a reason.
+- F007 (minor): the sample's inspection-procedure table lacks the input-condition and operation columns of the standard columns (performer, input condition, operation, completion condition, evidence). Its chapter 12 heading (`opd` reference, `mip` / `otp` / `cop` links) also differs from the rulebook. The sample should match the rulebook.
+- Points to record in the result's methods-and-kata-application section: the rulebook wording for F001 (prohibition table, personal information) and F002 (placement under `docs/ja/product/090-operations/`) follows `opd-index-rulebook`; for F004 (ID qualification) it follows atc-index / cop-index; the chapter list in the body structure and the standard columns were kept.
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+rulebook を修正し、grade の指摘事項を解消しました。ただし、F005, F006, F007 に関する修正は成果物（sample）側の変更が必要であるため、このフェーズでは rulebook の記述を維持・整理するに留めています。

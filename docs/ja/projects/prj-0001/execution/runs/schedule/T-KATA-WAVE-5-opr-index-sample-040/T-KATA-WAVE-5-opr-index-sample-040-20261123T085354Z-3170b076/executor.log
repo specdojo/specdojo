@@ -1,0 +1,19 @@
+`docs/ja/specdojo/rulebooks/opr-index-rulebook.md` を書き直しました。指摘 9 件のうち rulebook 側の F001〜F004、F008、F009 は直し、残る F005〜F007 は sample を直す必要があるため次の段に回します。検証は Prettier の整形チェックだけ実行して通りました。Markdown lint と Frontmatter の検証は、この後に親 runner が流します。
+
+**直した内容**
+
+- **F001（個人情報）:** 記述ガイドに「実施者・承認者・連絡先・引継ぎ先は Role 名か窓口名で、アカウントは権限の種類で書く」を良い例・悪い例つきで足しました。禁止事項にも「個人名・個人の連絡先・個人のアカウント識別子を書かない」を足しています。表の 4 章と 10 章の受入条件は「連絡先の窓口」「引継ぎ先の窓口」に変えました。
+- **F002（配置先）:** ドキュメント構成ガイドの `docs/ja/product/090-operations/` を推奨する一文を足しました。
+- **F003（検証方法）:** 「整形・lint はリポジトリの検証で扱う」を、`npm run lint:md` と `npm run lint:fm` をエラーなしで通す、という具体的な書き方にしました。
+- **F004（ID の修飾）:** プロダクト文書は `opr-index`、プロジェクト固有の成果物は `<project-id>:opr-index` とし、成果物カタログの宣言と一致させる、と書きました。分冊も同じです。
+- **F008（位置づけ）:** `opd` と `opr` の略語の意味、`opd-*`・`opr-index`・`opr-<term>` の役割を表にしました。どういうときに分冊へ切り出すか、何を index に残すかの基準も足しています。
+- **F009（表記の揺れ）:** 方針文書の総称を `opd-*`（`opd-index` と `opd-<term>`）に揃えました。禁止事項は理由つきの表にしています。
+- **PJR-76N9:** 全体方針を「どの利用場面で何を判断するための文書か」の形に書き直し、1 章の受入条件の「利用者」は「利用場面」にしました。
+
+**直さなかった箇所と理由**
+
+- 本文構成の 12 章をすべて必須とする表と、手順表の標準列は残しました。隣の `opd-index` も 12 章必須で、分冊した手順は参照で満たせると書いてあるので、規定が多すぎるのではなく sample が足りないと判断しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"Rewrote opr-index-rulebook.md for grade findings F001, F002, F003, F004, F008 and F009 and the PJR-76N9 rule. Findings F005-F007 need sample fixes and are handed off to a later stage.","handoff":["F005 (major): the sample's frontmatter says `rulebook: specdojo:opd-rulebook`, and the text body refers to `../rulebooks/opr-rulebook.md`. Both should point to `specdojo:opr-index-rulebook`. The sample is fixed in the sample-update stage.","F006 (major): the rulebook requires all 12 chapters, but the sample has only 4. The sibling `opd-index` also requires all 12 chapters, and a chapter that was split out can be satisfied by a reference, so the rulebook keeps the rule. The sample should get the missing chapters, either as references to `opr-<term>` or as not applicable with a reason.","F007 (minor): the sample's inspection-procedure table lacks the input-condition and operation columns of the standard columns (performer, input condition, operation, completion condition, evidence). Its chapter 12 heading (`opd` reference, `mip` / `otp` / `cop` links) also differs from the rulebook. The sample should match the rulebook.","Points to record in the result's methods-and-kata-application section: the rulebook wording for F001 (prohibition table, personal information) and F002 (placement under `docs/ja/product/090-operations/`) follows `opd-index-rulebook`; for F004 (ID qualification) it follows atc-index / cop-index; the chapter list in the body structure and the standard columns were kept."],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/opr-index-rulebook.md","status":"passed","summary":"The changed rulebook follows Prettier formatting."}]}
+</specdojo_executor_evidence>
