@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-5-cop-sample-050
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-5-cop-sample-050/T-KATA-WAVE-5-cop-sample-050-20261123T133242Z-ee50ac8b/plan.md
   started_at: "2026-11-23T13:32:52.265Z"
+  completed_at: "2026-11-23T13:47:31.821Z"
   agent: opus-executor
   execution: agent
   approach: sample-maintenance
@@ -20,16 +21,21 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- rulebook の 10 章構成に従い、`docs/ja/specdojo/samples/cop-sample.md` を駄菓子屋きぬやの切替日（`cop-cutover-day`）の完成例として厚く書き直しました。
+- 具体的なタイムラインや判定ポイント、作業対象、および `_UNDECIDED_` を用いた未決定事項を盛り込み、`mip-index-sample` や `dmd-sample` と整合性を取っています。
+- `prettier` による整形と `lint:md:changed` による検証をパスしています。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/samples/cop-sample.md`: rulebook の構成（見出し 1〜10）を適用し、駄菓子屋の販売管理システムの切替における具体的な作業手順、タイムライン、判定基準、および未決定の事項（`_UNDECIDED_`）を記述して、完成例としての厚みを持たせました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 決める必要のある値: 臨時休業の開始時刻は `_UNDECIDED_` のまま残した（遅くとも T-180m の前提）。店主代表がリハーサルの結果を見て決める。切替日も決まっていないが、本書は相対時刻だけで書いている。
+- F003（PO の最終承認を明記する）: GO/NO-GO の判断者は店主代表と書いた。文書そのものの承認の範囲は、PJR-76N9 の決まりにより sample 本文に書いていない。
+- 関連 sample の `cop-index-sample`・`mtp-sample` はまだ短く、`otp-sample` は業種がきぬやの話とずれている。今回の `cop-sample` と揃えるために書き直しが必要。
+- rulebook の変更案: 本文要件の章名『概要（`&lt;term&gt;`）』に、sample で何を書くかの例（例: `cutover-day`）を示すと分かりやすくなる。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+rulebook に従い、`docs/ja/specdojo/samples/cop-sample.md` を「駄菓子屋きぬや」の具体的な切替手順を示す完成例として拡充しました。具体的な値は `mip-index-sample` 等と整合させ、決定すべき事項は `_UNDECIDED_` を用いて残すことで、指示通りの「厚い sample」を作成しました。
