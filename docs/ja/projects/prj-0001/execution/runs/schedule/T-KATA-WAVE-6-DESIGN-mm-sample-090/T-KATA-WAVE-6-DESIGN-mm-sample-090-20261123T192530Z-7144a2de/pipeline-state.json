@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-WAVE-6-DESIGN-mm-sample-090",
   "run_id": "T-KATA-WAVE-6-DESIGN-mm-sample-090-20261123T192530Z-7144a2de",
-  "updated_at": "2026-11-23T19:27:59.776Z",
+  "updated_at": "2026-11-23T19:28:03.903Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-DESIGN-mm-sample-090/T-KATA-WAVE-6-DESIGN-mm-sample-090-20261123T192530Z-7144a2de/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sonnet-review-executor",
       "attempts": 1,
       "started_at": "2026-11-23T19:27:59.776Z",
-      "completed_at": null,
+      "completed_at": "2026-11-23T19:28:03.903Z",
       "artifact_ref": null
     }
   },
