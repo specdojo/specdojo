@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: high
   difficulty: medium
   owner: DEV
@@ -44,7 +44,31 @@ specdojo:
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+### 5.1. 解決内容
+
+- 統合だけの再試行（`exec resume --task`）では、統合の段の commit の前に統合先と同期するようにした。`src/exec/run/schedule-task.ts` の `syncIntegrationTargetsBeforeCommit` が、`--resume-from executor` で使う `syncTaskWorktreesWithIntegrationTargets` を呼ぶ。
+- hook を統合先と合わせた木で走らせる案ではなく、同期を選んだ。理由は次のとおり。
+  - 既存の同期は未 commit の成果を控えて戻す仕組みを持ち、実績がある。
+  - 同期すれば hook だけでなく、後の統合の merge も統合先と同じ土台になる。
+  - hook の実行場所を分ける案は、hook ごとの前提を個別に見る必要がある。
+- run の記録は exec branch 側を採る（`--resume-from executor` と同じ）。
+- 同期で衝突したときは、`project: merge conflicts with <統合先>: <ファイル>` の形でファイルを出し、統合の失敗として block する。プロダクトのときは、先頭がプロダクト名になる。
+
+### 5.2. 確認結果
+
+- `tests/src/exec/task-repos.integration.test.ts` に 2 件足した。
+  - 統合先で直した `FIX.md` が無いと落ちる pre-commit hook は、同期の前は失敗し、同期の後は手を入れずに通る。
+  - 統合先と exec branch が衝突したとき、エラーにファイル名が出る。
+- `npm run typecheck` と `npm run lint:ts`（エラーなし）を通した。`test:unit` と `test-integration` は親の検証に任せる。
+
+### 5.3. CHANGELOG に書く事項
+
+- 区分: Fixed
+- 文案: `exec resume --task` で統合だけを再試行するとき、commit の前に統合先を取り込むようにした。worktree の土台が古く、統合先で直した fixture に届かないために同じ commit の失敗を繰り返す問題を解消した。衝突したときは、ファイル名を block の理由に出す。
+
+### 5.4. 作業内容の補足
+
+- 統合の段の同期は、再試行（`resumeIntegration`）のときだけ行う。初回の統合は、worktree を作った直後で土台が新しいため行わない。
 
 ## 6. 関連ドキュメント
 

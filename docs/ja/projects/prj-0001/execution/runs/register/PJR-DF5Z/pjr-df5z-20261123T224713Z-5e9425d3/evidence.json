@@ -1,0 +1,229 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-DF5Z",
+  "run_id": "pjr-df5z-20261123T224713Z-5e9425d3",
+  "stage": {
+    "role": "executor",
+    "actor": "sonnet-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-23T22:48:39.184Z",
+    "completed_at": "2026-11-23T22:50:28.451Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-df5z.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-df5z-worktree-hook-stale-base.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/schedule-task.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/task-repos.integration.test.ts",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-df5z-worktree-hook-stale-base.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/schedule-task.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/task-repos.integration.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 4,
+    "summary": ".../pjr-df5z-worktree-hook-stale-base.md           | 26 ++++++++++-\n src/exec/run/schedule-task.ts                      | 54 ++++++++++++++++++++++\n tests/src/exec/task-repos.integration.test.ts      | 41 ++++++++++++++++\n 3 files changed, 120 insertions(+), 1 deletion(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx vitest run tests/src/exec/task-repos.integration.test.ts -t syncTaskWorktreesWithIntegrationTargets",
+      "status": "passed",
+      "summary": "同期の関数の 14 件が通った。追加した 2 件を含む。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "型エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "エラー 0 件、警告 43 件。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --check src/exec/run/schedule-task.ts tests/src/exec/task-repos.integration.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-df5z-worktree-hook-stale-base.md",
+      "status": "passed",
+      "summary": "整形に問題なし。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-DF5Z/src/catalog/catalog.ts\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-DF5Z/src/dashboard/dashboard.ts\n  1150:1  warning  File has too many lines (1073). Maximum allow\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-DF5Z/src/schedule/strategy-generate-document.ts\n  87:8  warning  Function 'buildStrategyDocument' has too many lines (289). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-DF5Z/src/shared/specdojo-config.ts\n  1250:1  warning  File has too many lines (1096). Maximum allowed is 1000  max-lines\n\n✖ 43 problems (0 errors, 43 warnings)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: prj-0001:pjr-df5z-worktree-hook-stale-base\n  type: project\n  status: draft\n  rulebook: specdojo:pjr-rulebook\n  part_of:\n    - prj-0001:pjr-index\n  item_type: issue\n  item_status: in-progress\n  priority: high\n  difficulty: medium\n  owner: DEV\n  registered_at: \"2026-11-23T22:25:09Z\"\n  due_on: \"2026-11-30\"\n  commit_type: fix\n  commit_scope: exec\n---\n\n# PJR-DF5Z task の worktree の commit の hook が古\n… output omitted …\nル名が出る。\n- `npm run typecheck` と `npm run lint:ts`（エラーなし）を通した。`test:unit` と `test-integration` は親の検証に任せる。\n\n### 5.3. CHANGELOG に書く事項\n\n- 区分: Fixed\n- 文案: `exec resume --task` で統合だけを再試行するとき、commit の前に統合先を取り込むようにした。worktree の土台が古く、統合先で直した fixture に届かないために同じ commit の失敗を繰り返す問題を解消した。衝突したときは、ファイル名を block の理由に出す。\n\n### 5.4. 作業内容の補足\n\n- 統合の段の同期は、再試行（`resumeIntegration`）のときだけ行う。初回の統合は、worktree を作った直後で土台が新しいため行わない。\n\n## 6. 関連ドキュメント\n\n- 関連: PJR-JA3M（テストが実物の sample に頼る件。落ちた fixture の元）、PJR-EEWP（止まった理由の要約）。"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6585 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6585 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)",
+      "reason": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "related tests only (19 of 43 test files depend on the changed files): exit 0: > specdojo@0.9.2 test:integration\n> vitest run --config vitest.integration.config.ts tests/src/commands/git.integration.test.ts tests/src/commands/where.integration.test.ts tests/src/exec/catalogless-register.integration.test.ts tests/src/exec/cycle.integration.test.ts tests/src/exec/job-sequence.integration.test.ts tests/src/exec/pipeline-e2e.integration.test.ts tests/src/exec/plan-markdownlint.integration.test.ts tests/src/exec/register-multiple-ids.integration.test.ts tests/\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match f…",
+      "test_selection": {
+        "mode": "related",
+        "reason": "19 of 43 test files depend on the changed files",
+        "selected_tests": [
+          "tests/src/commands/git.integration.test.ts",
+          "tests/src/commands/where.integration.test.ts",
+          "tests/src/exec/catalogless-register.integration.test.ts",
+          "tests/src/exec/cycle.integration.test.ts",
+          "tests/src/exec/job-sequence.integration.test.ts",
+          "tests/src/exec/pipeline-e2e.integration.test.ts",
+          "tests/src/exec/plan-markdownlint.integration.test.ts",
+          "tests/src/exec/register-multiple-ids.integration.test.ts",
+          "tests/src/exec/register-pipeline-e2e.integration.test.ts",
+          "tests/src/exec/register-resume.integration.test.ts",
+          "tests/src/exec/register-worktree.integration.test.ts",
+          "tests/src/exec/release-reset-worktree.integration.test.ts",
+          "tests/src/exec/task-repos.integration.test.ts",
+          "tests/src/exec/worktree-command.integration.test.ts",
+          "tests/src/exec/worktree-ops.integration.test.ts",
+          "tests/src/exec/worktree.integration.test.ts",
+          "tests/src/grade/yaml.integration.test.ts",
+          "tests/src/register/external-project.integration.test.ts",
+          "tests/src/shared/local-config.integration.test.ts"
+        ],
+        "omitted_tests": [
+          "tests/src/commands/build.integration.test.ts",
+          "tests/src/commands/init-agent-roster.integration.test.ts",
+          "tests/src/deliverable/trash.integration.test.ts",
+          "tests/src/devcontainer/scaffold.integration.test.ts",
+          "tests/src/exec/agent-git-state.integration.test.ts",
+          "tests/src/exec/job-worktree.integration.test.ts",
+          "tests/src/exec/kata-authoring.integration.test.ts",
+          "tests/src/exec/kata-review-stage.integration.test.ts",
+          "tests/src/exec/parent-validation-timeout.integration.test.ts",
+          "tests/src/exec/run/agent-timeout.integration.test.ts",
+          "tests/src/exec/run/change-scope.integration.test.ts",
+          "tests/src/exec/trailing-records.integration.test.ts",
+          "tests/src/exec/validate-records-commit.integration.test.ts",
+          "tests/src/exec/worktree-yaml-pages.integration.test.ts",
+          "tests/src/project/move-check.integration.test.ts",
+          "tests/src/register/commit.integration.test.ts",
+          "tests/src/register/cross-project.integration.test.ts",
+          "tests/src/shared/lefthook-scaffold.integration.test.ts",
+          "tests/test-environment.integration.test.ts",
+          "tests/tools/check-evidence-secrets.integration.test.ts",
+          "tests/tools/commit-msg-merge.integration.test.ts",
+          "tests/tools/d2-cli.integration.test.ts",
+          "tests/tools/open-agent-worktree.integration.test.ts",
+          "tests/tools/src-move-codemod.integration.test.ts"
+        ]
+      }
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-DF5Z/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-DF5Z/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-DF5Z\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/grade/grade.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/register/commands.test.ts\"}\n ✓ tests/src/grade/grade.test.ts (69 tests) 272ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/src/grade/grade.test.ts\",\"duration_ms\":272}\n[p\n… output omitted …\n it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "統合だけの再試行（exec resume --task）で、commit の前に統合先と同期するようにした。衝突時はファイル名を block の理由に出す。同期の関数と hook の組み合わせは追加した統合テスト 2 件で確認した。",
+  "completion_status": "complete",
+  "handoff": [
+    "統合の段の同期は resumeIntegration のときだけ行う。初回の統合は worktree を作った直後で土台が新しいため行わない。",
+    "test:unit と test-integration は親の検証に任せた。runPreparedTask を通した結合の試験は行っていない。",
+    "CHANGELOG.md は変えていない。区分 Fixed と文案を個票の対応結果の「CHANGELOG に書く事項」に書いた。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-DF5Z/pjr-df5z-20261123T224713Z-5e9425d3/executor.log",
+      "bytes": 3304,
+      "truncated": false
+    }
+  ]
+}

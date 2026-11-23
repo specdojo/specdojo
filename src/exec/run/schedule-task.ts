@@ -14,6 +14,7 @@ import { reviewTaskBlockReason } from "../review-completion.js";
 import { limitEventMeta, type AgentLimitSignal } from "../limit.js";
 import {
   createPipelineState,
+  integratedRepoNames,
   loadPipelineResumeCheckpoint,
   pipelineStateLocation,
   updatePipelineStage,
@@ -50,6 +51,7 @@ import {
   assertCommitScope,
   commitTargetPaths,
   commitWorktreeChanges,
+  currentBranch,
   isExecBranchMergedIntoCurrent,
   mergeWorktreeIntoCurrent,
   releaseRootWorkingCopies,
@@ -59,6 +61,8 @@ import {
   worktreeStatusPaths,
 } from "../worktree-ops.js";
 import { gitOutput } from "../worktree.js";
+import { repoRelative } from "../../shared/git.js";
+import { syncTaskWorktreesWithIntegrationTargets } from "../repo-integration-sync.js";
 import { refreshParentValidationsForReporterResume } from "./agent-pipeline.js";
 import { DeferredCleanup, runWithDeferredCleanup } from "./deferred-cleanup.js";
 import {
@@ -769,6 +773,17 @@ export async function runPreparedTask(
           );
           const productNames = (prepared.worktree.repos ?? []).map((product) => product.name);
           try {
+            // PJR-DF5Z: 統合だけの再試行では、commit の hook が worktree を作った時点の古い土台で走り、
+            // 統合先で直した fixture に届かず同じ失敗を繰り返す。commit の前に統合先を取り込む。
+            // 取り込みの衝突は、ファイル名を含むメッセージで統合の失敗として止める。
+            if (resumeIntegration) {
+              syncIntegrationTargetsBeforeCommit({
+                prepared,
+                state: pipelineState,
+                repoRoot,
+                executionPath,
+              });
+            }
             const productOutcomes = commitProductWorktrees({
               worktree: prepared.worktree,
               message: mergeMessage,
@@ -989,6 +1004,45 @@ export async function runPreparedTask(
     }),
     finalize,
   );
+}
+
+// 統合の段の再試行で commit の前に、統合先（project は root の現在ブランチ）の直しを exec branch へ
+// 取り込む。未 commit の成果は取り込みの前に控えて戻す。run の記録は exec branch 側を採る。
+function syncIntegrationTargetsBeforeCommit(params: {
+  prepared: PreparedTask;
+  state: PipelineState | undefined;
+  repoRoot: string;
+  executionPath: string;
+}): void {
+  const { prepared, repoRoot } = params;
+  const taskId = prepared.task.id;
+  const projectTarget = currentBranch(repoRoot);
+  const oursPaths = [
+    ...new Set(
+      [prepared.worktree.branch, projectTarget].flatMap((branch) =>
+        branchOwnedRunRecordPaths({
+          repoRoot,
+          executionPath: params.executionPath,
+          branch,
+          taskId,
+        }).map((path) => repoRelative(repoRoot, path)),
+      ),
+    ),
+  ].sort();
+  process.stdout.write(`  Syncing integration targets before integration commit: ${taskId}\n`);
+  const synced = syncTaskWorktreesWithIntegrationTargets({
+    worktree: prepared.worktree,
+    projectTarget,
+    message: `exec(${taskId}): merge integration target before integration retry`,
+    projectOursPaths: oursPaths,
+    integratedProducts: params.state ? integratedRepoNames(params.state) : undefined,
+  });
+  for (const entry of synced) {
+    process.stdout.write(
+      `  [sync] ${entry.repo}: ${entry.status} (${entry.target})` +
+        `${entry.detail ? ` — ${entry.detail}` : ""}\n`,
+    );
+  }
 }
 
 // 統合の段の失敗の理由（検査の名前・commit の対象外のパス・merge の失敗など、失敗した操作の

@@ -99,3 +99,29 @@
       from: ""
       to: 関連ドキュメント
   previous_event_id: reg_9053c71226c54e26b586aec147439ca4
+- v: 1
+  id: reg_7aff3a101ffa446eb257762479a3f2c7
+  ts: "2026-11-23T22:48:00Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_b735d5f684294dfa9c83189eae65501e
+- v: 1
+  id: reg_88c13921f6e9413a95d0e1a3503be292
+  ts: "2026-11-23T22:57:00Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_7aff3a101ffa446eb257762479a3f2c7
