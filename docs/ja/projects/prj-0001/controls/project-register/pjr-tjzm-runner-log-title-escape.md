@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: waiting
   priority: low
   owner: DEV
   registered_at: "2026-11-23T00:36:48Z"
   due_on: "2026-11-30"
+  block_reason: "parent validation failed: test-integration"
 ---
 
 # PJR-TJZM runner のログの Register item の行で、項目のタイトルの _ が \_ と表示される
