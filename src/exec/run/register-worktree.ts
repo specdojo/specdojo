@@ -1,5 +1,6 @@
 import { unescapeMarkdownCell } from "../../shared/text.js";
 import { readPlanFile } from "../../shared/plan-conventions.js";
+import { mergeRegisterBranch } from "../../shared/register-merge.js";
 import { executorStageResumeHint } from "../evidence.js";
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";
@@ -710,6 +711,25 @@ export async function runSingleRegisterItemWorktree(
       }
     | RegisterItemSummary
   > => {
+    // PJR-1JF6: register_sync の project では、develop の作業の前に register のブランチを
+    // 一方向に取り込む。未設定なら何もしない。取り込めないときは worktree を作らずに止める。
+    try {
+      const intake = mergeRegisterBranch(projectId);
+      if (intake.status === "merged") {
+        process.stdout.write(`  [run] merged register branch: ${intake.commit.slice(0, 12)}\n`);
+      }
+    } catch (error) {
+      const message = `register branch merge failed: ${error instanceof Error ? error.message : String(error)}`;
+      process.stderr.write(`${message}\n`);
+      return {
+        id: item.id,
+        title: item.title,
+        outcome: "failure",
+        transition: "none",
+        commit: "off",
+        reason: sanitizeRegisterConclusion(message),
+      };
+    }
     // Recheck after acquiring the lifecycle lock: dependencies may change while waiting.
     const current = resolveRegisterRunTarget(projectId, pjrId);
     const reason = registerDependencyBlockReason(current.registerPaths, current.item);

@@ -307,6 +307,8 @@ git push origin project/prj-0001/register
 
 schedule の claim・complete なども、`execution_path/exec/events/` のイベントだけを専用 worktree へ commit・push します。イベントの読み取りも同期先を参照し、既に claim されたタスクへの claim を拒否します。run の記録・grade・成果物は元の実行経路に残ります。`external_projects` 経由の起票では相手側を v0.10.0 以上に更新し、相手の project で同期を有効にしてください。
 
+register のブランチは develop へ一方向に取り込みます。develop（や feature）の作業の前に `specdojo register branch-merge --project <project-id>` を実行してください。`exec run --register --worktree` は worktree を作る前に自動で取り込みます。取り込みの merge の commit は、通常の PR で develop へ入ります。develop では register のファイルを直接変えないでください。`specdojo register branch-guard --project <project-id> --staged` を pre-commit の hook に、`--range <base>..<head>` を pre-push の hook や CI に置くと、直接の変更を止められます。
+
 失敗すると終了コード 1 で原因・worktree・ブランチ・復旧手順を表示します。記帳済みファイルやローカル commit は削除しません。表示された worktree で次の順に復旧してください。
 
 1. 通信・権限を直すか、衝突を解いて `git rebase --continue` を行います。rebase を取り消す場合は `git rebase --abort` で元のローカル commit に戻れます。
