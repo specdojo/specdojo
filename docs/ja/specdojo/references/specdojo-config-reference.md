@@ -102,19 +102,20 @@ linked worktree（`exec run --worktree` の作業場所など）では、`path` 
 
 `projects.<project-id>` に指定するキーです。`base_path` 以外の表中のパスは、`base_path` があればそこからの相対パス、無ければリポジトリルートからの相対パスとして解決します。
 
-| キー                    | 既定値           | 主な役割                                           | 必要とする主なコマンド                                       |
-| ----------------------- | ---------------- | -------------------------------------------------- | ------------------------------------------------------------ |
-| `base_path`             | リポジトリルート | project 文書に共通するパス接頭辞                   | project に紐づく各コマンド                                   |
-| `project_register_path` | なし             | 個票、event、登録簿の配置先                        | `register *`、`exec plan/run --register`                     |
-| `catalog_path`          | なし             | `dct-*.yaml` と生成ビューの配置先                  | `catalog *`、`deliverable scaffold`、catalog を使う grade 等 |
-| `schedule_path`         | `schedule`       | strategy、track、Schedule の配置先                 | `schedule *`、schedule 対象の `exec *`                       |
-| `execution_path`        | `execution`      | plan、result、実行状態、grade / job run の配置先   | `exec *`、`grade *`、`job *`、`dashboard build`              |
-| `timeline_path`         | `timeline`       | 非推奨。旧 timeline の互換読み込み・生成物の配置先 | 旧 `timeline *` と範囲解決の互換処理                         |
-| `members_path`          | なし             | 人間と対応 Role code を定義する `pm-members.yaml`  | actor 検証、owner 検証、合成名簿の project 側入力            |
-| `roles_path`            | なし             | role 定義ファイルの配置先                          | `schedule strategy generate`、owner を解決する `exec plan`   |
-| `viewpoints_path`       | なし             | review / grade 観点ファイルの配置先                | `grade *`、review plan、`exec scaffold --project`            |
-| `routines_path`         | なし             | `rtn-*.yaml` と routine 状態の配置先               | `routine *`、routine を集約する `dashboard build`            |
-| `jobs_path`             | なし             | `job-*.yaml` の配置先                              | `job *`、`exec run --job`                                    |
+| キー                    | 既定値                                               | 主な役割                                                       | 必要とする主なコマンド                                       |
+| ----------------------- | ---------------------------------------------------- | -------------------------------------------------------------- | ------------------------------------------------------------ |
+| `base_path`             | リポジトリルート                                     | project 文書に共通するパス接頭辞                               | project に紐づく各コマンド                                   |
+| `project_register_path` | なし                                                 | 個票、event、登録簿の配置先                                    | `register *`、`exec plan/run --register`                     |
+| `catalog_path`          | なし                                                 | `dct-*.yaml` と生成ビューの配置先                              | `catalog *`、`deliverable scaffold`、catalog を使う grade 等 |
+| `schedule_path`         | `schedule`                                           | strategy、track、Schedule の配置先                             | `schedule *`、schedule 対象の `exec *`                       |
+| `execution_path`        | `execution`                                          | plan、result、実行状態、grade / job run の配置先               | `exec *`、`grade *`、`job *`、`dashboard build`              |
+| `timeline_path`         | `timeline`                                           | 非推奨。旧 timeline の互換読み込み・生成物の配置先             | 旧 `timeline *` と範囲解決の互換処理                         |
+| `members_path`          | なし                                                 | 人間と対応 Role code を定義する `pm-members.yaml`              | actor 検証、owner 検証、合成名簿の project 側入力            |
+| `roles_path`            | なし                                                 | role 定義ファイルの配置先                                      | `schedule strategy generate`、owner を解決する `exec plan`   |
+| `viewpoints_path`       | なし                                                 | review / grade 観点ファイルの配置先                            | `grade *`、review plan、`exec scaffold --project`            |
+| `routines_path`         | なし                                                 | `rtn-*.yaml` と routine 状態の配置先                           | `routine *`、routine を集約する `dashboard build`            |
+| `jobs_path`             | なし                                                 | `job-*.yaml` の配置先                                          | `job *`、`exec run --job`                                    |
+| `playbook_path`         | `030-project-management/pm-orchestrator-playbook.md` | オーケストレーター運用メモのファイル（`base_path` からの相対） | `where playbook`、`playbook scaffold`                        |
 
 `schedule_path` と `execution_path` は解決時の既定値があります。ただし `schedule` コマンドや一括 `build` の対象判定ではキーの明示が必要なため、catalog から Schedule と exec へ進む構成では省略しないでください。
 

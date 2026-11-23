@@ -6,7 +6,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 const entry = resolve("src/specdojo.ts");
 const tsx = resolve("node_modules/tsx/dist/loader.mjs");
-const kinds = ["exec", "catalog", "schedule", "timeline", "job", "routine"] as const;
+const kinds = ["exec", "catalog", "schedule", "timeline", "job", "routine", "playbook"] as const;
 let root: string;
 
 beforeEach(() => {
@@ -84,6 +84,10 @@ describe("specdojo where", () => {
     if (kind === "timeline") expect(result.stdout).toContain("tml-index.yaml (does not exist)");
     if (kind === "catalog") expect(result.stdout).toContain("plans       :");
     if (kind === "job") expect(result.stdout).toContain(join(root, "project/execution/jobs/runs"));
+    if (kind === "playbook") {
+      const playbook = join(root, "project/030-project-management/pm-orchestrator-playbook.md");
+      expect(result.stdout).toContain(`playbook: ${playbook} (does not exist)`);
+    }
     if (kind === "routine") {
       expect(result.stdout).toContain(join(root, "local-state"));
       expect(result.stdout).toContain(join(root, "project/routines/sub/rtn-example.yml"));
@@ -125,7 +129,7 @@ describe("specdojo where", () => {
     },
   );
 
-  it("lists all six choices in help", () => {
+  it("lists all choices in help", () => {
     const result = run(["where", "--help"]);
     expect(result.status).toBe(0);
     for (const kind of kinds) expect(result.stdout).toContain(`"${kind}"`);

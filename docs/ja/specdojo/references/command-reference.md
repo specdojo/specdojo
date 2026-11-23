@@ -39,12 +39,17 @@ project の解決順序と設定は [遂行の技活用ガイド](../guides/waza
 
 ### 1.1. 保存先の確認（where）
 
-`specdojo where <種類> --project <id>` で、設定から解決した保存先を表示します。種類は `exec`・`catalog`・`schedule`・`timeline`・`job`・`routine` の6つです。表示内容と project の解決は各種類の従来の処理を使い、定義や生成物は書き換えません。`schedule` は strategy / track のファイル一覧、`routine` は定義ファイル一覧も表示します。ローカル設定がある場合、`exec` はそのパス（`local-config:`）とローカルで上書きした項目（`local-override:`）も表示します。
+`specdojo where <種類> --project <id>` で、設定から解決した保存先を表示します。種類は `exec`・`catalog`・`schedule`・`timeline`・`job`・`routine`・`playbook` の7つです。表示内容と project の解決は各種類の従来の処理を使い、定義や生成物は書き換えません。`schedule` は strategy / track のファイル一覧、`routine` は定義ファイル一覧も表示します。`playbook` はオーケストレーターの運用メモのパスを表示し、ファイルがなければ `(does not exist)` を付けて終了コード 0 で終わります。パスは `playbook_path`（`base_path` からの相対。既定は `030-project-management/pm-orchestrator-playbook.md`）で変えられます。ローカル設定がある場合、`exec` はそのパス（`local-config:`）とローカルで上書きした項目（`local-override:`）も表示します。
 
 ```bash
 specdojo where exec --project prj-0001
 specdojo where routine --project prj-0001
+specdojo where playbook --project prj-0001
 ```
+
+### 1.2. 運用メモの雛形（playbook scaffold）
+
+`specdojo playbook scaffold --project <id>` は、`where playbook` が表示するパスへ、運用メモの template（`pm-orchestrator-playbook-template`）から雛形を作ります。`_PROJECT_ID_` と `_PROJECT_NAME_` はプロジェクト ID に置き換え、残りの `_TODO_` は利用者が埋めます。既存のファイルは上書きせず失敗します。`--dry-run` で書かずに内容を表示します。章立ての決まりは [[specdojo:pm-orchestrator-playbook-rulebook|運用メモの rulebook]] を参照します。
 
 ## 2. init / config / project
 
