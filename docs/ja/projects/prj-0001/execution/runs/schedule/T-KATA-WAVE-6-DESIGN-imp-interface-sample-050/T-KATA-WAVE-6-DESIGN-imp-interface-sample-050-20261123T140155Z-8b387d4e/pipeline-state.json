@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-WAVE-6-DESIGN-imp-interface-sample-050",
   "run_id": "T-KATA-WAVE-6-DESIGN-imp-interface-sample-050-20261123T140155Z-8b387d4e",
-  "updated_at": "2026-11-23T14:12:47.310Z",
+  "updated_at": "2026-11-23T14:13:42.717Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-DESIGN-imp-interface-sample-050/T-KATA-WAVE-6-DESIGN-imp-interface-sample-050-20261123T140155Z-8b387d4e/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-23T14:12:47.310Z",
-      "completed_at": null,
+      "completed_at": "2026-11-23T14:13:42.717Z",
       "artifact_ref": null
     }
   },
