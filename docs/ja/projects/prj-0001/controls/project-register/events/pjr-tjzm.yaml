@@ -142,3 +142,35 @@
       from: "-"
       to: "parent validation failed: test-integration"
   previous_event_id: reg_0028366223b84ef19ef51e15ca791cf9
+- v: 1
+  id: reg_264f8e3e4a794955aad68c86c662cc5e
+  ts: "2026-11-23T02:47:54Z"
+  action: start
+  actor: sonnet-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-integration"
+      to: "-"
+  previous_event_id: reg_23d20960db0748d5bc02beffb1fcf1ba
+- v: 1
+  id: reg_cb62377e424345c8af0cf8493a54b989
+  ts: "2026-11-23T02:55:52Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-integration"
+  previous_event_id: reg_264f8e3e4a794955aad68c86c662cc5e

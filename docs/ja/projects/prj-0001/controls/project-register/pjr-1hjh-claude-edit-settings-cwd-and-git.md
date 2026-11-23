@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-11-23T00:35:38Z"
@@ -80,7 +80,29 @@ project ごとのコマンド（`python -m pytest *` など）は `exec-defaults
 
 ## 5. 対応結果
 
--
+### 5.1. 決定
+
+- 作業場所: 配布の `templates/claude/settings.edit.json` の `env` に `CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR=1` を入れた。設定に入れれば利用者の起動方法に依らず効き、runner の変更も要らない。
+- git: 読み取りの `git status*`・`git diff*`・`git log*`・`git show*`・`git grep *` と、差分に残る `git rm *`・`git mv *` を allow した。
+- 削除の限定: `git rm` の `-r`・`-f`・`--force`・`--cached`、`git mv` の `-f`・`--force` を deny した（opencode 側の再帰・強制の拒否と同じ方針）。`git push`・`gh` は従来の deny のまま。`git reset`・`git checkout`・`git commit`・`rm` は allow に無く拒まれる。
+
+### 5.2. 変更
+
+- `templates/claude/settings.edit.json`
+- `tests/src/exec/agent-config-allow-commands.test.ts`（env・許可・拒否・保護設定の Edit deny を確認）
+- `tests/src/shared/provider-scaffold.test.ts`（deny の完全一致の期待値）
+- `docs/ja/specdojo/guides/exec-config-guide.md`（claude の edit executor に許すコマンドの節）
+
+### 5.3. 申し送り
+
+- prj-0001 自身の `.specdojo/claude/settings.edit.json` は変えていない。統合の後に、利用者の承認のもとでオーケストレーターが feature ブランチで同じ `env`・allow・deny を反映する。
+- 既存の利用側は `config scaffold --force` で設定を当て直すと反映される。
+- `CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR` の効果は、個票の利用側確認（Linux の devcontainer）に基づく。この run では実機の executor で再確認していない。
+
+### 5.4. CHANGELOG に書く事項
+
+- 区分: Fixed
+- 文案: Claude の edit executor の既定の設定に `CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR` と、git の読み取り・`git rm`・`git mv` の許可を追加した（`git rm -r`・`-f` などは deny）。
 
 ## 6. 関連ドキュメント
 

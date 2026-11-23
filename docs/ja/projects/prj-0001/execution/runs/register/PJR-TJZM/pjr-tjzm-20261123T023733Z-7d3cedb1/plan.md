@@ -64,4 +64,10 @@ plan に展開された finding は、message と同じ viewpoint ID の判定�
 - 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
 - agent 自身は登録簿の状態を変更せず、終了コードと標準エラー出力で runner に結果を返す。
 
+## 再開の指示（2026-11-23T02:48:04.230Z）
+
+利用者が再開の前に足した指示である。これまでの申し送りとあわせて、この指示に従って作業を続ける。
+
+- 親の検証のtest-integrationでtests/src/exec/register-pipeline-e2e.integration.test.tsのdry-runの期待値が、エスケープ付きのタイトルのままで落ちた。dry-runの行はエスケープする前のタイトルを出すように直したので、テストの期待値を新しい出力に合わせる。ほかにエスケープ付きのタイトルを期待するテストがないかをrgで探して直す。
+
 `共通規約 sha256:e7dd6ff2a0dec2f12ed4ffc905cd185aca2d6f9c3922c56a249c88cb45b2a14e` `docs/ja/projects/prj-0001/execution/conventions/e7dd6ff2a0dec2f12ed4ffc905cd185aca2d6f9c3922c56a249c88cb45b2a14e.txt`
