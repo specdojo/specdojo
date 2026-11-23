@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-WAVE-6-DESIGN-bps-sample-050",
   "run_id": "T-KATA-WAVE-6-DESIGN-bps-sample-050-20261123T174623Z-aaf3f30f",
-  "updated_at": "2026-11-23T17:55:49.785Z",
+  "updated_at": "2026-11-23T17:56:28.648Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-DESIGN-bps-sample-050/T-KATA-WAVE-6-DESIGN-bps-sample-050-20261123T174623Z-aaf3f30f/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-23T17:55:49.785Z",
-      "completed_at": null,
+      "completed_at": "2026-11-23T17:56:28.648Z",
       "artifact_ref": null
     }
   },
