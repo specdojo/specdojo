@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-PROJECT-pm-risk-register-sample-050
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-PROJECT-pm-risk-register-sample-050/T-KATA-WAVE-6-PROJECT-pm-risk-register-sample-050-20261123T075012Z-dc2fcc93/plan.md
   started_at: "2026-11-23T07:50:25.023Z"
+  completed_at: "2026-11-23T08:05:21.330Z"
   agent: opus-executor
   execution: agent
   approach: sample-maintenance
@@ -20,16 +21,27 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- リスク登録簿の `sample` を、駄菓子屋きぬやのプロジェクトにおける単独の完成例として厚く書き換えました。
+- grading によって指摘された F001〜F026 の問題（評価基準の不足、完了条件の具体性、関連ドキュメントの参照形式、役割の明記など）を解消しました。
+- rulebook との整合性を保つため、本書がプロジェクト登録簿を用いない単独のサンプルである旨を概要に追記しました。
+- `priority` や `item_status` を rulebook の規定に合わせた値に修正し、情報の二重管理を解消しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/samples/pm-risk-register-sample.md`: リスク登録簿の完成例として、概要の拡充、評価基準（発生確率と影響度の判定表）の追加、完了条件の具体化、関連ドキュメントのリンク形式の修正、および `priority` や `item_status` の値の正規化を行いました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 決める必要のある値: RK-001 の完了条件にある、連続会計の試行の件数（`_UNDECIDED_` 件）と、1 件の会計確定にかけてよい秒数（`_UNDECIDED_` 秒）。
+- rulebook の修正案: `pm-risk-register-rulebook` の frontmatter の `template` は生成ビュー（`pm-risk-register-template`）を指しており、単独の登録簿の `sample` を手で書く形式と食い違うと grade が判定した（F021）。`sample` の概要に単独の登録簿の例であることを明記して対処した。単独の登録簿には `template` がないことを frontmatter または位置づけの章で区別できるよう、rulebook の見直しを提案する。
+- F025（ready にする前提）: `sample` の `status` は人だけが `ready` にできるため `draft` のまま。再 grade で問題がなければ、人の判断で `ready` にする。
+- sample で置いた仮の前提: RK-002 の根拠『準備中の打合せが 2 回延期された』、見直し漏れのとき PM が 2 営業日以内に再評価する期限、RK-003 の受容を PO が判断した記載。関連する `sample` と食い違う場合は直す。
+- 決める必要のある値: RK-001 の完了条件にある、連続会計の試行の件数（`_UNDECIDED_` 件）と、1 件の会計確定にかけてよい秒数（`_UNDECIDED_` 秒）。
+- rulebook の修正案: pm-risk-register-rulebook の frontmatter の `template` は生成ビュー（pm-risk-register-template）を指しており、単独の登録簿の sample を手で書く形式と食い違うと grade が判定した（F021）。sample の概要に単独の登録簿の例であることを明記して対処した。単独の登録簿には template がないことを frontmatter または位置づけの章で区別できるよう、rulebook の見直しを提案する。
+- F025（ready にする前提）: sample の status は人だけが ready にできるため draft のまま。再 grade で問題がなければ、人の判断で ready にする。
+- sample で置いた仮の前提: RK-002 の根拠『準備中の打合せが 2 回延期された』、見直し漏れのとき PM が 2 営業日以内に再評価する期限、RK-003 の受容を PO が判断した記載。関連する sample と食い違う場合は直す。
+- 適用外の検証: `npm run validate:history-links`（変更は docs/ja/specdojo/samples/ の sample だけで、plan・result・個票を変更していないため）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+rulebook に沿い、`sample` を共通サンプル文脈（駄菓子屋のプロジェクト）の完成例として厚くしました。`grade` の指摘（`finding`）に基づき、評価基準の定義、完了条件の具体性、関連ドキュメントの参照方法、および `priority` や `item_status` の値の一貫性を修正することで、実例としての完成度を高めました。
