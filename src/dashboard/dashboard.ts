@@ -62,7 +62,7 @@ import { extractLocalId } from "../schedule/phase-sets.js";
 import { buildScheduleIndex } from "../exec/schedule/schedule.js";
 import { type ScheduleNode } from "../shared/schedule-index.js";
 import { readReadySnapshot } from "../exec/schedule/ready.js";
-import { findRunRecord } from "../shared/run-records.js";
+import { findRunRecord, RunRecordIndex } from "../shared/run-records.js";
 
 // ================================
 // Types
@@ -84,6 +84,8 @@ export type DashboardPaths = {
   executionGeneratedPath: string;
   routinesPath?: string;
   gradeResultsPath?: string;
+  /** Per-generation snapshot of run records; set only by buildDashboardMarkdown. */
+  runRecordIndex?: RunRecordIndex;
 };
 
 // ================================
@@ -212,12 +214,12 @@ export function formatTaskLink(
   const execDir = join(paths.executionGeneratedPath, "..");
   if (paths.schedulePath && existsSync(execDir)) {
     try {
-      const plan = findRunRecord(execDir, "plan", taskId);
+      const plan = findRunRecord(execDir, "plan", taskId, paths.runRecordIndex);
       if (plan && existsSync(plan)) {
         const rel = relative(paths.executionGeneratedPath, plan).replaceAll("\\", "/");
         return `[${taskId}](${rel})`;
       }
-      const result = findRunRecord(execDir, "result", taskId);
+      const result = findRunRecord(execDir, "result", taskId, paths.runRecordIndex);
       if (result && existsSync(result)) {
         const rel = relative(paths.executionGeneratedPath, result).replaceAll("\\", "/");
         return `[${taskId}](${rel})`;
@@ -1057,7 +1059,12 @@ export type DashboardBuildResult = {
   warnings: string[];
 };
 
-export function buildDashboardMarkdown(paths: DashboardPaths): string {
+export function buildDashboardMarkdown(basePaths: DashboardPaths): string {
+  const execDir = join(basePaths.executionGeneratedPath, "..");
+  const paths: DashboardPaths = {
+    ...basePaths,
+    runRecordIndex: existsSync(execDir) ? new RunRecordIndex(execDir) : undefined,
+  };
   const lines: string[] = [];
   const nowLabel = new Date().toISOString().replace(/\.\d{3}Z$/, "");
 

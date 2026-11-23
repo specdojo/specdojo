@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-22T23:45:18Z"
   due_on: "2026-11-30"
-  block_reason: "parent validation failed: test-unit"
   derived_from:
     - PJR-BBTW
   commit_type: perf
@@ -48,12 +47,12 @@ findRunRecord が記録の置き場のない項目で execution/runs/ を全部�
 
 ## 4. 作業内容
 
-| No  | 作業                                                                                         | 担当 | 状態 | メモ                                                                          |
-| --- | -------------------------------------------------------------------------------------------- | ---- | ---- | ----------------------------------------------------------------------------- |
-| 1   | `RunRecordIndex` を `src/shared/run-records.ts` に追加し、一覧と frontmatter を 1 回だけ読む | DEV  | done | `findRunRecord` に任意の第 4 引数を追加。省略時の動きは従来どおり             |
-| 2   | `buildDashboardMarkdown` で生成ごとに索引を作り、`formatTaskLink` へ渡す                     | DEV  | done | 索引は `paths.runRecordIndex` に持ち、生成の外へ持ち越さない                  |
-| 3   | 単体テストを追加                                                                             | DEV  | done | 置き場のない項目、複数 run の最新選択                                         |
-| 4   | 前後の出力比較と時間の測定                                                                   | DEV  | open | sandbox で `tsx` の実行が承認待ちになり実行できなかった。手順は対応結果に記載 |
+| No  | 作業                                                                                         | 担当 | 状態 | メモ                                                              |
+| --- | -------------------------------------------------------------------------------------------- | ---- | ---- | ----------------------------------------------------------------- |
+| 1   | `RunRecordIndex` を `src/shared/run-records.ts` に追加し、一覧と frontmatter を 1 回だけ読む | DEV  | done | `findRunRecord` に任意の第 4 引数を追加。省略時の動きは従来どおり |
+| 2   | `buildDashboardMarkdown` で生成ごとに索引を作り、`formatTaskLink` へ渡す                     | DEV  | done | 索引は `paths.runRecordIndex` に持ち、生成の外へ持ち越さない      |
+| 3   | 単体テストを追加                                                                             | DEV  | done | 置き場のない項目、複数 run の最新選択                             |
+| 4   | 前後の出力比較と時間の測定                                                                   | DEV  | done | オーケストレーターが実施。結果は対応結果の検証に書き写した        |
 
 ## 5. 対応結果
 
@@ -68,10 +67,9 @@ findRunRecord が記録の置き場のない項目で execution/runs/ を全部�
 ### 5.2. 検証
 
 - `npm run typecheck` と、`tests/src/exec/run-records.test.ts`・`tests/src/dashboard` の単体テストは通過した。
-- 前後の出力比較と時間の測定は、sandbox で `tsx` の実行が承認待ちになり未実施。次の手順で行う（`tmp/compare.sh` に用意した）。
-  1. 旧 `dashboard.ts`（`git show HEAD:src/dashboard/dashboard.ts`）で `specdojo dashboard build --project prj-0001` を実行して時間を測り、生成物をコピーする。
-  2. 新しい版で同じ手順を行う。
-  3. `generated_at` の行を除いて `diff` し、一致を確かめる。
+- 前後の出力比較と時間の測定は、executor の sandbox で `tsx` を実行できなかったため、オーケストレーターが行った。executor は流し直していない。結果は次のとおり。
+  - 時間（`specdojo dashboard build`）: 本体の作業ツリーのデータで、直す前（develop の dist）が 52.2 秒、直した後（この worktree の src）が 13.3 秒。worktree のデータでは 8.0 秒から 5.2 秒（2 回ずつの平均）。
+  - 出力比較: `dashboard.md`・`exec-records.md`・`catalog-scaffold.md`・`dashboard-timeline-gantt.svg` は、`dashboard.md` の `generated_at` の 1 行を除いて、直す前と直した後で同じだった（`cmp` と `diff` で確かめた）。
 
 ### 5.3. CHANGELOG に書く事項
 
@@ -81,8 +79,8 @@ findRunRecord が記録の置き場のない項目で execution/runs/ を全部�
 ### 5.4. 判断
 
 - キャッシュは `DashboardPaths` の任意項目として生成ごとに作り、モジュールの大域には置かない。理由は、生成の外へ持ち越さないという完了条件のため。
-- 前後の測定は実行できなかったため、完了条件のうち時間と出力同一の確認が残る（`handoff` に記載）。
+- 前後の測定と出力比較は、オーケストレーターが行った結果を検証に書き写した。時間は短くなり、出力は `generated_at` 以外で同一だった。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- 親項目: PJR-BBTW（`derived_from`）。追跡先は登録簿 `prj-0001:pjr-index`。
