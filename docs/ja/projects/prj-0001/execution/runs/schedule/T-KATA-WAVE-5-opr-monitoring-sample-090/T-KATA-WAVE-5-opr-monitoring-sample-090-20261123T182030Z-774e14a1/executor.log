@@ -1,45 +1,31 @@
-レビュー結果: verdict は `incomplete` です。
+レビュー結果は `incomplete` です。対象成果物は完了条件を満たしていますが、型の追加完了条件を満たしていません。
 
-対象の `opr-monitoring-sample` の評価は最新で `pass`（92 点）です。ただし、plan が要求する型の評価に、最新の `pass` になっていないものが残っています。
+**鮮度確認**
+- `specdojo grade list --target kata --changed-only` を `opr-monitoring-sample.md` と `opr-rulebook.md` に実行しました。どちらも出力なしで、評価結果は最新です。
+- 評価対象のサイドカーを grep で読みました。`opr-monitoring-sample` は pass（92）、`opr-rulebook` は needs-work（94）、`opr-support-sample` は fail（57）です。
 
-**確認した内容**
-- 鮮度確認として、`specdojo grade list --target kata --path <対象> --changed-only` を 3 件で実行しました。いずれも出力なし・終了コード 0 で、評価結果は最新です。
-  - 対象: `docs/ja/specdojo/samples/opr-monitoring-sample.md`
-  - 型: `docs/ja/specdojo/rulebooks/opr-rulebook.md`
-  - 型: `docs/ja/specdojo/samples/opr-batch-sample.md`
-- `opr-change-sample` と `opr-support-sample` の鮮度は、plan の記載（最新）を前提にしました。シェルの変数展開が拒否されたため、個別には再確認していません。
-- 対象の `opr-monitoring-sample` は blocker 0・major 0・minor 6 です。minor は次の 6 件で、規約差や数値化の指摘が中心です。
-  - 報告先の欠落（F001）
-  - 暫定対応の時限が数値でない（F002）
-  - 閾値が「月 3 件以上」で、`opr-sample` の「月 3 回を超えたら」と食い違う（F003）
-  - 日次締めの差異に手順と時限がない（F004）
-  - 日次点検の時刻が 9:30 で、`opr-sample` の 9:45 と食い違う（F005）
-  - 障害対応の表が template の列構成と異なる（F006）
-- 対象成果物の完了条件 DC-001〜005 は、grade が満たすと判定しています。DC-005 の対象システム・環境・機能停止条件にも、grade の指摘はありません。
+**判断根拠**
+- 対象成果物 `opr-monitoring-sample` の `verdict` は pass（92）で、minor が 6 件です。blocker と major はありません。
+- 完了条件 DC-001〜DC-005 に直結する finding はありません。minor は次の内容で、完了を妨げません。
+  - 報告先の記述
+  - 暫定対応の時限
+  - 閾値の食い違い
+  - 時刻の食い違い
+  - 表の列構成
+- 型の追加完了条件は、型すべてに最新の pass を求めています。次の 2 件が満たしていません。
+  - `opr-rulebook` は needs-work です。major の F002 は、`opr-batch-sample`・`opr-change-sample`・`opr-support-sample` の `rulebook` が `opd-rulebook` のままで、template の構成にも沿っていない、という指摘です。
+  - `opr-support-sample` は fail（score 57、blocker 1、major 14）で、評価日が 2026-11-21 と古いままです。
+- `opr-batch-sample` と `opr-change-sample` は、再評価後に pass へ変わっています。
 
-**完了できない理由**
-plan の追加完了条件は、型すべてに最新の `pass` を求めています。次の 4 件が `pass` ではありません。
-
-| 型 | verdict | score | 主な指摘 |
-| --- | --- | --- | --- |
-| `opr-rulebook` | `needs-work` | 94 | major 1 件: `opr-batch-sample`・`opr-change-sample`・`opr-support-sample` が `rulebook: specdojo:opd-rulebook` を宣言し、template の 12 章構成になっていない |
-| `opr-batch-sample` | `needs-work` | 66 | major 8 件 |
-| `opr-change-sample` | `fail` | 38 | blocker 1 件・major 23 件 |
-| `opr-support-sample` | `fail` | 57 | blocker 1 件・major 14 件 |
-
-この 3 件の sample の評価は 2026-11-21 のものです。
-
-**改善指示**
-1. `opr-batch-sample`・`opr-change-sample`・`opr-support-sample` の Frontmatter を `rulebook: specdojo:opr-rulebook` に直します。あわせて template の 12 章構成に揃えるか、sample 宣言から外します。これで `opr-rulebook` の major 1 件が解消します。
-2. 3 件の sample は必須章が欠落しており、大幅な書き直しが要ります。その後に再 grade し、`pass` にします。
-3. `opr-monitoring-sample` の minor 6 件を直します。優先は、`opr-sample` との食い違い 2 件（F003 と F005）です。
-4. `opr-rulebook` の minor 1 件（6.4 と 6.6 が template と重複）も整理します。
+**未充足事項・改善指示**
+- `opr-support-sample` を `opr-rulebook` と template に沿って作り直します。`rulebook` の宣言を `opr-rulebook` に直し、必須章を揃えてから再評価します。
+- `opr-rulebook` の F002 を解消します。support-sample を直せば、あわせて解消する見込みです。
+- `opr-rulebook` の F001（template 本文との重複）は minor です。必要なら整理します。
+- 次回の schedule 再計画で、上の 2 点を型の整備として扱ってください。
 
 **確認できなかった範囲**
-- 実行記録（先行する edit タスクの result）は特定していません。
-- 成果物は再評価していません。
-- `opr-change-sample` と `opr-support-sample` の鮮度は、上記のとおり再確認していません。
+- 成果物を再評価していません。`opr-sample`、`opr-index`、`opr-template` の本文は読んでいません。実行記録（先行 edit の result）も特定できず、読めていません。
 
 <specdojo_executor_evidence>
-{"completion_status":"complete","final_message":"verdict=incomplete。対象 opr-monitoring-sample は最新で pass（92、minor 6）。ただし型の opr-rulebook が needs-work、opr-batch-sample が needs-work、opr-change-sample と opr-support-sample が fail で、plan の追加完了条件（型すべてに最新の pass）を満たさない。確認できなかった範囲: 実行記録（edit result）の特定、opr-change-sample と opr-support-sample の鮮度の個別再確認。成果物の再評価はしていない。","handoff":["opr-batch-sample・opr-change-sample・opr-support-sample の rulebook を specdojo:opr-rulebook に直し、template の12章構成へ書き直して再 grade する","opr-rulebook の minor（6.4・6.6 が template と重複）を整理する","opr-monitoring-sample の minor 6 件（特に opr-sample との閾値・点検時刻の食い違い）を直す"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/opr-monitoring-sample.md --changed-only","status":"passed","summary":"出力なし、終了コード 0。評価結果は最新"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/opr-rulebook.md --changed-only","status":"passed","summary":"出力なし、終了コード 0。評価結果は最新"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/opr-batch-sample.md --changed-only","status":"passed","summary":"出力なし、終了コード 0。評価結果は最新"}]}
+{"completion_status":"complete","final_message":"verdict=incomplete。対象 opr-monitoring-sample は pass(92)・完了条件充足だが、型の追加完了条件として opr-rulebook が needs-work(major 1)、opr-support-sample が fail(57, 古い評価)で pass 未達。鮮度は monitoring-sample と rulebook で最新を確認。確認できなかった範囲: 成果物の再評価、opr-sample/opr-index/opr-template 本文の通読、先行 edit の実行記録の確認は行っていない。","handoff":["opr-support-sample を opr-rulebook と template に沿って作り直し(rulebook 宣言を specdojo:opr-rulebook へ修正、必須章を追加)、再 grade で pass を得る","opr-rulebook の F002(batch/change/support sample の rulebook 宣言不整合)を解消し再 grade する。F001(template との重複)は minor で任意整理","対象 opr-monitoring-sample の minor 6 件は完了を妨げないが、F002 暫定対応時限の数値化、F003/F005 の opr-sample との閾値・時刻の整合を改善候補とする"],"validations":[],"target_coverage":[{"target":"specdojo:opr-monitoring-sample","status":"unchanged","reason":"review タスクのため成果物は変更しない。grade は pass(92)で最新、完了条件を満たす。"}]}
 </specdojo_executor_evidence>
