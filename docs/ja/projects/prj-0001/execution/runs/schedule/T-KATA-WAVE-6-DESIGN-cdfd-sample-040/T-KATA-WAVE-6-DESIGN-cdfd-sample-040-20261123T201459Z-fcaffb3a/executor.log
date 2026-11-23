@@ -1,0 +1,21 @@
+主 rulebook `cdfd-rulebook` と、取り込んでいる記法の rulebook 2 つ（Mermaid・D2）を編集しました。grade の finding のうち F002〜F004 は rulebook 側で直しました。F001・F005・F006・F007・F008 は rulebook の編集だけでは片付かないため、申し送りに残しています。追加の検証は、Markdown の整形（`prettier --write`）だけを実行しました。lint などの検証は親 runner が実行します。sample・recipe・template と `status` は変えていません。
+
+**`docs/ja/specdojo/rulebooks/cdfd-rulebook.md`**
+- **F002（追従対象と担当）**: 「位置づけと用語定義」に表を足しました。全体概要の領域分割・データストア・凡例、記法ルール、STSD、委譲先の CDFD が変わったときに、本書のどこを見直すかを示しています。更新は `BA`、表・図・ID の整合の確認は `ARC` と書きました。この Role code は、成果物カタログの `roles` の使い方から選んだものです。「全体方針」には、この表への案内を 1 行足しました。
+- **F003（検証の入口）**: 「共通の運用」に検証コマンドを明記しました。Frontmatter は `npm run lint:fm`、図は採用した記法に応じて `npm run lint:mermaid` か `npm run lint:d2` です。
+- **F004（未決事項）**: 記述ガイドに「未決事項」の節を足し、列を template と同じ「論点」「影響先」「決定者」「決定時期」にしました。本文要件の表もこれに合わせ、「完成判定」の節は番号を 6.9 に繰り下げました。
+- **PJR-76N9 の決まり**: 目的の書き方を「誰が使うか」から「どの利用場面で何を判断するための文書か」に改め、良い例と悪い例を付けました。「完成判定」の「確認者は」という書き出しも削りました。
+
+**記法の rulebook 2 つ（`cdfd-mermaid-rulebook.md`・`cdfd-d2-rulebook.md`）**
+- 「全体方針」にあった、プロセスグループを代表ノード 1 つで表すという項目を消しました。記述ガイドの「ノード」の節と同じ内容だったためです。
+- 「凡例と可読性」にあった、ほかの rulebook の図の分け方の再掲を消し、包含元を参照する形にしました。
+- 「共通の運用」に、それぞれの検証コマンドを書き足しました。
+
+**直さなかった箇所と理由**
+- **F006**: 指摘は「template と recipe がプロセス領域に入出力の箇条書きを求めている」というものですが、実際には template も recipe も箇条書きを禁じています。規定に合っていないのは sample だけなので、rulebook はそのままにしました。
+- **F007**: 目的 1〜2 文などの分量の規定は template と揃っています。sample 側の超過と判断し、規定はそのままにしました。
+- **F001・F005・F008**: 主 rulebook は `ready` ですが、取り込んでいる記法の rulebook は 2 つとも `draft` です。`ready` にするのは人の判断なので、本文には `status` を書かず申し送りに回しました。記法を変えたときの影響範囲は、F002 で足した表で示しています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"cdfd-rulebook に、改訂時の追従対象の表（BA が更新、ARC が整合を確認）、Frontmatter と図の検証コマンド、「未決事項」の記述ガイド、PJR-76N9 に沿った目的の書き方を足した（F002・F003・F004）。取り込んでいる記法の rulebook 2 つ（Mermaid・D2）は、重複した全体方針の項目とほかの rulebook の図の分け方の再掲を削り、検証コマンドを書き足した。F006・F007 は sample 側の不備と判断し、F001・F005・F008 は記法の rulebook を ready にする人の判断が要るため、申し送りに残した。","handoff":["F001・F005・F008: 主 rulebook `specdojo:cdfd-rulebook` と、その template・sample は `ready` だが、取り込んでいる `specdojo:cdfd-mermaid-rulebook` と `specdojo:cdfd-d2-rulebook` は `draft` のまま。人が記法の rulebook を ready にするか、未確定の依存を許すリリース判断を登録簿の個票に残す必要がある。rulebook の本文には status の状態を書かず、記法を変えたときの影響範囲だけを「位置づけと用語定義」の追従対象の表に示した。","F006: template（`specdojo:cdfd-template`）と recipe（`specdojo:cdfd-recipe`）は、プロセス領域に主要入力・主要出力・データストアの箇条書きを置くことを禁じている。指摘のうち「template と recipe が求めている」という前提は事実と異なる。規定に合っていないのは sample（`docs/ja/specdojo/samples/cdfd-sample.md` の 3.1・3.2 の要約文と箇条書き）だけなので、次の sample の段で消す。","F007: sample の目的（3 項目）、適用範囲（5 項目）、入荷検品の図の後の注記（6 文）が、rulebook と template の分量の規定（目的 1〜2 文、対象・対象外を各 1 行、注記 1〜2 文）を超えている。規定は template と揃っているため変えず、次の sample の段で sample を規定に合わせる。目的は PJR-76N9 に沿って、役割ごとの利用ではなく利用場面と判断内容で書き直す。","「位置づけと用語定義」の追従対象の表に書いた Role code（更新する `BA`、整合を確かめる `ARC`）は、prj-0001 の成果物カタログ（dct）の `roles` の使い方から選んだもの。ほかの CDFD の型（`cdfd-overview-rulebook`・`cdfd-uc-rulebook`）にも追従対象の表を置くかは、それぞれの段で判断する。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/rulebooks/cdfd-rulebook.md docs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md docs/ja/specdojo/rulebooks/cdfd-d2-rulebook.md","status":"passed","summary":"変更した 3 ファイルを整形した（エラーなし）"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴として蓄積されるファイルを変更していない","reason":"変更したのは docs/ja/specdojo/rulebooks/ 配下の rulebook だけで、plan・result・個票は変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"変更した YAML がない","reason":"変更したのは Markdown の rulebook だけで、*.yaml / *.yml を変更していない"}]}
+</specdojo_executor_evidence>
