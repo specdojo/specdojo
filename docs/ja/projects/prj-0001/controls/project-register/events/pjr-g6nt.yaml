@@ -1,0 +1,65 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_8dda26380fd74510a50d4310242c0435
+  ts: "2026-11-23T02:38:57Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 運用メモの雛形と specdojo where playbook を足し、指示の本文の案を書く
+    - field: description
+      from: ""
+      to: 運用メモの雛形を作れるようにし、where で場所を引けるようにする。オーケストレーターの指示の本文を、where で引いた運用メモを読む形に直す案を書く
+    - field: input
+      from: ""
+      to: '["利用者の問い（2026-11-23）: オーケストレーターのプロジェクトごとの知見を playbook にまとめているが、正式な機能か。オーケストレーターの答えは、正式ではない（型・置き場所・見つけ方が決まっていない）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-2P7C"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-9170"]'
+    - field: commit_type
+      from: ""
+      to: feat
+    - field: commit_scope
+      from: ""
+      to: config
+- v: 1
+  id: reg_c9fa5672d698443ca655d8e70c816a2c
+  ts: "2026-11-23T02:39:18Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_8dda26380fd74510a50d4310242c0435
