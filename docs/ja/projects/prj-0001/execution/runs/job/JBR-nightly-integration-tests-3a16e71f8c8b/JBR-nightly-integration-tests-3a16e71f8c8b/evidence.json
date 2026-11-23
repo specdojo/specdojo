@@ -1,0 +1,185 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-nightly-integration-tests-3a16e71f8c8b",
+  "run_id": "JBR-nightly-integration-tests-3a16e71f8c8b",
+  "stage": {
+    "role": "executor",
+    "actor": "specdojo-runner",
+    "status": "succeeded",
+    "started_at": "2026-11-23T04:27:51.091Z",
+    "completed_at": "2026-11-23T04:30:29.935Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-nightly-integration-tests-3a16e71f8c8b.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/queues/day-a-2026-11-23.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/queues/day-b-2026-11-23.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/queues/day-c-2026-11-23.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/queues/day-d-2026-11-23.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/queues/day-e-2026-11-23.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/queues/day-f-2026-11-23.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/queues/day-g-2026-11-23.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/queues/day-h-2026-11-23.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/queues/day-i-2026-11-23.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/queues/day-j-2026-11-23.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/queues/day-k-2026-11-23.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/queues/grade-day-2026-11-23.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/queues/grade-retry-2026-11-23.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/queues/grade-v010-2026-11-23.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/queues/rerun-0jvb-2026-11-23.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/queues/resume-beq8-2026-11-23.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/queues/resume-ef4z-2026-11-23.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/queues/resume-n4d0-2026-11-23.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/queues/resume-tjzm-2026-11-23.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/queues/resume-xhs8-2026-11-23.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/queues/resume2-beq8-2026-11-23.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/queues/resume2-n4d0-2026-11-23.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/queues/resume2-tjzm-2026-11-23.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/queues/resume3-n4d0-2026-11-23.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/queues/resume4-tjzm-2026-11-23.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/queues/v010-a-2026-11-23.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/queues/v010-b-2026-11-23.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/queues/v010-c-2026-11-23.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/queues/v010-d-2026-11-23.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/queues/v010-e-2026-11-23.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/queues/v010-f-2026-11-23.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/reports/nightly-integration-tests/nightly-integration-tests-20261123T042751Z.md",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 33,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "id": "job-command",
+      "source": "runner",
+      "command": "# integration-tests\n'/usr/local/bin/node' '/usr/local/share/npm-global/bin/specdojo' orchestrator integration-tests --project \"prj-0001\" --scheduled-at \"2026-11-23T04:22:37.700Z\"",
+      "status": "passed",
+      "summary": "exit 0"
+    }
+  ],
+  "final_message": "Runner command exit 0.",
+  "command": {
+    "shell": "/bin/sh -eu",
+    "value": "# integration-tests\n'/usr/local/bin/node' '/usr/local/share/npm-global/bin/specdojo' orchestrator integration-tests --project \"prj-0001\" --scheduled-at \"2026-11-23T04:22:37.700Z\"",
+    "exit_code": 0,
+    "stdout_ref": "docs/ja/projects/prj-0001/execution/runs/job/JBR-nightly-integration-tests-3a16e71f8c8b/JBR-nightly-integration-tests-3a16e71f8c8b/command.stdout.log",
+    "stderr_ref": "docs/ja/projects/prj-0001/execution/runs/job/JBR-nightly-integration-tests-3a16e71f8c8b/JBR-nightly-integration-tests-3a16e71f8c8b/command.stderr.log",
+    "stdout": "{\"steps\":[{\"id\":\"integration-tests\",\"status\":\"succeeded\",\"reason\":\"command exited 0\",\"started_at\":\"2026-11-23T04:27:51.093Z\",\"completed_at\":\"2026-11-23T04:30:28.943Z\",\"exit_code\":0,\"evidence_ref\":\"docs/ja/projects/prj-0001/execution/runs/job/JBR-nightly-integration-tests-3a16e71f8c8b/JBR-nightly-integration-tests-3a16e71f8c8b-attempt-1-step-integration-tests/evidence.json\"}]}",
+    "stderr": ""
+  },
+  "log_refs": [
+    {
+      "kind": "command-stdout",
+      "path": "docs/ja/projects/prj-0001/execution/runs/job/JBR-nightly-integration-tests-3a16e71f8c8b/JBR-nightly-integration-tests-3a16e71f8c8b/command.stdout.log",
+      "bytes": 378,
+      "truncated": false
+    },
+    {
+      "kind": "command-stderr",
+      "path": "docs/ja/projects/prj-0001/execution/runs/job/JBR-nightly-integration-tests-3a16e71f8c8b/JBR-nightly-integration-tests-3a16e71f8c8b/command.stderr.log",
+      "bytes": 0,
+      "truncated": false
+    }
+  ]
+}
