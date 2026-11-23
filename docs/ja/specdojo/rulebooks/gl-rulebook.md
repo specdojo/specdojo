@@ -60,7 +60,11 @@ Glossary Documentation Rules
 | `locale`   | 定義の言語（例: `ja` / `en`）                | ○    |
 | `status`   | 文書成熟度。`draft` / `ready` / `deprecated` | ○    |
 
+`status` は schema の `required` に含まれないが、[[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] が全種別で必須とするため記載する。
+
 構造検査は `npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/gl.schema.yaml --data <対象.yaml>`、参照検査は `node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references <対象.yaml>`。ともにエラーなし・終了コード 0 を確認する。modeline は `# yaml-language-server: $schema=<相対パス>`。
+
+参照検査が扱うのはファイル内の ID 重複と参照先の存在だけで、BDD・BR の参照は検査しない。業務の受入確認では用語集を横断して ID の一意性・翻訳以外の概念重複を照合し、参照元で意味と呼び方が一致すれば合格とする。
 
 ## 5. 本文要件
 
@@ -130,7 +134,6 @@ Glossary Documentation Rules
 
 - 良い例: 同じファイルの「販売」を分類に使い、別ファイルの「商品」は文書リンクで案内する。
 - 悪い例: 未定義の分類名や別ファイルの ID を指定する、分類のためだけに共通用語を複製する。
-- 参照検査が扱うのはファイル内の ID 重複と参照先の存在だけで、BDD・BR の参照は検査しない。業務の受入確認では用語集を横断して ID の一意性・翻訳以外の概念重複を照合し、参照元で意味と呼び方が一致すれば合格とする。
 
 ### 6.7. 改訂・廃止時の判断
 
