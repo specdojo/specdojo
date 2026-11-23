@@ -4,12 +4,11 @@ document: specdojo:bps-sample
 path: docs/ja/specdojo/samples/bps-sample.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-sample
 verdict: pass
-score: 92
-graded_at: "2026-11-21T03:10:39.429Z"
-graded_by: opus-executor
-content_hash: 9381a2055483fdaff507cbc8941640de9fc8c5b0154af58f99c931c163c8dc9d
+score: 100
+graded_at: "2026-11-23T20:06:26.154Z"
+graded_by: sonnet-review-executor
+content_hash: b623ce83998d900b49455cd1b1e0496f4ea4e587c9b65adc9a08c93a5caf5a59
 categories:
   purpose:
     score: 100
@@ -18,7 +17,7 @@ categories:
   planning:
     score: 100
   business:
-    score: 92
+    score: 100
   architecture:
     score: 100
   usability:
@@ -26,9 +25,9 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 100
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -52,8 +51,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
     level: 4
     score: 100
@@ -76,14 +75,14 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -105,68 +104,6 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 6
+  minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: minor
-    rule: vp-ba-requirements-completeness
-    line: 59
-    anchor: "| `E-02`  | `S-02`       | 同じ商品に未完了依頼がある | 新規依頼の確定 | 店主代表 | 既存依頼へ数量を反映するか決める               | 再承認、または重複不要記録で終了 |"
-    message: >-
-      E-02 の「再承認」は、既存依頼へ数量を反映した後にどのステップ（S-03 /
-      S-04）へ合流し、修正済み補充依頼を仕入グループへ渡し直すのかが示されておらず、出力にも修正済み依頼の成果がないため、合流先と確定する成果を明示する必要がある。
-    message_ja: >-
-      E-02 の「再承認」は、既存依頼へ数量を反映した後にどのステップ（S-03 /
-      S-04）へ合流し、修正済み補充依頼を仕入グループへ渡し直すのかが示されておらず、出力にも修正済み依頼の成果がないため、合流先と確定する成果を明示する必要がある。
-  - id: F002
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 71
-    anchor: "| 保留と再開     | `E-01`、`E-03`〜`E-05` の検出条件      | 処置の記録が残り、再開後に補充依頼へ至る     | 保留記録、補充依頼     |"
-    message: >-
-      「保留と再開」は E-01、E-04
-      からの再開も一律に「補充依頼へ至る」としているが、情報補完後に販売停止・基準以上や既存依頼が判明すれば補充不要記録・重複不要記録で終了できるため、補充依頼に至る追加条件を示すか、再開後の判定に応じた各成果を期待結果に含める必要がある。
-    message_ja: >-
-      「保留と再開」は E-01、E-04
-      からの再開も一律に「補充依頼へ至る」としているが、情報補完後に販売停止・基準以上や既存依頼が判明すれば補充不要記録・重複不要記録で終了できるため、補充依頼に至る追加条件を示すか、再開後の判定に応じた各成果を期待結果に含める必要がある。
-  - id: F003
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 62
-    anchor: "| `E-05`  | `S-04`       | 仕入グループへ引き渡せない | 引き渡し       | 店主代表 | 確定済み・未受領のまま状況を保留記録に残す     | 可能になり次第 `S-04` から再開   |"
-    message: E-05 の再開条件「可能になり次第」は何がそろえば S-04 を再開できるかを判定できないため、仕入グループが補充依頼を参照できる状態に戻ったことなど、確認可能な事実で再開条件を記述する必要がある。
-    message_ja: E-05 の再開条件「可能になり次第」は何がそろえば S-04 を再開できるかを判定できないため、仕入グループが補充依頼を参照できる状態に戻ったことなど、確認可能な事実で再開条件を記述する必要がある。
-  - id: F004
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 50
-    anchor: "| 補充依頼     | 仕入グループ | `S-03` の完了条件を満たす                  | 補充依頼 | `H-01` で `P-01-01` 発注内容確定へ |"
-    message: >-
-      概要は出力の確定を終了点とする一方、補充依頼の確定条件は S-03 の完了だけであり、S-04 の引渡し前や E-05
-      の保留中にも終了条件を満たすため、正常終了には仕入グループが参照できることを含め、承認済みと引渡し完了を区別する必要がある。
-    message_ja: >-
-      概要は出力の確定を終了点とする一方、補充依頼の確定条件は S-03 の完了だけであり、S-04 の引渡し前や E-05
-      の保留中にも終了条件を満たすため、正常終了には仕入グループが参照できることを含め、承認済みと引渡し完了を区別する必要がある。
-  - id: F005
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 51
-    anchor: "| 補充不要記録 | 店主代表     | 対象商品、理由、確認時刻があり、依頼がない | 在庫記録 | 次回の販売・入荷後に再判定         |"
-    message: >-
-      補充不要記録の確定条件を「依頼がない」としているが、S-01・S-02
-      の補充不要分岐は既存依頼がある商品も除外しておらず、その依頼を取り消す処置もないため、「新規依頼を作らない」という条件に限定するか、既存依頼がある場合の処置と分岐優先関係を明示する必要がある。
-    message_ja: >-
-      補充不要記録の確定条件を「依頼がない」としているが、S-01・S-02
-      の補充不要分岐は既存依頼がある商品も除外しておらず、その依頼を取り消す処置もないため、「新規依頼を作らない」という条件に限定するか、既存依頼がある場合の処置と分岐優先関係を明示する必要がある。
-  - id: F006
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 8
-    anchor: "- プロセス領域: 在庫グループの補充判断（`P-06`）"
-    message: >-
-      プロセス領域は「在庫グループの補充判断（P-06）」とするだけで、在庫グループの CDFD 正本 `cdfd-inventory` への参照と、同じ領域の
-      P-05（在庫数の算出）との境界説明がなく、業務目的も参照でなく再記述しているため、rulebook の「導入文と概要」と recipe のコツに沿って CDFD を参照し領域内の境界を示す必要がある。
-    message_ja: >-
-      プロセス領域は「在庫グループの補充判断（P-06）」とするだけで、在庫グループの CDFD 正本 `cdfd-inventory` への参照と、同じ領域の
-      P-05（在庫数の算出）との境界説明がなく、業務目的も参照でなく再記述しているため、rulebook の「導入文と概要」と recipe のコツに沿って CDFD を参照し領域内の境界を示す必要がある。
+findings: []
