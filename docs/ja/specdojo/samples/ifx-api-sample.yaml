@@ -1,22 +1,38 @@
 # specdojo-schema: none reason=external-openapi
+# 構造は OpenAPI 3.0.3 に対応した検証器（例: Redocly CLI、Spectral）で確かめる。
+# 詳細契約の参照元: [[specdojo:ifx-index-sample|駄菓子屋きぬや 販売管理CLIの外部システムI/F一覧]] の「本部への売上登録」。
+# 人間の PO（店主代表）が契約の承認・保留・差し戻しと ready への昇格を判断する。
+# _TODO_: 本部側の問い合わせ窓口は未特定。BA が契約レビューの前に特定する。
+# _UNDECIDED_: ready にするための残課題は次のとおり。
+#   - 結果不明のときの受付照会の操作（照会 API の有無）を本部と決める。
+#   - 税区分・合計・預かり金を本部へ送るか（現在は本部が単価と数量から計算する仮定）。
+#   - 通貨は日本円のみとする仮定の確認。
+#   - OpenAPI の検証器での構造の確認と、店舗端末からの接続確認。
 openapi: 3.0.3
 info:
   title: 本部売上登録API
   version: 1.0.0
   description: >-
-    駄菓子屋きぬやの店舗端末の販売管理 CLI が、会計確定した売上を本部へ登録する API。
+    駄菓子屋きぬやの店舗端末の販売管理 CLI が、会計確定した現金販売の売上を本部へ登録する API。
     `specdojo:ifx-index-sample` の「本部への売上登録」の詳細仕様にあたる。
+    連携の前提: 単一店舗・店舗端末 1 台、通貨は日本円（整数の円）、税と合計は本部が商品マスタの税区分で計算する。
+    合意対象: 要求・応答の項目、取引 ID による重複排除、各応答コードでの店舗端末の扱い。
+    冪等性: 同じ `transaction_id` の再送は登録せず、409 で既存の `sale_id` を返す。
+    互換: 任意の項目の追加は MINOR を上げ、受信側は知らない応答の項目を無視する。
+    項目の削除・改名・必須化は MAJOR とパスの版（/v1）を上げる。
+    404 はこの操作で返さない（対象の資源を指定しないため）。商品コードの未登録は 400 で返す。
 
 x-spec-meta:
   id: specdojo:ifx-api-sample
   type: api
   status: draft
   rulebook: specdojo:ifx-api-rulebook
-  based_on: []
+  based_on:
+    - specdojo:ifx-index-sample
 
 servers:
   - url: https://api.hq.kinuya.example.com
-    description: 本部（本番）
+    description: 本部（例示用のドメイン）
 
 paths:
   /v1/sales:
@@ -33,31 +49,48 @@ paths:
               $ref: "#/components/schemas/CreateSaleRequest"
       responses:
         "201":
-          description: 登録成功
+          description: 受付済み。店舗端末は `sale_id` をローカル記録へ保存し、会計を確定する。
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/CreateSaleResponse"
         "400":
-          description: 入力不正
+          description: 入力不正（商品コードの未登録を含む）。`details` の項目を直して送り直す。
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
         "401":
-          description: 認証エラー
+          description: 認証失敗。送り直さず、開発担当が API キーを確認する。
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: 認可失敗。送り直さず、開発担当が店舗の登録権限を本部に確認する。
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
         "409":
-          description: 同じ取引IDの売上が登録済み
+          description: 同じ取引 ID の売上が登録済み。応答の `sale_id` を既存の登録として保存し、受付済みとして扱う。
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DuplicateSaleResponse"
+        "429":
+          description: 利用制限。`Retry-After` の秒数を待ち、同じ取引 ID で送り直す。
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+                minimum: 1
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
         "500":
-          description: 内部エラー
+          description: 内部エラー。受付の有無が分からないため結果不明として保持し、同じ取引 ID で送り直す。
           content:
             application/json:
               schema:
@@ -78,7 +111,9 @@ components:
       properties:
         transaction_id:
           type: string
-          description: 取引ID（店舗端末側の識別子。重複登録の判定に使う）
+          pattern: "^TX-[0-9]{8}-[0-9]{4}$"
+          maxLength: 16
+          description: 取引ID（店舗端末が採番。例 TX-20261123-0001。重複登録の判定に使う）
         sold_at:
           type: string
           format: date-time
@@ -92,18 +127,21 @@ components:
     SaleLine:
       type: object
       additionalProperties: false
+      description: >-
+        販売の明細。税区分・税額・合計・預かり金は送らず、本部が商品マスタから計算する。
       required: [product_code, quantity, unit_price]
       properties:
         product_code:
           type: string
-          description: 商品コード
+          pattern: "^[0-9]{4,13}$"
+          description: 商品コード（4〜13 桁の数字。JAN コードまたは店舗の独自コード）
         quantity:
           type: integer
           minimum: 1
         unit_price:
           type: integer
           minimum: 0
-          description: 販売単価（円）
+          description: 販売単価（税込みの円）
 
     CreateSaleResponse:
       type: object
@@ -115,7 +153,22 @@ components:
           description: 本部が採番した売上ID
         status:
           type: string
-          enum: [ACCEPTED, REJECTED]
+          enum: [ACCEPTED]
+          description: 受付の状態。拒否は 4xx の応答で返し、201 では返さない。
+
+    DuplicateSaleResponse:
+      type: object
+      additionalProperties: false
+      required: [code, message, sale_id]
+      properties:
+        code:
+          type: string
+          enum: [DUPLICATE_TRANSACTION]
+        message:
+          type: string
+        sale_id:
+          type: string
+          description: 既存の登録の売上ID
 
     ErrorResponse:
       type: object
@@ -128,4 +181,4 @@ components:
           type: string
         details:
           type: object
-          description: 任意の追加情報
+          description: 任意の追加情報（入力不正の項目名など）

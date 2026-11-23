@@ -61,6 +61,10 @@ specdojo:
 | 2   | ifx-api-rulebook の必須構造に info.version と responses を足す | BA   | done | ifx-msg-rulebook は既に version を要求  |
 | 3   | ifx-api-sample を本部の売上登録 API に差し替える               | BA   | done | ifx-index-sample の本部への売上登録対応 |
 | 4   | 型の grade の再実行                                            | BA   | open | executor は grade を実行しないため      |
+| 5   | ifx-index-sample の売上登録の spec_ref とコメントを直す        | BA   | done | 2 回目。spec_ref を ifx-api-sample に   |
+| 6   | 4 文書から EAPIS・EMS・ESIL を外し、英語名の行を足す           | BA   | done | 2 回目                                  |
+| 7   | grade の minor と note を 4 文書で直す                         | BA   | done | 2 回目。対応結果の表を参照              |
+| 8   | yaml-pages で表示のページを作り直す                            | BA   | done | 3 ページを生成                          |
 
 ## 5. 対応結果
 
@@ -68,12 +72,84 @@ specdojo:
 - `ifx-msg-sample` に `info.version: 1.0.0` を追加した。`ifx-msg-rulebook` は `info` に `version` を既に要求しており、sample と整合する。変更なし。
 - `ifx-api-rulebook` の必須構造に `info.version` と各操作の `responses` を追加し、例の決済題材（`ifx-api-payment`・`createPayment`）を売上登録に置き換えた。
 - 決めた点: version は `1.0.0`。`ifx-msg-rulebook` の「決済」は外部システムの一般例のため残した。
-- `ifx-index-sample` の変更案: なし（`spec_ref` は TBD で、`ifx-api-kinuya-sales.yaml` を想定する記述と整合する）。
+- `ifx-index-sample` の変更案: なし（`spec_ref` は TBD で、`ifx-api-kinuya-sales.yaml` を想定する記述と整合する）。1 回目の判断。2 回目の利用者の決定で、下記のとおり直した。
 
-### 5.1. CHANGELOG に書く事項
+### 5.1. 2 回目の対応（2026-11-23）
+
+- `ifx-api-rulebook`・`ifx-msg-rulebook` を標準の章構成（全体方針・位置づけ・ファイル命名・ID規則・先頭メタ項目・本文要件・記述ガイド・禁止事項）に組み直した。タイトルを「外部API仕様 作成ルール」「外部メッセージ仕様 作成ルール」にし、直下に英語名の行を足した。`EAPIS`・`EMS`・`ESIL` は `ifx-api`・`ifx-msg`・`ifx-index` に置き換え、`ifx-index` は `[[specdojo:ifx-index-rulebook|外部システムI/F一覧 作成ルール]]` で特定した。sample の 2 つには `ESIL` の記述がなかった。
+- `ifx-index-sample` の「本部への売上登録」の `spec_ref` を `specdojo:ifx-api-sample` にし、詳細契約の wikilink のコメントを置いた。冒頭の「本部の二つの詳細仕様は未同梱」を「売上登録は同梱、商品マスタの照会は未同梱」に直し、`ifx-api-kinuya-sales.yaml` の記述は外した。商品マスタの照会は `spec_ref: TBD` のまま。
+- 決めた点と理由:
+  - `based_on` を rulebook で必須にし、参照元の `ifx-index` の ID を最低限入れるとした。sample の `based_on` を空にしないという指摘を、rulebook と sample の両方でそろえるため。
+  - 201 の `status` は `enum: [ACCEPTED]` にし、拒否は 4xx で返すとした。`REJECTED` を 201 に残すと HTTP の状態コードと意味が二重になるため。
+  - 409 は既存の `sale_id` を返す専用の `DuplicateSaleResponse` にした。再送を受付済みとして扱えるようにするため。
+  - 404 はこの操作で返さないとし、理由を `info.description` に書いた。対象の資源を指定しない登録の操作のため。商品コードの未登録は 400 で返す。
+  - 税区分・税額・合計・預かり金は送らず、本部が計算する仮定にした。`ifx-index-sample` の商品照会が税区分を本部から得るため。最終の扱いは `_UNDECIDED_` に残した。
+  - `ifx-msg-sample` の `defaultContentType` を `application/cloudevents+json` にし、`contentType` とそろえた。`datacontenttype` は `enum: ["application/json"]` に固定した。structured モードの既定と `data` の形式を分けるため。
+  - 在庫変更のイベントは `ifx-index-sample` に未掲載のため、未掲載の連携の例であり、採用するときは一覧に行を足すと `_ASSUMPTION_` に書いた。一覧に行を足すのは対象外の変更になるため、行は足していない。
+  - OpenAPI・AsyncAPI の検証器はリポジトリの依存にないため、rulebook では例（Redocly CLI・Spectral・AsyncAPI CLI）を挙げて実行記録に残す手順とした。依存の追加はこの項目の範囲外とした。
+
+指摘への対応（1 回目の後の grade の minor と note）:
+
+| 文書             | 指摘                                                                    | 対応                                                           |
+| ---------------- | ----------------------------------------------------------------------- | -------------------------------------------------------------- |
+| ifx-api-rulebook | OpenAPI 3.0.3 と 3.1.x の選び方と決める人がない                         | 直した（本文要件。DEV が ARC と合意）                          |
+| ifx-api-rulebook | 対象外（ifx-msg・ifx-file・ifx-cmd）がない                              | 直した（全体方針）                                             |
+| ifx-api-rulebook | 合意の当事者（Role）がない                                              | 直した（位置づけ）                                             |
+| ifx-api-rulebook | `specdojo-schema: none` の前提と代わりの検証の手順がない                | 直した（先頭メタ項目、記述ガイドの未決事項と検証）             |
+| ifx-api-rulebook | 配置先のディレクトリがない                                              | 直した（ファイル命名・ID規則）                                 |
+| ifx-api-rulebook | id を変えたときの `spec_ref` と yaml-pages への影響がない               | 直した（ファイル命名・ID規則）                                 |
+| ifx-api-rulebook | エラー定義の必須度が混ざる                                              | 直した（必須とし、省略は理由を書く）                           |
+| ifx-api-rulebook | ファイル名の例に拡張子がない                                            | 直した（`ifx-api-sales.yaml`）                                 |
+| ifx-api-rulebook | 互換を壊す変更の版の付け方と改訂の手順がない                            | 直した（記述ガイドの版と改訂）                                 |
+| ifx-api-rulebook | 標準の章の構成とのずれ                                                  | 直した                                                         |
+| ifx-api-rulebook | sample の id の例外の説明がない                                         | 直した（ifx-cmd-rulebook と同じ書き方）                        |
+| ifx-api-sample   | 連携の前提・合意対象・未決事項と PO の判断のコメントがない              | 直した（先頭コメントと `info.description`）                    |
+| ifx-api-sample   | `based_on` が空                                                         | 直した（`specdojo:ifx-index-sample`）                          |
+| ifx-api-sample   | 403・404・429 がない                                                    | 直した（403・429 を追加、404 は省略の理由を書いた）            |
+| ifx-api-sample   | `SaleLine` で税区分・合計・預かり金を送るかが分からない                 | 直した（送らない、本部が計算）                                 |
+| ifx-api-sample   | 結果不明のときの照会の手段と、409 で既存の `sale_id` を返すかがない     | 直した（409 は返す。照会の手段は `_UNDECIDED_` に残した）      |
+| ifx-api-sample   | 201 の `REJECTED` の意味が分からない                                    | 直した（`ACCEPTED` のみ）                                      |
+| ifx-api-sample   | 項目の追加・必須化の互換の扱いがない                                    | 直した（`info.description`）                                   |
+| ifx-api-sample   | `product_code`・`transaction_id` の形式がない                           | 直した（`pattern`・`maxLength`）                               |
+| ifx-api-sample   | 代わりの OpenAPI の検証の手段がない                                     | 直した（先頭コメント）                                         |
+| ifx-api-sample   | 本部の問い合わせの窓口がない                                            | 直した（`_TODO_`）                                             |
+| ifx-api-sample   | ready にするための残課題がない                                          | 直した（`_UNDECIDED_` の一覧）                                 |
+| ifx-api-sample   | 表示のページが旧版のまま                                                | 直した（yaml-pages で作り直した）                              |
+| ifx-msg-rulebook | AsyncAPI と CloudEvents を選ぶ理由がない                                | 直した（全体方針）                                             |
+| ifx-msg-rulebook | 合意・承認の主体と ready にする条件がない                               | 直した（位置づけ）                                             |
+| ifx-msg-rulebook | `servers` に実の接続先などを書かない禁止事項がない                      | 直した（禁止事項）                                             |
+| ifx-msg-rulebook | `ifx-index` で `spec_ref` を決めてから作る順序がない                    | 直した（位置づけ）                                             |
+| ifx-msg-rulebook | `type` の版の上げ方、旧版の併存、廃止の通知がない                       | 直した（記述ガイドの版と改訂）                                 |
+| ifx-msg-rulebook | 未決事項と仮定の書き方がない                                            | 直した（記述ガイドの未決事項と検証）                           |
+| ifx-msg-rulebook | 同期の API との責務の境界がない                                         | 直した（全体方針）                                             |
+| ifx-msg-rulebook | publish・subscribe の送信者・受信者の書き方がない                       | 直した（記述ガイドの向きと送信者・受信者）                     |
+| ifx-msg-rulebook | structured・binary と `contentType`、`servers` の要否がない             | 直した（形式の使い分け、本文要件で `servers` は任意）          |
+| ifx-msg-rulebook | 配置先と `channels`・`components/messages` の必須の項目がない           | 直した（ファイル命名・ID規則、本文要件）                       |
+| ifx-msg-rulebook | id やファイル名を変えたときの影響がない                                 | 直した（ファイル命名・ID規則）                                 |
+| ifx-msg-rulebook | AsyncAPI の検証の手順がない                                             | 直した（記述ガイドの未決事項と検証）                           |
+| ifx-msg-rulebook | 2.6.0 以外を許す条件と「最小十分」「推奨」の判定がない                  | 直した（本文要件、全体方針。「推奨」は必須性の列に置き換えた） |
+| ifx-msg-rulebook | `specdojo-schema: none` の書き方がない                                  | 直した（先頭メタ項目）                                         |
+| ifx-msg-rulebook | ファイル名の例に拡張子がない                                            | 直した（`ifx-msg-stock-changed.yaml`）                         |
+| ifx-msg-rulebook | sample の id の例外の説明がない                                         | 直した                                                         |
+| ifx-msg-rulebook | `datacontenttype` の固定と sample の食い違い                            | 直した（両方で `enum` に固定）                                 |
+| ifx-msg-rulebook | 禁止事項に理由がない                                                    | 直した（表に理由の列）                                         |
+| ifx-msg-rulebook | 「メッセージング仕様」「メッセージ仕様」の混在と 1 ファイルの単位       | 直した（「メッセージ仕様」に統一、全体方針で単位を定義）       |
+| ifx-msg-sample   | `info.description` がない                                               | 直した                                                         |
+| ifx-msg-sample   | 配信・順序の保証と重複受信の扱いがない                                  | 直した（at-least-once、`source` と `id` の組）                 |
+| ifx-msg-sample   | `based_on` が空                                                         | 直した（`specdojo:ifx-index-sample`）                          |
+| ifx-msg-sample   | `current_quantity` の下限と `product_id` の書式がない                   | 直した（`minimum: 0`、`pattern`）                              |
+| ifx-msg-sample   | `subscribe` の意味と発行者・購読者がない                                | 直した（チャネルの `description`）                             |
+| ifx-msg-sample   | `datacontenttype` を `enum` にしていない                                | 直した                                                         |
+| ifx-msg-sample   | 代わりの AsyncAPI の検証の手段がない                                    | 直した（先頭コメント）                                         |
+| ifx-msg-sample   | `id` が一意になる条件がない                                             | 直した（`source` との組）                                      |
+| ifx-msg-sample   | チャネルの発生の契機がない                                              | 直した（販売の確定・仕入れの登録・棚卸しの訂正）               |
+| ifx-msg-sample   | `defaultContentType`・`contentType`・`datacontenttype` の使い分けがない | 直した（`info.description`）                                   |
+| 両 rulebook      | major「sample に `info.version` がない」                                | 直さない（sample に `info.version` があり、評価の誤りのため）  |
+
+### 5.2. CHANGELOG に書く事項
 
 - 区分: Changed
-- 文案: ifx-api の rulebook で `info.version` と各操作の `responses` を必須構造に追加し、ifx-api-sample を本部売上登録 API へ、ifx-api・ifx-msg の sample に `info.version` を追加した。
+- 文案: ifx-api・ifx-msg の rulebook を標準の章構成に組み直し、タイトルから略語を外して英語名の行を足した。ifx-api の rulebook で `info.version` と各操作の `responses` を必須構造に追加し、版の付け方・検証の手順・合意の当事者を定めた。ifx-api-sample を本部売上登録 API へ差し替え、ifx-index-sample の「本部への売上登録」から参照するようにした。
 
 ## 6. 関連ドキュメント
 
