@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-DESIGN-uis-sample-050
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-DESIGN-uis-sample-050/T-KATA-WAVE-6-DESIGN-uis-sample-050-20261123T095816Z-4a94767e/plan.md
   started_at: "2026-11-23T09:58:26.645Z"
+  completed_at: "2026-11-23T10:11:51.247Z"
   agent: opus-executor
   execution: agent
   approach: sample-maintenance
@@ -20,16 +21,19 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- uis-sample.md の `grade` 指摘 F001〜F006 を修正しました。
+- 接続表現の誤記（F006）を修正しました。
+- 数量の二重定義を解消し、参照に置き換えました（F002）。
+- 「商品コード未登録」および「販売対象外」の状態説明を、追加時と会計確定時のケースに分けて整理し、確定時に検出した場合の回復手段（既存明細の削除など）を追記しました（F001, F003, F004, F005）。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/samples/uis-sample.md`: `grade` 指摘に基づき、バーコードスキャナの説明文の修正、数量の定義の集約、および会計確定時に「商品コード未登録」や「販売対象外」が発生した場合の回復手順（明細削除など）を追記しました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- rulebook に合わせて直すべき点は見つからなかった。確定時の回復は既存の「明細削除」と「会計確定」の操作だけで表している。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+`grade` 指摘の内容に基づき、`uis-sample.md` を修正しました。具体的には、文言の自然化、情報の集約による二重定義の解消、および会計確定時のエラーハンドリング（回復操作）の具体化を行いました。
