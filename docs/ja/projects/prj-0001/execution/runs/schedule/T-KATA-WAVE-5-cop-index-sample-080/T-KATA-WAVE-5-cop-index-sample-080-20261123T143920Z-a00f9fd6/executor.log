@@ -1,0 +1,15 @@
+`docs/ja/specdojo/samples/cop-index-sample.md` に冗長さの修正を 1 件入れました。ほかの候補は残しました。
+
+修正したのは、「担当者、連絡系統」の表にある技術メンターの備考です。「開発担当が 15 分で切り分けられないときに呼ぶ」という条件は、「障害時判断、エスカレーション」の連絡経路にも書いてあります。表側は「呼ぶ条件は「障害時判断、エスカレーション」に従う」に置き換え、正本を後者にしました。
+
+整形のために `prettier --write` を実行したところ、表の幅が揃い直り、diff は 8 行になりました。意味は変わっていません。parent validations は親 runner が実行します。
+
+残した候補は次の 3 件です。
+
+- 「切替判定ポイント（GO/NO-GO）」の導入文にある登録簿への転記の説明は、作業手順の手順 11 と「ロールバック手順」の手順 4 に近い内容です。ただし判定側の転記義務を定める記述なので残しました。
+- 「ロールバック手順」末尾の完了条件の文は、表の完了条件の一部と重なります。ただしロールバック全体の完了を定める文なので残しました。
+- 業務を止めるのは午前の臨時休業だけ、という記述は概要と「障害時判断、エスカレーション」の SLO に出てきます。SLO の定義として必要なので残しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"cop-index-sample の連絡先備考を参照に置換した。ほか 3 件は retain。","handoff":[],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/cop-index-sample.md","status":"passed","summary":"--write で整形後に解消"}],"condense_records":[{"location":"4. 担当者、連絡系統 の表（技術支援の備考）","category":"repetition","action":"reference","reason":"15 分で切り分けられないときに呼ぶ条件は 8. 障害時判断、エスカレーション の連絡経路に同じ内容があるため、そちらへの参照に置き換えた。意味は保たれている。","cause":{"type":"document"}},{"location":"6. 切替判定ポイント（GO/NO-GO）の導入文（登録簿への転記）","category":"repetition","action":"retain","reason":"判定結果の転記義務を定める記述であり、判断に要る。","cause":{"type":"document"}},{"location":"7. ロールバック手順 末尾の完了条件の文","category":"table-prose","action":"retain","reason":"ロールバック全体の完了条件を定める文であり、表の各手順の完了条件とは別。","cause":{"type":"document"}},{"location":"1. 概要 と 8. 障害時判断、エスカレーション の SLO","category":"repetition","action":"retain","reason":"8 章の SLO は判断基準の定義に必要で、概要は範囲の説明であり役割が違う。","cause":{"type":"document"}}]}
+</specdojo_executor_evidence>
