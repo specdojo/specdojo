@@ -138,6 +138,8 @@ export type RecordCommandEvidenceInput = {
   error?: string;
   /** A configured non-zero outcome accepted by the Job runner (for example, partial success). */
   accepted?: boolean;
+  /** Writes step-labelled files into the run directory instead of a separate evidence directory. */
+  stepLabel?: string;
 };
 
 export type RecordExecutorEvidenceInput = {
@@ -838,13 +840,19 @@ export function recordCommandEvidence(input: RecordCommandEvidenceInput): {
     input.runId,
   ).directory;
   ensureDir(evidenceDir);
-  const evidencePath = taskRecordPaths(
+  const baseEvidencePath = taskRecordPaths(
     join(input.worktreePath, executionRel),
     input.taskId,
     input.runId,
   ).evidence;
-  const stdoutPath = runLogPath(evidencePath, "command.stdout.log");
-  const stderrPath = runLogPath(evidencePath, "command.stderr.log");
+  const stepSlug = input.stepLabel === undefined ? undefined : safeSlug(input.stepLabel);
+  const evidencePath =
+    stepSlug === undefined
+      ? baseEvidencePath
+      : runLogPath(baseEvidencePath, `evidence.step-${stepSlug}.json`);
+  const logPrefix = stepSlug === undefined ? "command" : `step-${stepSlug}`;
+  const stdoutPath = runLogPath(evidencePath, `${logPrefix}.stdout.log`);
+  const stderrPath = runLogPath(evidencePath, `${logPrefix}.stderr.log`);
   const boundedStdout = boundedLog(input.stdout);
   const boundedStderr = boundedLog(input.stderr);
   writeFileSync(stdoutPath, boundedStdout.content, "utf8");

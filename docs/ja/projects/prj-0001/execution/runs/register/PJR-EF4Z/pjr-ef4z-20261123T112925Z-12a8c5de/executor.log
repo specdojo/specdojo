@@ -1,0 +1,20 @@
+3 回目の実行分の修正を入れました。job の段の記録は、配置の検査が求める形になりました。`npx tsc -b`、`job-sequence.integration.test.ts`（13 件）、ESLint（対象 2 ファイル）は通っています。統合後の確認は未実施で、orchestrator の作業として残しています。
+
+**原因:** 段ごとに別の run ディレクトリ（`...-attempt-1-step-<id>/`）を作っていました。そこには `evidence.json` と log しかなく、`plan.md` と `result.md` がありませんでした。
+
+**方式:** 段のディレクトリを作らない方式にしました。plan と result を段ごとに偽造せず、`exec-cycle` など既存の job と同じ「run ごとに plan・result・evidence」を保てるためです。
+
+**変更:**
+- `src/exec/evidence.ts` の `recordCommandEvidence` に、`stepLabel` を任意で渡せるようにしました。渡すと、job の run ディレクトリに次のファイルを書きます。試行ごとに名前が分かれるので、上書きされません。
+  - `evidence.step-attempt-<n>-<id>.json`
+  - `step-attempt-<n>-<id>.stdout.log`
+  - `step-attempt-<n>-<id>.stderr.log`
+- `src/exec/run/job-sequence.ts` は、段の run ID の代わりにこの `stepLabel` を渡します。
+- `tests/src/exec/job-sequence.integration.test.ts` に、段を持つ job の記録が `validateRunRecordLayout` を通る検証を足しました。
+- 個票は、作業内容の表に行 5（job の段の記録、`done`）を足し、行 6 に orchestrator の確認を移しました。3 回目の対応結果には方式と理由を書きました。
+
+**未実施:** 統合後に `routine run --id rtn-nightly-integration-tests` を 1 回流します。作った記録を commit した tree で `exec validate --records-only --commit` が通ることも確かめます。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"job の段の evidence・log を段ごとの別ディレクトリではなく job の run ディレクトリ（step ラベル付きファイル名）へ置くよう変更し、配置の検査を通る形にした。単体の統合テストで layout 検査の通過を確認。個票を更新した。","handoff":["3 回目の対応: 方式は「段のディレクトリを作らない」を選択。理由は個票 5.1 に記載。","統合後に orchestrator が routine run --id rtn-nightly-integration-tests を 1 回流し、記録を commit した tree で exec validate --records-only --commit が通ることを確認する。","CHANGELOG に書く事項は個票 5.4 に記載済み（変更なし）。"],"validations":[{"command":"npx tsc -b","status":"passed","summary":"型エラーなし"},{"command":"npx vitest run tests/src/exec/job-sequence.integration.test.ts","status":"passed","summary":"13 件成功（layout 検査の追加アサーションを含む）"},{"command":"npx eslint src/exec/evidence.ts src/exec/run/job-sequence.ts","status":"passed","summary":"エラーなし"}]}
+</specdojo_executor_evidence>

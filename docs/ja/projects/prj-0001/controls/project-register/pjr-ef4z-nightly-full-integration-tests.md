@@ -50,13 +50,14 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業                                                | 担当 | 状態 | メモ                                                                                                |
-| --- | --------------------------------------------------- | ---- | ---- | --------------------------------------------------------------------------------------------------- |
-| 1   | 方式の決定（job か specdojo コマンドか）            | DEV  | done | specdojo コマンドを足し job から呼ぶ方式に決定                                                      |
-| 2   | `orchestrator integration-tests` の実装と単体テスト | DEV  | done | `src/commands/nightly-integration-tests.ts`、`tests/src/commands/nightly-integration-tests.test.ts` |
-| 3   | job と routine の定義の追加                         | DEV  | done | `job-nightly-integration-tests`、`rtn-nightly-integration-tests`                                    |
-| 4   | コマンドリファレンスと運用ガイドの更新              | DEV  | done | `command-reference.md`、`register-operation-guide.md`                                               |
-| 5   | 統合後に `routine run --id` で 1 回流して確かめる   | ARC  | open | executor は統合前で実行できない。orchestrator が統合後に行う                                        |
+| No  | 作業                                                | 担当 | 状態 | メモ                                                                                                        |
+| --- | --------------------------------------------------- | ---- | ---- | ----------------------------------------------------------------------------------------------------------- |
+| 1   | 方式の決定（job か specdojo コマンドか）            | DEV  | done | specdojo コマンドを足し job から呼ぶ方式に決定                                                              |
+| 2   | `orchestrator integration-tests` の実装と単体テスト | DEV  | done | `src/commands/nightly-integration-tests.ts`、`tests/src/commands/nightly-integration-tests.test.ts`         |
+| 3   | job と routine の定義の追加                         | DEV  | done | `job-nightly-integration-tests`、`rtn-nightly-integration-tests`                                            |
+| 4   | コマンドリファレンスと運用ガイドの更新              | DEV  | done | `command-reference.md`、`register-operation-guide.md`                                                       |
+| 5   | job の段の記録を配置の検査に通す                    | DEV  | done | 段の evidence・log を job の run ディレクトリに置く。`src/exec/evidence.ts`、`src/exec/run/job-sequence.ts` |
+| 6   | 統合後に `routine run --id` で 1 回流して確かめる   | ARC  | open | executor は統合前で実行できない。orchestrator が統合後に行う                                                |
 
 ## 5. 対応結果
 
@@ -68,6 +69,8 @@ specdojo:
 - 結果は Vitest の JSON 報告から読み、成功・失敗の件数と失敗したテストのファイル・名前・メッセージの要約を `execution/reports/nightly-integration-tests/` の朝報告へ残す。JSON を読めない場合は出力の末尾を残す。失敗時は終了コード 1 で、job の実行記録にも失敗が残る。
 - 既定は `enabled: true`。
 - 2 回目の実行: 報告の書き出しを直した。連続する空行を 1 行にまとめ、末尾を改行 1 つにそろえ、失敗の表を Prettier と同じ列幅（全角は幅 2）に整える。成功・失敗・JSON を読めない場合の 3 通りの報告が markdownlint と prettier を通ることを単体テストで確かめる。2026-11-23 の報告のファイルは、すでに直した書き出しの形（空行 1 行、末尾改行 1 つ）と一致しており、変更不要だった。
+
+- 3 回目の実行: 段ごとに別の run ディレクトリ（`...-attempt-1-step-<id>/`）を作っていたため、plan・result がなく配置の検査に落ちた。段のディレクトリを作らない方式を選んだ。段の evidence と log は job の run ディレクトリへ `evidence.step-attempt-<n>-<id>.json`・`step-attempt-<n>-<id>.stdout.log`・`.stderr.log` として置く（試行ごとに名前が分かれ、上書きされない）。plan・result を段ごとに偽造するより、検査が求める「run ごとに plan・result・evidence」を保ち、既存の `exec-cycle` などの記録と同じ形になる。`tests/src/exec/job-sequence.integration.test.ts` で、段を持つ job の記録が `validateRunRecordLayout` を通ることを確かめた。統合後の `exec validate --records-only --commit` の確認は orchestrator が行う。
 
 ### 5.2. 成果物
 
