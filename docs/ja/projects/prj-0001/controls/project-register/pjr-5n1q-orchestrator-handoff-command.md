@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-5n1q-orchestrator-handoff-command
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-23T01:52:55Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-23T04:28:33Z"
+  conclusion: specdojo orchestrator handoff を作った。進行中（流している列・run・review と waiting の項目）と判断待ち（開いている question と waiting の項目）を組み立てて handoff を起票する。古い止まった列は件数の 1 行にまとめ、dry-run でも ID がそろう。指示の本文と playbook の手順の案を対応結果に書いた（反映は利用者の承認待ち）
   derived_from:
     - PJR-5RY7
   depends_on:

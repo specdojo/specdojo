@@ -125,3 +125,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_aa1eade1b3214d95a698a205fc12fdea
+- v: 1
+  id: reg_9bcb9535cdb64df79d53482f0a46f376
+  ts: "2026-11-23T04:28:33Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分と単体テストを確かめ、使い捨ての worktree での実際の起票と、2 回目の後の dry-run で列の並べ方と ID を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: specdojo orchestrator handoff を作った。進行中（流している列・run・review と waiting の項目）と判断待ち（開いている question と waiting の項目）を組み立てて handoff を起票する。古い止まった列は件数の 1 行にまとめ、dry-run でも ID がそろう。指示の本文と playbook の手順の案を対応結果に書いた（反映は利用者の承認待ち）
+  previous_event_id: reg_7d136e5bdfe54374a07fb10b3ddba45a
