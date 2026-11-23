@@ -1,0 +1,72 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_4921393a17174df1ae32cd70dab53fd0
+  ts: "2026-11-23T12:07:50Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 開発中の版の文書サイトを /next/ に並べて公開する
+    - field: description
+      from: ""
+      to: 本番はリリースの版のまま、site/next ブランチの文書を <https://specdojo.github.io/specdojo/next/> に公開し、開発中の機能の文書を見せる。帯と noindex で本番と見分ける
+    - field: input
+      from: ""
+      to: '["利用者の依頼（2026-11-23）: 開発中の機能の文書を見せたい。早く実現したいので、オーケストレーターが案を作って実装する（実装者はオーケストレーター）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: commit_type
+      from: ""
+      to: feat
+    - field: commit_scope
+      from: ""
+      to: docs-site
+- v: 1
+  id: reg_f289ad74ec3d40468edc51e757e0ec6c
+  ts: "2026-11-23T12:07:53Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_4921393a17174df1ae32cd70dab53fd0
+- v: 1
+  id: reg_85bd9a61f36d45539f495435a944b64a
+  ts: "2026-11-23T12:13:48Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: description
+      from: 本番はリリースの版のまま、site/next ブランチの文書を <https://specdojo.github.io/specdojo/next/> に公開し、開発中の機能の文書を見せる。帯と noindex で本番と見分ける
+      to: 本番はリリースの版のまま、site/next ブランチの文書を /specdojo/next/ に公開し、開発中の機能の文書を見せる。帯と noindex で本番と見分ける
+  previous_event_id: reg_f289ad74ec3d40468edc51e757e0ec6c
