@@ -350,6 +350,23 @@ export async function prepareSingleTask(
   // review to different agents (e.g. local LLMs) without editing the roster. They take an agent
   // nickname whose command is resolved from agent-members.yaml; a mode without an override falls back
   // to normal auto-selection.
+  // A human task runs automatically only with an explicit per-task agent (--by, a stage executor
+  // override, or an agent pinned on the task). Mode-level --edit-by / --review-by apply to every
+  // task of that mode and must not pull human tasks into plan generation.
+  const hasExplicitAgent = Boolean(
+    agentNicknameOverride ||
+    stageAgentOverrides.executor ||
+    pinnedExecutor(task) ||
+    (pipelineResume && skipClaim),
+  );
+  if ((task.execution ?? "agent") === "human" && !hasExplicitAgent) {
+    process.stdout.write(
+      `  Task "${task.name ?? task.id}" (${task.id}) has execution: human.\n` +
+        `  This task requires human execution. Use --by <nickname> to override.\n`,
+    );
+    return "failure";
+  }
+
   const overrideResolution = resolveAgentOverride(
     mode,
     task.agent_pipeline
