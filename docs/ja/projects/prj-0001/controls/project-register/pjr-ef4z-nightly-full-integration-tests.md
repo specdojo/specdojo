@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: done
+  item_status: review
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-23T00:16:11Z"
   due_on: "2026-11-30"
-  completed_at: "2026-11-23T04:31:22Z"
   conclusion: 統合テストの全件を固定の引数で流す specdojo orchestrator integration-tests と、job・routine（毎晩 4 時）を足した。結果を朝の報告に残す。任意のシェルのコマンドを流す action は足していない
   derived_from:
     - PJR-9X52
@@ -45,6 +44,7 @@ specdojo:
 - 保護された設定（`.specdojo/`・`.agents/`・`.claude/`・`.codex/`・`.opencode/`・`package.json` など）は変えない。変更が要る場合は、変更案を個票の対応結果と報告の `handoff` に書く。
 - 関連する設計・ガイド・CLI リファレンスを直す。
 - `npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md` を通し、親の検証を通す。
+- 2 回目の実行（2026-11-23）: 1 回目の後に `routine run --id rtn-nightly-integration-tests` を流すと、443 件の全件成功で朝の報告も作られたが、報告（`execution/reports/nightly-integration-tests/nightly-integration-tests-20261123T042751Z.md`）の 21 行目に markdownlint の MD012（空行が 2 行続く）が出た。commit の hook は `execution/` の下を検査しないため止まらなかった。報告を書き出す処理を直し、成功・失敗・JSON を読めないときのどの場合でも、作る報告が `npm run lint:md` の規則（markdownlint と prettier）を通るようにする。3 つの場合の報告が lint を通ることを単体テストで確かめる。2026-11-23 の報告のファイルも、直した書き出しの形に合わせて直す。
 
 ## 4. 作業内容
 

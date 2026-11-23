@@ -137,3 +137,32 @@
       from: "-"
       to: 統合テストの全件を固定の引数で流す specdojo orchestrator integration-tests と、job・routine（毎晩 4 時）を足した。結果を朝の報告に残す。任意のシェルのコマンドを流す action は足していない
   previous_event_id: reg_8f0c9a0202a447d4aff3e66ddc8e23a2
+- v: 1
+  id: reg_7159c6e070dc44b9ba014d53af3799fa
+  ts: "2026-11-23T04:44:31Z"
+  action: reopen
+  actor: indie
+  from_status: done
+  to_status: review
+  reason: 朝の報告に markdownlint の MD012 が出るため、2 回目の実行で直す（利用者の依頼、2026-11-23）
+  changes:
+    - field: status
+      from: done
+      to: review
+    - field: completed
+      from: "2026-11-23"
+      to: "-"
+  previous_event_id: reg_1f31668d3185450ea4758b2308cdeac1
+- v: 1
+  id: reg_5c31a7d79b7246548d2c9aa7c5d94095
+  ts: "2026-11-23T04:44:36Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: 2 回目の実行の条件を足した
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_7159c6e070dc44b9ba014d53af3799fa
