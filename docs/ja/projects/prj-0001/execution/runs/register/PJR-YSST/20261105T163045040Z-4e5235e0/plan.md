@@ -62,7 +62,7 @@ frontmatter の `owner` に記載された role の視点で成果物を記述�
 
 ### 成果物から届いた Kata が原因の finding
 
-- source=condense; result=`prj-0001:xer-pjr-mc63-20261105t101827z-3b1bbb8b`; document=`prj-0001:stsd-task-execution`; location=`§3 図の分割説明・修正前45〜47行および63行`; category=`figure-prose`; action=`retain`; reason=`分割理由、共有状態、対象遷移 ID と図間の読み方は、分割図から到達性を判断するために必要。遷移そのものの言い換えではなく、template の明示要件にも対応するため保持した。Kata の修正提案はない。`; cause=kata:template; location=`docs/ja/specdojo/templates/stsd-template.md §3 状態遷移図のコメント「各図が扱う遷移 ID と共有状態を明記する」`
+- source=condense; result=`prj-0001:xer-pjr-mc63-20261105t101827z-3b1bbb8b`; document=`stsd-task-execution`; location=`§3 図の分割説明・修正前45〜47行および63行`; category=`figure-prose`; action=`retain`; reason=`分割理由、共有状態、対象遷移 ID と図間の読み方は、分割図から到達性を判断するために必要。遷移そのものの言い換えではなく、template の明示要件にも対応するため保持した。Kata の修正提案はない。`; cause=kata:template; location=`docs/ja/specdojo/templates/stsd-template.md §3 状態遷移図のコメント「各図が扱う遷移 ID と共有状態を明記する」`
 
 各記録の `source=grade` / `source=condense` を確認する。grade は成果物・行・viewpoint・内容、condense は result・修正前の場所・種類・直し方・理由を読み、`cause.location` と照合して、見直し対象の Kata の該当箇所を確認する。この節の condense の記録も Kata の見直しの根拠とし、判定は `vp-arc-conciseness` を参照する。以下の手順は、この節と Kata そのものの grade の finding に適用する。
 

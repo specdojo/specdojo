@@ -11,7 +11,7 @@ specdojo:
   owner: BA
   approach: condense
   targets:
-    - prj-0001:cdt-register-type
+    - cdt-register-type
 ---
 
 # Condense Plan: T-BUSINESS-SPECS-REPS-cdt-register-type-080

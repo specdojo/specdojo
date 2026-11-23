@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: prj-0001:cdt-register-type
+  id: cdt-register-type
   type: data
   status: draft
   rulebook: specdojo:cdt-rulebook
@@ -11,7 +11,7 @@ specdojo:
 ## 1. 概要
 
 - 業務目的: 担当が交代しても、起票者が選んだ分類から追跡の目的・終了の仕方・承認者を読み取れるようにし、判断や作業を特定個人の記憶に依存させない。
-- 対象エンティティ: 登録項目（`register_entry`）。属性の定義は [[prj-0001:bdd-register-entry|業務データ辞書（登録項目個票）]] を正とする。
+- 対象エンティティ: 登録項目（`register_entry`）。属性の定義は [[bdd-register-entry|業務データ辞書（登録項目個票）]] を正とする。
 - 扱う範囲: 分類の業務的意味と使い分け。本書は公開用の分類定義と参照先を扱い、実個票の個人情報・非公開情報を含めない。
 - 利用場面: schema enum・CLI の許容値との対応確認、分類別の終端・承認条件の検証、登録項目の起票・更新での分類の選択
 - 適用範囲: 個票 Frontmatter の `item_type` と起票時に選ぶ分類。本書では分類の選び方に必要な条件だけを示し、状態遷移・終了承認の詳細は第4章の状態定義に委ねる。

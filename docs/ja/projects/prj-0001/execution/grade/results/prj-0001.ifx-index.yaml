@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
 version: 1
-document: prj-0001:ifx-index
+document: ifx-index
 path: docs/ja/product/020-external-interface-specs/ifx-index.yaml
 target: deliverable
 rubric: grade-rubric-v2

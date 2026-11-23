@@ -13,7 +13,7 @@ specdojo:
   execution: agent
   approach: condense
   targets:
-    - prj-0001:stsd-deliverable
+    - stsd-deliverable
   condense_records:
     - location: 第2章・変更前25行「以下の値と意味はカタログと業務規約に基づく」
       category: repetition

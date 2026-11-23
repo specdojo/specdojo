@@ -43,7 +43,7 @@
       to: retrofit
     - field: targets
       from: ""
-      to: '["prj-0001:stsd-deliverable"]'
+      to: '["stsd-deliverable"]'
     - field: derived_from
       from: ""
       to: '["PJR-3APD","PJR-PT5N"]'

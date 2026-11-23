@@ -33,7 +33,7 @@ specdojo:
 - `depends_on`:
   - [[bes-index]]
   - [[cdfd-overview]]
-  - [[prj-0001:stsd-task-execution]]
+  - [[stsd-task-execution]]
 - `overview`: 実行可能なタスクが選択されたイベント（単発／自動／並列など起点が一意にならない）を定義する
 - `path`: `docs/ja/product/010-business-specs/030-business-model/bes-task-ready-selected.md`
 

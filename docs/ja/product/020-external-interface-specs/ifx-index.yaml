@@ -1,5 +1,5 @@
 # yaml-language-server: $schema=../../../specdojo/schemas/v1/ifx-index.schema.yaml
-id: prj-0001:ifx-index
+id: ifx-index
 type: api
 title: SpecDojo 外部システムI/F一覧
 status: ready

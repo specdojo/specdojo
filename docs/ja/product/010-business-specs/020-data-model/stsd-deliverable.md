@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: prj-0001:stsd-deliverable
+  id: stsd-deliverable
   type: data
   status: draft
   rulebook: specdojo:stsd-rulebook

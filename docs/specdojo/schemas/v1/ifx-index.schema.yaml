@@ -30,7 +30,7 @@ properties:
   id:
     type: string
     pattern: "^(?:[a-z][a-z0-9-]*:)?ifx-index(?:-[a-z0-9-]+)?$"
-    description: "一意なID（ifx-index または ifx-index-...）。プロジェクトの修飾（例: prj-0001:ifx-index）を付けてよい"
+    description: "一意なID（ifx-index または ifx-index-...）。プロジェクトの修飾（例: ifx-index）を付けてよい"
   type:
     type: string
     const: "api"

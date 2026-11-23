@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
 version: 1
-document: prj-0001:stsd-task-execution
+document: stsd-task-execution
 path: docs/ja/product/010-business-specs/020-data-model/stsd-task-execution.md
 target: deliverable
 rubric: grade-rubric-v2

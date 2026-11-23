@@ -29,7 +29,7 @@ id-and-file-naming-standard のとおり、プロダクト文書の id は名前
 
 ## 2. 入力
 
-- PJR-Q9AW の磨き込みで、stsd-rulebook の frontmatter の規則（id はプロジェクト修飾なしの `stsd-<term>`）と、scaffold が作った prj-0001:stsd-task-execution が食い違った。既存の stsd-register-entry は修飾なしの id を持つ（2026-11-05）
+- PJR-Q9AW の磨き込みで、stsd-rulebook の frontmatter の規則（id はプロジェクト修飾なしの `stsd-<term>`）と、scaffold が作った stsd-task-execution が食い違った。既存の stsd-register-entry は修飾なしの id を持つ（2026-11-05）
 - 同じ「プロジェクト修飾なし」の書き方は cdfd・cdfd-uc・bps の rulebook にもある
 
 ## 3. 完了条件

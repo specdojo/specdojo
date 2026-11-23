@@ -11,7 +11,7 @@ specdojo:
   owner: BA
   approach: retrofit
   targets:
-    - prj-0001:ccd-project-planning
+    - ccd-project-planning
 ---
 
 # Review Plan: T-BUSINESS-SPECS-REPS-ccd-project-planning-090

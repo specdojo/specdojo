@@ -78,4 +78,4 @@ stsd-job-run を新しい章立てと遷移 ID 入りのラベルに合わせる
 
 - [[prj-0001:stsd-job-run]]: retrofit の対象
 - [[specdojo:stsd-rulebook]]・[[specdojo:stsd-mermaid-rulebook]]: そろえる先
-- [[prj-0001:stsd-task-execution]]: レビューした代表の 1 件
+- [[stsd-task-execution]]: レビューした代表の 1 件

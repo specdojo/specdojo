@@ -19,7 +19,7 @@
       to: "stsd・cdfd・cdfd-uc・bps の rulebook は成果物の id を「プロジェクト修飾なし」と書くが、カタログから作る成果物は prj-0001: で修飾される。既存の成果物には修飾なしのものもある。どちらを正とするかを決め、rulebook と成果物をそろえる"
     - field: input
       from: ""
-      to: '["PJR-Q9AW の磨き込みで、stsd-rulebook の frontmatter の規則（id はプロジェクト修飾なしの `stsd-<term>`）と、scaffold が作った prj-0001:stsd-task-execution が食い違った。既存の stsd-register-entry は修飾なしの id を持つ（2026-11-05）","同じ「プロジェクト修飾なし」の書き方は cdfd・cdfd-uc・bps の rulebook にもある"]'
+      to: '["PJR-Q9AW の磨き込みで、stsd-rulebook の frontmatter の規則（id はプロジェクト修飾なしの `stsd-<term>`）と、scaffold が作った stsd-task-execution が食い違った。既存の stsd-register-entry は修飾なしの id を持つ（2026-11-05）","同じ「プロジェクト修飾なし」の書き方は cdfd・cdfd-uc・bps の rulebook にもある"]'
     - field: type
       from: ""
       to: todo

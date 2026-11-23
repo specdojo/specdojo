@@ -19,7 +19,7 @@ specdojo:
   autopilot: approved
   approach: fully-guided
   targets:
-    - prj-0001:bdd-register-entry
+    - bdd-register-entry
 ---
 
 # PJR-DDAC 代表の bdd-register-entry を、確定した型で磨き込む
@@ -35,7 +35,7 @@ business-specs-kata で確定した型（specdojo:bdd-rulebook と sample）に�
 
 ## 3. 完了条件
 
-- 代表の [[prj-0001:bdd-register-entry]] を、確定した型 [[specdojo:bdd-rulebook]] と [[specdojo:bdd-sample]] に合わせて磨き込んでいる。型の本文要件の章立て・必須の項目・記述ガイドの判断の基準に沿い、型が禁止することを書いていない。
+- 代表の [[bdd-register-entry]] を、確定した型 [[specdojo:bdd-rulebook]] と [[specdojo:bdd-sample]] に合わせて磨き込んでいる。型の本文要件の章立て・必須の項目・記述ガイドの判断の基準に沿い、型が禁止することを書いていない。
 - 冗長さを整理している（判断に要る背景・制約・例外と意味は保ち、新しい内容を足さない）。
 - 実装・schema・リファレンスと同じことを書かず、正本を参照する方針（PJR-2GD6）を保っている。
 - 決められない点は `_UNDECIDED_` か `_ASSUMPTION_` のまま、理由（どの成果物がない、誰の判断が要る）を書いて残してよい。依存の成果物がないことを理由に未完了としない。
@@ -57,7 +57,7 @@ business-specs-kata で確定した型（specdojo:bdd-rulebook と sample）に�
 
 ### 5.1. 実施内容と変更ファイル
 
-- [[prj-0001:bdd-register-entry|業務データ辞書（登録項目個票）]] のエンティティ説明と `item_type`・`item_status`・`registered_at`・`completed_at` の注釈を整理した。
+- [[bdd-register-entry|業務データ辞書（登録項目個票）]] のエンティティ説明と `item_type`・`item_status`・`registered_at`・`completed_at` の注釈を整理した。
 - 本個票に変更根拠、検査、判断と申し送りを記録した。
 
 ### 5.2. 進め方と実践の型の適用
@@ -97,5 +97,5 @@ business-specs-kata で確定した型（specdojo:bdd-rulebook と sample）に�
 ## 6. 関連ドキュメント
 
 - 親: [[prj-0001:pjr-2gd6-business-specs-reps]]、[[prj-0001:pjr-t88p-business-specs-kata]]
-- 対象: [[prj-0001:bdd-register-entry]]
+- 対象: [[bdd-register-entry]]
 - 型: [[specdojo:bdd-rulebook]]

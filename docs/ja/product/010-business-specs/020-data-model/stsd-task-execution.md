@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: prj-0001:stsd-task-execution
+  id: stsd-task-execution
   type: data
   status: draft
   rulebook: specdojo:stsd-rulebook

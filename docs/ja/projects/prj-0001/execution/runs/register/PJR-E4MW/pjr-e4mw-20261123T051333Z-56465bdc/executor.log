@@ -1,0 +1,13 @@
+プロダクト文書 7 件の id から `prj-0001:` を外し、参照を付け替えました。parent の検証（`lint:md`・`lint:fm`・`validate:schema` など）はまだ流していません。executor は実行しない取り決めのため、runner の結果待ちです。
+
+- **付け替え:** `docs/` 配下の追跡ファイル 215 件・328 箇所の id の部分だけを書き換えました。過去の個票・plan・result・ログも含みます。`CHANGELOG.md` とファイル名は変えていません。
+- **別の id は対象外:** `prj-0001:ifx-index-grade-criteria` のように、7 件の id で始まる別の id は変えていません。
+- **作り直し:** yaml-pages・exec・dashboard は `specdojo build --only` で作り直しました。
+- **確認:** `rg` で旧 id の残存はありませんでした。`npx specdojo index build` の後、7 件とも `specdojo index lookup` で `docs/ja/product/` のファイルに引けました。`npm run validate:history-links` も通っています。
+- **個票:** 作業内容と対応結果を更新しました。「CHANGELOG に書く事項」は区分 Changed で書いてあります。作業内容の No.5（parent の検証）だけは `open` のままです。
+- **件数差:** 個票は `based_on` を 8 件としていましたが、7 件の id を名前空間ありで指していたのは 3 件でした。`ccd-project-planning`・`ifx-file-agent-evidence`・`bes-task-ready-selected` の 3 件で、残りは 7 件の外の id なので変えていません。
+- **tests は変更なし:** `tests/` の疑似入力と `*.snap` は、実文書を読まない固定の入力なので変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"7 件のプロダクト文書 id から prj-0001: を外し、docs/ 配下 215 ファイル・328 箇所の参照を付け替えた。yaml-pages・exec・dashboard を作り直し、索引を再構築して 7 件が名前空間なしで引けることを確認した。個票の対応結果を更新した。","handoff":["個票は based_on を 8 件としていたが、実際に 7 件の id を名前空間ありで指していたのは 3 件（ccd-project-planning・ifx-file-agent-evidence・bes-task-ready-selected）だった。残りの based_on（bdd-exec-state・bdd-exec-event・bdd-deliverable・bps-task-selection-preparation・prj-success-criteria-and-acceptance-criteria）は 7 件の外の id のため変えていない。","tests/src/docs/yaml-pages.test.ts の疑似入力と tests/fixtures/yaml-pages/*.snap は実文書を読まない固定の入力のため変えていない。","CHANGELOG に書く事項: 区分 Changed。プロダクト文書 7 件の id から名前空間 prj-0001: を外し、参照を付け替えた。","個票の作業内容 No.5（lint:md・lint:fm・validate:schema と親の検証）は executor が実行しないため open のまま残した。保護された設定の変更はない。"],"validations":[{"command":"npm run validate:history-links","status":"passed","summary":"履歴のファイルはすべて valid"},{"command":"npx specdojo index build","status":"passed","summary":"5963 件を構築し、7 件が名前空間なしの id で引けることを index lookup で確認"},{"command":"npx specdojo build --only yaml-pages","status":"passed","summary":"表示のページを作り直した"},{"command":"rg -c \"prj-0001:(<7 件の id>)[^-]\" docs","status":"passed","summary":"旧 id の残存なし"}]}
+</specdojo_executor_evidence>

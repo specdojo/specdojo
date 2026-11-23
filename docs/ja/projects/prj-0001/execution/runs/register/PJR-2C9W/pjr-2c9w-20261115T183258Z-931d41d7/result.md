@@ -13,7 +13,7 @@ specdojo:
   agent: opus-executor
   approach: fully-guided
   targets:
-    - prj-0001:stsd-task-execution
+    - stsd-task-execution
 ---
 
 # Edit Result

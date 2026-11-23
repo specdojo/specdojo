@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
 version: 1
-document: prj-0001:ifx-file-agent-evidence
+document: ifx-file-agent-evidence
 path: docs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml
 target: deliverable
 rubric: grade-rubric-v2

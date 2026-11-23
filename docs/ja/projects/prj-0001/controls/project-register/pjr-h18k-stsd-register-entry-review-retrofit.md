@@ -118,4 +118,4 @@ Prettier 整形、登録簿 build、hook のカタログ検証、履歴リンク
 
 - [[prj-0001:stsd-register-entry]]: retrofit の対象
 - [[specdojo:stsd-rulebook]]・[[specdojo:stsd-mermaid-rulebook]]: そろえる先
-- [[prj-0001:stsd-task-execution]]: レビューした代表の 1 件
+- [[stsd-task-execution]]: レビューした代表の 1 件

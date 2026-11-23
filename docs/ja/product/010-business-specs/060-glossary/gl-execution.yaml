@@ -39,7 +39,7 @@ terms:
     notes: "`todo`（未着手）・`ready`（着手可能）・`doing`（実行中）・`blocked`（中断中）・`done`（完了）・`cancelled`（中止）を区別する。着手可能は先行依存がそろったことから求める。成果物の文書成熟度とは別のもの。"
     category: tm-execution
     relatedTerms: [tm-claim, tm-task-completion, tm-task-block, tm-pipeline-stage]
-    source: "[[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]]"
+    source: "[[stsd-task-execution|ステータス定義（タスク実行）]]"
   - id: tm-claim
     term: claim
     englishName: claim
@@ -48,7 +48,7 @@ terms:
     notes: CLI は `exec claim`。状態追跡する自動実行では runner が記録する。plan の生成や worktree の準備だけではclaim にならない。
     category: tm-execution
     relatedTerms: [tm-task-state, tm-task-release, tm-runner]
-    source: "[[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]]、[[clis-exec-commands|CLI仕様（exec コマンド群）]]"
+    source: "[[stsd-task-execution|ステータス定義（タスク実行）]]、[[clis-exec-commands|CLI仕様（exec コマンド群）]]"
   - id: tm-task-completion
     term: complete
     englishName: complete
@@ -57,7 +57,7 @@ terms:
     notes: CLI は `exec complete`。状態追跡する自動実行では executor の成功、result の確認、親検証・統合の成功後に runner が記録する。成果物の受入承認・文書成熟度の昇格は人間が別に判断する。
     category: tm-execution
     relatedTerms: [tm-task-state, tm-executor-completion, tm-parent-validation, tm-integration]
-    source: "[[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]]、[[sf-task-execution|システム化機能（タスク実行）]]"
+    source: "[[stsd-task-execution|ステータス定義（タスク実行）]]、[[sf-task-execution|システム化機能（タスク実行）]]"
   - id: tm-task-block
     term: block
     englishName: block
@@ -66,7 +66,7 @@ terms:
     notes: CLI は `exec block`。恒久的な中止と区別し、中断中の作業は再開またはrelease の対象となる。
     category: tm-execution
     relatedTerms: [tm-task-state, tm-task-unblock, tm-task-release, tm-task-cancel]
-    source: "[[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]]"
+    source: "[[stsd-task-execution|ステータス定義（タスク実行）]]"
   - id: tm-task-unblock
     term: unblock
     englishName: unblock
@@ -75,7 +75,7 @@ terms:
     notes: CLI は `exec unblock`。保存済みの成果・段状態から処理を続ける `exec resume` と区別する。
     category: tm-execution
     relatedTerms: [tm-task-block, tm-execution-resume]
-    source: "[[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]]、[[clis-exec-commands|CLI仕様（exec コマンド群）]]"
+    source: "[[stsd-task-execution|ステータス定義（タスク実行）]]、[[clis-exec-commands|CLI仕様（exec コマンド群）]]"
   - id: tm-task-release
     term: release
     englishName: release
@@ -84,7 +84,7 @@ terms:
     notes: CLI は `exec release`。タスクを恒久的に中止する操作ではない。
     category: tm-execution
     relatedTerms: [tm-claim, tm-task-state, tm-task-cancel]
-    source: "[[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]]"
+    source: "[[stsd-task-execution|ステータス定義（タスク実行）]]"
   - id: tm-task-reopen
     term: reopen
     englishName: reopen
@@ -93,7 +93,7 @@ terms:
     notes: CLI は `exec reopen`。過去の完了記録を残し、後続タスクの進捗を含む許可条件は状態定義に従う。追加作業を新しいタスクにする場合と区別する。
     category: tm-execution
     relatedTerms: [tm-task-completion, tm-task-state]
-    source: "[[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]]、[[clis-exec-commands|CLI仕様（exec コマンド群）]]"
+    source: "[[stsd-task-execution|ステータス定義（タスク実行）]]、[[clis-exec-commands|CLI仕様（exec コマンド群）]]"
   - id: tm-task-cancel
     term: cancel
     englishName: cancel
@@ -102,7 +102,7 @@ terms:
     notes: CLI は `exec cancel`。実行中・中断中は先に release する。中止は先行タスクの完了の代わりにならない。
     category: tm-execution
     relatedTerms: [tm-task-block, tm-task-release, tm-task-state]
-    source: "[[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]]"
+    source: "[[stsd-task-execution|ステータス定義（タスク実行）]]"
   - id: tm-worktree
     term: worktree
     englishName: worktree

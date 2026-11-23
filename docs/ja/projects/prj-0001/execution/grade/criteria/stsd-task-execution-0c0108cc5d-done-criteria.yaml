@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
 id: prj-0001:stsd-task-execution-grade-criteria
-document: prj-0001:stsd-task-execution
+document: stsd-task-execution
 path: docs/ja/product/010-business-specs/020-data-model/stsd-task-execution.md
 graded_at: "2026-11-16T14:42:43.345Z"
 graded_by: sol-review-executor

@@ -11,7 +11,7 @@ specdojo:
   execution: human
   approach: finalize
   targets:
-    - prj-0001:stsd-task-execution
+    - stsd-task-execution
 ---
 
 # Finalize Result

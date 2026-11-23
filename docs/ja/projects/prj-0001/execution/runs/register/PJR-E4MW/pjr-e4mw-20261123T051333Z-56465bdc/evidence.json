@@ -1,0 +1,766 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-E4MW",
+  "run_id": "pjr-e4mw-20261123T051333Z-56465bdc",
+  "stage": {
+    "role": "executor",
+    "actor": "sonnet-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-23T05:14:15.701Z",
+    "completed_at": "2026-11-23T05:16:12.828Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/bdd-register-entry.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/cdt-register-type.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/stsd-deliverable.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/stsd-routine-run.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/stsd-task-execution.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/030-business-model/bes-task-ready-selected.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/050-system-functions/sf-task-execution.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/060-glossary/gl-execution.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/060-glossary/gl-register.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/020-external-interface-specs/ifx-index.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/040-system-design/sysd-critical-flows.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/040-system-design/sysd-cross-cutting-policy.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/040-system-design/sysd-index.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/050-business-acceptance-criteria/bac-task-completion.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-1799.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-2c9w.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-6sfb.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-7zzr.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-ddac.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-e4mw.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-er6j.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-kfmb.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-mc63.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-phy7.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-pw4z.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-q9aw.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-rapc.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-smw7.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-16t7-stsd-mermaid-transition-id.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-1799-stsd-task-execution-draft.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-2c9w-stsd-task-execution-rework-actor-authority.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-6sfb-stsd-deliverable-opening.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-6xwp-ifx-file-agent-evidence-rework-wave-2.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-7zzr-cdt-register-type-refine-confirmed-kata.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-cjmn-ifx-cmd-git-github.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-ddac-bdd-register-entry-refine-confirmed-kata.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-e4mw-product-doc-bare-id-migration.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-eakn-stsd-mermaid-rulebook-split.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-er6j-stsd-task-execution-review-retrofit.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-fs9a-stsd-rulebook-transition-id-renumber.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-h18k-stsd-register-entry-review-retrofit.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-h90h-ifx-cmd-ai-provider-cli-refine-confirmed-kata.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-jwgn-stsd-routine-run-review-retrofit.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-k3z2-ccd-direction-tb.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-kfmb-stsd-task-execution-opening.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-mc63-stsd-task-execution-condense.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-phy7-rulebook-id-project-qualification.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-pw4z-stsd-deliverable-review-retrofit.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-q9aw-stsd-task-execution-refine.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-qj41-ifx-index-yaml-pages.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-rapc-stsd-deliverable-retrofit.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-s8ef-stsd-rulebook-review-structure.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-sbnb-ifx-index-schema-rename.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-smw7-ccd-project-planning-refine-confirmed-kata.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-v681-bes-task-ready-selected-refine-grade.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-y29x-stsd-job-run-review-retrofit.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-zk3t-flaky-reporter-resume-e2e.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/bdd-register-entry-7aac6e50ea-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/ccd-project-planning-b57132c2f2-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdt-register-type-fc8ed94d2f-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/ifx-file-agent-evidence-1bb1936bf1-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/ifx-index-6d9eb4ca9a-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/stsd-deliverable-49f267f76f-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/stsd-task-execution-0c0108cc5d-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/bac-task-completion.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/bes-task-ready-selected.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/prj-0001.bdd-register-entry.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/prj-0001.ccd-project-planning.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/prj-0001.cdt-register-type.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/prj-0001.ifx-file-agent-evidence.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/prj-0001.ifx-index.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/prj-0001.stsd-deliverable.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/prj-0001.stsd-task-execution.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/sysd-cross-cutting-policy.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/ifx-index.schema.yaml",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/bdd-register-entry.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/cdt-register-type.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/stsd-deliverable.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/stsd-routine-run.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/stsd-task-execution.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/030-business-model/bes-task-ready-selected.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/050-system-functions/sf-task-execution.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/060-glossary/gl-execution.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/060-glossary/gl-register.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/020-external-interface-specs/ifx-index.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/040-system-design/sysd-critical-flows.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/040-system-design/sysd-cross-cutting-policy.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/040-system-design/sysd-index.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/050-business-acceptance-criteria/bac-task-completion.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-1799.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-2c9w.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-6sfb.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-7zzr.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-ddac.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-er6j.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-kfmb.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-mc63.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-phy7.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-pw4z.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-q9aw.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-rapc.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-smw7.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-16t7-stsd-mermaid-transition-id.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-1799-stsd-task-execution-draft.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-2c9w-stsd-task-execution-rework-actor-authority.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-6sfb-stsd-deliverable-opening.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-6xwp-ifx-file-agent-evidence-rework-wave-2.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-7zzr-cdt-register-type-refine-confirmed-kata.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-cjmn-ifx-cmd-git-github.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-ddac-bdd-register-entry-refine-confirmed-kata.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-e4mw-product-doc-bare-id-migration.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-eakn-stsd-mermaid-rulebook-split.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-er6j-stsd-task-execution-review-retrofit.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-fs9a-stsd-rulebook-transition-id-renumber.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-h18k-stsd-register-entry-review-retrofit.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-h90h-ifx-cmd-ai-provider-cli-refine-confirmed-kata.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-jwgn-stsd-routine-run-review-retrofit.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-k3z2-ccd-direction-tb.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-kfmb-stsd-task-execution-opening.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-mc63-stsd-task-execution-condense.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-phy7-rulebook-id-project-qualification.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-pw4z-stsd-deliverable-review-retrofit.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-q9aw-stsd-task-execution-refine.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-qj41-ifx-index-yaml-pages.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-rapc-stsd-deliverable-retrofit.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-s8ef-stsd-rulebook-review-structure.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-sbnb-ifx-index-schema-rename.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-smw7-ccd-project-planning-refine-confirmed-kata.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-v681-bes-task-ready-selected-refine-grade.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-y29x-stsd-job-run-review-retrofit.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-zk3t-flaky-reporter-resume-e2e.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/bdd-register-entry-7aac6e50ea-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/ccd-project-planning-b57132c2f2-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdt-register-type-fc8ed94d2f-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/ifx-file-agent-evidence-1bb1936bf1-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/ifx-index-6d9eb4ca9a-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/stsd-deliverable-49f267f76f-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/stsd-task-execution-0c0108cc5d-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/bac-task-completion.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/bes-task-ready-selected.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/prj-0001.bdd-register-entry.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/prj-0001.ccd-project-planning.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/prj-0001.cdt-register-type.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/prj-0001.ifx-file-agent-evidence.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/prj-0001.ifx-index.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/prj-0001.stsd-deliverable.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/prj-0001.stsd-task-execution.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/sysd-cross-cutting-policy.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/ifx-index.schema.yaml",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 77,
+    "summary": ".../020-data-model/bdd-register-entry.yaml         |  2 +-\n .../020-data-model/ccd-project-planning.md         |  8 ++---\n .../020-data-model/cdt-register-type.md            |  4 +--\n .../020-data-model/stsd-deliverable.md             |  2 +-\n .../020-data-model/stsd-routine-run.md             |  2 +-\n .../020-data-model/stsd-task-execution.md          |  2 +-\n .../030-business-model/bes-task-ready-selected.md  |  6 ++--\n .../050-system-functions/sf-task-execution.md      |  4 +--\n .../060-glossary/gl-execution.yaml                 | 16 ++++-----\n .../060-glossary/gl-register.yaml                  |  6 ++--\n .../ifx-file-agent-evidence.yaml                   |  4 +--\n .../020-external-interface-specs/ifx-index.yaml    |  2 +-\n .../040-system-design/sysd-critical-flows.md       |  2 +-\n .../040-system-design/sysd-cross-cutting-policy.md |  8 ++---\n docs/ja/product/040-system-design/sysd-index.md    |  2 +-\n .../bac-task-completion.md                         | 10 +++---\n .../controls/project-register/events/pjr-1799.yaml |  2 +-\n .../controls/project-register/events/pjr-2c9w.yaml |  2 +-\n .../controls/project-register/events/pjr-6sfb.yaml |  2 +-\n .../controls/project-register/events/pjr-7zzr.yaml |  2 +-\n .../controls/project-register/events/pjr-ddac.yaml |  2 +-\n .../controls/project-register/events/pjr-er6j.yaml |  2 +-\n .../controls/project-register/events/pjr-kfmb.yaml |  2 +-\n .../controls/project-register/events/pjr-mc63.yaml |  2 +-\n .../controls/project-register/events/pjr-phy7.yaml |  2 +-\n .../controls/project-register/events/pjr-pw4z.yaml |  2 +-\n .../controls/project-register/events/pjr-q9aw.yaml |  2 +-\n .../controls/project-register/events/pjr-rapc.yaml |  2 +-\n .../controls/project-register/events/pjr-smw7.yaml |  2 +-\n .../pjr-16t7-stsd-mermaid-transition-id.md         |  2 +-\n .../pjr-1799-stsd-task-execution-draft.md          |  2 +-\n ...w-stsd-task-execution-rework-actor-authority.md |  4 +--\n .../pjr-6sfb-stsd-deliverable-opening.md           |  4 +--\n ...r-6xwp-ifx-file-agent-evidence-rework-wave-2.md |  2 +-\n ...7zzr-cdt-register-type-refine-confirmed-kata.md | 12 +++----\n .../pjr-cjmn-ifx-cmd-git-github.md                 |  2 +-\n ...dac-bdd-register-entry-refine-confirmed-kata.md |  8 ++---\n .../pjr-e4mw-product-doc-bare-id-migration.md      | 38 +++++++++++++++++++---\n .../pjr-eakn-stsd-mermaid-rulebook-split.md        |  2 +-\n ...pjr-er6j-stsd-task-execution-review-retrofit.md |  8 ++---\n ...jr-fs9a-stsd-rulebook-transition-id-renumber.md |  2 +-\n ...pjr-h18k-stsd-register-entry-review-retrofit.md |  2 +-\n ...fx-cmd-ai-provider-cli-refine-confirmed-kata.md |  2 +-\n .../pjr-jwgn-stsd-routine-run-review-retrofit.md   |  2 +-\n .../project-register/pjr-k3z2-ccd-direction-tb.md  |  2 +-\n .../pjr-kfmb-stsd-task-execution-opening.md        |  4 +--\n .../pjr-mc63-stsd-task-execution-condense.md       |  2 +-\n .../pjr-phy7-rulebook-id-project-qualification.md  |  2 +-\n .../pjr-pw4z-stsd-deliverable-review-retrofit.md   | 10 +++---\n .../pjr-q9aw-stsd-task-execution-refine.md         |  4 +--\n .../pjr-qj41-ifx-index-yaml-pages.md               |  2 +-\n .../pjr-rapc-stsd-deliverable-retrofit.md          |  2 +-\n .../pjr-s8ef-stsd-rulebook-review-structure.md     |  4 +--\n .../pjr-sbnb-ifx-index-schema-rename.md            |  4 +--\n ...7-ccd-project-planning-refine-confirmed-kata.md | 10 +++---\n ...jr-v681-bes-task-ready-selected-refine-grade.md |  2 +-\n .../pjr-y29x-stsd-job-run-review-retrofit.md       |  2 +-\n .../pjr-zk3t-flaky-reporter-resume-e2e.md          |  2 +-\n ...bes-task-ready-selected-020_block_03c608ad.json |  2 +-\n ...dd-register-entry-7aac6e50ea-done-criteria.yaml |  2 +-\n ...-project-planning-b57132c2f2-done-criteria.yaml |  2 +-\n ...cdt-register-type-fc8ed94d2f-done-criteria.yaml |  2 +-\n ...le-agent-evidence-1bb1936bf1-done-criteria.yaml |  2 +-\n .../ifx-index-6d9eb4ca9a-done-criteria.yaml        |  2 +-\n .../stsd-deliverable-49f267f76f-done-criteria.yaml |  2 +-\n ...sd-task-execution-0c0108cc5…"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴のファイルはすべて valid"
+    },
+    {
+      "source": "executor",
+      "command": "npx specdojo index build",
+      "status": "passed",
+      "summary": "5963 件を構築し、7 件が名前空間なしの id で引けることを index lookup で確認"
+    },
+    {
+      "source": "executor",
+      "command": "npx specdojo build --only yaml-pages",
+      "status": "passed",
+      "summary": "表示のページを作り直した"
+    },
+    {
+      "source": "executor",
+      "command": "rg -c \"prj-0001:(<7 件の id>)[^-]\" docs",
+      "status": "passed",
+      "summary": "旧 id の残存なし"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6054 file(s), 107 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 83 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6054 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-E4MW\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (48 tests) 6ms\n[parent-validation:test-file] \n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1752}\n\n Test Files  19 passed (19)\n      Tests  480 passed (480)\n   Start at  14:16:23\n   Duration  2.45s (transform 4.50s, setup 611ms, import 6.92s, tests 5.57s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-E4MW/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-E4MW/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "7 件のプロダクト文書 id から prj-0001: を外し、docs/ 配下 215 ファイル・328 箇所の参照を付け替えた。yaml-pages・exec・dashboard を作り直し、索引を再構築して 7 件が名前空間なしで引けることを確認した。個票の対応結果を更新した。",
+  "completion_status": "complete",
+  "handoff": [
+    "個票は based_on を 8 件としていたが、実際に 7 件の id を名前空間ありで指していたのは 3 件（ccd-project-planning・ifx-file-agent-evidence・bes-task-ready-selected）だった。残りの based_on（bdd-exec-state・bdd-exec-event・bdd-deliverable・bps-task-selection-preparation・prj-success-criteria-and-acceptance-criteria）は 7 件の外の id のため変えていない。",
+    "tests/src/docs/yaml-pages.test.ts の疑似入力と tests/fixtures/yaml-pages/*.snap は実文書を読まない固定の入力のため変えていない。",
+    "CHANGELOG に書く事項: 区分 Changed。プロダクト文書 7 件の id から名前空間 prj-0001: を外し、参照を付け替えた。",
+    "個票の作業内容 No.5（lint:md・lint:fm・validate:schema と親の検証）は executor が実行しないため open のまま残した。保護された設定の変更はない。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-E4MW/pjr-e4mw-20261123T051333Z-56465bdc/executor.log",
+      "bytes": 3587,
+      "truncated": false
+    }
+  ]
+}
