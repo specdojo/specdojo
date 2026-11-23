@@ -1,0 +1,9 @@
+`docs/ja/specdojo/samples/dss-sample.md` で、冗長だった 1 箇所を削りました。「3.1. 色」末尾の「未定義の色を作らない」は、「3. デザイントークン」冒頭の「画面内で独自の色や余白を追加せず」と同じ内容なので削除しました。
+
+文書は全体としてすでに簡潔でした。ほかの候補は、意味を変えずに削れる箇所がなかったため `retain` にしています。理由は `condense_records` に記録しました。
+
+静的検査は、親 runner が実行する検査と重なるため、executor 側では実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"dss-sample.md の冗長な 1 文を削除し、ほかの候補は意味と完了条件を保つため保持した。","handoff":[],"validations":[],"condense_records":[{"location":"3.1. 色 末尾段落「ホバーは下線または内側の枠で示し、未定義の色を作らない。」","category":"repetition","action":"delete","reason":"「未定義の色を作らない」は、3. デザイントークン冒頭の「画面内で独自の色や余白を追加せず」と同じ内容。削除しても規則の意味は変わらない。","cause":{"type":"document"}},{"location":"8.1. 検証 の「合否は…次の表には再掲しない」","category":"canonical-restatement","action":"retain","reason":"合否の正本の所在を示す 1 文で、判断に要る。表への再掲を防ぐ役割もあるため残す。","cause":{"type":"document"}},{"location":"8.2. 検証の節目と基準版の採用 末尾「試作用の実装は採用とみなさない。」","category":"repetition","action":"retain","reason":"採用条件の表にない例外の補足で、判断に要るため残す。","cause":{"type":"document"}},{"location":"4. 部品の使い方 冒頭の参照文","category":"table-prose","action":"retain","reason":"状態表現とアクセシビリティの正本への参照で、重複ではないため残す。","cause":{"type":"document"}}]}
+</specdojo_executor_evidence>
