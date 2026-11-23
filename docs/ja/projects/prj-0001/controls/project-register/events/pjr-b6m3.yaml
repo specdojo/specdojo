@@ -60,3 +60,42 @@
       from: ""
       to: 完了条件
   previous_event_id: reg_771a18baa8e54ac7a7797eb372e00722
+- v: 1
+  id: reg_1ba0df8b388a41fbabeb18ea8bc4b7d9
+  ts: "2026-11-23T13:43:39Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "作業内容" updated
+  changes:
+    - field: section
+      from: ""
+      to: 作業内容
+  previous_event_id: reg_a2683a9d13644d809bc8d0930fb4622e
+- v: 1
+  id: reg_9019077a59b24ca09441dc3d6449b2b0
+  ts: "2026-11-23T13:43:44Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "対応結果" updated
+  changes:
+    - field: section
+      from: ""
+      to: 対応結果
+  previous_event_id: reg_1ba0df8b388a41fbabeb18ea8bc4b7d9
+- v: 1
+  id: reg_d9053b3050604ad6a890a9f31e330fb6
+  ts: "2026-11-23T13:43:49Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "関連ドキュメント" updated
+  changes:
+    - field: section
+      from: ""
+      to: 関連ドキュメント
+  previous_event_id: reg_9019077a59b24ca09441dc3d6449b2b0

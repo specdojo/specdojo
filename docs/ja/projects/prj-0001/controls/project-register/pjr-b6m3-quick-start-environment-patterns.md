@@ -39,14 +39,25 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                                                     | 担当                  | 状態 | メモ      |
+| --- | ---------------------------------------------------------------------------------------- | --------------------- | ---- | --------- |
+| 1   | クイックスタートに「使う環境のパターン」の節（6 パターンの表と最初の 10 分の手順）を足す | specdojo-orchestrator | done | 482fcc65e |
+| 2   | Node.js の版を `engines` に合わせ（22.17）、`init` の対話例に tmux の問いを足す          | specdojo-orchestrator | done | 482fcc65e |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- クイックスタートの「導入とオーケストレーターの起動」に「使う環境のパターン」の節を足した。Dev Container・Dev Container ＋ tmux・macOS・macOS ＋ tmux・WSL・WSL ＋ tmux の 6 つについて、`init` の答え・オプション、`doctor` での前提の確かめ、作られるものと入り方を表にした。最後に、`doctor` → `init` → tmux のセッション → オーケストレーターに最初の todo を起票して流してもらう、の手順を置いた。
+- WSL の注意（作業ツリーを `/mnt/c` でなく Linux 側に置く、Docker Desktop の WSL 連携）と tmux の入れ方・抜け方を書いた。
+- あわせて、前提の Node.js の版を `engines`（22.17）に合わせ、`init` の対話例に tmux の問いを足した。
+- 検証: `markdownlint-cli2` と prettier を通し、commit の hook（format・markdown）を通した。
+- 残り: 各パターンを実機で通しで確かめるのは PJR-F636 で行う。
+
+CHANGELOG に書く事項（Changed）:
+
+- クイックスタートに、Dev Container・macOS・WSL と tmux の組み合わせ 6 つの導入手順を足した。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[specdojo:quick-start-guide|クイックスタート]]: 使う環境のパターンの節。
+- [[specdojo:command-reference|コマンドリファレンス]]: `doctor`・`init` の説明。
+- 関連: PJR-7EZR（init の環境のパターン。最後の案内で `doctor` を勧める）、PJR-GA72、PJR-F636。
