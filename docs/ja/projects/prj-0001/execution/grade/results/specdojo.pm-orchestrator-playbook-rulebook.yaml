@@ -1,0 +1,175 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:pm-orchestrator-playbook-rulebook
+path: docs/ja/specdojo/rulebooks/pm-orchestrator-playbook-rulebook.md
+target: kata
+rubric: grade-rubric-v2
+verdict: pass
+score: 89
+graded_at: "2026-11-23T04:06:23.106Z"
+graded_by: opus-review-executor
+content_hash: c05ba7b7ff7171eb99ee681a02987991a598d23af71e10d2ad18f7fb6c641e2f
+categories:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
+  architecture:
+    score: 100
+  usability:
+    score: 83
+  implementation:
+    score: 100
+  quality:
+    score: 83
+  consistency:
+    score: 75
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 7
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 86
+    anchor: "- 進行中の run や待っている項目を運用メモに書かない。登録簿と実行状態から組み立てる。"
+    message: >-
+      「進行中の run や待っている項目を運用メモに書かない」は、置き場所の表（登録簿や実行状態の行）と禁止事項の2行目にもすでにあり、3か所で同じ主張になっている。「handoff と question
+      からの移し方」のこの箇条は削除してよい。
+    message_ja: >-
+      「進行中の run や待っている項目を運用メモに書かない」は、置き場所の表（登録簿や実行状態の行）と禁止事項の2行目にもすでにあり、3か所で同じ主張になっている。「handoff と question
+      からの移し方」のこの箇条は削除してよい。
+  - id: F002
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 11
+    anchor: "- 各記述は、実際に起きた事例か利用者の決定に基づかせます。手順・落とし穴には、根拠になった項目や事例（日付）と、回避策を直す側の項目を添えます。"
+    message: >-
+      「手順・落とし穴には、根拠になった項目や事例（日付）…を添えます」とあるが、どの記述に根拠が必須か（各箇条すべてか、回避策と落とし穴だけか）が判定できない。根拠の付け方として、必須にする記述の範囲と形（項目 ID
+      か日付のどちらか以上）を明示する。
+    message_ja: >-
+      「手順・落とし穴には、根拠になった項目や事例（日付）…を添えます」とあるが、どの記述に根拠が必須か（各箇条すべてか、回避策と落とし穴だけか）が判定できない。根拠の付け方として、必須にする記述の範囲と形（項目 ID
+      か日付のどちらか以上）を明示する。
+  - id: F003
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 88
+    anchor: "### 6.3. 章ごとの書き方"
+    message: 「章ごとの書き方」に、本文要件で定めた任意章「登録簿項目の完了条件の書き方」「落とし穴」「プロジェクトに固有の章」の書き方がない。とくに完了条件の書き方（変える対象のパスを書く、読むだけの文書は名前で書くなど）の記述規約を足す。
+    message_ja: 「章ごとの書き方」に、本文要件で定めた任意章「登録簿項目の完了条件の書き方」「落とし穴」「プロジェクトに固有の章」の書き方がない。とくに完了条件の書き方（変える対象のパスを書く、読むだけの文書は名前で書くなど）の記述規約を足す。
+  - id: F004
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 51
+    anchor: "- `based_on`: 任意。運用メモの決まりの直接の根拠になる決定（decision の個票）があれば挙げる"
+    message: >-
+      `based_on` は「決定（decision の個票）があれば挙げる」と定めているが、sample は `based_on` に `specdojo:pm-plan-sample` を挙げている。rulebook
+      の定義を広げるか、sample を決定の参照に直して揃える。
+    message_ja: >-
+      `based_on` は「決定（decision の個票）があれば挙げる」と定めているが、sample は `based_on` に `specdojo:pm-plan-sample` を挙げている。rulebook
+      の定義を広げるか、sample を決定の参照に直して揃える。
+  - id: F005
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 65
+    anchor: "| 登録簿項目の完了条件の書き方 | 任意   | 並べて流すときの衝突を避けるための、完了条件の書き方の決まり                                               |"
+    message: >-
+      本文要件では任意章「登録簿項目の完了条件の書き方」を置くとしているが、sample は完了条件の書き方の決まり（変える対象の相対パスを書く）を「実行の運び方」の中に書いている。章の受け持ちを rulebook と sample
+      のどちらかで揃える。
+    message_ja: >-
+      本文要件では任意章「登録簿項目の完了条件の書き方」を置くとしているが、sample は完了条件の書き方の決まり（変える対象の相対パスを書く）を「実行の運び方」の中に書いている。章の受け持ちを rulebook と sample
+      のどちらかで揃える。
+  - id: F006
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 11
+    anchor: "- 各記述は、実際に起きた事例か利用者の決定に基づかせます。手順・落とし穴には、根拠になった項目や事例（日付）と、回避策を直す側の項目を添えます。"
+    message: >-
+      手順・落とし穴に根拠（項目・日付）を添えると定めているが、sample の「落とし穴」の 2 項目、`—resume-note` の注意、文書サイトのビルドを直列にする記述には根拠がない。sample
+      を基準に合わせて直すか、基準の対象範囲を限定する。
+    message_ja: >-
+      手順・落とし穴に根拠（項目・日付）を添えると定めているが、sample の「落とし穴」の 2 項目、`—resume-note` の注意、文書サイトのビルドを直列にする記述には根拠がない。sample
+      を基準に合わせて直すか、基準の対象範囲を限定する。
+  - id: F007
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 90
+    anchor: "- 目的と適用範囲: 本体に従う範囲と、本書が加える範囲を 1〜3 項目で分けます。根拠にした運用の期間か版を書きます。"
+    message: 文書全体で「項目」は登録簿項目を指すが、「本体に従う範囲と、本書が加える範囲を 1〜3 項目で分けます」では箇条書きの数の意味で使われていて紛らわしい。「1〜3 個の箇条で分けます」などに言い換える。
+    message_ja: 文書全体で「項目」は登録簿項目を指すが、「本体に従う範囲と、本書が加える範囲を 1〜3 項目で分けます」では箇条書きの数の意味で使われていて紛らわしい。「1〜3 個の箇条で分けます」などに言い換える。
