@@ -4,98 +4,97 @@ document: specdojo:mtp-sample
 path: docs/ja/specdojo/samples/mtp-sample.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-sample
-verdict: fail
-score: 46
-graded_at: "2026-11-21T04:33:53.421Z"
-graded_by: opus-executor
-content_hash: 2e9f83b5247813dda9bc4d104eae71ac69de845641a6bdeeb40b0702b46afc4a
+verdict: pass
+score: 96
+graded_at: "2026-11-23T15:38:40.787Z"
+graded_by: sonnet-review-executor
+content_hash: 7baf6d70d5cec85b6f7ff029a72fd25c697f8b4de342f7e681be084a78a8fd50
 categories:
   purpose:
-    score: 38
+    score: 100
   operations:
-    score: 69
+    score: 100
   planning:
-    score: 42
+    score: 100
   business:
-    score: 42
+    score: 100
   architecture:
-    score: 75
+    score: 100
   usability:
-    score: 67
+    score: 92
   implementation:
-    score: 63
+    score: 88
   quality:
-    score: 33
+    score: 92
   consistency:
-    score: 0
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-po-decision-readiness:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-po-publication-accountability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-plan-feasibility:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-pm-control-reporting:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ba-business-value:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ba-requirements-completeness:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-implementation-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-dev-change-impact:
     level: 3
     score: 75
   vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
     level: 3
     score: 75
-  vp-qe-verifiability:
-    level: 1
-    score: 25
   vp-qe-omissions-consistency:
-    level: 0
-    score: 0
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 0
-    score: 0
+    level: 4
+    score: 100
   vp-ux-readability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 3
     score: 75
   vp-ops-release-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ops-operability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -103,218 +102,37 @@ viewpoints:
     level: 4
     score: 100
 finding_counts:
-  blocker: 2
-  major: 19
-  minor: 9
+  blocker: 0
+  major: 0
+  minor: 3
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-po-purpose-alignment
-    line: 5
-    anchor: 本書は、移行リハーサルの実施計画を定義し、切替前に妥当性を検証するための最小サンプルである。
-    message: "目的が汎用の定義文にとどまり、駄菓子屋きぬやで何を移行し、何を事前に検証するのか（例: 紙のつけ残高・在庫記録の移行で残高不一致や欠品を起こさないこと）を示していないため、上位の目的から必要性を説明できない。"
-    message_ja: "目的が汎用の定義文にとどまり、駄菓子屋きぬやで何を移行し、何を事前に検証するのか（例: 紙のつけ残高・在庫記録の移行で残高不一致や欠品を起こさないこと）を示していないため、上位の目的から必要性を説明できない。"
-  - id: F002
-    severity: minor
-    rule: vp-po-purpose-alignment
-    line: 10
-    anchor: "- 前提: プロジェクト文脈は handbook の共通方針に準拠する"
-    message: 前提の「handbook の共通方針」は参照先の id が書かれておらず、根拠をたどれないので、`based_on` や wikilink で上位文書（移行計画 `mip-index` など）を特定するべきである。
-    message_ja: 前提の「handbook の共通方針」は参照先の id が書かれておらず、根拠をたどれないので、`based_on` や wikilink で上位文書（移行計画 `mip-index` など）を特定するべきである。
-  - id: F003
-    severity: major
-    rule: vp-po-decision-readiness
-    line: 3
-    anchor: "## 1. 目的と適用範囲"
-    message: GO/NO-GO判断プロセス（判断主体、集約する証跡、GO／条件付きGO／NO-GO の判断）が記述されておらず、PO が移行可否を判断する手順の例になっていない。
-    message_ja: GO/NO-GO判断プロセス（判断主体、集約する証跡、GO／条件付きGO／NO-GO の判断）が記述されておらず、PO が移行可否を判断する手順の例になっていない。
-  - id: F004
-    severity: major
-    rule: vp-po-decision-readiness
-    line: 30
-    anchor: "| 要件詳細の補強 | 実案件適用時に具体化する |"
-    message: 未解決事項が「要件詳細の補強」という抽象的な論点だけで、何が未決か、移行判断と日程への影響、決める人と期限が書かれておらず、判断材料にならない。
-    message_ja: 未解決事項が「要件詳細の補強」という抽象的な論点だけで、何が未決か、移行判断と日程への影響、決める人と期限が書かれておらず、判断材料にならない。
-  - id: F005
-    severity: minor
-    rule: vp-po-publication-accountability
-    line: 16
-    anchor: "- 必須観点: 対象、条件、判定基準、責任者"
-    message: 必須観点に「責任者」を挙げているのに、合否判定と GO/NO-GO の最終判断を人間の PO（店主）が担うことが示されていないため、判定者を書いた例を加えるべきである。
-    message_ja: 必須観点に「責任者」を挙げているのに、合否判定と GO/NO-GO の最終判断を人間の PO（店主）が担うことが示されていないため、判定者を書いた例を加えるべきである。
-  - id: F006
-    severity: major
-    rule: vp-pm-plan-feasibility
-    line: 3
-    anchor: "## 1. 目的と適用範囲"
-    message: リハーサル回数とスケジュールの表（回数・予定日・目的・完了条件）がなく、rulebook の禁止事項「リハーサル回数/日程を曖昧に書く」に当たり、タスク化や進捗確認に使えない。
-    message_ja: リハーサル回数とスケジュールの表（回数・予定日・目的・完了条件）がなく、rulebook の禁止事項「リハーサル回数/日程を曖昧に書く」に当たり、タスク化や進捗確認に使えない。
-  - id: F007
-    severity: major
-    rule: vp-pm-dependency-risk
-    line: 3
-    anchor: "## 1. 目的と適用範囲"
-    message: 上位の `mip-index`（成功条件・停止許容時間）や `dmd-*`（許容差）への依存と、リハーサル失敗時の日程影響が識別されておらず、後続の切替計画に与えるリスクを追えない。
-    message_ja: 上位の `mip-index`（成功条件・停止許容時間）や `dmd-*`（許容差）への依存と、リハーサル失敗時の日程影響が識別されておらず、後続の切替計画に与えるリスクを追えない。
-  - id: F008
-    severity: major
-    rule: vp-pm-control-reporting
-    line: 3
-    anchor: "## 1. 目的と適用範囲"
-    message: 結果報告フォーマットと報告先がなく、rulebook の禁止事項「結果報告フォーマットを省略する」に当たり、課題や決定記録へ書き写す項目を分けられない。
-    message_ja: 結果報告フォーマットと報告先がなく、rulebook の禁止事項「結果報告フォーマットを省略する」に当たり、課題や決定記録へ書き写す項目を分けられない。
-  - id: F009
-    severity: major
-    rule: vp-ba-business-value
-    line: 9
-    anchor: "- 対象: 駄菓子屋の販売管理システム"
-    message: 対象を「駄菓子屋の販売管理システム」と名前で挙げるだけで、移行で守るべき業務（つけ残高、在庫数、販売記録の連続性）と、移行に失敗したときの影響が書かれておらず、リハーサルで何を守るのかがわからない。
-    message_ja: 対象を「駄菓子屋の販売管理システム」と名前で挙げるだけで、移行で守るべき業務（つけ残高、在庫数、販売記録の連続性）と、移行に失敗したときの影響が書かれておらず、リハーサルで何を守るのかがわからない。
-  - id: F010
-    severity: major
-    rule: vp-ba-requirements-completeness
-    line: 15
-    anchor: "- 主な内容: テスト範囲、シナリオ、環境、判定基準、是正計画"
-    message: "テスト範囲・シナリオ・判定基準を項目名として並べるだけで、件数照合・差分検知・業務シナリオ（例: 販売→つけ記録→残高確認）の具体的な観点と期待値を書いていない。"
-    message_ja: "テスト範囲・シナリオ・判定基準を項目名として並べるだけで、件数照合・差分検知・業務シナリオ（例: 販売→つけ記録→残高確認）の具体的な観点と期待値を書いていない。"
-  - id: F011
-    severity: major
-    rule: vp-ba-requirements-completeness
-    line: 3
-    anchor: "## 1. 目的と適用範囲"
-    message: 対象範囲と対象外（移行する記録の種類、移行しない過去データなど）が書かれておらず、リハーサルの範囲を利用者が確認できない。
-    message_ja: 対象範囲と対象外（移行する記録の種類、移行しない過去データなど）が書かれておらず、リハーサルの範囲を利用者が確認できない。
-  - id: F012
-    severity: major
-    rule: vp-ba-stakeholder-clarity
-    line: 16
-    anchor: "- 必須観点: 対象、条件、判定基準、責任者"
-    message: 必須観点に「責任者」を挙げながら、判定者・データ準備担当・報告先（店主、家族利用者代表など共通サンプル文脈の登場人物）を割り当てた例がなく、関係者と合意する対象がわからない。
-    message_ja: 必須観点に「責任者」を挙げながら、判定者・データ準備担当・報告先（店主、家族利用者代表など共通サンプル文脈の登場人物）を割り当てた例がなく、関係者と合意する対象がわからない。
-  - id: F013
-    severity: major
-    rule: vp-arc-technical-constraints
-    line: 3
-    anchor: "## 1. 目的と適用範囲"
-    message: テスト環境とデータ準備（検証環境、データセットID、初期化・後始末、店内タブレット1台などの端末前提）が書かれておらず、リハーサルの技術的な前提を読み取れない。
-    message_ja: テスト環境とデータ準備（検証環境、データセットID、初期化・後始末、店内タブレット1台などの端末前提）が書かれておらず、リハーサルの技術的な前提を読み取れない。
-  - id: F014
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 22
-    anchor: "| ドキュメント | 移行テスト計画（リハーサル計画）                           | 最小サンプル                         |"
-    message: 「最小記述例」の表の「目的」と「主な内容」の行は、5行目と15行目の文をそのまま繰り返しており、削るかまとめても情報を失わないため、表は実際に記入した例に置き換えるべきである。
-    message_ja: 「最小記述例」の表の「目的」と「主な内容」の行は、5行目と15行目の文をそのまま繰り返しており、削るかまとめても情報を失わないため、表は実際に記入した例に置き換えるべきである。
-  - id: F015
-    severity: minor
-    rule: vp-arc-single-responsibility
-    line: 7
-    anchor: "## 2. 入力情報"
-    message: 「入力情報」と「記述内容」の章は作成手順や観点の説明で、移行テスト計画の完成例という sample の責務に直接寄与していないため、rulebook の本文構成どおりの記入済みの章に置き換えるべきである。
-    message_ja: 「入力情報」と「記述内容」の章は作成手順や観点の説明で、移行テスト計画の完成例という sample の責務に直接寄与していないため、rulebook の本文構成どおりの記入済みの章に置き換えるべきである。
-  - id: F016
-    severity: major
-    rule: vp-dev-implementation-readiness
-    line: 18
-    anchor: "## 4. 最小記述例"
-    message: 「最小記述例」が項目名と定義文の3行だけで、写して MTP を作るのに必要な入力（日程、環境、データセット、検証観点、合否基準）の記入例がない。
-    message_ja: 「最小記述例」が項目名と定義文の3行だけで、写して MTP を作るのに必要な入力（日程、環境、データセット、検証観点、合否基準）の記入例がない。
-  - id: F017
-    severity: minor
-    rule: vp-dev-implementation-readiness
-    line: 3
-    anchor: "## 1. 目的と適用範囲"
-    message: "Frontmatter に rulebook が推奨する `based_on`（例: `mip-index`）がなく、上位の判断を使っていることを示す例になっていない。"
-    message_ja: "Frontmatter に rulebook が推奨する `based_on`（例: `mip-index`）がなく、上位の判断を使っていることを示す例になっていない。"
-  - id: F018
     severity: minor
     rule: vp-dev-change-impact
-    line: 11
-    anchor: "- 参照: `../rulebooks/mtp-rulebook.md`"
-    message: 参照先が rulebook への相対パスだけで、関連する `mip-index`・`dmd-*`・`cop-*` への参照がなく、上位文書を変更したときに追従すべき箇所を識別できない。
-    message_ja: 参照先が rulebook への相対パスだけで、関連する `mip-index`・`dmd-*`・`cop-*` への参照がなく、上位文書を変更したときに追従すべき箇所を識別できない。
-  - id: F019
+    line: 1
+    anchor: "# 移行テスト計画（移行リハーサル計画）: 駄菓子屋きぬや 販売管理システム"
+    message: >-
+      `based_on` に、本文で依拠している `specdojo:dmd-sample` がありません。参照しているのに追従対象として宣言されておらず、変更時の影響範囲を機械的に追えないため、`based_on`
+      に追加するか、`dmd-sample` を参照だけに留める理由を示すべきです。
+    message_ja: >-
+      `based_on` に、本文で依拠している `specdojo:dmd-sample` がありません。参照しているのに追従対象として宣言されておらず、変更時の影響範囲を機械的に追えないため、`based_on`
+      に追加するか、`dmd-sample` を参照だけに留める理由を示すべきです。
+  - id: F002
     severity: minor
-    rule: vp-dev-testability
-    line: 15
-    anchor: "- 主な内容: テスト範囲、シナリオ、環境、判定基準、是正計画"
-    message: 移行後に確認する検証方法と期待値（方法／期待値の表）の例がなく、リハーサル後に何を実行して合否を確かめるかが読み取れない。
-    message_ja: 移行後に確認する検証方法と期待値（方法／期待値の表）の例がなく、リハーサル後に何を実行して合否を確かめるかが読み取れない。
-  - id: F020
-    severity: major
     rule: vp-qe-verifiability
-    line: 16
-    anchor: "- 必須観点: 対象、条件、判定基準、責任者"
-    message: サンプルの例示として、判定基準を具体的にどう記述すべきか（Pass/Failが客観的に判定可能な表現）が示されておらず、検証可能性の例として不十分である。
-    message_ja: サンプルの例示として、判定基準を具体的にどう記述すべきか（Pass/Failが客観的に判定可能な表現）が示されておらず、検証可能性の例として不十分である。
-  - id: F021
-    severity: major
-    rule: vp-qe-verifiability
-    line: 3
-    anchor: "## 1. 目的と適用範囲"
-    message: 合否基準の表（項目・基準・判定者）がなく、停止許容・差分許容・重大障害の最低限の基準を欠いているため、GO/NO-GO を判定できない。
-    message_ja: 合否基準の表（項目・基準・判定者）がなく、停止許容・差分許容・重大障害の最低限の基準を欠いているため、GO/NO-GO を判定できない。
-  - id: F022
-    severity: blocker
-    rule: vp-qe-omissions-consistency
-    line: 3
-    anchor: "## 1. 目的と適用範囲"
-    message: "ルールブックで定義されている必須構成（## 1.概要 〜 ## 9.関連ドキュメント）がすべて欠落しており、ルールを無視した独自の構成となっている。"
-    message_ja: "ルールブックで定義されている必須構成（## 1.概要 〜 ## 9.関連ドキュメント）がすべて欠落しており、ルールを無視した独自の構成となっている。"
-  - id: F023
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 26
-    anchor: "## 5. 未解決事項"
-    message: 「差異発生時の扱い（許容/修正/再実行）」と「関連ドキュメント」の章がなく、rulebook の禁止事項2項目に当たっている。
-    message_ja: 「差異発生時の扱い（許容/修正/再実行）」と「関連ドキュメント」の章がなく、rulebook の禁止事項2項目に当たっている。
-  - id: F024
-    severity: blocker
-    rule: vp-qe-kata-conformance
-    line: 3
-    anchor: "## 1. 目的と適用範囲"
-    message: 本文構成がルールブックで指定された順序固定の必須見出しに従っておらず、具体例としての責務を果たしていない。
-    message_ja: 本文構成がルールブックで指定された順序固定の必須見出しに従っておらず、具体例としての責務を果たしていない。
-  - id: F025
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 18
-    anchor: "## 4. 最小記述例"
-    message: rulebook の「サンプル（最小・整合版）」は9章そろった完成例を示しているのに、対応する sample はそれと違う独自構成の要約表で、rulebook と sample の対応が矛盾している。
-    message_ja: rulebook の「サンプル（最小・整合版）」は9章そろった完成例を示しているのに、対応する sample はそれと違う独自構成の要約表で、rulebook と sample の対応が矛盾している。
-  - id: F026
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 9
-    anchor: "- 対象: 駄菓子屋の販売管理システム"
-    message: 共通サンプル文脈（駄菓子屋きぬや、店主、家族利用者、店頭販売・在庫・つけ）が対象名として出るだけで、内容の具体例に反映されていない。
-    message_ja: 共通サンプル文脈（駄菓子屋きぬや、店主、家族利用者、店頭販売・在庫・つけ）が対象名として出るだけで、内容の具体例に反映されていない。
-  - id: F027
-    severity: major
-    rule: vp-ux-readability
-    line: 3
-    anchor: "## 1. 目的と適用範囲"
-    message: ルールブックと全く異なる構成で記述されているため、初見の読者が正しい MTP の書き方を理解できず、誤った形式を模倣させるリスクがある。
-    message_ja: ルールブックと全く異なる構成で記述されているため、初見の読者が正しい MTP の書き方を理解できず、誤った形式を模倣させるリスクがある。
-  - id: F028
+    line: 61
+    anchor: "| 所要時間       | 3 対象の書き出し・取り込み・照合と動作確認の合計に、取り込み直し 1 回分を足した時間が、臨時休業の開始から正午までに収まる | OPS    |"
+    message: >-
+      所要時間の基準が「臨時休業の開始から正午まで」と、時刻や分数の値を持たず pass/fail を測れません。rulebook の良い例のように分数などの仮値（例: 停止許容時間の仮置き）を添え、確定は `_UNDECIDED_`
+      に残すとよいです。
+    message_ja: >-
+      所要時間の基準が「臨時休業の開始から正午まで」と、時刻や分数の値を持たず pass/fail を測れません。rulebook の良い例のように分数などの仮値（例: 停止許容時間の仮置き）を添え、確定は `_UNDECIDED_`
+      に残すとよいです。
+  - id: F003
     severity: minor
     rule: vp-ux-language-consistency
-    line: 16
-    anchor: "- 必須観点: 対象、条件、判定基準、責任者"
-    message: 「判定基準」と rulebook の見出し「合否基準」で用語が揺れているため、rulebook の用語「合否基準」に統一するべきである。
-    message_ja: 「判定基準」と rulebook の見出し「合否基準」で用語が揺れているため、rulebook の用語「合否基準」に統一するべきである。
-  - id: F029
-    severity: major
-    rule: vp-ops-release-readiness
-    line: 30
-    anchor: "| 要件詳細の補強 | 実案件適用時に具体化する |"
-    message: 未解決事項が「実案件適用時に具体化する」と先送りするだけで、sample を ready にするために解消すべき欠落（必須9章の記入）が識別されておらず、公開判断の前提にならない。
-    message_ja: 未解決事項が「実案件適用時に具体化する」と先送りするだけで、sample を ready にするために解消すべき欠落（必須9章の記入）が識別されておらず、公開判断の前提にならない。
-  - id: F030
-    severity: major
-    rule: vp-ops-operability
-    line: 3
-    anchor: "## 1. 目的と適用範囲"
-    message: 差異発生時の扱い（許容差内は記録、許容差超は修正して再実行、再実行の上限と判断者）がなく、再実行の判断がぶれる運用上のリスクを残している。
-    message_ja: 差異発生時の扱い（許容差内は記録、許容差超は修正して再実行、再実行の上限と判断者）がなく、再実行の判断がぶれる運用上のリスクを残している。
+    line: 104
+    anchor: "- 条件付き GO: 所要時間・件数・つけ残高・在庫数・重大障害が合格し、残った差異の原因と直し方が分かっていて、切替日の前日の読み合わせで直したことを確かめられる。条件と確認の期限を決定記録に書いて切替日を確定する。"
+    message: 条件付き GO の記述が「決定記録」と書かれており、他の章（`pm-decision-log`）と呼称が揺れています。`pm-decision-log` に統一すべきです。
+    message_ja: 条件付き GO の記述が「決定記録」と書かれており、他の章（`pm-decision-log`）と呼称が揺れています。`pm-decision-log` に統一すべきです。

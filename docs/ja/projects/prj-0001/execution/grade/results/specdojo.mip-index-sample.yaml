@@ -4,12 +4,11 @@ document: specdojo:mip-index-sample
 path: docs/ja/specdojo/samples/mip-index-sample.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-sample
-verdict: needs-work
-score: 86
-graded_at: "2026-11-21T04:28:39.152Z"
-graded_by: opus-executor
-content_hash: 6e81578e2a764f83bd549dc365a64d93b333c31590e313a5a95de8e50f07a186
+verdict: pass
+score: 100
+graded_at: "2026-11-23T15:36:15.843Z"
+graded_by: sonnet-review-executor
+content_hash: 1e163df235aa226db8b89ec6bfb93d240fe5e676729fc0b6a23ce52142399309
 categories:
   purpose:
     score: 100
@@ -18,17 +17,17 @@ categories:
   planning:
     score: 100
   business:
-    score: 92
+    score: 100
   architecture:
-    score: 88
+    score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 100
   consistency:
-    score: 50
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -55,11 +54,11 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-stakeholder-clarity:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -73,20 +72,20 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -101,65 +100,7 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 5
+  major: 0
+  minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: minor
-    rule: vp-ba-stakeholder-clarity
-    line: 96
-    anchor: "| 体制     | 開発担当が閉店後の日次締めに立ち会い、店舗運営アドバイザーが店番の引継ぎで困った点を聞き取る          |"
-    message: ハイパーケアの体制に挙げた「店舗運営アドバイザー」が「体制・役割（GO判断含む）」の表に載っておらず、移行後支援での責務と連絡先が分からないため、体制表へ行を加えて責務と連絡/判断を定義する。
-    message_ja: ハイパーケアの体制に挙げた「店舗運営アドバイザー」が「体制・役割（GO判断含む）」の表に載っておらず、移行後支援での責務と連絡先が分からないため、体制表へ行を加えて責務と連絡/判断を定義する。
-  - id: F002
-    severity: minor
-    rule: vp-arc-technical-constraints
-    line: 12
-    anchor: "- _ASSUMPTION_: 平日の午前は来店が少ないため、切替当日は午前に取り込みと動作確認を行い、下校時間に来店が増える午後から本番で利用する。閉店時間は変えない。"
-    message: >-
-      顧客の氏名・連絡先を転記用の表を経由して移すのに、「前提・制約」に個人情報の取り扱い（転記用の表の保管・廃棄、端末の保護）の制約がなく、rulebook の記述ガイドが求める法務/セキュリティ制約の例を欠くため、1
-      項目を追加する。
-    message_ja: >-
-      顧客の氏名・連絡先を転記用の表を経由して移すのに、「前提・制約」に個人情報の取り扱い（転記用の表の保管・廃棄、端末の保護）の制約がなく、rulebook の記述ガイドが求める法務/セキュリティ制約の例を欠くため、1
-      項目を追加する。
-  - id: F003
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 44
-    anchor: >-
-      | 業務停止時間   | 0 時間（開店時間を変えない）      | 切替日の午前（取り込み・動作確認）                                | 移行作業の記録表に書いた開始・終了時刻        
-      | 店主代表 | 午後の開店までに終わらなければ延期し、ノートだけで営業する               |
-    message: 業務停止時間の基準「0 時間」に対し、証跡が移行作業の開始・終了時刻になっていて停止の有無を測れないため、証跡を「通常の開店時刻どおりに販売を受け付けたかの記録」などに改める。
-    message_ja: 業務停止時間の基準「0 時間」に対し、証跡が移行作業の開始・終了時刻になっていて停止の有無を測れないため、証跡を「通常の開店時刻どおりに販売を受け付けたかの記録」などに改める。
-  - id: F004
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 12
-    anchor: "- _ASSUMPTION_: 平日の午前は来店が少ないため、切替当日は午前に取り込みと動作確認を行い、下校時間に来店が増える午後から本番で利用する。閉店時間は変えない。"
-    message: >-
-      「平日の午前は来店が少ない」で午前の営業を前提にしながら、「切替日の午前は販売しない」（line 71）や「午後の開店前」（line 52）とも書いており、成功条件の「業務停止時間 0 時間」（line
-      44）と矛盾するため、切替日の午前を休業扱いにして停止許容時間を明記するか、午前の営業を続ける前提に揃える。
-    message_ja: >-
-      「平日の午前は来店が少ない」で午前の営業を前提にしながら、「切替日の午前は販売しない」（line 71）や「午後の開店前」（line 52）とも書いており、成功条件の「業務停止時間 0 時間」（line
-      44）と矛盾するため、切替日の午前を休業扱いにして停止許容時間を明記するか、午前の営業を続ける前提に揃える。
-  - id: F005
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 31
-    anchor: >-
-      | 区分   | 対象                                                 |
-      補足                                                                                    |
-    message: >-
-      rulebook の記述ガイドが対象一覧に含めるよう求める「機能」「I/F」の区分が表になく、該当しない場合の書き方も示していないため、機能（販売・在庫・つけの各画面）の行と、I/F
-      が「なし（仕入先連携は対象外）」である旨の行を加える。
-    message_ja: >-
-      rulebook の記述ガイドが対象一覧に含めるよう求める「機能」「I/F」の区分が表になく、該当しない場合の書き方も示していないため、機能（販売・在庫・つけの各画面）の行と、I/F
-      が「なし（仕入先連携は対象外）」である旨の行を加える。
-  - id: F006
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 27
-    anchor: "| 正本切替   | 並行記録の最終日の閉店後 | システムの記録を正本にし、ノートへの記録をやめる             | 店主代表が正本切替を承認し、以後の販売・つけの記録先をシステムだけにしたことを店番担当へ伝えた |"
-    message: 正本切替の完了条件にある伝達先「店番担当」が体制表の役割名と一致せず指す相手が曖昧になるため、「家族利用者代表」など体制表の役割名に揃える。
-    message_ja: 正本切替の完了条件にある伝達先「店番担当」が体制表の役割名と一致せず指す相手が曖昧になるため、「家族利用者代表」など体制表の役割名に揃える。
+findings: []

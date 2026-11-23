@@ -4,74 +4,70 @@ document: specdojo:opd-index-sample
 path: docs/ja/specdojo/samples/opd-index-sample.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-sample
-verdict: needs-work
-score: 63
-graded_at: "2026-11-21T04:56:21.579Z"
-graded_by: opus-executor
-content_hash: cb0b59b311dd675ef75953c1a4627c2cbf82ff333b37c67a02ddcbcc0108643f
+verdict: pass
+score: 93
+graded_at: "2026-11-23T15:41:11.712Z"
+graded_by: sonnet-review-executor
+content_hash: 36ed3c325809604b93bdd01ad630af24b4973fa465d401b1fa77cc7b6fbb6e2b
 categories:
   purpose:
-    score: 50
+    score: 100
   operations:
-    score: 81
+    score: 100
   planning:
-    score: 75
+    score: 100
   business:
-    score: 50
+    score: 100
   architecture:
-    score: 83
+    score: 100
   usability:
-    score: 67
+    score: 92
   implementation:
-    score: 63
+    score: 100
   quality:
-    score: 67
+    score: 92
   consistency:
-    score: 25
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-po-decision-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-po-publication-accountability:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-business-value:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ba-requirements-completeness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
-  vp-arc-single-responsibility:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-dev-change-impact:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-testability:
     level: 4
     score: 100
@@ -79,23 +75,23 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-omissions-consistency:
-    level: 1
-    score: 25
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ux-readability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 3
     score: 75
   vp-ops-release-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-operability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -104,210 +100,32 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 15
-  minor: 10
+  major: 0
+  minor: 3
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-po-purpose-alignment
-    line: 13
-    anchor: "| 可用性      | 99.9%以上    | 月次     | 監視SaaSの稼働率集計     | 監視レポート | 運用責任者     |"
-    message: >-
-      SLO・SLA・KPI の可用性 99.9%・API p95・監視SaaS/APM という SaaS 前提の目標値は、駄菓子屋きぬやの単一店舗・タブレット 1
-      台・記録定着優先という共通サンプル文脈の目的から必要性を説明できないため、店頭販売・在庫・つけ記録の継続に対応する目標値へ置き換え、プロジェクトの目的との対応を示すべきである。
-    message_ja: >-
-      SLO・SLA・KPI の可用性 99.9%・API p95・監視SaaS/APM という SaaS 前提の目標値は、駄菓子屋きぬやの単一店舗・タブレット 1
-      台・記録定着優先という共通サンプル文脈の目的から必要性を説明できないため、店頭販売・在庫・つけ記録の継続に対応する目標値へ置き換え、プロジェクトの目的との対応を示すべきである。
-  - id: F002
-    severity: major
-    rule: vp-po-decision-readiness
-    line: 5
-    anchor: "## 1. 概要（index）"
-    message: >-
-      運用方針として PO が判断すべき論点（オフライン時の運用、停止判断の承認者、RTO/RPO など）と未決事項が `_UNDECIDED_` / `_ASSUMPTION_`
-      で明示されておらず、承認・保留の判断材料が欠けているため、未決事項と判断者を明記すべきである。
-    message_ja: >-
-      運用方針として PO が判断すべき論点（オフライン時の運用、停止判断の承認者、RTO/RPO など）と未決事項が `_UNDECIDED_` / `_ASSUMPTION_`
-      で明示されておらず、承認・保留の判断材料が欠けているため、未決事項と判断者を明記すべきである。
-  - id: F003
-    severity: minor
-    rule: vp-pm-plan-feasibility
-    line: 5
-    anchor: "## 1. 概要（index）"
-    message: 具体的な業務単位、定期的なスケジュール、および完了条件が不足しており、タスクの計画と追跡の実現可能性を下げています。
-    message_ja: 具体的な業務単位、定期的なスケジュール、および完了条件が不足しており、タスクの計画と追跡の実現可能性を下げています。
-  - id: F004
-    severity: minor
-    rule: vp-pm-dependency-risk
-    line: 5
-    anchor: "## 1. 概要（index）"
-    message: 運用方針の設計判断の根拠となる上位成果物（`nfr-*` / `sac-*` 等）が `based_on` にも本文にも示されず、運用リスクや後続 `opr-*` への依存も識別されていないため、依存とリスクを明記すべきである。
-    message_ja: 運用方針の設計判断の根拠となる上位成果物（`nfr-*` / `sac-*` 等）が `based_on` にも本文にも示されず、運用リスクや後続 `opr-*` への依存も識別されていないため、依存とリスクを明記すべきである。
-  - id: F005
-    severity: minor
-    rule: vp-pm-control-reporting
-    line: 9
-    anchor: "## 2. SLO・SLA・KPI"
-    message: SLO・SLA・KPI の未達時に誰へ報告し、課題・変更要求としてどこへ転記するかが示されていないため、未達時の報告先と対応方針を明記すべきである。
-    message_ja: SLO・SLA・KPI の未達時に誰へ報告し、課題・変更要求としてどこへ転記するかが示されていないため、未達時の報告先と対応方針を明記すべきである。
-  - id: F006
-    severity: major
-    rule: vp-ba-business-value
-    line: 9
-    anchor: "## 2. SLO・SLA・KPI"
-    message: >-
-      SLO・SLA・KPI が技術指標のみで、店主代表・家族利用者代表の業務課題（記録継続、つけ残高確認、店主不在時の運営継続）や共通サンプル文脈の期待効果と対応しておらず、運用方針の業務価値を説明できないため、業務成果に結び付く
-      KPI を含めるべきである。
-    message_ja: >-
-      SLO・SLA・KPI が技術指標のみで、店主代表・家族利用者代表の業務課題（記録継続、つけ残高確認、店主不在時の運営継続）や共通サンプル文脈の期待効果と対応しておらず、運用方針の業務価値を説明できないため、業務成果に結び付く
-      KPI を含めるべきである。
-  - id: F007
-    severity: major
-    rule: vp-ba-requirements-completeness
-    line: 5
-    anchor: "## 1. 概要（index）"
-    message: 業務範囲、前提条件、および対象外の境界が完全に欠落しており、ステークホルダーが要件の網羅性と受け入れ境界を検証できない状態になっています。
-    message_ja: 業務範囲、前提条件、および対象外の境界が完全に欠落しており、ステークホルダーが要件の網羅性と受け入れ境界を検証できない状態になっています。
-  - id: F008
-    severity: major
-    rule: vp-ba-stakeholder-clarity
-    line: 19
-    anchor: "| 対象          | R（実行） | A（責任） | C（相談） | I（共有） | 備考           |"
-    message: >-
-      RACI の担い手が Ops / Ops Lead / Dev Lead / Biz という共通サンプル文脈に存在しない体制で、当番体制と優先度別エスカレーション条件も欠けているため、Role code（PO / DEV
-      等）と共通登場人物の役割名で当番・連絡系統・エスカレーション条件を明記すべきである。
-    message_ja: >-
-      RACI の担い手が Ops / Ops Lead / Dev Lead / Biz という共通サンプル文脈に存在しない体制で、当番体制と優先度別エスカレーション条件も欠けているため、Role code（PO / DEV
-      等）と共通登場人物の役割名で当番・連絡系統・エスカレーション条件を明記すべきである。
-  - id: F009
-    severity: minor
-    rule: vp-arc-technical-constraints
-    line: 5
-    anchor: "## 1. 概要（index）"
-    message: 技術的な制約、外部システムへの依存関係、およびリカバリ目標（RTO/RPO）が指定されていません。
-    message_ja: 技術的な制約、外部システムへの依存関係、およびリカバリ目標（RTO/RPO）が指定されていません。
-  - id: F010
-    severity: major
-    rule: vp-arc-technical-constraints
-    line: 13
-    anchor: "| 可用性      | 99.9%以上    | 月次     | 監視SaaSの稼働率集計     | 監視レポート | 運用責任者     |"
-    message: 監視SaaS・APM・API p95 を前提とする測定方法は、店内タブレット 1 台・EC や外部システム連携は対象外という共通サンプル文脈の技術前提と矛盾するため、前提とする構成に合った測定手段へ改めるべきである。
-    message_ja: 監視SaaS・APM・API p95 を前提とする測定方法は、店内タブレット 1 台・EC や外部システム連携は対象外という共通サンプル文脈の技術前提と矛盾するため、前提とする構成に合った測定手段へ改めるべきである。
-  - id: F011
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 3
-    anchor: "- 参照: `../rulebooks/opd-rulebook.md`"
-    message: >-
-      本文冒頭の「参照: `../rulebooks/opd-rulebook.md`」は Frontmatter の `rulebook` 宣言の再掲で判断情報を持たないため、削除して Frontmatter
-      の宣言に一本化すべきである。
-    message_ja: >-
-      本文冒頭の「参照: `../rulebooks/opd-rulebook.md`」は Frontmatter の `rulebook` 宣言の再掲で判断情報を持たないため、削除して Frontmatter
-      の宣言に一本化すべきである。
-  - id: F012
-    severity: major
-    rule: vp-dev-implementation-readiness
-    line: 5
-    anchor: "## 1. 概要（index）"
-    message: 監視のしきい値、アラートの送信先、および変更の承認基準などの不可欠な実装パラメータが不足しており、設定要件が不完全な状態です。
-    message_ja: 監視のしきい値、アラートの送信先、および変更の承認基準などの不可欠な実装パラメータが不足しており、設定要件が不完全な状態です。
-  - id: F013
-    severity: minor
-    rule: vp-dev-change-impact
-    line: 5
-    anchor: "## 1. 概要（index）"
-    message: 変更管理の基準とロールバックのトリガーが不足しており、システムや設定変更の影響評価プロセスが定義されていません。
-    message_ja: 変更管理の基準とロールバックのトリガーが不足しており、システムや設定変更の影響評価プロセスが定義されていません。
-  - id: F014
     severity: minor
     rule: vp-qe-verifiability
-    line: 15
-    anchor: "| 一次応答    | P1: 30分以内 | 月次     | チケット初回応答時刻集計 | 問合せ台帳   | サポート責任者 |"
-    message: 一次応答の目標が P1 のみで P2/P3 の基準がなく、RACI 備考の「即時連絡」も判定可能な時間基準になっていないため、優先度ごとに数値で目標を定義すべきである。
-    message_ja: 一次応答の目標が P1 のみで P2/P3 の基準がなく、RACI 備考の「即時連絡」も判定可能な時間基準になっていないため、優先度ごとに数値で目標を定義すべきである。
-  - id: F015
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 5
-    anchor: "## 1. 概要（index）"
-    message: 必須章（2, 5, 6, 7, 8, 9, 10, 11）が大幅に欠落している。
-    message_ja: 必須章（2, 5, 6, 7, 8, 9, 10, 11）が大幅に欠落している。
-  - id: F016
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 9
-    anchor: "## 2. SLO・SLA・KPI"
-    message: "章番号が不整合であり、SLO・SLA・KPI は ## 3 であるべきだが ## 2 となっている。"
-    message_ja: "章番号が不整合であり、SLO・SLA・KPI は ## 3 であるべきだが ## 2 となっている。"
-  - id: F017
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 17
-    anchor: "## 3. 体制・責任分界（RACI・当番・エスカレーション）"
-    message: "章番号が不整合であり、体制・責任分界 は ## 4 であるべきだが ## 3 となっている。"
-    message_ja: "章番号が不整合であり、体制・責任分界 は ## 4 であるべきだが ## 3 となっている。"
-  - id: F018
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 25
-    anchor: "## 4. 関連ドキュメント導線（`opr` 等）"
-    message: "章番号が不整合であり、関連ドキュメント導線 は ## 12 であるべきだが ## 4 となっている。"
-    message_ja: "章番号が不整合であり、関連ドキュメント導線 は ## 12 であるべきだが ## 4 となっている。"
-  - id: F019
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 5
-    anchor: "## 1. 概要（index）"
-    message: ルールブックで定義された必須構成に従っておらず、サンプルとしての整合性が欠如している。
-    message_ja: ルールブックで定義された必須構成に従っておらず、サンプルとしての整合性が欠如している。
-  - id: F020
+    line: 39
+    anchor: >-
+      | SLO  | 営業時間内の稼働   | _UNDECIDED_                                             | 月次     |
+      店番担当が記録できなかった時間を障害記録に残し合計する | 障害記録     | `OPS`  |
+    message: 欠品 KPI の「導入前から 50% 減」は導入前の基準値の取得方法と期間が不明で、稼働の目標も未決のため、基準値の測り方と暫定の判定条件を示すべきである。
+    message_ja: 欠品 KPI の「導入前から 50% 減」は導入前の基準値の取得方法と期間が不明で、稼働の目標も未決のため、基準値の測り方と暫定の判定条件を示すべきである。
+  - id: F002
     severity: minor
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 運用方針・設計: 全体 サンプル"
-    message: Frontmatter の rulebook 参照 ID が specdojo:opd-index-rulebook と不整合である。
-    message_ja: Frontmatter の rulebook 参照 ID が specdojo:opd-index-rulebook と不整合である。
-  - id: F021
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 13
-    anchor: "| 可用性      | 99.9%以上    | 月次     | 監視SaaSの稼働率集計     | 監視レポート | 運用責任者     |"
-    message: >-
-      SLO 表・RACI が監視SaaS/APM/API と Ops / Biz 体制という汎用 SaaS の題材で書かれ、sample-authoring-standard
-      の共通サンプル文脈（駄菓子屋きぬや）への統一と、責務項目に Role code を使う規約に違反しているため、駄菓子屋きぬやの文脈と Role code で書き直すべきである。
-    message_ja: >-
-      SLO 表・RACI が監視SaaS/APM/API と Ops / Biz 体制という汎用 SaaS の題材で書かれ、sample-authoring-standard
-      の共通サンプル文脈（駄菓子屋きぬや）への統一と、責務項目に Role code を使う規約に違反しているため、駄菓子屋きぬやの文脈と Role code で書き直すべきである。
-  - id: F022
-    severity: major
-    rule: vp-ux-readability
-    line: 5
-    anchor: "## 1. 概要（index）"
-    message: 必須構成の大幅な省略により、運用方針の SSOT としての十分な情報を備えておらず、可読性と完結性に欠ける。
-    message_ja: 必須構成の大幅な省略により、運用方針の SSOT としての十分な情報を備えておらず、可読性と完結性に欠ける。
-  - id: F023
+    rule: vp-qe-omissions-consistency
+    line: 65
+    anchor: P1 で `OPS` が 15 分以内に応答しない場合、店番担当は `PO` へ直接連絡し、紙の販売控えへ切り替える。
+    message: 章 4 の「P1 で `OPS` が 15 分応答しなければ店番担当が紙の控えへ切替」と、章 6 の「30 分で `PO` が切替を決める」が食い違うため、切替の判断者とタイミングを統一すべきである。
+    message_ja: 章 4 の「P1 で `OPS` が 15 分応答しなければ店番担当が紙の控えへ切替」と、章 6 の「30 分で `PO` が切替を決める」が食い違うため、切替の判断者とタイミングを統一すべきである。
+  - id: F003
     severity: minor
     rule: vp-ux-language-consistency
-    line: 13
-    anchor: "| 可用性      | 99.9%以上    | 月次     | 監視SaaSの稼働率集計     | 監視レポート | 運用責任者     |"
-    message: >-
-      SLO 表の判定者（運用責任者・サポート責任者）と RACI の担い手（Ops Lead・Dev Lead・Biz）の呼称が対応付けられておらず表記が混在しているため、Role code
-      に統一して同一の担い手を同じラベルで示すべきである。
-    message_ja: >-
-      SLO 表の判定者（運用責任者・サポート責任者）と RACI の担い手（Ops Lead・Dev Lead・Biz）の呼称が対応付けられておらず表記が混在しているため、Role code
-      に統一して同一の担い手を同じラベルで示すべきである。
-  - id: F024
-    severity: minor
-    rule: vp-ops-release-readiness
-    line: 5
-    anchor: "## 1. 概要（index）"
-    message: ドキュメントのステータスを draft から ready へ移行するために必要な未解決の項目および前提条件が文書化されていません。
-    message_ja: ドキュメントのステータスを draft から ready へ移行するために必要な未解決の項目および前提条件が文書化されていません。
-  - id: F025
-    severity: major
-    rule: vp-ops-operability
-    line: 5
-    anchor: "## 1. 概要（index）"
-    message: インシデント対応、変更管理、定期的な運用、および問い合わせ対応を含む主要な運用ポリシーが不足しており、運用担当者が継続的な運用に必要なガイドラインを得られない状態になっています。
-    message_ja: インシデント対応、変更管理、定期的な運用、および問い合わせ対応を含む主要な運用ポリシーが不足しており、運用担当者が継続的な運用に必要なガイドラインを得られない状態になっています。
+    line: 71
+    anchor: >-
+      | 監視対象               | 閾値                                 | 通知先 |
+      初動                                                       |
+    message: 章 5 と章 10 の「夜間バックアップ」と、章 8 の「閉店後の日次締めの後」で同じ作業の呼称と時間帯が揃っていないため、呼称を統一すべきである。
+    message_ja: 章 5 と章 10 の「夜間バックアップ」と、章 8 の「閉店後の日次締めの後」で同じ作業の呼称と時間帯が揃っていないため、呼称を統一すべきである。
