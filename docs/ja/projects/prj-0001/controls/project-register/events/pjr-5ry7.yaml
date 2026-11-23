@@ -1,0 +1,118 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_cd484bfe1664491c8964384f36759a16
+  ts: "2026-11-23T01:51:42Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: オーケストレーターの引き継ぎ（hand off）を register の新しい種類 handoff で扱う
+    - field: description
+      from: ""
+      to: tmp の hand off を、受け取ったら close する register の種類 handoff にする。状態はコマンドで組み立て、判断待ちは question として別に起票する
+    - field: input
+      from: ""
+      to: '["今はセッションや LLM の切り替えのときに `tmp/orchestrator/handoff-*.md` を書いて引き継いでいる。git 管理外で、ほかのマシンや LLM から読めず、判断待ちが会話の中にしか残らない（2026-11-23）","利用者の提案（2026-11-23）: hand off を register で登録できるようにし、新しい種類 handoff を足す"]'
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+- v: 1
+  id: reg_d3a18cbfdf3b4eee8c2225018f74c66d
+  ts: "2026-11-23T01:52:05Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "背景" updated
+  changes:
+    - field: section
+      from: ""
+      to: 背景
+    - field: description
+      from: tmp の hand off を、受け取ったら close する register の種類 handoff にする。状態はコマンドで組み立て、判断待ちは question として別に起票する
+      to: オーケストレーターは、セッションや LLM を切り替えるときに `tmp/orchestrator/handoff-*.md` を書いて引き継いでいる。中身には、登録簿や `exec status` にすでにある状態の書き写し、利用者の返事を待っていること、会話の中だけの文脈（夜の間の承認の範囲、注意点）が混ざっている。git 管理外のため、ほかのマシンや LLM から読めず、判断待ちは会話の中にしか残らない。
+  previous_event_id: reg_cd484bfe1664491c8964384f36759a16
+- v: 1
+  id: reg_8f7a6ee431e64d7c96ca4e052442f632
+  ts: "2026-11-23T01:52:08Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "検討した選択肢" updated
+  changes:
+    - field: section
+      from: ""
+      to: 検討した選択肢
+  previous_event_id: reg_d3a18cbfdf3b4eee8c2225018f74c66d
+- v: 1
+  id: reg_50566c79bd8743239b658c6d2d3216fd
+  ts: "2026-11-23T01:52:11Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "決定内容" updated
+  changes:
+    - field: section
+      from: ""
+      to: 決定内容
+  previous_event_id: reg_8f7a6ee431e64d7c96ca4e052442f632
+- v: 1
+  id: reg_5b8c1ec662634ab280adabfb7031a574
+  ts: "2026-11-23T01:52:15Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "採択理由" updated
+  changes:
+    - field: section
+      from: ""
+      to: 採択理由
+  previous_event_id: reg_50566c79bd8743239b658c6d2d3216fd
+- v: 1
+  id: reg_2992279a3c52415e80292f306c81b544
+  ts: "2026-11-23T01:52:19Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "承認" updated
+  changes:
+    - field: section
+      from: ""
+      to: 承認
+  previous_event_id: reg_5b8c1ec662634ab280adabfb7031a574
+- v: 1
+  id: reg_14e2ece735e946d7ad48e12b5e662955
+  ts: "2026-11-23T01:52:26Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "影響範囲とフォローアップ" updated
+  changes:
+    - field: section
+      from: ""
+      to: 影響範囲とフォローアップ
+  previous_event_id: reg_2992279a3c52415e80292f306c81b544

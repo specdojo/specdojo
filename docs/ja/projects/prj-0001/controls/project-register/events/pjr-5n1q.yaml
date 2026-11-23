@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ed9e415387f44cc1a8522b92418959d7
+  ts: "2026-11-23T01:52:58Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: specdojo orchestrator handoff を作り、引き継ぎの手順を指示と playbook に足す
+    - field: description
+      from: ""
+      to: 進行中と判断待ちを登録簿と exec の状態から組み立てて handoff を起票するコマンドを作り、始めと終わりの手順を足す
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-5RY7"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-2Q86"]'
+    - field: commit_type
+      from: ""
+      to: feat
+    - field: commit_scope
+      from: ""
+      to: orchestrator
+- v: 1
+  id: reg_dfc6a74375a746aaaaf58b892c71c0fa
+  ts: "2026-11-23T01:53:09Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_ed9e415387f44cc1a8522b92418959d7

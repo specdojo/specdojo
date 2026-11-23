@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ec0ca176a48c43e1a8fc43868d8878ab
+  ts: "2026-11-23T01:52:54Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: register に新しい種類 handoff を足す
+    - field: description
+      from: ""
+      to: PJR-5RY7 の決定のとおり、受け取ったら close する種類 handoff を足す。template・pjr-rulebook・一覧と view・exec と夜の実行の除外を含む
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-5RY7"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-5RY7"]'
+    - field: commit_type
+      from: ""
+      to: feat
+    - field: commit_scope
+      from: ""
+      to: register
+- v: 1
+  id: reg_b61810ff8a944d1c9ddb1b3862b93d94
+  ts: "2026-11-23T01:53:03Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_ec0ca176a48c43e1a8fc43868d8878ab
