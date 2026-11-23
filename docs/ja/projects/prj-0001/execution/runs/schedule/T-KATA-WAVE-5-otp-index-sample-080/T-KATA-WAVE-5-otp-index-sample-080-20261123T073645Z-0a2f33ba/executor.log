@@ -1,0 +1,14 @@
+対象文書 `otp-index-sample.md` は編集していません。削る・まとめる・参照に置き換える対象がなく、変更不要と判断しました。静的検査も、文書を変更していないため実行していません。
+
+各候補は次のとおり、残す理由があるものでした。
+
+- **各表の導入文（「次の表は…示す」）**: 表の列を言い直しているのではなく、表の読み方（何を、誰が、いつ）を示す 1 文です。
+- **セクション 1 の適用範囲と `otp-hypercare` への分担**: 本書の範囲の宣言です。`mip-index` と `cop-index` の内容を言い直してはいません。
+- **セクション 8 の `mip-index` GO4 への参照**: 正本を再掲せず、参照だけにしています。
+- **セクション 3 から 7 の箇条書きと表**: 同じ内容が表と本文に二重に出ている箇所はありません。分担の違う項目が並んでいるだけです。
+- **セクション 10 の判定手順の段落**: 判定者、延長、最終報告物という完了条件の運用を定めており、削ると意味が変わります。
+- **セクション 11 の関連ドキュメント**: rulebook が必須とする章です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"対象文書に削る・まとめる・参照に置き換える冗長箇所はなく、変更不要と判断した。意味と必須情報を保つため、編集していない。","handoff":[],"condense_records":[{"location":"各表の導入文（「次の表は…示す」）","category":"table-prose","action":"retain","reason":"表を言い直さず表の読み方を示す 1 文で、rulebook の表の趣旨を保つために必要","cause":{"type":"document"}},{"location":"1. 概要（index）の適用範囲と otp-hypercare への分担","category":"repetition","action":"retain","reason":"本書の範囲と他文書との分担の宣言で、mip-index・cop-index の内容を言い直していない","cause":{"type":"document"}},{"location":"8. 初期増員体制の mip-index GO4 への参照","category":"canonical-restatement","action":"retain","reason":"正本を再掲せず参照のみで、すでに参照に置き換えられている","cause":{"type":"document"}},{"location":"10. 移行完了後のクローズ条件の判定手順の段落","category":"repetition","action":"retain","reason":"判定者・延長・最終報告物という完了条件の運用を定めており、削ると意味が変わる","cause":{"type":"document"}},{"location":"11. 関連ドキュメント（必須）","category":"canonical-restatement","action":"retain","reason":"rulebook が必須とする章で、各文書の役割を 1 行で示すだけで内容は再掲していない","cause":{"type":"document"}}],"validations":[{"command":"npm run lint:md","status":"not_applicable","reason":"文書を変更しておらず、検査対象の変更ファイルがない"}]}
+</specdojo_executor_evidence>
