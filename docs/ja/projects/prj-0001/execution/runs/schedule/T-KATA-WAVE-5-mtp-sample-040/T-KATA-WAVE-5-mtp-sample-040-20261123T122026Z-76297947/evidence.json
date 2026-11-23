@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-5-mtp-sample-040",
+  "run_id": "T-KATA-WAVE-5-mtp-sample-040-20261123T122026Z-76297947",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-23T12:21:27.601Z",
+    "completed_at": "2026-11-23T12:23:58.899Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/rulebooks/mtp-rulebook.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/rulebooks/mtp-rulebook.md | 290 ++++++-----------------------\n 1 file changed, 58 insertions(+), 232 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/rulebooks/mtp-rulebook.md",
+      "status": "passed",
+      "summary": "All matched files use Prettier code style"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2 docs/ja/specdojo/rulebooks/mtp-rulebook.md",
+      "status": "passed",
+      "summary": "0 issues in 0 files"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴ファイルを変更していない",
+      "reason": "変更は docs/ja/specdojo/rulebooks/mtp-rulebook.md だけで、plan・result・個票を変更していない"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "YAML の変更がない",
+      "reason": "変更したファイルに *.yaml / *.yml がない"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:mtp-rulebook\n  type: rulebook\n  deliverable_type: test\n  status: draft\n  recipe: undecided\n  sample: specdojo:mtp-sample\n  template: undecided\n---\n\n# 移行テスト計画 作成ルール\n\nMigration Test Plan (MTP) Documentation Rules\n\n移行テスト計画（`mtp-index` / `mtp-<term>`）は、移行手順と結果の妥当性をリハーサルで事前に確かめ、GO/NO-GO を判断する根拠を集めるための文書です。本書はその作成基準を定めます。\n\n## 1. 全体方針\n\n- **記載レベル**: リハーサルを再現でき、結果から合否と GO・条件付き GO・NO-GO を判断できる\n… output omitted …\nmtp-<term>`）\n\n- **判断基準**: 分冊は対象固有の観点・判定点・差異の扱いだけを書き、共通の合否基準と判断プロセスは `mtp-index` を参照すること。\n- **良い例**: 「共通基準は `mtp-index` に従う。本書では接続切替後のスモーク全項目成功を判定点に加える」。\n- **悪い例**: `mtp-index` と異なる許容差を分冊で言い直す。\n\n## 7. 禁止事項\n\n| 禁止事項 | 理由 |\n| - | - |\n| リハーサル回数/日程を曖昧に書く | 実行計画が不明確になるため |\n| 合否基準を基準値なしで書く、判定者を Role code 以外で書く | GO/NO-GO判断と判定者の特定ができないため |\n| 差異発生時の扱い・再実行の上限を未定義にする | 再実行判断がぶれるため |\n| リハーサルの結果を本書に書き足す | 計画と結果の記録が混ざり、追跡が困難になるため |\n| `mtp-<term>` に共通方針を重複記載し、`mtp-index` と矛盾させる | SSOTが崩れ、判断根拠が分散するため |"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6217 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6217 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-5-mtp-sample-040\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (48 tests) 9ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\",\"duration\n… output omitted …\nter-plan-escape.test.ts\",\"duration_ms\":1814}\n\n Test Files  19 passed (19)\n      Tests  480 passed (480)\n   Start at  21:29:28\n   Duration  4.48s (transform 23.33s, setup 2.01s, import 29.92s, tests 7.21s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-5-mtp-sample-040/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-5-mtp-sample-040/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "mtp-rulebook を簡潔にした。サンプル章を削除し（F002/F007）、本文要件の表・判断基準と良い例・悪い例の記述ガイドに改めた。追従表（F003）、lint:fm・lint:md と期待結果（F004）、pm-issue-log・pm-decision-log への転記条件（F001）、必須化と _UNDECIDED_ の扱い（F005）、判定者と Role code への統一（F008）を反映した。F006 は sample を変更しない段のため未解消。",
+  "completion_status": "complete",
+  "handoff": [
+    "F006（major, vp-qe-kata-conformance）は未解消: docs/ja/specdojo/samples/mtp-sample.md が汎用5章のままで、rulebook の Frontmatter（type: test, rulebook: specdojo:mtp-rulebook）と本文要件の9章（概要〜関連ドキュメント）に沿っていない。この段は sample を変更しないため、後続の sample の段で駄菓子屋の販売管理システムを題材に9章の完成例へ作り直す必要がある（合否基準の判定者は Role code、差異の扱いに再実行上限と pm-issue-log・pm-decision-log への転記を含める）。",
+    "rulebook のサンプル章を削除した。rulebook-authoring-standard は既存の章を段階的に外出しする経過措置としているが、plan の『rulebook に完成例の章を置かず、完成例は sample に任せる』と、同じ wave の cop-index-rulebook の前例に従った。完成例は sample の作り直しまで実質的に存在しない。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-mtp-sample-040/T-KATA-WAVE-5-mtp-sample-040-20261123T122026Z-76297947/executor.log",
+      "bytes": 4842,
+      "truncated": false
+    }
+  ]
+}
