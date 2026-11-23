@@ -94,6 +94,8 @@ exec の result の commit 前検査にも、利用リポジトリに設定が�
 
 別名は `[a-z0-9-]+` とし、ローカルの `projects` の ID と重ねられません。`path` は存在するディレクトリでなければならず、絶対パスは使えません。起票時は相手の `node_modules/.bin/specdojo` を使うため、相手に SpecDojo 0.4.2 以上が必要です。`orchestrator launch` は `repos` に加えて、宣言したすべての外部リポジトリにも provider 別の編集許可を付けます。
 
+linked worktree（`exec run --worktree` の作業場所など）では、`path` を worktree ではなく、その worktree を持つ主の作業ツリーのルートから解決します。相手のリポジトリは主の作業ツリーの隣にあり、task の worktree の隣にはないためです。主の作業ツリーでの解決は変わりません。
+
 相手に `node_modules/.bin/specdojo` がなく、相手の `package.json` の `name` が `specdojo` の場合は、呼び出し元と同じ Node.js で `node <相手>/dist/specdojo.js` を起動します。SpecDojo 自身のリポジトリを指定する場合は、相手で `npm install` と `npm run build` を実行してください。`dist/specdojo.js` がなければ `npm run build` を案内して停止します。CLI の版はこの起動方法でも 0.4.2 以上が必要です。
 
 ## 3. projectのパスキー

@@ -4,9 +4,9 @@ document: specdojo:ifx-api-rulebook
 path: docs/ja/specdojo/rulebooks/ifx-api-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 89
-graded_at: "2026-11-23T01:35:03.165Z"
+verdict: pass
+score: 91
+graded_at: "2026-11-23T02:09:09.176Z"
 graded_by: opus-review-executor
 content_hash: cfc2dfacf2c366f1b60f973f738c83c12d1ed64f873694b1213822d840772ae1
 categories:
@@ -25,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 67
+    score: 75
   consistency:
     score: 75
 viewpoints:
@@ -78,8 +78,8 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -100,8 +100,8 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 6
+  major: 0
+  minor: 4
   note: 0
 findings:
   - id: F001
@@ -144,41 +144,6 @@ findings:
       対象外の列挙で ifx-msg・ifx-cmd には rulebook への wikilink を付ける一方、実在する ifx-file だけ
       `[[specdojo:ifx-file-rulebook|外部ファイル連携仕様作成ルール]]` の参照がなく参照の扱いが不揃いなため、ifx-file にも同じ形式で参照を付ける必要がある。
   - id: F004
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 39
-    anchor: "| based_on | 根拠となる文書の ID リスト。参照元の `ifx-index` の ID を最低限入れる | ○    |"
-    message: >-
-      based_on は参照元の ifx-index の ID を最低限入れる必須項目だが、参照 sample の `x-spec-meta.based_on` は空配列で `specdojo:ifx-index-sample`
-      を含まず rulebook の必須メタを満たさないため、sample に参照元 ifx-index の ID を追加して整合させる必要がある。
-    message_ja: >-
-      based_on は参照元の ifx-index の ID を最低限入れる必須項目だが、参照 sample の `x-spec-meta.based_on` は空配列で `specdojo:ifx-index-sample`
-      を含まず rulebook の必須メタを満たさないため、sample に参照元 ifx-index の ID を追加して整合させる必要がある。
-  - id: F005
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 58
-    anchor: >-
-      エラーの応答は、共通の形式（例: `components/schemas/ErrorResponse`）を各操作から参照する。次のコードは、操作に該当しない場合を除き必須とし、省略する場合は省略の理由を
-      `info.description` に書く。
-    message: >-
-      参照 sample は 403・404・429 を定義せず、省略の理由も `info.description` に書いていないため rulebook のエラー応答の必須条件を満たさない完成例になっており、sample
-      に該当コードを追加するか省略理由を記載する必要がある。
-    message_ja: >-
-      参照 sample は 403・404・429 を定義せず、省略の理由も `info.description` に書いていないため rulebook のエラー応答の必須条件を満たさない完成例になっており、sample
-      に該当コードを追加するか省略理由を記載する必要がある。
-  - id: F006
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 81
-    anchor: "- 登録系の操作は、重複を判定する項目（例: 取引 ID）と、`409` で既存の登録を返すかを書く。"
-    message: >-
-      参照 sample は transaction_id に pattern・maxLength がなく、409 で既存の sale_id を返すか、enum REJECTED と HTTP
-      状態の使い分け、結果不明時の照会手段（または _UNDECIDED_）も示しておらず記述ガイドの再試行・結果不明の要件を体現していないため、sample をこれらの規定に沿って補う必要がある。
-    message_ja: >-
-      参照 sample は transaction_id に pattern・maxLength がなく、409 で既存の sale_id を返すか、enum REJECTED と HTTP
-      状態の使い分け、結果不明時の照会手段（または _UNDECIDED_）も示しておらず記述ガイドの再試行・結果不明の要件を体現していないため、sample をこれらの規定に沿って補う必要がある。
-  - id: F007
     severity: minor
     rule: vp-qe-kata-conformance
     line: 50
@@ -186,8 +151,10 @@ findings:
       | `info.description`           | 必須                 | 対応する `ifx-index`
       の連携名、連携の前提、合意対象、未決事項                                           |
     message: >-
-      参照 sample の info.description は連携名と前提のみで、rulebook が必須とする合意対象と未決事項を含まず、各応答の description
-      も「入力不正」「内部エラー」程度で呼び出し側の次の動作を判断できないため、sample の記述を rulebook の本文要件に合わせる必要がある。
+      本文要件の表は info.description に未決事項を必須とする一方、記述ガイドの未決事項と検証では未決事項を `_UNDECIDED_` コメントで書くと定め、参照 sample も未決事項をコメントにのみ置き
+      info.description に含めていないため、未決事項の正本の置き場所（info.description かコメントか、両方か）を rulebook で一つに定めて sample と揃える必要がある（応答の
+      description が次の動作を示していない件は sample で解消済み）。
     message_ja: >-
-      参照 sample の info.description は連携名と前提のみで、rulebook が必須とする合意対象と未決事項を含まず、各応答の description
-      も「入力不正」「内部エラー」程度で呼び出し側の次の動作を判断できないため、sample の記述を rulebook の本文要件に合わせる必要がある。
+      本文要件の表は info.description に未決事項を必須とする一方、記述ガイドの未決事項と検証では未決事項を `_UNDECIDED_` コメントで書くと定め、参照 sample も未決事項をコメントにのみ置き
+      info.description に含めていないため、未決事項の正本の置き場所（info.description かコメントか、両方か）を rulebook で一つに定めて sample と揃える必要がある（応答の
+      description が次の動作を示していない件は sample で解消済み）。

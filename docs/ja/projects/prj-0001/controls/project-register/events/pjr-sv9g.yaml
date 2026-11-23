@@ -164,3 +164,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_9c291240cec84c46829f5f8467f15000
+- v: 1
+  id: reg_1be7b95980ca4f9687c5f3b76bb10da2
+  ts: "2026-11-23T02:08:35Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 2 回目の完了条件を差分と対応結果で確かめ、template の grade が pass 92 だった（2026-11-23）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: prj-charter の template から文書の運用の記述を外す試行を終え、ほかの template へ広げる一覧（rulebook が記載を求める項目の目印は残す境目を含む）を作った。2 回目で外しすぎた目印を戻し、合格条件の列・AI Agent の目印・生成物の status を直した。template の grade は pass 92
+  previous_event_id: reg_d7c5db962ce94ec588213163c36b6755
