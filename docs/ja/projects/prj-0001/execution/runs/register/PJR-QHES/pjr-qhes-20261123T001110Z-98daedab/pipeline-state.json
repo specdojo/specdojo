@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-QHES",
   "run_id": "pjr-qhes-20261123T001110Z-98daedab",
-  "updated_at": "2026-11-23T00:32:56.184Z",
+  "updated_at": "2026-11-23T00:36:50.123Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-QHES/pjr-qhes-20261123T001110Z-98daedab/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "qwen-executor",
       "attempts": 1,
       "started_at": "2026-11-23T00:32:56.184Z",
-      "completed_at": null,
+      "completed_at": "2026-11-23T00:36:50.123Z",
       "artifact_ref": null
     }
   },
