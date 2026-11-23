@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-PROJECT-prj-overview-sample-050
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-PROJECT-prj-overview-sample-050/T-KATA-WAVE-6-PROJECT-prj-overview-sample-050-20261123T061410Z-41e8a115/plan.md
   started_at: "2026-11-23T06:14:18.646Z"
+  completed_at: "2026-11-23T06:29:40.469Z"
   agent: opus-executor
   execution: agent
   approach: sample-maintenance
@@ -20,16 +21,26 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- 既存の sample 文書 `docs/ja/specdojo/samples/prj-overview-sample.md` を、共通サンプル文脈（駄菓子屋のプロジェクト）の完成例として厚くする更新を行いました。
+- grade の指摘事項（F001-F006, F008）に基づき、背景情報の具体化（頻度・影響の仮説）、繁忙期の時期と期限の明記、目標値のハンドオフ先（`prj-success-criteria-and-acceptance-criteria`）の追記、冗長な説明の削除、前提条件の整理（固定的前提、依存関係、公開・AI Agent・選択方針への分離）、および用語（初期公開）の統一を行いました。
+- `F007` に関しては、rulebook の `Expected Effects` セクションの規定（`初期目標`）との整合性を優先し、変更を見送りました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/samples/prj-overview-sample.md`: `grade` の指摘に基づき、背景情報の具体化（欠品や不一致の発生頻度）、繁忙期（夏休み期間）と着手期限の明記、成功基準へのリンク、および `Expected Effects` セクションの冗長な記述の整理を行いました。また、`Preconditions` を固定的な前提事項と、依存関係・公開方針・AI Agent の役割・選択方針に整理し、用語を `初期公開` に統一しました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- F007 not applied: the rulebook (`Expected Effects`, last bullet) specifies the column name `目標` for initial publication indicators and `初期目標` for short- and medium- to long-term indicators, and the sample and template already follow it. The rulebook is authoritative; no Kata change is needed. If the reviewer wants to unify the column names, the rulebook must be changed first.
+- Undecided values left as `_UNDECIDED_`: the initial publication (初期公開) date and the offline operation policy (both to be decided in the initial publication plan).
+- `_ASSUMPTION_:` the busy season is the school summer holiday (late July to end of August). The PO should decide whether to add this to the shared sample context in sample-authoring-standard.
+- Term consistency proposal: this sample now uses 初期公開 (defined in its Basic Principles section), while `prj-success-criteria-and-acceptance-criteria-sample` and `prj-scope-sample` use 初期リリース. Consider aligning the sibling samples in a later task.
+- Background frequencies (stockouts about once a week, discrepancies a few times a month) are labeled as interview estimates within the shared fictional context and are to be replaced by the one-month pre-launch baseline.
+- F007 not applied: the rulebook (Expected Effects, last bullet) specifies the column name 目標 for initial publication indicators and 初期目標 for short- and medium- to long-term indicators, and the sample and template already follow it. The rulebook is authoritative; no Kata change is needed. If the reviewer wants to unify the column names, the rulebook must be changed first.
+- Undecided values left as `_UNDECIDED_:` the initial publication (初期公開) date and the offline operation policy (both to be decided in the initial publication plan).
+- Term consistency proposal: this sample now uses 初期公開 (defined in its Basic Principles section), while prj-success-criteria-and-acceptance-criteria-sample and prj-scope-sample use 初期リリース. Consider aligning the sibling samples in a later task.
+- 適用外の検証: `npm run validate:history-links`（Only a sample under docs/ja/specdojo/samples was changed; no plan/result/pjr history file was edited by the executor）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+rulebook の `Expected Effects` セクションの規定に基づき、`F007` は修正せず、`grade` の他の指摘事項（F001-F006, F008）に沿って sample の厚みを増す修正を行いました。利用者が決める必要がある値（初期公開日やオフライン時の運用方針）については、推測せずに `_UNDECIDED_` として残しています。
