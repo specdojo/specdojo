@@ -1,0 +1,34 @@
+`docs/ja/specdojo/samples/cdr-sample.md` を約 68 行から 109 行に厚くし、grade の指摘 F001〜F004 をすべて直しました。Prettier の整形と確認は通っています。lint・`validate:schema`・catalog validate などの検査は、終了後に親 runner が実行するため、まだ結果がありません。result ファイルには触れていません。
+
+**指摘への対応**
+- **F001・F004（禁止事項の重複）:** 禁止事項の表と本文で同じ規則を二重に書かないよう整理しました。
+  - 本文から外したもの: 「金額は円単位の整数」と、「型エラーを隠さずに直す」の言い回し。後者は「原因のコードを直して解消する」に書き換えました。
+  - 表から外したもの: 「検証していない入力を `as` で型に押し込む」。代わりに `型` の章へ「`as` は型ガードで検証した値にだけ使う」と書きました。
+  - 「クライアントからの DB 接続の import」と「顧客の氏名・残高をログに出す」は表だけに残しました。本文のほうには、その仕組み（`server-only`）と、エラーメッセージに ID を含める規則だけを書いています。
+- **F002（上限の定義元）:** 「上限額ちょうど」が何を指すかを、`[[specdojo:dmd-sample]]` の `顧客台帳.つけ上限`（税込の円の整数、未設定なら上限なし）と明記しました。そのうえで、テストすべき境界を 4 つ挙げました（残高 0 円、上限ちょうど、上限を 1 円超える、上限未設定）。
+- **F003（設計の正本への参照）:** 導入文で、配置・境界の正本を `kinuya-web-cpd`、エラーの通知・ログの方針の正本を `kinuya-web-sysd-cross-cutting-policy` としました。どちらもまだ存在しない文書なので、wikilink にせずバッククォートで仮置きし、`_ASSUMPTION_` を付けています。`src/server/` という配置の決めつけは削り、Sentry への記録は「共通のエラー応答処理に任せる」という書き方に変えました。
+
+**厚くした内容**
+- エラー処理の章に `cause` 付きで再送出するコード例を足しました。
+- 命名の章にファイル名の規則を足しました。
+- テストと検証の章に `npm run build` の行、統合テストを sandbox ではなく CI で回すという分担、Frontmatter の照合手順を足しました。
+- 禁止事項の表に「テストで本番の DB や `.env` を使う」を足しました。
+- rulebook が認める枠組み固有の章として、「Next.js のサーバーとクライアントの境界」を足しました。
+- 役割の割り当てや承認の進み具合は、本文に書いていません。
+
+**決めていただく値**
+
+推測で埋めず、`_UNDECIDED_` のまま残した点が 2 つあります。
+- つけ上限を超える申し出を、店主代表の承認で受け付けるかどうか。決まると、テストと検証の章のテストが変わります。
+- 店頭タブレットの OS と対応ブラウザ。決まると、使ってよいブラウザ API の範囲が変わります。
+
+**注意点**
+- `based_on` は今のところ `specdojo:tsd-index-sample` だけです。rulebook は `sysd-cross-cutting-policy` を入れることを勧めています。しかし、既存の `sysd-cross-cutting-policy-sample` と `cpd-sample` は CLI 版の設計で、この Next.js 版の根拠にはできないため、加えませんでした。
+- 本文に書いた `npm run lint` と `npm run build` は、題材の架空リポジトリのコマンドで、今のところ tsd-index の sample のどこにも書かれていません。
+
+**rulebook の変更案**（この段では rulebook を変えていません）
+- 禁止事項の重複をなくすと、「型の強制の制限」と「握りつぶしの禁止」は本文だけに置くことになります。どちらが本文、どちらが表という分担を rulebook に明記するよう提案します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"cdr-sample を 109 行に厚くし、F001〜F004 を解消した。禁止事項の表と本文の重複をなくし、つけ上限の定義元（dmd-sample）と境界値テスト、設計の正本（架空の kinuya-web-cpd・kinuya-web-sysd-cross-cutting-policy）への参照、Next.js 固有の章を足した。Prettier の確認は通過。","handoff":["決めていただく値: つけ上限を超える申し出を店主代表の承認で受け付けるか（`_UNDECIDED_`。決まるとテストと検証の章のテストが変わる）。","決めていただく値: 店頭タブレットの OS と対応ブラウザ（`_UNDECIDED_`。tsd-index-sample と同じ未決事項。決まると Next.js の境界の章のブラウザ API の扱いが変わる）。","設計の正本 `kinuya-web-cpd`・`kinuya-web-sysd-cross-cutting-policy` は存在しない架空の文書としてバッククォートで仮置きした。既存の cpd-sample・sysd-cross-cutting-policy-sample は CLI 版の設計のため、Next.js 版の根拠にしていない。このため `based_on` は `specdojo:tsd-index-sample` だけで、rulebook が勧める `sysd-cross-cutting-policy` は入っていない。","rulebook の変更案: 禁止事項を表だけに置く規則と、型の章の「型の強制の制限」・エラー処理の章の「握りつぶしの禁止」が重なる。表と本文のどちらにどれを置くかを rulebook に明記する。","本文の `npm run lint`・`npm run build` は架空リポジトリのコマンドとして書いたもので、tsd-index-sample には書かれていない。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/cdr-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/cdr-sample.md のみで、plan・result・個票を変更していない"}]}
+</specdojo_executor_evidence>
