@@ -79,3 +79,16 @@
       from: _TODO_
       to: "2026-11-30"
   previous_event_id: reg_4b4eef14c7ad4bb0887b065a461cda4b
+- v: 1
+  id: reg_80d1bc0289ed41d2b65810e539dc537b
+  ts: "2026-11-23T23:39:14Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_7004d6a5c7204f47aecde318383b52f3
