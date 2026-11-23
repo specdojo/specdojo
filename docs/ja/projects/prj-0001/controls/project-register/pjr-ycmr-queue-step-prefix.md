@@ -42,7 +42,14 @@ specdojo:
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- 解決内容: `parseQueueStepSpec`（`src/exec/queue.ts`）が段の先頭の `specdojo` を読み捨てるようにした。`exec queue status` の表示をそのまま `--step` / `--step-continue` に渡せる。先頭に付けない書き方も従来どおり受け付ける（両方を受け付ける方にした）。
+- 確認結果: `tests/src/exec/queue.test.ts` に、両方の書き方が同じ段になる単体テストを追加した。`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` と親の `test-integration` は runner が実行する。
+- 再発防止策: 上記の単体テスト。
+
+### 5.1. CHANGELOG に書く事項
+
+- 区分: Fixed
+- 文案: `exec queue add` の段が、`exec queue status` の表示と同じ `specdojo` を先頭に付けた書き方でも受け付けられるようにした（PJR-YCMR）。
 
 ## 6. 関連ドキュメント
 
