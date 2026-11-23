@@ -1,0 +1,101 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_e395cf3838214dc2ac81c63bdbce72c1
+  ts: "2026-11-23T22:25:25Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: review の段の reporter（gemma26）の出力が、形式のやり直しを 3 回しても通らない
+    - field: description
+      from: ""
+      to: review の段で gemma26-reporter の出力が Markdown の記法の違反や verdict の欠けで 3 回とも通らず、9 件が止まった。sonnet-reporter に替えると通った
+    - field: input
+      from: ""
+      to: '["v0.10.0 に入れる（利用者の指定、2026-11-24）","2026-11-23〜24 の kata の一括実行（第 4〜6 波）で詰まった所から起票した"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-24"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: exec
+- v: 1
+  id: reg_017f056543794be4852a0bed9bc047f6
+  ts: "2026-11-23T22:25:28Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "課題内容" updated
+  changes:
+    - field: section
+      from: ""
+      to: 課題内容
+    - field: description
+      from: review の段で gemma26-reporter の出力が Markdown の記法の違反や verdict の欠けで 3 回とも通らず、9 件が止まった。sonnet-reporter に替えると通った
+      to: "- 2026-11-23〜24 の一括実行で、review の段（090）の `dmd`・`dmd-index`・`nfr-index`・`nfr-usability`・`mip-index`・`opd-access-control`・`opr`・`cpd`・`otp` の 9 件が「reporter output invalid after 3 format attempts」で止まった。 - 違反は、自由記述の欄の Markdown（コードの書式の中の空白 MD038、見出しの末尾の句読点 MD026、コードブロック）と、JSON Schema の必須の `verdict` の欠けだった。 - 9 件とも `exec resume --task ... --reporter-by sonnet-reporter` で通った。"
+  previous_event_id: reg_e395cf3838214dc2ac81c63bdbce72c1
+- v: 1
+  id: reg_f063dcde34cf41369b8464f0a7d68e1b
+  ts: "2026-11-23T22:25:32Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "影響範囲" updated
+  changes:
+    - field: section
+      from: ""
+      to: 影響範囲
+  previous_event_id: reg_017f056543794be4852a0bed9bc047f6
+- v: 1
+  id: reg_3713af50f11e49f6b9b1e7285df1211e
+  ts: "2026-11-23T22:25:36Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "対応方針" updated
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_f063dcde34cf41369b8464f0a7d68e1b
+- v: 1
+  id: reg_d549cb0938b9418289b30bb136486f54
+  ts: "2026-11-23T22:27:32Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "関連ドキュメント" updated
+  changes:
+    - field: section
+      from: ""
+      to: 関連ドキュメント
+  previous_event_id: reg_3713af50f11e49f6b9b1e7285df1211e

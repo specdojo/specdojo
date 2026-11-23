@@ -1,0 +1,101 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_dac1a06aa6be4ea99b8f44c043b5eb5d
+  ts: "2026-11-23T22:24:24Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 親の検証の validate-schema が、並べて流したときに固まり時間切れになる
+    - field: description
+      from: ""
+      to: 5 並列の一括実行で、親の検証の validate-schema が固まるか時間切れになり、タスクが止まった。負荷が下がってから流し直すと通った
+    - field: input
+      from: ""
+      to: '["v0.10.0 に入れる（利用者の指定、2026-11-24）","2026-11-23〜24 の kata の一括実行（第 4〜6 波）で詰まった所から起票した"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-24"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: validate
+- v: 1
+  id: reg_fe9002c74556476db49d38971f57ae6d
+  ts: "2026-11-23T22:24:27Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "課題内容" updated
+  changes:
+    - field: section
+      from: ""
+      to: 課題内容
+    - field: description
+      from: 5 並列の一括実行で、親の検証の validate-schema が固まるか時間切れになり、タスクが止まった。負荷が下がってから流し直すと通った
+      to: "- 2026-11-23〜24 の kata の一括実行（`exec run --auto --parallel 5 --loop`）で、`T-KATA-WAVE-5-otp-sample-040`・`T-KATA-WAVE-5-opr-sample-060`・`T-KATA-WAVE-6-DESIGN-mm-sample-040`・`T-KATA-WAVE-6-PROJECT-pm-risk-register-sample-060` が「parent validation failed: validate-schema」で止まった。 - 4 件とも、一括実行が終わって負荷が下がった後に `exec resume --task` で流し直すと通った（2026-11-24 01:42〜01:52）。成果物の誤りではなかった。"
+  previous_event_id: reg_dac1a06aa6be4ea99b8f44c043b5eb5d
+- v: 1
+  id: reg_79ab8a454a7241f7b57f37a83f8c2df5
+  ts: "2026-11-23T22:24:33Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "影響範囲" updated
+  changes:
+    - field: section
+      from: ""
+      to: 影響範囲
+  previous_event_id: reg_fe9002c74556476db49d38971f57ae6d
+- v: 1
+  id: reg_2920d5659dcb4634a4488ae330307174
+  ts: "2026-11-23T22:24:37Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "対応方針" updated
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_79ab8a454a7241f7b57f37a83f8c2df5
+- v: 1
+  id: reg_c885ea85fed64c0ead0ee1871bc7426c
+  ts: "2026-11-23T22:27:15Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "関連ドキュメント" updated
+  changes:
+    - field: section
+      from: ""
+      to: 関連ドキュメント
+  previous_event_id: reg_2920d5659dcb4634a4488ae330307174

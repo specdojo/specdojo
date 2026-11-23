@@ -1,0 +1,101 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_868ab7f6c3c0407aa24dcf0231e0c1d9
+  ts: "2026-11-23T22:24:56Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: テストが実物の kata の sample の中身に頼っており、型の手直しのたびに壊れる
+    - field: description
+      from: ""
+      to: YAML の表示のページの fixture と grade の参照のテストが、docs/ja/specdojo/samples の実物を読むため、sample を厚くするたびに落ちた
+    - field: input
+      from: ""
+      to: '["v0.10.0 に入れる（利用者の指定、2026-11-24）","2026-11-23〜24 の kata の一括実行（第 4〜6 波）で詰まった所から起票した"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-24"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: test
+- v: 1
+  id: reg_e01bb006b2be43f985913d770c8e850c
+  ts: "2026-11-23T22:24:58Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "課題内容" updated
+  changes:
+    - field: section
+      from: ""
+      to: 課題内容
+    - field: description
+      from: YAML の表示のページの fixture と grade の参照のテストが、docs/ja/specdojo/samples の実物を読むため、sample を厚くするたびに落ちた
+      to: "- `tests/src/docs/yaml-tables.test.ts` が実物の sample から表示のページを作って fixture と比べるため、一括実行で sample が変わるたびに落ちた。`specdojo--dct-sample.md.snap` は 2026-11-24 に 2 回、`specdojo--pm-members-sample.md.snap`、`prj-0001--bdd-register-entry.md.snap`・`prj-0001--ifx-file-agent-evidence.md.snap` も作り直した。 - `tests/src/grade/grade.test.ts` の「resolves declared and reverse-linked Kata references」が `opr-batch-sample.md` の rulebook の宣言を前提にしており、executor が宣言を `opd-rulebook` から正しい `opr-rulebook` に直すと落ちた。 - 落ちたテストは commit の hook と親の検証の `test-docs` で、関係のないタスクの統合も止めた。"
+  previous_event_id: reg_868ab7f6c3c0407aa24dcf0231e0c1d9
+- v: 1
+  id: reg_be3518d8fa3843bd99455abc031c9f5c
+  ts: "2026-11-23T22:25:02Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "影響範囲" updated
+  changes:
+    - field: section
+      from: ""
+      to: 影響範囲
+  previous_event_id: reg_e01bb006b2be43f985913d770c8e850c
+- v: 1
+  id: reg_1e56460bc63a416f9e55bde1e9d0d080
+  ts: "2026-11-23T22:25:07Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "対応方針" updated
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_be3518d8fa3843bd99455abc031c9f5c
+- v: 1
+  id: reg_5cd8bb0bdc54480e95ab8f89fb5a2caf
+  ts: "2026-11-23T22:27:24Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "関連ドキュメント" updated
+  changes:
+    - field: section
+      from: ""
+      to: 関連ドキュメント
+  previous_event_id: reg_1e56460bc63a416f9e55bde1e9d0d080
