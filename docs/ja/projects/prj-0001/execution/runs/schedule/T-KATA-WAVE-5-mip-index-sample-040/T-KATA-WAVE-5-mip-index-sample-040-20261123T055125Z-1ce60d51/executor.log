@@ -1,0 +1,23 @@
+`docs/ja/specdojo/rulebooks/mip-index-rulebook.md` を短く整え、grade の指摘 2 件（F001・F002）に対応しました。変更はこのファイルだけで、sample・recipe・template には触れていません（+45 行 / −185 行）。
+
+**F001（`based_on` の「上位成果物」が抽象的）**
+「推奨 Frontmatter 項目」に上流の例を挙げました。対象と非対象を決める `prj-scope`、停止許容時間や許容誤差の根拠になる `nfr-*`、受入の基準になる `bac-*`・`sac-*`、移行先の構成と運用を定める `opd-index` です。「位置づけ」の章に、上流が変わったら本書を見直してから下流へ広げる手順も足しました。
+
+**F002（改訂時の追従対象と担当が書かれていない）**
+「位置づけ」を表に変え、`dmd-*`・`mtp-*`・`cop-*`・`otp-*` ごとに本書との関係と見直しの担当を書きました。担当は ARC・DEV、QE、OPS、OPS としています。スコープ・成功条件・判定点・ロールバック方針・ハイパーケア方針を変えたときにどれを見直すかと、見直し作業は PM が登録簿に起票して追うことも明記しました。
+
+**簡潔にするための変更**
+- **完成例の章を削除**: 「サンプル（最小）」の章を消し、完成例は sample に任せる形にしました。以前この章を消したときに良い例・悪い例まで失われて戻した経緯があるので、良い例・悪い例は「記述ガイド」へ移して残しています。
+- **本文要件を表にまとめた**: 旧「本文構成（標準テンプレ）」と記述ガイドの章ごとの箇条書きを、「本文要件」の表（章ごとの内容・受入条件）にまとめました。
+- **記述ガイドを判断基準と例だけにした**: 成功条件・受入基準、体制・役割、カットオーバー概要の 3 章に絞りました。体制・役割には「本書の作成・承認の役割は書かない」と入れ、PJR-76N9 に合わせています。
+- **禁止事項を絞った**: 「必須の章を省略しない」系の行のうち、本文要件で全章必須として既に決まっているものを統合・削除しました。
+- **見出し**: H3 までに収まっています。
+
+**検査**
+- `npx prettier --write` で整形しました。
+- `npx markdownlint-cli2` は 0 件でした。
+- `lint:md` などの決まった検査は、この後に親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"mip-index-rulebook を簡潔にした。完成例の章を削除し、良い例・悪い例は記述ガイドへ移した。本文要件を表にまとめた。F001（`based_on` の上流の例）と F002（下流 `dmd-*`/`mtp-*`/`cop-*`/`otp-*` の追従と担当 Role code）に対応した。sample・recipe・template は変更していない。","handoff":["result の『進め方と実践の型の適用』に書く内容: F001 は、推奨 Frontmatter 項目に `based_on` の上流の例（`prj-scope`・`nfr-*`・`bac-*`/`sac-*`・`opd-index`）を挙げて解消した。F002 は、位置づけの表に下流ごとの追従の担当（ARC・DEV／QE／OPS）と改訂時の追従の規則（PM が個票で追う）を足して解消した。根拠は document-metadata-standard の『文書の改訂・廃止とライフサイクル変更管理』、rulebook-authoring-standard、先例の cop-index-rulebook と stc-index-rulebook。","削除・統合した箇所と理由: サンプル（最小）の章は plan と先例の rulebook に合わせて削除し、良い例・悪い例は記述ガイドへ移した。記述ガイドの章ごとの箇条書きは本文要件の表と重なるためまとめた（`vp-arc-conciseness`）。禁止事項のうち必須の章を省略しないという行は、本文要件の『すべて必須』と重なるため統合・削除した。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/rulebooks/mip-index-rulebook.md","status":"passed","summary":"整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/mip-index-rulebook.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>
