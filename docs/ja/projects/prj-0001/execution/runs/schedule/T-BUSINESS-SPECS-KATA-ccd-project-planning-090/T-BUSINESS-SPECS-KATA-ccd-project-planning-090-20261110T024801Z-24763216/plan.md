@@ -11,7 +11,7 @@ specdojo:
   owner: ARC
   approach: fully-guided
   targets:
-    - prj-0001:ccd-project-planning
+    - ccd-project-planning
 ---
 
 # Review Plan: T-BUSINESS-SPECS-KATA-ccd-project-planning-090
@@ -31,7 +31,7 @@ specdojo:
   - [[bdd-deliverables-catalog]]
   - [[bdd-schedule-strategy]]
   - [[bdd-schedule-track]]
-- `based_on`（対象成果物の frontmatter）: [[prj-0001:bdd-register-entry]]
+- `based_on`（対象成果物の frontmatter）: [[bdd-register-entry]]
 - 個票の `入力`: なし
 - `overview`: プロジェクトの立上と計画に関わるエンティティ間の関係を図で定義する
 - `path`: `docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md`

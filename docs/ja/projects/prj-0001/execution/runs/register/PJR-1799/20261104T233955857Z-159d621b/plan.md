@@ -12,7 +12,7 @@ specdojo:
   owner: BA
   approach: draft
   targets:
-    - prj-0001:stsd-task-execution
+    - stsd-task-execution
 ---
 
 # Edit Plan: PJR-1799

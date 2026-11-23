@@ -13,7 +13,7 @@ specdojo:
   execution: agent
   approach: fully-guided
   targets:
-    - prj-0001:cdt-register-type
+    - cdt-register-type
 ---
 
 # Review Result
@@ -35,7 +35,7 @@ specdojo:
 
 ## 4. approach に応じた確認
 
-fully-guided の review として、宣言された文書のみを参照した。具体的に `[[specdojo:cdt-rulebook|分類一覧 作成ルール]]`、`[[specdojo:cdt-sample|商品区分]]`、および対象成果物 `[[prj-0001:cdt-register-type|分類一覧（登録項目の種別）]]` を確認し、型の一式が計画された構成で整備されているかを照合した。また、先行タスクの実行記録を読み、recipe/template の不要判断の妥当性を確認した。
+fully-guided の review として、宣言された文書のみを参照した。具体的に `[[specdojo:cdt-rulebook|分類一覧 作成ルール]]`、`[[specdojo:cdt-sample|商品区分]]`、および対象成果物 `[[cdt-register-type|分類一覧（登録項目の種別）]]` を確認し、型の一式が計画された構成で整備されているかを照合した。また、先行タスクの実行記録を読み、recipe/template の不要判断の妥当性を確認した。
 
 ## 5. decision
 

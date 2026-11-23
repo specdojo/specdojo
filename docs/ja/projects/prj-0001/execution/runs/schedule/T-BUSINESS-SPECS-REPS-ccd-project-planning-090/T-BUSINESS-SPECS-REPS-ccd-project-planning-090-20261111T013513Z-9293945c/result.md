@@ -12,7 +12,7 @@ specdojo:
   execution: agent
   approach: retrofit
   targets:
-    - prj-0001:ccd-project-planning
+    - ccd-project-planning
 ---
 
 # Review Result

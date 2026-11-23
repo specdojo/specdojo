@@ -13,7 +13,7 @@ specdojo:
   agent: sol-executor
   approach: retrofit
   targets:
-    - prj-0001:stsd-deliverable
+    - stsd-deliverable
 ---
 
 # Edit Result

@@ -12,7 +12,7 @@ specdojo:
   on_critical_path: true
   approach: retrofit
   targets:
-    - prj-0001:stsd-deliverable
+    - stsd-deliverable
 ---
 
 # Review Plan: T-STSD-PILOT-stsd-deliverable-090

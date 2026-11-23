@@ -11,7 +11,7 @@ specdojo:
   owner: ARC
   approach: fully-guided
   targets:
-    - prj-0001:cdt-register-type
+    - cdt-register-type
 ---
 
 # Review Plan: T-BUSINESS-SPECS-KATA-cdt-register-type-090

@@ -11,7 +11,7 @@ specdojo:
   owner: BA
   approach: fully-guided
   targets:
-    - prj-0001:stsd-task-execution
+    - stsd-task-execution
 ---
 
 # Review Plan: T-BUSINESS-SPECS-KATA-2-stsd-task-execution-090

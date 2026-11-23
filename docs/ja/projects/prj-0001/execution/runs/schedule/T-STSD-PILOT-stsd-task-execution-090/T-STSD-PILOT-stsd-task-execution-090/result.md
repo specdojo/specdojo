@@ -13,7 +13,7 @@ specdojo:
   execution: agent
   approach: retrofit
   targets:
-    - prj-0001:stsd-task-execution
+    - stsd-task-execution
 ---
 
 # Review Result
@@ -39,7 +39,7 @@ specdojo:
 
 ## 4. approach に応じた確認
 
-【対応記録の確認} - カタログの `evidence_refs` にある 2 つのパスは存在することを確認しました。 - 下書き・磨き込み記録には両パスへの言及と、イベント対応・依存導出・非状態変更イベント・legacy cancel の説明が含まれています。 - ただし、現在版の各パスに対する一致・乖離・確認不能・未確認の明示的な記録が不足しています。この記録不足は、plan `§6` に対する未充足事項です。 【実装照合】 - `src/exec/types.ts` の `ExecState` は 5 基本状態、`ExecEventType` は 10 種類で、[[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]] の 5 基本状態＋導出 `ready`、7 状態変更イベント＋ `note`/`link`/`estimate` に対応しています。 - `src/exec/events.ts` の `foldEventsTo-to-state`、`isDependencySatisfied`、`computeReadyIds` は、文書の基本状態再生・依存充足・`ready` の非永続化の仕様に対応しています。 - `canClaimTask` のロール照合例外、`canUnblockTask` のアクター未照合、および `canCompleteTask` が成果物の検証結果を直接確認しない点は、文書 `§5` および先行記録との間で乖離が確認されました。 - 既存の finding `F002` が示す「全イベントで `last_by` が更新され、`complete`/`block`/`release` の権限判定に使用される」挙動についても、ソースコード上で確認済みです（これは既存 finding の根拠照合であり、新規の指摘ではありません）。
+【対応記録の確認} - カタログの `evidence_refs` にある 2 つのパスは存在することを確認しました。 - 下書き・磨き込み記録には両パスへの言及と、イベント対応・依存導出・非状態変更イベント・legacy cancel の説明が含まれています。 - ただし、現在版の各パスに対する一致・乖離・確認不能・未確認の明示的な記録が不足しています。この記録不足は、plan `§6` に対する未充足事項です。 【実装照合】 - `src/exec/types.ts` の `ExecState` は 5 基本状態、`ExecEventType` は 10 種類で、[[stsd-task-execution|ステータス定義（タスク実行）]] の 5 基本状態＋導出 `ready`、7 状態変更イベント＋ `note`/`link`/`estimate` に対応しています。 - `src/exec/events.ts` の `foldEventsTo-to-state`、`isDependencySatisfied`、`computeReadyIds` は、文書の基本状態再生・依存充足・`ready` の非永続化の仕様に対応しています。 - `canClaimTask` のロール照合例外、`canUnblockTask` のアクター未照合、および `canCompleteTask` が成果物の検証結果を直接確認しない点は、文書 `§5` および先行記録との間で乖離が確認されました。 - 既存の finding `F002` が示す「全イベントで `last_by` が更新され、`complete`/`block`/`release` の権限判定に使用される」挙動についても、ソースコード上で確認済みです（これは既存 finding の根拠照合であり、新規の指摘ではありません）。
 
 ## 5. decision
 

@@ -13,7 +13,7 @@ specdojo:
   execution: agent
   approach: condense
   targets:
-    - prj-0001:ccd-project-planning
+    - ccd-project-planning
   condense_records:
     - location: 第4章「参照業務データ辞書」冒頭
       category: canonical-restatement

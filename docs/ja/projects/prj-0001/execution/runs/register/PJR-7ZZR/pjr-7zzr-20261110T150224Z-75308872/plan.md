@@ -11,7 +11,7 @@ specdojo:
   origin: register
   approach: fully-guided
   targets:
-    - prj-0001:cdt-register-type
+    - cdt-register-type
 ---
 
 # Edit Plan: PJR-7ZZR
@@ -173,7 +173,7 @@ plan に展開された finding は、message と同じ viewpoint ID の判定�
 
 成果物カタログの `done_criteria` に加え、登録簿の個票が定める次の条件も満たす。
 
-- 代表の [[prj-0001:cdt-register-type]] を、確定した型 [[specdojo:cdt-rulebook]] と [[specdojo:cdt-sample]] に合わせて磨き込んでいる。型の本文要件の章立て・必須の項目・記述ガイドの判断の基準に沿い、型が禁止することを書いていない。
+- 代表の [[cdt-register-type]] を、確定した型 [[specdojo:cdt-rulebook]] と [[specdojo:cdt-sample]] に合わせて磨き込んでいる。型の本文要件の章立て・必須の項目・記述ガイドの判断の基準に沿い、型が禁止することを書いていない。
 - 冗長さを整理している（判断に要る背景・制約・例外と意味は保ち、新しい内容を足さない）。
 - 実装・schema・リファレンスと同じことを書かず、正本を参照する方針（PJR-2GD6）を保っている。
 - 決められない点は `_UNDECIDED_` か `_ASSUMPTION_` のまま、理由（どの成果物がない、誰の判断が要る）を書いて残してよい。依存の成果物がないことを理由に未完了としない。

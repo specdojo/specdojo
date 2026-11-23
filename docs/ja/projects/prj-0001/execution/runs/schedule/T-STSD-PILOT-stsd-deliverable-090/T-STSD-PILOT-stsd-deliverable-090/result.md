@@ -13,7 +13,7 @@ specdojo:
   execution: agent
   approach: retrofit
   targets:
-    - prj-0001:stsd-deliverable
+    - stsd-deliverable
 ---
 
 # Review Result

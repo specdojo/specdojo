@@ -13,7 +13,7 @@ specdojo:
   execution: agent
   approach: retrofit
   targets:
-    - prj-0001:cdt-register-type
+    - cdt-register-type
 ---
 
 # Review Result
@@ -24,8 +24,8 @@ specdojo:
 
 ## 2. 判断根拠
 
-- 成果物 [[prj-0001:cdt-register-type|分類一覧（登録項目の種別）]] は作成済みであり、完了条件 DC-001・DC-002 ともに `satisfied` と判定されており充足している。
-- 実装エビデンス `src/register/register.ts` およびそこから到達する `src/register/item.ts` の `VALID_TYPES`、スキーマの `ItemType`、[[prj-0001:bdd-register-entry|業務データ辞書（登録項目個票）]]、成果物第3章における分類値（todo, epic, question, risk, issue, change-request, decision, note の8値）が一致することを確認した。
+- 成果物 [[cdt-register-type|分類一覧（登録項目の種別）]] は作成済みであり、完了条件 DC-001・DC-002 ともに `satisfied` と判定されており充足している。
+- 実装エビデンス `src/register/register.ts` およびそこから到達する `src/register/item.ts` の `VALID_TYPES`、スキーマの `ItemType`、[[bdd-register-entry|業務データ辞書（登録項目個票）]]、成果物第3章における分類値（todo, epic, question, risk, issue, change-request, decision, note の8値）が一致することを確認した。
 - 成果物第4章の派生ビュー振り分け定義は `src/register/views.ts` の実装と一致し、既定commit種別の定義は `src/register/item.ts` のマッピングと一致している。
 
 ## 3. 未充足事項・改善指示

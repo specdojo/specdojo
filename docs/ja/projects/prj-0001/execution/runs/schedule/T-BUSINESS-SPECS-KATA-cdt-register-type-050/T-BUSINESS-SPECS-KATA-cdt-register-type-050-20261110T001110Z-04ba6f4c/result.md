@@ -13,7 +13,7 @@ specdojo:
   execution: agent
   approach: sample-maintenance
   targets:
-    - prj-0001:cdt-register-type
+    - cdt-register-type
     - specdojo:cdt-sample
 ---
 

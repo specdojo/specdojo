@@ -11,7 +11,7 @@ specdojo:
   owner: BA
   approach: retrofit
   targets:
-    - prj-0001:stsd-task-execution
+    - stsd-task-execution
 ---
 
 # Review Plan: T-STSD-PILOT-stsd-task-execution-090
