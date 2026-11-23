@@ -1,0 +1,30 @@
+sample `docs/ja/specdojo/samples/prj-issues-and-approach-sample.md` を全面的に書き直しました。prettier で整形し、markdownlint はエラー 0 件です。`lint:md` などの正式な検査は親 runner に任せています。変更したのはこの 1 ファイルだけで、frontmatter の `status` は元の `ready` のまま触っていません。
+
+grade の 5 件の指摘への対応は次のとおりです。
+
+| 指摘 | 対応 |
+| --- | --- |
+| F001: 次の検討事項に完了条件と時期がない | 表に `完了条件` と `期限 / 判断タイミング` の列を足し、全行を埋めた。rulebook の表に合わせた形 |
+| F002: P-03 の仮説に確認方法がない | 在庫確認の日時と欠品日を照合する確認方法を書いた。ほかの仮説（P-02、P-03 の補充目安）にも確認方法を付けた |
+| F003: 未確定の目印がない | 決める事項に `_TODO_:`、オフライン時の記録方法に `_UNDECIDED_:` を付けた |
+| F004: 導入部が前段の文書を参照していない | 概要・スコープ・前提・制約・依存関係の sample への wikilink を導入部に置いた |
+| F005: 仮説が反証されたときの見直しがない | P-03 と P-02 の仮説が反証された場合の行を足した。前提 ACD-A01 が崩れた場合と、P-04 を見直す時期の行も足した |
+
+厚くするために次の点も直しました。
+
+- 課題に P-04（仕入れが勘頼り）を `Low` として足し、先送りする課題の例にした。頻度は概要の聞き取りの概算に合わせた。
+- 原因は課題ごとに複数に分け、事実と仮説を区別した。
+- 表の前に、何を示す表かを 1 文で書いた。
+- 採用理由は判断軸の順序に沿って書き、A-01 と A-03 を併用する理由と始める順序を示した。
+- リスクにタブレットが使えない日・通信断の日の対応を足した。
+
+PJR-76N9 の決まりに従い、次の 2 文は削除しました。
+
+- 導入部の「店主代表が承認し、家族利用者代表は…に利用する」
+- 末尾の「見直し結果は店主代表が確認し、手順書へ反映する」（記録先と記録の責任を書いていたため）
+
+template と recipe は、直した rulebook とまだ食い違っています。この段では直していないので、変更案を `handoff` に書きました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"prj-issues-and-approach-sample を厚くし、grade の指摘 F001〜F005 を解消した。導入部に based_on の sample への wikilink を置いた。原因は事実と仮説に分け、仮説に確認方法を付けた。P-04（Low の先送り課題）を足した。ToDo に完了条件と判断タイミングの列と `_TODO_:` / `_UNDECIDED_:` を付けた。仮説の反証を見直しの契機に加えた。PJR-76N9 に従い、承認者・利用ロールの割り当てと記録先・記録の責任を書いた文を削除した。frontmatter の status は ready のまま変えていない。","handoff":["template の変更案: 「次の検討事項（ToDo）」の表を rulebook の記述ガイドに合わせ、列を `ToDo` / `目的` / `完了条件` / `期限 / 判断タイミング` / `責任ロール` にする。","template の変更案: 導入部の `_TODO_: 主要課題と解決方針の承認者、および利用ロールごとの利用目的を記述する。` は、rulebook（承認者や利用ロールの割り当ては書かない）と PJR-76N9 に反する。削除するか、利用場面と判断対象を書く指示に置き換える。","template の変更案: 「見直しと変更管理」の `_TODO_` にある「記録先と責任ロールを添える」は、rulebook（記録先と記録の責任は書かない）に反する。削除する。","recipe の変更案: 「全体の作成手順」の 6. の「承認者と利用ロール」と、「レビュー観点」の「関係者・利用場面」の「承認者、利用ロール」は、rulebook と PJR-76N9 に反する。利用場面と合意対象を確かめる記述に置き換える。","利用者が決める値（`_UNDECIDED_` のまま残した）: オフライン時の記録方法は、初期運用の開始前に店主代表が決める（ACD-D03 と同じ論点）。初期リリースの具体的な日付は、sample の本文に書いていない。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/prj-issues-and-approach-sample.md","status":"passed","summary":"表を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/prj-issues-and-approach-sample.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>

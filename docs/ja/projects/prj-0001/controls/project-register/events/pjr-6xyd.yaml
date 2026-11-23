@@ -60,3 +60,16 @@
       from: ""
       to: 完了条件
   previous_event_id: reg_c6b53d020dc349089266a35dbd7f019f
+- v: 1
+  id: reg_04925edc4cf140d5af1b165c7de6baab
+  ts: "2026-11-23T22:32:43Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: v0.10.0 の後に機能追加を止める方針を計画に入れると利用者が決めた（2026-11-24）
+  changes:
+    - field: input
+      from: '["PJR-Y5RD の決定（2026-11-23）: kata による理解の負債の解消で、シビックテックを持続可能にすることを中核の位置づけにする"]'
+      to: '["PJR-Y5RD の決定（2026-11-23）: kata による理解の負債の解消で、シビックテックを持続可能にすることを中核の位置づけにする","v0.10.0 の後は機能追加をいったん止める期間にする（利用者の承認、2026-11-24）"]'
+  previous_event_id: reg_e1d231074131439a8cb8169a2b9378cf

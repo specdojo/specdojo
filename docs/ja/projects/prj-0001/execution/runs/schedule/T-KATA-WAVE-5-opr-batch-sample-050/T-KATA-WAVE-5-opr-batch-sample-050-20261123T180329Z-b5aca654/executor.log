@@ -1,0 +1,27 @@
+前回の試行で止まった原因は解消済みで、opr-batch-sample は plan の完了条件をすべて満たしています。今回は成果物を編集していません。
+
+**前回の失敗の原因:** テスト `tests/src/grade/grade.test.ts` が、Frontmatter を直す前の `opd-rulebook.md` を参照先として期待していたことです。このテストはすでに別のコミット（9b4aa29c60）で直されており、いまは `opr-rulebook.md` と `opr-template.md` を期待しています。該当のテスト「resolves declared and reverse-linked Kata references」を単体で実行し、通ることを確かめました。
+
+**sample の状態（前回の試行で書いた内容をそのまま使用）:**
+- Frontmatter の `rulebook` は `specdojo:opr-rulebook` を指しています（grade の F015/F017）。
+- 本文は opr-rulebook の 12 章構成に沿っています（F016/F018/F020）。
+- 再実行の前提の確認（合格・不合格の表）、入力（`closing_date`）、操作、完了の条件、上限（1 日 2 回）と上限に達したときの扱い、重複の防止を書いています（F010/F012/F013/F014）。
+- 証跡の表と関連ドキュメントへの導線を置き、「or」を「または」に直し、`run_id` をインラインコードにそろえました（F019/F021/F023）。
+
+**利用者が決める値（`_UNDECIDED_` で残しています）:**
+- RTO/RPO とバックアップの保管期間
+- 夜間バックアップの開始時刻と所要時間
+- 営業時間外の緊急連絡手段
+- 障害記録・点検記録の保管期間
+
+**推測で置いた前提（`_ASSUMPTION_`）:**
+- バックアップの取得中も、店頭の販売・在庫・つけの記録を続けられる。
+- ホスティング環境が手動取得のコマンド（例 `backup run --target sales-db --date <closing_date>`）を持つ。
+
+**意図して足していないもの:** PJR-76N9 に従い、grade の F002・F008 が求める文書の役割の割り当てと承認の進み具合は本文に書いていません。手順を誰が行い誰が判断するかは、手順の中身として書いてあります。
+
+lint・test などの検査は親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"opr-batch-sample は前回の試行の内容で plan の完了条件（Frontmatter の rulebook が opr-rulebook、opr-rulebook の 12 章構成、再実行のコマンド・入力・前提の確認・完了の条件）を満たしている。前回 test-docs が失敗した原因の grade.test.ts の期待値は、すでにコミット 9b4aa29c60 で opr-rulebook と opr-template に直っており、該当のテストを単体で実行して通ることを確かめた。今回は成果物を編集していない。","handoff":["sample に `_UNDECIDED_` で残した値（利用者が決める）: RTO/RPO とバックアップの保管期間、夜間バックアップの開始時刻と所要時間、営業時間外の緊急連絡手段、障害記録・点検記録の保管期間。","sample に残した `_ASSUMPTION_`: バックアップの取得中も店頭の記録を続けられる。ホスティング環境が手動取得のコマンド（例 `backup run --target sales-db --date <closing_date>`）を持つ。","PJR-76N9 に従い、grade の F008（Ops Lead 以外の責任の定義）と F002（PO の承認に必要な情報）が求める文書の役割の割り当てと承認の進み具合は本文に足していない。手順の実施者・判断者は手順の中身として書いてある。","前回の試行で申し送った tests/src/grade/grade.test.ts の期待値の修正は、コミット 9b4aa29c60 で対応済みのため、別に起票する必要はない。"],"validations":[{"command":"npx vitest run tests/src/grade/grade.test.ts -t \"reverse-linked\"","status":"passed","summary":"resolves declared and reverse-linked Kata references が通った（1 passed, 68 skipped）"}],"target_coverage":[{"target":"specdojo:opr-batch-sample","status":"changed","path":"docs/ja/specdojo/samples/opr-batch-sample.md"}]}
+</specdojo_executor_evidence>
