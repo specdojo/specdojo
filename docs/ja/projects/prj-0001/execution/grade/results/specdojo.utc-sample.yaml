@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 90
-graded_at: "2026-11-22T01:07:42.581Z"
+graded_at: "2026-11-23T02:05:46.627Z"
 graded_by: opus-review-executor
-content_hash: 8d90f81a1a59c7f7a48c03be3a1468d1f53893542ce8b1ae990802c9e81f5c31
+content_hash: dd5f7a08b2cee023598f83af400b27ce7d3e2d45b6de3ddfdacbe0c4edf600c7
 categories:
   purpose:
     score: 88
@@ -104,7 +104,7 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 8
+  minor: 9
   note: 0
 findings:
   - id: F001
@@ -182,6 +182,20 @@ findings:
       utc-index-sample.md は utc-sales-checkout の責務を「請求額・釣銭の計算」とし観点「釣銭計算の正しさ」にも触れているが、本書の責務とケースには釣銭の計算がないため、責務とケースを足すか
       index 側の分配を本書に合わせる必要がある。
   - id: F008
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 83
+    anchor: >-
+      | `ut-sales-checkout-print-request-010` | 入力: 商品A×2・受領額60円 状態: 在庫5個  | 会計を確定する | 取引番号 `T-0001`・請求額60円の印刷要求が1回送られる
+      | Mock の呼び出し回数と引数 | `receipt-print` Mock | TR-01,TR-05 | P1     | automated | 暫定: ローカル実行結果、`kinuya-ci-unit`
+      整備後に差し替え |
+    message: >-
+      utc-index-sample.md の「対象外・除外理由（共通）」は receipt-print の UT 例外を「印刷要求データへの変換のみ」とし、例外を適用する term
+      はケース表の境界/依存に適用した例外を書くと定めているが、print-request のケースは「`receipt-print` Mock」だけで例外の適用が書かれていないため、境界/依存の列に適用した例外を明記する必要がある。
+    message_ja: >-
+      utc-index-sample.md の「対象外・除外理由（共通）」は receipt-print の UT 例外を「印刷要求データへの変換のみ」とし、例外を適用する term
+      はケース表の境界/依存に適用した例外を書くと定めているが、print-request のケースは「`receipt-print` Mock」だけで例外の適用が書かれていないため、境界/依存の列に適用した例外を明記する必要がある。
+  - id: F009
     severity: minor
     rule: vp-ops-release-readiness
     line: 42

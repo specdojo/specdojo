@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 95
-graded_at: "2026-11-22T06:48:31.802Z"
+graded_at: "2026-11-23T02:04:48.356Z"
 graded_by: opus-review-executor
-content_hash: b5ecc20e2a619a05fe199f75808edf04fa59ca812566e89511e7617e7a928182
+content_hash: 5ae1079728e1879136addb7f95ffbeb1ef41c4df3c5838abfe0dbdecaca3c19e
 categories:
   purpose:
     score: 100
@@ -101,7 +101,7 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 2
+  minor: 3
   note: 0
 findings:
   - id: F001
@@ -131,3 +131,16 @@ findings:
     message_ja: >-
       開発環境では印刷をスタブとしているが、utc-index-sample は単体テストで `receipt-print`
       を送信回数と内容を検証するモックとしており食い違うため、単体テストでは印刷要求の呼び出しをモックで検証すること（rulebook の既定から外れる理由）を書き分ける必要がある。
+  - id: F003
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 94
+    anchor: >-
+      | _ASSUMPTION_: 会計確定の応答時間と処理量 | 入口／出口条件（総合テスト）       | NFR が未整備のため、放課後ピーク1時間60取引の負荷で会計確定の応答 95% が2秒以内を仮置き基準とする |
+      `kinuya:pjr-i006` |
+    message: >-
+      総合テストの性能の仮置き基準（放課後ピーク1時間60取引・応答95%が2秒以内）について「NFR が未整備のため」としか書かれておらず、rulebook
+      が求める「代わりの合格基準を採る根拠」（取引数や2秒の出所、例えば店頭の実績や会計待ちの許容など）がないため、数値の根拠を1文で追記する必要がある。
+    message_ja: >-
+      総合テストの性能の仮置き基準（放課後ピーク1時間60取引・応答95%が2秒以内）について「NFR が未整備のため」としか書かれておらず、rulebook
+      が求める「代わりの合格基準を採る根拠」（取引数や2秒の出所、例えば店頭の実績や会計待ちの許容など）がないため、数値の根拠を1文で追記する必要がある。
