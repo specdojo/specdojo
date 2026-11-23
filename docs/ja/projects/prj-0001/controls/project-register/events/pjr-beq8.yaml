@@ -102,3 +102,35 @@
       from: ""
       to: 完了条件
   previous_event_id: reg_0a901899a4844675a7bbb6f29af112a8
+- v: 1
+  id: reg_8eca94fcfb7c45db93024a7e98d87792
+  ts: "2026-11-23T01:03:05Z"
+  action: start
+  actor: sonnet-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "executor reported incomplete: RunRecordIndex を追加し dashboard の生成で 1 回だけ読むようにした。typecheck、lint:ts、単体テストは通過。修正前後の出力比較と時間の測定は sandbox で tsx 実行が承認待ちになり未実施のため、個票の作業内容 No.4 は open のまま残した。"
+      to: "-"
+  previous_event_id: reg_01a5c7e0c7fd4a8db82f4637fd47c48a
+- v: 1
+  id: reg_190d5d6ae7cf44c5bbd343df052c6045
+  ts: "2026-11-23T01:07:56Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-unit"
+  previous_event_id: reg_8eca94fcfb7c45db93024a7e98d87792
