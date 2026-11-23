@@ -1,0 +1,15 @@
+`docs/ja/specdojo/samples/tsd-index-sample.md` の冗長な 4 箇所を直しました。`lint:md` などの検査は親 runner が実行するため、私は実行していません。
+
+直した内容は次のとおりです。
+- 「1. 技術スタック一覧」の導入文は、表の列見出しを言い換えているだけでした。1 文に短くしました。
+- 「2.2. 参照先の役割と適用条件」の導入文も、列見出しをなぞっているだけでした。同じく短くしました。
+- Mermaid の備考「採用済み。図のない文書では使わない」を `-` にしました。適用範囲の列と同じ内容でした。
+- Sentry の備考「採用済み。開発環境では無効」を `-` にしました。同じく適用範囲の列と重複していました。
+
+残した箇所は 2 つあります。
+- 「2.3. 未作成の詳細文書」は、「2.2. 参照先の役割と適用条件」の表の TODO 行と話題が重なります。ただし、作成までの暫定の正本（`fly.toml`、`Dockerfile`、`.github/workflows/`）を示す唯一の箇所なので残しました。
+- 「2.1. 全体の共通条件」の各項目は、版の確認方法・未採択候補の扱い・未決事項という判断に要る内容なので残しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"tsd-index-sample.md の冗長な4箇所（導入文2・重複備考2）を削減。意味と必須情報は維持。","handoff":[],"condense_records":[{"location":"1. 技術スタック一覧 導入文","category":"table-prose","action":"merge","reason":"表の列見出しを言い換えるだけの文を1文に短縮。表の意味は不変","cause":{"type":"document"}},{"location":"2.2. 参照先の役割と適用条件 導入文","category":"table-prose","action":"merge","reason":"表の列見出しの言い換えを短縮。表の内容は不変","cause":{"type":"document"}},{"location":"1. 技術スタック一覧 Mermaid 行 詳細・備考","category":"repetition","action":"delete","reason":"適用範囲列の「任意: 図を含む設計文書…」と同内容のため `-` に置換","cause":{"type":"document"}},{"location":"1. 技術スタック一覧 Sentry 行 詳細・備考","category":"repetition","action":"delete","reason":"適用範囲列の「本番環境（任意…）」と同内容のため `-` に置換","cause":{"type":"document"}},{"location":"2.3. 未作成の詳細文書","category":"repetition","action":"retain","reason":"2.2 の TODO 行と話題は重なるが、作成までの暫定正本という判断に要る情報を持つため残す","cause":{"type":"document"}}],"validations":[{"command":"npm run lint:md","status":"not_run","reason":"親 runner が実行する allowlist 検査"}]}
+</specdojo_executor_evidence>
