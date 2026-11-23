@@ -4,16 +4,16 @@ document: specdojo:stc-index-sample
 path: docs/ja/specdojo/samples/stc-index-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 91
-graded_at: "2026-11-22T06:45:57.721Z"
+verdict: pass
+score: 92
+graded_at: "2026-11-23T02:03:42.714Z"
 graded_by: opus-review-executor
-content_hash: f26de182fd0222d14475587267b124604150308c2894d947cf3228cd6f91be1c
+content_hash: e0bfdbcd335b16cd755410e9a1257d141166e857db6cf8f8606d10f188b10b4e
 categories:
   purpose:
     score: 100
   operations:
-    score: 88
+    score: 100
   planning:
     score: 92
   business:
@@ -87,8 +87,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ops-operability:
     level: 4
     score: 100
@@ -100,8 +100,8 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 4
+  major: 0
+  minor: 5
   note: 0
 findings:
   - id: F001
@@ -110,7 +110,7 @@ findings:
     line: 132
     anchor: >-
       | _ASSUMPTION_: 会計確定の応答基準  | 対象外の例外、共通合格基準の P0      | TSP の仮置き（60取引/時で応答の95%が2秒以内）で判定する | NFR
-      確定後に基準値を置き換え、`会計確定応答` の期待値を更新する | ARC が NFR へ起票、QE が更新 |
+      確定後に基準値を置き換え、`会計確定応答` の期待値を更新する |
     message: >-
       メモ / 将来課題の2件（会計確定の応答基準、通信不能時の販売継続）は、TSP では `kinuya:pjr-i006`・`kinuya:pjr-i003` へ引き継ぐと明記されていますが、本書には PJR
       の引継ぎ先がありません。担当列か見直し方針列に引継ぎ先の PJR を記載し、決定記録への転記先を追えるようにする必要があります。
@@ -157,11 +157,18 @@ findings:
       分配表と観点の系統表は用紙切れを観点 `会計維持` に割り当てていますが、対象別の `stc-sample` の 6.2 節は同じケース（`perspective_key: print-failure`）を観点 `未確定停止`
       のままにしています。概要と対象別で観点名が食い違うため、`stc-sample` 側を `会計維持` に揃える必要があります。
   - id: F005
-    severity: major
-    rule: vp-ops-release-readiness
-    line: 132
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 123
     anchor: >-
-      | _ASSUMPTION_: 会計確定の応答基準  | 対象外の例外、共通合格基準の P0      | TSP の仮置き（60取引/時で応答の95%が2秒以内）で判定する | NFR
-      確定後に基準値を置き換え、`会計確定応答` の期待値を更新する | ARC が NFR へ起票、QE が更新 |
-    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
-    message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+      | `st-cash-sale-flow-success-010`  | 入力: 商品A 2個 / 状態: 在庫5個         | 商品Aを2個登録し、60円で会計を確定する |
+      販売記録が1件（数量2・60円）でき、在庫が5個から3個になる            | 販売記録、在庫記録       | `kinuya-st`、プリンタ検証機 | TR-01    | P0     | automated
+      | `kinuya-ci-st` の run、取引番号    |
+    message: >-
+      対象別カタログでの記入例として示す `st-cash-sale-flow-success-010` のトレースは `TR-01`、`st-cash-sale-print-failure-010` は `TR-02`
+      ですが、対象別の `stc-sample` の同じ case_id はそれぞれ `TR-01,TR-02`、`TR-02,TR-03` です。同じ case_id で概要と対象別のトレースが食い違うため、記入例のトレース列を
+      `stc-sample` に揃える必要があります。
+    message_ja: >-
+      対象別カタログでの記入例として示す `st-cash-sale-flow-success-010` のトレースは `TR-01`、`st-cash-sale-print-failure-010` は `TR-02`
+      ですが、対象別の `stc-sample` の同じ case_id はそれぞれ `TR-01,TR-02`、`TR-02,TR-03` です。同じ case_id で概要と対象別のトレースが食い違うため、記入例のトレース列を
+      `stc-sample` に揃える必要があります。

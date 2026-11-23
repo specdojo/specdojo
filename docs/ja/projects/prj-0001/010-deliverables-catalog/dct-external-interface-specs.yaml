@@ -10,7 +10,7 @@ base_path: /docs/ja/product/020-external-interface-specs
 
 # SpecDojo自身の外部連携は AI provider CLI（Claude Code / Codex CLI / opencode 等）と
 # Git/GitHub（gh CLI）が中心で、いずれもCLIプロセス起動型のため、
-# ESIL の interfaces[].kind には「コマンド」を使用する。個別の ifx-cmd-<term> 詳細仕様は
+# ifx-index の interfaces[].kind には「コマンド」を使用する。個別の ifx-cmd-<term> 詳細仕様は
 # ifx-cmd-ai-provider-cli・ifx-cmd-git-cli・ifx-cmd-github-cli を作成済み。ifx-api/ifx-file/ifx-msg の詳細仕様は、
 # 対応する形式の連携が具体的に必要になった時点で追加する。
 

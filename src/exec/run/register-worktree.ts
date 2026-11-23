@@ -1,3 +1,4 @@
+import { unescapeMarkdownCell } from "../../shared/text.js";
 import { readPlanFile } from "../../shared/plan-conventions.js";
 import { executorStageResumeHint } from "../evidence.js";
 import { existsSync } from "node:fs";
@@ -783,7 +784,9 @@ export async function runSingleRegisterItemWorktree(
     });
     const resultScaffold = readResultFrontmatterSnapshot(resultPath);
 
-    process.stdout.write(`Register item: ${item.id} — ${item.title}  [${item.type}]\n`);
+    process.stdout.write(
+      `Register item: ${item.id} — ${unescapeMarkdownCell(item.title)}  [${item.type}]\n`,
+    );
     process.stdout.write(`  Agent: ${actor}\n`);
     if (!spawnRegisterTransition(projectId, ["start", "--id", item.id, "--by", actor])) {
       throw new Error(`register start failed: ${item.id}`);
