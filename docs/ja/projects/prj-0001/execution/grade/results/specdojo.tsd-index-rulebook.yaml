@@ -4,31 +4,30 @@ document: specdojo:tsd-index-rulebook
 path: docs/ja/specdojo/rulebooks/tsd-index-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-rulebook
 verdict: pass
-score: 86
-graded_at: "2026-11-21T06:02:53.827Z"
-graded_by: opus-executor
-content_hash: dc8e92548a7aebc9e2222d3474dd0334b5b5ae0d00887e063d1261b0d064ce5b
+score: 98
+graded_at: "2026-11-23T15:55:47.560Z"
+graded_by: sonnet-review-executor
+content_hash: 070ef1a1e293ae4f2c466ec7ec84eabe08243b93b1e633c84eb523f8822544e1
 categories:
   purpose:
     score: 100
   operations:
-    score: 94
+    score: 100
   planning:
-    score: 92
+    score: 100
   business:
     score: 100
   architecture:
     score: 100
   usability:
-    score: 83
+    score: 100
   implementation:
-    score: 88
+    score: 100
   quality:
-    score: 75
+    score: 92
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -43,8 +42,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
     level: 4
     score: 100
@@ -61,29 +60,29 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-implementation-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-change-impact:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
     level: 3
     score: 75
   vp-ux-readability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 4
     score: 100
@@ -91,8 +90,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-operability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -102,96 +101,13 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 10
+  minor: 1
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-pm-dependency-risk
-    line: 22
-    anchor: "| 採用判断の記録           | 選定理由と未決事項       | 一覧で説明しきれない判断の根拠   |"
-    message: 位置づけ表の「採用判断の記録」がどの成果物種別（決定記録や PJR など）を指すか示されておらず、未採択候補や選定理由の転記先が一意に決まらないため、参照する文書種別または ID 規則を明記する。
-    message_ja: 位置づけ表の「採用判断の記録」がどの成果物種別（決定記録や PJR など）を指すか示されておらず、未採択候補や選定理由の転記先が一意に決まらないため、参照する文書種別または ID 規則を明記する。
-  - id: F002
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 11
-    anchor: "- 詳細な設定・手順・資源制約は「位置づけ」の正本に委ね、版や採用状態は「版と採用状態」に従う。"
-    message: 全体方針の10〜11行目は後続章「区分と網羅範囲」「位置づけ」「版と採用状態」へ従うことを言い直すだけで固有の判断を足していないため、1文にまとめるか削除し、51行目の補足記述も47行目の表の記述要件へ統合する。
-    message_ja: 全体方針の10〜11行目は後続章「区分と網羅範囲」「位置づけ」「版と採用状態」へ従うことを言い直すだけで固有の判断を足していないため、1文にまとめるか削除し、51行目の補足記述も47行目の表の記述要件へ統合する。
-  - id: F003
-    severity: minor
-    rule: vp-dev-implementation-readiness
-    line: 31
-    anchor: "- アーキテクチャまたは技術基盤の文書群に詳細な `tsd-<term>.md` とまとめる。環境・領域別の補足は一覧を複製せず参照する。"
-    message: 「アーキテクチャまたは技術基盤の文書群に詳細な `tsd-＜term＞.md` とまとめる」では配置先ディレクトリが特定できないため、docs-structure-guide に基づく章ディレクトリまたは配置規則を明記する。
-    message_ja: 「アーキテクチャまたは技術基盤の文書群に詳細な `tsd-＜term＞.md` とまとめる」では配置先ディレクトリが特定できないため、docs-structure-guide に基づく章ディレクトリまたは配置規則を明記する。
-  - id: F004
-    severity: minor
-    rule: vp-dev-testability
-    line: 86
-    anchor: "- 技術の採用・廃止・責務・適用範囲の変更時は一覧と詳細 TSD・設定の正本を照合し、不一致を解消する。"
-    message: >-
-      一覧と詳細 TSD・設定の正本を照合して不一致を解消するとあるが、版・正本列と依存定義（`package.json` や lockfile
-      等）を照合する確認手順や合否基準が示されておらず、改訂後の検証を再現できないため、確認方法を明記する。
-    message_ja: >-
-      一覧と詳細 TSD・設定の正本を照合して不一致を解消するとあるが、版・正本列と依存定義（`package.json` や lockfile
-      等）を照合する確認手順や合否基準が示されておらず、改訂後の検証を再現できないため、確認方法を明記する。
-  - id: F005
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 50
-    anchor: "- 版・利用環境・必須と任意の違いは、判断に必要な場合に列または補足で示す。"
-    message: 「版・利用環境・必須と任意の違いは、判断に必要な場合に列または補足で示す」の「判断に必要な場合」が判定可能な条件になっておらず、版・正本列や適用範囲列の要否がレビュー担当によってぶれるため、列を必須とする条件（環境差がある、互換性制約があるなど）を具体化する。
-    message_ja: 「版・利用環境・必須と任意の違いは、判断に必要な場合に列または補足で示す」の「判断に必要な場合」が判定可能な条件になっておらず、版・正本列や適用範囲列の要否がレビュー担当によってぶれるため、列を必須とする条件（環境差がある、互換性制約があるなど）を具体化する。
-  - id: F006
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 86
-    anchor: "- 技術の採用・廃止・責務・適用範囲の変更時は一覧と詳細 TSD・設定の正本を照合し、不一致を解消する。"
-    message: >-
-      rulebook-authoring-standard は自系統の成果物について追従対象と役割分担を定めるよう求めているが、一覧と詳細 TSD・設定の正本を照合する担当 Role code
-      が示されていないため、照合と更新を担う役割を明記する。
-    message_ja: >-
-      rulebook-authoring-standard は自系統の成果物について追従対象と役割分担を定めるよう求めているが、一覧と詳細 TSD・設定の正本を照合する担当 Role code
-      が示されていないため、照合と更新を担う役割を明記する。
-  - id: F007
-    severity: minor
     rule: vp-qe-kata-conformance
-    line: 87
-    anchor: "- 未作成の詳細や未決条件は共通ラベルで示し、仮の参照先や設定値を確定情報にしない。"
-    message: >-
-      sample の補足が未作成の `tsd-hosting.md`・`tsd-ci.md` を共通ラベルなしの「仮置き」として参照しており、本規則「未作成の詳細や未決条件は共通ラベルで示す」と整合しないため、sample を
-      `_TODO_` 等で示す形へ揃える。
-    message_ja: >-
-      sample の補足が未作成の `tsd-hosting.md`・`tsd-ci.md` を共通ラベルなしの「仮置き」として参照しており、本規則「未作成の詳細や未決条件は共通ラベルで示す」と整合しないため、sample を
-      `_TODO_` 等で示す形へ揃える。
-  - id: F008
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 80
-    anchor: "- 必須・任意を区別し、任意技術には採用済みであることと適用条件を示す。未採択の候補・将来案は判断の記録へ導く。"
-    message: >-
-      sample の ESLint・Mermaid・Sentry 行が「（任意）」のみで、本規則が任意技術に求める採用済みであることと適用条件を示していないため、sample
-      の適用範囲列へ利用条件を記載して完成例を規則と整合させる。
-    message_ja: >-
-      sample の ESLint・Mermaid・Sentry 行が「（任意）」のみで、本規則が任意技術に求める採用済みであることと適用条件を示していないため、sample
-      の適用範囲列へ利用条件を記載して完成例を規則と整合させる。
-  - id: F009
-    severity: minor
-    rule: vp-ux-readability
-    line: 31
-    anchor: "- アーキテクチャまたは技術基盤の文書群に詳細な `tsd-<term>.md` とまとめる。環境・領域別の補足は一覧を複製せず参照する。"
-    message: >-
-      「アーキテクチャまたは技術基盤の文書群に詳細な `tsd-＜term＞.md` とまとめる」は助詞の対応が崩れ、同じ場所に置くのか一つにまとめるのかを読み取れないため、「詳細な `tsd-＜term＞.md`
-      と同じ文書群へ配置する」など意味が一つに定まる文に直す。
-    message_ja: >-
-      「アーキテクチャまたは技術基盤の文書群に詳細な `tsd-＜term＞.md` とまとめる」は助詞の対応が崩れ、同じ場所に置くのか一つにまとめるのかを読み取れないため、「詳細な `tsd-＜term＞.md`
-      と同じ文書群へ配置する」など意味が一つに定まる文に直す。
-  - id: F010
-    severity: minor
-    rule: vp-ops-operability
-    line: 86
-    anchor: "- 技術の採用・廃止・責務・適用範囲の変更時は一覧と詳細 TSD・設定の正本を照合し、不一致を解消する。"
-    message: 更新契機が採用・廃止・責務・適用範囲の変更に限られ、メジャー版更新や依存定義の変更時に一覧を見直すかの基準がないため、版・正本列の見直しが必要となる変更の種類を明記する。
-    message_ja: 更新契機が採用・廃止・責務・適用範囲の変更に限られ、メジャー版更新や依存定義の変更時に一覧を見直すかの基準がないため、版・正本列の見直しが必要となる変更の種類を明記する。
+    line: 3
+    anchor: Technology Stack Index (TSD Index) Documentation Rules
+    message: sample の status が draft のままで、ready の rulebook に対応する完成例として扱えるか不明確なため、sample の ready 化の条件または状態を整合させる。
+    message_ja: sample の status が draft のままで、ready の rulebook に対応する完成例として扱えるか不明確なため、sample の ready 化の条件または状態を整合させる。

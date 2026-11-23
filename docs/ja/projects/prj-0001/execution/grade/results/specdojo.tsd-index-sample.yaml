@@ -4,19 +4,18 @@ document: specdojo:tsd-index-sample
 path: docs/ja/specdojo/samples/tsd-index-sample.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-sample
 verdict: pass
-score: 89
-graded_at: "2026-11-21T06:03:55.054Z"
-graded_by: opus-executor
-content_hash: 1c8158ec99127cc4ca4302b9f0467c7f9214d9f7ac954c7bc69e02f3a876fffb
+score: 99
+graded_at: "2026-11-23T15:55:30.258Z"
+graded_by: sonnet-review-executor
+content_hash: 140b582c0a9b4494b4dde56ee704a5586e281085e4cb962dff905030d0d6341e
 categories:
   purpose:
-    score: 88
+    score: 100
   operations:
-    score: 94
+    score: 100
   planning:
-    score: 92
+    score: 100
   business:
     score: 100
   architecture:
@@ -26,16 +25,16 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 100
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-publication-accountability:
     level: 4
     score: 100
@@ -43,8 +42,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
     level: 4
     score: 100
@@ -73,14 +72,14 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -88,8 +87,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-operability:
     level: 4
     score: 100
@@ -102,94 +101,19 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 8
+  minor: 1
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-decision-readiness
-    line: 26
-    anchor: "- ホスティング環境（Fly.io）の構成・デプロイ手順は、`tsd-hosting.md` を参照（未作成のため仮置き）。"
-    message: >-
-      `tsd-hosting.md`・`tsd-ci.md` を「未作成のため仮置き」とだけ書いており、rulebook の「詳細文書と更新」が求める共通ラベル（`_TODO_`
-      など）で未決・未作成を示していないため、未決事項として扱う対象と次の作業が判別しにくい。共通ラベルに置き換えるべきである。
-    message_ja: >-
-      `tsd-hosting.md`・`tsd-ci.md` を「未作成のため仮置き」とだけ書いており、rulebook の「詳細文書と更新」が求める共通ラベル（`_TODO_`
-      など）で未決・未作成を示していないため、未決事項として扱う対象と次の作業が判別しにくい。共通ラベルに置き換えるべきである。
-  - id: F002
-    severity: minor
-    rule: vp-pm-dependency-risk
-    line: 27
-    anchor: "- CI/CD パイプライン（GitHub Actions）のワークフロー構成・シークレット管理は、`tsd-ci.md` を参照（未作成のため仮置き）。"
-    message: "`tsd-ci.md` を未作成の仮の参照先として本文の導線に置いているが、未決事項として共通ラベルで区別していないため、後続の詳細 TSD 作成への依存が確定した参照と同じ見え方になる。"
-    message_ja: "`tsd-ci.md` を未作成の仮の参照先として本文の導線に置いているが、未決事項として共通ラベルで区別していないため、後続の詳細 TSD 作成への依存が確定した参照と同じ見え方になる。"
-  - id: F003
-    severity: minor
     rule: vp-arc-conciseness
-    line: 9
+    line: 48
     anchor: >-
-      | 言語               | TypeScript     | フロントエンド・バックエンドの共通実装                          | 5.x / `package.json`（固定版は
-      `package-lock.json`）                | 全環境（必須）     |
+      - ホスティングの詳細: _TODO_: `tsd-hosting.md` を作成する。作成までは Fly.io と Docker の構成は `fly.toml` と `Dockerfile`
+      を正本とし、一覧からの参照先を確定しない。
     message: >-
-      「（固定版は `package-lock.json`）」を `package.json` を正本とする8行で繰り返しており、npm 依存の固定版は `package-lock.json`
-      を参照するという共通条件として補足に一度書けば、判断情報を失わずに表を簡潔にできる。
+      ホスティングと CI/CD の未作成詳細は、一覧の備考列、参照先の表、「未作成の詳細文書」の三か所に同じ `_TODO_` を書いている。暫定正本を参照先の表の参照場面か一覧の備考に一本化し、2.3
+      を縮めても判断情報は失われない。
     message_ja: >-
-      「（固定版は `package-lock.json`）」を `package.json` を正本とする8行で繰り返しており、npm 依存の固定版は `package-lock.json`
-      を参照するという共通条件として補足に一度書けば、判断情報を失わずに表を簡潔にできる。
-  - id: F004
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 12
-    anchor: >-
-      | DB                 | PostgreSQL     | 販売履歴、在庫データ、常連客のつけ残高の永続化                  | 16.x / `Dockerfile`（詳細設定は
-      [[specdojo:tsd-sample\|詳細定義]]） | 本番・開発（必須） |
-    message: >-
-      PostgreSQL の詳細 TSD への wikilink を「版・正本」セルと補足・詳細への導線の両方に書いており導線が二重になっているため、表側は版の正本だけに絞り、詳細 TSD への導線は補足（または `詳細・備考`
-      列）に一本化すべきである。
-    message_ja: >-
-      PostgreSQL の詳細 TSD への wikilink を「版・正本」セルと補足・詳細への導線の両方に書いており導線が二重になっているため、表側は版の正本だけに絞り、詳細 TSD への導線は補足（または `詳細・備考`
-      列）に一本化すべきである。
-  - id: F005
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 19
-    anchor: >-
-      | 静的解析           | ESLint         | TypeScript / JavaScript コードの構文検査と品質規約チェック      | 9.x / `package.json`（固定版は
-      `package-lock.json`）                | 開発環境（任意）   |
-    message: >-
-      ESLint・Mermaid・Sentry を「（任意）」とだけ記しており、rulebook
-      の「版と採用状態」が求める「任意技術には採用済みであることと適用条件を示す」を満たしていないため、どの条件で利用するかを判定できない。適用条件を補うべきである。
-    message_ja: >-
-      ESLint・Mermaid・Sentry を「（任意）」とだけ記しており、rulebook
-      の「版と採用状態」が求める「任意技術には採用済みであることと適用条件を示す」を満たしていないため、どの条件で利用するかを判定できない。適用条件を補うべきである。
-  - id: F006
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 16
-    anchor: >-
-      | CI/CD              | GitHub Actions | 静的検査・テストの自動実行および本番環境への自動デプロイ        | - /
-      `.github/workflows/`                                            | 開発・運用（必須） |
-    message: >-
-      GitHub Actions の担当責務を「静的検査・テストの自動実行」としながら、静的解析を担う ESLint を「開発環境（任意）」としており、CI
-      で必ず走る静的検査と任意の静的解析ツールという位置づけが食い違っているため、必須・任意の区分か責務の記述をそろえるべきである。
-    message_ja: >-
-      GitHub Actions の担当責務を「静的検査・テストの自動実行」としながら、静的解析を担う ESLint を「開発環境（任意）」としており、CI
-      で必ず走る静的検査と任意の静的解析ツールという位置づけが食い違っているため、必須・任意の区分か責務の記述をそろえるべきである。
-  - id: F007
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 26
-    anchor: "- ホスティング環境（Fly.io）の構成・デプロイ手順は、`tsd-hosting.md` を参照（未作成のため仮置き）。"
-    message: >-
-      rulebook の「詳細文書と更新」は未作成の詳細を共通ラベルで示し仮の参照先を確定情報にしないと定めているが、サンプルは `tsd-hosting.md` を「未作成のため仮置き」という独自表現で参照しており、完成例として
-      rulebook の記法を示せていない。
-    message_ja: >-
-      rulebook の「詳細文書と更新」は未作成の詳細を共通ラベルで示し仮の参照先を確定情報にしないと定めているが、サンプルは `tsd-hosting.md` を「未作成のため仮置き」という独自表現で参照しており、完成例として
-      rulebook の記法を示せていない。
-  - id: F008
-    severity: minor
-    rule: vp-ops-release-readiness
-    line: 26
-    anchor: "- ホスティング環境（Fly.io）の構成・デプロイ手順は、`tsd-hosting.md` を参照（未作成のため仮置き）。"
-    message: 未作成の `tsd-hosting.md` を仮の参照先として残したまま ready 化を判断する情報（共通ラベルによる未決の明示）がないため、公開前に解消すべき未解決事項として識別しにくい。
-    message_ja: 未作成の `tsd-hosting.md` を仮の参照先として残したまま ready 化を判断する情報（共通ラベルによる未決の明示）がないため、公開前に解消すべき未解決事項として識別しにくい。
+      ホスティングと CI/CD の未作成詳細は、一覧の備考列、参照先の表、「未作成の詳細文書」の三か所に同じ `_TODO_` を書いている。暫定正本を参照先の表の参照場面か一覧の備考に一本化し、2.3
+      を縮めても判断情報は失われない。
