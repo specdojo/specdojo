@@ -100,3 +100,16 @@
       from: in-progress
       to: review
   previous_event_id: reg_33f923853ebb473e8f2e9fb5661bfdb6
+- v: 1
+  id: reg_be002008fe424b378579a3cffbbd7ae8
+  ts: "2026-11-23T02:23:09Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: dry-run の行が直っていなかったため 2 回目の実行の条件を足した
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_5926fab83d0844c695a1b53dcd7bb11f

@@ -54,6 +54,7 @@ Register item: PJR-7WPD — テストの文書を frontend\_test\_note.md に改
 - タイトルに `_`・`*` などを含む項目で、`Register item:` の行にエスケープしないタイトルが出る（テストで確かめる）。
 - 一覧と個票の Markdown のエスケープは今のまま。
 - `CHANGELOG.md` は変えない。個票の対応結果に「CHANGELOG に書く事項」の小節を作り、区分と行の文案を書く（prj-0001 の運用。並べて流したときの統合の衝突を避けるため）。
+- 2 回目の実行（2026-11-23）: 1 回目は `Register item:` の行（`register-worktree.ts`・`register-resume.ts` の 4 か所）を直したが、`--dry-run` の行（`src/exec/run/register-mode.ts` の `[dry-run] register item:`）は直っておらず、`external\_projects` のように出たままだった（prj-0001 の `exec run --register PJR-EKGQ --dry-run` で確かめた）。dry-run の行も、エスケープする前のタイトルを出す。ほかにも `item.title` をそのままログに出す箇所がないかを `rg` で探し、探した方法と結果を個票の対応結果に書く。dry-run の行のテストを足す。
 
 ## 5. 対応結果
 
