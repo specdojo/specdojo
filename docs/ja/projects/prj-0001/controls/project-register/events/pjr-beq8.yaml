@@ -134,3 +134,16 @@
       from: "-"
       to: "parent validation failed: test-unit"
   previous_event_id: reg_8eca94fcfb7c45db93024a7e98d87792
+- v: 1
+  id: reg_4e89adb3c4a741a09726467d4a3640c0
+  ts: "2026-11-23T01:12:13Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: waiting
+  to_status: waiting
+  reason: 親の検証で落ちた test-unit の原因を足した
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_190d5d6ae7cf44c5bbd343df052c6045

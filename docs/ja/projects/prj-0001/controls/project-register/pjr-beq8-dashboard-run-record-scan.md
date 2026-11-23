@@ -44,6 +44,7 @@ findRunRecord が記録の置き場のない項目で execution/runs/ を全部�
 - 2 回目の実行（2026-11-23）: 1 回目は直しと単体テストを終えたが、直す前後の出力の比較と時間の測りを sandbox の中で流せず、waiting になった。比較と測りはオーケストレーターが行った。結果は次のとおりで、executor はこれを個票の対応結果に書き写し、作業内容の表の比較と測りの行を done にする。executor は比較と測りを流し直さない。
   - 本体の作業ツリーのデータで `specdojo dashboard build` を流すと、直す前（develop の dist）が 52.2 秒、直した後（この worktree の src）が 13.3 秒だった。worktree のデータでは 8.0 秒から 5.2 秒（2 回ずつの平均）。
   - 生成物の `dashboard.md`・`exec-records.md`・`catalog-scaffold.md`・`dashboard-timeline-gantt.svg` は、`dashboard.md` の `generated_at` の 1 行を除いて、直す前と直した後で同じだった（`cmp` と `diff` で確かめた）。
+- 3 回目の実行（2026-11-23）: 2 回目の統合の前の親の検証の `test-unit` で、`tests/src/exec/run-records.test.ts` の「selects the result with the latest started_at among several runs」が落ちた（`run-b` が選ばれた）。fixture の `started_at` は引用符なしのため YAML が日付として読み、`RunRecordIndex` と `findRunRecord` は `started_at` が文字列のときだけ使うので、ファイルの作成時刻に戻る。2 つのファイルが同じミリ秒に書かれると名前の順で選ばれ、時々落ちる。`started_at` が日付の値でも文字列でも時刻として使うように直し、両方の形を単体テストで確かめる。作成時刻に頼るテストを残さない。直した内容を個票の対応結果に書く。
 
 ## 4. 作業内容
 
