@@ -5,7 +5,7 @@
 # 構造・必須キー・型制約は先頭の schema を正本とする。
 #
 # _ASSUMPTION_: `project_id`・`base_path` の prj-0001 は [[specdojo:dct-index-sample|成果物カタログ索引]] と同じ例示値で、
-# SpecDojo 本体のプロジェクトを表さない。親は同梱の索引 sample とする。
+# SpecDojo 本体のプロジェクトを表さない。
 id: specdojo:dct-sample
 type: project
 status: draft
