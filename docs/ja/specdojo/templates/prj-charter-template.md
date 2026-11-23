@@ -7,7 +7,7 @@ specdojo:
     specdojo:
       id: _PROJECT_ID_:prj-charter
       type: project
-      status: ready
+      status: draft
       rulebook: specdojo:prj-charter-rulebook
       based_on:
         - _PROJECT_ID_:prj-overview
@@ -51,6 +51,8 @@ _TODO_: 認可判断に必要な目的を 1〜2 文で要約する。
 | 対象外 | _OUT_OF_SCOPE_ITEM_ | `prj-scope` |
 | 未確定 | _UNDECIDED_ITEM_    | 未決事項    |
 
+_TODO_: AI Agent を利用する場合は、支援対象の活動と委譲範囲を記述する。
+
 成果物群と、憲章承認後に作成・詳細化する文書の一覧は、成果物カタログ（`dct-index`）を正とする。
 
 ## 4. 初期ステークホルダー
@@ -70,27 +72,29 @@ _TODO_: 詳細の正本とするステークホルダー登録簿を記述する
 | 詳細計画策定 | _DECISION_OWNER_ | _ACCOUNTABLE_ROLE_ | _CONSULTED_ROLE_ | _EVIDENCE_ |
 | 本格実行開始 | _DECISION_OWNER_ | _ACCOUNTABLE_ROLE_ | _CONSULTED_ROLE_ | _EVIDENCE_ |
 
-_TODO_: PO またはスポンサーの承認を必要とする事項を箇条書きで記述する。
+_TODO_: 承認責任者に留保する判断（予算枠の新設・確定・増額、公開可否、ライセンス方針、主要スコープ変更、GO / Not GO 判断）を記述する。
 
 ## 6. 主要前提・制約
 
 _TODO_: 認可判断に直結する事項だけを記載する。
 
-| 区分 | 内容                           | 詳細化先                                   |
-| ---- | ------------------------------ | ------------------------------------------ |
-| 前提 | _ASSUMPTION_ITEM_              | `prj-assumptions-constraints-dependencies` |
-| 制約 | _CONSTRAINT_ITEM_              | `prj-assumptions-constraints-dependencies` |
-| 制約 | _BUDGET_BOUNDARY_OR_UNDECIDED_ | 未決事項                                   |
+| 区分 | 内容                            | 詳細化先                                   |
+| ---- | ------------------------------- | ------------------------------------------ |
+| 前提 | _ASSUMPTION_ITEM_               | `prj-assumptions-constraints-dependencies` |
+| 制約 | _CONSTRAINT_ITEM_               | `prj-assumptions-constraints-dependencies` |
+| 制約 | _BUDGET_BOUNDARY_OR_UNDECIDED_  | 未決事項                                   |
+| 制約 | _PUBLICATION_SUITABILITY_       | `prj-assumptions-constraints-dependencies` |
+| 制約 | _HUMAN_DECISION_RESPONSIBILITY_ | `prj-assumptions-constraints-dependencies` |
 
 ## 7. 本格実行開始の GO / Not GO 判断
 
-| 判断観点 | 確認内容              | 記録先              |
-| -------- | --------------------- | ------------------- |
-| 目的整合 | _CONFIRMATION_DETAIL_ | _EVIDENCE_LOCATION_ |
-| 公開適性 | _CONFIRMATION_DETAIL_ | _EVIDENCE_LOCATION_ |
-| 予算枠   | _CONFIRMATION_DETAIL_ | _EVIDENCE_LOCATION_ |
-| 体制     | _CONFIRMATION_DETAIL_ | _EVIDENCE_LOCATION_ |
-| 品質     | _CONFIRMATION_DETAIL_ | _EVIDENCE_LOCATION_ |
+| 判断観点 | 確認内容              | 合格条件         | 記録先              |
+| -------- | --------------------- | ---------------- | ------------------- |
+| 目的整合 | _CONFIRMATION_DETAIL_ | _PASS_CONDITION_ | _EVIDENCE_LOCATION_ |
+| 公開適性 | _CONFIRMATION_DETAIL_ | _PASS_CONDITION_ | _EVIDENCE_LOCATION_ |
+| 予算枠   | _CONFIRMATION_DETAIL_ | _PASS_CONDITION_ | _EVIDENCE_LOCATION_ |
+| 体制     | _CONFIRMATION_DETAIL_ | _PASS_CONDITION_ | _EVIDENCE_LOCATION_ |
+| 品質     | _CONFIRMATION_DETAIL_ | _PASS_CONDITION_ | _EVIDENCE_LOCATION_ |
 
 ## 8. 承認
 
