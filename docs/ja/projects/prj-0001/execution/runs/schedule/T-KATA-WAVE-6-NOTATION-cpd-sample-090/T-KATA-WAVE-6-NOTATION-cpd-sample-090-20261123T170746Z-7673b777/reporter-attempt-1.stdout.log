@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "mode": "review",
+  "grade_check": "### 評価結果の確認\n\n1. `docs/ja/specdojo/samples/cpd-sample.md` の鮮度確認:\n   `npx specdojo grade list --target kata --path docs/ja/specdojo/samples/cpd-sample.md --changed-only` を実行した結果、出力はありません。評価結果は最新であることを確認しました。\n   - `verdict`: `pass`\n   - `score`: 100\n   - `finding_counts`: blocker 0 / major 0 / minor 0 / note 0\n\n2. `docs/ja/specdojo/rulebooks/cpd-rulebook.md` の鮮度確認:\n   - `verdict`: `pass`\n   - `score`: 94\n   - `finding_counts`: blocker 0 / major 0 / minor 4 / note 0\n\n3. `docs/ja/specdojo/recipes/cpd-recipe.md` の鮮度確認:\n   - `verdict`: `pass`\n   - `score`: 90\n   - `finding_counts`: blocker 0 / major 0 / minor 7 / note 0\n\n4. `docs/ja/specdojo/templates/cpd-template.md` の鮮度確認:\n   - `verdict`: `pass`\n   - `score`: 94\n   - `finding_counts`: blocker 0 / major 0 / minor 3 / note 0",
+  "rationale": [
+    "対象成果物 `docs/ja/specdojo/samples/cpd-sample.md` の評価結果は最新であり、`verdict`: `pass` であることを確認しました。\\n\\n完了条件の照合状況：\\n- `DC-001` (`vp-qe-omissions-consistency`): rulebook の章立てと必須の表に沿っています。\\n- `DC-002` (`vp-qe-kata-conformance`): 駄菓子屋のプロジェクト文脈に沿った記述となっています。\\n- `DC-003` (`vp-qe-kata-conformance`): rulebook の禁止事項への抵触は見られません。\\n- `DC-004` (`vp-arc-technical-constraints`): `node tools/lint-mermaid.mjs docs/ja/specdojo/samples/cpd-sample.md` により、Mermaid の構文が有効であることが確認されています。\\n\\n型（`rulebook`, `recipe`, `template`）の評価結果もすべて `pass` であり、`cpd-sample` の完了を妨げる blocker や major な finding は存在しません。"
+  ],
+  "improvements": [
+    "`cpd-rulebook` への改善指示:\\n- 概要行に公開範囲情報を追加すること (`F001`)\\n- 良い例/悪い例の記述を `recipe` へ寄せること (`F002`)\\n- 検証手順に具体的なコマンドや期待結果を示すこと (`F003`)\\n- 判定条件を客観的な表現に改めること (`F004`)\\n\\n`cpd-recipe` への改善指示:\\n- 上位文書への参照を補うこと (`F001`)\\n- 作業単位の見積基準を追加すること (`F002`)\\n- 転記先と担当ロールの情報を補うこと (`F003`)\\n- 期待価値・成功基準の問いを補強すること (`F004`)\\n- 検証観点を recipe 上に明示すること (`F005`)\\n- 境界の判定条件を明確化すること (`F006`)\\n- 変更時の影響確認に関するラベル設定を整理すること (`F007`)\\n\\n`cpd-template` への改善指示:\\n- 変更の影響追跡用プレースホルダーを追加すること (`F001`)\\n- 5章の表の列構成を `cpd-sample` の6列に合わせて調整すること (`F002`, `F003`)\\n\\nその他:\\n- 描画後の SVG の目視確認が必要。\\n- 先行する edit タスクの `result` の参照が確認できなかったため、必要に応じて確認すること。"
+  ],
+  "approach": "### approach に応じた確認\n\n- `docs/ja/specdojo/samples/cpd-sample.md` に対して、`node tools/lint-mermaid.mjs` による構文チェックが完了し、`passed` であることを確認しました。",
+  "verdict": "complete-with-findings"
+}
