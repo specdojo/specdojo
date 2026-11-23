@@ -1,0 +1,25 @@
+`docs/ja/specdojo/samples/opr-index-sample.md` を全面的に書き直しました。rulebook の 12 章構成にそろえ、駄菓子屋きぬやの完成例にしています。ただし、私が実行した検査は `npx prettier --write` による整形だけです。lint 類は親 runner が実行し、その結果が正になります。
+
+**直したこと**
+- **frontmatter と見出し:** `rulebook` を `specdojo:opr-index-rulebook` に直し、`based_on` に `specdojo:opd-index-sample` を入れました。古いパスを書いた「参照」行は削りました。H1 と章見出しは rulebook に合わせ、12 章目は「関連ドキュメント導線（`opd-index` 参照）」にしています（F017〜F019）。
+- **題材と表記:** 題材を店頭のタブレット 1 台の運用に置き換えました。実施者は `PO`・`OPS`・`DEV`・店番担当の 4 つにそろえ、略記をなくしています（F020、F022）。
+- **概要と適用範囲:** 1 章に対象運用・目的・使う場面と、未決事項の手順上の扱いを書きました。2 章には対象内外・時間帯・権限・環境・連絡手段と、検証用の環境での確かめ方を書きました（F001〜F003、F007、F008、F013、F023）。
+- **手順の章:** 3〜10 章を「実施者・入力条件・操作・完了条件・証跡」の列の表にしました。所要時間、判定の条件、再実行の上限、ロールバックの条件、引継ぎ先も入れています。障害対応（4 章）は P1〜P3 の連絡期限と段階ごとの操作を本文に書き、紙の販売控えへの切替手順だけを `opr-incident` に分冊しました（F004〜F006、F009、F011、F014〜F016、F024）。
+- **証跡と導線:** 11 章に保存先・保管期間・参照権限・識別子（`ticket_id`・`run_id`・`closing_date`）を書きました。12 章には読む場面と状態の列を足し、方針が変わったときに見直す範囲も書いています（F010、F012、F021）。
+- **値の出どころ:** 数値と条件は `opd-index-sample` の値をそのまま使いました（営業時間、P1 の 15 分・30 分、月次点検、監査ログ 1 年など）。
+- **役割の扱い:** 文書を作る・確かめる・承認する役割の割り当てや、承認の進み具合は本文に書いていません。
+
+**推測で埋めず `_UNDECIDED_` のまま残した値（利用者が決める必要があります）**
+- RTO/RPO とバックアップの保管期間
+- オフライン時の記録方法
+- 営業時間外の緊急連絡手段
+- 監査ログ以外の証跡の保管期間
+
+**判断が要ること**
+- **週次点検を置かなかった点:** 方針側に週次の作業がないため週次点検は置かず、その旨を 3 章に書きました。rulebook の 3 章名「日次/週次/月次」と合わないので、承認時に確認してください。
+- **既存の分冊 sample:** `opr-incident-sample` などの既存の `opr-*` sample は、まだ汎用の Web サービスが題材で、`rulebook: opd-rulebook` も指したままです。本 sample とつなげるには、別のタスクできぬやの文脈へ直す必要があります。
+- **rulebook への変更案:** 必須の章でも、該当する作業周期がないとき（例: 週次）の書き方の例を記述ガイドに足すことを提案します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"opr-index-sample を rulebook の 12 章構成・駄菓子屋きぬや文脈の完成例へ書き直し、frontmatter の rulebook 指定と見出しを rulebook に揃えた。grade finding F001〜F024 に対応した。","handoff":["`_UNDECIDED_` のまま残した値（利用者が決める）: RTO/RPO とバックアップの保管期間、オフライン時の記録方法、営業時間外の緊急連絡手段、監査ログ以外の証跡の保管期間。","運用方針（opd-index-sample）に週次の作業がないため、3 章では週次点検を置かずその旨を明記した。rulebook の章名「日次/週次/月次」との関係を承認時に確認すること。","rulebook 変更案: 必須章でも該当する周期（例: 週次）がない場合の記述例を記述ガイドに追加する。","既存の `opr-incident-sample` などの `opr-*` 分冊 sample は汎用 Web サービス題材で `rulebook: opd-rulebook` のままなので、きぬや文脈への見直しを別タスクで行う必要がある。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/opr-index-sample.md","status":"passed","summary":"Formatted the changed sample (tables aligned) without errors."},{"command":"npm run lint:md","status":"not_run","summary":"Parent validation; executed by the runner."}]}
+</specdojo_executor_evidence>
