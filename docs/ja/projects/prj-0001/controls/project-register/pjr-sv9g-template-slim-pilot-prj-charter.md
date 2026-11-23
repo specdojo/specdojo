@@ -53,8 +53,8 @@ template には簡潔にする手本がないため、rulebook と sample を見
 
 | No  | 作業                                         | 担当         | 状態 | メモ                                                      |
 | --- | -------------------------------------------- | ------------ | ---- | --------------------------------------------------------- |
-| 1   | prj-charter の template から運用の記述を外す | BA           | done | 2739 → 2265 文字                                          |
-| 2   | template へ広げるときの一覧を書く            | BA           | done | 5.4 に記載                                                |
+| 1   | prj-charter の template から運用の記述を外す | BA           | done | 2739 → 2265（1 回目）→ 2581 文字（2 回目）                |
+| 2   | template へ広げるときの一覧を書く            | BA           | done | 5.4 に記載。2 回目で境目と例を追記                        |
 | 3   | 統合の後に型を grade し、結果を書く          | orchestrator | open | 統合の後に orchestrator が実行する。executor は実行しない |
 
 ## 5. 対応結果
@@ -70,7 +70,25 @@ template には簡潔にする手本がないため、rulebook と sample を見
 
 ### 5.2. 前後の大きさ
 
-空白と表の区切り行を除いた文字数は、変更前 2739、変更後 2265（474 減）。
+空白と表の区切り行を除いた文字数は、変更前 2739、1 回目の後 2265（474 減）、2 回目の後 2581（316 増）。
+
+#### 5.2.1. 2 回目の実施内容
+
+- 「ハイレベルスコープ」に AI Agent の支援対象の活動と委譲範囲の目印を 1 文で追加した。
+- 「権限委譲」の `_TODO_` に留保の範囲を戻した。
+- 「主要前提・制約」に公開適性と人間の判断責任の行を追加した（予算枠は既存行）。
+- 「GO / Not GO 判断」の表に「合格条件」列を追加した。
+- `frontmatter_template` の生成物の `specdojo.status` を `ready` から `draft` に直した。template 自身は変更していない。
+
+#### 5.2.2. `status` が `draft` 以外の `frontmatter_template`
+
+`rg` で `docs/ja/specdojo/templates` を探した結果、生成物側（インデント 6）が `draft` 以外のものは次のとおり。本項目では直していない。
+
+- `pm-issue-log-template.md`・`pm-risk-register-template.md`・`pm-change-request-log-template.md`・`pm-decision-log-template.md`: `ready`
+- `pjr-index-template.md`・`pjr-views-by-status-template.md`・`pjr-views-by-owner-template.md`・`pjr-views-by-priority-template.md`・`pjr-dependent-items-template.md`・`pjr-derived-items-template.md`: `ready`
+- `dct-index-template.md`: `_STATUS_`（プレースホルダ。要判断）
+
+その他の template の `ready` は template 自身の `specdojo.status` で対象外。
 
 ### 5.3. 迷った点
 
@@ -90,10 +108,16 @@ template には簡潔にする手本がないため、rulebook と sample を見
 | 残す | 表の列と記入の目印（`_NAME_`）                                              | rulebook・sample の列と一致させる          |
 | 残す | 正本への参照の定型文（`prj-scope` など `詳細化先` 列、カタログ参照の 1 文） | 参照の形は `id` をインラインコードで書く   |
 | 残す | 埋める内容の要点を示す `_TODO_` 1 文                                        | 1 文に収める                               |
+| 残す | rulebook が記載を求める項目（列挙された必須の項目）の目印                   | 例示に見えても残す。列挙語だけを短く示す   |
+
+外しすぎた例（1 回目）:
+
+- 「権限委譲」の `_TODO_` から、留保の範囲（予算枠の新設・確定・増額、公開可否、ライセンス方針、主要スコープ変更、GO / Not GO 判断）を外した。rulebook が明示を求める列挙で、記入の目印として戻した。
+- 「主要前提・制約」から、rulebook が求める予算枠・公開適性・人間の判断責任のうち公開適性と人間の判断責任の行を外した。記入できる行として戻した。
 
 ### 5.5. 変更案（template 以外）
 
-- rulebook・sample・recipe の変更は不要。未決事項の列は template を合わせたため、3 者は一致した。
+- rulebook・sample・recipe の変更は不要。2 回目の追加（合格条件列、AI Agent の目印、前提・制約の行）は rulebook・sample と一致している。未決事項の列は template を合わせたため、3 者は一致した。
 
 ### 5.6. 保護された設定の変更
 
