@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-4-nfr-maintainability-sample-090
   mode: review
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-4-nfr-maintainability-sample-090/T-KATA-WAVE-4-nfr-maintainability-sample-090-20261123T151511Z-f261a780/plan.md
   started_at: "2026-11-23T15:15:13.913Z"
+  completed_at: "2026-11-23T15:22:35.821Z"
   agent: sonnet-review-executor
   execution: agent
   approach: fully-guided
@@ -19,20 +20,25 @@ specdojo:
 
 ## 1. 評価結果の確認
 
-_TODO_: 評価結果サイドカーのパス、鮮度確認で実行したコマンドとその出力（`content_hash` が現在の成果物と一致するか）、grade の `verdict` / `score` / finding 件数を記入する。評価結果が最新でない、または評価不能の場合は、その事実と理由を記入する。
+評点結果の鮮度は最新です。`specdojo grade list --target kata --path docs/ja/specdojo/samples/nfr-maintainability-sample.md --changed-only` および `specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/nfr-maintainability-rulebook.md --changed-only` を実行しましたが、出力は空であり、評価結果が最新であることを確認しました。[[docs/ja/specdojo/samples/nfr-maintainability-sample.md]] は pass (97点)、[[docs/ja/specdojo/rulebooks/nfr-maintainability-rulebook.md]] は pass (94点) です。
 
 ## 2. 判断根拠
 
-_TODO_: 変更内容・plan・実行記録・完了条件・最新の finding を照合した内容と、verdict を選んだ理由を記入する。finding が残るのに完了とする場合は、その finding が今回の完了を妨げない理由を記入する。参照は `[[id]]` 形式（Obsidian wikilink）で記載し、行番号アンカーや絶対パスは使わない。
+- 評価結果に基づき、`docs/ja/specdojo/samples/nfr-maintainability-sample.md` には 2 件の minor な finding が存在します。そのうち `F001` (`nfr-mnt-004` が `_UNDECIDED_` であること) は、概要の表で判断者と扱いが示されているため、完了条件 `DC-004` を満たしており、完了を妨げません。また `F002` (原因範囲の表記ゆれ) も品質に関する事項です。
+- `docs/ja/specdojo/rulebooks/nfr-maintainability-rulebook.md` に関しても 5 件の finding がありますが、これらは本タスクの完了条件に直結しないため、品質に関する事項として扱います。
+- 完了条件 `DC-001` 〜 `DC-005` は、grade の評価結果および sample 概要の確認により充足されていることを確認しました。
+- 確認できなかった範囲として、rulebook 本文および先行する edit の `result` ファイルに含まれる実行記録の詳細は確認できていません。
 
 ## 3. 未充足事項・改善指示
 
-_TODO_: 未充足事項と、再計画・成果物の改善・再評価に使う改善指示を記入する（なければ「なし」と記入する）。評価結果の内容に疑義がある場合は、再評価が必要な対象と理由もここに記入する。
+- [[docs/ja/specdojo/samples/nfr-maintainability-sample.md]] の原因範囲の表記を、rulebook の定義に合わせて「通信」から「外部」へ修正してください。
+- [[docs/ja/specdojo/samples/nfr-maintainability-sample.md]] の `nfr-mnt-004` における `_UNDECIDED_` を許容する旨を、rulebook の「中核の要件は未決に回さない」という記述と整合させてください。
+- [[docs/ja/specdojo/rulebooks/nfr-maintainability-rulebook.md]] にて、`recipe` および `template` の要否判断を行う判断者と時期を明記してください。
 
 ## 4. approach に応じた確認
 
-_TODO_: `approach` に応じて確認した内容を記入する。fully-guided / recipe-guided / freeform では求められた作成・更新が行われたか、retrofit では実装エビデンスの対応記録と未確認範囲、`rulebook-maintenance` などの maintenance 系では見直しの動機となった finding の解消状況を記入する。
+フェーズ説明で求められた磨き込み（rulebook の必須要素の反映、sample 形式との整合）が、評価結果の finding を通じて確認されました。既存の findings は品質に関する事項であり、タスクの完了条件（`done_criteria`）には抵触しないと判断しました。
 
 ## 5. decision
 
-- verdict: _TODO_（complete / complete-with-findings / incomplete / grade-stale / grade-unavailable / changed-during-review）
+- verdict: complete-with-findings
