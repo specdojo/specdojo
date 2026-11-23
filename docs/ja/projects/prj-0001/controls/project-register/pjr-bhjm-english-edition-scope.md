@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-bhjm-english-edition-scope
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   owner: BA
   registered_at: "2026-11-23T22:52:59Z"
   due_on: "2026-12-31"
+  completed_at: "2026-11-23T22:55:19Z"
+  conclusion: "案 A: 英語版は v0.11.0 で出し、README・文書サイトの入口・クイックスタートと入門の型の組から始める。残りの型は日本語の人の確定の後に順に訳す"
   derived_from:
     - PJR-6XYD
 ---
