@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-tqza-kata-agent-review-flow
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: high
   owner: BA
   registered_at: "2026-11-23T23:01:38Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-23T23:04:24Z"
+  conclusion: "案 A: 人の流れに合わせた 5 段のレビューを、書き手と別のモデルが段ごとに行い、人は直した案の採否を決める。prj-overview・opr・stsd の sample で目合わせする"
 ---
 
 # PJR-TQZA kata のレビューの流れを agent で人の流れに合わせる

@@ -129,3 +129,22 @@
       from: ""
       to: 関連ドキュメント
   previous_event_id: reg_c56db07f38564fa79592282610491b0f
+- v: 1
+  id: reg_9c307abf8af543de8971a5f4afe40aa6
+  ts: "2026-11-23T23:04:24Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: 利用者が会話で推奨の案 A を承認した（2026-11-24）
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-11-24"
+    - field: conclusion
+      from: "-"
+      to: "案 A: 人の流れに合わせた 5 段のレビューを、書き手と別のモデルが段ごとに行い、人は直した案の採否を決める。prj-overview・opr・stsd の sample で目合わせする"
+  previous_event_id: reg_993d82b1cd0a477c960d8de32349d77b
