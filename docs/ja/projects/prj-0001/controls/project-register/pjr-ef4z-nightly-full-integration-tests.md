@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-23T00:16:11Z"
   due_on: "2026-11-30"
-  block_reason: "integrate failed: Grade sidecar changed after checkpoint; reconcile before merge: docs/ja/projects/prj-0001/execution/grade/results/specdojo.ifx-api-rulebook.yaml"
   derived_from:
     - PJR-9X52
   commit_type: feat
