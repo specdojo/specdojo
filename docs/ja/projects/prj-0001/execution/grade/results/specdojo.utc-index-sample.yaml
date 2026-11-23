@@ -5,10 +5,10 @@ path: docs/ja/specdojo/samples/utc-index-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 91
-graded_at: "2026-11-22T09:02:12.611Z"
+score: 88
+graded_at: "2026-11-23T02:07:02.718Z"
 graded_by: opus-review-executor
-content_hash: 0e8ba9621db370d6e5980cea6f2a6bd4b3b9200319a678ded14d65c633c445a8
+content_hash: cbd969fa91c0a3a06f4d6ebcdc5541186381ac901025e4b8feb6786bc61b167f
 categories:
   purpose:
     score: 100
@@ -25,7 +25,7 @@ categories:
   implementation:
     score: 88
   quality:
-    score: 92
+    score: 83
   consistency:
     score: 75
 viewpoints:
@@ -69,8 +69,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-verifiability:
     level: 3
     score: 75
@@ -101,7 +101,7 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 8
+  minor: 9
   note: 0
 findings:
   - id: F001
@@ -143,6 +143,17 @@ findings:
       が決められないため、この区分の優先度とその理由を書き足す。
   - id: F004
     severity: minor
+    rule: vp-dev-testability
+    line: 103
+    anchor: "- `証跡`: CI ジョブ `kinuya-ci-unit` の実行結果とテストコードの位置を書く。CI 未整備の間は「暫定: ローカル実行結果、CI 整備後に差し替え」と書く。"
+    message: >-
+      CI 整備前の `証跡` を「暫定: ローカル実行結果」としているが、どのコマンドでどの範囲（対象の `utc-＜term＞` のテスト）を実行し、何を失敗 0 件の判定に使うかが書かれていないため、整備前に DEV
+      が実行する確認のコマンドと合格の判定（例: 単体テスト全件の失敗 0 件）を書き足す。
+    message_ja: >-
+      CI 整備前の `証跡` を「暫定: ローカル実行結果」としているが、どのコマンドでどの範囲（対象の `utc-＜term＞` のテスト）を実行し、何を失敗 0 件の判定に使うかが書かれていないため、整備前に DEV
+      が実行する確認のコマンドと合格の判定（例: 単体テスト全件の失敗 0 件）を書き足す。
+  - id: F005
+    severity: minor
     rule: vp-qe-verifiability
     line: 16
     anchor: >-
@@ -154,7 +165,7 @@ findings:
     message_ja: >-
       単体テストの合否条件「境界条件の観点がすべて実装済み」は、観点の型に「境界条件」がなく境界は条件の区分であるため何を数えて判定するかが定まらず、CI ジョブ `kinuya-ci-unit`
       の整備前の判定手段も書かれていないため、「条件の立て方（共通）」の境界値の条件がすべてケース表にあり automated で実行済みであることなど判定対象を具体化し、整備前の暫定の判定方法を書き足す。
-  - id: F005
+  - id: F006
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 101
@@ -165,7 +176,7 @@ findings:
     message_ja: >-
       優先度のルールは「誤課金・在庫の誤更新につながるものを P0、つけ残高を P1」としているが、分配方針の表ではつけ残高の採用理由を「誤計算は請求・入金の誤りにつながる」（誤課金）としているため、つけ残高を P0 にするか、P1
       とする理由（例: 店頭の会計と違い請求前に照合できる）を書き足して食い違いをなくす。
-  - id: F006
+  - id: F007
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 66
@@ -176,7 +187,7 @@ findings:
     message_ja: >-
       条件の立て方の「環境」では「記録サービス Fake の保存失敗」としているが、単体テスト共通の境界/依存の扱いでは記録サービスを「保存成功・保存失敗・タイムアウトを返す
       Stub」としており、テストダブルの種類が食い違うため、条件の例を「記録サービス Stub の保存失敗」にそろえる。
-  - id: F007
+  - id: F008
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 109
@@ -189,14 +200,18 @@ findings:
     message_ja: >-
       `証跡` の決め方では「CI ジョブ `kinuya-ci-unit` の実行結果とテストコードの位置を書く」としているが、記入例の `証跡` は「`kinuya-ci-unit`
       の実行結果」だけでテストコードの位置がなく、共通カラムの決め方と記入例が食い違うため、記入例にテストコードの位置（例: テストファイルとテスト名）を書き足す。
-  - id: F008
+  - id: F009
     severity: minor
     rule: vp-ops-release-readiness
-    line: 119
-    anchor: ready にする前に解消する論点は、通信不能時の販売継続と AC-02 のつけ残高確認への接続とする。CI ジョブ `kinuya-ci-unit` の整備は ready 後も継続でき、整備前は暫定の `証跡` で運用する。
+    line: 116
+    anchor: >-
+      | _UNDECIDED_: 通信不能時の販売継続               | 対象外・除外理由（共通）                | 対象外とし、未確定取引の保留判定を UT
+      に追加しない。初期リリースの範囲確定までに決める                                             | PM へリスクとして報告   |
     message: >-
-      CI ジョブ `kinuya-ci-unit` の整備を「ready 後も継続でき」としているが、そのままでは `_ASSUMPTION_` のラベルを残して ready にすることになり、未確定ラベルを放置せず PJR
-      へ転送先を明記して引き継ぐというドキュメントメタ情報標準と合わないため、ready にする前にこの前提を PJR（決定記録または課題）へ移すことと、そのときにラベルを外すことを明記する。
+      前回あった ready 化の論点の記述が削られた結果、`_UNDECIDED_`（通信不能時の販売継続）と `_ASSUMPTION_`（CI ジョブ `kinuya-ci-unit` の整備）を残したまま ready
+      にしてよいかが読み取れず、報告先も「PM へ」だけで転送先の PJR が示されていないため、ドキュメントメタ情報標準に沿って ready にする前に各ラベルを
+      PJR（リスク登録簿・決定記録など）へ転送先を明記して引き継ぎラベルを外すことを書き足す。
     message_ja: >-
-      CI ジョブ `kinuya-ci-unit` の整備を「ready 後も継続でき」としているが、そのままでは `_ASSUMPTION_` のラベルを残して ready にすることになり、未確定ラベルを放置せず PJR
-      へ転送先を明記して引き継ぐというドキュメントメタ情報標準と合わないため、ready にする前にこの前提を PJR（決定記録または課題）へ移すことと、そのときにラベルを外すことを明記する。
+      前回あった ready 化の論点の記述が削られた結果、`_UNDECIDED_`（通信不能時の販売継続）と `_ASSUMPTION_`（CI ジョブ `kinuya-ci-unit` の整備）を残したまま ready
+      にしてよいかが読み取れず、報告先も「PM へ」だけで転送先の PJR が示されていないため、ドキュメントメタ情報標準に沿って ready にする前に各ラベルを
+      PJR（リスク登録簿・決定記録など）へ転送先を明記して引き継ぎラベルを外すことを書き足す。

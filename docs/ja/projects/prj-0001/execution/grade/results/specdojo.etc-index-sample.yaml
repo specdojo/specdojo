@@ -4,18 +4,18 @@ document: specdojo:etc-index-sample
 path: docs/ja/specdojo/samples/etc-index-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: pass
-score: 94
-graded_at: "2026-11-22T02:02:11.226Z"
+verdict: needs-work
+score: 86
+graded_at: "2026-11-23T02:11:36.346Z"
 graded_by: opus-review-executor
-content_hash: a47ec0aaa133844e4cd34e2a9acf176057fc94c78a47cc4135e631caf4c2e8dd
+content_hash: b197abc7dcc2c739229b3a89725c951e4140469886277972e0886bb69da13bfd
 categories:
   purpose:
-    score: 100
+    score: 75
   operations:
     score: 100
   planning:
-    score: 92
+    score: 83
   business:
     score: 100
   architecture:
@@ -25,13 +25,13 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 92
+    score: 83
   consistency:
-    score: 75
+    score: 50
 viewpoints:
   vp-po-purpose-alignment:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-po-decision-readiness:
     level: 4
     score: 100
@@ -39,8 +39,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-dependency-risk:
     level: 4
     score: 100
@@ -72,11 +72,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 4
-    score: 100
-  vp-qe-omissions-consistency:
     level: 3
     score: 75
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
   vp-qe-kata-conformance:
     level: 3
     score: 75
@@ -100,36 +100,66 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 0
-  minor: 5
+  major: 2
+  minor: 7
   note: 0
 findings:
   - id: F001
-    severity: minor
-    rule: vp-pm-control-reporting
-    line: 110
+    severity: major
+    rule: vp-po-purpose-alignment
+    line: 17
     anchor: >-
-      | _ASSUMPTION_: 保管サービスの応答待ち30秒・再送2回 | 境界条件の値と合格基準が変わる                   | 提供事業者の提供条件が届くまで仮置きとし、届いたら本書と対象別を更新する   
-      | ARC が確認、PO が承認         |
-    message: 保管サービスの応答待ち・再送回数の仮置きは、`ifd-sample` が `kinuya:pjr-i004` へ引き継いだ保全条件の論点と重なるため、登録簿の引き継ぎ先（PJR の ID）を「担当・判断の場」に示してください。
-    message_ja: 保管サービスの応答待ち・再送回数の仮置きは、`ifd-sample` が `kinuya:pjr-i004` へ引き継いだ保全条件の論点と重なるため、登録簿の引き継ぎ先（PJR の ID）を「担当・判断の場」に示してください。
+      「外部」は、開発担当が運用しない製品・サービスとの境界とする。[[specdojo:ifd-sample|インフラ構成図]] の経路のうち、店舗プリンタを動かす `receipt-print`
+      コマンドと、提供事業者が運用する復元用保管サービス（`PATH-05`・`PATH-06`）が該当する。業務記録
+      DB（`PATH-03`・`PATH-04`・`PATH-07`）は開発担当が同じ環境で運用するため内部結合テストに置く。
+    message: >-
+      `PATH-04`（保全の取得）と `PATH-07`（復元の回復）を内部結合テストに置いていますが、based_on の tsp-index-sample と itc-index-sample は
+      `PATH-04`〜`PATH-07` を外部結合テストの範囲と定めており、このままではどのテストもこの2経路を扱いません。外部の範囲と `backup-storage` の経路を `PATH-04`〜`PATH-07`
+      にそろえ、復元の回復に対応する観点を加えてください。
+    message_ja: >-
+      `PATH-04`（保全の取得）と `PATH-07`（復元の回復）を内部結合テストに置いていますが、based_on の tsp-index-sample と itc-index-sample は
+      `PATH-04`〜`PATH-07` を外部結合テストの範囲と定めており、このままではどのテストもこの2経路を扱いません。外部の範囲と `backup-storage` の経路を `PATH-04`〜`PATH-07`
+      にそろえ、復元の回復に対応する観点を加えてください。
   - id: F002
     severity: minor
-    rule: vp-pm-control-reporting
+    rule: vp-pm-plan-feasibility
     line: 109
     anchor: >-
-      | _UNDECIDED_: 検証用領域の障害が続くときの判定     | 実接続の観点が未実施のまま出口条件を判定できない | 「外部結合テスト共通の境界/依存/環境の扱い」の保留に加え、PM が日程を見直す | QE
-      が起票、PM が判断          |
+      | _TODO_: 削除し損ねた `et-` コピーの定期的な片付け | 検証用領域の上限に達すると転送の正常系が失敗する | 週1回、7日を過ぎた `et-`
+      コピーを手動で削除する                             |
+    message: "「削除し損ねた `et-` コピーの定期的な片付け」の当面の扱いに、週1回の手動削除を実施する担当 Role code がないため、作業として割り当てられるよう担当（例: QE や DEV）を示してください。"
+    message_ja: "「削除し損ねた `et-` コピーの定期的な片付け」の当面の扱いに、週1回の手動削除を実施する担当 Role code がないため、作業として割り当てられるよう担当（例: QE や DEV）を示してください。"
+  - id: F003
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 108
+    anchor: >-
+      | _ASSUMPTION_: 保管サービスの応答待ち30秒・再送2回 | 境界条件の値と合格基準が変わる                   | 提供事業者の提供条件が届くまで仮置きとし、届いたら本書と対象別を更新する   
+      |
+    message: 保管サービスの応答待ち・再送回数の仮置きは、`ifd-sample` が `kinuya:pjr-i004` へ引き継いだ保全条件の論点と重なるため、登録簿の引き継ぎ先（PJR の ID）を「担当・判断の場」に示してください。
+    message_ja: 保管サービスの応答待ち・再送回数の仮置きは、`ifd-sample` が `kinuya:pjr-i004` へ引き継いだ保全条件の論点と重なるため、登録簿の引き継ぎ先（PJR の ID）を「担当・判断の場」に示してください。
+  - id: F004
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 107
+    anchor: "| _UNDECIDED_: 検証用領域の障害が続くときの判定     | 実接続の観点が未実施のまま出口条件を判定できない | 「外部結合テスト共通の境界/依存/環境の扱い」の保留に加え、PM が日程を見直す |"
     message: 「検証用領域の障害が続くときの判定」と「削除し損ねた `et-` コピーの片付け」も起票者・担当だけが書かれ、登録簿の引き継ぎ先（PJR の ID）がないため、`ifd-sample` の書き方にそろえて転記先を示してください。
     message_ja: 「検証用領域の障害が続くときの判定」と「削除し損ねた `et-` コピーの片付け」も起票者・担当だけが書かれ、登録簿の引き継ぎ先（PJR の ID）がないため、`ifd-sample` の書き方にそろえて転記先を示してください。
-  - id: F003
+  - id: F005
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 56
+    anchor: "- 環境: 成功・異常終了・無応答（タイムアウト）・遅延（上限の直前）。無応答と遅延はスタブで再現する。"
+    message: 環境条件の「遅延（上限の直前）」は何秒の遅延を与えるかが定まらず境界ケースの合否がぶれるため、`receipt-print` は9秒、保管サービスは29秒のように応答待ち上限に対する具体値で示してください。
+    message_ja: 環境条件の「遅延（上限の直前）」は何秒の遅延を与えるかが定まらず境界ケースの合否がぶれるため、`receipt-print` は9秒、保管サービスは29秒のように応答待ち上限に対する具体値で示してください。
+  - id: F006
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 40
     anchor: "| 観点の型       | `etc-receipt-print` での観点名 | `etc-backup-storage` での観点名 |"
     message: 観点の型の表に、rulebook が挙げる「ET で扱う範囲の非機能（タイムアウト上限・リトライ回数・バックオフ）」の型がないため、行を加えるか、該当しない理由を示してください。
     message_ja: 観点の型の表に、rulebook が挙げる「ET で扱う範囲の非機能（タイムアウト上限・リトライ回数・バックオフ）」の型がないため、行を加えるか、該当しない理由を示してください。
-  - id: F004
+  - id: F007
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 96
@@ -140,7 +170,20 @@ findings:
     message_ja: >-
       トレース列の記入例が「tsp の外部結合テスト出口条件（印刷失敗の契約観点）」という説明文で、rulebook が求める ID（req / spec / ac / issue 等）になっていないため、追跡可能な ID
       で書いてください。
-  - id: F005
+  - id: F008
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 22
+    anchor: >-
+      | `backup-storage` | 復元用保管サービス連携 | `PATH-05`（転送）・`PATH-06`（読取） | 通信断・認証失敗。同じコピーなら再送できる |
+      サービスの障害は提供事業者、保管可否の判断は店主代表 |
+    message: >-
+      `backup-storage` の経路を `PATH-05`・`PATH-06` に限っていますが、itc-index-sample は `PATH-04`〜`PATH-07`
+      の代替先を「ET（`etc-backup-storage`）」としており、保全の取得と復元の回復の責務がどのカタログにも置かれない矛盾があるため、経路と観点（復元の回復を含む）を補ってください。
+    message_ja: >-
+      `backup-storage` の経路を `PATH-05`・`PATH-06` に限っていますが、itc-index-sample は `PATH-04`〜`PATH-07`
+      の代替先を「ET（`etc-backup-storage`）」としており、保全の取得と復元の回復の責務がどのカタログにも置かれない矛盾があるため、経路と観点（復元の回復を含む）を補ってください。
+  - id: F009
     severity: minor
     rule: vp-qe-kata-conformance
     line: 24
