@@ -4,29 +4,28 @@ document: specdojo:nfr-security-safety-rulebook
 path: docs/ja/specdojo/rulebooks/nfr-security-safety-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-rulebook
-verdict: needs-work
-score: 84
-graded_at: "2026-11-21T04:51:16.697Z"
-graded_by: opus-executor
-content_hash: c41d3dd6d6c82517652961b18197b22bbc0def9bf149b6b01def5daa7b070210
+verdict: pass
+score: 94
+graded_at: "2026-11-23T15:21:50.868Z"
+graded_by: sonnet-review-executor
+content_hash: f0749d962e71ab3585ecdc6cd54aeae284f6e53010e603491af387c35343ee07
 categories:
   purpose:
     score: 100
   operations:
     score: 94
   planning:
-    score: 92
+    score: 100
   business:
-    score: 83
+    score: 100
   architecture:
     score: 100
   usability:
-    score: 75
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 75
+    score: 92
   consistency:
     score: 75
 viewpoints:
@@ -40,8 +39,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
     level: 4
     score: 100
@@ -52,11 +51,11 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
     level: 4
     score: 100
@@ -76,20 +75,20 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
     level: 3
     score: 75
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
-  vp-ux-readability:
-    level: 2
-    score: 50
-  vp-ux-language-consistency:
     level: 3
     score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 3
     score: 75
@@ -104,70 +103,28 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 2
-  minor: 7
+  major: 0
+  minor: 3
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-pm-plan-feasibility
-    line: 88
-    anchor: "- 要件IDごとに、セキュリティ試験・監査ログ検証・脆弱性スキャンなどの測定方法と判定時期を定める。"
-    message: 「測定・検証方法」の記述ガイドが測定方法と判定時期しか求めておらず、要件IDごとの検証担当 Role code を記載させる指示がないため、検証タスクへ担当を割り当てられない。
-    message_ja: 「測定・検証方法」の記述ガイドが測定方法と判定時期しか求めておらず、要件IDごとの検証担当 Role code を記載させる指示がないため、検証タスクへ担当を割り当てられない。
+    rule: vp-qe-omissions-consistency
+    line: 92
+    anchor: ""
+    message: "検証先に `opr-*` を挙げているが、位置づけでは `opr-*` を監視・インシデント対応の正本としている。検証先として使う場合の役割（例: 月次点検の手順・棚卸し記録）を揃えて明記すること。"
+    message_ja: "検証先に `opr-*` を挙げているが、位置づけでは `opr-*` を監視・インシデント対応の正本としている。検証先として使う場合の役割（例: 月次点検の手順・棚卸し記録）を揃えて明記すること。"
   - id: F002
     severity: minor
-    rule: vp-ba-requirements-completeness
-    line: 102
-    anchor: "| 例外運用を本文に散在させる           | 統制不能になるため       |"
-    message: 禁止事項で例外運用の散在を禁じているのに、本文構成・記述ガイドに例外運用（承認者・期限・代替統制）を集約する章や列の定義がなく、要件の対象範囲を完全に記述できない。
-    message_ja: 禁止事項で例外運用の散在を禁じているのに、本文構成・記述ガイドに例外運用（承認者・期限・代替統制）を集約する章や列の定義がなく、要件の対象範囲を完全に記述できない。
-  - id: F003
-    severity: minor
-    rule: vp-ba-stakeholder-clarity
-    line: 73
-    anchor: "- 想定脅威、対象境界、適用する規制、対象外を表で明記する。"
-    message: 「適用範囲・脅威前提」にアクセス主体（利用者区分・運用者等の役割）と権限範囲の定義を求める指示がなく、認可要件の「権限外ユーザー」が誰かを成果物で特定できない。
-    message_ja: 「適用範囲・脅威前提」にアクセス主体（利用者区分・運用者等の役割）と権限範囲の定義を求める指示がなく、認可要件の「権限外ユーザー」が誰かを成果物で特定できない。
-  - id: F004
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 131
-    anchor: "| nfr-sec-002 | 重大脆弱性は期限内に修正する                 | 修正 SLA 達成率 | 95% 以上    | CVSS 7.0 以上対象 |"
-    message: "最小例 nfr-sec-002 は「期限内に修正」としつつ修正期限（例: CVSS 7.0 以上は 14 日以内）を定めておらず、SLA 達成率の判定母数が決まらないため pass / fail を判定できない例になっている。"
-    message_ja: "最小例 nfr-sec-002 は「期限内に修正」としつつ修正期限（例: CVSS 7.0 以上は 14 日以内）を定めておらず、SLA 達成率の判定母数が決まらないため pass / fail を判定できない例になっている。"
-  - id: F005
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 119
-    anchor: "### 8.1. 適用範囲・脅威前提（例）"
-    message: 記述ガイドは「想定脅威、対象境界、適用する規制、対象外」を表で明記するよう求めるが、最小例「適用範囲・脅威前提（例）」は想定脅威と対象外の2行しかなく、ガイドと例が整合していない。
-    message_ja: 記述ガイドは「想定脅威、対象境界、適用する規制、対象外」を表で明記するよう求めるが、最小例「適用範囲・脅威前提（例）」は想定脅威と対象外の2行しかなく、ガイドと例が整合していない。
-  - id: F006
-    severity: major
     rule: vp-qe-kata-conformance
-    line: 7
-    anchor: "## 1. 全体方針"
-    message: 参照サンプル (specdojo:nfr-security-safety-sample) の構成が本ルールで定める必須見出し構成と完全に乖離しており、整合性が取れていない。
-    message_ja: 参照サンプル (specdojo:nfr-security-safety-sample) の構成が本ルールで定める必須見出し構成と完全に乖離しており、整合性が取れていない。
-  - id: F007
-    severity: major
-    rule: vp-ux-readability
-    line: 7
-    anchor: "## 1. 全体方針"
-    message: サンプルとの乖離により期待成果物の形式に混乱を招くため、また記述ガイドが抽象的で具体性に欠けるため、読者の理解を妨げる。
-    message_ja: サンプルとの乖離により期待成果物の形式に混乱を招くため、また記述ガイドが抽象的で具体性に欠けるため、読者の理解を妨げる。
-  - id: F008
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 136
-    anchor: "| 要件ID      | 測定方法                                         | 判定タイミング      |"
-    message: 記述ガイドの「判定時期」と最小例の列名「判定タイミング」、要件表の「id」と測定表の「要件ID」が不統一で、「権限かいくぐりシナリオ」も口語的なため、用語を統一する必要がある。
-    message_ja: 記述ガイドの「判定時期」と最小例の列名「判定タイミング」、要件表の「id」と測定表の「要件ID」が不統一で、「権限かいくぐりシナリオ」も口語的なため、用語を統一する必要がある。
-  - id: F009
+    line: 1
+    anchor: "# 非機能要件 / 機密性・安全性 作成ルール"
+    message: "`recipe` と `template` が `undecided` のままで、Kata の対応が揃っていない。ready 化の前に、対応する recipe と template を決めること。"
+    message_ja: "`recipe` と `template` が `undecided` のままで、Kata の対応が揃っていない。ready 化の前に、対応する recipe と template を決めること。"
+  - id: F003
     severity: minor
     rule: vp-ops-release-readiness
     line: 1
     anchor: "# 非機能要件 / 機密性・安全性 作成ルール"
-    message: ready 化の前提となる参照サンプルの本文構成への改訂が未完了であることが示されておらず、ready 判断時に未解決事項を見落とすおそれがある。
-    message_ja: ready 化の前提となる参照サンプルの本文構成への改訂が未完了であることが示されておらず、ready 判断時に未解決事項を見落とすおそれがある。
+    message: ready 化の条件である recipe と template の決定が未了であることが、本文で示されていない。ready 判断の前に確認できるようにすること。
+    message_ja: ready 化の条件である recipe と template の決定が未了であることが、本文で示されていない。ready 判断の前に確認できるようにすること。
