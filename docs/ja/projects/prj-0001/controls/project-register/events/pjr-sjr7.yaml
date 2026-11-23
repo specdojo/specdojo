@@ -60,3 +60,16 @@
       from: ""
       to: 完了条件
   previous_event_id: reg_cf67048e497b42eab2459105e662eb84
+- v: 1
+  id: reg_1c7b6f3980c241609840353f425f01e0
+  ts: "2026-11-23T21:25:06Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: 利用者が担当を DEV と決めた（2026-11-24）
+  changes:
+    - field: owner
+      from: _TODO_
+      to: DEV
+  previous_event_id: reg_968b73dbc3634fb38560137ad18b6f38
