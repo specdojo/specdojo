@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-WAVE-6-NOTATION-cnd-sample-090",
   "run_id": "T-KATA-WAVE-6-NOTATION-cnd-sample-090-20261123T092953Z-2bef720c",
-  "updated_at": "2026-11-23T09:56:12.012Z",
+  "updated_at": "2026-11-23T09:56:16.157Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-NOTATION-cnd-sample-090/T-KATA-WAVE-6-NOTATION-cnd-sample-090-20261123T092953Z-2bef720c/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sonnet-review-executor",
       "attempts": 1,
       "started_at": "2026-11-23T09:56:12.012Z",
-      "completed_at": null,
+      "completed_at": "2026-11-23T09:56:16.157Z",
       "artifact_ref": null
     }
   },
