@@ -74,6 +74,8 @@ specdojo exec run --project <project-id> --auto --track data-flow-uc-rewrite --p
 
 `--track <track>` は自動選択を 1 つの track に限定します。`sch-track-<track>.yaml`（または `.yml`）の track 名を大文字・小文字を区別して指定します。戦略による順序は維持され、準備や実行に失敗した後、`--loop` で枠を補充するときも、ほかの track は選びません。対象 track に Ready がなければ正常終了し、存在しない track は claim 前にエラーになります。`--track` は単一指定で `--auto` が必須です。省略時は従来どおり全 track から選びます。依存関係や Ready の計算は引き続きプロジェクト全体で行います。
 
+`--loop` は変更範囲の予約や provider の空き待ちを各回に理由と件数で表示し、実行中のタスクが終わった次の回に Ready を更新して再選択します。未統合の予約がある場合も、その予約が解除されれば再選択できます。実行中のタスクがなく、待機中の項目しかない場合は待ち続けず終了するため、外部の run の完了や未統合の項目の再開後に起動し直してください。実際に準備・実行を試みた項目は同じプロセスで繰り返し実行しません。
+
 ### 1.2. auto実行中の注意点
 
 `--auto` と `--loop` は root の現在ブランチへ task ごとの merge commit を繰り返します（checkpoint commit は exec branch 側に置き、root には plan / result / claim event の複製が統合まで未commitのまま残ります。統合されずに残った複製は `実行記録の記帳` に従って run の終わりに commit します）。同じ作業ツリーで並行して手作業を行う場合は、次の安全ガードに注意します。
