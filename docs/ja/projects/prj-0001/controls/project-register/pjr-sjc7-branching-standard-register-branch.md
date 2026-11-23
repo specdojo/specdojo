@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-sjc7-branching-standard-register-branch
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-23T00:21:30Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-23T01:13:50Z"
+  conclusion: git-branching-standard を PJR-2TX0 の方式（register 専用ブランチ、単独運用と複数人運用の層 3）に改訂し、PJR-11EX に置き換えを記録した。ガイドとの食い違い 4 か所は対応結果に一覧し、後続の N5J8・1JF6 などで直す
   derived_from:
     - PJR-2TX0
   commit_type: docs

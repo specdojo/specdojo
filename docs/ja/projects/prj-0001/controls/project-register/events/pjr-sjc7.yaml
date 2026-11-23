@@ -86,3 +86,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_fe30522667f24af78ce5acee6a878b81
+- v: 1
+  id: reg_b67a6a07959d46528946bc88dbc8fbbc
+  ts: "2026-11-23T01:13:50Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分と個票の対応結果で確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: git-branching-standard を PJR-2TX0 の方式（register 専用ブランチ、単独運用と複数人運用の層 3）に改訂し、PJR-11EX に置き換えを記録した。ガイドとの食い違い 4 か所は対応結果に一覧し、後続の N5J8・1JF6 などで直す
+  previous_event_id: reg_f48b0e11105544df9e890811c5e4c6ef
