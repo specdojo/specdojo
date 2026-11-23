@@ -1,0 +1,25 @@
+データ移行設計の対象別 rulebook（`docs/ja/specdojo/rulebooks/dmd-rulebook.md`）を grade の指摘 F001〜F012 に沿って直しました。変更したのはこのファイル1つで、sample・recipe・template・result には手を入れていません。ただし、直した見出しに sample がまだ合っておらず、sample の段での修正が要ります（最後に記載）。prettier と markdownlint は通りました（0 issues）。`lint:md`・`lint:fm` など runner が流す検査は実行していません。
+
+指摘ごとの直し方:
+
+- **F001・F004・F007（許容差εと確認者）**: εを採るときは、値・単位・比較対象と、合意の記録先（`mip-index` の成功条件や決定記録）を書くようにしました。照合結果を確かめる手順と証跡の取り方は `mtp-<term>` で定めると明記しました。PJR-76N9 の決まりに合わせ、確認者や承認者の Role code を本文に書かせる要件は足していません。
+- **F002（実データの記載）**: 「本文や証跡欄に実レコード値・個人情報・接続情報を載せる」を禁止事項に加え、証跡は保管場所の参照に留めると書きました。
+- **F003（未確定の値）**: 概算件数・増分基準・所要時間が決まっていないときは推測値を書かず、`_UNDECIDED_` と明示するよう定めました。
+- **F005（冗長な列と見出し）**: 本文要件の表から「必須」列を削って「すべて必須」と1文で示し、見出し10を「関連ドキュメント」に改めました。
+- **F006（変更の影響）**: マッピング・変換・除外・移行手順を変えたら、`mtp-<term>` の検証観点と `cop-<term>` の当日手順を見直す、と位置づけの章に1文足しました。
+- **F008（意味の通らない規定）**: 「（本書のみ）を明記する」を削り、`dmd-index` に加えて `mip-index` と `mtp-<term>` も挙げる要件にしました。
+- **F011（Frontmatter）**: recipe と template はどちらも見当たらなかったので、`recipe: undecided`・`template: undecided` を宣言しました。
+- **F012（表記の揺れ）**: ログ/再実行性の表で `run_id`・`upsert` などをインラインコードにしました。「見積り」は見出しの「見積」に揃えました。
+
+あわせて、対象データ詳細と検証方法の章に、判断の基準と良い例・悪い例を足しました。
+
+**sample の段で直すこと**:
+
+- **F005 の追従**: 見出し10の「（必須）」を消したので、sample の「## 10. 関連ドキュメント（必須）」も直す必要があります。
+- **F009**: H1 の規則は今のままにしました。sample の H1「データ移行設計 サンプル」を `# データ移行設計: <対象名>` の形に合わせる必要があります。
+- **F010**: sample の概要が1文だけなので、移行方式・移行期間・上位の成功条件を足す必要があります。
+- **sample の文脈**: sample は受注データ（orders）を題材にしています。駄菓子屋の文脈に揃っているかを sample の段で確かめてください。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"dmd-rulebook を grade の指摘 F001〜F008・F011・F012 に沿って修正した。F009・F010 は sample 側の問題として rulebook の規則を維持した。sample・recipe・template・result は変更していない。prettier と markdownlint-cli2 で対象ファイルに問題がないことを確認した。","handoff":["F009: rulebook の H1 規則（`# データ移行設計: <対象名>`）は維持した。sample `docs/ja/specdojo/samples/dmd-sample.md` の H1「データ移行設計 サンプル」を規則に合わせる必要がある（sample の段）。","F010: sample の概要に移行方式・移行期間・上位の成功条件を足す必要がある（sample の段）。","F005: 本文要件の見出し10を「関連ドキュメント（必須）」から「関連ドキュメント」に改めたので、sample の見出しも追従させる必要がある。","F001/F004: PJR-76N9 に従い、確認者・承認者の Role code は本文要件に加えなかった。代わりに、εの合意の記録先（`mip-index` の成功条件や決定記録）を書くこと、照合結果を確かめる手順は `mtp-<term>` で定めることを規定した。","F012: 見出しが「性能/所要時間見積」で固定されているため、本文の「見積り」を「見積」に揃えた（sample への影響はない）。","sample は受注データ（orders）を題材にしている。sample の段で、共通サンプル文脈（駄菓子屋）に揃っているかを確かめる必要がある。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/rulebooks/dmd-rulebook.md","status":"passed","summary":"変更した rulebook を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/dmd-rulebook.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更は docs/ja/specdojo/rulebooks/dmd-rulebook.md のみで、plan/result/個票を変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML の変更がない","reason":"変更したのは Markdown ファイルのみで、*.yaml / *.yml を変更していない"}]}
+</specdojo_executor_evidence>
