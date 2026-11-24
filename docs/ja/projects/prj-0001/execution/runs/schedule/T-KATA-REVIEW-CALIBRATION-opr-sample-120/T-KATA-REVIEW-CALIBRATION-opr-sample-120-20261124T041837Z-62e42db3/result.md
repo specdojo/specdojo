@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-REVIEW-CALIBRATION-opr-sample-120
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-REVIEW-CALIBRATION-opr-sample-120/T-KATA-REVIEW-CALIBRATION-opr-sample-120-20261124T041837Z-62e42db3/plan.md
   started_at: "2026-11-24T04:18:45.041Z"
+  completed_at: "2026-11-24T04:55:40.930Z"
   agent: sol-executor
   execution: agent
   approach: sample-maintenance
@@ -20,16 +21,27 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- kata レビューの段 R2（構成）として、運用手順の完成例 `opr-sample` の章内の配置を3点修正した。12章構成と必須表は template に適合していたため維持した。
+- 指摘表（R2-1 から R2-3）： | No | 段 | 箇所 | 指摘 | 直した案 | 根拠 | 印 | | --- | --- | --- | --- | --- | --- | --- | | R2-1 | R2 | 2. 手順適用範囲・前提、11. 証跡 | 手順確定前の模擬確認と、その記録要件が離れている | 模擬確認の段落を11章の記録要件の直前へ移動 | `vp-arc-document-structure`、opr-rulebook 1.2・6.11 | - | | R2-2 | R2 | 4. 障害対応手順 | 連絡前の記録が、連絡と復旧を扱う表の後にある | 連絡前の記録を表の前へ移し、復旧後の追記は表の後に配置 | `vp-arc-document-structure`、opr-rulebook 6.4、opr-template 4章 | - | | R2-3 | R2 | 9. アカウント付与・剥奪手順 | 月次棚卸しが、申請から検証までの一連の操作の第5段階になっている | 棚卸しを番号付き手順から独立した段落へ分離 | `vp-qe-omissions-consistency`、opr-rulebook 6.9、opr-template 9章 | - |
+- 検証は、整形、`git diff --check`、構造比較（12章の見出し、全表、frontmatter、R1追記の維持）が通った。親 runner の `lint:md:changed`、`lint:fm:changed`、`lint:mermaid`、`lint:d2`、`test:docs`、`validate:schema` も通った。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/samples/opr-sample.md`: 章内の配置を3点修正した（8行追加・5行削除）。(1) 手順確定前の模擬確認の段落を、2章から11章の記録要件の直前へ移した。(2) 4章で連絡前の記録を表の前へ移し、復旧後の追記を表の後に置いた。(3) 9章の月次棚卸しを、番号付き手順の第5段階から独立した段落にした。12章構成、全表の内容、frontmatter、R1が追加した承認記録と模擬結果の記録項目は変えていない。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- F002（証跡保管期間の判定値）は R4 の `vp-qe-verifiability`、F003（分冊・ID の整合）は R5 の `vp-qe-kata-conformance` に引き継ぐ。
+- F001 と F004 は、kata-guide 6.3 が承認判断・ready 化の観点を R2 の対象外としているため、本文を変えていない。grade result のサイドカーは直接編集していない。
+- result の実施内容に次の指摘表を記載してください。 | No | 段 | 箇所 | 指摘 | 直した案 | 根拠 | 印 | | --- | --- | --- | --- | --- | --- | --- | | R2-1 | R2 | 2. 手順適用範囲・前提、11. 証跡 | 手順確定前の模擬確認と、その記録要件が離れている | 模擬確認の段落を11章の記録要件の直前へ移動 | `vp-arc-document-structure`、opr-rulebook 1.2・6.11 | - | | R2-2 | R2 | 4. 障害対応手順 | 連絡前の記録が、連絡と復旧を扱う表の後にある | 連絡前の記録を表の前へ移し、復旧後の追記は表の後に配置 | `vp-arc-document-structure`、opr-rulebook 6.4、opr-template 4章 | - | | R2-3 | R2 | 9. アカウント付与・剥奪手順 | 月次棚卸しが、申請から検証までの一連の操作の第5段階になっている | 棚卸しを番号付き手順から独立した段落へ分離 | `vp-qe-omissions-consistency`、opr-rulebook 6.9、opr-template 9章 | - |
+- 変更ファイル欄：docs/ja/specdojo/samples/opr-sample.md のみ。模擬確認の説明を11章へ集約し、4章を連絡前の記録→優先度別対応→復旧後の記録の順へ整理。9章の月次棚卸しを独立させました。12章構成、全表の内容、frontmatter、R1が追加した承認記録と模擬結果の記録項目は維持しました。差分は8行追加・5行削除。result と grade サイドカーは編集していません。
+- result の「進め方と実践の型の適用」へ記録：kata-guide 6.1・6.3・6.5、Sample 記述標準、opr-rulebook、opr-template、共通レビュー観点一覧の該当観点、opd-index-sample、grade result（specdojo.opr-sample.yaml）、R1（T-KATA-REVIEW-CALIBRATION-opr-sample-110）の result、先行 T-KATA-WAVE-5-opr-sample-080 の condense result と -090 の review result を確認。対応する OPR recipe は検索で存在しないことを確認しました。章順と必須表は template に適合しているため維持し、章内配置だけを修正しました。先行 condense が残した概要への判定条件の参照と、障害対応の分冊への言及も維持しました。rulebook・template の変更提案はありません。
+- grade finding の扱い：F001・F004 は kata-guide 6.3 が除外する承認判断・ready化の観点のため、本文に決定期限・確認者等を追加していません。F002（証跡保管期間の判定値）は R4 の `vp-qe-verifiability`、F003（分冊・IDの整合）は R5 の `vp-qe-kata-conformance` へ引き継いでください。R1と同じ指摘をR2の新規指摘として繰り返していません。
+- 指定された Markdown lint・frontmatter・テスト等の親検証は runner に委ねています。整形、差分チェックに加え、読み取り専用の構造比較で12章の見出し・全表・frontmatterの維持、3点の配置修正、R1追記の維持を確認しました。
+- 適用外の検証: `npm run validate:schema:file`（変更はMarkdown sampleのみで、YAML/YMLファイルの変更がないため。）
+- 適用外の検証: `npm run validate:history-links`（履歴ファイル、既存plan、resultを編集していないため。）
+- 適用外の検証: `npm run validate:catalog`（成果物の変更が docs/ja/specdojo/samples/ 内に限られ、docs/ja/projects/ 配下に及ばないため。）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+根拠として次を確認した。kata-guide 6.1・6.3・6.5、Sample 記述標準、opr-rulebook、opr-template、共通レビュー観点一覧の該当観点、opd-index-sample、grade result（`specdojo.opr-sample.yaml`）、R1（T-KATA-REVIEW-CALIBRATION-opr-sample-110）の result、先行 T-KATA-WAVE-5-opr-sample-080 の condense result と -090 の review result。対応する OPR recipe は検索で存在しないことを確認した。章順と必須表は template に適合していたため維持し、章内の配置だけを直した。先行 condense が残した概要への判定条件の参照と、障害対応の分冊への言及も維持した。rulebook・template の変更提案はない。F001・F004 は R2 の観点外として見送り、F002 は R4、F003 は R5 に任せる。R1 と同じ指摘は繰り返していない。

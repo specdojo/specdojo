@@ -1,0 +1,198 @@
+parent validation: test-docs
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.9.2 test:docs
+> vitest run --config vitest.docs.config.ts
+
+
+ RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-CALIBRATION-opr-sample-120
+
+[parent-validation:test-file] {"event":"start","file":"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts"}
+[parent-validation:test-file] {"event":"start","file":"tests/packages/docs-lint/yaml-deliverable-type.test.ts"}
+[parent-validation:test-file] {"event":"start","file":"tests/packages/docs-site/kata-staging.test.ts"}
+ ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 6ms
+[parent-validation:test-file] {"event":"end","file":"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts","duration_ms":6}
+ ✓ tests/packages/docs-site/kata-staging.test.ts (6 tests) 27ms
+[parent-validation:test-file] {"event":"end","file":"tests/packages/docs-site/kata-staging.test.ts","duration_ms":27}
+[parent-validation:test-file] {"event":"start","file":"tests/docs/specdojo/schemas/dct-schema.test.ts"}
+ ✓ tests/docs/specdojo/schemas/dct-schema.test.ts (5 tests) 5ms
+[parent-validation:test-file] {"event":"end","file":"tests/docs/specdojo/schemas/dct-schema.test.ts","duration_ms":5}
+[parent-validation:test-file] {"event":"start","file":"tests/packages/docs-lint/deliverable-type.test.ts"}
+[parent-validation:test-file] {"event":"start","file":"tests/packages/docs-lint/rulebook-schema-enums.test.ts"}
+[parent-validation:test-file] {"event":"start","file":"tests/src/docs/template-resolution.test.ts"}
+ ✓ tests/packages/docs-lint/rulebook-schema-enums.test.ts (5 tests) 15ms
+[parent-validation:test-file] {"event":"end","file":"tests/packages/docs-lint/rulebook-schema-enums.test.ts","duration_ms":15}
+[parent-validation:test-file] {"event":"start","file":"tests/src/register/item.test.ts"}
+ ✓ tests/src/docs/template-resolution.test.ts (7 tests) 17ms
+[parent-validation:test-file] {"event":"end","file":"tests/src/docs/template-resolution.test.ts","duration_ms":17}
+[parent-validation:test-file] {"event":"start","file":"tests/src/kata/command.test.ts"}
+[parent-validation:test-file] {"event":"start","file":"tests/docs/specdojo/schemas/job-schema.test.ts"}
+[parent-validation:test-file] {"event":"start","file":"tests/docs/specdojo/schemas/pm-members-schema.test.ts"}
+ ✓ tests/docs/specdojo/schemas/job-schema.test.ts (6 tests) 6ms
+[parent-validation:test-file] {"event":"end","file":"tests/docs/specdojo/schemas/job-schema.test.ts","duration_ms":6}
+ ✓ tests/docs/specdojo/schemas/pm-members-schema.test.ts (6 tests) 3ms
+[parent-validation:test-file] {"event":"end","file":"tests/docs/specdojo/schemas/pm-members-schema.test.ts","duration_ms":3}
+[parent-validation:test-file] {"event":"start","file":"tests/src/catalog/index.test.ts"}
+ ✓ tests/src/kata/command.test.ts (29 tests) 129ms
+[parent-validation:test-file] {"event":"end","file":"tests/src/kata/command.test.ts","duration_ms":129}
+[parent-validation:test-file] {"event":"start","file":"tests/docs/specdojo/schemas/exec-defaults-schema.test.ts"}
+ ✓ tests/docs/specdojo/schemas/exec-defaults-schema.test.ts (13 tests) 6ms
+[parent-validation:test-file] {"event":"end","file":"tests/docs/specdojo/schemas/exec-defaults-schema.test.ts","duration_ms":6}
+ ✓ tests/src/catalog/index.test.ts (9 tests) 124ms
+[parent-validation:test-file] {"event":"end","file":"tests/src/catalog/index.test.ts","duration_ms":124}
+ ✓ tests/src/register/item.test.ts (55 tests) 234ms
+[parent-validation:test-file] {"event":"end","file":"tests/src/register/item.test.ts","duration_ms":234}
+ ✓ tests/packages/docs-lint/deliverable-type.test.ts (28 tests) 286ms
+[parent-validation:test-file] {"event":"end","file":"tests/packages/docs-lint/deliverable-type.test.ts","duration_ms":286}
+[parent-validation:test-file] {"event":"start","file":"tests/src/grade/grade.test.ts"}
+[parent-validation:test-file] {"event":"start","file":"tests/src/exec/plans.test.ts"}
+[parent-validation:test-file] {"event":"start","file":"tests/src/exec/run-records.test.ts"}
+[parent-validation:test-file] {"event":"start","file":"tests/src/exec/register-plan-escape.test.ts"}
+[parent-validation:test-file] {"event":"start","file":"tests/docs/specdojo/schemas/sch-strategy-schema.test.ts"}
+ ✓ tests/docs/specdojo/schemas/sch-strategy-schema.test.ts (12 tests) 24ms
+[parent-validation:test-file] {"event":"end","file":"tests/docs/specdojo/schemas/sch-strategy-schema.test.ts","duration_ms":24}
+ ✓ tests/src/grade/grade.test.ts (70 tests) 270ms
+[parent-validation:test-file] {"event":"end","file":"tests/src/grade/grade.test.ts","duration_ms":270}
+ ✓ tests/src/exec/run-records.test.ts (19 tests) 135ms
+[parent-validation:test-file] {"event":"end","file":"tests/src/exec/run-records.test.ts","duration_ms":135}
+[parent-validation:test-file] {"event":"start","file":"tests/src/exec/plan-conventions.test.ts"}
+ ✓ tests/src/exec/plan-conventions.test.ts (15 tests) 135ms
+[parent-validation:test-file] {"event":"end","file":"tests/src/exec/plan-conventions.test.ts","duration_ms":135}
+ ✓ tests/packages/docs-lint/yaml-deliverable-type.test.ts (15 tests) 1097ms
+     ✓ checks explicit files even if their structural schema accepts everything  430ms
+[parent-validation:test-file] {"event":"end","file":"tests/packages/docs-lint/yaml-deliverable-type.test.ts","duration_ms":1097}
+ ✓ tests/src/exec/register-plan-escape.test.ts (36 tests) 1356ms
+     ✓ approach の有無によらず、共通の規約は参照パスと要点だけを本文に載せる  692ms
+[parent-validation:test-file] {"event":"end","file":"tests/src/exec/register-plan-escape.test.ts","duration_ms":1356}
+ ❯ tests/src/exec/plans.test.ts (97 tests | 1 failed) 1592ms
+     ✓ owner 未設定の場合は全フィールドを MISSING にする 1ms
+     ✓ owner の責務（project_note）と該当 role の観点を値として返す 0ms
+     ✓ owner と一致しない role の観点は含めない 0ms
+     ✓ roles に未登録の owner では label を code のみ・note を MISSING にする 0ms
+     ✓ 該当 role の観点が無い場合は viewpoints を MISSING の箇条書き 1 項目にする 0ms
+     ✓ grade と同じ document_kinds 宣言で review 観点を選ぶ 0ms
+     ✓ 既存文書では配置にかかわらず frontmatter の id を返す 2ms
+     ✓ 未作成文書では product 配下をローカル ID、projects 配下を project 修飾 ID にする 0ms
+     ✓ returns the catalog path of a kata domain deliverable whose document id matches 1ms
+     ✓ returns undefined for a type document that the catalog does not list 1ms
+     ✓ uses a sequence fallback when the slug, second, and random suffix collide 0ms
+     ✓ recovers both the new and existing stem formats from a plan path 0ms
+     ✓ approach bootstrap を frontmatter から復元する 0ms
+     ✓ approach rulebook-authoring を frontmatter から復元する 0ms
+     ✓ approach retrofit を frontmatter から復元する 0ms
+     ✓ approach finalize を frontmatter から復元する 0ms
+     ✓ approach bootstrap-finalize を frontmatter から復元する 0ms
+     ✓ approach fully-guided を frontmatter から復元する 0ms
+     ✓ approach condense を frontmatter から復元する 0ms
+     ✓ approach draft を frontmatter から復元する 0ms
+     ✓ 未知の approach は無視して identity のみ復元する 0ms
+     ✓ frontmatter の targets を doc id リストとして復元する 0ms
+     ✓ origin: register を復元し、targets が無くても identity を返す 0ms
+     ✓ 未知の origin は無視して schedule 扱い（undefined）にする 0ms
+     × 通常 edit plan は完了の狙いを done_criteria 箇条書きで展開し自己レビュー節を持たない 127ms
+     ✓ 'edit' / 'draft' は edit 専用の予防規則の適用範囲を守る 71ms
+     ✓ 'review' / 'draft' は edit 専用の予防規則の適用範囲を守る 40ms
+     ✓ 'edit' / 'fully-guided' は edit 専用の予防規則の適用範囲を守る 54ms
+     ✓ 'review' / 'fully-guided' は edit 専用の予防規則の適用範囲を守る 34ms
+     ✓ 'edit' / 'recipe-guided' は edit 専用の予防規則の適用範囲を守る 33ms
+     ✓ 'review' / 'recipe-guided' は edit 専用の予防規則の適用範囲を守る 27ms
+     ✓ 'edit' / 'retrofit' は edit 専用の予防規則の適用範囲を守る 32ms
+     ✓ 'review' / 'retrofit' は edit 専用の予防規則の適用範囲を守る 26ms
+     ✓ 'edit' / 'bootstrap' は edit 専用の予防規則の適用範囲を守る 39ms
+     ✓ 'review' / 'bootstrap' は edit 専用の予防規則の適用範囲を守る 25ms
+     ✓ 'edit' / 'rulebook-maintenance' は edit 専用の予防規則の適用範囲を守る 26ms
+     ✓ 'review' / 'rulebook-maintenance' は edit 専用の予防規則の適用範囲を守る 22ms
+     ✓ 'edit' / 'recipe-maintenance' は edit 専用の予防規則の適用範囲を守る 26ms
+     ✓ 'review' / 'recipe-maintenance' は edit 専用の予防規則の適用範囲を守る 23ms
+     ✓ 'edit' / 'sample-maintenance' は edit 専用の予防規則の適用範囲を守る 21ms
+     ✓ 'review' / 'sample-maintenance' は edit 専用の予防規則の適用範囲を守る 19ms
+     ✓ 'edit' / 'template-maintenance' は edit 専用の予防規則の適用範囲を守る 23ms
+     ✓ 'review' / 'template-maintenance' は edit 専用の予防規則の適用範囲を守る 17ms
+     ✓ include を宣言する rulebook では併せて適用する rulebook のパスを注入する 40ms
+     ✓ rulebook 未宣言の成果物では併せて適用する rulebook は _MISSING_ になる 37ms
+     ✓ rulebook が sample を宣言していれば sample のパスを参照ファイルへ注入する 36ms
+     ✓ rulebook 未宣言の成果物では sample は _MISSING_ になる 38ms
+     ✓ Prettier 保存後も完了条件テーブルと行プレースホルダの間に空行を入れない 51ms
+     ✓ xrp-template.md は grade の評価結果を入力にし、観点ごとの評価を指示しない 0ms
+     ✓ xrp-fully-guided-template.md は grade の評価結果を入力にし、観点ごとの評価を指示しない 0ms
+     ✓ xrp-recipe-guided-template.md は grade の評価結果を入力にし、観点ごとの評価を指示しない 0ms
+     ✓ xrp-freeform-template.md は grade の評価結果を入力にし、観点ごとの評価を指示しない 0ms
+     ✓ xrp-retrofit-template.md は grade の評価結果を入力にし、観点ごとの評価を指示しない 0ms
+     ✓ xrp-rulebook-maintenance-template.md は grade の評価結果を入力にし、観点ごとの評価を指示しない 0ms
+     ✓ xrp-recipe-maintenance-template.md は grade の評価結果を入力にし、観点ごとの評価を指示しない 0ms
+     ✓ xrp-sample-maintenance-template.md は grade の評価結果を入力にし、観点ごとの評価を指示しない 0ms
+     ✓ xrp-template-maintenance-template.md は grade の評価結果を入力にし、観点ごとの評価を指示しない 0ms
+     ✓ edit は共通と mode 別の要点だけを両方の参照パスとともに載せる 0ms
+     ✓ review は共通と mode 別の要点だけを両方の参照パスとともに載せる 0ms
+     ✓ 実際の規約も mode を分離し、schema がない edit では YAML の要点を除く 1ms
+     ✓ 要点マーカーのない断片は全文を載せる 0ms
+     ✓ マーカーのある共通断片と全文の mode 別断片を組み合わせる 0ms
+     ✓ 全文の共通断片と要点のある mode 別断片では共通見出しを重複させない 0ms
+     ✓ verdict を bps-task-completion の受入観点 6 区分と一対一に対応させる 0ms
+     ✓ 鮮度確認を E-01 と対応させ、grade list --changed-only で確かめる 0ms
+     ✓ xep-bootstrap-template.md expands sidecar findings and requires correcting them 0ms
+     ✓ xep-rulebook-maintenance-template.md expands sidecar findings and requires correcting them 0ms
+     ✓ xep-recipe-maintenance-template.md expands sidecar findings and requires correcting them 0ms
+     ✓ xep-sample-maintenance-template.md expands sidecar findings and requires correcting them 0ms
+     ✓ xep-template-maintenance-template.md expands sidecar findings and requires correcting them 0ms
+     ✓ xep-rulebook-maintenance-template.md selects evidence from each finding 0ms
+     ✓ xep-recipe-maintenance-template.md selects evidence from each finding 0ms
+     ✓ xep-sample-maintenance-template.md selects evidence from each finding 0ms
+     ✓ xep-template-maintenance-template.md selects evidence from each finding 0ms
+     ✓ xep-sample-maintenance-template.md treats the rulebook as evidence for structural findings 0ms
+     ✓ xrp-rulebook-maintenance-template.md checks that the motivating findings were resolved 0ms
+     ✓ xrp-recipe-maintenance-template.md checks that the motivating findings were resolved 0ms
+     ✓ xrp-sample-maintenance-template.md checks that the motivating findings were resolved 0ms
+     ✓ xrp-template-maintenance-template.md checks that the motivating findings were resolved 0ms
+     ✓ catalog_path がない project の plan では catalog 検査を条件付きで案内する 24ms
+     ✓ 対象タスクの plan を再生成し、他の plan や index には触れない 90ms
+     ✓ authoring approach は target 契約を表せない schedule plan では拒否する 1ms
+     ✓ maintenance 4種と bootstrap の plan に編集対象 kata のパスと existing 状態を示す 176ms
+     ✓ kata の未作成とパス未解決を plan 上で区別する 87ms
+     ✓ retrofit edit plan へ実装エビデンスを展開し targets には追加しない 42ms
+     ✓ retrofit review plan へ実装エビデンスを展開し targets には追加しない 40ms
+     ✓ retrofit 対象に evidence_refs がなければ plan 生成を拒否する 2ms
+     ✓ 横断 pass は複数成果物を targets と本文へ列挙する 33ms
+     ✓ stem を渡すとユニーク名でファイル・id・result 参照を出力し task_id は保持する 38ms
+     ✓ plans ディレクトリが無くても作成して書き込む 30ms
+     ✓ review plan の完了条件テーブルは区切り行の直後に DC 行を出力する 37ms
+     ✓ review plan はプロジェクト差分から共通レビュー観点を解決して完了条件を選ぶ 35ms
+     ✓ project_context は空配列で opt-out でき、context 文書自身には自己参照を出さない 56ms
+     ✓ execution: human のタスクでは plan を生成しない 1ms
+     ✓ finalizeResultSectionsForDeliverable は roles/viewpoint 注記付きチェックリストと確定対象を返す 1ms
+     ✓ finalizeResultSectionsForDeliverable は成果物を解決できない場合 undefined を返す 1ms
+     ✓ targetDocIdsForDeliverable は成果物の project 修飾 doc id を先頭に返す 1ms
+[parent-validation:test-file] {"event":"end","file":"tests/src/exec/plans.test.ts","duration_ms":1592}
+
+ Test Files  1 failed | 18 passed (19)
+      Tests  1 failed | 488 passed (489)
+   Start at  13:23:12
+   Duration  2.30s (transform 4.42s, setup 684ms, import 6.70s, tests 5.47s, environment 1ms)
+
+
+
+--- stderr ---
+stderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata
+grade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/src/exec/plans.test.ts > plan generation (edit done_criteria goals) > 通常 edit plan は完了の狙いを done_criteria 箇条書きで展開し自己レビュー節を持たない
+Error: Plan conventions version not found: sha256:e7dd6ff2a0dec2f12ed4ffc905cd185aca2d6f9c3922c56a249c88cb45b2a14e; path=/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-CALIBRATION-opr-sample-120/specdojo-exec-plans-2RaTbk/execution/conventions/e7dd6ff2a0dec2f12ed4ffc905cd185aca2d6f9c3922c56a249c88cb45b2a14e.txt
+ ❯ planConventionsFiles src/shared/plan-conventions.ts:101:11
+     99|   const path = resolve(legacy ? baseDirectory : repositoryRoot(baseDir…
+    100|   if (!existsSync(path)) {
+    101|     throw new Error(`Plan conventions version not found: sha256:${hash…
+       |           ^
+    102|   }
+    103|   if (sha256(readFileSync(path, "utf8")) !== hash) {
+ ❯ expandPlanConventions src/shared/plan-conventions.ts:110:18
+ ❯ readPlanFile src/shared/plan-conventions.ts:121:10
+ ❯ tests/src/exec/plans.test.ts:462:24
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
