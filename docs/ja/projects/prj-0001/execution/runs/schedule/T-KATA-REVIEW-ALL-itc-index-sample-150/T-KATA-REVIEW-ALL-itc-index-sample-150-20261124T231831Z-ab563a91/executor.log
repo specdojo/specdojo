@@ -1,0 +1,18 @@
+R5 整合を終え、`docs/ja/specdojo/samples/itc-index-sample.md` だけを直しました。lint 系の検査はまだ流していません。runner がこのあと実行します。
+
+**主な直し:** 一番大きい食い違いは、保全の取得（`PATH-04`）と復元の回復（`PATH-07`）をどのテストで扱うかでした。テスト戦略・方針（`tsp-index-sample`）も外部結合テストの概要（`etc-index-sample`）も、この2つを内部結合テストに置いています。本書だけが外部結合テストの範囲としていました。そこで本書を2つの文書に合わせ、外部結合テストに置くのは保管サービスへの転送・読取（`PATH-05`・`PATH-06`）だけにしました。
+
+これに合わせて、次の箇所を書き足しました。
+
+- 防ぐ業務リスクに、保全・復元で記録が食い違うものを3つ目として足した。
+- 対象別カタログに `itc-backup-restore` を新しく置き、観点の表・分配の表・依存の表・CI の行にも反映した。
+- 依存の表では、復元用保管サービスを Stub にする行を足した。
+- 「メモ / 将来課題」に、保全・復元の成立条件（未決）の行を足した。報告先は既存の個票 `kinuya:pjr-i004` にした。
+
+**grade の指摘:** F002 は今回直しました。「通信不能時の販売継続」の報告先を、既存の個票 `kinuya:pjr-i003` に変えています。ほかの F001・F003〜F006 は前の段で直っていました。F004 の内容は上の直しと逆向きですが、これは grade の時点の tsp に基づく指摘だと判断しています。
+
+**確認してほしい点:** `itc-backup-restore` を独立した単位として足すかどうかは、私が判断に迷った点です。代わりに既存の単位へ含める案もありました。迷った理由は handoff の R5-2 に書いています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5 整合で itc-index-sample を tsp-index-sample・etc-index-sample・ifd-sample と突き合わせた。PATH-04・PATH-07 を内部結合テストの範囲に置くよう、関連する表をそろえた。F002 も直した。","handoff":["R5-1: R5 / 1. 本ドキュメントの目的と適用対象・テストレベルの表・3. 対象外・除外理由（共通） / PATH-04（保全の取得）と PATH-07（復元の回復）を外部結合テストの範囲としていた。tsp-index-sample の「テストレベル」「I/F の確認範囲と代替方法」と etc-index-sample は内部結合テストに置いており、食い違う / 適用対象を PATH-01〜PATH-04・PATH-07 にし、外部結合テストに置くのは PATH-05・PATH-06 だけにした。業務リスクに保全・復元の食い違いを足した。IT 行・ET 行と対象外の行も直した / vp-qe-kata-conformance（tsp-index-sample・etc-index-sample との整合） / -","R5-2: R5 / 2. テスト対象の括り方と分割基準・4. 観点の立て方（共通）・6. 分配方針・7. 境界/依存の扱い・8. 環境の CI 行 / PATH-04・PATH-07 を扱う単位がなかった / `itc-backup-restore` を足した。観点の型の列、分配の行（回復した記録と取得時点の一致／取得の途中失敗）、復元用保管サービスの Stub の行も足し、CI の必須の変更対象に保全・復元処理を加えた / vp-qe-kata-conformance、vp-dev-change-impact。迷った理由: 単位の数を増やすため。選ばなかった案: itc-sales-checkout に含める（トランザクションと依存境界が違うため不採用） / 要判断","R5-3: R5 / 10. メモ / 将来課題 / F002。「通信不能時の販売継続」の報告先が「PM へリスクとして報告」だけで、ifd-sample と tsp-index-sample が引き継いだ既存の個票 `kinuya:pjr-i003` を参照していない / 報告先を `kinuya:pjr-i003`（既存の個票に追記し、新たに起票しない）にした / F002（vp-pm-control-reporting） / -","R5-4: R5 / 10. メモ / 将来課題 / ifd-sample の未決「保全・復元の成立条件」（`kinuya:pjr-i004`）が、PATH-04・PATH-07 を扱う本書に載っていなかった / 行を足した。当面の扱いは itc-backup-restore を記録の一致に絞ることとし、報告先は `kinuya:pjr-i004` にした / vp-qe-kata-conformance（ifd-sample との整合） / -","R5-5: R5 / grade の指摘 F001・F003・F004・F005・F006 / 前の段で直っていることを確かめた。F004 の「PATH-04・PATH-07 は tsp の定めで外部結合テストの範囲」という前提は、いまの tsp-index-sample と逆である。本段では tsp に合わせた / -（相手側の文書の直しはない。次の grade で F004 と同じ指摘が出た場合は、tsp-index-sample の「テストレベル」を正とする） / F004、vp-qe-kata-conformance / -","申し送り: itc-sample（itc-sales-checkout）は PATH-02・PATH-03 だけを扱い、本段の変更と食い違いはない。itc-backup-restore の個別 sample は同梱しておらず、架空の成果物として扱う。用語集（`docs/ja/product/010-business-specs/060-glossary/`）には Stub・Mock・内部結合などの見出し語がなく、照合する食い違いもなかった。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/itc-index-sample.md","status":"passed","summary":"変更した sample の表を整形した"}]}
+</specdojo_executor_evidence>
