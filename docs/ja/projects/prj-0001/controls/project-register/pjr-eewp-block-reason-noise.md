@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-eewp-block-reason-noise
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: easy
   owner: DEV
   registered_at: "2026-11-23T22:26:08Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-24T00:36:26Z"
+  conclusion: hook やテストの失敗の要約が FAIL の行から始まるようにした
   commit_type: fix
   commit_scope: exec
 ---

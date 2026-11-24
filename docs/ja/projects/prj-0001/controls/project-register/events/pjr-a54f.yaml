@@ -125,3 +125,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_fe075b7bdd7049fc80440b946a981a9e
+- v: 1
+  id: reg_a12193513dc547f0baecf9b581eab4bb
+  ts: "2026-11-24T00:37:32Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果・親の検証（test-integration を含め passed）で確かめ、保護された設定の変更がないことを確かめた。統合の後の run が新しい runner で統合まで通った
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-24"
+    - field: conclusion
+      from: "-"
+      to: タスクの checkpoint が、ほかの sample の grade の結果を取り込まないようにした
+  previous_event_id: reg_050bad16bde94b15a6057e83b36f46c1

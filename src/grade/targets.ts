@@ -147,11 +147,14 @@ function parseKataReference(path: string, kind: KataReference["kind"]): KataRefe
 // grade の評価対象は利用リポジトリが所有する kata に限る。package 側の kata は SpecDojo が
 // 管理する成果物であり、利用プロジェクトが評価・改善する対象ではない。フォールバックは
 // 個別ファイルの解決にのみ用い、対象の列挙には用いない（解決と列挙を区別する）。
-export function loadKataReferences(): KataReference[] {
+// generated/ 配下の YAML 表示ページは正本と同じ id を持ち、古いまま残ると正本より先に選ばれて
+// grade が古い内容を読む（PJR-1RJP）ため、参照の候補から除く。
+export function loadKataReferences(root: string = specdojoRootDir()): KataReference[] {
   const references = new Map<string, KataReference>();
-  const root = specdojoRootDir();
   for (const kind of KATA_DIRS) {
-    const paths = listFilesRecursive(join(root, "docs/ja/specdojo", kind))
+    const kindDir = join(root, "docs/ja/specdojo", kind);
+    const paths = listFilesRecursive(kindDir)
+      .filter((path) => !relativePathFromRoot(path, kindDir).split("/").includes("generated"))
       .filter((path) => KATA_REFERENCE_EXTENSIONS.has(extname(path).toLowerCase()))
       .flatMap((path) => {
         const reference = parseKataReference(path, kind);

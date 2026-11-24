@@ -157,3 +157,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_95b92a97ff754450a406ffd090dd2f7e
+- v: 1
+  id: reg_2dda9a10ffcf4d56a929e8160f99e861
+  ts: "2026-11-24T00:36:26Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果・親の検証（test-integration を含め passed）で確かめ、保護された設定の変更がないことを確かめた。統合の後の run が新しい runner で統合まで通った
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-24"
+    - field: conclusion
+      from: "-"
+      to: hook やテストの失敗の要約が FAIL の行から始まるようにした
+  previous_event_id: reg_c217a0a659bc4fc29420b81d3c29ead5

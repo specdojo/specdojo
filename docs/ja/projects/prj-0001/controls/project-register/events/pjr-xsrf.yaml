@@ -125,3 +125,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_69356bd5bdb34ad8b3220679ceeb33b2
+- v: 1
+  id: reg_1dc422a80412445f812451d9a1edfd8d
+  ts: "2026-11-24T00:36:54Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果・親の検証（test-integration を含め passed）で確かめ、保護された設定の変更がないことを確かめた。統合の後の run が新しい runner で統合まで通った
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-24"
+    - field: conclusion
+      from: "-"
+      to: exec run --auto --dry-run が plan を書き出さず、対象と予定のパスを表示するようにした
+  previous_event_id: reg_e090f3e2f81a4820b75fa653bd58fa10
