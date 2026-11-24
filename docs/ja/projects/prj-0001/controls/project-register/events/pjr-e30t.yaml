@@ -60,3 +60,16 @@
       from: open
       to: in-progress
   previous_event_id: reg_849f7ba1f378474c97043e9187e845d4
+- v: 1
+  id: reg_133051c7c634444884f732d7de1373ae
+  ts: "2026-11-24T13:38:38Z"
+  action: review
+  actor: terra-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_143a2bb315b04af29dd19bdfdfc7a8ef
