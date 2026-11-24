@@ -102,3 +102,19 @@
       from: ""
       to: 関連ドキュメント
   previous_event_id: reg_eaaa63ac53054530982b69d79b259cd8
+- v: 1
+  id: reg_b5c46a53c9494a8cace6e7726eac5cb5
+  ts: "2026-11-24T03:37:47Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "課題内容" updated
+  changes:
+    - field: section
+      from: ""
+      to: 課題内容
+    - field: description
+      from: "- 2026-11-24 の `PJR-F4TG` の register の run の commit（`4349a4aa92`）に、同じ時刻に流れていた kata の run（`T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-*`）が作った grade の結果 4 件（`execution/grade/results/specdojo.prj-success-criteria-and-acceptance-criteria-{rulebook,recipe,sample,template}.yaml`）が入った。 - PJR-A54F は schedule のタスクの checkpoint だけを、自分の対象の grade の結果に絞った。register の worktree の経路（`src/exec/run/register-worktree.ts` など）は、引数を省いた呼び出しのまま、ルートで変更中の grade の結果をすべて取り込む。"
+      to: "- 2026-11-24 の `PJR-F4TG` の register の run の開始（start）の記帳の commit（`23d6bf8bcd`）に、同じ時刻に流れていた kata の run（`T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-*`）が作った grade の結果 4 件（`execution/grade/results/specdojo.prj-success-criteria-and-acceptance-criteria-{rulebook,recipe,sample,template}.yaml`）が入った。 - PJR-A54F は schedule のタスクの checkpoint だけを、自分の対象の grade の結果に絞った。register の worktree の経路（`src/exec/run/register-worktree.ts` など）は、引数を省いた呼び出しのまま、ルートで変更中の grade の結果をすべて取り込む。"
+  previous_event_id: reg_aa2432b4e4f24219b35f7071afd1be5c

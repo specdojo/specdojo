@@ -23,7 +23,7 @@ specdojo:
 
 ## 1. 課題内容
 
-- 2026-11-24 の `PJR-F4TG` の register の run の commit（`4349a4aa92`）に、同じ時刻に流れていた kata の run（`T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-*`）が作った grade の結果 4 件（`execution/grade/results/specdojo.prj-success-criteria-and-acceptance-criteria-{rulebook,recipe,sample,template}.yaml`）が入った。
+- 2026-11-24 の `PJR-F4TG` の register の run の開始（start）の記帳の commit（`23d6bf8bcd`）に、同じ時刻に流れていた kata の run（`T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-*`）が作った grade の結果 4 件（`execution/grade/results/specdojo.prj-success-criteria-and-acceptance-criteria-{rulebook,recipe,sample,template}.yaml`）が入った。
 - PJR-A54F は schedule のタスクの checkpoint だけを、自分の対象の grade の結果に絞った。register の worktree の経路（`src/exec/run/register-worktree.ts` など）は、引数を省いた呼び出しのまま、ルートで変更中の grade の結果をすべて取り込む。
 
 ## 2. 入力
