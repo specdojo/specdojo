@@ -15,6 +15,8 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { registerRegisterCommands } from "../../../src/register/register.js";
 import { readAllEventFiles, writeEventFile } from "../../../src/exec/events.js";
 import type { ExecEventV1 } from "../../../src/exec/types.js";
+import { publishRegisterTicket } from "../../../src/exec/run/register-sync.js";
+import { mergeRegisterBranch } from "../../../src/shared/register-merge.js";
 import { gitEnvironment } from "../../../src/shared/git.js";
 import {
   inRegisterBranch,
@@ -211,6 +213,108 @@ describe("register branch synchronization", () => {
     expect(process.exitCode).toBeUndefined();
     expect(existsSync(join(repo, ticket("PJR-AB12", "local-item")))).toBe(true);
     expect(git(remote, "rev-parse", BRANCH)).toBe(remoteHead);
+    expect(git(repo, "status", "--porcelain")).toBe("");
+  });
+
+  it("publishes concurrent runner responses under the shared lock without editing the exec tree", async () => {
+    fixture();
+    await add("PJR-AB12", "first-item");
+    await add("PJR-CD34", "second-item");
+    mergeRegisterBranch(PROJECT);
+    const head = git(repo, "rev-parse", "HEAD");
+    const paths = [ticket("PJR-AB12", "first-item"), ticket("PJR-CD34", "second-item")];
+    const sources = paths.map((path, index) => {
+      const source = join(parent, `exec-${index}`);
+      git(repo, "worktree", "add", "-b", `exec/response-${index}`, source, "HEAD");
+      write(join(source, path), readFileSync(join(source, path), "utf8") + `\nResponse ${index}\n`);
+      return source;
+    });
+    await register("start", "--project", PROJECT, "--id", "PJR-AB12", "--commit");
+    await Promise.all(
+      paths.map((path, index) =>
+        publishRegisterTicket(PROJECT, sources[index]!, join(sources[index]!, path)),
+      ),
+    );
+    paths.forEach((path, index) => {
+      expect(git(remote, "show", `${BRANCH}:${path}`)).toContain(`Response ${index}`);
+      expect(readFileSync(join(sources[index]!, path), "utf8")).not.toContain(`Response ${index}`);
+      expect(git(sources[index]!, "status", "--porcelain")).toBe("");
+    });
+    expect(git(remote, "show", `${BRANCH}:${paths[0]}`)).toContain("item_status: in-progress");
+    expect(git(repo, "rev-parse", "HEAD")).toBe(head);
+    expect(git(repo, "status", "--porcelain")).toBe("");
+  });
+
+  it("merges an independent remote edit and refuses conflicting responses without losing source edits", async () => {
+    fixture();
+    await add("PJR-AB12", "first-item");
+    mergeRegisterBranch(PROJECT);
+    const path = ticket("PJR-AB12", "first-item");
+    const original = readFileSync(join(repo, path), "utf8");
+    git(peer, "pull", "--rebase", "origin", BRANCH);
+    write(join(peer, path), original.replace("## 1. 概要", "## 1. 概要\n\nRemote input"));
+    git(peer, "add", path);
+    git(peer, "commit", "-m", "test: independent remote input");
+    git(peer, "push", "origin", BRANCH);
+    write(join(repo, path), original + "\nExecutor response\n");
+    await publishRegisterTicket(PROJECT, repo, join(repo, path));
+    const published = git(remote, "show", `${BRANCH}:${path}`);
+    expect(published).toContain("Remote input");
+    expect(published).toContain("Executor response");
+    // The source still has its old HEAD; a divergent edit to the same response must stop.
+    write(join(repo, path), original + "\nConflicting response\n");
+    await expect(publishRegisterTicket(PROJECT, repo, join(repo, path))).rejects.toThrow(
+      "conflict",
+    );
+    expect(readFileSync(join(repo, path), "utf8")).toContain("Conflicting response");
+    expect(git(remote, "show", `${BRANCH}:${path}`)).toBe(published);
+  });
+
+  it("retains executor responses when push is rejected", async () => {
+    fixture();
+    await add("PJR-AB12", "first-item");
+    mergeRegisterBranch(PROJECT);
+    const path = ticket("PJR-AB12", "first-item");
+    const response = readFileSync(join(repo, path), "utf8") + "\nRetained response\n";
+    write(join(repo, path), response);
+    write(join(remote, "hooks/pre-receive"), "#!/bin/sh\nexit 1\n");
+    const { chmodSync } = await import("node:fs");
+    chmodSync(join(remote, "hooks/pre-receive"), 0o755);
+    await expect(publishRegisterTicket(PROJECT, repo, join(repo, path))).rejects.toThrow(
+      "Register push failed",
+    );
+    expect(readFileSync(join(repo, path), "utf8")).toBe(response);
+    expect(git(repo, "show", `${BRANCH}:${path}`)).toContain("Retained response");
+    expect(git(remote, "show", `${BRANCH}:${path}`)).not.toContain("Retained response");
+  });
+
+  it("rebases a runner response after another clone pushes between its pull and push", async () => {
+    fixture();
+    await add("PJR-AB12", "first-item");
+    mergeRegisterBranch(PROJECT);
+    git(peer, "pull", "--rebase", "origin", BRANCH);
+    const path = ticket("PJR-AB12", "first-item");
+    write(join(repo, path), readFileSync(join(repo, path), "utf8") + "\nRunner response\n");
+    const peerNote = `${REGISTER}/peer-note.md`;
+    write(join(peer, peerNote), "Peer response\n");
+    const hook = join(repo, ".git/hooks/post-commit");
+    write(
+      hook,
+      `#!/bin/sh
+unset GIT_DIR GIT_WORK_TREE GIT_INDEX_FILE GIT_COMMON_DIR GIT_PREFIX
+if ! test -e '${join(parent, "peer-pushed")}'; then
+  git -C '${peer}' add -- '${peerNote}'
+  git -C '${peer}' commit -m 'test: parallel peer response'
+  git -C '${peer}' push origin '${BRANCH}'
+  touch '${join(parent, "peer-pushed")}'
+fi
+`,
+    );
+    const { chmodSync } = await import("node:fs");
+    chmodSync(hook, 0o755);
+    await publishRegisterTicket(PROJECT, repo, join(repo, path));
+    expect(git(remote, "show", `${BRANCH}:${path}`)).toContain("Runner response");
+    expect(git(remote, "show", `${BRANCH}:${peerNote}`)).toBe("Peer response");
     expect(git(repo, "status", "--porcelain")).toBe("");
   });
 

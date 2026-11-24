@@ -35,6 +35,8 @@ import {
 } from "../worktree.js";
 import { pathInsideWorktree } from "./agent.js";
 import { repoRelativePath } from "./mode-shared.js";
+import { isSyncedRegisterPath } from "./register-sync.js";
+import { resolveRegisterBranchTarget } from "../../shared/register-branch.js";
 import {
   registerEventPathForTicket,
   registerRunnerManagedPaths,
@@ -64,7 +66,9 @@ export function registerStatePaths(
       selected.add(path);
     }
   }
-  return [...selected].sort();
+  return [...selected]
+    .filter((path) => !isSyncedRegisterPath(registerPaths.projectId, repoRoot, path))
+    .sort();
 }
 
 // register 状態遷移の pjr-index / 派生ビュー変更を root へ 1 コミットする。hook が対象を
@@ -82,7 +86,7 @@ export function commitRegisterState(
       ...registerStatePaths(repoRoot, registerPaths, ticketPath),
       ...additionalPaths.map((path) => repoRelativePath(repoRoot, path)),
     ]),
-  ];
+  ].filter((path) => !isSyncedRegisterPath(registerPaths.projectId, repoRoot, path));
   if (paths.length === 0) return;
   const remainingPaths = (): string[] => registerStatePaths(repoRoot, registerPaths, ticketPath);
   try {
@@ -235,7 +239,7 @@ export function registerTransitionPaths(
   const eventPath = registerEventPathForTicket(registerPaths, ticketPath);
   if (eventPath) paths.push(eventPath);
   if (existsSync(registerPaths.pjrIndexPath)) paths.push(registerPaths.pjrIndexPath);
-  return paths;
+  return resolveRegisterBranchTarget(registerPaths.projectId) ? [] : paths;
 }
 
 // register 項目の実行管理ファイル（root 側の絶対パス）。再開時は plan / result /

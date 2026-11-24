@@ -319,7 +319,9 @@ register のブランチへの push は `specdojo register branch-check --projec
 
 未解消の記帳がある間は後続の同期を停止します。復旧後、worktree が clean でローカル HEAD がリモートに含まれることを次の同期が確認し、再開します。
 
-register の内容を文書サイトや `exec plan` へ見せるには、通常の統合手順で register ブランチを develop へ一方向に merge します。この設定だけでは自動 merge、register の runner が書く対応結果の転送、hook・CI の保護は有効になりません。それらの移行準備は [[specdojo:git-branching-standard|Git ブランチ運用標準]] に従って行います。参照文書を register の外で書き換える改名・再採番は、専用ブランチでは書き込み前に停止するため、通常の feature と PR で扱ってください。
+`exec run --register` も、start・review・waiting と post-review の close を専用ブランチへ commit・push します。executor は従来どおり実行中の worktree で個票を編集し、runner が検証後・exec の commit 前にその編集を専用ブランチへ転送します。転送は共通のロック内で最新を取得し、状態欄を専用ブランチの値に揃えて本文を三方向でマージします。重ならない編集は両方保持し、競合や push の失敗では元の編集を残して停止します。失敗した run の未検証の本文は転送せず、再開用 worktree に保持します。exec の commit には個票・イベントを含めません。
+
+worktree 実行の成功後は、専用ブランチを呼び出し元へ一方向に取り込んでから post-review へ進みます。in-place 実行では、最新の個票を見る前に `register branch-merge` してください。文書サイトや `exec plan` も取り込んだ個票を読みます。hook・CI の移行準備は [[specdojo:git-branching-standard|Git ブランチ運用標準]] に従って行います。参照文書を register の外で書き換える改名・再採番は、専用ブランチでは書き込み前に停止するため、通常の feature と PR で扱ってください。
 
 ### 2.2. 個票の作成
 

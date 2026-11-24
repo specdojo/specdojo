@@ -48,6 +48,8 @@ import {
 } from "../worktree-ops.js";
 import { formatGitResultFailure, gitOutput, gitResult } from "../worktree.js";
 import { runAgentPipeline } from "./agent-pipeline.js";
+import { resolveRegisterBranchTarget } from "../../shared/register-branch.js";
+import { isSyncedRegisterPath, publishRegisterTicket } from "./register-sync.js";
 import { expandPromptRefs } from "./agent.js";
 import { planConventionsFiles } from "../../shared/plan-conventions.js";
 import { spawnAgentInPlace } from "./in-place.js";
@@ -296,6 +298,9 @@ export function spawnRegisterTransition(
 ): boolean {
   const fullArgs = ["register", ...args];
   if (projectId) fullArgs.push("--project", projectId);
+  if (projectId && args[0] !== "build" && resolveRegisterBranchTarget(projectId)) {
+    fullArgs.push("--commit");
+  }
   return spawnSelf(fullArgs, cwd);
 }
 
@@ -396,7 +401,9 @@ export function registerRunnerManagedPaths(
     const normalized = path.replaceAll("\\", "/");
     if (prefixes.some((prefix) => normalized.startsWith(prefix))) exact.add(path);
   }
-  return [...exact];
+  return [...exact].filter(
+    (path) => !isSyncedRegisterPath(registerPaths.projectId, repoRoot, path),
+  );
 }
 
 export function registerReporterManagedPaths(registerPaths: RegisterPaths): string[] {
@@ -576,6 +583,15 @@ export async function runSingleRegisterItem(
     );
   }
 
+  if (effectiveExit === 0) {
+    try {
+      await publishRegisterTicket(projectId, repoRoot, ticketPath);
+    } catch (error) {
+      effectiveExit = 1;
+      blockReason = `register response sync failed: ${error instanceof Error ? error.message : String(error)}`;
+    }
+  }
+
   await updateResultStatus(
     resultPath,
     effectiveExit === 0 ? "complete" : "blocked",
@@ -599,6 +615,15 @@ export async function runSingleRegisterItem(
       process.stderr.write(`register review transition failed: ${item.id}\n`);
       transition = "none";
       reason = "register review transition failed";
+      await updateResultStatus(resultPath, "blocked", new Date().toISOString(), reason);
+      return {
+        id: item.id,
+        title: item.title,
+        outcome: "failure",
+        transition,
+        commit: "incomplete",
+        reason,
+      };
     }
     let commit = context.registerCommit ? "no-changes" : "off";
     if (context.registerCommit) {
@@ -656,25 +681,26 @@ export async function runSingleRegisterItem(
       .filter(Boolean)
       .join("; "),
   );
-  if (
-    !spawnRegisterTransition(projectId, [
-      "wait",
-      "--id",
-      item.id,
-      "--reason",
-      waitingReason,
-      "--by",
-      actor,
-    ])
-  ) {
+  const waited = spawnRegisterTransition(projectId, [
+    "wait",
+    "--id",
+    item.id,
+    "--reason",
+    waitingReason,
+    "--by",
+    actor,
+  ]);
+  if (!waited) {
     process.stderr.write(`register wait transition failed: ${item.id}\n`);
   }
-  process.stdout.write(`run failed: ${item.id} (exit ${effectiveExit}; status: waiting)\n`);
+  process.stdout.write(
+    `run failed: ${item.id} (exit ${effectiveExit}; status: ${waited ? "waiting" : "unchanged"})\n`,
+  );
   return {
     id: item.id,
     title: item.title,
     outcome: "failure",
-    transition: "waiting",
+    transition: waited ? "waiting" : "none",
     commit: context.registerCommit ? "skipped" : "off",
     reason: waitingReason,
   };

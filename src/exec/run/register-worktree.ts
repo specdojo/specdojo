@@ -1,6 +1,7 @@
 import { unescapeMarkdownCell } from "../../shared/text.js";
 import { readPlanFile } from "../../shared/plan-conventions.js";
 import { mergeRegisterBranch } from "../../shared/register-merge.js";
+import { publishRegisterTicket } from "./register-sync.js";
 import { executorStageResumeHint } from "../evidence.js";
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";
@@ -299,6 +300,12 @@ async function integrateRegisterWorktreeRun(
     baseCommit: string,
     outputCommit: string,
   ): RegisterItemSummary | DeferredCleanup<RegisterItemSummary> => {
+    try {
+      // Intake must succeed before removing the worktree needed for integration resume.
+      mergeRegisterBranch(projectId);
+    } catch (error) {
+      return blockedInReview(error, "register intake failed");
+    }
     const worktreeTaskId = qualifyTaskId(projectId, item.id);
     const cleanupLock = tryAcquireWorktreeCleanupLock(executionPath, worktreeTaskId, actor);
     if (!cleanupLock) {
@@ -324,7 +331,6 @@ async function integrateRegisterWorktreeRun(
           }
           process.stderr.write(`Warning: ${outcome.error.message}; run exec worktree prune.\n`);
         }
-        // review は merge で root の個票に入る。非追跡の派生ビューだけ root で作り直す。
         rebuildRootRegisterViews(projectId, item.id);
         const reviewed = await postReview(baseCommit, outputCommit);
         if (reviewed) return reviewed;
@@ -457,6 +463,7 @@ async function integrateRegisterWorktreeRun(
         const productRootNewFiles = productOutcomes.flatMap((outcome) =>
           outcome.rootNewFiles.map((path) => `${outcome.repo}:${path}`),
         );
+        await publishRegisterTicket(projectId, worktree.path, worktreeTicketPath);
         commitWorktreeChanges({
           context: wtContext,
           worktree,
