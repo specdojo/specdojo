@@ -65,4 +65,10 @@ plan に展開された finding は、message と同じ viewpoint ID の判定�
 - 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
 - agent 自身は登録簿の状態を変更せず、終了コードと標準エラー出力で runner に結果を返す。
 
+## 再開の指示（2026-11-24T00:12:23.991Z）
+
+利用者が再開の前に足した指示である。これまでの申し送りとあわせて、この指示に従って作業を続ける。
+
+- 親の検証の test-integration で、git merge の失敗の要約を期待するテストが落ちた。期待は typecheck の失敗の行（src/a.ts(1,1): error TS2322: intentional merge failure）を含む要約だが、受け取った要約は FAIL の行（tests/src/doc-index.test.ts）を先頭にしたものだった。今回の要約の順の変更で既存の統合テストの期待と食い違ったため、要約の規則とテストの期待をそろえ、決めた規則と理由を個票の対応結果に書く。
+
 `共通規約 sha256:e7dd6ff2a0dec2f12ed4ffc905cd185aca2d6f9c3922c56a249c88cb45b2a14e` `docs/ja/projects/prj-0001/execution/conventions/e7dd6ff2a0dec2f12ed4ffc905cd185aca2d6f9c3922c56a249c88cb45b2a14e.txt`

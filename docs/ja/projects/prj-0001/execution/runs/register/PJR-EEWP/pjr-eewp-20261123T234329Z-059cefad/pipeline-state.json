@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-EEWP",
+  "run_id": "pjr-eewp-20261123T234329Z-059cefad",
+  "updated_at": "2026-11-24T00:18:44.178Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sonnet-executor",
+      "attempts": 1,
+      "started_at": "2026-11-24T00:12:24.002Z",
+      "completed_at": "2026-11-24T00:13:41.114Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-EEWP/pjr-eewp-20261123T234329Z-059cefad/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "sonnet-reporter",
+      "attempts": 0,
+      "started_at": "2026-11-24T00:18:41.743Z",
+      "completed_at": "2026-11-24T00:18:41.743Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-EEWP/pjr-eewp-20261123T234329Z-059cefad/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "sonnet-executor",
+      "attempts": 1,
+      "started_at": "2026-11-24T00:18:44.178Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-EEWP/pjr-eewp-20261123T234329Z-059cefad/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-EEWP/pjr-eewp-20261123T234329Z-059cefad/result.md"
+  },
+  "resume_notes": [
+    {
+      "at": "2026-11-24T00:12:23.991Z",
+      "notes": [
+        "親の検証の test-integration で、git merge の失敗の要約を期待するテストが落ちた。期待は typecheck の失敗の行（src/a.ts(1,1): error TS2322: intentional merge failure）を含む要約だが、受け取った要約は FAIL の行（tests/src/doc-index.test.ts）を先頭にしたものだった。今回の要約の順の変更で既存の統合テストの期待と食い違ったため、要約の規則とテストの期待をそろえ、決めた規則と理由を個票の対応結果に書く。"
+      ]
+    }
+  ]
+}
