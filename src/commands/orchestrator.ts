@@ -18,6 +18,7 @@ import {
 import { registerNightOrchestratorCommand } from "./night-orchestrator.js";
 import { registerOrchestratorHandoffCommand } from "./orchestrator-handoff.js";
 import { registerNightlyIntegrationTestsCommand } from "./nightly-integration-tests.js";
+import { registerWatchScanCommand } from "./watch-scan.js";
 
 export type OrchestratorProvider = Exclude<AgentProvider, "custom">;
 
@@ -199,6 +200,7 @@ export function registerOrchestratorCommands(program: Command): void {
   registerNightOrchestratorCommand(orchestrator);
   registerOrchestratorHandoffCommand(orchestrator);
   registerNightlyIntegrationTestsCommand(orchestrator);
+  registerWatchScanCommand(orchestrator);
 
   orchestrator
     .command("launch")
