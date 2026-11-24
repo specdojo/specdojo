@@ -569,6 +569,48 @@ merge に commit-msg hook を使うリポジトリでは、Git が hook に渡�
 
 定期起動は Job `job-night-approved-register` と routine `rtn-night-approved-register` を使います。サンプル routine は保護された運用設定を勝手に有効化しないため `enabled: false` です。人が 2 時（Asia/Tokyo）、一晩 10 件、並列 2、連続失敗 2 件、fallback executor を確認してから有効化してください。
 
+### 3.3. 止まった実行を見張る
+
+routine `rtn-exec-watch-scan` が 30 分ごとに `specdojo orchestrator watch-scan` を起動し、止まったものを見つけて理由の種類に分けます。見張りは記録と報告を書くだけで、claim・再開・release・commit はしません。cron と routine だけで動き、オーケストレーターの agent の種類に頼りません。exec の実行ロックを取らない `action.kind: specdojo` のため、夜間の run の間も止まらずに見ます。見る間隔は routine の `interval` で変えます。
+
+見る対象は次のとおりです。`--stale-after`（既定 `2h`）は、実行ロックがないときに実行中の状態を中断と見なすまでの時間です。
+
+| 対象              | 止まったと見なす状態                                                                                         |
+| ----------------- | ------------------------------------------------------------------------------------------------------------ |
+| schedule のタスク | `blocked`（利用制限による延期は `deferred` と表示）、実行ロックがなく更新が `--stale-after` より古い `doing` |
+| register 項目     | `waiting`・`review`、実行ロックがなく最後の event が `--stale-after` より古い `in-progress`                  |
+| 列（queue）       | `stopped`、列のロックがなく更新が `--stale-after` より古い `running`                                         |
+
+理由は、event の limit の meta、状態に入った記録の文言（block event の `msg`、register event の `reason`、列の止まった段）、run のログの順に見て分けます。run のログは、親の検証の失敗した最後の試行と `integrate.log` だけを読みます。`executor.log` は plan や成果物の本文を含み、文言で誤って分けるため読みません。使用量の上限と負荷の文言（`overloaded` など）は、テストの名前で誤って分けないよう記録の文言だけに当てます。判断が要る失敗と時間切れが別のログに出ていれば、流し直しで直らない判断が要る方を採ります。
+
+| 理由の種類（`category`） | 詳細（`detail`）の例                                                                                                         | 分ける元の文言の例                                                                     |
+| ------------------------ | ---------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `usage_limit`            | `quota_exhausted`・`rate_limit`・`session_limit`                                                                             | meta の `limit_kind`、`rate limit reached`                                             |
+| `load_timeout`           | `load_timeout`・`git_index_lock`・`overloaded`                                                                               | `timed out: yes`、`Test timed out in 5000ms`、`index.lock`                             |
+| `needs_target_sync`      | `target_ahead`                                                                                                               | hook の `unknown option '--reserve'`（統合先の新しい commit が要る）                   |
+| `needs_decision`         | `kata_rule`・`protected_config`・`out_of_commit_scope`・`git_state`・`merge_conflict`・`manual_block`・`review_pending` など | `sidebar kata menus`、`agent-config-write`、`commit-scope: skipped non-target changes` |
+| `interrupted`            | `stale_doing`・`stale_in-progress`・`stale_running`                                                                          | 実行ロックがなく更新が古い                                                             |
+| `unknown`                | `unknown`                                                                                                                    | どの規則にも当たらない                                                                 |
+
+見つけたことは `execution/watch/watch-events.jsonl` に 1 件 1 行の JSON で足していきます。同じ止まりは、対象の種類・ID・状態・状態に入った時刻を合わせた `key` で見分け、開いている間は足し直しません。止まりが見えなくなった回に `cleared` の行を 1 行足します。新しい event で同じ対象がまた止まれば、別の `key` として足します。
+
+| 項目          | 内容                                                                    |
+| ------------- | ----------------------------------------------------------------------- |
+| `v`           | 記録の版。`1`                                                           |
+| `ts`          | 行を足した時刻（UTC）                                                   |
+| `event`       | `stalled`（止まりを見つけた）または `cleared`（止まりが見えなくなった） |
+| `key`         | 同じ止まりを見分ける鍵                                                  |
+| `target`      | 対象の種類（`schedule-task`・`register-item`・`queue`）と ID            |
+| `state`       | 止まって見える状態（`stalled` のみ）                                    |
+| `since`       | その状態に入った記録の時刻（`stalled` のみ）                            |
+| `category`    | 理由の種類（`stalled` のみ）                                            |
+| `detail`      | 理由の詳細（`stalled` のみ）                                            |
+| `basis`       | 分けた根拠。記録のパス（`source`）と当たった行（`excerpt`）             |
+| `next_action` | 次にすべきこと（`stalled` のみ）                                        |
+| `by`          | 書いた主体。`watch-scan`                                                |
+
+朝報告は、夜間実行の朝報告と同じ `execution/reports/` の下の `watch-scan/watch-scan-YYYYMMDD.md` に、登録簿の日付と同じ時間帯の 1 日 1 文書として毎回書き直します。「1. 集計」に種類ごとの件数、「2. 止まっているもの」に種類ごとの対象・状態・理由・根拠・次にすべきこと・最初に見つけた時刻、「3. この日に解けたもの」、「4. 読めなかった記録」を載せます。朝は判断が要るものから読み、次にすべきことに従って再開・手直しの起票・close を決めます。見張りは記録と報告を commit しません。夜間実行の朝報告と同じく、読んだ後にオーケストレーターが実行記録とまとめて commit します。
+
 ## 4. 例外対応と特殊な運用
 
 ID 重複の復旧と PO 留保事項の承認運用など、通常運用から外れる場面を扱います。

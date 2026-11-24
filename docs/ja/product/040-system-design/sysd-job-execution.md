@@ -322,6 +322,12 @@ checkpoint:
 
 Job 自体は `task.review` を宣言し、個別項目の統合に加えて朝報告と派生 issue を外側の Job review でも確認してから統合する。routine は時刻だけを担当し、保護された `enabled` の変更は人が行う。
 
+### 6.4. 止まった実行の見張り
+
+見張りは Job を通さず、routine `rtn-exec-watch-scan` の `action.kind: specdojo` から `orchestrator watch-scan` を直接呼ぶ。Job はプロジェクト実行ロックを待つため、夜間の run の間に止まったものを見つけられない。見張りは読み取りと、見張りの記録・朝報告の書き込みだけを行い、event・登録簿・worktree を変えない。この境界により実行ロックを取らずに並行して動ける。
+
+分類は決定論的な規則で行い、agent を呼ばない。理由の種類（`category`）と詳細（`detail`）は、後続の手当て（決まった種類への再開・流し直し・同期）と、判断が要るものの診断の入口になる。手当てと診断は見張りの記録の `stalled` 行を読み、見張りそのものは手を打たない。記録の項目と報告の形は [[specdojo:register-operation-guide|登録簿運用ガイド]] の「止まった実行を見張る」を正本とする。
+
 ## 7. 保存領域と監査
 
 プロジェクト直下へ次の領域を配置する。
