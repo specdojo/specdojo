@@ -115,3 +115,7 @@ specdojo:
 - `cop-index`：カットオーバー計画（切替日の午前の取り込み・動作確認の手順）
 - `dmd-index`：データ移行設計（旧ノートの保管期間）
 - `opr-index`：運用手順（クローズ後の日々の手順の正本）
+- `opr-sales`：店頭販売の記録手順
+- `opr-credit`：つけ残高の確認手順
+- `opr-daily-closing`：日次締めの手順
+- `opr-shift-handover`：店番の引継ぎ手順
