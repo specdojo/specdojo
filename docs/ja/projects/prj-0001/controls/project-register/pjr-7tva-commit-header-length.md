@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-7tva-commit-header-length
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: done
   priority: high
   difficulty: easy
   owner: DEV
   registered_at: "2026-11-24T02:35:38Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-24T03:29:04Z"
+  conclusion: commitlint の見出しの上限を 120 文字にし、長い task ID の run の準備の commit が通るようにした
   derived_from:
     - PJR-6690
   commit_type: fix

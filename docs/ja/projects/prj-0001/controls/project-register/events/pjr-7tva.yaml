@@ -115,3 +115,22 @@
       from: ""
       to: 関連ドキュメント
   previous_event_id: reg_eb564e7ef2614c288b71550e5c27cd3b
+- v: 1
+  id: reg_64d5e205717b442fab0241f0f100c0fd
+  ts: "2026-11-24T03:29:04Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: done
+  reason: 統合の後、止まっていた prj-success-criteria-and-acceptance-criteria-sample-040 が準備の checkpoint を通り、同じ系列の 050〜080 まで完了することを確かめた
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-24"
+    - field: conclusion
+      from: "-"
+      to: commitlint の見出しの上限を 120 文字にし、長い task ID の run の準備の commit が通るようにした
+  previous_event_id: reg_5e21e330624b43d596d2991425091216
