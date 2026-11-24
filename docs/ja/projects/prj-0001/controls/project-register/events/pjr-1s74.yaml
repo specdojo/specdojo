@@ -163,3 +163,32 @@
       from: "-"
       to: "agent exited with non-zero code: parent validation failed: lint-fm, test-unit"
   previous_event_id: reg_31909e805450432b8698b2fc66524588
+- v: 1
+  id: reg_c7a04122922240388f509c0f3e5adb67
+  ts: "2026-11-24T00:19:41Z"
+  action: start
+  actor: sonnet-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: lint-fm, test-unit"
+      to: "-"
+  previous_event_id: reg_6fd85e7715dc410aa39453ee42aab3d7
+- v: 1
+  id: reg_b0437d553c2e41939a95ffca1a0a195c
+  ts: "2026-11-24T00:26:24Z"
+  action: review
+  actor: sonnet-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_c7a04122922240388f509c0f3e5adb67
