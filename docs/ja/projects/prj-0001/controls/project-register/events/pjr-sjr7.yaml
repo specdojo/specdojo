@@ -73,3 +73,16 @@
       from: _TODO_
       to: DEV
   previous_event_id: reg_968b73dbc3634fb38560137ad18b6f38
+- v: 1
+  id: reg_9739fa7ca4d042dd9d5763fff49ab70c
+  ts: "2026-11-24T00:57:57Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_1c7b6f3980c241609840353f425f01e0
