@@ -519,6 +519,7 @@ specdojo schedule strategy generate \
 | `register history`      | 追記型 event と旧 Git 履歴から変更を再構成する        | `specdojo register history --project prj-0001 --since 2026-08-01`           |
 | `register branch-merge` | register のブランチを現在のブランチへ一方向に取り込む | `specdojo register branch-merge --project prj-0001`                         |
 | `register branch-guard` | register のファイルの直接の変更を検出する             | `specdojo register branch-guard --project prj-0001 --staged`                |
+| `register branch-check` | register のブランチへ push する commit を検査する     | `specdojo register branch-check --project prj-0001 --commit <sha>`          |
 
 `register add` は ID を省略すると自動採番し、現在の project では現在の作業ツリーに type 別の個票を作成します。別 project を `--project` で指定して `--commit` を付けると、対象 project の統合ブランチを開いている worktree、または CLI が作る一時 worktree で起票・再生成・commit を完了します。ID は乱数部分を持ち、曖昧文字（`I` / `L` / `O` / `U`）を除いた英大文字+数字の 32 文字セットによる 4 桁（例: `PJR-4B7K`）です。個票 Frontmatter が分類、処理状態、優先度、担当、日付、結論の正本であり、`register build` は個票から一覧と派生ビューを生成します。`register` 系コマンドはすべて、成功時の通常出力を標準出力へ、エラーメッセージを標準エラー出力へ書きます。
 
@@ -654,6 +655,8 @@ kata authoring は register 専用です。Schedule の task は対象成果物�
 `register branch-merge` は、`register_sync.enabled: true` の project で、リモートの register のブランチを fetch し、現在のブランチへ `--no-ff` で merge します（件名は `chore(register): merge <register-branch> into <branch>`）。取り込み済みなら何もしません。staged の変更・進行中の merge・register のファイルの未 commit 変更があるとき、HEAD が detached のとき、register のブランチが記帳の範囲の外のファイルを変えているときは、merge せずに終了コード 1 で止まります。衝突したときは merge を中止し、develop で register のファイルを直接変えたことを原因として案内します。register のブランチ上と `register_sync` が未設定のときは何もしません。`exec run --register --worktree` も、worktree を作る前に同じ取り込みを行います。
 
 `register branch-guard` は、register のブランチの外で register のファイル（`project_register_path` と `execution_path/exec/events/` の配下）を直接変えた変更を検出し、終了コード 1 で一覧を出します。`--staged` は index を（pre-commit 向け）、`--range <range>` は範囲の commit を（pre-push・CI 向け）調べます。変更は、merge で取り込んだ親が register のブランチから受け取った内容と一致する場合だけ許します。register のブランチ自身の commit と、develop を経由して feature に入った取り込みも許します。`register_sync` が未設定の project では検査しません。
+
+`register branch-check` は、register のブランチへ push する commit を検査します。`--commit <commit>` は push する先端、`--base <commit>` は push 先の現在の先端（省略または全 0 のときはリモートにない commit だけ）、`--remote-ref <ref>` は更新する ref で、register のブランチ（`refs/heads/<register_sync.branch>`）でなければ何もしません。検査は 2 つです。1 つめは、`--base` から `--commit` までの各 commit が、`project_register_path` と `execution_path/exec/events/` の配下の外のファイルを含まないことです。2 つめは、先端の tree の個票とイベントの形（個票とイベントの対応、event の schema、ID 一意性、状態連鎖、個票の ID とファイル名の対応）が `register build` と同じ検証に通ることです。違反は、commit とファイル、内容、直し方を標準エラー出力へ出し、終了コード 1 で止まります。`register_sync` が未設定の project では検査しません。別の project から `external_projects` で起票した commit も、同じブランチへ入るため同じ検査を通ります。pre-push の hook は `tools/check-register-push.mjs`、CI は同じコマンドを `--commit "$GITHUB_SHA" --base "<push 前の sha>" --remote-ref "$GITHUB_REF"` で流します。
 
 `register history` は `events/pjr-XXXX.yaml` を読み、個票単位の追加（`added`）と変更（`updated`）を発生順に出力します。event 導入前または未移行の期間だけ Git 履歴を読み、削除（`removed`）を含む従来の履歴と統合します。event は発生日時・actor・action・reason・遷移前後状態・変更フィールドを保持するため、複数遷移を1コミットへまとめても粒度を失いません。比較対象は登録項目一覧の列と `block_reason`、`approach`、`targets`、`sources`、`target_path`、`target_rulebook`、`derived_from`、`depends_on` です。
 

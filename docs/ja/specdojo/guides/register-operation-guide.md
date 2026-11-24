@@ -309,6 +309,8 @@ schedule の claim・complete なども、`execution_path/exec/events/` のイ�
 
 register のブランチは develop へ一方向に取り込みます。develop（や feature）の作業の前に `specdojo register branch-merge --project <project-id>` を実行してください。`exec run --register --worktree` は worktree を作る前に自動で取り込みます。取り込みの merge の commit は、通常の PR で develop へ入ります。develop では register のファイルを直接変えないでください。`specdojo register branch-guard --project <project-id> --staged` を pre-commit の hook に、`--range <base>..<head>` を pre-push の hook や CI に置くと、直接の変更を止められます。
 
+register のブランチへの push は `specdojo register branch-check --project <project-id> --commit <sha> --base <push 前の sha> --remote-ref refs/heads/<register-branch>` で検査します。register の範囲（個票・イベントの置き場）の外のファイルを含む commit と、個票とイベントの形の違反を止め、どのファイルのどこが違うかと直し方を出します。pre-push の hook（`tools/check-register-push.mjs`）が自動で流し、CI でも同じコマンドを流せます。別の project から `external_projects` で起票した commit も、同じブランチへ入るため同じ検査を通ります。
+
 失敗すると終了コード 1 で原因・worktree・ブランチ・復旧手順を表示します。記帳済みファイルやローカル commit は削除しません。表示された worktree で次の順に復旧してください。
 
 1. 通信・権限を直すか、衝突を解いて `git rebase --continue` を行います。rebase を取り消す場合は `git rebase --abort` で元のローカル commit に戻れます。
