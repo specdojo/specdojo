@@ -1366,6 +1366,20 @@ specdojo orchestrator night --project prj-0001 \
 specdojo orchestrator integration-tests --project prj-0001
 ```
 
+`orchestrator watch-scan` は、止まったものを見つけて理由の種類に分け、見張りのイベントの記録と朝報告に残します。claim・再開・release・commit はしません。見る対象・分け方・記録の項目・報告の形は [[specdojo:register-operation-guide|登録簿運用ガイド]] の「止まった実行を見張る」に従います。exec の実行ロックを取らないため、実行中の run を待たずに動きます。
+
+```bash
+specdojo orchestrator watch-scan --project prj-0001
+specdojo orchestrator watch-scan --project prj-0001 --stale-after 3h --dry-run
+```
+
+| オプション                 | 内容                                                                                                                          |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `--stale-after <duration>` | 実行ロックがないとき、更新がこれより古い `doing`・`in-progress`・`running` を中断と見なす。`<正の整数><m\|h\|d>`。既定は `2h` |
+| `--dry-run`                | 記録と報告を書かずに、足す行と件数だけを表示する                                                                              |
+
+読めなかった記録は警告として標準エラー出力と報告に残し、ほかの対象の見張りは続けます。成功は終了コード 0、コマンド自体の異常は 1 を返します。
+
 `orchestrator handoff` は、セッションや LLM を切り替えるときの引き継ぎを `handoff` の個票として起票します。「進行中」の章は、流している `exec queue` の列（`running`・`pending`）と前回の handoff の起票より後（handoff がなければ直近 24 時間）に止まった列、exec run のロックを持つ実行中の run、`in-progress`・`review`・`waiting` の register 項目から組み立てます。それより前に止まった列は件数だけを 1 行で示します。「判断待ち」の章には、開いている `question` と `waiting` の項目への参照を入れます。引き継ぎ元と先・有効な承認の範囲・注意点の章は `_TODO_` のまま残すため、起票した後に手で書きます。
 
 ```bash
