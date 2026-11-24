@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-24T17:54:44Z",
+  "type": "claim",
+  "task_id": "T-KATA-REVIEW-ALL-dmd-index-sample-110",
+  "by": "sol-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "OPS"
+  }
+}
