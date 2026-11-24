@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-TN64",
   "run_id": "pjr-tn64-20261124T052611Z-3365b7ac",
-  "updated_at": "2026-11-24T05:32:03.145Z",
+  "updated_at": "2026-11-24T05:32:12.193Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-TN64/pjr-tn64-20261124T052611Z-3365b7ac/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "terra-executor",
       "attempts": 1,
       "started_at": "2026-11-24T05:32:03.145Z",
-      "completed_at": null,
+      "completed_at": "2026-11-24T05:32:12.193Z",
       "artifact_ref": null
     }
   },
