@@ -294,12 +294,14 @@ specdojo register close \
 
 #### 専用ブランチへの同期（v0.10.0）
 
-[[specdojo:specdojo-config-reference|設定リファレンス]] の `projects.<project-id>.register_sync.enabled` を `true` にすると、`--commit` は専用 worktree で記帳・commit し、設定したリモートへ push します。ブランチ名の既定値は `project/<project-id>/register`、リモートは `origin` です。初回は設定を含む develop の commit からブランチを用意してください。
+[[specdojo:specdojo-config-reference|設定リファレンス]] の `projects.<project-id>.register_sync.enabled` を `true` にすると、`--commit` は専用 worktree で記帳・commit し、設定したリモートへ push します。ブランチ名の既定値は `project/<project-id>/register`、リモートは `origin` です。初回は、設定を含む develop の commit をリモートへ入れたあと、`register branch-push` でブランチを用意します。
 
 ```bash
-git branch project/prj-0001/register project/prj-0001/develop
-git push origin project/prj-0001/register
+specdojo register branch-push --project prj-0001 --dry-run
+specdojo register branch-push --project prj-0001
 ```
+
+`register branch-push` は、push の先を `register_sync` の `remote` と `branch` だけに絞った専用のコマンドです。手元にもリモートにもブランチが無ければ、統合のブランチ（`integration_branch`、省略時は `project/<project-id>/develop`）から作って push します。リモートにだけあれば、手元のブランチと専用 worktree を作るだけにします。`--dry-run` は、作るブランチ・push する commit の範囲・検査の結果を示すだけで何も変えません。
 
 ほかの利用者は初回の同期時にリモートからローカルブランチと worktree を作れます。既存の専用 worktree は再利用し、無ければ Git 共通ディレクトリ配下に作成して保持します。hook が使う依存関係や、追跡外の名簿などが必要な環境では、事前に専用 worktree を用意して必要なセットアップを行ってください。元の worktree の未 commit 変更は専用ブランチへコピーしません。
 
@@ -311,11 +313,13 @@ register のブランチは develop へ一方向に取り込みます。develop�
 
 register のブランチへの push は `specdojo register branch-check --project <project-id> --commit <sha> --base <push 前の sha> --remote-ref refs/heads/<register-branch>` で検査します。register の範囲（個票・イベントの置き場）の外のファイルを含む commit と、個票とイベントの形の違反を止め、どのファイルのどこが違うかと直し方を出します。pre-push の hook（`tools/check-register-push.mjs`）が自動で流し、CI でも同じコマンドを流せます。別の project から `external_projects` で起票した commit も、同じブランチへ入るため同じ検査を通ります。
 
-失敗すると終了コード 1 で原因・worktree・ブランチ・復旧手順を表示します。記帳済みファイルやローカル commit は削除しません。表示された worktree で次の順に復旧してください。
+失敗すると終了コード 1 で原因・worktree・ブランチ・復旧手順を表示します。記帳済みファイルやローカル commit は削除しません。次の順に復旧してください。
 
-1. 通信・権限を直すか、衝突を解いて `git rebase --continue` を行います。rebase を取り消す場合は `git rebase --abort` で元のローカル commit に戻れます。
-2. 未 commit の記帳があれば内容を確認して commit します。並行 claim で停止した場合は、採用する claim を確認し、未公開の重複 claim を解消します。
-3. `git pull --rebase <remote> <branch>` と `git push <remote> HEAD:refs/heads/<branch>` で共有します。失敗した `add` を push の代わりに再実行しないでください。
+1. 通信・権限を直します。衝突で止まった場合は、表示された worktree で衝突したファイルを直して `git add` します。rebase を取り消す場合は `git rebase --abort` で元のローカル commit に戻れます。
+2. 未 commit の記帳があれば、表示された worktree で内容を確認して commit します。並行 claim で停止した場合は、採用する claim を確認し、未公開の重複 claim を解消します。
+3. `specdojo register branch-push --project <project-id>` で共有します。止まった rebase を続け、`pull --rebase` から push までを流し直します。衝突が残っていれば、ファイルと直し方を出して終了コード 1 で止まります。失敗した `add` を push の代わりに再実行しないでください。
+
+`register branch-push` は、push の前に `register branch-check` と同じ検査（register の範囲の外のファイル、個票とイベントの形）を流し、違反があれば push しません。同期と同じロックの中で動くため、同期中の別の記帳と取り合いません。
 
 未解消の記帳がある間は後続の同期を停止します。復旧後、worktree が clean でローカル HEAD がリモートに含まれることを次の同期が確認し、再開します。
 

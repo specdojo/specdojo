@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { existsSync, mkdirSync, unlinkSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { CrossProcessMutex, releaseLock, tryAcquirePoolSlot } from "./cross-process-lock.js";
 import { gitOutput, gitResult, repoRelative, worktreeStatusPaths } from "./git.js";
@@ -74,19 +74,90 @@ export function assertRegisterBranchPaths(
   }
 }
 
-function branchStorage(target: RegisterBranchTarget): { pool: string; worktree: string } {
+function branchStoragePaths(target: RegisterBranchTarget): {
+  storage: string;
+  pool: string;
+  worktree: string;
+} {
   const commonDir = resolve(
     target.repoRoot,
     gitOutput(target.repoRoot, ["rev-parse", "--git-common-dir"]).trim(),
   );
   const key = createHash("sha256").update(target.branch).digest("hex").slice(0, 16);
   const storage = join(commonDir, "specdojo", "register", key);
-  mkdirSync(storage, { recursive: true });
   // Branch creation and worktree discovery share repository metadata across projects.
   return {
+    storage,
     pool: join(commonDir, "specdojo", "register", "lock"),
     worktree: join(storage, "worktree"),
   };
+}
+
+function branchStorage(target: RegisterBranchTarget): { pool: string; worktree: string } {
+  const paths = branchStoragePaths(target);
+  mkdirSync(paths.storage, { recursive: true });
+  return { pool: paths.pool, worktree: paths.worktree };
+}
+
+/** The worktree that has the register branch checked out, and where the sync would create one. */
+export function registerBranchWorktree(target: RegisterBranchTarget): {
+  worktree: string | undefined;
+  fallback: string;
+} {
+  return {
+    worktree: worktreeForBranch(target) ?? rebasingWorktreeForBranch(target),
+    fallback: branchStoragePaths(target).worktree,
+  };
+}
+
+/** A stopped rebase detaches HEAD, so the worktree is found through the rebase's head-name. */
+function rebasingWorktreeForBranch(target: RegisterBranchTarget): string | undefined {
+  const detached: string[] = [];
+  let path: string | undefined;
+  for (const line of gitOutput(target.repoRoot, ["worktree", "list", "--porcelain", "-z"]).split(
+    "\0",
+  )) {
+    if (line.startsWith("worktree ")) path = line.slice(9);
+    if (line === "detached" && path && existsSync(path)) detached.push(path);
+  }
+  return detached.find((worktree) =>
+    ["rebase-merge", "rebase-apply"].some((name) => {
+      const headName = resolve(
+        worktree,
+        gitOutput(worktree, ["rev-parse", "--git-path", `${name}/head-name`]).trim(),
+      );
+      return (
+        existsSync(headName) &&
+        readFileSync(headName, "utf8").trim() === `refs/heads/${target.branch}`
+      );
+    }),
+  );
+}
+
+/** True while a rebase is stopped in the worktree (for example on a conflict). */
+export function isRegisterRebaseInProgress(worktree: string): boolean {
+  return ["rebase-merge", "rebase-apply"].some((name) =>
+    existsSync(resolve(worktree, gitOutput(worktree, ["rev-parse", "--git-path", name]).trim())),
+  );
+}
+
+/** Clears the marker left by a failed sync once the bookkeeping has been published. */
+export function clearRegisterRecovery(worktree: string): void {
+  const marker = recoveryMarker(worktree);
+  if (existsSync(marker)) unlinkSync(marker);
+}
+
+/**
+ * Runs `operation` under the lock shared with every register sync, without preparing the
+ * worktree. `register branch-push` uses it to create, publish and recover the branch itself.
+ */
+export async function inRegisterBranchLock<T>(
+  target: RegisterBranchTarget,
+  operation: () => Promise<T> | T,
+): Promise<T> {
+  const storage = branchStorage(target);
+  const mutex = new CrossProcessMutex(storage.pool, { actor: "SpecDojo", label: "register sync" });
+  return mutex.runExclusive(async () => operation());
 }
 
 function worktreeForBranch(target: RegisterBranchTarget): string | undefined {
@@ -105,10 +176,8 @@ function assertClean(worktree: string): void {
   if (dirty.length) {
     throw new Error(`Register worktree has uncommitted changes: ${dirty.join(", ")}`);
   }
-  const rebase = ["rebase-merge", "rebase-apply"].some((name) =>
-    existsSync(resolve(worktree, gitOutput(worktree, ["rev-parse", "--git-path", name]).trim())),
-  );
-  if (rebase) throw new Error("Register worktree has an unfinished rebase");
+  if (isRegisterRebaseInProgress(worktree))
+    throw new Error("Register worktree has an unfinished rebase");
 }
 
 function recoveryMarker(worktree: string): string {
@@ -218,10 +287,12 @@ function recoveryError(target: RegisterBranchTarget, worktree: string, error: un
   return new Error(
     `${cause}\nRegister bookkeeping is preserved locally; inspect worktree ${worktree} ` +
       `and branch ${target.branch}. If the remote branch is missing, create it from the project ` +
-      `develop branch as described in the register operation guide. Fix connectivity/permissions ` +
-      `or resolve conflicts, then in that worktree finish git rebase --continue (or git rebase --abort), ` +
-      `commit any remaining bookkeeping, and run git pull --rebase ${target.remote} ${target.branch} ` +
-      `followed by git push ${target.remote} HEAD:refs/heads/${target.branch}. Do not repeat add to retry a push.`,
+      `develop branch with specdojo register branch-push --project ${target.projectId}. Fix ` +
+      `connectivity/permissions, resolve conflicts (git add the resolved files) and commit any ` +
+      `remaining bookkeeping in that worktree, then run specdojo register branch-push --project ` +
+      `${target.projectId}; it finishes git rebase --continue, rebases onto ` +
+      `${target.remote}/${target.branch} and pushes (git rebase --abort returns to the local commits). ` +
+      `Do not repeat add to retry a push.`,
     { cause: error },
   );
 }

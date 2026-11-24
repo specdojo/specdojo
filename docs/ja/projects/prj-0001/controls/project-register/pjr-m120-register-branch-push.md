@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: high
   difficulty: hard
   registered_at: "2026-11-24T23:14:51Z"
@@ -43,14 +43,54 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                                                              | 担当         | 状態 | メモ                                                                                                    |
+| --- | ------------------------------------------------------------------------------------------------- | ------------ | ---- | ------------------------------------------------------------------------------------------------------- |
+| 1   | `register branch-push` を足す（`src/register/branch-push.ts`・`src/register/branch-commands.ts`） | executor     | done | 初回の作成と push・リモートにだけあるとき・手元にだけあるとき・復旧・`--dry-run` を受け持つ             |
+| 2   | 同期のロックと worktree の場所を `src/shared/register-branch.ts` から export する                 | executor     | done | 既存の同期の動きは変えない。復旧の案内文を `branch-push` を指す文へ直した                               |
+| 3   | 単体テストと統合テストを足す                                                                      | executor     | done | `tests/src/register/branch-push.test.ts`・`tests/src/register/register-branch-push.integration.test.ts` |
+| 4   | 登録簿運用ガイド・設定リファレンス・コマンドリファレンスを直す                                    | executor     | done | 手で打つ `git branch`・`git pull --rebase`・`git push` の手順を `branch-push` に替えた                  |
+| 5   | 試しのリポジトリ（裸のリモート）で初回・復旧・`--dry-run` を確かめる                              | orchestrator | open | 完了条件で統合の後にオーケストレーターが行う作業のため、executor では行わない                           |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 5.1. 実施内容
+
+- `specdojo register branch-push --project <project-id> [--dry-run]` を足した。push の先は `register_sync` の `remote` と `branch` だけ。ほかのオプションと位置引数は commander が拒否する（`allowExcessArguments(false)`。未知のオプションは既定で拒否される）。
+- `register_sync.enabled` が `true` でない project では、理由（`register_sync is not enabled for <project-id>; nothing to push.`）を出して終了コード 1 で止まる。
+- 状態ごとの動き:
+  - 手元にもリモートにも無い: 統合のブランチ（`integration_branch`、省略時は `project/<project-id>/develop`）の先端から作る。専用 worktree を同期と同じ置き場に作って push する。
+  - リモートにだけある: fetch して手元のブランチと worktree を作るだけで、push しない。
+  - 手元にだけある: 検査のうえ、そのまま新しいリモートのブランチへ push する。
+  - 両方にある（復旧）: 止まった rebase を `rebase --continue` で続ける。範囲の検査、`pull --rebase`、検査、push（non-fast-forward のときは既存の `pushRegisterBranch` で最大 3 回）の順に流し、成功したら同期の復旧の印を消す。
+- 衝突が残っていれば、ファイルの一覧と直し方（worktree で直して `git add`、取り消すなら `git rebase --abort`）を出して終了コード 1 で止まる。記帳済みのファイルとローカルの commit は消さない。
+- push の前に `checkRegisterPush`（`register branch-check` と同じ検査）を流す。違反があれば `formatRegisterPushReport` の報告を出して push しない。
+- 同期と同じロック（`inRegisterBranchLock`。`CrossProcessMutex` の置き場も同じ）の中で動き、ロックを取ったあとに状態を読み直す。
+- rebase が止まっている間は HEAD が detached になり、ブランチ名では worktree を見つけられない。そのため `registerBranchWorktree` は rebase の `head-name` からも worktree を探す。
+- 同期が失敗したときの案内文（`recoveryError`）を、素の `git pull --rebase`・`git push` から `register branch-push` を指す文へ直した。既存のテストが見る語句（`create it from the project develop branch`・`git rebase --continue`・`Do not repeat add`）は残した。
+- 登録簿運用ガイドの「専用ブランチへの同期（v0.10.0）」、設定リファレンスの `register_sync` のキー、コマンドリファレンスの register の表と説明を直した。
+- `branch-merge`・`branch-guard`・`branch-check` の引数と出力は変えていない。保護された設定と `CHANGELOG.md` も変えていない。
+
+### 5.2. executor が決めたこと
+
+- `--dry-run` ではロックを取らず、fetch もしない（リモートの先端は `git ls-remote` で読む）。ロックのファイルを作ることや、FETCH_HEAD・リモート追跡の ref を更新することも「変える」に当たると判断した。リモートにまだ取得していない commit があれば、その旨と rebase 前の範囲を示す。
+- `--dry-run` で、実際の実行が止まる場合（検査の違反・衝突・未 commit）は終了コード 1 を返す。`register branch-check` と同じく、スクリプトから違反を判定できるようにするため。
+- 復旧のときに専用 worktree に未 commit の変更（rebase の途中のものを除く）があれば、自動では commit せず、一覧を出して終了コード 1 で止まる。並行 claim のように採用するかを利用者が決める記帳を、勝手に公開しないため。
+- 初回の検査は、`--base` を省いた `branch-check` と同じ範囲（リモートのどのブランチにもない commit）を見る。統合のブランチがリモートに無いとその commit が範囲の外として止まるため、先に統合のブランチを push するよう案内を添えた。
+- ブランチが手元にだけある場合（完了条件にない状態）は、検査のうえ push する。
+- 統合のブランチは手元の `refs/heads/<integration_branch>` を使い、無ければ止まる。設定リファレンスの「指定した project の統合ブランチはローカルに存在していなければなりません」に合わせた。
+
+### 5.3. CHANGELOG に書く事項
+
+- 区分 Added: `specdojo register branch-push --project <project-id>` を追加。`register_sync` の remote と branch だけへ push し、初回の専用ブランチの作成と push、止まった同期の復旧（`pull --rebase` から push まで）を受け持つ。push の前に `register branch-check` と同じ検査を流す。`--dry-run` は、作るブランチ・push する範囲・検査の結果を示す（PJR-M120）。
+- 区分 Changed: 登録簿の同期に失敗したときの案内を、手で打つ `git pull --rebase`・`git push` から `specdojo register branch-push` へ替えた（PJR-M120）。
+
+### 5.4. 残課題
+
+- 統合の後に、オーケストレーターが試しのリポジトリ（裸のリモートを持つ一時のリポジトリ）で初回・復旧・`--dry-run` を確かめる（作業内容の No 5）。
+- 同期の設定の差分（`../worktrees/feature-prj-0001-register-sync`・`../worktrees/feature-prj-0002-register-sync`）にある CLAUDE.md やオーケストレーターの本文に手で打つ git の手順があり、`register branch-push` に替える必要があれば、その差分の側で直す（この項目では変えない）。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[specdojo:register-operation-guide|登録簿運用ガイド]]
+- [[specdojo:specdojo-config-reference|設定リファレンス]]
+- [[specdojo:command-reference|コマンドリファレンス]]
