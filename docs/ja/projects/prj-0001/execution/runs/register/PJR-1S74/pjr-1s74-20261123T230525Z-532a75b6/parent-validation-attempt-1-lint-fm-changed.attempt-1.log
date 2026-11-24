@@ -1,0 +1,16 @@
+parent validation: lint-fm-changed
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.9.2 lint:fm:changed
+> node tools/lint-changed.mjs fm
+
+
+
+--- stderr ---
+[4m[31mdocs/ja/projects/prj-0001/controls/project-register/pjr-1s74-schema-check-skip-validate-false.md[39m[24m
+55:82-55:90 [31merror[39m [1m未エスケープの山括弧プレースホルダ [36m`<reason>`[39m を検知しました。実在しない HTML タグ名のため、VitePress の Vue コンパイラが未クローズタグと解釈し docs:build が失敗します。インラインコード（バッククォート）で囲んでください（例: [36m`<reason>`[39m）。[22m
+
+[31m✖[39m 1 error

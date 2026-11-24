@@ -22,6 +22,7 @@ import {
 } from "./reporter-output.js";
 import { repairReporterOutput } from "./reporter-repair.js";
 import { isRunRecordPath, runnerRecordPrefixes } from "./run-records.js";
+import { parseYamlSchemaModeline } from "../kata/yaml-schema-modeline.js";
 import { repoEnvironmentVariableName } from "./task-repos.js";
 import type { TaskMode } from "./types.js";
 
@@ -78,6 +79,11 @@ export type ReporterFactOptions = {
    * current run's runner-written plan and result files.
    */
   executorAttemptPaths?: ReadonlySet<string>;
+  /**
+   * Root used to read changed YAML files for their `specdojo-schema` directive. Defaults to the
+   * current working directory.
+   */
+  repoRoot?: string;
 };
 
 export type ReporterEvidence = ExecEvidence & {
@@ -205,6 +211,7 @@ export function evidenceForReporter(
     ...(projectId ? { projectId } : {}),
     changedPaths: changes.map((change) => change.path),
     ...(executorAttemptPaths ? { executorAttemptPaths } : {}),
+    repoRoot: scope.worktreePath,
   };
   const mechanicallyNotApplicable = evidence.validations.flatMap((validation) => {
     if (validation.source === "runner" || validation.status !== "not_run") return [];
@@ -295,6 +302,7 @@ export function deriveReporterFacts(
       : {}),
     changedPaths: options.changedPaths ?? evidence.changes.map((change) => change.path),
     ...(executorAttemptPaths ? { executorAttemptPaths } : {}),
+    ...(options.repoRoot ? { repoRoot: options.repoRoot } : {}),
   };
   const passedCommandsByRepo = new Map<string, Set<string>>();
   const runnerPassedCommandsByRepo = new Map<string, Set<string>>();
@@ -620,8 +628,25 @@ type ChangeScopedValidation = {
   /** Human-readable form of the path condition, used in runner-derived reasons. */
   pathCondition: string;
   matchesCommand: (command: string) => boolean;
-  matchesPath: (path: string) => boolean;
+  matchesPath: (path: string, repoRoot: string) => boolean;
 };
+
+// A YAML with a `specdojo-schema` directive and reason is skipped by `validate:schema:file`
+// (exit 0), so requiring the check would only block the task. `none` and `validate=false` are
+// treated alike; a directive without reason fails the command, so it still requires the check.
+function isSchemaCheckSkippedYaml(path: string, repoRoot: string): boolean {
+  const absolute = resolve(repoRoot, path);
+  if (!existsSync(absolute)) return false;
+  try {
+    const info = parseYamlSchemaModeline(readFileSync(absolute, "utf8"));
+    return info.directive?.reason !== undefined;
+  } catch {
+    return false;
+  }
+}
+
+const isSchemaCheckedYaml = (path: string, repoRoot: string): boolean =>
+  hasExtension([".yaml", ".yml"])(path) && !isSchemaCheckSkippedYaml(path, repoRoot);
 
 const hasExtension =
   (extensions: readonly string[]) =>
@@ -635,9 +660,10 @@ const hasExtension =
 // table: PJR-8WBN requires their existing script-based applicability to stay unchanged.
 const CHANGE_SCOPED_VALIDATIONS: readonly ChangeScopedValidation[] = [
   {
-    pathCondition: "YAML ファイル（*.yaml / *.yml）",
+    pathCondition:
+      "検査を飛ばす印（specdojo-schema: none / validate=false）のない YAML ファイル（*.yaml / *.yml）",
     matchesCommand: (command) => /^npm run validate:schema:file(?:\s|$)/u.test(command),
-    matchesPath: hasExtension([".yaml", ".yml"]),
+    matchesPath: isSchemaCheckedYaml,
   },
   {
     pathCondition: "Prettier 対象ファイル（*.md / *.ts / *.js / *.json / *.yaml / *.yml）",
@@ -700,6 +726,7 @@ function changeScopedValidationApplicability(
   config: SpecDojoConfig | null,
   projectId: string | undefined,
   executorAttemptPaths?: ReadonlySet<string>,
+  repoRoot: string = process.cwd(),
 ): { recognized: boolean; applicable?: boolean; reason?: string } {
   const validation = CHANGE_SCOPED_VALIDATIONS.find(({ matchesCommand }) =>
     matchesCommand(command),
@@ -713,7 +740,7 @@ function changeScopedValidationApplicability(
     projectId,
     executorAttemptPaths,
   );
-  return relevantPaths.some(validation.matchesPath)
+  return relevantPaths.some((path) => validation.matchesPath(path, repoRoot))
     ? { recognized: true, applicable: true }
     : {
         recognized: true,
@@ -818,6 +845,7 @@ export function mechanicallyNotApplicableReason(
     config,
     options.projectId,
     options.executorAttemptPaths,
+    options.repoRoot,
   );
   if (changeScoped.applicable === false) return changeScoped.reason;
   const packageJson =
@@ -861,6 +889,7 @@ function isValidNotApplicableValidation(
     config,
     options.projectId,
     options.executorAttemptPaths,
+    options.repoRoot,
   );
   if (changeScoped.applicable === false) return true;
   if (

@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-1S74",
+  "run_id": "pjr-1s74-20261123T230525Z-532a75b6",
+  "updated_at": "2026-11-24T00:26:15.750Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sonnet-executor",
+      "attempts": 1,
+      "started_at": "2026-11-23T23:27:15.095Z",
+      "completed_at": "2026-11-23T23:27:25.325Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-1S74/pjr-1s74-20261123T230525Z-532a75b6/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "sonnet-reporter",
+      "attempts": 2,
+      "started_at": "2026-11-24T00:26:13.168Z",
+      "completed_at": "2026-11-24T00:26:13.168Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-1S74/pjr-1s74-20261123T230525Z-532a75b6/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "sonnet-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-24T00:26:15.750Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-1S74/pjr-1s74-20261123T230525Z-532a75b6/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-1S74/pjr-1s74-20261123T230525Z-532a75b6/result.md"
+  },
+  "resume_notes": [
+    {
+      "at": "2026-11-23T23:27:15.084Z",
+      "notes": [
+        "親の検証の lint-fm-changed が、個票 pjr-1s74 の対応結果の 55 行目の山括弧のプレースホルダ <reason> を未エスケープとして検出した。インラインコードにして直す。ほかの変更は保つ。"
+      ]
+    }
+  ]
+}
