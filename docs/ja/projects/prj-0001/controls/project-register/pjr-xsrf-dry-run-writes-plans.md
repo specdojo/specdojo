@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: medium
   difficulty: medium
   owner: DEV
@@ -42,7 +42,13 @@ specdojo:
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- `exec run --auto --dry-run` は plan を生成せず、対象と予定パスを表示する。plan の内容や Markdown 検査を確認するには `specdojo exec plan --project <id> --task <task-id>` を実行する。このコマンドは plan を書き出す。
+- 既存 plan の有無それぞれで、実行前後の作業ツリーのファイルとディレクトリが同じであることを統合テストで確認する。
+- 型検査、TypeScript lint、単体テストと統合テストは親 runner が実行する。
+
+### 5.1. CHANGELOG に書く事項
+
+- 不具合修正: `exec run --auto --dry-run` が plan ファイルを残さず、予定パスを表示するようにした。
 
 ## 6. 関連ドキュメント
 

@@ -99,3 +99,29 @@
       from: ""
       to: 関連ドキュメント
   previous_event_id: reg_91d8d4f9af4341a4b4ca5f4f1eb7acff
+- v: 1
+  id: reg_69356bd5bdb34ad8b3220679ceeb33b2
+  ts: "2026-11-24T00:16:29Z"
+  action: start
+  actor: terra-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_68dfe6da8c77491eb82a75e5ade3babd
+- v: 1
+  id: reg_e090f3e2f81a4820b75fa653bd58fa10
+  ts: "2026-11-24T00:22:50Z"
+  action: review
+  actor: terra-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_69356bd5bdb34ad8b3220679ceeb33b2

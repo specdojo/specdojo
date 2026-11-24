@@ -690,6 +690,10 @@ export async function withProjectExecRunLock(
   action: () => Promise<void>,
   sharing: ExecRunLockSharing = EXCLUSIVE_EXEC_RUN,
 ): Promise<void> {
+  if (opts.dryRun) {
+    await action();
+    return;
+  }
   const resolvedPaths = resolveProjectPaths({ project: opts.project });
   const locksDir = execLocksDir(resolvedPaths.executionPath);
   const previousLocksDir = getActiveExecLocksDir();
