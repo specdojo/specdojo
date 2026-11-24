@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-DMSM",
+  "run_id": "pjr-dmsm-20261124T060642Z-6927dfd8",
+  "updated_at": "2026-11-24T06:10:59.921Z",
+  "stages": {
+    "executor": {
+      "status": "blocked",
+      "actor": "terra-executor",
+      "attempts": 1,
+      "started_at": "2026-11-24T06:07:24.566Z",
+      "completed_at": "2026-11-24T06:10:59.921Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-DMSM/pjr-dmsm-20261124T060642Z-6927dfd8/evidence.json"
+    },
+    "reporter": {
+      "status": "pending",
+      "actor": "sonnet-reporter",
+      "attempts": 0,
+      "started_at": null,
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-DMSM/pjr-dmsm-20261124T060642Z-6927dfd8/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-DMSM/pjr-dmsm-20261124T060642Z-6927dfd8/result.md"
+  }
+}

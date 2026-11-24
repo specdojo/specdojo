@@ -37,6 +37,7 @@ specdojo 0.4.6 を 2026-10-25 に公開した（[[prj-0001:pjr-ntwd-release-v0-4
   - JJBY の回避策（`--approach - --target - --source -`）で approach を外した個票には、authoring の approach を update で戻せない。kata がすでにあり、authoring の検証で止まるためである。作成済みの kata を直すときは `*-maintenance` の approach を使う。
   - 50YH で、利用者の project が手で入れた markdownlint の構成（`.markdownlintrc` と、それを `config.extends` で読む `.markdownlint-cli2.yaml`）と同じ形を、本家の scaffold が作るようになった。既存の設定は書き換えないため、そのままでよい。本家の生成物にそろえる場合は、`config scaffold --lefthook --slidev --dry-run` で表示される案内に従う。
 - 50YH の確認で、markdownlint-cli2 と VS Code の拡張は `.markdownlintignore` を読まないと分かった。VS Code では Slidev の kata が `overrides` の規則で検査され、commit hook と result の検査（markdownlint-cli）では `.markdownlintignore` で外れる。
+- PJR-DMSM で v0.10.0 の CHANGELOG の移行の注意に、上記の approach と markdownlint の注意を取り込んだ。
 
 ## 3. フォローアップ
 

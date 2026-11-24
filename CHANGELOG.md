@@ -4,6 +4,119 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ## [Unreleased]
 
+## [0.10.0] - 未公開
+
+### 移行の注意
+
+- Antigravity CLI（`agy`）の対応を外しました。`.specdojo/agent-members.yaml` に provider が `antigravity` の member が残ると、`disabled: true` でも名簿の読み込みでエラーになります。0.9.x で agy の member を残している場合は、次の順で移してください（PJR-N6FQ）。
+  1. `.specdojo/agent-members.yaml` から provider が `antigravity` の member と、それを向き先にする `aliases` を消す。
+  2. `.specdojo/exec-defaults.yaml` の `routing`・`fallback_executor`、schedule の strategy の `phase_overrides[].agent`、Job・routine の `--executor-by` / `--reporter-by` にある agy の member を、ほかの member へ替え、`providers.antigravity` を消す。
+  3. `package.json` から agy を起動する script（`orch:argon`・`orch:argon:work`・`orch:flash` など）を消し、`.specdojo/antigravity/` を消す。
+- 0.9.2 で非推奨にした 9 コマンドと `where` の別名を削除しました。使っている script や手順は、下の「削除」に書いた代わりの操作へ替えてください（PJR-GV43）。
+- 単独で書く pm-change-request-log・pm-issue-log・pm-risk-register・pm-decision-log の型は非推奨です。登録簿の change-request・issue・risk・decision を正本とし、一覧は `register build` で作ってください。一覧の生成に使う枠は残ります（PJR-X141、PJR-SJR7）。
+- `update` を持たない版（0.9.2 まで）から上げる最初の 1 回は、`npx specdojo@latest update`（版を指定する場合は `npx specdojo@<版> update`）で呼んでください。`--dry-run` で事前に確かめられます。配った skill・agent 定義・rules の差分は確かめてから適用し、設定ファイルは示された CHANGELOG の行を見て自分で直してください。stdin が TTY でないときと `--no-interactive` のときは書き換えません（PJR-MS7X）。
+- approach を `--approach - --target - --source -` で外した個票には、authoring の approach を `register update` で戻せません。作成済みの kata を直すときは `*-maintenance` の approach を使ってください。`init --lefthook` が作る markdownlint の構成（`.markdownlintrc` と、それを読む `.markdownlint-cli2.yaml`）は既存の設定を書き換えないため、そのままで使えます。生成物にそろえる場合は `config scaffold --lefthook --slidev --dry-run` の案内に従ってください。markdownlint-cli2 と VS Code の拡張は `.markdownlintignore` を読みません（PJR-XC5P）。
+
+### 削除
+
+- Antigravity（agy）の provider の実装、`templates/antigravity/`、`init`・`config scaffold`・`devcontainer scaffold`・`orchestrator launch` の `antigravity`、内部用の `agent launch`、`init` が作る名簿と起動設定の agy の部分を消しました。ユーザー設定を持つ provider が無くなったため、`config scaffold --provider <name> --global` はリポジトリへ書き込む前にエラーになります（PJR-N6FQ）。
+- `timeline where`・`timeline build`・`exec note`・`exec link`・`exec estimate`・`exec migrate-records`・`grade migrate`・`register migrate`・`config migrate-members` と、`exec`・`catalog`・`schedule`・`job`・`routine` の `where` の別名を削除しました。代わりは `specdojo where <種類>`（`where` の別名）、`dashboard build`（`timeline build`）、個票の対応結果や実行記録（`exec note`）、個票の `depends_on` やカタログ（`exec link`）、個票の `difficulty` と `priority`（`exec estimate`）です。移行用の 4 コマンドに代わるコマンドはなく、旧記録は `git mv` で移し、agent 定義は `.specdojo/agent-members.yaml` へ直接書きます（PJR-GV43）。
+
+### 非推奨
+
+- 単独で書く pm-change-request-log・pm-issue-log・pm-risk-register の rulebook と sample を非推奨にしました。正本は登録簿の項目で、一覧は `register build` が作ります（PJR-X141、PJR-SJR7）。
+
+### 追加
+
+- `specdojo update` を追加しました。入っている版と上げる先の版（`--to <spec>` で版・tag・tarball のパス、省くと npm の `latest`）の間の CHANGELOG を示し、lockfile から決めた package manager（npm・pnpm・yarn）で版の指定の形を保って更新します。`@specdojo/docs-lint`・`@specdojo/docs-site` は入っているときだけ一緒に上げます。`config scaffold` で配ったファイルが新しい版と違うときは、ファイルごとに差分を示して適用するかを聞きます（PJR-MS7X）。
+- `register_sync` を有効にした project で、登録簿の記帳（`--commit`・schedule の実行イベント・外部 project からの起票）と `exec run --register` の状態遷移・個票の編集を、register 専用ブランチへ commit・push できるようにしました。`register branch-merge` は専用ブランチを develop へ一方向に取り込み、`register branch-guard` は develop での register のファイルの直接の変更を、`register branch-check` は専用ブランチへ push する commit の範囲と形を検査します（PJR-N5J8、PJR-4VD6、PJR-1JF6、PJR-FBP0）。
+- 共有・local 設定の `references` で、読むだけのディレクトリを宣言できるようにしました。参照先は exec の worktree・commit・統合の対象になりません（PJR-77FH）。
+- ローカル設定 `.specdojo/specdojo.local.config.json` で `external_projects` を宣言・上書きできるようにしました。共有の alias は `path` を差し替え、新しい alias は `path` と `project_id` を足します（PJR-F6MC）。
+- `specdojo init` で使う環境のパターン（Dev Container・手元と tmux の組み合わせ）を選べるようにし、`--tmux`・`--no-tmux` を足しました。導入の前提（Node.js・git の名前とメール・agent の CLI、指定により Docker・Dev Container CLI・tmux）を確かめる `specdojo doctor` を足し、クイックスタートにパターン別の導入手順を足しました（PJR-7EZR、PJR-GA72、PJR-B6M3）。
+- オーケストレーターの運用メモ（playbook）の型（`pm-orchestrator-playbook` の rulebook・template・sample）と、場所を設定 `playbook_path` から引く `specdojo where playbook`、雛形を作る `specdojo playbook scaffold` を追加しました（PJR-9170、PJR-G6NT）。
+- `register` に新しい種類 `handoff` を追加しました。セッションや LLM を切り替えるときの引き継ぎを起票し、`register build` が受け取り待ちと受け取り済みの一覧を作ります。`specdojo orchestrator handoff` は登録簿と `exec queue`・実行中の run から引き継ぎの個票を起票します（PJR-2Q86、PJR-5N1Q）。
+- `register add` に `--section` / `--section-file` を足し、起票と同時に個票の章をファイルの本文で埋められるようにしました（PJR-5N1Q）。
+- `specdojo orchestrator watch-scan` と routine `rtn-exec-watch-scan` を追加しました。止まったタスク・項目・列を見つけ、理由の種類に分けてイベントの記録と朝の報告に残します（PJR-40EE）。
+- `specdojo orchestrator integration-tests` と routine `rtn-nightly-integration-tests` を追加し、統合テストの全件を毎晩流して朝の報告に残せるようにしました（PJR-EF4Z）。
+- `specdojo project move <project-id> --check` を追加しました。project を別のリポジトリへ移す前に、実行中の項目・exec のブランチと worktree・定期実行・project をまたぐ参照などを、何も書き換えずに点検します（PJR-9XEG）。
+- `config scaffold --provider`（`init` も同じ）が、会話の中で登録簿の項目を実装する手順の skill `specdojo-exec-in-session` を配るようにしました（PJR-09HA）。
+- Claude の edit executor が検証のコマンドを流せるよう、配る `settings.edit.json` の許可を広げ、`providers.claude.allow_commands` を足しました。opencode の executor にも検証のコマンドと `docs/`・`src/`・`tests/` の下の `git rm` を許し、`providers.opencode.allow_commands` を足しました（PJR-7KQT、PJR-YS9M）。
+- `providers.<provider>.agent_timeout_seconds` で agent の CLI の 1 回の起動の時間の上限を設定できるようにしました。上限に達すると CLI と子のプロセスを止めて run を block にします。未設定なら上限はありません（PJR-K8F1）。
+- `pipeline.parent_validations` に `parallel` と検証 ID `lint-md-changed`・`lint-fm-changed`・`test-docs` を足し、文書だけを変えた run の親の検証を軽くできるようにしました。`test-unit`・`test-integration` に `related: true` を書くと、変更に関係するテストだけを流します（PJR-50RQ、PJR-9X52）。
+- `grade run` に `--fallback-by <nickname>` を足し、評価者が rate limit のときに代わりの評価者で続けられるようにしました（PJR-XA6Y）。
+- `specdojo build --skip-fresh` を足し、`docs:generate:fresh` は入力が変わった段だけを作り直すようにしました。`specdojo-docs-site generate` と `--skip-if-fresh` も足しました（PJR-E73Z、PJR-BNAV）。
+- 文書サイトの公開のパスと版の種類を環境変数（`SPECDOJO_DOCS_BASE`・`SPECDOJO_DOCS_CHANNEL`・`SPECDOJO_DOCS_STABLE_URL`）で変えられるようにしました。開発中の版では帯とリリースの版へのリンクを出し、検索エンジンに載せません（PJR-98HS）。
+- SpecDojo の VS Code 拡張の Markdown プレビューで、`chat` の吹き出し表示と `chat tui` の表示に対応しました（PJR-WNQJ）。
+- README に英語の短い概要を足しました（PJR-82H2）。実践の型活用ガイドに、kata を agent でレビューする段の組み方を足しました（PJR-F4TG、review 中）。
+
+### 利用者から見て動きが変わる点
+
+- `docs:dev` は実行記録のページ（`execution/` の下の `runs/`・`exec/` など）を読まずに起動します。含めるときは `--with-exec-records` を付けます。`docs:build` は変わりません（PJR-BBTW）。
+- 文書サイトと VS Code の `chat` の対話表示で、発言の間や続き行の間の空行を読み飛ばすようにしました（PJR-WNQJ）。
+- exec の review の段で、agent に渡すプロダクトの worktree を読み取りだけにしました。読み取りだけにできない provider は、review の後にプロダクトへ変更が出ていたら runner が止めます（PJR-N0P1、review 中）。
+- `exec claim`・`release`・`block`・`unblock`・`complete`・`reopen`・`cancel` の `--by` が、`register` と同じ予約 actor（`SpecDojo`・`specdojo-orchestrator`・`night-orchestrator`）を受け付けます。名簿にも予約名にもない名前のエラーには予約名も並べます（PJR-ESE7、PJR-KZZM）。
+- grade の機械的な検査は、`--target kata` では `_TODO_` だけを major にし、`_ASSUMPTION_`・`_UNDECIDED_` を指摘しません。`--target deliverable` は変わりません（PJR-7C9X）。
+- 親の検証の記録（`parent-validation-metrics.jsonl`）に、テストのファイルごとの時間を残すようにしました（PJR-EZ4Z）。
+- CLI の出力とエラーの「Job Run」を「job run」にそろえました（PJR-2RHB）。
+- 導入のパターン（Linux の Dev Container と macOS）を CI で確かめ、WSL のリリース前の確認を足しました（PJR-F636、review 中）。
+
+### 性能
+
+- `dashboard build` が run の記録を項目ごとに全走査せず、1 回の生成で 1 回だけ読むようにしました（PJR-BEQ8）。
+- `docs:dev` の起動で、閲覧用のツリーへの複製を差分にし、サイトに出さない `execution/` の log・json・plan・result、更新時刻の端数による型の毎回の複製、検索の索引でのコードブロックの色付けを省きました（PJR-BNAV、PJR-XHS8）。
+
+### セキュリティ
+
+- Dependabot が示した依存の脆弱性を、`vite`・`esbuild`・`minimatch`・`glob`・`katex` の更新で解消しました（PJR-PXNQ、review 中）。
+
+### 型と文書
+
+- 実践の型の rulebook・sample・recipe・template から、文書の役割の割り当て・承認の進み具合・Frontmatter の項目表など共通の運用の記述を外し、ドキュメントメタ情報標準への参照にしました。対象は ifx-api・ifx-msg・dec・mm・pr・sld・prj-charter とテストの型 13 種類です。作成標準と共通レビュー観点も、文書の役割の割り当てを本文に求めないようにしました（PJR-0VPB、PJR-QWG7、PJR-8S4T、PJR-7M9J、PJR-SV9G、PJR-30PT、PJR-325Y）。
+- ifx-api・ifx-msg の rulebook を標準の章構成に組み直し、タイトルから略語を外しました。ifx-api では `info.version` と各操作の `responses` を必須にし、sample を本部への売上登録の API に替えました（PJR-AEKE）。
+- `cdt`・`ifx-file` の rulebook と `ifx-index`・`ifx-cmd` の template で、プロダクト文書の id を名前空間なしの形にしました（PJR-PHY7）。
+- sample の作成標準に、表の前に何を示す表かを 1 文で書く決まりと、列名を中身の分かる言葉にする決まりを足し、最終チェックから `docs:build` を外しました（PJR-C7WD、PJR-RPNF）。
+- `sysd-critical-flows-template` の未決事項と後続作業の表に「受入や運用への影響」「当面の扱い」の列を足しました（PJR-QHES）。
+- Git CLI と GitHub CLI の外部コマンド連携仕様（`ifx-cmd-git-cli`・`ifx-cmd-github-cli`）を足し、`git-branching-standard` を register 専用ブランチの方式へ改訂しました。SpecDojo のプロダクト文書 7 件の id から名前空間を外しました（PJR-CJMN、PJR-SJC7、PJR-E4MW）。
+
+### 不具合修正
+
+- exec run の準備と統合:
+  - `exec run --auto --dry-run` が plan のファイルを残さず、予定のパスを表示するようにしました（PJR-XSRF）。
+  - 準備で失敗した run と、reject・done にした項目の変更範囲の予約が残り、後続を止める問題を直しました。未着手で worktree と lock のない古い予約も回収します（PJR-YQ32、PJR-B6NS）。
+  - 個票の本文の `docs/`・`src/` などをディレクトリ全体の予約と読み、並べて流せなかった問題を直しました。広すぎる予約は予約の前に警告します（PJR-C11R）。
+  - `exec run --auto --loop` が、待ちの解けたタスクを次の回に選ぶようにしました。`exec cycle` と `exec run --auto` は `--edit-by` / `--review-by` の指定時に人のタスクを拾わず、人のタスクだけが残ったときは終了コード 0 で終えます（PJR-TAHV、PJR-0JVB）。
+  - `exec resume` がタスクの指定なしでも、reporter や統合の段で止まったタスクを再開するようにしました。`exec resume --task` で統合だけをやり直すときは、commit の前に統合先を取り込みます（PJR-2X6K、PJR-DF5Z）。
+  - `exec run --register --resume` で executor が対象を申告しきれなかったとき、executor の段を failed にせず blocked にし、`--resume-from executor` で作業を捨てずに再開できるようにしました（PJR-FGKB）。
+  - 長い task ID の run の commit が、commitlint の見出しの上限で準備に失敗しないようにしました（PJR-7TVA）。
+  - `external_projects` の `path` を linked worktree でも主の作業ツリーから解決し、worktree の準備が止まらないようにしました（PJR-EKGQ）。
+  - `disabled` の member を名前で指定すると、起動の前にエラーにするようにしました（PJR-77JB）。
+  - `exec run --task` が、流せないタスクに先行のタスク ID や done であることを示して止まるようにしました（PJR-R8DM）。
+  - `exec queue add` が、`exec queue status` と同じ `specdojo` を先頭に付けた段の書き方を受け付けるようにしました（PJR-YCMR）。
+- 親の検証と commit:
+  - 並べて流したときに、親の検証（とくに `validate-schema`）が出力の書き込みで止まって時間切れになる問題を直しました（PJR-6690）。
+  - 並べて流したタスクの checkpoint が、ほかの文書の grade の結果を取り込んで統合で衝突する問題を直しました（PJR-A54F、PJR-NRWJ）。
+  - 親の検証の前に、変えた YAML の表示のページを作り直して lint の対象にするようにしました（PJR-TF6F）。
+  - `specdojo-schema: validate=false` または `none` の YAML だけを変えた task に、schema の検査を求めないようにしました（PJR-1S74）。
+  - agent の run の ready への昇格の検査で、テストの fixture など成果物でないファイルを外しました（PJR-TN64）。
+  - kata などほかの名前空間で修飾した成果物を、commit の許可リストで引けるようにしました（PJR-5T0Q）。
+  - hook やテストの失敗の要約を、FAIL の行と失敗したテストの名前から始めるようにしました（PJR-EEWP）。
+  - 統合の後の検査のログ（`post-integration.log`）が git の管理外に残らないようにしました（PJR-EF7M）。
+  - プロダクトへの commit の 1 行目に、2 回目以降の run では `(run N)` を付けるようにしました（PJR-N4D0）。
+  - `exec run --register` の要約の `commit=` に、その run のものでない commit が出ることがある問題を直しました（PJR-VQK2）。
+  - `Register item:` の行と `--dry-run` の行で、項目のタイトルの `_` などがエスケープされて出る問題を直しました（PJR-TJZM）。
+  - `pipeline-state.schema.yaml` に runner が記録する `artifacts` を足しました（PJR-YY0P）。
+- reporter と result:
+  - reporter の出力の形式のやり直しを使い切ったとき、`fallback_reporter_by` の reporter で 1 回やり直すようにしました（PJR-Q723）。
+  - reporter が書いた result を書き込む前に markdownlint の規則で検査し、違反があれば書き直させるようにしました。エスケープされたバッククォートは戻してから書きます（PJR-WB78、PJR-G3TT）。
+- grade:
+  - `grade run --target kata` が YAML の sample の古い表示のページを評価する問題を直しました（PJR-1RJP）。
+  - `--kata` と `--kind` を一緒に指定すると `--kind` が無視される問題と、rulebook に複数並べた sample の一部しか選ばない問題を直しました（PJR-22N9、PJR-N5D2）。
+  - 型の schedule の review の段で、sample の grade の鮮度が対象の種別の食い違いで常に最新でないと出て止まる問題を直しました（PJR-PP4X）。
+- そのほか:
+  - Claude の edit executor の既定の設定に、作業場所を保つ設定と git の読み取り・`git rm`・`git mv` の許可を足しました（PJR-1HJH）。
+  - `catalog generate` が雛形の `based_on` と自分の id に、プロダクト文書の名前空間を付けないようにしました（PJR-KYG4）。
+  - 外部の project への `register add --commit -m` で、複数の段落をカンマでつながないようにしました。commit-msg hook の失敗の理由をエラーの出力に含めます（PJR-QTZ7）。
+
 ## [0.9.2] - 2026-11-21
 
 同梱パッケージ（`@specdojo/docs-lint` 0.5.0、`@specdojo/docs-site` 0.6.0）は変わらないため、公開しません。

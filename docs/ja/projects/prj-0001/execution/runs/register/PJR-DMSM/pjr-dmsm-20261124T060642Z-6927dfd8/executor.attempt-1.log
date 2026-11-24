@@ -1,0 +1,9 @@
+[CHANGELOG.md](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-DMSM/CHANGELOG.md) に v0.10.0 の未公開節を作り、主要な変更と移行の注意を記載しました。Antigravity の設定変更、pm ログの型の非推奨、更新手順、coderdojo-lessons の申し送りを含めています。
+
+**作業は未完了です。** 対象個票の文案をすべて照合できていないため、残りの収集と、文案が見つからない項目の一覧化が必要です。[PJR-DMSM の個票](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-DMSM/docs/ja/projects/prj-0001/controls/project-register/pjr-dmsm-v0100-release-notes.md) に収集済み項目と残作業を記録しました。
+
+変更した Markdown の整形・検査と履歴リンク検査は通過しました。カタログ検証は通常コマンドが sandbox の IPC 制限で失敗しましたが、代替コマンドでは警告付きで通過しました。全体の Markdown 検査は親 runner の担当です。
+
+<specdojo_executor_evidence>
+{"completion_status":"incomplete","final_message":"移行の注意と一部の変更を記載したが、対象個票の文案収集と未発見項目の一覧化が未完了。","handoff":["v0.9.2 以降に完了した項目と v0.10.0 指定項目を照合し、残りの文案を CHANGELOG.md に追加して、収集一覧と文案が見つからなかった項目を PJR-DMSM の対応結果に記録する。未完了項目の公開前の状態も確認する。","npm run validate:catalog は sandbox の tsx IPC 制限で失敗したが、node --import tsx src/specdojo.ts catalog validate --project prj-0001 は既存の警告付きで成功した。"],"validations":[{"command":"npx prettier --write CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-dmsm-v0100-release-notes.md docs/ja/projects/prj-0001/controls/project-register/pjr-xc5p-coderdojo-handoff-v0-4-6.md","status":"passed","summary":"変更した Markdown を整形した。"},{"command":"npx markdownlint CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-dmsm-v0100-release-notes.md docs/ja/projects/prj-0001/controls/project-register/pjr-xc5p-coderdojo-handoff-v0-4-6.md","status":"passed","summary":"変更した Markdown を検査した。"},{"command":"npm run validate:history-links","status":"passed","summary":"履歴リンク検査に成功した。"},{"command":"npm run validate:catalog","status":"failed","summary":"tsx の IPC ソケット作成が sandbox で EPERM となった。"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"代替方法でカタログ検証に成功した。既存の警告あり。"}]}
+</specdojo_executor_evidence>
