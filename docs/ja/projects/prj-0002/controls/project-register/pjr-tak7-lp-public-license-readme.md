@@ -30,16 +30,31 @@ specdojo-lp を showcase として公開する前に MIT の LICENSE を置き�
 - commit の Refs: prj-0002:PJR-XXXX は、公開中の specdojo/specdojo の project/prj-0002/develop ブランチで登録簿の項目へ辿れる。
 - CHANGELOG は specdojo-lp の README の決まりに従い、Unreleased へ追記する。
 - リポジトリを Public に切り替える操作は本項目に含めず、確認のあとで人が行う。
+- `package.json` は保護された設定のため、`"license": "MIT"` の追加はオーケストレーターが `feature/prj-0002/lp-package-license` で行い、LP の `develop` へ取り込み済みである（`1a9c2f3`）。
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- `specdojo-lp/LICENSE` に MIT の本文があり、著作権の表記が `Copyright (c) 2025 Tiny Shrine` である。
+- `specdojo-lp/README.md` に「ライセンス」の節がある。この節に次の 2 点が書いてある。
+  - リポジトリは MIT で、`src/assets/mascot/dojo-otter.webp` は MIT の対象外とし、転用・改変を許可しないこと。
+  - マスコット画像は暫定で、正式な画像に替える予定であること。
+- `specdojo-lp/README.md` の冒頭に、showcase としての案内がある。案内には次の 2 点が書いてある。
+  - このリポジトリは SpecDojo の登録簿と exec で運用していること。
+  - commit の `Refs: prj-0002:PJR-XXXX` から、公開中の `specdojo/specdojo` の `project/prj-0002/develop` ブランチにある登録簿の項目へ辿れること。
+- README の既存の節の番号を、新しい節に合わせて振り直す。既存の節の内容は変えない。
+- `specdojo-lp/CHANGELOG.md` の `Unreleased` へ、LP の README の決まりに従って、ライセンスを加えたこと（`LICENSE`・README の節・`package.json` の `license` の記載を含む）を追記する。公開済みの日付の節は変えない。
+- 変更してよいのは、LP の `LICENSE`・`README.md`・`CHANGELOG.md` と、本個票の対応結果だけとする。`package.json` は変更済みのため変えない。画面・設定・画像も変えない。`main` への統合、`git push`、PR の作成、リポジトリの公開設定の変更は行わない。
+- LP で `npm run lint:md`、`npm run format:check`、`npm run build` が成功する。runner に設定された親の検証を通す。
+- 実施内容・変更ファイル・検証結果・残課題を、本個票の対応結果に残す。pipeline で申し送りがあれば、`handoff` にも書く。
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                            | 担当 | 状態 | メモ |
+| --- | ----------------------------------------------- | ---- | ---- | ---- |
+| 1   | `LICENSE` を加える                              | DEV  | open | -    |
+| 2   | README にライセンスの節と showcase の案内を書く | DEV  | open | -    |
+| 3   | CHANGELOG の `Unreleased` へ追記する            | DEV  | open | -    |
+| 4   | LP の検査と親の検証を通し、対応結果を記録する   | DEV  | open | -    |
 
 ## 5. 対応結果
 
@@ -47,4 +62,5 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0002:pjr-rwqv-lp-changelog]]: LP の変更履歴の更新ルール。
+- `specdojo-lp:README.md`: 追記の対象。
