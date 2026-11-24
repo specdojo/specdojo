@@ -1,0 +1,32 @@
+R4（正しさ）のレビューを終えました。sample の記述を正本と突き合わせて誤り 3 点を見つけ、`docs/ja/specdojo/samples/stc-sample.md` だけを直しました（6 行追加・5 行削除、Prettier で整形済み）。lint などの検査は runner が後で実行するので、ここでは流していません。
+
+**直した箇所**
+
+- **TR-03:** 「印字失敗は自動再試行しない」と言い切っていましたが、`ifx-cmd-sample.yaml` では送信前のビジー状態（exit 1、`transient_failure`）だけは自動再試行します。そこで要点を「送信開始後の用紙切れ・30秒タイムアウト」に絞りました。
+- **TR-04:** 「取消は本 term が主担当」の根拠として分配方針を挙げていましたが、分配表には取消の行がありません。取消は `stc-index` の分割基準で本 term に含まれているため、仕様 ID に分割基準を加え、要点も書き直しました。
+- **TR-07 を追加:** `SAC-PERF-01`（P95 が 2 秒以内・P99 は記録のみ）へのトレースが抜けていました。トレース表に TR-07 を足し、`st-cash-sale-commit-response-010` のトレースを `TR-05,TR-07` に、観測点を「応答時間（P95・P99）」にしました。`stc-index` の分配表にある「P99 も記録する」にもこれで沿います。
+
+**正本と一致した主な主張**
+
+- **取引の値:** BAC-01 の C-01（2個・60円・在庫 5→3）と C-02（5個・150円・在庫 5→0）。
+- **受入条件:** AC-01 の「販売記録が1件できる」。
+- **性能:** 60取引/時で 95% が 2 秒以内（TSP の仮置き）、性能試行の在庫 100→40、`SAC-PERF-02` の内容。
+- **印刷:** 30 秒タイムアウトと、印字失敗でも会計を取り消さないこと。
+- **列挙値と書式:** `case_id` の書式、優先度（P0/P1）、自動化（automated/mixed）の値。
+- **frontmatter・参照:** `type: test` と `based_on`、wikilink の参照先がすべて実在すること。
+
+駄菓子屋の業務の値のように正本のない仮定は、確かめの対象から外しました。
+
+**grade の finding（F001〜F005）**
+
+どれも R4 で扱う観点ではないので触れていません。読んだ時点の版では、前の段の修正で F001・F003・F004・F005 は解消済みに見えます。F002 は取消ケースが「販売確定成立」の観点に残ったままですが、意図の文が 1 つの命題になっていると読めるので、R2 での確認に回します。
+
+**ほかの kata の問題として残したもの（直していません）**
+
+- `sac-sample` は、`st-cash-sale-commit-response-010` が `SAC-PERF-01` と `SAC-PERF-02` の両方を測ると書いています。実際には `SAC-PERF-02` は `st-cash-sale-commit-records-010` が担当しているので、`sac-sample` 側を直す必要があります。
+- `stc-index-sample` は商品検索の応答測定を `stc-cash-sale` の担当としていますが、本 sample にはその観点もケースもありません。観点を足すか担当を見直すかは R1/R5 で判断してください。
+- `stc-index-sample` の分配表には確定前の取消の行がありません。行を足すかどうかは R5 で判断してください。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）の確かめを行い、stc-sample.md の誤り3点を直した: TR-03 の自動再試行の言い切りを ifx-cmd の分類に合わせて限定、TR-04 の根拠に分割基準を追加、SAC-PERF-01 のトレース TR-07 を追加して会計確定応答のケースに P99 の記録を加えた。grade の finding F001〜F005 は R4 の観点外のため扱っていない。","handoff":["確かめの表（R4）: 1 TR-01 C-01（2個・60円・在庫5→3）/C-02（5個・150円・在庫5→0）| 正本 docs/ja/specdojo/samples/bac-sample.md 55-56行 | 一致","確かめの表（R4）: 2 TR-02 AC-01「商品・数量・支払方法を確定すると販売記録が1件できる」| 正本 prj-success-criteria-and-acceptance-criteria-sample.md 51行 | 一致","確かめの表（R4）: 3 TR-03「印字失敗・30秒タイムアウトは自動再試行しない」| 正本 ifx-cmd-sample.yaml の exit_codes・error_handling | 不一致: exit 1 の送信前のビジー状態は transient_failure で、最大3回まで自動再試行する。「送信開始後の用紙切れ・30秒タイムアウト」に限定して修正した。timeout_seconds: 30 と、会計を取り消さないこと（21行）は一致","確かめの表（R4）: 4 TR-04「取消・印刷失敗は分配方針で本 term が主担当」| 正本 stc-index-sample.md 分割基準（40行）・分配表（108-118行）| 一部不一致: 分配表に取消の行がなく、取消は分割基準で本 term に含まれている。仕様IDと要点を修正した。印刷失敗（会計維持）の主担当と、二重確定防止の従担当は一致","確かめの表（R4）: 5 TR-05・目的・例外「60取引/時で95%が2秒以内（仮置き）」「BAC-01〜BAC-03 の全ケース合格」| 正本 tsp-index-sample.md 106行・138行 | 一致","確かめの表（R4）: 6 会計確定応答のトレースと観測点 | 正本 sac-sample.md SAC-PERF-01（22行: P95 が2秒以内、P99 は記録のみ）、stc-index-sample.md 115行（P99 も記録する）| 不一致: SAC-PERF-01 へのトレースがなく、P99 の記録もなかった。TR-07 を追加し、観測点に P95・P99 を加えた","確かめの表（R4）: 7 TR-06 SAC-PERF-02「送った件数と販売記録が一致」| 正本 sac-sample.md 23行・58行（SAC-PERF-01 と同じ試行）| 一致","確かめの表（R4）: 8 データ・外部依存・証跡（kinuya-st・kinuya-test-data 商品A 30円・在庫5個、スタブで再現、kinuya-ci-st・kinuya-st-report）| 正本 stc-index-sample.md 7.1（133-137行）| 一致。性能試行で在庫を100個にする件は、共通方針との差として根拠つきで書かれている","確かめの表（R4）: 9 case_id 書式 st-<term>-<perspective_key>-<nnn>、優先度 P0/P1、自動化 automated/mixed、列の順 | 正本 stc-index-sample.md 8章 | 一致","確かめの表（R4）: 10 frontmatter（type: test、rulebook: specdojo:stc-rulebook、based_on に tsp-index と stc-index）と wikilink の参照先が実在すること | 正本 docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml、stc-rulebook.md 4章、各 sample の id | 一致（schema の正式な検査は runner の lint:fm に委ねる）","確かめの表（R4）: 11 在庫100→40（60取引×1個）、在庫5→3の算術 | 正本: 本文の値から算出 | 一致","指摘（他の kata・R5 向け）: sac-sample.md 29行は「st-cash-sale-commit-response-010 が SAC-PERF-01・SAC-PERF-02 を分解して測る」と書いているが、SAC-PERF-02 は st-cash-sale-commit-records-010 が担当している。sac-sample 側の修正を提案する","指摘（他の kata・R1/R5 向け）: stc-index-sample.md 152行は「商品検索の測定は stc-cash-sale が担当する」としているが、stc-sample に商品検索の応答測定の観点・ケースがない。観点を追加するか、分担を見直すかの判断が要る","指摘（他の kata・R5 向け）: stc-index-sample.md の分配表に「確定前の取消」の行がない。分割基準で stc-cash-sale に含めているだけなので、分配表に行を追加するかどうかの判断が要る","grade の finding: F001・F003・F004・F005 は、前の段の修正で解消済みに見える（実施の行は削除済み、対象外は例外の形に変更済み、stc-index に記入例のケースはない、観点名は「会計維持」）。F002 は R2 の観点で、flow-success-030 は観点「販売確定成立」に残っている。意図の文は1つの命題として読めるため、R2 での確認に委ねる。いずれも R4 の観点外のため未対応"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/stc-sample.md","status":"passed","summary":"変更した sample を整形した"},{"command":"npm run lint:md","status":"not_run","summary":"親 runner の parent validation で実行されるため、executor では実行しない"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/stc-sample.md のみで、plan・result・個票を変更していない"}]}
+</specdojo_executor_evidence>
