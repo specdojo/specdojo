@@ -27,6 +27,7 @@ PJR-DJZD で直した rulebook に合わせ、残りの sample と全ての temp
 
 - 利用者の要望（2026-11-18）: rulebook と recipe の見直しの後、全ての sample と template も見直す epic を起票して schedule で実行したい
 - 利用者の決定（2026-11-18、orchestrator の推奨の案）: PJR-DJZD の後に流す。template は手本がないため、先に prj-charter の template で試行して一覧を作ってから schedule に入れる。対象の型の線引きは PJR-DJZD と同じ。schedule の track は kata-slim-3
+- PJR-T2X5 の決定（2026-11-25）: v1.0 まで破壊的な変更をしない。CLI・設定・記録の形・型（kata の id と rulebook の必須の章）・生成物の場所を壊さず、消す・変えるときは先に非推奨にして少なくとも 1 つの minor の版のあいだ残す
 
 ## 3. 範囲（track と domain）
 
