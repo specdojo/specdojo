@@ -99,3 +99,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_ee783496fa6c438b9460a0c3753ee068
+- v: 1
+  id: reg_6d9be9e4d62046eaabaf36391c50449d
+  ts: "2026-11-24T00:58:37Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果・親の検証（passed）で確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-24"
+    - field: conclusion
+      from: "-"
+      to: grade が samples/generated の表示のページを参照の候補から除き、正本の YAML だけを読むようにした
+  previous_event_id: reg_e3033312ca5849d58454a470772e0f9d
