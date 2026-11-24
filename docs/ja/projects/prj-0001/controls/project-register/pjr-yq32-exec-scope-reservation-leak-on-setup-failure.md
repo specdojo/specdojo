@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-23T04:56:14Z"
   due_on: "2026-11-30"
+  block_reason: "parent validation failed: test-unit"
   derived_from:
     - PJR-0JVB
   commit_type: fix
@@ -32,13 +33,13 @@ specdojo:
 
 ## 3. 影響範囲
 
-| 観点         | 影響   |
-| ------------ | ------ |
-| スコープ     | _TODO_ |
-| スケジュール | _TODO_ |
-| コスト       | _TODO_ |
-| 品質         | _TODO_ |
-| 関係者       | _TODO_ |
+| 観点         | 影響                                                                  |
+| ------------ | --------------------------------------------------------------------- |
+| スコープ     | runner の変更範囲予約、単体テスト、設計・運用ガイド・CLI リファレンス |
+| スケジュール | v0.10.0 に含め、統合後の smoke を経て close する                      |
+| コスト       | 追加サービスなし。予約回収時に状態と worktree を照合する              |
+| 品質         | 準備失敗による後続の停止を防ぎ、未統合成果の保護を維持する            |
+| 関係者       | DEV が修正し、orchestrator が統合後の smoke を確認する                |
 
 ## 4. 対応方針
 
@@ -61,8 +62,36 @@ specdojo:
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+### 5.1. 作業内容
+
+| 作業                           | 状態 | メモ                                                                                                                        |
+| ------------------------------ | ---- | --------------------------------------------------------------------------------------------------------------------------- |
+| 準備失敗時の予約解放           | done | schedule の失敗戻り値・例外・provider 待機と、register の準備失敗で予約と lock を解放する                                   |
+| 古い予約の回収                 | done | 未着手で exec worktree と予約 lock のない予約を、照合 mutex 内で回収する                                                    |
+| 回帰テスト追加                 | done | 準備失敗、再実行時の既存予約復元、古い予約回収、worktree・lock・実行中状態の保護を単体テストに追加した                      |
+| 設計・ガイド・CLI リファレンス | done | 失敗時の境界と自動回収条件を更新した                                                                                        |
+| 統合後の smoke                 | open | executor sandbox では実 agent CLI を起動しない。統合後に orchestrator が `exec smoke` を流し、成功を確認してから close する |
+
+### 5.2. 判断と対応
+
+- 準備完了を境界に、新規予約の取り消しと実行後の未統合予約の保持を分けた。再実行の準備失敗では取得前の予約を復元し、既存 worktree がある register run の失敗も予約を保持する。既存成果の保護を優先するためである。
+- 回収対象の未着手状態は schedule の `todo` と register の `open` とした。register には `todo` 状態がなく、`todo` は項目種別だからである。schedule は生成済みキャッシュではなく event と strategy の初期状態から判定する。予約ディレクトリは共用のため、どちらの実行経路からも両種の未着手予約を判定・回収する。
+- 古さの時間閾値は設けず、未着手・worktree 不在・予約 lock 不在がそろうことを回収の根拠とした。heartbeat が止まった lock も、不在とは扱わない。状態または worktree を確認できない場合も予約を保持する。
+- 保護された設定、登録簿の状態、`CHANGELOG.md`、result、grade サイドカーは変更していない。
+
+### 5.3. 検証
+
+Prettier、`catalog validate --project prj-0001`、`npm run validate:history-links`、`npm run check:src-imports`、`register build --project prj-0001`、`git diff --check` は成功した。catalog は対象外の既存参照に警告を出したが、エラーはなかった。
+
+親 runner が `npm run typecheck`・`npm run lint:ts`・`npm run test:unit` と設定済みの共通検証を実行するため、executor では重複実行しない。単体テストの実行結果は親 runner の evidence を参照する。統合後の実動作確認は 5.1 の smoke として引き継ぐ。
+
+### 5.4. CHANGELOG に書く事項
+
+- 区分: 不具合修正（v0.10.0）
+- 文案: `exec run`（`--auto`・`exec cycle` を含む）の準備失敗で変更範囲の予約が残って後続を止める問題を修正。未着手で worktree と予約 lock のない古い予約も自動で回収する。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[specdojo:exec-operation-guide|exec 運用ガイド]]
+- [[specdojo:command-reference|CLI コマンドリファレンス]]
+- [[prj-0001:pjr-b6ns-reject-leaves-change-scope-reservation|終端項目の予約回収（PJR-B6NS）]]
