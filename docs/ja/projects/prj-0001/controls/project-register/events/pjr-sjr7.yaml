@@ -118,3 +118,16 @@
       from: "executor reported incomplete: 3 型の rulebook・sample の非推奨化、dct-kata と第 6 波 strategy からの除外、個票の記入は完了した。第 6 波の track（sch-track-kata-wave-6-project.yaml）の再生成が未実施で、060・080・090 の段がまだ残っている。"
       to: "-"
   previous_event_id: reg_141de46d85de4e2d9d9b42ecee413556
+- v: 1
+  id: reg_2b465cd43a2247c08d16277603e1c3e9
+  ts: "2026-11-24T01:46:35Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_0f5ec2a26f594705ae1453a4c467c812
