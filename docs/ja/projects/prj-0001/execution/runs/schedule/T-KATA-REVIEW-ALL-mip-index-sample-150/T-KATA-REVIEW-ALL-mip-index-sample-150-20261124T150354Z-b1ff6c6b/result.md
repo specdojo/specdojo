@@ -1,0 +1,51 @@
+---
+specdojo:
+  id: prj-0001:xer-t-kata-review-all-mip-index-sample-150-20261124t150354z-b1ff6c6b
+  type: exec-result
+  task_id: T-KATA-REVIEW-ALL-mip-index-sample-150
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  plan_ref: runs/schedule/T-KATA-REVIEW-ALL-mip-index-sample-150/T-KATA-REVIEW-ALL-mip-index-sample-150-20261124T150354Z-b1ff6c6b/plan.md
+  started_at: "2026-11-24T15:04:04.013Z"
+  completed_at: "2026-11-24T15:20:20.662Z"
+  agent: sol-executor
+  execution: agent
+  approach: sample-maintenance
+  targets:
+    - specdojo:mip-index-sample
+    - specdojo:mip-index-sample
+---
+
+# Edit Result
+
+## 1. 実施内容
+
+- kata レビューの段 R5（整合）を実施した。対象は `docs/ja/specdojo/samples/mip-index-sample.md` で、関連する DMD・COP・MTP・OTP の sample と照合した。sample 側の食い違い4点を修正し、相手側の修正が必要な4点は変更せず案を handoff に記した。 | No | 段 | 箇所 | 指摘 | 直した案 | 根拠 | 印 | | - | - | - | - | - | - | - | | R5-1 | R5 | 2. 前提・制約 | 転記用の表そのものを引き出しに保管して裁断する記述は、DMD の電子表・CSV による移行と媒体の区別がつかない | 保管・裁断の対象を転記用の表の印刷物と明記した | `vp-qe-kata-conformance`。[[specdojo:dmd-sample\|データ移行設計: 顧客台帳とつけ残高]] 第6章はタブレットの表計算から CSV を書き出す | - | | R5-2 | R5 | 2. 前提・制約 | 販売ノートを移行元に含めているが、DMD・MTP は商品ノートと常連客ノートからの取り込みを扱い、過去の販売ノートは非対象 | 移行元の列挙から販売ノートを除いた。第4章の非対象・紙での参照方針は維持した | `vp-qe-kata-conformance`。[[specdojo:dmd-index-sample\|データ移行設計（全体構成）]] 第1・5章、[[specdojo:mtp-sample\|移行テスト計画]] 第1章 | - | | R5-3 | R5 | 3. 移行方式と期間 | 準備開始時に転記したつけ残高を前日閉店時の値へ更新する工程がなく、DMD の移行手順と対応しない | 前日閉店後のフェーズを「最終棚卸・残高確定」とし、最終残高の更新・読み合わせ・店主代表の確認を補った | `vp-qe-kata-conformance`、`vp-dev-change-impact`。[[specdojo:dmd-sample\|データ移行設計: 顧客台帳とつけ残高]] 第2・6・7章 | - | | R5-4 | R5 | 8.1. タイムラインと判定点 | GO4 が差異の全面解消を求め、COP の「理由の分からない差異がない」という条件と食い違う | 売上額とつけ残高合計に理由の分からない差異が残っていない条件にそろえた | `vp-qe-kata-conformance`。[[specdojo:cop-index-sample\|カットオーバー計画（全体）]] 第2・6章、[[specdojo:mip-index-rulebook\|移行計画 作成ルール]] 第6.3節 | - | | R5-5 | R5 | 相手側: 運用切替計画 第9章 | OTP は転記用の表全体を裁断するとしており、電子表と印刷物の区別が残っている | OTP の裁断対象を「転記用の表の印刷物」に合わせる案。電子ファイルの保持・削除方針は裁断と分けて定める。相手側は未変更 | `vp-dev-change-impact`。[[specdojo:otp-index-sample\|運用切替計画: 概要]] 第9章 | - | | R5-6 | R5 | 相手側: データ移行設計（全体構成）第2章 | 取り消し線のある顧客を一律除外する方針は、つけ残高を取りこぼさない目的・全顧客の残高一致条件と食い違う | 顧客除外条件を「取り消し線があり、つけ残高が0円」に限定する案。相手側は未変更 | `vp-qe-kata-conformance`。[[specdojo:dmd-index-sample\|データ移行設計（全体構成）]] 第2章、[[specdojo:dmd-sample\|データ移行設計: 顧客台帳とつけ残高]] 第2・5章 | - | | R5-7 | R5 | 相手側: 顧客台帳とつけ残高のデータ移行設計 第9章 | DMD は照合の判定者を一律に店主代表としているが、MIP の件数一致の判定者は開発担当 | 件数は開発担当、残高は店主代表と分ける案。業務全体の GO 判断は店主代表に維持する。相手側は未変更 | `vp-qe-kata-conformance`。対象 sample 第5.1節を正とする | - | | R5-8 | R5 | 相手側: COP 第5章と MTP 第2章 | COP は切替日の1週間前にリハーサル合格を確認するが、MTP の合格を求める第2回は切替日の3日前であり、予定どおりでは事前条件を満たせない | COP の合格確認期限を MTP の第2回・追加回の完了後へ合わせる案。MTP を前倒しして1週間の是正余裕を確保する案もあり、日程方針の判断が必要。相手側は未変更 | `vp-qe-kata-conformance`、`vp-dev-change-impact`。[[specdojo:cop-index-sample\|カットオーバー計画（全体）]] 第5章、[[specdojo:mtp-sample\|移行テスト計画]] 第2章 | 要判断 |
+
+## 2. 変更ファイル
+
+- `docs/ja/specdojo/samples/mip-index-sample.md`: R5 の整合レビューとして4点を修正した。(1) 保管・裁断の対象を転記用の表の印刷物に限定した。(2) 移行元の列挙から販売ノートを除いた。(3) 前日閉店後のフェーズを「最終棚卸・残高確定」とし、最終残高の更新・読み合わせ・店主代表の確認を補った。(4) GO4 の条件を、売上額とつけ残高合計に理由の分からない差異が残っていないことにそろえた。整形に伴う空白変更を含む（16行追加・16行削除）。
+
+## 3. 申し送り
+
+- 要判断: R5-8 は COP と MTP の日程の食い違いである。COP の合格確認期限を MTP に合わせるか、MTP を前倒しするかは、MIP が優先関係を定めていないため日程方針の判断が必要。
+- R5-5〜R5-8 は相手側文書（OTP・DMD・COP・MTP）の修正案であり、本タスクでは未変更。扱う段・タスクを別に立てる必要がある。
+- R5-1: R5 / 2. 前提・制約 / 転記用の表そのものを引き出しに保管して裁断する記述は、DMD の電子表・CSV による移行と媒体の区別がつかない / 保管・裁断の対象を転記用の表の印刷物と明記した / `vp-qe-kata-conformance`。[[specdojo:dmd-sample|データ移行設計: 顧客台帳とつけ残高]] 第6章はタブレットの表計算から CSV を書き出す。紙の保護条件を維持して媒体を区別した / -
+- R5-2: R5 / 2. 前提・制約 / 販売ノートを移行元に含めているが、DMD・MTP は商品ノートと常連客ノートからの取り込みを扱い、過去の販売ノートは非対象としている / 移行元の列挙から販売ノートを除いた。第4章の非対象・紙での参照方針は維持した / `vp-qe-kata-conformance`。[[specdojo:dmd-index-sample|データ移行設計（全体構成）]] 第1・5章、[[specdojo:mtp-sample|移行テスト計画]] 第1章との照合 / -
+- R5-3: R5 / 3. 移行方式と期間 / 準備開始時に転記したつけ残高を前日閉店時の値へ更新する工程がなく、DMD の移行手順と対応しない / 前日閉店後のフェーズを「最終棚卸・残高確定」とし、最終残高の更新・読み合わせ・店主代表の確認を補った / `vp-qe-kata-conformance`、`vp-dev-change-impact`。[[specdojo:dmd-sample|データ移行設計: 顧客台帳とつけ残高]] 第2・6・7章は前日閉店後の残高更新と再読み合わせを定める。詳細手順は転記せず工程の骨格だけを反映した / -
+- R5-4: R5 / 8.1. タイムラインと判定点 / GO4 が差異の全面解消を求め、COP の「理由の分からない差異がない」という条件と食い違う / 売上額とつけ残高合計に理由の分からない差異が残っていない条件にそろえた / `vp-qe-kata-conformance`。[[specdojo:cop-index-sample|カットオーバー計画（全体）]] 第2・6章、対象 sample 第3・5章との照合。[[specdojo:mip-index-rulebook|移行計画 作成ルール]] 第6.3節は成功条件と判定点の一致を求める / -
+- R5-5: R5 / 相手側: 運用切替計画 第9章 / OTP は転記用の表全体を裁断するとしており、電子表と印刷物の区別が残っている / - / `vp-dev-change-impact`。[[specdojo:otp-index-sample|運用切替計画: 概要]] 第9章の裁断対象を「転記用の表の印刷物」に合わせる案。電子ファイルの保持・削除方針は裁断とは分けて定める。相手側は未変更 / -
+- R5-6: R5 / 相手側: データ移行設計（全体構成）第2章 / 取り消し線のある顧客を一律除外する方針は、MIP のつけ残高を取りこぼさない目的・全顧客の残高一致条件と食い違う / - / `vp-qe-kata-conformance`。[[specdojo:dmd-index-sample|データ移行設計（全体構成）]] 第2章の顧客除外条件を「取り消し線があり、つけ残高が0円」に限定する案。[[specdojo:dmd-sample|データ移行設計: 顧客台帳とつけ残高]] 第2・5章も残高がある顧客を除外しない。相手側は未変更 / -
+- R5-7: R5 / 相手側: 顧客台帳とつけ残高のデータ移行設計 第9章 / DMD は照合の判定者を一律に店主代表としているが、MIP の件数一致の判定者は開発担当である / - / `vp-qe-kata-conformance`。対象 sample 第5.1節を正として、[[specdojo:dmd-sample|データ移行設計: 顧客台帳とつけ残高]] 第9章で件数は開発担当、残高は店主代表と分ける案。業務全体の GO 判断は店主代表に維持する。相手側は未変更 / -
+- R5-8: R5 / 相手側: COP 第5章と MTP 第2章 / COP は切替日の1週間前にリハーサル合格を確認するが、MTP の合格を求める第2回は切替日の3日前であり、予定どおりでは事前条件を満たせない / - / `vp-qe-kata-conformance`、`vp-dev-change-impact`。[[specdojo:cop-index-sample|カットオーバー計画（全体）]] 第5章の合格確認期限を、[[specdojo:mtp-sample|移行テスト計画]] 第2章の第2回・追加回の完了後へ合わせる案。1週間の是正余裕を確保して MTP を前倒しする案もあり、MIP はその優先関係を定めていないため日程方針の判断が必要。相手側は未変更 / 要判断
+- reporter 向け: 指摘8件は result の実施内容に指定7列の Markdown 表として1回だけ記載し、申し送りに表を重ねない。変更ファイルは `docs/ja/specdojo/samples/mip-index-sample.md` のみで、意味上の修正は4点。残り4件は他文書側の修正案であり、対象外文書は変更していない。
+- reporter 向け（進め方と実践の型の適用）: 共通規約2文書、[[specdojo:kata-guide|実践の型活用ガイド]] 第6章、[[specdojo:mip-index-rulebook|移行計画 作成ルール]]、[[specdojo:sample-authoring-standard|Sample 記述標準]] の共通サンプル文脈、共通レビュー観点の R5・全段共通観点・`vp-arc-conciseness`、前段 R1〜R4 の result、既存 grade、DMD・COP・MTP・OTP の関連 sample を確認した。同じ接頭辞の sample は対象1件のみ。本文の wikilink はなく、`based_on` は空配列。rulebook の `recipe`・`template` は `undecided`。用語集6ファイルの見出し語・別名と該当定義を照合し、業務上の一般語と SpecDojo 固有の管理用語を区別した。用語集に合わせて変更すべき表記はなかった。
+- reporter 向け（維持判断・検証）: 必須9章・表の列、R1〜R3の修正、停止時間、移行時の許容差、GO判断主体、GO1〜GO3、並行記録期間、ハイパーケア方針、`status: draft` を維持した。差分を読み直し、rulebook の必須項目と責務境界を再照合した。plan に展開された finding はなく、既存 grade は前段修正前の記録のため現在の整合判断に代用していない。対象 sample の根拠不足による改訂見送りはない。R5-8 は相手側の日程方針として要判断。result・grade サイドカー・保護された設定は未変更。親 runner の指定検査の結果は後続処理で追記される。
+- 適用外の検証: `npm run validate:schema:file`（executor の変更は Markdown のみで、YAML の変更がない。）
+- 適用外の検証: `npm run validate:catalog`（変更は sample 配下のみで、`docs/ja/projects/` 配下の成果物を変更していない。）
+- 適用外の検証: `npm run validate:history-links`（executor は登録簿個票、plan、result を変更していない。）
+
+## 4. 進め方と実践の型の適用
+
+根拠にした資料は、共通規約2文書、[[specdojo:kata-guide|実践の型活用ガイド]] 第6章、[[specdojo:mip-index-rulebook|移行計画 作成ルール]]、[[specdojo:sample-authoring-standard|Sample 記述標準]] の共通サンプル文脈、共通レビュー観点（R5・全段共通観点・`vp-arc-conciseness`）、前段 R1〜R4 の result、既存 grade、DMD・COP・MTP・OTP の関連 sample である。同じ接頭辞の sample は対象1件のみ。本文の wikilink はなく、`based_on` は空配列だった。rulebook の `recipe`・`template` は `undecided`。用語集6ファイルの見出し語・別名を照合したが、用語集に合わせて直す表記はなかった。plan に展開された finding はなく、既存 grade は前段修正前の記録のため、現在の整合判断には使っていない。維持した記述は、必須9章・表の列、R1〜R3 の修正、停止時間、移行時の許容差、GO判断主体、GO1〜GO3、並行記録期間、ハイパーケア方針、`status: draft` である。構造と必須項目は rulebook を正とした。根拠不足で改訂を見送った箇所はない。
