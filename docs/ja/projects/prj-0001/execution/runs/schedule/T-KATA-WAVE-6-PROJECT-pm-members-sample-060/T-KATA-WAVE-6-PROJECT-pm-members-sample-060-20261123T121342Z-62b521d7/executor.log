@@ -1,0 +1,17 @@
+今回の再開では、前の試行で入れた template の変更が rulebook と sample に合っているかを確認しました。追加の編集は要らなかったため、ファイルは変更していません。
+
+**template の変更内容（`docs/ja/specdojo/templates/pm-members-template.yaml`、前回の試行で編集済み）**
+
+- **`title`**: rulebook の「推奨メタ項目」に合わせて `メンバー定義: _PROJECT_NAME_` にしました。`_PROJECT_NAME_` はほかの template でも使われている記法です。
+- **`members[]`**: 固定値として入っていた `PO`・`final-decision-maker` と PO 向けの説明文をプレースホルダに替えました。`_MEMBER_NICKNAME_`・`_MEMBER_DISPLAY_NAME_`・`_ROLE_CODE_`・`_PERSONA_` と、`focus` と `note` の _TODO_ です。項目の並びは rulebook の「本文要件」の表と同じです。
+- **`rules` と冒頭コメント**: 共通標準と schema の内容を書き写した箇所を削除し、project 固有のルールを書く _TODO_ 1 件にしました。rulebook の「運用ルール」の章が、`rules` で共通標準・schema を再掲することを禁じているためです。
+- 役割の割り当て欄と承認の進み具合の記入欄は置いていません（PJR-76N9）。rulebook と sample も変更していません。
+
+**検査**
+
+- **Prettier**: 整形違反はありません。
+- **schema 検査**: 実行するとエラーで終わりますが、合否の判定には使っていません。このファイルには `specdojo-schema: validate=false reason=template` の印があります。エラーはすべて template の性質によるもので、`version`・`project_id` が `metadata_template` の中にあることと、プレースホルダが値の形式に合わないことが原因です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"pm-members-template.yaml を rulebook と sample に合わせた（前回の試行で編集済み、今回は確認のみ）。title を rulebook の形式にし、members の固定値をプレースホルダに替え、rules の共通標準・schema の書き写しを project 固有のルールを書く _TODO_ 1 件にした。rulebook と sample は変更していない。","handoff":[],"validations":[{"command":"npx prettier --check docs/ja/specdojo/templates/pm-members-template.yaml","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/pm-members.schema.yaml --data docs/ja/specdojo/templates/pm-members-template.yaml","status":"not_applicable","summary":"実行するとエラーで終わる。原因はすべて template の性質（metadata_template の構造とプレースホルダ値）で、編集前の template でも同じエラーになる","reason":"対象は template で、`specdojo-schema: validate=false reason=template` の印により schema 検査の対象外。生成物のメタ情報は `metadata_template` に入り、値はプレースホルダのため、成果物用 schema には適合しない"}],"target_coverage":[{"target":"specdojo:pm-members-template","status":"changed","path":"docs/ja/specdojo/templates/pm-members-template.yaml"},{"target":"prj-0001:pm-members-sample","status":"unchanged","reason":"根拠として読む成果物で、plan の「このフェーズで行うこと」が、この段では sample を変更しないと定めているため"}]}
+</specdojo_executor_evidence>

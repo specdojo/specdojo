@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-PROJECT-pm-members-sample-060
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-PROJECT-pm-members-sample-060/T-KATA-WAVE-6-PROJECT-pm-members-sample-060-20261123T121342Z-62b521d7/plan.md
   started_at: "2026-11-23T12:13:55.490Z"
+  completed_at: "2026-11-24T01:39:03.931Z"
   agent: opus-executor
   execution: agent
   approach: template-maintenance
@@ -20,16 +21,21 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- `docs/ja/specdojo/templates/pm-members-template.yaml` を rulebook と sample に合わせて、骨組みだけを残す形に整理した。
+- rulebook と sample はこの段では変更していない。
+- executor が実行した prettier の検査は成功した。runner の `lint:md:changed`、`lint:fm:changed`、`lint:mermaid`、`lint:d2`、`test:docs`、`validate:schema` も成功した。
+- 変更種別に該当しない検査（`lint:ts`、`lint:md`、`lint:fm`、`test:integration`、`typecheck`、`test:unit`）は `not_applicable` だった。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/templates/pm-members-template.yaml`: `title` を rulebook の形式に直した。`members` の固定値はプレースホルダに替えた。`rules` にあった共通標準や schema の書き写しは削り、project 固有のルールを書く `_TODO_` 1 件にした。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- template 自体への schema 検査（`validate:schema:file`）は、executor が `not_applicable` とした。template は `specdojo-schema: validate=false reason=template` の印で検査対象外であり、値がプレースホルダのため成果物用 schema に適合しない。この結果は編集前の template でも同じと evidence にある。
+- 対象 `prj-0001:pm-members-sample` は未変更: 根拠として読む成果物で、plan の「このフェーズで行うこと」が、この段では sample を変更しないと定めているため
+- 適用外の検証: `npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/pm-members.schema.yaml --data docs/ja/specdojo/templates/pm-members-template.yaml`（対象は template で、`specdojo-schema: validate=false reason=template` の印により schema 検査の対象外。生成物のメタ情報は `metadata_template` に入り、値はプレースホルダのため、成果物用 schema には適合しない）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+参照の向きを成果物から template に切り替え、`pm-members-template.yaml` を見直し対象にした。plan に展開された grade と condense の finding はなかった。sample は根拠として読み、変更していない（`target_coverage` は unchanged）。根拠と整合しない記述は直し、整合する記述は維持した。矛盾があれば rulebook を正とした。ただし、evidence には個々の矛盾箇所の記録がない。
