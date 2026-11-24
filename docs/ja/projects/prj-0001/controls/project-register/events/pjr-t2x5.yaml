@@ -38,3 +38,22 @@
     - field: derived_from
       from: ""
       to: '["PJR-6XYD"]'
+- v: 1
+  id: reg_3b2827610f2547a7b455e2d16ac462dd
+  ts: "2026-11-24T22:42:40Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: 利用者が対話で決定（2026-11-25）
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-11-25"
+    - field: conclusion
+      from: "-"
+      to: v0.10.0 の後も機能改善を続け、v1.0 まで CLI・設定・記録の形・型・生成物の場所を壊さない。消す・変えるときは先に非推奨にする
+  previous_event_id: reg_1700083cc34e45c5aed7f476181b2121

@@ -7,10 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: high
   owner: PO
   registered_at: "2026-11-24T22:41:54Z"
+  completed_at: "2026-11-24T22:42:40Z"
+  conclusion: v0.10.0 の後も機能改善を続け、v1.0 まで CLI・設定・記録の形・型・生成物の場所を壊さない。消す・変えるときは先に非推奨にする
   derived_from:
     - PJR-6XYD
 ---
