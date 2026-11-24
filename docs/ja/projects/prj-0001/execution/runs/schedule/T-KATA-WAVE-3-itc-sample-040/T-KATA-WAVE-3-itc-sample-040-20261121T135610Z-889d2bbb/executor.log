@@ -1,0 +1,28 @@
+`docs/ja/specdojo/rulebooks/itc-rulebook.md` を簡潔に整え、grade の指摘 F001〜F012 にすべて対応しました。sample（`itc-sample.md`）と frontmatter はこの段では変えていません。Prettier と markdownlint はこのファイル 1 本に対して通りました。
+
+**変更内容（対応する指摘）**
+
+- **章の構成と見出し**:
+  - 「本文構成（標準テンプレ）」を記述標準に合わせて「本文要件」に改めました。
+  - H5 見出しは使わないようにし、観点の章を「観点」「条件・ケース表」の H4 2 つにまとめました（F007）。
+  - 山括弧のプレースホルダはインラインコードで囲みました（F008）。
+- **完成例の章**: 受注（order）を題材にした「サンプル（最小）」章を削除し、完成例は sample に任せる形にしました（F010）。
+- **未決事項の明示**: 全体方針に `_UNDECIDED_` の行を足しました。中身は、`recipe`・`template` の要否が未判断であること（template は PJR-WYTX で扱う）、sample の構成がまだ合っていないこと、どちらも ready 化の前に解消することです（F001・F009・F012）。
+- **検証コマンドの明示**: 文書の整形・lint の確認手順として `npm run lint:md`・`npm run lint:fm` を書きました（F005）。
+- **ケース表の扱い**:
+  - ケース表の列と、必須・推奨（運用必須）の区別、`case_id` の形式と付番は `itc-index` の「ケース表の共通カラム」を参照する形にしました（F002・F006）。
+  - 対象別の文書で必ず守ることは、`case_id` を一意にすることだけにしました。
+- **重複の整理と観点の付け替え**:
+  - `perspective_key` と `case_id` を変えない規則は、禁止事項の表だけに残しました（F003）。
+  - 観点を分けたり統合したりする場合の書き方を決めました。新しいキーと `case_id` を振り、旧ケースの行は残して、備考に移行先の `case_id` を書きます（F004）。
+- **記述ガイド**:
+  - 共通方針は `itc-index` が正本であることを冒頭に書き、依存の扱いの表は `itc-index` の該当箇所の参照に置き換えました。
+  - 概要・責務・結合境界・ケース表の各節に、駄菓子屋の販売管理を題材にした良い例・悪い例を足しました。
+  - トレース表は列ごとの説明表に直しました。
+- **文体**: 箇条書きの文末を「。」にそろえました（F011）。
+
+残っているのは sample の手直しで、構成を rulebook に合わせ、駄菓子屋の題材で厚くする作業です。後続の sample-maintenance の段で行います。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"itc-rulebook を簡潔化し、F001〜F012 にすべて対応した。H5 見出しを廃止して H4 以内に収め、サンプル章を削除、本文要件へ改称、列・case_id 形式は itc-index の「ケース表の共通カラム」へ委譲、不変性の規則は禁止事項に一本化、perspective_key の付け替え手順と _UNDECIDED_（recipe・template と sample の不整合）、検証コマンドを明記し、章ごとに良い例・悪い例を追加した。sample と frontmatter は変更していない。","handoff":["sample（docs/ja/specdojo/samples/itc-sample.md）は rulebook の「本文要件」（6章構成、`perspective_key` 宣言、`trace_key`、ケース表）に未整合のため、後続の sample-maintenance で駄菓子屋の文脈で厚くする必要がある（F009）。","recipe・template の要否判断は未了で、rulebook に _UNDECIDED_ として記載した（template は PJR-WYTX で扱う）。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/itc-rulebook.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/itc-rulebook.md","status":"passed","summary":"0 issues in 0 files"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルは変更していない","reason":"変更ファイルは rulebook のみで、plan・result・個票などの履歴ファイルを変更していないため"}]}
+</specdojo_executor_evidence>

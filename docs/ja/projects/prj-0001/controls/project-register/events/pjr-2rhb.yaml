@@ -47,3 +47,61 @@
     - field: commit_scope
       from: ""
       to: glossary
+- v: 1
+  id: reg_c3dfd33c67db4fb2837e5af200e9a170
+  ts: "2026-11-22T13:25:49Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件を利用者の承認のもとで書く
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_0d0bb0a728c242d8874e01a1290b34a9
+- v: 1
+  id: reg_69e799d7e7564484b7f805f997681987
+  ts: "2026-11-22T13:42:24Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_c3dfd33c67db4fb2837e5af200e9a170
+- v: 1
+  id: reg_9daf360f0a3648e48d5197947d2a2070
+  ts: "2026-11-22T13:49:26Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_69e799d7e7564484b7f805f997681987
+- v: 1
+  id: reg_1e3d7d46d57b49d6b71a6a8ee621b993
+  ts: "2026-11-22T14:06:42Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが対応結果を完了条件と照らし、履歴と生成物の外に「Job Run」が残っていないことを確かめた。親の検証（test-unit を含む）も通った
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: 用語集の外の「Job Run」を「job run」に統一した（225 箇所・56 ファイル）。gl-rulebook に英語の用語を小文字で書く決まりと notes に書く内容の決まりを足した。履歴と用語集そのものは変えていない
+  previous_event_id: reg_9daf360f0a3648e48d5197947d2a2070

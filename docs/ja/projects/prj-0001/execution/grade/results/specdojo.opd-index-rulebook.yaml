@@ -4,14 +4,14 @@ document: specdojo:opd-index-rulebook
 path: docs/ja/specdojo/rulebooks/opd-index-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 87
-graded_at: "2026-11-05T20:40:49.010Z"
-graded_by: flash-high-executor
-content_hash: a28d9d42e533287c5f4cf846208a75f2a1f86bc140f038108d7511c29a13f1c5
+verdict: pass
+score: 99
+graded_at: "2026-11-23T15:41:36.142Z"
+graded_by: sonnet-review-executor
+content_hash: 900994e5dbc4ed4e8383578f241a5c1154eba930a5619a3327532f3e7a9beb8e
 categories:
   purpose:
-    score: 100
+    score: 88
   operations:
     score: 100
   planning:
@@ -25,16 +25,16 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 75
+    score: 100
   consistency:
-    score: 50
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-publication-accountability:
     level: 4
     score: 100
@@ -75,11 +75,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -100,56 +100,14 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 4
-  minor: 3
+  major: 0
+  minor: 1
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 21
-    anchor: ""
-    message: 推奨されるファイル配置（ディレクトリパス）の定義が欠落している。
-    message_ja: 推奨されるファイル配置（ディレクトリパス）の定義が欠落している。
-  - id: F002
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 27
-    anchor: ""
-    message: Frontmatter の参照スキーマ（deliverable-frontmatter.schema.yaml 等）への言及がなく、共通標準との整合性が不明確である。
-    message_ja: Frontmatter の参照スキーマ（deliverable-frontmatter.schema.yaml 等）への言及がなく、共通標準との整合性が不明確である。
-  - id: F003
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 42
-    anchor: "| --- | ---- | ---- |"
-    message: 本ルールで12章すべてを必須としているが、対応するサンプルに実装されておらず、実効性に欠ける。
-    message_ja: 本ルールで12章すべてを必須としているが、対応するサンプルに実装されておらず、実効性に欠ける。
-  - id: F004
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 運用方針・設計 全体構成 作成ルール"
-    message: サンプルとしての整合性がなく、rulebook としての機能（ exemplification ）を果たしていない。
-    message_ja: サンプルとしての整合性がなく、rulebook としての機能（ exemplification ）を果たしていない。
-  - id: F005
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 運用方針・設計 全体構成 作成ルール"
-    message: サンプル `specdojo:opd-index-sample` における rulebook 参照 ID と本ルールの ID が不整合である。
-    message_ja: サンプル `specdojo:opd-index-sample` における rulebook 参照 ID と本ルールの ID が不整合である。
-  - id: F006
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 運用方針・設計 全体構成 作成ルール"
-    message: recipe が undecided であり、具体的な記述手順への導線が未定義である。
-    message_ja: recipe が undecided であり、具体的な記述手順への導線が未定義である。
-  - id: F007
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 運用方針・設計 全体構成 作成ルール"
-    message: template が undecided であり、骨組みの提供がなされていない。
-    message_ja: template が undecided であり、骨組みの提供がなされていない。
+    rule: vp-po-decision-readiness
+    line: 54
+    anchor: "## 6. 記述ガイド"
+    message: 記述ガイドに概要（index）章の項目がなく、サンプルにある未決事項の表（判断者・決まるまでの扱い・影響章）の要否も定まっていないため、PO の判断材料が作成者次第になる。概要章の記載項目と未決事項の書き方を追記する。
+    message_ja: 記述ガイドに概要（index）章の項目がなく、サンプルにある未決事項の表（判断者・決まるまでの扱い・影響章）の要否も定まっていないため、PO の判断材料が作成者次第になる。概要章の記載項目と未決事項の書き方を追記する。

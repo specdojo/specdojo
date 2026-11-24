@@ -1,0 +1,22 @@
+sample の指摘 5 件はすべて直しました。rulebook の指摘 2 件（minor）は、完了条件の範囲外のため直していません。親 runner の検証と grade の再評価はまだ走らせていません。`npm run lint:md` は未実行です。prettier は sample と個票にかけました。
+
+変更したのは `docs/ja/specdojo/samples/itc-index-sample.md` と個票だけです。`tsp-index-sample` と rulebook は変えていません。
+
+sample の直し方は次のとおりです。
+
+- **F001（major）**: `tsp-index-sample` は保全の取得（`PATH-04`）と復元の回復（`PATH-07`）を外部結合テストの範囲としています。そのため sample の適用対象を `PATH-01`〜`PATH-03` に絞りました。
+  - `itc-record-backup` と、それに関わる業務リスク・観点の列・分配表の行・依存の行を削除しました。
+  - 保全・復元は対象外の表で外部結合テスト（ET）と総合テスト（ST）へ送っています。tsp 側の改訂は不要と判断しました。
+- **F002**: ロック競合やロールバック検証など別接続やコミット済みデータが要る条件は、seed の再投入とスキーマ分離で独立させる例外を足しました。
+- **F003**: 分割の閾値を rulebook に合わせ、「観点が 15 以上、ケース表が 50 行以上」にしました。
+- **F004**: 「通信不能時の販売継続」の代替レベルを `ST` にし、未決であることは除外理由へ移しました。
+- **F005**: 「そろえ」と「揃える」の重複を解消し、「統一する」に改めました。
+- **`_TODO_`**: 将来課題の行のマーカーを外して論点として残しました。`_ASSUMPTION_` と `_UNDECIDED_` は残しています。
+
+rulebook の F001・F002 は、Frontmatter の `recipe` と `template` が `undecided` だという指摘です。この項目は rulebook・sample 以外の型の成果物を変えない条件で、recipe・template の要否は型の schedule の後続の段で決めるため、直していません。理由は個票の対応結果に書きました。
+
+個票は、作業内容の表と対応結果を更新しました。行 1・2 は `done`、行 3・4 は `open` のままで、理由をメモに書いています。`### 5.1. CHANGELOG に書く事項` は「なし」にしました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"sample の指摘 F001〜F005 を直し（F001 は範囲を tsp-index-sample に合わせ PATH-01〜03 に絞り itc-record-backup を削除）、_TODO_ を除去した。rulebook は変更なし（F001・F002 の minor は recipe・template の決定が後続の段のため未対応）。個票の対応結果を更新した。","handoff":["統合後にオーケストレーターが npx specdojo grade run --target kata --kata itc-index で再評価し、blocker と major がないことを確認する。PJR-7C9X の機械的指摘のみ残る場合は合格とする。","rulebook の grade 指摘 F001・F002（minor、recipe・template が undecided）は、完了条件の範囲外のため直していない。recipe・template の作成または対象外の決定は型の schedule の後続の段で行う。","tsp-index-sample の改訂は不要と判断した（tsp は PATH-04・PATH-07 を外部結合テストの範囲としており、sample 側を合わせた）。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/itc-index-sample.md docs/ja/projects/prj-0001/controls/project-register/pjr-k32v-kata-wave-3-itc-index-fix.md","status":"passed","summary":"変更した 2 つの Markdown を整形した。"},{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する検証のため executor では実行していない。"}]}
+</specdojo_executor_evidence>

@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/prj-scope-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 100
-graded_at: "2026-10-06T21:30:07.885Z"
-graded_by: agy-expert-executor
-content_hash: a139c3f362f12771c27e8815575d41cf609faed9b00a48a3c9df83403c779b0c
+score: 97
+graded_at: "2026-11-23T21:57:01.524Z"
+graded_by: sonnet-review-executor
+content_hash: d91179a495e76900e1814d078178adc960df7bbda4957351de972da13fe7d9b3
 categories:
   purpose:
     score: 100
@@ -27,7 +27,7 @@ categories:
   quality:
     score: 100
   consistency:
-    score: 100
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -78,8 +78,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
     level: 4
     score: 100
@@ -104,6 +104,17 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 1
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 134
+    anchor: 推奨表の各行には次を書きます。
+    message: >-
+      スコープ変更方針の記述ガイドと本文構成表に、template・sample・recipe が求める「初期リリース前のスコープ追加時のトレードオフ確認方針」の規定がない。rulebook に追記して template・sample
+      と整合させるべきである。
+    message_ja: >-
+      スコープ変更方針の記述ガイドと本文構成表に、template・sample・recipe が求める「初期リリース前のスコープ追加時のトレードオフ確認方針」の規定がない。rulebook に追記して template・sample
+      と整合させるべきである。

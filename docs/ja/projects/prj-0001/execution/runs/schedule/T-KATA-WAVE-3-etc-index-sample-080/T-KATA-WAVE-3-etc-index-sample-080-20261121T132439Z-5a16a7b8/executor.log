@@ -1,0 +1,21 @@
+`docs/ja/specdojo/samples/etc-index-sample.md` の冗長な箇所を 1 件だけ直しました。変更したのはこのファイルだけで、markdownlint・Prettier・docs ビルドはすべて通っています。
+
+**直した箇所**
+- 「メモ / 将来課題」表の `_UNDECIDED_` 行の「当面の扱い」で、「2営業日を超えたら QE が判定を保留する」を消しました。同じ規則が「外部結合テスト共通の境界/依存/環境の扱い」表の「検証用領域が使えない時」の行にも書かれていたためです。その章を参照する書き方に変え、この表にしかない「PM が日程を見直す」は残しました。
+- 2営業日という具体的な日数は、このセルには書かれなくなりました。参照先の章に残っているので、判断に要る情報は失っていません。
+
+**残した箇所（4 件）**
+- 「外部結合テスト共通の境界/依存/環境の扱い」の合格基準の例は、「ケース表の共通カラム」の期待値の記入例と内容が近いものの残しました。数値や状態で判定できる合格基準を書くことは、完了条件として求められているためです。
+- `_ASSUMPTION_` 行の「応答待ち30秒・再送2回」は、タイムアウト・再送の行と同じ値です。仮置きだと示す印なので残しました。
+- 冒頭の業務リスク 3 点と、採用基準の表の採用理由は別の役割を持ちます。前者は適用の根拠、後者は観点ごとの採用の根拠です。
+- 「ケース表の共通カラム」の `case_id` を変えない運用は、rulebook の規約をこのサンプルに当てはめた内容です。
+
+**検証**
+- `npx prettier --write`：整形済み（表の列幅が揃い直っただけ）
+- `npx markdownlint-cli2`：問題なし
+- `npm run docs:build`：成功
+- `npm run validate:history-links`：対象の履歴ファイルを変更していないため実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"etc-index-sample の「メモ / 将来課題」表で「外部結合テスト共通の境界/依存/環境の扱い」と重なる保留規則を、その章への参照に置き換えた。ほかの候補は判断に要るため残した。","handoff":[],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/etc-index-sample.md","status":"passed","summary":"整形済み（表の列幅だけが変わった）"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/etc-index-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run docs:build","status":"passed","summary":"build complete"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルは未変更","reason":"変更したのは samples 配下の sample だけで、pjr 個票・plan・result などの履歴ファイルを変更していない"}],"condense_records":[{"location":"メモ / 将来課題 の表、_UNDECIDED_ 行の「当面の扱い」","category":"repetition","action":"reference","reason":"「外部結合テスト共通の境界/依存/環境の扱い」表の「検証用領域が使えない時」と同じ保留規則（2営業日続けば QE が判定を保留）を、その章への参照に置き換えた。この表にしかない「PM が日程を見直す」は残したので意味は変わらない","cause":{"type":"document"}},{"location":"外部結合テスト共通の境界/依存/環境の扱い の合格基準の例の段落","category":"repetition","action":"retain","reason":"ケース表の記入例の期待値と近いが、数値や状態で判定できる共通の合格基準を示すことは完了条件の必須項目なので残す","cause":{"type":"document"}},{"location":"メモ / 将来課題 の表、_ASSUMPTION_ 行","category":"repetition","action":"retain","reason":"タイムアウト・再送の値と同じだが、仮置きであることと確定の手順を示す未決の記録として必要","cause":{"type":"document"}},{"location":"本ドキュメントの目的と適用対象 の業務リスク 3 点","category":"repetition","action":"retain","reason":"採用基準の表の採用理由と重なるが、こちらは適用の根拠、表は観点ごとの採用の根拠で役割が違う","cause":{"type":"document"}},{"location":"ケース表の共通カラム の表の後の段落（case_id の運用）","category":"canonical-restatement","action":"retain","reason":"rulebook の規約をサンプルに当てはめたもので、欠番の扱いとテスト名への含め方というサンプル固有の判断を含む","cause":{"type":"document"}}]}
+</specdojo_executor_evidence>

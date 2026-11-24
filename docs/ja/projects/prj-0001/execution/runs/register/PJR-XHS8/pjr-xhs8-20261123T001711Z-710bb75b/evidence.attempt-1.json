@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-XHS8",
+  "run_id": "pjr-xhs8-20261123T001711Z-710bb75b",
+  "stage": {
+    "role": "executor",
+    "actor": "sonnet-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-23T00:18:04.320Z",
+    "completed_at": "2026-11-23T00:18:58.453Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-xhs8.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-xhs8-docs-dev-staging-search-index.md",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/.vitepress/config.mts",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/.vitepress/kata-staging.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/packages/docs-site/kata-staging.test.ts",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-xhs8-docs-dev-staging-search-index.md",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/.vitepress/config.mts",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/.vitepress/kata-staging.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/packages/docs-site/kata-staging.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 5,
+    "summary": ".../pjr-xhs8-docs-dev-staging-search-index.md      | 31 ++++++++++++++++++----\n packages/docs-site/.vitepress/config.mts           | 13 ++++++++-\n packages/docs-site/.vitepress/kata-staging.ts      |  3 ++-\n tests/packages/docs-site/kata-staging.test.ts      | 22 +++++++++++++++\n 4 files changed, 62 insertions(+), 7 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx vitest run tests/packages/docs-site/kata-staging.test.ts",
+      "status": "passed",
+      "summary": "6 件すべて成功"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --check packages/docs-site/.vitepress/config.mts packages/docs-site/.vitepress/kata-staging.ts tests/packages/docs-site/kata-staging.test.ts",
+      "status": "passed",
+      "summary": "整形済み"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "",
+      "reason": "変更した履歴ファイルは個票のみで、Markdown リンクを含まない"
+    }
+  ],
+  "final_message": "copyIfChanged の 1ms 許容、dev 時の索引描画での Shiki 省略、単体テスト追加、個票更新は完了。索引の文字の前後比較と起動時間の 3 回測定は dev サーバーを起動できず未実施。",
+  "completion_status": "incomplete",
+  "handoff": [
+    "orchestrator が統合後に、(1) コードブロックを含む代表ページで renderSearchHtml の出力から HTML タグを除いた文字を前後で比較し、(2) 2 回目の docs:dev 起動を 3 回測って 58.4 秒と比べ、結果を個票の対応結果へ書く。",
+    "判断: dev 判定は bin が渡す環境変数 SPECDOJO_DOCS_COMMAND が dev かどうかで行い、md.options.highlight を一時的に外して描画後に戻す。理由は build の索引とページ表示を変えないため。",
+    "CHANGELOG に書く事項は個票の対応結果 5.3 に記載済み（区分 Performance）。CHANGELOG.md は未変更。",
+    "保護された設定の変更は不要だった。"
+  ],
+  "block_reason": "executor reported incomplete: copyIfChanged の 1ms 許容、dev 時の索引描画での Shiki 省略、単体テスト追加、個票更新は完了。索引の文字の前後比較と起動時間の 3 回測定は dev サーバーを起動できず未実施。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-XHS8/pjr-xhs8-20261123T001711Z-710bb75b/executor.attempt-1.log",
+      "bytes": 2904,
+      "truncated": false
+    }
+  ]
+}

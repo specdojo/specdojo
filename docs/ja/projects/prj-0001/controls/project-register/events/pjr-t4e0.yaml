@@ -1,0 +1,65 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_cef0fe55fb714edd9a7f04c0bd2e5c88
+  ts: "2026-11-23T00:13:30Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 見張りと立ち上げたままのオーケストレーターを共存させ、exec watch を足す
+    - field: description
+      from: ""
+      to: 手で始めた run に触らない・見張りの停止と再開・lock の尊重を扱い、次のイベントまで待つ exec watch を足す（PJR-52EE の子の 4）
+    - field: input
+      from: ""
+      to: '["PJR-52EE を 4 件に分ける。決まった手当ては規則で行い、判断が要るものは agent に診断の案だけを書かせ（案 C）、立ち上げたままのオーケストレーターのために待つコマンドを足す（案 A）。MCP を使う案は採らない（利用者の決定、2026-11-23）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-52EE"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-40EE"]'
+    - field: commit_type
+      from: ""
+      to: feat
+    - field: commit_scope
+      from: ""
+      to: exec
+- v: 1
+  id: reg_07feba05470840a19253a53f20a1eeed
+  ts: "2026-11-23T00:13:53Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_cef0fe55fb714edd9a7f04c0bd2e5c88

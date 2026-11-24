@@ -1,0 +1,27 @@
+親の検証の前に、YAML を変えた run だけ表示のページを作り直すようにしました。対象を決める処理の単体テストと、runner の流れ（作り直しと `lint-md-changed` の失敗）の統合テストは、どちらも手元で通っています。`typecheck`・`lint-ts`・`test-unit`・`lint-md` などは指示どおり実行しておらず、親の runner の結果を待つ状態です。
+
+**変更した内容**
+- **作り直し**: 新しい `src/exec/worktree-yaml-pages.ts` を、`src/exec/run/agent.ts` の `runConfiguredParentValidationBatch` から、親の検証の前に呼びます。
+  - 対象は `docs/ja`・`docs/en` の YAML のうち、表示のページより更新時刻が新しいものと、変更・未追跡でまだページが無いものです。
+  - 更新時刻で見るので、`--resume` で統合先から取り込んだ YAML も拾えます。
+  - 該当があるときだけ、worktree の CLI で `specdojo build --only yaml-pages` を流します。YAML を変えない run では何もしません。
+- **作り直しの失敗**: runner の検証 `yaml-pages` を `failed` として記録し、親の検証の失敗になります。
+  - どの YAML で止まったか分かるよう、`src/docs/yaml-pages.ts` の `buildYamlPages` は描画の失敗に YAML のパスを付けて返します。
+  - 成功したときは記録を足さないので、記録済みの検証の並びは変わりません。
+  - worktree に SpecDojo の CLI が無いときは、準備のときと同じく作り直しを飛ばします。
+- **`tools/lint-changed.mjs`**: 変えた YAML の表示のページが作業ツリーにあれば、検査の対象に足します。`lint-md-changed` と `lint-fm-changed` の両方に効きます。ページは .gitignore のままで、commit の対象には入りません。
+- **テスト**: 単体テストは `tests/src/exec/worktree-yaml-pages.test.ts` と `tests/tools/lint-changed.test.ts`、統合テストは `tests/src/exec/worktree-yaml-pages.integration.test.ts` です。統合テストで次の 3 つを確かめています。
+  - RS2P と同じく YAML のコメントを `# #` にすると、作り直した後の `lint-md-changed` が MD025 で止まる。
+  - YAML を変えない run では作り直さない。
+  - 取り込みで commit 済みになった YAML の変更も見つける。
+- **文書と個票**: `exec-operation-guide` の executor / reporter pipeline の節に 1 段落足しました。個票の作業内容・対応結果と、CHANGELOG の文案（区分「不具合修正」）も書きました。
+
+**残っている制約**
+- 統合先から取り込んだ新しい YAML でまだページが無いものは、ほかの YAML が変わっていなければ作り直されません。
+- 内容が変わらないページは書き換えないため、更新時刻だけ古いまま残ることがあります。その場合、YAML を変えた run では、以後の親の検証で作り直しが毎回走ります。
+- 作業内容の No.4 は `open` のままです。統合の後に、PJR-JSEY での runner の確かめと、YAML を壊した実際の `exec run --register` での確かめが要ります。
+- 保護された設定（`exec-defaults.yaml`・`package.json`）の変更は要りません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"親の検証の前に、YAML を変えた run だけ worktree で表示のページを作り直すようにした（`src/exec/worktree-yaml-pages.ts`、`runConfiguredParentValidationBatch` から呼ぶ）。作り直しの失敗は `yaml-pages` の `failed` として記録し、`buildYamlPages` は止まった YAML のパスを示す。`tools/lint-changed.mjs` は変えた YAML の表示のページを検査の対象に足す。単体テスト・統合テスト（`# #` の壊れ方を `lint-md-changed` で止める）、`exec-operation-guide`、個票の対応結果と CHANGELOG の文案を更新した。","handoff":["作業内容 No 4（統合の後の PJR-JSEY での runner の動作の確かめと、YAML を壊した実際の `exec run --register` で統合の前の親の検証で止まることの確かめ）は specdojo-orchestrator が行う。","CHANGELOG.md は変えていない。個票の `### 5.1. CHANGELOG に書く事項` に、区分「不具合修正」と行の文案を書いた。","保護された設定（`exec-defaults.yaml`・`package.json`）の変更は要らない。","制約: 統合先から取り込んだ新しい YAML でまだページが無いものは、ほかの YAML が変わっていなければ作り直しの対象にならない。内容の変わらないページは書き換えないため、更新時刻だけ古いページがあると、YAML を変えた run では以後の親の検証でも作り直しが走ることがある。"],"validations":[{"command":"npx vitest run tests/src/exec/worktree-yaml-pages.test.ts tests/src/exec/worktree-yaml-pages.integration.test.ts tests/tools/lint-changed.test.ts tests/src/docs/yaml-pages.test.ts tests/src/exec/run/parent-validation-gate.test.ts","status":"passed","summary":"5 files, 61 tests passed（変更に関わるテストだけを流した。全件は親 runner の test-unit / test-integration が正）"},{"command":"npm run validate:history-links","status":"passed","summary":"exit 0。変更した個票を含め違反なし"},{"command":"npx prettier --write (changed md/ts/mjs files)","status":"passed","summary":"変更したファイルを整形した"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,7 @@
+`docs/ja/specdojo/samples/dmd-index-sample.md` の冗長な「次の表は…示す」という前置き 3 か所を削りました。それ以外の記述は、判断に必要な背景・例外・完了条件にあたるため残しました。
+
+編集後の静的検査は、`lint:md` を含めすべて親 runner の担当のため、ここでは実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"3 件の table-prose を削除し、それ以外の記述は意味と必須情報の維持のため保持した。","handoff":[],"condense_records":[{"location":"3. `run_id` 規約 導入文の「次の表は、採番から参照までの決まりを示す。」","category":"table-prose","action":"delete","reason":"表の内容を予告するだけの文で、表自体が項目と決まりを示している。意味は変わらない。","cause":{"type":"document"}},{"location":"4. 検証の共通方針 導入文の「次の表は、種別ごとに何と何を比べ、何を満たせば合格とするかを示す。」","category":"table-prose","action":"delete","reason":"表の列見出し（種別・比べるもの・合格基準）の言い換えで、判定の決まりは表に残る。","cause":{"type":"document"}},{"location":"5. 対象一覧 導入文の「次の表で両者の対応と、移さない理由を示す。」","category":"table-prose","action":"delete","reason":"表の最終列「`mip-index` との対応・除外の理由」の見出しの繰り返し。`mip-index` の行を受けるという関係の説明は残した。","cause":{"type":"document"}},{"location":"2. 共通方針 冪等性・抽出方式の各項目","category":"repetition","action":"retain","reason":"洗い替えの条件・取り込み直しの期限・フル抽出の根拠は判断に要る制約であり、重複していない。","cause":{"type":"document"}},{"location":"4. 検証の共通方針 許容差・証跡・合否の箇条","category":"table-prose","action":"retain","reason":"表にない許容差の根拠、保管先、判定者の参照を補う内容で、表との二重説明ではない。","cause":{"type":"document"}}],"validations":[{"command":"npm run lint:md","status":"not_run","reason":"親 runner の allowlist 検査として実行されるため、executor では実行しない。"}]}
+</specdojo_executor_evidence>

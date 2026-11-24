@@ -1,0 +1,114 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_711e93e4d9104ad8b4c99f63ed32ef35
+  ts: "2026-11-22T11:41:48Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: reject した項目の変更の範囲の予約が残り、後の項目を止める
+    - field: description
+      from: ""
+      to: 統合されないまま reject した項目の変更の範囲の予約が blocked のまま残り、範囲が重なる後の項目が start する前に止まる。2026-11-22 に SGFC の予約で YS9M が止まった。
+    - field: input
+      from: ""
+      to: '["2026-11-22、YS9M の run が「[scope] PJR-YS9M blocked by unintegrated PJR-SGFC」で止まった。SGFC は TF6F の確かめに使い、統合せずに reject した項目で、worktree はもう無かった。","予約は execution/exec/.locks/change-scopes/ の項目ごとの JSON（state: blocked）。登録は src/exec/run/change-scope.ts の tryAcquire。","回避として、オーケストレーターが利用者の承認のもとで SGFC の予約のファイルを手で消した（2026-11-22）。","利用者の承認（2026-11-22、indie）で起票した。担当 DEV、期限 2026-11-30。"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-22"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-SGFC"]'
+- v: 1
+  id: reg_0049737b38fc483e8aba877157fe7938
+  ts: "2026-11-22T11:42:10Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 影響範囲と対応方針を利用者の承認のもとで書く
+  changes:
+    - field: section
+      from: ""
+      to: 影響範囲
+  previous_event_id: reg_711e93e4d9104ad8b4c99f63ed32ef35
+- v: 1
+  id: reg_f17fce1371c44c1f967b2ffec314b396
+  ts: "2026-11-22T11:42:17Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 影響範囲と対応方針を利用者の承認のもとで書く
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_0049737b38fc483e8aba877157fe7938
+- v: 1
+  id: reg_45f1ec7d75bb487eab8471aa616b1b18
+  ts: "2026-11-22T12:05:27Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_f17fce1371c44c1f967b2ffec314b396
+- v: 1
+  id: reg_e3c040bdf39c4b38aad8a609cbb097f0
+  ts: "2026-11-22T12:10:43Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_45f1ec7d75bb487eab8471aa616b1b18
+- v: 1
+  id: reg_0153263a2ccc4ac8b6f08539c4dc5ef8
+  ts: "2026-11-22T12:30:12Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが差分・単体テスト・ガイドの追記を確かめ、JSEY を含む統合後の run が予約に止められず、予約のファイルが残らないことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: 予約を調べるときに終端の項目の blocked の予約を読み飛ばして消すようにした。終端でない項目の予約は今までどおり後の項目を止める
+  previous_event_id: reg_e3c040bdf39c4b38aad8a609cbb097f0

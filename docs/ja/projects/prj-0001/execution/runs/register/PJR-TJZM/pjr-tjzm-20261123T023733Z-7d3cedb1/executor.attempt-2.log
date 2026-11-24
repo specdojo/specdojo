@@ -1,0 +1,9 @@
+`Register item:` の行の区切り空白を直し、最終確認まで済みました。前回の編集で `register-core.ts` の `  [` が `[` になっていたので、元の2スペースに戻しました。個票に `_TODO_` は残っていません。
+
+この環境ではテストを実行していません。テストと検査は親 runner が走らせます。
+
+`tests/src/exec/register-pipeline-e2e.integration.test.ts` の dry-run の期待値は、エスケープ前のタイトル `pipeline_test item` に合わせてあります。`rg` で探しても、エスケープ付きのタイトルを期待するテストはほかにありませんでした。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"runner ログと dry-run の Register item 行をエスケープ前のタイトルで出すようにした。register-core.ts の区切り空白の欠落を直し、e2e テストの期待値を新しい出力に合わせた。ほかにエスケープ付きタイトルを期待するテストはなかった。テストは executor では実行していない。","handoff":[],"validations":[{"command":"npm run test:integration","status":"not_run","summary":"親 runner が実行する。"}],"target_coverage":[{"target":"docs/ja/projects/prj-0001/controls/project-register/pjr-tjzm-runner-log-title-escape.md","status":"changed","path":"docs/ja/projects/prj-0001/controls/project-register/pjr-tjzm-runner-log-title-escape.md"},{"target":"src/exec/run/register-core.ts","status":"changed","path":"src/exec/run/register-core.ts"},{"target":"src/exec/run/register-mode.ts","status":"changed","path":"src/exec/run/register-mode.ts"},{"target":"tests/src/exec/register-pipeline-e2e.integration.test.ts","status":"changed","path":"tests/src/exec/register-pipeline-e2e.integration.test.ts"}]}
+</specdojo_executor_evidence>

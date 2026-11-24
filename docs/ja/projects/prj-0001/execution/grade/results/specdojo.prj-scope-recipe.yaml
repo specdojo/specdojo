@@ -4,12 +4,11 @@ document: specdojo:prj-scope-recipe
 path: docs/ja/specdojo/recipes/prj-scope-recipe.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-recipe
 verdict: pass
-score: 97
-graded_at: "2026-11-20T20:31:38.577Z"
-graded_by: flash-high-executor
-content_hash: df7896cdafc8f8b60e7e2a402c7977c7d8672a76dc9c0815e9dec8ea28e11d4d
+score: 99
+graded_at: "2026-11-23T21:57:23.730Z"
+graded_by: sonnet-review-executor
+content_hash: 639594dad693dc242544f4fa767884120466544e044b934032d581d73ea4c6db
 categories:
   purpose:
     score: 100
@@ -26,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 92
+    score: 100
   consistency:
     score: 100
 viewpoints:
@@ -82,8 +81,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 3
     score: 75
@@ -105,26 +104,15 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 2
+  minor: 1
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-kata-conformance
-    line: 110
-    anchor: 4. 受入条件・設計・実装の詳細を書いた箇所を見つけ、後続の成果物へ移す。
-    message: >-
-      委譲先を「後続成果物」とだけ記載し、実在する
-      `prj-success-criteria-and-acceptance-criteria`、`prj-assumptions-constraints-dependencies`、`prj-issues-and-approach`
-      を識別できないため、Recipe 記述標準のリンク規約に従ってリンクまたは文書 ID を明示する必要がある。
-    message_ja: >-
-      委譲先を「後続成果物」とだけ記載し、実在する
-      `prj-success-criteria-and-acceptance-criteria`、`prj-assumptions-constraints-dependencies`、`prj-issues-and-approach`
-      を識別できないため、Recipe 記述標準のリンク規約に従ってリンクまたは文書 ID を明示する必要がある。
-  - id: F002
-    severity: minor
     rule: vp-ux-readability
-    line: 110
-    anchor: 4. 受入条件・設計・実装の詳細を書いた箇所を見つけ、後続の成果物へ移す。
-    message: 「後続成果物」という総称だけでは次に見る文書を識別できないため、成功基準・受入条件, 前提・制約・依存関係, 課題と解決アプローチの各文書 ID またはリンクを明示する必要がある。
-    message_ja: 「後続成果物」という総称だけでは次に見る文書を識別できないため、成功基準・受入条件, 前提・制約・依存関係, 課題と解決アプローチの各文書 ID またはリンクを明示する必要がある。
+    line: 9
+    anchor: >-
+      -
+      スコープは、プロジェクト概要の目的・期待効果（Why）を引き継ぎ、対象業務・対象システム・対象期間・スコープ外（What）を定め、任意で境界の判断基準と変更方針（How）を決める。各行は、上位の期待効果と境界の理由で、変更後は変更記録でもたどれるようにする（Trace）。
+    message: 使い方の説明が 1 項目に Why / What / How / Trace を詰め込み、初見では意味を取りにくいため、観点ごとに分けるか平易な文に直す。
+    message_ja: 使い方の説明が 1 項目に Why / What / How / Trace を詰め込み、初見では意味を取りにくいため、観点ごとに分けるか平易な文に直す。

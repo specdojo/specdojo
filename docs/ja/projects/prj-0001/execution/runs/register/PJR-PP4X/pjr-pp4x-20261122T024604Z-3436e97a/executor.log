@@ -1,0 +1,40 @@
+PP4X の修正は終わり、変更はまだ commit していません。ただし、完了条件の最後の 1 つは残っています。統合の後に第 3 波の 090 を 1 件流し、止まらずに verdict が記録されることの確認です。sandbox の中では agent も grade も起動できないため、ここは確かめていません。
+
+**原因への対処**
+- 型の文書の review の評価の種類（対象種別）を、新しい関数 `reviewGradeTargetKind`（`src/exec/plans-core.ts`）で決めるようにしました。runner が review の前に流す grade と、review plan の「grade の対象種別」は、どちらもこの関数を使います。
+- 次のどれかに当たれば `kata`、どれにも当たらなければ今までどおり `deliverable` です。
+  - approach が型の整備（`*-authoring`・`*-maintenance`）である。
+  - 評価対象が `docs/ja/specdojo/` の `rulebooks`・`recipes`・`samples`・`templates` 配下にある。
+  - 成果物が `domain: kata` の catalog（`dct-kata` など）にある。
+- 判定を文書が型かどうかで決めたのは、評価結果のファイル（サイドカー）が対象種別によらず 1 文書に 1 つだからです。同じ文書を 2 種類で評価すると、互いに上書きします。
+- 代表成果物と型が同じ文書なら、grade は 1 回だけ流れます。以前からある「同じパスで両方 `kata` なら 2 回目を省く」規則が、第 3 波でも効くようになりました。
+
+**review の段の block の扱い**
+- review の段では、`specdojo grade list ... --changed-only` の鮮度の確認が失敗と記録されても、runner は block しません（`src/exec/reporter.ts`）。鮮度は review の verdict（`grade-stale` など）で判断します。
+- ほかの検証の失敗、`--changed-only` の付かない `grade list`（`--dependency-changed` など）、edit の段は、今までどおり block します。
+- 対象は `--changed-only` に絞りました。`--dependency-changed` の失敗で block することを確かめる既存のテストがあり、その動きは変えていません。
+
+**その他の変更**
+- `tests/src/exec/review-kata.test.ts` と `tests/src/exec/reporter.test.ts` に単体テストを足しました。
+- `review-guide.md` の「review 前段の grade」に、型の文書の対象種別と鮮度の確認の扱いを書きました。`exec-operation-guide` には該当する説明がなく、変えていません。
+- 個票の対応結果に、第 1・2 波への影響、090 の流し直しの手順、`### 5.1. CHANGELOG に書く事項`（区分は「不具合修正」）を書きました。`CHANGELOG.md` は変えていません。
+
+**第 1・2 波への影響**
+動きは変わりません。代表成果物は `docs/ja/projects/prj-0001/` 配下にあり、型でない catalog に載っているため、今までどおり `deliverable` で評価されます。型とは別の文書なのでサイドカーも別で、それが第 1・2 波で食い違いが起きなかった理由です。
+
+**090 の流し直し**
+手順はコードと exec 運用ガイドで確かめただけで、実際には流していません。
+1. 10 件それぞれに `specdojo exec release --project prj-0001 --task <task-id> --by <actor>` を実行し、続けて `specdojo exec refresh --project prj-0001` を実行します。
+2. 第 3 波の 090 を `specdojo exec run` で流し直します。新しい plan は `kata` で作られます。
+
+`exec resume` は使わないでください。reporter から再開すると、`deliverable` で出した古い verdict がそのまま残ります。`--resume-from executor` では、worktree にある古い plan がまた `deliverable` で鮮度を確かめます。
+
+**検証**
+- 対象のテスト 2 ファイル（149 件）は、整形の後にもう一度流してすべて通りました。
+- `npm run validate:history-links` と `npm run check:src-imports` は通りました。
+- 変更したファイルは Prettier で整形しました。
+- `typecheck`・`lint:ts`・`test:unit`・`lint:md` などは親の runner が流すため、ここでは流していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"型の文書（rulebook・recipe・sample・template）または domain: kata の catalog の成果物の review では、runner の事前の grade と review plan の grade の対象種別を kata に揃えた（reviewGradeTargetKind）。代表成果物と宣言済みの型が同じ文書なら grade は 1 回だけ流れる。review の段では grade list --changed-only の failed で block しない（isGradeFreshnessCheck）。単体テスト、review-guide、個票の対応結果（第 1・2 波への影響、090 の流し直しの手順、CHANGELOG の文案）を更新した。","handoff":["統合の後に、オーケストレーターが第 3 波の 090 を 1 件流し、止まらずに verdict が記録されることを確かめる（executor の sandbox では agent と grade を起動できない）。","止まった 090 の 10 件は、task ごとに `specdojo exec release --project prj-0001 --task <task-id> --by <actor>` と `specdojo exec refresh --project prj-0001` で todo に戻してから、`specdojo exec run` で流し直す。`exec resume`（reporter から、または `--resume-from executor`）は古い plan（`--target deliverable`）を使い回すため使わない。","CHANGELOG.md は変えていない。区分（不具合修正）と行の文案は個票の対応結果の `### 5.1. CHANGELOG に書く事項` にある。","鮮度の確認の block の除外は `grade list` の `--changed-only` 付きに限った。`--dependency-changed` の failed は既存のテストどおり review の段でも block する。"],"validations":[{"command":"npm run validate:history-links","status":"passed","summary":"個票を含む履歴ファイルの検査で違反なし（exit 0）"},{"command":"npm run check:src-imports","status":"passed","summary":"src の runtime import は dependencies に宣言済み"},{"command":"npx prettier --check src/exec/plans-core.ts src/exec/plans-generation.ts src/exec/reporter.ts tests/src/exec/review-kata.test.ts tests/src/exec/reporter.test.ts docs/ja/specdojo/guides/review-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-pp4x-review-grade-target-mismatch.md","status":"passed","summary":"plans-core.ts と plans-generation.ts を prettier --write で整形し、ほかのファイルは整形済み"},{"command":"npx vitest run tests/src/exec/review-kata.test.ts tests/src/exec/reporter.test.ts","status":"passed","summary":"対象の 2 ファイル 149 件が通過（全件の test:unit は親の runner が実行する）"}]}
+</specdojo_executor_evidence>

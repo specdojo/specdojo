@@ -1,0 +1,19 @@
+`docs/ja/specdojo/rulebooks/opd-rulebook.md` を作り直し、対象を `opd-<term>`（運用ドメインごとの分冊）だけに絞りました。grade の指摘 12 件のうち 9 件はこの rulebook の中で解消しました。残る 3 件（F008・F009・F010）は sample 側の作業になります。この段では sample を変更しない決まりなので、次の作業として引き継ぎます。Prettier と markdownlint はこのファイルで通過しています。
+
+**rulebook で直したこと**
+- **担当範囲（F003・F004・F007）**: `opd-index` の章立てと記述基準は `opd-index-rulebook` を正本とし、本書では扱わないと明記しました。frontmatter の `sample` からも `opd-index-sample` を外しています。
+- **他の文書との関係（F002）**: 「位置づけ」の章を表にし、`opd-index`・`opd-<term>`・`opr-*` がそれぞれ何を担うか、記述基準の正本はどれかを示しました。食い違ったときは `opd-index` を正とすること、`opd-index` を改訂したら差分を持つ `opd-<term>` を見直すことも書きました。
+- **recipe と template（F001・F012）**: 同系の `opd-index-rulebook` に合わせて `undecided` から `not-needed` に決め、理由（本文構成と記述ガイドで骨組みと記入基準が定まる）を全体方針に書きました。これで ready にする前の未解決事項はなくなります。
+- **命名と配置（F006）**: ファイル名は ID と同名の `.md`、配置は `docs/ja/product/090-operations/` を推奨に変え、`opd-index-rulebook` とそろえました。
+- **本文構成**: 12 行×2 列の表をやめ、3 段の構成にしました。先頭が概要、中間が `opd-index` と差分がある章を同じ見出しで 1 章以上、末尾が関連ドキュメント導線です。
+- **記述ガイド**: 章ごとの記入内容は `opd-index-rulebook` を参照する形にし、本書には補足・具体化・例外の書き分けだけを残しました。良い例と悪い例も付けています。
+- **「分冊」が何を指すか（F011）**: 該当する `opr-<term>` がない場合の書き方を明示し、`opr-index` への導線は省略しないとしました。
+- **禁止事項（F005）**: 判定基準のなかった「大量記載する」を「手順を逐次（コマンド列・チェックリスト）で書く。手順は `opr-*` へ置き参照だけを置く」に改めました。差分の根拠となる `opd-index` の章を示さない例外と、個人名・個人の連絡先も禁止事項に加えました。
+
+対象の `opd-access-control-sample` は、新しい章立て（概要／権限・アカウント運用／関連ドキュメント導線）にそのまま沿っています。
+
+npm の検査はこの段では実行していません。実行は後の runner 側の担当です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"opd-rulebook を `opd-<term>` 専用に絞って簡潔にした。`opd-index` の章立てと記述基準は `opd-index-rulebook` に任せ、`sample` から `opd-index-sample` を外した。recipe と template は理由を書いて `not-needed` に決めた。命名と配置を `opd-index-rulebook` にそろえ、本文構成を 3 段にし、記述ガイドには補足・具体化・例外の書き分けと良い例・悪い例を書いた。禁止事項は判定できる表現に改めた。指摘 12 件のうち 9 件はこの rulebook の中で解消し、sample 側の 3 件（F008・F009・F010）は handoff に回した。","handoff":["F009: OPR の sample 7 件（`opr-index-sample`・`opr-incident-sample`・`opr-access-control-sample`・`opr-backup-restore-sample`・`opr-batch-sample`・`opr-change-sample`・`opr-monitoring-sample`・`opr-support-sample` のうち `opr-sample` 以外）が frontmatter で `rulebook: specdojo:opd-rulebook` と宣言している。この段では sample を変更しない決まりのため直していない。sample の段で `opr-index-sample` は `specdojo:opr-index-rulebook` に、それ以外は `specdojo:opr-rulebook` に直す必要がある。","F010: `specdojo:opd-sample` は rulebook の `sample` に載っていないが、まだ `rulebook: specdojo:opd-rulebook` と宣言している。中身も旧形式の最小サンプル（目的と適用範囲・入力情報など）で、本書の章立てに沿っていない。sample の段で廃止（削除または deprecated）するかを判断する必要がある。","F008: rulebook の `sample` から `opd-index-sample` を外したので、この指摘の前提はなくなった。なお現在の `opd-index-sample` は 12 章をそろえており、`opd-index-rulebook` の sample として成り立っている。","直さなかった箇所と理由: frontmatter 規約にある `based_on` の方針（OPR を載せない）は grade の指摘がなく、`opd-index-rulebook` とも重ならないので残した。RACI と承認者の記述は文書の中身として役割を扱う運用統制で、PJR-76N9 の対象外なので残した。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/opd-rulebook.md","status":"passed","summary":"--write で表を整えた後、check で通過した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/opd-rulebook.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更したのは rulebook だけで、plan・result・個票は変更していない"}]}
+</specdojo_executor_evidence>

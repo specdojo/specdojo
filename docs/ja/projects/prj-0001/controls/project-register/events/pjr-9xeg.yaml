@@ -47,3 +47,74 @@
     - field: commit_scope
       from: ""
       to: project
+- v: 1
+  id: reg_a39cbd77afc44d759a30b19e16de055c
+  ts: "2026-11-22T11:39:47Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件と影響範囲を利用者の承認のもとで書く
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_f6db75ecc23440af8b5f6536db190e6c
+- v: 1
+  id: reg_178668b0a8414c62881090b08075ffd3
+  ts: "2026-11-22T11:39:53Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件と影響範囲を利用者の承認のもとで書く
+  changes:
+    - field: section
+      from: ""
+      to: 作業内容
+  previous_event_id: reg_a39cbd77afc44d759a30b19e16de055c
+- v: 1
+  id: reg_c15e7431170043ddb7e8997cfd3a95df
+  ts: "2026-11-22T11:46:39Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_178668b0a8414c62881090b08075ffd3
+- v: 1
+  id: reg_8aa7bb99dd414cc6b45b0f2db627e970
+  ts: "2026-11-22T12:00:48Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_c15e7431170043ddb7e8997cfd3a95df
+- v: 1
+  id: reg_a06c473c150f4d9f8783d3e3b62c8e92
+  ts: "2026-11-22T12:03:59Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが差分と対応結果を完了条件と照らし、残課題だった prj-0002 の checkout での全体の点検も流して確かめた（2026-11-22、8 項目すべて出力、exec/prj-0002-PJR-KH17 を実在のブランチと照合、前後で作業ツリー・refs・worktree が不変）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: specdojo project move `<project-id>` --check を足した。8 つの点検を ok・needs-cleanup・check-manually で出し、片付けが要れば終了コード 1 で終わる
+  previous_event_id: reg_8aa7bb99dd414cc6b45b0f2db627e970

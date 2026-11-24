@@ -59,7 +59,7 @@ properties:
       signals (e.g. opencode load wait / timeout, claude overloaded, copilot quota) from
       leaking across providers.
     propertyNames:
-      enum: ["opencode", "claude", "codex", "copilot", "antigravity", "custom"]
+      enum: ["opencode", "claude", "codex", "copilot", "custom"]
     additionalProperties:
       $ref: "#/$defs/ProviderOverride"
 
@@ -108,6 +108,9 @@ $defs:
         lint-ts,
         lint-fm,
         lint-md,
+        lint-fm-changed,
+        lint-md-changed,
+        test-docs,
         lint-mermaid,
         lint-d2,
         build,
@@ -160,6 +163,27 @@ $defs:
                     one of them, and records `not_applicable` otherwise. Without `paths`, or when
                     the change set is unknown or truncated, or when the integration targets were
                     merged into the worktree, the validation always runs.
+                parallel:
+                  type: boolean
+                  description: >
+                    When true, the validation runs concurrently with the directly adjacent
+                    entries that also set `parallel: true`. Other entries run one at a time in
+                    list order. Results are recorded in list order. Use it for light lint only.
+                related:
+                  type: boolean
+                  description: >
+                    Only for `test-unit` and `test-integration`. When true, the runner follows the
+                    relative imports (and the files a test launches, such as `src/specdojo.ts`)
+                    of each test file under `tests/` and passes only the test files that depend on
+                    a changed file to the fixed npm script after `--`. It runs the full suite when
+                    the change set is unknown or truncated, when no related test is found, when a
+                    change touches the test infrastructure or settings (`vitest.*`,
+                    `tests/helpers/**`, `tests/setup/**`, `tests/fixtures/**`, `package.json`,
+                    `package-lock.json`, `tsconfig*.json`, `lefthook.yml`, `.specdojo/**`,
+                    `docs/specdojo/**`), or when a non-code file changes under `src/`, `tests/`,
+                    `tools/`, `packages/` or `scripts/`. The selected and omitted test files and
+                    the reason are recorded in the validation's `test_selection`. Without
+                    `related`, the full suite runs.
       post_integration:
         type: array
         uniqueItems: true
@@ -283,6 +307,19 @@ $defs:
         description: >
           Extra template variables resolved by member attributes. Resolution precedence is
           by_nickname, then by_proficiency, then by_mode.
+      allow_commands:
+        type: array
+        minItems: 1
+        uniqueItems: true
+        description: >
+          claude and opencode only. Extra permission rules for edit-mode launch commands.
+          claude appends them as --allowedTools (deny rules in settings.edit.json still take
+          precedence); opencode adds them as bash allow rules to the launched agent's permission.bash through
+          the OPENCODE_CONFIG_CONTENT environment variable, after the agent definition's
+          "*": deny. Either way they survive `config scaffold --force`.
+        items:
+          type: string
+          pattern: "^Bash\\([^'\\\\\\r\\n]+\\)$"
       rate_limit_detection:
         $ref: "#/$defs/AgentErrorDetection"
         description: "Provider-specific failure signals. Prefer stderr_patterns over generic exit_codes."
@@ -303,6 +340,15 @@ $defs:
           local single-model Ollama host) without lowering the global --parallel for other
           providers. When a round would exceed this, the extra tasks are deferred to a later
           round. Absent means no per-provider limit.
+      agent_timeout_seconds:
+        type: integer
+        minimum: 1
+        maximum: 2147483
+        description: >
+          Seconds one launch of this provider's agent CLI may run. When the limit is reached
+          the runner stops the CLI's process group with SIGTERM, then SIGKILL after 10
+          seconds, and blocks the run with a reason that names this key. Absent means no
+          limit: the runner waits until the CLI exits.
 
   CommandParams:
     type: object

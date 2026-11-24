@@ -5,10 +5,10 @@ path: docs/ja/product/030-architecture/010-c4/cnd-specdojo.md
 target: deliverable
 rubric: grade-rubric-v2
 verdict: pass
-score: 100
-graded_at: "2026-11-15T21:51:26.906Z"
-graded_by: sol-review-executor
-content_hash: 6e40a05a5dd0ffd611abfb31d9f997326c15d4d5097ab23b463a7a61238d4ce1
+score: 93
+graded_at: "2026-11-21T08:57:12.825Z"
+graded_by: opus-executor
+content_hash: d279f2bc195ec0e38ed400bb10f85081de8f59edb929163ac48f811d4d6bbe1c
 source_hashes:
   catalog-entry: c0caead0066c7ce9e876446f3c1d3c1eb74dfd69f1d877bdbc6831568fc5bfa3
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
@@ -16,33 +16,33 @@ source_hashes:
   dependency:cxd-specdojo: 81a4bd013e6ebd2dc23755492479df1e4a609ffd632fa6475ddd9bcb8b328709
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
-  schedule: 0dfcda0848e7a3c34e36da9dfb892ca2b6a3186f870750012492f1beee3ccc56
+  schedule: a0eedf6470caca480628ee799d10f0dbea94cc1867904d2149badc64aae0e694
 categories:
   purpose:
-    score: 100
+    score: 88
   operations:
-    score: 100
+    score: 94
   planning:
     score: 100
   business:
-    score: 100
+    score: 92
   consistency:
-    score: 100
+    score: 88
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 94
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 88
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-publication-accountability:
     level: 4
     score: 100
@@ -62,8 +62,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-stakeholder-clarity:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-cross-document-consistency:
     level: 4
     score: 100
@@ -83,17 +83,17 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-done-criteria:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -101,11 +101,11 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-operability:
     level: 4
     score: 100
@@ -121,13 +121,87 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 7
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 7
+    anchor: 本図はインフラ設計への入力となる配置前提と結合対象を示す初版である。物理ホスト、ポート、公開範囲、認証方式、配備手順は確定せず、CLI の内部モジュール、コマンド構文、ファイル構造は各詳細仕様へ委ねる。
+    message: 概要に承認対象とする範囲と、作成担当（ARC）・確認者・最終判断者（PO）の Role code、および PO の承認・保留・差し戻しを記録する先が書かれておらず、誰が何を承認するかを概要から判断できないため追記する。
+    message_ja: 概要に承認対象とする範囲と、作成担当（ARC）・確認者・最終判断者（PO）の Role code、および PO の承認・保留・差し戻しを記録する先が書かれておらず、誰が何を承認するかを概要から判断できないため追記する。
+    cause:
+      type: document
+  - id: F002
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 59
+    anchor: "| Person（図中ラベル）     | 利用目的・接点                                       |"
+    message: Person 表に template の「判断・確認の責務」列がなく、各 Person が CLI やサイトの結果に対して何を確認・判断するかが読み取れないため、列を追加して責務を記入する。
+    message_ja: Person 表に template の「判断・確認の責務」列がなく、各 Person が CLI やサイトの結果に対して何を確認・判断するかが読み取れないため、列を追加して責務を記入する。
+    cause:
+      type: document
+  - id: F003
+    severity: minor
+    rule: vp-dev-testability
+    line: 152
+    anchor: >-
+      本図の境界やコンテナを改訂するときは [[specdojo:cnd-rulebook|C4コンテナ図作成ルール]] の「メモ / 将来課題」に従う。ARC が
+      [[cxd-specdojo|上位コンテキスト図]]、[[cpd-specdojo-cli|SpecDojo CLI C4コンポーネント図]]、[[ifd-specdojo|インフラ構成図（SpecDojo実行環境）]]
+      への影響を確認し、DEV が連携契約、QE が結合検証の対象と証跡を追従させる。OPS は人間の `PO` が承認を記録した版を公開の元とする。
+    message: 改訂時の手順が rulebook の「メモ / 将来課題」だけを参照し、「検証・承認前の確認」（図と定義表の双方向照合・描画確認）とその記録先を示していないため、変更後に行う文書検査を追記する。
+    message_ja: 改訂時の手順が rulebook の「メモ / 将来課題」だけを参照し、「検証・承認前の確認」（図と定義表の双方向照合・描画確認）とその記録先を示していないため、変更後に行う文書検査を追記する。
+    cause:
+      type: document
+  - id: F004
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 129
+    anchor: 以下は検証設計への入力であり、合格保証ではない。期待結果が未確定の項目や留保した範囲は未判定とする。
+    message: 検証対象の表に Pass / Fail の判定規則がなく、「利用場面」行の「各 Person の操作が上位図の利用目的と一致する」も照合方法が示されていないため、合否条件と照合手段を追記する。
+    message_ja: 検証対象の表に Pass / Fail の判定規則がなく、「利用場面」行の「各 Person の操作が上位図の利用目的と一致する」も照合方法が示されていないため、合否条件と照合手段を追記する。
+    cause:
+      type: document
+  - id: F005
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 140
+    anchor: "## 5. メモ / 将来課題"
+    message: template の「検証・承認前の確認」に当たる節（文書検査・描画確認の記録、未解決指摘と後続作業の制限、PO の承認記録、OPS の公開対象照合記録）が本文にないため、節を設けて参照先を記入する。
+    message_ja: template の「検証・承認前の確認」に当たる節（文書検査・描画確認の記録、未解決指摘と後続作業の制限、PO の承認記録、OPS の公開対象照合記録）が本文にないため、節を設けて参照先を記入する。
+    cause:
+      type: document
+  - id: F006
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 146
+    anchor: >-
+      | 実行・配備の仮定   | 決定候補。PJR は未登録                                                                          |
+      CLI、サイト、`REL-04`・`REL-06`。上位図はローカル実行も仮定としている | ARC            | T-KATA-WAVE-1 の 140 の PO 判断、インフラ設計の着手前 |
+      [[cpd-specdojo-cli\|SpecDojo CLI C4コンポーネント図]] と [[ifd-specdojo\|インフラ構成図（SpecDojo実行環境）]] で CLI
+      の実行単位、構築主体、配信先を具体化し、本図の配備の基準と照合する |
+    message: >-
+      判断時点の「T-KATA-WAVE-1 の 140 の PO 判断」はスケジュールのタスク ID
+      と表記が異なり、どのタスクを指すか特定しにくいため、`T-KATA-WAVE-1-cnd-specdojo-140`（完成版確定）のように正式な ID で記す。
+    message_ja: >-
+      判断時点の「T-KATA-WAVE-1 の 140 の PO 判断」はスケジュールのタスク ID
+      と表記が異なり、どのタスクを指すか特定しにくいため、`T-KATA-WAVE-1-cnd-specdojo-140`（完成版確定）のように正式な ID で記す。
+    cause:
+      type: document
+  - id: F007
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 152
+    anchor: >-
+      本図の境界やコンテナを改訂するときは [[specdojo:cnd-rulebook|C4コンテナ図作成ルール]] の「メモ / 将来課題」に従う。ARC が
+      [[cxd-specdojo|上位コンテキスト図]]、[[cpd-specdojo-cli|SpecDojo CLI C4コンポーネント図]]、[[ifd-specdojo|インフラ構成図（SpecDojo実行環境）]]
+      への影響を確認し、DEV が連携契約、QE が結合検証の対象と証跡を追従させる。OPS は人間の `PO` が承認を記録した版を公開の元とする。
+    message: "`ready` へ昇格させる前に揃える確認結果（ARC・QE・BA・OPS の確認）と、残す未決事項の扱いが書かれておらず、公開・確定の判断に必要な前提が不足しているため追記する。"
+    message_ja: "`ready` へ昇格させる前に揃える確認結果（ARC・QE・BA・OPS の確認）と、残す未決事項の扱いが書かれておらず、公開・確定の判断に必要な前提が不足しているため追記する。"
+    cause:
+      type: document
 done_criteria:
-  satisfied: 4
+  satisfied: 5
   total: 5
-  unsatisfied:
-    DC-002:
-      - PO
   detail_ref: cnd-specdojo-grade-criteria

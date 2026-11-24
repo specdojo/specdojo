@@ -1,0 +1,14 @@
+リスク登録簿サンプル `pm-risk-register-sample.md` の冗長な箇所を 1 件だけ削りました。
+
+- **削った箇所:** 5.2 のトリガー表で、RK-004 の顕在化のトリガーにあった「（2026-04-04 に該当）」です。同じ日付と移管の事実は、一覧の RK-004 の内容欄と、対応計画の期限欄に残っています。起票先の欄にも IS-002 が書いてあります。
+- **残した箇所:** 次の箇所は、判断に要る情報を含むため変更していません。
+  - 5.2 の導入文と 5.1 の表の「移管したら `done`」。移管の運用ルールと、ステータス更新の契機という別の観点です。
+  - 3.3 の判定根拠の表。
+  - 4 の RK-003 の受容の説明。
+- **変更ファイル:** この文書のみです。`prettier` で整形した結果、表の列幅が揃い直り、diff は 6 行になりました。
+- **検査:** `npx prettier --write` は成功しました。`npm run lint:md:changed` は出力がなく終了したので、エラーはなかったと判断しています。
+- **次の確認:** `Edit` の後に、この文書が外部で変更されたという通知が出ました。私が実行した `prettier` による変更の可能性が高く、内容は再読込していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"5.2 の RK-004 トリガー欄の重複する日付注記を削除し、表を prettier で整形した。ほかの候補は判断に要る情報のため保持した。","handoff":[],"condense_records":[{"location":"5.2. 顕在化のトリガーと移管先 の表、RK-004 行の顕在化のトリガー欄","category":"repetition","action":"delete","reason":"「2026-04-04 に該当」は、一覧の RK-004 の内容欄と、対応計画の RK-004 の期限欄に同じ日付と移管の事実が書かれている。起票先の欄にも IS-002 があるため、削っても意味は変わらない。","cause":{"type":"document"}},{"location":"5.2. 顕在化のトリガーと移管先 の導入文「顕在化したら当日中に起票し、元のリスクを done にする」","category":"repetition","action":"retain","reason":"5.1 の表はステータス更新の契機を示し、この文は顕在化時の起票期限という別の運用ルールを示す。判断に要る情報のため残した。","cause":{"type":"document"}}],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/pm-risk-register-sample.md","status":"passed","summary":"対象文書を整形した"}]}
+</specdojo_executor_evidence>

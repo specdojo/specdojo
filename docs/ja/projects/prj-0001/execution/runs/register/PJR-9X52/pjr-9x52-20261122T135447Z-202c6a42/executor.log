@@ -1,0 +1,39 @@
+PJR-9X52 は完了で、親の検証の統合テストを、変更したファイルに関係するテストだけに絞れるようにしました。何も書かなければ今までどおり全件を流します。prj-0001 の設定は変えていません。手元では関係する単体テスト 4 ファイル（136 件）、変更ファイルへの eslint と型検査、3 文書の markdownlint、`npm run validate:history-links` が通っています。runner が流す検証一式はまだです。
+
+**使い方と動き**
+- `test-unit`・`test-integration` の要素に `related: true` と書くと絞ります（`src/exec/related-tests.ts`）。他の検証に書くとエラーになります。
+- 選び方は `vitest related` を使わず、runner が各テストの相対 import と、テストが起動するファイルのパス（`tsx src/specdojo.ts` など）を辿って選びます。流す前に選んだテストと流さないテストが決まるので、evidence に残せて単体テストでも確かめられます。統合テストの多くは CLI を子プロセスで起動するため、import だけだと見逃します。
+- 次の場合は全件に戻します。
+  - 変更一覧が無いか、途中で切れている。
+  - 関係するテストが 1 つも無い。
+  - テストの基盤や設定を変えた（`vitest.*`、`tests/helpers/**`、`package.json`、`tsconfig*.json`、`docs/specdojo/**` など）。
+  - `src/` などの配下でコード以外のファイルを変えた。
+- 結果は evidence の各検証の `test_selection`（`mode`・`reason`・`selected_tests`・`omitted_tests`）に残ります。`summary` の先頭にも `related tests only (...)` か `full run (...)` を付けます。
+- `exec-defaults` と `exec-evidence` の schema を直しました。夜間とリリース前（`npm run check:release`）に全件を流す手順は `exec-config-guide` と `exec-operation-guide` に書きました。
+
+**今日の run での見込み**（全件は 43 ファイル、中央値 130 秒）
+
+| run | 選ばれる数 | 時間の見込み |
+| --- | --- | --- |
+| PJR-Z17T | 1 | 数秒〜十数秒 |
+| PJR-MS7X | 9 | 約 27 秒 |
+| PJR-7C9X | 10 | 約 31 秒 |
+| PJR-VQK2 | 20 | 約 71 秒 |
+| PJR-KZZM | 36 | 約 121 秒 |
+| PJR-K8F1 | 43（全件に戻る） | 変わらない |
+
+src か tests を変えた 19 run で見ると、選ばれる数の中央値は 26（4 run は全件に戻る）で、130 秒が約 80 秒になる見込みです。時間は実測に選ばれる割合を掛けただけです。重い e2e テストはほとんどの変更で選ばれるので、実際の短縮はこれより小さいはずです。
+
+**決めた点**
+- どのテストにも依存されない変更ファイルがあっても、関係するテストが 1 本でもあれば絞ります。全件に戻すと、単体テストしか無い src の変更のたびに全件になるためです。そうしたファイルは `reason` に挙げます。
+- 絞って通った検証も `commit_hook_skips` を満たす扱いにしました。そのため統合の commit で流れる `npm test` の全件の hook も流れません。速くしたいならここで全件を流せないので、その分の見逃しは夜間とリリース前の全件で拾う前提です。ガイドにも書きました。
+
+**あなたに決めてもらうこと**
+- 使う場合は `.specdojo/exec-defaults.yaml` の `test-integration` に `related: true` を足します（今の `paths` はそのまま）。上の理由から、夜間に全件を流す仕組みを先に用意してから入れてください。
+- 統合のあと、close の前にオーケストレーターが JSEY を流して runner の動きを確かめる必要があります。個票の作業内容 No.6 は `open` のまま残しています。
+
+個票には作業内容・対応結果・決めた理由と、「CHANGELOG に書く事項」（区分は「追加」）を書きました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"Added an opt-in `related: true` option to `test-unit` and `test-integration` in `pipeline.parent_validations` (`src/exec/related-tests.ts`). When set, the runner follows relative imports and launched file paths to run only the tests that depend on the changed files, and falls back to the full suite when the change set is unknown, no related test is found, or the test infrastructure, settings or non-code files under the source roots changed. Without the option the full suite runs as before. The selection is recorded in the evidence `test_selection` field. Updated the `exec-defaults` and `exec-evidence` schemas, added unit tests, and documented the nightly and pre-release full runs in `exec-config-guide` and `exec-operation-guide`. Filled in the ticket with the estimates from today's runs (median 26 of 43 files, about 130s down to about 80s), the decisions and the CHANGELOG entry. The prj-0001 config is unchanged.","handoff":["決めた点: 選び方は `vitest related` ではなく runner が import を辿る形にした。流す前に選んだテスト・流さないテストを evidence の `test_selection` に残せ、単体テストで確かめられるため。統合テストの多くが `tsx src/specdojo.ts` で CLI を起動するので、テストが起動するファイルのパスも依存として辿る。","決めた点: どのテストにも依存されない変更コードがあっても、関係するテストが 1 つでもあれば絞る（全件に戻すと単体テストしか持たない src の変更のたびに全件になるため）。該当ファイルは `reason` に挙げる。`docs/specdojo/**` の schema・template はテストが実行時に読むため、変えたら全件に戻す。","決めた点: 絞って `passed` になった検証も `commit_hook_skips` の `covered_by` を満たす扱いのままにした（統合の commit で `npm test` 全件を流すと時間が減らないため）。見逃しは夜間とリリースの前の全件で拾う前提で、`exec-config-guide` に明記した。","保護された設定の変更案（未適用、利用者の判断待ち）: `.specdojo/exec-defaults.yaml` の `test-integration` の要素に `related: true` を足す（`paths` はそのまま）。夜間に `npm run test:integration` を流す routine などを先に用意してから入れる。","見込み: src か tests を変えた今日の 19 run で、選ばれる数の中央値は 43 本中 26 本（4 run は全件に戻る）、中央値 130 秒が約 80 秒の見込み（実測 × 選ばれる割合で、実際の短縮はこれより小さい）。例ごとの値は個票の対応結果の表にある。","残作業: runner の動きを変えたため、統合の後にオーケストレーターが JSEY を流して確かめてから close する（個票の作業内容 No.6 を `open` のまま残した）。","CHANGELOG に書く事項（区分: 追加）: 親の検証の `test-unit`・`test-integration` に `related: true` を書くと、変更したファイルに関係するテストだけを流せるようにした。既定は今までどおり全件。選んだテストと理由は evidence の `test_selection` に残る（PJR-9X52）。"],"validations":[{"command":"npx vitest run --config vitest.unit.config.ts tests/src/exec/related-tests.test.ts tests/src/exec/parent-validation.test.ts tests/src/exec/agent-config.test.ts tests/src/exec/evidence.test.ts","status":"passed","summary":"136 tests passed (targeted check; the full test:unit run belongs to the parent runner)"},{"command":"npx eslint src/exec/related-tests.ts src/exec/parent-validation.ts src/exec/evidence.ts tests/src/exec/related-tests.test.ts","status":"passed","summary":"no errors"},{"command":"npx tsc -p tsconfig.test.json --noEmit","status":"passed","summary":"no type errors"},{"command":"npx markdownlint-cli2 docs/ja/projects/prj-0001/controls/project-register/pjr-9x52-parent-validation-related-integration-tests.md docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/guides/exec-operation-guide.md","status":"passed","summary":"0 issues in 3 files"},{"command":"npm run validate:history-links","status":"passed","summary":"exit 0, no violations"}]}
+</specdojo_executor_evidence>

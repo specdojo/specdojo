@@ -1,0 +1,530 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-JA3M",
+  "run_id": "pjr-ja3m-20261124T033100Z-0740bac1",
+  "stage": {
+    "role": "executor",
+    "actor": "terra-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-24T03:36:49.891Z",
+    "completed_at": "2026-11-24T03:38:19.283Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-ja3m.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-ja3m-tests-live-kata.md",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/docs/yaml-pages.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/docs/yaml-tables.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/worktree-yaml-pages.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/grade/grade.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/fixtures/grade/kata-references/docs/ja/specdojo/rulebooks/example-rulebook.md",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/grade/kata-references/docs/ja/specdojo/samples/example-sample.md",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/grade/kata-references/docs/ja/specdojo/templates/example-template.md",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/excluded-ifx-api-sample.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/excluded-ifx-msg-sample.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/excluded-job-sequence.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/gl-sample.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/ifx-cmd-ai-provider-cli.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/ifx-index-sample.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--bdd-register-entry.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--dct-business-model-bes.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--dct-business-model-bps.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--dct-business-model-br.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--dct-data-model-bdd.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--dct-data-model-ccd.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--dct-data-model-cdsd.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--dct-data-model-cdt.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--dct-data-model-stsd.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--ifx-file-agent-evidence.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--pm-members.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--pm-review-viewpoints.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--pm-roles.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--sch-milestones.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--tml-index.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/specdojo--bdd-sample.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/specdojo--dct-index-sample.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/specdojo--dct-sample.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/specdojo--ifx-cmd-sample.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/specdojo--pm-members-sample.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/specdojo--pm-review-viewpoints.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/specdojo--pm-roles-sample.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/specdojo--tml-sample.yaml",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-ja3m-tests-live-kata.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 38,
+    "summary": ".../controls/project-register/events/pjr-ja3m.yaml | 18 +++++++-\n .../project-register/pjr-ja3m-tests-live-kata.md   |  5 +--\n .../pjr-ja3m-20261124T033100Z-0740bac1/plan.md     |  6 +++\n tests/src/docs/yaml-pages.test.ts                  | 52 +++-------------------\n tests/src/docs/yaml-tables.test.ts                 |  7 ++-\n .../exec/worktree-yaml-pages.integration.test.ts   |  2 +-\n tests/src/grade/grade.test.ts                      | 16 ++++---\n 7 files changed, 47 insertions(+), 59 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-ja3m-tests-live-kata.md tests/src/docs/yaml-pages.test.ts tests/src/docs/yaml-tables.test.ts tests/src/exec/worktree-yaml-pages.integration.test.ts tests/src/grade/grade.test.ts tests/fixtures/grade/kata-references/docs/ja/specdojo/{rulebooks,samples,templates}/*.md tests/fixtures/yaml-pages/*.yaml",
+      "status": "passed",
+      "summary": "対象ファイルの整形を確認。"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-ja3m-tests-live-kata.md tests/fixtures/grade/kata-references/docs/ja/specdojo/{rulebooks,samples,templates}/*.md",
+      "status": "passed",
+      "summary": "Markdown 検査に成功。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検査に成功。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "catalog 検査に成功。警告あり。通常の npm script は sandbox の IPC 制限で失敗したため規約の代替起動を使用。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-JA3M/src/catalog/catalog.ts\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-JA3M/src/dashboard/dashboard.ts\n  1150:1  warning  File has too many lines (1073). Maximum allow\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-JA3M/src/schedule/strategy-generate-document.ts\n  87:8  warning  Function 'buildStrategyDocument' has too many lines (289). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-JA3M/src/shared/specdojo-config.ts\n  1252:1  warning  File has too many lines (1120). Maximum allowed is 1000  max-lines\n\n✖ 43 problems (0 errors, 43 warnings)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: prj-0001:pjr-ja3m-tests-live-kata\n  type: project\n  status: draft\n  rulebook: specdojo:pjr-rulebook\n  part_of:\n    - prj-0001:pjr-index\n  item_type: issue\n  item_status: in-progress\n  priority: high\n  difficulty: medium\n  owner: DEV\n  registered_at: \"2026-11-23T22:24:54Z\"\n  due_on: \"2026-11-30\"\n  commit_type: fix\n  commit_scope: test\n---\n\n# PJR-JA3M テストが実物の kata の sample の中身に頼っており、型の手直しのたびに壊れ\n… output omitted …\n検証は配布する実 sample の妥当性を確認するため残す。その他の sample パスは一時ディレクトリ上のテストデータまたはパス解決の期待値である。\n\n2026-11-24 12:40 にオーケストレーターがこの worktree で `dct-sample.yaml` と `pm-members-sample.yaml` の末尾に注釈を追加し、`opr-batch-sample.md` の rulebook 宣言を `opd-rulebook` に変更した状態で確認した。`npm run test:unit` は 257 ファイル・4469 件、`npm run test:docs` は 19 ファイル・489 件がすべて通り、sample は元に戻した。型・lint・単体・結合テストは親 runner が実行する。\n\n### 5.1. CHANGELOG に書く事項\n\nなし（テストの保守性改善のみ）。\n\n## 6. 関連ドキュメント\n\n- 関連: PJR-1RJP（rulebook の grade が YAML の sample の古い表示のページを読む）。"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6684 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6684 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-JA3M\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-site/kata-staging.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/rulebook-schema-enums.test.ts\"}\n[parent-\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1735}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  12:52:51\n   Duration  2.47s (transform 4.59s, setup 661ms, import 7.11s, tests 5.44s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "full run (change set is unknown or truncated): exit 0: > specdojo@0.9.2 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-JA3M\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/commands/where.integration.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/commands/build.integration.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/exec/job-worktree.integration.test.ts\"}\n[parent-vali\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr…",
+      "test_selection": {
+        "mode": "full",
+        "reason": "change set is unknown or truncated"
+      }
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-JA3M/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-JA3M/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-JA3M\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/tools/grade-per-document.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/register/catalogless-target.test.ts\"}\n ✓ tests/src/register/catalogless-target.test.ts (27 tests) 2908ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/src/regist\n… output omitted …\n/invalid.md\n\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\n[grade] attempt 1/3 failed; retrying: subject.md: exit 1: agent failed\n[grade] attempt 2/3 failed; retrying: subject.md: exit 1: agent failed\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-ja3m-tests-live-kata.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-ja3m-tests-live-kata.md",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/docs/yaml-pages.test.ts",
+      "status": "changed",
+      "path": "tests/src/docs/yaml-pages.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/docs/yaml-tables.test.ts",
+      "status": "changed",
+      "path": "tests/src/docs/yaml-tables.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/exec/worktree-yaml-pages.integration.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/worktree-yaml-pages.integration.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/grade/grade.test.ts",
+      "status": "changed",
+      "path": "tests/src/grade/grade.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/fixtures/grade/kata-references/docs/ja/specdojo/rulebooks/example-rulebook.md",
+      "status": "changed",
+      "path": "tests/fixtures/grade/kata-references/docs/ja/specdojo/rulebooks/example-rulebook.md",
+      "reason": ""
+    },
+    {
+      "target": "tests/fixtures/grade/kata-references/docs/ja/specdojo/samples/example-sample.md",
+      "status": "changed",
+      "path": "tests/fixtures/grade/kata-references/docs/ja/specdojo/samples/example-sample.md",
+      "reason": ""
+    },
+    {
+      "target": "tests/fixtures/grade/kata-references/docs/ja/specdojo/templates/example-template.md",
+      "status": "changed",
+      "path": "tests/fixtures/grade/kata-references/docs/ja/specdojo/templates/example-template.md",
+      "reason": ""
+    },
+    {
+      "target": "tests/fixtures/yaml-pages/excluded-ifx-api-sample.yaml",
+      "status": "changed",
+      "path": "tests/fixtures/yaml-pages/excluded-ifx-api-sample.yaml",
+      "reason": ""
+    },
+    {
+      "target": "tests/fixtures/yaml-pages/excluded-ifx-msg-sample.yaml",
+      "status": "changed",
+      "path": "tests/fixtures/yaml-pages/excluded-ifx-msg-sample.yaml",
+      "reason": ""
+    },
+    {
+      "target": "tests/fixtures/yaml-pages/excluded-job-sequence.yaml",
+      "status": "changed",
+      "path": "tests/fixtures/yaml-pages/excluded-job-sequence.yaml",
+      "reason": ""
+    },
+    {
+      "target": "tests/fixtures/yaml-pages/gl-sample.yaml",
+      "status": "changed",
+      "path": "tests/fixtures/yaml-pages/gl-sample.yaml",
+      "reason": ""
+    },
+    {
+      "target": "tests/fixtures/yaml-pages/ifx-cmd-ai-provider-cli.yaml",
+      "status": "changed",
+      "path": "tests/fixtures/yaml-pages/ifx-cmd-ai-provider-cli.yaml",
+      "reason": ""
+    },
+    {
+      "target": "tests/fixtures/yaml-pages/ifx-index-sample.yaml",
+      "status": "changed",
+      "path": "tests/fixtures/yaml-pages/ifx-index-sample.yaml",
+      "reason": ""
+    },
+    {
+      "target": "tests/fixtures/yaml-pages/prj-0001--bdd-register-entry.yaml",
+      "status": "changed",
+      "path": "tests/fixtures/yaml-pages/prj-0001--bdd-register-entry.yaml",
+      "reason": ""
+    },
+    {
+      "target": "tests/fixtures/yaml-pages/prj-0001--dct-business-model-bes.yaml",
+      "status": "changed",
+      "path": "tests/fixtures/yaml-pages/prj-0001--dct-business-model-bes.yaml",
+      "reason": ""
+    },
+    {
+      "target": "tests/fixtures/yaml-pages/prj-0001--dct-business-model-bps.yaml",
+      "status": "changed",
+      "path": "tests/fixtures/yaml-pages/prj-0001--dct-business-model-bps.yaml",
+      "reason": ""
+    },
+    {
+      "target": "tests/fixtures/yaml-pages/prj-0001--dct-business-model-br.yaml",
+      "status": "changed",
+      "path": "tests/fixtures/yaml-pages/prj-0001--dct-business-model-br.yaml",
+      "reason": ""
+    },
+    {
+      "target": "tests/fixtures/yaml-pages/prj-0001--dct-data-model-bdd.yaml",
+      "status": "changed",
+      "path": "tests/fixtures/yaml-pages/prj-0001--dct-data-model-bdd.yaml",
+      "reason": ""
+    },
+    {
+      "target": "tests/fixtures/yaml-pages/prj-0001--dct-data-model-ccd.yaml",
+      "status": "changed",
+      "path": "tests/fixtures/yaml-pages/prj-0001--dct-data-model-ccd.yaml",
+      "reason": ""
+    },
+    {
+      "target": "tests/fixtures/yaml-pages/prj-0001--dct-data-model-cdsd.yaml",
+      "status": "changed",
+      "path": "tests/fixtures/yaml-pages/prj-0001--dct-data-model-cdsd.yaml",
+      "reason": ""
+    },
+    {
+      "target": "tests/fixtures/yaml-pages/prj-0001--dct-data-model-cdt.yaml",
+      "status": "changed",
+      "path": "tests/fixtures/yaml-pages/prj-0001--dct-data-model-cdt.yaml",
+      "reason": ""
+    },
+    {
+      "target": "tests/fixtures/yaml-pages/prj-0001--dct-data-model-stsd.yaml",
+      "status": "changed",
+      "path": "tests/fixtures/yaml-pages/prj-0001--dct-data-model-stsd.yaml",
+      "reason": ""
+    },
+    {
+      "target": "tests/fixtures/yaml-pages/prj-0001--ifx-file-agent-evidence.yaml",
+      "status": "changed",
+      "path": "tests/fixtures/yaml-pages/prj-0001--ifx-file-agent-evidence.yaml",
+      "reason": ""
+    },
+    {
+      "target": "tests/fixtures/yaml-pages/prj-0001--pm-members.yaml",
+      "status": "changed",
+      "path": "tests/fixtures/yaml-pages/prj-0001--pm-members.yaml",
+      "reason": ""
+    },
+    {
+      "target": "tests/fixtures/yaml-pages/prj-0001--pm-review-viewpoints.yaml",
+      "status": "changed",
+      "path": "tests/fixtures/yaml-pages/prj-0001--pm-review-viewpoints.yaml",
+      "reason": ""
+    },
+    {
+      "target": "tests/fixtures/yaml-pages/prj-0001--pm-roles.yaml",
+      "status": "changed",
+      "path": "tests/fixtures/yaml-pages/prj-0001--pm-roles.yaml",
+      "reason": ""
+    },
+    {
+      "target": "tests/fixtures/yaml-pages/prj-0001--sch-milestones.yaml",
+      "status": "changed",
+      "path": "tests/fixtures/yaml-pages/prj-0001--sch-milestones.yaml",
+      "reason": ""
+    },
+    {
+      "target": "tests/fixtures/yaml-pages/prj-0001--tml-index.yaml",
+      "status": "changed",
+      "path": "tests/fixtures/yaml-pages/prj-0001--tml-index.yaml",
+      "reason": ""
+    },
+    {
+      "target": "tests/fixtures/yaml-pages/specdojo--bdd-sample.yaml",
+      "status": "changed",
+      "path": "tests/fixtures/yaml-pages/specdojo--bdd-sample.yaml",
+      "reason": ""
+    },
+    {
+      "target": "tests/fixtures/yaml-pages/specdojo--dct-index-sample.yaml",
+      "status": "changed",
+      "path": "tests/fixtures/yaml-pages/specdojo--dct-index-sample.yaml",
+      "reason": ""
+    },
+    {
+      "target": "tests/fixtures/yaml-pages/specdojo--dct-sample.yaml",
+      "status": "changed",
+      "path": "tests/fixtures/yaml-pages/specdojo--dct-sample.yaml",
+      "reason": ""
+    },
+    {
+      "target": "tests/fixtures/yaml-pages/specdojo--ifx-cmd-sample.yaml",
+      "status": "changed",
+      "path": "tests/fixtures/yaml-pages/specdojo--ifx-cmd-sample.yaml",
+      "reason": ""
+    },
+    {
+      "target": "tests/fixtures/yaml-pages/specdojo--pm-members-sample.yaml",
+      "status": "changed",
+      "path": "tests/fixtures/yaml-pages/specdojo--pm-members-sample.yaml",
+      "reason": ""
+    },
+    {
+      "target": "tests/fixtures/yaml-pages/specdojo--pm-review-viewpoints.yaml",
+      "status": "changed",
+      "path": "tests/fixtures/yaml-pages/specdojo--pm-review-viewpoints.yaml",
+      "reason": ""
+    },
+    {
+      "target": "tests/fixtures/yaml-pages/specdojo--pm-roles-sample.yaml",
+      "status": "changed",
+      "path": "tests/fixtures/yaml-pages/specdojo--pm-roles-sample.yaml",
+      "reason": ""
+    },
+    {
+      "target": "tests/fixtures/yaml-pages/specdojo--tml-sample.yaml",
+      "status": "changed",
+      "path": "tests/fixtures/yaml-pages/specdojo--tml-sample.yaml",
+      "reason": ""
+    }
+  ],
+  "final_message": "固定 fixture への移行と個票への検証結果の記録を完了。親 runner が型・lint・単体・結合テストを実行する。",
+  "completion_status": "complete",
+  "handoff": [
+    "2026-11-24 12:40 にオーケストレーターが sample 3 件を一時変更した状態で単体テスト 257 ファイル・4469 件、docs テスト 19 ファイル・489 件の成功を確認し、sample を復元した。",
+    "CHANGELOG に書く事項: なし（テストの保守性改善のみ）。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-JA3M/pjr-ja3m-20261124T033100Z-0740bac1/executor.log",
+      "bytes": 7794,
+      "truncated": false
+    }
+  ]
+}

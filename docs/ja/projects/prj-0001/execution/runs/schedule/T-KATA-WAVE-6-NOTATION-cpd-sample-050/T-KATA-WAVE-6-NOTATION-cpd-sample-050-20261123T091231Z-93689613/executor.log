@@ -1,0 +1,17 @@
+`docs/ja/specdojo/samples/cpd-sample.md` を直し、grade の指摘 F001〜F012 にすべて対応しました。PJR-76N9 の決まりに沿って、本文から文書の役割の割り当てと承認の進み具合も外しています。単体で実行した Mermaid の構文検査は終了コード 0 で通りました。markdownlint などのほかの検査は、このあと親 runner が実行します。
+
+| 指摘 | 対応 |
+| --- | --- |
+| F001・F002 | 概要の参照先に `prj-overview-sample` の「必要性」を加え、放置時の影響（店番の属人化、記録漏れ、引き継ぎの確認負担）を本文に書きました。 |
+| F003 | 用語の段落を追加しました。一般的な用語は rulebook の「位置づけと用語定義」と `gl-sample` を参照し、控え・発行状況・記録アクセスは本書の中で定義しています。 |
+| F011 | Mermaid のノード名 `保存` を `記録アクセス` に直し、図と表の呼び方をそろえました。 |
+| F006・F007・F009・F010 | rulebook にない `<対象.md>` 前提の文を外しました。代わりに rulebook の「検証と合意の判定」の3段階に沿った本図の確認結果（一致・一致・未判定）を書き、構文検査のコマンドと合格の基準を明記しました。基準の出力は実際に実行した結果と同じです。 |
+| F004・F005・F008・F012 | 5章の表から「担当・判断者」と「承認への影響」の列を外し、template と同じ4列にしました。PM・PO の進め方の段落、`draft` を維持するという文、保守窓口の段落は消しています。保守窓口の段落にあった変更時の影響確認は、役割を外して 4.1 へ移しました。 |
+
+- **役割の記述**: 3.2・4.1・4.2 にあった DEV・開発担当・QE といった役割の記述も外しました。店主代表は業務上の Person として書いているので、そのまま残しています。
+- **frontmatter**: `status: ready` は変えていません。
+- **決める必要がある値**: 後続作業の日付は推測で埋めず、`_UNDECIDED_` として残しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"cpd-sample を修正し、grade の指摘 F001〜F012 にすべて対応した。PJR-76N9 に沿って役割の割り当てと承認の進み具合を本文から外し、5章の表を template の4列に合わせた。図の名前を記録アクセスにそろえ、rulebook の「検証と合意の判定」に沿った確認結果と構文検査のコマンドを書いた。","handoff":["sample 本文の後続作業の日付は `_UNDECIDED_`（詳細設計の計画で決める）として残した。利用者が決める値である。","rulebook への変更案: `cpd-rulebook` の「メモ / 将来課題」の記録項目は「対象・論点 / 影響と後続成果物 / 当面の扱い・解消条件」の3つだが、`cpd-template` は「引き継ぎ先」を足した4列になっている。sample は template に合わせたので、rulebook 側に「引き継ぎ先」を足すと3つがそろう。","`cnd-sample` は `status: draft` で本文に「`draft` を維持する」と書いており、PJR-76N9 の承認の進み具合にあたる可能性がある。この段の対象外なので、別の段で見直すとよい。"],"validations":[{"command":"node tools/lint-mermaid.mjs docs/ja/specdojo/samples/cpd-sample.md","status":"passed","summary":"[mermaid 12.3.0] 1 file(s), 1 diagram(s) / flowchart: 1 passed, 0 error, 0 未検査, exit 0"},{"command":"npx prettier --write docs/ja/specdojo/samples/cpd-sample.md","status":"passed","summary":"対象ファイルを整形した"}]}
+</specdojo_executor_evidence>

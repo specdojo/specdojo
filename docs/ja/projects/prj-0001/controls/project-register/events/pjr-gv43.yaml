@@ -38,3 +38,109 @@
     - field: derived_from
       from: ""
       to: '["PJR-BSCK"]'
+- v: 1
+  id: reg_178701e7be02429fba9aaac08bd69308
+  ts: "2026-11-21T11:30:40Z"
+  action: update
+  actor: SpecDojo
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+    - field: difficulty
+      from: "-"
+      to: medium
+  previous_event_id: reg_9f2b2228655a44e7978b4ecee37104fb
+- v: 1
+  id: reg_c77ccb16ab104b3190226a993511f695
+  ts: "2026-11-21T11:31:19Z"
+  action: update
+  actor: SpecDojo
+  from_status: open
+  to_status: open
+  reason: section "作業内容" updated
+  changes:
+    - field: section
+      from: ""
+      to: 作業内容
+  previous_event_id: reg_178701e7be02429fba9aaac08bd69308
+- v: 1
+  id: reg_740929f2528f498d96d7c166fb8de0c7
+  ts: "2026-11-21T11:35:59Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_c77ccb16ab104b3190226a993511f695
+- v: 1
+  id: reg_49b43172b205435f9a72bf1f9a9f6773
+  ts: "2026-11-21T11:57:08Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-integration"
+  previous_event_id: reg_740929f2528f498d96d7c166fb8de0c7
+- v: 1
+  id: reg_e576c4fbf3b940fe97c3eac5651a88ea
+  ts: "2026-11-21T12:11:12Z"
+  action: start
+  actor: sonnet-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-integration"
+      to: "-"
+  previous_event_id: reg_49b43172b205435f9a72bf1f9a9f6773
+- v: 1
+  id: reg_59a05d2f9140452596e2931da5810fd3
+  ts: "2026-11-21T12:18:31Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_e576c4fbf3b940fe97c3eac5651a88ea
+- v: 1
+  id: reg_d808864e86e54b218466f900e1fd0ba6
+  ts: "2026-11-21T12:57:25Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（sonnet）で実装し、統合テスト 13 件の失敗を executor から再開して直した。オーケストレーターが完了条件を差分・個票の対応結果・ビルド済み CLI（各コマンドが unknown command になる）で確かめた。過去の版の移行ガイドと CHANGELOG.md は変わっていない
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-21"
+    - field: conclusion
+      from: "-"
+      to: 非推奨の 9 コマンドと exec・catalog・schedule・job・routine の where の別名を消した（3eea88005）。使われ方を確かめ、prj-0002 を含めて呼び出しがないことを確かめた
+  previous_event_id: reg_59a05d2f9140452596e2931da5810fd3

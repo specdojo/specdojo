@@ -1,0 +1,14 @@
+`findRunRecord` の全走査は直しましたが、修正前後の出力比較と時間の測定は実行できていません。sandbox で `tsx` の実行が承認待ちになりました。そのため、個票の作業内容 No.4 は `open` のままです。
+
+- **修正内容**: `src/shared/run-records.ts` に `RunRecordIndex` を追加しました。`execution/runs/` の一覧を 1 回だけ作り、frontmatter と時刻は path ごとに初回だけ読んで使い回します。
+- **`findRunRecord`**: 任意の第 4 引数 `index` を足しました。省略時は従来の動きのままで、ほかの呼び出し元は変わりません。
+- **dashboard**: `buildDashboardMarkdown` が生成のたびに索引を作って `formatTaskLink` へ渡し、生成が終わると捨てます。
+- **テスト**: `tests/src/exec/run-records.test.ts` に 2 件足しました。記録の置き場がない項目と、複数 run のうち最新を選ぶ場合です。
+- **個票**: `pjr-beq8-dashboard-run-record-scan.md` の作業内容と対応結果を埋めました。「CHANGELOG に書く事項」の小節も入れています。
+- **確認済み**: `npm run typecheck`、`run-records` と `dashboard` の単体テスト 95 件（修正後）、`npm run lint:ts` のエラー 0 件。
+
+`git diff --stat` には `controls/project-register/events/pjr-beq8.yaml` も出ています。これは私が編集したものではなく、runner 側の変更とみて触っていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"incomplete","final_message":"RunRecordIndex を追加し dashboard の生成で 1 回だけ読むようにした。typecheck、lint:ts、単体テストは通過。修正前後の出力比較と時間の測定は sandbox で tsx 実行が承認待ちになり未実施のため、個票の作業内容 No.4 は open のまま残した。","handoff":["前後の出力比較と時間測定が未実施（完了条件）。tmp/compare.sh を人手またはホストで実行する。旧 dashboard.ts（git show HEAD:src/dashboard/dashboard.ts）と新版で specdojo dashboard build --project prj-0001 の時間を測り、generated_at 行を除いて生成物を diff する。結果を個票の対応結果へ追記する。","判断: 索引は DashboardPaths の任意項目 runRecordIndex として生成ごとに作り、モジュールの大域には持たせない。理由は生成の外へ持ち越さない条件のため。","CHANGELOG に書く事項: 区分は Performance。文案は「dashboard build が run の記録を項目ごとに全走査していたのをやめ、1 回の生成で一覧を 1 回だけ読むようにした」。個票の対応結果にも記載済み。","保護された設定の変更は不要だった。"],"validations":[{"command":"npm run typecheck","status":"passed","summary":"型エラーなし"},{"command":"npm run lint:ts","status":"passed","summary":"error 0 件。warning は既存のもの"},{"command":"npx vitest run tests/src/exec/run-records.test.ts tests/src/dashboard","status":"passed","summary":"95 件通過。追加した RunRecordIndex のテスト 2 件を含む run-records.test.ts は修正後に 18 件通過"},{"command":"specdojo dashboard build --project prj-0001（修正前後の比較と時間測定）","status":"requires_human","summary":"sandbox で tsx 実行が承認待ちになり実行できなかった。tmp/compare.sh を実行して前後の出力と時間を確かめる"}]}
+</specdojo_executor_evidence>

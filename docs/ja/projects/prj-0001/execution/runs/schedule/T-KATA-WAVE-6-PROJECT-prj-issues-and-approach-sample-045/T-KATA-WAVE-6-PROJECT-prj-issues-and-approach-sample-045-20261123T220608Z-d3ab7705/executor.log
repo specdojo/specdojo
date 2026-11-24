@@ -1,0 +1,10 @@
+recipe（`docs/ja/specdojo/recipes/prj-issues-and-approach-recipe.md`）を見直し、grade の finding 3 件に対応しました。変更したのはこのファイルだけで、rulebook と sample はそのままです。Prettier の確認は通りました。markdownlint などの lint は、このあと親 runner が実行するので、こちらではまだ結果がありません。
+
+- **F002（代替案比較への参照がない）**: 「解決策候補」のコツに一文を足しました。評価軸での詳細な比較は代替案比較（`prj-comparison-of-alternatives`）に任せる、という内容です。rulebook と同じく、識別子をバッククォートで書いて仮置きしています。
+- **F001 / F003（公開してよいかと、PO の最終判断を確かめる項目がない）**: 「仕上げチェック」に 1 項目を足しました。公開してよい情報だけで書かれていること、そして人間の PO が公開を判断するのに必要な未決事項と影響範囲が `_UNDECIDED_` や次の検討事項から読み取れることを確かめます。PJR-76N9 に合わせ、承認の進み具合や役割の割り当てを本文に書かせる形にはしていません。
+
+ほかの記述は rulebook と矛盾しないので、変更していません。frontmatter の `status` も変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"recipe を更新して finding 3 件に対応した。F002 は「解決策候補」のコツに代替案比較（`prj-comparison-of-alternatives`）へ任せる一文を追加。F001・F003 は「仕上げチェック」に、公開してよい情報だけで書かれていることと、人間の PO が公開を判断するのに要る未決事項が読み取れることを確かめる項目を追加。rulebook・sample・`status` は変更していない。","handoff":[],"validations":[{"command":"npx prettier --check docs/ja/specdojo/recipes/prj-issues-and-approach-recipe.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルの変更なし","reason":"変更したのは recipe だけで、plan・result・個票などの履歴ファイルは変更していないため"}]}
+</specdojo_executor_evidence>

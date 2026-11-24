@@ -11,7 +11,7 @@ specdojo:
   owner: BA
   approach: sample-maintenance
   targets:
-    - prj-0001:stsd-task-execution
+    - stsd-task-execution
     - specdojo:stsd-sample
 ---
 

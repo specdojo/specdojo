@@ -81,7 +81,7 @@ business-specs-kata で確定した型（specdojo:ifx-cmd-rulebook と sample）
 
 ### 5.3. 未決定事項・申し送り
 
-- `prj-0001:ifx-index` は未作成の前提として扱い、内容を推測せず参照しなかった。作成後、連携設計の承認者が連携目的・方向・`spec_ref` を照合する。これを理由に本磨き込みを未完了とはしない。
+- `ifx-index` は未作成の前提として扱い、内容を推測せず参照しなかった。作成後、連携設計の承認者が連携目的・方向・`spec_ref` を照合する。これを理由に本磨き込みを未完了とはしない。
 - `execution.timeout_seconds` は現在の上限なし・終了待ちを保持した。時間上限、子プロセス終了、不完全出力の採否は連携設計の承認者の判断待ち。`execution.max_parallel` と `error_handling.retry.max_attempts` は設定参照を整数欄で表せないため `_UNDECIDED_` とし、設定の意味は exec設定ガイドを参照する。架空の値や schema 変更で埋めず、表現方法は承認者へ申し送る。
 - executor evidence タグの欠落時と `completion_status: incomplete` の既存動作は保持した。タグ内 JSON の解析失敗時の完了判定・変更保持・再開条件は宣言資料に個別契約がないため、型 6.8 に従い `_UNDECIDED_` と判断者を追記した。未宣言の parser 実装を読んで補完しない。reporter の形式不正はガイドに定められた同じ plan・evidence での再実行へ委ねる。
 - 対象成果物に `_CONTEXT_:` はなく、draft への差し戻しは不要。result は pipeline の reporter / runner が記入する。本節と 5.1・5.2 の判断根拠を executor の `handoff` にも残す。

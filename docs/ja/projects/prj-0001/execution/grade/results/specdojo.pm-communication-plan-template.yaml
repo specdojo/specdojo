@@ -5,10 +5,10 @@ path: docs/ja/specdojo/templates/pm-communication-plan-template.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 100
-graded_at: "2026-10-22T20:21:06.146Z"
-graded_by: flash-high-executor
-content_hash: 6cb6367e1cc4538c4979efdec6baa3cfb33d877a90862102cb438f7abb826f63
+score: 98
+graded_at: "2026-11-24T02:26:16.651Z"
+graded_by: sonnet-review-executor
+content_hash: 4142b6c7d9274c7dc438fa847a416a5f7d4c3f3b8f8f63b10323ea2755670ea8
 categories:
   purpose:
     score: 100
@@ -25,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 92
   consistency:
     score: 100
 viewpoints:
@@ -81,8 +81,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -104,6 +104,17 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 1
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 9
+    anchor: "| 対象・機会 | 伝える・確認する内容 | タイミング | 手段   | 責任   | 証跡   |"
+    message: >-
+      機会の表に、対象をステークホルダー ID、責任を採用済み Role code で書く指示（TODO 文）がなく、エスカレーションの表にも一次対応が判断者へ渡す材料を示す指示がない。rulebook の記述ガイドとの対応を
+      template の章冒頭の _TODO_ か表の行内に補うとよい。
+    message_ja: >-
+      機会の表に、対象をステークホルダー ID、責任を採用済み Role code で書く指示（TODO 文）がなく、エスカレーションの表にも一次対応が判断者へ渡す材料を示す指示がない。rulebook の記述ガイドとの対応を
+      template の章冒頭の _TODO_ か表の行内に補うとよい。

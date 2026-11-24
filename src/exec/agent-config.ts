@@ -20,8 +20,12 @@ import {
 } from "./parent-validation.js";
 import { resolveCommitHookSkips, type CommitHookSkip } from "./commit-hook-skips.js";
 import { configureIndexLockWait, DEFAULT_INDEX_LOCK_WAIT_MS } from "../shared/git.js";
+import {
+  OPENCODE_CONFIG_CONTENT_ENV,
+  opencodeAgentNameFromCommand,
+  opencodeAllowCommandsConfig,
+} from "./opencode-permissions.js";
 import { resolvePostIntegrationEntries, type PostIntegrationEntry } from "./post-integration.js";
-import { assertProviderLaunchAllowed } from "../shared/antigravity-block.js";
 
 // ── Types for .specdojo/exec-defaults.yaml (global + per-provider) ─────────────
 
@@ -94,6 +98,9 @@ export type ProviderOverride = {
   // from command_params.
   command_template?: string;
   command_params?: CommandParams;
+  // claude / opencode: extra `Bash(...)` permission rules for edit-mode launch commands (claude:
+  // `--allowedTools`; opencode: the agent's `permission.bash` via `OPENCODE_CONFIG_CONTENT`). They survive `config scaffold --force`.
+  allow_commands?: string[];
   rate_limit_detection?: RateLimitDetection;
   connection_error_detection?: ConnectionErrorDetection;
   rate_limit_policy?: RateLimitPolicy;
@@ -102,6 +109,9 @@ export type ProviderOverride = {
   // local single-model Ollama host) without lowering the global `--parallel` for other
   // providers. Absent or non-positive means no per-provider limit.
   max_concurrency?: number;
+  // Seconds an agent CLI of this provider may run before the runner stops its process group and
+  // blocks the run (PJR-K8F1). Absent means no limit: the runner waits for the CLI to exit.
+  agent_timeout_seconds?: number;
 };
 
 export type RegisterDifficulty = "hard" | "medium" | "easy";
@@ -156,7 +166,7 @@ export type ExecDefaultsConfig = {
 
 type CommandMemberAttributes = Pick<
   ProjectMember,
-  "nickname" | "provider" | "model" | "mode" | "proficiency" | "command"
+  "nickname" | "provider" | "model" | "mode" | "proficiency" | "command" | "disabled"
 >;
 
 const PLACEHOLDER_PATTERN = /\{([a-z][a-z0-9_]*)\}/g;
@@ -235,9 +245,13 @@ export function resolveMemberCommand(
   config: ExecDefaultsConfig,
   member: CommandMemberAttributes,
 ): string | undefined {
-  // Every launch path (named, automatic, fallback) expands the command here, so refusing an
-  // Antigravity member before building any command keeps agy from ever being spawned.
-  assertProviderLaunchAllowed(member.provider, `Cannot launch member ${member.nickname}`);
+  // Auto-selection already skips disabled members; this covers every named path (--by,
+  // --executor-by, --reporter-by, routing, strategy agent, fallback_executor) in one place.
+  if (member.disabled === true) {
+    throw new Error(
+      `Cannot launch member ${member.nickname}: disabled in .specdojo/agent-members.yaml`,
+    );
+  }
   // Require provider opt-in even for an explicit member command: otherwise a frontier
   // member could silently inherit ordinary defaults or bypass the missing-tier error.
   if (
@@ -271,7 +285,50 @@ export function resolveMemberCommand(
       `Cannot resolve ${[...new Set(unresolved)].join(", ")} in providers.${provider}.command_template for member ${member.nickname} (mode: ${member.mode ?? "-"}, proficiency: ${member.proficiency ?? "-"})`,
     );
   }
-  return expanded;
+  return appendAllowedCommands(expanded, provider, member, config.providers?.[provider]);
+}
+
+const ALLOW_COMMAND_PATTERN = /^Bash\([^'\\\r\n]+\)$/;
+
+// Apply providers.<claude|opencode>.allow_commands to an edit-mode command. claude gets
+// `--allowedTools`; opencode gets an `OPENCODE_CONFIG_CONTENT` environment prefix.
+// Rules are single-quoted for the shell, so quotes, backslashes, and newlines are rejected.
+function appendAllowedCommands(
+  command: string,
+  provider: AgentProvider,
+  member: CommandMemberAttributes,
+  override: ProviderOverride | undefined,
+): string {
+  const rules = override?.allow_commands;
+  if (
+    (provider !== "claude" && provider !== "opencode") ||
+    member.mode !== "edit" ||
+    !rules ||
+    rules.length === 0
+  ) {
+    return command;
+  }
+  for (const rule of rules) {
+    if (!ALLOW_COMMAND_PATTERN.test(rule)) {
+      throw new Error(
+        `exec-defaults providers.${provider}.allow_commands entry must look like Bash(<command> *) without quotes or backslashes: ${JSON.stringify(rule)}`,
+      );
+    }
+  }
+  if (provider === "opencode") {
+    const agentName = opencodeAgentNameFromCommand(command);
+    if (!agentName) {
+      throw new Error(
+        `exec-defaults providers.opencode.allow_commands needs --agent <name> in command_template: ${command}`,
+      );
+    }
+    // OPENCODE_PERMISSION sorts before the agent definition's `"*": deny` and is ignored, so the
+    // rules go to the agent's own permission.bash through OPENCODE_CONFIG_CONTENT.
+    const patterns = rules.map((rule) => rule.slice("Bash(".length, -1));
+    const config = opencodeAllowCommandsConfig(undefined, agentName, patterns);
+    return `${OPENCODE_CONFIG_CONTENT_ENV}='${config}' ${command}`;
+  }
+  return `${command} --allowedTools ${rules.map((rule) => `'${rule}'`).join(" ")}`;
 }
 
 // ── Provider resolution ─────────────────────────────────────────────────────
@@ -300,6 +357,38 @@ export function resolveRateLimitPolicy(
 ): RateLimitPolicy | undefined {
   const override = provider ? config.providers?.[provider]?.rate_limit_policy : undefined;
   return override ?? config.rate_limit_policy;
+}
+
+// Largest limit Node's setTimeout accepts (2^31 - 1 ms), rounded down to whole seconds.
+export const MAX_AGENT_TIMEOUT_SECONDS = 2_147_483;
+
+export type AgentTimeout = {
+  seconds: number;
+  // The exec-defaults key the limit came from, quoted in the block reason.
+  key: string;
+};
+
+// Resolve a provider's agent time limit. Absent means no limit. An invalid value throws instead
+// of falling back so a typo cannot silently remove the limit.
+export function resolveAgentTimeout(
+  config: ExecDefaultsConfig,
+  provider?: AgentProvider,
+): AgentTimeout | undefined {
+  if (!provider) return undefined;
+  const raw = config.providers?.[provider]?.agent_timeout_seconds;
+  if (raw === undefined) return undefined;
+  const key = `providers.${provider}.agent_timeout_seconds`;
+  if (
+    typeof raw !== "number" ||
+    !Number.isInteger(raw) ||
+    raw < 1 ||
+    raw > MAX_AGENT_TIMEOUT_SECONDS
+  ) {
+    throw new Error(
+      `${key} in exec-defaults must be an integer from 1 to ${MAX_AGENT_TIMEOUT_SECONDS}: ${String(raw)}`,
+    );
+  }
+  return { seconds: raw, key };
 }
 
 export const DEFAULT_PINNED_RATE_LIMIT_MAX_WAIT_SECONDS = 8 * 60 * 60;

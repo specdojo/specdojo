@@ -1,0 +1,31 @@
+`docs/ja/specdojo/rulebooks/itc-index-rulebook.md` を簡潔にしました（293 行から 185 行、64 行追加・172 行削除）。7 件の指摘のうち 4 件は rulebook 側で直しました。残り 3 件は、この段では sample と frontmatter を変えない指示のため、申し送りに回しています。
+
+**構成の変更**
+- 完成例は sample に任せるため、末尾のサンプル章を削除しました。
+- 見出しは H3 までにそろえ、旧 6.3 にあった H4 の小見出し（記述ルール・推奨フォーマット・典型例）はなくしました。
+- 章名を執筆標準に合わせ、2 章を「位置づけ」、5 章を「本文要件」に変えました。
+- 4 章の小節 2 つを箇条書き 3 項目にまとめ、6 章の各節も箇条書きを整理しました。
+- 6.3・6.4・6.6・6.7 に良い例・悪い例を足しました。
+- frontmatter は変えていません。
+
+**rulebook で直した指摘**
+- **F001**: ケース表の章に、当面の確認手段を書きました。検査ツールができるまでは、レビューで次の 3 点を確認し、満たさなければ不合格とします。
+  - `case_id` が重複していないこと
+  - 必須列が全行で埋まっていること
+  - `ready` にする時点で「推奨（運用必須）」列が埋まっていること
+- **F002**: 「推奨（運用必須）」列がいつ必須になるかを決めました。`draft` では空欄を許し、`itc-<term>` を `ready` にする時点で全行に記入します。空欄が残る間は `ready` にしません。
+- **F003**: トレース列の定義を「根拠仕様の ID。従担当の場合は主担当側の `case_id` も記す」と広げ、分配方針の記述とそろえました。
+- **F006**: テストレベルの略語を UT・IT・ET・ST・AT と、NFR に基づく非機能テストに統一し、対象外の代替レベルもこの略語で書くようにしました。
+
+**検証**
+- Prettier の書式チェックと markdownlint は、どちらもエラーなしで通りました。
+- lint・schema・テストの各検査は、このあと親 runner が実行します。
+
+**未対応（申し送り）**
+- **F004**: sample `specdojo:itc-index-sample` が、本文要件で定めた見出し順に沿っていません。後続の sample-maintenance で直す必要があります。
+- **F005**: frontmatter の `recipe` と `template` が `undecided` のままです。作るか対象外とするかを決める必要があり、template は PJR-WYTX で扱います。
+- **F007**: `ready` にする前に、F004 と F005 をいつ誰が解消するかを決める必要があります。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"itc-index-rulebook を簡潔にしました（サンプル章を削除、H4 をなくして H3 まで、章名を執筆標準に合わせた）。F001・F002・F003・F006 を本文で解消し、F004・F005・F007 は sample と frontmatter を変えない段のため申し送りにしました。","handoff":["F004: sample `specdojo:itc-index-sample` が rulebook の本文要件（固定見出し順の 10 章）に沿っていない。後続の sample-maintenance で、駄菓子屋の販売管理システムを題材に必須章を揃えて厚くする。","F005: rulebook frontmatter の `recipe` と `template` が `undecided` のまま。この段では宣言を変えない指示のため未対応。template は PJR-WYTX で扱い、recipe は作成するか `not-needed` とするかを人が判断する。","F007: ready 化の前提として、F004（sample の整合）と F005（recipe・template の要否）の解消を誰がいつ行うかを決める必要がある。rulebook の `status` は `draft` のまま据え置いた。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/itc-index-rulebook.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/itc-index-rulebook.md","status":"passed","summary":"0 issues in 0 files"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更は docs/ja/specdojo/rulebooks/itc-index-rulebook.md だけで、plan・result・個票などの履歴ファイルを変更していないため"},{"command":"npm run validate:catalog","status":"not_applicable","summary":"プロジェクト成果物の変更なし","reason":"変更は docs/ja/specdojo/ 配下だけで、docs/ja/projects/ 配下の成果物を変更していないため"}]}
+</specdojo_executor_evidence>

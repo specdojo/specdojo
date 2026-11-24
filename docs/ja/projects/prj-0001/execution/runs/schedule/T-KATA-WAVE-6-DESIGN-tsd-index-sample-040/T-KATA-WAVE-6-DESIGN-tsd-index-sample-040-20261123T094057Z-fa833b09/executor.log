@@ -1,0 +1,22 @@
+`tsd-index-rulebook` の見直しが終わりました。grade の指摘 10 件のうち 8 件（F001〜F006、F009、F010）は rulebook 側で直しました。残る F007・F008 は sample を直す指摘で、この段では sample に触れない決まりのため申し送りにしました。
+
+変更したのは `docs/ja/specdojo/rulebooks/tsd-index-rulebook.md` の 1 ファイルだけです。sample・recipe・template と `status` は変えていません。
+
+- **F001（判断の記録先）:** 位置づけ表の「採用判断の記録」を「登録簿の `decision` 個票」に直しました。版と採用状態の章で未採択の候補・将来案を案内する先も、この個票にそろえています。
+- **F002（言い直し）:** 全体方針で後続の章へ従うと言い直していた 2 行を、1 文にまとめました。本文要件の表の後ろにあった補足 2 行は、表の行（補足・詳細への導線）と列定義の表へ入れて消しました。
+- **F003・F009（置き場所と崩れた文）:** 配置先を、ドキュメント構成ガイドにある `030-architecture/020-infrastructure/` と書き、詳細な `tsd-<term>.md` と並べて置く文に直しました。
+- **F005（列を置く条件）:** 「判断に必要な場合」をやめ、列ごとに条件を書きました。
+  - 版・正本の列は、メジャー版の固定・互換性制約・版を管理する依存定義が一つでもあれば置きます。
+  - 適用範囲の列は、環境で採否が違う技術か任意の技術が一つでもあれば置きます。
+- **F004・F006・F010（見直しの手順・担当・きっかけ）:** 一覧を見直すきっかけに、メジャー版の更新、依存定義での技術の追加・削除、ランタイム版の指定ファイルや実行基盤の設定の変更を足しました。見直す役割は例として `ARC` を示しました。合格の基準は、正本にない技術・正本と違う版・正本にあって一覧にない前提技術がないこと、としました。
+- **直さなかった箇所:** 区分と網羅範囲、禁止事項、Frontmatter の章は指摘がなく重複もないため、そのままにしました。
+
+検証は、変更ファイルに prettier と markdownlint-cli2 をかけて指摘 0 件でした。lint や schema など許可リストの検査は、このあと runner が実行します。
+
+申し送りは 2 件です。
+- **F007:** sample の補足で、未作成の `tsd-hosting.md`・`tsd-ci.md` が共通ラベルのない「仮置き」になっています。`_TODO_` を付ける形に直す必要があります。
+- **F008:** sample の ESLint・Mermaid・Sentry の行は「（任意）」とあるだけです。適用範囲の列に、採用済みであることと使う条件を書き足す必要があります。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"tsd-index-rulebook を簡潔化し F001〜F006・F009・F010 を反映。F007・F008 は sample 側の修正のため handoff。","handoff":["F007: sample `docs/ja/specdojo/samples/tsd-index-sample.md` の補足で未作成の `tsd-hosting.md`・`tsd-ci.md` を「仮置き」と記載しており共通ラベルがない。`_TODO_` 等で示す形へ sample を直す（本段は sample 変更不可のため未対応）。","F008: sample の ESLint・Mermaid・Sentry 行の適用範囲が「（任意）」のみ。rulebook の版と採用状態の規定に合わせ、採用済みであることと利用条件を sample の適用範囲列へ記載する（本段は sample 変更不可のため未対応）。","直さなかった箇所: 区分と網羅範囲・禁止事項・推奨 Frontmatter 項目は finding がなく重複もないため維持。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/rulebooks/tsd-index-rulebook.md","status":"passed","summary":"整形済み"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/tsd-index-rulebook.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更は rulebook のみで、plan / result / 個票を変更していない"}]}
+</specdojo_executor_evidence>

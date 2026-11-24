@@ -4,11 +4,11 @@ document: specdojo:itc-rulebook
 path: docs/ja/specdojo/rulebooks/itc-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 94
-graded_at: "2026-11-02T20:22:23.148Z"
-graded_by: flash-high-executor
-content_hash: 7f7aabaea126a57834f93f574c5bcbdfbb2c40a21db696c63b9b88f2be04fbc6
+verdict: pass
+score: 93
+graded_at: "2026-11-23T01:49:13.812Z"
+graded_by: opus-review-executor
+content_hash: 6df1cd9beb95c5e17c1a6586ec1b9d239229332b70558ffce276102b9ff75d2d
 categories:
   purpose:
     score: 100
@@ -25,9 +25,9 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 92
   consistency:
-    score: 100
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -60,8 +60,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -78,17 +78,17 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -103,21 +103,51 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 1
+  major: 0
+  minor: 4
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 内部結合テストカタログ 対象別 作成ルール"
-    message: 参照サンプル `specdojo:itc-sample` が本ルールブックで定義した構成（第5節）に従っておらず、実例として不適切である。
-    message_ja: 参照サンプル `specdojo:itc-sample` が本ルールブックで定義した構成（第5節）に従っておらず、実例として不適切である。
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 137
+    anchor: "- ケースは代表→境界→重大例外の順で増やし、直積は作らない。"
+    message: >-
+      本文137行目の「ケースは代表→境界→重大例外の順で増やし、直積は作らない。」は itc-index の「条件の立て方（共通）」の再掲で、直積の禁止は本書の禁止事項（本文150行目）とも重なるため、削除するか itc-index
+      への参照に置き換えること。
+    message_ja: >-
+      本文137行目の「ケースは代表→境界→重大例外の順で増やし、直積は作らない。」は itc-index の「条件の立て方（共通）」の再掲で、直積の禁止は本書の禁止事項（本文150行目）とも重なるため、削除するか itc-index
+      への参照に置き換えること。
   - id: F002
     severity: minor
-    rule: vp-ux-language-consistency
-    line: 93
-    anchor: 生成する `utc-<term>` 本文の見出しは各章で指定された **番号付き** の形式
-    message: "`utc-＜term＞` は `itc-＜term＞` の誤記である。"
-    message_ja: "`utc-＜term＞` は `itc-＜term＞` の誤記である。"
+    rule: vp-qe-omissions-consistency
+    line: 128
+    anchor: "- 観点の分割・統合で保証内容が変わる場合は、新しい `perspective_key` と `case_id` を採番し、旧ケースの行は残して備考に移行先の `case_id` を書く。"
+    message: >-
+      本文128行目の「旧ケースの行は残して備考に移行先の `case_id` を書く」と本文118行目の「備考へ理由を残す」は、itc-index
+      の「ケース表の共通カラム」に備考列がないため書く先が定まらない。トレース表の備考に書くのか、ケース表に列を足すのかを明記すること。
+    message_ja: >-
+      本文128行目の「旧ケースの行は残して備考に移行先の `case_id` を書く」と本文118行目の「備考へ理由を残す」は、itc-index
+      の「ケース表の共通カラム」に備考列がないため書く先が定まらない。トレース表の備考に書くのか、ケース表に列を足すのかを明記すること。
+  - id: F003
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 87
+    anchor: "- 結合として保証する振る舞いを、動詞で始まる箇条書きで3〜7個程度示す（例: API入力を永続化モデルへ変換する／同一要求の冪等性を保証する）。"
+    message: >-
+      本文87行目の「動詞で始まる箇条書き」は、同じ行の例「API入力を永続化モデルへ変換する」や itc-sample
+      の責務の各行（目的語から始まり動詞で終わる）と食い違うため、「振る舞いを表す述語で終わる箇条書き」など日本語の語順に合う表現に改めること。
+    message_ja: >-
+      本文87行目の「動詞で始まる箇条書き」は、同じ行の例「API入力を永続化モデルへ変換する」や itc-sample
+      の責務の各行（目的語から始まり動詞で終わる）と食い違うため、「振る舞いを表す述語で終わる箇条書き」など日本語の語順に合う表現に改めること。
+  - id: F004
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 117
+    anchor: "- 観点・ケース表の「トレース」列は仕様IDを直書きせず `TR-01` / `TR-01,TR-02` のように記載する。根拠の追加時は先にトレース表へ行を追加する。"
+    message: >-
+      本文117行目はケース表のトレース列に仕様IDを直書きせず `TR-xx` を書くと定めるが、itc-index-rulebook の「ケース表の共通カラム」はトレース列を「根拠仕様（BAC・NFR・BR 等）の
+      ID。従担当の場合は主担当側の `case_id` も記す」と定義しており食い違うため、どちらかに揃え、従担当の場合に `TR-xx` と主担当 `case_id` をどう併記するかを本書に明記すること。
+    message_ja: >-
+      本文117行目はケース表のトレース列に仕様IDを直書きせず `TR-xx` を書くと定めるが、itc-index-rulebook の「ケース表の共通カラム」はトレース列を「根拠仕様（BAC・NFR・BR 等）の
+      ID。従担当の場合は主担当側の `case_id` も記す」と定義しており食い違うため、どちらかに揃え、従担当の場合に `TR-xx` と主担当 `case_id` をどう併記するかを本書に明記すること。

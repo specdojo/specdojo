@@ -13,7 +13,7 @@ specdojo:
   agent: sol-executor
   approach: fully-guided
   targets:
-    - prj-0001:bdd-register-entry
+    - bdd-register-entry
 ---
 
 # Edit Result

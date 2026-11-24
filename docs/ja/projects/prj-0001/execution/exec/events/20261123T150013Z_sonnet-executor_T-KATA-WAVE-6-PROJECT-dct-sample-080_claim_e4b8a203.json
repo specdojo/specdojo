@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-23T15:00:13Z",
+  "type": "claim",
+  "task_id": "T-KATA-WAVE-6-PROJECT-dct-sample-080",
+  "by": "sonnet-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "PM"
+  }
+}

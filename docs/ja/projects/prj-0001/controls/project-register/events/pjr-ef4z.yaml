@@ -1,0 +1,313 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_bd75bd64779144bc925f0f9633f7ba1d
+  ts: "2026-11-23T00:16:17Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 統合テストの全件を毎晩 routine で流す
+    - field: description
+      from: ""
+      to: "親の検証の test-integration を related: true にしたため、関係しないと判定されたテストが release の前まで流れない。routine から毎晩 1 回、統合テストの全件を流し、結果を朝の報告に残す"
+    - field: input
+      from: ""
+      to: '["PJR-9X52 の対応結果は「夜間に npm run test:integration を流す routine などを併せて用意してから related を入れる」としていた。related は 2026-11-23 に先に入れた（936202ff4）","今の routine の action は job と specdojo だけで、npm の script を直接流せない"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-9X52"]'
+    - field: commit_type
+      from: ""
+      to: feat
+    - field: commit_scope
+      from: ""
+      to: routine
+- v: 1
+  id: reg_0fdc9f5b54ee4a96bc6d82ced0dc4eae
+  ts: "2026-11-23T00:16:26Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_bd75bd64779144bc925f0f9633f7ba1d
+- v: 1
+  id: reg_9f6884dd8f68475fb18077045ddcc5b8
+  ts: "2026-11-23T02:02:38Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_0fdc9f5b54ee4a96bc6d82ced0dc4eae
+- v: 1
+  id: reg_0f84f45de387466e8abf6bfdf277968f
+  ts: "2026-11-23T02:13:14Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: Grade sidecar changed after checkpoint; reconcile before merge: docs/ja/projects/prj-0001/execution/grade/results/specdojo.ifx-api-rulebook.yaml"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: Grade sidecar changed after checkpoint; reconcile before merge: docs/ja/projects/prj-0001/execution/grade/results/specdojo.ifx-api-rulebook.yaml"
+  previous_event_id: reg_9f6884dd8f68475fb18077045ddcc5b8
+- v: 1
+  id: reg_8889f8001cf8421ea3c8c92a22260022
+  ts: "2026-11-23T02:36:40Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: Grade sidecar changed after checkpoint; reconcile before merge: docs/ja/projects/prj-0001/execution/grade/results/specdojo.ifx-api-rulebook.yaml"
+      to: "-"
+  previous_event_id: reg_0f84f45de387466e8abf6bfdf277968f
+- v: 1
+  id: reg_8f0c9a0202a447d4aff3e66ddc8e23a2
+  ts: "2026-11-23T02:41:16Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_8889f8001cf8421ea3c8c92a22260022
+- v: 1
+  id: reg_1f31668d3185450ea4758b2308cdeac1
+  ts: "2026-11-23T04:31:22Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分と単体テストを確かめ、routine run --id rtn-nightly-integration-tests を 1 回流して 443 件の全件成功と朝の報告の作成を確かめた（2026-11-23）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: 統合テストの全件を固定の引数で流す specdojo orchestrator integration-tests と、job・routine（毎晩 4 時）を足した。結果を朝の報告に残す。任意のシェルのコマンドを流す action は足していない
+  previous_event_id: reg_8f0c9a0202a447d4aff3e66ddc8e23a2
+- v: 1
+  id: reg_7159c6e070dc44b9ba014d53af3799fa
+  ts: "2026-11-23T04:44:31Z"
+  action: reopen
+  actor: indie
+  from_status: done
+  to_status: review
+  reason: 朝の報告に markdownlint の MD012 が出るため、2 回目の実行で直す（利用者の依頼、2026-11-23）
+  changes:
+    - field: status
+      from: done
+      to: review
+    - field: completed
+      from: "2026-11-23"
+      to: "-"
+  previous_event_id: reg_1f31668d3185450ea4758b2308cdeac1
+- v: 1
+  id: reg_5c31a7d79b7246548d2c9aa7c5d94095
+  ts: "2026-11-23T04:44:36Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: 2 回目の実行の条件を足した
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_7159c6e070dc44b9ba014d53af3799fa
+- v: 1
+  id: reg_30dc90ac06f9497ba28a3341ac08f293
+  ts: "2026-11-23T04:48:45Z"
+  action: start
+  actor: sonnet-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_5c31a7d79b7246548d2c9aa7c5d94095
+- v: 1
+  id: reg_fa38c966c03c42228996a6742e045a6b
+  ts: "2026-11-23T04:54:12Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_30dc90ac06f9497ba28a3341ac08f293
+- v: 1
+  id: reg_1c17d54e701949fa9a322e3abe229839
+  ts: "2026-11-23T04:59:58Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 2 回目の差分と単体テストを確かめ、2026-11-23 の朝の報告が markdownlint を通ることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: 統合テストの全件を固定の引数で流す specdojo orchestrator integration-tests と、job・routine（毎晩 4 時）を足した。結果を朝の報告に残す。任意のシェルのコマンドを流す action は足していない
+      to: 統合テストの全件を毎晩流す orchestrator integration-tests と job・routine を足した。2 回目で、朝の報告が成功・失敗・JSON を読めないときのどの場合でも lint を通るように書き出しを直し、2026-11-23 の報告も直した
+  previous_event_id: reg_fa38c966c03c42228996a6742e045a6b
+- v: 1
+  id: reg_3de47128c8d941ae9934355e03e0d448
+  ts: "2026-11-23T06:12:17Z"
+  action: reopen
+  actor: indie
+  from_status: done
+  to_status: review
+  reason: routine の job の段の記録に plan と result がなく push が止まったため、3 回目の実行で直す（利用者の承認の範囲、2026-11-23）
+  changes:
+    - field: status
+      from: done
+      to: review
+    - field: completed
+      from: "2026-11-23"
+      to: "-"
+  previous_event_id: reg_1c17d54e701949fa9a322e3abe229839
+- v: 1
+  id: reg_26a0147350f440be9e25f905aff9d416
+  ts: "2026-11-23T06:12:24Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: 3 回目の実行の条件を足した
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_3de47128c8d941ae9934355e03e0d448
+- v: 1
+  id: reg_54741d480e8742e797df993d21c41a3b
+  ts: "2026-11-23T11:29:30Z"
+  action: start
+  actor: sonnet-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_26a0147350f440be9e25f905aff9d416
+- v: 1
+  id: reg_e5d32586cd0248299912670800e6b9bb
+  ts: "2026-11-23T11:35:16Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_54741d480e8742e797df993d21c41a3b
+- v: 1
+  id: reg_bf6580e129d04d3ba354c695bc011753
+  ts: "2026-11-24T00:11:04Z"
+  action: start
+  actor: sonnet-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_e5d32586cd0248299912670800e6b9bb
+- v: 1
+  id: reg_0b2bb77c86f447388e379d23334b4f1a
+  ts: "2026-11-24T00:15:27Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_bf6580e129d04d3ba354c695bc011753
+- v: 1
+  id: reg_ba4556df423644cdb9ab0f44b2c25f96
+  ts: "2026-11-24T00:38:05Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果・親の検証（test-integration を含め passed）で確かめ、保護された設定の変更がないことを確かめた。統合の後の run が新しい runner で統合まで通った
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-24"
+    - field: conclusion
+      from: 統合テストの全件を毎晩流す orchestrator integration-tests と job・routine を足した。2 回目で、朝の報告が成功・失敗・JSON を読めないときのどの場合でも lint を通るように書き出しを直し、2026-11-23 の報告も直した
+      to: 統合テストの全件を毎晩 4 時に routine で流し、朝の報告を残すようにした。2026-11-24 04:00 の実行で 443 件の全件成功を確かめた。報告の id を小文字にした
+  previous_event_id: reg_0b2bb77c86f447388e379d23334b4f1a

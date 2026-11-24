@@ -2,12 +2,12 @@
 id: bes-index-grade-criteria
 document: bes-index
 path: docs/ja/product/010-business-specs/030-business-model/bes-index.md
-graded_at: "2026-11-16T15:51:23.727Z"
-graded_by: sol-review-executor
-content_hash: 9f4bc779b167edeb1a89c530cbfb99d5d89a2b8f173b882650b927d415eefbf8
+graded_at: "2026-11-22T14:55:50.162Z"
+graded_by: opus-review-executor
+content_hash: 1db08939e9aaad9652328a8344658ae3303e863893b24707302d8d48d6ef4dc3
 summary:
-  satisfied: 2
-  unsatisfied: 2
+  satisfied: 3
+  unsatisfied: 1
   total: 4
 criteria:
   - id: DC-001
@@ -27,12 +27,11 @@ criteria:
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
-    status: unsatisfied
-    reason: 事実データと正本のデータモデル・schema の照合が未実施で、本文88行が設計の確定入力としての利用を留保している。
+    status: satisfied
   - id: DC-004
     text: イベントベースのテスト設計への網羅性が確認できること
     roles:
       - QE
     viewpoint: vp-qe-omissions-consistency
     status: unsatisfied
-    reason: QE による網羅確認が未実施で、派生生成要求の系統が重なった場合の発生回数も個別仕様の作成待ちである。
+    reason: 本文はテスト設計の観点で網羅を確かめていないと記しており、QE がイベントベースのテスト設計への網羅性を確認した根拠がない。

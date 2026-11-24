@@ -1,0 +1,14 @@
+指摘の表を result に 1 回だけ書かせる決まりを、`kata-guide` と strategy の 5 段の指示に入れました。実際に段を 1 件流して表が 1 回だけ出ることの確認は、まだです。
+
+- **`kata-guide`**: `docs/ja/specdojo/guides/kata-guide.md` の `人への報告の形` に 2 点を追記しました。executor は指摘を `handoff` に 1 件 1 項目で書きます。reporter はそれを `実施内容` に Markdown の表として 1 回だけ書き、申し送りには表を重ねません。
+- **strategy**: `sch-strategy-kata-review-calibration.yaml` の `description` を同じ決まりに直しました。R1・R2・R3・R5 は報告の指示を差し替えています。R4 には、確かめの表の指示のほかに、指摘の報告の指示を足しました。
+- **検査**: `npm run validate:schema:file` は valid でした。
+- **個票**: 作業内容と対応結果を更新し、「CHANGELOG に書く事項」は「なし」としました。
+- **保護された設定**: 変更していません。変更案もありません。
+- **`sch-track-kata-review-calibration.yaml`**: 生成物なので直接は編集していません。strategy の変更を反映するには track の再生成が要ります。
+- **項目の書式**: `handoff` の 1 項目を `No: 段 / 箇所 / 指摘 / 直した案 / 根拠 / 印` と決めました。reporter が表へ写しやすいためです。
+- **作業内容の表**: 統合後に段を 1 件流して確かめる行は、`open` のまま理由を付けています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"kata-guide と strategy の 5 段の報告指示を直し、個票を更新した。統合後の段の実行確認はオーケストレーターの作業として残した。","handoff":["統合後にオーケストレーターが段を 1 件流し、result の指摘の表が表として 1 回だけ書かれることを確かめてから close する（個票の作業内容 3 行目は open）。","sch-track-kata-review-calibration.yaml は生成物のため未編集。strategy の変更を反映するには track の再生成が必要。","決めたこと: handoff の指摘の書式を `No: 段 / 箇所 / 指摘 / 直した案 / 根拠 / 印` の 1 件 1 項目とした。reporter が表へ写しやすいため。R4 の description にも指摘の報告の指示を足した。","保護された設定の変更案はなし。CHANGELOG に書く事項はなし。"],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/sch-strategy.schema.yaml --data docs/ja/projects/prj-0001/schedule/sch-strategy-kata-review-calibration.yaml","status":"passed","summary":"valid"},{"command":"npx prettier --write (changed md)","status":"passed","summary":"個票と kata-guide を整形した"}]}
+</specdojo_executor_evidence>

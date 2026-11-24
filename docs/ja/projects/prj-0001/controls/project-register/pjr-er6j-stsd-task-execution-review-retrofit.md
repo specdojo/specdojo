@@ -26,7 +26,7 @@ specdojo:
     - PJR-FS9A
   approach: retrofit
   targets:
-    - prj-0001:stsd-task-execution
+    - stsd-task-execution
 ---
 
 # PJR-ER6J stsd-task-execution をレビューの指摘と新しい Kata に合わせる
@@ -45,7 +45,7 @@ stsd-task-execution を新しい Kata に合わせ、目的・着手と再開・
 
 ## 3. 完了条件
 
-- [[prj-0001:stsd-task-execution]] が、PJR-S8EF〜PJR-93NK で直した Kata（[[specdojo:stsd-rulebook]]・[[specdojo:stsd-mermaid-rulebook]]）の必須の章・表・図の規則を満たしている。目的は状態が何を管理し何のために使われるかを書き、文書の読み手や使い方を書いていない。状態の正本と判定の規則は「状態の判定」の章にある。
+- [[stsd-task-execution]] が、PJR-S8EF〜PJR-93NK で直した Kata（[[specdojo:stsd-rulebook]]・[[specdojo:stsd-mermaid-rulebook]]）の必須の章・表・図の規則を満たしている。目的は状態が何を管理し何のために使われるかを書き、文書の読み手や使い方を書いていない。状態の正本と判定の規則は「状態の判定」の章にある。
 - 「現行実装（AS-IS）」などのスコープの表記を、TO-BE の文書と並ばない限り書いていない。
 - 図の遷移ラベルが `T-<nn> イベント / 条件` で、分けた図ごとにすぐ下へその図の遷移の表がある。図の全遷移が、その図の下の表へ一度ずつ対応している。
 - 状態と遷移の中身は、カタログの `evidence_refs` の実装で確かめられる。実装で確かめられないことは推測で埋めず、`_UNDECIDED_` か今後の検討メモで残す。
@@ -73,7 +73,7 @@ stsd-task-execution を新しい Kata に合わせ、目的・着手と再開・
 
 判断は「部分反映」。既存の 6 状態・16 遷移は有効であり、状態一覧、依存判定、着手解放、差し戻し、中止、旧イベントの互換規則を維持して、新しい Kata と 2026-11-06 の利用者の決定を反映した。
 
-変更対象は [[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]] と本個票の対応結果のみ。
+変更対象は [[stsd-task-execution|ステータス定義（タスク実行）]] と本個票の対応結果のみ。
 
 - 目的を、タスクの段階の管理と、人・AI Agent による次のタスクの選択、引き継ぎ、後続へ進めるかの判断へ変更した。
 - 適用範囲をスケジュール帳票のタスクに絞り、正本・判定規則・互換の扱いを「状態の判定」へ移した。スコープ表記を削除した。
@@ -130,5 +130,5 @@ stsd-task-execution を新しい Kata に合わせ、目的・着手と再開・
 
 ## 6. 関連ドキュメント
 
-- [[prj-0001:stsd-task-execution]]: retrofit の対象
+- [[stsd-task-execution]]: retrofit の対象
 - [[specdojo:stsd-rulebook]]・[[specdojo:stsd-mermaid-rulebook]]: そろえる先

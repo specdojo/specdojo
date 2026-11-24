@@ -5,10 +5,10 @@ path: docs/ja/specdojo/samples/cnd-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 98
-graded_at: "2026-11-15T02:05:37.149Z"
-graded_by: sol-review-executor
-content_hash: ac097b5703fc3a1483679c3741a4c1007a4020d1d08a8111c49a539e2343104d
+score: 100
+graded_at: "2026-11-23T09:28:19.969Z"
+graded_by: sonnet-review-executor
+content_hash: 16a212d692b185e595b9663af3ea117cf512f634f8bf8ba89e64c924e844a6f9
 categories:
   purpose:
     score: 100
@@ -25,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 92
+    score: 100
   consistency:
     score: 100
 viewpoints:
@@ -81,8 +81,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -104,22 +104,6 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 1
+  minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 118
-    anchor: >-
-      文書検査は [[specdojo:cnd-rulebook|C4コンテナ図作成ルール]] の「検証・承認前の確認」に従い、`<対象.md>` を `docs/ja/specdojo/samples/cnd-sample.md`
-      として実行する。QE は終了コード、全図の検査結果、生成 SVG の文字・矢印・境界の目視結果をレビューへ残す。内容面では、境界を含む全要素の定義と `REL-01`〜`REL-05` の端点・ラベルが図と表で一致すれば
-      Pass とし、欠落・余剰・不一致は Fail とする。
-    message: >-
-      The sample omits the template's section "4.3. 検証・承認前の確認", although the rulebook makes the template authoritative
-      for heading structure. Place the existing verification and approval-check material under that heading to
-      demonstrate the prescribed structure; the content already exists, so this is a minor structural issue.
-    message_ja: >-
-      The sample omits the template's section "4.3. 検証・承認前の確認", although the rulebook makes the template authoritative
-      for heading structure. Place the existing verification and approval-check material under that heading to
-      demonstrate the prescribed structure; the content already exists, so this is a minor structural issue.
+findings: []

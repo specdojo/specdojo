@@ -1,0 +1,45 @@
+## レビュー結果: `complete-with-findings`
+
+### 評価結果の確認
+- sample、rulebook、recipe、template の 4 つについて、`specdojo grade list --target kata --path <対象> --changed-only` を実行しました。出力はどれも空で、終了コードは 0 でした。したがって評価結果は最新です。
+- sample には `--incomplete` も実行しました。出力は空で、評価パイプラインは完了しています。
+- 4 つの型の grade 結果は、いずれも `verdict` が `pass` です。
+  - sample: score 99、minor 1 件
+  - rulebook: score 94、minor 3 件
+  - recipe: score 98、minor 1 件
+  - template: score 99、minor 1 件
+- blocker と major は、4 つとも 0 件です。
+
+### 判断根拠
+- sample（`pm-members-sample.yaml`）を直接読んで確認した内容は次のとおりです。
+  - 冒頭に schema 参照の宣言があります。
+  - `id`、`type`、`status: draft`、`rulebook`、`based_on`、`project_id` がそろっています。
+  - member は 5 名で、共通サンプル文脈の駄菓子屋の題材に沿っています。
+  - `rules` に表示名の方針、未成年の連絡経路、交代時の扱いが書かれています。
+- `status` は `draft` のままで、`ready` への昇格はありません。
+- 作業ツリーで未追跡のファイルは、runner が出力した `pipeline-state.json` だけです。対象外の変更は混入していません。
+- 完了条件 DC-001〜DC-004 は、grade 結果で `pass` が確認されています。review ではこれらを再評価していません。
+- 型の整備を含む schedule の追加完了条件は満たしています。rulebook、recipe、sample、template の 4 つすべてに、最新の `--target kata` の `pass` があります。
+
+### 未充足事項・改善指示
+未充足の完了条件はありません。残る finding はすべて minor で、完了を妨げません。次の理由によります。
+- 必須要素の欠落や禁止事項への抵触ではありません。
+- 表示名、見出し、注記の表現に関する指摘です。
+
+改善指示は次の 6 点です。
+1. sample の `F001`（38 行目）: display_name「同行レビュー担当」を「第三者レビュー担当」などに改めます。これを変えるときは、`rules` の 61 行目の同名の記述も合わせて直します。
+2. rulebook の `F001`: 見出し「推奨メタ項目」を、必須項目も含む実態に合う名前に改めます。
+3. rulebook の `F002`: 見出し「位置づけと用語定義」を実態に合わせて改めます。または、nickname や member などの用語定義を補います。
+4. rulebook の `F003`: 成果物の呼称が揺れています。H1「プロジェクトメンバー定義」、recipe「メンバー定義」、本文の「名簿」を一つにそろえます。
+5. recipe の `F001`: 仕上げチェックに、schema 検証コマンドと nickname 一意性の確認への参照を加えます。
+6. template の `F001`: `_MEMBER_NICKNAME_` の形式制約と、`roles` が `pm-roles.yaml` の Role code に限られることを、コメントまたは `_TODO_` で示します。
+
+これらは型そのものへの手直しです。sample の確定の前に、横串の確認でまとめて扱うのが適切です。
+
+### 確認できなかった範囲
+- 実行記録として先行する edit タスクの result は参照していません。plan に edit の result の記載がなかったためです。磨き込みの変更内容は、成果物の現状と grade 結果から判断しました。
+- verdict を記録する直前の鮮度の再確認は、上記の実行以降に成果物が変わっていないことを、`git status` で確認する形にとどめました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict: complete-with-findings。sample・rulebook・recipe・template の4型すべてで最新の kata grade が pass（鮮度確認は grade list --changed-only が空出力、sample は --incomplete も空）。残る finding は minor 6件（sample 1、rulebook 3、recipe 1、template 1）で、完了条件 DC-001〜DC-004 を妨げない。未追跡は runner の pipeline-state.json のみ。確認できなかった範囲: 先行 edit タスクの result は plan に記載がなく未参照。","handoff":["sample F001: display_name「同行レビュー担当」を「第三者レビュー担当」などに改める（rules の 61 行目の同名の記述も合わせる）","rulebook F001〜F003: 見出し「推奨メタ項目」「位置づけと用語定義」の実態との不一致と、成果物の呼称（プロジェクトメンバー定義・メンバー定義・名簿）の揺れを解消する","recipe F001: 仕上げチェックに schema 検証コマンドと nickname 一意性の確認への参照を加える","template F001: _MEMBER_NICKNAME_ の形式制約と roles の許容値（pm-roles.yaml の Role code）をコメントまたは _TODO_ で示す","sample の確定は、sample がひととおりそろった後の横串の確認でまとめて行う"],"validations":[]}
+</specdojo_executor_evidence>

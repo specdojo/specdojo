@@ -1,8 +1,19 @@
 import { type Command, Option } from "commander";
 import { spawnSync } from "node:child_process";
+import path from "node:path";
 import { loadConfig, loadEnv, specdojoRootDir } from "../shared/specdojo-config.js";
 import type { SpecDojoConfig, SpecDojoProjectConfig } from "../shared/specdojo-config.js";
 import { selfRunArgs } from "../shared/spawn-self.js";
+import {
+  collectStepOutputs,
+  freshnessScanRoots,
+  freshnessStatePath,
+  planFreshSteps,
+  readFreshnessState,
+  scanFileStats,
+  writeFreshnessState,
+} from "./build-freshness.js";
+import type { FreshnessContext, FreshnessState } from "./build-freshness.js";
 
 // ================================
 // Types
@@ -210,6 +221,10 @@ export function registerBuildCommand(program: Command): void {
         "Views to generate (only with --only register)",
       ).choices(["register", "controls", "all"]),
     )
+    .option(
+      "--skip-fresh",
+      "Rerun only the default steps whose inputs changed since their last --skip-fresh success",
+    )
     .option("--dry-run", "Print commands without executing", false)
     .action((opts) => {
       const scope = (opts.only ?? opts.scope ?? "all") as BuildScope;
@@ -224,7 +239,9 @@ export function registerBuildCommand(program: Command): void {
                 ? "--output requires --only index"
                 : opts.registerScope !== undefined && scope !== "register"
                   ? "--register-scope requires --only register"
-                  : undefined;
+                  : opts.skipFresh && scope !== "all"
+                    ? "--skip-fresh cannot be combined with --only"
+                    : undefined;
       if (optionError) {
         logError(optionError);
         process.exitCode = 1;
@@ -269,6 +286,11 @@ export function registerBuildCommand(program: Command): void {
         return;
       }
 
+      if (opts.skipFresh) {
+        runFreshBuild(steps, project, config, !!opts.dryRun);
+        return;
+      }
+
       const total = steps.length;
 
       if (opts.dryRun) {
@@ -284,25 +306,88 @@ export function registerBuildCommand(program: Command): void {
       const overallStart = Date.now();
 
       for (let i = 0; i < total; i++) {
-        const step = steps[i];
-        log(`step ${i + 1}/${total}: ${step.label}`);
-
-        const start = Date.now();
-        const [cmd, args] = selfRunArgs(step.subArgs);
-        const result = spawnSync(cmd, args, { stdio: "inherit" });
-        const elapsed = ((Date.now() - start) / 1000).toFixed(1);
-        const exitCode = result.status ?? 1;
-
-        if (exitCode !== 0) {
-          logError(`error: ${step.label} exited with code ${exitCode} — aborting`);
-          process.exitCode = 1;
-          return;
-        }
-
-        log(`done: ${step.label} (${elapsed}s)`);
+        if (!runStep(steps[i], i, total)) return;
       }
 
       const totalElapsed = ((Date.now() - overallStart) / 1000).toFixed(1);
       log(`all steps completed (${totalElapsed}s)`);
     });
+}
+
+// ================================
+// Step Execution
+// ================================
+
+function runStep(step: StepDef, index: number, total: number): boolean {
+  log(`step ${index + 1}/${total}: ${step.label}`);
+
+  const start = Date.now();
+  const [cmd, args] = selfRunArgs(step.subArgs);
+  const result = spawnSync(cmd, args, { stdio: "inherit" });
+  const elapsed = ((Date.now() - start) / 1000).toFixed(1);
+  const exitCode = result.status ?? 1;
+
+  if (exitCode !== 0) {
+    logError(`error: ${step.label} exited with code ${exitCode} — aborting`);
+    process.exitCode = 1;
+    return false;
+  }
+
+  log(`done: ${step.label} (${elapsed}s)`);
+  return true;
+}
+
+// `--skip-fresh`: 入力が前回の成功から変わった段だけを流す（PJR-E73Z）。段を流す前に記録を消し、
+// 成功した後に鍵と出力を記録する。途中で止まった段は記録が無いため、次回は作り直す。
+function runFreshBuild(
+  steps: StepDef[],
+  project: SpecDojoProjectConfig | undefined,
+  config: SpecDojoConfig | null,
+  isDryRun: boolean,
+): void {
+  const overallStart = Date.now();
+  const repoRoot = specdojoRootDir();
+  const ctx: FreshnessContext = {
+    repoRoot,
+    config,
+    project,
+    codeRoot: path.dirname(path.resolve(process.argv[1] ?? ".")),
+    now: new Date(),
+    env: process.env,
+  };
+  const statePath = freshnessStatePath(repoRoot);
+  const { state: previous, problem } = readFreshnessState(statePath);
+  const files = scanFileStats(repoRoot, freshnessScanRoots(config));
+  const decisions = planFreshSteps(steps, ctx, files, previous, problem);
+  const state: FreshnessState = previous ?? { version: 1, steps: {} };
+  const total = decisions.length;
+
+  for (let i = 0; i < total; i++) {
+    const decision = decisions[i];
+    if (!decision.rebuild) {
+      log(`skip: ${decision.step.label} (${decision.reason})`);
+      continue;
+    }
+    log(`rebuild: ${decision.step.label} (${decision.reason})`);
+    if (isDryRun) {
+      const [cmd, args] = selfRunArgs(decision.step.subArgs);
+      log(`  would run: ${cmd} ${args.join(" ")}`);
+      continue;
+    }
+
+    delete state.steps[decision.id];
+    writeFreshnessState(statePath, state);
+    if (!runStep(decision.step, i, total)) return;
+    if (decision.key) {
+      state.steps[decision.id] = {
+        key: decision.key,
+        outputs: collectStepOutputs(decision.step, ctx, files),
+      };
+      writeFreshnessState(statePath, state);
+    }
+  }
+
+  if (isDryRun) return;
+  const totalElapsed = ((Date.now() - overallStart) / 1000).toFixed(1);
+  log(`all steps completed (${totalElapsed}s)`);
 }

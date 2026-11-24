@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-BNAV",
+  "run_id": "pjr-bnav-20261121T230220Z-477f46f8",
+  "updated_at": "2026-11-22T02:42:24.240Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sonnet-executor",
+      "attempts": 1,
+      "started_at": "2026-11-22T02:23:51.710Z",
+      "completed_at": "2026-11-22T02:24:13.116Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-BNAV/pjr-bnav-20261121T230220Z-477f46f8/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-22T02:42:13.953Z",
+      "completed_at": "2026-11-22T02:42:13.953Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-BNAV/pjr-bnav-20261121T230220Z-477f46f8/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-22T02:42:15.934Z",
+      "completed_at": "2026-11-22T02:42:24.240Z",
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-BNAV/pjr-bnav-20261121T230220Z-477f46f8/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-BNAV/pjr-bnav-20261121T230220Z-477f46f8/result.md"
+  },
+  "resume_notes": [
+    {
+      "at": "2026-11-22T02:23:51.697Z",
+      "notes": [
+        "段ごとの時間の測定と npm run docs:build は、executor の sandbox では流せないため、オーケストレーターが行い、個票の対応結果の 5.3 に書いた。測り直さず、5.3 を読んで残りの完了条件（作業内容の表の状態など）を整え、検証を流して完了を報告する。kata-staging-old.ts はオーケストレーターが消した。"
+      ]
+    }
+  ]
+}

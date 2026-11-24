@@ -1,0 +1,14 @@
+型の schedule の review の段を 1 回通す統合テストを追加しました。新しいテスト 3 ケースは通りました。`npm run typecheck` はエラーなし、`npm run lint:ts` はエラー 0 件（警告 42 件）です。`lint:md` は全体では流さず、個票だけ markdownlint を流して問題なしでした。
+
+テストは `tests/src/exec/kata-review-stage.integration.test.ts` です。一時リポジトリに、intent が `improve-kata` で review の段（090）の代表が sample の fixture を置き、`exec run --task` を実プロセスで起動します。agent と grade の agent は fixture のコマンドで代えています。次の 3 ケースを確かめます。
+- **grade の回数と対象種別:** sample と rulebook が `--target kata` で 1 回ずつ流れ、サイドカーの `target` が `kata` になります。review の plan の「grade の対象種別」も `kata` で、verdict は `complete` です。
+- **executor の失敗記録:** executor が `grade list --changed-only` を `failed` と記録しても block にならず、verdict が記録されます。
+- **`needs-work` のとき:** 型の grade が `needs-work` だと、reporter が `complete` を返しても runner が verdict を `incomplete` に制限します。
+
+テストで不具合は見つからず、本番コードは変更していません。個票は作業内容の表と対応結果を更新しました。「CHANGELOG に書く事項」はテストだけの変更なので「なし」です。
+
+親検証（`test:integration` など）はまだ流していません。`npm run test:unit` も流していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"tests/src/exec/kata-review-stage.integration.test.ts を追加し、3 ケースが通過した。個票の作業内容と対応結果を更新した。本番コードの変更はない。","handoff":["型の grade が needs-work で verdict が incomplete に制限されても、in-place の run は run done を出して終了コード 0 になる。verdict で扱う設計と読めるため変更していない。run の終了表示と verdict の関係を見直すかは、必要なら別項目で起票を提案する。","exec run --worktree 経路の review の段は、このテストでは通していない（in-place のみ）。必要なら起票を提案する。","CHANGELOG に書く事項: なし（テストだけの変更）。"],"validations":[{"command":"npx vitest run --project integration tests/src/exec/kata-review-stage.integration.test.ts","status":"passed","summary":"3 件すべて通過した。"},{"command":"npm run typecheck","status":"passed","summary":"エラーなし。"},{"command":"npm run lint:ts","status":"passed","summary":"エラー 0 件（警告 42 件、既存の max-lines 系）。"},{"command":"npx markdownlint-cli2 docs/ja/projects/prj-0001/controls/project-register/pjr-z17t-kata-review-e2e-test.md","status":"passed","summary":"個票は 0 issues。"},{"command":"npm run validate:history-links","status":"passed","summary":"履歴ファイルのリンク検査で違反なし。"}]}
+</specdojo_executor_evidence>

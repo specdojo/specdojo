@@ -1,0 +1,175 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_0da86ef9726a42b186d8de2d59214404
+  ts: "2026-11-22T12:55:22Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: ifx-api と ifx-msg の rulebook と sample の仕様の中身を直す
+    - field: description
+      from: ""
+      to: 型の grade で、ifx-api と ifx-msg は rulebook と sample とも needs-work だった。必須の info.version と responses の欠け、ifx-api の sample の題材が駄菓子屋の文脈でないことを直す。
+    - field: input
+      from: ""
+      to: '["2026-11-22 の型の grade（opus-review-executor）: ifx-api-rulebook 72・ifx-api-sample 73・ifx-msg-rulebook 77・ifx-msg-sample 74、いずれも needs-work。","major の中心: OpenAPI 3.0.3 と AsyncAPI 2.6.0 で必須の info.version が sample にない。ifx-api-rulebook の必須の構造に info.version と各操作の responses が入っていない。ifx-api-sample は汎用の決済 API が題材で、ifx-index-sample でキャッシュレス決済は対象外とされている。","PJR-0VPB の executor は「標準の構造を変えない」完了条件に従い、info.version を変更案として個票に残していた。0VPB は運用の記述を外す目的で完了したため、中身の直しはこの項目で扱う（indie の承認、2026-11-22）。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-22"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-0VPB"]'
+- v: 1
+  id: reg_971a49553073402ea671e6a5271ffc34
+  ts: "2026-11-22T12:56:34Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 会話で決まっていない担当と期限を推測で入れたため、未定に戻す
+  changes:
+    - field: owner
+      from: BA
+      to: _TODO_
+    - field: due
+      from: "2026-11-30"
+      to: _TODO_
+  previous_event_id: reg_0da86ef9726a42b186d8de2d59214404
+- v: 1
+  id: reg_600501182626468e8e6c1a5ecc984490
+  ts: "2026-11-22T13:02:22Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: 担当と期限を indie が決めた（2026-11-22）
+  changes:
+    - field: owner
+      from: _TODO_
+      to: BA
+    - field: due
+      from: _TODO_
+      to: "2026-11-30"
+  previous_event_id: reg_971a49553073402ea671e6a5271ffc34
+- v: 1
+  id: reg_bbee5046dfca4b57a2c52b368287bb9d
+  ts: "2026-11-22T13:20:51Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件を利用者の承認のもとで書く
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_600501182626468e8e6c1a5ecc984490
+- v: 1
+  id: reg_d788cce7912b4a8c96ec2368dfc8a627
+  ts: "2026-11-22T13:34:25Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_bbee5046dfca4b57a2c52b368287bb9d
+- v: 1
+  id: reg_79246a51bfff4c438a29cd0d2ec9b117
+  ts: "2026-11-22T13:36:13Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_d788cce7912b4a8c96ec2368dfc8a627
+- v: 1
+  id: reg_3c53416781004ecfbecb9a477b364d6a
+  ts: "2026-11-22T23:26:54Z"
+  action: update
+  actor: indie
+  from_status: review
+  to_status: review
+  reason: 2 回目の実行の範囲を決めた（ifx-index-sample の接続、4 文書の minor、古い略語、2026-11-23）
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+    - field: difficulty
+      from: medium
+      to: hard
+  previous_event_id: reg_79246a51bfff4c438a29cd0d2ec9b117
+- v: 1
+  id: reg_b26508f2bee042ccaaa8c1e4aada9922
+  ts: "2026-11-23T00:03:35Z"
+  action: start
+  actor: opus-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_3c53416781004ecfbecb9a477b364d6a
+- v: 1
+  id: reg_2d390d11c8b1472995225e5ddd8ab317
+  ts: "2026-11-23T00:11:03Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_b26508f2bee042ccaaa8c1e4aada9922
+- v: 1
+  id: reg_c725a1b5267b40d982044e732eb3a659
+  ts: "2026-11-23T02:12:23Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 2 回目の完了条件を差分と対応結果で確かめ、表示のページを作り直したうえでの型の grade が 5 文書とも pass だった（2026-11-23）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: ifx-api と ifx-msg の rulebook と sample を直し、ifx-index-sample の本部への売上登録を specdojo:ifx-api-sample につないだ。古い略語を外し、4 文書の minor を仕分けた。grade は rulebook が pass 91・95、sample が pass 93・92、ifx-index-sample が pass 98
+  previous_event_id: reg_2d390d11c8b1472995225e5ddd8ab317

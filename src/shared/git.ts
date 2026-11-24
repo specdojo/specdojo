@@ -491,7 +491,12 @@ export function summarizeGitHookFailure(output: string): string {
     line !== step && !isDecoration(line) && !/[❯▶]\s*$/u.test(line);
   const sectionLines = lines.slice(stepIndex + 1, sectionEnd).filter(isCandidate);
   // 整形ツールが出す "(unchanged)" などの進捗行より、error を含む行を最初のエラーとして選ぶ。
+  // テストの失敗（FAIL の行）があるときは、それが原因なので error を含む行より優先する。
+  // 引数の誤りを確かめるテストの通常の出力（unknown option など）を原因と読み違えないため。
+  // 型検査などの診断（error TS1234）は位置つきの原因なので、FAIL の行よりさらに優先する。
   const errorLine =
+    sectionLines.find((line) => /\berror TS\d+/u.test(line)) ??
+    lines.find((line) => /^FAIL\b/u.test(line)) ??
     sectionLines.find((line) => /\berror\b/i.test(line)) ??
     sectionLines[0] ??
     lines.slice(stepIndex + 1).find(isCandidate);
@@ -505,7 +510,7 @@ export function summarizeGitHookFailure(output: string): string {
           lines[0]!);
   const tail = lines
     .filter((line) => /^(?:FAIL\b|Test Files\b|Tests\b)/iu.test(line))
-    .filter((line) => line !== errorLine && !primary.includes(line))
+    .filter((line) => !primary.includes(line))
     .slice(-3);
   const summary = [primary, ...tail].join("; ");
   const limit = 400;

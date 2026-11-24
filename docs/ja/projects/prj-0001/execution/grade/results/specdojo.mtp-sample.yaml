@@ -4,11 +4,11 @@ document: specdojo:mtp-sample
 path: docs/ja/specdojo/samples/mtp-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: fail
-score: 70
-graded_at: "2026-10-12T21:32:33.216Z"
-graded_by: agy-expert-executor
-content_hash: 1992ce64d94d6c23edb0a5f7a35f710997d710fe3f8c7bc701b8a949a53300b1
+verdict: pass
+score: 96
+graded_at: "2026-11-23T15:38:40.787Z"
+graded_by: sonnet-review-executor
+content_hash: 7baf6d70d5cec85b6f7ff029a72fd25c697f8b4de342f7e681be084a78a8fd50
 categories:
   purpose:
     score: 100
@@ -21,13 +21,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 75
+    score: 92
   implementation:
-    score: 100
+    score: 88
   quality:
-    score: 50
+    score: 92
   consistency:
-    score: 0
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -69,26 +69,26 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-change-impact:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
-    level: 0
-    score: 0
-  vp-qe-kata-conformance:
-    level: 0
-    score: 0
-  vp-ux-readability:
-    level: 1
-    score: 25
-  vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-qe-kata-conformance:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -102,50 +102,37 @@ viewpoints:
     level: 4
     score: 100
 finding_counts:
-  blocker: 2
-  major: 3
-  minor: 1
+  blocker: 0
+  major: 0
+  minor: 3
   note: 0
 findings:
   - id: F001
-    severity: major
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 1
+    anchor: "# 移行テスト計画（移行リハーサル計画）: 駄菓子屋きぬや 販売管理システム"
+    message: >-
+      `based_on` に、本文で依拠している `specdojo:dmd-sample` がありません。参照しているのに追従対象として宣言されておらず、変更時の影響範囲を機械的に追えないため、`based_on`
+      に追加するか、`dmd-sample` を参照だけに留める理由を示すべきです。
+    message_ja: >-
+      `based_on` に、本文で依拠している `specdojo:dmd-sample` がありません。参照しているのに追従対象として宣言されておらず、変更時の影響範囲を機械的に追えないため、`based_on`
+      に追加するか、`dmd-sample` を参照だけに留める理由を示すべきです。
+  - id: F002
+    severity: minor
     rule: vp-qe-verifiability
     line: 61
-    anchor: ""
-    message: サンプルの例示として、判定基準を具体的にどう記述すべきか（Pass/Failが客観的に判定可能な表現）が示されておらず、検証可能性の例として不十分である。
-    message_ja: サンプルの例示として、判定基準を具体的にどう記述すべきか（Pass/Failが客観的に判定可能な表現）が示されておらず、検証可能性の例として不十分である。
-  - id: F002
-    severity: blocker
-    rule: vp-qe-omissions-consistency
-    line: 37
-    anchor: ""
-    message: "ルールブックで定義されている必須構成（## 1.概要 〜 ## 9.関連ドキュメント）がすべて欠落しており、ルールを無視した独自の構成となっている。"
-    message_ja: "ルールブックで定義されている必須構成（## 1.概要 〜 ## 9.関連ドキュメント）がすべて欠落しており、ルールを無視した独自の構成となっている。"
+    anchor: "| 所要時間       | 3 対象の書き出し・取り込み・照合と動作確認の合計に、取り込み直し 1 回分を足した時間が、臨時休業の開始から正午までに収まる | OPS    |"
+    message: >-
+      所要時間の基準が「臨時休業の開始から正午まで」と、時刻や分数の値を持たず pass/fail を測れません。rulebook の良い例のように分数などの仮値（例: 停止許容時間の仮置き）を添え、確定は `_UNDECIDED_`
+      に残すとよいです。
+    message_ja: >-
+      所要時間の基準が「臨時休業の開始から正午まで」と、時刻や分数の値を持たず pass/fail を測れません。rulebook の良い例のように分数などの仮値（例: 停止許容時間の仮置き）を添え、確定は `_UNDECIDED_`
+      に残すとよいです。
   - id: F003
     severity: minor
-    rule: vp-qe-kata-conformance
-    line: 3
-    anchor: "## 1. 目的と適用範囲"
-    message: Frontmatter に必須項目である `title` が欠落している。
-    message_ja: Frontmatter に必須項目である `title` が欠落している。
-  - id: F004
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 4
-    anchor: ""
-    message: Frontmatter の type が `project` となっているが、ルールブックの定義に従い `migration` 固定とする必要がある。
-    message_ja: Frontmatter の type が `project` となっているが、ルールブックの定義に従い `migration` 固定とする必要がある。
-  - id: F005
-    severity: blocker
-    rule: vp-qe-kata-conformance
-    line: 37
-    anchor: ""
-    message: 本文構成がルールブックで指定された順序固定の必須見出しに従っておらず、具体例としての責務を果たしていない。
-    message_ja: 本文構成がルールブックで指定された順序固定の必須見出しに従っておらず、具体例としての責務を果たしていない。
-  - id: F006
-    severity: major
-    rule: vp-ux-readability
-    line: 37
-    anchor: ""
-    message: ルールブックと全く異なる構成で記述されているため、初見の読者が正しい MTP の書き方を理解できず、誤った形式を模倣させるリスクがある。
-    message_ja: ルールブックと全く異なる構成で記述されているため、初見の読者が正しい MTP の書き方を理解できず、誤った形式を模倣させるリスクがある。
+    rule: vp-ux-language-consistency
+    line: 104
+    anchor: "- 条件付き GO: 所要時間・件数・つけ残高・在庫数・重大障害が合格し、残った差異の原因と直し方が分かっていて、切替日の前日の読み合わせで直したことを確かめられる。条件と確認の期限を決定記録に書いて切替日を確定する。"
+    message: 条件付き GO の記述が「決定記録」と書かれており、他の章（`pm-decision-log`）と呼称が揺れています。`pm-decision-log` に統一すべきです。
+    message_ja: 条件付き GO の記述が「決定記録」と書かれており、他の章（`pm-decision-log`）と呼称が揺れています。`pm-decision-log` に統一すべきです。

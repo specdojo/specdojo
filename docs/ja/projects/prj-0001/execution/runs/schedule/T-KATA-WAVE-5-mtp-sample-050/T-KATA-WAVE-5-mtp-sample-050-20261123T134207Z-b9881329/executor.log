@@ -1,0 +1,29 @@
+移行テスト計画の sample（`docs/ja/specdojo/samples/mtp-sample.md`）を作り直しました。駄菓子屋きぬやの移行リハーサルを題材に、rulebook が求める 9 章を値で埋めた完成例です。Prettier で整形済みですが、lint や schema 検証は実行していません。後続の runner が流すので、`based_on` の追加が lint:fm を通るかもまだ分かりません。
+
+**主な変更点**
+- **構成:** 以前の独自構成（入力情報・記述内容・最小記述例・未解決事項）をやめ、rulebook の 9 章を正しい順序で置きました。
+- **数値と判定者:** 停止時間・照合方法・許容差・判定者は、既存の移行計画とデータ移行設計の sample に合わせました。
+- **frontmatter:** 移行計画とデータ移行設計の sample を `based_on` に入れました（指摘 F017）。
+- **各章の中身:**
+  - リハーサルは本番の前に 2 回、不合格なら追加は 1 回まで（切替日の 2 日前の閉店後まで）としました。
+  - 合否基準では、所要時間・件数・サンプル照合・つけ残高・在庫数・業務シナリオ・重大障害のそれぞれに基準値と判定者を入れました。
+  - 差異の扱いは区分ごとに決め、記録先は `pm-issue-log` と `pm-decision-log` です。
+  - GO／条件付き GO／NO-GO は、判断する人と条件を書きました。
+- **書かなかったこと:** 決まりどおり、この文書を作る・確かめる・承認する役割の割り当ては本文に入れていません。
+
+**決めていただく値（推測で埋めず `_UNDECIDED_` で残しました）**
+- 仮置きの切替日と定休日の曜日。第 1 回の予定日がここで決まるため、店主代表が準備フェーズの前に決めます。
+- 臨時休業の開始時刻。合否基準の所要時間がこれに依存するため、店主代表が第 1 回の実測を見て第 2 回の前までに決めます。
+
+**仮定として置いた前提（`_ASSUMPTION_`）**
+- 定休日が週 1 日あり、リハーサルはその午前に行う。
+- 販売管理システムに、本番の台帳と分けたリハーサル用の保存先がある。
+
+**rulebook 側で合わせて直すとよい点（今回は rulebook を変えていません）**
+- rulebook の合否基準の良い例は件数の判定者を QE にしていますが、移行計画の sample では件数の判定者が開発担当です。sample は移行計画に合わせて DEV にしました。どちらに揃えるか決める必要があります。
+- 「関連ドキュメント」章は分冊への導線だけを求めていますが、指摘 F018 は上位文書への参照を求めています。上位文書への導線も書いてよいと rulebook に書き足すかを検討してください。
+- rulebook の `recipe` と `template` がまだ `undecided` です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"mtp-sample.md を rulebook の必須9章（概要〜関連ドキュメント）に沿って作り直し、駄菓子屋きぬやの移行リハーサル計画の完成例にした。mip-index-sample・dmd-index-sample・dmd-sample と値（停止許容・許容差・判定者・run_id 規約）を整合させ、based_on を追加した。F001〜F030 は構成・内容の書き直しで対応し、Prettier で整形した。lint とスキーマ検証は親 runner が実行するため、この段では実行していない。","handoff":["_UNDECIDED_: 仮置きの切替日と定休日の曜日（第1回リハーサルの予定日が決まらないため、店主代表が準備フェーズの開始前に決める）。","_UNDECIDED_: 臨時休業の開始時刻（合否基準の所要時間の基準になる。店主代表が第1回の実測を見て第2回の前までに決める）。","_ASSUMPTION_: 定休日は週1日あり、リハーサルはその午前に行う。販売管理システムは本番の台帳と分けたリハーサル用の保存先を持つ。","rulebook の変更案: 6.1 合否基準の良い例は件数の判定者を QE にしているが、mip-index-sample の成功条件では件数の判定者が開発担当（DEV）。sample は mip に合わせて DEV にした。rulebook の例と mip のどちらに揃えるか決める必要がある。","rulebook の変更案: 「関連ドキュメント」章は分冊への導線だけを求めている。F018 は上位文書（mip/dmd/cop/otp）への参照を求めているため、上位文書への導線も書いてよいと rulebook に明記するか検討する。","rulebook の frontmatter で recipe と template が undecided のまま残っている。","PJR-76N9 に従い、文書を作る・確かめる・承認する役割の割り当ては本文に書いていない。合否判定者・GO/NO-GO の判断者・データ準備の担当は、rulebook が求める文書の中身として Role code で書いた。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/mtp-sample.md","status":"passed","summary":"変更した Markdown を整形した"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルの変更なし","reason":"変更は docs/ja/specdojo/samples/mtp-sample.md だけで、plan・result・個票などの履歴ファイルを変更していない"}]}
+</specdojo_executor_evidence>

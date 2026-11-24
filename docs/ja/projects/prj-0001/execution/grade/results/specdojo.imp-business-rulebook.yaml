@@ -5,15 +5,15 @@ path: docs/ja/specdojo/rulebooks/imp-business-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 93
-graded_at: "2026-11-08T20:35:20.406Z"
-graded_by: flash-high-executor
-content_hash: d7c9168c9ddf684336130097b55dafcf786c32c4774c7a1966826690ebe07f3a
+score: 98
+graded_at: "2026-11-23T15:45:28.528Z"
+graded_by: sonnet-review-executor
+content_hash: a3118bbc9fdc39b8531a12f3517683357d5759a571ff6f0a197a5f7ce2e1f8d8
 categories:
   purpose:
     score: 100
   operations:
-    score: 100
+    score: 94
   planning:
     score: 100
   business:
@@ -21,11 +21,11 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 83
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 92
   consistency:
     score: 100
 viewpoints:
@@ -75,8 +75,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
     level: 4
     score: 100
@@ -84,14 +84,14 @@ viewpoints:
     level: 3
     score: 75
   vp-ux-readability:
-    level: 3
-    score: 75
-  vp-ux-language-consistency:
-    level: 3
-    score: 75
-  vp-ops-release-readiness:
     level: 4
     score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
   vp-ops-operability:
     level: 4
     score: 100
@@ -104,34 +104,24 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 4
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-verifiability
-    line: 72
-    anchor: ""
-    message: 影響度の尺度を定義するよう禁止事項にあるが、記述ガイド（6.3）では評価観点を示すのみとなっており、尺度の定義方法についての指示が不十分である。
-    message_ja: 影響度の尺度を定義するよう禁止事項にあるが、記述ガイド（6.3）では評価観点を示すのみとなっており、尺度の定義方法についての指示が不十分である。
+    rule: vp-qe-kata-conformance
+    line: 103
+    anchor: "- 次の条件に当てはまる事項はプロジェクト登録簿へ転記し、転記先の登録項目 ID（`PJR-XXXX`）を記載する。決定の進み具合は個票で追う。"
+    message: >-
+      見送り・代替には再評価条件と期限が必須ですが、sample の 5 章は在庫補充の再評価期限を 2026-06-30 としています。6.5
+      の記述場所（表内か表外か）が規定されておらず、読み手が記載位置に迷うため、見送り・代替の再評価は対応方針の表の下に箇条書きで書くと明記する必要があります。
+    message_ja: >-
+      見送り・代替には再評価条件と期限が必須ですが、sample の 5 章は在庫補充の再評価期限を 2026-06-30 としています。6.5
+      の記述場所（表内か表外か）が規定されておらず、読み手が記載位置に迷うため、見送り・代替の再評価は対応方針の表の下に箇条書きで書くと明記する必要があります。
   - id: F002
     severity: minor
-    rule: vp-qe-kata-conformance
-    line: 101
-    anchor: ""
-    message: Frontmatter で参照する sample が、禁止事項で要求した影響度尺度を定義せずに高・中・低を使用しているため、完成例として rulebook の適用方法を完全には示せていない。
-    message_ja: Frontmatter で参照する sample が、禁止事項で要求した影響度尺度を定義せずに高・中・低を使用しているため、完成例として rulebook の適用方法を完全には示せていない。
-  - id: F003
-    severity: minor
-    rule: vp-ux-readability
-    line: 85
-    anchor: "| 影響度 | `高` / `中` / `低` |"
-    message: 影響詳細一覧の必須カラム表が「変更要否」の直後の空行で分断され、Markdown 描画では「影響度」以降の4行が表にならないため、空行を削除して1つの表に統合する必要がある。
-    message_ja: 影響詳細一覧の必須カラム表が「変更要否」の直後の空行で分断され、Markdown 描画では「影響度」以降の4行が表にならないため、空行を削除して1つの表に統合する必要がある。
-  - id: F004
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 91
-    anchor: ""
-    message: 本文全体では「影響度」、参考 sample の対応方針では「優先度」を用いている一方、この箇所だけ未定義の「重要度」を使用しているため、「影響度」または定義済みの優先順位用語へ統一する必要がある。
-    message_ja: 本文全体では「影響度」、参考 sample の対応方針では「優先度」を用いている一方、この箇所だけ未定義の「重要度」を使用しているため、「影響度」または定義済みの優先順位用語へ統一する必要がある。
+    rule: vp-ops-release-readiness
+    line: 1
+    anchor: "# 影響調査（業務）作成ルール"
+    message: Frontmatter の `recipe` と `template` が `undecided` のままです。ready 化の前に、`not-needed` か整備対象かを判断して宣言する必要があります。
+    message_ja: Frontmatter の `recipe` と `template` が `undecided` のままです。ready 化の前に、`not-needed` か整備対象かを判断して宣言する必要があります。

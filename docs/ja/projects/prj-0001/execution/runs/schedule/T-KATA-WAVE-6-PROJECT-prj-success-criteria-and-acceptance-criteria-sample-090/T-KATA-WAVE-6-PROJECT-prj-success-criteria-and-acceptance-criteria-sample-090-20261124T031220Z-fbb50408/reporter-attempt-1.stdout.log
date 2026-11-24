@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "mode": "review",
+  "grade_check": "### 評価結果の確認\n\n#### 鮮度確認\n`npx specdojo grade list --target kata --path docs/ja/specdojo/samples/prj-success-criteria-and-acceptance-criteria-sample.md --changed-only` を実行した結果、出力なし。評価結果は最新。\n\n#### 評価結果\n- **評価対象**: `docs/ja/specdojo/samples/prj-success-criteria-and-acceptance-criteria-sample.md` \n- **verdict**: `pass` \n- **score**: 96 \n- **finding 件数**: blocker 0 / major 0 / minor 2 / note 0\n\n#### 型の評価結果（全）\n- `docs/ja/specdojo/rulebooks/prj-success-criteria-and-acceptance-criteria-rulebook.md`: `pass` (score: 98)\n- `docs/ja/specdojo/recipes/prj-success-criteria-and-acceptance-criteria-recipe.md`: `pass` (score: 98)\n- `docs/ja/specdojo/samples/prj-success-criteria-and-acceptance-criteria-sample.md`: `pass` (score: 96)\n- `docs/ja/specdojo/templates/prj-success-criteria-and-acceptance-criteria-template.md`: `pass` (score: 90)",
+  "rationale": [
+    "評価結果の鮮度は、`npx specdojo grade list` による `--changed-only` および `--incomplete` の実行結果から最新であることを確認済み。",
+    "各型（`rulebook`, `recipe`, `sample`, `template`）はすべて `pass` と判定されており、`done_criteria`（DC-001〜DC-005）も `sample` 本文および `grade` の結果から充足していることを確認した。",
+    "`sample` における「在庫とつけ残高の記録」に関する受入条件（DC-004）および「合否判定基準」の明示（DC-005）は満たされている。",
+    "確認できなかった範囲: 先行 `edit` の実行記録、`rulebook`・`recipe`・`template` 本文の通読、親 runner による検証結果。"
+  ],
+  "improvements": [
+    "SC-06 の「必須記録と引き継ぎ」について、具体的な項目と内容を明記すること。",
+    "例外表の列構成を `rulebook`・`template`・`sample` の間で統一すること（「判定への影響」の列、および「解決期限・責任者」の扱いを揃える）。",
+    "`template` の判定手順に、変更理由と影響条件 ID の記録、変更要求ログへの転記、および下流の再照合を行う手順を追加すること。",
+    "`recipe` の問い・レビュー観点・仕上げチェックに、証跡の公開範囲（非公開の保存先と参照のみを残すこと）および、確認者・承認者を役割名で記載することを追記すること。"
+  ],
+  "approach": "#### approach に応じた確認\n\n- **磨き込みの実施**: `plan` で求められた `rulebook` の必須要素の反映、`recipe` の問いへの対応、`sample` の形式との整合性は、`grade` の結果によって確認された。\n- **変更の混入確認**: `specdojo grade list --changed-only` の結果、対象外の変更は混入していない。",
+  "verdict": "complete-with-findings"
+}

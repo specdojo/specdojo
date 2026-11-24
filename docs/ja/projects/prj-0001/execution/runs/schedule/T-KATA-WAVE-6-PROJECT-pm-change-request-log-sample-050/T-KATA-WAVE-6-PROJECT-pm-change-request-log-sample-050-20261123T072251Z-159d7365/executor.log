@@ -1,0 +1,29 @@
+変更要求ログの sample（`docs/ja/specdojo/samples/pm-change-request-log-sample.md`）を、rulebook と周辺の sample に合わせた完成例に書き直しました。実行した検査は Prettier だけで、通っています。lint・schema などの検査は、このあと runner が実行します。
+
+**主な変更点**
+
+- **変更要求を 4 件にした:** 承認して実施中、条件付き承認で完了、保留、却下の 4 パターンを示しています。旧 CR-002（会計ソフト向けの CSV 列順変更）は、スコープ sample の「本格的な会計連携は対象外」と食い違うため、日次売上一覧に現金・つけの小計行を足す要求に置き換えました。
+- **状態の矛盾を解消した（F002・F003・F018）:** 一覧の状態と実施追跡の進捗を、rulebook が単独ログに定める値（審査中・保留・実施中・完了・却下・取下げ）にそろえました。
+- **一覧に変更理由の列を足した（F009・F019）:** 要求内容も「何を・どう変えるか」が 1 文で分かる形にしました。
+- **影響評価を作り直した（F004・F013・F015・F017・F022）:** スコープ・工数・品質・納期ごとに影響の量と根拠を書き、影響度の判定基準（小・中・大）を表の前に示しました。見送ったときの影響と期待効果の表も足しています。
+- **審査・決定（F001・F005）:** プロジェクト管理計画の M-01・M-02 と、スコープの「境界の判断基準」との対応列を足しました。決定者はすべて `PO` です。保留には再審査の時期と追加で集める材料を書きました。
+- **完了条件（F006・F012・F014）:** 「何を確かめ、何を満たせば合格か」の形に直しました。
+- **役割の表記（F011）:** 申請者・評価者・担当を Role code に統一しました。
+- **関連ドキュメント（F007・F008）:** 根拠・影響先・更新したリスク（RK-002）と課題（IS-001）を、変更 ID と結び付けた表にしました。参照先は既存の sample にある項目だけで、新しい ID は作っていません。
+- **概要（F016・F021・F024）:** 管理対象・運用期間・記録単位に加え、単独のログとして更新すること、何時点の記載かを書きました。
+
+**反映していない指摘（F020）と、rulebook・template への提案**
+
+テンプレートは「登録簿の個票から生成するビュー」を前提にしていますが、rulebook は「生成物は直接編集しない」としています。そのため sample は、rulebook の単独ログの形（`CR-NNN`）のまま据え置きました。次の 3 点は rulebook・template 側の検討事項として残します。
+
+- 単独ログ用と登録簿の生成物用のどちらを sample の見本にするかを、rulebook に明記する。
+- 単独ログ用の template を別に用意する。
+- 影響度の判定基準を書くことを rulebook の要件にするか決める。
+
+**決めていただく値**
+
+参加者別の作業時間上限（プロジェクト管理計画の U-02）は未決のため、`_UNDECIDED_` のまま残しました。各変更要求の工数が上限内かは、U-02 の決定後に確かめる必要があります。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"Rewrote pm-change-request-log-sample to the rulebook structure, addressing grade findings F001-F019 and F021-F024. F020 (generated-view template nature) was left as a rulebook/template follow-up. Prettier passed.","handoff":["F020 not applied: the template `pm-change-request-log-template` assumes the register-generated view (`rulebook: specdojo:pjr-rulebook`), while the rulebook forbids editing generated files and defines the standalone `CR-NNN` log. The sample keeps the standalone form. Proposed rulebook/template change: state which form the sample illustrates, and consider adding a standalone-log template.","Proposed rulebook change: in the 影響評価 guide, require stating the 影響度 scale (e.g., `小`/`中`/`大` with criteria) so evaluations are reproducible (grade F015/F022).","Undecided value left as `_UNDECIDED_`: whether CR effort is within the per-participant work-time cap depends on U-02 in the pm-plan sample; the user must decide U-02.","CR-002 (CSV column order for accounting software) was replaced with a daily-sales subtotal row because the original conflicted with the scope sample's out-of-scope 本格的な会計連携. The rulebook's good examples still mention 会計ソフト; consider aligning them with the common sample context."],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/pm-change-request-log-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"No history file changed","reason":"Only docs/ja/specdojo/samples/pm-change-request-log-sample.md changed; no pjr-*.md, plan.md, or result.md was edited"},{"command":"npm run validate:catalog","status":"not_applicable","summary":"Changes are outside docs/ja/projects/","reason":"The deliverable change is under docs/ja/specdojo/samples/, not docs/ja/projects/"}]}
+</specdojo_executor_evidence>

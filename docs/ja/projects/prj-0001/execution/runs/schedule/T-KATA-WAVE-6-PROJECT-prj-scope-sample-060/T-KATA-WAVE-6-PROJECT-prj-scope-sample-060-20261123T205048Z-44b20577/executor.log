@@ -1,0 +1,18 @@
+`docs/ja/specdojo/templates/prj-scope-template.md` を、直した rulebook と sample に合わせました。章・表の列・`frontmatter_template` は rulebook と合っていたので変えておらず、`_TODO_` の記入指示の文言だけを 7 か所直しています。rulebook と sample には手を入れていません。plan に展開された finding はありませんでした。
+
+**直した記入指示**
+- **導入文**: rulebook で任意になったので「（任意）」を付けました。中身は、プロジェクト概要を受けて何の境界を定める文書かを 1 文で書く、という指示にしています。
+- **対象システム**: rulebook から消えた「粒度を揃えて」をやめました。代わりに、各行がどの対象業務を支えるかを読み取れるようにする、という指示にしています。UI・API・DB を書かない話は rulebook の禁止事項と重なるので消しました。
+- **スコープ外**: 「対象外」を、rulebook に合わせて「今回扱わない対象」と言い換えました。記入指示は、外す理由と後続で扱う条件を添える形にしています。
+- **境界の判断基準・スコープ変更方針**: rulebook で任意の章なので「（任意）」を付けました。
+- **対象業務・対象期間**: rulebook の記述ガイドを写していた説明を、何を書くかだけに縮めました。
+
+**残したもの**
+- スコープ変更方針の表の「承認者」行は残しました。これはスコープ変更を誰が判断するかという中身で、rulebook が求める項目です。PJR-76N9 が外すように言う、文書の役割や承認の進み具合を書く欄とは別のものです。
+- 章の末尾にある「初期リリース前のトレードオフ確認方針」の記入欄も残しました。rulebook の必須ではありませんが、sample で使われているので、問題がなければこのままにします。
+
+検証は Prettier と markdownlint を通し、どちらも問題ありませんでした。その他の lint は、このあと親の runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"`prj-scope-template` の記入指示を、直した `prj-scope-rulebook` と `prj-scope-sample` に合わせた。導入文・境界の判断基準・スコープ変更方針に（任意）を付け、対象システムの指示を『各行がどの対象業務を支えるか』に変え、『対象外』を rulebook に合わせて『今回扱わない対象』と言い換え、記述ガイドを写していた説明を縮めた。章構成・表の列・`frontmatter_template` は変えていない。plan に展開された finding はなかった。","handoff":["根拠: `docs/ja/specdojo/rulebooks/prj-scope-rulebook.md`（commit 93a61c69e3 の改訂を含む）、`docs/ja/specdojo/samples/prj-scope-sample.md`、`docs/ja/specdojo/standards/template-authoring-standard.md`。","スコープ変更方針の表の『承認者』行は、スコープ変更の判断者という中身として rulebook が求める項目なので残した（PJR-76N9 が外すよう求める、文書の役割の割り当てや承認の進み具合の欄ではない）。","スコープ変更方針の末尾にあるトレードオフ確認方針の記入欄は、rulebook の必須ではないが sample で使われているので残した。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/templates/prj-scope-template.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/templates/prj-scope-template.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>

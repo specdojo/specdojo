@@ -5,9 +5,9 @@ path: docs/ja/specdojo/samples/ifx-cmd-sample.yaml
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 100
-graded_at: "2026-11-13T06:26:34.412Z"
-graded_by: sol-review-executor
+score: 95
+graded_at: "2026-11-23T04:07:40.401Z"
+graded_by: opus-review-executor
 content_hash: 14fce7f362952d240d5c42dc807736bc267f0b3c386b06d7303b79e5e58bd834
 categories:
   purpose:
@@ -21,13 +21,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 92
   implementation:
     score: 100
   quality:
     score: 100
   consistency:
-    score: 100
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -75,8 +75,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
     level: 4
     score: 100
@@ -84,8 +84,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -101,6 +101,28 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 2
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 106
+    anchor: 起動引数と標準入力に秘密値を含めず、環境変数の値とレシート本文をログへ記録しない。
+    message: >-
+      103行目で秘密値も注入対象もないとしているのに、log_policy
+      が秘密値を含めないことや保存前に秘密値をマスクすることを求めており、矛盾してマスクの実対象が曖昧になる。認証不要のため秘密値はないと明記し、ログに残さない対象をレシート本文などの実在する情報に絞って書き直す。
+    message_ja: >-
+      103行目で秘密値も注入対象もないとしているのに、log_policy
+      が秘密値を含めないことや保存前に秘密値をマスクすることを求めており、矛盾してマスクの実対象が曖昧になる。認証不要のため秘密値はないと明記し、ログに残さない対象をレシート本文などの実在する情報に絞って書き直す。
+  - id: F002
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 92
+    anchor: 印字の有無を断定せず、自動再試行を止めて店頭利用者の確認へ進む
+    message: >-
+      結果不明時に紙面を確認する人を「店頭利用者」「利用者」（92・119・126・132・135行目）と呼んでいるが、関連する ifx-index-sample と clis-sample
+      は同じ役割を「店番担当」と呼んでおり、お客様とも読めて表記がゆれている。共通サンプル文脈の役割名「店番担当」に統一する。
+    message_ja: >-
+      結果不明時に紙面を確認する人を「店頭利用者」「利用者」（92・119・126・132・135行目）と呼んでいるが、関連する ifx-index-sample と clis-sample
+      は同じ役割を「店番担当」と呼んでおり、お客様とも読めて表記がゆれている。共通サンプル文脈の役割名「店番担当」に統一する。

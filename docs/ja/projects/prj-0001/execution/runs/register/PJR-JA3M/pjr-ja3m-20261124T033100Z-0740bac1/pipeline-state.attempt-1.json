@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-JA3M",
+  "run_id": "pjr-ja3m-20261124T033100Z-0740bac1",
+  "updated_at": "2026-11-24T03:34:42.407Z",
+  "stages": {
+    "executor": {
+      "status": "blocked",
+      "actor": "terra-executor",
+      "attempts": 1,
+      "started_at": "2026-11-24T03:31:43.214Z",
+      "completed_at": "2026-11-24T03:34:42.407Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-JA3M/pjr-ja3m-20261124T033100Z-0740bac1/evidence.json"
+    },
+    "reporter": {
+      "status": "pending",
+      "actor": "sonnet-reporter",
+      "attempts": 0,
+      "started_at": null,
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-JA3M/pjr-ja3m-20261124T033100Z-0740bac1/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-JA3M/pjr-ja3m-20261124T033100Z-0740bac1/result.md"
+  }
+}

@@ -1,0 +1,14 @@
+grade の指摘 3 件（F001〜F003）をすべて `docs/ja/specdojo/rulebooks/pm-members-rulebook.md` の修正で解消しました。sample・recipe・template は計画どおり変更していません。ただし template の名称はまだ揃っておらず、次の段で直す必要があります。検査は Prettier の整形確認だけ通しました。lint や schema 検査は、このあと親 runner が実行します。
+
+- **F001（完了の確かめ方がない）**: 「6.2. 検証と合成名簿との整合」に、合格の判定方法を書き足しました。
+  - schema 適合は `npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/pm-members.schema.yaml --data <pm-members.yaml のパス>` が終了コード 0 で終われば合格です。
+  - nickname の一意性は、CLI が名簿を読み込むときに検査します（`src/shared/specdojo-config.ts` で確認済み）。`--by` を取る exec コマンドが `Duplicate member nickname` で止まらなければ合格です。
+- **F002（`roles: []` の扱いが不明）**: 人間 member の `roles` は 1 件以上と明記しました。schema は `[]` を通しますが、上位標準では `[]` を汎用 agent 用と定義しているため、人間には使わないという理由も添えています。禁止事項にも `roles: []` の行を足しました。
+- **F003（名称の揺れ）**: `title` の標準表記を `メンバー定義: <プロジェクト名>` と決めました。sample の title はすでにこの形です。
+- **直さなかった箇所**: 残りの章は冗長な記述や上位標準の再掲がないため、そのままにしました。
+
+**template の名称**: `docs/ja/specdojo/templates/pm-members-template.yaml` が作る文書の title は「メンバー名簿」のままです。template を扱う段で `メンバー定義: <プロジェクト名>` に揃える必要があります。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"pm-members-rulebook の grade 指摘 F001〜F003 を解消した。schema 検査と合成名簿の nickname 一意性の合格判定、人間 member の roles を 1 件以上とする規定と禁止事項、title の標準表記 `メンバー定義: <プロジェクト名>` を追加した。sample・recipe・template は変更していない。","handoff":["F003: template（docs/ja/specdojo/templates/pm-members-template.yaml）の生成物 title「メンバー名簿」は rulebook の標準表記 `メンバー定義: <プロジェクト名>` と揃っていない。template を扱う段で揃える。sample はすでに標準表記に合っている。","直さなかった箇所: 全体方針・位置づけ・ファイル命名・ID規則・6.1・6.3、および既存の禁止事項 3 行。grade の指摘がなく、冗長な記述やほかの型との重なりもないため維持した。","根拠として読んだもの: docs/specdojo/schemas/v1/pm-members.schema.yaml（roles に minItems がない）、people-and-organization-definition-standard（`roles: []` は汎用 agent 用）、src/shared/specdojo-config.ts の loadMemberRoster（合成時の Duplicate member nickname 検査）、rulebook-authoring-standard。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/pm-members-rulebook.md","status":"passed","summary":"整形済み（最後の編集後に --write も実行）"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変更していない","reason":"変更したのは Markdown の rulebook だけで、*.yaml / *.yml の変更がない"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"plan / result / 個票を変更していない"}]}
+</specdojo_executor_evidence>

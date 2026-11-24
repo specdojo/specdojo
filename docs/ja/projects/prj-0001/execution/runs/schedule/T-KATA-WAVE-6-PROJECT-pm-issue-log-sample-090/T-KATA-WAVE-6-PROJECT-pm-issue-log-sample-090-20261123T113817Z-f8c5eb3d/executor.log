@@ -1,0 +1,47 @@
+三つの型（rulebook・sample・template）はいずれも評価結果が最新で、完了条件も満たしています。verdict は `complete-with-findings` です。
+
+## 評価結果の確認
+- `specdojo grade list --target kata --path <対象> --changed-only` と `--incomplete` を、rulebook・sample・template の3対象それぞれで実行しました。
+- どちらのコマンドも出力は空で、終了コードは 0 でした。評価結果は最新で、評価パイプラインも完了しています。
+- 作業ツリーに増えたのは `pipeline-state.json`（未追跡）だけです。成果物は review 中に変更されていません。
+- grade の結果は次のとおりです。
+  - sample: `pass`、96 点。finding は minor 2 件。
+  - rulebook: `pass`、98 点。finding は minor 2 件。
+  - template: `pass`、100 点。finding は minor 1 件。
+
+## 判断根拠
+sample を読み、完了条件 DC-001〜DC-004 を照合しました。判定は plan が示す grade の結果を事実として使い、再評価していません。
+
+- DC-001（章立てと必須の表）: 概要、課題ログ一覧、優先度と期限、対応計画、進捗レビュー、関連ドキュメントの6章がそろっています。grade では `vp-arc-document-structure` が 100 点でした。
+- DC-002、DC-003（sample 標準、共通サンプル文脈、禁止事項）: 題材は駄菓子屋きぬやで、`vp-qe-kata-conformance` は 100 点でした。
+- DC-004（優先度・状態・判定基準・期限）:
+  - 優先度は `high`・`medium`・`low`、状態は `in-progress`・`waiting`・`done`・`deferred` を使っています。
+  - 優先度の判定基準は3章の表に、期限の決め方は同章の箇条書きにあります。
+
+## 未充足事項・改善指示
+完了を妨げる未充足事項はありません。残っている finding は minor で、完了条件を満たさないものではありません。
+
+- sample F001: 決定記録 `kinuya-decision-log` が project 修飾の文書 ID や wikilink で書かれていません。
+- sample F002: IS-002 は影響欄で AC-01 を確認できないと書いており、優先度は `high` の条件に当たります。表では `medium` になっているので、優先度か影響の記述のどちらかを合わせてください。
+- rulebook F001: 連携する template は登録簿からの生成ビューの枠だけを定義しています。単独の課題ログ用の template か骨組みの所在を明記してください。
+- rulebook F002: sample の関連ドキュメントに、`kinuya-decision-log` や「操作メモ」のような project 修飾でない表記があります。これは sample F001 と同じ点です。
+- template F001: template は `ready` ですが、rulebook と sample は `draft` です。両者の確定に合わせて status をそろえてください。
+
+確定の前に確かめる点が一つあります。sample の3章にある `_UNDECIDED_` は、初期リリース候補日 U-03 が未決のためで、`high` の判定に使う候補日が決まっていません。
+
+## approach に応じた確認
+- fully-guided として、宣言された文書だけを参照しました。
+- recipe は `_MISSING_`（未宣言）で、rulebook が recipe を宣言していません。実行記録にその扱いが残っているかは未確認です。
+- 成果物の `status` はいずれも変更していません。
+
+## decision
+verdict: `complete-with-findings`
+
+確認できなかった範囲は次の2点です。
+
+- 先行 edit タスクの実行記録は特定していません。
+- rulebook と template の本文は、grade の結果に任せて読んでいません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict=complete-with-findings。3対象(rulebook/sample/template)の grade は最新(changed-only・incomplete とも出力なし)で kata pass(96/98/100)。DC-001〜DC-004 は sample 本文と grade 結果から充足。minor finding(決定記録の修飾ID表記、IS-002 の優先度と影響の不整合、単独ログ用 template の所在、template と rulebook/sample の status 食い違い)は完了を妨げない。確認できなかった範囲: 先行 edit タスクの実行記録は特定しておらず、rulebook・template 本文は grade 結果に依拠して読んでいない。recipe は _MISSING_。","handoff":["sample: kinuya-decision-log を project 修飾 doc id または wikilink に直す(sample F001 / rulebook F002)","sample: IS-002 の優先度 medium と影響欄(AC-01 確認不能)の不整合を解消する(sample F002)","rulebook: 単独課題ログ用 template または骨組みの所在を明記する(rulebook F001)","template が ready で rulebook・sample が draft の status 食い違いを、確定時に整合させる(template F001)","U-03 初期リリース候補日の決定後に sample の _UNDECIDED_ を解消する"],"validations":[{"command":"specdojo grade list --target kata --path docs/ja/specdojo/samples/pm-issue-log-sample.md --changed-only / --incomplete","status":"passed","summary":"出力なし、終了コード 0(最新・完了)"},{"command":"specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/pm-issue-log-rulebook.md --changed-only / --incomplete","status":"passed","summary":"出力なし、終了コード 0(最新・完了)"},{"command":"specdojo grade list --target kata --path docs/ja/specdojo/templates/pm-issue-log-template.md --changed-only / --incomplete","status":"passed","summary":"出力なし、終了コード 0(最新・完了)"}]}
+</specdojo_executor_evidence>

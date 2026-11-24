@@ -1,0 +1,133 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_3d3e896aa39e4e3b8914db810a6d79cf
+  ts: "2026-11-22T12:55:55Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: prj-charter の sample の品質の確認の対象を、販売管理システムに合わせる
+    - field: description
+      from: ""
+      to: 型の grade で prj-charter-sample が needs-work だった。販売管理システムの開始判断なのに、品質の確認の対象が rulebook・recipe・sample・template になっていて、題材と合っていない。
+    - field: input
+      from: ""
+      to: '["2026-11-22 の型の grade（opus-review-executor）: prj-charter-rulebook pass 91、prj-charter-sample needs-work 83（major 4 件）。","major 4 件はどれも同じ内容: GO・Not GO の判断の材料と品質の確認の対象が型の 4 種類の文書になっており、販売管理システムの実装・操作手順・受入結果・公開物と、参照先の品質管理計画のゲートに結びついていない。","PJR-7M9J は recipe だけを直したため、sample の問題はこの項目で扱う（indie の承認、2026-11-22）。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-22"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-7M9J"]'
+- v: 1
+  id: reg_518771b76908492b9e3f44b356b680d2
+  ts: "2026-11-22T12:57:07Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 会話で決まっていない担当と期限を推測で入れたため、未定に戻す
+  changes:
+    - field: owner
+      from: BA
+      to: _TODO_
+    - field: due
+      from: "2026-11-30"
+      to: _TODO_
+  previous_event_id: reg_3d3e896aa39e4e3b8914db810a6d79cf
+- v: 1
+  id: reg_f440369da68e497aa6e12d1fd094ac9d
+  ts: "2026-11-22T13:03:11Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: 担当と期限を indie が決めた（2026-11-22）
+  changes:
+    - field: owner
+      from: _TODO_
+      to: BA
+    - field: due
+      from: _TODO_
+      to: "2026-11-30"
+  previous_event_id: reg_518771b76908492b9e3f44b356b680d2
+- v: 1
+  id: reg_e6b5028a71f14220a05b7b3d1ba3c05b
+  ts: "2026-11-22T13:20:59Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件を利用者の承認のもとで書く
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_f440369da68e497aa6e12d1fd094ac9d
+- v: 1
+  id: reg_66cb1e3d1ecb4f8d9d3d58d1d10c063c
+  ts: "2026-11-22T13:35:09Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_e6b5028a71f14220a05b7b3d1ba3c05b
+- v: 1
+  id: reg_2fd56ff4398442bdaff05e1c00aa170d
+  ts: "2026-11-22T13:36:38Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_66cb1e3d1ecb4f8d9d3d58d1d10c063c
+- v: 1
+  id: reg_da3be5f6f79844819db9682269525ba3
+  ts: "2026-11-22T15:00:18Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが差分と対応結果を完了条件と照らし、統合の後の型の grade（2026-11-23、opus-review-executor）で rulebook と sample がともに pass であることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: prj-charter の sample の品質の確認の対象と GO・Not GO の判断の材料を、販売管理システムの実装・操作手順・受入結果・公開物と品質管理計画のゲートに結びつけた。型の grade は rulebook pass 90・sample pass 96
+  previous_event_id: reg_2fd56ff4398442bdaff05e1c00aa170d

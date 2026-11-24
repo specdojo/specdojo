@@ -2,8 +2,8 @@ import { spawn, type SpawnOptions } from "node:child_process";
 import { constants as osConstants } from "node:os";
 import { resolve } from "node:path";
 import { type Command } from "commander";
+import { resolveReferences, validateReferences } from "../shared/reference-directories.js";
 import { agentExtraRootArguments, resolveProductRepos } from "../exec/task-repos.js";
-import { assertProviderLaunchAllowed } from "../shared/antigravity-block.js";
 import {
   OPENCODE_CONFIG_CONTENT_ENV,
   opencodeAgentNameFromArguments,
@@ -17,13 +17,15 @@ import {
   type SpecDojoConfig,
 } from "../shared/specdojo-config.js";
 import { registerNightOrchestratorCommand } from "./night-orchestrator.js";
+import { registerOrchestratorHandoffCommand } from "./orchestrator-handoff.js";
+import { registerNightlyIntegrationTestsCommand } from "./nightly-integration-tests.js";
+import { registerWatchScanCommand } from "./watch-scan.js";
 
 export type OrchestratorProvider = Exclude<AgentProvider, "custom">;
 
 const ORCHESTRATOR_EXECUTABLES: Readonly<Record<OrchestratorProvider, string>> = {
   claude: "claude",
   codex: "codex",
-  antigravity: "agy",
   copilot: "copilot",
   opencode: "opencode",
 };
@@ -77,21 +79,58 @@ export function buildOrchestratorLaunch(options: {
   provider: OrchestratorProvider;
   providerArgs: readonly string[];
   repoRoots: readonly string[];
+  referenceRoots?: readonly string[];
   cwd: string;
   env?: NodeJS.ProcessEnv;
 }): OrchestratorLaunch {
-  assertProviderLaunchAllowed(options.provider, "orchestrator launch");
   const env = { ...(options.env ?? process.env) };
   const args = [...options.providerArgs];
-  if (options.provider === "opencode" && options.repoRoots.length > 0) {
+  const references = [...new Set(options.referenceRoots ?? [])];
+  if (options.provider === "opencode" && (options.repoRoots.length > 0 || references.length > 0)) {
     env[OPENCODE_CONFIG_CONTENT_ENV] = opencodeExtraRootConfig(
       env[OPENCODE_CONFIG_CONTENT_ENV],
       opencodeAgentName(args),
       options.repoRoots,
       options.cwd,
+      "write",
+      references,
     );
   } else {
     args.push(...agentExtraRootArguments(options.provider, options.repoRoots));
+    if (references.length > 0) {
+      switch (options.provider) {
+        case "claude":
+          args.push(
+            "--add-dir",
+            ...references,
+            "--disallowedTools",
+            ...references.map(
+              (root) => `Edit(/${root.replaceAll("\\", "/").replace(/[?*[\]]/g, "\\$&")}/**)`,
+            ),
+          );
+          break;
+        case "copilot":
+          for (const root of references) {
+            const pattern = root.replaceAll("\\", "/").replace(/[?*[\]]/g, (char) => `[${char}]`);
+            args.push("--add-dir", root, "--deny-tool", `write(${pattern}/**)`);
+          }
+          break;
+        case "codex":
+          // workspace-write already permits reads outside the workspace. --add-dir would
+          // grant writes, so references must never be passed to that option.
+          args.push(
+            "--sandbox",
+            "workspace-write",
+            "-c",
+            "sandbox_workspace_write.writable_roots=[]",
+            "-c",
+            "sandbox_workspace_write.exclude_slash_tmp=true",
+            "-c",
+            "sandbox_workspace_write.exclude_tmpdir_env_var=true",
+          );
+          break;
+      }
+    }
   }
   return {
     command: ORCHESTRATOR_EXECUTABLES[options.provider],
@@ -107,14 +146,17 @@ export function resolveOrchestratorLaunch(options: {
   project?: string;
   env?: NodeJS.ProcessEnv;
 }): OrchestratorLaunch {
-  // Refuse before reading any configuration so a blocked provider never reaches spawn.
-  assertProviderLaunchAllowed(options.provider, "orchestrator launch");
   const env = options.env ?? process.env;
   const rootDir = specdojoRootDir();
   const configuredRoot = env[ORCHESTRATOR_CONFIG_ROOT_ENV]?.trim();
   const configRootDir = configuredRoot ? resolve(rootDir, configuredRoot) : rootDir;
   const { config, configPath } = loadConfig(configRootDir);
   if (!config) throw new Error(`No config found: ${configPath}`);
+  if (configRootDir !== rootDir) {
+    const errors = validateReferences(configRootDir, config, [rootDir]);
+    if (errors.length > 0)
+      throw new Error(`Invalid references (${configPath}):\n${errors.join("\n")}`);
+  }
   const projectId = resolveOrchestratorProjectId(config, options.project, env);
   const repos = resolveProductRepos(configRootDir, config.projects[projectId]);
   const externalProjects = resolveExternalProjects(configRootDir, config);
@@ -128,6 +170,7 @@ export function resolveOrchestratorLaunch(options: {
     provider: options.provider,
     providerArgs: options.providerArgs,
     repoRoots,
+    referenceRoots: resolveReferences(configRootDir, config).map((entry) => entry.root),
     cwd: rootDir,
     env,
   });
@@ -200,14 +243,14 @@ export function registerOrchestratorCommands(program: Command): void {
     .description("Launch an interactive orchestrator with declared repository access");
 
   registerNightOrchestratorCommand(orchestrator);
+  registerOrchestratorHandoffCommand(orchestrator);
+  registerNightlyIntegrationTestsCommand(orchestrator);
+  registerWatchScanCommand(orchestrator);
 
   orchestrator
     .command("launch")
     .description("Launch a provider CLI and allow only repositories declared by the project")
-    .requiredOption(
-      "--provider <name>",
-      "Provider CLI (claude|codex|copilot|opencode; antigravity is refused)",
-    )
+    .requiredOption("--provider <name>", "Provider CLI (claude|codex|copilot|opencode)")
     .option("--project <projectId>", "Project id in specdojo.config.json")
     .argument("[providerArgs...]", "Provider arguments; put them after --")
     .action(async (providerArgs: string[], opts: { provider: string; project?: string }) => {

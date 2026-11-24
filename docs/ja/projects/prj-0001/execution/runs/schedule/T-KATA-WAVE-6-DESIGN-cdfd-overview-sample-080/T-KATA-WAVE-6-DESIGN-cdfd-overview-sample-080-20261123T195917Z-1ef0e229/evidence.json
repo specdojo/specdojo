@@ -1,0 +1,182 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-6-DESIGN-cdfd-overview-sample-080",
+  "run_id": "T-KATA-WAVE-6-DESIGN-cdfd-overview-sample-080-20261123T195917Z-1ef0e229",
+  "stage": {
+    "role": "executor",
+    "actor": "sonnet-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-23T20:02:57.338Z",
+    "completed_at": "2026-11-23T20:03:19.083Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/cdfd-overview-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/cdfd-overview-sample.md | 4 ++--\n 1 file changed, 2 insertions(+), 2 deletions(-)"
+  },
+  "validations": [
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:cdfd-overview-sample\n  type: flow\n  status: ready\n  rulebook: specdojo:cdfd-overview-rulebook\n  based_on: []\n  supersedes: []\n---\n\n# 概念データフロー図（全体概要）: 駄菓子屋きぬや販売管理\n\n本書は、駄菓子屋きぬやの店舗運営について、仕入から店頭販売、在庫管理、常連客のつけ管理、日次・月次の締めまでを業務プロセスとして整理する。\n\n## 1. 目的\n\n駄菓子屋きぬやの販売管理業務の全体像として、仕入・販売・在庫・顧客・締めの五つのプロセスグループと、それらが読み書きするデータの関係を示す。\n\n## 2. 適用範囲\n\n- 対象は、単一店舗での仕入計画から入荷、店頭販売、在庫確認と補充判断、常連客の登録とつけ精算、日次締めと月次見直し\n… output omitted …\nサブ分類を表す。マスタ・構成データは、他のプロセスから参照される比較的安定した基準情報（商品台帳、顧客台帳）を指す。トランザクションデータは、業務活動に伴い都度更新される記録（販売記録、仕入記録、在庫記録、つけ台帳、日次締め記録、月次報告）を指す。物理保管は現物の保管先であり、いずれの区分にも属さない。トランザクションデータと同じ色の使用は、「データストア」の章で述べた図に置くための例外であり、区分への所属を意味しない。\n\nノード形状・線種そのものの記法は \\[\\[specdojo:cdfd-d2-rulebook|D2 記法ルール]] に従う。本章は、その記法に基づき駄菓子屋きぬや販売管理の全 CDFD が実際に採用する色・絵文字の割り当てを固定する。\n\n## 8. 未決事項\n\n<!-- prettier-ignore -->\n\n| 論点 | 影響 |\n| - | - |\n| *UNDECIDED*: システム化後の各データストアの保管先（タブレット端末内、クラウド、紙との併用） | 「データストア」の保管先列と、プロセスグループ別 CDFD の記録・復旧手順 |"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6502 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6502 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-DESIGN-cdfd-overview-sample-080\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (48 tests) 8ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.t\n… output omitted …\ns/src/exec/plans.test.ts\",\"duration_ms\":1967}\n\n Test Files  19 passed (19)\n      Tests  480 passed (480)\n   Start at  05:06:15\n   Duration  3.39s (transform 9.34s, setup 2.17s, import 13.63s, tests 7.21s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nm coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-DESIGN-cdfd-overview-sample-080/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-DESIGN-cdfd-overview-sample-080/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "condense_records": [
+    {
+      "location": "7. 凡例（本プロダクト共通） 本文第2段落「`->` の通常線は情報…売場棚は物理保管として描く」",
+      "category": "table-prose",
+      "action": "delete",
+      "reason": "同じ内容が直後の凡例対応表（情報の流れ・物の流れ・物理保管の行）にあり二重の説明だったため。凡例の意味は表で保たれる。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "7. 凡例（本プロダクト共通） データストアの色分けの段落末尾「併記とトランザクションデータと同じ色の使用は…」",
+      "category": "repetition",
+      "action": "reference",
+      "reason": "物理保管の併記が例外である旨は「データストア」の章で既に述べており、重複する説明を同章への参照に置き換えた。区分に属さないという意味は維持している。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "3. プロセス領域 章冒頭（正本の所在）",
+      "category": "canonical-restatement",
+      "action": "retain",
+      "reason": "rulebook の記述ガイド（プロセス領域）が章冒頭で正本の所在を示すよう要求しているため。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "6. 詳細 CDFD 一覧 章冒頭（役割分担）",
+      "category": "canonical-restatement",
+      "action": "retain",
+      "reason": "rulebook の記述ガイド（詳細 CDFD 一覧）が章冒頭で詳細化の分担と状態定義の正本を示すよう要求しているため。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "5. 概念データフロー（概要） 図の後の 1 文の説明",
+      "category": "figure-prose",
+      "action": "retain",
+      "reason": "rulebook の本文要件が各図に業務の題と 1 文の説明を要求しているため。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "4. データストア 章冒頭（入荷数量と販売数量の反映担当）",
+      "category": "repetition",
+      "action": "retain",
+      "reason": "在庫記録への反映責務を 1 つのプロセスに定める判断に要る記述で、図のエッジとの一致を担保しているため。",
+      "cause": {
+        "type": "document"
+      }
+    }
+  ],
+  "final_message": "凡例章の重複 2 箇所を整理した（線種の説明を削除、物理保管の例外説明を参照に置き換え）。必須記述と判断に要る内容は残した。lint 系の検査は親 runner が実行する。",
+  "completion_status": "complete",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-DESIGN-cdfd-overview-sample-080/T-KATA-WAVE-6-DESIGN-cdfd-overview-sample-080-20261123T195917Z-1ef0e229/executor.log",
+      "bytes": 4052,
+      "truncated": false
+    }
+  ]
+}

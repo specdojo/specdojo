@@ -1,0 +1,370 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-JA3M",
+  "run_id": "pjr-ja3m-20261124T033100Z-0740bac1",
+  "stage": {
+    "role": "executor",
+    "actor": "terra-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-24T03:31:43.214Z",
+    "completed_at": "2026-11-24T03:34:42.194Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-ja3m.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-ja3m-tests-live-kata.md",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/docs/yaml-pages.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/docs/yaml-tables.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/worktree-yaml-pages.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/grade/grade.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/fixtures/grade/kata-references/docs/ja/specdojo/rulebooks/example-rulebook.md",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/grade/kata-references/docs/ja/specdojo/samples/example-sample.md",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/grade/kata-references/docs/ja/specdojo/templates/example-template.md",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/excluded-ifx-api-sample.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/excluded-ifx-msg-sample.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/excluded-job-sequence.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/gl-sample.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/ifx-cmd-ai-provider-cli.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/ifx-index-sample.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--bdd-register-entry.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--dct-business-model-bes.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--dct-business-model-bps.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--dct-business-model-br.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--dct-data-model-bdd.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--dct-data-model-ccd.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--dct-data-model-cdsd.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--dct-data-model-cdt.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--dct-data-model-stsd.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--ifx-file-agent-evidence.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--pm-members.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--pm-review-viewpoints.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--pm-roles.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--sch-milestones.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--tml-index.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/specdojo--bdd-sample.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/specdojo--dct-index-sample.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/specdojo--dct-sample.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/specdojo--ifx-cmd-sample.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/specdojo--pm-members-sample.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/specdojo--pm-review-viewpoints.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/specdojo--pm-roles-sample.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/specdojo--tml-sample.yaml",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-ja3m-tests-live-kata.md",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/docs/yaml-pages.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/docs/yaml-tables.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/worktree-yaml-pages.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/grade/grade.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/fixtures/grade/kata-references/docs/ja/specdojo/rulebooks/example-rulebook.md",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/grade/kata-references/docs/ja/specdojo/samples/example-sample.md",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/grade/kata-references/docs/ja/specdojo/templates/example-template.md",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/excluded-ifx-api-sample.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/excluded-ifx-msg-sample.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/excluded-job-sequence.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/gl-sample.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/ifx-cmd-ai-provider-cli.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/ifx-index-sample.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--bdd-register-entry.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--dct-business-model-bes.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--dct-business-model-bps.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--dct-business-model-br.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--dct-data-model-bdd.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--dct-data-model-ccd.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--dct-data-model-cdsd.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--dct-data-model-cdt.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--dct-data-model-stsd.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--ifx-file-agent-evidence.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--pm-members.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--pm-review-viewpoints.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--pm-roles.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--sch-milestones.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/prj-0001--tml-index.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/specdojo--bdd-sample.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/specdojo--dct-index-sample.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/specdojo--dct-sample.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/specdojo--ifx-cmd-sample.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/specdojo--pm-members-sample.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/specdojo--pm-review-viewpoints.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/specdojo--pm-roles-sample.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/specdojo--tml-sample.yaml",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 38,
+    "summary": ".../project-register/pjr-ja3m-tests-live-kata.md   |  8 +++-\n tests/src/docs/yaml-pages.test.ts                  | 52 +++-------------------\n tests/src/docs/yaml-tables.test.ts                 |  7 ++-\n .../exec/worktree-yaml-pages.integration.test.ts   |  2 +-\n tests/src/grade/grade.test.ts                      | 16 ++++---\n 5 files changed, 29 insertions(+), 56 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "./node_modules/.bin/prettier --write 'tests/fixtures/yaml-pages/*.yaml'",
+      "status": "passed",
+      "summary": "固定 YAML 入力を整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "./node_modules/.bin/prettier --write tests/src/docs/yaml-tables.test.ts tests/src/docs/yaml-pages.test.ts tests/src/grade/grade.test.ts tests/src/exec/worktree-yaml-pages.integration.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-ja3m-tests-live-kata.md tests/fixtures/grade/kata-references/docs/ja/specdojo/samples/example-sample.md tests/fixtures/grade/kata-references/docs/ja/specdojo/rulebooks/example-rulebook.md tests/fixtures/grade/kata-references/docs/ja/specdojo/templates/…",
+      "status": "passed",
+      "summary": "変更した TypeScript と Markdown を整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検証に成功。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "catalog 検証に成功。既存の警告あり。"
+    },
+    {
+      "source": "executor",
+      "command": "node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-ja3m-tests-live-kata.md tests/fixtures/grade/kata-references/docs/ja/specdojo/samples/example-sample.md tests/fixtures/grade/kata-references/docs/ja/specdojo/rulebooks/example-rulebook.md tests/fixtures/grade/kata-references/docs/ja/specdojo/templates/example-template.md",
+      "status": "passed",
+      "summary": "変更した Markdown の検査に成功。"
+    }
+  ],
+  "final_message": "固定 fixture への移行は実施したが、sample 変更中の単体テスト全体の確認が未完了。",
+  "completion_status": "incomplete",
+  "handoff": [
+    "sample を一時変更した状態で単体テスト全体が通ることを runner 側で確認し、sample を復元する。executor は親 runner のテストと重複する実行を禁止されている。",
+    "CHANGELOG に書く事項: なし（テストの保守性改善のみ）。",
+    "親 runner は型検査、lint、単体・結合テストを実行する。"
+  ],
+  "block_reason": "executor reported incomplete: 固定 fixture への移行は実施したが、sample 変更中の単体テスト全体の確認が未完了。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-JA3M/pjr-ja3m-20261124T033100Z-0740bac1/executor.attempt-1.log",
+      "bytes": 2683,
+      "truncated": false
+    }
+  ]
+}

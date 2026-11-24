@@ -1,0 +1,10 @@
+個票の対応結果の表に 1 行を追記し、確認対象を PJR-YQ32 にしました。変更したのは `pjr-jsey-exec-run-split-smoke.md` だけです。
+
+- **追記した行:** 2026-11-24 15:03 JST、PJR-YQ32、`sonnet-executor`。
+- **確認対象の根拠:** 対象一覧のうち、HEAD に含まれる最新の統合は PJR-YQ32 でした。review 遷移 commit は `afdacb7991`（15:01 JST）です。
+- **あわせて直した箇所:** 作業内容の表のメモと、表の下の本文の確認対象と commit も PJR-YQ32 に合わせました。
+- **検証:** `git diff --stat` で変更が個票 1 ファイルだけであることを確認しました。lint などの検証は親 runner が実行します。executor では実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"個票の対応結果に PJR-YQ32 の確認行（2026-11-24 15:03 JST、sonnet-executor）を追記し、作業内容のメモと本文の確認対象も更新した。変更は個票のみ。","handoff":["親 runner の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）、reporter の result 記入、統合は後続段で確認する。"],"validations":[{"command":"git diff --stat","status":"passed","summary":"変更は個票 1 ファイルのみ"}]}
+</specdojo_executor_evidence>

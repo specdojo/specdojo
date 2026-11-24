@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/prj-stakeholder-register-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 97
-graded_at: "2026-10-06T21:31:23.510Z"
-graded_by: agy-expert-executor
-content_hash: b2b142248bd05db51667c3a31b22e3ea6e69a160fc6b61d35d3f7992a0499381
+score: 98
+graded_at: "2026-11-23T21:47:24.266Z"
+graded_by: sonnet-review-executor
+content_hash: cbe5fc090e2156b974928e0b12c6f89253365234faeee9563320f17219dde920
 categories:
   purpose:
     score: 100
@@ -21,7 +21,7 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
     score: 100
   quality:
@@ -60,8 +60,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -75,14 +75,14 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -104,28 +104,17 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 2
+  minor: 1
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-arc-conciseness
-    line: 85
-    anchor: "## 6. 記述ガイド"
+    rule: vp-qe-verifiability
+    line: 71
+    anchor: "- 必要な合意は全関係者で空欄にしない。High の関係者は、エンゲージメント方針にも行を置き、関与方針を空欄にしない。"
     message: >-
-      The "推奨表" (Recommended Table) examples in Chapter 6 merely duplicate the template structure without adding new
-      writing rules, and should be removed to avoid redundancy.
+      「High の関係者」が影響度 High と関心度 High のどちらを指すか定義されておらず（sample では影響度 Medium・関心度 High
+      の関係者がいる）、行の要否を判定できないため、「影響度または関心度のいずれかが High」のように条件を明記する必要がある。
     message_ja: >-
-      The "推奨表" (Recommended Table) examples in Chapter 6 merely duplicate the template structure without adding new
-      writing rules, and should be removed to avoid redundancy.
-  - id: F002
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# ステークホルダー登録簿 作成ルール"
-    message: >-
-      対応 template を宣言済みなのに「本文構成（標準テンプレ）」として見出し順を rulebook 側でも正本化しているため、この章を「本文要件」として各章の目的・必須性・記述規約に限定し、骨組みの正本は template
-      に統一する必要がある。
-    message_ja: >-
-      対応 template を宣言済みなのに「本文構成（標準テンプレ）」として見出し順を rulebook 側でも正本化しているため、この章を「本文要件」として各章の目的・必須性・記述規約に限定し、骨組みの正本は template
-      に統一する必要がある。
+      「High の関係者」が影響度 High と関心度 High のどちらを指すか定義されておらず（sample では影響度 Medium・関心度 High
+      の関係者がいる）、行の要否を判定できないため、「影響度または関心度のいずれかが High」のように条件を明記する必要がある。

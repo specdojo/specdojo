@@ -1,0 +1,29 @@
+`docs/ja/specdojo/samples/imp-interface-sample.md` を、駄菓子屋の販売管理システムを題材にした完成例として書き直しました。この sample だけを変更し、rulebook には手を入れていません。整形と `markdownlint-cli2` は通っています。親 runner の検証はまだ流れていません。
+
+**I/F の構成を入れ替えた理由**: 元の sample の 4 I/F（POS 連携 API、商品マスタ連携 CSV、通知 Webhook、売上集計バッチ連携）は、ほかの sample と合っていませんでした。`ifx-index-sample` に載っている I/F と違い、`imp-data-sample` が示す波及先とも食い違っていました。また、取引先との CSV 連携は共通サンプル文脈で対象外とされています。そこで、次の 4 I/F に置き換えました。
+
+- 本部商品マスタの照会
+- 本部への売上登録
+- 確定済みレシートの印字
+- 在庫変更イベント（一覧への追加を検討中）
+
+**指摘ごとの対応**:
+
+| 指摘 | 対応 |
+| --- | --- |
+| F002 | 未解決事項の表を rulebook の 7 列にし、判断・対応への影響と当面の扱いを入れた |
+| F003 | 判定できる成功条件を 4 つ、表で入れた |
+| F004 | 備考に波及先の ID を書き、データ・テスト・運用への波及は兄弟の 3 sample に委ねると冒頭に書いた |
+| F005 | 再評価の条件を「対応方針」の 1 か所にまとめ、件数・期限で判定できる形にした |
+| F006 | 対象期間（2026-05-01〜2026-06-07）、対象外、判断しない事項を入れた |
+| F007 | 3 観点ごとに高・中・低の条件を表で定め、最も高い判定をとる規則を書いた |
+| F008 | I/F 名を統一し、担当は個人名をやめて Role code にした |
+| F001 | 一部だけ対応した（理由は下記） |
+
+**F001 を一部にとどめた理由**: いつ判断するか（I/F の改修に着手する 2026-05-11 より前）は書きました。誰が承認するかは書いていません。PJR-76N9 の決まりで、sample の本文に承認の割り当てを書かないことになっているためです。
+
+**決める必要のある値**: バーコード照会の応答を待てる時間の上限は推測で埋めず、`_UNDECIDED_` として未解決事項 `PJR-I6Q2` に残しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"imp-interface-sample.md を、ifx-index-sample・imp-data-sample と I/F の構成をそろえた完成例として書き直した。F001〜F008 に対応し、F001 のうち承認者の記載は PJR-76N9 に従い本文に入れていない。prettier と markdownlint はエラーなし。","handoff":["F001（vp-po-decision-readiness）: 判断の時期（I/F の改修着手 2026-05-11 より前）は本文に書いた。誰が承認するかは PJR-76N9 の決まりに従い sample の本文に書いていない。grade の viewpoint を、文書の承認者を求めない形に直す提案として result に記録してほしい。","I/F の構成の変更: 元の 4 I/F（POS 連携 API、商品マスタ連携 CSV、通知 Webhook、売上集計バッチ連携）は、ifx-index-sample と imp-data-sample の波及先（`ifx-api-kinuya-products` / `ifx-api-kinuya-sales`）に合わず、取引先との CSV 連携は共通サンプル文脈の対象外とも食い違うため、ifx-index-sample の 3 I/F と検討中の在庫変更イベント（ifx-msg-sample）に置き換えた。","rulebook の変更案: rulebook の「推奨 Frontmatter 項目」は `based_on` に変更要求の個票 ID（`PJR-XXXX`）を求めているが、imp-* の sample はすべて `cr-2026-004` を使っている。sample 群をまとめて個票 ID の形へ直すか、rulebook の例を合わせるかは別のタスクで決める必要がある。","決める必要のある値: バーコード照会の応答を待てる時間の上限は `_UNDECIDED_` とし、未解決事項 `PJR-I6Q2`（担当 `PO`）に残した。切替日 2026-06-01 は imp-data・imp-test と同じ `_ASSUMPTION_` としている。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/imp-interface-sample.md","status":"passed","summary":"対象の sample を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/imp-interface-sample.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>

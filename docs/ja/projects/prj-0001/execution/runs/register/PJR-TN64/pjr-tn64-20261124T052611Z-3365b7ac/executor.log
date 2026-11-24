@@ -1,0 +1,7 @@
+ready 昇格ガードを `docs/` 配下に限定し、`tests/fixtures/` などの `status: ready` で統合が止まらないよう修正しました。成果物と型の文書を保護するテスト、および fixture のコミットを確認するテストを追加しました。
+
+整形、履歴リンク検査、catalog 検査、登録簿の生成は完了しました。型検査・lint・単体テスト・統合テストは親 runner が実行します。配置による判定のため、`docs/` 外の成果物はこのガードの対象外です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"ready 昇格ガードを docs/ 配下に限定し、fixture と成果物の回帰テスト、ガイド、個票を更新した。親 runner が型検査・lint・単体テスト・統合テストを実行する。","handoff":["CHANGELOG に書く事項（不具合修正）: agent 実行の ready 昇格検査で、テスト fixture などの成果物でないファイルを除外する。","パス規則を採用したため、docs/ 外の成果物は ready 昇格ガードの対象外となる。"],"validations":[{"command":"npx --no-install prettier --write src/exec/worktree-ops-commit.ts tests/src/exec/ready-promotion.test.ts tests/src/exec/worktree-ops.integration.test.ts docs/ja/specdojo/guides/exec-config-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-tn64-ready-guard-non-deliverables.md","status":"passed","summary":"変更ファイルを整形した。"},{"command":"npm run validate:history-links","status":"passed","summary":"履歴リンク検査に成功した。"},{"command":"node --import tsx tools/catalog-validate-if-configured.mjs","status":"passed","summary":"catalog 検査に成功した。既存の警告あり。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿の生成に成功した。"},{"command":"git diff --check","status":"passed","summary":"差分の空白検査に成功した。"}]}
+</specdojo_executor_evidence>

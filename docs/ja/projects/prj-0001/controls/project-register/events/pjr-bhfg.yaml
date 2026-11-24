@@ -1,0 +1,129 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_5791ea4ca9b545d8b0150d835ab3a091
+  ts: "2026-11-23T01:46:26Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 第 4 波の kata ドメインと strategy・schedule を用意する（非機能要件と受け入れ条件）
+    - field: description
+      from: ""
+      to: PJR-HJ3H の 11 種類の sample を dct-kata.yaml に足し、sch-strategy-kata-wave-4.yaml を作って track を生成する
+    - field: input
+      from: ""
+      to: '["PJR-8X86 の観測（2026-11-23）: 2026-11-21 の型の grade のし直しで pass でなかった文書のうち 69 文書が手付かずで、第 4〜6 波には strategy と track がない。第 4 波 → 第 5 波 → 第 6 波の順に進める（利用者の依頼、2026-11-23）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-HJ3H","PJR-8X86"]'
+    - field: commit_type
+      from: ""
+      to: chore
+    - field: commit_scope
+      from: ""
+      to: schedule
+- v: 1
+  id: reg_608cf4ae7dcc4ec48b670c656a8d0833
+  ts: "2026-11-23T01:47:00Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_5791ea4ca9b545d8b0150d835ab3a091
+- v: 1
+  id: reg_08ca5a817d6545f7af83ffb2d0fc107b
+  ts: "2026-11-23T03:24:34Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: 第 4〜6 波の 5 件を 1 件にまとめ、並べて流せる組み方にした（2026-11-23）
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+    - field: title
+      from: 第 4 波の kata ドメインと strategy・schedule を用意する（非機能要件と受け入れ条件）
+      to: 第 4〜6 波の kata ドメインと strategy・schedule をまとめて用意する
+    - field: description
+      from: PJR-HJ3H の 11 種類の sample を dct-kata.yaml に足し、sch-strategy-kata-wave-4.yaml を作って track を生成する
+      to: 第 4〜6 波の型の sample を dct-kata.yaml に足し、波ごとの strategy と track を作る。型ごとの段の鎖を並べて流せるようにし、人の確定は横串の確認に回す
+    - field: derived_from
+      from: '["PJR-HJ3H","PJR-8X86"]'
+      to: '["PJR-HJ3H","PJR-JZ2F","PJR-G1M8","PJR-SBGQ","PJR-PYS2","PJR-8X86"]'
+  previous_event_id: reg_608cf4ae7dcc4ec48b670c656a8d0833
+- v: 1
+  id: reg_55fa86a806374e198b7f0362458b3205
+  ts: "2026-11-23T03:27:12Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_08ca5a817d6545f7af83ffb2d0fc107b
+- v: 1
+  id: reg_48cc0923d1b54f48b0ac6fc390a196c2
+  ts: "2026-11-23T03:44:20Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_55fa86a806374e198b7f0362458b3205
+- v: 1
+  id: reg_f24959c98983427f8519acff3f388209
+  ts: "2026-11-23T03:53:58Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分と対応結果を確かめ、track の段・agent・型の間の依存を数え、exec validate・catalog validate・exec refresh が通った
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: 第 4〜6 波の sample 65 件を dct-kata.yaml に足し、5 つの strategy と track を作った（262 タスク）。型ごとの段の鎖は参照のある所だけでつなぎ、人の確定は入れず、型の grade は review の段で runner が行う。漏れた 9 種類は第 5・6 波に割り振った
+  previous_event_id: reg_48cc0923d1b54f48b0ac6fc390a196c2

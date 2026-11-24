@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-23T17:27:04Z",
+  "type": "claim",
+  "task_id": "T-KATA-WAVE-5-opd-incident-management-sample-080",
+  "by": "sonnet-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "OPS"
+  }
+}

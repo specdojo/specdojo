@@ -1,0 +1,29 @@
+PJR-K8F1 の実装は終わりました。provider ごとに agent の CLI の時間の上限を設定でき、上限に達すると CLI と孫のプロセスを止めて run を block にします。既定は上限なしで、今と同じ動きです。新しいテストと関連する既存のテストは通っています。全体の検査と全件のテストは親 runner が実行します。
+
+**動き**
+- 設定のキーは `exec-defaults.yaml` の `providers.<provider>.agent_timeout_seconds` です（1〜2147483 の整数）。整数でない値や範囲外の値は、上限なしに戻さず起動前にエラーで止めます。
+- 上限を設定した provider だけ、CLI を専用のプロセスグループで起動します。上限に達するとそのグループへ SIGTERM を送り、10 秒後も残っていれば SIGKILL を送ります。CLI が終わった後にグループに残った孫も止めます。
+- 止めた run は block になり、理由は `blocked: agent timed out after <秒>s (providers.<provider>.agent_timeout_seconds)` です。block の理由には、agent が先に出した block の行よりこの行を優先して使います。止めた後の出力は rate limit や接続エラーの検出に掛けず、別の agent への切り替えもしません。
+- 対象は executor・reporter・in-place・register・Job の起動と `src/exec/agent-plan.ts` です。Job の in-place 起動はこれまで provider を渡していなかったので、渡すようにしました。
+
+**私が決めた点**
+- SIGTERM から SIGKILL までの猶予は親の検証と同じ 10 秒に固定し、設定のキーは足していません。
+- キーは provider 別だけに置き、全体の既定は置いていません。
+- 上限なしの起動は、従来どおり runner と同じプロセスグループで起動します。専用のグループにすると端末の Ctrl-C が届かなくなるためです。上限ありの起動では、runner が受けた SIGINT・SIGTERM・SIGHUP を CLI のグループへ転送します。
+
+**変更したファイル**
+- 新規: `src/exec/run/agent-timeout.ts`
+- 変更: `src/exec/agent-config.ts`、`src/exec/run/shared.ts`、`src/exec/run/agent.ts`、`src/exec/run/in-place.ts`、`src/exec/run/register-core.ts`、`src/exec/run/job.ts`、`src/exec/agent-plan.ts`
+- schema: `docs/specdojo/schemas/v1/exec-defaults.schema.yaml`
+- 文書: `exec-config-guide.md`、`specdojo-config-reference.md`
+- テスト: `tests/src/exec/run/agent-timeout.test.ts`（14 件）、`tests/src/exec/run/agent-timeout.integration.test.ts`（3 件）。統合テストでは、眠り続ける偽の agent とその孫が止まることと、上限なしなら終わるまで待つことを確かめています。
+- 個票: 対応結果に、私が決めた点、申し送り、「CHANGELOG に書く事項」（区分: 追加）を書きました。
+
+**残っている作業**
+- 判断をお願いしたいこと: prj-0001 の `.specdojo/exec-defaults.yaml` は保護された設定なので変えていません。入れる値の案は claude・codex・copilot が 7200 秒、opencode が 5400 秒です。実測ではなく仮定の値なので、過去の run の所要時間を見て決めてください。
+- 統合の後に、オーケストレーターが JSEY を流して確かめる必要があります。個票のこの行は `open` のまま残しています。
+- `src/exec/run/job.ts` は変更前から 1,000 行を超えています（ESLint の warn）。今回 16 行増えましたが、分割は範囲外として残しています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"`providers.<provider>.agent_timeout_seconds`（既定は上限なし）を追加。上限に達すると agent の CLI のプロセスグループを SIGTERM、10 秒後に SIGKILL で止め、キーを理由に残して block にする。executor・reporter・in-place・register・Job の in-place 起動と `src/exec/agent-plan.ts` に適用した。schema・exec-config-guide・specdojo-config-reference・単体テスト・統合テスト・個票の対応結果を更新した。","handoff":["prj-0001 の `.specdojo/exec-defaults.yaml` は保護された設定のため変更していない。値の案: `providers.claude.agent_timeout_seconds: 7200`、`providers.codex.agent_timeout_seconds: 7200`、`providers.copilot.agent_timeout_seconds: 7200`、`providers.opencode.agent_timeout_seconds: 5400`。実測ではなく仮定（_ASSUMPTION_）なので、過去の run の所要時間を見て人が決める。","executor が決めた点: SIGTERM から SIGKILL までの猶予は 10 秒、SIGKILL 後に pipe の close を待つのは 5 秒に固定し、設定のキーは足していない。キーは provider 別だけに置き、全体の既定は置いていない。上限なしの起動は従来どおり runner と同じプロセスグループで起動する（専用グループにすると Ctrl-C が届かないため）。不正な値は上限なしへ戻さずエラーで止める。","CHANGELOG に書く事項（区分: 追加）: `providers.<provider>.agent_timeout_seconds` で agent の CLI の起動の時間の上限を設定できる。上限に達すると、CLI とその子のプロセスを SIGTERM、10 秒後に SIGKILL で止め、run を block にして理由に設定のキーを残す。未設定なら上限はない（PJR-K8F1）。文案は個票の対応結果にある。","完了条件どおり、統合の後にオーケストレーターが JSEY を流して確かめてから close する。個票のこの行は `open` のまま残している。","`src/exec/run/job.ts` は変更前から 1,000 行を超えている（ESLint の `max-lines` の warn）。今回 16 行増えたが、分割は範囲外とした。"],"validations":[{"command":"npx vitest run --config vitest.unit.config.ts tests/src/exec/run/agent-timeout.test.ts tests/src/exec/run/run.test.ts tests/src/exec/validation-metrics.test.ts tests/src/exec/run/inplace.test.ts tests/src/exec/agent-config.test.ts","status":"passed","summary":"5 files, 148 tests passed"},{"command":"npx vitest run --config vitest.integration.config.ts tests/src/exec/run/agent-timeout.integration.test.ts","status":"passed","summary":"3 tests passed (sleeping fake agent and grandchild stopped, no-limit agent waited for)"},{"command":"npx eslint src/exec/run/agent-timeout.ts src/exec/run/agent.ts src/exec/agent-config.ts src/exec/agent-plan.ts tests/src/exec/run/agent-timeout.test.ts tests/src/exec/run/agent-timeout.integration.test.ts","status":"passed","summary":"0 errors; only the existing max-lines-per-function warning on runWithRetry"},{"command":"npx prettier --check src/exec tests/src/exec/run docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/references/specdojo-config-reference.md docs/specdojo/schemas/v1/exec-defaults.schema.yaml","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/projects/prj-0001/controls/project-register/pjr-k8f1-provider-cli-timeout.md docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/references/specdojo-config-reference.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"passed","summary":"ticket pjr-k8f1-provider-cli-timeout.md valid"}]}
+</specdojo_executor_evidence>

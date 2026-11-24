@@ -1,5 +1,5 @@
 import { normalizeRegisterInput } from "./input.js";
-import { validateSectionFile } from "./section.js";
+import { applyTicketSections, pairSectionOptions, validateSectionFile } from "./section.js";
 import type { Command } from "commander";
 import { existsSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
@@ -174,6 +174,16 @@ export function registerCreateCommands(
     "--topic <topic>",
     "Topic slug for ticket filename; derived from --title if omitted",
   );
+  addCmd.option(
+    "--section <name>",
+    "Ticket section to fill from the paired --section-file (repeatable, paired in order)",
+    collectTarget,
+  );
+  addCmd.option(
+    "--section-file <path>",
+    "Markdown file with the body of the paired --section (repeatable)",
+    collectTarget,
+  );
   addCmd.option("--by <actor>", "Actor recorded in the append-only register event");
   addCmd.option("--reason <text>", "Reason recorded in the append-only register event");
   addCmd.option("--force", "Overwrite existing ticket file", false);
@@ -291,14 +301,21 @@ export function registerCreateCommands(
       if (derivedFrom !== undefined) fields.derivedFrom = derivedFrom;
       fields.dependsOn = normalizeDependsOn(opts.dependsOn);
 
+      const sections = pairSectionOptions(opts.section, opts.sectionFile).map((section) => ({
+        name: section.name,
+        content: validateSectionFile(section.file),
+      }));
       const ticketPath = join(paths.projectRegisterPath, ticketFilename);
-      const content = buildRegisterItemContent({
-        projectId: paths.projectId,
-        displayId,
-        topic,
-        fields,
-        templatePath,
-      });
+      const content = applyTicketSections(
+        buildRegisterItemContent({
+          projectId: paths.projectId,
+          displayId,
+          topic,
+          fields,
+          templatePath,
+        }),
+        sections,
+      );
       const dependencyItem = readRegisterItemContent(content, ticketFilename)?.item;
       if (!dependencyItem) throw new Error(`Failed to read item ${displayId}`);
       validateRegisterDependencies(paths, dependencyItem);

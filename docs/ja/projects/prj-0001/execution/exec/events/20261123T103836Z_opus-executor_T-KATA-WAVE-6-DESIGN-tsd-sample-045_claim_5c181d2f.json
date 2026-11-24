@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-23T10:38:36Z",
+  "type": "claim",
+  "task_id": "T-KATA-WAVE-6-DESIGN-tsd-sample-045",
+  "by": "opus-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "ARC"
+  }
+}

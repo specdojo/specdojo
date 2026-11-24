@@ -15,6 +15,6 @@ specdojo:
 
 # 課題ログ
 
-> このファイルは各 `pjr-XXXX-<topic>.md`（個票）から生成された派生ビューです。正本は個票の Frontmatter であり、このファイルは再生成可能です。
+> このファイルは `item_type: issue` の各 `pjr-XXXX-<topic>.md`（個票）から `register build` で生成された派生ビューです。正本は個票の Frontmatter です。直接編集せず、個票を直して `register build` で再生成してください。
 
 <!-- specdojo:view-slot=table -->

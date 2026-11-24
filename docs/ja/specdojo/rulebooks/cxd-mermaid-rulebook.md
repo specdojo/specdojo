@@ -20,181 +20,46 @@ Mermaid の `flowchart` 構文で C4 コンテキスト図を描くための記�
 
 ## 1. 全体方針
 
-- Mermaid の **`flowchart` を C4 コンテキスト図風に利用**する。
-
-- 対象は「システム境界の外側との関係」であり、内部構造（コンテナ/コンポーネント）や実装詳細は含めない。
-- 図は「正確さ（過剰な詳細）」よりも「解釈が割れないこと（合意）」を優先する。
-- 1つの図には **対象システムを1つ**だけ置く（複数対象は図を分ける）。
-- **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status`・承認・改訂と廃止・未決事項の引き継ぎは [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従います。文書の整形・lint はリポジトリの検証で扱い、業務の受入確認には含めません。
+- `flowchart LR` を C4 コンテキスト図風に使い、システム境界の外側との関係だけを描きます。内部構造や実装詳細は含めません。
+- 正確さ（過剰な詳細）よりも、解釈が割れないこと（合意）を優先します。
+- 1 つの図に対象システムは 1 つだけ置きます。複数の対象は図を分けます。
+- **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status`・承認・改訂と廃止・未決事項の引き継ぎは [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従います。構文の検査は [[specdojo:cxd-rulebook|C4コンテキスト図（CXD）作成ルール]] の運用ルールに従います。
 
 ## 2. C4要素と Mermaid 記号の対応
 
-C4 の要素を、以下のように Mermaid の記号にマッピングする。
+| C4要素                                   | 形状・記法                              | クラス     | 色（推奨）             |
+| ---------------------------------------- | --------------------------------------- | ---------- | ---------------------- |
+| Person（人/ロール）                      | 四角 `[]`。業務ロールを短い日本語で表す | `person`   | 暖色系                 |
+| Software System（対象システム）          | 角丸 `()`。システム名＋必要なら短い補足 | `system`   | 寒色系（主役）         |
+| External Software System（外部システム） | 四角 `[]`。外部システムの一般名で表す   | `external` | 無彩色系（脇役）       |
+| System Boundary（境界）                  | `subgraph 境界["..."] ... end`          | `style`    | 破線枠・塗りつぶし無し |
 
-| C4要素                                   | 意味                       | Mermaid での表現例                                       |
-| ---------------------------------------- | -------------------------- | -------------------------------------------------------- |
-| Person（人/ロール）                      | 利用者・関係者             | `店員["店員"]`                                           |
-| Software System（対象システム）          | この図の中心となるシステム | `販売管理システム("駄菓子屋きぬや<br>販売管理システム")` |
-| External Software System（外部システム） | 連携先システム             | `会計システム["会計システム"]`                           |
-| System Boundary（境界）                  | 対象システムの範囲         | `subgraph 境界["対象システム"] ... end`                  |
-| Relationship（関係）                     | 依存・利用・連携（概念）   | `店員 -->\| "売上登録" \| 販売管理システム`              |
-
-### 2.1. 標準の色分け（推奨）
-
-C4コンテキスト図は色が必須ではありませんが、読み手が「人 / 対象システム / 外部システム」を一目で区別できるよう、以下の色分けを推奨します。
-
-- Person（人/ロール）: 暖色系
-- 対象システム（Software System）: 寒色系（主役）
-- 外部システム（External System）: 無彩色系（脇役）
-- 境界（System Boundary）: 破線枠
-
-Mermaid `flowchart` では `classDef` + `class`、境界は `style` を使用します。
-
-#### 2.1.1. 標準スタイル定義（コピーして利用）
+- 境界内には対象システムのノード 1 つだけを置きます。
+- 表示ラベルの改行には `<br>` を使い、長文化を防ぎます。
+- 色は必須ではありませんが、人・対象システム・外部システムを一目で区別できるよう、次の標準スタイルを図の末尾にコピーして使います。`style` の対象 ID は `subgraph` の ID に合わせます。
 
 ```mermaid
 flowchart LR
-  %% --- Standard styles (recommended) ---
-
   classDef person fill:#fff3bf,stroke:#f08c00,color:#000;
   classDef system fill:#d0ebff,stroke:#1c7ed6,color:#000;
   classDef external fill:#e9ecef,stroke:#495057,color:#000;
-
-  %% System boundary style (subgraph)
-  %% NOTE: '境界' は subgraph のID（名前）に合わせる
-  style 境界 fill:#ffffff,fill-opacity:0,stroke:#868e96,stroke-width:1px,stroke-dasharray: 5 5;
-
-```
-
-#### 2.1.2. 適用ルール
-
-- Personノードには `person` クラスを付ける
-- 対象システムノードには `system` クラスを付ける
-- 外部システムノードには `external` クラスを付ける
-- 境界は `subgraph 境界[...]` として、`style 境界 ...` で枠線を指定する
-
-例:
-
-```mermaid
-flowchart LR
-  店員["店員"]
-  会計システム["会計システム"]
-  subgraph 境界["対象システム"]
-    販売管理システム("販売管理システム")
-  end
-
-  class 店員 person;
-  class 販売管理システム system;
-  class 会計システム external;
   style 境界 fill:#ffffff,fill-opacity:0,stroke:#868e96,stroke-width:1px,stroke-dasharray: 5 5;
 ```
 
-## 3. ノードのルール
+## 3. エッジ（関係）のルール
 
-### 3.1. Person（人/ロール）
+- `A --> B` を基本とし、矢印は主たる依存・利用・送信の向き（人 → 対象システム、対象システム → 外部システム）にそろえます。応答は同じ線に含め、独立した逆方向の起動だけを別線にします。
+- すべてのエッジに短い名詞句または動詞句のラベルを付けます。長い場合は `<br>` で改行します。
+- 良い例: `店員 -->|"売上登録"| 販売管理システム`、`販売管理システム -->|"会計仕訳<br>連携"| 会計システム`。
+- 悪い例: ラベルのない `販売管理システム --> 会計システム`、または `POST /api/v1/sales` のようなエンドポイントをラベルにする。
 
-- **四角 `[]`** を使用する。
-- 表示ラベルは業務ロール/主体を短い日本語で表す。
+## 4. 命名・表記ルール
 
-例:
+- ノード ID は日本語でもよいが、記号や空白を避けた短い識別子にします（例: `販売管理システム`、`店員`）。
+- 表示ラベルは `"..."` で囲んで図内で統一し、同じ主体・システムの名称を揺らしません。
+- 凡例は読み手が記号の意味を取り違えるおそれがある場合だけ置き、本図と同じクラスと境界スタイルを使います。
 
-```mermaid
-flowchart LR
-  店員["👤店員"]
-  店主["👤店主"]
-
-  classDef person fill:#fff3bf,stroke:#f08c00,color:#000;
-  class 店員,店主 person;
-```
-
-### 3.2. Software System（対象システム）
-
-- **角丸長方形 `()`** を使用する。
-- 図の中心として扱い、表示ラベルは「システム名（＋必要なら短い補足）」とする。
-- 改行は `<br>` を使用してよい（長文化防止）。
-
-例:
-
-```mermaid
-flowchart LR
-  販売管理システム("駄菓子屋きぬや<br>販売管理システム")
-
-  classDef system fill:#d0ebff,stroke:#1c7ed6,color:#000;
-  class 販売管理システム system;
-```
-
-### 3.3. External Software System（外部システム）
-
-- **四角 `[]`** を使用する。
-- 表示ラベルは外部システムの一般名（例: 決済、会計、EC、配送など）。
-
-例:
-
-```mermaid
-flowchart LR
-  会計システム["会計システム"]
-  決済サービス["決済サービス"]
-
-  classDef external fill:#e9ecef,stroke:#495057,color:#000;
-  class 会計システム,決済サービス external;
-```
-
-### 3.4. System Boundary（境界）
-
-- 対象システムは **サブグラフ `subgraph ... end`** で囲う。
-- 境界内には、原則として **対象システムのノード1つ**だけを置く（コンテキスト図の過密化防止）。
-
-例:
-
-```mermaid
-flowchart LR
-  subgraph 境界["対象システム"]
-    販売管理システム("駄菓子屋きぬや<br>販売管理システム")
-  end
-
-  classDef system fill:#d0ebff,stroke:#1c7ed6,color:#000;
-  class 販売管理システム system;
-  style 境界 fill:#ffffff,fill-opacity:0,stroke:#868e96,stroke-width:1px,stroke-dasharray: 5 5;
-```
-
-## 4. エッジ（関係）のルール
-
-### 4.1. 方向
-
-- `A --> B` を基本とする。
-- 方向は「主たる依存/利用/送信の向き」が分かるように統一する。
-  - 例: 人がシステムを利用する: `人 -->|"利用"| 対象システム`
-  - 例: 対象システムが外部システムに連携する: `対象システム -->|"連携"| 外部システム`
-
-### 4.2. ラベル
-
-- すべてのエッジにラベルを付ける（「何の関係か」を合意するため）。
-- ラベルは **短い名詞句**または **短い動詞句**で書く。
-  - 例: `売上登録` / `在庫照会` / `仕入データ連携` / `入金結果を受信`
-- 長い場合は `<br>` で改行してよい。
-
-例:
-
-```mermaid
-flowchart LR
-  店員["店員"] -->|"売上登録"| 販売管理システム("販売管理システム")
-  販売管理システム -->|"会計仕訳<br>連携"| 会計システム["会計システム"]
-
-  classDef person fill:#fff3bf,stroke:#f08c00,color:#000;
-  classDef system fill:#d0ebff,stroke:#1c7ed6,color:#000;
-  classDef external fill:#e9ecef,stroke:#495057,color:#000;
-  class 店員 person;
-  class 販売管理システム system;
-  class 会計システム external;
-```
-
-## 5. 命名・表記ルール
-
-- ノードIDは日本語でもよいが、記号や空白は避け、短い識別子にする（例: `販売管理システム`, `会計システム`, `店員`）。
-- 表示ラベルは `"..."` で囲ってよい（混乱を避けるため、必要に応じて統一）。
-- 同じ主体/システムは、図の中で名称を揺らさない。
-
-## 6. 禁止事項
+## 5. 禁止事項
 
 | 項目                                                  | 理由                              |
 | ----------------------------------------------------- | --------------------------------- |
@@ -203,67 +68,3 @@ flowchart LR
 | 実装クラス/関数名、具体的な技術スタックの列挙         | 変更に弱い                        |
 | 対象システムの内部プロセス/内部データストアの詳細     | コンテナ図/コンポーネント図で表す |
 | 矢印ラベルなしの関係                                  | 合意が取れない                    |
-
-## 7. サンプル（最小）
-
-```mermaid
-flowchart LR
-  %% Person
-  店員["👤店員"]
-  店主["👤店主"]
-
-  %% External Systems
-  会計システム["会計システム"]
-  決済サービス["決済サービス"]
-
-  %% Target System Boundary
-  subgraph 境界["対象システム"]
-    販売管理システム("駄菓子屋きぬや<br>販売管理システム")
-  end
-
-  %% Relationships
-  店員 -->|"売上登録"| 販売管理システム
-  店主 -->|"商品・在庫管理"| 販売管理システム
-
-  販売管理システム -->|"会計仕訳連携"| 会計システム
-  販売管理システム -->|"決済依頼"| 決済サービス
-  決済サービス -->|"決済結果"| 販売管理システム
-
-  %% Styles
-  classDef person fill:#fff3bf,stroke:#f08c00,color:#000;
-  classDef system fill:#d0ebff,stroke:#1c7ed6,color:#000;
-  classDef external fill:#e9ecef,stroke:#495057,color:#000;
-  class 店員,店主 person;
-  class 販売管理システム system;
-  class 会計システム,決済サービス external;
-  style 境界 fill:#ffffff,fill-opacity:0,stroke:#868e96,stroke-width:1px,stroke-dasharray: 5 5;
-```
-
-## 8. 凡例（推奨）
-
-凡例は下記のように表現する（必要な場合のみ）。
-
-```mermaid
-flowchart LR
-  subgraph 凡例["凡例"]
-    direction LR
-    人["👤Person<br>（人/ロール）"]
-
-    subgraph 境界例["システム境界"]
-      対象("Software System<br>（対象システム）")
-    end
-    外部["External System<br>（外部システム）"]
-
-    人 -->|"Relationship（関係）"| 対象
-    対象 -->|"Relationship（関係）"| 外部
-  end
-
-  %% Styles
-  classDef person fill:#fff3bf,stroke:#f08c00,color:#000;
-  classDef system fill:#d0ebff,stroke:#1c7ed6,color:#000;
-  classDef external fill:#e9ecef,stroke:#495057,color:#000;
-  class 人 person;
-  class 対象 system;
-  class 外部 external;
-  style 境界例 fill:#ffffff,fill-opacity:0,stroke:#868e96,stroke-width:1px,stroke-dasharray: 5 5;
-```

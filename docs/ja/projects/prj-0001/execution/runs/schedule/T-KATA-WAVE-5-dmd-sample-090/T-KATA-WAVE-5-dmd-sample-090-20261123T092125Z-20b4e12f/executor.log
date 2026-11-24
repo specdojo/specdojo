@@ -1,0 +1,60 @@
+# レビュー結果: T-KATA-WAVE-5-dmd-sample-090
+
+verdict は `complete-with-findings` を推奨します。
+
+## 評価結果の確認
+
+- 鮮度確認として、`npx specdojo grade list --target kata --path docs/ja/specdojo/samples/dmd-sample.md --changed-only` を実行しました。出力は空で、終了コードは 0 でした。
+- rulebook（`docs/ja/specdojo/rulebooks/dmd-rulebook.md`）にも同じコマンドを実行しました。出力は空で、終了コードは 0 でした。どちらの評価結果も最新です。
+- sample は `verdict` が `pass`、`score` が 100 です。finding は minor が 1 件で、`F001`（`vp-pm-plan-feasibility`、移行手順表の実行担当が不明）です。
+- rulebook は `verdict` が `pass`、`score` が 100 です。finding はありません。
+- `git status` に出た未追跡ファイルは、runner の `pipeline-state.json` だけでした。成果物の変更は混入していません。
+- `incomplete`（評価パイプライン未完了）の確認は実行していません。plan の評価結果に未完了を示す記載がないためです。
+
+## 判断根拠
+
+`docs/ja/specdojo/samples/dmd-sample.md` を実際に読んで、完了条件と照合しました。
+
+- DC-001: 次の 10 章が連番でそろっています。
+  - 概要
+  - 対象データ詳細
+  - データマッピング
+  - 変換ルール
+  - 除外ルール
+  - 移行手順
+  - 性能/所要時間見積
+  - ログ/再実行性
+  - 検証方法
+  - 関連ドキュメント
+
+  必須の表（対象、マッピング、除外、手順、見積、ログ、検証）も各章にあります。
+- DC-002: 題材は駄菓子屋の常連客ノートと「つけ」で、店主代表や `mip-index` など共通サンプル文脈の語に沿っています。H1 は 1 つで、frontmatter も `specdojo:` 名前空間配下に `id`、`type`、`status`、`rulebook` を置いています。
+- DC-003: grade の評価結果に、rulebook の禁止事項への抵触を示す finding はありません。
+- DC-004: 除外ルールの表で、2 件の除外それぞれに理由と業務への影響を書いています。
+  - 取り消し線があり残高が 0 円の顧客: 販売・つけに影響せず、再来店時は新規登録する。
+  - つけ欄の明細: 請求には残高だけを使い、問い合わせには保管した常連客ノートで答える。
+  - 残高が 0 円でない顧客は除外しない理由も、請求できなくなるためと説明しています。
+- `F001` は、手順 1・3・4・5 の担当が表にない、という担当の補足不足です。このタスクの範囲と完了条件は満たしているため、完了を妨げません。
+- `_UNDECIDED_`（臨時休業の開始時刻）は、決定者（店主代表）と理由を明記した意図的な未確定事項です。人の確定は横串の確認で行う方針なので、欠落ではありません。
+
+## 未充足事項・改善指示
+
+- 完了を妨げる未充足事項はありません。
+- 任意の改善として、移行手順表の備考欄に各手順の担当ロールを補います。手順 2 の「同行レビュー担当」のように、手順 1・3・4・5 にも担当を書きます。
+- 人の確定の前に確かめる点は、`_UNDECIDED_` の臨時休業の開始時刻だけです。
+
+## approach に応じた確認（fully-guided）
+
+- 宣言された文書だけを参照しました（評価結果、対象成果物、rulebook の評価結果）。recipe は `_MISSING_` で、評価結果から不備は報告されていません。
+- 成果物に対象外の変更が混入していないことを、`git status` で確認しました。
+
+## 確認できなかった範囲
+
+- 先行する edit タスクの result は plan に特定できず、読んでいません。実行記録の検証結果は確認できていません。
+- 成果物の再評価は、判断手順どおり行っていません。
+- 親 runner の検証コマンド一式は、親が実行するため私は実行していません。
+- verdict を記録する直前の鮮度の再確認は、上の確認から変更がないことのみで、再実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"評価結果は最新（両対象とも pass / 100、sample に minor finding F001 のみ）。完了条件 DC-001〜004 を成果物で照合し、finding は完了を妨げないため verdict は complete-with-findings を推奨。確認できなかった範囲: 先行 edit result は plan に特定できず未確認、成果物の再評価は判断手順どおり実施していない。","handoff":["F001（minor）: 移行手順表の備考欄に、手順 1・3・4・5 の担当ロールを補うことを推奨。","_UNDECIDED_ の臨時休業の開始時刻は、横串の確認で店主代表が決定する。"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/dmd-sample.md --changed-only","status":"passed","summary":"出力なし・終了コード 0。評価結果は最新。"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/dmd-rulebook.md --changed-only","status":"passed","summary":"出力なし・終了コード 0。評価結果は最新。"}]}
+</specdojo_executor_evidence>

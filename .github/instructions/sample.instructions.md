@@ -32,4 +32,4 @@ applyTo: "docs/ja/specdojo/samples/**/*-sample.md"
 - [ ] rulebook の禁止事項に抵触していない
 - [ ] 業務文脈が駄菓子屋プロジェクトに統一されている
 - [ ] `npm run -s lint:md` でエラーがない
-- [ ] `npm run docs:build` でエラーがない
+- 文書サイトのビルド（`npm run docs:build`）は、型の schedule の区切り（gate の前）と release の前にオーケストレーターがまとめて 1 回流すため、タスクごとには流さない

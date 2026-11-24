@@ -1,0 +1,110 @@
+{
+  "version": 1,
+  "queue_id": "review-c-2026-11-22",
+  "project_id": "prj-0001",
+  "created_at": "2026-11-22T01:04:00.817Z",
+  "updated_at": "2026-11-22T02:14:49.636Z",
+  "state": "completed_with_failures",
+  "steps": [
+    {
+      "index": 1,
+      "on_failure": "continue",
+      "status": "failed",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--task",
+        "T-KATA-WAVE-3-stc-sample-090",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--fallback-executor-by",
+        "sonnet-review-executor",
+        "--project",
+        "prj-0001"
+      ],
+      "started_at": "2026-11-22T01:04:41.124Z",
+      "completed_at": "2026-11-22T01:22:06.360Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
+    },
+    {
+      "index": 2,
+      "on_failure": "continue",
+      "status": "failed",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--task",
+        "T-KATA-WAVE-3-stc-index-sample-090",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--fallback-executor-by",
+        "sonnet-review-executor",
+        "--project",
+        "prj-0001"
+      ],
+      "started_at": "2026-11-22T01:22:06.362Z",
+      "completed_at": "2026-11-22T01:39:26.918Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
+    },
+    {
+      "index": 3,
+      "on_failure": "continue",
+      "status": "failed",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--task",
+        "T-KATA-WAVE-3-tsp-index-sample-090",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--fallback-executor-by",
+        "sonnet-review-executor",
+        "--project",
+        "prj-0001"
+      ],
+      "started_at": "2026-11-22T01:39:26.921Z",
+      "completed_at": "2026-11-22T01:57:09.990Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
+    },
+    {
+      "index": 4,
+      "on_failure": "continue",
+      "status": "failed",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--task",
+        "T-KATA-WAVE-3-trc-requirements-to-tests-sample-090",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--fallback-executor-by",
+        "sonnet-review-executor",
+        "--project",
+        "prj-0001"
+      ],
+      "started_at": "2026-11-22T01:57:09.992Z",
+      "completed_at": "2026-11-22T02:14:49.629Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
+    }
+  ]
+}

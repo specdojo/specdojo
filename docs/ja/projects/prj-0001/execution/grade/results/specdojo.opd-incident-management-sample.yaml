@@ -4,14 +4,14 @@ document: specdojo:opd-incident-management-sample
 path: docs/ja/specdojo/samples/opd-incident-management-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 88
-graded_at: "2026-10-15T21:24:45.824Z"
-graded_by: agy-expert-executor
-content_hash: c050e40e04a4721f8c90c9e754f2fbf45223d935c20dad68df6678a74aaed8fe
+verdict: pass
+score: 96
+graded_at: "2026-11-23T17:38:29.877Z"
+graded_by: sonnet-review-executor
+content_hash: 6d2c129e170463c8c014cb8d0c53efac87e2ce3f16a8a1e9babb3ed548e0f803
 categories:
   purpose:
-    score: 100
+    score: 88
   operations:
     score: 100
   planning:
@@ -21,20 +21,20 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 100
   consistency:
-    score: 50
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-publication-accountability:
     level: 4
     score: 100
@@ -78,14 +78,14 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
-  vp-qe-kata-conformance:
-    level: 2
-    score: 50
-  vp-ux-readability:
     level: 3
     score: 75
+  vp-qe-kata-conformance:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 4
     score: 100
@@ -103,35 +103,35 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 2
+  major: 0
   minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 1
-    anchor: "# 運用方針・設計: 障害対応 サンプル"
-    message: Frontmatter の必須項目 `title` が不足している。
-    message_ja: Frontmatter の必須項目 `title` が不足している。
+    rule: vp-po-decision-readiness
+    line: 39
+    anchor: >-
+      | ------ | ---------------------------------------------------------------------------------- |
+      ---------------------------------- | -------- | --------------------------------------------------------------- |
+    message: >-
+      停止・切替の表の P1「販売の記録を紙の販売控えへ切り替える」は判断者が `PO`
+      で、時機が「切替の期限を過ぎても再開を確かめられない」です。一方、周知の表では「紙の販売控えへ切り替えた時点」に来店客へ周知します。初動で誰がいつ切り替えるか（店番担当の即時切替か、`PO`
+      の承認待ちか）が読み取れません。初動の切替と再開の判断を分けて明記する必要があります。
+    message_ja: >-
+      停止・切替の表の P1「販売の記録を紙の販売控えへ切り替える」は判断者が `PO`
+      で、時機が「切替の期限を過ぎても再開を確かめられない」です。一方、周知の表では「紙の販売控えへ切り替えた時点」に来店客へ周知します。初動で誰がいつ切り替えるか（店番担当の即時切替か、`PO`
+      の承認待ちか）が読み取れません。初動の切替と再開の判断を分けて明記する必要があります。
   - id: F002
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 5
-    anchor: "## 1. 概要（incident-management）"
-    message: "`opd-rulebook` の「5. 本文構成（標準テンプレ）」で定義されている必須見出し（2, 3, 4, 5, 7, 8, 9, 10, 11）が不足している。"
-    message_ja: "`opd-rulebook` の「5. 本文構成（標準テンプレ）」で定義されている必須見出し（2, 3, 4, 5, 7, 8, 9, 10, 11）が不足している。"
-  - id: F003
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 13
-    anchor: "| P1     | 全ユーザ影響/決済不可 | 30分/4h               | Ops Leadが即時→PO承認で停止可 | 全ユーザ（ステータス/メール） |"
-    message: "見出し番号が `opd-rulebook` の定義する順序（## 6. 障害対応方針 / ## 12. 関連ドキュメント導線）と不一致である。"
-    message_ja: "見出し番号が `opd-rulebook` の定義する順序（## 6. 障害対応方針 / ## 12. 関連ドキュメント導線）と不一致である。"
-  - id: F004
     severity: minor
-    rule: vp-ux-readability
-    line: 5
-    anchor: "## 1. 概要（incident-management）"
-    message: 必須構成を省略しているため、`opd-＜term＞` 文書を正しく作成するためのサンプルとして不十分である。
-    message_ja: 必須構成を省略しているため、`opd-＜term＞` 文書を正しく作成するためのサンプルとして不十分である。
+    rule: vp-qe-omissions-consistency
+    line: 21
+    anchor: >-
+      | 守る業務               | 障害の例                                             | システムを使わない回避策                         |
+      優先度 |
+    message: >-
+      `opd-monitoring` は夜間バックアップの失敗を P2
+      として扱うと定めています。優先度の判定の表には対応する行がなく、停止・切替の表と周知の表も同様です。監視の入口として示した優先度判定とずれるため、バックアップ失敗の行を追加する（または扱いを明記する）必要があります。
+    message_ja: >-
+      `opd-monitoring` は夜間バックアップの失敗を P2
+      として扱うと定めています。優先度の判定の表には対応する行がなく、停止・切替の表と周知の表も同様です。監視の入口として示した優先度判定とずれるため、バックアップ失敗の行を追加する（または扱いを明記する）必要があります。

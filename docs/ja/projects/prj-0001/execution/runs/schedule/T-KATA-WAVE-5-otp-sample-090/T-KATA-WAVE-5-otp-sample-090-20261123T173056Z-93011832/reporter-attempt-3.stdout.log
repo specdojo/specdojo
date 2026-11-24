@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "mode": "review",
+  "grade_check": "評価結果の鮮度を確認したところ、`npx specdojo grade list --target kata --path docs/ja/specdojo/samples/otp-sample.md --changed-only` および `npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/otp-rulebook.md --changed-only` の両方において変更が検知されず、出力も空であったため、評価結果は最新であると判断しました。\n\n- `docs/ja/specdojo/samples/otp-sample.md`: `verdict`: `pass`, `score`: 100, findings: なし\n- `docs/ja/specdojo/rulebooks/otp-rulebook.md`: `verdict`: `pass`, `score`: 98, findings: 1 件 (minor `F001` 被検知)",
+  "rationale": [
+    "完了条件 `DC-001`（rulebook の章立てと必須の表への適合）: `docs/ja/specdojo/samples/otp-sample.md` の内容が `docs/ja/specdojo/rulebooks/otp-rulebook.md` の規定に基づいていることを確認しました。",
+    "完了条件 `DC-002`（Sample 記述標準と共通サンプル文脈への適合）: 駄菓子屋のプロジェクトという共通の文脈に沿っていることを確認しました。",
+    "完了条件 `DC-003`（rulebook の禁止事項への不抵触）: 禁止事項に触れていないことを確認しました。",
+    "完了条件 `DC-004`（業務の価値と範囲の明示）: 概要セクションにおいて、店頭販売・在庫・つけの記録を継続するという業務価値と、対象範囲が示されていることを確認しました。",
+    "なお、`recipe` が `_MISSING_` であるため、その扱いについては `handoff` にて言及されています。"
+  ],
+  "improvements": [
+    "rulebook (`docs/ja/specdojo/rulebooks/otp-rulebook.md`) の `F001` (minor/`vp-dev-testability`): Frontmatter に `npm run lint:fm` の記載はあるが、本文の章立てや見出し書式を確認する `npm run lint:md` 等の検証手順が欠落しているため、今後の整備時に追記が必要です。"
+  ],
+  "approach": "フェーズ説明に基づき、`docs/ja/specdojo/rulebooks/otp-rulebook.md` の必須要素・禁止事項、および `docs/ja/specdojo/samples/otp-sample.md` の形式との整合性を確認しました。`recipe` が `_MISSING_` であるため、型としての整備状況については別途検討が必要です。"
+}

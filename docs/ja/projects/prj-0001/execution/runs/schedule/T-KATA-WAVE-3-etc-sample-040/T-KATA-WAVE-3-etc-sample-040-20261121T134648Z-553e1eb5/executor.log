@@ -1,0 +1,22 @@
+`docs/ja/specdojo/rulebooks/etc-rulebook.md` を簡潔に書き直し、5 件の finding すべてに対応しました。変更したのはこの 1 ファイルだけです。手元で通した検査は Prettier と markdownlint で、ほかの検査は親 runner に任せています。
+
+**finding への対応**
+- **F001（`perspective_key` の宣言場所がない）**: 観点見出しの直下 1 行目に `perspective_key: <key>` と書く形を定めました（例: `perspective_key: retry-idempotency`）。`etc-index` の「見出し直下に宣言」とそろえています。見出しの順序を決めた「本文要件」の段落にも、この宣言行を入れました。
+- **F002（H5 見出し）**: H5 だった「意図」「条件・ケース表」をやめ、`#### 6.6.1. 観点` と `#### 6.6.2. 条件・ケース表` に組み替えました。意図の書き方は観点の節に入れています。
+- **F003（山括弧の素書き）**: `外部結合テストカタログ: <対象名>` と `観点: <観点>` をインラインコードで囲みました。
+- **F004（sample が rulebook と合っていない）**: plan の指示どおり、sample はこの段では変えていません。不一致は全体方針に `_UNDECIDED_` として書き、後続の sample の見直しで揃えて ready 化の前に解消すると明記しました。
+- **F005（章の名前の不一致）**: 章構成表と記述ガイドの見出しを、どちらも「実行運用メモ」にそろえました。
+
+**簡潔化**
+- 完成例の章（「サンプル（最小）」）を削り、完成例は sample に任せる形にしました。
+- 章 5 の名前を標準に合わせて「本文要件」に変えました。
+- 記述ガイドの冒頭に受入確認で照合する 3 段の手順を置き、各節に判断の基準と良い例・悪い例を入れました。`etc-index` と重なる内容（ケース表のカラム、`case_id` の形式、依存の扱い）は書き写さずに参照する形にし、トレース表は列ごとの判断条件の表に置き換えました。
+- 禁止事項には、`perspective_key` を観点名の修正に合わせて変えることを加えました。
+
+**後続の段で必要なこと**
+- sample の見直しで、本文要件の章 1〜7、`trace_key`、条件・ケース表、`perspective_key` の宣言行へ sample を揃えます。sample にある独自の章構成と「責任者」の観点もやめます。
+- `recipe`・`template` の要否はまだ決まっていません。template は PJR-WYTX で扱います。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"`etc-rulebook.md` を簡潔に書き直し、F001〜F005 に対応した。完成例の章を削り、見出しを H4 までにし、`perspective_key` の宣言を見出し直下の行として定義し、山括弧のプレースホルダをインラインコードにし、実行運用メモの章の名前をそろえた。sample が合っていない点（F004）は `_UNDECIDED_` で後続の sample の見直しへ申し送った。","handoff":["F004: `docs/ja/specdojo/samples/etc-sample.md` は rulebook の本文要件（章 1〜7、`trace_key`、条件・ケース表、`perspective_key` の宣言行）に合っていない。後続の sample の見直しで揃え、独自の章構成と「責任者」の観点をやめる。rulebook には `_UNDECIDED_` として記録した。","`recipe`・`template` の要否は未判断のまま（template は PJR-WYTX で扱う）。","result の `進め方と実践の型の適用` に記録する内容: 根拠には `rulebook-authoring-standard`、`etc-index-rulebook` の「ケース表の共通カラム」（`perspective_key` は見出し直下に宣言する）、同じ wave で直した `utc-rulebook` の構成を使った。F001・F002・F003・F005 は修正で解消し、F004 は sample の段へ申し送った。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/etc-rulebook.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/etc-rulebook.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更したのは rulebook だけで、plan・result・個票を変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML の変更なし","reason":"変更したファイルに `*.yaml` / `*.yml` がない"}]}
+</specdojo_executor_evidence>

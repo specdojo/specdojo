@@ -1,0 +1,172 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-CALIBRATION-stsd-sample-150",
+  "run_id": "T-KATA-REVIEW-CALIBRATION-stsd-sample-150-20261124T044602Z-42cda1c3",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-24T04:46:43.486Z",
+    "completed_at": "2026-11-24T04:49:46.858Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/stsd-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/stsd-sample.md | 3 +--\n 1 file changed, 1 insertion(+), 2 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx --no-install prettier --write docs/ja/specdojo/samples/stsd-sample.md",
+      "status": "passed",
+      "summary": "対象 sample の整形が成功。追加の整形差分なし。"
+    },
+    {
+      "source": "executor",
+      "command": "npx --no-install prettier --check docs/ja/specdojo/samples/stsd-sample.md",
+      "status": "passed",
+      "summary": "対象 sample の書式検査が成功。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白・差分の検査が成功。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "ファイル単位の YAML schema 検査は非適用。",
+      "reason": "変更した成果物は Markdown のみで、YAML ファイルを変更していない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "カタログ検査は非適用。",
+      "reason": "executor の変更は docs/ja/specdojo/samples/ 配下のみで、docs/ja/projects/ 配下の成果物を変更していない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検査は非適用。",
+      "reason": "executor は登録簿個票、既存 plan・result などの履歴蓄積ファイルを変更していない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:stsd-sample\n  type: data\n  status: draft\n  rulebook: specdojo:stsd-rulebook\n  based_on: []\n---\n\n# 商品のステータス定義\n\n駄菓子屋きぬやの商品について、納品から販売または返品までの状態と遷移を定義する。\n\n## 1. 目的\n\n商品の受入から販売・返品までの進み具合と販売可否を管理する。店番担当（店主代表または家族利用者代表）が、検品、売場補充、顧客への引渡し、仕入先への返品のどれを次に行えるか判断するために使う。\n\n## 2. 適用範囲\n\n- 対象: 店舗が仕入先へ発注し、納品を受けた商品の1個（個品）\n- 業務範囲: 商品の受領を起点とする入荷受入、検品、売場補充、販売、仕入先への返品。納品前の発注業務、顧客への引渡し後の対応、現物が届かなかった納品不足分は対象外\n… output omitted …\n入記録へ記録した\n  returned --> [*] : T-08 返品処理確定 / 返品商品と仕入記録が一致した\n```\n\n| 遷移 ID | 遷移元 | 遷移先 | イベント | 条件 | 補足 |\n| - | - | - | - | - | - |\n| `T-06` | 検品済み | 返品待ち | 検品完了 | 結果が過剰納品分または品質不良で、該当する個品を返品保管箱へ分けた | 店番担当は不合格理由と返品保管箱への分離を確認する。分離未完了なら販売対象へ混ぜない。この場合、家族利用者代表が店番をしていれば、未完了の分離を店主代表へ引き継ぐ |\n| `T-07` | 返品待ち | 返品済み | 返品処理完了 | 仕入先へ引き渡し返品日と数量を仕入記録へ記録した | 引渡しだけで記録がなければ返品待ちに留め、返品した店番担当が補記する。商品を再度送らない |\n| `T-08` | 返品済み | 終了 | 返品処理確定 | 返品商品と仕入記録が一致した | 店主代表が仕入先へ渡した商品・数量と記録を照合する。不一致なら返品済みに留め、補記・訂正後に確定する |"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6709 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6709 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-CALIBRATION-stsd-sample-150\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 6\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1660}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  13:49:56\n   Duration  2.36s (transform 4.38s, setup 622ms, import 6.84s, tests 5.49s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\n.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-CALIBRATION-stsd-sample-150/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-CALIBRATION-stsd-sample-150/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R5 の整合確認を完了。rulebook を優先し、sample の `based_on` を空配列に修正した。整形・差分検査は成功。解釈が分かれる点は「要判断」として申し送る。",
+  "completion_status": "complete",
+  "handoff": [
+    "reporter は次の指摘表を result の実施内容へ、改行を保った Markdown 表として記載すること。\n\n| No | 段 | 箇所 | 指摘 | 直した案 | 根拠 | 印 |\n| --- | --- | --- | --- | --- | --- | --- |\n| R5-1 | R5 | frontmatter | `based_on` に Sample 記述標準を指定しているが、カタログの `depends_on` は空であり、先行成果物だけを指定する STSD rulebook の規定と整合しない。 | rulebook を優先し、`based_on: []` にした。 | `vp-qe-kata-conformance`。stsd-rulebook 4章、共通編集規約、dct-kata.yaml の stsd-sample 行。実装の src/catalog/build-references.ts は外部名前空間を閉包検査から除外するため、標準への参照を残す解釈もある。その案は採らず、明示された rulebook を優先した。機械検査の失敗としての指摘ではない。 | 要判断 |",
+    "変更ファイルは docs/ja/specdojo/samples/stsd-sample.md のみ。`based_on` の2行を空配列1行へ置換した。本文・状態値・状態名・遷移 ID・図表は変更していない。result と grade サイドカーは直接編集していない。",
+    "進め方と実践の型の適用へ記載する根拠: kata-guide 6.1・6.3・6.5、stsd-rulebook、stsd-mermaid-rulebook、stsd-recipe、stsd-template、Sample 記述標準の共通サンプル文脈、document-metadata-standard、共通レビュー観点、dct-kata.yaml を確認した。同じ接頭辞の sample は対象1件で、index・個別 sample は存在しない。対象本文に wikilink はなく、メタ情報の参照先を確認した。指定の product 用語集6件には駄菓子屋の状態・検品用語の定義がない。関連する gl-sample、cdfd-sample、cdfd-overview-sample、sld-sample、bdd-sample、非推奨 cstd-sample も照合した。共通の役割名、受入・配置・返品の記録と保管場所は維持した。標準への `based_on` を外しても Sample 記述標準の適用は継続する。",
+    "前段 R1〜R4 の result と grade 結果 docs/ja/projects/prj-0001/execution/grade/results/specdojo.stsd-sample.yaml を読み、anchor と現状を照合した。F001 は R4 の品質不良・合格基準の追記、F002 は R3 の家族利用者代表からの引継ぎの明示により対応済みで、再指摘していない。condense 起因の記録はない。今回の変更に伴う他文書の修正は不要。標準への参照を維持する方針を採る場合は、stsd-rulebook 4章に外部標準参照の例外を明記する案があるが、本タスクでは変更していない。",
+    "指定された親検証は runner に委ね、sandbox で重複実行していない。npx による playbook の所在確認は npm キャッシュ制約で失敗したが、node --import tsx src/specdojo.ts where playbook --project prj-0001 は成功し、運用メモを読んだ。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-CALIBRATION-stsd-sample-150/T-KATA-REVIEW-CALIBRATION-stsd-sample-150-20261124T044602Z-42cda1c3/executor.log",
+      "bytes": 4444,
+      "truncated": false
+    }
+  ]
+}

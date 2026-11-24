@@ -1,0 +1,22 @@
+`docs/ja/specdojo/samples/opr-monitoring-sample.md` を、表の数行だけの状態から、駄菓子屋きぬやの販売管理システムを題材にした 12 章の完成例に書き直しました。変更したのはこのファイルだけです。prettier と markdownlint はエラーなしで通りました。lint などの正式な検査は親 runner が実行するため、ここでは走らせていません。
+
+**主な変更点**
+
+- **Frontmatter:** `rulebook` を `specdojo:opd-rulebook` から `specdojo:opr-rulebook` に直しました。`based_on` は `specdojo:opd-monitoring-sample` と `specdojo:opd-index-sample` にしています。H1 は「駄菓子屋きぬや 販売管理システム 運用手順（アラート対応）」です。
+- **章立て:** template と同じ 12 章にしました。該当する作業がない章も省略せず、理由を付けて「`opr-index` 参照」と書いています。
+- **対象のシステムと環境:** 手順の対象をホスティング環境の死活、夜間バックアップ、日次締めの差異の 3 つに絞りました。対象外にするものと、時間帯・権限・使う手段・連絡先も書いています。
+- **アラート対応手順:** 段階ごとに実施する役割・時限・判定できる完了条件を表にしました。誤検知は「段階」の行から外し、確認の段階の分岐として扱っています。誤検知を終えてよい条件、閾値の調整、通知を止めて再開する手順も加えました。
+- **機能を止める判断:** 止めるもの・止める条件・判断する役割・再開の条件を表にしました。つけの新規記録は店番担当が止め、紙の販売控えへの切替は 30 分で再開できないときに `PO` が決めます。
+- **P1・P2 への引継ぎ:** 障害対応手順の章に、引継ぎ先と障害記録に書く内容を置きました。閾値や通知先の変更は、承認者とロールバック条件付きで運用変更作業の章に置きました。
+
+**決めずに残した点**
+
+- **未決の値:** 営業時間外の通知、外部の死活監視サービスと費用、稼働率の目標、証跡の保管期間は、根拠がないため `_UNDECIDED_` / `_ASSUMPTION_` のまま残しました。
+- **削除した記述:** 既存の「スロットル」は、宣言された資料に根拠がなく、この小さなシステムでは実態とも合わないため削りました。
+- **停止の承認者:** F003 が挙げる `opd-incident-management` の承認の流れは、参照してよい資料に入っていないため読んでいません。停止の判断者は `opr-index` の sample に合わせ、紙への切替を `PO` としました。
+- **PJR-76N9:** 本文に文書の作成・承認の役割や承認の進み具合は書いていません。表の判断者や承認者は、成果物の中身としての運用上の役割です。
+- **rulebook:** この段では変更していません。変更案もありません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"opr-monitoring-sample を opr-rulebook の 12 章構成に沿った駄菓子屋きぬやの完成例へ書き直した。Frontmatter の rulebook を specdojo:opr-rulebook へ修正し、対象システム・環境・対象外、機能を止める判断の条件と判断者、誤検知のクローズ・閾値調整・抑止、P1/P2 の引継ぎ、監視変更の承認とロールバックを追加した。","handoff":["加筆・修正の根拠: rulebook の必須 12 章（F016/F019/F021）が欠けていたため、template と同じ見出し名で 12 章構成に移し、既存の 4 段階の表の内容はアラート対応手順に残して具体化した。該当作業のない章（バックアップ確認・リストア、バッチ再実行、アカウント付与・剥奪、問い合わせ一次対応）は rulebook の本文要件に従い、理由付きで `opr-index 参照` とした。","Frontmatter 修正: `rulebook` を `specdojo:opd-rulebook` から `specdojo:opr-rulebook` へ直した（F018）。`based_on` は未修飾の `opd-monitoring` を、実在する `specdojo:opd-monitoring-sample` と `specdojo:opd-index-sample` へ置き換えた（opr-sample の書き方にそろえた）。H1 は共通サンプル文脈に合わせて「駄菓子屋きぬや 販売管理システム 運用手順（アラート対応）」とした（F020）。","削除: 既存の暫定対応にあった「スロットル」は、宣言された参照資料（opd-monitoring-sample / opd-index-sample / opr-sample）に根拠がなく、小規模な単一店舗のシステムにも合わないため削った。機能を止める判断は、つけの新規記録の停止と紙の販売控えへの切替（`PO` の判断、30 分で再開できない場合）として opr-sample と opd-monitoring-sample の記述から書いた（F003/F017）。",“参照しなかった文書: F003 が挙げる `opd-incident-management` の停止承認（Ops Lead→PO）は宣言された参照範囲外のため読んでいない。停止の判断者は opr-sample の P1 切替の判断（`PO`）にそろえた。opd-incident-management-sample の内容と食い違っていないかは、後続の review で確かめる必要がある。","未決のまま残した値（利用者が決める値）: 営業時間外の通知を `OPS` がすぐ受けるか、外部の死活監視サービスを使うか・費用額、営業時間内の稼働率の目標、証跡の保管期間。いずれも opd-monitoring-sample / opr-sample の未決事項と同じく `_UNDECIDED_` / `_ASSUMPTION_` のまま残した。","PJR-76N9 の扱い: F002 が求める「再発防止策の合意者」は、文書の承認の進み具合ではなく運用上の判断として扱い、恒久対応は運用変更作業（承認者 `PO`）へ寄せた。本文に、文書を作る・確かめる・承認する役割の割り当てや承認の進み具合は書いていない。rulebook の変更案はない。","参照した型: rulebook は docs/ja/specdojo/rulebooks/opr-rulebook.md（構造の基準）、形式の参照は docs/ja/specdojo/samples/opr-sample.md（表の列・粒度）、内容の根拠は based_on の opd-monitoring-sample と opd-index-sample。recipe は `_MISSING_`。template は fully-guided のため本文を読まず、見出し名だけを確認した。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/opr-monitoring-sample.md","status":"passed","summary":"変更した Markdown を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/opr-monitoring-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/ 配下の sample だけで、plan・result・個票を変更していないため"},{"command":"npm run validate:catalog","status":"not_applicable","summary":"プロジェクト成果物を変更していない","reason":"変更は docs/ja/projects/ の外（docs/ja/specdojo/samples/）だけのため"}]}
+</specdojo_executor_evidence>

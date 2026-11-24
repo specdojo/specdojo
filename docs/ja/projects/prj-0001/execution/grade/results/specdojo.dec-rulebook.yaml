@@ -5,25 +5,25 @@ path: docs/ja/specdojo/rulebooks/dec-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 93
-graded_at: "2026-11-08T20:30:38.051Z"
-graded_by: flash-high-executor
-content_hash: aff26e86c4629e172603fe3aed790d86dd051dbe59eb7aee529badf3375c4eab
+score: 96
+graded_at: "2026-11-22T12:39:09.178Z"
+graded_by: opus-review-executor
+content_hash: b277acec32abe7b1be239df4ee1dabf2430293b2d82bb7b11d71851d123c6a83
 categories:
   purpose:
-    score: 88
+    score: 100
   operations:
     score: 94
   planning:
-    score: 92
+    score: 100
   business:
-    score: 92
+    score: 100
   architecture:
     score: 100
   usability:
-    score: 92
-  implementation:
     score: 100
+  implementation:
+    score: 88
   quality:
     score: 100
   consistency:
@@ -33,14 +33,14 @@ viewpoints:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-publication-accountability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-plan-feasibility:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
     level: 4
     score: 100
@@ -54,8 +54,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-stakeholder-clarity:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
     level: 4
     score: 100
@@ -66,8 +66,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-change-impact:
     level: 4
     score: 100
@@ -84,14 +84,14 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-readability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-operability:
     level: 4
     score: 100
@@ -104,62 +104,31 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 8
+  minor: 3
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-decision-readiness
-    line: 32
-    anchor: ""
-    message: 本文構成に「判断者」や「未決事項」を設けておらず、誰が判断を下したか、および残存する論点が不明瞭になる恐れがある。
-    message_ja: 本文構成に「判断者」や「未決事項」を設けておらず、誰が判断を下したか、および残存する論点が不明瞭になる恐れがある。
+    rule: vp-dev-implementation-readiness
+    line: 10
+    anchor: "- 既存の決定記録がある場合は、プロジェクト登録簿の decision 個票へ移行します。"
+    message: 既存の決定記録を移すときの章の対応（背景・検討した選択肢・決定内容・採択理由・影響範囲を、decision 個票のどの章へ移すか）を書いておらず、前例の cstd-rulebook のように移す先の章を示すべきである。
+    message_ja: 既存の決定記録を移すときの章の対応（背景・検討した選択肢・決定内容・採択理由・影響範囲を、decision 個票のどの章へ移すか）を書いておらず、前例の cstd-rulebook のように移す先の章を示すべきである。
   - id: F002
     severity: minor
-    rule: vp-po-publication-accountability
-    line: 7
-    anchor: "## 1. 全体方針"
-    message: 決定記録に含める情報の機密度（個人情報や非公開情報の扱い）や公開対象についての方針が記載されていない。
-    message_ja: 決定記録に含める情報の機密度（個人情報や非公開情報の扱い）や公開対象についての方針が記載されていない。
+    rule: vp-qe-omissions-consistency
+    line: 5
+    anchor: >-
+      この rulebook は非推奨です。決定の記録はプロジェクト登録簿の decision で管理するため、後継を登録簿の
+      decision（[[specdojo:pjr-rulebook|プロジェクト登録簿作成ルール]]）としました。
+    message: document-metadata-standard が非推奨の文書の冒頭に求める廃止時期（非推奨にした日、または移行期間の終わり）がなく、告知に追記すべきである。
+    message_ja: document-metadata-standard が非推奨の文書の冒頭に求める廃止時期（非推奨にした日、または移行期間の終わり）がなく、告知に追記すべきである。
   - id: F003
     severity: minor
-    rule: vp-pm-plan-feasibility
-    line: 32
-    anchor: ""
-    message: 影響範囲をタスク化するための「次アクション」や「担当者」の項目が標準テンプレに含まれておらず、実行可能性を担保しにくい。
-    message_ja: 影響範囲をタスク化するための「次アクション」や「担当者」の項目が標準テンプレに含まれておらず、実行可能性を担保しにくい。
-  - id: F004
-    severity: minor
-    rule: vp-ba-stakeholder-clarity
-    line: 7
-    anchor: "## 1. 全体方針"
-    message: 決定記録の作成者、レビュー者、承認者など、関与すべきステークホルダーの役割が明示されていない。
-    message_ja: 決定記録の作成者、レビュー者、承認者など、関与すべきステークホルダーの役割が明示されていない。
-  - id: F005
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 23
-    anchor: ""
-    message: Frontmatter 必須項目に rulebook ID の指定を追加し、成果物とルールのトレーサビリティを確保すべきである。
-    message_ja: Frontmatter 必須項目に rulebook ID の指定を追加し、成果物とルールのトレーサビリティを確保すべきである。
-  - id: F006
-    severity: minor
-    rule: vp-ux-readability
-    line: 13
-    anchor: "## 2. 位置づけと用語定義（必要に応じて）"
-    message: 「位置づけ」において、成果物リファレンス等の上位ガイドへの参照を記述し、プロジェクト全体における役割を明確にすべきである。
-    message_ja: 「位置づけ」において、成果物リファレンス等の上位ガイドへの参照を記述し、プロジェクト全体における役割を明確にすべきである。
-  - id: F007
-    severity: minor
-    rule: vp-ux-readability
-    line: 27
-    anchor: "| ---- | ---- | ---- |"
-    message: Markdownの表のヘッダーとデータ行の間に空行が含まれており、レンダリングが崩れる恐れがあるため削除すべきである。
-    message_ja: Markdownの表のヘッダーとデータ行の間に空行が含まれており、レンダリングが崩れる恐れがあるため削除すべきである。
-  - id: F008
-    severity: minor
-    rule: vp-ux-readability
-    line: 42
-    anchor: ""
-    message: 「記述ガイド」の具体性が不足しており、「判断軸」の書き方や曖昧さを排除する記述方法など、作成者が迷わないための具体的な指針を追記すべきである。
-    message_ja: 「記述ガイド」の具体性が不足しており、「判断軸」の書き方や曖昧さを排除する記述方法など、作成者が迷わないための具体的な指針を追記すべきである。
+    rule: vp-ops-release-readiness
+    line: 5
+    anchor: >-
+      この rulebook は非推奨です。決定の記録はプロジェクト登録簿の decision で管理するため、後継を登録簿の
+      decision（[[specdojo:pjr-rulebook|プロジェクト登録簿作成ルール]]）としました。
+    message: 移行期間の終わり（dec の型を一覧やカタログから外す、またはファイルを削除する判断の時期・条件）がなく、非推奨のまま残し続けるのか、いつ取り除くのかを判断できない。
+    message_ja: 移行期間の終わり（dec の型を一覧やカタログから外す、またはファイルを削除する判断の時期・条件）がなく、非推奨のまま残し続けるのか、いつ取り除くのかを判断できない。

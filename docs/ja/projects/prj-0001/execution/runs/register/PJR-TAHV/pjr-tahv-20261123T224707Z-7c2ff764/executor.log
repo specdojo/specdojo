@@ -1,0 +1,7 @@
+変更範囲の未統合予約で待機したタスクを、別タスクの終了後に再評価するよう修正しました。待機の理由と件数を各回に表示し、再選択を確認する単体テストを追加しています。
+
+実行中のタスクがなく、待機中の項目だけが残る場合は終了します。外部 run による予約解除後は再起動が必要です。Prettier、Markdown 検査、履歴リンク検査、catalog 検査は通過しました。型検査・lint・単体テスト・統合テストは親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"変更範囲の予約待ちを再評価し、待機理由と件数を表示するよう修正。単体テストと運用ガイド、個票を更新した。","handoff":["CHANGELOG の不具合修正文案: `exec run --auto --loop` で変更範囲の待ちが解除されたタスクを次の回に再選択し、待ちの理由と件数を表示する。"],"validations":[{"command":"npx prettier --write src/exec/run/change-scope.ts src/exec/run/schedule-mode.ts tests/src/exec/run/human-task-skip.test.ts docs/ja/specdojo/guides/schedule-operation-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-tahv-auto-loop-deferred.md","status":"passed","summary":"変更ファイルを整形した。"},{"command":"node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint docs/ja/specdojo/guides/schedule-operation-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-tahv-auto-loop-deferred.md","status":"passed","summary":"変更した Markdown の検査に通過。"},{"command":"npm run validate:history-links","status":"passed","summary":"履歴リンク検査に通過。"},{"command":"node --import tsx tools/catalog-validate-if-configured.mjs","status":"passed","summary":"catalog 検査に通過。既存の参照先に関する警告あり。"},{"command":"git diff --check","status":"passed","summary":"差分の空白検査に通過。"}]}
+</specdojo_executor_evidence>

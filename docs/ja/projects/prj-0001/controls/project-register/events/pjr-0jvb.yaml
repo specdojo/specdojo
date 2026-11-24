@@ -1,0 +1,133 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_72185f6f4d0a4a95b774dfe44db945f0
+  ts: "2026-11-22T23:53:48Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: exec cycle が agent を指定すると人の確定のタスクを拾って失敗する
+    - field: description
+      from: ""
+      to: "11-23 朝の exec cycle が第 3 波の完成版確定（execution: human）13 件を edit として拾い、plan の生成で止まって failed になった。agent を指定した自動の実行でも人のタスクを外す"
+    - field: input
+      from: ""
+      to: '["2026-11-23 の朝の exec cycle（JBR-exec-cycle-eb11b9add2df）の stderr に、`T-KATA-WAVE-3-*-140` の 13 件で「has execution: human; claim it to create and use its result instead of a plan.」が出て、auto=failure になった","見立て（未確認）: src/exec/run/schedule-prepare.ts は agent の候補が無いときだけ人のタスクを止める。cycle が --edit-by で agent を渡すと、この判定を通り抜けて src/exec/plans-generation.ts の plan の生成で止まる","PJR-561Q の記録では、--auto は execution: human のタスクを自動で飛ばしていた"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-561Q"]'
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: exec
+- v: 1
+  id: reg_ff97dd3bc0d147bea50b2d2d99f87748
+  ts: "2026-11-23T00:05:14Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_72185f6f4d0a4a95b774dfe44db945f0
+- v: 1
+  id: reg_d9b73cccb3194f48b847582a54011243
+  ts: "2026-11-23T00:10:21Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_ff97dd3bc0d147bea50b2d2d99f87748
+- v: 1
+  id: reg_2def4816ccd946fdba306a5ff7b28511
+  ts: "2026-11-23T01:20:34Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: 2 回目の実行の条件を足し、起票のときに入らなかった完了条件を入れ直した
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_d9b73cccb3194f48b847582a54011243
+- v: 1
+  id: reg_5f61c35efd09405987c7db0e839f608d
+  ts: "2026-11-23T01:22:57Z"
+  action: start
+  actor: sonnet-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_2def4816ccd946fdba306a5ff7b28511
+- v: 1
+  id: reg_0460cfd83c6945c4b590ce5803a47739
+  ts: "2026-11-23T01:27:57Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_5f61c35efd09405987c7db0e839f608d
+- v: 1
+  id: reg_02cbae8e0de74a5498af564fcf7aef1d
+  ts: "2026-11-23T01:32:37Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分と単体テストを確かめ、prj-0001 の exec run --auto --dry-run --edit-by sol-executor が 13 件を飛ばして終了コード 0 で終わることと、exec smoke の成功を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: "agent を指定した自動の実行でも execution: human のタスクを飛ばし、人のタスクだけが残ったときは待つ数を出して終了コード 0 で終えるようにした。単体テスト 4 件を足した"
+  previous_event_id: reg_0460cfd83c6945c4b590ce5803a47739

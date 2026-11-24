@@ -1,0 +1,15 @@
+rulebook `docs/ja/specdojo/rulebooks/prj-success-criteria-and-acceptance-criteria-rulebook.md` を編集し、grade の指摘 F001〜F007 をすべて直しました。prettier と markdownlint-cli2 は指摘 0 件です。ほかの検査は親 runner が実行します。指摘のうち F004 は、template をこの段で変えられないため、まだ一部が残っています。
+
+- **F004（未解決事項の表の列）**: rulebook の推奨表を「論点・判定への影響・当面の扱い」にし、sample と揃えました。ただし template はまだ「扱い・解決期限・責任者」のままです。template の列を揃える作業は次の段へ申し送ります。
+- **F001（証跡の公開範囲）**: 記述ガイドに「判定手順と証跡」の節を足しました。証跡は保存先の参照だけを書いて中身を本文に写さないこと、顧客情報を含む証跡は非公開の保存先に置くことを定め、良い例と悪い例を付けました。禁止事項にも、顧客情報や個人名を公開文書に書く行を足しました。
+- **F002（導入文との重複）**: 導入文から「責任者」を外して「どの利用場面で何を判断するための文書か」の形に直しました（PJR-76N9）。「対象と目的」は「対象範囲」に絞りました。
+- **F003（改訂時の追従）**: 全体方針に「改訂時の追従対象」を足しました。業務価値・閾値・判定時期・初期受入の必須条件を変えたら、下流の受入条件・関連テスト・取得済みの証跡を再照合します。担当は Role code で書き、影響先を洗い出すのは本書のオーナー、再照合するのは各影響先のオーナーです。
+- **F005（位置づけ）**: 図の前に、下流の業務受入条件（`[[specdojo:bac-rulebook]]`）とシステム受入条件が本書から何を引き継ぐかを一文で書きました。システム受入条件の rulebook は見つからなかったので、文字だけで書いています。
+- **F006（表記ゆれ）**: 本文要件の「責任者」を「確認者・承認者」に直しました。
+- **F007（AI Agent の扱い）**: 承認者は人間の役割に限り、AI Agent に受入可否の最終判断を任せないと記述ガイドに書きました。禁止事項にも同じ行を足しました。
+
+指摘のなかった箇所は書き換えていません。sample・recipe・template は変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"prj-success-criteria-and-acceptance-criteria-rulebook を編集し、grade の指摘 F001〜F007 を直した。F004 は rulebook と sample の列を揃えたが、template をこの段で変えられないため template の列（扱い・解決期限・責任者）はまだ揃っていない。sample・recipe・template は変更していない。prettier と markdownlint-cli2 の指摘は 0 件。","handoff":["F004 は一部が残っている: template `docs/ja/specdojo/templates/prj-success-criteria-and-acceptance-criteria-template.md` の「例外条件と未解決事項」の表がまだ「論点・扱い・解決期限 / 判断タイミング・責任者」のまま。rulebook と sample の列（論点・判定への影響・当面の扱い）に揃える作業を template の段で行う必要がある。","指摘のなかった既存の記述（ファイル命名・ID規則、推奨 Frontmatter 項目、成功基準の記述ガイド、既存の禁止事項）は理由がないため書き換えていない。","システム受入条件の rulebook は見つからなかったため、位置づけでは wikilink にせず文字だけで書いた。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/rulebooks/prj-success-criteria-and-acceptance-criteria-rulebook.md","status":"passed","summary":"整形を実行した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/prj-success-criteria-and-acceptance-criteria-rulebook.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"plan・result・個票を変更していないため"}]}
+</specdojo_executor_evidence>

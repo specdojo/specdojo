@@ -1,0 +1,28 @@
+`git-branching-standard` を PJR-2TX0 の方式に改訂しました。`npm run lint:md` と `npm run lint:fm` は走らせておらず、親 runner の検証に任せています。実行したのは Prettier の整形と `npm run validate:history-links` だけです。後者は出力の末尾 5 行だけを確認していて、失敗の有無は見ていません。
+
+- **標準の改訂**: `docs/ja/specdojo/standards/git-branching-standard.md` を直しました。
+  - ブランチ表に `project/<project-id>/register` を追加し、経路図に develop への一方向 merge を足しました。
+  - 4.1 の層 3 は、単独運用では develop への直接記帳のままにしました。複数人運用では register ブランチへ push し、develop へ一方向に merge する形にしました。
+  - 4.1 に、置くもの、runner の書き込み先、`register ... --commit` の push とやり直し、CI、`external_projects` からの起票経路を書きました。
+  - 4.2 の統合専用 actor の行は register ブランチの行に置き換えました。単独運用の間は今の方式でよく、準備の項目が終わってから既定を切り替えると書きました。
+  - 5 章から統合専用 actor による bypass の記述を除きました。
+- **PJR-11EX**: 個票に、2TX0 で置き換えたことを追記しました。状態は変えていません。
+- **PJR-SJC7 の個票**:
+  - 作業内容の表を全行 `done` にしました。
+  - 対応結果に実施内容、決めた点、ガイドとの食い違い、CHANGELOG に書く事項を記入しました。
+  - 保護された設定は変更していません。
+
+## 申し送り
+
+- 層 1（exec の成果）は、2TX0 の「自動の統合は PR に置き換わる」に従い、複数人運用では PR で統合すると書きました。単独運用の `--no-ff` merge は残しています。
+- register から develop への merge の仕組み（Actions か runner と CLI か）は、2TX0 が後続へ回したため標準では固定せず、「一方向に merge」とだけ書きました。
+- 標準以外は直していません。食い違いは個票の対応結果に挙げた次の 4 点です（`register-operation-guide` の 2 点は、切り替え後の話です）。
+  - `branch-workflow-guide` の統合専用 GitHub App または service account だけを bypass actor にする記述と、確認手順 4。
+  - `branch-workflow-guide` の、exec の記帳は exec ブランチに残るという説明。
+  - `register-operation-guide` の、別 project 起票が develop の worktree で行われるという説明。
+  - `register-operation-guide` の `external_projects` の説明。
+- CHANGELOG は変えていません。個票に区分 Changed（Documentation）の文案を書きました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"git-branching-standard を PJR-2TX0（1b・2a・3a・4a）の方式へ改訂し、PJR-11EX に置き換えを追記、PJR-SJC7 の個票に対応結果を記入した。","handoff":["層1（exec の成果）は複数人運用では PR で統合すると書いた（2TX0 の「自動の統合は PR に置き換わる」に従う）。単独運用の --no-ff merge は残した。","register から develop への merge の仕組み（Actions か runner と CLI か）は 2TX0 が後続へ回したため標準では固定せず、一方向 merge とだけ書いた。","ガイドとの食い違い（直していない。個票の対応結果に詳細）: branch-workflow-guide の統合専用 GitHub App の bypass 記述と確認手順 4、branch-workflow-guide の exec の記帳が exec ブランチに残るという説明、register-operation-guide の別 project 起票が develop の worktree で行われるという説明、register-operation-guide の external_projects の説明（register-operation-guide の 2 点は切り替え後の話）。","CHANGELOG に書く事項: 区分 Changed（Documentation）。文案は git-branching-standard を register 専用ブランチ（project/<project-id>/register）の方式（PJR-2TX0）へ改訂し、統合専用 actor の方式（PJR-11EX）を置き換えた、とする。","保護された設定の変更は不要だった。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/standards/git-branching-standard.md docs/ja/projects/prj-0001/controls/project-register/pjr-sjc7-branching-standard-register-branch.md docs/ja/projects/prj-0001/controls/project-register/pjr-11ex-multi-user-integration-actor.md","status":"passed","summary":"3 ファイルを整形した。"},{"command":"npm run validate:history-links","status":"passed","summary":"出力の末尾 5 行はすべて valid だった。失敗の有無は末尾しか確認していない。"}]}
+</specdojo_executor_evidence>

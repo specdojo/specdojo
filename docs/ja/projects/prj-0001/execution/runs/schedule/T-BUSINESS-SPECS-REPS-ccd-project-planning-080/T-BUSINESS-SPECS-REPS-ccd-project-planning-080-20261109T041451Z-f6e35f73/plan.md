@@ -11,7 +11,7 @@ specdojo:
   owner: BA
   approach: condense
   targets:
-    - prj-0001:ccd-project-planning
+    - ccd-project-planning
 ---
 
 # Condense Plan: T-BUSINESS-SPECS-REPS-ccd-project-planning-080

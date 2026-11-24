@@ -1,0 +1,24 @@
+`docs/ja/specdojo/rulebooks/etc-index-rulebook.md` を短く書き直しました。8 件の指摘のうち 6 件はこの段で直し、残る 2 件（F005・F006）は後続に回します。lint 系の検査は親 runner に任せ、自分では Prettier だけ実行しました（整形後に check が通過）。
+
+**直した指摘**
+- **F001**: 非適用に、同じシステム内の結合は `itc-index` で扱うことを書き足しました。「外部」の定義にも、同じチーム・同じ環境で運用する部品どうしの結合は `itc-index` 側に置くと明記し、`itc-index` の範囲を `etc-<term>` に重ねて載せることを禁止事項に加えました。
+- **F002**: `perspective_key` の決め方を書きました。観点名を表す英語の kebab-case で決め、観点見出しの直下に宣言し、原則変えません。`nnn` は 3 桁・10 刻みです。`itc-index-rulebook` と同じ規則に揃えています。
+- **F003**: ファイル名を `etc-index.md` と `etc-<term>.md` にし、成果物カタログ（`dct-test-specs-template.yaml`）の `path` と一致させると書きました。
+- **F004**: カタログ上の `local_id` は `etc-index`、文書 ID はプロジェクト文書なら `<project-id>:etc-index` と分けて書きました。参照先は ID・ファイル命名標準です。
+- **F007**: 導入文を「テスト戦略・方針（`tsp-index`）に基づき」に改めました。
+- **F008**: 図のラベルを「外部結合テストカタログ 概要／対象別」に揃えました。
+
+**簡潔化**
+- 完成例を置いていたサンプル章を削除し、完成例は sample に任せました。
+- 各記述ガイドに、判断の基準と良い例・悪い例を足しました。
+- ケース表の共通カラムを 1 つの表にまとめ、「推奨 Frontmatter 項目」の小節も一本化しました。
+- 見出しは H4 を使わず H3 までにしています。
+- frontmatter の宣言は変えていません。
+
+**後続に回した指摘**
+- **F005**（重大度 major）: sample が本文構成の 1〜8 章に沿っていない指摘です。この段では sample を変えない決まりなので、sample-maintenance で 1〜8 章の構成に直す必要があります。指摘にある「type に `project` を指定」は、確認した sample では `type: test` だったので事実と合いません。後続で確認してください。
+- **F006**: `recipe` と `template` が `undecided` のままの指摘です。この段では宣言を変えないため残しました。template は PJR-WYTX で扱います。`target_format` は書いていなければ markdown とみなされるので、宣言を足すかどうかを判断してください。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"etc-index-rulebook を簡潔化し、F001〜F004・F007・F008 を修正した（サンプル章を削除し、記述ガイドに判断基準と良い例・悪い例を追加）。F005（sample 側）と F006（frontmatter 宣言）は plan の範囲外のため申し送る。","handoff":["F005（major）: etc-index-sample が rulebook の本文構成（1〜8章）に従っていない。後続の sample-maintenance で本文構成どおりに厚くする。指摘の「type に project を指定」は、確認した sample の frontmatter が `type: test` だったため事実と一致しない。再評価で確認する。","F006: rulebook の `recipe` / `template` は `undecided` のまま（plan で宣言の変更を禁止）。template は PJR-WYTX で扱う。`target_format` を省略すると markdown とみなされるため、宣言を補うかどうかを後続で判断する。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/etc-index-rulebook.md","status":"passed","summary":"prettier --write で整形した後の check で、整形差分なし"}]}
+</specdojo_executor_evidence>

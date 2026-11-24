@@ -1,0 +1,22 @@
+PJR-50RQ の実装は終わりました。保護された設定（`.specdojo/exec-defaults.yaml`・`package.json`）は変えていません。そのため、`test-docs` や `*-changed` はまだ設定から呼ばれません。
+
+流した範囲では、`npm run typecheck`・`npm run lint:ts`・`vitest.unit.config.ts` の単体テスト 12 ファイル 158 件が通りました。`lint:ts` は警告のみで、エラーはありません。`vitest.docs.config.ts` は 19 ファイル 474 件が約 2.5 秒で通りました。変更した Markdown への lint は md・fm とも通りました。`npm run lint:md`、`npm run test:unit` の全体、`npm run validate:schema` は流していません（`validate:history-links` は出力の末尾 3 行が `valid` だったのみで、全体の終了コードは確認していません）。
+
+- **`parallel`:** `src/exec/parent-validation.ts` で、`parent_validations` の要素に `parallel: true` を書けるようにしました。`parallel: true` が続く要素は同時に流し、それ以外は 1 本ずつ流します。結果は設定の並び順で記録します。
+- **新しい検証 ID:**
+  - `lint-md-changed` と `lint-fm-changed` は、変えた Markdown だけに lint を流します。
+  - `test-docs` は、実際の文書を読むテストだけを流します。
+  - schema と `exec-config-guide` も更新しました。
+- **ツール:**
+  - `tools/lint-changed.mjs`（HEAD からの変更と未追跡の `*.md`）を追加しました。
+  - `vitest.docs.config.ts` は 14 件のテストを並べています。
+- **単体テスト:** 文書だけの変更では `test-docs` が選ばれ、`src` の変更では `test-unit` と `test-integration` が選ばれることを確かめました。あわせて並列の同時実行と記録順、`selectFiles` も確かめています。
+- **個票:** 作業内容の表を `done` にし、対応結果（検証時間の集計、文書を読むテストの一覧、保護設定の案、`CHANGELOG` の文案）を書きました。`CHANGELOG.md` は変えていません。
+
+変更前の検証時間は、run 219 回分の `parent-validation-metrics.jsonl` から集計しました。中央値は `test-integration` 182 秒、`test-unit` 88 秒、`lint-md` 107 秒、`lint-fm` 38 秒です。run を並べて流した時間を含むため、個票の入力の値より大きくなっています。
+
+文書を読むテストの一覧は grep による確認で、全数確認ではありません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"`parallel` キー、検証 ID `lint-md-changed`・`lint-fm-changed`・`test-docs`、`tools/lint-changed.mjs`、`vitest.docs.config.ts` を実装し、schema・guide・個票を更新した。保護された設定は変えていない。","handoff":["保護された設定の反映案: `package.json` の scripts に `test:docs`（`vitest run --config vitest.docs.config.ts`）、`lint:md:changed`（`node tools/lint-changed.mjs md`）、`lint:fm:changed`（`node tools/lint-changed.mjs fm`）を追加する。`.specdojo/exec-defaults.yaml` の `pipeline.parent_validations` は個票の対応結果 5.4 の案に従い、lint を `parallel: true` で並べ、`test-unit` と `test-integration` の `paths` から文書を外し、`test-docs` に文書の `paths` を付ける。反映は利用者の承認のもと feature ブランチで行う。","反映後に `.markdownlint*`・`.remarkrc*` の実在を確かめる。`parent_validation_concurrency` は今は 1 のままにし、文書だけを変える run を 1 回流して合計時間を変更前と比べた後に 4 へ上げる。比較の結果は個票に書く（オーケストレーターの作業）。","文書を読むテストの一覧は grep による確認で、全数確認ではない。integration テストが `cp` で文書を fixture へ複製する経路は `test-docs` に含めていない。","CHANGELOG の文案（区分は Added）は個票の対応結果 5.1 に書いた。"],"validations":[{"command":"npm run typecheck","status":"not_applicable","summary":"親 runner が実行する検証のため、executor では報告しない（手元では通過を確認した）。","reason":"親 runner の allowlist 検証であり、親の結果を正とする。"},{"command":"npx vitest run --config vitest.docs.config.ts","status":"passed","summary":"19 ファイル 474 件が通った。"},{"command":"npx vitest run --config vitest.unit.config.ts tests/tools tests/src/exec/parent-validation.test.ts","status":"passed","summary":"12 ファイル 158 件が通った。"},{"command":"node tools/lint-changed.mjs md","status":"passed","summary":"変更した Markdown の markdownlint が通った。"},{"command":"node tools/lint-changed.mjs fm","status":"passed","summary":"変更した Markdown の frontmatter 検査が通った。"}]}
+</specdojo_executor_evidence>

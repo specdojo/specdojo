@@ -1,0 +1,11 @@
+`sample-authoring-standard` に決まりを足し、個票の対応結果を更新しました。`lint:md` と `lint:fm` は、この Bash 呼び出しに承認が出ず、最後は実行できていません。以前の実行は出力なしで終わっていますが、個票の見出し番号を直す前でした。親 runner の検証で確かめてください。
+
+- **標準の変更**: `docs/ja/specdojo/standards/sample-authoring-standard.md` の「記述ガイド」に箇条書きを 2 件足しました。表の前に何を示す表かを 1 文で書くことと、列名を読み手が推測しなくて済む言葉にすることです。
+- **例**: 新しい小節 6.1「表の前の 1 文と列名の例」に、PJR-8S4T の 3 回目の sld-sample（4.1・4.2）を材料にした良い例 2 件と悪い例 1 件を書きました。
+- **個票**: 作業内容の表、対応結果、CHANGELOG に書く事項（区分は「変更」、文案つき）、決めた点を書きました。関連ドキュメントは `PJR-8S4T` の 1 行にしています。
+- **変えていないもの**: 既存の sample と rulebook、`CHANGELOG.md` は変えていません。
+- **既存 sample の確認**: 決まりに合わない既存 sample は見つけていませんが、全 sample の走査はしていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"sample-authoring-standard に表の前の 1 文と列名の決まり、良い例・悪い例を足し、個票の対応結果（CHANGELOG 事項を含む）を更新した。lint:md・lint:fm は最終状態では実行できておらず、親 runner の検証で確認が必要。","handoff":["決めた点: 決まりは新しい章を作らず、記述ガイドの箇条書き 2 件と小節 6.1 にした。章番号を変えて他文書の参照を乱さないため。","CHANGELOG に書く事項: 区分は変更。文案は「sample の作成標準に、表の前に何を示す表かを 1 文で書く決まりと、列名を中身の分かる言葉にする決まりを足しました（PJR-C7WD）。」","決まりに合わない既存 sample の型名は見つけていない。ただし全 sample の走査はしていない。","個票の見出し番号を直した後の lint:md・lint:fm は、承認が出ず実行できていない。親 runner の検証で確認が必要。"],"validations":[{"command":"npm run lint:md","status":"not_run","summary":"個票の見出し番号を直した後は、承認が出ず実行できなかった。親 runner の結果を正とする。"},{"command":"npm run lint:fm","status":"not_run","summary":"個票の見出し番号を直した後は、承認が出ず実行できなかった。親 runner の結果を正とする。"}]}
+</specdojo_executor_evidence>

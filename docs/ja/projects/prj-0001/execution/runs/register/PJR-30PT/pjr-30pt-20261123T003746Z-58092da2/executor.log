@@ -1,0 +1,26 @@
+第 3 波 13 種類の rulebook と sample から、文書の役割・承認・未決事項の承認の記述を外しました。26 文書のうち 22 文書（rulebook 9、sample 13）を直しています。grade は実行していません（統合の後に orchestrator が流すため、個票の作業内容でも `open` のままです）。
+
+**直さなかった文書**: `itc-rulebook`・`etc-index-rulebook`・`etc-rulebook`・`atc-index-rulebook` の 4 rulebook は、通読しても外す記述がありませんでした。
+
+**外したもの**
+- 文書を作る・確かめる・承認する役割の割り当て（「DEV がケースを追加し QE がレビュー」など）。
+- 改訂・分割の承認（「ARC が承認」など）。
+- `ready` への昇格の条件と「人が判断する」旨。
+- 未決事項の表で承認と担当だけを書いた列。登録簿の ID・期限・報告先など承認でない値は残しました。
+- 「誰が使うか」の書き方。利用場面と判断の書き方に直しました。
+- 外したことで rulebook と sample が食い違った箇所（`itc-index` のケース表の書き方など）は、両方を直しました。
+
+**残したもの**: 出口条件の判定者・例外承認者、受入の判定記録に残す実施者・証跡確認者・判定者、テストの実施体制は、テストの中身として残しました。
+
+**迷って決めた点**（個票の対応結果にも理由付きで書いています）
+- `etc-index-sample` の「運用責任・確認者」の列は、rulebook の分割基準が求める外部 I/F の運用責任なので残し、列名を「運用責任」に直しました。「主担当」の列は外しました。
+- `imp-test` の対応方針・未解決事項の「担当」の列は必須の列で、テスト作業の担当なので残しました。
+- rulebook の `_UNDECIDED_` にある「ready 化前に解消する」は、役割も承認も含まないので残しました。
+
+**検証**: 変更したファイルを prettier で整え、`npx prettier --check` と `npm run -s validate:history-links` は通っています。`npm run lint:md`・`npm run lint:fm` は親の runner が実行します。
+
+個票（`pjr-30pt-kata-wave-3-drop-role-approval.md`）は作業内容・対応結果（判定の表、迷った点、直したほうがよい点、CHANGELOG に書く事項の文案）・関連ドキュメントを記入しました。ステータス欄、`CHANGELOG.md`、保護された設定、result は変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"第 3 波 13 種類の rulebook と sample のうち 22 文書（rulebook 9、sample 13）から、文書の役割・承認・ready への昇格の条件・未決事項の承認の記述を外した。テストの判定者・例外承認者・受入の判定記録・実施体制は対象外として残した。個票の作業内容・対応結果（判定の表、迷った点、直したほうがよい点、CHANGELOG の文案）・関連ドキュメントを記入した。grade は executor では実行していない。","handoff":["型の grade は統合の後に orchestrator が 1 回流す。対象は直した 13 種類（`tsp-index`・`utc-index`・`utc`・`stc-index`・`stc`・`itc-index`・`itc`・`etc-index`・`etc`・`atc-index`・`atc`・`imp-test`・`trc-requirements-to-tests`）。そのあと 140 の人の確定へ進む。個票の作業内容 No.4・No.5 は `open` のまま。","決めた点: `etc-index-sample` の「運用責任・確認者」の列は、rulebook の分割基準「運用責任」が求める外部 I/F の運用責任なので残し、列名を「運用責任」に直した。文書の担当の割り当てである「主担当」の列は外した。","決めた点: `imp-test` の対応方針・未解決事項の「担当」の列は、本文要件の必須の列でテストの対応項目の担当なので残した。`trc-requirements-to-tests` のように登録簿へ寄せるかは 140 の人の確定で決めるとよい。","決めた点: 未決事項の表で承認と担当だけを書いた列は列ごと外し、登録簿の項目 ID・期限・報告先など承認でない値は残した。rulebook の `_UNDECIDED_` の「ready 化前に解消する」は役割も承認も含まないので残し、「人が判断する」「QE が決める」の部分だけ外した。","直したほうがよい点: `itc-index-rulebook` の「推奨（運用必須）」の列は「完成した `itc-<term>` で全行に記入」に直したが、完成の判定の仕方は型に書かれていない。grade の指摘を見て決める。","CHANGELOG の文案（区分: 変更）は個票の「CHANGELOG に書く事項」に記載した。"],"validations":[{"command":"npx prettier --check docs/ja/projects/prj-0001/controls/project-register/pjr-30pt-kata-wave-3-drop-role-approval.md docs/ja/specdojo/rulebooks docs/ja/specdojo/samples","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"passed","summary":"変更した個票を含め、違反なしで終了コード 0"}]}
+</specdojo_executor_evidence>

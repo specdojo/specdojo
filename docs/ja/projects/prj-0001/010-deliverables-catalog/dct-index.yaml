@@ -87,3 +87,10 @@ groups:
           - domain: operations
             name: 運用
             overview: 稼働後の監視、保守、障害対応などの運用成果物を管理する。
+  - name: 実践の型
+    groups:
+      - name: 型の完成例
+        domains:
+          - domain: kata
+            name: 実践の型
+            overview: 型の整備の対象とする sample を、対応する rulebook の完成例として管理する。

@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import {
   FINDING_RE,
   insertFindings,
@@ -8,7 +8,6 @@ import {
   parseGradeDocument,
   preservePreviousFindingSeverities,
   serializeMarkdown,
-  withoutFindingComments,
   type GradeCriterionInput,
   type GradeDocumentInput,
   type GradeDoneCriteriaContext,
@@ -17,27 +16,10 @@ import {
   type GradeSeverity,
   type GradeTarget,
   type GradeVerdict,
-  type MarkdownDocument,
 } from "./core.js";
-import { discoverGradeTargets } from "./target-discovery.js";
 import { applicableDoneCriteria, deterministicResults } from "./plan.js";
-import {
-  gradeContentHash,
-  gradeResultPathForDocument,
-  markdownDocumentId,
-  readGradeResultForDocument,
-  resolveGradeResultsDirectory,
-  validateGradeResult,
-  writeGradeResult,
-  type GradeResult,
-  type StoredGradeFinding,
-} from "./result.js";
-import {
-  assertRubric,
-  relativePathFromRoot,
-  repoRelativePath,
-  resolveSafeMarkdownPath,
-} from "./targets.js";
+import { readGradeResultForDocument, validateGradeResult } from "./result.js";
+import { assertRubric, repoRelativePath, resolveSafeMarkdownPath } from "./targets.js";
 import type { GradeRubric, ReviewViewpointsDoc } from "../review/types.js";
 import { specdojoRootDir } from "../shared/specdojo-config.js";
 
@@ -242,116 +224,4 @@ export function validateGradedMarkdown(content: string, path: string): string[] 
   if (grade.content_hash !== legacyInlineContentHash(document))
     errors.push(`${path}: content changed after the last grade`);
   return errors;
-}
-
-export function migrateInlineGrades(opts: {
-  project?: string;
-  target?: GradeTarget;
-  paths?: string[];
-  dryRun?: boolean;
-}): string[] {
-  const rootDir = specdojoRootDir();
-  const candidates =
-    opts.paths && opts.paths.length > 0
-      ? opts.paths.map((path) => resolveSafeMarkdownPath(path, rootDir, opts.project))
-      : [
-          ...(opts.target !== "deliverable"
-            ? discoverGradeTargets({ target: "kata", project: opts.project }, rootDir)
-            : []),
-          ...(opts.target !== "kata"
-            ? discoverGradeTargets({ target: "deliverable", project: opts.project }, rootDir)
-            : []),
-        ];
-  const resultsDirectory = resolveGradeResultsDirectory(opts.project, rootDir);
-  const changed: string[] = [];
-  for (const absolute of candidates) {
-    const rel = relativePathFromRoot(absolute, rootDir);
-    const current = readFileSync(absolute, "utf8");
-    if (!current.includes("specdojo:finding") && !/^  grade:\s*$/m.test(current)) continue;
-    let document: MarkdownDocument;
-    try {
-      document = parseMarkdown(current, rel);
-    } catch {
-      continue;
-    }
-    const specdojo = document.data.specdojo as Record<string, unknown>;
-    const legacyGrade = isRecord(specdojo.grade) ? structuredClone(specdojo.grade) : undefined;
-    const legacyTarget = legacyGrade?.target;
-    const target: GradeTarget =
-      legacyTarget === "kata" || legacyTarget === "deliverable"
-        ? legacyTarget
-        : rel.startsWith("docs/ja/specdojo/")
-          ? "kata"
-          : "deliverable";
-    if (opts.target && target !== opts.target) continue;
-
-    const legacyFindings = [...document.body.matchAll(FINDING_RE)].map((match) => ({
-      id: match[1],
-      severity: match[2] as GradeSeverity,
-      rule: match[3],
-      line: match[4] ? Number(match[4]) : 1,
-      message: match[5].trim(),
-    }));
-    delete specdojo.grade;
-    document.body = withoutFindingComments(document.body)
-      .replace(/\n{3,}/g, "\n\n")
-      .replace(/(?:\n[ \t]*)*$/, "\n");
-    const cleaned = serializeMarkdown(document);
-    if (cleaned !== current) {
-      changed.push(rel);
-      if (!opts.dryRun) writeFileSync(absolute, cleaned, "utf8");
-    }
-    if (!legacyGrade) continue;
-
-    const documentId = markdownDocumentId(cleaned, rel);
-    const bodyLines = document.body.split(/\r?\n/);
-    const findings: StoredGradeFinding[] = legacyFindings.map((finding) => ({
-      ...finding,
-      anchor: bodyLines[Math.min(bodyLines.length, finding.line) - 1]?.trim() ?? "",
-      message_ja: finding.message,
-    }));
-    const counts: Record<GradeSeverity, number> = { blocker: 0, major: 0, minor: 0, note: 0 };
-    for (const finding of findings) counts[finding.severity] += 1;
-    if (
-      typeof legacyGrade.rubric !== "string" ||
-      (legacyGrade.verdict !== "pass" &&
-        legacyGrade.verdict !== "needs-work" &&
-        legacyGrade.verdict !== "fail") ||
-      !Number.isSafeInteger(legacyGrade.score) ||
-      typeof legacyGrade.graded_at !== "string" ||
-      typeof legacyGrade.graded_by !== "string" ||
-      !isRecord(legacyGrade.categories) ||
-      !isRecord(legacyGrade.viewpoints)
-    ) {
-      throw new Error(`${rel}: legacy specdojo.grade is invalid`);
-    }
-    const result: GradeResult = {
-      version: 1,
-      document: documentId,
-      path: rel,
-      target,
-      rubric: legacyGrade.rubric,
-      ...(typeof legacyGrade.reference === "string" ? { reference: legacyGrade.reference } : {}),
-      verdict: legacyGrade.verdict,
-      score: legacyGrade.score as number,
-      graded_at: legacyGrade.graded_at,
-      graded_by: legacyGrade.graded_by,
-      content_hash: gradeContentHash(cleaned),
-      categories: legacyGrade.categories as GradeResult["categories"],
-      viewpoints: legacyGrade.viewpoints as GradeResult["viewpoints"],
-      finding_counts: counts,
-      findings,
-      ...(isRecord(legacyGrade.done_criteria) ? { done_criteria: legacyGrade.done_criteria } : {}),
-    };
-    const resultPath = gradeResultPathForDocument({
-      documentPath: absolute,
-      project: opts.project,
-      rootDir,
-      resultsDirectory,
-    });
-    if (writeGradeResult(resultPath, result, opts.dryRun)) {
-      changed.push(repoRelativePath(resultPath));
-    }
-  }
-  return changed;
 }

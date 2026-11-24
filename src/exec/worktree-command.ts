@@ -56,7 +56,9 @@ import {
   missingProductWorktrees,
   plannedProjectWorktreePath,
   productBranchForTask,
+  productAccessForMode,
   productRepoEnvironment,
+  type ProductAccess,
   pruneOrphanedProductExecBranches,
   withAgentExtraRoots,
   withoutInheritedRepoEnvironment,
@@ -217,6 +219,7 @@ function resolveAgent(
   command: string;
   provider?: AgentProvider;
   prompt: string;
+  access: ProductAccess;
 } {
   const state = requireDoingTask(context.schedulePath, taskId);
   const task = buildTaskView(context.schedulePath, context.executionPath, taskId);
@@ -255,7 +258,13 @@ function resolveAgent(
 
   const prompt = loadPrompt(context.executionPath, taskId);
   if (!prompt) throw new Error(`Plan not found for task: ${taskId}`);
-  return { actor: member.nickname, command, provider: member.provider, prompt };
+  return {
+    actor: member.nickname,
+    command,
+    provider: member.provider,
+    prompt,
+    access: productAccessForMode(task.mode),
+  };
 }
 
 function printWorktree(worktree: ExecWorktree): void {
@@ -420,6 +429,7 @@ async function agent(opts: AgentOpts): Promise<void> {
   const productDirs = (worktree.repos ?? []).map((product) => product.path);
   const command = withAgentExtraRoots(resolved.command, resolved.provider, productDirs, {
     cwd: worktree.path,
+    access: resolved.access,
   });
   if (opts.dryRun) {
     process.stdout.write(`[dry-run] actor: ${resolved.actor}\n`);
@@ -442,7 +452,7 @@ async function agent(opts: AgentOpts): Promise<void> {
       ...localConfigEnvironment(worktree.path),
       SPECDOJO_SCHEDULE_PATH: context.schedulePath,
       SPECDOJO_EXECUTION_PATH: context.executionPath,
-      ...productRepoEnvironment(worktree.path, worktree.repos),
+      ...productRepoEnvironment(worktree.path, worktree.repos, resolved.access),
     },
     shell: true,
     stdio: ["pipe", "inherit", "inherit"],

@@ -44,3 +44,61 @@
     - field: commit_scope
       from: ""
       to: ifx
+- v: 1
+  id: reg_c33be9d475174df2a7ba199cbea26a58
+  ts: "2026-11-22T13:25:57Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件を利用者の承認のもとで書く
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_ea262664131743818b2a5b03e5fb1b15
+- v: 1
+  id: reg_3d13e772299c41d5833d74ed6e4b7939
+  ts: "2026-11-22T13:54:04Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_c33be9d475174df2a7ba199cbea26a58
+- v: 1
+  id: reg_2ce04392241c47c6bfd4197d3b9506c9
+  ts: "2026-11-22T13:57:41Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_3d13e772299c41d5833d74ed6e4b7939
+- v: 1
+  id: reg_9f1a20b1af044cdc8a0052964a55f95f
+  ts: "2026-11-22T14:07:08Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが対応結果と差分を完了条件と照らして確かめた。実装の根拠のファイルが示され、ready の文書の status は変わっていない
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: ifx-cmd-git-cli と ifx-cmd-github-cli を draft で作り、カタログに登録し、ifx-index と ifd-specdojo の PATH-07 の留保の追跡先を付け替えた。未決の点は _UNDECIDED_ で残した
+  previous_event_id: reg_2ce04392241c47c6bfd4197d3b9506c9

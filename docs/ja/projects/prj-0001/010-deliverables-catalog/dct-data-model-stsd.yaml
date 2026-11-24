@@ -150,20 +150,20 @@ groups:
             roles: [DEV]
             viewpoint: vp-dev-implementation-readiness
       - local_id: stsd-job-run
-        name: ステータス定義（Job Run）
+        name: ステータス定義（job run）
         kind: work
         depends_on:
           - bdd-job-run
-        overview: Job Run が取り得る状態（running / succeeded / partial / failed / noop、attempt を含む）と状態遷移を一覧・図で定義する
+        overview: job run が取り得る状態（running / succeeded / partial / failed / noop、attempt を含む）と状態遷移を一覧・図で定義する
         path: stsd-job-run.md
         rulebook: specdojo:stsd-rulebook
         evidence_refs:
           - kind: implementation
             path: src/job/job.ts
-            purpose: Job Run の状態（running/succeeded/partial/failed/noop、attempt の status を含む）の判定・状態遷移規則
+            purpose: job run の状態（running/succeeded/partial/failed/noop、attempt の status を含む）の判定・状態遷移規則
           - kind: implementation
             path: src/job/definition.ts
-            purpose: Job Run の状態型定義（JobRunState）および試行レコード（JobRunAttempt）の定義
+            purpose: job run の状態型定義（JobRunState）および試行レコード（JobRunAttempt）の定義
         done_criteria:
           - text: ステータス名・意味・成立条件と、遷移・イベント・条件が業務観点で正確に定義されていること
             roles: [BA]

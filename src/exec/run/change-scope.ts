@@ -8,6 +8,7 @@ import {
   readFileSync,
   renameSync,
   rmSync,
+  statSync,
   writeFileSync,
 } from "node:fs";
 import { isAbsolute, join, posix, relative } from "node:path";
@@ -34,6 +35,8 @@ export type ChangeScope = { paths: string[]; unknown: boolean };
 export type UnknownScopePolicy = "parallel" | "serialize";
 export type ScopeWait = { item: string; blocker: string; overlap: string; at: string };
 
+export class ChangeScopeBlockedError extends Error {}
+
 export function parseUnknownScopePolicy(value?: string): UnknownScopePolicy {
   if (value === undefined || value === "parallel" || value === "serialize")
     return value ?? "parallel";
@@ -57,6 +60,20 @@ export function normalizeScopePath(value: string): string | undefined {
   path = posix.normalize(path).replace(/\/$/, "");
   if (path === ".." || path.startsWith("../")) return undefined;
   return `${repo}:${path}`;
+}
+
+function isBroadScopePath(normalized: string, value: string, repoRoot: string): boolean {
+  const path = normalized.slice(normalized.indexOf(":") + 1);
+  if (path === ".") return true;
+  if (path.includes("/")) return false;
+  if (/\/$|(?:^|\/)\.{1,2}$|[*?{[]/.test(value)) return true;
+  // An extensionless root file (for example ./Dockerfile) is still a concrete file. Only
+  // treat directory syntax or a verified directory as broad, including dotted directories.
+  try {
+    return normalized.startsWith("project:") && statSync(join(repoRoot, path)).isDirectory();
+  } catch {
+    return false;
+  }
 }
 
 // Generated plans mix task inputs with shared operating instructions. Read only task-specific
@@ -146,6 +163,8 @@ export function inferChangeScope(params: {
   documentPaths?: Record<string, string>;
 }): ChangeScope {
   const paths = new Set<string>();
+  const broadPaths = new Set<string>();
+  const ignoredBroadPaths = new Set<string>();
   let unresolved = false;
   const add = (path: string) => {
     const normalized = normalizeScopePath(path);
@@ -153,7 +172,10 @@ export function inferChangeScope(params: {
       unresolved = true;
       return;
     }
-    if (!/(?:^|\/)generated(?:\/|$)/.test(normalized.split(":")[1]!)) paths.add(normalized);
+    if (!/(?:^|\/)generated(?:\/|$)/.test(normalized.split(":")[1]!)) {
+      paths.add(normalized);
+      if (isBroadScopePath(normalized, path, params.repoRoot)) broadPaths.add(normalized);
+    }
   };
   const configPath = (path: string) => (isAbsolute(path) ? relative(params.repoRoot, path) : path);
   let index = params.documentPaths;
@@ -226,6 +248,13 @@ export function inferChangeScope(params: {
       )
     )
       return;
+    const normalized = normalizeScopePath(path);
+    // A bare top-level directory in prose is often context, not an edit declaration. Keep
+    // explicit targets and globs authoritative, even when they reserve the entire repository.
+    if (normalized && isBroadScopePath(normalized, path, params.repoRoot) && !/[*?{[]/.test(path)) {
+      ignoredBroadPaths.add(normalized);
+      return;
+    }
     add(path);
   };
   for (const match of body.matchAll(/`([^`\n]+)`/g)) {
@@ -236,7 +265,7 @@ export function inferChangeScope(params: {
     )
       addTextPath(value);
   }
-  for (const match of body.matchAll(/(?:^|[\s`（(・])((?:[\w-]+:)?[\w@.-]+\/[\w@.*?{}[\]/-]+)/gm)) {
+  for (const match of body.matchAll(/(?:^|[\s`（(・])((?:[\w-]+:)?[\w@.-]+\/[\w@.*?{}[\]/-]*)/gm)) {
     const value = match[1]!;
     // A slash in prose can also mean alternatives (executor/reporter). Accept filenames,
     // explicit directory/glob syntax, or an existing repository path rather than every slash.
@@ -265,6 +294,16 @@ export function inferChangeScope(params: {
       for (const path of ignored.stdout.split("\0").filter(Boolean))
         paths.delete(`project:${path}`);
   }
+  for (const path of ignoredBroadPaths)
+    if (!paths.has(path))
+      process.stderr.write(
+        `  [scope] warning: ignored broad prose path ${path}; specify a narrower path or declare targets / target_path for the whole directory\n`,
+      );
+  for (const path of broadPaths)
+    if (paths.has(path))
+      process.stderr.write(
+        `  [scope] warning: broad change scope ${path} retained from a declared target or glob; overlapping runs will wait for integration\n`,
+      );
   return { paths: [...paths].sort(), unknown: unresolved || paths.size === 0 };
 }
 
@@ -287,11 +326,12 @@ function writeReservation(path: string, record: Reservation): void {
 export type ChangeScopeLease = {
   waits: ScopeWait[];
   finish: (integrated: boolean) => Promise<void>;
+  cancelPreparation: () => Promise<void>;
 };
 
 // The short registry mutex protects check+reserve as one operation, including across --join
 // processes. Per-item heartbeat locks cover setup, agents, validation AND integration. Failed
-// or crashed reservations remain barriers until that same item is retried/resumed.
+// or crashed execution reservations remain barriers until that same item is retried/resumed.
 export class ChangeScopeGate {
   private readonly directory: string;
   private readonly waits = new Map<string, ScopeWait[]>();
@@ -299,6 +339,10 @@ export class ChangeScopeGate {
     executionPath: string,
     private readonly policy: UnknownScopePolicy = "parallel",
     private readonly options: WaitOptions = {},
+    // Items already in a terminal register status (rejected, done, ...) will never integrate.
+    private readonly isTerminal: (item: string) => boolean = () => false,
+    // Callers must confirm an unstarted status and no exec worktree from current state.
+    private readonly isUnstarted: (item: string) => boolean = () => false,
   ) {
     this.directory = join(execLocksDir(executionPath), "change-scopes");
   }
@@ -327,20 +371,34 @@ export class ChangeScopeGate {
       const key = createHash("sha256").update(item).digest("hex");
       const recordPath = join(this.directory, `${key}.json`);
       const lockPath = join(this.directory, `${key}.lock`);
+      let prior: Reservation | undefined;
       if (existsSync(recordPath)) {
-        const prior = JSON.parse(readFileSync(recordPath, "utf8")) as Reservation;
-        effective.paths = [...new Set([...prior.scope.paths, ...effective.paths])];
-        effective.unknown ||= prior.scope.unknown;
+        prior = JSON.parse(readFileSync(recordPath, "utf8")) as Reservation;
+        if (!existsSync(lockPath) && this.isUnstarted(item)) {
+          rmSync(recordPath, { force: true });
+          prior = undefined;
+        }
+        if (prior) {
+          effective.paths = [...new Set([...prior.scope.paths, ...effective.paths])];
+          effective.unknown ||= prior.scope.unknown;
+        }
       }
       for (const name of readdirSync(this.directory).filter((name) =>
         /^[a-f0-9]{64}\.json$/.test(name),
       )) {
         const record = JSON.parse(readFileSync(join(this.directory, name), "utf8")) as Reservation;
-        const live = isLiveLock(
-          join(this.directory, name.replace(/\.json$/, ".lock")),
-          this.options.staleMs,
-        );
+        const reservationLock = join(this.directory, name.replace(/\.json$/, ".lock"));
+        const live = isLiveLock(reservationLock, this.options.staleMs);
         if (record.item === item && !live) continue;
+        if (
+          record.item !== item &&
+          !live &&
+          ((record.state === "blocked" && this.isTerminal(record.item)) ||
+            (!existsSync(reservationLock) && this.isUnstarted(record.item)))
+        ) {
+          rmSync(join(this.directory, name), { force: true });
+          continue;
+        }
         const overlap = record.item === item ? "same item" : scopeOverlap(effective, record.scope);
         if (!overlap) continue;
         const waits = this.waits.get(item) ?? [];
@@ -352,7 +410,7 @@ export class ChangeScopeGate {
           process.stdout.write(`  [scope] waiting: ${item} — ${record.item}: ${overlap}\n`);
         }
         if (record.state === "blocked" || !live)
-          throw new Error(
+          throw new ChangeScopeBlockedError(
             `[scope] ${item} blocked by unintegrated ${record.item}: ${overlap}; resume/retry ${record.item} first`,
           );
         return null;
@@ -368,22 +426,26 @@ export class ChangeScopeGate {
       const waits = this.waits.get(item) ?? [];
       this.waits.delete(item);
       let finished = false;
-      return {
-        waits,
-        finish: async (integrated: boolean) => {
-          await this.registry(() => {
-            if (finished) return;
-            if (readLockOwner(lockPath)?.token !== handle.token) {
-              releaseLock(handle);
-              finished = true;
-              return;
-            }
-            if (integrated) rmSync(recordPath, { force: true });
-            else writeReservation(recordPath, { item, scope: effective, state: "blocked" });
+      const finish = async (integrated: boolean, preparationFailed = false) => {
+        await this.registry(() => {
+          if (finished) return;
+          if (readLockOwner(lockPath)?.token !== handle.token) {
             releaseLock(handle);
             finished = true;
-          });
-        },
+            return;
+          }
+          // A failed retry must not erase an older unintegrated run's reservation.
+          if (preparationFailed && prior) writeReservation(recordPath, prior);
+          else if (integrated || preparationFailed) rmSync(recordPath, { force: true });
+          else writeReservation(recordPath, { item, scope: effective, state: "blocked" });
+          releaseLock(handle);
+          finished = true;
+        });
+      };
+      return {
+        waits,
+        finish: (integrated) => finish(integrated),
+        cancelPreparation: () => finish(false, true),
       };
     });
   }

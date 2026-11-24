@@ -1,0 +1,45 @@
+The runner now lints the result rendered from the reporter's output before writing it. If the lint fails, the reporter gets the violations and rewrites. The `exec` unit tests pass (93 files, 1677 tests). The runner checks after integration (PJR-JSEY) are still to do.
+
+**How it works**
+- The runner builds the result in memory first, without writing the file. It lints that content with the same rules as the pre-commit check that raises `Result Markdown notation violation before commit`. That means the repository's markdownlint settings, or SpecDojo's defaults if there are none.
+- The reporter is told the line number, rule and rendered line of each violation, and rewrites its output.
+- Rewrites count toward the existing limit of 3 format attempts, with no separate limit. If the output still fails at the limit, the stop reason includes the lines and rules, and the item goes to waiting as it does today.
+- The check runs on the shared pipeline used by register, job, resume and post-review runs, and on schedule and in-place runs. `exec trial` doesn't write a result, so it's excluded. So are mechanically generated results, which don't use the reporter.
+- If markdownlint isn't installed, the check is skipped, the same as the pre-commit check.
+
+**Ticket examples**
+
+| Example | Caught by |
+| --- | --- |
+| Heading inside a bullet, ending in a full stop | MD022, MD026 |
+| Bare URL | MD034 |
+| Heading and code block collapsed onto one line | MD038 |
+| Escaped backticks mixed with a code span | MD038 |
+| Simplified Chinese glyph (U+4E2A) | MD061 |
+
+- **Simplified Chinese glyphs:** the pre-commit check doesn't catch these. What stopped QTZ7 was the extra rule that `lint:md` adds from `packages/docs-lint` (MD061). The new check adds that rule too, but only when the repository has the rule file and markdown-it can be loaded. The `@specdojo/docs-lint` package doesn't publish the rule, so other projects that install SpecDojo won't get it, and their check skips glyphs.
+- **Escaped backticks:** sentences where every backtick is escaped are already fixed before writing (from PJR-G3TT). Only the form mixed with a code span still fails, so the test uses that form.
+
+**Docs and ticket**
+- `exec-operation-guide`: added the pre-write check to the reporter-stage section and to the failure table.
+- Ticket: work rows 1–3 are `done`. Row 4 (JSEY check) stays `open` because the orchestrator runs it after integration. The results section has the details, the Chinese-glyph handling, and a CHANGELOG draft under the "不具合修正" category.
+- No changes are needed to `exec-defaults.yaml` or `package.json`. `CHANGELOG.md` is unchanged.
+
+**Files changed**
+- New: `src/exec/result-markdownlint.ts`, `tests/src/exec/result-markdownlint.test.ts`
+- `src/exec/reporter.ts`, `src/exec/results.ts`, `src/exec/plan-markdownlint.ts`
+- `src/exec/run/agent-pipeline.ts`, `src/exec/run/schedule-task.ts`, `src/exec/run/in-place.ts`
+- `docs/ja/specdojo/guides/exec-operation-guide.md`
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-wb78-lint-reporter-result.md`
+
+**Checks I ran**
+- Prettier on the changed files.
+- markdownlint, with the Chinese-glyph rule, on the two changed Markdown files: no errors.
+- `npm run validate:history-links`: no invalid files reported.
+- While working I also ran `npx tsc -b` once (no output). Typecheck is one of the parent runner's checks, so the runner's own run is the one that counts.
+
+The parent runner runs typecheck, `lint:ts`, `test:unit` and `lint:md`. A probe script is left in `tmp/wb78/`, which is excluded from commits.
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"runner が reporter の出力から result を描画し、書き込む前に統合の前の検査と同じ markdownlint の規則（リポジトリに docs-lint の MD061 があれば追加）で検査し、違反の行・規則を示して format attempts と同じ枠で reporter に書き直させるようにした。上限に達した場合は違反を理由に失敗する。入力の事例を fixture にした単体テスト、`exec-operation-guide` の reporter の段の説明、個票の対応結果（簡体字の扱い、CHANGELOG の文案）を更新した。","handoff":["作業内容 No 4: 統合の後に、オーケストレーターが PJR-JSEY で runner の動作（書き込む前の検査と reporter の書き直し）を確かめる。","CHANGELOG の文案（区分: 不具合修正）は個票の `### 5.1. CHANGELOG に書く事項` にある。`CHANGELOG.md` は変えていない。","中国語の簡体字（MD061）は、リポジトリに `packages/docs-lint/src/markdownlint-rule-no-chinese-glyphs.cjs` があり markdown-it を読み込めるときだけ検査する。`@specdojo/docs-lint` の `exports` で公開されていないため、配布先のプロジェクトでは統合の前の検査と同じ規則だけになる。配布先でも検出するには、この規則を `exports` で公開する別の項目が要る。","`exec-defaults.yaml`・`package.json` の保護された設定の変更は要らない。"],"validations":[{"command":"npx vitest run --config vitest.unit.config.ts tests/src/exec","status":"passed","summary":"93 files, 1677 tests passed (including the new tests/src/exec/result-markdownlint.test.ts with 10 tests)"},{"command":"npx prettier --write (changed ts/md files)","status":"passed","summary":"formatted the changed files"},{"command":"npx markdownlint -r ./packages/docs-lint/src/markdownlint-rule-no-chinese-glyphs.cjs (ticket and exec-operation-guide)","status":"passed","summary":"no errors in the 2 changed Markdown files"},{"command":"npm run validate:history-links","status":"passed","summary":"no invalid history files reported, including the changed ticket"}]}
+</specdojo_executor_evidence>

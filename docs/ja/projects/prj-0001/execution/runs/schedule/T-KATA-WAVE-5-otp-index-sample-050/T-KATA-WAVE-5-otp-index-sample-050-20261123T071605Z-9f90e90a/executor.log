@@ -1,0 +1,26 @@
+`docs/ja/specdojo/samples/otp-index-sample.md` を書き直し、駄菓子屋きぬやを題材にした運用切替計画の完成例にしました。変更したのはこのファイルだけです。prettier と markdownlint は通りました（指摘 0 件）。lint・schema の検査は、このあと親の runner が実行します。
+
+- **前提の文書**: frontmatter に `based_on`（`specdojo:mip-index-sample`、`specdojo:cop-index-sample`）を追加しました（F004・F016）。
+- **値の揃え方**: 並行記録 1 週間、ハイパーケアは正本切替から 2 週間、問合せは店主代表が受けて当日の閉店後までに開発担当が対応、という点は `mip-index-sample` に合わせました。登場人物は「店主代表」などの役割名だけで書き、「Ops」「Biz」は使っていません（F005・F007・F015・F017）。
+- **章ごとの主な変更**:
+  - 概要に、目的・対象業務・期間と `otp-hypercare` への導線を書きました（F001）。
+  - バックアップに保管先とリストアの合格条件を足しました（F006・F010）。
+  - 権限移行に、旧（ノート）と新（システム）の役割ごとの差分表と、合格条件のある検証方法を足しました（F009・F011）。
+  - 手順変更表の参照列には `opr-*` の文書 ID を入れました（F008）。
+  - 問合せ窓口に、閉店後の受付と P1〜P3 のエスカレーション条件を足しました（F012・F018）。
+  - 障害対応フローは、店主代表の指揮のもとで「判断・連絡・復旧・報告」の 4 段階に分けました（F003・F014）。
+  - クローズ条件に、判定する日・判断者（店主代表）・最終報告物を書きました（F002・F013）。
+- **残した未決事項と仮定**:
+  - `_UNDECIDED_`: 画面の応答が何秒で遅いとみなすか、旧ノートを参照できる期間（`dmd-index` に合わせる）。
+  - `_ASSUMPTION_`: バッテリー残量 20%、バックアップの保管先を USB メモリとした点。
+  - 店の営業時間はほかの sample にも定義がないため、時刻ではなく「営業時間中」「閉店後」で書きました。
+
+**合わせて直すべき点**:
+
+- `otp-sample`（対象別の分冊の sample）は、まだ「Ops2 + Biz1」など一般的な IT 運用の例のままで、本書と食い違っています。
+- rulebook の記述ガイドの例（重大障害 0 件が 30 日継続）と、本書の値（14 日）が違います。必要なら rulebook の例をほかの業種の題材に寄せない値へ直してください。
+- `otp-hypercare`、`opr-*`、`dmd-index` はまだ文書がないため、バッククォートで仮置きしています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"otp-index-sample を駄菓子屋きぬやの運用切替計画の完成例に書き直し、F001〜F018 に対応しました。prettier と markdownlint は指摘なしです。","handoff":["決める必要のある値（`_UNDECIDED_`）: 画面の応答が遅いとみなす閾値（ハイパーケア初週の様子を見て店主代表が決める）、旧ノートを参照できる期間（`dmd-index` の保管期間に合わせる）。","仮定した値（`_ASSUMPTION_`）: 端末のバッテリーの閾値 20%、バックアップの保管先を店頭タブレットとは別の USB メモリとして鍵付きの引き出しに保管する点。","店の営業時間はほかの sample にも定義がないため、時刻ではなく「営業時間中」「閉店後」で書いた。共通サンプル文脈に営業時間を加える場合は本書も直す。","合わせて直すべき点: `otp-sample`（対象別の分冊）は Ops2 + Biz1 など一般的な IT 運用の例のままで、共通サンプル文脈と本書に食い違う。別タスクで駄菓子屋の文脈へ揃える必要がある。","rulebook の変更案: 記述ガイドの良い例（重大障害 0 件が 30 日継続、2 名・夜間オンコール）は一般的な IT 運用の値であり、sample（P1 0 件が 14 日継続、店番 2 名）と食い違う。rulebook の例を題材に依存しない書き方へ直すか、sample と揃えることを検討する。","参照の仮置き: `otp-hypercare`、`opr-sales`、`opr-credit`、`opr-daily-closing`、`opr-shift-handover`、`opr-index`、`dmd-index` は文書がないためバッククォートで仮置きした。","PJR-76N9 に従い、文書の役割の割り当てと承認の進み具合は本文に書いていない。クローズ判断者・障害時の指揮系統は、rulebook が求める文書の中身（体制）として書いた。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/otp-index-sample.md","status":"passed","summary":"変更した sample を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/otp-index-sample.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>

@@ -3,13 +3,21 @@ import { existsSync } from "node:fs";
 import { basename, dirname, join, relative, resolve, sep } from "node:path";
 import { trackExecutor, withValidationMetrics } from "../validation-metrics.js";
 import {
+  resolveAgentTimeout,
   resolveConnectionErrorDetection,
   resolveMemberCommand,
   resolveRateLimitDetection,
   resolveRateLimitPolicy,
+  type AgentTimeout,
   type ExecDefaultsConfig,
   type RateLimitDetection,
 } from "../agent-config.js";
+import {
+  AGENT_TIMEOUT_REASON_PREFIX,
+  agentTimeoutReason,
+  usesAgentProcessGroup,
+  waitForAgentExit,
+} from "./agent-timeout.js";
 import {
   decidePinnedWait,
   normalizeAgentLimit,
@@ -20,10 +28,18 @@ import { replaceDocIndexRefs } from "../../docs/doc-index.js";
 import { localConfigEnvironment } from "../../shared/local-config.js";
 import { loadPlan, parsePlanTaskIdentity } from "../plans.js";
 import type { ReadyTaskView, TaskMode } from "../types.js";
+import { worktreeStatusPaths } from "../worktree-ops.js";
 import {
+  refreshYamlPagesBeforeParentValidations,
+  type YamlPagesRefresh,
+} from "../worktree-yaml-pages.js";
+import {
+  partitionVanishedCoverageTargets,
   recordParentValidationFailureOutput,
   validateResumedTargetCoverage,
   writeExecutorEvidence,
+  type EvidenceExcludedCoverageTarget,
+  type EvidenceProductWorktree,
   type ExecEvidence,
 } from "../evidence.js";
 import {
@@ -67,6 +83,8 @@ import {
 } from "../protection-handoff.js";
 import {
   productRepoEnvironment,
+  productAccessForMode,
+  productAccessFromEnvironment,
   productRootsFromEnvironment,
   withAgentExtraRoots,
   withoutInheritedRepoEnvironment,
@@ -134,6 +152,39 @@ export function resolveResumedCoverageTargets(
   return initial.length > 0
     ? { source: "initial-changes", targets: initial }
     : { source: "none", targets: [] };
+}
+
+/**
+ * Drops lower-bound targets from an earlier attempt that vanished before resume (PJR-FGKB).
+ * Declared plan targets take precedence over the lower bound and are never pruned here.
+ */
+export function pruneVanishedInitialChangeTargets(params: {
+  plan: string;
+  initialChangeTargets: readonly string[];
+  worktreePath: string;
+  productWorktrees?: readonly EvidenceProductWorktree[];
+}): { targets: string[]; excluded: EvidenceExcludedCoverageTarget[] } {
+  const coverage = resolveResumedCoverageTargets(params.plan, params.initialChangeTargets);
+  if (coverage.source !== "initial-changes") {
+    return { targets: [...params.initialChangeTargets], excluded: [] };
+  }
+  const { kept, excluded } = partitionVanishedCoverageTargets(
+    params.worktreePath,
+    params.productWorktrees ?? [],
+    coverage.targets,
+  );
+  return { targets: kept, excluded };
+}
+
+/** Records runner-excluded lower-bound targets in executor evidence (no-op when none). */
+export function recordExcludedCoverageTargets(
+  evidence: ExecEvidence,
+  evidencePath: string,
+  excluded: readonly EvidenceExcludedCoverageTarget[],
+): void {
+  if (excluded.length === 0) return;
+  evidence.excluded_coverage_targets = excluded.map((entry) => ({ ...entry }));
+  writeExecutorEvidence(evidencePath, evidence);
 }
 
 function executorEvidenceContract(
@@ -296,21 +347,28 @@ export function buildExecutorPrompt(
   })}`;
 }
 
+// PJR-FGKB: a coverage gap is incomplete work, not a process failure. The evidence keeps the
+// succeeded process status and is marked incomplete with the missing targets in `block_reason`, so
+// the run stops at the executor stage as blocked and `--resume-from executor` can pick it up again
+// without discarding the worktree.
 export function resumedTargetCoverageFailure(params: {
   resumed: boolean;
   plan: string;
   evidence: ExecEvidence;
   evidencePath: string;
   initialChangeTargets?: readonly string[];
+  resumeHint?: string;
 }): string | undefined {
   if (!params.resumed) return undefined;
   const targets = resolveResumedCoverageTargets(params.plan, params.initialChangeTargets).targets;
   const coverage = validateResumedTargetCoverage(targets, params.evidence);
   if (coverage.ok) return undefined;
 
-  params.evidence.stage.status = "failed";
+  const reason = params.resumeHint ? `${coverage.reason}; ${params.resumeHint}` : coverage.reason;
+  params.evidence.completion_status = "incomplete";
+  params.evidence.block_reason = reason;
   writeExecutorEvidence(params.evidencePath, params.evidence);
-  return coverage.reason;
+  return reason;
 }
 
 export type ParentValidationRunOptions = {
@@ -320,6 +378,8 @@ export type ParentValidationRunOptions = {
   invoke?: ParentValidationInvoker;
   // 変更の種類で選ぶ検証（`paths` あり）の判定に使う変更一覧。省略時はすべて流す（PJR-T01P）。
   selection?: ParentValidationSelection;
+  // 親の検証の前に YAML の表示のページを作り直す処理（PJR-TF6F）。テストで差し替える。
+  refreshYamlPages?: (worktreePath: string) => YamlPagesRefresh;
 };
 
 // 同じ exec run 内の親検証は run 全体の gate（既定 1 本）で直列化する。executor と reporter は
@@ -336,8 +396,23 @@ export async function runConfiguredParentValidationBatch(
   const label = options.label ?? basename(typeof cwd === "string" ? cwd : cwd.project);
   const batch = await withValidationMetrics(label, options.metricsPath, () =>
     parentValidationGateFor(execDefaults).run(label, labels, async () => {
+      // YAML を変えた run だけ、古い表示のページを作り直してから検査する。作り直しの失敗は
+      // 親の検証の失敗として記録し、残りの検証は従来どおり流す。
+      const refreshed = refreshYamlPagesBeforeParentValidations(
+        typeof cwd === "string" ? { project: cwd } : cwd,
+        options.refreshYamlPages,
+      );
       process.stdout.write(`  Running parent validations (${label}): ${labels.join(", ")}\n`);
-      return await runParentValidationBatch(entries, cwd, options.invoke, options.selection);
+      const validated = await runParentValidationBatch(
+        entries,
+        cwd,
+        options.invoke,
+        options.selection,
+      );
+      return {
+        validations: [...refreshed.validations, ...validated.validations],
+        failureOutputs: [...refreshed.failureOutputs, ...validated.failureOutputs],
+      };
     }),
   );
   for (const validation of batch.validations) {
@@ -491,6 +566,7 @@ export async function executeAgent(
   env: NodeJS.ProcessEnv,
   quiet = false,
   stageRole: "executor" | "reporter" = "executor",
+  timeout?: AgentTimeout,
 ): Promise<AgentExecution> {
   if (!agentCommand.trim()) {
     return { result: "failure", exitCode: null, stdout: "", stderr: "Empty agent command" };
@@ -504,6 +580,8 @@ export async function executeAgent(
     env,
     shell: true,
     stdio: ["pipe", "pipe", "pipe"],
+    // PJR-K8F1: 時間の上限があるときは、孫まで止められるよう agent を自分の process group で起動する。
+    detached: usesAgentProcessGroup(timeout),
   });
   const stopTracking = stageRole === "executor" ? trackExecutor(child.pid, cwd) : () => undefined;
   // stdin を読まずに即終了するコマンドへの書き込みは EPIPE になる。未処理だと
@@ -524,14 +602,18 @@ export async function executeAgent(
   });
   child.stdin.end(prompt);
 
-  const exitCode = await new Promise<number | null>((resolveExit) => {
-    child.once("error", (error) => {
-      stderr += `${error.message}\n`;
-      resolveExit(null);
-    });
-    child.once("close", (code) => resolveExit(code));
-  });
+  const exit = await waitForAgentExit(child, timeout);
   stopTracking();
+  const { exitCode } = exit;
+  if (exit.spawnError) stderr += `${exit.spawnError}\n`;
+
+  // 時間切れは rate limit や接続の失敗の検出より先に判定する。止めた後の出力を検出に掛けない。
+  if (exit.timedOut && timeout) {
+    const line = `blocked: ${agentTimeoutReason(timeout)}\n`;
+    process.stderr.write(line);
+    stderr += `${stderr.endsWith("\n") || !stderr ? "" : "\n"}${line}`;
+    return { result: "failure", exitCode, stdout, stderr, timedOut: true };
+  }
 
   const combinedOutput = `${stdout}\n${stderr}`;
   if (isRateLimitError(exitCode, combinedOutput, detection)) {
@@ -579,6 +661,25 @@ function rateLimitPrefix(result: RunResult): string {
   return result === "rate_limit" ? "rate limit reached; " : "";
 }
 
+type ProductStatus = { name: string; paths: string[] };
+
+function productStatuses(roots: readonly { name: string; path: string }[]): ProductStatus[] {
+  return roots.map((root) => ({ name: root.name, paths: worktreeStatusPaths(root.path) }));
+}
+
+/** Product paths whose status differs after a read-only (review) stage, as `<repo>:<path>`. */
+export function changedProductStatuses(
+  before: readonly ProductStatus[],
+  after: readonly ProductStatus[],
+): string[] {
+  return after.flatMap((current) => {
+    const previous = new Set(before.find((entry) => entry.name === current.name)?.paths ?? []);
+    return current.paths
+      .filter((path) => !previous.has(path))
+      .map((path) => `${current.name}:${path}`);
+  });
+}
+
 export async function runWithRetry(
   candidates: AgentRunCandidate[],
   prompt: string,
@@ -604,6 +705,7 @@ export async function runWithRetry(
   // PJR-98G4: agentEnvironment が渡したプロダクト worktree を、provider の追加ディレクトリと
   // 保護設定・Git 状態の検査対象に加える。宣言の無い project では cwd だけになる。
   const productRoots = productRootsFromEnvironment(env);
+  const productAccess = productAccessFromEnvironment(env);
   const agentRepos = [
     { root: cwd },
     ...productRoots.map((root) => ({ name: root.name, root: root.path })),
@@ -640,12 +742,13 @@ export async function runWithRetry(
       lastActor = candidate.actor;
       const protectedConfigBefore = captureAgentProtectedConfigAcrossRepos(agentRepos);
       const gitStateBefore = captureAgentGitStateAcrossRepos(agentRepos);
+      const productChangesBefore = productAccess === "read" ? productStatuses(productRoots) : [];
       const attempt = await executeAgent(
         withAgentExtraRoots(
           candidate.command,
           candidate.provider,
           productRoots.map((root) => root.path),
-          { cwd, env },
+          { cwd, env, access: productAccess },
         ),
         prompt,
         detection,
@@ -655,6 +758,7 @@ export async function runWithRetry(
         env,
         false,
         stageRole,
+        resolveAgentTimeout(execDefaults, candidate.provider),
       );
       const protectedConfigChanges = changedAgentProtectedConfigAcrossRepos(protectedConfigBefore);
       if (protectedConfigChanges.length > 0) {
@@ -671,6 +775,24 @@ export async function runWithRetry(
           }),
           resultPath,
         );
+        return {
+          result: "failure",
+          exitCode: 1,
+          stdout: attempt.stdout,
+          stderr: `${attempt.stderr}${attempt.stderr.endsWith("\n") || !attempt.stderr ? "" : "\n"}${reason}\n`,
+          protectionBlock: true,
+          actor: candidate.actor,
+        };
+      }
+      const readOnlyViolations =
+        productAccess === "read"
+          ? changedProductStatuses(productChangesBefore, productStatuses(productRoots))
+          : [];
+      if (readOnlyViolations.length > 0) {
+        const reason =
+          rateLimitPrefix(attempt.result) +
+          `review stage changed product repositories that are read-only: ${readOnlyViolations.join(", ")}`;
+        process.stderr.write(`blocked: ${reason}\n`);
         return {
           result: "failure",
           exitCode: 1,
@@ -710,6 +832,7 @@ export async function runWithRetry(
       lastLimit = attempt.limit;
       const connectionError =
         attempt.result === "failure" &&
+        !attempt.timedOut &&
         isConnectionError(
           attempt.exitCode,
           `${attempt.stdout}\n${attempt.stderr}`,
@@ -902,13 +1025,14 @@ export function agentEnvironment(
   schedulePath: string,
   executionPath: string,
   productWorktrees?: readonly ProductWorktree[],
+  mode?: TaskMode,
 ): NodeJS.ProcessEnv {
   return {
     ...withoutInheritedRepoEnvironment(gitEnvironment()),
     ...localConfigEnvironment(repoRoot),
     SPECDOJO_SCHEDULE_PATH: pathInsideWorktree(repoRoot, worktreePath, schedulePath),
     SPECDOJO_EXECUTION_PATH: pathInsideWorktree(repoRoot, worktreePath, executionPath),
-    ...productRepoEnvironment(worktreePath, productWorktrees),
+    ...productRepoEnvironment(worktreePath, productWorktrees, productAccessForMode(mode)),
   };
 }
 
@@ -923,7 +1047,10 @@ export function extractBlockReason(stderr: string): string {
     .split("\n")
     .map((line) => line.trim())
     .filter((line) => line.length > 0);
-  const tagged = lines.find((line) => /^(blocked|review-blocked):/i.test(line));
+  // runner が時間切れで止めた理由は、agent が先に出した block 行より優先する。
+  const tagged =
+    lines.find((line) => line.startsWith(`blocked: ${AGENT_TIMEOUT_REASON_PREFIX}`)) ??
+    lines.find((line) => /^(blocked|review-blocked):/i.test(line));
   const reason = tagged ?? lines.at(-1);
   if (!reason) return fallback;
   const trimmed =

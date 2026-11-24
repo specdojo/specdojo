@@ -13,7 +13,7 @@ specdojo:
   execution: agent
   approach: condense
   targets:
-    - prj-0001:cdt-register-type
+    - cdt-register-type
   condense_records:
     - location: 4. 関連仕様との関係「状態定義」箇条書き
       category: canonical-restatement

@@ -1,0 +1,34 @@
+4 件の型はいずれも最新で、sample・rulebook・recipe・template がすべて `pass` でした。完了を妨げる未充足事項はありません。
+
+**評価結果の確認**
+- `specdojo grade list --target kata --changed-only` を、sample・rulebook・recipe・template の 4 パスに対して実行しました。出力はいずれも空で、評価結果は最新です。
+- sample は `pass` / 100 点 / finding 0 件です。
+- rulebook は `pass` / 97 点 / minor 1 件です。
+- recipe は `pass` / 99 点 / minor 1 件です。
+- template は `pass` / 99 点 / minor 3 件です。
+
+**判断根拠**
+- DC-001 から DC-003 は、sample の `vp-qe-omissions-consistency` と `vp-qe-kata-conformance` が level 4 で、finding もないため充足しています。
+- 型 3 種（rulebook・recipe・template）の finding はすべて minor です。必須要素の欠落にも禁止事項への抵触にも当たらないので、完了条件には直結しません。
+- 先行する edit の実行記録は読んでいません。plan にある評価結果と対象の判定だけで判断しました。
+
+**未充足事項・改善指示**
+- rulebook の `F001`: スコープ変更方針に、初期リリース前のトレードオフ確認方針を追記して、template・sample と整合させてください。
+- recipe の `F001`: 使い方の説明を、観点ごとに分けるか平易な文に直してください。
+- template の `F001`: スコープ外の章に、`_UNDECIDED_` と決定時期を書く欄を足してください。
+- template の `F002`: 利用者・関係者ごとの表の骨組み、または書き方の案内を足してください。
+- template の `F003`: 承認者の欄に、Role code で書く案内を足してください。
+
+**approach に応じた確認**
+- fully-guided として、宣言された文書だけを参照しました。型の欠落（`_MISSING_`）はありません。
+
+**確認できなかった範囲**
+- 先行 edit の result は特定していないため、実行記録の検証結果は確認していません。
+- review 中の成果物変更はありません。鮮度は判断の前後で空出力のままでした。
+
+**decision**
+- verdict は `complete-with-findings` です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict=complete-with-findings。4 件の型（sample・rulebook・recipe・template）の評価結果は最新で、すべて pass です。残る minor finding（rulebook 1 件、recipe 1 件、template 3 件）は完了条件に直結しないため、改善指示として記録しました。確認できなかった範囲: 先行 edit の result は特定しておらず、実行記録の検証結果は未確認です。","handoff":["rulebook F001: スコープ変更方針に、初期リリース前のトレードオフ確認方針を追記する","recipe F001: 使い方の説明を観点ごとに分けるか平易な文に直す","template F001-F003: スコープ外の `_UNDECIDED_` 欄、利用者・関係者の表の骨組み、承認者の Role code の注記を足す"],"validations":[{"command":"npx specdojo grade list --target kata --changed-only (sample/rulebook/recipe/template)","status":"passed","summary":"4 パスとも出力は空で、評価結果は最新。"}]}
+</specdojo_executor_evidence>

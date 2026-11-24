@@ -1,0 +1,19 @@
+`--target kata` の grade では、`vp-qe-config-validity` の機械的な検査が `_TODO_` だけを major にするようにしました。ただし、同じ sample で結果が分かれた原因は特定できていません。統合後の `utc-index` の再評価は、まだ行っていません。
+
+- **変更内容:** `--target kata` では `_ASSUMPTION_` と `_UNDECIDED_` を指摘しません。`--target deliverable` は従来どおり、`_TODO_` と `_ASSUMPTION_` の両方を major にします。変更は `src/grade/plan.ts` です。
+- **テスト:** `tests/src/grade/yaml.test.ts` に 3 件を追加しました（kata の `_ASSUMPTION_` / `_UNDECIDED_` は指摘なし、kata の `_TODO_` は major、deliverable の `_ASSUMPTION_` は major のまま）。`tests/src/grade` の 176 件と `npm run typecheck` は通りました。
+- **文書:** `docs/ja/specdojo/references/command-reference.md` の grade の説明に、この条件を追記しました。
+- **個票:** `pjr-7c9x-grade-assumption-marker-major.md` の `## 5. 対応結果` に、解決内容、確認結果、`### 5.1. CHANGELOG に書く事項` を書きました。
+
+結果が分かれた原因については、次の 2 点が分かっています。
+
+- `pm-review-viewpoints.yaml` では `vp-qe-config-validity` は `grade_targets: [deliverable]` なので、kata では機械的な検査が走らないはずです。
+- それなのに `itc-sample` の指摘は、検査と同じ文言で `rule` が `vp-ops-release-readiness` になっています。`src` 内でこの文言を出すのは `plan.ts` だけで、経路は特定できませんでした。
+
+`utc-sample` の評価は 01:07Z、`itc-sample` は 07:13Z で、評価の時期も違います。この内容は個票と `handoff` に残しました。
+
+`npm run lint:ts` は実行していません。`prettier` は変更したファイルで通っています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"kata の grade では vp-qe-config-validity の機械的な検査が _TODO_ だけを major にするよう変更。deliverable は従来どおり。テスト追加、command-reference と個票を更新。結果が分かれた原因は特定できず、handoff に記録。","handoff":["結果が分かれた原因は未特定。pm-review-viewpoints.yaml では vp-qe-config-validity は grade_targets: [deliverable] で kata では走らないはずだが、itc-sample の指摘は同じ文言で rule が vp-ops-release-readiness になっている。src 内で該当文言を出すのは src/grade/plan.ts だけ。utc-sample（01:07Z）と itc-sample（07:13Z）は評価の時期も違う。統合後に utc-index の型を評価し直し、sample が verdict pass になることをオーケストレーターが確認する。","CHANGELOG に書く事項（区分「変更」）: grade の機械的な検査（vp-qe-config-validity）が、--target kata では _TODO_ だけを major にし、_ASSUMPTION_ / _UNDECIDED_ を指摘しないようにした。--target deliverable は変わらない。"],"validations":[{"command":"npx vitest run tests/src/grade","status":"passed","summary":"9 files, 176 tests passed"},{"command":"npx prettier --check src/grade/plan.ts tests/src/grade/yaml.test.ts docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-7c9x-grade-assumption-marker-major.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"passed","summary":"出力の末尾は valid のみ。個票を含め違反は確認されなかった"}]}
+</specdojo_executor_evidence>

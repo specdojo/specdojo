@@ -1,0 +1,14 @@
+ステークホルダー登録簿の template（`docs/ja/specdojo/templates/prj-stakeholder-register-template.md`）を、rulebook と sample に沿って見直しました。変更は各章の記入欄の説明 6 箇所だけです。Prettier の整形チェックは通りました。markdownlint などの検査はこのあと親 runner が実行するため、ここでは流していません。
+
+**変更した箇所**
+- 冒頭と 1〜5 章にある `_TODO_` の説明文が、rulebook の記述ガイドの内容（影響度の判定基準、見直しの契機、Role code の扱い、個人情報を書かないことなど）を繰り返していたので削りました。代わりに、sample の各章冒頭の文にならい「この表が何を示すか」を書く記入欄にしました。
+- 見出しの順序、5 章の構成、各表の列名は、rulebook の本文要件と sample とすでに一致していたので変えていません。プレースホルダ名と `frontmatter_template` もそのままです。
+
+**変更していないもの**
+- rulebook と sample には手を入れていません。
+- 「見直し条件」の表の「見直し責任者」「承認者」の列は残しました。PJR-76N9 は文書の役割の割り当てと承認の進み具合の記入欄を置かない決まりですが、この 2 列は rulebook の本文要件で必須とされており、rulebook を正とする扱いに従いました。PJR-76N9 との関係は判断が要るので、申し送りに入れています。
+- template 自身の frontmatter は `status: ready` のままです。template の執筆標準は `draft` と定めていますが、この段では `status` を変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"ステークホルダー登録簿の template で、rulebook の記述ガイドを繰り返していた冒頭と各章の `_TODO_` の説明文を、sample の各章冒頭の文にならった記入欄に置き換えた。章・表の列・プレースホルダ名は rulebook・sample とすでに一致していたため維持した。rulebook と sample は変更していない。","handoff":["見直し条件の表の「見直し責任者」「承認者」の列は rulebook の本文要件で必須のため維持した。PJR-76N9（文書の役割の割り当てと承認の進み具合の記入欄を置かない）に当たるかは、rulebook 側で判断が要る。","template 自身の frontmatter は `status: ready` のままで、template の執筆標準の `draft` 指定と食い違う。本タスクでは `status` を変えていない。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/templates/prj-stakeholder-register-template.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run lint:md:changed","status":"not_run","summary":"parent runner が実行する","reason":""}]}
+</specdojo_executor_evidence>

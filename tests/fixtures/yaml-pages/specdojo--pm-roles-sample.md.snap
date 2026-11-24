@@ -2,7 +2,7 @@
 specdojo:
   id: specdojo:pm-roles-sample
   type: project
-  status: ready
+  status: draft
   rulebook: specdojo:pm-roles-rulebook
 ---
 
@@ -36,7 +36,7 @@ specdojo:
 # yaml-language-server: $schema=../../../specdojo/schemas/v1/pm-roles.schema.yaml
 id: specdojo:pm-roles-sample
 type: project
-status: ready
+status: draft
 title: "ロール定義: 駄菓子屋きぬや 販売管理システム"
 rulebook: specdojo:pm-roles-rulebook
 based_on:

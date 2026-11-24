@@ -1,0 +1,172 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:ifx-api-sample
+path: docs/ja/specdojo/samples/ifx-api-sample.yaml
+target: kata
+rubric: grade-rubric-v2
+verdict: pass
+score: 93
+graded_at: "2026-11-23T01:37:27.405Z"
+graded_by: opus-review-executor
+content_hash: 0bf0a6ba75ee13891842b243af7bb3fc80c0f1dd0631b760d29172c196e476b5
+categories:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 92
+  business:
+    score: 100
+  architecture:
+    score: 100
+  usability:
+    score: 83
+  implementation:
+    score: 88
+  quality:
+    score: 100
+  consistency:
+    score: 75
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 3
+    score: 75
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 3
+    score: 75
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 5
+  note: 1
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 6
+    anchor: "# _UNDECIDED_: ready にするための残課題は次のとおり。"
+    message: >-
+      _UNDECIDED_ の残課題（受付照会・税と合計の送信要否・通貨の仮定・検証器と接続確認）に担当 Role code と解消の期限（例: 外部結合テスト着手前）がなく、5 行の _TODO_
+      と同じ粒度でタスク化・順序付けできないため、各項目に担当と解消時期を追記する必要がある。
+    message_ja: >-
+      _UNDECIDED_ の残課題（受付照会・税と合計の送信要否・通貨の仮定・検証器と接続確認）に担当 Role code と解消の期限（例: 外部結合テスト着手前）がなく、5 行の _TODO_
+      と同じ粒度でタスク化・順序付けできないため、各項目に担当と解消時期を追記する必要がある。
+  - id: F002
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 3
+    anchor: "# 詳細契約の参照元: [[specdojo:ifx-index-sample|駄菓子屋きぬや 販売管理CLIの外部システムI/F一覧]] の「本部への売上登録」。"
+    message: >-
+      3 行のコメントの「詳細契約の参照元: ifx-index-sample の『本部への売上登録』」は 17 行の info.description と同じ主張の繰り返しで、rulebook が連携名の記載先とする
+      info.description に一本化しても判断情報を失わないため、コメント側を削る必要がある。
+    message_ja: >-
+      3 行のコメントの「詳細契約の参照元: ifx-index-sample の『本部への売上登録』」は 17 行の info.description と同じ主張の繰り返しで、rulebook が連携名の記載先とする
+      info.description に一本化しても判断情報を失わないため、コメント側を削る必要がある。
+  - id: F003
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 182
+    anchor: "details:"
+    message: >-
+      400 の description が「details の項目を直して送り直す」と指示する一方、ErrorResponse.details が構造のない type: object
+      で、不正な項目名や商品コード未登録を店舗端末が機械的に判別できないため、details の構造（項目名・理由など）を定義するか、形式が未決である旨を示す必要がある。
+    message_ja: >-
+      400 の description が「details の項目を直して送り直す」と指示する一方、ErrorResponse.details が構造のない type: object
+      で、不正な項目名や商品コード未登録を店舗端末が機械的に判別できないため、details の構造（項目名・理由など）を定義するか、形式が未決である旨を示す必要がある。
+  - id: F004
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 9
+    anchor: "#   - 通貨は日本円のみとする仮定の確認。"
+    message: >-
+      8〜9 行の「本部が計算する仮定」「通貨は日本円のみとする仮定」は rulebook の記述ガイドで _ASSUMPTION_ とすべき仮置きなのに _UNDECIDED_ の下にあり、18 行・131
+      行では確定した前提として書かれていて扱いが矛盾するため、_ASSUMPTION_ に分けて本文の前提と対応させる必要がある。
+    message_ja: >-
+      8〜9 行の「本部が計算する仮定」「通貨は日本円のみとする仮定」は rulebook の記述ガイドで _ASSUMPTION_ とすべき仮置きなのに _UNDECIDED_ の下にあり、18 行・131
+      行では確定した前提として書かれていて扱いが矛盾するため、_ASSUMPTION_ に分けて本文の前提と対応させる必要がある。
+  - id: F005
+    severity: note
+    rule: vp-qe-kata-conformance
+    line: 13
+    anchor: "title: 本部売上登録API"
+    message: >-
+      docs/ja/specdojo/samples/generated/ifx-api-sample.md が based_on: []・REJECTED・403/429 なしの旧版のままで正本 YAML
+      と一致しないため、yaml-pages で再生成する必要がある。
+    message_ja: >-
+      docs/ja/specdojo/samples/generated/ifx-api-sample.md が based_on: []・REJECTED・403/429 なしの旧版のままで正本 YAML
+      と一致しないため、yaml-pages で再生成する必要がある。
+  - id: F006
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 64
+    anchor: "description: 認証失敗。送り直さず、開発担当が API キーを確認する。"
+    message: >-
+      5 行は Role code「BA」、4 行は「PO（店主代表）」と書く一方、64 行・70 行は Role code のない「開発担当」で、rulebook の「DEV（開発担当）」と表記が揃わないため、Role code
+      を付けて統一する必要がある。
+    message_ja: >-
+      5 行は Role code「BA」、4 行は「PO（店主代表）」と書く一方、64 行・70 行は Role code のない「開発担当」で、rulebook の「DEV（開発担当）」と表記が揃わないため、Role code
+      を付けて統一する必要がある。

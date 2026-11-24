@@ -5,10 +5,10 @@ path: docs/ja/specdojo/samples/prj-scope-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 97
-graded_at: "2026-10-17T20:21:32.812Z"
-graded_by: agy-expert-executor
-content_hash: c976bc6f907d733fcd87f28ecc2de2cf923afec0c6a1cc3cfa3d8ca41b32dd4c
+score: 100
+graded_at: "2026-11-23T21:56:37.186Z"
+graded_by: sonnet-review-executor
+content_hash: 117a15ae895d7ba84bbcbd1565eb7144284c9f0b74b40a91fcfc71aa51bf5a38
 categories:
   purpose:
     score: 100
@@ -21,7 +21,7 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 83
+    score: 100
   implementation:
     score: 100
   quality:
@@ -84,11 +84,11 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-readability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -104,20 +104,6 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 2
+  minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: minor
-    rule: vp-ux-readability
-    line: 57
-    anchor: "| 承認者   | PO が最終判断し、BA は利用者影響と受入観点を整理する                       |"
-    message: 第6章で突然登場する「PO」「BA」という役割が第1章の定義（店主代表等）と対応付けられておらず、読者が役割を識別できない。
-    message_ja: 第6章で突然登場する「PO」「BA」という役割が第1章の定義（店主代表等）と対応付けられておらず、読者が役割を識別できない。
-  - id: F002
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 57
-    anchor: "| 承認者   | PO が最終判断し、BA は利用者影響と受入観点を整理する                       |"
-    message: 役割の呼称が第1章では「店主代表」等、第6章（承認者）では「PO」「BA」と表記ゆれしており、統一されていない。
-    message_ja: 役割の呼称が第1章では「店主代表」等、第6章（承認者）では「PO」「BA」と表記ゆれしており、統一されていない。
+findings: []

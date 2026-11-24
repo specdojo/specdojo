@@ -4,16 +4,16 @@ document: specdojo:nfr-operations-rulebook
 path: docs/ja/specdojo/rulebooks/nfr-operations-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 93
-graded_at: "2026-11-05T20:25:34.560Z"
-graded_by: flash-high-executor
-content_hash: ef45b6ddcea26263d8175ebe2625a5e702d2b39895763098b6ccc7c61b4f5e46
+verdict: pass
+score: 98
+graded_at: "2026-11-23T19:19:22.764Z"
+graded_by: sonnet-review-executor
+content_hash: 2f5fb8adeb8fea153404edb5138203f38d67027272d2317d0223ad2a06aae29e
 categories:
   purpose:
     score: 100
   operations:
-    score: 100
+    score: 94
   planning:
     score: 100
   business:
@@ -25,9 +25,9 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 92
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -78,11 +78,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
     level: 3
     score: 75
-  vp-qe-kata-conformance:
-    level: 2
-    score: 50
   vp-ux-readability:
     level: 4
     score: 100
@@ -90,8 +90,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-operability:
     level: 4
     score: 100
@@ -103,21 +103,29 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 1
+  major: 0
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 1
-    anchor: "# 非機能要件 / 運用 作成ルール"
-    message: 生成対象ドキュメントの推奨配置ディレクトリ（フォルダ構成）に関する記述を追加してください。
-    message_ja: 生成対象ドキュメントの推奨配置ディレクトリ（フォルダ構成）に関する記述を追加してください。
-  - id: F002
-    severity: major
     rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 非機能要件 / 運用 作成ルール"
-    message: 参照サンプル specdojo:nfr-operations-sample の構成がルールブックで定義した標準テンプレ（第5節）に準拠しておらず、正しくない例となっている。
-    message_ja: 参照サンプル specdojo:nfr-operations-sample の構成がルールブックで定義した標準テンプレ（第5節）に準拠しておらず、正しくない例となっている。
+    line: 12
+    anchor: >-
+      - _UNDECIDED_: `recipe`・`template` の要否は未判断である。sample は「本文要件」の 5 章に揃っていないため、sample を揃えることと、同じ構成を NFR 分冊で共通の
+      template にできるかの判断を、本書を `ready` にする前提条件とする。
+    message: >-
+      `_UNDECIDED_` が「sample は本文要件の5章に揃っていない」と述べていますが、sample は既に5章構成で揃っています。現状に合わせて、残る未決事項（recipe・template の要否と共通
+      template 化）だけに書き直してください。
+    message_ja: >-
+      `_UNDECIDED_` が「sample は本文要件の5章に揃っていない」と述べていますが、sample は既に5章構成で揃っています。現状に合わせて、残る未決事項（recipe・template の要否と共通
+      template 化）だけに書き直してください。
+  - id: F002
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 12
+    anchor: >-
+      - _UNDECIDED_: `recipe`・`template` の要否は未判断である。sample は「本文要件」の 5 章に揃っていないため、sample を揃えることと、同じ構成を NFR 分冊で共通の
+      template にできるかの判断を、本書を `ready` にする前提条件とする。
+    message: "`ready` 化の前提に「sample を揃えること」が残っていますが、sample は既に揃っています。実際に残る前提（template の共通化判断、recipe の要否）へ更新してください。"
+    message_ja: "`ready` 化の前提に「sample を揃えること」が残っていますが、sample は既に揃っています。実際に残る前提（template の共通化判断、recipe の要否）へ更新してください。"

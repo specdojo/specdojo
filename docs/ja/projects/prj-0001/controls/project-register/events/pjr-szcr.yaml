@@ -1,0 +1,114 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_400f83bf3cb24075b936e33e9b7df0d1
+  ts: "2026-11-22T12:41:48Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: opencode の executor で検証のコマンドと git rm を流せるかを確かめる
+    - field: description
+      from: ""
+      to: PJR-YS9M で prj-0001 の opencode の executor に許したコマンドが、qwen の executor の実際の run で拒まれないことを確かめる確認用の todo。
+    - field: input
+      from: ""
+      to: '["YS9M の反映（070630934）の後に、オーケストレーターが qwen-executor で流す（indie の承認、2026-11-22）。","消す対象のファイルは 55e17ba32 で置いた。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-22"
+    - field: due
+      from: ""
+      to: "2026-11-23"
+    - field: derived_from
+      from: ""
+      to: '["PJR-YS9M"]'
+- v: 1
+  id: reg_8cccb901795d4abb96e784cd1f08bc29
+  ts: "2026-11-22T12:42:05Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 確認用の完了条件を書く
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_400f83bf3cb24075b936e33e9b7df0d1
+- v: 1
+  id: reg_f83b859aa5904d498b3bd3ba839fdef6
+  ts: "2026-11-22T12:42:09Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 確認用の完了条件を書く
+  changes:
+    - field: section
+      from: ""
+      to: 作業内容
+  previous_event_id: reg_8cccb901795d4abb96e784cd1f08bc29
+- v: 1
+  id: reg_82e5b416505c4a58a6b2e7b1fb1f7052
+  ts: "2026-11-22T12:49:43Z"
+  action: start
+  actor: qwen-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_f83b859aa5904d498b3bd3ba839fdef6
+- v: 1
+  id: reg_e201402f85d04e50ade2c9b4c43e2ee6
+  ts: "2026-11-22T13:00:08Z"
+  action: review
+  actor: qwen-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_82e5b416505c4a58a6b2e7b1fb1f7052
+- v: 1
+  id: reg_de532d307d88422980d1a3ac0af31ed9
+  ts: "2026-11-22T13:06:06Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが evidence のコマンドの記録、executor のログの実際の出力、統合の commit の削除を照らして確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: qwen の executor の実際の run で、git rm と npx vitest・npx tsc・npx eslint が拒まれずに流れた。拒まれたのはパイプや && でつないだコマンドだけだった
+  previous_event_id: reg_e201402f85d04e50ade2c9b4c43e2ee6

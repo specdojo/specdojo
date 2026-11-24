@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "mode": "review",
+  "grade_check": "### 評価結果の確認\n\n`npx specdojo grade list --target kata --path docs/ja/specdojo/samples/cpd-sample.md --changed-only` を実行し、以下の結果を確認しました。\n\n- `docs/ja/specdojo/samples/cpd-sample.md`: `pass` (score 100, finding 0)\n- `docs/ja/specdojo/rulebooks/cpd-rulebook.md`: `pass` (score 94, finding 4)\n- `docs/ja/specdojo/recipes/cpd-recipe.md`: `pass` (score 90, finding 7)\n- `docs/ja/specdojo/templates/cpd-template.md`: `pass` (score 94, finding 3)\n\nすべての評価結果は最新であり、最新の変更内容を反映しています。",
+  "rationale": [
+    "評価対象の `docs/ja/specdojo/samples/cpd-sample.md` の aside ファイルが最新であることを `npx specdojo grade list --target kata --path docs/ja/specdojo/samples/cpd-sample.md --changed-only` により確認しました。",
+    "`cpd-sample` の完了条件 `DC-001`〜`DC-004` について、`rulebook` の章立て・必須要素の遵守、共通サンプル文脈（駄菓子屋）への適合、および `cpd-mermaid-rulebook` に基づく図のコード構成が満たされていることを確認しました。",
+    "`cpd-sample` は `score 100` であり、`finding` が存在しないため、型としての品質は極めて高い状態です。",
+    "型側（`rulebook`, `recipe`, `template`）に残された `minor` 級の `finding` は、本タスクの完了条件である `cpd-sample` の評価結果には影響を与えないと判断しました。",
+    "確認できなかった範囲として、描画後の SVG の目視確認、および先行する edit タスクの `result` の参照が挙げられています。"
+  ],
+  "improvements": [
+    "`cpd-template` の 5 章の表の列構成を、`cpd-sample` の 6 列に合わせて調整してください（`F002`, `F003`）。",
+    "`cpd-rulebook` の概要行に公開範囲に関する情報を追加してください（`F001`）。",
+    "`cpd-rulebook` の検証手順において、Mermaid の構文検査を行う具体的なコマンドと期待結果を明示してください（`F003`）。",
+    "`cpd-rulebook` の判定条件を、「要素名・関係ラベルが欠けず、境界内外と矢印の端点を判読できる」といった主観的な表現から、客観的な確認項目に改めてください（`F004`）。",
+    "`cpd-recipe` に関しては、提示された 7 件の `finding` (`F001`〜`F007`) に基づく改善を行ってください。"
+  ],
+  "approach": "### approach に応じた確認\n\n`node tools/lint-mermaid.mjs docs/ja/specdojo/samples/cpd-sample.md` による構文チェックを実行し、`passed` であることを確認しました。",
+  "verdict": "complete-with-findings"
+}

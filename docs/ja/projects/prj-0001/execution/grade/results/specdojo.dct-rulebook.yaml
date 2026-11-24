@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/dct-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 84
-graded_at: "2026-11-07T20:13:49.418Z"
-graded_by: flash-high-executor
-content_hash: 43e8daff4f23b517e6c0cf04bc1519bc4da06ff4443046f491aa24208c710d7e
+score: 93
+graded_at: "2026-11-23T20:02:22.191Z"
+graded_by: sonnet-review-executor
+content_hash: a35d734b2fc29a9009b714b692c5e5564b78d80e0719f508f8e9c566cbfdb90c
 categories:
   purpose:
     score: 100
@@ -19,15 +19,15 @@ categories:
   business:
     score: 100
   architecture:
-    score: 100
+    score: 92
   usability:
-    score: 83
+    score: 100
   implementation:
     score: 100
   quality:
     score: 75
   consistency:
-    score: 50
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -57,11 +57,11 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
-  vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-arc-single-responsibility:
+    level: 3
+    score: 75
   vp-dev-implementation-readiness:
     level: 4
     score: 100
@@ -75,14 +75,14 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
     level: 1
     score: 25
   vp-ux-readability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 4
     score: 100
@@ -100,79 +100,67 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 3
-  minor: 5
+  major: 2
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-arc-conciseness
-    line: 89
-    anchor: "| `title`    | ○    | ドキュメント名              |"
-    message: 「4. 推奨メタ項目」と「5.1. ルート構造」でトップレベルキーの定義が重複しており, 冗長であるため。
-    message_ja: 「4. 推奨メタ項目」と「5.1. ルート構造」でトップレベルキーの定義が重複しており, 冗長であるため。
+    rule: vp-arc-single-responsibility
+    line: 195
+    anchor: "### 6.12. 成果物カタログ判定計画（`dct-plan-<domain>.yaml`）"
+    message: >-
+      The rules for the decision plan `dct-plan-＜domain＞.yaml` (sections 6.12 and 6.13) have their own schema, location,
+      author and point of use, and the plan is listed as a separate `work` deliverable in section 6.2. Consider moving
+      them into a `dct-plan` rulebook so the catalog can map it with a `rulebook` field (this rulebook would keep only a
+      reference).
+    message_ja: >-
+      The rules for the decision plan `dct-plan-＜domain＞.yaml` (sections 6.12 and 6.13) have their own schema, location,
+      author and point of use, and the plan is listed as a separate `work` deliverable in section 6.2. Consider moving
+      them into a `dct-plan` rulebook so the catalog can map it with a `rulebook` field (this rulebook would keep only a
+      reference).
   - id: F002
     severity: major
-    rule: vp-qe-omissions-consistency
-    line: 110
-    anchor: ""
+    rule: vp-qe-kata-conformance
+    line: 132
+    anchor: >-
+      - `sch-track-<track>` と `sch-milestones` は strategy から再生成できるため `generated` とし、生成元の `sch-strategy-<track>` を
+      `depends_on` に宣言する。テンプレートでも同じとする（例: `sch-track-launch` は `depends_on: [sch-strategy-launch]`）。
     message: >-
-      `groups` と `deliverables` はどちらか一方だけを持つと規定しているが、`dct.schema.yaml` は `anyOf` のため両方を持つ構造も検証に合格し, rulebook
-      上の親・葉グループ境界を機械検証できないため。
+      `sch-track-＜track＞` は対応する `sch-strategy-＜track＞` を `depends_on` に宣言すると規定しているが、`dct-project-management-template` の
+      `sch-track-launch` は `depends_on: []` であり、生成元 `sch-strategy-launch` へのトレーサビリティが欠落しているため。
     message_ja: >-
-      `groups` と `deliverables` はどちらか一方だけを持つと規定しているが、`dct.schema.yaml` は `anyOf` のため両方を持つ構造も検証に合格し, rulebook
-      上の親・葉グループ境界を機械検証できないため。
+      `sch-track-＜track＞` は対応する `sch-strategy-＜track＞` を `depends_on` に宣言すると規定しているが、`dct-project-management-template` の
+      `sch-track-launch` は `depends_on: []` であり、生成元 `sch-strategy-launch` へのトレーサビリティが欠落しているため。
   - id: F003
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 207
-    anchor: "- `work` 成果物には最低 1 件の完了条件を記載する。"
-    message: ドメインの `base_path` について、スキーマ（`^/[^\\s]+$`）および4章の表では絶対パスを必須としているが、6.6節では「絶対パスで記載することを推奨する」と任意に読める表現になっており矛盾しているため。
-    message_ja: ドメインの `base_path` について、スキーマ（`^/[^\\s]+$`）および4章の表では絶対パスを必須としているが、6.6節では「絶対パスで記載することを推奨する」と任意に読める表現になっており矛盾しているため。
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 132
+    anchor: >-
+      - `sch-track-<track>` と `sch-milestones` は strategy から再生成できるため `generated` とし、生成元の `sch-strategy-<track>` を
+      `depends_on` に宣言する。テンプレートでも同じとする（例: `sch-track-launch` は `depends_on: [sch-strategy-launch]`）。
+    message: >-
+      Section 6.2 says `sch-milestones` is also `generated` and must declare its source `sch-strategy-＜track＞` in
+      `depends_on`, but in `dct-project-management-template` `sch-milestones` has `depends_on: []`, so it cannot be
+      traced to its source.
+    message_ja: >-
+      Section 6.2 says `sch-milestones` is also `generated` and must declare its source `sch-strategy-＜track＞` in
+      `depends_on`, but in `dct-project-management-template` `sch-milestones` has `depends_on: []`, so it cannot be
+      traced to its source.
   - id: F004
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 225
-    anchor: "### 6.10. 業務領域テンプレートの反復方針（`_TERM_` の使い分け）"
-    message: >-
-      `min_size` は `type: template` でのみ使用可能と規定しているが、`dct.schema.yaml` は project の group と deliverable でも受理するため、禁止事項と
-      schema 検証結果が一致しないため。
-    message_ja: >-
-      `min_size` は `type: template` でのみ使用可能と規定しているが、`dct.schema.yaml` は project の group と deliverable でも受理するため、禁止事項と
-      schema 検証結果が一致しないため。
-  - id: F005
-    severity: major
     rule: vp-qe-kata-conformance
-    line: 172
-    anchor: "### 6.3. `depends_on`"
+    line: 168
+    anchor: >-
+      - `work` 成果物には 1 件以上の完了条件を記載する。`control`・`generated` には書かない。スケジュール展開・表示ページ・plan のいずれも `work`
+      以外の完了条件を使わないため、書いても確認されない。
     message: >-
-      `sch-track-＜track＞` は対応する `sch-strategy-＜track＞` を `depends_on` に宣言すると規定しているが、`dct-project-management-template` の
-      `sch-track-launch` は `depends_on: []` であり、生成元 `sch-strategy-launch` へのトレーサビリティが欠落しているため。
+      6.7 は `control`・`generated` に `done_criteria` を書かないと規定するが、`dct-project-management-template` の `generated` である
+      `sch-milestones` と `sch-track-launch` は `done_criteria` を持っており、規則とテンプレートが食い違っているため。
     message_ja: >-
-      `sch-track-＜track＞` は対応する `sch-strategy-＜track＞` を `depends_on` に宣言すると規定しているが、`dct-project-management-template` の
-      `sch-track-launch` は `depends_on: []` であり、生成元 `sch-strategy-launch` へのトレーサビリティが欠落しているため。
-  - id: F006
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 186
-    anchor: ""
-    message: >-
-      recipe・sample・template の要否と所在は rulebook Frontmatter を正本とすると定義している一方、既存の DCT template 群が本 rulebook を参照しているのに
-      `template` 宣言がなく、fully-guided の参照ハブから適用テンプレートを解決できないため。
-    message_ja: >-
-      recipe・sample・template の要否と所在は rulebook Frontmatter を正本とすると定義している一方、既存の DCT template 群が本 rulebook を参照しているのに
-      `template` 宣言がなく、fully-guided の参照ハブから適用テンプレートを解決できないため。
-  - id: F007
-    severity: minor
-    rule: vp-ux-readability
-    line: 89
-    anchor: "| `title`    | ○    | ドキュメント名              |"
-    message: 「推奨メタ項目」と「ルート構造」が同じトップレベルキーを連続して再掲し、両節の役割差を読み分けにくいため。
-    message_ja: 「推奨メタ項目」と「ルート構造」が同じトップレベルキーを連続して再掲し、両節の役割差を読み分けにくいため。
-  - id: F008
-    severity: minor
-    rule: vp-ux-readability
-    line: 102
-    anchor: ""
-    message: 「5.1」の空行と「5.3」の finding コメントがフィールド表を途中で分断し、`domain` 以降および `depends_on` 以降が列見出しに結び付かない表示になるため。
-    message_ja: 「5.1」の空行と「5.3」の finding コメントがフィールド表を途中で分断し、`domain` 以降および `depends_on` 以降が列見出しに結び付かない表示になるため。
+      6.7 は `control`・`generated` に `done_criteria` を書かないと規定するが、`dct-project-management-template` の `generated` である
+      `sch-milestones` と `sch-track-launch` は `done_criteria` を持っており、規則とテンプレートが食い違っているため。
+level_corrections:
+  - viewpoint: vp-qe-kata-conformance
+    original_level: 2
+    corrected_level: 1

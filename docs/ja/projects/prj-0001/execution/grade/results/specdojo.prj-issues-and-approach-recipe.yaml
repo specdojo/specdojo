@@ -4,12 +4,11 @@ document: specdojo:prj-issues-and-approach-recipe
 path: docs/ja/specdojo/recipes/prj-issues-and-approach-recipe.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-recipe
 verdict: pass
 score: 97
-graded_at: "2026-11-20T20:27:02.605Z"
-graded_by: flash-high-executor
-content_hash: b52807c19e588072b8bb545cbf853ffaa1568bc74ac63b8d7ab2fa8ac6263562
+graded_at: "2026-11-23T22:34:50.303Z"
+graded_by: sonnet-review-executor
+content_hash: 8d3062e8577cebf1f45a5238489d658996d95d292b727481da999bbd230673db
 categories:
   purpose:
     score: 100
@@ -111,21 +110,21 @@ findings:
   - id: F001
     severity: minor
     rule: vp-po-publication-accountability
-    line: 147
-    anchor: "- 課題・原因・リスクの記述に、個人や特定の組織を識別できる情報や非公開の観察事実がない。"
-    message: 仕上げチェックに公開対象、個人情報・非公開情報の有無、人間の PO による公開可否判断の確認がないため、公開適性と説明責任を確認する項目を追加する。
-    message_ja: 仕上げチェックに公開対象、個人情報・非公開情報の有無、人間の PO による公開可否判断の確認がないため、公開適性と説明責任を確認する項目を追加する。
+    line: 156
+    anchor: ""
+    message: 公開可否の最終判断と説明責任を人間の PO が担うことが明示されていないため、仕上げチェックに人間の PO による公開可否の最終承認を確認する項目を明記する。
+    message_ja: 公開可否の最終判断と説明責任を人間の PO が担うことが明示されていないため、仕上げチェックに人間の PO による公開可否の最終承認を確認する項目を明記する。
   - id: F002
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 68
-    anchor: "- 代替案どうしの詳細な比較を書き始めたら、比較が要る論点だけを残す。"
-    message: 存在する関連成果物「代替案比較」をリンクまたは仮置き識別子で示しておらず Recipe 記述標準のリンク規約を満たさないため, 参照先リンクまたは `prj-comparison-of-alternatives` を明示する。
-    message_ja: 存在する関連成果物「代替案比較」をリンクまたは仮置き識別子で示しておらず Recipe 記述標準のリンク規約を満たさないため, 参照先リンクまたは `prj-comparison-of-alternatives` を明示する。
+    line: 39
+    anchor: "- 放置すると、誰がどの業務価値で困るか。"
+    message: 作成手順で導入部（目的、承認者と利用ロール、合意対象）を最後に書くと定めているが、各章の書き方に導入部の問いとコツがなく rulebook の導入部の要件と対応しないため、導入部の節を追加する。
+    message_ja: 作成手順で導入部（目的、承認者と利用ロール、合意対象）を最後に書くと定めているが、各章の書き方に導入部の問いとコツがなく rulebook の導入部の要件と対応しないため、導入部の節を追加する。
   - id: F003
     severity: minor
     rule: vp-ops-release-readiness
-    line: 147
-    anchor: "- 課題・原因・リスクの記述に、個人や特定の組織を識別できる情報や非公開の観察事実がない。"
-    message: 仕上げチェックに公開適性と人間の PO による最終承認の確認がなく、ready 化・公開判断の完了条件を判定できないため、公開前確認項目として明示する。
-    message_ja: 仕上げチェックに公開適性と人間の PO による最終承認の確認がなく、ready 化・公開判断の完了条件を判定できないため、公開前確認項目として明示する。
+    line: 157
+    anchor: ""
+    message: ready 化・公開の前に人間の PO が最終承認する確認が仕上げチェックにないため、公開前確認項目として明示する。
+    message_ja: ready 化・公開の前に人間の PO が最終承認する確認が仕上げチェックにないため、公開前確認項目として明示する。

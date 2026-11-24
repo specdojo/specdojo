@@ -5,10 +5,10 @@ path: docs/ja/specdojo/samples/pm-communication-plan-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 100
-graded_at: "2026-11-17T22:35:14.289Z"
-graded_by: sol-review-executor
-content_hash: e601d57738436cff22c270854440b1513d0156324bfa8b45c15e9eaec5ee4803
+score: 99
+graded_at: "2026-11-24T02:25:05.223Z"
+graded_by: sonnet-review-executor
+content_hash: dc1f00a00683c48d5ed68c559b462a1a77f2851653fb34b35096fc95b156e3c0
 categories:
   purpose:
     score: 100
@@ -21,7 +21,7 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 92
   implementation:
     score: 100
   quality:
@@ -87,8 +87,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -104,6 +104,13 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 1
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 60
+    anchor: "| エスカレーションの判断者 | 本書のエスカレーションと RACI（`PM`）、管理計画の最終判断（`PM`）                         | 変更要求ログの変更 ID             |"
+    message: 「本書のエスカレーションと RACI(`PM`)」の RACI が本書内で定義・参照されておらず、どの成果物を指すか読み取れない。参照先(管理計画の RACI など)を示すか、「エスカレーションの判断者」だけにそろえる。
+    message_ja: 「本書のエスカレーションと RACI(`PM`)」の RACI が本書内で定義・参照されておらず、どの成果物を指すか読み取れない。参照先(管理計画の RACI など)を示すか、「エスカレーションの判断者」だけにそろえる。

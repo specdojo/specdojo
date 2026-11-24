@@ -1386,6 +1386,47 @@ describe("syncTaskWorktreesWithIntegrationTargets", () => {
     );
   });
 
+  it("lets a commit hook that needs a file fixed on the integration branch pass after the sync", () => {
+    const fixture = setup({ withProducts: false });
+    const worktree = prepare(fixture);
+    const hooksDir = join(worktree.path, "..", "stale-base-hooks");
+    mkdirSync(hooksDir, { recursive: true });
+    const hookPath = join(hooksDir, "pre-commit");
+    writeFile(hookPath, '#!/bin/sh\ntest -f "$(git rev-parse --show-toplevel)/FIX.md"\n');
+    chmodSync(hookPath, 0o755);
+    const commitWithHook = (message: string) =>
+      gitResult(worktree.path, ["-c", `core.hooksPath=${hooksDir}`, "commit", "-m", message]);
+    writeFile(join(worktree.path, "docs", "artifact.md"), "# executor artifact\n");
+    git(worktree.path, "add", "docs/artifact.md");
+    expect(commitWithHook("stale base").status).not.toBe(0);
+    commitOn(fixture.repo, "FIX.md", "fixed on the integration branch\n");
+
+    syncTaskWorktreesWithIntegrationTargets({
+      worktree,
+      projectTarget: currentBranch(fixture.repo),
+      message: "merge integration target before integration retry",
+    });
+    git(worktree.path, "add", "docs/artifact.md");
+
+    expect(commitWithHook("after sync").status).toBe(0);
+  });
+
+  it("names the conflicting files when the integration branch conflicts with the exec branch", () => {
+    const fixture = setup({ withProducts: false });
+    commitOn(fixture.repo, "README.md", "base\n");
+    const worktree = prepare(fixture);
+    commitOn(worktree.path, "README.md", "exec side\n");
+    commitOn(fixture.repo, "README.md", "integration side\n");
+
+    expect(() =>
+      syncTaskWorktreesWithIntegrationTargets({
+        worktree,
+        projectTarget: currentBranch(fixture.repo),
+        message: "merge integration target before integration retry",
+      }),
+    ).toThrow(/merge conflicts with .*: README\.md/);
+  });
+
   it("merges non-conflicting changes to the same file and restores the executor edit", () => {
     const fixture = setup({ withProducts: false });
     const base =

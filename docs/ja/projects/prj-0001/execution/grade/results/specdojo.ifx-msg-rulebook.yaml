@@ -5,15 +5,15 @@ path: docs/ja/specdojo/rulebooks/ifx-msg-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 92
-graded_at: "2026-11-01T20:37:36.772Z"
-graded_by: flash-high-executor
-content_hash: 11c3781e13c37fc192d44435113dc757d063e6dcbe265dda23630046c779631e
+score: 95
+graded_at: "2026-11-23T02:10:12.210Z"
+graded_by: opus-review-executor
+content_hash: a0e4f6a3966c4bc4b75e575955294d28643fa8c93a74fcbce767d2ebe7762a33
 categories:
   purpose:
-    score: 88
+    score: 100
   operations:
-    score: 94
+    score: 100
   planning:
     score: 100
   business:
@@ -21,7 +21,7 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
     score: 100
   quality:
@@ -33,8 +33,8 @@ viewpoints:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-publication-accountability:
     level: 4
     score: 100
@@ -69,8 +69,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-verifiability:
     level: 4
     score: 100
@@ -78,17 +78,17 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
-  vp-ux-readability:
     level: 3
     score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-operability:
     level: 4
     score: 100
@@ -101,48 +101,20 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 6
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-decision-readiness
-    line: 12
-    anchor: ""
-    message: EMSの合意や承認を行う主体（POや外部システム担当者など）に関する言及がない。
-    message_ja: EMSの合意や承認を行う主体（POや外部システム担当者など）に関する言及がない。
+    rule: vp-qe-omissions-consistency
+    line: 51
+    anchor: "| `info.description`    | 必須             | 対応する `ifx-index` の連携名、発行者と購読者、配信と順序の保証、重複受信の扱い、未決事項     |"
+    message: 本文要件の表では`info.description`に「未決事項」を書くとし、未決事項と検証の節ではコメントで書くとしており記述先が食い違っているため、どちらに書くか（コメントを正とし`info.description`では要約のみ等）を一つに揃える必要がある。
+    message_ja: 本文要件の表では`info.description`に「未決事項」を書くとし、未決事項と検証の節ではコメントで書くとしており記述先が食い違っているため、どちらに書くか（コメントを正とし`info.description`では要約のみ等）を一つに揃える必要がある。
   - id: F002
     severity: minor
-    rule: vp-dev-testability
-    line: 47
-    anchor: "## 4.1 メタ情報（x-spec-meta）"
-    message: AsyncAPI YAMLの妥当性を検証する手順（lintコマンドやバリデーション方法）についての言及がない。
-    message_ja: AsyncAPI YAMLの妥当性を検証する手順（lintコマンドやバリデーション方法）についての言及がない。
-  - id: F003
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 22
-    anchor: "## 3. 記載方針（必須）"
-    message: "sampleにあるスキーマ検証回避のディレクティブ（`# specdojo-schema: none reason=external-asyncapi`）に関する記載ルールが欠落している。"
-    message_ja: "sampleにあるスキーマ検証回避のディレクティブ（`# specdojo-schema: none reason=external-asyncapi`）に関する記載ルールが欠落している。"
-  - id: F004
-    severity: minor
-    rule: vp-ux-readability
-    line: 12
-    anchor: ""
-    message: 成果物の位置づけについて言及があるが、関連するルールブック（ESIL等）へのリンクがなく、ナビゲーションが不十分である。（前回の未解消指摘）
-    message_ja: 成果物の位置づけについて言及があるが、関連するルールブック（ESIL等）へのリンクがなく、ナビゲーションが不十分である。（前回の未解消指摘）
-  - id: F005
-    severity: minor
-    rule: vp-ux-readability
-    line: 41
-    anchor: "- `info`（`title`, `version` を含む）"
-    message: 禁止事項に理由（例：詳細設計への委譲のためなど）が記載されていないため、記述範囲の境界判断が困難である。（前回の未解消指摘）
-    message_ja: 禁止事項に理由（例：詳細設計への委譲のためなど）が記載されていないため、記述範囲の境界判断が困難である。（前回の未解消指摘）
-  - id: F006
-    severity: minor
-    rule: vp-ops-release-readiness
-    line: 66
-    anchor: "- `id`: イベントID（重複しない）"
-    message: statusを `ready` にするための完了条件（例：外部システム担当者との合意完了など）が明示されていない。
-    message_ja: statusを `ready` にするための完了条件（例：外部システム担当者との合意完了など）が明示されていない。
+    rule: vp-qe-kata-conformance
+    line: 51
+    anchor: "| `info.description`    | 必須             | 対応する `ifx-index` の連携名、発行者と購読者、配信と順序の保証、重複受信の扱い、未決事項     |"
+    message: rulebookは`info.description`に対応する`ifx-index`の連携名と未決事項を書くと定めているが、sampleの`info.description`にはいずれもなく、コメントで「ifx-index-sampleには未掲載の連携」としたまま`based_on`で同一覧を参照しているため、sampleに連携名（または未掲載である旨と未決事項）を`info.description`へ書くか、学習用の例外をrulebookに明記する必要がある。
+    message_ja: rulebookは`info.description`に対応する`ifx-index`の連携名と未決事項を書くと定めているが、sampleの`info.description`にはいずれもなく、コメントで「ifx-index-sampleには未掲載の連携」としたまま`based_on`で同一覧を参照しているため、sampleに連携名（または未掲載である旨と未決事項）を`info.description`へ書くか、学習用の例外をrulebookに明記する必要がある。

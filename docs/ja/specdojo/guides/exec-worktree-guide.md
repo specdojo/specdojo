@@ -244,6 +244,8 @@ stage 済み変更は merge 対象との重複にかかわらず、複製の解�
 
 通常は `git merge --no-ff` 相当で統合します。自動実行では `exec(<task-id>): <task name>` を merge commit の subject に使い、統合先の first-parent を1タスク1commitにします（`prepare execution` / `apply task changes` は exec branch 側に残ります）。`--ff-only` 指定時は fast-forward 可能な場合だけ統合します。
 
+`register_sync.enabled: true` の場合、個票・イベントは専用ブランチへ書き、exec の commit から除きます。統合先には exec の merge のほかに専用ブランチの取り込みが増えます。転送と復旧は [[specdojo:register-operation-guide|登録簿運用ガイド]] に従います。以下の個票・イベントの競合解決は専用ブランチを使わない場合の処理です。
+
 register 項目の統合で競合したのが項目自身の記帳ファイル（個票・イベント・plan・result）だけの場合は、記帳ファイルを次のように解決して merge commit を作ります。`waiting` を複数回経た項目では、wait 時の同期 merge の後も統合先と exec branch の双方で記帳ファイルが変わるためです。解決後の commit は通常の `git merge` と同じく pre-commit hook を実行しません。
 
 - イベント（`events/pjr-<id>.yaml`）は、両側のイベントの和集合で解決します。同じ id のイベントは 1 件にまとめ、時刻順に並べて `previous_event_id` の連鎖を張り直します。`waiting` の間に統合先で追記されたイベント（`register update` など）も統合後に残ります。

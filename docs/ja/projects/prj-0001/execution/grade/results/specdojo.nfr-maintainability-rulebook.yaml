@@ -4,16 +4,16 @@ document: specdojo:nfr-maintainability-rulebook
 path: docs/ja/specdojo/rulebooks/nfr-maintainability-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 96
-graded_at: "2026-11-05T20:23:23.145Z"
-graded_by: flash-high-executor
-content_hash: 0ae178b195a1bfe6979820b54062eb7e0004de1ee21ff5c03ef6cabd60adc74f
+verdict: pass
+score: 94
+graded_at: "2026-11-23T15:15:11.270Z"
+graded_by: sonnet-review-executor
+content_hash: dd6836363223927aaaa85f4c74f148b7c45c36044171b61815f7415fba8a0e7b
 categories:
   purpose:
-    score: 100
+    score: 88
   operations:
-    score: 100
+    score: 94
   planning:
     score: 100
   business:
@@ -33,8 +33,8 @@ viewpoints:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-publication-accountability:
     level: 4
     score: 100
@@ -72,8 +72,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-verifiability:
     level: 4
     score: 100
@@ -81,8 +81,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -90,8 +90,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-operability:
     level: 4
     score: 100
@@ -103,14 +103,44 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 0
+  major: 0
+  minor: 5
   note: 0
 findings:
   - id: F001
-    severity: major
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 12
+    anchor: "- _UNDECIDED_: `recipe`・`template` の要否は未判断である。sample を「本文要件」の構成に揃えた後、同じ構成を NFR 分冊で共通の template にできるかを論点として判断する。"
+    message: "`recipe` / `template` の要否判断について、判断者と次アクション（登録簿への起票、判断時期）を示し、PO が承認や差し戻しを判断できるようにする。"
+    message_ja: "`recipe` / `template` の要否判断について、判断者と次アクション（登録簿への起票、判断時期）を示し、PO が承認や差し戻しを判断できるようにする。"
+  - id: F002
+    severity: minor
+    rule: vp-dev-testability
+    line: 11
+    anchor: >-
+      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status` の昇格と承認、改訂と廃止、未決事項の登録簿への引き継ぎは
+      [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従い、本書と成果物で言い直さない。文書の整形・lint はリポジトリの検証で扱い、「測定・検証方法」に含めない。
+    message: 成果物作成後に実行する検証コマンド（`npm run -s lint:md`、`npm run lint:fm`）の所在を、正本への参照として1行で示す。
+    message_ja: 成果物作成後に実行する検証コマンド（`npm run -s lint:md`、`npm run lint:fm`）の所在を、正本への参照として1行で示す。
+  - id: F003
+    severity: minor
     rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 非機能要件 / 保守性 作成ルール"
-    message: 指定されているサンプル成果物 `specdojo:nfr-maintainability-sample` が、本書で定義した標準テンプレの構成に従っていない。
-    message_ja: 指定されているサンプル成果物 `specdojo:nfr-maintainability-sample` が、本書で定義した標準テンプレの構成に従っていない。
+    line: 26
+    anchor: "| `dec-*`            | 閾値・測定方法を決めた・見直した判断の記録         | 見直しの判断を新しい `dec-*` に残す                   |"
+    message: rulebook の `dec-*` と sample の「登録簿の decision」の呼称を統一する。または、ID を持たない導線の書き方を記述ガイドに明記する。
+    message_ja: rulebook の `dec-*` と sample の「登録簿の decision」の呼称を統一する。または、ID を持たない導線の書き方を記述ガイドに明記する。
+  - id: F004
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 12
+    anchor: "- _UNDECIDED_: `recipe`・`template` の要否は未判断である。sample を「本文要件」の構成に揃えた後、同じ構成を NFR 分冊で共通の template にできるかを論点として判断する。"
+    message: "`recipe` / `template` が `undecided` のままなので、Kata 一式が揃うまでの判断期限を示し、型の対応関係を確定させる。"
+    message_ja: "`recipe` / `template` が `undecided` のままなので、Kata 一式が揃うまでの判断期限を示し、型の対応関係を確定させる。"
+  - id: F005
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 12
+    anchor: "- _UNDECIDED_: `recipe`・`template` の要否は未判断である。sample を「本文要件」の構成に揃えた後、同じ構成を NFR 分冊で共通の template にできるかを論点として判断する。"
+    message: ready 化の前に、`recipe` / `template` の要否判断を完了させる条件（判断者と時期）を明記する。
+    message_ja: ready 化の前に、`recipe` / `template` の要否判断を完了させる条件（判断者と時期）を明記する。

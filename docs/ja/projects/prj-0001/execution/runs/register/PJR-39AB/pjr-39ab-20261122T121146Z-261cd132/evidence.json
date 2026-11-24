@@ -1,0 +1,161 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-39AB",
+  "run_id": "pjr-39ab-20261122T121146Z-261cd132",
+  "stage": {
+    "role": "executor",
+    "actor": "sonnet-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-22T12:12:34.701Z",
+    "completed_at": "2026-11-22T12:14:07.421Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-39ab.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-39ab-sysd-cross-cutting-policy-conformance.md",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-39ab-sysd-cross-cutting-policy-conformance.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 2,
+    "summary": "...r-39ab-sysd-cross-cutting-policy-conformance.md | 118 ++++++++++++++++++++-\n 1 file changed, 116 insertions(+), 2 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-39ab-sysd-cross-cutting-policy-conformance.md",
+      "status": "passed",
+      "summary": "個票を整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2 docs/ja/projects/prj-0001/controls/project-register/pjr-39ab-sysd-cross-cutting-policy-conformance.md",
+      "status": "passed",
+      "summary": "0 issues。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s validate:history-links",
+      "status": "passed",
+      "summary": "出力の末尾はすべて valid。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: prj-0001:pjr-39ab-sysd-cross-cutting-policy-conformance\n  type: project\n  status: draft\n  rulebook: specdojo:pjr-rulebook\n  part_of:\n    - prj-0001:pjr-index\n  item_type: issue\n  item_status: in-progress\n  priority: medium\n  owner: ARC\n  registered_at: \"2026-11-15T04:06:04Z\"\n---\n\n# PJR-39AB 横断ルールの数値の境界と実装状況を照合する（sysd-cross-cutting-policy の Q1・Q2・Q4）\n\n## 1. 課題内容\n\nexec-defaults と実装を照合し、規則ごとに実装済\n… output omitted …\n」は設計書の MUST の一部だけが実装されているものに使い、判定の 3 分類の補足として併記した。\n- `on_exhausted` は型が `\"block\"` 固定で値が読まれないため、実装済みの動作と判定した。\n- Routine の timeout は読み切れず「不明」とした。実装済みと推定しない。\n- 環境変数の優先順とテストの有無は、検索で見つからないものを「不明」とし、無いと断定しない。\n\n### 5.6. CHANGELOG に書く事項\n\nなし。\n\n### 5.7. 確認結果\n\n- コード・設定・`sysd-cross-cutting-policy` は変更していない。\n- `npm run lint:md` は親の検証で実行される。\n\n## 6. 関連ドキュメント\n\n- \\[\\[sysd-cross-cutting-policy|システム設計横断ルール]]\n- \\[\\[specdojo:specdojo-config-reference|設定リファレンス]]\n- \\[\\[specdojo:command-reference|コマンドリファレンス]]"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 5861 file(s), 107 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 83 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5861 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)",
+      "reason": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-39AB/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-39AB/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "PJR-39AB の照合結果（Q1・Q2・Q4 の判定、数値の境界の対比、直す案、起票の案、CHANGELOG 事項なし）を個票の対応結果に記録した。コード・設定・sysd 本文は変更していない。",
+  "completion_status": "complete",
+  "handoff": [
+    "個票の判定で「不明」とした規則（CFG-002・ERR-001・IDM-001・LOG-001・TRC-001・SEC-001、Routine の timeout、環境変数の優先順と反映時点）は今回の範囲で読み切れていない。規則ごとの確認タスクを Schedule / PJR へ接続する必要がある。",
+    "executor の判断: 設計書の MUST の一部だけが実装されている場合に「一部」を 3 分類の補足として併記した。`on_exhausted` は型が `block` 固定で値が読まれないため実装済みと判定した。検索で見つからないテストや正本は「無い」と断定せず「不明」とした。",
+    "直す案の最優先は provider CLI（`executeAgent`）への timeout と SIGTERM→SIGKILL のプロセスグループ停止の追加（issue 案）。値は人間が決める。`on_non_critical` の扱いは change と decision で決める必要がある。",
+    "`backoff` の設定コメント（60→180→540、120→240→480）は `max_attempts: 3` では到達しない。`max_attempts` を 4 にするかコメントを直すかの判断が要る。保護設定である `.specdojo/exec-defaults.yaml` は変更していない。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-39AB/pjr-39ab-20261122T121146Z-261cd132/executor.log",
+      "bytes": 4160,
+      "truncated": false
+    }
+  ]
+}

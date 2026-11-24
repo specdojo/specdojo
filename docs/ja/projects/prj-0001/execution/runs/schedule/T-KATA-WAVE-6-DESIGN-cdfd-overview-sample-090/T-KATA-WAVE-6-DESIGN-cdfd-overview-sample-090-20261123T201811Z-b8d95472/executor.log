@@ -1,0 +1,40 @@
+`cdfd-overview-sample` のタスクは完了にできると判断しました。評価結果の finding は残っていますが、完了を妨げません。判定は `complete-with-findings` です。
+
+**評価結果の確認**
+- 対象の4件(sample、rulebook、recipe、template)について、`specdojo grade list --target kata --path <対象> --changed-only` を実行しました。どれも出力は空で、評価結果は最新です。
+- 各 grade の結果は次のとおりです。
+
+| 対象 | `verdict` | `score` | finding 件数 |
+| --- | --- | --- | --- |
+| sample | `pass` | 97 | blocker 0 / major 0 / minor 2 / note 0 |
+| rulebook | `pass` | 98 | blocker 0 / major 0 / minor 2 / note 0 |
+| recipe | `pass` | 91 | blocker 0 / major 0 / minor 4 / note 0 |
+| template | `pass` | 99 | blocker 0 / major 0 / minor 1 / note 0 |
+
+- `--incomplete` は実行していません。plan が示す評価結果はどれも最新で、4件ともサイドカー(評価結果のファイル)が `pass` で確定しているためです。
+- `git status` に出たのは、未追跡の `pipeline-state.json` だけでした。レビュー中に成果物は変更されていません。
+
+**判断根拠**
+- 完了条件 DC-001〜DC-003 は、grade の `vp-qe-omissions-consistency` が level 4 でした。`vp-qe-kata-conformance` は level 3 で、finding は minor だけです。
+- DC-004 は sample 本文を読んで確認しました。在庫記録への入荷数量の反映は仕入グループの `P-02` が担い、販売数量の反映は在庫グループの `P-05` が担います。同じ数量を両方から反映しないことも明記されています。図にも `purchasing -> inventory_record: "入荷数量"` のエッジがあり、本文と一致します。
+- DC-005 は `vp-arc-conciseness` が level 3 です。冗長な箇所は sample の F001 だけで、minor です。
+- 型の整備に求められる追加条件も満たしています。rulebook、recipe、sample、template のすべてに最新の `kata` `pass` があります。
+
+**finding が完了を妨げない理由と改善指示**
+- どの finding も minor で、必須要素の欠落や禁止事項への抵触はありません。
+- 次の点は、横串の確認か後続の手直しで対応してください。
+  - sample F001: プロセスグループ別 CDFD とユースケース別 CDFD の役割分担の説明は、rulebook を参照する短い要約に圧縮できます。
+  - sample F002: 店主代表など領域の担当から直接受け取る入力を図から省いた旨を、図の直後に1文で注記してください。
+  - rulebook F001 と recipe F004: 物理保管の例外併記の規則を recipe へ反映してください。sample には反映済みです。
+  - rulebook F002: 方式名を「プロセスグループ方式」に統一してください。recipe、sample、template が「今の方式」のままです。
+  - recipe F001〜F003: 仕上げチェックに、`lint:fm`、`lint:mermaid`/`lint:d2`、グループ・区分 8 以下、16 ノード以内の項目を追加してください。
+  - template F001: 保管先に関する記入指示の重複を整理してください。
+- 人の確定は plan の方針どおり、横串の確認でまとめて行います。
+
+**確認できなかった範囲**
+- 実行記録(先行する edit タスクの result)は特定できませんでした。
+- 成果物の再評価や、`lint` などの検証コマンドは実行していません。親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict=complete-with-findings。kata の評価結果は4型(rulebook/recipe/sample/template)とも最新で pass(98/91/97/99)。finding は minor のみで、完了条件 DC-001〜DC-005 を妨げない。DC-004 は sample 本文と図のエッジで入荷数量の反映責務が P-02 に一本化されていることを確認した。改善指示: sample F001(役割分担の圧縮)・F002(省略の注記)、rulebook F001/F002 と recipe F001〜F004(物理保管の併記、方式名統一、仕上げチェック追加)、template F001(記入指示の重複)は横串の確認か後続で対応。確認できなかった範囲: 先行する edit タスクの result は特定できなかった。成果物の再評価と lint 系の検証は実行していない。","handoff":["sample F001/F002、rulebook F001/F002、recipe F001〜F004、template F001 の minor finding は横串の確認で人が確定する","recipe に物理保管の例外併記の問いとコツ、仕上げチェックの lint・数値条件を追加する","方式名を「プロセスグループ方式」に統一する(recipe・sample・template)"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/cdfd-overview-sample.md --changed-only","status":"passed","summary":"出力なし(最新)"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md --changed-only","status":"passed","summary":"出力なし(最新)"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/recipes/cdfd-overview-recipe.md --changed-only","status":"passed","summary":"出力なし(最新)"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/templates/cdfd-overview-template.md --changed-only","status":"passed","summary":"出力なし(最新)"}]}
+</specdojo_executor_evidence>

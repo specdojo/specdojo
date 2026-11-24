@@ -1,0 +1,19 @@
+sample を更新しました。grade の指摘 F001〜F005 はすべて直しています。rulebook は変更していません。変更したのは `docs/ja/specdojo/samples/stsd-sample.md` だけです。
+
+検査は sample に Prettier と markdownlint をかけ、markdownlint は 0 件でした。Prettier が整えたあとの文面は読み直していません。lint や schema などの検査はこのあと親 runner が流します。
+
+| finding | 直した内容 |
+| --- | --- |
+| F001（数量違いの返品） | 返品待ちと `T-06` の対象を「過剰納品分または品質不良」に絞りました。納品不足分は返品する現物がないので状態の外とし、「適用範囲」で対象外と書きました。`T-06` の補足には、店番担当が不足数量を仕入記録へ書き、店主代表が仕入先へ連絡すると足しました。 |
+| F002（同じ主張の繰り返し） | 「未成立時の扱い」を「一意判定」へまとめて重複を削りました。template にない項目もなくなり、項目は正本・一意判定・互換の 3 つになりました。 |
+| F003（対象の単位が未定義、major） | 対象の単位を個品（1 個）と決めました。記録は同じ納品明細で同じ状態の個品を数量でまとめます。一部だけ検品や販売が進んだときは、進んだ数量だけが遷移先へ移り、残りは元の状態に留まります。 |
+| F004（値の表記） | 状態一覧の「値」列を template に合わせて `` `received` `` のようにインラインコードにしました。 |
+| F005（呼称のゆれ） | `T-01`・`T-02`・`T-07` の補足にあった「店主代表または家族利用者代表」を、目的で決めた「店番担当」にそろえました。 |
+
+単位を個品にした点（F003）と、不足分を状態の外にして仕入先への連絡を補足に書いた点（F001）は、指摘に沿ってこちらで決めた業務の前提です。
+
+利用者が決める値はこの sample になく、`_UNDECIDED_` は置いていません。文書の役割の割り当てや承認の進み具合も足していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"stsd-sample の grade の指摘 F001〜F005 を直した。個品単位の定義と分割時の扱い、過剰納品分と納品不足分の区別、未成立時の扱いの一意判定への統合、状態値のインラインコード化、店番担当への呼称統一。rulebook は変更していない。","handoff":["F003 の対応で対象の単位を個品（1 個）とし、記録は同じ納品明細で同じ状態の個品を数量でまとめる前提を置いた。rulebook の「適用範囲」の記述ガイドに、数量を持つ対象の判定単位と分割時の扱いを示す観点を足すか検討する（変更案）。","F002 の対応で sample の「状態の判定」を template と同じ 3 項目（正本・一意判定・互換）にした。","利用者が決める値（`_UNDECIDED_`）はこの sample になく、決める必要のある値はない。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/stsd-sample.md","status":"passed","summary":"変更した sample を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/stsd-sample.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>

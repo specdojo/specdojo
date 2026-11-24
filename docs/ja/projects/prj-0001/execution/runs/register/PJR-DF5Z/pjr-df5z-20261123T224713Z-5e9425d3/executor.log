@@ -1,0 +1,13 @@
+`exec resume --task` で統合だけを再試行するとき、commit の前に統合先を取り込むようにしました。これで hook が worktree の古い土台で走る問題は解消するはずです。`typecheck`、`lint:ts`（エラーなし）、追加した 2 件のテストは通りました。`test:unit` と `test-integration` は親の検証に任せたので、このセッションでは流していません。また、`runPreparedTask` を通した結合では試していません。テストは同期の関数と hook の組み合わせまでです。
+
+- **実装:** `src/exec/run/schedule-task.ts` に `syncIntegrationTargetsBeforeCommit` を追加しました。`resumeIntegration` のときだけ、commit の前に既存の `syncTaskWorktreesWithIntegrationTargets` を呼びます。run の記録は exec branch 側を採ります。
+- **同期か hook の差し替えか:** 同期を選びました。既存の同期は未 commit の成果を控えて戻す仕組みを持っています。同期すれば後の統合の merge も統合先と同じ土台になります。
+- **衝突したとき:** `project: merge conflicts with <統合先>: <ファイル>` の形でファイル名が出て、統合の失敗として止まります。
+- **テスト:** `tests/src/exec/task-repos.integration.test.ts` に 2 件追加しました。
+  - 統合先で直した `FIX.md` が無いと落ちる pre-commit hook が、同期の前は失敗し、同期の後は手を入れずに通る。
+  - 統合先と exec branch が衝突したとき、エラーにファイル名が出る。
+- **個票:** 対応結果に、解決内容、同期を選んだ理由、確認結果、「CHANGELOG に書く事項」（区分 Fixed と文案）を書きました。`CHANGELOG.md` は変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"統合だけの再試行（exec resume --task）で、commit の前に統合先と同期するようにした。衝突時はファイル名を block の理由に出す。同期の関数と hook の組み合わせは追加した統合テスト 2 件で確認した。","handoff":["統合の段の同期は resumeIntegration のときだけ行う。初回の統合は worktree を作った直後で土台が新しいため行わない。","test:unit と test-integration は親の検証に任せた。runPreparedTask を通した結合の試験は行っていない。","CHANGELOG.md は変えていない。区分 Fixed と文案を個票の対応結果の「CHANGELOG に書く事項」に書いた。"],"validations":[{"command":"npx vitest run tests/src/exec/task-repos.integration.test.ts -t syncTaskWorktreesWithIntegrationTargets","status":"passed","summary":"同期の関数の 14 件が通った。追加した 2 件を含む。"},{"command":"npm run typecheck","status":"passed","summary":"型エラーなし。"},{"command":"npm run lint:ts","status":"passed","summary":"エラー 0 件、警告 43 件。"},{"command":"npx prettier --check src/exec/run/schedule-task.ts tests/src/exec/task-repos.integration.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-df5z-worktree-hook-stale-base.md","status":"passed","summary":"整形に問題なし。"}]}
+</specdojo_executor_evidence>

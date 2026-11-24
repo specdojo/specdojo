@@ -134,6 +134,34 @@ properties:
           type: string
           minLength: 1
           maxLength: 1000
+        test_selection:
+          type: object
+          additionalProperties: false
+          required: [mode, reason]
+          description: >
+            Recorded by the runner for a parent validation configured with `related`: whether it
+            ran only the related test files or the full suite, why, and which test files ran or
+            did not run.
+          properties:
+            mode:
+              type: string
+              enum: [related, full]
+            reason:
+              type: string
+              minLength: 1
+              maxLength: 1000
+            selected_tests:
+              type: array
+              maxItems: 500
+              items:
+                type: string
+                minLength: 1
+            omitted_tests:
+              type: array
+              maxItems: 500
+              items:
+                type: string
+                minLength: 1
       allOf:
         - if:
             required: [source]
@@ -175,6 +203,27 @@ properties:
           maxLength: 1000
         reason:
           type: string
+          maxLength: 1000
+  excluded_coverage_targets:
+    description: >
+      Runner-recorded lower-bound targets removed on executor resume because an earlier attempt
+      changed them but they no longer exist in the working tree or the cumulative diff (for
+      example, build output created by mistake and deleted before resume). Declared plan targets
+      are never excluded.
+    type: array
+    maxItems: 1000
+    items:
+      type: object
+      additionalProperties: false
+      required: [target, reason]
+      properties:
+        target:
+          type: string
+          minLength: 1
+          maxLength: 1000
+        reason:
+          type: string
+          minLength: 1
           maxLength: 1000
   rate_limit_events:
     description: >
@@ -299,33 +348,74 @@ properties:
     type: array
     description: >-
       Repository settings the runner took from .specdojo/specdojo.local.config.json for this
-      run: a shared repos[] path replaced by name (kind path) or a local repository added
-      (kind added). Omitted when no local config value was applied.
+      run: a shared repos[] path replaced by name (kind path), a local repository added
+      (kind added), a shared external_projects alias `path` replaced (kind external-path),
+      an external_projects alias added locally (kind external-added), or a reference directory
+      path replaced/added (kind reference-path/reference-added). Omitted when no
+      local config value was applied.
     items:
       type: object
-      additionalProperties: false
-      required: [project, repo, kind, path]
-      properties:
-        project:
-          type: string
-          minLength: 1
-        repo:
-          type: string
-          minLength: 1
-        kind:
-          enum: [path, added]
-        path:
-          type: string
-          minLength: 1
-        shared_path:
-          type: string
-          minLength: 1
-      if:
-        properties:
-          kind:
-            const: path
-      then:
-        required: [shared_path]
-      else:
-        not:
-          required: [shared_path]
+      oneOf:
+        - required: [project, repo, kind, path]
+          additionalProperties: false
+          properties:
+            project:
+              type: string
+              minLength: 1
+            repo:
+              type: string
+              minLength: 1
+            kind:
+              enum: [path, added]
+            path:
+              type: string
+              minLength: 1
+            shared_path:
+              type: string
+              minLength: 1
+          if:
+            properties:
+              kind:
+                const: path
+          then:
+            required: [shared_path]
+        - required: [external, kind, path]
+          additionalProperties: false
+          properties:
+            external:
+              type: string
+              minLength: 1
+            kind:
+              enum: [external-path, external-added]
+            path:
+              type: string
+              minLength: 1
+            shared_path:
+              type: string
+              minLength: 1
+          if:
+            properties:
+              kind:
+                const: external-path
+          then:
+            required: [shared_path]
+        - required: [reference, kind, path]
+          additionalProperties: false
+          properties:
+            reference:
+              type: string
+              minLength: 1
+            kind:
+              enum: [reference-path, reference-added]
+            path:
+              type: string
+              minLength: 1
+            shared_path:
+              type: string
+              minLength: 1
+          if:
+            properties:
+              kind:
+                const: reference-path
+          then:
+            required: [shared_path]

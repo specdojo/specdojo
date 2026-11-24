@@ -4,12 +4,11 @@ document: specdojo:cdfd-recipe
 path: docs/ja/specdojo/recipes/cdfd-recipe.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-recipe
 verdict: pass
-score: 97
-graded_at: "2026-11-19T20:22:35.072Z"
-graded_by: flash-high-executor
-content_hash: 25ebc767f70b367d67f4d7a7f6dbb8210c1502549831e5e8202647c163c75bf6
+score: 93
+graded_at: "2026-11-23T21:54:53.630Z"
+graded_by: sonnet-review-executor
+content_hash: 79d3c26d0cf518d9ef18ca54045ca5a40bc86254802d862cf90a7c1a38ed6940
 categories:
   purpose:
     score: 100
@@ -26,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 83
   consistency:
     score: 75
 viewpoints:
@@ -73,8 +72,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-verifiability:
     level: 4
     score: 100
@@ -82,8 +81,8 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -105,13 +104,44 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 1
+  minor: 4
   note: 0
 findings:
   - id: F001
     severity: minor
+    rule: vp-dev-testability
+    line: 145
+    anchor: "- Frontmatter の `id` が `cdfd-<group>`、`type` が `flow` で、`based_on` に全体概要など直接の根拠とした文書だけを挙げている。"
+    message: >-
+      仕上げチェックに Frontmatter の `npm run lint:fm` と、採用記法に応じた図の `npm run lint:mermaid` または `npm run lint:d2` が終了コード 0
+      になる確認を加えると、rulebook の機械検証手順と対応します。
+    message_ja: >-
+      仕上げチェックに Frontmatter の `npm run lint:fm` と、採用記法に応じた図の `npm run lint:mermaid` または `npm run lint:d2` が終了コード 0
+      になる確認を加えると、rulebook の機械検証手順と対応します。
+  - id: F002
+    severity: minor
     rule: vp-qe-omissions-consistency
-    line: 142
+    line: 145
+    anchor: "- Frontmatter の `id` が `cdfd-<group>`、`type` が `flow` で、`based_on` に全体概要など直接の根拠とした文書だけを挙げている。"
+    message: >-
+      前回の指摘の主要部分（`id`・`type`・責任分担の参照）は仕上げチェックに反映済みですが、`status` と `rulebook` の確認、表・図・入出力表の ID と名称の一致、データストアの名称・区分の照合が
+      rulebook の完成判定にあるのに仕上げチェックにありません。
+    message_ja: >-
+      前回の指摘の主要部分（`id`・`type`・責任分担の参照）は仕上げチェックに反映済みですが、`status` と `rulebook` の確認、表・図・入出力表の ID と名称の一致、データストアの名称・区分の照合が
+      rulebook の完成判定にあるのに仕上げチェックにありません。
+  - id: F003
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 143
     anchor: "## 8. 仕上げチェック"
-    message: 仕上げチェックにおいて、Rulebookが完成判定で求める Frontmatter（id、type、status等）や、適用範囲での責任分担の参照確認が漏れています。
-    message_ja: 仕上げチェックにおいて、Rulebookが完成判定で求める Frontmatter（id、type、status等）や、適用範囲での責任分担の参照確認が漏れています。
+    message: rulebook の任意章「未決事項」（`_UNDECIDED_:` 始まり、影響先は ID、決定者は Role code）の扱いが、レシピの各章の書き方と仕上げチェックにありません。
+    message_ja: rulebook の任意章「未決事項」（`_UNDECIDED_:` 始まり、影響先は ID、決定者は Role code）の扱いが、レシピの各章の書き方と仕上げチェックにありません。
+  - id: F004
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 16
+    anchor: >-
+      | ------------------ | -------------------------------------------------------------- |
+      ---------------------------- |
+    message: プロセス ID `P-＜nn＞-＜nn＞` と例外 ID `E-＜nn＞-＜nn＞` の形式は rulebook の規則ですが、レシピは ID を使う旨を述べるだけで形式に触れていません。
+    message_ja: プロセス ID `P-＜nn＞-＜nn＞` と例外 ID `E-＜nn＞-＜nn＞` の形式は rulebook の規則ですが、レシピは ID を使う旨を述べるだけで形式に触れていません。

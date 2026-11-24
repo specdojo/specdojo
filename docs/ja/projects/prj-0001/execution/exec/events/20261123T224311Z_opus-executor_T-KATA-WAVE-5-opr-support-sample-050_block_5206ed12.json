@@ -1,0 +1,17 @@
+{
+  "v": 1,
+  "ts": "2026-11-23T22:43:11Z",
+  "type": "block",
+  "task_id": "T-KATA-WAVE-5-opr-support-sample-050",
+  "by": "opus-executor",
+  "msg": "resumed executor target path is absent from the cumulative worktree diff: specdojo:opr-support-sample (docs/ja/specdojo/samples/opr-support-sample.md); specdojo exec resume --task T-KATA-WAVE-5-opr-support-sample-050 --resume-from executor (add --executor-by <nickname> to switch the executor agent)",
+  "meta": {
+    "limit_deferred": "false",
+    "claim_actor": "opus-executor",
+    "stage_actor": "opus-executor",
+    "pipeline_stage": "executor",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-opr-support-sample-050/T-KATA-WAVE-5-opr-support-sample-050-20261123T182405Z-ad9ea488/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-opr-support-sample-050/T-KATA-WAVE-5-opr-support-sample-050-20261123T182405Z-ad9ea488/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-5-opr-support-sample-050-20261123T182405Z-ad9ea488"
+  }
+}

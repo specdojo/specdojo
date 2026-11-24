@@ -25,6 +25,7 @@ const srcFeatureDirectories = [
   "grade",
   "job",
   "kata",
+  "project",
   "register",
   "review",
   "routine",

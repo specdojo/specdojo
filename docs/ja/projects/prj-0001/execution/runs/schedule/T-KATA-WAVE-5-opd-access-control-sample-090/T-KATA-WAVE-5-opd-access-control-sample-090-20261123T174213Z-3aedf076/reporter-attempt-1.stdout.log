@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "mode": "review",
+  "grade_check": "### 評価結果の確認\n\n#### 鮮度確認のコマンド\n`npx specdojo grade list --target kata --path docs/ja/specdojo/samples/opd-access-control-sample.md --changed-only`\n\n#### 実行結果\n出力なし、`rc=0`。評価結果は最新。\n\n#### 評価結果\n- `verdict`: `pass`\n- `score`: 100\n- `finding_counts`: blocker 0 / major 0 / minor 0 / note 0",
+  "rationale": [
+    "評価結果の鮮度を確認したところ、`npx specdojo grade list --target kata --path docs/ja/specdojo/samples/opd-access-control-sample.md --changed-only` の実行により、評価結果が最新であることを確認した。[[docs/ja/specdojo/samples/opd-access-control-sample.md]] は `pass`、`score` 100 であり、finding も存在しない。",
+    "完了条件 `DC-001`〜`DC-005` について、以下の通り充足を確認した：\n- `DC-001` (`vp-qe-omissions-consistency`): `rulebook` の章立てと必須の構成要素が反映されていることを `grade` の観点と照らし合わせて確認した。\n- `DC-002` (`vp-qe-kata-conformance`): 駄菓子屋のプロジェクト文脈に沿った記述となっていることを確認した。\n- `DC-003` (`vp-qe-kata-conformance`): `rulebook` の禁止事項に抵触していないことを確認した。\n- `DC-004` (`vp-ba-requirements-completeness`): 権限の付与・剥奪ルールおよび監査ログの方針（記録対象・保持期間）が記載されていることを確認した。\n- `DC-005` (`vp-ba-stakeholder-clarity`): 権限の付与対象が共通サンプル文脈の役割名で書かれ、`opr-index` への導線（`specdojo:opr-index`）を持つことを確認した。",
+    "対象の `sample` に対する変更は、plan で求められた磨き込みのみであり、対象外の変更の混入は認められない。"
+  ],
+  "improvements": [
+    "型（`rulebook` および他の `sample`）に関する `grade` の finding は、本タスクの範囲外であるため、今後の別タスクでの解消を期待する。",
+    "- `opd-rulebook` の `F001` (OPR サンプルの `rulebook` 宣言の誤り) および `F002` (旧 `opd-sample` の整理)\n- `opd-incident-management-sample` の `F001`, `F002` \n- `opd-monitoring-sample` の `F001`, `F002`"
+  ],
+  "approach": "#### approach に応じた確認\n\n- 磨き込みの実施: `plan` で求められた `rulebook` の必須要素の反映および `done_criteria` の充足状況を、`grade` の結果および本文の記述から確認した。\n- 対象外の変更の混入: なし。",
+  "verdict": "complete"
+}

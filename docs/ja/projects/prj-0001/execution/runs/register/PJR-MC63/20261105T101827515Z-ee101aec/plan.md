@@ -12,7 +12,7 @@ specdojo:
   owner: BA
   approach: condense
   targets:
-    - prj-0001:stsd-task-execution
+    - stsd-task-execution
 ---
 
 # Condense Plan: PJR-MC63

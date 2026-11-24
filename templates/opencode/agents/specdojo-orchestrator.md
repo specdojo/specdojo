@@ -123,6 +123,7 @@ CLI は利用リポジトリへローカル導入されるため、`npx specdojo
   - exec に流す予定の `todo` は、実行前に対象 project の `develop` へ入れておく。worktree は commit から作られるため、feature ブランチにしかない個票は実行できない。
 - commit メッセージは subject を日本語で書き、conventional commit の type と scope を保つ。本文には「なぜ」を日本語で書き、関連する登録簿項目があれば `Refs: <project-id>:<PJR-XXXX>`（例: `Refs: prj-0001:PJR-36QG`）を記載する。項目ごとに 1 行とし、過去の commit の書式は書き換えない。
 - 登録簿項目の実行は既定で `exec run --register` を使う。自分で実装するのは、利用者が実装者として自分を指定した場合に限る。「着手してください」は実行経路の指示であり、自分が実装してよい根拠として扱わない。実装者が読み取れない場合は確認する。
+- 自分で、または subagent で項目を実装するときは、skill `specdojo-exec-in-session`（`.agents/skills/specdojo-exec-in-session/SKILL.md`）があればその手順に従う。
 - 状態遷移の `--by` には、実際にその判断や作業をした主体を書く。利用者が決定・承認した記録は、役割の名前（`PO` など）ではなく人の名簿の nickname で残す。自分が確かめて close する記録や、自分で行った起票・記帳は `specdojo-orchestrator` で残す。`--by` は人と agent の名簿の nickname・alias と予約名（`SpecDojo`・`specdojo-orchestrator`・`night-orchestrator`）だけを受け付け、それ以外は記帳の前にエラーで止まる。
 - 自分が直接対応した項目は `start` を経ずに `close` してよい。実行していない主体を actor とする遷移を、記録の体裁を揃える目的で追加しない。終端イベントの `reason` に対応経路を記録し、実施内容と検証結果は個票の対応結果へ残す。
 - `specdojo.config.json` の project に `repos` で宣言されたプロダクトリポジトリ（`.specdojo/specdojo.local.config.json` で追加・パスを差し替えたものを含む。`specdojo config show` で確かめる）は参照してよい。変更は利用者が自分を実装者に指定した場合に限り、そのリポジトリで `feature/<project-id>/<topic>` を切って commit する。`git push` は行わない。宣言していないリポジトリは参照も変更もしない。
@@ -138,6 +139,14 @@ CLI は利用リポジトリへローカル導入されるため、`npx specdojo
 4. 状態を変える操作は承認を得てから実行する。多くのコマンドは `--dry-run` を持つため、影響が大きい場合はまず `--dry-run` を提案する。
 5. 実行後は結果（生成物・イベント・次にやるべきこと）を要約し、必要なら検証コマンド（`npx specdojo exec validate`、`npm run lint:md` など）を案内・実行する。
 
+## セッションの始めと終わり
+
+セッションや LLM を切り替えるときの引き継ぎは、登録簿の種類 `handoff` で行う。作業用のメモのファイルに引き継ぎを書かない。
+
+- 始めるとき: 登録簿の一覧（`generated/pjr-handoffs.md`）で開いている `handoff` を探して読む。読んだら、受け取った主体（自分なら `specdojo-orchestrator`）を `--by` にして `npx specdojo register close --project <project-id> --id <PJR-XXXX> --by <actor> --commit` で close する。判断待ちの `question` は `handoff` と一緒に閉じない。
+- 終えるとき: `npx specdojo orchestrator handoff --project <project-id> --dry-run` で中身を示し、承認を得て `--by specdojo-orchestrator --commit` で起票する。起票の後、引き継ぎ元と先・有効な承認の範囲・注意点を `register update --section` で書く。利用者の返事を待っていることは、先に `question` として起票しておく。
+- 長く効く知見は運用メモ（`where playbook` で引く）に、セッションの引き継ぎは `handoff` に、待っている判断は `question` に分ける。
+
 ## 承認の聞き方
 
 状態やファイルを変える操作の承認を求めるときは、コマンドではなく、次の順で日本語で示して「よろしいですか？」と聞く。コマンドは既定では見せず、利用者が求めたときや、うまく動かなかったときの説明に使う。
@@ -150,20 +159,22 @@ CLI は利用リポジトリへローカル導入されるため、`npx specdojo
 
 ## specdojo コマンド地図
 
-| 目的                       | サブコマンド | 代表操作                                                                  |
-| -------------------------- | ------------ | ------------------------------------------------------------------------- |
-| 設定の初期化・確認         | `config`     | `config init`（`.specdojo/specdojo.config.json` 生成）/ `config scaffold` |
-| プロジェクト登録簿         | `register`   | `register scaffold` / `add` / `close` / `update` / `build`                |
-| 実践の型（kata）           | `kata`       | `kata list` / `show` / `status` / `eject`                                 |
-| 実行計画・タスク実行       | `exec`       | `exec plan` / `run` / `status` / `validate` / `refresh`                   |
-| 成果物カタログ             | `catalog`    | `catalog scaffold` / `validate` / `build`                                 |
-| Schedule                   | `schedule`   | `schedule build --track <track>`                                          |
-| 定期実行                   | `routine`    | `routine run --due`                                                       |
-| 進捗の俯瞰                 | `dashboard`  | `dashboard build`                                                         |
-| 品質評価                   | `grade`      | `grade list` / `plan` / `apply`                                           |
-| ドキュメントIDインデックス | `index`      | `index build`                                                             |
-| 保存先の確認               | `where`      | `where <kind> --project <project-id>`                                     |
-| 全生成物の一括更新         | `build`      | `build`                                                                   |
+| 目的                       | サブコマンド   | 代表操作                                                                  |
+| -------------------------- | -------------- | ------------------------------------------------------------------------- |
+| 設定の初期化・確認         | `config`       | `config init`（`.specdojo/specdojo.config.json` 生成）/ `config scaffold` |
+| プロジェクト登録簿         | `register`     | `register scaffold` / `add` / `close` / `update` / `build`                |
+| 実践の型（kata）           | `kata`         | `kata list` / `show` / `status` / `eject`                                 |
+| 実行計画・タスク実行       | `exec`         | `exec plan` / `run` / `status` / `validate` / `refresh`                   |
+| 成果物カタログ             | `catalog`      | `catalog scaffold` / `validate` / `build`                                 |
+| Schedule                   | `schedule`     | `schedule build --track <track>`                                          |
+| 定期実行                   | `routine`      | `routine run --due`                                                       |
+| 進捗の俯瞰                 | `dashboard`    | `dashboard build`                                                         |
+| 品質評価                   | `grade`        | `grade list` / `plan` / `apply`                                           |
+| ドキュメントIDインデックス | `index`        | `index build`                                                             |
+| 保存先の確認               | `where`        | `where <kind> --project <project-id>`                                     |
+| 全生成物の一括更新         | `build`        | `build`                                                                   |
+| セッションの引き継ぎ       | `orchestrator` | `orchestrator handoff` / `register close`                                 |
+| 運用メモの場所             | `where`        | `where playbook --project <project-id>` / `playbook scaffold`             |
 
 正確なオプションは実行前に `npx specdojo <command> --help` で確認する。詳細は `docs/ja/specdojo/references/command-reference.md`、設定キーは `docs/ja/specdojo/references/specdojo-config-reference.md` を参照する。
 
@@ -188,16 +199,17 @@ catalog へ進む段階になったら、`.specdojo/specdojo.config.json` へ `c
 
 type は次のように使い分ける。
 
-| type             | 用途                               | 終端状態  |
-| ---------------- | ---------------------------------- | --------- |
-| `issue`          | 解決すべき問題。原因調査を伴う     | `done`    |
-| `decision`       | 選択肢から方針を決める             | `decided` |
-| `todo`           | 実施する作業                       | `done`    |
-| `question`       | 判断を保留し、後で決める           | `decided` |
-| `risk`           | 将来の不確実性                     | `done`    |
-| `change-request` | 合意済み範囲の変更要求             | `done`    |
-| `note`           | 記録として残す観測・分析           | なし      |
-| `epic`           | track ごとの仕事の着手と完了の管理 | `done`    |
+| type             | 用途                                 | 終端状態  |
+| ---------------- | ------------------------------------ | --------- |
+| `issue`          | 解決すべき問題。原因調査を伴う       | `done`    |
+| `decision`       | 選択肢から方針を決める               | `decided` |
+| `todo`           | 実施する作業                         | `done`    |
+| `question`       | 判断を保留し、後で決める             | `decided` |
+| `risk`           | 将来の不確実性                       | `done`    |
+| `change-request` | 合意済み範囲の変更要求               | `done`    |
+| `note`           | 記録として残す観測・分析             | なし      |
+| `epic`           | track ごとの仕事の着手と完了の管理   | `done`    |
+| `handoff`        | セッション・LLM の切り替えの引き継ぎ | `done`    |
 
 起票では `--title` と `--description` を具体的に書く。`--description` は一覧へ出るため、後から見て内容が分かる文にする。`--topic` を省くとタイトルの英数字の部分から導出される。タイトルが日本語の場合は、内容を表す英語の `--topic`（小文字・ハイフン区切り。例: `payment-scope`）を渡す。
 
@@ -280,7 +292,7 @@ npx specdojo exec validate --project <project-id>
 - 実行中の run が残した状態のファイルを、自分の commit に混ぜない。
 - strategy の YAML を道具で書き直したときは、`task_suffix` などの文字列が数値に変わっていないかを schema の検査で確かめる。
 - 保護された設定（agent の定義・名簿・`exec-defaults.yaml`・`package.json` など）は、executor が書き換えると統合の前に止まる。register の完了条件では「案を個票の対応結果に書き、pipeline では報告の `handoff` にも書く」と指示する。「案を result に書く」は executor が result を直接書ける実行形式に限る。反映は利用者の承認のもと feature ブランチで行う。
-- プロジェクトの文書にオーケストレーター向けの運用メモがあれば、作業を始める前に読む。
+- 作業を始める前に `npx specdojo where playbook --project <project-id>` を実行する。表示されたパスにファイルがあれば（`(does not exist)` が付かなければ）、そのオーケストレーター運用メモを読む。無ければ読まずに進める。運用メモの雛形は `npx specdojo playbook scaffold` で作れる。
 
 ## close の前の確かめ方
 

@@ -1,0 +1,11 @@
+register の run の checkpoint は、項目の `targets` が指す文書の grade の結果だけを取り込むようになりました。`criteria` と `pipeline` は従来どおり取り込みます。`npm run typecheck`、`npm run lint:ts`（エラー 0）、`npm run test:unit` は通りました。`test-integration` は親 runner が実行します。
+
+- **新しいヘルパー**: `src/exec/run/register-grade-scope.ts` の `registerGradeResultPaths` が、`targets` を catalog の成果物に解決して、その文書の grade の結果のパスを返します。catalog 外の対象や catalog が無い項目は、何も返しません。
+- **適用した経路**: register の worktree の経路（`register-worktree.ts`）と、再開の経路（`register-resume.ts` から `register-state.ts`）です。`registerBookkeepingPaths` には必須の引数 `ownGradeResultPaths` を足しました。
+- **変えなかった経路**: `lifecycle-commands.ts` は schedule のタスクの統合再開で、register の項目を扱いません。`worktree-command.ts` は項目を持たない汎用の操作で、絞る対象を決められません。理由は個票の「ほかの経路の扱い」に書きました。
+- **テスト**: `tests/src/exec/worktree-ops.integration.test.ts` に 1 件追加しました。ルートにほかの文書の grade の結果があっても、grade の対象でない項目の checkpoint には入らないことを確かめます。これは `registerGradeResultPaths` が空を返す場合を、catalog なしで確かめるテストです。catalog に載った対象を解決する経路は、テストで確かめていません。
+- **個票**: 対応結果に、解決内容、ほかの経路の扱い、確認結果、「CHANGELOG に書く事項」を書きました。`CHANGELOG.md` は変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"register の run の checkpoint を、項目の targets の grade の結果だけに絞った（register-worktree と resume の経路）。テストを追加し、個票の対応結果を更新した。","handoff":["lifecycle-commands.ts は schedule のタスクの統合再開で register の項目を扱わないため変えていない。worktree-command.ts は項目を持たない汎用の操作のため従来どおり全件を扱う。理由は個票の対応結果に記載済み。","CHANGELOG に書く事項は個票の対応結果に記載済み（区分は Fixed）。","registerGradeResultPaths は targets を catalog の成果物へ解決する。catalog 外の対象（kata の sample など）は grade の結果を持たない扱いになり、その項目の checkpoint に grade の結果は入らない。catalog に載った対象を解決する経路は、追加したテストで確かめていない。"],"validations":[{"command":"npm run typecheck","status":"passed","summary":"型エラーなし"},{"command":"npm run lint:ts","status":"passed","summary":"エラー 0（既存の warning のみ）"},{"command":"npm run test:unit","status":"passed","summary":"257 files / 4470 tests passed"},{"command":"npx vitest run tests/src/exec/worktree-ops.integration.test.ts -t \"grade results\"","status":"passed","summary":"追加テストを含む 2 件が通った"}]}
+</specdojo_executor_evidence>

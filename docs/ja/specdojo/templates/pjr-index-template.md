@@ -43,6 +43,7 @@ Project Register
 - [[pjr-derived-items|登録項目の派生関係]]
 - [[_PROJECT_ID_:pjr-dependent-items|登録項目の実行依存]]
 - [[_PROJECT_ID_:pjr-epic-items|epic ごとの子項目]]
+- [[_PROJECT_ID_:pjr-handoffs|引き継ぎ（handoff）の一覧]]
 
 ### 2.2. controls 全体の派生管理ビュー
 

@@ -1,0 +1,36 @@
+`config scaffold --provider` で、4 つの provider（Claude Code・Codex・OpenCode・Copilot）すべてに skill `specdojo-exec-in-session` が配られるようになりました。ただし、配る本文にはまだこのリポジトリに固有の記述が残っています。原本は正本をそのまま写したもので、正本は executor が変えられないためです。直す案は個票に書きました。
+
+**決めた配り方**
+- **正本:** 4 つの provider すべてで `.agents/skills/specdojo-exec-in-session/SKILL.md` に置きます。
+- **ラッパー:** Claude Code だけに `.claude/skills/specdojo-exec-in-session/SKILL.md` も置きます。
+- **根拠:** 公式文書で確かめたところ、Codex・OpenCode・Copilot は `.agents/skills` を読みますが、Claude Code は `.claude/skills` しか読みません。確かめた URL と理由は個票の 5.3 に書きました。
+- 既にあるファイルは `--force` なしでは上書きしません。
+
+**変更したもの**
+- **写しと検査:** `npm run orchestrator:sync` が、正本を `templates/agent-skills/` へ、ラッパーを `templates/claude/skills/` へそのまま写します。写し漏れと食い違いは `npm run lint:orchestrator-sync` が検出します。原本を手で 2 か所に持つことはありません。
+- **scaffold:** `src/shared/provider-scaffold.ts` で上の配り方にしました。`agent-skills` は provider の一覧に出さず、provider として指定されたら拒みます。
+- **単体テスト:** provider ごとに置かれるファイルの一覧、既にあるファイルを上書きしないこと、写し漏れの検出を足しました。
+- **文書:** command-reference の `config scaffold` の説明、exec 設定ガイド、オーケストレーター運用ガイド、`templates/claude/README.md` を直しました。
+- **個票:** 作業内容 1〜4 を `done` にし、対応結果に CHANGELOG の文案（区分「追加」）と変更案を書きました。
+
+**検証**
+- 通ったもの: `npm run -s lint:orchestrator-sync`（11 件一致）、変えたファイルの Prettier と markdownlint、`npm run -s validate:history-links`。
+- 関係する単体テストのファイルは個別に流して通りました。`typecheck`・`lint:ts`・`test:unit`・`lint:md` は親の runner が流します。
+
+**利用者の承認のもとでオーケストレーターが反映するもの（個票 5.4）**
+1. **正本の記述 4 点:**
+   - `src/` のパスを `dist` 側のパスだけにする。
+   - `npm run build` の段を消して playbook へ移す。
+   - `develop` を統合ブランチ（`integration_branch`）に替える。
+   - `npm run docs:build` を「文書サイトのビルド」にする。
+
+   直した後に `npm run orchestrator:sync` を流せば、配る原本も直ります。
+2. **`lefthook.yml`:** `orchestrator-sync` の `glob` に skill の 4 つのパスを足します。足さないと、正本だけを変えた commit で写しが自動では直りません（検査では検出されます）。
+
+**まだ終わっていないこと**
+- 作業内容 5 は `open` のままです。統合の後、`npm pack` の tarball を空のリポジトリに入れて `config scaffold --provider claude` を流し、新しいセッションの Claude Code がラッパーから正本を読むかを確かめる必要があります。
+- OpenCode と Copilot は `.claude/skills` も読みます。Claude Code と併せて scaffold すると同じ名前の skill が 2 か所に置かれますが、その扱いは確かめていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"skill specdojo-exec-in-session の配布を実装した。正本は orchestrator:sync で templates/agent-skills/ と templates/claude/skills/ へバイト一致で写し、lint:orchestrator-sync が写し漏れを検出する。provider scaffold は 4 provider で .agents/skills/ に正本を、Claude Code には .claude/skills/ のラッパーも置き、既にあるファイルは --force なしでは上書きしない。単体テスト・文書・個票（CHANGELOG の文案、一次情報の URL、変更案）を更新した。","handoff":["正本 `.agents/skills/specdojo-exec-in-session/SKILL.md` の変更案（保護された設定のため未反映。反映後に `npm run orchestrator:sync` を流すと配布原本も直る）: (1) `src/exec/agent-protected-config.ts`（利用リポジトリでは …）を `node_modules/specdojo/dist/exec/agent-protected-config.js` だけにする。(2) 「承認を得て merge する」の `src` を変えたら `npm run build` の段を正本から消し、`pm-orchestrator-playbook.md` へ移す。(3) 「作業ツリー（develop）」を「統合ブランチ（`integration_branch`）を出した作業ツリー」に替える。(4) `npm run docs:build` を「文書サイトのビルド」にする。","`lefthook.yml` の `orchestrator-sync` の `glob` に `.agents/skills/specdojo-exec-in-session/SKILL.md`、`.claude/skills/specdojo-exec-in-session/SKILL.md`、`templates/agent-skills/**`、`templates/claude/skills/**` を足す案。足さないと、正本だけを変えた commit で写しが自動では直らない（`lint:orchestrator-sync` では検出される）。","作業内容 5（統合の後に `npm pack` の tarball を空のリポジトリへ入れて `config scaffold --provider claude` を流し、新しいセッションの Claude Code がラッパーから正本を読むかを確かめる）は specdojo-orchestrator が行う。個票では open のまま。","_ASSUMPTION_: OpenCode と Copilot は `.claude/skills` も読むため、Claude Code と併せて scaffold すると同じ名前の skill が 2 か所に置かれる。ラッパーは正本を読ませるだけなので害はないと見たが、重複の扱いは確かめていない。","provider ごとの読み場所の一次情報: https://code.claude.com/docs/en/skills 、 https://learn.chatgpt.com/docs/build-skills 、 https://opencode.ai/docs/skills/ 、 https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-skills"],"validations":[{"command":"npm run -s lint:orchestrator-sync","status":"passed","summary":"orchestrator body sync: OK (11 targets)"},{"command":"npx vitest run --config vitest.unit.config.ts tests/src/shared/provider-scaffold.test.ts tests/tools/validate-orchestrator-sync.test.ts","status":"passed","summary":"34 + 8 tests passed（関係する単体テストのファイルを個別に実行。全件は親の test-unit が流す）"},{"command":"npx prettier --check src/shared/provider-scaffold.ts tools/*orchestrator*.mjs tests/tools/validate-orchestrator-sync.test.ts tests/src/shared/provider-scaffold.test.ts templates/agent-skills templates/claude/skills","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/projects/prj-0001/controls/project-register/pjr-09ha-distribute-exec-in-session-skill.md templates/claude/README.md","status":"passed","summary":"0 issues"},{"command":"npm run -s validate:history-links","status":"passed","summary":"変更した個票を含めて違反なし"}]}
+</specdojo_executor_evidence>

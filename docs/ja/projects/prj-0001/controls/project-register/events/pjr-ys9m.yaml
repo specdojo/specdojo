@@ -1,0 +1,153 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_fb07a349600f40d49d907eea27532a99
+  ts: "2026-11-22T03:13:52Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: opencode の executor が sandbox で検証のコマンドとファイルの削除を流せない
+    - field: description
+      from: ""
+      to: qwen（opencode）の executor は npx・rm・git rm を拒まれ、検証を流せないまま報告する。PJR-7KQT は claude の分だけを直した。opencode の executor にも検証のコマンドを許す設定を足し、easy に振る基準も見直す。
+    - field: input
+      from: ""
+      to: '["2026-11-22、F6MC は検証を流せず 2 回止まり、HCHH は 2 ファイルを消せず止まった。","利用者の承認（2026-11-22、indie）で起票した。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-22"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-7KQT"]'
+- v: 1
+  id: reg_d1678ae77a264fb19c9894b35a63c486
+  ts: "2026-11-22T11:14:03Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件を利用者の承認のもとで書く
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_fb07a349600f40d49d907eea27532a99
+- v: 1
+  id: reg_1d50632a85474befbd7de17832880106
+  ts: "2026-11-22T11:14:08Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 作業内容を利用者の承認のもとで書く
+  changes:
+    - field: section
+      from: ""
+      to: 作業内容
+  previous_event_id: reg_d1678ae77a264fb19c9894b35a63c486
+- v: 1
+  id: reg_234e22f5598b481493cb6163542d36cc
+  ts: "2026-11-22T11:38:49Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_1d50632a85474befbd7de17832880106
+- v: 1
+  id: reg_3d1a4f49e08a403fa4f36e9b9a5203f6
+  ts: "2026-11-22T11:44:44Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_234e22f5598b481493cb6163542d36cc
+- v: 1
+  id: reg_4c2df6e79eba4455b5802e135b9717bd
+  ts: "2026-11-22T11:56:27Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: 2 回目の実行の完了条件を利用者の承認のもとで足す
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_3d1a4f49e08a403fa4f36e9b9a5203f6
+- v: 1
+  id: reg_f4be30fbbca54b0f8fb8ff1f94d4c312
+  ts: "2026-11-22T12:15:47Z"
+  action: start
+  actor: sonnet-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_4c2df6e79eba4455b5802e135b9717bd
+- v: 1
+  id: reg_f3211c7a5ae24612b8ffcdd11862d828
+  ts: "2026-11-22T12:21:42Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_f4be30fbbca54b0f8fb8ff1f94d4c312
+- v: 1
+  id: reg_82506679b9104d1d82269f6fa76a3757
+  ts: "2026-11-22T13:06:36Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 2 回目の実装を実際の opencode で確かめ、保護された設定の反映（070630934、indie の承認）の後に PJR-SZCR で qwen の executor が拒まれないことを確かめた。git diff の拒否の原因は、パイプなどでつないだコマンドが拒まれることだと SZCR で裏付けた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: opencode の executor に検証のコマンドと docs・src・tests の下に限った git rm を許した。allow_commands はエージェントの permission.bash に OPENCODE_CONFIG_CONTENT で入れる。prj-0001 の定義に反映し、qwen の実際の run で確かめた
+  previous_event_id: reg_f3211c7a5ae24612b8ffcdd11862d828

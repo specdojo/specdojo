@@ -11,7 +11,7 @@ specdojo:
   execution: human
   approach: bootstrap-finalize
   targets:
-    - prj-0001:cdt-register-type
+    - cdt-register-type
     - specdojo:cdt-rulebook
     - specdojo:cdt-sample
 ---

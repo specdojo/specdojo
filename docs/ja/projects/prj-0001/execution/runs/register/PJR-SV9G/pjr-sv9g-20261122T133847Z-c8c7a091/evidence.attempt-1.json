@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-SV9G",
+  "run_id": "pjr-sv9g-20261122T133847Z-c8c7a091",
+  "stage": {
+    "role": "executor",
+    "actor": "sonnet-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-22T13:40:27.030Z",
+    "completed_at": "2026-11-22T13:41:12.583Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-sv9g.yaml",
+      "status": "MM"
+    }
+  ],
+  "attempt_changes": [],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run lint:md",
+      "status": "not_run",
+      "summary": "編集できなかったため未実行（親 runner が実行する検証）。"
+    }
+  ],
+  "final_message": "template への書き込み権限が付与されず（Edit が permission 拒否）、prj-charter-template の編集と個票の更新を実施できなかった。成果物は未変更。",
+  "completion_status": "incomplete",
+  "handoff": [
+    "`docs/ja/specdojo/templates/prj-charter-template.md` と個票 `pjr-sv9g-template-slim-pilot-prj-charter.md` への書き込み権限が必要。権限付与後に executor を再開する。",
+    "予定した編集: 冒頭文・目的・権限委譲・前提制約・承認の `_TODO_` 注記を最小化し、承認事項の例示 5 項目と認可条件行の注記を削除する。「未決事項」表の列は `論点`・`影響`・`当面の扱い` に直す（rulebook と sample はこの列で、PJR-7M9J の変更案 2 と同じ）。",
+    "個票の対応結果に書く予定の項目: 実施内容、前後の文字数（空白と表の区切り行を除く）、迷った点、外す記述・残す記述・参照の形の一覧、変更案、保護された設定の変更なし、CHANGELOG に書く事項（変更区分）、残課題（orchestrator による型の grade）。"
+  ],
+  "block_reason": "executor reported incomplete: template への書き込み権限が付与されず（Edit が permission 拒否）、prj-charter-template の編集と個票の更新を実施できなかった。成果物は未変更。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-SV9G/pjr-sv9g-20261122T133847Z-c8c7a091/executor.attempt-1.log",
+      "bytes": 3046,
+      "truncated": false
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+`docs/ja/specdojo/samples/mtp-sample.md` の冗長な 3 箇所を削るか短くしました。Prettier の確認は通りました。`lint:md` などの検査は親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"冗長な3箇所を削る・参照に置き換える形で直した。判断に要る内容は変えていない。","handoff":[],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/mtp-sample.md","status":"passed","summary":"整形に問題なし"}],"condense_records":[{"location":"3. テスト環境/データ準備 の導入文の 2 文目","category":"table-prose","action":"delete","reason":"直後の表の内容を言い直しているだけで、削っても意味は変わらない","cause":{"type":"document"}},{"location":"5. 合否基準 の導入文の 2 文目","category":"repetition","action":"delete","reason":"結果報告の「結果」項目に同じ内容がある。判定者は表の列に残っている","cause":{"type":"document"}},{"location":"6. 差異発生時の扱い の「再実行の上限」の箇条書き","category":"repetition","action":"reference","reason":"追加の回の回数と期限は「リハーサル回数とスケジュール」の表と NO-GO の条件に既にある。ここでは表への参照に置き換え、PO の判断と転記先は残した","cause":{"type":"document"}},{"location":"1. 概要 の事業上の影響の文","category":"unneeded-background","action":"retain","reason":"つけ残高と在庫数を厳しく確かめる理由を示す文なので残す","cause":{"type":"document"}}]}
+</specdojo_executor_evidence>

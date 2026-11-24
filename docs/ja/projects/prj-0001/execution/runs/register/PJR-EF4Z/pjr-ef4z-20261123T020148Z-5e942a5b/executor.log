@@ -1,0 +1,15 @@
+統合テストの全件を毎晩 4 時（Asia/Tokyo）に流す routine を追加しました。結果は朝報告として `execution/reports/nightly-integration-tests/` に残ります。
+
+実行して確認したのは、`npm run typecheck`、`npm run lint:ts`（エラー 0）、新規の単体テスト 6 件（通過）、job と routine の schema 検証、prettier、`npm run validate:history-links` です。`test:unit` と `lint:md` の全体は親 runner の検証に任せました。統合後に `routine run --id rtn-nightly-integration-tests` で 1 回流す確認は、個票の作業内容の表で `open` のまま残してあります。
+
+- **方式:** 任意のシェルを流す action は足さず、`specdojo orchestrator integration-tests` を新設しました。固定の引数で `npm run test:integration` だけを流します。routine の action は既存の `job` を使いました。
+- **ロック待ち:** `job-nightly-integration-tests` は、実行中の run がプロジェクト実行ロックを持っている間、最大 3 時間待ちます。時間切れは失敗ではなく延期として記録されます。ロック待ちの単体テストは足していません。
+- **時刻:** 4 時は、0 時の夜間実行、1 時の grade、3 時の翻訳の後で、5 時の grade-recheck と 6 時の exec-cycle の前です。
+- **報告の内容:** Vitest の JSON 報告から、成功・失敗の件数と、失敗したテストのファイル・名前・メッセージ要約を表にします。JSON を読めないときは出力の末尾を残します。失敗時の終了コードは 1 で、job の実行記録にも失敗が残ります。
+- **定義:** routine は `enabled: true` です。
+- **文書:** `command-reference.md` と `register-operation-guide.md` に追記しました。個票の対応結果には、方式の理由と「CHANGELOG に書く事項」の小節を書いてあります。
+- **保護設定:** `package.json` など保護された設定は変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"`specdojo orchestrator integration-tests` と、毎晩 4 時の routine `rtn-nightly-integration-tests`（job は `job-nightly-integration-tests`、ロック待ち 3 時間）を追加した。単体テスト、文書、個票も更新した。統合後の `routine run --id` での確認は orchestrator に残した。","handoff":["統合後に orchestrator が `routine run --id rtn-nightly-integration-tests` を 1 回流して確かめる（個票の作業内容の行 5 は `open` のまま）。","方式の決定: 任意シェルの action は足さず、`specdojo orchestrator integration-tests` を新設し、既存の `job` action（`task.steps` と `lock_wait_seconds` 10800 秒）から呼ぶ。時刻は毎晩 4 時（Asia/Tokyo）で、ほかの夜の routine と重ならない。","CHANGELOG に書く事項: 区分 Added。`specdojo orchestrator integration-tests` を追加し、routine `rtn-nightly-integration-tests` で統合テストの全件を毎晩 1 回流して朝報告へ結果を残すようにした。","ロック待ち（延期）の単体テストは、既存の job の機構に任せて追加していない。","保護された設定の変更は不要だった。"],"validations":[{"command":"npm run typecheck","status":"passed","summary":"エラーなし"},{"command":"npm run lint:ts","status":"passed","summary":"エラー 0（既存の warning のみ）"},{"command":"npx vitest run --config vitest.unit.config.ts tests/src/commands/nightly-integration-tests.test.ts","status":"passed","summary":"6 件通過"},{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/job.schema.yaml --data docs/ja/projects/prj-0001/jobs/job-nightly-integration-tests.yaml","status":"passed","summary":"valid"},{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/routine.schema.yaml --data docs/ja/projects/prj-0001/routines/rtn-nightly-integration-tests.yaml","status":"passed","summary":"valid"},{"command":"npx prettier --check (changed files)","status":"passed","summary":"個票を --write で整形した後に変更ファイルが整形済みになった"},{"command":"npm run validate:history-links","status":"passed","summary":"個票を含め違反なし"}]}
+</specdojo_executor_evidence>

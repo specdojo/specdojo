@@ -1,0 +1,7 @@
+指定された sample 31 件を [dct-kata.yaml](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-E30T/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-kata.yaml) に追加し、[個票](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-E30T/docs/ja/projects/prj-0001/controls/project-register/pjr-e30t-kata-catalog-missing-samples.md) に作業結果を記録しました。
+
+schema・カタログ検証、カタログ生成、履歴リンク検証は通過しました。カタログ検証では既存の警告が出ています。親 runner が担当する検証は実行後に引き継がれます。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"指定された sample 31 件をカタログに追加し、個票を更新した。","handoff":["新規項目の `depends_on` は、新たな作業順序を確定できないため空とした。同一 rulebook または同系列の既存項目の近くに配置し、系列がないものはプロジェクト概要の近くに配置した。","CHANGELOG に書く事項はなし。"],"validations":[{"command":"npx --no-install prettier --write docs/ja/projects/prj-0001/010-deliverables-catalog/dct-kata.yaml docs/ja/projects/prj-0001/controls/project-register/pjr-e30t-kata-catalog-missing-samples.md","status":"passed","summary":"変更ファイルを整形した。"},{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/dct.schema.yaml --data docs/ja/projects/prj-0001/010-deliverables-catalog/dct-kata.yaml","status":"passed","summary":"カタログの schema 検証に成功した。"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"カタログ検証に成功した。既存の警告あり。"},{"command":"node --import tsx src/specdojo.ts catalog build","status":"passed","summary":"カタログを生成できた。"},{"command":"npm run validate:history-links","status":"passed","summary":"履歴リンク検証に成功した。"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし。"}]}
+</specdojo_executor_evidence>

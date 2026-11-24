@@ -32,7 +32,7 @@ Code Table (CDT) Documentation Rules
 
 ## 3. ファイル命名・ID規則
 
-- **ID**: `<project-id>:cdt-<term>`（例: `prj-0001:cdt-register-type`）。`<term>` は分類の主題を表す英小文字の kebab-case とする。
+- **ID**: プロダクト文書としての `cdt-<term>`（例: `cdt-register-type`）。`<term>` は分類の主題を表す英小文字の kebab-case とする。
 - **ファイル名と配置**: `cdt-<term>.md`。成果物カタログの `base_path`・`path` と [[specdojo:docs-structure-guide|ドキュメント構成ガイド]] に従う。
 - **文書名（H1）**: 分類の主題を示す（例: `# 分類一覧（登録項目の種別）`）。
 

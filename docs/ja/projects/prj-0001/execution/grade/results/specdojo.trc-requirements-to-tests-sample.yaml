@@ -4,11 +4,11 @@ document: specdojo:trc-requirements-to-tests-sample
 path: docs/ja/specdojo/samples/trc-requirements-to-tests-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 88
-graded_at: "2026-10-20T20:39:27.140Z"
-graded_by: flash-high-executor
-content_hash: 94e8359c86922d7e3f7dc9cb8a80eae3b248e1a8d62fd630cf955869fa64c375
+verdict: pass
+score: 99
+graded_at: "2026-11-22T06:57:44.575Z"
+graded_by: opus-review-executor
+content_hash: 80452756d70c8b8783456bbc0c0901a934ae3c8763bf1fb540483c6aef2ed109
 categories:
   purpose:
     score: 100
@@ -25,9 +25,9 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 100
   consistency:
-    score: 50
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -78,11 +78,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -103,30 +103,23 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 2
+  major: 0
   minor: 1
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 9
-    anchor: "- 要求参照元: 要求一覧 `req-2026-r1`"
-    message: Frontmatter の `based_on` に、本文で参照されている要求一覧および受入テスト仕様の ID が漏れている。
-    message_ja: Frontmatter の `based_on` に、本文で参照されている要求一覧および受入テスト仕様の ID が漏れている。
-  - id: F002
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 40
-    anchor: "## 6. 変更履歴と更新ルール"
-    message: rulebook で禁止されている「ビューの手編集」を前提とした更新ルール（手動での充足状況管理やチケット ID 追記）が定義されており、成果物の型定義に違反している。
-    message_ja: rulebook で禁止されている「ビューの手編集」を前提とした更新ルール（手動での充足状況管理やチケット ID 追記）が定義されており、成果物の型定義に違反している。
-  - id: F003
     severity: minor
     rule: vp-ux-language-consistency
-    line: 35
+    line: 73
     anchor: >-
-      | 要求ID     | ギャップ内容                   | 解消方針                                            | 担当           | 期限      
-      | 判定条件                            |
-    message: 担当者欄における表記が Role code ではなく役職名・役割名の自由記述となっており、表記が不統一である。
-    message_ja: 担当者欄における表記が Role code ではなく役職名・役割名の自由記述となっており、表記が不統一である。
+      | `bac-sample BAC-01`, `prj-success-criteria-and-acceptance-criteria-sample SC-01`・`AC-01`・`AC-03`・`AC-04` |
+      対応テストが `draft`         | `atc-cash-sale`・`stc-cash-sale` を各カタログの `ready` 条件（判定に影響する前提の解消を含む）でレビューし、人が `ready`
+      にする                     | 再生成で該当行が `充足` になる                                                        |
+    message: >-
+      ギャップと対応方針の表の「対象」列で、`prj-success-criteria-and-acceptance-criteria-sample SC-01`・`AC-01` や `bac-sample BAC-02`,
+      `BAC-03` のように 2 件目以降の項目 ID に要求文書 ID がなく、区切りも `,` と `・` が混在しており、rulebook の要求項目の表記 `＜要求文書ID＞ ＜項目ID＞`
+      とマトリクスの要求ID列に揃っていないため、各項目に文書 ID を付けて区切りを統一する（前回の指摘は各グループの先頭に文書 ID が付いたことで大部分が解消し、残りは表記の統一だけのため minor とする）。
+    message_ja: >-
+      ギャップと対応方針の表の「対象」列で、`prj-success-criteria-and-acceptance-criteria-sample SC-01`・`AC-01` や `bac-sample BAC-02`,
+      `BAC-03` のように 2 件目以降の項目 ID に要求文書 ID がなく、区切りも `,` と `・` が混在しており、rulebook の要求項目の表記 `＜要求文書ID＞ ＜項目ID＞`
+      とマトリクスの要求ID列に揃っていないため、各項目に文書 ID を付けて区切りを統一する（前回の指摘は各グループの先頭に文書 ID が付いたことで大部分が解消し、残りは表記の統一だけのため minor とする）。

@@ -3,7 +3,11 @@ import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { dump } from "js-yaml";
-import { findDeliverableInfo } from "../../../src/exec/plans-core.js";
+import {
+  findDeliverableInfo,
+  reviewGradeSubject,
+  reviewGradeTargetKind,
+} from "../../../src/exec/plans-core.js";
 import { generateSinglePlan } from "../../../src/exec/plans.js";
 import {
   enforceKataReviewVerdict,
@@ -293,4 +297,93 @@ describe("schedule kata review", () => {
     expect(content).toContain("`complete-with-findings` でも完了扱いにしない");
     expect(kataReviewSummary(subjects(), "test")).toContain("`pass`");
   });
+});
+
+function kataCatalog(): void {
+  write(
+    "kata-catalog/dct-kata.yaml",
+    dump({
+      id: "test:dct-kata",
+      domain: "kata",
+      base_path: "/docs/ja/specdojo",
+      groups: [
+        {
+          base_path: "samples",
+          deliverables: [
+            {
+              local_id: "overview",
+              name: "Sample",
+              kind: "work",
+              path: "test-sample.md",
+              rulebook: "specdojo:test-rulebook",
+              done_criteria: [],
+            },
+          ],
+        },
+      ],
+    }),
+  );
+}
+
+describe("review grade target kind (PJR-PP4X)", () => {
+  it("grades a kata-catalog sample once with --target kata before the review", async () => {
+    kataCatalog();
+    const invoke = vi
+      .spyOn(reviewGrade, "ensureReviewGrade")
+      .mockResolvedValue({ action: "executed", runId: "test" });
+
+    await gradeBeforeReviewPlan({
+      task,
+      projectId: "test",
+      catalogPath: "kata-catalog",
+      repoRoot: root,
+      dryRun: false,
+    });
+
+    expect(invoke.mock.calls.map(([options]) => [options.subjectPath, options.target])).toEqual([
+      [samplePath, "kata"],
+      [rulebookPath, "kata"],
+    ]);
+  });
+
+  it("renders --target kata in the review plan of a kata-catalog deliverable", async () => {
+    kataCatalog();
+
+    const plan = await generateSinglePlan({
+      projectId: "test",
+      executionPath: "execution",
+      catalogPath: "kata-catalog",
+      task,
+      projectContext: [],
+    });
+
+    expect(readFileSync(plan, "utf8")).toContain("grade の対象種別（`--target`）: `kata`");
+  });
+
+  it("keeps --target deliverable for a review of an ordinary deliverable", async () => {
+    const subject = reviewGradeSubject("catalog", task);
+    const plan = await generateSinglePlan({
+      projectId: "test",
+      executionPath: "execution",
+      catalogPath: "catalog",
+      task,
+      projectContext: [],
+    });
+
+    expect(subject?.target).toBe("deliverable");
+    expect(readFileSync(plan, "utf8")).toContain("grade の対象種別（`--target`）: `deliverable`");
+  });
+
+  it.each([
+    ["fully-guided", "/docs/ja/specdojo/samples/a-sample.md", undefined, "kata"],
+    ["retrofit", "docs/ja/specdojo/rulebooks/a-rulebook.md", undefined, "kata"],
+    ["retrofit", "docs/a.md", "kata", "kata"],
+    ["sample-maintenance", "docs/a.md", undefined, "kata"],
+    ["fully-guided", "docs/ja/projects/prj-0001/a.md", "test", "deliverable"],
+  ] as const)(
+    "judges approach %s, path %s, catalog domain %s as --target %s",
+    (approach, subjectPath, catalogDomain, expected) => {
+      expect(reviewGradeTargetKind({ approach, subjectPath, catalogDomain })).toBe(expected);
+    },
+  );
 });

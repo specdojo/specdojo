@@ -105,3 +105,37 @@ describe("loadConfig with external_projects", () => {
     );
   });
 });
+
+function linkWorktree(): string {
+  const worktree = join(parent, "worktrees", "task", "project");
+  const gitdir = join(root, ".git", "worktrees", "task");
+  mkdirSync(worktree, { recursive: true });
+  mkdirSync(gitdir, { recursive: true });
+  writeFileSync(join(worktree, ".git"), `gitdir: ${gitdir}\n`, "utf8");
+  return worktree;
+}
+
+describe("external_projects in a linked worktree", () => {
+  it("resolves path from the main working tree root instead of the worktree", () => {
+    const worktree = linkWorktree();
+    const external = { customer: { path: "../target", project_id: "prj-target" } };
+
+    const errors = validateExternalProjects(external, ["prj-local"], worktree);
+    const resolved = resolveExternalProjects(worktree, { external_projects: external });
+
+    expect(errors).toEqual([]);
+    expect(resolved[0]?.repoRoot).toBe(join(parent, "target"));
+  });
+
+  it("still reports a missing target when the main working tree has none", () => {
+    const worktree = linkWorktree();
+
+    const errors = validateExternalProjects(
+      { customer: { path: "../missing", project_id: "prj-target" } },
+      ["prj-local"],
+      worktree,
+    );
+
+    expect(errors[0]).toContain(`does not exist (resolved to ${join(parent, "missing")})`);
+  });
+});

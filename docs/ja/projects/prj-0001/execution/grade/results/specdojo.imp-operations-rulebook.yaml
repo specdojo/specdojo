@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/imp-operations-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 97
-graded_at: "2026-11-08T20:45:53.075Z"
-graded_by: flash-high-executor
-content_hash: f800a84e5d872393f06baa0355462591576767572a57e2d9a1ed4e09485e85ed
+score: 98
+graded_at: "2026-11-23T15:50:53.580Z"
+graded_by: sonnet-review-executor
+content_hash: a5d6c6920258523650981cab89e43e9d463ef20560aed7560b8f50876f7c6773
 categories:
   purpose:
     score: 100
@@ -21,7 +21,7 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
     score: 100
   quality:
@@ -72,8 +72,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-verifiability:
     level: 4
     score: 100
@@ -81,11 +81,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 4
     score: 100
@@ -104,27 +104,19 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 3
+  minor: 1
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-kata-conformance
-    line: 2
-    anchor: ""
-    message: Frontmatter の recipe が undecided となっており、対応する recipe への参照が定義されていない。
-    message_ja: Frontmatter の recipe が undecided となっており、対応する recipe への参照が定義されていない。
-  - id: F002
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 2
-    anchor: ""
-    message: Frontmatter の template が undecided となっており、対応する template への参照が定義されていない。
-    message_ja: Frontmatter の template が undecided となっており、対応する template への参照が定義されていない。
-  - id: F003
-    severity: minor
-    rule: vp-ux-readability
-    line: 13
-    anchor: ""
-    message: 委譲先として「各ドキュメント」と記載されているが、具体的にどの成果物種別に委譲すべきかの例示がなく、境界が曖昧である。
-    message_ja: 委譲先として「各ドキュメント」と記載されているが、具体的にどの成果物種別に委譲すべきかの例示がなく、境界が曖昧である。
+    rule: vp-dev-testability
+    line: 12
+    anchor: >-
+      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status`・承認・改訂と廃止・未決事項の引き継ぎは [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]]
+      に従う。文書の整形・lint はリポジトリの検証で扱う。
+    message: >-
+      作成後に実行する検証（例: `npm run lint:md`、`npm run lint:fm`、`npm run validate:schema`
+      など該当するもの）と、その期待結果を明記し、「リポジトリの検証で扱う」を具体化すべきである。
+    message_ja: >-
+      作成後に実行する検証（例: `npm run lint:md`、`npm run lint:fm`、`npm run validate:schema`
+      など該当するもの）と、その期待結果を明記し、「リポジトリの検証で扱う」を具体化すべきである。

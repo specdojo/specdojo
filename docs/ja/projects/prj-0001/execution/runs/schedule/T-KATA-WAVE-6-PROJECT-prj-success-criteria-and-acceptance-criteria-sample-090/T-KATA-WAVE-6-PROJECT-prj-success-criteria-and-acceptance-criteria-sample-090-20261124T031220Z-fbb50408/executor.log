@@ -1,0 +1,57 @@
+レビューの結果、判断は `complete-with-findings` です。評価結果はすべて最新で、型の 4 件（rulebook・recipe・sample・template）はすべて `pass` でした。未充足事項はありません。
+
+## 評価結果の確認
+
+- 次の鮮度確認を実行しました。
+  - sample には `npx specdojo grade list --target kata --path <path> --changed-only` と `--incomplete` の両方を実行しました。
+  - rulebook・recipe・template には `--changed-only` を実行しました。
+- 5 件のコマンドすべてで、パスの出力はなく終了コードは 0 でした。したがって評価結果は最新で、評価パイプラインも完了しています。
+- 評価対象ごとの結果は次のとおりです。
+
+| 評価対象 | `verdict` | `score` | finding |
+| --- | --- | --- | --- |
+| sample | `pass` | 96 | minor 2 件 |
+| rulebook | `pass` | 98 | minor 1 件 |
+| recipe | `pass` | 98 | minor 2 件 |
+| template | `pass` | 90 | minor 9 件 |
+
+- blocker と major の finding はありません。
+- review の開始後に追跡対象ファイルの変更はなく、`git status` に出たのは run の `pipeline-state.json` だけでした。
+
+## 判断根拠
+
+sample 本文を読み、完了条件を照合しました。
+
+- DC-001: sample の本文は §1〜§5（判定対象と適用範囲、成功基準、受入条件、判定手順と証跡、例外条件と未解決事項）で構成されています。成功基準と受入条件の表もあります。この章立ては grade の評価結果と食い違いません。
+- DC-002・DC-003: 駄菓子屋きぬやの文脈で書かれています。grade の `vp-qe-kata-conformance` は 75 点（minor）で、禁止事項への抵触を指す finding はありません。
+- DC-004: AC-05 が入荷・棚卸・廃棄の登録による在庫数の増減を定めています。つけでの購入と入金の登録によるつけ残高の増減も定め、結果が AC-02 の画面に出ることを求めています。AC-02 は在庫数とつけ残高の表示を求めています。
+- DC-005: SC-01〜SC-10 と AC-01〜AC-05 のすべてに、判定基準または合格基準があります。
+- 先行 edit の実行記録は plan から特定できず、確認できませんでした。
+
+## 未充足事項・改善指示
+
+完了を妨げる未充足事項はありません。finding が完了を妨げない理由は、すべて minor で、必須要素の欠落や禁止事項への抵触に当たらないためです。対応は完了後の改善として扱えます。
+
+- sample F001: SC-06 の「必須記録と引き継ぎ」の中身を定義します。必須記録の項目と引き継ぎの内容を明記します。
+- sample F002 と rulebook F001 と template F005・F006・F008: 例外表の列構成が 3 者で揃っていません。rulebook・template は「論点・判定への影響・当面の扱い」で、sample は「論点・扱い・解決期限 / 判断タイミング・責任者」です。rulebook・template・sample のどれに揃えるかは型の整備側で決めてください。
+- template F002・F003・F004・F007・F009: 判定手順に、条件変更時の変更理由と影響条件 ID の記録、変更要求ログへの起票、下流の再照合を求める手順がありません。sample の手順 6 に対応する手順の追加が必要です。
+- template F001: 解決期限 / 判断タイミングと責任者の列が template にありません。
+- recipe F001・F002: 証跡の公開範囲と、確認者・承認者を役割名で書くことを、問い・レビュー観点・仕上げチェックへ追記します。
+- 評価結果の内容に疑義はなく、再評価は要求しません。
+
+## approach に応じた確認（fully-guided）
+
+- 磨き込みの結果は sample に反映されています。BV・SC・AC の対応、証跡の保存先と公開範囲、変更時の手順が書かれています。
+- 実践の型に `_MISSING_` の項目はありません。
+- 型の整備に要する改善は、上記のとおり改善指示に残しました。
+
+## 確認できなかった範囲
+
+- 先行 edit タスクの result は特定できず、実行記録の検証結果は確認していません。
+- rulebook・recipe・template の本文は読んでおらず、grade の finding を根拠にしています。
+- 成果物の再評価は行っていません。
+- 親 runner の検証（lint 系・test 系など）は実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict=complete-with-findings。評価結果は最新（grade list --changed-only / --incomplete の出力なし、終了コード 0）で、型の4件（rulebook・recipe・sample・template）はすべて pass。blocker/major なし、minor のみ（sample 2 / rulebook 1 / recipe 2 / template 9）。完了条件 DC-001〜DC-005 は sample 本文と grade の結果から満たしている。finding は完了を妨げない。改善指示: SC-06 の必須記録・引き継ぎの定義、例外表の列構成を rulebook・template・sample で統一、template の判定手順に変更管理の手順を追加、recipe に証跡の公開範囲と役割名表記を追記。確認できなかった範囲: 先行 edit の実行記録（plan から特定できず）、rulebook・recipe・template 本文の通読（grade の finding を根拠にした）、親 runner 検証の結果。","handoff":["改善指示: sample F001 の SC-06 について、必須記録の項目と引き継ぎの内容を明記する。","改善指示: 例外表の列構成を rulebook・template・sample で統一する（「判定への影響」の列と、解決期限・責任者の列の扱いを決める）。","改善指示: template の判定手順に、変更理由と影響条件 ID の記録、変更要求ログへの起票、下流の再照合の手順を追加する。","改善指示: recipe の問い・レビュー観点・仕上げチェックに、証跡の公開範囲と、確認者・承認者を役割名で書くことを追記する。"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/prj-success-criteria-and-acceptance-criteria-sample.md --changed-only","status":"passed","summary":"出力なし・終了コード 0。評価結果は最新"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/prj-success-criteria-and-acceptance-criteria-sample.md --incomplete","status":"passed","summary":"出力なし・終了コード 0。評価パイプラインは完了"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/prj-success-criteria-and-acceptance-criteria-rulebook.md --changed-only","status":"passed","summary":"出力なし・終了コード 0。評価結果は最新"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/recipes/prj-success-criteria-and-acceptance-criteria-recipe.md --changed-only","status":"passed","summary":"出力なし・終了コード 0。評価結果は最新"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/templates/prj-success-criteria-and-acceptance-criteria-template.md --changed-only","status":"passed","summary":"出力なし・終了コード 0。評価結果は最新"}]}
+</specdojo_executor_evidence>

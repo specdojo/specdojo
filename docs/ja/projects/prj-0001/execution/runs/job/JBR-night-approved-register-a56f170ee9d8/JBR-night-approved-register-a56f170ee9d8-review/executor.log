@@ -1,0 +1,26 @@
+判定は `complete`（統合してよい）です。実行記録と出力の食い違い、対象外の変更、finding は見つかりませんでした。私は成果物も result も変更していません。
+
+**一致した点**
+
+- **差分の範囲**: `fec93ba..393bdfce` は commit 1 件（`393bdfce2`）で、7 ファイルの追加だけです（239 行）。内訳は Run JSON、朝報告 `night-orchestrator-20261122T150000000Z.md`、job run の plan・result・evidence・stdout・stderr です。どれもこの run の出力で、登録簿・`src`・ほかの成果物は変わっていません。
+- **状態の整合**:
+  - Run JSON は `state: succeeded` で、attempt 1 も `succeeded`・`exit_code` 0 です。
+  - evidence は `stage.status: succeeded`・`exit_code` 0 で、`job-command` の検査も `passed` です。
+  - コマンドは plan に書かれたもの（`orchestrator night --project prj-0001 --scheduled-at 2026-11-22T15:00:00.000Z --max-items 10 ...`）と同じで、引数は Run JSON の `inputs` と一致します。
+  - result は `status: complete` で、変更ファイルとして挙げた 2 件は evidence の `changes` と一致します。
+- **出力内容**:
+  - stdout は `[night] approved queue (0/10): none` と朝報告のパスの 2 行で、ログ上は 165 bytes です。stderr は 0 bytes です。
+  - 朝報告は close・`waiting`・新しい承認待ちがいずれも「なし」で、表は 1 行だけ（「承認済みの open todo/issue なし」で `skipped`）です。stdout と食い違いはありません。
+- **「承認済みゼロ」の裏取り**: 登録簿の作業ツリーで `autopilot: approved` の付いた個票を調べたところ、すべて `item_status: done` で、open の todo・issue はありませんでした。キューが 0 件だったことと矛盾しません。
+
+**score・verdict・finding**: この job run には grade の評価結果がなく、score・verdict・finding・失敗文書も生じていないため、評価結果の確認は対象外です。Run は `succeeded` なので、`partial` や `failed` の場合の条件も当てはまりません。
+
+**確認できなかった範囲**
+
+- `specdojo grade list` による鮮度の確認は実行していません。評価する成果物がないためです。
+- 承認状態は、実行前 commit ではなく現在の作業ツリーで確かめました。この 2 つの間で登録簿に変更がないことは diff で確認済みです。
+- orchestrator night コマンドがキューをどう選ぶかの実装は読んでいません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict: complete。差分 fec93ba..393bdfce は commit 393bdfce2 の 7 ファイル追加だけで、内訳は Run JSON、朝報告、job run の plan・result・evidence・stdout・stderr。いずれも当該 job run の出力で、対象外の変更はない。Run JSON（`state: succeeded`、attempt 1 の `exit_code` 0）、evidence（`stage.status: succeeded`、`job-command` passed、exit 0、stderr 0 bytes）、result（`status: complete`、変更ファイル 2 件が evidence の `changes` と一致）、plan のコマンドと `inputs` は相互に整合する。stdout の `approved queue (0/10): none` は、朝報告の『承認済みの open todo/issue なし（skipped）』と一致する。登録簿で `autopilot: approved` の付いた個票はすべて `item_status: done` で、キューが 0 件だったことと矛盾しない。grade の評価結果・score・finding・失敗文書はない。確認できなかった範囲: 評価する成果物がないため `specdojo grade list` による鮮度の確認は実行していない。承認状態は現在の作業ツリーで確かめた（実行前 commit との間に登録簿の差分がないことは diff で確認済み）。orchestrator night のキュー選定の実装は読んでいない。","handoff":[],"validations":[{"command":"git diff --stat fec93ba744019ab2909b74e4dc017616cfe58d93..393bdfce2e38877482996f17bee9bdb936ca9276","status":"passed","summary":"7 files changed, 239 insertions（すべて当該 job run の出力）"},{"command":"git diff --name-status fec93ba744019ab2909b74e4dc017616cfe58d93..393bdfce2e38877482996f17bee9bdb936ca9276","status":"passed","summary":"A のみ 7 件。Run JSON・朝報告・job run の plan/result/evidence/stdout/stderr"}]}
+</specdojo_executor_evidence>

@@ -292,6 +292,34 @@ await program.parseAsync(["register", "add", "--type", "todo", "--title", "Inter
     },
   );
 
+  it("commit-msg が stdout に理由を出しても失敗原因をエラーへ含める（PJR-QTZ7）", async () => {
+    vi.spyOn(process.stdout, "write").mockReturnValue(true);
+    const stderr = vi.spyOn(process.stderr, "write").mockReturnValue(true);
+    root = await createRepository();
+    writeFileSync(join(root, "notes.md"), "staged by user\n", "utf8");
+    git(root, "add", "notes.md");
+    writeFileSync(join(root, "notes.md"), "unstaged by user\n", "utf8");
+    const stagedBefore = git(root, "diff", "--cached", "--binary");
+    const headBefore = git(root, "rev-parse", "HEAD");
+    // commitlint の body-max-line-length 等と同じく、失敗理由を stdout（stderr には出さず）へ出す hook。
+    const hookPath = join(root, ".git/hooks/commit-msg");
+    writeFileSync(hookPath, "#!/bin/sh\necho 'body-max-line-length: found 0'\nexit 1\n", "utf8");
+    chmodSync(hookPath, 0o755);
+
+    await runRegister(["update", "--id", "PJR-AB12", "--owner", "DEV", "--commit"]);
+
+    expect(process.exitCode).toBe(1);
+    // stdout 由来の失敗理由がエラー（stderr 出力）に含まれること。
+    expect(stderr.mock.calls.flat().join("")).toContain("body-max-line-length");
+    expect(stderr.mock.calls.flat().join("")).toContain(
+      "The register changes were written but not committed:",
+    );
+    // 元の stage と作業ツリーは壊れないこと。
+    expect(git(root, "rev-parse", "HEAD")).toBe(headBefore);
+    expect(git(root, "diff", "--cached", "--binary")).toBe(stagedBefore);
+    expect(readFileSync(join(root, "notes.md"), "utf8")).toBe("unstaged by user\n");
+  });
+
   it.each([false, true])(
     "hook 整形後の amend で無関係な stage を保持する（amend 拒否: %s）",
     async (rejectAmend) => {

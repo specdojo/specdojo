@@ -1,0 +1,46 @@
+**verdict 案: `incomplete`**
+
+`opr-sample` の grade は最新で `pass` です。ただし、schedule の追加完了条件で必須になっている型の整備が満たされていません。
+
+**評価結果の確認**
+- `specdojo grade list --target kata --changed-only` の出力に `opr-` を含む行はありませんでした。`--incomplete` でも同じです。
+- そのため、plan に挙がった型の評価結果はすべて最新で、評価パイプラインも完了しています。
+- 確認コマンドは 1 回だけ実行しました。この出力では、verdict 直前の再確認は別にしていません。この間に成果物の変更は検知していません。
+- `opr-sample`: `verdict` は `pass`、score は 94、finding は minor 4 件です。
+- 完了条件 DC-001〜005 に直結する finding はありません。grade では `vp-qe-kata-conformance` が level 3 です。
+
+**型の追加完了条件の判定**
+次の対象が最新の `--target kata` で `pass` になっていません。
+
+| 対象 | verdict | score | 主な finding |
+| --- | --- | --- | --- |
+| `opr-rulebook` | `needs-work` | 94 | major 1 件: `opr-batch-sample`・`opr-change-sample`・`opr-support-sample` の `rulebook` 宣言が不整合（F002）。minor 1 件: 6.4 と 6.6 が template と重複（F001）。 |
+| `opr-batch-sample` | `needs-work` | 66 | major 8 件。2026-11-21 の旧評価のままです。 |
+| `opr-support-sample` | `fail` | 57 | blocker 1 件、major 14 件。2026-11-21 の旧評価のままです。 |
+
+- `opr-batch-sample` と `opr-support-sample` は、frontmatter の `rulebook` が `specdojo:opd-rulebook` のままです。
+- `based_on` も `opd-index` のままです。
+- 本文は必須章を欠いています。章番号も `## 1` のままです。
+- 残りの型は `pass` です。対象は `opr-access-control-sample`、`opr-backup-restore-sample`、`opr-change-sample`、`opr-incident-sample`、`opr-monitoring-sample`、`opr-template` です。
+
+**opr-sample の finding（完了は妨げない）**
+- F001 と F004: 未決事項の表に、決定者・期限・ready 化の基準がありません。
+- F002: 証跡の保管期間が `_UNDECIDED_` ばかりです。
+- F003: 「分冊は障害対応だけ」「`opr-incident` は予定」という記述が、実在する分冊 sample と食い違います。
+- 他の分冊との食い違いも指摘されています。`opr-access-control-sample` は緊急権限と `OPS` による付与を認めています。`opr-monitoring-sample` は日次点検を 9:30 としています。`opr-sample` はアカウントを店番担当と `DEV` に限り、日次点検を 9:45 としています。`opr-change-sample` は月次集計の項目を `opr-sample` 側に求めています。
+- これらは `opr-sample` 単体の完了条件ではなく、横串の整合の課題です。人の確定は plan のとおりこの track に入れていません。
+
+**改善指示**
+1. `opr-batch-sample`・`opr-support-sample` を `specdojo:opr-rulebook` に直します。template の12章構成に揃えて再 grade するか、sample の宣言から外します。
+2. 上記の対応後に `opr-rulebook` を再 grade します。6.4 と 6.6 の template との重複も縮約します。
+3. `opr-sample` の F001〜F004 と、分冊間の食い違いを解消します。
+4. 食い違いの解消後に、`opr-sample` と分冊の sample を再 grade します。
+
+**確認できなかった範囲**
+- 成果物は再評価していません。`opr-sample` の本文は、概要、章見出し、証跡、導線の一部だけを読みました。
+- 先行する edit タスクの result は特定していません。
+- sandbox の検査は実行していません。parent validations は runner の結果が正です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"review 判断: verdict=incomplete。opr-sample は grade pass(94)・最新で、DC-001〜005 に直結する finding なし。ただし型の追加完了条件で opr-rulebook(needs-work)、opr-batch-sample(needs-work 66)、opr-support-sample(fail 57) が pass でないため未完了。鮮度は grade list --changed-only / --incomplete で opr- 該当なし（最新・完了）。確認できなかった範囲: 成果物の再評価（本文は一部のみ閲覧）、先行 edit result の特定、sandbox 検査。","handoff":["opr-batch-sample / opr-support-sample の rulebook を specdojo:opr-rulebook に直し、template の12章構成へ揃えて再 grade する（または sample 宣言から外す）","opr-rulebook の再 grade（F001 template 重複縮約、F002 解消後）","opr-sample の F001〜F004 と、分冊 sample との食い違い（緊急権限・日次点検時刻 9:30/9:45・月次集計・分冊の記述）を解消し再 grade する","人の確定は横串の確認でまとめて行う"],"validations":[{"command":"npx specdojo grade list --target kata --changed-only","status":"passed","summary":"出力に opr- を含む対象なし（評価結果は最新）"},{"command":"npx specdojo grade list --target kata --incomplete","status":"passed","summary":"出力に opr- を含む対象なし（評価パイプライン完了）"}]}
+</specdojo_executor_evidence>

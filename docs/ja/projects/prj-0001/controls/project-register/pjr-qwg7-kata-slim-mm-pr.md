@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-qwg7-kata-slim-mm-pr
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-18T00:14:41Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-22T12:51:01Z"
+  conclusion: mm と pr の rulebook から共通の運用の記述を外した。型の grade は 4 文書とも pass（mm-rulebook 80・mm-sample 86・pr-rulebook 80・pr-sample 90）
   derived_from:
     - PJR-DJZD
 ---

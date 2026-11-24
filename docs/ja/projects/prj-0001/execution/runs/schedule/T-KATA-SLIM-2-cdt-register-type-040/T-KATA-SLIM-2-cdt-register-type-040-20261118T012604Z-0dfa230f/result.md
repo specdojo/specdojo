@@ -13,7 +13,7 @@ specdojo:
   execution: agent
   approach: rulebook-maintenance
   targets:
-    - prj-0001:cdt-register-type
+    - cdt-register-type
     - specdojo:cdt-rulebook
 ---
 
@@ -40,7 +40,7 @@ specdojo:
 - 共通標準への追記は不要です。document-metadata-standard のライフサイクル変更管理・成果物の値制約で参照先を賄えます。recipe・template は `not-needed`、記法 rulebook の `includes` 宣言はありません。
 - 別段での変更案: cdt-sample の「主担当ロール」から BA・PO・QE の文書作成・確認の役割分担を外し、店主代表・家族利用者代表の業務判断は維持してください。今回 sample は変更していません。
 - result と再開前の実行管理ファイルは更新していません。lint・schema・テストは指定された親 runner の検証に委ねます。
-- 対象 `prj-0001:cdt-register-type` は未変更: rulebook 見直しの根拠として確認しました。計画が成果物本体の変更を対象外としているため維持しました。
+- 対象 `cdt-register-type` は未変更: rulebook 見直しの根拠として確認しました。計画が成果物本体の変更を対象外としているため維持しました。
 - 適用外の検証: `npm run validate:schema:file`（executor の変更は Markdown rulebook のみで、YAML の変更がありません。）
 - 適用外の検証: `npm run validate:catalog`（executor は docs/ja/projects/ 配下の成果物を変更していません。）
 - 適用外の検証: `npm run validate:history-links`（executor は登録簿個票・既存 plan・result を変更していません。）

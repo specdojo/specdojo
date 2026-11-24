@@ -29,6 +29,41 @@ describe("registerProductMessage", () => {
     },
   );
 
+  it("keeps the subject unchanged for the first run", () => {
+    expect(
+      registerProductMessage({
+        ...base,
+        priorCommitCount: 0,
+        repoConfig: { ...repo, commit_subject_template: "{type}({scope}): {title}" },
+      }),
+    ).toBe(`feat: Add feature\n\n${trailer}`);
+  });
+
+  it("distinguishes the subject of a rerun and keeps the trailer", () => {
+    const first = registerProductMessage({ ...base, priorCommitCount: 0 });
+    const second = registerProductMessage({ ...base, priorCommitCount: 1 });
+
+    expect(second).toBe(`exec(register PJR-Z7GX): Add feature (run 2)\n\n${trailer}`);
+    expect(second).not.toBe(first);
+  });
+
+  it("clips the title instead of the run number of a long subject", () => {
+    const subject = registerProductMessage({
+      ...base,
+      item: { ...base.item, title: "x".repeat(200) },
+      priorCommitCount: 2,
+    }).split("\n")[0];
+
+    expect(subject).toHaveLength(100);
+    expect(subject?.endsWith("… (run 3)")).toBe(true);
+  });
+
+  it("does not add a run number to merge messages", () => {
+    expect(registerProductMessage({ ...base, kind: "merge", priorCommitCount: 3 })).toBe(
+      `exec(register PJR-Z7GX): Add feature\n\n${trailer}`,
+    );
+  });
+
   it("expands all variables, taking type and scope from the item", () => {
     expect(
       registerProductMessage({

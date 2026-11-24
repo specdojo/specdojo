@@ -1,0 +1,265 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-325Y",
+  "run_id": "pjr-325y-20261122T141253Z-d2176bc0",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-22T14:14:11.431Z",
+    "completed_at": "2026-11-22T14:19:44.450Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-325y.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-325y-kata-strategy-no-role-assignment.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/schedule/sch-strategy-kata-wave-3.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/defaults/pm-review-viewpoints.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/rulebook-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/sample-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/cnd-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/cpd-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/cxd-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/sysd-critical-flows-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/sysd-cross-cutting-policy-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/sysd-index-template.md",
+      "status": "M"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/specdojo--pm-review-viewpoints.md.snap",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-325y-kata-strategy-no-role-assignment.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/schedule/sch-strategy-kata-wave-3.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/defaults/pm-review-viewpoints.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/rulebook-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/sample-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/cnd-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/cpd-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/cxd-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/sysd-critical-flows-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/sysd-cross-cutting-policy-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/sysd-index-template.md",
+      "status": "M"
+    },
+    {
+      "path": "tests/fixtures/yaml-pages/specdojo--pm-review-viewpoints.md.snap",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 13,
+    "summary": ".../pjr-325y-kata-strategy-no-role-assignment.md   | 57 ++++++++++++++++++++--\n .../schedule/sch-strategy-kata-wave-3.yaml         |  4 ++\n .../ja/specdojo/defaults/pm-review-viewpoints.yaml | 14 +++---\n .../standards/rulebook-authoring-standard.md       |  3 ++\n .../standards/sample-authoring-standard.md         |  2 +\n docs/ja/specdojo/templates/cnd-template.md         | 36 +++++---------\n docs/ja/specdojo/templates/cpd-template.md         | 12 ++---\n docs/ja/specdojo/templates/cxd-template.md         | 18 +++----\n .../templates/sysd-critical-flows-template.md      | 20 +++-----\n .../sysd-cross-cutting-policy-template.md          | 37 +++++---------\n docs/ja/specdojo/templates/sysd-index-template.md  | 32 +++++-------\n .../specdojo--pm-review-viewpoints.md.snap         | 24 ++++-----\n 12 files changed, 138 insertions(+), 121 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx vitest run tests/src/docs/yaml-tables.test.ts",
+      "status": "passed",
+      "summary": "38 tests passed after regenerating specdojo--pm-review-viewpoints.md.snap"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/sch-strategy.schema.yaml --data docs/ja/projects/prj-0001/schedule/sch-strategy-kata-wave-3.yaml",
+      "status": "passed",
+      "summary": "valid; `task_suffix` values remain quoted strings"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/pm-review-viewpoints.schema.yaml --data docs/ja/specdojo/defaults/pm-review-viewpoints.yaml",
+      "status": "passed",
+      "summary": "valid"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write (changed md/yaml files)",
+      "status": "passed",
+      "summary": "formatted changed templates, standards, strategy and ticket"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2 (changed md files)",
+      "status": "passed",
+      "summary": "0 issues in 9 changed Markdown files"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "no invalid history files reported"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 5909 file(s), 107 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 83 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5909 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-325Y\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (48 tests) 6ms\n[parent-validation:test-file] \n… output omitted …\n\":\"end\",\"file\":\"tests/src/exec/plans.test.ts\"}\n\n Test Files  19 passed (19)\n      Tests  476 passed (476)\n   Start at  23:19:54\n   Duration  2.33s (transform 4.72s, setup 633ms, import 7.00s, tests 5.06s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-325Y\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/devcontainer/scaffold.integration.test.ts\"}\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-co\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-325Y/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-325Y/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-325Y\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/grade/grade.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/register/commands.test.ts\"}\n ✓ tests/src/grade/grade.test.ts (69 tests) 247ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/src/grade/grade.test.ts\"}\n[parent-validation:t\n… output omitted …\n it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "PJR-76N9 の決まりを sample と rulebook の作成標準、第 3 波の strategy の 2 段の説明、template 6 件（cnd・cxd・cpd・sysd-index・sysd-critical-flows・sysd-cross-cutting-policy）、共通レビュー観点（網羅種別 `stakeholder` と観点 4 件）に入れ、YAML の表示ページの fixture `specdojo--pm-review-viewpoints.md.snap` を新しい出力に合わせた。カタログの `done_criteria` は直す行がなかった。個票の作業内容と対応結果を書いた。track の作り直しと型の grade は完了条件どおり orchestrator に残した。",
+  "completion_status": "complete",
+  "handoff": [
+    "track の作り直し: `sch-strategy-kata-wave-3.yaml` の `rulebook-maintenance` と `sample-maintenance` の段の説明を変えたため、orchestrator が `kata-wave-3` の track を作り直す。tsp-index で流している試しへの反映の要否も判断する。",
+    "型の grade: 統合の後に、直した template 6 件（cnd・cxd・cpd・sysd-index・sysd-critical-flows・sysd-cross-cutting-policy）と、sample・rulebook の作成標準を orchestrator が grade する。",
+    "迷って決めたこと: 未決事項やメモの表の「担当ロール」「判断者」列は文書の作業の割り当てとして外した。cnd-template の「検証・承認前の確認」と sysd-critical-flows-template の「承認対象と公開前条件」は承認の記録の参照だけだったため節ごと外した。運用の一次対応・ルールの Owner・例外の判断者・SSOT の更新責任は文書の中身として残した。カタログの `done_criteria` の「〜を承認できること」、RACI、受入テストの承認者は対象外として直さなかった。",
+    "rulebook と sample に残る役割の記述: cnd-rulebook の 6.1 と「検証・承認前の確認」、sysd-cross-cutting-policy-rulebook の概要、prj-issues-and-approach-rulebook の承認者、prj-issues-and-approach-template・stsd-template・cdfd-template の「誰が……判断するか」、cnd-sample の Person の「判断・確認の責務」列などは、第 3〜6 波と kata-slim-3 で直す。",
+    "CHANGELOG に書く事項（個票の 5.5 にも記載）: 区分は Changed。文案は「sample と rulebook の作成標準、C4 図と SYSD の template、共通レビュー観点で、文書の役割の割り当てと承認の進み具合を本文に求めないようにした（RACI・体制など役割を扱う文書は対象外）」。",
+    "保護された設定の変更は無い。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-325Y/pjr-325y-20261122T141253Z-d2176bc0/executor.log",
+      "bytes": 6561,
+      "truncated": false
+    }
+  ]
+}

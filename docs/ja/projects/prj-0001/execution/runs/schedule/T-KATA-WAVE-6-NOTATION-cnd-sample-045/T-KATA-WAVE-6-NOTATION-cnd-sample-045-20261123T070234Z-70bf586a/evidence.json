@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-6-NOTATION-cnd-sample-045",
+  "run_id": "T-KATA-WAVE-6-NOTATION-cnd-sample-045-20261123T070234Z-70bf586a",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-23T07:03:20.950Z",
+    "completed_at": "2026-11-23T07:07:26.920Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/recipes/cnd-recipe.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/recipes/cnd-recipe.md | 10 +++++-----\n 1 file changed, 5 insertions(+), 5 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/recipes/cnd-recipe.md",
+      "status": "passed",
+      "summary": "All matched files use Prettier code style"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:cnd-recipe\n  type: recipe\n  status: draft\n  rulebook: specdojo:cnd-rulebook\n  sample: specdojo:cnd-sample\n---\n\n# C4コンテナ図 作成レシピ\n\nC4 Container Diagram Writing Recipe\n\n利用者が必要とする結果から、実行単位・ストア・連携経路を選ぶ作り方を示す。\n\n## 1. このレシピの使い方\n\n- コンテナ図は、上位のコンテキスト図の利用目的と外部への委譲を引き継ぎ（Why）、それを担う実行単位・ストア・関係を定め（What）、配置の前提と結合で観測する結果までを扱う（How）。要素名と関係 ID で、図・定義・検証観点・仮定をたどれるようにする（Trace）。\n\n## 2. 作成前に集める情報\n\n| 項目 | 集める\n… output omitted …\n| 印刷時だけ印刷基盤へ依頼する | 印刷基盤の停止で全参照も止まると断定する |\n| 検証観点 | 控えと紙面の一致と、印字失敗時に残る販売の記録を分けて確かめる | 「結合テストをする」 |\n| 未確定の配置 | ローカル構築を仮定し、配信先の確認を解消条件として残す | 候補のホストを既存構成のように描く |\n\n## 7. レビュー観点\n\n| 観点 | 確認内容 |\n| - | - |\n| 価値と範囲 | 利用者が得る結果が、分割後も上位図の境界からはみ出ないか |\n| 配置への入力 | 実行単位、保持単位、必要な接続と仮定を分けて読み取れるか |\n| 結合への入力 | 主要な経路と外部の失敗で観測する対象を関係 ID で追えるか |\n| 詳細との分担 | 構文・データ構造・物理配置を書かず、更新先が分かるか |\n\n## 8. 仕上げチェック\n\n- 各コンテナが一つ以上の利用結果につながっている。\n- 正本、構築時の入力、閲覧用の生成物が区別され、関係が成立する時点が図と定義で食い違っていない。\n- 仮定と確定事項が分かれ、各仮定に当面の扱いと解消条件がある。"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6096 file(s), 92 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 68 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6096 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-NOTATION-cnd-sample-045\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (48 tests) 9ms\n[\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1802}\n\n Test Files  19 passed (19)\n      Tests  480 passed (480)\n   Start at  16:16:13\n   Duration  2.67s (transform 5.09s, setup 863ms, import 8.06s, tests 5.91s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nrulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-NOTATION-cnd-sample-045/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-NOTATION-cnd-sample-045/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "cnd-recipe を cnd-rulebook の修正（1 章の共通の運用から役割の割り当てを削除、6.1 の『誰が判断するか』を『どの利用場面で何を判断するための図か』に変更）と PJR-76N9 に合わせて 5 か所書き換えた。概要の問い、メモ / 将来課題の問いとコツ、良い例の『未確定の配置』の行、仕上げチェックから役割の割り当てを外し、メモ / 将来課題の 3 か所は rulebook 6.5 の『当面の扱いと解消条件』にそろえた。展開された finding はない。rulebook と sample は変更していない。",
+  "completion_status": "complete",
+  "handoff": [
+    "cnd-sample.md には、役割の割り当てと承認の進み具合の記述（メモ / 将来課題の表の担当ロール列、承認前・変更時の役割の手順の段落など）がまだ残っている。PJR-76N9 に従い、sample を直す段で扱う必要がある。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-NOTATION-cnd-sample-045/T-KATA-WAVE-6-NOTATION-cnd-sample-045-20261123T070234Z-70bf586a/executor.log",
+      "bytes": 3738,
+      "truncated": false
+    }
+  ]
+}

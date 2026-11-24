@@ -1,0 +1,146 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ed9e415387f44cc1a8522b92418959d7
+  ts: "2026-11-23T01:52:58Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: specdojo orchestrator handoff を作り、引き継ぎの手順を指示と playbook に足す
+    - field: description
+      from: ""
+      to: 進行中と判断待ちを登録簿と exec の状態から組み立てて handoff を起票するコマンドを作り、始めと終わりの手順を足す
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-5RY7"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-2Q86"]'
+    - field: commit_type
+      from: ""
+      to: feat
+    - field: commit_scope
+      from: ""
+      to: orchestrator
+- v: 1
+  id: reg_dfc6a74375a746aaaaf58b892c71c0fa
+  ts: "2026-11-23T01:53:09Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_ed9e415387f44cc1a8522b92418959d7
+- v: 1
+  id: reg_732ec81bc04b457d9ba890958636d3de
+  ts: "2026-11-23T03:47:26Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_dfc6a74375a746aaaaf58b892c71c0fa
+- v: 1
+  id: reg_8a1ce0bf1d7142c7bc44ce6947cccc59
+  ts: "2026-11-23T04:00:25Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_732ec81bc04b457d9ba890958636d3de
+- v: 1
+  id: reg_b1171927808946348717f824127386ce
+  ts: "2026-11-23T04:03:40Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: prj-0001 で流して見つけた 2 点を 2 回目の実行の条件に足した
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_8a1ce0bf1d7142c7bc44ce6947cccc59
+- v: 1
+  id: reg_aa1eade1b3214d95a698a205fc12fdea
+  ts: "2026-11-23T04:15:17Z"
+  action: start
+  actor: opus-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_b1171927808946348717f824127386ce
+- v: 1
+  id: reg_7d136e5bdfe54374a07fb10b3ddba45a
+  ts: "2026-11-23T04:27:04Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_aa1eade1b3214d95a698a205fc12fdea
+- v: 1
+  id: reg_9bcb9535cdb64df79d53482f0a46f376
+  ts: "2026-11-23T04:28:33Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分と単体テストを確かめ、使い捨ての worktree での実際の起票と、2 回目の後の dry-run で列の並べ方と ID を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: specdojo orchestrator handoff を作った。進行中（流している列・run・review と waiting の項目）と判断待ち（開いている question と waiting の項目）を組み立てて handoff を起票する。古い止まった列は件数の 1 行にまとめ、dry-run でも ID がそろう。指示の本文と playbook の手順の案を対応結果に書いた（反映は利用者の承認待ち）
+  previous_event_id: reg_7d136e5bdfe54374a07fb10b3ddba45a

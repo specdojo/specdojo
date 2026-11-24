@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/bps-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 98
-graded_at: "2026-11-17T21:45:14.756Z"
-graded_by: sol-review-executor
-content_hash: fbee89397b029a75407c5003de0bac76c2b521ea9e2f17cf79091e328ebb8cae
+score: 97
+graded_at: "2026-11-23T20:06:46.357Z"
+graded_by: sonnet-review-executor
+content_hash: 629bd842d6556c9a7b9e3e563de23540474eb1fa4d452088777fe9ed642361a7
 categories:
   purpose:
     score: 100
@@ -21,7 +21,7 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 92
   implementation:
     score: 100
   quality:
@@ -60,8 +60,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -72,8 +72,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-verifiability:
     level: 4
     score: 100
@@ -81,8 +81,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -104,13 +104,20 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 1
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-dev-testability
-    line: 124
-    anchor: "### 6.9. 完成判定"
-    message: 完成判定に Markdown lint や成果物 Frontmatter スキーマ検証など機械的に確認する検証手段が示されておらず、BPS 作成後にどのコマンドで形式適合を確認するかが読み取れない。
-    message_ja: 完成判定に Markdown lint や成果物 Frontmatter スキーマ検証など機械的に確認する検証手段が示されておらず、BPS 作成後にどのコマンドで形式適合を確認するかが読み取れない。
+    rule: vp-arc-conciseness
+    line: 95
+    anchor: ""
+    message: 6.4 と 6.7 の良い例・悪い例が recipe の「良い例 / 悪い例」表と重複しており、rulebook には判定基準だけを残して例は recipe 参照に寄せられる。
+    message_ja: 6.4 と 6.7 の良い例・悪い例が recipe の「良い例 / 悪い例」表と重複しており、rulebook には判定基準だけを残して例は recipe 参照に寄せられる。
+  - id: F002
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 46
+    anchor: 見出し順・表の列・記入欄は Frontmatter で宣言した template を正本とし、次の意味要件を満たします。
+    message: template は例外がない行を「-」とする運用を示すが rulebook の ID 規則と処理の記述ガイドに規定がなく、rulebook と template の記入規則が一致していない。
+    message_ja: template は例外がない行を「-」とする運用を示すが rulebook の ID 規則と処理の記述ガイドに規定がなく、rulebook と template の記入規則が一致していない。

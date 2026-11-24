@@ -1,0 +1,35 @@
+`pm-issue-log-rulebook.md` を直しました。grade の指摘のうち rulebook 側の F001〜F008 と F012 は手当て済みです。sample 側の F009〜F011 は、plan で sample をこの段では変えない決まりのため、未対応で引き継ぎます。変更したファイルはこの 1 つだけです。
+
+**finding ごとの対応**
+- **F001**: 担当はメンバー定義の Role code で書き、個人名を書かない規定を加えました。良い例・悪い例も付けています。良い例の担当は、デフォルトのロールに `QA` がないため `QE` にしました。
+- **F002**: 対応方針の採否のような判断は決定記録（`decision` の個票）へ起票し、課題ログには ID だけを書く規定を加えました。
+- **F003**: 全体方針を「対応順の決定、エスカレーション、完了の確認を判断するための文書」としました。PJR-76N9 に合わせ、「誰が判断するか」は書いていません。
+- **F004**: 対象を発生済みの課題に限りました。未顕在の事象はリスク登録簿、仕様・範囲の変更は変更要求へ記録し、課題ログに二重に書かない区別を加えました。
+- **F005**: 単独のログの `rulebook` は `specdojo:pm-issue-log-rulebook` と明記しました。
+- **F006**: 単独のログから登録簿へ移す手順を加えました。未完了の課題だけを個票に移して元の `IS-NNN` を個票に残し、単独のログは `deprecated` にします。
+- **F007 / F008**: 適用範囲を分けました。
+  - 生成物の枠組みは template に従います。
+  - 個票の必須節は `pjr-rulebook` に従い、本書からは記述ガイドの判断基準だけを当てます。
+  - 本文の章立ては単独のログだけに適用します。
+  - 執筆標準に合わせて章名を「本文要件」に変え、表に目的の列を足しました。
+- **F012**: 優先度とステータスの値の参照先を、register-item-frontmatter schema の `Priority`・`ItemStatus` と明記しました。良い例・悪い例も付けています。
+- 完了条件の書き方と関連ドキュメントの ID の書き方（project 修飾）にも良い例を足しました。
+
+**直さなかった箇所**
+- 概要・優先度と期限・禁止事項は、指摘も冗長さもないため変えていません。
+- 完成例の章はもともとありません。見出しは H3 までです。
+
+**検証**
+- `npx prettier --check` は最初に整形の差分を検出したため、`--write` で整形しました。整形後に check はかけ直していません。
+- `npx markdownlint-cli2` は 0 件でした。
+- lint などのそのほかの検査は、このあと親 runner が実行します。
+
+**引き継ぎ**
+- **F009**: sample の優先度「高/中」とステータス「未着手/対応中」を `high`/`medium` と `in-progress`/`open` に直す必要があります。
+- **F010**: sample に、優先度の変更を決める者、完了を判定する者と判定の観点、確認の手段を含む完了条件が欠けています。担当も `QA担当` などから Role code にする必要があります。
+- **F011**: sample の関連ドキュメントを project 修飾の文書 ID にし、決定記録への参照も扱う必要があります。
+- **template の Frontmatter**: 生成物の `status` が `ready` で、`draft` から始めるほかの型と違います。直すかどうかは別途判断が必要です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"pm-issue-log-rulebook を grade の finding F001〜F008・F012 に沿って簡潔に整えた（利用場面、対象範囲と対象外、適用範囲（単独ログ・個票・生成物）、単独ログの `rulebook` 値、IS から PJR への移行、担当の Role code、`Priority`・`ItemStatus` の参照先、決定記録への起票、良い例・悪い例）。sample 側の F009〜F011 は plan の変更範囲外のため引き継ぐ。変更ファイル: docs/ja/specdojo/rulebooks/pm-issue-log-rulebook.md","handoff":["F009: sample の優先度「高/中」とステータス「未着手/対応中」を schema の `Priority`・`ItemStatus` の値（`high`/`medium`、`in-progress`/`open`）へ直す。この段は sample を変更しない plan のため未対応。","F010: sample に、優先度の変更を決める者（Role code）、完了を判定する者と判定の観点、確認の手段を含む完了条件を補う。担当欄も `QA担当`・`業務担当` から Role code（例: `QE`、`PO`）へ直す。","F011: sample の関連ドキュメントを project 修飾の文書 ID 表記へ直し、決定記録への参照の扱いも反映する。","直さなかった箇所: 概要・優先度と期限・禁止事項は、指摘も冗長さもないため据え置いた。完成例の章はもともとなく、見出しは H3 まで。","template の `frontmatter_template` で生成物の `status` が `ready` になっている。直すかどうかは別途判断する（template はこの段の変更範囲外）。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/pm-issue-log-rulebook.md","status":"passed","summary":"最初の check で整形の差分を検出し、npx prettier --write で整形した。整形後の再 check は未実行。"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/pm-issue-log-rulebook.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>

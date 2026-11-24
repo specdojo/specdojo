@@ -1,0 +1,133 @@
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "同じ run 内の待ち合わせを保ち、準備失敗の予約を run 終了時に解放するよう修正しました。回帰テスト・設計文書・個票を更新し、sandbox 内の適用検査は成功しました。親検証は runner が再実行します。",
+  "handoff": [
+    "schedule の準備失敗は失敗直後に解放せず、worker pool 終了時の `finally` で取り消す。`--unknown-scope serialize` の既存の待ち合わせを維持するためであり、既存テストの期待は変更していない。失敗戻り値・例外と loop 有無の4通りで、同じ run 内の待機、終了後の予約・lock 不在、次の run での実行を検査する。",
+    "再実行の準備失敗では以前の未統合予約を復元する。古い予約は schedule の todo または register の open で、exec worktree と予約 lock がない場合だけ回収する。状態・worktree を確認できない場合や heartbeat が止まった lock が残る場合は保持する。",
+    "単体テスト・型検査・lint など設定済みの親検証は、指示に従い executor では実行していない。前回失敗した `track-filter.test.ts` を含む親検証の再実行結果を確認する。",
+    "統合後に orchestrator が実 agent CLI を使う `exec smoke` を実行し、成功を確認してから close する。個票の該当作業行は理由付きで open のまま残した。",
+    "CHANGELOG に書く事項（v0.10.0、不具合修正）: `exec run`（`--auto`・`exec cycle` を含む）の準備失敗で変更範囲の予約が残って後続を止める問題を修正。未着手で worktree と予約 lock のない古い予約も自動で回収する。"
+  ],
+  "validations": [
+    {
+      "command": "npx prettier --write docs/ja/product/040-system-design/sysd-critical-flows.md docs/ja/projects/prj-0001/controls/project-register/pjr-yq32-exec-scope-reservation-leak-on-setup-failure.md docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/specdojo/references/command-reference.md src/exec/run/change-scope.ts src/exec/run/change-scope-state.ts src/exec/run/register-mode.ts src/exec/run/register-worktree.ts src/exec/run/schedule-mode.ts src/exec/run/shared.ts tests/src/exec/run/change-scope.test.ts tests/src/exec/run/human-task-skip.test.ts tests/src/exec/run/register-scope.test.ts tests/src/exec/run/track-filter.test.ts",
+      "status": "passed",
+      "summary": "成果物14ファイルを整形した。"
+    },
+    {
+      "command": "npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-yq32-exec-scope-reservation-leak-on-setup-failure.md",
+      "status": "passed",
+      "summary": "検証記録更新後の個票を整形した。"
+    },
+    {
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "prj-0001 の catalog 検証成功。既存参照への警告あり、エラーなし。"
+    },
+    {
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検証成功。"
+    },
+    {
+      "command": "npm run check:src-imports",
+      "status": "passed",
+      "summary": "実行時 import の依存宣言検証成功。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿の派生ビュー生成成功。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白検査成功。"
+    },
+    {
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "executor が編集した YAML 成果物はない。",
+      "reason": "既存差分のイベント YAML は runner 管理の状態遷移記録であり、今回の成果物編集には含まれない。"
+    },
+    {
+      "command": "exec smoke",
+      "status": "requires_human",
+      "summary": "統合後に orchestrator が実 agent CLI を起動して確認する。"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "docs/ja/product/040-system-design/sysd-critical-flows.md",
+      "status": "changed",
+      "path": "docs/ja/product/040-system-design/sysd-critical-flows.md"
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-yq32-exec-scope-reservation-leak-on-setup-failure.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-yq32-exec-scope-reservation-leak-on-setup-failure.md"
+    },
+    {
+      "target": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md"
+    },
+    {
+      "target": "docs/ja/specdojo/references/command-reference.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/references/command-reference.md"
+    },
+    {
+      "target": "src/exec/run/change-scope.ts",
+      "status": "changed",
+      "path": "src/exec/run/change-scope.ts"
+    },
+    {
+      "target": "src/exec/run/register-mode.ts",
+      "status": "changed",
+      "path": "src/exec/run/register-mode.ts"
+    },
+    {
+      "target": "src/exec/run/register-worktree.ts",
+      "status": "changed",
+      "path": "src/exec/run/register-worktree.ts"
+    },
+    {
+      "target": "src/exec/run/schedule-mode.ts",
+      "status": "changed",
+      "path": "src/exec/run/schedule-mode.ts"
+    },
+    {
+      "target": "src/exec/run/shared.ts",
+      "status": "changed",
+      "path": "src/exec/run/shared.ts"
+    },
+    {
+      "target": "tests/src/exec/run/change-scope.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/run/change-scope.test.ts"
+    },
+    {
+      "target": "tests/src/exec/run/human-task-skip.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/run/human-task-skip.test.ts"
+    },
+    {
+      "target": "src/exec/run/change-scope-state.ts",
+      "status": "changed",
+      "path": "src/exec/run/change-scope-state.ts"
+    },
+    {
+      "target": "tests/src/exec/run/register-scope.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/run/register-scope.test.ts"
+    },
+    {
+      "target": "tests/src/exec/run/track-filter.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/run/track-filter.test.ts"
+    }
+  ]
+}
+</specdojo_executor_evidence>

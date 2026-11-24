@@ -9,6 +9,7 @@ import { scaffoldResult } from "../../../src/exec/results.js";
 import { taskPaths } from "../../../src/exec/worktree-ops-commit.js";
 import {
   findRunRecord,
+  RunRecordIndex,
   listRunRecords,
   recordIdentity,
   recordRef,
@@ -340,4 +341,37 @@ describe("run record layout", () => {
       );
     expect(collectExecRecords(join(execution, "exec"))).toHaveLength(2);
   });
+});
+
+describe("RunRecordIndex", () => {
+  it("matches findRunRecord when the item has no record directory", () => {
+    const execution = fixture();
+    const other = taskRecordPaths(execution, "T-OTHER", "run-1");
+    write(other.plan, "---\nspecdojo:\n  task_id: T-WANTED\n---\nbody\n");
+    const index = new RunRecordIndex(execution);
+
+    expect(index.find("plan", "T-WANTED")).toBe(other.plan);
+    expect(index.find("plan", "T-WANTED")).toBe(findRunRecord(execution, "plan", "T-WANTED"));
+    expect(index.find("plan", "T-MISSING")).toBeUndefined();
+  });
+
+  it.each([
+    ["unquoted (Date)", (value: string) => value],
+    ["quoted (string)", (value: string) => `"${value}"`],
+  ])(
+    "selects the result with the latest started_at among several runs when %s",
+    (_name, format) => {
+      const execution = fixture();
+      const older = taskRecordPaths(execution, "T-TEST", "run-b");
+      const newer = taskRecordPaths(execution, "T-TEST", "run-a");
+      const body = (started: string) =>
+        `---\nspecdojo:\n  task_id: T-TEST\n  started_at: ${format(started)}\n---\n`;
+      write(older.result, body("2026-01-01T00:00:00Z"));
+      write(newer.result, body("2026-02-01T00:00:00Z"));
+      const index = new RunRecordIndex(execution);
+
+      expect(index.find("result", "T-TEST")).toBe(newer.result);
+      expect(findRunRecord(execution, "result", "T-TEST", index)).toBe(newer.result);
+    },
+  );
 });

@@ -1,0 +1,31 @@
+DSS の rulebook（`docs/ja/specdojo/rulebooks/dss-rulebook.md`）だけを直し、11 行を書き換えました。prettier で整形し、markdownlint は指摘 0 件でした。sample・recipe・template は変えていません。
+
+**grade の指摘への対応**
+
+- **F001（例外の判断者）:** 指摘どおり判断者の Role code を求めると、PJR-76N9 の決まりとぶつかります。PJR-76N9 は本文に承認の役割を書かず、登録簿の個票で追うと決めています。そこで「判断者・承認と留保の進み具合は本文に書かず、個票で追う」と書き、判断者を個票で読み取れる形にしました。
+- **F002（転記先の区別）:** 記述ガイドの「検証・変更管理と関連文書」の節で、転記先を分けました。
+  - 検証不適合は issue。
+  - 規則変更は todo、審査が要る変更は change-request（sample が todo を使っているのに合わせました）。
+  - 例外は decision。
+  - 担当は F001 と同じ理由で本文に書かず、個票で追う扱いです。
+  - 本文要件の表の 8 章の内容も同じ趣旨に直しました。
+- **F003（プロジェクト限定の DSS の置き場所）:** 正本にない語「設計ドメイン配下」をやめ、「`docs/ja/projects/<prj-id>/` 配下の成果物ドメイン」と書きました。あわせて `[[specdojo:docs-structure-guide|ドキュメント構成ガイド]]` を参照させています。
+- **F004（合格条件の列）:** 検証の推奨列から合格条件を外しました。合格条件は各章の規則の確認条件か試験仕様の合否基準を参照し、検証の表には再掲しない、と書いています。これで sample の検証の表と食い違いません。
+- **F005（「決まり」と「規則」）:** 全体方針で「本書の規則は規則 ID で追跡する設計の決まりを指す」と定め、ほかの箇所は「規則」にそろえました。ただし sample の表の列名に合わせるため、アクセシビリティの節の推奨列「必須の決まり」だけは残しています。
+
+**PJR-76N9 に合わせた変更**
+
+記述ガイドの良い例の結びを「未達なら採用を保留する」から「証跡と未達の条件を添えて採否を登録簿の decision に記録する」に変えました。
+
+**変えなかった箇所**
+
+- 正本の表の「更新責任」と検証の表の「担当」は残しました。どちらもデザインの正本や製品の検証を誰が受け持つかという、DSS の中身にあたると判断したためです（PJR-76N9 の対象外）。
+- 章構成、トークン・部品・レイアウト・状態の各節、禁止事項は、指摘も冗長な記述もないため変えていません。
+
+**残っている問題**
+
+sample の「検証の節目と基準版の採用」「変更・不適合・例外」「同梱する完成例の公開条件」の章には、まだ役割の割り当てと承認の進み具合が書かれています。PJR-76N9 と食い違っており、sample を直す段で直す必要があります。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"Edited docs/ja/specdojo/rulebooks/dss-rulebook.md for grade findings F001-F005, following PJR-76N9: unified the terms 決まり and 規則, stated the placement of project-limited DSS with a reference to docs-structure-guide, made the pass criteria in the verification table refer to the rule confirmation conditions, split where verification nonconformities, rule changes and exceptions go (issue, todo or change-request, decision), and moved approvers and approval progress to the register tickets. The sample, recipe and template were not changed.","handoff":["F001 asked for the approver's Role code in the body; that conflicts with PJR-76N9, so the rulebook now says approvers and approval progress are tracked in the register tickets instead of the body.","Sample dss-sample sections 8.2, 8.3 and 8.5 still assign roles and approval progress (for example 'PO が採用前に承認または却下を判断し'), which conflicts with PJR-76N9 and the revised rulebook; fix them in the sample revision stage.","Kept the 更新責任 column of the 正本 table and the 担当 column of the verification table: they assign product ownership and verification, which is DSS content and outside PJR-76N9.","Kept the column name 必須の決まり in the 6.7 recommended columns to match the sample's accessibility table; 全体方針 now defines 規則 as the 決まり tracked by rule ID."],"validations":[{"command":"npx prettier --write docs/ja/specdojo/rulebooks/dss-rulebook.md","status":"passed","summary":"Formatted the changed rulebook"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/dss-rulebook.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"No history file changed","reason":"Only a rulebook under docs/ja/specdojo/rulebooks was changed; no plan, result, or register ticket was edited."},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"No YAML changed","reason":"No *.yaml or *.yml file was changed."}]}
+</specdojo_executor_evidence>

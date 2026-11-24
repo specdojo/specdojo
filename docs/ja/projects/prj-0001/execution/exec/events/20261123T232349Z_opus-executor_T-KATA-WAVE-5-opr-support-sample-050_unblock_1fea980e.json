@@ -1,0 +1,18 @@
+{
+  "v": 1,
+  "ts": "2026-11-23T23:23:49Z",
+  "type": "unblock",
+  "task_id": "T-KATA-WAVE-5-opr-support-sample-050",
+  "by": "opus-executor",
+  "msg": "resume executor from persisted pipeline state",
+  "meta": {
+    "limit_deferred": "false",
+    "claim_actor": "opus-executor",
+    "stage_actor": "opus-executor",
+    "pipeline_stage": "executor",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-opr-support-sample-050/T-KATA-WAVE-5-opr-support-sample-050-20261123T182405Z-ad9ea488/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-opr-support-sample-050/T-KATA-WAVE-5-opr-support-sample-050-20261123T182405Z-ad9ea488/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-5-opr-support-sample-050-20261123T182405Z-ad9ea488",
+    "pipeline_resume_claimed": "true"
+  }
+}

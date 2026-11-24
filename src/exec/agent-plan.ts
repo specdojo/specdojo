@@ -4,6 +4,7 @@ import { dirname, resolve } from "node:path";
 import {
   defaultExecDefaultsPath,
   loadExecDefaultsConfig,
+  resolveAgentTimeout,
   resolveMemberCommand,
   resolveRateLimitDetection,
   resolveRateLimitPolicy,
@@ -162,6 +163,8 @@ export async function runAgentPlan(opts: {
       SPECDOJO_EXECUTION_PATH: paths.executionPath,
     },
     opts.quiet,
+    "executor",
+    resolveAgentTimeout(execDefaults, member.provider),
   );
 
   return { execution, command, actor: member.nickname };

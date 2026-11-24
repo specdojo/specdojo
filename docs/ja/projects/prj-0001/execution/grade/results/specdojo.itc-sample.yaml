@@ -4,11 +4,11 @@ document: specdojo:itc-sample
 path: docs/ja/specdojo/samples/itc-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: fail
-score: 76
-graded_at: "2026-10-12T21:27:50.523Z"
-graded_by: agy-expert-executor
-content_hash: baf6b958314bd6f011c4894dbac21855eb7734bcb13f65b8747e5e8e36a864fd
+verdict: pass
+score: 93
+graded_at: "2026-11-23T02:00:44.630Z"
+graded_by: opus-review-executor
+content_hash: 1bf7cde120a4641db6c3f828ebc3f97fdf2017c9218c76a3fa811b86e8ade02c
 categories:
   purpose:
     score: 100
@@ -21,13 +21,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 83
+    score: 92
   implementation:
     score: 100
   quality:
-    score: 67
+    score: 92
   consistency:
-    score: 0
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -78,14 +78,14 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 0
-    score: 0
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
-    level: 0
-    score: 0
+    level: 3
+    score: 75
   vp-ux-readability:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ux-language-consistency:
     level: 4
     score: 100
@@ -102,43 +102,55 @@ viewpoints:
     level: 4
     score: 100
 finding_counts:
-  blocker: 2
-  major: 3
-  minor: 0
+  blocker: 0
+  major: 0
+  minor: 3
   note: 0
 findings:
   - id: F001
-    severity: blocker
+    severity: minor
     rule: vp-qe-omissions-consistency
-    line: 3
-    anchor: "## 1. 目的と適用範囲"
-    message: Rulebook 第 5 節で定義された必須見出し構成（1.概要 〜 6.テスト観点とケース）に従っておらず、必要な章がすべて不足している。
-    message_ja: Rulebook 第 5 節で定義された必須見出し構成（1.概要 〜 6.テスト観点とケース）に従っておらず、必要な章がすべて不足している。
+    line: 55
+    anchor: >-
+      [[specdojo:itc-index-sample|内部結合テストカタログ: 概要]] の観点の型のうち、「結合 I/F
+      の契約」は各観点の応答（確定結果・エラー種別）の期待値で担保し、独立した観点にしない。「状態遷移の整合性」は未確定のまま確定へ進まない保留の維持だけを「未確定の購入の保留」の観点で扱い、補完後の確定への遷移は扱わない。「依存障害時の挙動」は
+      DB の更新拒否を「確定できない会計のロールバック」で扱い、未保存を成功と応答しないことを `it-sales-checkout-transaction-boundary-020` で確かめる。DB
+      停止・接続断は採用しない（理由: 検証用コンテナ DB の停止は CI の他ケースを巻き込み再現性を保てない、代替: ST の障害・回復）。「セキュリティ境界」は該当なし（単一店舗・端末1台）。
+    message: >-
+      itc-index-sample は「状態遷移の整合性」を `itc-sales-checkout`
+      で「未確定から確定への遷移」と割り当て、該当しない型には理由を1行残すよう求めているが、本書は「補完後の確定への遷移は扱わない」とするだけで理由も代わりに担うケースもない。補完後の確定は通常の会計確定と同じため
+      `it-sales-checkout-persistence-integrity-010` で担う、などの理由と代わりのケースを書き添える必要がある。
+    message_ja: >-
+      itc-index-sample は「状態遷移の整合性」を `itc-sales-checkout`
+      で「未確定から確定への遷移」と割り当て、該当しない型には理由を1行残すよう求めているが、本書は「補完後の確定への遷移は扱わない」とするだけで理由も代わりに担うケースもない。補完後の確定は通常の会計確定と同じため
+      `it-sales-checkout-persistence-integrity-010` で担う、などの理由と代わりのケースを書き添える必要がある。
   - id: F002
-    severity: blocker
+    severity: minor
     rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# [内部結合テスト対象別](../rulebooks/itc-rulebook.md) サンプル"
-    message: sample 種別の責務である「完成例」を提示せず、記述内容の抽象的な説明に留まっており、実例として不適切である。
-    message_ja: sample 種別の責務である「完成例」を提示せず、記述内容の抽象的な説明に留まっており、実例として不適切である。
+    line: 55
+    anchor: >-
+      [[specdojo:itc-index-sample|内部結合テストカタログ: 概要]] の観点の型のうち、「結合 I/F
+      の契約」は各観点の応答（確定結果・エラー種別）の期待値で担保し、独立した観点にしない。「状態遷移の整合性」は未確定のまま確定へ進まない保留の維持だけを「未確定の購入の保留」の観点で扱い、補完後の確定への遷移は扱わない。「依存障害時の挙動」は
+      DB の更新拒否を「確定できない会計のロールバック」で扱い、未保存を成功と応答しないことを `it-sales-checkout-transaction-boundary-020` で確かめる。DB
+      停止・接続断は採用しない（理由: 検証用コンテナ DB の停止は CI の他ケースを巻き込み再現性を保てない、代替: ST の障害・回復）。「セキュリティ境界」は該当なし（単一店舗・端末1台）。
+    message: >-
+      itc-index-sample の「観点の立て方（共通）」は `itc-sales-checkout` の「依存障害時の挙動」を「DB 停止時に未保存を成功表示しない」としているが、本書は DB
+      停止・接続断を不採用にしており、共通方針と食い違う。itc-index-sample の割り当てを更新拒否に改めるか、本書で DB 停止を扱うかのどちらかに揃える必要がある。
+    message_ja: >-
+      itc-index-sample の「観点の立て方（共通）」は `itc-sales-checkout` の「依存障害時の挙動」を「DB 停止時に未保存を成功表示しない」としているが、本書は DB
+      停止・接続断を不採用にしており、共通方針と食い違う。itc-index-sample の割り当てを更新拒否に改めるか、本書で DB 停止を扱うかのどちらかに揃える必要がある。
   - id: F003
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 4
-    anchor: ""
-    message: Frontmatter `type` は `test` 固定である必要があるが `project` となっている。
-    message_ja: Frontmatter `type` は `test` 固定である必要があるが `project` となっている。
-  - id: F004
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 7
-    anchor: "## 2. 入力情報"
-    message: 必須項目である `title` および `based_on` が Frontmatter に不足している。
-    message_ja: 必須項目である `title` および `based_on` が Frontmatter に不足している。
-  - id: F005
-    severity: major
+    severity: minor
     rule: vp-ux-readability
-    line: 3
-    anchor: "## 1. 目的と適用範囲"
-    message: 文書構造が rulebook の定義と乖離しており, 初見の読者が正しい作成手順や構成を把握できない。
-    message_ja: 文書構造が rulebook の定義と乖離しており, 初見の読者が正しい作成手順や構成を把握できない。
+    line: 55
+    anchor: >-
+      [[specdojo:itc-index-sample|内部結合テストカタログ: 概要]] の観点の型のうち、「結合 I/F
+      の契約」は各観点の応答（確定結果・エラー種別）の期待値で担保し、独立した観点にしない。「状態遷移の整合性」は未確定のまま確定へ進まない保留の維持だけを「未確定の購入の保留」の観点で扱い、補完後の確定への遷移は扱わない。「依存障害時の挙動」は
+      DB の更新拒否を「確定できない会計のロールバック」で扱い、未保存を成功と応答しないことを `it-sales-checkout-transaction-boundary-020` で確かめる。DB
+      停止・接続断は採用しない（理由: 検証用コンテナ DB の停止は CI の他ケースを巻き込み再現性を保てない、代替: ST の障害・回復）。「セキュリティ境界」は該当なし（単一店舗・端末1台）。
+    message: >-
+      「テスト観点とケース」の導入段落が4つの観点の型の扱い（I/F
+      の契約、状態遷移、依存障害、セキュリティ境界）と不採用の理由・代わりのテストを1段落に詰め込んでおり、型と観点・ケースの対応を読み取りにくい。観点の型ごとに1項目の箇条書きか「観点の型／本書での扱い／理由・代わり」の表に分けると読みやすくなる。
+    message_ja: >-
+      「テスト観点とケース」の導入段落が4つの観点の型の扱い（I/F
+      の契約、状態遷移、依存障害、セキュリティ境界）と不採用の理由・代わりのテストを1段落に詰め込んでおり、型と観点・ケースの対応を読み取りにくい。観点の型ごとに1項目の箇条書きか「観点の型／本書での扱い／理由・代わり」の表に分けると読みやすくなる。

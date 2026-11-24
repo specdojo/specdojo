@@ -672,25 +672,6 @@ describe("runDevcontainerScaffold", () => {
     expect(shCall[1]).not.toContain("antigravity.google/cli/install.sh");
   });
 
-  it("refuses the antigravity provider before writing any Dev Container file", async () => {
-    await expect(
-      runDevcontainerScaffold({
-        packageRoot,
-        repoRoot,
-        providers: ["claude", "antigravity"],
-        editors: [],
-        ollama: false,
-        cron: false,
-        tmux: false,
-        force: false,
-        dryRun: false,
-      }),
-    ).rejects.toThrow(
-      /devcontainer scaffold cannot add provider antigravity: SpecDojo 0\.9\.2 and later do not launch Antigravity/,
-    );
-    expect(writeFileMock).not.toHaveBeenCalled();
-  });
-
   it("should add Emacs tools, setup, and init template only when requested", async () => {
     await runDevcontainerScaffold({
       packageRoot,

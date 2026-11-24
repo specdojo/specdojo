@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "queue_id": "morning-a2-2026-11-22",
+  "project_id": "prj-0001",
+  "created_at": "2026-11-21T23:40:30.697Z",
+  "updated_at": "2026-11-22T00:23:25.013Z",
+  "state": "stopped",
+  "steps": [
+    {
+      "index": 1,
+      "on_failure": "stop",
+      "status": "succeeded",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--register",
+        "PJR-QTZ7",
+        "--resume",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--project",
+        "prj-0001"
+      ],
+      "started_at": "2026-11-21T23:40:31.018Z",
+      "completed_at": "2026-11-21T23:54:47.472Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
+    },
+    {
+      "index": 2,
+      "on_failure": "stop",
+      "status": "failed",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--register",
+        "PJR-HCHH",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--project",
+        "prj-0001"
+      ],
+      "started_at": "2026-11-21T23:54:47.474Z",
+      "completed_at": "2026-11-22T00:23:24.989Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
+    }
+  ],
+  "stopped_step": 2,
+  "reason": "step 2 failed: exit code 1"
+}

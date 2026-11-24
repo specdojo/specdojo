@@ -34,6 +34,7 @@ describe("gitignorePatternsForLayouts", () => {
       "specs/prj-0001/**/generated/*",
       "!specs/prj-0001/**/generated/.gitkeep",
       "specs/prj-0001/execution/exec/.locks/",
+      "specs/prj-0001/execution/runs/**/post-integration.log",
     ]);
   });
 
@@ -52,6 +53,7 @@ describe("gitignorePatternsForLayouts", () => {
       "register/**/generated/*",
       "!register/**/generated/.gitkeep",
       "docs/ops/run/exec/.locks/",
+      "docs/ops/run/runs/**/post-integration.log",
     ]);
   });
 
@@ -61,6 +63,34 @@ describe("gitignorePatternsForLayouts", () => {
     ]);
 
     expect(patterns).toEqual([...DEFAULT_GITIGNORE_PATTERNS]);
+  });
+});
+
+describe("post-integration.log の除外", () => {
+  it("run の記録の置き場の post-integration.log を git の管理外にする", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-gitignore-"));
+    try {
+      execFileSync("git", ["init", "--quiet", root], { env: gitEnvironment() });
+      writeFileSync(
+        join(root, ".gitignore"),
+        mergeGitignore("", [...DEFAULT_GITIGNORE_PATTERNS]).content,
+      );
+      const runDir = join(root, "docs/ja/projects/prj-0001/execution/runs/register/PJR-X/run-1");
+      mkdirSync(runDir, { recursive: true });
+      writeFileSync(join(runDir, "post-integration.log"), "{}\n");
+      writeFileSync(join(runDir, "result.md"), "x\n");
+
+      const status = execFileSync("git", ["status", "--porcelain", "-uall"], {
+        cwd: root,
+        env: gitEnvironment(),
+        encoding: "utf8",
+      });
+
+      expect(status).toContain("result.md");
+      expect(status).not.toContain("post-integration.log");
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
   });
 });
 

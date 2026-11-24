@@ -1,0 +1,703 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/sch-strategy.schema.yaml
+kind: strategy
+id: prj-0001:sch-strategy-kata-review-all
+type: project
+status: draft
+title: スケジュール戦略（kata の sample の全件の 5 段のレビュー）
+rulebook: specdojo:sch-rulebook
+track: kata-review-all
+# PJR-0BGE の段取りとして PJR-G2XJ で組んだもの。PJR-F4TG で目合わせした 5 段のレビュー（R1〜R5）を、
+# dct-kata の非推奨でない sample のうち目合わせの 3 件（prj-overview・opr・stsd）を除く 103 件に広げる。
+# 段の phase set は sch-strategy-kata-review-calibration の kata-agent-review-pass を写した。
+# agent は kata-guide の「書き手と別のモデルの組み方」に従い owner_rules の phase_overrides で指名する。
+# codex が書いた sample は opus-executor、claude と flash（cdt・ifx-cmd）が書いた sample は sol-executor に任せる。
+# 流す順の段の区切りの依存は付けない（利用者の判断、2026-11-24）。1 件止まっても後ろが止まらないよう、
+# grade が pass でない sample はオーケストレーターが先に流し、残りは exec run --auto の選択に任せる。
+scope:
+  catalogs:
+    - id: prj-0001:dct-kata
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-kata.yaml
+      local_ids:
+        - opd-sample
+        - bes-sample
+        - ifx-file-sample
+        - tsp-index-sample
+        - etc-index-sample
+        - prj-charter-sample
+        - prj-scope-sample
+        - prj-issues-and-approach-sample
+        - prj-stakeholder-register-sample
+        - prj-success-criteria-and-acceptance-criteria-sample
+        - prj-assumptions-constraints-dependencies-sample
+        - prj-comparison-of-alternatives-sample
+        - pm-plan-sample
+        - pm-organization-sample
+        - pm-roles-sample
+        - pm-raci-sample
+        - pm-members-sample
+        - pm-communication-plan-sample
+        - pm-quality-management-plan-sample
+        - pm-orchestrator-playbook-sample
+        - mm-sample
+        - pr-sample
+        - dct-sample
+        - dct-index-sample
+        - bac-sample
+        - bes-index-sample
+        - br-sample
+        - bps-sample
+        - bdd-sample
+        - bds-sample
+        - gl-sample
+        - imp-business-sample
+        - nfr-index-sample
+        - nfr-availability-sample
+        - nfr-integrity-sample
+        - nfr-maintainability-sample
+        - nfr-operations-sample
+        - nfr-performance-sample
+        - nfr-reliability-sample
+        - nfr-security-safety-sample
+        - nfr-usability-sample
+        - sac-sample
+        - trc-requirements-to-specs-sample
+        - sysd-critical-flows-sample
+        - sysd-cross-cutting-policy-sample
+        - sf-index-sample
+        - sf-sample
+        - clis-sample
+        - uis-sample
+        - dss-sample
+        - cdt-sample
+        - cdsd-sample
+        - ccd-sample
+        - sld-sample
+        - cdfd-overview-sample
+        - cdfd-sample
+        - cdfd-uc-sample
+        - ifd-sample
+        - ifx-index-sample
+        - ifx-api-sample
+        - ifx-msg-sample
+        - ifx-cmd-sample
+        - tsd-index-sample
+        - tsd-sample
+        - cdr-sample
+        - cxd-sample
+        - cnd-sample
+        - cpd-sample
+        - imp-interface-sample
+        - sysd-index-sample
+        - utc-index-sample
+        - utc-sample
+        - itc-index-sample
+        - itc-sample
+        - stc-index-sample
+        - stc-sample
+        - etc-sample
+        - atc-index-sample
+        - atc-sample
+        - trc-requirements-to-tests-sample
+        - imp-test-sample
+        - opd-index-sample
+        - opd-access-control-sample
+        - opd-incident-management-sample
+        - opd-monitoring-sample
+        - opr-index-sample
+        - opr-access-control-sample
+        - opr-backup-restore-sample
+        - opr-batch-sample
+        - opr-change-sample
+        - opr-incident-sample
+        - opr-monitoring-sample
+        - opr-support-sample
+        - mip-index-sample
+        - otp-index-sample
+        - otp-sample
+        - cop-index-sample
+        - cop-sample
+        - dmd-index-sample
+        - dmd-sample
+        - mtp-sample
+        - imp-data-sample
+        - imp-operations-sample
+  include_kinds:
+    - work
+approach_rules:
+  - local_ids:
+      - opd-sample
+      - bes-sample
+      - ifx-file-sample
+      - tsp-index-sample
+      - etc-index-sample
+      - prj-charter-sample
+      - prj-scope-sample
+      - prj-issues-and-approach-sample
+      - prj-stakeholder-register-sample
+      - prj-success-criteria-and-acceptance-criteria-sample
+      - prj-assumptions-constraints-dependencies-sample
+      - prj-comparison-of-alternatives-sample
+      - pm-plan-sample
+      - pm-organization-sample
+      - pm-roles-sample
+      - pm-raci-sample
+      - pm-members-sample
+      - pm-communication-plan-sample
+      - pm-quality-management-plan-sample
+      - pm-orchestrator-playbook-sample
+      - mm-sample
+      - pr-sample
+      - dct-sample
+      - dct-index-sample
+      - bac-sample
+      - bes-index-sample
+      - br-sample
+      - bps-sample
+      - bdd-sample
+      - bds-sample
+      - gl-sample
+      - imp-business-sample
+      - nfr-index-sample
+      - nfr-availability-sample
+      - nfr-integrity-sample
+      - nfr-maintainability-sample
+      - nfr-operations-sample
+      - nfr-performance-sample
+      - nfr-reliability-sample
+      - nfr-security-safety-sample
+      - nfr-usability-sample
+      - sac-sample
+      - trc-requirements-to-specs-sample
+      - sysd-critical-flows-sample
+      - sysd-cross-cutting-policy-sample
+      - sf-index-sample
+      - sf-sample
+      - clis-sample
+      - uis-sample
+      - dss-sample
+      - cdt-sample
+      - cdsd-sample
+      - ccd-sample
+      - sld-sample
+      - cdfd-overview-sample
+      - cdfd-sample
+      - cdfd-uc-sample
+      - ifd-sample
+      - ifx-index-sample
+      - ifx-api-sample
+      - ifx-msg-sample
+      - ifx-cmd-sample
+      - tsd-index-sample
+      - tsd-sample
+      - cdr-sample
+      - cxd-sample
+      - cnd-sample
+      - cpd-sample
+      - imp-interface-sample
+      - sysd-index-sample
+      - utc-index-sample
+      - utc-sample
+      - itc-index-sample
+      - itc-sample
+      - stc-index-sample
+      - stc-sample
+      - etc-sample
+      - atc-index-sample
+      - atc-sample
+      - trc-requirements-to-tests-sample
+      - imp-test-sample
+      - opd-index-sample
+      - opd-access-control-sample
+      - opd-incident-management-sample
+      - opd-monitoring-sample
+      - opr-index-sample
+      - opr-access-control-sample
+      - opr-backup-restore-sample
+      - opr-batch-sample
+      - opr-change-sample
+      - opr-incident-sample
+      - opr-monitoring-sample
+      - opr-support-sample
+      - mip-index-sample
+      - otp-index-sample
+      - otp-sample
+      - cop-index-sample
+      - cop-sample
+      - dmd-index-sample
+      - dmd-sample
+      - mtp-sample
+      - imp-data-sample
+      - imp-operations-sample
+    intent: improve-kata
+    kata_target: rulebook
+phase_sets:
+  kata-agent-review-pass:
+    - id: kata-review-r1
+      name: R1 目的の過不足
+      execution: agent
+      mode: edit
+      approach: sample-maintenance
+      agent:
+        executor: sol-executor
+        reporter: sonnet-reporter
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "110"
+      duration_days: 0.25
+      description:
+        "kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は [[specdojo:kata-guide|実践の型活用ガイド]]（docs/ja/specdojo/guides/kata-guide.md）の「kata を agent でレビューする」に従う。plan に展開された grade の finding は、この段の観点に当たるものだけを扱い、ほかは扱う段に任せる。この段は sample を厚くする段ではなく、R1 の確かめに当たる箇所だけを直す。
+
+        対象の sample が、種別の責務（Sample 記述標準）と rulebook の目的に対し、要る内容を欠いていないか、要らない内容を含んでいないかを確かめ、足す・削る差分を sample に入れる。rulebook など sample 以外は変更せず、直す案を result に書く。報告は同ガイドの「人への報告の形」に従い、executor は報告の handoff に指摘を 1 件ずつ 1 項目（No・段・箇所・指摘・直した案・根拠・印）で書き、表の文字列にまとめない。reporter は handoff の指摘を result の実施内容に Markdown の表として 1 回だけ書き、申し送りには表を重ねない。迷った指摘に「要判断」の印を付ける。
+
+        "
+    - id: kata-review-r2
+      name: R2 構成
+      execution: agent
+      mode: edit
+      approach: sample-maintenance
+      agent:
+        executor: sol-executor
+        reporter: sonnet-reporter
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "120"
+      duration_days: 0.25
+      description:
+        "kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は [[specdojo:kata-guide|実践の型活用ガイド]]（docs/ja/specdojo/guides/kata-guide.md）の「kata を agent でレビューする」に従う。plan に展開された grade の finding は、この段の観点に当たるものだけを扱い、ほかは扱う段に任せる。R1 が直した版を読み、R1 の指摘を繰り返さない。
+
+        章の順・粒度・表と本文の配置が rulebook の本文構成と template に沿い、前提から結論の順に読めるかを確かめ、章の移動・分割・統合の差分を sample に入れる。rulebook など sample 以外は変更せず、直す案を result に書く。報告は同ガイドの「人への報告の形」に従い、executor は報告の handoff に指摘を 1 件ずつ 1 項目（No・段・箇所・指摘・直した案・根拠・印）で書き、表の文字列にまとめない。reporter は handoff の指摘を result の実施内容に Markdown の表として 1 回だけ書き、申し送りには表を重ねない。迷った指摘に「要判断」の印を付ける。
+
+        "
+    - id: kata-review-r3
+      name: R3 読みやすさ
+      execution: agent
+      mode: edit
+      approach: sample-maintenance
+      agent:
+        executor: sol-executor
+        reporter: sonnet-reporter
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "130"
+      duration_days: 0.25
+      description:
+        "kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は [[specdojo:kata-guide|実践の型活用ガイド]]（docs/ja/specdojo/guides/kata-guide.md）の「kata を agent でレビューする」に従う。plan に展開された grade の finding は、この段の観点に当たるものだけを扱い、ほかは扱う段に任せる。前の段が直した版を読み、前の段の指摘を繰り返さない。
+
+        同ガイドの「文章のチェック項目」（W1〜W10）と、その正本として挙げた規約を確かめ、文の直しの差分を sample に入れる。意味と判断に要る背景・例外・制約は変えない。指摘の根拠の列にはチェック項目の No か観点 ID を書く。報告は同ガイドの「人への報告の形」に従い、executor は報告の handoff に指摘を 1 件ずつ 1 項目（No・段・箇所・指摘・直した案・根拠・印）で書き、表の文字列にまとめない。reporter は handoff の指摘を result の実施内容に Markdown の表として 1 回だけ書き、申し送りには表を重ねない。迷った指摘に「要判断」の印を付ける。
+
+        "
+    - id: kata-review-r4
+      name: R4 正しさ
+      execution: agent
+      mode: edit
+      approach: sample-maintenance
+      agent:
+        executor: sol-executor
+        reporter: sonnet-reporter
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "140"
+      duration_days: 0.25
+      description:
+        "kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は [[specdojo:kata-guide|実践の型活用ガイド]]（docs/ja/specdojo/guides/kata-guide.md）の「kata を agent でレビューする」に従う。plan に展開された grade の finding は、この段の観点に当たるものだけを扱い、ほかは扱う段に任せる。前の段が直した版を読み、前の段の指摘を繰り返さない。
+
+        sample に書いてある事実（コマンド、オプション、キー、既定値、列挙値、パス、挙動）を、schema（docs/specdojo/schemas/v1/）、src/、コマンドリファレンス、必要なら --help や検証コマンドの実行と突き合わせる。主張ごとの確かめの表を result の実施内容に書き、誤りの直しの差分を sample に入れる。確かめられなかった主張も表に残す。指摘は同ガイドの「人への報告の形」に従い、executor は報告の handoff に 1 件ずつ 1 項目で書き、reporter は result の実施内容に Markdown の表として 1 回だけ書く（申し送りに表を重ねない）。駄菓子屋の業務の値のように正本のない仮定は、共通サンプル文脈と食い違わなければ確かめの対象にしない。
+
+        "
+    - id: kata-review-r5
+      name: R5 整合
+      execution: agent
+      mode: edit
+      approach: sample-maintenance
+      agent:
+        executor: sol-executor
+        reporter: sonnet-reporter
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "150"
+      duration_days: 0.25
+      description:
+        "kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は [[specdojo:kata-guide|実践の型活用ガイド]]（docs/ja/specdojo/guides/kata-guide.md）の「kata を agent でレビューする」に従う。plan に展開された grade の finding は、この段の観点に当たるものだけを扱い、ほかは扱う段に任せる。前の段が直した版を読み、前の段の指摘を繰り返さない。
+
+        同じ接頭辞の sample（index と個別）、wikilink と based_on の参照先、用語集（docs/ja/product/010-business-specs/060-glossary/）、Sample 記述標準の共通サンプル文脈を読み、食い違いを確かめる。sample の側を直す差分を入れ、相手側を直すべき点は変更せずに直す案を result に書く。報告は同ガイドの「人への報告の形」に従い、executor は報告の handoff に指摘を 1 件ずつ 1 項目（No・段・箇所・指摘・直した案・根拠・印）で書き、表の文字列にまとめない。reporter は handoff の指摘を result の実施内容に Markdown の表として 1 回だけ書き、申し送りには表を重ねない。迷った指摘に「要判断」の印を付ける。
+
+        "
+default_phase_sets:
+  - phase_set: kata-agent-review-pass
+owner_rules:
+  - local_ids:
+      - prj-charter-sample
+      - prj-scope-sample
+      - prj-issues-and-approach-sample
+      - prj-stakeholder-register-sample
+      - prj-success-criteria-and-acceptance-criteria-sample
+    owner: PO
+    phase_overrides:
+      - phase: kata-review-r1
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r2
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r3
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r4
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r5
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+  - local_ids:
+      - pm-roles-sample
+    owner: PM
+    phase_overrides:
+      - phase: kata-review-r1
+        agent:
+          executor: opus-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r2
+        agent:
+          executor: opus-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r3
+        agent:
+          executor: opus-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r4
+        agent:
+          executor: opus-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r5
+        agent:
+          executor: opus-executor
+          reporter: sonnet-reporter
+  - local_ids:
+      - prj-assumptions-constraints-dependencies-sample
+      - prj-comparison-of-alternatives-sample
+      - pm-plan-sample
+      - pm-organization-sample
+      - pm-raci-sample
+      - pm-members-sample
+      - pm-communication-plan-sample
+      - pm-quality-management-plan-sample
+      - pm-orchestrator-playbook-sample
+      - mm-sample
+      - pr-sample
+      - dct-sample
+    owner: PM
+    phase_overrides:
+      - phase: kata-review-r1
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r2
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r3
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r4
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r5
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+  - local_ids:
+      - bac-sample
+      - cdfd-uc-sample
+    owner: BA
+    phase_overrides:
+      - phase: kata-review-r1
+        agent:
+          executor: opus-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r2
+        agent:
+          executor: opus-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r3
+        agent:
+          executor: opus-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r4
+        agent:
+          executor: opus-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r5
+        agent:
+          executor: opus-executor
+          reporter: sonnet-reporter
+  - local_ids:
+      - bps-sample
+      - gl-sample
+      - imp-business-sample
+      - trc-requirements-to-specs-sample
+      - clis-sample
+      - cdsd-sample
+      - ifx-cmd-sample
+      - imp-data-sample
+    owner: BA
+    phase_overrides:
+      - phase: kata-review-r1
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r2
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r3
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r4
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r5
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+  - local_ids:
+      - bds-sample
+      - uis-sample
+      - dss-sample
+    owner: UX
+    phase_overrides:
+      - phase: kata-review-r1
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r2
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r3
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r4
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r5
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+  - local_ids:
+      - dct-index-sample
+      - bdd-sample
+      - sysd-critical-flows-sample
+      - sysd-cross-cutting-policy-sample
+      - ifd-sample
+      - sysd-index-sample
+    owner: ARC
+    phase_overrides:
+      - phase: kata-review-r1
+        agent:
+          executor: opus-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r2
+        agent:
+          executor: opus-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r3
+        agent:
+          executor: opus-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r4
+        agent:
+          executor: opus-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r5
+        agent:
+          executor: opus-executor
+          reporter: sonnet-reporter
+  - local_ids:
+      - bes-sample
+      - ifx-file-sample
+      - bes-index-sample
+      - br-sample
+      - nfr-index-sample
+      - nfr-availability-sample
+      - nfr-integrity-sample
+      - nfr-maintainability-sample
+      - nfr-operations-sample
+      - nfr-performance-sample
+      - nfr-reliability-sample
+      - nfr-security-safety-sample
+      - nfr-usability-sample
+      - sf-index-sample
+      - sf-sample
+      - cdt-sample
+      - ccd-sample
+      - sld-sample
+      - cdfd-overview-sample
+      - cdfd-sample
+      - ifx-index-sample
+      - ifx-api-sample
+      - ifx-msg-sample
+      - tsd-index-sample
+      - tsd-sample
+      - cdr-sample
+      - cxd-sample
+      - cnd-sample
+      - cpd-sample
+      - imp-interface-sample
+    owner: ARC
+    phase_overrides:
+      - phase: kata-review-r1
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r2
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r3
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r4
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r5
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+  - local_ids:
+      - tsp-index-sample
+      - etc-index-sample
+      - sac-sample
+      - utc-index-sample
+      - utc-sample
+      - itc-index-sample
+      - itc-sample
+      - stc-index-sample
+      - stc-sample
+      - etc-sample
+      - atc-index-sample
+      - atc-sample
+      - trc-requirements-to-tests-sample
+      - imp-test-sample
+      - mtp-sample
+    owner: QE
+    phase_overrides:
+      - phase: kata-review-r1
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r2
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r3
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r4
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r5
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+  - local_ids:
+      - opd-sample
+    owner: OPS
+    phase_overrides:
+      - phase: kata-review-r1
+        agent:
+          executor: opus-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r2
+        agent:
+          executor: opus-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r3
+        agent:
+          executor: opus-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r4
+        agent:
+          executor: opus-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r5
+        agent:
+          executor: opus-executor
+          reporter: sonnet-reporter
+  - local_ids:
+      - opd-index-sample
+      - opd-access-control-sample
+      - opd-incident-management-sample
+      - opd-monitoring-sample
+      - opr-index-sample
+      - opr-access-control-sample
+      - opr-backup-restore-sample
+      - opr-batch-sample
+      - opr-change-sample
+      - opr-incident-sample
+      - opr-monitoring-sample
+      - opr-support-sample
+      - mip-index-sample
+      - otp-index-sample
+      - otp-sample
+      - cop-index-sample
+      - cop-sample
+      - dmd-index-sample
+      - dmd-sample
+      - imp-operations-sample
+    owner: OPS
+    phase_overrides:
+      - phase: kata-review-r1
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r2
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r3
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r4
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r5
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter

@@ -3,7 +3,7 @@
 # product repositories through the same extra-root arguments as SpecDojo.
 #
 # Usage:
-#   tools/exec/verify-multi-repo-agent-write.sh <claude|codex|antigravity|all>
+#   tools/exec/verify-multi-repo-agent-write.sh <claude|codex|all>
 #   KEEP_TMP=1 tools/exec/verify-multi-repo-agent-write.sh all
 #
 # The script invokes real agent CLIs and may consume provider quota. Run it from
@@ -12,9 +12,9 @@ set -euo pipefail
 
 provider="${1:-}"
 case "$provider" in
-  claude | codex | antigravity | all) ;;
+  claude | codex | all) ;;
   *)
-    echo "usage: $0 <claude|codex|antigravity|all>" >&2
+    echo "usage: $0 <claude|codex|all>" >&2
     exit 2
     ;;
 esac
@@ -92,27 +92,12 @@ run_codex() {
   verify_output codex
 }
 
-run_antigravity() {
-  require_command agy
-  prompt="$(prompt_for antigravity)"
-  (
-    cd "$project_repo"
-    agy --sandbox --add-dir "$(pwd)" --dangerously-skip-permissions \
-      -p "$prompt" \
-      --add-dir "$app1_repo" \
-      --add-dir "$app2_repo"
-  )
-  verify_output antigravity
-}
-
 case "$provider" in
   claude) run_claude ;;
   codex) run_codex ;;
-  antigravity) run_antigravity ;;
   all)
     run_claude
     run_codex
-    run_antigravity
     ;;
 esac
 

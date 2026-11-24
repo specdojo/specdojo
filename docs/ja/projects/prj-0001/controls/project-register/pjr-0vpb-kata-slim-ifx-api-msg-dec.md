@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-0vpb-kata-slim-ifx-api-msg-dec
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-17T23:21:54Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-22T12:57:44Z"
+  conclusion: ifx-api・ifx-msg・dec の rulebook と sample から共通の運用の記述を外した。dec は rulebook・sample とも pass。ifx-api・ifx-msg の needs-work は仕様の中身（info.version・responses・題材）の問題で、PJR-AEKE で扱う
   derived_from:
     - PJR-DJZD
 ---

@@ -49,7 +49,7 @@ describe("typed YAML display pages", () => {
     const expected = readFileSync(`${fixtureDir}/${name}`, "utf8");
     const source = expected.match(/> このページは `([^`]+)` から/)?.[1];
     expect(source).toBeDefined();
-    const content = readFileSync(source!, "utf8");
+    const content = readFileSync(`${fixtureDir}/${name.replace(/\.md\.snap$/, ".yaml")}`, "utf8");
     const page = renderYamlPage(source!, content);
     expect(page).toBe(expected);
     const visible = page.split("<details>")[0];
@@ -166,7 +166,10 @@ describe("typed YAML display pages", () => {
     "docs/ja/specdojo/schemas/v1/guide-content.schema.yaml",
   ];
   it.each(excluded)("preserves the plain YAML display of %s", (source) => {
-    const content = readFileSync(source, "utf8");
+    const fixture = source.startsWith("docs/ja/specdojo/samples/")
+      ? `${fixtureDir}/excluded-${source.split("/").pop()}`
+      : source;
+    const content = readFileSync(fixture, "utf8");
     const page = renderYamlPage(source, content);
     expect(page).not.toContain("<details>");
     expect(tables(page)).toHaveLength(0);

@@ -15,14 +15,14 @@ Job Definition Standard
 
 - 対象: プロジェクトの `jobs_path` 配下に置くすべての `job-*.yaml`。
 - 目的: 決定論的な実行と agent に委譲する判断を分け、コマンドの組み立てへ agent の判断力を使わせないこと。
-- 位置づけ: 本標準は Job Definition の規範を定める。実行モデル（Job Run、冪等性、checkpoint）の設計は `sysd-job-execution`、運用手順は `routine-operation-guide` と `command-reference` に委譲する。
+- 位置づけ: 本標準は Job Definition の規範を定める。実行モデル（job run、冪等性、checkpoint）の設計は `sysd-job-execution`、運用手順は `routine-operation-guide` と `command-reference` に委譲する。
 - 機械検証: `docs/specdojo/schemas/v1/job.schema.yaml` を SSOT とし、本文では制約を二重定義しない。
 
 ## 2. 基本方針
 
 - 決定論的な手順は script または CLI へ実装し、`mode: command` の `task.command` から入口を呼ぶ。複数の入口を順に実行する場合は `task.steps` を使う。
 - `task.command` は materialize 時に入力を展開して Run へ凍結し、runner が agent の sandbox 外で直接実行する。
-- 対象選択を伴う command Job は任意の `task.precondition` で選択を先に評価できる。skip 条件を満たした場合は Job Run と付随成果物を作らない。
+- 対象選択を伴う command Job は任意の `task.precondition` で選択を先に評価できる。skip 条件を満たした場合は job run と付随成果物を作らない。
 - command Job が同じプロジェクトの `specdojo exec` を子プロセスとして呼ぶ場合、runner が保持する project 実行 lock の token を子へ継承する。子は owner token の一致を検証した場合だけ再取得を省略し、Job 全体の排他範囲を維持する。
 - 判断（観測した結果の解釈、失敗の切り分け、次の行動の提案）が必要な command Job だけ、`task.analysis` で reporter agent と判断内容を指定する。
 - `edit` / `review` Job は従来どおり agent に作業を委譲し、`task.description` に判断内容を書く。
@@ -55,18 +55,18 @@ Job Definition Standard
 
 - `task.agent.executor` に、成果物の編集・検証・コマンド実行を担当する agent の nickname を書く。
 - result を executor が書かない構成（stage_role を持つ pipeline member）では、`task.agent.reporter` に reporter の nickname を書く。両方を指名した Run は executor → reporter の2段で実行され、result は reporter が書く。
-- `task.agent.reporter` を省略した場合、executor が Job Run の result まで記入する。result を書かない agent を単独で指名してはならない。
+- `task.agent.reporter` を省略した場合、executor が job run の result まで記入する。result を書かない agent を単独で指名してはならない。
 - nickname は `.specdojo/agent-members.yaml` に登録済みのメンバーと完全一致させる。`job validate` は書式のみを検査するため、実在確認は `exec run --job --dry-run` で行う。
 - `exec run --by` は単一 agent 実行としての単発の差し替え、`--executor-by` / `--reporter-by` は段ごとの差し替えとして、いずれも Job の指名より優先する。
 - command Job で判断が必要な場合は `task.analysis.agent` に `stage_role: reporter` の nickname を指定する。`--reporter-by` で差し替えられるが、runner 実行を `--by` / `--executor-by` で agent に置き換えることはできない。
 
 ### 3.3. command mode の規約
 
-- `task.command` は非空のシェルコマンドとし、materialize 後の文字列を Job Run に保存する。
-- `task.precondition` は command mode だけで使用でき、非空の `command` と `skip_when` を持つ。runner は入力と Job Run ID を含む template 値を解決した後、初回の Job Run を保存する前に precondition を実行する。
+- `task.command` は非空のシェルコマンドとし、materialize 後の文字列を job run に保存する。
+- `task.precondition` は command mode だけで使用でき、非空の `command` と `skip_when` を持つ。runner は入力と job run ID を含む template 値を解決した後、初回の job run を保存する前に precondition を実行する。
 - `skip_when: empty-output` は終了コード 0 かつ、前後の空白を除いた stdout が空の場合に skip とする。`skip_when` に 0 から 255 の整数を指定した場合は、その終了コードを skip とする。それ以外の非 0 終了は precondition の失敗として扱う。
-- precondition による skip では Job Run、plan、result、evidence を作らず、analysis reporter と `task.command` も起動しない。routine 起動では routine に `skipped` を返し、routine 側だけが `last_run` / `last_result` を更新する。
-- 既存 Job Run の retry は保存済みの対象と再開状態を維持するため precondition を再実行しない。`--dry-run` は precondition を実行せず、解決済みコマンドと skip 条件を表示する。
+- precondition による skip では job run、plan、result、evidence を作らず、analysis reporter と `task.command` も起動しない。routine 起動では routine に `skipped` を返し、routine 側だけが `last_run` / `last_result` を更新する。
+- 既存 job run の retry は保存済みの対象と再開状態を維持するため precondition を再実行しない。`--dry-run` は precondition を実行せず、解決済みコマンドと skip 条件を表示する。
 - command から対象プロジェクトを指定するときは template 値 `{{project_id}}` を使い、同じ CLI を子プロセスで呼ぶときは `{{specdojo}}` を使う。`specdojo` という PATH 上の別 checkout を直接呼ばない。
 - script が中断再開用の ID を要求するときは `{{job_run_id}}` を渡す。期間などの `inputs` から再開キーを組み立てない。
 - runner は POSIX 環境では `/bin/sh -eu` でコマンドを実行する。終了コード0は`succeeded`、`task.partial_exit_code`に明示した非0は`partial`、それ以外の非0は`failed`とする。
@@ -89,7 +89,7 @@ Job Definition Standard
 - `task.review` は `edit` / `review` / `command` のいずれの mode でも書ける。空の mapping（`review: {}`）は、review agent を指名せずに宣言だけを行う。
 - review agent は `task.review.agent.executor`（review executor）と `task.review.agent.reporter`（reporter）に nickname で指名する。書式と未知のキーの扱いは `task.agent` と同じで、`executor` は必須、`reporter` は任意、それ以外のキーは `job validate` がエラーにする。
 - review agent の解決順は、`exec run` の `--review-by` / `--reporter-by` → `task.review.agent` → 自動選択とする。review タスクは能力要件を持たないため、自動選択では利用者の意図した agent にならない場合がある。review の品質を固定したい Job は指名する。
-- `task.review.agent` は Job Run 自体の agent（`task.agent` / `task.analysis.agent`）とは独立している。`--reporter-by` は従来どおり Run の reporter と review の reporter の両方を差し替える。
+- `task.review.agent` は job run 自体の agent（`task.agent` / `task.analysis.agent`）とは独立している。`--reporter-by` は従来どおり Run の reporter と review の reporter の両方を差し替える。
 - routine の `action.commit: true` は互換として読み、`task.review` を宣言していない Job でも同じ流れで実行する。Job が `task.review` を宣言している場合は Job を優先し、`action.commit` の有無や値によらず review を経て統合する。
 
 ### 3.6. inputs と冪等性

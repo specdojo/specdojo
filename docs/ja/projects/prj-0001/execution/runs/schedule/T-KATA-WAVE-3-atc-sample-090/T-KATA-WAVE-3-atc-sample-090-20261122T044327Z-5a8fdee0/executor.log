@@ -1,0 +1,33 @@
+レビューの結論は `incomplete`（未完了）です。sample の評価結果が `needs-work` のままで、完了条件 DC-003（rulebook の禁止事項に当たらないこと）も満たしていません。成果物と result はどちらも変更していません。
+
+**評価結果の鮮度**
+- sample と rulebook のそれぞれに `npx specdojo grade list --target kata --path <対象> --changed-only` と `--incomplete` を実行しました。どれも何も出力せず、終了コードは 0 でした。
+- verdict を決める直前にも `--changed-only` をもう一度実行し、同じ結果でした。どちらの評価結果も最新で、確認中に成果物は変わっていません。
+- sample のサイドカーの値は plan と同じでした（`verdict: needs-work`、`score` 87、blocker 0 / major 3 / minor 2）。
+- rulebook は plan の時点で `pass`（`score` 98、minor 2）です。
+
+**判断根拠**
+- 型を整える schedule では、型すべてに最新の `pass` が必要です。`needs-work` は `incomplete` にする決まりなので、sample が `needs-work` の時点でこのタスクは完了にできません。
+- grade の F001 と F003（major）が指摘した矛盾が、本文にそのまま残っています。
+  - 取引照合のケース `at-cash-sale-transaction-check-010`（本文 115 行）の条件は「店主代表へ店番を交代 / 経路: 交代後に照合」です。
+  - 受入の責務（30 行）と観点の意図（109 行）も、店番の交代を前提にしています。
+  - 一方、atc-index-sample（101 行）は「店番の交代は `atc-sale-hold` の引継ぎ経路だけで確かめる」と決めています。これは rulebook の禁止事項にあたる共通方針の上書きで、DC-003 に直接かかわります。
+- 「term」という内部用語は、本文 20・32・69 行に残っています（F004）。
+- `_ASSUMPTION_` が 2 件残っています（本文 58・59 行、F005 major）。
+- 先行する edit タスク 040・050・080 の result は、いずれも `mode: edit` / `status: complete` でした。それでも grade の結果は `needs-work` のままです。
+
+**改善指示**
+1. 取引照合のケース・受入の責務・観点の意図を、店番の交代を前提にしない照合に改める。交代を前提にするなら、先に atc-index の条件の立て方と分配表を改める（F001・F003）。
+2. 差を残す場合は、「共通方針との差」の行に理由とともに書く（F002）。
+3. 「term」を「本カタログ（`atc-cash-sale`）」などに言い換える（F004）。
+4. 残っている 2 件の `_ASSUMPTION_` を解消するか、ready にする前の扱いを決める（F005）。
+5. 直した後に `--target kata` で grade をやり直し、`pass` を得る。
+6. rulebook に minor が 2 件残っています。ready にする前に、`_UNDECIDED_` に残る「sample は未整合」という記述を、recipe・template の要否だけに直してください。
+
+**確認できなかった範囲**
+- 先行する edit の result は frontmatter の状態だけを見ました。本文の検証結果は読んでいません。
+- grade の行番号は本文の行と数行ずれていますが、指摘の中身は本文と一致しています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"review verdict: incomplete。atc-sample・atc-rulebook とも評価結果は最新（`--changed-only` と `--incomplete` は出力なし・exit 0。verdict 直前の `--changed-only` も同じ）。sample の grade は `needs-work`（87、major 3 / minor 2）で、型の schedule では全型の `pass` が要るため完了にできない。F001・F003 の矛盾は本文に残っている: `at-cash-sale-transaction-check-010`（本文 115 行）・受入の責務（30 行）・観点の意図（109 行）が店番交代を前提にしており、atc-index-sample 101 行の『店番の交代は `atc-sale-hold` の引継ぎ経路だけで確かめる』を上書きしている（DC-003 未充足）。このほか『term』（20・32・69 行、F004）と `_ASSUMPTION_` 2 件（58・59 行、F005）が残る。rulebook は `pass`（98、minor 2）。先行する edit タスク 040・050・080 の result は `mode: edit` / `status: complete`。確認できなかった範囲: edit の result は frontmatter だけを見て、本文の検証結果は読んでいない。grade の行番号は本文と数行ずれるが、指摘の中身は一致する。","handoff":["atc-sample: 取引照合のケース・受入の責務・観点の意図を、店番の交代を前提にしない照合に改める。交代を前提にするなら、先に atc-index の条件の立て方と分配表を改める（F001・F003・DC-003）。差を残す場合は『共通方針との差』の行に理由を書く（F002）。","atc-sample: 『term』を『本カタログ（`atc-cash-sale`）』などに言い換える（F004）。残っている 2 件の `_ASSUMPTION_` を解消するか、ready にする前の扱いを決める（F005）。","atc-sample を直した後に `--target kata` で grade をやり直し、`pass` を得てから review をやり直す。","atc-rulebook の minor 2 件: ready にする前に、`_UNDECIDED_` に残る『sample は未整合』という記述を、recipe・template の要否だけに直す。"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/atc-sample.md --changed-only","status":"passed","summary":"出力なし・exit 0。評価結果は最新（verdict 直前にもう一度実行し、同じ結果）"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/atc-sample.md --incomplete","status":"passed","summary":"出力なし・exit 0。評価パイプラインは完了している"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/atc-rulebook.md --changed-only","status":"passed","summary":"出力なし・exit 0。評価結果は最新（verdict 直前にもう一度実行し、同じ結果）"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/atc-rulebook.md --incomplete","status":"passed","summary":"出力なし・exit 0。評価パイプラインは完了している"}]}
+</specdojo_executor_evidence>

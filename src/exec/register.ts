@@ -62,7 +62,7 @@ import { repoEnvironmentVariableName } from "./task-repos.js";
 // ---------------------------------------------------------------------------
 
 // 登録項目の実行区分。edit は成果物・実装を変更する対応、investigate は調査して
-// 結論案を result に記録する対応（epic / decision / note は実行対象外）。
+// 結論案を result に記録する対応（epic / decision / note / handoff は実行対象外）。
 export type RegisterTaskCategory = "edit" | "investigate";
 
 const EDIT_TYPES: ReadonlySet<string> = new Set(["todo", "issue", "change-request"]);
@@ -187,6 +187,18 @@ export type RegisterItemSummary = {
   reason?: string;
   uncommittedFiles?: number;
 };
+
+// 要約の commit= に出す ID を選ぶ。run が commit を作った（HEAD が動いた）場合だけ
+// その HEAD を使い、作っていなければ統合の commit を使う。作っていないのに HEAD を読むと、
+// 別の run や無関係な commit の ID が出る。
+export function selectRunCommitId(params: {
+  headBefore: string;
+  headAfter: string;
+  integrationCommit: string;
+}): string {
+  const id = params.headAfter !== params.headBefore ? params.headAfter : params.integrationCommit;
+  return id.slice(0, 12);
+}
 
 // 全ID処理後にID別の成否・状態遷移・commit結果・理由を一覧表示するための整形。
 export function formatRegisterRunSummary(summaries: readonly RegisterItemSummary[]): string {

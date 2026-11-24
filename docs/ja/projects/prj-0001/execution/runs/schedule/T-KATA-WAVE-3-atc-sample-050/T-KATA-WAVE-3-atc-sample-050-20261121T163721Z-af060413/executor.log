@@ -1,0 +1,26 @@
+`docs/ja/specdojo/samples/atc-sample.md` を書き直しました。変更したのはこのファイルだけで、rulebook と result は触っていません。中身は 5 行の最小例から、駄菓子屋の現金販売（`atc-cash-sale`）を題材にした完成例に変わっています。
+
+prettier と markdownlint は対象ファイルで問題ゼロ、`npm run docs:build` も成功しました。lint・schema の各検査は、このあと親の runner が実行します。
+
+**主な変更**
+- **frontmatter:** `based_on` に TSP と ATC 概要の sample を加えました（F001, F005, F021）。存在しない `bac-order-registration` を指していた `relations.verifies` は、業務受入条件（BAC）の sample と成功基準・受入条件の sample に改めました（F023）。
+- **見出しと章立て:** H1 を「受入テストカタログ: 店頭の現金販売」にし、本文を rulebook の 6 章（概要、受入の責務、対象外、環境/データ/外部依存、トレース、受入観点とケース）に揃えました。古い独自の章はなくしたので、重複も消えています（F014, F015, F020, F022, F024〜F027）。
+- **概要:** 誰がどの判断に使うか、役割の分担、`ready` にする条件（3 者の確認、前提の解消、`npm run -s lint:md` と `npm run lint:fm` が終了コード 0）を書きました（F003, F007, F011, F012, F018, F028）。
+- **受入の責務:** 観測できる成果を 5 つ挙げ、正常系に加えて確定前の取消と店番交代の場合を含めました。完了条件も添えています（F008）。
+- **対象外:** 4 項目を、理由と代わりの確認先つきで書きました（F009）。
+- **環境/データ/外部依存:** 開始・完了・データ・プリンタ、判定を保留する条件を表にしました。判定に影響する仮定 2 件には、判断する人・次の手・課題登録の候補を書いています（F002, F006, F013, F029）。
+- **トレース:** `TR-01`〜`TR-05` の表にし、上流が変わったときの見直し方を 1 文で添えました（F017）。
+- **ケース:** 観点 3 つで計 5 ケースです。`case_id`、priority（優先度）、実施形態、証跡などの必須列をすべて値で埋め、合否を判定できる期待値にしました（F004, F016, F019）。
+
+**対応しなかったもの**
+- **F010（用語定義）:** rulebook の必須章にないため、独自の章は足していません。用語は rulebook と同じ言葉に揃えました。
+
+**rulebook と ATC 概要 sample（`atc-index-sample.md`）の食い違い（確認が必要）**
+この sample では rulebook を正としました。
+- ATC 概要の sample は優先度 P2 と実施形態 `assisted` を定義していますが、rulebook は P0/P1 と `manual`/`automated` だけです。
+- ATC 概要の sample はケース表のトレース列に仕様 ID を直接書いていますが、rulebook ではこれが禁止事項です。
+- 直すには、ATC 概要の sample を揃えるか、rulebook の側で両者の関係を書くかのどちらかが必要です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"atc-sample.md を rulebook の 6 章構成で、駄菓子屋の現金販売（atc-cash-sale）の完成例に書き直した。F001〜F029 のうち F010 以外に対応した。F010 は rulebook の必須章にないため章を足さなかった。prettier・markdownlint・docs:build はすべて成功した。","handoff":["F010（用語定義の欠落）は rulebook の必須章にないため、sample に独自の章は足さなかった。用語は rulebook と同じ言葉に揃えた。","atc-index-sample.md は優先度 P2 と実施形態 assisted を定義しているが、atc-rulebook.md は P0/P1 と manual/automated だけを定義している。atc-sample では rulebook を正とした。atc-index-sample を揃えるか、rulebook に両者の関係を書くかを判断する必要がある。","atc-index-sample.md のケース表の例は、トレース列に SC/AC/BAC の ID を直接書いている。atc-rulebook.md ではこれが禁止事項（TR-xx を使う）。atc-sample は TR-xx を使った。atc-index-sample の見直しを申し送る。","atc-rulebook.md の全体方針にある _UNDECIDED_ の『sample は本文要件の章構成・トレース表・条件・ケース表へ未整合』の一文は、今回の改訂で解消した。削除または更新を rulebook の変更案とする（rulebook はこの段では変更しない）。","sample 内の _ASSUMPTION_ 2 件（確定前の取消の業務受入条件がない、レシートに取引番号が印字される前提）は、BAC の取消条件の追加と画面・帳票の設計で確かめる。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/atc-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/atc-sample.md","status":"passed","summary":"0 issues in 0 files"},{"command":"npm run docs:build","status":"passed","summary":"build complete in 152.70s"},{"command":"npm run validate:history-links","status":"not_applicable","reason":"履歴蓄積ファイル（plan / result / pjr 個票）を変更していない"}]}
+</specdojo_executor_evidence>

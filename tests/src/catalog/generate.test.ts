@@ -114,6 +114,48 @@ afterEach(async () => {
   await rm(fx.dir, { recursive: true, force: true });
 });
 
+describe("runGenerate — based_on の依存先 id", () => {
+  const catalog = `id: prjx:dct-demo
+type: project
+status: draft
+project_id: prjx
+domain: demo
+groups:
+  - deliverables:
+      - local_id: product-spec
+        name: プロダクト仕様
+        kind: work
+        overview: プロダクトの仕様
+        path: docs/ja/product/product-spec.md
+      - local_id: prj-overview
+        name: 概要
+        kind: work
+        overview: 概要
+        path: docs/ja/projects/prjx/prj-overview.md
+      - local_id: prj-charter
+        name: 憲章
+        kind: work
+        depends_on: [product-spec, prj-overview]
+        overview: 憲章
+        path: docs/ja/projects/prjx/prj-charter.md
+`;
+
+  it("プロダクト文書は名前空間なし、プロジェクト文書は project 修飾で based_on に入れる", () => {
+    writeCatalog(fx, catalog);
+
+    const result = run(fx);
+
+    expect(result.errors).toEqual([]);
+    const content = readFileSync(
+      path.join(fx.repoRoot, "docs/ja/projects/prjx/prj-charter.md"),
+      "utf8",
+    );
+    expect(content).toContain("- product-spec");
+    expect(content).toContain("- prjx:prj-overview");
+    expect(content).not.toContain("prjx:product-spec");
+  });
+});
+
 describe("runGenerate — テンプレートがない成果物", () => {
   it("カタログ情報から Frontmatter・H1・overview・_TODO_ を持つ Markdown 雛形を生成する", () => {
     writeCatalog(fx, CATALOG_ONE_WORK_MD);

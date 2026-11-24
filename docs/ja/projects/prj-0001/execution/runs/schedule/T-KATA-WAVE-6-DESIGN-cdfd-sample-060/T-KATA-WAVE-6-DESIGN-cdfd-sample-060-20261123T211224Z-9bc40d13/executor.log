@@ -1,0 +1,12 @@
+`docs/ja/specdojo/templates/cdfd-template.md` を直しした rulebook と sample に合わせました。変えたのは 2 か所だけで、rulebook と sample には手を入れていません。
+
+1. **「目的」の記入指示（PJR-76N9 への対応）**: 旧版の指示は「誰が承認・後続設計・確認に使うか」を書かせるもので、新しい rulebook の「どの利用場面で何を判断するための文書か」と食い違っていました。指示を「利用場面（業務境界の合意、後続設計の入力など）で何を判断するための文書か」に書き換えました。あわせて、文書を作る・確かめる・承認する役割の割り当ては書かないと明記しました。
+2. **「個別プロセス主要入出力」の節冒頭の要約**: 「数行で要約する」を、sample の書き方に合わせて「一文で要約する」に変えました。
+
+その他の箇所は rulebook・sample と食い違いがないので、そのままにしています。確認したのは、章の構成、各表の列名、プロセス ID・例外 ID の形式、データストアの区分、D2 の図の枠と凡例の注記、状態遷移の参照、未決事項の章（決定者・決定時期の列を含む）です。frontmatter に承認の進み具合を書く欄がないことも確かめました。
+
+Prettier の整形チェックは通っています。lint 系の検査は親の runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"cdfd-template を改訂済み rulebook・sample に同期した。目的の記入指示から役割の割り当て（誰が承認・確認するか）を外して利用場面と判断対象を書く形にし、個別プロセス主要入出力の節要約を一文に合わせた。他の章・列・ID 形式・D2 の図の枠・未決事項の章は rulebook と整合しているため維持した。","handoff":[],"validations":[{"command":"npx prettier --check docs/ja/specdojo/templates/cdfd-template.md","status":"passed","summary":"All matched files use Prettier code style"}]}
+</specdojo_executor_evidence>

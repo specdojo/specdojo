@@ -1,0 +1,29 @@
+`docs/ja/specdojo/samples/stc-index-sample.md` の冗長さを整理しました。もともと簡潔な文書だったため、書き換えたのは 1 行です。
+
+**直した箇所（1 件）**
+
+- 「観点の立て方（共通）」の末尾の文を書き換えました。条件を作れない観点を AT に委ねるという主張は、「対象外・除外理由（共通）」の AT 行と重なっていました。
+- 書き換え後は「『対象外・除外理由（共通）』のとおり AT に委ねる」として、既存の行への参照にしています。観点を立てないという判断と、AT に委ねるという内容は変えていません。
+
+**残した箇所（6 件）**
+
+| 場所 | 残した理由 |
+| --- | --- |
+| 「本ドキュメントの目的と適用対象」の UT・IT / ET / AT 境界表 | rulebook が必須とする他のテストレベルとの境界で、ほかの章では代わりにならない |
+| 「テスト対象の括り方と分割基準」の導入文（判断の順序）と、15 観点・60 行の分割再検討の基準 | rulebook の再掲に近いが、表の判断がこの順序で行われたことを示し、分割軸を「データ境界」に絞るという判断が加わっている |
+| 「観点/条件の採用基準と対象別への分配方針（共通）」末尾の主担当重複の規則 | `stc-<term>` の担当者に向けた規則で、「差し戻す」というこのプロジェクトのレビュー時の扱いが加わっている |
+| 「ケース表の共通カラム」末尾の差し戻し文 | 禁止事項の再掲に近いが、QE がレビューで差し戻すという運用上の責任を定めている |
+| 「対象外・除外理由（共通）」の通信不能時の行と、「メモ / 将来課題」の未決の行 | どちらも「決定後に観点を追加する」と書いてあるが、前者は rulebook が必須とする例外条件（いつ・どの条件で扱うか）、後者は分配表を見直す方針で、役割が違う |
+| 「条件の立て方（共通）」で直積を作らない理由 | rulebook が、直積を作らない場合に理由を書くよう求めている |
+
+原因はすべて `document` としました。宣言済みの Kata（`recipe`・`template`）は `not-needed` で、根拠の箇所を示せないためです。
+
+**検証**
+
+- `npx prettier --check` は通りました。
+- `npm run lint:md` などは親 runner が実行するので、ここでは実行していません。
+- frontmatter の `status` は `draft` のままです。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"stc-index-sample の「観点の立て方（共通）」末尾で、AT に委ねる主張の重複を「対象外・除外理由（共通）」への参照に置き換えた（1 件）。ほかの候補 6 件は判断・運用の情報を持つため残した。変更は対象文書の 1 行だけ。","handoff":[],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/stc-index-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルは変更していない","reason":"変更は docs/ja/specdojo/samples/stc-index-sample.md だけで、plan・result・個票を変更していないため"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML ファイルは変更していない","reason":"変更したファイルに *.yaml / *.yml がないため"},{"command":"npm run validate:catalog","status":"not_applicable","summary":"docs/ja/projects/ 配下は変更していない","reason":"変更は docs/ja/specdojo/samples/ 配下だけで、docs/ja/projects/ に及ばないため"}],"condense_records":[{"location":"観点の立て方（共通） 末尾の文「「操作性が良いこと」のように条件を作れない観点は立てず、AT の観点として扱う。」","category":"repetition","action":"reference","reason":"「対象外・除外理由（共通）」の AT 行（画面の分かりやすさ・説明なしでの操作完了→AT）と同じ主張のため、その章への参照に置き換えた。観点を立てない判断と AT に委ねる内容は保った","cause":{"type":"document"}},{"location":"本ドキュメントの目的と適用対象 のレベル境界表（UT・IT / ET / AT）","category":"repetition","action":"retain","reason":"rulebook の記述ガイドが求める他のテストレベルとの境界で、対象外の表とは役割が違う必須情報のため残した","cause":{"type":"document"}},{"location":"テスト対象の括り方と分割基準 の導入文（業務/価値境界→境界横断→データ境界→運用境界）と末尾の分割再検討基準","category":"canonical-restatement","action":"retain","reason":"表の判断がこの順序で行われたことを示し、再検討の分割軸をデータ境界に絞るという固有の判断を含むため残した","cause":{"type":"document"}},{"location":"観点/条件の採用基準と対象別への分配方針（共通） 末尾「主担当を複数置く場合は…理由のない重複は差し戻す。」","category":"canonical-restatement","action":"retain","reason":"stc-term の担当者に向けた共通規則で、差し戻すというこのプロジェクトのレビュー時の扱いを含むため残した","cause":{"type":"document"}},{"location":"ケース表の共通カラム 末尾「期待値に「正常に処理される」とだけ書いたケースは、QE がレビューで差し戻す。」","category":"canonical-restatement","action":"retain","reason":"禁止事項の再掲に近いが、QE がレビューで差し戻すという運用上の責任を定めているため残した","cause":{"type":"document"}},{"location":"対象外・除外理由（共通） の通信不能時の販売継続の行と、メモ / 将来課題 の _UNDECIDED_ の行","category":"repetition","action":"retain","reason":"前者は rulebook が必須とする例外条件（いつ・どの条件で扱うか）、後者は分配表への主担当の割り当てを含む見直し方針で、役割が違うため残した","cause":{"type":"document"}},{"location":"条件の立て方（共通） 末尾の直積を作らない理由「（在庫の判定は店番の役割で変わらないため）」","category":"unneeded-background","action":"retain","reason":"rulebook が直積を作らない場合に理由を書くよう求めており、判断に要る理由のため残した","cause":{"type":"document"}}]}
+</specdojo_executor_evidence>

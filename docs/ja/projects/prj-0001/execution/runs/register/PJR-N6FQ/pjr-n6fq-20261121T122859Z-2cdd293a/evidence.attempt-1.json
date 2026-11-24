@@ -1,0 +1,510 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-N6FQ",
+  "run_id": "pjr-n6fq-20261121T122859Z-2cdd293a",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-21T12:29:46.142Z",
+    "completed_at": "2026-11-21T12:39:32.244Z",
+    "exit_code": 0,
+    "attempts": 2
+  },
+  "changes": [
+    {
+      "path": "README.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-n6fq.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-n6fq-remove-antigravity-0-10.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/job-sequence-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/orchestrator-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/quick-start-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/remote-host-development-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/specdojo-overview-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/specdojo-config-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/agent.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/init.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/orchestrator.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/devcontainer/scaffold.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/agent-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/antigravity-session.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/limit.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/shared.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/task-repos.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/antigravity-block.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/shared/provider-scaffold.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/specdojo-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "templates/antigravity/README.md",
+      "status": "D"
+    },
+    {
+      "path": "templates/antigravity/agent-members-snippet.yaml",
+      "status": "D"
+    },
+    {
+      "path": "templates/antigravity/exec-defaults-snippet.yaml",
+      "status": "D"
+    },
+    {
+      "path": "templates/antigravity/orchestrator.md",
+      "status": "D"
+    },
+    {
+      "path": "templates/antigravity/settings.edit.json",
+      "status": "D"
+    },
+    {
+      "path": "templates/antigravity/settings.global.json",
+      "status": "D"
+    },
+    {
+      "path": "templates/antigravity/settings.orchestrator.json",
+      "status": "D"
+    },
+    {
+      "path": "templates/antigravity/settings.report.json",
+      "status": "D"
+    },
+    {
+      "path": "templates/antigravity/settings.review.json",
+      "status": "D"
+    },
+    {
+      "path": "templates/devcontainer/post-create.sh",
+      "status": "M"
+    },
+    {
+      "path": "templates/init-agent-members.yaml",
+      "status": "M"
+    },
+    {
+      "path": "templates/init-exec-defaults.yaml",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/commands/init-agent-roster.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/commands/init.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/commands/orchestrator.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/devcontainer/scaffold.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/agent-config-command.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/antigravity-session.integration.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec/antigravity-session.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec/frontier.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/limit.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/task-repos.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/unblock-claim-owner.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/shared/antigravity-block.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/shared/provider-scaffold.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/shared/specdojo-config.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/tools/validate-orchestrator-sync.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tools/exec/verify-multi-repo-agent-write.sh",
+      "status": "M"
+    },
+    {
+      "path": "tools/update-agent-clis.mjs",
+      "status": "M"
+    },
+    {
+      "path": "tools/validate-orchestrator-sync.mjs",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "README.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-n6fq-remove-antigravity-0-10.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/job-sequence-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/orchestrator-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/quick-start-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/remote-host-development-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/specdojo-overview-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/specdojo-config-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/agent.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/init.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/orchestrator.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/devcontainer/scaffold.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/agent-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/antigravity-session.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/limit.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/shared.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/task-repos.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/antigravity-block.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/shared/provider-scaffold.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/specdojo-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "templates/antigravity/README.md",
+      "status": "D"
+    },
+    {
+      "path": "templates/antigravity/agent-members-snippet.yaml",
+      "status": "D"
+    },
+    {
+      "path": "templates/antigravity/exec-defaults-snippet.yaml",
+      "status": "D"
+    },
+    {
+      "path": "templates/antigravity/orchestrator.md",
+      "status": "D"
+    },
+    {
+      "path": "templates/antigravity/settings.edit.json",
+      "status": "D"
+    },
+    {
+      "path": "templates/antigravity/settings.global.json",
+      "status": "D"
+    },
+    {
+      "path": "templates/antigravity/settings.orchestrator.json",
+      "status": "D"
+    },
+    {
+      "path": "templates/antigravity/settings.report.json",
+      "status": "D"
+    },
+    {
+      "path": "templates/antigravity/settings.review.json",
+      "status": "D"
+    },
+    {
+      "path": "templates/devcontainer/post-create.sh",
+      "status": "M"
+    },
+    {
+      "path": "templates/init-agent-members.yaml",
+      "status": "M"
+    },
+    {
+      "path": "templates/init-exec-defaults.yaml",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/commands/init-agent-roster.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/commands/init.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/commands/orchestrator.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/devcontainer/scaffold.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/agent-config-command.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/antigravity-session.integration.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec/antigravity-session.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec/frontier.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/limit.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/task-repos.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/unblock-claim-owner.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/shared/antigravity-block.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/shared/provider-scaffold.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/shared/specdojo-config.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/tools/validate-orchestrator-sync.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tools/exec/verify-multi-repo-agent-write.sh",
+      "status": "M"
+    },
+    {
+      "path": "tools/update-agent-clis.mjs",
+      "status": "M"
+    },
+    {
+      "path": "tools/validate-orchestrator-sync.mjs",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 54,
+    "summary": "README.md                                          |  20 +-\n .../pjr-n6fq-remove-antigravity-0-10.md            |  69 ++++-\n docs/ja/specdojo/guides/exec-config-guide.md       |  83 ++----\n docs/ja/specdojo/guides/exec-operation-guide.md    |   2 +-\n docs/ja/specdojo/guides/job-sequence-guide.md      |   2 +-\n .../guides/orchestrator-operation-guide.md         |  59 ++---\n docs/ja/specdojo/guides/quick-start-guide.md       |   4 +-\n .../guides/remote-host-development-guide.md        |   2 +-\n docs/ja/specdojo/guides/specdojo-overview-guide.md |   2 +-\n docs/ja/specdojo/references/command-reference.md   |  28 +-\n .../references/specdojo-config-reference.md        |  15 +-\n src/commands/agent.ts                              |  27 --\n src/commands/init.ts                               |   5 -\n src/commands/orchestrator.ts                       |  10 +-\n src/devcontainer/scaffold.ts                       |   5 -\n src/exec/agent-config.ts                           |   4 -\n src/exec/antigravity-session.ts                    | 190 --------------\n src/exec/limit.ts                                  |   2 +-\n src/exec/run/shared.ts                             |   4 -\n src/exec/task-repos.ts                             |   1 -\n src/shared/antigravity-block.ts                    |  29 ---\n src/shared/provider-scaffold.ts                    | 210 +--------------\n src/shared/specdojo-config.ts                      |  28 +-\n templates/antigravity/README.md                    |  37 ---\n templates/antigravity/agent-members-snippet.yaml   | 157 ------------\n templates/antigravity/exec-defaults-snippet.yaml   |  35 ---\n templates/antigravity/orchestrator.md              | 236 -----------------\n templates/antigravity/settings.edit.json           |  73 ------\n templates/antigravity/settings.global.json         |  60 -----\n templates/antigravity/settings.orchestrator.json   |  15 --\n templates/antigravity/settings.report.json         |   7 -\n templates/antigravity/settings.review.json         |   7 -\n templates/devcontainer/post-create.sh              |   3 +-\n templates/init-agent-members.yaml                  |  49 ----\n templates/init-exec-defaults.yaml                  |  10 -\n .../commands/init-agent-roster.integration.test.ts |  20 --\n tests/src/commands/init.test.ts                    |  52 +---\n tests/src/commands/orchestrator.test.ts            |  14 -\n tests/src/devcontainer/scaffold.test.ts            |  19 --\n tests/src/exec/agent-config-command.test.ts        |  27 --\n .../exec/antigravity-session.integration.test.ts   |  63 -----\n tests/src/exec/antigravity-session.test.ts         | 157 ------------\n tests/src/exec/frontier.test.ts                    |   2 +-\n tests/src/exec/limit.test.ts                       |   6 +-\n tests/src/exec/task-repos.test.ts                  |   8 +-\n tests/src/exec/unblock-claim-owner.test.ts         |   2 +-\n tests/src/shared/antigravity-block.test.ts         | 244 ------------------\n tests/src/shared/provider-scaffold.test.ts         | 283 +--------------------\n tests/src/shared/specdojo-config.test.ts           |  36 ++-\n tests/tools/validate-orchestrator-sync.test.ts     |   2 +-\n tools/exec/verify-multi-repo-agent-write.sh        |  21 +-\n tools/update-agent-clis.mjs                        |   1 -\n tools/validate-orchestrator-sync.mjs               |   3 +-\n 53 files changed, 211 insertions(+), 2239 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run lint:orchestrator-sync",
+      "status": "passed",
+      "summary": "orchestrator body sync: OK (9 targets)"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "ticket and history files valid"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write (changed md/ts/mjs/yaml)",
+      "status": "passed",
+      "summary": "formatted changed files"
+    },
+    {
+      "source": "executor",
+      "command": "node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint (changed docs and ticket)",
+      "status": "passed",
+      "summary": "no markdownlint errors"
+    },
+    {
+      "source": "executor",
+      "command": "npx vitest run --config vitest.unit.config.ts (11 affected test files)",
+      "status": "passed",
+      "summary": "11 files, 249 tests passed; full test:unit is run by the parent"
+    }
+  ],
+  "rate_limit_events": [
+    {
+      "action": "fallback",
+      "trigger": "rate_limit",
+      "from_actor": "sol-executor",
+      "to_actor": "opus-executor",
+      "resumed_at": "2026-11-21T12:29:48.726Z"
+    }
+  ],
+  "final_message": "Removed Antigravity (agy) for 0.10.0 from the provider code, templates, init / config scaffold / devcontainer scaffold / orchestrator launch, agent launch, tools, tests, and docs. agent-members.yaml now errors on any provider: antigravity member, disabled or not, with the reason and the fix. Incomplete: .agents/rules/*.md (protected path) was not deleted, and package.json, agent-members.yaml, exec-defaults.yaml, lefthook.yml, and the schema enums are left for a human. This repo's agent-members.yaml must drop its 11 agy members before building.",
+  "completion_status": "incomplete",
+  "handoff": [
+    "Before building or shipping this change: .specdojo/agent-members.yaml still has 11 provider: antigravity members (flash-executor, flash-high-executor, argon-executor, flash-high-review-executor, hydrogen-executor, hydrogen-review-executor, flash-reporter, agy-sonnet-executor, agy-opus-executor, agy-opus-review-executor, agy-gpt-oss-executor). Loading the member list now errors until they are deleted. No aliases point to them.",
+    "Protected-config proposals (apply on a feature branch with user approval): (1) delete the 11 members and the agy comment block from .specdojo/agent-members.yaml; (2) delete the providers.antigravity section and the routing agy comments from .specdojo/exec-defaults.yaml (no routing references agy members); (3) delete orch:flash, orch:flash:work, orch:argon, orch:argon:work from package.json; (4) drop templates/antigravity/orchestrator.md from the orchestrator-sync glob in lefthook.yml; (5) delete the 6 .agents/rules/*.md agy wrappers (protected, so the executor cannot delete them).",
+    "After (1)-(3): remove antigravity from the enums in docs/specdojo/schemas/v1/agent-members.schema.yaml and exec-defaults.schema.yaml and run npm run validate:schema. They were kept because the protected .specdojo/*.yaml files still use antigravity and validate:schema would fail.",
+    "Optional: remove agy from this repo's .devcontainer/ (install step, specdojo-antigravity volume, prepare-agent-dirs.sh) and CONTRIBUTING.md; optionally remove the now-unused --global option from config scaffold / exec scaffold (kept for CLI compatibility; it now errors before writing).",
+    "The CHANGELOG draft (section: removal, with migration steps) is in the ticket under 5.1. CHANGELOG.md itself was not changed.",
+    "Some deletions were staged by git rm early on (unstaging needed approval). The worktree content is the intended result."
+  ],
+  "block_reason": "executor reported incomplete: Removed Antigravity (agy) for 0.10.0 from the provider code, templates, init / config scaffold / devcontainer scaffold / orchestrator launch, agent launch, tools, tests, and docs. agent-members.yaml now errors on any provider: antigravity member, disabled or not, with the reason and the fix. Incomplete: .agents/rules/*.md (protected path) was not deleted, and package.json, agent-members.yaml, exec-defaults.yaml, lefthook.yml, and the schema enums are left for a human. This repo's agent-members.yaml must drop its 11 agy members before building.",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-N6FQ/pjr-n6fq-20261121T122859Z-2cdd293a/executor.attempt-1.log",
+      "bytes": 6790,
+      "truncated": false
+    }
+  ]
+}
