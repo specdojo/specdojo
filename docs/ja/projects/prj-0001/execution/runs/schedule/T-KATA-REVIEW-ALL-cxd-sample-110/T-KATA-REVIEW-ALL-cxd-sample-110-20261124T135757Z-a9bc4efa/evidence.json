@@ -1,0 +1,160 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-cxd-sample-110",
+  "run_id": "T-KATA-REVIEW-ALL-cxd-sample-110-20261124T135757Z-a9bc4efa",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-24T14:00:55.912Z",
+    "completed_at": "2026-11-24T14:02:20.942Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "git diff --exit-code -- docs/ja/specdojo/samples/cxd-sample.md docs/ja/specdojo/rulebooks/cxd-rulebook.md docs/ja/specdojo/templates/cxd-template.md docs/ja/projects/prj-0001/execution/grade/results/specdojo.cxd-sample.yaml",
+      "status": "passed",
+      "summary": "対象 sample と関連規範・grade sidecar に変更がないことを確認。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/samples/cxd-sample.md",
+      "status": "not_applicable",
+      "summary": "整形対象なし。",
+      "reason": "R1 で変更不要と判断し、Markdown ファイルを編集していない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "YAML 成果物の変更なし。",
+      "reason": "executor による YAML・YML ファイルの変更がない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "カタログ検査の適用対象なし。",
+      "reason": "executor による docs/ja/projects/ 配下の成果物変更がない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検査の適用対象なし。",
+      "reason": "executor による履歴ファイル・plan・result の変更がない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md\n\nlint:md:changed: no changed files"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\nlint:fm:changed: no changed files"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6744 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6744 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)",
+      "reason": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-cxd-sample-110/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-cxd-sample-110/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R1 完了。目的の過不足による修正は不要。変更ファイルなし。F001 は R5 へ申し送り。",
+  "completion_status": "complete",
+  "handoff": [
+    "実施内容・判断根拠: docs/ja/specdojo/samples/cxd-sample.md を、cxd-rulebook、cxd-mermaid-rulebook、cxd-recipe、Sample 記述標準、kata-guide 第6章、共通レビュー観点、dct-kata.yaml の `done_criteria` と照合した。目的・対象外・主要関係者、単一システムの境界、Person・外部システム・関係、技術前提・検証観点、未確定事項の影響と解消条件がそろっている。内部構成や詳細契約は参照先へ委ねており、完成例の責務に対して追加・削除すべき内容は認めなかった。変更ファイルなし。result は reporter が記入する。",
+    "F001: R5（後続段へ申し送り） / 箇所: cxd-sample 第3.2節・cxd-template 第3.2節 / 指摘: grade の F001 は template の列見出し「境界上の接点」と sample・rulebook の「境界上の接点・確認責務」の相違を指す。R1 の種別責務ではなく kata 相互の整合に当たる / 直した案: - / 根拠: `vp-qe-kata-conformance`、kata-guide 第6.1・6.3節。docs/ja/projects/prj-0001/execution/grade/results/specdojo.cxd-sample.yaml の F001 と実文書を確認済み。sample は cxd-rulebook 第6.3.2節に一致するため維持する。R5 で docs/ja/specdojo/templates/cxd-template.md の列見出しを rulebook に合わせる案を扱う / 印: -"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-cxd-sample-110/T-KATA-REVIEW-ALL-cxd-sample-110-20261124T135757Z-a9bc4efa/executor.log",
+      "bytes": 2974,
+      "truncated": false
+    }
+  ]
+}
