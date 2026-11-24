@@ -99,3 +99,16 @@
       from: ""
       to: 関連ドキュメント
   previous_event_id: reg_980016c1cf6342f5bcb4c889c56d07cf
+- v: 1
+  id: reg_fe075b7bdd7049fc80440b946a981a9e
+  ts: "2026-11-24T00:27:11Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_82fb18d306fb4ef58e5260e9aad110c1
