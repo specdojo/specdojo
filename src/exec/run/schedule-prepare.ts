@@ -1,7 +1,8 @@
 import { withPlanConventionsFiles } from "../../shared/plan-conventions.js";
 import { appendScopeWaitNotes } from "./change-scope.js";
 import { existsSync } from "node:fs";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
+import { repoRelative } from "../../shared/git.js";
 import {
   ensureReviewGrade,
   reviewGradeFreshness,
@@ -236,6 +237,19 @@ export function reviewGradeSidecarPaths(params: {
     return "sidecarPath" in freshness && freshness.sidecarPath ? [freshness.sidecarPath] : [];
   });
   return [...new Set(sidecars)].sort();
+}
+
+// Repo-relative result sidecars of this task's own subjects. Tasks without a project own none.
+function taskGradeResultPaths(params: {
+  task: ReadyTaskView;
+  projectId: string | undefined;
+  catalogPath: string | undefined;
+  repoRoot: string;
+}): string[] {
+  if (!params.projectId) return [];
+  return reviewGradeSidecarPaths({ ...params, projectId: params.projectId }).map((path) =>
+    repoRelative(params.repoRoot, resolve(params.repoRoot, path)),
+  );
 }
 
 /**
@@ -586,7 +600,15 @@ export async function prepareSingleTask(
         recordPathForRead(executionPath, "plan", task.id),
         resultPath,
         claimEventPath,
-        ...gradeCheckpointPaths({ repoRoot, executionPath }),
+        ...gradeCheckpointPaths(
+          { repoRoot, executionPath },
+          taskGradeResultPaths({
+            task,
+            projectId,
+            catalogPath: planGenPaths.catalogPath,
+            repoRoot,
+          }),
+        ),
       ]),
       pipelineRunId: executorTarget.runId,
       pipelineResumeStage: "executor",
@@ -754,7 +776,10 @@ export async function prepareSingleTask(
     recordPathForRead(executionPath, "plan", task.id),
     resultPath,
     claimEventPath,
-    ...gradeCheckpointPaths({ repoRoot, executionPath }),
+    ...gradeCheckpointPaths(
+      { repoRoot, executionPath },
+      taskGradeResultPaths({ task, projectId, catalogPath: planGenPaths.catalogPath, repoRoot }),
+    ),
   ]);
   const checkpointFailureLogPath = pipelineRunId
     ? integrateLogPath(

@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: medium
   difficulty: medium
   owner: DEV
@@ -43,7 +43,25 @@ specdojo:
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+### 5.1. 原因
+
+- 各タスクの実行前 checkpoint（`gradeCheckpointPaths`）は、ルートで変更中の grade サイドカーをすべて取り込んでいた。ほかの sample の `grade/results` も含まれるため、並べて流したタスクの branch が同じサイドカーを持ち、統合で衝突した。
+
+### 5.2. 対応
+
+- 書かない方を選んだ。`gradeCheckpointPaths` に任意の第 2 引数を足し、`grade/results` をタスク自身の対象（`reviewGradeSidecarPaths`）に絞る。`criteria` と `pipeline` は従来どおり取り込む。
+- `src/exec/run/schedule-prepare.ts` の 2 か所（通常の準備と executor 再開）で、タスクの対象だけを渡す。ほかの sample の結果はルートに残り、runner が解く対象を増やさずに済む。
+- 引数を省いた呼び出し（`worktree-command.ts`、`register-worktree.ts`、`lifecycle-commands.ts`、`register-state.ts`）は従来どおり全件を取り込む。register や job の経路で同じ衝突が出たら、同じ絞り込みを渡す。
+
+### 5.3. 確認結果
+
+- `tests/src/exec/worktree-ops.integration.test.ts` に、ほかの sample の結果が checkpoint に入らないことを確かめるテストを追加し、通した。
+- 2 つのタスクが同じ sample の結果を変える統合と再開の通しテストは追加していない。原因を作らない対応のため、checkpoint の絞り込みだけを確かめた。通しの確認は親の `test-integration` に任せる。
+
+### 5.4. CHANGELOG に書く事項
+
+- 区分: Fixed
+- 文案: 並べて流したタスクが、ほかの sample の grade の結果を checkpoint に取り込んで統合で衝突する問題を修正した。checkpoint はタスク自身の対象の結果だけを取り込む（PJR-A54F）。
 
 ## 6. 関連ドキュメント
 

@@ -444,6 +444,20 @@ describe("exec worktree ops", () => {
       expect(readFileSync(join(fixture.repo, path), "utf8")).toBe("grade: after\n");
   });
 
+  it("leaves other samples' grade results out of the task checkpoint (PJR-A54F)", () => {
+    const fixture = setupRepository();
+    const own = "execution/grade/results/own.yaml";
+    const other = "execution/grade/results/other.yaml";
+    const criteria = "execution/grade/criteria/doc.yaml";
+    for (const path of [own, other, criteria]) writeFile(join(fixture.repo, path), "grade: x\n");
+
+    const actual = gradeCheckpointPaths(fixture.context, [own]).map((path) =>
+      path.slice(fixture.repo.length + 1),
+    );
+
+    expect(actual.sort()).toEqual([criteria, own].sort());
+  });
+
   it("preserves a newer root grade instead of discarding it during merge", () => {
     const fixture = setupRepository();
     const path = "execution/grade/results/doc.yaml";
