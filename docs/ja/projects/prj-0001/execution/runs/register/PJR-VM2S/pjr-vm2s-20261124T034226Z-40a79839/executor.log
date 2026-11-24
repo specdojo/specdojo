@@ -1,0 +1,16 @@
+移行手順と、既定に切り替える条件は個票に書きました。ただし、手順に沿った実際の試しは行っていません。作業内容の行 3 は `open` のままで、メモにその理由を書いています。
+
+ブランチの作成と push は git の状態変更で、`specdojo.config.json` の切り替えは保護された設定の変更です。どちらも executor には行えません。実施は、利用者の承認のもとで orchestrator が行います。
+
+個票の「対応結果」に次の内容を書きました。
+- **移行手順:** ブランチの作成、今の記録の移し方、設定の切り替え、切り替え直後の確認、別のプロジェクトからの起票の確認、戻し方を含みます。今の記録は、ブランチの起点の commit で引き継ぎます。
+- **試しの計画と切り替えの条件:** 期間は 2026-11-25 から 2026-11-30 です。条件は、記帳・schedule・別のプロジェクトからの起票・`branch-merge`・`branch-guard`・`branch-check` が一巡して動くことなどです。切り替えの判断は利用者が行い、満たすまでは任意のままにします。
+- **起票案:** 読解で 2 件見つけました。`branch-guard` が lefthook と CI に組み込まれていないこと、再有効化の手順が運用ガイドに無いことです。
+- **保護された設定の変更案:** `specdojo.config.json` への `register_sync` の追加と、`lefthook.yml`・`.github/workflows/` への `branch-guard` の追加案です。
+- **CHANGELOG に書く事項:** なしとしました。
+
+`CHANGELOG.md` と保護された設定は変えていません。prettier と markdownlint は個票に対して通っています。親の検証は runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"個票に移行手順・試しの計画と切り替え条件・起票案・保護設定の変更案・CHANGELOG の事項（なし）を記載した。実際の試し（ブランチ作成、push、設定切り替え）は git 状態変更と保護設定の変更を伴い executor では行えないため、作業内容の行 3 を open のまま理由を付けて残した。","handoff":["実際の試しは未実施（個票の作業内容の行 3 は open）。利用者の承認のもとで orchestrator が、個票の「移行手順」に沿って、ブランチ作成、`specdojo.config.json` の `projects.prj-0001.register_sync` 追加、確認、別プロジェクトからの起票確認を行う。","保護された設定の変更案: `specdojo.config.json` に `register_sync`（`enabled: true`）を追加する。`lefthook.yml` に `register branch-guard --staged`（pre-commit）と `--range`（pre-push）を、`.github/workflows/` に同じ `--range` の検査を追加する。`branch-guard` は現状どの hook・CI にも組み込まれていない。","起票案: `--from prj-0001:PJR-VM2S` で、`branch-guard` の hook・CI への組み込み、再有効化の手順を運用ガイドへ追加する、の 2 件。","決めたこと: 試しの期間は 2026-11-25 から 2026-11-30。既存の個票とイベントは移さず、ブランチの起点の commit で引き継ぐ。戻した後も register のブランチは削除せず残す。既定への切り替えの判断は利用者が行う。","CHANGELOG に書く事項: なし。"],"validations":[{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-vm2s-register-branch-migration-trial.md","status":"passed","summary":"整形済み"},{"command":"npx markdownlint-cli2 docs/ja/projects/prj-0001/controls/project-register/pjr-vm2s-register-branch-migration-trial.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>
