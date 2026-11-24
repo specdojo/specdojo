@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-24T15:08:45Z",
+  "type": "claim",
+  "task_id": "T-KATA-REVIEW-ALL-cnd-sample-110",
+  "by": "sol-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "ARC"
+  }
+}
