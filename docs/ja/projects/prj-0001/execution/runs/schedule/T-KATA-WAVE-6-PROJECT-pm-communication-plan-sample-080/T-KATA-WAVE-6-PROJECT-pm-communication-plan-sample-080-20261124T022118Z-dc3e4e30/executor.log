@@ -1,0 +1,16 @@
+`docs/ja/specdojo/samples/pm-communication-plan-sample.md` の冗長さを 4 か所削りました。いずれも表の前置き文が列見出しをなぞっていた箇所で、意味と必須情報は変えていません。
+
+`npx prettier --check` と `npx markdownlint-cli2` はこの 1 ファイルに対して通りました。親 runner の検査（`npm run lint:md` など）は実行していません。
+
+修正は次の 4 件です。
+
+- **「コミュニケーション機会」の前置き**: 列見出しをなぞる部分を削り、「判断ゲート」の定義は残しました。
+- **「エスカレーション」の前置き**: 列の説明を削り、「次の支出・利用・公開より前に判断を求める」だけを残しました。
+- **「情報管理と公開」の前置き**: 列の説明を削り、口頭で決まった事項の転記ルールは残しました。
+- **「見直し条件と未決事項」の前置き**: 「次の表は…示す」を、見直しの対象を示す文に短くしました。
+
+表の内容、未決事項、`_UNDECIDED_` の記述は変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"表の前置き文が列見出しをなぞっていた4か所を削り、判断に要る定義・条件は保持した。","handoff":[],"condense_records":[{"location":"2. コミュニケーション機会 導入文","category":"table-prose","action":"merge","reason":"表の列見出し（何を・いつ・手段・証跡）をなぞる説明を削り、判断ゲートの定義は残した。意味は維持。","cause":{"type":"document"}},{"location":"3. エスカレーション 導入文","category":"table-prose","action":"delete","reason":"表の列構成を説明する前半を削り、判断を求める時点の制約は残した。","cause":{"type":"document"}},{"location":"4. 情報管理と公開 導入文","category":"table-prose","action":"delete","reason":"表の列構成を説明する前半を削り、口頭決定事項の転記ルールは残した。","cause":{"type":"document"}},{"location":"5. 見直し条件と未決事項 導入文","category":"table-prose","action":"merge","reason":"表の列をなぞる文を、見直し時に合わせて直す対象を示す1文にまとめた。","cause":{"type":"document"}}],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/pm-communication-plan-sample.md","status":"passed","summary":"整形済み"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/pm-communication-plan-sample.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>
