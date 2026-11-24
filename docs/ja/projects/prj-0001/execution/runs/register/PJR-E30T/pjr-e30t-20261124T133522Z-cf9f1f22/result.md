@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-E30T
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-E30T/pjr-e30t-20261124T133522Z-cf9f1f22/plan.md
   started_at: "2026-11-24T13:35:23.726Z"
+  completed_at: "2026-11-24T13:38:29.974Z"
   agent: terra-executor
 ---
 
@@ -16,16 +17,17 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- 指定された sample 31 件をカタログに追加し、個票を更新した。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-kata.yaml`: 変更、+558 / -0 行
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 新規項目の `depends_on` は、新たな作業順序を確定できないため空とした。同一 rulebook または同系列の既存項目の近くに配置し、系列がないものはプロジェクト概要の近くに配置した。
+- CHANGELOG に書く事項はなし。
 
 ## 4. 進め方
 
-_TODO_: どう進めたか、根拠にした文書や規約を記入する。
+reporter を使わず、runner が executor の報告（`final_message`・`handoff`）と証跡から機械的に作成した（`pipeline.mechanical_result`）。
