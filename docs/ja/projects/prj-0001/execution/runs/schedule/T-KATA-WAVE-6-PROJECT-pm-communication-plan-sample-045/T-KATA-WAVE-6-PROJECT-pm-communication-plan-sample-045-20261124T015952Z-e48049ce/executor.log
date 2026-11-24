@@ -1,0 +1,30 @@
+recipe を、前の段で直した rulebook に合わせました。rulebook が新しく求める項目（AI Agent と人の判断の境目、責任を持つ Role code、口頭の決定を転記する担当、見直し時に何を追従させるか）について、書き手に答えさせる問いを足しています。変更したファイルは `docs/ja/specdojo/recipes/pm-communication-plan-recipe.md` だけです。rulebook と sample、result ファイルは触っていません。
+
+**追加した内容**
+
+| 章 | 追加した項目 |
+| --- | --- |
+| 作成前に集める情報 | 「責任主体（採用済みの Role code）／取り出し元はロール定義」の行 |
+| 方針と適用範囲 | AI Agent に任せる整理・草案と、人が担う合意・承認・公開の境目を問う |
+| コミュニケーション機会 | 結果を記録先へ残す責任をどの Role code が持つかを問う |
+| 情報管理と公開 | 口頭の決定を、どの Role code がどの管理記録へ転記するかを問う |
+| 見直し条件と未決事項 | 連絡時期・判断経路・手段を変えたとき、どの計画・タスク・設定を誰が追従させ、反映をどこに残すかを問う |
+| 仕上げチェック | 確認項目を「AI Agent に合意・承認・公開を任せていない」に広げ、「口頭の決定に転記する Role code と記録先がある」を追加 |
+
+**見直しの根拠と判断**
+
+- plan に展開された finding はありませんでした。根拠は、直前の段で入った rulebook の変更（`be5939141a`）、`recipe-authoring-standard` の章立てと禁止事項、sample（AI Agent の境界の書き方、口頭の決定を `PM` が転記する例）です。
+- 既存の問い・コツ・深掘り手順・良い例/悪い例・レビュー観点は rulebook と矛盾しないので、そのまま残しました。
+- rulebook の規則は言い直さず、問いの形にとどめています。
+- 足した Role code の問いは、計画の中身としての責任分担を聞くものです。文書の役割の割り当てや承認の進み具合を聞くものではないため、PJR-76N9 には反しません。
+- recipe の `status`（`ready`）は変えていません。
+
+**検証**
+
+- `npx prettier --check`（対象ファイル）：合格
+- `npx markdownlint-cli2`（対象ファイル）：問題 0 件
+- lint:md などの残りの検査は、親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"Synced pm-communication-plan-recipe with the revised rulebook: added questions on the AI Agent / human judgment boundary, responsible Role code, the Role code that transcribes oral decisions, and follow-up targets on review, plus a Role code source row and finishing checks. Rulebook and sample unchanged; no findings were provided.","handoff":[],"validations":[{"command":"npx prettier --check docs/ja/specdojo/recipes/pm-communication-plan-recipe.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/recipes/pm-communication-plan-recipe.md","status":"passed","summary":"0 issues in 0 files"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"No history file changed","reason":"Only a recipe under docs/ja/specdojo/recipes/ was changed; no plan/result/pjr history files were edited by the executor"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"No YAML changed","reason":"No *.yaml or *.yml file was changed"}]}
+</specdojo_executor_evidence>
