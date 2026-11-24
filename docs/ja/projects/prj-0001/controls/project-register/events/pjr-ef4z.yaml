@@ -292,3 +292,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_bf6580e129d04d3ba354c695bc011753
+- v: 1
+  id: reg_ba4556df423644cdb9ab0f44b2c25f96
+  ts: "2026-11-24T00:38:05Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果・親の検証（test-integration を含め passed）で確かめ、保護された設定の変更がないことを確かめた。統合の後の run が新しい runner で統合まで通った
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-24"
+    - field: conclusion
+      from: 統合テストの全件を毎晩流す orchestrator integration-tests と job・routine を足した。2 回目で、朝の報告が成功・失敗・JSON を読めないときのどの場合でも lint を通るように書き出しを直し、2026-11-23 の報告も直した
+      to: 統合テストの全件を毎晩 4 時に routine で流し、朝の報告を残すようにした。2026-11-24 04:00 の実行で 443 件の全件成功を確かめた。報告の id を小文字にした
+  previous_event_id: reg_0b2bb77c86f447388e379d23334b4f1a
