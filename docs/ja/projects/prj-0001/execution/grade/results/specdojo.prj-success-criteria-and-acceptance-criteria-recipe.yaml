@@ -4,17 +4,16 @@ document: specdojo:prj-success-criteria-and-acceptance-criteria-recipe
 path: docs/ja/specdojo/recipes/prj-success-criteria-and-acceptance-criteria-recipe.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-recipe
 verdict: pass
-score: 97
-graded_at: "2026-11-20T20:38:47.227Z"
-graded_by: flash-high-executor
-content_hash: 9d64b04246b6f98ec9c6a5a3a26da1432d2478b5c0a4672f431ffe4b8f51f326
+score: 98
+graded_at: "2026-11-24T03:11:54.362Z"
+graded_by: sonnet-review-executor
+content_hash: 0e8337a18d1f1133a44092baafe1f39f3558334002319e050fc2a3fbb9e7e4e7
 categories:
   purpose:
     score: 100
   operations:
-    score: 100
+    score: 94
   planning:
     score: 100
   business:
@@ -24,7 +23,7 @@ categories:
   usability:
     score: 100
   implementation:
-    score: 88
+    score: 100
   quality:
     score: 92
   consistency:
@@ -37,8 +36,8 @@ viewpoints:
     level: 4
     score: 100
   vp-po-publication-accountability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-plan-feasibility:
     level: 4
     score: 100
@@ -70,8 +69,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-change-impact:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-testability:
     level: 4
     score: 100
@@ -110,23 +109,23 @@ finding_counts:
 findings:
   - id: F001
     severity: minor
-    rule: vp-dev-change-impact
-    line: 75
-    anchor: "- 否決したとき、何を直し、どの条件を確かめ直すか。"
+    rule: vp-po-publication-accountability
+    line: 81
+    anchor: "- 証跡を「確認結果」とだけ書きそうになったら、確認日、確認者、条件 ID、母数など、記録に残す中身を聞く。"
     message: >-
-      条件の追加・変更時に変更理由と影響範囲を追記するという rulebook
-      の運用要件を引き出す問い・手順がなく、既存の成功基準・受入条件や関連成果物への変更影響を記録できないため、判定手順または仕上げチェックに追加する必要がある。
+      rulebook
+      が求める証跡の公開範囲（顧客情報・個人情報を含む証跡は非公開の保存先に置き、公開文書には保存先参照と確認結果だけを残す）と、確認者・承認者を個人名でなく役割名で書くことを引き出す問い・コツ、または仕上げチェックの項目を追加する必要がある。
     message_ja: >-
-      条件の追加・変更時に変更理由と影響範囲を追記するという rulebook
-      の運用要件を引き出す問い・手順がなく、既存の成功基準・受入条件や関連成果物への変更影響を記録できないため、判定手順または仕上げチェックに追加する必要がある。
+      rulebook
+      が求める証跡の公開範囲（顧客情報・個人情報を含む証跡は非公開の保存先に置き、公開文書には保存先参照と確認結果だけを残す）と、確認者・承認者を個人名でなく役割名で書くことを引き出す問い・コツ、または仕上げチェックの項目を追加する必要がある。
   - id: F002
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 75
-    anchor: "- 否決したとき、何を直し、どの条件を確かめ直すか。"
+    line: 81
+    anchor: "- 証跡を「確認結果」とだけ書きそうになったら、確認日、確認者、条件 ID、母数など、記録に残す中身を聞く。"
     message: >-
-      rulebook は条件追加・変更時の変更理由と影響範囲の追記を要求しているが, recipe の判定手順・レビュー観点・仕上げチェックのいずれにも対応する問いがなく, Kata
-      間で変更管理要件が欠落しているため追記が必要である。
+      rulebook の「判定手順と証跡」が求める証跡の公開範囲（非公開の保存先と、公開文書には参照と結果のみ）と、確認者・承認者を役割名で書くことが、レシピの問い・レビュー観点・仕上げチェックに対応しておらず Kata
+      間で欠落しているため追記が必要である。
     message_ja: >-
-      rulebook は条件追加・変更時の変更理由と影響範囲の追記を要求しているが, recipe の判定手順・レビュー観点・仕上げチェックのいずれにも対応する問いがなく, Kata
-      間で変更管理要件が欠落しているため追記が必要である。
+      rulebook の「判定手順と証跡」が求める証跡の公開範囲（非公開の保存先と、公開文書には参照と結果のみ）と、確認者・承認者を役割名で書くことが、レシピの問い・レビュー観点・仕上げチェックに対応しておらず Kata
+      間で欠落しているため追記が必要である。

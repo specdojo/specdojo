@@ -76,3 +76,16 @@
       from: '["v0.10.0 に入れる（利用者の指定、2026-11-24）","sample の横串の確認（段 2）のやり方として使う"]'
       to: '["v0.10.0 に入れる（利用者の指定、2026-11-24）","sample の横串の確認（段 2）のやり方として使う","目合わせの型は prj-overview・opr・stsd の sample（利用者の決定、2026-11-24）"]'
   previous_event_id: reg_d0ac0ae79aba4767ba80efde1b2e84e7
+- v: 1
+  id: reg_98116718a5b54d9fb5f2aa15966aea19
+  ts: "2026-11-24T03:19:23Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_73f027db5f5845018cd379ff5a99a0ae
