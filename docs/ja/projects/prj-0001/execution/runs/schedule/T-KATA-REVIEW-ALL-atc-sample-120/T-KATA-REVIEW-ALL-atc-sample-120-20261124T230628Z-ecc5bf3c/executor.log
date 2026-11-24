@@ -1,0 +1,13 @@
+R2（構成）のレビューで、`docs/ja/specdojo/samples/atc-sample.md` の章の配置を 2 か所直しました。章の順と見出しの立て方は rulebook の本文要件のとおりで、直す必要はありませんでした。markdownlint と prettier は問題なしで、ほかの検査は親 runner が実行します。
+
+**sample に入れた差分:**
+1. **店番の交代を対象外の表へ移しました。** 概要にあった「店番の交代は `atc-sale-hold` の引継ぎ経路だけで確かめる」は、除外の事項と代わりの確認先を述べた文です。そのため概要から外し、対象外の表に理由・代替付きの 1 行として足しました。
+2. **受入の責務の箇条書きを観点の順に並べ替えました。** 先頭にあった自力完了の責務を、取消の責務の後ろへ移しました。これで箇条の順が 6.1 会計確定、6.2 自力完了、6.3 取引照合の順に合います。ただし先頭の責務は全体の目的にも読めるため、「要判断」の印を付けました。観点のほうを並べ替える案は、6.3 が 6.1 の確定済みの取引を使うので選んでいません。
+
+**直さずに残した指摘:**
+- **環境/データ/外部依存にある前提の表（`_ASSUMPTION_`）**は、内容が期待結果やレシートの印字の前提で、厳密には環境ではありません。ただし rulebook の必須の章にほかの置き場がないため、sample は変えていません。rulebook の本文要件で前提の表の置き場を決めるかどうかは、人の判断に回しました。
+- **grade の F001**（概要で引く分割基準から「金額の提示」が抜けている）は、R1 の後の版ですでに直っており、手を入れていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R2（構成）: atc-sample の概要にあった店番の交代の除外文を対象外の表へ移し、受入の責務の箇条を観点の順（6.1→6.2→6.3）に並べ替えた。章の順は rulebook の本文要件のとおりで、grade の F001 は R1 の後の版ですでに直っていた。","handoff":["R2-1: R2 / 1. 概要・3. 対象外 / 概要に除外の文（店番の交代は `atc-sale-hold` の引継ぎ経路だけで確かめる）があり、理由・代替を書く対象外の章と役割が重なる / 概要からその文を外し、対象外の表に「店番の交代と引継ぎ｜引継ぎ経路は `atc-sale-hold` が主担当で、本カタログは店番を替えない経路だけを扱う｜`atc-sale-hold` の引継ぎ経路」の行を足した / `vp-arc-document-structure`、atc-rulebook の本文要件（対象外は理由と代替とともに示す）、atc-index-sample の分配方針 / -","R2-2: R2 / 2. 受入の責務 / 責務の箇条の順（自力完了→会計確定→在庫→取消→照合）が観点の章の順（6.1 会計確定、6.2 自力完了、6.3 取引照合）と合わず、責務から観点へ辿りにくい / 自力完了の箇条を取消の箇条の後ろへ移し、観点の順にそろえた / `vp-arc-document-structure`。迷った理由: 先頭の箇条は全体の目的（店主不在でも会計できる）にも読める。観点の章を並べ替える案は、6.3 が 6.1 の確定済み取引を使うため選ばなかった / 要判断","R2-3: R2 / 4. 環境/データ/外部依存 / 判定に影響する前提の表（`_ASSUMPTION_` の期待結果・印字の前提）は環境・データ・外部依存ではないが、rulebook の必須の章に置き場がない / - （sample は変えていない。atc-rulebook の本文要件に「前提（`_ASSUMPTION_`）は環境/データ/外部依存の章に表で置く」と書き足すか、置き場を決める案を人が判断する） / `vp-arc-document-structure`、`vp-qe-omissions-consistency` / 要判断","R2-4: R2 / 1. 概要 / grade の F001（分割基準から「金額の提示」が抜けている）は R1 の後の版ですでに直っている / -（直す必要なし） / `vp-qe-omissions-consistency`、atc-index-sample の分割基準の表 / -"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/atc-sample.md","status":"passed","summary":"変更した sample を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/atc-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"履歴蓄積ファイル（plan / result / 個票）を変更していないため"}]}
+</specdojo_executor_evidence>
