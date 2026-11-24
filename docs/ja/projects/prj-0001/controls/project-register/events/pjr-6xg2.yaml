@@ -44,3 +44,16 @@
     - field: commit_scope
       from: ""
       to: docs-site
+- v: 1
+  id: reg_51c6b011f7fe4dca8c878d5f40bbd23f
+  ts: "2026-11-24T14:38:17Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: specdojo-lp の公開の予定を入力に記録する
+  changes:
+    - field: input
+      from: '["v0.10.0 に入れる（利用者の指定、2026-11-24）","prj-0002 の project の文書だけを重ねて開発中の版に出す案 A にする（利用者の判断、2026-11-24）","担当と期限は PJR-FZQA と同じ DEV・2026-11-30 とした（オーケストレーターの推奨。利用者の確認待ち）","specdojo-lp は private のリポジトリで、その product の文書は公開を利用者が決めるまで取り込まない"]'
+      to: '["v0.10.0 に入れる（利用者の指定、2026-11-24）","prj-0002 の project の文書だけを重ねて開発中の版に出す案 A にする（利用者の判断、2026-11-24）","担当と期限は PJR-FZQA と同じ DEV・2026-11-30 とした（オーケストレーターの推奨。利用者の確認待ち）","specdojo-lp は private のリポジトリで、その product の文書は公開を利用者が決めるまで取り込まない","利用者は specdojo-lp を公開する準備をしている（2026-11-24）。公開された後に、workflow へ token なしの specdojo-lp の checkout を足し、FZQA の仕組みで product の文書を取り込む。workflow の変更案には、その手順も書いておく"]'
+  previous_event_id: reg_d0f8767681bd473c818238725a7992cb

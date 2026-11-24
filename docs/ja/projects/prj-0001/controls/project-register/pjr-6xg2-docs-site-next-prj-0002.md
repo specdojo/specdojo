@@ -29,6 +29,7 @@ specdojo:
 - prj-0002 の project の文書だけを重ねて開発中の版に出す案 A にする（利用者の判断、2026-11-24）
 - 担当と期限は PJR-FZQA と同じ DEV・2026-11-30 とした（オーケストレーターの推奨。利用者の確認待ち）
 - specdojo-lp は private のリポジトリで、その product の文書は公開を利用者が決めるまで取り込まない
+- 利用者は specdojo-lp を公開する準備をしている（2026-11-24）。公開された後に、workflow へ token なしの specdojo-lp の checkout を足し、FZQA の仕組みで product の文書を取り込む。workflow の変更案には、その手順も書いておく
 
 ## 3. 完了条件
 
