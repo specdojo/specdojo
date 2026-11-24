@@ -1,0 +1,60 @@
+レビューの結果、verdict は `incomplete` です。対象サンプルの `opr-support-sample` 自体は完了条件を満たしています。ただし、型の `opr-rulebook` の grade が `needs-work` で、schedule の追加完了条件（型すべてに `pass`）を満たしていません。
+
+**評価結果の確認**
+- 鮮度確認として、次の 4 件に `specdojo grade list --target kata --path <対象> --changed-only` を実行しました。
+  - `docs/ja/specdojo/samples/opr-support-sample.md`
+  - `docs/ja/specdojo/rulebooks/opr-rulebook.md`
+  - `docs/ja/specdojo/samples/opr-sample.md`
+  - `docs/ja/specdojo/templates/opr-template.md`
+- いずれも出力は空で終了コードは 0 でした。評価結果は最新です。
+- 対象サンプルについて `--incomplete` も実行し、出力は空でした。評価パイプラインは完了済みです。
+- 対象サンプルの grade は `pass`、score 95、finding は minor 3 件です（blocker と major は 0 件）。
+
+**判断根拠**
+- 対象サンプルの Frontmatter は `rulebook: specdojo:opr-rulebook` を指しています。`based_on` は `opd-index-sample` と `opr-sample` です。完了条件のうち、grade が評価した範囲（DC-001〜DC-005 の観点）は満たしています。
+- 対象サンプルの minor 3 件は完了を妨げません。
+  - `F001`: `opr-incident` を「予定」としているが、`opr-incident-sample` は作成済み。
+  - `F002`: 引き継ぎの記録の保管期間が `_UNDECIDED_` のままで、概要の未決事項の表に載っていない。
+  - `F003`: 手順適用範囲・前提の表に template の必須行「連絡先」がない。
+- 型の評価結果は次のとおりです。
+
+| 型 | verdict | score | 備考 |
+| --- | --- | --- | --- |
+| `opr-rulebook` | `needs-work` | 94 | major 1 件、minor 1 件 |
+| `opr-sample` | `pass` | 94 | |
+| `opr-template` | `pass` | 100 | |
+| `opr-access-control-sample` | `pass` | 95 | |
+| `opr-backup-restore-sample` | `pass` | 98 | |
+| `opr-batch-sample` | `pass` | 89 | |
+| `opr-change-sample` | `pass` | 96 | |
+| `opr-incident-sample` | `pass` | 91 | |
+| `opr-monitoring-sample` | `pass` | 92 | |
+
+- 計画の「型の評価対象」の見出しに載っている型の中で、pass でないのは `opr-rulebook` だけです。
+- `opr-rulebook` の major finding `F002` は、`opr-batch-sample`、`opr-change-sample`、`opr-support-sample` が `specdojo:opd-rulebook` を宣言しているという指摘でした。現在の 3 件は `specdojo:opr-rulebook` を宣言しており、この指摘は解消済みの可能性があります。
+- ただし、サイドカーは `opr-rulebook` 自体の `content_hash` に対しては最新です。サイドカーの `graded_at` は 2026-11-23T18:17:04Z で、3 件の sample はそれ以降に修正されたと考えられます。この判断は評価コンテキストの変化が未反映である可能性を示すもので、私の側では再評価も判定の置き換えもしていません。
+
+**未充足事項・改善指示**
+- `opr-rulebook` の grade を再実行し、`pass` を得る必要があります。再評価の理由は、上記のとおり `F002` の前提が変わっている可能性があるためです。
+- 再実行しても `F002` が残る場合の対応は次のとおりです。
+  - `opr-change-sample` と `opr-batch-sample` も template の 12 章構成に揃える。
+  - または Frontmatter の sample 宣言から外す。
+- `opr-rulebook` の minor `F001` は 6.4 と 6.6 の template 重複で、template 参照への置き換えが必要です。
+- 対象サンプルの minor 3 件は、可能なら次の手直しで直してください。
+  - `F001`: `opr-incident` の備考を実態に合わせ、wikilink で参照する。
+  - `F002`: 未決事項の表に保管期間を追加する（または「概要参照」と明示する）。
+  - `F003`: 手順適用範囲・前提の表に「連絡先」行を戻す。
+- 人の確定は横串の確認でまとめて行う想定のため、この track では扱っていません。
+
+**approach に応じた確認**
+- 確認に使ったのは宣言された文書だけです。評価結果、対象サンプルの Frontmatter と概要・証跡・導線の各章、`git status` を見ました。
+- 対象外の変更は混入していません。`git status` に出たのは runner の `pipeline-state.json` のみです。
+
+**確認できなかった範囲**
+- 先行する edit タスクの result は特定していません。
+- 対象サンプル全文の独自再評価は、plan のとおり行っていません。
+- `opr-rulebook` の再 grade は executor の権限外のため実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict=incomplete。対象サンプル opr-support-sample は grade pass(95、minor 3)で最新、完了条件を満たす。ただし型 opr-rulebook の grade が needs-work(94、major 1: F002)で、schedule の追加完了条件（型すべて pass）を満たさない。F002 の前提（3 sample の rulebook 宣言）は現在 opr-rulebook に修正済みで解消済みの可能性があるため、opr-rulebook の再 grade を求める。鮮度確認は 4 対象とも changed-only 出力なし(exit 0)。確認できなかった範囲: 先行 edit result の特定、対象サンプル全文の独自再評価、opr-rulebook の再 grade。","handoff":["opr-rulebook の kata grade を再実行して pass を得る（F002 の前提は 3 sample が opr-rulebook 宣言に修正済みで解消の可能性）。残る場合は opr-change-sample・opr-batch-sample を template の12章構成に揃えるか sample 宣言から外す。","opr-rulebook minor F001: 6.4/6.6 の template 重複を参照に置換する。","opr-support-sample の minor: opr-incident の備考を実態に合わせ wikilink 化、引き継ぎの記録の保管期間を未決事項の表へ追加、手順適用範囲・前提の表に「連絡先」行を戻す。","人の確定は横串の確認でまとめて行う。"],"validations":[]}
+</specdojo_executor_evidence>
