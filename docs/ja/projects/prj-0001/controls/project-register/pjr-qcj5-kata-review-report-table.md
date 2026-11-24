@@ -43,14 +43,24 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                | 担当 | 状態 | メモ                                               |
+| --- | --------------------------------------------------- | ---- | ---- | -------------------------------------------------- |
+| 1   | kata-guide の `人への報告の形` に報告の決まりを追記 | BA   | done | executor の `handoff` と reporter の表を定めた     |
+| 2   | strategy の 5 段の `description` を直す             | BA   | done | R4 にも指摘の報告の指示を足した。schema 検査 valid |
+| 3   | 統合後に段を 1 件流して確かめる                     | BA   | open | executor は流せない。オーケストレーターが行う      |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `docs/ja/specdojo/guides/kata-guide.md` の `人への報告の形` に、executor は `handoff` に指摘を 1 件 1 項目で書き、reporter は `実施内容` に表として 1 回だけ書いて申し送りに重ねない決まりを追記した。
+- `sch-strategy-kata-review-calibration.yaml` の R1〜R5 の `description` を同じ決まりに合わせた。R4 は確かめの表の指示に指摘の報告を足した。
+- `sch-track-kata-review-calibration.yaml` は生成物のため直接編集していない。反映は track の再生成が要る（オーケストレーターへの申し送り）。
+- 保護された設定（reporter の agent の定義など）は変更していない。変更案はなし。
+- 決めた点: 項目の書式を `No: 段 / 箇所 / 指摘 / 直した案 / 根拠 / 印` とした。理由は 1 件 1 項目で、reporter が表へ写しやすいため。
+
+### 5.1. CHANGELOG に書く事項
+
+なし
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[specdojo:kata-guide|実践の型活用ガイド]]
