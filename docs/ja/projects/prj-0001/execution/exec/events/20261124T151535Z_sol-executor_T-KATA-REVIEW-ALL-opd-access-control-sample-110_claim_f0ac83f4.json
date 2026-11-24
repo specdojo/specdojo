@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-24T15:15:35Z",
+  "type": "claim",
+  "task_id": "T-KATA-REVIEW-ALL-opd-access-control-sample-110",
+  "by": "sol-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "OPS"
+  }
+}
