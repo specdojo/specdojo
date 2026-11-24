@@ -41,3 +41,29 @@
     - field: derived_from
       from: ""
       to: '["PJR-QCJ5","PJR-0BGE"]'
+- v: 1
+  id: reg_72a46a740e3143ed9daa473c7b2c12f8
+  ts: "2026-11-24T23:43:39Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_a0b4426bf74348449ae38c5631431e0f
+- v: 1
+  id: reg_c5d4e55fcf8c41f2962207ce178993d5
+  ts: "2026-11-24T23:52:45Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_72a46a740e3143ed9daa473c7b2c12f8
