@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-PROJECT-pm-communication-plan-sample-050
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-PROJECT-pm-communication-plan-sample-050/T-KATA-WAVE-6-PROJECT-pm-communication-plan-sample-050-20261124T020611Z-0ed569e8/plan.md
   started_at: "2026-11-24T02:06:18.629Z"
+  completed_at: "2026-11-24T02:09:59.229Z"
   agent: opus-executor
   execution: agent
   approach: sample-maintenance
@@ -20,16 +21,20 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- sample 文書を共通サンプル文脈に合わせて厚くし、`grade` による指摘事項（F001〜F006）をすべて解消しました。
+- 具体的には、進捗共有のタイミングの具体化、店主（`STH-SHOP-OWNER`）の受入確認手段の変更、判断依頼における対面扱いの整合性、営業時間外の停止連絡に関する機会とエスカレーションの追加、`supersedes: []` の追加、および店主が `PO` を担うことの明記を行いました。
+- また、常連顧客への告知時期や、情報の公開区分に関する記述を補完しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/samples/pm-communication-plan-sample.md`: `grade` の指摘に基づき、進捗共有のタイミングの具体化、店主による受入確認手段（Issue と対面）の整理、営業時間外の連絡に関連する機会・エスカレーション行の追加、および `supervisor` としての `PO` の役割明記など、サンプルとしての厚みを増すための修正を行いました。また、`frontmatter` に `supersedes: []` を追加しました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 利用者が決める値を `_UNDECIDED_` として残した: (1) 営業時間外の緊急連絡手段。判断ゲート「初期リリース・店頭試用開始」の前に `PO` が決める。(2) つけの記録方法の切替開始日。管理計画 U-03 に連動し、`PO` が決める。告知の開始時期、実演の所要時間、試用後の聞き取り期限の具体値は推測で埋めなかった。
+- rulebook に合わせて直すべき点は見つからなかった（変更案なし）。
+- 適用外の検証: `npm run validate:history-links`（変更したのは docs/ja/specdojo/samples/ 配下の sample のみで、plan・result・個票を変更していない）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+`grade` の指摘事項（F001〜F006）を軸として、`docs/ja/specdojo/standards/sample-authoring-standard.md` に従い、既存の `sample` を完成例として厚くする作業を行いました。未決事項は `_UNDECIDED_` とし、決定が必要な事項を整理して記述しています。
