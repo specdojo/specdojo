@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-sjr7-deprecate-pm-log-kata-apply
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-23T21:14:31Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-24T01:50:02Z"
+  conclusion: 単独で書く pm-change-request-log・pm-issue-log・pm-risk-register の rulebook と sample を非推奨にし、カタログと第 6 波から外した。一覧の枠の template は残した
   derived_from:
     - PJR-X141
   commit_type: docs

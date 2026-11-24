@@ -131,3 +131,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_0f5ec2a26f594705ae1453a4c467c812
+- v: 1
+  id: reg_5c1b02ae612e471eba6d7fdae569405f
+  ts: "2026-11-24T01:50:02Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果・親の検証で確かめ、統合の後にオーケストレーターが第 6 波の track を strategy から作り直し、exec validate が通ることを確かめた（d470ae407）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-24"
+    - field: conclusion
+      from: "-"
+      to: 単独で書く pm-change-request-log・pm-issue-log・pm-risk-register の rulebook と sample を非推奨にし、カタログと第 6 波から外した。一覧の枠の template は残した
+  previous_event_id: reg_2b465cd43a2247c08d16277603e1c3e9
