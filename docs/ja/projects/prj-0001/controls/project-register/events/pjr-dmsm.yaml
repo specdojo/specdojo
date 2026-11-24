@@ -102,3 +102,16 @@
       from: "executor reported incomplete: 移行の注意と一部の変更を記載したが、対象個票の文案収集と未発見項目の一覧化が未完了。"
       to: "-"
   previous_event_id: reg_833b5d9e096c46e7ac24ecfc394fb316
+- v: 1
+  id: reg_bb2bc936c39c49d0b6b05359801d5407
+  ts: "2026-11-24T06:17:33Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: "rate limit fallback: sol-executor -> opus-executor at 2026-11-24T06:12:57.236Z"
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_1cc7aa2b04b642bb9949226a71dcfb52

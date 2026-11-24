@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-DMSM",
   "run_id": "pjr-dmsm-20261124T060642Z-6927dfd8",
-  "updated_at": "2026-11-24T06:17:25.376Z",
+  "updated_at": "2026-11-24T06:17:34.403Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -30,11 +30,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-DMSM/pjr-dmsm-20261124T060642Z-6927dfd8/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-executor",
       "attempts": 1,
       "started_at": "2026-11-24T06:17:25.376Z",
-      "completed_at": null,
+      "completed_at": "2026-11-24T06:17:34.403Z",
       "artifact_ref": null
     }
   },
