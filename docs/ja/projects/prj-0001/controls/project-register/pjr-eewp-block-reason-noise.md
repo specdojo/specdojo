@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: review
   priority: medium
   difficulty: easy
   owner: DEV
   registered_at: "2026-11-23T22:26:08Z"
   due_on: "2026-11-30"
-  block_reason: "parent validation failed: test-integration"
   commit_type: fix
   commit_scope: exec
 ---
@@ -43,7 +42,25 @@ specdojo:
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+### 5.1. 解決内容
+
+- `summarizeGitHookFailure`（`src/shared/git.ts`）で、hook 出力に FAIL の行があればそれを最初の原因として選ぶ。`unknown option` など、CLI の引数の誤りを確かめるテストの通常の出力は、要約の先頭に出ない。
+- 単体テスト（`tests/src/exec/worktree.test.ts`）に、今回の出力から作った要約が FAIL の行から始まるケースを足し、既存の期待を更新した。
+
+- 再開後の統合テストの食い違いを解消した。選ぶ順は次のとおりに決めた。
+  1. 型検査の診断（`error TS1234`）を含む行。位置つきで原因が確定するため最優先にする。
+  2. FAIL の行。テストの失敗が原因であり、`unknown option` などの通常の出力より優先する。
+  3. error を含む行、それも無ければ section の先頭行。
+- 先頭を FAIL にすると、step の見出しが無い出力（checkpoint の hook 失敗）で FAIL の行が末尾の追加分から外れ、要約から消えた。末尾の追加分は、要約の先頭に含まれる行だけを除くようにして、FAIL の行を残した。
+
+### 5.2. CHANGELOG に書く事項
+
+- 区分: Fixed
+- 文案: hook やテストの失敗の要約が、テストの通常の出力ではなく FAIL の行と失敗したテストの名前から始まるようにした（PJR-EEWP）。`CHANGELOG.md` は変えていない。
+
+### 5.3. 確認結果
+
+- `tests/src/exec/worktree.test.ts` を実行して確認した。`npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run test:integration` は親 runner が実行する。
 
 ## 6. 関連ドキュメント
 
