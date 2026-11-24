@@ -38,3 +38,16 @@
     - field: due
       from: ""
       to: "2026-11-30"
+- v: 1
+  id: reg_7ebe87274e474d90b8a6f066dcadfb23
+  ts: "2026-11-24T15:10:27Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_6573c9078a6d41deb88feb431601e20b
