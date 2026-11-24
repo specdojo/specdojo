@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  conclusion: C11R・TN64 の統合後の smoke が成功した
+  completed_at: "2026-11-24T06:05:27Z"
+  conclusion: YQ32 の統合後の smoke が成功した
   autopilot: approved
 ---
 
