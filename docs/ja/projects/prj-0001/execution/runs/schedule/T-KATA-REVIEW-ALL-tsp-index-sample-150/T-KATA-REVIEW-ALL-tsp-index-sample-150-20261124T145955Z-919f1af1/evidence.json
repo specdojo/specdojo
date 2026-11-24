@@ -1,0 +1,172 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-tsp-index-sample-150",
+  "run_id": "T-KATA-REVIEW-ALL-tsp-index-sample-150-20261124T145955Z-919f1af1",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-24T15:00:49.515Z",
+    "completed_at": "2026-11-24T15:08:42.648Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/tsp-index-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/tsp-index-sample.md | 83 +++++++++++++++-------------\n 1 file changed, 44 insertions(+), 39 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx --no-install prettier --write docs/ja/specdojo/samples/tsp-index-sample.md",
+      "status": "passed",
+      "summary": "対象 Markdown を整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "ファイル単位の YAML schema 検証は対象外。",
+      "reason": "変更は Markdown sample のみで YAML ファイルを変更していない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "成果物カタログ検証は対象外。",
+      "reason": "executor の変更は docs/ja/specdojo/samples/ 配下のみで、docs/ja/projects/ 配下へ及ばない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検証は対象外。",
+      "reason": "登録簿個票および既存 plan/result を変更していない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:tsp-index-sample\n  type: test\n  status: draft\n  rulebook: specdojo:tsp-index-rulebook\n  based_on:\n    - specdojo:bac-sample\n    - specdojo:sac-sample\n    - specdojo:nfr-index-sample\n    - specdojo:prj-success-criteria-and-acceptance-criteria-sample\n    - specdojo:ifd-sample\n---\n\n# 駄菓子屋きぬや 販売管理システム テスト戦略・方針\n\n## 1. 概要\n\n駄菓子屋きぬや 販売管理システムの初期リリースについて、販売・在庫・つけの記録が欠けず、店主代表と家族利用者代表が同じ手順で照合できる\n… output omitted …\nして次レベルへ進む場合は、「入口／出口条件（品質ゲート）」の例外承認に従う。\n\n## 8. メモ / 将来課題\n\n未確定の論点ごとに、影響する章・決定までの扱い・引き継ぎ先を示す。\n\n| 論点 | 影響する章 | 決定までの扱い | 引き継ぎ先 |\n| - | - | - | - |\n| *ASSUMPTION*: 会計確定の応答時間と処理量 | 入口／出口条件（総合テスト） | NFR の会計確定の応答時間の閾値が未確定のため、放課後ピーク1時間60取引の負荷で会計確定の応答 95% が2秒以内を仮置き基準とする | `kinuya:pjr-i006` |\n| *UNDECIDED*: 通信不能時の販売継続 | スコープ、テスト環境・テストデータ | 対象外として扱い、総合テストの合格をもって当該経路の受入とみなさない | `kinuya:pjr-i003` |\n\n会計確定の仮置き基準では、単一端末で1分1取引を扱う負荷を仮定している。記録を後回しにしないため、応答待ちの許容時間を2秒と仮定する。この基準は、試用開始後の販売記録と店番担当の待ち時間の評価で見直す。"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6776 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6776 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-tsp-index-sample-150\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 6ms\n\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1774}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  00:09:23\n   Duration  2.73s (transform 7.23s, setup 1.82s, import 8.94s, tests 6.03s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nlebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-tsp-index-sample-150/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-tsp-index-sample-150/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "tsp-index-sample の R5 整合修正を完了。整形・差分検査は通過。相手側の修正案と判断根拠を handoff に記録した。",
+  "completion_status": "complete",
+  "handoff": [
+    "R5-1: R5 / 2.1. テストレベル一覧、4.1. 環境区分と用途 / F002: 印刷を一律スタブ、記録サービスと DB をモックとする方針が単体テストカタログの Mock・Stub・Fake と食い違っていた / 単体と内部結合の環境行を分け、印刷要求の回数・内容を検証するためモックを使う例外理由を明記した。DB は Fake、記録サービスはスタブとし、単体の範囲に印刷要求を含めた / `vp-qe-kata-conformance`。[[specdojo:tsp-index-rulebook|TSP 作成ルール]] 2.2・6.4、[[specdojo:utc-index-sample|単体テストカタログ: 概要]] 7章、[[specdojo:utc-sample|単体テストカタログ: 会計確定]] 4・6.3章 / -",
+    "R5-2: R5 / 1. 概要、2.1. テストレベル一覧、3. スコープ、5. 品質ゲート / 初期受入の範囲が SC-01・AC-01〜AC-04 に限られ、参照先が必須とする SC-07・SC-09・AC-05 が欠けていた / 必須条件をすべて出口条件に対応付け、在庫・つけの記録更新、両代表の照合、操作メモと文書照合、条件別の証跡を反映した。運用開始後の成功基準は初期受入から除外した / `vp-qe-kata-conformance`。[[specdojo:prj-success-criteria-and-acceptance-criteria-sample|成功基準と受入条件]] 1〜4章、[[specdojo:tsp-index-rulebook|TSP 作成ルール]] 5章・5.3 / -",
+    "R5-3: R5 / 1. 概要、2.1. テストレベル一覧、3. スコープ、5. 品質ゲート、8章 / 定義済みの SAC 性能条件と出口条件が未接続で、つけ残高確認・日次締めの性能判定も明示されていなかった / 総合テストの出口を SAC-PERF-01〜04 の合格へ接続し、測定条件・判定方法は SAC を参照した。応答時間の計測境界と、P99・商品検索応答は記録のみとする扱いを明記し、接続未反映という旧課題を削除した / `vp-qe-kata-conformance`。[[specdojo:sac-sample|システム受入条件: 性能]] 1〜3章、[[specdojo:nfr-performance-sample|性能要件]] 2〜4章、[[specdojo:tsp-index-rulebook|TSP 作成ルール]] 5.3。既存の60取引/時・2秒の仮置き値と根拠は維持 / -",
+    "R5-4: R5 / 2.2. 観点/条件設計の共通原則 / 観点を販売確定だけに限定し、観測点も記録・画面だけに限定しており、単体カタログの戻り値・Mock 呼び出しや SAC の性能ログに合わなかった / 観点は対象処理の振る舞いについての1命題とし、レベルに応じて戻り値・依存の呼び出し・各業務記録・ログを観測点に選べるようにした / `vp-qe-kata-conformance`。[[specdojo:utc-sample|単体テストカタログ: 会計確定]] 6章、[[specdojo:sac-sample|システム受入条件: 性能]] 2章、[[specdojo:tsp-index-rulebook|TSP 作成ルール]] 5.2 / -",
+    "R5-5: R5 / 相手側: utc-sample 3. 対象外 / 印刷失敗の外部結合を PATH-05、DB 保存の内部結合を PATH-01 としているが、IFD ではそれぞれ保管サービスへの転送、画面資材の取得である / - / `vp-qe-kata-conformance`。[[specdojo:ifd-sample|インフラ構成図]] 4章と照合。[[specdojo:utc-sample|単体テストカタログ: 会計確定]] 側で印刷の PATH-05 を外し、DB 保存は記録サービスと DB の PATH-03 を含む経路として修正する案。対象外文書のため未変更 / -",
+    "R5-6: R5 / 相手側: nfr-index-sample 3. 分冊ドキュメント一覧 / 未確定の指標は合否を判定しないという一律の扱いが、性能分冊・SAC・TSP の暫定基準による判定と食い違う / - / `vp-qe-kata-conformance`。[[specdojo:nfr-performance-sample|性能要件]] 3・4章、[[specdojo:sac-sample|システム受入条件: 性能]] 1・3章を確認。[[specdojo:nfr-index-sample|非機能要件インデックス]] 側を、暫定基準がある場合はそれに従い、記録のみと定めた指標は合否を判定しない、という記述へ直す案。対象外文書のため未変更 / -",
+    "R5-7: R5 / 相手側: stc-index-sample 2. テスト対象の括り方と分割基準 / TSP の範囲を具体化する分配表に、AC-05 の在庫・つけの更新と SAC-PERF-03・04 の性能確認の委譲先が示されていない / - / `vp-dev-change-impact`、`vp-qe-kata-conformance`。[[specdojo:stc-index-sample|総合テストカタログ: 概要]] 側で、更新後の TSP 出口条件を対象別カタログへ分配する案。会計確定の性能ケースは [[specdojo:stc-sample|総合テストカタログ: 店頭の現金販売]] に既存であり維持する。対象外文書のため未変更 / -",
+    "R5-8: R5 / 相手側: atc-index-sample 1・2・6章 / 受入範囲と P0 の根拠が旧 TSP の SC-01・AC-01〜AC-04 のままで、SC-07・SC-09・AC-05 の対象別への分配がない / - / `vp-dev-change-impact`、`vp-qe-kata-conformance`。[[specdojo:prj-success-criteria-and-acceptance-criteria-sample|成功基準と受入条件]] の初期受入必須条件に合わせ、[[specdojo:atc-index-sample|受入テストカタログ: 概要]] 側の範囲・P0 基準・分配に、両代表の確認結果一致、全試行1分以内、在庫・つけの記録更新を接続する案。対象外文書のため未変更 / -",
+    "reporter 記録用: 変更ファイルは `docs/ja/specdojo/samples/tsp-index-sample.md` のみ。R5-1〜R5-8 を result の実施内容へ指定7列の Markdown 表として1回だけ記載し、申し送りには表を重ねない。相手側の文書は未変更。result、grade サイドカー、Git 設定・コミットには変更を加えていない。",
+    "進め方と実践の型の適用への記録: 共通規約2文書、kata-guide 6.1・6.3・6.5、Sample 記述標準の共通文脈、TSP rulebook、テストドキュメントスコープ定義標準、共通レビュー観点、dct-kata の対象 `done_criteria`、grade result、R1〜R4 result を確認した。同接頭辞の sample は index の1本だけ。全 wikilink・`based_on` の参照先と関連する UTC・STC・ATC を照合した。用語集6ファイルの見出し語を確認し、Role の定義と整合することを確認した。テスト固有語は TSP rulebook 2.2 に従った。`recipe`・`template` は `undecided` で参照対象なし。章構成・必須表・禁止事項は rulebook を正とし、個別ケースや測定手順は参照先へ委ねた。`status: draft` と `based_on` は維持した。",
+    "grade と前段の扱い: 展開元は `docs/ja/projects/prj-0001/execution/grade/results/specdojo.tsp-index-sample.yaml` の `source=grade` 相当の F001〜F003。condense 記録と `cause.location` はない。F001 は R2 の内部経路分担、F003 は R1 の仮置き根拠によって解消済みであり、再指摘せず修正を維持した。F002 は R5-1 で解消した。性能の正式閾値と通信不能時の販売継続は、参照元でも未確定のため、既存の仮置き・対象外の扱いを維持した。親 runner 指定の lint・schema・test は重複実行していない。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-tsp-index-sample-150/T-KATA-REVIEW-ALL-tsp-index-sample-150-20261124T145955Z-919f1af1/executor.log",
+      "bytes": 8607,
+      "truncated": false
+    }
+  ]
+}
