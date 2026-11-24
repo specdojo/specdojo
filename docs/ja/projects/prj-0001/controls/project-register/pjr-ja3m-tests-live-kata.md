@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: waiting
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-23T22:24:54Z"
   due_on: "2026-11-30"
+  block_reason: "executor reported incomplete: 固定 fixture への移行は実施したが、sample 変更中の単体テスト全体の確認が未完了。"
   commit_type: fix
   commit_scope: test
 ---
