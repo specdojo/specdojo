@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-ja3m-tests-live-kata
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-23T22:24:54Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-24T04:57:43Z"
+  conclusion: 表示ページと grade の参照のテストを tests/fixtures の固定入力に移し、sample を書き換えても単体テストが落ちなくなった
   commit_type: fix
   commit_scope: test
 ---
