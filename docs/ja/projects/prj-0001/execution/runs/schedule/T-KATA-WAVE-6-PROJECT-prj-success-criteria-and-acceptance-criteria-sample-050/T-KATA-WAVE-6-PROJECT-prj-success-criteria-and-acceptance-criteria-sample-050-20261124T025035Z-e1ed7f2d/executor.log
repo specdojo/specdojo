@@ -1,0 +1,32 @@
+成功基準と受入条件の sample を書き直し、20 件の finding すべてに対応しました。変更したのは `docs/ja/specdojo/samples/prj-success-criteria-and-acceptance-criteria-sample.md` だけで、prettier での整形と markdownlint は通り、指摘は 0 件でした。それ以外の検査は、この後 runner が実行します。
+
+**ID の扱い:** 既存の BV-01〜03・SC-01〜06・AC-01〜04 は、ほかの sample が参照しているので、意味を変えずに残しました。新しい条件は末尾の番号で足しています。
+
+**主な変更**
+- **業務価値と成功基準を追加（F001・F006・F013・F018）:**
+  - BV-04: つけ残高をその場で確かめ、記録漏れや食い違いを残さない。
+  - SC-07: 両代表の確認結果が 100% 一致する。
+  - SC-08: 家族が補助なしで 3 回以上記録できる。
+  - SC-09: つけ残高を 1 分以内に確認できる。
+  - SC-10: つけの食い違いを翌月へ残す件数が毎月 0 件。
+- **判定基準の明確化（F009・F010・F011・F015）:**
+  - SC-01 は、口頭説明や代行操作を受けたら未完了とし、どこまでが支援かを書きました。
+  - SC-04 は 6 か月目の暦月で判定します。
+  - SC-05 は 3 区分を合算し、数量と金額の両方で、ベースラインの 1 か月を 12 倍した年間換算値と比べます。
+  - 外部要因の記録と寄与の評価も足しました。
+- **受入条件（F007・F008・F016）:** 在庫とつけを記録・更新できる AC-05 を追加しました。操作メモの中身と、作るのが開発担当（`DEV`）であることを明記し、承認者は「店主代表（`PO`）」と書いています。
+- **判定手順（F003・F004・F012・F020）:**
+  - 証跡は非公開の店舗共有フォルダに置き、条件 ID から辿れるようにしました。
+  - ベースライン記録を、誰がいつ始めるかを書きました。
+  - 是正と再確認、運用開始後に未達だったときの担当 Role code・承認・再測定時期の記録を足しました。
+  - 条件を変えるときは変更要求ログに起票し、決定記録（DEC）に残す流れにしました。
+- **例外表（F002・F005・F014・F017・F019）:** 列を template と同じ「論点・扱い・解決期限 / 判断タイミング・責任者」に揃え、各行の責任者を `PO` としました。長期滞留の定義と、ベースラインが繁忙期にかかる場合の 2 行を足しています。オフライン対応で追加する受入条件は、初期受入の後に判定し、合格を運用開始の条件にしました。
+
+**確認が要る点**
+- **ほかの sample との食い違い:** 初期受入の必須条件が「SC-01・SC-07・SC-09・AC-01〜AC-05」に増えました。trc・atc-index・itc-index の各 sample は「SC-01・AC-01〜AC-04（5 件）」と書いており、こちらとずれます。今回は対象外なので、それらは直していません。
+- **rulebook の推奨表と template の不一致:** rulebook の例外表は「論点・判定への影響・当面の扱い」で、template と列が違います。sample は template に合わせ、判定への影響は「扱い」の列に書きました。rulebook 側を template に合わせる変更案として記録しておきます。
+- **決めていない値:** 対象商品、長期滞留の日数、繁忙期にかかる場合の比較の扱い、オフライン時の方針は `_UNDECIDED_` のまま残しています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"成功基準と受入条件の sample を20件の finding に合わせて書き直した。既存の ID は残し、BV-04・SC-07〜SC-10・AC-05 を追加した。例外表は template の列構成に揃え、判定手順・証跡の保存先・担当 Role code を補った。prettier と markdownlint の結果は問題なし。","handoff":["下流の sample の整合: 初期受入の必須条件が SC-01・SC-07・SC-09・AC-01〜AC-05 になった。`trc-requirements-to-tests-sample`（「SC-01・AC-01〜AC-04（5 件）」）、`atc-index-sample`・`itc-index-sample`（「SC-01・AC-01〜AC-04」）はこれに合わせる手直しが要る。","rulebook の変更案: rulebook の「例外条件と未解決事項」の推奨表は「論点・判定への影響・当面の扱い」で、template の「論点・扱い・解決期限 / 判断タイミング・責任者」と食い違う（F017）。sample は template に合わせ、判定への影響は「扱い」の列に書いた。rulebook の推奨表を template に揃え、判定への影響は扱いの列に書くと定めることを提案する。","利用者が決める値（`_UNDECIDED_` のまま）: SC-04 の人気商品の対象範囲と除外条件、SC-05 の長期滞留の日数の基準、ベースラインが繁忙期にかかる場合の比較の扱い、オフライン時の記録方法。","前提として置いた判断（承認者の確認が要る）: SC-05 は3区分を合算し、数量と金額の両方で20%以上の削減を合格とした。SC-09 のつけ残高を1分以内に確認する条件は、共通サンプル文脈の期待効果に合わせて初期受入の必須とした。概要 sample の期待効果の表には1分の目標がないため、概要 sample へ反映するかを判断する。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/prj-success-criteria-and-acceptance-criteria-sample.md","status":"passed","summary":"表を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/prj-success-criteria-and-acceptance-criteria-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"対象外","reason":"履歴蓄積ファイル（plan・result・個票）を変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"対象外","reason":"変更した YAML ファイルがない"}]}
+</specdojo_executor_evidence>
