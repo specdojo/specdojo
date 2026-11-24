@@ -51,3 +51,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_6573c9078a6d41deb88feb431601e20b
+- v: 1
+  id: reg_80b451781e2c484db8c675dfb2b4c00b
+  ts: "2026-11-24T15:14:25Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor validation failed or not run: npm run format:check, npm run build"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor validation failed or not run: npm run format:check, npm run build"
+  previous_event_id: reg_7ebe87274e474d90b8a6f066dcadfb23
