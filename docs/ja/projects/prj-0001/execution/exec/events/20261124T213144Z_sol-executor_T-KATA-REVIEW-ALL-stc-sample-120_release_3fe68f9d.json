@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-24T21:31:44Z",
+  "type": "release",
+  "task_id": "T-KATA-REVIEW-ALL-stc-sample-120",
+  "by": "sol-executor",
+  "msg": "release claim to switch executor to opus-executor",
+  "meta": {
+    "pipeline_resume_released": "true",
+    "replaced_by": "opus-executor"
+  }
+}
