@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_db23742861f649ffaea86c72dd0bda42
+  ts: "2026-11-24T13:32:50Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者の承認のもと、全 sample のレビューの段取りを起票する
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 段のレビューの指摘の表を result に表として 1 回だけ書かせる
+    - field: description
+      from: ""
+      to: 段の result で指摘の表が 1 行に詰められ重なる問題を、kata-guide と段の指示で直す
+    - field: input
+      from: ""
+      to: '["担当は BA、期限は 2026-11-30（利用者、2026-11-24）","PJR-0BGE の段取りとして 2026-11-24 の晩の実行の前に行う（利用者、2026-11-24）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-24"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-0BGE"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: kata
