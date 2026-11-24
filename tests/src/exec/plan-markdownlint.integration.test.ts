@@ -72,13 +72,28 @@ describe("scheduled plan Markdown validation", () => {
   });
 
   it.each([false, true])(
-    "checks auto dry-run plans before claim or agent launch (valid: %s)",
-    async (valid) => {
-      const repo = fixture(`Phase instructions.\n${valid ? "\n" : ""}- First item`);
-      vi.spyOn(process.stdout, "write").mockImplementation(() => true);
-      const stderr = vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+    "leaves the working tree unchanged during auto dry-run (existing plan: %s)",
+    async (existing) => {
+      const repo = fixture("Phase instructions.\n- First item");
+      const stdout = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
       await runExec(["refresh", "--project", "test"]);
       expect(process.exitCode).toBe(0);
+      if (existing)
+        writeFileSync(
+          join(repo, "execution", "exec", "plans", `${taskId}-plan.md`),
+          "existing plan\n",
+        );
+      const snapshot = () =>
+        readdirSync(repo, { recursive: true, withFileTypes: true })
+          .map((entry) => {
+            const path = join(entry.parentPath, entry.name);
+            return [
+              path.slice(repo.length),
+              entry.isFile() ? readFileSync(path, "utf8") : "<directory>",
+            ];
+          })
+          .sort(([a], [b]) => a.localeCompare(b));
+      const before = snapshot();
 
       vi.spyOn(spawnSelf, "selfRunArgs").mockImplementation((args) => [
         process.execPath,
@@ -92,10 +107,11 @@ describe("scheduled plan Markdown validation", () => {
 
       await runExec(["run", "--project", "test", "--auto", "--dry-run", "--edit-by", "test-agent"]);
 
-      expect(process.exitCode ?? 0).toBe(valid ? 0 : 1);
-      const errors = stderr.mock.calls.map(([text]) => String(text)).join("");
-      if (!valid) expect(errors).toMatch(/Task T-TEST-doc-010[\s\S]*plan\.md: \d+[^\n]*MD032/);
-      expect(existsSync(recordPathForRead(join(repo, "execution"), "plan", taskId))).toBe(valid);
+      expect(process.exitCode ?? 0).toBe(0);
+      expect(stdout.mock.calls.map(([text]) => String(text)).join("")).toMatch(
+        /\[dry-run\] Plan: .*plan\.md/,
+      );
+      expect(snapshot()).toEqual(before);
       const events = join(repo, "execution", "exec", "events");
       expect(existsSync(events) ? readdirSync(events) : []).toEqual([]);
     },

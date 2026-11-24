@@ -445,13 +445,16 @@ export function registerRunCommand(exec: Command): void {
             process.exitCode = 1;
             return;
           }
-          process.stdout.write("[run] validate: ok\n[run] refresh...\n");
-          if (!spawnRefresh(opts.project)) {
-            process.stdout.write("[run] refresh failed — exit\n");
-            process.exitCode = 1;
-            return;
+          process.stdout.write("[run] validate: ok\n");
+          if (!opts.dryRun) {
+            process.stdout.write("[run] refresh...\n");
+            if (!spawnRefresh(opts.project)) {
+              process.stdout.write("[run] refresh failed — exit\n");
+              process.exitCode = 1;
+              return;
+            }
+            process.stdout.write("[run] refresh: ok\n");
           }
-          process.stdout.write("[run] refresh: ok\n");
 
           await withTrailingRunRecords(opts, "run", () =>
             isBatch ? runBatchMode(opts) : runManualMode(opts),

@@ -1,0 +1,9 @@
+`exec run --auto --dry-run` が plan を生成せず、対象と予定パスを表示するよう修正しました。ドライラン中の refresh とロック取得も省き、既存 plan の有無それぞれについて、作業ツリーが変わらないことを統合テストで確認しました。
+
+plan の内容を確認するには `specdojo exec plan --project <id> --task <task-id>` を使えます。このコマンドは plan を書き出します。ドライランは既存の `ready.json` を使うため、最新の対象を確認する場合は事前に `exec refresh` が必要です。
+
+対象の統合テスト、Markdown 検査、履歴リンク検査は成功しました。catalog 検査も警告付きで成功しました。型検査、lint、単体・統合テスト全体は親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"auto dry-run の plan 書き出し、refresh、ロック取得を防止し、作業ツリー不変の統合テストと個票を更新した。","handoff":["CHANGELOG に書く事項（不具合修正）: `exec run --auto --dry-run` が plan ファイルを残さず、予定パスを表示するようにした。","ドライランは既存の `ready.json` を使用する。最新の対象を確認する場合は事前に `exec refresh` を実行する。"],"validations":[{"command":"node_modules/.bin/vitest run --config vitest.integration.config.ts tests/src/exec/plan-markdownlint.integration.test.ts","status":"passed","summary":"6 件成功。既存 plan の有無について作業ツリーの不変を確認。"},{"command":"node_modules/.bin/prettier --write src/exec/run/schedule-prepare.ts src/exec/run/shared.ts src/exec/run/register-command.ts tests/src/exec/plan-markdownlint.integration.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-xsrf-dry-run-writes-plans.md","status":"passed","summary":"変更ファイルを整形。"},{"command":"node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-xsrf-dry-run-writes-plans.md","status":"passed","summary":"個票の Markdown 検査成功。"},{"command":"npm run validate:history-links","status":"passed","summary":"履歴リンク検査成功。"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"catalog 検査成功、既存の参照に関する警告あり。"},{"command":"git diff --check","status":"passed","summary":"差分の空白検査成功。"}]}
+</specdojo_executor_evidence>
