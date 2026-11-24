@@ -754,6 +754,8 @@ schedule の `exec resume --task <task-id> --resume-from executor` は、executo
 | `--fallback-reporter-by <name>`         | rate limit の `fallback` または接続不能時に reporter 段を1回だけ引き継ぐ agent                           | `run` / `resume`                                                                                    |
 | `--due`                                 | 再開時刻を迎えた利用制限延期 task を対象にする                                                           | `resume`                                                                                            |
 
+変更範囲の予約では、本文の `docs/`・`src/`・`./` のような広すぎる語を警告して除外します。範囲が空なら `--unknown-scope` に従います。全体を予約する明示的な `targets` / `target_path` や glob は維持し、予約前に広い範囲であることを警告します。詳しい推定規則は [[specdojo:exec-operation-guide|exec運用ガイド]] の「変更範囲が重なる項目の順番待ち」を参照します。
+
 `--plan` と `--deliverable` も Schedule のパイプライン宣言を持たないため、`--executor-by` / `--reporter-by` の少なくとも一方を指定したときだけ executor/reporter 2段階で実行します。指定しなかった段は `stage_role` による自動選択で決まります。`--plan` では reporter が scaffold 済みの result を記入するため、frontmatter に `task_id` を持つ plan が必要です。`--by` との併用はエラーです。`--by` に `stage_role` を持つ pipeline 用 agent を指定すると、result 未記入の blocked にはせず、`--executor-by` / `--reporter-by` を使うよう案内するエラーで実行前に拒否します。
 
 指名した agent の rate limit は既定では `stop` です。`wait` は provider の reset / retry-after、次に `rate_limit_policy.cooldown_seconds` を使い、`rate_limit_policy.pinned.max_wait_seconds`（既定8時間）以内なら同じ段を同じ agent で再開します。`fallback` は対応する fallback flag または `rate_limit_policy.pinned.fallback_executor_by` / `fallback_reporter_by` の agent へ1回だけ切り替えます。fallback 未指定時と fallback agent も上限になった場合は停止します。CLI が `exec-defaults.yaml` より優先します。待機中は project の実行ロックを保持します。

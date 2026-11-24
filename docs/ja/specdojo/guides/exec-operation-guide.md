@@ -202,6 +202,8 @@ register の worktree 実行（同じ run の `--parallel` と別 run の `--joi
 
 ディレクトリは `src/exec/` のように書きます。`app:src/main.ts` は宣言済み product repo を表し、無修飾のパスは project repo として区別します。`./` と `..` を正規化し、行番号・`#関数名` はファイル単位へ広げます。glob は最初のワイルドカードより前のディレクトリ全体を予約します。本文の参照パスも安全側に含めるため、読み取り専用の資料が共通して待機する場合があります。宣言にない変更や別名パスまで静的に予測するものではありません。
 
+本文の `docs/`・`src/` のような上位ディレクトリだけの語と、repo のルート `./` は範囲から除き、予約前に `[scope] warning: ignored broad prose path ...` を出します。repo 修飾や `..` の正規化後も同じ規則で判定し、併記された個別ファイル・下位ディレクトリは残します。上位ディレクトリ全体を変更する場合は `targets` / `target_path` に明示するか、`docs/**/*.md` のような glob を書きます。これらの広い範囲は維持し、`[scope] warning: broad change scope ... retained ...` で他の項目が待機し得ることを知らせます。上位ディレクトリだけを除外して範囲が空になった場合は、次の不明範囲の方針に従います。
+
 `generated/` 配下と project repo で Git が無視するパス（派生一覧など）は、明示対象も含めて除外します。Git の判定に失敗した場合は `generated/` 以外の候補を残します。生成 plan の共通文に加え、項目固有の本文でも「保護された設定は変えない」「`CHANGELOG.md` は変えず」のように変更しないと明示した節のパスは除外します。同じ文の別の節や別の条件に書かれた変更対象と、明示した `targets` / `target_path` は残します。
 
 範囲が空、または対象 doc ID の一部を解決できない場合は不明として扱います。`--unknown-scope parallel`（既定）は推定できた範囲だけで重複を判断し、不明部分は従来どおり並列を許可します。`--unknown-scope serialize` は、不明な項目を他の項目と直列化します。たとえば `exec run --auto --parallel 2 --unknown-scope serialize` で指定します。`--if-busy` は project / join 枠の待機方針であり、この範囲待ちとは別です。dry-run は範囲を予約しません。

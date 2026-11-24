@@ -8,6 +8,7 @@ import {
   readFileSync,
   renameSync,
   rmSync,
+  statSync,
   writeFileSync,
 } from "node:fs";
 import { isAbsolute, join, posix, relative } from "node:path";
@@ -59,6 +60,20 @@ export function normalizeScopePath(value: string): string | undefined {
   path = posix.normalize(path).replace(/\/$/, "");
   if (path === ".." || path.startsWith("../")) return undefined;
   return `${repo}:${path}`;
+}
+
+function isBroadScopePath(normalized: string, value: string, repoRoot: string): boolean {
+  const path = normalized.slice(normalized.indexOf(":") + 1);
+  if (path === ".") return true;
+  if (path.includes("/")) return false;
+  if (/\/$|(?:^|\/)\.{1,2}$|[*?{[]/.test(value)) return true;
+  // An extensionless root file (for example ./Dockerfile) is still a concrete file. Only
+  // treat directory syntax or a verified directory as broad, including dotted directories.
+  try {
+    return normalized.startsWith("project:") && statSync(join(repoRoot, path)).isDirectory();
+  } catch {
+    return false;
+  }
 }
 
 // Generated plans mix task inputs with shared operating instructions. Read only task-specific
@@ -148,6 +163,8 @@ export function inferChangeScope(params: {
   documentPaths?: Record<string, string>;
 }): ChangeScope {
   const paths = new Set<string>();
+  const broadPaths = new Set<string>();
+  const ignoredBroadPaths = new Set<string>();
   let unresolved = false;
   const add = (path: string) => {
     const normalized = normalizeScopePath(path);
@@ -155,7 +172,10 @@ export function inferChangeScope(params: {
       unresolved = true;
       return;
     }
-    if (!/(?:^|\/)generated(?:\/|$)/.test(normalized.split(":")[1]!)) paths.add(normalized);
+    if (!/(?:^|\/)generated(?:\/|$)/.test(normalized.split(":")[1]!)) {
+      paths.add(normalized);
+      if (isBroadScopePath(normalized, path, params.repoRoot)) broadPaths.add(normalized);
+    }
   };
   const configPath = (path: string) => (isAbsolute(path) ? relative(params.repoRoot, path) : path);
   let index = params.documentPaths;
@@ -228,6 +248,13 @@ export function inferChangeScope(params: {
       )
     )
       return;
+    const normalized = normalizeScopePath(path);
+    // A bare top-level directory in prose is often context, not an edit declaration. Keep
+    // explicit targets and globs authoritative, even when they reserve the entire repository.
+    if (normalized && isBroadScopePath(normalized, path, params.repoRoot) && !/[*?{[]/.test(path)) {
+      ignoredBroadPaths.add(normalized);
+      return;
+    }
     add(path);
   };
   for (const match of body.matchAll(/`([^`\n]+)`/g)) {
@@ -238,7 +265,7 @@ export function inferChangeScope(params: {
     )
       addTextPath(value);
   }
-  for (const match of body.matchAll(/(?:^|[\s`（(・])((?:[\w-]+:)?[\w@.-]+\/[\w@.*?{}[\]/-]+)/gm)) {
+  for (const match of body.matchAll(/(?:^|[\s`（(・])((?:[\w-]+:)?[\w@.-]+\/[\w@.*?{}[\]/-]*)/gm)) {
     const value = match[1]!;
     // A slash in prose can also mean alternatives (executor/reporter). Accept filenames,
     // explicit directory/glob syntax, or an existing repository path rather than every slash.
@@ -267,6 +294,16 @@ export function inferChangeScope(params: {
       for (const path of ignored.stdout.split("\0").filter(Boolean))
         paths.delete(`project:${path}`);
   }
+  for (const path of ignoredBroadPaths)
+    if (!paths.has(path))
+      process.stderr.write(
+        `  [scope] warning: ignored broad prose path ${path}; specify a narrower path or declare targets / target_path for the whole directory\n`,
+      );
+  for (const path of broadPaths)
+    if (paths.has(path))
+      process.stderr.write(
+        `  [scope] warning: broad change scope ${path} retained from a declared target or glob; overlapping runs will wait for integration\n`,
+      );
   return { paths: [...paths].sort(), unknown: unresolved || paths.size === 0 };
 }
 

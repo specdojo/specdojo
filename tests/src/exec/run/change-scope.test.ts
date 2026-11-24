@@ -42,6 +42,7 @@ beforeEach(() => {
   root = mkdtempSync(join(tmpdir(), "specdojo-change-scope-"));
   leases = [];
   vi.spyOn(process.stdout, "write").mockReturnValue(true);
+  vi.spyOn(process.stderr, "write").mockReturnValue(true);
 });
 afterEach(async () => {
   for (const lease of leases) await lease.finish(true);
@@ -53,6 +54,142 @@ describe("change scope inference", () => {
   const unchangedConditions =
     "保護された設定（lefthook.yml・.agents/・.claude/・.codex/・package.json・.specdojo/ など）は変えない。" +
     "`CHANGELOG.md` は変えず、個票の対応結果に文案を書く（PJR-EPQ3）。";
+
+  it.each([
+    "docs/",
+    "src/",
+    "./docs/",
+    "project:docs/",
+    "app:src/",
+    "./",
+    "app:./",
+    "src/nested/../",
+    ".agents/",
+    "release.v1/",
+  ])("ignores bare top-level prose path %s and warns once even when repeated", (path) => {
+    expect(
+      inferChangeScope({
+        projectId: "test",
+        repoRoot: root,
+        text: `\`${path}\` の説明。 ${path} の記述。`,
+      }),
+    ).toEqual({ paths: [], unknown: true });
+    expect(process.stderr.write).toHaveBeenCalledTimes(1);
+    expect(process.stderr.write).toHaveBeenCalledWith(
+      expect.stringContaining(
+        `[scope] warning: ignored broad prose path ${normalizeScopePath(path)}`,
+      ),
+    );
+  });
+
+  it("allows independent files beside broad prose but still waits for the same file", async () => {
+    const infer = (file: string) =>
+      inferChangeScope({
+        projectId: "test",
+        repoRoot: root,
+        text: [`## 1. 課題内容\n\n\`docs/\` と src/ に関する修正。`, `\`${file}\` を直す。`],
+      });
+    const firstScope = infer("docs/first.md");
+    const secondScope = infer("docs/second.md");
+    expect(firstScope).toEqual(known("docs/first.md"));
+    expect(secondScope).toEqual(known("docs/second.md"));
+    const gate = new ChangeScopeGate(root);
+    const first = remember(await gate.acquire("PJR-FIRST", firstScope));
+    const second = await gate.tryAcquire("PJR-SECOND", secondScope);
+    expect(second).not.toBeNull();
+    remember(second!);
+    expect(await gate.tryAcquire("PJR-SAME", infer("docs/first.md"))).toBeNull();
+    await first.finish(true);
+    const same = remember(await gate.acquire("PJR-SAME", infer("docs/first.md")));
+    expect(same.waits).toMatchObject([{ blocker: "PJR-FIRST" }]);
+  });
+
+  it.each(["targets", "targetPath"] as const)(
+    "keeps broad explicit %s despite narrower prose and warns before reservation",
+    async (field) => {
+      const scope = inferChangeScope({
+        projectId: "test",
+        repoRoot: root,
+        ...(field === "targets" ? { targets: ["docs/"] } : { targetPath: "docs/" }),
+        text: "`docs/` にある `docs/first.md` を直す。",
+      });
+      expect(scope).toEqual({
+        paths: ["project:docs", "project:docs/first.md"],
+        unknown: false,
+      });
+      expect(process.stderr.write).toHaveBeenCalledTimes(1);
+      expect(process.stderr.write).toHaveBeenCalledWith(
+        expect.stringContaining("[scope] warning: broad change scope project:docs retained"),
+      );
+      expect(existsSync(join(root, "exec/.locks/change-scopes"))).toBe(false);
+      const gate = new ChangeScopeGate(root);
+      remember(await gate.acquire("PJR-ALL", scope));
+      expect(await gate.tryAcquire("PJR-FILE", known("docs/other.md"))).toBeNull();
+    },
+  );
+
+  it.each(["`docs/**/*.md`", "docs/*.md", "`app:src/*`", "`./**/*.ts`"])(
+    "preserves intentional broad glob %s and warns",
+    (text) => {
+      const scope = inferChangeScope({ projectId: "test", repoRoot: root, text });
+      expect(scope.unknown).toBe(false);
+      expect(scope.paths).toEqual([normalizeScopePath(text.replaceAll("`", ""))]);
+      expect(process.stderr.write).toHaveBeenCalledWith(
+        expect.stringContaining("[scope] warning: broad change scope"),
+      );
+      const [repo, path] = scope.paths[0]!.split(":");
+      expect(
+        scopeOverlap(scope, {
+          paths: [`${repo}:${path === "." ? "" : `${path}/`}file.md`],
+          unknown: false,
+        }),
+      ).toBeDefined();
+    },
+  );
+
+  it.each(["`docs/guides/`", "docs/guides/", "`docs/guides/*.md`"])(
+    "keeps lower directory %s and detects file overlaps without warnings",
+    (text) => {
+      const scope = inferChangeScope({ projectId: "test", repoRoot: root, text });
+      expect(scope).toEqual(known("docs/guides"));
+      expect(scopeOverlap(scope, known("docs/guides/run.md"))).toBeDefined();
+      expect(scopeOverlap(scope, known("docs/guides-other/run.md"))).toBeUndefined();
+      expect(process.stderr.write).not.toHaveBeenCalled();
+    },
+  );
+
+  it("preserves root files and unresolved target uncertainty beside broad prose", () => {
+    expect(
+      inferChangeScope({
+        projectId: "test",
+        repoRoot: root,
+        targets: ["test:missing"],
+        documentPaths: {},
+        text: "`docs/` の説明。 `./README.md` と `package.json` を直す。",
+      }),
+    ).toEqual({ paths: ["project:README.md", "project:package.json"], unknown: true });
+  });
+
+  it("distinguishes extensionless root files from existing top-level directories", () => {
+    writeFileSync(join(root, "Dockerfile"), "FROM scratch\n");
+    mkdirSync(join(root, "docs"));
+    mkdirSync(join(root, "release.v1"));
+    expect(
+      inferChangeScope({
+        projectId: "test",
+        repoRoot: root,
+        text: "`./Dockerfile` と `./LICENSE` を変更する。 `./docs` と `./release.v1` の説明。",
+      }),
+    ).toEqual({ paths: ["project:Dockerfile", "project:LICENSE"], unknown: false });
+    expect(process.stderr.write).toHaveBeenCalledTimes(2);
+  });
+
+  it("serializes broad-only unknown input when the conservative policy is selected", async () => {
+    const scope = inferChangeScope({ projectId: "test", repoRoot: root, text: "`docs/`" });
+    const gate = new ChangeScopeGate(root, "serialize");
+    remember(await gate.acquire("PJR-UNKNOWN", scope));
+    expect(await gate.tryAcquire("PJR-FILE", known("src/run.ts"))).toBeNull();
+  });
 
   it("finishes quickly on a long run of path characters that never forms a path", () => {
     const text = `\`${".-/".repeat(5000)}!\` ${".-/".repeat(5000)}!`;
