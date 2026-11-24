@@ -901,6 +901,7 @@ export async function runSingleRegisterItemWorktree(
 
   const prepared = lifecycleLock ? await lifecycleLock.runExclusive(setup) : await setup();
   if ("outcome" in prepared) return prepared;
+  opts.onScopePrepared?.();
   const { worktree, planPath, resultPath, resultScaffold, prompt, bookkeepingPaths } = prepared;
 
   // Phase 2: agent を worktree 内で実行（ロック外・並列可能な長時間部分）。

@@ -65,4 +65,10 @@ plan に展開された finding は、message と同じ viewpoint ID の判定�
 - 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
 - agent 自身は登録簿の状態を変更せず、終了コードと標準エラー出力で runner に結果を返す。
 
+## 再開の指示（2026-11-24T05:53:17.095Z）
+
+利用者が再開の前に足した指示である。これまでの申し送りとあわせて、この指示に従って作業を続ける。
+
+- 親の検証の test-unit で tests/src/exec/run/track-filter.test.ts の「retains the scope barrier when schedule preparation fails」が落ちた。このテストは、--unknown-scope serialize で準備に失敗したタスクがあると、同じ run の中では後のタスクを準備しない（待たせる）ことを守っている。YQ32 で外すのは、run が終わった後に残る予約（exec/.locks/change-scopes/ の blocked のまま残る分）であり、同じ run の中の待ち合わせは保つ方針を推奨する。テストの期待を変えるなら、変える理由を個票の対応結果と handoff に書く。
+
 `共通規約 sha256:e7dd6ff2a0dec2f12ed4ffc905cd185aca2d6f9c3922c56a249c88cb45b2a14e` `docs/ja/projects/prj-0001/execution/conventions/e7dd6ff2a0dec2f12ed4ffc905cd185aca2d6f9c3922c56a249c88cb45b2a14e.txt`

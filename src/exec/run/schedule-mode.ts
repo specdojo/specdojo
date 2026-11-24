@@ -16,6 +16,7 @@ import { type ReadyTaskView, type ScheduleIndex } from "../types.js";
 import { type CurrentState } from "../types.js";
 import { extractLocalId, extractPhaseSuffix } from "../../schedule/phase-sets.js";
 import { resolveWorktreeBase } from "../worktree.js";
+import { isUnstartedScopeReservation } from "./change-scope-state.js";
 import {
   buildPhaseModeIndex,
   resolveAgentPipeline,
@@ -147,8 +148,16 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
   const maxRounds = opts.maxRounds ? Math.max(1, parseInt(opts.maxRounds, 10) || 1) : null;
   const dryRun = !!opts.dryRun;
   const strategy = opts.strategy ?? "critical-first";
-  const scopeGate = new ChangeScopeGate(executionPath, parseUnknownScopePolicy(opts.unknownScope));
+  const scopeGate = new ChangeScopeGate(
+    executionPath,
+    parseUnknownScopePolicy(opts.unknownScope),
+    {},
+    undefined,
+    (item) => isUnstartedScopeReservation({ item, projectId, repoRoot, schedulePath }),
+  );
   const scopeLeases = new Map<string, ChangeScopeLease>();
+  // Keep preparation failures as barriers within this run, then release them when it drains.
+  const failedPreparationLeases = new Set<ChangeScopeLease>();
   const attempted = new Set<string>();
   // A non-loop run still launches at most --parallel tasks, but defers overlapping preparation
   // until a prior task integrates instead of forking both worktrees from the same HEAD.
@@ -260,7 +269,7 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
         // "deferred": every candidate provider is at its cap; try it again after a slot frees.
         if (prepared === "deferred") {
           recordDeferred("provider capacity");
-          await lease?.finish(true);
+          await lease?.cancelPreparation();
           continue;
         }
         attempted.add(taskId);
@@ -274,17 +283,18 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
           capacity.reserve(prepared.agentCandidates[0]?.provider);
           batchBudget--;
         } else {
-          await lease?.finish(prepared === "success");
+          if (prepared === "success") await lease?.finish(true);
+          else if (lease) failedPreparationLeases.add(lease);
           if (prepared === "failure") process.exitCode = 1;
         }
       } catch (error) {
+        if (lease) failedPreparationLeases.add(lease);
         if (loop && error instanceof ChangeScopeBlockedError) {
           recordDeferred("change scope blocked");
           process.stdout.write(`  [run] deferred: ${taskId} — ${error.message}\n`);
           continue;
         }
         attempted.add(taskId);
-        await lease?.finish(false);
         const message = error instanceof Error ? error.message : String(error);
         process.stderr.write(`[run] setup error for ${task.id}: ${message}\n`);
         process.exitCode = 1;
@@ -421,6 +431,8 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
         return { stop: true };
       }
     },
+  }).finally(async () => {
+    for (const lease of failedPreparationLeases) await lease.cancelPreparation();
   });
 
   if (poolResult.launched === 0) {

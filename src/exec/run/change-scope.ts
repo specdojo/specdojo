@@ -326,11 +326,12 @@ function writeReservation(path: string, record: Reservation): void {
 export type ChangeScopeLease = {
   waits: ScopeWait[];
   finish: (integrated: boolean) => Promise<void>;
+  cancelPreparation: () => Promise<void>;
 };
 
 // The short registry mutex protects check+reserve as one operation, including across --join
 // processes. Per-item heartbeat locks cover setup, agents, validation AND integration. Failed
-// or crashed reservations remain barriers until that same item is retried/resumed.
+// or crashed execution reservations remain barriers until that same item is retried/resumed.
 export class ChangeScopeGate {
   private readonly directory: string;
   private readonly waits = new Map<string, ScopeWait[]>();
@@ -340,6 +341,8 @@ export class ChangeScopeGate {
     private readonly options: WaitOptions = {},
     // Items already in a terminal register status (rejected, done, ...) will never integrate.
     private readonly isTerminal: (item: string) => boolean = () => false,
+    // Callers must confirm an unstarted status and no exec worktree from current state.
+    private readonly isUnstarted: (item: string) => boolean = () => false,
   ) {
     this.directory = join(execLocksDir(executionPath), "change-scopes");
   }
@@ -368,25 +371,30 @@ export class ChangeScopeGate {
       const key = createHash("sha256").update(item).digest("hex");
       const recordPath = join(this.directory, `${key}.json`);
       const lockPath = join(this.directory, `${key}.lock`);
+      let prior: Reservation | undefined;
       if (existsSync(recordPath)) {
-        const prior = JSON.parse(readFileSync(recordPath, "utf8")) as Reservation;
-        effective.paths = [...new Set([...prior.scope.paths, ...effective.paths])];
-        effective.unknown ||= prior.scope.unknown;
+        prior = JSON.parse(readFileSync(recordPath, "utf8")) as Reservation;
+        if (!existsSync(lockPath) && this.isUnstarted(item)) {
+          rmSync(recordPath, { force: true });
+          prior = undefined;
+        }
+        if (prior) {
+          effective.paths = [...new Set([...prior.scope.paths, ...effective.paths])];
+          effective.unknown ||= prior.scope.unknown;
+        }
       }
       for (const name of readdirSync(this.directory).filter((name) =>
         /^[a-f0-9]{64}\.json$/.test(name),
       )) {
         const record = JSON.parse(readFileSync(join(this.directory, name), "utf8")) as Reservation;
-        const live = isLiveLock(
-          join(this.directory, name.replace(/\.json$/, ".lock")),
-          this.options.staleMs,
-        );
+        const reservationLock = join(this.directory, name.replace(/\.json$/, ".lock"));
+        const live = isLiveLock(reservationLock, this.options.staleMs);
         if (record.item === item && !live) continue;
         if (
           record.item !== item &&
-          record.state === "blocked" &&
           !live &&
-          this.isTerminal(record.item)
+          ((record.state === "blocked" && this.isTerminal(record.item)) ||
+            (!existsSync(reservationLock) && this.isUnstarted(record.item)))
         ) {
           rmSync(join(this.directory, name), { force: true });
           continue;
@@ -418,22 +426,26 @@ export class ChangeScopeGate {
       const waits = this.waits.get(item) ?? [];
       this.waits.delete(item);
       let finished = false;
-      return {
-        waits,
-        finish: async (integrated: boolean) => {
-          await this.registry(() => {
-            if (finished) return;
-            if (readLockOwner(lockPath)?.token !== handle.token) {
-              releaseLock(handle);
-              finished = true;
-              return;
-            }
-            if (integrated) rmSync(recordPath, { force: true });
-            else writeReservation(recordPath, { item, scope: effective, state: "blocked" });
+      const finish = async (integrated: boolean, preparationFailed = false) => {
+        await this.registry(() => {
+          if (finished) return;
+          if (readLockOwner(lockPath)?.token !== handle.token) {
             releaseLock(handle);
             finished = true;
-          });
-        },
+            return;
+          }
+          // A failed retry must not erase an older unintegrated run's reservation.
+          if (preparationFailed && prior) writeReservation(recordPath, prior);
+          else if (integrated || preparationFailed) rmSync(recordPath, { force: true });
+          else writeReservation(recordPath, { item, scope: effective, state: "blocked" });
+          releaseLock(handle);
+          finished = true;
+        });
+      };
+      return {
+        waits,
+        finish: (integrated) => finish(integrated),
+        cancelPreparation: () => finish(false, true),
       };
     });
   }

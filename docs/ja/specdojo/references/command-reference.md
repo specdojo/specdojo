@@ -754,7 +754,7 @@ schedule の `exec resume --task <task-id> --resume-from executor` は、executo
 | `--fallback-reporter-by <name>`         | rate limit の `fallback` または接続不能時に reporter 段を1回だけ引き継ぐ agent                           | `run` / `resume`                                                                                    |
 | `--due`                                 | 再開時刻を迎えた利用制限延期 task を対象にする                                                           | `resume`                                                                                            |
 
-変更範囲の予約では、本文の `docs/`・`src/`・`./` のような広すぎる語を警告して除外します。範囲が空なら `--unknown-scope` に従います。全体を予約する明示的な `targets` / `target_path` や glob は維持し、予約前に広い範囲であることを警告します。詳しい推定規則は [[specdojo:exec-operation-guide|exec運用ガイド]] の「変更範囲が重なる項目の順番待ち」を参照します。
+変更範囲の予約では、本文の `docs/`・`src/`・`./` のような広すぎる語を警告して除外します。範囲が空なら `--unknown-scope` に従います。全体を予約する明示的な `targets` / `target_path` や glob は維持し、予約前に広い範囲であることを警告します。準備失敗時は新たに取得した予約を解放し、再実行前からある未統合予約は保持します。schedule の自動選択では同じ run 内の待ち合わせを保ち、run 終了時に解放します。次の予約判定では、未着手（schedule の `todo`、register の `open`）で exec worktree と予約 lock のない古い予約を回収します。詳しい推定・回収規則は [[specdojo:exec-operation-guide|exec運用ガイド]] の「変更範囲が重なる項目の順番待ち」を参照します。
 
 `--plan` と `--deliverable` も Schedule のパイプライン宣言を持たないため、`--executor-by` / `--reporter-by` の少なくとも一方を指定したときだけ executor/reporter 2段階で実行します。指定しなかった段は `stage_role` による自動選択で決まります。`--plan` では reporter が scaffold 済みの result を記入するため、frontmatter に `task_id` を持つ plan が必要です。`--by` との併用はエラーです。`--by` に `stage_role` を持つ pipeline 用 agent を指定すると、result 未記入の blocked にはせず、`--executor-by` / `--reporter-by` を使うよう案内するエラーで実行前に拒否します。
 

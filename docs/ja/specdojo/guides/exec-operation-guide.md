@@ -210,15 +210,15 @@ register の worktree 実行（同じ run の `--parallel` と別 run の `--joi
 
 待機時は `[scope] waiting: <項目> — <先行項目>: <重複範囲>` を出力し、`execution_path/exec/.locks/change-scopes/waits.jsonl` に日時・両項目・理由を追記します。起動できた項目は生成 plan の「変更範囲による実行待ち」にも記録し、統合して残します。schedule の非 loop 実行は従来どおり最大 `--parallel` 件を実行し、重複する項目の準備を前の統合後へ遅らせます。
 
-統合前に失敗した予約と heartbeat が止まった予約は、未統合の障害として後続をエラーにし、無期限に待ち続けません。表示された先行項目を再開・再実行し、統合してから後続を流します。保持した worktree の衝突解消は既存の再開手順に従います。統合後の撤去・post-review の失敗は予約の解放を妨げません。
+plan 生成などの準備中に失敗した場合は、その run が取得した予約と lock を解放します。schedule の自動選択では、同じ run 内の重なる後続タスクを待たせるため、run が実行中のタスクを処理し終えて終了するときに解放します。再実行の準備が失敗した場合、以前の run の未統合予約は残します。準備完了後の実行・統合に失敗した予約と heartbeat が止まった予約は、未統合の障害として後続をエラーにし、無期限に待ち続けません。表示された先行項目を再開・再実行し、統合してから後続を流します。保持した worktree の衝突解消は既存の再開手順に従います。統合後の撤去・post-review の失敗は予約の解放を妨げません。
 
-register の `exec run --register` は、予約を調べるときに先行項目の個票の状態を読み、終端（`done`・`decided`・`rejected`・`deferred`）の項目の blocked の予約を後続の妨げにせず、そのファイルを削除します。`waiting` など終端でない項目の blocked の予約は、従来どおり後続を止めます。
+register の `exec run --register` は、予約を調べるときに先行項目の個票の状態を読み、終端（`done`・`decided`・`rejected`・`deferred`）の項目の blocked の予約を後続の妨げにせず、そのファイルを削除します。さらに register の `open`、schedule の `todo` の項目で、exec worktree も予約の lock もない場合は、準備時に残った古い予約を次の予約判定で削除します。schedule の状態は event と初期状態から再構成します。状態や worktree の有無を確認できない場合、lock が残る場合（heartbeat 停止を含む）、`waiting`・`doing`・`blocked` などの場合は、この回収の対象にしません。
 
 残った予約の確かめ方は次のとおりです。
 
 1. `execution_path/exec/.locks/change-scopes/` の `<sha256>.json` を開き、`item` と `state: blocked` を確かめる。
-2. その項目の個票の `item_status` を確かめる。終端なら次の `exec run --register` が自動で解くので、手で消さない。
-3. 終端でなければ、表示された先行項目を再開・再実行して統合する。手で消すのは、実行中の項目と範囲が重ならないと確かめ、利用者の承認を得たときだけにする。
+2. register は個票の `item_status`、schedule は event からの状態を確かめる。register の終端、または上記の未着手・worktree 不在・lock 不在を満たす予約は、次の予約判定で自動で解くので、手で消さない。
+3. 自動回収の条件を満たさなければ、表示された先行項目を再開・再実行して統合する。手で消すのは、実行中の項目と範囲が重ならないと確かめ、利用者の承認を得たときだけにする。
 
 ### 1.5. 実行eventの保存粒度
 

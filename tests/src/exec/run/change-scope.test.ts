@@ -625,6 +625,74 @@ describe("change scope reservations", () => {
     remember(await gate.acquire("PJR-1GCD", known("src/exec/run.ts")));
   });
 
+  it("releases a reservation and its lock when preparation fails", async () => {
+    const gate = new ChangeScopeGate(root);
+    const lease = await gate.acquire("T-SETUP", known("src/run.ts"));
+    await lease.cancelPreparation();
+    await lease.cancelPreparation();
+    const key = createHash("sha256").update("T-SETUP").digest("hex");
+    expect(existsSync(join(root, "exec/.locks/change-scopes", `${key}.json`))).toBe(false);
+    expect(existsSync(join(root, "exec/.locks/change-scopes", `${key}.lock`))).toBe(false);
+    remember(await gate.acquire("T-NEXT", known("src/run.ts")));
+  });
+
+  it("restores the prior barrier when preparation of a retry fails", async () => {
+    const gate = new ChangeScopeGate(root);
+    const first = await gate.acquire("T-RETRY", known("src/old.ts"));
+    await first.finish(false);
+    const retry = await gate.acquire("T-RETRY", known("src/new.ts"));
+    await retry.cancelPreparation();
+    await expect(gate.tryAcquire("T-NEXT", known("src/old.ts"))).rejects.toThrow(
+      /unintegrated T-RETRY/,
+    );
+    remember(await gate.acquire("T-OTHER", known("src/new.ts")));
+  });
+
+  it.each(["blocked", "running"])(
+    "removes an unstarted legacy %s reservation without a lock",
+    async (state) => {
+      const gate = new ChangeScopeGate(root, "parallel", {}, undefined, (id) => id === "T-OLD");
+      const key = createHash("sha256").update("T-OLD").digest("hex");
+      const record = join(root, "exec/.locks/change-scopes", `${key}.json`);
+      mkdirSync(join(root, "exec/.locks/change-scopes"), { recursive: true });
+      writeFileSync(record, JSON.stringify({ item: "T-OLD", scope: known("src/run.ts"), state }));
+      const next = remember(await gate.acquire("T-NEXT", known("src/run.ts")));
+      expect(next.waits).toEqual([]);
+      expect(existsSync(record)).toBe(false);
+    },
+  );
+
+  it("does not inherit an unstarted item's obsolete scope when retrying it", async () => {
+    const firstGate = new ChangeScopeGate(root);
+    const old = await firstGate.acquire("T-OLD", known("src/old.ts"));
+    await old.finish(false);
+    const gate = new ChangeScopeGate(root, "parallel", {}, undefined, (id) => id === "T-OLD");
+    remember(await gate.acquire("T-OLD", known("src/new.ts")));
+    remember(await gate.acquire("T-NEXT", known("src/old.ts")));
+  });
+
+  it.each([false, true])("retains an unstarted item's existing lock (stale: %s)", async (stale) => {
+    const gate = new ChangeScopeGate(root, "parallel", {}, undefined, () => true);
+    const key = createHash("sha256").update("T-OLD").digest("hex");
+    const directory = join(root, "exec/.locks/change-scopes");
+    const lock = join(directory, `${key}.lock`);
+    mkdirSync(lock, { recursive: true });
+    writeFileSync(
+      join(directory, `${key}.json`),
+      JSON.stringify({ item: "T-OLD", scope: known("src/run.ts"), state: "running" }),
+    );
+    if (stale) {
+      const old = new Date(Date.now() - 60_000);
+      utimesSync(lock, old, old);
+      await expect(gate.tryAcquire("T-NEXT", known("src/run.ts"))).rejects.toThrow(
+        /unintegrated T-OLD/,
+      );
+    } else {
+      expect(await gate.tryAcquire("T-NEXT", known("src/run.ts"))).toBeNull();
+    }
+    expect(existsSync(join(directory, `${key}.json`))).toBe(true);
+  });
+
   it("ignores and removes a blocked reservation of an item that reached a terminal status", async () => {
     const terminal = new Set(["PJR-SGFC"]);
     const gate = new ChangeScopeGate(root, "parallel", {}, (item) => terminal.has(item));
