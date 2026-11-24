@@ -1,0 +1,315 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-77FH",
+  "run_id": "pjr-77fh-20261124T005755Z-760a1ba5",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-24T00:59:43.586Z",
+    "completed_at": "2026-11-24T01:13:42.351Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-77fh.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-77fh-read-only-reference-dirs.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/orchestrator-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/specdojo-config-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/exec-evidence.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/specdojo-config.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/orchestrator.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/opencode-permissions.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/local-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/specdojo-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/docs/specdojo/schemas/specdojo-config-schema.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/commands/orchestrator.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/shared/local-config.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/reference-directories.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/shared/reference-directories.test.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-77fh-read-only-reference-dirs.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/orchestrator-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/specdojo-config-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/exec-evidence.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/specdojo-config.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/orchestrator.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/opencode-permissions.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/local-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/specdojo-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/docs/specdojo/schemas/specdojo-config-schema.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/commands/orchestrator.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/shared/local-config.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/reference-directories.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/shared/reference-directories.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 16,
+    "summary": ".../pjr-77fh-read-only-reference-dirs.md           |  43 ++++++-\n .../guides/orchestrator-operation-guide.md         |   4 +\n docs/ja/specdojo/references/command-reference.md   |   8 +-\n .../references/specdojo-config-reference.md        |  42 ++++++-\n docs/specdojo/schemas/v1/exec-evidence.schema.yaml |  23 +++-\n .../schemas/v1/specdojo-config.schema.yaml         |  18 +++\n src/commands/orchestrator.ts                       |  47 +++++++-\n src/exec/opencode-permissions.ts                   |  10 +-\n src/shared/local-config.ts                         |  72 +++++++++--\n src/shared/specdojo-config.ts                      |  12 +-\n .../schemas/specdojo-config-schema.test.ts         |  21 ++++\n tests/src/commands/orchestrator.test.ts            | 132 +++++++++++++++++++++\n tests/src/shared/local-config.test.ts              |   9 +-\n 13 files changed, 418 insertions(+), 23 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check src/shared/{reference-directories,specdojo-config,local-config}.ts src/commands/orchestrator.ts src/exec/opencode-permissions.ts tests/src/shared/{reference-directories,local-config}.test.ts tests/src/commands/orchestrator.test.ts tests/docs/specdojo/schemas/specdojo-config-schema.test.ts docs/specdojo/schemas/v1/{specdojo-config,exec-evidence}.schema.yaml docs/ja/specdojo/references/{specdojo-config-reference,command-reference}.md docs/ja/specdojo/guides/orchestrator-opera…",
+      "status": "passed",
+      "summary": "変更15ファイルの整形確認に成功。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write tests/src/shared/reference-directories.test.ts",
+      "status": "passed",
+      "summary": "最終のテスト環境分離修正も整形済み。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/specdojo-config.schema.yaml --data .specdojo/specdojo.config.json",
+      "status": "passed",
+      "summary": "更新した設定 schema で既存設定を検証できることを確認。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検証が終了コード0で成功。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "catalog 検証成功。変更対象外の文書・参照に関する警告あり。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001 > /tmp/pjr-77fh-register-build.log 2>&1",
+      "status": "passed",
+      "summary": "登録簿生成成功。作業ログは削除済み。"
+    },
+    {
+      "source": "executor",
+      "command": "node tools/check-evidence-secrets.mjs --staged",
+      "status": "passed",
+      "summary": "対象実行記録0件、検出0件。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "specdojo exec smoke --project prj-0001 --targets PJR-77FH",
+      "status": "requires_human",
+      "summary": "統合後にオーケストレーターが実 agent を使って実施する確認。"
+    },
+    {
+      "source": "executor",
+      "command": "specdojo orchestrator launch --provider claude --project prj-0001 -- --agent specdojo-orchestrator",
+      "status": "requires_human",
+      "summary": "参照先を宣言した設定で、各 provider の実 CLI による読み取り・書き込み拒否を sandbox 外で確認する。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-77FH/src/catalog/catalog.ts\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-77FH/src/dashboard/dashboard.ts\n  1150:1  warning  File has too many lines (1073). Maximum allow\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-77FH/src/schedule/strategy-generate-document.ts\n  87:8  warning  Function 'buildStrategyDocument' has too many lines (289). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-77FH/src/shared/specdojo-config.ts\n  1252:1  warning  File has too many lines (1120). Maximum allowed is 1000  max-lines\n\n✖ 43 problems (0 errors, 43 warnings)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6627 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6627 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-77FH\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-site/kata-staging.test.ts\"}\n ✓ t\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1630}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  10:14:01\n   Duration  2.32s (transform 4.38s, setup 663ms, import 6.66s, tests 5.17s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "full run (test infrastructure or settings changed: docs/specdojo/schemas/v1/exec-evidence.schema.yaml, docs/specdojo/schemas/v1/specdojo-config.schema.yaml): exit 0: > specdojo@0.9.2 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-77FH\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/devcontainer/scaffold.integration.test.ts\"}\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-co\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipe…",
+      "test_selection": {
+        "mode": "full",
+        "reason": "test infrastructure or settings changed: docs/specdojo/schemas/v1/exec-evidence.schema.yaml, docs/specdojo/schemas/v1/specdojo-config.schema.yaml"
+      }
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-77FH/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-77FH/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-77FH\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/register/commands.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/exec/plans.test.ts\"}\n ✓ tests/src/register/commands.test.ts (85 tests) 1520ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/src/register/commands.test.ts\",\"duration\n… output omitted …\n it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "参照用の `references` 設定、local の差し替え・追加、主 worktree 基準のパス解決、provider 別の編集拒否、`config show` を実装しました。変更は src/shared/{reference-directories,specdojo-config,local-config}.ts、src/commands/orchestrator.ts、src/exec/opencode-permissions.ts、設定・evidence の schema 2件、テスト4件、設定リファレンス・コマンドリファレンス・運用ガイド、個票の計15ファイルです。executor 側の検証は成功しました。単体テスト・型検査・lint は親 runner が実行します。",
+  "completion_status": "complete",
+  "handoff": [
+    "設定名はトップレベルの `references` としました。全 project で参照先を共有し、編集用の `repos`、起票用の `external_projects` と用途を分けるためです。別名ごとに `path` を指定し、local では差し替え・追加後に同じ検証を行います。存在しないパス・ファイル・絶対パスは拒否します。実パスで管理リポジトリや起動場所と重なる参照先も拒否し、書き込み許可との重複を防ぎます。",
+    "exec の executor・reviewer には参照先を追加公開しません。今回は対話時の調査を対象とし、実行時の権限を広げない判断です。参照先は worktree・setup・commit・統合の対象にしません。local の由来は `reference-path`・`reference-added` として表示と evidence に記録します。",
+    "保護された指示の変更案: 利用者の承認後、オーケストレーターが .agents/specdojo-orchestrator.agent.md の該当箇条書きへ『トップレベルの `references` に宣言されたディレクトリ（local の追加・差し替えを含む）は読み取りだけを許す。参照先で編集・起票・worktree 作成・commit・統合を行わない。有効な別名とパスは `specdojo config show` で確かめる。`repos`・`external_projects`・`references` のいずれにも宣言していないリポジトリは参照も変更もしない』を反映してください。既存の実装者指定・feature branch・push 禁止条件を維持し、`npm run orchestrator:sync` で同期します。個票5.2にも記録済みです。",
+    "統合後、オーケストレーターが `exec smoke` を実行し、参照先を宣言した共有/local 設定で `config show` と実 provider CLI を確認してから close してください。launch に dry-run はありません。読み取り成功と書き込み拒否を確認します。Copilot はパス glob 対応版、OpenCode は既存の V1 権限形式が対象です。Claude Code・Copilot・OpenCode の拒否はファイルツールの規則であり、任意の shell・MCP の OS レベル隔離ではありません。制約は設定リファレンスと個票5.3に記録済みです。",
+    "CHANGELOG に書く事項（v0.10.0、追加）: 共有・local 設定の `references` で読むだけのディレクトリを宣言できるようにした。local のパス差し替え・別名追加、主 worktree 基準の解決、`config show` の実パス表示と provider 別の参照権限に対応した。参照先は exec の worktree・commit・統合の対象にしない。CHANGELOG と保護された設定、版番号、result、登録簿の状態は変更していません。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-77FH/pjr-77fh-20261124T005755Z-760a1ba5/executor.log",
+      "bytes": 5836,
+      "truncated": false
+    }
+  ]
+}

@@ -139,6 +139,7 @@ export function opencodeExtraRootConfig(
   roots: readonly string[],
   cwd: string,
   access: "write" | "read" = "write",
+  readOnlyRoots: readonly string[] = [],
 ): string {
   const { config, agents, selectedAgent, permission } = parseAgentPermission(current, agentName);
 
@@ -158,6 +159,13 @@ export function opencodeExtraRootConfig(
     externalDirectory[opencodeExternalDirectoryPattern(root)] = "allow";
     if (access === "write") edit[opencodeEditPattern(root, cwd)] = "allow";
   }
+  for (const root of readOnlyRoots) {
+    externalDirectory[opencodeExternalDirectoryPattern(root)] = "allow";
+    const pattern = opencodeEditPattern(root, cwd);
+    // The final matching rule wins, including over a pre-existing broad edit allow.
+    delete edit[pattern];
+    edit[pattern] = "deny";
+  }
 
   return JSON.stringify({
     ...config,
@@ -168,7 +176,7 @@ export function opencodeExtraRootConfig(
         permission: {
           ...permission,
           external_directory: externalDirectory,
-          ...(access === "write" ? { edit } : {}),
+          ...(access === "write" || readOnlyRoots.length > 0 ? { edit } : {}),
         },
       },
     },
