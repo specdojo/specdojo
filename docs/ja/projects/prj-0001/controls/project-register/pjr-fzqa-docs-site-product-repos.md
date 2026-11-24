@@ -2,17 +2,18 @@
 specdojo:
   id: prj-0001:pjr-fzqa-docs-site-product-repos
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-24T13:58:26Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-24T17:35:17Z"
   commit_type: feat
   commit_scope: docs-site
 ---

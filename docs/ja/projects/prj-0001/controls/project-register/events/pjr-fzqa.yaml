@@ -70,3 +70,19 @@
       from: in-progress
       to: review
   previous_event_id: reg_bebb5d1cf2f148b1ac3d8dd192d8e5df
+- v: 1
+  id: reg_d81f4037398f47b79c656ce74fa21feb
+  ts: "2026-11-24T17:35:17Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（opus-executor）で実装。差分と対応結果を完了条件に照らし、repos を宣言した試しのリポジトリ（prj-9001＋specdojo-lp）でサイトをビルドして product のページ・サイドバーの節・wikilink の解決を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-25"
+  previous_event_id: reg_cf1b928d49964b83b515f880dfe7895f
