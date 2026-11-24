@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-JSEY
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-JSEY/pjr-jsey-20261124T053345Z-625547b5/plan.md
   started_at: "2026-11-24T05:33:46.523Z"
+  completed_at: "2026-11-24T05:34:53.005Z"
   agent: sonnet-executor
 ---
 
@@ -16,16 +17,17 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- 個票の対応結果の表に 2026-11-24 14:34 JST・PJR-TN64・sonnet-executor の 1 行を追記し、確認対象の説明段落を更新した。変更ファイルは個票のみ。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- なし
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 親 runner の検証、reporter の result 記入、統合、review 遷移の完了は後続段で確認する。
+- 適用外の検証（runner の判定）: `npm run lint:md`（変更に Markdown ファイル（`*.md`） がない）
 
 ## 4. 進め方
 
-_TODO_: どう進めたか、根拠にした文書や規約を記入する。
+reporter を使わず、runner が executor の報告（`final_message`・`handoff`）と証跡から機械的に作成した（`pipeline.mechanical_result`）。
