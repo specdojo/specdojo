@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-atc-index-sample-150",
+  "run_id": "T-KATA-REVIEW-ALL-atc-index-sample-150-20261124T223114Z-6bba99f5",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-24T22:31:59.211Z",
+    "completed_at": "2026-11-24T22:35:05.135Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/atc-index-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/atc-index-sample.md | 8 ++++----\n 1 file changed, 4 insertions(+), 4 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/samples/atc-index-sample.md",
+      "status": "passed",
+      "summary": "表の列幅を整えた"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2 docs/ja/specdojo/samples/atc-index-sample.md",
+      "status": "passed",
+      "summary": "0 issues"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:atc-index-sample\n  type: test\n  status: draft\n  rulebook: specdojo:atc-index-rulebook\n  based_on:\n    - specdojo:tsp-index-sample\n    - specdojo:bac-sample\n    - specdojo:prj-success-criteria-and-acceptance-criteria-sample\n---\n\n# 駄菓子屋きぬや 販売管理システム 受入テストカタログ 概要\n\n## 1. 本ドキュメントの目的と適用対象\n\n駄菓子屋きぬや 販売管理システムの初期リリースについて、店主代表と家族利用者代表が「店主不在でも同じ手順で販売・在庫・つけを記録して確認できる」と判断するための受入テスト（AT）の共通方針を定める。\\[\\\n… output omitted …\nしく会計できること」とだけ書いたケースは認めない。\n\n## 9. メモ / 将来課題\n\n| 論点 | 受入判断への影響 | 当面の扱い | 確定時の見直し方針 | 期限 |\n| - | - | - | - | - |\n| *UNDECIDED*: 通信不能時の販売継続 | 当該経路の受入を判定できない | 対象外とし、現行シナリオの合格で当該経路の受入とみなさない | 決定後に `atc-sale-hold` へ観点と条件を追加し、分配表を更新する | 受入開始前まで |\n| *TODO*: 画面キャプチャの保存形式と保存先 | 証跡照合で取引番号を確認できない記録が出るおそれ | 取引番号が写っていることだけを必須とする | 形式と保存先を決め、全 term の `証跡` 列と本書の証跡の項目を揃える | 受入開始の1週間前まで |\n| *ASSUMPTION*: P2 の合格率90% | P2 の Fail が多い場合の受入可否 | 頻度の低い経路は運用で補えるとみなし、90%を仮置きする | 確定した値へ置き換え、「合格基準」を更新する | 受入開始前まで |"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6870 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6870 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-atc-index-sample-150\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 10ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1753}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  07:39:31\n   Duration  2.62s (transform 6.27s, setup 947ms, import 8.77s, tests 5.87s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nlebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-atc-index-sample-150/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-atc-index-sample-150/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R5（整合）で atc-index-sample の合格基準に TSP の出口条件（Blocker・Critical・Major の Fail が残れば受入不可）を足し、ケース表の記入例を atc-sample の `at-cash-sale-sale-complete-010` に揃えた。F001〜F003 は前の段で解消済みだった。F003 は pm-members-sample の `roles: [UX]` を正として UX のまま残した。atc-sample 側へ直す案は handoff に残した。",
+  "completion_status": "complete",
+  "handoff": [
+    "R5-1: R5 / 合格基準 / P1 の条件付き受入と P2 の 90% 合格が、TSP の受入の出口条件「SC-01・SC-07・SC-09・AC-01〜AC-05 がすべて合格、Blocker・Critical・Major 0 件、例外なし」と食い違って読める / 「優先度にかかわらず Blocker・Critical・Major の Fail が1件でも残る場合は、受入可・条件付き受入にしない」の1文を足した / `vp-qe-kata-conformance`（tsp-index-sample の受入テスト行と品質ゲートの表）。迷った理由: 条件付き受入の範囲が Minor 以下に狭まる。TSP 側を直す案は、受入の出口の正本が TSP のため選ばなかった / 要判断",
+    "R5-2: R5 / ケース表の共通カラム（記入例） / 記入例 `at-cash-sale-sale-complete-010` の条件・期待値・トレースが atc-sample の同じケースと食い違っていた。期待値に「説明なしで確定でき」、トレースに SC-01 が入っており、別の観点（`self-complete`）の内容が混ざっていた / 条件を「店主不在で家族利用者代表が店番」、期待値を「レシートと販売一覧に同じ取引番号と合計60円が表示され、在庫一覧で商品Aが3個と表示される」、トレースを BAC-01、AC-01 にした / `vp-qe-kata-conformance`（atc-sample の観点「会計確定の成立」のケース表、TR-01・TR-02） / -",
+    "R5-3: R5 / atc-sample の観点の見出し「主要操作の自力完了」 / 本書の分配表と命名規則（名詞＋成立/保証/整合）では `主要操作の自力完了の成立` で、個別 sample の観点名と食い違う / - / `vp-qe-kata-conformance`。相手側の docs/ja/specdojo/samples/atc-sample.md の見出し「観点：主要操作の自力完了」を「観点：主要操作の自力完了の成立」に改める案 / -",
+    "R5-4: R5 / atc-sample の概要の分割基準の引用 / 個別 sample は「商品の登録→会計確定→レシートの受け渡し」、本書の分割基準の表は「商品の登録→金額の提示→会計確定→レシートの受け渡し」で、引用が欠けている / - / `vp-qe-kata-conformance`。相手側の atc-sample.md の概要の括弧内に「金額の提示」を足す案 / -",
+    "R5-5: R5 / ケース表の共通カラム（環境/依存の列） / 本書の記入例は `kinuya-at`、店舗プリンタと書き、atc-sample の同じケースは「なし」と書いている。列の意味（共通方針との差だけを書くのか、常に書くのか）が両者で揃っていない / - / `vp-qe-kata-conformance`、`vp-dev-change-impact`。迷った理由: どちらを正とするかは列の定義の判断になる。案は、本書の列の説明を「共通方針と異なる場合だけデータ領域と接続先を書く」に改めて記入例を「なし」にする案と、atc-sample 側に `kinuya-at`、店舗プリンタを書く案の2つ / 要判断",
+    "R5-6: R5 / atc-sample の環境/データ/外部依存 / 本書の外部依存は店舗プリンタと復元用保管サービスを挙げるが、個別 sample は店舗プリンタだけで、保管サービスの扱いに触れていない / - / `vp-qe-kata-conformance`。相手側の atc-sample.md の外部依存に保管サービスの扱い（このカタログで使わないなら `共通方針との差` に一言）を足す案 / -",
+    "F001〜F003 は前の段（R1〜R4）で解消済みだった。F001 は `取引照合の保証` の主担当が `atc-sale-hold` だけになっている。F002 は観点名が `主要操作の自力完了の成立` になっている。F003 は家族利用者代表に `UX` が付いている。F003 の message は `PO` 業務助言に合わせる案だったが、pm-members-sample.yaml が家族利用者代表を `roles: [UX]` と定義しているため、UX のまま残した。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-atc-index-sample-150/T-KATA-REVIEW-ALL-atc-index-sample-150-20261124T223114Z-6bba99f5/executor.log",
+      "bytes": 8334,
+      "truncated": false
+    }
+  ]
+}
