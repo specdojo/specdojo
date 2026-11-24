@@ -1,0 +1,19 @@
+rulebook に合わせてテンプレートを直しました。変更したファイルは `docs/ja/specdojo/templates/prj-success-criteria-and-acceptance-criteria-template.md` だけで、rulebook・sample・result には手を入れていません。Prettier での整形は通っています。
+
+ただし、sample とテンプレートで「例外条件と未解決事項」の表の列が今は食い違っています。テンプレートは rulebook の推奨表（論点・判定への影響・当面の扱い）に合わせましたが、sample は従来の列（論点・扱い・解決期限 / 判断タイミング・責任者）のままです。この段では sample を変えられないため、後続のタスクで sample を rulebook に合わせる必要があります。
+
+**変更内容**
+
+- **骨組みだけに絞った:** rulebook の記述ガイドを写していた説明（低コストの扱い、判定段階ごとの観点、承認者を人間にすること）を各章から削りました。章立てと各表の列名は rulebook の推奨表と同じにしています。
+- **判定対象と適用範囲:** 判定対象、対象外、初期受入に必須とする条件 ID、運用開始後に判定する条件 ID を書く欄にしました。業務価値の表の「主な判定段階」は `_DECISION_STAGE_` を埋める形にしています。
+- **判定手順と証跡:** 本文要件に合わせて、証跡の保存先と公開範囲を書く欄を足しました。否決時の手順は「再判定予定の記録方法」から「再判定時期」に直しています。
+- **例外条件と未解決事項:**
+  - 列を rulebook の推奨表どおり「論点・判定への影響・当面の扱い」にしました。期限は当面の扱いの中に書きます。
+  - 責任者の列は rulebook の推奨表になく、PJR-76N9 の決まり（役割の割り当てを本文に置かない）に従って削りました。
+- **据え置いたもの:** テンプレート自身の frontmatter（`frontmatter_template` を含む）。
+
+今回の plan には grade・condense から来た finding はありませんでした。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"prj-success-criteria-and-acceptance-criteria-template を rulebook に同期した。rulebook の説明を写した TODO を削って骨組みに絞り、判定手順と証跡に証跡の保存先・公開範囲と再判定時期を足し、例外条件と未解決事項の表を rulebook の推奨表（論点・判定への影響・当面の扱い）に合わせた。責任者の列は PJR-76N9 に従って削った。rulebook と sample は変更していない。","handoff":["sample の「例外条件と未解決事項」の表は 論点・扱い・解決期限 / 判断タイミング・責任者 の列のままで、rulebook の推奨表とそれに合わせた template（論点・判定への影響・当面の扱い）と食い違っている。後続タスクで sample を rulebook に合わせる必要がある。","grade・condense の finding は plan になく、finding による修正はない。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/templates/prj-success-criteria-and-acceptance-criteria-template.md","status":"passed","summary":"整形済み。表の列幅を揃えた"}]}
+</specdojo_executor_evidence>
