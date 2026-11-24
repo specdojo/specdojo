@@ -1,0 +1,29 @@
+R4（正しさ）のレビューで、`docs/ja/specdojo/samples/etc-index-sample.md` を3か所直しました。Prettier と markdownlint はこのファイルについて通りました。それ以外の検査は親 runner が実行します。
+
+**直したこと**
+
+1. **境界ケースの遅延（F005）**: 条件の立て方の「遅延（上限の直前）」を、上限の1秒前という具体値（`receipt-print` は9秒、保管サービスは29秒）に直しました。
+2. **章の参照**: ケース表のトレース列の記入例で、「テスト戦略・方針 5章」という番号での参照を章タイトル「入口／出口条件（品質ゲート）」に直しました。
+3. **印刷の待ち時間の食い違い**: 本書は `receipt-print` の応答待ちを10秒・自動再送なしとしています。一方、正本の `ifx-cmd-sample.yaml` は上限30秒で、送信前ビジーのときは最大3回まで自動で再試行します。どちらかに寄せるには個別カタログ（`etc-sample`）も直す必要があるので、値は変えていません。メモ / 将来課題に `_UNDECIDED_` の行を足すだけにしました。どちらの値にそろえるかの判断が残ります。
+
+**確かめて正本と合っていたもの**
+
+- 経路の範囲（`PATH-05`・`PATH-06` は外部結合テスト、`PATH-03`・`PATH-04`・`PATH-07` は内部結合テスト）は、based_on の `tsp-index-sample` と一致しました。
+- ケース表のカラム名・順・区分、`case_id` の形式、優先度と自動化の列挙値は rulebook と一致しました。
+- ケース表の記入例は、`etc-sample` の該当ケースと一致しました。
+- 放課後ピークの1時間60件と CI ジョブ名 `kinuya-ci-sales-recovery` は、`tsp-index-sample` と一致しました。
+
+**確かめられなかったもの**
+
+- 明細の最大件数（30件）には、根拠になる記述が見つかりませんでした。
+- 保管サービスの応答待ち30秒・再送2回・間隔5秒/10秒にも正本がなく、本書の中で `_ASSUMPTION_` と明記されています。
+
+**ほかの段や文書に回したもの**
+
+- **F001・F008（`PATH-04`・`PATH-07` の扱い）**: R4 の観点外なので直していません。本書は based_on の `tsp-index-sample` と合っています。食い違っているのは `itc-index-sample` の側で、19行目・30行目・68行目がこの2経路を外部結合テストの範囲としています。直すなら `itc-index-sample` を `tsp-index-sample` に合わせる案を R5 に渡しました。
+- **F006・F007・F009**: R4 の観点ではないので、ほかの段に任せました。F006（観点の型の表に非機能の型がない）は、表にもう行があり解消済みです。
+- **F002〜F004**: PM 系の観点なので、ガイドの決まりで kata の段のレビューでは使いません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）で etc-index-sample を直した。境界ケースの遅延を上限の1秒前の具体値（`receipt-print` は9秒、保管サービスは29秒）にした（F005）。トレース記入例の章番号での参照を章タイトルにした。`ifx-cmd-sample` の上限30秒・自動再試行3回と本書の10秒・自動再送なしの食い違いを `_UNDECIDED_` としてメモに足した。ほかの主張は based_on と rulebook に一致した。","handoff":["R4-1: R4 / 5. 条件の立て方（共通） / 環境の「遅延（上限の直前）」は何秒遅らせるかが決まらず、境界ケースの合否が人によってぶれる（F005） / 「遅延（応答待ち上限の1秒前。`receipt-print` は9秒、保管サービスは29秒）」にした / vp-qe-verifiability。上限10秒・30秒は本書の「外部結合テスト共通の境界/依存/環境の扱い」による / -","R4-2: R4 / 9. メモ / 将来課題 / `receipt-print` の応答待ち10秒・自動再送なしが、正本の `docs/ja/specdojo/samples/ifx-cmd-sample.yaml`（`timeout_seconds: 30`、`retry.max_attempts: 3`、`on_categories: transient_failure`）と食い違うのに、本書に記載がない / `_UNDECIDED_` の行を足し、連携仕様と値をそろえた時点で本書と `etc-receipt-print` を更新する扱いにした / vp-arc-technical-constraints。`etc-sample` の4章も同じ食い違いを `_UNDECIDED_` としている。値を30秒に寄せる案は、`etc-sample` の多くのケースへ波及するため採らなかった / 要判断","R4-3: R4 / 8. ケース表の共通カラム / トレース記入例が「テスト戦略・方針 5章」と章番号で参照しており、markdown の規約（章への参照は章タイトルで書く）に反する。参照先の5章は「入口／出口条件（品質ゲート）」で、内容は正しい / 「の「入口／出口条件（品質ゲート）」の」に置き換えた / `.github/instructions/markdown.instructions.md` の見出し階層と番号付け / -","R4-4: R4 / 2. テスト対象の括り方と分割基準 / `PATH-04`・`PATH-07` を内部結合テストに置く記述は、based_on の `tsp-index-sample` の36行目・89行目と一致する。食い違っているのは `itc-index-sample` の側で、19行目・30行目・68行目がこの2経路を外部結合テストの範囲としている（F001・F008 の原因） / - / 相手側の `itc-index-sample` を `tsp-index-sample` に合わせ、`PATH-04`・`PATH-07` を内部結合テストの範囲に入れる案を R5 に渡す。F001・F008 の観点は R1・R2 のもので、R4 では本書を直さない / 要判断","R4 確かめの表 C1: 主張 2章「保管サービスは `PATH-05`・`PATH-06`、`PATH-03`・`PATH-04`・`PATH-07` は内部」 / 正本 `docs/ja/specdojo/samples/tsp-index-sample.md`・`ifd-sample.md` / grep で読み取り / 一致 / tsp の36〜37行目・89行目、ifd の79〜82行目","R4 確かめの表 C2: 主張 7章「`receipt-print` は応答待ち10秒・自動再送なし」 / 正本 `docs/ja/specdojo/samples/ifx-cmd-sample.yaml` / grep で読み取り / 不一致 / 正本は `timeout_seconds: 30`、`retry.max_attempts: 3`。メモに `_UNDECIDED_` を足した（R4-2）","R4 確かめの表 C3: 主張 7章「保管サービスは応答待ち30秒・再送2回（間隔5秒・10秒）」 / 正本なし（`ops-kinuya-backup` は未同梱） / ifd-sample を grep で確認 / 確かめられない / 本書の中で `_ASSUMPTION_` と明記されている。提供事業者の提供条件が必要","R4 確かめの表 C4: 主張 5章「明細最大件数（30件）」 / 正本の候補 `ifx-file-sample.md`・`ifx-cmd-sample.yaml` / maxItems・最大で grep / 確かめられない / 上限の定義が見つからない。`etc-sample` の contract-020 は30件を使っている。`line_items` の上限を定める正本が必要","R4 確かめの表 C5: 主張 8章「カラム名・順・区分、`case_id` = `et-<term>-<perspective_key>-<nnn>`、`nnn` は010から10刻み、優先度 P0、自動化 automated」 / 正本 `docs/ja/specdojo/rulebooks/etc-index-rulebook.md` のケース表の共通カラム / 読み取り / 一致 / rulebook の 6.8 の表と同じ","R4 確かめの表 C6: 主張 8章の記入例 `et-receipt-print-failure-handling-010`（観点「印刷失敗時の会計維持」、`perspective_key`: `failure-handling`） / 正本 `docs/ja/specdojo/samples/etc-sample.md` / grep で読み取り / 一致 / etc-sample の83行目と93行目","R4 確かめの表 C7: 主張 3章「放課後ピークでも印刷は1時間60件」 / 正本 `docs/ja/specdojo/samples/tsp-index-sample.md` / grep で読み取り / 一致 / tsp の138行目「放課後ピーク1時間60取引」","R4 確かめの表 C8: 主張 8章「証跡は `kinuya-ci-sales-recovery`、相関 ID は取引番号」 / 正本 `tsp-index-sample.md`・`etc-sample.md` / grep で読み取り / 一致 / tsp の116行目、etc-sample の27行目","R4 確かめの表 C9: 主張 8章のトレース記入例「テスト戦略・方針の外部結合テスト出口条件」 / 正本 `tsp-index-sample.md` の入口／出口条件（品質ゲート） / grep で読み取り / 一致（章の参照の書き方だけを直した） / tsp の97行目と105行目","申し送り: F002・F003・F004（`vp-pm-*`）は kata-guide の「kata の観点の組」で段のレビューに使わない観点とされている。F006・F007・F009 は R1・R2・R5 の観点に当たる。どれも R4 では扱わなかった。F006 は観点の型の表に非機能の行がもうあり、解消済み"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/etc-index-sample.md","status":"passed","summary":"変更した sample を整形した（表の列幅を整えた）"},{"command":"npx markdownlint docs/ja/specdojo/samples/etc-index-sample.md","status":"passed","summary":"エラーなし"}]}
+</specdojo_executor_evidence>
