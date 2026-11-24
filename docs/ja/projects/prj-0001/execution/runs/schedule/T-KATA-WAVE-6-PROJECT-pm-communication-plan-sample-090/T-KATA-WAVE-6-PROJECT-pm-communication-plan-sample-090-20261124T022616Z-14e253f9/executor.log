@@ -1,0 +1,47 @@
+レビューを実施しました。成果物は変更していません。
+
+**評価結果の確認**
+- `specdojo grade list --target kata --changed-only` を sample、rulebook、recipe、template の4件に実行しました。どれも出力は空で終了コードは 0 でした。評価結果はすべて最新です。
+- sample に `--incomplete` も実行しました。出力は空で、評価パイプラインは完了しています。
+- 4件の grade は次のとおりです。
+
+| 対象 | verdict | score | finding |
+| --- | --- | --- | --- |
+| sample | `pass` | 99 | minor 1 |
+| rulebook | `pass` | 98 | minor 1 |
+| recipe | `pass` | 91 | minor 5 |
+| template | `pass` | 98 | minor 1 |
+
+- blocker と major の finding はありません。
+- 作業ツリーに未追跡で増えていたのは `pipeline-state.json` だけで、成果物の変更はありません。
+
+**判断根拠**
+- sample の本文は5章構成です。方針と適用範囲、コミュニケーション機会、エスカレーション、情報管理と公開、見直し条件と未決事項が、rulebook の本文構成に1対1で対応しています。
+- DC-001（章立てと必須の表）は満たしています。機会の表は、責任に Role code、証跡に記録先が入っています。エスカレーションの表は、一次対応、最終判断、証跡が揃っています。
+- DC-002（共通サンプル文脈）は満たしています。内容は駄菓子屋きぬやの販売管理システムで、前提を `STH-SHOP-OWNER` などのステークホルダー ID と `PO`・`PM` などの Role code で書いています。
+- DC-003（禁止事項）は満たしています。登録簿や Role code 一覧の再掲はありません。エスカレーションに「必要に応じて」だけの条件はありません。目的や証跡のない定例会議もなく、定例会議は置かないと明記しています。
+- 6章に当たる任意章では、`_UNDECIDED_` の記法で営業時間外の緊急連絡手段と切替開始日を、影響・決定時期・判断者つきで書いています。
+- 先行する edit タスクの result は plan に特定されていないため、実行記録との照合はしていません。
+- 残る finding は完了を妨げません。理由は次の2点です。
+  - sample の F001 は表記上の minor 指摘で、必須要素の欠落でも禁止事項への抵触でもありません。
+  - rulebook、recipe、template の finding は、sample の完了条件に直結しません。
+
+**未充足事項・改善指示**
+- 完了を妨げる未充足事項はありません。次の改善は任意で、型の整備側で扱う候補です。
+  - sample の F001（72行目）: 「本書のエスカレーションと RACI(`PM`)」の RACI が本書内で定義されていません。管理計画の RACI などの参照先を示すか、「エスカレーションの判断者」だけにそろえます。
+  - rulebook の F001: エスカレーションの受入条件に、一次対応・最終判断者・証跡が記入されていることを判定条件として書きます。
+  - recipe の F001〜F005: 取り出し元に管理記録を加えること、仕上げチェックの重複を参照へ置き換えること、機械検証への言及、任意章と `_UNDECIDED_` の記法の補足、template の frontmatter 宣言です。
+  - template の F001: 機会の表と、エスカレーションの表に書く指示を補います。
+- 人の確定は、この track に入れず横串の確認でまとめて行う方針です。確定前に確かめる点は2つあります。1つは、F001 の RACI の参照先です。もう1つは、`_UNDECIDED_` の2件（営業時間外の緊急連絡手段、切替開始日）が `PO` の決定待ちであることです。
+
+**確認できなかった範囲**
+- 次の項目は実行も確認もしていません。
+  - `npm run lint:md` などの検証。親 runner が実行します。
+  - sample が参照する wikilink 先の存在確認。
+  - 管理計画や登録簿の内容との突き合わせ。
+  - プロジェクトコンテキスト（`prj-overview.md`）の読み込み。
+  - 先行する edit タスクの result との照合。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict 案: complete-with-findings。4型（sample/rulebook/recipe/template）の kata grade はすべて pass・最新（changed-only は出力なし、sample の incomplete も出力なし）。DC-001〜003 は充足、残る minor finding は完了を妨げない。確認できなかった範囲: lint 等の親 runner 検証、wikilink 先の存在確認、管理計画・登録簿との突き合わせ、prj-overview の読み込み、先行 edit result との照合。","handoff":["sample F001: 72行目の「RACI」の参照先を示すか「エスカレーションの判断者」へそろえる（minor）","rulebook F001: エスカレーションの受入条件を判定可能な形へ（minor）","recipe F001-F005 と template F001 は型の整備側の改善候補（minor）","横串の確認で _UNDECIDED_ 2件（営業時間外の緊急連絡手段、切替開始日）の PO 決定待ちを確認する"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/pm-communication-plan-sample.md --changed-only","status":"passed","summary":"出力なし（最新）"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/pm-communication-plan-sample.md --incomplete","status":"passed","summary":"出力なし（パイプライン完了）"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/pm-communication-plan-rulebook.md --changed-only","status":"passed","summary":"出力なし（最新）"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/recipes/pm-communication-plan-recipe.md --changed-only","status":"passed","summary":"出力なし（最新）"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/templates/pm-communication-plan-template.md --changed-only","status":"passed","summary":"出力なし（最新）"}]}
+</specdojo_executor_evidence>
