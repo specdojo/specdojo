@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-5-opr-support-sample-090
   mode: review
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-5-opr-support-sample-090/T-KATA-WAVE-5-opr-support-sample-090-20261124T013057Z-cb0c6f50/plan.md
   started_at: "2026-11-24T01:30:59.615Z"
+  completed_at: "2026-11-24T01:34:55.967Z"
   agent: sonnet-review-executor
   execution: agent
   approach: fully-guided
@@ -19,20 +20,27 @@ specdojo:
 
 ## 1. 評価結果の確認
 
-_TODO_: 評価結果サイドカーのパス、鮮度確認で実行したコマンドとその出力（`content_hash` が現在の成果物と一致するか）、grade の `verdict` / `score` / finding 件数を記入する。評価結果が最新でない、または評価不能の場合は、その事実と理由を記入する。
+### 評価結果の確認 `specdojo grade list --target kata --path docs/ja/specdojo/samples/opr-support-sample.md --changed-only` を実行した結果、出力はありません (exit 0)。 - `docs/ja/specdojo/samples/opr-support-sample.md`: `verdict`: `pass`, `score`: 95, `finding_counts`: {`blocker`: 0, `major`: 0, `minor`: 3, `note`: 0} - `docs/ja/specdojo/rulebooks/opr-rulebook.md`: `verdict`: `needs-work`, `score`: 94, `finding_counts`: {`blocker`: 0, `major`: 1, `minor`: 1, `note`: 0} - `docs/ja/specdojo/samples/opr-sample.md`: `verdict`: `pass`, `score`: 94, `finding_counts`: {`blocker`: 0, `major`: 0, `minor`: 4, `note`: 0} - `docs/ja/specdojo/samples/opr-access-control-sample.md`: `verdict`: `pass`, `score`: 95, `finding_counts`: {`block-er`: 0, `major`: 0, `minor`: 2, `note`: 0} - `docs/ja/specdojo/samples/opr-backup-restore-sample.md`: `verdict`: `pass`, `score`: 98, `finding_counts`: {`blocker`: 0, `major`: 0, `minor`: 2, `note`: 0} - `docs/ja/specdojo/samples/opr-batch-sample.md`: `verdict`: `pass`, `score`: 89, `finding_counts`: {`blocker`: 0, `major`: 0, `minor`: 8, `note`: 0} - `docs/ja/specdojo/samples/opr-change-sample.md`: `verdict`: `pass`, `score`: 96, `finding_counts`: {`blocker`: 0, `major`: 0, `minor`: 3, `note`: 0} - `docs/ja/specdojo/samples/opr-incident-sample.md`: `verdict`: `pass`, `score`: 91, `finding_counts`: {`blocker`: 0, `major`: 0, `minor`: 7, `note`: 0} - `docs/ja/specdojo/samples/opr-monitoring-sample.md`: `verdict`: `pass`, `score`: 92, `finding_counts`: {`blocker`: 0, `major`: 0, `minor`: 6, `note`: 0} - `docs/ja/specdojo/templates/opr-template.md`: `verdict`: `pass`, `score`: 100, `finding_counts`: {`blocker`: 0, `major`: 0, `minor`: 0}
 
 ## 2. 判断根拠
 
-_TODO_: 変更内容・plan・実行記録・完了条件・最新の finding を照合した内容と、verdict を選んだ理由を記入する。finding が残るのに完了とする場合は、その finding が今回の完了を妨げない理由を記入する。参照は `[[id]]` 形式（Obsidian wikilink）で記載し、行番号アンカーや絶対パスは使わない。
+- `docs/ja/specdojo/samples/opr-support-sample.md` は `grade` が `pass` (score 95) であり、最新であることが確認されました。
+- しかし、型である `docs/ja/specdojo/rulebooks/opr-rulebook.md` の `grade` が `needs-work` (score 94) であり、完了条件である「型すべてに最新の `--target kata` の `pass` が必要」を満たしていません。
+- `opr-rulebook` の `finding` `F002` (major) に関しては、3つの sample が `opr-rulebook` を宣言している問題が修正済みである可能性があるため、再評価が必要です。
+- 確認できなかった範囲: 先行 edit result の特定、対象サンプル全文の独自再評価、`opr-rulebook` の再 `grade`。
 
 ## 3. 未充足事項・改善指示
 
-_TODO_: 未充足事項と、再計画・成果物の改善・再評価に使う改善指示を記入する（なければ「なし」と記入する）。評価結果の内容に疑義がある場合は、再評価が必要な対象と理由もここに記入する。
+- `opr-rulebook` の `grade` を再実行し、`pass` を取得すること。特に `F002` (major) が解消されているか確認してください。
+- `opr-rulebook` の `F001` (minor) に対し、6.4 および 6.6 の template 重複部分を template 参照へ置き換えること。
+- `opr-support-sample` の `F001` に対し、`opr-incident` の備考を実態に合わせ `wikilink` で参照すること。
+- `opr-support-sample` の `F002` に対し、引き継ぎ記録の保管期間を未決事項の表へ追加すること。
+- `opr-support-sample` の `F003` に対し、手順適用範囲・前提の表に `template` の必須行である「連絡先」を戻すこと。
 
 ## 4. approach に応じた確認
 
-_TODO_: `approach` に応じて確認した内容を記入する。fully-guided / recipe-guided / freeform では求められた作成・更新が行われたか、retrofit では実装エビデンスの対応記録と未確認範囲、`rulebook-maintenance` などの maintenance 系では見直しの動機となった finding の解消状況を記入する。
+`opr-support-sample` の `grade` は `pass` であり、`done_criteria` に基づく磨き込みが適切に行われたことを確認しました。ただし、依存する型である `opr-rulebook` が `needs-work` であるため、スケジュール全体の完了判定には至りません。
 
 ## 5. decision
 
-- verdict: _TODO_（complete / complete-with-findings / incomplete / grade-stale / grade-unavailable / changed-during-review）
+- verdict: incomplete
