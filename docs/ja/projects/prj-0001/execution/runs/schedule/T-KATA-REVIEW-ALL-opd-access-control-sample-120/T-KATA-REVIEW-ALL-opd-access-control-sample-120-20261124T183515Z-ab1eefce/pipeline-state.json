@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-opd-access-control-sample-120",
+  "run_id": "T-KATA-REVIEW-ALL-opd-access-control-sample-120-20261124T183515Z-ab1eefce",
+  "updated_at": "2026-11-24T18:47:25.994Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-24T18:36:00.432Z",
+      "completed_at": "2026-11-24T18:39:45.875Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-opd-access-control-sample-120/T-KATA-REVIEW-ALL-opd-access-control-sample-120-20261124T183515Z-ab1eefce/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "sonnet-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-24T18:46:34.325Z",
+      "completed_at": "2026-11-24T18:47:12.697Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-opd-access-control-sample-120/T-KATA-REVIEW-ALL-opd-access-control-sample-120-20261124T183515Z-ab1eefce/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-24T18:47:25.994Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-opd-access-control-sample-120/T-KATA-REVIEW-ALL-opd-access-control-sample-120-20261124T183515Z-ab1eefce/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-opd-access-control-sample-120/T-KATA-REVIEW-ALL-opd-access-control-sample-120-20261124T183515Z-ab1eefce/result.md"
+  }
+}
