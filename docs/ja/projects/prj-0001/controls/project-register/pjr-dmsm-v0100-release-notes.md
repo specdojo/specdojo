@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-23T22:38:15Z"
   due_on: "2026-11-30"
+  block_reason: "executor reported incomplete: 移行の注意と一部の変更を記載したが、対象個票の文案収集と未発見項目の一覧化が未完了。"
   commit_type: docs
   commit_scope: release
 ---
