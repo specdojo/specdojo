@@ -896,6 +896,30 @@ const makeSidebarMulti = (
 const sidebarJa = makeSidebarMulti("ja", sidebarJaAuto, specdojoItems.ja, productRepoSidebarJa);
 const sidebarEn = makeSidebarMulti("en", sidebarEnAuto);
 
+// 上のメニューの project の入口。文書のある project が 1 つなら従来の入口（prj-0001 の概要）、
+// 2 つ以上なら project ごとのドロップダウンにする。prj-0001 以外の project は、その project の
+// トップ（/ja/projects/<id>/）へ向ける。開発中の版では、公開の workflow が prj-0002 の文書を重ねる。
+const PRJ_0001_ENTRY_LINK = "/ja/projects/prj-0001/020-project-definition/prj-overview";
+function projectNavItem():
+  { text: string; link: string } | { text: string; items: { text: string; link: string }[] } {
+  const projectsRoot = path.join(WORKSPACE_ROOT, "docs", "ja", "projects");
+  const ids = existsSync(projectsRoot)
+    ? readdirSync(projectsRoot, { withFileTypes: true })
+        .filter((entry) => entry.isDirectory())
+        .map((entry) => entry.name)
+        .sort()
+    : [];
+  const others = ids.filter((id) => id !== "prj-0001");
+  if (others.length === 0) return { text: "プロジェクト", link: PRJ_0001_ENTRY_LINK };
+  return {
+    text: "プロジェクト",
+    items: ids.map((id) => ({
+      text: id,
+      link: id === "prj-0001" ? PRJ_0001_ENTRY_LINK : `/ja/projects/${id}/`,
+    })),
+  };
+}
+
 export default defineConfig({
   title: "SpecDojo",
   description: "Documentation for SpecDojo",
@@ -1006,10 +1030,7 @@ export default defineConfig({
         nav: [
           { text: "ホーム", link: jaHomeLink },
           { text: "SpecDojo", link: "/ja/specdojo/guides/specdojo-overview-guide" },
-          {
-            text: "プロジェクト",
-            link: "/ja/projects/prj-0001/020-project-definition/prj-overview",
-          },
+          projectNavItem(),
           ...(siteChannel.channel === "next"
             ? [{ text: "リリースの版", link: siteChannel.stableUrl }]
             : []),

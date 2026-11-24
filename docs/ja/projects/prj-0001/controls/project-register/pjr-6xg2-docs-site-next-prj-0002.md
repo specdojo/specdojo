@@ -44,14 +44,74 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                                | 担当 | 状態 | メモ                                                               |
+| --- | ------------------------------------------------------------------- | ---- | ---- | ------------------------------------------------------------------ |
+| 1   | 上のメニューの project の入口を、出す project に合わせる            | DEV  | done | `config.mts` に `projectNavItem` を追加                            |
+| 2   | `deploy.yml` の変更案を差分で書く                                   | DEV  | done | 対応結果に記載。`.github` は保護のため変えない                     |
+| 3   | CHANGELOG に書く事項の案を書く                                      | DEV  | done | 対応結果に記載                                                     |
+| 4   | 手元で同じ重ね方をしてサイトをビルドし、prj-0002 のページを確かめる | DEV  | open | executor は実行しない。反映前にオーケストレーターが行う            |
+| 5   | 変更案を `.github/workflows/deploy.yml` へ反映する                  | DEV  | open | 保護された設定のため、利用者の承認のもとでオーケストレーターが行う |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 5.1. 実施内容
+
+- `packages/docs-site/.vitepress/config.mts` の上のメニューを `projectNavItem()` にした。`docs/ja/projects/` に prj-0001 以外の project が無いときは従来どおり prj-0001 の概要への単一リンクにする。あるときは「プロジェクト」をドロップダウンにし、prj-0001 は概要、ほかは `/ja/projects/<id>/` へ向ける。本番の版は prj-0002 を重ねないため表示は変わらない。
+- project の一覧のページとサイドバーは `docs/ja/projects/` 配下のディレクトリから自動で作るため、prj-0002 の文書を重ねれば出る。
+
+### 5.2. 決めた内容と理由
+
+- 重ねる範囲: `git checkout FETCH_HEAD -- docs/ja/projects/prj-0002/` だけを使う。`docs/ja/product/` などはそのブランチから取り込まない。
+- 設定の足し方: `.specdojo/specdojo.local.config.json` は使わない。local config は共有設定に無い project を足せない（CLI は `project is not declared` で拒否する）。docs-site の `loadProductRepos` と `readProjectEntries` も共有設定の `projects` だけを走査する。そこで、ビルド用の detached worktree（commit せず捨てる複製）の `.specdojo/specdojo.config.json` に prj-0002 の項目を足す。足すのは `base_path`・`project_register_path` と、`repos` の `specdojo-lp` だけである。
+- `specdojo-assets` は public でないため宣言しない。
+- `specdojo-lp` は `repos[].path`（`../specdojo-lp`）が指す `$RUNNER_TEMP/specdojo-lp` へ token なしで clone する（next の worktree は `$RUNNER_TEMP/next`）。`actions/checkout` の `path` は `GITHUB_WORKSPACE` の下に限られるため `git clone` にした。
+- PJR-FZQA の仕組みが無い `site/next` でも落ちないよう、`product-repos.ts` の有無で `specdojo-lp` の段を有効にする。FZQA が入るまでは prj-0002 の project の文書だけが出る。
+- prj-0002 のブランチを fetch できない場合は、重ねずに進める。
+
+### 5.3. workflow の変更案（`.github/workflows/deploy.yml`）
+
+`Build the next site` の `cd "$RUNNER_TEMP/next"` の直後、`npm ci` の前に次の段を足す。
+
+```diff
+           git worktree add --detach "$RUNNER_TEMP/next" "$NEXT_REF"
+           cd "$RUNNER_TEMP/next"
++
++          # prj-0002 の project の文書だけを重ねる（PJR-6XG2）。ブランチが無ければ重ねない。
++          if git fetch origin project/prj-0002/develop 2>/dev/null; then
++            git checkout FETCH_HEAD -- docs/ja/projects/prj-0002/
++            node -e '
++              const fs = require("node:fs");
++              const file = ".specdojo/specdojo.config.json";
++              const config = JSON.parse(fs.readFileSync(file, "utf8"));
++              config.projects["prj-0002"] = {
++                base_path: "docs/ja/projects/prj-0002",
++                project_register_path: "controls/project-register",
++              };
++              // PJR-FZQA が入っている版だけ、specdojo-lp（public）の product の文書も出す。
++              if (fs.existsSync("packages/docs-site/.vitepress/product-repos.ts")) {
++                config.projects["prj-0002"].repos = [{ name: "specdojo-lp", path: "../specdojo-lp" }];
++              }
++              fs.writeFileSync(file, JSON.stringify(config, null, 2) + "\n");
++            '
++            if [ -f packages/docs-site/.vitepress/product-repos.ts ]; then
++              git clone --depth 1 https://github.com/specdojo/specdojo-lp.git "$RUNNER_TEMP/specdojo-lp"
++            fi
++          fi
++
+           npm ci
+```
+
+### 5.4. CHANGELOG に書く事項
+
+- 区分: Added（文書サイト）
+- 案: `文書サイトの開発中の版（/specdojo/next/）に prj-0002 の project の文書と specdojo-lp の product の文書を出す。上のメニューの「プロジェクト」は、文書のある project が複数あるときドロップダウンになる。`
+
+### 5.5. 残課題
+
+- 作業 4（手元ビルドの確認）と作業 5（`deploy.yml` への反映）は、オーケストレーターが利用者の承認のもとで行う。重ねた文書で wikilink の解決や登録簿の表示ページの生成が止まるかは未確認。
+- 担当 DEV・期限 2026-11-30 は利用者の確認待ち。
+- `specdojo-lp` の clone は既定ブランチを取る。`develop` の文書を出す場合は `--branch develop` を足す（要判断）。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-index]]
