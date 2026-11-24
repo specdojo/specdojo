@@ -1,0 +1,18 @@
+{
+  "v": 1,
+  "ts": "2026-11-23T16:42:32Z",
+  "type": "unblock",
+  "task_id": "T-KATA-WAVE-5-otp-sample-040",
+  "by": "opus-executor",
+  "msg": "resume reporter from persisted pipeline state",
+  "meta": {
+    "limit_deferred": "false",
+    "claim_actor": "opus-executor",
+    "stage_actor": "gemma26-reporter",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-otp-sample-040/T-KATA-WAVE-5-otp-sample-040-20261123T075705Z-da540b58/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-otp-sample-040/T-KATA-WAVE-5-otp-sample-040-20261123T075705Z-da540b58/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-5-otp-sample-040-20261123T075705Z-da540b58",
+    "pipeline_resume_claimed": "true"
+  }
+}

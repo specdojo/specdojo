@@ -57,3 +57,22 @@
       from: ""
       to: 完了条件
   previous_event_id: reg_9aea630d773f4ae794f01814b09539ee
+- v: 1
+  id: reg_524e2b286d46423fba60a82957173b59
+  ts: "2026-11-23T13:17:40Z"
+  action: reject
+  actor: indie
+  from_status: open
+  to_status: rejected
+  reason: オンボーディングを環境のパターンでまとめて扱うと利用者が決めた（2026-11-23）
+  changes:
+    - field: status
+      from: open
+      to: rejected
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: PJR-7EZR の init の環境のパターンにまとめた（Dev Container ＋ tmux で本体スクリプトを作る）
+  previous_event_id: reg_a5bfd831a5cf4346a6f7b8a9ebf2d57e

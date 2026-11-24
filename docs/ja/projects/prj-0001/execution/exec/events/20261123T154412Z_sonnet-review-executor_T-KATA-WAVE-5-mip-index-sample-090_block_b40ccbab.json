@@ -1,0 +1,17 @@
+{
+  "v": 1,
+  "ts": "2026-11-23T15:44:12Z",
+  "type": "block",
+  "task_id": "T-KATA-WAVE-5-mip-index-sample-090",
+  "by": "sonnet-review-executor",
+  "msg": "reporter output invalid after 3 format attempts: result Markdown notation violation before writing (fix the JSON prose that produced these rendered lines; do not put Markdown headings, code fences, bare URLs, escaped backticks, or Chinese simplified glyphs in free-text fields):\nline 22 MD038/no-space-in-code Spaces inside code span elements: \"### 評価結果の確認 #### 1. 鮮度確認 ```bash npx specdojo grade list --target kata --path docs/ja/specdojo/samples/mip-index-sample.md --changed-only ``` 出力: なし（sample の評価結果は最新） ```bash npx specdojo grade list --\"\nline 22 MD038/no-space-in-code Spaces inside code span elements: \"### 評価結果の確認 #### 1. 鮮度確認 ```bash npx specdojo grade list --target kata --path docs/ja/specdojo/samples/mip-index-sample.md --changed-only ``` 出力: なし（sample の評価結果は最新） ```bash npx specdojo grade list --\"",
+  "meta": {
+    "limit_deferred": "false",
+    "claim_actor": "sonnet-review-executor",
+    "stage_actor": "gemma26-reporter",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-mip-index-sample-090/T-KATA-WAVE-5-mip-index-sample-090-20261123T153639Z-20262379/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-mip-index-sample-090/T-KATA-WAVE-5-mip-index-sample-090-20261123T153639Z-20262379/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-5-mip-index-sample-090-20261123T153639Z-20262379"
+  }
+}

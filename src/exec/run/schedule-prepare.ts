@@ -1,7 +1,8 @@
 import { withPlanConventionsFiles } from "../../shared/plan-conventions.js";
 import { appendScopeWaitNotes } from "./change-scope.js";
 import { existsSync } from "node:fs";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
+import { repoRelative } from "../../shared/git.js";
 import {
   ensureReviewGrade,
   reviewGradeFreshness,
@@ -23,6 +24,7 @@ import { canCompleteTask, foldEventsToState, readAllEventFiles } from "../events
 import { gradeCheckpointPaths } from "../grade-checkpoint.js";
 import { pipelineStateLocation, type PipelineStageRole } from "../pipeline-state.js";
 import {
+  buildInPlaceStem,
   finalizeResultSectionsForDeliverable,
   generateSinglePlan,
   reviewGradeSubject,
@@ -30,7 +32,13 @@ import {
 } from "../plans.js";
 import type { RegisterResumeTarget } from "../register-resume.js";
 import { isResultUnfilled, readResultFrontmatterSnapshot, scaffoldResult } from "../results.js";
-import { findRunRecord, recordPathForRead, recordRef, recordStem } from "../run-records.js";
+import {
+  findRunRecord,
+  recordPathForRead,
+  recordRef,
+  recordStem,
+  taskRecordPaths,
+} from "../run-records.js";
 import { buildInitialStateFromStrategy } from "../schedule/initial.js";
 import { buildScheduleIndex } from "../schedule/schedule.js";
 import { qualifyTaskId } from "../shared.js";
@@ -229,6 +237,19 @@ export function reviewGradeSidecarPaths(params: {
     return "sidecarPath" in freshness && freshness.sidecarPath ? [freshness.sidecarPath] : [];
   });
   return [...new Set(sidecars)].sort();
+}
+
+// Repo-relative result sidecars of this task's own subjects. Tasks without a project own none.
+function taskGradeResultPaths(params: {
+  task: ReadyTaskView;
+  projectId: string | undefined;
+  catalogPath: string | undefined;
+  repoRoot: string;
+}): string[] {
+  if (!params.projectId) return [];
+  return reviewGradeSidecarPaths({ ...params, projectId: params.projectId }).map((path) =>
+    repoRelative(params.repoRoot, resolve(params.repoRoot, path)),
+  );
 }
 
 /**
@@ -579,7 +600,15 @@ export async function prepareSingleTask(
         recordPathForRead(executionPath, "plan", task.id),
         resultPath,
         claimEventPath,
-        ...gradeCheckpointPaths({ repoRoot, executionPath }),
+        ...gradeCheckpointPaths(
+          { repoRoot, executionPath },
+          taskGradeResultPaths({
+            task,
+            projectId,
+            catalogPath: planGenPaths.catalogPath,
+            repoRoot,
+          }),
+        ),
       ]),
       pipelineRunId: executorTarget.runId,
       pipelineResumeStage: "executor",
@@ -595,7 +624,10 @@ export async function prepareSingleTask(
   }
 
   // Plans are generated on demand here; `exec refresh` does not manage them.
-  if (!skipClaim || !findRunRecord(executionPath, "plan", task.id))
+  const existingPlan = skipClaim ? findRunRecord(executionPath, "plan", task.id) : null;
+  const plannedPath =
+    existingPlan ?? taskRecordPaths(executionPath, task.id, buildInPlaceStem(task.id)).plan;
+  if (!dryRun && !existingPlan)
     await generateSinglePlan({
       executionPath,
       projectId: projectId ?? "",
@@ -612,17 +644,19 @@ export async function prepareSingleTask(
       recordPathForRead(executionPath, "plan", task.id),
       rateLimitOverrides.changeScopeWaits,
     );
-  const planPrompt = loadPrompt(executionPath, task.id);
-  if (!planPrompt) {
+  const planPrompt = dryRun ? "" : (loadPrompt(executionPath, task.id) ?? "");
+  if (!dryRun && !planPrompt) {
     process.stdout.write(`  Plan not found for ${task.id}.\n`);
     return "failure";
   }
-  const prompt = task.agent_pipeline
-    ? buildExecutorPrompt(planPrompt, execDefaults.pipeline?.parent_validations)
-    : planPrompt;
-  const pipelineRunId = task.agent_pipeline
-    ? recordStem(recordPathForRead(executionPath, "plan", task.id))
-    : undefined;
+  const prompt =
+    task.agent_pipeline && !dryRun
+      ? buildExecutorPrompt(planPrompt, execDefaults.pipeline?.parent_validations)
+      : planPrompt;
+  const pipelineRunId =
+    task.agent_pipeline && !dryRun
+      ? recordStem(recordPathForRead(executionPath, "plan", task.id))
+      : undefined;
 
   const worktreeTaskId = qualifyTaskId(projectId, task.id);
   const worktreeName = worktreeNameFromTaskId(worktreeTaskId);
@@ -653,7 +687,7 @@ export async function prepareSingleTask(
     process.stdout.write(claimMsg + "\n");
     process.stdout.write(`  [dry-run] Command: ${agentCandidates[0]?.command ?? ""}\n`);
     process.stdout.write(`  [dry-run] CWD: ${worktree.path}\n`);
-    process.stdout.write(`  [dry-run] Plan: ${prompt.length} chars\n`);
+    process.stdout.write(`  [dry-run] Plan: ${plannedPath}\n`);
     return {
       task,
       actor,
@@ -742,7 +776,10 @@ export async function prepareSingleTask(
     recordPathForRead(executionPath, "plan", task.id),
     resultPath,
     claimEventPath,
-    ...gradeCheckpointPaths({ repoRoot, executionPath }),
+    ...gradeCheckpointPaths(
+      { repoRoot, executionPath },
+      taskGradeResultPaths({ task, projectId, catalogPath: planGenPaths.catalogPath, repoRoot }),
+    ),
   ]);
   const checkpointFailureLogPath = pipelineRunId
     ? integrateLogPath(

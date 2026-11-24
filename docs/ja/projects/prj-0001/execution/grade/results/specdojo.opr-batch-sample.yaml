@@ -4,98 +4,97 @@ document: specdojo:opr-batch-sample
 path: docs/ja/specdojo/samples/opr-batch-sample.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-sample
-verdict: needs-work
-score: 66
-graded_at: "2026-11-21T06:47:38.682Z"
-graded_by: opus-executor
-content_hash: d851e89cc823ebc8f607d594f61ab40e44e056a3ab0c391c1485991b6a1a96fd
+verdict: pass
+score: 89
+graded_at: "2026-11-24T01:33:40.390Z"
+graded_by: sonnet-review-executor
+content_hash: 2fea4b99eb9a9296c84f28f4025f4d2f557026b97101b5a4a6ed458153e0fee9
 categories:
   purpose:
-    score: 75
+    score: 100
   operations:
-    score: 81
+    score: 100
   planning:
-    score: 75
+    score: 100
   business:
-    score: 67
+    score: 100
   architecture:
-    score: 92
+    score: 100
   usability:
-    score: 75
+    score: 83
   implementation:
-    score: 63
+    score: 100
   quality:
-    score: 58
+    score: 83
   consistency:
-    score: 25
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-publication-accountability:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 3
-    score: 75
-  vp-pm-dependency-risk:
-    level: 3
-    score: 75
-  vp-pm-control-reporting:
-    level: 3
-    score: 75
-  vp-ba-business-value:
-    level: 3
-    score: 75
-  vp-ba-requirements-completeness:
-    level: 2
-    score: 50
-  vp-ba-stakeholder-clarity:
-    level: 3
-    score: 75
-  vp-arc-technical-constraints:
-    level: 3
-    score: 75
-  vp-arc-conciseness:
     level: 4
     score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-dev-change-impact:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-testability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-verifiability:
     level: 3
     score: 75
   vp-qe-omissions-consistency:
-    level: 1
-    score: 25
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
-    level: 1
-    score: 25
+    level: 3
+    score: 75
   vp-ux-readability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 3
     score: 75
   vp-ops-release-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-operability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -104,180 +103,79 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 8
-  minor: 15
+  major: 0
+  minor: 8
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-purpose-alignment
-    line: 1
-    anchor: "# 運用手順: バッチ再実行・失敗対応 サンプル"
-    message: ドキュメントには、具体的な運用の目的、範囲、および期待される成果に関する明確な記述が不足しており、プロジェクトの目標との関連付けがない孤立した手順の断片のみが示されています。
-    message_ja: ドキュメントには、具体的な運用の目的、範囲、および期待される成果に関する明確な記述が不足しており、プロジェクトの目標との関連付けがない孤立した手順の断片のみが示されています。
+    rule: vp-arc-conciseness
+    line: 46
+    anchor: "| P2     | 開店前の点検で当日分の成功記録がない、または実行ログが失敗で終わっている | 店頭の記録を続け、「バッチ再実行・失敗時対応」の手順で取り直す        | `OPS`  |"
+    message: P2 の条件・対応（開店前に成功記録なし→再実行）が、4章の表・5章の暫定対応・7.1 に重複しています。7.1 を基準に、他章は参照へ集約できます。
+    message_ja: P2 の条件・対応（開店前に成功記録なし→再実行）が、4章の表・5章の暫定対応・7.1 に重複しています。7.1 を基準に、他章は参照へ集約できます。
   - id: F002
     severity: minor
-    rule: vp-po-decision-readiness
-    line: 1
-    anchor: "# 運用手順: バッチ再実行・失敗対応 サンプル"
-    message: POによる承認またはレビューに必要な未解決の問題、前提条件、および運用の影響範囲が文書化されていません。
-    message_ja: POによる承認またはレビューに必要な未解決の問題、前提条件、および運用の影響範囲が文書化されていません。
+    rule: vp-qe-verifiability
+    line: 77
+    anchor: >-
+      | 確かめること                       | 合格の条件                                                 |
+      合格しないとき                                         |
+    message: 「当日の実行回数」の数え方（前夜の自動取得を当日に含めるか、当日閉店後の自動取得を上限 2 回にどう数えるか）が判定できません。起点日（`closing_date` 基準など）を明記してください。
+    message_ja: 「当日の実行回数」の数え方（前夜の自動取得を当日に含めるか、当日閉店後の自動取得を上限 2 回にどう数えるか）が判定できません。起点日（`closing_date` 基準など）を明記してください。
   - id: F003
     severity: minor
-    rule: vp-pm-plan-feasibility
-    line: 5
-    anchor: "## 1. バッチ再実行・失敗時対応"
-    message: 手順には、タスクのスケジューリングと進捗管理に必要な具体的な作業単位、実行順序、完了基準、および割り当てられたロールコードが不足しています。
-    message_ja: 手順には、タスクのスケジューリングと進捗管理に必要な具体的な作業単位、実行順序、完了基準、および割り当てられたロールコードが不足しています。
+    rule: vp-qe-omissions-consistency
+    line: 43
+    anchor: >-
+      | 優先度 | 本書で該当する条件                                                       |
+      対応                                                                  | 判断者 |
+    message: >-
+      4章の表が template の列（初動目標・切り分け・一次対応・復旧・エスカレーション）と異なります。rulebook の「初動目標、切り分け、一次対応、復旧」を満たす列へ揃えるか、`opr-index`
+      参照と明記してください。
+    message_ja: >-
+      4章の表が template の列（初動目標・切り分け・一次対応・復旧・エスカレーション）と異なります。rulebook の「初動目標、切り分け、一次対応、復旧」を満たす列へ揃えるか、`opr-index`
+      参照と明記してください。
   - id: F004
     severity: minor
-    rule: vp-pm-dependency-risk
-    line: 5
-    anchor: "## 1. バッチ再実行・失敗時対応"
-    message: バッチの失敗が後続の処理スケジュールや依存する成果物に与える影響に関するリスクと依存関係が特定されていません。
-    message_ja: バッチの失敗が後続の処理スケジュールや依存する成果物に与える影響に関するリスクと依存関係が特定されていません。
+    rule: vp-qe-omissions-consistency
+    line: 146
+    anchor: "| 手順 | `opr-incident`                                            | P1 で紙の販売控えへ切り替え、復旧後に転記する          | 予定   |"
+    message: >-
+      `opr-incident` と `opd-monitoring` を「予定」としていますが、`opr-incident-sample` と `opd-monitoring-sample` が存在します。ID
+      と備考を実態に合わせてください。
+    message_ja: >-
+      `opr-incident` と `opd-monitoring` を「予定」としていますが、`opr-incident-sample` と `opd-monitoring-sample` が存在します。ID
+      と備考を実態に合わせてください。
   - id: F005
     severity: minor
-    rule: vp-pm-control-reporting
-    line: 11
-    anchor: "- エスカレーション:"
-    message: エスカレーションや再実行の決定に関する報告先とチケット記録の要件が、明確に区別または指定されていません。
-    message_ja: エスカレーションや再実行の決定に関する報告先とチケット記録の要件が、明確に区別または指定されていません。
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# 駄菓子屋きぬや 販売管理システム 運用手順（バッチ再実行）"
+    message: >-
+      Frontmatter の `based_on` が `opd-index` で、他 sample の `specdojo:opd-index-sample` と不整合です。実在する ID（必要なら
+      `specdojo:opr-sample` も）へ修正してください。
+    message_ja: >-
+      Frontmatter の `based_on` が `opd-index` で、他 sample の `specdojo:opd-index-sample` と不整合です。実在する ID（必要なら
+      `specdojo:opr-sample` も）へ修正してください。
   - id: F006
     severity: minor
-    rule: vp-ba-business-value
-    line: 5
-    anchor: "## 1. バッチ再実行・失敗時対応"
-    message: ドキュメントには、バッチの再試行およびエスカレーション制御によって提供される運用の課題、対象ユーザー、またはビジネス価値が記載されていません。
-    message_ja: ドキュメントには、バッチの再試行およびエスカレーション制御によって提供される運用の課題、対象ユーザー、またはビジネス価値が記載されていません。
+    rule: vp-qe-kata-conformance
+    line: 26
+    anchor: "| 連絡経路 | 店番担当が `OPS` へ、`OPS` が `DEV` へ再実行を依頼する。上限に達した場合は `OPS` が `PO` へ報告する                                |"
+    message: template の項目名は「連絡先」ですが、本書は「連絡経路」です。template に合わせてください。
+    message_ja: template の項目名は「連絡先」ですが、本書は「連絡経路」です。template に合わせてください。
   - id: F007
-    severity: major
-    rule: vp-ba-requirements-completeness
-    line: 5
-    anchor: "## 1. バッチ再実行・失敗時対応"
-    message: 適用されるバッチの範囲、除外事項、前提条件、および受け入れ基準が不足しており、オペレーターが手順の完全性を検証することができません。
-    message_ja: 適用されるバッチの範囲、除外事項、前提条件、および受け入れ基準が不足しており、オペレーターが手順の完全性を検証することができません。
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 51
+    anchor: "## 5. アラート対応手順"
+    message: 5章が template の段階表（確認・暫定対応・恒久対応・誤検知の完了条件と証跡）ではなく箇条書きです。誤検知のクローズ条件に当たる完了条件・証跡が不明確なので、表形式に揃えてください。
+    message_ja: 5章が template の段階表（確認・暫定対応・恒久対応・誤検知の完了条件と証跡）ではなく箇条書きです。誤検知のクローズ条件に当たる完了条件・証跡が不明確なので、表形式に揃えてください。
   - id: F008
     severity: minor
-    rule: vp-ba-stakeholder-clarity
-    line: 5
-    anchor: "## 1. バッチ再実行・失敗時対応"
-    message: ステークホルダー、主要なオペレーター、通知先、および Ops Lead 以外の合意された責任が明確に定義されていません。
-    message_ja: ステークホルダー、主要なオペレーター、通知先、および Ops Lead 以外の合意された責任が明確に定義されていません。
-  - id: F009
-    severity: minor
-    rule: vp-arc-technical-constraints
-    line: 9
-    anchor: "- 同一run_idで再実行可否を確認（冪等性方式に従う）"
-    message: 技術的な制約、冪等性の検証メカニズム、および外部システムへの依存関係が具体的に指定されていません。
-    message_ja: 技術的な制約、冪等性の検証メカニズム、および外部システムへの依存関係が具体的に指定されていません。
-  - id: F010
-    severity: major
-    rule: vp-dev-implementation-readiness
-    line: 5
-    anchor: "## 1. バッチ再実行・失敗時対応"
-    message: バッチの再試行を実行するために必要な具体的な実行コマンド、必要な入力パラメータ、前提条件のチェック、および完了条件が完全に欠落しています。
-    message_ja: バッチの再試行を実行するために必要な具体的な実行コマンド、必要な入力パラメータ、前提条件のチェック、および完了条件が完全に欠落しています。
-  - id: F011
-    severity: minor
-    rule: vp-dev-change-impact
-    line: 11
-    anchor: "- エスカレーション:"
-    message: バッチの再実行がデータベースの状態、ダウンストリームジョブ、および関連システムに与える副作用と影響の特定が不十分です。
-    message_ja: バッチの再実行がデータベースの状態、ダウンストリームジョブ、および関連システムに与える副作用と影響の特定が不十分です。
-  - id: F012
-    severity: minor
-    rule: vp-dev-testability
-    line: 5
-    anchor: "## 1. バッチ再実行・失敗時対応"
-    message: バッチの再実行が正常に完了したことを確認するための検証手順、期待されるログパターン、およびバリデーションステップが提供されていません。
-    message_ja: バッチの再実行が正常に完了したことを確認するための検証手順、期待されるログパターン、およびバリデーションステップが提供されていません。
-  - id: F013
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 9
-    anchor: "- 同一run_idで再実行可否を確認（冪等性方式に従う）"
-    message: 冪等性のルールに基づき再実行が許容されるかどうかを検証するための基準が、客観的にテスト可能な Pass/Fail 形式で定義されていません。
-    message_ja: 冪等性のルールに基づき再実行が許容されるかどうかを検証するための基準が、客観的にテスト可能な Pass/Fail 形式で定義されていません。
-  - id: F014
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 10
-    anchor: "- 再実行上限: 1回（2回目はOps Lead判断）"
-    message: "「再実行上限: 1回」と「2回目はOps Lead判断」が併記され、実際の上限回数とOps Leadが2回目を許可する判断条件が判定できないため、上限と例外承認の条件を明記する必要がある。"
-    message_ja: "「再実行上限: 1回」と「2回目はOps Lead判断」が併記され、実際の上限回数とOps Leadが2回目を許可する判断条件が判定できないため、上限と例外承認の条件を明記する必要がある。"
-  - id: F015
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 1
-    anchor: "# 運用手順: バッチ再実行・失敗対応 サンプル"
-    message: Frontmatter の `rulebook` 指定が `specdojo:opd-rulebook` となっており、成果物種別（operations/OPR）と矛盾している。
-    message_ja: Frontmatter の `rulebook` 指定が `specdojo:opd-rulebook` となっており、成果物種別（operations/OPR）と矛盾している。
-  - id: F016
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 5
-    anchor: "## 1. バッチ再実行・失敗時対応"
-    message: >-
-      `opr-rulebook` 第 5
-      章で定義されている必須章（概要、適用範囲・前提、定期点検、障害対応、アラート対応、バックアップ・リストア、運用変更、アカウント付与・剥奪、問い合わせ一次対応、証跡、関連文書導線）がすべて省略されており、ルールに違反している。
-    message_ja: >-
-      `opr-rulebook` 第 5
-      章で定義されている必須章（概要、適用範囲・前提、定期点検、障害対応、アラート対応、バックアップ・リストア、運用変更、アカウント付与・剥奪、問い合わせ一次対応、証跡、関連文書導線）がすべて省略されており、ルールに違反している。
-  - id: F017
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 運用手順: バッチ再実行・失敗対応 サンプル"
-    message: Frontmatter の `rulebook` 指定が `specdojo:opd-rulebook` となっており、成果物種別（operations/OPR）と矛盾している。
-    message_ja: Frontmatter の `rulebook` 指定が `specdojo:opd-rulebook` となっており、成果物種別（operations/OPR）と矛盾している。
-  - id: F018
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 5
-    anchor: "## 1. バッチ再実行・失敗時対応"
-    message: 見出し番号が `## 1` となっているが、ルールおよびテンプレートの定義に従い `## 7` とすべきである。
-    message_ja: 見出し番号が `## 1` となっているが、ルールおよびテンプレートの定義に従い `## 7` とすべきである。
-  - id: F019
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 5
-    anchor: "## 1. バッチ再実行・失敗時対応"
-    message: >-
-      `opd-monitoring-sample` はバッチ未完了時の詳細手順として `opr-batch` を参照しているが、本サンプルには関連ドキュメント導線がなく `opd-index` / `opd-monitoring`
-      への逆方向の導線が欠落しているため、template の「関連ドキュメント導線」表で相互参照を示す必要がある。
-    message_ja: >-
-      `opd-monitoring-sample` はバッチ未完了時の詳細手順として `opr-batch` を参照しているが、本サンプルには関連ドキュメント導線がなく `opd-index` / `opd-monitoring`
-      への逆方向の導線が欠落しているため、template の「関連ドキュメント導線」表で相互参照を示す必要がある。
-  - id: F020
-    severity: major
-    rule: vp-ux-readability
-    line: 5
-    anchor: "## 1. バッチ再実行・失敗時対応"
-    message: 必須構成を大幅に省略しており、`opr-＜term＞` 文書を正しく作成するためのサンプルとして不十分である。
-    message_ja: 必須構成を大幅に省略しており、`opr-＜term＞` 文書を正しく作成するためのサンプルとして不十分である。
-  - id: F021
-    severity: minor
     rule: vp-ux-language-consistency
-    line: 7
-    anchor: "- 失敗検知: 監視アラート or ジョブ管理の失敗通知"
-    message: >-
-      「監視アラート or ジョブ管理の失敗通知」で英語の「or」が混在し、9行目の識別子 run_id も rulebook の表記（`run_id`）と異なりインラインコードになっていないため、「または」への置換と
-      `run_id` 表記への統一が必要である。
-    message_ja: >-
-      「監視アラート or ジョブ管理の失敗通知」で英語の「or」が混在し、9行目の識別子 run_id も rulebook の表記（`run_id`）と異なりインラインコードになっていないため、「または」への置換と
-      `run_id` 表記への統一が必要である。
-  - id: F022
-    severity: minor
-    rule: vp-ops-release-readiness
-    line: 1
-    anchor: "# 運用手順: バッチ再実行・失敗対応 サンプル"
-    message: 未解決の問題、前提条件の検証項目、およびドキュメントをドラフトから ready へ昇格させるための基準が指定されていません。
-    message_ja: 未解決の問題、前提条件の検証項目、およびドキュメントをドラフトから ready へ昇格させるための基準が指定されていません。
-  - id: F023
-    severity: major
-    rule: vp-ops-operability
-    line: 5
-    anchor: "## 1. バッチ再実行・失敗時対応"
-    message: 実行ツール、ログおよびトレイルの保存場所、問い合わせ先、および変更のワークフローを含む不可欠な運用手順が完全に省略されており、運用の実行ができません。
-    message_ja: 実行ツール、ログおよびトレイルの保存場所、問い合わせ先、および変更のワークフローを含む不可欠な運用手順が完全に省略されており、運用の実行ができません。
+    line: 143
+    anchor: "| 方針 | [[specdojo:opd-index-sample\\|運用方針・設計（全体構成）]] | 夜間バックアップの失敗時の扱い、RTO/RPO を確かめる     | 作成済 |"
+    message: 方針文書の参照が、wikilink（`opd-index-sample`）と素の `opd-monitoring` で混在しています。実在する sample ID の wikilink に統一してください。
+    message_ja: 方針文書の参照が、wikilink（`opd-index-sample`）と素の `opd-monitoring` で混在しています。実在する sample ID の wikilink に統一してください。

@@ -57,13 +57,14 @@ specdojo where playbook --project prj-0001
 | ----------------- | ------------------------------------------------------------------- | ----------------------------------------- |
 | `init`            | project から agent 実行までを質問式で初期設定する                   | `specdojo init`                           |
 | `config init`     | `specdojo.config.json` と `.gitignore` を個別に用意する             | `specdojo config init`                    |
-| `config show`     | 有効な `repos` と、ローカル設定に由来する値を表示する               | `specdojo config show --project prj-0001` |
+| `config show`     | 有効な `repos`、`references` と、ローカル設定に由来する値を表示する | `specdojo config show --project prj-0001` |
 | `config scaffold` | provider、VS Code ワークスペース、Git hook、Slidev を個別に配置する | `specdojo config scaffold --slidev`       |
 | `project list`    | 登録済み project を表示する                                         | `specdojo project list`                   |
+| `doctor`          | 使う環境のパターンに合わせて導入の前提を確かめる                    | `specdojo doctor --tmux`                  |
 | `project move`    | 別リポジトリへ移す前に、読むだけの点検をする                        | `specdojo project move prj-0002 --check`  |
 
 `init` は対話できる端末で、project ID と名前、register、人の nickname と表示名、複数指定可能な
-provider、exec、Dev Container、Git hook、Slidev の順に質問します。Dev Container を選んだ場合だけ、続けて `minimal` / `recommended` / `full` の preset を質問します（既定は `recommended`）。Git hook は既定では作りません。Slidev の質問は `full` を選んだ場合だけ既定が「はい」、それ以外は「いいえ」です。成果物カタログは対話では質問せず、`--catalog <size>` を
+provider、exec、Dev Container、tmux、Git hook、Slidev の順に質問します。Dev Container を選んだ場合だけ、続けて `minimal` / `recommended` / `full` の preset を質問します（既定は `recommended`）。Git hook は既定では作りません。Slidev の質問は `full` を選んだ場合だけ既定が「はい」、それ以外は「いいえ」です。成果物カタログは対話では質問せず、`--catalog <size>` を
 明示した場合にだけ作成します。既存ファイルは上書きせず、スキップしたパスを表示します。`--dry-run` は
 予定だけを表示し、ファイルや `package.json` を変更しません。各回答は質問の直後に検証され、誤りの理由を
 表示して同じ質問だけをやり直します。それまでの回答は保持されます。`--exec` を選んだのに provider が
@@ -74,30 +75,35 @@ provider、exec、Dev Container、Git hook、Slidev の順に質問します。D
 
 非対話環境では質問せず、次の主要オプションと既定値を使います。
 
-| オプション                     | 用途                                                                      | 既定値                |
-| ------------------------------ | ------------------------------------------------------------------------- | --------------------- |
-| `--yes`                        | 質問せず既定値と指定済みオプションで実行する                              | -                     |
-| `--project <id>`               | project ID                                                                | `prj-0001`            |
-| `--name <name>`                | project の表示名                                                          | `My Project`          |
-| `--no-register`                | register を作らない                                                       | register を作る       |
-| `--nickname <nickname>`        | 人の名簿に書く nickname                                                   | `owner`               |
-| `--display-name <name>`        | 人の名簿に書く表示名                                                      | `Project Owner`       |
-| `--provider <names>`           | provider をカンマ区切りで指定する                                         | `codex`               |
-| `--exec`                       | executor / reporter の名簿と起動設定を作る                                | 作らない              |
-| `--catalog <size>`             | `small` / `medium` / `large` の成果物カタログを作る（対話では質問しない） | 作らない              |
-| `--devcontainer`               | 選んだ provider の Dev Container を作る                                   | 作らない              |
-| `--lefthook`                   | commit 前の文書・SpecDojo 検査を行う Git hook を作る                      | 作らない              |
-| `--slidev`                     | Slidev 本体と kata 用の整形・検査設定を追加する                           | `full` の場合だけ追加 |
-| `--no-slidev`                  | `full` を選んだ場合も Slidev の追加を解除する                             | -                     |
-| `--devcontainer-preset <name>` | Dev Container の preset（`minimal` / `recommended` / `full`）を選ぶ       | `recommended`         |
-| `--workspace-name <name>`      | Dev Container 内で使う親ディレクトリ名                                    | ホスト側の親名        |
-| `--dry-run`                    | 作成・変更予定だけを表示する                                              | 書き込む              |
+| オプション                     | 用途                                                                      | 既定値                                            |
+| ------------------------------ | ------------------------------------------------------------------------- | ------------------------------------------------- |
+| `--yes`                        | 質問せず既定値と指定済みオプションで実行する                              | -                                                 |
+| `--project <id>`               | project ID                                                                | `prj-0001`                                        |
+| `--name <name>`                | project の表示名                                                          | `My Project`                                      |
+| `--no-register`                | register を作らない                                                       | register を作る                                   |
+| `--nickname <nickname>`        | 人の名簿に書く nickname                                                   | `owner`                                           |
+| `--display-name <name>`        | 人の名簿に書く表示名                                                      | `Project Owner`                                   |
+| `--provider <names>`           | provider をカンマ区切りで指定する                                         | `codex`                                           |
+| `--exec`                       | executor / reporter の名簿と起動設定を作る                                | 作らない                                          |
+| `--catalog <size>`             | `small` / `medium` / `large` の成果物カタログを作る（対話では質問しない） | 作らない                                          |
+| `--devcontainer`               | 選んだ provider の Dev Container を作る                                   | 作らない                                          |
+| `--lefthook`                   | commit 前の文書・SpecDojo 検査を行う Git hook を作る                      | 作らない                                          |
+| `--slidev`                     | Slidev 本体と kata 用の整形・検査設定を追加する                           | `full` の場合だけ追加                             |
+| `--no-slidev`                  | `full` を選んだ場合も Slidev の追加を解除する                             | -                                                 |
+| `--devcontainer-preset <name>` | Dev Container の preset（`minimal` / `recommended` / `full`）を選ぶ       | `recommended`                                     |
+| `--tmux` / `--no-tmux`         | tmux でセッションを保つ（Dev Container ならホストの本体スクリプトも作る） | `recommended` と `full` の Dev Container だけ使う |
+| `--workspace-name <name>`      | Dev Container 内で使う親ディレクトリ名                                    | ホスト側の親名                                    |
+| `--dry-run`                    | 作成・変更予定だけを表示する                                              | 書き込む                                          |
 
 `--devcontainer-preset none` は後方互換のため受け付け、`minimal` と同じ構成として扱います。
 `init --yes --devcontainer --devcontainer-preset full` は Slidev も追加します。Dev Container の
 `full` は VS Code 拡張 `antfu.slidev` も含み、`minimal` / `recommended` は含みません。
 拡張の選択とリポジトリの npm・整形設定は独立しているため、`--no-slidev` は拡張を外しません。
 `devcontainer scaffold --preset full` 単体では npm・整形設定を変更しません。
+
+`--tmux` は、Dev Container を作る場合は Dev Container の tmux と常時稼働ホストで使う本体スクリプト（`.specdojo/host/devcontainer-tmux.sh`）を作り、Dev Container を作らない場合は手元で tmux のセッションを作るか入るスクリプト（`.specdojo/host/local-tmux.sh`）を作ります。最後の案内には、選んだパターンの次の手順だけを出します。
+
+`doctor` は、Node.js（`engines` の版）、Git とその `user.name`・`user.email`、agent の CLI（claude・codex・opencode・copilot のどれか）を確かめます。`--devcontainer` では Docker と Dev Container CLI（Dev Container の中では省く）、`--tmux` では tmux も確かめます。WSL で作業ツリーが `/mnt/` の下にある場合は警告します。必須のものが足りないと、入れ方を表示して終了コード 1 で終わります。
 
 `init` が作る `.specdojo/agent-members.yaml` と `.specdojo/exec-defaults.yaml` は、選択した
 provider だけを含みます。親 runner の検証は、対応する `package.json` の npm script が存在する
@@ -119,7 +125,7 @@ provider 設定、登録簿作成の順に次のコマンドを案内します�
 書き込まず、予定の内容だけを表示します。`config scaffold` の `--provider` には
 `claude`、`codex`、`copilot`、`opencode` を指定でき、`--dry-run` と `--force` も利用できます。どの provider でも、skill `specdojo-exec-in-session` の正本を `.agents/skills/specdojo-exec-in-session/SKILL.md` へ置きます。`.agents/skills` を読まない Claude Code には、正本を読ませるラッパーを `.claude/skills/specdojo-exec-in-session/SKILL.md` へ置きます。既にあるファイルは `--force` なしでは上書きしません。`--global` は 0.10.0 では対応する provider がなく、指定するとリポジトリへ書き込む前にエラーになります。
 
-`config show` は、`specdojo.config.json` とローカル設定 `.specdojo/specdojo.local.config.json` のパス、ローカルで上書きした項目、project ごとの `repos` を表示します。各リポジトリには `shared`（共有の設定）、`local; shared: <path>`（パスの差し替え）、`local; added`（ローカルで追加）のいずれかを付けます。`--project <id>` で対象を絞れます。ローカル設定の許可キーと優先順位は [[specdojo:specdojo-config-reference|SpecDojo設定リファレンス]] の「ローカル設定」を参照してください。
+`config show` は、`specdojo.config.json` とローカル設定 `.specdojo/specdojo.local.config.json` のパス、ローカルで上書きした項目、project ごとの `repos` を表示します。各リポジトリには `shared`（共有の設定）、`local; shared: <path>`（パスの差し替え）、`local; added`（ローカルで追加）のいずれかを付けます。`references` は別名・設定パス・解決した実パス・`read-only`・設定の由来を表示します。`--project <id>` で project を絞っても、全 project 共通の参照先は表示します。ローカル設定の許可キーと優先順位は [[specdojo:specdojo-config-reference|SpecDojo設定リファレンス]] の「ローカル設定」を参照してください。
 
 通常の `init` と `config init` は、markdownlint の設定がなければリポジトリ直下に
 `.markdownlint.yaml` を作成します。SpecDojo の文書規約に合わせて MD013（行長）、MD024（見出しの重複）、
@@ -496,21 +502,24 @@ specdojo schedule strategy generate \
 
 `register` は個票を正本とするプロジェクト登録簿と、その生成ビューを扱います。
 
-| コマンド                | 用途                                           | 例                                                                          |
-| ----------------------- | ---------------------------------------------- | --------------------------------------------------------------------------- |
-| `register scaffold`     | 登録簿ディレクトリと生成ビューを初期化する     | `specdojo register scaffold --project prj-0001`                             |
-| `register add`          | issue / todo / question などの項目を追加する   | `specdojo register add --project prj-0001 --type issue --title "確認事項"`  |
-| `build --only register` | 個票から登録項目一覧と派生ビューを生成する     | `specdojo build --only register --project prj-0001`                         |
-| `register update`       | 登録項目を更新する                             | `specdojo register update --project prj-0001 --id PJR-001 --owner PM`       |
-| `register start`        | 項目を対応中へ変更する                         | `specdojo register start --project prj-0001 --id PJR-001`                   |
-| `register wait`         | 項目を待ち状態へ変更する                       | `specdojo register wait --project prj-0001 --id PJR-001`                    |
-| `register review`       | 項目をレビュー状態へ変更する                   | `specdojo register review --project prj-0001 --id PJR-001`                  |
-| `register close`        | 項目を完了にし、個票を `ready` へ昇格する      | `specdojo register close --project prj-0001 --id PJR-001`                   |
-| `register reject`       | 項目を却下にし、個票を `deprecated` にする     | `specdojo register reject --project prj-0001 --id PJR-001`                  |
-| `register defer`        | 項目を延期にする                               | `specdojo register defer --project prj-0001 --id PJR-001`                   |
-| `register reopen`       | 終了済み項目を再オープンする                   | `specdojo register reopen --project prj-0001 --id PJR-001`                  |
-| `register renumber`     | 重複・衝突した PJR-ID を未使用の ID へ移す     | `specdojo register renumber --project prj-0001 --id PJR-0137 --to PJR-0140` |
-| `register history`      | 追記型 event と旧 Git 履歴から変更を再構成する | `specdojo register history --project prj-0001 --since 2026-08-01`           |
+| コマンド                | 用途                                                  | 例                                                                          |
+| ----------------------- | ----------------------------------------------------- | --------------------------------------------------------------------------- |
+| `register scaffold`     | 登録簿ディレクトリと生成ビューを初期化する            | `specdojo register scaffold --project prj-0001`                             |
+| `register add`          | issue / todo / question などの項目を追加する          | `specdojo register add --project prj-0001 --type issue --title "確認事項"`  |
+| `build --only register` | 個票から登録項目一覧と派生ビューを生成する            | `specdojo build --only register --project prj-0001`                         |
+| `register update`       | 登録項目を更新する                                    | `specdojo register update --project prj-0001 --id PJR-001 --owner PM`       |
+| `register start`        | 項目を対応中へ変更する                                | `specdojo register start --project prj-0001 --id PJR-001`                   |
+| `register wait`         | 項目を待ち状態へ変更する                              | `specdojo register wait --project prj-0001 --id PJR-001`                    |
+| `register review`       | 項目をレビュー状態へ変更する                          | `specdojo register review --project prj-0001 --id PJR-001`                  |
+| `register close`        | 項目を完了にし、個票を `ready` へ昇格する             | `specdojo register close --project prj-0001 --id PJR-001`                   |
+| `register reject`       | 項目を却下にし、個票を `deprecated` にする            | `specdojo register reject --project prj-0001 --id PJR-001`                  |
+| `register defer`        | 項目を延期にする                                      | `specdojo register defer --project prj-0001 --id PJR-001`                   |
+| `register reopen`       | 終了済み項目を再オープンする                          | `specdojo register reopen --project prj-0001 --id PJR-001`                  |
+| `register renumber`     | 重複・衝突した PJR-ID を未使用の ID へ移す            | `specdojo register renumber --project prj-0001 --id PJR-0137 --to PJR-0140` |
+| `register history`      | 追記型 event と旧 Git 履歴から変更を再構成する        | `specdojo register history --project prj-0001 --since 2026-08-01`           |
+| `register branch-merge` | register のブランチを現在のブランチへ一方向に取り込む | `specdojo register branch-merge --project prj-0001`                         |
+| `register branch-guard` | register のファイルの直接の変更を検出する             | `specdojo register branch-guard --project prj-0001 --staged`                |
+| `register branch-check` | register のブランチへ push する commit を検査する     | `specdojo register branch-check --project prj-0001 --commit <sha>`          |
 
 `register add` は ID を省略すると自動採番し、現在の project では現在の作業ツリーに type 別の個票を作成します。別 project を `--project` で指定して `--commit` を付けると、対象 project の統合ブランチを開いている worktree、または CLI が作る一時 worktree で起票・再生成・commit を完了します。ID は乱数部分を持ち、曖昧文字（`I` / `L` / `O` / `U`）を除いた英大文字+数字の 32 文字セットによる 4 桁（例: `PJR-4B7K`）です。個票 Frontmatter が分類、処理状態、優先度、担当、日付、結論の正本であり、`register build` は個票から一覧と派生ビューを生成します。`register` 系コマンドはすべて、成功時の通常出力を標準出力へ、エラーメッセージを標準エラー出力へ書きます。
 
@@ -539,7 +548,7 @@ specdojo schedule strategy generate \
 | `--topic <slug>`             | 個票ファイル名と文書 ID の論点部分を指定・更新する                  | `add` / `update`                                 |
 | `--section <name>`           | 差し替える個票の章の名前（見出し番号を除いた名前）                  | `add` / `update`                                 |
 | `--section-file <path>`      | 差し替え後の章の本文を含む Markdown ファイルのパス                  | `add` / `update`                                 |
-| `--commit`                   | `register lifecycle` 枠内で記帳・再生成・commitを行う               | `add` / `update` / `renumber` / 遷移             |
+| `--commit`                   | 記帳・再生成・commit（同期設定が有効なら push）                     | `add` / `update` / `renumber` / 遷移             |
 | `-m, --message <message>`    | `--commit` のcommitメッセージを上書きする（繰り返し可）             | `add` / `update` / `renumber` / 遷移             |
 | `--dry-run`                  | 書き込みを行わず変更対象を表示する                                  | `add` / `update` / `renumber` / 遷移 / `migrate` |
 | `--since <date>`             | 対象コミットの開始日（`YYYY-MM-DD`、当日を含む）                    | `history`                                        |
@@ -641,6 +650,14 @@ kata authoring は register 専用です。Schedule の task は対象成果物�
 
 一覧・派生ビューの「登録日」「完了日」は、保存した日時を config の `run.register_date_timezone`（IANA タイムゾーン名、既定 `UTC`）へ変換して導出する表示値です。
 
+`register_sync.enabled: true` の project では、`--commit` は既定の `project/<project-id>/register` を別 worktree で更新して push します。別 project への起票と `external_projects` 経由の起票も対象 project の設定に従います。schedule の実行イベントも同じ経路で同期し、読み取りは同期先を参照します。non-fast-forward は `pull --rebase` 後に再 push し、最大 3 回で停止します。通信・権限・衝突などの失敗時は記帳をローカルに残し、復旧先を標準エラー出力へ表示して終了コード 1 を返します。`--commit` のない register 操作と `--dry-run --commit` は同期しません。設定は [[specdojo:specdojo-config-reference|設定リファレンス]]、初期作成・復旧は [[specdojo:register-operation-guide|登録簿運用ガイド]] を参照してください。
+
+`register branch-merge` は、`register_sync.enabled: true` の project で、リモートの register のブランチを fetch し、現在のブランチへ `--no-ff` で merge します（件名は `chore(register): merge <register-branch> into <branch>`）。取り込み済みなら何もしません。staged の変更・進行中の merge・register のファイルの未 commit 変更があるとき、HEAD が detached のとき、register のブランチが記帳の範囲の外のファイルを変えているときは、merge せずに終了コード 1 で止まります。衝突したときは merge を中止し、develop で register のファイルを直接変えたことを原因として案内します。register のブランチ上と `register_sync` が未設定のときは何もしません。`exec run --register --worktree` も、worktree を作る前に同じ取り込みを行います。
+
+`register branch-guard` は、register のブランチの外で register のファイル（`project_register_path` と `execution_path/exec/events/` の配下）を直接変えた変更を検出し、終了コード 1 で一覧を出します。`--staged` は index を（pre-commit 向け）、`--range <range>` は範囲の commit を（pre-push・CI 向け）調べます。変更は、merge で取り込んだ親が register のブランチから受け取った内容と一致する場合だけ許します。register のブランチ自身の commit と、develop を経由して feature に入った取り込みも許します。`register_sync` が未設定の project では検査しません。
+
+`register branch-check` は、register のブランチへ push する commit を検査します。`--commit <commit>` は push する先端、`--base <commit>` は push 先の現在の先端（省略または全 0 のときはリモートにない commit だけ）、`--remote-ref <ref>` は更新する ref で、register のブランチ（`refs/heads/<register_sync.branch>`）でなければ何もしません。検査は 2 つです。1 つめは、`--base` から `--commit` までの各 commit が、`project_register_path` と `execution_path/exec/events/` の配下の外のファイルを含まないことです。2 つめは、先端の tree の個票とイベントの形（個票とイベントの対応、event の schema、ID 一意性、状態連鎖、個票の ID とファイル名の対応）が `register build` と同じ検証に通ることです。違反は、commit とファイル、内容、直し方を標準エラー出力へ出し、終了コード 1 で止まります。`register_sync` が未設定の project では検査しません。別の project から `external_projects` で起票した commit も、同じブランチへ入るため同じ検査を通ります。pre-push の hook は `tools/check-register-push.mjs`、CI は同じコマンドを `--commit "$GITHUB_SHA" --base "<push 前の sha>" --remote-ref "$GITHUB_REF"` で流します。
+
 `register history` は `events/pjr-XXXX.yaml` を読み、個票単位の追加（`added`）と変更（`updated`）を発生順に出力します。event 導入前または未移行の期間だけ Git 履歴を読み、削除（`removed`）を含む従来の履歴と統合します。event は発生日時・actor・action・reason・遷移前後状態・変更フィールドを保持するため、複数遷移を1コミットへまとめても粒度を失いません。比較対象は登録項目一覧の列と `block_reason`、`approach`、`targets`、`sources`、`target_path`、`target_rulebook`、`derived_from`、`depends_on` です。
 
 各書き込みコマンドは現在値を個票へ、event を項目別イベントファイルへ反映します。同じ現在値になる操作の再実行では event を追加しません。`register build` は個票とイベントファイルの対応、event の schema、ID 一意性、時刻順、直前イベント参照、状態連鎖、最新 event と現在値の一致を検証します。
@@ -667,7 +684,7 @@ kata authoring は register 専用です。Schedule の task は対象成果物�
 | `exec cancel`   | `todo` を `cancelled` にする                                                                                                                     | `specdojo exec cancel --project prj-0001 --task <task-id> --by agent-1 --msg "scope removed"`           |
 | `exec run`      | plan を生成してエージェントを実行する                                                                                                            | `specdojo exec run --project prj-0001 --task <task-id>`                                                 |
 | `exec handoff`  | block された保護設定の提案差分を確認し、統合先へ適用して commit する                                                                             | `specdojo exec handoff apply --project prj-0001 --register PJR-0012`                                    |
-| `exec resume`   | `doing`、または due な利用制限延期 task を既存 worktree で再開する                                                                               | `specdojo exec resume --project prj-0001 --due`                                                         |
+| `exec resume`   | `doing`、reporter・統合段で停止した task、または due な利用制限延期 task を既存 worktree で再開する                                              | `specdojo exec resume --project prj-0001 --due`                                                         |
 | `exec cycle`    | 延期 task 再開・doc-index 再構築・古い track の再生成・状態再計算・`--auto` loop を単一ロック内で順次実行する                                    | `specdojo exec cycle --project prj-0001 --loop`                                                         |
 | `exec status`   | 実行状態を表示する                                                                                                                               | `specdojo exec status --project prj-0001 --state blocked`                                               |
 | `exec queue`    | grade・`exec run`・統合の後の処理を混ぜた順番を予約し、順に流す（「実行の予約（exec queue）」を参照）                                            | `specdojo exec queue add nightly --project prj-0001 --step "exec run --register PJR-XXXX"`              |
@@ -686,6 +703,8 @@ kata authoring は register 専用です。Schedule の task は対象成果物�
 | `exec trial`     | 同一planを複数agentで隔離試行し、比較・評価・採否を管理する                                     | `specdojo exec trial run --project prj-0001 --plan <path> --agent agent-a agent-b` |
 
 `exec validate` は、一部だけの run 記録を通常は `WARN:` で報告し、欠落だけなら終了コード 0 を返します。`--records-only` は同じ欠落を `ERROR:` と終了コード 1 にします。両モードとも、plan・result がそろい state・evidence のない evidence 導入前の run、state・evidence のみがあり同じ出どころ・項目の別 run に plan・result の対がある移行後の先行試行、旧 `exec/plans/`・`results/`・`evidence/` の記録はエラー・警告にしません。`execution/grade/generated/` と空の lock のディレクトリも配置の検査から外します。これら以外の配置違反、Git に無視されない lock、Git 確認失敗は通常時もエラーです。`--schedule-only` は従来どおり schedule・event だけを検査します。`--records-only --commit <rev>` は作業ツリーではなく `<rev>` の tree の記録を検査し、未 commit の run や空のディレクトリを対象にしません（pre-push の検査で使います）。
+
+schedule の `exec resume` は `--task` を省略すると、`doing` と pipeline の状態参照を持つ reporter・統合段の `blocked` task を選び、`--parallel` の上限で再開します。executor 段の `blocked` task は自動選択せず、個別に指定します。`--due` は期限に達した利用制限延期 task のみを選びます。
 
 schedule の `exec resume --task <task-id> --resume-from executor` は、executor が `succeeded` で reporter が未完了、または統合段（commit・検査・merge）で止まった pipeline、あるいは approach の必須項目（`condense_records` など）を欠いた報告として runner が executor の段で止めた pipeline を、既存 worktree・変更・同じ run を引き継いで executor → reporter → 統合の順に再実行します。対象状態は reporter 段・統合段・executor 段の `blocked` または中断した `doing` で、executor の試行回数を増やし、`blocked` からの状態遷移は `unblock` イベントへ記録します。統合段から戻す場合は、executor を起動する前に統合先（project は root の現在ブランチ）を exec branch と worktree へ取り込みます。統合が成功済みの run、一部のリポジトリを統合済みの run、exec branch が merge 済みの run、worktree が merge の途中の run、executor 未成功、pipeline 以外、`executor` 以外の値は拒否します。`--task` は必須で、`--due` とは併用できません。worktree の `<execution_path>/runs/schedule/<task-id>/<run-id>/plan.md` を編集してから再開すると、その plan を使います。変更理由と再開の経緯を報告の `handoff` へ記載するよう plan に指示し、再開後の result の申し送りを確認してください。手順は [[specdojo:exec-operation-guide|exec運用ガイド]] の「blockedタスクの復帰」を参照してください。
 
@@ -817,6 +836,8 @@ specdojo exec run --project prj-0001 --job job-weekly-report --input period=2026
 `--register` は指定した個票の項目を実行します。`--register-filter` は `--register-types` / `--register-priorities` / `--register-statuses` のカンマ区切り条件と、正の整数の `--register-limit` で項目を選びます。条件省略時は open かつ実行可能な type が対象です。いずれも実行対象になる type は `todo` / `issue` / `change-request` / `question` / `risk` で、`epic` / `decision` / `note` / `handoff` は対象外です。実行場所の既定は `.specdojo/exec-defaults.yaml` の `run.register_execution`（`worktree` / `in-place`）で選び、未設定時は互換性のため in-place です。`--worktree` / `--in-place` は設定を上書きし、同時指定はエラーになります。worktree モードは成果物の変更を隔離し、状態遷移（`start` / `review` / `waiting`）を直列化したうえで、成功時に merge back します。`--post-review` または `run.register_post_review: true` を指定すると、merge back の後に完了判定を行い、todo / issue を自動 close できます。`--parallel <n>` は worktree モードでのみ指定できます。
 
 `--branch <repo>=<name>` は、register の worktree モードでプロダクトの作業ブランチ名を上書きします。たとえば `specdojo exec run --project prj-0001 --register PJR-0012 --worktree --branch app1=feature/login` と指定します。複数のリポジトリにはオプションを繰り返します。宣言にないリポジトリ、同じリポジトリの重複、空の値、不正な Git ブランチ名は拒否します。別項目のブランチと重なると start 前に停止するため、topic を変えるかこの指定で解消します。自動の連番は付けません。SpecDojo の記帳用のブランチには適用しません。`--resume` では記録済みの名前を使うため指定の繰り返しは不要で、別名への変更は拒否します。
+
+`register_sync.enabled: true` の場合、`exec run --register` の start・review・waiting と post-review の close は専用ブランチへ commit・push します。executor の個票編集は検証後・exec の commit 前に転送し、exec の commit には個票・イベントを含めません。同期の失敗では編集を保持して停止します。設定・復旧は [[specdojo:register-operation-guide|登録簿運用ガイド]] を参照してください。未設定の場合は従来動作です。
 
 作業ブランチ名の既定値は `exec/{project}-{id}` です。`repos[].branch_template` に git-flow の `feature/{topic}`、GitHub flow の `{type}/{topic}` などを設定できます。統合の形は `repos[].integration_strategy` の `merge`（既定）・`ff`・`branch-only` で選びます。`ff` は早送りできるときだけ統合し、分岐していれば停止します。自動の rebase や同期 merge は行いません。
 
@@ -1325,11 +1346,13 @@ specdojo orchestrator launch --provider claude --project prj-0001 -- \
   --agent specdojo-orchestrator --model sonnet
 ```
 
-対象 project は `--project`、`SPECDOJO_PROJECT`、`current_project`、`projects` の先頭の順で解決します。`--` より後ろの引数は provider CLI へそのまま渡します。`repos` が無い場合、provider CLI へ渡すコマンドと引数は従来と変わりません。
+対象 project は `--project`、`SPECDOJO_PROJECT`、`current_project`、`projects` の先頭の順で解決します。`--` より後ろの引数は provider CLI へそのまま渡します。`repos`・`external_projects`・`references` が無い場合、provider CLI へ渡すコマンドと引数は従来と変わりません。
 
 provider CLI の実行中、起動元は `SIGINT` と `SIGQUIT` を無視して子プロセスの終了を待ちます。端末での Ctrl-C は provider CLI に直接届くため、入力の取り消しとして扱う CLI が起動元だけを終了させることはありません。`SIGTERM` と `SIGHUP` は子プロセスへ転送し、子の終了後に同じ終了コードを返します。子がシグナルで終了した場合は `128 + シグナル番号` を返します。
 
 Claude Code、Codex、GitHub Copilot には exec と同じ追加ルート引数を渡します。OpenCode は、起動時の `OPENCODE_CONFIG_CONTENT` に選択 agent の `permission.external_directory` を注入し、全外部ディレクトリを拒否したうえで宣言済みのリポジトリだけを許可します。外部パスへ既存の `permission.edit` が一致しないため、同じ宣言済みルートの編集許可を起動場所からの相対パス（例: `../<repo>/**`）で注入します。既存の inline config の他項目は保持します。未宣言のリポジトリは、どの provider でも許可対象になりません。
+
+`references`（v0.10.0 以降）は読み取り専用の参照先です。Claude Code・Copilot・OpenCode には参照先のファイル編集を拒否する規則を加えます。Codex は `workspace-write` の外部読み取りを使い、参照先を `--add-dir` に渡しません。exec の executor・reviewer へは追加公開しません。パス検証・権限の制約は [[specdojo:specdojo-config-reference|設定リファレンス]] の「`references`のキー」を参照してください。
 
 `orchestrator night` は `autopilot: approved` の付いた `open` todo・issue だけを夜間 queue として実行します。
 
@@ -1346,6 +1369,20 @@ specdojo orchestrator night --project prj-0001 \
 ```bash
 specdojo orchestrator integration-tests --project prj-0001
 ```
+
+`orchestrator watch-scan` は、止まったものを見つけて理由の種類に分け、見張りのイベントの記録と朝報告に残します。claim・再開・release・commit はしません。見る対象・分け方・記録の項目・報告の形は [[specdojo:register-operation-guide|登録簿運用ガイド]] の「止まった実行を見張る」に従います。exec の実行ロックを取らないため、実行中の run を待たずに動きます。
+
+```bash
+specdojo orchestrator watch-scan --project prj-0001
+specdojo orchestrator watch-scan --project prj-0001 --stale-after 3h --dry-run
+```
+
+| オプション                 | 内容                                                                                                                          |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `--stale-after <duration>` | 実行ロックがないとき、更新がこれより古い `doing`・`in-progress`・`running` を中断と見なす。`<正の整数><m\|h\|d>`。既定は `2h` |
+| `--dry-run`                | 記録と報告を書かずに、足す行と件数だけを表示する                                                                              |
+
+読めなかった記録は警告として標準エラー出力と報告に残し、ほかの対象の見張りは続けます。成功は終了コード 0、コマンド自体の異常は 1 を返します。
 
 `orchestrator handoff` は、セッションや LLM を切り替えるときの引き継ぎを `handoff` の個票として起票します。「進行中」の章は、流している `exec queue` の列（`running`・`pending`）と前回の handoff の起票より後（handoff がなければ直近 24 時間）に止まった列、exec run のロックを持つ実行中の run、`in-progress`・`review`・`waiting` の register 項目から組み立てます。それより前に止まった列は件数だけを 1 行で示します。「判断待ち」の章には、開いている `question` と `waiting` の項目への参照を入れます。引き継ぎ元と先・有効な承認の範囲・注意点の章は `_TODO_` のまま残すため、起票した後に手で書きます。
 

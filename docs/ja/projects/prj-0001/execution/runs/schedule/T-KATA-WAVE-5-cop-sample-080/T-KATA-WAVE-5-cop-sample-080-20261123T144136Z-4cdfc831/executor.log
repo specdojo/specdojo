@@ -1,0 +1,9 @@
+`docs/ja/specdojo/samples/cop-sample.md` で、冗長な記述を 1 箇所だけ削りました。ほかの候補は意味の維持に必要と判断して残しました。
+
+- **削った箇所:** 「担当者/連絡系統」の表で、判断者の行の備考にあった「判定結果の記録先は登録簿の decision 個票」を削りました。同じ内容が表の直後の箇条書きにあるためです。意味は変わりません。
+- **残した箇所:** 当日タイムラインと作業手順チェックリストは、実施者と証跡が加わるので別の情報です。ロールバックの発動条件と障害対応の重大度「高」は、役割が違うので残しました。
+- **検査:** 変更したファイルで `npx prettier --check` と `npx markdownlint-cli2` を実行し、どちらも問題なしでした。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"cop-sample.md の担当者表の重複記述を 1 件削除。ほかの候補は retain。","handoff":[],"condense_records":[{"location":"4. 担当者/連絡系統 の表「判断者（GO/NO-GO）」行の備考","category":"repetition","action":"delete","reason":"判定結果の記録先（decision 個票）は表の直後の箇条書きに同じ内容があり、削っても意味と必須情報は維持される","cause":{"type":"document"}},{"location":"3. 作業手順チェックリスト 全体","category":"table-prose","action":"retain","reason":"タイムラインにない実施者・証跡を加える別視点の表で、重複ではない","cause":{"type":"document"}},{"location":"8. 障害時判断・エスカレーション 重大度「高」の判断基準","category":"repetition","action":"retain","reason":"重大度ごとの判断と連絡経路を示すのに必要で、ロールバック章の発動条件とは役割が異なる","cause":{"type":"document"}}],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/cop-sample.md","status":"passed","summary":"整形済み"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/cop-sample.md","status":"passed","summary":"問題 0 件"}]}
+</specdojo_executor_evidence>

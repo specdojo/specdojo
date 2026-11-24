@@ -16,6 +16,7 @@ import { registerWatchCommand } from "./commands/watch.js";
 import { registerBuildCommand } from "./commands/build.js";
 import { registerPlaybookCommands } from "./project/playbook.js";
 import { registerWhereCommand } from "./commands/where.js";
+import { registerDoctorCommand } from "./commands/doctor.js";
 import { registerYamlPagesCommands } from "./docs/yaml-pages-command.js";
 import { registerDashboardCommands } from "./dashboard/dashboard.js";
 import { registerGradeCommand } from "./grade/grade.js";
@@ -69,6 +70,7 @@ async function main(): Promise<void> {
   registerWatchCommand(program);
   registerBuildCommand(program);
   registerWhereCommand(program);
+  registerDoctorCommand(program);
   registerPlaybookCommands(program);
   registerYamlPagesCommands(program);
   registerDashboardCommands(program);

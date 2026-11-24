@@ -4,317 +4,140 @@ document: specdojo:opr-sample
 path: docs/ja/specdojo/samples/opr-sample.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-sample
-verdict: fail
-score: 39
-graded_at: "2026-11-21T05:04:24.830Z"
-graded_by: opus-executor
-content_hash: 28ca5cc071ed2d3b4449fc67b4fe5c3686c143db9bd2aa01d6e0dfdaf4da0e5c
+verdict: pass
+score: 94
+graded_at: "2026-11-23T18:17:45.923Z"
+graded_by: sonnet-review-executor
+content_hash: 978c73f412ccf9615bd377d5d63ac94c9f5edbb09ee2f3143b41a7ed69ef7593
 categories:
   purpose:
-    score: 25
+    score: 88
   operations:
-    score: 44
+    score: 94
   planning:
-    score: 25
+    score: 100
   business:
-    score: 25
+    score: 100
   architecture:
-    score: 75
+    score: 100
   usability:
-    score: 67
+    score: 100
   implementation:
-    score: 25
+    score: 100
   quality:
-    score: 33
+    score: 83
   consistency:
-    score: 0
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-po-decision-readiness:
-    level: 1
-    score: 25
+    level: 3
+    score: 75
   vp-po-publication-accountability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-plan-feasibility:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-pm-control-reporting:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ba-business-value:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ba-requirements-completeness:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-dev-change-impact:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-dev-testability:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-qe-verifiability:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
-    level: 0
-    score: 0
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 1
-    score: 25
+    level: 3
+    score: 75
   vp-ux-readability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
-    level: 1
-    score: 25
-  vp-ops-operability:
-    level: 0
-    score: 0
-  vp-ops-agent-boundary:
     level: 3
     score: 75
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
-  blocker: 2
-  major: 20
-  minor: 6
+  blocker: 0
+  major: 0
+  minor: 4
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-po-purpose-alignment
-    line: 3
-    anchor: "## 1. 目的と適用範囲"
-    message: ドキュメントでは対象システムを菓子店販売管理システムと宣言していますが、プロジェクトの目標、スコープ、優先順位に沿った実際の運用手順が定義されていません。
-    message_ja: ドキュメントでは対象システムを菓子店販売管理システムと宣言していますが、プロジェクトの目標、スコープ、優先順位に沿った実際の運用手順が定義されていません。
-  - id: F002
-    severity: major
-    rule: vp-po-purpose-alignment
-    line: 5
-    anchor: 本書は、運用作業を再現可能な手順として定義し、誰が実施しても同じ結果になる状態を作るための最小サンプルである。
-    message: 概要に `opr-index` が恒常運用の実行手順の SSOT であることと、店主一人運用・家族店番時の継続といったきぬやの目的との対応を記述し、手順の必要性を上位文書から説明できるようにする必要がある。
-    message_ja: 概要に `opr-index` が恒常運用の実行手順の SSOT であることと、店主一人運用・家族店番時の継続といったきぬやの目的との対応を記述し、手順の必要性を上位文書から説明できるようにする必要がある。
-  - id: F003
-    severity: major
+    severity: minor
     rule: vp-po-decision-readiness
-    line: 26
-    anchor: "## 5. 未解決事項"
-    message: 未解決事項のセクションには、実行可能な意思決定ポイント、影響範囲、またはPOの承認やエスカレーションの基準が指定されていない、些細なプレースホルダーしか含まれていません。
-    message_ja: 未解決事項のセクションには、実行可能な意思決定ポイント、影響範囲、またはPOの承認やエスカレーションの基準が指定されていない、些細なプレースホルダーしか含まれていません。
+    line: 7
+    anchor: 次の表は、運用方針で未決の値が本書のどの手順に影響し、決まるまでどう扱うかを示す。値が決まった時点で該当する章の完了条件を差し替える。
+    message: 未決事項の表に、決定者（Role code）と決定の期限または判断タイミングの列を足し、PO が承認・保留を判断する際の次アクションを読み取れるようにする必要がある。
+    message_ja: 未決事項の表に、決定者（Role code）と決定の期限または判断タイミングの列を足し、PO が承認・保留を判断する際の次アクションを読み取れるようにする必要がある。
+  - id: F002
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 126
+    anchor: >-
+      | 日次点検の記録 | 店内の点検ノート（紙）               | _UNDECIDED_                               | 店番担当、`OPS`       |
+      点検日、点検した役割             |
+    message: "証跡の保管期間が監査ログ以外すべて `_UNDECIDED_` で判定値がない。概要の未決事項の表に「保管期間」の行を足して扱いを示すか、サンプル上の仮値（例: 点検記録 1 年）を置いて、水準を例示する必要がある。"
+    message_ja: "証跡の保管期間が監査ログ以外すべて `_UNDECIDED_` で判定値がない。概要の未決事項の表に「保管期間」の行を足して扱いを示すか、サンプル上の仮値（例: 点検記録 1 年）を置いて、水準を例示する必要がある。"
+  - id: F003
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 142
+    anchor: "| 種別 | ドキュメント ID                                           | 目的                                          | 備考   |"
+    message: >-
+      関連導線の表と直後の文が「分冊は障害対応だけ」「`opr-incident` は予定」と書く一方、分冊 sample が複数存在し、`opr-incident-sample` は本書を `opr-index-sample`
+      として参照している。id と分冊の記述を揃える必要がある。
+    message_ja: >-
+      関連導線の表と直後の文が「分冊は障害対応だけ」「`opr-incident` は予定」と書く一方、分冊 sample が複数存在し、`opr-incident-sample` は本書を `opr-index-sample`
+      として参照している。id と分冊の記述を揃える必要がある。
   - id: F004
     severity: minor
-    rule: vp-po-publication-accountability
-    line: 3
-    anchor: "## 1. 目的と適用範囲"
-    message: ドキュメントにプライベートな情報は含まれていませんが、人の承認および公開に関する責任が、責任ある役割を定義しない抽象的な項目としてのみ言及されています。
-    message_ja: ドキュメントにプライベートな情報は含まれていませんが、人の承認および公開に関する責任が、責任ある役割を定義しない抽象的な項目としてのみ言及されています。
-  - id: F005
-    severity: major
-    rule: vp-pm-plan-feasibility
-    line: 13
-    anchor: "## 3. 記述内容"
-    message: 運用タスク、実行シーケンス、推定所要時間、および完了条件が完全に省略されており、作業分解やスケジューリングを行うことができません。
-    message_ja: 運用タスク、実行シーケンス、推定所要時間、および完了条件が完全に省略されており、作業分解やスケジューリングを行うことができません。
-  - id: F006
-    severity: major
-    rule: vp-pm-plan-feasibility
-    line: 13
-    anchor: "## 3. 記述内容"
-    message: いかなる運用手順についても、担当者の役割コードや実行のトリガー、または期限が定義されていません。
-    message_ja: いかなる運用手順についても、担当者の役割コードや実行のトリガー、または期限が定義されていません。
-  - id: F007
-    severity: major
-    rule: vp-pm-dependency-risk
-    line: 13
-    anchor: "## 3. 記述内容"
-    message: 運用のリスク、後続の成果物やアップストリームシステムへの依存関係、およびプロジェクトのリスク候補が特定されていません。
-    message_ja: 運用のリスク、後続の成果物やアップストリームシステムへの依存関係、およびプロジェクトのリスク候補が特定されていません。
-  - id: F008
-    severity: major
-    rule: vp-pm-control-reporting
-    line: 26
-    anchor: "## 5. 未解決事項"
-    message: プロジェクトのレジスター（リスク、課題、変更要求）に転記される項目と、指定された役割コードを持つ報告先が区別または定義されていません。
-    message_ja: プロジェクトのレジスター（リスク、課題、変更要求）に転記される項目と、指定された役割コードを持つ報告先が区別または定義されていません。
-  - id: F009
-    severity: major
-    rule: vp-ba-business-value
-    line: 3
-    anchor: "## 1. 目的と適用範囲"
-    message: 菓子店の運営におけるビジネス上の課題、何もしなかった場合の結果、および具体的な期待されるビジネス価値や成功基準が定義されていません。
-    message_ja: 菓子店の運営におけるビジネス上の課題、何もしなかった場合の結果、および具体的な期待されるビジネス価値や成功基準が定義されていません。
-  - id: F010
-    severity: major
-    rule: vp-ba-requirements-completeness
-    line: 7
-    anchor: "## 2. 入力情報"
-    message: ユーザーおよびオペレーターの視点から、運用要件、受け入れ基準、および明確なインスコープとアウトオブスコープの境界が完全に欠落しています。
-    message_ja: ユーザーおよびオペレーターの視点から、運用要件、受け入れ基準、および明確なインスコープとアウトオブスコープの境界が完全に欠落しています。
-  - id: F011
-    severity: major
-    rule: vp-ba-stakeholder-clarity
-    line: 7
-    anchor: "## 2. 入力情報"
-    message: 運用手順における特定のステークホルダー、オペレーター、レビュアー、および合意の対象が特定されていません。
-    message_ja: 運用手順における特定のステークホルダー、オペレーター、レビュアー、および合意の対象が特定されていません。
-  - id: F012
-    severity: major
-    rule: vp-arc-technical-constraints
-    line: 7
-    anchor: "## 2. 入力情報"
-    message: 技術的な制約、アーキテクチャの前提条件、外部依存関係、および構成に関する決定事項が指定されていません。
-    message_ja: 技術的な制約、アーキテクチャの前提条件、外部依存関係、および構成に関する決定事項が指定されていません。
-  - id: F013
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 18
-    anchor: "## 4. 最小記述例"
-    message: セクション3 ('記述内容') とセクション4 ('最小記述例') は、運用トピックのハイレベルな要約リストを重複して記載しており、決定事項の情報を失うことなく統合できます。
-    message_ja: セクション3 ('記述内容') とセクション4 ('最小記述例') は、運用トピックのハイレベルな要約リストを重複して記載しており、決定事項の情報を失うことなく統合できます。
-  - id: F014
-    severity: major
-    rule: vp-dev-implementation-readiness
-    line: 7
-    anchor: "## 2. 入力情報"
-    message: 運用コマンド、入力パラメータ、設定ファイル、および完了条件などの実装および実行の詳細が欠落しています。
-    message_ja: 運用コマンド、入力パラメータ、設定ファイル、および完了条件などの実装および実行の詳細が欠落しています。
-  - id: F015
-    severity: major
-    rule: vp-dev-change-impact
-    line: 13
-    anchor: "## 3. 記述内容"
-    message: 運用変更が既存のシステムコンポーネント、データスキーマ、および手順の互換性に与える影響が評価または特定されていません。
-    message_ja: 運用変更が既存のシステムコンポーネント、データスキーマ、および手順の互換性に与える影響が評価または特定されていません。
-  - id: F016
-    severity: major
-    rule: vp-dev-testability
-    line: 13
-    anchor: "## 3. 記述内容"
-    message: 運用手順の後の検証コマンド、期待される結果、対象のログファイル、およびエラーハンドリングの手順が完全に欠落しています。
-    message_ja: 運用手順の後の検証コマンド、期待される結果、対象のログファイル、およびエラーハンドリングの手順が完全に欠落しています。
-  - id: F017
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 1
-    anchor: "# [運用手順](../rulebooks/opr-rulebook.md) サンプル"
-    message: 手順の具体例が記述されておらず、判定条件や完了条件の具体的な記述水準（verifiability）を提示できていない。
-    message_ja: 手順の具体例が記述されておらず、判定条件や完了条件の具体的な記述水準（verifiability）を提示できていない。
-  - id: F018
-    severity: major
-    rule: vp-qe-verifiability
-    line: 21
-    anchor: "| ------------ | ------------------------------------------ | ------------------------------------ |"
-    message: >-
-      完了条件・初動目標・再実行上限・証跡の保管期間など pass / fail を判定できる値が一つも示されておらず、OPR
-      の受入確認（完了条件と証跡の照合）の水準を例示できていないため、各手順に具体的な判定値を記載する必要がある。
-    message_ja: >-
-      完了条件・初動目標・再実行上限・証跡の保管期間など pass / fail を判定できる値が一つも示されておらず、OPR
-      の受入確認（完了条件と証跡の照合）の水準を例示できていないため、各手順に具体的な判定値を記載する必要がある。
-  - id: F019
-    severity: blocker
-    rule: vp-qe-omissions-consistency
-    line: 1
-    anchor: "# [運用手順](../rulebooks/opr-rulebook.md) サンプル"
-    message: "`opr-rulebook` で定義されている必須章（概要〜関連文書導線）がすべて欠落しており、運用手順書の構成として不成立である。"
-    message_ja: "`opr-rulebook` で定義されている必須章（概要〜関連文書導線）がすべて欠落しており、運用手順書の構成として不成立である。"
-  - id: F020
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 1
-    anchor: "# [運用手順](../rulebooks/opr-rulebook.md) サンプル"
-    message: >-
-      template の `frontmatter_template` が持つ `based_on`（`opd-index` など手順判断に用いた成果物）と `supersedes` が Frontmatter
-      に記載されておらず、rulebook の推奨ルールに沿った依存の宣言ができていない。
-    message_ja: >-
-      template の `frontmatter_template` が持つ `based_on`（`opd-index` など手順判断に用いた成果物）と `supersedes` が Frontmatter
-      に記載されておらず、rulebook の推奨ルールに沿った依存の宣言ができていない。
-  - id: F021
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# [運用手順](../rulebooks/opr-rulebook.md) サンプル"
-    message: 成果物の完成例ではなく「記述すべき内容のリスト」となっており、OPR のサンプルとしての責務（完成例の提示）を果たしていない。
-    message_ja: 成果物の完成例ではなく「記述すべき内容のリスト」となっており、OPR のサンプルとしての責務（完成例の提示）を果たしていない。
-  - id: F022
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 3
-    anchor: "## 1. 目的と適用範囲"
-    message: >-
-      本文の見出しが `opr-template`
-      の構成（概要、手順適用範囲・前提、点検、障害対応、アラート対応、バックアップ・リストア、バッチ再実行、運用変更、アカウント付与・剥奪、問い合わせ一次対応、証跡、関連ドキュメント導線）と対応しておらず、分冊 sample
-      が参照する `opr-index` の共通規約も示されていないため、template に沿った完成例へ置き換える必要がある。
-    message_ja: >-
-      本文の見出しが `opr-template`
-      の構成（概要、手順適用範囲・前提、点検、障害対応、アラート対応、バックアップ・リストア、バッチ再実行、運用変更、アカウント付与・剥奪、問い合わせ一次対応、証跡、関連ドキュメント導線）と対応しておらず、分冊 sample
-      が参照する `opr-index` の共通規約も示されていないため、template に沿った完成例へ置き換える必要がある。
-  - id: F023
-    severity: major
-    rule: vp-ux-readability
-    line: 1
-    anchor: "# [運用手順](../rulebooks/opr-rulebook.md) サンプル"
-    message: 具体的な記述例ではなくメタ記述（項目リスト）となっているため、執筆時の具体水準を把握するためのリファレンスとして不十分である。
-    message_ja: 具体的な記述例ではなくメタ記述（項目リスト）となっているため、執筆時の具体水準を把握するためのリファレンスとして不十分である。
-  - id: F024
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 9
-    anchor: "- 対象: 駄菓子屋の販売管理システム"
-    message: "対象名を共通サンプル文脈の「駄菓子屋きぬや 販売管理システム」に統一し、定義されていない「handbook の共通方針」は参照先の文書 ID（例: `opd-index`）に置き換える必要がある。"
-    message_ja: "対象名を共通サンプル文脈の「駄菓子屋きぬや 販売管理システム」に統一し、定義されていない「handbook の共通方針」は参照先の文書 ID（例: `opd-index`）に置き換える必要がある。"
-  - id: F025
-    severity: major
     rule: vp-ops-release-readiness
-    line: 26
-    anchor: "## 5. 未解決事項"
-    message: 特定の承認者やリリース前の検証チェックを含む、ドキュメントのステータスをドラフトからレディに進めるための基準と前提条件が定義されていません。
-    message_ja: 特定の承認者やリリース前の検証チェックを含む、ドキュメントのステータスをドラフトからレディに進めるための基準と前提条件が定義されていません。
-  - id: F026
-    severity: major
-    rule: vp-ops-operability
-    line: 13
-    anchor: "## 3. 記述内容"
-    message: 日常的なメンテナンス、インシデント対応、変更管理、および問い合わせ対応のための実行可能な運用手順が完全に欠落しています。
-    message_ja: 日常的なメンテナンス、インシデント対応、変更管理、および問い合わせ対応のための実行可能な運用手順が完全に欠落しています。
-  - id: F027
-    severity: blocker
-    rule: vp-ops-operability
-    line: 13
-    anchor: "## 3. 記述内容"
-    message: 運用手順 sample の中核である実行手順・実施者・証跡が一切なく、継続運用や障害時対応にまったく使えないため、少なくとも P1/P2 障害対応・点検・証跡の手順を具体値付きで記述する必要がある。
-    message_ja: 運用手順 sample の中核である実行手順・実施者・証跡が一切なく、継続運用や障害時対応にまったく使えないため、少なくとも P1/P2 障害対応・点検・証跡の手順を具体値付きで記述する必要がある。
-  - id: F028
-    severity: minor
-    rule: vp-ops-agent-boundary
-    line: 16
-    anchor: "- 必須観点: 対象、条件、判定基準、責任者"
-    message: 「責任者」が観点名として挙げられているだけで、停止判断・変更承認・権限付与の承認者を人間の役割（Ops Lead、店主など）として明示しておらず、人間が担う承認の境界を読み取れない。
-    message_ja: 「責任者」が観点名として挙げられているだけで、停止判断・変更承認・権限付与の承認者を人間の役割（Ops Lead、店主など）として明示しておらず、人間が担う承認の境界を読み取れない。
+    line: 7
+    anchor: 次の表は、運用方針で未決の値が本書のどの手順に影響し、決まるまでどう扱うかを示す。値が決まった時点で該当する章の完了条件を差し替える。
+    message: 未決事項の表に、ready 化の前に解消すべき項目と確認者を示す記述（または列）が無く、ready 化の判断基準が読み取れない。
+    message_ja: 未決事項の表に、ready 化の前に解消すべき項目と確認者を示す記述（または列）が無く、ready 化の判断基準が読み取れない。

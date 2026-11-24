@@ -1,0 +1,11 @@
+grade 評価は最新でした。minor の finding 2 件は完了を妨げません。
+
+- `nfr-mnt-004` は `_UNDECIDED_` のままですが、概要の表に判断者（`PO`）と決まるまでの扱いが書かれています。DC-004 の「利用者が決める値は推測で埋めず `_UNDECIDED_` で残す」に合っています。
+- 原因範囲の表記は、sample が「通信」、rulebook が「外部」と食い違っています。
+- 概要には、店主不在時の運用と「営業日の 90% 以上で記録を継続する」が目的として示されています（DC-005）。
+
+確認できなかった範囲: rulebook の本文と result の実行記録は読んでいません。grade の finding を事実として扱い、成果物は再評価していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict 案: complete-with-findings。鮮度確認として、sample と rulebook に対し `specdojo grade list --target kata --changed-only` を実行しました。どちらも出力は空で、評価結果は最新です。sample は pass・97 点、rulebook は pass・94 点で、どちらも minor の finding のみです。sample の finding は2件です。F001 は `nfr-mnt-004` が `_UNDECIDED_` のままという指摘です。ただし概要の表で判断者と決まるまでの扱いが示されており、DC-004 を満たすため完了を妨げません。F002 は原因範囲の表記ゆれで、「通信」と「外部」が揃っていません。改善指示は2点です。F001 は、`_UNDECIDED_` を許す旨を rulebook 側と揃えます。F002 は、「通信」を「外部」に統一します。rulebook の finding（recipe・template の要否判断の期限、検証コマンドの所在、`dec-*` の呼称統一）も完了を妨げません。DC-001〜005 は、grade の評価結果と sample 概要の確認から充足と判断しました。確認できなかった範囲は、rulebook 本文と先行する edit の result の実行記録を読んでいない点です。","handoff":["改善指示: sample の原因範囲の表記を rulebook の用語定義（アプリ・データ・端末・外部）に揃える","改善指示: `nfr-mnt-004` の `_UNDECIDED_` を許す理由を rulebook の「中核の要件は未決に回さない」と整合させる","改善指示: rulebook の `recipe` / `template` の要否判断の判断者と時期を明記する"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/nfr-maintainability-sample.md --changed-only","status":"passed","summary":"出力なし。評価結果は最新"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/nfr-maintainability-rulebook.md --changed-only","status":"passed","summary":"出力なし。評価結果は最新"}]}
+</specdojo_executor_evidence>

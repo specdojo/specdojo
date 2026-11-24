@@ -1,0 +1,35 @@
+レビュー結果は `complete-with-findings` としました。評価結果は最新で、`pass`(score 95)、blocker と major は 0 件です。
+
+**評価結果の確認**
+- 鮮度確認として、`specdojo grade list --target kata --changed-only` を sample と rulebook の両方に実行しました。どちらも出力は空で終了コード 0 でした。そのため、評価結果は最新と判断しました。
+- sample は `verdict` が `pass`、score が 95 です。finding は minor 2 件(F001、F002)です。
+- rulebook は `verdict` が `pass`、score が 98 です。finding は minor 1 件(F001)です。
+- 作業ツリーの変更は、未追跡の `pipeline-state.json` だけでした。review 中に成果物の変更は検知していません。
+
+**完了条件との照合**
+- DC-001、DC-002、DC-003 は、grade の `vp-qe-kata-conformance`(level 4)と `vp-qe-omissions-consistency`(level 3)の結果で足りると判断しました。
+  - sample の章構成は、概要、タイムライン、作業手順チェックリスト、担当者・連絡系統、実施条件、GO/NO-GO、ロールバック、障害時判断、周知、関連ドキュメントです。
+  - 駄菓子屋の文脈になっており、禁止事項に当たる記述は見当たりませんでした。
+- DC-004 は充足しています。第1章の概要で、切替の対象(商品・顧客・つけ残高・現在庫の取り込みと、正午の開店からの並行記録)と、対象外(`dmd-index`、`otp-index`、過去ノートの移行、EC・会計・仕入先との連携)を示しています。
+- DC-005 は充足しています。第6章に、判定点・条件・判断者・失敗時の扱いの表があります。
+
+**finding が完了を妨げない理由**
+- 3件とも minor で、完了条件に直結する欠落や禁止事項への抵触はありません。
+- 内容は、sample の2件(GO4 の差異基準が曖昧なこと、実施条件の導入文と GO1 の時期の不一致)と、rulebook の記述ガイドの不足です。いずれも文言の精緻化です。
+- sample 本文を読んで確認したところ、GO4 の条件(82行目付近の指摘は第6章の GO4 行に相当)は「理由の分からない差異がない」のままでした。第5章の導入文は「前日の閉店時まで」で、GO1 の確認時期は「前日の閉店後」でした。指摘は現状と一致しています。
+
+**改善指示**
+1. GO4 の条件を、差異は 0、または原因を日次締めの差異欄に書いた差異だけ、のように状態で示す。
+2. 第5章の導入文と GO1 の確認時期を揃える。例は「前日の最終棚卸の終了時(T-13:00)まで」。
+3. rulebook の記述ガイドに、概要、作業手順チェックリスト、実施条件、関連ドキュメントの4章を足す。実施条件は、未達時の扱いと判断者の書き方を含め、判断基準と良い例・悪い例を示す。
+
+**確認できなかった範囲**
+- 先行する edit タスクの実行記録は、plan に示されておらず特定できませんでした。そのため、実行記録の検証結果は確認していません。
+- rulebook 本文は読んでいません。rulebook は grade の評価結果だけに依拠しています。
+- `recipe` は plan 上 `_MISSING_`(未宣言)でした。
+
+verdict は `complete-with-findings` です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict: complete-with-findings。評価結果は sample・rulebook とも最新（grade list --changed-only は出力なし、終了コード 0）で、どちらも pass（95 / 98）、blocker・major は 0 件。DC-001〜DC-005 は sample 本文と grade の判定で充足。minor finding 3 件（sample の GO4 差異基準と、実施条件の導入文・GO1 の時期の不一致、rulebook の記述ガイド不足）は完了を妨げない。改善指示は、GO4 の差異基準を状態で示すこと、実施条件の導入文と GO1 の時期を揃えること、記述ガイドに4章を足すこと。確認できなかった範囲: 先行 edit タスクの実行記録は特定できなかった。rulebook 本文は読まず grade の評価結果に依拠した。recipe は未宣言（_MISSING_）。","handoff":["改善指示: GO4 の条件を、差異は 0、または原因を日次締めの差異欄に書いた差異だけ、のように状態で示す","改善指示: 実施条件の導入文（前日の閉店時まで）と GO1 の確認時期（前日の閉店後）を、前日の最終棚卸の終了時（T-13:00）などへ揃える","改善指示: rulebook の記述ガイドに、概要、作業手順チェックリスト、実施条件、関連ドキュメントの4章を足し、判断基準と良い例・悪い例を示す"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/cop-index-sample.md --changed-only","status":"passed","summary":"出力なし、終了コード 0。評価結果は最新"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/cop-index-rulebook.md --changed-only","status":"passed","summary":"出力なし、終了コード 0。評価結果は最新"}]}
+</specdojo_executor_evidence>

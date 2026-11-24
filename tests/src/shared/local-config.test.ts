@@ -346,10 +346,17 @@ describe("local config records", () => {
           shared_path: "../app1",
         },
         { project: "prj-0001", repo: "tools", kind: "added", path: "../tools" },
+        {
+          reference: "library",
+          kind: "reference-path",
+          path: "../library-alt",
+          shared_path: "../library",
+        },
+        { reference: "manuals", kind: "reference-added", path: "../manuals" },
       ],
     });
 
-    expect(evidence.local_config_overrides).toHaveLength(2);
+    expect(evidence.local_config_overrides).toHaveLength(4);
     expect(validate(evidence), JSON.stringify(validate.errors)).toBe(true);
   });
 

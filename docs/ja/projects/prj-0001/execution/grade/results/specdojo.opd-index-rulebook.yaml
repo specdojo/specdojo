@@ -4,41 +4,40 @@ document: specdojo:opd-index-rulebook
 path: docs/ja/specdojo/rulebooks/opd-index-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-rulebook
-verdict: needs-work
-score: 83
-graded_at: "2026-11-21T04:54:56.530Z"
-graded_by: opus-executor
-content_hash: e1f88722f21f7744010d6cf8a28439f53d8a6a0699c9f728d313ab505fa51727
+verdict: pass
+score: 99
+graded_at: "2026-11-23T15:41:36.142Z"
+graded_by: sonnet-review-executor
+content_hash: 900994e5dbc4ed4e8383578f241a5c1154eba930a5619a3327532f3e7a9beb8e
 categories:
   purpose:
-    score: 100
+    score: 88
   operations:
-    score: 94
+    score: 100
   planning:
     score: 100
   business:
-    score: 92
+    score: 100
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
-    score: 88
+    score: 100
   quality:
-    score: 58
+    score: 100
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 4
-    score: 100
-  vp-po-publication-accountability:
     level: 3
     score: 75
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
   vp-pm-plan-feasibility:
     level: 4
     score: 100
@@ -52,8 +51,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
     level: 4
     score: 100
@@ -64,29 +63,29 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-change-impact:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -101,94 +100,14 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 3
-  minor: 8
+  major: 0
+  minor: 1
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-publication-accountability
-    line: 47
-    anchor: "- 体制は RACI・当番・優先度別エスカレーション条件、監視・障害・変更管理は条件・判断者・通知先を示す。"
-    message: 体制・当番・通知先の記述で個人名・個人連絡先を載せず Role や窓口名で書く旨の制約がなく、公開リポジトリへ個人情報が記載されるおそれがあるため、禁止事項または記述ガイドに明記する。
-    message_ja: 体制・当番・通知先の記述で個人名・個人連絡先を載せず Role や窓口名で書く旨の制約がなく、公開リポジトリへ個人情報が記載されるおそれがあるため、禁止事項または記述ガイドに明記する。
-  - id: F002
-    severity: minor
-    rule: vp-ba-requirements-completeness
-    line: 15
-    anchor: "`opd-index` を入口・方針の正本とし、`opd-<term>` は差分（補足・具体化・例外）、`opr-*` は実行手順と証跡を担う。"
-    message: 章名が「位置づけと用語定義」なのに SLO・SLA・KPI・RACI・RTO/RPO などの用語定義がなく、移行期文書（`otp-*`）との対象外境界も示されていないため、用語の定義と対象外を追記する。
-    message_ja: 章名が「位置づけと用語定義」なのに SLO・SLA・KPI・RACI・RTO/RPO などの用語定義がなく、移行期文書（`otp-*`）との対象外境界も示されていないため、用語の定義と対象外を追記する。
-  - id: F003
-    severity: minor
-    rule: vp-dev-implementation-readiness
-    line: 48
-    anchor: "- 復旧は RTO/RPO・検証頻度、関連導線は `opr-index` を含める。"
-    message: >-
-      必須章の「運用の範囲・前提」「権限・アカウント運用」「定期運用方針」「問い合わせ運用方針」に記述ガイドがなく記入基準が定まらないため、各章で最低限書く項目（棚卸し頻度、監査ログ保管、点検周期、窓口・分類・応答 SLA
-      等）を追記する。
-    message_ja: >-
-      必須章の「運用の範囲・前提」「権限・アカウント運用」「定期運用方針」「問い合わせ運用方針」に記述ガイドがなく記入基準が定まらないため、各章で最低限書く項目（棚卸し頻度、監査ログ保管、点検周期、窓口・分類・応答 SLA
-      等）を追記する。
-  - id: F004
-    severity: minor
-    rule: vp-dev-testability
-    line: 11
-    anchor: >-
-      - **共通の運用**: 役割は適用先のメンバー定義、`status`・承認・改訂と廃止・未決事項の引き継ぎは [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]]
-      に従う。整形・lint はリポジトリの検証で扱う。
-    message: 「整形・lint はリポジトリの検証で扱う」だけでは作成後に通すべき検証が特定できないため、Markdown lint と Frontmatter スキーマ検証など確認対象の検証を明記する。
-    message_ja: 「整形・lint はリポジトリの検証で扱う」だけでは作成後に通すべき検証が特定できないため、Markdown lint と Frontmatter スキーマ検証など確認対象の検証を明記する。
-  - id: F005
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 52
-    anchor: "- コマンド列・逐次チェックリストを大量記載しない。"
-    message: 禁止事項「大量記載しない」の「大量」は判定基準がなく pass/fail を決められないため、「手順は `opr-*` へ委譲し本書には記載しない」など判定可能な表現にする。
-    message_ja: 禁止事項「大量記載しない」の「大量」は判定基準がなく pass/fail を決められないため、「手順は `opr-*` へ委譲し本書には記載しない」など判定可能な表現にする。
-  - id: F006
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 15
-    anchor: "`opd-index` を入口・方針の正本とし、`opd-<term>` は差分（補足・具体化・例外）、`opr-*` は実行手順と証跡を担う。"
-    message: 見出し「位置づけと用語定義」に対し用語定義の内容が欠落しており、見出しと中身が一致しないため、用語定義を追加するか見出しを実態に合わせる。
-    message_ja: 見出し「位置づけと用語定義」に対し用語定義の内容が欠落しており、見出しと中身が一致しないため、用語定義を追加するか見出しを実態に合わせる。
-  - id: F007
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 51
-    anchor: ""
-    message: 禁止事項に理由が記載されておらず、例外判断やレビュー時の根拠にできないため、各項目に理由を添える（表形式を推奨）。
-    message_ja: 禁止事項に理由が記載されておらず、例外判断やレビュー時の根拠にできないため、各項目に理由を添える（表形式を推奨）。
-  - id: F008
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 42
-    anchor: "| 12  | 関連ドキュメント導線（`opr-index` 等）             | ○    |"
-    message: 本ルールで12章すべてを必須としているが、対応するサンプルに実装されておらず、実効性に欠ける。
-    message_ja: 本ルールで12章すべてを必須としているが、対応するサンプルに実装されておらず、実効性に欠ける。
-  - id: F009
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 運用方針・設計 全体構成 作成ルール"
-    message: サンプルとしての整合性がなく、rulebook としての機能（ exemplification ）を果たしていない。
-    message_ja: サンプルとしての整合性がなく、rulebook としての機能（ exemplification ）を果たしていない。
-  - id: F010
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 運用方針・設計 全体構成 作成ルール"
-    message: サンプル `specdojo:opd-index-sample` における rulebook 参照 ID と本ルールの ID が不整合である。
-    message_ja: サンプル `specdojo:opd-index-sample` における rulebook 参照 ID と本ルールの ID が不整合である。
-  - id: F011
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 46
-    anchor: "- SLO/SLA/KPI の標準列は「指標・数値目標・測定期間・測定方法・証跡・判定者」とする。"
-    message: 「SLO/SLA/KPI」と本文構成表の「SLO・SLA・KPI」で表記が揺れ、標準列「数値目標」もサンプルの「目標値」と不一致のため、章名・列名の表記を統一する。
-    message_ja: 「SLO/SLA/KPI」と本文構成表の「SLO・SLA・KPI」で表記が揺れ、標準列「数値目標」もサンプルの「目標値」と不一致のため、章名・列名の表記を統一する。
-level_corrections:
-  - viewpoint: vp-qe-kata-conformance
-    original_level: 2
-    corrected_level: 1
+    rule: vp-po-decision-readiness
+    line: 54
+    anchor: "## 6. 記述ガイド"
+    message: 記述ガイドに概要（index）章の項目がなく、サンプルにある未決事項の表（判断者・決まるまでの扱い・影響章）の要否も定まっていないため、PO の判断材料が作成者次第になる。概要章の記載項目と未決事項の書き方を追記する。
+    message_ja: 記述ガイドに概要（index）章の項目がなく、サンプルにある未決事項の表（判断者・決まるまでの扱い・影響章）の要否も定まっていないため、PO の判断材料が作成者次第になる。概要章の記載項目と未決事項の書き方を追記する。

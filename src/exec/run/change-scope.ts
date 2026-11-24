@@ -34,6 +34,8 @@ export type ChangeScope = { paths: string[]; unknown: boolean };
 export type UnknownScopePolicy = "parallel" | "serialize";
 export type ScopeWait = { item: string; blocker: string; overlap: string; at: string };
 
+export class ChangeScopeBlockedError extends Error {}
+
 export function parseUnknownScopePolicy(value?: string): UnknownScopePolicy {
   if (value === undefined || value === "parallel" || value === "serialize")
     return value ?? "parallel";
@@ -363,7 +365,7 @@ export class ChangeScopeGate {
           process.stdout.write(`  [scope] waiting: ${item} — ${record.item}: ${overlap}\n`);
         }
         if (record.state === "blocked" || !live)
-          throw new Error(
+          throw new ChangeScopeBlockedError(
             `[scope] ${item} blocked by unintegrated ${record.item}: ${overlap}; resume/retry ${record.item} first`,
           );
         return null;

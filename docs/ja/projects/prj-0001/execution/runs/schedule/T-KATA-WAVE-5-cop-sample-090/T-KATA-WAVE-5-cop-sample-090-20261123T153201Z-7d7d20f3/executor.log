@@ -1,0 +1,43 @@
+## レビュー結果: `T-KATA-WAVE-5-cop-sample-090`
+
+**verdict の案は `complete-with-findings` です。**
+
+### 評価結果の確認
+
+- `specdojo grade list --target kata --path docs/ja/specdojo/samples/cop-sample.md --changed-only` は何も出力しませんでした。サンプルの評価結果は最新です。
+- `specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/cop-rulebook.md --changed-only` も何も出力しませんでした。rulebook の評価結果も最新です。
+- `specdojo grade list --target kata --path docs/ja/specdojo/samples/cop-sample.md --incomplete` も何も出力しませんでした。評価パイプラインは完了しています。
+- `git status` で未追跡だったのは、runner が作る `pipeline-state.json` だけです。成果物は review 中に変更されていません。
+- サンプルは `pass`、スコア 99 で、finding は minor 1 件です。
+- rulebook も `pass`、スコア 99 で、finding は minor 1 件です。
+
+### 判断根拠
+
+- **DC-001、DC-002、DC-003:** grade は `vp-qe-omissions-consistency` と `vp-qe-kata-conformance` を level 4 で判定済みです。私は再評価していません。
+- **DC-004:** サンプルを実際に読んで確認しました。
+  - 「当日タイムライン」の表は、前日の閉店（C+0m）から当日の開店後 60 分（T+60m）までを分単位で示しています。
+  - 各時点に完了条件があり、判定点 GO1〜GO3 を置いています。
+  - 「切替判定ポイント（GO/NO-GO）」の表の失敗時の扱いに延期、代替手順、ロールバックが書かれています。
+  - 「ロールバック手順」の章で、発動条件、復旧方針、5 手順、各完了条件を示しています。
+- **題材と範囲:** 題材は駄菓子屋の販売管理システムで、共通サンプル文脈に沿っています。並行記録の運用と正本切替は対象外と明記し、`otp-index` などに委ねています。
+- **未決事項:** 臨時休業の開始時刻は `_UNDECIDED_` で残しています。サンプルの frontmatter の `status` は `draft` のままで、`ready` に上げていません。
+
+### finding が完了を妨げない理由
+
+- **サンプルの `F001`**（minor、`vp-ux-language-consistency`）は、「店主代表」と Role code `PO` の対応が本文に書かれていないという指摘です。表記の読みやすさに関するもので、rulebook の必須要素の欠落や禁止事項への抵触ではありません。
+- **rulebook の `F001`**（minor、`vp-dev-change-impact`）は、必須章を変えるときの追従確認先を広げるという指摘です。これも完了条件に直結しません。
+
+### 改善指示（次回の手直し用）
+
+- 「担当者/連絡系統」の章で、「店主代表（`PO`）」のように役割名と Role code の対応を一度明記する。
+- rulebook に、必須章や frontmatter 規約を変えたときの影響確認先を追記する。対象は `deliverable-frontmatter.schema.yaml`、scaffold・生成処理、成果物カタログの宣言です。
+
+### 確認できなかった範囲
+
+- 実行記録（先行する edit タスクの result）は、plan に宣言された文書に含まれていませんでした。そのため参照していません。
+- `cop-rulebook.md` の本文は読んでいません。rulebook の要件との照合は、grade の結果に依拠しています。
+- recipe は `_MISSING_` で、未宣言です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"評価結果は kata（サンプル・rulebook）とも最新で pass（99、minor 1 件ずつ）。DC-004 のタイムライン（分単位）・判定点・ロールバックはサンプルを読んで確認済み。verdict 案は complete-with-findings。改善指示は、サンプルで「店主代表（PO）」の対応を明記すること、rulebook で影響確認先を追記すること。確認できなかった範囲: 先行 edit result は宣言文書になく未参照。cop-rulebook 本文は未読で grade 結果に依拠。recipe は _MISSING_。","handoff":["サンプル F001: 「担当者/連絡系統」の章で「店主代表（PO）」の役割名と Role code の対応を明記する","rulebook F001: 必須章・frontmatter 規約の変更時の影響確認先に deliverable-frontmatter.schema.yaml、scaffold・生成処理、成果物カタログの宣言を追記する"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/cop-sample.md --changed-only","status":"passed","summary":"出力なし。評価結果は最新"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/cop-rulebook.md --changed-only","status":"passed","summary":"出力なし。評価結果は最新"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/cop-sample.md --incomplete","status":"passed","summary":"出力なし。評価パイプラインは完了"}]}
+</specdojo_executor_evidence>

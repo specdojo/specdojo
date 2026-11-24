@@ -1,0 +1,17 @@
+{
+  "v": 1,
+  "ts": "2026-11-23T15:30:38Z",
+  "type": "block",
+  "task_id": "T-KATA-WAVE-4-nfr-usability-sample-090",
+  "by": "sonnet-review-executor",
+  "msg": "reporter output invalid after 3 format attempts: result Markdown notation violation before writing (fix the JSON prose that produced these rendered lines; do not put Markdown headings, code fences, bare URLs, escaped backticks, or Chinese simplified glyphs in free-text fields):\nline 40 MD026/no-trailing-punctuation Trailing punctuation in heading [Punctuation: '。']: \"### approach に応じた確認 - `**`磨き込みの確認`**:` `grade` の結果および finding に基づき、`rulebook` の必須要素の整備および `sample` の形式への適合が確認された。両者ともに `pass` であるため、計画された磨き込みは完了している。 - `**findings` の扱い`**:` 検出された finding はすべて `minor`\"",
+  "meta": {
+    "limit_deferred": "false",
+    "claim_actor": "sonnet-review-executor",
+    "stage_actor": "gemma26-reporter",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-4-nfr-usability-sample-090/T-KATA-WAVE-4-nfr-usability-sample-090-20261123T152430Z-f042bc83/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-4-nfr-usability-sample-090/T-KATA-WAVE-4-nfr-usability-sample-090-20261123T152430Z-f042bc83/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-4-nfr-usability-sample-090-20261123T152430Z-f042bc83"
+  }
+}

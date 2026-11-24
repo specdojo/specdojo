@@ -36,6 +36,43 @@ function createRepo(prefix: string): string {
   return repo;
 }
 
+describe("specdojo init environment patterns", () => {
+  it.each([
+    { flags: {}, local: false, host: false, steps: "npx specdojo doctor\n" },
+    { flags: { tmux: true }, local: true, host: false, steps: "npx specdojo doctor --tmux" },
+    {
+      flags: { devcontainer: true, devcontainerPreset: "minimal", tmux: false },
+      local: false,
+      host: false,
+      steps: "npx specdojo doctor --devcontainer\n",
+    },
+    {
+      flags: { devcontainer: true },
+      local: false,
+      host: true,
+      steps: "npx specdojo doctor --devcontainer --tmux",
+    },
+  ])("writes the tmux script and next steps for $flags", async ({ flags, local, host, steps }) => {
+    const repo = createRepo("specdojo-init-environment-");
+    const output: string[] = [];
+    vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+      output.push(String(chunk));
+      return true;
+    });
+    try {
+      process.chdir(repo);
+      await runInit({ yes: true, provider: "none", ...flags });
+
+      expect(existsSync(join(repo, ".specdojo/host/local-tmux.sh"))).toBe(local);
+      expect(existsSync(join(repo, ".specdojo/host/devcontainer-tmux.sh"))).toBe(host);
+      expect(output.join("")).toContain(steps);
+    } finally {
+      process.chdir(originalCwd);
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+});
+
 describe("specdojo init", () => {
   it("creates minimal markdownlint settings without lefthook and preserves them on rerun", async () => {
     const repo = createRepo("specdojo-init-markdownlint-");
@@ -72,7 +109,7 @@ describe("specdojo init", () => {
     "uses the Slidev default for $preset and accepts '$answer'",
     async ({ preset, answer, expected, defaultPrompt }) => {
       const prompts: string[] = [];
-      const answers = ["", "", "", "", "", "", "", "yes", preset, "", answer];
+      const answers = ["", "", "", "", "", "", "", "yes", preset, "", "", answer];
       const prompter: InitPrompter = {
         async question(prompt) {
           prompts.push(prompt);
@@ -143,6 +180,7 @@ describe("specdojo init", () => {
       "yes",
       "no",
       "no",
+      "no",
     ];
     const prompts: string[] = [];
     let closed = false;
@@ -168,8 +206,9 @@ describe("specdojo init", () => {
       devcontainer: false,
       lefthook: false,
       slidev: false,
+      tmux: false,
     });
-    expect(prompts).toHaveLength(10);
+    expect(prompts).toHaveLength(11);
     expect(prompts.some((prompt) => prompt.includes("Deliverables catalog"))).toBe(false);
     expect(closed).toBe(true);
   });
@@ -182,6 +221,7 @@ describe("specdojo init", () => {
       "alice",
       "Alice",
       "codex",
+      "no",
       "no",
       "no",
       "no",
@@ -210,14 +250,15 @@ describe("specdojo init", () => {
       devcontainer: false,
       lefthook: false,
       slidev: false,
+      tmux: false,
     });
-    expect(prompts).toHaveLength(10);
+    expect(prompts).toHaveLength(11);
     expect(prompts.some((prompt) => prompt.includes("Deliverables catalog"))).toBe(false);
     expect(closed).toBe(true);
   });
 
   it("asks for a preset only after selecting a Dev Container and defaults to recommended", async () => {
-    const answers = ["", "", "", "", "", "", "", "yes", "", ""];
+    const answers = ["", "", "", "", "", "", "", "yes", "", "", "", ""];
     const prompts: string[] = [];
     const prompter: InitPrompter = {
       async question(prompt) {
@@ -230,13 +271,15 @@ describe("specdojo init", () => {
     await expect(collectInitAnswers({}, prompter)).resolves.toMatchObject({
       devcontainer: true,
       devcontainerPreset: "recommended",
+      tmux: true,
     });
-    expect(prompts.at(-3)).toBe(
+    expect(prompts.at(-4)).toBe(
       "Dev Container preset (minimal, recommended, full) [recommended]: ",
     );
+    expect(prompts.at(-3)).toBe("Keep agent sessions running with tmux (Dev Container)? [Y/n]: ");
     expect(prompts.at(-2)).toBe("Create Git hooks with lefthook? [y/N]: ");
     expect(prompts.at(-1)).toBe("Set up Slidev for kata? [y/N]: ");
-    expect(prompts).toHaveLength(11);
+    expect(prompts).toHaveLength(12);
   });
 
   it("interprets all Dev Container preset values and keeps none as a minimal alias", async () => {
@@ -302,6 +345,7 @@ describe("specdojo init", () => {
       "later",
       "no",
       "no",
+      "no",
     ];
     const prompts: string[] = [];
     const errors: string[] = [];
@@ -332,6 +376,7 @@ describe("specdojo init", () => {
       devcontainer: false,
       lefthook: false,
       slidev: false,
+      tmux: false,
     });
     expect(prompts.filter((prompt) => prompt.startsWith("Project ID"))).toHaveLength(2);
     expect(prompts.filter((prompt) => prompt.startsWith("Project name"))).toHaveLength(1);

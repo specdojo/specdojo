@@ -1,0 +1,39 @@
+評価結果は最新で、完了を妨げる未充足事項はないため、verdict は `complete-with-findings` と判断しました。
+
+**評価結果の確認**
+- 次の鮮度確認コマンドは、どれも出力が空でした。出力が空なので、評価結果は最新です。
+  - `specdojo grade list --target kata --path docs/ja/specdojo/samples/prj-issues-and-approach-sample.md --changed-only`
+  - 同じ sample に `--incomplete` を付けたコマンド
+  - rulebook に `--changed-only` を付けたコマンド
+- grade の結果は sample が `pass`、97 点、minor 1 件です。
+- rulebook は `pass`、98 点、minor 1 件です。
+- recipe は `pass`、97 点、minor 3 件です。
+- template は `pass`、97 点、minor 2 件です。
+- blocker と major はありません。
+- recipe と template の鮮度は、plan の記載をそのまま使いました。この 2 つには鮮度確認コマンドを実行していません。
+
+**完了条件の照合**
+- **DC-001 と DC-002:** sample の grade は `pass` です。`vp-qe-kata-conformance` は 100 点、`vp-qe-omissions-consistency` は 75 点（minor 1 件）でした。この minor は完了条件に直結しません。
+- **DC-003:** rulebook の禁止事項に当たる finding はありません。
+- **DC-004:** sample と rulebook を grep しました。
+  - sample には、文書の承認者や承認の進み具合を求める記述が残っていません。
+  - rulebook の 99 行目は、承認者や利用ロールの割り当てを書かないと明記しています。
+  - rulebook の 27 行目は、承認の運用を「ドキュメントメタ情報標準」に委ねています。
+  - rulebook の 90 行目と 148 行目の「承認」は、次の意思決定に必要な ToDo の内容を指します。文書の承認役割や進み具合を求める記述ではありません。
+- **recipe の記述:** recipe の手順 6 とレビュー観点は承認者と利用ロールを求めており、rulebook と矛盾します（rulebook の F001）。recipe は DC-004 の対象外ですが、改善指示に残します。
+
+**未充足事項・改善指示**
+完了を妨げる未充足事項はありません。次の finding が残っていて、いずれも minor です。完了を妨げない理由は、必須要素の欠落や禁止事項への抵触ではないためです。
+- **sample F001:** A-01 の対応課題を「P-04（記録の蓄積のみ）」と限定するか、P-04 を外す。
+- **rulebook F001 と recipe F002:** recipe の手順 6 とレビュー観点から承認者・利用ロールの記述を外し、rulebook に揃える。recipe には導入部の節も足す。
+- **recipe F001 と F003:** 仕上げチェックに、人間の PO による公開可否の最終承認の確認項目を足す。
+- **template F001 と F002:** 導入部の「本章」を「本書」に統一する。
+
+**確認できなかった範囲**
+- 実行記録として、先行する edit タスクの result は参照していません。
+- recipe と template の鮮度確認コマンドは実行していません。
+- 成果物の再評価はしていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict: complete-with-findings。grade は sample、rulebook、recipe、template のすべてが pass。鮮度確認は sample と rulebook で最新（出力なし）、recipe と template は plan 記載を採用。DC-001〜004 を満たし、minor finding のみ残る。改善指示: sample の A-01 と P-04 の整合、recipe を rulebook に揃える（承認者・利用ロール記述を外す、導入部の節を足す、PO 最終承認の確認項目を足す）、template の「本章」を「本書」に統一。確認できなかった範囲: 先行 edit タスクの result は未参照。recipe と template の鮮度確認コマンドは未実行。","handoff":[],"validations":[]}
+</specdojo_executor_evidence>

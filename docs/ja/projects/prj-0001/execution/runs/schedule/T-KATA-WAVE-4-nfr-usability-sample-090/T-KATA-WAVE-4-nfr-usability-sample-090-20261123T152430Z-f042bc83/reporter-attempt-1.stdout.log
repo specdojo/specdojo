@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "mode": "review",
+  "grade_check": "### 評価結果の確認\n\n#### 1. `docs/ja/specdojo/samples/nfr-usability-sample.md` の鮮度確認\n```bash\nnpx specdojo grade list --target kata --path docs/ja/specdojo/samples/nfr-usability-sample.md --changed-only\n```\n- 出力なし。評価結果は最新であることを確認。\n- `verdict`: `pass`\n- `score`: 97\n- `finding_counts`: blocker 0 / major 0 / minor 2 / note 0\n\n#### 2. `docs/ja/specdojo/rulebooks/nfr-usability-rulebook.md` の鮮度確認\n```bash\nnpx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/nfr-usability-rulebook.md --changed-only\n```\n- 出力なし。評価結果は最新であることを確認。\n- `verdict`: `pass`\n- `score`: 98\n- `finding_counts`: blocker 0 / major 0 / minor 2 / note 0",
+  "rationale": [
+    "成果物の `grade` 評価結果の鮮度を確認し、両ファイルとも最新であることを確認した。[[docs/ja/specdojo/samples/nfr-usability-sample.md]] は `verdict`: `pass`、[[docs/ja/specdojo/rulebooks/nfr-usability-rulebook.md]] も `verdict`: `pass` である。",
+    "`docs/ja/specdojo/samples/nfr-usability-sample.md` について、完了条件 `DC-001`〜`DC-005` を照合したところ、`grade` の `finding` に基づき、以下の事項が確認された：\\n- `DC-001`〜`DC-003`：`grade` の `pass` により充足。\\n- `DC-004`：指標値が `_UNDECIDED_` で残されていること、および導線が整理されていることを読解により確認。\\n- `DC-005`：対象範囲と対象外の記述を確認。",
+    "`docs/ja/specdojo/rulebooks/nfr-usability-rulebook.md` について、完了条件の充足状況を確認した：\\n- `grade` の結果に基づき、章立てや必須要素が整っていることを確認。\\n- ただし、`recipe` と `template` が `undecided` である点、および `ready` に至るための未完了作業に関する記述が不足している点が `finding` として指摘されている。"
+  ],
+  "improvements": [
+    "Sample に関する改善事項：\\n- `F001`: `sac-store-sales` の導線を wikilink 化するか、「未作成」と明記すること。\\n- `F002`: 判定者列の「利用者代表」の表記を、メンバー定義の Role code に合わせる。\\nRulebook に関する改善事項：\\n- `F001`: `recipe` および `template` が `undecided` である現状の扱い（作成予定など）を明記するか、決定後に更新すること。\\n- `F002`: `ready` ステータスへ移行するまでに必要な残作業について、本文への記述または登録簿への移管を行うこと。",
+    "確認できなかった範囲：先行する edit タスクの実行記録および検証結果。また、`sac-store-sales` が指す文書の wikilink としての実在性については、このレビューの範囲では確認できていない。"
+  ],
+  "approach": "### approach に応じた確認\n\n- `docs/ja/specdojo/samples/nfr-usability-sample.md` の磨き込み：`grade` の `finding` にある通り、wikilink 形式の不備や Role code の表記揺れが残っているが、plan で求められた成果物の整備（指標の `_UNDECIDED_` 化など）は完了している。\n- `docs/ja/specdojo/rulebooks/nfr-asi-rulebook.md` の磨き込み：`recipe` / `template` の `status` が `undecided` であることによる構造的な不備についての記述が不足している。" ,
+  "verdict": "complete-with-findings"
+}

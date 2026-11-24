@@ -26,6 +26,17 @@ import {
   writeJson,
 } from "./shared.js";
 import { eventsDirForProject, executionRootForProject } from "./project.js";
+import {
+  gitOutput,
+  repoRelative,
+  restoreIndexAfterPathspecCommit,
+  worktreeStatusPaths,
+} from "../shared/git.js";
+import {
+  inRegisterBranchSync,
+  pushRegisterBranch,
+  registerBranchForSchedule,
+} from "../shared/register-branch.js";
 
 export { collectRepeatable };
 
@@ -271,7 +282,16 @@ function orderSameTimestampEventsByState(items: { path: string; event: ExecEvent
 }
 
 export function readAllEventFiles(projectPath: string): { path: string; event: ExecEventV1 }[] {
-  const dir = eventsDirForProject(projectPath);
+  const target = registerBranchForSchedule(projectPath);
+  if (target) {
+    return inRegisterBranchSync(target, (worktree) =>
+      readEventFilesFromDirectory(join(worktree, target.eventsPath)),
+    );
+  }
+  return readEventFilesFromDirectory(eventsDirForProject(projectPath));
+}
+
+function readEventFilesFromDirectory(dir: string): { path: string; event: ExecEventV1 }[] {
   const files = listFilesRecursive(dir).filter((p) => extname(p).toLowerCase() === ".json");
 
   const items: { path: string; event: ExecEventV1 }[] = [];
@@ -338,7 +358,56 @@ export function writeEventFile(
   event: ExecEventV1,
   dependencies: { randomHex?: (bytes: number) => string } = {},
 ): string {
-  const execDir = eventsDirForProject(projectPath);
+  const target = registerBranchForSchedule(projectPath);
+  if (!target) return writeEventToDirectory(eventsDirForProject(projectPath), event, dependencies);
+  return inRegisterBranchSync(target, (worktree) => {
+    const execDir = join(worktree, target.eventsPath);
+    const assertClaimAvailable = (exclude?: string): void => {
+      if (event.type !== "claim") return;
+      let state: SimpleTaskState = "todo";
+      for (const item of readEventFilesFromDirectory(execDir)) {
+        if (item.path !== exclude && item.event.task_id === event.task_id) {
+          state = advanceTaskState(state, item.event);
+        }
+      }
+      if (state !== "todo") {
+        throw new Error(
+          `Cannot publish claim for ${event.task_id}: register branch state is ${state}. Inspect concurrent claims before retrying.`,
+        );
+      }
+    };
+    assertClaimAvailable();
+    const path = writeEventToDirectory(execDir, event, dependencies);
+    const relativePath = repoRelative(worktree, path);
+    gitOutput(worktree, ["add", "--", relativePath]);
+    gitOutput(worktree, [
+      "commit",
+      "--only",
+      "-m",
+      `docs(exec): ${event.type} ${event.task_id}`,
+      "--",
+      relativePath,
+    ]);
+    restoreIndexAfterPathspecCommit(worktree, [relativePath]);
+    for (
+      let attempt = 0;
+      attempt < 3 && worktreeStatusPaths(worktree).includes(relativePath);
+      attempt++
+    ) {
+      gitOutput(worktree, ["add", "--", relativePath]);
+      gitOutput(worktree, ["commit", "--only", "--amend", "--no-edit", "--", relativePath]);
+      restoreIndexAfterPathspecCommit(worktree, [relativePath]);
+    }
+    pushRegisterBranch(target, worktree, () => assertClaimAvailable(path));
+    return path;
+  });
+}
+
+function writeEventToDirectory(
+  execDir: string,
+  event: ExecEventV1,
+  dependencies: { randomHex?: (bytes: number) => string },
+): string {
   ensureDir(execDir);
 
   const tsPart = tsForFilenameUtc(event.ts);

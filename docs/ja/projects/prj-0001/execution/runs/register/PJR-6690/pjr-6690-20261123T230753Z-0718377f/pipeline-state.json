@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-6690",
+  "run_id": "pjr-6690-20261123T230753Z-0718377f",
+  "updated_at": "2026-11-23T23:34:05.880Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-23T23:27:25.042Z",
+      "completed_at": "2026-11-23T23:28:47.732Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-6690/pjr-6690-20261123T230753Z-0718377f/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "sonnet-reporter",
+      "attempts": 0,
+      "started_at": "2026-11-23T23:33:54.678Z",
+      "completed_at": "2026-11-23T23:33:54.678Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-6690/pjr-6690-20261123T230753Z-0718377f/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-23T23:33:56.693Z",
+      "completed_at": "2026-11-23T23:34:05.880Z",
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-6690/pjr-6690-20261123T230753Z-0718377f/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-6690/pjr-6690-20261123T230753Z-0718377f/result.md"
+  },
+  "resume_notes": [
+    {
+      "at": "2026-11-23T23:27:25.030Z",
+      "notes": [
+        "親の検証の test-unit で tests/src/exec/validation-metrics.test.ts:214 が失敗した。validation-timeout の行の active_test_files が期待の [\"tests/hanging.test.ts\"] でなく空になった。今回の変更が原因なら直し、テストの期待を変える場合は理由を個票の対応結果に書く。"
+      ]
+    }
+  ]
+}

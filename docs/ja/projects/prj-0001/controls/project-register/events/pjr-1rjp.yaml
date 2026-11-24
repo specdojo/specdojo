@@ -60,3 +60,61 @@
       from: ""
       to: 対応方針
   previous_event_id: reg_ae96bf00fc0247469b6f9d8589c424fb
+- v: 1
+  id: reg_8cf3d02249454d5f8fda2ba19210f1f0
+  ts: "2026-11-23T22:37:38Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: 利用者が v0.10.0 に入れると決めた（2026-11-24）
+  changes:
+    - field: input
+      from: '["利用者の決定（2026-11-23）: オーケストレーターの推奨どおり起票する"]'
+      to: '["利用者の決定（2026-11-23）: オーケストレーターの推奨どおり起票する","v0.10.0 に入れる（利用者の指定、2026-11-24）"]'
+  previous_event_id: reg_72abd13c491140fabe1989a4eaa3ef55
+- v: 1
+  id: reg_ee783496fa6c438b9460a0c3753ee068
+  ts: "2026-11-24T00:35:04Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_8cf3d02249454d5f8fda2ba19210f1f0
+- v: 1
+  id: reg_e3033312ca5849d58454a470772e0f9d
+  ts: "2026-11-24T00:40:17Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_ee783496fa6c438b9460a0c3753ee068
+- v: 1
+  id: reg_6d9be9e4d62046eaabaf36391c50449d
+  ts: "2026-11-24T00:58:37Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果・親の検証（passed）で確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-24"
+    - field: conclusion
+      from: "-"
+      to: grade が samples/generated の表示のページを参照の候補から除き、正本の YAML だけを読むようにした
+  previous_event_id: reg_e3033312ca5849d58454a470772e0f9d

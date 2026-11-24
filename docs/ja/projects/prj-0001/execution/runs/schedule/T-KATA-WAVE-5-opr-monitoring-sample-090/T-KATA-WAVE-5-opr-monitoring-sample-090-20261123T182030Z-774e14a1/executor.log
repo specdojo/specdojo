@@ -1,0 +1,31 @@
+レビュー結果は `incomplete` です。対象成果物は完了条件を満たしていますが、型の追加完了条件を満たしていません。
+
+**鮮度確認**
+- `specdojo grade list --target kata --changed-only` を `opr-monitoring-sample.md` と `opr-rulebook.md` に実行しました。どちらも出力なしで、評価結果は最新です。
+- 評価対象のサイドカーを grep で読みました。`opr-monitoring-sample` は pass（92）、`opr-rulebook` は needs-work（94）、`opr-support-sample` は fail（57）です。
+
+**判断根拠**
+- 対象成果物 `opr-monitoring-sample` の `verdict` は pass（92）で、minor が 6 件です。blocker と major はありません。
+- 完了条件 DC-001〜DC-005 に直結する finding はありません。minor は次の内容で、完了を妨げません。
+  - 報告先の記述
+  - 暫定対応の時限
+  - 閾値の食い違い
+  - 時刻の食い違い
+  - 表の列構成
+- 型の追加完了条件は、型すべてに最新の pass を求めています。次の 2 件が満たしていません。
+  - `opr-rulebook` は needs-work です。major の F002 は、`opr-batch-sample`・`opr-change-sample`・`opr-support-sample` の `rulebook` が `opd-rulebook` のままで、template の構成にも沿っていない、という指摘です。
+  - `opr-support-sample` は fail（score 57、blocker 1、major 14）で、評価日が 2026-11-21 と古いままです。
+- `opr-batch-sample` と `opr-change-sample` は、再評価後に pass へ変わっています。
+
+**未充足事項・改善指示**
+- `opr-support-sample` を `opr-rulebook` と template に沿って作り直します。`rulebook` の宣言を `opr-rulebook` に直し、必須章を揃えてから再評価します。
+- `opr-rulebook` の F002 を解消します。support-sample を直せば、あわせて解消する見込みです。
+- `opr-rulebook` の F001（template 本文との重複）は minor です。必要なら整理します。
+- 次回の schedule 再計画で、上の 2 点を型の整備として扱ってください。
+
+**確認できなかった範囲**
+- 成果物を再評価していません。`opr-sample`、`opr-index`、`opr-template` の本文は読んでいません。実行記録（先行 edit の result）も特定できず、読めていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict=incomplete。対象 opr-monitoring-sample は pass(92)・完了条件充足だが、型の追加完了条件として opr-rulebook が needs-work(major 1)、opr-support-sample が fail(57, 古い評価)で pass 未達。鮮度は monitoring-sample と rulebook で最新を確認。確認できなかった範囲: 成果物の再評価、opr-sample/opr-index/opr-template 本文の通読、先行 edit の実行記録の確認は行っていない。","handoff":["opr-support-sample を opr-rulebook と template に沿って作り直し(rulebook 宣言を specdojo:opr-rulebook へ修正、必須章を追加)、再 grade で pass を得る","opr-rulebook の F002(batch/change/support sample の rulebook 宣言不整合)を解消し再 grade する。F001(template との重複)は minor で任意整理","対象 opr-monitoring-sample の minor 6 件は完了を妨げないが、F002 暫定対応時限の数値化、F003/F005 の opr-sample との閾値・時刻の整合を改善候補とする"],"validations":[],"target_coverage":[{"target":"specdojo:opr-monitoring-sample","status":"unchanged","reason":"review タスクのため成果物は変更しない。grade は pass(92)で最新、完了条件を満たす。"}]}
+</specdojo_executor_evidence>

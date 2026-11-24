@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/routine.schema.yaml
+# 止まったタスク・register 項目・列を見つけて理由の種類に分け、見張りのイベントの記録と
+# 朝報告に残す（PJR-40EE）。記録と報告を書くだけで手は打たず、実行中の run を待たないよう
+# exec の実行ロックを取らない specdojo action で 30 分ごとに動かす。
+id: rtn-exec-watch-scan
+name: 止まった実行の見張り
+description: 30 分ごとに止まったものを見つけ、理由の種類・根拠・次にすべきことを見張りの記録と朝報告に残す。claim・再開・release・commit はしない。
+enabled: true
+interval: 30m
+policy:
+  missed_run: skip
+  overlap: skip
+action:
+  kind: specdojo
+  args: [orchestrator, watch-scan]

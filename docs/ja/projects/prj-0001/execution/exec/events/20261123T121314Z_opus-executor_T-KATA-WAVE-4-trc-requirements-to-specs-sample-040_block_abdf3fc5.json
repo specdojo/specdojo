@@ -1,0 +1,16 @@
+{
+  "v": 1,
+  "ts": "2026-11-23T12:13:14Z",
+  "type": "block",
+  "task_id": "T-KATA-WAVE-4-trc-requirements-to-specs-sample-040",
+  "by": "opus-executor",
+  "msg": "integration failed: Staged changes in integration target /workspaces/specdojo-workspace/specdojo: docs/ja/projects/prj-0001/controls/project-register/events/pjr-98hs.yaml, docs/ja/projects/prj-0001/controls/project-register/pjr-98hs-docs-site-next-channel.md. Commit them, or run git restore --staged -- <path> for each listed path in that worktree (file contents are preserved), then retry integration.; worktree kept: /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-4-trc-requirements-to-specs-sample-040; next: fix the artifacts with exec resume --task T-KATA-WAVE-4-trc-requirements-to-specs-sample-040 --resume-from executor (syncs the integration target first), or retry only the integration with exec resume --task T-KATA-WAVE-4-trc-requirements-to-specs-sample-040",
+  "meta": {
+    "pipeline_stage": "integrate",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-4-trc-requirements-to-specs-sample-040/T-KATA-WAVE-4-trc-requirements-to-specs-sample-040-20261123T115822Z-bdaf7ec9/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-4-trc-requirements-to-specs-sample-040/T-KATA-WAVE-4-trc-requirements-to-specs-sample-040-20261123T115822Z-bdaf7ec9/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-4-trc-requirements-to-specs-sample-040-20261123T115822Z-bdaf7ec9",
+    "claim_actor": "opus-executor",
+    "stage_actor": "opus-executor"
+  }
+}

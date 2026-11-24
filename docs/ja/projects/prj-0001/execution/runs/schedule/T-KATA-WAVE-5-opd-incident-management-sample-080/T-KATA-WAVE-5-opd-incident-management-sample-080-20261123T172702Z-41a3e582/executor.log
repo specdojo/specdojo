@@ -1,0 +1,12 @@
+`docs/ja/specdojo/samples/opd-incident-management-sample.md` の冗長な 2 箇所を、既存の正本 `opd-index` への参照に置き換えました。意味と完了条件は変えていません。`lint:md` などの検査は親 runner が実行します。executor では何も実行していません。
+
+- **「2.2. 停止・切替の判断」冒頭:** `opd-index` が定める方針を 1 文ずつ再掲していた箇所を、表が方針を具体化するという 1 文へまとめました。表の「止めないもの」と「判断者」の列に同じ内容があるためです。
+- **「2.4. 障害記録」冒頭:** `opd-index` の障害記録の定めを再掲していた部分を削り、本節が記録項目を加えるという趣旨だけ残しました。
+
+次の箇所は、判断に要る内容なので残しました。
+
+- 「1. 概要」の `opd-index` への参照、未決事項の表、「2.1. 優先度の判定」の 3 つの箇条書き、「2.2. 停止・切替の判断」の表直後の段落、「2.3. 周知の対象・手段・時機」末尾の P2・P3 の例外、「3. 関連ドキュメント導線」の表です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"2 箇所の正本再掲を参照に置き換え、他は保持。意味は維持。","handoff":[],"validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する allowlist 検査のため executor では実行しない"}],"condense_records":[{"location":"2.2. 停止・切替の判断 冒頭段落","category":"canonical-restatement","action":"reference","reason":"opd-index が定める切替方針の再掲を、表が方針を具体化する旨の 1 文に置き換えた。表の列に同内容があり意味は維持される。","cause":{"type":"document"}},{"location":"2.4. 障害記録 冒頭段落","category":"canonical-restatement","action":"reference","reason":"opd-index の障害記録の定めの再掲を削り、本書が加える記録項目という趣旨のみ残した。記録項目は不変。","cause":{"type":"document"}},{"location":"2.3. 周知の対象・手段・時機 末尾の P2・P3 は来店客へ周知しない旨の文","category":"table-prose","action":"retain","reason":"表に来店客の行がないことの理由を示す例外の判断根拠であり、残す。","cause":{"type":"document"}},{"location":"2.1. 優先度の判定 の箇条書き 3 件","category":"table-prose","action":"retain","reason":"複数行該当時の扱い、回避策喪失時の引き上げ、予備機の仮定は表にない判断規則・前提であり、残す。","cause":{"type":"document"}}]}
+</specdojo_executor_evidence>

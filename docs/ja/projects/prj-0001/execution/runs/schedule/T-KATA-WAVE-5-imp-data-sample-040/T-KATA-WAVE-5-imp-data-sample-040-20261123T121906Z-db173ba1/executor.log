@@ -1,0 +1,30 @@
+`docs/ja/specdojo/rulebooks/imp-data-rulebook.md` を簡潔に整え直しました。同じ影響調査の型で先に整理済みの `imp-test-rulebook` と同じ形にそろえています。この段の対象外なので、sample・recipe・template と result は触っていません。prettier と markdownlint は通っています。
+
+**主な変更**
+- **PJR-76N9 に従った直し**: 「データ責任者とプロジェクト管理者が合意できる粒度」という書き方をやめ、「着手前に何をどう判断するための文書か」に書き直しました。
+- **章立て**: 5章の見出しを標準どおり「本文要件」に変えました。章ごとの目的と、表ごとの必須の列をそこで定めています。
+- **記述ガイド**: 章ごとの判断基準に、良い例・悪い例の表を付けました。完成例は sample に任せています。
+- **禁止事項**: 列名の別名と、担当への個人名・連絡先の記載を禁止する項目を足しました。
+
+**grade の指摘への対応**
+
+| 指摘 | 対応 |
+| --- | --- |
+| F001 | 未解決事項に決定期限と担当（Role code）を必須にした |
+| F002 | 登録簿の個票へ転記する条件（`question` / `risk` / `issue` / `decision`）と、転記先の ID（`PJR-XXXX`）を書く列を足した |
+| F003 | 確認者・承認者を Role code で書く要求は、PJR-76N9 と執筆標準に反するので入れなかった。代わりに一般名称の合意者の記述を消した |
+| F004 | 「高」の不整合を「補正しても解消できない、または業務判断を誤らせるもの」に絞り、「補正で解消できる不整合」は「中」とした |
+| F005 | `based_on` に `<project-id>:imp-business` と変更要求の個票 ID を書く形にし、推移閉包の制限は消した |
+| F006〜F009 | sample 側を直す指摘なので、rulebook はそのまま正とし、sample はこの段では直していない |
+
+F006〜F009 で後の段に残る作業は次の4点です。
+- sample の「変更要求の概要」に成功条件を足す。
+- 「影響分析サマリ」を4観点に直し、境界値を示す。
+- `based_on` に `imp-business` と変更要求の個票 ID を入れる。
+- 判断根拠・備考・受入確認を足し、各表の列名を rulebook に合わせる。
+
+sample の `based_on` は今 `cr-2026-004` という形の ID なので、個票 ID（`PJR-XXXX`）に直すかどうかは sample の段で決める必要があります。これも申し送りに入れました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"imp-data-rulebook を imp-test-rulebook と同じ形に簡潔化した。本文要件（章・必須の列）、良い例・悪い例付きの記述ガイド、PJR-76N9 に従う位置づけの書き直しを入れた。F001・F002・F004・F005 を rulebook で解消し、F003 は PJR-76N9 に従って役割の割り当てを求めない形で対応した。F006〜F009 は sample 側の修正として申し送りに回した。","handoff":["F006〜F009（sample 側）: imp-data-sample を rulebook に合わせる必要がある。(1) 「変更要求の概要」に判定可能な成功条件を足す。(2) 「影響分析サマリ」を整合性・可用性・移行難易度・利用者影響の4観点に直し、許容停止時間などの境界値を示す。(3) Frontmatter の `based_on` に `<project-id>:imp-business` と変更要求の個票 ID を記載する。(4) 判断根拠に構造・整合性、データ検証・移行テスト、実装変更への影響を書き、備考に波及先の成果物 ID を書き、対応方針に受入確認を足す。(5) 対応方針・未解決事項の列名を本文要件に合わせる（優先度→影響度、実施時期→期限、処理方針→当面の扱い、判断・対応への影響と転記先の登録項目を追加）。担当は Role code にする。","F003: 確認者・承認者を Role code で本文に示す要求は、PJR-76N9 と rulebook-authoring-standard の記述ガイド（文書の役割の割り当てや承認の進み具合を成果物本文に求めない）に反するため採らなかった。一般名称の合意者の記述（データ責任者とプロジェクト管理者）を消し、どの利用場面で何を判断するための文書かを示す形に直した。","直さなかった箇所と理由: 3章（ファイル命名・ID規則）と7章（禁止事項）の既存項目は、根拠と整合し grade の指摘もないため維持した。","sample の `based_on` は現在 `cr-2026-004` という形の ID である。変更要求の個票 ID（`PJR-XXXX`）に直すかどうかは sample の段で確認する必要がある。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/imp-data-rulebook.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/imp-data-rulebook.md","status":"passed","summary":"0 issues in 0 files"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更は docs/ja/specdojo/rulebooks/imp-data-rulebook.md のみで、plan・result・個票は変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML の変更なし","reason":"変更したのは Markdown の rulebook だけで、*.yaml / *.yml の変更はない"}]}
+</specdojo_executor_evidence>

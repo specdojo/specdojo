@@ -1,0 +1,25 @@
+障害対応の sample（`docs/ja/specdojo/samples/opr-incident-sample.md`）を書き直しました。38 行の汎用的な表から、駄菓子屋きぬや 販売管理システムの完成例になっています。変更したのはこのファイルだけで、rulebook、result、Git の設定には触れていません。この sample には prettier と markdownlint を実行し、指摘は 0 件でした。その他の検査は親 runner が実行します。
+
+**主な変更点**
+- **Frontmatter:** `rulebook` を `specdojo:opd-rulebook` から `specdojo:opr-rulebook` に直しました（F019）。`based_on` は、実在するファイルの id `specdojo:opd-incident-management-sample` に差し替えました。
+- **章構成:** rulebook が必須とする 12 章（概要から関連ドキュメント導線まで）をすべて置きました。この分冊で扱わない章は、`opr-index 参照` と、障害時にどの手順へつながるかを書いています（F015、F020、F023）。
+- **対象と対象外:** 概要に対象システム、目的、未決事項の表を、「手順適用範囲・前提」に対象・対象外・時間帯・権限・使用手段・連絡先を書きました（F001、F002、F006、F007、F022）。
+- **障害対応手順の中身:**
+  - 優先度別の表は、守る業務の条件と初動目標を入れた形にしました。初動目標の起点は「気付いた時刻」です（F014、F021）。
+  - 停止・切替・ロールバックについて、行う条件・判断者・戻す条件の表を追加しました（F017）。
+  - 紙の販売控えへの切替から転記・照合までを 7 段階の手順にしました（F003、F010、F012、F013）。
+  - 切替中に在庫・夜間バックアップ・日次締めへ出る影響を書きました（F011）。
+  - 復旧後の報告先・期限と、再発防止を課題管理へ登録する担当を書きました（F005）。
+- **証跡と導線:** 証跡は保存先・保管期間・参照権限・識別子の表にし、手順を模擬したときの記録の残し方を加えました（F018）。導線には `opd-index`、障害対応の方針、権限の方針、`opr-index` の行と「計画（なし）」を入れ、手順の見直しのきっかけも書きました（F016、F026）。
+- **表記:** 「Ops Lead」「Dev Lead」をやめ、`OPS` / `DEV` / `PO` と「店番担当」に揃えました（F024）。文書を作る・確かめる・承認する役割の割り当ては書いていません。
+
+**判断が必要な点**
+- **復旧の期限:** grade の指摘 F014 は「P1: 4h、P2: 1d」を前提にしていますが、`based_on` の障害対応の方針では未決です。推測で値を入れず `_UNDECIDED_` のまま残しました。値は `PO` が決める必要があります。
+- **見出しの書き方:** plan の指示どおり template を読まず、`opr-sample` と同じ括弧書きなしの見出しにしました。依存する `opr-index-sample` は括弧書き付きなので、どちらが正しいかは template と照らして確かめる必要があります。
+- **紙の販売控えの分担:** 転記は店番担当、照合は `OPS` という分担と、日次点検の基準の「20 枚以上」は、宣言された資料に根拠がない仮定です。
+- **緊急権限の食い違い:** `opr-sample` には「緊急権限は置かない」とあり、権限の方針（`opd-access-control-sample`）とは逆です。本書は方針側に従いました。`opr-sample` 側の直しが必要です。
+- **ready 化の基準（F025）:** PJR-76N9 の決まりで sample には書かないため、この指摘は対応していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"opr-incident-sample.md を opr-rulebook の 12 章構成と共通サンプル文脈（駄菓子屋きぬや）に沿う完成例に書き直した。frontmatter の rulebook を specdojo:opr-rulebook に、based_on を specdojo:opd-incident-management-sample に修正。grade の指摘 F001〜F024・F026 に対応し、F025 は PJR-76N9 により本文へ書かず申し送り。","handoff":["frontmatter の `based_on` を存在しない `opd-incident-management` から実在する `specdojo:opd-incident-management-sample` へ差し替えた。plan の対象成果物の欄の `based_on` 表記も合わせて直す必要がある。","F014 は復旧目標（P1: 4h、P2: 1d）を前提にしているが、`based_on` の opd-incident-management-sample では『優先度ごとの復旧の期限』が _UNDECIDED_ のため、推測で埋めずに _UNDECIDED_ のまま残した。利用者（`PO`）が決める必要がある値: 優先度ごとの復旧の期限、オフライン時の記録方法、営業時間外の緊急連絡手段、証跡の保管期間。","plan の指示（磨き込みでは template を読まない）に従い template を読まなかった。見出しは opr-sample（括弧書きなし）と、grade 指摘 F021 の『template にない括弧書き』に合わせた。opr-index-sample は括弧書き付きの見出しなので、どちらが正しいかを template と照らして確認し、食い違うほうを直すこと。","opr-sample は『緊急権限は置かない』としているが、opd-access-control-sample と opd-incident-management-sample は緊急権限を定めている。本書は方針（opd）に従った。opr-sample の手直しが必要（本タスクの範囲外）。","F025（draft から ready への移行の前提・基準）は、PJR-76N9 / sample-authoring-standard の決まり（承認の進み具合を本文に書かない）に当たるため本文に足さなかった。rulebook 側で sample の grade 観点から ready 化の基準を外すか検討すること。","紙の販売控えの手順のうち『転記は店番担当、照合は `OPS`』という分担と、日次点検の『20 枚以上』という基準は、共通サンプル文脈から置いた仮定である。関連する opr / opd sample と値をそろえるか確認すること。","rulebook の変更案: 6.12 は『`opr-<term>` が差分元の `opr-index` を導線に載せる』ことを明示していない。分冊の場合に差分元の `opr-index` を必ず載せる旨を加えるとよい。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/opr-incident-sample.md","status":"passed","summary":"対象 sample を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/opr-incident-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルの変更なし","reason":"変更したのは docs/ja/specdojo/samples/ 配下の sample だけで、plan・result・個票（履歴ファイル）は変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML の変更なし","reason":"変更した *.yaml / *.yml ファイルがない"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,16 @@
+{
+  "v": 1,
+  "ts": "2026-11-23T21:08:43Z",
+  "type": "block",
+  "task_id": "T-KATA-WAVE-6-PROJECT-prj-stakeholder-register-sample-060",
+  "by": "opus-executor",
+  "msg": "integration failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  |unit| tests/src/docs/yaml-tables.test.ts > typed YAML display pages > renders tables and the entire folded source for specdojo--dct-sample.md.snap; Test Files  1 failed | 291 passed (292); Tests  1 failed | 4793 passed (4794); integrated repositories: none; not integrated: project; worktree kept: /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-PROJECT-prj-stakeholder-register-sample-060; next: fix the artifacts with exec resume --task T-KATA-WAVE-6-PROJECT-prj-stakeholder-register-sample-060 --resume-from executor (syncs the integration target first), or retry only the integration with exec resume --task T-KATA-WAVE-6-PROJECT-prj-stakeholder-register-sample-060",
+  "meta": {
+    "pipeline_stage": "integrate",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-prj-stakeholder-register-sample-060/T-KATA-WAVE-6-PROJECT-prj-stakeholder-register-sample-060-20261123T205545Z-087d2655/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-prj-stakeholder-register-sample-060/T-KATA-WAVE-6-PROJECT-prj-stakeholder-register-sample-060-20261123T205545Z-087d2655/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-6-PROJECT-prj-stakeholder-register-sample-060-20261123T205545Z-087d2655",
+    "claim_actor": "opus-executor",
+    "stage_actor": "opus-executor"
+  }
+}

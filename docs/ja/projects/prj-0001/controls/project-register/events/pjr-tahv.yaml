@@ -1,0 +1,127 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_1af16a668e4b4c8e9b02659c024f5bb1
+  ts: "2026-11-23T22:24:41Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: exec run --auto --loop が、一度後回しにしたタスクをプロセスが終わるまで選ばない
+    - field: description
+      from: ""
+      to: 一括実行の loop が、一度後回しにしたタスクを次の回でも選び直さず、第 4 波と project が止まった。runner を止めて起動し直すまで進まなかった
+    - field: input
+      from: ""
+      to: '["v0.10.0 に入れる（利用者の指定、2026-11-24）","2026-11-23〜24 の kata の一括実行（第 4〜6 波）で詰まった所から起票した"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-24"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: exec
+- v: 1
+  id: reg_bc4ad63f959a479aae3cd83218b1de23
+  ts: "2026-11-23T22:24:44Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "課題内容" updated
+  changes:
+    - field: section
+      from: ""
+      to: 課題内容
+    - field: description
+      from: 一括実行の loop が、一度後回しにしたタスクを次の回でも選び直さず、第 4 波と project が止まった。runner を止めて起動し直すまで進まなかった
+      to: "- 2026-11-23 の kata の一括実行（列 `kata-blitz-2026-11-23`）で、第 4 波と第 6 波の project の track が、着手できる todo が残っているのに選ばれなくなった。 - runner の PID を止め、列 `kata-blitz-2-2026-11-23` として起動し直すと、同じタスクが選ばれて進んだ。loop は、一度後回し（変更範囲の待ちや busy など）にしたタスクを、プロセスが終わるまで候補から外している。"
+  previous_event_id: reg_1af16a668e4b4c8e9b02659c024f5bb1
+- v: 1
+  id: reg_4f4e808e7618452987acfb3d0c9b8ef7
+  ts: "2026-11-23T22:24:48Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "影響範囲" updated
+  changes:
+    - field: section
+      from: ""
+      to: 影響範囲
+  previous_event_id: reg_bc4ad63f959a479aae3cd83218b1de23
+- v: 1
+  id: reg_4151de6a0e7844138dd6d50ecb5fd7c5
+  ts: "2026-11-23T22:24:52Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "対応方針" updated
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_4f4e808e7618452987acfb3d0c9b8ef7
+- v: 1
+  id: reg_396fbd03415a43659231a60e9dc54d5b
+  ts: "2026-11-23T22:27:20Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "関連ドキュメント" updated
+  changes:
+    - field: section
+      from: ""
+      to: 関連ドキュメント
+  previous_event_id: reg_4151de6a0e7844138dd6d50ecb5fd7c5
+- v: 1
+  id: reg_7fe180be6ad84d8fa42d03b94331194e
+  ts: "2026-11-23T22:47:14Z"
+  action: start
+  actor: terra-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_396fbd03415a43659231a60e9dc54d5b
+- v: 1
+  id: reg_018268f194db4d588c886935f7f89584
+  ts: "2026-11-23T22:53:46Z"
+  action: review
+  actor: terra-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_7fe180be6ad84d8fa42d03b94331194e

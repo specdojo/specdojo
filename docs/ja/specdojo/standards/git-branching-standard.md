@@ -96,6 +96,8 @@ project `develop` へ入る変更は、変更の作成主体と事前レビュ�
 
 層3を例外にできるのは、register ID が連番ではなく乱数で採番され、index と view の生成物が `.gitignore` で Git 管理対象外になっており、Git 管理する実体が項目単位の個票と event に分かれているためです。これらの前提が成立しない register や、同じ正本ファイルを複数人が更新する記帳には例外を適用せず、層2として扱います。
 
+CLI の専用ブランチ経路は v0.10.0 の `register_sync` で明示的に有効にします。register の `--commit`、schedule の実行イベント、register runner の状態遷移と対応結果は、共通の Git 同期接点で別 worktree・排他・rebase・push を扱います。executor の個票編集は検証後・exec の commit 前に転送し、push 成功後に実行元の個票を HEAD の内容へ戻します。同期対象外のファイルは記帳前と push 前に拒否し、同期失敗時はローカルの記帳を保持して復旧まで後続の同期を止めます。設定と初期作成・復旧の手順は [[specdojo:specdojo-config-reference|設定リファレンス]] と [[specdojo:register-operation-guide|登録簿運用ガイド]] を参照してください。develop への一方向の取り込みは `register branch-merge` が行い、`exec run --register --worktree` は worktree を作る前と統合後に取り込みます。develop での直接の変更は `register branch-guard` で検出します。手順は [[specdojo:command-reference|CLI コマンドリファレンス]] を参照してください。register のブランチへの push は `register branch-check` が pre-push の hook と CI で検査します。CI への検査の組み込みなど、複数人運用への移行準備は別途必要です。
+
 exec に流す `todo` の個票と実行に必要な記帳は、実行前に project `develop` へ統合済みでなければなりません。`exec run --worktree` は project `develop` の commit を起点に worktree を作るため、feature にだけ存在する `todo` は実行対象にしません。
 
 ### 4.2. 運用規模ごとの必須条件

@@ -1,0 +1,146 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_456f5227cad94a06ac3e268c6d92544d
+  ts: "2026-11-23T22:25:10Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: task の worktree の commit の hook が古い土台で走り、develop で直した fixture でも落ち続ける
+    - field: description
+      from: ""
+      to: template の段の run が、develop で直した fixture を持たない worktree で commit の hook を走らせて落ち、再開しても develop と同期しないため通らなかった
+    - field: input
+      from: ""
+      to: '["v0.10.0 に入れる（利用者の指定、2026-11-24）","2026-11-23〜24 の kata の一括実行（第 4〜6 波）で詰まった所から起票した"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-24"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: exec
+- v: 1
+  id: reg_e4ef7c1c9d824796945e609c82964b1c
+  ts: "2026-11-23T22:25:13Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "課題内容" updated
+  changes:
+    - field: section
+      from: ""
+      to: 課題内容
+    - field: description
+      from: template の段の run が、develop で直した fixture を持たない worktree で commit の hook を走らせて落ち、再開しても develop と同期しないため通らなかった
+      to: "- 第 6 波の template の段（060）の `bps`・`stsd`・`cdfd-overview`・`prj-overview`・`cdfd`・`prj-scope`・`prj-stakeholder-register` の 7 件が「integration failed: project: git commit failed: test: ... yaml-tables.test.ts」で止まった。 - 落ちた fixture は develop では直っていたが、worktree の土台（作った時点の develop）には無く、`exec resume --task` で再開しても worktree は同期されず、同じ失敗を繰り返した。 - 2026-11-24 に、staged の task の変更を exec のブランチへ hook を飛ばして手で commit し、再開して通した。"
+  previous_event_id: reg_456f5227cad94a06ac3e268c6d92544d
+- v: 1
+  id: reg_0c7b74cdc9164145b558121f3e1f2360
+  ts: "2026-11-23T22:25:17Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "影響範囲" updated
+  changes:
+    - field: section
+      from: ""
+      to: 影響範囲
+  previous_event_id: reg_e4ef7c1c9d824796945e609c82964b1c
+- v: 1
+  id: reg_9053c71226c54e26b586aec147439ca4
+  ts: "2026-11-23T22:25:21Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "対応方針" updated
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_0c7b74cdc9164145b558121f3e1f2360
+- v: 1
+  id: reg_b735d5f684294dfa9c83189eae65501e
+  ts: "2026-11-23T22:27:28Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "関連ドキュメント" updated
+  changes:
+    - field: section
+      from: ""
+      to: 関連ドキュメント
+  previous_event_id: reg_9053c71226c54e26b586aec147439ca4
+- v: 1
+  id: reg_7aff3a101ffa446eb257762479a3f2c7
+  ts: "2026-11-23T22:48:00Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_b735d5f684294dfa9c83189eae65501e
+- v: 1
+  id: reg_88c13921f6e9413a95d0e1a3503be292
+  ts: "2026-11-23T22:57:00Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_7aff3a101ffa446eb257762479a3f2c7
+- v: 1
+  id: reg_be5a7c675f184888a4bbeba18aee3fa4
+  ts: "2026-11-23T23:36:36Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果・親の検証（test-integration を含む全件 passed）で確かめ、統合の後に新しい runner で PJR-6690 の run が統合まで通ることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-24"
+    - field: conclusion
+      from: "-"
+      to: 統合だけの再試行で、commit の前に統合先と同期するようにした
+  previous_event_id: reg_88c13921f6e9413a95d0e1a3503be292

@@ -1,0 +1,20 @@
+性能要件の sample を書き直しました。rulebook の 6 章構成（概要（対象・目的）／適用範囲・負荷条件／性能要件一覧／測定・検証方法／関連ドキュメント導線／未決事項）に揃え、駄菓子屋きぬやの値で埋めた完成例にしています。Prettier と markdownlint は対象ファイルで指摘 0 件でした。`npm run lint:md` など許可リストの検査は、このあと親 runner が実行します。
+
+**変更したファイル:** `docs/ja/specdojo/samples/nfr-performance-sample.md`
+
+**主な内容**
+- **見出しと frontmatter:** 「最小サンプル」の雛形と「未解決事項」の章を廃止し、H1 を業務文書の題名にしました。frontmatter に `part_of`（`nfr-index-sample`）と `based_on`（プロジェクト概要・前提・制約・依存関係の sample）を加えました。
+- **概要:** 対象処理を 4 つ（会計確定、商品検索、つけ残高の表示、日次締め）に絞り、遅れたときに店で何が起きるかを書きました。基準の厳しさは、プロジェクト概要にある「記録を営業日の 90% 以上で続ける」「つけ残高を 1 分以内に確認する」という目標に結び付けています。
+- **負荷条件:** 平常時・ピーク時・閉店後に分けました。ピークは平日 16:00〜18:00、会計 60 件/時です。この値はテスト戦略・方針と総合テストの sample が既に仮置きしているものを、`_ASSUMPTION_` として合わせました。タブレット 1 台なので複数端末の同時接続は対象外、回線の遅延とレシート印字は応答時間に含めない、と技術前提も明記しています。
+- **要件一覧:** `nfr-perf-001`〜`nfr-perf-006` の 6 件です。具体的な目標値は推測で埋めず `_UNDECIDED_` にし、決まるまでの暫定の判定を各行に書きました（例: 会計確定の P95 はテスト戦略・方針の仮置き 2 秒以内で判定）。
+- **測定方法と導線:** 要件ごとに測定方法・環境・回数・判定時期を表にしました。関連文書として受入条件、総合テスト、テスト方針、監視の sample へ導線を置いています。受入条件の `sac-performance` はまだ無いので、バッククォートで仮置きしています。
+- **未決事項:** rulebook の形式（論点・当面の扱い・決まったときに直す要件ID）で 6 件書きました。
+- **細かな修正:** 「RPS(吞吐量)」の表記ゆれ（F026）と、rulebook パスの重複（F015）は削除しました。
+
+**意図して反映しなかった指摘:** F005・F006・F008・F012・F027・F028 は、責任者・承認権限・担当・連絡先の記載を求めています。PJR-76N9 と sample 記述標準が「sample の本文に文書の役割の割り当てや承認の進み具合を書かない」と定めているため、本文には足していません。性能が落ちたときの対応は、運用監視の sample への導線で受けています。
+
+**決めていただく値:** 会計確定の P95・P99、商品検索とつけ残高表示の P95、日次締めの完了時間、ピーク時の処理件数（60 件/時は仮置き）、商品数と保持する販売記録の件数、ホスティング環境のプランと資源の上限です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"`docs/ja/specdojo/samples/nfr-performance-sample.md` を nfr-performance rulebook の 6 章構成（概要（対象・目的）／適用範囲・負荷条件／性能要件一覧／測定・検証方法／関連ドキュメント導線／未決事項）に沿った駄菓子屋きぬやの完成例へ書き直した。frontmatter に `part_of`・`based_on` を追加。負荷条件は平常時・ピーク時・閉店後に分け、ピーク条件（平日 16:00〜18:00、会計 60 件/時）は既存の tsp-index-sample・stc-sample の仮置き値と `_ASSUMPTION_` で揃えた。要件 `nfr-perf-001`〜`nfr-perf-006` の目標値は `_UNDECIDED_` とし、各行に暫定の判定を併記した。測定方法・関連文書の表を加え、未決事項は rulebook の形式で書いた。役割・承認を求める finding（F005・F006・F008・F012・F027・F028）は PJR-76N9 に従い本文に反映していない。","handoff":["利用者が決める値（`_UNDECIDED_` で残したもの）: 会計確定の応答時間 P95・P99（`nfr-perf-001`・`nfr-perf-002`。P95 は当面 tsp-index-sample の仮置き 2 秒以内で判定）、商品検索の P95（`nfr-perf-004`）、つけ残高表示の P95（`nfr-perf-005`）、日次締めの完了時間（`nfr-perf-006`）、ピーク時の処理件数（60 件/時は販売実績がないための仮置き）、商品数と保持する販売記録の件数、ホスティング環境のプランと資源の上限。","PJR-76N9 により本文へ反映しなかった finding: F005（責任者・承認権限）、F006（タスク・担当）、F008（報告先・責任者コード）、F012（レビュー担当・合意範囲）、F027（draft から ready への基準・レビューゲート）、F028（問い合わせ先・保守責任）。これらは登録簿・メンバー定義・document-metadata-standard の扱いで、sample の本文では扱わない。性能低下時の対応は運用監視（opd-monitoring-sample）への導線で受けた。","rulebook への変更案: 記述ガイドの「適用範囲・負荷条件」の良い例「同時接続 50、100 RPS」と、「性能要件一覧」の良い例「`nfr-perf-002` / 会計確定 API / P95 800 ms 以内」は、共通サンプル文脈の店頭タブレット 1 台・単一店舗の前提と、sample の要件ID割り当て（会計確定は `nfr-perf-001`、P95 は暫定 2 秒）と食い違う。例の値を共通文脈に合わせるか、例が架空であることを示す修正を提案する。","rulebook への変更案: 「全体方針」の `_UNDECIDED_`（sample が本文要件の章に揃っていない）は本タスクで解消したので、記述の見直しを提案する。","rulebook への変更案: 同時操作数が 1 の題材では、RPS より件/時のほうが自然である。指標例（P95・P99・RPS・バッチ完了時間）に「処理件数（件/時）」を加えるか検討を提案する。","関連 sample の未整備: nfr-index-sample は旧形式の最小サンプルのままで、`sac-performance` は存在しない（本書ではバッククォートで仮置きした）。opd-monitoring-sample には応答時間の監視閾値がまだない。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/nfr-performance-sample.md","status":"passed","summary":"対象ファイルを整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/nfr-performance-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples 配下の sample だけで、plan・result・個票を変更していないため"}]}
+</specdojo_executor_evidence>

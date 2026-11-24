@@ -1,0 +1,25 @@
+`docs/ja/specdojo/samples/sac-sample.md` を、駄菓子屋の SAC「`# システム受入条件: 性能`」の完成例に書き直しました。rulebook は変えていません。この sample に prettier と markdownlint-cli2 をかけ、指摘は 0 件でした。親 runner が流す検査はここでは実行していません。
+
+**書き直した内容**
+- **構成**: 旧来の解説型の構成をやめ、rulebook どおり「概要」「受入条件」「メモ / 将来課題」の 3 章にしました（F017, F020, F021）。
+- **frontmatter**: `based_on` に性能要件の sample（`nfr-performance-sample`）とテスト戦略・方針の sample（`tsp-index-sample`）を追加しました（F018）。
+- **概要**: 出口条件、業務上の影響（レジ待ちと記録漏れ）、対象と対象外を書きました。受入条件 ID と根拠の要件 ID の対応表と、下位の総合テストケース `st-cash-sale-commit-response-010` への接続も載せています（F001, F002, F005, F007, F008, F010, F011）。
+- **受入条件**: 次の 4 件を、前提・操作・期待結果・判定方法の形で書きました（F009, F013–F016, F022）。
+  - `SAC-PERF-01`: 会計確定の応答。P95 が 2 秒以内（仮置き）なら合格で、P99 は記録だけ。
+  - `SAC-PERF-02`: 60 件/時の会計を、件数と取引番号がすべて一致する形で取りこぼさない。
+  - `SAC-PERF-03`: つけ残高の確認が 30 回すべて 1 分以内。
+  - `SAC-PERF-04`: 日次締めが翌日の開店までに終わる。
+- **閾値**: すべて性能要件の sample とテスト戦略・方針の sample の値をそのまま使い、新しい閾値は作っていません。
+- **メモ / 将来課題**: 性能要件で `_UNDECIDED_` の基準を、影響する受入条件と当面の扱いと一緒に表にしました（F003, F006）。
+- **表記**: 「受入条件」に揃えました（F023）。旧 4 章の重複もなくなっています（F012）。
+
+**入れなかったもの**
+- **作る・確かめる・承認する役割（F004）と、ready にするための条件・レビュー担当（F024）**: PJR-76N9 の決まりで本文に書けないため、入れていません。
+- **商品検索の応答（`nfr-perf-004`）**: 基準が決まっておらず、根拠側でも値を記録するだけなので、受入条件を置かず「メモ / 将来課題」に回しました。
+
+**判断が必要な点**
+- **ID の不一致**: 性能要件・完全性・信頼性・可用性の各 sample は、受入条件を `sac-performance` などの名前で参照しています。この sample の ID は `specdojo:sac-sample` なので、そちらを `[[specdojo:sac-sample]]` に直すかどうかは別のタスクで決めてください。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"sac-sample.md を「システム受入条件: 性能」の完成例に書き直した。based_on 追加、rulebook どおりの 3 章構成、受入条件 SAC-PERF-01〜04 を前提・操作・期待結果・判定方法の形で記述。閾値は nfr-performance-sample と tsp-index-sample の値だけを使い、未決の基準はメモ / 将来課題に影響と当面の扱いを添えて残した。prettier と markdownlint-cli2 は指摘 0 件。","handoff":["F004（役割コード・責任者）と F024（ready にするための終了条件・レビュー担当）は、PJR-76N9 の決まりに従い本文に足していない。sac-rulebook 側でも判定する人の割り当てを本文で求めていないため、rulebook の変更は不要と判断した。","商品検索の応答（nfr-perf-004）は根拠の NFR で値を記録するだけになっているため、受入条件を置かずメモ / 将来課題に回した。基準が決まったら SAC-PERF-05 を追加する。","決める必要のある値（すべて _UNDECIDED_ のまま、正本は nfr-performance-sample）: 会計確定の応答時間の基準（P95・P99）、ピーク時の処理件数、つけ残高表示の応答時間の基準、日次締めの完了時間、商品検索の応答時間の基準、商品数と保持する販売記録の件数、ホスティング環境のプラン。","文書間の整合: nfr-performance / nfr-reliability / nfr-availability / nfr-integrity の各 sample は受入条件を `sac-performance` などの仮の名前で参照しており、tsp-index-sample は「SAC の条件 ID が未整備」としている。この sample（specdojo:sac-sample = 性能）へ接続するかどうかは、別のタスクで判断と修正が必要。","sac-rulebook の変更案: rulebook 内に「サンプル（簡易）」の節はもう無いため、F021 は sample 側の対応だけで解消している。rulebook の変更案はない。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/sac-sample.md","status":"passed","summary":"整形を適用した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/sac-sample.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>

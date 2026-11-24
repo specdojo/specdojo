@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "mode": "review",
+  "grade_check": "### 評価結果の確認\n\n`specdojo grade list` による鮮度確認を実行しました。\n\n```bash\nspecdojo grade list --target kata --path docs/ja/specdojo/samples/dmd-index-sample.md\n```\n\n出力:\n\n```text\npass (100/100) | 1 minor finding\n```\n\n```bash\nspecdojo grade list --target kata --path docs/ja/specdojo/rulebooks/dmd-index-rulebook.md\n```\n\n出力:\n\n```text\npass (94/100) | 4 minor findings\n```\n\n評価結果は最新です。",
+  "rationale": [
+    "評価結果の鮮度を確認し、`docs/ja/specdojo/samples/dmd-index-sample.md` および `docs/ja/specdojo/rulebooks/dmd-index-rulebook.md` の双方において最新であることを確認しました。",
+    "対象成果物 `docs/ja/specdojo/samples/dmd-index-sample.md` について、`grade` の結果（`pass`, スコア 100, `minor` 1 件）を die 照合しました。",
+    "`rulebook` については、`grade` の結果（`pass`, スコア 94, `minor` 4 件）を照合しました。",
+    "完了条件 `DC-001` 〜 `DC-005` を確認したところ、すべて充足していることを確認しました。",
+    "「確認できなかった範囲」として、先行 edit タスクの `result`、`rulebook` の `--incomplete` 確認、および `mip-index` 本文との突き合わせが挙げられています。"
+  ],
+  "improvements": [
+    "sample `F001`: 合否の判定者の役割（Role code）を併記すること。",
+    "rulebook `F001`: `recipe` ・ `template` の未決事項について、判断者と判断期限を整備すること。",
+    "rulebook `F002`: 作成後に実行する検証コマンドとエラー時の対応を明示すること。",
+    "rulebook `F003`: `recipe` と `template` が `_UNDECIDED_` の状態から解消され、Kata の一式が揃うようにすること。",
+    "rulebook `F004`: `ready` 化の条件を詳細に列挙すること。",
+    "sample 内の `_UNDECIDED_` 2件（控えの置き場所、照合表・旧ノートの保管期間）は、店主代表による確定が必要です。"
+  ],
+  "approach": "### approach に応じた確認\n\n- `**`磨き込みの実施`**`: `rulebook` の必須要素・禁止事項、および `sample` の形式に基づいた磨き込みが行われていることを確認しました。\n- `**`未決事項の扱い`**`: `recipe` と `template` が `_UNDECIDED_` のままであること、および `sample` 内に一部未決の項目（控えの置き場所、照合表・旧ノートの保管期間）が存在することを確認しました。",
+  "verdict": "complete-with-findings"
+}

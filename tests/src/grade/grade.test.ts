@@ -20,6 +20,7 @@ import {
   renderGradeReporterPlan,
   resolveGradeActor,
   resolveGradeReferenceId,
+  loadKataReferences,
   resolveGradeReferencePaths,
   selectGradeReferenceExample,
   validateGradeReporterFidelity,
@@ -1304,11 +1305,31 @@ LEVEL: 4
     const references = resolveGradeReferencePaths("docs/ja/specdojo/samples/opr-batch-sample.md");
     expect(references).toEqual(
       expect.arrayContaining([
-        expect.stringContaining("/rulebooks/opd-rulebook.md"),
         expect.stringContaining("/rulebooks/opr-rulebook.md"),
         expect.stringContaining("/templates/opr-template.md"),
       ]),
     );
+  });
+
+  it("ignores stale generated YAML pages when loading Kata references", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-kata-refs-"));
+    try {
+      const samples = join(root, "docs/ja/specdojo/samples");
+      mkdirSync(join(samples, "generated"), { recursive: true });
+      const yaml = "id: demo-sample\ntype: sample\nstatus: draft\nrulebook: none\n";
+      writeFileSync(join(samples, "demo-sample.yaml"), yaml, "utf8");
+      writeFileSync(
+        join(samples, "generated", "demo-sample.md"),
+        "---\nspecdojo:\n  id: demo-sample\n  type: sample\n  status: draft\n  rulebook: none\n---\n\n# stale\n",
+        "utf8",
+      );
+
+      const actual = loadKataReferences(root).map((item) => item.path);
+
+      expect(actual).toEqual([join(samples, "demo-sample.yaml")]);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
   });
 
   it("lists reference paths without embedding target or reference contents", () => {

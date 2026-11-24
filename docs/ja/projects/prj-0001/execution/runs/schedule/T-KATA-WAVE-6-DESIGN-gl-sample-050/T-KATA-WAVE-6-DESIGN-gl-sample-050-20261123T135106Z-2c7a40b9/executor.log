@@ -1,0 +1,18 @@
+用語集の sample（`docs/ja/specdojo/samples/gl-sample.yaml`）を更新しました。grade の指摘 6 件（F001〜F006）はすべて sample 内で直し、schema 検査・用語参照の検査・Prettier の整形確認はいずれもエラーなしで通りました。rulebook は変更していません。
+
+**指摘ごとの直し方**
+
+- **F001（常連客・顧客が未定義）:** 「顧客」（`tm-sales-customer`）と「常連客」（`tm-sales-regular-customer`）を `tm-actor` の分類で追加しました。常連客は「顧客のうち、店主代表がつけの利用を認めた人」と定義し、つけの定義と関連用語も常連客に合わせました。
+- **F002（`status: official` が発注点だけ）:** 全用語に `status: official` を付けて揃えました。
+- **F003（ID の領域接頭辞がない）:** 冒頭のコメントに「接頭辞のない ID は参照済みの既存 ID として維持し、新規は `tm-<領域>-<概念>` で採番する」と書きました。今回足した用語はこの規則で採番しています。
+- **F004（「商品」の正本が示されていない）:** 冒頭のコメントで、「商品」は共通用語集 `gl-common`（`tm-common-product`）を正本とし、本書では定義しないことを示しました。
+- **F005（安全在庫と発注点の境界があいまい）:** 安全在庫の定義を具体的にしました。注記には、店主代表が定番商品ごとに決めることと、「発注点は安全在庫に入荷までの販売見込み数量を加えた水準」という関係を書きました。
+- **F006（店主と店主代表の書き分け）:** ほかの用語の定義・注記を、正式な用語の「店主代表」に統一しました。
+
+厚みを出すため、指摘とは別に「欠品」（`tm-inventory-stockout`）を足しました。共通サンプル文脈にある欠品削減の目標に合わせたものです。用例は、共通サンプル文脈の「本文には役割名を使う」に合わせて人名を使わない文にしました。
+
+**確認が要る点:** 冒頭のコメントで正本として挙げた `gl-common` と `tm-common-product` は、同じ場所の sample にはありません。これは rulebook の「別ファイルの商品は文書リンクで案内する」に合わせた仮の名前で、コメントなので用語参照の検査の対象外です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"gl-sample.yaml で grade の指摘 F001〜F006 を直した。顧客・常連客・欠品の用語を追加し、全用語の status を揃え、ID 方針と「商品」の正本（gl-common）を冒頭のコメントに示した。安全在庫と発注点の境界を注記に書き、表記を「店主代表」に統一した。schema 検査・用語参照の検査・Prettier の整形確認はエラーなし。","handoff":["冒頭のコメントで「商品」の正本として挙げた gl-common（`tm-common-product`）は、同梱の sample にはない。rulebook の「記述ガイド」にある「別ファイルの商品は文書リンクで案内する」に合わせた仮の名前。共通用語集の sample を作るか、コメントの書き方を変えるかを今後判断する。","rulebook の変更案（任意）: 用語の status をすべての用語に付けるのか、candidate と deprecated だけに付けて無指定を採用済みとみなすのかを rulebook の「terms の項目」に書くと、今回の F002 のような揺れを防げる。"],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/gl.schema.yaml --data docs/ja/specdojo/samples/gl-sample.yaml","status":"passed","summary":"docs/ja/specdojo/samples/gl-sample.yaml: valid"},{"command":"node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references docs/ja/specdojo/samples/gl-sample.yaml","status":"passed","summary":"終了コード 0（ID の重複・参照先の欠落なし）"},{"command":"npx prettier --check docs/ja/specdojo/samples/gl-sample.yaml","status":"passed","summary":"All matched files use Prettier code style"}]}
+</specdojo_executor_evidence>

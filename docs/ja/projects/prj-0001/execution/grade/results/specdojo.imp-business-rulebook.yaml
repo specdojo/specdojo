@@ -4,29 +4,28 @@ document: specdojo:imp-business-rulebook
 path: docs/ja/specdojo/rulebooks/imp-business-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-rulebook
 verdict: pass
-score: 91
-graded_at: "2026-11-21T04:07:07.737Z"
-graded_by: opus-executor
-content_hash: 02a3d2f0a448375a082cea27b63550cf508cda6a006d8e2beb7d094c1b0fd551
+score: 98
+graded_at: "2026-11-23T15:45:28.528Z"
+graded_by: sonnet-review-executor
+content_hash: a3118bbc9fdc39b8531a12f3517683357d5759a571ff6f0a197a5f7ce2e1f8d8
 categories:
   purpose:
-    score: 88
+    score: 100
   operations:
-    score: 88
+    score: 94
   planning:
-    score: 75
+    score: 100
   business:
     score: 100
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 92
   consistency:
     score: 100
 viewpoints:
@@ -34,20 +33,20 @@ viewpoints:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-publication-accountability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-plan-feasibility:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-business-value:
     level: 4
     score: 100
@@ -76,8 +75,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
     level: 4
     score: 100
@@ -88,8 +87,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 3
     score: 75
@@ -105,94 +104,24 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 10
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-decision-readiness
-    line: 78
-    anchor: "- 論点、不足情報、判断・対応への影響と当面の扱いを記載する。未解決事項がなければ「なし」とする。"
-    message: 未解決事項の記述項目に判断者（Role code）と決定期限が含まれず、承認・保留・差し戻しを誰がいつ判断するかが読み取れないため、6.6 に判断者と決定期限を必須項目として追加する必要がある。
-    message_ja: 未解決事項の記述項目に判断者（Role code）と決定期限が含まれず、承認・保留・差し戻しを誰がいつ判断するかが読み取れないため、6.6 に判断者と決定期限を必須項目として追加する必要がある。
+    rule: vp-qe-kata-conformance
+    line: 103
+    anchor: "- 次の条件に当てはまる事項はプロジェクト登録簿へ転記し、転記先の登録項目 ID（`PJR-XXXX`）を記載する。決定の進み具合は個票で追う。"
+    message: >-
+      見送り・代替には再評価条件と期限が必須ですが、sample の 5 章は在庫補充の再評価期限を 2026-06-30 としています。6.5
+      の記述場所（表内か表外か）が規定されておらず、読み手が記載位置に迷うため、見送り・代替の再評価は対応方針の表の下に箇条書きで書くと明記する必要があります。
+    message_ja: >-
+      見送り・代替には再評価条件と期限が必須ですが、sample の 5 章は在庫補充の再評価期限を 2026-06-30 としています。6.5
+      の記述場所（表内か表外か）が規定されておらず、読み手が記載位置に迷うため、見送り・代替の再評価は対応方針の表の下に箇条書きで書くと明記する必要があります。
   - id: F002
-    severity: minor
-    rule: vp-po-publication-accountability
-    line: 73
-    anchor: "- 影響度が高い項目から順に、実施時期、担当、前提条件を記載する。"
-    message: >-
-      対応方針の「担当」を Role code で記載するか個人名で記載するかが規定されておらず、sample が個人名を記載しているため、メンバー定義の Role code
-      で記載し個人名を書かないことを記述ガイドまたは禁止事項に明記する必要がある。
-    message_ja: >-
-      対応方針の「担当」を Role code で記載するか個人名で記載するかが規定されておらず、sample が個人名を記載しているため、メンバー定義の Role code
-      で記載し個人名を書かないことを記述ガイドまたは禁止事項に明記する必要がある。
-  - id: F003
-    severity: minor
-    rule: vp-pm-plan-feasibility
-    line: 73
-    anchor: "- 影響度が高い項目から順に、実施時期、担当、前提条件を記載する。"
-    message: 対応方針に実施時期・担当・前提条件はあるが完了条件の記載が求められておらず、タスク化後の進捗確認で完了を判定できないため、対応項目ごとの完了条件を記載項目に加える必要がある。
-    message_ja: 対応方針に実施時期・担当・前提条件はあるが完了条件の記載が求められておらず、タスク化後の進捗確認で完了を判定できないため、対応項目ごとの完了条件を記載項目に加える必要がある。
-  - id: F004
-    severity: minor
-    rule: vp-pm-dependency-risk
-    line: 26
-    anchor: >-
-      共通項目・必須性・型制約は [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従う。`type` は `project`、`rulebook` は
-      `specdojo:imp-business-rulebook` とする。
-    message: >-
-      上流の変更要求との依存を Frontmatter の `based_on` で宣言する規定がなく、本文の識別子記載だけでは変更要求との依存を機械的に追跡できないため、`based_on` に変更要求 ID
-      を列挙する推奨を追加する必要がある。
-    message_ja: >-
-      上流の変更要求との依存を Frontmatter の `based_on` で宣言する規定がなく、本文の識別子記載だけでは変更要求との依存を機械的に追跡できないため、`based_on` に変更要求 ID
-      を列挙する推奨を追加する必要がある。
-  - id: F005
-    severity: minor
-    rule: vp-pm-control-reporting
-    line: 78
-    anchor: "- 論点、不足情報、判断・対応への影響と当面の扱いを記載する。未解決事項がなければ「なし」とする。"
-    message: 未解決事項や見送り判断を PJR の課題・リスク・決定記録へ転記するかどうかと報告先が規定されていないため、転記対象と報告先の扱いを 6.5 または 6.6 に追記する必要がある。
-    message_ja: 未解決事項や見送り判断を PJR の課題・リスク・決定記録へ転記するかどうかと報告先が規定されていないため、転記対象と報告先の扱いを 6.5 または 6.6 に追記する必要がある。
-  - id: F006
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 67
-    anchor: "| 対応方針     | 実施・代替・見送りなどの方針         |"
-    message: >-
-      対応方針列の値が「実施・代替・見送りなど」と開いた列挙になっており、6.5 の見送り時規定の適用対象を pass / fail で判定できないため、値を `実施` / `代替` / `見送り`
-      に限定するか追加値の扱いを定める必要がある。
-    message_ja: >-
-      対応方針列の値が「実施・代替・見送りなど」と開いた列挙になっており、6.5 の見送り時規定の適用対象を pass / fail で判定できないため、値を `実施` / `代替` / `見送り`
-      に限定するか追加値の扱いを定める必要がある。
-  - id: F007
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 84
-    anchor: "- 影響度の尺度を定義せずに高・中・低を混在させない。"
-    message: Frontmatter で参照する sample が、禁止事項で要求した影響度尺度を定義せずに高・中・低を使用しているため、完成例として rulebook の適用方法を完全には示せていない。
-    message_ja: Frontmatter で参照する sample が、禁止事項で要求した影響度尺度を定義せずに高・中・低を使用しているため、完成例として rulebook の適用方法を完全には示せていない。
-  - id: F008
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 78
-    anchor: "- 論点、不足情報、判断・対応への影響と当面の扱いを記載する。未解決事項がなければ「なし」とする。"
-    message: >-
-      6.6 は未解決事項に「判断・対応への影響」の記載を求めているが、参照する sample の未解決事項表には影響の列がなく、完成例が rulebook の記述ガイドと一致していないため、sample に影響の記載を加えるか
-      6.6 の項目を見直す必要がある。
-    message_ja: >-
-      6.6 は未解決事項に「判断・対応への影響」の記載を求めているが、参照する sample の未解決事項表には影響の列がなく、完成例が rulebook の記述ガイドと一致していないため、sample に影響の記載を加えるか
-      6.6 の項目を見直す必要がある。
-  - id: F009
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 73
-    anchor: "- 影響度が高い項目から順に、実施時期、担当、前提条件を記載する。"
-    message: 対応方針の並び順は「影響度」、構成表と 6.3 は「優先順位」「優先対応対象」と表現し両者の関係が定義されておらず、sample が「優先度」列を用いているため、影響度と優先度の関係を定義するか用語を統一する必要がある。
-    message_ja: 対応方針の並び順は「影響度」、構成表と 6.3 は「優先順位」「優先対応対象」と表現し両者の関係が定義されておらず、sample が「優先度」列を用いているため、影響度と優先度の関係を定義するか用語を統一する必要がある。
-  - id: F010
     severity: minor
     rule: vp-ops-release-readiness
     line: 1
     anchor: "# 影響調査（業務）作成ルール"
-    message: Frontmatter の `recipe` と `template` が `undecided` のままで要否判断が未了のため、ready 化の前に `not-needed` か整備対象かを判断して宣言する必要がある。
-    message_ja: Frontmatter の `recipe` と `template` が `undecided` のままで要否判断が未了のため、ready 化の前に `not-needed` か整備対象かを判断して宣言する必要がある。
+    message: Frontmatter の `recipe` と `template` が `undecided` のままです。ready 化の前に、`not-needed` か整備対象かを判断して宣言する必要があります。
+    message_ja: Frontmatter の `recipe` と `template` が `undecided` のままです。ready 化の前に、`not-needed` か整備対象かを判断して宣言する必要があります。

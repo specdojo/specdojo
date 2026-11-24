@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-6-PROJECT-prj-issues-and-approach-sample-060",
+  "run_id": "T-KATA-WAVE-6-PROJECT-prj-issues-and-approach-sample-060-20261123T221949Z-87b959c9",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-23T22:20:33.485Z",
+    "completed_at": "2026-11-23T22:21:18.885Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/templates/prj-issues-and-approach-template.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../templates/prj-issues-and-approach-template.md      | 18 ++++++++----------\n 1 file changed, 8 insertions(+), 10 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/templates/prj-issues-and-approach-template.md",
+      "status": "passed",
+      "summary": "All matched files use Prettier code style"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2 docs/ja/specdojo/templates/prj-issues-and-approach-template.md",
+      "status": "passed",
+      "summary": "0 issues in 0 files"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴ファイルの変更なし",
+      "reason": "plan / result / 個票などの履歴蓄積ファイルを変更していない"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:prj-issues-and-approach-template\n  type: template\n  status: ready\n  frontmatter_template:\n    specdojo:\n      id: _PROJECT_ID_:prj-issues-and-approach\n      type: project\n      status: draft\n      rulebook: specdojo:prj-issues-and-approach-rulebook\n      based_on:\n        - _PROJECT_ID_:prj-overview\n        - _PROJECT_ID_:prj-scope\n        - _PROJECT_ID_:prj-assumptions-constraints-d\n… output omitted …\n| 区分 | 内容 | 軽減策 |\n| - | - | - |\n| *TODO* | *TODO* | *TODO* |\n\n## 6. 次の検討事項（ToDo）\n\n*TODO*: 次の意思決定に必要な追加調査・確認・承認事項を、目的・完了条件・期限（または判断タイミング）・責任ロールとともに記述する。各 ToDo の先頭には、後で記入・判断する事項なら `_TODO_:`、判断が未確定の事項なら `_UNDECIDED_:` を付ける。任意章のため不要なら削除する。\n\n| ToDo | 目的 | 完了条件 | 期限 / 判断タイミング | 責任ロール |\n| - | - | - | - | - |\n| *TODO* | *TODO* | *TODO* | *TODO* | *TODO* |\n\n## 7. 見直しと変更管理\n\n*TODO*: 本書の合意を見直す契機、確認する観点、対応方針を記述する。任意章のため不要なら削除する。\n\n| 見直しの契機 | 確認する観点 | 対応方針 |\n| - | - | - |\n| *TODO* | *TODO* | *TODO* |"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6565 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6565 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-PROJECT-prj-issues-and-approach-sample-060\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1703}\n\n Test Files  19 passed (19)\n      Tests  480 passed (480)\n   Start at  07:21:28\n   Duration  2.43s (transform 4.57s, setup 663ms, import 7.06s, tests 5.70s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nkspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-PROJECT-prj-issues-and-approach-sample-060/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-PROJECT-prj-issues-and-approach-sample-060/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "`prj-issues-and-approach-template.md` を rulebook と sample に合わせて直した。F001 に対応して ToDo の先頭に付ける `_TODO_:` / `_UNDECIDED_:` ラベルの指示を足し、ToDo 表を 5 列にした。rulebook と食い違っていた導入部の承認者・利用ロール欄と、見直し章の記録先・責任ロールの指示を消した。優先度・区分の値、採用しない案の扱い、前提が崩れた場合の対応を記入指示に足した。rulebook・recipe・sample は変更していない。",
+  "completion_status": "complete",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-prj-issues-and-approach-sample-060/T-KATA-WAVE-6-PROJECT-prj-issues-and-approach-sample-060-20261123T221949Z-87b959c9/executor.log",
+      "bytes": 3019,
+      "truncated": false
+    }
+  ]
+}

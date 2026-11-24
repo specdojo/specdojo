@@ -1,0 +1,37 @@
+PJR-6690 is fixed. `validate-schema` wasn't hanging inside the check itself: it was stuck writing its output into a pipe that the runner wasn't reading. I ran only targeted checks myself (results at the end); the full parent validations are still to come.
+
+**Cause**
+- `exec run --parallel` runs every task in one process. While other tasks prepare or merge their worktrees, the runner waits on synchronous child processes (`npm ci`, `specdojo build`, merges) and its event loop stops.
+- While the loop is stopped, the pipe carrying the validation's output isn't read. `validate:schema` prints about 450 KB, so the pipe's 64 KiB buffer fills and the check stops at its next write.
+- The evidence: in all 4 runs, the 10-minute timeout fired 43–269 s late, which only happens when the event loop is stopped. They also stopped at different stages (yaml, pipeline-state, glossary twice), so it's not one stage or one file.
+- On 11-23 even the runs that passed took 100–590 s instead of the usual 3 s. On 11-22 they took about 3 s.
+- Running 5 at once is not the cause by itself: 5 simultaneous runs take 3.3 s if nothing blocks the runner.
+
+**Fix**
+- Parent validations now write stdout and stderr to temporary files instead of pipes. The runner reads the files when the check ends (and at a timeout). A stopped event loop no longer stops the check.
+- On a timeout, the block reason now gives the stage and elapsed time, e.g. `parent validation failed: validate-schema (timed out after 649s (stage: validate:schema:glossary))`. The failure log gets `elapsed` and `stage` lines, and the timeout metric gets `stage` and `timer_lag_ms`.
+- Behaviour change: if a child process escapes the process group and keeps running, the runner no longer waits for it to release the output. I updated the matching existing test, and the timeout metrics table and notes in `exec-operation-guide.md`.
+
+**Measurements**
+I used the new script `tools/e2e/parent-validation-load.ts`: 5 simultaneous `npm run validate:schema` runs, with the runner blocked on purpose.
+
+| Condition | Before | After |
+| --- | --- | --- |
+| Not blocked | 3.3 s | 3.1 s |
+| Blocked 2 s, free 0.2 s, repeated | 6.6 s | 4.4 s |
+| Blocked 20 s, free 0.05 s, repeated | 60.2 s | 20.1 s |
+
+After the fix, the checks finish during the first blocked window. The runner sees the results as soon as it is free again, so 20.1 s is one window, not three. I added no cap on how many run in parallel and no waiting. The new test `parent-validation-output.integration.test.ts` reproduces both the blocked runner and the timeout message.
+
+**Checks I ran**
+- The two integration test files that cover this: 5 tests passed.
+- Unit tests in four related files, including `parent-validation.test.ts`: passed.
+- ESLint and Prettier on the changed files: no errors.
+- `tsc --noEmit` for `src` and `tools/e2e`: no errors.
+- markdownlint and `validate:history-links`: no errors.
+
+The ticket's response section now has the cause, the fix, the measurements and a "CHANGELOG に書く事項" subsection. I didn't edit `CHANGELOG.md`. Spawned processes that still block the runner (`npm ci`, `specdojo build`) remain. Making them asynchronous would be a separate item.
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"Cause: during `exec run --parallel`, the runner's event loop is stopped by other tasks' spawnSync calls (`npm ci`, `specdojo build`, merges), so it stops reading the validation's output pipe. `validate:schema` prints about 450 KB, fills the 64 KiB pipe buffer and stalls on write until the timeout. Evidence: the timeout timer fired 43–269 s late, and the 4 runs stopped at different stages (yaml, pipeline-state, glossary twice). Fix: parent validations now write stdout and stderr to temporary files, read when the check ends or times out (`src/exec/parent-validation-output.ts`, `src/exec/parent-validation.ts`). Timeouts now put the elapsed time and npm script stage in the summary, the block reason and the failure log (`src/exec/evidence.ts`). Measured with 5 simultaneous runs and the runner blocked 20 s at a time: 60.2 s before, 20.1 s after; 3.1 s without blocking. Added a reproduction test (`tests/src/exec/parent-validation-output.integration.test.ts`), a measurement script (`tools/e2e/parent-validation-load.ts`), a unit test, the updated expectations for the existing timeout test, the operation guide update, and the ticket's response section (including the CHANGELOG subsection).","handoff":["If the timeout integration test's `pipes_closed` expectation is reviewed: output now goes to files, so a descendant that escapes the process group no longer keeps the runner from seeing the child close. `tests/src/exec/parent-validation-timeout.integration.test.ts` now expects `pipes_closed: true` in that case. `pipes_closed: false` remains only for a direct child that does not close after SIGKILL.","CHANGELOG.md is unchanged. The entry's category and draft line are in the ticket's section 「CHANGELOG に書く事項」 (Fixed).","Follow-up idea (outside this item's scope): the spawnSync calls that stop the runner's event loop (`npm ci`, `specdojo build`, the build after a merge) remain. Making them asynchronous could be a separate register item."],"validations":[{"command":"npx vitest run --config vitest.integration.config.ts tests/src/exec/parent-validation-output.integration.test.ts tests/src/exec/parent-validation-timeout.integration.test.ts","status":"passed","summary":"2 files, 5 tests passed (targeted run; the full integration suite is left to the parent runner's test-integration)"},{"command":"npx vitest run --config vitest.unit.config.ts tests/src/exec/parent-validation.test.ts tests/src/exec/evidence.test.ts tests/src/exec/reporter.test.ts tests/src/exec/worktree-yaml-pages.test.ts","status":"passed","summary":"4 files passed, including the new unit test for the timeout summary, block reason and log lines"},{"command":"npx tsx tools/e2e/parent-validation-load.ts --count 5 --block-ms 20000 --idle-ms 50","status":"passed","summary":"5 simultaneous validate:schema runs, all exit 0: 20.1 s after the fix vs 60.2 s before. Without blocking: 3.1 s"},{"command":"npx eslint src/exec/parent-validation.ts src/exec/parent-validation-output.ts src/exec/evidence.ts tests/src/exec/parent-validation.test.ts tests/src/exec/parent-validation-output.integration.test.ts tests/src/exec/parent-validation-timeout.integration.test.ts tools/e2e/parent-validation-load.ts","status":"passed","summary":"no errors"},{"command":"npx prettier --check src/exec/*.ts tests/src/exec/parent-validation.test.ts tests/src/exec/parent-validation-output.integration.test.ts tools/e2e/parent-validation-load.ts","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx tsc --noEmit -p tsconfig.build.json","status":"passed","summary":"no type errors in src"},{"command":"npx tsc --noEmit -p tools/e2e/tsconfig.json","status":"passed","summary":"no type errors in tools/e2e"},{"command":"npx markdownlint-cli2 docs/ja/projects/prj-0001/controls/project-register/pjr-6690-schema-hang.md","status":"passed","summary":"0 issues"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/guides/exec-operation-guide.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"passed","summary":"all history files valid, including the edited ticket"}]}
+</specdojo_executor_evidence>

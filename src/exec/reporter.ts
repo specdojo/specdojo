@@ -20,7 +20,9 @@ import {
   reporterOutputSchemaForMode,
   type ReporterOutput,
 } from "./reporter-output.js";
+import { repairReporterOutput } from "./reporter-repair.js";
 import { isRunRecordPath, runnerRecordPrefixes } from "./run-records.js";
+import { parseYamlSchemaModeline } from "../kata/yaml-schema-modeline.js";
 import { repoEnvironmentVariableName } from "./task-repos.js";
 import type { TaskMode } from "./types.js";
 
@@ -77,6 +79,11 @@ export type ReporterFactOptions = {
    * current run's runner-written plan and result files.
    */
   executorAttemptPaths?: ReadonlySet<string>;
+  /**
+   * Root used to read changed YAML files for their `specdojo-schema` directive. Defaults to the
+   * current working directory.
+   */
+  repoRoot?: string;
 };
 
 export type ReporterEvidence = ExecEvidence & {
@@ -204,6 +211,7 @@ export function evidenceForReporter(
     ...(projectId ? { projectId } : {}),
     changedPaths: changes.map((change) => change.path),
     ...(executorAttemptPaths ? { executorAttemptPaths } : {}),
+    repoRoot: scope.worktreePath,
   };
   const mechanicallyNotApplicable = evidence.validations.flatMap((validation) => {
     if (validation.source === "runner" || validation.status !== "not_run") return [];
@@ -294,6 +302,7 @@ export function deriveReporterFacts(
       : {}),
     changedPaths: options.changedPaths ?? evidence.changes.map((change) => change.path),
     ...(executorAttemptPaths ? { executorAttemptPaths } : {}),
+    ...(options.repoRoot ? { repoRoot: options.repoRoot } : {}),
   };
   const passedCommandsByRepo = new Map<string, Set<string>>();
   const runnerPassedCommandsByRepo = new Map<string, Set<string>>();
@@ -619,8 +628,25 @@ type ChangeScopedValidation = {
   /** Human-readable form of the path condition, used in runner-derived reasons. */
   pathCondition: string;
   matchesCommand: (command: string) => boolean;
-  matchesPath: (path: string) => boolean;
+  matchesPath: (path: string, repoRoot: string) => boolean;
 };
+
+// A YAML with a `specdojo-schema` directive and reason is skipped by `validate:schema:file`
+// (exit 0), so requiring the check would only block the task. `none` and `validate=false` are
+// treated alike; a directive without reason fails the command, so it still requires the check.
+function isSchemaCheckSkippedYaml(path: string, repoRoot: string): boolean {
+  const absolute = resolve(repoRoot, path);
+  if (!existsSync(absolute)) return false;
+  try {
+    const info = parseYamlSchemaModeline(readFileSync(absolute, "utf8"));
+    return info.directive?.reason !== undefined;
+  } catch {
+    return false;
+  }
+}
+
+const isSchemaCheckedYaml = (path: string, repoRoot: string): boolean =>
+  hasExtension([".yaml", ".yml"])(path) && !isSchemaCheckSkippedYaml(path, repoRoot);
 
 const hasExtension =
   (extensions: readonly string[]) =>
@@ -634,9 +660,10 @@ const hasExtension =
 // table: PJR-8WBN requires their existing script-based applicability to stay unchanged.
 const CHANGE_SCOPED_VALIDATIONS: readonly ChangeScopedValidation[] = [
   {
-    pathCondition: "YAML ファイル（*.yaml / *.yml）",
+    pathCondition:
+      "検査を飛ばす印（specdojo-schema: none / validate=false）のない YAML ファイル（*.yaml / *.yml）",
     matchesCommand: (command) => /^npm run validate:schema:file(?:\s|$)/u.test(command),
-    matchesPath: hasExtension([".yaml", ".yml"]),
+    matchesPath: isSchemaCheckedYaml,
   },
   {
     pathCondition: "Prettier 対象ファイル（*.md / *.ts / *.js / *.json / *.yaml / *.yml）",
@@ -699,6 +726,7 @@ function changeScopedValidationApplicability(
   config: SpecDojoConfig | null,
   projectId: string | undefined,
   executorAttemptPaths?: ReadonlySet<string>,
+  repoRoot: string = process.cwd(),
 ): { recognized: boolean; applicable?: boolean; reason?: string } {
   const validation = CHANGE_SCOPED_VALIDATIONS.find(({ matchesCommand }) =>
     matchesCommand(command),
@@ -712,7 +740,7 @@ function changeScopedValidationApplicability(
     projectId,
     executorAttemptPaths,
   );
-  return relevantPaths.some(validation.matchesPath)
+  return relevantPaths.some((path) => validation.matchesPath(path, repoRoot))
     ? { recognized: true, applicable: true }
     : {
         recognized: true,
@@ -817,6 +845,7 @@ export function mechanicallyNotApplicableReason(
     config,
     options.projectId,
     options.executorAttemptPaths,
+    options.repoRoot,
   );
   if (changeScoped.applicable === false) return changeScoped.reason;
   const packageJson =
@@ -860,6 +889,7 @@ function isValidNotApplicableValidation(
     config,
     options.projectId,
     options.executorAttemptPaths,
+    options.repoRoot,
   );
   if (changeScoped.applicable === false) return true;
   if (
@@ -1209,6 +1239,20 @@ export type ReporterInvocationOutput = {
   stderr: string;
 };
 
+async function checkReporterAttempt(
+  stdout: string,
+  opts: {
+    mode: TaskMode;
+    validateOutput?: (output: ReporterOutput) => Promise<string | undefined>;
+  },
+): Promise<{ output: ReporterOutput; error?: undefined } | { output?: undefined; error: string }> {
+  const parsed = parseReporterOutput(stdout, opts.mode);
+  if (!parsed.output) return { error: parsed.error ?? "unknown schema validation error" };
+  const repaired = repairReporterOutput(parsed.output);
+  const outputError = await opts.validateOutput?.(repaired);
+  return outputError ? { error: outputError } : { output: repaired };
+}
+
 export async function runReporterWithFormatRetry(opts: {
   plan: string;
   evidence: ExecEvidence;
@@ -1221,8 +1265,13 @@ export async function runReporterWithFormatRetry(opts: {
    * attempt limit.
    */
   validateOutput?: (output: ReporterOutput) => Promise<string | undefined>;
+  /**
+   * Invoked once with the last format error when the format attempts are exhausted
+   * (a different reporter agent). Not used for rate limits or exit failures.
+   */
+  fallbackInvoke?: ReporterInvocation;
 }): Promise<
-  | { result: "success"; output: ReporterOutput; formatAttempts: number }
+  | { result: "success"; output: ReporterOutput; formatAttempts: number; usedFormatFallback?: true }
   | {
       result: "failure" | "rate_limit";
       reason: string;
@@ -1251,14 +1300,38 @@ export async function runReporterWithFormatRetry(opts: {
         invocationOutputs,
       };
     }
-    const parsed = parseReporterOutput(attempt.stdout, opts.mode);
-    if (parsed.output) {
-      const outputError = await opts.validateOutput?.(parsed.output);
-      if (!outputError) return { result: "success", output: parsed.output, formatAttempts };
-      validationError = outputError;
-      continue;
+    const checked = await checkReporterAttempt(attempt.stdout, opts);
+    if (checked.output) return { result: "success", output: checked.output, formatAttempts };
+    validationError = checked.error;
+  }
+  if (opts.fallbackInvoke) {
+    const attempt = await opts.fallbackInvoke(
+      buildReporterPrompt({
+        plan: opts.plan,
+        evidence: opts.evidence,
+        mode: opts.mode,
+        ...(validationError ? { validationError } : {}),
+      }),
+    );
+    invocationOutputs.push({ stdout: attempt.stdout, stderr: attempt.stderr });
+    if (attempt.result !== "success") {
+      return {
+        result: attempt.result,
+        reason: attempt.stderr.trim() || `fallback reporter exited with ${attempt.result}`,
+        formatAttempts: maxAttempts + 1,
+        invocationOutputs,
+      };
     }
-    validationError = parsed.error ?? "unknown schema validation error";
+    const checked = await checkReporterAttempt(attempt.stdout, opts);
+    if (checked.output) {
+      return {
+        result: "success",
+        output: checked.output,
+        formatAttempts: maxAttempts + 1,
+        usedFormatFallback: true,
+      };
+    }
+    validationError = checked.error;
   }
   return {
     result: "failure",

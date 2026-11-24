@@ -1,0 +1,187 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-5-opd-access-control-sample-080",
+  "run_id": "T-KATA-WAVE-5-opd-access-control-sample-080-20261123T093945Z-31f53d15",
+  "stage": {
+    "role": "executor",
+    "actor": "sonnet-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-23T16:31:08.242Z",
+    "completed_at": "2026-11-23T16:31:22.985Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/opd-access-control-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../result.md                                                       | 4 +++-\n docs/ja/specdojo/samples/opd-access-control-sample.md               | 6 +++---\n 2 files changed, 6 insertions(+), 4 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run lint:md",
+      "status": "not_run",
+      "summary": "親 runner が実行する検査のため、executor では実行していない"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6148 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6148 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-5-opd-access-control-sample-080\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (48 tests)\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1663}\n\n Test Files  19 passed (19)\n      Tests  480 passed (480)\n   Start at  01:31:32\n   Duration  2.43s (transform 5.22s, setup 755ms, import 7.69s, tests 5.37s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\n enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-5-opd-access-control-sample-080/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-5-opd-access-control-sample-080/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "condense_records": [
+    {
+      "location": "1. 概要（access-control） 第1段落末尾",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "「本書は権限区分、付与・剥奪の契機、棚卸しの合否、監査ログの記録対象、緊急権限を定める」は2章の見出しと内容の再掲。分冊の目的と背景は残したため意味は変わらない",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "2.1. 権限区分 導入文",
+      "category": "table-prose",
+      "action": "merge",
+      "reason": "表が示す対応を本文で言い直していたため「次の表で具体化する。」に短縮。opd-index との差分の根拠は残した",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "2.2. 付与・剥奪の契機 導入文",
+      "category": "table-prose",
+      "action": "delete",
+      "reason": "表の内容の言い直しを削った。承認者と操作者の記述は残した",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "2.4. 棚卸し 合格条件の表と直前の本文",
+      "category": "table-prose",
+      "action": "retain",
+      "reason": "表は合否の条件、本文は照合の方法で役割が異なり、二重の説明ではない",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "2.6. 緊急権限 表と直後の ASSUMPTION",
+      "category": "repetition",
+      "action": "retain",
+      "reason": "表は承認・失効・延長の方針、ASSUMPTION は戻し方の前提で重複せず、判断に要る制約のため残す",
+      "cause": {
+        "type": "document"
+      }
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "specdojo:opd-access-control-sample",
+      "status": "changed",
+      "path": "docs/ja/specdojo/samples/opd-access-control-sample.md",
+      "reason": ""
+    }
+  ],
+  "final_message": "opd-access-control-sample.md の冗長な3箇所を整理済み（概要の章構成列挙の削除、2.1と2.2の表導入文の短縮）。意味と必須情報は維持した。",
+  "completion_status": "complete",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-opd-access-control-sample-080/T-KATA-WAVE-5-opd-access-control-sample-080-20261123T093945Z-31f53d15/executor.log",
+      "bytes": 3130,
+      "truncated": false
+    }
+  ]
+}

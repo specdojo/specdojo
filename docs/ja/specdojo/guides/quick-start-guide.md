@@ -42,7 +42,7 @@ SpecDojo の導入から始め、オーケストレーターとの対話を通�
 
 ## 1. 導入とオーケストレーターの起動
 
-Node.js 22.13 以上と Git を用意します。SpecDojo は、成果物の更新、登録簿の状態遷移、実行記録をプロダクトの Git 履歴に混ぜないため、**別リポジトリ構成（Detached Unit）** を基本とします。
+Node.js 22.17 以上と Git を用意します。SpecDojo は、成果物の更新、登録簿の状態遷移、実行記録をプロダクトの Git 履歴に混ぜないため、**別リポジトリ構成（Detached Unit）** を基本とします。
 
 ```text
 landing-page-workspace/
@@ -56,7 +56,7 @@ landing-page-workspace/
 #### 前提
 
 - ワークスペースディレクトリに既存のプロダクトリポジトリ `landing-page/` があること。
-- Node.js 22.13 以上、npm、Git が利用可能であること。
+- Node.js 22.17 以上、npm、Git が利用可能であること。
 - オーケストレーターに使う AI provider（Claude Code、Codex、OpenCode など）の CLI が導入・ログイン済みであること。
 
 #### 導入と起動コマンド（本文）
@@ -88,6 +88,7 @@ Your display name [Project Owner]: サイト責任者      <- 表示名
 Orchestrator providers (...) [codex]: claude        <- 利用する AI ツールを選ぶ
 Delegate work to agents (exec)? [y/N]: y            <- y（AI への作業委譲を有効化）
 Create a Dev Container? [y/N]: n                    <- Enter（手元環境で進める）
+Keep agent sessions running with tmux (macOS / WSL / Linux)? [y/N]: n <- Enter（tmux を使わない）
 Create Git hooks with lefthook? [y/N]: n            <- Enter（初期設定では作らない）
 ```
 
@@ -153,6 +154,32 @@ landing-page-specdojo/
 ```
 
 </details>
+
+### 1.2. 使う環境のパターン
+
+`init` では、Dev Container を使うかと、tmux でセッションを保つかを選びます。組み合わせは次の 6 つです。最初に `npx specdojo doctor` で前提（Node.js・Git の名前とメール・agent の CLI、パターンに応じて Docker・Dev Container CLI・tmux）を確かめ、足りないものは表示される入れ方で入れます。
+
+| パターン              | `init` の答え・オプション                            | 前提の確かめ                                | 作られるもの・入り方                                                                                                                                           |
+| --------------------- | ---------------------------------------------------- | ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Dev Container         | `--devcontainer --devcontainer-preset minimal`       | `npx specdojo doctor --devcontainer`        | `.devcontainer/`。VS Code の「Dev Containers: Reopen in Container」で開く                                                                                      |
+| Dev Container ＋ tmux | `--devcontainer`（recommended と full は tmux 込み） | `npx specdojo doctor --devcontainer --tmux` | `.devcontainer/` と `.specdojo/host/devcontainer-tmux.sh`。常時稼働ホストでの使い方は [[specdojo:remote-host-development-guide\|常時稼働ホストでの開発ガイド]] |
+| macOS                 | 既定（Dev Container・tmux とも使わない）             | `npx specdojo doctor`                       | 手元の端末でそのまま使う                                                                                                                                       |
+| macOS ＋ tmux         | `--tmux`                                             | `npx specdojo doctor --tmux`                | `.specdojo/host/local-tmux.sh`。`bash .specdojo/host/local-tmux.sh` でセッションに入る                                                                         |
+| WSL                   | 既定                                                 | `npx specdojo doctor`                       | WSL の端末でそのまま使う                                                                                                                                       |
+| WSL ＋ tmux           | `--tmux`                                             | `npx specdojo doctor --tmux`                | `.specdojo/host/local-tmux.sh`。`bash .specdojo/host/local-tmux.sh` でセッションに入る                                                                         |
+
+どのパターンでも、最初の 10 分の目標は「最初の todo を起票し、agent に 1 件流す」ことです。
+
+```bash
+npx specdojo doctor --tmux          # パターンに合わせてオプションを変える
+npx specdojo init --tmux            # 対話で答えてもよい
+bash .specdojo/host/local-tmux.sh   # tmux のパターンだけ。抜けるときは Ctrl-b d
+npm run orch:opus                   # オーケストレーターに「最初の todo を起票して流して」と頼む
+```
+
+- tmux のパターンでは、端末を閉じたり接続が切れたりしても、セッションの中で流したオーケストレーターや `exec run` が続きます。入り直すときは同じスクリプトを流します。
+- WSL では、作業ツリーを Windows 側（`/mnt/c` の下）ではなく Linux 側のホーム（例: `~/src`）に置きます。`/mnt/c` の下は遅く、ファイルの権限で詰まりやすいためです。`doctor` はこれを警告します。Dev Container を使う場合は、Docker Desktop の WSL 連携を有効にします。
+- macOS で tmux を入れるには `brew install tmux`、WSL・Linux では `sudo apt install tmux` を使います。
 
 ## 2. 管理対象リポジトリと Git flow の設定
 

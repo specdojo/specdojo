@@ -35,6 +35,13 @@ properties:
       pattern: "^[a-z0-9-]+$"
     additionalProperties:
       $ref: "#/$defs/ExternalProject"
+  references:
+    description: Read-only directories for orchestrator launch; never product worktrees or exec targets.
+    type: object
+    propertyNames:
+      pattern: "^[a-z0-9-]+$"
+    additionalProperties:
+      $ref: "#/$defs/Reference"
 $defs:
   NonEmptyString:
     type: string
@@ -77,6 +84,21 @@ $defs:
           Branch that receives direct project-register commits. Defaults to
           project/<project-id>/develop.
         $ref: "#/$defs/NonEmptyString"
+      register_sync:
+        description: Opt-in register and schedule-event synchronization through a dedicated branch.
+        type: object
+        additionalProperties: false
+        properties:
+          enabled:
+            type: boolean
+            default: false
+          branch:
+            description: Defaults to project/<project-id>/register.
+            $ref: "#/$defs/NonEmptyString"
+          remote:
+            type: string
+            pattern: "^(?!-)(?!.*[\\s:])\\S+$"
+            default: origin
       catalog_path:
         type: string
       schedule_path:
@@ -116,6 +138,17 @@ $defs:
           $ref: "#/$defs/Repo"
       run:
         $ref: "#/$defs/Run"
+  Reference:
+    type: object
+    additionalProperties: false
+    required: [path]
+    properties:
+      path:
+        description: Existing directory relative to the main working tree root; must not overlap writable repositories.
+        type: string
+        pattern: "\\S"
+        not:
+          pattern: "^(/|[A-Za-z]:[\\\\/])"
   ExternalProject:
     type: object
     additionalProperties: false

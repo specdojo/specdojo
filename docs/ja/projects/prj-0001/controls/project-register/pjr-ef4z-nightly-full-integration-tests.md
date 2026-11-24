@@ -7,13 +7,14 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-23T00:16:11Z"
   due_on: "2026-11-30"
-  conclusion: 統合テストの全件を毎晩流す orchestrator integration-tests と job・routine を足した。2 回目で、朝の報告が成功・失敗・JSON を読めないときのどの場合でも lint を通るように書き出しを直し、2026-11-23 の報告も直した
+  completed_at: "2026-11-24T00:38:05Z"
+  conclusion: 統合テストの全件を毎晩 4 時に routine で流し、朝の報告を残すようにした。2026-11-24 04:00 の実行で 443 件の全件成功を確かめた。報告の id を小文字にした
   derived_from:
     - PJR-9X52
   commit_type: feat
@@ -48,6 +49,8 @@ specdojo:
 - 3 回目の実行（2026-11-23）: `routine run --id rtn-nightly-integration-tests` が作った job の記録のうち、段のディレクトリ（`execution/runs/job/JBR-nightly-integration-tests-<id>/JBR-nightly-integration-tests-<id>-attempt-1-step-integration-tests/`）に `evidence.json` と log だけがあり、`plan.md` と `result.md` がなかった。commit すると pre-push の `exec validate --records-only` と CI の Check execution record layout で止まる（オーケストレーターがこのディレクトリを管理から外した、`892de711e`）。毎晩の routine で同じ記録ができるため、job の段が作る記録を、配置の検査が求める形（plan・result・evidence がそろう、または段のディレクトリを作らない）にする。ほかの job（`job-exec-cycle` など）の段の記録とそろえる。どちらにするかを executor が決め、理由を個票の対応結果に書く。
 - 統合テストの全件の job の記録が `exec validate --records-only` を通ることを、単体テストか統合テストで確かめる。統合の後に orchestrator が routine を 1 回流し、作った記録を commit した tree で `exec validate --records-only --commit` が通ることを確かめる。
 
+- 4 回目の実行（2026-11-24）: 夜間の routine（2026-11-24 04:00）が作った報告の `specdojo.id` が `prj-0001:nightly-integration-tests-report-20261123T193127Z` と時刻の T と Z を大文字のまま含み、frontmatter の id の規則（`^[a-z0-9][a-z0-9-:]*$`）に合わず `npm run lint:fm` が警告で落ちた（`--frail`）。lint-fm を親の検証に持つ run がすべて止まった。既存の 2 件の報告の id はオーケストレーターが小文字に直した。`src/commands/nightly-integration-tests.ts` の id の組み立てで時刻を小文字にし、作った報告が `npm run lint:fm` を通ることを単体テストで確かめる。報告のファイル名は今のままでよい。
+
 ## 4. 作業内容
 
 | No  | 作業                                                | 担当 | 状態 | メモ                                                                                                        |
@@ -71,6 +74,8 @@ specdojo:
 - 2 回目の実行: 報告の書き出しを直した。連続する空行を 1 行にまとめ、末尾を改行 1 つにそろえ、失敗の表を Prettier と同じ列幅（全角は幅 2）に整える。成功・失敗・JSON を読めない場合の 3 通りの報告が markdownlint と prettier を通ることを単体テストで確かめる。2026-11-23 の報告のファイルは、すでに直した書き出しの形（空行 1 行、末尾改行 1 つ）と一致しており、変更不要だった。
 
 - 3 回目の実行: 段ごとに別の run ディレクトリ（`...-attempt-1-step-<id>/`）を作っていたため、plan・result がなく配置の検査に落ちた。段のディレクトリを作らない方式を選んだ。段の evidence と log は job の run ディレクトリへ `evidence.step-attempt-<n>-<id>.json`・`step-attempt-<n>-<id>.stdout.log`・`.stderr.log` として置く（試行ごとに名前が分かれ、上書きされない）。plan・result を段ごとに偽造するより、検査が求める「run ごとに plan・result・evidence」を保ち、既存の `exec-cycle` などの記録と同じ形になる。`tests/src/exec/job-sequence.integration.test.ts` で、段を持つ job の記録が `validateRunRecordLayout` を通ることを確かめた。統合後の `exec validate --records-only --commit` の確認は orchestrator が行う。
+
+- 4 回目の実行: 報告の `specdojo.id` の組み立てで時刻を小文字にした（`...-report-20261123t193127z`）。報告のファイル名は変えていない。単体テストで、作った報告の id が `^[a-z0-9][a-z0-9-:]*$` に合うことを確かめた。
 
 ### 5.2. 成果物
 

@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-8pxj-init-devcontainer-host-script
   type: project
-  status: draft
+  status: deprecated
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: rejected
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-23T10:22:51Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-23T13:17:40Z"
+  conclusion: PJR-7EZR の init の環境のパターンにまとめた（Dev Container ＋ tmux で本体スクリプトを作る）
   commit_type: feat
   commit_scope: init
 ---

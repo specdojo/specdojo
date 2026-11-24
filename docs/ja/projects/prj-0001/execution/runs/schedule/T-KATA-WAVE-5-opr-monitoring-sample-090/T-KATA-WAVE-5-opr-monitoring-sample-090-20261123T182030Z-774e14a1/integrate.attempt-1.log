@@ -1,0 +1,19 @@
+=== 2026-11-23T19:52:48.804Z git merge --no-ff -m exec(T-KATA-WAVE-5-opr-monitoring-sample-090): 型の grade とレビュー exec/prj-0001-T-KATA-WAVE-5-opr-monitoring-sample-090 ===
+exit: 1
+--- stdout ---
+Auto-merging docs/ja/projects/prj-0001/execution/grade/results/specdojo.opr-access-control-sample.yaml
+CONFLICT (content): Merge conflict in docs/ja/projects/prj-0001/execution/grade/results/specdojo.opr-access-control-sample.yaml
+Auto-merging docs/ja/projects/prj-0001/execution/grade/results/specdojo.opr-backup-restore-sample.yaml
+CONFLICT (content): Merge conflict in docs/ja/projects/prj-0001/execution/grade/results/specdojo.opr-backup-restore-sample.yaml
+Auto-merging docs/ja/projects/prj-0001/execution/grade/results/specdojo.opr-incident-sample.yaml
+CONFLICT (content): Merge conflict in docs/ja/projects/prj-0001/execution/grade/results/specdojo.opr-incident-sample.yaml
+Auto-merging docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-opr-monitoring-sample-090/T-KATA-WAVE-5-opr-monitoring-sample-090-20261123T182030Z-774e14a1/result.md
+CONFLICT (add/add): Merge conflict in docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-opr-monitoring-sample-090/T-KATA-WAVE-5-opr-monitoring-sample-090-20261123T182030Z-774e14a1/result.md
+Automatic merge failed; fix conflicts and then commit the result.
+
+--- stderr ---
+
+--- merge --abort ---
+exit: 0
+
+

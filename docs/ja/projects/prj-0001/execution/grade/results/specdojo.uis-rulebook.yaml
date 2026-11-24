@@ -4,12 +4,11 @@ document: specdojo:uis-rulebook
 path: docs/ja/specdojo/rulebooks/uis-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-rulebook
 verdict: pass
-score: 94
-graded_at: "2026-11-21T06:10:09.159Z"
-graded_by: opus-executor
-content_hash: ea53aaf5050d388e0bf4f8ed7799f6087d95cebd0d2c97bbc4bb00e02e0bb705
+score: 100
+graded_at: "2026-11-23T15:57:51.348Z"
+graded_by: sonnet-review-executor
+content_hash: 7e21758a050e76619c3f491641e4f428ffa51327c3272ca33f2eb71f4622d255
 categories:
   purpose:
     score: 100
@@ -24,11 +23,11 @@ categories:
   usability:
     score: 100
   implementation:
-    score: 88
+    score: 100
   quality:
-    score: 92
+    score: 100
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -70,8 +69,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-change-impact:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-testability:
     level: 4
     score: 100
@@ -79,11 +78,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -105,46 +104,6 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 4
+  minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: minor
-    rule: vp-dev-change-impact
-    line: 13
-    anchor: >-
-      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status` の昇格と承認、改訂と廃止、未決事項の登録簿への引き継ぎは
-      [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従い、本書と成果物で言い直しません。
-    message: >-
-      改訂・廃止を共通標準へ委ねるだけでは、UIS 固有の追従確認対象が明確になりません。共通規則は再掲せず、画面索引、当該画面へ流入・流出する他画面の遷移と受け渡し情報、対応する実装・受入条件を確認対象として示し、共通標準の担当
-      Role code との対応を補ってください。
-    message_ja: >-
-      改訂・廃止を共通標準へ委ねるだけでは、UIS 固有の追従確認対象が明確になりません。共通規則は再掲せず、画面索引、当該画面へ流入・流出する他画面の遷移と受け渡し情報、対応する実装・受入条件を確認対象として示し、共通標準の担当
-      Role code との対応を補ってください。
-  - id: F002
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 98
-    anchor: "- **判断基準**: 同じ入力に同じ可否を判断でき、境界値で検証できること。入力時と確定時で条件が異なれば区別し、失敗時に前の有効値を保持するか、修正用に入力値を残すかを記す。"
-    message: バリデーションの判断基準と良い例が失敗時の保持状態（前の有効値の保持・修正入力を残すこと）をこの章へ書かせており、「全体方針」の一元化規則と禁止事項「入力の条件や回復の手順を、正とする章以外で言い直す」に自ら抵触しているため、保持状態の記述を「エラー表示と利用者の次の手」へ移し、バリデーションでは対応エラー名を示す要件と例に改めてください。
-    message_ja: バリデーションの判断基準と良い例が失敗時の保持状態（前の有効値の保持・修正入力を残すこと）をこの章へ書かせており、「全体方針」の一元化規則と禁止事項「入力の条件や回復の手順を、正とする章以外で言い直す」に自ら抵触しているため、保持状態の記述を「エラー表示と利用者の次の手」へ移し、バリデーションでは対応エラー名を示す要件と例に改めてください。
-  - id: F003
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 13
-    anchor: >-
-      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status` の昇格と承認、改訂と廃止、未決事項の登録簿への引き継ぎは
-      [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従い、本書と成果物で言い直しません。
-    message: >-
-      Rulebook 記述標準は各系統の具体的な追従対象と役割分担の定義を求めていますが、本書は改訂・廃止を共通標準へ委ねる記述に留まっています。共通規則の再掲を避けつつ、UIS
-      の変更時に追従確認する画面索引・接続先画面・実装・受入条件と担当 Role code の対応を補ってください。
-    message_ja: >-
-      Rulebook 記述標準は各系統の具体的な追従対象と役割分担の定義を求めていますが、本書は改訂・廃止を共通標準へ委ねる記述に留まっています。共通規則の再掲を避けつつ、UIS
-      の変更時に追従確認する画面索引・接続先画面・実装・受入条件と担当 Role code の対応を補ってください。
-  - id: F004
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 98
-    anchor: "- **判断基準**: 同じ入力に同じ可否を判断でき、境界値で検証できること。入力時と確定時で条件が異なれば区別し、失敗時に前の有効値を保持するか、修正用に入力値を残すかを記す。"
-    message: 全体方針では失敗時の表示と回復を「エラー表示と利用者の次の手」に集約していますが、バリデーションの判断基準と良い例は有効値・修正入力の保持をこの章へ直接記すよう読めます。保持状態はエラー章を正本とし、バリデーションから対応エラーを参照する書き方に揃えて、同じ状態規則の二重記載を防いでください。
-    message_ja: 全体方針では失敗時の表示と回復を「エラー表示と利用者の次の手」に集約していますが、バリデーションの判断基準と良い例は有効値・修正入力の保持をこの章へ直接記すよう読めます。保持状態はエラー章を正本とし、バリデーションから対応エラーを参照する書き方に揃えて、同じ状態規則の二重記載を防いでください。
+findings: []

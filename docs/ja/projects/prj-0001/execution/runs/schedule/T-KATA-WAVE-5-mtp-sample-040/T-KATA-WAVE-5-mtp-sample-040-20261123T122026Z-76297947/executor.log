@@ -1,0 +1,18 @@
+`docs/ja/specdojo/rulebooks/mtp-rulebook.md` を書き直し、grade の指摘 F001〜F008 に対応しました。変更したのはこの 1 ファイルだけで、sample・recipe・template と result には触れていません。`status` は `draft` のままです。prettier と markdownlint はこのファイルで指摘なしでした。lint 系の検査は親 runner に任せています。
+
+**指摘への対応**
+- **F002・F007（完成例の章）**: 受注システムの完成文書 2 本を丸ごと埋め込んでいた「サンプル（最小・整合版）」章を削除しました。完成例は Frontmatter の `sample` に任せる形にし、直前に済んだ `cop-index-rulebook` の改訂と同じ構成にそろえています。
+- **F003（改訂時の追従）**: 「位置づけ」を表にしました。`mip-index`・`dmd-*`・`cop-*`・`otp-*` のどれが変わったら MTP のどの章を見直すかを行ごとに書き、見直しは QE、個票の起票は PM が担当すると定めました。
+- **F004（作成後の検証）**: `npm run lint:fm` と `npm run lint:md` を実行し、どちらも終了コード 0 なら合格と明記しました。
+- **F001（管理記録への転記）**: 許容差を超えた差異と原因が未解決の差異は課題管理簿（`pm-issue-log`）へ、再実行と NO-GO 案の判断は決定記録（`pm-decision-log`）へ、判定者が結果報告までに転記すると定めました。
+- **F005（「可能な限り」の削除）**: 再実行の上限（回数と期限）と報告先を必須にし、未確定のときは `_UNDECIDED_:` で論点と決める時点を書くようにしました。
+- **F008（表記ゆれ）**: 「判断者」「判断主体」を「判定者」に統一し、判定者は Role code で書くと定めました。
+
+あわせて「本文構成（標準テンプレ）」を「本文要件」の表に直し、記述ガイドを判断基準・良い例・悪い例の形にしました。「リハーサルの結果を本書に書き足す」を禁止事項に加え、PJR-76N9 に沿って文書の作成・承認の役割は求めていません。
+
+**残っている問題**
+F006（sample が rulebook の構成に沿っていない）は、この段では sample を変更しないため解消していません。`mtp-sample.md` は今も汎用の 5 章構成のままで、Frontmatter と 9 章の本文要件に合っていません。駄菓子屋を題材に 9 章で作り直す作業は sample の段に引き継ぎます。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"mtp-rulebook を簡潔にした。サンプル章を削除し（F002/F007）、本文要件の表・判断基準と良い例・悪い例の記述ガイドに改めた。追従表（F003）、lint:fm・lint:md と期待結果（F004）、pm-issue-log・pm-decision-log への転記条件（F001）、必須化と _UNDECIDED_ の扱い（F005）、判定者と Role code への統一（F008）を反映した。F006 は sample を変更しない段のため未解消。","handoff":["F006（major, vp-qe-kata-conformance）は未解消: docs/ja/specdojo/samples/mtp-sample.md が汎用5章のままで、rulebook の Frontmatter（type: test, rulebook: specdojo:mtp-rulebook）と本文要件の9章（概要〜関連ドキュメント）に沿っていない。この段は sample を変更しないため、後続の sample の段で駄菓子屋の販売管理システムを題材に9章の完成例へ作り直す必要がある（合否基準の判定者は Role code、差異の扱いに再実行上限と pm-issue-log・pm-decision-log への転記を含める）。","rulebook のサンプル章を削除した。rulebook-authoring-standard は既存の章を段階的に外出しする経過措置としているが、plan の『rulebook に完成例の章を置かず、完成例は sample に任せる』と、同じ wave の cop-index-rulebook の前例に従った。完成例は sample の作り直しまで実質的に存在しない。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/mtp-rulebook.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/mtp-rulebook.md","status":"passed","summary":"0 issues in 0 files"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更は docs/ja/specdojo/rulebooks/mtp-rulebook.md だけで、plan・result・個票を変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML の変更がない","reason":"変更したファイルに *.yaml / *.yml がない"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,161 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-6-DESIGN-tsd-sample-050",
+  "run_id": "T-KATA-WAVE-6-DESIGN-tsd-sample-050-20261123T110326Z-3a30bfe6",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-23T16:12:38.435Z",
+    "completed_at": "2026-11-23T16:14:36.787Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/tsd-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../result.md                                      |  26 +-\n docs/ja/specdojo/samples/tsd-sample.md             | 319 ++++++++++++---------\n 2 files changed, 200 insertions(+), 145 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/samples/tsd-sample.md",
+      "status": "passed",
+      "summary": "整形済み"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/samples/tsd-sample.md",
+      "status": "passed",
+      "summary": "指摘なし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "対象外",
+      "reason": "履歴蓄積ファイル（plan / result / 個票）を executor は変更していない"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "対象外",
+      "reason": "変更した YAML ファイルがない"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6188 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6188 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-DESIGN-tsd-sample-050\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (48 tests) 6ms\n[pa\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1846}\n\n Test Files  19 passed (19)\n      Tests  480 passed (480)\n   Start at  01:16:27\n   Duration  2.59s (transform 4.77s, setup 708ms, import 7.28s, tests 5.63s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\ners-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-DESIGN-tsd-sample-050/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-DESIGN-tsd-sample-050/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "tsd-sample.md を grade の F001〜F018 に対応する形で更新済みであることを確認した。fly postgres config update の 3 つのオプションは公式ドキュメントで実在を確認した。Prisma の P3009 と migrate resolve による解消方法はコミュニティの回答・解説記事で確認した。prettier と markdownlint は通過した。rulebook と result は変更していない。",
+  "completion_status": "complete",
+  "handoff": [
+    "利用者が決める値として _UNDECIDED_ のまま残した: ISSUE-02 の月額費用の上限、ISSUE-03 の繁忙期の 1 時間あたり会計件数と p95 の閾値（何秒以内か）、バックアップの保管期間（opd-index-sample の側で未決）。",
+    "F002 は作成担当の明記を求めているが、PJR-76N9（文書の役割の割り当てを書かない）に従い書かなかった。代わりに `_TODO_`、本書が頼っている内容、作成までの暫定の正本を書いた。",
+    "9 章の表の「担当 Role」列は課題を解く担当（文書の中身）として残した。",
+    "事実確認済み: `fly postgres config update` に `--max-connections` / `--shared-buffers` / `--log-min-duration-statement` があることは公式ドキュメント（docs.fly.io/flyctl/postgres-config-update）で確認した。Prisma の `P3009` と `migrate resolve --rolled-back` / `--applied` による解消はコミュニティの回答・解説記事で確認した。Prisma 公式の該当ページ（pris.ly/d/migrate-resolve）は検索結果に出ず、確認していない。",
+    "事実確認が残る点: `--shared-buffers` の値の書式（公式ドキュメントに例がない）、Fly Postgres のデータのマウント先 `/data`、Prisma の `P3009` の公式ドキュメント上の表記。",
+    "動作確認の表の「開発端末で 2026-11-20 に成功（PostgreSQL 16.4、Prisma 5.22）」は、完成例として置いた架空の記録である。",
+    "rulebook の変更案: 6.4 に、確認状況（環境・日付・未確認の条件）を記録する表の例を加えると、sample と書き方をそろえやすい。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-DESIGN-tsd-sample-050/T-KATA-WAVE-6-DESIGN-tsd-sample-050-20261123T110326Z-3a30bfe6/executor.log",
+      "bytes": 5774,
+      "truncated": false
+    }
+  ]
+}

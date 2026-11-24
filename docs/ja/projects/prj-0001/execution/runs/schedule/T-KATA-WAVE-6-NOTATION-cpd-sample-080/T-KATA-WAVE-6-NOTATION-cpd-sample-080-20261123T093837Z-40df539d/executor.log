@@ -1,0 +1,9 @@
+対象文書の冗長な 1 文を削除しました。`lint:md`、`lint:mermaid` などの検査は親 runner が実行するため、私は実行していません。
+
+削除したのは、§3.2 の定義表の後の段落にあった「販売可否の判断を共通の記録接点へ移さない。」です。同じ内容が定義表の記録アクセス行(「販売可否を判断しない」)にあるため、表と本文の二重の説明(`table-prose`)と判定しました。意味は表側に残っています。
+
+ほかの候補は、判断に要る背景・制約・例外・完了条件にあたるため残しました。たとえば §1 の成功判定の範囲、§4.1 の依存方向・保存順序・再実行の扱い、§4.2 の検証対象表、§5 の引き継ぎ表です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"cpd-sample.md の §3.2 で、定義表と重複する 1 文を削除した。他の候補は判断に要る内容のため保持した。","handoff":[],"validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する allowlist 検査のため、executor では実行していない。"}],"target_coverage":[{"target":"specdojo:cpd-sample","status":"changed","path":"docs/ja/specdojo/samples/cpd-sample.md"}],"condense_records":[{"location":"§3.2 コンポーネントと論理配置 表後の段落「販売可否の判断を共通の記録接点へ移さない。」","category":"table-prose","action":"delete","reason":"定義表の記録アクセス行(販売可否を判断しない)と同内容の重複で、削除しても意味は変わらない。","cause":{"type":"document"}},{"location":"§4.1 技術前提・制約 / §4.2 検証対象 / §5 メモ・将来課題","category":"repetition","action":"retain","reason":"各所の記述は制約・失敗時の判定・引き継ぎ条件として役割が異なり、判断に要るため残した。","cause":{"type":"document"}}]}
+</specdojo_executor_evidence>

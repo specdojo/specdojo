@@ -4,12 +4,11 @@ document: specdojo:tsd-rulebook
 path: docs/ja/specdojo/rulebooks/tsd-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-rulebook
 verdict: pass
-score: 94
-graded_at: "2026-11-21T06:05:12.166Z"
-graded_by: opus-executor
-content_hash: 4fafae7aa7c4e9dd21846773a0b23f455d704b3cac0f9bfb5b7f06ee9d6f3c07
+score: 97
+graded_at: "2026-11-23T17:33:19.460Z"
+graded_by: sonnet-review-executor
+content_hash: 12a7538afce15f67dc96cf885c41ce07d8c5fe14853819c8a1b1fbbc2b7cb6be
 categories:
   purpose:
     score: 100
@@ -22,9 +21,9 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 83
+    score: 92
   implementation:
-    score: 88
+    score: 100
   quality:
     score: 92
   consistency:
@@ -70,8 +69,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-change-impact:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-testability:
     level: 4
     score: 100
@@ -88,8 +87,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -105,51 +104,20 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 5
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-arc-conciseness
-    line: 60
-    anchor: 冒頭に初期構築・接続設定・日常利用の対象と開始条件を示し、手順を別冊へ委ねても完了の確認方法は残す。版・環境別の条件と任意設定を分け、未決事項は論点と影響（当面の扱い）を記す。
-    message: 分冊・別冊で前提と完了条件を示す旨が位置づけ節・本文要件の前置き・本文要件の補足の3か所で繰り返されているため、1か所に集約し他は削るか参照に置き換えてください。
-    message_ja: 分冊・別冊で前提と完了条件を示す旨が位置づけ節・本文要件の前置き・本文要件の補足の3か所で繰り返されているため、1か所に集約し他は削るか参照に置き換えてください。
+    line: 118
+    anchor: "- 良い例: `<TOKEN>` を置き、実行時にシークレット管理から注入する方法を示す。悪い例: 実トークン付きの URL や認証設定の全文を貼る。"
+    message: 秘密情報・既存設定統合・継続利用の良い例／悪い例が recipe の「良い例 / 悪い例」表と重複しているため、rulebook 側は判定基準だけに絞るか recipe への参照に置き換えてください。
+    message_ja: 秘密情報・既存設定統合・継続利用の良い例／悪い例が recipe の「良い例 / 悪い例」表と重複しているため、rulebook 側は判定基準だけに絞るか recipe への参照に置き換えてください。
   - id: F002
     severity: minor
-    rule: vp-dev-change-impact
-    line: 13
-    anchor: >-
-      - **共通の運用**: 作成・維持・確認の役割は適用先のメンバー定義に、`status`・承認・改訂と廃止・未決事項の引き継ぎは
-      [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従う。文書の整形・lint はリポジトリの検証で扱い、業務の動作確認に含めない。
-    message: >-
-      TSD の改訂・廃止時に追従確認すべき対象（`tsd-index` の一覧、前提とする接続設定・日常利用の分冊など）を自系統の具体的な追従対象として示してください（rulebook-authoring-standard
-      の要求）。
-    message_ja: >-
-      TSD の改訂・廃止時に追従確認すべき対象（`tsd-index` の一覧、前提とする接続設定・日常利用の分冊など）を自系統の具体的な追従対象として示してください（rulebook-authoring-standard
-      の要求）。
-  - id: F003
-    severity: minor
     rule: vp-qe-kata-conformance
-    line: 53
-    anchor: "| 接続設定               | 条件付き | 外部サービスや別の実行環境へ接続する場合、接続方式、認証方法、識別子の対応を示す                   |"
-    message: 本文要件の「接続設定」、記述ガイドの「接続情報と秘密情報」、recipe の「接続設定と秘密情報の扱い」で同じ内容の名称が揃っていないため、Kata 間で章名を統一してください。
-    message_ja: 本文要件の「接続設定」、記述ガイドの「接続情報と秘密情報」、recipe の「接続設定と秘密情報の扱い」で同じ内容の名称が揃っていないため、Kata 間で章名を統一してください。
-  - id: F004
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 24
-    anchor: "| 運用設計・運用手順   | 体制・SLO・障害対応・バックアップ方針。技術固有の操作は TSD |"
-    message: >-
-      位置づけ表ではバックアップ方針を運用設計に委ねていますが、sample の TSD 本文には保管期間などの方針が書かれているため、TSD に残す技術固有の操作と運用設計に委ねる方針の境界例を示し、sample
-      との整合を取ってください。
-    message_ja: >-
-      位置づけ表ではバックアップ方針を運用設計に委ねていますが、sample の TSD 本文には保管期間などの方針が書かれているため、TSD に残す技術固有の操作と運用設計に委ねる方針の境界例を示し、sample
-      との整合を取ってください。
-  - id: F005
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 44
-    anchor: 以下は内容要件であり、章の統合・分割・順序変更を認める。別冊へ委ねる条件付きの内容は、正本と前提の完了条件を示す。
-    message: 分けた文書を指す語として「分冊」と「別冊」が混在しているため、どちらかに統一してください。
-    message_ja: 分けた文書を指す語として「分冊」と「別冊」が混在しているため、どちらかに統一してください。
+    line: 55
+    anchor: "| 接続設定と秘密情報の扱い | 条件付き | 外部サービスや別の実行環境へ接続する場合、接続方式、認証方法、識別子の対応、秘密情報の取得・保存・参照方法を示す |"
+    message: 本文要件の「接続設定と秘密情報の扱い」に対し sample が「接続情報と秘密情報の管理」、recipe が「別冊」（rulebook は「分冊」）と名称が揃っていないため、Kata 間で章名と用語を統一してください。
+    message_ja: 本文要件の「接続設定と秘密情報の扱い」に対し sample が「接続情報と秘密情報の管理」、recipe が「別冊」（rulebook は「分冊」）と名称が揃っていないため、Kata 間で章名と用語を統一してください。

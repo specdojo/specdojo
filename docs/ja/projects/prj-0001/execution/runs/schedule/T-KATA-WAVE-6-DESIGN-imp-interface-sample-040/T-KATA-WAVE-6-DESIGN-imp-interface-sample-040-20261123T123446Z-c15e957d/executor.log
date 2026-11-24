@@ -1,0 +1,38 @@
+`docs/ja/specdojo/rulebooks/imp-interface-rulebook.md` を書き直しました。grade の 14 件のうち rulebook 側で直せるものは直しています。残りは sample と recipe・template の側の作業です（下に書きます）。手本には、第 5 波で直した `imp-data-rulebook` と `imp-test-rulebook` を使いました。変更したファイルはこの 1 つだけで、sample・recipe・template と result には触れていません。
+
+**rulebook 側で直したもの（F001〜F008、F011〜F013）**
+
+| finding | 直した内容 |
+| --- | --- |
+| F001・F011 | 未解決事項の必須列を「論点、不足情報、判断・対応への影響、当面の扱い、決定期限、担当、転記先の登録項目」にした。登録簿へ転記する条件の表も足した |
+| F002・F006 | 担当は Role code、調整先は連携先の組織名・システム名で書くと定めた。担当・調整先に個人名や連絡先を書くことは禁止事項に入れた |
+| F003 | 対応方針に「完了条件」と「調整先」の列を足し、良い例・悪い例を付けた |
+| F004・F012 | 位置づけを「入力（変更要求の個票と `imp-business`）」「判断対象」「反映先（`ifx-*`）」「並行する文書（`imp-data`・`imp-test`・`imp-operations`）」の 4 つに分けた |
+| F005 | 目的と適用範囲に、対象外の I/F とその理由を書くよう求めた |
+| F007 | Frontmatter は `npm run lint:fm` で確かめると書いた |
+| F008 | `based_on` に変更要求の個票 ID と `<project-id>:imp-business` を書くと明記した |
+| F013 | 対応方針の「重要度」を「影響度」に揃え、別の列名を使うことを禁止事項にした |
+
+そのほか、計画の方針に合わせて次も直しました。
+
+- 「本文構成（標準テンプレ）」を「本文要件」に改め、章ごとに必須の列の表を置いた。
+- 記述ガイドに、章ごとの判断基準と良い例・悪い例の表を足した。
+- 影響度の高・中・低の基準と、3 つの観点のうち最も高い判定を影響度にする規則を定めた。
+- 全体方針を「どの利用場面で何を判断するための文書か」の形にした（PJR-76N9）。
+
+整形は Prettier をかけ、markdownlint-cli2 で指摘 0 件です。lint や schema 検証などの検査は、このあと親 runner が流します。
+
+**未対応のもの**
+
+- **sample が新しい rulebook と合っていない（F009・F010・F011）:** この段では sample を変えないため、まだずれています。
+  - 影響分析サマリに尺度の定義がない。
+  - 目的と適用範囲に対象外と対象期間がない。
+  - 対応方針が「優先度」「実施時期」の列名を使い、担当に個人名が入っている。
+  - 対応方針に「調整先」「完了条件」の列がない。
+  - 未解決事項に「判断・対応への影響」「当面の扱い」「転記先の登録項目」の列がない。
+  - `based_on` が個票 ID の形になっていない。
+- **`recipe` と `template` を決めていない（F014）:** どちらも `undecided` のままにしました。作るかどうかは人の判断で、ほかの影響調査の rulebook もすべて `undecided` です。markdown が既定のため `target_format` も足していません。ready にする前に決めてください。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"imp-interface-rulebook を兄弟 rulebook（`imp-data`・`imp-test`）の形に揃えて簡潔化し、F001〜F008・F011〜F013 を rulebook 側で解消した。F009・F010 と F011 の sample 側は次の sample 改訂へ、F014 は人の判断へ申し送る。","handoff":["sample 側の不整合（F009・F010・F011）は、この段では sample を変更しないため未解消。次の sample 改訂で直す: 影響分析サマリの前に高・中・低の尺度と最大値規則を書く。目的と適用範囲に対象外の I/F とその理由、対象期間を書く。対応方針の列を「影響度、対応項目、期限、担当、調整先、前提条件、完了条件」にし、担当を Role code にして個人名を外す。未解決事項に「判断・対応への影響」「当面の扱い」「転記先の登録項目」の列を足し、担当を Role code にする。`based_on` に個票 ID（`PJR-XXXX`）と `imp-business` を書く。","F014: `recipe`・`template` は兄弟の影響調査 rulebook（`imp-business`・`imp-data`・`imp-test`・`imp-operations`）と同じく `undecided` のまま据え置いた。要否は人が判断し、ready にする前に `not-needed` か完全 ID へ決める。markdown が既定のため `target_format` は追加していない。","F007 は `npm run lint:fm` による検証を Frontmatter の章に書いて対応した。schema ファイルのパスを rulebook に再掲しない（正本の再掲を避けるため）。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/rulebooks/imp-interface-rulebook.md","status":"passed","summary":"変更した rulebook を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/imp-interface-rulebook.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更は docs/ja/specdojo/rulebooks 配下の rulebook だけで、plan・result・個票を変更していない"}]}
+</specdojo_executor_evidence>

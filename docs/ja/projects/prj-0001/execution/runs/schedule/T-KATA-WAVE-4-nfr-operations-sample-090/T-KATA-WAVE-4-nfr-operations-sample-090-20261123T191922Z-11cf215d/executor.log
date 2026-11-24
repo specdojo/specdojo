@@ -1,0 +1,52 @@
+レビューの結果、verdict は `complete-with-findings` です。minor の finding は残りますが、完了条件は満たしています。
+
+## 評価結果の確認
+
+- 鮮度確認として、sample と rulebook の両方に `npx specdojo grade list --target kata --path <対象> --changed-only` を実行しました。どちらも出力は空で、終了コードは 0 でした。評価結果は両方とも最新です。
+- sample は `verdict` が `pass`、`score` が 94 です。finding は blocker 0 / major 0 / minor 4 / note 0 です。
+- rulebook は `verdict` が `pass`、`score` が 98 です。finding は blocker 0 / major 0 / minor 2 / note 0 です。
+- `git status` で見えた変更は、runner が作った `pipeline-state.json` だけです。成果物の変更はなく、`changed-during-review` には当たりません。
+
+## 判断根拠
+
+sample 本文（`[[specdojo:nfr-operations-sample]]`）を読み、完了条件と照合しました。
+
+- **DC-001・DC-005:** 本文は次の5章で構成されています。
+  - 概要
+  - 適用範囲・体制前提
+  - 運用要件一覧
+  - 測定・検証方法
+  - 関連ドキュメント導線
+
+  要件 `nfr-ops-001`〜`nfr-ops-009` のすべてに、測定方法・判定時期・判定者・未達時の扱いがあります。
+- **DC-004:** 概要章が、停止・バックアップ不備・手順不在・連絡段階の欠如を、店番担当の記録抜けや、つけ残高を説明できない事態に結び付けています。
+- **DC-002・DC-003:** 駄菓子屋の文脈で書かれています。grade の `vp-qe-kata-conformance` は level 3 で、blocker / major の finding はありません。
+- **フェーズの範囲:** 磨き込みの結果は sample に反映されています。
+
+## 未充足事項・改善指示
+
+残る finding はすべて minor で、必須要素の欠落や禁止事項への抵触ではありません。そのため完了は妨げません。人の確定の前に、次の点を直してください。
+
+- **sample F001・F002:** 次の2点が `_UNDECIDED_` のままです。
+  - `nfr-ops-003` の基準値
+  - 営業時間外の緊急連絡手段（`nfr-ops-009` にも影響します）
+
+  どちらも、決定者と期限、または暫定の `_ASSUMPTION_` 値を示してください。
+- **sample F004:** draft から ready へ移す条件が書かれていません。`_UNDECIDED_` の解消と `_ASSUMPTION_` 値の確認を条件として、一行で示してください。
+- **rulebook F001・F002、sample F003:** rulebook の記述が現状と食い違っています。
+  - 「sample は5章に揃っていない」という記述が古くなっています。
+  - ready 化の前提に「sample を揃えること」が残っています。
+
+  残る前提は template の共通化と recipe の要否だけです。別タスクで rulebook を更新してください。
+- **recipe:** 未整備（`_MISSING_`）です。rulebook 側の `_UNDECIDED_` で扱われています。
+- **grade の結果への疑義:** ありません。
+
+## 確認できなかった範囲
+
+- 先行する edit タスクの result は特定していません。実行記録の検証結果は確認していません。
+- recipe は存在しないため、照合していません。
+- 宣言された文書以外は参照していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict: complete-with-findings。sample（pass/94）と rulebook（pass/98）の kata 評価結果はいずれも最新です。sample は5章構成で、`nfr-ops-001`〜`nfr-ops-009` のすべてに確認方法があり、完了条件 DC-001〜DC-005 を満たします。残る finding は minor のみです。未決の `_UNDECIDED_` 2点（`nfr-ops-003` の基準値、営業時間外の緊急連絡手段）に決定者と期限、または暫定値を示すこと、ready 条件を一行で示すこと、rulebook の古い記述（sample が5章に揃っていない、ready 前提に sample を揃えること）を更新することを改善指示とします。確認できなかった範囲: 先行 edit result、recipe（未整備）、宣言外の文書。","handoff":["sample の `_UNDECIDED_`（`nfr-ops-003` の基準値、営業時間外の緊急連絡手段）に決定者と期限、または暫定の `_ASSUMPTION_` 値を示す","sample に draft から ready への移行条件を一行で追記する","rulebook の古い記述（sample が5章に揃っていない、ready 前提に sample を揃えること）を更新する。recipe の要否と template の共通化判断は人の確定の前に確認する"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/nfr-operations-sample.md --changed-only","status":"passed","summary":"出力なし、終了コード 0。評価結果は最新"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/nfr-operations-rulebook.md --changed-only","status":"passed","summary":"出力なし、終了コード 0。評価結果は最新"}]}
+</specdojo_executor_evidence>

@@ -4,12 +4,11 @@ document: specdojo:gl-sample
 path: docs/ja/specdojo/samples/gl-sample.yaml
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-sample
 verdict: pass
-score: 91
-graded_at: "2026-11-21T04:00:30.250Z"
-graded_by: opus-executor
-content_hash: 74dd149a72fd5dbadb91c24a1ce73385c913b49772a0c73a92cfca8ead4af31b
+score: 100
+graded_at: "2026-11-23T15:43:02.230Z"
+graded_by: sonnet-review-executor
+content_hash: ff377efa6e3a613784a09cf4ec70b3e3d9ba3e43de313eb8e7be3b4fef8cf588
 categories:
   purpose:
     score: 100
@@ -18,17 +17,17 @@ categories:
   planning:
     score: 100
   business:
-    score: 88
+    score: 100
   architecture:
     score: 100
   usability:
-    score: 83
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 92
+    score: 100
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -49,8 +48,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
     level: 4
     score: 100
@@ -76,17 +75,17 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -102,72 +101,6 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 6
+  minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: minor
-    rule: vp-ba-requirements-completeness
-    line: 36
-    anchor: "notes: 店主が認めた常連客だけが利用する。店頭では現金による販売と区別して記録する。"
-    message: >-
-      つけの利用条件を決める「常連客」と、つけ残高・つけ限度額の単位となる「顧客」が用語として定義されていないため、顧客（および常連客との関係）を tm-actor
-      分類などで定義し、つけを利用できる対象者の境界を用語集内で確認できるようにする。
-    message_ja: >-
-      つけの利用条件を決める「常連客」と、つけ残高・つけ限度額の単位となる「顧客」が用語として定義されていないため、顧客（および常連客との関係）を tm-actor
-      分類などで定義し、つけを利用できる対象者の境界を用語集内で確認できるようにする。
-  - id: F002
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 19
-    anchor: "status: official"
-    message: "用語の status: official が発注点だけに付いており、ほかの9語は採用状態が不明に読めるため、全用語で status を揃えるか、発注点だけに付ける理由がなければ削除して採用状態の表現を一貫させる。"
-    message_ja: "用語の status: official が発注点だけに付いており、ほかの9語は採用状態が不明に読めるため、全用語で status を揃えるか、発注点だけに付ける理由がなければ削除して採用状態の表現を一貫させる。"
-  - id: F003
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 11
-    anchor: "- id: tm-reorder-point"
-    message: >-
-      rulebook の ID規約は新規採番を tm-＜領域＞-＜概念＞ とするが、tm-reorder-point・tm-standard-product・tm-safety-stock・tm-shop-owner
-      は領域接頭辞を持たず tm-sales-credit-* と混在しているため、新規採番として規約どおりの ID に揃えるか、既存確定 ID
-      として維持していることを冒頭コメント等で示し、完成例から規約の適用が読み取れるようにする。
-    message_ja: >-
-      rulebook の ID規約は新規採番を tm-＜領域＞-＜概念＞ とするが、tm-reorder-point・tm-standard-product・tm-safety-stock・tm-shop-owner
-      は領域接頭辞を持たず tm-sales-credit-* と混在しているため、新規採番として規約どおりの ID に揃えるか、既存確定 ID
-      として維持していることを冒頭コメント等で示し、完成例から規約の適用が読み取れるようにする。
-  - id: F004
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 9
-    anchor: "# 単一店舗の販売・在庫・つけ管理を扱う。外部システムとの連携と本格会計は対象外。"
-    message: >-
-      rulebook
-      の位置づけは冒頭コメントまたは代表用語の注記で対象範囲と共通・他領域の正本を示すことを求め、分類・関連用語の判断でも別ファイルの「商品」を文書リンクで案内する例を挙げているが、冒頭コメントは対象範囲だけを示し、定義で使う「商品」（line
-      26・70・84）の正本（共通用語集など）を示していないため、冒頭コメントまたは在庫・販売の notes か source で共通の正本を案内し、完成例から規約の適用が読み取れるようにする。
-    message_ja: >-
-      rulebook
-      の位置づけは冒頭コメントまたは代表用語の注記で対象範囲と共通・他領域の正本を示すことを求め、分類・関連用語の判断でも別ファイルの「商品」を文書リンクで案内する例を挙げているが、冒頭コメントは対象範囲だけを示し、定義で使う「商品」（line
-      26・70・84）の正本（共通用語集など）を示していないため、冒頭コメントまたは在庫・販売の notes か source で共通の正本を案内し、完成例から規約の適用が読み取れるようにする。
-  - id: F005
-    severity: minor
-    rule: vp-ux-readability
-    line: 77
-    anchor: "notes: 発注を検討する基準の発注点とは区別する。"
-    message: >-
-      安全在庫の notes は「発注点とは区別する」と述べるだけで区別の内容がなく、定義も需要変動に備えるという一般論に留まるため、この店舗で誰がどの商品（定番商品など）に設定するのか、発注点との関係（例:
-      発注点は安全在庫に入荷までの販売見込みを加えた水準とする）を注記で示し、初見の読者が2語の境界を判断できるようにする。
-    message_ja: >-
-      安全在庫の notes は「発注点とは区別する」と述べるだけで区別の内容がなく、定義も需要変動に備えるという一般論に留まるため、この店舗で誰がどの商品（定番商品など）に設定するのか、発注点との関係（例:
-      発注点は安全在庫に入荷までの販売見込みを加えた水準とする）を注記で示し、初見の読者が2語の境界を判断できるようにする。
-  - id: F006
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 16
-    anchor: "notes: 定番商品だけに設定し、発注候補に挙がった後の発注数量と発注先は店主が判断する。"
-    message: >-
-      正式な用語は店主代表（line 60）で店主は別名だが、line 16・26・36・54 の定義・注記は店主、line 64 は店主代表と書き分けているため、他用語の定義・注記では正式な用語の店主代表に統一するか、term
-      を店主にして店主代表を別名に回し、表記を一貫させる。
-    message_ja: >-
-      正式な用語は店主代表（line 60）で店主は別名だが、line 16・26・36・54 の定義・注記は店主、line 64 は店主代表と書き分けているため、他用語の定義・注記では正式な用語の店主代表に統一するか、term
-      を店主にして店主代表を別名に回し、表記を一貫させる。
+findings: []

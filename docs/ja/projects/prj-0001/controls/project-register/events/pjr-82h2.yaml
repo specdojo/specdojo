@@ -1,0 +1,85 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_d862a719f2d541a6ac612101fb14e612
+  ts: "2026-11-23T22:38:21Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: README に英語の短い概要を足す
+    - field: description
+      from: ""
+      to: OSS として広めるため、README に目的・位置づけ・クイックスタートへの道筋を英語で短く書く
+    - field: input
+      from: ""
+      to: '["v0.10.0 に入れる（利用者の指定、2026-11-24）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-24"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: readme
+- v: 1
+  id: reg_4801a9e1def64fccb8f3943bd64566aa
+  ts: "2026-11-23T22:38:32Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_d862a719f2d541a6ac612101fb14e612
+- v: 1
+  id: reg_90009b1d60444ac4a1342a037bba24bc
+  ts: "2026-11-24T01:01:08Z"
+  action: start
+  actor: terra-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_4801a9e1def64fccb8f3943bd64566aa
+- v: 1
+  id: reg_8c4d79265f8644aa90a86ca61662428d
+  ts: "2026-11-24T01:03:17Z"
+  action: review
+  actor: terra-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_90009b1d60444ac4a1342a037bba24bc

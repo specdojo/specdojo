@@ -1,0 +1,40 @@
+バッチ再実行の sample（`docs/ja/specdojo/samples/opr-batch-sample.md`）を、5行ほどの断片から rulebook の必須12章をすべて揃えた完成例に書き直しました。変更したのはこのファイルだけです。prettier と markdownlint は通っています。`npm run lint:md` などの親 runner が流す検査は、指示どおり実行していません。
+
+**主な変更点**
+
+- **Frontmatter**: `rulebook` を `specdojo:opd-rulebook` から `specdojo:opr-rulebook` に直しました（F015・F017）。
+- **H1**: 「駄菓子屋きぬや 販売管理システム 運用手順（バッチ再実行）」に変えました。
+- **章立て**: 概要から関連ドキュメント導線まで12章を置きました。バッチの章は `## 7.` になります（F016・F018・F020）。中身のない章は `opr-index 参照` と書き、本書で足す分だけを書いています。
+- **未決事項**: 概要に表でまとめました。決まるまでの扱いと、影響する章を書いています（F001・F002・F022）。
+- **関係者と連絡経路**: 手順適用範囲・前提の章に書きました（F008・F023）。
+- **再実行の手順（第7章）**: 次の6節に分けました（F003・F010・F012・F013）。
+  - 失敗検知
+  - 再実行の前提の確認（合格・不合格の表）
+  - 再実行の操作（コマンドと入力）
+  - 完了の条件
+  - 再実行上限と上限到達時
+  - 重複の防止
+- **再実行上限**: 「1回（2回目はOps Lead判断）」を「自動の取得を含めて1日2回、手動は1回まで、例外なし」にしました。依存先の `opr-sample` に合わせた変更です（F014）。
+- **優先度と影響**: 優先度ごとの扱いと、データ不整合を P1 にする条件を書きました（F004・F011）。データ不整合の時に `opr-incident` へ切り替える既存の記述は残しています。
+- **証跡**: 保存先と残す識別子の表、手順を模擬した結果の残し方を書きました（F005）。
+- **関連ドキュメント導線**: `opd-index`・`opd-monitoring`・`opr-index`・`opr-incident` との行き来を表にしました（F019）。
+- **表記**: 「or」を「または」に、run_id を `run_id` に直しました（F021）。
+- **削除**: 先頭の「参照: `../rulebooks/opr-rulebook.md`」の行を消しました。rulebook は Frontmatter で指定済みで、必須要素にも完了条件にも当たらないためです。
+
+**手を付けなかったもの**
+
+- **推測した値**: 再実行のコマンド `backup run --target sales-db --date <closing_date>` は根拠になる資料がないため、例として書き `_ASSUMPTION_` を付けました。「取得中も店頭で記録を続けられる」も同じく `_ASSUMPTION_` です。
+- **利用者が決める値**: RTO/RPO と保管期間、夜間バックアップの開始時刻と所要時間、営業時間外の緊急連絡手段は `_UNDECIDED_` のまま残しています。
+- **書かないと決まっている内容**: ready に上げる基準（F022）と承認の進め方（F002）は、PJR-76N9 で sample 本文に書かないことになっているので入れていません。
+- **`based_on`**: `opd-index` のまま変えていません。
+
+**他の sample とのずれ**
+
+- `opr-sample` の関連ドキュメント導線には「分冊は障害対応だけ」とあり、本書（`opr-batch`）と食い違っています。
+- `opd-index-sample` の導線表にも `opr-batch` が載っていません。
+
+どちらも今回の範囲外なので、直す必要がある点として申し送りに入れました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"opr-batch-sample を opr-rulebook の必須12章構成の完成例に書き直した。Frontmatter の rulebook を specdojo:opr-rulebook に修正し、再実行のコマンド・入力・前提の確認・完了の条件・上限・重複の防止を第7章に記述。prettier と markdownlint はエラーなし。","handoff":["opr-sample（opr-index）の関連ドキュメント導線は「分冊は障害対応だけ」としており、opr-batch 分冊の存在と矛盾する。opr-sample と opd-index-sample の導線表に opr-batch を追加するかを判断すること。","再実行コマンド `backup run --target sales-db --date <closing_date>` と「取得中も店頭の記録を続けられる」は宣言資料に裏付けがなく、_ASSUMPTION_ として残した。","利用者が決める値: RTO/RPO とバックアップの保管期間、夜間バックアップの開始時刻と所要時間、営業時間外の緊急連絡手段（_UNDECIDED_）。各証跡の保管期間も _UNDECIDED_。","F002（PO承認に必要な事項）と F022（ready への昇格基準）のうち承認・昇格の進め方に関わる部分は、PJR-76N9 と sample-authoring-standard に従い本文に書かなかった。未決事項は概要の表で扱う。grade の viewpoint を sample に適用する範囲の見直しを提案する。","変更・削除の根拠: 先頭の「参照: ../rulebooks/opr-rulebook.md」の行は rulebook の必須要素にも done_criteria にも当たらないため削除した（rulebook は frontmatter で宣言済み）。再実行上限「1回（2回目はOps Lead判断）」は depends_on の opr-sample（1日2回）に合わせ、「自動を含め1日2回、手動1回、例外なし」に改めた。H1 から「サンプル」の語を除き、共通サンプル文脈の名称に合わせた。based_on は既存の opd-index のまま残した。","rulebook への変更案: 第5章は template を見出しの正本としているが、opr-term 分冊の扱いがある。分冊で opr-index 参照とした章に、差分が無い場合の最小の書き方の例を記述ガイドに足すとよい。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/opr-batch-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/opr-batch-sample.md","status":"passed","summary":"0 issues in 0 files"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/ 配下の sample だけで、pjr 個票や plan・result を変更していない"}]}
+</specdojo_executor_evidence>

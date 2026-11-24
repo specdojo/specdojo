@@ -1,0 +1,7 @@
+`exec resume` のタスク未指定時に、`doing` に加えて reporter・統合段で停止したタスクを選び、`--parallel` の上限で再開するよう修正しました。判断が必要な executor 段は自動選択しません。
+
+選択ロジックのテスト、Markdown 検査、履歴リンク検査、カタログ検査は通過しました。カタログ検査は npm スクリプトが sandbox の IPC 制限で失敗したため、同じ CLI を `node --import tsx` で実行して確認しました。型検査と全体の lint・テストは親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"タスク未指定の一括再開に reporter・統合段の blocked タスクを追加し、選択テストと説明を更新した。","handoff":["CHANGELOG の不具合修正文案: `exec resume` がタスク未指定でも reporter・統合段で停止したタスクを並列に再開するよう修正。"],"validations":[{"command":"./node_modules/.bin/vitest run --config vitest.unit.config.ts tests/src/exec/run/resume.test.ts","status":"passed","summary":"4 テストが成功。"},{"command":"./node_modules/.bin/prettier --write src/exec/run/lifecycle-commands.ts tests/src/exec/run/resume.test.ts docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-2x6k-resume-blocked-stages.md","status":"passed","summary":"変更ファイルを整形。"},{"command":"node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-2x6k-resume-blocked-stages.md","status":"passed","summary":"変更 Markdown の検査に成功。"},{"command":"npm run validate:history-links","status":"passed","summary":"履歴リンク検査に成功。"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"警告あり、終了コード 0。npm スクリプトは sandbox の IPC 制限で起動できず、同じ CLI を直接実行した。"}]}
+</specdojo_executor_evidence>

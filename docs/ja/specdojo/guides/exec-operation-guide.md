@@ -152,14 +152,16 @@ specdojo exec run --project <project-id> --register PJR-00QV --worktree --join
 
 親検証の時間切れを調べるときは、run の `evidence.json` と同じディレクトリの `parent-validation-metrics.jsonl` を確認します。trial では `exec/trials/<comparison-id>/trials/<trial-id>/` に保存します。再開時も追記するため、`batch_id` と検証の `id`・`repo` で絞って読みます。
 
-| 記録                                  | 読み方                                                                                                                                                                                                                                                                    |
-| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `gate-queued` / `gate-acquired`       | 枠の要求・取得時刻。`local_wait_ms` は同一プロセス内、`shared_wait_ms` は共有ロックの取得にかかった時間。各検証の `gate_wait_ms` はバッチ全体の待ち時間で、検証ごとの待ちの合計ではありません                                                                             |
-| `validation-start` / `validation-end` | `at` は UTC の記録時刻、`started_at` は開始時刻、`duration_ms` は単調時計で測った実行時間。`status`・`exit_code`・`timed_out` で終了状態を確認します                                                                                                                      |
-| `validation-timeout`                  | 上限に達した時点で終了要求より先に保存します。`active_test_files` は開始通知があり終了通知のないテストファイル、`output_tail` は直近 16 Ki 文字の標準出力です。詳細な出力は従来の失敗ログも参照します                                                                     |
-| `validation-timeout-stop`             | 時間切れの後に検証を止め終えた時点で保存します。`survivors_after_term` は SIGTERM の猶予（10 秒）の後に子孫が残っていたか、`kill_sent` は SIGKILL を送ったか、`pipes_closed: false` は group 外の子孫が出力の pipe を持ったまま残り、close を待たずに返したことを示します |
-| `load`                                | Linux の CPU・memory・I/O の PSI（`pressure`）、`loadavg`、`/proc/meminfo` 由来のメモリ・swap 使用量（bytes）。PSI の `avg10` などは待ちの割合、`total` は累積待ち時間（マイクロ秒）です。開始・終了・時間切れの差分で確認します                                          |
-| `activity`                            | `scope: project-locks` は同じ project の primary / join run の数と PID、および実行中 executor の子 PID・worktree 名。reporter と終了済み executor は数えません。共有ロックのない実行は `scope: process` として自プロセスだけを数えます                                    |
+| 記録                                  | 読み方                                                                                                                                                                                                                                                                                                                                |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `gate-queued` / `gate-acquired`       | 枠の要求・取得時刻。`local_wait_ms` は同一プロセス内、`shared_wait_ms` は共有ロックの取得にかかった時間。各検証の `gate_wait_ms` はバッチ全体の待ち時間で、検証ごとの待ちの合計ではありません                                                                                                                                         |
+| `validation-start` / `validation-end` | `at` は UTC の記録時刻、`started_at` は開始時刻、`duration_ms` は単調時計で測った実行時間。`status`・`exit_code`・`timed_out` で終了状態を確認します                                                                                                                                                                                  |
+| `validation-timeout`                  | 上限に達した時点で終了要求より先に保存します。`active_test_files` は開始通知があり終了通知のないテストファイル、`output_tail` は直近 16 Ki 文字の標準出力、`stage` は最後に始まった npm script、`timer_lag_ms` は時間切れの timer が遅れた時間（runner の event loop が止まっていた時間）です。詳細な出力は従来の失敗ログも参照します |
+| `validation-timeout-stop`             | 時間切れの後に検証を止め終えた時点で保存します。`survivors_after_term` は SIGTERM の猶予（10 秒）の後に子孫が残っていたか、`kill_sent` は SIGKILL を送ったか、`pipes_closed: false` は直下の子が SIGKILL の後も close せず、待たずに返したことを示します                                                                              |
+| `load`                                | Linux の CPU・memory・I/O の PSI（`pressure`）、`loadavg`、`/proc/meminfo` 由来のメモリ・swap 使用量（bytes）。PSI の `avg10` などは待ちの割合、`total` は累積待ち時間（マイクロ秒）です。開始・終了・時間切れの差分で確認します                                                                                                      |
+| `activity`                            | `scope: project-locks` は同じ project の primary / join run の数と PID、および実行中 executor の子 PID・worktree 名。reporter と終了済み executor は数えません。共有ロックのない実行は `scope: process` として自プロセスだけを数えます                                                                                                |
+
+親検証の標準出力と標準エラーは pipe ではなく一時ファイルへ書かせ、終了後に読みます。`--parallel` の runner は他のタスクの準備・統合（`npm ci`・`specdojo build` など）の間 event loop が止まり、pipe では出力の多い検証が書き込みで止まるためです（PJR-6690）。時間切れの block 理由は `validate-schema (timed out after 649s (stage: validate:schema:glossary))` のように経過時間と段を含み、失敗ログにも `elapsed`・`stage` を残します。
 
 このリポジトリの Vitest 設定は、親検証が渡す `SPECDOJO_PARENT_VALIDATION_METRICS=1` のときだけファイル開始・終了通知を出します。他リポジトリの検証でこの通知がない場合、`active_test_files` は空で、実行ファイルは未特定です。直近の出力が示す完了済みファイルを実行中と解釈しないでください。テストの初期化前の停止も通知がない場合があります。
 
@@ -512,6 +514,8 @@ specdojo exec resume \
 executor と reporter が成功した後の commit・merge・worktree 撤去で止まった場合、`exec resume --task <task-id>` は agent を起動せず、`pipeline-state.json` の `integrate` 段から統合だけを再開します。前回の merge が完了している場合は exec branch を再 merge せず、runner が残した lifecycle 差分を確認したうえで worktree 撤去と `exec complete` だけを行います。通常実行の成功時は `integrate.status=succeeded`、失敗時は `failed` と block event の `pipeline_state_ref` が残ります。
 
 ### 2.7. register統合後のreviewと自動close
+
+`register_sync.enabled: true` の project では、runner の状態遷移と検証済みの個票編集は専用ブランチへ commit・push します。exec の commit には個票・イベントを含めず、成功後に専用ブランチを呼び出し元へ取り込んでから post-review を始めます。転送・競合・復旧の扱いは [[specdojo:register-operation-guide|登録簿運用ガイド]] の専用ブランチの節を参照してください。未設定の場合は従来の記帳経路を使います。
 
 register の worktree 実行では、`--post-review` を付けると、成果を統合した後に読み取り専用の review pipeline を実行できます。review executor の既定は `claude-expert-review-executor` で、`--review-by` により変更できます。reporter は `stage_role: reporter` の候補から選び、edit pipeline で `--reporter-by` を指定している場合は同じ reporter を使います。
 

@@ -1,0 +1,26 @@
+`docs/ja/specdojo/templates/prj-overview-template.md` を、更新済みの rulebook と sample に合わせて直しました。prettier で整形し、markdownlint は 0 件です。rulebook と sample は変更していません。
+
+**変更した点:**
+- **説明文を削った:** 各章の _TODO_ を「どこに何を書くか」だけに絞りました。rulebook や recipe に書かれている書き方の説明（原則は 2〜5 件、成果物の完成率だけで価値としない、母数が小さい場合の扱いなど）は削除しました。
+- **背景:** 問題の箇条書きを「問題 | 頻度・影響」の表にしました。rulebook の「事実は頻度・件数・影響を添える」と、sample の構成に合わせています。
+- **必要性:** 中心仮説を書く欄の下に、確かめる時間軸を添えた価値仮説の番号付きリストを置きました。
+- **基本的な考え方・実現したいこと:** 項目を `_PRINCIPLE_NAME_`、`_DESIRED_STATE_` などのプレースホルダにしました。実現したいことの末尾には、詳細な範囲は `prj-scope` で扱う旨の一文を置いています。
+- **期待効果:**
+  - 冒頭の _TODO_ を、目標値が初期仮説であること・ベースライン・判定時期・寄与の確かめ方を書く欄にしました。確定した成功判定は `prj-success-criteria-and-acceptance-criteria` で管理する旨も添えています。
+  - 表の目標の列名は rulebook どおり、初期公開指標が「目標」、短期・中長期指標が「初期目標」です。
+  - 使わない時間軸の扱いを書いたコメントは残しました。
+- **前提条件:** sample と同じく、次の 3 つの組に分けました。
+  - 変えない前提
+  - 依存する条件
+  - 判断責任・AI Agent の役割・公開方針・取捨選択方針と未決事項
+
+**変えていない点:**
+- テンプレート自身の `status` は `ready` のままです。テンプレートの記述標準は `draft` と定めていますが、人が付けた状態なので、下げるかどうかは人の判断に残しています。
+- 文書の役割の割り当てや承認の進み具合の記入欄は、もともとありません。
+- plan に展開された finding はありません。
+
+lint などの検査は、このあと runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"prj-overview-template を rulebook・sample に合わせて直した。説明文を骨組みに絞り、背景の問題表・価値仮説のリスト・3 組に分けた前提条件をそろえた。rulebook と sample は変更していない。","handoff":["テンプレート自身の `specdojo.status` は既存の `ready` のまま。template-authoring-standard は `draft` と定めているが、状態の変更は人が判断する。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/templates/prj-overview-template.md","status":"passed","summary":"表を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/templates/prj-overview-template.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルの変更なし","reason":"変更したのは template だけで、plan・result・個票は変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML の変更なし","reason":"変更したファイルは Markdown だけ"}]}
+</specdojo_executor_evidence>

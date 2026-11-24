@@ -1,0 +1,13 @@
+`docs/ja/specdojo/templates/bps-template.md` を直し、指摘 F001・F002 を両方とも解消しました。prettier と markdownlint はどちらもエラーなしです。lint・schema など親 runner が実行する検査は、この段では流していません。rulebook と sample には手を入れていません。
+
+- **F001（「検証・受入観点」の注記）**: 主要例外を条件なしに少なくとも一行求める書き方をやめました。正常系と条件付き処理は少なくとも一行ずつ書き、主要例外がある場合は例外ごとに一行を足します。主要例外がない場合は、例外がないと結論した範囲（入力不足、出力確定失敗など）を確かめる行を置きます。これで「例外・代替経路」章の「例外なし」を許す注記と食い違わなくなり、recipe の「検証・受入観点」の節や rulebook の 6.6・6.7 とも合います。
+- **F002（「未決事項」の雛形）**:
+  - 論点の先頭を `_UNDECIDED_` に固定していたのをやめ、差し替え用の `_ISSUE_LABEL_` にしました。
+  - 注記で `_TODO_`・`_UNDECIDED_`・`_ASSUMPTION_` のどれを付けるかを選べるようにしています。
+  - rulebook 6.8 と sample に合わせ、表の列を「論点／影響する章・ステップ／当面の扱い」の 3 列にしました。
+  - 「区分」「決定者」「決定時期」の列は削除しました。rulebook が決定の担当と期限を本文に書かないとしているためで、役割の割り当てを置かないという PJR-76N9 の決まりにも沿います。
+  - 書き方の説明は章の外側のコメントに入れ、コメントを外して章を足しても本文に説明が残らないようにしました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"bps-template.md を更新した。F001: 「検証・受入観点」の注記で、主要例外の行を例外がある場合だけに限り、例外がない場合は結論の範囲を確かめる行を置くようにした。F002: 「未決事項」の論点ラベルを差し替え用の `_ISSUE_LABEL_` にし、`_TODO_`/`_UNDECIDED_`/`_ASSUMPTION_` の選び方を注記した。rulebook 6.8 と sample に合わせて表を「論点／影響する章・ステップ／当面の扱い」の3列にし、区分・決定者・決定時期の列を削除した（PJR-76N9 にも沿う）。rulebook と sample は変更していない。","handoff":[],"validations":[{"command":"npx prettier --check docs/ja/specdojo/templates/bps-template.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/templates/bps-template.md","status":"passed","summary":"0 issues in 0 files"}]}
+</specdojo_executor_evidence>

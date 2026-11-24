@@ -1,0 +1,27 @@
+template は変更していません。rulebook に照らすと、今の template がすでに正しい形だと判断しました。
+
+**変更しなかった理由**
+
+- rulebook の「位置づけ」の章には、Frontmatter の `template` は `register build` が個票から作る生成ビュー（`controls/generated/pm-risk-register.md`）の骨組みを指すと書かれています。単独のリスク登録簿には対応する template がない、とも明記されています。
+- 実装もこの前提で動いています。`src/register/views.ts` が `pm-risk-register-template.md` を読み、`<!-- specdojo:view-slot=table -->` の行を生成した表に置き換えます。
+- 同じ仕組みの `pm-issue-log-template` と `pm-decision-log-template` も、同じ構成（`frontmatter_template.rulebook: specdojo:pjr-rulebook`、注記、view-slot）です。
+
+**finding の扱い**
+
+- F001〜F013 と F015（6 章の構成・評価基準・対応計画・担当などの記入欄がない、生成ビューとして書かれているのが誤り）：template を単独の登録簿の雛形とみなした指摘で、rulebook の「位置づけ」と食い違います。rulebook を正として、6 章の骨組みは足していません。6 章の内容は個票と管理計画に書く決まりです。
+- F014（生成物の `rulebook` を `specdojo:pm-risk-register-rulebook` にすべき）：rulebook は生成と検証の手順を `pjr-rulebook` に従うと定めており、同種の template もすべて `pjr-rulebook` です。ここを変えると生成されるビューの Frontmatter も変わり、同種の template との統一も崩れるので、見送りました。
+- F016（template の `status` が `ready`）：template 執筆標準は template 自身の `status` を `draft` と定めているので、指摘には根拠があります。ただ、`status` を変えるのは人の判断で、同種の template もすべて `ready` のため、変えずに判断をお願いする形にしました。
+- F017（再生成の仕組みの説明がない）：手順は `pjr-rulebook` と `register build` が正本です。template に書き写すと正本の重複になるので足していません。
+
+**検証**
+
+ファイルを変更していないので、整形と静的検査は対象外です。lint などは親 runner が実行します。
+
+**お願いしたい判断**
+
+- rulebook と grade の観点の調整（再評価で同じ指摘が出ないように）。grade が template を単独の登録簿の雛形として評価しており、再評価でも同じ指摘が出る見込みです。
+- template の `status`（`ready` → `draft`）。同種の template 一式とあわせて判断が必要です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"pm-risk-register-template は rulebook の「位置づけ」の章が定める生成ビューの骨組みで、src/register/views.ts の view-slot 置換と同種の template（issue-log・decision-log）とも合っているため、変更していない。F001〜F013・F015・F017 は template を単独の登録簿の雛形とみなした指摘で、rulebook を正として見送った。F014 は生成と検証の手順を `pjr-rulebook` に従わせる rulebook の規定と同種の template の統一を優先して見送った。F016 は人の判断に回した。","handoff":["F001〜F013・F015・F017 は、template を単独のリスク登録簿（6 章）の雛形とみなした指摘である。rulebook の「位置づけ」の章は、Frontmatter の `template` が `register build` の生成ビュー（`controls/generated/pm-risk-register.md`）の骨組みを指し、単独の登録簿には template がないと定めている。src/register/views.ts もこの template の `<!-- specdojo:view-slot=table -->` を置き換えて生成ビューを作る。このため rulebook を正として 6 章の骨組みは足していない。再評価で同じ指摘が繰り返されないよう、grade の観点（`vp-qe-kata-conformance` など）が生成ビューの template を評価する方法か、rulebook の書き方の調整を人間に判断してほしい。","F014（`frontmatter_template.rulebook` を `specdojo:pm-risk-register-rulebook` にすべき）は見送った。rulebook は生成と検証の手順を `specdojo:pjr-rulebook` に従うと定め、同種の pm-issue-log・pm-decision-log・pm-change-request-log の template もすべて `pjr-rulebook` である。変えると生成されるビューの Frontmatter も変わるため、同種の template 一式でそろえて変えるかを人間が判断する。","F016: template-authoring-standard は template 自身の `specdojo.status` を `draft` と定めているが、この template と同種の template はすべて `ready` である。status の変更は人間の判断のため変えていない。同種の template 一式の status をどうするか判断してほしい。"],"validations":[{"command":"git status --short","status":"passed","summary":"成果物（template・rulebook・sample）に変更なし。runner が管理する pipeline-state.json だけが未追跡で残っている。"},{"command":"npx prettier --check docs/ja/specdojo/templates/pm-risk-register-template.md","status":"not_applicable","summary":"変更したファイルがない","reason":"変更した *.md ファイルがなく、Prettier の適用条件を満たさない"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"plan・result・個票などの履歴蓄積ファイルを executor が変更していない"}]}
+</specdojo_executor_evidence>

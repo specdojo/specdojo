@@ -1,0 +1,15 @@
+`docs/ja/specdojo/samples/nfr-availability-sample.md` の冗長な 2 箇所を短くしました。どちらも意味は変えていません。`npm run lint:md` は親 runner が実行します。
+
+- **「適用範囲・除外条件」章末:** 「判断できない」という説明が「未決事項」章の SLA の行と重複していました。参照に置き換えました。
+- **「可用性要件一覧」章の導入文:** 「決まるまでの」を削除しました。同じ内容が「測定・検証方法」章末と「未決事項」章にあります。
+
+そのほかの候補は、判断に必要な内容なので残しました。
+
+- 業務影響の箇条書き。
+- 通信断の前提 ACD-A02 の記載。
+- 「測定・検証方法」章末の pass / fail の判定規則。
+- 「関連ドキュメント導線」章の導入文の「基準値を変えたときは…見直す」。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"nfr-availability-sample.md の冗長 2 箇所を参照・削除で整理した。意味と必須情報は維持した。","handoff":[],"condense_records":[{"location":"2. 適用範囲・除外条件 末尾の段落","category":"canonical-restatement","action":"reference","reason":"ホスティング環境と店舗の回線の SLA 未確認の説明が「未決事項」の行と重複していたため、「未決事項」への参照に置き換えた。リスクの置き場所の指示は残した。","cause":{"type":"document"}},{"location":"3. 可用性要件一覧 導入文","category":"repetition","action":"delete","reason":"「決まるまでの」は暫定判定の記述と重複していたため削った。暫定判定を併記する旨は残した。","cause":{"type":"document"}},{"location":"1. 概要の業務影響の箇条書きと 4. 測定・検証方法の判定規則","category":"unneeded-background","action":"retain","reason":"基準値の厳しさを決める根拠と pass / fail の判定規則であり、判断に必要なので残した。","cause":{"type":"document"}}],"validations":[{"command":"npm run lint:md","status":"not_run","reason":"親 runner が実行する検査のため、executor では実行しない。"}]}
+</specdojo_executor_evidence>

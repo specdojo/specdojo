@@ -1,0 +1,25 @@
+障害管理 sample（`docs/ja/specdojo/samples/opd-incident-management-sample.md`）を、駄菓子屋きぬやの障害対応方針の完成例として書き直しました。grade の指摘 F001〜F018 には対応しましたが、復旧の期限を数値で示す指摘（F003・F011）だけは、利用者が決める値なので `_UNDECIDED_` のまま残しています。prettier と markdownlint はエラーなしで通りました。
+
+**直した内容**
+
+- **題材の置き換え**：EC/SaaS 前提の書き方（決済不可・ステータスページ・全ユーザ・Ops Lead）をやめました。H1 をきぬや向けに改め、旧来の「参照:」行は削除しています。
+- **優先度の判定**：店頭販売の記録、つけの記録と残高の確認、タブレットや通信の停止、在庫の確認と調整、日次締め、表示の崩れを、回避策の有無とあわせて P1〜P3 に対応付けました。複数に当たるときは高い方を取り、回避策が使えなくなったら 1 つ上げる決まりも書いています。予備のタブレットがない前提は `_ASSUMPTION_` で明示しました。
+- **停止・切替の判断**：優先度ごとに、止める・切り替える対象、止めないもの、判断者（`PO`／店番担当／`OPS`）、判断の時機を表にしました。紙の販売控えからシステムへ戻すときの判断も加えています。
+- **周知**：周知の対象を役割名（来店客・店主代表・家族利用者代表を含む店番担当）で書き、手段とタイミングもすべて埋めました。
+- **障害記録**：記録する項目を足す補足を加えました。
+- **`opd-index` との重複解消**：一次連絡の期限（30 分）とエスカレーションは `opd-index` を正とし、本書では参照だけにしました。冒頭の章で、`opd-index` のどの章を具体化するかも示しています。
+- **関連ドキュメント導線**：抜けていた `opr-index` の行を加え、`opd-index`・`opd-monitoring`・`opd-access-control`・`opr-incident` の行も置きました。
+
+本文に、この文書を作る・確かめる・承認する役割の割り当ては書いていません。
+
+**決めていただく値（`PO` の判断）**
+
+- 優先度ごとの復旧の期限
+- オフライン時の記録方法（`opd-index` から引き継いだ未決事項）
+- 営業時間外の緊急連絡手段（`opd-index` から引き継いだ未決事項）
+
+導線の表の状態は、すでにある sample と揃えてすべて「予定」にしました。rulebook はこの段では変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"opd-incident-management-sample をきぬやの共通サンプル文脈で書き直した。優先度の判定は業務への影響と回避策に対応付け、停止・切替の対象と判断者、周知の対象（役割名）・手段・タイミング、障害記録の補足を加えた。opr-index の導線を足し、opd-index の一次連絡の期限は参照に置き換えた。prettier と markdownlint はエラーなし。","handoff":["F003・F011（復旧の期限を数値で示す）は、利用者が決める値のため推測で埋めず、未決事項の表に `_UNDECIDED_: 優先度ごとの復旧の期限`（判断者 `PO`、決まるまでは障害記録に復旧までの時間を残すだけ）として残した。PO が期限を決める必要がある。","オフライン時の記録方法と営業時間外の緊急連絡手段は opd-index-sample の未決事項を引き継ぎ、本書への影響と決まるまでの扱いを未決事項の表に書いた（F008・F017 対応）。","F004: rulebook の `based_on` は nfr・sac・br・issue だけを載せる決まりなので、`based_on` は空のままにした。opd-index への依存は概要の章・各節の冒頭・導線の表の『差分元』の行で示した。","F009・F010: P1 の 30 分などの期限は再掲せず『opd-index の一次連絡の期限』『opd-index の切替の期限』として参照した。","既存の『参照: ../rulebooks/opd-rulebook.md』の行は、rulebook の対応は frontmatter で宣言し本文に置かないため削除した。H1 はほかの opd sample と揃えて『駄菓子屋きぬや 販売管理システム 運用方針・設計（障害対応）』にした。","導線の表の状態は、すでにある opd-access-control-sample・opd-index-sample と揃えて『予定』にした（sample の中の世界では未作成として扱う）。","rulebook の変更案: なし（今回の指摘はすべて文書側の原因だった）。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/opd-incident-management-sample.md","status":"passed","summary":"表を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/opd-incident-management-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴の文書は変更していない","reason":"変更したのは sample だけで、plan・result・個票は変更していない"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,33 @@
+bps の型4件（sample・rulebook・recipe・template）のレビュー結果は `complete-with-findings` です。minor の finding 4件が残っていますが、どれもこのタスクの完了を妨げません。
+
+**評価結果の確認**
+- `specdojo grade list --target kata --changed-only` を、sample・rulebook・recipe・template の4件それぞれに実行しました。どれも出力は空で、4件とも評価結果は最新です。
+- `git status` に出た差分は、runner が作る `pipeline-state.json` だけです。review 中に成果物は変更されていません。
+
+**grade の結果**
+
+| 対象 | verdict | score | finding |
+| --- | --- | --- | --- |
+| `bps-sample` | `pass` | 100 | なし |
+| `bps-template` | `pass` | 100 | なし |
+| `bps-rulebook` | `pass` | 97 | minor 2件（`F001`、`F002`） |
+| `bps-recipe` | `pass` | 97 | minor 2件（`F001`、`F002`） |
+
+**判断根拠**
+- 成果物（`bps-sample`）の完了条件 DC-001〜003 は、`vp-qe-omissions-consistency` と `vp-qe-kata-conformance` がともに level 4 です。finding は0件です。
+- 型の整備の追加完了条件は、4件すべてに最新の `pass` があるため満たしています。
+- 残った finding は4件とも minor で、完了条件に直結する必須要素の欠落や禁止事項への抵触ではありません。
+
+**未充足事項・改善指示**（完了は妨げません）
+- rulebook `F001`: 6.4 と 6.7 の良い例・悪い例が recipe の表と重複しています。例は recipe 参照に寄せ、rulebook には判定基準だけを残してください。
+- rulebook `F002`: 例外がない行を「-」とする運用が、template にだけあります。rulebook の ID 規則と処理の記述ガイドにも同じ規定を足してください。
+- recipe `F001`: 良い例の前提条件が sample と食い違っています。良い例は「販売中でなければ補充不要として記録し、処理を開始しない」ですが、sample は `S-01` で判断して補充不要記録を確定してから終了します。例を sample に合わせてください。
+- recipe `F002`: 良い例の受入観点が「重複確認記録」ですが、sample と rulebook の出力名は「重複不要記録」です。名前を揃えてください。
+
+**確認できなかった範囲**
+- 先行 edit タスクの実行記録は特定していません。
+- 成果物の再評価はしていません。plan の指示どおり、grade の結果を事実として扱いました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict=complete-with-findings。bps の sample・rulebook・recipe・template の4件はいずれも評価結果が最新（`grade list --changed-only` の出力が空）で、`pass`（score は 100・97・97・100）。残る finding は rulebook と recipe の minor 各2件で、完了条件 DC-001〜003 と型の整備の追加完了条件を妨げない。review 中の成果物変更なし。確認できなかった範囲: 先行 edit タスクの実行記録は特定していない。成果物の再評価はしていない。","handoff":["rulebook F001: 6.4 と 6.7 の良い例・悪い例を recipe 参照に寄せ、rulebook には判定基準だけを残す","rulebook F002: 例外がない行を「-」とする規定を、ID 規則と処理の記述ガイドへ追加する","recipe F001: 良い例の前提条件を sample に合わせる（販売停止・終売は `S-01` で判断し、補充不要記録を確定して終了する）","recipe F002: 良い例の受入観点の「重複確認記録」を「重複不要記録」へ揃える"],"validations":[]}
+</specdojo_executor_evidence>

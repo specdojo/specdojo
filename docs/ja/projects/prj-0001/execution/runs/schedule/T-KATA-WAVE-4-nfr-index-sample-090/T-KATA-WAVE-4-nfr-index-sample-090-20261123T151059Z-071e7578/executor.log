@@ -1,0 +1,38 @@
+評価結果は最新で、完了条件も満たしています。verdict は `complete-with-findings` と判断しました。
+
+**評価結果の確認**
+- サンプルと rulebook のそれぞれで `specdojo grade list --target kata --path <対象> --changed-only` を実行しました。どちらも出力なし・終了コード 0 で、評価結果は最新です。
+- 評価結果サイドカーが存在しないという報告はありません。
+- サンプル（`specdojo:nfr-index-sample`）は `verdict` が `pass`、`score` が 98 です。finding は minor 2 件（blocker 0、major 0、note 0）です。
+- rulebook（`specdojo:nfr-index-rulebook`）は `verdict` が `pass`、`score` が 95 です。finding は minor 3 件（blocker 0、major 0、note 0）です。
+- `git status` で未追跡だったのは `pipeline-state.json` だけで、成果物の変更はありません。
+- 最初の確認から verdict 記録の直前まで成果物の変更は見ておらず、再実行で鮮度が崩れる兆候もありません。ただし、この最終確認は上記の `git status` 以外に独立して再実行していません。
+
+**判断根拠（完了条件との照合）**
+- DC-001: 章構成は「概要」「カテゴリ一覧（8カテゴリ）」「分冊ドキュメント一覧」「変更の入口」「関連ドキュメント導線」の 5 章です。必須の表も、カテゴリ一覧、分冊一覧、変更の種類、導線の 4 つがそろっています。
+- DC-002: 題材は駄菓子屋きぬやの販売管理システムで、共通サンプル文脈に沿っています。`based_on` は `prj-overview-sample`、`sysd-cross-cutting-policy-sample`、`opd-index-sample` です。
+- DC-003: サンプルの kata 評価は `vp-qe-kata-conformance` が level 4 で、禁止事項への抵触は報告されていません。
+- DC-004: 分冊一覧に `nfr-availability` など 8 分冊の ID と参照先があります。導線表でもカテゴリごとに SAC/STC、OPD/OPR、DEC への導線を示しています。
+- DC-005: 「変更の入口」で追加・削除・統合・分割・改定の 5 種類について、更新する文書と完了条件を表にしています。改定で ID と参照先が変わらない場合の例外も書かれています。
+
+**未充足事項・改善指示（完了を妨げない minor finding）**
+- サンプル `F001`: 分冊一覧の `nfr-operations` の備考に `_UNDECIDED_`（営業時間外の緊急連絡手段）があります。同時に決める文書や時期を添えてください。
+- サンプル `F002`: `nfr-security-safety` の備考に監査ログの保管期間 1 年が再掲されています。本書は目標値を再掲しない方針なので、値を削るか「運用方針と揃える」だけにしてください。
+- rulebook `F001` から `F003`: 作成後の検証コマンドへの参照がありません。recipe と template が `undecided` のままです。ready 化の前提が不明確です。型側の整備事項として扱います。
+- いずれも rulebook の必須要素の欠落や禁止事項への抵触ではないため、このタスクの完了は妨げません。
+- 実行記録（先行 edit の result）は確認していません。plan にも指定がなく、特定できませんでした。
+
+**approach に応じた確認**
+- fully-guided として、宣言された文書だけを参照しました。recipe は `_MISSING_` です。rulebook 側で `undecided` と扱われていて、指摘は rulebook `F002` に出ています。
+- 対象外の変更の混入はありません。
+
+**decision**
+- verdict: `complete-with-findings`
+
+**確認できなかった範囲**
+- rulebook 本体は読んでおらず、grade サイドカーも直接は読んでいません。plan に記載された評価結果を事実として使っています。
+- lint やスキーマ検証は親 runner の担当のため実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"評価結果は最新（サンプル pass/98、rulebook pass/95）。完了条件 DC-001〜005 は成果物で確認でき、残る minor finding は完了を妨げないため verdict は complete-with-findings。確認できなかった範囲: rulebook 本体と grade サイドカーの直接読取、親 runner の lint 類、先行 edit の実行記録（特定できず）。","handoff":["verdict: complete-with-findings","サンプル F001: nfr-operations 備考の _UNDECIDED_ に決定時期・同時に決める文書を添える","サンプル F002: nfr-security-safety 備考の監査ログ保管期間 1 年の再掲を削るか「運用方針と揃える」のみにする","rulebook F001〜F003: 検証コマンド参照の追加、recipe/template の決定時期と判断者、ready 化前提の明示"],"validations":[{"command":"specdojo grade list --target kata --path docs/ja/specdojo/samples/nfr-index-sample.md --changed-only","status":"passed","summary":"出力なし・終了コード 0（最新）"},{"command":"specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/nfr-index-rulebook.md --changed-only","status":"passed","summary":"出力なし・終了コード 0（最新）"}]}
+</specdojo_executor_evidence>

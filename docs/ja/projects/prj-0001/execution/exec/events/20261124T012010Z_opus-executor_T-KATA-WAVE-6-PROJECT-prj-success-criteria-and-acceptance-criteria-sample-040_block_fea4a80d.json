@@ -1,0 +1,17 @@
+{
+  "v": 1,
+  "ts": "2026-11-24T01:20:10Z",
+  "type": "block",
+  "task_id": "T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-040",
+  "by": "opus-executor",
+  "msg": "reporter result rendering failed: Result not found: /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-040/docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-040/T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-040-20261123T233751Z-48cf3cd4/result.md",
+  "meta": {
+    "limit_deferred": "false",
+    "claim_actor": "opus-executor",
+    "stage_actor": "sonnet-reporter",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-040/T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-040-20261123T233751Z-48cf3cd4/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-040/T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-040-20261123T233751Z-48cf3cd4/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-040-20261123T233751Z-48cf3cd4"
+  }
+}

@@ -1,0 +1,146 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f0770699d3f14230899b16d0de0acfdb
+  ts: "2026-11-23T22:25:40Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 並べて流したタスクどうしで、ほかの sample の grade の結果が衝突し、runner が解けない
+    - field: description
+      from: ""
+      to: opr の 2 件が、ほかの sample の grade の結果のファイルの衝突で統合と再開の前の同期に失敗し、手で develop を取り込むまで進まなかった
+    - field: input
+      from: ""
+      to: '["v0.10.0 に入れる（利用者の指定、2026-11-24）","2026-11-23〜24 の kata の一括実行（第 4〜6 波）で詰まった所から起票した"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-24"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: exec
+- v: 1
+  id: reg_3b54c5e4094a42e599e121533f0c3eed
+  ts: "2026-11-23T22:25:42Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "課題内容" updated
+  changes:
+    - field: section
+      from: ""
+      to: 課題内容
+    - field: description
+      from: opr の 2 件が、ほかの sample の grade の結果のファイルの衝突で統合と再開の前の同期に失敗し、手で develop を取り込むまで進まなかった
+      to: "- `T-KATA-WAVE-5-opr-support-sample-050` と `T-KATA-WAVE-5-opr-monitoring-sample-090` が「git merge failed: CONFLICT (content): Merge conflict in docs/ja/projects/prj-0001/execution/grade/results/specdojo.opr-access-control-sample.yaml」で止まった。その前は「Grade sidecar changed after checkpoint」で止まっていた。 - runner が示した `exec resume --task ... --resume-from executor` も、再開の前の同期で同じ衝突になり失敗した。 - 2026-11-24 に、worktree の実行の記録を commit し、develop を `-X theirs` で取り込んでから再開した。"
+  previous_event_id: reg_f0770699d3f14230899b16d0de0acfdb
+- v: 1
+  id: reg_37d4c4c774454d8b94eac254a20c6fe8
+  ts: "2026-11-23T22:25:46Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "影響範囲" updated
+  changes:
+    - field: section
+      from: ""
+      to: 影響範囲
+  previous_event_id: reg_3b54c5e4094a42e599e121533f0c3eed
+- v: 1
+  id: reg_980016c1cf6342f5bcb4c889c56d07cf
+  ts: "2026-11-23T22:25:50Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "対応方針" updated
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_37d4c4c774454d8b94eac254a20c6fe8
+- v: 1
+  id: reg_82fb18d306fb4ef58e5260e9aad110c1
+  ts: "2026-11-23T22:27:36Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "関連ドキュメント" updated
+  changes:
+    - field: section
+      from: ""
+      to: 関連ドキュメント
+  previous_event_id: reg_980016c1cf6342f5bcb4c889c56d07cf
+- v: 1
+  id: reg_fe075b7bdd7049fc80440b946a981a9e
+  ts: "2026-11-24T00:27:11Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_82fb18d306fb4ef58e5260e9aad110c1
+- v: 1
+  id: reg_050bad16bde94b15a6057e83b36f46c1
+  ts: "2026-11-24T00:32:32Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_fe075b7bdd7049fc80440b946a981a9e
+- v: 1
+  id: reg_a12193513dc547f0baecf9b581eab4bb
+  ts: "2026-11-24T00:37:32Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果・親の検証（test-integration を含め passed）で確かめ、保護された設定の変更がないことを確かめた。統合の後の run が新しい runner で統合まで通った
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-24"
+    - field: conclusion
+      from: "-"
+      to: タスクの checkpoint が、ほかの sample の grade の結果を取り込まないようにした
+  previous_event_id: reg_050bad16bde94b15a6057e83b36f46c1

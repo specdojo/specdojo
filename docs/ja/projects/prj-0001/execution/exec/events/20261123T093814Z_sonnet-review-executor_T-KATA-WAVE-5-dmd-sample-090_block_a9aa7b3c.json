@@ -1,0 +1,17 @@
+{
+  "v": 1,
+  "ts": "2026-11-23T09:38:14Z",
+  "type": "block",
+  "task_id": "T-KATA-WAVE-5-dmd-sample-090",
+  "by": "sonnet-review-executor",
+  "msg": "reporter output invalid after 3 format attempts: response is not a single JSON value: Expected ':' after property name in JSON at position 1323 (line 15 column 3)",
+  "meta": {
+    "limit_deferred": "false",
+    "claim_actor": "sonnet-review-executor",
+    "stage_actor": "gemma26-reporter",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-dmd-sample-090/T-KATA-WAVE-5-dmd-sample-090-20261123T092125Z-20b4e12f/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-dmd-sample-090/T-KATA-WAVE-5-dmd-sample-090-20261123T092125Z-20b4e12f/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-5-dmd-sample-090-20261123T092125Z-20b4e12f"
+  }
+}

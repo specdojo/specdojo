@@ -1,0 +1,14 @@
+`docs/ja/specdojo/samples/imp-interface-sample.md` の冗長な記述を直しました。「影響詳細一覧」の判断根拠に4行とも付いていた「最大値規則により高／中／低。」を削除しました。判定は「影響分析サマリ」の集約規則に書いてあり、各行の観点別判定と影響度の列から読み取れます。
+
+集約規則の末尾の文は、「「影響詳細一覧」の影響度と下の件数にもこの規則を適用した。」に直しました。「最大値規則」という名前は、定義のあるサマリの集約規則を指さなくなるためです。
+
+保持したのは次の3点です。
+- 「影響分析サマリ」の表の後の段落は、調整の優先順を決める判断理由なので残しました。
+- 「見送り・代替の再評価条件」は、期限つきの完了条件なので残しました。
+- 「未解決事項」の末尾の段落は、確定と見直しの手順なので残しました。
+
+検証は、変更した文書に対する `prettier` と `markdownlint-cli2` で、どちらも指摘 0 件でした。repo 全体の lint とテストは親 runner の検証に任せ、ここでは実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"imp-interface-sample.md の影響詳細一覧の判断根拠から、集約規則と重複する「最大値規則により高/中/低。」4件を削除し、集約規則の文を整えた。意味と必須情報は維持した。","handoff":[],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/imp-interface-sample.md","status":"passed","summary":"整形済み"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/imp-interface-sample.md","status":"passed","summary":"0 issues"}],"condense_records":[{"location":"4. 影響詳細一覧 判断根拠（本部商品マスタの照会・本部への売上登録・確定済みレシートの印字・在庫変更イベントの4行）","category":"repetition","action":"delete","reason":"「最大値規則により高／中／低。」は3. 影響分析サマリの集約規則と各観点の判定の繰り返しで、観点別判定と影響度の列から導ける。判断根拠の観点別判定は残したので意味は変わらない。","cause":{"type":"document"}},{"location":"3. 影響分析サマリ 集約規則の文","category":"repetition","action":"merge","reason":"削除した各行の「最大値規則」の参照先を、集約規則が影響詳細一覧の影響度と件数の両方に適用されると示す文にまとめた。","cause":{"type":"document"}},{"location":"3. 影響分析サマリ 表後の段落","category":"unneeded-background","action":"retain","reason":"調整の優先順を決める判断理由で、未解決事項の PJR-I6R1 への根拠になるため残す。","cause":{"type":"document"}},{"location":"5. 対応方針 見送り・代替の再評価条件","category":"table-prose","action":"retain","reason":"表にない再評価の条件と期限を示す完了条件なので残す。","cause":{"type":"document"}}]}
+</specdojo_executor_evidence>

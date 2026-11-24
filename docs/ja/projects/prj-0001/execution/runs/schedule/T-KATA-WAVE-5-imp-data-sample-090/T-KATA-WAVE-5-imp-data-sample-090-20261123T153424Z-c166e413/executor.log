@@ -1,0 +1,19 @@
+imp-data-sample のレビューを行いました。結果は `complete-with-findings` が妥当です。
+
+- **鮮度**: sample と rulebook のどちらについても、`specdojo grade list --target kata --changed-only` と `--incomplete` の出力は空でした（終了コード 0）。評価結果は最新で、評価は完了しています。
+- **grade 結果**:
+  - sample は `pass`、score 95、minor 2 件（blocker と major は 0 件）です。
+  - rulebook は `pass`、score 98、minor 2 件（blocker と major は 0 件）です。
+- **finding の内容**: 関係する指摘は 3 点で、いずれも minor です。
+  - `based_on` の `cr-2026-004` が、rulebook の定める個票 ID（`PJR-XXXX`）形式と合っていません。sample 側の指摘が 2 件、rulebook 側が 1 件で、すべて同じ原因です。
+  - 代替案（キャンペーン適用履歴）には再評価条件があるものの、期限がありません。これは rulebook 側の指摘です。
+- **完了を妨げない理由**: 完了条件 DC-001〜DC-004 の観点（`vp-qe-omissions-consistency`、`vp-qe-kata-conformance`、`vp-qe-verifiability`）は、level 3 以上で評価されています。必須要素の欠落や禁止事項への抵触を示す finding はありません。
+- **混入の確認**: `git status` で見える変更は、runner が作る `pipeline-state.json` だけでした。対象外の変更の混入は確認していません。
+- **改善指示**:
+  - `based_on` を個票 ID（`PJR-XXXX`）に直すか、rulebook に `cr-` 形式を許容すると明記してください。
+  - sample の代替案に、再評価の期限を追加してください。
+- **確認できなかった範囲**: 先行する edit タスクの result は読んでいません。実行記録の検証結果は未確認です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict 推奨: complete-with-findings。評価結果は sample・rulebook とも最新で、grade の verdict は pass です。minor の finding は based_on の cr-2026-004 が PJR-XXXX 形式でない点と、代替案に再評価の期限がない点です。完了条件を妨げる finding はありません。改善指示は、based_on を個票 ID に揃えるか rulebook に許容形式を明記すること、および代替案に再評価の期限を追加することです。確認できなかった範囲: 先行 edit タスクの result と実行記録の検証結果は未確認です。","handoff":["based_on の cr-2026-004 を PJR-XXXX 形式に揃えるか、rulebook に許容形式を明記する","代替案（キャンペーン適用履歴）に再評価の期限を追加する"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/imp-data-sample.md --changed-only","status":"passed","summary":"出力なし。評価結果は最新"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/imp-data-sample.md --incomplete","status":"passed","summary":"出力なし。評価は完了"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/imp-data-rulebook.md --changed-only","status":"passed","summary":"出力なし。評価結果は最新"}]}
+</specdojo_executor_evidence>

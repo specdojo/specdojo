@@ -1,0 +1,120 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_771a18baa8e54ac7a7797eb372e00722
+  ts: "2026-11-23T13:17:05Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 環境のパターン別のクイックスタートを書く
+    - field: description
+      from: ""
+      to: 6 つのパターンごとに、最初の todo を起票し agent に 1 件流すまでの手順をクイックスタートに足す
+    - field: input
+      from: ""
+      to: '["利用者の依頼（2026-11-23）: 多くの人に使ってもらうため、Dev Container・Dev Container ＋ tmux・mac・mac ＋ tmux・WSL・WSL ＋ tmux のパターンですぐに使えるようにする","v0.10.0 に入れる。実装はオーケストレーターが会話の中で行う（利用者の指定）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: depends_on
+      from: ""
+      to: '["PJR-7EZR","PJR-GA72"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: guide
+- v: 1
+  id: reg_a2683a9d13644d809bc8d0930fb4622e
+  ts: "2026-11-23T13:17:28Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_771a18baa8e54ac7a7797eb372e00722
+- v: 1
+  id: reg_1ba0df8b388a41fbabeb18ea8bc4b7d9
+  ts: "2026-11-23T13:43:39Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "作業内容" updated
+  changes:
+    - field: section
+      from: ""
+      to: 作業内容
+  previous_event_id: reg_a2683a9d13644d809bc8d0930fb4622e
+- v: 1
+  id: reg_9019077a59b24ca09441dc3d6449b2b0
+  ts: "2026-11-23T13:43:44Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "対応結果" updated
+  changes:
+    - field: section
+      from: ""
+      to: 対応結果
+  previous_event_id: reg_1ba0df8b388a41fbabeb18ea8bc4b7d9
+- v: 1
+  id: reg_d9053b3050604ad6a890a9f31e330fb6
+  ts: "2026-11-23T13:43:49Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "関連ドキュメント" updated
+  changes:
+    - field: section
+      from: ""
+      to: 関連ドキュメント
+  previous_event_id: reg_9019077a59b24ca09441dc3d6449b2b0
+- v: 1
+  id: reg_9dbee26350c4499f9092b4c7139a840c
+  ts: "2026-11-23T13:51:07Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: done
+  reason: オーケストレーターが会話の中で実装し、統合の後に空のリポジトリで確かめた（利用者の指定）
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: クイックスタートに 6 つの環境のパターンの表と最初の 10 分の手順を足した
+  previous_event_id: reg_d9053b3050604ad6a890a9f31e330fb6

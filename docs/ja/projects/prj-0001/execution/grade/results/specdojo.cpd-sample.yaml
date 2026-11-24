@@ -4,31 +4,30 @@ document: specdojo:cpd-sample
 path: docs/ja/specdojo/samples/cpd-sample.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-sample
 verdict: pass
-score: 88
-graded_at: "2026-11-21T03:37:21.091Z"
-graded_by: opus-executor
-content_hash: dfc97d8749e4fc61ac4cb508561c63549d8bfdf08b2b6d3f9157f5007200ab56
+score: 100
+graded_at: "2026-11-23T17:07:14.049Z"
+graded_by: sonnet-review-executor
+content_hash: 6f662cc532c61b467286e412e06a6dfad2451bea8c105e7d5d47595839359871
 categories:
   purpose:
     score: 100
   operations:
-    score: 94
+    score: 100
   planning:
     score: 100
   business:
-    score: 83
+    score: 100
   architecture:
     score: 100
   usability:
-    score: 83
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 100
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -49,11 +48,11 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-business-value:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-requirements-completeness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
     level: 4
     score: 100
@@ -61,8 +60,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -73,26 +72,26 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-verifiability:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-operability:
     level: 4
     score: 100
@@ -105,146 +104,6 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 12
+  minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: minor
-    rule: vp-ba-business-value
-    line: 7
-    anchor: >-
-      業務目的と成功基準は [[specdojo:prj-overview-sample|プロジェクト概要]]
-      の「基本的な考え方」「期待効果」を根拠とする。本分割は、販売記録の完遂と両利用者の確認結果の一致を支える。正常販売では同じ明細・請求額・販売結果を確認でき、保存失敗・未印字・結果不明では未完了の取引を店主代表へ引き継げることを確認対象とする。在庫・つけを含むプロジェクト全体の成功は、本図だけでは判定しない。
-    message: >-
-      Explicitly state the problem's impact-if-unaddressed (業務への影響) in the body so the business-value chain is complete,
-      not only referenced upward.
-    message_ja: >-
-      Explicitly state the problem's impact-if-unaddressed (業務への影響) in the body so the business-value chain is complete,
-      not only referenced upward.
-  - id: F002
-    severity: minor
-    rule: vp-ba-business-value
-    line: 7
-    anchor: >-
-      業務目的と成功基準は [[specdojo:prj-overview-sample|プロジェクト概要]]
-      の「基本的な考え方」「期待効果」を根拠とする。本分割は、販売記録の完遂と両利用者の確認結果の一致を支える。正常販売では同じ明細・請求額・販売結果を確認でき、保存失敗・未印字・結果不明では未完了の取引を店主代表へ引き継げることを確認対象とする。在庫・つけを含むプロジェクト全体の成功は、本図だけでは判定しない。
-    message: 7行目の上位参照が「基本的な考え方」「期待効果」だけなので、放置時の影響（属人化・記録漏れ）を述べた prj-overview-sample の「必要性」章も参照先に加え、rulebook「概要」の参照要件を満たすべきである。
-    message_ja: 7行目の上位参照が「基本的な考え方」「期待効果」だけなので、放置時の影響（属人化・記録漏れ）を述べた prj-overview-sample の「必要性」章も参照先に加え、rulebook「概要」の参照要件を満たすべきである。
-  - id: F003
-    severity: minor
-    rule: vp-ba-requirements-completeness
-    line: 16
-    anchor: flowchart LR
-    message: >-
-      Add a brief terminology/term-definition subsection (or reference the rulebook's) so user-level requirement terms
-      are standardized.
-    message_ja: >-
-      Add a brief terminology/term-definition subsection (or reference the rulebook's) so user-level requirement terms
-      are standardized.
-  - id: F004
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 135
-    anchor: >-
-      PM は「配置の照合 → 契約整備 → 結合検証 →
-      店舗試行・公開判断」の順で作業を割り当て、関係数と回復条件の未確定範囲から見積もる。日付は未設定であり、各判断時点を満たせない場合は後続開始を延期し、上表の担当・解消条件を進捗確認に使う。構成の採否、販売・保留・回復の条件、公開範囲の判断結果は
-      `kinuya:pjr-a005-sales-approval` に残す想定とする。
-    message: >-
-      Consolidate the two trailing paragraphs (lines 148 and 150) into the §5 table rows to remove the duplicated
-      PM/PJR/publication description.
-    message_ja: >-
-      Consolidate the two trailing paragraphs (lines 148 and 150) into the §5 table rows to remove the duplicated
-      PM/PJR/publication description.
-  - id: F005
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 137
-    anchor: >-
-      PO の合意依頼には ARC の境界・契約の照合、DEV の実装対応、QE の文書検査・描画確認と結合観測点、BA の両利用者による正常・保留時の確認、OPS の運用・公開前確認をそろえる。OPS
-      は個人情報、認証情報、実店舗の内部接続先を公開候補から除外し、確認範囲と残る懸念を合意記録へ渡す。本例は架空の役割名・構成と仮参照名だけを扱う。PO が承認・保留・差し戻しと公開先・可否を記録し、人間が `ready`
-      への昇格を判断する。境界・責務・受け渡し・成功基準に影響する上表の残件がある現状は `draft` を維持する。
-    message: PO の最終合意・公開判断と OPS の公開前確認が11・126・133・137・139行で重複しているため、11行目の役割割当てと5章の表へ集約し、137行目と139行目末尾は参照に置き換えるべきである。
-    message_ja: PO の最終合意・公開判断と OPS の公開前確認が11・126・133・137・139行で重複しているため、11行目の役割割当てと5章の表へ集約し、137行目と139行目末尾は参照に置き換えるべきである。
-  - id: F006
-    severity: minor
-    rule: vp-dev-testability
-    line: 122
-    anchor: >-
-      文書検査は [[specdojo:cpd-rulebook|CPD 作成ルール]] の「検証と合意の判定」に従い、`<対象.md>` を `docs/ja/specdojo/samples/cpd-sample.md`
-      とする。QE は全8要素（内部5、外部3）と境界の定義、全9関係の ID・端点・ラベルの対応を照合し、欠落・不一致を Fail とする。メタ情報・参照・構文の検査結果と SVG
-      の文字・矢印・境界の描画確認を実行記録へ残す。コマンドと構文は rulebook とリポジトリ設定を参照し、ここへ再掲しない。
-    message: >-
-      Add a runnable sample-level verification command (e.g., mermaid lint/build) and its expected output so the
-      testability section is self-contained rather than only repository-referenced.
-    message_ja: >-
-      Add a runnable sample-level verification command (e.g., mermaid lint/build) and its expected output so the
-      testability section is self-contained rather than only repository-referenced.
-  - id: F007
-    severity: minor
-    rule: vp-dev-testability
-    line: 122
-    anchor: >-
-      文書検査は [[specdojo:cpd-rulebook|CPD 作成ルール]] の「検証と合意の判定」に従い、`<対象.md>` を `docs/ja/specdojo/samples/cpd-sample.md`
-      とする。QE は全8要素（内部5、外部3）と境界の定義、全9関係の ID・端点・ラベルの対応を照合し、欠落・不一致を Fail とする。メタ情報・参照・構文の検査結果と SVG
-      の文字・矢印・境界の描画確認を実行記録へ残す。コマンドと構文は rulebook とリポジトリ設定を参照し、ここへ再掲しない。
-    message: 参照先の cpd-rulebook「検証と合意の判定」には `＜対象.md＞` のプレースホルダーも検証コマンドも存在しないため、実在する検証手順の正本（リポジトリの検証 script 等）を参照先として明示すべきである。
-    message_ja: 参照先の cpd-rulebook「検証と合意の判定」には `＜対象.md＞` のプレースホルダーも検証コマンドも存在しないため、実在する検証手順の正本（リポジトリの検証 script 等）を参照先として明示すべきである。
-  - id: F008
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 137
-    anchor: >-
-      PO の合意依頼には ARC の境界・契約の照合、DEV の実装対応、QE の文書検査・描画確認と結合観測点、BA の両利用者による正常・保留時の確認、OPS の運用・公開前確認をそろえる。OPS
-      は個人情報、認証情報、実店舗の内部接続先を公開候補から除外し、確認範囲と残る懸念を合意記録へ渡す。本例は架空の役割名・構成と仮参照名だけを扱う。PO が承認・保留・差し戻しと公開先・可否を記録し、人間が `ready`
-      への昇格を判断する。境界・責務・受け渡し・成功基準に影響する上表の残件がある現状は `draft` を維持する。
-    message: >-
-      frontmatter の `status: ready` と本文「現状は `draft` を維持する」が矛盾するため、本文の draft がサンプル内の想定状態であることを明記するか、記述を frontmatter
-      と整合させるべきである。
-    message_ja: >-
-      frontmatter の `status: ready` と本文「現状は `draft` を維持する」が矛盾するため、本文の draft がサンプル内の想定状態であることを明記するか、記述を frontmatter
-      と整合させるべきである。
-  - id: F009
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 122
-    anchor: >-
-      文書検査は [[specdojo:cpd-rulebook|CPD 作成ルール]] の「検証と合意の判定」に従い、`<対象.md>` を `docs/ja/specdojo/samples/cpd-sample.md`
-      とする。QE は全8要素（内部5、外部3）と境界の定義、全9関係の ID・端点・ラベルの対応を照合し、欠落・不一致を Fail とする。メタ情報・参照・構文の検査結果と SVG
-      の文字・矢印・境界の描画確認を実行記録へ残す。コマンドと構文は rulebook とリポジトリ設定を参照し、ここへ再掲しない。
-    message: 122行目が cpd-rulebook に存在しない `＜対象.md＞` プレースホルダーと検証コマンドを前提としているため、参照先を実在する定義に合わせて修正すべきである。
-    message_ja: 122行目が cpd-rulebook に存在しない `＜対象.md＞` プレースホルダーと検証コマンドを前提としているため、参照先を実在する定義に合わせて修正すべきである。
-  - id: F010
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 122
-    anchor: >-
-      文書検査は [[specdojo:cpd-rulebook|CPD 作成ルール]] の「検証と合意の判定」に従い、`<対象.md>` を `docs/ja/specdojo/samples/cpd-sample.md`
-      とする。QE は全8要素（内部5、外部3）と境界の定義、全9関係の ID・端点・ラベルの対応を照合し、欠落・不一致を Fail とする。メタ情報・参照・構文の検査結果と SVG
-      の文字・矢印・境界の描画確認を実行記録へ残す。コマンドと構文は rulebook とリポジトリ設定を参照し、ここへ再掲しない。
-    message: >-
-      sample が cpd-rulebook「検証と合意の判定」に `＜対象.md＞` 置換型の検査手順があると前提しているが rulebook 側に定義がないため、sample の記述か rulebook の章のどちらかを揃えて
-      Kata 間の参照を整合させるべきである。
-    message_ja: >-
-      sample が cpd-rulebook「検証と合意の判定」に `＜対象.md＞` 置換型の検査手順があると前提しているが rulebook 側に定義がないため、sample の記述か rulebook の章のどちらかを揃えて
-      Kata 間の参照を整合させるべきである。
-  - id: F011
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 25
-    anchor: 保存("記録アクセス")
-    message: Standardize the term "記録アクセス/保存" to one label throughout sections so user-facing terms are consistent.
-    message_ja: Standardize the term "記録アクセス/保存" to one label throughout sections so user-facing terms are consistent.
-  - id: F012
-    severity: minor
-    rule: vp-ops-release-readiness
-    line: 137
-    anchor: >-
-      PO の合意依頼には ARC の境界・契約の照合、DEV の実装対応、QE の文書検査・描画確認と結合観測点、BA の両利用者による正常・保留時の確認、OPS の運用・公開前確認をそろえる。OPS
-      は個人情報、認証情報、実店舗の内部接続先を公開候補から除外し、確認範囲と残る懸念を合意記録へ渡す。本例は架空の役割名・構成と仮参照名だけを扱う。PO が承認・保留・差し戻しと公開先・可否を記録し、人間が `ready`
-      への昇格を判断する。境界・責務・受け渡し・成功基準に影響する上表の残件がある現状は `draft` を維持する。
-    message: >-
-      本文が「残件があるため draft を維持する」と定める一方で frontmatter が `status: ready`
-      となっており公開前提が判断できないため、サンプル自体の状態と例示上の成果物の状態の区別を明記すべきである。
-    message_ja: >-
-      本文が「残件があるため draft を維持する」と定める一方で frontmatter が `status: ready`
-      となっており公開前提が判断できないため、サンプル自体の状態と例示上の成果物の状態の区別を明記すべきである。
+findings: []

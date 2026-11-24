@@ -1,5 +1,7 @@
 import { unescapeMarkdownCell } from "../../shared/text.js";
 import { readPlanFile } from "../../shared/plan-conventions.js";
+import { mergeRegisterBranch } from "../../shared/register-merge.js";
+import { publishRegisterTicket } from "./register-sync.js";
 import { executorStageResumeHint } from "../evidence.js";
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";
@@ -298,6 +300,12 @@ async function integrateRegisterWorktreeRun(
     baseCommit: string,
     outputCommit: string,
   ): RegisterItemSummary | DeferredCleanup<RegisterItemSummary> => {
+    try {
+      // Intake must succeed before removing the worktree needed for integration resume.
+      mergeRegisterBranch(projectId);
+    } catch (error) {
+      return blockedInReview(error, "register intake failed");
+    }
     const worktreeTaskId = qualifyTaskId(projectId, item.id);
     const cleanupLock = tryAcquireWorktreeCleanupLock(executionPath, worktreeTaskId, actor);
     if (!cleanupLock) {
@@ -323,7 +331,6 @@ async function integrateRegisterWorktreeRun(
           }
           process.stderr.write(`Warning: ${outcome.error.message}; run exec worktree prune.\n`);
         }
-        // review は merge で root の個票に入る。非追跡の派生ビューだけ root で作り直す。
         rebuildRootRegisterViews(projectId, item.id);
         const reviewed = await postReview(baseCommit, outputCommit);
         if (reviewed) return reviewed;
@@ -456,6 +463,7 @@ async function integrateRegisterWorktreeRun(
         const productRootNewFiles = productOutcomes.flatMap((outcome) =>
           outcome.rootNewFiles.map((path) => `${outcome.repo}:${path}`),
         );
+        await publishRegisterTicket(projectId, worktree.path, worktreeTicketPath);
         commitWorktreeChanges({
           context: wtContext,
           worktree,
@@ -710,6 +718,25 @@ export async function runSingleRegisterItemWorktree(
       }
     | RegisterItemSummary
   > => {
+    // PJR-1JF6: register_sync の project では、develop の作業の前に register のブランチを
+    // 一方向に取り込む。未設定なら何もしない。取り込めないときは worktree を作らずに止める。
+    try {
+      const intake = mergeRegisterBranch(projectId);
+      if (intake.status === "merged") {
+        process.stdout.write(`  [run] merged register branch: ${intake.commit.slice(0, 12)}\n`);
+      }
+    } catch (error) {
+      const message = `register branch merge failed: ${error instanceof Error ? error.message : String(error)}`;
+      process.stderr.write(`${message}\n`);
+      return {
+        id: item.id,
+        title: item.title,
+        outcome: "failure",
+        transition: "none",
+        commit: "off",
+        reason: sanitizeRegisterConclusion(message),
+      };
+    }
     // Recheck after acquiring the lifecycle lock: dependencies may change while waiting.
     const current = resolveRegisterRunTarget(projectId, pjrId);
     const reason = registerDependencyBlockReason(current.registerPaths, current.item);

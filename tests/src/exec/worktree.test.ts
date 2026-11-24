@@ -503,10 +503,23 @@ describe("summarizeGitHookFailure", () => {
 
     const summary = summarizeGitHookFailure(output);
 
-    expect(summary).toContain("test: unknown option '--reserve'");
-    expect(summary).toContain("FAIL  tests/src/doc-index.test.ts");
+    expect(summary).toMatch(/^test: FAIL {2}tests\/src\/doc-index\.test\.ts/u);
+    expect(summary).not.toContain("unknown option");
     expect(summary).toContain("Test Files  1 failed | 120 passed (121)");
     expect(summary).toContain("Tests  1 failed | 2038 passed (2039)");
+  });
+
+  it("starts with the FAIL line instead of an unrelated CLI output line", () => {
+    const output = [
+      "┃ test ❯",
+      "error: unknown option '--reserve'",
+      "┃ FAIL  |unit| tests/src/docs/yaml-tables.test.ts > fixture matches",
+      "┃ Test Files  1 failed | 120 passed (121)",
+    ].join("\n");
+
+    expect(summarizeGitHookFailure(output)).toBe(
+      "test: FAIL  |unit| tests/src/docs/yaml-tables.test.ts > fixture matches; Test Files  1 failed | 120 passed (121)",
+    );
   });
 
   it("reports the step marked as failed in the lefthook summary, not the first step header", () => {

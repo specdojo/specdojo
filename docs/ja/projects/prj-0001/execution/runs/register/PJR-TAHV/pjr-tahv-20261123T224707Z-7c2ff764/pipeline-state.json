@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-TAHV",
+  "run_id": "pjr-tahv-20261123T224707Z-7c2ff764",
+  "updated_at": "2026-11-23T22:53:47.800Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "terra-executor",
+      "attempts": 1,
+      "started_at": "2026-11-23T22:47:56.842Z",
+      "completed_at": "2026-11-23T22:50:05.740Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-TAHV/pjr-tahv-20261123T224707Z-7c2ff764/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "sonnet-reporter",
+      "attempts": 0,
+      "started_at": "2026-11-23T22:53:25.293Z",
+      "completed_at": "2026-11-23T22:53:25.293Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-TAHV/pjr-tahv-20261123T224707Z-7c2ff764/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "terra-executor",
+      "attempts": 1,
+      "started_at": "2026-11-23T22:53:38.004Z",
+      "completed_at": "2026-11-23T22:53:47.800Z",
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-TAHV/pjr-tahv-20261123T224707Z-7c2ff764/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-TAHV/pjr-tahv-20261123T224707Z-7c2ff764/result.md"
+  }
+}

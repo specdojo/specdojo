@@ -1,0 +1,161 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-4-nfr-availability-sample-080",
+  "run_id": "T-KATA-WAVE-4-nfr-availability-sample-080-20261123T141053Z-a0c23b6d",
+  "stage": {
+    "role": "executor",
+    "actor": "sonnet-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-23T14:11:30.525Z",
+    "completed_at": "2026-11-23T14:11:46.931Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/nfr-availability-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/nfr-availability-sample.md | 4 ++--\n 1 file changed, 2 insertions(+), 2 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run lint:md",
+      "status": "not_run",
+      "summary": ""
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:nfr-availability-sample\n  type: requirement\n  status: draft\n  rulebook: specdojo:nfr-availability-rulebook\n  part_of:\n    - specdojo:nfr-index-sample\n  based_on:\n    - specdojo:prj-overview-sample\n    - specdojo:prj-assumptions-constraints-dependencies-sample\n---\n\n# 駄菓子屋きぬや 販売管理システム 可用性要件\n\n## 1. 概要（対象・目的）\n\n店主が不在でも店番担当が販売・在庫・つけの記録を続けられるよう、障害時に許す停止時間と記録の損失を定める。対象業務は店頭タブレット 1 台での販売記録、在庫\n… output omitted …\n | - | - |\n| *UNDECIDED*: 営業時間内の稼働率の目標 | 停止の時間を記録するだけとし、達成・未達を判定しない | `nfr-avl-001` |\n| *UNDECIDED*: RTO と RPO の値 | 翌営業日の開店までの再開と、前日の閉店時点までの損失を暫定の合格とする | `nfr-avl-002`、`nfr-avl-003` |\n| *UNDECIDED*: ホスティング環境の SLA | 自システムの稼働率の目標と整合するか判断できない。SLA が目標を下回る場合は冗長化の要否を見直す | `nfr-avl-001`、`nfr-avl-002` |\n| *UNDECIDED*: タブレット故障時の代替端末 | 代替がない間は、故障から復旧まで紙の控えで販売を続ける | `nfr-avl-002`、`nfr-avl-004` |\n| *UNDECIDED*: 通信断の頻度と店頭での記録方法 | 通信断も停止として数え、紙の控えで販売を続ける（前提条件 ACD-A02） | `nfr-avl-001`、`nfr-avl-004` |"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6274 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6274 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-4-nfr-availability-sample-080\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (48 tests) 7\n… output omitted …\ns/src/exec/plans.test.ts\",\"duration_ms\":2078}\n\n Test Files  19 passed (19)\n      Tests  480 passed (480)\n   Start at  23:12:47\n   Duration  3.33s (transform 8.10s, setup 1.51s, import 11.80s, tests 7.52s, environment 2ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\n.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-4-nfr-availability-sample-080/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-4-nfr-availability-sample-080/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "condense_records": [
+    {
+      "location": "2. 適用範囲・除外条件 末尾の段落",
+      "category": "canonical-restatement",
+      "action": "reference",
+      "reason": "ホスティング環境と店舗の回線の SLA 未確認の説明が「未決事項」の行と重複していたため、「未決事項」への参照に置き換えた。リスクの置き場所の指示は残した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "3. 可用性要件一覧 導入文",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "「決まるまでの」は暫定判定の記述と重複していたため削った。暫定判定を併記する旨は残した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "1. 概要の業務影響の箇条書きと 4. 測定・検証方法の判定規則",
+      "category": "unneeded-background",
+      "action": "retain",
+      "reason": "基準値の厳しさを決める根拠と pass / fail の判定規則であり、判断に必要なので残した。",
+      "cause": {
+        "type": "document"
+      }
+    }
+  ],
+  "final_message": "nfr-availability-sample.md の冗長 2 箇所を参照・削除で整理した。意味と必須情報は維持した。",
+  "completion_status": "complete",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-4-nfr-availability-sample-080/T-KATA-WAVE-4-nfr-availability-sample-080-20261123T141053Z-a0c23b6d/executor.log",
+      "bytes": 2282,
+      "truncated": false
+    }
+  ]
+}

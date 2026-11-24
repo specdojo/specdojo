@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-4-nfr-security-safety-sample-090",
+  "run_id": "T-KATA-WAVE-4-nfr-security-safety-sample-090-20261123T152150Z-ea5740e0",
+  "updated_at": "2026-11-23T15:27:49.402Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sonnet-review-executor",
+      "attempts": 1,
+      "started_at": "2026-11-23T15:22:35.746Z",
+      "completed_at": "2026-11-23T15:23:03.062Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-4-nfr-security-safety-sample-090/T-KATA-WAVE-4-nfr-security-safety-sample-090-20261123T152150Z-ea5740e0/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 2,
+      "started_at": "2026-11-23T15:23:47.297Z",
+      "completed_at": "2026-11-23T15:26:16.453Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-4-nfr-security-safety-sample-090/T-KATA-WAVE-4-nfr-security-safety-sample-090-20261123T152150Z-ea5740e0/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "sonnet-review-executor",
+      "attempts": 1,
+      "started_at": "2026-11-23T15:27:44.650Z",
+      "completed_at": "2026-11-23T15:27:49.402Z",
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-4-nfr-security-safety-sample-090/T-KATA-WAVE-4-nfr-security-safety-sample-090-20261123T152150Z-ea5740e0/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-4-nfr-security-safety-sample-090/T-KATA-WAVE-4-nfr-security-safety-sample-090-20261123T152150Z-ea5740e0/result.md"
+  }
+}

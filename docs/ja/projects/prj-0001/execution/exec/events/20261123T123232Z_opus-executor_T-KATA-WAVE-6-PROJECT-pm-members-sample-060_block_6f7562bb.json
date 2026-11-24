@@ -1,0 +1,17 @@
+{
+  "v": 1,
+  "ts": "2026-11-23T12:32:32Z",
+  "type": "block",
+  "task_id": "T-KATA-WAVE-6-PROJECT-pm-members-sample-060",
+  "by": "opus-executor",
+  "msg": "executor validation failed or not run: npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/pm-members.schema.yaml --data docs/ja/specdojo/templates/pm-members-template.yaml",
+  "meta": {
+    "limit_deferred": "false",
+    "claim_actor": "opus-executor",
+    "stage_actor": "gemma26-reporter",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-pm-members-sample-060/T-KATA-WAVE-6-PROJECT-pm-members-sample-060-20261123T121342Z-62b521d7/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-pm-members-sample-060/T-KATA-WAVE-6-PROJECT-pm-members-sample-060-20261123T121342Z-62b521d7/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-6-PROJECT-pm-members-sample-060-20261123T121342Z-62b521d7"
+  }
+}
