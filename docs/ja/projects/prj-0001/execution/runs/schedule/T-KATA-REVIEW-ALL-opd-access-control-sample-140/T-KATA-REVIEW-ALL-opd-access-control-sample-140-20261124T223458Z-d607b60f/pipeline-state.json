@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-REVIEW-ALL-opd-access-control-sample-140",
   "run_id": "T-KATA-REVIEW-ALL-opd-access-control-sample-140-20261124T223458Z-d607b60f",
-  "updated_at": "2026-11-24T22:47:55.950Z",
+  "updated_at": "2026-11-24T22:48:45.220Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-opd-access-control-sample-140/T-KATA-REVIEW-ALL-opd-access-control-sample-140-20261124T223458Z-d607b60f/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-24T22:47:55.950Z",
-      "completed_at": null,
+      "completed_at": "2026-11-24T22:48:45.220Z",
       "artifact_ref": null
     }
   },
