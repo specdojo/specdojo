@@ -73,3 +73,29 @@
       from: '["利用者の決定（2026-11-23）: オーケストレーターの推奨どおり起票する"]'
       to: '["利用者の決定（2026-11-23）: オーケストレーターの推奨どおり起票する","v0.10.0 に入れる（利用者の指定、2026-11-24）"]'
   previous_event_id: reg_72abd13c491140fabe1989a4eaa3ef55
+- v: 1
+  id: reg_ee783496fa6c438b9460a0c3753ee068
+  ts: "2026-11-24T00:35:04Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_8cf3d02249454d5f8fda2ba19210f1f0
+- v: 1
+  id: reg_e3033312ca5849d58454a470772e0f9d
+  ts: "2026-11-24T00:40:17Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_ee783496fa6c438b9460a0c3753ee068
