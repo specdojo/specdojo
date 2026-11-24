@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-TAK7",
+  "run_id": "pjr-tak7-20261124T151026Z-575ba475",
+  "updated_at": "2026-11-24T15:14:24.368Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sonnet-executor",
+      "attempts": 1,
+      "started_at": "2026-11-24T15:11:20.587Z",
+      "completed_at": "2026-11-24T15:11:54.399Z",
+      "artifact_ref": "docs/ja/projects/prj-0002/execution/runs/register/PJR-TAK7/pjr-tak7-20261124T151026Z-575ba475/evidence.json"
+    },
+    "reporter": {
+      "status": "failed",
+      "actor": "gemma26-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-24T15:13:30.735Z",
+      "completed_at": "2026-11-24T15:14:24.368Z",
+      "artifact_ref": "docs/ja/projects/prj-0002/execution/runs/register/PJR-TAK7/pjr-tak7-20261124T151026Z-575ba475/result.md"
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0002/execution/runs/register/PJR-TAK7/pjr-tak7-20261124T151026Z-575ba475/plan.md",
+    "result_ref": "docs/ja/projects/prj-0002/execution/runs/register/PJR-TAK7/pjr-tak7-20261124T151026Z-575ba475/result.md"
+  }
+}

@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: easy
   owner: DEV
   registered_at: "2026-11-24T14:39:30Z"
   due_on: "2026-11-30"
-  block_reason: "executor validation failed or not run: npm run format:check, npm run build"
 ---
 
 # PJR-TAK7 specdojo-lp の公開に向けて LICENSE を加え、README に showcase の案内を書く
@@ -52,19 +51,20 @@ specdojo-lp を showcase として公開する前に MIT の LICENSE を置き�
 
 ## 4. 作業内容
 
-| No  | 作業                                            | 担当 | 状態 | メモ |
-| --- | ----------------------------------------------- | ---- | ---- | ---- |
-| 1   | `LICENSE` を加える                              | DEV  | done | MIT、Copyright (c) 2025 Tiny Shrine |
-| 2   | README にライセンスの節と showcase の案内を書く | DEV  | done | 冒頭に案内、第 6 章にライセンス |
-| 3   | CHANGELOG の `Unreleased` へ追記する            | DEV  | done | 「追加」に 2 件 |
-| 4   | LP の検査と親の検証を通し、対応結果を記録する   | DEV  | open | LP の検査は executor の sandbox で未実行。親 runner の検証と人の確認に委ねる |
+| No  | 作業                                            | 担当 | 状態 | メモ                                                                                                              |
+| --- | ----------------------------------------------- | ---- | ---- | ----------------------------------------------------------------------------------------------------------------- |
+| 1   | `LICENSE` を加える                              | DEV  | done | MIT、Copyright (c) 2025 Tiny Shrine                                                                               |
+| 2   | README にライセンスの節と showcase の案内を書く | DEV  | done | 冒頭に案内、第 6 章にライセンス                                                                                   |
+| 3   | CHANGELOG の `Unreleased` へ追記する            | DEV  | done | 「追加」に 2 件                                                                                                   |
+| 4   | LP の検査と親の検証を通し、対応結果を記録する   | DEV  | done | LP で `npm run lint:md`・`npm run format:check`・`npm run build` が成功した。親 runner の検証は runner が実行する |
 
 ## 5. 対応結果
 
 - 実施内容: LP に `LICENSE`（MIT）を追加した。README の冒頭に showcase の案内を書き、第 6 章「ライセンス」を新設した。後続の章は 7（ブランチと取り込みの運用、7.1 を含む）、8（変更履歴の更新）へ振り直した。CHANGELOG の `Unreleased` に追記した。
 - 外からの PR を受け付けない旨の 1 文は、showcase の案内（README 冒頭）に置いた。
 - 変更ファイル: `specdojo-lp:LICENSE`、`specdojo-lp:README.md`、`specdojo-lp:CHANGELOG.md`、本個票。
-- 残課題: LP の `npm run lint:md`・`npm run format:check`・`npm run build` は executor では未実行（`lint:md` は LP に script がない可能性があり、親 runner の検証結果を正とする）。リポジトリの Public 化と PR を Collaborators only にする設定は人が行う。
+- 検証: LP の作業ツリーで `npm run lint:md`・`npm run format:check`・`npm run build` が成功した（検査による変更なし）。
+- 残課題: リポジトリの Public 化と PR を Collaborators only にする設定は人が行う。
 
 ## 6. 関連ドキュメント
 
