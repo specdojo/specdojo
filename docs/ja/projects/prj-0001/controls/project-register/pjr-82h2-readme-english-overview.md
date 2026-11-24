@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-82h2-readme-english-overview
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: easy
   owner: DEV
   registered_at: "2026-11-23T22:38:18Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-24T01:44:24Z"
+  conclusion: README に英語の概要（目的・位置づけ・クイックスタートと文書サイトへの道筋）を足した
   commit_type: docs
   commit_scope: readme
 ---
