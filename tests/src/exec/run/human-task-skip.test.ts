@@ -1,4 +1,5 @@
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -8,6 +9,7 @@ import { runPreparedTaskSafely } from "../../../../src/exec/run/schedule-task.js
 import { spawnRefresh } from "../../../../src/exec/run/mode-shared.js";
 import type { ReadyTaskView } from "../../../../src/exec/types.js";
 import { ChangeScopeBlockedError, ChangeScopeGate } from "../../../../src/exec/run/change-scope.js";
+import { findExecWorktree } from "../../../../src/exec/worktree.js";
 
 vi.mock(import("../../../../src/exec/run/schedule-prepare.js"), async (importOriginal) => ({
   ...(await importOriginal()),
@@ -21,6 +23,10 @@ vi.mock(import("../../../../src/exec/run/mode-shared.js"), async (importOriginal
   ...(await importOriginal()),
   spawnIndexBuild: vi.fn(() => true),
   spawnRefresh: vi.fn(() => true),
+}));
+vi.mock(import("../../../../src/exec/worktree.js"), async (importOriginal) => ({
+  ...(await importOriginal()),
+  findExecWorktree: vi.fn(),
 }));
 
 const originalCwd = process.cwd();
@@ -81,7 +87,13 @@ beforeEach(() => {
     JSON.stringify({
       version: 1,
       current_project: "test",
-      projects: { test: { schedule_path: "schedule", execution_path: "execution" } },
+      projects: {
+        test: {
+          schedule_path: "schedule",
+          execution_path: "execution",
+          project_register_path: "register",
+        },
+      },
     }),
   );
   writeFileSync(
@@ -102,6 +114,7 @@ beforeEach(() => {
     result: "success",
   }));
   vi.mocked(spawnRefresh).mockReturnValue(true);
+  vi.mocked(findExecWorktree).mockReturnValue(null);
 });
 
 afterEach(() => {
@@ -119,7 +132,7 @@ describe("exec run --auto with human tasks", () => {
     const finish = vi.fn(async () => {});
     vi.spyOn(ChangeScopeGate.prototype, "tryAcquire").mockImplementation(async (id) => {
       if (id === "A-1" && blocked) throw new ChangeScopeBlockedError("waiting for B-1");
-      return { waits: [], finish };
+      return { waits: [], finish, cancelPreparation: vi.fn(async () => {}) };
     });
     vi.mocked(runPreparedTaskSafely).mockImplementation(async (p) => {
       blocked = false;
@@ -164,5 +177,106 @@ describe("exec run --auto with human tasks", () => {
 
     expect(output.join("")).toContain("no executable tasks");
     expect(process.exitCode).toBe(1);
+    expect(readdirSync(join(repo, "execution/exec/.locks/change-scopes"))).toEqual([]);
+  });
+
+  it("releases the reservation when plan generation throws", async () => {
+    writeReady([task("A-1")]);
+    vi.mocked(prepareSingleTask).mockRejectedValue(new Error("plan generation failed"));
+
+    await runBatchMode({ project: "test" });
+
+    expect(process.stderr.write).toHaveBeenCalledWith(
+      expect.stringContaining("setup error for A-1: plan generation failed"),
+    );
+    expect(process.exitCode).toBe(1);
+    expect(readdirSync(join(repo, "execution/exec/.locks/change-scopes"))).toEqual([]);
+  });
+
+  it.each([
+    { state: "todo", worktree: false, removed: true },
+    { state: "todo", worktree: true, removed: false },
+    { state: "doing", worktree: false, removed: false },
+    { state: "blocked", worktree: false, removed: false },
+  ])(
+    "recovers only unused todo reservations: $state, worktree=$worktree",
+    async ({ state, worktree, removed }) => {
+      writeReady([task("A-1")]);
+      writeFileSync(
+        join(repo, "schedule/sch-track-main.yaml"),
+        "kind: track\ntrack: main\ntasks:\n  - id: T-OLD\n",
+      );
+      const directory = join(repo, "execution/exec/.locks/change-scopes");
+      mkdirSync(directory, { recursive: true });
+      const record = join(directory, `${createHash("sha256").update("T-OLD").digest("hex")}.json`);
+      writeFileSync(
+        record,
+        JSON.stringify({
+          item: "T-OLD",
+          state: "blocked",
+          scope: { paths: ["project:src/run.ts"], unknown: false },
+        }),
+      );
+      if (state !== "todo") {
+        mkdirSync(join(repo, "execution/exec/events"), { recursive: true });
+        writeFileSync(
+          join(repo, "execution/exec/events/old.json"),
+          JSON.stringify({
+            v: 1,
+            ts: "2026-11-23T00:00:00Z",
+            task_id: "T-OLD",
+            type: state === "doing" ? "claim" : "block",
+            by: "test-agent",
+            msg: "old run",
+          }),
+        );
+      }
+      if (worktree) {
+        vi.mocked(findExecWorktree).mockReturnValue({
+          path: join(repo, "old"),
+          branch: "exec/old",
+          name: "old",
+          created: false,
+        });
+      }
+
+      await runBatchMode({ project: "test", unknownScope: "serialize" });
+
+      expect(existsSync(record)).toBe(!removed);
+      expect(prepareSingleTask).toHaveBeenCalledTimes(removed ? 1 : 0);
+      expect(process.exitCode).toBe(removed ? undefined : 1);
+    },
+  );
+
+  it("recovers a register preparation's orphan before a schedule run", async () => {
+    writeReady([task("A-1")]);
+    mkdirSync(join(repo, "register"));
+    writeFileSync(
+      join(repo, "register/pjr-ab12-test.md"),
+      `---
+specdojo:
+  id: test:pjr-ab12-test
+  type: project
+  status: draft
+  item_type: todo
+  item_status: open
+---
+
+# PJR-AB12 Test
+`,
+    );
+    const directory = join(repo, "execution/exec/.locks/change-scopes");
+    mkdirSync(directory, { recursive: true });
+    const record = join(directory, `${createHash("sha256").update("PJR-AB12").digest("hex")}.json`);
+    writeFileSync(
+      record,
+      JSON.stringify({ item: "PJR-AB12", state: "blocked", scope: { paths: [], unknown: true } }),
+    );
+
+    await runBatchMode({ project: "test", unknownScope: "serialize" });
+
+    expect(existsSync(record)).toBe(false);
+    expect(prepareSingleTask).toHaveBeenCalledTimes(1);
+    expect(process.exitCode).toBeUndefined();
   });
 });

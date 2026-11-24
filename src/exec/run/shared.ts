@@ -128,6 +128,7 @@ export type RunOpts = {
   unknownScope?: string;
   /** Runner facts appended to the generated plan before its checkpoint. */
   changeScopeWaits?: ScopeWait[];
+  onScopePrepared?: () => void;
   onScopeIntegrated?: () => Promise<void>;
   /** Repeatable `<repo>=<branch>` product integration target overrides. */
   integrationBranch?: string[];

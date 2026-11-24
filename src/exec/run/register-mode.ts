@@ -26,6 +26,7 @@ import { CrossProcessMutex } from "../slot-lock.js";
 import { findExecWorktree, resolveWorktreeBase } from "../worktree.js";
 import { loadRosterForExecutionPath } from "./agent.js";
 import { execLifecyclePoolPath, execLocksDir } from "./lock.js";
+import { isUnstartedScopeReservation } from "./change-scope-state.js";
 import {
   ChangeScopeGate,
   inferChangeScope,
@@ -308,6 +309,7 @@ export async function runRegisterMode(opts: RunOpts): Promise<void> {
         return false;
       }
     },
+    (item) => isUnstartedScopeReservation({ item, projectId, repoRoot, schedulePath }),
   );
   const runItem = async (
     pjrId: string,
@@ -330,12 +332,18 @@ export async function runRegisterMode(opts: RunOpts): Promise<void> {
     });
     let lease: ChangeScopeLease | undefined;
     let integrated = false;
+    let prepared = false;
     try {
       // Wait outside the lifecycle lock: its holder must be able to integrate and release us.
       lease = await scopeGate.acquire(pjrId, scope);
+      // A retry may fail before setup while still owning an older unintegrated worktree.
+      prepared = !!findExecWorktree(repoRoot, qualifyTaskId(projectId, pjrId));
       const itemOpts = {
         ...optsForItem(pjrId),
         changeScopeWaits: lease.waits,
+        onScopePrepared: () => {
+          prepared = true;
+        },
         onScopeIntegrated: async () => {
           integrated = true;
           await lease?.finish(true);
@@ -358,7 +366,8 @@ export async function runRegisterMode(opts: RunOpts): Promise<void> {
         reason,
       };
     } finally {
-      await lease?.finish(integrated);
+      if (prepared || integrated) await lease?.finish(integrated);
+      else await lease?.cancelPreparation();
     }
   };
 

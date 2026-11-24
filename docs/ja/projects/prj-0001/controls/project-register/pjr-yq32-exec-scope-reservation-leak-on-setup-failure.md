@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-23T04:56:14Z"
   due_on: "2026-11-30"
-  block_reason: "parent validation failed: test-unit"
   derived_from:
     - PJR-0JVB
   commit_type: fix
@@ -66,24 +65,25 @@ specdojo:
 
 | 作業                           | 状態 | メモ                                                                                                                        |
 | ------------------------------ | ---- | --------------------------------------------------------------------------------------------------------------------------- |
-| 準備失敗時の予約解放           | done | schedule の失敗戻り値・例外・provider 待機と、register の準備失敗で予約と lock を解放する                                   |
+| 準備失敗時の予約解放           | done | schedule の準備失敗は同じ run 内の待ち合わせを保って終了時に解放し、provider 待機と register の準備失敗は直ちに解放する     |
 | 古い予約の回収                 | done | 未着手で exec worktree と予約 lock のない予約を、照合 mutex 内で回収する                                                    |
-| 回帰テスト追加                 | done | 準備失敗、再実行時の既存予約復元、古い予約回収、worktree・lock・実行中状態の保護を単体テストに追加した                      |
+| 回帰テスト追加                 | done | 準備失敗、既存予約復元、古い予約回収、worktree・lock・実行中状態の保護に加え、同一 run の待機と次の run の実行を検査する    |
 | 設計・ガイド・CLI リファレンス | done | 失敗時の境界と自動回収条件を更新した                                                                                        |
 | 統合後の smoke                 | open | executor sandbox では実 agent CLI を起動しない。統合後に orchestrator が `exec smoke` を流し、成功を確認してから close する |
 
 ### 5.2. 判断と対応
 
 - 準備完了を境界に、新規予約の取り消しと実行後の未統合予約の保持を分けた。再実行の準備失敗では取得前の予約を復元し、既存 worktree がある register run の失敗も予約を保持する。既存成果の保護を優先するためである。
+- 再開指示に従い、schedule の準備失敗時は同じ run 内の scope barrier を保ち、worker pool 終了時の `finally` で予約を取り消す。失敗直後に解放すると `--unknown-scope serialize` の後続まで準備してしまうためである。既存テストの期待は変えず、失敗戻り値・例外と loop 有無の組合せで、同じ run 内の待機、終了後の予約・lock 不在、次の run での実行を検査する。
 - 回収対象の未着手状態は schedule の `todo` と register の `open` とした。register には `todo` 状態がなく、`todo` は項目種別だからである。schedule は生成済みキャッシュではなく event と strategy の初期状態から判定する。予約ディレクトリは共用のため、どちらの実行経路からも両種の未着手予約を判定・回収する。
 - 古さの時間閾値は設けず、未着手・worktree 不在・予約 lock 不在がそろうことを回収の根拠とした。heartbeat が止まった lock も、不在とは扱わない。状態または worktree を確認できない場合も予約を保持する。
 - 保護された設定、登録簿の状態、`CHANGELOG.md`、result、grade サイドカーは変更していない。
 
 ### 5.3. 検証
 
-Prettier、`catalog validate --project prj-0001`、`npm run validate:history-links`、`npm run check:src-imports`、`register build --project prj-0001`、`git diff --check` は成功した。catalog は対象外の既存参照に警告を出したが、エラーはなかった。
+Prettier、hook の catalog 検証（`node --import tsx tools/catalog-validate-if-configured.mjs`）、`npm run validate:history-links`、`npm run check:src-imports`、`register build --project prj-0001`、`git diff --check` は成功した。catalog は対象外の既存参照に警告を出したが、エラーはなかった。
 
-親 runner が `npm run typecheck`・`npm run lint:ts`・`npm run test:unit` と設定済みの共通検証を実行するため、executor では重複実行しない。単体テストの実行結果は親 runner の evidence を参照する。統合後の実動作確認は 5.1 の smoke として引き継ぐ。
+前回の親検証では `track-filter.test.ts` の準備失敗時の待ち合わせテストが失敗した。今回、その原因となった解放時点を修正した。親 runner が `npm run typecheck`・`npm run lint:ts`・`npm run test:unit` と設定済みの共通検証を再実行するため、executor では重複実行しない。単体テストの実行結果は親 runner の evidence を参照する。統合後の実動作確認は 5.1 の smoke として引き継ぐ。
 
 ### 5.4. CHANGELOG に書く事項
 

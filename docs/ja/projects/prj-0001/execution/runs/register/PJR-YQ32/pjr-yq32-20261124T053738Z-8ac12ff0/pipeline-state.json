@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-YQ32",
+  "run_id": "pjr-yq32-20261124T053738Z-8ac12ff0",
+  "updated_at": "2026-11-24T06:01:14.993Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-24T05:53:17.106Z",
+      "completed_at": "2026-11-24T05:57:41.925Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-YQ32/pjr-yq32-20261124T053738Z-8ac12ff0/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "sonnet-reporter",
+      "attempts": 0,
+      "started_at": "2026-11-24T06:01:12.221Z",
+      "completed_at": "2026-11-24T06:01:12.221Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-YQ32/pjr-yq32-20261124T053738Z-8ac12ff0/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-24T06:01:14.993Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-YQ32/pjr-yq32-20261124T053738Z-8ac12ff0/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-YQ32/pjr-yq32-20261124T053738Z-8ac12ff0/result.md"
+  },
+  "resume_notes": [
+    {
+      "at": "2026-11-24T05:53:17.095Z",
+      "notes": [
+        "親の検証の test-unit で tests/src/exec/run/track-filter.test.ts の「retains the scope barrier when schedule preparation fails」が落ちた。このテストは、--unknown-scope serialize で準備に失敗したタスクがあると、同じ run の中では後のタスクを準備しない（待たせる）ことを守っている。YQ32 で外すのは、run が終わった後に残る予約（exec/.locks/change-scopes/ の blocked のまま残る分）であり、同じ run の中の待ち合わせは保つ方針を推奨する。テストの期待を変えるなら、変える理由を個票の対応結果と handoff に書く。"
+      ]
+    }
+  ]
+}
