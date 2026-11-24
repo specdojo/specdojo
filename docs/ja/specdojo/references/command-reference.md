@@ -57,7 +57,7 @@ specdojo where playbook --project prj-0001
 | ----------------- | ------------------------------------------------------------------- | ----------------------------------------- |
 | `init`            | project から agent 実行までを質問式で初期設定する                   | `specdojo init`                           |
 | `config init`     | `specdojo.config.json` と `.gitignore` を個別に用意する             | `specdojo config init`                    |
-| `config show`     | 有効な `repos` と、ローカル設定に由来する値を表示する               | `specdojo config show --project prj-0001` |
+| `config show`     | 有効な `repos`、`references` と、ローカル設定に由来する値を表示する | `specdojo config show --project prj-0001` |
 | `config scaffold` | provider、VS Code ワークスペース、Git hook、Slidev を個別に配置する | `specdojo config scaffold --slidev`       |
 | `project list`    | 登録済み project を表示する                                         | `specdojo project list`                   |
 | `doctor`          | 使う環境のパターンに合わせて導入の前提を確かめる                    | `specdojo doctor --tmux`                  |
@@ -125,7 +125,7 @@ provider 設定、登録簿作成の順に次のコマンドを案内します�
 書き込まず、予定の内容だけを表示します。`config scaffold` の `--provider` には
 `claude`、`codex`、`copilot`、`opencode` を指定でき、`--dry-run` と `--force` も利用できます。どの provider でも、skill `specdojo-exec-in-session` の正本を `.agents/skills/specdojo-exec-in-session/SKILL.md` へ置きます。`.agents/skills` を読まない Claude Code には、正本を読ませるラッパーを `.claude/skills/specdojo-exec-in-session/SKILL.md` へ置きます。既にあるファイルは `--force` なしでは上書きしません。`--global` は 0.10.0 では対応する provider がなく、指定するとリポジトリへ書き込む前にエラーになります。
 
-`config show` は、`specdojo.config.json` とローカル設定 `.specdojo/specdojo.local.config.json` のパス、ローカルで上書きした項目、project ごとの `repos` を表示します。各リポジトリには `shared`（共有の設定）、`local; shared: <path>`（パスの差し替え）、`local; added`（ローカルで追加）のいずれかを付けます。`--project <id>` で対象を絞れます。ローカル設定の許可キーと優先順位は [[specdojo:specdojo-config-reference|SpecDojo設定リファレンス]] の「ローカル設定」を参照してください。
+`config show` は、`specdojo.config.json` とローカル設定 `.specdojo/specdojo.local.config.json` のパス、ローカルで上書きした項目、project ごとの `repos` を表示します。各リポジトリには `shared`（共有の設定）、`local; shared: <path>`（パスの差し替え）、`local; added`（ローカルで追加）のいずれかを付けます。`references` は別名・設定パス・解決した実パス・`read-only`・設定の由来を表示します。`--project <id>` で project を絞っても、全 project 共通の参照先は表示します。ローカル設定の許可キーと優先順位は [[specdojo:specdojo-config-reference|SpecDojo設定リファレンス]] の「ローカル設定」を参照してください。
 
 通常の `init` と `config init` は、markdownlint の設定がなければリポジトリ直下に
 `.markdownlint.yaml` を作成します。SpecDojo の文書規約に合わせて MD013（行長）、MD024（見出しの重複）、
@@ -837,6 +837,8 @@ specdojo exec run --project prj-0001 --job job-weekly-report --input period=2026
 
 `--branch <repo>=<name>` は、register の worktree モードでプロダクトの作業ブランチ名を上書きします。たとえば `specdojo exec run --project prj-0001 --register PJR-0012 --worktree --branch app1=feature/login` と指定します。複数のリポジトリにはオプションを繰り返します。宣言にないリポジトリ、同じリポジトリの重複、空の値、不正な Git ブランチ名は拒否します。別項目のブランチと重なると start 前に停止するため、topic を変えるかこの指定で解消します。自動の連番は付けません。SpecDojo の記帳用のブランチには適用しません。`--resume` では記録済みの名前を使うため指定の繰り返しは不要で、別名への変更は拒否します。
 
+`register_sync.enabled: true` の場合、`exec run --register` の start・review・waiting と post-review の close は専用ブランチへ commit・push します。executor の個票編集は検証後・exec の commit 前に転送し、exec の commit には個票・イベントを含めません。同期の失敗では編集を保持して停止します。設定・復旧は [[specdojo:register-operation-guide|登録簿運用ガイド]] を参照してください。未設定の場合は従来動作です。
+
 作業ブランチ名の既定値は `exec/{project}-{id}` です。`repos[].branch_template` に git-flow の `feature/{topic}`、GitHub flow の `{type}/{topic}` などを設定できます。統合の形は `repos[].integration_strategy` の `merge`（既定）・`ff`・`branch-only` で選びます。`ff` は早送りできるときだけ統合し、分岐していれば停止します。自動の rebase や同期 merge は行いません。
 
 `--integration-branch <repo>=<branch>` は、register の worktree モードで、その run に限ってプロダクトリポジトリ `<repo>` の統合先を上書きします。複数リポジトリにはオプションを繰り返します。`<repo>` は `repos[].name` に宣言済みで、`<branch>` はそのリポジトリに存在する有効なローカルブランチでなければならず、リモートブランチの取得やローカルブランチの作成は行いません。同じ `<repo>` の重複、宣言にないリポジトリ、空の値は register の状態を変える前に拒否します。統合先の優先順位は「run の指定 → `repos[].integration_branch` → そのリポジトリの現在のブランチ」です。指定しない run の挙動は従来と変わりません。
@@ -1344,11 +1346,13 @@ specdojo orchestrator launch --provider claude --project prj-0001 -- \
   --agent specdojo-orchestrator --model sonnet
 ```
 
-対象 project は `--project`、`SPECDOJO_PROJECT`、`current_project`、`projects` の先頭の順で解決します。`--` より後ろの引数は provider CLI へそのまま渡します。`repos` が無い場合、provider CLI へ渡すコマンドと引数は従来と変わりません。
+対象 project は `--project`、`SPECDOJO_PROJECT`、`current_project`、`projects` の先頭の順で解決します。`--` より後ろの引数は provider CLI へそのまま渡します。`repos`・`external_projects`・`references` が無い場合、provider CLI へ渡すコマンドと引数は従来と変わりません。
 
 provider CLI の実行中、起動元は `SIGINT` と `SIGQUIT` を無視して子プロセスの終了を待ちます。端末での Ctrl-C は provider CLI に直接届くため、入力の取り消しとして扱う CLI が起動元だけを終了させることはありません。`SIGTERM` と `SIGHUP` は子プロセスへ転送し、子の終了後に同じ終了コードを返します。子がシグナルで終了した場合は `128 + シグナル番号` を返します。
 
 Claude Code、Codex、GitHub Copilot には exec と同じ追加ルート引数を渡します。OpenCode は、起動時の `OPENCODE_CONFIG_CONTENT` に選択 agent の `permission.external_directory` を注入し、全外部ディレクトリを拒否したうえで宣言済みのリポジトリだけを許可します。外部パスへ既存の `permission.edit` が一致しないため、同じ宣言済みルートの編集許可を起動場所からの相対パス（例: `../<repo>/**`）で注入します。既存の inline config の他項目は保持します。未宣言のリポジトリは、どの provider でも許可対象になりません。
+
+`references`（v0.10.0 以降）は読み取り専用の参照先です。Claude Code・Copilot・OpenCode には参照先のファイル編集を拒否する規則を加えます。Codex は `workspace-write` の外部読み取りを使い、参照先を `--add-dir` に渡しません。exec の executor・reviewer へは追加公開しません。パス検証・権限の制約は [[specdojo:specdojo-config-reference|設定リファレンス]] の「`references`のキー」を参照してください。
 
 `orchestrator night` は `autopilot: approved` の付いた `open` todo・issue だけを夜間 queue として実行します。
 

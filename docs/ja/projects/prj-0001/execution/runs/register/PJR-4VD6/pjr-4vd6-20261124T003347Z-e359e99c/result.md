@@ -4,53 +4,41 @@ specdojo:
   type: exec-result
   task_id: PJR-4VD6
   mode: edit
-  status: blocked
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-4VD6/pjr-4vd6-20261124T003347Z-e359e99c/plan.md
   started_at: "2026-11-24T00:33:51.302Z"
-  completed_at: "2026-11-24T00:51:11.852Z"
+  completed_at: "2026-11-24T01:08:19.060Z"
   agent: sol-executor
-  block_reason: "parent validation failed: test-integration"
 ---
 
 # Edit Result
 
 ## 1. 実施内容
 
-- exec run --register の状態遷移(start・review・waiting)と検証済みの個票編集を、register 専用ブランチへ commit・push する実装を追加した。exec の commit には個票とイベントを含めない。
-- executor は従来どおり個票を編集する。検証後・exec commit 前に runner が専用ブランチへ転送する。最新の状態欄を保持して本文を三方向マージし、push 成功後だけ実行元を HEAD へ戻す。競合や転送失敗時は編集を保持する。
-- 並行更新は共通ロックと rebase 再試行で同期する。
-- 関連する文書6件(ガイド・リファレンス・標準)を更新し、統合テスト2件を拡張した。
-- runner 検証では lint、typecheck、`test:unit`、`test:docs`、`validate:schema` などが通過した。一方 `npm run test:integration` は失敗した。`tests/src/exec/register-pipeline-e2e.integration.test.ts` の774行付近で、リモートのブランチ上の個票の内容を確認するアサーションが落ちている。原因は evidence からは特定できない。
-- `exec smoke` と実際の `exec run --register` の確認は、実 agent CLI と利用枠が必要なため未実施で、`requires_human` になっている。
+- 親の検証 test-integration で落ちた E2E の 3 件を直した。原因はテストの誤りで、実装は変えていない。1 つ目は fixture の個票 `id` がファイル名と合わず、`--commit` 経路の記帳前の検査で start が止まっていたこと。2 つ目はヘルパー `execWorktreePath` が register 専用の worktree を exec の worktree と取り違えていたこと。指示の vitest のコマンドでファイルの 57 件がすべて通った。判断は個票の対応結果に書いた。
 
 ## 2. 変更ファイル
 
-- `docs/ja/specdojo/guides/exec-operation-guide.md`: exec run --register の状態遷移・対応結果が register ブランチへ書かれる運用を追記した。
-- `docs/ja/specdojo/guides/exec-worktree-guide.md`: exec の worktree/ブランチに個票の変更を含めない扱いと、register ブランチとの関係を追記した。
-- `docs/ja/specdojo/guides/register-operation-guide.md`: runner による register ブランチへの転送、競合・失敗時の編集保持、再開手順を追記した。
-- `docs/ja/specdojo/references/command-reference.md`: exec run --register の挙動(register ブランチへの commit・push、exec commit からの分離)をコマンドリファレンスに反映した。
-- `docs/ja/specdojo/references/specdojo-config-reference.md`: `register_sync` に関わる設定の説明を、新しい転送挙動に合わせて更新した。
-- `docs/ja/specdojo/standards/git-branching-standard.md`: register 専用ブランチと exec ブランチの役割分担、個票の変更を exec ブランチに含めない規則を追記した。
-- `src/exec/run/register-core.ts`: register run の流れを register-sync と連携させ、exec commit から個票・イベントを分離するよう変更した。
-- `src/exec/run/register-state.ts`: start・review・waiting などの状態遷移と対応結果を、register ブランチへ書く経路に合わせて変更した。
-- `src/exec/run/register-worktree.ts`: worktree 運用で個票の変更が exec ブランチへ含まれないよう調整し、push 成功後に実行元を HEAD へ戻す処理を加えた。
-- `tests/src/exec/register-pipeline-e2e.integration.test.ts`: register パイプラインの E2E 統合テストを、register ブランチへの転送と exec ブランチへの非混入を検証するよう更新した。現状、この中の1件が `test:integration` で失敗している。
-- `tests/src/register/register-branch.integration.test.ts`: register ブランチの同期動作(転送、並行更新、競合時の保持)に関する統合テストを更新した。
-- `src/exec/run/register-sync.ts`: 新規。runner が個票の状態遷移と検証済みの編集を register 専用ブランチへ転送する同期処理。共通ロック、rebase 再試行、状態欄を保持した本文の三方向マージ、競合・失敗時の編集保持を担う。
+- `docs/ja/specdojo/guides/exec-operation-guide.md`: 変更、+2 / -0 行
+- `docs/ja/specdojo/guides/exec-worktree-guide.md`: 変更、+2 / -0 行
+- `docs/ja/specdojo/guides/register-operation-guide.md`: 変更、+3 / -1 行
+- `docs/ja/specdojo/references/command-reference.md`: 変更、+2 / -0 行
+- `docs/ja/specdojo/references/specdojo-config-reference.md`: 変更、+1 / -1 行
+- `docs/ja/specdojo/standards/git-branching-standard.md`: 変更、+1 / -1 行
+- `src/exec/run/register-core.ts`: 変更、+40 / -14 行
+- `src/exec/run/register-state.ts`: 変更、+7 / -3 行
+- `src/exec/run/register-worktree.ts`: 変更、+8 / -1 行
+- `tests/src/exec/register-pipeline-e2e.integration.test.ts`: 変更、+120 / -1 行
+- `tests/src/register/register-branch.integration.test.ts`: 変更、+104 / -0 行
+- `src/exec/run/register-sync.ts`: 追加、+103 / -0 行
 
 ## 3. 申し送り
 
-- 親 runner の `npm run test:integration` が失敗している(`tests/src/exec/register-pipeline-e2e.integration.test.ts` 774行付近、リモートのブランチ上の個票内容に対する `toContain` / `not.toContain` のアサーション)。詳細は `parent-validation-attempt-1-test-integration.log` を参照し、修正してから先へ進める必要がある。
-- 設計判断: executor は従来どおり個票を編集し、検証後・exec commit 前に runner が専用ブランチへ転送する。最新の状態欄を保持して本文を三方向マージし、push 成功後だけ実行元を HEAD へ戻す。競合・転送失敗時は編集を保持する。決定内容は個票の対応結果にも記載済み。
-- 統合後、新しいプロセスで exec smoke と実際の exec run --register を各 1 回実行してから close する。実 agent CLI と利用枠を使うため sandbox では実施していない。個票の該当作業は理由付きで open。
-- CHANGELOG に書く事項（変更、v0.10.0）: `register_sync` が有効な project の `exec run --register` は、状態遷移と検証済みの個票編集を register 専用ブランチへ commit・push し、exec の commit には個票・イベントを含めないようになりました。並行更新は共通ロックと rebase 再試行で同期し、転送に失敗した編集は再開用に保持します。
-- result は pipeline の指示に従い編集していない。保護された設定の変更も不要。
-- 適用外の検証: `npm run validate:schema:file`（executor の変更は TypeScript と Markdown のみ。既存の runner 管理イベントは変更対象に含めていない。）
-- 人の確認が必要: `specdojo exec smoke --project prj-0001 --register PJR-JSEY --targets PJR-4VD6 --executor-by sol-executor --reporter-by gemma26-reporter`（統合後に orchestrator が新しいプロセスで実行する。実 agent CLI と利用枠が必要。）
-- 人の確認が必要: `specdojo exec run --project prj-0001 --register PJR-JSEY --worktree --executor-by sol-executor --reporter-by gemma26-reporter`（統合後に実際の register run を確認してから close する。確認用個票の状態と実行 agent は orchestrator が確認する。）
+- 再開時の判断: E2E の 3 件の失敗はテストの誤りとして直した。fixture の個票 `id`（`test:pjr-ab12-topic`）をファイル名に合わせて `test:pjr-ab12-pipeline-test` にし、`execWorktreePath` は `.git/specdojo/register/` 配下の専用 worktree を除外する。記帳前の id とファイル名の検査は既存の register CLI の規約なので緩めない。
+- 統合の後に orchestrator が、新しい runner プロセスで `exec smoke` と実際の `exec run --register` を各 1 回流して確かめてから close する（作業内容の表の No.5 は open のまま）。実際の agent CLI と利用枠を使うため、executor の sandbox では実施できない。
 
 ## 4. 進め方
 
-個票を編集する流れは変えず、検証後・exec commit 前に runner が register 専用ブランチへ転送する方式にした。個票とイベントは exec の commit から外した。転送は共通ロックと rebase 再試行で並行更新に対応し、競合や失敗時は編集を保持する。文書6件と統合テスト2件も合わせて更新した。
+reporter を使わず、runner が executor の報告（`final_message`・`handoff`）と証跡から機械的に作成した（`pipeline.mechanical_result`）。

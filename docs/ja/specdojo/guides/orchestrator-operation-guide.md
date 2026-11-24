@@ -82,6 +82,10 @@ worktree 付きは、全 CLI で `tools/worktree/open-agent-worktree.sh` を通�
 
 固定 worktree から起動しても、project 設定と `repos[].path` は主 worktree を基準に解決します。provider の作業ディレクトリは固定 worktree のままです。この受け渡しに使う内部用の `SPECDOJO_ORCHESTRATOR_CONFIG_ROOT` は provider 起動前に除去されるため、対話中に実行する別の `specdojo` コマンドへは引き継がれません。
 
+v0.10.0 から、読むだけのコードや文書は `specdojo.config.json` のトップレベルの `references` に、例として `"references": { "library": { "path": "../shared-library" } }` のように宣言します。マシンごとの置き場は `specdojo.local.config.json` の同じ別名の `path` で差し替えられ、local だけの別名も追加できます。`specdojo config show` で解決したパスと `read-only` 表示を確かめてから起動してください。参照先のパスも主 worktree が基準です。
+
+`references` は編集・起票の対象にはなりません。provider ごとの読み取り範囲・編集拒否と shell 経由の制約は [[specdojo:specdojo-config-reference|設定リファレンス]] の「`references`のキー」を参照してください。
+
 ### 2.1. 利用リポジトリへ設定を配置する
 
 npm package から利用する場合は、起動前に provider の設定と npm script を利用リポジトリへ配置します。

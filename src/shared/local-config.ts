@@ -1,10 +1,12 @@
 import { existsSync, readFileSync, statSync } from "node:fs";
-import { basename, isAbsolute, join, resolve } from "node:path";
+import { basename, dirname, isAbsolute, join, resolve } from "node:path";
+import { resolveReferences } from "./reference-directories.js";
 import type {
   ConfigLoadResult,
   SpecDojoConfig,
   SpecDojoExternalProjectConfig,
   SpecDojoRepoConfig,
+  SpecDojoReferenceConfig,
 } from "./specdojo-config.js";
 
 /**
@@ -30,7 +32,9 @@ export type LocalConfigOverride =
   | { project: string; repo: string; kind: "path"; path: string; shared_path: string }
   | { project: string; repo: string; kind: "added"; path: string }
   | { external: string; kind: "external-path"; path: string; shared_path: string }
-  | { external: string; kind: "external-added"; path: string };
+  | { external: string; kind: "external-added"; path: string }
+  | { reference: string; kind: "reference-path"; path: string; shared_path: string }
+  | { reference: string; kind: "reference-added"; path: string };
 
 export type LocalConfigApplication = {
   config: SpecDojoConfig;
@@ -142,6 +146,7 @@ function validateRepoEntry(
  * its `path` replaced, and an alias absent from the shared config is appended as a new external
  * project after the merge. The shared validator then checks the path, aliases, and `project_id`
  * on the merged value.
+ * `references` likewise replaces paths by alias or appends local-only reference directories.
  */
 export function applyLocalConfig(
   shared: SpecDojoConfig,
@@ -164,8 +169,10 @@ export function applyLocalConfig(
     return fail();
   }
   for (const key of Object.keys(local).sort()) {
-    if (key !== "version" && key !== "projects" && key !== "external_projects") {
-      errors.push(`unknown key "${key}" (allowed: version, projects, external_projects)`);
+    if (!["version", "projects", "external_projects", "references"].includes(key)) {
+      errors.push(
+        `unknown key "${key}" (allowed: version, projects, external_projects, references)`,
+      );
     }
   }
   if (local.version !== 1) errors.push("version must be 1");
@@ -289,11 +296,46 @@ export function applyLocalConfig(
     }
   }
 
+  const references = { ...shared.references };
+  if (local.references !== undefined) {
+    if (!isRecord(local.references)) {
+      errors.push("references must be an object");
+    } else {
+      for (const [alias, entry] of Object.entries(local.references)) {
+        const at = `references.${alias}`;
+        if (!isRecord(entry)) {
+          errors.push(`${at} must be an object with path`);
+          continue;
+        }
+        for (const key of Object.keys(entry).sort()) {
+          if (key !== "path") errors.push(`${at}: unknown key "${key}"`);
+        }
+        if (typeof entry.path !== "string" || !entry.path.trim()) {
+          errors.push(`${at}.path must be a non-empty string`);
+          continue;
+        }
+        const existing = Object.hasOwn(references, alias) ? references[alias] : undefined;
+        overrides.push(
+          existing
+            ? {
+                reference: alias,
+                kind: "reference-path",
+                path: entry.path,
+                shared_path: existing.path,
+              }
+            : { reference: alias, kind: "reference-added", path: entry.path },
+        );
+        references[alias] = { ...existing, ...entry } as SpecDojoReferenceConfig;
+      }
+    }
+  }
+
   if (errors.length > 0) return fail();
 
   const config: SpecDojoConfig = localExternalApplied
     ? { ...shared, projects, external_projects: mergedExternalProjects }
     : { ...shared, projects };
+  if (local.references !== undefined) config.references = references;
   return { config, overrides };
 }
 
@@ -337,6 +379,10 @@ export function formatLocalOverride(override: LocalConfigOverride): string {
       );
     case "external-added":
       return `external_projects.${override.external} = ${override.path} (local; added)`;
+    case "reference-path":
+      return `references.${override.reference}.path = ${override.path} (local; shared: ${override.shared_path})`;
+    case "reference-added":
+      return `references.${override.reference} = ${override.path} (local; added)`;
   }
 }
 
@@ -344,7 +390,7 @@ export function formatLocalOverride(override: LocalConfigOverride): string {
 export function formatLocalConfigLines(result: ConfigLoadResult, projectId?: string): string[] {
   if (!result.localConfigPath) return ["local-config: none"];
   const localOverrides = result.localOverrides ?? [];
-  // external-* overrides are repository-wide (not tied to a project id), so they always show
+  // External-project and reference overrides are repository-wide, so they always show
   // up together with the project's repos.
   const overrides =
     projectId === undefined
@@ -352,7 +398,7 @@ export function formatLocalConfigLines(result: ConfigLoadResult, projectId?: str
       : localOverrides.filter((override) =>
           "project" in override
             ? override.project === projectId
-            : // external-* entries are not project-scoped, always include them
+            : // Repository-wide entries are not project-scoped, always include them
               true,
         );
   return [
@@ -361,7 +407,7 @@ export function formatLocalConfigLines(result: ConfigLoadResult, projectId?: str
   ];
 }
 
-/** `config show` output: config files, then each project's repos with their source. */
+/** `config show` output: config files, repositories, and resolved read-only references. */
 export function formatConfigShow(result: ConfigLoadResult, projectId?: string): string {
   if (!result.config) return `No config found: ${result.configPath}\n`;
   const config = result.config;
@@ -414,6 +460,18 @@ export function formatConfigShow(result: ConfigLoadResult, projectId?: string): 
           : "shared";
       lines.push(`  external ${alias}: ${entry.path} (${source})`);
     }
+  }
+  for (const entry of resolveReferences(dirname(dirname(result.configPath)), config)) {
+    const override = result.localOverrides?.find(
+      (candidate) => "reference" in candidate && candidate.reference === entry.alias,
+    );
+    const source =
+      override?.kind === "reference-path"
+        ? `local; shared: ${override.shared_path}`
+        : override
+          ? "local; added"
+          : "shared";
+    lines.push(`reference ${entry.alias}: ${entry.path} -> ${entry.root} (read-only; ${source})`);
   }
   return `${lines.join("\n")}\n`;
 }

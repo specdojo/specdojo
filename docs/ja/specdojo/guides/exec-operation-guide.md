@@ -515,6 +515,8 @@ executor と reporter が成功した後の commit・merge・worktree 撤去で�
 
 ### 2.7. register統合後のreviewと自動close
 
+`register_sync.enabled: true` の project では、runner の状態遷移と検証済みの個票編集は専用ブランチへ commit・push します。exec の commit には個票・イベントを含めず、成功後に専用ブランチを呼び出し元へ取り込んでから post-review を始めます。転送・競合・復旧の扱いは [[specdojo:register-operation-guide|登録簿運用ガイド]] の専用ブランチの節を参照してください。未設定の場合は従来の記帳経路を使います。
+
 register の worktree 実行では、`--post-review` を付けると、成果を統合した後に読み取り専用の review pipeline を実行できます。review executor の既定は `claude-expert-review-executor` で、`--review-by` により変更できます。reporter は `stage_role: reporter` の候補から選び、edit pipeline で `--reporter-by` を指定している場合は同じ reporter を使います。
 
 ```bash

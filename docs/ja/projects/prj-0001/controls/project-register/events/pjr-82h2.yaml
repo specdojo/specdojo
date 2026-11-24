@@ -57,3 +57,48 @@
       from: ""
       to: 完了条件
   previous_event_id: reg_d862a719f2d541a6ac612101fb14e612
+- v: 1
+  id: reg_90009b1d60444ac4a1342a037bba24bc
+  ts: "2026-11-24T01:01:08Z"
+  action: start
+  actor: terra-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_4801a9e1def64fccb8f3943bd64566aa
+- v: 1
+  id: reg_8c4d79265f8644aa90a86ca61662428d
+  ts: "2026-11-24T01:03:17Z"
+  action: review
+  actor: terra-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_90009b1d60444ac4a1342a037bba24bc
+- v: 1
+  id: reg_1014f281b2ab45bbb310981d3ff6010c
+  ts: "2026-11-24T01:44:24Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果・親の検証（passed）で確かめ、保護された設定の変更がないことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-24"
+    - field: conclusion
+      from: "-"
+      to: README に英語の概要（目的・位置づけ・クイックスタートと文書サイトへの道筋）を足した
+  previous_event_id: reg_8c4d79265f8644aa90a86ca61662428d
