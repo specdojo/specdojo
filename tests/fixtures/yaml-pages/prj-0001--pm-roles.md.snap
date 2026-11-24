@@ -2,7 +2,7 @@
 specdojo:
   id: prj-0001:pm-roles
   type: project
-  status: ready
+  status: draft
   rulebook: specdojo:pm-roles-rulebook
 ---
 
@@ -36,7 +36,7 @@ specdojo:
 # yaml-language-server: $schema=../../../../specdojo/schemas/v1/pm-roles.schema.yaml
 id: prj-0001:pm-roles
 type: project
-status: ready
+status: draft
 title: ロール一覧
 rulebook: specdojo:pm-roles-rulebook
 based_on:

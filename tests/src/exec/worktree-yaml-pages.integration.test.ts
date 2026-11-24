@@ -42,7 +42,7 @@ function prepareWorktree(root: string): void {
   symlinkSync(join(repoRoot, "packages", "docs-lint"), join(root, "packages", "docs-lint"));
   mkdirSync(join(root, "docs", "ja", "product"), { recursive: true });
   copyFileSync(
-    join(repoRoot, "docs/ja/specdojo/samples/ifx-index-sample.yaml"),
+    join(repoRoot, "tests/fixtures/yaml-pages/ifx-index-sample.yaml"),
     join(root, yamlPath),
   );
   git(root, ["add", "-A"]);

@@ -2,7 +2,7 @@
 specdojo:
   id: ifx-file-agent-evidence
   type: api
-  status: ready
+  status: draft
   rulebook: specdojo:ifx-file-rulebook
 ---
 
@@ -127,7 +127,7 @@ specdojo:
 x-spec-meta:
   id: ifx-file-agent-evidence
   type: api
-  status: ready
+  status: draft
   title: 外部ファイル連携仕様（agent の evidence）
   rulebook: specdojo:ifx-file-rulebook
   based_on:

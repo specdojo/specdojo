@@ -2,7 +2,7 @@
 specdojo:
   id: ifx-cmd-ai-provider-cli
   type: api
-  status: ready
+  status: draft
   rulebook: specdojo:ifx-cmd-rulebook
 ---
 
@@ -105,7 +105,7 @@ specdojo:
 # yaml-language-server: $schema=../../../specdojo/schemas/v1/ifx-cmd.schema.yaml
 id: ifx-cmd-ai-provider-cli
 type: api
-status: ready
+status: draft
 title: AI provider CLI 非対話起動のコマンド連携仕様
 rulebook: specdojo:ifx-cmd-rulebook
 version: 1

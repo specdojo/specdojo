@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: review
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-23T22:24:54Z"
   due_on: "2026-11-30"
-  block_reason: 'integrate failed: project: Deliverable status promotion to "ready" is human-only and must not be done by an agent run: tests/fixtures/yaml-pages/ifx-cmd-ai-provider-cli.yaml, tests/fixtures/yaml-pages…'
   commit_type: fix
   commit_scope: test
 ---
@@ -47,7 +46,7 @@ specdojo:
 
 表示ページの 24 件の比較入力を固定 fixture に移し、grade の宣言・逆参照も固定した kata で検証する。glossary・I/F 一覧の表示検証と worktree の結合テストも固定入力に切り替えた。実 sample は表示ページを例外なく生成できることを確認する。`dct-index` の schema 検証は配布する実 sample の妥当性を確認するため残す。その他の sample パスは一時ディレクトリ上のテストデータまたはパス解決の期待値である。
 
-`dct-sample.yaml` に一時的にコメントを追加した状態で固定入力の 24 件の生成結果がスナップショットと一致することを確認し、元に戻した。単体テスト全体を sample 変更中に実行する確認は、親 runner の検証との重複を禁じる pipeline 指示により未実施であり、runner 側で確認が必要。型・lint・単体・結合テストは親 runner が実行する。
+2026-11-24 12:40 にオーケストレーターがこの worktree で `dct-sample.yaml` と `pm-members-sample.yaml` の末尾に注釈を追加し、`opr-batch-sample.md` の rulebook 宣言を `opd-rulebook` に変更した状態で確認した。`npm run test:unit` は 257 ファイル・4469 件、`npm run test:docs` は 19 ファイル・489 件がすべて通り、sample は元に戻した。型・lint・単体・結合テストは親 runner が実行する。
 
 ### 5.1. CHANGELOG に書く事項
 

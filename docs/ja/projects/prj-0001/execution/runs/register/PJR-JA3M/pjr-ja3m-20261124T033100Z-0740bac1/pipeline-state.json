@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-JA3M",
+  "run_id": "pjr-ja3m-20261124T033100Z-0740bac1",
+  "updated_at": "2026-11-24T03:56:13.322Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "terra-executor",
+      "attempts": 1,
+      "started_at": "2026-11-24T03:36:49.891Z",
+      "completed_at": "2026-11-24T03:38:19.562Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-JA3M/pjr-ja3m-20261124T033100Z-0740bac1/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "sonnet-reporter",
+      "attempts": 0,
+      "started_at": "2026-11-24T03:41:46.045Z",
+      "completed_at": "2026-11-24T03:41:46.045Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-JA3M/pjr-ja3m-20261124T033100Z-0740bac1/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "sonnet-reporter",
+      "attempts": 2,
+      "started_at": "2026-11-24T03:56:03.832Z",
+      "completed_at": "2026-11-24T03:56:13.322Z",
+      "artifact_ref": null,
+      "repos": {
+        "project": {
+          "status": "failed",
+          "commit": null,
+          "merged_at": null,
+          "error": "Deliverable status promotion to \"ready\" is human-only and must not be done by an agent run: tests/fixtures/yaml-pages/ifx-cmd-ai-provider-cli.yaml, tests/fixtures/yaml-pages/ifx-index-sample.yaml, tests/fixtures/yaml-pages/prj-0001--pm-members.yaml, tests/fixtures/yaml-pages/prj-0001--pm-roles.yaml, tests/fixtures/yaml-pages/prj-0001--sch-milestones.yaml, tests/fixtures/yaml-pages/specdojo--bdd-sample.yaml, tests/fixtures/yaml-pages/specdojo--dct-index-sample.yaml, tests/fixtures/yaml-pages/specdojo--ifx-cmd-sample.yaml, tests/fixtures/yaml-pages/specdojo--pm-roles-sample.yaml"
+        }
+      }
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-JA3M/pjr-ja3m-20261124T033100Z-0740bac1/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-JA3M/pjr-ja3m-20261124T033100Z-0740bac1/result.md"
+  },
+  "resume_notes": [
+    {
+      "at": "2026-11-24T03:36:49.880Z",
+      "notes": [
+        "sample を変えても落ちないことの確かめは、オーケストレーターが 2026-11-24 12:40 にこの worktree で行った。dct-sample.yaml と pm-members-sample.yaml の末尾に注釈を足し、opr-batch-sample.md の rulebook の宣言を opd-rulebook に変えた状態で、npm run test:unit（257 ファイル・4469 件）と npm run test:docs（19 ファイル・489 件）がすべて通り、その後に元へ戻した。この結果を個票の対応結果に書き、残りの作業がなければ complete として報告する。"
+      ]
+    }
+  ]
+}
