@@ -4,8 +4,7 @@ specdojo:
   type: data
   status: draft
   rulebook: specdojo:stsd-rulebook
-  based_on:
-    - specdojo:sample-authoring-standard
+  based_on: []
 ---
 
 # 商品のステータス定義
