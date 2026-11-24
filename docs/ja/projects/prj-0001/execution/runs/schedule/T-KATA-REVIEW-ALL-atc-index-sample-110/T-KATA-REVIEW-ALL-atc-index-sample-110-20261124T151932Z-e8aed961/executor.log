@@ -1,0 +1,24 @@
+R1（目的の過不足）のレビューを終え、sample に 2 か所の差分を入れました。sample 以外は変更していません。markdownlint と Prettier は通っています。
+
+**直した点（`docs/ja/specdojo/samples/atc-index-sample.md`）**
+
+1. **R1-1（finding F002）:** 分配表の観点名「主要操作の自力完了」を、rulebook の命名規則「名詞＋成立/保証/整合」に合わせて `主要操作の自力完了の成立` にしました。ほかの行と同じくインラインコードで囲んでいます。
+2. **R1-2（要判断）:** 「条件の立て方（共通）」で、ケースを追加する順が「代表 → 重要分岐」で止まっていました。rulebook は 3 段目に重大リスク（P0）を求めているため、「→重大リスク（P0: 金銭に響くつけ残高の照合）」を足しました。
+   - 要判断にした理由: つけ残高は合格基準の P0（AC-02）にすでに入っており、書き足さなくても扱いは変わらないとも読めるためです。重大リスクの例を、金銭影響に当たり AC-02 と分配表の `つけ残高の整合` とも合うつけ残高にしました。
+   - 選ばなかった案: 何も書き足さずに「代表」の段で兼ねたものとみなす案です。
+
+**この段で扱わず、担当の段に任せた finding**
+
+- **F001 → R2:** 運用可能性の観点 `取引照合の保証` は、主担当として `atc-cash-sale` と `atc-sale-hold` の 2 つの term を並べています。これが「同じ観点を複数の term で主担当にしない」という分配方針と食い違って読めます。主担当を 1 つに絞るか、分配表に行を足して主担当・従担当を分けるかを、R2 で決めてください。
+- **F003 → R3:** 関係者表の「家族利用者代表」だけ Role code がありません。共通サンプル文脈に合わせて書き足してください。
+
+**R1 で確かめて、変えなかったもの**
+
+- 合格基準と判定の流れ（実施者・証跡確認者を辿れること）、全必須章、共通カラム、`based_on`、形式例に限ったケースの記載、どれも rulebook とカタログの `done_criteria` を満たしています。
+- 関係者表の役割は、受入の手順という文書の中身として書かれています。Sample 記述標準が禁じる「文書の作成・承認の割り当て」には当たりません。
+
+前回の実行は、codex の利用上限に達して編集前に止まっていました。今回は最初からやり直しています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1（目的の過不足）を実施し、atc-index-sample の分配表の観点名を命名規則に合わせ（F002）、条件の追加順に rulebook が求める重大リスクの段を足した。F001（R2）と F003（R3）は該当段へ申し送った。","handoff":["R1-1: 段 R1 / 箇所 6. 観点/条件の採用基準と対象別への分配方針（共通） / 指摘 分配表の観点名「主要操作の自力完了」が rulebook と本書の受入観点の立て方で定めた「名詞＋成立/保証/整合」の命名規則に従っていない（grade F002） / 直した案 観点名を `主要操作の自力完了の成立` にし、ほかの行と同じくインラインコードで囲んだ / 根拠 `vp-qe-kata-conformance`（rulebook 記述ガイドの受入観点の立て方: 観点名は名詞＋成立/保証/整合） / 印 -","R1-2: 段 R1 / 箇所 5. 条件の立て方（共通） / 指摘 ケースの追加順が「代表→重要分岐」で止まり、rulebook の条件の立て方が求める「→重大リスク（P0: 不正権限・金銭・監査・データ破壊）」の段がない / 直した案 「→重大リスク（P0: 金銭に響くつけ残高の照合）」を追加順に足した / 根拠 `vp-qe-kata-conformance`、`vp-po-purpose-alignment`（rulebook 記述ガイドの条件の立て方）。重大リスクの例は合格基準の P0（AC-02）と分配表の `つけ残高の整合` に合うつけ残高にした。迷った理由: つけ残高は P0 にすでに含まれ、追記しなくても扱いは変わらないとも読める。選ばなかった案: 追記せず「代表」の段で兼ねたとみなす案 / 印 要判断","申し送り（R2 へ）: grade F001（`vp-qe-omissions-consistency`、受入観点の立て方の表）は R2 の観点のため R1 では直していない。`取引照合の保証` の主に立てる term に `atc-cash-sale` と `atc-sale-hold` の 2 つを並べており、分配方針の「同じ観点を複数の term で主担当にしない」と食い違って読める。主担当を 1 つに絞るか、分配表に行を足して主担当・従担当を分けるかを R2 で判断する。","申し送り（R3 へ）: grade F003（`vp-ux-language-consistency`、関係者表の家族利用者代表の行）は R3 の観点のため R1 では直していない。列見出し「関係者（Role code）」に対して家族利用者代表だけ Role code がないため、共通サンプル文脈に合わせて書き足す。","R1 で維持した記述: 合格基準と判定の流れ（実施者・証跡確認者を辿れること）、全必須章、ケース表の共通カラム、`based_on`、形式例に限ったケースの記載は rulebook と成果物カタログの `done_criteria` を満たすため維持した。関係者表の役割は受入の手順という文書の中身であり、Sample 記述標準が禁じる文書の作成・承認の割り当てに当たらないため維持した。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/atc-index-sample.md","status":"passed","summary":"整形済み（表の列幅を揃えた）"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/atc-index-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"executor が変更したのは docs/ja/specdojo/samples/atc-index-sample.md だけで、個票・plan・result などの履歴蓄積ファイルを変更していないため"}],"target_coverage":[{"target":"specdojo:atc-index-sample","status":"changed","path":"docs/ja/specdojo/samples/atc-index-sample.md"}]}
+</specdojo_executor_evidence>
