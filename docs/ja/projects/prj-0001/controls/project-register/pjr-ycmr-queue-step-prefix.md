@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-ycmr-queue-step-prefix
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: low
   difficulty: easy
   owner: DEV
   registered_at: "2026-11-23T22:26:23Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-24T00:12:27Z"
+  conclusion: exec queue add の段が、先頭に specdojo を付けた書き方も受け付けるようにした
   commit_type: fix
   commit_scope: exec
 ---

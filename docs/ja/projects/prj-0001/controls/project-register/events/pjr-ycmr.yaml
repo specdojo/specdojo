@@ -125,3 +125,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_a7873d3993e14e7b90d9d9efb799714f
+- v: 1
+  id: reg_f93cd6a6c7a14157b6991a13a5978724
+  ts: "2026-11-24T00:12:27Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果・親の検証（test-integration を含め passed）で確かめ、保護された設定の変更がないことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-24"
+    - field: conclusion
+      from: "-"
+      to: exec queue add の段が、先頭に specdojo を付けた書き方も受け付けるようにした
+  previous_event_id: reg_eb26e316b7d24e1b8215a1cd36a788f2
