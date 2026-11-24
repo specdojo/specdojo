@@ -99,3 +99,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_5e9537ce3292466e9a3d3fa2423a86f0
+- v: 1
+  id: reg_ca2d3970397e418da067804af1cb3e0d
+  ts: "2026-11-24T00:59:57Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果・親の検証（passed）で確かめ、統合の後に watch-scan --dry-run を本番のデータで流して 33 件を分類できることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-24"
+    - field: conclusion
+      from: "-"
+      to: orchestrator watch-scan と routine を足し、止まったものを理由の種類に分けて execution/watch/ に記録し、朝の報告にまとめるようにした
+  previous_event_id: reg_9d6175e5cd8f4167a03bc1640177771b

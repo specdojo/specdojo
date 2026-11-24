@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-1rjp-grade-stale-yaml-sample-pages
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-23T04:56:18Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-24T00:58:37Z"
+  conclusion: grade が samples/generated の表示のページを参照の候補から除き、正本の YAML だけを読むようにした
   derived_from:
     - PJR-AEKE
   commit_type: fix
