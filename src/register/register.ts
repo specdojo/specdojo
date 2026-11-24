@@ -63,6 +63,7 @@ import {
   type RegisterDifficulty,
 } from "./item.js";
 import { registerMaintenanceCommands } from "./maintenance-commands.js";
+import { registerBranchCommands } from "./branch-commands.js";
 import {
   planRenumber,
   planRetopic,
@@ -739,4 +740,5 @@ export function registerRegisterCommands(program: Command): void {
   registerTransitionCommands(reg, REGISTER_COMMAND_DEPENDENCIES);
   registerUpdateCommand(reg, REGISTER_COMMAND_DEPENDENCIES);
   registerMaintenanceCommands(reg, REGISTER_COMMAND_DEPENDENCIES);
+  registerBranchCommands(reg, REGISTER_COMMAND_DEPENDENCIES);
 }

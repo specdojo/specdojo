@@ -526,7 +526,23 @@ function validateScheduleResumeOptions(opts: RunOpts): void {
   }
 }
 
-// Resume tasks left in "doing" state by an interrupted run. Unlike --auto (which selects from
+export function selectAutomaticResumeTasks(
+  tasks: ReturnType<typeof foldEventsToState>["tasks"],
+): string[] {
+  return Object.entries(tasks)
+    .filter(
+      ([, task]) =>
+        task.state === "doing" ||
+        (task.state === "blocked" &&
+          (task.meta?.pipeline_stage === "reporter" || task.meta?.pipeline_stage === "integrate") &&
+          typeof task.meta?.pipeline_state_ref === "string" &&
+          task.meta.pipeline_state_ref.length > 0),
+    )
+    .map(([id]) => id)
+    .sort();
+}
+
+// Resume interrupted doing tasks and eligible blocked pipeline stages. Unlike --auto (which selects from
 // ready.json and provably excludes "doing"/"blocked" tasks), resume folds the event log to find
 // in-flight tasks and re-runs each on its existing worktree, reusing the claiming actor and the
 // partially-filled result (scaffoldResult is idempotent; the worktree is reused). No validate/build
@@ -669,20 +685,18 @@ export async function runResumeMode(opts: RunOpts): Promise<void> {
       if (lockDir) releaseSchedulerLock(lockDir);
     }
   } else {
-    doingIds = Object.entries(snapshot.tasks)
-      .filter(([, st]) => st.state === "doing")
-      .map(([id]) => id)
-      .sort();
+    doingIds = opts.task ? [opts.task] : selectAutomaticResumeTasks(snapshot.tasks);
 
-    if (opts.task) {
-      const taskState = snapshot.tasks[opts.task];
+    for (const taskId of doingIds) {
+      const taskState = snapshot.tasks[taskId];
       const blockedPipelineStage = taskState?.meta?.pipeline_stage;
       const canResumeBlockedPipeline =
         taskState?.state === "blocked" &&
         (blockedPipelineStage === "executor" ||
           blockedPipelineStage === "reporter" ||
           blockedPipelineStage === "integrate") &&
-        typeof taskState.meta?.pipeline_state_ref === "string";
+        typeof taskState.meta?.pipeline_state_ref === "string" &&
+        taskState.meta.pipeline_state_ref.length > 0;
       if (canResumeBlockedPipeline) {
         const actor = claimOwnerOf(taskState) ?? opts.by ?? "exec-pipeline-resume";
         if (!dryRun) {
@@ -695,7 +709,7 @@ export async function runResumeMode(opts: RunOpts): Promise<void> {
           const meta = Object.entries(resumeMeta).map(([key, value]) => `${key}=${String(value)}`);
           meta.push("pipeline_resume_claimed=true");
           const event = buildEvent("unblock", {
-            task: opts.task,
+            task: taskId,
             by: actor,
             msg:
               opts.resumeFrom === "executor"
@@ -707,23 +721,23 @@ export async function runResumeMode(opts: RunOpts): Promise<void> {
                     : "resume executor from persisted pipeline state",
             meta,
           });
-          if (executorResume || opts.executorBy) pendingExecutorUnblock = event;
+          if (executorResume || (opts.executorBy && blockedPipelineStage === "executor"))
+            pendingExecutorUnblock = event;
           else writeEventFile(schedulePath, event);
         }
-        snapshot.tasks[opts.task] = {
+        snapshot.tasks[taskId] = {
           ...taskState,
           state: "doing",
           last_by: actor,
           last_type: "unblock",
         };
-      } else if (taskState?.state !== "doing") {
+      } else if (opts.task && taskState?.state !== "doing") {
         process.stdout.write(
-          `[resume] ${opts.task} is not resumable (state: ${taskState?.state ?? "unknown"}) — nothing to resume.\n`,
+          `[resume] ${taskId} is not resumable (state: ${taskState?.state ?? "unknown"}) — nothing to resume.\n`,
         );
         process.exitCode = 1;
         return;
       }
-      doingIds = [opts.task];
     }
   }
 
@@ -731,7 +745,7 @@ export async function runResumeMode(opts: RunOpts): Promise<void> {
     process.stdout.write(
       opts.due
         ? "[resume] no due deferred-limit tasks — exit\n"
-        : '[resume] no "doing" tasks to resume — exit\n',
+        : "[resume] no resumable tasks — exit\n",
     );
     return;
   }
@@ -739,7 +753,7 @@ export async function runResumeMode(opts: RunOpts): Promise<void> {
   process.stdout.write(
     opts.due
       ? `[resume] ${doingIds.length} due deferred-limit task(s): ${doingIds.join(", ")}\n`
-      : `[resume] ${doingIds.length} doing task(s): ${doingIds.join(", ")}\n`,
+      : `[resume] ${doingIds.length} resumable task(s): ${doingIds.join(", ")}\n`,
   );
 
   for (let offset = 0; offset < doingIds.length; offset += parallel) {

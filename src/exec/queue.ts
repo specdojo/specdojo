@@ -96,7 +96,9 @@ export function parseQueueStepSpec(
   projectId: string,
 ): QueueStep {
   const where = `step ${index}`;
-  const tokens = spec.trim().split(/\s+/).filter(Boolean);
+  const allTokens = spec.trim().split(/\s+/).filter(Boolean);
+  // `exec queue status` prints steps as `specdojo exec run ...`, so accept that spelling too.
+  const tokens = allTokens[0] === "specdojo" ? allTokens.slice(1) : allTokens;
   if (tokens.some((token) => /["'`\\]/.test(token))) {
     throw new Error(`${where}: quotes and backslashes are not supported (no shell is used)`);
   }
