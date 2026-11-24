@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-c11r-exec-scope-too-broad-docs
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-23T04:56:27Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-24T05:35:57Z"
+  conclusion: 個票の本文の docs/ などの上位のディレクトリだけの語を変更範囲にせず、除いたときと広い予約のときに予約の前に警告するようになった
   derived_from:
     - PJR-E73Z
   commit_type: fix

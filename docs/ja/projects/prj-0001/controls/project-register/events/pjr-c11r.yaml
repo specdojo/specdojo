@@ -99,3 +99,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_e5395707f3c84e5580cff548d0821daf
+- v: 1
+  id: reg_a6fae58993b449c988e6285dc76dcf21
+  ts: "2026-11-24T05:35:57Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分・親の検証を確かめ、統合後の TN64 の run で project:docs を除く警告が出て並行できたこと、exec smoke（PJR-JSEY）の成功を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-24"
+    - field: conclusion
+      from: "-"
+      to: 個票の本文の docs/ などの上位のディレクトリだけの語を変更範囲にせず、除いたときと広い予約のときに予約の前に警告するようになった
+  previous_event_id: reg_64ea4f972ffe4abaa5a98e3bab565c13
