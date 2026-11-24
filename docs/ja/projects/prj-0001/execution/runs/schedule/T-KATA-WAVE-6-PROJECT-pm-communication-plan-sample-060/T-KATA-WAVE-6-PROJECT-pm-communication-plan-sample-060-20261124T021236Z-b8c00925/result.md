@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-PROJECT-pm-communication-plan-sample-060
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-PROJECT-pm-communication-plan-sample-060/T-KATA-WAVE-6-PROJECT-pm-communication-plan-sample-060-20261124T021236Z-b8c00925/plan.md
   started_at: "2026-11-24T02:12:43.757Z"
+  completed_at: "2026-11-24T02:14:47.359Z"
   agent: opus-executor
   execution: agent
   approach: template-maintenance
@@ -20,16 +21,18 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- pm-communication-plan-template を rulebook および sample に同期するために更新しました。
+- 「情報管理と公開」セクションに、口頭決定の事項を転記するための `_TODO_` 行を追加しました。
+- 「見直し条件と未決事項」セクションに、変更内容、追従対象の `Role`、および反映の証跡を管理するための表（`_TODO_` 付き）を追加し、未決事項（`_UNDECIDED_`）がある場合の記述指示を追記しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/templates/pm-communication-plan-template.md`: rulebook と sample の内容に合わせて、テンプレートの構成を更新しました。「情報管理と公開」に転記担当の `_TODO_` を追加し、「見直し条件と未決事項」に追従管理用の表と未決事項への指示を追加しました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- なし
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+既存の `pm-communication-plan-template.md` を読み込み、`pm-communication-plan-sample.md` の構成に合わせて、必須となるセクションの骨組みと `_TODO_` を整備しました。「情報管理と公開」には情報の発生（口頭決定）に伴う転記作業のプレースホルダを、「見直し条件と未決事項」には計画変更時の追従管理を表形式で追加しました。
