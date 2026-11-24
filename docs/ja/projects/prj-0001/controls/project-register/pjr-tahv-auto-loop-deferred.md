@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-tahv-auto-loop-deferred
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-23T22:24:39Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-24T03:28:37Z"
+  conclusion: exec run --auto --loop が、変更範囲の待ちが解けたタスクを次の回で選び直し、各回の後回しの理由と件数を出すようにした
   commit_type: fix
   commit_scope: exec
 ---

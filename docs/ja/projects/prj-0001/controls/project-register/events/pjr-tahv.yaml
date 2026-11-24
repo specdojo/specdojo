@@ -125,3 +125,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_7fe180be6ad84d8fa42d03b94331194e
+- v: 1
+  id: reg_8f314b21eedc42d3afc362a4e5794f44
+  ts: "2026-11-24T03:28:37Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果・親の検証で確かめ、統合の後に kata の loop（kata-blitz-7〜9）を流して各回の後回しの表示と選び直しが働くことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-24"
+    - field: conclusion
+      from: "-"
+      to: exec run --auto --loop が、変更範囲の待ちが解けたタスクを次の回で選び直し、各回の後回しの理由と件数を出すようにした
+  previous_event_id: reg_018268f194db4d588c886935f7f89584
