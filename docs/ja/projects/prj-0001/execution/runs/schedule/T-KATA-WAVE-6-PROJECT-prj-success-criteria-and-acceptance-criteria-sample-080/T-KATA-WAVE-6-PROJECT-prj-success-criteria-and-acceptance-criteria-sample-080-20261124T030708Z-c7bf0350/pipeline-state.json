@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-080",
   "run_id": "T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-080-20261124T030708Z-c7bf0350",
-  "updated_at": "2026-11-24T03:09:10.165Z",
+  "updated_at": "2026-11-24T03:09:32.312Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-080/T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-080-20261124T030708Z-c7bf0350/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sonnet-executor",
       "attempts": 1,
       "started_at": "2026-11-24T03:09:10.165Z",
-      "completed_at": null,
+      "completed_at": "2026-11-24T03:09:32.312Z",
       "artifact_ref": null
     }
   },
