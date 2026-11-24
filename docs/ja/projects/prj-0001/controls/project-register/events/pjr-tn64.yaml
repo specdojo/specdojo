@@ -128,3 +128,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_1209cd118d3247d29032e0f2d473262d
+- v: 1
+  id: reg_a3d5e103f60d4576b3ac87d2bf812744
+  ts: "2026-11-24T05:36:24Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分と親の検証（test-unit・test-integration ほか passed）を確かめ、統合後の exec smoke（PJR-JSEY）の成功を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-24"
+    - field: conclusion
+      from: "-"
+      to: ready への昇格の検査を docs/ 配下に絞り、tests/fixtures などの写しで run が止まらなくなった
+  previous_event_id: reg_fd11c5607325442daf3aad6fa378949d

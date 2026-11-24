@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-tn64-ready-guard-non-deliverables
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: easy
   owner: DEV
   registered_at: "2026-11-24T03:45:46Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-24T05:36:24Z"
+  conclusion: ready への昇格の検査を docs/ 配下に絞り、tests/fixtures などの写しで run が止まらなくなった
   derived_from:
     - PJR-JA3M
   commit_type: fix
