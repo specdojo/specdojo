@@ -252,6 +252,8 @@ export function registerBookkeepingPaths(params: {
   planPath: string;
   resultPath: string;
   ticketPath: string | null;
+  /** Repo-relative grade result sidecars of the item's own targets (PJR-NRWJ). */
+  ownGradeResultPaths: readonly string[];
 }): string[] {
   const { repoRoot, registerPaths, planPath, resultPath, ticketPath } = params;
   return registerRunnerManagedPaths(
@@ -263,7 +265,7 @@ export function registerBookkeepingPaths(params: {
     ticketPath,
   )
     .map((path) => resolve(repoRoot, path))
-    .concat(gradeCheckpointPaths(params));
+    .concat(gradeCheckpointPaths(params, params.ownGradeResultPaths));
 }
 
 // root の登録簿派生ビュー（pjr-index / generated）は非追跡の生成物で、merge や複製では更新され

@@ -118,3 +118,29 @@
       from: "- 2026-11-24 の `PJR-F4TG` の register の run の commit（`4349a4aa92`）に、同じ時刻に流れていた kata の run（`T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-*`）が作った grade の結果 4 件（`execution/grade/results/specdojo.prj-success-criteria-and-acceptance-criteria-{rulebook,recipe,sample,template}.yaml`）が入った。 - PJR-A54F は schedule のタスクの checkpoint だけを、自分の対象の grade の結果に絞った。register の worktree の経路（`src/exec/run/register-worktree.ts` など）は、引数を省いた呼び出しのまま、ルートで変更中の grade の結果をすべて取り込む。"
       to: "- 2026-11-24 の `PJR-F4TG` の register の run の開始（start）の記帳の commit（`23d6bf8bcd`）に、同じ時刻に流れていた kata の run（`T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-*`）が作った grade の結果 4 件（`execution/grade/results/specdojo.prj-success-criteria-and-acceptance-criteria-{rulebook,recipe,sample,template}.yaml`）が入った。 - PJR-A54F は schedule のタスクの checkpoint だけを、自分の対象の grade の結果に絞った。register の worktree の経路（`src/exec/run/register-worktree.ts` など）は、引数を省いた呼び出しのまま、ルートで変更中の grade の結果をすべて取り込む。"
   previous_event_id: reg_aa2432b4e4f24219b35f7071afd1be5c
+- v: 1
+  id: reg_455965f5397f4b9c8421ce24e1ae98df
+  ts: "2026-11-24T03:45:44Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_b5c46a53c9494a8cace6e7726eac5cb5
+- v: 1
+  id: reg_5060286dce9c46dd8e2c4603eec0f8cb
+  ts: "2026-11-24T03:52:23Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_455965f5397f4b9c8421ce24e1ae98df

@@ -1,3 +1,4 @@
+import { registerGradeResultPaths } from "./register-grade-scope.js";
 import { unescapeMarkdownCell } from "../../shared/text.js";
 import { readPlanFile } from "../../shared/plan-conventions.js";
 import { mergeRegisterBranch } from "../../shared/register-merge.js";
@@ -832,7 +833,15 @@ export async function runSingleRegisterItemWorktree(
     );
     const checkpointPaths = [
       ...checkpointRel.map((rel) => resolve(repoRoot, rel)),
-      ...gradeCheckpointPaths({ repoRoot, executionPath }),
+      ...gradeCheckpointPaths(
+        { repoRoot, executionPath },
+        registerGradeResultPaths({
+          repoRoot,
+          projectId,
+          catalogPath: context.catalogPath,
+          item,
+        }),
+      ),
     ];
     const checkpointFailureLogPath = pipelineRunId
       ? integrateLogPath(
