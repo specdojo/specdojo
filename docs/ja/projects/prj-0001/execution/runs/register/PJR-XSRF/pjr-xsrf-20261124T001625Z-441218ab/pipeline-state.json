@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-XSRF",
   "run_id": "pjr-xsrf-20261124T001625Z-441218ab",
-  "updated_at": "2026-11-24T00:22:41.820Z",
+  "updated_at": "2026-11-24T00:22:51.383Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-XSRF/pjr-xsrf-20261124T001625Z-441218ab/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "terra-executor",
       "attempts": 1,
       "started_at": "2026-11-24T00:22:41.820Z",
-      "completed_at": null,
+      "completed_at": "2026-11-24T00:22:51.383Z",
       "artifact_ref": null
     }
   },
