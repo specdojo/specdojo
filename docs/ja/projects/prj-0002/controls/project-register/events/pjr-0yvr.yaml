@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_14d6161c08884463b325000e01d0797f
+  ts: "2026-11-24T23:10:42Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: "PR #3 の本番公開を受け、PO の依頼で起票した"
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: specdojo-lp の公開済み変更を CHANGELOG の 2026-11-25 節へ移す
+    - field: description
+      from: ""
+      to: "PR #3 の本番公開を受け、LP の CHANGELOG の Unreleased にある 2 件を 2026-11-25 の節へ移し、次の Unreleased を残す"
+    - field: input
+      from: ""
+      to: '["PR #3（develop → main）は 2026-11-24T23:06:12Z（日本時間 2026-11-25 08:06）に merge commit で main へ取り込まれ、マージコミットは 7a5b7d70e07c50e66d76c0e34dfebd60b13097ef である。main と develop の tree は同じ（a4d02ed826）。","main の Workers Builds（Workers Builds: specdojo-lp）は 2026-11-24T23:07:56Z に success で完了し、https://specdojo.org/ は HTTP 200 を返す。","PO の決定により、公開日は日本時間の 2026-11-25 とする。","公開した変更は CHANGELOG の Unreleased の「追加」にある 2 件（LICENSE と README の節の追加、package.json の license の記載）である。","CHANGELOG の更新は specdojo-lp の README の「変更履歴の更新」の決まりに従う。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-25"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-TAK7"]'
