@@ -30,6 +30,7 @@ specdojo-lp を showcase として公開する前に MIT の LICENSE を置き�
 - commit の Refs: prj-0002:PJR-XXXX は、公開中の specdojo/specdojo の project/prj-0002/develop ブランチで登録簿の項目へ辿れる。
 - CHANGELOG は specdojo-lp の README の決まりに従い、Unreleased へ追記する。
 - リポジトリを Public に切り替える操作は本項目に含めず、確認のあとで人が行う。
+- PO の決定により、公開後は GitHub の設定で PR の作成を Collaborators only にし、外からの PR は受け付けない。設定の変更は人が行う。
 - `package.json` は保護された設定のため、`"license": "MIT"` の追加はオーケストレーターが `feature/prj-0002/lp-package-license` で行い、LP の `develop` へ取り込み済みである（`1a9c2f3`）。
 
 ## 3. 完了条件
@@ -41,6 +42,7 @@ specdojo-lp を showcase として公開する前に MIT の LICENSE を置き�
 - `specdojo-lp/README.md` の冒頭に、showcase としての案内がある。案内には次の 2 点が書いてある。
   - このリポジトリは SpecDojo の登録簿と exec で運用していること。
   - commit の `Refs: prj-0002:PJR-XXXX` から、公開中の `specdojo/specdojo` の `project/prj-0002/develop` ブランチにある登録簿の項目へ辿れること。
+- `specdojo-lp/README.md` に、外からの PR は受け付けていないことを 1 文で書く。置き場所は showcase の案内かライセンスの節のどちらかとし、どちらにしたかを対応結果に書く。
 - README の既存の節の番号を、新しい節に合わせて振り直す。既存の節の内容は変えない。
 - `specdojo-lp/CHANGELOG.md` の `Unreleased` へ、LP の README の決まりに従って、ライセンスを加えたこと（`LICENSE`・README の節・`package.json` の `license` の記載を含む）を追記する。公開済みの日付の節は変えない。
 - 変更してよいのは、LP の `LICENSE`・`README.md`・`CHANGELOG.md` と、本個票の対応結果だけとする。`package.json` は変更済みのため変えない。画面・設定・画像も変えない。`main` への統合、`git push`、PR の作成、リポジトリの公開設定の変更は行わない。
