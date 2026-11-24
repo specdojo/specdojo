@@ -2083,6 +2083,22 @@ describe("exec worktree ops", () => {
     );
   });
 
+  it("allows a register task to commit a ready test fixture", () => {
+    const fixture = setupRepository();
+    const taskId = "PJR-0145";
+    const worktree = prepare(
+      fixture,
+      taskId,
+      taskId,
+      planWithIdentity(taskId, { mode: "edit", origin: "register", targets: [] }),
+    );
+    writeFile(join(worktree.path, "tests", "fixtures", "d.yaml"), "id: d\nstatus: ready\n");
+
+    const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+    expect(committed.targets).toContain("tests/fixtures/d.yaml");
+    expect(committed.committed).toBe(true);
+  });
+
   it("blocks protected config changes even for a register-originated exclusion-list task", () => {
     const fixture = setupRepository();
     const taskId = "PJR-0138";
