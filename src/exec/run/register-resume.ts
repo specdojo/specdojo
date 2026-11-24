@@ -1,3 +1,4 @@
+import { registerGradeResultPaths } from "./register-grade-scope.js";
 import { unescapeMarkdownCell } from "../../shared/text.js";
 import { readPlanFile } from "../../shared/plan-conventions.js";
 import { executorStageResumeHint } from "../evidence.js";
@@ -422,6 +423,12 @@ export async function resumeSingleRegisterItemWorktree(
       planPath: resolve(repoRoot, artifacts.planRef),
       resultPath: resolve(repoRoot, artifacts.resultRef),
       ticketPath,
+      ownGradeResultPaths: registerGradeResultPaths({
+        repoRoot,
+        projectId,
+        catalogPath: context.catalogPath,
+        item,
+      }),
     });
 
   // waiting のまま再開しないよう、通常実行と同じく in-progress へ戻す。遷移は exec branch

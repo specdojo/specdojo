@@ -45,7 +45,26 @@ specdojo:
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+### 5.1. 解決内容
+
+- `src/exec/run/register-grade-scope.ts` に `registerGradeResultPaths` を追加した。項目の `targets` を catalog の成果物へ解決し、その文書の grade の結果のパスだけを返す。catalog 外の対象や catalog が無い項目は何も返さない。
+- 絞り込みは `gradeCheckpointPaths` の第 2 引数（PJR-A54F で追加済み）に渡す。結果のサイドカーだけを絞り、`criteria` と `pipeline` は従来どおり取り込む。
+- register の worktree の経路（`register-worktree.ts`）と、再開の経路（`register-resume.ts` から `register-state.ts` の `registerBookkeepingPaths`）に適用した。後者は `ownGradeResultPaths` を必須の引数にした。
+
+### 5.2. ほかの経路の扱い
+
+- `lifecycle-commands.ts` は schedule のタスクの統合再開の経路で、register の項目を扱わない。対象の文書も持たないため、今回は変えない。
+- `worktree-command.ts` は項目を持たない汎用の worktree の操作で、絞る対象を決められないため、従来どおり全件を扱う。
+
+### 5.3. 確認結果
+
+- `tests/src/exec/worktree-ops.integration.test.ts` に、ほかの文書の grade の結果がルートにあっても、grade の対象でない項目の checkpoint に入らないことを確かめるテストを追加し、通った。
+- `npm run typecheck` と `npm run lint:ts`（エラー 0）を通した。`test-integration` は親の検証が行う。
+
+### 5.4. CHANGELOG に書く事項
+
+- 区分: Fixed
+- 行の文案: register の run の checkpoint が、項目の対象でない文書の grade の結果を取り込まないようにした（PJR-NRWJ）。
 
 ## 6. 関連ドキュメント
 
