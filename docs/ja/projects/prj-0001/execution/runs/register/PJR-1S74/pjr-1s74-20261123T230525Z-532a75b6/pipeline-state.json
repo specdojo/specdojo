@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-1S74",
   "run_id": "pjr-1s74-20261123T230525Z-532a75b6",
-  "updated_at": "2026-11-24T00:26:15.750Z",
+  "updated_at": "2026-11-24T00:26:24.801Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-1S74/pjr-1s74-20261123T230525Z-532a75b6/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sonnet-reporter",
       "attempts": 1,
       "started_at": "2026-11-24T00:26:15.750Z",
-      "completed_at": null,
+      "completed_at": "2026-11-24T00:26:24.801Z",
       "artifact_ref": null
     }
   },
