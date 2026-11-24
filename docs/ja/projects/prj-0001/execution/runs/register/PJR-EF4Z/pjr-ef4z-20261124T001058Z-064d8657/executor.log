@@ -1,0 +1,11 @@
+夜間の統合テスト報告の `specdojo.id` を小文字にしました。`npm run lint:fm` がこれで落ちることはなくなるはずです。確認したのは、このタスクのテストファイルだけです。`npm run lint:fm` や他の検証は流していません。
+
+- **コード:** `src/commands/nightly-integration-tests.ts` で id に入れる時刻を小文字にしました。報告のファイル名は今のままです。
+- **テスト:** `tests/src/commands/nightly-integration-tests.test.ts` に、報告の id が `prj-0001:nightly-integration-tests-report-20261124t040000z` になり、`^[a-z0-9][a-z0-9-:]*$` に合うことを確かめる単体テストを足しました。このファイルのテストは 10 件すべて通りました。
+- **個票:** 個票の「対応結果」に、4 回目の実行の内容を足しました。
+
+個票の作業内容の表は変えていません。行 6 の routine の確認は、前から `open` のままです。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"報告の specdojo.id の時刻を小文字にし、id が frontmatter の規則に合うことを単体テストで確認した。個票の対応結果も更新した。","handoff":["個票の作業内容の行 6（統合後に routine run --id で 1 回流して確かめる）は、orchestrator が統合後に行う項目として open のまま。"],"validations":[{"command":"npx vitest run tests/src/commands/nightly-integration-tests.test.ts","status":"passed","summary":"10 件通過"}]}
+</specdojo_executor_evidence>

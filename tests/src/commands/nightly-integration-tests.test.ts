@@ -97,6 +97,19 @@ describe("renderNightlyIntegrationReport", () => {
     expect(actual).toContain("boom happened");
   });
 
+  it("writes a lowercase specdojo.id that matches the frontmatter id rule", () => {
+    const actual = renderNightlyIntegrationReport({
+      ...base,
+      exitCode: 0,
+      summary: { total: 1, passed: 1, failed: 0, skipped: 0, failures: [] },
+    });
+
+    const id = /^ {2}id: (.+)$/mu.exec(actual)?.[1];
+
+    expect(id).toBe("prj-0001:nightly-integration-tests-report-20261124t040000z");
+    expect(id).toMatch(/^[a-z0-9][a-z0-9-:]*$/u);
+  });
+
   describe("lint compliance", () => {
     const cases = {
       success: {

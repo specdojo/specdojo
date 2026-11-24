@@ -74,6 +74,8 @@ specdojo:
 
 - 3 回目の実行: 段ごとに別の run ディレクトリ（`...-attempt-1-step-<id>/`）を作っていたため、plan・result がなく配置の検査に落ちた。段のディレクトリを作らない方式を選んだ。段の evidence と log は job の run ディレクトリへ `evidence.step-attempt-<n>-<id>.json`・`step-attempt-<n>-<id>.stdout.log`・`.stderr.log` として置く（試行ごとに名前が分かれ、上書きされない）。plan・result を段ごとに偽造するより、検査が求める「run ごとに plan・result・evidence」を保ち、既存の `exec-cycle` などの記録と同じ形になる。`tests/src/exec/job-sequence.integration.test.ts` で、段を持つ job の記録が `validateRunRecordLayout` を通ることを確かめた。統合後の `exec validate --records-only --commit` の確認は orchestrator が行う。
 
+- 4 回目の実行: 報告の `specdojo.id` の組み立てで時刻を小文字にした（`...-report-20261123t193127z`）。報告のファイル名は変えていない。単体テストで、作った報告の id が `^[a-z0-9][a-z0-9-:]*$` に合うことを確かめた。
+
 ### 5.2. 成果物
 
 - `src/commands/nightly-integration-tests.ts`、`src/commands/orchestrator.ts`（登録）
