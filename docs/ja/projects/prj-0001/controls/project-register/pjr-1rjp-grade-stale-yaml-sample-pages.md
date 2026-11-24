@@ -32,13 +32,13 @@ rulebook の grade が samples/generated の古いページを読み、sample �
 
 ## 3. 影響範囲
 
-| 観点         | 影響   |
-| ------------ | ------ |
-| スコープ     | _TODO_ |
-| スケジュール | _TODO_ |
-| コスト       | _TODO_ |
-| 品質         | _TODO_ |
-| 関係者       | _TODO_ |
+| 観点         | 影響                          |
+| ------------ | ----------------------------- |
+| スコープ     | grade の kata 参照の解決のみ  |
+| スケジュール | 影響なし                      |
+| コスト       | 小                            |
+| 品質         | YAML の sample の誤評価を防ぐ |
+| 関係者       | なし                          |
 
 ## 4. 対応方針
 
@@ -61,8 +61,18 @@ rulebook の grade が samples/generated の古いページを読み、sample �
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- 原因: `loadKataReferences` が `samples/` 配下を再帰で走査し、git 管理外の `samples/generated/<name>.md`（YAML の表示のページ）を拾っていた。表示のページは正本の YAML と同じ id を持ち、先に走査されると id の重複で正本より優先され、古い内容が grade に渡った。
+- 決定: 表示のページを作り直す案ではなく、`generated/` 配下を参照の候補から除く案にした。理由は、grade が正本（YAML）だけを読めば鮮度に依存せず、作り直しの副作用や実行順の前提も要らないため。`loadKataReferences` は `root` を引数に取れるようにした（既定は従来どおり）。
+- 変更: `src/grade/targets.ts`。単体テスト `tests/src/grade/grade.test.ts` に、古い表示のページがあっても正本の YAML だけが選ばれるテストを追加した。
+- 確認: `npx vitest run tests/src/grade/grade.test.ts`・`npm run typecheck`・`npm run lint:ts` を通した（エラーなし）。runner の動きは変えていないため `exec smoke` は不要。
+- 設計・ガイド・CLI リファレンス: 挙動の外形（grade は正本を読む）は変わらないため修正不要。
+- 保護された設定は変更していない。
+
+### 5.1. CHANGELOG に書く事項
+
+- 区分: Fixed
+- 文案: `grade run --target kata` が、YAML の sample の古い表示のページ（`samples/generated`）を読んで項目を「ない」と誤評価する問題を修正した。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- なし
