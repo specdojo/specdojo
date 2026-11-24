@@ -32,6 +32,11 @@ import {
 } from "./exec-record-paths";
 import { loadArchiveLinks, resolveArchiveWikilink } from "./archive-links";
 import { channelHeadTags, resolveSiteChannel } from "./site-channel";
+import {
+  buildProductRepoSidebarSection,
+  collectProductDocIndex,
+  loadProductRepos,
+} from "./product-repos";
 import * as path from "path";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 
@@ -49,13 +54,22 @@ const GITHUB_SOURCE = {
 
 // package 参照中の kata をページ走査より前にステージングへ複製する。
 // VitePress は設定の読み込み後にページを走査するため、build / dev の両方でここが先に動く。
-const kataStaging = stageBundledKata(WORKSPACE_ROOT);
+// repos で宣言したプロダクトのリポジトリの docs/ja/product/ も同じステージングの
+// docs/ja/product/<リポジトリ名>/ へ取り込む（PJR-FZQA）。repos が無ければ何もしない。
+const kataStaging = stageBundledKata(WORKSPACE_ROOT, {
+  productRepos: loadProductRepos(WORKSPACE_ROOT),
+});
 if (kataStaging.packageRoot) {
   console.log(
     `[kata] staged ${kataStaging.staged} file(s) from ${kataStaging.packageRoot} (ejected: ${kataStaging.ejected})`,
   );
 }
 const SITE_CONTENT_ROOT = path.join(kataStaging.stagingRoot, "docs");
+for (const repo of kataStaging.productRepos) {
+  console.log(
+    `[product-repos] staged ${repo.files.length} file(s) from ${repo.root} to /${repo.docsRelativeDir}/`,
+  );
+}
 
 // [[id]] wikilink index — loaded once at build/dev startup
 function loadDocIndex(workspaceRoot: string): Record<string, string> {
@@ -75,7 +89,17 @@ function loadDocIndex(workspaceRoot: string): Record<string, string> {
     return {};
   }
 }
-const docIndex = loadDocIndex(WORKSPACE_ROOT);
+// 取り込んだ product の文書の id は doc-index.json に無いため、ステージングの frontmatter から
+// 補う。同じ id が project の索引にある場合は project 側を優先する。
+const projectDocIndex = loadDocIndex(WORKSPACE_ROOT);
+const docIndex: Record<string, string> = {
+  ...collectProductDocIndex(
+    kataStaging.stagingRoot,
+    kataStaging.productRepos,
+    new Set(Object.keys(projectDocIndex)),
+  ),
+  ...projectDocIndex,
+};
 const archiveLinks = loadArchiveLinks(WORKSPACE_ROOT);
 
 // doc-index エントリから行番号サフィックスを除去する（例: "docs/ja/foo.yaml:42" → "docs/ja/foo.yaml"）
@@ -96,7 +120,10 @@ function toRenderableEntryPath(entryPath: string): string | undefined {
     "generated",
     path.posix.basename(entryPath).replace(/\.ya?ml$/, ".md"),
   );
-  return existsSync(path.join(WORKSPACE_ROOT, pagePath)) ? pagePath : undefined;
+  return existsSync(path.join(WORKSPACE_ROOT, pagePath)) ||
+    existsSync(path.join(kataStaging.stagingRoot, pagePath))
+    ? pagePath
+    : undefined;
 }
 
 // doc id を doc-index で docs ルート相対パス（"ja/..."）へ解決する。
@@ -400,7 +427,11 @@ const docsPathFromLink = (link: string): string | undefined => {
   const clean = link.split("#")[0].replace(/^\/+/, "").replace(/\/+$/, "");
   if (!clean) return undefined;
 
-  return path.join(WORKSPACE_ROOT, "docs", `${clean}.md`);
+  const workspacePath = path.join(WORKSPACE_ROOT, "docs", `${clean}.md`);
+  // 取り込んだ product の文書は workspace に無く、ステージングにだけある。
+  if (existsSync(workspacePath)) return workspacePath;
+  const stagedPath = path.join(SITE_CONTENT_ROOT, `${clean}.md`);
+  return existsSync(stagedPath) ? stagedPath : workspacePath;
 };
 
 // result frontmatter（specdojo: 名前空間配下）の started_at を読む。
@@ -672,9 +703,12 @@ const transformSidebar = (
   items: SidebarItem[],
   locale: Locale,
   contentTree?: ContentTree,
+  // 取り込んだ product の文書（/ja/product/<name>/...）は、リポジトリ名が specdojo でも
+  // handbook と取り違えないよう、この除外をしない。
+  excludeHandbook = true,
 ): SidebarItem[] => {
   const transformed = items
-    .filter((it) => !isHandbookTop(it)) // handbook トップは自動生成側に含めない
+    .filter((it) => !excludeHandbook || !isHandbookTop(it)) // handbook トップは自動生成側に含めない
     // 実行記録（plan / result / events）は件数が多く、サイドバーに載せると全ページの HTML が
     // 肥大化してビルドがメモリ不足になる。plan / result は生成一覧から GitHub の正本へ辿る。
     // 表示名の解決（ファイル読み込み）より前に除外し、不要な I/O も避ける。
@@ -706,7 +740,7 @@ const transformSidebar = (
 
       // 子も同じルールで処理
       if (next.items) {
-        next.items = transformSidebar(next.items, locale, currentTree);
+        next.items = transformSidebar(next.items, locale, currentTree, excludeHandbook);
         if (currentTree === "projects") {
           next.items = promoteProjectRegisterViews(next.items);
           next.items = promoteProjectDashboard(next.items);
@@ -757,6 +791,22 @@ const makeSidebar = (locale: Locale): SidebarItem[] =>
   );
 
 const sidebarJaAuto = makeSidebar("ja");
+
+// 取り込んだ product の文書は workspace の docs/ に無いため、ステージング側を走査する。
+// 走査先は generateSidebar と同じく process.cwd() からの相対で渡す。
+const makeProductRepoSidebarItems = (): SidebarItem[] =>
+  kataStaging.productRepos.map((repo) => {
+    const scanned = generateSidebar({
+      documentRootPath: path.relative(process.cwd(), SITE_CONTENT_ROOT),
+      scanStartPath: repo.docsRelativeDir,
+      useTitleFromFileHeading: false,
+      collapseDepth: 2,
+      collapsed: true,
+    }) as SidebarItem[];
+    const section = buildProductRepoSidebarSection(repo, scanned);
+    return { ...section, items: transformSidebar(section.items ?? [], "ja", "product", false) };
+  });
+const productRepoSidebarJa = makeProductRepoSidebarItems();
 const sidebarEnAuto = makeSidebar("en");
 
 type SidebarMulti = Record<string, SidebarItem[]>;
@@ -788,6 +838,7 @@ const makeSidebarMulti = (
   locale: Locale,
   autoItems: SidebarItem[],
   handbookItem?: SidebarItem,
+  productRepoItems: SidebarItem[] = [],
 ): SidebarMulti => {
   const sections: { key: string; items: SidebarItem[]; entry: SidebarItem }[] = [];
 
@@ -825,6 +876,13 @@ const makeSidebarMulti = (
     });
   }
 
+  // 取り込んだ product の文書は、リポジトリごとの節（/<locale>/product/<name>/）にする。
+  // VitePress は長いキーを優先するため、project 自身の /<locale>/product/ の節とは分かれる。
+  for (const item of productRepoItems) {
+    if (!item.link) continue;
+    sections.push({ key: item.link, items: [item], entry: { text: item.text, link: item.link } });
+  }
+
   const multi: SidebarMulti = {};
   for (const section of sections) {
     multi[section.key] = [...(multi[section.key] ?? []), ...section.items];
@@ -835,7 +893,7 @@ const makeSidebarMulti = (
   return multi;
 };
 
-const sidebarJa = makeSidebarMulti("ja", sidebarJaAuto, specdojoItems.ja);
+const sidebarJa = makeSidebarMulti("ja", sidebarJaAuto, specdojoItems.ja, productRepoSidebarJa);
 const sidebarEn = makeSidebarMulti("en", sidebarEnAuto);
 
 export default defineConfig({

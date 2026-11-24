@@ -395,6 +395,23 @@ exec worktree の中で設定を読む場合（agent が worktree で `specdojo`
 
 設定の形は `docs/specdojo/schemas/v1/specdojo-config.schema.yaml` でも検証できます。リポジトリ名と project ID の重複と `path` の実在は schema で表せないため、CLI の読み込み時の検証が正本です。
 
+### 6.1. 文書サイトへの取り込み
+
+`@specdojo/docs-site` の `build` と `dev` は、全 project の `repos` を読み、宣言したリポジトリの `docs/ja/product/` を `/ja/product/<name>/` に取り込みます。使うキーは `name` と `path` だけです。CI での checkout の例と公開時の注意は [[specdojo:docs-editing-guide|ドキュメント編集ガイド]] の「プロダクトのリポジトリの文書を取り込む」を参照してください。
+
+- `path` は CLI と同じ規則で解決します。ローカル設定の `repos[]` の差し替えと追加を反映し、複数リポジトリの exec の project worktree では隣の `<worktree_base>/<task-id>/<name>/` を使います。
+- 同じ `name` を複数の project が宣言した場合は、project ID の順で先に出た宣言を使います。
+- 取り込んだ文書の id は `.specdojo/doc-index.json` に入れず、サイトのビルド時に取り込んだ Markdown の frontmatter から読みます。宣言どおりの id に加え、`:` を含まない id は `<name>:<id>` でも引けます。project の索引に同じ id がある場合は project 側を優先し、警告します。
+- `docs/ja/product/` に `index.md` が無いリポジトリには、節の入口のページを閲覧用ツリーにだけ置きます。
+
+次の場合は警告を出してそのリポジトリを飛ばし、ビルドは続けます。設定の読み込みの検証（前述）と違い、文書サイトは checkout していないリポジトリがあっても止めません。
+
+- `path` が指すリポジトリ、またはその `docs/ja/product/` が無い。
+- project のリポジトリ自身に `docs/ja/product/<name>/` がある。project 側の文書を優先します。
+- `name` が `[a-z0-9-]` 以外の文字を含む。
+
+`repos` を宣言した project が無い場合、サイトの出力は変わりません。
+
 ## 7. ローカル設定
 
 `.specdojo/specdojo.local.config.json` は、git で管理しない環境ごとの設定です。`specdojo.config.json` を読んだ後に読み、許可したキーだけを上書きします。`config init` は `.gitignore` にこのファイルを足します。
