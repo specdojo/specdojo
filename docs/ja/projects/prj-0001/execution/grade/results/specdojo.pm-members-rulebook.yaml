@@ -4,12 +4,11 @@ document: specdojo:pm-members-rulebook
 path: docs/ja/specdojo/rulebooks/pm-members-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-rulebook
 verdict: pass
 score: 94
-graded_at: "2026-11-21T06:41:19.575Z"
-graded_by: opus-executor
-content_hash: be8f942543d16bd4be54213666354ca5546165c8f101d9c5b711a184be024c19
+graded_at: "2026-11-24T01:55:37.722Z"
+graded_by: sonnet-review-executor
+content_hash: 400acda84d6373d66ea150714bbff9b4ae6224f5ae78137238202698a0b5ce4f
 categories:
   purpose:
     score: 100
@@ -22,13 +21,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 83
   implementation:
     score: 100
   quality:
-    score: 83
-  consistency:
     score: 100
+  consistency:
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -70,20 +69,20 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 3
-    score: 75
-  vp-qe-verifiability:
-    level: 3
-    score: 75
-  vp-qe-omissions-consistency:
     level: 4
     score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
     level: 4
     score: 100
   vp-ux-readability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-language-consistency:
     level: 3
     score: 75
@@ -107,34 +106,22 @@ finding_counts:
 findings:
   - id: F001
     severity: minor
-    rule: vp-dev-testability
-    line: 74
-    anchor: "- 人間名簿と agent 定義の合成後、全 nickname が一意であり、`--by`・実行イベントが登録値を使うことを照合します。"
-    message: >-
-      合成名簿でnicknameが一意かの照合と、schema適合の確認について、実行するコマンド（例: `npm run validate:schema:yaml`
-      やCLIの検証）と期待結果が示されておらず、作成者が完了をpass/failで確かめられない。
-    message_ja: >-
-      合成名簿でnicknameが一意かの照合と、schema適合の確認について、実行するコマンド（例: `npm run validate:schema:yaml`
-      やCLIの検証）と期待結果が示されておらず、作成者が完了をpass/failで確かめられない。
+    rule: vp-qe-omissions-consistency
+    line: 27
+    anchor: "## 4. 推奨メタ項目"
+    message: 見出し「推奨メタ項目」と、表で `id`・`type`・`status`・`title` などを必須（○）とする内容が食い違っており、必須か推奨かが曖昧になるため、見出しを「メタ項目」などに改めるべきです。
+    message_ja: 見出し「推奨メタ項目」と、表で `id`・`type`・`status`・`title` などを必須（○）とする内容が食い違っており、必須か推奨かが曖昧になるため、見出しを「メタ項目」などに改めるべきです。
   - id: F002
     severity: minor
-    rule: vp-qe-verifiability
-    line: 57
-    anchor: "| `roles`              | ○    | `pm-roles.yaml` に存在する Role code の重複なし配列       |"
-    message: >-
-      `roles`を必須としながら、空配列`[]`を人間memberに認めるかを示していない。schemaは空配列を許可し、上位標準は`[]`を汎用agent用と定義しているため、人間の`roles:
-      []`の適否をpass/failで判定できない。
-    message_ja: >-
-      `roles`を必須としながら、空配列`[]`を人間memberに認めるかを示していない。schemaは空配列を許可し、上位標準は`[]`を汎用agent用と定義しているため、人間の`roles:
-      []`の適否をpass/failで判定できない。
+    rule: vp-ux-readability
+    line: 13
+    anchor: "## 2. 位置づけと用語定義"
+    message: 見出し「位置づけと用語定義」に対して、本文は正本の分担表だけで用語定義がありません。見出しを実態に合わせるか、nickname や member などの用語を補うべきです。
+    message_ja: 見出し「位置づけと用語定義」に対して、本文は正本の分担表だけで用語定義がありません。見出しを実態に合わせるか、nickname や member などの用語を補うべきです。
   - id: F003
     severity: minor
     rule: vp-ux-language-consistency
     line: 1
     anchor: "# プロジェクトメンバー定義 作成ルール"
-    message: >-
-      成果物名がH1「プロジェクトメンバー定義」、sample
-      title「メンバー定義」、template生成物title「メンバー名簿」とKata間で揺れており、rulebookも`title`の標準表記を示していないため、生成物の名称が統一されない。
-    message_ja: >-
-      成果物名がH1「プロジェクトメンバー定義」、sample
-      title「メンバー定義」、template生成物title「メンバー名簿」とKata間で揺れており、rulebookも`title`の標準表記を示していないため、生成物の名称が統一されない。
+    message: 成果物名が H1「プロジェクトメンバー定義」、recipe「メンバー定義」、本文の「名簿」とで揺れています。標準表記を一つに定め、H1 や本文の呼称を揃えるべきです。
+    message_ja: 成果物名が H1「プロジェクトメンバー定義」、recipe「メンバー定義」、本文の「名簿」とで揺れています。標準表記を一つに定め、H1 や本文の呼称を揃えるべきです。
