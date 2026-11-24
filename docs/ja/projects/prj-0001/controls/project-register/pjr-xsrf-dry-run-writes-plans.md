@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-xsrf-dry-run-writes-plans
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-23T22:26:38Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-24T00:36:54Z"
+  conclusion: exec run --auto --dry-run が plan を書き出さず、対象と予定のパスを表示するようにした
   commit_type: fix
   commit_scope: exec
 ---
