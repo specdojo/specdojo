@@ -4,6 +4,8 @@ name: Deploy VitePress site to GitHub Pages
 # - 本番（/specdojo/）: main に入っている最新のリリースタグ（v*）の文書。
 # - 開発中の版（/specdojo/next/）: 公開用のブランチ site/next の文書。develop から出したいときだけ
 #   fast-forward する。全ページに開発中の版の帯を出し、検索エンジンに載せない。
+#   prj-0002 の project の文書は project/prj-0002/develop から、specdojo-lp の product の文書は
+#   その既定のブランチから、開発中の版のビルドの間だけ重ねる（PJR-6XG2）。
 # GitHub Pages は 1 つのリポジトリに 1 つのサイトしか持てないため、どのきっかけでも 2 つの版を
 # ビルドし、1 つの成果物にまとめて公開する。
 on:
@@ -106,6 +108,31 @@ jobs:
           set -euo pipefail
           git worktree add --detach "$RUNNER_TEMP/next" "$NEXT_REF"
           cd "$RUNNER_TEMP/next"
+
+          # prj-0002 の project の文書だけを、そのブランチから重ねる（PJR-6XG2）。ブランチが無ければ重ねない。
+          # 設定はこのビルドの複製にだけ足し、commit しない。
+          if git fetch origin project/prj-0002/develop 2>/dev/null; then
+            git checkout FETCH_HEAD -- docs/ja/projects/prj-0002/
+            node -e '
+              const fs = require("node:fs");
+              const file = ".specdojo/specdojo.config.json";
+              const config = JSON.parse(fs.readFileSync(file, "utf8"));
+              config.projects["prj-0002"] = {
+                base_path: "docs/ja/projects/prj-0002",
+                project_register_path: "controls/project-register",
+              };
+              // PJR-FZQA が入っている版だけ、specdojo-lp（public）の product の文書も出す。
+              if (fs.existsSync("packages/docs-site/.vitepress/product-repos.ts")) {
+                config.projects["prj-0002"].repos = [{ name: "specdojo-lp", path: "../specdojo-lp" }];
+              }
+              fs.writeFileSync(file, JSON.stringify(config, null, 2) + "\n");
+            '
+            if [ -f packages/docs-site/.vitepress/product-repos.ts ]; then
+              # 既定のブランチを取り込む（利用者の判断、2026-11-25）。
+              git clone --depth 1 https://github.com/specdojo/specdojo-lp.git "$RUNNER_TEMP/specdojo-lp"
+            fi
+          fi
+
           npm ci
           npm --prefix packages/docs-site ci
           node tools/lint-d2.mjs
