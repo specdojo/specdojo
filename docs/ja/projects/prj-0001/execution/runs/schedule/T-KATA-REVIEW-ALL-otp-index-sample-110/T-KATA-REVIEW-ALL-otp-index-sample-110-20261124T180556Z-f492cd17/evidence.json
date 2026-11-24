@@ -1,0 +1,141 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-otp-index-sample-110",
+  "run_id": "T-KATA-REVIEW-ALL-otp-index-sample-110-20261124T180556Z-f492cd17",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-24T18:06:40.120Z",
+    "completed_at": "2026-11-24T18:10:21.111Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。executor による変更なし。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/samples/otp-index-sample.md",
+      "status": "not_applicable",
+      "summary": "整形対象となる変更なし。",
+      "reason": "R1 の確認で変更不要と判断し、Markdown を編集していないため。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md\n\nlint:md:changed: no changed files"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\nlint:fm:changed: no changed files"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6804 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6804 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)",
+      "reason": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nlebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-otp-index-sample-110/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-otp-index-sample-110/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R1 の確認を完了。目的・責務に対する過不足はなく、sample は変更不要と判断しました。F001 は R2 へ引き継ぎます。",
+  "completion_status": "complete",
+  "handoff": [
+    "実施内容: R1 の指摘は 0 件。運用安定化の目的・適用範囲、監視、窓口、初期増員体制、クローズ条件が記述され、対象別の当番表と問合せ記録は `otp-hypercare` に委譲されているため、追加・削除は不要と判断した。変更ファイルはなし。",
+    "進め方と実践の型の適用: docs/ja/specdojo/guides/kata-guide.md §6、docs/ja/specdojo/standards/sample-authoring-standard.md、docs/ja/specdojo/rulebooks/otp-index-rulebook.md、docs/ja/projects/prj-0001/010-deliverables-catalog/dct-kata.yaml の対象項目の `done_criteria` を照合した。rulebook を一次根拠とし、11 章の内容は共通方針・判断軸として維持した。バックアップの検証、権限移行、障害対応の記述は完成例に必要な具体性であり、独立した対象別詳細や実装コードには踏み込んでいない。対応 recipe は rulebook で `undecided` と宣言されている。",
+    "維持判断の補助根拠: docs/ja/specdojo/samples/mip-index-sample.md、docs/ja/specdojo/samples/cop-index-sample.md、docs/ja/projects/prj-0001/execution/grade/results/specdojo.otp-index-sample.yaml、先行タスク T-KATA-WAVE-5-otp-index-sample-080 と同 -090 の result を確認した。移行計画の判定点は参照し、切替当日の実行手順を再掲せず、開店後から安定化までを扱う責務を保っている。文書の承認進捗や agent への最終判断の委任は見つからなかった。",
+    "R2 への申し送り: grade の F001（`vp-qe-omissions-consistency`、11. 関連ドキュメント）は、5 章の `opr-sales` 等への参照導線に関する指摘。kata-guide §6.3 では R2 の担当であるため、本段では未修正。R2 で参照先の現状を確認し、関連ドキュメントの導線を整える。本段で見送った理由は段の対象外であり、根拠不足ではない。result と grade サイドカーは編集していない。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-otp-index-sample-110/T-KATA-REVIEW-ALL-otp-index-sample-110-20261124T180556Z-f492cd17/executor.log",
+      "bytes": 2682,
+      "truncated": false
+    }
+  ]
+}
