@@ -57,3 +57,29 @@
       from: ""
       to: 完了条件
   previous_event_id: reg_d862a719f2d541a6ac612101fb14e612
+- v: 1
+  id: reg_90009b1d60444ac4a1342a037bba24bc
+  ts: "2026-11-24T01:01:08Z"
+  action: start
+  actor: terra-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_4801a9e1def64fccb8f3943bd64566aa
+- v: 1
+  id: reg_8c4d79265f8644aa90a86ca61662428d
+  ts: "2026-11-24T01:03:17Z"
+  action: review
+  actor: terra-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_90009b1d60444ac4a1342a037bba24bc

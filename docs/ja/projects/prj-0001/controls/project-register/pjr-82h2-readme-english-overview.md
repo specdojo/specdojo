@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   difficulty: easy
   owner: DEV
@@ -37,14 +37,21 @@ OSS として広めるため、README に目的・位置づけ・クイックス
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                           | 担当 | 状態 | メモ                                            |
+| --- | ------------------------------ | ---- | ---- | ----------------------------------------------- |
+| 1   | 英語の概要を追加し、根拠と照合 | DEV  | done | README 冒頭に追加し、位置づけと案内先を確認した |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+`README.md` の冒頭に英語の概要を追加し、目的、仕様駆動開発ツールとの関係、日本語の Quick Start と文書サイトへのリンクを示した。日本語本文は変更していない。
+
+[[prj-0001:pjr-y5rd-civic-tech-comprehension-debt|PJR-Y5RD]] のシビックテックと理解の負債、復元・確認・人の確定・記録の方針、および [[prj-0001:pjr-36qg-competitive-landscape-and-release|PJR-36QG]] の `3.17.` にある新規開発と既存システムからの復元の両方を扱う位置づけと照合し、矛盾がないことを確認した。残課題はない。
+
+### 5.1. CHANGELOG に書く事項
+
+- 追加: README に SpecDojo の目的と位置づけ、Quick Start への案内を英語で追加。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-y5rd-civic-tech-comprehension-debt|PJR-Y5RD]]: 目的と位置づけの決定。
+- [[prj-0001:pjr-36qg-competitive-landscape-and-release|PJR-36QG]]: `3.17.` の比較と評価。
