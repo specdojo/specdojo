@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-fbp0-register-branch-push-checks
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-23T00:21:48Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-24T03:31:45Z"
+  conclusion: register のブランチへの push を、範囲の外のファイルと個票・イベントの形で検査する register branch-check を足し、pre-push の hook と CI（check-register-push.yml）に組み込んだ
   derived_from:
     - PJR-2TX0
   depends_on:
