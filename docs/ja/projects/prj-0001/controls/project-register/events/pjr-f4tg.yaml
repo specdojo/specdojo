@@ -128,3 +128,22 @@
       from: ""
       to: 作業内容
   previous_event_id: reg_707ef1704b3747bab6143bc94f748ae8
+- v: 1
+  id: reg_7255c0574c894e81a9ddcc47194df3ae
+  ts: "2026-11-24T13:29:23Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 利用者が prj-overview・opr・stsd の sample の段ごとの差分を確かめ、すべて採用すると判断した（2026-11-24）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-24"
+    - field: conclusion
+      from: "-"
+      to: 5 段のレビューの組み方を kata-guide と strategy に定め、3 つの型で目合わせした。利用者は全段の差分を採用し、見落としと誤りはなかった。報告の表の形と全件への展開は epic の子の項目で行う
+  previous_event_id: reg_325a3826431142b1b78662bcf4dad58d

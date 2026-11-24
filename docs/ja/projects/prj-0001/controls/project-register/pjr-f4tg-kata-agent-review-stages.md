@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-f4tg-kata-agent-review-stages
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   owner: BA
   registered_at: "2026-11-23T23:01:49Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-24T13:29:23Z"
+  conclusion: 5 段のレビューの組み方を kata-guide と strategy に定め、3 つの型で目合わせした。利用者は全段の差分を採用し、見落としと誤りはなかった。報告の表の形と全件への展開は epic の子の項目で行う
   derived_from:
     - PJR-TQZA
   depends_on:
