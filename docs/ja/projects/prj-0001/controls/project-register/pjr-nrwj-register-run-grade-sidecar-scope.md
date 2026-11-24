@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-nrwj-register-run-grade-sidecar-scope
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-24T03:36:55Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-24T04:58:31Z"
+  conclusion: register の worktree と再開の経路の checkpoint が、項目の対象の文書の grade の結果だけを取り込むようになった
   derived_from:
     - PJR-A54F
   commit_type: fix

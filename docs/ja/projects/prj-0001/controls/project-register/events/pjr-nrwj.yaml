@@ -144,3 +144,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_455965f5397f4b9c8421ce24e1ae98df
+- v: 1
+  id: reg_f08e26cfe97e4a68a2a756df92083ab8
+  ts: "2026-11-24T04:58:31Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分と親の検証（test-integration ほか passed）を確かめ、後の register run（JA3M・C11R）の統合 commit に grade の結果が混ざらないことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-24"
+    - field: conclusion
+      from: "-"
+      to: register の worktree と再開の経路の checkpoint が、項目の対象の文書の grade の結果だけを取り込むようになった
+  previous_event_id: reg_5060286dce9c46dd8e2c4603eec0f8cb
