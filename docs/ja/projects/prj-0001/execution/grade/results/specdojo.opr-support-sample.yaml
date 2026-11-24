@@ -4,62 +4,61 @@ document: specdojo:opr-support-sample
 path: docs/ja/specdojo/samples/opr-support-sample.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-sample
-verdict: fail
-score: 57
-graded_at: "2026-11-21T06:52:58.942Z"
-graded_by: opus-executor
-content_hash: 48792af58ac26f7b9a186fe89fb482404ce0a4038a729814528192df5bb031fb
+verdict: pass
+score: 95
+graded_at: "2026-11-24T01:30:57.480Z"
+graded_by: sonnet-review-executor
+content_hash: 4e317e7e57002d32c98056d363eac1c3843f4a9047a8caa567a84a9a80085822
 categories:
   purpose:
-    score: 63
+    score: 100
   operations:
-    score: 81
+    score: 100
   planning:
-    score: 67
+    score: 100
   business:
-    score: 50
+    score: 100
   architecture:
-    score: 92
+    score: 100
   usability:
-    score: 67
+    score: 100
   implementation:
-    score: 63
+    score: 100
   quality:
-    score: 50
+    score: 92
   consistency:
-    score: 0
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-publication-accountability:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-business-value:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ba-requirements-completeness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -67,35 +66,35 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-dev-change-impact:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-testability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-verifiability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
-    level: 0
-    score: 0
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
-    level: 1
-    score: 25
+    level: 3
+    score: 75
   vp-ux-readability:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-operability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -103,176 +102,45 @@ viewpoints:
     level: 4
     score: 100
 finding_counts:
-  blocker: 1
-  major: 14
-  minor: 9
+  blocker: 0
+  major: 0
+  minor: 3
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-po-purpose-alignment
-    line: 12
-    anchor: "- 障害疑いは `opr-incident` へ（P判定を付与）"
-    message: 文書には目的、範囲、および運用の必要性に関する明確な記述が不足しているため、プロジェクトの目的との整合性を評価することが不可能です。
-    message_ja: 文書には目的、範囲、および運用の必要性に関する明確な記述が不足しているため、プロジェクトの目的との整合性を評価することが不可能です。
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 127
+    anchor: >-
+      | 手順 | `opr-incident`                                            | P1 で紙の販売控えへ切り替える                        | 予定  
+      |
+    message: >-
+      `opr-incident` を「予定」としているが、`opr-incident-sample` が作成済みで、他の sample（`opr-monitoring-sample`
+      など）は作成済みとして導線を張っている。状態と導線の書き方が揃っておらず、読者が引き継ぎ先の有無を誤解するため、備考を実態に合わせ、wikilink で参照する必要がある。
+    message_ja: >-
+      `opr-incident` を「予定」としているが、`opr-incident-sample` が作成済みで、他の sample（`opr-monitoring-sample`
+      など）は作成済みとして導線を張っている。状態と導線の書き方が揃っておらず、読者が引き継ぎ先の有無を誤解するため、備考を実態に合わせ、wikilink で参照する必要がある。
   - id: F002
     severity: minor
-    rule: vp-po-decision-readiness
-    line: 12
-    anchor: "- 障害疑いは `opr-incident` へ（P判定を付与）"
-    message: サンプルには、前提条件やPOの承認待ち事項を詳述した、オープンな課題または意思決定準備状況のセクションが不足しています。
-    message_ja: サンプルには、前提条件やPOの承認待ち事項を詳述した、オープンな課題または意思決定準備状況のセクションが不足しています。
+    rule: vp-qe-omissions-consistency
+    line: 113
+    anchor: "| 引き継ぎの記録 | プロジェクトの課題管理 | _UNDECIDED_              | `OPS`、`DEV`、`PO` | `ticket_id`、分類、引き継ぎ先            |"
+    message: >-
+      引き継ぎの記録の保管期間が `_UNDECIDED_` のままで、概要の未決事項の表（問い合わせ記録のみ記載）にも論点と影響が載っていない。rulebook
+      の「未決の条件は該当章に論点と運用への影響を記載」に沿い、未決事項の表へ追加するか、「概要参照」と明示する必要がある。
+    message_ja: >-
+      引き継ぎの記録の保管期間が `_UNDECIDED_` のままで、概要の未決事項の表（問い合わせ記録のみ記載）にも論点と影響が載っていない。rulebook
+      の「未決の条件は該当章に論点と運用への影響を記載」に沿い、未決事項の表へ追加するか、「概要参照」と明示する必要がある。
   - id: F003
-    severity: major
-    rule: vp-pm-plan-feasibility
-    line: 10
-    anchor: "- 受付→再現条件→影響→暫定回避→引継ぎ要否"
-    message: 手順には、作業計画や実現可能性の推定に必要な責任役割コード、条件を含むステップごとの順序、および完了基準が不足しています。
-    message_ja: 手順には、作業計画や実現可能性の推定に必要な責任役割コード、条件を含むステップごとの順序、および完了基準が不足しています。
-  - id: F004
     severity: minor
-    rule: vp-pm-dependency-risk
-    line: 12
-    anchor: "- 障害疑いは `opr-incident` へ（P判定を付与）"
-    message: 運用のリスク、および後続の成果物やプロジェクトレジスターに対する明示的な依存関係の影響が特定されていません。
-    message_ja: 運用のリスク、および後続の成果物やプロジェクトレジスターに対する明示的な依存関係の影響が特定されていません。
-  - id: F005
-    severity: minor
-    rule: vp-pm-control-reporting
-    line: 12
-    anchor: "- 障害疑いは `opr-incident` へ（P判定を付与）"
-    message: 文書では、報告先が分離されておらず、プロジェクト管理レジスターに記録および追跡されるべき項目も指定されていません。
-    message_ja: 文書では、報告先が分離されておらず、プロジェクト管理レジスターに記録および追跡されるべき項目も指定されていません。
-  - id: F006
-    severity: major
-    rule: vp-ba-business-value
-    line: 12
-    anchor: "- 障害疑いは `opr-incident` へ（P判定を付与）"
-    message: 文書では、サポート手順のビジネス上の課題、対象ユーザー、および期待されるビジネス価値や成功基準が明確に述べられていません。
-    message_ja: 文書では、サポート手順のビジネス上の課題、対象ユーザー、および期待されるビジネス価値や成功基準が明確に述べられていません。
-  - id: F007
-    severity: major
-    rule: vp-ba-requirements-completeness
-    line: 7
-    anchor: "- 分類:"
-    message: 受付可能な問い合わせの範囲、除外事項、営業時間、および受け入れ基準が完全に省略されています。
-    message_ja: 受付可能な問い合わせの範囲、除外事項、営業時間、および受け入れ基準が完全に省略されています。
-  - id: F008
-    severity: major
-    rule: vp-ba-stakeholder-clarity
-    line: 10
-    anchor: "- 受付→再現条件→影響→暫定回避→引継ぎ要否"
-    message: 問い合わせの提出者、一次ラインのオペレーター、およびエスカレーションのレビュアーを含むステークホルダーが明確に特定されていません。
-    message_ja: 問い合わせの提出者、一次ラインのオペレーター、およびエスカレーションのレビュアーを含むステークホルダーが明確に特定されていません。
-  - id: F009
-    severity: minor
-    rule: vp-arc-technical-constraints
-    line: 7
-    anchor: "- 分類:"
-    message: 問い合わせ対応に使用される技術的な制約や支援ツール（例：チケッティングシステム、コミュニケーションプラットフォーム）が定義されていない。
-    message_ja: 問い合わせ対応に使用される技術的な制約や支援ツール（例：チケッティングシステム、コミュニケーションプラットフォーム）が定義されていない。
-  - id: F010
-    severity: major
-    rule: vp-dev-implementation-readiness
-    line: 10
-    anchor: "- 受付→再現条件→影響→暫定回避→引継ぎ要否"
-    message: 手順には、具体的な問い合わせ受付フィールド、回答テンプレート、または実行可能な実装の詳細がなく、抽象的な段階のみが示されています。
-    message_ja: 手順には、具体的な問い合わせ受付フィールド、回答テンプレート、または実行可能な実装の詳細がなく、抽象的な段階のみが示されています。
-  - id: F011
-    severity: minor
-    rule: vp-dev-change-impact
-    line: 12
-    anchor: "- 障害疑いは `opr-incident` へ（P判定を付与）"
-    message: 手順の変更が関連する運用のランブックやチケッティングワークフローに与える影響が文書化されていません。
-    message_ja: 手順の変更が関連する運用のランブックやチケッティングワークフローに与える影響が文書化されていません。
-  - id: F012
-    severity: minor
-    rule: vp-dev-testability
-    line: 10
-    anchor: "- 受付→再現条件→影響→暫定回避→引継ぎ要否"
-    message: 文書には、問い合わせ対応プロセスを検証するための検証ステップ、シミュレーションチェック、または受け入れテストが含まれていません。
-    message_ja: 文書には、問い合わせ対応プロセスを検証するための検証ステップ、シミュレーションチェック、または受け入れテストが含まれていません。
-  - id: F013
-    severity: major
-    rule: vp-qe-verifiability
-    line: 12
-    anchor: "- 障害疑いは `opr-incident` へ（P判定を付与）"
-    message: 優先度の決定ルールと一時的な解決の成功基準に、測定可能で合否判定可能な条件が欠けています。
-    message_ja: 優先度の決定ルールと一時的な解決の成功基準に、測定可能で合否判定可能な条件が欠けています。
-  - id: F014
-    severity: blocker
-    rule: vp-qe-omissions-consistency
-    line: 5
-    anchor: "## 1. 問い合わせ一次対応手順（テンプレ・ナレッジ）"
-    message: "`opr-rulebook` 第 5 章で定義されている必須章がほぼすべて欠落しており、かつ省略理由の記載もないため、運用手順書の構成として不成立である。"
-    message_ja: "`opr-rulebook` 第 5 章で定義されている必須章がほぼすべて欠落しており、かつ省略理由の記載もないため、運用手順書の構成として不成立である。"
-  - id: F015
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 12
-    anchor: "- 障害疑いは `opr-incident` へ（P判定を付与）"
-    message: 証跡章（保存先・保管期間・参照権限・`ticket_id` 等の識別子）がなく rulebook 禁止事項「証跡要件を未定義にする」に抵触し、関連ドキュメント導線に必須の `opd-index` 参照もないため追加が必要である。
-    message_ja: 証跡章（保存先・保管期間・参照権限・`ticket_id` 等の識別子）がなく rulebook 禁止事項「証跡要件を未定義にする」に抵触し、関連ドキュメント導線に必須の `opd-index` 参照もないため追加が必要である。
-  - id: F016
-    severity: major
     rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 運用手順: 問い合わせ一次対応 サンプル"
-    message: Frontmatter の `rulebook` が `specdojo:opd-rulebook` となっており、手順書であるため `specdojo:opr-rulebook` とすべきである。
-    message_ja: Frontmatter の `rulebook` が `specdojo:opd-rulebook` となっており、手順書であるため `specdojo:opr-rulebook` とすべきである。
-  - id: F017
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 5
-    anchor: "## 1. 問い合わせ一次対応手順（テンプレ・ナレッジ）"
-    message: 見出し番号が `## 1` となっているが、ルールおよびテンプレートの定義に従い `## 10` とすべきである。
-    message_ja: 見出し番号が `## 1` となっているが、ルールおよびテンプレートの定義に従い `## 10` とすべきである。
-  - id: F018
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 11
-    anchor: "- 引き継ぎ条件:"
-    message: rulebook の記述ガイドが求めるナレッジ参照先と開発・業務・運用それぞれへの引き継ぎ条件が欠け、障害疑い→`opr-incident` の1件のみのため、問い合わせ一次対応章の完成例として不足しており追記が必要である。
-    message_ja: rulebook の記述ガイドが求めるナレッジ参照先と開発・業務・運用それぞれへの引き継ぎ条件が欠け、障害疑い→`opr-incident` の1件のみのため、問い合わせ一次対応章の完成例として不足しており追記が必要である。
-  - id: F019
-    severity: major
-    rule: vp-ux-readability
-    line: 5
-    anchor: "## 1. 問い合わせ一次対応手順（テンプレ・ナレッジ）"
-    message: 必須構成を大幅に省略しているため、`opr-＜term＞` 文書を正しく作成するためのサンプルとしての役割（完成形の提示）を果たせておらず、不十分である。
-    message_ja: 必須構成を大幅に省略しているため、`opr-＜term＞` 文書を正しく作成するためのサンプルとしての役割（完成形の提示）を果たせておらず、不十分である。
-  - id: F020
-    severity: major
-    rule: vp-ux-readability
-    line: 1
-    anchor: "# 運用手順: 問い合わせ一次対応 サンプル"
-    message: 共通サンプル文脈（駄菓子屋きぬや 販売管理システム）や対象システム・問い合わせ者が一切示されず、読者が手順の適用場面を読み取れないため、概要で文脈を明示する必要がある。
-    message_ja: 共通サンプル文脈（駄菓子屋きぬや 販売管理システム）や対象システム・問い合わせ者が一切示されず、読者が手順の適用場面を読み取れないため、概要で文脈を明示する必要がある。
-  - id: F021
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 12
-    anchor: "- 障害疑いは `opr-incident` へ（P判定を付与）"
-    message: 略語「P判定」が定義や標準的なインシデント優先順位の用語との整合性なしに使用されており、標準的な役割コードも不足しています。
-    message_ja: 略語「P判定」が定義や標準的なインシデント優先順位の用語との整合性なしに使用されており、標準的な役割コードも不足しています。
-  - id: F022
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 10
-    anchor: "- 受付→再現条件→影響→暫定回避→引継ぎ要否"
-    message: 「引継ぎ要否」（10行目）と「引き継ぎ条件」（11行目）で表記が揺れているため、rulebook と同じ「引き継ぎ」に統一する必要がある。
-    message_ja: 「引継ぎ要否」（10行目）と「引き継ぎ条件」（11行目）で表記が揺れているため、rulebook と同じ「引き継ぎ」に統一する必要がある。
-  - id: F023
-    severity: minor
-    rule: vp-ops-release-readiness
-    line: 5
-    anchor: "## 1. 問い合わせ一次対応手順（テンプレ・ナレッジ）"
-    message: サンプルはドラフト状態のままであり、readyに進めるための基準や保留タスクが指定されていません。
-    message_ja: サンプルはドラフト状態のままであり、readyに進めるための基準や保留タスクが指定されていません。
-  - id: F024
-    severity: major
-    rule: vp-ops-operability
-    line: 10
-    anchor: "- 受付→再現条件→影響→暫定回避→引継ぎ要否"
-    message: ランブックには、ログのリポジトリ、監査証跡、ナレッジベースの更新フロー、および責任を持つ運用チームなどの不可欠な運用情報が不足しています。
-    message_ja: ランブックには、ログのリポジトリ、監査証跡、ナレッジベースの更新フロー、および責任を持つ運用チームなどの不可欠な運用情報が不足しています。
+    line: 19
+    anchor: >-
+      | 項目         |
+      内容                                                                                                             |
+    message: >-
+      手順適用範囲・前提の表に template の必須行「連絡先」がなく、代わりに「問い合わせ者」「一次対応者」の行が入っている。連絡先（営業時間中は店内の電話で `OPS`、応答がなければ
+      `PO`）が「使用手段」に混在しているため、template の 6 行を維持し、追加行は別に足す必要がある。
+    message_ja: >-
+      手順適用範囲・前提の表に template の必須行「連絡先」がなく、代わりに「問い合わせ者」「一次対応者」の行が入っている。連絡先（営業時間中は店内の電話で `OPS`、応答がなければ
+      `PO`）が「使用手段」に混在しているため、template の 6 行を維持し、追加行は別に足す必要がある。
