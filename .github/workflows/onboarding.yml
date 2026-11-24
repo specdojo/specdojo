@@ -2,7 +2,7 @@ name: Onboarding
 # macOS の job は Actions の利用時間を多く使うため、pull request では流さない（2026-11-24 の利用者の判断）。
 on:
   push:
-    branches: [develop]
+    branches: [develop, "project/*/develop"]
   workflow_dispatch:
 permissions:
   contents: read
