@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-24T04:35:09Z",
+  "type": "claim",
+  "task_id": "T-KATA-REVIEW-CALIBRATION-prj-overview-sample-140",
+  "by": "sol-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "PO"
+  }
+}

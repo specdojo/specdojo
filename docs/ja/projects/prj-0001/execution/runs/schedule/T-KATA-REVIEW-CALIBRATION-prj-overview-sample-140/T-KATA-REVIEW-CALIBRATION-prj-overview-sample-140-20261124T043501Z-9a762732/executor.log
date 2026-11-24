@@ -1,0 +1,44 @@
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "R4（正しさ）の照合を完了しました。訂正が必要な誤りはなく、サンプルは維持しました。F001 は R1 で対応済みです。確認表を reporter 向けに申し送ります。",
+  "handoff": [
+    "reporter は result の実施内容に、次の指摘表と後続の確認表を実際の Markdown 表として記載してください。executor は result を編集していません。\n\n| No | 段 | 箇所 | 指摘 | 直した案 | 根拠 | 印 |\n| --- | --- | --- | --- | --- | --- | --- |\n| R4-1 | R4 | 全文・frontmatter | 正本と照合した範囲に訂正すべき誤りなし | - | `vp-arc-technical-constraints`、`vp-dev-implementation-readiness`、`vp-dev-testability`、`vp-qe-verifiability` | - |\n\n本文には SpecDojo のコマンド・オプション・既定動作の説明がないため、CLI の実行確認は不要と判断した。業務の数値・期間・運用方針は例示上の仮定であり、共通サンプル文脈に反しないため技術的な事実検証の対象から除外した。対象とした主張に不一致・確かめられないものはなかった。",
+    "result の実施内容に記載する確認表（前半）。行番号は `docs/ja/specdojo/samples/prj-overview-sample.md`。\n\n| No | 主張 | 正本 | 確かめ方 | 結果 | 根拠 |\n| --- | --- | --- | --- | --- | --- |\n| 1 | 2行: メタ情報を `specdojo` 名前空間に置く | `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml`、`src/shared/frontmatter-namespace.ts` | schema を `cat`、実装を `nl -ba` で読み取り | 一致 | schema 21〜24行で名前空間を必須化。実装20〜22行で同名前空間を取得する |\n| 2 | 3行: ID は `specdojo:prj-overview-sample` | `docs/specdojo/schemas/v1/common-frontmatter.schema.yaml`、`docs/ja/specdojo/rulebooks/prj-overview-rulebook.md` | `cat` で読み取り | 一致 | schema の `idRef` パターンに適合し、rulebook の `sample` 宣言と一致する |\n| 3 | 4行: `type` は `project` | `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml`、`docs/ja/specdojo/rulebooks/prj-overview-rulebook.md` | `cat` で読み取り | 一致 | schema の列挙値に存在し、rulebook の `deliverable_type: project` と一致する |\n| 4 | 5行: `status` は `ready` | `docs/specdojo/schemas/v1/common-frontmatter.schema.yaml` | `cat`、`nl -ba` で読み取り | 一致 | 63〜68行の列挙値に存在する。既存値を維持し、昇格操作はしていない |\n| 5 | 6行: `rulebook` は `specdojo:prj-overview-rulebook` | `docs/specdojo/schemas/v1/common-frontmatter.schema.yaml`、`docs/ja/specdojo/rulebooks/prj-overview-rulebook.md` | `cat` で読み取り | 一致 | `rulebookRef` のパターンに適合し、参照先の ID と一致する |\n| 6 | 7行: `based_on` は空配列 | `docs/specdojo/schemas/v1/common-frontmatter.schema.yaml` | `cat`、`nl -ba` で読み取り | 一致 | 72〜74行で `idRefArray` を参照。空配列を許容する |\n| 7 | 8行: `supersedes` は空配列 | `docs/specdojo/schemas/v1/common-frontmatter.schema.yaml` | `cat`、`nl -ba` で読み取り | 一致 | 75〜77行で `idRefArray` を参照。空配列を許容する |",
+    "result の実施内容に記載する確認表（後半）。前半と同じ表として連結してください。\n\n| No | 主張 | 正本 | 確かめ方 | 結果 | 根拠 |\n| --- | --- | --- | --- | --- | --- |\n| 8 | 53行: スコープ参照の ID は `specdojo:prj-scope-sample` | `docs/ja/specdojo/samples/prj-scope-sample.md`、`src/docs/doc-index.ts` | 参照先の ID・見出しを `rg -n`、実装544〜589行を `sed` で読み取り | 一致 | 参照先3行の ID と一致。実装は wikilink の ID と表示名を分離して解決する |\n| 9 | 57行: 成功判定の参照 ID は `specdojo:prj-success-criteria-and-acceptance-criteria-sample` | `docs/ja/specdojo/samples/prj-success-criteria-and-acceptance-criteria-sample.md`、`docs/ja/specdojo/rulebooks/prj-overview-rulebook.md` | 参照先を `rg -n`、rulebook 6.9を `sed` で読み取り | 一致 | 参照先3行の ID と一致し、確定した成功判定の委譲先も rulebook と一致する |\n| 10 | 108行: 引き渡し先の ID は `specdojo:prj-assumptions-constraints-dependencies-sample` | `docs/ja/specdojo/samples/prj-assumptions-constraints-dependencies-sample.md` | ID・見出しを `rg -n` で読み取り | 一致 | 参照先3行の ID と一致し、依存関係・影響評価の章が存在する |\n| 11 | 32行: 繁忙期の仮定に `_ASSUMPTION_:` を使う | `docs/ja/specdojo/standards/document-metadata-standard.md` 2.4、`docs/ja/specdojo/standards/sample-authoring-standard.md` 3.5 | `sed`、`cat` で読み取り | 一致 | 共通の文脈目印として許容され、sample の仮定を明示する記法に一致する |\n| 12 | 32・116行: 未確定の公開日・オフライン方針に `_UNDECIDED_:` を使う | `docs/ja/specdojo/standards/sample-authoring-standard.md` 3.5、`docs/ja/specdojo/recipes/prj-overview-recipe.md` 4.7 | `cat` で読み取り | 一致 | 未確定事項の目印と決定タイミングを示す要件に一致する |",
+    "result の変更ファイル: なし。正本との不一致がなく、サンプルを変更する必要はなかった。Prettier の確認と `git diff --check` は合格した。指定の親検証は runner に委ね、重複実行していない。",
+    "result の進め方と実践の型の適用: [[specdojo:kata-guide|実践の型活用ガイド]] 6.1・6.3・6.5、[[specdojo:sample-authoring-standard|Sample 記述標準]]、[[specdojo:document-metadata-standard|ドキュメントメタ情報標準]]、[[specdojo:prj-overview-rulebook|プロジェクト概要 作成ルール]]、[[specdojo:prj-overview-recipe|プロジェクト概要 作成レシピ]]、[[specdojo:prj-overview-template|プロジェクト概要テンプレート]]、[[specdojo:command-reference|コマンドリファレンス]]、共通レビュー観点一覧、`dct-kata.yaml` の対象項目、共通・成果物 frontmatter schema、関連実装を確認した。R1〜R3 の result（タスク末尾110・120・130）、実成果物 [[prj-0001:prj-overview|プロジェクト概要]]、grade 結果 `docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-overview-sample.yaml` も確認した。実成果物の本文は複製していない。構成・文章・業務仮定を維持し、R4 の事実確認に限定した。rulebook との矛盾による修正はなかった。",
+    "F001 は source=grade として照合した。grade の90行の anchor は現行102行にあり、108行に未成立時の影響と後続文書への引き渡しが R1 で追記済みである。`vp-pm-dependency-risk` は kata-guide 6.3で段レビューから除外されるため、再指摘・再修正しなかった。grade の `content_hash` は現行ファイルの SHA-256 と異なり、過去の指摘記録として扱った。grade サイドカーは編集していない。condense 由来の指摘、未解消事項、根拠不足による見送り、対象外文書の修正提案、要判断事項はない。"
+  ],
+  "validations": [
+    {
+      "command": "npx prettier --check docs/ja/specdojo/samples/prj-overview-sample.md",
+      "status": "passed",
+      "summary": "対象サンプルは Prettier の整形規則に適合した。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。executor による変更なし。"
+    },
+    {
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 YAML schema 検証は適用外。",
+      "reason": "変更した YAML ファイルがない。"
+    },
+    {
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "カタログ検証は適用外。",
+      "reason": "executor は `docs/ja/projects/` 配下の成果物を変更していない。"
+    },
+    {
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検証は適用外。",
+      "reason": "履歴ファイル、plan、result を変更していない。"
+    }
+  ]
+}
+</specdojo_executor_evidence>
