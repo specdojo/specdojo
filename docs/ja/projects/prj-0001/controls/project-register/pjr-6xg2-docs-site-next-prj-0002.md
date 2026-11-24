@@ -1,0 +1,57 @@
+---
+specdojo:
+  id: prj-0001:pjr-6xg2-docs-site-next-prj-0002
+  type: project
+  status: draft
+  rulebook: specdojo:pjr-rulebook
+  part_of:
+    - prj-0001:pjr-index
+  item_type: todo
+  item_status: open
+  priority: medium
+  difficulty: medium
+  owner: DEV
+  registered_at: "2026-11-24T13:59:40Z"
+  due_on: "2026-11-30"
+  commit_type: ci
+  commit_scope: docs-site
+---
+
+# PJR-6XG2 文書サイトの開発中の版に prj-0002 の project の文書を出す
+
+## 1. 概要
+
+公開の workflow で prj-0002 のブランチから project の文書だけを重ね、開発中の版のサイトに出す
+
+## 2. 入力
+
+- v0.10.0 に入れる（利用者の指定、2026-11-24）
+- prj-0002 の project の文書だけを重ねて開発中の版に出す案 A にする（利用者の判断、2026-11-24）
+- 担当と期限は PJR-FZQA と同じ DEV・2026-11-30 とした（オーケストレーターの推奨。利用者の確認待ち）
+- specdojo-lp は private のリポジトリで、その product の文書は公開を利用者が決めるまで取り込まない
+
+## 3. 完了条件
+
+- 文書サイトの開発中の版（`/specdojo/next/`）に、prj-0002 の project の文書（`project/prj-0002/develop` の `docs/ja/projects/prj-0002/`）を出す。prj-0002 のブランチの `docs/ja/product/` など、project の文書のほかは取り込まない。
+- 公開の workflow（`.github/workflows/deploy.yml`）で、開発中の版のビルドの前に `origin/project/prj-0002/develop` から `docs/ja/projects/prj-0002/` だけを取り出して重ねる。project の一覧のページとサイドバーに prj-0002 が出るよう、ビルドの間だけ使う設定（`.specdojo/specdojo.local.config.json` など、commit しないもの）で prj-0002 を足す。どの設定をどう足すかを決め、理由を個票の対応結果と報告の `handoff` に書く。
+- サイトの上のメニューの project の入口（`packages/docs-site/.vitepress/config.mts` の prj-0001 に固定した入口）を、出す project に合わせる。
+- `.github` は保護された設定のため変えない。workflow の変更案を、差分の形で個票の対応結果と報告の `handoff` に書く。反映は利用者の承認のもとでオーケストレーターが行う。
+- specdojo-lp（private）の product の文書は、利用者が公開を決めるまで取り込まない。
+- 反映の前に、オーケストレーターが手元で同じ重ね方をしてサイトをビルドし、prj-0002 のページが出て、wikilink の解決と登録簿の表示ページの生成でビルドが止まらないことを確かめる。
+- `npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を通し、親の検証を通す。
+- `CHANGELOG.md` は変えない。個票の対応結果に「CHANGELOG に書く事項」の小節を作り、区分と行の文案を書く。
+- 迷った点は executor が決め、決めた内容と理由を個票の対応結果と報告の `handoff` に書く。
+
+## 4. 作業内容
+
+| No  | 作業   | 担当   | 状態 | メモ |
+| --- | ------ | ------ | ---- | ---- |
+| 1   | _TODO_ | _TODO_ | open | -    |
+
+## 5. 対応結果
+
+_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+
+## 6. 関連ドキュメント
+
+- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
