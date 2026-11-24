@@ -44,3 +44,16 @@
     - field: commit_scope
       from: ""
       to: docs-site
+- v: 1
+  id: reg_bebb5d1cf2f148b1ac3d8dd192d8e5df
+  ts: "2026-11-24T17:18:26Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_058c593f43d64524b87c7a7cd0a8cfad
