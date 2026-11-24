@@ -32,11 +32,11 @@ specdojo:
 
 ## 3. 完了条件
 
-- 文書サイトの開発中の版（`/specdojo/next/`）に、prj-0002 の project の文書（`project/prj-0002/develop` の `docs/ja/projects/prj-0002/`）を出す。prj-0002 のブランチの `docs/ja/product/` など、project の文書のほかは取り込まない。
+- 文書サイトの開発中の版（`/specdojo/next/`）に、prj-0002 の project の文書（`project/prj-0002/develop` の `docs/ja/projects/prj-0002/`）を出す。prj-0002 のブランチの `docs/ja/product/` など、project の文書のほかはそのブランチから取り込まない。
 - 公開の workflow（`.github/workflows/deploy.yml`）で、開発中の版のビルドの前に `origin/project/prj-0002/develop` から `docs/ja/projects/prj-0002/` だけを取り出して重ねる。project の一覧のページとサイドバーに prj-0002 が出るよう、ビルドの間だけ使う設定（`.specdojo/specdojo.local.config.json` など、commit しないもの）で prj-0002 を足す。どの設定をどう足すかを決め、理由を個票の対応結果と報告の `handoff` に書く。
 - サイトの上のメニューの project の入口（`packages/docs-site/.vitepress/config.mts` の prj-0001 に固定した入口）を、出す project に合わせる。
 - `.github` は保護された設定のため変えない。workflow の変更案を、差分の形で個票の対応結果と報告の `handoff` に書く。反映は利用者の承認のもとでオーケストレーターが行う。
-- specdojo-lp（private）の product の文書は、利用者が公開を決めるまで取り込まない。
+- specdojo-lp（2026-11-25 に public）の product の文書も出す。workflow で token なしに `specdojo/specdojo-lp` を checkout し、ビルドの間だけの設定で prj-0002 の `repos` として宣言して、PJR-FZQA の仕組みで取り込む。FZQA が統合される前は、その段を FZQA の統合の後に有効になる形で書く。
 - 反映の前に、オーケストレーターが手元で同じ重ね方をしてサイトをビルドし、prj-0002 のページが出て、wikilink の解決と登録簿の表示ページの生成でビルドが止まらないことを確かめる。
 - `npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を通し、親の検証を通す。
 - `CHANGELOG.md` は変えない。個票の対応結果に「CHANGELOG に書く事項」の小節を作り、区分と行の文案を書く。
