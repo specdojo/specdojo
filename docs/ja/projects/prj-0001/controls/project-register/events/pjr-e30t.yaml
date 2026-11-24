@@ -47,3 +47,16 @@
     - field: commit_scope
       from: ""
       to: catalog
+- v: 1
+  id: reg_143a2bb315b04af29dd19bdfdfc7a8ef
+  ts: "2026-11-24T13:35:26Z"
+  action: start
+  actor: terra-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_849f7ba1f378474c97043e9187e845d4
