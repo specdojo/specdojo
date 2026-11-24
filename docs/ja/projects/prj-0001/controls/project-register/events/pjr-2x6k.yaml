@@ -125,3 +125,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_d92080d7e6d04b159dddae4e74bbebc0
+- v: 1
+  id: reg_263d6d1bbb8740bda80450db0660e007
+  ts: "2026-11-24T00:13:02Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果・親の検証（test-integration を含め passed）で確かめ、保護された設定の変更がないことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-24"
+    - field: conclusion
+      from: "-"
+      to: exec resume を --task なしで流すと、doing と、reporter・統合の段で止まったタスクを --parallel で並べて再開するようにした
+  previous_event_id: reg_4e19da81ff9041a2927b7afe1c8939a2
