@@ -2,17 +2,18 @@
 specdojo:
   id: prj-0001:pjr-g2xj-kata-review-all-strategy
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-24T13:33:23Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-24T17:41:25Z"
   derived_from:
     - PJR-0BGE
   depends_on:
