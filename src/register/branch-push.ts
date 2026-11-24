@@ -52,9 +52,12 @@ function isAncestor(cwd: string, ancestor: string, descendant: string): boolean 
   return gitResult(cwd, ["merge-base", "--is-ancestor", ancestor, descendant]).status === 0;
 }
 
-/** リモートの register のブランチの先端。ブランチが無ければ undefined。fetch はしない。 */
-function remoteBranchTip(target: RegisterBranchTarget): string | undefined {
-  const ref = `refs/heads/${target.branch}`;
+/** リモートのブランチ（省略時は register のブランチ）の先端。無ければ undefined。fetch はしない。 */
+function remoteBranchTip(
+  target: RegisterBranchTarget,
+  branch: string = target.branch,
+): string | undefined {
+  const ref = `refs/heads/${branch}`;
   const output = gitOutput(target.repoRoot, ["ls-remote", "--heads", target.remote, ref]);
   const line = output.split(/\r?\n/u).find((entry) => entry.endsWith(`\t${ref}`));
   return line?.split("\t")[0];
@@ -106,9 +109,18 @@ function assertCheckPassed(state: BranchState, check: PushCheck, hint?: string):
   );
 }
 
-function checkLines(check: PushCheck, target: RegisterBranchTarget): string[] {
+/** `--dry-run` の検査結果の行。止まるときは本番と同じ案内（`hint`）を添える。 */
+export function checkLines(
+  check: PushCheck,
+  target: Pick<RegisterBranchTarget, "registerPath" | "eventsPath" | "branch">,
+  hint?: string,
+): string[] {
   if (!hasViolations(check)) return ["Checks: passed."];
-  return ["Checks: failed; the push would stop.", formatRegisterPushReport(target, check)];
+  return [
+    "Checks: failed; the push would stop.",
+    formatRegisterPushReport(target, check),
+    ...(hint ? [hint] : []),
+  ];
 }
 
 function conflictError(state: BranchState, worktree: string, conflicts: string[]): Error {
@@ -133,7 +145,7 @@ function dirtyError(state: BranchState, worktree: string, dirty: string[]): Erro
   );
 }
 
-const INITIAL_CHECK_HINT =
+export const INITIAL_CHECK_HINT =
   "On the first push, push the integration branch to the remote first so that only register " +
   "commits remain outside it.";
 
@@ -170,6 +182,51 @@ function integrationTip(state: BranchState): string {
   return tip;
 }
 
+/** 初回に専用ブランチを作る起点。 */
+type InitialBase = {
+  /** 起点の commit。`--dry-run` でリモートの先端がまだ手元に無いときは undefined。 */
+  commit: string | undefined;
+  /** 起点の表示名（`origin/<integration_branch>` または手元の統合ブランチ名）。 */
+  label: string;
+  /** リモートの統合ブランチの先端。リモートに無いときは undefined（手元の先端から作る）。 */
+  remoteTip: string | undefined;
+};
+
+function noRemoteIntegrationNotice(state: BranchState): string {
+  const { remote, branch } = state.target;
+  return (
+    `${remote}/${state.integrationBranch} does not exist; creating ${branch} from the local ` +
+    `${state.integrationBranch}. Its commits that are not on ${remote} are checked as register ` +
+    `commits; push ${state.integrationBranch} to ${remote} first if the check fails.`
+  );
+}
+
+/**
+ * 初回の起点を決める。リモートに統合ブランチがあれば、その先端（本番は fetch して読む）から作り、
+ * 手元にしかない統合ブランチの commit を専用ブランチに含めない。無いときだけ手元の先端から作る。
+ */
+function initialBase(state: BranchState, dryRun: boolean): InitialBase {
+  const { target } = state;
+  const remoteTip = remoteBranchTip(target, state.integrationBranch);
+  if (!remoteTip) {
+    return { commit: integrationTip(state), label: state.integrationBranch, remoteTip };
+  }
+  const label = `${target.remote}/${state.integrationBranch}`;
+  if (dryRun) {
+    const commit = hasObject(target.repoRoot, remoteTip) ? remoteTip : undefined;
+    return { commit, label, remoteTip };
+  }
+  // Fetch the exact ref even if a single-branch clone has a narrower fetch refspec.
+  gitOutput(target.repoRoot, [
+    "fetch",
+    "--",
+    target.remote,
+    `refs/heads/${state.integrationBranch}`,
+  ]);
+  const fetched = gitOutput(target.repoRoot, ["rev-parse", "FETCH_HEAD"]).trim();
+  return { commit: fetched, label, remoteTip: fetched };
+}
+
 function worktreeLine(state: BranchState, dryRun: boolean): string {
   if (state.worktree) return `Worktree: ${state.worktree}`;
   return `Worktree: ${dryRun ? "would create" : "created"} ${state.fallback}`;
@@ -203,13 +260,24 @@ function describeDryRun(state: BranchState): RegisterBranchPushOutcome {
   const { target } = state;
   const lines = ["Dry run: nothing is changed."];
   if (!state.localTip && !state.remoteTip) {
-    const base = integrationTip(state);
-    const check = runCheck(state, base);
+    const base = initialBase(state, true);
+    const tip = base.commit ?? base.remoteTip ?? "";
+    lines.push(`Would create branch ${target.branch} from ${base.label} (${short(tip)}).`);
+    if (!base.remoteTip) lines.push(noRemoteIntegrationNotice(state));
+    lines.push(worktreeLine(state, true));
+    if (!base.commit) {
+      lines.push(
+        `Would fetch ${base.label} first; its commits are already on ${target.remote}, so ` +
+          "no other commit would be pushed.",
+        "Checks: not run before the fetch; the run checks the register files at the fetched tip.",
+      );
+      return { action: "create", lines, wouldStop: false };
+    }
+    const check = runCheck(state, base.commit, base.remoteTip);
     lines.push(
-      `Would create branch ${target.branch} from ${state.integrationBranch} (${short(base)}).`,
-      worktreeLine(state, true),
-      `Would push to ${target.remote}/${target.branch}: ${describeRange(state, base)}`,
-      ...checkLines(check, target),
+      `Would push to ${target.remote}/${target.branch}: ` +
+        describeRange(state, base.commit, base.remoteTip),
+      ...checkLines(check, target, INITIAL_CHECK_HINT),
     );
     return { action: "create", lines, wouldStop: hasViolations(check) };
   }
@@ -246,7 +314,7 @@ function describeDryRun(state: BranchState): RegisterBranchPushOutcome {
     const check = runCheck(state, localTip);
     lines.push(
       `Would push the local branch to new ${target.remote}/${target.branch}: ${describeRange(state, localTip)}`,
-      ...checkLines(check, target),
+      ...checkLines(check, target, INITIAL_CHECK_HINT),
     );
     return { action: "publish", lines, wouldStop: wouldStop || hasViolations(check) };
   }
@@ -275,12 +343,20 @@ function describeDryRun(state: BranchState): RegisterBranchPushOutcome {
 
 function createBranch(state: BranchState): RegisterBranchPushOutcome {
   const { target } = state;
-  const base = integrationTip(state);
-  assertCheckPassed(state, runCheck(state, base), INITIAL_CHECK_HINT);
-  const range = describeRange(state, base);
-  gitOutput(target.repoRoot, ["branch", "--no-track", "--", target.branch, base]);
+  const base = initialBase(state, false);
+  // Outside --dry-run the remote tip is always fetched, so the commit is known here.
+  const commit = base.commit ?? integrationTip(state);
+  const notice = base.remoteTip ? [] : [noRemoteIntegrationNotice(state)];
+  assertCheckPassed(
+    state,
+    runCheck(state, commit, base.remoteTip),
+    [...notice, INITIAL_CHECK_HINT].join("\n"),
+  );
+  const range = describeRange(state, commit, base.remoteTip);
+  gitOutput(target.repoRoot, ["branch", "--no-track", "--", target.branch, commit]);
   const lines = [
-    `Created branch ${target.branch} from ${state.integrationBranch} (${short(base)}).`,
+    `Created branch ${target.branch} from ${base.label} (${short(commit)}).`,
+    ...notice,
     worktreeLine(state, false),
   ];
   const worktree = ensureWorktree(state);

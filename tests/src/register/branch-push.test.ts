@@ -3,9 +3,40 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { Command } from "commander";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { checkLines, INITIAL_CHECK_HINT } from "../../../src/register/branch-push.js";
 import { registerRegisterCommands } from "../../../src/register/register.js";
 
 const PROJECT = "sample";
+
+describe("checkLines", () => {
+  const target = {
+    registerPath: "docs/sample/controls/project-register",
+    eventsPath: "docs/sample/execution/exec/events",
+    branch: "project/sample/register",
+  };
+
+  it("adds the hint of the real run when the check would stop", () => {
+    const lines = checkLines(
+      { scopeViolations: ["0123456789ab: product.txt"], shapeViolations: [] },
+      target,
+      INITIAL_CHECK_HINT,
+    );
+
+    expect(lines[0]).toBe("Checks: failed; the push would stop.");
+    expect(lines[1]).toContain("0123456789ab: product.txt");
+    expect(lines.at(-1)).toBe(INITIAL_CHECK_HINT);
+  });
+
+  it("shows only the passed line without the hint when the check passes", () => {
+    const lines = checkLines(
+      { scopeViolations: [], shapeViolations: [] },
+      target,
+      INITIAL_CHECK_HINT,
+    );
+
+    expect(lines).toEqual(["Checks: passed."]);
+  });
+});
 
 describe("register branch-push arguments and preconditions", () => {
   const originalCwd = process.cwd();

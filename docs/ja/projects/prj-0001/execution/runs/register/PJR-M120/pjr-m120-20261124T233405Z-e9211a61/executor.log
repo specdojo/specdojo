@@ -1,0 +1,25 @@
+PJR-M120 の2回目の指摘2点を直しました。対象のテストファイル2本（単体テストと統合テスト）を vitest で直接流し、18件すべて通っています。typecheck・lint・単体テスト全件・統合テスト全件は、このあと親の runner が流します。
+
+**1. 初回はリモートの統合のブランチの先端から作る**（`src/register/branch-push.ts`）
+- リモートに統合のブランチ（`<remote>/<integration_branch>`）があれば、本番では fetch して、その先端から専用ブランチを作ります。手元にしかない develop の commit（今回の 65 件）は専用ブランチに入りません。
+- 初回の検査は、その先端より後の commit だけを見ます。範囲は 0 件になり、範囲の外の commit で止まることはなくなります。個票とイベントの形の検査は、これまでどおり先端で流します。
+- リモートに統合のブランチが無いときだけ、これまでどおり手元の先端から作り、その旨の案内を出します。
+
+**2. `--dry-run` でも本番と同じ案内を出す**
+- 検査で止まるときは、初回の作成でも手元にだけあるブランチの push でも、`INITIAL_CHECK_HINT` を添えます。
+- `--dry-run` はこれまでどおり fetch しません。リモートの先端の commit が手元にまだ無いときは、検査は流さずに「fetch してから作り、検査は fetch のあとに流す」と示して、終了コード 0 で返します。
+
+**テスト**
+- 単体テストを書けるように、`checkLines` と `INITIAL_CHECK_HINT` を export しました。足した単体テストは、止まるときに案内を添え、通るときは添えないことを確かめます。
+- 統合テストを4件足しました（手元が進んでいてもリモートの先端から作ること、リモートに統合のブランチが無いときの案内、`--dry-run` でもリモートの先端から作ること、`--dry-run` に案内が出ること）。
+- 前回の「未 push の develop の commit で止まる」テストは、新しい動きに合わせて置き換えました。
+
+**文書**
+- 登録簿運用ガイドとコマンドリファレンスの初回の説明を直しました。設定リファレンスには起点の記述がないので変えていません。
+- 個票には、作業内容の No 6 と「2 回目の実行（2026-11-25）で直したこと」の小節を足しました。前回の「executor が決めたこと」のうち初回の検査の範囲は今回の内容で置き換え、その旨を書きました。
+
+`npm run validate:history-links` で違反はありません。統合のあとにオーケストレーターが試しのリポジトリで初回・復旧・`--dry-run` を確かめる作業（No 5）は、`open` のまま残しています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"register branch-push の初回作成を統合のブランチのリモートの先端（fetch して読む）から行うよう直し、手元にしかない統合ブランチの commit を専用ブランチに含めないようにした。リモートに統合のブランチが無いときだけ手元の先端から作り、案内を出す。--dry-run でも本番と同じ案内（INITIAL_CHECK_HINT など）を出す。単体テスト・統合テストを足し、ガイドとコマンドリファレンス、個票を更新した。","handoff":["決めた動き: 初回は `git ls-remote` で `<remote>/<integration_branch>` を確かめ、あれば本番では fetch した FETCH_HEAD から専用ブランチを作る。初回の検査はその先端を base として、それより後の commit だけを見る（範囲は 0 件、形の検査は先端で流す）。理由: 手元の develop に未 push の commit があると、`--remotes` 除外の範囲ではそれらが範囲の外として挙がり、初回が始められないため。","リモートに統合のブランチが無いときだけ手元の先端から作り、`<remote>/<integration_branch> does not exist; creating ... from the local ...` の案内を出す。検査で止まるときは `INITIAL_CHECK_HINT` も添える。","`--dry-run` は従来どおり fetch しない。リモートの統合ブランチの先端の commit が手元に無いときは、fetch してから作ることと、検査は fetch 後に流すことを示して終了コード 0 で返す。","単体テストのために `checkLines` と `INITIAL_CHECK_HINT` を `src/register/branch-push.ts` から export した。","作業内容 No 5（統合の後、オーケストレーターが試しのリポジトリで初回・復旧・`--dry-run` を確かめる）は open のまま。"],"validations":[{"command":"npx vitest run tests/src/register/branch-push.test.ts tests/src/register/register-branch-push.integration.test.ts","status":"passed","summary":"2 files, 18 tests passed"},{"command":"npm run validate:history-links","status":"passed","summary":"no violations; changed ticket pjr-m120 is valid"},{"command":"npx prettier --write (changed ts and md files)","status":"passed","summary":"formatted changed files"}]}
+</specdojo_executor_evidence>
