@@ -93,3 +93,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_22ec70a16f954522acfae0f8c9a35172
+- v: 1
+  id: reg_83b0db59509446c0b1c8fe8168818578
+  ts: "2026-11-24T13:47:12Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: repos に specdojo-lp の写しを宣言した試しの project（develop の版）で review の段を流し、claude は書けず変更が出ないこと、codex（terra-review-executor）が書いた README の変更を runner が review stage changed product repositories that are read-only で止めたことを確かめた（2026-11-24）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-24"
+    - field: conclusion
+      from: "-"
+      to: review の段でプロダクトの worktree を読み取りだけで渡し、読み取りだけにできない provider の書き込みは runner が止めるようになった
+  previous_event_id: reg_45592915d13446c283efbd0218a7aa2c

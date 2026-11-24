@@ -7,11 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: low
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-21T02:09:29Z"
+  completed_at: "2026-11-24T13:47:12Z"
+  conclusion: review の段でプロダクトの worktree を読み取りだけで渡し、読み取りだけにできない provider の書き込みは runner が止めるようになった
   derived_from:
     - PJR-08EK
 ---
