@@ -1,0 +1,18 @@
+R1（目的の過不足）のレビューで直したのは、`docs/ja/specdojo/samples/atc-sample.md` の「概要」の1か所です。lint などの検査はこの後に親の runner が実行するため、ここでは実行していません。result と rulebook は変更していません。
+
+**直した点（F001）**
+「概要」に引いている `atc-index` の分割基準から「金額の提示」が抜けていました。`atc-index-sample.md` にある分割基準（「商品の登録→金額の提示→会計確定→レシートの受け渡し」）のとおりに直しました。
+
+**確かめたが直していない点**
+`atc-rulebook` の目的と本文の必須の章の内容と照らし合わせました。
+
+- **6章:** 必須の6章はすべて揃っています。
+- **受入の責務:** 5項目あり、正常系に加えて確定前の取消、取引の照合、在庫の差分を含んでいます。
+- **対象外:** 各項目に理由と代わりの扱い先があります。
+- **環境:** 判定を保留する条件が書かれています。
+
+要らない内容、つまり UI の細かい手順や `atc-index` の共通方針の言い直しもありませんでした。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1 目的の過不足: atc-sample の「概要」で引いていた atc-index の分割基準に抜けていた「金額の提示」を足し、正本に揃えた（F001）。そのほかは rulebook の目的と必須の章に照らして過不足がなく、手を入れていない。","handoff":["No: 1 / 段: R1 / 箇所: docs/ja/specdojo/samples/atc-sample.md の「概要（`cash-sale`）」の段落 / 指摘: 引いていた atc-index の分割基準が「商品の登録→会計確定→レシートの受け渡し」で、atc-index-sample の分割基準の表の `atc-cash-sale` の行にある「金額の提示」が抜けていた（grade F001、`vp-qe-omissions-consistency`） / 直した案: 「商品の登録→金額の提示→会計確定→レシートの受け渡し」に直した / 根拠: docs/ja/specdojo/samples/atc-index-sample.md の「受入テスト対象の括り方と分割基準」の表、atc-rulebook の「本文要件」（概要は `atc-index` の分割基準に沿った粒度が分かること）、「全体方針」（共通方針を言い直さない） / 印: なし","No: 2 / 段: R1 / 箇所: docs/ja/specdojo/samples/atc-sample.md の全体 / 指摘: atc-rulebook の「本文要件」の必須の6章、受入の責務（5項目で、取消・照合・在庫の差分を含む）、対象外の理由と代わりの扱い先、判定を保留する条件を確かめ、欠けている内容も要らない内容も見つからなかった / 直した案: 変更なし（直したのは No 1 だけ） / 根拠: docs/ja/specdojo/rulebooks/atc-rulebook.md の「全体方針」「本文要件」「記述ガイド」「禁止事項」、docs/ja/specdojo/guides/kata-guide.md の「kata を agent でレビューする」 / 印: なし"],"validations":[{"command":"npm run lint:md","status":"not_run","summary":"親の runner が実行するため、executor では実行していない"},{"command":"npm run lint:fm","status":"not_run","summary":"親の runner が実行するため、executor では実行していない"}]}
+</specdojo_executor_evidence>
