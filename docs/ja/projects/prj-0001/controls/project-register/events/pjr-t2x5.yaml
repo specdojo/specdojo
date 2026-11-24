@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_1700083cc34e45c5aed7f476181b2121
+  ts: "2026-11-24T22:41:57Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: v0.10.0 の後も機能改善を続け、v1.0 まで破壊的な変更をしない
+    - field: description
+      from: ""
+      to: "- PJR-6XYD の入力と完了条件で、v0.10.0 の後は機能追加をいったん止める期間にすると決めていた（利用者の承認、2026-11-24）。PJR-BHJM は英語版をその例外として扱っていた。 - 利用者の判断（2026-11-25）: 機能改善はまだ必要なため、止める方針は撤回する。利用者には新しい版へ順次上げてもらい、その代わりに破壊的な変更をしない約束を置く。 - v0.10.0 で、agy の対応の削除と、0.9.2 で非推奨にした 9 コマンドの削除という大きな破壊的変更は済んでいる。"
+    - field: input
+      from: ""
+      to: '["利用者の判断（2026-11-25）: 機能改善はまだ必要なため、止める方針を撤回し、利用者には逐次 update してもらう","利用者の判断（2026-11-25）: 期限は v1.0 まで。ルールはオーケストレーターの推奨どおり"]'
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: PO
+    - field: registered
+      from: ""
+      to: "2026-11-25"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-6XYD"]'
