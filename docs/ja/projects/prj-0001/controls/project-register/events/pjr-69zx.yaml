@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_43c6588dd5c74f3e8dba2e150cbc2189
+  ts: "2026-11-24T23:02:07Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 運用メモの一般の知見をオーケストレーターの本文へ移す
+    - field: description
+      from: ""
+      to: prj-0001 の運用メモ（`pm-orchestrator-playbook`）には、prj-0001 に限らず、どの利用者のオーケストレーターにも効く知見が溜まっている。配布するオーケストレーターの本文（`.agents/specdojo-orchestrator.agent.md`）へ移し、運用メモには prj-0001 に固有の事柄だけを残す。
+    - field: input
+      from: ""
+      to: '["利用者の要望（2026-11-25）: playbook に書いてあることで、orchestrator に反映したほうがよいものを確認して起票する","オーケストレーターが運用メモと本文を照らした（2026-11-25）。本文にない一般の知見が 10 件ほどある","担当と期限は利用者の確認待ち"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-25"
+    - field: due
+      from: ""
+      to: _TODO_
