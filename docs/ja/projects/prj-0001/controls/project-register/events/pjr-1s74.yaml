@@ -192,3 +192,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_c7a04122922240388f509c0f3e5adb67
+- v: 1
+  id: reg_c532b6bae33a4ea58c3fd76234d5527d
+  ts: "2026-11-24T01:49:08Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果・親の検証で確かめ、統合の後に pm-members-sample-060 を scheduler_strategy を critical-first に戻して流し直し、統合まで通ることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-24"
+    - field: conclusion
+      from: "-"
+      to: validate=false などの印の付いた YAML を、変えた YAML に求める schema の検査から外した
+  previous_event_id: reg_b0437d553c2e41939a95ffca1a0a195c
