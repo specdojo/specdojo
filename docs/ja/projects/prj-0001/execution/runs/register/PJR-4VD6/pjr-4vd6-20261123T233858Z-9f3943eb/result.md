@@ -4,14 +4,13 @@ specdojo:
   type: exec-result
   task_id: PJR-4VD6
   mode: edit
-  status: blocked
+  status: superseded
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-4VD6/pjr-4vd6-20261123T233858Z-9f3943eb/plan.md
   started_at: "2026-11-23T23:40:03.866Z"
-  completed_at: "2026-11-23T23:58:20.388Z"
+  completed_at: "2026-11-24T00:33:51.302Z"
   agent: sol-executor
-  block_reason: "parent validation failed: test-integration"
 ---
 
 # Edit Result
