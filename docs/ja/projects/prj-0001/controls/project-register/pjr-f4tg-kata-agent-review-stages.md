@@ -107,7 +107,11 @@ PJR-TQZA で決めた流れで、文章のチェック項目・kata 専用の観
 
 ### 5.6. 残課題
 
-- 作業内容 No 7・No 8（段の実行と利用者のレビューとの比べ）。
+- 作業内容 No 7（報告の見本）: 2026-11-24 に 3 つの型 × 5 段の 15 タスクを流し終えた（executor は sol-executor、reporter は sonnet-reporter）。オーケストレーターが prj-overview-sample の R1〜R5 の result を確かめたところ、次の 2 点が `人への報告の形` を満たしていない。
+  - 指摘の表が Markdown の表にならず、申し送りの 1 行に詰めて書かれる。同じ表が申し送りに 2 回重なる（R5）。executor の handoff の指示を reporter がそのまま写している。
+  - そのため人は result だけでは指摘を一覧できない。オーケストレーターが 15 の result から表を集めた一覧（指摘 45 件、段ごとの commit 付き）を作り、利用者のレビューの材料にした。
+- 直し方の案: 段の `description` か kata-guide の `人への報告の形` で、指摘の表を result の `実施内容` に Markdown の表として 1 回だけ書くと定める。reporter の書き方に頼らず executor が result の表の文案を handoff に表として渡すかは、No 8 の比べの後に決める。
+- 作業内容 No 8: 利用者が同じ版の 3 つの sample をレビューし、agent の指摘と比べる。利用者のレビュー待ち。
 - grade の kata の観点を絞る変更（`kata 専用の観点の組と grade への反映の案`）の起票と承認。
 
 ## 6. 関連ドキュメント
