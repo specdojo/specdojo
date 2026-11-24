@@ -65,4 +65,10 @@ plan に展開された finding は、message と同じ viewpoint ID の判定�
 - 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
 - agent 自身は登録簿の状態を変更せず、終了コードと標準エラー出力で runner に結果を返す。
 
+## 再開の指示（2026-11-24T06:12:35.289Z）
+
+利用者が再開の前に足した指示である。これまでの申し送りとあわせて、この指示に従って作業を続ける。
+
+- 前回は CHANGELOG.md の下書きまでで未完了だった。下書き（移行の注意・追加・不具合修正）は活かして続ける。前回の報告では個票に収集済みの項目を記録したとあったが、PJR-DMSM の個票は変わっていなかった。集める対象は次の 2 組。(1) 入力に「v0.10.0 に入れる」とある項目: PJR-2P7C PJR-TQZA PJR-1JF6 PJR-1RJP PJR-2X6K PJR-40EE PJR-4VD6 PJR-6690 PJR-77FH PJR-7EZR PJR-7TVA PJR-82H2 PJR-A54F PJR-B6M3 PJR-C11R PJR-DF5Z PJR-EEWP PJR-FBP0 PJR-GA72 PJR-JA3M PJR-N5J8 PJR-NRWJ PJR-Q723 PJR-TAHV PJR-TN64 PJR-XSRF PJR-YCMR PJR-YQ32 PJR-36QG PJR-8PXJ PJR-F4TG PJR-F636 PJR-VM2S PJR-DMSM  (2) v0.9.2（2026-11-21）の後に done・decided・review になり、個票に「CHANGELOG に書く事項」がある項目: PJR-09HA PJR-0JVB PJR-0VPB PJR-1FMG PJR-1HJH PJR-1S74 PJR-22N9 PJR-2MR5 PJR-2Q86 PJR-2RHB PJR-30PT PJR-325Y PJR-39AB PJR-50RQ PJR-5N1Q PJR-5T0Q PJR-6Y05 PJR-77JB PJR-7C9X PJR-7KQT PJR-7M9J PJR-86BN PJR-8S4T PJR-9170 PJR-98HS PJR-9X52 PJR-9XEG PJR-AEKE PJR-B6NS PJR-BBTW PJR-BEQ8 PJR-BHFG PJR-BM07 PJR-BNAV PJR-C7WD PJR-CJMN PJR-E4MW PJR-E73Z PJR-EF4Z PJR-EF7M PJR-EKGQ PJR-ESE7 PJR-EX0D PJR-EZ4Z PJR-F6MC PJR-FGKB PJR-G3TT PJR-G6NT PJR-GV43 PJR-HCHH PJR-HRW6 PJR-K32V PJR-K8F1 PJR-KYG4 PJR-KZZM PJR-MS7X PJR-N0P1 PJR-N4D0 PJR-N5D2 PJR-N6FQ PJR-PHY7 PJR-PP4X PJR-PXNQ PJR-QHES PJR-QTZ7 PJR-QWG7 PJR-R05D PJR-R8DM PJR-RPNF PJR-RS2P PJR-SJC7 PJR-SJR7 PJR-SV9G PJR-SZCR PJR-TF6F PJR-TJZM PJR-TN50 PJR-VCER PJR-VQK2 PJR-WB78 PJR-WNQJ PJR-XA6Y PJR-XHS8 PJR-XZ9B PJR-YS9M PJR-YY0P PJR-Z17T PJR-Z8MQ  。各個票の「CHANGELOG に書く事項」を読み、利用者に影響するものを区分ごとに CHANGELOG.md へまとめる（似た項目は 1 行にまとめてよい。kata の sample・rulebook の手直しは個別に並べず要約してよい）。「なし」と書かれたものは載せない。集めた項目と区分、載せなかった項目と理由、文案が見つからなかった項目の一覧を PJR-DMSM の個票の対応結果に必ず書く。review の項目（F636・F4TG・VM2S など）は載せたうえで、個票の対応結果に review であることを書く。
+
 `共通規約 sha256:e7dd6ff2a0dec2f12ed4ffc905cd185aca2d6f9c3922c56a249c88cb45b2a14e` `docs/ja/projects/prj-0001/execution/conventions/e7dd6ff2a0dec2f12ed4ffc905cd185aca2d6f9c3922c56a249c88cb45b2a14e.txt`
