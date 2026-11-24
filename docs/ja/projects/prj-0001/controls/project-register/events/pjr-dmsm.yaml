@@ -57,3 +57,16 @@
       from: ""
       to: 完了条件
   previous_event_id: reg_10fd4e8e72fc402bacc194f33e97ee87
+- v: 1
+  id: reg_2df62bd0b93f4cc29beb8d745b1400ec
+  ts: "2026-11-24T06:06:47Z"
+  action: start
+  actor: terra-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_9738af59da894eaeb75cca0cac850f95
