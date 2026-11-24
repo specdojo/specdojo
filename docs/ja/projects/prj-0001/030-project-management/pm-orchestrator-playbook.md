@@ -150,7 +150,15 @@ docs だけの項目や、runner の通らないコード（kata、docs-site な
 9. 利用者が PR を merge commit でマージし、タグを付けて push し、`npm stage` で公開を承認する。stage の ID は公開の workflow のログ（`staged with id`）にある。承認は 2FA を通した経路で行う（npmjs.com、または手元の端末で `npx -y npm@^11.15.0 login` の後に `npx -y npm@^11.15.0 stage approve <stage-id>`）。npm 11.15 より前には `npm stage` が無く、2FA を迂回する token では 401 になる。
 10. npm の `latest`、タグで起動した workflow の結果、npm から入れた版での導入を確かめ、リリースの todo を close する。
 
-### 9.1. 文書サイトの 2 つの版
+### 9.1. WSL の導入確認
+
+リリース手順 7 で、WSL2 の Linux 側のホーム配下に空の Git リポジトリを 2 つ作り、その版の `npm pack` の tarball をそれぞれ `npm install --save-dev` で導入する。Node.js 22.17 以上、Git の名前・メールと agent CLI を用意する。Dev Container も試す場合は Docker Desktop の WSL 連携を有効にする。実際の agent の認証情報は記録に残さない。
+
+- [ ] 手元: `npx specdojo doctor`、`npx specdojo init --yes --provider claude --no-tmux`、`npx specdojo register add --project prj-0001 --type todo --title "WSL check"` を実行する。
+- [ ] tmux: 別の空リポジトリで `npx specdojo doctor --tmux`、`npx specdojo init --yes --provider claude --tmux`、同じ `register add` を実行する。`tmux new -s specdojo-check` で入り、`Ctrl-b`、`d` で離脱し、`tmux attach -t specdojo-check` で再接続できることを確認する。
+- [ ] 両方で各コマンドが成功し、生成された個票に指定したタイトルがあることを確認する。WSL の版、package の版、実施日と結果をリリースの個票に記録し、失敗時は修正して再実行する。
+
+### 9.2. 文書サイトの 2 つの版
 
 文書サイトは、本番（`/specdojo/`）と開発中の版（`/specdojo/next/`）を並べて公開する（PJR-98HS）。
 
