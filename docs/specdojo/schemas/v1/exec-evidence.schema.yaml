@@ -350,7 +350,8 @@ properties:
       Repository settings the runner took from .specdojo/specdojo.local.config.json for this
       run: a shared repos[] path replaced by name (kind path), a local repository added
       (kind added), a shared external_projects alias `path` replaced (kind external-path),
-      or an external_projects alias added locally (kind external-added). Omitted when no
+      an external_projects alias added locally (kind external-added), or a reference directory
+      path replaced/added (kind reference-path/reference-added). Omitted when no
       local config value was applied.
     items:
       type: object
@@ -396,5 +397,25 @@ properties:
             properties:
               kind:
                 const: external-path
+          then:
+            required: [shared_path]
+        - required: [reference, kind, path]
+          additionalProperties: false
+          properties:
+            reference:
+              type: string
+              minLength: 1
+            kind:
+              enum: [reference-path, reference-added]
+            path:
+              type: string
+              minLength: 1
+            shared_path:
+              type: string
+              minLength: 1
+          if:
+            properties:
+              kind:
+                const: reference-path
           then:
             required: [shared_path]

@@ -1,4 +1,5 @@
 import { warnDeprecated } from "./deprecation.js";
+import { validateReferences } from "./reference-directories.js";
 import { type Command } from "commander";
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -133,6 +134,9 @@ export type SpecDojoExternalProjectConfig = {
   /** Project id understood by the SpecDojo installation in the external repository. */
   project_id: string;
 };
+
+/** A directory made available only for reference, outside the managed repositories. */
+export type SpecDojoReferenceConfig = { path: string };
 
 export const REPO_NAME_PATTERN = /^[a-z0-9-]+$/;
 
@@ -310,6 +314,8 @@ export type SpecDojoConfig = {
   projects: Record<string, SpecDojoProjectConfig>;
   /** External project registers delegated to the SpecDojo installation in another repository. */
   external_projects?: Record<string, SpecDojoExternalProjectConfig>;
+  /** Read-only directories for the interactive orchestrator; never exec targets. */
+  references?: Record<string, SpecDojoReferenceConfig>;
 };
 
 export const DEFAULT_AGENT_MEMBERS_PATH = ".specdojo/agent-members.yaml";
@@ -1127,7 +1133,11 @@ export function loadConfig(configRootDir: string = specdojoRootDir()): ConfigLoa
     projectIds,
     rootDir,
   );
-  const configErrors = [...repoErrors, ...externalProjectErrors];
+  const configErrors = [
+    ...repoErrors,
+    ...externalProjectErrors,
+    ...validateReferences(rootDir, effective),
+  ];
   if (configErrors.length > 0) {
     const localNote = local ? ` with local overrides from ${local.path}` : "";
     throw new Error(

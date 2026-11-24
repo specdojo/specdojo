@@ -40,6 +40,138 @@ afterEach(() => {
 describe("buildOrchestratorLaunch", () => {
   const repoRoots = ["/workspace/app1", "/workspace/admin-ui"];
 
+  it("adds Claude references with an explicit edit deny and keeps product write access", () => {
+    const launch = buildOrchestratorLaunch({
+      provider: "claude",
+      providerArgs: [],
+      repoRoots: [repoRoots[0]],
+      referenceRoots: ["/reference/library"],
+      cwd: "/workspace/project",
+      env: {},
+    });
+    expect(launch.args).toEqual([
+      "--add-dir",
+      repoRoots[0],
+      "--allowedTools",
+      "Edit(//workspace/app1/**)",
+      "--add-dir",
+      "/reference/library",
+      "--disallowedTools",
+      "Edit(//reference/library/**)",
+    ]);
+    expect(launch.args).not.toContain("Write(//reference/library/**)");
+  });
+
+  it("never adds Codex references to writable roots", () => {
+    const launch = buildOrchestratorLaunch({
+      provider: "codex",
+      providerArgs: ["prompt"],
+      repoRoots: [repoRoots[0]],
+      referenceRoots: ["/reference/library"],
+      cwd: "/workspace/project",
+      env: {},
+    });
+    expect(launch.args).toEqual([
+      "prompt",
+      "--add-dir",
+      repoRoots[0],
+      "--sandbox",
+      "workspace-write",
+      "-c",
+      "sandbox_workspace_write.writable_roots=[]",
+      "-c",
+      "sandbox_workspace_write.exclude_slash_tmp=true",
+      "-c",
+      "sandbox_workspace_write.exclude_tmpdir_env_var=true",
+    ]);
+    expect(launch.args).not.toContain("/reference/library");
+  });
+
+  it("denies Copilot writes to reference descendants", () => {
+    const launch = buildOrchestratorLaunch({
+      provider: "copilot",
+      providerArgs: ["--allow-tool", "write"],
+      repoRoots: [],
+      referenceRoots: ["/reference/library"],
+      cwd: "/workspace/project",
+      env: {},
+    });
+    expect(launch.args).toEqual([
+      "--allow-tool",
+      "write",
+      "--add-dir",
+      "/reference/library",
+      "--deny-tool",
+      "write(/reference/library/**)",
+    ]);
+  });
+
+  it("merges OpenCode read-only references after broad edit allows", () => {
+    const launch = buildOrchestratorLaunch({
+      provider: "opencode",
+      providerArgs: ["--agent", "orch"],
+      repoRoots: [repoRoots[0]],
+      referenceRoots: ["/reference/library"],
+      cwd: "/workspace/project",
+      env: {
+        OPENCODE_CONFIG_CONTENT: JSON.stringify({
+          agent: {
+            orch: { permission: { edit: { "../../reference/library/**": "allow", "*": "allow" } } },
+          },
+          autoupdate: false,
+        }),
+      },
+    });
+    const config = JSON.parse(launch.env.OPENCODE_CONFIG_CONTENT!) as {
+      autoupdate: boolean;
+      agent: {
+        orch: {
+          permission: { external_directory: Record<string, string>; edit: Record<string, string> };
+        };
+      };
+    };
+    expect(config.autoupdate).toBe(false);
+    expect(config.agent.orch.permission.external_directory).toEqual({
+      "*": "deny",
+      "/workspace/app1/**": "allow",
+      "/reference/library/**": "allow",
+    });
+    expect(Object.entries(config.agent.orch.permission.edit)).toEqual([
+      ["*", "allow"],
+      ["../app1/**", "allow"],
+      ["../../reference/library/**", "deny"],
+    ]);
+  });
+
+  it("requires an explicit OpenCode agent for reference-only launches", () => {
+    expect(() =>
+      buildOrchestratorLaunch({
+        provider: "opencode",
+        providerArgs: [],
+        repoRoots: [],
+        referenceRoots: ["/reference/library"],
+        cwd: "/workspace/project",
+        env: {},
+      }),
+    ).toThrow("requires --agent");
+  });
+
+  it("treats glob characters in Claude and Copilot reference paths literally", () => {
+    const options = {
+      providerArgs: [],
+      repoRoots: [],
+      referenceRoots: ["/reference/lib[1]"],
+      cwd: "/workspace/project",
+      env: {},
+    };
+    expect(buildOrchestratorLaunch({ ...options, provider: "claude" }).args).toContain(
+      "Edit(//reference/lib\\[1\\]/**)",
+    );
+    expect(buildOrchestratorLaunch({ ...options, provider: "copilot" }).args).toContain(
+      "write(/reference/lib[[]1[]]/**)",
+    );
+  });
+
   it("reuses exec extra-root arguments for claude", () => {
     const launch = buildOrchestratorLaunch({
       provider: "claude",
