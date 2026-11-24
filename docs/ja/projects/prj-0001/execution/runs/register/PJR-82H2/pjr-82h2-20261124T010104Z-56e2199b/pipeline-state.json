@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-82H2",
+  "run_id": "pjr-82h2-20261124T010104Z-56e2199b",
+  "updated_at": "2026-11-24T01:03:09.075Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "terra-executor",
+      "attempts": 1,
+      "started_at": "2026-11-24T01:01:46.873Z",
+      "completed_at": "2026-11-24T01:02:55.558Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-82H2/pjr-82h2-20261124T010104Z-56e2199b/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "sonnet-reporter",
+      "attempts": 0,
+      "started_at": "2026-11-24T01:03:09.066Z",
+      "completed_at": "2026-11-24T01:03:09.066Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-82H2/pjr-82h2-20261124T010104Z-56e2199b/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "terra-executor",
+      "attempts": 1,
+      "started_at": "2026-11-24T01:03:09.075Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-82H2/pjr-82h2-20261124T010104Z-56e2199b/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-82H2/pjr-82h2-20261124T010104Z-56e2199b/result.md"
+  }
+}
