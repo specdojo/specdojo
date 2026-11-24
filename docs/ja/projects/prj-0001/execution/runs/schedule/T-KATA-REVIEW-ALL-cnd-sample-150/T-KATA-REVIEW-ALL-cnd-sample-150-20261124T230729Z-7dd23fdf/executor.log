@@ -1,0 +1,17 @@
+R5（整合）の段を終えました。`docs/ja/specdojo/samples/cnd-sample.md` を 2 か所直し、相手側の文書を直すべき点を 1 件、案として残しています。Prettier の確認は通りました。lint などの残りの検査は、このあと親 runner が実行します。
+
+**直した点**
+
+- **R5-1（Person の節）**: 「来店客」を「顧客」にしました。用語集（`gl-sample.yaml`）の正式な語が「顧客」で、別名は「お客さん」だけだからです。ただし同じ系列の `cxd-sample` やほかの sample も「来店客」を使っているため、「要判断」の印を付けています。用語集の側に「来店客」を別名として足し、sample を元に戻す案もあります。
+- **R5-2（メモ / 将来課題の末尾）**: 仮の名前 `cpd-kinuya-sales-service` を、既にある `cpd-sample` への wikilink に置き換えました。`cpd-sample` は本図を `based_on` にして販売処理サービスを分解した下位図なので、構成を変えたときに照合する先として実在の文書を示すほうが合います。
+
+**相手側を直す案（本ファイルは変えていません）**
+
+- **R5-3（概要と frontmatter の `based_on`）**: 成果物カタログ（`dct-kata.yaml`）は `cnd-sample` の `depends_on` に `cxd-sample` を挙げています。一方、sample の本文は `cxd-sample` を「別の学習用構成で、直接の設計根拠にはしない」と書き、`based_on` も空です。
+  - 案 A: カタログの `depends_on` から `cxd-sample` を外す。
+  - 案 B: `cxd-sample` の上位図を、本図と同じタブレット画面の構成で作り直し、`based_on` に入れる。
+  - 型全体の構成に関わるため「要判断」としています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5 整合: cnd-sample の Person の節で「来店客」を用語集の「顧客」にし、末尾の照合先の仮名 `cpd-kinuya-sales-service` を既存の `cpd-sample` への wikilink に置き換えた。カタログの `depends_on`（`cxd-sample`）と本文・`based_on` の食い違いは、相手側を直す案として handoff に残した。","handoff":["R5-1: R5 / 3.2. Person（人・ロール） / 店頭で商品を受け取る人を「来店客」と書いており、用語集（`gl-sample.yaml` の `tm-sales-customer`）の正式な語「顧客」（別名は「お客さん」だけ）と食い違う / 「来店客」2 か所を「顧客」にした / `vp-qe-kata-conformance`（適用先の用語集との整合）。迷った理由: 同じ系列の `cxd-sample` やほかの sample（sf・nfr・bac など）も「来店客」を使っている。選ばなかった案: 用語集の `tm-sales-customer` の `aliases` に「来店客」を足し、本 sample を元の表記に戻す / 要判断","R5-2: R5 / 5. メモ / 将来課題（末尾の変更時の照合先） / 下位のコンポーネント図を仮の名前 `cpd-kinuya-sales-service` で示しているが、本図を `based_on` にして販売処理サービスを分解した `specdojo:cpd-sample` が既にある / 仮の名前を `[[specdojo:cpd-sample|販売処理サービス C4コンポーネント図]]` に置き換えた / `vp-dev-change-impact`（変更の影響先を実在の文書で追える）。`cpd-sample` の frontmatter の `based_on` と概要が `specdojo:cnd-sample` を上位図として参照している / -","R5-3: R5 / 1. 概要・frontmatter の `based_on` / 成果物カタログ（`docs/ja/projects/prj-0001/010-deliverables-catalog/dct-kata.yaml` の `cnd-sample`）は `depends_on: [cxd-sample]` とするが、sample の本文は `cxd-sample` を「別の学習用構成で、直接の設計根拠にはしない」と書き、`based_on` も空である。cnd-rulebook は `based_on` を `depends_on` の推移閉包にある上位コンテキスト図などの直接の根拠に限るとしている / - / `vp-qe-kata-conformance`（kata 相互）。相手側を直す案 A: `dct-kata.yaml` の `cnd-sample` の `depends_on` から `cxd-sample` を外す（または前後関係を示すだけの依存であると明記する）。案 B: `cxd-sample` の上位図を本図と同じタブレット画面の構成で作り直し、cnd-sample の `based_on` に入れる。型全体の構成に関わるため本段では直さない / 要判断"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/cnd-sample.md","status":"passed","summary":"All matched files use Prettier code style"}]}
+</specdojo_executor_evidence>
