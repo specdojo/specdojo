@@ -73,3 +73,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_143a2bb315b04af29dd19bdfdfc7a8ef
+- v: 1
+  id: reg_44c7e44fcc7d454c8271651606c33aa0
+  ts: "2026-11-24T13:39:45Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 31 件すべてが載り、各項目の rulebook が sample の frontmatter と一致し、done_criteria が 3 行であること、catalog validate のエラーが 0 件であることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-24"
+    - field: conclusion
+      from: "-"
+      to: 非推奨でない sample のうち dct-kata に載っていなかった 31 件を、既存の sample と同じ形で catalog に足した
+  previous_event_id: reg_133051c7c634444884f732d7de1373ae
