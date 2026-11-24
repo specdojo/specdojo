@@ -1,0 +1,18 @@
+R5（整合）のレビューを終え、`docs/ja/specdojo/samples/otp-index-sample.md` を 3 か所直しました。変更したのはこのファイルだけです。Prettier と markdownlint はどちらも問題ありませんでした。残りの検査は親 runner が実行します。
+
+**直したこと**
+
+- **「初期増員体制」の表の前の文**: 元の文では、並行記録の 1 週間もハイパーケアの期間に読めました。`mip-index-sample` では、ハイパーケアは正本切替から 2 週間です。`mip-index` の定義に合わせ、並行記録の 1 週間は同じ表で扱うだけだと書き分けました。
+- **「バックアップ/リストア」**: 個別の sample が使う手順書 `opr-backup-restore` への導線がありませんでした。リストア責任者の項目に、戻す手順の置き場所として足しました。
+- **「関連ドキュメント（必須）」**: 同じく `opr-backup-restore` を足しました。
+
+**相手側を直すべき点（`otp-sample.md` は変えていません）**
+
+- ハイパーケアの期間の定義が `mip-index` と食い違っています。`otp-sample.md` の「概要」は、ハイパーケアの期間に並行記録の 1 週間を含めています。迷ったため「要判断」の印を付けました。
+- 障害時に何へ書くかが食い違っています。`otp-index` では、P1 の間はノートへ切り替えます。`otp-sample.md` の「監視/アラート」の備考は「店番メモは障害時とバッテリー切れの間に使う」と書いています。
+
+**F001（関連ドキュメントに `opr-sales` などの分冊がない）**: 前の段で 4 件とも足されていたため、解消済みとして扱いました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5 整合: otp-index-sample のハイパーケア期間を mip-index（正本切替から 2 週間）に合わせ、`opr-backup-restore` への導線を足した。F001 は前の段で解消済み。相手側（otp-sample）を直す案 2 件を handoff に残した。","handoff":["R5-1: R5 / 8. 初期増員体制（期間・当番・SLA） / 表の前の文「ハイパーケアの期間ごとに」が並行記録の 1 週間をハイパーケアに含めて読め、`mip-index-sample` の「移行後ハイパーケア方針」（期間は正本切替から 2 週間）と食い違う / ハイパーケアは `mip-index` のとおり正本切替から 2 週間とし、並行記録の 1 週間も同じ体制の表で扱うと書き分けた / `vp-qe-kata-conformance`（`based_on` の `mip-index-sample` を正とした） / -","R5-2: R5 / 3. バックアップ/リストア、11. 関連ドキュメント（必須） / 個別の sample（`otp-sample`）がリストア手順の参照先にしている `opr-backup-restore` への導線が index になく、index から辿れない / リストア責任者の項目に「戻す手順は `opr-backup-restore` に置く」を足し、関連ドキュメントに `opr-backup-restore` を足した / `vp-qe-kata-conformance`（kata 相互）、`vp-dev-change-impact` / -","R5-3: R5 / otp-sample.md の 1. 概要（hypercare） / 「ハイパーケアの期間（並行記録の 1 週間と正本切替から 2 週間）」が `mip-index-sample`（正本切替から 2 週間）と、直した後の `otp-index` と食い違う / - / 相手側の `docs/ja/specdojo/samples/otp-sample.md` を直す案: 「ハイパーケアの期間（正本切替から 2 週間）と、その前の並行記録の 1 週間に」と書き分ける。`vp-qe-kata-conformance`。迷った理由: `mip-index` の側を「並行記録を含めて 3 週間」に広げる案もあるが、`based_on` で上流にあたる `mip-index` を正とし、その案は選ばなかった / 要判断","R5-4: R5 / otp-sample.md の 2. 監視/アラート（店番メモの補記漏れの備考） / 「店番メモは障害時とバッテリー切れの間に使う」が、`otp-index` の 6. 問合せ窓口/一次対応・7. 障害対応フロー（P1 ではノートへ切り替える）と、`otp-sample` 自身の 4. 権限/アカウント移行（ノートへ書くのは P1 の障害の間だけ）と食い違う / - / 相手側の `docs/ja/specdojo/samples/otp-sample.md` を直す案: 備考を「店番メモはバッテリー切れの間と、P1 以外で記録できない操作に使う（P1 の間はノートに書く）」にする。`vp-qe-kata-conformance` / -","R5-5: R5 / 11. 関連ドキュメント（必須） / grade finding F001（5. 運用手順の変更点の参照先 `opr-sales` などが関連ドキュメントにない）は、前の段（`T-KATA-REVIEW-ALL-otp-index-sample-140` まで）で `opr-sales`・`opr-credit`・`opr-daily-closing`・`opr-shift-handover` が足され、解消済みと確かめた / - / `vp-qe-omissions-consistency` / -"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/otp-index-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/otp-index-sample.md","status":"passed","summary":"0 issues in 0 files"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/otp-index-sample.md だけで、plan・result・個票を変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変更していない","reason":"変更したファイルに *.yaml / *.yml がない"}]}
+</specdojo_executor_evidence>
