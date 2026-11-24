@@ -1,0 +1,19 @@
+`docs/ja/specdojo/samples/trc-requirements-to-tests-sample.md` を、駄菓子屋きぬやの初期リリースを題材にした完成例として書き直しました。プレースホルダの `req-r1-*`・`utc-*`・`itc-*` を、リポジトリに実在する sample の ID に置き換えています。整形は prettier で済ませ、markdownlint は0件でした。`npm run docs:build` は実行していません。
+
+**sample の中身**
+- **導入部と利用者**: 本書がテストの `relations.verifies` と「トレース」の表から作る派生ビューだと最初に書きました。誰がどの場面で使うか（QE はテストレビュー、店主代表（PO）は受入判断、PM は登録簿への転記）と、テスト漏れを残した場合の影響も加えています。対象外は SC-02〜SC-06 と、性能試験・単体テストで、どちらにも理由を付けました（F001・F006〜F008・F021）。
+- **トレース対象の前提**: 要求の対象（BAC-01〜BAC-03 と SC-01・AC-01〜AC-04 の8件）、テストの抽出条件、作り方（手順に沿った手作業、2026-05-11）、生成元の版（`main` の `4f9e2c1`）、別の QE が作り直して照合する確認手順を書きました。`based_on` には要求文書とテスト文書を全部入れています（F004・F009・F010・F012・F015・F016）。
+- **トレースマトリクス**: 列は rulebook の標準6列で、対応テストは `atc-cash-sale TR-01` のようにテストと `trace_key` で書いています。対象外の文書を指す参照は別の表に4件まとめました。各行の状況は rulebook の判定条件から説明でき、備考には各テストの `status` を書いています（F013・F014・F017・F020・F023）。
+- **結果**: 充足0件・一部充足5件・未着手3件です。参照元の atc / stc の sample がまだ `draft` なので、「充足」の行はありません。サマリには優先する要求と理由を付け、合計が8件と一致することを書きました。
+- **ギャップと対応方針**: 担当・期限の列を外し、「直す元の成果物と直し方」「作り直したときの解消の判定条件」を書く形にしました。担当と期限は登録簿で追跡すると明記しています（F003・F005・F019・F022）。
+- **変更履歴と更新ルール**: 作り直すきっかけの一覧と、作り直した日ごとの差分の表にしました。表を手で直す前提の運用は消しました（F011・F018・F025）。
+- **`_TODO_`・`_UNDECIDED_`**: ギャップ列からなくなりました（F024）。F002 は、指摘された `req-r1-004` の行ごと消えたので対象がなくなりました。
+
+**別途対応が必要な点**
+- `stc-sample` の frontmatter に `relations.verifies` がありません。本書ではこれを実際の不足として「一部充足」のギャップに載せましたが、`stc-sample` 自体は今回直していません。本書の表にした内容は、`stc-sample` 側を直したら作り直す必要があります。
+- rulebook の手順2は `relations.verifies` を持つテストしか拾わないため、それが抜けたテストは手順4の照合まで届きません。本書では総合テストの索引（`stc-index-sample`）のトレース表も見る抽出条件にして回避しました。rulebook 側で索引の走査を認めるかどうかを決める必要があります。
+- 手順4の「母集団にない項目」が、要求でない連携仕様やテスト方針を指す行まで含むのかが曖昧です。本書では含めて扱いましたが、rulebook で明確にしたほうがよい点です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"trc-requirements-to-tests-sample を実在 sample（bac/prj-success-criteria/atc/stc）に基づく完成例へ書き直し、F001〜F025 に対応した。prettier と markdownlint は通過。","handoff":["stc-sample の frontmatter に `relations.verifies` がない。本 sample はこれを実ギャップ（一部充足）として扱っている。stc-sample を直す場合は本 sample の表を作り直す必要がある（別タスク）。","rulebook の変更案: 「生成の手順」の手順2は `relations.verifies` を持つテストだけを集めるため、`relations.verifies` を欠くテストが手順4の照合に届かない。索引（`stc-index-sample` など）のトレース表の走査を抽出条件として認める記述を追加したい。","rulebook の変更案: 手順4の「母集団にない項目」が、要求でない文書（連携仕様・テスト方針）を指すトレース行を含むかが曖昧。本 sample では含めて母集団外の参照に4件載せた。含めるかどうかを rulebook で明確にしたい。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/trc-requirements-to-tests-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/trc-requirements-to-tests-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples 配下の sample のみで、plan・result・PJR 個票を変更していない"},{"command":"npm run docs:build","status":"not_run","summary":"サイト全体のビルドは重いため sandbox では実行していない"}]}
+</specdojo_executor_evidence>

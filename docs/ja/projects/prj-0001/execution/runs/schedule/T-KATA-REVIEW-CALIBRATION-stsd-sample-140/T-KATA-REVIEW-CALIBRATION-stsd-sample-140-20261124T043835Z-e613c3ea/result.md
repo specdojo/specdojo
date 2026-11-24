@@ -1,0 +1,48 @@
+---
+specdojo:
+  id: prj-0001:xer-t-kata-review-calibration-stsd-sample-140-20261124t043835z-e613c3ea
+  type: exec-result
+  task_id: T-KATA-REVIEW-CALIBRATION-stsd-sample-140
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  plan_ref: runs/schedule/T-KATA-REVIEW-CALIBRATION-stsd-sample-140/T-KATA-REVIEW-CALIBRATION-stsd-sample-140-20261124T043835Z-e613c3ea/plan.md
+  started_at: "2026-11-24T04:38:42.431Z"
+  completed_at: "2026-11-24T04:43:24.878Z"
+  agent: sol-executor
+  execution: agent
+  approach: sample-maintenance
+  targets:
+    - specdojo:stsd-sample
+    - specdojo:stsd-sample
+---
+
+# Edit Result
+
+## 1. 実施内容
+
+- R4（正しさ）の段として `stsd-sample.md` を grade の finding F001 と突き合わせて修正した。「品質不良」の判定基準がなく、`T-03` と `T-06` の分岐を一意に決められない問題を、返品待ちの意味と `T-03` の補足に具体条件を足して解消した。
+- F002（店番担当と店主代表の引き継ぎ表現）は前段 R3 で解消済みと確認し、再修正していない。
+- sample 本文には CLI コマンド・オプション・既定値・ファイルパスの主張がない。frontmatter と Mermaid の記述は schema と rulebook に一致した。確かめられなかった技術的主張はない。
+- executor が実行した Prettier の整形と書式検査、`git diff --check` は成功した。runner の `lint:md:changed`、`lint:fm:changed`、`lint:mermaid`、`lint:d2`、`test:docs`、`validate:schema` も成功した。
+
+## 2. 変更ファイル
+
+- `docs/ja/specdojo/samples/stsd-sample.md`: 意味を変えたのは 2 セルである。返品待ちの意味では、商品の割れ・つぶれ、個包装の破れ・開封、検品日時点で賞味期限または消費期限を過ぎていることを品質不良と定義した。`T-03` の補足では、過剰納品分でも品質不良でもない個品を合格とした。残りの差分は Prettier による表幅の調整である。状態値、状態名、遷移 ID、図、イベント、遷移条件、前段の章配置・導入文・引継ぎ表現は維持した。
+
+## 3. 申し送り
+
+- 補足: 品質不良の具体条件は F001 の例と sample 記述標準が許容する業務仮定に基づく例示である。外部の食品品質規格としての主張ではない。`cdfd-sample.md` の入荷検品・仕入記録・返品引渡しの記述とも衝突しない。
+- 補足: executor が起動時に実行した `npx specdojo where` は npm キャッシュへの書込みで失敗した。代わりに `node --import tsx src/specdojo.ts where playbook --project prj-0001` を使い、運用メモを確認している。
+- reporter は result の実施内容に次の指摘表を、改行を維持した Markdown 表として記載すること。 | No | 段 | 箇所 | 指摘 | 直した案 | 根拠 | 印 | | --- | --- | --- | --- | --- | --- | --- | | R4-1 | R4 | 4. 状態一覧、5. 状態遷移 | grade F001: 品質不良と合格の判定基準がなく、T-03 と T-06 の分岐を一意に判定できない。 | 返品待ちの意味に、商品の割れ・つぶれ、個包装の破れ・開封、検品日時点で表示された賞味期限または消費期限を過ぎていることを品質不良として定義した。T-03 の補足で、過剰納品分でも品質不良でもない個品を合格とした。 | `vp-qe-verifiability`、stsd-rulebook 6.4・6.5、stsd-recipe 4.5・5・8 | - | F002 は R3 の観点で、前段 result と現状から解消済みと確認した。再修正・再指摘していない。
+- reporter は実施内容の指摘表の後に、次の主張ごとの確かめの表を記載すること。各パスは読み取り済み。結果は修正後の判定である。 | No | 主張（本文の箇所） | 正本 | 確かめ方 | 結果 | 根拠 | | --- | --- | --- | --- | --- | --- | | C01 | frontmatter: メタ情報を `specdojo:` 配下に置く | docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml、src/shared/frontmatter-namespace.ts | schema と名前空間読取り実装を読取り | 一致 | schema 18〜28行で名前空間を要求し、実装の `specdojoFromBlock` が同キーのオブジェクトを読む。sample 2〜8行が該当する。 | | C02 | frontmatter: ID は `specdojo:stsd-sample` | docs/specdojo/schemas/v1/common-frontmatter.schema.yaml、docs/ja/specdojo/standards/sample-authoring-standard.md | ID の正規表現と sample 識別規約を読取り | 一致 | schema 10〜13行の ID パターンに一致し、標準4章の `-sample` 識別に適合する。 | | C03 | frontmatter: `type` は `data` | docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml、docs/ja/specdojo/rulebooks/stsd-rulebook.md | 列挙値と主 rulebook の宣言を読取り | 一致 | schema 12行に `data` があり、rulebook の `deliverable_type` と4章の指定も `data`。 | | C04 | frontmatter: `status` は `draft` | docs/specdojo/schemas/v1/common-frontmatter.schema.yaml | `status` の列挙値を読取り | 一致 | schema 63〜68行は draft・ready・deprecated。sample 5行は draft を維持。 | | C05 | frontmatter: `rulebook` は `specdojo:stsd-rulebook` | docs/specdojo/schemas/v1/common-frontmatter.schema.yaml、docs/ja/specdojo/rulebooks/stsd-rulebook.md | 参照形式と指定先を読取り | 一致 | schema 19〜25行の形式に一致し、rulebook 4章が同じ ID を指定する。対象文書も存在する。 | | C06 | frontmatter: `based_on` は参照 ID の配列 | docs/specdojo/schemas/v1/common-frontmatter.schema.yaml | 配列型と値を読取り | 一致 | schema 14〜18・72〜74行に適合する重複のない1要素配列。参照先 sample-authoring-standard.md が存在する。依存関係の横断確認は R5 の範囲。 | | C07 | 5章: Mermaid の宣言は `stateDiagram-v2` | docs/ja/specdojo/rulebooks/stsd-mermaid-rulebook.md | 本文要件と2図の宣言を読取り | 一致 | rulebook 5章の指定と sample 54・77行が一致する。 | | C08 | 5章: 図の表示名は状態一覧の状態名と値に一致する | docs/ja/specdojo/rulebooks/stsd-mermaid-rulebook.md、対象 sample 4章 | rulebook 2・3章と全状態宣言を照合 | 一致 | 6状態を照合。`return-pending` は表示値、`return_pending` は英小文字とアンダースコアによる内部 ID として区別されている。 | | C09 | 5章: 図の各遷移が直下の表へ一対一に対応する | docs/ja/specdojo/rulebooks/stsd-rulebook.md、対象 sample の遷移表 | 全8遷移の ID・遷移元・遷移先・イベント・条件を読取り照合 | 一致 | 通常系 T-01〜T-05、例外系 T-06〜T-08 に重複・欠落・図表の相違はない。 | | C10 | 5章: 開始・終了は状態一覧に含めず `[*]` で表す | docs/ja/specdojo/rulebooks/stsd-rulebook.md、docs/ja/specdojo/rulebooks/stsd-mermaid-rulebook.md | 用語定義と開始・終了経路を読取り | 一致 | T-01 が開始、T-05・T-08 が終了。共有状態 inspected を介して販売・返品の両終端へ到達できる。 | | C11 | 4・5章: 検品完了の合格と返品対象を区別できる | docs/ja/specdojo/defaults/pm-review-viewpoints.yaml、docs/ja/specdojo/rulebooks/stsd-rulebook.md | 判定根拠と修正後の条件を読取り、過剰納品・品質不良の有無を組合せて確認 | 一致 | 修正前は F001 の基準不足。修正後は両方なしの場合だけ合格、それ以外は返品対象となり分岐が重ならない。配置・分離未完了時は既存規則により検品済みに留まる。 | sample 本文には CLI コマンド・オプション・既定値・ファイルパスの主張がない。駄菓子屋の6状態の値、記録の運用、品質基準は業務上の例示であり、SpecDojo の schema・src の列挙値や挙動とは扱っていない。共通サンプル文脈と食い違わない業務仮定は正本照合の対象外とし、技術的主張について確かめられない項目はなかった。
+- result の変更ファイル欄には docs/ja/specdojo/samples/stsd-sample.md のみを記載すること。意味を変更したのは返品待ちの意味と T-03 の補足の2セルで、残りの差分は Prettier の表幅調整。状態値、状態名、遷移 ID、図、イベント、遷移条件、前段の章配置・導入文・引継ぎ表現を維持した。
+- result の進め方と実践の型の適用へ記載する根拠: docs/ja/specdojo/guides/kata-guide.md 6.1〜6.5、docs/ja/specdojo/standards/sample-authoring-standard.md、docs/ja/specdojo/standards/document-metadata-standard.md、docs/ja/specdojo/rulebooks/stsd-rulebook.md、docs/ja/specdojo/rulebooks/stsd-mermaid-rulebook.md、docs/ja/specdojo/recipes/stsd-recipe.md、docs/ja/specdojo/defaults/pm-review-viewpoints.yaml、docs/specdojo/schemas/v1/common-frontmatter.schema.yaml、docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml、src/shared/frontmatter-namespace.ts、docs/ja/specdojo/references/command-reference.md の sample-maintenance の記述を確認した。grade の docs/ja/projects/prj-0001/execution/grade/results/specdojo.stsd-sample.yaml の F001・F002 と現状を照合し、前段 R3 の result（T-KATA-REVIEW-CALIBRATION-stsd-sample-130、20261124T043119Z-5c014473）を読んだ。condense 起因の finding はない。品質基準は F001 の具体例と sample 記述標準6章の合理的な業務仮定の許容に基づく例示で、外部の食品品質規格としての主張ではない。cdfd-sample.md の入荷検品・仕入記録・返品引渡しの記述とも衝突しない。規範間の矛盾、根拠不足による見送り、他文書の修正提案はない。
+- 親 runner に指定された lint・schema・docs test 等は sandbox では重複実行していない。result、grade サイドカー、Git の状態・設定は更新していない。起動時の npx specdojo where は npm キャッシュへの書込みで失敗したが、node --import tsx src/specdojo.ts where playbook --project prj-0001 は成功し、指定された運用メモを確認した。
+- 適用外の検証: `npm run validate:schema:file`（executor が変更したファイルは Markdown のみで、YAML ファイルを変更していない。）
+- 適用外の検証: `npm run validate:catalog`（executor の変更は docs/ja/specdojo/samples/ 配下のみで、docs/ja/projects/ 配下を変更していない。）
+- 適用外の検証: `npm run validate:history-links`（executor は個票や既存 plan・result などの履歴蓄積ファイルを変更していない。）
+
+## 4. 進め方と実践の型の適用
+
+approach は sample-maintenance。根拠にした資料は次のとおり。`kata-guide.md` 6.1〜6.5、`sample-authoring-standard.md`、`document-metadata-standard.md`、`stsd-rulebook.md`、`stsd-mermaid-rulebook.md`、`stsd-recipe.md`、`pm-review-viewpoints.yaml`、`common-frontmatter.schema.yaml`、`deliverable-frontmatter.schema.yaml`、`src/shared/frontmatter-namespace.ts`、`command-reference.md`。grade の F001 と F002 を現状と照合し、前段 R3 の result も読んだ。condense 起因の finding はない。F001 は `vp-qe-verifiability` と rulebook 6.4・6.5、recipe 4.5・5・8 に基づいて直した。規範間の矛盾、根拠不足による見送り、他文書の修正提案はない。 指摘表: | No | 段 | 箇所 | 指摘 | 直した案 | 根拠 | 印 | | --- | --- | --- | --- | --- | --- | --- | | R4-1 | R4 | 4. 状態一覧、5. 状態遷移 | grade F001: 品質不良と合格の判定基準がなく、`T-03` と `T-06` の分岐を一意に判定できない。 | 返品待ちの意味に品質不良の具体条件を定義した。`T-03` の補足で、過剰納品分でも品質不良でもない個品を合格とした。 | `vp-qe-verifiability`、stsd-rulebook 6.4・6.5、stsd-recipe 4.5・5・8 | - | 主張ごとの確かめの表: | No | 主張（本文の箇所） | 正本 | 確かめ方 | 結果 | 根拠 | | --- | --- | --- | --- | --- | --- | | C01 | frontmatter: メタ情報を `specdojo:` 配下に置く | `deliverable-frontmatter.schema.yaml`、`src/shared/frontmatter-namespace.ts` | schema と名前空間読取り実装を読取り | 一致 | schema 18〜28行で名前空間を要求し、実装の `specdojoFromBlock` が同キーのオブジェクトを読む。sample 2〜8行が該当する。 | | C02 | frontmatter: ID は `specdojo:stsd-sample` | `common-frontmatter.schema.yaml`、`sample-authoring-standard.md` | ID の正規表現と sample 識別規約を読取り | 一致 | schema 10〜13行の ID パターンに一致し、標準4章の `-sample` 識別に適合する。 | | C03 | frontmatter: `type` は `data` | `deliverable-frontmatter.schema.yaml`、`stsd-rulebook.md` | 列挙値と主 rulebook の宣言を読取り | 一致 | schema 12行に `data` があり、rulebook の `deliverable_type` と4章の指定も `data`。 | | C04 | frontmatter: `status` は `draft` | `common-frontmatter.schema.yaml` | `status` の列挙値を読取り | 一致 | schema 63〜68行は draft・ready・deprecated。sample 5行は draft を維持。 | | C05 | frontmatter: `rulebook` は `specdojo:stsd-rulebook` | `common-frontmatter.schema.yaml`、`stsd-rulebook.md` | 参照形式と指定先を読取り | 一致 | schema 19〜25行の形式に一致し、rulebook 4章が同じ ID を指定する。対象文書も存在する。 | | C06 | frontmatter: `based_on` は参照 ID の配列 | `common-frontmatter.schema.yaml` | 配列型と値を読取り | 一致 | schema 14〜18・72〜74行に適合する重複のない1要素配列。参照先 `sample-authoring-standard.md` が存在する。依存関係の横断確認は R5 の範囲。 | | C07 | 5章: Mermaid の宣言は `stateDiagram-v2` | `stsd-mermaid-rulebook.md` | 本文要件と2図の宣言を読取り | 一致 | rulebook 5章の指定と sample 54・77行が一致する。 | | C08 | 5章: 図の表示名は状態一覧の状態名と値に一致する | `stsd-mermaid-rulebook.md`、対象 sample 4章 | rulebook 2・3章と全状態宣言を照合 | 一致 | 6状態を照合。`return-pending` は表示値、`return_pending` は英小文字とアンダースコアによる内部 ID として区別されている。 | | C09 | 5章: 図の各遷移が直下の表へ一対一に対応する | `stsd-rulebook.md`、対象 sample の遷移表 | 全8遷移の ID・遷移元・遷移先・イベント・条件を読取り照合 | 一致 | 通常系 `T-01`〜`T-05`、例外系 `T-06`〜`T-08` に重複・欠落・図表の相違はない。 | | C10 | 5章: 開始・終了は状態一覧に含めず `[*]` で表す | `stsd-rulebook.md`、`stsd-mermaid-rulebook.md` | 用語定義と開始・終了経路を読取り | 一致 | `T-01` が開始、`T-05`・`T-08` が終了。共有状態 inspected を介して販売・返品の両終端へ到達できる。 | | C11 | 4・5章: 検品完了の合格と返品対象を区別できる | `pm-review-viewpoints.yaml`、`stsd-rulebook.md` | 判定根拠と修正後の条件を読取り、過剰納品・品質不良の有無を組合せて確認 | 一致 | 修正前は F001 の基準不足。修正後は両方なしの場合だけ合格、それ以外は返品対象となり分岐が重ならない。配置・分離未完了時は既存規則により検品済みに留まる。 | 駄菓子屋の6状態の値、記録の運用、品質基準は業務上の例示であり、共通サンプル文脈と食い違わない。そのため正本照合の対象外とした。

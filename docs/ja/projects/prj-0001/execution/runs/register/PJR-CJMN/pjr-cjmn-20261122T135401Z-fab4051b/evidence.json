@@ -1,0 +1,206 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-CJMN",
+  "run_id": "pjr-cjmn-20261122T135401Z-fab4051b",
+  "stage": {
+    "role": "executor",
+    "actor": "sonnet-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-22T13:54:42.214Z",
+    "completed_at": "2026-11-22T13:57:21.702Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/020-external-interface-specs/ifx-index.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/030-architecture/020-infrastructure/ifd-specdojo.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-external-interface-specs.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-cjmn.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-cjmn-ifx-cmd-git-github.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/020-external-interface-specs/ifx-cmd-git-cli.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/product/020-external-interface-specs/ifx-cmd-github-cli.yaml",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/product/020-external-interface-specs/ifx-index.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/030-architecture/020-infrastructure/ifd-specdojo.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-external-interface-specs.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-cjmn-ifx-cmd-git-github.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/020-external-interface-specs/ifx-cmd-git-cli.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/product/020-external-interface-specs/ifx-cmd-github-cli.yaml",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 7,
+    "summary": ".../020-external-interface-specs/ifx-index.yaml    | 20 +++----\n .../020-infrastructure/ifd-specdojo.md             | 36 ++++++------\n .../dct-external-interface-specs.yaml              | 65 +++++++++++++++++++++-\n .../pjr-cjmn-ifx-cmd-git-github.md                 | 46 +++++++++++++--\n 4 files changed, 132 insertions(+), 35 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/ifx-cmd.schema.yaml --data docs/ja/product/020-external-interface-specs/ifx-cmd-git-cli.yaml",
+      "status": "passed",
+      "summary": "valid"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/ifx-cmd.schema.yaml --data docs/ja/product/020-external-interface-specs/ifx-cmd-github-cli.yaml",
+      "status": "passed",
+      "summary": "valid"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write",
+      "status": "passed",
+      "summary": "変更した md・yaml を整形"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 5903 file(s), 107 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 83 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5903 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)",
+      "reason": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-CJMN/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-CJMN/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "ifx-cmd-git-cli と ifx-cmd-github-cli を draft で作成し、カタログ登録と ifx-index・ifd-specdojo の付け替え、個票の更新を完了した。",
+  "completion_status": "complete",
+  "handoff": [
+    "決定: Git の契約はローカル操作に限定した。src に git push・fetch・pull・clone・remote の呼び出しがなく、ifx-index の注記もリモートを混ぜない方針のため。",
+    "決定: src に gh を起動する実装がないため、ifx-cmd-github-cli は現行の利用境界（オーケストレーターは読み取りのみ、agent は全 gh と git push を deny、認証は named volume）と未決事項を記す文書にした。書き込み操作の許可範囲は _UNDECIDED_。",
+    "決定: PATH-07 の章は YAML に章がないため ifx-cmd-github-cli.yaml の先頭コメントに 3 論点（経路・認証・失敗後の保持範囲）として置いた。",
+    "決定: ifx-cmd-git-cli の max_attempts は上限が 2 種類で schema の単一整数で表せないため _UNDECIDED_ とした。",
+    "未決: 両文書の timeout_seconds・max_parallel、gh の終了コード 4 の公式表との照合、トークン種別・スコープの標準。",
+    "残課題: cpd-specdojo-cli・cnd-specdojo・cxd-specdojo に ifx-cmd-git-cli・ifx-cmd-github-cli の（未作成）記述が残る。本タスクの対象外（ifx-index と ifd-specdojo のみ）のため変更していない。付け替えは後続で必要。",
+    "CHANGELOG に書く事項: 区分 Documentation。Git CLI と GitHub CLI の外部コマンド連携仕様（ifx-cmd-git-cli・ifx-cmd-github-cli、draft）を追加し、外部システムI/F一覧の spec_ref を付け替えた。",
+    "型の grade は統合後に orchestrator が流す。個票の作業内容の表で grade の行は open のまま残している。",
+    "保護された設定の変更は不要だった。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-CJMN/pjr-cjmn-20261122T135401Z-fab4051b/executor.log",
+      "bytes": 4343,
+      "truncated": false
+    }
+  ]
+}

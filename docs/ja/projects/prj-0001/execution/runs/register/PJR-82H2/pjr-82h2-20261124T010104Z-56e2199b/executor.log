@@ -1,0 +1,7 @@
+[README.md](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-82H2/README.md) に英語の概要を追加し、[個票](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-82H2/docs/ja/projects/prj-0001/controls/project-register/pjr-82h2-readme-english-overview.md)に根拠との照合結果と CHANGELOG 文案を記録しました。
+
+対象ファイルの整形・Markdown 検査、履歴リンク検査、カタログ検証は通過しました。カタログ検証には既存の警告があります。全体の `npm run lint:md` は親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"README に英語の概要を追加し、個票に位置づけの照合結果と CHANGELOG 文案を記録した。","handoff":["CHANGELOG に書く事項（追加）: README に SpecDojo の目的と位置づけ、Quick Start への案内を英語で追加。"],"validations":[{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-82h2-readme-english-overview.md","status":"passed","summary":"個票を整形した。"},{"command":"npx prettier --check README.md","status":"passed","summary":"README の整形を確認した。"},{"command":"npx markdownlint README.md docs/ja/projects/prj-0001/controls/project-register/pjr-82h2-readme-english-overview.md","status":"passed","summary":"変更した Markdown を検査した。"},{"command":"npm run validate:history-links","status":"passed","summary":"履歴リンク検査に通過した。"},{"command":"node --import tsx tools/catalog-validate-if-configured.mjs","status":"passed","summary":"カタログ検証は警告付きで通過した。"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーはない。"}]}
+</specdojo_executor_evidence>

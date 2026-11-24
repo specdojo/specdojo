@@ -1,0 +1,17 @@
+{
+  "v": 1,
+  "ts": "2026-11-23T21:28:33Z",
+  "type": "unblock",
+  "task_id": "T-KATA-WAVE-6-PROJECT-prj-scope-sample-060",
+  "by": "opus-executor",
+  "msg": "resume integration from persisted pipeline state",
+  "meta": {
+    "pipeline_stage": "integrate",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-prj-scope-sample-060/T-KATA-WAVE-6-PROJECT-prj-scope-sample-060-20261123T205048Z-44b20577/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-prj-scope-sample-060/T-KATA-WAVE-6-PROJECT-prj-scope-sample-060-20261123T205048Z-44b20577/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-6-PROJECT-prj-scope-sample-060-20261123T205048Z-44b20577",
+    "claim_actor": "opus-executor",
+    "stage_actor": "opus-executor",
+    "pipeline_resume_claimed": "true"
+  }
+}

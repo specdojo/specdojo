@@ -76,6 +76,14 @@ const threeSteps = (middle: QueueOnFailure) => [
 ];
 
 describe("parseQueueStepSpec", () => {
+  it("accepts a leading specdojo the same as the bare step", () => {
+    const bare = parseQueueStepSpec("exec run --auto", "stop", 1, "prj-0001");
+    const prefixed = parseQueueStepSpec("specdojo exec run --auto", "stop", 1, "prj-0001");
+
+    expect(prefixed).toEqual(bare);
+    expect(prefixed.argv).toEqual(["exec", "run", "--auto", "--project", "prj-0001"]);
+  });
+
   it("maps grade run to the specdojo argv and adds the queue project", () => {
     const step = parseQueueStepSpec("grade run --kind rulebook", "stop", 1, "prj-0001");
 

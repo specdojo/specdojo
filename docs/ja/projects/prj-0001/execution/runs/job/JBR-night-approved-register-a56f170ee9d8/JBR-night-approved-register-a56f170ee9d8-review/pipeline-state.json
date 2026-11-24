@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-night-approved-register-a56f170ee9d8-review",
+  "run_id": "JBR-night-approved-register-a56f170ee9d8-review",
+  "updated_at": "2026-11-22T15:03:32.636Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "opus-review-executor",
+      "attempts": 1,
+      "started_at": "2026-11-22T15:01:56.379Z",
+      "completed_at": "2026-11-22T15:03:12.878Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/job/JBR-night-approved-register-a56f170ee9d8/JBR-night-approved-register-a56f170ee9d8-review/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "sonnet-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-22T15:03:24.925Z",
+      "completed_at": "2026-11-22T15:03:32.636Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/job/JBR-night-approved-register-a56f170ee9d8/JBR-night-approved-register-a56f170ee9d8-review/result.md"
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/job/JBR-night-approved-register-a56f170ee9d8/JBR-night-approved-register-a56f170ee9d8-review/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/job/JBR-night-approved-register-a56f170ee9d8/JBR-night-approved-register-a56f170ee9d8-review/result.md"
+  }
+}

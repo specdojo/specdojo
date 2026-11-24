@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 97
-graded_at: "2026-11-15T01:59:48.669Z"
-graded_by: sol-review-executor
-content_hash: ad608851dd177ecfec5a80f5c8bfc30ccf950a7aca3d9db42ac759dbee79b34f
+graded_at: "2026-11-23T16:00:11.871Z"
+graded_by: sonnet-review-executor
+content_hash: d68fc2ced655ba99f38b43ec8aaa36dbeea88a3d8ab17a41691226ad2abb2808
 categories:
   purpose:
     score: 100
@@ -60,8 +60,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -72,8 +72,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-verifiability:
     level: 4
     score: 100
@@ -81,11 +81,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-language-consistency:
     level: 4
     score: 100
@@ -109,30 +109,19 @@ finding_counts:
 findings:
   - id: F001
     severity: minor
-    rule: vp-arc-conciseness
-    line: 12
-    anchor: >-
-      - 内部コンテナ分割は C4 コンテナ図（`cnd`）、内部コンポーネント構造は C4
-      コンポーネント図（`cpd`）、実行環境・ネットワーク配置はインフラ構成図（`ifd`）、採用技術一覧は技術スタック一覧（`tsd-index`）、外部連携や操作の詳細は外部インターフェース仕様（`ifx-*`）や CLI
-      仕様（`clis`）・画面仕様（`uis`）を正本とし、CXD には境界判断に必要な要点と参照先だけを残します。
+    rule: vp-qe-kata-conformance
+    line: 98
+    anchor: "- 推奨列は「Person（図中ラベル）」「対応ロール」「利用目的・主な関わり」「境界上の接点・確認責務」です。直接の利用・運用・管理の接点を持つ業務上の利用者区分と対応させます。"
     message: >-
-      The opening policy bullet repeats the document-by-document delegation mapping already provided in “正本の選び方と参照の境界”;
-      replace this enumeration with a reference to that section, retaining the boundary-summary principle and preserving
-      all mapping details in the table.
+      Person 表の推奨列「境界上の接点・確認責務」が cxd-template の列「境界上の接点」と一致していません。template の列名と記入プレースホルダを rulebook と sample
+      に合わせるか、rulebook の推奨列を見直してください。
     message_ja: >-
-      The opening policy bullet repeats the document-by-document delegation mapping already provided in “正本の選び方と参照の境界”;
-      replace this enumeration with a reference to that section, retaining the boundary-summary principle and preserving
-      all mapping details in the table.
+      Person 表の推奨列「境界上の接点・確認責務」が cxd-template の列「境界上の接点」と一致していません。template の列名と記入プレースホルダを rulebook と sample
+      に合わせるか、rulebook の推奨列を見直してください。
   - id: F002
     severity: minor
-    rule: vp-dev-testability
-    line: 159
-    anchor: "## 8. 運用ルール"
-    message: >-
-      Add a validation instruction or a direct reference for checking CXD Mermaid syntax after edits, including a
-      supported command such as `npm run lint:mermaid — ＜document-path＞` and the requirement for no syntax errors or
-      unchecked diagrams; the current guidance covers diagram content but provides no Mermaid validation procedure.
-    message_ja: >-
-      Add a validation instruction or a direct reference for checking CXD Mermaid syntax after edits, including a
-      supported command such as `npm run lint:mermaid — ＜document-path＞` and the requirement for no syntax errors or
-      unchecked diagrams; the current guidance covers diagram content but provides no Mermaid validation procedure.
+    rule: vp-ux-readability
+    line: 148
+    anchor: "| コマンド引数・API エンドポイント・JSON ペイロード詳細の本文転載 | `clis`・`ifx-*`・リファレンス等の正本との二重管理を防ぐ（PJR-2GD6） |"
+    message: 理由欄の「PJR-2GD6」は参照先の説明がなく、初見の読者には意味が分かりません。登録簿 ID を削除するか、理由を文章で述べてください。
+    message_ja: 理由欄の「PJR-2GD6」は参照先の説明がなく、初見の読者には意味が分かりません。登録簿 ID を削除するか、理由を文章で述べてください。

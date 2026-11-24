@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-N6FQ",
+  "run_id": "pjr-n6fq-20261121T122859Z-2cdd293a",
+  "updated_at": "2026-11-21T12:39:32.500Z",
+  "stages": {
+    "executor": {
+      "status": "blocked",
+      "actor": "opus-executor",
+      "attempts": 2,
+      "started_at": "2026-11-21T12:29:46.142Z",
+      "completed_at": "2026-11-21T12:39:32.500Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-N6FQ/pjr-n6fq-20261121T122859Z-2cdd293a/evidence.json",
+      "rate_limit_events": [
+        {
+          "action": "fallback",
+          "trigger": "rate_limit",
+          "from_actor": "sol-executor",
+          "to_actor": "opus-executor",
+          "resumed_at": "2026-11-21T12:29:48.726Z"
+        }
+      ]
+    },
+    "reporter": {
+      "status": "pending",
+      "actor": "gemma26-reporter",
+      "attempts": 0,
+      "started_at": null,
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-N6FQ/pjr-n6fq-20261121T122859Z-2cdd293a/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-N6FQ/pjr-n6fq-20261121T122859Z-2cdd293a/result.md"
+  }
+}

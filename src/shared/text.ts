@@ -117,6 +117,12 @@ export function escapeMarkdownInline(text: string): string {
   return replaceOutsideMarkdownCodeSpans(inlineCodeAnglePlaceholders(text), codeSpanRiskyTokens);
 }
 
+// 登録簿の表セルへ書くために toCell がエスケープした `\*` `\_` `\|` を元の文字へ戻す。
+// ログなど Markdown ではない出力に項目のタイトルを出すときに使う。
+export function unescapeMarkdownCell(text: string): string {
+  return text.replace(/\\([*_|])/g, "$1");
+}
+
 function codeSpanRiskyTokens(segment: string): string {
   return segment.replace(ASCII_RUN, (run) => (/[_*]/.test(run) ? `\`${run}\`` : run));
 }
@@ -223,4 +229,15 @@ export function escapeRegExp(value: string): string {
 // Markdown 表のセルへ入れる文字列をエスケープする。先に `\` を `\\` にしてから `|` を `\|` にする。
 export function escapeMarkdownTableCell(cell: string): string {
   return cell.replace(/\\/g, "\\\\").replace(/\|/g, "\\|");
+}
+
+// reporter などの agent は JSON 文字列の中でバッククォートを `\`` と二重にエスケープして返すことがある。
+// Markdown では `\`` は code span にならず、対になるバッククォートとの間が MD038 に当たって統合の前の
+// 検査が止まる。バッククォートがすべてバックスラッシュ付きのときだけ、全体が一律にエスケープされた
+// ものとして戻す。エスケープなしのバッククォートが混ざる文は、code span 内の意図した `\` を
+// 壊さないよう変えない。
+export function unescapeBackticksWhenUniform(text: string): string {
+  if (!text.includes("\\`")) return text;
+  const hasBareBacktick = /(?<!\\)`/.test(text);
+  return hasBareBacktick ? text : text.replace(/\\`/g, "`");
 }

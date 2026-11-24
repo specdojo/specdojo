@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-cxd-sample-150",
+  "run_id": "T-KATA-REVIEW-ALL-cxd-sample-150-20261124T145109Z-c1c47e33",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-24T14:51:54.569Z",
+    "completed_at": "2026-11-24T14:55:44.319Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "git diff --exit-code",
+      "status": "passed",
+      "summary": "追跡ファイルに差分なし。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/samples/cxd-sample.md",
+      "status": "not_applicable",
+      "summary": "整形対象なし。",
+      "reason": "整合確認の結果、Markdown ファイルを変更していない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 schema 検証対象なし。",
+      "reason": "YAML・YML ファイルを変更していない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "カタログ検証の適用対象外。",
+      "reason": "executor による docs/ja/projects/ 配下の成果物変更がない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検証の適用対象外。",
+      "reason": "履歴ファイル・既存 plan・result を変更していない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md\n\nlint:md:changed: no changed files"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\nlint:fm:changed: no changed files"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6772 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6772 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)",
+      "reason": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-cxd-sample-150/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-cxd-sample-150/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R5 の整合確認を完了。sample 側の修正は不要。F001 は template 側の修正案として引き継ぐ。変更ファイルなし。",
+  "completion_status": "complete",
+  "handoff": [
+    "F001: R5 / 箇所: 3.2. Person（人・ロール） / 指摘: template の列名「境界上の接点」が、sample・rulebook の「境界上の接点・確認責務」と一致しない / 直した案: - / 根拠: `vp-qe-kata-conformance`。[[specdojo:cxd-rulebook|C4コンテキスト図 作成ルール]] 第6.3.2節を正とし、sample の列名は維持した。編集対象外の docs/ja/specdojo/templates/cxd-template.md 第3.2節の列名を「境界上の接点・確認責務」に変更する案を申し送る。grade sidecar の F001 を実文書と照合済み。根拠不足ではなく編集対象外のため未解消。次のアクションは template 側の改訂 / 印: -",
+    "reporter 向け: F001 を result の実施内容に指定の7列の Markdown 表として1回だけ記載し、申し送りには表を重ねない。変更ファイルは「なし」。executor は result・grade sidecar を編集していない。",
+    "進め方と実践の型の適用への記録: kata-guide 第6章、共通規約2文書、Sample 記述標準、cxd-rulebook、cxd-mermaid-rulebook、cxd-recipe、cxd-template、共通レビュー観点の `vp-qe-kata-conformance`・`vp-dev-change-impact`・`vp-arc-conciseness`、grade sidecar、R1〜R4 result を確認した。同じ接頭辞の sample は cxd-sample.md のみで index・個別の追加文書はない。`based_on` は空。wikilink 参照先の prj-overview-sample・clis-sample・ifx-cmd-sample、用語集6ファイルの収録語と該当定義、共通サンプル文脈と照合した。単一店舗・端末1台・家族による店番、学習用 CLI の限定範囲、会計確定と印字の分離、本部受付の結果不明時の保留、再印刷と認証の責任分界に修正を要する食い違いは認めなかった。業務上のロール・会計完了を、用語集のプロジェクトロール・登録項目の完了と混同しない。R2 の仮定の配置、R3 の文章修正、R4 の未確認事項と将来課題は維持した。sample の変更がないため schema・生成処理・コマンド・運用手順への変更影響はない。参照先IDの解決と F001 の所在を読み取りで再確認した。",
+    "検査の適用条件は package.json、.specdojo/specdojo.config.json、lefthook.yml で確認した。指定された親検証は runner に委ねた。差分はなく、開始時からある未追跡の pipeline-state.json のみ残っている。運用メモの取得は `npx specdojo where playbook --project prj-0001` が npm 一時領域の ENOENT で失敗したため、`node --import tsx src/specdojo.ts where playbook --project prj-0001` で成功を確認し、指定文書を読んだ。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-cxd-sample-150/T-KATA-REVIEW-ALL-cxd-sample-150-20261124T145109Z-c1c47e33/executor.log",
+      "bytes": 4018,
+      "truncated": false
+    }
+  ]
+}

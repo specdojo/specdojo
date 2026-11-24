@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: prj-0001:bdd-register-entry
+  id: bdd-register-entry
   type: data
   status: draft
   rulebook: specdojo:bdd-rulebook
@@ -63,7 +63,7 @@ specdojo:
 <!-- prettier-ignore -->
 ```yaml
 # yaml-language-server: $schema=../../../../specdojo/schemas/v1/bdd.schema.yaml
-id: prj-0001:bdd-register-entry
+id: bdd-register-entry
 type: data
 title: 業務データ辞書（登録項目個票）
 status: draft

@@ -12,7 +12,7 @@ specdojo:
   owner: BA
   approach: fully-guided
   targets:
-    - prj-0001:stsd-deliverable
+    - stsd-deliverable
 ---
 
 # Edit Plan: PJR-6SFB

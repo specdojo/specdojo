@@ -4,16 +4,16 @@ document: specdojo:ifx-file-sample
 path: docs/ja/specdojo/samples/ifx-file-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: pass
-score: 100
-graded_at: "2026-11-16T01:24:10.110Z"
-graded_by: sol-review-executor
+verdict: needs-work
+score: 84
+graded_at: "2026-11-23T04:09:46.800Z"
+graded_by: opus-review-executor
 content_hash: e7ee4c81df954e29ac1d350980fafc1fcd00b934358ab80203982bdd5927c863
 categories:
   purpose:
     score: 100
   operations:
-    score: 100
+    score: 94
   planning:
     score: 100
   business:
@@ -21,13 +21,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 83
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 75
   consistency:
-    score: 100
+    score: 50
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -60,8 +60,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -75,23 +75,23 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-operability:
     level: 4
     score: 100
@@ -103,7 +103,105 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 0
-  minor: 0
+  major: 2
+  minor: 6
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 306
+    anchor: "```json"
+    message: >-
+      正本スキーマ 2 件の全文掲載により required 配列が YAML の required_fields と重複しているため、状態値の制約（enum・if/then）など required_fields
+      で表せない部分だけの抜粋に絞り、正本の全文は schemas/ 配下を参照させる形に縮める。
+    message_ja: >-
+      正本スキーマ 2 件の全文掲載により required 配列が YAML の required_fields と重複しているため、状態値の制約（enum・if/then）など required_fields
+      で表せない部分だけの抜粋に絞り、正本の全文は schemas/ 配下を参照させる形に縮める。
+  - id: F002
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 458
+    anchor: >-
+      | 取引状態の欠落（`current_tx_json` の `missing`、「取引未開始」） | `sales start` が未解決の控えを検査し、1 件でもあれば新規取引を始めずに exit code 3
+      で停止する                          | 店番担当は `sales total` を使わずに停止し、店主代表と開発担当（`DEV`）が `data/sales/`
+      の当日控えを確認する。未解決の控え（`api_sync_status` が `pending` / `unknown` / `rejected`）を本部受付と照合してから新規取引へ進む |
+    message: >-
+      「取引状態の欠落」の行が、取引未開始（sales add/total/complete/cancel で exit code 2）と sales start が未解決の控えを検出して止まる場合（exit code 3）を 1
+      行に混ぜており期待結果が一意に決まらないため、事象ごとに行を分けて終了コードと次の手を対応させる。
+    message_ja: >-
+      「取引状態の欠落」の行が、取引未開始（sales add/total/complete/cancel で exit code 2）と sales start が未解決の控えを検出して止まる場合（exit code 3）を 1
+      行に混ぜており期待結果が一意に決まらないため、事象ごとに行を分けて終了コードと次の手を対応させる。
+  - id: F003
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 9
+    anchor: >-
+      _UNDECIDED_: 本サンプルの仕様は学習用の完成例（`status: draft`）であり、実運用の採否、問屋側 SFTP 接続条件の確定、および `status: ready`
+      への昇格は人間の店主代表（`PO`）が最終判断する。
+    message: >-
+      sample-authoring-standard は本文に文書の承認・昇格の担当や進み具合を書くことを禁じているが、本文 9・42・179・469 行で ready
+      昇格や承認判断の担当を述べているため削除し、承認と留保は登録簿の個票で追う形にする（採否の論点など業務上の未決事項だけを残す）。
+    message_ja: >-
+      sample-authoring-standard は本文に文書の承認・昇格の担当や進み具合を書くことを禁じているが、本文 9・42・179・469 行で ready
+      昇格や承認判断の担当を述べているため削除し、承認と留保は登録簿の個票で追う形にする（採否の論点など業務上の未決事項だけを残す）。
+  - id: F004
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# 駄菓子屋きぬや 外部ファイル連携仕様 サンプル"
+    message: >-
+      rulebook の target_format は yaml で、sample-authoring-standard はファイル名を target_format に合わせ sample 独自の章立てを作らないことを求めるが、本
+      sample は .md 形式で rulebook にない章（利用目的、正本スキーマ例、再開判定、異常時の次の手、将来課題）を持ち他の ifx sample（.yaml）とも不一致なため、YAML sample に再構成し補足は
+      YAML コメントか rulebook 側の扱いへ移すか、md とする例外を rulebook に宣言する。
+    message_ja: >-
+      rulebook の target_format は yaml で、sample-authoring-standard はファイル名を target_format に合わせ sample 独自の章立てを作らないことを求めるが、本
+      sample は .md 形式で rulebook にない章（利用目的、正本スキーマ例、再開判定、異常時の次の手、将来課題）を持ち他の ifx sample（.yaml）とも不一致なため、YAML sample に再構成し補足は
+      YAML コメントか rulebook 側の扱いへ移すか、md とする例外を rulebook に宣言する。
+  - id: F005
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 300
+    anchor: "### 3.3. 参照する正本スキーマの例と検証"
+    message: >-
+      rulebook は正本スキーマの全文再掲を禁止事項としているが「参照する正本スキーマの例と検証」で 2 スキーマを全文掲載しており正本参照方式の手本として誤用を招くため、required_fields
+      で表せない制約の抜粋に絞るか正本ファイルへの参照に置き換える。
+    message_ja: >-
+      rulebook は正本スキーマの全文再掲を禁止事項としているが「参照する正本スキーマの例と検証」で 2 スキーマを全文掲載しており正本参照方式の手本として誤用を招くため、required_fields
+      で表せない制約の抜粋に絞るか正本ファイルへの参照に置き換える。
+  - id: F006
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 5
+    anchor: >-
+      店主代表（`PO`）と家族利用者代表（`PO` 業務助言）が日々の店頭販売と在庫把握を行う「駄菓子屋きぬや」において、[[specdojo:ifx-file-rulebook|外部ファイル連携仕様作成ルール]] に従う 2
+      つの代表的なファイル受け渡し契約（**単一ファイル・インライン定義**および**複数ファイル・正本スキーマ参照**）を示す完成例である。外部取引先へ送付するバッチファイルと、店頭 CLI
+      の実行段階間で授受・照合する状態・証跡ファイルの双方について、配置・命名・必須項目・書き手と読み手・失敗時の回復手順を検証可能な形で定義する。
+    message: 家族利用者代表を「PO 業務助言」と記しているが pm-members-sample では roles が [UX] であり Role code が食い違うため、UX（または役割名のみ）に揃える。
+    message_ja: 家族利用者代表を「PO 業務助言」と記しているが pm-members-sample では roles が [UX] であり Role code が食い違うため、UX（または役割名のみ）に揃える。
+  - id: F007
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 9
+    anchor: >-
+      _UNDECIDED_: 本サンプルの仕様は学習用の完成例（`status: draft`）であり、実運用の採否、問屋側 SFTP 接続条件の確定、および `status: ready`
+      への昇格は人間の店主代表（`PO`）が最終判断する。
+    message: >-
+      本文で本サンプルを「status: draft」としているが Frontmatter の status は ready で状態表記が矛盾するため、「埋め込み YAML の x-spec-meta.status は
+      draft」のように対象を明示するか記述を揃える。
+    message_ja: >-
+      本文で本サンプルを「status: draft」としているが Frontmatter の status は ready で状態表記が矛盾するため、「埋め込み YAML の x-spec-meta.status は
+      draft」のように対象を明示するか記述を揃える。
+  - id: F008
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 9
+    anchor: >-
+      _UNDECIDED_: 本サンプルの仕様は学習用の完成例（`status: draft`）であり、実運用の採否、問屋側 SFTP 接続条件の確定、および `status: ready`
+      への昇格は人間の店主代表（`PO`）が最終判断する。
+    message: >-
+      sample 自体は Frontmatter で status: ready だが本文で「学習用の完成例（status: draft）」「ready
+      への昇格は未判断」と読める記述があり公開状態の判断を誤らせるため、埋め込み契約例の status と sample 文書の status を区別して記述する。
+    message_ja: >-
+      sample 自体は Frontmatter で status: ready だが本文で「学習用の完成例（status: draft）」「ready
+      への昇格は未判断」と読める記述があり公開状態の判断を誤らせるため、埋め込み契約例の status と sample 文書の status を区別して記述する。

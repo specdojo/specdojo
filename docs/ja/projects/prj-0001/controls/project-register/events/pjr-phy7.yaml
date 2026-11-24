@@ -19,7 +19,7 @@
       to: "stsd・cdfd・cdfd-uc・bps の rulebook は成果物の id を「プロジェクト修飾なし」と書くが、カタログから作る成果物は prj-0001: で修飾される。既存の成果物には修飾なしのものもある。どちらを正とするかを決め、rulebook と成果物をそろえる"
     - field: input
       from: ""
-      to: '["PJR-Q9AW の磨き込みで、stsd-rulebook の frontmatter の規則（id はプロジェクト修飾なしの `stsd-<term>`）と、scaffold が作った prj-0001:stsd-task-execution が食い違った。既存の stsd-register-entry は修飾なしの id を持つ（2026-11-05）","同じ「プロジェクト修飾なし」の書き方は cdfd・cdfd-uc・bps の rulebook にもある"]'
+      to: '["PJR-Q9AW の磨き込みで、stsd-rulebook の frontmatter の規則（id はプロジェクト修飾なしの `stsd-<term>`）と、scaffold が作った stsd-task-execution が食い違った。既存の stsd-register-entry は修飾なしの id を持つ（2026-11-05）","同じ「プロジェクト修飾なし」の書き方は cdfd・cdfd-uc・bps の rulebook にもある"]'
     - field: type
       from: ""
       to: todo
@@ -38,3 +38,141 @@
     - field: derived_from
       from: ""
       to: '["PJR-Q9AW","PJR-00NY"]'
+- v: 1
+  id: reg_74e7da9e46f340a68436003c7a867e8c
+  ts: "2026-11-22T13:25:44Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件を利用者の承認のもとで書く
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_6274065ea07a412d91b3d10725103493
+- v: 1
+  id: reg_3ae5df3232d249c397fb142361ab8d39
+  ts: "2026-11-22T13:26:06Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 難しさを決める
+  changes:
+    - field: difficulty
+      from: "-"
+      to: medium
+  previous_event_id: reg_74e7da9e46f340a68436003c7a867e8c
+- v: 1
+  id: reg_fed72cbaaf684877a69e2ca76f76879c
+  ts: "2026-11-22T13:38:52Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_3ae5df3232d249c397fb142361ab8d39
+- v: 1
+  id: reg_6f67e936e7c742aaa64e3cf07f9d8e7f
+  ts: "2026-11-22T13:40:38Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor reported incomplete: rulebook 6 件の ID 記述を修飾形へ修正した。個票への書き込みが権限エラーで拒否されたため、作業内容・対応結果の更新が未完了。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor reported incomplete: rulebook 6 件の ID 記述を修飾形へ修正した。個票への書き込みが権限エラーで拒否されたため、作業内容・対応結果の更新が未完了。"
+  previous_event_id: reg_fed72cbaaf684877a69e2ca76f76879c
+- v: 1
+  id: reg_03f71f818bc14acfb332bfb8609007ea
+  ts: "2026-11-22T23:11:15Z"
+  action: update
+  actor: indie
+  from_status: waiting
+  to_status: waiting
+  reason: 案 A（標準どおり名前空間なし）に決めた（2026-11-23）
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+    - field: title
+      from: rulebook の frontmatter の id の書き方（プロジェクト修飾の有無）を実物とそろえる
+      to: プロダクト文書の id を名前空間なしで定める型（rulebook・template・sample）をそろえる
+    - field: description
+      from: "stsd・cdfd・cdfd-uc・bps の rulebook は成果物の id を「プロジェクト修飾なし」と書くが、カタログから作る成果物は prj-0001: で修飾される。既存の成果物には修飾なしのものもある。どちらを正とするかを決め、rulebook と成果物をそろえる"
+      to: id-and-file-naming-standard のとおり、プロダクト文書の id は名前空間なしを正とする。cdt・ifx-file の rulebook と ifx の YAML template が名前空間ありで定めているので直す。1 回目の rulebook の変更は捨てる
+    - field: depends_on
+      from: "-"
+      to: '["PJR-AEKE"]'
+  previous_event_id: reg_6f67e936e7c742aaa64e3cf07f9d8e7f
+- v: 1
+  id: reg_501c68397cd748cda92354e0da8451a6
+  ts: "2026-11-22T23:27:13Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: waiting
+  to_status: waiting
+  reason: ifx-file-rulebook に触れる BM07 の後に流す
+  changes:
+    - field: depends_on
+      from: '["PJR-AEKE"]'
+      to: '["PJR-AEKE","PJR-BM07"]'
+  previous_event_id: reg_03f71f818bc14acfb332bfb8609007ea
+- v: 1
+  id: reg_fcd1b157f38d47dc9d9b2face8066b2e
+  ts: "2026-11-23T04:59:07Z"
+  action: start
+  actor: sonnet-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "executor reported incomplete: rulebook 6 件の ID 記述を修飾形へ修正した。個票への書き込みが権限エラーで拒否されたため、作業内容・対応結果の更新が未完了。"
+      to: "-"
+  previous_event_id: reg_501c68397cd748cda92354e0da8451a6
+- v: 1
+  id: reg_c695bf60ecbd4943a90af4abb544ade7
+  ts: "2026-11-23T05:04:34Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_fcd1b157f38d47dc9d9b2face8066b2e
+- v: 1
+  id: reg_b59b2865954d4894857de84f225254ba
+  ts: "2026-11-23T05:13:02Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分と対応結果（rg で探した一覧）を確かめ、表示のページを作り直したうえでの型の grade が pass だった（2026-11-23）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: プロダクト文書の id を名前空間なしで定めるよう、cdt と ifx-file の rulebook の id の規則と、ifx-cmd・ifx-index の template の id を直した。1 回目の 6 つの rulebook の変更は捨てた。grade は rulebook が pass 94・90、template が pass 94・90
+  previous_event_id: reg_c695bf60ecbd4943a90af4abb544ade7

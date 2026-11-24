@@ -5,15 +5,15 @@ path: docs/ja/specdojo/rulebooks/imp-interface-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 99
-graded_at: "2026-11-08T20:44:09.235Z"
-graded_by: flash-high-executor
-content_hash: f202ef3668b12e15cc1777dd6008ee43d63ce3e601e4d7fcd9af8a382c4557e4
+score: 100
+graded_at: "2026-11-23T15:48:09.857Z"
+graded_by: sonnet-review-executor
+content_hash: c8c0838b40eb06425d49dcfc031f6e0abf2b03429639580bcda960110be71833
 categories:
   purpose:
     score: 100
   operations:
-    score: 100
+    score: 94
   planning:
     score: 100
   business:
@@ -21,7 +21,7 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
     score: 100
   quality:
@@ -84,14 +84,14 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-readability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-operability:
     level: 4
     score: 100
@@ -104,20 +104,13 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 2
+  minor: 1
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-ux-readability
-    line: 38
-    anchor: "| ---------- | ---------------------------------------------------- | ---- |"
-    message: "推奨ファイル名の記述はあるが、作成者が適切に配置できるよう、推奨されるディレクトリパス（例: `docs/ja/projects/＜project-id＞/` 配下など）を明記すべきである。"
-    message_ja: "推奨ファイル名の記述はあるが、作成者が適切に配置できるよう、推奨されるディレクトリパス（例: `docs/ja/projects/＜project-id＞/` 配下など）を明記すべきである。"
-  - id: F002
-    severity: minor
-    rule: vp-ux-readability
-    line: 47
-    anchor: "## 5. 本文構成（標準テンプレ）"
-    message: テーブルのヘッダー行と区切り線の間に空行が含まれており、Markdownのテーブルとして正しくレンダリングされないため空行を削除すべきである。
-    message_ja: テーブルのヘッダー行と区切り線の間に空行が含まれており、Markdownのテーブルとして正しくレンダリングされないため空行を削除すべきである。
+    rule: vp-ops-release-readiness
+    line: 1
+    anchor: "# 影響調査（I/F）作成ルール"
+    message: "`recipe` と `template` が undecided のままで、`target_format` の宣言もない。ready にする前に、これらを決めるか、作らないなら作らないと明記すべきである。"
+    message_ja: "`recipe` と `template` が undecided のままで、`target_format` の宣言もない。ready にする前に、これらを決めるか、作らないなら作らないと明記すべきである。"

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-CALIBRATION-stsd-sample-130",
+  "run_id": "T-KATA-REVIEW-CALIBRATION-stsd-sample-130-20261124T043119Z-5c014473",
+  "updated_at": "2026-11-24T04:36:52.969Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-24T04:32:01.460Z",
+      "completed_at": "2026-11-24T04:35:07.205Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-CALIBRATION-stsd-sample-130/T-KATA-REVIEW-CALIBRATION-stsd-sample-130-20261124T043119Z-5c014473/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "sonnet-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-24T04:35:49.961Z",
+      "completed_at": "2026-11-24T04:36:00.303Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-CALIBRATION-stsd-sample-130/T-KATA-REVIEW-CALIBRATION-stsd-sample-130-20261124T043119Z-5c014473/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-24T04:36:11.142Z",
+      "completed_at": "2026-11-24T04:36:52.969Z",
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-CALIBRATION-stsd-sample-130/T-KATA-REVIEW-CALIBRATION-stsd-sample-130-20261124T043119Z-5c014473/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-CALIBRATION-stsd-sample-130/T-KATA-REVIEW-CALIBRATION-stsd-sample-130-20261124T043119Z-5c014473/result.md"
+  }
+}

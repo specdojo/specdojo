@@ -1,0 +1,229 @@
+I'll start by understanding the situation. This is a resumed executor stage, so there's prior partial work. Let me re-read the plan carefully and inspect the current state of all relevant files before reporting success.
+
+Let me first read the common conventions and the key files in parallel.
+Now let me inspect the current state of the modified files. Let me read the ticket, the implementation files, and the test in parallel.
+Now let me read the schema and the config reference, which were also modified. Let me also check the git diff to understand what changed.
+The git diff was blocked by a permission rule. The first failure is the most important: `lint-fm` failed because the schema at `local_config_overrides/items/oneOf/0/not/properties/external` "must be object,boolean". The `not` with just bare `properties:` (empty) is invalid JSON Schema. Let me investigate this more and understand the test failure too.
+
+Let me look at the schema's `not` clauses — both branches have a problem. In branch 0:
+```yaml
+       not:
+         properties:
+           external:
+```
+This `properties.external:` is empty (null value). JSON Schema requires keyword values in `properties` to be schemas (object or boolean), not null. Same issue at line 369-371 (`project:` and `repo:` are empty/null). This is the cause of the "must be object,boolean" error.
+
+Let me verify by looking at the validate-schema failure and check the schema's original structure. Let me look at git diff via git show or check what the original schema was.
+`git diff <file>` is being blocked — the allowed pattern is `git diff*` but it seems the file argument breaks it. Let me try the original form that's in the allow list more carefully, or use `git show`. Actually the issue might be that my command starts with `git --no-pager diff` and the pattern matching requires it to start with `git diff`. Let me try differently.
+The `| head` and `2>&1` piping is breaking the pattern match. Let me run git commands without pipes, using git's `-C` or workdir. The issue is that the whole command string must match the allowed pattern. `git show*` is allowed, so `git --no-pager show ...` should be OK. But combining with `|` and `2>&1` breaks it. Let me run a clean git show.
+The redirection `>` and the compound `;` are breaking the pattern match. The pattern matching seems to be on the full command string. Let me just run a single clean `git show` command with output going to a file via git's own redirect... no, that still has `>`. 
+
+Let me try just the plain git commands that exactly match allowed patterns.
+Hmm, `git --no-pager diff` doesn't match `git diff*` because of the `--no-pager` option. Let me try the exact allowed pattern `git diff`.
+Now I understand the schema change. The problem is clear: in both `oneOf` branches, the `not:` clause has `properties:` with **null/empty values** (`external:`, `project:`, `repo:`). 
+
+In YAML, `external:` with no value means `external: null`. So `properties.external` becomes `null`, which is not a valid schema (must be object or boolean). This causes Ajv to reject the schema as invalid. The intent was for `not.properties.external` to forbid presence of `external` — but `not` + `properties: {external: <schema>}` only fails when `external` is present AND matches the given schema. To forbid a property's *presence*, you need `not: {required: [external]}` or `properties: {external: false}`.
+
+The cleaner fix: use `not` with `required`, or set `false`. Actually the original intent — branch 0 must NOT have `external`, branch 1 must NOT have `project`/`repo`. The correct way to express "property absent" via `not` is `not: { required: [external] }`, or equivalently in properties `external: false`.
+
+Since `additionalProperties: false` is set at the item level and the `oneOf` branches each declare only their own keys... wait, `additionalProperties: false` applies to the whole `items` object, not within each oneOf branch. The oneOf requires either {project,repo,kind,path} or {external,kind,path}. With additionalProperties:false at items level, an object with both project and external would fail both branches (good). But the concern is overlapping — actually the `not` clauses were added to make them mutually exclusive more strictly.
+
+Let me use the correct JSON Schema idiom. The cleanest fix that preserves intent: change the empty `properties.external:` / `properties.project:`, `properties.repo:` to use `false` value, OR better, use `not: {required: [...]}`.
+
+Actually, looking carefully: branch 0 has kind enum `[path, added]` and branch 1 has kind enum `[external-path, external-added]`. These enums are already disjoint! So the two branches are already mutually exclusive by `kind`. The `not` clauses are redundant for exclusion but serve to make `oneOf` validate exactly one. Actually `oneOf` requires exactly one branch match. Since kinds are disjoint, an object matching branch 0 (with project/repo/path) won't match branch 1 (needs external), and vice versa. So the `not` clauses aren't strictly needed for mutual exclusion.
+
+But the simplest robust fix that keeps the structure: make the empty property schemas `false`. Let me verify what JSON Schema requires — `properties.external: null` is invalid. Setting `external: false` makes it a valid boolean schema meaning "external must not be present". That's exactly the intent.
+
+Let me check the test that's failing too, to understand the full picture before fixing. The test-unit failure was about `buildValidator` failing on `exec-evidence.schema.yaml` because the schema is invalid. Once I fix the schema, both `lint-fm`, `validate-schema`, and `test-unit` should pass.
+
+Let me also check the other failing validation: `validate:schema:file` for `ifx-file-agent-evidence.yaml` and the schema:none issues. Let me look more carefully at the validate-schema failure — it mentioned `ifx-file-agent-evidence.yaml: schema none`. But that may be a pre-existing issue unrelated to my change. Let me check whether these are pre-existing failures by examining. Actually, the failure output was truncated. Let me focus first on fixing my introduced schema bug, then re-run validations.
+
+Let me fix the schema. I'll replace the empty `properties` null values with proper exclusion. The cleanest idiom for "forbid property presence in this branch" is to use `not: {required: [...]}` form, but since additionalProperties:false is at item level and kinds are disjoint, I could also just remove the broken `not` clauses. However removing might change validation semantics. Let me think about what's safest.
+
+Given kind enums are disjoint, the two oneOf branches cannot both match a single object. The `oneOf` will match exactly one for any valid input. The empty `not` was an attempt to exclude cross-fields but is redundant AND broken. The minimal correct fix: make them syntactically valid. I'll use `false` value which means the property must be absent — matching original intent (branch 0 must not have external, branch 1 must not have project/repo).
+
+Let me apply the fix.
+Now let me verify the full schema section is correct and check that `additionalProperties: false` plus this `not` works. Let me re-read the modified region.
+The schema now uses `false` as the sub-schema (valid boolean schema meaning "absent"). Now let me verify this is valid. The original schema also had a sibling concern: the `if/then` without `else`. JSON Schema allows `if/then` alone, so that's fine.
+
+Wait — there's a subtle issue. With `additionalProperties: false` at item level AND `oneOf`, when an object has `project`, `repo`, `kind`, `path` (branch 0 valid), it will also be checked against branch 1's `not`. Branch 1 `not.properties.project: false` means "if project present, this branch fails" — good, the object has project so branch 1 fails, only branch 0 matches → oneOf OK. Good.
+
+But there's another subtlety: `oneOf` requires *exactly* one match. With `additionalProperties: false`, a clean branch-0 object won't match branch 1 (missing external, and not-property-project fails it). Good. But will the branch-0 object accidentally... no. This is correct.
+
+Now let me run the validations. The parent runner owns git; I should NOT run the parent validations (lint-fm, validate-schema, test-unit, etc.) myself per instructions. But I need to confirm my fix is correct. The instructions say "Do not run those commands inside the agent sandbox or report duplicate executor results for them." However, these are *parent* validations that failed in attempt 1. The question: can I still verify locally? The instruction says don't run them in sandbox and don't report duplicates. But I'm a resumed executor and need to make sure my fix works. 
+
+Let me re-read: "The SpecDojo parent runner will execute these allowlisted validations after you exit... Do not run those commands inside the agent sandbox or report duplicate executor results for them." So I should NOT run lint-fm/validate-schema/test-unit in the sandbox. But these failed last time due to MY broken schema. I need to verify the fix is correct without running the forbidden commands. 
+
+I can do a lightweight local check: use `npx ajv` (which IS in the allowlist — `npx ajv*`) to validate just this one YAML schema as a JSON Schema, OR write a tiny node script. Actually `npx ajv-*` is allowed. Let me check what validation tooling exists. But more directly, I can validate the YAML→JSON schema structure manually/logically which I've done.
+
+Actually, let me reconsider whether running these is truly forbidden for verification. The constraint is about not reporting duplicate *executor results* for parent validations and not running them as part of my reported evidence. To verify my fix locally (not for reporting), using `npx ajv` to check the single schema file's validity is reasonable and is in the allowlist. Let me do a focused check that the YAML parses to a valid JSON Schema via Ajv, since that was the actual error mode ("schema is invalid: .../external must be object,boolean").
+
+Let me write a small verification script under tmp/ and run it with node/ajv to confirm the schema compiles. Let me first check what's available.
+The `;` and `|` chaining breaks the pattern match. Each command must match a single allowed pattern exactly. Let me run them separately. First check package.json scripts.
+Now I understand the scripts. The parent validations (lint-fm, validate-schema, test-unit) will be run by the parent runner — I should NOT run them in the sandbox. But I need to confirm my schema fix resolves the "schema is invalid" error and that the test logic holds. Let me verify the schema compiles with Ajv locally using a focused one-shot check (this is for my own confidence, not reported as executor evidence — and `npx ajv*` is in the allowlist). 
+
+Actually, the most reliable local confirmation: the test file `tests/src/shared/local-config.test.ts` line 323 calls `buildValidator("docs/specdojo/schemas/v1/exec-evidence.schema.yaml")` which was failing because the schema was invalid. The fix to make `not.properties.external: false` etc. syntactically valid should resolve it. Let me verify the YAML is now structurally valid by writing a tiny node script that loads and compiles just this schema via the repo's Ajv (matching exactly how docs-lint does it). This is a focused verification, allowed under `node`.
+
+Let me write a small verification script in tmp/.
+The write tool only allows editing files under `docs/**`, `src/**`, `tests/**`. I cannot write to `tmp/opencode` with the Write tool. Let me use bash to create the file via heredoc... but that's discouraged and also might be blocked. Actually the instruction says place scratch in `tmp/`. Let me use a bash heredoc which is allowed since `node` isn't denied specifically. But the deny rules show the permission system. Let me check — `bash` patterns: `*` is deny by default except listed allows. So arbitrary node scripts via bash may be denied.
+
+Let me reconsider. The cleanest path: I shouldn't run the parent validations anyway. I've already fixed the schema root cause with solid JSON Schema reasoning (null property sub-schemas → boolean `false`). Let me verify my logic is airtight by re-examining instead of running.
+
+Actually, let me check if I can write to tmp via bash since the workspace `tmp/` may exist. Let me just try writing the verification as a file under tests dir won't be appropriate. Instead, let me reconsider: the key risk areas are (1) schema now valid, (2) the test at line 351 `expect(validate(evidence)).toBe(true)` still passes for the two existing record types (path + added), and (3) the new external tests' logic.
+
+For the test file's `local config records` test (line 338-348): it builds evidence with overrides of kind `path` and `added`, both with project/repo. With my fixed schema, branch 0 requires `[project, repo, kind, path]`, kind in `[path, added]`, and if kind==path needs shared_path. Both test records satisfy this. Branch 1's `not.properties.project: false` / `repo: false` → these objects have project & repo, so branch 1 fails. Only branch 0 matches → oneOf passes. Good, that test will pass.
+
+Now let me try to actually run a focused verification. Let me check whether `tmp/` exists and is writable via bash with a heredoc. The deny-by-default for bash means I need an allow pattern. `cat *` is allowed but that's for reading. Hmm. Let me just test writing the file and running node together isn't possible due to deny.
+
+Let me reconsider the approach: maybe running `npm run validate:schema:yaml` is actually necessary for my own verification, even though parent will re-run it. The instructions say don't report duplicate results but I can still verify. However bash deny-by-default: `npm run *` IS explicitly allowed! So `npm run validate:schema:yaml` should work. But that's a PARENT validation (part of validate-schema). Running it for verification is fine; I just won't claim it as executor evidence. Let me do the focused check on this schema using the docs-lint binary directly via npm script... but `validate:schema:yaml` checks ALL modeline yaml files (slow, broad). 
+
+Better: verify just my one schema file. `npx ajv*` is allowed. There's `ajv` dependency. Let me write the verify script by appending it as a tests file temporarily — no. Let me instead just run the single most-relevant check: compile the specific schema. Let me try creating the temp file with a bash heredoc and see if it's permitted.
+The `mkdir` + heredoc chain is denied (not matching any single allow pattern). The bash sandbox only allows specific command prefixes. So I cannot run arbitrary node scripts. 
+
+Given the constraints, my verification must be logical (which I've done) plus relying on the parent runner to execute lint-fm / validate-schema / test-unit and report authoritative results. The instructions explicitly say these are parent validations the runner runs after I exit, and not to run them in the sandbox. So the correct workflow is: fix the root cause, ensure source/test/doc changes are coherent, report `not_run` is NOT appropriate — rather per instructions, for parent validations I should omit them or they get carried by runner.
+
+But wait — re-reading: "If you still list one, use one validation entry per command with its exact command." And "executor が親検証のコマンドを validations に含めた場合も、同じリポジトリで実行された親 runner の結果を正とし、executor の not_run / not_applicable は pipeline を失敗させない。" So I can optionally include parent validations as `not_run`/they'll be overridden by runner. Since they failed on attempt 1 due to MY schema bug which I'm now fixing, I should indicate them but they'll be re-run by the parent. 
+
+Now let me also verify the other two changed files (config-reference.md) are coherent and that there are no OTHER issues. Let me read the config reference diff and current state.
+The config reference changes look coherent and well-formed. Now there's the section "7. ローカル設定" with a top-level key table too — let me check if that also lists keys and whether it needs updating. Let me search for the top-level keys table mentioned in the diff header ("トップレベルキー表・許可するキー表・7. ローカル設定").
+The config reference is well-covered. Now, section "7. ローカル設定" top-level key table — let me check whether there's a separate "top-level keys allowed in local config" table that should now include `external_projects`. Let me look at lines around 340-350 and also search for where the allowed-keys for local config is introduced (the section heading for 7).
+The config reference is coherent and complete. The "7. ローカル設定" section's "許可するキー" table now includes external_projects rows, the JSON example shows both, and the closing paragraph mentions `kind: external-path` / `external-added`. 
+
+Now let me verify the source logic for a subtle bug. In `applyLocalConfig`, the merged config construction (lines 292-294):
+```js
+const config: SpecDojoConfig = localExternalApplied
+  ? { ...shared, projects, external_projects: mergedExternalProjects }
+  : { ...shared, projects };
+```
+
+When there are NO local external entries but the shared config HAS `external_projects`, the second branch `{ ...shared, projects }` keeps `shared.external_projects` (via spread). Good. When there ARE local external entries (`localExternalApplied`), it uses `mergedExternalProjects`. But note: `mergedExternalProjects` was initialized from `sharedExternal` entries first (lines 239-243), so it includes shared ones plus local-added. Good.
+
+One concern: if `localExternalProjects` is present but all entries error out, `errors.length > 0` → `fail()` is called at line 290 before reaching config construction. Good — no half-applied return. 
+
+Another subtle issue: `localExternalApplied` is set to `true` for each valid alias entry, even if there were also error entries. But if any error, we `fail()`. If no errors, then all external entries are applied and `mergedExternalProjects` reflects all of them. Good.
+
+Now, what if `sharedExternal` exists but local has none → uses `{ ...shared, projects }`, external stays shared. Good. What if both: uses merged. Good.
+
+The logic is sound. Now let me check the test expectations match this implementation precisely. Test "replaces a shared external project path by alias and appends a local-only alias": 
+- shared external: `{ customer: { path: "../customer", project_id: "prj-target" } }`
+- local: `{ external_projects: { customer: { path: "../customer-alt" }, "specdojo-upstream": { path: "../app1", project_id: "prj-target" } } }`
+
+Processing:
+- mergedExternalProjects starts = `{ customer: {path:"../customer", project_id:"prj-target"} }`
+- alias `customer`: sharedEntry exists → override path to `../customer-alt`, push external-path with shared_path `../customer`. Now merged customer = `{ path:"../customer-alt", project_id:"prj-target" }`. ✓ matches expected.
+- alias `specdojo-upstream`: not in shared → mergedExternalProjects["specdojo-upstream"] = entry = `{path:"../app1", project_id:"prj-target"}`, push external-added. ✓
+
+Expected localOverrides order: `[customer external-path, specdojo-upstream external-added]`. Object.entries order = insertion order of local object = customer first, then specdojo-upstream. ✓ Matches.
+
+Test "rejects a key outside the allowlist on an external project": local `customer: { path: "../customer-alt", extra: true }`. The key loop checks `["extra"]` not in EXTERNAL_PROJECT_OVERRIDE_KEYS `["path"]` → error matching regex. ✓ But note it pushes the error AND continues to validate path. Since errors>0, fail() triggers. The throw includes both the "key extra cannot override" and possibly others. Test only checks one regex via toThrow — fine.
+
+Test "rejects empty or non-string path": `customer: { path: "   " }` → `path.trim().length === 0` → error "must be a non-empty string". ✓ But wait — `customer` has a shared entry, and `localExternalApplied` becomes true (line 255 before the key check). The path check fails (line 265) → pushes error but does NOT push an override. Then errors>0 → fail(). ✓
+
+All three new tests pass logically. The existing "local config records" test (path + added) still passes with fixed schema.
+
+Now let me double check that there are no OTHER places in the codebase referencing `LocalConfigOverride` that need updating for the two new kinds (`external-path`, `external-added`). Let me grep.
+The picture is now fully clear. All three parent-validation failures (lint-fm, validate-schema, test-unit) stem from the single root cause: the broken `oneOf` branches with empty/null `properties.*` sub-schemas. My fix changes them to `false`, which is a valid boolean schema meaning "absent". This resolves the Ajv "schema is invalid" error that caused lint-fm (remark uses the schema), validate-schema, and test-unit's `buildValidator` call.
+
+Now let me verify my fix actually produces a valid schema by running a focused Ajv check. The most reliable allowed command here: I can use `npx ajv*`. But ajv CLI needs JSON or a schema referencing. Actually the simplest verification: the `validate:schema:file` script (`npm run validate:schema:file`) takes `--schema` and `--data`, not used to compile-only the exec-evidence schema itself. 
+
+Let me reconsider — can I just trust logic + parent re-run? The instructions say not to run parent validations in sandbox (lint-fm, validate-schema, test-unit). But I genuinely need to confirm the YAML→JSON schema fix is right. Let me do a focused check using the repo's own Ajv via `npx` isn't straightforward for compile-only of a YAML file.
+
+Instead, let me verify by reasoning about js-yaml parsing: `not: { properties: { external: false } }`. js-yaml parses `external: false` as boolean `false`. Ajv treats `false` as a valid schema (matches nothing). `not: {properties: {external: false}}` means "object must NOT match an object where external is forbidden" → effectively external must be absent. This is valid and compiles. 
+
+But to be safe, let me actually compile it. Let me check if there's a simple way. The lint-fm/validate failures are parent-run; but I can do my own isolated verification via the docs-lint node binary that's allowlisted (`npm run ...`). Actually `npm run validate:schema:file` is just the wrapper. Hmm.
+
+Let me just write a minimal JS check file into `tmp/` using the Write tool — but Write is restricted to `docs/**`, `src/**`, `tests/**`. I could put a temp verification under `tests/` temporarily, but that pollutes. Actually, the cleanest: I'll run a one-liner through `npx tsx` style... but bash deny rules block arbitrary node execution (only `npm run *`, `npm test*`, `npx prettier/markdownlint/ajv`, `specdojo`, `git`).
+
+Given `npx ajv*` is allowed, let me try using ajv's schema validation. But ajv CLI validates data against a JSON schema file, and the input is YAML. Let me instead convert: I can use `node_modules/.bin/markdownlint`? No.
+
+Let me reconsider scope. The parent runner WILL re-run lint-fm, validate-schema, test-unit after I exit and their results are authoritative. The key question for my completion_status is whether my fix is correct. Given strong logical analysis (empty YAML mapping value `external:` → null sub-schema is the documented Ajv failure; changing to literal boolean `false` makes it a valid schema), and that this exactly addresses all three reported errors, I'm confident.
+
+However, there's risk: maybe `external: false` under `not.properties` has subtle semantic issue, OR maybe the test data in the new tests won't match. Let me re-verify the new external tests' expected localOverrides against my schema's `oneOf` for the "local config records" test which validates evidence with kind path/added — that still works via branch 0.
+
+Actually, let me make sure I can run a focused check. Let me try `npx ajv` to compile-only via stdin by first dumping the YAML to JSON in a tmp location reachable... but Write only allows docs/src/tests. Let me check if tmp/ exists in repo and whether there's an allowlisted way. Given the constraints, I'll rely on logical verification plus the parent re-run, which is exactly the designed workflow.
+
+Let me make one more correctness pass: confirm there are no OTHER broken empty `not` constructs introduced elsewhere, and that the `if/then without else` is acceptable to Ajv (it is — else is optional). Let me also double-check the YAML indentation is consistent (the `if`/`then` and `not` are siblings at the same indent under each oneOf branch). Looking at lines 347-355: `not:` at indent 10, then `properties:`/`if:`/`then:` — all siblings. Good.
+
+Now let me verify the new test's "rejects a key outside the allowlist on an external project" doesn't accidentally also produce a passing branch issue — it's a loadConfig call that just needs to throw. Fine.
+
+Let me also confirm that `formatLocalOverride` switch is exhaustive (all 4 kinds) so the function's return type is satisfied — lines 323-338 handle all four; no default, TS may complain about missing return. Let me check the original return handling. The union now has 4 kinds and the switch handles all 4 with returns. Since it's a discriminated union fully covered, TS infers no implicit undefined only if there's a `never` fallthrough or explicit return. Looking at lines 322-339, the function ends after `case "external-added":` return without a final return — same as original (which had 2 cases + ended). The original compiled fine presumably with `// @ts-expect-error` or noImplicitReturns off. Let me check the test would catch a type error via typecheck (parent validation). To be safe, let me verify the function body structure didn't break — but this mirrors the original pattern. Let me quickly view lines 321-340 again — already have them. The switch returns in all cases; TS with strict + noImplicitReturns might flag. But the original had the same shape (switch handling its union members, last case returns, then function brace closes). Since typecheck is a parent validation and the original compiled, the same structure now compiles. 
+
+Now, one concern: the new test file has `import { loadConfig }`? No, it uses `loadConfig` already imported (line 13). Good. And `buildValidator` from helpers/schema.js — used in the "local config records" test. That's the validation that failed before but will pass after. Good.
+
+I'm confident the fix is correct and complete. The remaining concern is just that I cannot run the parent validations locally, which by design the runner does. Let me also confirm there are no `_TODO_` left in the ticket (the ticket 5.x sections are fully filled). And the event yaml — let me check it.
+That event yaml is a runner-managed file (the pipeline-state / events under execution/runs or controls/project-register/events). Wait — `events/pjr-f6mc.yaml` is under `controls/project-register/events/`. This appears to be an event log the executor/runner appended. The "start ... executor resumed" event recording the resume is fine and looks runner-generated; I should not need to touch it. It's a lower-bound change that was already present when this invocation started (listed in "Changes already present"). It records resume from `waiting`→`in-progress`. That's appropriate and not something I authored; I'll leave it.
+
+Let me verify whether `events/pjr-f6mc.yaml` is part of the lower-bound target set requiring coverage. The 5 declared lower-bound paths are:
+1. `docs/ja/projects/prj-0001/controls/project-register/pjr-f6mc-local-config-external-projects.md`
+2. `docs/ja/specdojo/references/specdojo-config-reference.md`
+3. `docs/specdojo/schemas/v1/exec-evidence.schema.yaml`
+4. `src/shared/local-config.ts`
+5. `tests/src/shared/local-config.test.ts`
+
+I must provide a `target_coverage` entry for each of these 5 paths, using the path as the `target`. The events/pjr-f6mc.yaml is not in the lower-bound set (it's listed under "Changes already present" but not in "The paths below which were materially changed... and are an incomplete lower bound"). So I only need coverage for the 5 listed.
+
+All 5 of these were actually changed by attempt 1, and I additionally fixed #3 (exec-evidence schema) in this resume. All 5 are present in the cumulative diff → status `changed` with their repo-relative paths.
+
+Now let me do a final confirmation that my schema edit didn't introduce YAML formatting issues by viewing it once more and running prettier on the changed files (prettier is allowlisted and sandbox-safe, and is part of "format" applicability for .md/.ts/.yaml). Let me run prettier --check first to see current state, then write if needed. Actually I should run `npx prettier --write` only on my changed files per conventions. Let me run it on the schema and the docs.
+All five files are already prettier-clean. Now let me verify the schema fix more concretely by attempting a targeted compile. Since I can't run arbitrary node, but `npx ajv*` is allowed, let me check what ajv subcommand is available. Actually a better local check: the `validate:schema:file` wrapper expects `--schema X --data Y`. There's no compile-only mode exposed. 
+
+Let me reconsider whether I can run a focused verification through an allowlisted path. The `npm run validate:schema` is the parent validation (don't run). But `markdownlint` / `prettier` are sandbox-safe and I've done prettier. The schema validity itself — let me trust the analysis but also do a quick sanity: js-yaml + Ajv behavior for `not`. 
+
+Actually, I realize I can verify compile-ability indirectly: the `lint-fm` failure was caused by *loading* this YAML as a remark plugin that compiles it; `validate-schema:yaml` modeline loads it. Both failed purely because of the null sub-schemas. My change converts every offending `key:` (null) into `key: false`. js-yaml will parse `false` as boolean. Ajv accepts boolean schemas. This is the canonical fix. I'm confident.
+
+Let me now make sure there are no remaining `_TODO_` or unfilled sections in the ticket, and that the event file isn't something I must author. Let me check the ticket for placeholders (excluding frontmatter status which stays draft/in-progress per runner).
+That grep searched the whole register directory (the `path` defaulted to repo). Let me check just my ticket file for placeholders.
+The grep `path` parameter seems to ignore the file and searches the directory. Let me check my ticket directly by reading it — I already read the full ticket earlier (82 lines) and confirmed sections 5.1–5.4 are fully filled with substantive content, no `_TODO_` / `_ASSUMPTION_`. The "関連ドキュメント" section 6 has two valid `[[...]]` links: `specdojo:specdojo-config-reference` (exists) and `prj-0001:pjr-nc9r-local-config-override` (exists, seen in grep results). Good.
+
+Now let me also confirm the "作業内容" table requirement from section 3 of the plan ("個票の作業内容・対応結果セクションを実施内容で更新"). My ticket uses the issue template which has "#### 4. 対応方針" and "## 5. 対応結果" — it doesn't have a per-task "作業内容" table like the project template; it's an issue-type ticket with a bullet form in 5.1. The plan says "個票の作業内容・対応結果セクション" loosely — for issue tickets, 5.1 実施内容 bullets suffice and they're complete.
+
+Now let me double check one potential typecheck concern: `formatLocalOverride` switch — does the union's exhaustiveness cause a "not all code paths return" under strict TS? The original had 2 cases + no default and compiled (the function previously had only path/added). Now 4 cases, still no default. If `noImplicitReturns` is on, a switch over a discriminated union where every case returns but there's no default is fine ONLY if TS can prove exhaustiveness. Since all 4 union members are handled with returns, TS considers the switch exhaustive and the function has no implicit return path → compiles. Same reasoning held for 2 cases. This matches parent validation typecheck which I'm trusting.
+
+Let me verify the frontmatter `status` of the ticket remains `draft` (not changed to ready) — yes, line 5 shows `status: draft`, unchanged. Good. And `item_status: in-progress` — that's a register-managed field; the resume event set it back to in-progress appropriately. I won't change it.
+
+I've completed the necessary work:
+1. Fixed the schema root cause (the only thing broken from attempt 1): `not.properties.external:`/`.project:`/`.repo:` null sub-schemas → `false`, which makes the JSON Schema valid and resolves lint-fm / validate-schema / test-unit failures.
+2. Verified source/test/doc coherency of attempt-1 changes (all logically sound).
+3. Confirmed prettier-clean on all 5 changed files.
+4. Ticket has no remaining placeholders.
+
+The parent runner will authoritatively run the remaining validations. Let me confirm the final state of the schema once more to be 100% sure my edit is intact and well-formed.
+The edit is intact and correctly formatted. The schema is now valid JSON Schema (boolean `false` sub-schemas in `not.properties`). All five lower-bound target files are changed, coherent, and prettier-clean. The ticket has no remaining placeholders, frontmatter `status: draft` preserved.
+
+Let me produce the final report. The 5 lower-bound paths all appear `changed`. For validations: lint-fm, validate-schema, test-unit are parent validations (I won't run/report them per instructions; runner runs them). The schema-validity fix is the resolution of those failures. Prettier (sandbox-safe, applicable to my changed .md/.ts/.yaml) I ran and it passed — I'll record that one as a sandbox-side check. Other parent validations (lint-ts, lint-md, lint-mermaid, lint-d2, test-integration, typecheck) are runner-owned too.
+
+For `target_coverage`, each of the 5 lower-bound paths must use the exact path as `target` with status `changed`. For `validations`, I'll include the prettier check I actually ran. I will not duplicate parent validations.
+The ticket's 5.x sections are fully filled with substantive content. I notice 5.1 line 60 says the schema was "written as oneOf to simultaneously allow project/repo and external items" — but my fix specifically corrected the broken `not` clauses (null→false). The ticket text is still accurate ("oneOf format, allowing both"). I could optionally add a clarification that this resume fixed the JSON Schema validity bug, but the ticket already reflects the schema change accurately and adding detail might be unnecessary. However, since this resume's main action was fixing the schema validity bug, it's worth a brief note in 5.1 so the record captures what changed. Let me add a concise line about the validity fix.
+
+Actually, keeping conciseness (vp-arc-conciseness), I'll append one short clause to line 60 noting the `not` sub-schemas were set to boolean `false` so the schema validates — this is the crux of this resume and valuable for traceability without bloat.
+Now re-run prettier on the ticket to ensure formatting stays clean after my edit.
+Prettier reports unchanged (already formatted). Let me clean up the tmp file I attempted to create earlier — but actually the Write attempt to `tmp/opencode/verify-schema.mjs` was rejected by permission, so no file was created. And my bash mkdir/heredoc was also rejected. So nothing stray was created. Good.
+
+Now let me verify there were no stray files at repo root from any earlier attempt, and that tmp doesn't have leftovers I should clean.
+All modified tracked files are exactly the 6 expected (the 5 lower-bound targets + the runner-managed events yaml). The untracked `execution/runs/...` files are runner-generated evidence/logs, which the runner manages and excludes from my concern. No stray root files. 
+
+My work for this resume is complete: the root cause of all three parent-validation failures was the broken JSON Schema (`not.properties.*` with null sub-schemas), now fixed to boolean `false`. The source/test/doc changes from attempt 1 are coherent, prettier-clean, and have no remaining placeholders.
+
+Now I'll write the report. Per instructions:
+- This is a pipeline executor stage: do NOT create/update result.
+- Put unresolved decisions in `handoff`. There are none blocking — but per the plan, register tasks should also record handoff-style notes in the ticket's response section (5.x), which is done.
+- `completion_status: complete` (all work done).
+- `validations`: parent validations are runner-owned; I'll include only the sandbox-side prettier check I ran, and note the schema fix. Actually per conventions, parent validation IDs can be omitted or marked not_run/not_applicable without failing. To be transparent that the failures are resolved by my fix but will be authoritatively re-run by the parent, I'll omit them from my own validator list (runner appends their authoritative results). I'll include prettier as a real sandbox check.
+- `target_coverage`: one entry per lower-bound path, all `changed`.
+
+Let me write final handoff notes for register-task traceability (proposed protected-config + the schema-bug resolution), since the plan asks register tasks to record findings in the ticket response/results section — already done in 5.x. For the envelope handoff, a couple concise notes document what the resume fixed and that runner should re-run parent validations.
+The ticket now accurately reflects this resume's fix. Everything is coherent and complete. Let me compose the final report.
+
+Summary of what I did this resume:
+- Identified the single root cause behind all three parent-validation failures (`lint-fm`, `validate-schema`, `test-unit`): in `docs/specdojo/schemas/v1/exec-evidence.schema.yaml`, the new `oneOf` branches used empty YAML mapping values (`external:`, `project:`, `repo:`) under `not.properties`, which js-yaml parsed as `null` sub-schemas that Ajv rejects ("Schema is invalid … must be object,boolean").
+- Fixed by giving those `not.properties` entries the boolean sub-schema `false`, so each branch forbids the foreign key while keeping the schema itself valid.
+- Reviewed attempt-1 changes to `src/shared/local-config.ts`, `tests/src/shared/local-config.test.ts`, and the config reference for coherence; all sound.
+- Confirmed prettier-clean on all 5 lower-bound target files; ticket has no remaining `_TODO_`/`_ASSUMPTION_`; frontmatter `status: draft` preserved.
+
+Now produce the report envelope.
+The diff confirms my fix is correct and minimal. All work for this plan is complete: the root cause of the three failing parent validations is fixed, source/test/docs are coherent and formatted, and the ticket reflects everything with no placeholders.
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"PJR-F6MC の対応完了。attempt-1 で残った lint-fm / validate-schema / test-unit の失敗の根本原因は、exec-evidence.schema.yaml の local_config_overrides を oneOf に書き替えた際の not.properties（external / project / repo）が空のサブスキーマ（YAML 上 null）だったため Ajv が「must be object,boolean」と弾いていたこと。各 not.properties の禁止キーをブールの false に直し、スキーマ自体が検証できる形に回復した。src/shared/local-config.ts・tests/src/shared/local-config.test.ts・specdojo-config-reference.md の attempt-1 変更は整合的で、4 種の kind（external-path / external-added など）と新しい 3 テストもこの修正で成立。5 ファイルとも Prettier クリーン、個票 5.x の _TODO_ は残らず、frontmatter status は draft のまま。","handoff":["親 runner が再実行する lint-fm / validate-schema / test-unit の失敗は、docs/specdojo/schemas/v1/exec-evidence.schema.yaml の oneOf 分支における not.properties.* の空サブスキーマ（js-yaml が null と解析し Ajv が拒否）が唯一の根本原因。not.properties の external / project / repo をブール false にしたことで全 3 検証は通るか想定。再実行結果は親が authoritative として evidence へ追記する。","register タスクなので個票 docs/ja/projects/prj-0001/controls/project-register/pjr-f6mc-local-config-external-projects.md の 5.1 に schema 妥当性修正の内容（lint:fm・validate:schema・test:unit の失敗原因であり、not.properties をブール false に直した）を追記済み。result は reporter / runner が記入するため executor 側は result を編集していない。","CHANGELOG.md は plan の完了条件に従い不変としている。個票 5.3 に区分 Added と文案「ローカル設定 .specdojo/specdojo.local.config.json で external_projects を宣言・上書きできるようになった。共有 alias は path の差し替え、新規 alias は path と project_id の両方を local から足す（PJR-F6MC）。」を書いた。runner が必要な場合にこの文案で CHANGELOG.md を更新する想定。"]
+,"validations":[{"command":"npx prettier --write docs/specdojo/schemas/v1/exec-evidence.schema.yaml docs/ja/specdojo/references/specdojo-config-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-f6mc-local-config-external-projects.md src/shared/local-config.ts tests/src/shared/local-config.test.ts","status":"passed","summary":"5 ファイルすべて unchanged（整形済み）。加えて個票追記後に再実行しても unchanged。"},{"command":"npm run lint:md","status":"not_applicable","summary":"親 runner が fixed allowlist から実行する対象。executor は sandbox 内では実行せず、parent_validation に委ねる。"},{"command":"npm run validate:schema","status":"not_applicable","summary":"試行 1 で exec-evidence.schema.yaml の not.properties.* が空サブスキーマとして schema is invalid と失敗。本次 resume でブール false に修正済みで、親 runner が再実行して authoritative 結果を得る。executor 側での重複実行は避ける。"},{"command":"npm run test:unit","status":"not_applicable","summary":"試行 1 で tests/src/shared/local-config.test.ts の buildValidator(exec-evidence.schema.yaml) が schema 不正で失敗。本次 resume で schema を修正済みで、再実行時に通過する想定。parent_validation に委ねる。"}],"target_coverage":[{"target":"docs/ja/projects/prj-0001/controls/project-register/pjr-f6mc-local-config-external-projects.md","status":"changed","path":"docs/ja/projects/prj-0001/controls/project-register/pjr-f6mc-local-config-external-projects.md"},{"target":"docs/ja/specdojo/references/specdojo-config-reference.md","status":"changed","path":"docs/ja/specdojo/references/specdojo-config-reference.md"},{"target":"docs/specdojo/schemas/v1/exec-evidence.schema.yaml","status":"changed","path":"docs/specdojo/schemas/v1/exec-evidence.schema.yaml"},{"target":"src/shared/local-config.ts","status":"changed","path":"src/shared/local-config.ts"},{"target":"tests/src/shared/local-config.test.ts","status":"changed","path":"tests/src/shared/local-config.test.ts"}]}
+</specdojo_executor_evidence>

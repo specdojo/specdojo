@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/cnd-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 100
-graded_at: "2026-11-15T02:03:55.636Z"
-graded_by: sol-review-executor
-content_hash: a6f6ea03a587784f0b1b58330726115707f3ab7bfaf0e818316d27a51c98dca4
+score: 92
+graded_at: "2026-11-23T09:28:57.255Z"
+graded_by: sonnet-review-executor
+content_hash: fc006c4dad54931d9de126c8f4949d6bf4617db42611afcae2eefa9a8f686470
 categories:
   purpose:
     score: 100
@@ -21,11 +21,11 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 92
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 75
   consistency:
     score: 100
 viewpoints:
@@ -60,8 +60,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -72,17 +72,17 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -104,6 +104,36 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 4
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 90
+    anchor: "### 6.6. 検証・承認前の確認"
+    message: 記述ガイド（要素と境界の定義、技術前提・制約と検証観点）と「検証・承認前の確認」表で合格条件が二重に書かれている。どちらか一方を正本にし、もう一方は参照に置き換えて重複を解消する。
+    message_ja: 記述ガイド（要素と境界の定義、技術前提・制約と検証観点）と「検証・承認前の確認」表で合格条件が二重に書かれている。どちらか一方を正本にし、もう一方は参照に置き換えて重複を解消する。
+  - id: F002
+    severity: minor
+    rule: vp-dev-testability
+    line: 13
+    anchor: >-
+      - **共通の運用**: `status`、改訂と廃止、未決事項の登録簿への引き継ぎは [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従います。文書の整形・lint
+      はリポジトリの検証で扱い、業務の受入確認に含めません。
+    message: lint や schema 検証が必要であることは書かれているが、実行するコマンド名と期待結果、エラー時の対応が参照先を含めて示されていない。
+    message_ja: lint や schema 検証が必要であることは書かれているが、実行するコマンド名と期待結果、エラー時の対応が参照先を含めて示されていない。
+  - id: F003
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 81
+    anchor: "- 下流の結合検証へ渡す各経路には正常時の結果を、外部依存・保存先には不在・失敗・結果不明時に区別する状態を記します。未確定の期待結果は検証済みの保証にせず、引き継ぐ論点にします。"
+    message: 検証対象表の各行に Pass / Fail / 未判定の判定条件を記すことが、rulebook の要件として明記されていない。template と sample に先行して存在する要件なので、rulebook に追加する。
+    message_ja: 検証対象表の各行に Pass / Fail / 未判定の判定条件を記すことが、rulebook の要件として明記されていない。template と sample に先行して存在する要件なので、rulebook に追加する。
+  - id: F004
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 70
+    anchor: "- 境界、Person、Container、Data Store、External Software System、Relationship に分けて説明します。名称と関係ラベルは図と一致させます。"
+    message: sample の Person 表だけが「判断・確認の責務」列を持ち、template と rulebook の要件にはない。列を標準にするか、sample から外すかを決めて揃える。
+    message_ja: sample の Person 表だけが「判断・確認の責務」列を持ち、template と rulebook の要件にはない。列を標準にするか、sample から外すかを決めて揃える。

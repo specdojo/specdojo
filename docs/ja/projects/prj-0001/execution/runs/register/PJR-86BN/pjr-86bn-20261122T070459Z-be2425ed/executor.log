@@ -1,0 +1,22 @@
+itc の sample と rulebook を、grade の新しい指摘に沿って直しました。評価し直しはまだで、`npm run lint:md` などの検証も、親 runner の実行に任せたため未実行です。
+
+**sample（`itc-sample.md`）**
+- F001（major）: `it-sales-checkout-transaction-boundary-010` の観測点を、期待値と同じ `out-of-stock` に揃えました。
+- F002: `it-sales-checkout-persistence-integrity-030` の期待値と観測点に、販売記録の内容（商品A・数量5・150円）を加えました。
+- F003: 「状態遷移の整合性」の扱いを、保留の維持だけに絞りました。補完後に確定へ進む遷移は扱わないと明記しています。
+- F004: `itc-index-sample` は変えていません。sample 側に、更新拒否でも未保存を成功と応答しないことを `it-sales-checkout-transaction-boundary-020` で確かめると書きました。DB 停止・接続断は不採用のままです。
+- F005: 機械的な「未解決の `_TODO_` / `_ASSUMPTION_`」の指摘（PJR-7C9X）です。`_TODO_` は sample にありません。`_ASSUMPTION_`（分離レベル）は `sample-authoring-standard` に従って残しました。
+
+**rulebook（`itc-rulebook.md`）**
+- F001: 記述ガイド冒頭と重複していた「本節は対象別に固有の判断だけを定める。」を削りました。
+- F002: 禁止事項の表の「SSOTとして成立しないため」を「正本として成立しないため」に統一しました。
+
+個票の対応結果に、2 回目の実行分の対応（上記の各指摘）を追記しました。作業内容の表の行 3 と 4 は `open` のままです。`CHANGELOG.md` は変えていません。
+
+直さない指摘はありません。
+
+grade の起動は executor では行わないため、統合後にオーケストレーターが `npx specdojo grade run --target kata --kata itc` で評価し直す必要があります。blocker・major がなく、機械的な指摘（PJR-7C9X）だけが残る場合は合格です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"itc-sample の F001〜F004 と itc-rulebook の F001・F002 を直した。F005 は機械的な指摘（PJR-7C9X）なので `_ASSUMPTION_` を残した。個票の対応結果も更新した。grade の評価し直しはオーケストレーターが行う。","handoff":["統合後に orchestrator が `npx specdojo grade run --target kata --kata itc` で評価し直す。blocker・major がなく、機械的な指摘（PJR-7C9X）だけが残る場合は合格とする。","sample F004 は `itc-index-sample` を変えず、sample 側で更新拒否による未保存の成功応答の防止を明記して対応した。再評価で残る場合は、`itc-index-sample` の割り当て文言を更新拒否に改める別項目が必要。","個票の作業内容の表の行 3 と 4 は `open` のまま（親 runner の検証と orchestrator の grade 起動が必要なため）。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/itc-sample.md docs/ja/specdojo/rulebooks/itc-rulebook.md docs/ja/projects/prj-0001/controls/project-register/pjr-86bn-kata-wave-3-itc-fix.md","status":"passed","summary":"対象 Markdown の整形を実行し、エラーなし。"},{"command":"npm run validate:history-links","status":"not_run","summary":"個票に Markdown リンクを追加していないが、この検査は実行していない。"}]}
+</specdojo_executor_evidence>

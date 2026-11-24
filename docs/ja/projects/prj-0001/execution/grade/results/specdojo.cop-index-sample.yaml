@@ -4,11 +4,11 @@ document: specdojo:cop-index-sample
 path: docs/ja/specdojo/samples/cop-index-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: fail
-score: 73
-graded_at: "2026-10-11T21:16:46.923Z"
-graded_by: agy-expert-executor
-content_hash: fd31c36767e96caa3f121a95c1c912298d13fbd753b6a734a1b975983d18c6ed
+verdict: pass
+score: 95
+graded_at: "2026-11-23T15:29:19.947Z"
+graded_by: sonnet-review-executor
+content_hash: 40fe448d8c50cfd0e9ac05b6be62850866bc972bb211a65f6d279dd43ea7baf2
 categories:
   purpose:
     score: 100
@@ -21,13 +21,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 83
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 58
+    score: 92
   consistency:
-    score: 0
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -75,14 +75,14 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-omissions-consistency:
-    level: 0
-    score: 0
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
-    level: 0
-    score: 0
+    level: 4
+    score: 100
   vp-ux-readability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 4
     score: 100
@@ -99,43 +99,28 @@ viewpoints:
     level: 4
     score: 100
 finding_counts:
-  blocker: 2
-  major: 2
-  minor: 1
+  blocker: 0
+  major: 0
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-qe-verifiability
-    line: 32
-    anchor: ""
-    message: 「主な内容」の値が「要点のみ記載」となっており、具体的な記述例として不十分である。
-    message_ja: 「主な内容」の値が「要点のみ記載」となっており、具体的な記述例として不十分である。
+    line: 82
+    anchor: >-
+      | GO4    | T+7日の日次締めで、売上額とつけ残高合計に理由の分からない差異がない    | 店主代表 |
+      延期。並行記録を延ばし、ノートを正本のまま続ける                                   |
+    message: "GO4 の条件「理由の分からない差異がない」は判定者によって解釈が分かれるため、差異の許容基準（例: 差異は 0、または原因を日次締めの差異欄に書いた差異だけ）を数値や状態で示す必要がある。"
+    message_ja: "GO4 の条件「理由の分からない差異がない」は判定者によって解釈が分かれるため、差異の許容基準（例: 差異は 0、または原因を日次締めの差異欄に書いた差異だけ）を数値や状態で示す必要がある。"
   - id: F002
-    severity: blocker
+    severity: minor
     rule: vp-qe-omissions-consistency
-    line: 9
-    anchor: "- 対象: 駄菓子屋の販売管理システム"
-    message: ルールブックで定義された必須見出し（1.概要 〜 10.関連ドキュメント）がすべて欠落している。
-    message_ja: ルールブックで定義された必須見出し（1.概要 〜 10.関連ドキュメント）がすべて欠落している。
-  - id: F003
-    severity: blocker
-    rule: vp-qe-kata-conformance
-    line: 9
-    anchor: "- 対象: 駄菓子屋の販売管理システム"
-    message: 成果物の構造（必須構成）を無視した概要説明になっており、完成例としての責務を果たしていない。
-    message_ja: 成果物の構造（必須構成）を無視した概要説明になっており、完成例としての責務を果たしていない。
-  - id: F004
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 4
-    anchor: ""
-    message: Frontmatter の `type` が `project` となっており、ルールブックで定義された `migration` と矛盾している。
-    message_ja: Frontmatter の `type` が `project` となっており、ルールブックで定義された `migration` と矛盾している。
-  - id: F005
-    severity: major
-    rule: vp-ux-readability
-    line: 9
-    anchor: "- 対象: 駄菓子屋の販売管理システム"
-    message: 必須構成が欠落し具体的記述がないため、成果物の正しい書き方を確認することができない。
-    message_ja: 必須構成が欠落し具体的記述がないため、成果物の正しい書き方を確認することができない。
+    line: 63
+    anchor: 切替を始めるには、次の条件が前日の閉店時までにすべて満たされている必要がある。満たしていないものがあれば、店主代表が表の「未達時の扱い」に従って決める。
+    message: >-
+      導入文は条件を「前日の閉店時までに」満たすとしています。しかし表の最終棚卸（GO1）の確認時期は「前日の閉店後」で、タイムラインでは T-13:00
+      に終わります。時期を「前日の最終棚卸の終了時（T-13:00）まで」などに揃える必要がある。
+    message_ja: >-
+      導入文は条件を「前日の閉店時までに」満たすとしています。しかし表の最終棚卸（GO1）の確認時期は「前日の閉店後」で、タイムラインでは T-13:00
+      に終わります。時期を「前日の最終棚卸の終了時（T-13:00）まで」などに揃える必要がある。

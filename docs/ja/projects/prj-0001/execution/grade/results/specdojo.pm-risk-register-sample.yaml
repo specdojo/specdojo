@@ -4,30 +4,30 @@ document: specdojo:pm-risk-register-sample
 path: docs/ja/specdojo/samples/pm-risk-register-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: fail
-score: 83
-graded_at: "2026-10-17T20:06:45.631Z"
-graded_by: agy-expert-executor
-content_hash: 4f988167bf337bd56344365e99b203a13bb930a82ed05ccec17c8fc79d6878a2
+verdict: needs-work
+score: 93
+graded_at: "2026-11-23T18:55:48.630Z"
+graded_by: sonnet-review-executor
+content_hash: f75b50ff081a3b30b2e21bee5015a474574f549727d474dc0b442ac261b6d1aa
 categories:
   purpose:
     score: 100
   operations:
-    score: 100
+    score: 88
   planning:
-    score: 100
+    score: 92
   business:
     score: 100
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 92
   implementation:
     score: 100
   quality:
-    score: 58
+    score: 83
   consistency:
-    score: 50
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -39,8 +39,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-dependency-risk:
     level: 4
     score: 100
@@ -75,23 +75,23 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
-  vp-qe-omissions-consistency:
     level: 2
     score: 50
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 0
-    score: 0
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-ops-operability:
     level: 4
     score: 100
@@ -102,54 +102,44 @@ viewpoints:
     level: 4
     score: 100
 finding_counts:
-  blocker: 1
-  major: 1
-  minor: 4
+  blocker: 0
+  major: 2
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-verifiability
-    line: 27
-    anchor: "## 5. モニタリング"
-    message: 「閾値以内」という表現は具体的数値や判定基準が不明確であり、客観的な検証可能性が低い。
-    message_ja: 「閾値以内」という表現は具体的数値や判定基準が不明確であり、客観的な検証可能性が低い。
+    rule: vp-pm-plan-feasibility
+    line: 68
+    anchor: >-
+      | RK-001   | 低減     | 2026-04-15                    | 連続会計の試行で _UNDECIDED_ 件を続けて記録し、販売記録の漏れが 0 件、1 件の会計確定が
+      _UNDECIDED_ 秒以内に終わる |
+    message: RK-001 の完了条件の試行件数と会計確定の秒数が `_UNDECIDED_` のままで、完了を判定できない。具体値を入れる。
+    message_ja: RK-001 の完了条件の試行件数と会計確定の秒数が `_UNDECIDED_` のままで、完了を判定できない。具体値を入れる。
   - id: F002
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 28
-    anchor: ""
-    message: 「合意完了」という表現は、誰が誰に、何を合意すれば完了とするのかが不明確である。
-    message_ja: 「合意完了」という表現は、誰が誰に、何を合意すれば完了とするのかが不明確である。
-  - id: F003
     severity: major
-    rule: vp-qe-omissions-consistency
-    line: 6
-    anchor: ""
-    message: 概要に「見直し頻度」と「責任者」の記述が不足している。
-    message_ja: 概要に「見直し頻度」と「責任者」の記述が不足している。
+    rule: vp-qe-verifiability
+    line: 68
+    anchor: >-
+      | RK-001   | 低減     | 2026-04-15                    | 連続会計の試行で _UNDECIDED_ 件を続けて記録し、販売記録の漏れが 0 件、1 件の会計確定が
+      _UNDECIDED_ 秒以内に終わる |
+    message: RK-001 の完了条件の件数と秒数が `_UNDECIDED_` のままで、rulebook 6.4 の「確認の手段と合格の基準」を満たさず合否を判定できない。具体値を確定する。
+    message_ja: RK-001 の完了条件の件数と秒数が `_UNDECIDED_` のままで、rulebook 6.4 の「確認の手段と合格の基準」を満たさず合否を判定できない。具体値を確定する。
+  - id: F003
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 71
+    anchor: >-
+      | RK-004   | 低減     | 2026-04-04（移管済み）        | 課題 IS-002
+      へ移管し、追跡を課題ログに任せた                                                                      |
+    message: RK-004 の対応方針が「低減」なのに、完了条件は課題 IS-002 への移管で、方針区分と内容が一致しない。移管した旨を方針の側でも分かる表記にそろえる。
+    message_ja: RK-004 の対応方針が「低減」なのに、完了条件は課題 IS-002 への移管で、方針区分と内容が一致しない。移管した旨を方針の側でも分かる表記にそろえる。
   - id: F004
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 17
-    anchor: "- 影響度: 低/中/高"
-    message: 評価基準に「再評価条件」の記述が不足している。
-    message_ja: 評価基準に「再評価条件」の記述が不足している。
-  - id: F005
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 33
-    anchor: ""
-    message: モニタリングに「状態更新ルール」の記述が不足している。
-    message_ja: モニタリングに「状態更新ルール」の記述が不足している。
-  - id: F006
-    severity: blocker
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# リスク登録簿 サンプル"
-    message: >-
-      本書は rulebook
-      に基づき手動作成の形式をとっているが、対応するテンプレート（specdojo:pm-risk-register-template）では自動生成ビューとして定義されており、成果物の種別と責務が根本的に矛盾している。
-    message_ja: >-
-      本書は rulebook
-      に基づき手動作成の形式をとっているが、対応するテンプレート（specdojo:pm-risk-register-template）では自動生成ビューとして定義されており、成果物の種別と責務が根本的に矛盾している。
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 68
+    anchor: >-
+      | RK-001   | 低減     | 2026-04-15                    | 連続会計の試行で _UNDECIDED_ 件を続けて記録し、販売記録の漏れが 0 件、1 件の会計確定が
+      _UNDECIDED_ 秒以内に終わる |
+    message: RK-001 の完了条件に `_UNDECIDED_` が残っており、ready 化の前提である未解決事項の解消が済んでいない。
+    message_ja: RK-001 の完了条件に `_UNDECIDED_` が残っており、ready 化の前提である未解決事項の解消が済んでいない。

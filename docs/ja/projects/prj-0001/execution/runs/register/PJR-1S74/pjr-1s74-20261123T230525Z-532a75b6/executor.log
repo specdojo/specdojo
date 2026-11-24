@@ -1,0 +1,7 @@
+個票 pjr-1s74 の 55 行目にあった `<reason>` を、インラインコードで囲んで直しました。`lint:fm:changed` は親 runner が検査するため、私は実行していません。
+
+今回は、親の検証が指摘した 1 件の修正だけを行いました。`src/exec/reporter.ts` とテスト `tests/src/exec/reporter-schema-check-skip.test.ts` は前回の変更のままで、再確認はしていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"個票の対応結果 55 行目の山括弧プレースホルダ `<reason>` をインラインコードで囲んだ。ほかの変更は保った。","handoff":[],"validations":[{"command":"npm run lint:fm:changed","status":"not_applicable","reason":"親 runner が実行する検査のため、executor では実行しない。"}],"target_coverage":[{"target":"docs/ja/projects/prj-0001/controls/project-register/pjr-1s74-schema-check-skip-validate-false.md","status":"changed","path":"docs/ja/projects/prj-0001/controls/project-register/pjr-1s74-schema-check-skip-validate-false.md"},{"target":"src/exec/reporter.ts","status":"changed","path":"src/exec/reporter.ts"},{"target":"tests/src/exec/reporter-schema-check-skip.test.ts","status":"changed","path":"tests/src/exec/reporter-schema-check-skip.test.ts"}]}
+</specdojo_executor_evidence>

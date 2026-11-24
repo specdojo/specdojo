@@ -4,30 +4,30 @@ document: specdojo:stc-index-sample
 path: docs/ja/specdojo/samples/stc-index-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 81
-graded_at: "2026-10-20T20:21:14.315Z"
-graded_by: flash-high-executor
-content_hash: 450b099990ae36d6a16f74f1d57640670b4cc668fb996ab745354dbf5964d98f
+verdict: pass
+score: 92
+graded_at: "2026-11-23T02:03:42.714Z"
+graded_by: opus-review-executor
+content_hash: e0bfdbcd335b16cd755410e9a1257d141166e857db6cf8f8606d10f188b10b4e
 categories:
   purpose:
     score: 100
   operations:
     score: 100
   planning:
-    score: 100
+    score: 92
   business:
     score: 100
   architecture:
     score: 100
   usability:
-    score: 75
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 67
+    score: 83
   consistency:
-    score: 50
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -45,8 +45,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-control-reporting:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-business-value:
     level: 4
     score: 100
@@ -60,8 +60,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-implementation-readiness:
     level: 4
     score: 100
@@ -75,14 +75,14 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
-    level: 1
-    score: 25
+    level: 3
+    score: 75
   vp-ux-readability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 4
     score: 100
@@ -100,52 +100,75 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 4
-  minor: 2
+  major: 0
+  minor: 5
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-arc-conciseness
-    line: 29
-    anchor: "| -------------- | ------------------------ |"
-    message: 「主な内容」の記述が前の節の内容をそのまま反復しており、冗長である。
-    message_ja: 「主な内容」の記述が前の節の内容をそのまま反復しており、冗長である。
+    rule: vp-pm-control-reporting
+    line: 132
+    anchor: >-
+      | _ASSUMPTION_: 会計確定の応答基準  | 対象外の例外、共通合格基準の P0      | TSP の仮置き（60取引/時で応答の95%が2秒以内）で判定する | NFR
+      確定後に基準値を置き換え、`会計確定応答` の期待値を更新する |
+    message: >-
+      メモ / 将来課題の2件（会計確定の応答基準、通信不能時の販売継続）は、TSP では `kinuya:pjr-i006`・`kinuya:pjr-i003` へ引き継ぐと明記されていますが、本書には PJR
+      の引継ぎ先がありません。担当列か見直し方針列に引継ぎ先の PJR を記載し、決定記録への転記先を追えるようにする必要があります。
+    message_ja: >-
+      メモ / 将来課題の2件（会計確定の応答基準、通信不能時の販売継続）は、TSP では `kinuya:pjr-i006`・`kinuya:pjr-i003` へ引き継ぐと明記されていますが、本書には PJR
+      の引継ぎ先がありません。担当列か見直し方針列に引継ぎ先の PJR を記載し、決定記録への転記先を追えるようにする必要があります。
   - id: F002
     severity: minor
     rule: vp-qe-verifiability
-    line: 20
+    line: 98
     anchor: >-
-      | 項目         |
-      値                                                                                                                                    
-      | 備考                                 |
-    message: 判定基準の具体例がなく、verifiability（検証可能性）を担保する記述方法のサンプルとして不十分である。
-    message_ja: 判定基準の具体例がなく、verifiability（検証可能性）を担保する記述方法のサンプルとして不十分である。
+      | P0     | 記録の欠落・誤り、販売の誤確定につながるケース | 全件 Pass。1件でも Fail なら ST
+      を完了しない                                                 |
+    message: >-
+      P0 の対象を「記録の欠落・誤り、販売の誤確定につながるケース」とだけ定義していますが、132行目のメモと対象別の `stc-sample` は `会計確定応答`（性能）を P0 として扱っています。性能ケースが P0
+      に当たるかを優先度の定義から判定できないため、P0 の対象に「TSP 出口条件の性能基準」を加えるなどして明記する必要があります。
+    message_ja: >-
+      P0 の対象を「記録の欠落・誤り、販売の誤確定につながるケース」とだけ定義していますが、132行目のメモと対象別の `stc-sample` は `会計確定応答`（性能）を P0 として扱っています。性能ケースが P0
+      に当たるかを優先度の定義から判定できないため、P0 の対象に「TSP 出口条件の性能基準」を加えるなどして明記する必要があります。
   - id: F003
-    severity: major
+    severity: minor
     rule: vp-qe-omissions-consistency
-    line: 9
-    anchor: "- 対象: 駄菓子屋の販売管理システム"
-    message: "rulebook で定義された必須見出し構成（## 1 〜 ## 8）に従っておらず、第 2 章から 第 8 章までの必須項目がすべて欠落している。"
-    message_ja: "rulebook で定義された必須見出し構成（## 1 〜 ## 8）に従っておらず、第 2 章から 第 8 章までの必須項目がすべて欠落している。"
+    line: 26
+    anchor: >-
+      | `stc-record-recovery` | 応答欠落・保存失敗の検知→照合待ちの識別→記録の復元→業務再開 | TSP のスコープ（記録の保全・復元） |
+      実施者が店主代表で、運用手順と観測点（保管サービスの記録）が販売と異なるため運用境界で分ける |
+    message: >-
+      `stc-record-recovery` を分ける理由に「実施者が店主代表」とありますが、92行目の責任欄は「実施と証跡の照合は QE」としており矛盾します。記録の復元の操作者が店主代表で、照合と判定が QE
+      であるなら、分割理由と責任欄の役割分担をその内容に揃える必要があります。
+    message_ja: >-
+      `stc-record-recovery` を分ける理由に「実施者が店主代表」とありますが、92行目の責任欄は「実施と証跡の照合は QE」としており矛盾します。記録の復元の操作者が店主代表で、照合と判定が QE
+      であるなら、分割理由と責任欄の役割分担をその内容に揃える必要があります。
   - id: F004
-    severity: major
+    severity: minor
     rule: vp-qe-kata-conformance
-    line: 4
-    anchor: ""
-    message: Frontmatter の `type` が `project` となっており, rulebook 第 4.1 節の「`test` 固定」というルールに違反している。
-    message_ja: Frontmatter の `type` が `project` となっており, rulebook 第 4.1 節の「`test` 固定」というルールに違反している。
+    line: 76
+    anchor: >-
+      | `会計維持` / 印刷の用紙切れ       | 会計を取り消すと現金と記録がずれる                  | `stc-cash-sale`       | なし            |
+      確定済みの会計を取り消さず、警告だけを出す     |
+    message: >-
+      分配表と観点の系統表は用紙切れを観点 `会計維持` に割り当てていますが、対象別の `stc-sample` の 6.2 節は同じケース（`perspective_key: print-failure`）を観点 `未確定停止`
+      のままにしています。概要と対象別で観点名が食い違うため、`stc-sample` 側を `会計維持` に揃える必要があります。
+    message_ja: >-
+      分配表と観点の系統表は用紙切れを観点 `会計維持` に割り当てていますが、対象別の `stc-sample` の 6.2 節は同じケース（`perspective_key: print-failure`）を観点 `未確定停止`
+      のままにしています。概要と対象別で観点名が食い違うため、`stc-sample` 側を `会計維持` に揃える必要があります。
   - id: F005
-    severity: major
+    severity: minor
     rule: vp-qe-kata-conformance
-    line: 9
-    anchor: "- 対象: 駄菓子屋の販売管理システム"
-    message: rulebook で定義された標準テンプレの見出し構成を無視しており、kata（種別）としての責務を果たすサンプルになっていない。
-    message_ja: rulebook で定義された標準テンプレの見出し構成を無視しており、kata（種別）としての責務を果たすサンプルになっていない。
-  - id: F006
-    severity: major
-    rule: vp-ux-readability
-    line: 9
-    anchor: "- 対象: 駄菓子屋の販売管理システム"
-    message: 記述が抽象的すぎて、STC Index の具体的な書き方（特に共通ルールや判定基準の定義方法）を学習するためのガイドとして機能していない。
-    message_ja: 記述が抽象的すぎて、STC Index の具体的な書き方（特に共通ルールや判定基準の定義方法）を学習するためのガイドとして機能していない。
+    line: 123
+    anchor: >-
+      | `st-cash-sale-flow-success-010`  | 入力: 商品A 2個 / 状態: 在庫5個         | 商品Aを2個登録し、60円で会計を確定する |
+      販売記録が1件（数量2・60円）でき、在庫が5個から3個になる            | 販売記録、在庫記録       | `kinuya-st`、プリンタ検証機 | TR-01    | P0     | automated
+      | `kinuya-ci-st` の run、取引番号    |
+    message: >-
+      対象別カタログでの記入例として示す `st-cash-sale-flow-success-010` のトレースは `TR-01`、`st-cash-sale-print-failure-010` は `TR-02`
+      ですが、対象別の `stc-sample` の同じ case_id はそれぞれ `TR-01,TR-02`、`TR-02,TR-03` です。同じ case_id で概要と対象別のトレースが食い違うため、記入例のトレース列を
+      `stc-sample` に揃える必要があります。
+    message_ja: >-
+      対象別カタログでの記入例として示す `st-cash-sale-flow-success-010` のトレースは `TR-01`、`st-cash-sale-print-failure-010` は `TR-02`
+      ですが、対象別の `stc-sample` の同じ case_id はそれぞれ `TR-01,TR-02`、`TR-02,TR-03` です。同じ case_id で概要と対象別のトレースが食い違うため、記入例のトレース列を
+      `stc-sample` に揃える必要があります。

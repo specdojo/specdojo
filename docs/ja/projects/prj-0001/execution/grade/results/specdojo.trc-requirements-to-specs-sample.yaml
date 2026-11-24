@@ -4,11 +4,11 @@ document: specdojo:trc-requirements-to-specs-sample
 path: docs/ja/specdojo/samples/trc-requirements-to-specs-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 94
-graded_at: "2026-10-20T20:36:40.429Z"
-graded_by: flash-high-executor
-content_hash: 7c8dff121878e967a75fe0a630bb24c80f1228ab81bc3eb2a014037543756ea1
+verdict: pass
+score: 99
+graded_at: "2026-11-23T19:23:26.171Z"
+graded_by: sonnet-review-executor
+content_hash: fa2c1d2290031c34167f0b6a438314556d771cfd63f64d3be9a823442d037f1e
 categories:
   purpose:
     score: 100
@@ -25,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 100
   consistency:
     score: 100
 viewpoints:
@@ -81,8 +81,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -103,23 +103,14 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
+  major: 0
   minor: 1
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 3
-    anchor: "## 1. 目的と適用範囲"
-    message: Frontmatter の `based_on` と本文のトレースマトリクスで参照されている仕様 ID が不整合である。
-    message_ja: Frontmatter の `based_on` と本文のトレースマトリクスで参照されている仕様 ID が不整合である。
-  - id: F002
     severity: minor
     rule: vp-ux-language-consistency
-    line: 19
-    anchor: >-
-      | req-r1-002 | 在庫引当をリアルタイムで更新する | bes-stock-allocation, ifx-msg-stock | 一部充足 | _TODO_: 障害時の再送仕様が未確定          |
-      再送方針は IF 仕様で検討中 |
-    message: ギャップ欄に rulebook で指定された `_UNDECIDED_:` ではなく `_TODO_:` が使用されており、語彙が統一されていない。
-    message_ja: ギャップ欄に rulebook で指定された `_UNDECIDED_:` ではなく `_TODO_:` が使用されており、語彙が統一されていない。
+    line: 9
+    anchor: "| 使う場面                    | 使う人                     | 本書で確かめること                                              |"
+    message: 使う人の欄が通称（開発担当・店主代表・同行レビュー担当）で書かれており、適用先のメンバー定義の Role code に揃っていないため、割り当てと照合できる表記へ統一する。
+    message_ja: 使う人の欄が通称（開発担当・店主代表・同行レビュー担当）で書かれており、適用先のメンバー定義の Role code に揃っていないため、割り当てと照合できる表記へ統一する。

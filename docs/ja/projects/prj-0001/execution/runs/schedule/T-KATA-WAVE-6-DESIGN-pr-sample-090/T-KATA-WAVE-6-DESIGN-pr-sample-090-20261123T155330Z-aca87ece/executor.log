@@ -1,0 +1,39 @@
+レビューを実施しました。成果物は変更していません。
+
+**評価結果の確認**
+- 次の 2 つのコマンドを実行しました。
+  - `npx specdojo grade list --target kata --path docs/ja/specdojo/samples/pr-sample.md --changed-only`
+  - `npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/pr-rulebook.md --changed-only`
+- どちらも出力は空でした。評価対象のパスが出なかったため、sample と rulebook の評価結果はどちらも最新です。
+- 作業ツリーで未追跡のファイルは、runner の `pipeline-state.json` だけでした。成果物の変更は混入していません。
+- `pr-sample` の grade は `pass`、score 100 です。finding は minor 1 件（`F001`）です。
+- `pr-rulebook` の grade は `pass`、score 95 です。finding は minor 5 件（`F001` から `F005`）です。
+
+**判断根拠**
+- sample の本文は先頭 40 行を読みました。次の点を確認しています。
+  - frontmatter は `rulebook: specdojo:pr-rulebook` を宣言し、`status` は `draft` のままです。
+  - H1 は 1 つで、章番号は `1.` から連番です。
+  - 題材は駄菓子屋きぬやの販売管理システムで、共通サンプル文脈に沿っています。
+  - 完了事項・進行中事項の表には、根拠 ID が付いています。
+  - リスク・課題の表は、影響度、対応方針、個票 ID を持つ形になっています。
+- 完了条件 DC-001 から DC-003 は、grade の観点 `vp-qe-omissions-consistency` と `vp-qe-kata-conformance` がどちらも level 4・100 点です。blocker と major はありません。
+- 残る finding はすべて minor です。必須要素の欠落や禁止事項への抵触ではないため、完了を妨げません。
+- 先行する edit タスクの result は plan に示されていないため、特定できませんでした。実行記録の検証結果は確認できていません。
+
+**未充足事項・改善指示（完了を妨げない）**
+- sample の `F001`: 導入文（11 行目）に、報告者と報告先（定期レビューの参加者）を一文で明記する。
+- rulebook の `F001` と `F005`: 主な読み手と、作成責任の Role code（例: `PM`）を位置づけに追記する。
+- rulebook の `F002`: 禁止事項と位置づけの重複を整理する。
+- rulebook の `F003` と `F004`: 作成後の検証コマンドと、進捗報告固有の ready 条件を一か所にまとめる。
+- これらは型の磨き込みの範囲です。人の確定は横串の確認でまとめて行います。
+
+**確認できなかった範囲**
+- sample の 41 行目以降（リスク・課題の表の残りと、次期予定の章）は読んでいません。grade の評価結果に依拠しています。
+- rulebook 本文は再読していません。
+- `lint:md` などの検査は親 runner の担当のため、実行していません。
+
+**decision**: `verdict: complete-with-findings`
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict=complete-with-findings。sample・rulebook の評価結果は最新（--changed-only の出力は空）で、どちらも pass。finding は minor のみで、完了条件は満たしている。確認できなかった範囲: sample の 41 行目以降と rulebook 本文は読んでおらず grade に依拠した。先行 edit の result は特定できなかった。","handoff":["sample F001: 導入文に報告者と報告先（定期レビューの参加者）を明記する","rulebook F001〜F005: 読み手・作成責任ロール・検証手順・ready 条件の明記と、重複する禁止事項の整理を検討する","人の確定は sample がそろった後の横串の確認で行う"],"validations":[]}
+</specdojo_executor_evidence>

@@ -1,0 +1,137 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_548ea5af64a84217b72d048aa54beba8
+  ts: "2026-11-23T21:12:13Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 単独で書く pm-\* のログの型を非推奨にし、一覧の枠は登録簿の内部の template として残す
+    - field: description
+      from: ""
+      to: pm-change-request-log・pm-issue-log・pm-risk-register・pm-decision-log は登録簿の項目と重なるため、単独のログの型を非推奨にする。register build の一覧の枠は残す
+    - field: input
+      from: ""
+      to: '["第 6 波の pm-change-request-log-sample-060 で、template が register build の一覧の枠を兼ねているため executor が止まった（2026-11-24）","利用者の指摘: pm-change-request-log は登録簿の change-request と重なる（2026-11-24）"]'
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: PO
+    - field: registered
+      from: ""
+      to: "2026-11-24"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-CPA8"]'
+- v: 1
+  id: reg_54b757cdde674aa2bb3faf9b772f5deb
+  ts: "2026-11-23T21:12:35Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "検討した選択肢" updated
+  changes:
+    - field: section
+      from: ""
+      to: 検討した選択肢
+  previous_event_id: reg_548ea5af64a84217b72d048aa54beba8
+- v: 1
+  id: reg_7a733d0c70b84b7d8e68ccb8498daa15
+  ts: "2026-11-23T21:12:42Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "決定内容" updated
+  changes:
+    - field: section
+      from: ""
+      to: 決定内容
+  previous_event_id: reg_54b757cdde674aa2bb3faf9b772f5deb
+- v: 1
+  id: reg_e1ffc7c714a543c0b3e94fd71b9e000c
+  ts: "2026-11-23T21:12:53Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "採択理由" updated
+  changes:
+    - field: section
+      from: ""
+      to: 採択理由
+  previous_event_id: reg_7a733d0c70b84b7d8e68ccb8498daa15
+- v: 1
+  id: reg_4797fd76b28b4668832a112ee9785622
+  ts: "2026-11-23T21:13:02Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "承認" updated
+  changes:
+    - field: section
+      from: ""
+      to: 承認
+  previous_event_id: reg_e1ffc7c714a543c0b3e94fd71b9e000c
+- v: 1
+  id: reg_2339ad0ad5ab40d291ffdb9c06a3fbe5
+  ts: "2026-11-23T21:13:08Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "影響範囲とフォローアップ" updated
+  changes:
+    - field: section
+      from: ""
+      to: 影響範囲とフォローアップ
+  previous_event_id: reg_4797fd76b28b4668832a112ee9785622
+- v: 1
+  id: reg_3f0094af860b418cb1f78f1f024d12c5
+  ts: "2026-11-23T21:13:13Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "関連ドキュメント" updated
+  changes:
+    - field: section
+      from: ""
+      to: 関連ドキュメント
+  previous_event_id: reg_2339ad0ad5ab40d291ffdb9c06a3fbe5
+- v: 1
+  id: reg_6600d348311e4b1da47e075e823ccdc9
+  ts: "2026-11-23T21:13:48Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: 利用者が会話で案 A を承認した（2026-11-24）
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-11-24"
+    - field: conclusion
+      from: "-"
+      to: 単独で書く pm-* のログの型を非推奨にし、register build の一覧の枠は登録簿の内部の template として残す（案 A）
+  previous_event_id: reg_3f0094af860b418cb1f78f1f024d12c5

@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "queue_id": "morning-a-2026-11-22",
+  "project_id": "prj-0001",
+  "created_at": "2026-11-21T22:46:11.872Z",
+  "updated_at": "2026-11-21T23:24:06.976Z",
+  "state": "stopped",
+  "steps": [
+    {
+      "index": 1,
+      "on_failure": "continue",
+      "status": "succeeded",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--register",
+        "PJR-G3TT",
+        "--resume",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--project",
+        "prj-0001"
+      ],
+      "started_at": "2026-11-21T22:46:37.963Z",
+      "completed_at": "2026-11-21T22:51:30.240Z",
+      "exit_code": 0,
+      "summary": "exit code 0"
+    },
+    {
+      "index": 2,
+      "on_failure": "stop",
+      "status": "failed",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--register",
+        "PJR-QTZ7",
+        "--resume",
+        "--resume-from",
+        "executor",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--project",
+        "prj-0001"
+      ],
+      "started_at": "2026-11-21T22:51:30.242Z",
+      "completed_at": "2026-11-21T23:24:06.973Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
+    },
+    {
+      "index": 3,
+      "on_failure": "stop",
+      "status": "pending",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--register",
+        "PJR-HCHH",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--project",
+        "prj-0001"
+      ]
+    }
+  ],
+  "stopped_step": 2,
+  "reason": "step 2 failed: exit code 1"
+}

@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-wnqj-vscode-chat-preview-blank-line
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: sol-executor
   registered_at: "2026-11-11T14:51:47Z"
+  completed_at: "2026-11-22T12:08:23Z"
+  conclusion: VS Code の Markdown のプレビューで chat と chat tui の対話を描き、発言の間に空行を置けるようにした。indie が VS Code で表示を確かめた
   commit_type: feat
   commit_scope: vscode
 ---
@@ -41,11 +43,11 @@ vscode-specdojo のプレビューに chat と chat tui の描き方を足し、
 
 ## 4. 作業内容
 
-| No  | 作業                                             | 担当     | 状態 | メモ                                            |
-| --- | ------------------------------------------------ | -------- | ---- | ----------------------------------------------- |
-| 1   | 拡張機能に chat の描き方を足し、空行の扱いを直す | executor | done | 描画処理・CSS・フェンス処理と共通テストを追加   |
-| 2   | 記述ルールと既存の chat のブロックを直す         | executor | done | 記述ルール・ガイド・README と対話 11 か所を更新 |
-| 3   | VS Code のプレビューで見た目を確かめる           | indie    | open | -                                               |
+| No  | 作業                                             | 担当     | 状態 | メモ                                                                          |
+| --- | ------------------------------------------------ | -------- | ---- | ----------------------------------------------------------------------------- |
+| 1   | 拡張機能に chat の描き方を足し、空行の扱いを直す | executor | done | 描画処理・CSS・フェンス処理と共通テストを追加                                 |
+| 2   | 記述ルールと既存の chat のブロックを直す         | executor | done | 記述ルール・ガイド・README と対話 11 か所を更新                               |
+| 3   | VS Code のプレビューで見た目を確かめる           | indie    | done | VSIX を作り直して入れ直し、quick-guide の chat の表示を確かめた（2026-11-22） |
 
 ## 5. 対応結果
 

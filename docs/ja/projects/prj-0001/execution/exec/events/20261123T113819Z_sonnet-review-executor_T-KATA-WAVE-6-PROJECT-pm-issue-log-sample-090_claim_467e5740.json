@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-23T11:38:19Z",
+  "type": "claim",
+  "task_id": "T-KATA-WAVE-6-PROJECT-pm-issue-log-sample-090",
+  "by": "sonnet-review-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "PM"
+  }
+}

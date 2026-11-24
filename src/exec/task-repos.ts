@@ -29,6 +29,7 @@ import {
   OPENCODE_CONFIG_CONTENT_ENV,
   opencodeAgentNameFromCommand,
   opencodeExtraRootConfig,
+  splitLeadingOpencodeConfig,
 } from "./opencode-permissions.js";
 
 import {
@@ -669,6 +670,21 @@ export function pruneOrphanedProductExecBranches(params: {
 
 export const REPO_NAMES_ENV = "SPECDOJO_REPO_NAMES";
 
+/** `read` で review の段（読み取りだけで足りる）。`write` は edit の段。 */
+export type ProductAccess = "write" | "read";
+
+/** Set to `read` in the agent environment when product worktrees must not be written. */
+export const PRODUCT_ACCESS_ENV = "SPECDOJO_REPO_ACCESS";
+
+/** review の段は読み取りだけでプロダクトの worktree を渡す。 */
+export function productAccessForMode(mode: string | undefined): ProductAccess {
+  return mode === "review" ? "read" : "write";
+}
+
+export function productAccessFromEnvironment(env: NodeJS.ProcessEnv): ProductAccess {
+  return env[PRODUCT_ACCESS_ENV] === "read" ? "read" : "write";
+}
+
 /** `SPECDOJO_REPO_<NAME>` with `-` mapped to `_` (names are `[a-z0-9-]`, so this is injective). */
 export function repoEnvironmentVariableName(name: string): string {
   return `SPECDOJO_REPO_${name.toUpperCase().replaceAll("-", "_")}`;
@@ -683,11 +699,13 @@ export function repoEnvironmentVariableName(name: string): string {
 export function productRepoEnvironment(
   projectWorktreePath: string,
   products: readonly Pick<ProductWorktree, "name" | "path">[] | undefined,
+  access: ProductAccess = "write",
 ): Record<string, string> {
   if (!products || products.length === 0) return {};
   const env: Record<string, string> = {
     [repoEnvironmentVariableName(PROJECT_REPO_WORKTREE_DIRNAME)]: resolve(projectWorktreePath),
     [REPO_NAMES_ENV]: products.map((product) => product.name).join(","),
+    ...(access === "read" ? { [PRODUCT_ACCESS_ENV]: "read" } : {}),
   };
   for (const product of products) {
     env[repoEnvironmentVariableName(product.name)] = resolve(product.path);
@@ -772,11 +790,14 @@ function shellQuote(value: string): string {
 export function agentExtraRootArguments(
   provider: AgentProvider | undefined,
   dirs: readonly string[],
+  access: ProductAccess = "write",
 ): string[] {
   if (dirs.length === 0) return [];
   const absolute = dirs.map((dir) => resolve(dir));
   switch (provider) {
     case "claude":
+      // 読み取りでは `--add-dir` だけを渡し、`Edit` の許可を足さない。
+      if (access === "read") return ["--add-dir", ...absolute];
       // `--add-dir` makes the directory a working directory; `Edit(//<abs>/**)` is required because
       // the mode settings only allow edits under project-relative paths.
       return [
@@ -786,8 +807,9 @@ export function agentExtraRootArguments(
         ...absolute.map((dir) => `Edit(/${dir}/**)`),
       ];
     case "codex":
-    case "antigravity":
     case "copilot":
+      // 起動の引数に読み取り専用の追加ディレクトリはない。review でも `--add-dir` は書き込みを
+      // 許すため、runner が review 後のプロダクトの変更を検出して止める。
       return absolute.flatMap((dir) => ["--add-dir", dir]);
     default:
       return [];
@@ -805,7 +827,7 @@ export function withAgentExtraRoots(
   command: string,
   provider: AgentProvider | undefined,
   dirs: readonly string[],
-  options: { cwd?: string; env?: NodeJS.ProcessEnv } = {},
+  options: { cwd?: string; env?: NodeJS.ProcessEnv; access?: ProductAccess } = {},
 ): string {
   if (provider === "opencode" && dirs.length > 0) {
     const agentName = opencodeAgentNameFromCommand(command);
@@ -814,15 +836,18 @@ export function withAgentExtraRoots(
         `OpenCode command needs --agent <name> to scope the product worktree permissions: ${command}`,
       );
     }
+    // A leading assignment from `allow_commands` would shadow ours, so merge into it and drop it.
+    const split = splitLeadingOpencodeConfig(command);
     const config = opencodeExtraRootConfig(
-      (options.env ?? process.env)[OPENCODE_CONFIG_CONTENT_ENV],
+      split.config ?? (options.env ?? process.env)[OPENCODE_CONFIG_CONTENT_ENV],
       agentName,
       dirs,
       options.cwd ?? process.cwd(),
+      options.access ?? "write",
     );
-    return `${OPENCODE_CONFIG_CONTENT_ENV}=${shellQuote(config)} ${command}`;
+    return `${OPENCODE_CONFIG_CONTENT_ENV}=${shellQuote(config)} ${split.command}`;
   }
-  const args = agentExtraRootArguments(provider, dirs);
+  const args = agentExtraRootArguments(provider, dirs, options.access ?? "write");
   if (args.length === 0) return command;
   return `${command} ${args.map(shellQuote).join(" ")}`;
 }

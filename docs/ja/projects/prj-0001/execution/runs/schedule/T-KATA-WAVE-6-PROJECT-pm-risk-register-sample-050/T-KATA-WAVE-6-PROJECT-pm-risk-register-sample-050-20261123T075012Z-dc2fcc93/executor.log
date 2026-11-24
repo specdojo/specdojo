@@ -1,0 +1,30 @@
+`docs/ja/specdojo/samples/pm-risk-register-sample.md` を、rulebook に沿った駄菓子屋きぬやのリスク登録簿の完成例として書き直しました。Prettier と markdownlint-cli2 は 0 件で通っています。lint などの親 runner の検査は、あとで runner が実行します。
+
+**書き直した内容（指摘番号はかっこ内）**
+- **概要:** 管理期間、1 件 1 行の `RK-NNN`、毎週の見直し、記載日 2026-04-09 を書きました。あわせて、本書は登録簿を使わない単独の例だと明記しました。登録簿を使う場合は `item_type: risk` の個票から `register build` で生成し、生成された `pm-risk-register.md` は直接編集しないことも書いています（F009、F012、F016、F021、F022）。
+- **リスク一覧:** 4 件に増やしました。そのうち RK-004 は、課題ログ IS-002 へ移した例です。
+  - 優先度とステータスは `priority`・`item_status` の値で書きました（F011、F019）。
+  - 担当は Role code にそろえました（F023）。
+  - 対応策は一覧だけに書き、対応計画と重ならないようにしました（F010）。
+  - RK-002 は「業務側」を店主代表と家族利用者代表と書き、対応方針を「回避」から「低減」に改めました（F008、F024）。
+- **評価基準:** 3 段階ごとの判定条件と、そこから優先度を決める 3×3 の対応表を入れました。各リスクの判定根拠、再評価の条件、評価を変える判断者（`PO`）、材料をまとめる役（`PM`）も書いています（F002、F006、F007、F015、F017）。
+- **対応計画:** 完了条件を、確かめる手段と合格の基準で書きました。RK-003 は受容の例で、判断した `PO` と許容する残り影響を書いています（F003、F013、F014）。
+- **モニタリング:** ステータスを変える契機の表、リスクごとの顕在化の条件と起票先、見直し漏れや期限切れのときの連絡先と立て直しの手順を書きました（F004、F005、F018、F026）。
+- **関連ドキュメント:** 根拠となる概要と管理計画、影響を受ける成功基準、課題ログ、変更要求ログ、ロール定義を、文書 ID のリンクで示しました（F001、F020）。
+
+**決めていただく値**
+- RK-001 の完了条件にある「続けて記録する会計の件数」と「1 件の会計確定にかけてよい秒数」は、推測で埋めず `_UNDECIDED_` で残しています。
+
+**私が置いた仮の前提**
+次の 3 つは共通文脈になく、例として私が置きました。必要なら直してください。
+- RK-002 の根拠「準備中の打合せが 2 回延期された」
+- 見直し漏れのとき `PM` が 2 営業日以内に再評価する、という期限
+- RK-003 の受容を `PO` が判断した、という記載
+
+**直していない点**
+- **F021（種別の食い違い）:** 本文の説明で対処しました。ただ rulebook の frontmatter の `template` は生成ビューを指したままなので、単独の登録簿には template がないことを frontmatter 側でも区別できるよう、rulebook の修正を提案します（この段では rulebook を変更していません）。
+- **F025（ready にする前提）:** `status` を `ready` にするのは人の操作なので、`draft` のままです。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"pm-risk-register-sample.md を rulebook に沿った駄菓子屋きぬやの単独リスク登録簿の完成例として書き直し、F001〜F026 に対応した（F021 は本文の説明で対処し、rulebook の修正案を引き継ぐ。F025 は status の ready 化が人の操作のため対象外）。","handoff":["決める必要のある値: RK-001 の完了条件にある、連続会計の試行の件数（_UNDECIDED_ 件）と、1 件の会計確定にかけてよい秒数（_UNDECIDED_ 秒）。","rulebook の修正案: pm-risk-register-rulebook の frontmatter の `template` は生成ビュー（pm-risk-register-template）を指しており、単独の登録簿の sample を手で書く形式と食い違うと grade が判定した（F021）。sample の概要に単独の登録簿の例であることを明記して対処した。単独の登録簿には template がないことを frontmatter または位置づけの章で区別できるよう、rulebook の見直しを提案する。","F025（ready にする前提）: sample の status は人だけが ready にできるため draft のまま。再 grade で問題がなければ、人の判断で ready にする。","sample で置いた仮の前提: RK-002 の根拠『準備中の打合せが 2 回延期された』、見直し漏れのとき PM が 2 営業日以内に再評価する期限、RK-003 の受容を PO が判断した記載。関連する sample と食い違う場合は直す。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/pm-risk-register-sample.md","status":"passed","summary":"変更した sample を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/pm-risk-register-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/ の sample だけで、plan・result・個票を変更していないため"}]}
+</specdojo_executor_evidence>

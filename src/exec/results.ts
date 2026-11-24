@@ -26,6 +26,7 @@ import {
 } from "./run-records.js";
 import {
   escapeMarkdownInline,
+  unescapeBackticksWhenUniform,
   expandTemplate,
   inlineCodeFrontmatterAnglePlaceholders,
   stripTerminalControlSequences,
@@ -279,7 +280,7 @@ export async function scaffoldResult(opts: {
   startedAt: string;
   execution?: "agent" | "human";
   approach?: Approach;
-  // 登録簿項目は "register"、Job Runは "job"。省略時はschedule由来として扱う。
+  // 登録簿項目は "register"、job runは "job"。省略時はschedule由来として扱う。
   origin?: TaskOrigin;
   jobId?: string;
   runId?: string;
@@ -507,7 +508,7 @@ function reporterInlineText(value: string): string {
 // 正規化したうえで、強調と解釈される `_` / `*` 入りの ASCII トークンを code span にする。
 // escapeMarkdownInline は既存の code span を保持するため、agent が意図して付けた書式は二重化しない。
 function reporterFreeText(value: string): string {
-  return escapeMarkdownInline(reporterInlineText(value));
+  return escapeMarkdownInline(unescapeBackticksWhenUniform(reporterInlineText(value)));
 }
 
 // reporter や runner の文を `- ` の箇条書きに描くとき、文が自前のリスト記号（`1.`・`1)`・
@@ -917,6 +918,25 @@ export async function renderReporterResult(
   evidence: ExecEvidence,
   options?: RenderEditReporterOptions,
 ): Promise<void> {
+  writeFileSync(
+    resultPath,
+    renderReporterResultContent(resultPath, output, evidence, options),
+    "utf8",
+  );
+  await formatMarkdownFile(resultPath);
+}
+
+/**
+ * Builds the result Markdown that renderReporterResult writes, without touching the file.
+ * The runner lints this content before writing so reporter prose that breaks the commit
+ * check is sent back to the reporter instead of blocking integration.
+ */
+export function renderReporterResultContent(
+  resultPath: string,
+  output: ReporterOutput,
+  evidence: ExecEvidence,
+  options?: RenderEditReporterOptions,
+): string {
   if (!existsSync(resultPath)) throw new Error(`Result not found: ${resultPath}`);
   const content = readFileSync(resultPath, "utf8");
   const parsed = parseSpecdojoDocument(content);
@@ -957,8 +977,7 @@ export async function renderReporterResult(
     output.mode === "edit"
       ? renderEditReporterBody(output, evidence, resolvedOptions)
       : renderReviewReporterBody(output, evidence);
-  writeFileSync(resultPath, frontmatterWithBody(frontmatter, body + recordsBody), "utf8");
-  await formatMarkdownFile(resultPath);
+  return frontmatterWithBody(frontmatter, body + recordsBody);
 }
 
 export async function updateResultStatus(

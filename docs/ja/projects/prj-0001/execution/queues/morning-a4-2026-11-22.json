@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "queue_id": "morning-a4-2026-11-22",
+  "project_id": "prj-0001",
+  "created_at": "2026-11-22T00:39:06.224Z",
+  "updated_at": "2026-11-22T00:46:44.486Z",
+  "state": "stopped",
+  "steps": [
+    {
+      "index": 1,
+      "on_failure": "stop",
+      "status": "failed",
+      "kind": "exec-run",
+      "argv": [
+        "exec",
+        "run",
+        "--register",
+        "PJR-HCHH",
+        "--resume",
+        "--worktree",
+        "--if-busy",
+        "wait",
+        "--on-rate-limit",
+        "fallback",
+        "--project",
+        "prj-0001"
+      ],
+      "started_at": "2026-11-22T00:39:06.509Z",
+      "completed_at": "2026-11-22T00:46:44.483Z",
+      "exit_code": 1,
+      "summary": "exit code 1"
+    }
+  ],
+  "stopped_step": 1,
+  "reason": "step 1 failed: exit code 1"
+}

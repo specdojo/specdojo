@@ -1,0 +1,26 @@
+Grade は最新でした。鮮度確認で出力が空だったため、サイドカーは最新と判断します。成果物の内容も、完了条件と grade の結果に整合しています。
+
+**レビュー結果: `complete-with-findings`**
+
+- **鮮度確認:** 次の 2 つのコマンドを実行しました。どちらも出力は空で、終了コードは 0 でした。
+  - `specdojo grade list --target kata --path docs/ja/specdojo/samples/sac-sample.md --changed-only`
+  - `specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/sac-rulebook.md --changed-only`
+- **grade の結果:**
+  - sample は `pass`、score 97、minor が 2 件でした。
+  - rulebook は `pass`、score 96、minor が 3 件でした。
+  - blocker と major はありません。
+- **完了条件との照合:** DC-001 から DC-005 は、grade の観点が level 3 以上です。`vp-qe-omissions-consistency`、`vp-qe-kata-conformance`、`vp-qe-verifiability` が該当します。概要表では SAC-PERF-01 から 04 の 4 件のシナリオが、判定できる基準で書かれています。受入対象を決めた実例になっています。
+- **範囲外の変更:** ありません。`git status` で未追跡だったのは `pipeline-state.json` だけで、runner が管理するファイルです。
+- **実行記録:** 先行する edit タスクの result は確認しませんでした。
+- **finding が完了を妨げない理由:** どの finding も minor で、完了条件に直結する必須要素の欠落や禁止事項への抵触ではありません。
+- **改善指示:**
+  - sample の `F001`: 日次締めの合否境界を固定します。閉店時刻と開店時刻を前提に置くか、許容時間を暫定値で示します。
+  - sample の `F002`: 概要表の SAC-PERF-04 の合格内容（在庫数の確認）と、2.4 の見出し（日次締めの完了）をそろえます。
+  - rulebook の `F001`: `recipe` と `template` が `undecided` のままです。作成の要否と予定を確定します。
+  - rulebook の `F002`: 見出し「推奨 Frontmatter 項目」を、必須と任意の区別が伝わる形にします。
+  - rulebook の `F003`: ready にする前に解消すべき未解決事項を示します。
+- **確認できなかった範囲:** 人による確定は、plan のとおりこの track に含まれません。横串の確認でまとめて行う想定です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict 推奨: complete-with-findings。鮮度確認（sample・rulebook とも grade list --changed-only が空出力・rc=0）で最新。sample pass 97 / rulebook pass 96、blocker/major なし。minor finding（sample F001/F002、rulebook F001-F003）は完了条件に直結せず完了を妨げない。改善指示: 日次締めの合否境界の固定、SAC-PERF-04 と 2.4 見出しの名称統一、rulebook の recipe/template 確定、見出し『推奨 Frontmatter 項目』の修正、未解決事項の明示。確認できなかった範囲: 先行 edit タスクの result は未確認、人の確定は横串確認で実施。","handoff":["sample F001/F002 と rulebook F001-F003 の minor 改善を次回改訂で検討"],"validations":[{"command":"specdojo grade list --target kata --path docs/ja/specdojo/samples/sac-sample.md --changed-only","status":"passed","summary":"出力なし（最新）"},{"command":"specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/sac-rulebook.md --changed-only","status":"passed","summary":"出力なし（最新）"}]}
+</specdojo_executor_evidence>

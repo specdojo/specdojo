@@ -38,3 +38,22 @@
     - field: derived_from
       from: ""
       to: '["PJR-WYTX"]'
+- v: 1
+  id: reg_3a8ca41d982d4342bd24091003c4c691
+  ts: "2026-11-21T02:52:45Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: 2026-11-21 の対話で indie が orchestrator の推奨を承認した
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-11-21"
+    - field: conclusion
+      from: "-"
+      to: "案 A: kata ドメインを足して sample を成果物として載せ、第 3〜5 波と kata-slim-3 はこのドメインを対象にする。epic は今ある波の epic を使う"
+  previous_event_id: reg_54b0b02927be4c50bb9ddd57c2924915

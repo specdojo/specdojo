@@ -9,7 +9,7 @@ status: ready
 title: 外部コマンド連携仕様テンプレート
 rulebook: none
 metadata_template:
-  id: _PROJECT_ID_:_LOCAL_ID_
+  id: _LOCAL_ID_
   type: api
   status: draft
   title: _DELIVERABLE_NAME_

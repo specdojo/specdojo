@@ -1,0 +1,22 @@
+`docs/ja/specdojo/samples/tsd-index-sample.md` を作り直しました。grade の指摘 F001〜F008 はすべて修正したと判断しています。rulebook は変えていません。Prettier で整形し、markdownlint をこのファイルだけにかけて 0 件でした。`lint:md` などの正式な検査はこのあと runner が実行します。
+
+**主な変更**
+- **冒頭の概要**: 対象システム（単一店舗・店頭タブレット 1 台）、環境（本番・開発）、一覧の使い道と対象範囲を示しました。主一覧表の前に、何を対応させる表かを 1 文で書いています。
+- **主一覧表**:
+  - 「詳細・備考」列を足し、詳細 TSD へのリンクはこの列にまとめました（F004）。
+  - 8 行で繰り返していた「（固定版は `package-lock.json`）」をやめ、補足の共通条件に一度だけ書きました（F003）。
+  - ESLint は開発環境・CI で必須とし、GitHub Actions の担当責務にある「ESLint・Vitest の実行」とそろえました（F006）。
+  - Mermaid と Sentry は採用済みと書き、どの条件で使うかを適用範囲に足しました（F005）。
+  - 既存の `tsd-sample` が Docker Compose を前提にしているため、Docker / Docker Compose の行を追加しました。
+- **補足・詳細への導線**: 3 つの小節に分けました（共通条件、参照先の役割と適用条件の表、未作成の詳細文書）。未作成の `tsd-hosting.md` と `tsd-ci.md` は `_TODO_` で示し、それぞれ作成までの正本も書いています（F001・F002・F007・F008）。
+- 文書を作る・確かめる・承認する役割の割り当ては書いていません（PJR-76N9）。
+
+**推測で埋めずに `_UNDECIDED_` で残した値**
+- 店頭タブレットの OS と対応ブラウザです。決まったら区分「クライアント実行環境」の行を足します。
+
+**判断が必要な仮置き**
+- PostgreSQL の版の正本は `docker-compose.yml` とし、Docker の版の正本は `Dockerfile` に置きました。どちらも `tsd-sample` の記述から合わせた仮置きで、ファイル名が正しいかは確かめていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"tsd-index-sample.md を作り直し、grade の指摘 F001〜F008 を修正した。冒頭の概要を広げ、主一覧表に「詳細・備考」列と Docker の行を足し、Mermaid・Sentry の適用条件と ESLint の必須化を反映した。補足は共通条件、参照先の役割と適用条件の表、未作成の詳細文書の 3 小節に分け、未作成の詳細は _TODO_ で示した。rulebook は変更していない。","handoff":["_UNDECIDED_: 店頭タブレットの OS と対応ブラウザは利用者が決める値のため未定として残した。決まった時点で区分「クライアント実行環境」の行を一覧へ追加する。","PostgreSQL の版の正本を `docker-compose.yml`、Docker の版の正本を `Dockerfile` とした。どちらも `tsd-sample` の記述（ローカル環境の Docker Compose）から合わせた仮置きで、ファイル名が正しいかは確かめていない。","rulebook の変更案: 6.4 は「未作成の詳細は共通ラベルで示す」とだけ定めており、表のセル内で示すか補足で示すかを決めていない。本 sample では参照先の表のセルと「未作成の詳細文書」の小節の両方に `_TODO_` を置いた。rulebook に置き場所の例を一つ足すと、迷わずに書けるようになる。","PJR-76N9 に従い、6.4 の見直しを担う役割（Role code）の記述は sample 本文に入れていない。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/tsd-index-sample.md","status":"passed","summary":"変更した sample を整形した"},{"command":"npm run lint:md","status":"not_run","summary":"parent runner が実行する検査のため executor では実行していない"}]}
+</specdojo_executor_evidence>

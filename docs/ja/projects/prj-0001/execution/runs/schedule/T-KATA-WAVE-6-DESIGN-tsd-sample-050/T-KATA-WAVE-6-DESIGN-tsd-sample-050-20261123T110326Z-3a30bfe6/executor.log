@@ -1,0 +1,37 @@
+`tsd-sample.md` の更新は完了しています。grade の指摘 F001〜F018 にはすべて対応しました。編集の本体は前回の実行で済んでいたため、今回は内容を確かめ、未確認だった事実を調べ、整形と lint を通しました。rulebook と result には手を入れていません。
+
+- **今回確かめたこと**:
+  - `fly postgres config update` の公式ドキュメントで、`--max-connections`・`--shared-buffers`・`--log-min-duration-statement` の 3 つのオプションが実在することを確認しました。
+  - Prisma の `P3009` エラーと、`migrate resolve --rolled-back` / `--applied` を使う解消方法も一致しました。ただし確認できたのはコミュニティの回答と解説記事で、Prisma 公式の該当ページは見ていません。
+  - 本文に古い表記の `kinuyo` は残っておらず、作成担当や承認の記述もありません。
+- **主な対応内容**:
+  - 目的とバックアップ方針は上位文書を参照する形にし、本書には技術的な操作だけを残しました。
+  - 容量の見積もりには `_ASSUMPTION_` を付けました。
+  - 復元の手順には、事前のダンプ取得・アプリ停止・失われるデータの範囲・切り戻しを書きました。
+  - 動作確認の表には、確認した環境・日付・未確認の条件を記録しました。
+  - 未決の論点は `ISSUE-01`〜`03` への参照にそろえました。
+
+**引き継ぐ点**
+
+- **利用者が決める値**: 次の値は `_UNDECIDED_` のまま残しています。
+  - `ISSUE-02` の月額費用の上限
+  - `ISSUE-03` の繁忙期の 1 時間あたり会計件数と、p95 の閾値（何秒以内か）
+  - バックアップの保管期間（運用方針・設計の側で未決）
+- **PJR-76N9 との関係**:
+  - F002 は作成担当を書くよう求めていますが、PJR-76N9 に従い書いていません。
+  - 9 章の「担当 Role」列は、課題を解く担当（文書の中身）として残しました。
+- **事実確認が残る点**: 次の 3 点はまだ確かめていません。
+  - `--shared-buffers` の値の書式。公式ドキュメントには例がありません。
+  - Fly Postgres のデータのマウント先 `/data`。
+  - Prisma の `P3009` の公式ドキュメント上の表記。
+- **架空の記録**: 動作確認の表の「2026-11-20 に開発端末で成功（PostgreSQL 16.4、Prisma 5.22）」は、完成例として置いた架空の記録です。
+- **rulebook の変更案**: 6.4 に、確認状況（環境・日付・未確認の条件）を記録する表の例を加えると、sample と書き方をそろえやすくなります。
+
+Sources:
+- https://docs.fly.io/flyctl/postgres-config-update
+- https://www.prisma.io/docs/orm/prisma-migrate/workflows/troubleshooting
+- https://station.railway.com/questions/backend-crashed-32b5b577
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"tsd-sample.md を grade の F001〜F018 に対応する形で更新済みであることを確認した。fly postgres config update の 3 つのオプションは公式ドキュメントで実在を確認した。Prisma の P3009 と migrate resolve による解消方法はコミュニティの回答・解説記事で確認した。prettier と markdownlint は通過した。rulebook と result は変更していない。","handoff":["利用者が決める値として _UNDECIDED_ のまま残した: ISSUE-02 の月額費用の上限、ISSUE-03 の繁忙期の 1 時間あたり会計件数と p95 の閾値（何秒以内か）、バックアップの保管期間（opd-index-sample の側で未決）。","F002 は作成担当の明記を求めているが、PJR-76N9（文書の役割の割り当てを書かない）に従い書かなかった。代わりに `_TODO_`、本書が頼っている内容、作成までの暫定の正本を書いた。","9 章の表の「担当 Role」列は課題を解く担当（文書の中身）として残した。","事実確認済み: `fly postgres config update` に `--max-connections` / `--shared-buffers` / `--log-min-duration-statement` があることは公式ドキュメント（docs.fly.io/flyctl/postgres-config-update）で確認した。Prisma の `P3009` と `migrate resolve --rolled-back` / `--applied` による解消はコミュニティの回答・解説記事で確認した。Prisma 公式の該当ページ（pris.ly/d/migrate-resolve）は検索結果に出ず、確認していない。","事実確認が残る点: `--shared-buffers` の値の書式（公式ドキュメントに例がない）、Fly Postgres のデータのマウント先 `/data`、Prisma の `P3009` の公式ドキュメント上の表記。","動作確認の表の「開発端末で 2026-11-20 に成功（PostgreSQL 16.4、Prisma 5.22）」は、完成例として置いた架空の記録である。","rulebook の変更案: 6.4 に、確認状況（環境・日付・未確認の条件）を記録する表の例を加えると、sample と書き方をそろえやすい。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/tsd-sample.md","status":"passed","summary":"整形済み"},{"command":"npx markdownlint docs/ja/specdojo/samples/tsd-sample.md","status":"passed","summary":"指摘なし"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"対象外","reason":"履歴蓄積ファイル（plan / result / 個票）を executor は変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"対象外","reason":"変更した YAML ファイルがない"}]}
+</specdojo_executor_evidence>

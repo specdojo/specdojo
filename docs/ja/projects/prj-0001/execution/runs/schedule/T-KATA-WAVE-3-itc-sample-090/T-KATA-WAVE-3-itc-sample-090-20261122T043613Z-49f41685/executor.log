@@ -1,0 +1,35 @@
+判定は **`incomplete`** です。型の schedule では、全部の型が最新の `--target kata` で `pass` になることが完了の条件です。rulebook は `pass` ですが、sample が `needs-work` のため、この条件を満たしていません。
+
+**評価結果の確認**
+- 鮮度の確認は、最初と判定の直前の 2 回行いました。`npx specdojo grade list --target kata --path <対象> --changed-only` と `--incomplete` を、sample（`docs/ja/specdojo/samples/itc-sample.md`）と rulebook（`docs/ja/specdojo/rulebooks/itc-rulebook.md`）に実行しました。どちらも出力は空で、終了コードは 0 でした。サイドカーは 2 件とも存在するので、評価結果は最新です。
+- sample `[[specdojo:itc-sample]]`: `verdict` `needs-work`、score 89、blocker 0 / major 2 / minor 4（サイドカーの `content_hash` は 5bdae170…）。
+- rulebook `[[specdojo:itc-rulebook]]`: `verdict` `pass`、score 93、blocker 0 / major 0 / minor 6。
+
+**判断根拠**
+- major の finding が 2 件残っています。
+  - F005: `case_id` `it-sales-checkout-persistence-integrity-020` の採番が itc-index-sample と食い違っています。完了条件 DC-002 と DC-003（`vp-qe-kata-conformance`、level 2）に直接かかります。
+  - F006: sample の 4 章（本文 52 行目）に `_ASSUMPTION_` が残っています。
+- 完了条件の一部は満たしています。H1 は「内部結合テストカタログ: 会計確定（…）」で、`based_on` には `specdojo:tsp-index-sample` と `specdojo:itc-index-sample` があります（DC-005）。見出しは H4 までに収まっています（DC-004）。
+- 実行記録: 先行する edit タスク（080、20261121T150540Z）の result は complete でした。ただし、その後の grade（2026-11-22T02:19Z）は `needs-work` のままです。今回の作業ツリーに、成果物の変更はありません（未追跡ファイルは `pipeline-state.json` だけです）。
+
+**未充足事項・改善指示**
+- F005: `-020` の採番を、itc-index-sample か itc-sample のどちらかに合わせて揃えてください。
+- F006: `_ASSUMPTION_` を解消するか、itc-index 側の論点へ移す扱いをはっきり書いてください。
+- 4 件の minor も併せて直してください。
+  - F001: C-04 の採否と理由を書く。
+  - F002: エラー種別の識別子を期待値に書く。
+  - F003: 採用しない観点の型と理由を書く。
+  - F004: TR-05 の仕様ID を根拠仕様にする。
+- 直したあと、`--target kata` で grade を取り直してください。
+
+**approach に応じた確認（fully-guided）**
+- recipe は `_MISSING_` です。rulebook の minor F001 と F006 で、recipe の要否に引き継ぎ先がないと指摘されています。
+- 実践の型そのものの整備としては、rulebook の minor 指摘（F001〜F006）にある recipe の引き継ぎ先と sample の記述の更新を、型の改善指示として扱うことを勧めます。
+
+**確認できなかった範囲**
+- 先行する 040・050 の result の中身は読んでいません。
+- lint などの検査は親 runner が行うため、ここでは実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"review の判定は incomplete。鮮度の確認（changed-only・incomplete。sample と rulebook の両方で、最初と判定の直前の2回）は出力が空で、評価結果は最新。rulebook は pass（93、minor 6）だが、sample `specdojo:itc-sample` は needs-work（89、major 2 / minor 4）で、型の schedule の追加完了条件（全部の型が kata で pass）を満たさない。major は F005（case_id `it-sales-checkout-persistence-integrity-020` の採番が itc-index-sample と食い違い、DC-002・DC-003 に直結）と F006（4章に `_ASSUMPTION_` が残る）。DC-004（H4まで）と DC-005（H1、`based_on` に tsp-index-sample と itc-index-sample）は満たす。先行する edit 080 の result は complete だが、その後の grade も needs-work。作業ツリーに成果物の変更はない。確認できなかった範囲: 040・050 の result の詳細は読んでいない。lint などは親 runner が行う。","handoff":["itc-sample の major F005（`-020` の採番を itc-index-sample と揃える）と F006（`_ASSUMPTION_` の解消または itc-index へ移す）を直し、minor F001〜F004 も直したうえで --target kata の grade を取り直す","itc-rulebook の minor F001・F006: recipe の要否の引き継ぎ先を示し、sample を未整合とする記述を実態に合わせて更新する（型の整備として扱う）"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/itc-sample.md --changed-only","status":"passed","summary":"出力なし・exit 0（最新。判定の直前に再確認しても同じ）"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/itc-sample.md --incomplete","status":"passed","summary":"出力なし・exit 0"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/itc-rulebook.md --changed-only","status":"passed","summary":"出力なし・exit 0（最新。判定の直前に再確認しても同じ）"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/itc-rulebook.md --incomplete","status":"passed","summary":"出力なし・exit 0"}]}
+</specdojo_executor_evidence>

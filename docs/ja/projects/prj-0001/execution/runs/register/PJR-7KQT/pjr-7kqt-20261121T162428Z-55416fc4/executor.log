@@ -1,0 +1,12 @@
+PJR-7KQT の A+B を実装し、完了条件のうち実機で確かめていない 1 点を除いて満たしました。`--allowedTools` が実際の `claude -p` で deny に負けず効くかは、クォータを使うため確認していません。人が 1 回確認してください。
+
+- **A（配布する設定）**: `templates/claude/settings.edit.json` の allow に、検証のコマンドを足しました。足したのは `npm run`・`npm test`・`npx prettier`・`npx markdownlint-cli2`・`npx markdownlint`・`npx eslint`・`npx tsc`・`npx vitest`・`npx slidev`・`specdojo` です。`git push` と `gh` の deny は変えていないので、今までどおり許されません。
+- **B（exec-defaults のキー）**: `exec-defaults.yaml` の `providers.<name>.allow_commands` を追加しました。`Bash(...)` の配列で、claude の edit mode の起動コマンドにだけ `--allowedTools` として足されます。`config scaffold --force` で設定を当て直しても残ります。引用符・バックスラッシュ・改行を含む規則は、起動前にエラーにします。変更は `src/exec/agent-config.ts` と `exec-defaults.schema.yaml` です。
+- **ドキュメント**: `exec-config-guide` に「claude の edit executor に許すコマンド」の節を追加しました。
+- **テスト**: `tests/src/exec/agent-config-allow-commands.test.ts` を新規に追加しました。検証内容は、`allow_commands` が起動コマンドに足されること、危ないコマンドが allow に無く deny が残ること、不正な規則を拒むことです。`provider-scaffold.test.ts` は allow の期待値を `toContain("Edit(**)")` に直しました。
+- **検証**: 関連 vitest、`npm run typecheck`、`npm run lint:ts`（error 0、warning 40）、Prettier、markdownlint、`npm run validate:history-links` は通っています。親の検証は runner が実行します。
+- **個票・CHANGELOG・保護設定**: 個票の対応結果を書き、`### 5.1. CHANGELOG に書く事項` に区分「追加」と文案を入れました。`CHANGELOG.md` と `.specdojo` の保護設定は変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"A+B を実装した。配布する settings.edit.json に検証コマンドを許可し、providers.claude.allow_commands で起動時に --allowedTools へ足す。schema・guide・テスト・個票を更新した。","handoff":["実機の claude -p で --allowedTools が deny より弱く効くことは未確認（クォータ消費のため）。人が 1 回確認する。","保護設定 .specdojo/exec-defaults.yaml の providers.claude に allow_commands を足す案がある（変更はしていない）。","CHANGELOG 案: 区分「追加」。claude の edit executor が検証コマンドを実行できるよう settings.edit.json の allow を拡張し、providers.claude.allow_commands を追加した。"],"validations":[{"command":"npx vitest run tests/src/exec/agent-config-allow-commands.test.ts tests/src/shared/provider-scaffold.test.ts tests/src/exec/agent-config-command.test.ts","status":"passed","summary":"関連テストがすべて通過"},{"command":"npx prettier --write (変更ファイル)","status":"passed","summary":"整形済み、差分なし"},{"command":"npx markdownlint-cli2 (変更した md)","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"passed","summary":"valid"}]}
+</specdojo_executor_evidence>

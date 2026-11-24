@@ -1,0 +1,31 @@
+`nfr-performance-rulebook` を grade の指摘に沿って短く整理しました。F007（sample が規定の章立てに沿っていない）だけは、この段で sample を変更できないため直していません。Prettier と markdownlint は対象ファイルで指摘 0 件でした。lint と schema の検査は、このあと親 runner が実行します。
+
+変更したファイルは `docs/ja/specdojo/rulebooks/nfr-performance-rulebook.md` だけです。
+
+**全体の整理**
+- 完成例の「サンプル」章を削除し、完成例は sample に任せる形にしました。見出しは H3 までです。
+- 「本文構成（標準テンプレ）」を執筆標準の章名「本文要件」に改め、各章の内容の列を加えました。
+- 記述ガイドの章ごとに、判断基準と良い例・悪い例を加えました。毎章にあった「生成する本文の見出しは〜」の繰り返しは、冒頭の 1 文にまとめました。
+- 先に整えた可用性・完全性の rulebook と書き方を揃えています。
+
+**指摘ごとの対応**
+
+| 指摘 | 内容 | 対応 |
+| --- | --- | --- |
+| F001 | ピーク条件の根拠が確かめられない | 実績・計画などの根拠を `based_on` と「適用範囲・負荷条件」に示す形にした。根拠のない値には `_ASSUMPTION_` を付ける |
+| F002 | 作成先のファイル名と配置が決まらない | 配置先 `docs/ja/product/060-non-functional-requirements/nfr-performance.md` を明記した |
+| F003 | 基準値を変えたときの影響先が不明 | 基準値や負荷条件を変えたら `sac-*`・`stc-*`・`opd-*` を見直す旨を「位置づけ」に加えた |
+| F004 | 測定結果を再現できない | 「測定・検証方法」で、測定環境（本番相当か、外部依存をスタブにするか）と計測時間・試行回数を求めるようにした |
+| F005 | 文書 ID の決め方がほかの rulebook と揃わない | 完全性の rulebook と同じく、「プロダクト文書のため名前空間を付けない」と根拠を添えて `nfr-performance` に確定した |
+| F006 | `dec-*` の扱いが章ごとに食い違う | 「位置づけ」を表にし、`dec-*` は任意の導線先として載せた |
+| F008 | 表ごとに ID の列名が揺れる | 両方の表の列名を `要件ID` に揃えた |
+
+PJR-76N9 の決まりに沿い、合意した関係者を本文に書かせる形にはせず、根拠の文書で負荷条件を後から確かめられるようにしました。
+
+**直していない点**
+- F007: 全体方針に `_UNDECIDED_` を置き、sample を「本文要件」の章立てに揃えることを rulebook を `ready` にする前提条件と書きました。sample の作り直しは後の段で行う必要があります。
+- 禁止事項の表（3 件）と「未決事項」の書き方は、指摘も冗長な点もないため変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"`nfr-performance-rulebook` を簡潔にし、F001〜F006 と F008 を直した。完成例の「サンプル」章を削除し、「本文構成（標準テンプレ）」を「本文要件」に改め、記述ガイドに判断基準と良い例・悪い例を加えた。F007（sample が本文要件に揃っていない）は sample をこの段で変更できないため、`_UNDECIDED_` と handoff に残した。","handoff":["F007: `nfr-performance-sample` が rulebook の「本文要件」の 6 章（概要・適用範囲と負荷条件・性能要件一覧・測定と検証方法・関連ドキュメント導線・未決事項）に揃っていない。sample を作り直す段（recipe・template・sample の段）で対応する必要がある。rulebook の全体方針に `_UNDECIDED_` として、`ready` にする前提条件と書いた。","直さなかった箇所: 禁止事項の表（3 件）と「未決事項」の記述ガイドは、grade の指摘も冗長な点もないため変えていない。","F001 は PJR-76N9 の決まりに沿い、合意した関係者（役割）を本文に書かせる形にはせず、ピーク条件の根拠の文書（`based_on`）と本文に根拠を示す形で直した。","F005 は完全性の rulebook と同じく、プロダクト文書のため名前空間を付けない `nfr-performance` に確定した（根拠を本文に書いた）。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/rulebooks/nfr-performance-rulebook.md","status":"passed","summary":"対象の rulebook を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/nfr-performance-rulebook.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"対象外","reason":"履歴ファイル（plan・result・個票）を変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"対象外","reason":"変更した YAML ファイルがない"}]}
+</specdojo_executor_evidence>

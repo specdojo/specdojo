@@ -21,6 +21,8 @@ module.exports = {
     ],
     // Disabled: subjects may contain uppercase template placeholders (e.g., pjr-NNNN-TERM, YYYY-MM-DD)
     "subject-case": [0],
+    // runner の commit の見出しは長い task ID を scope に含むため、既定の 100 では足りない（PJR-7TVA）。
+    "header-max-length": [2, "always", 120],
     "subject-max-length": [2, "always", 100],
     "body-max-line-length": [2, "always", 100],
   },

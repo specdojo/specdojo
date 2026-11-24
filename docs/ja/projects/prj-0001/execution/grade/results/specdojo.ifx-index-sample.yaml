@@ -5,10 +5,10 @@ path: docs/ja/specdojo/samples/ifx-index-sample.yaml
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 100
-graded_at: "2026-11-15T02:28:52.689Z"
-graded_by: sol-review-executor
-content_hash: 7fd3a11351e2d0fb012a9e56b31fc2abb59d69242fdf2b1229637c4b5d5a54bf
+score: 98
+graded_at: "2026-11-23T01:40:25.261Z"
+graded_by: opus-review-executor
+content_hash: 2bb527fe24dd1407e0158a5723bc0cbb58e5cf520489be3173910359763e6d93
 categories:
   purpose:
     score: 100
@@ -25,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 92
   consistency:
     score: 100
 viewpoints:
@@ -75,8 +75,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -98,6 +98,17 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 1
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 57
+    anchor: "spec_ref: specdojo:ifx-api-sample"
+    message: >-
+      売上登録の spec_ref は既存の specdojo:ifx-api-sample を指すが、14 行で仮定を共有する specdojo:clis-sample の入出力表は同じ契約をまだ作られていない
+      ifx-api-kinuya-sales.yaml として参照したままで、売上登録の詳細契約の扱いが両文書で一致しない。共有先の参照をそろえるか、一覧のコメントで対応関係を示す。
+    message_ja: >-
+      売上登録の spec_ref は既存の specdojo:ifx-api-sample を指すが、14 行で仮定を共有する specdojo:clis-sample の入出力表は同じ契約をまだ作られていない
+      ifx-api-kinuya-sales.yaml として参照したままで、売上登録の詳細契約の扱いが両文書で一致しない。共有先の参照をそろえるか、一覧のコメントで対応関係を示す。

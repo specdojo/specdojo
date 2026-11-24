@@ -5,10 +5,10 @@ path: docs/ja/specdojo/samples/prj-issues-and-approach-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 98
-graded_at: "2026-10-17T20:18:28.675Z"
-graded_by: agy-expert-executor
-content_hash: beba19946b24b3afda6879d457f26b0cc4234236c9fccd12811b904aaad781ba
+score: 97
+graded_at: "2026-11-23T22:34:12.370Z"
+graded_by: sonnet-review-executor
+content_hash: e4b190592949166002b993d6d718be398ac92f3a3f6b1441261b408076034849
 categories:
   purpose:
     score: 100
@@ -25,9 +25,9 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 92
-  consistency:
     score: 100
+  consistency:
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -78,11 +78,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
-  vp-qe-kata-conformance:
     level: 3
     score: 75
+  vp-qe-kata-conformance:
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -109,8 +109,10 @@ finding_counts:
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-kata-conformance
-    line: 54
-    anchor: "| 初期リリースに含める最小機能を確定する | 記録継続に必要な範囲を実行可能にする | 店主代表   |"
-    message: 次の検討事項（ToDo）の項目に、Recipe で指定された `_TODO_:` または `_UNDECIDED` ラベルが付与されていない。
-    message_ja: 次の検討事項（ToDo）の項目に、Recipe で指定された `_TODO_:` または `_UNDECIDED` ラベルが付与されていない。
+    rule: vp-qe-omissions-consistency
+    line: 38
+    anchor: >-
+      | A-01 | タブレットで最小機能の記録を行う             | 代替 | 販売・在庫・つけを同じ手順で記録し、在庫一覧とつけ残高を顧客別に引ける最小機能を作る     |
+      店番が交代しても同じ記録を見られ、残高確認の足し上げがなくなる | P-01、P-02、P-04 |
+    message: A-01 の対応課題に P-04 が含まれる一方、直後の本文では P-04 の解決策候補を立てず先送りとしているため、対応課題を「P-04（記録の蓄積のみ）」と限定するか P-04 を外して扱いをそろえるべきである。
+    message_ja: A-01 の対応課題に P-04 が含まれる一方、直後の本文では P-04 の解決策候補を立てず先送りとしているため、対応課題を「P-04（記録の蓄積のみ）」と限定するか P-04 を外して扱いをそろえるべきである。

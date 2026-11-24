@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_17c22c5577d04e05a41420d16aca334f
+  ts: "2026-11-21T02:21:40Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: decision の判断の材料として、方式が成り立つかを試作で確かめるため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 段ごとのコマンドと Claude Code の skill で、register の項目を 1 件流す試作をする
+    - field: description
+      from: ""
+      to: exec の段を agent を起動しないコマンド（prepare・finish など）に分け、Claude Code の skill と subagent で register の項目を 1 件、start から review・統合まで流す
+    - field: input
+      from: ""
+      to: '["前提の decision（PJR-DEF1）で方式を採ると決めてから着手する","試作は Claude Code から始める。.claude/agents/ に executor・reviewer・reporter の定義があり、この場で確かめられるため。agy は Google に確かめてから、Codex と schedule の --task はそのあとに広げる","段の例: exec step prepare --register `<ID>` が start の記帳・worktree・plan・result の雛形を作りパスを出す。exec step finish --register `<ID>` --evidence `<file>` が親の検証・commit と保護された設定の検査・統合・review の記帳を行い、失敗したら waiting にする（名前は executor が決める）","今ある手動のコマンド: schedule 向けの exec worktree prepare・commit・merge と exec claim・complete。register の項目と親の検証にはつながっていない"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-21"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-DEF1"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-DEF1"]'

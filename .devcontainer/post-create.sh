@@ -54,17 +54,15 @@ fi
 
 WORKSPACE_DIR="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 
+# worktree と node_modules の named volume の持ち主をそろえ、空の node_modules に依存を入れる
+# （PJR-TATP）。下の npm run build と npm link は依存を必要とするため、その前に行う。
+bash "$(dirname "$0")/prepare-workspace-volumes.sh"
+
 echo "Building and linking SpecDojo CLI..."
 (
   cd "$WORKSPACE_DIR"
   npm run build
   sudo npm link
-)
-
-echo "Installing documentation site dependencies..."
-(
-  cd "$WORKSPACE_DIR"
-  npm --prefix packages/docs-site ci
 )
 
 # Keep safe.directory entries unique to avoid unbounded growth across rebuilds.

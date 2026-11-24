@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-6-PROJECT-pm-risk-register-sample-050",
+  "run_id": "T-KATA-WAVE-6-PROJECT-pm-risk-register-sample-050-20261123T075012Z-dc2fcc93",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-23T07:50:59.992Z",
+    "completed_at": "2026-11-23T07:54:35.170Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/pm-risk-register-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../ja/specdojo/samples/pm-risk-register-sample.md | 107 ++++++++++++++++++---\n 1 file changed, 91 insertions(+), 16 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/samples/pm-risk-register-sample.md",
+      "status": "passed",
+      "summary": "変更した sample を整形した"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2 docs/ja/specdojo/samples/pm-risk-register-sample.md",
+      "status": "passed",
+      "summary": "0 issues"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴ファイルを変更していない",
+      "reason": "変更は docs/ja/specdojo/samples/ の sample だけで、plan・result・個票を変更していないため"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:pm-risk-register-sample\n  type: project\n  status: draft\n  rulebook: specdojo:pm-risk-register-rulebook\n---\n\n# リスク登録簿 サンプル\n\n## 1. 概要\n\n駄菓子屋きぬや 販売管理システム構築で、準備着手から2週間の店頭試用終了までに顕在化しうるリスクを、初期受入・店頭試用の期日と成功条件への影響で評価・対応・監視する。記録単位はリスク 1 件 1 行（`RK-NNN`）とし、毎週の見直しと兆候・期限超過の発生時に該当行を更新する。記載は 2026-04-09 時点である。\n\n本書はプロジェクト登録簿を使わない単独のリスク登録簿の例である。登録簿を使う場合はリスクを `item_type: risk` の個票に書き、`register build` が個\n… output omitted …\nする。`PM` 自身の見直しが行われなかったときは `PO` へ連絡する。\n\n## 6. 関連ドキュメント\n\n- 根拠: \\[\\[specdojo:prj-overview-sample|プロジェクト概要]]（端末1台・単一店舗の前提）、\\[\\[specdojo:pm-plan-sample|プロジェクト管理計画]]（課題・リスク・変更の管理方針と週次の確認）\n- 影響を受ける成果物: \\[\\[specdojo:prj-success-criteria-and-acceptance-criteria-sample|成功基準と受入条件]]（SC-01〜SC-03、AC-01〜AC-04）\n- 起票した課題: \\[\\[specdojo:pm-issue-log-sample|課題ログ]]（RK-004 → IS-002）\n- 変更要求の起票先: \\[\\[specdojo:pm-change-request-log-sample|変更要求ログ]]（現時点で起票なし）\n- 担当の Role code: \\[\\[specdojo:pm-roles-sample|ロール定義]]"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6112 file(s), 92 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 68 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6112 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-PROJECT-pm-risk-register-sample-050\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packa\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1885}\n\n Test Files  19 passed (19)\n      Tests  480 passed (480)\n   Start at  16:58:01\n   Duration  2.76s (transform 5.48s, setup 904ms, import 8.27s, tests 6.24s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nge valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-PROJECT-pm-risk-register-sample-050/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-PROJECT-pm-risk-register-sample-050/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "pm-risk-register-sample.md を rulebook に沿った駄菓子屋きぬやの単独リスク登録簿の完成例として書き直し、F001〜F026 に対応した（F021 は本文の説明で対処し、rulebook の修正案を引き継ぐ。F025 は status の ready 化が人の操作のため対象外）。",
+  "completion_status": "complete",
+  "handoff": [
+    "決める必要のある値: RK-001 の完了条件にある、連続会計の試行の件数（_UNDECIDED_ 件）と、1 件の会計確定にかけてよい秒数（_UNDECIDED_ 秒）。",
+    "rulebook の修正案: pm-risk-register-rulebook の frontmatter の `template` は生成ビュー（pm-risk-register-template）を指しており、単独の登録簿の sample を手で書く形式と食い違うと grade が判定した（F021）。sample の概要に単独の登録簿の例であることを明記して対処した。単独の登録簿には template がないことを frontmatter または位置づけの章で区別できるよう、rulebook の見直しを提案する。",
+    "F025（ready にする前提）: sample の status は人だけが ready にできるため draft のまま。再 grade で問題がなければ、人の判断で ready にする。",
+    "sample で置いた仮の前提: RK-002 の根拠『準備中の打合せが 2 回延期された』、見直し漏れのとき PM が 2 営業日以内に再評価する期限、RK-003 の受容を PO が判断した記載。関連する sample と食い違う場合は直す。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-pm-risk-register-sample-050/T-KATA-WAVE-6-PROJECT-pm-risk-register-sample-050-20261123T075012Z-dc2fcc93/executor.log",
+      "bytes": 5608,
+      "truncated": false
+    }
+  ]
+}

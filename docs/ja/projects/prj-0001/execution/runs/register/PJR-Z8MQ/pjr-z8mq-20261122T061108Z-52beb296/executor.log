@@ -1,0 +1,25 @@
+`utc-index` の rulebook と sample の grade 指摘（rulebook 6 件・sample 8 件）は、すべて直しました。直さなかった指摘はありません。grade の再評価は executor では起動できないため、未実施です。
+
+`npm run lint:md` は通り、sample に `_TODO_` は残っていません。変更は rulebook、sample、個票の 3 ファイルだけです。
+
+**rulebook** (`docs/ja/specdojo/rulebooks/utc-index-rulebook.md`)
+- 6.3.2 の空の表を外し、典型例の表に統合しました。
+- 禁止事項の「大量に」を削りました。
+- `_UNDECIDED_` を recipe・template の要否だけに更新しました。
+- 「E2E」を ST/AT に統一しました。
+- 6.7 の「例外方針」を「テストダブルの使い分け」へ改名しました。
+
+**sample** (`docs/ja/specdojo/samples/utc-index-sample.md`)
+- メモ / 将来課題の各論点に決める時期を足し、ready にする前に解消する論点（通信不能時の販売継続、AC-02 への接続）を明記しました。
+- 記録サービスの Stub にタイムアウトを足し、非同期・並行性は当てはまらない旨を追記しました。
+- つけ残高の採用理由を業務影響で書き直しました。
+- 通信不能時の販売継続の担保先を、どのレベルでも担保しない（受入は保留）と明記しました。
+- 記入例の `証跡` に、CI 整備後の書き方である旨を注記しました。
+- 分割の目安を「以上」にそろえました。
+- `_TODO_` を解消しました。
+
+個票は作業内容の表の 1〜3 行目を `done` にし、4 行目（grade の評価し直し）は `open` のまま理由を書きました。対応結果、`### 5.1. CHANGELOG に書く事項`（「なし」）、関連ドキュメントも記入しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"utc-index の rulebook（6件）と sample（8件）の grade 指摘をすべて直し、個票の対応結果を記入した。grade の再評価は executor では実行できないため未実施。","handoff":["統合後にオーケストレーターが `npx specdojo grade run --target kata --kata utc-index` で評価し直し、blocker と major がないことを確認する。機械的な指摘（PJR-7C9X）だけが残る場合は合格とし、個票の対応結果に書く。","個票の作業内容の表の 4 行目（grade での評価し直し）は `open` のまま残している。","`CHANGELOG.md` は変更していない（個票の `### 5.1. CHANGELOG に書く事項` に「なし」と記載）。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/utc-index-sample.md docs/ja/specdojo/rulebooks/utc-index-rulebook.md","status":"passed","summary":"sample は整形済み、rulebook は変更なし。"},{"command":"npm run -s lint:md","status":"passed","summary":"エラーなし。"},{"command":"npm run -s validate:history-links","status":"passed","summary":"出力末尾の確認範囲では valid のみで、エラーは出ていない。"}]}
+</specdojo_executor_evidence>

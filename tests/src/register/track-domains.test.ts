@@ -1,4 +1,3 @@
-import { Command } from "commander";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { mkdirSync, mkdtempSync, rmSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -202,50 +201,5 @@ describe("track domain resolution", () => {
         String(message).includes("tml-index.yaml is deprecated"),
       ),
     ).toHaveLength(1);
-  });
-  it("timeline build and timeline_path warn once while the compatibility CLI still works", async () => {
-    vi.resetModules();
-    const { registerTimelineCommands } = await import("../../../src/dashboard/timeline.js");
-    const previousCwd = process.cwd();
-    const previousExitCode = process.exitCode;
-    mkdirSync(join(root, ".specdojo"));
-    writeFileSync(
-      join(root, ".specdojo/specdojo.config.json"),
-      JSON.stringify({
-        version: 1,
-        projects: {
-          "prj-test": {
-            timeline_path: "timeline",
-            catalog_path: "catalog",
-            project_register_path: "register",
-            schedule_path: "schedule",
-          },
-        },
-      }),
-    );
-    const stderr = vi.spyOn(process.stderr, "write").mockReturnValue(true);
-    vi.spyOn(process.stdout, "write").mockReturnValue(true);
-    try {
-      process.chdir(root);
-      process.exitCode = undefined;
-      for (let i = 0; i < 2; i++) {
-        const command = new Command();
-        registerTimelineCommands(command);
-        await command.parseAsync(["timeline", "build", "--project", "prj-test", "--dry-run"], {
-          from: "user",
-        });
-      }
-      expect(process.exitCode).toBeUndefined();
-      for (const feature of ["timeline build", "timeline_path", "tml-index.yaml"]) {
-        expect(
-          stderr.mock.calls.filter(([message]) =>
-            String(message).includes(`${feature} is deprecated`),
-          ),
-        ).toHaveLength(1);
-      }
-    } finally {
-      process.chdir(previousCwd);
-      process.exitCode = previousExitCode;
-    }
   });
 });

@@ -95,16 +95,6 @@ providers:
       stderr_patterns: [timeout, out of memory, model is loading]
     connection_error_detection:
       stderr_patterns: [Cannot connect to API, ECONNREFUSED, connection refused]
-  antigravity:
-    # 使える model の ID は `agy models` で確かめる。Gemini の Pro 系は提供されなくなったため、
-    # expert は Flash の high とする（2026-10-15、agy 1.3.5 で確認）。
-    # model の ID は実体の member の model に書く（PJR-ZM1K）。
-    command_template: 'specdojo agent launch --provider antigravity --role {mode} -- --sandbox --model {model} -p "$(cat)"'
-    command_params:
-      by_proficiency:
-        frontier: {}
-    rate_limit_detection:
-      stderr_patterns: [rate limit, "429", quota, RESOURCE_EXHAUSTED]
   copilot:
     command_params:
       by_proficiency:

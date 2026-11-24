@@ -1,0 +1,26 @@
+tsp-index の rulebook と sample について、grade の指摘を全件直しました。直さなかった指摘はありません。再評価はまだで、統合後にオーケストレーターが `npx specdojo grade run --target kata --kata tsp-index` を実行します。
+
+**rulebook（F001〜F004）**
+- F001: 「共通の運用」に追従対象と担当の記述を足しました。
+- F002: 出口条件で重大度を使う場合は「不具合管理方針」を必須と明記しました。
+- F003: 記述ガイドの良い例を、`receipt-print` と復元用保管サービスに合わせて書き換えました。
+- F004: 「試験」を「テスト」に統一しました。
+
+**sample（F001〜F009）**
+- F001・F009: 未決論点に引き継ぎ先を足し、`_TODO_` を `_ASSUMPTION_` に変えました。sample に `_TODO_` は残っていません。引き継ぎ先 `kinuya:pjr-i006`・`kinuya:pjr-i007` は実在する個票ではなく、ifd-sample の `kinuya:pjr-i001`〜`i005` に続く架空の番号です。
+- F002・F005: 開発環境の保管サービスをスタブにし、検証用 DB への実接続は内部結合テストに限ると明記しました。
+- F003: 回帰の範囲に保管サービス連携と記録の保全・復元を加えました。
+- F004: 総合テストの出口条件の行に応答の閾値（ピーク1時間60取引、95% が2秒以内）を書きました。
+- F006: 単体テストと受入テストの出口条件に重大度別の許容件数を足しました。
+- F007: 応答欠落時の照合待ちを、内部結合テスト（`PATH-02`）で確認する記述に揃えました。
+- F008: `based_on` に ifd-sample を加えて本文でも参照し、`PATH-04`・`PATH-07` のテストレベルを書きました。
+
+rulebook の変更に合わせて sample も直しており、両者に食い違いはありません。
+
+個票の対応結果は書き込み済みです。作業内容の No 4（grade での評価し直し）だけ `open` で残しています。`### 5.1. CHANGELOG に書く事項` は「なし」です。
+
+2 つの md と個票に Prettier をかけ、markdownlint は 0 件でした。`npm run lint:md` など親 runner の検証は未実行です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"tsp-index の rulebook（F001〜F004）と sample（F001〜F009）の指摘をすべて直し、個票の対応結果を更新した。","handoff":["統合後に、オーケストレーターが `npx specdojo grade run --target kata --kata tsp-index` で評価し直し、rulebook と sample に blocker と major がないことを確かめる。機械的な指摘（PJR-7C9X）だけが残る場合は合格とする。","sample の引き継ぎ先 `kinuya:pjr-i006`・`kinuya:pjr-i007` は ifd-sample の `kinuya:pjr-i001`〜`i005` に続く架空の番号で、実在する個票ではない。","`CHANGELOG.md` は変更していない。個票の `### 5.1. CHANGELOG に書く事項` に「なし」と記載した。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/tsp-index-sample.md docs/ja/specdojo/rulebooks/tsp-index-rulebook.md docs/ja/projects/prj-0001/controls/project-register/pjr-r05d-kata-wave-3-tsp-index-fix.md","status":"passed","summary":"対象 3 ファイルを整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/tsp-index-sample.md docs/ja/specdojo/rulebooks/tsp-index-rulebook.md docs/ja/projects/prj-0001/controls/project-register/pjr-r05d-kata-wave-3-tsp-index-fix.md","status":"passed","summary":"0 issues"},{"command":"npx specdojo grade run --target kata --kata tsp-index","status":"requires_human","summary":"統合後にオーケストレーターが実行する。executor の sandbox から grade は起動できない。"}]}
+</specdojo_executor_evidence>

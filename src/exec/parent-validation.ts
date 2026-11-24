@@ -1,4 +1,4 @@
-import { spawn } from "node:child_process";
+import { spawn, type ChildProcess } from "node:child_process";
 import { join } from "node:path";
 import { performance } from "node:perf_hooks";
 import { StringDecoder } from "node:string_decoder";
@@ -8,6 +8,7 @@ import {
   ValidationTestFiles,
 } from "./validation-metrics.js";
 import { gitEnvironment } from "./worktree.js";
+import { NpmScriptStageTracker, ValidationOutputFiles } from "./parent-validation-output.js";
 import {
   hasValidationProcessTreeSurvivors,
   signalValidationProcessTree,
@@ -19,11 +20,15 @@ import {
 import { acquirePoolSlot, getActiveExecLocksDir, releaseLock } from "./slot-lock.js";
 import type { EvidenceValidation, ExecEvidence } from "./evidence.js";
 import { MAX_CHANGE_FILES, redactSensitiveText } from "./evidence.js";
+import type { RelatedTestKind, RelatedTestSelection } from "./related-tests.js";
+import { buildTestDependencyGraph, selectRelatedTests } from "./related-tests.js";
 import { PROJECT_REPO_WORKTREE_DIRNAME, REPO_NAME_PATTERN } from "../shared/specdojo-config.js";
 
 export const MAX_PARENT_VALIDATION_STREAM_BYTES = 1024 * 1024;
 const MAX_SUMMARY_LENGTH = 1_000;
 const CAPTURE_MARKER_RESERVE_BYTES = 256;
+/** Upper bound of the selected and omitted test files recorded in one validation. */
+export const MAX_RECORDED_TEST_FILES = 500;
 
 export type ParentValidationId =
   | "validate-schema"
@@ -33,6 +38,9 @@ export type ParentValidationId =
   | "lint-ts"
   | "lint-fm"
   | "lint-md"
+  | "lint-fm-changed"
+  | "lint-md-changed"
+  | "test-docs"
   | "lint-mermaid"
   | "lint-d2"
   | "build"
@@ -54,10 +62,15 @@ export type ParentValidationProcessResult = {
   timedOut?: boolean;
   stdoutTruncated?: boolean;
   stderrTruncated?: boolean;
+  /** Time from spawn to the end of the validation. */
+  durationMs?: number;
+  /** Last npm script the validation started (`validate:schema:glossary`), from npm's banners. */
+  stage?: string;
 };
 
 export type ParentValidationFailureOutput = ParentValidationProcessResult & {
-  id: ParentValidationId;
+  // `yaml-pages` は親の検証の前の表示のページの作り直しの失敗を表す（PJR-TF6F）。
+  id: ParentValidationId | "yaml-pages";
   repo?: string;
   label: string;
 };
@@ -120,6 +133,27 @@ const PARENT_VALIDATION_REGISTRY: Record<ParentValidationId, ParentValidationDef
     command: process.platform === "win32" ? "npm.cmd" : "npm",
     args: ["run", "lint:md"],
     displayCommand: "npm run lint:md",
+    timeoutMs: 10 * 60 * 1_000,
+  },
+  "lint-fm-changed": {
+    id: "lint-fm-changed",
+    command: process.platform === "win32" ? "npm.cmd" : "npm",
+    args: ["run", "lint:fm:changed"],
+    displayCommand: "npm run lint:fm:changed",
+    timeoutMs: 10 * 60 * 1_000,
+  },
+  "lint-md-changed": {
+    id: "lint-md-changed",
+    command: process.platform === "win32" ? "npm.cmd" : "npm",
+    args: ["run", "lint:md:changed"],
+    displayCommand: "npm run lint:md:changed",
+    timeoutMs: 10 * 60 * 1_000,
+  },
+  "test-docs": {
+    id: "test-docs",
+    command: process.platform === "win32" ? "npm.cmd" : "npm",
+    args: ["run", "test:docs"],
+    displayCommand: "npm run test:docs",
     timeoutMs: 10 * 60 * 1_000,
   },
   "lint-mermaid": {
@@ -229,7 +263,8 @@ export const PARENT_VALIDATION_PROJECT_REPO = PROJECT_REPO_WORKTREE_DIRNAME;
 
 /** One element of `pipeline.parent_validations` in exec-defaults. */
 export type ParentValidationEntry =
-  string | { id: string; repo?: string; paths?: readonly string[] };
+  | string
+  | { id: string; repo?: string; paths?: readonly string[]; parallel?: boolean; related?: boolean };
 
 export type ParentValidationAssignment = {
   definition: ParentValidationDefinition;
@@ -242,6 +277,16 @@ export type ParentValidationAssignment = {
    * Absent means the validation always runs.
    */
   paths?: readonly string[];
+  /** PJR-50RQ: validation may run alongside adjacent `parallel` validations (light lint). */
+  parallel?: boolean;
+  /** PJR-9X52: run only the test files related to the changed files (vitest validations). */
+  related?: boolean;
+};
+
+/** Validations whose vitest run can be narrowed to the related test files, by test kind. */
+export const RELATED_TEST_VALIDATIONS: Partial<Record<ParentValidationId, RelatedTestKind>> = {
+  "test-unit": "unit",
+  "test-integration": "integration",
 };
 
 /**
@@ -277,7 +322,13 @@ function assignmentLabel(id: string, repo: string): string {
   return repo === PARENT_VALIDATION_PROJECT_REPO ? id : `${repo}:${id}`;
 }
 
-type ParsedEntry = { id: string; repo: string; paths?: readonly string[] };
+type ParsedEntry = {
+  id: string;
+  repo: string;
+  paths?: readonly string[];
+  parallel?: boolean;
+  related?: boolean;
+};
 
 function parsePaths(value: unknown, where: string): readonly string[] | undefined {
   if (value === undefined) return undefined;
@@ -300,7 +351,7 @@ function parseEntry(entry: unknown, index: number): ParsedEntry {
     );
   }
   const unknownKeys = Object.keys(entry)
-    .filter((key) => key !== "id" && key !== "repo" && key !== "paths")
+    .filter((key) => !["id", "repo", "paths", "parallel", "related"].includes(key))
     .sort();
   if (unknownKeys.length > 0) {
     throw new Error(`${where}: unknown key(s) ${unknownKeys.map((key) => `"${key}"`).join(", ")}`);
@@ -309,8 +360,24 @@ function parseEntry(entry: unknown, index: number): ParsedEntry {
     throw new Error(`${where}.id must be a non-empty string`);
   }
   const paths = parsePaths(entry.paths, where);
-  if (entry.repo === undefined && paths === undefined) {
-    throw new Error(`${where} must set repo or paths when written as an object`);
+  if (entry.parallel !== undefined && typeof entry.parallel !== "boolean") {
+    throw new Error(`${where}.parallel must be a boolean`);
+  }
+  if (entry.related !== undefined && typeof entry.related !== "boolean") {
+    throw new Error(`${where}.related must be a boolean`);
+  }
+  if (entry.related === true && !Object.hasOwn(RELATED_TEST_VALIDATIONS, entry.id)) {
+    throw new Error(
+      `${where}.related is supported only for ${Object.keys(RELATED_TEST_VALIDATIONS).join(", ")} (got ${entry.id})`,
+    );
+  }
+  if (
+    entry.repo === undefined &&
+    paths === undefined &&
+    entry.parallel === undefined &&
+    entry.related === undefined
+  ) {
+    throw new Error(`${where} must set repo, paths, parallel or related when written as an object`);
   }
   const repo = entry.repo ?? PARENT_VALIDATION_PROJECT_REPO;
   if (typeof repo !== "string" || !REPO_NAME_PATTERN.test(repo)) {
@@ -318,7 +385,13 @@ function parseEntry(entry: unknown, index: number): ParsedEntry {
       `${where}.repo must match ${String(REPO_NAME_PATTERN)} (got ${JSON.stringify(entry.repo)})`,
     );
   }
-  return { id: entry.id, repo, ...(paths ? { paths } : {}) };
+  return {
+    id: entry.id,
+    repo,
+    ...(paths ? { paths } : {}),
+    ...(entry.parallel === true ? { parallel: true } : {}),
+    ...(entry.related === true ? { related: true } : {}),
+  };
 }
 
 export function resolveParentValidationAssignments(
@@ -327,7 +400,7 @@ export function resolveParentValidationAssignments(
   if (!entries) return [];
   const seen = new Set<string>();
   return entries.map((entry, index) => {
-    const { id, repo, paths } = parseEntry(entry, index);
+    const { id, repo, paths, parallel, related } = parseEntry(entry, index);
     const label = assignmentLabel(id, repo);
     if (seen.has(label)) {
       throw new Error(`Duplicate parent validation id in exec-defaults: ${label}`);
@@ -341,7 +414,14 @@ export function resolveParentValidationAssignments(
         `Unknown parent validation id in exec-defaults: ${id} (allowed: ${Object.keys(PARENT_VALIDATION_REGISTRY).join(", ")})`,
       );
     }
-    return { definition, repo, label, ...(paths ? { paths } : {}) };
+    return {
+      definition,
+      repo,
+      label,
+      ...(paths ? { paths } : {}),
+      ...(parallel ? { parallel } : {}),
+      ...(related ? { related } : {}),
+    };
   });
 }
 
@@ -424,6 +504,65 @@ export function isParentValidationSkipped(
   );
 }
 
+/**
+ * PJR-9X52: the test files a `related` validation runs for the change set. Returns undefined for
+ * validations without `related`. A change set that is unknown, or a dependency graph that cannot
+ * be read, selects the full run.
+ */
+export async function relatedTestSelectionFor(
+  assignment: ParentValidationAssignment,
+  root: string,
+  selection: ParentValidationSelection | undefined,
+  productRepos: readonly string[] = [],
+): Promise<RelatedTestSelection | undefined> {
+  const kind = RELATED_TEST_VALIDATIONS[assignment.definition.id];
+  if (!assignment.related || !kind) return undefined;
+  const changedPaths = selection?.changedPaths;
+  if (changedPaths === undefined)
+    return { mode: "full", reason: "change set is unknown or truncated" };
+  try {
+    const graph = await buildTestDependencyGraph(root, kind);
+    return selectRelatedTests(
+      graph,
+      changedPathsForRepo(changedPaths, assignment.repo, productRepos),
+    );
+  } catch (error) {
+    return {
+      mode: "full",
+      reason: `related test selection failed: ${error instanceof Error ? error.message : String(error)}`,
+    };
+  }
+}
+
+/** The fixed argv with the selected test files appended after `--` for a related selection. */
+export function definitionForTestSelection(
+  definition: ParentValidationDefinition,
+  testSelection: RelatedTestSelection | undefined,
+): ParentValidationDefinition {
+  if (testSelection?.mode !== "related") return definition;
+  return { ...definition, args: [...definition.args, "--", ...testSelection.selected] };
+}
+
+function evidenceTestSelection(
+  testSelection: RelatedTestSelection,
+): NonNullable<EvidenceValidation["test_selection"]> {
+  const reason = truncateHead(testSelection.reason, MAX_SUMMARY_LENGTH);
+  if (testSelection.mode === "full") return { mode: "full", reason };
+  return {
+    mode: "related",
+    reason,
+    selected_tests: testSelection.selected.slice(0, MAX_RECORDED_TEST_FILES),
+    omitted_tests: testSelection.omitted.slice(0, MAX_RECORDED_TEST_FILES),
+  };
+}
+
+function testSelectionSummaryPrefix(testSelection: RelatedTestSelection | undefined): string {
+  if (!testSelection) return "";
+  return testSelection.mode === "related"
+    ? `related tests only (${testSelection.reason}): `
+    : `full run (${testSelection.reason}): `;
+}
+
 export function resolveParentValidationDefinitions(
   entries: readonly unknown[] | undefined,
 ): ParentValidationDefinition[] {
@@ -464,6 +603,7 @@ export async function invokeParentValidation(
 ): Promise<ParentValidationProcessResult> {
   const killGraceMs = options.killGraceMs ?? VALIDATION_KILL_GRACE_MS;
   const closeGraceMs = options.closeGraceMs ?? VALIDATION_CLOSE_GRACE_MS;
+  const output = new ValidationOutputFiles();
   return await new Promise((resolve) => {
     const stdoutCapture: BoundedCapture = { chunks: [], totalBytes: 0 };
     const stderrCapture: BoundedCapture = { chunks: [], totalBytes: 0 };
@@ -475,58 +615,83 @@ export async function invokeParentValidation(
     let killTimer: NodeJS.Timeout | undefined;
     let closeTimer: NodeJS.Timeout | undefined;
     const testFiles = new ValidationTestFiles();
+    const stage = new NpmScriptStageTracker();
     const stdoutDecoder = new StringDecoder("utf8");
-    const child = spawn(definition.command, [...definition.args], {
-      cwd,
-      env: { ...gitEnvironment(), SPECDOJO_PARENT_VALIDATION_METRICS: "1" },
-      shell: false,
-      stdio: ["ignore", "pipe", "pipe"],
-      windowsHide: true,
-      detached: VALIDATION_USES_PROCESS_GROUP,
-    });
+    const spawnedAt = performance.now();
+    let child: ChildProcess;
+    try {
+      child = spawn(definition.command, [...definition.args], {
+        cwd,
+        env: { ...gitEnvironment(), SPECDOJO_PARENT_VALIDATION_METRICS: "1" },
+        shell: false,
+        // PJR-6690: pipe ではなくファイルへ書かせる。runner の event loop が他のタスクの
+        // spawnSync で止まっても、検証の子は出力の書き込みで止まらない。
+        stdio: ["ignore", output.stdoutFd, output.stderrFd],
+        windowsHide: true,
+        detached: VALIDATION_USES_PROCESS_GROUP,
+      });
+    } catch (error) {
+      output.dispose();
+      throw error;
+    }
     const untrack = trackValidationProcessGroup(child);
-    child.stdout.on("data", (chunk: Buffer) => {
-      appendBounded(stdoutCapture, chunk);
-      testFiles.observe(stdoutDecoder.write(chunk));
-    });
-    child.stderr.on("data", (chunk: Buffer) => {
-      appendBounded(stderrCapture, chunk);
-    });
+    const drainOutput = (): void => {
+      output.drain("stdout", (chunk) => {
+        appendBounded(stdoutCapture, chunk);
+        const text = stdoutDecoder.write(chunk);
+        testFiles.observe(text);
+        stage.observe(text);
+      });
+      output.drain("stderr", (chunk) => {
+        appendBounded(stderrCapture, chunk);
+      });
+    };
     const forceKill = (): void => {
       survivorsAfterTerm = hasValidationProcessTreeSurvivors(child) || child.exitCode === null;
       killSent = signalValidationProcessTree(child, "SIGKILL") || killSent;
     };
-    const settle = (exitCode: number | null, pipesClosed: boolean): void => {
+    const capturedResult = (exitCode: number | null): ParentValidationProcessResult => {
+      drainOutput();
       const stdout = capturedOutput(stdoutCapture);
       const stderr = capturedOutput(stderrCapture);
-      finish(
-        {
-          exitCode,
-          stdout: stdout.output,
-          stderr: stderr.output,
-          timedOut,
-          stdoutTruncated: stdout.truncated,
-          stderrTruncated: stderr.truncated,
-        },
-        pipesClosed,
-      );
+      return {
+        exitCode,
+        stdout: stdout.output,
+        stderr: stderr.output,
+        timedOut,
+        stdoutTruncated: stdout.truncated,
+        stderrTruncated: stderr.truncated,
+        durationMs: performance.now() - spawnedAt,
+        ...(stage.stage ? { stage: stage.stage } : {}),
+      };
+    };
+    const settle = (exitCode: number | null, pipesClosed: boolean): void => {
+      if (settled) return;
+      const result = capturedResult(exitCode);
+      const fileDurations = testFiles.durationsSnapshot();
+      if (fileDurations.length > 0)
+        validationMetric("validation-test-files", { id: definition.id, files: fileDurations });
+      finish(result, pipesClosed);
     };
     const timer = setTimeout(() => {
       timedOut = true;
       timeoutStartedAt = performance.now();
+      drainOutput();
       validationMetric("validation-timeout", {
         id: definition.id,
         cwd,
         timeout_ms: definition.timeoutMs,
+        // 時間切れの timer が遅れた分は、runner の event loop が止まっていた時間を表す。
+        timer_lag_ms: Math.max(0, timeoutStartedAt - spawnedAt - definition.timeoutMs),
+        ...(stage.stage ? { stage: stage.stage } : {}),
         ...testFiles.snapshot(),
       });
       signalValidationProcessTree(child, "SIGTERM");
       killTimer = setTimeout(() => {
         forceKill();
         closeTimer = setTimeout(() => {
-          // group の外へ出た子孫が pipe を持ち続けても、close を待たずに時間切れとして返す。
-          child.stdout.destroy();
-          child.stderr.destroy();
+          // 出力はファイルなので、group の外へ出た子孫は close を止めない。直下の子が SIGKILL の
+          // 後も close しない場合に限り、待たずに時間切れとして返す。
           settle(child.exitCode, false);
         }, closeGraceMs);
       }, killGraceMs);
@@ -553,29 +718,37 @@ export async function invokeParentValidation(
       clearTimeout(closeTimer);
       recordStop(pipesClosed);
       untrack();
+      output.dispose();
       resolve(result);
     };
     child.on("error", (error) => {
-      const stdout = capturedOutput(stdoutCapture);
-      const stderr = capturedOutput(stderrCapture);
-      finish({
-        exitCode: null,
-        stdout: stdout.output,
-        stderr: stderr.output,
-        error: error.message,
-        timedOut,
-        stdoutTruncated: stdout.truncated,
-        stderrTruncated: stderr.truncated,
-      });
+      if (settled) return;
+      finish({ ...capturedResult(null), error: error.message });
     });
     child.on("close", (exitCode) => settle(exitCode, true));
   });
 }
 
+// PJR-6690: 時間切れは経過時間と止まった段を summary の先頭に置き、block の理由へ引き継ぐ。
+function timedOutSummaryPrefix(result: ParentValidationProcessResult): string {
+  const elapsed =
+    result.durationMs !== undefined ? ` after ${Math.round(result.durationMs / 1_000)}s` : "";
+  return `timed out${elapsed}${result.stage ? ` (stage: ${result.stage})` : ""}`;
+}
+
+const TIMED_OUT_SUMMARY_PATTERN =
+  /(?:^|: )(timed out(?: after \d+s)?(?: \(stage: [^)\n]+\))?)(?::|$)/u;
+
+function failedValidationReasonLabel(validation: EvidenceValidation): string {
+  const label = recordedParentValidationLabel(validation);
+  const timedOut = TIMED_OUT_SUMMARY_PATTERN.exec(validation.summary)?.[1];
+  return timedOut ? `${label} (${timedOut})` : label;
+}
+
 function validationSummary(result: ParentValidationProcessResult): string {
   const output = [result.stdout, result.stderr].filter(Boolean).join("\n").trim();
   const prefix = result.timedOut
-    ? "timed out"
+    ? timedOutSummaryPrefix(result)
     : result.error
       ? `spawn failed: ${result.error}`
       : `exit ${result.exitCode ?? "unknown"}`;
@@ -606,7 +779,9 @@ export async function runParentValidationBatch(
   const validations: EvidenceValidation[] = [];
   const failureOutputs: ParentValidationFailureOutput[] = [];
   const productRepos = Object.keys(roots.repos ?? {});
-  for (const assignment of assignments) {
+  const runOne = async (
+    assignment: ParentValidationAssignment,
+  ): Promise<{ validation: EvidenceValidation; failure?: ParentValidationFailureOutput }> => {
     const { definition, repo } = assignment;
     const repoField = recordsRepo ? { repo } : {};
     if (isParentValidationSkipped(assignment, selection, productRepos)) {
@@ -616,17 +791,18 @@ export async function runParentValidationBatch(
         `skipped by change type: no changed file matches paths (${(assignment.paths ?? []).join(", ")})`,
         MAX_SUMMARY_LENGTH,
       );
-      validations.push({
-        id: definition.id,
-        source: "runner",
-        ...repoField,
-        command: definition.displayCommand,
-        status: "not_applicable",
-        summary: reason,
-        reason,
-      });
       validationMetric("validation-skipped", { id: definition.id, repo, reason });
-      continue;
+      return {
+        validation: {
+          id: definition.id,
+          source: "runner",
+          ...repoField,
+          command: definition.displayCommand,
+          status: "not_applicable",
+          summary: reason,
+          reason,
+        },
+      };
     }
     const root =
       repo === PARENT_VALIDATION_PROJECT_REPO
@@ -635,19 +811,32 @@ export async function runParentValidationBatch(
           ? roots.repos?.[repo]
           : undefined;
     if (!root) {
-      validations.push({
+      return {
+        validation: {
+          id: definition.id,
+          source: "runner",
+          ...repoField,
+          command: definition.displayCommand,
+          status: "failed",
+          summary: truncateHead(
+            `repository "${repo}" has no worktree for this task; declare it in projects.<project-id>.repos ` +
+              `or assign ${definition.id} to another repository in pipeline.parent_validations`,
+            MAX_SUMMARY_LENGTH,
+          ),
+        },
+      };
+    }
+    const testSelection = await relatedTestSelectionFor(assignment, root, selection, productRepos);
+    if (testSelection) {
+      validationMetric("validation-test-selection", {
         id: definition.id,
-        source: "runner",
-        ...repoField,
-        command: definition.displayCommand,
-        status: "failed",
-        summary: truncateHead(
-          `repository "${repo}" has no worktree for this task; declare it in projects.<project-id>.repos ` +
-            `or assign ${definition.id} to another repository in pipeline.parent_validations`,
-          MAX_SUMMARY_LENGTH,
-        ),
+        repo,
+        mode: testSelection.mode,
+        reason: testSelection.reason,
+        ...(testSelection.mode === "related"
+          ? { selected: testSelection.selected.length, omitted: testSelection.omitted.length }
+          : {}),
       });
-      continue;
     }
     const startedAt = new Date().toISOString();
     const started = performance.now();
@@ -659,7 +848,7 @@ export async function runParentValidationBatch(
     });
     let result: ParentValidationProcessResult;
     try {
-      result = await invoke(definition, root);
+      result = await invoke(definitionForTestSelection(definition, testSelection), root);
     } catch (error) {
       validationMetric("validation-end", {
         id: definition.id,
@@ -680,22 +869,41 @@ export async function runParentValidationBatch(
       timed_out: result.timedOut === true,
       status: passed ? "passed" : "failed",
     });
-    validations.push({
+    const validation: EvidenceValidation = {
       id: definition.id,
       source: "runner",
       ...repoField,
       command: definition.displayCommand,
       status: passed ? "passed" : "failed",
-      summary: validationSummary(result),
-    });
-    if (!passed) {
-      failureOutputs.push({
+      summary: truncateHead(
+        `${testSelectionSummaryPrefix(testSelection)}${validationSummary(result)}`,
+        MAX_SUMMARY_LENGTH,
+      ),
+      ...(testSelection ? { test_selection: evidenceTestSelection(testSelection) } : {}),
+    };
+    if (passed) return { validation };
+    return {
+      validation,
+      failure: {
         ...result,
         id: definition.id,
         ...(recordsRepo ? { repo } : {}),
         label: assignmentLabel(definition.id, repo),
-      });
+      },
+    };
+  };
+  // PJR-50RQ: `parallel` が続く検証は同時に流し、それ以外は 1 本ずつ流す。結果は設定の並びで記録する。
+  for (let start = 0; start < assignments.length;) {
+    let end = start + 1;
+    if (assignments[start].parallel) {
+      while (end < assignments.length && assignments[end].parallel) end++;
     }
+    const settled = await Promise.all(assignments.slice(start, end).map(runOne));
+    for (const { validation, failure } of settled) {
+      validations.push(validation);
+      if (failure) failureOutputs.push(failure);
+    }
+    start = end;
   }
   return { validations, failureOutputs };
 }
@@ -852,7 +1060,7 @@ export function failedParentValidationReason(
       validation.status !== "not_applicable",
   );
   if (failed.length === 0) return undefined;
-  return `parent validation failed: ${failed.map(recordedParentValidationLabel).join(", ")}`;
+  return `parent validation failed: ${failed.map(failedValidationReasonLabel).join(", ")}`;
 }
 
 // PJR-Q2AT: executor が親検証をまとめて 1 行（例: `parent runner: lint-ts, lint-fm`、

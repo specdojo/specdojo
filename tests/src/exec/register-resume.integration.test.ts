@@ -1,4 +1,3 @@
-import { rebasePlanConventions } from "../../../src/shared/plan-conventions.js";
 import { Command } from "commander";
 import { execFileSync } from "node:child_process";
 import {
@@ -13,7 +12,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
-import { dirname, isAbsolute, join } from "node:path";
+import { isAbsolute, join } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { registerExecCommands } from "../../../src/exec/exec.js";
 import type { ExecEvidence } from "../../../src/exec/evidence.js";
@@ -408,35 +407,6 @@ function worktreePathFor(root: string): string | null {
   return line ? line.slice("worktree ".length) : null;
 }
 
-// Recreate a pre-layout checkpoint whose run ID differs from the plan stem.
-function recreateLegacyRun(root: string, stem: string, runId: string): void {
-  const runRel = `runs/register/PJR-CD34/${stem}`;
-  const directory = join(root, EXECUTION_REL, runRel);
-  for (const name of readdirSync(directory)) {
-    const destination =
-      name === "plan.md"
-        ? `exec/plans/${stem}-plan.md`
-        : name === "result.md"
-          ? `exec/results/${stem}-result.md`
-          : `exec/evidence/PJR-CD34/${runId}/${name}`;
-    let content = readFileSync(join(directory, name), "utf8")
-      .replaceAll(`${runRel}/plan.md`, `exec/plans/${stem}-plan.md`)
-      .replaceAll(`${runRel}/result.md`, `exec/results/${stem}-result.md`)
-      .replaceAll(`${runRel}/`, `exec/evidence/PJR-CD34/${runId}/`);
-    if (name === "evidence.json" || name === "pipeline-state.json") {
-      const record = JSON.parse(content);
-      record.run_id = runId;
-      content = `${JSON.stringify(record, null, 2)}\n`;
-    }
-    const path = join(root, EXECUTION_REL, destination);
-    if (name === "plan.md") content = rebasePlanConventions(content, join(directory, name), path);
-    mkdirSync(dirname(path), { recursive: true });
-    writeFileSync(path, content);
-  }
-  rmSync(join(root, EXECUTION_REL, "runs"), { recursive: true });
-  git(root, "add", EXECUTION_REL);
-}
-
 afterEach(() => {
   process.chdir(originalCwd);
   process.argv[1] = originalArgv1;
@@ -696,56 +666,6 @@ describe("exec run --register --worktree --resume", () => {
         expect(readFileSync(join(root, TICKET_REL), "utf8")).toContain("item_status: review");
         expect(existsSync(join(root, "docs/job-output.md"))).toBe(true);
         expect(git(root, "status", "--porcelain", "--", PROJECT_BASE)).toBe("");
-      });
-    },
-  );
-
-  it.each([false, true])(
-    "refuses migrating a retained run worktree without changing records (dry-run=%s)",
-    { timeout: 180_000 },
-    async (dryRun) => {
-      await withRepo(async ({ root, markerPath, worktreeBase }) => {
-        vi.spyOn(process.stdout, "write").mockImplementation(() => true);
-        const stderr = vi.spyOn(process.stderr, "write").mockImplementation(() => true);
-        await runWithFailingReporter(markerPath, worktreeBase);
-        expect(process.exitCode).toBe(1);
-        const worktree = worktreePathFor(root)!;
-        expect(worktree).toBeTruthy();
-        const stem = readdirSync(join(worktree, EXECUTION_REL, "runs/register/PJR-CD34"))[0]!;
-        const runId = "20261106T160500718Z-12a595ba";
-        recreateLegacyRun(root, stem, runId);
-        recreateLegacyRun(worktree, stem, runId);
-        const snapshots = [root, worktree].map((checkout) => ({
-          status: git(checkout, "status", "--porcelain"),
-          index: git(checkout, "diff", "--cached"),
-          plan: readFileSync(join(checkout, EXECUTION_REL, `exec/plans/${stem}-plan.md`)),
-          result: readFileSync(join(checkout, EXECUTION_REL, `exec/results/${stem}-result.md`)),
-        }));
-        // Both the integration checkout and the task worktree must refuse migration.
-        for (const checkout of [root, worktree]) {
-          process.chdir(checkout);
-          stderr.mockClear();
-          await runExec(["migrate-records", "--project", "test", ...(dryRun ? ["--dry-run"] : [])]);
-          expect(process.exitCode).toBe(1);
-          const error = stderr.mock.calls.map(([message]) => String(message)).join("");
-          expect(error).toContain(
-            "blocked: Migration target PJR-CD34 has a retained exec worktree:",
-          );
-          expect(error).toContain(worktree);
-          expect(error).toContain("remove its worktree before migrating");
-        }
-        for (const [i, checkout] of [root, worktree].entries()) {
-          expect(git(checkout, "status", "--porcelain")).toBe(snapshots[i].status);
-          expect(git(checkout, "diff", "--cached")).toBe(snapshots[i].index);
-          expect(readFileSync(join(checkout, EXECUTION_REL, `exec/plans/${stem}-plan.md`))).toEqual(
-            snapshots[i].plan,
-          );
-          expect(
-            readFileSync(join(checkout, EXECUTION_REL, `exec/results/${stem}-result.md`)),
-          ).toEqual(snapshots[i].result);
-          expect(existsSync(join(checkout, EXECUTION_REL, "runs"))).toBe(false);
-        }
-        expect(worktreePathFor(root)).toBe(worktree);
       });
     },
   );

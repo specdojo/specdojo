@@ -1,0 +1,16 @@
+{
+  "v": 1,
+  "ts": "2026-11-24T01:25:21Z",
+  "type": "block",
+  "task_id": "T-KATA-WAVE-6-PROJECT-pm-members-sample-060",
+  "by": "opus-executor",
+  "msg": "integration failed: project: git commit failed: test: FAIL  |unit| tests/src/docs/yaml-tables.test.ts > typed YAML display pages > renders tables and the entire folded source for specdojo--pm-members-sample.md.snap; Test Files  1 failed | 288 passed (289); Tests  1 failed | 4765 passed (4766); integrated repositories: none; not integrated: project; worktree kept: /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-PROJECT-pm-members-sample-060; next: fix the artifacts with exec resume --task T-KATA-WAVE-6-PROJECT-pm-members-sample-060 --resume-from executor (syncs the integration target first), or retry only the integration with exec resume --task T-KATA-WAVE-6-PROJECT-pm-members-sample-060",
+  "meta": {
+    "pipeline_stage": "integrate",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-pm-members-sample-060/T-KATA-WAVE-6-PROJECT-pm-members-sample-060-20261123T121342Z-62b521d7/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-pm-members-sample-060/T-KATA-WAVE-6-PROJECT-pm-members-sample-060-20261123T121342Z-62b521d7/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-6-PROJECT-pm-members-sample-060-20261123T121342Z-62b521d7",
+    "claim_actor": "opus-executor",
+    "stage_actor": "opus-executor"
+  }
+}

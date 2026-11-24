@@ -1,0 +1,25 @@
+`opd-index-rulebook` を改訂し、rulebook 側で直せる 8 件の指摘を解消しました。残る 3 件は sample 側の問題で、この段では sample を変更しないため直していません。Prettier と markdownlint はどちらも問題なしです。
+
+変更したのは `docs/ja/specdojo/rulebooks/opd-index-rulebook.md` だけです。
+
+**rulebook で解消した指摘**
+- **F001**: 禁止事項に「個人名・個人の連絡先を書かない」を追加しました。記述ガイドには、担当・判断者・通知先は Role 名か窓口名で書くことを加えました。
+- **F002・F006**: 「位置づけと用語定義」の章に、SLO・SLA・KPI・RACI・RTO/RPO の用語表を追加しました。移行期の一時体制を扱う `otp-*` は対象外と明記しました。
+- **F003**: 記述ガイドがなかった 4 章（運用の範囲・前提、権限・アカウント運用、定期運用方針、問い合わせ運用方針）に、最低限書く項目を追加しました。
+- **F004**: 作成後に通す検証として `npm run lint:md` と `npm run lint:fm` を明記しました。
+- **F005**: 判定できない「大量記載しない」を「コマンド列・逐次チェックリストを書かない（手順は `opr-*` へ委譲）」に変えました。
+- **F007**: 禁止事項を表に変え、各項目に理由を付けました。
+- **F011**: 表記を「SLO・SLA・KPI」、列名を sample と同じ「目標値」に揃えました。
+- 本文構成には「該当しない章は対象外と理由を示し、分冊は参照で満たす」を加えました（`opr-index-rulebook` と同じ扱い）。
+- 全体方針の 1 行目を「どの判断に使う文書か」の形に直しました（PJR-76N9）。記述ガイドには良い例・悪い例を足しました。
+
+**直していない指摘（sample 側の問題）**
+- **F008・F009**: sample は 12 章のうち 4 章しか書いていません。12 章必須は運用方針として妥当なので rulebook は維持し、sample を足すべきと判断しました。
+- **F010**: sample の frontmatter の `rulebook` が `specdojo:opd-rulebook` を指し、本文の参照パスも `opd-rulebook.md` を指しています。
+
+**直さなかった箇所**
+「ファイル命名・ID規則」と「推奨 Frontmatter 項目」の章は、指摘がなく冗長でもないため、そのままにしました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"opd-index-rulebook を簡潔に改訂し、rulebook 側で直せる 8 件（F001〜F007、F011）を解消した。F008・F009・F010 は sample 側の問題で、この段では sample を変更しないため申し送りとした。","handoff":["F008/F009: sample `docs/ja/specdojo/samples/opd-index-sample.md` は本文構成 12 章のうち 4 章（概要、SLO・SLA・KPI、体制、関連導線）しか書いておらず、運用の範囲・前提、監視、障害、変更管理、バックアップ、権限、定期運用、問い合わせの章がない。12 章必須は運用方針として妥当なので rulebook は維持し、sample へ不足章を足す（該当しない章は対象外と理由を書く）次の段の sample タスクが要る。","F010: sample の frontmatter の `rulebook` が `specdojo:opd-rulebook`、本文の参照が `../rulebooks/opd-rulebook.md` になっている。`specdojo:opd-index-rulebook` へ直し、本文の参照行は削除する必要がある（sample タスクで対応）。","直さなかった箇所: 「ファイル命名・ID規則」と「推奨 Frontmatter 項目」の章は、grade の指摘がなく冗長でもないため変更していない。","根拠とした規範: `docs/ja/specdojo/standards/rulebook-authoring-standard.md`（章立て、用語定義の扱い、役割記述の方針）、比較対象とした兄弟の rulebook `specdojo:opr-index-rulebook`（全章必須で対象外を許す書き方）、sample `specdojo:opd-index-sample`（列名「目標値」の統一）。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/opd-index-rulebook.md","status":"passed","summary":"Prettier の書式に適合"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/opd-index-rulebook.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>

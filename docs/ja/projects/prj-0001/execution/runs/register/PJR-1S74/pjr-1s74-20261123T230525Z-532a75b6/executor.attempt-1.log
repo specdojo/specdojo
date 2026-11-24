@@ -1,0 +1,13 @@
+`reporter.ts` は、`reason=` 付きの `specdojo-schema:` の印がある YAML を、`validate:schema:file` を求める対象から外すようになりました。新しいテスト 5 件と既存の `reporter` テストが通り、`typecheck` も通りました。`lint:ts` は error 0 件で、warning が 43 件出ています。`test:unit` 全体は走らせていません（親 runner が実行します）。
+
+- **変更内容:** `src/exec/reporter.ts` の `CHANGE_SCOPED_VALIDATIONS` で、YAML の変更が印付きの YAML だけなら `validate:schema:file` を適用外にします。印の有無は変更ファイルの先頭を読んで判定します。読む基準は新設した `ReporterFactOptions.repoRoot` で、未指定なら `process.cwd()` です。
+- **`none` の扱い:** `none` も `validate=false` と同じく外しました。どちらも `reason=` があれば `validate:schema:file` は検査を飛ばして終了コード 0 で終えるため、求めても止めるだけだからです。`reason=` のない印は同コマンドが失敗するので、今までどおり検査を求めます。
+- **`validate:schema:file` 側:** `validate=false` の YAML には「validation skipped: <reason>」を出して終了コード 0 で終える動作が既にありました。コードは変えていません。
+- **テスト:** `tests/src/exec/reporter-schema-check-skip.test.ts` を追加しました。印付きだけの変更は求めず、ふつうの YAML・`reason=` なしの印・印付きとふつうの YAML の混在は求めることを確かめています。
+- **個票:** 作業内容の表と対応結果を更新しました。「CHANGELOG に書く事項」の小節（区分は Fixed）も作りました。`CHANGELOG.md` は変えていません。
+
+`T-KATA-WAVE-6-PROJECT-pm-members-sample-060` の流し直しは、個票の作業内容 3 行目を `open` のまま残しました。統合後にオーケストレーターが `exec resume --task T-KATA-WAVE-6-PROJECT-pm-members-sample-060 --resume-from executor` で行います。そのとき template の `scheduler_strategy` を `_SCHEDULER_STRATEGY_` から `critical-first` に戻すよう指示します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"reporter.ts の YAML 検査要否判定から reason 付き specdojo-schema directive（none / validate=false）の YAML を外し、単体テストと個票の対応結果を追加した。","handoff":["統合後、オーケストレーターが exec resume --task T-KATA-WAVE-6-PROJECT-pm-members-sample-060 --resume-from executor で流し直す。template の scheduler_strategy は _SCHEDULER_STRATEGY_ から critical-first に戻すよう指示する。","CHANGELOG に書く事項: 区分 Fixed。runner が、specdojo-schema: validate=false または none（reason= 付き）の YAML だけを変えた task に validate:schema:file を求めて止めていたのを直した。"],"validations":[{"command":"npx vitest run tests/src/exec/reporter","status":"passed","summary":"既存 reporter テスト 131 件が通過"},{"command":"npx vitest run tests/src/exec/reporter-schema-check-skip","status":"passed","summary":"追加テスト 5 件が通過"},{"command":"npm run typecheck","status":"passed","summary":"型エラーなし"},{"command":"npm run lint:ts","status":"passed","summary":"error 0 件、既存の warning のみ"}]}
+</specdojo_executor_evidence>

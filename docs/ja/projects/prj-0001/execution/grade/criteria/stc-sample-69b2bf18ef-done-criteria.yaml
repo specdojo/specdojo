@@ -1,0 +1,48 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: specdojo:stc-sample-grade-criteria
+document: specdojo:stc-sample
+path: docs/ja/specdojo/samples/stc-sample.md
+graded_at: "2026-11-22T01:15:04.456Z"
+graded_by: opus-review-executor
+content_hash: 57dd590486dcbf6832b1ad1e15a07290f7cb949654cb8ba9af4197f20d1d3c89
+summary:
+  satisfied: 6
+  unsatisfied: 0
+  total: 6
+criteria:
+  - id: DC-001
+    text: rulebook の章立てと必須の表に沿っていること
+    roles:
+      - QE
+    viewpoint: vp-qe-omissions-consistency
+    status: satisfied
+  - id: DC-002
+    text: Sample 記述標準と共通サンプル文脈（駄菓子屋のプロジェクト）に沿っていること
+    roles:
+      - QE
+    viewpoint: vp-qe-kata-conformance
+    status: satisfied
+  - id: DC-003
+    text: rulebook の禁止事項に当たらないこと
+    roles:
+      - QE
+    viewpoint: vp-qe-kata-conformance
+    status: satisfied
+  - id: DC-004
+    text: rulebook が H5 以下の見出しを使わず、見出しを H4 までに収めていること
+    roles:
+      - QE
+    viewpoint: vp-qe-omissions-consistency
+    status: satisfied
+  - id: DC-005
+    text: H1 が rulebook の定めるタイトル形式で、駄菓子屋の具体的な対象名を用いていること
+    roles:
+      - QE
+    viewpoint: vp-qe-kata-conformance
+    status: satisfied
+  - id: DC-006
+    text: 判定基準を、判定できる値や状態で書いていること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: satisfied

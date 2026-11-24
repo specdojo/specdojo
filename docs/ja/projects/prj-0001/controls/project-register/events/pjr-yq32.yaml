@@ -1,0 +1,152 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_3aaf04c16a814ff4bf039e38fdb7d9bf
+  ts: "2026-11-23T04:56:17Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 準備の段で失敗した run が変更範囲の予約を blocked のまま残す
+    - field: description
+      from: ""
+      to: 朝の cycle で人の確定の 13 件が予約を残し、後の run が blocked by unintegrated で止まった。準備の段の失敗で予約を外し、古い予約を片付ける
+    - field: input
+      from: ""
+      to: '["利用者の決定（2026-11-23）: オーケストレーターの推奨どおり起票する"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-0JVB"]'
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: exec
+- v: 1
+  id: reg_8b3f84837368436cb38a8d349e8fe281
+  ts: "2026-11-23T04:57:01Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "対応方針" updated
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_3aaf04c16a814ff4bf039e38fdb7d9bf
+- v: 1
+  id: reg_7f1ab375c9b7439f8c70e4aa219edb43
+  ts: "2026-11-23T22:37:33Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: 利用者が v0.10.0 に入れると決めた（2026-11-24）
+  changes:
+    - field: input
+      from: '["利用者の決定（2026-11-23）: オーケストレーターの推奨どおり起票する"]'
+      to: '["利用者の決定（2026-11-23）: オーケストレーターの推奨どおり起票する","v0.10.0 に入れる（利用者の指定、2026-11-24）"]'
+  previous_event_id: reg_8b3f84837368436cb38a8d349e8fe281
+- v: 1
+  id: reg_0b487b17bb994fe98a0a532034454140
+  ts: "2026-11-24T05:37:43Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_7f1ab375c9b7439f8c70e4aa219edb43
+- v: 1
+  id: reg_c2f6e35ef9864215810ff4d13b1c4dbd
+  ts: "2026-11-24T05:51:47Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-unit"
+  previous_event_id: reg_0b487b17bb994fe98a0a532034454140
+- v: 1
+  id: reg_00aacc8e7d5c40179aef982f68371004
+  ts: "2026-11-24T05:53:08Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_c2f6e35ef9864215810ff4d13b1c4dbd
+- v: 1
+  id: reg_2417d12d18f14cc889abab44cbe94019
+  ts: "2026-11-24T06:01:23Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_00aacc8e7d5c40179aef982f68371004
+- v: 1
+  id: reg_4bff25cb1ecb4d31aff7096bc56d298d
+  ts: "2026-11-24T06:05:00Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分と親の検証（test-unit・test-integration ほか passed）、同じ run の中の待ち合わせを保つ既存テストの維持、統合後の exec smoke（PJR-JSEY）の成功を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-24"
+    - field: conclusion
+      from: "-"
+      to: 準備の段で失敗した run の変更範囲の予約を run の終わりに外し、未着手で worktree も lock もない古い予約を次の判定で片付けるようになった
+  previous_event_id: reg_2417d12d18f14cc889abab44cbe94019

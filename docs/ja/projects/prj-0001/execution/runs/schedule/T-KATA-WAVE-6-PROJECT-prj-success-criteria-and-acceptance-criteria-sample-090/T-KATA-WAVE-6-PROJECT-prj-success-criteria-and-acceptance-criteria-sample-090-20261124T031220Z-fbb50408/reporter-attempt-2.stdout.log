@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "mode": "review",
+  "grade_check": "#### 評価結果の確認\n\n`npx specdojo grade list --target kata --path docs/ja/specdojo/samples/prj-success-criteria-and-acceptance-criteria-sample.md --changed-only` を実行した結果、対象外の変更は検出されませんでした。\n\n- `verdict`: `pass` \n- `score`: 96 \n- `finding_counts`: blocker 0 / major 0 / minor 2 / note 0 \n\n`npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/prj-success-criteria-and-acceptance-criteria-rulebook.md --changed-only` を実行した結果、対象外の変更は検出されませんでした。\n\n- `verdict`: `pass` \n- `score`: 98 \n- `finding_counts`: blocker 0 / major 0 / minor 1 / note 0 \n\n`npx specdojo grade list --target kata --path docs/ja/specdojo/recipes/prj-success-criteria-and-acceptance-criteria-recipe.md --changed-only` を実行した結果、対象外の変更は検出されませんでした。\n\n- `verdict`: `pass` \n- `score`: 98 \n- `finding_counts`: blocker 0 / major 0 / minor 2 / note 0 \n\n`npx specdojo grade list --target kata --path docs/ja/specdojo/templates/prj-success-criteria-and-acceptance-criteria-template.md --changed-only` を実行した結果、対象外の変更は検出されませんでした。\n\n- `verdict`: `pass` \n- `score`: 90 \n- `finding_counts`: blocker 0 / major 0 / minor 9 / note 0",
+  "rationale": [
+    "評価結果の鮮度は、各型に対して `specdojo grade list --target kata --path <path> --changed-only` の実行結果から最新であることを確認済みである。",
+    "`docs/ja/specdojo/samples/prj-success-criteria-and-acceptance-criteria-sample.md` は、`done_criteria` （DC-001〜DC-005）をすべて満たしている。",
+    "先行する edit タスクの実行記録が `plan` から直接特定できなかったため、確認できなかった範囲に含まれる。",
+    "rulebook, recipe, template の本文については、grade の finding を根拠としたため、直接の通読は確認できなかった範囲に含まれる。",
+    "親 runner による検証結果については、本タスクの検討範囲外であるため、確認できなかった範囲に含まれる。"
+  ],
+  "improvements": [
+    "SC-06 の「必須記録と引き継ぎ」について、具体的な項目と内容を明記すること。",
+    "例外表の列構成（「判定への影響」の列および「解決期限・責任者」の扱い）を、rulebook, template, sample の 3 者で統一すること。",
+    "template の判定手順に、変更理由・影響条件 ID の記録や、変更要求ログへの転記、下流の再照合に関する手順を追加すること。",
+    "recipe の問い・レビュー観点・仕上げチェックに、証跡の公開範囲（非公開の保存先への管理）および、確認者・承認者を役割名で記述することを追記すること。"
+  ],
+  "approach": "#### approach に応じた確認\n- `**`磨き込みの実施`**`: `plan` で求められた `rulebook` の必須要素の反映、`recipe` の問いへの対応、`sample` の形式との整合性は、`grade` の結果によって確認された。\n- `**`変更の混入確認`**`: `specdojo grade list --changed-only` の結果、対象外の変更は混入していないことを確認した。",
+  "verdict": "complete-with-findings"
+}

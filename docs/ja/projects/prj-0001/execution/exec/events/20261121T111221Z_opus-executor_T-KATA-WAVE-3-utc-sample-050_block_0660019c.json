@@ -1,0 +1,16 @@
+{
+  "v": 1,
+  "ts": "2026-11-21T11:12:21Z",
+  "type": "block",
+  "task_id": "T-KATA-WAVE-3-utc-sample-050",
+  "by": "opus-executor",
+  "msg": "integration failed: project: Result Markdown notation violation before commit: docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-3-utc-sample-050/T-KATA-WAVE-3-utc-sample-050-20261121T110214Z-2c3b1615/result.md:24:44 error MD038/no-space-in-code Spaces inside code span elements [Context: \"` を \\`\"] docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-3-utc-sample-050/T-KATA-WAVE-3-utc-sample-050-20261121T110214Z-2c3b1615/result.md:48:122 error MD038/no-space-in-code Spaces inside code span elements [Context: \"` によるトレーサビリティ、依存関係の定義、および検証可能な...\"] docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-3-utc-sample-050/T-KATA-WAVE-3-utc-sample-050-20261121T110214Z-2c3b1615/result.md:48:99 error MD038/no-space-in-code Spaces inside code span elements [Context: \"` の指摘事項に基づき、\\`\"] docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-3-utc-sample-050/T-KATA-WAVE-3-utc-sample-050-20261121T110214Z-2c3b1615/result.md:48:45 error MD038/no-space-in-code Spaces inside code span elements [Context: \"` を駄菓子屋の具体的なビジネスロジック（会計確定）に即した...\"]; integrated repositories: none; not integrated: project; worktree kept: /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-3-utc-sample-050; next: fix the artifacts with exec resume --task T-KATA-WAVE-3-utc-sample-050 --resume-from executor (syncs the integration target first), or retry only the integration with exec resume --task T-KATA-WAVE-3-utc-sample-050",
+  "meta": {
+    "pipeline_stage": "integrate",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-3-utc-sample-050/T-KATA-WAVE-3-utc-sample-050-20261121T110214Z-2c3b1615/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-3-utc-sample-050/T-KATA-WAVE-3-utc-sample-050-20261121T110214Z-2c3b1615/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-3-utc-sample-050-20261121T110214Z-2c3b1615",
+    "claim_actor": "opus-executor",
+    "stage_actor": "opus-executor"
+  }
+}

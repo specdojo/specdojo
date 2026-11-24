@@ -38,3 +38,74 @@
     - field: derived_from
       from: ""
       to: '["PJR-5V0T"]'
+- v: 1
+  id: reg_64abc34609f54d54ab8000fa99deaf7c
+  ts: "2026-11-21T01:57:37Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_0672f2724f33408d933392938f79d040
+- v: 1
+  id: reg_738fc6d65c894a4b8d9147e29cb8255b
+  ts: "2026-11-21T01:57:43Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "作業内容" updated
+  changes:
+    - field: section
+      from: ""
+      to: 作業内容
+  previous_event_id: reg_64abc34609f54d54ab8000fa99deaf7c
+- v: 1
+  id: reg_a305d29ed7b748b5a6435420827f92da
+  ts: "2026-11-21T01:57:48Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "対応結果" updated
+  changes:
+    - field: section
+      from: ""
+      to: 対応結果
+  previous_event_id: reg_738fc6d65c894a4b8d9147e29cb8255b
+- v: 1
+  id: reg_fb2a9940de4441a6bdb551023c2370c3
+  ts: "2026-11-21T01:58:08Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "関連ドキュメント" updated
+  changes:
+    - field: section
+      from: ""
+      to: 関連ドキュメント
+  previous_event_id: reg_a305d29ed7b748b5a6435420827f92da
+- v: 1
+  id: reg_dc62117c74314e01ba07255611629c90
+  ts: "2026-11-21T01:58:41Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: done
+  reason: npm の dist-tags と provenance、タグで起動した公開と文書サイトの workflow の成功、npm から入れた 0.9.2 で agy が init と agent launch で断られ claude の init が通ることを確かめた
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-21"
+    - field: conclusion
+      from: "-"
+      to: "SpecDojo 0.9.2 を公開した（PR #42、merge commit 3bf65f9d2、タグ v0.9.2）。npm の latest は 0.9.2 で、provenance 付き"
+  previous_event_id: reg_fb2a9940de4441a6bdb551023c2370c3

@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-DMSM",
+  "run_id": "pjr-dmsm-20261124T060642Z-6927dfd8",
+  "stage": {
+    "role": "executor",
+    "actor": "terra-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-24T06:07:24.566Z",
+    "completed_at": "2026-11-24T06:10:59.801Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-dmsm.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-dmsm-v0100-release-notes.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-xc5p-coderdojo-handoff-v0-4-6.md",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-dmsm-v0100-release-notes.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-xc5p-coderdojo-handoff-v0-4-6.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 4,
+    "summary": "CHANGELOG.md                                       | 24 ++++++++++++++++++++++\n .../pjr-dmsm-v0100-release-notes.md                | 16 ++++++++++-----\n .../pjr-xc5p-coderdojo-handoff-v0-4-6.md           |  2 ++\n 3 files changed, 37 insertions(+), 5 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-dmsm-v0100-release-notes.md docs/ja/projects/prj-0001/controls/project-register/pjr-xc5p-coderdojo-handoff-v0-4-6.md",
+      "status": "passed",
+      "summary": "変更した Markdown を整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-dmsm-v0100-release-notes.md docs/ja/projects/prj-0001/controls/project-register/pjr-xc5p-coderdojo-handoff-v0-4-6.md",
+      "status": "passed",
+      "summary": "変更した Markdown を検査した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検査に成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "failed",
+      "summary": "tsx の IPC ソケット作成が sandbox で EPERM となった。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "代替方法でカタログ検証に成功した。既存の警告あり。"
+    }
+  ],
+  "final_message": "移行の注意と一部の変更を記載したが、対象個票の文案収集と未発見項目の一覧化が未完了。",
+  "completion_status": "incomplete",
+  "handoff": [
+    "v0.9.2 以降に完了した項目と v0.10.0 指定項目を照合し、残りの文案を CHANGELOG.md に追加して、収集一覧と文案が見つからなかった項目を PJR-DMSM の対応結果に記録する。未完了項目の公開前の状態も確認する。",
+    "npm run validate:catalog は sandbox の tsx IPC 制限で失敗したが、node --import tsx src/specdojo.ts catalog validate --project prj-0001 は既存の警告付きで成功した。"
+  ],
+  "block_reason": "executor reported incomplete: 移行の注意と一部の変更を記載したが、対象個票の文案収集と未発見項目の一覧化が未完了。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-DMSM/pjr-dmsm-20261124T060642Z-6927dfd8/executor.attempt-1.log",
+      "bytes": 2782,
+      "truncated": false
+    }
+  ]
+}

@@ -52,7 +52,7 @@ esil.schema.yaml を ifx-index の名前へ改め、参照をそろえる。他�
 
 - schema の正本を `docs/specdojo/schemas/v1/ifx-index.schema.yaml` へ移した。`id` の pattern から古い接頭辞の形式を除き、`ifx-index` と `ifx-index-...`（プロジェクト修飾可）だけを許す形にした。
 - 古いファイル名の schema は、`$ref: "ifx-index.schema.yaml"` と `deprecated: true` だけを持つ非推奨の別名にした。古い名前を指す modeline の YAML も、新しい schema と同じ内容で検証される。
-- modeline（sample・template・`prj-0001:ifx-index`）と、rulebook・recipe の schema パスを新しい名前にそろえた。
+- modeline（sample・template・`ifx-index`）と、rulebook・recipe の schema パスを新しい名前にそろえた。
 - テストに古い名前への参照はなかった。各 schema に `$id` は無いので、追加していない（ほかの schema に合わせた）。
 
 ### 5.2. 決めた内容と理由
@@ -74,4 +74,4 @@ esil.schema.yaml を ifx-index の名前へ改め、参照をそろえる。他�
 ## 6. 関連ドキュメント
 
 - [[specdojo:ifx-index-rulebook]]
-- [[prj-0001:ifx-index]]
+- [[ifx-index]]

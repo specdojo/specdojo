@@ -1,0 +1,94 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_849f7ba1f378474c97043e9187e845d4
+  ts: "2026-11-24T13:32:23Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者の承認のもと、全 sample のレビューの段取りを起票する
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: dct-kata に載っていない sample 31 件を載せる
+    - field: description
+      from: ""
+      to: 非推奨でない sample のうち dct-kata に載っていない 31 件を catalog に足す
+    - field: input
+      from: ""
+      to: '["担当は BA、期限は 2026-11-30（利用者、2026-11-24）","PJR-0BGE の段取りとして 2026-11-24 の晩の実行の前に行う（利用者、2026-11-24）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-24"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-0BGE"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: catalog
+- v: 1
+  id: reg_143a2bb315b04af29dd19bdfdfc7a8ef
+  ts: "2026-11-24T13:35:26Z"
+  action: start
+  actor: terra-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_849f7ba1f378474c97043e9187e845d4
+- v: 1
+  id: reg_133051c7c634444884f732d7de1373ae
+  ts: "2026-11-24T13:38:38Z"
+  action: review
+  actor: terra-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_143a2bb315b04af29dd19bdfdfc7a8ef
+- v: 1
+  id: reg_44c7e44fcc7d454c8271651606c33aa0
+  ts: "2026-11-24T13:39:45Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 31 件すべてが載り、各項目の rulebook が sample の frontmatter と一致し、done_criteria が 3 行であること、catalog validate のエラーが 0 件であることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-24"
+    - field: conclusion
+      from: "-"
+      to: 非推奨でない sample のうち dct-kata に載っていなかった 31 件を、既存の sample と同じ形で catalog に足した
+  previous_event_id: reg_133051c7c634444884f732d7de1373ae

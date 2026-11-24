@@ -4,31 +4,30 @@ document: specdojo:pm-communication-plan-recipe
 path: docs/ja/specdojo/recipes/pm-communication-plan-recipe.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-recipe
 verdict: pass
-score: 100
-graded_at: "2026-11-19T20:42:46.406Z"
-graded_by: flash-high-executor
-content_hash: 2c945279e2f32ceb475f68f6a8dd8db1a08a9dc68cd0a060a370a7c67ee1c111
+score: 91
+graded_at: "2026-11-24T02:25:53.798Z"
+graded_by: sonnet-review-executor
+content_hash: aa72eac485279d29f3bddaff0a7510f655e646abbd2171a8b06cc33ea4bd3643
 categories:
   purpose:
     score: 100
   operations:
     score: 100
   planning:
-    score: 100
+    score: 92
   business:
     score: 100
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 92
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 83
   consistency:
-    score: 100
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -43,8 +42,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-dependency-risk:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-control-reporting:
     level: 4
     score: 100
@@ -61,8 +60,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -73,17 +72,17 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-verifiability:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -105,6 +104,41 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 5
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 22
+    anchor: ""
+    message: 取り出し元に管理計画の判断ゲート以外の依存（リスクや課題の管理記録）が入っていない。情報管理章の転記先（課題ログ・リスク登録簿・変更要求ログ）を集める情報にも含めると依存が追える。
+    message_ja: 取り出し元に管理計画の判断ゲート以外の依存（リスクや課題の管理記録）が入っていない。情報管理章の転記先（課題ログ・リスク登録簿・変更要求ログ）を集める情報にも含めると依存が追える。
+  - id: F002
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 111
+    anchor: ""
+    message: 仕上げチェックの機会行の確認は、深掘り手順1・2とレビュー観点「漏れ」の繰り返しである。参照に置き換えられる。
+    message_ja: 仕上げチェックの機会行の確認は、深掘り手順1・2とレビュー観点「漏れ」の繰り返しである。参照に置き換えられる。
+  - id: F003
+    severity: minor
+    rule: vp-dev-testability
+    line: 109
+    anchor: ""
+    message: 仕上げチェックは内容の確認に限られ、lint:md などの機械検証への言及がない。参照を一行足すと確認手順が完結する。
+    message_ja: 仕上げチェックは内容の確認に限られ、lint:md などの機械検証への言及がない。参照を一行足すと確認手順が完結する。
+  - id: F004
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 33
+    anchor: "- 会議でしか決まらない判断はあるか。"
+    message: 見直し条件と未決事項は rulebook で任意章だが、recipe が任意性と _UNDECIDED_ の記法に触れていない。省ける条件と未決の付し方を補うと整合する。
+    message_ja: 見直し条件と未決事項は rulebook で任意章だが、recipe が任意性と _UNDECIDED_ の記法に触れていない。省ける条件と未決の付し方を補うと整合する。
+  - id: F005
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 7
+    anchor: "## 1. このレシピの使い方"
+    message: rulebook は template を宣言するが recipe の frontmatter に template がなく、相互参照が非対称である。template の宣言を足すか、省く方針を明確にする。
+    message_ja: rulebook は template を宣言するが recipe の frontmatter に template がなく、相互参照が非対称である。template の宣言を足すか、省く方針を明確にする。

@@ -45,6 +45,8 @@ import {
   appendParentValidationsToExecutorEvidence,
   buildExecutorPrompt,
   extractBlockReason,
+  pruneVanishedInitialChangeTargets,
+  recordExcludedCoverageTargets,
   resumedTargetCoverageFailure,
   runConfiguredParentValidationBatch,
   runWithRetry,
@@ -55,6 +57,7 @@ import type {
   RateLimitRecoveryEvent,
   RunResult,
 } from "./shared.js";
+import { resultMarkdownlintValidator } from "../result-markdownlint.js";
 
 export async function refreshParentValidationsForReporterResume(params: {
   execDefaults: ExecDefaultsConfig;
@@ -153,7 +156,7 @@ export async function runReporterStage(params: {
   statePath: string;
   providerConcurrencyGate?: ProviderConcurrencyGate;
   productWorktrees?: readonly ProductWorktree[];
-  /** reporter が返す出力の mode。省略時は edit（Job Run の review だけが review を渡す）。 */
+  /** reporter が返す出力の mode。省略時は edit（job run の review だけが review を渡す）。 */
   mode?: TaskMode;
   rateLimitOptions?: PinnedRateLimitRunOptions;
   /** Recovery command recorded when the executor evidence breaks the approach contract. */
@@ -189,7 +192,14 @@ export async function runReporterStage(params: {
     process.stdout.write(`  Executor report rejected before the reporter: ${contractFailure}\n`);
     return { exitCode: 1, runResult: "failure", blockReason: contractFailure, state };
   }
-  const env = agentEnvironment(repoRoot, cwd, schedulePath, executionPath, params.productWorktrees);
+  const env = agentEnvironment(
+    repoRoot,
+    cwd,
+    schedulePath,
+    executionPath,
+    params.productWorktrees,
+    params.mode,
+  );
   const reporterEvidence = evidenceForReporter(params.evidence, {
     repoRoot,
     worktreePath: cwd,
@@ -251,6 +261,37 @@ export async function runReporterStage(params: {
       plan: params.planPrompt,
       evidence: reporterEvidence,
       mode: params.mode ?? "edit",
+      validateOutput: resultMarkdownlintValidator({
+        repoRoot: cwd,
+        resultPath: params.resultPath,
+        evidence: reporterEvidence,
+      }),
+      // 形式のやり直しの上限に達したら、設定した代わりの reporter（fallback_reporter_by）で 1 回だけやり直す。
+      ...(params.rateLimitOptions?.fallbackCandidate
+        ? {
+            fallbackInvoke: async (reporterPrompt: string) => {
+              const fallback = params.rateLimitOptions?.fallbackCandidate;
+              if (!fallback) throw new Error("fallback reporter candidate is not configured");
+              const outcome = await runWithRetry(
+                [fallback],
+                reporterPrompt,
+                execDefaults,
+                cwd,
+                env,
+                params.resultPath,
+                undefined,
+                "reporter",
+              );
+              reporterAttempts += outcome.attempts;
+              reporterActor = outcome.actor ?? fallback.actor;
+              rateLimitEvents.push(...outcome.rateLimitEvents);
+              process.stdout.write(
+                `  Reporter format retries exhausted; retried once with fallback reporter: ${fallback.actor}\n`,
+              );
+              return { result: outcome.result, stdout: outcome.stdout, stderr: outcome.stderr };
+            },
+          }
+        : {}),
       invoke: async (reporterPrompt) => {
         const reporterOutcome = await runWithRetry(
           reporterCandidates,
@@ -365,7 +406,7 @@ function editOutcomeFailure(params: {
   });
 }
 
-// 1件の plan/result を executor→reporter の2段階で実行する。register 項目と Job Run の
+// 1件の plan/result を executor→reporter の2段階で実行する。register 項目と job run の
 // 双方が使い、in-place（cwd: repoRoot）・worktree（cwd: worktree.path）から共有する。
 // evidence・pipeline-state の記録先は
 // Schedule タスクの pipeline と同じ run ディレクトリにすることで、
@@ -465,15 +506,30 @@ export async function runAgentPipeline(params: {
   );
   writePipelineState(stateLocation.path, state);
 
-  const env = agentEnvironment(repoRoot, cwd, schedulePath, executionPath, params.productWorktrees);
+  const env = agentEnvironment(
+    repoRoot,
+    cwd,
+    schedulePath,
+    executionPath,
+    params.productWorktrees,
+    params.mode,
+  );
+  // PJR-FGKB: a lower-bound path the earlier attempt created and that was removed before resume
+  // has nothing left to account for; drop it and record the exclusion in the evidence.
+  const resumedCoverage = params.resumedExecutor
+    ? pruneVanishedInitialChangeTargets({
+        plan: planPrompt,
+        initialChangeTargets: params.initialChangeTargets ?? [],
+        worktreePath: cwd,
+        productWorktrees: params.productWorktrees,
+      })
+    : { targets: [...(params.initialChangeTargets ?? [])], excluded: [] };
   const executorPrompt = withProductRepoPrompt(
     buildExecutorPrompt(planPrompt, execDefaults.pipeline?.parent_validations, {
       mode: params.mode ?? "edit",
       resumed: params.resumedExecutor,
       ...(params.resumedExecutor ? { existingChanges: worktreeStatusPaths(cwd) } : {}),
-      ...(params.resumedExecutor
-        ? { initialChangeTargets: params.initialChangeTargets ?? [] }
-        : {}),
+      ...(params.resumedExecutor ? { initialChangeTargets: resumedCoverage.targets } : {}),
       ...(params.resumedExecutor ? { resumeHandoff: params.resumeHandoff ?? [] } : {}),
     }),
     params.productWorktrees,
@@ -515,6 +571,7 @@ export async function runAgentPipeline(params: {
     productWorktrees: params.productWorktrees,
     rateLimitEvents: outcome.rateLimitEvents,
   });
+  recordExcludedCoverageTargets(recorded.evidence, recorded.evidencePath, resumedCoverage.excluded);
   const completionFailure =
     outcome.result === "success" ? executorCompletionFailure(recorded.evidence) : undefined;
   const coverageFailure =
@@ -524,7 +581,8 @@ export async function runAgentPipeline(params: {
           plan: planPrompt,
           evidence: recorded.evidence,
           evidencePath: recorded.evidencePath,
-          initialChangeTargets: params.initialChangeTargets,
+          initialChangeTargets: resumedCoverage.targets,
+          resumeHint: params.executorResumeHint ?? DEFAULT_EXECUTOR_RESUME_HINT,
         })
       : undefined;
   // PJR-QQRH: a complete report cannot override tool-permission denials in the output or a
@@ -558,7 +616,7 @@ export async function runAgentPipeline(params: {
       status:
         executorResult === "success"
           ? "succeeded"
-          : outcome.protectionBlock || completionFailure || outcomeFailure
+          : outcome.protectionBlock || completionFailure || coverageFailure || outcomeFailure
             ? "blocked"
             : executorResult === "rate_limit"
               ? "rate_limited"

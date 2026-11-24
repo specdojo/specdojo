@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-6-DESIGN-bps-sample-060",
+  "run_id": "T-KATA-WAVE-6-DESIGN-bps-sample-060-20261123T183237Z-64a9bbf0",
+  "updated_at": "2026-11-23T19:39:10.302Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-23T18:33:30.250Z",
+      "completed_at": "2026-11-23T18:34:43.257Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-DESIGN-bps-sample-060/T-KATA-WAVE-6-DESIGN-bps-sample-060-20261123T183237Z-64a9bbf0/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-23T18:40:48.538Z",
+      "completed_at": "2026-11-23T18:41:45.904Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-DESIGN-bps-sample-060/T-KATA-WAVE-6-DESIGN-bps-sample-060-20261123T183237Z-64a9bbf0/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 2,
+      "started_at": "2026-11-23T19:38:19.888Z",
+      "completed_at": "2026-11-23T19:39:10.302Z",
+      "artifact_ref": null,
+      "repos": {
+        "project": {
+          "status": "failed",
+          "commit": null,
+          "merged_at": null,
+          "error": "git commit failed: test: error: unknown option '--reserve'; FAIL  |unit| tests/src/docs/yaml-tables.test.ts > typed YAML display pages > renders tables and the entire folded source for specdojo--dct-sample.md.snap; Test Files  1 failed | 291 passed (292); Tests  1 failed | 4793 passed (4794)"
+        }
+      }
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-DESIGN-bps-sample-060/T-KATA-WAVE-6-DESIGN-bps-sample-060-20261123T183237Z-64a9bbf0/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-DESIGN-bps-sample-060/T-KATA-WAVE-6-DESIGN-bps-sample-060-20261123T183237Z-64a9bbf0/result.md"
+  }
+}

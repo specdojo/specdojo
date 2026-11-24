@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "mode": "edit",
+  "summary": [
+    "同じ項目の過去の commit を数え、2 回目以降の commit の 1 行目の末尾に ` (run N)` を付与する実装を行いました。これにより、リピート実行時でも commit のタイトルがユニークになります。",
+    "設定リファレンスおよびテストケースの更新を行いました。"
+  ],
+  "changed_files": [
+    {
+      "path": "docs/ja/specdojo/references/specdojo-config-reference.md",
+      "summary": "コミットメッセージのタイトル形式に関する変更（` (run N)` の付与）についての記述を更新しました。"
+    },
+    {
+      "path": "src/exec/register-product-message.ts",
+      "summary": "実行回数に応じたタイトル生成（` (run N)` の付与）を行うロジックを追加しました。"
+    },
+    {
+      "path": "src/exec/run/mode-shared.ts",
+      "summary": "run モードの共有ロジックを更新しました。"
+    },
+    {
+      "path": "src/exec/run/register-worktree.ts",
+      "summary": "worktree への登録プロセスにおけるタイトル生成処理を調整しました。"
+    },
+    {
+      "path": "tests/src/exec/register-product-message.test.ts",
+      "summary": "実行回数に応じたタイトル生成（` (run N)` の付与）が正しく行われることを確認するためのテストケースを追加しました。"
+    }
+  ],
+  "handoff": [
+    "対応策は案 (c) を採用した。案 (a)・(b) は executor の要約の品質に依存し、設定の追加も要るため見送った。",
+    "前の回の commit が作業 worktree の履歴に含まれる場合だけ数える。`--force-restart` で前の回が統合先に入っていないと 1 回目として扱われる。",
+    "CHANGELOG は変更していない。個票の対応結果の「CHANGEL_OG に書く事項」に Fixed と文案を書いた。",
+    "prettier の整形（`src/exec/register-product-message.ts`）はテスト実行の後に行ったため、整形後のテストは再実行していない。"
+  ],
+  "approach": "同じ項目を何回か実行した場合に、コミットメッセージの 1 行目がすべて同じになる問題を解決するため、2 回目以降のコミットのタイトル末尾に ` (run N)` を付与する実装を行いました。具体的には、作業 worktree 内の既存の commit を数え、2 回目以降であればその回数に応じた番号をタイトルに付加します。これにより、`--force-restart` 等による繰り返し実行時でも、各 run がユニークなコミットメッセージを持つようになります。"
+}

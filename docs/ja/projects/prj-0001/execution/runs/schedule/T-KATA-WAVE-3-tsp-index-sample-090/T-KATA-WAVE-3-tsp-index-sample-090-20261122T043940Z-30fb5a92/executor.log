@@ -1,0 +1,40 @@
+**判定: `incomplete`。** sample が型の評価で `pass` を取れていないため、このタスクはまだ完了にできません。
+
+**評価結果が最新か**
+- `npx specdojo grade list --target kata --path <対象> --changed-only` と `--incomplete` を sample と rulebook の両方で実行しました。出力はどれも空で、終了コードは 0 です。評価結果は最新で、評価の処理も終わっています。
+- 判断の直前に `--changed-only` をもう一度実行しましたが、出力は空のままでした。review の途中で成果物は変わっていません。
+- 評価結果ファイルは 2 つとも存在します。
+
+**評価結果**
+
+| 対象 | `verdict` | `score` | finding |
+| --- | --- | --- | --- |
+| `docs/ja/specdojo/samples/tsp-index-sample.md` | `needs-work` | 89 | blocker 0 / major 1 / minor 8 |
+| `docs/ja/specdojo/rulebooks/tsp-index-rulebook.md` | `pass` | 93 | minor 4 |
+
+**判断根拠**
+- plan には、型の整備を含む schedule は型すべてで最新の `pass` が必要、`needs-work` は `incomplete` とする、という追加の完了条件があります。sample が `needs-work` なので、この条件を満たしていません。
+- 完了を妨げている主な finding は sample の `F009`（major）です。sample の 8. メモ / 将来課題に `_ASSUMPTION_`（応答時間の仮置き）と `_TODO_`（SAC の条件 ID への接続）が残っています。
+- 完了条件の照合結果:
+  - DC-005（入口／出口条件を判定できる基準）: `F004`（閾値が別章にある）と `F006`（未解決不具合の重大度別の許容件数がない）で、まだ満たしていません。
+  - DC-001・DC-002（rulebook と Sample 記述標準・共通サンプル文脈への準拠）: `F005`・`F007`・`F008` で、まだ満たしていません。
+  - DC-006（rulebook に完成例の章がない）: rulebook の見出しを見ると完成例の章はなく、満たしています。
+- 先行する edit タスク 080 の result は `mode: edit`、`status: complete` です。
+
+**改善指示**
+1. sample の `_ASSUMPTION_` と `_TODO_` を、引き継ぎ先の登録簿の識別子（PJR）を付けた未決論点として整理し、`F009` と `F001` を直す。
+2. 総合テストの出口条件の行に閾値を直接書き、受入テストと単体テストの出口条件に重大度別の許容件数を書く（`F004`・`F006`）。
+3. 次の点をまとめて直し、そのあと `grade --target kata` で sample を評価し直して `pass` を取る。
+   - 開発環境で保管サービスをモックにしている点（`F002`・`F005`）
+   - 保全・復元の回帰範囲（`F003`）
+   - 応答欠落を確認するテストレベル（`F007`）
+   - ifd-sample を出典として示すことと `PATH-04`・`PATH-07` の扱い（`F008`）
+4. rulebook は `pass` ですが、minor が 4 件残っています。次に rulebook を直す機会にあわせて対応してください。
+
+**確認できなかった範囲**
+- 成果物の変更内容（diff）と対象外の変更が混じっていないかは確認していません。
+- 080 の result は frontmatter の状態しか見ておらず、検証結果の中身までは読んでいません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"review verdict: incomplete。鮮度確認（grade list --changed-only / --incomplete、sample・rulebook とも出力なし・exit 0、判断直前の再確認も出力なし）で評価結果は最新。sample `docs/ja/specdojo/samples/tsp-index-sample.md` は needs-work / 89（blocker 0 / major 1 / minor 8）、rulebook `docs/ja/specdojo/rulebooks/tsp-index-rulebook.md` は pass / 93（minor 4）。plan の追加完了条件（型の整備を含む schedule では型すべてに最新の kata pass が必要、needs-work は incomplete）を sample が満たさない。major F009 として sample の 8. メモ / 将来課題に _ASSUMPTION_（応答時間の仮置き）と _TODO_（SAC の条件 ID への接続）が残る。DC-005 は F004・F006、DC-001・DC-002 は F005・F007・F008 によりまだ満たさない。DC-006 は rulebook の見出しに完成例の章がなく満たす。先行 edit 080 の result は mode: edit / status: complete。確認できなかった範囲: 成果物の差分と対象外の変更が混じっていないか（diff は未確認）、080 の result の検証結果の中身（frontmatter のみ確認）。","handoff":["sample の _ASSUMPTION_ と _TODO_ を、引き継ぎ先の登録簿の識別子（PJR）を付けた未決論点として整理し、F009 と F001 を直す","総合テストの出口条件の行に閾値（ピーク1時間60取引で応答 95% が2秒以内）を直接書き、受入テストと単体テストの出口条件に重大度別の許容件数を書く（F004・F006）","開発環境の保管サービスのモック（F002・F005）、保全・復元の回帰範囲（F003）、応答欠落を確認するテストレベル（F007）、ifd-sample を出典として示すことと PATH-04・PATH-07 の扱い（F008）を直してから、grade --target kata で sample を評価し直して pass を取る","rulebook は pass だが minor 4 件（F001〜F004）が残るため、次に rulebook を直す機会にあわせて対応する"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/tsp-index-sample.md --changed-only","status":"passed","summary":"出力なし・exit 0（評価結果は最新）。判断直前の再確認も同じ"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/tsp-index-sample.md --incomplete","status":"passed","summary":"出力なし・exit 0（評価の処理は完了）"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/tsp-index-rulebook.md --changed-only","status":"passed","summary":"出力なし・exit 0（評価結果は最新）。判断直前の再確認も同じ"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/tsp-index-rulebook.md --incomplete","status":"passed","summary":"出力なし・exit 0（評価の処理は完了）"}]}
+</specdojo_executor_evidence>

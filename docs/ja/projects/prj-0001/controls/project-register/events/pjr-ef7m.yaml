@@ -1,0 +1,127 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_cb28f325760f47c996a1a1a61854c8fa
+  ts: "2026-11-22T13:42:09Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 統合の後の検査のログ（post-integration.log）が、毎回 git の管理外に残る
+    - field: description
+      from: ""
+      to: exec run の統合の後に書く post-integration.log は、統合の commit の後に書かれるため commit に入らず、git の管理外のまま作業ツリーに溜まる。2026-11-22 の夜に 61 件が残っていた。
+    - field: input
+      from: ""
+      to: '["2026-11-22 の夜の確かめで、git の管理外のファイル 71 件のうち 61 件が execution/runs/register/ の下の post-integration.log だった。前の引き継ぎでも commit の対象ではないとして残していた。","書いているのは src/exec/run/register-worktree.ts・schedule-task.ts・job.ts の runPostIntegration の logPath（run の記録の置き場の post-integration.log）。","利用者の承認（2026-11-22、indie）で起票し、今晩の列に加えた。担当と期限は未定。"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-22"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_6fefd32e05004c84ae834f55c844f90b
+  ts: "2026-11-22T13:42:29Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 影響範囲と対応方針を利用者の承認のもとで書く
+  changes:
+    - field: section
+      from: ""
+      to: 影響範囲
+  previous_event_id: reg_cb28f325760f47c996a1a1a61854c8fa
+- v: 1
+  id: reg_4cfbe406e251499dbe6b3a1f7ac91139
+  ts: "2026-11-22T13:42:33Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 影響範囲と対応方針を利用者の承認のもとで書く
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_6fefd32e05004c84ae834f55c844f90b
+- v: 1
+  id: reg_d069260ad545412e91b401afa6ffe78b
+  ts: "2026-11-22T14:26:45Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_4cfbe406e251499dbe6b3a1f7ac91139
+- v: 1
+  id: reg_28abac9a91614ed58d06de2e3d4dd949
+  ts: "2026-11-22T14:31:10Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_d069260ad545412e91b401afa6ffe78b
+- v: 1
+  id: reg_0071418742f9472aabd13e75b0f4411e
+  ts: "2026-11-22T14:37:42Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが差分を確かめ、既存の 61 件と JSEY の新しいログが git status に出なくなったことを実物で確かめた。完了条件の統合テストは、実 git の単体テストと実物の確かめで代えた（除外は .gitignore の規則で、3 種類の run は同じ置き場に書くため）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: post-integration.log を .gitignore と init の既定の除外に足し、作業ツリーに管理外のまま残らないようにした
+  previous_event_id: reg_28abac9a91614ed58d06de2e3d4dd949
+- v: 1
+  id: reg_9670669b0f8542c3b22ea50ef6e0b329
+  ts: "2026-11-22T23:58:01Z"
+  action: update
+  actor: indie
+  from_status: done
+  to_status: done
+  reason: 担当と期限を決めた（2026-11-23）
+  changes:
+    - field: owner
+      from: _TODO_
+      to: DEV
+    - field: due
+      from: _TODO_
+      to: "2026-11-30"
+  previous_event_id: reg_0071418742f9472aabd13e75b0f4411e

@@ -1,13 +1,14 @@
 import { warnDeprecated } from "./deprecation.js";
+import { validateReferences } from "./reference-directories.js";
 import { type Command } from "commander";
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { basename, dirname, isAbsolute, join, posix, relative, resolve } from "node:path";
+import { basename, dirname, isAbsolute, join, posix, resolve } from "node:path";
 import dotenv from "dotenv";
 import { validateBranchTemplate } from "./branch-template.js";
 import { VALID_COMMIT_TYPES } from "./commit-types.js";
 import { validateCommitMessageTemplate } from "./commit-message-template.js";
-import { dump, load } from "./yaml.js";
+import { load } from "./yaml.js";
 import Ajv2020Module from "ajv/dist/2020.js";
 import type { ValidateFunction } from "ajv";
 import type { AgentStageRole, Proficiency, SchedulerStrategy, TaskMode } from "./agent-types.js";
@@ -64,6 +65,12 @@ export type SpecDojoProjectConfig = {
   base_path?: string;
   /** Branch that receives direct project-register commits. */
   integration_branch?: string;
+  /** Opt-in synchronization of register mutations and schedule events through a dedicated branch. */
+  register_sync?: {
+    enabled?: boolean;
+    branch?: string;
+    remote?: string;
+  };
   catalog_path?: string;
   schedule_path?: string;
   execution_path?: string;
@@ -73,6 +80,8 @@ export type SpecDojoProjectConfig = {
   viewpoints_path?: string;
   project_register_path?: string;
   routines_path?: string;
+  /** Orchestrator playbook file (relative to base_path). Defaults to DEFAULT_PLAYBOOK_PATH. */
+  playbook_path?: string;
   jobs_path?: string;
   /**
    * Project-level document ids supplied to deliverable edit/review plans independently from
@@ -125,6 +134,9 @@ export type SpecDojoExternalProjectConfig = {
   /** Project id understood by the SpecDojo installation in the external repository. */
   project_id: string;
 };
+
+/** A directory made available only for reference, outside the managed repositories. */
+export type SpecDojoReferenceConfig = { path: string };
 
 export const REPO_NAME_PATTERN = /^[a-z0-9-]+$/;
 
@@ -180,7 +192,7 @@ export const DEFAULT_PROJECT_CONTEXT = ["prj-overview"] as const;
 
 // Agent runtime provider family. Selects which providers.<name> override in
 // exec-defaults.yaml applies to a member's failure handling.
-export type AgentProvider = "opencode" | "claude" | "codex" | "copilot" | "antigravity" | "custom";
+export type AgentProvider = "opencode" | "claude" | "codex" | "copilot" | "custom";
 
 // Member launch profiles include the task-facing executor modes plus the reporter-only
 // profile. `report` never becomes a TaskMode: reporter eligibility is resolved by stage_role.
@@ -302,6 +314,8 @@ export type SpecDojoConfig = {
   projects: Record<string, SpecDojoProjectConfig>;
   /** External project registers delegated to the SpecDojo installation in another repository. */
   external_projects?: Record<string, SpecDojoExternalProjectConfig>;
+  /** Read-only directories for the interactive orchestrator; never exec targets. */
+  references?: Record<string, SpecDojoReferenceConfig>;
 };
 
 export const DEFAULT_AGENT_MEMBERS_PATH = ".specdojo/agent-members.yaml";
@@ -467,6 +481,12 @@ export function getProjectRoutinesPath(project: SpecDojoProjectConfig): string |
   return withOptionalBasePath(project, project.routines_path);
 }
 
+export const DEFAULT_PLAYBOOK_PATH = "030-project-management/pm-orchestrator-playbook.md";
+
+export function getProjectPlaybookPath(project: SpecDojoProjectConfig): string {
+  return withBasePath(project, project.playbook_path?.trim() || DEFAULT_PLAYBOOK_PATH);
+}
+
 export function getProjectJobsPath(project: SpecDojoProjectConfig): string | undefined {
   return withOptionalBasePath(project, project.jobs_path);
 }
@@ -514,12 +534,16 @@ export type ResolvedExternalProject = SpecDojoExternalProjectConfig & {
   repoRoot: string;
 };
 
-/** Resolve a configured external-project repository from the SpecDojo root. */
+/**
+ * Resolve a configured external-project repository from the SpecDojo root. A linked worktree
+ * resolves `path` from the main working tree root, because the sibling repository sits next to
+ * the main checkout, not next to the task worktree.
+ */
 export function resolveExternalProjectRoot(
   rootDir: string,
   project: Pick<SpecDojoExternalProjectConfig, "path">,
 ): string {
-  return resolve(rootDir, project.path);
+  return resolve(repositoryIdentityRoot(rootDir), project.path);
 }
 
 /** Return external projects in configuration order with absolute repository roots. */
@@ -568,7 +592,7 @@ export function validateExternalProjects(
     } else if (isAbsolute(path)) {
       errors.push(`${at}.path must be relative to the SpecDojo root (got absolute "${path}")`);
     } else {
-      const absolutePath = resolve(rootDir, path);
+      const absolutePath = resolveExternalProjectRoot(rootDir, { path });
       if (!existsSync(absolutePath)) {
         errors.push(`${at}.path "${path}" does not exist (resolved to ${absolutePath})`);
       } else if (!statSync(absolutePath).isDirectory()) {
@@ -774,7 +798,7 @@ export function loadMemberRoster(
       throw new Error(
         `Invalid members file: ${humanFullPath}: agent '${legacyAgent.nickname ?? "<unknown>"}' ` +
           `must be moved to ${resolve(baseDir, configuredAgentMembersPath(baseDir))}. ` +
-          `Run: specdojo config migrate-members --dry-run`,
+          `Edit the files by hand to move agent members.`,
       );
     }
     validateMemberFile("pm-members.schema.yaml", humanFullPath, parsed);
@@ -795,6 +819,7 @@ export function loadMemberRoster(
         `Invalid agent members file: ${agentFullPath}: human '${human.nickname ?? "<unknown>"}' is not allowed`,
       );
     }
+    assertNoRemovedProviders(agentFullPath, agentRoster);
     validateMemberFile("agent-members.schema.yaml", agentFullPath, agentRoster);
     validateAgentAliases(agentFullPath, agentRoster);
   }
@@ -828,6 +853,31 @@ export function loadMemberRoster(
   const aliases = agentRoster?.aliases;
   if (humanRoster) return { ...humanRoster, members, ...(aliases ? { aliases } : {}) };
   return { version: agentRoster?.version ?? 1, members, ...(aliases ? { aliases } : {}) };
+}
+
+// SpecDojo 0.10.0 removed the Antigravity (agy) provider (PJR-5V0T, PJR-N6FQ). A roster that still
+// declares one fails here, before schema validation, so the error names the reason and the fix
+// instead of a bare enum mismatch. Disabled members fail too: the provider no longer exists.
+const REMOVED_ANTIGRAVITY_PROVIDER = "antigravity";
+
+function assertNoRemovedProviders(path: string, roster: AgentMemberRoster): void {
+  const removed = roster.members
+    .filter((member) => {
+      // The YAML is not yet schema-validated, so the value may lie outside AgentProvider.
+      const provider: unknown = member?.provider;
+      return provider === REMOVED_ANTIGRAVITY_PROVIDER;
+    })
+    .map((member) => member.nickname ?? "<unknown>");
+  if (removed.length === 0) return;
+  throw new Error(
+    `Invalid agent members file: ${path}: provider antigravity was removed in SpecDojo 0.10.0 ` +
+      `(members: ${removed.join(", ")}). On consumer plans, the Antigravity FAQ does not cover ` +
+      `launching agy from third-party agents or applications, and the Antigravity Additional ` +
+      `Terms (Section 6) treat it as a breach of contract. To fix: remove these members and any ` +
+      `aliases that point to them, move routing, strategy, and fallback references in ` +
+      `exec-defaults.yaml to another member, delete providers.antigravity from exec-defaults.yaml, ` +
+      `and delete package.json scripts that launch agy.`,
+  );
 }
 
 function validateAgentAliases(path: string, roster: AgentMemberRoster): void {
@@ -924,21 +974,6 @@ function validateMemberFile(schemaName: string, path: string, value: unknown): v
   throw new Error(`Schema validation failed: ${path}: ${details}`);
 }
 
-function dumpMemberFile(path: string, schemaName: string, value: unknown): string {
-  const schemaPath = join(
-    specdojoPackageRootDir(),
-    "docs",
-    "specdojo",
-    "schemas",
-    "v1",
-    schemaName,
-  );
-  const schemaRef = relative(dirname(path), schemaPath).replaceAll("\\", "/");
-  return (
-    `# yaml-language-server: $schema=${schemaRef}\n` + dump(value, { lineWidth: 100, noRefs: true })
-  );
-}
-
 function configuredAgentMembersPath(baseDir: string): string {
   const configPath = resolve(baseDir, ".specdojo", "specdojo.config.json");
   if (!existsSync(configPath)) return DEFAULT_AGENT_MEMBERS_PATH;
@@ -973,6 +1008,19 @@ export function assertValidActor(actor: string, roster: MemberRoster | null): vo
   }
 }
 
+// exec の記帳（claim・release など）の --by 用。名簿の人・agent に加え、登録簿と同じ
+// RESERVED_REGISTER_ACTORS を受け付ける。grade の --by は agent 限定のため assertValidActor のまま。
+export function assertValidExecActor(actor: string, roster: MemberRoster | null): void {
+  if ((RESERVED_REGISTER_ACTORS as readonly string[]).includes(actor)) return;
+  if (!roster) return;
+  const known = roster.members.map((m) => m.nickname);
+  if (known.includes(actor)) return;
+  throw new Error(
+    `Unknown actor: "${actor}". Must be one of: ${[...known, ...RESERVED_REGISTER_ACTORS].join(", ")}\n` +
+      `Register a human in members_path or an agent in agent_members_path before use, or use a reserved actor.`,
+  );
+}
+
 function isOmittedOrNonEmptyString(value: unknown): boolean {
   if (value === undefined) return true;
   return typeof value === "string" && value.trim().length > 0;
@@ -986,12 +1034,23 @@ function isValidProjectConfig(project: unknown): project is SpecDojoProjectConfi
     execution_path?: unknown;
     integration_branch?: unknown;
     project_context?: unknown;
+    register_sync?: unknown;
   };
   // 省略は既定値へ解決するため許容する。ただし指定したうえでの空文字は、設定漏れと
   // 意図的な省略を区別できないため引き続き不正として扱う。
   if (!isOmittedOrNonEmptyString(candidate.schedule_path)) return false;
   if (!isOmittedOrNonEmptyString(candidate.execution_path)) return false;
   if (!isOmittedOrNonEmptyString(candidate.integration_branch)) return false;
+  if (candidate.register_sync !== undefined) {
+    const sync = candidate.register_sync;
+    if (!isRecord(sync)) return false;
+    if (Object.keys(sync).some((key) => !["enabled", "branch", "remote"].includes(key)))
+      return false;
+    if (sync.enabled !== undefined && typeof sync.enabled !== "boolean") return false;
+    if (!isOmittedOrNonEmptyString(sync.branch) || !isOmittedOrNonEmptyString(sync.remote))
+      return false;
+    if (typeof sync.remote === "string" && !/^(?!-)[^\s:]+$/.test(sync.remote)) return false;
+  }
   if (
     candidate.project_context !== undefined &&
     (!Array.isArray(candidate.project_context) ||
@@ -1045,7 +1104,8 @@ export function loadConfig(configRootDir: string = specdojoRootDir()): ConfigLoa
       throw new Error(
         `Invalid .specdojo/specdojo.config.json: projects.${projectId} must omit ` +
           `schedule_path/execution_path/integration_branch or set them to non-empty strings, ` +
-          `and project_context must be a string[] when present`,
+          `project_context must be a string[] when present, and register_sync must contain only ` +
+          `enabled (boolean), branch and remote (non-empty strings)`,
       );
     }
   }
@@ -1073,7 +1133,11 @@ export function loadConfig(configRootDir: string = specdojoRootDir()): ConfigLoa
     projectIds,
     rootDir,
   );
-  const configErrors = [...repoErrors, ...externalProjectErrors];
+  const configErrors = [
+    ...repoErrors,
+    ...externalProjectErrors,
+    ...validateReferences(rootDir, effective),
+  ];
   if (configErrors.length > 0) {
     const localNote = local ? ` with local overrides from ${local.path}` : "";
     throw new Error(
@@ -1209,26 +1273,6 @@ export function registerConfigCommands(program: Command): void {
     });
 
   cfg
-    .command("migrate-members")
-    .description(
-      "Deprecated: configure agent members directly in .specdojo/agent-members.yaml (will be removed in 0.10.0)",
-    )
-    .option("--project <projectId>", "Migrate only one project (default: all configured projects)")
-    .option("--dry-run", "Show planned changes without writing", false)
-    .action((opts: { project?: string; dryRun?: boolean }) => {
-      try {
-        warnDeprecated(
-          "config migrate-members",
-          "Configure agent members directly in .specdojo/agent-members.yaml instead. This command will be removed in 0.10.0.",
-        );
-        migrateAgentMembers({ projectId: opts.project, dryRun: !!opts.dryRun });
-      } catch (error) {
-        process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
-        process.exitCode = 1;
-      }
-    });
-
-  cfg
     .command("scaffold")
     .description("Scaffold provider settings, a VS Code multi-root workspace, Git hooks, or Slidev")
     .option("--provider <name>", "Provider template to copy (claude|codex|copilot|opencode)")
@@ -1302,114 +1346,7 @@ export function registerConfigCommands(program: Command): void {
     });
 }
 
-export function migrateAgentMembers(options: {
-  projectId?: string;
-  dryRun: boolean;
-  rootDir?: string;
-}): void {
-  const rootDir = options.rootDir ? resolve(options.rootDir) : specdojoRootDir();
-  const configPath = join(rootDir, ".specdojo", "specdojo.config.json");
-  if (!existsSync(configPath)) throw new Error(`No config found: ${configPath}`);
-  const config = JSON.parse(readFileSync(configPath, "utf8")) as SpecDojoConfig;
-
-  const projectEntries: Array<[string, SpecDojoProjectConfig | undefined]> = options.projectId
-    ? [[options.projectId, config.projects[options.projectId]]]
-    : Object.entries(config.projects);
-  if (options.projectId && !config.projects[options.projectId]) {
-    throw new Error(`Unknown project: ${options.projectId}`);
-  }
-
-  const agentRelPath = config.agent_members_path?.trim() || DEFAULT_AGENT_MEMBERS_PATH;
-  assertProtectedAgentMembersPath(agentRelPath, configPath);
-  const agentPath = resolve(rootDir, agentRelPath);
-  let existingAgents: AgentMemberRoster = { version: 1, members: [] };
-  if (existsSync(agentPath)) {
-    existingAgents = readYamlFile(agentPath) as AgentMemberRoster;
-    validateMemberFile("agent-members.schema.yaml", agentPath, existingAgents);
-    validateAgentAliases(agentPath, existingAgents);
-  }
-
-  const agentNicknames = new Set([
-    ...existingAgents.members.map((member) => member.nickname),
-    ...(existingAgents.aliases ?? []).map((alias) => alias.nickname),
-  ]);
-  const moved: ProjectMember[] = [];
-  const updates: Array<{ path: string; roster: MemberRoster; count: number }> = [];
-  for (const [projectId, project] of projectEntries) {
-    if (!project) continue;
-    const relPath = getProjectMembersPath(project);
-    if (!relPath) throw new Error(`projects.${projectId}.members_path is required`);
-    const path = resolve(rootDir, relPath);
-    if (!existsSync(path)) throw new Error(`members_path not found: ${path}`);
-    const roster = readYamlFile(path) as MemberRoster;
-    if (!roster || !Array.isArray(roster.members)) {
-      throw new Error(`Invalid members file: ${path} (expected { members: [...] })`);
-    }
-    const humans = roster.members.filter((member) => member.type !== "agent");
-    const agents = roster.members.filter((member) => member.type === "agent");
-    const humanNicknames = new Set<string>();
-    for (const human of humans) {
-      if (humanNicknames.has(human.nickname)) {
-        throw new Error(`Duplicate human nickname '${human.nickname}' while migrating ${path}`);
-      }
-      humanNicknames.add(human.nickname);
-    }
-    for (const agent of agents) {
-      if (agentNicknames.has(agent.nickname)) {
-        throw new Error(
-          `Duplicate agent member or alias nickname '${agent.nickname}' while migrating ${path}`,
-        );
-      }
-      agentNicknames.add(agent.nickname);
-      moved.push(agent);
-    }
-    const humanRoster = { ...roster, members: humans };
-    validateMemberFile("pm-members.schema.yaml", path, humanRoster);
-    updates.push({ path, roster: humanRoster, count: agents.length });
-  }
-
-  const mergedAgents = {
-    ...existingAgents,
-    version: existingAgents.version || 1,
-    members: [...existingAgents.members, ...moved],
-  } satisfies AgentMemberRoster;
-  validateMemberFile("agent-members.schema.yaml", agentPath, mergedAgents);
-  validateAgentAliases(agentPath, mergedAgents);
-  for (const update of updates) {
-    for (const human of update.roster.members) {
-      if (agentNicknames.has(human.nickname)) {
-        throw new Error(
-          `Duplicate member nickname '${human.nickname}' across ${update.path} and ${agentPath}`,
-        );
-      }
-    }
-  }
-
-  const verb = options.dryRun ? "Would move" : "Moved";
-  for (const update of updates) {
-    process.stdout.write(`${verb} ${update.count} agent member(s) from ${update.path}\n`);
-  }
-  process.stdout.write(
-    `${options.dryRun ? "Would write" : "Wrote"} ${mergedAgents.members.length} agent member(s) to ${agentPath}\n`,
-  );
-  if (options.dryRun) return;
-
-  for (const update of updates) {
-    writeFileSync(
-      update.path,
-      dumpMemberFile(update.path, "pm-members.schema.yaml", update.roster),
-      "utf8",
-    );
-  }
-  mkdirSync(dirname(agentPath), { recursive: true });
-  writeFileSync(
-    agentPath,
-    dumpMemberFile(agentPath, "agent-members.schema.yaml", mergedAgents),
-    "utf8",
-  );
-}
-
-export function registerProjectCommands(program: Command): void {
+export function registerProjectCommands(program: Command): Command {
   const pj = program.command("project").description("Project registry commands");
 
   pj.command("list")
@@ -1436,4 +1373,5 @@ export function registerProjectCommands(program: Command): void {
         process.stdout.write(`${id}\t${schedulePath}${suffix}\n`);
       }
     });
+  return pj;
 }

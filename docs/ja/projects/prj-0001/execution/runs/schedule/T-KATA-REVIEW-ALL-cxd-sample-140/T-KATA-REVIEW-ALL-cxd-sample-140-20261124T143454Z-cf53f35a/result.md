@@ -1,0 +1,83 @@
+---
+specdojo:
+  id: prj-0001:xer-t-kata-review-all-cxd-sample-140-20261124t143454z-cf53f35a
+  type: exec-result
+  task_id: T-KATA-REVIEW-ALL-cxd-sample-140
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  plan_ref: runs/schedule/T-KATA-REVIEW-ALL-cxd-sample-140/T-KATA-REVIEW-ALL-cxd-sample-140-20261124T143454Z-cf53f35a/plan.md
+  started_at: "2026-11-24T14:35:03.489Z"
+  completed_at: "2026-11-24T14:47:56.107Z"
+  agent: sol-executor
+  execution: agent
+  approach: sample-maintenance
+  targets:
+    - specdojo:cxd-sample
+    - specdojo:cxd-sample
+---
+
+# Edit Result
+
+## 1. 実施内容
+
+- R4（正しさ）レビューを実施した。cxd-sample.md の主張を schema、実装、関連 sample、rulebook と突き合わせた。修正を要する誤りはなく、新規の指摘はない。変更ファイルはなく、sample は編集していない。
+- 主張ごとの確かめ（C01〜C30）の結果は次のとおり。C01〜C08 は frontmatter の項目（`specdojo` 名前空間、`id`、`type`、`status`、`rulebook`、`part_of`、`based_on`、`supersedes`）で、schema と `readSpecdojoNamespace` の実行読取に一致した。C09〜C11 は参照先 sample（prj-overview-sample、clis-sample、ifx-cmd-sample）の実在を確認した。C12〜C15 は未同梱の架空参照名（`ifx-api-kinuya-products.yaml`、`ifx-api-kinuya-sales.yaml`、`cnd-kinuya-sales-cli`、`ifd-kinuya-sales-cli`）で、該当ファイルがないことと、sample が実在リンクにしていないことを確認した。
+- C16〜C22 は印字連携の主張で、ifx-cmd-sample.yaml の契約例と一致した。具体的には、保存済みレシートの受け渡し、印刷失敗時の会計維持、送信後異常終了・時間切れ・結果不正での印字結果不明と自動再印刷なし、保存済みレシートだけを使う再印刷、USB 直結で認証情報を渡さないことを確かめた。これらは契約例との一致であり、実動作の保証ではない。
+- C23〜C26 は販売 CLI の主張で、clis-sample.md と一致した。認証不足・拒否の通知、会計確定通知の条件、商品照会失敗時に明細を追加しないこと、結果不明取引を自動再送しないことを確かめた。C27 は図の矢印の意味で、cxd-mermaid-rulebook の記法ルールと全4関係が一致した。Mermaid の構文検査は親 runner が実行した。
+- 確かめられなかった主張は C28〜C30 の3件。C28 は本部受付照会・重複排除・保存失敗後の回復、C29 は印刷基盤未導入時の会計維持と未印字警告、C30 は未印字・結果不明・二重印字の紙面と控えでの区別である。いずれも契約ファイルや実装、実機が同梱されていない。sample が既に仮定・受入保留として書いているため修正は不要で、新規の不備ではなく既存の検証課題である。
+- 対象 sample に具体的な CLI 構文・オプション・終了コード・既定値の主張はなかった。command-reference.md は SpecDojo 本体の CLI を扱い、架空の販売 CLI・印刷 CLI を定義していない。架空コマンドの `--help` は実行していない。
+- grade の F001（Person 表の列見出しが template と sample・rulebook で一致しない）は新規指摘として再掲しない。sample 第3.2節は rulebook 6.3.2 と一致しており、相違は template 側にある。kata 相互の整合は R5 の範囲であるため、本段では改訂を見送った。
+
+## 2. 変更ファイル
+
+- なし
+
+## 3. 申し送り
+
+- F001 は R5 に継続する。`docs/ja/specdojo/templates/cxd-template.md` の列名「境界上の接点」を rulebook の「境界上の接点・確認責務」に合わせる案を R5 で扱う。
+- C28〜C30 は将来の検証課題として残る。契約ファイルと回復方式の整備、故障注入、実機での紙面・控えの照合が必要である。
+- reporter 向け: result の実施内容に「R4 の新規指摘なし」と記載し、以下の C01〜C30 を、列 No・主張（本文の箇所）・正本・確かめ方・結果・根拠の Markdown 表として1回だけ記載すること。各 C 項目は1行にし、申し送りに表や確認項目を重ねない。変更ファイルは「なし」。executor は result を編集していない。
+- 進め方と実践の型の適用への記録: kata-guide 第6章、共通規約2文書、Sample 記述標準、document-metadata-standard、cxd-rulebook、cxd-mermaid-rulebook、cxd-recipe、cxd-template、R4 の4観点の判定根拠、grade sidecar、R1〜R3 result を読んだ。schema・メタデータ読取実装・コマンドリファレンス・操作仕様例・印字契約例を照合した。R2 の仮定の配置と R3 の文章修正を維持した。正本との不一致を認めず、sample を変更しなかった。業務上の架空の仮定は共通サンプル文脈と矛盾しないため、実在性の検証対象から除いた。
+- 既存 F001 の扱い: 新規指摘として再掲しない。grade sidecar の source=grade の指摘と実文書を確認した。sample 第3.2節の「境界上の接点・確認責務」は cxd-rulebook 第6.3.2節と一致し、template の「境界上の接点」が相違している。kata-guide 第6.3節では kata 相互の整合は R5 の範囲である。前段の申し送りを継続し、R5 で docs/ja/specdojo/templates/cxd-template.md の列名を rulebook に合わせる案を扱う。本段の改訂見送りは根拠不足ではなく、段と編集対象の範囲による。
+- C01: 主張=frontmatter は `specdojo` 名前空間に置く（冒頭）。正本=docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml、src/shared/frontmatter-namespace.ts。確かめ方=両ファイルを読み、`readSpecdojoNamespace` で対象 sample を実行読取。結果=一致。根拠=schema はルートの `specdojo` を必須とし、実装から7項目を正常取得できた。
+- C02: 主張=`id: specdojo:cxd-sample`（冒頭）。正本=docs/specdojo/schemas/v1/common-frontmatter.schema.yaml。確かめ方=schema 読取と名前空間読取実行。結果=一致。根拠=第10〜13行の ID パターンに適合する。
+- C03: 主張=`type: architecture`（冒頭）。正本=docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml、docs/ja/specdojo/rulebooks/cxd-rulebook.md。確かめ方=両ファイルと対象 frontmatter を読取。結果=一致。根拠=schema の成果物種別列挙に architecture があり、rulebook の `deliverable_type` とも一致する。
+- C04: 主張=`status: ready`（冒頭）。正本=docs/specdojo/schemas/v1/common-frontmatter.schema.yaml。確かめ方=列挙値と対象 frontmatter を読取。結果=一致。根拠=第63〜68行の許容値 draft・ready・deprecated に含まれる。既存値を維持し、状態変更はしていない。
+- C05: 主張=`rulebook: specdojo:cxd-rulebook`（冒頭）。正本=docs/specdojo/schemas/v1/common-frontmatter.schema.yaml、docs/ja/specdojo/rulebooks/cxd-rulebook.md。確かめ方=参照形式と参照先 frontmatter を読取。結果=一致。根拠=第19〜25行の rulebook 参照形式に適合し、実在する参照先 ID と一致する。
+- C06: 主張=`part_of: []`（冒頭）。正本=docs/specdojo/schemas/v1/common-frontmatter.schema.yaml。確かめ方=schema と名前空間読取出力を照合。結果=一致。根拠=第69〜71行は ID 配列を指定し、空配列を許容する。
+- C07: 主張=`based_on: []`（冒頭）。正本=docs/specdojo/schemas/v1/common-frontmatter.schema.yaml。確かめ方=schema と名前空間読取出力を照合。結果=一致。根拠=第72〜74行は ID 配列を指定し、空配列を許容する。無関係な参照を追加していない。
+- C08: 主張=`supersedes: []`（冒頭）。正本=docs/specdojo/schemas/v1/common-frontmatter.schema.yaml。確かめ方=schema と名前空間読取出力を照合。結果=一致。根拠=第75〜77行は ID 配列を指定し、空配列を許容する。
+- C09: 主張=プロジェクト概要の参照先が存在する（第1章）。正本=docs/ja/specdojo/samples/prj-overview-sample.md。確かめ方=ファイルと frontmatter を読取。結果=一致。根拠=`id: specdojo:prj-overview-sample` が存在する。
+- C10: 主張=販売管理 CLI 仕様の参照先が存在する（第1章・第3.4節）。正本=docs/ja/specdojo/samples/clis-sample.md。確かめ方=ファイルと frontmatter を読取。結果=一致。根拠=`id: specdojo:clis-sample` が存在し、操作・入出力・障害時の扱いを定義する。
+- C11: 主張=レシート印刷コマンド連携仕様の参照先が存在する（第1章・第3.4節）。正本=docs/ja/specdojo/samples/ifx-cmd-sample.yaml。確かめ方=ファイルとメタデータを読取。結果=一致。根拠=`id: specdojo:ifx-cmd-sample` が存在し、印字連携の契約例を定義する。
+- C12: 主張=`ifx-api-kinuya-products.yaml` は未同梱の架空参照名（第3.4節・第5章）。正本=リポジトリ内ファイル一覧、docs/ja/specdojo/samples/clis-sample.md。確かめ方=`rg --files` で該当名を検索し、CLI 仕様第7章を読取。結果=一致。根拠=該当ファイルはなく、CLI 仕様第123行も本部契約を未同梱と明記する。
+- C13: 主張=`ifx-api-kinuya-sales.yaml` は未同梱の架空参照名（第3.4節・第5章）。正本=リポジトリ内ファイル一覧、docs/ja/specdojo/samples/clis-sample.md。確かめ方=`rg --files` で該当名を検索し、CLI 仕様第7章を読取。結果=一致。根拠=該当ファイルはなく、CLI 仕様第123行も本部契約を未同梱と明記する。
+- C14: 主張=`cnd-kinuya-sales-cli` は未同梱（第5章）。正本=リポジトリ内ファイル一覧。確かめ方=`rg --files` で同名文書を検索。結果=一致。根拠=該当する下位図のファイルは見つからず、sample でも実在するリンクにしていない。
+- C15: 主張=`ifd-kinuya-sales-cli` は未同梱（第5章）。正本=リポジトリ内ファイル一覧。確かめ方=`rg --files` で同名文書を検索。結果=一致。根拠=該当する配置図のファイルは見つからず、sample でも実在するリンクにしていない。
+- C16: 主張=印刷基盤へ保存済みレシートを渡す（第3.3・3.4節）。正本=docs/ja/specdojo/samples/ifx-cmd-sample.yaml。確かめ方=`files.inputs` と `command.purpose` を読取。結果=一致。根拠=第18〜21行・第48〜58行が、販売 CLI の作成済みテキストを印刷 CLI が読み取る契約を定義する。実動作の保証ではなく契約例との一致である。
+- C17: 主張=印刷失敗でも会計を維持する（第3.3節・第4.1節）。正本=docs/ja/specdojo/samples/ifx-cmd-sample.yaml。確かめ方=`command.purpose` を読取。結果=一致。根拠=第20〜21行が会計の再実行を含めず、印字失敗でも会計を取り消さないと定める。
+- C18: 主張=送信後の異常終了では印字結果を不明として扱う（第3.3節）。正本=docs/ja/specdojo/samples/ifx-cmd-sample.yaml。確かめ方=`exit_codes` を読取。結果=一致。根拠=第88〜94行が送信開始後の失敗や診断欠落を含む場合に印字の有無を断定せず、自動再試行しないと定める。
+- C19: 主張=時間切れでは印字結果不明とし、自動再印刷しない（第3.3節・第4.2節）。正本=docs/ja/specdojo/samples/ifx-cmd-sample.yaml。確かめ方=`error_handling.timeout_action` を読取。結果=一致。根拠=第129〜132行が、送信済みデータの印字停止を保証せず、結果不明通知と利用者確認後の手動再印刷を定める。
+- C20: 主張=結果不正では印字結果不明とし、自動再印刷しない（第3.3節・第4.2節）。正本=docs/ja/specdojo/samples/ifx-cmd-sample.yaml。確かめ方=`error_handling.malformed_output_action` を読取。結果=一致。根拠=第133〜135行が JSON 欠落・解析失敗・対象不一致などを結果不明として扱い、自動再試行しないと定める。
+- C21: 主張=再印刷には保存済みレシートだけを使い、売上登録を再実行しない（第4.1・4.2節）。正本=docs/ja/specdojo/samples/ifx-cmd-sample.yaml。確かめ方=`execution.idempotency` を読取。結果=一致。根拠=第115〜120行が二重印字の可能性、紙面確認、保存済みレシートによる再印刷、会計・売上送信の再実行禁止を定める。
+- C22: 主張=USB 直結の印刷基盤には認証情報を渡さず、機器権限は開発担当が管理する（第4.1節）。正本=docs/ja/specdojo/samples/ifx-cmd-sample.yaml。確かめ方=`authentication` を読取。結果=一致。根拠=第96〜108行に認証不要・秘密値注入なし・開発担当による OS デバイス権限管理が明記される。認証情報の実値は読んでいない。
+- C23: 主張=本部 API の認証不足・拒否を利用者へ通知する（第4.1節）。正本=docs/ja/specdojo/samples/clis-sample.md。確かめ方=第5.1・6.2節を読取。結果=一致。根拠=第60行・第102〜104行が認証設定不足と商品マスタ取得失敗の表示・開発担当への設定や権限確認を定める。認証値の具体的設定方法は未同梱リファレンスへ委譲されている。
+- C24: 主張=会計確定の通知は本部受付と販売実績保存を確認した後に行う（第4.1節）。正本=docs/ja/specdojo/samples/clis-sample.md。確かめ方=第6.2節末尾を読取。結果=一致。根拠=第115行の学習用の仮定と一致する。実装済みの保証とは扱わない。
+- C25: 主張=商品照会失敗では明細を追加しない（第3.3節・第4.2節）。正本=docs/ja/specdojo/samples/clis-sample.md。確かめ方=第5.1・6.2節を読取。結果=一致。根拠=第61行・第104行が取得失敗時の追加未実施と原因表示を定める。
+- C26: 主張=売上応答欠落を未登録と断定せず、結果不明取引を自動再送しない（第3.3節・第5章）。正本=docs/ja/specdojo/samples/clis-sample.md。確かめ方=第6.1・6.2・7章を読取。結果=一致。根拠=第92行・第110行・第115行・第123行が結果不明の照合・保留と自動再送禁止を定める。回復方式の詳細は未整備である。
+- C27: 主張=図の矢印は主たる操作・依頼方向を示し、応答を同じ関係に含める（第2章）。正本=docs/ja/specdojo/rulebooks/cxd-mermaid-rulebook.md。確かめ方=第3章と対象図の4本の矢印を読取。結果=一致。根拠=記法ルールは人から対象システム、対象システムから外部システムへの向きと応答の同線への包含を定める。図は全4関係でこの意味に従う。Mermaid の構文検査は親 runner に委ねる。
+- C28: 主張=本部受付照会・重複排除・保存失敗後の回復（第4.2節・第5章の期待動作）。正本=未同梱の `ifx-api-kinuya-products.yaml`・`ifx-api-kinuya-sales.yaml` と対応実装。確かめ方=ファイル一覧、`src/`、docs/specdojo/schemas/v1/ を検索し、CLI 仕様第7章を読取。結果=確かめられない。根拠=契約ファイルと販売 CLI 実装が同梱されていない。契約・回復方式を整備して故障注入で照合する必要がある。sample は既に仮定・受入保留としているため修正不要。
+- C29: 主張=印刷基盤未導入時に会計を維持して未印字警告と控えを確認できる（第3.3節・第4.2節の期待動作）。正本=販売 CLI の実装と印刷コマンド起動処理。確かめ方=`src/` とコマンドリファレンスを検索し、CLI 仕様の第65・111行を読取。結果=確かめられない。根拠=契約例の警告方針には一致するが、未導入時の実装は存在せず実行確認できない。実装後に印刷コマンド不在のケースを確認する。第4.2節は確認済みの保証ではないと明記しており修正不要。
+- C30: 主張=未印字・結果不明・二重印字を紙面と控えで区別できる（第4.2節・第5章の実機確認条件）。正本=印刷 CLI 実装・実プリンタ・未同梱の `receipt-print-reference`。確かめ方=印字契約例第11〜13行、第115〜135行と、対象 sample 第119・137行を読取。結果=確かめられない。根拠=印刷 CLI は架空で実装・機器・詳細リファレンスがない。契約例との一致と実機での成立は区別する。実機で紙面・控えを照合する必要があり、sample の既存の将来課題を維持した。
+- 補足: 対象 sample に具体的な CLI 構文・オプション・終了コード・既定値の主張はない。docs/ja/specdojo/references/command-reference.md は SpecDojo 本体の CLI を扱い、架空の販売 CLI・印刷 CLI を定義していない。架空コマンドの `--help` は実行していない。未確認の C28〜C30 は既存の検証課題であり、本段で新たに発見した不備ではない。
+- 検査と変更範囲: package.json、.specdojo/specdojo.config.json、lefthook.yml を読んで適用条件を判断した。成果物を編集していないため整形・変更ファイル限定検査は適用外。指定の親検証は実行していない。`git diff --exit-code` は成功し、開始時から存在する未追跡 pipeline-state.json 以外に変更はない。Git の状態変更、result・grade sidecar・保護設定の編集はしていない。
+- 環境補足: 指定の `npx specdojo where playbook --project prj-0001` は npm キャッシュディレクトリの ENOENT で起動できなかった。共通規約で認められたソース起動 `node --import tsx src/specdojo.ts where playbook --project prj-0001` は成功し、指定の運用メモのパスを確認して読んだ。
+- 適用外の検証: `npx prettier --write docs/ja/specdojo/samples/cxd-sample.md`（正しさの照合で変更不要と判断し、ファイルを編集していない。）
+- 適用外の検証: `npm run validate:schema:file`（YAML・YML ファイルを変更していない。）
+- 適用外の検証: `npm run validate:catalog`（executor による docs/ja/projects/ 配下の成果物変更がない。）
+- 適用外の検証: `npm run validate:history-links`（履歴ファイル・plan・result を変更していない。）
+
+## 4. 進め方と実践の型の適用
+
+kata-guide 第6章、共通規約2文書、Sample 記述標準、document-metadata-standard、cxd-rulebook、cxd-mermaid-rulebook、cxd-recipe、cxd-template、R4 の4観点の判定根拠、grade sidecar、R1〜R3 result を読んだ。schema、メタデータ読取実装、コマンドリファレンス、操作仕様例、印字契約例と照合した。R2 の仮定の配置と R3 の文章修正は維持した。正本との不一致はなく、sample は変更していない。業務上の架空の仮定は共通サンプル文脈と矛盾しないため、実在性の検証対象から除いた。F001 は template 側の相違で、段と編集対象の範囲外のため見送った。根拠不足による見送りではない。

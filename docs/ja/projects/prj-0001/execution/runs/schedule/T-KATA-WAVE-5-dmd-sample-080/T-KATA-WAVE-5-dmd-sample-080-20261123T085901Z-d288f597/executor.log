@@ -1,0 +1,5 @@
+`dmd-sample.md` の冗長な 3 か所を削り、意味と必須情報は保ちました。`npx prettier --write` で表を整形済みです。`lint-md` などの親 runner 検査は実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"dmd-sample.md の冗長な3か所を削除。意味と必須情報は維持。","handoff":[],"condense_records":[{"location":"1. 概要（credit-data） 第2段落末尾","category":"repetition","action":"delete","reason":"抽出方式・採番・差分0は対象データ詳細、データマッピング、検証方法の各表で述べているため。前提（mip-index の並行移行と成功条件）は残した。","cause":{"type":"document"}},{"location":"6. 移行手順 表 手順1の備考","category":"table-prose","action":"delete","reason":"「準備フェーズに行う」は章冒頭の本文で説明済みのため。つけ残高の上書きの制約は残した。","cause":{"type":"document"}},{"location":"6. 移行手順 表 手順2の備考","category":"table-prose","action":"delete","reason":"「準備フェーズに行う」は章冒頭の本文で説明済みのため。残高の再読み合わせの制約は残した。","cause":{"type":"document"}}],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/dmd-sample.md","status":"passed","summary":"整形済み"}]}
+</specdojo_executor_evidence>

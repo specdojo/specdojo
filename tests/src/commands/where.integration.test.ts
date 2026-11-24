@@ -6,7 +6,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 const entry = resolve("src/specdojo.ts");
 const tsx = resolve("node_modules/tsx/dist/loader.mjs");
-const kinds = ["exec", "catalog", "schedule", "timeline", "job", "routine"] as const;
+const kinds = ["exec", "catalog", "schedule", "timeline", "job", "routine", "playbook"] as const;
 let root: string;
 
 beforeEach(() => {
@@ -64,18 +64,12 @@ function run(args: string[], env: NodeJS.ProcessEnv = {}) {
 }
 
 describe("specdojo where", () => {
-  it.each(kinds)("preserves %s output and keeps its deprecated alias for one release", (kind) => {
+  it.each(kinds)("prints %s output without touching the project files", (kind) => {
     const before = readdirSync(root, { recursive: true }).sort();
     const result = run(["where", kind, "--project", "prj-test"]);
-    const alias = run([kind, "where", "--project", "prj-test"]);
     expect(result.status).toBe(0);
     expect(result.stderr).toBe("");
     expect(result.stdout).toContain(join(root, "project"));
-    expect(alias.status).toBe(result.status);
-    expect(alias.stdout).toBe(result.stdout);
-    expect(alias.stderr).toContain(`WARN: ${kind} where is deprecated.`);
-    expect(alias.stderr).toContain(`Use specdojo where ${kind}.`);
-    expect(alias.stderr).toContain("removed in 0.10.0");
     expect(readdirSync(root, { recursive: true }).sort()).toEqual(before);
     if (kind === "exec") {
       expect(result.stdout).toContain(join(root, "project/execution/exec/events"));
@@ -90,6 +84,10 @@ describe("specdojo where", () => {
     if (kind === "timeline") expect(result.stdout).toContain("tml-index.yaml (does not exist)");
     if (kind === "catalog") expect(result.stdout).toContain("plans       :");
     if (kind === "job") expect(result.stdout).toContain(join(root, "project/execution/jobs/runs"));
+    if (kind === "playbook") {
+      const playbook = join(root, "project/030-project-management/pm-orchestrator-playbook.md");
+      expect(result.stdout).toContain(`playbook: ${playbook} (does not exist)`);
+    }
     if (kind === "routine") {
       expect(result.stdout).toContain(join(root, "local-state"));
       expect(result.stdout).toContain(join(root, "project/routines/sub/rtn-example.yml"));
@@ -97,14 +95,10 @@ describe("specdojo where", () => {
     }
   });
 
-  it.each(kinds)("preserves %s failure output and status for an unknown project", (kind) => {
+  it.each(kinds)("fails %s with status 1 for an unknown project", (kind) => {
     const result = run(["where", kind, "--project", "unknown"]);
-    const alias = run([kind, "where", "--project", "unknown"]);
     expect(result.status).toBe(1);
     expect(result.stdout + result.stderr).toContain("unknown");
-    expect(alias.status).toBe(1);
-    expect(alias.stdout).toBe(result.stdout);
-    expect(alias.stderr.split("\n").slice(1).join("\n")).toBe(result.stderr);
   });
 
   it("honors the environment project and lets --project override it", () => {
@@ -135,15 +129,16 @@ describe("specdojo where", () => {
     },
   );
 
-  it("lists all six choices in help", () => {
+  it("lists all choices in help", () => {
     const result = run(["where", "--help"]);
     expect(result.status).toBe(0);
     for (const kind of kinds) expect(result.stdout).toContain(`"${kind}"`);
   });
 
-  it.each(kinds)("hides the deprecated %s alias from normal help", (kind) => {
-    const result = run([kind, "--help"]);
-    expect(result.status).toBe(0);
-    expect(result.stdout).not.toMatch(/^\s+where\b/m);
+  it.each(kinds)("rejects the removed `%s where` alias", (kind) => {
+    const result = run([kind, "where", "--project", "prj-test"]);
+    expect(result.status).toBe(1);
+    expect(result.stdout).toBe("");
+    expect(result.stderr).toContain("error:");
   });
 });

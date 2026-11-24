@@ -1,0 +1,23 @@
+可用性要件の sample（`docs/ja/specdojo/samples/nfr-availability-sample.md`）を、rulebook が定める 6 章構成の完成例に書き直しました。変更したのはこのファイルだけです。Prettier と markdownlint はこのファイルに対して通っています。親 runner が実行する検証はまだ流れていません。
+
+**稼働率・RTO・RPO の値は決めていません。** plan の指示どおり `_UNDECIDED_` のまま残し、値が決まるまでの判定には運用方針 sample（`opd-index-sample`）にある暫定の扱いをそのまま使いました。
+
+- 稼働率は、停止した時間を記録するだけで、達成・未達は判定しない。
+- RTO は、翌営業日の開店までに記録を再開できれば合格とする。
+- RPO は、前日の閉店時点まで戻ることを許す。
+
+**書き直した内容:**
+
+- **見出しと参照:** 見出しを rulebook の章名（概要、適用範囲・除外条件、可用性要件一覧、測定・検証方法、関連ドキュメント導線、未決事項）に合わせました。H1 と本文にあった rulebook へのリンクは外し、Frontmatter に `part_of`（非機能要件の入口）と `based_on`（プロジェクト概要、前提・制約・依存）を足しています。
+- **停止の影響:** 販売・在庫・つけの記録が止まると何が起きるかを、店主不在の日を含めて書きました。障害時は紙の販売控えに切り替え、復旧の確認は `OPS`、データを復元するかは `PO` が決めます。
+- **対象時間帯と除外条件:** 営業時間 10:00〜18:00 を運用方針と揃え、`_ASSUMPTION_` を付けました。閉店後の計画停止は稼働率から除き、タブレット故障・店舗の回線断・ホスティング環境の停止は停止に数えます。
+- **要件:** `nfr-avl-001`〜`nfr-avl-004` の 4 件です。稼働率・RTO・RPO に加え、停止中の取引を紙の控えから転記したときの漏れを 0 件とする要件を置きました。この 0 件は私が置いた仮の値で、`_ASSUMPTION_` を付けています。各要件に算出式、RTO の起点と終点、RPO の確かめ方、判定時期を付けました。
+- **関連文書と未決事項:** 関連文書の表は既存の sample へ wikilink でつなぎ、まだない `sac-availability`・`stc-availability` はバッククォートで仮置きしました。未決事項は 5 件です（稼働率の目標、RTO/RPO、ホスティング環境の SLA、代替端末、通信断）。
+
+**直さなかった指摘:** F003・F004・F006・F009・F023・F025 は、文書の作成・承認の担当や承認の進み方を求めるものなので、PJR-76N9 の決まりに従って本文に足していません。F002 が求める「判断者」の列も同じ理由で入れていません。
+
+**rulebook の変更案:** rulebook の「技術前提」は対応する `dec-*` を書くよう求めていますが、`dec-sample` はすでに非推奨で、決定記録は登録簿の decision に移っています。そのためこの sample では `dec-*` を参照していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"nfr-availability-sample.md を rulebook の 6 章構成（概要・適用範囲と除外条件・可用性要件一覧・測定と検証方法・関連ドキュメント導線・未決事項）で、駄菓子屋の完成例に書き直した。稼働率・RTO・RPO の値は _UNDECIDED_ とし、決まるまでの判定には opd-index-sample にある暫定の扱いを使った。frontmatter に part_of と based_on を追加し、本文から rulebook へのリンクを外した。","handoff":["利用者が決める値: `nfr-avl-001` の営業時間内の月間稼働率の目標（%）、`nfr-avl-002` の RTO、`nfr-avl-003` の RPO、ホスティング環境の SLA、タブレット故障時の代替端末の有無、通信断の頻度と店頭での記録方法。sample 内ではいずれも `_UNDECIDED_` とし、opd-index-sample の暫定の扱い（翌営業日の開店までに再開、前日の閉店時点まで戻ることを許す）を併記した。値を決めたら opd-index-sample と opr-backup-restore-sample の同じ値も合わせて直す必要がある。","仮置きの値: 営業時間 10:00〜18:00 は opd-index-sample の運用時間帯に揃え、`_ASSUMPTION_` を付けた。`nfr-avl-004` の転記漏れ 0 件と、単一構成で冗長化しないことも `_ASSUMPTION_` とした。","直さなかった指摘（PJR-76N9）: F003・F004・F006・F009・F023・F025 は、文書の作成・承認の担当、ready に上げる条件、変更管理の責任者、登録簿への引き継ぎ先を求めるもので、sample-authoring-standard の記述ガイドと PJR-76N9 により本文に足していない。F002 が求める未決事項の判断者の列も同じ理由で入れていない。未決事項の判断者と承認は登録簿の個票で追う。障害時の復旧判断（OPS）と復元の決定（PO）は文書の中身なので本文に書いた。","rulebook の変更案: 記述ガイドの「可用性要件一覧」「関連ドキュメント導線」は、技術前提の根拠に `dec-*` を書くよう求めているが、dec-sample は deprecated で、決定記録は登録簿の decision（pjr）に移っている。参照先を登録簿の decision または運用方針（opd-index）の該当章に改めることを提案する。","rulebook の変更案: 「位置づけ」の `sac-*` / `stc-*` に可用性向けの sample がなく、sample 内では `sac-availability`・`stc-availability` をバッククォートで仮置きした。","整合の申し送り: 同じ型の nfr-* sample（performance・reliability など）はまだ旧来の薄い形のままで、nfr-index-sample にも可用性分冊への導線がない。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/nfr-availability-sample.md","status":"passed","summary":"整形済み（表の列幅を揃えた）"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/nfr-availability-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/ 配下の sample だけで、plan / result / pjr 個票は変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML の変更なし","reason":"変更したのは Markdown 1 件だけで、*.yaml / *.yml の変更がない"}]}
+</specdojo_executor_evidence>

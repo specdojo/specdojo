@@ -4,11 +4,11 @@ document: specdojo:dmd-index-sample
 path: docs/ja/specdojo/samples/dmd-index-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 91
-graded_at: "2026-10-11T21:34:28.813Z"
-graded_by: agy-expert-executor
-content_hash: 9db026a1d045d5c8cbf1cdb78a625951135a898cb3bf69d4c2a9f768316fd960
+verdict: pass
+score: 100
+graded_at: "2026-11-23T09:44:33.840Z"
+graded_by: sonnet-review-executor
+content_hash: 49ff7a1429be971e4de192b376d16b212cd65287a679a66abff58061b1e594ca
 categories:
   purpose:
     score: 100
@@ -17,7 +17,7 @@ categories:
   planning:
     score: 100
   business:
-    score: 100
+    score: 92
   architecture:
     score: 100
   usability:
@@ -25,9 +25,9 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 75
+    score: 100
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -54,8 +54,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-stakeholder-clarity:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-technical-constraints:
     level: 4
     score: 100
@@ -75,11 +75,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -100,28 +100,14 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 2
+  major: 0
   minor: 1
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 1
-    anchor: "# データ移行設計 サンプル"
-    message: Frontmatter に必須項目である title が欠落している。
-    message_ja: Frontmatter に必須項目である title が欠落している。
-  - id: F002
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# データ移行設計 サンプル"
-    message: Frontmatter の id および type が、参照先の rulebook で定義されている必須値と矛盾している。
-    message_ja: Frontmatter の id および type が、参照先の rulebook で定義されている必須値と矛盾している。
-  - id: F003
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# データ移行設計 サンプル"
-    message: rulebook で定義された Frontmatter の制約を遵守しておらず、サンプルとしての正しさを欠いている。
-    message_ja: rulebook で定義された Frontmatter の制約を遵守しておらず、サンプルとしての正しさを欠いている。
+    rule: vp-ba-stakeholder-clarity
+    line: 40
+    anchor: "- 合否の判定: 照合の結果は、`mip-index` の成功条件に定めた判定者が照合表を見て決める。"
+    message: 合否の判定者が `mip-index` への参照だけで、本書から誰が確認し承認するかが読み取れない。判定者の役割（Role code）を併記すること。
+    message_ja: 合否の判定者が `mip-index` への参照だけで、本書から誰が確認し承認するかが読み取れない。判定者の役割（Role code）を併記すること。

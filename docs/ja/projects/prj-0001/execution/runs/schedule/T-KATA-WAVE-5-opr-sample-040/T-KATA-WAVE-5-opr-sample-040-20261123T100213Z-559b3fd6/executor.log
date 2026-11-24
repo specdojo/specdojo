@@ -1,0 +1,17 @@
+`docs/ja/specdojo/rulebooks/opr-rulebook.md` を直し、grade の指摘 8 件のうち 7 件は rulebook で解消しました。残る F005 は sample の修正が要るため、この段では直していません。変更したのはこのファイルだけで、Prettier の確認は通っています。markdownlint などの検査は親 runner に任せ、ここでは実行していません。
+
+- **F001（証跡の推奨表）**: 「証跡」節にあった推奨表は template と同じ列の再掲なので削除しました。代わりに「列は template に従う」と書き、証跡の種類ごとに残す識別子（`ticket_id`、`run_id` / `job_id`、実施日と実施者）を指示しました。
+- **F002 / F006（運用作業の受入確認）**: 記述ガイドの 6.13 を全体方針の 1.2 に移しました。成果物の章ではなく、手順を確定する前に行う運用上の確認だと明記しています。照合する OPD の基準（優先度定義と初動目標、RTO/RPO、変更の承認基準と凍結期間、権限の棚卸し周期）と、結果を残す章（「証跡」）も書きました。
+- **F003（表示名）**: 「表示名は title / ファイル名」を「H1 / ファイル名」に直しました。
+- **F004（ID 規則）**: `<project-id>:opr-index` のような project 修飾の形を書き足し、ドキュメント構造ガイドへの参照を付けました。
+- **F007（連携先の説明）**: 位置づけの節に `mip-index`（移行計画）、`cop-index`（カットオーバー計画）、`otp-index`（運用切替計画）を加え、OPR が何を引き継ぐかを書きました。
+- **F008（語の衝突）**: 「手順テンプレの共通規約」を「手順の記述書式の共通規約」に変えました。
+- **condense の記録（関連ドキュメント導線）**: 前提の章に書いた参照先（技術スタックなど）は、表の行を `手順適用範囲・前提 参照` のように章タイトルへの参照で埋める、と明確にしました。
+
+直していないのは F005（major）です。`opr-` で始まる 7 件の sample の frontmatter が `rulebook: specdojo:opd-rulebook` になっています。また `opr-sample` と `opr-incident-sample` は template と章の構成が違います。rulebook の `sample` 宣言は正しいので変えず、次の段で sample 側を直す必要があります。
+
+ほかに指摘のない記述は書き換えていません。見出しは H3 まで、frontmatter の `status` は `draft` のままです。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"opr-rulebook を grade の finding F001-F004・F006-F008 と condense の記録に沿って簡潔に整えた。F005 は sample の修正が要り、この段では対象外のため handoff に残した。変更ファイルは docs/ja/specdojo/rulebooks/opr-rulebook.md のみ。","handoff":["F005（major）は未解消: opr-access-control / opr-backup-restore / opr-batch / opr-change / opr-incident / opr-monitoring / opr-support の 7 件の sample が frontmatter で `rulebook: specdojo:opd-rulebook` を宣言しており、opr-rulebook の `sample` 宣言と一致しない。sample はこの段で変更しない決まりのため rulebook の宣言は維持した。次のアクション: 後続の sample の段で各 sample の `rulebook` を `specdojo:opr-rulebook` に直し、`opr-incident-sample` の列名「初動SLA」を template の「初動目標」に、`opr-sample` の独自の章構成を opr-template の 12 章構成に揃える。","直さなかった箇所と理由: 全体方針の箇条、記述ガイドの 6.1〜6.10、禁止事項は finding の対象外で、冗長さやほかの型との重なりも確認できなかったため維持した。障害対応の判断者・変更の承認者は、文書の役割の割り当てではなく運用手順の中身なので、PJR-76N9 の対象外として維持した。","condense の記録（関連ドキュメント導線の重複、action=retain）: 6.12 の再掲禁止を `手順適用範囲・前提 参照` という具体的な書き方に明確化した。成果物 opr-agent-cli-update 側の重複行の扱いは、次回の condense で判断する。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/opr-rulebook.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更は docs/ja/specdojo/rulebooks/opr-rulebook.md のみで、plan / result / 個票を変更していないため"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML ファイルを変更していない","reason":"変更ファイルに *.yaml / *.yml がなく、target_format は markdown のため"}]}
+</specdojo_executor_evidence>

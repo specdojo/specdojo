@@ -1,0 +1,21 @@
+`exec run --register` の要約の `commit=` に、その run のものではない commit の ID が出る原因を特定して直しました。単体テストは通りましたが、再現はしていません。例の run の記録が残っておらず、2 経路のどちらで起きたかは断定できません。
+
+**原因（どちらも root の `HEAD` を読んでいた）**
+- `register-post-review.ts`: `commitRegisterState` は staged 差分が無いと commit を作らずに戻ります。その後の `HEAD` が、その run のものではない commit の ID になっていました。
+- `register-worktree.ts`: post-review が無い経路で、統合後の `HEAD` を読んでいました。並行 run や他の commit で `HEAD` が動くと、統合の commit と食い違います。
+
+**修正**
+- `selectRunCommitId`（`src/exec/register.ts`）を追加しました。run の前後で `HEAD` が動いたときだけその `HEAD` を使い、動かなければ統合の commit（`outputCommit`）を使います。
+- post-review は `selectRunCommitId` を使うようにしました。post-review が無い経路は `outputCommit` を直接使います。
+- 単体テストを `tests/src/exec/register-multiple-ids.test.ts` に 2 件追加しました（`HEAD` が動かない場合と動いた場合）。
+
+**確認**
+- この環境では `npx tsc -b` が通り、`register-multiple-ids.test.ts` の 17 件が通りました。
+- 個票の対応結果に、原因の経路、修正、確認、「CHANGELOG に書く事項」（区分は Fixed）、判断を書きました。`CHANGELOG.md` は変えていません。
+- `npm run lint:ts`・`npm run test:unit` などは親 runner の検証に任せました。
+
+runner の出力を変えるため、統合の後にオーケストレーターが JSEY を流して確かめてから close してください。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"要約の commit= の出どころを特定した。post-review で commit が作られないときに HEAD を読む経路と、post-review が無い経路で統合後の HEAD を読む経路である。どちらも統合の commit（outputCommit）が出るように直した。selectRunCommitId を追加し、単体テストを 2 件足した。","handoff":["原因の経路は 2 つ（post-review で commit が作られないときの HEAD、post-review が無い経路の統合後の HEAD）。例の run の記録が無く、実際にどちらで起きたかは断定できない。","commit= の ID は 12 桁に揃えた。従来の --short の長さは環境で変わるため、既存の outputCommit.slice(0, 12) に合わせた。","runner の出力を変えるため、統合の後にオーケストレーターが JSEY を流して確かめてから close する。","CHANGELOG.md は変えていない。個票の対応結果の「CHANGELOG に書く事項」に、区分 Fixed と行の文案を書いた。"],"validations":[{"command":"npx tsc -b","status":"passed","summary":"型エラーなし"},{"command":"npx vitest run tests/src/exec/register-multiple-ids.test.ts","status":"passed","summary":"17 件が通った（selectRunCommitId の 2 件を含む）"}]}
+</specdojo_executor_evidence>

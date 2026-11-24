@@ -1,0 +1,23 @@
+`docs/ja/specdojo/rulebooks/nfr-operations-rulebook.md` を書き直し、22 件の finding のうち 21 件は rulebook 側で解消しました。残る major の F016（sample の章構成が rulebook に合っていない）は sample を直す必要があり、この段では sample を変更しない決まりのため未解消です。変更したファイルはこの rulebook だけで、prettier と markdownlint は問題なしでした（0 issues）。plan が求める検査のうち残りは、終了後に親 runner が流します。
+
+**主な変更**
+- **サンプル章を削除**: 完成例は sample に任せる方針に従いました。題材（GCS 基幹システム）の食い違い、要件 ID の飛び、製品名の混入、コードブロックでない点の指摘（F009・F010・F015・F017・F018）もこれで解消します。
+- **位置づけ**: 名前を並べるだけだった章を、関係と参照する場面の表に替えました。本書を先に作り `opd-*`・`opr-*`・`sac-*` が要件 ID を参照するという作る順序と、基準値を変えたときに見直す文書も明記しました（F001・F004・F012・F019）。
+- **未決事項の明記**: 全体方針に `_UNDECIDED_` を置き、`recipe`・`template` の要否判断と sample の構成合わせを `ready` の前提条件にしました（F002・F021）。
+- **Frontmatter**: 表をやめて箇条書きにし、`status` などの必須項目は正本に委ねました。`part_of` はスキーマに合わせて配列で統一しました（F011）。
+- **本文要件**: 章名を「本文構成（標準テンプレ）」から「本文要件」に改め、5 章それぞれに目的と内容を付けました（F014）。
+- **記述ガイド**: 各章に 3 項目以上の書き方、判断基準、良い例と悪い例（駄菓子屋の題材）を置きました（F003）。主な追加は次のとおりです。
+  - 守る業務と、守れなかったときの業務影响（F006）
+  - 監視・バックアップ・手順・体制の 4 領域を必ず扱い、扱わない領域は理由を書くこと（F007）
+  - 基準を数値・単位・比較方向・集計期間で書くこと（F013）
+  - 判定者や体制は Role code で書くこと（F008）
+  - 通知手段は種類で書き、製品名は `opd-*` に置くこと（F009）
+  - 未達の結果は `sac-*` に残し、基準値を見直すときは `dec-*` に判断を残すこと、見直す契機（F005・F022）
+- **表記の統一**: 略称を `opd-*`・`opr-*`、列名を「要件ID」にそろえました（F020）。
+- **禁止事項**: 「基準を単位・集計期間なしで書く」と「監視製品・通知ツールの選定を要件として書く」を加えました。
+
+PJR-76N9 の決まりに従い、成果物に文書の作成・承認の役割を求める記述は入れていません。オンコール体制や判定者は運用の中身なので、Role code で書く要件として残しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"nfr-operations-rulebook を書き直した。サンプル章を削除し、位置づけを関係表に、本文構成（標準テンプレ）を本文要件に改め、記述ガイドに判断基準と良い例・悪い例を加えた。grade の finding F001〜F022 のうち、sample の章構成の是正（F016）を除いて rulebook 側で対処した。","handoff":["F016（major/vp-qe-kata-conformance）は未解消。sample（docs/ja/specdojo/samples/nfr-operations-sample.md）が rulebook の「本文要件」の 5 章（概要（対象・目的）／適用範囲・体制前提／運用要件一覧／測定・検証方法／関連ドキュメント導線）に揃っていない。この段は sample を変更しないため、sample の段で駄菓子屋の題材のまま 5 章構成へ直す必要がある（要件 ID は nfr-ops-001 からの連番、領域列で 4 領域を網羅、判定者は Role code、製品名を書かない）。","recipe・template の要否は rulebook の全体方針に _UNDECIDED_ として残した。sample の是正と、NFR 分冊で共通の template にできるかの判断が ready の前提条件。","維持した記述: ID 規則 nfr-ops-<連番>、配置先、既存の禁止事項 3 行。同系統の nfr-availability-rulebook・nfr-integrity-rulebook の簡潔化と構成を揃えた。役割の割り当てや承認の進み具合は成果物に求めていない（PJR-76N9）。オンコール体制と判定者は運用の中身として Role code で書く要件として残した。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/rulebooks/nfr-operations-rulebook.md","status":"passed","summary":"整形を適用した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/nfr-operations-rulebook.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更は docs/ja/specdojo/rulebooks 配下の rulebook だけで、plan・result・個票は変更していない"}]}
+</specdojo_executor_evidence>

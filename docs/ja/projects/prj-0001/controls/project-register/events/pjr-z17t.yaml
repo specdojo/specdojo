@@ -1,0 +1,114 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_4c53738bfbb5446893f45cdfd5db8588
+  ts: "2026-11-22T03:13:06Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 型の schedule の review の段を通しで試す統合テストがない
+    - field: description
+      from: ""
+      to: PJR-E4R5 の型の grade と review の段の事前の grade の組み合わせが試されておらず、第 3 波の 090 で初めて食い違いが分かった。fixture の型の schedule で review の段を 1 回通す統合テストを足す。
+    - field: input
+      from: ""
+      to: '["利用者の承認（2026-11-22、indie）で起票した。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-22"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-PP4X"]'
+- v: 1
+  id: reg_02f2d24701e54d4583b4f12b7613d3ce
+  ts: "2026-11-22T11:13:52Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件を利用者の承認のもとで書く
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_4c53738bfbb5446893f45cdfd5db8588
+- v: 1
+  id: reg_2c1ab4aad5a24b5cacd4e087ef8ce201
+  ts: "2026-11-22T11:13:57Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 作業内容を利用者の承認のもとで書く
+  changes:
+    - field: section
+      from: ""
+      to: 作業内容
+  previous_event_id: reg_02f2d24701e54d4583b4f12b7613d3ce
+- v: 1
+  id: reg_430601afa2194d1294f8343c0e93e90b
+  ts: "2026-11-22T11:24:56Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_2c1ab4aad5a24b5cacd4e087ef8ce201
+- v: 1
+  id: reg_24b0ca794c114d2796480112fa46e506
+  ts: "2026-11-22T11:33:21Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_430601afa2194d1294f8343c0e93e90b
+- v: 1
+  id: reg_8bf3d418f5584adbadbd06cfea6d81e5
+  ts: "2026-11-22T11:38:00Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが差分・個票の対応結果・result を完了条件と照らして確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: 型の schedule の review の段を通しで試す統合テストを足した。kata の grade が 1 回だけ流れること、plan の対象種別、鮮度の確認で止まらないこと、needs-work で完了にならないことを確かめる
+  previous_event_id: reg_24b0ca794c114d2796480112fa46e506

@@ -1,0 +1,27 @@
+9 コマンドと `where` の別名を CLI の登録・実装・テスト・文書から消し、個票を更新しました。`npm run typecheck`、`npm run lint:ts`（エラー 0）、`npm run test:unit`（4088 件）、`npm run lint:md` は通っています。親の検証（`test:integration` など）は未実行です。
+
+**使われ方の確認**
+- このリポジトリの `src`・`tools`・`templates`・`package.json`・`.specdojo` に、9 コマンドや `where` の別名の呼び出しはありませんでした。あったのは CLI の登録・警告文・テスト・文書だけです。
+- routine の定義は、`docs` 配下の grep で確認しました。
+- `../specdojo-prj-0002` の `.specdojo` と `package.json` にも呼び出しはありませんでした。
+- 例外が 1 件ありました。`src/shared/specdojo-config.ts` の members 読込エラーが `config migrate-members` を案内していたため、手作業で移す案内に変えました。
+
+**消したもの**
+- 5 種類の `where` の別名と `timeline` コマンド全体。
+- `exec note`・`link`・`estimate`、`exec migrate-records`、`grade migrate`、`register migrate`、`config migrate-members`。
+- 呼び出し元がなくなった実装も消しました。`runSimpleEventCommand`、`migrateInlineGrades`、`migrateAgentMembers`、`renderTimelineOrderMarkdown`、`src/shared/where-alias.ts`、`src/register/migration.ts` などです。
+- `src/dashboard/timeline.ts` には、`specdojo where timeline` が使う関数だけを残しました。
+- 対応するテストも消し、`schedule` の subcommand 一覧など、数や名前を固定していたテストを直しました。
+
+**残したもの**
+- `src/shared/deprecation.ts` は、`timeline_path` と `tml-index.yaml` の警告でまだ使うため残しました。どちらにしたかは対応結果に書いてあります。
+- `buildTimeline` と `renderCatalogScaffoldMarkdown` は dashboard が使うため残しました。
+
+**文書**
+- `command-reference.md`、`plan-result-lifecycle-guide.md`、`register-operation-guide.md`、`timeline-design-guide.md`、`tml-rulebook.md`、`pm-members-rulebook.md`、`clis-exec-commands.md`、`sysd-index.md` を直しました。
+- 過去の版の移行ガイドと `CHANGELOG.md` は変えていません。
+- 個票の `### 5.1. CHANGELOG に書く事項` に、区分（削除）と行の文案を書きました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"9コマンドと where の別名を CLI・実装・テスト・文書から削除し、個票の対応結果（使われ方の確認、CHANGELOG 文案を含む）を更新した。typecheck・lint:ts・test:unit・lint:md は通過。","handoff":["`src/register/migrate-timestamps.ts` と `migrateEmbeddedRegisterEvents`・`migrateRegisterEventsFromGit`（`src/register/register.ts`、`src/register/command-types.ts`）は `register migrate` の削除で呼び出し元がなくなった。別の項目で削除を判断する。","`src/exec/core.ts` のイベント型（`note`・`link`・`estimate`）は、既存のイベントファイルを読むため残した。","`src/shared/deprecation.ts` は `timeline_path` と `tml-index.yaml` の警告で使うため残した。","`../specdojo-prj-0002` の `.specdojo` と `package.json` に 9 コマンドや `where` の別名の呼び出しはなかった。","CHANGELOG.md は変更していない。区分（削除）と文案は個票の `### 5.1. CHANGELOG に書く事項` に書いた。"],"validations":[{"command":"npm run typecheck","status":"passed","summary":"エラーなし"},{"command":"npm run lint:ts","status":"passed","summary":"エラー 0（既存の warning のみ）"},{"command":"npm run test:unit","status":"passed","summary":"4088 件通過"},{"command":"npm run lint:md","status":"passed","summary":"エラーなし"}]}
+</specdojo_executor_evidence>

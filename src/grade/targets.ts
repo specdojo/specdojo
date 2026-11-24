@@ -8,7 +8,7 @@ import { isTrashedPath, resolveBasePath } from "../catalog/paths.js";
 import { listFilesRecursive } from "../shared/fs.js";
 import { gradeContentHash } from "./result.js";
 import { readSpecdojoNamespace } from "../docs/frontmatter-namespace.js";
-import { resolveAuthoredKataPathIfExists } from "../kata/authoring.js";
+import { resolveAuthoredKataPathIfExists, type AuthoringKind } from "../kata/authoring.js";
 import {
   GRADE_TARGETS,
   KATA_DIRS,
@@ -147,11 +147,14 @@ function parseKataReference(path: string, kind: KataReference["kind"]): KataRefe
 // grade の評価対象は利用リポジトリが所有する kata に限る。package 側の kata は SpecDojo が
 // 管理する成果物であり、利用プロジェクトが評価・改善する対象ではない。フォールバックは
 // 個別ファイルの解決にのみ用い、対象の列挙には用いない（解決と列挙を区別する）。
-export function loadKataReferences(): KataReference[] {
+// generated/ 配下の YAML 表示ページは正本と同じ id を持ち、古いまま残ると正本より先に選ばれて
+// grade が古い内容を読む（PJR-1RJP）ため、参照の候補から除く。
+export function loadKataReferences(root: string = specdojoRootDir()): KataReference[] {
   const references = new Map<string, KataReference>();
-  const root = specdojoRootDir();
   for (const kind of KATA_DIRS) {
-    const paths = listFilesRecursive(join(root, "docs/ja/specdojo", kind))
+    const kindDir = join(root, "docs/ja/specdojo", kind);
+    const paths = listFilesRecursive(kindDir)
+      .filter((path) => !relativePathFromRoot(path, kindDir).split("/").includes("generated"))
       .filter((path) => KATA_REFERENCE_EXTENSIONS.has(extname(path).toLowerCase()))
       .flatMap((path) => {
         const reference = parseKataReference(path, kind);
@@ -622,12 +625,83 @@ export function sourceHashesChanged(
   return Object.entries(current).some(([key, hash]) => stored?.[key] !== hash);
 }
 
-/** Resolve rulebook and sample documents for a single kata name or prefix. */
+/** Kata document kinds accepted by `--kind` (`all` selects every kind). */
+export type KataDocumentKind = AuthoringKind | "all";
+
+const KATA_DOCUMENT_KINDS: readonly AuthoringKind[] = ["rulebook", "recipe", "sample", "template"];
+const NOT_DECLARED_IDS = new Set(["not-needed", "none", "undecided"]);
+
+function resolveRulebookDeclaredDocuments(
+  normalized: string,
+  kind: "recipe" | "template",
+  rootDir: string,
+): string[] {
+  const rulebook = resolveRulebookAndSample(normalized, rootDir)[0];
+  let declared: unknown;
+  if (rulebook?.includes("-rulebook")) {
+    try {
+      declared = readSpecdojoNamespace(readFileSync(resolve(rootDir, rulebook), "utf8"))[kind];
+    } catch (error) {
+      throw new Error(
+        `Failed to read rulebook ${rulebook} while resolving kata ${normalized}: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
+        { cause: error },
+      );
+    }
+  }
+  const ids = (Array.isArray(declared) ? declared : [declared]).filter(
+    (item): item is string => typeof item === "string" && item.trim() !== "",
+  );
+  const candidates = ids.length > 0 ? ids : [`${normalized}-${kind}`];
+  const found: string[] = [];
+  for (const id of candidates) {
+    if (NOT_DECLARED_IDS.has(id)) continue;
+    for (const ext of ["md", "yaml", "yml", "json"] as const) {
+      const authored = resolveAuthoredKataPathIfExists(id, kind, ext, rootDir);
+      if (authored && existsSync(authored.absolutePath)) {
+        const relative = relativePathFromRoot(authored.absolutePath, rootDir);
+        if (!found.includes(relative)) found.push(relative);
+        break;
+      }
+    }
+    if (ids.length > 0 && found.length === 0) {
+      throw new Error(
+        `${kind} file not found for '${id}' declared in ${kind} of ${rulebook} (kata ${normalized})`,
+      );
+    }
+  }
+  return found;
+}
+
+/**
+ * Resolve the documents of one kata name or prefix.
+ * Without `kind` the rulebook and sample are selected; with `kind` only that kind
+ * (`all` selects rulebook, recipe, sample and template). A missing kind yields no documents.
+ */
 export function resolveKataDocuments(
   kataName: string,
   rootDir: string = specdojoRootDir(),
+  kind?: KataDocumentKind,
 ): string[] {
   const normalized = kataName.trim().replace(/-rulebook(\.md)?$/, "");
+  if (!normalized) return [];
+  if (kind === undefined) return resolveRulebookAndSample(normalized, rootDir);
+
+  const kinds = kind === "all" ? KATA_DOCUMENT_KINDS : [kind];
+  const documents: string[] = [];
+  const baseline = resolveRulebookAndSample(normalized, rootDir);
+  for (const each of kinds) {
+    const found =
+      each === "recipe" || each === "template"
+        ? resolveRulebookDeclaredDocuments(normalized, each, rootDir)
+        : baseline.filter((path) => path.split("/").includes(`${each}s`));
+    for (const path of found) if (!documents.includes(path)) documents.push(path);
+  }
+  return documents;
+}
+
+function resolveRulebookAndSample(normalized: string, rootDir: string): string[] {
   if (!normalized) return [];
 
   const found: string[] = [];
@@ -635,7 +709,7 @@ export function resolveKataDocuments(
   // 1. rulebook
   const rulebookCandidate = join(rootDir, `docs/ja/specdojo/rulebooks/${normalized}-rulebook.md`);
   if (existsSync(rulebookCandidate)) {
-    found.push(repoRelativePath(rulebookCandidate));
+    found.push(relativePathFromRoot(rulebookCandidate, rootDir));
   } else {
     const authored = resolveAuthoredKataPathIfExists(
       `${normalized}-rulebook`,
@@ -644,7 +718,7 @@ export function resolveKataDocuments(
       rootDir,
     );
     if (authored && existsSync(authored.absolutePath)) {
-      found.push(repoRelativePath(authored.absolutePath));
+      found.push(relativePathFromRoot(authored.absolutePath, rootDir));
     }
   }
 
@@ -652,28 +726,40 @@ export function resolveKataDocuments(
   let foundSample = false;
   if (found.length > 0) {
     const rulebookPath = resolve(rootDir, found[0]!);
+    let declared: unknown;
     try {
-      const content = readFileSync(rulebookPath, "utf8");
-      const fm = readSpecdojoNamespace(content);
-      if (fm.sample && typeof fm.sample === "string") {
-        if (fm.sample !== "not-needed" && fm.sample !== "none" && fm.sample !== "undecided") {
-          const sampleId = fm.sample;
-          const extensions: ("md" | "yaml" | "yml" | "json")[] = ["md", "yaml", "yml", "json"];
-          for (const ext of extensions) {
-            const authored = resolveAuthoredKataPathIfExists(sampleId, "sample", ext, rootDir);
-            if (authored && existsSync(authored.absolutePath)) {
-              found.push(repoRelativePath(authored.absolutePath));
-              foundSample = true;
-              break;
-            }
+      declared = readSpecdojoNamespace(readFileSync(rulebookPath, "utf8")).sample;
+    } catch (error) {
+      throw new Error(
+        `Failed to read rulebook ${found[0]} while resolving kata ${normalized}: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
+        { cause: error },
+      );
+    }
+    const sampleIds = (Array.isArray(declared) ? declared : [declared]).filter(
+      (item): item is string => typeof item === "string" && item.trim() !== "",
+    );
+    if (sampleIds.length > 0) {
+      foundSample = true;
+      const extensions: ("md" | "yaml" | "yml" | "json")[] = ["md", "yaml", "yml", "json"];
+      for (const sampleId of sampleIds) {
+        if (sampleId === "not-needed" || sampleId === "none" || sampleId === "undecided") continue;
+        let resolved: string | undefined;
+        for (const ext of extensions) {
+          const authored = resolveAuthoredKataPathIfExists(sampleId, "sample", ext, rootDir);
+          if (authored && existsSync(authored.absolutePath)) {
+            resolved = relativePathFromRoot(authored.absolutePath, rootDir);
+            break;
           }
-        } else {
-          // Explicitly not-needed or none
-          foundSample = true;
         }
+        if (!resolved) {
+          throw new Error(
+            `Sample file not found for '${sampleId}' declared in sample of ${found[0]} (kata ${normalized})`,
+          );
+        }
+        if (!found.includes(resolved)) found.push(resolved);
       }
-    } catch {
-      // Ignore rulebook read error and fall through to filename lookup
     }
   }
 
@@ -682,7 +768,7 @@ export function resolveKataDocuments(
     for (const ext of sampleExtensions) {
       const sampleCandidate = join(rootDir, `docs/ja/specdojo/samples/${normalized}-sample.${ext}`);
       if (existsSync(sampleCandidate)) {
-        found.push(repoRelativePath(sampleCandidate));
+        found.push(relativePathFromRoot(sampleCandidate, rootDir));
         break;
       }
     }
@@ -694,7 +780,7 @@ export function resolveKataDocuments(
     for (const ext of sampleExtensions) {
       const sampleCandidate = join(rootDir, `docs/ja/specdojo/samples/${normalized}-sample.${ext}`);
       if (existsSync(sampleCandidate)) {
-        found.push(repoRelativePath(sampleCandidate));
+        found.push(relativePathFromRoot(sampleCandidate, rootDir));
         break;
       }
     }
@@ -710,7 +796,9 @@ export function resolveKataDocuments(
 export function resolveKataBatchTargets(
   kataNames: string[],
   rootDir: string = specdojoRootDir(),
-): { documentsByKata: Map<string, string[]>; allDocuments: string[] } {
+  kind?: KataDocumentKind,
+): { documentsByKata: Map<string, string[]>; allDocuments: string[]; notes: string[] } {
+  const notes: string[] = [];
   const documentsByKata = new Map<string, string[]>();
   const unknown: string[] = [];
 
@@ -718,8 +806,10 @@ export function resolveKataBatchTargets(
     const name = rawName.trim();
     if (!name) continue;
     if (documentsByKata.has(name)) continue;
-    const docs = resolveKataDocuments(name, rootDir);
-    if (docs.length === 0) {
+    const docs = resolveKataDocuments(name, rootDir, kind);
+    if (docs.length === 0 && resolveKataDocuments(name, rootDir).length > 0) {
+      notes.push(`kata ${name}: no ${kind} document to grade (not-needed or not defined)`);
+    } else if (docs.length === 0) {
       unknown.push(name);
     } else {
       documentsByKata.set(name, docs);
@@ -739,5 +829,5 @@ export function resolveKataBatchTargets(
     }
   }
 
-  return { documentsByKata, allDocuments };
+  return { documentsByKata, allDocuments, notes };
 }

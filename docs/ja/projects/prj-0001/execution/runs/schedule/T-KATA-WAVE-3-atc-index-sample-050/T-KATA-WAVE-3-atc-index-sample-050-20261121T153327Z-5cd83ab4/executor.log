@@ -1,0 +1,24 @@
+`docs/ja/specdojo/samples/atc-index-sample.md` を、rulebook が定める 9 章構成の完成例に書き直しました。変更したのはこの1ファイルだけで、rulebook と他の sample には手を入れていません。
+
+**主な変更内容**
+- **frontmatter と見出し**: `based_on` に tsp-index、bac、成功基準・受入条件の各 sample を入れました。H1 は「駄菓子屋きぬや 販売管理システム 受入テストカタログ 概要」に変えました（F005・F018・F023）。
+- **目的と適用対象**: 本書・`atc-<term>`・受入確認記録の分担、関係者ごとの責務（Role code 付き）、P0/P1/P2 の合格基準、判定の流れ4段階とそれぞれの完了条件を書きました（F001・F007〜F009・F015）。
+- **2〜8章**: 対象を `atc-cash-sale`・`atc-sale-hold`・`atc-stock-credit-check` の3つに分け、その分割根拠を示しました。ほかに対象外とその代わりの担保先、観点と条件の立て方、分配表、受入環境・データの準備と後始末・外部依存・証跡、ケース表の共通カラムと形式例1行を入れました（F010・F012・F017・F020・F021・F025）。
+- **メモ / 将来課題**: 各論点に、受入判断への影響、当面の扱い、確定したときの見直し方針、担当と期限を付けました（F002・F006・F024）。
+- 旧版の rulebook へのリンク、素の識別子、「主な内容」の重複は消しました（F011・F016・F019）。
+
+**値の整合**: TSP は受入の出口条件に例外を設けていません。そのため P0 は例外なしで全件 Pass とし、条件付き受入は P1 だけに限りました。データ（商品A 単価30円・在庫5個、`kinuya-test-data`）と記録（`kinuya-acceptance-record`）は TSP・stc-index の sample と同じ値にしています。
+
+**検証**: markdownlint は指摘0件、`npm run docs:build` も成功しました。
+
+**直していない指摘**
+- F018 のうち `title` は入れていません。Markdown 規約で frontmatter に `title` を書くことが禁止されているためです。`supersedes` も入れていません。置き換える前の版がないためです。
+- F003・F013・F014 は本文には足していません。rulebook が、文書の承認と形式の確認をメタ情報標準と lint に任せ、業務の受入確認に含めないと決めているためです。この扱いでよいかは再評価で確かめてください。
+
+**rulebook の変更案**
+- 記述ガイドの合格基準の例は「P1/P2 の fail は条件付き受入の可否を判断」となっていて、TSP の「受入の出口条件に例外なし」とぶつかって読めます。P0 には例外がないことを明記する案です。
+- frontmatter の `recipe`・`template` が `undecided` のままです。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"atc-index-sample を rulebook の9章構成に沿った駄菓子屋きぬやの完成例へ書き直した（based_on、H1、合格基準・判定の流れ、分割基準、対象外、観点・条件、分配表、環境・データ・証跡、ケース表共通カラムと形式例、将来課題の担当・期限）。変更は docs/ja/specdojo/samples/atc-index-sample.md のみ。","handoff":["F018 のうち `title` は入れていない。Markdown 規約で frontmatter に `title` を書くことが禁止されているため。`supersedes` は置き換える前の版がないため入れていない。","F003・F013・F014（公開・承認者、変更影響、lint コマンド）は本文に足していない。rulebook の「全体方針」が、承認・改訂と形式の確認をメタ情報標準と `npm run lint:fm`・`npm run lint:md` に任せ、業務の受入確認に含めないと決めているため。この扱いでよいかは再評価で確かめる。","rulebook の変更案: 記述ガイド（本ドキュメントの目的と適用対象）の合格基準の例「P1/P2 の fail は…条件付き受入の可否を判断」は、TSP sample の「受入テストの出口条件には例外を設けない」とぶつかって読める。sample では P0 は例外なしで全件 Pass とし、条件付き受入は P1 だけに限った。rulebook の例でも P0 に例外がないことを明記する案。","rulebook の変更案: frontmatter の `recipe`・`template` が `undecided` のまま。","関連 sample の申し送り: etc-index-sample と stc-index-sample は本 sample へのリンクの表示名を「受入テスト」としている。H1 に合わせて「受入テストカタログ 概要」へそろえる候補。atc-sample（対象別）はまだ旧形式の薄い sample で、本書の `atc-cash-sale` などの term と合わせて厚くする必要がある。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/atc-index-sample.md","status":"passed","summary":"--write で表を整形したあと、check が通った"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/atc-index-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run docs:build","status":"passed","summary":"build complete in 163.34s"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/ 配下の sample だけで、plan・result・個票を変更していないため"},{"command":"npm run validate:catalog","status":"not_applicable","summary":"プロジェクト成果物を変更していない","reason":"変更が docs/ja/projects/ に届いておらず、docs/ja/specdojo/samples/ 配下だけのため"}]}
+</specdojo_executor_evidence>

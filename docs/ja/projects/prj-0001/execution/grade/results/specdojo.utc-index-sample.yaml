@@ -4,94 +4,94 @@ document: specdojo:utc-index-sample
 path: docs/ja/specdojo/samples/utc-index-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: fail
-score: 36
-graded_at: "2026-10-20T20:51:41.876Z"
-graded_by: flash-high-executor
-content_hash: 6ee60a091cc6f8b7e943ae14f496d7ec013c5d0506fd1a78bfbde10bb4d442d7
+verdict: pass
+score: 88
+graded_at: "2026-11-23T02:07:02.718Z"
+graded_by: opus-review-executor
+content_hash: cbd969fa91c0a3a06f4d6ebcdc5541186381ac901025e4b8feb6786bc61b167f
 categories:
   purpose:
-    score: 25
+    score: 100
   operations:
-    score: 69
+    score: 94
   planning:
-    score: 33
+    score: 100
   business:
-    score: 33
+    score: 100
   architecture:
-    score: 63
+    score: 88
   usability:
-    score: 50
+    score: 92
   implementation:
-    score: 38
+    score: 88
   quality:
-    score: 25
+    score: 83
   consistency:
-    score: 0
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-po-decision-readiness:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 3
     score: 75
-  vp-pm-plan-feasibility:
-    level: 1
-    score: 25
-  vp-pm-dependency-risk:
-    level: 1
-    score: 25
-  vp-pm-control-reporting:
-    level: 2
-    score: 50
-  vp-ba-business-value:
-    level: 1
-    score: 25
-  vp-ba-requirements-completeness:
-    level: 1
-    score: 25
-  vp-ba-stakeholder-clarity:
-    level: 2
-    score: 50
-  vp-arc-technical-constraints:
-    level: 1
-    score: 25
   vp-arc-conciseness:
     level: 3
     score: 75
   vp-dev-implementation-readiness:
-    level: 1
-    score: 25
+    level: 3
+    score: 75
   vp-dev-change-impact:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-dev-testability:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-qe-verifiability:
-    level: 1
-    score: 25
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
-    level: 0
-    score: 0
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
-    level: 0
-    score: 0
+    level: 4
+    score: 100
   vp-ux-readability:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ux-language-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ops-release-readiness:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ops-operability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -99,203 +99,119 @@ viewpoints:
     level: 4
     score: 100
 finding_counts:
-  blocker: 2
-  major: 19
-  minor: 2
+  blocker: 0
+  major: 0
+  minor: 9
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-po-purpose-alignment
-    line: 5
-    anchor: 本書は、単体テストとして確認する観点・条件と分配を定義するための最小サンプルである。
-    message: >-
-      The document fails to align the sample content with project objectives and higher-level specifications like
-      `tsp-index`, lacking specific scope, purpose justification, and alignment with the target system.
-    message_ja: ドキュメントは、サンプル内容をプロジェクトの目的や `tsp-index` のような上位の仕様と一致させておらず、具体的なスコープ、目的の正当化、およびターゲットシステムとの整合性が不足しています。
-  - id: F002
-    severity: major
-    rule: vp-po-decision-readiness
-    line: 26
-    anchor: "## 5. 未解決事項"
-    message: >-
-      Open issues and decision points lack specific decision-makers, preconditions, business impacts, and concrete next
-      actions required for PO evaluation.
-    message_ja: 未解決の事項や決定事項において、具体的な意思決定者、前提条件、ビジネスへの影響、およびPOによる評価に必要な具体的な次のアクションが不足しています。
-  - id: F003
     severity: minor
-    rule: vp-po-publication-accountability
-    line: 1
-    anchor: "# [単体テスト](../rulebooks/utc-index-rulebook.md) サンプル"
-    message: The sample does not define the approval accountability or target publication audience for the document.
-    message_ja: サンプルには、ドキュメントの承認責任やターゲットとなる公開対象が定義されていません。
-  - id: F004
-    severity: major
-    rule: vp-pm-plan-feasibility
-    line: 15
-    anchor: "- 主な内容: 対象単位、テスト範囲と対象外、境界（モック/スタブ方針）、TPC の観点・条件の分配、合格基準とエビデンス（共通）"
-    message: >-
-      The document lists abstract topics without actionable task breakdowns, role codes, dependencies, or completion
-      criteria needed for planning and tracking.
-    message_ja: ドキュメントには抽象的なトピックがリストされていますが、計画や追跡に必要な実行可能なタスクの分解、ロールコード、依存関係、または完了基準がありません。
-  - id: F005
-    severity: major
-    rule: vp-pm-dependency-risk
-    line: 11
-    anchor: "- 参照: `../rulebooks/utc-index-rulebook.md`"
-    message: >-
-      Dependencies on upstream deliverables (e.g., `tsp-index`) and downstream deliverables (`utc-＜term＞`), along with
-      associated schedule risks and unresolved issues, are not identified.
-    message_ja: 上流の成果物（例：`tsp-index`）や下流の成果物（`utc-＜term＞`）への依存関係、およびそれに伴うスケジュールのリスクや未解決の事項が特定されていません。
-  - id: F006
-    severity: major
-    rule: vp-pm-control-reporting
-    line: 26
-    anchor: "## 5. 未解決事項"
-    message: >-
-      Unresolved items and reporting candidates lack separation into risks, change requests, or decision records, and
-      lack designated reporting destinations or role codes.
-    message_ja: 未解決事項や報告候補が、リスク、変更要求、または決定事項に分類されておらず、指定された報告先やロールコードも不足しています。
-  - id: F007
-    severity: major
-    rule: vp-ba-business-value
-    line: 9
-    anchor: "- 対象: 駄菓子屋の販売管理システム"
-    message: >-
-      The sample names the target system but completely omits the business problems, expected values, failure impacts,
-      and success criteria for the unit test catalog.
-    message_ja: サンプルにはターゲットシステムの名前が記載されていますが、ユニットテストカタログにおけるビジネス上の課題、期待される価値、失敗時の影響、および成功基準が完全に省略されています。
-  - id: F008
-    severity: major
-    rule: vp-ba-requirements-completeness
-    line: 15
-    anchor: "- 主な内容: 対象単位、テスト範囲と対象外、境界（モック/スタブ方針）、TPC の観点・条件の分配、合格基準とエビデンス（共通）"
-    message: >-
-      Essential requirements, including common scope, exclusions with rationales, acceptance criteria, and term
-      definitions, are entirely missing from the sample.
-    message_ja: 共通のスコープ、理由を伴う除外事項、受け入れ基準、および用語の定義を含む重要な要件が、サンプルから完全に欠落しています。
-  - id: F009
-    severity: major
-    rule: vp-ba-stakeholder-clarity
-    line: 16
-    anchor: "- 必須観点: 対象、条件、判定基準、責任者"
-    message: >-
-      Stakeholders, reviewers, approvers, and operational users are not clearly identified beyond mentioning the word
-      '責任者'.
-    message_ja: ステークホルダー、レビュアー、承認者、および運用ユーザーが、「責任者」という言葉に触れている以外、明確に特定されていません。
-  - id: F010
-    severity: major
     rule: vp-arc-technical-constraints
-    line: 15
-    anchor: "- 主な内容: 対象単位、テスト範囲と対象外、境界（モック/スタブ方針）、TPC の観点・条件の分配、合格基準とエビデンス（共通）"
+    line: 24
+    anchor: >-
+      | `utc-sales-checkout` | 請求額・釣銭の計算と、会計確定時の在庫引当           | 商品・在庫リポジトリは Fake       | 金額と在庫減算は BAC-01
+      で同時に確定し、同時に変更される |
     message: >-
-      Technical constraints, external dependencies, and architectural policies (e.g., DB isolation, external API
-      stubbing, clock control) required by the rulebook are omitted.
-    message_ja: ルールブックで求められている技術的な制約、外部依存関係、およびアーキテクチャポリシー（例：DBの分離、外部APIのスタブ化、クロック制御）が省略されています。
-  - id: F011
+      括り方の表の `utc-sales-checkout` は依存の扱いを「商品・在庫リポジトリは Fake」としか書いていないが、「単体テスト共通の境界/依存の扱い」では会計確定 1 回につき `receipt-print` の
+      Mock で要求 1 回を検証し、記録サービス Stub・採番器も注入するとしており、どの term がこれらの依存を持つかが読み取れないため、括り方の表の依存の扱いに `receipt-print` Mock・記録サービス
+      Stub・採番器のうち該当するものを書き足す。
+    message_ja: >-
+      括り方の表の `utc-sales-checkout` は依存の扱いを「商品・在庫リポジトリは Fake」としか書いていないが、「単体テスト共通の境界/依存の扱い」では会計確定 1 回につき `receipt-print` の
+      Mock で要求 1 回を検証し、記録サービス Stub・採番器も注入するとしており、どの term がこれらの依存を持つかが読み取れないため、括り方の表の依存の扱いに `receipt-print` Mock・記録サービス
+      Stub・採番器のうち該当するものを書き足す。
+  - id: F002
     severity: minor
     rule: vp-arc-conciseness
-    line: 24
-    anchor: "| 主な内容     | 対象単位、テスト範囲と対象外、境界（モック/スタブ方針）、TPC の観点・条件の分配、合格基準とエビデンス（共通） | 要点のみ記載                         |"
+    line: 105
+    anchor: "`utc-sales-checkout` の1行の書き方は次のとおりとする（`証跡` は CI 整備後の書き方で、整備前は上記の暫定表記にする）。"
     message: >-
-      The table in section 4 duplicates the exact text from section 3 without providing additional concrete sample data
-      or distinctive value.
-    message_ja: セクション4の表は、追加の具体的なサンプルデータや独自の価値を提供することなく、セクション3のテキストをそのまま重複させています。
-  - id: F012
-    severity: major
+      `証跡` の暫定の書き方は line 103 で定めており、line 105 の括弧書き「整備前は上記の暫定表記にする」と line 117 の「整備前は `証跡`
+      を暫定のローカル実行結果とし」が同じ内容を繰り返しているため、line 105 の括弧書きを削り、line 117 は差し替えの期限と担当だけにまとめる。
+    message_ja: >-
+      `証跡` の暫定の書き方は line 103 で定めており、line 105 の括弧書き「整備前は上記の暫定表記にする」と line 117 の「整備前は `証跡`
+      を暫定のローカル実行結果とし」が同じ内容を繰り返しているため、line 105 の括弧書きを削り、line 117 は差し替えの期限と担当だけにまとめる。
+  - id: F003
+    severity: minor
     rule: vp-dev-implementation-readiness
-    line: 15
-    anchor: "- 主な内容: 対象単位、テスト範囲と対象外、境界（モック/スタブ方針）、TPC の観点・条件の分配、合格基準とエビデンス（共通）"
+    line: 101
+    anchor: "- `優先度`: 誤課金・在庫の誤更新につながるものを P0、つけ残高を P1、表示の書式変換を P2 とする。"
     message: >-
-      The document lacks unit partitioning criteria, condition categorization rules, and common test case table schemas
-      needed for developers to implement tests and downstream catalogs.
-    message_ja: 開発者がテストや下流のカタログを実装するために必要な、ユニット分割基準、条件分類ルール、および共通のテストケース表スキーマが不足しています。
-  - id: F013
-    severity: major
-    rule: vp-dev-change-impact
-    line: 11
-    anchor: "- 参照: `../rulebooks/utc-index-rulebook.md`"
-    message: Impact of changes on downstream catalogs (`utc-＜term＞`), test suites, and CI pipelines is not identified.
-    message_ja: 変更による下流のカタログ（`utc-＜term＞`）、テストスイート、およびCIパイプラインへの影響が特定されていません。
-  - id: F014
-    severity: major
+      `優先度` の決め方が「誤課金・在庫の誤更新」「つけ残高」「表示の書式変換」しか扱っておらず、`utc-sale-input` が受け持つ入力検証と未確定で保留する判定（BAC-03）にどの優先度を付けるかを DEV
+      が決められないため、この区分の優先度とその理由を書き足す。
+    message_ja: >-
+      `優先度` の決め方が「誤課金・在庫の誤更新」「つけ残高」「表示の書式変換」しか扱っておらず、`utc-sale-input` が受け持つ入力検証と未確定で保留する判定（BAC-03）にどの優先度を付けるかを DEV
+      が決められないため、この区分の優先度とその理由を書き足す。
+  - id: F004
+    severity: minor
     rule: vp-dev-testability
-    line: 5
-    anchor: 本書は、単体テストとして確認する観点・条件と分配を定義するための最小サンプルである。
-    message: Verification commands, lint checks, test execution steps, and expected outputs are completely missing.
-    message_ja: 検証コマンド、Lintチェック、テスト実行手順、および期待される出力が完全に欠落しています。
-  - id: F015
-    severity: major
+    line: 103
+    anchor: "- `証跡`: CI ジョブ `kinuya-ci-unit` の実行結果とテストコードの位置を書く。CI 未整備の間は「暫定: ローカル実行結果、CI 整備後に差し替え」と書く。"
+    message: >-
+      CI 整備前の `証跡` を「暫定: ローカル実行結果」としているが、どのコマンドでどの範囲（対象の `utc-＜term＞` のテスト）を実行し、何を失敗 0 件の判定に使うかが書かれていないため、整備前に DEV
+      が実行する確認のコマンドと合格の判定（例: 単体テスト全件の失敗 0 件）を書き足す。
+    message_ja: >-
+      CI 整備前の `証跡` を「暫定: ローカル実行結果」としているが、どのコマンドでどの範囲（対象の `utc-＜term＞` のテスト）を実行し、何を失敗 0 件の判定に使うかが書かれていないため、整備前に DEV
+      が実行する確認のコマンドと合格の判定（例: 単体テスト全件の失敗 0 件）を書き足す。
+  - id: F005
+    severity: minor
     rule: vp-qe-verifiability
     line: 16
-    anchor: "- 必須観点: 対象、条件、判定基準、責任者"
+    anchor: >-
+      単体テストの合否は [[specdojo:tsp-index-sample|テスト戦略・方針]] の品質ゲートに従い、CI ジョブ `kinuya-ci-unit`（架空）の失敗 0
+      件と、境界条件の観点がすべて実装済みであることを DEV が判定する。
     message: >-
-      Acceptance criteria and pass/fail standards are mentioned only as abstract labels without verifiable conditions or
-      observation criteria.
-    message_ja: 受け入れ基準と合否判定基準が、検証可能な条件や観察基準のない抽象的なラベルとしてのみ記載されています。
-  - id: F016
-    severity: blocker
-    rule: vp-qe-omissions-consistency
-    line: 7
-    anchor: "## 2. 入力情報"
-    message: ルールブックで定義された必須構成（第 2 章〜第 8 章）がすべて欠落している。
-    message_ja: ルールブックで定義された必須構成（第 2 章〜第 8 章）がすべて欠落している。
-  - id: F017
-    severity: blocker
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# [単体テスト](../rulebooks/utc-index-rulebook.md) サンプル"
-    message: ルールブックで定義された必須の Frontmatter 設定および本文構成を遵守しておらず、種別としての責務を果たしていない。
-    message_ja: ルールブックで定義された必須の Frontmatter 設定および本文構成を遵守しておらず、種別としての責務を果たしていない。
-  - id: F018
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# [単体テスト](../rulebooks/utc-index-rulebook.md) サンプル"
-    message: Frontmatter の id と type が、ルールブックで定義された固定値 (utc-index, test) と不整合である。
-    message_ja: Frontmatter の id と type が、ルールブックで定義された固定値 (utc-index, test) と不整合である。
-  - id: F019
-    severity: major
-    rule: vp-ux-readability
-    line: 3
-    anchor: "## 1. 目的と適用範囲"
-    message: 見出し名がルールブックで指定された標準名称（例：本ドキュメントの目的と適用対象）から逸脱している。
-    message_ja: 見出し名がルールブックで指定された標準名称（例：本ドキュメントの目的と適用対象）から逸脱している。
-  - id: F020
-    severity: major
-    rule: vp-ux-readability
-    line: 13
-    anchor: "## 3. 記述内容"
-    message: >-
-      The body consists of meta-placeholders that prevent readers from understanding the actual unit test policies and
-      key decisions for the target system.
-    message_ja: 本文がメタプレースホルダーで構成されているため、読者がターゲットシステムにおける実際のユニットテストポリシーや重要な決定事項を理解することを妨げています。
-  - id: F021
-    severity: major
-    rule: vp-ux-language-consistency
-    line: 15
-    anchor: "- 主な内容: 対象単位、テスト範囲と対象外、境界（モック/スタブ方針）、TPC の観点・条件の分配、合格基準とエビデンス（共通）"
-    message: >-
-      Undefined acronyms such as 'TPC' are introduced without definition, and the document title deviates from the
-      standard catalog name '単体テストカタログ概要'.
+      単体テストの合否条件「境界条件の観点がすべて実装済み」は、観点の型に「境界条件」がなく境界は条件の区分であるため何を数えて判定するかが定まらず、CI ジョブ `kinuya-ci-unit`
+      の整備前の判定手段も書かれていないため、「条件の立て方（共通）」の境界値の条件がすべてケース表にあり automated で実行済みであることなど判定対象を具体化し、整備前の暫定の判定方法を書き足す。
     message_ja: >-
-      Undefined acronyms such as 'TPC' are introduced without definition, and the document title deviates from the
-      standard catalog name '単体テストカタログ概要'.
-  - id: F022
-    severity: major
+      単体テストの合否条件「境界条件の観点がすべて実装済み」は、観点の型に「境界条件」がなく境界は条件の区分であるため何を数えて判定するかが定まらず、CI ジョブ `kinuya-ci-unit`
+      の整備前の判定手段も書かれていないため、「条件の立て方（共通）」の境界値の条件がすべてケース表にあり automated で実行済みであることなど判定対象を具体化し、整備前の暫定の判定方法を書き足す。
+  - id: F006
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 101
+    anchor: "- `優先度`: 誤課金・在庫の誤更新につながるものを P0、つけ残高を P1、表示の書式変換を P2 とする。"
+    message: >-
+      優先度のルールは「誤課金・在庫の誤更新につながるものを P0、つけ残高を P1」としているが、分配方針の表ではつけ残高の採用理由を「誤計算は請求・入金の誤りにつながる」（誤課金）としているため、つけ残高を P0 にするか、P1
+      とする理由（例: 店頭の会計と違い請求前に照合できる）を書き足して食い違いをなくす。
+    message_ja: >-
+      優先度のルールは「誤課金・在庫の誤更新につながるものを P0、つけ残高を P1」としているが、分配方針の表ではつけ残高の採用理由を「誤計算は請求・入金の誤りにつながる」（誤課金）としているため、つけ残高を P0 にするか、P1
+      とする理由（例: 店頭の会計と違い請求前に照合できる）を書き足して食い違いをなくす。
+  - id: F007
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 66
+    anchor: "| 環境 | 固定クロックの日付（月末・月初）、記録サービス Fake の保存失敗         |"
+    message: >-
+      条件の立て方の「環境」では「記録サービス Fake の保存失敗」としているが、単体テスト共通の境界/依存の扱いでは記録サービスを「保存成功・保存失敗・タイムアウトを返す
+      Stub」としており、テストダブルの種類が食い違うため、条件の例を「記録サービス Stub の保存失敗」にそろえる。
+    message_ja: >-
+      条件の立て方の「環境」では「記録サービス Fake の保存失敗」としているが、単体テスト共通の境界/依存の扱いでは記録サービスを「保存成功・保存失敗・タイムアウトを返す
+      Stub」としており、テストダブルの種類が食い違うため、条件の例を「記録サービス Stub の保存失敗」にそろえる。
+  - id: F008
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 109
+    anchor: >-
+      | `ut-sales-checkout-stock-allocation-020` | 入力: 商品A×5 状態: 在庫5個 環境: なし | 会計を確定する | 請求額150円の販売が1件確定し、在庫が5個から0個になる |
+      戻り値の請求額、Fake の在庫数 | 在庫リポジトリ Fake | BAC-01 / C-02 | P0     | automated | `kinuya-ci-unit` の実行結果 |
+    message: >-
+      `証跡` の決め方では「CI ジョブ `kinuya-ci-unit` の実行結果とテストコードの位置を書く」としているが、記入例の `証跡` は「`kinuya-ci-unit`
+      の実行結果」だけでテストコードの位置がなく、共通カラムの決め方と記入例が食い違うため、記入例にテストコードの位置（例: テストファイルとテスト名）を書き足す。
+    message_ja: >-
+      `証跡` の決め方では「CI ジョブ `kinuya-ci-unit` の実行結果とテストコードの位置を書く」としているが、記入例の `証跡` は「`kinuya-ci-unit`
+      の実行結果」だけでテストコードの位置がなく、共通カラムの決め方と記入例が食い違うため、記入例にテストコードの位置（例: テストファイルとテスト名）を書き足す。
+  - id: F009
+    severity: minor
     rule: vp-ops-release-readiness
-    line: 1
-    anchor: "# [単体テスト](../rulebooks/utc-index-rulebook.md) サンプル"
+    line: 116
+    anchor: >-
+      | _UNDECIDED_: 通信不能時の販売継続               | 対象外・除外理由（共通）                | 対象外とし、未確定取引の保留判定を UT
+      に追加しない。初期リリースの範囲確定までに決める                                             | PM へリスクとして報告   |
     message: >-
-      Ready criteria, release preconditions, and verification checklists necessary to transition from draft status are
-      completely absent.
-    message_ja: ドラフト状態から移行するために必要な準備完了基準、リリース前提条件、および検証チェックリストが完全に不足しています。
-  - id: F023
-    severity: major
-    rule: vp-ops-operability
-    line: 5
-    anchor: 本書は、単体テストとして確認する観点・条件と分配を定義するための最小サンプルである。
-    message: >-
-      Operational guidelines for continuous maintenance, change control procedures when updating tests, and support
-      contact/role information are not provided.
-    message_ja: 継続的なメンテナンスのための運用ガイドライン、テスト更新時の変更管理手順、およびサポートの連絡先やロール情報が提供されていません。
+      前回あった ready 化の論点の記述が削られた結果、`_UNDECIDED_`（通信不能時の販売継続）と `_ASSUMPTION_`（CI ジョブ `kinuya-ci-unit` の整備）を残したまま ready
+      にしてよいかが読み取れず、報告先も「PM へ」だけで転送先の PJR が示されていないため、ドキュメントメタ情報標準に沿って ready にする前に各ラベルを
+      PJR（リスク登録簿・決定記録など）へ転送先を明記して引き継ぎラベルを外すことを書き足す。
+    message_ja: >-
+      前回あった ready 化の論点の記述が削られた結果、`_UNDECIDED_`（通信不能時の販売継続）と `_ASSUMPTION_`（CI ジョブ `kinuya-ci-unit` の整備）を残したまま ready
+      にしてよいかが読み取れず、報告先も「PM へ」だけで転送先の PJR が示されていないため、ドキュメントメタ情報標準に沿って ready にする前に各ラベルを
+      PJR（リスク登録簿・決定記録など）へ転送先を明記して引き継ぎラベルを外すことを書き足す。

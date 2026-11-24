@@ -5,10 +5,10 @@ path: docs/ja/specdojo/templates/stsd-template.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 100
-graded_at: "2026-10-23T20:15:25.555Z"
-graded_by: flash-high-executor
-content_hash: 353a45c0c6fd672552745344c248b2a0e756a3256f0e48ca0281e6324831b296
+score: 94
+graded_at: "2026-11-23T20:28:21.653Z"
+graded_by: sonnet-review-executor
+content_hash: 3ea49e5a745d1c82b63706ca28bf3a62830c692482f815779f84037c3397aa86
 categories:
   purpose:
     score: 100
@@ -21,13 +21,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 83
   implementation:
     score: 100
   quality:
     score: 100
   consistency:
-    score: 100
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -60,8 +60,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -78,14 +78,14 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
     level: 4
     score: 100
   vp-ux-readability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-language-consistency:
     level: 4
     score: 100
@@ -104,6 +104,27 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 3
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 53
+    anchor: "| 遷移 ID | 遷移元               | 遷移先               | イベント        | 条件                | 補足           |"
+    message: 図の分割条件と共有状態の規則が rulebook 側の「図の分割」と重複している。しきい値の再掲を参照へ置き換えるとコメントを短くできる。
+    message_ja: 図の分割条件と共有状態の規則が rulebook 側の「図の分割」と重複している。しきい値の再掲を参照へ置き換えるとコメントを短くできる。
+  - id: F002
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 47
+    anchor: state "_NEXT_STATE_NAME_<br>_NEXT_STATE_CODE_" as next_state
+    message: "`-` を複数行で使える旨を rulebook に合わせて明記すると、解釈のずれを防げる。"
+    message_ja: "`-` を複数行で使える旨を rulebook に合わせて明記すると、解釈のずれを防げる。"
+  - id: F003
+    severity: minor
+    rule: vp-ux-readability
+    line: 51
+    anchor: "```"
+    message: 状態遷移の章の記入指示コメントが 4 つ連続して密度が高い。図の作り方と表の作り方の 2 つに整理すると読みやすくなる。
+    message_ja: 状態遷移の章の記入指示コメントが 4 つ連続して密度が高い。図の作り方と表の作り方の 2 つに整理すると読みやすくなる。

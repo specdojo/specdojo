@@ -1,0 +1,101 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f1a5b61550814612a53078eb55f8b3a2
+  ts: "2026-11-22T05:41:43Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 第 3 波の itc-index の型を grade の指摘に沿って直す
+    - field: description
+      from: ""
+      to: 第 3 波の 090 で itc-index の型（rulebook pass 98（minor 2）、sample needs-work 92（major 1・minor 4））が合格に届かなかったため、grade の指摘を直して評価し直す
+    - field: input
+      from: ""
+      to: '["2026-11-22、T-KATA-WAVE-3-itc-index-sample-090 の review で、型の評価は rulebook pass 98（minor 2）、sample needs-work 92（major 1・minor 4） だった。指摘は docs/ja/projects/prj-0001/execution/grade/results/specdojo.itc-index-rulebook.yaml と specdojo.itc-index-sample.yaml にある。","合格は、機械的な「未解決の `_TODO_` / `_ASSUMPTION_`」の指摘（PJR-7C9X）を除いて、rulebook と sample に blocker と major がないこととする（indie の判断、2026-11-22）。","`_TODO_` は sample に残さない。`_ASSUMPTION_` は docs/ja/specdojo/standards/sample-authoring-standard.md に従って残してよい。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-22"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-ABY4"]'
+- v: 1
+  id: reg_9fbbd59e037d4e53b69a7534a6f79db9
+  ts: "2026-11-22T06:18:32Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 読むだけの標準のパスが変更の範囲と推定され、並べた項目が順番待ちになったため名前だけにする
+  changes:
+    - field: input
+      from: '["2026-11-22、T-KATA-WAVE-3-itc-index-sample-090 の review で、型の評価は rulebook pass 98（minor 2）、sample needs-work 92（major 1・minor 4） だった。指摘は docs/ja/projects/prj-0001/execution/grade/results/specdojo.itc-index-rulebook.yaml と specdojo.itc-index-sample.yaml にある。","合格は、機械的な「未解決の `_TODO_` / `_ASSUMPTION_`」の指摘（PJR-7C9X）を除いて、rulebook と sample に blocker と major がないこととする（indie の判断、2026-11-22）。","`_TODO_` は sample に残さない。`_ASSUMPTION_` は docs/ja/specdojo/standards/sample-authoring-standard.md に従って残してよい。"]'
+      to: '["2026-11-22、T-KATA-WAVE-3-itc-index-sample-090 の review で、型の評価は rulebook pass 98（minor 2）、sample needs-work 92（major 1・minor 4） だった。指摘は docs/ja/projects/prj-0001/execution/grade/results/specdojo.itc-index-rulebook.yaml と specdojo.itc-index-sample.yaml にある。","合格は、機械的な「未解決の `_TODO_` / `_ASSUMPTION_`」の指摘（PJR-7C9X）を除いて、rulebook と sample に blocker と major がないこととする（indie の判断、2026-11-22）。","`_TODO_` は sample に残さない。`_ASSUMPTION_` は sample-authoring-standard（sample の記述の標準、読むだけで変えない）に従って残してよい。"]'
+  previous_event_id: reg_f1a5b61550814612a53078eb55f8b3a2
+- v: 1
+  id: reg_f008fc71082843079dc27cbd43a3be0f
+  ts: "2026-11-22T06:24:32Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_9fbbd59e037d4e53b69a7534a6f79db9
+- v: 1
+  id: reg_2ad2a49f6181420998ed4695bfb448b4
+  ts: "2026-11-22T06:26:38Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_f008fc71082843079dc27cbd43a3be0f
+- v: 1
+  id: reg_ae151000cce14eb3b502cb5a753ad1c6
+  ts: "2026-11-22T07:03:26Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分が自分の型の rulebook と sample だけであること、対応結果、統合後の grade を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-22"
+    - field: conclusion
+      from: "-"
+      to: itc-index の型を grade の指摘に沿って直し、評価し直しで合格の基準（機械的な指摘を除いて blocker と major がない）を満たした
+  previous_event_id: reg_2ad2a49f6181420998ed4695bfb448b4

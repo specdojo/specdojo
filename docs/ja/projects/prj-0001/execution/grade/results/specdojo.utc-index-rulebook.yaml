@@ -4,11 +4,11 @@ document: specdojo:utc-index-rulebook
 path: docs/ja/specdojo/rulebooks/utc-index-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 96
-graded_at: "2026-10-10T21:05:59.272Z"
-graded_by: agy-expert-executor
-content_hash: 07918f43270d0e4b668d93dc470dd8ab5271a915a98407a21a68d9b65f21a152
+verdict: pass
+score: 92
+graded_at: "2026-11-23T01:54:32.430Z"
+graded_by: opus-review-executor
+content_hash: 31496596ccc0b18043b0ef1d9e3936710917bb27053165bec5f6e6bce5406dfb
 categories:
   purpose:
     score: 100
@@ -21,13 +21,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 83
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 92
   consistency:
-    score: 100
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -75,17 +75,17 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ux-readability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -100,18 +100,67 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 0
+  major: 0
+  minor: 6
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 単体テストカタログ概要 作成ルール"
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 106
+    anchor: "- 形式は **「対象外（何をやらないか）」「除外理由（なぜやらないか）」「例外（UTで扱う条件）」** の3点セットを基本とする"
     message: >-
-      参照しているサンプル `docs/ja/specdojo/samples/utc-index-sample.md` が、本書の「5.
-      本文構成（標準テンプレ）」で定義した必須見出し構成および順序と整合しておらず、ルールを逸脱している。
+      6.3.1 は形式を「対象外・除外理由・例外」の3点セットと定めているが、6.3.2・6.3.3 は「代替レベル/代替手段」の記載を必須とする4列であり要件が食い違うため、6.3.1
+      を「代替レベル/代替手段」を含む4点セットに改める。
     message_ja: >-
-      参照しているサンプル `docs/ja/specdojo/samples/utc-index-sample.md` が、本書の「5.
-      本文構成（標準テンプレ）」で定義した必須見出し構成および順序と整合しておらず、ルールを逸脱している。
+      6.3.1 は形式を「対象外・除外理由・例外」の3点セットと定めているが、6.3.2・6.3.3 は「代替レベル/代替手段」の記載を必須とする4列であり要件が食い違うため、6.3.1
+      を「代替レベル/代替手段」を含む4点セットに改める。
+  - id: F002
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 247
+    anchor: >-
+      | `utc-index` に個別ケース（条件・手順・期待値）を列挙する            | `utc-index` は共通方針のSSOTであり、個別は `utc-<term>`
+      に集約するため                 |
+    message: >-
+      禁止事項は `utc-index` に個別ケース（条件・手順・期待値）を列挙することを一律に禁じているが、`utc-index-sample`
+      の「ケース表の共通カラム」は条件・手順・期待値を持つ記入例を1行載せており食い違うため、共通カラムの書き方を示す少数の記入例は許すと 6.8 と禁止事項に明記するか、sample から記入例を外す。
+    message_ja: >-
+      禁止事項は `utc-index` に個別ケース（条件・手順・期待値）を列挙することを一律に禁じているが、`utc-index-sample`
+      の「ケース表の共通カラム」は条件・手順・期待値を持つ記入例を1行載せており食い違うため、共通カラムの書き方を示す少数の記入例は許すと 6.8 と禁止事項に明記するか、sample から記入例を外す。
+  - id: F003
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 115
+    anchor: "- 「代替レベル/代替手段」は、IT/ET/ST/AT/非機能テストなど **どこで担保するか** を必ず記載する"
+    message: >-
+      6.3.2 は「代替レベル/代替手段」に担保先を必ず記載すると定めるが、`utc-index-sample`
+      の対象外の表は未決の「通信不能時の販売継続」を「どのレベルでも担保しない（決定まで受入は保留）」と記載しており食い違うため、未決で担保先を決められない場合の書き方（未決である旨と「メモ / 将来課題」への記録）を 6.3.2
+      に定めるか、sample を担保先の記載に合わせる。
+    message_ja: >-
+      6.3.2 は「代替レベル/代替手段」に担保先を必ず記載すると定めるが、`utc-index-sample`
+      の対象外の表は未決の「通信不能時の販売継続」を「どのレベルでも担保しない（決定まで受入は保留）」と記載しており食い違うため、未決で担保先を決められない場合の書き方（未決である旨と「メモ / 将来課題」への記録）を 6.3.2
+      に定めるか、sample を担保先の記載に合わせる。
+  - id: F004
+    severity: minor
+    rule: vp-ux-readability
+    line: 249
+    anchor: "| 手順にUI操作のクリック列挙を書く（末端表でも過剰な操作手順を書く）  | 保守性が低く、変更に弱く、テストの意図が見えなくなるため                               |"
+    message: 禁止事項の「手順にUI操作のクリック列挙を書く（末端表でも過剰な操作手順を書く）」の「末端表」は本文に定義がなく何を指すか読み手が判断できないため、「`utc-＜term＞` のケース表」など本文の用語に置き換える。
+    message_ja: 禁止事項の「手順にUI操作のクリック列挙を書く（末端表でも過剰な操作手順を書く）」の「末端表」は本文に定義がなく何を指すか読み手が判断できないため、「`utc-＜term＞` のケース表」など本文の用語に置き換える。
+  - id: F005
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 252
+    anchor: "| 対象外・除外理由（共通） と矛盾するケースを `utc-<term>` に記載する | 責任境界が崩れるため（例外は根拠と条件を明記）                                         |"
+    message: 全体方針・6.2・6.6.2 は「責務境界」を用いるが、禁止事項の最終行は「責任境界が崩れるため」、6.1 は「責任範囲」と表記しており同一概念か読み手が迷うため、「責務境界」「責務範囲」に統一する。
+    message_ja: 全体方針・6.2・6.6.2 は「責務境界」を用いるが、禁止事項の最終行は「責任境界が崩れるため」、6.1 は「責任範囲」と表記しており同一概念か読み手が迷うため、「責務境界」「責務範囲」に統一する。
+  - id: F006
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 247
+    anchor: >-
+      | `utc-index` に個別ケース（条件・手順・期待値）を列挙する            | `utc-index` は共通方針のSSOTであり、個別は `utc-<term>`
+      に集約するため                 |
+    message: 全体方針は `utc-index` を「共通方針の正本」と表記する一方、禁止事項は「共通方針のSSOT」と表記しており同一概念の表記が揺れているため、「正本」に統一する。
+    message_ja: 全体方針は `utc-index` を「共通方針の正本」と表記する一方、禁止事項は「共通方針のSSOT」と表記しており同一概念の表記が揺れているため、「正本」に統一する。

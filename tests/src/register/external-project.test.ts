@@ -33,7 +33,7 @@ const baseOptions: ExternalRegisterAddOptions = {
   force: true,
   dryRun: true,
   commit: true,
-  message: "docs: add external item",
+  message: ["docs: add external item"],
 };
 
 describe("buildExternalRegisterAddArgs", () => {
@@ -142,6 +142,38 @@ describe("buildExternalRegisterAddArgs", () => {
       "docs: add external item",
     ]);
   });
+
+  // PJR-QTZ7: `-m` の各値が段落として相手へ渡され、カンマ連結で 1 行の件名にならない。
+  it("forwards each -m value as a separate --message paragraph (PJR-QTZ7)", () => {
+    const args = buildExternalRegisterAddArgs(
+      "customer",
+      { path: "../target", project_id: "prj-target" },
+      {
+        ...baseOptions,
+        message: [
+          "docs(register PJR-NEW1): 起票",
+          "本文の段落。\n\nCo-Authored-By: Example <noreply@example.com>",
+        ],
+      },
+    );
+    const flags = args.filter((arg) => arg === "--message");
+    expect(flags).toHaveLength(2);
+    expect(args).toContain("--message");
+    expect(args).not.toContain(",");
+    expect(args[args.indexOf("--message") + 1]).toBe("docs(register PJR-NEW1): 起票");
+    expect(args[args.indexOf("--message", args.indexOf("--message") + 1) + 1]).toBe(
+      "本文の段落。\n\nCo-Authored-By: Example <noreply@example.com>",
+    );
+  });
+
+  it("omits --message when every value is blank so the target uses its default", () => {
+    const args = buildExternalRegisterAddArgs(
+      "customer",
+      { path: "../target", project_id: "prj-target" },
+      { ...baseOptions, message: ["  ", ""] },
+    );
+    expect(args.filter((arg) => arg === "--message")).toHaveLength(0);
+  });
 });
 
 describe("external SpecDojo version", () => {
@@ -214,6 +246,25 @@ describe("delegateExternalRegisterAdd preconditions", () => {
     }));
   }
 
+  it("requires a sync-capable target CLI when the external project enables register_sync", () => {
+    const source = createFixture();
+    const target = join(source, "../target");
+    mkdirSync(join(target, ".specdojo"), { recursive: true });
+    writeFileSync(
+      join(target, ".specdojo/specdojo.config.json"),
+      JSON.stringify({
+        version: 1,
+        projects: { target: { register_sync: { enabled: true } } },
+      }),
+    );
+    const oldRun = successfulRun("0.9.2");
+    expect(() => delegateExternalRegisterAdd(baseOptions, oldRun)).toThrow("0.10.0 or newer");
+    expect(oldRun).toHaveBeenCalledTimes(1);
+    const currentRun = successfulRun("0.10.0");
+    expect(delegateExternalRegisterAdd(baseOptions, currentRun)).toBe(true);
+    expect(currentRun).toHaveBeenCalledTimes(2);
+  });
+
   it("uses Node and the self repository's dist entrypoint for version inspection and add", () => {
     const target = createSelfRepository();
     const run = successfulRun();
@@ -236,7 +287,7 @@ describe("delegateExternalRegisterAdd preconditions", () => {
             baseOptions,
           ),
         ],
-        { cwd: target, encoding: "utf8", stdio: "inherit" },
+        { cwd: target, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] },
       ],
     ]);
   });
@@ -365,6 +416,8 @@ describe("delegateExternalRegisterAdd preconditions", () => {
     expect(delegateExternalRegisterAdd(baseOptions, run)).toBe(true);
     expect(process.exitCode).toBe(23);
     expect(runMock).toHaveBeenCalledTimes(2);
-    expect(runMock.mock.calls[1]?.[2]).toMatchObject({ stdio: "inherit" });
+    expect(runMock.mock.calls[1]?.[2]).toMatchObject({
+      stdio: ["ignore", "pipe", "pipe"],
+    });
   });
 });

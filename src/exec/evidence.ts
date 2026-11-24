@@ -1,4 +1,4 @@
-import { readFileSync, renameSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, sep } from "node:path";
 import {
   runLogPath,
@@ -35,12 +35,31 @@ export type EvidenceValidation = {
   summary: string;
   /** Why an executor validation does not apply. Required when status is `not_applicable`. */
   reason?: string;
+  /**
+   * PJR-9X52: test files a runner validation configured with `related` ran, and why. Absent
+   * for validations that always run the full suite.
+   */
+  test_selection?: EvidenceTestSelection;
+};
+
+export type EvidenceTestSelection = {
+  mode: "related" | "full";
+  reason: string;
+  /** Test files that ran (related mode). */
+  selected_tests?: string[];
+  /** Test files of the same kind that did not run (related mode). */
+  omitted_tests?: string[];
 };
 
 export type EvidenceTargetCoverage = {
   target: string;
   status: "changed" | "unchanged";
   path?: string;
+  reason: string;
+};
+
+export type EvidenceExcludedCoverageTarget = {
+  target: string;
   reason: string;
 };
 
@@ -67,6 +86,8 @@ export type ExecEvidence = {
   validations: EvidenceValidation[];
   /** Executor-reported disposition of plan targets. Required by the runner on executor resume. */
   target_coverage?: EvidenceTargetCoverage[];
+  /** Runner-excluded lower-bound targets that no longer exist and have no diff (PJR-FGKB). */
+  excluded_coverage_targets?: EvidenceExcludedCoverageTarget[];
   /** Runner-recorded pinned-agent rate-limit/connection recovery history for this stage. */
   rate_limit_events?: RateLimitRecoveryEvent[];
   final_message: string;
@@ -117,6 +138,8 @@ export type RecordCommandEvidenceInput = {
   error?: string;
   /** A configured non-zero outcome accepted by the Job runner (for example, partial success). */
   accepted?: boolean;
+  /** Writes step-labelled files into the run directory instead of a separate evidence directory. */
+  stepLabel?: string;
 };
 
 export type RecordExecutorEvidenceInput = {
@@ -177,6 +200,8 @@ export type RecordParentValidationFailureOutputInput = {
     timedOut?: boolean;
     stdoutTruncated?: boolean;
     stderrTruncated?: boolean;
+    durationMs?: number;
+    stage?: string;
   }[];
 };
 
@@ -432,6 +457,52 @@ function changedEvidencePaths(changes: readonly ExecEvidence["changes"][number][
     }
   }
   return paths;
+}
+
+/**
+ * Splits lower-bound coverage targets into those that still need an executor disposition and
+ * those that vanished: every side of the path is absent from the working tree and the cumulative
+ * git status (so it is neither tracked in HEAD nor part of the diff the integration would carry).
+ * A file an interrupted attempt created by mistake and that was deleted before resume falls into
+ * the second group (PJR-FGKB). `<name>:<path>` targets resolve against the named product worktree.
+ */
+export function partitionVanishedCoverageTargets(
+  worktreePath: string,
+  productWorktrees: readonly EvidenceProductWorktree[],
+  targets: readonly string[],
+): { kept: string[]; excluded: EvidenceExcludedCoverageTarget[] } {
+  const statusPaths = changedEvidencePaths(
+    repoStatusChanges(worktreePath, productWorktrees).map(({ path, status }) => ({ path, status })),
+  );
+  const productRoots = new Map(productWorktrees.map((product) => [product.name, product.path]));
+  const existsOnDisk = (value: string): boolean => {
+    const separator = value.indexOf(":");
+    const productRoot = separator > 0 ? productRoots.get(value.slice(0, separator)) : undefined;
+    const local = productRoot ? value.slice(separator + 1) : value;
+    const normalized = normalizedEvidencePath(local);
+    // Paths that cannot be resolved safely stay in the lower bound for the executor to explain.
+    if (!normalized) return true;
+    return existsSync(join(productRoot ?? worktreePath, ...normalized.split("/")));
+  };
+  const kept: string[] = [];
+  const excluded: EvidenceExcludedCoverageTarget[] = [];
+  for (const target of targets) {
+    const sides = target.split(" -> ").map((side) => side.trim());
+    const vanished = sides.every(
+      (side) =>
+        side && !statusPaths.has(normalizedEvidencePath(side) ?? side) && !existsOnDisk(side),
+    );
+    if (vanished) {
+      excluded.push({
+        target,
+        reason:
+          "changed by an earlier attempt, but absent from the working tree and the cumulative diff at resume",
+      });
+    } else {
+      kept.push(target);
+    }
+  }
+  return { kept, excluded };
 }
 
 export type WorktreeChangeSnapshot = ReadonlyMap<string, string>;
@@ -771,13 +842,19 @@ export function recordCommandEvidence(input: RecordCommandEvidenceInput): {
     input.runId,
   ).directory;
   ensureDir(evidenceDir);
-  const evidencePath = taskRecordPaths(
+  const baseEvidencePath = taskRecordPaths(
     join(input.worktreePath, executionRel),
     input.taskId,
     input.runId,
   ).evidence;
-  const stdoutPath = runLogPath(evidencePath, "command.stdout.log");
-  const stderrPath = runLogPath(evidencePath, "command.stderr.log");
+  const stepSlug = input.stepLabel === undefined ? undefined : safeSlug(input.stepLabel);
+  const evidencePath =
+    stepSlug === undefined
+      ? baseEvidencePath
+      : runLogPath(baseEvidencePath, `evidence.step-${stepSlug}.json`);
+  const logPrefix = stepSlug === undefined ? "command" : `step-${stepSlug}`;
+  const stdoutPath = runLogPath(evidencePath, `${logPrefix}.stdout.log`);
+  const stderrPath = runLogPath(evidencePath, `${logPrefix}.stderr.log`);
   const boundedStdout = boundedLog(input.stdout);
   const boundedStderr = boundedLog(input.stderr);
   writeFileSync(stdoutPath, boundedStdout.content, "utf8");
@@ -870,6 +947,16 @@ export function writeExecutorEvidence(path: string, evidence: ExecEvidence): voi
  * Persists failed parent-validation output beside executor evidence. A new numbered set is added
  * for every validation batch so reporter/integration resume never overwrites the prior failure.
  */
+// PJR-6690: 時間切れの検証は、経過時間と止まった npm script の段をログに残す。
+function timeoutLogLines(output: { durationMs?: number; stage?: string }): string[] {
+  return [
+    ...(output.durationMs !== undefined
+      ? [`elapsed: ${Math.round(output.durationMs / 1_000)}s`]
+      : []),
+    ...(output.stage ? [`stage: ${output.stage}`] : []),
+  ];
+}
+
 export function recordParentValidationFailureOutput(
   input: RecordParentValidationFailureOutputInput,
 ): ExecEvidence {
@@ -893,6 +980,7 @@ export function recordParentValidationFailureOutput(
         `parent validation: ${output.label}`,
         `exit code: ${output.exitCode ?? "unknown"}`,
         `timed out: ${output.timedOut === true ? "yes" : "no"}`,
+        ...(output.timedOut === true ? timeoutLogLines(output) : []),
         ...(output.error ? [`spawn error: ${output.error}`] : []),
         "",
         "--- stdout ---",

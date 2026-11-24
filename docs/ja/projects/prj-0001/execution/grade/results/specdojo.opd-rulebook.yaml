@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/opd-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 95
-graded_at: "2026-11-05T20:44:08.749Z"
-graded_by: flash-high-executor
-content_hash: 37f062e5bd4e2e2e442c4b4cbb5a05e083c678db33165c7bafc6b3feed66d1ab
+score: 98
+graded_at: "2026-11-23T17:39:03.588Z"
+graded_by: sonnet-review-executor
+content_hash: 10e78e4d5d9671fae7a8ba9880e1bc6ba27418dc09f5e821dc84f4b7e297dced
 categories:
   purpose:
     score: 100
@@ -27,7 +27,7 @@ categories:
   quality:
     score: 92
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -78,8 +78,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
     level: 3
     score: 75
@@ -104,34 +104,32 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 4
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 79
-    anchor: "| 12   | 関連ドキュメント導線（`opr` 等）                   | ○    |"
-    message: 5章では `opd-＜term＞` でも全12章が必須とされているが、1.1の「差分を記述し重複記載を避ける」方針と矛盾している。
-    message_ja: 5章では `opd-＜term＞` でも全12章が必須とされているが、1.1の「差分を記述し重複記載を避ける」方針と矛盾している。
+    rule: vp-qe-kata-conformance
+    line: 36
+    anchor: "- `specdojo.type` は `operations`、`specdojo.rulebook` は `specdojo:opd-rulebook` とする。"
+    message: >-
+      OPR
+      のサンプル7件（`opr-access-control-sample`・`opr-backup-restore-sample`・`opr-batch-sample`・`opr-change-sample`・`opr-incident-sample`・`opr-monitoring-sample`・`opr-support-sample`）が
+      Frontmatter で `rulebook: specdojo:opd-rulebook` と宣言しており、本書が手順の正本とする `opr-rulebook` と矛盾している。宣言を
+      `specdojo:opr-rulebook` に改め、OPD と OPR の対応を正す。
+    message_ja: >-
+      OPR
+      のサンプル7件（`opr-access-control-sample`・`opr-backup-restore-sample`・`opr-batch-sample`・`opr-change-sample`・`opr-incident-sample`・`opr-monitoring-sample`・`opr-support-sample`）が
+      Frontmatter で `rulebook: specdojo:opd-rulebook` と宣言しており、本書が手順の正本とする `opr-rulebook` と矛盾している。宣言を
+      `specdojo:opr-rulebook` に改め、OPD と OPR の対応を正す。
   - id: F002
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 8
+    rule: vp-qe-kata-conformance
+    line: 7
     anchor: "## 1. 全体方針"
-    message: 存在する `specdojo:opd-index-sample` が Frontmatter の `sample` リストから漏れている。
-    message_ja: 存在する `specdojo:opd-index-sample` が Frontmatter の `sample` リストから漏れている。
-  - id: F003
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 9
-    anchor: ""
-    message: "サンプルとして指定されている `specdojo:opd-sample` が、本ルールで定義した必須構成および Frontmatter (type: operations) に準拠していない。"
-    message_ja: "サンプルとして指定されている `specdojo:opd-sample` が、本ルールで定義した必須構成および Frontmatter (type: operations) に準拠していない。"
-  - id: F004
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 10
-    anchor: "`opd-index`（必要に応じて `opd-<term>`）は、恒常運用の方針と統制基準を一元化する SSOT とする。"
-    message: 指定されている term 系のサンプル群（opd-access-control-sample 等）も、本ルール5章で定義された全12章の必須構成を満たしていない。
-    message_ja: 指定されている term 系のサンプル群（opd-access-control-sample 等）も、本ルール5章で定義された全12章の必須構成を満たしていない。
+    message: >-
+      `sample` から外れた `specdojo:opd-sample` が `rulebook: specdojo:opd-rulebook` を宣言したまま残り、旧来の最小サンプルとして `opd-＜term＞`
+      の差分構成に準拠していない。廃止するか、対応関係を整理する。
+    message_ja: >-
+      `sample` から外れた `specdojo:opd-sample` が `rulebook: specdojo:opd-rulebook` を宣言したまま残り、旧来の最小サンプルとして `opd-＜term＞`
+      の差分構成に準拠していない。廃止するか、対応関係を整理する。

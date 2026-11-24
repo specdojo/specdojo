@@ -1,17 +1,27 @@
 name: Deploy VitePress site to GitHub Pages
 
-# サイトはリリースした版の文書を公開する。main への昇格では更新せず、specdojo のリリースタグ
-# （v*）の push か手動実行で更新する。
+# サイトは 2 つの版を並べて公開する（PJR-98HS）。
+# - 本番（/specdojo/）: main に入っている最新のリリースタグ（v*）の文書。
+# - 開発中の版（/specdojo/next/）: 公開用のブランチ site/next の文書。develop から出したいときだけ
+#   fast-forward する。全ページに開発中の版の帯を出し、検索エンジンに載せない。
+# GitHub Pages は 1 つのリポジトリに 1 つのサイトしか持てないため、どのきっかけでも 2 つの版を
+# ビルドし、1 つの成果物にまとめて公開する。
 on:
   push:
     tags:
       - "v*"
+    branches:
+      - site/next
   workflow_dispatch:
 
 permissions:
   contents: read
   pages: write
   id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -25,15 +35,25 @@ jobs:
         with:
           node-version: 24
 
-      - name: Verify the release ref
+      - name: Resolve the refs to publish
+        id: refs
         shell: bash
         run: |
           set -euo pipefail
-          git fetch --no-tags origin main
-          if ! git merge-base --is-ancestor "$GITHUB_SHA" origin/main; then
-            echo "$GITHUB_REF_NAME ($GITHUB_SHA) is not on main. Deploy a commit that has been promoted to main." >&2
+          git fetch --tags --force origin main
+          stable_tag="$(git tag --list 'v*' --merged origin/main --sort=-v:refname | head -n 1)"
+          if [ -z "$stable_tag" ]; then
+            echo "No release tag (v*) is on main." >&2
             exit 1
           fi
+          echo "stable_ref=$stable_tag" >> "$GITHUB_OUTPUT"
+          if git fetch origin site/next 2>/dev/null; then
+            echo "next_ref=$(git rev-parse FETCH_HEAD)" >> "$GITHUB_OUTPUT"
+          else
+            echo "next_ref=" >> "$GITHUB_OUTPUT"
+          fi
+          echo "Stable: $stable_tag"
+          echo "Next: $(git rev-parse --short FETCH_HEAD 2>/dev/null || echo none)"
 
       - name: Install Japanese fonts for mermaid
         run: sudo apt-get update && sudo apt-get install -y fonts-noto-cjk fonts-noto-color-emoji
@@ -42,14 +62,6 @@ jobs:
         run: |
           sh .devcontainer/install-d2.sh "$RUNNER_TEMP/d2-bin"
           echo "$RUNNER_TEMP/d2-bin" >> "$GITHUB_PATH"
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Install documentation site dependencies
-        env:
-          PUPPETEER_SKIP_DOWNLOAD: "true"
-        run: npm --prefix packages/docs-site ci
 
       - name: Resolve system Chrome for puppeteer (mermaid)
         run: |
@@ -62,24 +74,50 @@ jobs:
           echo "PUPPETEER_SKIP_DOWNLOAD=true" >> "$GITHUB_ENV"
           echo "PUPPETEER_EXECUTABLE_PATH=$chrome_path" >> "$GITHUB_ENV"
 
-      - name: Validate D2 diagrams
-        run: node tools/lint-d2.mjs
-
-      - name: Test real D2 rendering and validation
-        run: npm run test:integration -- tests/tools/d2-cli.integration.test.ts
-
       # 既定のヒープ（環境により約 2 GB）では VitePress のビルドがメモリ不足で落ちる
       # （2026-10-11、2,536 文書では 4 GB で通過。2026-11-08、4,039 文書では 4 GB で止まり、
       # 8 GB で通過。PJR-2SRR）。package.json の docs:build も同じ値にそろえる。
-      - name: Build VitePress site
+      - name: Build the stable site
         env:
           NODE_OPTIONS: --max-old-space-size=8192
-        run: npm run docs:build
+          STABLE_REF: ${{ steps.refs.outputs.stable_ref }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git worktree add --detach "$RUNNER_TEMP/stable" "$STABLE_REF"
+          cd "$RUNNER_TEMP/stable"
+          npm ci
+          npm --prefix packages/docs-site ci
+          node tools/lint-d2.mjs
+          npm run docs:build
+          mkdir -p "$RUNNER_TEMP/site"
+          cp -R .vitepress/dist/. "$RUNNER_TEMP/site/"
+
+      - name: Build the next site
+        if: steps.refs.outputs.next_ref != ''
+        env:
+          NODE_OPTIONS: --max-old-space-size=8192
+          NEXT_REF: ${{ steps.refs.outputs.next_ref }}
+          SPECDOJO_DOCS_CHANNEL: next
+          SPECDOJO_DOCS_BASE: /specdojo/next/
+          SPECDOJO_DOCS_STABLE_URL: https://specdojo.github.io/specdojo/
+        shell: bash
+        run: |
+          set -euo pipefail
+          git worktree add --detach "$RUNNER_TEMP/next" "$NEXT_REF"
+          cd "$RUNNER_TEMP/next"
+          npm ci
+          npm --prefix packages/docs-site ci
+          node tools/lint-d2.mjs
+          npm run test:integration -- tests/tools/d2-cli.integration.test.ts
+          npm run docs:build
+          mkdir -p "$RUNNER_TEMP/site/next"
+          cp -R .vitepress/dist/. "$RUNNER_TEMP/site/next/"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5
         with:
-          path: .vitepress/dist
+          path: ${{ runner.temp }}/site
 
   deploy:
     needs: build

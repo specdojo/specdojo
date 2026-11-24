@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_186bbaaa953548af98342b4bac5dc6ae
+  ts: "2026-11-22T04:46:43Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: オーケストレーターに、他の agent の claim を release する --force を許すか
+    - field: description
+      from: ""
+      to: exec release の --force は人だけが使え、agent が claim したまま止まったタスクをオーケストレーターが戻せない。予約名 specdojo-orchestrator に許すかを決める
+    - field: input
+      from: ""
+      to: '["2026-11-22、第 3 波の 090 の blocked 10 件は opus-review-executor が claim していたため、オーケストレーターは release できず、indie が tmp/orchestrator/release-090.sh で --force を付けて戻した。","PJR-ESE7 で exec の --by は予約名を受け付けるようになったが、持ち主以外の release に要る --force は人に限られたまま。","利用者（indie）の承認で、ESE7 に含めず別の question として起票した（2026-11-22）。"]'
+    - field: type
+      from: ""
+      to: question
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-22"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-ESE7"]'

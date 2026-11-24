@@ -1,0 +1,154 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-4-nfr-integrity-sample-050",
+  "run_id": "T-KATA-WAVE-4-nfr-integrity-sample-050-20261123T125715Z-43e05c36",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-23T12:58:00.531Z",
+    "completed_at": "2026-11-23T13:03:04.551Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/nfr-integrity-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/nfr-integrity-sample.md | 103 ++++++++++++++++++-----\n 1 file changed, 83 insertions(+), 20 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/samples/nfr-integrity-sample.md",
+      "status": "passed",
+      "summary": "変更した sample を整形した"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2 docs/ja/specdojo/samples/nfr-integrity-sample.md",
+      "status": "passed",
+      "summary": "0 issues"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴蓄積ファイルを変更していない",
+      "reason": "変更は docs/ja/specdojo/samples/ 配下の sample だけで、plan・result・個票を変更していない"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:nfr-integrity-sample\n  type: requirement\n  status: draft\n  rulebook: specdojo:nfr-integrity-rulebook\n  part_of:\n    - specdojo:nfr-index-sample\n---\n\n# 駄菓子屋きぬや 販売管理システム 非機能要件 / 完全性\n\n## 1. 概要（対象・目的）\n\n駄菓子屋きぬや 販売管理システムが扱う業務データのうち、販売記録・在庫数・つけ残高を重要記録とし、その正確性・整合性・改ざんの検知・変更履歴の追跡性を定める。\n\n重要記録を選んだ基準は、欠落や不整合が店主代表の業務判断を直接誤らせるかどうかである。次の表は、重要記録ごとに完全性が損なわれたときの業務影響と、その影響から導いた要件を示す。\n\n| 重要記録 | 完全性が損なわれ\n… output omitted …\nて実行するかは未決定である。店番の操作負担と閉店時刻のばらつきを踏まえて運用方針 `opd-integrity-check` で決める。\n\n## 5. 関連ドキュメント導線\n\n次の表は、本書と接続する文書と、その文書で確かめる内容を示す。\n\n| 文書 | 確かめる内容 | 必須・任意 |\n| - | - | - |\n| `nfr-index` | 非機能要件全体の中での本書の位置づけ | 必須 |\n| `nfr-security-safety` | 記録を操作できる人の制限と、アクセスの監査 | 必須 |\n| `sac-integrity` / `stc-integrity` | `nfr-int-002`〜`nfr-int-004`・`nfr-int-006` の合否判定基準と試験手順 | 必須 |\n| `opd-integrity-check` / `opr-integrity-check` | 整合性チェックの実行と、監査証跡の 7 年保管の運用方針・手順 | 必須 |\n| `dec-*` | 実在庫差を違反から除外した判断、保持期間の根拠の判断 | 任意 |"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6231 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6231 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-4-nfr-integrity-sample-050\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/dct-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/dct-schema.test.ts (5 tests) 10ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/docs/specdojo/schemas/dct-schema.test.ts\",\"duration_ms\":10}\n[parent-validatio\n… output omitted …\ner-plan-escape.test.ts\",\"duration_ms\":2974}\n\n Test Files  19 passed (19)\n      Tests  480 passed (480)\n   Start at  22:10:41\n   Duration  5.98s (transform 22.25s, setup 2.55s, import 27.71s, tests 12.57s, environment 2ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nlebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-4-nfr-integrity-sample-050/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-4-nfr-integrity-sample-050/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "nfr-integrity-sample を rulebook の5章構成（概要（対象・目的）／適用範囲・前提条件／完全性要件一覧／測定・検証方法／関連ドキュメント導線）に合わせ、駄菓子屋きぬやの販売記録・在庫数・つけ残高を題材にした完成例へ書き直した。frontmatter に part_of: specdojo:nfr-index-sample を追加し、H1 は rulebook へのリンクを外した平文にした。整合性境界3組、除外条件、監査証跡の必須項目と保持期間7年、要件 nfr-int-001〜006 を数値基準付きで定義し、要件ごとの測定手段・判定タイミング・合否条件・判定 Role code、違反時の記録先、見直しの契機も書いた。旧版の重複表と独自の未解決事項章は削除した。変更ファイルは docs/ja/specdojo/samples/nfr-integrity-sample.md のみ。",
+  "completion_status": "complete",
+  "handoff": [
+    "未決（利用者の判断が必要）: 監査証跡の保持期間7年の根拠は、青色申告の帳簿保存期間とする _ASSUMPTION_ として本文に書いた。根拠にする規程文書がまだないため `based_on` は空のまま。根拠文書を決めたら `based_on` に追加する。",
+    "未決（利用者の判断が必要）: 端末の障害中に紙へ記録した販売を復旧後にどう入力し、いつから整合性境界の対象にするかを、オフライン時の運用方針と合わせて決める必要がある（本文に _UNDECIDED_ として記載）。",
+    "未決（利用者の判断が必要）: 整合性チェックを閉店後に自動で実行するか、店番が操作して実行するかを `opd-integrity-check` で決める必要がある（本文に _UNDECIDED_ として記載）。",
+    "PJR-76N9 に従い、F003（PO の承認判断に必要な意思決定者・選択肢）、F004（作業単位・Role 割り当て）、F006（未解決事項の転送先と Role）、F023（ready 昇格の条件）のうち、文書の役割割り当てや承認の進み具合を求める部分は sample に書いていない。未決事項は本文の _UNDECIDED_ と、要件ごとの判定 Role code・違反時の記録先で表した。",
+    "rulebook の変更案: 「全体方針」の _UNDECIDED_ に「sample は本文構成の5章に揃っていない」とあるが、今回の改訂で5章に揃ったため、この記述を更新し、NFR 分冊で共通の template にできるかの判断だけを残すとよい。",
+    "rulebook の変更案: 「推奨 Frontmatter 項目」は `part_of` に `nfr-index` を置くとしているが、sample では存在する doc id として `specdojo:nfr-index-sample` を置いた。sample での書き方を rulebook に一文添えるとよい。",
+    "参照先の `sac-integrity` / `stc-integrity` / `opd-integrity-check` / `opr-integrity-check` / `nfr-security-safety` は存在しないため、wikilink にせずバッククォートで仮置きした。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-4-nfr-integrity-sample-050/T-KATA-WAVE-4-nfr-integrity-sample-050-20261123T125715Z-43e05c36/executor.log",
+      "bytes": 6542,
+      "truncated": false
+    }
+  ]
+}

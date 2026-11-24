@@ -1,0 +1,29 @@
+`docs/ja/specdojo/samples/cnd-sample.md` を更新し、5件の finding（F001〜F005）すべてに対応しました。F003 だけは見出しを足さない形で扱っています。rulebook と template は変更していません。Prettier での整形と markdownlint は通っており（指摘 0 件）、ほかの検査は親 runner が実行します。
+
+**finding への対応**
+
+- **F001（画面資材の配置）:** 販売画面の配置の前提に `_ASSUMPTION_` を付け、資材の配信元が未確定であることを書きました。配信は営業中の経路ではなく配備時の前提なので、配信元が決まるまで図と関係表に描かない理由も足しました。「メモ / 将来課題」の配備の論点にもこの点を加えています。
+- **F002・F004（存在しない検査手順への参照）:** `<対象.md>` を置き換えて実行するという段落を削除しました。代わりに、rulebook の「検証・承認前の確認」の 3 項目に合わせた確認記録を置いています。
+  - 範囲と経路: 上位図が未同梱のため未判定。
+  - 要素と境界: 一致。
+  - 結合対象: 一致。
+- **F003（「4.3. 検証・承認前の確認」の見出し）:** 見出しは足していません。指摘と違い、template（`cnd-template.md`）にはその見出しがなく、rulebook は見出しの順を template に任せているためです。確認記録は「コンテナ間・外部依存の検証対象」の中に置きました。
+- **F005（「店番担当」の指す人）:** Person の定義の節に、「店番担当」はその時間に店頭で画面を操作している店主代表または家族利用者代表を指し、別の Person ではないと書きました。
+
+**PJR-76N9 に沿って削ったもの**
+
+本文から、役割の割り当てと承認の進み具合の記述を削りました。
+
+- 概要にあった ARC・BA・DEV・QE・OPS・PO の担当の段落
+- 検証対象の表の「主確認ロール」列と、将来課題の表の「担当ロール」列（どちらも template の列構成にないもの）
+- 承認前にそろえる確認と承認記録の段落
+- 将来課題の表にあった「PO の判断まで」などの承認の進み具合の記述
+
+**決めていただくこと（引き継ぎ）**
+
+- 画面資材の配信元は推測で埋めず、未確定のまま残しています。決めるべき値です。
+- F003 について、確認記録の置き場所を rulebook か template に明記するかどうかの判断が要ります。案は、template に「4.3. 検証・承認前の確認」の見出しを足すか、rulebook の同じ節に「確認結果は『コンテナ間・外部依存の検証対象』の末尾に記す」と書くかのどちらかです。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"Updated docs/ja/specdojo/samples/cnd-sample.md to address F001-F005. F001: marked the screen-asset placement as `_ASSUMPTION_`, stated why its delivery path is not drawn, and added it to the deployment issue. F002/F004: replaced the reference to a non-existent check procedure with a check record matching the rulebook items (scope and paths, elements and boundary, integration targets). F003: no heading added, because the template has no 4.3 section; the record sits under the existing verification section. F005: defined 店番担当 as whichever Person is staffing the shop. Per PJR-76N9, removed role-assignment and approval-progress text and the role columns that are not in the template. prettier and markdownlint passed.","handoff":["F003: the template `cnd-template.md` has no '4.3. 検証・承認前の確認' heading, and rulebook body requirements make the template authoritative for heading order, so no heading was added to the sample and the check record was placed at the end of '4.2. コンテナ間・外部依存の検証対象'. Proposed Kata fix: either add a '4.3. 検証・承認前の確認' heading to the template, or state in the rulebook '検証・承認前の確認' section that the check results are recorded at the end of 'コンテナ間・外部依存の検証対象'.","Per PJR-76N9, the sample no longer contains role assignment (ARC/BA/DEV/QE/OPS/PO responsibilities), the '主確認ロール'/'担当ロール' columns, or approval-progress text. If a future grade asks for these, do not add them back; record them as Kata change proposals instead.","Value to be decided by the user: where the sales screen assets are delivered from (left unresolved under `_ASSUMPTION_` and in the 上位図・配備案との照合 issue)."],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/cnd-sample.md","status":"passed","summary":"Formatted the changed sample"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/cnd-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"No history file changed","reason":"Only docs/ja/specdojo/samples/cnd-sample.md was changed; no plan/result/pjr history files were edited"}]}
+</specdojo_executor_evidence>

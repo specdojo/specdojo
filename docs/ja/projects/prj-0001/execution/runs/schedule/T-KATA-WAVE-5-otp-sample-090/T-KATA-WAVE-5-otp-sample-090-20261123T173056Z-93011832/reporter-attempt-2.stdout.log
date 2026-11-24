@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "mode": "review",
+  "grade_check": "### 評価結果の確認\n\n`specdojo grade list --target kata --path docs/ja/specdojo/samples/otp-sample.md --changed-only` を実行した結果、出力なし（最新）。\n`specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/otp-rulebook.md --changed-only` を実行した結果、出力なし（最新）。\n\n- `docs/ja/specdojo/samples/otp-sample.md`: `verdict`: `pass`, `score`: 100, `finding` 件数: 0\n- `docs/ja/specdojo/rulebooks/otp-rulebook.md`: `verdict`: `pass`, `score`: 98, `finding` 件数: 1 (minor `F001`)\n",
+  "rationale": [
+    "完了条件の照合: `DC-001`（章立てと必須の表）、`DC-002`（記述標準と共通コンテキスト）、`DC-003`（禁止事項）のすべてについて、成果物 `docs/ja/specdojo/samples/otp-sample.md` の内容を確認し、充足していることを確認しました。`DC-004`（業務の価値と範囲）についても、概要セクションにおいて満たされていることを確認しました。",
+    "確認できなかった範囲: 先行 edit の実行記録の詳細内容、親 runner による検証結果、および 鮮度確認コマンドを実行した直後の成果物の状態については確認できていません。"
+  ],
+  "improvements": [
+    "`docs/ja/specdojo/rulebooks/otp-rulebook.md` の `F001` に対する改善: Frontmatter に `npm run lint:fm` は記載されていますが、本文の構成や書式を確認するための `npm run lint:md` などの検証手順を追記してください。",
+    "横串の人の確認事項: 9 章の `_UNDECIDED_`（旧ノート参照期間は `dmd-index` で決定する予定）および 3 章の RTO/RPO の仮定について、確定のタイミングで確認が必要です。",
+    "型の整備: `recipe` が `_MISSING_` であるため、必要に応じて型の整備を検討してください。"
+  ],
+  "approach": "### approach に応じた確認 - 磨き込みの実施\n\n- `rulebook` の必須要素および禁止事項: `grade` によって `pass` であることを確認済みです。\n- `sample` の形式: `grade` によって `pass` であることを確認済みです。\n- `recipe` の扱い: `recipe` が `_MISSING_` であることを確認しました。",
+  "verdict": "complete-with-findings"
+}

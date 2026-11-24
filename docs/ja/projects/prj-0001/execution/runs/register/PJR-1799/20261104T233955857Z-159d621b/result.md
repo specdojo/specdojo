@@ -13,7 +13,7 @@ specdojo:
   agent: flash-high-executor
   approach: draft
   targets:
-    - prj-0001:stsd-task-execution
+    - stsd-task-execution
 ---
 
 # Edit Result

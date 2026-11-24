@@ -1,0 +1,33 @@
+dss-sample の review 結果は、完了を妨げる未充足事項がないため `complete-with-findings` です。成果物と型は変更していません。
+
+**評価結果の確認**
+- 鮮度確認の結果:
+  - `specdojo grade list --target kata --path docs/ja/specdojo/samples/dss-sample.md --changed-only` は出力なしです。
+  - 同じ sample に `--incomplete` を付けた確認も出力なしです。
+  - rulebook に `--changed-only` を付けた確認も出力なしです。
+  - いずれも終了コードは 0 です。
+  - つまり sample と rulebook の評価結果はどちらも最新で、評価パイプラインも完了しています。
+- sample: `verdict` は `pass`、`score` は 100 で、finding はありません。
+- rulebook: `verdict` は `pass`、`score` は 99 で、minor の finding が 1 件あります（`F001`）。
+- `git status` の差分は、runner 管理の `pipeline-state.json` が未追跡で出ているだけでした。review 中の成果物変更はありません。
+
+**判断根拠**
+- sample の frontmatter は `rulebook: specdojo:dss-rulebook`、`based_on: specdojo:uis-sample`、`status: draft` で、`ready` へ昇格していません。
+- 先行 edit タスク（-040、-050、-080）のコミットがあり、フェーズが求めた磨き込みは行われています。
+- 完了条件 DC-001〜003 は、sample の grade が全観点 level 4（100 点）です。review はこの判定を事実として使い、再評価していません。
+- rulebook の `F001`（minor、`vp-ux-language-consistency`）は、「決まり」と「規則」が併用されているという指摘です。rulebook の文言上の揺れで、sample の完了条件や必須要素には関わりません。そのため完了を妨げません。指摘の周辺（rulebook 120〜128 行目）を読み、推奨列が「規則 ID」で表記されていることも確認しました。
+
+**未充足事項・改善指示**
+- 未充足事項はありません。
+- 任意の改善として、`dss-rulebook` の用語を「規則」に統一するか、使い分けを一文で補ってください。次に rulebook を手直しするときで足ります。
+
+**確認できなかった範囲**
+- recipe は `_MISSING_` で、plan の宣言どおり未整備です。この点は照合していません。
+- 人の確定は plan どおり対象外で、sample 全体がそろった後の横串確認に回します。
+
+**decision**
+- `verdict`: `complete-with-findings`
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"review verdict: complete-with-findings。sample/rulebook とも評価結果は最新（grade list --changed-only / --incomplete は出力なし、終了コード 0）で、どちらも verdict は pass（sample 100、rulebook 99）。rulebook の minor F001（「決まり」と「規則」の用語揺れ）は完了条件に直結せず完了を妨げない。改善指示は、rulebook の用語を統一するか使い分けを一文で補うこと。確認できなかった範囲: recipe は _MISSING_ で未整備、人の確定は plan どおり対象外。","handoff":["dss-rulebook の F001（minor）: 「決まり」と「規則」の用語を統一するか、使い分けを一文で補う（任意、次回の rulebook 手直し時）"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/dss-sample.md --changed-only","status":"passed","summary":"出力なし。評価結果は最新"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/dss-sample.md --incomplete","status":"passed","summary":"出力なし。評価パイプラインは完了済み"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/dss-rulebook.md --changed-only","status":"passed","summary":"出力なし。rulebook の評価結果は最新"}]}
+</specdojo_executor_evidence>

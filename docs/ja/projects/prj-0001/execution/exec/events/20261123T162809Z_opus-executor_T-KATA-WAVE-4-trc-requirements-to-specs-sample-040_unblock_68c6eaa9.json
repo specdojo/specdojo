@@ -1,0 +1,17 @@
+{
+  "v": 1,
+  "ts": "2026-11-23T16:28:09Z",
+  "type": "unblock",
+  "task_id": "T-KATA-WAVE-4-trc-requirements-to-specs-sample-040",
+  "by": "opus-executor",
+  "msg": "resume integration from persisted pipeline state",
+  "meta": {
+    "pipeline_stage": "integrate",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-4-trc-requirements-to-specs-sample-040/T-KATA-WAVE-4-trc-requirements-to-specs-sample-040-20261123T115822Z-bdaf7ec9/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-4-trc-requirements-to-specs-sample-040/T-KATA-WAVE-4-trc-requirements-to-specs-sample-040-20261123T115822Z-bdaf7ec9/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-4-trc-requirements-to-specs-sample-040-20261123T115822Z-bdaf7ec9",
+    "claim_actor": "opus-executor",
+    "stage_actor": "opus-executor",
+    "pipeline_resume_claimed": "true"
+  }
+}

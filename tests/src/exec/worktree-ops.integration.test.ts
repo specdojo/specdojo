@@ -46,6 +46,7 @@ import {
 } from "../../../src/register/events.js";
 import { readSpecdojoFields } from "../../../src/register/item.js";
 import { taskRecordPaths } from "../../../src/exec/run-records.js";
+import { registerGradeResultPaths } from "../../../src/exec/run/register-grade-scope.js";
 import { gradeCheckpointPaths } from "../../../src/exec/grade-checkpoint.js";
 import { projectMergeBlockers } from "../../../src/exec/repo-integration.js";
 import { createPipelineState, writePipelineState } from "../../../src/exec/pipeline-state.js";
@@ -442,6 +443,40 @@ describe("exec worktree ops", () => {
     mergeIntoRoot(fixture, worktree, "GRADE");
     for (const path of paths)
       expect(readFileSync(join(fixture.repo, path), "utf8")).toBe("grade: after\n");
+  });
+
+  it("leaves other samples' grade results out of the task checkpoint (PJR-A54F)", () => {
+    const fixture = setupRepository();
+    const own = "execution/grade/results/own.yaml";
+    const other = "execution/grade/results/other.yaml";
+    const criteria = "execution/grade/criteria/doc.yaml";
+    for (const path of [own, other, criteria]) writeFile(join(fixture.repo, path), "grade: x\n");
+
+    const actual = gradeCheckpointPaths(fixture.context, [own]).map((path) =>
+      path.slice(fixture.repo.length + 1),
+    );
+
+    expect(actual.sort()).toEqual([criteria, own].sort());
+  });
+
+  it("carries no grade results for a register item without graded targets (PJR-NRWJ)", () => {
+    const fixture = setupRepository();
+    const other = "execution/grade/results/other.yaml";
+    const criteria = "execution/grade/criteria/doc.yaml";
+    for (const path of [other, criteria]) writeFile(join(fixture.repo, path), "grade: x\n");
+    const own = registerGradeResultPaths({
+      repoRoot: fixture.repo,
+      projectId: "prj-0001",
+      catalogPath: undefined,
+      item: { targets: ["prj-0001:not-in-catalog"] },
+    });
+
+    const actual = gradeCheckpointPaths(fixture.context, own).map((path) =>
+      path.slice(fixture.repo.length + 1),
+    );
+
+    expect(own).toEqual([]);
+    expect(actual).toEqual([criteria]);
   });
 
   it("preserves a newer root grade instead of discarding it during merge", () => {
@@ -1641,6 +1676,86 @@ describe("exec worktree ops", () => {
     expect(readFileSync(records.log("integrate.log"), "utf8")).toContain(path);
   });
 
+  describe("kata domain deliverable targets (PJR-5T0Q)", () => {
+    const samplePath = "docs/ja/specdojo/samples/tsp-index-sample.md";
+    const sampleDoc = (body: string) =>
+      `---\nspecdojo:\n  id: specdojo:tsp-index-sample\n  type: sample\n  status: draft\n---\n\n# Sample\n\n${body}\n`;
+
+    function setupKataCatalog(fixture: Fixture): void {
+      const catalogPath = join(fixture.repo, "catalog");
+      writeFile(
+        join(catalogPath, "dct-kata.yaml"),
+        [
+          "domain: kata",
+          "base_path: /docs/ja/specdojo",
+          "groups:",
+          "  - name: samples",
+          "    base_path: samples",
+          "    deliverables:",
+          "      - local_id: tsp-index-sample",
+          "        path: tsp-index-sample.md",
+          "",
+        ].join("\n"),
+      );
+      writeFile(join(fixture.repo, samplePath), sampleDoc("before"));
+      git(fixture.repo, "add", "catalog", samplePath);
+      git(fixture.repo, "commit", "-m", "add kata catalog");
+      fixture.context = { ...fixture.context, catalogPath };
+    }
+
+    it("commits a condense edit to a kata domain sample targeted by its specdojo id", () => {
+      const fixture = setupRepository();
+      setupKataCatalog(fixture);
+      const taskId = "T-KATA-tsp-index-sample-080";
+      const worktree = prepare(
+        fixture,
+        taskId,
+        taskId,
+        planWithIdentity(taskId, {
+          mode: "edit",
+          approach: "condense",
+          targets: ["specdojo:tsp-index-sample"],
+        }),
+      );
+      writeFile(join(worktree.path, samplePath), sampleDoc("after"));
+
+      const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+
+      expect(committed.targets).toContain(samplePath);
+    });
+
+    it("keeps blocking a condense edit to a type document that the catalog does not list", () => {
+      const fixture = setupRepository();
+      setupKataCatalog(fixture);
+      const rulebookPath = "docs/ja/specdojo/rulebooks/tsp-index-rulebook.md";
+      writeFile(
+        join(fixture.repo, rulebookPath),
+        "---\nspecdojo:\n  id: specdojo:tsp-index-rulebook\n---\n\n# Rulebook\n",
+      );
+      git(fixture.repo, "add", rulebookPath);
+      git(fixture.repo, "commit", "-m", "add rulebook");
+      const taskId = "T-KATA-tsp-index-rulebook-080";
+      const worktree = prepare(
+        fixture,
+        taskId,
+        taskId,
+        planWithIdentity(taskId, {
+          mode: "edit",
+          approach: "condense",
+          targets: ["specdojo:tsp-index-rulebook"],
+        }),
+      );
+      writeFile(
+        join(worktree.path, rulebookPath),
+        "---\nspecdojo:\n  id: specdojo:tsp-index-rulebook\n---\n\n# Rulebook changed\n",
+      );
+
+      expect(() => commitWorktreeChanges({ context: fixture.context, worktree, taskId })).toThrow(
+        UncommittedChangesError,
+      );
+    });
+  });
+
   it("does not write block evidence during a dry run", () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
@@ -1966,6 +2081,22 @@ describe("exec worktree ops", () => {
     expect(() => commitWorktreeChanges({ context: fixture.context, worktree, taskId })).toThrow(
       /promotion to "ready" is human-only.*: docs\/d\.yaml$/,
     );
+  });
+
+  it("allows a register task to commit a ready test fixture", () => {
+    const fixture = setupRepository();
+    const taskId = "PJR-0145";
+    const worktree = prepare(
+      fixture,
+      taskId,
+      taskId,
+      planWithIdentity(taskId, { mode: "edit", origin: "register", targets: [] }),
+    );
+    writeFile(join(worktree.path, "tests", "fixtures", "d.yaml"), "id: d\nstatus: ready\n");
+
+    const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+    expect(committed.targets).toContain("tests/fixtures/d.yaml");
+    expect(committed.committed).toBe(true);
   });
 
   it("blocks protected config changes even for a register-originated exclusion-list task", () => {

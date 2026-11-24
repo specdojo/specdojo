@@ -5,10 +5,10 @@ path: docs/ja/specdojo/templates/cdfd-template.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 100
-graded_at: "2026-11-16T00:50:11.273Z"
-graded_by: sol-review-executor
-content_hash: a49894a6295f434343754817378b888adb08b14fcd800c3c7ec5fc652127111b
+score: 98
+graded_at: "2026-11-23T21:55:21.573Z"
+graded_by: sonnet-review-executor
+content_hash: aad347076b4337585f78f230cca46d7b8fa00c5eb0be6832a971f4be15e916a3
 categories:
   purpose:
     score: 100
@@ -25,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 92
   consistency:
     score: 100
 viewpoints:
@@ -81,8 +81,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -104,6 +104,17 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 1
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 58
+    anchor: >-
+      <!-- 以下は D2 の例。記法は全体概要の「凡例（本プロダクト共通）」の宣言に従う。凡例が D2 を宣言した場合は specdojo:cdfd-d2-rulebook に従い、凡例が Mermaid
+      を宣言した場合、記法を宣言しない場合、または凡例がない場合は、本図を specdojo:cdfd-mermaid-rulebook に従う Mermaid の flowchart
+      へ置き換える。色・絵文字の割り当ては凡例があればそれに合わせる。対象グループで使わない雛形のノード・線・classes は削除し、物を渡す線には material_flow class、現物の保管先には
+      physical_store class を使う。 -->
+    message: rulebook の既定記法は Mermaid ですが、図の雛形は D2 のみです。Mermaid の flowchart 雛形を併記するか、D2 雛形が例である理由と既定記法との関係を明記してください。
+    message_ja: rulebook の既定記法は Mermaid ですが、図の雛形は D2 のみです。Mermaid の flowchart 雛形を併記するか、D2 雛形が例である理由と既定記法との関係を明記してください。

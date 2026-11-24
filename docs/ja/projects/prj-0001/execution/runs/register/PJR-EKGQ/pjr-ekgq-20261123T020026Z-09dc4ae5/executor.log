@@ -1,0 +1,22 @@
+PJR-EKGQ の修正は済みました。linked worktree では `external_projects` の `path` を主の作業ツリーのルートから解決するので、worktree の準備（`specdojo build`）で止まらなくなります。追加テストと変更ファイルの Prettier は通っています。実際の `exec run --register --worktree` での確認はしていません。
+
+## 変更内容
+
+- **対応策:** 個票の案 (a) を採用しました。利用者が宣言を変える必要がなく、案 (b) のように検証を弱めることもないためです。
+- **実装:** `src/shared/specdojo-config.ts` の `resolveExternalProjectRoot` が `repositoryIdentityRoot` を通して `path` を解決します。`validateExternalProjects` も同じ解決を使います。
+- **互換性:** 主の作業ツリーでの解決は変わりません。相手のリポジトリが無い場合は、従来どおり検証で停止します。
+
+## 追加・更新したもの
+
+- `tests/src/shared/specdojo-config-external-projects.test.ts` に linked worktree の 2 ケースを足しました。主の作業ツリーから解決できる場合と、相手が無く停止する場合です。
+- 設定リファレンスの `external_projects` の節に、worktree での `path` の扱いを追記しました。
+- 個票の対応結果に、採用理由と「CHANGELOG に書く事項」の小節（区分 Fixed と行の文案）を書きました。`CHANGELOG.md` は変えていません。
+
+## 補足
+
+- `npm run typecheck` や `npm run lint:ts` など、親 runner が実行する検査は流していません。
+- 個票の作業内容の表は、読んだ範囲には見当たらなかったため触っていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"外部プロジェクトの path を linked worktree では主の作業ツリーのルートから解決するよう修正した（案 a）。テスト・設定リファレンス・個票の対応結果（CHANGELOG 事項を含む）を更新した。","handoff":["CHANGELOG に書く事項（区分 Fixed）: `external_projects` の `path` を、linked worktree では主の作業ツリーのルートから解決する。`exec run --register --worktree` の worktree の準備が止まる問題を修正（PJR-EKGQ）。個票の対応結果の小節にも同文を記載済み。","対応策は案 (a) を採用。案 (b)・(c) は採用していない。理由は個票の対応結果に記載。"],"validations":[{"command":"npx vitest run tests/src/shared/specdojo-config-external-projects.test.ts","status":"passed","summary":"7 件すべて成功（linked worktree の 2 ケースを追加）"},{"command":"npx prettier --check docs/ja/specdojo/references/specdojo-config-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-ekgq-external-projects-path-in-worktree.md tests/src/shared/specdojo-config-external-projects.test.ts src/shared/specdojo-config.ts","status":"passed","summary":"変更した 4 ファイルすべて整形済み"}]}
+</specdojo_executor_evidence>

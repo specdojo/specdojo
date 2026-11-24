@@ -1,0 +1,19 @@
+cxd-rulebook と、取り込んでいる記法の rulebook（cxd-mermaid-rulebook）を簡潔にし、2 件の grade の指摘に対応しました。sample・recipe・template は変えていません。この段で流した検査は Prettier による整形だけです。lint や schema 検査は親 runner がこのあと実行します。
+
+**cxd-rulebook（変更は 15 行）**
+- **F001（委譲先の列挙の重複）:** 今の全体方針は、すでに「正本の選び方と参照の境界」を参照するだけの 1 行になっていました。指摘された列挙は残っていないので、直していません。
+- **F002（Mermaid の検証手順がない）:** 運用ルールに 1 行足しました。図を編集したら `npm run lint:mermaid -- <document-path>` で全ブロックを検査して構文エラーと未検査の図を残さないこと、描画プレビューでラベルが読めることを確かめることを書いています。この引数の形は `tools/lint-mermaid.mjs` が受け付けることを確認しました。
+- **PJR-76N9（文書の位置づけの書き方）:** 1.1 の表を「対象者」ごとの形から「利用場面」ごとの形に変え、見出しを「利用場面と判断すること」にしました。
+- **直さなかった箇所:** sample から届いた condense の記録 6 件（いずれも `retain`）は、指している 1.1 / 6.1 / 6.2 / 6.3.x / 6.4 / 6.5 / 7 に重複がないため、そのまま残しました。概要の要件にある「主要ステークホルダー」も残しました。システム側の利害関係者という成果物の中身であり、変えると sample の概要の表と合わなくなるためです。
+
+**cxd-mermaid-rulebook（変更は 245 行で、大半が削除）**
+- 「サンプル（最小）」の章を外しました。完成した図は cxd-sample にあります。
+- 要素・形状・クラス・色を 1 つの表にまとめ、繰り返し載せていた標準スタイルの定義は 1 つのコードブロックにしました。
+- ノードごとの例の図と、凡例のまるごとの例の図を外しました。凡例は「必要な場合だけ置く」という規則として残しています。
+- エッジの節には良い例・悪い例を足しました。禁止事項は変えていません。見出しは H2 までです。
+
+rulebook 記述標準は個別の改訂で「サンプル」の章を先に削ることを止めていますが、今回は plan の指示を優先して外しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"cxd-rulebook に Mermaid の構文検査の手順（F002）を足し、1.1 の表を PJR-76N9 に合わせて利用場面ごとの形にした。F001 は現行の文書ですでに参照 1 行になっていたため直していない。取り込んでいる cxd-mermaid-rulebook は、サンプルの章と繰り返しの例の図を外し、対応表・標準スタイル・エッジ・命名・禁止事項にまとめて簡潔にした。sample・recipe・template は変えていない。","handoff":["F001 は現行の cxd-rulebook 全体方針 L28 ですでに「正本の選び方と参照の境界」を参照する 1 行になっており、指摘された列挙が残っていないため直していない（result の `進め方と実践の型の適用` に記録すること）。","condense の記録 6 件（cause=kata:rulebook、action=retain）は、指している 1.1 / 6.1 / 6.2 / 6.3.x / 6.4 / 6.5 / 7 に重複がないため維持した。概要の要件の「主要ステークホルダー」は成果物の中身（システム側の利害関係者）であり、変えると sample の概要の表と合わなくなるため残した。","cxd-mermaid-rulebook の「サンプル（最小）」の章は plan の「完成例は sample に任せる」に従って外した。rulebook 記述標準の『個別の改訂で先行して削除しない』という経過措置と食い違うため、確定するときに確認してほしい。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/rulebooks/cxd-mermaid-rulebook.md docs/ja/specdojo/rulebooks/cxd-rulebook.md","status":"passed","summary":"変更した 2 ファイルを Prettier で整形した（エラーなし）"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルは変更していない","reason":"変更は docs/ja/specdojo/rulebooks/ 配下だけで、plan・result・個票を変えていない"}]}
+</specdojo_executor_evidence>

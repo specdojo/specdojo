@@ -1,0 +1,53 @@
+判定は `incomplete` です。評価結果はどちらも最新ですが、型の schedule の完了条件である「対象の型すべてが最新の `--target kata` で `pass`」を sample が満たしていません。成果物も result も変更していません。
+
+**評価結果の確認**
+
+鮮度の確認は 2 回行い、どちらも最新でした。
+- 実行したコマンド:
+  - `npx specdojo grade list --target kata --path docs/ja/specdojo/samples/itc-index-sample.md --changed-only`
+  - `npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/itc-index-rulebook.md --changed-only`
+- 2 回とも何も出力されず、終了コードは 0 でした。
+- 同じ 2 ファイルについて `--incomplete` でも確認し、何も出力されず終了コードは 0 でした。
+- 評価結果サイドカーは 2 つとも存在します。
+- 判定直前の再確認でも出力はなく、review 中に成果物は変わっていません。
+
+| 対象 | `verdict` | `score` | finding（blocker / major / minor / note） | `content_hash` の先頭 |
+| --- | --- | --- | --- | --- |
+| `specdojo.itc-index-sample.yaml` | `needs-work` | 92 | 0 / 1 / 4 / 0 | `3fe2b5f6…` |
+| `specdojo.itc-index-rulebook.yaml` | `pass` | 98 | 0 / 0 / 2 / 0 | `2a5d9a9e…` |
+
+**判断根拠**
+
+- 追加の完了条件では `needs-work` は `incomplete` とし、`complete-with-findings` でも完了扱いにしません。sample が `needs-work` なので、この時点で完了できません。
+- sample の F001（major）は適用対象のずれです。本文に `PATH-01`〜`PATH-04` と `PATH-07` とあり、`specdojo:tsp-index-sample` が定める範囲（`PATH-01`〜`PATH-03`）を超えています。sample の冒頭で、該当の記述が実際にあることを確かめました。
+- 照合した Frontmatter と H1 は次のとおりです。
+  - `based_on` に `specdojo:tsp-index-sample` があります。
+  - `rulebook` は `specdojo:itc-index-rulebook`、`status` は `draft` のままです。
+  - H1 は「内部結合テストカタログ: 概要（駄菓子屋きぬや 販売管理システム）」で、題材は駄菓子屋で統一されています。
+- 前の edit 実行記録（`T-KATA-WAVE-3-itc-index-sample-080` の result）は存在し、`status: complete` でした。ただし、その中の検証結果が成功かどうかは見つけられていません。
+
+**未充足事項・改善指示**
+
+1. **F001（major）:** 適用対象を上位と合わせます。`PATH-04`・`PATH-07` と `itc-record-backup` を外して tsp-index の範囲に合わせるか、範囲を広げる根拠と tsp 側の改訂方針を書きます。
+2. **F002（minor）:** テストごとのトランザクションロールバックを一律にせず、例外を明記します。ロック競合・ロールバック検証・保全取得は、seed の再投入やスキーマ分離で独立させます。
+3. **F003（minor）:** 分割の閾値を rulebook と同じ「観点が 15 以上、表が 50 行以上」に直します。
+4. **F004（minor）:** 「通信不能時の販売継続」の代替レベル列をテストレベルの略語で書き、未決であることは除外理由か例外列へ移します。
+5. **F005（minor）:** 「そろえ」と「揃える」の表記ゆれをなくし、一文にまとめます。
+6. **型の整備（rulebook の F001・F002、minor）:** rulebook の Frontmatter の `recipe` と `template` が `undecided` のままです。作るか対象外とするかを決め、rulebook を `ready` にする前に方針を明示します。これは rulebook 側の課題で、今回の完了判定には直接関係しません。
+
+直したあとは、sample を `--target kata` で評価し直し、`pass` を確認してからもう一度 review します。
+
+**approach に応じた確認（fully-guided）**
+
+- 前の edit タスク（080）で磨き込みは行われていますが、major finding が残っているため、求められた磨き込みは終わっていません。
+- recipe は宣言されていません（`_MISSING_`）。その扱いは rulebook の finding（`undecided`）として残っています。
+- rulebook の必須章や禁止事項は grade が評価済みのため、照合し直していません。
+
+**確認できなかった範囲**
+
+- 080 の result に記録された検証結果（lint など）が成功しているかは確認できていません。
+- 成果物を自分で評価し直すことはしていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict: incomplete。鮮度確認（specdojo grade list --target kata --changed-only / --incomplete を sample・rulebook の両方に実行し、2 回とも何も出力されず終了コード 0）で評価結果は最新、判定直前の再確認でも変更なし。sample の grade は needs-work（score 92、finding は blocker 0 / major 1 / minor 4）、rulebook の grade は pass（score 98、minor 2）。型の schedule の追加完了条件『対象の型すべてが最新の --target kata で pass』を sample が満たさないため incomplete。F001（major、適用対象 PATH-04・PATH-07 が tsp-index-sample の PATH-01〜PATH-03 を超える）は sample の冒頭で記述を確認した。Frontmatter の `based_on` に specdojo:tsp-index-sample があり、H1 の形式・駄菓子屋の題材・status draft も確認した。確認できなかった範囲: 前の edit 実行記録（T-KATA-WAVE-3-itc-index-sample-080 の result、status: complete）に記録された検証結果が成功かどうかは見つけられていない。成果物の再評価はしていない。","handoff":["sample F001（major）: 適用対象を tsp-index-sample の PATH-01〜PATH-03 に合わせる（PATH-04・PATH-07 と itc-record-backup を外す）か、範囲を広げる根拠と tsp 側の改訂方針を書く","sample F002〜F005（minor）: ロールバック一律適用の例外を明記、分割閾値を『観点が 15 以上、表が 50 行以上』に統一、代替レベル列を略語にして未決は除外理由・例外列へ移す、『そろえ／揃える』の表記を統一して一文にまとめる","修正後に sample を --target kata で評価し直し、pass を確認してからもう一度 review する","rulebook の recipe・template が undecided のまま（rulebook の grade の minor 2 件）。作るか対象外とするかを rulebook を ready にする前に決める"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/itc-index-sample.md --changed-only","status":"passed","summary":"何も出力されず終了コード 0（最新）。判定直前の再確認でも出力なし"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/itc-index-sample.md --incomplete","status":"passed","summary":"何も出力されず終了コード 0（評価パイプラインは完了済み）"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/itc-index-rulebook.md --changed-only","status":"passed","summary":"何も出力されず終了コード 0（最新）。判定直前の再確認でも出力なし"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/itc-index-rulebook.md --incomplete","status":"passed","summary":"何も出力されず終了コード 0（評価パイプラインは完了済み）"}]}
+</specdojo_executor_evidence>

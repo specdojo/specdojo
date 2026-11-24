@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-22T02:10:34Z",
+  "type": "claim",
+  "task_id": "T-KATA-WAVE-3-trc-requirements-to-tests-sample-090",
+  "by": "opus-review-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "QE"
+  }
+}

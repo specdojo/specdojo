@@ -88,7 +88,24 @@ export const VALID_TYPES = [
   "change-request",
   "decision",
   "note",
+  "handoff",
 ] as const;
+
+// 種類ごとに取りうる状態を絞る。handoff は受け取り待ち（open）と受け取った（done）だけを持ち、
+// 作業中・待ち・レビューの段階を持たない。表に無い種類はすべての状態を取りうる。
+export const ITEM_TYPE_ALLOWED_STATUSES: Readonly<Record<string, readonly string[]>> = {
+  handoff: ["open", "done"],
+};
+
+// 種類が取りえない状態への変更を、書き込みの前に止める。
+export function assertStatusAllowedForType(itemType: string, status: string, id?: string): void {
+  const allowed = ITEM_TYPE_ALLOWED_STATUSES[itemType];
+  if (!allowed || allowed.includes(status)) return;
+  throw new Error(
+    `${id ? `Cannot set ${id} to` : "Invalid status for"} "${status}": item type "${itemType}" ` +
+      `only allows status ${allowed.map((value) => `"${value}"`).join(" or ")}.`,
+  );
+}
 
 export const VALID_PRIORITIES = ["high", "medium", "low"] as const;
 export const VALID_DIFFICULTIES = ["hard", "medium", "easy"] as const;
@@ -101,6 +118,7 @@ export const DEFAULT_ITEM_TYPE_COMMIT_TYPE_MAP: Record<string, string> = {
   "change-request": "feat",
   decision: "docs",
   note: "docs",
+  handoff: "docs",
   question: "docs",
   risk: "docs",
   epic: "feat",

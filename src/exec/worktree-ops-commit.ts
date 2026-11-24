@@ -18,8 +18,10 @@ import {
   qualifiedRepoPaths,
   type AgentRepoPathChanges,
 } from "./agent-protected-config.js";
+import { readSpecdojoNamespace } from "../docs/frontmatter-namespace.js";
 import {
   deliverableDocPath,
+  deliverableDocPathByDocId,
   parsePlanTaskIdentity,
   targetReferenceDirsForApproach,
 } from "./plans.js";
@@ -161,6 +163,16 @@ export function deliverableStatus(content: string, relPath: string): string | un
   return typeof status === "string" ? status : undefined;
 }
 
+// Project deliverables and kata documents live under docs/. Other trees may contain
+// copies or test data with the same frontmatter and are not human approval targets.
+export function isAgentReadyPromotion(relPath: string, current: string, base?: string): boolean {
+  if (!relPath.replaceAll("\\", "/").startsWith("docs/")) return false;
+  return (
+    deliverableStatus(current, relPath) === "ready" &&
+    (base === undefined || deliverableStatus(base, relPath) !== "ready")
+  );
+}
+
 // Promotion of a deliverable's frontmatter status to "ready" is a human-only gate.
 // Agents commit their changes through commitWorktreeChanges, so reject (block) any run
 // that transitions a deliverable to "ready" here; humans promote out-of-band via a direct
@@ -179,15 +191,15 @@ function assertNoAgentReadyPromotion(
   const promoted: string[] = [];
   for (const relPath of paths) {
     if (relPath === resultRel || relPath === planRel) continue;
+    if (!relPath.replaceAll("\\", "/").startsWith("docs/")) continue;
     const absPath = resolve(worktree.path, relPath);
     if (!existsSync(absPath)) continue; // deletion is not a promotion
-    if (deliverableStatus(readFileSync(absPath, "utf8"), relPath) !== "ready") continue;
+    const content = readFileSync(absPath, "utf8");
+    if (deliverableStatus(content, relPath) !== "ready") continue;
     const base = gitResult(worktree.path, ["show", `HEAD:${relPath}`]);
-    const baseStatus =
-      base.status === 0 && typeof base.stdout === "string"
-        ? deliverableStatus(base.stdout, relPath)
-        : undefined;
-    if (baseStatus !== "ready") promoted.push(relPath);
+    const baseContent =
+      base.status === 0 && typeof base.stdout === "string" ? base.stdout : undefined;
+    if (isAgentReadyPromotion(relPath, content, baseContent)) promoted.push(relPath);
   }
   if (promoted.length > 0) {
     throw new Error(
@@ -308,6 +320,24 @@ function headDocIndexLookup(worktreePath: string): (id: string) => string | unde
   };
 }
 
+function isForeignNamespaceId(target: string, projectId: string | undefined): boolean {
+  return target.includes(":") && !(projectId && target.startsWith(`${projectId}:`));
+}
+
+// HEAD の文書の frontmatter（specdojo: 名前空間）の id。agent の working tree 改変で
+// 別の文書を target に見せかけられないよう、checkpoint 済みの版から読む。
+function headDocumentId(worktreePath: string, relPath: string): string | undefined {
+  const content = readWorktreeHeadFile(worktreePath, relPath);
+  if (!content) return undefined;
+  try {
+    const id = readSpecdojoNamespace(content).id;
+    return typeof id === "string" ? id.trim() : undefined;
+  } catch {
+    // frontmatter の壊れた文書は照合対象にしない。
+    return undefined;
+  }
+}
+
 // commit を許可する範囲。mode 別の許可リスト（review は result のみ、edit は result と
 // 対象成果物、maintenance / bootstrap 系 approach は参考資料ディレクトリも追加）。
 export type CommitScope = {
@@ -386,6 +416,18 @@ export function resolveCommitScope(
       : undefined;
     if (fromCatalog) {
       allowedFiles.add(fromCatalog);
+      continue;
+    }
+    // project 以外の名前空間の id（kata ドメインの specdojo:<name>-sample など）は、catalog の
+    // 成果物の文書 id と HEAD の frontmatter で照合する。catalog に無い型の文書は解決しない。
+    const fromCatalogDocId =
+      context.catalogPath && isForeignNamespaceId(target, identity.projectId)
+        ? deliverableDocPathByDocId(context.catalogPath, target, (path) =>
+            headDocumentId(worktree.path, path),
+          )
+        : undefined;
+    if (fromCatalogDocId) {
+      allowedFiles.add(fromCatalogDocId);
       continue;
     }
     unresolvedTargets.push(target);

@@ -20,7 +20,7 @@ specdojo:
     - PJR-FMYK
   approach: draft
   targets:
-    - prj-0001:stsd-task-execution
+    - stsd-task-execution
 ---
 
 # PJR-1799 stsd-task-execution を現行の実装をもとに下書きする

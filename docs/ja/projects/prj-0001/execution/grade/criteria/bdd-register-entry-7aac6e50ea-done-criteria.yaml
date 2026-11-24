@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
 id: prj-0001:bdd-register-entry-grade-criteria
-document: prj-0001:bdd-register-entry
+document: bdd-register-entry
 path: docs/ja/product/010-business-specs/020-data-model/bdd-register-entry.yaml
 graded_at: "2026-11-11T03:20:36.215Z"
 graded_by: sol-review-executor

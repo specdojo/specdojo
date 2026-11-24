@@ -5,10 +5,10 @@ path: docs/ja/specdojo/samples/mm-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 95
-graded_at: "2026-10-12T21:29:13.367Z"
-graded_by: agy-expert-executor
-content_hash: 0443aec4290f714977287b7bd4a2e34904ce16753ab1a428cb00ae3b3c6fd1b9
+score: 100
+graded_at: "2026-11-23T19:24:54.775Z"
+graded_by: sonnet-review-executor
+content_hash: f85c22285cfd4c64b874bb333a5bd82c35543873dc1ed988e41494845f01e687
 categories:
   purpose:
     score: 100
@@ -17,7 +17,7 @@ categories:
   planning:
     score: 100
   business:
-    score: 100
+    score: 92
   architecture:
     score: 100
   usability:
@@ -25,9 +25,9 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 92
+    score: 100
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -48,8 +48,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-business-value:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-requirements-completeness:
     level: 4
     score: 100
@@ -78,11 +78,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -104,20 +104,13 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 2
+  minor: 1
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 1
-    anchor: "# 議事録 サンプル"
-    message: Frontmatterのidがルールブックで定義された命名規則(mm-＜yyyy-mm-dd＞-＜nn＞)に準拠していない。
-    message_ja: Frontmatterのidがルールブックで定義された命名規則(mm-＜yyyy-mm-dd＞-＜nn＞)に準拠していない。
-  - id: F002
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 議事録 サンプル"
-    message: サンプルのidがルールブックの定義する形式に準拠しておらず、正解例としての役割を十分に果たしていない。
-    message_ja: サンプルのidがルールブックの定義する形式に準拠しておらず、正解例としての役割を十分に果たしていない。
+    rule: vp-ba-business-value
+    line: 20
+    anchor: 週次レビューでは、人気商品の欠品7回のうち5回が、店番ごとに補充の目安（在庫2以下・3以下・5以下）が違い、補充が遅れたことによるものだった。次の表は、この会議で決まったことと、決めた役割を示す。
+    message: 決定2（欠品速報の確認時刻を毎日16:00に固定）の判断理由が決定事項の導入文で示されておらず、決定の妥当性を後から確認できないため、固定する理由を1文添えるべきである。
+    message_ja: 決定2（欠品速報の確認時刻を毎日16:00に固定）の判断理由が決定事項の導入文で示されておらず、決定の妥当性を後から確認できないため、固定する理由を1文添えるべきである。

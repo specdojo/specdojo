@@ -54,3 +54,132 @@
       from: "-"
       to: '["PJR-7M9J"]'
   previous_event_id: reg_40e491b2fc5b4785ba233df37c2e401d
+- v: 1
+  id: reg_833ef01b24104083baf3fceb73a6d163
+  ts: "2026-11-22T13:25:40Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件を利用者の承認のもとで書く
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_a1fe5ffec837412a96e9dff59d997a0c
+- v: 1
+  id: reg_17f2f9773e534ba6adabd5ba1eb73e20
+  ts: "2026-11-22T13:39:43Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_833ef01b24104083baf3fceb73a6d163
+- v: 1
+  id: reg_557b66d661da4b28958d0af2c4b93f05
+  ts: "2026-11-22T13:41:49Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor reported incomplete: template への書き込み権限が付与されず（Edit が permission 拒否）、prj-charter-template の編集と個票の更新を実施できなかった。成果物は未変更。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor reported incomplete: template への書き込み権限が付与されず（Edit が permission 拒否）、prj-charter-template の編集と個票の更新を実施できなかった。成果物は未変更。"
+  previous_event_id: reg_17f2f9773e534ba6adabd5ba1eb73e20
+- v: 1
+  id: reg_e967b637375345a8b210f3688c480c5e
+  ts: "2026-11-22T14:06:17Z"
+  action: start
+  actor: sonnet-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "executor reported incomplete: template への書き込み権限が付与されず（Edit が permission 拒否）、prj-charter-template の編集と個票の更新を実施できなかった。成果物は未変更。"
+      to: "-"
+  previous_event_id: reg_557b66d661da4b28958d0af2c4b93f05
+- v: 1
+  id: reg_288d331c7d1142c09c03a364394d1f3a
+  ts: "2026-11-22T14:12:10Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_e967b637375345a8b210f3688c480c5e
+- v: 1
+  id: reg_e186f74c7bc54e3b99abb6f4c93f50e6
+  ts: "2026-11-22T23:30:59Z"
+  action: update
+  actor: indie
+  from_status: review
+  to_status: review
+  reason: 2 回目の実行の範囲を決めた（外しすぎた目印の復元と一覧の修正、合格条件の列など、2026-11-23）
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_288d331c7d1142c09c03a364394d1f3a
+- v: 1
+  id: reg_9c291240cec84c46829f5f8467f15000
+  ts: "2026-11-23T00:04:32Z"
+  action: start
+  actor: sonnet-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_e186f74c7bc54e3b99abb6f4c93f50e6
+- v: 1
+  id: reg_d7c5db962ce94ec588213163c36b6755
+  ts: "2026-11-23T00:09:53Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_9c291240cec84c46829f5f8467f15000
+- v: 1
+  id: reg_1be7b95980ca4f9687c5f3b76bb10da2
+  ts: "2026-11-23T02:08:35Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 2 回目の完了条件を差分と対応結果で確かめ、template の grade が pass 92 だった（2026-11-23）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: prj-charter の template から文書の運用の記述を外す試行を終え、ほかの template へ広げる一覧（rulebook が記載を求める項目の目印は残す境目を含む）を作った。2 回目で外しすぎた目印を戻し、合格条件の列・AI Agent の目印・生成物の status を直した。template の grade は pass 92
+  previous_event_id: reg_d7c5db962ce94ec588213163c36b6755

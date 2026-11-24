@@ -1,0 +1,20 @@
+recipe `docs/ja/specdojo/recipes/prj-success-criteria-and-acceptance-criteria-recipe.md` を直し、F001 と F002 に対応しました。どちらも「条件を足す・変えるときに、変更理由と影響範囲を引き出す問いがない」という指摘です。
+
+**根拠にした規範**
+- rulebook の「全体方針」にある「改訂時の追従対象」。業務価値・閾値・判定時期・必須条件を変えたときは、その条件 ID を引き継ぐ下流の受入条件・テスト・取得済みの証跡を確かめ直す、と定めています。
+- `document-metadata-standard` の改訂・廃止の規定（改訂理由の明記、参照元への影響の洗い出し）。
+
+**変更内容**
+- 「判定手順と証跡」の問いに 1 行足しました。条件を変える理由と、影響を受ける下流の条件・テスト・取得済みの証跡を尋ねる問いです。
+- 同じ章のコツに 1 行足しました。条件を足す・変えるときに、変更理由と影響範囲を条件 ID で控えておく、という内容です。
+- 「仕上げチェック」に 1 項目足しました。追加・変更した条件に、変更理由と影響先が条件 ID で記録されているかを確かめます。
+
+rulebook の規則を言い直さず、問い・コツ・チェック項目の形にとどめています。PJR-76N9 で禁じている、文書の役割の割り当てや承認の進み具合を書かせる問いは加えていません。rulebook・sample と recipe の `status` には手を入れていません。
+
+**検証**
+- 変更したファイルに `npx prettier --check` をかけ、通りました。
+- lint などの検査は、このあと親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"recipe の「判定手順と証跡」の問い・コツと「仕上げチェック」に、条件を足す・変えるときの変更理由と影響範囲（下流の条件・テスト・取得済みの証跡）を引き出す記述を足し、F001・F002 に対応した。根拠は rulebook の「改訂時の追従対象」と document-metadata-standard の改訂規定。rulebook・sample と recipe の `status` は変更していない。","handoff":[],"validations":[{"command":"npx prettier --check docs/ja/specdojo/recipes/prj-success-criteria-and-acceptance-criteria-recipe.md","status":"passed","summary":"All matched files use Prettier code style"}]}
+</specdojo_executor_evidence>

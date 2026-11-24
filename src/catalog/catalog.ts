@@ -1,4 +1,3 @@
-import { registerDeprecatedWhereAlias } from "../shared/where-alias.js";
 import { type Command } from "commander";
 import { join, relative, resolve } from "node:path";
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -315,8 +314,6 @@ export function printCatalogPaths(opts: { project?: string }): void {
 
 export function registerCatalogCommands(program: Command): void {
   const cat = program.command("catalog").description("Deliverables catalog (dct-*.yaml) commands");
-
-  registerDeprecatedWhereAlias(cat, printCatalogPaths);
 
   const vcmd = cat.command("validate").description("Validate dct-*.yaml files");
   addProjectOption(vcmd);

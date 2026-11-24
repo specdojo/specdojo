@@ -56,7 +56,7 @@ export function registerRunCommand(exec: Command): void {
     "--input <key=value...>",
     "Job input values (repeat or provide multiple key=value pairs)",
   );
-  rcmd.option("--scheduled-at <dateTime>", "Scheduled occurrence time for a Job Run");
+  rcmd.option("--scheduled-at <dateTime>", "Scheduled occurrence time for a job run");
   rcmd.option("--job-trigger <source>", "Job trigger source: manual|routine|ci", "manual");
   rcmd.option(
     "--register-commit",
@@ -445,13 +445,16 @@ export function registerRunCommand(exec: Command): void {
             process.exitCode = 1;
             return;
           }
-          process.stdout.write("[run] validate: ok\n[run] refresh...\n");
-          if (!spawnRefresh(opts.project)) {
-            process.stdout.write("[run] refresh failed — exit\n");
-            process.exitCode = 1;
-            return;
+          process.stdout.write("[run] validate: ok\n");
+          if (!opts.dryRun) {
+            process.stdout.write("[run] refresh...\n");
+            if (!spawnRefresh(opts.project)) {
+              process.stdout.write("[run] refresh failed — exit\n");
+              process.exitCode = 1;
+              return;
+            }
+            process.stdout.write("[run] refresh: ok\n");
           }
-          process.stdout.write("[run] refresh: ok\n");
 
           await withTrailingRunRecords(opts, "run", () =>
             isBatch ? runBatchMode(opts) : runManualMode(opts),

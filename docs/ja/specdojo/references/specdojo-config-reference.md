@@ -13,7 +13,7 @@ SpecDojo Configuration Reference
 
 **対象範囲**
 
-- `.specdojo/specdojo.config.json` のトップレベル、project、`run`、`repos`、`external_projects` の設定キー
+- `.specdojo/specdojo.config.json` のトップレベル、project、`run`、`repos`、`external_projects`、`references` の設定キー
 - `.specdojo/specdojo.local.config.json` で上書きできるキーと優先順位
 
 **ここで引けるもの**
@@ -67,6 +67,7 @@ exec の result の commit 前検査にも、利用リポジトリに設定が�
 | `kata_authority`     | 任意 | リポジトリのディレクトリ名             | 利用者が新しく作る kata のリポジトリ単位の authority です。英小文字・数字・ハイフンで指定します。           |
 | `projects`           | 必須 | なし                                   | project ID をキー、project 設定を値とするオブジェクトです。複数 project を1ファイルで扱えます。             |
 | `external_projects`  | 任意 | なし                                   | 別リポジトリの project をローカルの別名で宣言します。`register add` と `orchestrator launch` が使用します。 |
+| `references`         | 任意 | なし                                   | 読むだけのディレクトリを別名で宣言します。`orchestrator launch` が使用します。                              |
 
 対象 project の一般的な解決順序は、`--project <id>`、`SPECDOJO_PROJECT`、`current_project`、`projects` の先頭です。一部のコマンドは `current_project` を参照せず `projects` の先頭へフォールバックするため、複数 project では `--project` を明示してください。
 
@@ -94,25 +95,58 @@ exec の result の commit 前検査にも、利用リポジトリに設定が�
 
 別名は `[a-z0-9-]+` とし、ローカルの `projects` の ID と重ねられません。`path` は存在するディレクトリでなければならず、絶対パスは使えません。起票時は相手の `node_modules/.bin/specdojo` を使うため、相手に SpecDojo 0.4.2 以上が必要です。`orchestrator launch` は `repos` に加えて、宣言したすべての外部リポジトリにも provider 別の編集許可を付けます。
 
+linked worktree（`exec run --worktree` の作業場所など）では、`path` を worktree ではなく、その worktree を持つ主の作業ツリーのルートから解決します。相手のリポジトリは主の作業ツリーの隣にあり、task の worktree の隣にはないためです。主の作業ツリーでの解決は変わりません。
+
 相手に `node_modules/.bin/specdojo` がなく、相手の `package.json` の `name` が `specdojo` の場合は、呼び出し元と同じ Node.js で `node <相手>/dist/specdojo.js` を起動します。SpecDojo 自身のリポジトリを指定する場合は、相手で `npm install` と `npm run build` を実行してください。`dist/specdojo.js` がなければ `npm run build` を案内して停止します。CLI の版はこの起動方法でも 0.4.2 以上が必要です。
+
+### 2.2. `references`のキー
+
+v0.10.0 から、コード・文書などを読むだけのディレクトリをトップレベルの `references` に宣言できます。全 project の対話型オーケストレーターで共有します。Git リポジトリや SpecDojo の導入は不要です。
+
+```json
+{
+  "references": {
+    "library": { "path": "../shared-library" },
+    "manuals": { "path": "../vendor-docs" }
+  }
+}
+```
+
+別名は `[a-z0-9-]+`、各値のキーは必須の `path` だけです。`path` は主の作業ツリーのルートからの相対パスで、linked worktree でも基準を変えません。存在しないパス、ファイル、絶対パスは設定の読み込み時にエラーにします。local の上書きがある場合は上書き後に検証します。
+
+参照先を実パスに解決したうえで、プロジェクトリポジトリ、全 project の `repos`、`external_projects` との一致・親子関係を拒否します。symlink 経由でも同じです。書ける範囲と読むだけの範囲を重ねないためです。`references` は `targets` のリポジトリ接頭辞にはならず、exec の executor・reviewer へ追加公開せず、worktree・setup・commit・統合の対象にもなりません。
+
+`orchestrator launch` は次の指定を加えます。
+
+| provider   | 参照先の扱い                                                                                                                                                                                                                          |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `claude`   | `--add-dir` で読み取り範囲を追加し、`--disallowedTools 'Edit(//<path>/**)'` で編集を拒否します。`Edit` のパス規則は Write・NotebookEdit にも適用されます。                                                                            |
+| `codex`    | `--sandbox workspace-write` を指定し、既存の外部読み取り範囲を使います。書き込みを許す `--add-dir` に参照先を渡しません。追加の `sandbox_workspace_write.writable_roots` と、一時ディレクトリの暗黙の書き込み許可も起動時に外します。 |
+| `copilot`  | `--add-dir` と `--deny-tool 'write(<path>/**)'` を指定します。パスの glob を扱える CLI が必要です。                                                                                                                                   |
+| `opencode` | 既存の V1 権限注入と同じ形式で、選択 agent の `external_directory` に参照先を追加し、相対パスの `edit` を `deny` にします。                                                                                                           |
+
+Claude Code・Copilot・OpenCode の編集拒否は provider のファイルツールの規則です。任意の shell・MCP 経由の書き込みを OS レベルで隔離するものではありません。参照先の変更を許可する追加設定や、sandbox を解除するオプションを併用しないでください。厳密な隔離が必要な環境では参照先を読み取り専用でマウントします。規則の詳細は [Claude Code の権限](https://code.claude.com/docs/en/permissions)と [Copilot CLI の権限](https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-command-reference)を参照してください。
+
+`config show` は別名・設定したパス・解決した実パス・`read-only`・共有/local の由来を表示します。
 
 ## 3. projectのパスキー
 
 `projects.<project-id>` に指定するキーです。`base_path` 以外の表中のパスは、`base_path` があればそこからの相対パス、無ければリポジトリルートからの相対パスとして解決します。
 
-| キー                    | 既定値           | 主な役割                                           | 必要とする主なコマンド                                       |
-| ----------------------- | ---------------- | -------------------------------------------------- | ------------------------------------------------------------ |
-| `base_path`             | リポジトリルート | project 文書に共通するパス接頭辞                   | project に紐づく各コマンド                                   |
-| `project_register_path` | なし             | 個票、event、登録簿の配置先                        | `register *`、`exec plan/run --register`                     |
-| `catalog_path`          | なし             | `dct-*.yaml` と生成ビューの配置先                  | `catalog *`、`deliverable scaffold`、catalog を使う grade 等 |
-| `schedule_path`         | `schedule`       | strategy、track、Schedule の配置先                 | `schedule *`、schedule 対象の `exec *`                       |
-| `execution_path`        | `execution`      | plan、result、実行状態、grade / Job Run の配置先   | `exec *`、`grade *`、`job *`、`dashboard build`              |
-| `timeline_path`         | `timeline`       | 非推奨。旧 timeline の互換読み込み・生成物の配置先 | 旧 `timeline *` と範囲解決の互換処理                         |
-| `members_path`          | なし             | 人間と対応 Role code を定義する `pm-members.yaml`  | actor 検証、owner 検証、合成名簿の project 側入力            |
-| `roles_path`            | なし             | role 定義ファイルの配置先                          | `schedule strategy generate`、owner を解決する `exec plan`   |
-| `viewpoints_path`       | なし             | review / grade 観点ファイルの配置先                | `grade *`、review plan、`exec scaffold --project`            |
-| `routines_path`         | なし             | `rtn-*.yaml` と routine 状態の配置先               | `routine *`、routine を集約する `dashboard build`            |
-| `jobs_path`             | なし             | `job-*.yaml` の配置先                              | `job *`、`exec run --job`                                    |
+| キー                    | 既定値                                               | 主な役割                                                       | 必要とする主なコマンド                                       |
+| ----------------------- | ---------------------------------------------------- | -------------------------------------------------------------- | ------------------------------------------------------------ |
+| `base_path`             | リポジトリルート                                     | project 文書に共通するパス接頭辞                               | project に紐づく各コマンド                                   |
+| `project_register_path` | なし                                                 | 個票、event、登録簿の配置先                                    | `register *`、`exec plan/run --register`                     |
+| `catalog_path`          | なし                                                 | `dct-*.yaml` と生成ビューの配置先                              | `catalog *`、`deliverable scaffold`、catalog を使う grade 等 |
+| `schedule_path`         | `schedule`                                           | strategy、track、Schedule の配置先                             | `schedule *`、schedule 対象の `exec *`                       |
+| `execution_path`        | `execution`                                          | plan、result、実行状態、grade / job run の配置先               | `exec *`、`grade *`、`job *`、`dashboard build`              |
+| `timeline_path`         | `timeline`                                           | 非推奨。旧 timeline の互換読み込み・生成物の配置先             | 旧 `timeline *` と範囲解決の互換処理                         |
+| `members_path`          | なし                                                 | 人間と対応 Role code を定義する `pm-members.yaml`              | actor 検証、owner 検証、合成名簿の project 側入力            |
+| `roles_path`            | なし                                                 | role 定義ファイルの配置先                                      | `schedule strategy generate`、owner を解決する `exec plan`   |
+| `viewpoints_path`       | なし                                                 | review / grade 観点ファイルの配置先                            | `grade *`、review plan、`exec scaffold --project`            |
+| `routines_path`         | なし                                                 | `rtn-*.yaml` と routine 状態の配置先                           | `routine *`、routine を集約する `dashboard build`            |
+| `jobs_path`             | なし                                                 | `job-*.yaml` の配置先                                          | `job *`、`exec run --job`                                    |
+| `playbook_path`         | `030-project-management/pm-orchestrator-playbook.md` | オーケストレーター運用メモのファイル（`base_path` からの相対） | `where playbook`、`playbook scaffold`                        |
 
 `schedule_path` と `execution_path` は解決時の既定値があります。ただし `schedule` コマンドや一括 `build` の対象判定ではキーの明示が必要なため、catalog から Schedule と exec へ進む構成では省略しないでください。
 
@@ -123,12 +157,37 @@ exec の result の commit 前検査にも、利用リポジトリに設定が�
 | キー                 | 既定値                         | 役割・利用箇所                                                                                                                                      |
 | -------------------- | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `integration_branch` | `project/<project-id>/develop` | 別 project の作業ツリーから `register add --project <project-id> --commit` で直接記帳する統合ブランチです。                                         |
+| `register_sync`      | `{ "enabled": false }`         | register の `--commit` と schedule の実行イベントを専用ブランチへ同期します。詳細は次節を参照してください。                                         |
 | `project_context`    | `["prj-overview"]`             | edit / review plan へ常に渡す project 共通文書のローカル ID です。空配列 `[]` で無効化できます。`depends_on` や成果物の `based_on` は変更しません。 |
 | `commit_types`       | なし                           | 登録項目 type（`todo`・`issue` 等）から Conventional Commits type への対応マッピングです。                                                          |
 | `run`                | `{}`                           | agent 実行、worktree、登録日の表示に関する project 単位の設定です。                                                                                 |
 | `repos`              | なし                           | project のタスクが変更するプロダクトリポジトリの宣言です。詳細は「`repos`のキー」を参照してください。                                               |
 
 project の `integration_branch` は、`repos[].integration_branch` とは別の設定です。前者は project リポジトリ内の登録簿へ直接記帳するブランチ、後者は exec が各プロダクトリポジトリへ変更を統合するブランチを表します。指定した project の統合ブランチはローカルに存在していなければなりません。
+
+### 4.1. `register_sync` のキー
+
+`projects.<project-id>.register_sync` は v0.10.0 からの任意設定です。
+
+| キー      | 既定値                          | 役割                                                                                                                                   |
+| --------- | ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `enabled` | `false`                         | `true` なら register の `--commit` と schedule のイベントを専用 worktree に書き、commit・push します。未設定・`false` は従来動作です。 |
+| `branch`  | `project/<project-id>/register` | 記帳専用の Git ブランチ名です。                                                                                                        |
+| `remote`  | `origin`                        | fetch・pull・push に使う登録済みのリモート名です。URL とオプション形式は指定できません。                                               |
+
+```json
+{
+  "register_sync": {
+    "enabled": true,
+    "branch": "project/prj-0001/register",
+    "remote": "origin"
+  }
+}
+```
+
+有効時は `integration_branch` よりこの同期先を優先します。`external_projects` 経由の起票も、相手の CLI と project の設定に従います。相手も v0.10.0 以上に更新してください。`--commit` のない register 操作は現在の worktree に書き、`--dry-run --commit` は同期しません。
+
+同期範囲は `project_register_path` と `execution_path/exec/events/` です。`exec run --register` の状態遷移と検証済みの個票編集も同期し、exec の commit から個票・イベントを除きます。run の記録・成果物は従来の実行先に残ります。専用 worktree は既存のものを再利用し、無ければ Git 共通ディレクトリの `specdojo/register/<識別子>/worktree` に作成します。設定とパスはブランチ上でも解決できる状態にしてください。schedule のイベント読み取りは同期先を更新して参照するため、通信が必要です。初期ブランチの作成、競合の復旧、develop への取り込みは [[specdojo:register-operation-guide|登録簿運用ガイド]] を参照してください。
 
 ## 5. `run`のキー
 
@@ -142,6 +201,8 @@ project の `integration_branch` は、`repos[].integration_branch` とは別の
 | `parent_validations_exclude` | `[]`           | 共有の `pipeline.parent_validations` から除外する ID と実行先の組です。除外後に `parent_validations` を追記します。          |
 | `worktree_base`              | `../worktrees` | `exec run --worktree` / `--auto` と `exec trial` が作る worktree の親です。リポジトリ外を指定します。                        |
 | `register_date_timezone`     | `UTC`          | 登録簿の「登録日」「完了日」を日時から暦日へ変換する IANA タイムゾーン名です。例は `Asia/Tokyo` です。                       |
+
+`exec_defaults` のファイルには、provider ごとの `providers.<provider>.agent_timeout_seconds` で agent の CLI の 1 回の起動の時間の上限（秒）を書けます。未指定なら上限はありません。上限に達すると、runner は CLI のプロセスグループを SIGTERM、10 秒後に SIGKILL で止め、run を block にして理由にこのキーを残します。書き方と動きは [[specdojo:exec-config-guide|exec設定ガイド]] の「exec-defaults」を参照してください。
 
 `parent_validations` の要素は、共有 defaults と同じく検証 ID、または `{ "id": "<id>", "repo": "<repo>" }` です。共有 defaults を複製せず、プロダクトリポジトリを持つ project だけに検証を追加できます。たとえば `prj-0002` だけで `specdojo-lp` の型と lint を検査する設定は次のとおりです。
 
@@ -208,7 +269,7 @@ register の worktree 実行では、`exec run --integration-branch <repo>=<bran
 
 `commit_types` は項目の type ごとに既定の commit type を上書きします。値は個票の `commit_type` と同じ 11 種類（`feat`・`fix`・`docs`・`refactor`・`test`・`chore`・`perf`・`build`・`ci`・`style`・`revert`）です。空文字や一覧外の値は設定読み込み時にエラーになります。未指定のキーは「個票の `commit_type` → `repos[].commit_types` → `projects.<project-id>.commit_types` → 既定対応」の順に解決します。`commit_scope` は個票で指定した場合だけ使います。
 
-既定対応は `issue` が `fix`、`todo`・`change-request`・`epic` が `feat`、`decision`・`note`・`question`・`risk` が `docs` です。未知の type は `chore` にフォールバックします。たとえば、project に `"commit_types": { "todo": "chore", "issue": "fix" }`、ドキュメント用の repo に `"commit_types": { "todo": "docs" }` を設定すると、その repo の todo は `docs`、他の repo の todo は `chore` になります。個票で `commit_type` を明示すれば、設定より優先されます。
+既定対応は `issue` が `fix`、`todo`・`change-request`・`epic` が `feat`、`decision`・`note`・`handoff`・`question`・`risk` が `docs` です。未知の type は `chore` にフォールバックします。たとえば、project に `"commit_types": { "todo": "chore", "issue": "fix" }`、ドキュメント用の repo に `"commit_types": { "todo": "docs" }` を設定すると、その repo の todo は `docs`、他の repo の todo は `chore` になります。個票で `commit_type` を明示すれば、設定より優先されます。
 
 `commit_subject_template` と `merge_message_template` はプロダクトリポジトリごとに独立して指定できます。設定がない場合は commit・merge とも従来の `exec(register <ID>): <タイトル>` を保ちます。SpecDojo の記録のリポジトリの start・review・wait・merge などの記帳には適用しません。
 
@@ -225,7 +286,7 @@ register の worktree 実行では、`exec run --integration-branch <repo>=<bran
 | `{branch}`  | そのプロダクトの実際の作業ブランチ名                                                    |
 | `{target}`  | run の上書きを含む、そのプロダクトの実際の統合先                                        |
 
-commit／merge の scope が空のときは、テンプレートに書いた `({scope})` を括弧ごと取り除きます。たとえば `{type}({scope}): {title}` は `feat: 機能追加` になります。commit のテンプレートは空白と改行を 1 つの空白にまとめて 1 行にします。merge のテンプレートは本文の改行を保ちます。どちらも 1 行目は従来どおり最大 100 文字（超過時は末尾を `…` にして切り詰める）です。本文の末尾には設定にかかわらず `Refs: <project-id>:<ID>` を付けます。テンプレート自身に同じ `Refs:` 行があっても、末尾に 1 回だけ置きます。
+commit／merge の scope が空のときは、テンプレートに書いた `({scope})` を括弧ごと取り除きます。たとえば `{type}({scope}): {title}` は `feat: 機能追加` になります。commit のテンプレートは空白と改行を 1 つの空白にまとめて 1 行にします。merge のテンプレートは本文の改行を保ちます。どちらも 1 行目は従来どおり最大 100 文字（超過時は末尾を `…` にして切り詰める）です。同じ項目を `--force-restart` や `--resume` で流し直したときは、作業 worktree の履歴に同じ項目の `Refs:` を持つ merge でない commit がすでにあれば、commit の 1 行目の末尾に空白と `(run N)`（N は 2 回目以降の通番）を付けます。テンプレートの有無にかかわらず付き、1 行目が 100 文字を超える場合は title 側を切り詰めて番号を残します。1 回目の commit と merge メッセージには付きません。本文の末尾には設定にかかわらず `Refs: <project-id>:<ID>` を付けます。テンプレート自身に同じ `Refs:` 行があっても、末尾に 1 回だけ置きます。
 
 git-flow で develop へローカル統合する場合の `repos` 要素の例です。作業ブランチは `feature/{topic}` とし、`ff` で早送りだけを許可する例です。`merge_message_template` は `integration_strategy` を `merge` にした場合に使います。
 
@@ -305,17 +366,16 @@ agent には、各 worktree の絶対パスを次の環境変数で渡します�
 
 agent の起動コマンドには、provider ごとにプロダクト worktree への書き込み許可を runner が付け足します。`exec-defaults.yaml` の `command_template` を変える必要はありません。
 
-| provider      | 付け足す引数                                                     | 制約                                                                                             |
-| ------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| `claude`      | `--add-dir <path>...` と `--allowedTools 'Edit(//<path>/**)'...` | mode 別 settings の `Edit` 許可は作業ディレクトリ相対のため、絶対パスの許可を別に渡す            |
-| `codex`       | `--add-dir <path>`（リポジトリの数だけ）                         | `--sandbox workspace-write` の書き込みルートに加わる。`.git` は codex の仕様で読み取り専用のまま |
-| `antigravity` | `--add-dir <path>`（リポジトリの数だけ）                         | テンプレートの `--add-dir "$(pwd)"` に追加する                                                   |
-| `copilot`     | `--add-dir <path>`（リポジトリの数だけ）                         | 書き込みはテンプレートの `--allow-tool write` に従う                                             |
-| `opencode`    | なし（`OPENCODE_CONFIG_CONTENT` を起動コマンドの前に付ける）     | 下記の inline config で許可する。`command_template` に `--agent <name>` が無いと起動前に止まる   |
+| provider   | 付け足す引数                                                     | 制約                                                                                             |
+| ---------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `claude`   | `--add-dir <path>...` と `--allowedTools 'Edit(//<path>/**)'...` | mode 別 settings の `Edit` 許可は作業ディレクトリ相対のため、絶対パスの許可を別に渡す            |
+| `codex`    | `--add-dir <path>`（リポジトリの数だけ）                         | `--sandbox workspace-write` の書き込みルートに加わる。`.git` は codex の仕様で読み取り専用のまま |
+| `copilot`  | `--add-dir <path>`（リポジトリの数だけ）                         | 書き込みはテンプレートの `--allow-tool write` に従う                                             |
+| `opencode` | なし（`OPENCODE_CONFIG_CONTENT` を起動コマンドの前に付ける）     | 下記の inline config で許可する。`command_template` に `--agent <name>` が無いと起動前に止まる   |
 
 OpenCode は起動引数に追加ルートの指定を持たないため、runner は `OPENCODE_CONFIG_CONTENT` で、起動コマンドの `--agent` が選ぶ agent の `permission.external_directory` を「全拒否、プロダクト worktree だけ許可」に差し替え、同じ worktree の `permission.edit` を許可に加えます。`external_directory` は絶対パス（`<path>/**`）、`edit` は作業ディレクトリ（プロジェクトの worktree）からの相対パス（`../<name>/**`）で照合されるため、それぞれの形で渡します。inline config は agent 定義の frontmatter より後に読まれるため上書きされません。継承した `OPENCODE_CONFIG_CONTENT` の他項目は保持します。
 
-対話型オーケストレーターは `specdojo orchestrator launch` が同じ `repos` を読み、プロダクトリポジトリ本体のルートを許可します。Claude Code、Codex、Antigravity、GitHub Copilot は上表と同じ引数規則です。OpenCode は起動時の inline config で、exec と同じ形で、選択 agent の `permission.external_directory` を「全拒否、宣言済みルートだけ許可」に差し替え、宣言済みルートの `permission.edit` を起動場所からの相対パスで許可します。この設定はオーケストレーターのプロセスだけに適用され、agent 定義や利用者の設定ファイルは書き換えません。`repos` を省略した project では追加の引数・設定を渡しません。
+対話型オーケストレーターは `specdojo orchestrator launch` が同じ `repos` を読み、プロダクトリポジトリ本体のルートを許可します。Claude Code、Codex、GitHub Copilot は上表と同じ引数規則です。OpenCode は起動時の inline config で、exec と同じ形で、選択 agent の `permission.external_directory` を「全拒否、宣言済みルートだけ許可」に差し替え、宣言済みルートの `permission.edit` を起動場所からの相対パスで許可します。この設定はオーケストレーターのプロセスだけに適用され、agent 定義や利用者の設定ファイルは書き換えません。`repos` を省略した project では追加の引数・設定を渡しません。
 
 agent 実行の前後で行う保護設定（`package.json`、CI 設定など）と Git 状態（HEAD・ローカル設定）の検査は、プロダクト worktree にも同じ一覧で行います。evidence の変更ファイルは、プロダクト側を `<name>:<path>` で記録します。
 
@@ -339,13 +399,16 @@ exec worktree の中で設定を読む場合（agent が worktree で `specdojo`
 
 `.specdojo/specdojo.local.config.json` は、git で管理しない環境ごとの設定です。`specdojo.config.json` を読んだ後に読み、許可したキーだけを上書きします。`config init` は `.gitignore` にこのファイルを足します。
 
-| 許可するキー                            | 扱い                                                                                                          |
-| --------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| `version`                               | `1` 固定です。                                                                                                |
-| `projects.<project-id>.repos[]`（既存） | 共有の設定と同じ `name` の要素は、`path` だけを差し替えます。`name`・`path` 以外のキーはエラーです。          |
-| `projects.<project-id>.repos[]`（追加） | 共有の設定に無い `name` の要素は、ローカルのリポジトリとして末尾に足します。キーは `repos` のキーと同じです。 |
+| 許可するキー                            | 扱い                                                                                                                            |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `version`                               | `1` 固定です。                                                                                                                  |
+| `projects.<project-id>.repos[]`（既存） | 共有の設定と同じ `name` の要素は、`path` だけを差し替えます。`name`・`path` 以外のキーはエラーです。                            |
+| `projects.<project-id>.repos[]`（追加） | 共有の設定に無い `name` の要素は、ローカルのリポジトリとして末尾に足します。キーは `repos` のキーと同じです。                   |
+| `external_projects.<alias>`（既存）     | 共有の設定に同じ別名があるときだけ、その `path` を差し替えます。`project_id` は共有から引き継ぎ、ローカルで書き換えられません。 |
+| `external_projects.<alias>`（追加）     | 共有の設定に無い別名は、新規の外部 project として足します。`path` と `project_id` の両方を local に書きます。                   |
+| `references.<alias>`（既存・追加）      | 同じ別名の `path` を差し替え、共有に無い別名は追加します。許可するキーは `path` だけです。                                      |
 
-上書きの後の `repos` は、共有の設定と同じ検証を受けます。共有の設定に無い project、許可していないキー、型の誤りは、ローカル設定のファイルとキーを示してエラーにします。ローカルで足したリポジトリも `repos` で宣言したリポジトリとして扱い、`<name>:<path>` の解決、プロダクト worktree の作成、commit の許可範囲の対象になります。
+上書きの後の `repos`・`external_projects`・`references` は、共有の設定と同じ検証を受けます。共有の設定に無い project、許可していないキー、型の誤りは、ローカル設定のファイルとキーを示してエラーにします。ローカルで足したリポジトリも `repos` で宣言したリポジトリとして扱い、`<name>:<path>` の解決、プロダクト worktree の作成、commit の許可範囲の対象になります。ローカルで足した外部 project も共有一体となり、`register add --project <別名> --commit` や `orchestrator launch` が引けます。
 
 ```json
 {
@@ -357,6 +420,14 @@ exec worktree の中で設定を読む場合（agent が worktree で `specdojo`
         { "name": "tools", "path": "../tools" }
       ]
     }
+  },
+  "external_projects": {
+    "customer": { "path": "../customer-specdojo" },
+    "specdojo-upstream": { "path": "../specdojo", "project_id": "prj-0001" }
+  },
+  "references": {
+    "library": { "path": "../shared-library-local" },
+    "manuals": { "path": "../vendor-docs" }
   }
 }
 ```
@@ -367,7 +438,7 @@ exec worktree の中で設定を読む場合（agent が worktree で `specdojo`
 2. linked worktree では、環境変数 `SPECDOJO_LOCAL_CONFIG` があればその絶対パスを読みます。runner は worktree の中の子のプロセス（build・agent）へ主の作業ツリーのファイルのパスを渡します。
 3. linked worktree で環境変数が無ければ、主の作業ツリーのファイルを読みます。worktree の中の同じ名前のファイルは読みません。
 
-ローカル設定は worktree へコピーしません。agent の保護対象（`.specdojo/` 配下）に含まれ、executor が書き換えると統合の前に止まります。ローカル由来の値は `config show` と `where exec` に `local` と表示し、`exec run` の executor evidence の `local_config_overrides` に記録します。
+ローカル設定は worktree へコピーしません。agent の保護対象（`.specdojo/` 配下）に含まれ、executor が書き換えると統合の前に止まります。ローカル由来の値は `config show` と `where exec` に `local` と表示し、`exec run` の executor evidence の `local_config_overrides` に記録します。`external_projects.<alias>.path` の差し替え（`kind: external-path`）と新規追加（`kind: external-added`）も同様に記録されます。`references` の差し替え・追加は `reference-path`・`reference-added` として記録されます。
 
 ## 8. catalog・schedule・execへ進む設定例
 

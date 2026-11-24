@@ -4,11 +4,10 @@ document: specdojo:prj-charter-recipe
 path: docs/ja/specdojo/recipes/prj-charter-recipe.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-recipe
 verdict: pass
-score: 100
-graded_at: "2026-11-20T20:19:08.212Z"
-graded_by: flash-high-executor
+score: 98
+graded_at: "2026-11-22T14:44:35.678Z"
+graded_by: opus-review-executor
 content_hash: a2e93c8d1d896a63429454f6ddab473c3a5145ec12494074987b0c452b9dba82
 categories:
   purpose:
@@ -26,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 92
   consistency:
     score: 100
 viewpoints:
@@ -82,8 +81,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -105,6 +104,17 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 1
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 32
+    anchor: 7. 本格実行開始の GO / Not GO 判断の観点と記録先を書く。
+    message: >-
+      作成手順の7番は GO / Not GO を「判断の観点と記録先」だけで書かせており、rulebook
+      が求める合格条件と、判断観点に含める目的整合・公開適性・予算枠・体制・品質が抜けているため、手順の列挙に合格条件と判断観点を加える必要がある。
+    message_ja: >-
+      作成手順の7番は GO / Not GO を「判断の観点と記録先」だけで書かせており、rulebook
+      が求める合格条件と、判断観点に含める目的整合・公開適性・予算枠・体制・品質が抜けているため、手順の列挙に合格条件と判断観点を加える必要がある。

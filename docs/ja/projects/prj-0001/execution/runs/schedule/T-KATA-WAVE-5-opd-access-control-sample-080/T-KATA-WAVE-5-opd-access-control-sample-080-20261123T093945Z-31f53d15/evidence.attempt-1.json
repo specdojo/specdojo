@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-5-opd-access-control-sample-080",
+  "run_id": "T-KATA-WAVE-5-opd-access-control-sample-080-20261123T093945Z-31f53d15",
+  "stage": {
+    "role": "executor",
+    "actor": "sonnet-executor",
+    "status": "rate_limited",
+    "started_at": "2026-11-23T09:40:36.177Z",
+    "completed_at": "2026-11-23T09:43:08.489Z",
+    "exit_code": 1,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/opd-access-control-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/opd-access-control-sample.md | 6 +++---\n 1 file changed, 3 insertions(+), 3 deletions(-)"
+  },
+  "validations": [],
+  "final_message": "API Error: 529 Overloaded. This is a server-side issue, usually temporary — try again in a moment. If it persists, check https://status.claude.com.",
+  "block_reason": "executor rate limit reached",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-5-opd-access-control-sample-080/T-KATA-WAVE-5-opd-access-control-sample-080-20261123T093945Z-31f53d15/executor.attempt-1.log",
+      "bytes": 149,
+      "truncated": false
+    }
+  ]
+}

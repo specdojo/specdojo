@@ -1,0 +1,146 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:ifx-msg-sample
+path: docs/ja/specdojo/samples/ifx-msg-sample.yaml
+target: kata
+rubric: grade-rubric-v2
+verdict: pass
+score: 92
+graded_at: "2026-11-23T01:38:45.629Z"
+graded_by: opus-review-executor
+content_hash: 99062efce596b26a7774efff9d1472715b85baa81d764ee97f14f77480e2a867
+categories:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 88
+  architecture:
+    score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
+  quality:
+    score: 83
+  consistency:
+    score: 75
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 3
+    score: 75
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 4
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 87
+    anchor: "description: 対象識別子（任意）"
+    message: >-
+      順序保証の単位として14行で使う `subject` が任意で書式の制約もないため、`required` に加えて `pattern`（例 `^product/PROD-[0-9]{4}$`）で `product_id`
+      との対応を固定するか、順序の単位を `data.product_id` に改める。
+    message_ja: >-
+      順序保証の単位として14行で使う `subject` が任意で書式の制約もないため、`required` に加えて `pattern`（例 `^product/PROD-[0-9]{4}$`）で `product_id`
+      との対応を固定するか、順序の単位を `data.product_id` に改める。
+  - id: F002
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 15
+    anchor: 購読者は `source` と `id` の組で重複を捨て、同じ商品で `time` が古いイベントは無視する。
+    message: 古いイベントを捨てる判定の「同じ商品」が任意の `subject` と `data.product_id` のどちらで決まるか分からず、`subject` のないイベントの扱いを判定できないため、比べる単位の項目を明記する。
+    message_ja: 古いイベントを捨てる判定の「同じ商品」が任意の `subject` と `data.product_id` のどちらで決まるか分からず、`subject` のないイベントの扱いを判定できないため、比べる単位の項目を明記する。
+  - id: F003
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 39
+    anchor: "在庫数が変わった通知。発行者: 店舗端末の在庫管理。購読者: 本部の在庫集計。"
+    message: >-
+      rulebook の本文要件はチャネルの `description` に発生の契機を求めているが、sample では販売の確定・仕入れの登録・棚卸しの訂正が
+      `info.description`（13行）にしかないため、チャネルの `description` にも発生の契機を書くか、rulebook 側で置き場所を `info.description` に揃える。
+    message_ja: >-
+      rulebook の本文要件はチャネルの `description` に発生の契機を求めているが、sample では販売の確定・仕入れの登録・棚卸しの訂正が
+      `info.description`（13行）にしかないため、チャネルの `description` にも発生の契機を書くか、rulebook 側で置き場所を `info.description` に揃える。
+  - id: F004
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 26
+    anchor: "- specdojo:ifx-index-sample"
+    message: >-
+      `based_on` の `specdojo:ifx-index-sample` にはこの連携の行がなく（4行）、rulebook が `info.description` に求める `ifx-index`
+      の連携名も書けていないため、ifx-index-sample に在庫変更通知の行を足して連携名を `info.description` に入れるか、rulebook に sample の例外として記す。
+    message_ja: >-
+      `based_on` の `specdojo:ifx-index-sample` にはこの連携の行がなく（4行）、rulebook が `info.description` に求める `ifx-index`
+      の連携名も書けていないため、ifx-index-sample に在庫変更通知の行を足して連携名を `info.description` に入れるか、rulebook に sample の例外として記す。

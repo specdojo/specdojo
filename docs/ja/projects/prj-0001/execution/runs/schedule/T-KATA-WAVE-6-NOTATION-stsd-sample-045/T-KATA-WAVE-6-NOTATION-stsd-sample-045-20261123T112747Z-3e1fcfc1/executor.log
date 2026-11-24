@@ -1,0 +1,16 @@
+`docs/ja/specdojo/recipes/stsd-recipe.md` の「1. このレシピの使い方」を直し、F001 の指摘を解消しました。変更したのはこの recipe だけで、rulebook と sample は触っていません。変更後のファイルに prettier と markdownlint をかけ、どちらもエラーは出ませんでした。
+
+**F001（minor）の内容:** 執筆標準（`recipe-authoring-standard`）がこの章に求める「このレシピを使う順序と確認の進め方」が書かれておらず、項目が 1 つしかありませんでした。
+
+**直したこと:** 既存の Why・What・How・Trace の項目は残し、使う順序と確認の進め方を 4 項目足しました。
+
+1. 着手前に、集める情報を短いメモにまとめる。対象を一つに決められない、または状態で行う判断を答えられないときは、聞き取りに戻る。
+2. 作成手順の順に書き進め、各章の問いに答えられたら次へ進む。答えられない問いは推測で埋めず、「今後の検討メモ」に回す。
+3. 状態と遷移がつながらないときや、分岐の条件を判定できないときは、深掘り手順で原因を探し、該当する章に戻って直す。
+4. 書き終えたら「レビュー観点」で確かめ、最後に「仕上げチェック」をすべて満たしてから提出する。
+
+追加したのは使う順序と次へ進む判断だけで、rulebook の規則や他の章の内容は書き写していません。文書の役割の割り当てや承認の進み具合を書かせる問い・手順も入れていません（PJR-76N9）。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"stsd-recipe の「このレシピの使い方」に使う順序と確認の進め方を 4 項目追加し、F001 を解消した。rulebook・sample は変更していない。","handoff":[],"validations":[{"command":"npx prettier --check docs/ja/specdojo/recipes/stsd-recipe.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/recipes/stsd-recipe.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>

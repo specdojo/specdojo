@@ -463,6 +463,36 @@ describe("selectResumableRegisterRun", () => {
     expect(actual.target.initialChanges).toEqual(["docs/first-attempt.md"]);
   });
 
+  it("同じ run を再開して上書きされた evidence より、保存済みの最初の試行を下限にする", () => {
+    const runId = "run-same";
+    const firstAttempt: ExecEvidence = {
+      ...makeEvidence(runId),
+      completion_status: "incomplete",
+      attempt_changes: [{ path: "dist/stray.html", status: "??" }],
+    };
+    const coverageBlocked: ExecEvidence = {
+      ...makeEvidence(runId),
+      completion_status: "incomplete",
+      block_reason: "resumed executor did not account for every plan target: dist/stray.html",
+      attempt_changes: [{ path: "docs/ticket.md", status: "M" }],
+    };
+    const candidate = makeCandidate({
+      state: makeState({ runId, executorStatus: "blocked" }),
+      executorEvidence: coverageBlocked,
+      evidence: undefined,
+      archivedExecutorEvidence: [firstAttempt],
+    });
+
+    const actual = selectResumableRegisterRun([candidate], { resumeFrom: "executor" });
+
+    expect(actual.kind).toBe("resumable");
+    if (actual.kind !== "resumable" || actual.target.stage !== "executor") return;
+    expect(actual.target.initialChanges).toEqual(["dist/stray.html"]);
+    expect(actual.target.handoff).toEqual([
+      "resumed executor did not account for every plan target: dist/stray.html",
+    ]);
+  });
+
   it("保護機構で blocked になった run は evidence があっても executor 再開対象にする", () => {
     const candidate = makeCandidate({
       state: makeState({
@@ -596,6 +626,39 @@ describe("loadRegisterResumeCandidates / findResumableRegisterRun", () => {
     expect(candidates).toHaveLength(1);
     expect(candidates[0].runId).toBe(runId);
     expect(candidates[0].evidence?.run_id).toBe(runId);
+  });
+
+  it("同じ run の以前の試行の evidence を試行順に読み出す", () => {
+    const runId = "20260820T000000Z-attempts";
+    writeRun(runId, makeState({ runId, executorStatus: "blocked" }), makeEvidence(runId));
+    const dir = path.join(root, EXECUTION_REL, "runs", "register", TASK_ID, runId);
+    for (const [attempt, changed] of [
+      [1, "docs/first.md"],
+      [2, "docs/second.md"],
+    ] as const) {
+      writeFileSync(
+        path.join(dir, `evidence.attempt-${attempt}.json`),
+        `${JSON.stringify({
+          ...makeEvidence(runId),
+          attempt_changes: [{ path: changed, status: "M" }],
+        })}\n`,
+        "utf8",
+      );
+    }
+
+    const candidates = loadRegisterResumeCandidates({
+      repoRoot: root,
+      worktreePath: root,
+      executionPath: path.join(root, EXECUTION_REL),
+      taskId: TASK_ID,
+    });
+
+    expect(
+      candidates[0].archivedExecutorEvidence?.map((evidence) => evidence.attempt_changes),
+    ).toEqual([
+      [{ path: "docs/first.md", status: "M" }],
+      [{ path: "docs/second.md", status: "M" }],
+    ]);
   });
 
   it("evidence.json が無い run は再開不可として理由を返す", () => {

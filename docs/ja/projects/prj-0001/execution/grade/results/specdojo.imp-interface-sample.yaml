@@ -5,10 +5,10 @@ path: docs/ja/specdojo/samples/imp-interface-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 95
-graded_at: "2026-10-12T21:10:01.722Z"
-graded_by: agy-expert-executor
-content_hash: 1cdb0b45217a9389c17d968569f4760b1f40a5b3fd9c955376bf6278a96a5248
+score: 98
+graded_at: "2026-11-23T15:47:45.950Z"
+graded_by: sonnet-review-executor
+content_hash: b5a76a7d9baf8f0cb71328e3c61cd2987ca595dd5ec837e88c2763c26a086bcb
 categories:
   purpose:
     score: 100
@@ -27,7 +27,7 @@ categories:
   quality:
     score: 92
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -78,8 +78,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
     level: 3
     score: 75
@@ -104,20 +104,22 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 2
+  minor: 1
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 6
-    anchor: 対象は「POS 連携 API」「商品マスタ連携 CSV」「通知 Webhook」「売上集計バッチ連携」の 4 I/F とする。
-    message: 「目的と適用範囲」において、ルールブックで求められている「対象期間」の記載が不足している。
-    message_ja: 「目的と適用範囲」において、ルールブックで求められている「対象期間」の記載が不足している。
-  - id: F002
-    severity: minor
     rule: vp-qe-kata-conformance
-    line: 16
-    anchor: 評価観点は、契約互換性、障害波及、運用調整負荷の 3 点とする。
-    message: ルールブックの禁止事項に基づき、影響度（高・中・低）を判定するための尺度定義を明記すべきである。
-    message_ja: ルールブックの禁止事項に基づき、影響度（高・中・低）を判定するための尺度定義を明記すべきである。
+    line: 5
+    anchor: >-
+      本書は、変更要求 `cr-2026-004`（バーコード会計とキャンペーン値引きの導入）が駄菓子屋の販売管理システムの外部 I/F へ与える影響を判断し、I/F ごとの変更要否・影響度・対応方針と連携先との調整を、I/F
+      の改修に着手する 2026-05-11 より前に決めるための文書である。業務への影響は [[specdojo:imp-business-sample|影響調査（業務）サンプル]]
+      で判断済みであり、本書はその判断を前提とする。データ・テスト・運用への波及の詳細は
+      [[specdojo:imp-data-sample|影響調査（データ）サンプル]]・[[specdojo:imp-test-sample|影響調査（テスト）サンプル]]・[[specdojo:imp-operations-sample|影響調査（運用）サンプル]]
+      へ委ね、本書は結論だけを「影響詳細一覧」の備考に示す。
+    message: >-
+      rulebook は `based_on` に変更要求の個票 ID（`PJR-XXXX`）を求めているが、sample は `cr-2026-004` を使っているため、個票 ID
+      の形式に合わせるか、この形式が許される根拠を示すべきである。
+    message_ja: >-
+      rulebook は `based_on` に変更要求の個票 ID（`PJR-XXXX`）を求めているが、sample は `cr-2026-004` を使っているため、個票 ID
+      の形式に合わせるか、この形式が許される根拠を示すべきである。

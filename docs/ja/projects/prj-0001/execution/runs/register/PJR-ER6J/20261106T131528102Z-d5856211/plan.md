@@ -12,7 +12,7 @@ specdojo:
   owner: BA
   approach: retrofit
   targets:
-    - prj-0001:stsd-task-execution
+    - stsd-task-execution
 ---
 
 # Edit Plan: PJR-ER6J
@@ -144,7 +144,7 @@ owner として達成する狙い:
 
 成果物カタログの `done_criteria` に加え、登録簿の個票が定める次の条件も満たす。
 
-- [[prj-0001:stsd-task-execution]] が、PJR-S8EF〜PJR-93NK で直した Kata（[[specdojo:stsd-rulebook]]・[[specdojo:stsd-mermaid-rulebook]]）の必須の章・表・図の規則を満たしている。目的は状態が何を管理し何のために使われるかを書き、文書の読み手や使い方を書いていない。状態の正本と判定の規則は「状態の判定」の章にある。
+- [[stsd-task-execution]] が、PJR-S8EF〜PJR-93NK で直した Kata（[[specdojo:stsd-rulebook]]・[[specdojo:stsd-mermaid-rulebook]]）の必須の章・表・図の規則を満たしている。目的は状態が何を管理し何のために使われるかを書き、文書の読み手や使い方を書いていない。状態の正本と判定の規則は「状態の判定」の章にある。
 - 「現行実装（AS-IS）」などのスコープの表記を、TO-BE の文書と並ばない限り書いていない。
 - 図の遷移ラベルが `T-<nn> イベント / 条件` で、分けた図ごとにすぐ下へその図の遷移の表がある。図の全遷移が、その図の下の表へ一度ずつ対応している。
 - 状態と遷移の中身は、カタログの `evidence_refs` の実装で確かめられる。実装で確かめられないことは推測で埋めず、`_UNDECIDED_` か今後の検討メモで残す。

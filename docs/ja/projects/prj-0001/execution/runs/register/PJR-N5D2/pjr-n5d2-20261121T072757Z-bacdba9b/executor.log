@@ -1,0 +1,12 @@
+`grade run --kata` は、rulebook の `sample` が文字列でも配列でも、並べた sample をすべて選ぶようになりました。`tests/src/grade` の 170 件が通り、`npm run typecheck` も通りました。`npm run lint:ts` は警告のみで、エラーはありません。`src/grade/targets.ts` の `resolveKataDocuments` を直しました。
+
+- **宣言の扱い:** `not-needed`・`none`・`undecided` は sample なしとして rulebook だけを選びます。`sample` の宣言が無い rulebook は、従来のファイル名（`<name>-sample.*`）での探し方のままです。
+- **宣言した sample のファイルが無い場合:** 宣言元の rulebook と sample id を示してエラーにします。
+- **rulebook の読み込み失敗:** 以前は黙って次へ進んでいましたが、rulebook のパスと理由を示して止めるようにしました。
+- **パスの基準の変更:** 返すパスの相対化の基準を、関数の引数 `rootDir` に揃えました（これまでは `specdojo-config` のルートでした）。既定値では結果は同じで、テストで一時ディレクトリを使えます。
+- **テスト:** `tests/src/grade/kata-documents.test.ts` を追加しました。opd の 4 件と同じ形の配列、文字列、`not-needed`、宣言なし、ファイル欠落の 5 ケースを確認しています。
+- **個票:** 作業内容の表（すべて `done`）、解決内容、CHANGELOG に書く事項（区分 Fixed と文案）を `pjr-n5d2-grade-kata-multi-sample.md` に書きました。`CHANGELOG.md` は変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"resolveKataDocuments が sample の配列・文字列宣言をすべて選ぶよう修正。sample ファイル欠落と rulebook 読み込み失敗は理由付きでエラー化。単体テスト追加、個票の対応結果を更新。","handoff":["判断: rulebook・sample パスの相対化を repoRelativePath から relativePathFromRoot(path, rootDir) に変更（既定 rootDir では結果同一、テストで一時ディレクトリを使うため）。","判断: rulebook 読み込み失敗の catch は握りつぶさず、rulebook パスと理由を含む例外にした（cause 保持）。frontmatter が無い rulebook は従来どおり宣言なしとして扱う。","CHANGELOG に書く事項: 区分 Fixed。grade run --kata が rulebook の sample に並べた複数の sample をすべて評価対象に選ぶ。欠落・読み込み失敗は理由付きエラー。"],"validations":[{"command":"npx vitest run tests/src/grade","status":"passed","summary":"9 files, 170 tests passed"},{"command":"npm run typecheck","status":"passed","summary":"no type errors"},{"command":"npm run lint:ts","status":"passed","summary":"0 errors, 41 warnings (既存の max-lines 等)"},{"command":"npx prettier --write","status":"passed","summary":"changed ts and md files formatted"}]}
+</specdojo_executor_evidence>

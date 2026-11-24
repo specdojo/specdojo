@@ -90,7 +90,7 @@ specdojo register add --project prj-0002 --type todo \
   --from prj-0001:PJR-AB12 --commit
 ```
 
-この経路は対象 project の `integration_branch`（省略時は `project/<project-id>/develop`）を開いている worktree を使い、無ければ一時 worktree を作ります。対象 project の名簿で `--by` を検証し、`register lifecycle` 枠の内側で起票、派生ビュー再生成、1 件の commit を行います。対象登録簿に未 commit 変更がある場合、または統合ブランチが存在しない場合は書き込みません。`--commit` のない別 project への起票と、別 project の項目に対する状態遷移は行えません。状態遷移は対象 project の作業ツリーで実行してください。
+対象 project の `register_sync.enabled` が有効なら、後述の専用ブランチへ記帳して push します。未設定なら `integration_branch`（省略時は `project/<project-id>/develop`）を開いている worktree を使い、無ければ一時 worktree を作ります。対象 project の名簿で `--by` を検証し、`register lifecycle` 枠の内側で起票、派生ビュー再生成、1 件の commit を行います。対象登録簿に未 commit 変更がある場合、または記帳先のブランチが存在しない場合は書き込みません。`--commit` のない別 project への起票と、別 project の項目に対する状態遷移は行えません。状態遷移は対象 project の作業ツリーで実行してください。
 
 別リポジトリの project へ起票する場合は、`specdojo.config.json` のトップレベルに別名を宣言し、その別名を `--project` に指定します。
 
@@ -149,6 +149,7 @@ register 経由の plan では、approach がある成果物の plan と approac
 | `change-request` | 成果物・仕様・計画に対する変更の要望   | 実施が確定済みの作業なら `todo`                                                                             |
 | `decision`       | 記録・追跡する意思決定                 | 判断材料が足りず確認が先なら `question`                                                                     |
 | `note`           | 共有・備忘のための記録                 | 回答や結論が必要なら `question`                                                                             |
+| `handoff`        | セッション・LLM の切り替えの引き継ぎ   | 利用者の返事を待つことは `question` に分け、長く効く決まりは playbook や個票の入力へ移す                    |
 
 外部の対応・提供物への依存（外部待ち）には専用 type を設けない。対応が必要なら `todo` / `issue` として登録し、外部待ちで止まっている状態は `register wait` の `waiting` ステータスで表す。計画上の前提・制約・依存関係は `prj-assumptions-constraints-dependencies` 成果物へ整理する。
 
@@ -175,7 +176,25 @@ specdojo dashboard build
 
 `register build` は `generated/pjr-epic-items.md` に、epic ごとの直接の子項目とその type・現在の状態を表示します。別 project の子も project 修飾 ID で表示し、子がない epic も残します。孫は再帰的に表示しません。子の状態から epic を自動 close せず、完了基準を満たしたことを人が確認して `register close --id <epic-id> --conclusion "判断の根拠"` で `done` にします。`reject` / `defer` / `reopen` も todo と同じように使用できます。
 
-### 1.5. 全体計画を確認する
+### 1.5. セッションの引き継ぎを handoff で受け渡す
+
+オーケストレーターがセッションや LLM を切り替えるときは、引き継ぎを `handoff` として起票します。git で管理されるため、ほかのマシンや LLM からも同じ手順で読めます。開いている handoff は、まだ読まれていない引き継ぎを表します。
+
+```bash
+specdojo orchestrator handoff --title "夜のセッションから朝のセッションへ" --topic night-to-morning --dry-run
+specdojo orchestrator handoff --title "夜のセッションから朝のセッションへ" --topic night-to-morning --commit
+specdojo register close --id PJR-AB12 --by <受け取った主体>
+```
+
+- 終えるセッションは `orchestrator handoff` で起票します。「進行中」と「判断待ち」の章は登録簿と exec の状態から組み立てるため書き写しません。引き継ぎ元と先・有効な承認の範囲・注意点は `_TODO_` のまま起票されるので、起票の後に `register update --section` で書きます。章を手で全部書く場合は `register add --type handoff` も使えます。
+- 始めるセッションは、`generated/pjr-handoffs.md` で開いている handoff を探して読み、受け取った主体を `--by` にして close します。開いている handoff があるまま `orchestrator handoff` を流すと、その ID を標準エラー出力に示します。
+
+- 個票の章（引き継ぎ元と先・有効な承認の範囲・進行中・判断待ち・注意点）の書き方は [プロジェクト登録簿 作成ルール](../rulebooks/pjr-rulebook.md) に従います。利用者の返事を待っていることは `question` として別に起票し、判断待ちの章には参照だけを書きます。
+- 状態は `open`（受け取り待ち）と `done`（受け取った）だけです。次のセッションが読んだら、受け取った主体を `--by` にして `register close` します。`start` / `wait` / `review` / `reject` / `defer` はエラー終了します。
+- `register build` は `generated/pjr-handoffs.md` に、受け取り待ちと受け取り済みの handoff を分けて表示します。
+- `exec run --register` と夜間 orchestrator の対象にはなりません。
+
+### 1.6. 全体計画を確認する
 
 `dashboard build` は epic の依存順に全体計画の表とガントを `execution/generated/` へ出力します。カレンダーは `sch-defaults.yaml` を使います。
 
@@ -200,8 +219,8 @@ specdojo dashboard build
 | 他者・外部の対応を待つ   | `register wait`   | `waiting`                                                             |
 | 確認・レビューに回す     | `register review` | `review`                                                              |
 | 完了する                 | `register close`  | `done`（`decision` / `question` は `decided`。`note` は終端させない） |
-| 対応しないと判断する     | `register reject` | `rejected`（`note` は拒否）                                           |
-| 延期する                 | `register defer`  | `deferred`（`note` は拒否）                                           |
+| 対応しないと判断する     | `register reject` | `rejected`（`note` と `handoff` は拒否）                              |
+| 延期する                 | `register defer`  | `deferred`（`note` と `handoff` は拒否）                              |
 | 終了済み項目を再開する   | `register reopen` | `open`                                                                |
 | 担当・期限などを変更する | `register update` | （状態は変えずフィールドを更新）                                      |
 
@@ -272,6 +291,37 @@ specdojo register close \
 ほかのファイルがすでに stage されていても、初回 commit と hook 整形後の amend は対象パスだけを記録し、既存の staged 変更を保持します。実行中に別タスクの exec event が増えても対象へ取り込みません。stage 後の検査や commit・amend が失敗した場合、または `SIGINT`・`SIGTERM`・`SIGHUP` で中断された場合は、そのコマンドが stage した対象だけを unstage し、作業ツリーの本文を残します。Git の実行中に届いた中断は Git が戻ってから処理します。初回 commit 後の失敗・中断では commit が残るため、本文と HEAD の差分を確認してから再実行してください。
 
 別 project への起票では、対象登録簿全体が clean であることを追加で確認します。元の作業ツリーのブランチと HEAD は変更しません。
+
+#### 専用ブランチへの同期（v0.10.0）
+
+[[specdojo:specdojo-config-reference|設定リファレンス]] の `projects.<project-id>.register_sync.enabled` を `true` にすると、`--commit` は専用 worktree で記帳・commit し、設定したリモートへ push します。ブランチ名の既定値は `project/<project-id>/register`、リモートは `origin` です。初回は設定を含む develop の commit からブランチを用意してください。
+
+```bash
+git branch project/prj-0001/register project/prj-0001/develop
+git push origin project/prj-0001/register
+```
+
+ほかの利用者は初回の同期時にリモートからローカルブランチと worktree を作れます。既存の専用 worktree は再利用し、無ければ Git 共通ディレクトリ配下に作成して保持します。hook が使う依存関係や、追跡外の名簿などが必要な環境では、事前に専用 worktree を用意して必要なセットアップを行ってください。元の worktree の未 commit 変更は専用ブランチへコピーしません。
+
+同期は fetch と `pull --rebase` の後に記帳し、non-fast-forward なら再び `pull --rebase` して push し直します。push は最大 3 回です。同じリポジトリの同期処理は共通のロックで直列化します。schedule の同期処理が busy になった場合は、処理の終了後にコマンドを再実行してください。
+
+schedule の claim・complete なども、`execution_path/exec/events/` のイベントだけを専用 worktree へ commit・push します。イベントの読み取りも同期先を参照し、既に claim されたタスクへの claim を拒否します。run の記録・grade・成果物は元の実行経路に残ります。`external_projects` 経由の起票では相手側を v0.10.0 以上に更新し、相手の project で同期を有効にしてください。
+
+register のブランチは develop へ一方向に取り込みます。develop（や feature）の作業の前に `specdojo register branch-merge --project <project-id>` を実行してください。`exec run --register --worktree` は worktree を作る前に自動で取り込みます。取り込みの merge の commit は、通常の PR で develop へ入ります。develop では register のファイルを直接変えないでください。`specdojo register branch-guard --project <project-id> --staged` を pre-commit の hook に、`--range <base>..<head>` を pre-push の hook や CI に置くと、直接の変更を止められます。
+
+register のブランチへの push は `specdojo register branch-check --project <project-id> --commit <sha> --base <push 前の sha> --remote-ref refs/heads/<register-branch>` で検査します。register の範囲（個票・イベントの置き場）の外のファイルを含む commit と、個票とイベントの形の違反を止め、どのファイルのどこが違うかと直し方を出します。pre-push の hook（`tools/check-register-push.mjs`）が自動で流し、CI でも同じコマンドを流せます。別の project から `external_projects` で起票した commit も、同じブランチへ入るため同じ検査を通ります。
+
+失敗すると終了コード 1 で原因・worktree・ブランチ・復旧手順を表示します。記帳済みファイルやローカル commit は削除しません。表示された worktree で次の順に復旧してください。
+
+1. 通信・権限を直すか、衝突を解いて `git rebase --continue` を行います。rebase を取り消す場合は `git rebase --abort` で元のローカル commit に戻れます。
+2. 未 commit の記帳があれば内容を確認して commit します。並行 claim で停止した場合は、採用する claim を確認し、未公開の重複 claim を解消します。
+3. `git pull --rebase <remote> <branch>` と `git push <remote> HEAD:refs/heads/<branch>` で共有します。失敗した `add` を push の代わりに再実行しないでください。
+
+未解消の記帳がある間は後続の同期を停止します。復旧後、worktree が clean でローカル HEAD がリモートに含まれることを次の同期が確認し、再開します。
+
+`exec run --register` も、start・review・waiting と post-review の close を専用ブランチへ commit・push します。executor は従来どおり実行中の worktree で個票を編集し、runner が検証後・exec の commit 前にその編集を専用ブランチへ転送します。転送は共通のロック内で最新を取得し、状態欄を専用ブランチの値に揃えて本文を三方向でマージします。重ならない編集は両方保持し、競合や push の失敗では元の編集を残して停止します。失敗した run の未検証の本文は転送せず、再開用 worktree に保持します。exec の commit には個票・イベントを含めません。
+
+worktree 実行の成功後は、専用ブランチを呼び出し元へ一方向に取り込んでから post-review へ進みます。in-place 実行では、最新の個票を見る前に `register branch-merge` してください。文書サイトや `exec plan` も取り込んだ個票を読みます。hook・CI の移行準備は [[specdojo:git-branching-standard|Git ブランチ運用標準]] に従って行います。参照文書を register の外で書き換える改名・再採番は、専用ブランチでは書き込み前に停止するため、通常の feature と PR で扱ってください。
 
 ### 2.2. 個票の作成
 
@@ -369,7 +419,7 @@ specdojo register update --id PJR-EF56 --depends-on -
 specdojo register build --project <project-id>
 ```
 
-- `project-register/generated/` には登録項目一覧（`pjr-index.md`）と登録簿内の補助一覧（状態別・優先度別・担当者別）が生成されます。
+- `project-register/generated/` には登録項目一覧（`pjr-index.md`）と登録簿内の補助一覧（状態別・優先度別・担当者別、受け取り待ちと受け取り済みの handoff）が生成されます。
 - 個票の `part_of` と本文のwikilinkが参照する `<project-id>:pjr-index` は、生成された `project-register/generated/pjr-index.md` へ解決されます。
 - `controls/generated/` には controls 全体の type 別管理ビュー（リスク登録簿、課題ログ、変更要求ログ、決定記録）が生成されます。
 - `generated/` 配下は追跡対象外の生成物です。生成ファイルを手編集しても次回の `register build` で失われるため、内容を直したい場合は個票を修正して再生成します。
@@ -426,7 +476,7 @@ specdojo register history --project <project-id> --since 2026-08-01 --json
 - 異なる項目の並行実行は別の個票とイベントファイルへ書くため共有ログ競合を起こしません。同じ項目を複数 worktree で変更してイベントファイルが競合した場合は、統合時に両側のイベントの和集合で解決します。
 - exec event と共通化するのは UTC 秒精度、version、actor、reason、追記・検証の原則です。exec は task state の SSOT で 1 event 1 JSON、Register は現在値を個票に維持し項目別 YAML 配列を監査履歴とするため、保存形式と fold 処理は共通化しません。
 - 生成物（`generated/` 配下）は追跡対象外のため、PR の差分にも Git 履歴にも現れません。レビュー対象は個票と `events/` 配下の項目別ログです。
-- 既存プロジェクトは移行前でも動作し、event のない個票は Git 履歴から再構成します。`register migrate` は非推奨であり、次の版（0.10.0）で削除予定です（現在は個別個票ファイルと外部イベントファイルが標準形式のため新規移行は不要です）。旧データを移行する場合は `register migrate --dry-run` で件数を確認し、`register migrate` で復元可能な Git 履歴を決定的な event ID へ変換します。浅い clone などで履歴が不足する場合は無理に合成せず Git フォールバックを維持します。
+- 既存プロジェクトは移行前でも動作し、event のない個票は Git 履歴から再構成します。旧形式の登録簿データを移す `register migrate` は 0.10.0 で削除しました（個別個票ファイルと外部イベントファイルが標準形式のため移行は不要です）。浅い clone などで履歴が不足する場合は無理に合成せず Git フォールバックを維持します。
 - 分離前の CLI は `events/` を読まないため、ロールバック時も項目別ログを削除せず、分離対応版の CLI を再適用して履歴を維持します。
 - 個票へ移行する前（`pjr-index.md` の表が正本だった期間）の履歴は、削除済みの一覧ファイルの履歴に残ります。`git log -p --follow -- <登録簿ディレクトリ>/pjr-index.md` で参照します。
 
@@ -475,7 +525,7 @@ specdojo exec run --project <project-id> --register PJR-0012 --in-place
 specdojo exec run --project <project-id> --register PJR-0012 PJR-0013 --worktree --parallel 2
 ```
 
-- type が `todo` / `issue` / `change-request` の項目は成果物・実装を変更する対応、`question` / `risk` の項目は調査して結論案を result に記録する対応になります。`epic` / `decision` / `note` は実行対象外です。
+- type が `todo` / `issue` / `change-request` の項目は成果物・実装を変更する対応、`question` / `risk` の項目は調査して結論案を result に記録する対応になります。`epic` / `decision` / `note` / `handoff` は実行対象外です。
 - 状態は register の遷移（`in-progress` / `review` / `waiting`）で追跡され、agent は項目を終端化しません。成功後は人が内容を確認して `register close` します。
 - todo 個票に `approach` と `targets` を指定した場合、成果物カタログの `done_criteria` や kata 参照を取り込んだ schedule と共通の plan が生成されます（詳細は [exec運用ガイド](exec-operation-guide.md) の「register の todo から approach で成果物・kata を作る・直す手順」を参照してください）。
 - 個票 Frontmatter の `targets` に宣言した変更対象文書は、plan 生成時に直近の自動評価（grade）結果があれば `_GRADE_FINDINGS_` として plan に展開されます。`targets` がない場合は finding を展開しません。「関連ドキュメント」は根拠や参考への導線であり、そこに wikilink があるだけでは解消対象になりません。表示は最大10文書・各20件までに制限され、超過分はサイドカーを参照するよう促します。サイドカーがない場合は「finding なし」と表示されます。
@@ -509,15 +559,59 @@ specdojo register update --project <project-id> --id PJR-0012 \
   --autopilot - --by <approver> --reason "夜間 queue から除外"
 ```
 
-`autopilot: approved` は「現在の個票に書かれた完了条件」の承認です。夜間 orchestrator は印のある `open` の todo・issue だけを ID 順に選びます。epic、decision、印のない項目、`waiting` の項目は実行しません。完了条件を変更した場合は一度承認を取り消し、変更後の条件を再確認して承認します。
+`autopilot: approved` は「現在の個票に書かれた完了条件」の承認です。夜間 orchestrator は印のある `open` の todo・issue だけを ID 順に選びます。epic、decision、handoff、印のない項目、`waiting` の項目は実行しません。完了条件を変更した場合は一度承認を取り消し、変更後の条件を再確認して承認します。
 
 夜間実行は `specdojo orchestrator night` が担います。worktree 隔離、post-review、自動 close / `waiting` への復帰を必須とし、件数、並列数、連続失敗停止、rate limit 時の fallback をオプションで制限します。承認範囲外の操作が必要になった失敗は、元項目を `derived_from` に持つ issue として起票します。結果は `execution/reports/night-orchestrator/` の朝報告 1 文書へ集約します。
+
+親の検証は変えたファイルに関係する統合テストだけを流すため、毎晩 4 時の routine `rtn-nightly-integration-tests` が統合テストの全件を流し、結果を `execution/reports/nightly-integration-tests/` の朝報告へ残します。失敗した朝は、報告の失敗テストの表から登録簿へ項目を起票して直します。
 
 朝報告は `type: project`・`status: draft`・`rulebook: none` の管理文書として生成し、番号付きの「1. 集計」「2. 実行結果」を記録します。Job の review 前に、通常の成果物と同じ frontmatter・Markdown 検査の対象になります。
 
 merge に commit-msg hook を使うリポジトリでは、Git が hook に渡すメッセージファイルを検査してください。Lefthook の設定例は `run: npx commitlint --edit "{1}"` です。`$1` は Lefthook の引数置換ではないため、ファイル名が渡らず `COMMIT_EDITMSG` を検査する場合があります。merge で渡される `MERGE_MSG` と異なり、linked worktree では未作成、主の作業ツリーでは古い内容が残っていることがあります。検査を省略せず、両方の作業ツリーで有効な merge メッセージの受理と無効なメッセージの拒否を確かめてください。
 
 定期起動は Job `job-night-approved-register` と routine `rtn-night-approved-register` を使います。サンプル routine は保護された運用設定を勝手に有効化しないため `enabled: false` です。人が 2 時（Asia/Tokyo）、一晩 10 件、並列 2、連続失敗 2 件、fallback executor を確認してから有効化してください。
+
+### 3.3. 止まった実行を見張る
+
+routine `rtn-exec-watch-scan` が 30 分ごとに `specdojo orchestrator watch-scan` を起動し、止まったものを見つけて理由の種類に分けます。見張りは記録と報告を書くだけで、claim・再開・release・commit はしません。cron と routine だけで動き、オーケストレーターの agent の種類に頼りません。exec の実行ロックを取らない `action.kind: specdojo` のため、夜間の run の間も止まらずに見ます。見る間隔は routine の `interval` で変えます。
+
+見る対象は次のとおりです。`--stale-after`（既定 `2h`）は、実行ロックがないときに実行中の状態を中断と見なすまでの時間です。
+
+| 対象              | 止まったと見なす状態                                                                                         |
+| ----------------- | ------------------------------------------------------------------------------------------------------------ |
+| schedule のタスク | `blocked`（利用制限による延期は `deferred` と表示）、実行ロックがなく更新が `--stale-after` より古い `doing` |
+| register 項目     | `waiting`・`review`、実行ロックがなく最後の event が `--stale-after` より古い `in-progress`                  |
+| 列（queue）       | `stopped`、列のロックがなく更新が `--stale-after` より古い `running`                                         |
+
+理由は、event の limit の meta、状態に入った記録の文言（block event の `msg`、register event の `reason`、列の止まった段）、run のログの順に見て分けます。run のログは、親の検証の失敗した最後の試行と `integrate.log` だけを読みます。`executor.log` は plan や成果物の本文を含み、文言で誤って分けるため読みません。使用量の上限と負荷の文言（`overloaded` など）は、テストの名前で誤って分けないよう記録の文言だけに当てます。判断が要る失敗と時間切れが別のログに出ていれば、流し直しで直らない判断が要る方を採ります。
+
+| 理由の種類（`category`） | 詳細（`detail`）の例                                                                                                         | 分ける元の文言の例                                                                     |
+| ------------------------ | ---------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `usage_limit`            | `quota_exhausted`・`rate_limit`・`session_limit`                                                                             | meta の `limit_kind`、`rate limit reached`                                             |
+| `load_timeout`           | `load_timeout`・`git_index_lock`・`overloaded`                                                                               | `timed out: yes`、`Test timed out in 5000ms`、`index.lock`                             |
+| `needs_target_sync`      | `target_ahead`                                                                                                               | hook の `unknown option '--reserve'`（統合先の新しい commit が要る）                   |
+| `needs_decision`         | `kata_rule`・`protected_config`・`out_of_commit_scope`・`git_state`・`merge_conflict`・`manual_block`・`review_pending` など | `sidebar kata menus`、`agent-config-write`、`commit-scope: skipped non-target changes` |
+| `interrupted`            | `stale_doing`・`stale_in-progress`・`stale_running`                                                                          | 実行ロックがなく更新が古い                                                             |
+| `unknown`                | `unknown`                                                                                                                    | どの規則にも当たらない                                                                 |
+
+見つけたことは `execution/watch/watch-events.jsonl` に 1 件 1 行の JSON で足していきます。同じ止まりは、対象の種類・ID・状態・状態に入った時刻を合わせた `key` で見分け、開いている間は足し直しません。止まりが見えなくなった回に `cleared` の行を 1 行足します。新しい event で同じ対象がまた止まれば、別の `key` として足します。
+
+| 項目          | 内容                                                                    |
+| ------------- | ----------------------------------------------------------------------- |
+| `v`           | 記録の版。`1`                                                           |
+| `ts`          | 行を足した時刻（UTC）                                                   |
+| `event`       | `stalled`（止まりを見つけた）または `cleared`（止まりが見えなくなった） |
+| `key`         | 同じ止まりを見分ける鍵                                                  |
+| `target`      | 対象の種類（`schedule-task`・`register-item`・`queue`）と ID            |
+| `state`       | 止まって見える状態（`stalled` のみ）                                    |
+| `since`       | その状態に入った記録の時刻（`stalled` のみ）                            |
+| `category`    | 理由の種類（`stalled` のみ）                                            |
+| `detail`      | 理由の詳細（`stalled` のみ）                                            |
+| `basis`       | 分けた根拠。記録のパス（`source`）と当たった行（`excerpt`）             |
+| `next_action` | 次にすべきこと（`stalled` のみ）                                        |
+| `by`          | 書いた主体。`watch-scan`                                                |
+
+朝報告は、夜間実行の朝報告と同じ `execution/reports/` の下の `watch-scan/watch-scan-YYYYMMDD.md` に、登録簿の日付と同じ時間帯の 1 日 1 文書として毎回書き直します。「1. 集計」に種類ごとの件数、「2. 止まっているもの」に種類ごとの対象・状態・理由・根拠・次にすべきこと・最初に見つけた時刻、「3. この日に解けたもの」、「4. 読めなかった記録」を載せます。朝は判断が要るものから読み、次にすべきことに従って再開・手直しの起票・close を決めます。見張りは記録と報告を commit しません。夜間実行の朝報告と同じく、読んだ後にオーケストレーターが実行記録とまとめて commit します。
 
 ## 4. 例外対応と特殊な運用
 

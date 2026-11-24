@@ -1,0 +1,24 @@
+`docs/ja/specdojo/templates/pm-members-template.yaml` を rulebook と sample に合わせて直しました。sample と rulebook は変えていません。prettier の整形検査は通りましたが、schema 検査は終了コード 1 で失敗しています。原因は template の作りそのものによるもので、詳しくは下に書きます。
+
+**変更内容**
+
+- **title:** 生成される文書の title を `メンバー名簿` から `"メンバー定義: _PROJECT_NAME_"` に変えました。rulebook の「推奨メタ項目」の形式に合わせ、ほかの template が使う `_PROJECT_NAME_` をそのまま使っています。
+- **コメントの削除:** Role code、`owner`、agent 名簿の置き場所を繰り返していたコメントを消しました。どれも rulebook と人と組織の定義標準に書かれている内容です。
+- **members の空欄化:** PO・`final-decision-maker`・`critical-first` という決まった値の記入例をやめ、`_MEMBER_NICKNAME_`・`_MEMBER_DISPLAY_NAME_`・`_ROLE_CODE_`・`_PERSONA_`・`_SCHEDULER_STRATEGY_` の空欄に置き換えました。`email: null` と `type: human` は固定値として残しています。
+- **focus の不具合修正:** `- _TODO_: ...` は YAML ではキーと値の組として読まれ、文字列の配列になっていませんでした。引用符で囲んで直しました。
+- **rules:** rulebook の「運用ルール」は、共通標準や schema を `rules` に繰り返し書くことを禁じています。既存の 5 項目はどれも繰り返しだったため消し、プロジェクト固有の運用ルールを書く `_TODO_` を 1 行置きました。
+- **割り当て欄:** PJR-76N9 で禁止された「文書の役割の割り当て」と「承認の進み具合」の記入欄は、もともとありませんでした。名簿の `roles` は文書の中身として役割を扱う項目なので、対象外として残しています。
+
+**検査結果**
+
+- `npx prettier --check`（対象ファイル）: 通りました。
+- `npm run validate:schema:file`（pm-members の schema、対象ファイル）: 終了コード 1 で失敗しました。不足項目の `version`・`project_id` と、余分な項目・`type`・`nickname` の形式は、変更前の版にもあった問題だと見ています。前の版でも検査して比べようとしましたが、ファイルの書き出しに承認が必要で実行できず、確かめられていません。この変更で新たに出た違反は `roles` の形式と `scheduler_strategy` の値の 2 つで、どちらも空欄に置き換えたことが原因です。template は先頭で `validate=false reason=template` と宣言しているので、下の報告ではこの検査を `not_applicable`（対象外）としました。ただし runner は script があり YAML が変わっていると、この理由を認めない可能性があります。
+- 親 runner が実行する検査は、ここでは実行していません。
+
+**判断していただきたいこと**
+
+`scheduler_strategy` を空欄にしたので、scaffold した直後の名簿は記入するまで schema に合いません。固定値（たとえば `fifo`）に戻すかどうかは、recipe との整合を見て決めてください。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"pm-members-template.yaml を rulebook と sample に合わせて直した。title を「メンバー定義: _PROJECT_NAME_」に変え、rulebook を繰り返していたコメントと rules を消した。members の記入例は空欄に置き換え、focus の YAML の不具合を直した。prettier の検査は通った。schema 検査は template の作りが原因で終了コード 1。","handoff":["template の rules にあった共通ルールの繰り返し 5 項目を消し、プロジェクト固有の運用ルールを書く _TODO_ 1 行にした。根拠は rulebook の「運用ルール」（共通標準や schema を繰り返さない）。","`scheduler_strategy` を空欄（`_SCHEDULER_STRATEGY_`）にしたため、scaffold した直後の名簿は記入するまで schema の enum に合わない。固定値（例: `fifo`）に戻すかどうかは、recipe との整合を見て決める。","schema 検査の違反のうち version・project_id・余分な項目・type・nickname の形式は、変更前の版にもあった問題だと見ている。前の版での検査はファイルの書き出しに承認が必要で実行できず、確かめていない。","PJR-76N9 で禁止された文書の役割の割り当てと承認の進み具合の記入欄は、もともとなかった。名簿の `roles` は文書の中身として役割を扱う項目なので、対象外として残した。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/templates/pm-members-template.yaml","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/pm-members.schema.yaml --data docs/ja/specdojo/templates/pm-members-template.yaml","status":"not_applicable","summary":"実行して終了コード 1。違反は template 自身のメタ情報（type: template、metadata_template、version・project_id の不足）と空欄（nickname・roles・scheduler_strategy）によるもの。","reason":"対象は template で、先頭で `specdojo-schema: validate=false reason=template` と宣言しており、pm-members の YAML 成果物そのものではない。template 自身のメタ情報と空欄は、pm-members の schema では本来満たせない。"}]}
+</specdojo_executor_evidence>

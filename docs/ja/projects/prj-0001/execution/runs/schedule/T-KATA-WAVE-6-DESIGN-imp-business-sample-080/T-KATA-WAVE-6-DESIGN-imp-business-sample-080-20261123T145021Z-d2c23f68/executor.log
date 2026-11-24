@@ -1,0 +1,15 @@
+`docs/ja/specdojo/samples/imp-business-sample.md` の冗長な記述を 6 か所削りました。判断に要る背景・制約・例外・完了条件は変えていません。`lint:md` などの検査は親 runner が実行するため、私は何も実行していません。
+
+削った箇所:
+- 「対応方針」表の直前にあった導入文を削除しました。表の「前提条件」列と内容が重なっていました。
+- 「未解決事項」表の直前にあった導入文を削除しました。表の列見出しと内容が重なっていました。
+- 「影響詳細一覧」の判断根拠にあった「最大値規則により高／中／低」を 4 行すべてから削除しました。同じ規則は「影響分析サマリ」の集約規則に書いてあります。
+
+残した箇所:
+- 「影響分析サマリ」の表の後にある「店頭販売を先に着手する」の段落は残しました。着手順序の判断理由だからです。
+- 「対応方針」の箇条書き 3 本は残しました。決定記録 `PJR-B4D1` の参照と再評価の条件で、他の箇所には書いてありません。
+- 「影響詳細一覧」の判断根拠にある観点別の高・中・低は残しました。業務ごとの評価結果で、サマリは基準だけを示します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"imp-business-sample.md の冗長な 6 か所を削除（表直前の導入文 2 件、最大値規則の繰り返し 4 件）。必須情報と意味は維持。","handoff":[],"condense_records":[{"location":"5. 対応方針 冒頭の導入文","category":"table-prose","action":"delete","reason":"表の前提条件列と同じ内容の二重説明で、削っても意味は変わらない","cause":{"type":"document"}},{"location":"6. 未解決事項 冒頭の導入文","category":"table-prose","action":"delete","reason":"表の列見出しの内容をなぞる説明で、削っても意味は変わらない","cause":{"type":"document"}},{"location":"4. 影響詳細一覧 判断根拠（店頭販売・日次締め・在庫補充・つけ管理）の「最大値規則により〜」","category":"repetition","action":"reference","reason":"集約規則は 3. 影響分析サマリに明記されており、4 行で繰り返す必要がない。各観点の判定は残して意味を保った","cause":{"type":"document"}},{"location":"3. 影響分析サマリ 優先着手の段落","category":"unneeded-background","action":"retain","reason":"着手順序の判断理由を示すため残した","cause":{"type":"document"}},{"location":"5. 対応方針 末尾の箇条書き 3 件","category":"canonical-restatement","action":"retain","reason":"決定記録の参照と再評価条件は他の箇所にない","cause":{"type":"document"}}],"validations":[{"command":"npm run lint:md","status":"not_run","reason":"親 runner が実行する許可リストの検査のため、executor では実行しない"}]}
+</specdojo_executor_evidence>

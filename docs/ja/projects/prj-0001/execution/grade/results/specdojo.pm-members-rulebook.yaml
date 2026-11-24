@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/pm-members-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 93
-graded_at: "2026-11-07T20:38:43.309Z"
-graded_by: flash-high-executor
-content_hash: 7a7fffe5240f0b664c4c50904e8253a13543093d3ea3c18f1e7cfe6d7dd61835
+score: 94
+graded_at: "2026-11-24T01:55:37.722Z"
+graded_by: sonnet-review-executor
+content_hash: 400acda84d6373d66ea150714bbff9b4ae6224f5ae78137238202698a0b5ce4f
 categories:
   purpose:
     score: 100
@@ -21,11 +21,11 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 83
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 100
   consistency:
     score: 75
 viewpoints:
@@ -72,20 +72,20 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
     level: 3
     score: 75
   vp-qe-kata-conformance:
+    level: 4
+    score: 100
+  vp-ux-readability:
     level: 3
     score: 75
-  vp-ux-readability:
-    level: 4
-    score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -106,22 +106,22 @@ finding_counts:
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-verifiability
-    line: 33
-    anchor: "- `members[].nickname` は英小文字または数字で始め、英小文字、数字、ハイフン、アンダースコアだけを使います。"
-    message: nicknameの許容文字だけを示し、先頭を英小文字か数字とする条件と最大文字数のschema制約を示していないため、schemaでrejectされる値を作成し得る。
-    message_ja: nicknameの許容文字だけを示し、先頭を英小文字か数字とする条件と最大文字数のschema制約を示していないため、schemaでrejectされる値を作成し得る。
+    rule: vp-qe-omissions-consistency
+    line: 27
+    anchor: "## 4. 推奨メタ項目"
+    message: 見出し「推奨メタ項目」と、表で `id`・`type`・`status`・`title` などを必須（○）とする内容が食い違っており、必須か推奨かが曖昧になるため、見出しを「メタ項目」などに改めるべきです。
+    message_ja: 見出し「推奨メタ項目」と、表で `id`・`type`・`status`・`title` などを必須（○）とする内容が食い違っており、必須か推奨かが曖昧になるため、見出しを「メタ項目」などに改めるべきです。
   - id: F002
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 50
-    anchor: schema にないメタ項目は追加しません。成果物の `status` は作成中は `draft` とし、`ready` への変更は人間が判断します。
-    message: schemaが任意のルートメタ項目として許可するsupersedesが「推奨メタ項目」とルート構造から欠落しており、置き換え関係の記述可否を判断できない。
-    message_ja: schemaが任意のルートメタ項目として許可するsupersedesが「推奨メタ項目」とルート構造から欠落しており、置き換え関係の記述可否を判断できない。
+    rule: vp-ux-readability
+    line: 13
+    anchor: "## 2. 位置づけと用語定義"
+    message: 見出し「位置づけと用語定義」に対して、本文は正本の分担表だけで用語定義がありません。見出しを実態に合わせるか、nickname や member などの用語を補うべきです。
+    message_ja: 見出し「位置づけと用語定義」に対して、本文は正本の分担表だけで用語定義がありません。見出しを実態に合わせるか、nickname や member などの用語を補うべきです。
   - id: F003
     severity: minor
-    rule: vp-qe-kata-conformance
-    line: 66
-    anchor: "| `roles`              | ○    | 対応可能な Role code の配列                               |"
-    message: members[].rolesを必須としているが、based_onの標準定義では任意とされており、関連文書間で必須性と優先する規定を判断できない。
-    message_ja: members[].rolesを必須としているが、based_onの標準定義では任意とされており、関連文書間で必須性と優先する規定を判断できない。
+    rule: vp-ux-language-consistency
+    line: 1
+    anchor: "# プロジェクトメンバー定義 作成ルール"
+    message: 成果物名が H1「プロジェクトメンバー定義」、recipe「メンバー定義」、本文の「名簿」とで揺れています。標準表記を一つに定め、H1 や本文の呼称を揃えるべきです。
+    message_ja: 成果物名が H1「プロジェクトメンバー定義」、recipe「メンバー定義」、本文の「名簿」とで揺れています。標準表記を一つに定め、H1 や本文の呼称を揃えるべきです。

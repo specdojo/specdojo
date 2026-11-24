@@ -68,10 +68,10 @@ policy:
   overlap: skip
 ```
 
-cron は repository に移動して `routine run --due` を起動するだけです。たとえば5分ごとに `cd /path/to/repository && specdojo routine run --project prj-0001 --due` を呼びます。runner 自身が待機・各段の起動・完了判定を行うので、Claude Code・Codex・Antigravity の会話機能には依存しません。
+cron は repository に移動して `routine run --due` を起動するだけです。たとえば5分ごとに `cd /path/to/repository && specdojo routine run --project prj-0001 --due` を呼びます。runner 自身が待機・各段の起動・完了判定を行うので、Claude Code・Codex などの会話機能には依存しません。
 
 ## 3. 結果と再試行
 
-Job Run JSON の `attempts[].steps` で成功・失敗・延期、終了コード、理由、各 command evidence 参照を確認します。project lock を取得するまでの上限は定義の3600秒です。grade 独自の lock も `--if-busy wait` で待ちます。grade 段の `timeout_seconds: 7200` は待機と処理を含む実行時間の上限で、超過するとプロセスを停止して延期にします。次回は同じ `job_run_id` による grade の再開を使います。
+job run JSON の `attempts[].steps` で成功・失敗・延期、終了コード、理由、各 command evidence 参照を確認します。project lock を取得するまでの上限は定義の3600秒です。grade 独自の lock も `--if-busy wait` で待ちます。grade 段の `timeout_seconds: 7200` は待機と処理を含む実行時間の上限で、超過するとプロセスを停止して延期にします。次回は同じ `job_run_id` による grade の再開を使います。
 
 同じ `--scheduled-at` と入力で再実行すると、失敗した Run の次 attempt で先頭から実行します。完了済み Run の同じ実行枠は重複実行しません。新しい `--scheduled-at` は新規 Run になるため、停止した task の再開条件を確認して入力を変えます。routine 自体の失敗・延期履歴と実行枠の扱いは [[specdojo:routine-operation-guide|routine 運用ガイド]] に従います。

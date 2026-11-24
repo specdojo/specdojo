@@ -12,7 +12,6 @@ import {
   type RateLimitDetection,
 } from "../agent-config.js";
 import { resolveProjectPaths } from "../project.js";
-import { isBlockedProvider } from "../../shared/antigravity-block.js";
 import type { AgentLimitSignal } from "../limit.js";
 import { buildInitialStateFromStrategy } from "../schedule/initial.js";
 import { buildScheduleIndex } from "../schedule/schedule.js";
@@ -129,6 +128,7 @@ export type RunOpts = {
   unknownScope?: string;
   /** Runner facts appended to the generated plan before its checkpoint. */
   changeScopeWaits?: ScopeWait[];
+  onScopePrepared?: () => void;
   onScopeIntegrated?: () => Promise<void>;
   /** Repeatable `<repo>=<branch>` product integration target overrides. */
   integrationBranch?: string[];
@@ -145,6 +145,8 @@ export type AgentExecution = {
   stdout: string;
   stderr: string;
   limit?: AgentLimitSignal;
+  // The runner stopped the agent at its configured time limit (PJR-K8F1).
+  timedOut?: true;
 };
 
 // Mode-specific agent overrides from --edit-by / --review-by. Each value is an agent
@@ -506,9 +508,6 @@ export function selectCandidates(
       // Temporarily disabled agents (e.g. to isolate one provider while testing rate limits)
       // are skipped during auto-selection.
       if (m.disabled === true) return false;
-      // Antigravity members are never launched (0.9.2); drop them so selection moves on to the
-      // next member instead of failing the whole candidate list.
-      if (isBlockedProvider(m.provider)) return false;
       // Opt-in tier: never enter an automatic primary/fallback pool implicitly, even when
       // every ordinary member is busy. Named selections resolve outside this function.
       if (m.proficiency === "frontier" && proficiency !== "frontier") return false;
@@ -692,6 +691,10 @@ export async function withProjectExecRunLock(
   action: () => Promise<void>,
   sharing: ExecRunLockSharing = EXCLUSIVE_EXEC_RUN,
 ): Promise<void> {
+  if (opts.dryRun) {
+    await action();
+    return;
+  }
   const resolvedPaths = resolveProjectPaths({ project: opts.project });
   const locksDir = execLocksDir(resolvedPaths.executionPath);
   const previousLocksDir = getActiveExecLocksDir();

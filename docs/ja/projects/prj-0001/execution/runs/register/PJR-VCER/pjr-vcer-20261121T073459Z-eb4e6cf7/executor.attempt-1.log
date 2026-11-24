@@ -1,0 +1,33 @@
+13 種類の試験の型のカタログと strategy を作り、track を生成しました。ただ、完了条件の `npx specdojo catalog validate` は、まだ失敗します（エラー 3 件）。sample をこのカタログに載せたことで出る問題があり、`src/` の検証を直したためです。
+
+**カタログの検証で起きた問題**
+sample の `based_on` には、駄菓子屋のサンプルの世界の ID（`utc-index`、`cr-2026-004` など）が入っています。kata ドメインに載せると、検証がこれを prj-0001 の成果物として照合し、trc と imp-test でエラー 3 件が出ました。後の段で grade の指摘どおり `based_on` を足すと、エラーはさらに増えます。
+
+そこで `src/catalog/build-references.ts` を直しました。文書の `id` が project 以外の名前空間（`specdojo:` など）なら、その `based_on` は照合しません。テストも 1 件足しました。この修正は `npm run validate:catalog`（worktree の src を動かす）では通ります。一方、グローバルの `specdojo` はメインのリポジトリの build 済みのものを指すので、build し直すまで失敗が残ります。この修正は個票の範囲の外なので、よいか確認してください。
+
+**作ったもの**
+- **`dct-kata.yaml` と `dct-index.yaml`**: 13 種類の sample を載せ、`dct-index.yaml` に domain `kata` を足しました。`depends_on` は型の上下関係に合わせています（tsp-index → 各 index → 対象別。trc は atc・stc の後）。
+- **`done_criteria`**: 26 件すべてに grade の結果がありました。どの型も、共通の 3 条件に、blocker と major の指摘から拾った固有の条件を 2〜4 件足しています。itc-sample の「frontmatter に `title` を足す」という指摘は、記述ルールで `title` が禁止なので入れていません。
+- **strategy と track**: `sch-strategy-kata-wave-3.yaml` から `schedule build` で `sch-track-kata-wave-3.yaml`（65 タスク）を生成しました。track は手で触っていません。`sch-milestones.yaml` には 3 件が追記されただけで、既存の項目は変わっていません。
+
+**決めたこと**
+- **段の並び**: rulebook を簡潔に（040）→ sample を厚く（050）→ condense（080）→ review（090）→ 人の確定（140）。13 種類とも recipe と template が無いので、その段は置いていません。
+- **sample を厚くする段**: approach は `sample-maintenance` にしました。`fully-guided` だと、対象の sample が自分の手本を兼ねてしまいます。こうすると手本が rulebook、対象が sample になります。成果物の `done_criteria` も、この段で満たすよう指示しました。
+- **人の確定**: `finalize` にしました。recipe・template が `undecided` なので、一式で確定する `bootstrap-finalize` にはせず、直した rulebook の確認は段の説明で求めています。
+- **担当と agent**: owner は QE です。edit の段は `opus-executor`、review の段は `sol-review-executor`、reporter は `gemma26-reporter` で、`phase_overrides[].agent` に書きました。
+
+**plan の dry-run**
+utc-sample の 4 つの段と trc の sample の段で確かめ、どれも対象と手本は食い違いませんでした。sample の段だけは成果物と編集の対象が同じなので、`targets` に同じ ID が 2 回並びます。schema は重複を禁じていないので、そのまま進められます。なお、`--project prj-0001` を付けないと、この worktree では既にある成果物も見つけられませんでした。
+
+**検証**
+strategy・track・2 つのカタログの schema 検証、Prettier、個票の markdownlint、`validate:history-links`、`exec validate`、足したテストは通りました。
+
+**次の作業**
+- schedule のタスクを走らせる前に、メインのリポジトリで検証の修正を build してください。
+- `targets` の重複を除くかは、別の項目で決めてください。
+
+決めたことと理由、dry-run の表、CHANGELOG に影響が無いことは個票の対応結果に書きました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"dct-kata.yaml（13 種類の sample、grade の結果から書いた done_criteria）と dct-index.yaml の domain kata、sch-strategy-kata-wave-3.yaml を作り、schedule build で sch-track-kata-wave-3.yaml（65 タスク）を生成した。sample の based_on がサンプルの世界の ID なので、catalog validate がエラーになった。project の外の名前空間の文書の based_on を照合しないよう src/catalog/build-references.ts を直し、テストを足した。exec plan の dry-run で、各段の対象と手本が食い違わないことを確かめた。","handoff":["`npx specdojo` はグローバルに入ったメインのリポジトリの `dist` を指す。`validateBasedOn` の修正（src/catalog/build-references.ts）を build するまで、`npx specdojo catalog validate` は dct-kata.yaml の trc-requirements-to-tests-sample と imp-test-sample でエラー 3 件を出す。worktree の src を動かす `npm run validate:catalog` は通る。kata-wave-3 のタスクを走らせる前に、メインのリポジトリで build すること。","カタログの検証の修正: 文書の `id` が catalog の project 以外の名前空間（例: `specdojo:utc-sample`）で修飾されているとき、その `based_on` を照合しない。sample の `based_on` は共通サンプル文脈（駄菓子屋）の ID を指すためである。個票の範囲の外の src の変更なので、人が確認すること。","sample を厚くする段の approach は `sample-maintenance` にした（手本は rulebook、対象は sample）。`fully-guided` だと、対象の sample が自分の手本を兼ねる。成果物を磨く `refine` の段は置いていない。finalize は `bootstrap-finalize` ではなく `finalize` にした（recipe・template が `undecided` のため）。owner は QE。","dry-run で、sample-maintenance の段の plan の `targets` に `specdojo:<name>-sample` が 2 回並んだ（成果物と編集の対象が同じため）。schema は重複を禁じていない。`targetDocIds` で重複を除くかは、別の項目で決める。","この worktree では、`--project prj-0001` を付けないと `exec plan` が既存の成果物（例: utc-catalog）も見つけられなかった。dry-run は `--project` を付けて行った。","itc-sample の grade の指摘のうち、frontmatter に `title` を足す件は採らなかった（Markdown 記述ルールで禁止）。","CHANGELOG.md は変えていない。利用者への影響が無いことは、個票の「CHANGELOG に書く事項」に書いた。"],"validations":[{"command":"npm run validate:catalog","status":"passed","summary":"worktree の src（修正後）で exit 0。dct-kata.yaml と dct-index.yaml は OK（警告は既存のものだけ）"},{"command":"npx specdojo catalog validate --project prj-0001","status":"failed","summary":"グローバルの CLI はメインのリポジトリの古い dist を指すため、based_on のエラー 3 件が残る。src/catalog/build-references.ts の修正を build すると解消する。親の validate:schema とは別の検査"},{"command":"npx specdojo exec validate --project prj-0001","status":"passed","summary":"exit 0（警告は過去の event と、runner が作る evidence.json の未作成だけ）"},{"command":"npx vitest run tests/src/catalog/based-on.test.ts","status":"passed","summary":"10 件が通過（足したテスト 1 件を含む）"},{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/sch-strategy.schema.yaml --data docs/ja/projects/prj-0001/schedule/sch-strategy-kata-wave-3.yaml","status":"passed","summary":"valid"},{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/sch-track.schema.yaml --data docs/ja/projects/prj-0001/schedule/sch-track-kata-wave-3.yaml","status":"passed","summary":"valid。phase_suffix 65 件はすべて引用符付きの文字列"},{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/dct.schema.yaml --data docs/ja/projects/prj-0001/010-deliverables-catalog/dct-kata.yaml","status":"passed","summary":"valid"},{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/dct-index.schema.yaml --data docs/ja/projects/prj-0001/010-deliverables-catalog/dct-index.yaml","status":"passed","summary":"valid"},{"command":"npx prettier --check docs/ja/projects/prj-0001/010-deliverables-catalog/dct-kata.yaml docs/ja/projects/prj-0001/010-deliverables-catalog/dct-index.yaml docs/ja/projects/prj-0001/schedule/sch-strategy-kata-wave-3.yaml docs/ja/projects/prj-0001/schedule/sch-track-kata-wave-3.yaml docs/ja/projects/prj-0001/schedule/sch-milestones.yaml src/catalog/build-references.ts tests/src/catalog/based-on.test.ts","status":"passed","summary":"変更したファイルはすべて Prettier の書式（個票は prettier --write で整形した）"},{"command":"npx markdownlint-cli2 docs/ja/projects/prj-0001/controls/project-register/pjr-vcer-kata-wave-3-catalog-schedule.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"passed","summary":"exit 0"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-BEQ8",
+  "run_id": "pjr-beq8-20261123T001207Z-ddb0f4f3",
+  "stage": {
+    "role": "executor",
+    "actor": "sonnet-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-23T00:13:45.981Z",
+    "completed_at": "2026-11-23T00:16:06.640Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-beq8.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-beq8-dashboard-run-record-scan.md",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/dashboard.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/run-records.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/run-records.test.ts",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-beq8-dashboard-run-record-scan.md",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/dashboard.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/run-records.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/run-records.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 5,
+    "summary": ".../pjr-beq8-dashboard-run-record-scan.md          | 35 ++++++++++--\n src/dashboard/dashboard.ts                         | 15 ++++--\n src/shared/run-records.ts                          | 63 +++++++++++++++++++++-\n tests/src/exec/run-records.test.ts                 | 28 ++++++++++\n 4 files changed, 131 insertions(+), 10 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "型エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "error 0 件。warning は既存のもの"
+    },
+    {
+      "source": "executor",
+      "command": "npx vitest run tests/src/exec/run-records.test.ts tests/src/dashboard",
+      "status": "passed",
+      "summary": "95 件通過。追加した RunRecordIndex のテスト 2 件を含む run-records.test.ts は修正後に 18 件通過"
+    },
+    {
+      "source": "executor",
+      "command": "specdojo dashboard build --project prj-0001（修正前後の比較と時間測定）",
+      "status": "requires_human",
+      "summary": "sandbox で tsx 実行が承認待ちになり実行できなかった。tmp/compare.sh を実行して前後の出力と時間を確かめる"
+    }
+  ],
+  "final_message": "RunRecordIndex を追加し dashboard の生成で 1 回だけ読むようにした。typecheck、lint:ts、単体テストは通過。修正前後の出力比較と時間の測定は sandbox で tsx 実行が承認待ちになり未実施のため、個票の作業内容 No.4 は open のまま残した。",
+  "completion_status": "incomplete",
+  "handoff": [
+    "前後の出力比較と時間測定が未実施（完了条件）。tmp/compare.sh を人手またはホストで実行する。旧 dashboard.ts（git show HEAD:src/dashboard/dashboard.ts）と新版で specdojo dashboard build --project prj-0001 の時間を測り、generated_at 行を除いて生成物を diff する。結果を個票の対応結果へ追記する。",
+    "判断: 索引は DashboardPaths の任意項目 runRecordIndex として生成ごとに作り、モジュールの大域には持たせない。理由は生成の外へ持ち越さない条件のため。",
+    "CHANGELOG に書く事項: 区分は Performance。文案は「dashboard build が run の記録を項目ごとに全走査していたのをやめ、1 回の生成で一覧を 1 回だけ読むようにした」。個票の対応結果にも記載済み。",
+    "保護された設定の変更は不要だった。"
+  ],
+  "block_reason": "executor reported incomplete: RunRecordIndex を追加し dashboard の生成で 1 回だけ読むようにした。typecheck、lint:ts、単体テストは通過。修正前後の出力比較と時間の測定は sandbox で tsx 実行が承認待ちになり未実施のため、個票の作業内容 No.4 は open のまま残した。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-BEQ8/pjr-beq8-20261123T001207Z-ddb0f4f3/executor.attempt-1.log",
+      "bytes": 3541,
+      "truncated": false
+    }
+  ]
+}

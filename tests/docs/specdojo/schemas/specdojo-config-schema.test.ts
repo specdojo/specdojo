@@ -37,6 +37,27 @@ function configWithRepos(repos: unknown): Record<string, unknown> {
 describe("specdojo-config.schema.yaml", () => {
   const validate = compileConfigSchema();
 
+  it("accepts read-only references alongside product repositories", () => {
+    expect(
+      validate({
+        ...configWithRepos([{ name: "app1", path: "../app1" }]),
+        references: { library: { path: "../library" } },
+      }),
+    ).toBe(true);
+  });
+
+  it.each([
+    null,
+    [],
+    { Bad_Name: { path: "../library" } },
+    { library: {} },
+    { library: { path: "/absolute" } },
+    { library: { path: " " } },
+    { library: { path: "../library", write: true } },
+  ])("rejects invalid reference shape %j", (references) => {
+    expect(validate({ ...configWithRepos([]), references })).toBe(false);
+  });
+
   it("accepts the repository's own config, which declares no repos", () => {
     const config = JSON.parse(readFileSync(configPath, "utf8")) as unknown;
 

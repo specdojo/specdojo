@@ -19,6 +19,18 @@ properties:
   updated_at:
     type: string
     format: date-time
+  # Plan / result references the runner records for the run (`PipelineArtifactRefs`).
+  artifacts:
+    type: object
+    additionalProperties: false
+    required: [plan_ref, result_ref]
+    properties:
+      plan_ref:
+        type: string
+        minLength: 1
+      result_ref:
+        type: string
+        minLength: 1
   # Run-scoped product integration targets given by `exec run --integration-branch <repo>=<branch>`.
   # Only explicit overrides are recorded; resume reuses them instead of repos[].integration_branch.
   integration_branches:

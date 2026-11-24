@@ -1,0 +1,167 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-6-NOTATION-cxd-sample-080",
+  "run_id": "T-KATA-WAVE-6-NOTATION-cxd-sample-080-20261123T062323Z-fe2209da",
+  "stage": {
+    "role": "executor",
+    "actor": "sonnet-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-23T06:24:02.295Z",
+    "completed_at": "2026-11-23T06:27:03.239Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/cxd-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/cxd-sample.md | 2 --\n 1 file changed, 2 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/samples/cxd-sample.md",
+      "status": "passed",
+      "summary": "整形は問題なし"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2 docs/ja/specdojo/samples/cxd-sample.md",
+      "status": "passed",
+      "summary": "指摘 0 件"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:cxd-sample\n  type: architecture\n  status: ready\n  rulebook: specdojo:cxd-rulebook\n  part_of: []\n  based_on: []\n  supersedes: []\n---\n\n# 駄菓子屋きぬや 販売管理 CLI C4コンテキスト図\n\n## 1. 概要\n\n店主代表と家族利用者代表が現金販売を記録し、会計と印字の結果を次の店番へ引き継ぐための販売管理 CLI を対象とする。店頭での操作、商品・売上の外部管理、レシート印刷の責任分界を定義し、通信や印字の失敗を会計のやり直しと混同しないようにする。上位の目的と初期範囲は \\[\\[specdojo:prj-overview-sample|プロジェクト概要]] を正とし、本図はタブレット 1 台での店頭運用に先立ち、販売記録と外部連\n… output omitted …\n/ 将来課題\n\n次の表は、確定していない契約・実機確認・下位設計と、それぞれの解消条件を示す。\n\n| 対象・論点 | 影響範囲 | 解消条件・引き継ぎ先 |\n| - | - | - |\n| 架空の本部 API 契約 | `REL-03`。売上の受付照会・重複排除・保存失敗後の回復 | `ifx-api-kinuya-products.yaml`・`ifx-api-kinuya-sales.yaml` の整備時に照合・回復方法を定める。応答欠落・受付済み・未受付の期待結果を確かめるまで当該経路を受入の対象に含めず、結果不明の取引を自動再送しない |\n| 印字経路の実機確認 | `REL-04`。未印字と結果不明、二重印字の識別 | 実機で紙面・控えの照合と再印刷を行い、会計を再実行せずに未印字・結果不明・二重印字を区別できることを確かめて解消する |\n| 内部構成・配置 | 取引記録と外部連携を担う内部構成 | 未同梱の `cnd-kinuya-sales-cli`・`ifd-kinuya-sales-cli` で記録と実行環境を詳細化し、本図の外部境界を維持する |"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6078 file(s), 99 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 75 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6078 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-NOTATION-cxd-sample-080\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (48 tests) 9ms\n[\n… output omitted …\ns/src/exec/plans.test.ts\",\"duration_ms\":2271}\n\n Test Files  19 passed (19)\n      Tests  480 passed (480)\n   Start at  15:33:39\n   Duration  3.70s (transform 9.20s, setup 1.02s, import 14.19s, tests 8.15s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nrulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-NOTATION-cxd-sample-080/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-6-NOTATION-cxd-sample-080/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "condense_records": [
+    {
+      "location": "3.3. External Software System の表の後の段落「印刷基盤は販売管理 CLI と同じ端末で動くが…境界外に置く」",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "同じ表の「レシート印刷基盤」の行（区分・位置づけ、責任分界）に同内容があり、削除しても意味は変わらない",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "3.2. Person（人・ロール）末尾の段落「技術メンター・開発担当と同行レビュー担当は…描かない」",
+      "category": "repetition",
+      "action": "retain",
+      "reason": "Person に含めない範囲を示す境界の判断に要る文なので残した",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "4.1. 技術前提・制約の「会計確定と物理印字の成否を分ける」の項目",
+      "category": "repetition",
+      "action": "retain",
+      "reason": "概要や 3.3 の表と近い内容だが、制約として判断に要るため残した",
+      "cause": {
+        "type": "document"
+      }
+    }
+  ],
+  "final_message": "cxd-sample.md の冗長な 1 文を削除し、それ以外は意味維持のため保持した。",
+  "completion_status": "complete",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-NOTATION-cxd-sample-080/T-KATA-WAVE-6-NOTATION-cxd-sample-080-20261123T062323Z-fe2209da/executor.log",
+      "bytes": 2554,
+      "truncated": false
+    }
+  ]
+}

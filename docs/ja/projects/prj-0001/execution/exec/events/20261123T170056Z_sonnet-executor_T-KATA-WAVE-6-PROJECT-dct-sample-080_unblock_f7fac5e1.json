@@ -1,0 +1,18 @@
+{
+  "v": 1,
+  "ts": "2026-11-23T17:00:56Z",
+  "type": "unblock",
+  "task_id": "T-KATA-WAVE-6-PROJECT-dct-sample-080",
+  "by": "sonnet-executor",
+  "msg": "resume reporter from persisted pipeline state",
+  "meta": {
+    "limit_deferred": "false",
+    "claim_actor": "sonnet-executor",
+    "stage_actor": "gemma26-reporter",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-dct-sample-080/T-KATA-WAVE-6-PROJECT-dct-sample-080-20261123T150011Z-41882987/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-dct-sample-080/T-KATA-WAVE-6-PROJECT-dct-sample-080-20261123T150011Z-41882987/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-6-PROJECT-dct-sample-080-20261123T150011Z-41882987",
+    "pipeline_resume_claimed": "true"
+  }
+}

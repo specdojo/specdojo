@@ -1,0 +1,21 @@
+並べて流したタスクが、ほかの sample の grade の結果を取り込んで衝突する原因を直しました。`npm run typecheck` は通り、追加テストも通りました。`lint:ts` はエラー 0 です。`test:unit` と `test:integration` は走らせていません。
+
+**原因**
+- 各タスクの実行前の checkpoint が、ルートで変更中の grade サイドカーを、ほかの sample のものも含めてすべて取り込んでいました。
+- `opr-*` のようにルートの結果が複数変わっていると、並べたタスクの branch が同じサイドカーを持ち、統合で衝突しました。
+
+**対応（書かない方を選びました）**
+- `gradeCheckpointPaths` に任意の第 2 引数を足しました。`grade/results` は、タスク自身の対象だけに絞ります。`criteria` と `pipeline` は従来どおりです。
+- `src/exec/run/schedule-prepare.ts` の通常の準備と executor 再開の 2 か所で、タスクの対象だけを渡します。ほかの sample の結果はルートに残ります。
+- 引数を省いた呼び出しは、従来どおり全件を取り込みます。具体的には `worktree-command.ts`、`register-worktree.ts`、`lifecycle-commands.ts`、`register-state.ts` です。これらの経路で同じ衝突が出たら、同じ絞り込みを渡す必要があります。
+
+**テスト**
+- `tests/src/exec/worktree-ops.integration.test.ts` に、ほかの sample の結果が checkpoint に入らないことを確かめるテストを足しました。
+- 2 つのタスクが同じ sample の結果を変えたときの統合と再開を通して確かめるテストは足していません。個票の対応方針が求める確認の一部が、未実施のままです。親の `test-integration` で確かめてください。
+
+**個票**
+- 個票の「対応結果」に、原因・対応・確認結果と「CHANGELOG に書く事項」の小節を書きました。`CHANGELOG.md` は変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"checkpoint の grade results をタスク自身の対象に絞り、並べて流したタスクの sample 衝突の原因を除いた。テストと個票の対応結果を追加した。","handoff":["引数を省いた gradeCheckpointPaths の呼び出し（worktree-command.ts、register-worktree.ts、lifecycle-commands.ts、register-state.ts）は全件取り込みのまま。register や job の経路で同じ衝突が出たら同じ絞り込みを渡す。","2 つのタスクが同じ sample の結果を変えたときの統合と再開の通しテストは追加していない。checkpoint の絞り込みだけをテストした。通しの確認は親の test-integration に任せる。"],"validations":[{"command":"npm run typecheck","status":"passed","summary":"型エラーなし"},{"command":"npm run lint:ts","status":"passed","summary":"エラー 0、既存の warning のみ"},{"command":"npx vitest run tests/src/exec/worktree-ops.integration.test.ts -t PJR-A54F","status":"passed","summary":"追加テスト 1 件が通過"},{"command":"npx prettier --check","status":"passed","summary":"変更した src・tests・個票を整形済み"}]}
+</specdojo_executor_evidence>

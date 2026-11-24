@@ -6,16 +6,16 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 100
-graded_at: "2026-10-17T20:19:57.641Z"
-graded_by: agy-expert-executor
-content_hash: ada59362dc067e999a63802e76a7a0a934602c0cc73e3343261860adfe65fd82
+graded_at: "2026-11-23T20:41:33.115Z"
+graded_by: sonnet-review-executor
+content_hash: 94a621156fecca9ffd7e2585d207b6441962c6fbabed5cd55a0336fdd910bd58
 categories:
   purpose:
     score: 100
   operations:
     score: 100
   planning:
-    score: 100
+    score: 92
   business:
     score: 100
   architecture:
@@ -42,8 +42,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-dependency-risk:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-control-reporting:
     level: 4
     score: 100
@@ -101,6 +101,13 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 1
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 90
+    anchor: 本プロジェクトが成り立つために、次の条件に依存する。
+    message: 依存前提（タブレット、ベースライン記録、家族利用者代表の参加）が成立しなかった場合の影響（初期公開の遅れ、指標の判定不能など）と、リスクまたは未決事項として渡す後続文書を一文で追記する。
+    message_ja: 依存前提（タブレット、ベースライン記録、家族利用者代表の参加）が成立しなかった場合の影響（初期公開の遅れ、指標の判定不能など）と、リスクまたは未決事項として渡す後続文書を一文で追記する。

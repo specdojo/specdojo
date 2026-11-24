@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_d5236ae856e64caea9fd87db5c7eb8fe
+  ts: "2026-11-23T13:11:15Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 理解の負債の測り方を定め、OpenFisca-Japan で試す計画を作る
+    - field: description
+      from: ""
+      to: 新しい参加者や agent が文書だけで主要な問いに答え、変更を始められるかを測る引き継ぎのテストを決め、既存のコードからの復元を含めて OpenFisca-Japan で試す計画を書く
+    - field: input
+      from: ""
+      to: '["PJR-Y5RD の決定（2026-11-23）: kata による理解の負債の解消で、シビックテックを持続可能にすることを中核の位置づけにする"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-Y5RD"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: project
+- v: 1
+  id: reg_cec9a475d1854812a75ae753fab8d241
+  ts: "2026-11-23T13:11:34Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_d5236ae856e64caea9fd87db5c7eb8fe

@@ -1,0 +1,9 @@
+hook やテストの失敗の要約は、FAIL の行があればそれを先頭の原因として出すように直しました。`tests/src/exec/worktree.test.ts` は 47 件すべて通りました。親 runner の検証（`npm run typecheck`、`npm run lint:ts`、`npm run test:unit`、`npm run test:integration`）はまだ流していません。
+
+- **修正:** `src/shared/git.ts` の `summarizeGitHookFailure` で、FAIL の行を `error` を含む行より優先して選びます。`unknown option '--reserve'` のような通常の出力は、要約の先頭に出なくなります。
+- **テスト:** `tests/src/exec/worktree.test.ts` に、FAIL の行から始まることを確かめるケースを足しました。既存の「Vitest の失敗名と集計を残す」ケースは、新しい並びに合わせて期待を更新しました。
+- **個票:** `pjr-eewp-block-reason-noise.md` の対応結果に、解決内容、「CHANGELOG に書く事項」の小節（区分は Fixed と文案）、確認結果を書きました。`CHANGELOG.md` は変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"summarizeGitHookFailure が FAIL の行を最初の原因として選ぶように修正し、単体テストを追加・更新した。個票の対応結果に CHANGELOG 用の区分と文案を記載した。","handoff":["CHANGELOG.md は変更していない。個票の対応結果 5.2 に区分 Fixed と文案を記載した。","npm run typecheck、npm run lint:ts、npm run test:unit、npm run test:integration は親 runner の検証結果を正とする。"],"validations":[{"command":"npx vitest run tests/src/exec/worktree.test.ts","status":"passed","summary":"47 件すべて通過"}]}
+</specdojo_executor_evidence>

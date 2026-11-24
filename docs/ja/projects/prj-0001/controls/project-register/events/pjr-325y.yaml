@@ -1,0 +1,169 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_0b90c3bfcc674d7db1969dbe6bf63a55
+  ts: "2026-11-21T08:23:46Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-76N9 の決まりを、これから流す型の整備に伝えるため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 型の整備の strategy に、文書に役割の割り当てを書かない決まりを足す
+    - field: description
+      from: ""
+      to: 第 3〜6 波と kata-slim-3 の strategy の段の説明に PJR-76N9 の決まりを足し、track を作り直す。sample と rulebook の作成標準にも足す
+    - field: input
+      from: ""
+      to: '["PJR-76N9 の決定（2026-11-21、indie）: 成果物と sample の本文に、文書の役割の割り当てと承認の進み具合を書かない。rulebook の「誰がどの利用場面で何を判断するか」は「どの利用場面で何を判断するための文書か」に直す。文書の中身として役割が要る型（RACI・体制など）は対象外","第 3 波（kata-wave-3）は 2026-11-21 から tsp-index で試しを流している。ほかの波の strategy はまだ無い"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-21"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-76N9"]'
+- v: 1
+  id: reg_15f33eff48874777b9c5b3eb077ad51c
+  ts: "2026-11-21T08:58:14Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: input
+      from: '["PJR-76N9 の決定（2026-11-21、indie）: 成果物と sample の本文に、文書の役割の割り当てと承認の進み具合を書かない。rulebook の「誰がどの利用場面で何を判断するか」は「どの利用場面で何を判断するための文書か」に直す。文書の中身として役割が要る型（RACI・体制など）は対象外","第 3 波（kata-wave-3）は 2026-11-21 から tsp-index で試しを流している。ほかの波の strategy はまだ無い"]'
+      to: '["PJR-76N9 の決定（2026-11-21、indie）: 成果物と sample の本文に、文書の役割の割り当てと承認の進み具合を書かない。rulebook の「誰がどの利用場面で何を判断するか」は「どの利用場面で何を判断するための文書か」に直す。文書の中身として役割が要る型（RACI・体制など）は対象外","第 3 波（kata-wave-3）は 2026-11-21 から tsp-index で試しを流している。ほかの波の strategy はまだ無い","2026-11-21、直した cnd-specdojo を grade すると pass 93 だったが、minor の指摘 7 件の多くが、概要に作成担当・確認者・最終判断者の役割を書く、Person の表に「判断・確認の責務」の列を足す、ready の前の確認と PO の承認記録を書く、を求めた。型の template（cnd-template の列と「検証・承認前の確認」の節）とカタログの `done_criteria` が役割と承認の記述を求めているため。この todo の範囲に、template・`done_criteria`・grade の観点を含める"]'
+  previous_event_id: reg_0b90c3bfcc674d7db1969dbe6bf63a55
+- v: 1
+  id: reg_5b8e9288a3a446138553df0202ec11d9
+  ts: "2026-11-22T13:25:54Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 完了条件を利用者の承認のもとで書く
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_15f33eff48874777b9c5b3eb077ad51c
+- v: 1
+  id: reg_cee243be86c648c5a8b524807623fafb
+  ts: "2026-11-22T13:26:02Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 範囲が strategy・標準・template・カタログ・観点にまたがるため
+  changes:
+    - field: difficulty
+      from: "-"
+      to: hard
+  previous_event_id: reg_5b8e9288a3a446138553df0202ec11d9
+- v: 1
+  id: reg_69e00f55fdbe453a9f9a1b5d6eb2fa92
+  ts: "2026-11-22T13:41:10Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_cee243be86c648c5a8b524807623fafb
+- v: 1
+  id: reg_581be9f3b3104627b7a50a04f6789c27
+  ts: "2026-11-22T13:53:26Z"
+  action: wait
+  actor: opus-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /unit/ tests/src/docs/yaml-tables.test.ts > typed YAML display pages > renders tables and the entire folded…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /unit/ tests/src/docs/yaml-tables.test.ts > typed YAML display pages > renders tables and the entire folded…"
+  previous_event_id: reg_69e00f55fdbe453a9f9a1b5d6eb2fa92
+- v: 1
+  id: reg_e74d1e6dc65c4c9ebdd5a0f996b31e5f
+  ts: "2026-11-22T14:05:43Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: waiting
+  to_status: waiting
+  reason: 2 回目の実行の完了条件を足す（統合の hook の失敗）
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_581be9f3b3104627b7a50a04f6789c27
+- v: 1
+  id: reg_59da6132c4df4c8fb221ee6a0d57aff0
+  ts: "2026-11-22T14:13:34Z"
+  action: start
+  actor: opus-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /unit/ tests/src/docs/yaml-tables.test.ts > typed YAML display pages > renders tables and the entire folded…"
+      to: "-"
+  previous_event_id: reg_e74d1e6dc65c4c9ebdd5a0f996b31e5f
+- v: 1
+  id: reg_7cbabce612ee4967a9e1c28706ea4f12
+  ts: "2026-11-22T14:22:54Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_59da6132c4df4c8fb221ee6a0d57aff0
+- v: 1
+  id: reg_bd797fdf72aa46e4af08f128d77cf2c3
+  ts: "2026-11-22T23:34:58Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分と個票の対応結果で確かめ、template の grade で 5 つが pass、残る major は範囲外と利用者が判断した（2026-11-23）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: 第 3 波の strategy・作成標準・template などに PJR-76N9 の決まりを足した。直した 6 つの template のうち 5 つが pass。sysd-critical-flows-template の major は 325Y の前からある問題として別の todo に分けた
+  previous_event_id: reg_7cbabce612ee4967a9e1c28706ea4f12

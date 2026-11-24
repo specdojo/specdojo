@@ -1,5 +1,4 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import config from "../vitest.config.js";
 import integrationConfig from "../vitest.integration.config.js";
 import unitConfig from "../vitest.unit.config.js";
 import { TEST_GIT_SETUP_FILE } from "./helpers/git-environment.js";
@@ -29,7 +28,16 @@ describe("vitest config", () => {
     expect(process.env.SPECDOJO_PROJECT).toBeUndefined();
   });
 
-  it("runs unit and integration projects with at most two workers", () => {
+  async function loadConfigWithMaxWorkers(value: string) {
+    // 設定は読み込みのときに VITEST_MAX_WORKERS を読むため、値を決めてから読み込み直す。
+    vi.stubEnv("VITEST_MAX_WORKERS", value);
+    vi.resetModules();
+    return (await import("../vitest.config.js")).default;
+  }
+
+  it("runs unit and integration projects with two workers by default", async () => {
+    const config = await loadConfigWithMaxWorkers("");
+
     expect(config).toMatchObject({
       test: {
         projects: [
@@ -44,6 +52,22 @@ describe("vitest config", () => {
         ],
       },
     });
+  });
+
+  it("uses VITEST_MAX_WORKERS for both projects when it is set", async () => {
+    const config = await loadConfigWithMaxWorkers("4");
+
+    expect(config).toMatchObject({
+      test: {
+        projects: [{ test: { maxWorkers: 4 } }, { test: { maxWorkers: 4 } }],
+      },
+    });
+  });
+
+  it("rejects a VITEST_MAX_WORKERS that is not a positive integer", async () => {
+    await expect(loadConfigWithMaxWorkers("0")).rejects.toThrow(
+      /VITEST_MAX_WORKERS must be a positive integer: 0/,
+    );
   });
 
   it("keeps the integration test timeout at 30 seconds", () => {

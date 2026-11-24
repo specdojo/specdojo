@@ -1,0 +1,19 @@
+The gate now ignores and deletes a blocked change-scope reservation when its item is already terminal. That stops a rejected item like SGFC from blocking a later item like YS9M. A new unit test file run passes (48/48 in `change-scope.test.ts`) and `tsc --noEmit` reports no errors. I did not run the full `lint`, `test:unit` and `lint:md` suites; the parent runner does that.
+
+**Approach:** the check happens when a reservation is looked at, not when the item changes status. A transition-side release would make `register` import `exec`, which creates the dependency loop the TypeScript rules forbid. Checking at lookup also works however the item was closed.
+
+**Code changes:**
+- `ChangeScopeGate` in `src/exec/run/change-scope.ts` takes an optional 4th constructor argument, `isTerminal`. In `tryAcquire`, a record that is blocked, has no live lock and belongs to a terminal item is deleted and skipped. Running reservations are never touched.
+- `src/exec/run/register-mode.ts` passes a check based on `TERMINAL_STATUSES_SET`, which covers `done`, `decided`, `rejected` and `deferred`. It returns false if the ticket can't be resolved, so an unknown item still blocks.
+- Schedule mode doesn't pass the check, so its behaviour is unchanged.
+
+**Tests:** two new cases in `tests/src/exec/run/change-scope.test.ts`. A terminal item's blocked reservation no longer blocks and its file is removed. A non-terminal blocked reservation still blocks.
+
+**Docs:**
+- `exec-operation-guide` section 1.4.2 now says how to check a leftover reservation and when to clear it.
+- The PJR-B6NS ticket's response section records the decision and reason, the test results, and the CHANGELOG note (Fixed, with draft wording). `CHANGELOG.md` itself is untouched.
+- I wrote the ticket's 作業内容 as the short summary section 5.4 and did not edit a row table. The ticket had none, so check this against the post-review rule that every row must be `done`.
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"終端項目の blocked 予約を tryAcquire で無視・削除するよう変更し、単体テスト2件・運用ガイド追記・個票の対応結果（CHANGELOG 文案含む）を記載した。","handoff":["方式は「予約を調べるときに終端の項目を読み飛ばして予約ファイルを削除」を採用。遷移側で解くと register が exec を import する循環になるため。","ChangeScopeGate に第4引数 isTerminal を追加。register-mode は個票の status と TERMINAL_STATUSES_SET で判定し、解決できなければ非終端として扱う。schedule 側は挙動不変。","CHANGELOG.md は未変更。個票 5.3 に区分 Fixed と文案を記載済み。","統合後、オーケストレーターが JSEY を流して確かめてから close する。"],"validations":[{"command":"npx vitest run tests/src/exec/run/change-scope.test.ts","status":"passed","summary":"48 tests passed"},{"command":"npx tsc --noEmit -p .","status":"passed","summary":"no type errors"}]}
+</specdojo_executor_evidence>

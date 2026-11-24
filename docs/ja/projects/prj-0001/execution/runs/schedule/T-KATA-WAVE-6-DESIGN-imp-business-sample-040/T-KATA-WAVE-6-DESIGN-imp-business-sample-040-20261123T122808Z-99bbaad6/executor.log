@@ -1,0 +1,23 @@
+`docs/ja/specdojo/rulebooks/imp-business-rulebook.md` を直しました。grade の指摘 10 件のうち、rulebook で直せる 8 件を反映しています。sample の修正が要る 2 件と、recipe・template の要否判断は申し送りに回しました。Prettier と markdownlint は通っています。それ以外の lint とテストは、この後で親 runner が実行します。
+
+**反映した指摘:**
+- **`F001`（未解決事項の判断者・期限）:** 「未解決事項」に「決定期限」と「担当（Role code）」を足しました。PJR-76N9 の決まりに従い、承認・留保・差し戻しの進み具合は本文に求めず、登録簿の個票で追う形にしています。
+- **`F002`（担当の書き方）:** 担当はメンバー定義の Role code で書き、個人名を書かないことを記述ガイドと禁止事項に入れました。
+- **`F003`（完了条件）:** 対応方針の項目ごとに「完了条件」を必須にしました。
+- **`F004`（変更要求との依存）:** Frontmatter の `based_on` に入力の変更要求 ID を並べるよう推奨 Frontmatter 項目に書きました。
+- **`F005`（登録簿への転記）:** 未解決事項を登録簿へ転記する条件と転記先（`question` / `risk` / `issue` / `decision`）の表を入れ、転記先の登録項目 ID を書くようにしました。
+- **`F006`（対応方針の値）:** 値を `実施` / `代替` / `見送り` の 3 つに限りました。
+- **`F008`（未解決事項の列）:** 「判断・対応への影響」の列は残し、必須の列として明記しました。いまの sample にはこの列がないので、sample 側で足す必要があります。
+- **`F009`（影響度と優先度）:** 「優先順位は影響度で決める」と定め、列名を「影響度」に揃えて「優先度」などの別名を禁止しました。
+
+**章立て:** `rulebook-authoring-standard` に合わせ、「本文構成（標準テンプレ）」を「本文要件」に改め、章ごとの必須の列の表を加えました。記述ガイドの各章には良い例・悪い例の表を置いています。書き方は、改訂済みの `imp-test-rulebook` に揃えました。
+
+**直さなかった箇所:** 全体方針にあった「業務担当者とプロジェクト管理者が合意できる粒度」は、PJR-76N9 の方針に合わないので削りました。ほかの記述は理由がないので変えていません。
+
+**申し送り:**
+- **sample の修正（`F007`・`F002`・`F008`・`F009`）:** この段では sample を変更しないため、次の段で直す必要があります。直す点は、影響度の尺度と集約規則の定義、「優先度」列を「影響度」へ、担当の個人名を Role code へ、対応方針の「完了条件」列、未解決事項の「判断・対応への影響」「当面の扱い」「転記先の登録項目」列です。
+- **recipe・template の要否（`F010`）:** Frontmatter の `recipe` と `template` は `undecided` のままです。ready にする前に、型の schedule の recipe・template の段で `not-needed` か整備対象かを人が決める必要があります。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"imp-business-rulebook を簡潔にし、grade の指摘 F001〜F006・F008・F009 を反映した。sample の修正（F007 ほか）と recipe・template の要否判断（F010）は申し送りに回した。","handoff":["F007・F002・F008・F009 は sample の修正が要る。この段では sample を変更しないため、次の段で直す: 3章に影響度の尺度と集約規則を定義する、5章の『優先度』列を『影響度』にし、担当の個人名を Role code にし、『完了条件』列を足す、6章に『判断・対応への影響』『当面の扱い』『転記先の登録項目』列を足す。","F010: Frontmatter の `recipe` と `template` は `undecided` のまま。ready にする前に、型の schedule の recipe・template の段で `not-needed` か整備対象かを人が決める。","F001 は PJR-76N9 に合わせて一部だけ反映した。決定期限と担当（Role code）は本文に求めるが、承認・保留・差し戻しの進み具合は登録簿の個票で追う。","章立てを rulebook-authoring-standard に合わせ、『本文構成（標準テンプレ）』を『本文要件』に改めた。書き方は改訂済みの imp-test-rulebook に揃えた。全体方針にあった『業務担当者とプロジェクト管理者が合意できる粒度』は PJR-76N9 の方針に合わないため削った。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/imp-business-rulebook.md","status":"passed","summary":"--write で整形し、表の列幅を揃えた"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/imp-business-rulebook.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>

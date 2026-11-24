@@ -1,4 +1,4 @@
-import { mkdirSync, mkdtempSync, renameSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readdirSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { Command } from "commander";
@@ -179,20 +179,50 @@ describe("exec run --auto --track", () => {
     expect(process.exitCode).toBe(1);
   });
 
-  it("retains the scope barrier when schedule preparation fails", async () => {
-    writeReady([first, second]);
-    vi.mocked(prepareSingleTask).mockResolvedValue("failure");
-    await runBatchMode({
-      project: "test",
-      track: selectedTrack,
-      parallel: "2",
-      unknownScope: "serialize",
-    });
-    expect(vi.mocked(prepareSingleTask).mock.calls.map(([task]) => task.id)).toEqual([first.id]);
-    expect(runPreparedTaskSafely).not.toHaveBeenCalled();
-    expect(output.join("")).toContain(`[scope] waiting: ${second.id}`);
-    expect(process.exitCode).toBe(1);
-  });
+  it.each([
+    { failure: "result", loop: false },
+    { failure: "throw", loop: false },
+    { failure: "result", loop: true },
+    { failure: "throw", loop: true },
+  ])(
+    "retains the scope barrier when schedule preparation fails ($failure, loop=$loop)",
+    async ({ failure, loop }) => {
+      writeReady([first, second]);
+      if (failure === "throw") {
+        vi.mocked(prepareSingleTask).mockRejectedValue(new Error("plan generation failed"));
+      } else {
+        vi.mocked(prepareSingleTask).mockResolvedValue("failure");
+      }
+      await runBatchMode({
+        project: "test",
+        track: selectedTrack,
+        parallel: "2",
+        unknownScope: "serialize",
+        loop,
+      });
+      expect(vi.mocked(prepareSingleTask).mock.calls.map(([task]) => task.id)).toEqual([first.id]);
+      expect(runPreparedTaskSafely).not.toHaveBeenCalled();
+      expect(output.join("")).toContain(`[scope] waiting: ${second.id}`);
+      expect(process.exitCode).toBe(1);
+      expect(
+        readdirSync(join(repo, "execution/exec/.locks/change-scopes")).filter((name) =>
+          /\.(json|lock)$/.test(name),
+        ),
+      ).toEqual([]);
+
+      // The failure barrier belongs to the finished run; a later run can prepare the next task.
+      process.exitCode = undefined;
+      writeReady([second]);
+      vi.mocked(prepareSingleTask).mockImplementation(async (task) => prepared(task));
+      await runBatchMode({ project: "test", unknownScope: "serialize" });
+      expect(vi.mocked(prepareSingleTask).mock.calls.map(([task]) => task.id)).toEqual([
+        first.id,
+        second.id,
+      ]);
+      expect(runPreparedTaskSafely).toHaveBeenCalledTimes(1);
+      expect(process.exitCode).toBeUndefined();
+    },
+  );
 
   it.each([
     { dryRun: true, parallel: "3", strategy: "critical-first", expected: [first, second] },

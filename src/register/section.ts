@@ -149,3 +149,39 @@ export function replaceTicketSection(
     beforeBody,
   };
 }
+
+/**
+ * `register add` の繰り返し指定 `--section` / `--section-file` を指定順に組にする。
+ * 数が合わない場合や空の値はエラーにする。
+ */
+export function pairSectionOptions(
+  names: readonly string[] | undefined,
+  files: readonly string[] | undefined,
+): { name: string; file: string }[] {
+  const sectionNames = names ?? [];
+  const sectionFiles = files ?? [];
+  if (sectionNames.length !== sectionFiles.length) {
+    throw new Error(
+      `--section and --section-file must be specified in pairs (got ${sectionNames.length} --section and ${sectionFiles.length} --section-file)`,
+    );
+  }
+  return sectionNames.map((rawName, index) => {
+    const name = rawName.trim();
+    const file = (sectionFiles[index] ?? "").trim();
+    if (name === "") throw new Error("Section name must not be empty");
+    if (file === "") throw new Error("Section file path must not be empty");
+    return { name, file };
+  });
+}
+
+/** 起票する個票の本文で、指定された章を順に差し替える。 */
+export function applyTicketSections(
+  content: string,
+  sections: readonly { name: string; content: string }[],
+): string {
+  let updated = content;
+  for (const section of sections) {
+    updated = replaceTicketSection(updated, section.name, section.content).content;
+  }
+  return updated;
+}

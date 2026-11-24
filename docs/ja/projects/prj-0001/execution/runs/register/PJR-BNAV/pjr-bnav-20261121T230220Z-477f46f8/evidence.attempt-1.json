@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-BNAV",
+  "run_id": "pjr-bnav-20261121T230220Z-477f46f8",
+  "stage": {
+    "role": "executor",
+    "actor": "sonnet-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-21T23:02:55.994Z",
+    "completed_at": "2026-11-21T23:04:46.449Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-bnav.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-bnav-faster-docs-dev-startup.md",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/.vitepress/kata-staging.ts",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/bin/specdojo-docs-site.js",
+      "status": "M"
+    },
+    {
+      "path": "tests/packages/docs-site/kata-staging.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/.vitepress/kata-staging-old.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-bnav-faster-docs-dev-startup.md",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/.vitepress/kata-staging.ts",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/bin/specdojo-docs-site.js",
+      "status": "M"
+    },
+    {
+      "path": "tests/packages/docs-site/kata-staging.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/.vitepress/kata-staging-old.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 6,
+    "summary": ".../pjr-bnav-faster-docs-dev-startup.md            | 31 ++++++---\n packages/docs-site/.vitepress/kata-staging.ts      | 80 ++++++++++++++++++----\n packages/docs-site/bin/specdojo-docs-site.js       | 49 ++++++++++++-\n tests/packages/docs-site/kata-staging.test.ts      | 63 ++++++++++++++++-\n 4 files changed, 198 insertions(+), 25 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx vitest run tests/packages/docs-site/kata-staging.test.ts",
+      "status": "passed",
+      "summary": "5 件通過"
+    },
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "エラー 0 件、警告 40 件（既存）"
+    },
+    {
+      "source": "executor",
+      "command": "npm run docs:build",
+      "status": "not_run",
+      "summary": "sandbox で実行しなかった"
+    }
+  ],
+  "final_message": "kata-staging の差分コピーと execution/ の除外、bin の generate コマンド、単体テスト、個票の更新は完了。docs:dev 全体の段ごとの時間測定と docs:build は sandbox で実行できず未実施。",
+  "completion_status": "incomplete",
+  "handoff": [
+    "`packages/docs-site/.vitepress/kata-staging-old.ts` は測定用の一時ファイルで、削除が拒否されたため中身を `export {};` にした。削除すること。",
+    "`docs:generate`・VitePress の起動・最初のページが開けるまでの時間は未測定。変更前後を同じ手順で測り、個票の対応結果へ追記すること。",
+    "`npm run docs:build` が通ることは未確認。execution/ の plan・result を複製から外したことで dead link が出ないか確かめること。",
+    "`bin generate` コマンドは構文チェックのみで、実行は未確認。",
+    "保護された設定の案: `package.json` の `docs:generate` を `specdojo-docs-site generate --skip-if-fresh` 経由にする案と、`.devcontainer/devcontainer.json` でツリーと `.vitepress/cache` を named volume に置く案。反映は利用者の承認のもと feature ブランチで行う。",
+    "CHANGELOG の文案は個票の 5.1 に記載済み。"
+  ],
+  "block_reason": "executor reported incomplete: kata-staging の差分コピーと execution/ の除外、bin の generate コマンド、単体テスト、個票の更新は完了。docs:dev 全体の段ごとの時間測定と docs:build は sandbox で実行できず未実施。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-BNAV/pjr-bnav-20261121T230220Z-477f46f8/executor.attempt-1.log",
+      "bytes": 4101,
+      "truncated": false
+    }
+  ]
+}

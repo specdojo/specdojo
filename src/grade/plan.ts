@@ -60,13 +60,18 @@ export function deterministicResults(
       }
     }
     if (viewpoint.id === "vp-qe-config-validity") {
+      // kata の sample は、sample-authoring-standard が未確定事項を _ASSUMPTION_ / _UNDECIDED_ で明示するよう求めるため、_TODO_ だけを未解決とする。
+      const isKata = target === "kata";
+      const placeholderPattern = isKata ? /_TODO_/ : /(?:_TODO_|_ASSUMPTION_)/;
       const placeholderLine = document.body
         .split("\n")
-        .findIndex((line) => /(?:_TODO_|_ASSUMPTION_)/.test(line));
+        .findIndex((line) => placeholderPattern.test(line));
       if (placeholderLine >= 0) {
         findings.push({
           severity: "major",
-          message: "未解決の _TODO_ / _ASSUMPTION_ が残っています。",
+          message: isKata
+            ? "未解決の _TODO_ が残っています。"
+            : "未解決の _TODO_ / _ASSUMPTION_ が残っています。",
           line: placeholderLine + 1,
         });
       }
@@ -75,6 +80,21 @@ export function deterministicResults(
     results.push({ id: viewpoint.id, level: cap, findings });
   }
   return results;
+}
+
+const OBSOLETE_KATA_PLACEHOLDER_MESSAGE = "未解決の _TODO_ / _ASSUMPTION_ が残っています。";
+
+// 旧い機械的な検査は kata でも _ASSUMPTION_ を major にした。その指摘を前回の指摘として渡すと
+// agent が同じ文言で再掲し続けるため、kata では渡さない。_TODO_ は現在の検査が改めて指摘する。
+function withoutObsoletePlaceholderFindings<
+  T extends { message: string; message_ja?: string | undefined },
+>(findings: readonly T[], target: string): T[] {
+  if (target !== "kata") return [...findings];
+  return findings.filter(
+    (finding) =>
+      finding.message !== OBSOLETE_KATA_PLACEHOLDER_MESSAGE &&
+      finding.message_ja !== OBSOLETE_KATA_PLACEHOLDER_MESSAGE,
+  );
 }
 
 function doneCriteriaPlanLines(
@@ -236,14 +256,16 @@ function renderGradePlanWithEmbedding(opts: RenderGradePlanOptions): {
   const metadata = document.data.specdojo as Record<string, unknown>;
   const viewpoints = agentViewpoints(opts.viewpoints, opts.target, metadata);
   const documentId = typeof metadata.id === "string" ? metadata.id : rel;
-  const priorFindings =
+  const priorFindings = withoutObsoletePlaceholderFindings(
     readGradeResult(
       gradeResultPathForDocument({
         documentPath: absolute,
         project: opts.projectId,
         resultsDirectory: opts.resultsDirectory,
       }),
-    )?.findings ?? [];
+    )?.findings ?? [],
+    opts.target,
+  );
   const taskHash = createHash("sha256").update(rel).digest("hex").slice(0, 12).toUpperCase();
   const taskId = `GRADE-${opts.target.toUpperCase()}-${taskHash}`;
   const references = (opts.references ?? []).map((reference) =>

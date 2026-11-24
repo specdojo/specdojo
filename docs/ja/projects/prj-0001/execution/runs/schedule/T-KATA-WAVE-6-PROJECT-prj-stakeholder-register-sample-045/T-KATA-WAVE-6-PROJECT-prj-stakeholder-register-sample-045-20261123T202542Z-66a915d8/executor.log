@@ -1,0 +1,21 @@
+recipe（`docs/ja/specdojo/recipes/prj-stakeholder-register-recipe.md`）を、指摘 3 件に合わせて直しました。変更は 3 か所で、rulebook と sample は触っていません。lint などの検査は親 runner が後で実行します。この段で実行したのは Prettier の整形確認だけで、通っています。
+
+3 件とも sample の書き方の食い違いを指していますが、この段では sample を直せません。そのため recipe 側では、同じ食い違いを書かせないための書き方を足しました。sample 自体はまだ直っていません。
+
+- **F001（家族利用者の試利用の時点）:** エンゲージメント方針の問いを書き換えました。「影響度/関心度分析とコミュニケーション要件に書いた合意の時点（リリース前の試利用など）に間に合うか」を確かめる問いです。深掘り手順のリリース前後の確認はそのまま残しています。
+- **F002（「週次相談」を何度も書いている）:** エンゲージメント方針のコツを 2 つ直しました。
+  - 節目がない関与は、期限に「設計方針の確定まで」のような関与を終える条件を書く。
+  - 会議の日時や頻度は他の表に繰り返さず、コミュニケーション要件の「計画への反映」の 1 か所だけに書く。rulebook の禁止事項「詳細な会議運営・配信計画の重複管理」に合わせた形です。
+- **F003（承認者が「-」）:** 見直し条件のコツを書き直しました。見直す人が自分で承認してよいのは、その役割が見直す内容を最終判断する場合だけです。例は、目的・スコープの変更を `PO` が見直す場合です。そのときも承認者欄に役割名を書きます。
+
+PJR-76N9 の決まりで外すべき問い（文書の役割の割り当てや承認の進み具合を書かせるもの）は、recipe にもともとありませんでした。
+
+**残っていること:** sample の 3 か所は、別の sample 修正の段で直す必要があります。
+
+- 家族利用者の関与方針の「リリース後に試利用させる」
+- 「週次相談」が何度も出てくること
+- 目的・スコープ変更の行の承認者が「-」になっていること
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"recipe の 3 か所を直し、F001〜F003 を recipe 側で解消した（エンゲージメント方針の問いとコツ、見直し条件のコツ）。rulebook と sample は変更していない。","handoff":["sample（`docs/ja/specdojo/samples/prj-stakeholder-register-sample.md`）は未修正。次の sample 修正の段で直す: `STH-FAMILY-USER` の関与方針「リリース後に試利用させる」をリリース前の試利用に合わせる（F001）／「週次相談」の繰り返しをコミュニケーション要件の「計画への反映」1 か所に絞り、関与方針の期限を節目か関与を終える条件で書く（F002）／見直し条件の目的・スコープ変更行の承認者「-」を `PO` に直す（F003）。","grade の finding の行番号（60・64・87）は今の recipe の行（69・73・96）とずれている。前の版を評価したものとみて、anchor の文言で場所を突き合わせた。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/recipes/prj-stakeholder-register-recipe.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更は recipe のみで、plan・result・個票を変更していないため"}]}
+</specdojo_executor_evidence>

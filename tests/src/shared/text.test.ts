@@ -3,6 +3,8 @@ import {
   escapeMarkdownTableCell,
   escapeRegExp,
   redactSensitiveText,
+  unescapeBackticksWhenUniform,
+  unescapeMarkdownCell,
 } from "../../../src/shared/text.js";
 import { sensitiveTextCases } from "../../fixtures/sensitive-text.js";
 
@@ -86,5 +88,35 @@ describe("redactSensitiveText", () => {
     "password=[REDACTED] api_key=[REDACTED]",
   ])("keeps non-secrets and already redacted text: %s", (input) => {
     expect(redactSensitiveText(input)).toBe(input);
+  });
+});
+
+describe("unescapeBackticksWhenUniform", () => {
+  it("restores backticks when every backtick is escaped", () => {
+    const actual = unescapeBackticksWhenUniform("\\`npm test\\` を実行した");
+
+    expect(actual).toBe("`npm test` を実行した");
+  });
+
+  it("keeps text unchanged when a bare backtick is mixed in", () => {
+    const text = "`a\\` と \\`b\\`";
+
+    expect(unescapeBackticksWhenUniform(text)).toBe(text);
+  });
+
+  it("keeps text without escaped backticks unchanged", () => {
+    expect(unescapeBackticksWhenUniform("`code` のまま")).toBe("`code` のまま");
+  });
+});
+
+describe("unescapeMarkdownCell", () => {
+  it("restores underscores, asterisks and pipes escaped for a table cell", () => {
+    const actual = unescapeMarkdownCell("frontend\\_test\\_note.md と a\\*b と c\\|d");
+
+    expect(actual).toBe("frontend_test_note.md と a*b と c|d");
+  });
+
+  it("keeps a title without escapes unchanged", () => {
+    expect(unescapeMarkdownCell("docs/test_note.md")).toBe("docs/test_note.md");
   });
 });

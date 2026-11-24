@@ -137,11 +137,12 @@ export function repoRelativePath(repoRoot: string, path: string): string {
 // register titles are free text, so clip the subject instead of failing the commit or merge.
 const COMMIT_SUBJECT_MAX_LENGTH = 100;
 
-export function commitSubject(prefix: string, title: string): string {
+export function commitSubject(prefix: string, title: string, suffix = ""): string {
   const flat = title.replace(/\s+/g, " ").trim();
   const subject = `${prefix}${flat}`;
-  if (subject.length <= COMMIT_SUBJECT_MAX_LENGTH) return subject;
-  return `${subject.slice(0, COMMIT_SUBJECT_MAX_LENGTH - 1)}…`;
+  if (subject.length + suffix.length <= COMMIT_SUBJECT_MAX_LENGTH) return `${subject}${suffix}`;
+  // Clip the title, not the suffix, so the run number always survives.
+  return `${subject.slice(0, COMMIT_SUBJECT_MAX_LENGTH - suffix.length - 1)}…${suffix}`;
 }
 
 // 統合段（commit → merge → worktree 撤去）の進捗を pipeline-state へ記録する。Schedule は

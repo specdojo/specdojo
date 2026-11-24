@@ -1,0 +1,10 @@
+`docs/ja/specdojo/samples/mip-index-sample.md` に冗長箇所の整理を 2 件入れました。意味と必須情報（成功条件、GO/NO-GO、ロールバック方針）は変えていません。`lint:md` などの静的検査は実行しておらず、親 runner の検証に任せます。result は編集していません。
+
+- **前提・制約の対象外の行:** 仕入先連携・本格会計・過去履歴の電子化の列挙は、「移行対象一覧（スコープ/非対象）」と重複していました。そこで列挙をやめ、同章への参照に置き換えました（`reference`）。
+- **ロールバック方針の箇条書き:** GO1〜GO3 の扱いはカットオーバー表の「失敗時の扱い」列と重複していました。そこで 2 項目にまとめました（`merge`）。1 項目目は「表のとおり、延期時は店主代表が切替日を決め直す」、2 項目目は「並行記録中はノートが正本」です。表にない情報はどちらも残しています。
+
+`mip-index-rulebook`（`mip-index-sample` の rulebook）の宣言済み Kata（`recipe` と `template` は `_MISSING_`）から原因の根拠を示せないため、原因はすべて `document` としました。上記以外の候補（フェーズ表と成功条件の完了条件の対応など）は、判定に必要な内容のため `retain` としました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"mip-index-sample の冗長 2 箇所を参照置換・統合で整理し、意味は維持した。","handoff":[],"condense_records":[{"location":"2. 前提・制約 の対象外の列挙","category":"canonical-restatement","action":"reference","reason":"対象外の範囲は 4. 移行対象一覧（スコープ/非対象）に同内容があり、参照に置き換えても情報は欠けない","cause":{"type":"document"}},{"location":"8. カットオーバー概要 のロールバック方針の 1・2 項目目","category":"table-prose","action":"merge","reason":"GO1〜GO3 の失敗時の扱いは表の失敗時の扱い列と重複。表にない情報（切替日の決め直し、ノートが正本で記録が失われないこと）だけを残した","cause":{"type":"document"}},{"location":"3. 移行方式と期間 のフェーズ表の完了条件と 5. 成功条件の基準","category":"repetition","action":"retain","reason":"フェーズの完了条件と判定者付きの受入基準で役割が異なり、判定に必要なため残した","cause":{"type":"document"}}],"validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する検証のため、executor では実行していない"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,81 @@
+## レビュー結果: T-KATA-WAVE-3-etc-index-sample-090（完成版レビュー）
+
+推奨 verdict は **`complete-with-findings`** です。完了条件 DC-001〜DC-005 はすべて満たしています。grade の minor finding が sample に 5 件、rulebook に 4 件残っていますが、いずれも完了を妨げません。成果物と result は変更していません。
+
+### 1. 評価結果の確認
+
+鮮度は 2 回確認し、どちらも最新でした。1 回目は着手時、2 回目は verdict を決める直前です。
+
+- 実行したコマンド（出力なし、exit=0）:
+  - `npx specdojo grade list --target kata --path docs/ja/specdojo/samples/etc-index-sample.md --changed-only`
+  - `npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/etc-index-rulebook.md --changed-only`
+- 同じ 2 ファイルで `--incomplete` も実行しました。こちらも出力なし、exit=0 です。
+- `sha256sum` で求めた値がサイドカーの `content_hash` と一致しました。
+  - sample: `a47ec0aa…e8dd`
+  - rulebook: `c2bbdfbd…f1fb`
+- review 中に成果物は変わっていません。`git status` に出たのは runner の `pipeline-state.json` だけでした。
+
+| 評価対象 | verdict | score | blocker | major | minor | note |
+| --- | --- | --- | --- | --- | --- | --- |
+| sample | `pass` | 94 | 0 | 0 | 5 | 0 |
+| rulebook | `pass` | 96 | 0 | 0 | 4 | 0 |
+
+型を整える schedule の追加条件は、すべての型に最新の `--target kata` の `pass` があることです。今回はこの条件を満たしています。
+
+### 2. 判断根拠
+
+- **DC-001（rulebook の章立てと必須の表）:** sample は rulebook「本文構成（標準テンプレ）」の 9 章を同じ名前・同じ順で持っています。
+  - 必須の表もそろっています。「対象外・除外理由（共通）」の 4 列表、分配表の 5 列、ケース表の共通カラム 10 列です。
+  - F003（観点の型の表に非機能の型がない）は grade が minor としたもので、章や必須の表の欠落ではありません。
+- **DC-002（Sample 記述標準と駄菓子屋の文脈）:** 業務文脈は駄菓子屋きぬやの販売管理システムでそろっています（店番・店主代表、レシート印刷、つけ、在庫）。
+- **DC-003（禁止事項）:** どれにも当たりません。
+  - 個別ケースはカラムの記入例の 1 行だけです。
+  - 実接続とスタブの役割を分け、実接続を無条件の必須にしていません。
+  - 手順は最小限で、クリック操作の列挙はありません。
+  - 内部の結合（業務記録 DB）は itc 側へ回しています。
+- **DC-004（Frontmatter と H1）:**
+  - `type: test` は rulebook の `deliverable_type: test` と一致します。
+  - H1「外部結合テストカタログ: 概要（駄菓子屋きぬや 販売管理システム）」は rulebook の定める形式どおりです。
+  - `based_on` に `specdojo:tsp-index-sample` があります。
+- **DC-005（数値や状態で判定できる合格基準）:** 「外部結合テスト共通の境界/依存/環境の扱い」の章に次の内容があります。
+  - 応答待ちの上限: 印刷は 10 秒、保管サービスは 30 秒
+  - 再送: 印刷は自動再送なし、保管サービスは 2 回（間隔 5 秒・10 秒）で、同じコピー識別子を使う
+  - 冪等性の観測結果: 販売記録が 1 件、印刷要求が 1 回のまま
+  - 状態による例: 「『復元できるコピーなし』と通知」
+- **先行する edit の実行記録（T-KATA-WAVE-3-etc-index-sample-080、condense）:**
+  - 変更は sample だけで、対象外の変更は混ざっていません。
+  - evidence では prettier、markdownlint、`lint:md`、`lint:fm`、`lint:mermaid`、`lint:d2`、`validate:schema`、`test:unit`、`test:integration`、`docs:build` がすべて passed でした。`not_applicable` には理由が書かれています。
+  - grade の実施（2026-11-22）はこの edit の完了（2026-11-21）より後で、ハッシュも一致しています。
+- `prj-overview` を読み、ここに示した判断軸と食い違う点がないことを確かめました。
+
+### 3. 完了を妨げない理由と改善指示
+
+finding はすべて minor です。必須の章や表の欠落でも、禁止事項への抵触でもありません。
+
+**sample の finding**
+
+- F001・F002: 「メモ / 将来課題」の各論点に、登録簿の引き継ぎ先（PJR の ID）を書き足します。
+- F003: 観点の型の表に「ET で扱う範囲の非機能」の行を足すか、該当しない理由を書きます。
+- F004: トレース列の記入例を、追跡できる ID にします。
+- F005: 分割を見直す閾値の書き方を「15 を超える」から「15 以上・50 行以上」に直し、rulebook とそろえます。
+
+**rulebook の finding（sample の完了条件の外）**
+
+- F001・F003: `＜term＞` の命名根拠を、dct の `_TARGET_` note とそろえます。
+- F002: `recipe`・`template` が `undecided` のままで、`target_format` もありません。型の組の整備として残っています。
+- F004: 呼び名を dct の name とそろえます。
+
+**型そのものの整備:** recipe が `_MISSING_` です。recipe と template をどう整えるかは、型の schedule で扱う必要があります。
+
+### 4. approach（fully-guided）に応じた確認
+
+確認には宣言された文書だけを使いました。評価結果、sample、rulebook、`based_on`（tsp-index-sample、ifd-sample）、`prj-overview`、実行記録 080 です。磨き込みの内容は、080 の condense で sample に入っていることを確かめました。
+
+### 5. 確認できなかった範囲
+
+- `based_on` にある tsp-index-sample と ifd-sample の本文は読んでいません。そのため、F001 が挙げる `kinuya:pjr-i004` との関係は確かめていません。
+- 080 より前の edit（040・050）の実行記録は確認していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"推奨 verdict は complete-with-findings。sample（pass/94、minor 5）と rulebook（pass/96、minor 4）の評価結果はどちらも最新（grade list --changed-only と --incomplete の出力なし、sha256 が content_hash と一致、verdict を決める直前に再確認）。DC-001〜DC-005 を満たす: 9 章と必須の表がそろう、駄菓子屋きぬやの文脈、禁止事項に当たらない、`type: test`・H1 の形式・`based_on` に tsp-index-sample、応答待ち 10 秒/30 秒・再送 2 回・販売記録 1 件・印刷要求 1 回という数値と状態の合格基準。先行する edit 080（condense）は sample だけを変更し、検証はすべて passed。finding はすべて minor で、必須要素の欠落や禁止事項への抵触ではないため完了を妨げない。確認できなかった範囲: `based_on` の tsp-index-sample・ifd-sample の本文（F001 が挙げる `kinuya:pjr-i004` との関係は未確認）、080 より前の edit（040・050）の実行記録。","handoff":["sample の改善指示: F001・F002 で「メモ / 将来課題」の各論点に登録簿の引き継ぎ先（PJR の ID）を書き足す。F003 で観点の型の表に「ET で扱う範囲の非機能」の行を足すか、該当しない理由を書く。F004 でトレース列の記入例を追跡できる ID にする。F005 で分割を見直す閾値を「15 以上・50 行以上」に直し rulebook とそろえる","rulebook の改善指示（sample の完了条件の外）: F001・F003 で `＜term＞` の命名根拠を dct の `_TARGET_` note とそろえる。F002 で `recipe`・`template` が `undecided` のまま、`target_format` がない点を型の組として整える。F004 で呼び名を dct の name とそろえる","recipe が `_MISSING_`。recipe と template をどう整えるかは型の schedule で扱う必要がある"],"validations":[{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/etc-index-sample.md --changed-only","status":"passed","summary":"出力なし exit=0（評価結果は最新）。verdict を決める直前の再実行も同じ"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/samples/etc-index-sample.md --incomplete","status":"passed","summary":"出力なし exit=0（評価パイプラインは完了済み）"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/etc-index-rulebook.md --changed-only","status":"passed","summary":"出力なし exit=0（評価結果は最新）。verdict を決める直前の再実行も同じ"},{"command":"npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/etc-index-rulebook.md --incomplete","status":"passed","summary":"出力なし exit=0"}]}
+</specdojo_executor_evidence>

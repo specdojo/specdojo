@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/dss-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 100
-graded_at: "2026-11-11T04:01:46.663Z"
-graded_by: sol-review-executor
-content_hash: 7b4ea6323a1612f967f891d49f25fb8354aa3d6dd629a560ae462c0fe9a0fddd
+score: 99
+graded_at: "2026-11-23T17:43:47.336Z"
+graded_by: sonnet-review-executor
+content_hash: d1fb217ab35efdb382e2f645bd239c4d30e1091ca42e23b34125ef0fe74cc8d7
 categories:
   purpose:
     score: 100
@@ -21,7 +21,7 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 92
   implementation:
     score: 100
   quality:
@@ -87,8 +87,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -104,6 +104,13 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 1
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 124
+    anchor: "- 悪い例: 「失敗時は赤くし、一定時間後に消す。」（色依存で回復前に情報を失う）"
+    message: 「決まり」と「規則」が列名などで併用されており、読み手が迷う余地が残っているため、列名を「規則」に統一するか、使い分けを一文で補う。
+    message_ja: 「決まり」と「規則」が列名などで併用されており、読み手が迷う余地が残っているため、列名を「規則」に統一するか、使い分けを一文で補う。

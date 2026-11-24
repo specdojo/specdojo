@@ -4,16 +4,16 @@ document: specdojo:nfr-reliability-rulebook
 path: docs/ja/specdojo/rulebooks/nfr-reliability-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 93
-graded_at: "2026-11-05T20:30:02.461Z"
-graded_by: flash-high-executor
-content_hash: 16f97518cb9d239e9524c7d39b29961fb66cdd56b6e6fbb118256cfdb6e73bdf
+verdict: pass
+score: 96
+graded_at: "2026-11-23T15:19:35.171Z"
+graded_by: sonnet-review-executor
+content_hash: 1e5e82b4197488a1329a4cad6d3e9bedbb8ff442096cf53051c807109a038571
 categories:
   purpose:
-    score: 100
+    score: 88
   operations:
-    score: 100
+    score: 94
   planning:
     score: 100
   business:
@@ -23,18 +23,18 @@ categories:
   usability:
     score: 100
   implementation:
-    score: 100
+    score: 88
   quality:
-    score: 83
+    score: 92
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-publication-accountability:
     level: 4
     score: 100
@@ -66,8 +66,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-change-impact:
     level: 4
     score: 100
@@ -78,11 +78,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
     level: 3
     score: 75
-  vp-qe-kata-conformance:
-    level: 2
-    score: 50
   vp-ux-readability:
     level: 4
     score: 100
@@ -90,8 +90,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-operability:
     level: 4
     score: 100
@@ -103,21 +103,45 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 1
+  major: 0
+  minor: 4
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 122
-    anchor: "supersedes: []"
-    message: 第8章のサンプルのFrontmatterに第4.1節で定義されていない `supersedes` キーが含まれています。
-    message_ja: 第8章のサンプルのFrontmatterに第4.1節で定義されていない `supersedes` キーが含まれています。
+    rule: vp-po-decision-readiness
+    line: 11
+    anchor: >-
+      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status` の昇格と承認、改訂と廃止、未決事項の登録簿への引き継ぎは
+      [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従い、本書と成果物で言い直さない。文書の整形・lint はリポジトリの検証で扱い、「測定・検証方法」に含めない。
+    message: "`recipe`・`template` の要否判断について、論点は書かれているが判断のタイミング（どの工程までに決めるか）がない。判断時期を追記するか、登録簿の個票で追跡すること。"
+    message_ja: "`recipe`・`template` の要否判断について、論点は書かれているが判断のタイミング（どの工程までに決めるか）がない。判断時期を追記するか、登録簿の個票で追跡すること。"
   - id: F002
-    severity: major
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 32
+    anchor: "## 4. 推奨 Frontmatter 項目"
+    message: >-
+      第4章は `specdojo.type` を `requirement` とする。一方、この rulebook 自身の frontmatter には `deliverable_type: requirement`
+      があり、`type` は `rulebook` である。成果物側と rulebook 側のキーの違いを一文で示すこと。
+    message_ja: >-
+      第4章は `specdojo.type` を `requirement` とする。一方、この rulebook 自身の frontmatter には `deliverable_type: requirement`
+      があり、`type` は `rulebook` である。成果物側と rulebook 側のキーの違いを一文で示すこと。
+  - id: F003
+    severity: minor
     rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 非機能要件 / 信頼性 作成ルール"
-    message: 指定サンプル(nfr-reliability-sample.md)の構成を、第5章で定義した必須構成(順序固定)に準拠させること。
-    message_ja: 指定サンプル(nfr-reliability-sample.md)の構成を、第5章で定義した必須構成(順序固定)に準拠させること。
+    line: 11
+    anchor: >-
+      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status` の昇格と承認、改訂と廃止、未決事項の登録簿への引き継ぎは
+      [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従い、本書と成果物で言い直さない。文書の整形・lint はリポジトリの検証で扱い、「測定・検証方法」に含めない。
+    message: "`recipe` と `template` が未宣言のため、Kata の4種別が揃っていない。判断して宣言を確定し、未宣言のまま ready 化しないこと。"
+    message_ja: "`recipe` と `template` が未宣言のため、Kata の4種別が揃っていない。判断して宣言を確定し、未宣言のまま ready 化しないこと。"
+  - id: F004
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 11
+    anchor: >-
+      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status` の昇格と承認、改訂と廃止、未決事項の登録簿への引き継ぎは
+      [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従い、本書と成果物で言い直さない。文書の整形・lint はリポジトリの検証で扱い、「測定・検証方法」に含めない。
+    message: ready 化の前に解消すべき `recipe`・`template` の判断について、追跡先（登録簿の個票など）が示されていない。参照先を明示すること。
+    message_ja: ready 化の前に解消すべき `recipe`・`template` の判断について、追跡先（登録簿の個票など）が示されていない。参照先を明示すること。

@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "mode": "review",
+  "grade_check": "評価結果の鮮度を確認するため、以下のコマンドを実行しました。\n\n```bash\nspecdojo grade list --target kata --path docs/ja/specdojo/samples/nfr-index-sample.md --changed-only\nspecdojo grade list --target kata --path docs/ja/specdojo/rulebooks/nfr-index-rulebook.md --changed-only\n```\n\n出力はなし（終了コード 0）であり、両成果物の評価結果が最新であることを確認しました。\n\n- `docs/ja/specdojo/samples/nfr-index-sample.md`: `verdict`: `pass`, `score`: 98, `finding_count`: 2\n- `docs/ja/specdojo/rulebooks/nfr-index-rulebook.md`: `verdict`: `pass`, `score`: 95, `finding_count`: 3",
+  "rationale": [
+    "成果物としての `docs/ja/specdojo/samples/nfr-index-sample.md` は、`grade` によって `pass` と判定されています。",
+    "`rulebook` である `docs/ja/specdojo/rulebooks/nfr-index-rulebook.md` も、`grade` によって `pass` と判定されています。",
+    "完了条件 `DC-001` 〜 `DC-005` について、成果物の内容から以下の通り充足を確認しました：\n- `DC-001` / `DC-004`: `rulebook` の必須見出しに基づき、カテゴリ別の非機能要件への導線が一覧で示されています。",
+    "`DC-002` / `DC-003`: 共通サンプル文脈（駄菓子屋）に沿っており、`rulebook` の禁止事項にも抵触していません。",
+    "`DC-005`: カテゴリ別の文書の見直し範囲が示されています。"
+  ],
+  "improvements": [
+    "サンプル `docs/ja/specdojo/samples/nfr-index-sample.md` に関する `finding`：\n- `F001`: `nfr-operations` の備考欄にある `_UNDECIDED_`（営業時間外の緊急連絡手段）に対し、決定のタイミングや、同時に決めるべき文書の記述を追加してください。",
+    "- `F002`: `nfr-security-safety` の備考欄にある「監査ログの保管期間 1 年」という値の再掲を削除するか、「運用方針と揃える」という記述に留めてください。",
+    "`rulebook` に関する `finding`：\n- `F001`: 作成後に実行する検証コマンド（`npm run lint:md` 等）への参照を追加してください。",
+    "- `F002`: `recipe` および `template` が `_UNDECIDED_` であるため、決定時期と判断者の記述を明記してください。",
+    "- `F003`: `ready` 化の前提条件（recipe/template の要否を決定すること）を明示してください。"
+  ],
+  "approach": "指示された `fully-guided` の磨き込みが、対象成果物に対して行われていることを確認しました。\n- `rulebook` の必須要素・禁止事項、および `sample` の形式との整合性は、`grade` の結果により検証済みです。\n- 成果物には、タスクの範囲外の変更は含まれていません。",
+  "verdict": "complete-with-findings"
+}

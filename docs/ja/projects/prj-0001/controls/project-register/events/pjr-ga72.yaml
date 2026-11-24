@@ -1,0 +1,117 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_5b0d428eb2584f7cbe959e8103077ab6
+  ts: "2026-11-23T13:17:00Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 前提を確かめる specdojo doctor を作る
+    - field: description
+      from: ""
+      to: Node・git・agent の CLI、Dev Container のときは Docker と Dev Container CLI、tmux のときは tmux を確かめ、足りないものと入れ方を出す
+    - field: input
+      from: ""
+      to: '["利用者の依頼（2026-11-23）: 多くの人に使ってもらうため、Dev Container・Dev Container ＋ tmux・mac・mac ＋ tmux・WSL・WSL ＋ tmux のパターンですぐに使えるようにする","v0.10.0 に入れる。実装はオーケストレーターが会話の中で行う（利用者の指定）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: commit_type
+      from: ""
+      to: feat
+    - field: commit_scope
+      from: ""
+      to: cli
+- v: 1
+  id: reg_7d1547be98234d3f85e9ea0ce4a467ee
+  ts: "2026-11-23T13:17:20Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_5b0d428eb2584f7cbe959e8103077ab6
+- v: 1
+  id: reg_44083719ebdf4974b856035a73d6520d
+  ts: "2026-11-23T13:43:22Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "作業内容" updated
+  changes:
+    - field: section
+      from: ""
+      to: 作業内容
+  previous_event_id: reg_7d1547be98234d3f85e9ea0ce4a467ee
+- v: 1
+  id: reg_6f7e88dd18a64199bbbb738f88e58409
+  ts: "2026-11-23T13:43:28Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "対応結果" updated
+  changes:
+    - field: section
+      from: ""
+      to: 対応結果
+  previous_event_id: reg_44083719ebdf4974b856035a73d6520d
+- v: 1
+  id: reg_9a46352e8f714e4aac8ba80469604281
+  ts: "2026-11-23T13:43:34Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "関連ドキュメント" updated
+  changes:
+    - field: section
+      from: ""
+      to: 関連ドキュメント
+  previous_event_id: reg_6f7e88dd18a64199bbbb738f88e58409
+- v: 1
+  id: reg_fa1a501fc7534b338705a28b1f6e161c
+  ts: "2026-11-23T13:50:31Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: done
+  reason: オーケストレーターが会話の中で実装し、統合の後に空のリポジトリで確かめた（利用者の指定）
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: specdojo doctor を足し、パターンに応じた前提を確かめて、足りないものの入れ方を出すようにした
+  previous_event_id: reg_9a46352e8f714e4aac8ba80469604281

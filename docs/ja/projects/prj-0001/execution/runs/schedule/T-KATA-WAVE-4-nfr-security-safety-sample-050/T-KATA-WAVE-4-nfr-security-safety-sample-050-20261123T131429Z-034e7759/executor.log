@@ -1,0 +1,28 @@
+`docs/ja/specdojo/samples/nfr-security-safety-sample.md` を書き直しました。38 行の抽象的なキーワードの並びだったものを、駄菓子屋きぬやの販売管理システムで値を埋めた完成例にしています。prettier で整形し、markdownlint は 0 件でした。それ以外の検査は親 runner が実行します。result ファイルと rulebook には手を入れていません。
+
+**直した内容**
+
+- **構成**: rulebook が順序固定で定める 6 章に揃えました（概要（対象・目的）／適用範囲・脅威前提／機密性・安全性要件一覧／測定・検証方法／例外運用／関連ドキュメント導線）。各表の列も rulebook の指定どおりです。これで F017・F019 に対応します。
+- **frontmatter と H1**: frontmatter に `part_of`（`nfr-index`）と `based_on` を足しました（F018）。H1 の相対パスの Markdown リンクはやめ、「handbook の共通方針」という特定できない参照も削りました（F020・F022）。
+- **概要**: 守る対象（顧客の氏名とつけ残高、販売・在庫の記録、価格マスタ）と防ぐ事象を書き、プロジェクト概要の目的に結び付けました（F001・F002・F008）。
+- **適用範囲**: 想定脅威・対象境界・適用規制（個人情報保護法）・対象外を表にしました。さらに主体ごとの「許可する操作／許可しない操作」の表を置き、「権限外」がどの操作を指すか特定できるようにしました（F009・F010・F011）。
+- **要件一覧と測定方法**: 要件を 12 行に分け（`nfr-sec-001`〜`012`）、それぞれの判定基準を件数・時間・期限で書きました。測定・検証方法も要件ごとに、測定方法・判定時期・検証先を書いています（F013・F015・F016・F021）。
+- **値の出どころ**: 値は既存の sample から取っています。10 分の自動ログアウト、当日中の剥奪、紛失時は 15 分以内の停止、監査ログの 1 年保管、緊急権限の 24 時間失効は `opd-index` / `opd-access-control` の sample から取りました。認証値の秘匿（`scp-SEC-001`）と公開資料の制約（ACD-C03）も既存 sample の記述に合わせています。
+- **未決の値**: 脆弱性の修正期限は利用者が決める値なので推測せず `_UNDECIDED_` とし、決まるまでの暫定の扱いを備考に書きました。
+- **例外運用**: 記入例として、例外を 1 行（`nfr-sec-ex-001`）作りました（F023）。
+
+**この sample には足さなかった指摘**
+
+F004・F005・F007・F024 は、文書の責任者・役割の割り当て・報告先・工数を書くよう求めています。これらは PJR-76N9 と sample 記述標準が本文への記載を禁じている内容なので、足しませんでした。F003・F006・F014 も、未決事項に責任者を付けることを求める部分は同じ理由で対象外です。下流文書との関係は関連ドキュメント導線の表で代わりに示しています。
+
+**判断をお願いしたいこと**
+
+1. **例外運用の例**: 例外の例は、自動ログアウトを 20 分にする内容で、期限は初期リリースの 30 日後、承認者は店主代表です。ただ `opd-access-control` の sample は 10 分と定めており、これと食い違います。例として残すか、「なし」にするか、別の例に替えるかを決めてください。
+2. **脆弱性の修正期限**: `nfr-sec-012` の日数は `_UNDECIDED_` のままです。`nfr-index` sample の機密性の行と、`sac-store-sales` 側の基準も合わせて決める必要があります。
+3. **独自に足した要素**: 主体の表に、`opd-access-control` にない要素を 2 つ足しました。店番が許可されない操作としての「顧客情報の出力」と、「本部連携（外部システム）」の行です。運用方針の sample にも反映するかを決めてください。
+4. **存在しない文書の参照**: 受入条件の `sac-store-sales` と、`opr-access-control` の手順はまだ sample がないため、バッククォートで仮置きしています。
+5. **関連 sample の作り直し**: `opr-access-control-sample` は役割名が共通サンプル文脈と合っていません（Ops Lead 等）。また、同じ型の `nfr-*` sample のうち 6 本は、この sample の修正前と同じ薄い形のままです。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"nfr-security-safety-sample を rulebook の順序固定 6 章（概要・適用範囲と脅威前提・要件一覧 5 列・測定と検証方法・例外運用・関連導線）で駄菓子屋きぬやの完成例に再構成した。主体ごとの権限表、要件 12 行（`nfr-sec-001`〜`012`、件数・時間・期限の判定基準）、例外 1 行を追加し、`part_of` / `based_on` を付けて H1 の相対リンクと特定できない handbook 参照を削除した。値は opd-index・opd-access-control・sysd-cross-cutting-policy・ACD の既存 sample に揃え、脆弱性の修正期限は推測せず `_UNDECIDED_` とした。役割の割り当て・承認者・報告先を求める finding（F004・F005・F007・F024 と F003・F006・F014 の該当部分）は PJR-76N9 と sample 記述標準に従い本文には足さなかった。","handoff":["F004・F005・F007・F024 と、F003・F006・F014 の責任者・役割を求める部分は、文書の役割の割り当て・承認・報告先を本文へ書くよう求めている。PJR-76N9 と sample-authoring-standard の記述ガイドが禁じているため本文には足さなかった。下流との依存は関連ドキュメント導線の表で示している。rulebook 側の変更案: 例外運用の `承認者` 列は例外を認める業務上の権限者であり、文書の承認とは別だと sample でも読み取れるよう、rulebook の記述ガイドの例を維持する（変更は不要）。","利用者が決める値: `nfr-sec-012` の脆弱性の修正期限（CVSS 7.0 以上を公表から何日以内に直すか）を `_UNDECIDED_` のままにした。決めたら nfr-index sample の機密性の行と `sac-store-sales` の基準もそろえる。","`nfr-sec-ex-001` は記入例として、自動ログアウトを 20 分に緩める例外を置いた（期限は初期リリースの 30 日後、承認者は店主代表）。opd-access-control sample の 10 分と食い違う例外になるため、例として残すか「なし」や別の例に替えるかを判断してほしい。","主体の表で opd-access-control sample にない要素として、店番の「顧客情報の出力」の不許可と「本部連携（外部システム）」の行を足した。運用方針の sample に反映するかを判断してほしい。","`sac-store-sales` と opr-access-control の手順は sample が未作成または未整備のため、バッククォートで仮置きした。opr-access-control-sample は役割名（Ops Lead 等）が共通サンプル文脈と合っておらず、作り直しの候補。同じ型の nfr-integrity・maintainability・operations・performance・reliability・usability の 6 本も旧来の最小サンプルのまま。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/nfr-security-safety-sample.md","status":"passed","summary":"対象 sample を整形した"},{"command":"npx markdownlint docs/ja/specdojo/samples/nfr-security-safety-sample.md","status":"passed","summary":"0 件"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"対象外","reason":"履歴蓄積ファイル（plan・result・個票）を変更していないため"}]}
+</specdojo_executor_evidence>

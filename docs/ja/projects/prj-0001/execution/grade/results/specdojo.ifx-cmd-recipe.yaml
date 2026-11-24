@@ -4,29 +4,28 @@ document: specdojo:ifx-cmd-recipe
 path: docs/ja/specdojo/recipes/ifx-cmd-recipe.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-recipe
 verdict: pass
-score: 100
-graded_at: "2026-11-19T20:38:38.324Z"
-graded_by: flash-high-executor
-content_hash: b8b16df4dcc53032b0f4677205c81e457085a37ab1a17eefae2c1060d1bf9bc8
+score: 93
+graded_at: "2026-11-23T04:13:10.052Z"
+graded_by: opus-review-executor
+content_hash: 4a994d5a0091ffab4b90d76772b6962a7de80b9d3c1eb145b0a64ce94966f7ec
 categories:
   purpose:
     score: 100
   operations:
-    score: 100
+    score: 94
   planning:
     score: 100
   business:
-    score: 100
+    score: 88
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 92
   implementation:
-    score: 100
+    score: 88
   quality:
-    score: 100
+    score: 83
   consistency:
     score: 100
 viewpoints:
@@ -49,8 +48,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-stakeholder-clarity:
     level: 4
     score: 100
@@ -64,14 +63,14 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-change-impact:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-verifiability:
     level: 4
     score: 100
@@ -79,17 +78,17 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-language-consistency:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-operability:
     level: 4
     score: 100
@@ -102,6 +101,51 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 6
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 73
+    anchor: "### 4.4. ファイル"
+    message: ファイルの章の問いに、入出力がない側を `[]` または省略で表し、未確認の場合と区別する判断を加え、recipe だけで書いても「出力なし」と「未確認」を取り違えないようにする。
+    message_ja: ファイルの章の問いに、入出力がない側を `[]` または省略で表し、未確認の場合と区別する判断を加え、recipe だけで書いても「出力なし」と「未確認」を取り違えないようにする。
+  - id: F002
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 31
+    anchor: 6. `authentication` を書く。
+    message: 全体の作成手順の6番「`authentication` を書く。」に、ほかの手順と同じく、この位置で書く理由や前の手順から引き継ぐ判断（注入経路とログのマスクは streams で決めた出力範囲を前提にする、など）を加える。
+    message_ja: 全体の作成手順の6番「`authentication` を書く。」に、ほかの手順と同じく、この位置で書く理由や前の手順から引き継ぐ判断（注入経路とログのマスクは streams で決めた出力範囲を前提にする、など）を加える。
+  - id: F003
+    severity: minor
+    rule: vp-dev-testability
+    line: 157
+    anchor: "## 8. 仕上げチェック"
+    message: 仕上げチェックまたはレビュー観点に、正常・同じ終了コードの異なる失敗・出力欠落・途中失敗後の再実行の各ケースで、次の動作と回復の条件が契約と一致するかをたどる確認を加え、rulebook の成果物の検証手順に対応させる。
+    message_ja: 仕上げチェックまたはレビュー観点に、正常・同じ終了コードの異なる失敗・出力欠落・途中失敗後の再実行の各ケースで、次の動作と回復の条件が契約と一致するかをたどる確認を加え、rulebook の成果物の検証手順に対応させる。
+  - id: F004
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 148
+    anchor: ""
+    message: rulebook の記述ガイドにある成果物の検証手順に対応する書き方（照合するケースと合格条件の問い）が「各章の書き方」にも仕上げチェックにもなく、Kata 内の章の対応が一つ欠けているので補う。
+    message_ja: rulebook の記述ガイドにある成果物の検証手順に対応する書き方（照合するケースと合格条件の問い）が「各章の書き方」にも仕上げチェックにもなく、Kata 内の章の対応が一つ欠けているので補う。
+  - id: F005
+    severity: minor
+    rule: vp-ux-readability
+    line: 9
+    anchor: >-
+      - この仕様は、`ifx-index`（外部システム I/F
+      一覧）の連携目的を引き継ぎ（Why）、呼び出し元が成功後に得る状態と入出力・終了状態の約束を定め（What）、識別信号・再試行・認証の渡し方を決める（How）。起動方法は正本の文書・設定キーへの参照で、仕様自体は
+      `ifx-index` の `spec_ref` からたどれるようにする（Trace）。
+    message: 「このレシピの使い方」の最初の項目は Why・What・How・Trace を1文に詰め込み、括弧書きも挟んでいるので、要素ごとに短い文か箇条書きへ分けて主旨を取りやすくする。
+    message_ja: 「このレシピの使い方」の最初の項目は Why・What・How・Trace を1文に詰め込み、括弧書きも挟んでいるので、要素ごとに短い文か箇条書きへ分けて主旨を取りやすくする。
+  - id: F006
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 1
+    anchor: "# 外部コマンド連携仕様 作成レシピ"
+    message: 構造の正本の ifx-cmd-rulebook が `draft` のまま recipe が `ready` になっているので、rulebook の確定に合わせて status を揃えるか、ready としてよい前提を確かめる。
+    message_ja: 構造の正本の ifx-cmd-rulebook が `draft` のまま recipe が `ready` になっているので、rulebook の確定に合わせて status を揃えるか、ready としてよい前提を確かめる。

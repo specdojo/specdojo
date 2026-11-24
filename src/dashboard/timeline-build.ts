@@ -193,45 +193,6 @@ export function buildTimeline(opts: {
   };
 }
 
-function formatEstimate(track: TimelineTrackPlan): string {
-  return track.catalog_duration_estimate_days === undefined
-    ? "-"
-    : String(track.catalog_duration_estimate_days);
-}
-
-export function renderTimelineOrderMarkdown(result: TimelineBuildResult): string {
-  const lines: string[] = [];
-  lines.push(`# トラック着手順序`);
-  lines.push("");
-  lines.push(`- project_id: \`${result.projectId}\``);
-  lines.push(`- wave_count: \`${result.waves.length}\``);
-  lines.push(`- schedule_ready_tracks: \`${result.scheduleReadyTracks.length}\``);
-  lines.push(`- catalog_scaffold_targets: \`${result.scaffolds.length}\``);
-  lines.push("");
-  lines.push(
-    `この文書は epic・strategy（互換用 \`tml-index.yaml\`）から非推奨の \`specdojo timeline build\` が生成した派生ビューです。` +
-      `計画は register の epic、範囲は strategy の scope、カタログ作成の完了は register の todo に記録し、通常は \`dashboard build\` を使ってください。`,
-  );
-
-  for (const wave of result.waves) {
-    lines.push("");
-    lines.push(`## ${wave.wave}. Wave ${wave.wave}`);
-    lines.push("");
-    lines.push(`| track | domains | catalog_status | 見積り日数 | parallel_group | depends_on |`);
-    lines.push(`| --- | --- | --- | --- | --- | --- |`);
-    for (const track of wave.tracks) {
-      const dependsOn = track.depends_on.length > 0 ? track.depends_on.join(", ") : "-";
-      lines.push(
-        `| \`${track.track}\` | ${track.domains.join(", ")} | ${track.catalog_status} | ` +
-          `${formatEstimate(track)} | ${track.parallel_group ?? "-"} | ${dependsOn} |`,
-      );
-    }
-  }
-
-  lines.push("");
-  return lines.join("\n");
-}
-
 export function renderCatalogScaffoldMarkdown(result: TimelineBuildResult): string {
   const lines: string[] = [];
   lines.push(`# 成果物カタログ作成の準備`);

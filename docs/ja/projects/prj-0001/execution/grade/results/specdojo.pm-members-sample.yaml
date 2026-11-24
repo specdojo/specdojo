@@ -1,0 +1,117 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:pm-members-sample
+path: docs/ja/specdojo/samples/pm-members-sample.yaml
+target: kata
+rubric: grade-rubric-v2
+verdict: pass
+score: 99
+graded_at: "2026-11-24T01:55:14.650Z"
+graded_by: sonnet-review-executor
+content_hash: 69bc8ba444d952e0d93babfcc3d6861a09b3a2ac60300fa1078add17e6d865da
+categories:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
+  architecture:
+    score: 100
+  usability:
+    score: 92
+  implementation:
+    score: 100
+  quality:
+    score: 100
+  consistency:
+    score: 100
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 1
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 38
+    anchor: "display_name: 同行レビュー担当"
+    message: >-
+      display_name「同行レビュー担当」が nickname `peer-reviewer` と note
+      の「第三者視点で確認」に合わず、レビューの独立性が伝わらないため、「第三者レビュー担当」や「相互レビュー担当」など意味の合う表示名にそろえる。
+    message_ja: >-
+      display_name「同行レビュー担当」が nickname `peer-reviewer` と note
+      の「第三者視点で確認」に合わず、レビューの独立性が伝わらないため、「第三者レビュー担当」や「相互レビュー担当」など意味の合う表示名にそろえる。

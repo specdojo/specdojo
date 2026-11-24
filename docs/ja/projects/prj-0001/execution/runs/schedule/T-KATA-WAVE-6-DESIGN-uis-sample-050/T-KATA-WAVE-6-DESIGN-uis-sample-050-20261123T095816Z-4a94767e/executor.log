@@ -1,0 +1,14 @@
+`docs/ja/specdojo/samples/uis-sample.md` で、grade の指摘 6 件（F001〜F006）をすべて直しました。変更はこの 1 ファイルだけで、rulebook と result には手を入れていません。prettier で整え、markdownlint-cli2 は 0 件でした。ほかの検査は親 runner が実行します。
+
+- **F006**: 「バーコードスキャナから読み取るし、」を「読み取り、」に直しました。
+- **F002**: 「明細の数量」の更新契機を「『商品追加』と『数量変更』の成功時に更新」に置き換えました。数量の増え方の定義は「商品追加」操作の結果欄の 1 か所だけになります。
+- **F001・F003・F005**: 「商品コード未登録」を追加時と会計確定時の 2 行に分けました。
+  - 追加時は、入力を残し、明細と集計を変えません。
+  - 確定時は、確定せずに登録中のまま残し、対象の明細を示します。利用者は対象明細を「明細削除」し、必要なら別の商品を追加して「会計確定」をやり直せます。
+- **F004**: 「販売対象外」も同じく追加時と確定時の 2 行に分け、追加時は入力を残して明細を追加しないことを書き分けました。
+
+確定時の回復手順は、既存の「明細削除」と「会計確定」の操作だけで組んでいます。rulebook に合わせて直すべき点はありません。PJR-76N9 で禁じられた記述（役割の割り当てや承認範囲）も足していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"uis-sample.md の grade 指摘 F001〜F006 を修正（誤記修正、数量の二重定義解消、商品コード未登録・販売対象外を追加時／確定時に分割し確定時の回復手順を追記）。","handoff":["rulebook に合わせて直すべき点は見つからなかった。確定時の回復は既存の「明細削除」と「会計確定」の操作だけで表している。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/uis-sample.md","status":"passed","summary":"整形済み"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/uis-sample.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>

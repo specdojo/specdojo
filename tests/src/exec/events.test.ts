@@ -186,6 +186,25 @@ describe("foldEventsToState", () => {
     expect(snapshot.tasks["T-001"].last_by).toBe("agent-1");
   });
 
+  it("予約名 specdojo-orchestrator の release event も エラーなく todo に戻す", () => {
+    const schedule = makeSchedule([{ id: "T-001" }]);
+    const events = [
+      { path: "1.json", event: makeEvent({ type: "claim", task_id: "T-001", by: "agent-1" }) },
+      {
+        path: "2.json",
+        event: makeEvent({
+          type: "release",
+          task_id: "T-001",
+          by: "specdojo-orchestrator",
+          msg: "rerun",
+        }),
+      },
+    ];
+    const snapshot = foldEventsToState(events, schedule, "/dummy");
+    expect(snapshot.tasks["T-001"].state).toBe("todo");
+    expect(snapshot.tasks["T-001"].last_by).toBe("specdojo-orchestrator");
+  });
+
   it("complete で doing → done に遷移する", () => {
     const schedule = makeSchedule([{ id: "T-001" }]);
     const events = [

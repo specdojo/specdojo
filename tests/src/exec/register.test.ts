@@ -65,9 +65,10 @@ describe("registerItemCategory", () => {
     expect(registerItemCategory("risk")).toBe("investigate");
   });
 
-  it("decision / note は実行対象外として null を返す", () => {
+  it("decision / note / handoff は実行対象外として null を返す", () => {
     expect(registerItemCategory("decision")).toBeNull();
     expect(registerItemCategory("note")).toBeNull();
+    expect(registerItemCategory("handoff")).toBeNull();
     expect(registerItemCategory("epic")).toBeNull();
   });
 });
@@ -78,6 +79,7 @@ describe("register filter selection", () => {
     makeItem({ id: "PJR-0001", type: "todo", priority: "high" }),
     makeItem({ id: "PJR-0002", type: "issue", priority: "high" }),
     makeItem({ id: "PJR-0004", type: "note", priority: "high" }),
+    makeItem({ id: "PJR-0008", type: "handoff", priority: "high" }),
     makeItem({ id: "PJR-0007", type: "epic", track: "business", priority: "high" }),
     makeItem({ id: "PJR-0005", type: "todo", priority: "high", status: "done" }),
     makeItem({ id: "PJR-0006", type: "todo", priority: "high", status: "waiting" }),
@@ -109,6 +111,12 @@ describe("register filter selection", () => {
     expect(selectRegisterItems(items, parseRegisterSelectionFilter({ types: "epic" }))).toEqual([]);
   });
 
+  it("handoff を明示した filter も実行対象にしない", () => {
+    expect(selectRegisterItems(items, parseRegisterSelectionFilter({ types: "handoff" }))).toEqual(
+      [],
+    );
+  });
+
   it("未知の値と正でない limit を拒否する", () => {
     expect(() => parseRegisterSelectionFilter({ types: "unknown" })).toThrow(/unknown value/);
     expect(() => parseRegisterSelectionFilter({ limit: "0" })).toThrow(/positive integer/);
@@ -133,6 +141,9 @@ describe("requireRunnableRegisterItem", () => {
 
   it("実行対象外の type はエラーを投げる", () => {
     expect(() => requireRunnableRegisterItem(makeItem({ type: "note" }))).toThrow(/not executable/);
+    expect(() => requireRunnableRegisterItem(makeItem({ type: "handoff" }))).toThrow(
+      /handoff.*not executable/,
+    );
     expect(() => requireRunnableRegisterItem(makeItem({ type: "epic" }))).toThrow(
       /epic.*not executable/,
     );

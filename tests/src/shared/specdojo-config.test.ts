@@ -2,10 +2,10 @@ import { describe, expect, it } from "vitest";
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
-import { load as loadYaml } from "js-yaml";
 import { specdojoPackageRootDir } from "../../../src/shared/package-paths.js";
 import {
   assertValidActor,
+  assertValidExecActor,
   getProjectCatalogPath,
   getKataAuthority,
   getProjectContext,
@@ -14,8 +14,8 @@ import {
   getProjectSchedulePath,
   loadConfig,
   loadMemberRoster,
-  migrateAgentMembers,
   resolveAgentMember,
+  resolveRegisterActor,
 } from "../../../src/shared/specdojo-config.js";
 import type {
   MemberRoster,
@@ -318,17 +318,37 @@ describe("split human and agent member registries", () => {
     expect(roster?.members.map((member) => member.nickname)).toEqual(["codex-executor"]);
   });
 
-  it.each(["copilot", "antigravity"])(
-    "ships a schema-valid %s agent registry snippet",
-    (provider) => {
-      const root = mkdtempSync(join(tmpdir(), "specdojo-members-"));
-      const snippet = readFileSync(
-        join(specdojoPackageRootDir(), "templates", provider, "agent-members-snippet.yaml"),
-        "utf8",
-      );
-      write(join(root, ".specdojo", "agent-members.yaml"), snippet);
+  it("ships a schema-valid copilot agent registry snippet", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-members-"));
+    const snippet = readFileSync(
+      join(specdojoPackageRootDir(), "templates", "copilot", "agent-members-snippet.yaml"),
+      "utf8",
+    );
+    write(join(root, ".specdojo", "agent-members.yaml"), snippet);
 
-      expect(loadMemberRoster(root, {})?.members.length).toBeGreaterThan(0);
+    expect(loadMemberRoster(root, {})?.members.length).toBeGreaterThan(0);
+  });
+
+  it.each([false, true])(
+    "rejects an antigravity member with the reason and the fix (disabled: %s)",
+    (disabled) => {
+      const root = mkdtempSync(join(tmpdir(), "specdojo-members-"));
+      write(
+        join(root, ".specdojo", "agent-members.yaml"),
+        `version: 1\nmembers:${agentMember}
+  - nickname: flash-executor
+    display_name: Flash Executor
+    email: null
+    roles: []
+    type: agent
+    provider: antigravity
+    disabled: ${disabled}
+`,
+      );
+
+      expect(() => loadMemberRoster(root, {})).toThrow(
+        /agent-members\.yaml: provider antigravity was removed in SpecDojo 0\.10\.0 \(members: flash-executor\)\..*Additional Terms \(Section 6\).*remove these members and any aliases.*routing, strategy, and fallback.*providers\.antigravity.*package\.json scripts/,
+      );
     },
   );
 
@@ -358,12 +378,12 @@ describe("split human and agent member registries", () => {
     );
   });
 
-  it("rejects an agent in pm-members.yaml and points to the migration command", () => {
+  it("rejects an agent in pm-members.yaml and points to the agent members file", () => {
     const root = mkdtempSync(join(tmpdir(), "specdojo-members-"));
     write(join(root, "members.yaml"), humanRoster.replace(/  - nickname:[\s\S]*$/, agentMember));
 
     expect(() => loadMemberRoster(root, { members_path: "members.yaml" })).toThrow(
-      /codex-executor.*config migrate-members --dry-run/,
+      /codex-executor.*agent-members\.yaml/,
     );
   });
 
@@ -378,35 +398,6 @@ describe("split human and agent member registries", () => {
     expect(() => loadMemberRoster(root, { members_path: "members.yaml" })).toThrow(
       /human 'bob' is not allowed/,
     );
-  });
-
-  it("migrates agents and leaves dry-run unchanged", () => {
-    const root = mkdtempSync(join(tmpdir(), "specdojo-members-"));
-    const membersPath = join(root, "project", "pm-members.yaml");
-    const mixed = humanRoster.replace(
-      /members:[\s\S]*$/,
-      `members:\n${humanRoster.split("members:\n")[1]}${agentMember}`,
-    );
-    write(membersPath, mixed);
-    write(
-      join(root, ".specdojo", "specdojo.config.json"),
-      JSON.stringify({
-        version: 1,
-        projects: { "prj-test": { base_path: "project", members_path: "pm-members.yaml" } },
-      }),
-    );
-
-    migrateAgentMembers({ rootDir: root, dryRun: true });
-    expect(readFileSync(membersPath, "utf8")).toBe(mixed);
-    expect(() => readFileSync(join(root, ".specdojo", "agent-members.yaml"), "utf8")).toThrow();
-
-    migrateAgentMembers({ rootDir: root, dryRun: false });
-    const humans = loadYaml(readFileSync(membersPath, "utf8")) as { members: unknown[] };
-    const agents = loadYaml(
-      readFileSync(join(root, ".specdojo", "agent-members.yaml"), "utf8"),
-    ) as { members: unknown[] };
-    expect(humans.members).toHaveLength(1);
-    expect(agents.members).toHaveLength(1);
   });
 });
 
@@ -448,5 +439,49 @@ describe("resolveAgentMember", () => {
         "old-a",
       ),
     ).toBeUndefined();
+  });
+});
+
+describe("assertValidExecActor", () => {
+  it("予約名は名簿になくても受け付ける", () => {
+    const roster = makeRoster(["alice"]);
+    for (const name of ["SpecDojo", "specdojo-orchestrator", "night-orchestrator"]) {
+      expect(() => assertValidExecActor(name, roster)).not.toThrow();
+    }
+  });
+
+  it("名簿の人は受け付ける", () => {
+    expect(() => assertValidExecActor("alice", makeRoster(["alice"]))).not.toThrow();
+  });
+
+  it("名簿にも予約名にもない名前はエラーを投げる", () => {
+    expect(() => assertValidExecActor("charlie", makeRoster(["alice"]))).toThrow("charlie");
+  });
+
+  it("エラーの文に名簿の nickname と予約名の両方を並べる", () => {
+    expect(() => assertValidExecActor("charlie", makeRoster(["alice"]))).toThrow(
+      /alice.*SpecDojo.*specdojo-orchestrator.*night-orchestrator/,
+    );
+  });
+
+  it("register の記帳のエラーの文にも名簿の nickname と予約名の両方を並べる", () => {
+    const roster = makeRoster(["alice"]);
+
+    for (const name of ["alice", "SpecDojo", "specdojo-orchestrator", "night-orchestrator"]) {
+      expect(() => resolveRegisterActor("charlie", roster)).toThrow(name);
+    }
+  });
+
+  it("agent 限定の assertValidActor のエラーの文には予約名を並べない", () => {
+    let message = "";
+    try {
+      assertValidActor("charlie", makeRoster(["alice"]));
+    } catch (error) {
+      message = error instanceof Error ? error.message : String(error);
+    }
+
+    expect(message).toContain("alice");
+    expect(message).not.toContain("SpecDojo");
+    expect(message).not.toContain("night-orchestrator");
   });
 });

@@ -1,0 +1,89 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_d6a221bb18cc4d68bb05ec98591cbc64
+  ts: "2026-11-23T00:35:40Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: OpenFisca-Japan の作業（利用側の prj-0001）で見つけた
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: Claude の edit executor の既定の設定に、作業場所を保つ設定と git の読み取り・rm・mv の許可がない
+    - field: description
+      from: ""
+      to: cd でプロダクトの worktree に移ると相対パスの Edit の規則がずれて個票を書けず、git status・diff・log・show・grep・rm・mv も承認待ちで拒まれる。配布の settings.edit.json に CLAUDE\_BASH\_MAINTAIN\_PROJECT\_WORKING\_DIR と git の許可を足すかを決める
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-23"
+- v: 1
+  id: reg_2f640e46d8d947878f38a1f4704502ef
+  ts: "2026-11-23T01:03:31Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: 期限を決め、CHANGELOG の書き方を prj-0001 の運用にそろえた（2026-11-23）
+  changes:
+    - field: due
+      from: "-"
+      to: "2026-11-30"
+  previous_event_id: reg_d6a221bb18cc4d68bb05ec98591cbc64
+- v: 1
+  id: reg_9f7fa0a2ee24463fab1309090cf4aeb0
+  ts: "2026-11-23T02:39:54Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_2f640e46d8d947878f38a1f4704502ef
+- v: 1
+  id: reg_bfbc88314cd44de2b5d7293819bc95bb
+  ts: "2026-11-23T02:52:34Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_9f7fa0a2ee24463fab1309090cf4aeb0
+- v: 1
+  id: reg_b9972bb2e1274d2ab8d7b24720c2f68e
+  ts: "2026-11-23T04:22:03Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 設定の単体テストと利用側の確認を根拠とし、prj-0001 に当てた後の exec smoke で拒否がなかったことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-23"
+    - field: conclusion
+      from: "-"
+      to: 配布の claude の edit 設定に、作業場所を保つ env と git の読み取り・rm・mv の許可（再帰・強制は禁止）を足し、prj-0001 自身の設定にも当てた
+  previous_event_id: reg_bfbc88314cd44de2b5d7293819bc95bb

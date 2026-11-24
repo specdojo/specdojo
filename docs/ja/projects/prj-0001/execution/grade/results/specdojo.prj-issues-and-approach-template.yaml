@@ -5,10 +5,10 @@ path: docs/ja/specdojo/templates/prj-issues-and-approach-template.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 98
-graded_at: "2026-10-23T20:05:17.122Z"
-graded_by: flash-high-executor
-content_hash: 597049d71afff504334d9179c6d322717d37a26a31dcff5d4350c0c6bafb3cbd
+score: 97
+graded_at: "2026-11-23T22:35:12.280Z"
+graded_by: sonnet-review-executor
+content_hash: 9b0b03649381accf58ad44e1e24d82d1cd557616ecdd1ca04e5e0175fa0d6a4e
 categories:
   purpose:
     score: 100
@@ -21,7 +21,7 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 92
   implementation:
     score: 100
   quality:
@@ -87,8 +87,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -104,13 +104,20 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 1
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 59
-    anchor: "_TODO_: 追加調査・確認・承認が必要な事項と責任ロールを記述する。任意章のため不要なら削除する。"
-    message: Recipe で指定された `_TODO_:` または `_UNDECIDED` ラベルを項目先頭に付与するよう、ガイドラインに追記する。
-    message_ja: Recipe で指定された `_TODO_:` または `_UNDECIDED` ラベルを項目先頭に付与するよう、ガイドラインに追記する。
+    line: 5
+    anchor: 本章の合意対象は、優先して扱う主要課題、採用する解決アプローチ、先送りする事項、追加判断が必要な事項である。個別業務システムの設計、特定技術の採否、詳細な作業手順は本書の合意対象に含めない。
+    message: 導入部2段落目の「本章の合意対象は」は文書全体を指すため、rulebook・sample と同じく「本書の合意対象は」に直す。
+    message_ja: 導入部2段落目の「本章の合意対象は」は文書全体を指すため、rulebook・sample と同じく「本書の合意対象は」に直す。
+  - id: F002
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 5
+    anchor: 本章の合意対象は、優先して扱う主要課題、採用する解決アプローチ、先送りする事項、追加判断が必要な事項である。個別業務システムの設計、特定技術の採否、詳細な作業手順は本書の合意対象に含めない。
+    message: 文書を指す呼称が導入部1段落目の「本書」と2段落目の「本章」で揺れている。「本書」に統一する。
+    message_ja: 文書を指す呼称が導入部1段落目の「本書」と2段落目の「本章」で揺れている。「本書」に統一する。

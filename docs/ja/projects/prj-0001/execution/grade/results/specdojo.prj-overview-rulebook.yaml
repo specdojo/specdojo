@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/prj-overview-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 95
-graded_at: "2026-10-06T21:28:55.520Z"
-graded_by: agy-expert-executor
-content_hash: 375ea094d9f3495cd8a7a9e91806c29b8dfc98b8b1da07e8489bb51449627d52
+score: 97
+graded_at: "2026-11-23T20:42:05.011Z"
+graded_by: sonnet-review-executor
+content_hash: a3979c0439f00128c47dbadbcc9b6e3a91a48977aa0978e75ab212c165f08819
 categories:
   purpose:
     score: 100
@@ -21,13 +21,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 83
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 92
-  consistency:
     score: 100
+  consistency:
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -60,8 +60,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-implementation-readiness:
     level: 4
     score: 100
@@ -75,14 +75,14 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
     level: 4
     score: 100
-  vp-qe-kata-conformance:
-    level: 3
-    score: 75
   vp-ux-readability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 4
     score: 100
@@ -101,31 +101,24 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 3
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-arc-conciseness
-    line: 1
-    anchor: "# プロジェクト概要 作成ルール"
-    message: 憲章と成功基準への委譲方針が全体方針および禁止事項と重複しているため、本節を責務境界の正本として他箇所を短い参照へ統合すると、判断情報を失わず簡潔にできる。
-    message_ja: 憲章と成功基準への委譲方針が全体方針および禁止事項と重複しているため、本節を責務境界の正本として他箇所を短い参照へ統合すると、判断情報を失わず簡潔にできる。
+    rule: vp-qe-omissions-consistency
+    line: 31
+    anchor: メタ情報（Frontmatter）を付ける場合、ID は一意である必要があります。
+    message: >-
+      3.2 の「メタ情報（Frontmatter）を付ける場合」は任意に読める一方、4.1 では `specdojo.id`・`type`・`status`・`rulebook`
+      を必須としており、「付ける場合」の条件を削除して必須であることに揃える必要がある。
+    message_ja: >-
+      3.2 の「メタ情報（Frontmatter）を付ける場合」は任意に読める一方、4.1 では `specdojo.id`・`type`・`status`・`rulebook`
+      を必須としており、「付ける場合」の条件を削除して必須であることに揃える必要がある。
   - id: F002
     severity: minor
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# プロジェクト概要 作成ルール"
-    message: >-
-      対応 template を宣言済みなのに「本文構成（標準テンプレ）」として見出し順を rulebook 側でも正本化しているため、この章を「本文要件」として各章の目的・必須性・記述規約に限定し、骨組みの正本は template
-      に統一する必要がある。
-    message_ja: >-
-      対応 template を宣言済みなのに「本文構成（標準テンプレ）」として見出し順を rulebook 側でも正本化しているため、この章を「本文要件」として各章の目的・必須性・記述規約に限定し、骨組みの正本は template
-      に統一する必要がある。
-  - id: F003
-    severity: minor
-    rule: vp-ux-readability
-    line: 1
-    anchor: "# プロジェクト概要 作成ルール"
-    message: 憲章・成功基準との分担が全体方針と禁止事項でも繰り返されているため、本節に詳細を集約し、他箇所は要約または参照にすると主要な判断点をより追いやすくできる。
-    message_ja: 憲章・成功基準との分担が全体方針と禁止事項でも繰り返されているため、本節に詳細を集約し、他箇所は要約または参照にすると主要な判断点をより追いやすくできる。
+    rule: vp-qe-omissions-consistency
+    line: 137
+    anchor: "### 6.8. 前提条件"
+    message: 前提条件の記述ガイド 6.8 に未決事項（`_UNDECIDED_` と決定タイミング）の記述規約がなく、template と recipe にある未決事項の扱いと整合していないため、6.8 に追記する必要がある。
+    message_ja: 前提条件の記述ガイド 6.8 に未決事項（`_UNDECIDED_` と決定タイミング）の記述規約がなく、template と recipe にある未決事項の扱いと整合していないため、6.8 に追記する必要がある。

@@ -1,0 +1,30 @@
+`register branch-check` を追加し、pre-push 用の入口とテストも書きました。ただし `lefthook.yml` と CI workflow は保護されていて編集できなかったため、組み込みは未了です。`typecheck`、`lint:ts`（エラー 0）、`lint:md:changed` と、追加した 2 本の単体テストは通りました。`lint:md` 全体、`lint:fm`、`test:unit` 全体は流していません。これらは親 runner の検証に任せます。
+
+**追加した検査**
+- `specdojo register branch-check --project <id> --commit <sha> [--base <sha>] [--remote-ref <ref>]` です。
+- `--remote-ref` が register のブランチでないとき、`register_sync` が未設定のときは、何もしません。
+- 範囲の外の検査は、`--base` から `--commit` までの各 commit が `project_register_path` と `exec/events/` の配下の外のファイルを含まないかを見ます。
+- 形の検査は、先端の tree を一時ディレクトリに書き出し、`register build` と同じ個票・イベントの検証に通します。
+- 違反は `<commit>: <path>` または `<file>: <内容>` の形で出し、直し方を添えて終了コード 1 で止まります。
+- `external_projects` で別のプロジェクトから起票した commit も同じブランチに入るため、同じ検査を通ります。個別の分岐は作っていません。
+
+**ファイル**
+- 実装: `src/register/push-check.ts` を新規作成し、`src/register/branch-commands.ts` にコマンドを追加しました。
+- hook の入口: `tools/check-register-push.mjs` です。Node 標準だけで動き、`tsx` が無ければ検査を飛ばします。
+- テスト: `tests/src/register/push-check.test.ts` と `tests/tools/check-register-push.test.ts` を追加しました。範囲の外のファイル、形の違反、空の register（正しい場合）、hook の入口を検証します。
+- 文書: コマンドリファレンス、登録簿運用ガイド、分岐の標準を更新しました。個票の作業内容と対応結果も記入しました。
+
+**手動で反映が要るもの**
+- `lefthook.yml` の `pre-push` の `protect-main.run` の末尾に、`&& printf '%s\n' "$input" | node tools/check-register-push.mjs --project prj-0001` を足す必要があります。
+- CI は `.github/workflows/check-register-push.yml` を新設する案です。`project/*/register` への push で `branch-check` を `$GITHUB_SHA`、`github.event.before`、`$GITHUB_REF` 付きで流します。全文は個票の対応結果に書きました。
+
+**判断した点**
+- 検査の入口は、既存の `branch-guard` とは別の `branch-check` にしました。向きが逆（register のブランチ側で範囲の外を止める）で、引数も違うためです。
+- 形の検査は個票とイベントに限りました。epic・依存・`derived_from` の横断検証は、参照先が develop 側にあるため入れていません。
+- 実 Git を使う統合テストは足していません。`rev-list` と `diff` を通る経路は、単体テストでは検証していません。
+
+CHANGELOG は変えていません。個票の対応結果に「Added」の文案を書きました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"register branch-check（範囲の外のパスと個票・イベントの形の検査）、pre-push の入口 tools/check-register-push.mjs、単体テスト、関連文書と個票を更新した。lefthook.yml と .github/ は保護のため変更案のみ。","handoff":["lefthook.yml の pre-push protect-main.run の末尾へ `&& printf '%s\\n' \"$input\" | node tools/check-register-push.mjs --project prj-0001` を足す（保護のため未変更）。","CI の案: .github/workflows/check-register-push.yml を新設し、project/*/register への push で `node --import tsx src/specdojo.ts register branch-check --project prj-0001 --commit \"$GITHUB_SHA\" --base \"${{ github.event.before }}\" --remote-ref \"$GITHUB_REF\"` を流す（fetch-depth: 0）。全文は個票の対応結果 5.3。","決定: 入口は branch-guard と別の branch-check にした。形の検査は個票とイベントに限り、epic・依存・derived_from の横断検証は含めない。","実 Git を通る統合テストは未追加（executor は test:integration を流せない）。","CHANGELOG に書く事項: 区分 Added。文案は個票の対応結果 5.5。"],"validations":[{"command":"npm run typecheck","status":"passed","summary":"型エラーなし"},{"command":"npm run lint:ts","status":"passed","summary":"エラー 0（既存の warning のみ）"},{"command":"npx vitest run --config vitest.unit.config.ts tests/src/register/push-check.test.ts tests/tools/check-register-push.test.ts","status":"passed","summary":"2 ファイル 12 テストが通過"},{"command":"npm run lint:md:changed","status":"passed","summary":"変更した Markdown にエラーなし"}]}
+</specdojo_executor_evidence>

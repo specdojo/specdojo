@@ -1,0 +1,12 @@
+対象文書の冗長な箇所は、前回の試行で3件直してありました。今回の再開では追加の編集はしていません。本文を読み直し、他の箇所は判断に要る内容と確認しました。`npm run lint:md` などは親 runner が実行するため、ここでは実行していません。
+
+- **直した3件:**
+  - 1章の概要にあった「本書は…を定める」という章構成の列挙を削りました。
+  - 2.1の表の導入文は、表がすでに示している対応の説明を繰り返していたため、短くしました。
+  - 2.2の表の導入文も同じ理由で削りました。
+- **残した箇所:** 2.4の合格条件の表、2.6の緊急権限の表、3章の導線の表は、本文との二重の説明ではありません。承認者・期限・失効条件など判断に要る情報を持つため、そのまま残しました。
+- **原因:** 3件とも文書自身の書き方によるもので、Kata に根拠を示せる箇所はありませんでした。そのため `{"type":"document"}` としました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"opd-access-control-sample.md の冗長な3箇所を整理済み（概要の章構成列挙の削除、2.1と2.2の表導入文の短縮）。意味と必須情報は維持した。","handoff":[],"validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する検査のため、executor では実行していない"}],"target_coverage":[{"target":"specdojo:opd-access-control-sample","status":"changed","path":"docs/ja/specdojo/samples/opd-access-control-sample.md"}],"condense_records":[{"location":"1. 概要（access-control） 第1段落末尾","category":"repetition","action":"delete","reason":"「本書は権限区分、付与・剥奪の契機、棚卸しの合否、監査ログの記録対象、緊急権限を定める」は2章の見出しと内容の再掲。分冊の目的と背景は残したため意味は変わらない","cause":{"type":"document"}},{"location":"2.1. 権限区分 導入文","category":"table-prose","action":"merge","reason":"表が示す対応を本文で言い直していたため「次の表で具体化する。」に短縮。opd-index との差分の根拠は残した","cause":{"type":"document"}},{"location":"2.2. 付与・剥奪の契機 導入文","category":"table-prose","action":"delete","reason":"表の内容の言い直しを削った。承認者と操作者の記述は残した","cause":{"type":"document"}},{"location":"2.4. 棚卸し 合格条件の表と直前の本文","category":"table-prose","action":"retain","reason":"表は合否の条件、本文は照合の方法で役割が異なり、二重の説明ではない","cause":{"type":"document"}},{"location":"2.6. 緊急権限 表と直後の ASSUMPTION","category":"repetition","action":"retain","reason":"表は承認・失効・延長の方針、ASSUMPTION は戻し方の前提で重複せず、判断に要る制約のため残す","cause":{"type":"document"}}]}
+</specdojo_executor_evidence>

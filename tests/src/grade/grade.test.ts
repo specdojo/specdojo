@@ -20,7 +20,7 @@ import {
   renderGradeReporterPlan,
   resolveGradeActor,
   resolveGradeReferenceId,
-  resolveGradeReferencePaths,
+  loadKataReferences,
   selectGradeReferenceExample,
   validateGradeReporterFidelity,
   validateGradeSubmission,
@@ -31,6 +31,7 @@ import {
   type GradeSubmission,
   pipelineContentHash,
 } from "../../../src/grade/grade.js";
+import { resolveGradeReferencePathsFromCatalog } from "../../../src/grade/targets.js";
 import type { ReviewViewpointsDoc } from "../../../src/review/types.js";
 import type { MemberRoster } from "../../../src/shared/specdojo-config.js";
 import type { GradeResult, StoredGradeFinding } from "../../../src/grade/result.js";
@@ -1301,14 +1302,36 @@ LEVEL: 4
   });
 
   it("resolves declared and reverse-linked Kata references", () => {
-    const references = resolveGradeReferencePaths("docs/ja/specdojo/samples/opr-batch-sample.md");
-    expect(references).toEqual(
-      expect.arrayContaining([
-        expect.stringContaining("/rulebooks/opd-rulebook.md"),
-        expect.stringContaining("/rulebooks/opr-rulebook.md"),
-        expect.stringContaining("/templates/opr-template.md"),
-      ]),
+    const root = "tests/fixtures/grade/kata-references";
+    const references = resolveGradeReferencePathsFromCatalog(
+      `${root}/docs/ja/specdojo/samples/example-sample.md`,
+      loadKataReferences(root),
     );
+    expect(references).toEqual([
+      `${root}/docs/ja/specdojo/rulebooks/example-rulebook.md`,
+      `${root}/docs/ja/specdojo/templates/example-template.md`,
+    ]);
+  });
+
+  it("ignores stale generated YAML pages when loading Kata references", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-kata-refs-"));
+    try {
+      const samples = join(root, "docs/ja/specdojo/samples");
+      mkdirSync(join(samples, "generated"), { recursive: true });
+      const yaml = "id: demo-sample\ntype: sample\nstatus: draft\nrulebook: none\n";
+      writeFileSync(join(samples, "demo-sample.yaml"), yaml, "utf8");
+      writeFileSync(
+        join(samples, "generated", "demo-sample.md"),
+        "---\nspecdojo:\n  id: demo-sample\n  type: sample\n  status: draft\n  rulebook: none\n---\n\n# stale\n",
+        "utf8",
+      );
+
+      const actual = loadKataReferences(root).map((item) => item.path);
+
+      expect(actual).toEqual([join(samples, "demo-sample.yaml")]);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
   });
 
   it("lists reference paths without embedding target or reference contents", () => {

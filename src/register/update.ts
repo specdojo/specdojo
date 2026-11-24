@@ -8,6 +8,7 @@ import { buildRegisterEvent, type RegisterEventAction } from "./events.js";
 import { parseSpecdojoDocument } from "../docs/frontmatter-namespace.js";
 import {
   applyRegisterItemFields,
+  assertStatusAllowedForType,
   formatRegisterItemFields,
   PJR_ID_RE,
   registerItemFieldsFromItem,
@@ -90,6 +91,8 @@ export function applyItemUpdate(opts: {
   if (!ticketPath) {
     throw new Error(`Item ${opts.view.id} has no ticket file to update`);
   }
+
+  assertStatusAllowedForType(opts.updated.type, opts.updated.status, opts.updated.id);
 
   const label = opts.action ?? `→ ${opts.updated.status}`;
   const updates: RegisterItemFieldUpdates = {

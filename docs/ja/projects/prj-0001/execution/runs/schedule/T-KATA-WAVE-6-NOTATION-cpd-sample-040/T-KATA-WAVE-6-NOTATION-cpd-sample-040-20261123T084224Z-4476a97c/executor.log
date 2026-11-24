@@ -1,0 +1,27 @@
+CPD 記法 rulebook（`cpd-mermaid-rulebook.md`）を簡潔にしました。主 rulebook（`cpd-rulebook.md`）は変更していません。sample・recipe・template も変更していません。lint は親 runner が実行するため、まだ通っていません。
+
+**`cpd-mermaid-rulebook.md` の主な変更**
+
+前回の grade（2026-11-21、needs-work 82 点、major 1・minor 11）への対応で、構成は先に同じ形に直した CND 記法 rulebook に揃えました。181 行の差分で 42 行を足し、139 行を削りました。
+
+- **完成例の章を削除**: 「サンプル（最小）」の章をなくし、冒頭で完成例は sample に任せると書きました。「凡例（推奨）」の章は図を消し、記号の説明を色分けの章へまとめました。
+- **重複の解消（F004・F010）**: 「ノードのルール」の章を対応表へまとめ、表に「表示ラベル」列を足しました。Person は `👤` と半角空白を付ける書き方に統一し、CND 記法 rulebook と同じにしました。
+- **構文確認の手段（F003・F006）**: 構文は `npm run lint:mermaid` で確かめ、描画の判読は主 rulebook の「検証と合意の判定」で扱うと書きました。
+- **判定できる書き方（F007）**: 表示ラベルの `"..."` は「囲ってよい」から必ず囲む書き方にしました。関係のラベルには主 rulebook の関係 ID（`REL-01` 形式）を先頭に置くことにし、双方向矢印を禁じました。
+- **配色を変えるとき（F002・F005・F012）**: 見直す相手として sample、`cxd-mermaid-rulebook`、`cnd-mermaid-rulebook` を挙げました。
+- **必須章を省く理由（F008）**: 命名・メタ情報・本文要件は主 rulebook に従うと冒頭に書き、主 rulebook へ任せる範囲を示しました。
+- **sample との整合**: 境界外の別コンテナ・ストア・外部系に `external` を付けるとし、表現例を sample の要素（販売処理サービス、会計処理、販売記録ストアなど）に合わせました。
+
+**直さなかった箇所と理由**
+
+- **`cpd-rulebook.md`**: grade は pass（100 点）で指摘がなく、`includes` で記法の rulebook を取り込む書き方もそのまま正しいため変えていません。PJR-76N9 で直すべき書き方（役割の割り当てや承認の進み具合を本文に求めるもの）も見当たりませんでした。
+- **`recipe` / `template` の `undecided`（F001・F009・F011）**: `not-needed` にするかは要否の判断になるため、CND 記法 rulebook と同じく据え置きました。
+
+**検証**
+
+- prettier で整形済みです。
+- `npm run lint:md` などの lint は親 runner が実行するため、ここでは実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"cpd-mermaid-rulebook.md を簡潔にした。前回 grade（needs-work）の指摘（F002〜F008・F010・F012）に対応し、CND 記法 rulebook の前例に構成を揃えた。完成例の章は削除し、ノードのルールを対応表へ統合した。lint:mermaid による構文確認、ラベルの引用符の必須化、関係 ID の付与、配色を変えるときに見直す相手を明記した。cpd-rulebook.md は grade pass で指摘がなく、直す理由がないため変更していない。","handoff":["cpd-rulebook.md は grade pass（100 点・指摘なし）で、PJR-76N9 で直すべき書き方もないため変更していない。result の「進め方と実践の型の適用」に、直さなかった理由として記録してほしい。","cpd-mermaid-rulebook の recipe / template を undecided から not-needed にするかの判断（grade の F001・F009・F011）は、CND 記法 rulebook の前例に合わせて据え置いた。要否の判断を確定させる担当を決める必要がある。","cpd-mermaid-rulebook の再 grade で、指摘が解消したかと構造が劣化していないかを確認する。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/rulebooks/cpd-mermaid-rulebook.md","status":"passed","summary":"変更した rulebook を整形した"}]}
+</specdojo_executor_evidence>

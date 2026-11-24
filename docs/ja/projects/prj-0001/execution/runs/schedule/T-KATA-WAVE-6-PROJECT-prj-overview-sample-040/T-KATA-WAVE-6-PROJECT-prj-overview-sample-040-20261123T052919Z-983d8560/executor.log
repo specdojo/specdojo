@@ -1,0 +1,18 @@
+プロジェクト概要の rulebook（`docs/ja/specdojo/rulebooks/prj-overview-rulebook.md`）を整理し、grade の指摘 F001〜F011 をすべて反映しました。sample・recipe・template には手を入れていません。整形の確認（`npx prettier --check`）は通りました。markdownlint や `lint:fm` などはこの後 runner 側で実行されるため、ここでは流していません。
+
+- **F001・F009（憲章・成功基準との分担の重複）:** 「プロジェクト憲章・成功基準との分担」の節を、後続文書との境目を決める正本にしました。全体方針の 3 項目は 1 行にまとめてこの節を参照する形にしました。禁止事項の 2 行（認可、受入条件・GO / Not GO）も 1 行にまとめました。記述ガイドに散っていた `prj-scope` と `prj-success-criteria-and-acceptance-criteria` への委譲もこの節に集めました。
+- **F002（導入文の規定の重複）:** 推奨ルールから、H1 とその直下の導入文の規定を削り、記述ガイドの「導入文」だけに残しました。
+- **F003・F011（改訂時の追従と置き換えの手順）:** 推奨ルールに次の 2 点を足しました。
+  - 本書を改訂したときに追従させる文書：template・sample・recipe・既存プロジェクトの `prj-overview`・後続のプロジェクト定義文書。
+  - 改訂か置き換えかの分け方：仮説や期待効果の見直しは同じ文書の改訂、中心仮説から作り直す場合だけ `supersedes` で新しい文書に置き換えます。手順はドキュメントメタ情報標準を参照し、置き換えの判断は PO、波及する更新の起票は PM とする担当も書きました。
+- **F004（検証の手順）:** `npm run lint:fm` と `npm run lint:md` をエラー 0 件で通すことを書き足しました。
+- **F005・F008（計測定義と「未確定」の扱い）:** 計測定義を省略できるのは、その時間軸を置かない場合だけにしました。目標値が決まらないときは「未確定」と書かず、何を記録していつ判定するかを書く形に改め、recipe と揃えました。
+- **F006（名前空間）:** Frontmatter の項目表を `specdojo.id` の形に直し、すべて `specdojo:` 配下に置く旨を明記しました。
+- **F007（本文構成の正本）:** 章名を「本文構成（標準テンプレ）」から「本文要件」に変えました。見出し順と骨組みは template を正本とし、表には各章の目的と必須・任意だけを残しました。
+- **F010（表の列名）:** 記述ガイドの空の推奨表 3 つを削り、目標の列名は初期公開指標が「目標」、短期・中長期指標が「初期目標」と一文で決めました。template・sample の実際の列名に合わせています。
+
+**意図的に残した箇所:** 全体方針の「数値目標は測定方法と判定時期を明示する」と、期待効果の判定時期の詳しい項目は残しました。前者は方針、後者は具体的な判定時点で、grade の指摘もなかったためです。前提条件の「人間の判断責任・AI Agent の役割」も残しました。PJR-76N9 が禁じる「文書の役割の割り当て」ではなく、プロジェクトの中身に当たるためです。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"rulebook `docs/ja/specdojo/rulebooks/prj-overview-rulebook.md` を整理し、F001〜F011 をすべて反映した。sample・recipe・template は変更していない。","handoff":["直さなかった箇所と理由: 全体方針の「数値目標は測定方法・判定時期・初期仮説か確定目標かを明示」は方針、記述ガイドの判定時期の項目は具体的な判定時点として残した（grade の指摘なし）。前提条件の「人間の判断責任、AI Agent の役割」は、PJR-76N9 の対象である文書の役割の割り当てではなくプロジェクトの中身のため残した。","F008 は recipe の「未確定ではなく何を記録して後で判定するかを書く」に rulebook を合わせて解いた。F010 は template・sample の実際の列名（初期公開指標が「目標」、短期・中長期指標が「初期目標」）を rulebook に規則として書いて統一した。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/prj-overview-rulebook.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルの変更なし","reason":"変更したのは rulebook だけで、plan・result・個票などの履歴ファイルは変更していない"}]}
+</specdojo_executor_evidence>

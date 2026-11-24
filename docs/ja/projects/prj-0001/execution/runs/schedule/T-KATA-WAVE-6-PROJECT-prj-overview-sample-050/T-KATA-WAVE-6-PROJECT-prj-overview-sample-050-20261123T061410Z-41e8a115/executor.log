@@ -1,0 +1,24 @@
+`docs/ja/specdojo/samples/prj-overview-sample.md` を直し、駄菓子屋の完成例として内容を足しました（95 行から 112 行）。Prettier と markdownlint はこのファイルで通っています。親 runner が流す検査はここでは流していません。8 件の指摘のうち 7 件をこのファイルで直し、F007 は rulebook を正として直していません。
+
+| 指摘 | 対応 |
+| --- | --- |
+| F001 | 繁忙期を「学校の夏休み（例年 7 月下旬〜8 月末）」と `_ASSUMPTION_` で置きました。期限は「繁忙期の前に初期公開と、運用開始後 2 週間の定着確認を終える」としました。初期公開の日付は決めず `_UNDECIDED_` のままです。 |
+| F002 | 目標値の確定先として、成功基準と受入条件の sample（`specdojo:prj-success-criteria-and-acceptance-criteria-sample`）への wikilink を足しました。あわせて、スコープの sample（`specdojo:prj-scope-sample`）への参照も足しました。 |
+| F003 | 背景の問題を表にし、欠品は週 1 回程度、つけの食い違いは月に数件などのおおよその頻度を添えました。これは聞き取りによる概算で記録に基づく値ではないと書き、ベースライン測定で実測に置き換える旨を明記しました。 |
+| F004 | 期待効果の冒頭にあった、時間軸ごとの確認内容を繰り返す段落を削りました。 |
+| F005 | 在庫の無駄の目標を「年間換算で 20% 削減」とし、「ベースライン 1 か月 ×12」と比べる換算方法を書きました。判定時期は、在庫の無駄が運用開始後 12 か月、ほかの中長期指標が 6 か月です。成功基準の sample の SC-04〜SC-06 と同じ時期にそろえています。 |
+| F006 | 前提条件を「変えない前提」「依存する前提」「判断責任・AI Agent・公開方針・取捨選択」の 3 つに分けて書き直しました。 |
+| F007 | 直していません。rulebook の「期待効果」の最後の箇条で、短期指標と中長期指標の列名は「初期目標」と決まっており、今の sample と template はそれに合っているためです。 |
+| F008 | 「初期公開」を「店頭で使い始める最初の版の提供」と定義し、この sample の中ではこの言葉に統一しました。 |
+
+あわせて、中心仮説を 3 件の価値仮説に分け、それぞれをどの時間軸の指標で確かめるかを書きました。基本的な考え方の各原則には、このプロジェクトでの意味を一文ずつ足しました。文書の役割の割り当てや承認の進み具合は書いていません。frontmatter の `status` は元の `ready` のまま変えていません。
+
+決めてもらう必要がある点は次のとおりです。
+
+- **初期公開の日付とオフライン時の運用方針:** 推測で埋めず `_UNDECIDED_` のままです。
+- **繁忙期の時期:** 夏休みは仮に置いた値です。共通サンプル文脈に載せるかどうかは、PO の判断が必要です。
+- **ほかの sample の言葉:** 成功基準とスコープの sample は「初期リリース」という言葉を使っており、この sample の「初期公開」と食い違います。どちらかにそろえるか判断が必要です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"Revised docs/ja/specdojo/samples/prj-overview-sample.md for grade findings F001-F006 and F008: added rough problem figures labeled as interview estimates, the busy season (an assumption) and the deadline, value hypotheses, links to the success criteria and scope samples, and judgment timings and the annualized baseline conversion for the medium- to long-term indicators; removed the repeated paragraph; split the preconditions into fixed premises, dependencies, and judgment/AI Agent/publication/selection policy; unified the term to 初期公開. F007 was not changed because the rulebook Expected Effects section specifies 初期目標 for the short- and medium- to long-term columns.","handoff":["F007 not applied: the rulebook (Expected Effects, last bullet) specifies the column name 目標 for initial publication indicators and 初期目標 for short- and medium- to long-term indicators, and the sample and template already follow it. The rulebook is authoritative; no Kata change is needed. If the reviewer wants to unify the column names, the rulebook must be changed first.","Undecided values left as _UNDECIDED_: the initial publication (初期公開) date and the offline operation policy (both to be decided in the initial publication plan).","_ASSUMPTION_: the busy season is the school summer holiday (late July to end of August). The PO should decide whether to add this to the shared sample context in sample-authoring-standard.","Term consistency proposal: this sample now uses 初期公開 (defined in its Basic Principles section), while prj-success-criteria-and-acceptance-criteria-sample and prj-scope-sample use 初期リリース. Consider aligning the sibling samples in a later task.","Background frequencies (stockouts about once a week, discrepancies a few times a month) are labeled as interview estimates within the shared fictional context and are to be replaced by the one-month pre-launch baseline."],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/prj-overview-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/prj-overview-sample.md","status":"passed","summary":"0 issues in 1 file"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"No history file changed","reason":"Only a sample under docs/ja/specdojo/samples was changed; no plan/result/pjr history file was edited by the executor"}]}
+</specdojo_executor_evidence>

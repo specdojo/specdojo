@@ -1654,6 +1654,74 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
     },
   );
 
+  it("handoff を template の章で起票し、受け取った主体で close して done にする", async () => {
+    await withRepo(async ({ registerDir }) => {
+      writeFileSync(join(registerDir, "pjr-index.md"), buildIndex([]), "utf8");
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+      await runRegister([
+        "add",
+        "--type",
+        "handoff",
+        "--title",
+        "夜のセッションから朝のセッションへ",
+        "--topic",
+        "night-to-morning",
+        "--id",
+        "PJR-AB12",
+      ]);
+
+      const ticketPath = join(registerDir, "pjr-ab12-night-to-morning.md");
+      const ticket = readFileSync(ticketPath, "utf8");
+      expect(ticket).toContain("  item_type: handoff");
+      expect(ticket).toContain("  item_status: open");
+      expect(ticket.match(/^## \d+\. .+$/gm)).toEqual([
+        "## 1. 引き継ぎ元と先",
+        "## 2. 有効な承認の範囲",
+        "## 3. 進行中",
+        "## 4. 判断待ち",
+        "## 5. 注意点",
+        "## 6. 関連ドキュメント",
+      ]);
+
+      await runRegister(["close", "--id", "PJR-AB12", "--by", "codex"]);
+
+      expect(readFileSync(ticketPath, "utf8")).toContain("  item_status: done");
+      expect(readEvents(registerDir, "PJR-AB12").at(-1)).toMatchObject({
+        action: "close",
+        actor: "codex",
+        from_status: "open",
+        to_status: "done",
+      });
+    });
+  });
+
+  it.each([["start"], ["wait"], ["review"], ["reject"], ["defer"]])(
+    "%s は handoff を書き換えず終了コード 1 で拒否する",
+    async (command) => {
+      await withRepo(async ({ registerDir }) => {
+        const ticketPath = join(registerDir, "pjr-ab12-topic.md");
+        writeFileSync(join(registerDir, "pjr-index.md"), buildIndex([]), "utf8");
+        const original = buildTicket("PJR-AB12", ["item_status: open", "priority: high"]).replace(
+          "  item_type: todo",
+          "  item_type: handoff",
+        );
+        writeFileSync(ticketPath, original, "utf8");
+        vi.spyOn(process.stdout, "write").mockReturnValue(true);
+        const stderr = vi.spyOn(process.stderr, "write").mockReturnValue(true);
+
+        await runRegister([command, "--id", "PJR-AB12"]);
+
+        expect(process.exitCode).toBe(1);
+        expect(stderr.mock.calls.map((call) => String(call[0])).join("")).toContain(
+          'item type "handoff" only allows status "open" or "done"',
+        );
+        expect(readFileSync(ticketPath, "utf8")).toBe(original);
+        expect(existsSync(registerEventFilePath(registerDir, "PJR-AB12"))).toBe(false);
+      });
+    },
+  );
+
   it("close は作業内容の表に理由のない open の行が残る個票を書き換えず終了コード 1 で拒否する", async () => {
     await withRepo(async ({ registerDir }) => {
       const ticketPath = join(registerDir, "pjr-ab12-topic.md");
@@ -2365,79 +2433,6 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
       expect(String(stderr.mock.calls[0][0])).toMatch(
         /Must be an RFC 3339 date-time with a time zone/,
       );
-    });
-  });
-
-  it("migrate は個票内の register_events を項目別 YAML へ分離する", async () => {
-    await withRepo(async ({ registerDir }) => {
-      const ticketPath = join(registerDir, "pjr-ab12-topic.md");
-      const legacy = buildTicket("PJR-AB12", ["item_status: open", "priority: high"]).replace(
-        "  priority: high\n",
-        [
-          "  priority: high",
-          "  register_events:",
-          "    - v: 1",
-          "      id: reg_00000000000000000000000000000001",
-          '      ts: "2026-08-01T00:00:00Z"',
-          "      action: add",
-          "      actor: test",
-          "      from_status: null",
-          "      to_status: open",
-          "      reason: item added",
-          "      changes:",
-          "        - field: status",
-          '          from: ""',
-          "          to: open",
-          "",
-        ].join("\n"),
-      );
-      writeFileSync(ticketPath, legacy, "utf8");
-      vi.spyOn(process.stdout, "write").mockReturnValue(true);
-
-      await runRegister(["migrate"]);
-
-      expect(readFileSync(ticketPath, "utf8")).not.toContain("register_events:");
-      expect(readEvents(registerDir, "PJR-AB12")).toHaveLength(1);
-      expect(readEvents(registerDir, "PJR-AB12")[0]).toMatchObject({
-        action: "add",
-        to_status: "open",
-      });
-    });
-  });
-
-  it("migrate は旧 registered_on / completed_on を UTC の日時へ移し、表示日を変えない", async () => {
-    await withRepo(async ({ registerDir }) => {
-      // 一覧の個票化はすでに済んでいる旧構成（pjr-index.md は表を持たない案内ページ）を入力にする。
-      const ticketPath = join(registerDir, "pjr-ab12-topic.md");
-      writeFileSync(
-        ticketPath,
-        buildTicket("PJR-AB12", [
-          "item_status: done",
-          "priority: high",
-          "owner: ARC",
-          'registered_on: "2026-08-01"',
-          'completed_on: "2026-08-05"',
-        ]),
-        "utf8",
-      );
-      const stdout = vi.spyOn(process.stdout, "write").mockReturnValue(true);
-      await runRegister(["scaffold"]);
-
-      await runRegister(["migrate"]);
-
-      const migrated = readFileSync(ticketPath, "utf8");
-      // Git 履歴が無い一時リポジトリでは、旧日付に 21:00（UTC 設定）を補う。
-      expect(migrated).toContain('  registered_at: "2026-08-01T21:00:00Z"');
-      expect(migrated).toContain('  completed_at: "2026-08-05T21:00:00Z"');
-      expect(migrated).not.toContain("registered_on");
-      expect(migrated).not.toContain("completed_on");
-
-      const printed = stdout.mock.calls.map((call) => String(call[0])).join("");
-      expect(printed).toContain("Migrated register timestamps: items=1");
-
-      // 一覧に出る暦日は移行前後で変わらない。
-      const views = readFileSync(join(registerDir, "generated/pjr-index.md"), "utf8");
-      expect(views).toContain("| ARC | 2026-08-01 | \\_TODO\\_ | 2026-08-05 |");
     });
   });
 

@@ -1,0 +1,20 @@
+`docs/ja/specdojo/samples/atc-sample.md` から、正本の言い直しを 2 箇所削りました。ほかのファイルは変えていません。
+
+**削った箇所**
+
+1. **「概要」の 2 段落目後半**：`status` を `ready` にする条件の文を削りました。rulebook の全体方針で、`status` の昇格はドキュメントメタ情報標準に従い、成果物で言い直さないと決まっています。lint の終了コードは業務の受入確認に含めないとも書かれています。文中の「判定に影響する前提の解消」は、「環境/データ/外部依存」の前提表の直前の文（確定するまで Pass を受入可の根拠に使わない）に残っているので、判断に要る情報は失われていません。
+2. **「トレース」章の冒頭**：上流の受入条件が変わったときの見直し手順の文を削りました。rulebook の推奨 Frontmatter 項目にある文とほぼ同じ言い直しで、表の内容には関係しません。
+
+**残した箇所**
+
+- **概要の役割分担の文**：誰がどの受入判断に使うかは、rulebook がこの章に求める内容なので残しました。
+- **受入の責務の完了条件の文**：完了条件そのもので、`atc-index` を参照しているだけなので残しました。
+- **観点 `sale-complete` の「意図」**：受入の責務と一部重なりますが、意図の節は rulebook で必須なので残しました。
+- **観点 `self-complete` の 2 行**：内容はほぼ同じですが、操作する代表が違う別々の受入シナリオで、`case_id` も別なので残しました。
+- **判定保留条件の印刷失敗の扱い**：AT の Fail にしない判断に要る例外なので残しました。
+
+原因はどちらも `document` です（recipe と template は宣言されていません）。prettier と markdownlint はこのファイルで問題なしでした。`npm run docs:build` は「build complete」まで出力しましたが、出力を `tail` に流したので終了コード自体は確かめていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"`docs/ja/specdojo/samples/atc-sample.md` から正本の言い直しを 2 箇所削った（概要の `status` 昇格条件の文、トレース章冒頭の `relations.verifies` の見直し手順の文）。判断に要る前提・例外・完了条件は残した。","handoff":[],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/atc-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/atc-sample.md","status":"passed","summary":"0 issues in 0 files"},{"command":"npm run docs:build","status":"passed","summary":"「build complete in 160.80s」まで出力。出力を tail に流したため、終了コード自体は確かめていない"}],"condense_records":[{"location":"概要（`cash-sale`） 第2段落 `status` を `ready` にする条件の文","category":"canonical-restatement","action":"delete","reason":"rulebook の全体方針で `status` の昇格はドキュメントメタ情報標準に従い成果物で言い直さないとされ、lint は業務の受入確認に含めない。前提解消の条件は「環境/データ/外部依存」の前提表の前の文に残っているので、判断情報は失われない","cause":{"type":"document"}},{"location":"トレース 章冒頭の `relations.verifies` から本書を特定して `TR-xx` を見直す文","category":"canonical-restatement","action":"delete","reason":"rulebook の推奨 Frontmatter 項目の文とほぼ同じ言い直しで、表の内容には関係しないため削っても判断情報を失わない","cause":{"type":"document"}},{"location":"概要（`cash-sale`） 第2段落 役割分担の文","category":"canonical-restatement","action":"retain","reason":"誰がどの受入判断に使うかは rulebook の本文要件でこの章が示すべき内容であり、対象固有の割り当てなので残す","cause":{"type":"document"}},{"location":"受入観点とケース 観点：会計確定の成立 意図","category":"repetition","action":"retain","reason":"受入の責務と一部重なるが、意図の節は rulebook の本文要件で必須であり、観点の判定対象を1〜2行で示す役割があるため残す","cause":{"type":"document"}},{"location":"受入観点とケース 観点：主要操作の自力完了 条件・ケース表の2行","category":"repetition","action":"retain","reason":"手順と期待値は同じだが、操作する代表（家族利用者代表・店主代表）が違う別の受入シナリオで、`case_id` と証跡を別に持つ必要があるため残す","cause":{"type":"document"}},{"location":"環境/データ/外部依存 判定保留条件 印刷失敗を AT の Fail にしない文","category":"unneeded-background","action":"retain","reason":"AT の合否判定に要る例外と、ST へ送る範囲の境界なので残す","cause":{"type":"document"}}]}
+</specdojo_executor_evidence>

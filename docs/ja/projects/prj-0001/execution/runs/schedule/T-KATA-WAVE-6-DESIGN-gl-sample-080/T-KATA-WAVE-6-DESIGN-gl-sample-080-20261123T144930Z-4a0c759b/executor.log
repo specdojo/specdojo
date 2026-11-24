@@ -1,0 +1,5 @@
+`docs/ja/specdojo/samples/gl-sample.yaml` の `notes` 2 か所から、他の用語の定義と重なる文を削りました。schema 検査は valid でした。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"`gl-sample.yaml` の重複する `notes` 2 件を削除し、意味と必須情報は維持した。schema 検査は valid。","handoff":[],"condense_records":[{"location":"tm-sales-customer の `notes`「つけを利用できるのは顧客のうち常連客だけである」","category":"repetition","action":"delete","reason":"tm-sales-regular-customer の `definition`（顧客のうち、店主代表がつけの利用を認めた人）と同じ内容で、顧客の定義の判断に要らない。","cause":{"type":"document"}},{"location":"tm-shop-owner の `notes`「家族が店番をする場合も、常連客や定番商品の選定は店主代表が決める」","category":"canonical-restatement","action":"delete","reason":"常連客と定番商品の選定者は tm-sales-regular-customer と tm-standard-product の `definition` が正本で、店番の家族の扱いは tm-sales-regular-customer の `notes` に残っている。","cause":{"type":"document"}}],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/gl.schema.yaml --data docs/ja/specdojo/samples/gl-sample.yaml","status":"passed","summary":"valid"}]}
+</specdojo_executor_evidence>

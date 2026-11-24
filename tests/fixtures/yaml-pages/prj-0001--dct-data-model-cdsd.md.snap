@@ -33,7 +33,7 @@ specdojo:
 | 成果物 ID | 名称 | 種別 | 根拠 | 概要 |
 | --- | --- | --- | --- | --- |
 | cdsd-planning | 概念データストア定義（プロジェクトの立上と計画） | work | bdd-project-config / bdd-operations-config / bdd-register-entry / bdd-deliverables-catalog / bdd-schedule-strategy / bdd-schedule-track | プロジェクトの立上と計画で扱うデータストア（プロジェクト構成、登録簿、成果物カタログ、Schedule等）を一覧で定義する |
-| cdsd-execution | 概念データストア定義（プロジェクト実行） | work | bdd-exec-event / bdd-exec-state / bdd-exec-plan-result / bdd-exec-evidence / bdd-worktree-branch / bdd-routine-definition / bdd-job-run | プロジェクト実行で扱うデータストア（実行イベント・状態、plan/result、worktree、定期処理、Job Run等）を一覧で定義する |
+| cdsd-execution | 概念データストア定義（プロジェクト実行） | work | bdd-exec-event / bdd-exec-state / bdd-exec-plan-result / bdd-exec-evidence / bdd-worktree-branch / bdd-routine-definition / bdd-job-run | プロジェクト実行で扱うデータストア（実行イベント・状態、plan/result、worktree、定期処理、job run等）を一覧で定義する |
 | cdsd-sharing | 概念データストア定義（活用と共有） | work | bdd-deliverable / bdd-derived-view / bdd-report-record | 活用と共有で扱うデータストア（成果物、派生ビュー、報告記録）を一覧で定義する |
 | sld-specdojo | 保管場所一覧（SpecDojo） | work | cdsd-planning / cdsd-execution / cdsd-sharing | SpecDojo が記録を置く場所（リポジトリ内の docs・execution・controls、端末側の状態ディレクトリ、worktree、一時ディレクトリ）ごとに、置くもの・Git で共有するか・寿命・消してよいかを一覧にする |
 
@@ -179,7 +179,7 @@ groups:
           - bdd-worktree-branch
           - bdd-routine-definition
           - bdd-job-run
-        overview: プロジェクト実行で扱うデータストア（実行イベント・状態、plan/result、worktree、定期処理、Job Run等）を一覧で定義する
+        overview: プロジェクト実行で扱うデータストア（実行イベント・状態、plan/result、worktree、定期処理、job run等）を一覧で定義する
         path: cdsd-execution.md
         rulebook: specdojo:cdsd-rulebook
         evidence_refs:
@@ -191,7 +191,7 @@ groups:
             purpose: 定期処理ストアのスキーマ
           - kind: implementation
             path: src/job/job.ts
-            purpose: Job Runストアのスキーマ
+            purpose: job runストアのスキーマ
         done_criteria:
           - text: データストアの業務的役割・内容・粒度が記述されていること
             roles: [BA]

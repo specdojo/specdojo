@@ -13,7 +13,7 @@ specdojo:
   agent: sol-executor
   approach: fully-guided
   targets:
-    - prj-0001:cdt-register-type
+    - cdt-register-type
 ---
 
 # Edit Result

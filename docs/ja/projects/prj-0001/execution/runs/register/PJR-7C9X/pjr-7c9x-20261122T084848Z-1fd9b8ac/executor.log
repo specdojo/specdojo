@@ -1,0 +1,13 @@
+grade の plan は、`--target kata` のとき、旧い機械的な検査が付けた「未解決の _TODO_ / _ASSUMPTION_ が残っています。」の指摘を「前回の指摘」として渡さなくなりました。`npm run typecheck` と `tests/src/grade` の単体テスト 177 件は通りました。`npm run lint:ts` は error なしで、max-lines などの warning だけです。`utc-index` の再評価は、統合の後にオーケストレーターが行います。
+
+- **原因:** 手順 7 は、前回の指摘が未解消なら同じ文言で再掲させます。そのため、直す前の検査が付けた指摘が引き継がれ続けていました。`_ASSUMPTION_` を持つ sample の結果が、評価の時期で pass と needs-work に分かれていたのはこのためです。
+- **変更:** `src/grade/plan.ts` に `withoutObsoletePlaceholderFindings` を足し、kata では上の文言の指摘を plan へ渡しません。`_TODO_` は現在の検査が改めて major にします。`--target deliverable` は変えていません。
+- **テスト:** `tests/src/grade/repo-results.test.ts` に、kata では渡されず deliverable では渡されるテストを追加しました。
+- **文書:** `docs/ja/specdojo/references/command-reference.md` の grade の説明へ追記しました。個票 `pjr-7c9x-grade-assumption-marker-major.md` の対応結果も更新し、`_TODO_` も消しました。
+- **未確認の点:** itc-sample の指摘の `rule` が `vp-ops-release-readiness` だった理由は、観点が再掲時に付け替わったためと推定です。これは確かめていません。
+
+個票の `### 5.1. CHANGELOG に書く事項` は 1 回目の文案のままです。2 回目の変更用の行は足していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"kata の grade plan から、旧い機械的な検査が付けた「未解決の _TODO_ / _ASSUMPTION_ が残っています。」の指摘を前回の指摘として渡さないようにした。deliverable は変更なし。単体テスト、文書、個票の対応結果を更新した。","handoff":["統合の後、オーケストレーターが utc-index の型を評価し直し、sample の F006 が消えて verdict が pass になることを確かめる。","itc-sample の指摘の rule が vp-ops-release-readiness だった理由は、前回の指摘の再掲時に観点が付け替わったためと推定した。未確認なので、再評価で確かめる。","個票の 5.1 CHANGELOG に書く事項は 1 回目の文案のままにした。2 回目の変更用の行は足していない。"],"validations":[{"command":"npx vitest run tests/src/grade","status":"passed","summary":"9 files, 177 tests passed"},{"command":"npx prettier --check src/grade/plan.ts tests/src/grade/repo-results.test.ts docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-7c9x-grade-assumption-marker-major.md","status":"passed","summary":"all matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"passed","summary":"valid"},{"command":"npm run typecheck","status":"passed","summary":"no type errors"},{"command":"npm run lint:ts","status":"passed","summary":"0 errors, 42 warnings"}]}
+</specdojo_executor_evidence>

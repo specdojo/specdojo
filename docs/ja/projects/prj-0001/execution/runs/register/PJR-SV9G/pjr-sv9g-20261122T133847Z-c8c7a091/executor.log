@@ -1,0 +1,26 @@
+`prj-charter-template` から運用の記述を外し、個票の対応結果と作業内容の表を更新しました。作業内容 No.3 の型の grade は、統合の後に orchestrator が流すため `open` のままです。
+
+`validate:history-links` は実行し、最後の 5 行がすべて valid でした。`lint:md` と `lint:fm` は親の runner が実行します。
+
+## 変更内容
+
+- **`prj-charter-template`**: 冒頭文・目的・ステークホルダー・前提制約・承認の `_TODO_` 注記を、記入内容の要点だけに縮めました。認可条件行の削除条件の注記と、権限委譲の承認事項の例示 5 項目は削除しました。
+- **文字数**: 空白と表の区切り行を除いて、2739 から 2265 に減りました（474 減）。
+- **「未決事項」表の列**: `期限`・`担当`・`対応方針` を `論点`・`影響`・`当面の扱い` に直しました。章の構成を rulebook と合わせる条件に従い、rulebook と sample の列に合わせたものです。
+- **個票**: 対応結果に次の項目を書きました。
+  - 実施内容
+  - 前後の文字数
+  - 迷った点
+  - 他の template へ広げるときの外す・残す・参照の形の一覧
+  - 変更案（rulebook・sample・recipe は変更不要）
+  - 保護された設定の変更なし
+  - CHANGELOG に書く事項（区分は「変更」）
+  - 残課題
+
+## 確認範囲
+
+変更したのは `docs/ja/specdojo/templates/prj-charter-template.md` と個票だけです。個票は、実行前から他のファイル（`events/pjr-sv9g.yaml` と run ディレクトリ配下の evidence 類）にも変更がありました。これらは runner 管理のファイルで、私は触っていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"prj-charter-template の注記を簡潔化（2739→2265 文字）し、未決事項表の列を rulebook/sample に合わせた。個票の対応結果と作業内容を更新した。作業内容 No.3（型の grade）は orchestrator の作業として open のまま。検証済み: prj-charter-template と個票。rulebook・sample・recipe は変更不要。","handoff":["迷った点: 未決事項表の列が rulebook/sample とずれていたため、章の構成を rulebook に合わせる条件に従い template 側を `論点`・`影響`・`当面の扱い` に直した。承認事項の例示 5 項目は項目がプロジェクトごとに決まり rulebook にも書かれるため削除した。","前後の文字数（空白と表の区切り行を除く）: 2739 → 2265。","他の template へ広げるときの外す・残す・参照の形の一覧は個票の対応結果 5.4 に記載した。","rulebook・sample・recipe の変更案はなし。保護された設定の変更もなし。","CHANGELOG に書く事項: 区分は変更。文案は `prj-charter-template` の記入注記を簡潔にし、未決事項表の列を rulebook に合わせた、とする。","残課題: 統合の後に orchestrator が型を grade する（作業内容 No.3、open）。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/templates/prj-charter-template.md","status":"passed","summary":"整形済み"},{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-sv9g-template-slim-pilot-prj-charter.md","status":"passed","summary":"整形済み"},{"command":"npm run validate:history-links","status":"passed","summary":"出力の最後の 5 行がすべて valid"}],"target_coverage":[]}
+</specdojo_executor_evidence>

@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-BEQ8",
+  "run_id": "pjr-beq8-20261123T001207Z-ddb0f4f3",
+  "updated_at": "2026-11-23T01:17:10.195Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sonnet-executor",
+      "attempts": 1,
+      "started_at": "2026-11-23T01:13:09.897Z",
+      "completed_at": "2026-11-23T01:13:33.926Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-BEQ8/pjr-beq8-20261123T001207Z-ddb0f4f3/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 0,
+      "started_at": "2026-11-23T01:16:59.278Z",
+      "completed_at": "2026-11-23T01:16:59.278Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-BEQ8/pjr-beq8-20261123T001207Z-ddb0f4f3/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "sonnet-executor",
+      "attempts": 1,
+      "started_at": "2026-11-23T01:17:01.372Z",
+      "completed_at": "2026-11-23T01:17:10.195Z",
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-BEQ8/pjr-beq8-20261123T001207Z-ddb0f4f3/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-BEQ8/pjr-beq8-20261123T001207Z-ddb0f4f3/result.md"
+  },
+  "resume_notes": [
+    {
+      "at": "2026-11-23T01:03:18.297Z",
+      "notes": [
+        "完了条件の2回目の実行にある、オーケストレーターが行った比較と測りの結果を個票の対応結果に書き写し、作業内容の表の該当の行をdoneにして完了として報告する。比較と測りは流し直さない。"
+      ]
+    },
+    {
+      "at": "2026-11-23T01:13:09.878Z",
+      "notes": [
+        "完了条件の3回目の実行にある、親の検証で落ちたtest-unitの原因を直す。started_atが日付の値でも文字列でも時刻として使い、両方の形を単体テストで確かめる。test:unitを流して通ることを確かめてから報告する。"
+      ]
+    }
+  ]
+}
