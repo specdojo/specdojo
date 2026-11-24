@@ -156,7 +156,7 @@ project の `integration_branch` は、`repos[].integration_branch` とは別の
 
 有効時は `integration_branch` よりこの同期先を優先します。`external_projects` 経由の起票も、相手の CLI と project の設定に従います。相手も v0.10.0 以上に更新してください。`--commit` のない register 操作は現在の worktree に書き、`--dry-run --commit` は同期しません。
 
-同期範囲は `project_register_path` と `execution_path/exec/events/` です。専用 worktree は既存のものを再利用し、無ければ Git 共通ディレクトリの `specdojo/register/<識別子>/worktree` に作成します。設定とパスはブランチ上でも解決できる状態にしてください。schedule のイベント読み取りは同期先を更新して参照するため、通信が必要です。初期ブランチの作成、競合の復旧、develop への取り込みは [[specdojo:register-operation-guide|登録簿運用ガイド]] を参照してください。
+同期範囲は `project_register_path` と `execution_path/exec/events/` です。`exec run --register` の状態遷移と検証済みの個票編集も同期し、exec の commit から個票・イベントを除きます。run の記録・成果物は従来の実行先に残ります。専用 worktree は既存のものを再利用し、無ければ Git 共通ディレクトリの `specdojo/register/<識別子>/worktree` に作成します。設定とパスはブランチ上でも解決できる状態にしてください。schedule のイベント読み取りは同期先を更新して参照するため、通信が必要です。初期ブランチの作成、競合の復旧、develop への取り込みは [[specdojo:register-operation-guide|登録簿運用ガイド]] を参照してください。
 
 ## 5. `run`のキー
 

@@ -790,7 +790,10 @@ function execWorktreePath(root: string): string | null {
       .split("\n")
       .filter((line) => line.startsWith("worktree "))
       .map((line) => line.slice("worktree ".length))
-      .find((path) => path !== root) ?? null
+      // register_sync の専用 worktree（.git/specdojo/register/ 配下）は exec の worktree ではない。
+      .find(
+        (path) => path !== root && !path.startsWith(join(root, ".git", "specdojo", "register")),
+      ) ?? null
   );
 }
 
@@ -1003,6 +1006,122 @@ describe("exec smoke integration", () => {
 });
 
 describe("exec run --register executor/reporter pipeline (E2E)", () => {
+  it.each([
+    ["--worktree", false],
+    ["--in-place", false],
+    ["--worktree", true],
+  ] as const)(
+    "publishes runner transitions and the executor response with %s (reporter retry: %s)",
+    { timeout: 120_000 },
+    async (mode, retryReporter) => {
+      await withRepo(async ({ root, worktreeBase }) => {
+        const branch = "project/test/register";
+        const remote = join(worktreeBase, "remote.git");
+        const failureMarker = join(worktreeBase, "fail-reporter");
+        const ticket = `${REGISTER_REL}/pjr-ab12-pipeline-test.md`;
+        // register CLI の --commit 経路は記帳前に id とファイル名の一致を検査する。
+        writeFileSync(
+          join(root, ticket),
+          readFileSync(join(root, ticket), "utf8").replace(
+            "id: test:pjr-ab12-topic",
+            "id: test:pjr-ab12-pipeline-test",
+          ),
+        );
+        writeFileSync(
+          join(root, ".specdojo/specdojo.config.json"),
+          JSON.stringify({
+            ...CONFIG,
+            projects: { test: { ...CONFIG.projects.test, register_sync: { enabled: true } } },
+          }),
+        );
+        writeFileSync(
+          join(root, "fake-agent.mjs"),
+          FAKE_PIPELINE_AGENT_SCRIPT.replace(
+            'if (role === "reporter") {',
+            `if (role === "reporter" && existsSync(${JSON.stringify(failureMarker)})) process.exit(1);\nif (role === "reporter") {`,
+          ).replace(
+            'if (role === "executor") {',
+            `if (role === "executor") {
+            const path = ${JSON.stringify(ticket)};
+            writeFileSync(path, readFileSync(path, "utf8") + "\\nValidated executor response\\n");`,
+          ),
+        );
+        await runConfig(["init"]);
+        const ignored = git(root, "ls-files", "-ci", "--exclude-standard")
+          .split("\n")
+          .filter(Boolean);
+        if (ignored.length) git(root, "rm", "-r", "--cached", "--quiet", ...ignored);
+        git(root, "add", "-A");
+        git(root, "commit", "-m", "test: dedicated runner register branch");
+        const base = git(root, "rev-parse", "HEAD");
+        git(root, "init", "--bare", remote);
+        git(root, "remote", "add", "origin", remote);
+        git(root, "branch", branch);
+        git(root, "push", "origin", branch);
+        const args = [
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-AB12",
+          "--executor-by",
+          "exec-1",
+          "--reporter-by",
+          "report-1",
+          mode,
+          "--worktree-base",
+          worktreeBase,
+        ];
+        if (retryReporter) writeFileSync(failureMarker, "fail\n");
+        await runExec(args);
+        if (retryReporter) {
+          expect(process.exitCode).toBe(1);
+          expect(git(remote, "show", `${branch}:${ticket}`)).toContain("item_status: waiting");
+          expect(git(remote, "show", `${branch}:${ticket}`)).not.toContain(
+            "Validated executor response",
+          );
+          const worktree = execWorktreePath(root)!;
+          expect(readFileSync(join(worktree, ticket), "utf8")).toContain(
+            "Validated executor response",
+          );
+          expect(git(root, "diff", "--name-only", `${base}..${EXEC_BRANCH}`)).not.toContain(ticket);
+          rmSync(failureMarker);
+          await runExec([...args, "--resume"]);
+        }
+        expect(process.exitCode ?? 0).toBe(0);
+        const published = git(remote, "show", `${branch}:${ticket}`);
+        expect(published).toContain("item_status: review");
+        expect(published).toContain("Validated executor response");
+        const events = git(remote, "show", `${branch}:${REGISTER_REL}/events/pjr-ab12.yaml`);
+        expect(events).toContain("action: start");
+        expect(events).toContain("action: review");
+        expect(
+          git(remote, "diff", "--name-only", `${base}..${branch}`)
+            .split("\n")
+            .every((path) => path.startsWith(`${REGISTER_REL}/`)),
+        ).toBe(true);
+        if (mode === "--worktree") {
+          const integration = git(
+            root,
+            "log",
+            "--first-parent",
+            "--format=%H",
+            "--grep=^exec(register PJR-AB12):",
+          ).split("\n")[0]!;
+          const execHead = git(root, "rev-parse", `${integration}^2`);
+          expect(
+            git(root, "diff", "--name-only", `${base}..${execHead}`)
+              .split("\n")
+              .some((path) => path.startsWith(`${REGISTER_REL}/`)),
+          ).toBe(false);
+          expect(readFileSync(join(root, ticket), "utf8")).toContain("Validated executor response");
+        } else {
+          expect(git(root, "diff", "--name-only")).not.toContain(ticket);
+        }
+      });
+    },
+  );
+
   it.each(["passed", "failed", "skipped"] as const)(
     "records post-integration %s in the root run after merge and preserves review",
     { timeout: 120_000 },

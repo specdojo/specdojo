@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-4VD6",
+  "run_id": "pjr-4vd6-20261124T003347Z-e359e99c",
+  "updated_at": "2026-11-24T01:08:19.066Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-24T00:59:54.720Z",
+      "completed_at": "2026-11-24T01:04:49.217Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-4VD6/pjr-4vd6-20261124T003347Z-e359e99c/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "sonnet-reporter",
+      "attempts": 0,
+      "started_at": "2026-11-24T01:08:16.860Z",
+      "completed_at": "2026-11-24T01:08:16.860Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-4VD6/pjr-4vd6-20261124T003347Z-e359e99c/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-24T01:08:19.066Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-4VD6/pjr-4vd6-20261124T003347Z-e359e99c/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-4VD6/pjr-4vd6-20261124T003347Z-e359e99c/result.md"
+  },
+  "resume_notes": [
+    {
+      "at": "2026-11-24T00:59:54.709Z",
+      "notes": [
+        "親の検証の test-integration で、この項目で足した tests/src/exec/register-pipeline-e2e.integration.test.ts の 3 件（publishes runner transitions and the executor response の --worktree・--in-place・reporter retry: true）が落ちた。--worktree と --in-place では process.exitCode が 0 でなく 1 になり（1082 行目の前）、reporter retry: true では register のブランチの個票に item_status: waiting が無い（1068 行目）。実装とテストのどちらが意図と違うかを確かめて直し、決めた内容を個票の対応結果に書く。worktree で npx vitest run --config vitest.integration.config.ts tests/src/exec/register-pipeline-e2e.integration.test.ts を流して通ることを確かめる。"
+      ]
+    }
+  ]
+}

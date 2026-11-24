@@ -140,3 +140,19 @@
       from: "-"
       to: "parent validation failed: test-integration"
   previous_event_id: reg_f654ca64f8234f7bbf2187315afe083e
+- v: 1
+  id: reg_479260f03ab74acaa43e22f25abf5411
+  ts: "2026-11-24T00:59:46Z"
+  action: start
+  actor: opus-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-integration"
+      to: "-"
+  previous_event_id: reg_e08812b2e4d64663ba51d32ba733c926

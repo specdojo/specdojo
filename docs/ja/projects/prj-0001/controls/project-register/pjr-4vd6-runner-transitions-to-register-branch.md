@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-23T00:21:39Z"
   due_on: "2026-11-30"
-  block_reason: "parent validation failed: test-integration"
   derived_from:
     - PJR-2TX0
   depends_on:
@@ -64,6 +63,7 @@ exec run --register の start・review・waiting と対応結果を register の
 - 対象個票以外の記帳差分が exec の commit に紛れ込む場合は停止する。runner の checkpoint・review・wait・再開時の複製からも専用ブランチの個票・イベントを外す。失敗した run の未検証本文は worktree に残し、再開後に検証してから転送する。
 - 成功時は register を呼び出し元へ一方向に merge し、最新の作業表と対応結果で post-review する。取り込みに失敗したときも統合再開ができるよう、worktree の撤去前に行う。run 記録・成果物は従来の exec 経路に残す。
 - 並行 run の個票転送と別 clone による push の割り込みを統合テストで扱う。実 runner 経路では worktree／in-place、waiting と reporter 再開、exec の commit に個票がないことを検証する。テスト実行・型検査などの親検証は runner が実施する。
+- 再開時の判断: 親の検証で落ちた E2E の 3 件は、実装ではなくテストが意図と違っていた。`--worktree`・`--in-place` は、fixture の個票 `id`（`test:pjr-ab12-topic`）がファイル名と一致せず、`--commit` 経路の記帳前の検査で start が止まっていた。fixture の `id` をファイル名に合わせる（smoke の fixture と同じ置き換え）。reporter 再開は、ヘルパー `execWorktreePath` が register 専用の worktree（`.git/specdojo/register/` 配下）を exec の worktree と取り違えていたため、専用の worktree を除外する。記帳前の id 検査は既存の register CLI の規約であり、緩めない。
 - 保護された設定の変更は不要。既存の同期設定を利用し、`CHANGELOG.md`・登録簿一覧・本個票のステータス項目・result は編集していない。
 
 ### 5.2. 残る確認

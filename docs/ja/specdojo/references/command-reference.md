@@ -837,6 +837,8 @@ specdojo exec run --project prj-0001 --job job-weekly-report --input period=2026
 
 `--branch <repo>=<name>` は、register の worktree モードでプロダクトの作業ブランチ名を上書きします。たとえば `specdojo exec run --project prj-0001 --register PJR-0012 --worktree --branch app1=feature/login` と指定します。複数のリポジトリにはオプションを繰り返します。宣言にないリポジトリ、同じリポジトリの重複、空の値、不正な Git ブランチ名は拒否します。別項目のブランチと重なると start 前に停止するため、topic を変えるかこの指定で解消します。自動の連番は付けません。SpecDojo の記帳用のブランチには適用しません。`--resume` では記録済みの名前を使うため指定の繰り返しは不要で、別名への変更は拒否します。
 
+`register_sync.enabled: true` の場合、`exec run --register` の start・review・waiting と post-review の close は専用ブランチへ commit・push します。executor の個票編集は検証後・exec の commit 前に転送し、exec の commit には個票・イベントを含めません。同期の失敗では編集を保持して停止します。設定・復旧は [[specdojo:register-operation-guide|登録簿運用ガイド]] を参照してください。未設定の場合は従来動作です。
+
 作業ブランチ名の既定値は `exec/{project}-{id}` です。`repos[].branch_template` に git-flow の `feature/{topic}`、GitHub flow の `{type}/{topic}` などを設定できます。統合の形は `repos[].integration_strategy` の `merge`（既定）・`ff`・`branch-only` で選びます。`ff` は早送りできるときだけ統合し、分岐していれば停止します。自動の rebase や同期 merge は行いません。
 
 `--integration-branch <repo>=<branch>` は、register の worktree モードで、その run に限ってプロダクトリポジトリ `<repo>` の統合先を上書きします。複数リポジトリにはオプションを繰り返します。`<repo>` は `repos[].name` に宣言済みで、`<branch>` はそのリポジトリに存在する有効なローカルブランチでなければならず、リモートブランチの取得やローカルブランチの作成は行いません。同じ `<repo>` の重複、宣言にないリポジトリ、空の値は register の状態を変える前に拒否します。統合先の優先順位は「run の指定 → `repos[].integration_branch` → そのリポジトリの現在のブランチ」です。指定しない run の挙動は従来と変わりません。
