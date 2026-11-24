@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-F636",
   "run_id": "pjr-f636-20261124T023056Z-ab7d6d82",
-  "updated_at": "2026-11-24T02:34:08.084Z",
+  "updated_at": "2026-11-24T02:34:17.045Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-F636/pjr-f636-20261124T023056Z-ab7d6d82/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "terra-executor",
       "attempts": 1,
       "started_at": "2026-11-24T02:34:08.084Z",
-      "completed_at": null,
+      "completed_at": "2026-11-24T02:34:17.045Z",
       "artifact_ref": null
     }
   },
