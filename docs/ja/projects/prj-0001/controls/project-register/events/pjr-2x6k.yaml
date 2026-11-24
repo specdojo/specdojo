@@ -99,3 +99,48 @@
       from: ""
       to: 関連ドキュメント
   previous_event_id: reg_d7e51b0c4fa8410784690d1dbf926af7
+- v: 1
+  id: reg_d92080d7e6d04b159dddae4e74bbebc0
+  ts: "2026-11-23T23:59:13Z"
+  action: start
+  actor: terra-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_ad19771ecf08492e8496f4d794564023
+- v: 1
+  id: reg_4e19da81ff9041a2927b7afe1c8939a2
+  ts: "2026-11-24T00:05:28Z"
+  action: review
+  actor: terra-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_d92080d7e6d04b159dddae4e74bbebc0
+- v: 1
+  id: reg_263d6d1bbb8740bda80450db0660e007
+  ts: "2026-11-24T00:13:02Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果・親の検証（test-integration を含め passed）で確かめ、保護された設定の変更がないことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-24"
+    - field: conclusion
+      from: "-"
+      to: exec resume を --task なしで流すと、doing と、reporter・統合の段で止まったタスクを --parallel で並べて再開するようにした
+  previous_event_id: reg_4e19da81ff9041a2927b7afe1c8939a2

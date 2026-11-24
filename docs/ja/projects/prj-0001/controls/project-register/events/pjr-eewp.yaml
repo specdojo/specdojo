@@ -99,3 +99,61 @@
       from: ""
       to: 関連ドキュメント
   previous_event_id: reg_7e5951714774429f98eeee7fcc335ad2
+- v: 1
+  id: reg_88dbffb6c2ef4681af5cf2fbe714f402
+  ts: "2026-11-23T23:43:33Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_0be8f6d41dcd40debd72076858c0acda
+- v: 1
+  id: reg_522786fc02d24302a4839eb3bca7bb6b
+  ts: "2026-11-23T23:48:14Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-integration"
+  previous_event_id: reg_88dbffb6c2ef4681af5cf2fbe714f402
+- v: 1
+  id: reg_95b92a97ff754450a406ffd090dd2f7e
+  ts: "2026-11-24T00:12:15Z"
+  action: start
+  actor: sonnet-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-integration"
+      to: "-"
+  previous_event_id: reg_522786fc02d24302a4839eb3bca7bb6b
+- v: 1
+  id: reg_c217a0a659bc4fc29420b81d3c29ead5
+  ts: "2026-11-24T00:18:52Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_95b92a97ff754450a406ffd090dd2f7e

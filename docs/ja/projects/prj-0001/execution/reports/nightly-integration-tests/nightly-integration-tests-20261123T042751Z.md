@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: prj-0001:nightly-integration-tests-report-20261123T042751Z
+  id: prj-0001:nightly-integration-tests-report-20261123t042751z
   type: project
   status: draft
   rulebook: none

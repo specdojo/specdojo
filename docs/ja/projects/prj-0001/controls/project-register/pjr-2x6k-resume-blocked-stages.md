@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-2x6k-resume-blocked-stages
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: done
   priority: medium
   difficulty: easy
   owner: DEV
   registered_at: "2026-11-23T22:25:52Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-24T00:13:02Z"
+  conclusion: exec resume を --task なしで流すと、doing と、reporter・統合の段で止まったタスクを --parallel で並べて再開するようにした
   commit_type: fix
   commit_scope: exec
 ---
@@ -43,7 +45,11 @@ specdojo:
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+`--task` なしで `doing` と状態参照のある reporter・統合段の `blocked` を選び、`--parallel` の上限で再開する。大量の停止を個別に再開する負担を解消するため、この動作を採用した。判断が必要な executor 段や状態参照のない停止は自動選択しない。選択の単体テストを追加し、親 runner が型検査・lint・単体／統合テストを実行する。
+
+### 5.1. CHANGELOG に書く事項
+
+- 不具合修正: `exec resume` がタスク未指定でも reporter・統合段で停止したタスクを並列に再開するよう修正。
 
 ## 6. 関連ドキュメント
 
