@@ -102,3 +102,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_60acdd6d7bfe463db8c049aad9b9b214
+- v: 1
+  id: reg_a3b4b7b236d84a95ae7b0f727aa42e2c
+  ts: "2026-11-24T13:47:58Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 利用者の承認のもと workflow を反映し、起動ブランチを project の develop に直した後の初回の実行（run 45405044916）で macOS・ubuntu の 4 つの組み合わせがすべて success になったことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-24"
+    - field: conclusion
+      from: "-"
+      to: Linux の Dev Container と macOS の導入を GitHub Actions の Onboarding の workflow で確かめるようにした。WSL はリリースの手順の人の確認で行う
+  previous_event_id: reg_df22a9660cb94d4192ca29bd80cf3b37

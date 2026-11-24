@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-f636-onboarding-ci-matrix
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-23T13:17:07Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-24T13:47:58Z"
+  conclusion: Linux の Dev Container と macOS の導入を GitHub Actions の Onboarding の workflow で確かめるようにした。WSL はリリースの手順の人の確認で行う
   depends_on:
     - PJR-B6M3
   commit_type: ci
