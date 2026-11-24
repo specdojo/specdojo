@@ -1,0 +1,15 @@
+LP に `LICENSE` を追加し、README と CHANGELOG を更新して、個票の対応結果を記入しました。ただし、作業用の Bash が承認待ちで実行できなかったため、LP の `npm run lint:md`・`npm run format:check`・`npm run build` は走らせていません。これらの確認は親 runner の検証に委ねます。
+
+- **`LICENSE`:** MIT の本文で、著作権の表記は `Copyright (c) 2025 Tiny Shrine` です。specdojo 本体の `LICENSE` にある `Authored by naoji3x` の行は付けていません。
+- **`README.md`:**
+  - 冒頭に showcase の案内を足しました。登録簿と exec で運用していること、commit の `Refs: prj-0002:PJR-XXXX` から `specdojo/specdojo` の `project/prj-0002/develop` の登録簿の項目へ辿れることを書きました。外からの PR を受け付けない旨の 1 文もここに置きました。
+  - 第 6 章に「ライセンス」を新設しました。MIT であること、`src/assets/mascot/dojo-otter.webp` は MIT の対象外で転用・改変を許可しないこと、暫定の画像で正式な画像に替える予定であることを書いています。
+  - 既存の節は番号だけ振り直しました。ブランチ運用は第 7 章（7.1 を含む）、変更履歴の更新は第 8 章です。
+- **`CHANGELOG.md`:** `Unreleased` の「追加」に 2 件を追記しました。`LICENSE` と README の節の追加、`package.json` の `license` の記載です。
+- **個票:** 作業内容の表の 1〜3 を `done` にしました。4 は `open` のままで、検査を実行できなかった理由をメモに書いています。対応結果にも実施内容と残課題を記入しました。
+
+個票は表のメモを長くしたので、列幅が揃わず親の `npm run lint:md`（Prettier の整形検査を含む場合）で指摘が出る可能性があります。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"LICENSE（MIT）追加、README に showcase の案内とライセンス節（以降の章番号を振り直し）、CHANGELOG の Unreleased 追記、個票の対応結果を記入した。LP の検査は sandbox で実行できず親 runner に委ねる。","handoff":["外からの PR を受け付けない 1 文は showcase の案内（README 冒頭）に置いた。","LP の `npm run lint:md`・`npm run format:check`・`npm run build` は executor では未実行。親 runner の検証結果を確認すること。","リポジトリの Public 化と PR を Collaborators only にする GitHub 設定は人が行う。","個票の作業内容の表のメモが長く、Prettier の列幅整形で差分が出る可能性がある。"],"validations":[{"command":"npm run format:check","status":"not_run","summary":"Bash の承認待ちで LP のコマンドを実行できなかった。親 runner の検証と人の確認に委ねる。"},{"command":"npm run build","status":"not_run","summary":"Bash の承認待ちで LP のコマンドを実行できなかった。親 runner の検証と人の確認に委ねる。"}]}
+</specdojo_executor_evidence>

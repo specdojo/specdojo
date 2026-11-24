@@ -1,0 +1,11 @@
+LP の作業ツリーで `npm run lint:md`・`npm run format:check`・`npm run build` を流し、3 つとも成功しました。検査による LP のファイル変更はありません。
+
+個票は 2 か所を直しました。
+- 作業内容の行 4 を `open` から `done` にしました。
+- 検証結果を対応結果に書きました。残課題は、リポジトリの Public 化と PR を Collaborators only にする設定の 2 つで、どちらも人が行います。
+
+`git status` は実行していません（承認が要るコマンドだったため）。そのため、`target_coverage` の `changed` は、再開前の変更として渡された一覧に基づいて書いています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"LP で lint:md・format:check・build が成功した。検査による変更はなく、個票の作業内容 4 行目を done にし、検証結果を対応結果へ記録した。","handoff":["LP の `npm run lint:md`・`npm run format:check`・`npm run build` は LP の作業ツリーで成功した。","リポジトリを Public に切り替える操作と、GitHub の設定で PR の作成を Collaborators only にする操作は人が行う。"],"validations":[{"command":"npm run lint:md (specdojo-lp)","status":"passed","summary":"LP の作業ツリーで成功"},{"command":"npm run format:check (specdojo-lp)","status":"passed","summary":"Prettier の検査に成功"},{"command":"npm run build (specdojo-lp)","status":"passed","summary":"Astro のビルドに成功"}],"target_coverage":[{"target":"docs/ja/projects/prj-0002/controls/project-register/pjr-tak7-lp-public-license-readme.md","status":"changed","path":"docs/ja/projects/prj-0002/controls/project-register/pjr-tak7-lp-public-license-readme.md"},{"target":"specdojo-lp:CHANGELOG.md","status":"changed","path":"specdojo-lp:CHANGELOG.md"},{"target":"specdojo-lp:README.md","status":"changed","path":"specdojo-lp:README.md"},{"target":"specdojo-lp:LICENSE","status":"changed","path":"specdojo-lp:LICENSE"}]}
+</specdojo_executor_evidence>

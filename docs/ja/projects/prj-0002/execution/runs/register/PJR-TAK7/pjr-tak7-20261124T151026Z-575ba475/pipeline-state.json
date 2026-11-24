@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-TAK7",
+  "run_id": "pjr-tak7-20261124T151026Z-575ba475",
+  "updated_at": "2026-11-24T15:25:49.380Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sonnet-executor",
+      "attempts": 1,
+      "started_at": "2026-11-24T15:24:46.815Z",
+      "completed_at": "2026-11-24T15:25:15.956Z",
+      "artifact_ref": "docs/ja/projects/prj-0002/execution/runs/register/PJR-TAK7/pjr-tak7-20261124T151026Z-575ba475/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 0,
+      "started_at": "2026-11-24T15:25:32.304Z",
+      "completed_at": "2026-11-24T15:25:32.304Z",
+      "artifact_ref": "docs/ja/projects/prj-0002/execution/runs/register/PJR-TAK7/pjr-tak7-20261124T151026Z-575ba475/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "sonnet-executor",
+      "attempts": 1,
+      "started_at": "2026-11-24T15:25:35.290Z",
+      "completed_at": "2026-11-24T15:25:49.380Z",
+      "artifact_ref": null,
+      "repos": {
+        "specdojo-lp": {
+          "status": "merged",
+          "commit": "0cffe556f2bc92ce2ba7ce6a4aa866484bbbc584",
+          "merged_at": "2026-11-24T15:25:46.772Z"
+        },
+        "specdojo-assets": {
+          "status": "unchanged",
+          "commit": null,
+          "merged_at": null
+        },
+        "project": {
+          "status": "merged",
+          "commit": null,
+          "merged_at": "2026-11-24T15:25:46.773Z"
+        }
+      }
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0002/execution/runs/register/PJR-TAK7/pjr-tak7-20261124T151026Z-575ba475/plan.md",
+    "result_ref": "docs/ja/projects/prj-0002/execution/runs/register/PJR-TAK7/pjr-tak7-20261124T151026Z-575ba475/result.md"
+  },
+  "resume_notes": [
+    {
+      "at": "2026-11-24T15:24:46.772Z",
+      "notes": [
+        "LP の作業ツリーで npm run lint:md・npm run format:check・npm run build を流し、結果を検証として記録する。成果物はできているので、変更は検査で必要になった場合に限る。"
+      ]
+    }
+  ]
+}
