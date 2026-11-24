@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-JA3M",
   "run_id": "pjr-ja3m-20261124T033100Z-0740bac1",
-  "updated_at": "2026-11-24T03:56:03.832Z",
+  "updated_at": "2026-11-24T03:56:13.322Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-JA3M/pjr-ja3m-20261124T033100Z-0740bac1/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sonnet-reporter",
       "attempts": 2,
       "started_at": "2026-11-24T03:56:03.832Z",
-      "completed_at": null,
+      "completed_at": "2026-11-24T03:56:13.322Z",
       "artifact_ref": null,
       "repos": {
         "project": {

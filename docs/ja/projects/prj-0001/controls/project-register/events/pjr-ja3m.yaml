@@ -176,3 +176,16 @@
       from: 'integrate failed: project: Deliverable status promotion to "ready" is human-only and must not be done by an agent run: tests/fixtures/yaml-pages/ifx-cmd-ai-provider-cli.yaml, tests/fixtures/yaml-pages…'
       to: "-"
   previous_event_id: reg_3104df6a3df74610915a9ca7e2b33c04
+- v: 1
+  id: reg_d9857974acfe4ad1af4ba42fbf5c4f1f
+  ts: "2026-11-24T03:56:12Z"
+  action: review
+  actor: sonnet-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_3029bc7fb1b647e7ad9d407d26e50f6f
