@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-PROJECT-pm-communication-plan-sample-040
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-PROJECT-pm-communication-plan-sample-040/T-KATA-WAVE-6-PROJECT-pm-communication-plan-sample-040-20261124T015049Z-f37c23f3/plan.md
   started_at: "2026-11-24T01:50:57.903Z"
+  completed_at: "2026-11-24T01:57:03.619Z"
   agent: opus-executor
   execution: agent
   approach: rulebook-maintenance
@@ -20,16 +21,27 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- rulebook の本文構成における受入条件と記述ガイドを、grade の指摘（F001〜F007）に基づいて更新しました。
+- 「位置づけ」の章を PJR-76N9 に従い、文書の役割の割り当てを求めない記述に変更しました。
+- 「見直し条件と未決事項」の記述ガイドに、追従対象の定義、更新するための `Role code`、および反映の証跡の記録先を求める要件を追加しました。
+- 「未決事項」の記述ガイドに、決定時期と判断者の記載を求める要件を追加しました。
+- 「方針と適用範囲」の記述ガイドに、人間と AI Agent の判断境界を記述することを求める要件を追加しました。
+- template に残っていた空の表ヘッダーを削除し、代わりに良い例・悪い例の記述ガイドを補充しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/rulebooks/pm-communication-plan-rulebook.md`: rulebook の受入条件、記述ガイド（方針と適用範囲、見直し条件と未決事項）、および「位置づけ」のセクションを更新しました。具体的には、grade の指摘に基づき、AI Agent と人間の判断境界の明記、更新時の追従対象・担当 `Role code`・証跡の記録先の定義、および未決事項における決定時期と判断者の記載要件を記述ガイドに追加しました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- F006 の一部は入れていません: 『この計画の更新担当』と『反映を確かめる担当』を本文に書かせる規定は、PJR-76N9（文書の役割の割り当てを本文に求めない）に当たるため入れませんでした。追従対象（管理計画の判断ゲート、Schedule の確認・承認タスク、エスカレーションの判断者、チャネル設定）ごとの更新 `Role code` と、反映の証跡の記録先は要件に入れました。result の `進め方と実践の型の適用` へ記録してください。
+- 直さなかった箇所: 『全体方針』『ファイル命名・ID規則』『推奨 Frontmatter 項目』『禁止事項』は、grade の指摘も冗長な記述もないため変更していません。
+- sample・recipe・template はこの段では変更していません。rulebook の『見直し条件と未決事項』で追加した追従対象と更新 `Role code` は、sample の『見直し条件と未決事項』の章にはまだ記述されていないため、後の sample の段での更新が必要です。
+- F006 の一部は入れていない: 『この計画の更新担当』と『反映を確かめる担当』を本文に書かせる規定は、PJR-76N9（文書の役割の割り当てを本文に求めない）に当たるため入れなかった。追従対象（管理計画の判断ゲート、Schedule の確認・承認タスク、エスカレーションの判断者、チャネル設定）ごとの更新 Role code と、反映の証跡の記録先は要件に入れた。result の `進め方と実践の型の適用` へ記録すること。
+- 直さなかった箇所: 『全体方針』『ファイル命名・ID規則』『推奨 Frontmatter 項目』『禁止事項』は、grade の指摘も冗長な記述もないため変えなかった。
+- sample・recipe・template はこの段では変えていない。rulebook の『見直し条件と未決事項』で足した追従対象と更新 Role code は、sample の『見直し条件と未決事項』の章にまだ書かれていないため、後の sample の段で埋める必要がある。
+- 適用外の検証: `npm run validate:history-links`（plan・result・個票（`pjr-*.md`）のどれも変更しておらず、変更は rulebook 1 ファイルだけのため）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+대상 `rulebook` の構成を、`grade` の指摘事項および `PJR-76N9` の規定に基づいて整理しました。`recipe` や `template` との整合性を保ちつつ、`rulebook` 側で定義すべき記述ガイド（判断境界、追従対象、未決事項の記載要件）を拡充しました。また、役割の割り当てを本文に求めない方針に基づき、「位置づけ」の記述を調整しました。

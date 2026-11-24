@@ -1,0 +1,22 @@
+コミュニケーション計画の rulebook（`docs/ja/specdojo/rulebooks/pm-communication-plan-rulebook.md`）を、grade の指摘 F001〜F007 に沿って直しました。変えたのはこの 1 ファイルだけで、sample・recipe・template には手を付けていません。Prettier と markdownlint は問題なしです。残りの検査は親の runner が流します。
+
+**指摘ごとの直し方**
+- **F003（機会の受入条件）**: 「本文構成（標準テンプレ）」の受入条件を判定できる形にしました。各行がステークホルダー ID の情報要求に対応し、責任に採用済み Role code、証跡に記録先が入っていることを条件にしています。記述ガイドにも同じことを書き、情報要求に対応しない行と記録先のない行は置かないとしました。
+- **F005・F007（方針と未決事項）**: template・sample とのずれを埋めました。
+  - 「方針と適用範囲」で、AI Agent は記録整理と草案の支援だけを担い、合意・承認・公開の判断は人間の Role code が担うことを必須にしました。
+  - 未決事項には、決定時期と判断者を添えることを求めました。
+- **F001（情報管理と公開）**: 判断・課題・リスク・変更要求を、課題ログ・リスク登録簿・変更要求ログへ分けて転記することを書きました。口頭の決定を転記する担当も Role code で示させます。
+- **F002・F004（見直し時の追従）**: 連絡時期・判断経路・共有手段を変えたときの追従対象を挙げました。管理計画の判断ゲート、Schedule の確認・承認タスク、エスカレーションの判断者、チャネル設定の 4 つです。それぞれを更新する Role code も書かせます。
+- **F006（反映の確認）**: 一部だけ反映しました。連絡運用へ反映された証跡の記録先を書くことは求めました。ただし「この計画の更新担当」「反映を確かめる担当」を本文に書かせる規定は入れていません。文書を作る・確かめる役割の割り当てを本文に求めないという PJR-76N9 の決まりに当たるためです。追従対象ごとの更新担当は業務の担当なので、要件に含めています。
+
+**簡潔化として直した箇所**
+- 「位置づけ」の「担当者は…確認します」を「…を判断するための文書です」に書き換えました（PJR-76N9）。
+- 記述ガイドから空の表ヘッダー 3 つを外しました。template が骨組みの正本で、同じものを rulebook に載せないという Rulebook 記述標準に合わせています。
+- 記述ガイドの各章に、良い例・悪い例を 1 つずつ足しました。
+
+**変えなかった箇所**
+「全体方針」「ファイル命名・ID規則」「推奨 Frontmatter 項目」「禁止事項」は、指摘も冗長な記述もなかったので変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"pm-communication-plan-rulebook の本文構成の受入条件と記述ガイドを grade の指摘 F001〜F007 に沿って直し、template と重なる空の表ヘッダーを外して良い例・悪い例を足した。「位置づけ」は PJR-76N9 に沿って書き換えた。F006 は、この計画の更新・確認の担当を求める部分を PJR-76N9 により入れず、追従対象ごとの更新 Role code と反映の証跡だけを入れた。","handoff":["F006 の一部は入れていない: 『この計画の更新担当』と『反映を確かめる担当』を本文に書かせる規定は、PJR-76N9（文書の役割の割り当てを本文に求めない）に当たるため入れなかった。追従対象（管理計画の判断ゲート、Schedule の確認・承認タスク、エスカレーションの判断者、チャネル設定）ごとの更新 Role code と、反映の証跡の記録先は要件に入れた。result の `進め方と実践の型の適用` へ記録すること。","直さなかった箇所: 『全体方針』『ファイル命名・ID規則』『推奨 Frontmatter 項目』『禁止事項』は、grade の指摘も冗長な記述もないため変えなかった。","sample・recipe・template はこの段では変えていない。rulebook の『見直し条件と未決事項』で足した追従対象と更新 Role code は、sample の『見直し条件と未決事項』の章にまだ書かれていないため、後の sample の段で埋める必要がある。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/pm-communication-plan-rulebook.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/pm-communication-plan-rulebook.md","status":"passed","summary":"0 issues in 0 files"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"plan・result・個票（pjr-*.md）のどれも変更しておらず、変更は rulebook 1 ファイルだけのため"}]}
+</specdojo_executor_evidence>
