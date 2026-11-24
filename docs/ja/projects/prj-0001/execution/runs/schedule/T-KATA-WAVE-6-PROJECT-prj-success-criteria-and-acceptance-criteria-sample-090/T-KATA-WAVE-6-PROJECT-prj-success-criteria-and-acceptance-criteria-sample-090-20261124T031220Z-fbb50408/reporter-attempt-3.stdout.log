@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "mode": "review",
+  "grade_check": "### 評価結果の確認\n\n`npx specdojo grade list --target kata --path docs/ja/specdojo/samples/prj-success-criteria-and-acceptance-criteria-sample.md --changed-only` を実行した結果、対象外の変更は検出されませんでした。\n- `verdict`: `pass`\n- `score`: 96\n- `finding_counts`: blocker 0, major 0, minor 2, note 0\n\n`npx specdojo grade list --target kata --path docs/ja/specdojo/rulebooks/prj-success-criteria-and-acceptance-criteria-rulebook.md --changed-only` を実行した結果、対象外の変更は検出されませんでした。\n- `verdict`: `pass`\n- `score`: 98\n- `finding_counts`: blocker 0, major 0, minor 1, note 0\n\n`npx specdojo grade list --target kata --path docs/ja/specdojo/recipes/prj-success-criteria-and-acceptance-criteria-recipe.md --changed-only` を実行した結果、対象外の変更は検出されませんでした。\n- `verdict`: `pass`\n- `score`: 98\n- `finding_counts`: blocker 0, major 0, minor 2, note 0\n\n`npx specdojo grade list --target kata --path docs/ja/specdojo/templates/prj-success-criteria-and-acceptance-criteria-template.md --changed-only` を実行した結果、対象外の変更は検出されませんでした。\n- `verdict`: `pass`\n- `score`: 90\n- `finding_counts`: blocker 0, major 0, minor 9, note 0",
+  "rationale": [
+    "評価結果の鮮度は `specdojo grade list --changed-only` コマンドによって最新であることが確認された。",
+    "完了条件 `DC-001`〜`DC-005` について、`docs/ja/specdojo/samples/prj-success-criteria-and-acceptance-criteria-sample.md` の内容と `grade` の結果を照合したところ、いずれも満たしていることを確認した。",
+    "`grade` の結果（`F001`, `F002` 等の `minor` な `finding`）は、本タスクの完了を妨げるものではないと判断した。"
+  ],
+  "improvements": [
+    "SC-06 の「必須記録と引き継ぎ」について、具体的な項目と内容を明記する。",
+    "例外表の列構成を `rulebook`、`template`、`sample` の間で統一する（「判定への影響」および「解決期限・責任者」の扱いを揃える）。",
+    "`template` の判定手順に、変更理由と影響条件 ID の記録、および変更要求ログへの転記手順を追加する。",
+    "`recipe` に、証跡の公開範囲と、確認者・承認者を役割名で記載する旨の問い・レビュー観点を追記する。"
+  ],
+  "approach": "### approach に応じた確認\n\n- `**`磨き込みの実施`**`: `plan` で要求された `rulebook` の必須要素の反映、`recipe` の問いへの対応、`sample` の形式との整合性は、`grade` の結果によって確認された。\n- `**`変更の混入確認`**`: `specdojo grade list --changed-only` の結果、対象外の変更は混入していないことが確認された。"
+  ],
+  "verdict": "complete-with-findings"
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-090",
+  "run_id": "T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-090-20261124T031220Z-fbb50408",
+  "updated_at": "2026-11-24T03:30:14.384Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sonnet-review-executor",
+      "attempts": 1,
+      "started_at": "2026-11-24T03:12:59.883Z",
+      "completed_at": "2026-11-24T03:13:27.155Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-090/T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-090-20261124T031220Z-fbb50408/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "sonnet-reporter",
+      "attempts": 4,
+      "started_at": "2026-11-24T03:30:03.613Z",
+      "completed_at": "2026-11-24T03:30:13.721Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-090/T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-090-20261124T031220Z-fbb50408/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "sonnet-review-executor",
+      "attempts": 1,
+      "started_at": "2026-11-24T03:30:14.384Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-090/T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-090-20261124T031220Z-fbb50408/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-090/T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-090-20261124T031220Z-fbb50408/result.md"
+  }
+}
