@@ -171,7 +171,7 @@ ${(options.outputTail ?? "").slice(-MAX_OUTPUT_TAIL).replace(/```/gu, "'''")}
       : "";
   return `---
 specdojo:
-  id: ${options.projectId}:nightly-integration-tests-report-${stamp}
+  id: ${options.projectId}:nightly-integration-tests-report-${stamp.toLowerCase()}
   type: project
   status: draft
   rulebook: none
