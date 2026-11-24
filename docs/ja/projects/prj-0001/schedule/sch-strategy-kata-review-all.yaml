@@ -1,0 +1,1106 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/sch-strategy.schema.yaml
+kind: strategy
+id: prj-0001:sch-strategy-kata-review-all
+type: project
+status: draft
+title: スケジュール戦略（kata の sample の全件の 5 段のレビュー）
+rulebook: specdojo:sch-rulebook
+track: kata-review-all
+# PJR-0BGE の段取りとして PJR-G2XJ で組んだもの。PJR-F4TG で目合わせした 5 段のレビュー（R1〜R5）を、
+# dct-kata の非推奨でない sample のうち目合わせの 3 件（prj-overview・opr・stsd）を除く 103 件に広げる。
+# 段の phase set は sch-strategy-kata-review-calibration の kata-agent-review-pass を写した。
+# agent は kata-guide の「書き手と別のモデルの組み方」に従い owner_rules の phase_overrides で指名する。
+# codex が書いた sample は opus-executor、claude と flash（cdt・ifx-cmd）が書いた sample は sol-executor に任せる。
+# 流す順は cross_domain_dependencies で段に分けて付ける（段の中は並べて流す）。
+scope:
+  catalogs:
+    - id: prj-0001:dct-kata
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-kata.yaml
+      local_ids:
+        - opd-sample
+        - bes-sample
+        - ifx-file-sample
+        - tsp-index-sample
+        - etc-index-sample
+        - prj-charter-sample
+        - prj-scope-sample
+        - prj-issues-and-approach-sample
+        - prj-stakeholder-register-sample
+        - prj-success-criteria-and-acceptance-criteria-sample
+        - prj-assumptions-constraints-dependencies-sample
+        - prj-comparison-of-alternatives-sample
+        - pm-plan-sample
+        - pm-organization-sample
+        - pm-roles-sample
+        - pm-raci-sample
+        - pm-members-sample
+        - pm-communication-plan-sample
+        - pm-quality-management-plan-sample
+        - pm-orchestrator-playbook-sample
+        - mm-sample
+        - pr-sample
+        - dct-sample
+        - dct-index-sample
+        - bac-sample
+        - bes-index-sample
+        - br-sample
+        - bps-sample
+        - bdd-sample
+        - bds-sample
+        - gl-sample
+        - imp-business-sample
+        - nfr-index-sample
+        - nfr-availability-sample
+        - nfr-integrity-sample
+        - nfr-maintainability-sample
+        - nfr-operations-sample
+        - nfr-performance-sample
+        - nfr-reliability-sample
+        - nfr-security-safety-sample
+        - nfr-usability-sample
+        - sac-sample
+        - trc-requirements-to-specs-sample
+        - sysd-critical-flows-sample
+        - sysd-cross-cutting-policy-sample
+        - sf-index-sample
+        - sf-sample
+        - clis-sample
+        - uis-sample
+        - dss-sample
+        - cdt-sample
+        - cdsd-sample
+        - ccd-sample
+        - sld-sample
+        - cdfd-overview-sample
+        - cdfd-sample
+        - cdfd-uc-sample
+        - ifd-sample
+        - ifx-index-sample
+        - ifx-api-sample
+        - ifx-msg-sample
+        - ifx-cmd-sample
+        - tsd-index-sample
+        - tsd-sample
+        - cdr-sample
+        - cxd-sample
+        - cnd-sample
+        - cpd-sample
+        - imp-interface-sample
+        - sysd-index-sample
+        - utc-index-sample
+        - utc-sample
+        - itc-index-sample
+        - itc-sample
+        - stc-index-sample
+        - stc-sample
+        - etc-sample
+        - atc-index-sample
+        - atc-sample
+        - trc-requirements-to-tests-sample
+        - imp-test-sample
+        - opd-index-sample
+        - opd-access-control-sample
+        - opd-incident-management-sample
+        - opd-monitoring-sample
+        - opr-index-sample
+        - opr-access-control-sample
+        - opr-backup-restore-sample
+        - opr-batch-sample
+        - opr-change-sample
+        - opr-incident-sample
+        - opr-monitoring-sample
+        - opr-support-sample
+        - mip-index-sample
+        - otp-index-sample
+        - otp-sample
+        - cop-index-sample
+        - cop-sample
+        - dmd-index-sample
+        - dmd-sample
+        - mtp-sample
+        - imp-data-sample
+        - imp-operations-sample
+  include_kinds:
+    - work
+approach_rules:
+  - local_ids:
+      - opd-sample
+      - bes-sample
+      - ifx-file-sample
+      - tsp-index-sample
+      - etc-index-sample
+      - prj-charter-sample
+      - prj-scope-sample
+      - prj-issues-and-approach-sample
+      - prj-stakeholder-register-sample
+      - prj-success-criteria-and-acceptance-criteria-sample
+      - prj-assumptions-constraints-dependencies-sample
+      - prj-comparison-of-alternatives-sample
+      - pm-plan-sample
+      - pm-organization-sample
+      - pm-roles-sample
+      - pm-raci-sample
+      - pm-members-sample
+      - pm-communication-plan-sample
+      - pm-quality-management-plan-sample
+      - pm-orchestrator-playbook-sample
+      - mm-sample
+      - pr-sample
+      - dct-sample
+      - dct-index-sample
+      - bac-sample
+      - bes-index-sample
+      - br-sample
+      - bps-sample
+      - bdd-sample
+      - bds-sample
+      - gl-sample
+      - imp-business-sample
+      - nfr-index-sample
+      - nfr-availability-sample
+      - nfr-integrity-sample
+      - nfr-maintainability-sample
+      - nfr-operations-sample
+      - nfr-performance-sample
+      - nfr-reliability-sample
+      - nfr-security-safety-sample
+      - nfr-usability-sample
+      - sac-sample
+      - trc-requirements-to-specs-sample
+      - sysd-critical-flows-sample
+      - sysd-cross-cutting-policy-sample
+      - sf-index-sample
+      - sf-sample
+      - clis-sample
+      - uis-sample
+      - dss-sample
+      - cdt-sample
+      - cdsd-sample
+      - ccd-sample
+      - sld-sample
+      - cdfd-overview-sample
+      - cdfd-sample
+      - cdfd-uc-sample
+      - ifd-sample
+      - ifx-index-sample
+      - ifx-api-sample
+      - ifx-msg-sample
+      - ifx-cmd-sample
+      - tsd-index-sample
+      - tsd-sample
+      - cdr-sample
+      - cxd-sample
+      - cnd-sample
+      - cpd-sample
+      - imp-interface-sample
+      - sysd-index-sample
+      - utc-index-sample
+      - utc-sample
+      - itc-index-sample
+      - itc-sample
+      - stc-index-sample
+      - stc-sample
+      - etc-sample
+      - atc-index-sample
+      - atc-sample
+      - trc-requirements-to-tests-sample
+      - imp-test-sample
+      - opd-index-sample
+      - opd-access-control-sample
+      - opd-incident-management-sample
+      - opd-monitoring-sample
+      - opr-index-sample
+      - opr-access-control-sample
+      - opr-backup-restore-sample
+      - opr-batch-sample
+      - opr-change-sample
+      - opr-incident-sample
+      - opr-monitoring-sample
+      - opr-support-sample
+      - mip-index-sample
+      - otp-index-sample
+      - otp-sample
+      - cop-index-sample
+      - cop-sample
+      - dmd-index-sample
+      - dmd-sample
+      - mtp-sample
+      - imp-data-sample
+      - imp-operations-sample
+    intent: improve-kata
+    kata_target: rulebook
+phase_sets:
+  kata-agent-review-pass:
+    - id: kata-review-r1
+      name: R1 目的の過不足
+      execution: agent
+      mode: edit
+      approach: sample-maintenance
+      agent:
+        executor: sol-executor
+        reporter: sonnet-reporter
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "110"
+      duration_days: 0.25
+      description:
+        "kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は [[specdojo:kata-guide|実践の型活用ガイド]]（docs/ja/specdojo/guides/kata-guide.md）の「kata を agent でレビューする」に従う。plan に展開された grade の finding は、この段の観点に当たるものだけを扱い、ほかは扱う段に任せる。この段は sample を厚くする段ではなく、R1 の確かめに当たる箇所だけを直す。
+
+        対象の sample が、種別の責務（Sample 記述標準）と rulebook の目的に対し、要る内容を欠いていないか、要らない内容を含んでいないかを確かめ、足す・削る差分を sample に入れる。rulebook など sample 以外は変更せず、直す案を result に書く。報告は同ガイドの「人への報告の形」に従い、executor は報告の handoff に指摘を 1 件ずつ 1 項目（No・段・箇所・指摘・直した案・根拠・印）で書き、表の文字列にまとめない。reporter は handoff の指摘を result の実施内容に Markdown の表として 1 回だけ書き、申し送りには表を重ねない。迷った指摘に「要判断」の印を付ける。
+
+        "
+    - id: kata-review-r2
+      name: R2 構成
+      execution: agent
+      mode: edit
+      approach: sample-maintenance
+      agent:
+        executor: sol-executor
+        reporter: sonnet-reporter
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "120"
+      duration_days: 0.25
+      description:
+        "kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は [[specdojo:kata-guide|実践の型活用ガイド]]（docs/ja/specdojo/guides/kata-guide.md）の「kata を agent でレビューする」に従う。plan に展開された grade の finding は、この段の観点に当たるものだけを扱い、ほかは扱う段に任せる。R1 が直した版を読み、R1 の指摘を繰り返さない。
+
+        章の順・粒度・表と本文の配置が rulebook の本文構成と template に沿い、前提から結論の順に読めるかを確かめ、章の移動・分割・統合の差分を sample に入れる。rulebook など sample 以外は変更せず、直す案を result に書く。報告は同ガイドの「人への報告の形」に従い、executor は報告の handoff に指摘を 1 件ずつ 1 項目（No・段・箇所・指摘・直した案・根拠・印）で書き、表の文字列にまとめない。reporter は handoff の指摘を result の実施内容に Markdown の表として 1 回だけ書き、申し送りには表を重ねない。迷った指摘に「要判断」の印を付ける。
+
+        "
+    - id: kata-review-r3
+      name: R3 読みやすさ
+      execution: agent
+      mode: edit
+      approach: sample-maintenance
+      agent:
+        executor: sol-executor
+        reporter: sonnet-reporter
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "130"
+      duration_days: 0.25
+      description:
+        "kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は [[specdojo:kata-guide|実践の型活用ガイド]]（docs/ja/specdojo/guides/kata-guide.md）の「kata を agent でレビューする」に従う。plan に展開された grade の finding は、この段の観点に当たるものだけを扱い、ほかは扱う段に任せる。前の段が直した版を読み、前の段の指摘を繰り返さない。
+
+        同ガイドの「文章のチェック項目」（W1〜W10）と、その正本として挙げた規約を確かめ、文の直しの差分を sample に入れる。意味と判断に要る背景・例外・制約は変えない。指摘の根拠の列にはチェック項目の No か観点 ID を書く。報告は同ガイドの「人への報告の形」に従い、executor は報告の handoff に指摘を 1 件ずつ 1 項目（No・段・箇所・指摘・直した案・根拠・印）で書き、表の文字列にまとめない。reporter は handoff の指摘を result の実施内容に Markdown の表として 1 回だけ書き、申し送りには表を重ねない。迷った指摘に「要判断」の印を付ける。
+
+        "
+    - id: kata-review-r4
+      name: R4 正しさ
+      execution: agent
+      mode: edit
+      approach: sample-maintenance
+      agent:
+        executor: sol-executor
+        reporter: sonnet-reporter
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "140"
+      duration_days: 0.25
+      description:
+        "kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は [[specdojo:kata-guide|実践の型活用ガイド]]（docs/ja/specdojo/guides/kata-guide.md）の「kata を agent でレビューする」に従う。plan に展開された grade の finding は、この段の観点に当たるものだけを扱い、ほかは扱う段に任せる。前の段が直した版を読み、前の段の指摘を繰り返さない。
+
+        sample に書いてある事実（コマンド、オプション、キー、既定値、列挙値、パス、挙動）を、schema（docs/specdojo/schemas/v1/）、src/、コマンドリファレンス、必要なら --help や検証コマンドの実行と突き合わせる。主張ごとの確かめの表を result の実施内容に書き、誤りの直しの差分を sample に入れる。確かめられなかった主張も表に残す。指摘は同ガイドの「人への報告の形」に従い、executor は報告の handoff に 1 件ずつ 1 項目で書き、reporter は result の実施内容に Markdown の表として 1 回だけ書く（申し送りに表を重ねない）。駄菓子屋の業務の値のように正本のない仮定は、共通サンプル文脈と食い違わなければ確かめの対象にしない。
+
+        "
+    - id: kata-review-r5
+      name: R5 整合
+      execution: agent
+      mode: edit
+      approach: sample-maintenance
+      agent:
+        executor: sol-executor
+        reporter: sonnet-reporter
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "150"
+      duration_days: 0.25
+      description:
+        "kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は [[specdojo:kata-guide|実践の型活用ガイド]]（docs/ja/specdojo/guides/kata-guide.md）の「kata を agent でレビューする」に従う。plan に展開された grade の finding は、この段の観点に当たるものだけを扱い、ほかは扱う段に任せる。前の段が直した版を読み、前の段の指摘を繰り返さない。
+
+        同じ接頭辞の sample（index と個別）、wikilink と based_on の参照先、用語集（docs/ja/product/010-business-specs/060-glossary/）、Sample 記述標準の共通サンプル文脈を読み、食い違いを確かめる。sample の側を直す差分を入れ、相手側を直すべき点は変更せずに直す案を result に書く。報告は同ガイドの「人への報告の形」に従い、executor は報告の handoff に指摘を 1 件ずつ 1 項目（No・段・箇所・指摘・直した案・根拠・印）で書き、表の文字列にまとめない。reporter は handoff の指摘を result の実施内容に Markdown の表として 1 回だけ書き、申し送りには表を重ねない。迷った指摘に「要判断」の印を付ける。
+
+        "
+default_phase_sets:
+  - phase_set: kata-agent-review-pass
+owner_rules:
+  - local_ids:
+      - prj-charter-sample
+      - prj-scope-sample
+      - prj-issues-and-approach-sample
+      - prj-stakeholder-register-sample
+      - prj-success-criteria-and-acceptance-criteria-sample
+    owner: PO
+    phase_overrides:
+      - phase: kata-review-r1
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r2
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r3
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r4
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r5
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+  - local_ids:
+      - pm-roles-sample
+    owner: PM
+    phase_overrides:
+      - phase: kata-review-r1
+        agent:
+          executor: opus-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r2
+        agent:
+          executor: opus-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r3
+        agent:
+          executor: opus-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r4
+        agent:
+          executor: opus-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r5
+        agent:
+          executor: opus-executor
+          reporter: sonnet-reporter
+  - local_ids:
+      - prj-assumptions-constraints-dependencies-sample
+      - prj-comparison-of-alternatives-sample
+      - pm-plan-sample
+      - pm-organization-sample
+      - pm-raci-sample
+      - pm-members-sample
+      - pm-communication-plan-sample
+      - pm-quality-management-plan-sample
+      - pm-orchestrator-playbook-sample
+      - mm-sample
+      - pr-sample
+      - dct-sample
+    owner: PM
+    phase_overrides:
+      - phase: kata-review-r1
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r2
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r3
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r4
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r5
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+  - local_ids:
+      - bac-sample
+      - cdfd-uc-sample
+    owner: BA
+    phase_overrides:
+      - phase: kata-review-r1
+        agent:
+          executor: opus-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r2
+        agent:
+          executor: opus-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r3
+        agent:
+          executor: opus-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r4
+        agent:
+          executor: opus-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r5
+        agent:
+          executor: opus-executor
+          reporter: sonnet-reporter
+  - local_ids:
+      - bps-sample
+      - gl-sample
+      - imp-business-sample
+      - trc-requirements-to-specs-sample
+      - clis-sample
+      - cdsd-sample
+      - ifx-cmd-sample
+      - imp-data-sample
+    owner: BA
+    phase_overrides:
+      - phase: kata-review-r1
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r2
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r3
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r4
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r5
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+  - local_ids:
+      - bds-sample
+      - uis-sample
+      - dss-sample
+    owner: UX
+    phase_overrides:
+      - phase: kata-review-r1
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r2
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r3
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r4
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r5
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+  - local_ids:
+      - dct-index-sample
+      - bdd-sample
+      - sysd-critical-flows-sample
+      - sysd-cross-cutting-policy-sample
+      - ifd-sample
+      - sysd-index-sample
+    owner: ARC
+    phase_overrides:
+      - phase: kata-review-r1
+        agent:
+          executor: opus-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r2
+        agent:
+          executor: opus-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r3
+        agent:
+          executor: opus-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r4
+        agent:
+          executor: opus-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r5
+        agent:
+          executor: opus-executor
+          reporter: sonnet-reporter
+  - local_ids:
+      - bes-sample
+      - ifx-file-sample
+      - bes-index-sample
+      - br-sample
+      - nfr-index-sample
+      - nfr-availability-sample
+      - nfr-integrity-sample
+      - nfr-maintainability-sample
+      - nfr-operations-sample
+      - nfr-performance-sample
+      - nfr-reliability-sample
+      - nfr-security-safety-sample
+      - nfr-usability-sample
+      - sf-index-sample
+      - sf-sample
+      - cdt-sample
+      - ccd-sample
+      - sld-sample
+      - cdfd-overview-sample
+      - cdfd-sample
+      - ifx-index-sample
+      - ifx-api-sample
+      - ifx-msg-sample
+      - tsd-index-sample
+      - tsd-sample
+      - cdr-sample
+      - cxd-sample
+      - cnd-sample
+      - cpd-sample
+      - imp-interface-sample
+    owner: ARC
+    phase_overrides:
+      - phase: kata-review-r1
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r2
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r3
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r4
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r5
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+  - local_ids:
+      - tsp-index-sample
+      - etc-index-sample
+      - sac-sample
+      - utc-index-sample
+      - utc-sample
+      - itc-index-sample
+      - itc-sample
+      - stc-index-sample
+      - stc-sample
+      - etc-sample
+      - atc-index-sample
+      - atc-sample
+      - trc-requirements-to-tests-sample
+      - imp-test-sample
+      - mtp-sample
+    owner: QE
+    phase_overrides:
+      - phase: kata-review-r1
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r2
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r3
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r4
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r5
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+  - local_ids:
+      - opd-sample
+    owner: OPS
+    phase_overrides:
+      - phase: kata-review-r1
+        agent:
+          executor: opus-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r2
+        agent:
+          executor: opus-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r3
+        agent:
+          executor: opus-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r4
+        agent:
+          executor: opus-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r5
+        agent:
+          executor: opus-executor
+          reporter: sonnet-reporter
+  - local_ids:
+      - opd-index-sample
+      - opd-access-control-sample
+      - opd-incident-management-sample
+      - opd-monitoring-sample
+      - opr-index-sample
+      - opr-access-control-sample
+      - opr-backup-restore-sample
+      - opr-batch-sample
+      - opr-change-sample
+      - opr-incident-sample
+      - opr-monitoring-sample
+      - opr-support-sample
+      - mip-index-sample
+      - otp-index-sample
+      - otp-sample
+      - cop-index-sample
+      - cop-sample
+      - dmd-index-sample
+      - dmd-sample
+      - imp-operations-sample
+    owner: OPS
+    phase_overrides:
+      - phase: kata-review-r1
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r2
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r3
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r4
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+      - phase: kata-review-r5
+        agent:
+          executor: sol-executor
+          reporter: sonnet-reporter
+# 流す順: grade が pass でない sample → プロジェクトの定義・計画 → 業務 → システム → 試験 → 運用・移行。
+# 各段の最後の sample を区切りにし、区切りは段のほかの sample を、次の段の sample は区切りを待つ。
+cross_domain_dependencies:
+  # grade が pass でない sample（etc-index が待つ tsp-index を含む）: 区切りの etc-index-sample は段のほかの sample を待つ。
+  - dependent: etc-index-sample
+    requires: opd-sample
+  - dependent: etc-index-sample
+    requires: bes-sample
+  - dependent: etc-index-sample
+    requires: ifx-file-sample
+  - dependent: etc-index-sample
+    requires: tsp-index-sample
+  # プロジェクトの定義・計画: 区切りの dct-index-sample は段のほかの sample を待つ。
+  - dependent: dct-index-sample
+    requires: prj-charter-sample
+  - dependent: dct-index-sample
+    requires: prj-scope-sample
+  - dependent: dct-index-sample
+    requires: prj-issues-and-approach-sample
+  - dependent: dct-index-sample
+    requires: prj-stakeholder-register-sample
+  - dependent: dct-index-sample
+    requires: prj-success-criteria-and-acceptance-criteria-sample
+  - dependent: dct-index-sample
+    requires: prj-assumptions-constraints-dependencies-sample
+  - dependent: dct-index-sample
+    requires: prj-comparison-of-alternatives-sample
+  - dependent: dct-index-sample
+    requires: pm-plan-sample
+  - dependent: dct-index-sample
+    requires: pm-organization-sample
+  - dependent: dct-index-sample
+    requires: pm-roles-sample
+  - dependent: dct-index-sample
+    requires: pm-raci-sample
+  - dependent: dct-index-sample
+    requires: pm-members-sample
+  - dependent: dct-index-sample
+    requires: pm-communication-plan-sample
+  - dependent: dct-index-sample
+    requires: pm-quality-management-plan-sample
+  - dependent: dct-index-sample
+    requires: pm-orchestrator-playbook-sample
+  - dependent: dct-index-sample
+    requires: mm-sample
+  - dependent: dct-index-sample
+    requires: pr-sample
+  - dependent: dct-index-sample
+    requires: dct-sample
+  # プロジェクトの定義・計画の sample は前の段の区切り etc-index-sample を待つ。
+  - dependent: prj-charter-sample
+    requires: etc-index-sample
+  - dependent: prj-scope-sample
+    requires: etc-index-sample
+  - dependent: prj-issues-and-approach-sample
+    requires: etc-index-sample
+  - dependent: prj-stakeholder-register-sample
+    requires: etc-index-sample
+  - dependent: prj-success-criteria-and-acceptance-criteria-sample
+    requires: etc-index-sample
+  - dependent: prj-assumptions-constraints-dependencies-sample
+    requires: etc-index-sample
+  - dependent: prj-comparison-of-alternatives-sample
+    requires: etc-index-sample
+  - dependent: pm-plan-sample
+    requires: etc-index-sample
+  - dependent: pm-organization-sample
+    requires: etc-index-sample
+  - dependent: pm-roles-sample
+    requires: etc-index-sample
+  - dependent: pm-raci-sample
+    requires: etc-index-sample
+  - dependent: pm-members-sample
+    requires: etc-index-sample
+  - dependent: pm-communication-plan-sample
+    requires: etc-index-sample
+  - dependent: pm-quality-management-plan-sample
+    requires: etc-index-sample
+  - dependent: pm-orchestrator-playbook-sample
+    requires: etc-index-sample
+  - dependent: mm-sample
+    requires: etc-index-sample
+  - dependent: pr-sample
+    requires: etc-index-sample
+  - dependent: dct-sample
+    requires: etc-index-sample
+  - dependent: dct-index-sample
+    requires: etc-index-sample
+  # 業務: 区切りの imp-business-sample は段のほかの sample を待つ。
+  - dependent: imp-business-sample
+    requires: bac-sample
+  - dependent: imp-business-sample
+    requires: bes-index-sample
+  - dependent: imp-business-sample
+    requires: br-sample
+  - dependent: imp-business-sample
+    requires: bps-sample
+  - dependent: imp-business-sample
+    requires: bdd-sample
+  - dependent: imp-business-sample
+    requires: bds-sample
+  - dependent: imp-business-sample
+    requires: gl-sample
+  # 業務の sample は前の段の区切り dct-index-sample を待つ。
+  - dependent: bac-sample
+    requires: dct-index-sample
+  - dependent: bes-index-sample
+    requires: dct-index-sample
+  - dependent: br-sample
+    requires: dct-index-sample
+  - dependent: bps-sample
+    requires: dct-index-sample
+  - dependent: bdd-sample
+    requires: dct-index-sample
+  - dependent: bds-sample
+    requires: dct-index-sample
+  - dependent: gl-sample
+    requires: dct-index-sample
+  - dependent: imp-business-sample
+    requires: dct-index-sample
+  # システム: 区切りの sysd-index-sample は段のほかの sample を待つ。
+  - dependent: sysd-index-sample
+    requires: nfr-index-sample
+  - dependent: sysd-index-sample
+    requires: nfr-availability-sample
+  - dependent: sysd-index-sample
+    requires: nfr-integrity-sample
+  - dependent: sysd-index-sample
+    requires: nfr-maintainability-sample
+  - dependent: sysd-index-sample
+    requires: nfr-operations-sample
+  - dependent: sysd-index-sample
+    requires: nfr-performance-sample
+  - dependent: sysd-index-sample
+    requires: nfr-reliability-sample
+  - dependent: sysd-index-sample
+    requires: nfr-security-safety-sample
+  - dependent: sysd-index-sample
+    requires: nfr-usability-sample
+  - dependent: sysd-index-sample
+    requires: sac-sample
+  - dependent: sysd-index-sample
+    requires: trc-requirements-to-specs-sample
+  - dependent: sysd-index-sample
+    requires: sysd-critical-flows-sample
+  - dependent: sysd-index-sample
+    requires: sysd-cross-cutting-policy-sample
+  - dependent: sysd-index-sample
+    requires: sf-index-sample
+  - dependent: sysd-index-sample
+    requires: sf-sample
+  - dependent: sysd-index-sample
+    requires: clis-sample
+  - dependent: sysd-index-sample
+    requires: uis-sample
+  - dependent: sysd-index-sample
+    requires: dss-sample
+  - dependent: sysd-index-sample
+    requires: cdt-sample
+  - dependent: sysd-index-sample
+    requires: cdsd-sample
+  - dependent: sysd-index-sample
+    requires: ccd-sample
+  - dependent: sysd-index-sample
+    requires: sld-sample
+  - dependent: sysd-index-sample
+    requires: cdfd-overview-sample
+  - dependent: sysd-index-sample
+    requires: cdfd-sample
+  - dependent: sysd-index-sample
+    requires: cdfd-uc-sample
+  - dependent: sysd-index-sample
+    requires: ifd-sample
+  - dependent: sysd-index-sample
+    requires: ifx-index-sample
+  - dependent: sysd-index-sample
+    requires: ifx-api-sample
+  - dependent: sysd-index-sample
+    requires: ifx-msg-sample
+  - dependent: sysd-index-sample
+    requires: ifx-cmd-sample
+  - dependent: sysd-index-sample
+    requires: tsd-index-sample
+  - dependent: sysd-index-sample
+    requires: tsd-sample
+  - dependent: sysd-index-sample
+    requires: cdr-sample
+  - dependent: sysd-index-sample
+    requires: cxd-sample
+  - dependent: sysd-index-sample
+    requires: cnd-sample
+  - dependent: sysd-index-sample
+    requires: cpd-sample
+  - dependent: sysd-index-sample
+    requires: imp-interface-sample
+  # システムの sample は前の段の区切り imp-business-sample を待つ。
+  - dependent: nfr-index-sample
+    requires: imp-business-sample
+  - dependent: nfr-availability-sample
+    requires: imp-business-sample
+  - dependent: nfr-integrity-sample
+    requires: imp-business-sample
+  - dependent: nfr-maintainability-sample
+    requires: imp-business-sample
+  - dependent: nfr-operations-sample
+    requires: imp-business-sample
+  - dependent: nfr-performance-sample
+    requires: imp-business-sample
+  - dependent: nfr-reliability-sample
+    requires: imp-business-sample
+  - dependent: nfr-security-safety-sample
+    requires: imp-business-sample
+  - dependent: nfr-usability-sample
+    requires: imp-business-sample
+  - dependent: sac-sample
+    requires: imp-business-sample
+  - dependent: trc-requirements-to-specs-sample
+    requires: imp-business-sample
+  - dependent: sysd-critical-flows-sample
+    requires: imp-business-sample
+  - dependent: sysd-cross-cutting-policy-sample
+    requires: imp-business-sample
+  - dependent: sf-index-sample
+    requires: imp-business-sample
+  - dependent: sf-sample
+    requires: imp-business-sample
+  - dependent: clis-sample
+    requires: imp-business-sample
+  - dependent: uis-sample
+    requires: imp-business-sample
+  - dependent: dss-sample
+    requires: imp-business-sample
+  - dependent: cdt-sample
+    requires: imp-business-sample
+  - dependent: cdsd-sample
+    requires: imp-business-sample
+  - dependent: ccd-sample
+    requires: imp-business-sample
+  - dependent: sld-sample
+    requires: imp-business-sample
+  - dependent: cdfd-overview-sample
+    requires: imp-business-sample
+  - dependent: cdfd-sample
+    requires: imp-business-sample
+  - dependent: cdfd-uc-sample
+    requires: imp-business-sample
+  - dependent: ifd-sample
+    requires: imp-business-sample
+  - dependent: ifx-index-sample
+    requires: imp-business-sample
+  - dependent: ifx-api-sample
+    requires: imp-business-sample
+  - dependent: ifx-msg-sample
+    requires: imp-business-sample
+  - dependent: ifx-cmd-sample
+    requires: imp-business-sample
+  - dependent: tsd-index-sample
+    requires: imp-business-sample
+  - dependent: tsd-sample
+    requires: imp-business-sample
+  - dependent: cdr-sample
+    requires: imp-business-sample
+  - dependent: cxd-sample
+    requires: imp-business-sample
+  - dependent: cnd-sample
+    requires: imp-business-sample
+  - dependent: cpd-sample
+    requires: imp-business-sample
+  - dependent: imp-interface-sample
+    requires: imp-business-sample
+  - dependent: sysd-index-sample
+    requires: imp-business-sample
+  # 試験: 区切りの imp-test-sample は段のほかの sample を待つ。
+  - dependent: imp-test-sample
+    requires: utc-index-sample
+  - dependent: imp-test-sample
+    requires: utc-sample
+  - dependent: imp-test-sample
+    requires: itc-index-sample
+  - dependent: imp-test-sample
+    requires: itc-sample
+  - dependent: imp-test-sample
+    requires: stc-index-sample
+  - dependent: imp-test-sample
+    requires: stc-sample
+  - dependent: imp-test-sample
+    requires: etc-sample
+  - dependent: imp-test-sample
+    requires: atc-index-sample
+  - dependent: imp-test-sample
+    requires: atc-sample
+  - dependent: imp-test-sample
+    requires: trc-requirements-to-tests-sample
+  # 試験の sample は前の段の区切り sysd-index-sample を待つ。
+  - dependent: utc-index-sample
+    requires: sysd-index-sample
+  - dependent: utc-sample
+    requires: sysd-index-sample
+  - dependent: itc-index-sample
+    requires: sysd-index-sample
+  - dependent: itc-sample
+    requires: sysd-index-sample
+  - dependent: stc-index-sample
+    requires: sysd-index-sample
+  - dependent: stc-sample
+    requires: sysd-index-sample
+  - dependent: etc-sample
+    requires: sysd-index-sample
+  - dependent: atc-index-sample
+    requires: sysd-index-sample
+  - dependent: atc-sample
+    requires: sysd-index-sample
+  - dependent: trc-requirements-to-tests-sample
+    requires: sysd-index-sample
+  - dependent: imp-test-sample
+    requires: sysd-index-sample
+  # 運用・移行: 区切りの imp-operations-sample は段のほかの sample を待つ。
+  - dependent: imp-operations-sample
+    requires: opd-index-sample
+  - dependent: imp-operations-sample
+    requires: opd-access-control-sample
+  - dependent: imp-operations-sample
+    requires: opd-incident-management-sample
+  - dependent: imp-operations-sample
+    requires: opd-monitoring-sample
+  - dependent: imp-operations-sample
+    requires: opr-index-sample
+  - dependent: imp-operations-sample
+    requires: opr-access-control-sample
+  - dependent: imp-operations-sample
+    requires: opr-backup-restore-sample
+  - dependent: imp-operations-sample
+    requires: opr-batch-sample
+  - dependent: imp-operations-sample
+    requires: opr-change-sample
+  - dependent: imp-operations-sample
+    requires: opr-incident-sample
+  - dependent: imp-operations-sample
+    requires: opr-monitoring-sample
+  - dependent: imp-operations-sample
+    requires: opr-support-sample
+  - dependent: imp-operations-sample
+    requires: mip-index-sample
+  - dependent: imp-operations-sample
+    requires: otp-index-sample
+  - dependent: imp-operations-sample
+    requires: otp-sample
+  - dependent: imp-operations-sample
+    requires: cop-index-sample
+  - dependent: imp-operations-sample
+    requires: cop-sample
+  - dependent: imp-operations-sample
+    requires: dmd-index-sample
+  - dependent: imp-operations-sample
+    requires: dmd-sample
+  - dependent: imp-operations-sample
+    requires: mtp-sample
+  - dependent: imp-operations-sample
+    requires: imp-data-sample
+  # 運用・移行の sample は前の段の区切り imp-test-sample を待つ。
+  - dependent: opd-index-sample
+    requires: imp-test-sample
+  - dependent: opd-access-control-sample
+    requires: imp-test-sample
+  - dependent: opd-incident-management-sample
+    requires: imp-test-sample
+  - dependent: opd-monitoring-sample
+    requires: imp-test-sample
+  - dependent: opr-index-sample
+    requires: imp-test-sample
+  - dependent: opr-access-control-sample
+    requires: imp-test-sample
+  - dependent: opr-backup-restore-sample
+    requires: imp-test-sample
+  - dependent: opr-batch-sample
+    requires: imp-test-sample
+  - dependent: opr-change-sample
+    requires: imp-test-sample
+  - dependent: opr-incident-sample
+    requires: imp-test-sample
+  - dependent: opr-monitoring-sample
+    requires: imp-test-sample
+  - dependent: opr-support-sample
+    requires: imp-test-sample
+  - dependent: mip-index-sample
+    requires: imp-test-sample
+  - dependent: otp-index-sample
+    requires: imp-test-sample
+  - dependent: otp-sample
+    requires: imp-test-sample
+  - dependent: cop-index-sample
+    requires: imp-test-sample
+  - dependent: cop-sample
+    requires: imp-test-sample
+  - dependent: dmd-index-sample
+    requires: imp-test-sample
+  - dependent: dmd-sample
+    requires: imp-test-sample
+  - dependent: mtp-sample
+    requires: imp-test-sample
+  - dependent: imp-data-sample
+    requires: imp-test-sample
+  - dependent: imp-operations-sample
+    requires: imp-test-sample
