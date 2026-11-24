@@ -1,0 +1,117 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_2dbf962a395047bfb4a84d336a6cf3c5
+  ts: "2026-11-24T02:35:40Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 長い task ID の run で、commit の見出しが commitlint の上限を超えて準備に失敗する
+    - field: description
+      from: ""
+      to: task ID が長いと runner の commit の見出しが 100 文字を超え、checkpoint の commit が commitlint で落ちて run が始まらない
+    - field: input
+      from: ""
+      to: '["v0.10.0 に入れる（2026-11-24、kata の一括実行で見つけた詰まり。利用者の方針: 今回の実行で詰まったところを issue として起票して直す）"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-24"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-6690"]'
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: commitlint
+- v: 1
+  id: reg_ea774a6f5f4d4b3f8d7534816fb6086d
+  ts: "2026-11-24T02:35:44Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "課題内容" updated
+  changes:
+    - field: section
+      from: ""
+      to: 課題内容
+    - field: description
+      from: task ID が長いと runner の commit の見出しが 100 文字を超え、checkpoint の commit が commitlint で落ちて run が始まらない
+      to: "- `T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-040` の準備の commit の見出し「exec(T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-040): prepare execution」が 102 文字になり、commitlint の `header-max-length`（`@commitlint/config-conventional` の既定 100）を超えて、checkpoint の commit が失敗した（「Checkpoint commit failed: commitlint」「Claim rolled back (checkpoint failed)」）。 - 2026-11-23 の一括実行と 2026-11-24 の loop の両方で同じ失敗になり、タスクは todo に戻ったまま、変更範囲の予約だけが残って、範囲の重なる register の run（JA3M・C11R・F4TG）も止まった。"
+  previous_event_id: reg_2dbf962a395047bfb4a84d336a6cf3c5
+- v: 1
+  id: reg_67fd1e8eda084119b7b5a9f7b5b89583
+  ts: "2026-11-24T02:35:48Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "影響範囲" updated
+  changes:
+    - field: section
+      from: ""
+      to: 影響範囲
+  previous_event_id: reg_ea774a6f5f4d4b3f8d7534816fb6086d
+- v: 1
+  id: reg_dcd33d26a82348138ce6a2d616317d85
+  ts: "2026-11-24T02:35:52Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "対応方針" updated
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_67fd1e8eda084119b7b5a9f7b5b89583
+- v: 1
+  id: reg_eb564e7ef2614c288b71550e5c27cd3b
+  ts: "2026-11-24T02:36:58Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "対応結果" updated
+  changes:
+    - field: section
+      from: ""
+      to: 対応結果
+  previous_event_id: reg_dcd33d26a82348138ce6a2d616317d85
+- v: 1
+  id: reg_5e21e330624b43d596d2991425091216
+  ts: "2026-11-24T02:37:03Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "関連ドキュメント" updated
+  changes:
+    - field: section
+      from: ""
+      to: 関連ドキュメント
+  previous_event_id: reg_eb564e7ef2614c288b71550e5c27cd3b
