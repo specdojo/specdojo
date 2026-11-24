@@ -1,0 +1,38 @@
+R4（正しさ）の段として sample の事実を正本と突き合わせ、誤り 2 件と、R4 の観点に当たる grade の finding 2 件（F003・F005）を直しました。変更したのは `docs/ja/specdojo/samples/itc-index-sample.md` だけです。もう 1 件、適用範囲の大きな食い違いが残っていますが、直すには term を足す必要があるため R5 に回しました。lint などの検査はこの後 runner が実行するので、こちらでは流していません（`prettier` での整形だけ済ませています）。
+
+**残した食い違い（要判断）**
+- 現在の tsp-index-sample は、保全の取得（`PATH-04`）と復元の回復（`PATH-07`）を内部結合テストの範囲に入れています。
+- 本書はこれを外部結合テストの範囲とし、「tsp の定めに合わせる」と書いたままです。tsp 側は tsp-index-sample-120 の段（2026-11-24）でこの扱いに変わっていました。
+- 直すと、目的と適用対象・テストレベル表・括り方（term の追加）・対象外・観点・依存・CI 方針の 7 か所に及びます。正しさの段で直す範囲を超えるため、based_on の参照先との整合を見る R5 に任せました。
+- 外部結合テスト（ET）の行の「`PATH-04`〜`PATH-07`」も、tsp では `PATH-05`・`PATH-06` です。ここだけ先に直すと本文が食い違うため、このまま残しています。
+
+**直したこと**
+- **受入テスト（AT）の範囲:** 「SC-01・AC-01〜AC-04」を、tsp の受入テストの範囲どおり「SC-01・SC-07・SC-09・AC-01〜AC-05」にしました。
+- **単体テスト（UT）の置き換え:** tsp の環境区分では DB が Fake、記録サービスが Stub なので、「記録サービスを Fake」を「Stub」にしました。
+- **F003:** 依存の表に `PATH-02` の応答の行を足しました。照合待ちの条件に限り、要求元のタイムアウトより長く応答を遅らせるか、応答を捨てる Stub を挟みます。tsp の「遅延と無応答を再現できるスタブ」を根拠にしています。
+- **F005:** 優先度の基準から、何を指すか分からなかった「通知内容」をなくしました。記録が誤るものを P0、応答だけが誤るものを P1、どちらでもないものを P2 とし、どのケースも判定できるようにしています。
+
+**扱わなかった finding**
+- F001・F004・F006 は前の段で直っていました。
+- F002（報告先に `kinuya:pjr-i003` を書く）は、ほかの文書との整合の話なので R5 に任せました。
+
+**主張ごとの確かめの表**
+
+| No | 主張（箇所） | 正本 | 確かめ方 | 結果 | 根拠 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | frontmatter `type: test`・`based_on` | `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml`、`common-frontmatter.schema.yaml`、rulebook | 読み取り | 一致 | `deliverableType` の enum に `test` があり、`based_on` もある |
+| 2 | ケース表は 10 カラム・`case_id` の形式・`nnn` は 010 から 10 刻み・`automated` | itc-index-rulebook の「ケース表の共通カラム」 | 読み取り | 一致 | 10 列で、`manual` / `automated` / `mixed` の列挙 |
+| 3 | `kinuya-test-data` は商品A・単価30円・在庫5個 | tsp-index-sample の「テストデータ」 | 読み取り | 一致 | — |
+| 4 | C-01 で在庫5→3、C-02 で在庫5→0 | bac-sample の BAC-01 | 読み取り | 一致 | — |
+| 5 | 放課後ピーク1時間60取引 | tsp-index-sample の「メモ / 将来課題」 | 読み取り | 一致 | 仮置きの基準として書かれている |
+| 6 | 受入テストの範囲 | tsp-index-sample のテストレベル一覧 | 読み取り | 不一致 → 修正 | SC-01・SC-07・SC-09・AC-01〜AC-05 |
+| 7 | 単体テストの置き換え | tsp-index-sample の環境区分 | 読み取り | 不一致 → 修正 | DB は Fake、記録サービスは Stub |
+| 8 | `PATH-04`・`PATH-07` は外部結合テストの範囲 | tsp-index-sample のテストレベル一覧と「I/F の確認範囲と代替方法」 | 読み取り、`git log -S` | 不一致（R5 に回した） | tsp 側は内部結合テストで検証用 DB へ実接続すると定めている |
+| 9 | `kinuya-ci-sales-recovery` の実行条件 | tsp-index-sample の自動化方針 | 読み取り | 一部不一致（No.8 に従う） | tsp は保管サービス連携の変更も条件に含む。本書は代わりにスキーマの変更を入れている |
+| 10 | `PATH-02`・`PATH-03` の定義と照合待ちの要件 | ifd-sample | 読み取り | 一致 | — |
+| 11 | 通信不能時の販売継続は未決で対象外 | tsp-index-sample、ifd-sample | 読み取り | 一致 | 報告先は F002 として R5 に回した |
+| 12 | `receipt-print` の Stub の10秒無応答 | なし | — | 確かめられない | 正本のない仮置きの値 |
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4 正しさ: itc-index-sample の事実を tsp/ifd/bac sample・schema・rulebook と照合し、AT 範囲と UT の置き換えの誤りを修正、F003（PATH-02 遅延・無応答 Stub の依存行）と F005（優先度基準の判定可能化）を反映した。PATH-04/PATH-07 の範囲の食い違いは要判断として R5 へ申し送った。","handoff":["R4-1: R4 / 1. 本ドキュメントの目的と適用対象（テストレベル表 AT 行） / AT の範囲が「SC-01・AC-01〜AC-04」で tsp-index-sample のテストレベル一覧（SC-01・SC-07・SC-09・AC-01〜AC-05）と不一致 / 「SC-01・SC-07・SC-09・AC-01〜AC-05」に直した / vp-arc-technical-constraints（正本: tsp-index-sample テストレベル一覧の受入テスト行） / -","R4-2: R4 / 1. 本ドキュメントの目的と適用対象（テストレベル表 UT 行） / 「DB と記録サービスを Fake で置き換えた」が、tsp-index-sample の環境区分（DB は Fake、記録サービスはスタブ）と不一致 / 「DB を Fake、記録サービスを Stub で置き換えた」に直した / vp-arc-technical-constraints（正本: tsp-index-sample 環境区分と用途の単体テスト行） / -","R4-3: R4 / 7. 内部結合テスト共通の境界/依存の扱い / F003: tsp が IT で求める `PATH-02` の遅延・無応答を再現する手段が依存の表にない / 「`PATH-02` の応答」行を追加し、照合待ちの条件に限り記録サービス処理後の応答を要求元タイムアウトより長く遅延または破棄する Stub を挟むとした / vp-arc-technical-constraints（tsp-index-sample「I/F の確認範囲と代替方法」の遅延と無応答を再現できるスタブ） / -","R4-4: R4 / 9. ケース表の共通カラム（`優先度`） / F005: 「通知内容を P2」が IT 範囲のどれか不明で、P0〜P2 に当たらないケースの扱いがない / P0=記録の二重計上・欠落・誤更新が起きうるもの、P1=記録は変えないが応答（確定結果・エラー種別・残高照会の結果）を誤りうるもの、P2=どちらにも当たらないもの（印刷要求の回数など）に書き直した / vp-qe-verifiability / -","R4-5: R4 / 1. 本ドキュメントの目的と適用対象・2. テスト対象の括り方と分割基準・3. 対象外・除外理由（共通）・8. テスト環境・データの共通方針 / tsp-index-sample は tsp-index-sample-120（2026-11-24）以降、保全の取得（`PATH-04`）と復元の回復（`PATH-07`）を内部結合テストの範囲（検証用 DB へ実接続、保管サービスは Stub）とし、外部結合テストは `PATH-05`・`PATH-06` とした。本書は依然「PATH-04・PATH-07 は外部結合テストの範囲（tsp の定め）」「ET は PATH-04〜PATH-07」「IT は PATH-04〜PATH-07 を扱わない」と書き、CI 実行条件からも保管サービス連携の変更が抜けている / - / vp-arc-technical-constraints。直すには保全・復元の term（例: `itc-backup-restore`）の追加と観点・依存・CI 方針の改訂が要り、正しさの段の局所的な直しを超えるため、based_on 参照先との整合を扱う R5 に任せた。選ばなかった案: R4 で ET 行だけ `PATH-05`・`PATH-06` に直す案は本文の他箇所と矛盾するため採らなかった。tsp 側を元に戻す案も R5 で比較する / 要判断","R4-6: R4 / 7. 内部結合テスト共通の境界/依存の扱い（`receipt-print` 行） / 「10秒無応答」の値は正本（tsp・ifd・コマンドリファレンス）がなく確かめられない / - / 共通サンプル文脈と食い違わない仮置きの値として確かめの対象外とした / -","確かめの表（reporter が R4 の指摘表の後に置く）: 1 frontmatter `type: test`・`based_on`（deliverable-frontmatter.schema.yaml / common-frontmatter.schema.yaml）一致。2 ケース表10カラム・`case_id` 形式・`nnn` 010 から10刻み・`automated`（itc-index-rulebook「ケース表の共通カラム」）一致。3 `kinuya-test-data` 商品A 単価30円・在庫5個（tsp「テストデータ」）一致。4 C-01 在庫5→3・C-02 在庫5→0（bac-sample BAC-01）一致。5 放課後ピーク1時間60取引（tsp「メモ / 将来課題」）一致。6 AT の範囲（tsp テストレベル一覧）不一致→修正。7 UT の置き換え（tsp 環境区分）不一致→修正。8 `PATH-04`・`PATH-07` の範囲（tsp テストレベル一覧・「I/F の確認範囲と代替方法」、git log -S で変更履歴を確認）不一致→R5 へ。9 `kinuya-ci-sales-recovery` の実行条件（tsp 自動化方針）一部不一致（No.8 に従属）。10 `PATH-02`・`PATH-03` の定義と照合待ちの要件（ifd-sample）一致。11 通信不能時の販売継続は未決で対象外（tsp・ifd）一致。報告先は F002 として R5 へ。12 `receipt-print` の10秒無応答（正本なし）確かめられない。","F001・F004・F006 は前の段で解消済み、F002（vp-pm-control-reporting、報告先に `kinuya:pjr-i003` を書く）は R4 の観点の組に当たらないため R5 に任せた。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/itc-index-sample.md","status":"passed","summary":"変更した sample を整形した"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/itc-index-sample.md のみで、plan / result / 個票を変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変更していない","reason":"変更ファイルに *.yaml / *.yml がない"}]}
+</specdojo_executor_evidence>
