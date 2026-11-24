@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-WAVE-6-PROJECT-pm-communication-plan-sample-080",
   "run_id": "T-KATA-WAVE-6-PROJECT-pm-communication-plan-sample-080-20261124T022118Z-dc3e4e30",
-  "updated_at": "2026-11-24T02:23:11.878Z",
+  "updated_at": "2026-11-24T02:23:34.253Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-pm-communication-plan-sample-080/T-KATA-WAVE-6-PROJECT-pm-communication-plan-sample-080-20261124T022118Z-dc3e4e30/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sonnet-executor",
       "attempts": 1,
       "started_at": "2026-11-24T02:23:11.878Z",
-      "completed_at": null,
+      "completed_at": "2026-11-24T02:23:34.253Z",
       "artifact_ref": null
     }
   },
