@@ -64,3 +64,16 @@
       from: in-progress
       to: review
   previous_event_id: reg_384fbbe57fdb4137a4f76dacd0ccd7eb
+- v: 1
+  id: reg_05e0f1836ca347a6a651dfa292e9daa9
+  ts: "2026-11-24T23:33:26Z"
+  action: update
+  actor: SpecDojo
+  from_status: review
+  to_status: review
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_0e7a5916f50143f3aad5d8da49b714aa
