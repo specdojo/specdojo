@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-040
   mode: edit
-  status: in_progress
+  status: superseded
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-040/T-KATA-WAVE-6-PROJECT-prj-success-criteria-and-acceptance-criteria-sample-040-20261124T015137Z-bc62c67b/plan.md
   started_at: "2026-11-24T01:51:44.385Z"
+  completed_at: "2026-11-24T02:38:14.437Z"
   agent: opus-executor
   execution: agent
   approach: rulebook-maintenance
