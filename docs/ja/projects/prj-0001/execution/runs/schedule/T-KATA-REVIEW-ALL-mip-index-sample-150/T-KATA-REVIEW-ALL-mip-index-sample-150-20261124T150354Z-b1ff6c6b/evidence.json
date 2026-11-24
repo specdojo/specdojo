@@ -1,0 +1,184 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-mip-index-sample-150",
+  "run_id": "T-KATA-REVIEW-ALL-mip-index-sample-150-20261124T150354Z-b1ff6c6b",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-24T15:04:41.083Z",
+    "completed_at": "2026-11-24T15:09:22.935Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/mip-index-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/mip-index-sample.md | 32 ++++++++++++++--------------\n 1 file changed, 16 insertions(+), 16 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/samples/mip-index-sample.md",
+      "status": "passed",
+      "summary": "変更した Markdown を整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint docs/ja/specdojo/samples/mip-index-sample.md",
+      "status": "passed",
+      "summary": "対象 sample の Markdown 検査に成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "node tools/check-evidence-secrets.mjs --staged",
+      "status": "passed",
+      "summary": "ステージ済みの検査対象は0件、検出0件。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 YAML schema 検査は適用外。",
+      "reason": "executor の変更は Markdown のみで、YAML の変更がない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "成果物カタログ検査は適用外。",
+      "reason": "変更は sample 配下のみで、`docs/ja/projects/` 配下の成果物を変更していない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検査は適用外。",
+      "reason": "executor は登録簿個票、plan、result を変更していない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:mip-index-sample\n  type: project\n  status: draft\n  rulebook: specdojo:mip-index-rulebook\n  based_on: []\n  supersedes: []\n---\n\n# 移行計画: 概要（駄菓子屋きぬや 販売管理システム）\n\n## 1. 移行の背景/目的\n\n駄菓子屋きぬやでは、販売・在庫・つけの記録をノートと店主の記憶に頼っており、記録漏れとつけ残高の確認の手間が生じている。\n\nノートの記録を店頭タブレットの販売管理システムへ移す。移行の目的は、店主代表と家族利用者代表が同じ手順で販売・在庫・つけを記録できる状態にすることである。本計画は、移行の方針と判断点を定める。\n\n移行の成果は、つけ残高と現在庫を取りこぼさずにシステムへ移し、1 週間の並行記録の後にシステムの記録を正本と\n… output omitted …\n集中支援（ハイパーケア）について、期間・体制・窓口とサービスレベル合意（SLA）の目安を次に示す。\n\n| 項目 | 方針 |\n| - | - |\n| 期間 | 正本切替から 2 週間 |\n| 体制 | 開発担当が閉店後の日次締めに立ち会い、店舗運営アドバイザーが店番の引継ぎで困った点を聞き取る |\n| 対応範囲 | 記録の誤りの訂正、操作の分からない点の説明、端末の不具合の一次切り分け |\n| 窓口/SLA | 店番中の困りごとは店主代表が受け、その日の閉店後までに開発担当が対応する |\n| 旧ノート | 正本切替の後も、つけ残高の問い合わせに備えて店頭台帳保管棚に保管する。保管期間は `dmd-index` で定める |\n\n関連ドキュメント:\n\n- `dmd-index`：データ移行設計（転記用の表、取り込み、照合の方法）\n- `mtp-index`：移行リハーサル計画（作業時間の測定と照合の合否基準）\n- `cop-index`：カットオーバー計画（切替日の作業手順と判定点）\n- `otp-index`：運用切替計画（並行記録の運用と正本切替後の問い合わせ窓口）"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6778 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6778 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-mip-index-sample-150\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 8ms\n\n… output omitted …\nister-plan-escape.test.ts\",\"duration_ms\":1760}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  00:16:18\n   Duration  3.00s (transform 6.32s, setup 1.19s, import 9.00s, tests 6.91s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nlebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-mip-index-sample-150/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-mip-index-sample-150/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R5 の整合レビューを完了。対象 sample の4点を修正し、他文書側の修正案を申し送ります。整形・Markdown 検査・差分検査は成功しました。",
+  "completion_status": "complete",
+  "handoff": [
+    "R5-1: R5 / 2. 前提・制約 / 転記用の表そのものを引き出しに保管して裁断する記述は、DMD の電子表・CSV による移行と媒体の区別がつかない / 保管・裁断の対象を転記用の表の印刷物と明記した / `vp-qe-kata-conformance`。[[specdojo:dmd-sample|データ移行設計: 顧客台帳とつけ残高]] 第6章はタブレットの表計算から CSV を書き出す。紙の保護条件を維持して媒体を区別した / -",
+    "R5-2: R5 / 2. 前提・制約 / 販売ノートを移行元に含めているが、DMD・MTP は商品ノートと常連客ノートからの取り込みを扱い、過去の販売ノートは非対象としている / 移行元の列挙から販売ノートを除いた。第4章の非対象・紙での参照方針は維持した / `vp-qe-kata-conformance`。[[specdojo:dmd-index-sample|データ移行設計（全体構成）]] 第1・5章、[[specdojo:mtp-sample|移行テスト計画]] 第1章との照合 / -",
+    "R5-3: R5 / 3. 移行方式と期間 / 準備開始時に転記したつけ残高を前日閉店時の値へ更新する工程がなく、DMD の移行手順と対応しない / 前日閉店後のフェーズを「最終棚卸・残高確定」とし、最終残高の更新・読み合わせ・店主代表の確認を補った / `vp-qe-kata-conformance`、`vp-dev-change-impact`。[[specdojo:dmd-sample|データ移行設計: 顧客台帳とつけ残高]] 第2・6・7章は前日閉店後の残高更新と再読み合わせを定める。詳細手順は転記せず工程の骨格だけを反映した / -",
+    "R5-4: R5 / 8.1. タイムラインと判定点 / GO4 が差異の全面解消を求め、COP の「理由の分からない差異がない」という条件と食い違う / 売上額とつけ残高合計に理由の分からない差異が残っていない条件にそろえた / `vp-qe-kata-conformance`。[[specdojo:cop-index-sample|カットオーバー計画（全体）]] 第2・6章、対象 sample 第3・5章との照合。[[specdojo:mip-index-rulebook|移行計画 作成ルール]] 第6.3節は成功条件と判定点の一致を求める / -",
+    "R5-5: R5 / 相手側: 運用切替計画 第9章 / OTP は転記用の表全体を裁断するとしており、電子表と印刷物の区別が残っている / - / `vp-dev-change-impact`。[[specdojo:otp-index-sample|運用切替計画: 概要]] 第9章の裁断対象を「転記用の表の印刷物」に合わせる案。電子ファイルの保持・削除方針は裁断とは分けて定める。相手側は未変更 / -",
+    "R5-6: R5 / 相手側: データ移行設計（全体構成）第2章 / 取り消し線のある顧客を一律除外する方針は、MIP のつけ残高を取りこぼさない目的・全顧客の残高一致条件と食い違う / - / `vp-qe-kata-conformance`。[[specdojo:dmd-index-sample|データ移行設計（全体構成）]] 第2章の顧客除外条件を「取り消し線があり、つけ残高が0円」に限定する案。[[specdojo:dmd-sample|データ移行設計: 顧客台帳とつけ残高]] 第2・5章も残高がある顧客を除外しない。相手側は未変更 / -",
+    "R5-7: R5 / 相手側: 顧客台帳とつけ残高のデータ移行設計 第9章 / DMD は照合の判定者を一律に店主代表としているが、MIP の件数一致の判定者は開発担当である / - / `vp-qe-kata-conformance`。対象 sample 第5.1節を正として、[[specdojo:dmd-sample|データ移行設計: 顧客台帳とつけ残高]] 第9章で件数は開発担当、残高は店主代表と分ける案。業務全体の GO 判断は店主代表に維持する。相手側は未変更 / -",
+    "R5-8: R5 / 相手側: COP 第5章と MTP 第2章 / COP は切替日の1週間前にリハーサル合格を確認するが、MTP の合格を求める第2回は切替日の3日前であり、予定どおりでは事前条件を満たせない / - / `vp-qe-kata-conformance`、`vp-dev-change-impact`。[[specdojo:cop-index-sample|カットオーバー計画（全体）]] 第5章の合格確認期限を、[[specdojo:mtp-sample|移行テスト計画]] 第2章の第2回・追加回の完了後へ合わせる案。1週間の是正余裕を確保して MTP を前倒しする案もあり、MIP はその優先関係を定めていないため日程方針の判断が必要。相手側は未変更 / 要判断",
+    "reporter 向け: 指摘8件は result の実施内容に指定7列の Markdown 表として1回だけ記載し、申し送りに表を重ねない。変更ファイルは `docs/ja/specdojo/samples/mip-index-sample.md` のみで、意味上の修正は4点。残り4件は他文書側の修正案であり、対象外文書は変更していない。",
+    "reporter 向け（進め方と実践の型の適用）: 共通規約2文書、[[specdojo:kata-guide|実践の型活用ガイド]] 第6章、[[specdojo:mip-index-rulebook|移行計画 作成ルール]]、[[specdojo:sample-authoring-standard|Sample 記述標準]] の共通サンプル文脈、共通レビュー観点の R5・全段共通観点・`vp-arc-conciseness`、前段 R1〜R4 の result、既存 grade、DMD・COP・MTP・OTP の関連 sample を確認した。同じ接頭辞の sample は対象1件のみ。本文の wikilink はなく、`based_on` は空配列。rulebook の `recipe`・`template` は `undecided`。用語集6ファイルの見出し語・別名と該当定義を照合し、業務上の一般語と SpecDojo 固有の管理用語を区別した。用語集に合わせて変更すべき表記はなかった。",
+    "reporter 向け（維持判断・検証）: 必須9章・表の列、R1〜R3の修正、停止時間、移行時の許容差、GO判断主体、GO1〜GO3、並行記録期間、ハイパーケア方針、`status: draft` を維持した。差分を読み直し、rulebook の必須項目と責務境界を再照合した。plan に展開された finding はなく、既存 grade は前段修正前の記録のため現在の整合判断に代用していない。対象 sample の根拠不足による改訂見送りはない。R5-8 は相手側の日程方針として要判断。result・grade サイドカー・保護された設定は未変更。親 runner の指定検査の結果は後続処理で追記される。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-mip-index-sample-150/T-KATA-REVIEW-ALL-mip-index-sample-150-20261124T150354Z-b1ff6c6b/executor.log",
+      "bytes": 7908,
+      "truncated": false
+    }
+  ]
+}
