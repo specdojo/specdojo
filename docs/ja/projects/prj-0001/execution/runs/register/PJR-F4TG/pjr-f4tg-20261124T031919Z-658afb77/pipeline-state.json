@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-F4TG",
   "run_id": "pjr-f4tg-20261124T031919Z-658afb77",
-  "updated_at": "2026-11-24T03:27:30.732Z",
+  "updated_at": "2026-11-24T03:27:40.109Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-F4TG/pjr-f4tg-20261124T031919Z-658afb77/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-24T03:27:30.732Z",
-      "completed_at": null,
+      "completed_at": "2026-11-24T03:27:40.109Z",
       "artifact_ref": null
     }
   },
