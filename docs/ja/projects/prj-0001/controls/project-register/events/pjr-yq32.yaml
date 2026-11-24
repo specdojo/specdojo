@@ -131,3 +131,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_00aacc8e7d5c40179aef982f68371004
+- v: 1
+  id: reg_4bff25cb1ecb4d31aff7096bc56d298d
+  ts: "2026-11-24T06:05:00Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分と親の検証（test-unit・test-integration ほか passed）、同じ run の中の待ち合わせを保つ既存テストの維持、統合後の exec smoke（PJR-JSEY）の成功を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-24"
+    - field: conclusion
+      from: "-"
+      to: 準備の段で失敗した run の変更範囲の予約を run の終わりに外し、未着手で worktree も lock もない古い予約を次の判定で片付けるようになった
+  previous_event_id: reg_2417d12d18f14cc889abab44cbe94019

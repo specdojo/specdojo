@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-yq32-exec-scope-reservation-leak-on-setup-failure
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-23T04:56:14Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-24T06:05:00Z"
+  conclusion: 準備の段で失敗した run の変更範囲の予約を run の終わりに外し、未着手で worktree も lock もない古い予約を次の判定で片付けるようになった
   derived_from:
     - PJR-0JVB
   commit_type: fix
