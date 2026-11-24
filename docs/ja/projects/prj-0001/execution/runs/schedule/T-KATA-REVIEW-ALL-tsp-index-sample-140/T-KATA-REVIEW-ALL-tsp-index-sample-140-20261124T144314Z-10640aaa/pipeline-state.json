@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-REVIEW-ALL-tsp-index-sample-140",
   "run_id": "T-KATA-REVIEW-ALL-tsp-index-sample-140-20261124T144314Z-10640aaa",
-  "updated_at": "2026-11-24T14:55:57.247Z",
+  "updated_at": "2026-11-24T14:56:54.988Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-tsp-index-sample-140/T-KATA-REVIEW-ALL-tsp-index-sample-140-20261124T144314Z-10640aaa/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-executor",
       "attempts": 1,
       "started_at": "2026-11-24T14:55:57.247Z",
-      "completed_at": null,
+      "completed_at": "2026-11-24T14:56:54.988Z",
       "artifact_ref": null
     }
   },
