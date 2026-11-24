@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: done
+  item_status: open
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  completed_at: "2026-11-23T04:19:53Z"
   conclusion: TJZM・N4D0・EKGQ・1HJH の統合の後、exec smoke で runner の start → review の記帳を確かめた。executor の記録に拒否はなかった
   autopilot: approved
 ---

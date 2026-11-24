@@ -5426,3 +5426,19 @@
       from: PJR-0JVB の 2 回目の統合の後、exec smoke で runner の start → review の記帳を確かめた
       to: TJZM・N4D0・EKGQ・1HJH の統合の後、exec smoke で runner の start → review の記帳を確かめた。executor の記録に拒否はなかった
   previous_event_id: reg_8b872fda30d649caaa8acb4f99a03343
+- v: 1
+  id: reg_8397ac6b9e754e4ca9a84b38940e691d
+  ts: "2026-11-24T05:33:17Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-C11R・PJR-TN64 の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-11-23"
+      to: "-"
+  previous_event_id: reg_783b8ae3c315442fa5244684e55cdd6d
