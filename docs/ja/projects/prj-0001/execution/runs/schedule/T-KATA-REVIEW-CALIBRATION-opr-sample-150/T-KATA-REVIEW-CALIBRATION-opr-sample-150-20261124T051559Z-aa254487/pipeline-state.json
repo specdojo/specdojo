@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-REVIEW-CALIBRATION-opr-sample-150",
   "run_id": "T-KATA-REVIEW-CALIBRATION-opr-sample-150-20261124T051559Z-aa254487",
-  "updated_at": "2026-11-24T05:23:29.766Z",
+  "updated_at": "2026-11-24T05:24:09.597Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-CALIBRATION-opr-sample-150/T-KATA-REVIEW-CALIBRATION-opr-sample-150-20261124T051559Z-aa254487/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-executor",
       "attempts": 1,
       "started_at": "2026-11-24T05:23:29.766Z",
-      "completed_at": null,
+      "completed_at": "2026-11-24T05:24:09.597Z",
       "artifact_ref": null
     }
   },
