@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-23T21:14:31Z"
   due_on: "2026-11-30"
+  block_reason: "executor reported incomplete: 3 型の rulebook・sample の非推奨化、dct-kata と第 6 波 strategy からの除外、個票の記入は完了した。第 6 波の track（sch-track-kata-wave-6-project.yaml）の再生成が未実施で、060・080・090 の段がまだ残っている。"
   derived_from:
     - PJR-X141
   commit_type: docs

@@ -73,3 +73,32 @@
       from: _TODO_
       to: DEV
   previous_event_id: reg_968b73dbc3634fb38560137ad18b6f38
+- v: 1
+  id: reg_9739fa7ca4d042dd9d5763fff49ab70c
+  ts: "2026-11-24T00:57:57Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_1c7b6f3980c241609840353f425f01e0
+- v: 1
+  id: reg_141de46d85de4e2d9d9b42ecee413556
+  ts: "2026-11-24T01:00:31Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor reported incomplete: 3 型の rulebook・sample の非推奨化、dct-kata と第 6 波 strategy からの除外、個票の記入は完了した。第 6 波の track（sch-track-kata-wave-6-project.yaml）の再生成が未実施で、060・080・090 の段がまだ残っている。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor reported incomplete: 3 型の rulebook・sample の非推奨化、dct-kata と第 6 波 strategy からの除外、個票の記入は完了した。第 6 波の track（sch-track-kata-wave-6-project.yaml）の再生成が未実施で、060・080・090 の段がまだ残っている。"
+  previous_event_id: reg_9739fa7ca4d042dd9d5763fff49ab70c
