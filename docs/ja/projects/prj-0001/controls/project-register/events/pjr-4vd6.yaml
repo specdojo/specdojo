@@ -156,3 +156,16 @@
       from: "parent validation failed: test-integration"
       to: "-"
   previous_event_id: reg_e08812b2e4d64663ba51d32ba733c926
+- v: 1
+  id: reg_f15c4f85264643e4b61d6dd463adfc38
+  ts: "2026-11-24T01:08:27Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_479260f03ab74acaa43e22f25abf5411
