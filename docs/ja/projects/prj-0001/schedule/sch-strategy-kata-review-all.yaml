@@ -9,8 +9,9 @@ track: kata-review-all
 # PJR-0BGE の段取りとして PJR-G2XJ で組んだもの。PJR-F4TG で目合わせした 5 段のレビュー（R1〜R5）を、
 # dct-kata の非推奨でない sample のうち目合わせの 3 件（prj-overview・opr・stsd）を除く 103 件に広げる。
 # 段の phase set は sch-strategy-kata-review-calibration の kata-agent-review-pass を写した。
-# agent は kata-guide の「書き手と別のモデルの組み方」に従い owner_rules の phase_overrides で指名する。
-# codex が書いた sample は opus-executor、claude と flash（cdt・ifx-cmd）が書いた sample は sol-executor に任せる。
+# agent は owner_rules の phase_overrides で指名する。当初は kata-guide の「書き手と別のモデルの組み方」に従い、
+# claude と flash（cdt・ifx-cmd）が書いた sample を sol-executor に任せていた。codex の利用枠で止まるため、
+# 利用者の判断でこの全件レビューに限って決まりを外し、全段を opus-executor にした（2026-11-25）。
 # 流す順の段の区切りの依存は付けない（利用者の判断、2026-11-24）。1 件止まっても後ろが止まらないよう、
 # grade が pass でない sample はオーケストレーターが先に流し、残りは exec run --auto の選択に任せる。
 scope:
@@ -238,7 +239,7 @@ phase_sets:
       mode: edit
       approach: sample-maintenance
       agent:
-        executor: sol-executor
+        executor: opus-executor
         reporter: sonnet-reporter
       agent_pipeline:
         stages:
@@ -260,7 +261,7 @@ phase_sets:
       mode: edit
       approach: sample-maintenance
       agent:
-        executor: sol-executor
+        executor: opus-executor
         reporter: sonnet-reporter
       agent_pipeline:
         stages:
@@ -282,7 +283,7 @@ phase_sets:
       mode: edit
       approach: sample-maintenance
       agent:
-        executor: sol-executor
+        executor: opus-executor
         reporter: sonnet-reporter
       agent_pipeline:
         stages:
@@ -304,7 +305,7 @@ phase_sets:
       mode: edit
       approach: sample-maintenance
       agent:
-        executor: sol-executor
+        executor: opus-executor
         reporter: sonnet-reporter
       agent_pipeline:
         stages:
@@ -326,7 +327,7 @@ phase_sets:
       mode: edit
       approach: sample-maintenance
       agent:
-        executor: sol-executor
+        executor: opus-executor
         reporter: sonnet-reporter
       agent_pipeline:
         stages:
@@ -355,23 +356,23 @@ owner_rules:
     phase_overrides:
       - phase: kata-review-r1
         agent:
-          executor: sol-executor
+          executor: opus-executor
           reporter: sonnet-reporter
       - phase: kata-review-r2
         agent:
-          executor: sol-executor
+          executor: opus-executor
           reporter: sonnet-reporter
       - phase: kata-review-r3
         agent:
-          executor: sol-executor
+          executor: opus-executor
           reporter: sonnet-reporter
       - phase: kata-review-r4
         agent:
-          executor: sol-executor
+          executor: opus-executor
           reporter: sonnet-reporter
       - phase: kata-review-r5
         agent:
-          executor: sol-executor
+          executor: opus-executor
           reporter: sonnet-reporter
   - local_ids:
       - pm-roles-sample
@@ -414,23 +415,23 @@ owner_rules:
     phase_overrides:
       - phase: kata-review-r1
         agent:
-          executor: sol-executor
+          executor: opus-executor
           reporter: sonnet-reporter
       - phase: kata-review-r2
         agent:
-          executor: sol-executor
+          executor: opus-executor
           reporter: sonnet-reporter
       - phase: kata-review-r3
         agent:
-          executor: sol-executor
+          executor: opus-executor
           reporter: sonnet-reporter
       - phase: kata-review-r4
         agent:
-          executor: sol-executor
+          executor: opus-executor
           reporter: sonnet-reporter
       - phase: kata-review-r5
         agent:
-          executor: sol-executor
+          executor: opus-executor
           reporter: sonnet-reporter
   - local_ids:
       - bac-sample
@@ -470,23 +471,23 @@ owner_rules:
     phase_overrides:
       - phase: kata-review-r1
         agent:
-          executor: sol-executor
+          executor: opus-executor
           reporter: sonnet-reporter
       - phase: kata-review-r2
         agent:
-          executor: sol-executor
+          executor: opus-executor
           reporter: sonnet-reporter
       - phase: kata-review-r3
         agent:
-          executor: sol-executor
+          executor: opus-executor
           reporter: sonnet-reporter
       - phase: kata-review-r4
         agent:
-          executor: sol-executor
+          executor: opus-executor
           reporter: sonnet-reporter
       - phase: kata-review-r5
         agent:
-          executor: sol-executor
+          executor: opus-executor
           reporter: sonnet-reporter
   - local_ids:
       - bds-sample
@@ -496,23 +497,23 @@ owner_rules:
     phase_overrides:
       - phase: kata-review-r1
         agent:
-          executor: sol-executor
+          executor: opus-executor
           reporter: sonnet-reporter
       - phase: kata-review-r2
         agent:
-          executor: sol-executor
+          executor: opus-executor
           reporter: sonnet-reporter
       - phase: kata-review-r3
         agent:
-          executor: sol-executor
+          executor: opus-executor
           reporter: sonnet-reporter
       - phase: kata-review-r4
         agent:
-          executor: sol-executor
+          executor: opus-executor
           reporter: sonnet-reporter
       - phase: kata-review-r5
         agent:
-          executor: sol-executor
+          executor: opus-executor
           reporter: sonnet-reporter
   - local_ids:
       - dct-index-sample
@@ -578,23 +579,23 @@ owner_rules:
     phase_overrides:
       - phase: kata-review-r1
         agent:
-          executor: sol-executor
+          executor: opus-executor
           reporter: sonnet-reporter
       - phase: kata-review-r2
         agent:
-          executor: sol-executor
+          executor: opus-executor
           reporter: sonnet-reporter
       - phase: kata-review-r3
         agent:
-          executor: sol-executor
+          executor: opus-executor
           reporter: sonnet-reporter
       - phase: kata-review-r4
         agent:
-          executor: sol-executor
+          executor: opus-executor
           reporter: sonnet-reporter
       - phase: kata-review-r5
         agent:
-          executor: sol-executor
+          executor: opus-executor
           reporter: sonnet-reporter
   - local_ids:
       - tsp-index-sample
@@ -616,23 +617,23 @@ owner_rules:
     phase_overrides:
       - phase: kata-review-r1
         agent:
-          executor: sol-executor
+          executor: opus-executor
           reporter: sonnet-reporter
       - phase: kata-review-r2
         agent:
-          executor: sol-executor
+          executor: opus-executor
           reporter: sonnet-reporter
       - phase: kata-review-r3
         agent:
-          executor: sol-executor
+          executor: opus-executor
           reporter: sonnet-reporter
       - phase: kata-review-r4
         agent:
-          executor: sol-executor
+          executor: opus-executor
           reporter: sonnet-reporter
       - phase: kata-review-r5
         agent:
-          executor: sol-executor
+          executor: opus-executor
           reporter: sonnet-reporter
   - local_ids:
       - opd-sample
@@ -683,21 +684,21 @@ owner_rules:
     phase_overrides:
       - phase: kata-review-r1
         agent:
-          executor: sol-executor
+          executor: opus-executor
           reporter: sonnet-reporter
       - phase: kata-review-r2
         agent:
-          executor: sol-executor
+          executor: opus-executor
           reporter: sonnet-reporter
       - phase: kata-review-r3
         agent:
-          executor: sol-executor
+          executor: opus-executor
           reporter: sonnet-reporter
       - phase: kata-review-r4
         agent:
-          executor: sol-executor
+          executor: opus-executor
           reporter: sonnet-reporter
       - phase: kata-review-r5
         agent:
-          executor: sol-executor
+          executor: opus-executor
           reporter: sonnet-reporter

@@ -19,7 +19,7 @@ tasks:
     depends_on: []
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -40,7 +40,7 @@ tasks:
       - T-KATA-REVIEW-ALL-tsp-index-sample-110
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -61,7 +61,7 @@ tasks:
       - T-KATA-REVIEW-ALL-tsp-index-sample-120
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -81,7 +81,7 @@ tasks:
       - T-KATA-REVIEW-ALL-tsp-index-sample-130
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -102,7 +102,7 @@ tasks:
       - T-KATA-REVIEW-ALL-tsp-index-sample-140
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -123,7 +123,7 @@ tasks:
       - T-KATA-REVIEW-ALL-tsp-index-sample-150
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -144,7 +144,7 @@ tasks:
       - T-KATA-REVIEW-ALL-utc-index-sample-110
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -165,7 +165,7 @@ tasks:
       - T-KATA-REVIEW-ALL-utc-index-sample-120
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -185,7 +185,7 @@ tasks:
       - T-KATA-REVIEW-ALL-utc-index-sample-130
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -206,7 +206,7 @@ tasks:
       - T-KATA-REVIEW-ALL-utc-index-sample-140
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -227,7 +227,7 @@ tasks:
       - T-KATA-REVIEW-ALL-utc-index-sample-150
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -248,7 +248,7 @@ tasks:
       - T-KATA-REVIEW-ALL-utc-sample-110
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -269,7 +269,7 @@ tasks:
       - T-KATA-REVIEW-ALL-utc-sample-120
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -289,7 +289,7 @@ tasks:
       - T-KATA-REVIEW-ALL-utc-sample-130
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -310,7 +310,7 @@ tasks:
       - T-KATA-REVIEW-ALL-utc-sample-140
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -331,7 +331,7 @@ tasks:
       - T-KATA-REVIEW-ALL-tsp-index-sample-150
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -352,7 +352,7 @@ tasks:
       - T-KATA-REVIEW-ALL-itc-index-sample-110
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -373,7 +373,7 @@ tasks:
       - T-KATA-REVIEW-ALL-itc-index-sample-120
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -393,7 +393,7 @@ tasks:
       - T-KATA-REVIEW-ALL-itc-index-sample-130
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -414,7 +414,7 @@ tasks:
       - T-KATA-REVIEW-ALL-itc-index-sample-140
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -435,7 +435,7 @@ tasks:
       - T-KATA-REVIEW-ALL-itc-index-sample-150
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -456,7 +456,7 @@ tasks:
       - T-KATA-REVIEW-ALL-itc-sample-110
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -477,7 +477,7 @@ tasks:
       - T-KATA-REVIEW-ALL-itc-sample-120
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -497,7 +497,7 @@ tasks:
       - T-KATA-REVIEW-ALL-itc-sample-130
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -518,7 +518,7 @@ tasks:
       - T-KATA-REVIEW-ALL-itc-sample-140
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -539,7 +539,7 @@ tasks:
       - T-KATA-REVIEW-ALL-tsp-index-sample-150
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -560,7 +560,7 @@ tasks:
       - T-KATA-REVIEW-ALL-stc-index-sample-110
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -581,7 +581,7 @@ tasks:
       - T-KATA-REVIEW-ALL-stc-index-sample-120
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -601,7 +601,7 @@ tasks:
       - T-KATA-REVIEW-ALL-stc-index-sample-130
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -622,7 +622,7 @@ tasks:
       - T-KATA-REVIEW-ALL-stc-index-sample-140
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -643,7 +643,7 @@ tasks:
       - T-KATA-REVIEW-ALL-stc-index-sample-150
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -664,7 +664,7 @@ tasks:
       - T-KATA-REVIEW-ALL-stc-sample-110
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -685,7 +685,7 @@ tasks:
       - T-KATA-REVIEW-ALL-stc-sample-120
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -705,7 +705,7 @@ tasks:
       - T-KATA-REVIEW-ALL-stc-sample-130
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -726,7 +726,7 @@ tasks:
       - T-KATA-REVIEW-ALL-stc-sample-140
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -747,7 +747,7 @@ tasks:
       - T-KATA-REVIEW-ALL-tsp-index-sample-150
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -768,7 +768,7 @@ tasks:
       - T-KATA-REVIEW-ALL-etc-index-sample-110
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -789,7 +789,7 @@ tasks:
       - T-KATA-REVIEW-ALL-etc-index-sample-120
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -809,7 +809,7 @@ tasks:
       - T-KATA-REVIEW-ALL-etc-index-sample-130
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -830,7 +830,7 @@ tasks:
       - T-KATA-REVIEW-ALL-etc-index-sample-140
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -851,7 +851,7 @@ tasks:
       - T-KATA-REVIEW-ALL-etc-index-sample-150
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -872,7 +872,7 @@ tasks:
       - T-KATA-REVIEW-ALL-etc-sample-110
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -893,7 +893,7 @@ tasks:
       - T-KATA-REVIEW-ALL-etc-sample-120
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -913,7 +913,7 @@ tasks:
       - T-KATA-REVIEW-ALL-etc-sample-130
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -934,7 +934,7 @@ tasks:
       - T-KATA-REVIEW-ALL-etc-sample-140
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -955,7 +955,7 @@ tasks:
       - T-KATA-REVIEW-ALL-tsp-index-sample-150
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -976,7 +976,7 @@ tasks:
       - T-KATA-REVIEW-ALL-atc-index-sample-110
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -997,7 +997,7 @@ tasks:
       - T-KATA-REVIEW-ALL-atc-index-sample-120
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1017,7 +1017,7 @@ tasks:
       - T-KATA-REVIEW-ALL-atc-index-sample-130
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1038,7 +1038,7 @@ tasks:
       - T-KATA-REVIEW-ALL-atc-index-sample-140
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1059,7 +1059,7 @@ tasks:
       - T-KATA-REVIEW-ALL-atc-index-sample-150
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1080,7 +1080,7 @@ tasks:
       - T-KATA-REVIEW-ALL-atc-sample-110
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1101,7 +1101,7 @@ tasks:
       - T-KATA-REVIEW-ALL-atc-sample-120
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1121,7 +1121,7 @@ tasks:
       - T-KATA-REVIEW-ALL-atc-sample-130
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1142,7 +1142,7 @@ tasks:
       - T-KATA-REVIEW-ALL-atc-sample-140
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1164,7 +1164,7 @@ tasks:
       - T-KATA-REVIEW-ALL-stc-sample-150
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1185,7 +1185,7 @@ tasks:
       - T-KATA-REVIEW-ALL-trc-requirements-to-tests-sample-110
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1206,7 +1206,7 @@ tasks:
       - T-KATA-REVIEW-ALL-trc-requirements-to-tests-sample-120
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1226,7 +1226,7 @@ tasks:
       - T-KATA-REVIEW-ALL-trc-requirements-to-tests-sample-130
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1247,7 +1247,7 @@ tasks:
       - T-KATA-REVIEW-ALL-trc-requirements-to-tests-sample-140
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1267,7 +1267,7 @@ tasks:
     depends_on: []
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1288,7 +1288,7 @@ tasks:
       - T-KATA-REVIEW-ALL-imp-test-sample-110
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1309,7 +1309,7 @@ tasks:
       - T-KATA-REVIEW-ALL-imp-test-sample-120
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1329,7 +1329,7 @@ tasks:
       - T-KATA-REVIEW-ALL-imp-test-sample-130
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1350,7 +1350,7 @@ tasks:
       - T-KATA-REVIEW-ALL-imp-test-sample-140
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1370,7 +1370,7 @@ tasks:
     depends_on: []
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1391,7 +1391,7 @@ tasks:
       - T-KATA-REVIEW-ALL-nfr-index-sample-110
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1412,7 +1412,7 @@ tasks:
       - T-KATA-REVIEW-ALL-nfr-index-sample-120
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1432,7 +1432,7 @@ tasks:
       - T-KATA-REVIEW-ALL-nfr-index-sample-130
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1453,7 +1453,7 @@ tasks:
       - T-KATA-REVIEW-ALL-nfr-index-sample-140
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1473,7 +1473,7 @@ tasks:
     depends_on: []
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1494,7 +1494,7 @@ tasks:
       - T-KATA-REVIEW-ALL-nfr-availability-sample-110
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1515,7 +1515,7 @@ tasks:
       - T-KATA-REVIEW-ALL-nfr-availability-sample-120
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1535,7 +1535,7 @@ tasks:
       - T-KATA-REVIEW-ALL-nfr-availability-sample-130
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1556,7 +1556,7 @@ tasks:
       - T-KATA-REVIEW-ALL-nfr-availability-sample-140
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1576,7 +1576,7 @@ tasks:
     depends_on: []
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1597,7 +1597,7 @@ tasks:
       - T-KATA-REVIEW-ALL-nfr-integrity-sample-110
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1618,7 +1618,7 @@ tasks:
       - T-KATA-REVIEW-ALL-nfr-integrity-sample-120
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1638,7 +1638,7 @@ tasks:
       - T-KATA-REVIEW-ALL-nfr-integrity-sample-130
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1659,7 +1659,7 @@ tasks:
       - T-KATA-REVIEW-ALL-nfr-integrity-sample-140
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1679,7 +1679,7 @@ tasks:
     depends_on: []
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1700,7 +1700,7 @@ tasks:
       - T-KATA-REVIEW-ALL-nfr-maintainability-sample-110
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1721,7 +1721,7 @@ tasks:
       - T-KATA-REVIEW-ALL-nfr-maintainability-sample-120
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1741,7 +1741,7 @@ tasks:
       - T-KATA-REVIEW-ALL-nfr-maintainability-sample-130
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1762,7 +1762,7 @@ tasks:
       - T-KATA-REVIEW-ALL-nfr-maintainability-sample-140
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1782,7 +1782,7 @@ tasks:
     depends_on: []
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1803,7 +1803,7 @@ tasks:
       - T-KATA-REVIEW-ALL-nfr-operations-sample-110
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1824,7 +1824,7 @@ tasks:
       - T-KATA-REVIEW-ALL-nfr-operations-sample-120
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1844,7 +1844,7 @@ tasks:
       - T-KATA-REVIEW-ALL-nfr-operations-sample-130
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1865,7 +1865,7 @@ tasks:
       - T-KATA-REVIEW-ALL-nfr-operations-sample-140
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1885,7 +1885,7 @@ tasks:
     depends_on: []
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1906,7 +1906,7 @@ tasks:
       - T-KATA-REVIEW-ALL-nfr-performance-sample-110
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1927,7 +1927,7 @@ tasks:
       - T-KATA-REVIEW-ALL-nfr-performance-sample-120
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1947,7 +1947,7 @@ tasks:
       - T-KATA-REVIEW-ALL-nfr-performance-sample-130
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1968,7 +1968,7 @@ tasks:
       - T-KATA-REVIEW-ALL-nfr-performance-sample-140
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -1988,7 +1988,7 @@ tasks:
     depends_on: []
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2009,7 +2009,7 @@ tasks:
       - T-KATA-REVIEW-ALL-nfr-reliability-sample-110
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2030,7 +2030,7 @@ tasks:
       - T-KATA-REVIEW-ALL-nfr-reliability-sample-120
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2050,7 +2050,7 @@ tasks:
       - T-KATA-REVIEW-ALL-nfr-reliability-sample-130
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2071,7 +2071,7 @@ tasks:
       - T-KATA-REVIEW-ALL-nfr-reliability-sample-140
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2091,7 +2091,7 @@ tasks:
     depends_on: []
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2112,7 +2112,7 @@ tasks:
       - T-KATA-REVIEW-ALL-nfr-security-safety-sample-110
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2133,7 +2133,7 @@ tasks:
       - T-KATA-REVIEW-ALL-nfr-security-safety-sample-120
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2153,7 +2153,7 @@ tasks:
       - T-KATA-REVIEW-ALL-nfr-security-safety-sample-130
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2174,7 +2174,7 @@ tasks:
       - T-KATA-REVIEW-ALL-nfr-security-safety-sample-140
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2194,7 +2194,7 @@ tasks:
     depends_on: []
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2215,7 +2215,7 @@ tasks:
       - T-KATA-REVIEW-ALL-nfr-usability-sample-110
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2236,7 +2236,7 @@ tasks:
       - T-KATA-REVIEW-ALL-nfr-usability-sample-120
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2256,7 +2256,7 @@ tasks:
       - T-KATA-REVIEW-ALL-nfr-usability-sample-130
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2277,7 +2277,7 @@ tasks:
       - T-KATA-REVIEW-ALL-nfr-usability-sample-140
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2297,7 +2297,7 @@ tasks:
     depends_on: []
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2318,7 +2318,7 @@ tasks:
       - T-KATA-REVIEW-ALL-sac-sample-110
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2339,7 +2339,7 @@ tasks:
       - T-KATA-REVIEW-ALL-sac-sample-120
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2359,7 +2359,7 @@ tasks:
       - T-KATA-REVIEW-ALL-sac-sample-130
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2380,7 +2380,7 @@ tasks:
       - T-KATA-REVIEW-ALL-sac-sample-140
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2400,7 +2400,7 @@ tasks:
     depends_on: []
     owner: BA
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2421,7 +2421,7 @@ tasks:
       - T-KATA-REVIEW-ALL-trc-requirements-to-specs-sample-110
     owner: BA
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2442,7 +2442,7 @@ tasks:
       - T-KATA-REVIEW-ALL-trc-requirements-to-specs-sample-120
     owner: BA
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2462,7 +2462,7 @@ tasks:
       - T-KATA-REVIEW-ALL-trc-requirements-to-specs-sample-130
     owner: BA
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2483,7 +2483,7 @@ tasks:
       - T-KATA-REVIEW-ALL-trc-requirements-to-specs-sample-140
     owner: BA
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2503,7 +2503,7 @@ tasks:
     depends_on: []
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2524,7 +2524,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opd-index-sample-110
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2545,7 +2545,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opd-index-sample-120
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2565,7 +2565,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opd-index-sample-130
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2586,7 +2586,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opd-index-sample-140
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2607,7 +2607,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opd-index-sample-150
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2628,7 +2628,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opd-access-control-sample-110
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2649,7 +2649,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opd-access-control-sample-120
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2669,7 +2669,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opd-access-control-sample-130
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2690,7 +2690,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opd-access-control-sample-140
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2712,7 +2712,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opd-access-control-sample-150
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2733,7 +2733,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opd-incident-management-sample-110
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2754,7 +2754,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opd-incident-management-sample-120
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2774,7 +2774,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opd-incident-management-sample-130
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2795,7 +2795,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opd-incident-management-sample-140
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2817,7 +2817,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opd-access-control-sample-150
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2838,7 +2838,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opd-monitoring-sample-110
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2859,7 +2859,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opd-monitoring-sample-120
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2879,7 +2879,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opd-monitoring-sample-130
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -2900,7 +2900,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opd-monitoring-sample-140
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3024,7 +3024,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opd-index-sample-150
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3045,7 +3045,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opr-index-sample-110
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3066,7 +3066,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opr-index-sample-120
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3086,7 +3086,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opr-index-sample-130
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3107,7 +3107,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opr-index-sample-140
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3128,7 +3128,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opd-index-sample-150
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3149,7 +3149,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opr-access-control-sample-110
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3170,7 +3170,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opr-access-control-sample-120
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3190,7 +3190,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opr-access-control-sample-130
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3211,7 +3211,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opr-access-control-sample-140
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3232,7 +3232,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opd-index-sample-150
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3253,7 +3253,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opr-backup-restore-sample-110
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3274,7 +3274,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opr-backup-restore-sample-120
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3294,7 +3294,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opr-backup-restore-sample-130
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3315,7 +3315,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opr-backup-restore-sample-140
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3336,7 +3336,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opd-index-sample-150
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3357,7 +3357,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opr-batch-sample-110
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3378,7 +3378,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opr-batch-sample-120
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3398,7 +3398,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opr-batch-sample-130
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3419,7 +3419,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opr-batch-sample-140
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3440,7 +3440,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opd-index-sample-150
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3461,7 +3461,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opr-change-sample-110
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3482,7 +3482,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opr-change-sample-120
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3502,7 +3502,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opr-change-sample-130
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3523,7 +3523,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opr-change-sample-140
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3544,7 +3544,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opr-index-sample-150
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3565,7 +3565,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opr-incident-sample-110
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3586,7 +3586,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opr-incident-sample-120
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3606,7 +3606,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opr-incident-sample-130
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3627,7 +3627,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opr-incident-sample-140
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3648,7 +3648,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opr-index-sample-150
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3669,7 +3669,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opr-monitoring-sample-110
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3690,7 +3690,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opr-monitoring-sample-120
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3710,7 +3710,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opr-monitoring-sample-130
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3731,7 +3731,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opr-monitoring-sample-140
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3752,7 +3752,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opd-index-sample-150
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3773,7 +3773,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opr-support-sample-110
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3794,7 +3794,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opr-support-sample-120
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3814,7 +3814,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opr-support-sample-130
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3835,7 +3835,7 @@ tasks:
       - T-KATA-REVIEW-ALL-opr-support-sample-140
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3855,7 +3855,7 @@ tasks:
     depends_on: []
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3876,7 +3876,7 @@ tasks:
       - T-KATA-REVIEW-ALL-mip-index-sample-110
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3897,7 +3897,7 @@ tasks:
       - T-KATA-REVIEW-ALL-mip-index-sample-120
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3917,7 +3917,7 @@ tasks:
       - T-KATA-REVIEW-ALL-mip-index-sample-130
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3938,7 +3938,7 @@ tasks:
       - T-KATA-REVIEW-ALL-mip-index-sample-140
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3959,7 +3959,7 @@ tasks:
       - T-KATA-REVIEW-ALL-mip-index-sample-150
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -3980,7 +3980,7 @@ tasks:
       - T-KATA-REVIEW-ALL-otp-index-sample-110
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4001,7 +4001,7 @@ tasks:
       - T-KATA-REVIEW-ALL-otp-index-sample-120
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4021,7 +4021,7 @@ tasks:
       - T-KATA-REVIEW-ALL-otp-index-sample-130
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4042,7 +4042,7 @@ tasks:
       - T-KATA-REVIEW-ALL-otp-index-sample-140
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4063,7 +4063,7 @@ tasks:
       - T-KATA-REVIEW-ALL-otp-index-sample-150
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4084,7 +4084,7 @@ tasks:
       - T-KATA-REVIEW-ALL-otp-sample-110
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4105,7 +4105,7 @@ tasks:
       - T-KATA-REVIEW-ALL-otp-sample-120
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4125,7 +4125,7 @@ tasks:
       - T-KATA-REVIEW-ALL-otp-sample-130
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4146,7 +4146,7 @@ tasks:
       - T-KATA-REVIEW-ALL-otp-sample-140
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4166,7 +4166,7 @@ tasks:
     depends_on: []
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4187,7 +4187,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cop-index-sample-110
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4208,7 +4208,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cop-index-sample-120
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4228,7 +4228,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cop-index-sample-130
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4249,7 +4249,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cop-index-sample-140
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4269,7 +4269,7 @@ tasks:
     depends_on: []
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4290,7 +4290,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cop-sample-110
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4311,7 +4311,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cop-sample-120
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4331,7 +4331,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cop-sample-130
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4352,7 +4352,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cop-sample-140
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4373,7 +4373,7 @@ tasks:
       - T-KATA-REVIEW-ALL-mip-index-sample-150
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4394,7 +4394,7 @@ tasks:
       - T-KATA-REVIEW-ALL-dmd-index-sample-110
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4415,7 +4415,7 @@ tasks:
       - T-KATA-REVIEW-ALL-dmd-index-sample-120
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4435,7 +4435,7 @@ tasks:
       - T-KATA-REVIEW-ALL-dmd-index-sample-130
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4456,7 +4456,7 @@ tasks:
       - T-KATA-REVIEW-ALL-dmd-index-sample-140
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4477,7 +4477,7 @@ tasks:
       - T-KATA-REVIEW-ALL-dmd-index-sample-150
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4498,7 +4498,7 @@ tasks:
       - T-KATA-REVIEW-ALL-dmd-sample-110
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4519,7 +4519,7 @@ tasks:
       - T-KATA-REVIEW-ALL-dmd-sample-120
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4539,7 +4539,7 @@ tasks:
       - T-KATA-REVIEW-ALL-dmd-sample-130
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4560,7 +4560,7 @@ tasks:
       - T-KATA-REVIEW-ALL-dmd-sample-140
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4580,7 +4580,7 @@ tasks:
     depends_on: []
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4601,7 +4601,7 @@ tasks:
       - T-KATA-REVIEW-ALL-mtp-sample-110
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4622,7 +4622,7 @@ tasks:
       - T-KATA-REVIEW-ALL-mtp-sample-120
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4642,7 +4642,7 @@ tasks:
       - T-KATA-REVIEW-ALL-mtp-sample-130
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4663,7 +4663,7 @@ tasks:
       - T-KATA-REVIEW-ALL-mtp-sample-140
     owner: QE
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4683,7 +4683,7 @@ tasks:
     depends_on: []
     owner: BA
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4704,7 +4704,7 @@ tasks:
       - T-KATA-REVIEW-ALL-imp-data-sample-110
     owner: BA
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4725,7 +4725,7 @@ tasks:
       - T-KATA-REVIEW-ALL-imp-data-sample-120
     owner: BA
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4745,7 +4745,7 @@ tasks:
       - T-KATA-REVIEW-ALL-imp-data-sample-130
     owner: BA
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4766,7 +4766,7 @@ tasks:
       - T-KATA-REVIEW-ALL-imp-data-sample-140
     owner: BA
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4786,7 +4786,7 @@ tasks:
     depends_on: []
     owner: PO
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4807,7 +4807,7 @@ tasks:
       - T-KATA-REVIEW-ALL-prj-charter-sample-110
     owner: PO
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4828,7 +4828,7 @@ tasks:
       - T-KATA-REVIEW-ALL-prj-charter-sample-120
     owner: PO
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4848,7 +4848,7 @@ tasks:
       - T-KATA-REVIEW-ALL-prj-charter-sample-130
     owner: PO
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -4869,7 +4869,7 @@ tasks:
       - T-KATA-REVIEW-ALL-prj-charter-sample-140
     owner: PO
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -5198,7 +5198,7 @@ tasks:
     depends_on: []
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -5219,7 +5219,7 @@ tasks:
       - T-KATA-REVIEW-ALL-sld-sample-110
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -5240,7 +5240,7 @@ tasks:
       - T-KATA-REVIEW-ALL-sld-sample-120
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -5260,7 +5260,7 @@ tasks:
       - T-KATA-REVIEW-ALL-sld-sample-130
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -5281,7 +5281,7 @@ tasks:
       - T-KATA-REVIEW-ALL-sld-sample-140
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -5301,7 +5301,7 @@ tasks:
     depends_on: []
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -5322,7 +5322,7 @@ tasks:
       - T-KATA-REVIEW-ALL-sf-index-sample-110
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -5343,7 +5343,7 @@ tasks:
       - T-KATA-REVIEW-ALL-sf-index-sample-120
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -5363,7 +5363,7 @@ tasks:
       - T-KATA-REVIEW-ALL-sf-index-sample-130
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -5384,7 +5384,7 @@ tasks:
       - T-KATA-REVIEW-ALL-sf-index-sample-140
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -5404,7 +5404,7 @@ tasks:
     depends_on: []
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -5425,7 +5425,7 @@ tasks:
       - T-KATA-REVIEW-ALL-sf-sample-110
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -5446,7 +5446,7 @@ tasks:
       - T-KATA-REVIEW-ALL-sf-sample-120
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -5466,7 +5466,7 @@ tasks:
       - T-KATA-REVIEW-ALL-sf-sample-130
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -5487,7 +5487,7 @@ tasks:
       - T-KATA-REVIEW-ALL-sf-sample-140
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -5610,7 +5610,7 @@ tasks:
     depends_on: []
     owner: BA
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -5631,7 +5631,7 @@ tasks:
       - T-KATA-REVIEW-ALL-clis-sample-110
     owner: BA
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -5652,7 +5652,7 @@ tasks:
       - T-KATA-REVIEW-ALL-clis-sample-120
     owner: BA
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -5672,7 +5672,7 @@ tasks:
       - T-KATA-REVIEW-ALL-clis-sample-130
     owner: BA
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -5693,7 +5693,7 @@ tasks:
       - T-KATA-REVIEW-ALL-clis-sample-140
     owner: BA
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -5713,7 +5713,7 @@ tasks:
     depends_on: []
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -5734,7 +5734,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cdt-sample-110
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -5755,7 +5755,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cdt-sample-120
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -5775,7 +5775,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cdt-sample-130
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -5796,7 +5796,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cdt-sample-140
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -5816,7 +5816,7 @@ tasks:
     depends_on: []
     owner: BA
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -5837,7 +5837,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cdsd-sample-110
     owner: BA
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -5858,7 +5858,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cdsd-sample-120
     owner: BA
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -5878,7 +5878,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cdsd-sample-130
     owner: BA
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -5899,7 +5899,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cdsd-sample-140
     owner: BA
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -5919,7 +5919,7 @@ tasks:
     depends_on: []
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -5940,7 +5940,7 @@ tasks:
       - T-KATA-REVIEW-ALL-ccd-sample-110
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -5961,7 +5961,7 @@ tasks:
       - T-KATA-REVIEW-ALL-ccd-sample-120
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -5981,7 +5981,7 @@ tasks:
       - T-KATA-REVIEW-ALL-ccd-sample-130
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -6002,7 +6002,7 @@ tasks:
       - T-KATA-REVIEW-ALL-ccd-sample-140
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -6022,7 +6022,7 @@ tasks:
     depends_on: []
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -6043,7 +6043,7 @@ tasks:
       - T-KATA-REVIEW-ALL-br-sample-110
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -6064,7 +6064,7 @@ tasks:
       - T-KATA-REVIEW-ALL-br-sample-120
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -6084,7 +6084,7 @@ tasks:
       - T-KATA-REVIEW-ALL-br-sample-130
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -6105,7 +6105,7 @@ tasks:
       - T-KATA-REVIEW-ALL-br-sample-140
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -6125,7 +6125,7 @@ tasks:
     depends_on: []
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -6146,7 +6146,7 @@ tasks:
       - T-KATA-REVIEW-ALL-bes-index-sample-110
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -6167,7 +6167,7 @@ tasks:
       - T-KATA-REVIEW-ALL-bes-index-sample-120
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -6187,7 +6187,7 @@ tasks:
       - T-KATA-REVIEW-ALL-bes-index-sample-130
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -6208,7 +6208,7 @@ tasks:
       - T-KATA-REVIEW-ALL-bes-index-sample-140
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -6228,7 +6228,7 @@ tasks:
     depends_on: []
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -6249,7 +6249,7 @@ tasks:
       - T-KATA-REVIEW-ALL-bes-sample-110
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -6270,7 +6270,7 @@ tasks:
       - T-KATA-REVIEW-ALL-bes-sample-120
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -6290,7 +6290,7 @@ tasks:
       - T-KATA-REVIEW-ALL-bes-sample-130
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -6311,7 +6311,7 @@ tasks:
       - T-KATA-REVIEW-ALL-bes-sample-140
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -6331,7 +6331,7 @@ tasks:
     depends_on: []
     owner: UX
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -6352,7 +6352,7 @@ tasks:
       - T-KATA-REVIEW-ALL-bds-sample-110
     owner: UX
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -6373,7 +6373,7 @@ tasks:
       - T-KATA-REVIEW-ALL-bds-sample-120
     owner: UX
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -6393,7 +6393,7 @@ tasks:
       - T-KATA-REVIEW-ALL-bds-sample-130
     owner: UX
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -6414,7 +6414,7 @@ tasks:
       - T-KATA-REVIEW-ALL-bds-sample-140
     owner: UX
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -6640,7 +6640,7 @@ tasks:
     depends_on: []
     owner: PO
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -6661,7 +6661,7 @@ tasks:
       - T-KATA-REVIEW-ALL-prj-scope-sample-110
     owner: PO
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -6682,7 +6682,7 @@ tasks:
       - T-KATA-REVIEW-ALL-prj-scope-sample-120
     owner: PO
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -6702,7 +6702,7 @@ tasks:
       - T-KATA-REVIEW-ALL-prj-scope-sample-130
     owner: PO
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -6723,7 +6723,7 @@ tasks:
       - T-KATA-REVIEW-ALL-prj-scope-sample-140
     owner: PO
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -6744,7 +6744,7 @@ tasks:
       - T-KATA-REVIEW-ALL-prj-scope-sample-150
     owner: PO
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -6765,7 +6765,7 @@ tasks:
       - T-KATA-REVIEW-ALL-prj-issues-and-approach-sample-110
     owner: PO
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -6786,7 +6786,7 @@ tasks:
       - T-KATA-REVIEW-ALL-prj-issues-and-approach-sample-120
     owner: PO
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -6806,7 +6806,7 @@ tasks:
       - T-KATA-REVIEW-ALL-prj-issues-and-approach-sample-130
     owner: PO
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -6827,7 +6827,7 @@ tasks:
       - T-KATA-REVIEW-ALL-prj-issues-and-approach-sample-140
     owner: PO
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -6847,7 +6847,7 @@ tasks:
     depends_on: []
     owner: PO
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -6868,7 +6868,7 @@ tasks:
       - T-KATA-REVIEW-ALL-prj-stakeholder-register-sample-110
     owner: PO
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -6889,7 +6889,7 @@ tasks:
       - T-KATA-REVIEW-ALL-prj-stakeholder-register-sample-120
     owner: PO
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -6909,7 +6909,7 @@ tasks:
       - T-KATA-REVIEW-ALL-prj-stakeholder-register-sample-130
     owner: PO
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -6930,7 +6930,7 @@ tasks:
       - T-KATA-REVIEW-ALL-prj-stakeholder-register-sample-140
     owner: PO
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -6951,7 +6951,7 @@ tasks:
       - T-KATA-REVIEW-ALL-prj-scope-sample-150
     owner: PO
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -6972,7 +6972,7 @@ tasks:
       - T-KATA-REVIEW-ALL-prj-success-criteria-and-acceptance-criteria-sample-110
     owner: PO
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -6993,7 +6993,7 @@ tasks:
       - T-KATA-REVIEW-ALL-prj-success-criteria-and-acceptance-criteria-sample-120
     owner: PO
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7013,7 +7013,7 @@ tasks:
       - T-KATA-REVIEW-ALL-prj-success-criteria-and-acceptance-criteria-sample-130
     owner: PO
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7034,7 +7034,7 @@ tasks:
       - T-KATA-REVIEW-ALL-prj-success-criteria-and-acceptance-criteria-sample-140
     owner: PO
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7054,7 +7054,7 @@ tasks:
     depends_on: []
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7075,7 +7075,7 @@ tasks:
       - T-KATA-REVIEW-ALL-prj-assumptions-constraints-dependencies-sample-110
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7096,7 +7096,7 @@ tasks:
       - T-KATA-REVIEW-ALL-prj-assumptions-constraints-dependencies-sample-120
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7116,7 +7116,7 @@ tasks:
       - T-KATA-REVIEW-ALL-prj-assumptions-constraints-dependencies-sample-130
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7137,7 +7137,7 @@ tasks:
       - T-KATA-REVIEW-ALL-prj-assumptions-constraints-dependencies-sample-140
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7157,7 +7157,7 @@ tasks:
     depends_on: []
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7178,7 +7178,7 @@ tasks:
       - T-KATA-REVIEW-ALL-prj-comparison-of-alternatives-sample-110
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7199,7 +7199,7 @@ tasks:
       - T-KATA-REVIEW-ALL-prj-comparison-of-alternatives-sample-120
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7219,7 +7219,7 @@ tasks:
       - T-KATA-REVIEW-ALL-prj-comparison-of-alternatives-sample-130
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7240,7 +7240,7 @@ tasks:
       - T-KATA-REVIEW-ALL-prj-comparison-of-alternatives-sample-140
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7261,7 +7261,7 @@ tasks:
       - T-KATA-REVIEW-ALL-prj-stakeholder-register-sample-150
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7282,7 +7282,7 @@ tasks:
       - T-KATA-REVIEW-ALL-pm-communication-plan-sample-110
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7303,7 +7303,7 @@ tasks:
       - T-KATA-REVIEW-ALL-pm-communication-plan-sample-120
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7323,7 +7323,7 @@ tasks:
       - T-KATA-REVIEW-ALL-pm-communication-plan-sample-130
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7344,7 +7344,7 @@ tasks:
       - T-KATA-REVIEW-ALL-pm-communication-plan-sample-140
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7364,7 +7364,7 @@ tasks:
     depends_on: []
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7385,7 +7385,7 @@ tasks:
       - T-KATA-REVIEW-ALL-pm-members-sample-110
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7406,7 +7406,7 @@ tasks:
       - T-KATA-REVIEW-ALL-pm-members-sample-120
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7426,7 +7426,7 @@ tasks:
       - T-KATA-REVIEW-ALL-pm-members-sample-130
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7447,7 +7447,7 @@ tasks:
       - T-KATA-REVIEW-ALL-pm-members-sample-140
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7467,7 +7467,7 @@ tasks:
     depends_on: []
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7488,7 +7488,7 @@ tasks:
       - T-KATA-REVIEW-ALL-pm-orchestrator-playbook-sample-110
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7509,7 +7509,7 @@ tasks:
       - T-KATA-REVIEW-ALL-pm-orchestrator-playbook-sample-120
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7529,7 +7529,7 @@ tasks:
       - T-KATA-REVIEW-ALL-pm-orchestrator-playbook-sample-130
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7550,7 +7550,7 @@ tasks:
       - T-KATA-REVIEW-ALL-pm-orchestrator-playbook-sample-140
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7570,7 +7570,7 @@ tasks:
     depends_on: []
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7591,7 +7591,7 @@ tasks:
       - T-KATA-REVIEW-ALL-pm-organization-sample-110
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7612,7 +7612,7 @@ tasks:
       - T-KATA-REVIEW-ALL-pm-organization-sample-120
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7632,7 +7632,7 @@ tasks:
       - T-KATA-REVIEW-ALL-pm-organization-sample-130
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7653,7 +7653,7 @@ tasks:
       - T-KATA-REVIEW-ALL-pm-organization-sample-140
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7673,7 +7673,7 @@ tasks:
     depends_on: []
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7694,7 +7694,7 @@ tasks:
       - T-KATA-REVIEW-ALL-pm-plan-sample-110
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7715,7 +7715,7 @@ tasks:
       - T-KATA-REVIEW-ALL-pm-plan-sample-120
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7735,7 +7735,7 @@ tasks:
       - T-KATA-REVIEW-ALL-pm-plan-sample-130
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7756,7 +7756,7 @@ tasks:
       - T-KATA-REVIEW-ALL-pm-plan-sample-140
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7776,7 +7776,7 @@ tasks:
     depends_on: []
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7797,7 +7797,7 @@ tasks:
       - T-KATA-REVIEW-ALL-pm-quality-management-plan-sample-110
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7818,7 +7818,7 @@ tasks:
       - T-KATA-REVIEW-ALL-pm-quality-management-plan-sample-120
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7838,7 +7838,7 @@ tasks:
       - T-KATA-REVIEW-ALL-pm-quality-management-plan-sample-130
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7859,7 +7859,7 @@ tasks:
       - T-KATA-REVIEW-ALL-pm-quality-management-plan-sample-140
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7879,7 +7879,7 @@ tasks:
     depends_on: []
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7900,7 +7900,7 @@ tasks:
       - T-KATA-REVIEW-ALL-pm-raci-sample-110
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7921,7 +7921,7 @@ tasks:
       - T-KATA-REVIEW-ALL-pm-raci-sample-120
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7941,7 +7941,7 @@ tasks:
       - T-KATA-REVIEW-ALL-pm-raci-sample-130
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -7962,7 +7962,7 @@ tasks:
       - T-KATA-REVIEW-ALL-pm-raci-sample-140
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -8085,7 +8085,7 @@ tasks:
     depends_on: []
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -8106,7 +8106,7 @@ tasks:
       - T-KATA-REVIEW-ALL-dct-sample-110
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -8127,7 +8127,7 @@ tasks:
       - T-KATA-REVIEW-ALL-dct-sample-120
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -8147,7 +8147,7 @@ tasks:
       - T-KATA-REVIEW-ALL-dct-sample-130
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -8168,7 +8168,7 @@ tasks:
       - T-KATA-REVIEW-ALL-dct-sample-140
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -8291,7 +8291,7 @@ tasks:
     depends_on: []
     owner: BA
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -8312,7 +8312,7 @@ tasks:
       - T-KATA-REVIEW-ALL-bps-sample-110
     owner: BA
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -8333,7 +8333,7 @@ tasks:
       - T-KATA-REVIEW-ALL-bps-sample-120
     owner: BA
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -8353,7 +8353,7 @@ tasks:
       - T-KATA-REVIEW-ALL-bps-sample-130
     owner: BA
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -8374,7 +8374,7 @@ tasks:
       - T-KATA-REVIEW-ALL-bps-sample-140
     owner: BA
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -8394,7 +8394,7 @@ tasks:
     depends_on: []
     owner: BA
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -8415,7 +8415,7 @@ tasks:
       - T-KATA-REVIEW-ALL-imp-business-sample-110
     owner: BA
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -8436,7 +8436,7 @@ tasks:
       - T-KATA-REVIEW-ALL-imp-business-sample-120
     owner: BA
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -8456,7 +8456,7 @@ tasks:
       - T-KATA-REVIEW-ALL-imp-business-sample-130
     owner: BA
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -8477,7 +8477,7 @@ tasks:
       - T-KATA-REVIEW-ALL-imp-business-sample-140
     owner: BA
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -8497,7 +8497,7 @@ tasks:
     depends_on: []
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -8518,7 +8518,7 @@ tasks:
       - T-KATA-REVIEW-ALL-imp-interface-sample-110
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -8539,7 +8539,7 @@ tasks:
       - T-KATA-REVIEW-ALL-imp-interface-sample-120
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -8559,7 +8559,7 @@ tasks:
       - T-KATA-REVIEW-ALL-imp-interface-sample-130
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -8580,7 +8580,7 @@ tasks:
       - T-KATA-REVIEW-ALL-imp-interface-sample-140
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -8600,7 +8600,7 @@ tasks:
     depends_on: []
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -8621,7 +8621,7 @@ tasks:
       - T-KATA-REVIEW-ALL-imp-operations-sample-110
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -8642,7 +8642,7 @@ tasks:
       - T-KATA-REVIEW-ALL-imp-operations-sample-120
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -8662,7 +8662,7 @@ tasks:
       - T-KATA-REVIEW-ALL-imp-operations-sample-130
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -8683,7 +8683,7 @@ tasks:
       - T-KATA-REVIEW-ALL-imp-operations-sample-140
     owner: OPS
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -8703,7 +8703,7 @@ tasks:
     depends_on: []
     owner: BA
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -8724,7 +8724,7 @@ tasks:
       - T-KATA-REVIEW-ALL-gl-sample-110
     owner: BA
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -8745,7 +8745,7 @@ tasks:
       - T-KATA-REVIEW-ALL-gl-sample-120
     owner: BA
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -8765,7 +8765,7 @@ tasks:
       - T-KATA-REVIEW-ALL-gl-sample-130
     owner: BA
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -8786,7 +8786,7 @@ tasks:
       - T-KATA-REVIEW-ALL-gl-sample-140
     owner: BA
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -8806,7 +8806,7 @@ tasks:
     depends_on: []
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -8827,7 +8827,7 @@ tasks:
       - T-KATA-REVIEW-ALL-mm-sample-110
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -8848,7 +8848,7 @@ tasks:
       - T-KATA-REVIEW-ALL-mm-sample-120
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -8868,7 +8868,7 @@ tasks:
       - T-KATA-REVIEW-ALL-mm-sample-130
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -8889,7 +8889,7 @@ tasks:
       - T-KATA-REVIEW-ALL-mm-sample-140
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -8909,7 +8909,7 @@ tasks:
     depends_on: []
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -8930,7 +8930,7 @@ tasks:
       - T-KATA-REVIEW-ALL-pr-sample-110
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -8951,7 +8951,7 @@ tasks:
       - T-KATA-REVIEW-ALL-pr-sample-120
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -8971,7 +8971,7 @@ tasks:
       - T-KATA-REVIEW-ALL-pr-sample-130
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -8992,7 +8992,7 @@ tasks:
       - T-KATA-REVIEW-ALL-pr-sample-140
     owner: PM
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9012,7 +9012,7 @@ tasks:
     depends_on: []
     owner: UX
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9033,7 +9033,7 @@ tasks:
       - T-KATA-REVIEW-ALL-uis-sample-110
     owner: UX
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9054,7 +9054,7 @@ tasks:
       - T-KATA-REVIEW-ALL-uis-sample-120
     owner: UX
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9074,7 +9074,7 @@ tasks:
       - T-KATA-REVIEW-ALL-uis-sample-130
     owner: UX
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9095,7 +9095,7 @@ tasks:
       - T-KATA-REVIEW-ALL-uis-sample-140
     owner: UX
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9116,7 +9116,7 @@ tasks:
       - T-KATA-REVIEW-ALL-uis-sample-150
     owner: UX
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9137,7 +9137,7 @@ tasks:
       - T-KATA-REVIEW-ALL-dss-sample-110
     owner: UX
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9158,7 +9158,7 @@ tasks:
       - T-KATA-REVIEW-ALL-dss-sample-120
     owner: UX
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9178,7 +9178,7 @@ tasks:
       - T-KATA-REVIEW-ALL-dss-sample-130
     owner: UX
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9199,7 +9199,7 @@ tasks:
       - T-KATA-REVIEW-ALL-dss-sample-140
     owner: UX
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9219,7 +9219,7 @@ tasks:
     depends_on: []
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9240,7 +9240,7 @@ tasks:
       - T-KATA-REVIEW-ALL-tsd-index-sample-110
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9261,7 +9261,7 @@ tasks:
       - T-KATA-REVIEW-ALL-tsd-index-sample-120
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9281,7 +9281,7 @@ tasks:
       - T-KATA-REVIEW-ALL-tsd-index-sample-130
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9302,7 +9302,7 @@ tasks:
       - T-KATA-REVIEW-ALL-tsd-index-sample-140
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9323,7 +9323,7 @@ tasks:
       - T-KATA-REVIEW-ALL-tsd-index-sample-150
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9344,7 +9344,7 @@ tasks:
       - T-KATA-REVIEW-ALL-tsd-sample-110
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9365,7 +9365,7 @@ tasks:
       - T-KATA-REVIEW-ALL-tsd-sample-120
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9385,7 +9385,7 @@ tasks:
       - T-KATA-REVIEW-ALL-tsd-sample-130
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9406,7 +9406,7 @@ tasks:
       - T-KATA-REVIEW-ALL-tsd-sample-140
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9427,7 +9427,7 @@ tasks:
       - T-KATA-REVIEW-ALL-tsd-index-sample-150
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9448,7 +9448,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cdr-sample-110
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9469,7 +9469,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cdr-sample-120
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9489,7 +9489,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cdr-sample-130
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9510,7 +9510,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cdr-sample-140
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9530,7 +9530,7 @@ tasks:
     depends_on: []
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9551,7 +9551,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cdfd-overview-sample-110
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9572,7 +9572,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cdfd-overview-sample-120
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9592,7 +9592,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cdfd-overview-sample-130
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9613,7 +9613,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cdfd-overview-sample-140
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9634,7 +9634,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cdfd-overview-sample-150
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9655,7 +9655,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cdfd-sample-110
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9676,7 +9676,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cdfd-sample-120
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9696,7 +9696,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cdfd-sample-130
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9717,7 +9717,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cdfd-sample-140
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9840,7 +9840,7 @@ tasks:
     depends_on: []
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9861,7 +9861,7 @@ tasks:
       - T-KATA-REVIEW-ALL-ifx-api-sample-110
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9882,7 +9882,7 @@ tasks:
       - T-KATA-REVIEW-ALL-ifx-api-sample-120
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9902,7 +9902,7 @@ tasks:
       - T-KATA-REVIEW-ALL-ifx-api-sample-130
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9923,7 +9923,7 @@ tasks:
       - T-KATA-REVIEW-ALL-ifx-api-sample-140
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9943,7 +9943,7 @@ tasks:
     depends_on: []
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9964,7 +9964,7 @@ tasks:
       - T-KATA-REVIEW-ALL-ifx-msg-sample-110
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -9985,7 +9985,7 @@ tasks:
       - T-KATA-REVIEW-ALL-ifx-msg-sample-120
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -10005,7 +10005,7 @@ tasks:
       - T-KATA-REVIEW-ALL-ifx-msg-sample-130
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -10026,7 +10026,7 @@ tasks:
       - T-KATA-REVIEW-ALL-ifx-msg-sample-140
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -10046,7 +10046,7 @@ tasks:
     depends_on: []
     owner: BA
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -10067,7 +10067,7 @@ tasks:
       - T-KATA-REVIEW-ALL-ifx-cmd-sample-110
     owner: BA
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -10088,7 +10088,7 @@ tasks:
       - T-KATA-REVIEW-ALL-ifx-cmd-sample-120
     owner: BA
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -10108,7 +10108,7 @@ tasks:
       - T-KATA-REVIEW-ALL-ifx-cmd-sample-130
     owner: BA
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -10129,7 +10129,7 @@ tasks:
       - T-KATA-REVIEW-ALL-ifx-cmd-sample-140
     owner: BA
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -10149,7 +10149,7 @@ tasks:
     depends_on: []
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -10170,7 +10170,7 @@ tasks:
       - T-KATA-REVIEW-ALL-ifx-file-sample-110
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -10191,7 +10191,7 @@ tasks:
       - T-KATA-REVIEW-ALL-ifx-file-sample-120
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -10211,7 +10211,7 @@ tasks:
       - T-KATA-REVIEW-ALL-ifx-file-sample-130
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -10232,7 +10232,7 @@ tasks:
       - T-KATA-REVIEW-ALL-ifx-file-sample-140
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -10252,7 +10252,7 @@ tasks:
     depends_on: []
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -10273,7 +10273,7 @@ tasks:
       - T-KATA-REVIEW-ALL-ifx-index-sample-110
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -10294,7 +10294,7 @@ tasks:
       - T-KATA-REVIEW-ALL-ifx-index-sample-120
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -10314,7 +10314,7 @@ tasks:
       - T-KATA-REVIEW-ALL-ifx-index-sample-130
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -10335,7 +10335,7 @@ tasks:
       - T-KATA-REVIEW-ALL-ifx-index-sample-140
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -10355,7 +10355,7 @@ tasks:
     depends_on: []
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -10376,7 +10376,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cxd-sample-110
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -10397,7 +10397,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cxd-sample-120
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -10417,7 +10417,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cxd-sample-130
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -10438,7 +10438,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cxd-sample-140
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -10459,7 +10459,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cxd-sample-150
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -10480,7 +10480,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cnd-sample-110
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -10501,7 +10501,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cnd-sample-120
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -10521,7 +10521,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cnd-sample-130
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -10542,7 +10542,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cnd-sample-140
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
@@ -10563,7 +10563,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cnd-sample-150
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R1（目的の過不足）を行う。段の内容・読む範囲・観点・報告の形は
@@ -10584,7 +10584,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cpd-sample-110
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R2（構成）を行う。段の内容・読む範囲・観点・報告の形は
@@ -10605,7 +10605,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cpd-sample-120
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R3（読みやすさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -10625,7 +10625,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cpd-sample-130
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R4（正しさ）を行う。段の内容・読む範囲・観点・報告の形は
@@ -10646,7 +10646,7 @@ tasks:
       - T-KATA-REVIEW-ALL-cpd-sample-140
     owner: ARC
     agent:
-      executor: sol-executor
+      executor: opus-executor
       reporter: sonnet-reporter
     description: >
       kata のレビューの段 R5（整合）を行う。段の内容・読む範囲・観点・報告の形は
