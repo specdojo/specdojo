@@ -96,3 +96,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_13c8f7f846d94521ac82af585105515e
+- v: 1
+  id: reg_bc1a167aafd14888b8d6346a582ca6b2
+  ts: "2026-11-24T15:27:12Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register の統合後に、LP の差分・LICENSE の本文・個票の対応結果・evidence を完了条件に照らし、統合後の LP develop で lint:md・format:check・build が通ることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-25"
+    - field: conclusion
+      from: "-"
+      to: specdojo-lp に MIT の LICENSE を加え、README に showcase の案内（登録簿への辿り方と外からの PR を受け付けない旨）とライセンスの節（マスコット画像は対象外）を書き、CHANGELOG の Unreleased に追記した。package.json の license はオーケストレーターが反映した。
+  previous_event_id: reg_df5e53ab4062459fbeb856ca02c71dfc

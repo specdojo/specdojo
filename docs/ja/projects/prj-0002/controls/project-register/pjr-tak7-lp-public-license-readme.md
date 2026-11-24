@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0002:pjr-tak7-lp-public-license-readme
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: easy
   owner: DEV
   registered_at: "2026-11-24T14:39:30Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-24T15:27:12Z"
+  conclusion: specdojo-lp に MIT の LICENSE を加え、README に showcase の案内（登録簿への辿り方と外からの PR を受け付けない旨）とライセンスの節（マスコット画像は対象外）を書き、CHANGELOG の Unreleased に追記した。package.json の license はオーケストレーターが反映した。
 ---
 
 # PJR-TAK7 specdojo-lp の公開に向けて LICENSE を加え、README に showcase の案内を書く
