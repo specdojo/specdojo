@@ -4,12 +4,14 @@ specdojo:
   type: exec-result
   task_id: PJR-JA3M
   mode: edit
-  status: in_progress
+  status: blocked
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-JA3M/pjr-ja3m-20261124T033100Z-0740bac1/plan.md
   started_at: "2026-11-24T03:31:00.958Z"
+  completed_at: "2026-11-24T03:34:42.410Z"
   agent: terra-executor
+  block_reason: "executor reported incomplete: 固定 fixture への移行は実施したが、sample 変更中の単体テスト全体の確認が未完了。"
 ---
 
 # Edit Result

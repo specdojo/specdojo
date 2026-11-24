@@ -105,3 +105,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_20ab775aaba84b5dbe9cc32e15b6d8fc
+- v: 1
+  id: reg_b10cf6aa39a14fb6b149de138ff969dc
+  ts: "2026-11-24T03:31:45Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果・親の検証で確かめた。保護された設定（lefthook.yml・.github/workflows/）への組み込みは、利用者の承認のもとでオーケストレーターが反映した（769eaa301）。ふだんの push で hook が通ることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-24"
+    - field: conclusion
+      from: "-"
+      to: register のブランチへの push を、範囲の外のファイルと個票・イベントの形で検査する register branch-check を足し、pre-push の hook と CI（check-register-push.yml）に組み込んだ
+  previous_event_id: reg_2a72586ff6bd4fafb729ffd92f408be2

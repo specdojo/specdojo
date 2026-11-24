@@ -112,3 +112,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_5cd8bb0bdc54480e95ab8f89fb5a2caf
+- v: 1
+  id: reg_41e8bcb8575a46c79ce78db97e29af98
+  ts: "2026-11-24T03:34:43Z"
+  action: wait
+  actor: terra-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor reported incomplete: 固定 fixture への移行は実施したが、sample 変更中の単体テスト全体の確認が未完了。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor reported incomplete: 固定 fixture への移行は実施したが、sample 変更中の単体テスト全体の確認が未完了。"
+  previous_event_id: reg_3d1f8472dcae4019b14c2a146dfd81f2
