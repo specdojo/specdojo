@@ -5468,3 +5468,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_eab84bb4490640928596d6a2d7bdae5c
+- v: 1
+  id: reg_d5ac1c7038df49be85696aec64913a1f
+  ts: "2026-11-24T05:36:50Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec smoke の検証（actor=sonnet-executor、start・review の記帳）が通った
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-24"
+    - field: conclusion
+      from: TJZM・N4D0・EKGQ・1HJH の統合の後、exec smoke で runner の start → review の記帳を確かめた。executor の記録に拒否はなかった
+      to: C11R・TN64 の統合後の smoke が成功した
+  previous_event_id: reg_5099a35c119147be9d58ddfbc7b02687
