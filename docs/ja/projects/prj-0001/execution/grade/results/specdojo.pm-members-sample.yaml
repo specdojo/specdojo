@@ -4,29 +4,28 @@ document: specdojo:pm-members-sample
 path: docs/ja/specdojo/samples/pm-members-sample.yaml
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-sample
-verdict: needs-work
-score: 90
-graded_at: "2026-11-21T05:22:09.900Z"
-graded_by: opus-executor
-content_hash: fc3a02798958a89bd05df2b239291571838203129670a5bf8bc8b5195f5f93ea
+verdict: pass
+score: 99
+graded_at: "2026-11-24T01:55:14.650Z"
+graded_by: sonnet-review-executor
+content_hash: 69bc8ba444d952e0d93babfcc3d6861a09b3a2ac60300fa1078add17e6d865da
 categories:
   purpose:
     score: 100
   operations:
-    score: 94
+    score: 100
   planning:
-    score: 92
+    score: 100
   business:
     score: 100
   architecture:
     score: 100
   usability:
-    score: 75
+    score: 92
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 100
   consistency:
     score: 100
 viewpoints:
@@ -40,8 +39,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
     level: 4
     score: 100
@@ -58,8 +57,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -79,11 +78,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-readability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 3
     score: 75
@@ -91,8 +90,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-operability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -101,46 +100,14 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 5
+  major: 0
+  minor: 1
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-pm-plan-feasibility
-    line: 50
-    anchor: "- nickname: family-user-representative"
-    message: 家族利用者代表や技術メンターなど参加が限られる member の `note` に参加できる時間帯・頻度などの稼働条件がなく、PM が確認作業を順序付けて見積もる材料が不足しているため、公開できる範囲で稼働条件を1文添える。
-    message_ja: 家族利用者代表や技術メンターなど参加が限られる member の `note` に参加できる時間帯・頻度などの稼働条件がなく、PM が確認作業を順序付けて見積もる材料が不足しているため、公開できる範囲で稼働条件を1文添える。
-  - id: F002
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 14
-    anchor: "# agent 定義は repository 共通の .specdojo/agent-members.yaml に置く。"
-    message: 14 行のコメントと 61 行の rule が agent 定義の置き場所を二重に説明し、58・60 行も正本の標準を再掲しているため、片方を削るか正本への参照に置き換えて重複を解消する。
-    message_ja: 14 行のコメントと 61 行の rule が agent 定義の置き場所を二重に説明し、58・60 行も正本の標準を再掲しているため、片方を削るか正本への参照に置き換えて重複を解消する。
-  - id: F003
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 57
-    anchor: "rules:"
-    message: >-
-      sample の `rules` が template の汎用 rules をそのまま写し、owner の Role code 指定や agent の置き場所など共通標準の再掲が大半を占めていて、rulebook「運用ルール」と
-      recipe の良い例・仕上げチェックに反するため、駄菓子屋固有の公開制約や交代時の扱いだけに絞った完成例へ書き換える。
-    message_ja: >-
-      sample の `rules` が template の汎用 rules をそのまま写し、owner の Role code 指定や agent の置き場所など共通標準の再掲が大半を占めていて、rulebook「運用ルール」と
-      recipe の良い例・仕上げチェックに反するため、駄菓子屋固有の公開制約や交代時の扱いだけに絞った完成例へ書き換える。
-  - id: F004
-    severity: minor
-    rule: vp-ux-readability
-    line: 41
-    anchor: "- 条件 ID と対象版・検証結果の照合"
-    message: focus の「条件 ID と対象版・検証結果の照合」の「条件 ID」が受入条件か品質基準のどちらの ID かを示しておらず初見の読者に伝わらないため、「受入条件 ID」などの具体的な名前に置き換える。
-    message_ja: focus の「条件 ID と対象版・検証結果の照合」の「条件 ID」が受入条件か品質基準のどちらの ID かを示しておらず初見の読者に伝わらないため、「受入条件 ID」などの具体的な名前に置き換える。
-  - id: F005
-    severity: minor
     rule: vp-ux-language-consistency
-    line: 36
+    line: 38
     anchor: "display_name: 同行レビュー担当"
     message: >-
       display_name「同行レビュー担当」が nickname `peer-reviewer` と note
@@ -148,14 +115,3 @@ findings:
     message_ja: >-
       display_name「同行レビュー担当」が nickname `peer-reviewer` と note
       の「第三者視点で確認」に合わず、レビューの独立性が伝わらないため、「第三者レビュー担当」や「相互レビュー担当」など意味の合う表示名にそろえる。
-  - id: F006
-    severity: minor
-    rule: vp-ops-operability
-    line: 59
-    anchor: "- specdojo exec --by には members[].nickname を指定し、実行ログ記録後の nickname は変更しない。"
-    message: >-
-      実行ログ記録後に nickname を変えない制約はあるが、メンバー交代時は新しい member を追加し旧 member を残すという継続更新の扱いが `rules` にないため、project
-      固有の交代時ルールとして1行加える。
-    message_ja: >-
-      実行ログ記録後に nickname を変えない制約はあるが、メンバー交代時は新しい member を追加し旧 member を残すという継続更新の扱いが `rules` にないため、project
-      固有の交代時ルールとして1行加える。

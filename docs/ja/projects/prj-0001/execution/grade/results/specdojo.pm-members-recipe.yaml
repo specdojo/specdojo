@@ -4,12 +4,11 @@ document: specdojo:pm-members-recipe
 path: docs/ja/specdojo/recipes/pm-members-recipe.md
 target: kata
 rubric: grade-rubric-v2
-reference: specdojo:prj-overview-recipe
 verdict: pass
-score: 97
-graded_at: "2026-11-19T20:46:09.766Z"
-graded_by: flash-high-executor
-content_hash: f2e5c142f4fca7fe01e4a737fd499fe52d11423027fbe3d2a2158ba5f528cd55
+score: 98
+graded_at: "2026-11-24T01:56:01.956Z"
+graded_by: sonnet-review-executor
+content_hash: 313bc0fe0aa6597b0bc6c0715c20dfef9b4106fc0b70d8fbeaf5e3b04feb20a4
 categories:
   purpose:
     score: 100
@@ -26,9 +25,9 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 92
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -70,14 +69,14 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-verifiability:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
     level: 4
     score: 100
@@ -107,8 +106,8 @@ finding_counts:
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 28
-    anchor: "### 4.1. members"
-    message: "`members` の問いにおいて、必須項目である `display_name` の確認が漏れている。"
-    message_ja: "`members` の問いにおいて、必須項目である `display_name` の確認が漏れている。"
+    rule: vp-dev-testability
+    line: 72
+    anchor: "## 8. 仕上げチェック"
+    message: 仕上げチェックに、rulebook の検証と合成名簿との整合に定める schema 検証コマンドと nickname 一意性の確認を参照として加える。
+    message_ja: 仕上げチェックに、rulebook の検証と合成名簿との整合に定める schema 検証コマンドと nickname 一意性の確認を参照として加える。
