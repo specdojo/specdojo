@@ -1,0 +1,23 @@
+name: Check register branch push
+on:
+  push:
+    branches:
+      - "project/*/register"
+permissions:
+  contents: read
+jobs:
+  register:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Check register branch push
+        run: >-
+          node --import tsx src/specdojo.ts register branch-check --project prj-0001
+          --commit "$GITHUB_SHA" --base "${{ github.event.before }}" --remote-ref "$GITHUB_REF"

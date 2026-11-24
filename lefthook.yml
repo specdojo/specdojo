@@ -85,9 +85,10 @@ commit-msg:
 pre-push:
   commands:
     # use_stdin のコマンドが複数あると標準入力は 1 つにしか渡らないため、main の保護と
-    # 実行記録の配置の検査（PJR-1ZQK、CI の Check execution record layout と同じ）を 1 つにまとめる。
+    # 実行記録の配置の検査（PJR-1ZQK、CI の Check execution record layout と同じ）と、register のブランチへの
+    # push の検査（PJR-FBP0、CI の Check register branch push と同じ）を 1 つにまとめる。
     protect-main:
-      run: input="$(cat)"; printf '%s\n' "$input" | node tools/protect-main-push.mjs && printf '%s\n' "$input" | node tools/check-run-record-layout-push.mjs --project prj-0001
+      run: input="$(cat)"; printf '%s\n' "$input" | node tools/protect-main-push.mjs && printf '%s\n' "$input" | node tools/check-run-record-layout-push.mjs --project prj-0001 && printf '%s\n' "$input" | node tools/check-register-push.mjs --project prj-0001
       use_stdin: true
 
 # specdojo の bin は dist/specdojo.js を指すため、merge / checkout で src が更新された
