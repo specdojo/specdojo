@@ -801,14 +801,14 @@ exec の plan は done_criteria と成果物本文から生成され、agent は
 
 provider によらず、exec の実行構造そのものが次の境界を提供します。
 
-| 対策                       | 内容                                                                                             |
-| -------------------------- | ------------------------------------------------------------------------------------------------ |
-| worktree 隔離              | agent はタスク専用 worktree 内で作業し、root の作業ツリーへ直接書き込まない                      |
-| git 操作の分離             | `git add` / `commit` / `merge` は specdojo CLI が親プロセスで行い、agent には git 権限を与えない |
-| Git 環境・状態ガード       | repository 固有環境を除去し、agent 前後の HEAD・local config 変更を検知して block する           |
-| ready 昇格の human-only 化 | 成果物 `status` の `ready` への昇格を commit 時に検出し、agent 実行では block する               |
-| commit 対象の除外          | `plan.md`、対象 run 以外の `execution/runs/`、`exec/events/`、`generated/` は commit しない      |
-| merge の重複ガード         | root 側の未 commit 変更と merge 対象パスが重複する場合は merge しない                            |
+| 対策                       | 内容                                                                                                                                     |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| worktree 隔離              | agent はタスク専用 worktree 内で作業し、root の作業ツリーへ直接書き込まない                                                              |
+| git 操作の分離             | `git add` / `commit` / `merge` は specdojo CLI が親プロセスで行い、agent には git 権限を与えない                                         |
+| Git 環境・状態ガード       | repository 固有環境を除去し、agent 前後の HEAD・local config 変更を検知して block する                                                   |
+| ready 昇格の human-only 化 | `docs/` 配下の成果物や型の `status` の `ready` への昇格を commit 時に検出し、agent 実行では block する。`tests/` などの fixture は対象外 |
+| commit 対象の除外          | `plan.md`、対象 run 以外の `execution/runs/`、`exec/events/`、`generated/` は commit しない                                              |
+| merge の重複ガード         | root 側の未 commit 変更と merge 対象パスが重複する場合は merge しない                                                                    |
 
 ### 8.2. provider 別の権限設定
 

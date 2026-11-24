@@ -163,6 +163,16 @@ export function deliverableStatus(content: string, relPath: string): string | un
   return typeof status === "string" ? status : undefined;
 }
 
+// Project deliverables and kata documents live under docs/. Other trees may contain
+// copies or test data with the same frontmatter and are not human approval targets.
+export function isAgentReadyPromotion(relPath: string, current: string, base?: string): boolean {
+  if (!relPath.replaceAll("\\", "/").startsWith("docs/")) return false;
+  return (
+    deliverableStatus(current, relPath) === "ready" &&
+    (base === undefined || deliverableStatus(base, relPath) !== "ready")
+  );
+}
+
 // Promotion of a deliverable's frontmatter status to "ready" is a human-only gate.
 // Agents commit their changes through commitWorktreeChanges, so reject (block) any run
 // that transitions a deliverable to "ready" here; humans promote out-of-band via a direct
@@ -181,15 +191,15 @@ function assertNoAgentReadyPromotion(
   const promoted: string[] = [];
   for (const relPath of paths) {
     if (relPath === resultRel || relPath === planRel) continue;
+    if (!relPath.replaceAll("\\", "/").startsWith("docs/")) continue;
     const absPath = resolve(worktree.path, relPath);
     if (!existsSync(absPath)) continue; // deletion is not a promotion
-    if (deliverableStatus(readFileSync(absPath, "utf8"), relPath) !== "ready") continue;
+    const content = readFileSync(absPath, "utf8");
+    if (deliverableStatus(content, relPath) !== "ready") continue;
     const base = gitResult(worktree.path, ["show", `HEAD:${relPath}`]);
-    const baseStatus =
-      base.status === 0 && typeof base.stdout === "string"
-        ? deliverableStatus(base.stdout, relPath)
-        : undefined;
-    if (baseStatus !== "ready") promoted.push(relPath);
+    const baseContent =
+      base.status === 0 && typeof base.stdout === "string" ? base.stdout : undefined;
+    if (isAgentReadyPromotion(relPath, content, baseContent)) promoted.push(relPath);
   }
   if (promoted.length > 0) {
     throw new Error(

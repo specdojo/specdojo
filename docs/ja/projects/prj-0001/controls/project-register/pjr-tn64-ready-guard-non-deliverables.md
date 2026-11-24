@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: medium
   difficulty: easy
   owner: DEV
@@ -44,7 +44,12 @@ specdojo:
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- commit 対象のうち `docs/` 配下を検査する。カタログに未登録の新規成果物や型も守りつつ、`tests/`・`tools/` などの写しを除外するため、配置による判定を選んだ。`docs/` 外の成果物はこの検査の対象外となる。
+- 新規・昇格済みの成果物を止め、ready の fixture を許す単体テストと統合テストを追加した。型検査・lint・単体テスト・統合テストは親 runner が実行する。
+
+### 5.1. CHANGELOG に書く事項
+
+- 不具合修正: agent 実行の ready 昇格検査で、テスト fixture などの成果物でないファイルを除外する。
 
 ## 6. 関連ドキュメント
 
