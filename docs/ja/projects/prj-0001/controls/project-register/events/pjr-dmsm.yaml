@@ -115,3 +115,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_1cc7aa2b04b642bb9949226a71dcfb52
+- v: 1
+  id: reg_e802de0159464c86b22b3cd06ff77330
+  ts: "2026-11-24T06:18:40Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 集めた 98 件・載せなかった項目・文案のない項目の一覧を個票で確かめ、CHANGELOG の markdownlint と prettier の通過、公開済みの節と package.json が変わっていないことを確かめた。review 中の 4 件の行は公開の前に確かめる
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-24"
+    - field: conclusion
+      from: "-"
+      to: CHANGELOG.md に v0.10.0 の節を区分ごとにまとめ、agy の削除・pm-* のログの型の非推奨・update での上げ方・XC5P の注意を移行の注意に書いた
+  previous_event_id: reg_bb2bc936c39c49d0b6b05359801d5407

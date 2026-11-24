@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-dmsm-v0100-release-notes
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-23T22:38:15Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-24T06:18:40Z"
+  conclusion: CHANGELOG.md に v0.10.0 の節を区分ごとにまとめ、agy の削除・pm-* のログの型の非推奨・update での上げ方・XC5P の注意を移行の注意に書いた
   commit_type: docs
   commit_scope: release
 ---
