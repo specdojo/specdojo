@@ -169,3 +169,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_479260f03ab74acaa43e22f25abf5411
+- v: 1
+  id: reg_70bc1b06152046f88a0730c384621421
+  ts: "2026-11-24T01:49:36Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果・親の検証（test-integration を含め passed）で確かめ、統合の後に新しい runner で PJR-SJR7 の run が統合まで通ることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-24"
+    - field: conclusion
+      from: "-"
+      to: register_sync が有効なとき、runner の状態の変わり目と対応結果を register のブランチへ書くようにした
+  previous_event_id: reg_f15c4f85264643e4b61d6dd463adfc38

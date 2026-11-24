@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-4vd6-runner-transitions-to-register-branch
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-23T00:21:39Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-24T01:49:36Z"
+  conclusion: register_sync が有効なとき、runner の状態の変わり目と対応結果を register のブランチへ書くようにした
   derived_from:
     - PJR-2TX0
   depends_on:
