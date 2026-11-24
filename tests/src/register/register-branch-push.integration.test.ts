@@ -145,7 +145,7 @@ describe("register branch-push", () => {
     expect(remoteTip()).toBe(develop);
     expect(git(registerWorktree(), "symbolic-ref", "--short", "HEAD")).toBe(BRANCH);
     expect(git(repo, "symbolic-ref", "--short", "HEAD")).toBe(DEVELOP);
-    expect(stdout.join("")).toContain(`Created branch ${BRANCH} from ${DEVELOP}`);
+    expect(stdout.join("")).toContain(`Created branch ${BRANCH} from origin/${DEVELOP}`);
   });
 
   it("only creates the local branch and worktree when the branch exists only on the remote", async () => {
@@ -248,15 +248,62 @@ describe("register branch-push", () => {
     expect(remoteTip()).toBe(before);
   });
 
-  it("does not push the integration branch commits that are not on the remote yet", async () => {
+  it("creates the branch from the remote integration tip when the local one is ahead", async () => {
     fixture();
+    const pushed = git(repo, "rev-parse", DEVELOP);
     commitFile(repo, "product.txt", "unpushed product edit\n");
 
     await branchPush();
 
+    expect(process.exitCode).toBeUndefined();
+    expect(git(repo, "rev-parse", `refs/heads/${BRANCH}`)).toBe(pushed);
+    expect(remoteTip()).toBe(pushed);
+    expect(git(remote, "rev-parse", `refs/heads/${DEVELOP}`)).toBe(pushed);
+    expect(stdout.join("")).toContain(`Created branch ${BRANCH} from origin/${DEVELOP}`);
+  });
+
+  it("creates from the local integration branch with a notice when the remote has none", async () => {
+    fixture();
+    git(repo, "push", "origin", "--delete", DEVELOP);
+
+    await branchPush();
+
     expect(process.exitCode).toBe(1);
-    expect(stderr.join("")).toContain("push the integration branch to the remote first");
+    const message = stderr.join("");
+    expect(message).toContain(`origin/${DEVELOP} does not exist`);
+    expect(message).toContain("push the integration branch to the remote first");
     expect(git(remote, "branch", "--list", BRANCH)).toBe("");
+    expect(git(repo, "branch", "--list", BRANCH)).toBe("");
+  });
+
+  it("starts --dry-run from the remote integration tip when the local one is ahead", async () => {
+    fixture();
+    const pushed = git(repo, "rev-parse", DEVELOP);
+    commitFile(repo, "product.txt", "unpushed product edit\n");
+
+    await branchPush("--dry-run");
+
+    expect(process.exitCode).toBeUndefined();
+    const output = stdout.join("");
+    expect(output).toContain(
+      `Would create branch ${BRANCH} from origin/${DEVELOP} (${pushed.slice(0, 12)})`,
+    );
+    expect(output).toContain(", 0 commit(s)");
+    expect(output).toContain("Checks: passed.");
+    expect(git(repo, "branch", "--list", BRANCH)).toBe("");
+  });
+
+  it("shows the same initial-check hint on --dry-run as the real run", async () => {
+    fixture();
+    git(repo, "push", "origin", "--delete", DEVELOP);
+
+    await branchPush("--dry-run");
+
+    expect(process.exitCode).toBe(1);
+    const output = stdout.join("");
+    expect(output).toContain(`origin/${DEVELOP} does not exist`);
+    expect(output).toContain("Checks: failed");
+    expect(output).toContain("push the integration branch to the remote first");
     expect(git(repo, "branch", "--list", BRANCH)).toBe("");
   });
 
@@ -269,7 +316,7 @@ describe("register branch-push", () => {
     expect(process.exitCode).toBeUndefined();
     const output = stdout.join("");
     expect(output).toContain(
-      `Would create branch ${BRANCH} from ${DEVELOP} (${develop.slice(0, 12)})`,
+      `Would create branch ${BRANCH} from origin/${DEVELOP} (${develop.slice(0, 12)})`,
     );
     expect(output).toContain("Would push to origin/project/sample/register");
     expect(output).toContain("Checks: passed.");

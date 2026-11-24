@@ -301,7 +301,7 @@ specdojo register branch-push --project prj-0001 --dry-run
 specdojo register branch-push --project prj-0001
 ```
 
-`register branch-push` は、push の先を `register_sync` の `remote` と `branch` だけに絞った専用のコマンドです。手元にもリモートにもブランチが無ければ、統合のブランチ（`integration_branch`、省略時は `project/<project-id>/develop`）から作って push します。リモートにだけあれば、手元のブランチと専用 worktree を作るだけにします。`--dry-run` は、作るブランチ・push する commit の範囲・検査の結果を示すだけで何も変えません。
+`register branch-push` は、push の先を `register_sync` の `remote` と `branch` だけに絞った専用のコマンドです。手元にもリモートにもブランチが無ければ、統合のブランチ（`integration_branch`、省略時は `project/<project-id>/develop`）のリモートの先端から作って push します。手元にしかない統合のブランチの commit は含めません。リモートに統合のブランチが無いときだけ、手元の先端から作り、その旨を案内します。リモートにだけあれば、手元のブランチと専用 worktree を作るだけにします。`--dry-run` は、作るブランチ・push する commit の範囲・検査の結果を示すだけで何も変えません。
 
 ほかの利用者は初回の同期時にリモートからローカルブランチと worktree を作れます。既存の専用 worktree は再利用し、無ければ Git 共通ディレクトリ配下に作成して保持します。hook が使う依存関係や、追跡外の名簿などが必要な環境では、事前に専用 worktree を用意して必要なセットアップを行ってください。元の worktree の未 commit 変更は専用ブランチへコピーしません。
 
