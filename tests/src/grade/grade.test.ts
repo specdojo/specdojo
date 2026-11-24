@@ -21,7 +21,6 @@ import {
   resolveGradeActor,
   resolveGradeReferenceId,
   loadKataReferences,
-  resolveGradeReferencePaths,
   selectGradeReferenceExample,
   validateGradeReporterFidelity,
   validateGradeSubmission,
@@ -32,6 +31,7 @@ import {
   type GradeSubmission,
   pipelineContentHash,
 } from "../../../src/grade/grade.js";
+import { resolveGradeReferencePathsFromCatalog } from "../../../src/grade/targets.js";
 import type { ReviewViewpointsDoc } from "../../../src/review/types.js";
 import type { MemberRoster } from "../../../src/shared/specdojo-config.js";
 import type { GradeResult, StoredGradeFinding } from "../../../src/grade/result.js";
@@ -1302,13 +1302,15 @@ LEVEL: 4
   });
 
   it("resolves declared and reverse-linked Kata references", () => {
-    const references = resolveGradeReferencePaths("docs/ja/specdojo/samples/opr-batch-sample.md");
-    expect(references).toEqual(
-      expect.arrayContaining([
-        expect.stringContaining("/rulebooks/opr-rulebook.md"),
-        expect.stringContaining("/templates/opr-template.md"),
-      ]),
+    const root = "tests/fixtures/grade/kata-references";
+    const references = resolveGradeReferencePathsFromCatalog(
+      `${root}/docs/ja/specdojo/samples/example-sample.md`,
+      loadKataReferences(root),
     );
+    expect(references).toEqual([
+      `${root}/docs/ja/specdojo/rulebooks/example-rulebook.md`,
+      `${root}/docs/ja/specdojo/templates/example-template.md`,
+    ]);
   });
 
   it("ignores stale generated YAML pages when loading Kata references", () => {

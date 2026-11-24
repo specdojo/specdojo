@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: in-progress
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-23T22:24:54Z"
   due_on: "2026-11-30"
-  block_reason: "integrate failed: project: Deliverable status promotion to \"ready\" is human-only and must not be done by an agent run: tests/fixtures/yaml-pages/ifx-cmd-ai-provider-cli.yaml, tests/fixtures/yaml-pages…"
   commit_type: fix
   commit_scope: test
 ---

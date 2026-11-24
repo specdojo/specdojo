@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../docs/specdojo/schemas/v1/tml-index.schema.yaml
+# 非推奨: 全体計画は epic で管理する。移行先は specdojo:pjr-rulebook、
+# 移行手順は specdojo:timeline-design-guide を参照。以下は旧形式の互換用サンプル。
+
+id: specdojo:tml-sample
+type: project
+status: deprecated
+title: トラック順序計画
+rulebook: specdojo:tml-rulebook
+version: 1
+project_id: prj-0001
+notes: 全体計画は epic へ移行してください（specdojo:pjr-rulebook、specdojo:timeline-design-guide）。
+
+tracks:
+  - track: launch
+    domains: [project-definition, project-management]
+    catalog_status: primary
+    order: 1
+    depends_on: []
+    note: プロジェクト全体の前提を定義する起点トラック。
+
+  - track: data-flow
+    domains: [data-flow]
+    catalog_status: primary
+    order: 2
+    parallel_group: business-specs
+    depends_on: [launch]
+
+  - track: data-model
+    domains: [data-model]
+    catalog_status: draft
+    catalog_duration_estimate_days: 3
+    order: 2
+    parallel_group: business-specs
+    depends_on: [launch]
+    note: data-flow と同じ入力を使うため並行候補とする。
+
+  - track: architecture
+    domains: [architecture]
+    catalog_status: not_started
+    catalog_duration_estimate_days: 2
+    order: 3
+    depends_on: [data-flow, data-model]

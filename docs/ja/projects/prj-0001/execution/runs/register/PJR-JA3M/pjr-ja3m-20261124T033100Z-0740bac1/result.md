@@ -4,14 +4,13 @@ specdojo:
   type: exec-result
   task_id: PJR-JA3M
   mode: edit
-  status: blocked
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-JA3M/pjr-ja3m-20261124T033100Z-0740bac1/plan.md
   started_at: "2026-11-24T03:31:00.958Z"
-  completed_at: "2026-11-24T03:41:49.025Z"
+  completed_at: "2026-11-24T03:56:03.745Z"
   agent: terra-executor
-  block_reason: "integrate failed: project: Deliverable status promotion to \"ready\" is human-only and must not be done by an agent run: tests/fixtures/yaml-pages/ifx-cmd-ai-provider-cli.yaml, tests/fixtures/yaml-pages…"
 ---
 
 # Edit Result
