@@ -83,3 +83,16 @@
       from: "executor validation failed or not run: npm run format:check, npm run build"
       to: "-"
   previous_event_id: reg_80b451781e2c484db8c675dfb2b4c00b
+- v: 1
+  id: reg_df5e53ab4062459fbeb856ca02c71dfc
+  ts: "2026-11-24T15:25:47Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_13c8f7f846d94521ac82af585105515e
