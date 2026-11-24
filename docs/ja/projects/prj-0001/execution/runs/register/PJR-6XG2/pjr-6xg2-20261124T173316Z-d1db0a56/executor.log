@@ -1,0 +1,27 @@
+上のメニューの project の入口と、`deploy.yml` の変更案、CHANGELOG の文案は作りました。手元ビルドと workflow への反映は残っています。`.github` は変えていません。`npm run typecheck` と `npm run lint:ts` は通り、`lint:ts` は warning 43 件だけでした。`npm run test:unit` と `npm run lint:md:changed` は実行していません。
+
+**メニュー**
+- `packages/docs-site/.vitepress/config.mts` の「プロジェクト」を `projectNavItem()` にしました。
+- `docs/ja/projects/` に prj-0001 以外の project が無いときは、従来どおり prj-0001 の概要へのリンクのままです。あるときだけドロップダウンにして、prj-0002 は `/ja/projects/prj-0002/` へ向けます。
+- 本番の版は prj-0002 を重ねないので、表示は変わりません。
+
+**個票**（`pjr-6xg2-docs-site-next-prj-0002.md`）
+- 作業内容の表と対応結果を書き、「CHANGELOG に書く事項」は区分 Added で文案を付けました。
+- workflow の差分は個票の「workflow の変更案」の節にあります。`Build the next site` の `cd` の直後、`npm ci` の前に足す段で、次のことをします。
+  - `origin/project/prj-0002/develop` から `docs/ja/projects/prj-0002/` だけを重ねます。
+  - `specdojo-lp` を token なしで clone します。
+  - `product-repos.ts` がある版でだけ、`repos` に宣言します。
+- 作業 4（手元ビルド）と 5（workflow への反映）は `open` のままです。
+
+**依頼と違う点**
+- ビルド用の設定は `.specdojo/specdojo.local.config.json` ではなく、build 用 worktree の共有設定 `.specdojo/specdojo.config.json` に足す形にしました。local config は共有設定に無い project を足せず、docs-site も共有設定の `projects` しか見ないためです。worktree は commit せず、ビルド後に捨てます。
+- `specdojo-assets` は public でないため宣言していません。
+
+**確認が要る点**
+- 重ねた文書で wikilink の解決や登録簿の表示ページの生成が止まるかは、まだ確かめていません。
+- 担当 DEV・期限 2026-11-30 は、利用者の確認待ちのままです。
+- `specdojo-lp` の clone は既定ブランチを取ります。`develop` の文書を出すなら `--branch develop` を足す必要があります。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"メニューの project の入口を複数 project 対応にし、deploy.yml の変更案と CHANGELOG 文案を個票に記載した。手元ビルドと workflow への反映は残課題としてオーケストレーターへ引き継ぐ。","handoff":["deploy.yml の変更案（差分）は個票 pjr-6xg2 の対応結果の「workflow の変更案」の節にある。Build the next site の cd の直後、npm ci の前に、prj-0002 のブランチから docs/ja/projects/prj-0002/ だけを git checkout で重ね、ビルド用 worktree の共有設定へ prj-0002 を足し、product-repos.ts がある版だけ specdojo-lp を token なしで git clone して repos に宣言する。","設定の足し方の決定: .specdojo/specdojo.local.config.json は使わない。CLI の local config は共有設定に無い project を足せず、docs-site の loadProductRepos と readProjectEntries も共有設定の projects だけを走査するため。代わりにビルド用の detached worktree の共有設定へ足す。この worktree は commit せず捨てる。","specdojo-assets は public でないため宣言しない。specdojo-lp は actions/checkout の path が GITHUB_WORKSPACE の下に限られるため git clone で $RUNNER_TEMP/specdojo-lp に置く。clone は既定ブランチを取るので、develop の文書を出す場合は --branch develop が要る（要判断）。","CHANGELOG に書く事項: 区分は Added（文書サイト）。案は「文書サイトの開発中の版（/specdojo/next/）に prj-0002 の project の文書と specdojo-lp の product の文書を出す。上のメニューの「プロジェクト」は、文書のある project が複数あるときドロップダウンになる。」","作業 4（手元で同じ重ね方をしたビルドで、prj-0002 のページ、wikilink の解決、登録簿の表示ページの生成を確かめる）と作業 5（deploy.yml への反映、利用者の承認のもと）は open のまま。担当 DEV・期限 2026-11-30 は利用者の確認待ち。"],"validations":[{"command":"npm run typecheck","status":"passed","summary":"エラーなし"},{"command":"npm run lint:ts","status":"passed","summary":"エラー 0、warning 43 件（既存の max-lines など）"}]}
+</specdojo_executor_evidence>
