@@ -3,14 +3,16 @@ specdojo:
   id: specdojo:pm-risk-register-rulebook
   type: rulebook
   deliverable_type: project
-  status: draft
+  status: deprecated
   sample: specdojo:pm-risk-register-sample
   template: specdojo:pm-risk-register-template
 ---
 
-# リスク登録簿 作成ルール
+# リスク登録簿 作成ルール（非推奨）
 
 Risk Register Documentation Rules
+
+この rulebook は非推奨です。リスクの正本は、プロジェクト登録簿のリスク（`risk`）の項目です。単独のリスク登録簿は書かず、項目の起票と個票で記録してください。一覧は `register build` が `generated/pm-risk-register.md` に作ります（PJR-X141）。
 
 顕在化前のリスクを評価・対応・監視し、納期・品質・後続成果物への影響を事前に抑えるためのリスク登録簿の記述基準を定める。
 

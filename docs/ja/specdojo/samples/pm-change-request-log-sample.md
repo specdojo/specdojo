@@ -2,11 +2,13 @@
 specdojo:
   id: specdojo:pm-change-request-log-sample
   type: project
-  status: draft
+  status: deprecated
   rulebook: specdojo:pm-change-request-log-rulebook
 ---
 
-# 変更要求ログ サンプル
+# 変更要求ログ サンプル（非推奨）
+
+この sample は非推奨です。変更要求の正本は、プロジェクト登録簿の変更要求（`change-request`）の項目です。単独のログの完成例としては使わず、登録簿の項目と個票を参照してください（PJR-X141）。
 
 ## 1. 概要
 

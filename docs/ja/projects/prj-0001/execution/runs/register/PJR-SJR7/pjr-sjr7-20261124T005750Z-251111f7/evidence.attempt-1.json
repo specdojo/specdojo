@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-SJR7",
+  "run_id": "pjr-sjr7-20261124T005750Z-251111f7",
+  "stage": {
+    "role": "executor",
+    "actor": "sonnet-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-24T00:58:35.470Z",
+    "completed_at": "2026-11-24T01:00:12.894Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-kata.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-sjr7.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-sjr7-deprecate-pm-log-kata-apply.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/schedule/sch-strategy-kata-wave-6-project.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pm-change-request-log-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pm-issue-log-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pm-risk-register-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/pm-change-request-log-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/pm-issue-log-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/pm-risk-register-sample.md",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-kata.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-sjr7-deprecate-pm-log-kata-apply.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/schedule/sch-strategy-kata-wave-6-project.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pm-change-request-log-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pm-issue-log-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pm-risk-register-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/pm-change-request-log-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/pm-issue-log-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/pm-risk-register-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 10,
+    "summary": ".../010-deliverables-catalog/dct-kata.yaml         | 72 ----------------------\n .../pjr-sjr7-deprecate-pm-log-kata-apply.md        | 28 ++++++++-\n .../schedule/sch-strategy-kata-wave-6-project.yaml | 39 +-----------\n .../rulebooks/pm-change-request-log-rulebook.md    |  6 +-\n .../ja/specdojo/rulebooks/pm-issue-log-rulebook.md |  6 +-\n .../rulebooks/pm-risk-register-rulebook.md         |  6 +-\n .../samples/pm-change-request-log-sample.md        |  6 +-\n docs/ja/specdojo/samples/pm-issue-log-sample.md    |  6 +-\n .../ja/specdojo/samples/pm-risk-register-sample.md |  6 +-\n 9 files changed, 50 insertions(+), 125 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run lint:md",
+      "status": "not_run",
+      "summary": "親 runner が実行する検査のため executor では実行しない"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "not_run",
+      "summary": "親 runner が実行する検査のため executor では実行しない"
+    }
+  ],
+  "final_message": "3 型の rulebook・sample の非推奨化、dct-kata と第 6 波 strategy からの除外、個票の記入は完了した。第 6 波の track（sch-track-kata-wave-6-project.yaml）の再生成が未実施で、060・080・090 の段がまだ残っている。",
+  "completion_status": "incomplete",
+  "handoff": [
+    "sch-track-kata-wave-6-project.yaml に pm-change-request-log・pm-issue-log・pm-risk-register の sample の段（040〜080）が残っている。track は直接編集禁止のため、strategy からの再生成で外す。未実行の 060・080・090 は流さないこと。strategy からの再生成の手順は未確認。",
+    "pm-decision-log には rulebook も sample もないため、非推奨化の対象となる文書はなかった。",
+    "CHANGELOG に書く事項は個票の対応結果 5.2 に記載済み（区分 Deprecated）。CHANGELOG.md は未変更。",
+    "`register build` の generated/ 差分は、template と views.ts を変えていないため未取得。親の検査に任せた。"
+  ],
+  "block_reason": "executor reported incomplete: 3 型の rulebook・sample の非推奨化、dct-kata と第 6 波 strategy からの除外、個票の記入は完了した。第 6 波の track（sch-track-kata-wave-6-project.yaml）の再生成が未実施で、060・080・090 の段がまだ残っている。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-SJR7/pjr-sjr7-20261124T005750Z-251111f7/executor.attempt-1.log",
+      "bytes": 3142,
+      "truncated": false
+    }
+  ]
+}

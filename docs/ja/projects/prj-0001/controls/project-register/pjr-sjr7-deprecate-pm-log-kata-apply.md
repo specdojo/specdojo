@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-23T21:14:31Z"
   due_on: "2026-11-30"
-  block_reason: "executor reported incomplete: 3 型の rulebook・sample の非推奨化、dct-kata と第 6 波 strategy からの除外、個票の記入は完了した。第 6 波の track（sch-track-kata-wave-6-project.yaml）の再生成が未実施で、060・080・090 の段がまだ残っている。"
   derived_from:
     - PJR-X141
   commit_type: docs
@@ -42,14 +41,14 @@ PJR-X141 に従い、pm-change-request-log・pm-issue-log・pm-risk-register・p
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | 3 型の rulebook・sample の非推奨化 | DEV | done | `status: deprecated` と冒頭の案内を追加 |
-| 2   | kata の一覧から外す（dct-kata） | DEV | done | 3 つの sample の項目と依存を削除 |
-| 3   | 第 6 波の strategy から外す | DEV | done | scope・approach_rules・owner_rules から削除 |
-| 4   | 第 6 波の track の再生成 | DEV | open | track は直接編集不可。下の残課題を参照 |
-| 5   | `register build` の結果が変わらないことの確認 | DEV | done | template・`views.ts` を変えていないため差分なし。実行は親の検査に任せた |
-| 6   | CHANGELOG に書く事項 | DEV | done | 下に区分と文案を記載 |
+| No  | 作業                                          | 担当 | 状態 | メモ                                                                    |
+| --- | --------------------------------------------- | ---- | ---- | ----------------------------------------------------------------------- |
+| 1   | 3 型の rulebook・sample の非推奨化            | DEV  | done | `status: deprecated` と冒頭の案内を追加                                 |
+| 2   | kata の一覧から外す（dct-kata）               | DEV  | done | 3 つの sample の項目と依存を削除                                        |
+| 3   | 第 6 波の strategy から外す                   | DEV  | done | scope・approach_rules・owner_rules から削除                             |
+| 4   | 第 6 波の track の再生成                      | DEV  | open | track は直接編集不可。下の残課題を参照                                  |
+| 5   | `register build` の結果が変わらないことの確認 | DEV  | done | template・`views.ts` を変えていないため差分なし。実行は親の検査に任せた |
+| 6   | CHANGELOG に書く事項                          | DEV  | done | 下に区分と文案を記載                                                    |
 
 ## 5. 対応結果
 

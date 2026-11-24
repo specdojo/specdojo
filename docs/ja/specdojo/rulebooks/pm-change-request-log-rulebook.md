@@ -3,14 +3,16 @@ specdojo:
   id: specdojo:pm-change-request-log-rulebook
   type: rulebook
   deliverable_type: project
-  status: draft
+  status: deprecated
   sample: specdojo:pm-change-request-log-sample
   template: specdojo:pm-change-request-log-template
 ---
 
-# 変更要求ログ 作成ルール
+# 変更要求ログ 作成ルール（非推奨）
 
 Change Request Log Documentation Rules
+
+この rulebook は非推奨です。変更要求の正本は、プロジェクト登録簿の変更要求（`change-request`）の項目です。単独の変更要求ログは書かず、項目の起票と個票で記録してください。一覧は `register build` が `generated/pm-change-request-log.md` に作ります（PJR-X141）。
 
 本ドキュメントは、`変更要求ログ` を一貫した粒度で作成するためのルールを定義する。
 

@@ -12,6 +12,7 @@ track: kata-wave-6-project
 # runner が rulebook と sample の組で流す。人の確定は track に入れず、横串の確認でまとめて行う。
 # prj-charter は PJR-SV9G などで直し済み（rulebook 90・sample 96）のため track に入れない。recipe・template を持つ型には
 # recipe（045）・template（060）の段を足す。
+# pm-change-request-log・pm-issue-log・pm-risk-register の sample は PJR-X141 で非推奨にしたため、scope と段から外した。
 scope:
   catalogs:
     - id: prj-0001:dct-kata
@@ -24,9 +25,6 @@ scope:
         - prj-success-criteria-and-acceptance-criteria-sample
         - pm-communication-plan-sample
         - pm-members-sample
-        - pm-change-request-log-sample
-        - pm-issue-log-sample
-        - pm-risk-register-sample
         - dct-sample
   include_kinds:
     - work
@@ -39,9 +37,6 @@ approach_rules:
       - prj-success-criteria-and-acceptance-criteria-sample
       - pm-communication-plan-sample
       - pm-members-sample
-      - pm-change-request-log-sample
-      - pm-issue-log-sample
-      - pm-risk-register-sample
       - dct-sample
     intent: improve-kata
     kata_target: rulebook
@@ -232,38 +227,6 @@ owner_rules:
           executor: opus-executor
           reporter: gemma26-reporter
       - phase: recipe-maintenance
-        agent:
-          executor: opus-executor
-          reporter: gemma26-reporter
-      - phase: sample-maintenance
-        agent:
-          executor: opus-executor
-          reporter: gemma26-reporter
-      - phase: template-maintenance
-        agent:
-          executor: opus-executor
-          reporter: gemma26-reporter
-      - phase: condense
-        agent:
-          executor: sonnet-executor
-          reporter: gemma26-reporter
-      - phase: review
-        agent:
-          executor: sonnet-review-executor
-          reporter: gemma26-reporter
-  - local_ids:
-      - pm-change-request-log-sample
-      - pm-issue-log-sample
-      - pm-risk-register-sample
-    owner: PM
-    phase_sets:
-      - phase_set: rulebook-maintenance-pass
-      - phase_set: sample-maintenance-pass
-      - phase_set: template-maintenance-pass
-      - phase_set: condense-pass
-      - phase_set: review-pass
-    phase_overrides:
-      - phase: rulebook-maintenance
         agent:
           executor: opus-executor
           reporter: gemma26-reporter
