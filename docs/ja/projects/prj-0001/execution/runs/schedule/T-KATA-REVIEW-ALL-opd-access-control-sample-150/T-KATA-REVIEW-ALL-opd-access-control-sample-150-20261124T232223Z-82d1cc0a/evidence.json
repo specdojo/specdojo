@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-opd-access-control-sample-150",
+  "run_id": "T-KATA-REVIEW-ALL-opd-access-control-sample-150-20261124T232223Z-82d1cc0a",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-24T23:23:07.795Z",
+    "completed_at": "2026-11-24T23:26:30.176Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/opd-access-control-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/opd-access-control-sample.md | 18 ++++++++++--------\n 1 file changed, 10 insertions(+), 8 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/samples/opd-access-control-sample.md",
+      "status": "passed",
+      "summary": "All matched files use Prettier code style"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴蓄積ファイルを変更していない",
+      "reason": "変更は docs/ja/specdojo/samples/ の sample だけで、plan・result・個票を変更していない"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:opd-access-control-sample\n  type: operations\n  status: draft\n  rulebook: specdojo:opd-rulebook\n  based_on: []\n  supersedes: []\n---\n\n# 駄菓子屋きぬや 販売管理システム 運用方針・設計（権限・アカウント）\n\n## 1. 概要（access-control）\n\n本書は、\\[\\[specdojo:opd-index-sample|運用方針・設計（全体構成）]] の「権限・アカウント運用（棚卸し・監査ログ）」を具体化する分冊である。店主代表と家族利用者代表は交代で店番をし、店頭のタブレット 1 台を共用する。そのため、つけ残高や価格を誰がいつ変えたかを後から確かめられなければ、店主代表は誤操作や不正な訂正を判断できない。前提とする目的と制\n… output omitted …\nきなかった月は、`opd-index` の定期運用方針のとおり `OPS` が翌週に棚卸しを行う。翌週も棚卸しができなければ、`OPS` が `PO` へ報告し、`PO` が実施日を決める（補足）。\n\n## 3. 関連ドキュメント導線（`opr` 等）\n\n次の表は、本書の差分元と、本書の方針を実行する手順の置き場所の対応を示す。\n\n| 種別 | ドキュメントID | 目的 | 備考 |\n| - | - | - | - |\n| 方針 | \\[\\[specdojo:opd-index-sample\\|運用方針・設計（全体構成）]] | 差分元。権限・アカウント運用の承認者・剥奪の時期・保管期間 | 統制が変わったら本書を見直す |\n| 手順 | \\[\\[specdojo:opr-index-sample\\|運用手順（全体構成）]] | 月次点検の手順の入口 | 作成済 |\n| 手順 | \\[\\[specdojo:opr-access-control-sample\\|運用手順（権限・アカウント）]] | 付与・剥奪、棚卸し、緊急権限の区分の変更と戻しの手順 | 作成済 |"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6898 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6898 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-opd-access-control-sample-150\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 te\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1809}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  08:31:50\n   Duration  2.70s (transform 5.91s, setup 1.26s, import 8.16s, tests 6.02s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-opd-access-control-sample-150/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-opd-access-control-sample-150/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R5（整合）のレビューで opd-access-control-sample の食い違いを 3 件直した（剥奪・保守付与の契機の追加、OPS 兼務者のアカウントの扱い、棚卸しの照合対象から保守中の DEV を除く）。相手側を直す案 2 件は未変更で handoff に残した。frontmatter の status は draft のまま。",
+  "completion_status": "complete",
+  "handoff": [
+    "No: 1 / 段: R5 / 箇所: opd-access-control-sample「付与・剥奪の契機」の表 / 指摘: opd-index は「店番をやめた日のうちに剥奪する」と定めるが、sample の表に「店番をやめる」行がなかった。opr-access-control にある「`DEV` の保守作業が始まる」付与の行もなかった / 直した案: 「店番をやめる → アカウントを停止する → やめた日のうち（具体化）」と「開発担当の保守作業が始まる → 保守の区分を付与する → 作業を始める前日まで（具体化）」の 2 行を足した / 根拠: opd-index-sample の権限・アカウント運用の表、opr-access-control-sample の申請を受け付ける条件の表 / 印: なし",
+    "No: 2 / 段: R5 / 箇所: opd-access-control-sample「権限区分」の表の後の文 / 指摘: opd-index はアカウントを店番担当と `DEV` に限る。sample は運用の区分を `OPS` に付けるため、`OPS` 用に別のアカウントがあるように読めた。また pm-members-sample では `OPS` を店主代表が兼ねており、「区分は 1 つだけ」の文と食い違っていた / 直した案: 「`OPS` を兼ねる人のアカウントには運用の区分を加え、運用のためのアカウントは別に作らない（具体化）」を足した / 根拠: opd-index-sample の権限・アカウント運用の章、pm-members-sample.yaml の shop-owner（roles: PO, OPS） / 印: なし",
+    "No: 3 / 段: R5 / 箇所: opd-access-control-sample「棚卸し」の表の 1 行目 / 指摘: 「店番の予定表にない人の有効なアカウント 0 件」だと、正当に持つ `DEV` の保守アカウントも違反になる / 直した案: 「店番の予定表にも保守作業中の権限変更記録にもない人の有効なアカウントが残っていない」に変えた / 根拠: opd-index-sample の「アカウントは店番担当と `DEV` に限る」 / 印: 要判断（照合元に権限変更記録を使う表現でよいか）",
+    "No: 4 / 段: R5 / 箇所: opr-access-control-sample のアラート対応手順（相手側・未変更） / 指摘: 「夜間バックアップ」と書いているが、opd-index は「閉店後のバックアップ」と書く / 直す案: opr-access-control-sample の表記を「閉店後のバックアップ」にそろえる。opd-monitoring-sample の「夜間バックアップ」を分冊での呼び方として残すかも合わせて決める / 根拠: opd-index-sample の監視・アラート方針と定期運用方針 / 印: 要判断",
+    "No: 5 / 段: R5 / 箇所: opd-index-sample の権限・アカウント運用の表の「棚卸しの頻度」の行（相手側・未変更） / 指摘: 「有効なアカウントと店番担当の一覧が一致するか」とあり、`DEV` の保守アカウントが不一致として扱われる / 直す案: 「有効なアカウントが、店番担当と保守作業中の `DEV` の一覧と一致するか」に直す / 根拠: 同じ章の「アカウントは店番担当と `DEV` に限る」 / 印: 要判断"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-opd-access-control-sample-150/T-KATA-REVIEW-ALL-opd-access-control-sample-150-20261124T232223Z-82d1cc0a/executor.log",
+      "bytes": 7497,
+      "truncated": false
+    }
+  ]
+}
