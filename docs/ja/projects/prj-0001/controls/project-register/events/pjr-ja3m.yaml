@@ -99,3 +99,16 @@
       from: ""
       to: 関連ドキュメント
   previous_event_id: reg_1e56460bc63a416f9e55bde1e9d0d080
+- v: 1
+  id: reg_3d1f8472dcae4019b14c2a146dfd81f2
+  ts: "2026-11-24T03:31:03Z"
+  action: start
+  actor: terra-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_5cd8bb0bdc54480e95ab8f89fb5a2caf
