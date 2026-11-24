@@ -1,0 +1,47 @@
+review の verdict は `incomplete` です。対象サンプル自体は pass ですが、型の評価対象である `opr-rulebook` が `needs-work` のため、schedule の追加完了条件を満たしません。
+
+## 評価結果の確認
+
+次の 3 件で `grade list --target kata --changed-only` を実行しました。どれも出力は空で終了コードは 0 だったため、評価結果は最新です。
+
+- `docs/ja/specdojo/samples/opr-batch-sample.md`
+- `docs/ja/specdojo/rulebooks/opr-rulebook.md`
+- `docs/ja/specdojo/samples/opr-sample.md`
+
+## 判断根拠
+
+- **対象サンプル:** `opr-batch-sample` は `pass`、スコア 89、minor 8 件で、blocker と major はありません。
+- **完了条件との照合:**
+  - DC-001 と DC-004 は満たしています。1 章から 12 章の構成で、Frontmatter の `rulebook` は `specdojo:opr-rulebook` を指しています。
+  - DC-005 も満たしています。7.2 に前提の確認の表、7.3 に再実行のコマンド例・入力・手順、7.4 に完了の条件があります。
+  - DC-002 と DC-003 は評価結果に blocker・major がなく、駄菓子屋の文脈でも書かれているため、満たしていると判断します。minor の finding（`based_on` の ID、5 章の形式、表の列構成、「連絡経路」の語、導線の「予定」表記）は完了を妨げません。
+- **`opr-rulebook` の評価結果:** `needs-work`、スコア 94 で、major が 1 件あります。F002 は、`opr-batch-sample` を含む 3 つのサンプルが `opd-rulebook` を宣言しているという指摘です。
+  - 現在の `opr-batch-sample` の Frontmatter は `opr-rulebook` を指しており、対象サンプルについては解消済みに見えます。
+  - ただし評価結果は更新されておらず、`needs-work` が残っています。評価結果は事実として扱うため、私の判断で置き換えません。
+  - `needs-work` は schedule の追加完了条件で `incomplete` になります。
+- **型の評価対象の残り:** `opr-sample`、`opr-template` ほかのサンプルはすべて `pass` です。
+
+## 未充足事項・改善指示
+
+1. `opr-rulebook` を再評価して `pass` を得る必要があります。
+   - 先に、`opr-change-sample` と `opr-support-sample` の `rulebook` と章構成が `opr-rulebook` に揃っているかを確認します。
+   - 次に `opr-rulebook` の F001（template との重複記述）の整理を検討します。
+   - そのうえで `opr-rulebook` を再 grade します。
+2. 対象サンプルの minor は、再 grade 前に直すと効率的です。
+   - F004 と F008: `opr-incident-sample` と `opr-monitoring-sample` の ID と備考を実態に合わせ、wikilink に統一します。
+   - F005: `based_on` を実在する ID に直します。
+   - F002: 実行回数の起点日を `closing_date` 基準で明記します。
+   - F003 と F007: 4 章の表と 5 章を template の列・段階表に揃えます。
+   - F006: 「連絡経路」を「連絡先」にします。
+   - F001: P2 の記述の重複を 7.1 参照に集約します。
+
+## 確認できなかった範囲
+
+- 鮮度確認は 3 件の評価対象だけです。他のサンプルと template の鮮度は再確認していません。
+- 対象サンプルの本文は 1 章から 12 章の冒頭まで読みました。12 章の表以降（150 行目より後）は読んでいません。
+- 先行する edit タスクの result は特定していません。
+- `npm` の検証は、親 runner に委ねる対象のため実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict=incomplete。対象 opr-batch-sample は grade pass（89、minor 8）で完了条件 DC-001〜005 は満たすが、型の評価対象 opr-rulebook の最新 grade が needs-work（major 1: 他サンプルの rulebook 宣言不整合）のため schedule 追加条件を満たさない。鮮度は対象・opr-rulebook・opr-sample とも最新（--changed-only 出力なし）。確認できなかった範囲: 他サンプル・template の鮮度再確認、対象サンプル12章表以降の本文、先行 edit result。","handoff":["opr-rulebook を再 grade し pass を得る（F002 の対象サンプルは現 Frontmatter で opr-rulebook を指し解消済みに見えるが、opr-change-sample・opr-support-sample の宣言と章構成を確認、F001 の template 重複も整理）","opr-batch-sample の minor（based_on の ID、4章の列、5章の表形式、連絡先の語、導線の予定表記・wikilink、実行回数の起点日、P2 重複）を直して再 grade"],"validations":[]}
+</specdojo_executor_evidence>
