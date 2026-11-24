@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-WAVE-6-PROJECT-pm-members-sample-080",
   "run_id": "T-KATA-WAVE-6-PROJECT-pm-members-sample-080-20261124T015226Z-bcb3b050",
-  "updated_at": "2026-11-24T01:54:19.401Z",
+  "updated_at": "2026-11-24T01:54:22.613Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-6-PROJECT-pm-members-sample-080/T-KATA-WAVE-6-PROJECT-pm-members-sample-080-20261124T015226Z-bcb3b050/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sonnet-executor",
       "attempts": 1,
       "started_at": "2026-11-24T01:54:19.401Z",
-      "completed_at": null,
+      "completed_at": "2026-11-24T01:54:22.613Z",
       "artifact_ref": null
     }
   },
