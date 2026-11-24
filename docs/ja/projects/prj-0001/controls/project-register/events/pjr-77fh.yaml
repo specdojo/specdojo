@@ -86,3 +86,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_a2897563b66242bcb0b355ca619f766c
+- v: 1
+  id: reg_faafc296b68348a6b448148631979e40
+  ts: "2026-11-24T01:45:00Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果・親の検証（passed）で確かめ、保護された設定の変更がないことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-24"
+    - field: conclusion
+      from: "-"
+      to: 読むだけの参照先を specdojo.config.json と specdojo.local.config.json の references で宣言できるようにし、対話のオーケストレーターには読むだけで公開するようにした
+  previous_event_id: reg_8e63228c92664e209200a00ad430ab3f
