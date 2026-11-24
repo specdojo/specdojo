@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   difficulty: easy
   owner: DEV
   registered_at: "2026-11-24T14:39:30Z"
   due_on: "2026-11-30"
+  block_reason: "executor validation failed or not run: npm run format:check, npm run build"
 ---
 
 # PJR-TAK7 specdojo-lp の公開に向けて LICENSE を加え、README に showcase の案内を書く
