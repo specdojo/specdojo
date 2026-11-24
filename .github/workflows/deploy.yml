@@ -113,6 +113,8 @@ jobs:
           # 設定はこのビルドの複製にだけ足し、commit しない。
           if git fetch origin project/prj-0002/develop 2>/dev/null; then
             git checkout FETCH_HEAD -- docs/ja/projects/prj-0002/
+            # prj-0002 の個票が derived_from で指す prj-0001 の項目を確かめるため、統合のブランチを手元に作る。
+            git branch --force project/prj-0001/develop origin/project/prj-0001/develop
             node -e '
               const fs = require("node:fs");
               const file = ".specdojo/specdojo.config.json";
