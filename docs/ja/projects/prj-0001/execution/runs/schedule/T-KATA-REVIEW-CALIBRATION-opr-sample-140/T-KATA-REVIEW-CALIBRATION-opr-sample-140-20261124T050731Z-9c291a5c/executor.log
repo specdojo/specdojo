@@ -1,0 +1,50 @@
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "R4を完了。証跡の保管期間が未決の間の扱いを概要に明示し、11章から参照しました。整形・差分チェックは通過しました。",
+  "handoff": [
+    "変更ファイル欄へ記録：`docs/ja/specdojo/samples/opr-sample.md` のみ（3行追加・2行削除）。概要の未決事項表に「監査ログ以外の証跡の保管期間」と「決まるまで削除しない」を追加し、11章の既存の削除禁止記述を概要への参照に置き換えた。保管年数、frontmatter、12章構成、先行R1〜R3の修正は維持した。result・gradeサイドカーは編集していない。",
+    "reporter は実施内容へ次の指摘表を記載してください。\n\n| No | 段 | 箇所 | 指摘 | 直した案 | 根拠 | 印 |\n| --- | --- | --- | --- | --- | --- | --- |\n| R4-1 | R4 | 1. 概要、11. 証跡 | 監査ログ以外の証跡の保管期間が未決事項表に含まれず、暫定的な扱いを概要から追えない | 保管期間の行に削除禁止を明示し、11章から参照した | source=grade F002、`vp-qe-verifiability`、opr-rulebook 5・6.11、opr-template 1章 | - |",
+    "reporter は指摘表の後に次の確かめ表を記載してください。続く申し送りの行も同じ表へ連結してください。箇所の行番号は修正後の sample を指します。\n\n| No | 主張（本文の箇所） | 正本 | 確かめ方 | 結果 | 根拠 |\n| --- | --- | --- | --- | --- | --- |\n| C01 | メタ情報は `specdojo:` 配下に置く（2行） | `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml`、`src/shared/frontmatter-namespace.ts` | properties と読取処理を読む | 一致 | schema と `readSpecdojoNamespace` が名前空間を扱う |\n| C02 | `id: specdojo:opr-sample` は sample のIDとして使える（3行） | `docs/specdojo/schemas/v1/common-frontmatter.schema.yaml`、`docs/ja/specdojo/standards/document-metadata-standard.md` 2章 | IDパターンとsample識別規定を読む | 一致 | `idRef` のパターンに適合し、ID末尾でsampleを識別する |\n| C03 | `type: operations`（4行） | `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml`、`docs/ja/specdojo/rulebooks/opr-rulebook.md` | enum と `deliverable_type` を読む | 一致 | 両方が operations を定義する |\n| C04 | `status: draft`（5行） | `docs/specdojo/schemas/v1/common-frontmatter.schema.yaml` | status の列挙値を読む | 一致 | draft は許可値 |\n| C05 | `rulebook: specdojo:opr-rulebook`（6行） | `docs/specdojo/schemas/v1/common-frontmatter.schema.yaml`、`docs/ja/specdojo/rulebooks/opr-rulebook.md` | `rulebookRef` と参照先IDを読む | 一致 | 形式に適合し、参照先が存在する |\n| C06 | `based_on` に運用方針のIDを配列で置く（7〜8行） | `docs/specdojo/schemas/v1/common-frontmatter.schema.yaml`、`docs/ja/specdojo/samples/opd-index-sample.md` | 配列定義と参照先IDを読む | 一致 | ID配列として適合し、直接の判断根拠が存在する |\n| C07 | `supersedes: []`（9行） | `docs/specdojo/schemas/v1/common-frontmatter.schema.yaml` | 配列定義を読む | 一致 | 空配列を禁止する制約はない |\n| C08 | OPS は Operations / Release Manager（16行） | `docs/ja/specdojo/standards/people-and-organization-definition-standard.md` 3章 | Role code の表を読む | 一致 | OPS の正式名と一致 |\n| C09 | DEV は Developer（16行） | `docs/ja/specdojo/standards/people-and-organization-definition-standard.md` 3章 | Role code の表を読む | 一致 | DEV の正式名と一致 |\n| C10 | PO は Project Owner（40行） | `docs/ja/specdojo/standards/people-and-organization-definition-standard.md` 3章 | Role code の表を読む | 一致 | PO の正式名と一致 |",
+    "| C11 | 運用方針への参照IDは `specdojo:opd-index-sample`（18・163行） | `docs/ja/specdojo/samples/opd-index-sample.md` | frontmatter のIDを読む | 一致 | 参照先の実IDと一致 |\n| C12 | チケットの追跡識別子に `ticket_id` を使う（143・145〜147行） | `docs/ja/specdojo/rulebooks/opr-rulebook.md` 6.11 | 証跡の識別子規定を読む | 一致 | チケットの識別子例として明示 |\n| C13 | 実行ログの追跡識別子に `run_id` を使う（144行） | `docs/ja/specdojo/rulebooks/opr-rulebook.md` 6.11 | 証跡の識別子規定を読む | 一致 | 実施ログの識別子例として明示。実際のログ出力はC19に留保 |\n| C14 | 未決の保管期間は概要に暫定的な扱いを示す（27・151行） | `docs/ja/specdojo/templates/opr-template.md` 1章、`docs/ja/specdojo/rulebooks/opr-rulebook.md` 5・6.11 | grade F002 と修正差分を照合 | 一致（修正後） | 監査ログ以外を対象として削除禁止と影響章を明記 |\n| C15 | 監査ログの保管期間は1年（149行） | `docs/ja/specdojo/samples/opd-index-sample.md` 9章 | 方針の監査ログ行を読む | 一致 | 保管期間1年と明記 |\n| C16 | 手順の模擬結果に確認日・環境・識別子・合否を残す（153〜155行） | `docs/ja/specdojo/rulebooks/opr-rulebook.md` 1.2 | 受入確認の規定を読む | 一致 | 必要な記録項目と判断分岐の確認を維持 |",
+    "| C17 | 同じ日付のバックアップは同じ世代を上書きする（96行） | 実装正本なし。関連例：`docs/ja/specdojo/samples/opr-batch-sample.md` 121行 | `src/`・schema・関連sampleを `rg` で検索 | 確かめられない | 関連sampleの記述とは一致するが、ホスティング環境の実装はない。確認には取得日の世代管理仕様または検証環境での再実行結果が必要 |\n| C18 | 顧客画面の取り消しから当日分のつけ記録だけを消せる（128行） | 実装正本なし。関連例：`docs/ja/specdojo/samples/opr-support-sample.md` 105行 | `src/`・schema・関連sampleを `rg` で検索 | 確かめられない | 関連sampleの回答例とは一致する。確認には販売管理システムの画面仕様または実装が必要 |\n| C19 | バックアップの実行ログから `run_id` を取得できる（95行） | 実装正本なし。関連例：`docs/ja/specdojo/samples/opr-batch-sample.md` 98〜99行 | 手動取得コマンドの仮定と出力記述を読む | 確かめられない | 関連sampleもホスティング環境のコマンドを仮定している。確認には実環境のログ形式・出力例が必要 |\n| C20 | 日次締め記録の識別子が `closing_date` である（142・151行） | 販売管理システムのschemaなし。関連例：`docs/ja/specdojo/samples/opr-batch-sample.md` 97行 | `src/`・`docs/specdojo/schemas/v1/`・関連sampleを `rg` で検索 | 確かめられない | SpecDojoのschemaは販売管理データを定義しない。確認には日次締め記録のデータ仕様が必要 |",
+    "「進め方と実践の型の適用」へ記録：kata-guide 6.1・6.3・6.5、Sample記述標準、メタ情報標準、人物と組織の定義標準、opr-rulebook、opr-template、共通レビュー観点一覧のR4・簡潔性の判定根拠、grade result、先行R1〜R3のresult、opd-index-sample、関連するbatch・backup-restore・support sample、共通／成果物frontmatter schema、frontmatterと文書IDの読取実装、コマンドリファレンスを確認した。OPRのrecipe宣言・対応recipeはない。F002は仮の保管年数を追加せず、既存の削除禁止を概要へ集約する案で解消した。章構成と必須表はrulebook・templateを正として維持した。業務の営業時間・回数・金額等の仮定は共通文脈と食い違わないため実証対象外とした。C17〜C20は正本不足で実装との一致を判断できず、推測で改訂していない。必要な資料と次の確認を確かめ表に残した。sample本文にSpecDojoのコマンド・オプション・既定値・実行対象パスの記載はなく、対象sampleの検証にCLI実行は不要だった。",
+    "findingの扱い：source=grade のF001・F004はkata-guide 6.3が除外する承認判断・ready化の観点であり、本文に決定者・期限・確認者を追加していない。F003はR5のkata相互と適用先の整合性に引き継ぐ。本planのcondense由来findingはない。先行段の指摘は新規指摘として繰り返していない。指定された親検証はrunnerへ委ね、sandboxで重複実行していない。"
+  ],
+  "validations": [
+    {
+      "command": "npx --no-install prettier --write docs/ja/specdojo/samples/opr-sample.md",
+      "status": "passed",
+      "summary": "変更したMarkdownを整形した。"
+    },
+    {
+      "command": "npx --no-install prettier --check docs/ja/specdojo/samples/opr-sample.md",
+      "status": "passed",
+      "summary": "整形済みであることを確認した。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別YAML検証は適用外。",
+      "reason": "変更対象はMarkdown sampleのみで、YAML/YMLファイルの変更がない。"
+    },
+    {
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検証は適用外。",
+      "reason": "履歴ファイル、既存plan、resultを編集していない。"
+    },
+    {
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "カタログ検証は適用外。",
+      "reason": "成果物変更はdocs/ja/specdojo/samples/内のみで、docs/ja/projects/配下に及ばない。"
+    }
+  ]
+}
+</specdojo_executor_evidence>
