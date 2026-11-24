@@ -17,7 +17,6 @@ specdojo:
     - PJR-0BGE
   depends_on:
     - PJR-E30T
-    - PJR-QCJ5
   commit_type: docs
   commit_scope: schedule
 ---

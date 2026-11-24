@@ -50,3 +50,16 @@
     - field: commit_scope
       from: ""
       to: schedule
+- v: 1
+  id: reg_ebeee1a1252646e2a09740a69de66efb
+  ts: "2026-11-24T13:34:45Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: QCJ5 は統合後の段の確かめまで review に残すため、先行を catalog の追加だけにする。QCJ5 の内容は実行の順で先に統合する
+  changes:
+    - field: depends_on
+      from: '["PJR-E30T","PJR-QCJ5"]'
+      to: '["PJR-E30T"]'
+  previous_event_id: reg_3b674332a8a04335ae34c40c1a9d006e
