@@ -157,3 +157,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_3569fc6b8293485ba7b2b6ea4d3687c5
+- v: 1
+  id: reg_1224520144774bcf924ec41c8c5715d8
+  ts: "2026-11-24T00:34:35Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果・親の検証（test-integration を含め passed）で確かめ、保護された設定の変更がないことを確かめた。統合の後の run が新しい runner で統合まで通った
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-24"
+    - field: conclusion
+      from: "-"
+      to: 親の検証の出力を pipe でなく一時ファイルへ書かせ、event loop が止まっても子が固まらないようにした。時間切れのときは止まった段と経過時間を出す
+  previous_event_id: reg_9d8ad4473c44456ca86b8c35879a2fe2

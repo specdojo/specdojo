@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-6690-schema-hang
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-23T22:24:22Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-24T00:34:35Z"
+  conclusion: 親の検証の出力を pipe でなく一時ファイルへ書かせ、event loop が止まっても子が固まらないようにした。時間切れのときは止まった段と経過時間を出す
   commit_type: fix
   commit_scope: validate
 ---
