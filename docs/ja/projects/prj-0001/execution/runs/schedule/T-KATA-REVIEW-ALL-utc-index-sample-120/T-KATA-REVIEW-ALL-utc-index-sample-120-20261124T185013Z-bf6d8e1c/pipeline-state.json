@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-REVIEW-ALL-utc-index-sample-120",
   "run_id": "T-KATA-REVIEW-ALL-utc-index-sample-120-20261124T185013Z-bf6d8e1c",
-  "updated_at": "2026-11-24T19:02:37.483Z",
+  "updated_at": "2026-11-24T19:03:25.897Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-utc-index-sample-120/T-KATA-REVIEW-ALL-utc-index-sample-120-20261124T185013Z-bf6d8e1c/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-executor",
       "attempts": 1,
       "started_at": "2026-11-24T19:02:37.483Z",
-      "completed_at": null,
+      "completed_at": "2026-11-24T19:03:25.897Z",
       "artifact_ref": null
     }
   },
