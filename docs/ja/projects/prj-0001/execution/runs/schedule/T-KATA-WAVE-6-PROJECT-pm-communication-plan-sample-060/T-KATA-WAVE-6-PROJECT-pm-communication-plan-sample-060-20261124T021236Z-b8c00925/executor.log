@@ -1,0 +1,16 @@
+template を rulebook と sample に合わせました。直したのは `docs/ja/specdojo/templates/pm-communication-plan-template.md` の1ファイルだけです。Prettier の整形チェックは通っています。markdownlint などの Markdown・frontmatter の検査は、このあと runner が実行します。
+
+**変更した点:**
+- **「情報管理と公開」:** 口頭や対面で決まったことを、どの Role code の人がどの管理記録へ転記するかを書く _TODO_ 行を、表の前に足しました。rulebook がこの章に求める「口頭決定の転記担当」を書く場所が、template になかったためです。
+- **「見直し条件と未決事項」:**
+  - 「変えたこと / 追従対象と更新する Role / 反映の証跡」の3列の表を足しました。sample の表に合わせています。
+  - _UNDECIDED_ 行に「伝達先・時期・手段への影響」を書くよう足しました。どちらも rulebook の記述ガイドが求めている項目です。
+
+**変更しなかった点:**
+- 「方針と適用範囲」「コミュニケーション機会」「エスカレーション」の各章と、frontmatter の `frontmatter_template` は、rulebook や sample とずれていないため、そのままです。
+- 役割の割り当てや承認の進み具合を記入する欄は置いていません（PJR-76N9 の決まりのとおりです）。
+- rulebook と sample は編集していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"pm-communication-plan-template を rulebook・sample に同期した。「情報管理と公開」に口頭決定の転記担当を書く _TODO_ 行、「見直し条件と未決事項」に追従対象の表（変えたこと/追従対象と更新する Role/反映の証跡）と、未決事項の影響を添える指示を追加した。ほかの章と frontmatter はそのまま維持した。","handoff":[],"validations":[{"command":"npx prettier --check docs/ja/specdojo/templates/pm-communication-plan-template.md","status":"passed","summary":"All matched files use Prettier code style"}]}
+</specdojo_executor_evidence>
