@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-1jf6-register-branch-merge-into-develop
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-23T00:21:44Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-24T00:11:47Z"
+  conclusion: register のブランチを develop へ一方向に取り込む register branch-merge と、develop 側の直接の変更を見つける branch-guard を足し、register の worktree の実行の前に取り込むようにした
   derived_from:
     - PJR-2TX0
   depends_on:

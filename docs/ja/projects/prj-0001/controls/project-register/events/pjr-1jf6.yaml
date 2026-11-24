@@ -105,3 +105,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_80d1bc0289ed41d2b65810e539dc537b
+- v: 1
+  id: reg_4a26fe1199344ce2ab9c69796a3b69e4
+  ts: "2026-11-24T00:11:47Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果・親の検証（test-integration を含め passed）で確かめ、保護された設定の変更がないことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-24"
+    - field: conclusion
+      from: "-"
+      to: register のブランチを develop へ一方向に取り込む register branch-merge と、develop 側の直接の変更を見つける branch-guard を足し、register の worktree の実行の前に取り込むようにした
+  previous_event_id: reg_4c312ad1435d4d2f9aa0fdcd6c50cabd
