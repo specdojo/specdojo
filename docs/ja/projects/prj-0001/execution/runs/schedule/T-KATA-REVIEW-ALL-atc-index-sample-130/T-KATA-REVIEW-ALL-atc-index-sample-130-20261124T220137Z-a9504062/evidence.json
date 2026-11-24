@@ -1,0 +1,155 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-atc-index-sample-130",
+  "run_id": "T-KATA-REVIEW-ALL-atc-index-sample-130-20261124T220137Z-a9504062",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-24T22:02:22.329Z",
+    "completed_at": "2026-11-24T22:05:13.118Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/atc-index-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/atc-index-sample.md | 22 +++++++++++-----------\n 1 file changed, 11 insertions(+), 11 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/samples/atc-index-sample.md",
+      "status": "passed",
+      "summary": "整形した"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2 docs/ja/specdojo/samples/atc-index-sample.md",
+      "status": "passed",
+      "summary": "0 issues"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴ファイルの変更なし",
+      "reason": "変更したのは sample だけで、plan・result・個票を変更していない"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:atc-index-sample\n  type: test\n  status: draft\n  rulebook: specdojo:atc-index-rulebook\n  based_on:\n    - specdojo:tsp-index-sample\n    - specdojo:bac-sample\n    - specdojo:prj-success-criteria-and-acceptance-criteria-sample\n---\n\n# 駄菓子屋きぬや 販売管理システム 受入テストカタログ 概要\n\n## 1. 本ドキュメントの目的と適用対象\n\n駄菓子屋きぬや 販売管理システムの初期リリースについて、店主代表と家族利用者代表が「店主不在でも同じ手順で販売・在庫・つけを記録して確認できる」と判断するための受入テスト（AT）の共通方針を定める。\\[\\\n… output omitted …\nしく会計できること」とだけ書いたケースは認めない。\n\n## 9. メモ / 将来課題\n\n| 論点 | 受入判断への影響 | 当面の扱い | 確定時の見直し方針 | 期限 |\n| - | - | - | - | - |\n| *UNDECIDED*: 通信不能時の販売継続 | 当該経路の受入を判定できない | 対象外とし、現行シナリオの合格で当該経路の受入とみなさない | 決定後に `atc-sale-hold` へ観点と条件を追加し、分配表を更新する | 受入開始前まで |\n| *TODO*: 画面キャプチャの保存形式と保存先 | 証跡照合で取引番号を確認できない記録が出るおそれ | 取引番号が写っていることだけを必須とする | 形式と保存先を決め、全 term の `証跡` 列と本書の証跡の項目を揃える | 受入開始の1週間前まで |\n| *ASSUMPTION*: P2 の合格率90% | P2 の Fail が多い場合の受入可否 | 頻度の低い経路は運用で補えるとみなし、90%を仮置きする | 確定した値へ置き換え、「合格基準」を更新する | 受入開始前まで |"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6854 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6854 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-atc-index-sample-130\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 6ms\n\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1775}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  07:09:24\n   Duration  2.65s (transform 6.16s, setup 1.48s, import 7.91s, tests 5.93s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nlebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-atc-index-sample-130/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-atc-index-sample-130/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R3 読みやすさとして atc-index-sample.md に文の直しを入れた（F003 の Role code 追記、TSP・ST の初出の正式名、合格基準と判定の流れの主語の明示）。F001・F002 は R3 の観点ではなく、読んだ版ですでに解消していた。",
+  "completion_status": "complete",
+  "handoff": [
+    "R3-1: R3 / 本ドキュメントの目的と適用対象（関係者の表） / 家族利用者代表の行だけ Role code がなく、列見出し「関係者（Role code）」と表記が揃わない（F003） / 「家族利用者代表（UX）」にした / `vp-ux-language-consistency`、F003。迷った理由: F003 は `ifx-file-sample` に合わせて `PO` 業務助言を勧めていたが、名簿の正本 `pm-members-sample.yaml` では `family-user-representative` の roles が `[UX]` であり、`PO` 業務助言は Role code ではないため採らなかった / 要判断",
+    "R3-2: R3 / 本ドキュメントの目的と適用対象 / TSP が正式名なしで本文に繰り返し出る / 初出の wikilink の後に「（TSP）」を足した / W8 / -",
+    "R3-3: R3 / 本ドキュメントの目的と適用対象 / ST が正式名なしで本文に繰り返し出る / 初出を「総合テスト（ST）」にした / W8 / -",
+    "R3-4: R3 / 合格基準 / 修正版の再試験と再判定を誰が行うかが書かれておらず、「Fail のケースと、同じ…」の係りも読み違えやすい / 「BA が Fail のケースに加えて同じ `atc-<term>` の P0 全件を再試験し、その後に PO が再判定する」にした / W1、W5 / -",
+    "R3-5: R3 / 判定の流れ / nickname を判定の記録に残す主語が書かれていない / 文頭に「PO は」を足した / W1 / -",
+    "R3-6: R3 / 対象外・除外理由（共通） / 表のセルの UT・IT・ET・NFR に正式名がない / - / W8。迷った理由: 正式名を足すとセルが長くなり、この系列の sample でも略語を正式名なしで使っている。テスト系列の用語集に合わせて直すかは R5 で決める / 要判断",
+    "参考: F001（`vp-qe-omissions-consistency`）と F002（`vp-qe-kata-conformance`）は R3 の観点ではなく、読んだ版ではすでに解消していた（`取引照合の保証` の主に立てる term は `atc-sale-hold` だけ、分配表の観点名は `主要操作の自力完了の成立`）。R3 では扱っていない。",
+    "相手側の文書: `ifx-file-sample.md` の「家族利用者代表（`PO` 業務助言）」は `pm-members-sample.yaml` の roles `[UX]` と食い違う。直すかは R5 か別タスクで決める。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-atc-index-sample-130/T-KATA-REVIEW-ALL-atc-index-sample-130-20261124T220137Z-a9504062/executor.log",
+      "bytes": 5874,
+      "truncated": false
+    }
+  ]
+}
