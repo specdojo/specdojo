@@ -3,14 +3,16 @@ specdojo:
   id: specdojo:pm-issue-log-rulebook
   type: rulebook
   deliverable_type: project
-  status: draft
+  status: deprecated
   sample: specdojo:pm-issue-log-sample
   template: specdojo:pm-issue-log-template
 ---
 
-# 課題ログ 作成ルール
+# 課題ログ 作成ルール（非推奨）
 
 Issue Log Documentation Rules
+
+この rulebook は非推奨です。課題の正本は、プロジェクト登録簿の課題（`issue`）の項目です。単独の課題ログは書かず、項目の起票と個票で記録してください。一覧は `register build` が `generated/pm-issue-log.md` に作ります（PJR-X141）。
 
 顕在化した課題の優先度・期限・対応・状態を追跡する課題ログの記述基準を定める。
 

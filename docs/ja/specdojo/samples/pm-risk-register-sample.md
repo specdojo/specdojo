@@ -2,11 +2,13 @@
 specdojo:
   id: specdojo:pm-risk-register-sample
   type: project
-  status: draft
+  status: deprecated
   rulebook: specdojo:pm-risk-register-rulebook
 ---
 
-# リスク登録簿 サンプル
+# リスク登録簿 サンプル（非推奨）
+
+この sample は非推奨です。リスクの正本は、プロジェクト登録簿のリスク（`risk`）の項目です。単独のログの完成例としては使わず、登録簿の項目と個票を参照してください（PJR-X141）。
 
 ## 1. 概要
 

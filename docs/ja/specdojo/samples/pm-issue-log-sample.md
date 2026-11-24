@@ -2,11 +2,13 @@
 specdojo:
   id: specdojo:pm-issue-log-sample
   type: project
-  status: draft
+  status: deprecated
   rulebook: specdojo:pm-issue-log-rulebook
 ---
 
-# 課題ログ サンプル
+# 課題ログ サンプル（非推奨）
+
+この sample は非推奨です。課題の正本は、プロジェクト登録簿の課題（`issue`）の項目です。単独のログの完成例としては使わず、登録簿の項目と個票を参照してください（PJR-X141）。
 
 ## 1. 概要
 

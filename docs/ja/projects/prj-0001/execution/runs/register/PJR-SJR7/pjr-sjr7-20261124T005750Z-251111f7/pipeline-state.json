@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-SJR7",
+  "run_id": "pjr-sjr7-20261124T005750Z-251111f7",
+  "updated_at": "2026-11-24T01:46:36.628Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sonnet-executor",
+      "attempts": 1,
+      "started_at": "2026-11-24T01:45:54.038Z",
+      "completed_at": "2026-11-24T01:46:05.209Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-SJR7/pjr-sjr7-20261124T005750Z-251111f7/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "sonnet-reporter",
+      "attempts": 0,
+      "started_at": "2026-11-24T01:46:23.641Z",
+      "completed_at": "2026-11-24T01:46:23.641Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-SJR7/pjr-sjr7-20261124T005750Z-251111f7/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "sonnet-executor",
+      "attempts": 1,
+      "started_at": "2026-11-24T01:46:25.843Z",
+      "completed_at": "2026-11-24T01:46:36.628Z",
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-SJR7/pjr-sjr7-20261124T005750Z-251111f7/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-SJR7/pjr-sjr7-20261124T005750Z-251111f7/result.md"
+  },
+  "resume_notes": [
+    {
+      "at": "2026-11-24T01:45:54.014Z",
+      "notes": [
+        "第 6 波の track（sch-track-kata-wave-6-project.yaml）の作り直しは、統合の後にオーケストレーターが schedule build で行う。track は直接編集しない。残りの作業がなければ complete として報告し、track の作り直しが残ることを個票の対応結果に書く。"
+      ]
+    }
+  ]
+}
