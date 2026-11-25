@@ -1,7 +1,6 @@
 # specdojo-schema: none reason=external-asyncapi
 # 構造は AsyncAPI 2.6.0 に対応した検証器（例: AsyncAPI CLI の validate）で確かめる。
 # _ASSUMPTION_: 駄菓子屋きぬやの店舗端末が在庫の変化を本部へ通知する学習用の例。
-# 一覧 ifx-index-sample には未掲載の連携で、採用するときは一覧に行を足してから spec_ref を付ける。
 # _UNDECIDED_: 本部が在庫の通知を受けるかは未合意。確認先は PO（店主代表）で、ready にする前に解消する。
 asyncapi: 2.6.0
 info:
@@ -23,6 +22,7 @@ x-spec-meta:
   status: draft
   rulebook: specdojo:ifx-msg-rulebook
   based_on:
+    # 一覧 ifx-index-sample には未掲載の連携で、採用するときは一覧に行を足してから spec_ref を付ける。
     - specdojo:ifx-index-sample
 
 defaultContentType: application/cloudevents+json
