@@ -1,0 +1,19 @@
+R4（正しさ）のレビューを終えました。誤った事実は見つからず、sample の直しは SC-06 の1行だけです（`docs/ja/specdojo/samples/prj-success-criteria-and-acceptance-criteria-sample.md`）。prettier をかけても差分は出ず、markdownlint は0件でした。
+
+**finding の扱い**
+- **F001（SC-06、R4 の観点に当たる）:** 直しました。判定基準を「不在の店番日の90%以上で、その日の販売・在庫・つけの記録と、未完了事項を店主代表へ渡す引き継ぎメモの記入を完了する」にしました。測定方法も「3種の記録の有無と引き継ぎメモの記入を店番日ごとに確認する」にしました。「3種の記録」は `prj-overview-sample` の店舗継続指標（家族が販売・在庫・つけ管理を完了）に合わせています。「引き継ぎメモ」は正本のない業務上の仮定で、共通サンプル文脈とは食い違いません。この言葉は R5 で `prj-overview-sample` に同じ説明がないので、そろえるかを人が決める必要があります（`要判断`）。
+- **F002（例外表の列構成）:** 前の段で直っていました。例外表は template と同じ「論点・判定への影響・当面の扱い」になっています。観点も R4 のものではないので、この段では扱っていません。
+
+**確かめた主張**
+- frontmatter: `type: project` は schema の列挙値にあります。rulebook の id も存在します。
+- wikilink: 本文から参照している4つの文書（`prj-scope-sample`、`prj-overview-sample`、`pm-change-request-log-sample`、`dec-sample`）はすべて存在します。
+- Role code: `PO`・`BA`・`DEV` は `pm-roles-sample.yaml` にあります。
+- 表の列: 3つの表の列構成は template と一致します。
+- 閾値と判定時期: 90%・10分・50%・20%・2週間・6か月・12か月は `prj-overview-sample` と一致します。
+- 確かめられない主張: なし。店舗共有フォルダの運用は正本のない仮定なので、確かめる対象に入れていません。
+
+lint と検査の本番の実行は、このあと runner が行います。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4 正しさ: sample 内の事実（frontmatter の type・rulebook、wikilink 先 id、Role code、表の列構成、閾値・判定時期）を正本と照合し、すべて一致した。R4 の観点の F001（SC-06 の必須記録と引き継ぎが未定義）は判定基準と測定方法を具体化して解消した。F002 は前の段で解消済みで、R4 の観点ではない。","handoff":["R4-1: R4 / 2. 成功基準（SC-06） / 「必須記録と引き継ぎ」の中身が定義されておらず、判定者によって合否がぶれる（F001） / 判定基準を「その日の販売・在庫・つけの記録と、未完了事項を店主代表へ渡す引き継ぎメモの記入を完了する」に、測定方法を「3種の記録の有無と引き継ぎメモの記入を店番日ごとに確認する」に直した / vp-qe-verifiability。3種の記録は specdojo:prj-overview-sample の店舗継続指標（家族が販売・在庫・つけ管理を完了）による。引き継ぎメモは正本のない業務上の仮定で、共通サンプル文脈と食い違わない / 要判断（R5 で prj-overview-sample に引き継ぎメモの説明を足してそろえるかを決める。選ばなかった案は、引き継ぎを定義せず3種の記録だけで判定する案）","R4-2: R4 / 5. 例外条件と未解決事項 / F002（列構成が template と違う）は前の段で直っており、今の列は template と同じ「論点・判定への影響・当面の扱い」になっている / - / vp-qe-kata-conformance は R1・R5 の観点で、R4 では扱わない / -","確かめの表 C1: 主張=frontmatter の type: project / 正本=docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml / 確かめ方=grep / 結果=一致 / 根拠=7行目の列挙値 project","確かめの表 C2: 主張=frontmatter の rulebook: specdojo:prj-success-criteria-and-acceptance-criteria-rulebook / 正本=docs/ja/specdojo/rulebooks/prj-success-criteria-and-acceptance-criteria-rulebook.md / 確かめ方=id の grep / 結果=一致 / 根拠=同じ id があり、そのファイルの sample 宣言が本 sample を指す","確かめの表 C3: 主張=based_on と wikilink（prj-scope-sample、prj-overview-sample、pm-change-request-log-sample、dec-sample） / 正本=docs/ja/specdojo/samples/ / 確かめ方=id の grep / 結果=一致 / 根拠=4つとも id があるファイルが存在する","確かめの表 C4: 主張=Role code の PO・BA・DEV / 正本=docs/ja/specdojo/samples/pm-roles-sample.yaml / 確かめ方=grep code: / 結果=一致 / 根拠=19・25・31行目","確かめの表 C5: 主張=業務価値・成功基準・受入条件・例外表の列構成 / 正本=docs/ja/specdojo/templates/prj-success-criteria-and-acceptance-criteria-template.md / 確かめ方=表ヘッダの照合 / 結果=一致 / 根拠=template の24・30・36・52行目","確かめの表 C6: 主張=SC-02〜SC-10 の閾値と判定時期（90%、10分、50%、20%、2週間、6か月、12か月、3回以上、月0件、1分以内） / 正本=docs/ja/specdojo/samples/prj-overview-sample.md / 確かめ方=grep / 結果=一致 / 根拠=67〜91行目の指標表と84行目の判定時期","確かめの表 C7: 主張=確認者の店主代表・家族利用者代表・開発担当の役割 / 正本=docs/ja/specdojo/samples/prj-scope-sample.md / 確かめ方=grep / 結果=一致 / 根拠=29〜31行目と95行目"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/prj-success-criteria-and-acceptance-criteria-sample.md","status":"passed","summary":"unchanged（整形の差分なし）"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/prj-success-criteria-and-acceptance-criteria-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更したのは sample だけで、plan・result・個票を変更していないため"}]}
+</specdojo_executor_evidence>
