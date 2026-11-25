@@ -1,0 +1,154 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-sld-sample-110",
+  "run_id": "T-KATA-REVIEW-ALL-sld-sample-110-20261125T151421Z-2f31c69b",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-25T15:15:07.355Z",
+    "completed_at": "2026-11-25T15:18:07.134Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/sld-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/sld-sample.md | 39 ++++++++++++++++++----------------\n 1 file changed, 21 insertions(+), 18 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/samples/sld-sample.md",
+      "status": "passed",
+      "summary": "All matched files use Prettier code style"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴蓄積ファイルを変更していない",
+      "reason": "変更したのは docs/ja/specdojo/samples/sld-sample.md だけで、plan・result・個票は変更していない"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "docs/ja/projects/ 配下を変更していない",
+      "reason": "成果物の変更は docs/ja/specdojo/samples/ 配下だけで、docs/ja/projects/ に届いていない"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:sld-sample\n  type: data\n  status: ready\n  rulebook: specdojo:sld-rulebook\n  based_on:\n    - specdojo:cdfd-overview-sample\n    - specdojo:cdsd-sample\n    - specdojo:bdd-sample\n    - specdojo:stsd-sample\n    - specdojo:clis-sample\n    - specdojo:pm-members-sample\n---\n\n# 保管場所一覧（駄菓子屋きぬやの販売・在庫・記録管理）\n\n## 1. 概要\n\n店主代表と店番担当が、現物・紙台帳・タブレット内のファイルをどこに置き、いつ消してよいかを同じ根拠で判断できるようにする。検品前の入荷品と販売可能な商品の混在\n… output omitted …\n |\n| `_UNDECIDED_`: 販売記録の正本保存先と電子・紙記録の保持期間（CDSD で未決） | 決まるまで `data/sales/` と母屋書庫の記録を処分しない |\n| 日次集計の再生成手順（`specdojo:cop-sales-reconciliation`）が未整備 | 整うまで `data/summary/` を削除できない |\n| 本部との受付照会・重複排除・回復の契約が未整備 | 誤った取消・再登録で二重登録や照合根拠の消失が起こる。回復と日次集計の自動再生成に依存する運用は始めない |\n| `_UNDECIDED_`: 仕入記録・在庫記録のシステム化後の保管先 | 在庫記録は今は保管場所がない。決まったら「保管場所一覧」へ行を足す |\n| 撤去品保留箱に当たる商品状態が STSD にない | 撤去品保留箱は仮置きで運用する。STSD に状態が足されたら対応を見直す |\n| 紙の台帳・締め記録をタブレットへ完全移行する場合 | 正本区分、`data/` の構成、外部退避の対象、日次集計の再集計元、本部照合に使う記録、検証項目が変わる |"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7327 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7327 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-sld-sample-110\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 6ms\n[paren\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1748}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  00:19:22\n   Duration  2.64s (transform 6.36s, setup 1.23s, import 8.50s, tests 6.07s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-sld-sample-110/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-sld-sample-110/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "sld-sample に R1（目的の過不足）の足す差分を 4 件入れた: 検品場所の行を管理区分ごとに 3 行へ分割、隣接仕様の対応表に CLIS 行を追加、STSD 行に `sold` の置き場所を追加、空き容量不足の場面に `tmp/` の作り直す契機を追加。R1 の観点外の grade finding（F001・F002・F004・F005）は扱う段へ回した（F002 は R1 の欠落として同じ箇所を直した）。",
+  "completion_status": "complete",
+  "handoff": [
+    "R1-1: R1 / 保管場所一覧（店舗内・母屋の物理保管場所） / 検品場所の 1 行に、処分しない入荷品、綴りへ移す納品伝票、処分する外箱が混在し、rulebook の「共有範囲・寿命・削除可否の判断が同じ区分を 1 行にする」に合わない（grade F003） / 検品場所を入荷品（`処分不可`）・納品伝票（`処分不可`、納品伝票綴りへ移す）・外箱（`条件付き処分可`）の 3 行に分けた / `vp-qe-kata-conformance`、sld-rulebook の「全体方針」の記載レベル / -",
+    "R1-2: R1 / 関連仕様・実装配置との対応と検証（隣接仕様の記録・状態と保管場所の対応） / タブレット内のパスの正本である CLIS が対応表になく、rulebook 5.3 の「パス解決を担う実装・設定との対応を示す」「隣接仕様との分担を 1 つの表にまとめる」を満たしていなかった（CLIS は確認の表にしか出ていない） / CLIS の行を足し、`config/store-config.yaml`・`.session/current-tx.json`・`data/sales/`・`receipts/` を CLIS 由来、`data/summary/` と `tmp/` を CLIS にない `_ASSUMPTION_` の仮置きとした / `vp-qe-kata-conformance`、sld-rulebook の「関連仕様・実装配置との対応と検証要件」 / -",
+    "R1-3: R1 / 関連仕様・実装配置との対応と検証（隣接仕様の記録・状態と保管場所の対応） / STSD 行に販売済み（`sold`）の置き場所がなく、rulebook 5.3 の「STSD の状態がどの保管場所に対応するかを追跡できる」を欠いていた / `sold` は商品が店を出るため、販売記録として `data/sales/`（現金）と販売ノート（つけ）に残ると追記した / `vp-qe-kata-conformance`、sld-rulebook の「関連仕様・実装配置との対応と検証要件」、grade F002 / 要判断（grade F002 の観点 `vp-qe-omissions-consistency` は R2 の観点だが、rulebook が求める内容の欠落なので R1 で直した。R2 に残す案は選ばなかった）",
+    "R1-4: R1 / 削除・退避・復旧の判断基準（場面別の対処と復旧手順） / `削除可` の `tmp/` について、rulebook 5.2 が求める「削除後の再生成コマンドまたは再作成の契機」がなかった / 空き容量不足の行に「`tmp/` は次の保守作業の開始時に DEV が作り直す」を足した / `vp-qe-kata-conformance`、sld-rulebook の「削除・退避・復旧の判断要件」 / -",
+    "R1-5: R1 / 確認事項と変更影響 / grade F001（`vp-arc-conciseness`、処分の条件の言い直し）と F004（`vp-ux-language-consistency`、店番担当と Role code の表記揺れ）は R3 の観点なので、この段では直さない / - / kata-guide の「kata の観点の組」で R3 に割り当てられている / -",
+    "R1-6: R1 / 保管場所一覧（店舗タブレット内の論理保管場所） / grade F005（`vp-ops-operability`、取引セッションが消えたときの対処）は、kata-guide が kata の段のレビューで使わないとしている観点なので直さない / - / kata-guide の「kata の観点の組」の外す観点（`vp-ops-operability`）。採るかは人が決める / 要判断（取引セッションが消えたときの対処を場面別の表へ足す案もあるが、外す観点なので選ばなかった）"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-sld-sample-110/T-KATA-REVIEW-ALL-sld-sample-110-20261125T151421Z-2f31c69b/executor.log",
+      "bytes": 7268,
+      "truncated": false
+    }
+  ]
+}
