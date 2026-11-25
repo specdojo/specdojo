@@ -55,6 +55,18 @@ import {
 } from "./change-scope.js";
 import { targetDocIdsForScheduledTask } from "../plans.js";
 import { findRunRecord } from "../run-records.js";
+import {
+  EXEC_QUEUE_ID_ENV,
+  EXEC_STOP_EXIT_CODE,
+  acknowledgeStopRequest,
+  describeStopTarget,
+  discardStaleStopRequests,
+  findApplicableStopRequest,
+  finishStopRequest,
+  registerAutoRun,
+  type AutoRunMarker,
+  type StopRequest,
+} from "../stop-request.js";
 
 export type CycleScheduleRebuildResult = {
   status: "not-needed" | "success" | "failure";
@@ -162,6 +174,20 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
   // A non-loop run still launches at most --parallel tasks, but defers overlapping preparation
   // until a prior task integrates instead of forking both worktrees from the same HEAD.
   let batchBudget = parallel;
+  // A dry run claims nothing and has nothing to drain.
+  const stopWatch = dryRun
+    ? undefined
+    : new AutoRunStopWatch(executionPath, {
+        version: 1,
+        pid: process.pid,
+        command: opts.cycleRebuildStaleTracks ? "cycle" : "run",
+        // The process start, so a request made during the validate / refresh steps before this
+        // point still applies instead of being discarded as stale.
+        started_at: new Date(Date.now() - process.uptime() * 1000).toISOString(),
+        loop,
+        ...(track !== undefined ? { track } : {}),
+        ...(process.env[EXEC_QUEUE_ID_ENV] ? { queue_id: process.env[EXEC_QUEUE_ID_ENV] } : {}),
+      });
 
   const prepareReadyTasks = async (
     capacity: ReturnType<typeof createProviderCapacityTracker>,
@@ -204,6 +230,8 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
 
     for (const taskId of orderedIds) {
       if (preparedTasks.length >= limit || (!loop && batchBudget <= 0)) break;
+      // A stop request that arrives while this round prepares tasks stops further claims too.
+      if (stopWatch?.isStopRequested()) break;
       const task = taskMap.get(taskId);
       if (!task || attempted.has(taskId) || scopeLeases.has(taskId)) continue;
       // Automatic selection leaves human tasks alone unless an explicit per-task agent is given;
@@ -345,6 +373,10 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
 
   const lifecycleLock = new SerialAsyncLock();
   const capacity = createProviderCapacityTracker(execDefaults);
+  if (!stopWatch) throw new Error("internal error: no stop watch for a non-dry auto run");
+  const watch = stopWatch;
+  const runningTaskIds = new Set<string>();
+  const drainedTaskIds = new Set<string>();
   let schedulingPass = 0;
   let stopNewTasks = false;
   let lastReadyCount = 0;
@@ -352,6 +384,10 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
 
   const scheduleAvailable = async (openSlots: number): Promise<PreparedTask[]> => {
     if (stopNewTasks || openSlots <= 0) return [];
+    if (watch.check(runningTaskIds)) {
+      for (const taskId of runningTaskIds) drainedTaskIds.add(taskId);
+      return [];
+    }
     if (!loop && batchBudget <= 0) return [];
     if (loop && maxRounds !== null && schedulingPass >= maxRounds) {
       process.stdout.write(`[run] reached max-rounds ${maxRounds} — drain running tasks\n`);
@@ -401,39 +437,58 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
     return preparedTasks;
   };
 
-  const poolResult = await runCompletionDrivenWorkerPool<PreparedTask, PreparedTaskOutcome>({
-    maxParallel: parallel,
-    fillSlots: (openSlots) => lifecycleLock.runExclusive(() => scheduleAvailable(openSlots)),
-    runItem: (prepared) =>
-      runPreparedTaskSafely(
-        prepared,
-        projectId,
-        repoRoot,
-        schedulePath,
-        executionPath,
-        catalogPath,
-        execDefaults,
-        dryRun,
-        lifecycleLock,
-      ),
-    onSettled: async (prepared, outcome) => {
-      await scopeLeases.get(prepared.task.id)?.finish(outcome.result === "success");
-      scopeLeases.delete(prepared.task.id);
-      capacity.release(prepared.agentCandidates[0]?.provider);
+  let poolResult: Awaited<ReturnType<typeof runCompletionDrivenWorkerPool>>;
+  try {
+    poolResult = await runCompletionDrivenWorkerPool<PreparedTask, PreparedTaskOutcome>({
+      maxParallel: parallel,
+      fillSlots: (openSlots) => lifecycleLock.runExclusive(() => scheduleAvailable(openSlots)),
+      runItem: (prepared) => {
+        runningTaskIds.add(prepared.task.id);
+        return runPreparedTaskSafely(
+          prepared,
+          projectId,
+          repoRoot,
+          schedulePath,
+          executionPath,
+          catalogPath,
+          execDefaults,
+          dryRun,
+          lifecycleLock,
+        );
+      },
+      onSettled: async (prepared, outcome) => {
+        runningTaskIds.delete(prepared.task.id);
+        await scopeLeases.get(prepared.task.id)?.finish(outcome.result === "success");
+        scopeLeases.delete(prepared.task.id);
+        capacity.release(prepared.agentCandidates[0]?.provider);
 
-      if (outcome.result === "failure") process.exitCode = 1;
+        if (outcome.result === "failure") process.exitCode = 1;
 
-      const critical = (prepared.task.cpm?.slack ?? 1) === 0;
-      if (critical && outcome.result === "failure") {
-        process.stdout.write(`[run] stopping: failure on critical task.\n`);
-        process.exitCode = 1;
-        stopNewTasks = true;
-        return { stop: true };
-      }
-    },
-  }).finally(async () => {
-    for (const lease of failedPreparationLeases) await lease.cancelPreparation();
-  });
+        const critical = (prepared.task.cpm?.slack ?? 1) === 0;
+        if (critical && outcome.result === "failure") {
+          process.stdout.write(`[run] stopping: failure on critical task.\n`);
+          process.exitCode = 1;
+          stopNewTasks = true;
+          return { stop: true };
+        }
+      },
+    }).finally(async () => {
+      for (const lease of failedPreparationLeases) await lease.cancelPreparation();
+    });
+  } finally {
+    watch.unregister();
+  }
+
+  // A request that arrived after the last scheduling point still ends this run as "stopped".
+  if (watch.check(runningTaskIds)) {
+    watch.finish([...drainedTaskIds]);
+    if (poolResult.launched > 0) {
+      process.stdout.write(
+        `[run] all ${poolResult.completed} of ${poolResult.launched} launched instance(s) completed\n`,
+      );
+    }
+    return;
+  }
 
   if (poolResult.launched === 0) {
     process.stdout.write(noTaskMessage(lastReadyCount, lastHumanWaiting));
@@ -444,6 +499,80 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
   process.stdout.write(
     `[run] all ${poolResult.completed} of ${poolResult.launched} launched instance(s) completed\n`,
   );
+}
+
+// Watches `exec stop` requests for one auto run (PJR-32PN). The request is re-read at every
+// scheduling point, so withdrawing it before the run exits lets the run claim tasks again.
+export class AutoRunStopWatch {
+  private readonly removeMarker: () => void;
+  private current: StopRequest | undefined;
+
+  constructor(
+    private readonly executionPath: string,
+    private readonly marker: AutoRunMarker,
+    private readonly write: (line: string) => void = (line) => process.stdout.write(line),
+  ) {
+    for (const stale of discardStaleStopRequests(executionPath, marker)) {
+      this.write(
+        `[run] WARN: discarded a stop request for ${describeStopTarget(stale.target)} ` +
+          `left from an earlier run (requested at ${stale.requested_at})\n`,
+      );
+    }
+    this.removeMarker = registerAutoRun(executionPath, marker);
+  }
+
+  /** Re-read the request without side effects. */
+  isStopRequested(): boolean {
+    return findApplicableStopRequest(this.executionPath, this.marker) !== undefined;
+  }
+
+  /** Re-read the request, report a change, and note the tasks the run still waits for. */
+  check(running: ReadonlySet<string>): boolean {
+    const request = findApplicableStopRequest(this.executionPath, this.marker);
+    if (!request) {
+      if (this.current) {
+        this.write(
+          `[run] stop request for ${describeStopTarget(this.current.target)} withdrawn — continuing\n`,
+        );
+      }
+      this.current = undefined;
+      return false;
+    }
+    if (!this.current) {
+      this.write(
+        `[run] stop requested for ${describeStopTarget(request.target)}: ${request.message} — ` +
+          `claiming no new tasks; waiting for ${running.size} running task(s)\n`,
+      );
+    }
+    this.current = acknowledgeStopRequest(this.executionPath, request, this.marker.pid, [
+      ...running,
+    ]);
+    return true;
+  }
+
+  unregister(): void {
+    this.removeMarker();
+  }
+
+  /**
+   * Record the stop and set the exit code. A failure exit code is kept so a failed task is not
+   * hidden; queue requests are finished by the queue runner, which owns them.
+   */
+  finish(drainedTasks: readonly string[]): void {
+    const request = this.current;
+    if (!request) return;
+    if (request.target.kind !== "queue") {
+      const path = finishStopRequest(this.executionPath, request, {
+        stopped_by: "auto-run",
+        drained_tasks: [...drainedTasks],
+      });
+      this.write(`[run] stop recorded: ${path}\n`);
+    }
+    this.write(
+      `[run] stopped by exec stop (${describeStopTarget(request.target)}): ${request.message}\n`,
+    );
+    if (!process.exitCode) process.exitCode = EXEC_STOP_EXIT_CODE;
+  }
 }
 
 export function noTaskMessage(readyCount: number, humanWaiting: number): string {

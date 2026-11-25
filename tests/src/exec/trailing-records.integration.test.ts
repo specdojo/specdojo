@@ -141,6 +141,21 @@ describe("selectTrailingRunRecords", () => {
     expect(selection.paths).not.toContain(relativePaths(fixture, [release])[0]);
     expect(selection.paths).not.toContain(relativePaths(fixture, [humanRun.result])[0]);
   });
+
+  it("selects the records of runs stopped by exec stop", () => {
+    const fixture = setupRepository();
+    const stop = join(
+      fixture.context.executionPath,
+      "exec",
+      "stops",
+      "20261125T113000Z-project.json",
+    );
+    writeFile(stop, "{}\n");
+
+    const selection = selectTrailingRunRecords(fixture.context);
+
+    expect(selection.paths).toEqual(relativePaths(fixture, [stop]));
+  });
 });
 
 describe("commitTrailingRunRecords", () => {
