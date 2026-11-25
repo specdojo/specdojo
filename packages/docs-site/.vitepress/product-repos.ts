@@ -81,14 +81,21 @@ export function resolveLocalConfigPath(
   env: NodeJS.ProcessEnv = process.env,
 ): string {
   const root = path.resolve(workspaceRoot);
-  const gitdir = gitdirOf(root);
-  if (!gitdir) return path.join(root, LOCAL_CONFIG_RELATIVE_PATH);
+  if (!gitdirOf(root)) return path.join(root, LOCAL_CONFIG_RELATIVE_PATH);
   const fromEnv = env[LOCAL_CONFIG_ENV]?.trim();
   if (fromEnv && path.isAbsolute(fromEnv)) return fromEnv;
+  return path.join(resolveMainWorkingTreeRoot(root), LOCAL_CONFIG_RELATIVE_PATH);
+}
+
+// CLI の repositoryIdentityRoot と同じ規則。linked worktree なら、その worktree を持つ主の
+// 作業ツリーのルートを返す。それ以外は与えたルートのまま返す。
+export function resolveMainWorkingTreeRoot(workspaceRoot: string): string {
+  const root = path.resolve(workspaceRoot);
+  const gitdir = gitdirOf(root);
+  if (!gitdir) return root;
   const normalized = gitdir.replaceAll("\\", "/");
   const markerIndex = normalized.lastIndexOf("/.git/worktrees/");
-  const mainRoot = markerIndex >= 0 ? normalized.slice(0, markerIndex) : root;
-  return path.join(mainRoot, LOCAL_CONFIG_RELATIVE_PATH);
+  return markerIndex >= 0 ? path.resolve(normalized.slice(0, markerIndex)) : root;
 }
 
 // CLI の resolveRepoRoot と同じ規則。複数リポジトリの exec の project 側 worktree

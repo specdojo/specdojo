@@ -1,0 +1,40 @@
+リポジトリをまたぐリンクの書き方を決め、文書サイトの仕組み・テスト・利用者向けの文書まで対応しました。ただし、このリポジトリにある `[[prj-0002:...]]` のリンクは、今はまだ解決されません。共有の設定 `.specdojo/specdojo.config.json` に prj-0002 の `external_projects` の宣言が無く、そこは agent が変えられない保護対象だからです。
+
+個票に完了条件が無かったので、タイトルと入力から仮説を立てて作業の基準にし、個票の完了条件の章に `_ASSUMPTION_` として書きました。
+
+**決めた書き方:** リンクは今と同じ project 修飾の doc id（`[[prj-0002:pjr-xxxx]]`）で書きます。比べた案は次の 4 つです。
+- 本文に相手の完全な URL を書く
+- `external_projects` の別名を付けた wikilink（入力にあった案）
+- doc id のまま書く（採用）
+- 相手の文書を文書サイトへ取り込む
+
+別名を付ける案は、別名がリポジトリごとに違い、移すときに既存のリンクの書き換えが要るため採りませんでした。doc id は project を移しても変わらないので、今ある 17 か所のリンクもそのまま使えます。リンク先の URL の基点は、`external_projects` に足した任意の項目 `source_url` で宣言します。比較の表と理由は個票の対応結果に書きました。
+
+**文書サイトの動き:**
+- 手元の索引に無い id のうち、接頭辞が `external_projects` の `project_id` と一致するものを、相手のリポジトリの索引から引きます。索引が無ければ、相手の Markdown の frontmatter から引きます。
+- 引けた id は「`source_url` ＋ファイルのパス」の URL へ置き換え、新しいタブで開くリンクにします。frontmatter の表の値も同じように解決します。
+- 相手のリポジトリが無い場合や、`source_url` が無い場合は、警告を出して今までどおり `[[...]]` のまま表示します。ビルドは止めません。
+
+**変更したファイル:**
+- `packages/docs-site/.vitepress/external-links.ts`（新規）：解決の本体
+- `packages/docs-site/.vitepress/config.mts`：解決を組み込んだ
+- `packages/docs-site/.vitepress/product-repos.ts`：worktree での相手のリポジトリの場所の解決に使う関数を切り出した（動きは変えていない）
+- `src/shared/specdojo-config.ts`、`docs/specdojo/schemas/v1/specdojo-config.schema.yaml`：`source_url` の検証を足した（`http(s)` の URL のみ）
+- `tests/packages/docs-site/external-links.test.ts`（新規）、`tests/src/shared/specdojo-config-external-projects.test.ts`：テスト
+- `docs/ja/specdojo/references/specdojo-config-reference.md`、`docs/ja/specdojo/guides/project-move-guide.md`：利用者向けの説明。移行ガイドの「準備中」の注記は、決めた書き方に置き換えた
+- 個票 `pjr-66er-cross-repository-links.md`：完了条件・作業内容・対応結果
+
+**検証:**
+- 関係する 3 つのテストファイルを vitest で流し、30 件すべて通りました。
+- 変更したファイルの Prettier と markdownlint は問題なし、`npm run validate:history-links` も通りました。
+- ESLint はエラーなしで警告が 3 件です。うち 1 件は `src/shared/specdojo-config.ts` が 1,000 行を超えたことで、このファイルを分ける候補として残っています。
+- `npm run docs:build` での表示の確認はしていません。
+
+**残っていること:**
+- prj-0002 を別リポジトリへ移すときに、移行ガイドの手順4で `path`・`project_id`・`source_url` を宣言する必要があります。
+- CI など相手のリポジトリを checkout しない環境では、リンクは解決されません。公開サイトで解決させるには、ビルドの前に相手のリポジトリを `path` の位置へ checkout します。
+- VS Code 拡張の wikilink の解決は対象にしていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"リポジトリをまたぐリンクは project 修飾の doc id のまま書く方式に決めた。external_projects の任意項目 source_url を使い、文書サイトが相手のリポジトリの URL へ解決するよう実装し、テスト・schema・設定リファレンス・移行ガイド・個票を更新した。","handoff":["個票に完了条件が無かったため、executor が仮説を立てて個票の完了条件の章に _ASSUMPTION_ として書いた。仮説でよいか確認が要る。","方式の決定: 案は本文に完全 URL を書く、`external_projects` の別名を付けた wikilink、project 修飾の doc id のまま書く、相手の文書を取り込む、の 4 つ。doc id のまま（`[[prj-0002:pjr-xxxx]]`）を採用し、URL の基点は `external_projects.<alias>.source_url` で宣言する。別名案は、別名が呼び出し元ごとに違い、移すときに既存のリンクの書き換えが要るため採らなかった。","保護設定の変更の提案: このリポジトリには `[[prj-0002:...]]` の wikilink が 6 種類・17 か所あるが、`.specdojo/specdojo.config.json` に prj-0002 の `external_projects` が無いため解決されない。prj-0002 を別リポジトリへ移すときに、`path`・`project_id`・`source_url` を人が宣言する（移行ガイドの手順4）。","CI など相手のリポジトリを checkout しない環境では解決されない（警告を出し `[[...]]` のまま表示）。公開サイトで解決させるには、ビルドの前に相手のリポジトリを `path` の位置へ checkout する。","VS Code 拡張の wikilink の解決は対象外。要るなら別の項目として起票する。","`npm run docs:build` での表示の確認は、型の区切りでオーケストレーターがまとめて流すときに行う。","ESLint の `max-lines` の警告: `src/shared/specdojo-config.ts` が 1,000 行を超えた（1127 行）。ファイルを分ける候補。","CHANGELOG の文案（区分: 追加）: `feat(docs): external_projects に source_url を宣言すると、別リポジトリの project の doc id の wikilink を文書サイトが相手のリポジトリの URL へ解決する`"],"validations":[{"command":"npx vitest run --config vitest.unit.config.ts tests/packages/docs-site/external-links.test.ts tests/packages/docs-site/product-repos.test.ts tests/src/shared/specdojo-config-external-projects.test.ts","status":"passed","summary":"3 files, 30 tests passed"},{"command":"npx prettier --check (changed files)","status":"passed","summary":"All changed ts/md/yaml files use Prettier style"},{"command":"npx markdownlint-cli2 (changed md files)","status":"passed","summary":"0 issues in 4 changed Markdown files"},{"command":"npm run validate:history-links","status":"passed","summary":"exit 0 (ticket pjr-66er updated)"},{"command":"npx eslint packages/docs-site/.vitepress/external-links.ts packages/docs-site/.vitepress/product-repos.ts src/shared/specdojo-config.ts tests/packages/docs-site/external-links.test.ts","status":"passed","summary":"0 errors, 3 warnings (incl. existing max-lines on specdojo-config.ts)"}]}
+</specdojo_executor_evidence>

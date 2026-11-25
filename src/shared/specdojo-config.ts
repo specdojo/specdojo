@@ -133,6 +133,12 @@ export type SpecDojoExternalProjectConfig = {
   path: string;
   /** Project id understood by the SpecDojo installation in the external repository. */
   project_id: string;
+  /**
+   * Base URL that turns a repository-relative path of the external repository into a link
+   * (for example `https://github.com/<owner>/<repo>/blob/main`). The docs site uses it to
+   * resolve wikilinks to the external project's doc ids.
+   */
+  source_url?: string;
 };
 
 /** A directory made available only for reference, outside the managed repositories. */
@@ -517,7 +523,7 @@ const REPO_KEYS = new Set([
   "merge_message_template",
 ]);
 const REPO_SETUP_KEYS = new Set(["install", "build"]);
-const EXTERNAL_PROJECT_KEYS = new Set(["path", "project_id"]);
+const EXTERNAL_PROJECT_KEYS = new Set(["path", "project_id", "source_url"]);
 
 function validateCommitTypes(value: unknown, at: string): string[] {
   if (value === undefined) return [];
@@ -602,6 +608,12 @@ export function validateExternalProjects(
 
     if (typeof value.project_id !== "string" || value.project_id.trim().length === 0) {
       errors.push(`${at}.project_id must be a non-empty string`);
+    }
+    if (
+      value.source_url !== undefined &&
+      (typeof value.source_url !== "string" || !/^https?:\/\/\S+$/.test(value.source_url))
+    ) {
+      errors.push(`${at}.source_url must be an http(s) URL without spaces`);
     }
   }
   return errors;

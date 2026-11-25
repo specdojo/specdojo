@@ -74,6 +74,8 @@ SpecDojo 拡張は、ワークスペースの `.specdojo/doc-index.json` を使�
 文書リンクは、本文では `[[id]]` または `[[id|表示名]]` と記述します。Markdown 表のセル内では、
 列区切りとの衝突を避けるため `[[id\|表示名]]` と記述してください。
 
+別リポジトリにある project の文書も、別名を付けず project 修飾の doc id のまま `[[prj-0002:pjr-xxxx-topic|表示名]]` と記述します。文書サイトは `external_projects` に `source_url` を宣言した project の文書を相手のリポジトリの URL へ解決し、解決できない修飾付きの id は `[[...]]` のまま表示して、id と文書のパスを警告に出します。設定と解決の規則は [[specdojo:specdojo-config-reference|SpecDojo設定リファレンス]] の「リポジトリをまたぐ wikilink」を参照してください。
+
 表整形の詳細と Prettier を併用する場合の注意点は「Markdown 表フォーマットガイド」を参照してください。
 
 ## 2. 見出しに番号を付与
