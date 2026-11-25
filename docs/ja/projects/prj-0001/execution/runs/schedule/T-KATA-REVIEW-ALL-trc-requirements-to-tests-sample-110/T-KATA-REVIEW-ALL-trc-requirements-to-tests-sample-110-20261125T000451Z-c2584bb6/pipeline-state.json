@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-REVIEW-ALL-trc-requirements-to-tests-sample-110",
   "run_id": "T-KATA-REVIEW-ALL-trc-requirements-to-tests-sample-110-20261125T000451Z-c2584bb6",
-  "updated_at": "2026-11-25T00:19:42.795Z",
+  "updated_at": "2026-11-25T00:20:39.363Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-trc-requirements-to-tests-sample-110/T-KATA-REVIEW-ALL-trc-requirements-to-tests-sample-110-20261125T000451Z-c2584bb6/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-25T00:19:42.795Z",
-      "completed_at": null,
+      "completed_at": "2026-11-25T00:20:39.363Z",
       "artifact_ref": null
     }
   },
