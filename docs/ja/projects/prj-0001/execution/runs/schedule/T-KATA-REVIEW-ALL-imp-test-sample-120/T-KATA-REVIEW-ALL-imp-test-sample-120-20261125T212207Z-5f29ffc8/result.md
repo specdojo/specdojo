@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-REVIEW-ALL-imp-test-sample-120
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-REVIEW-ALL-imp-test-sample-120/T-KATA-REVIEW-ALL-imp-test-sample-120-20261125T212207Z-5f29ffc8/plan.md
   started_at: "2026-11-25T21:22:16.622Z"
+  completed_at: "2026-11-25T21:29:58.283Z"
   agent: opus-executor
   execution: agent
   approach: sample-maintenance
@@ -20,16 +21,30 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- R2（構成）として imp-test-sample を確認した。章の順と必須の列は rulebook の本文要件に合っていた。変更要求の概要の箇条書きの並べ替えと、対応方針の決定記録の箇条書きの分割を sample に入れた。
+- template は `undecided` のため、章の配置の照合はできなかった。rulebook など sample 以外は変更していない。
+- executor が実行した prettier と markdownlint、runner が実行した `lint:md:changed`、`lint:fm:changed`、`lint:mermaid`、`lint:d2`、`test:docs`、`validate:schema` はいずれも passed だった。
+
+| No | 段 | 箇所 | 指摘 | 直した案 | 根拠 | 印 |
+| --- | --- | --- | --- | --- | --- | --- |
+| R2-1 | R2 | 2. 変更要求の概要 / 箇条書きの順 | 箇条書きの順（背景→要求の要点→狙い）が rulebook の本文要件の順「背景・狙い・要求の要点」と違い、目的の前に要求が来る。 | 「狙い」を「要求の要点」の前へ移した。 | `vp-arc-document-structure`（imp-test-rulebook の本文要件と、記述ガイドの「変更要求の概要」） | - |
+| R2-2 | R2 | 5. 対応方針 / 決定記録の箇条書き | 決定記録の箇条書き 1 項目に、回帰テストの代替と単体テストの見送りの決定と再評価条件の 3 文が入っており、項目ごとの再評価条件が読み取りにくい。 | 回帰テストの代替と単体テストの見送りの 2 項目に分け、それぞれに決定記録 `PJR-T5D1` と再評価条件を書いた。 | `vp-arc-document-structure`、`vp-qe-omissions-consistency`（rulebook の記述ガイド「対応方針」: 見送り・代替は再評価条件と期限を必ず記載する） | - |
+| R2-3 | R2 | 6. 未解決事項 / 表 | rulebook の記述ガイド「未解決事項」は、見送り・代替を決めた事項を `decision` として登録簿へ転記し、転記先 ID を書くよう求める。sample は `PJR-T5D1` を対応方針にだけ書いており、未解決事項の表に行がない。決定済みの事項を未解決事項に載せると章の目的（判断待ち・調査不足）と食い違うため、直していない。 | - | `vp-qe-omissions-consistency`。選ばなかった案: 未解決事項の表に `PJR-T5D1`（`decision`）の行を足す。rulebook 側を直すなら、`decision` の転記先 ID は対応方針に書くと明記する案がある。 | 要判断 |
+| R2-4 | R2 | 全体 / imp-test-rulebook の frontmatter | rulebook の frontmatter の `template` が `undecided` で、template との章の配置の照合ができない。 | - | `vp-qe-omissions-consistency`。相手側は imp-test-rulebook。template を作るなら、本文要件の 6 章と必須の列をそのまま見出しと表の枠にする案がある。 | - |
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/samples/imp-test-sample.md`: 「変更要求の概要」の箇条書きを、rulebook の本文要件の順（背景・狙い・要求の要点）に並べ替えた。「対応方針」の決定記録の項目は、回帰テストの代替と単体テストの見送りの 2 項目に分け、それぞれに決定記録 `PJR-T5D1` と再評価条件を書いた。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- F001（`vp-pm-plan-feasibility`）は、kata のレビューの段に使わない観点のため、R2 では扱っていない。F002 と F003 は R1 の版で解消済みだった。F004（受入判定日の営業日数）と F005（論点名の呼称）は文章の直しのため R3 に回す。
+- R2-1: R2 / 2. 変更要求の概要 / 箇条書きの順（背景→要求の要点→狙い）が rulebook の本文要件の順「背景・狙い・要求の要点」と違い、目的の前に要求が来る / 「狙い」を「要求の要点」の前へ移した / `vp-arc-document-structure`（imp-test-rulebook の本文要件と、記述ガイドの「変更要求の概要」） / -
+- R2-2: R2 / 5. 対応方針 / 決定記録の箇条書き 1 項目に、回帰テストの代替と単体テストの見送りの決定と再評価条件の 3 文が入っており、項目ごとの再評価条件が読み取りにくい / 回帰テストの代替と単体テストの見送りの 2 項目に分け、それぞれに決定記録 `PJR-T5D1` と再評価条件を書いた / `vp-arc-document-structure`、`vp-qe-omissions-consistency`（rulebook の記述ガイド「対応方針」: 見送り・代替は再評価条件と期限を必ず記載する） / -
+- R2-3: R2 / 6. 未解決事項 / rulebook の記述ガイド「未解決事項」は「見送り・代替を決めた」事項を `decision` として登録簿へ転記し、転記先 ID を書くよう求める。sample は `PJR-T5D1` を対応方針にだけ書いており、未解決事項の表に行がない。決定済みのため未解決事項に載せないのは妥当とも読めるため、直していない / - / `vp-qe-omissions-consistency`。迷った理由: rulebook の転記の条件の表は未解決事項の章にあるが、決定済みの事項を未解決事項の表へ載せると章の目的（判断待ち・調査不足）と食い違う。選ばなかった案: 未解決事項の表に `PJR-T5D1`（`decision`）の行を足す。rulebook 側を直すなら、`decision` の転記先 ID は対応方針に書くと明記する案がある / 要判断
+- R2-4: R2 / 全体 / imp-test-rulebook の frontmatter の `template` が `undecided` で、template との章の配置の照合ができない / - / `vp-qe-omissions-consistency`。相手側: imp-test-rulebook。template を作るなら、本文要件の 6 章と必須の列をそのまま見出しと表の枠にする案がある / -
+- 申し送り: F001（`vp-pm-plan-feasibility`）は kata-guide の「kata の観点の組」で kata の段のレビューに使わない観点のため、R2 では扱っていない。F002（反映先の記載）と F003（成功条件のつけ残高）は R1 の版で解消済みだった。F004（受入判定日の営業日数）と F005（論点名の呼称）は文章の直しのため R3 に回す。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+kata-guide の「kata を agent でレビューする」の R2 に従った。R1 が直した版を読み、章の順・粒度・表と本文の配置を rulebook の本文要件と照合した。照合で差が見つかった 2 件は sample で直した。決定記録の扱いが迷う 1 件は直さず「要判断」とした。template は `undecided` のため照合できず、案を findings に書いた。
