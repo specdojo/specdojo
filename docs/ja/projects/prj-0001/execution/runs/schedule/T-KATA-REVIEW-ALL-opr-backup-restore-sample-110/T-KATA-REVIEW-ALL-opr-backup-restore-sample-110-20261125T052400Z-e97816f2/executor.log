@@ -1,0 +1,18 @@
+R1（目的の過不足）のレビューを終えました。`docs/ja/specdojo/samples/opr-backup-restore-sample.md` の「証跡」の章に 1 段落を足しました。変更はこの 1 段落だけで、`opr-sample.md` と rulebook は変えていません。
+
+**対象の判断:** plan の編集対象欄は `opr-sample.md` でしたが、レビューする sample は `opr-backup-restore-sample.md` と判断しました。
+- task 名と plan の根拠の `path` がこのファイルを指しています。
+- plan の `targets` に両方の sample が入っているので、このファイルも commit してよい範囲に入ります。
+- `opr-sample.md` の R1 は、兄弟タスク `T-KATA-REVIEW-ALL-opr-access-control-sample-110` がすでに済ませています。
+
+**指摘:**
+- **R1-1（直した）:** rulebook は、運用作業の受入確認の結果を証跡の章に残すよう求めています。この sample には、その記録先と項目がありませんでした。また、月次の演習では復元の手順 2・5・6 と、1 つ前の世代から戻し直す分岐が試されません。これらを検証用の環境で 1 回ずつ模擬し、確認日・確認環境・`run_id`・合否を月次点検の記録に残す段落を足しました。
+- **F003（直していない）:** 関連導線の表が、すでにある `opr-incident-sample` を「予定」としている件です。ほかの sample との食い違いなので、R5（整合）に任せます。
+- **F001・F004（直していない）:** kata-guide がこの段のレビューで使わないと定めた観点の指摘なので、扱っていません。
+- **F002（直していない）:** 保管期間の観点は R4（正しさ）の担当なので、そちらに任せます。
+
+**検証:** `npx prettier --check` は通りました。ほかの検査は runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1（目的の過不足）を opr-backup-restore-sample.md で実施し、rulebook の「運用作業の受入確認」に対して欠けていた模擬の記録先と項目を証跡の章に 1 段落足した。grade の finding F001〜F004 は、kata-guide の観点の組に従ってほかの段か対象外として扱い、直していない。","handoff":["R1-1: R1 / 11. 証跡 / opr-rulebook の「運用作業の受入確認」は確認結果（確認日・確認環境・`run_id` 等・合否）を証跡の章に残すよう求めるが、本書には記録先がなかった。さらに月次の演習は検証用の環境への復元と照合だけで、本番の復元の手順 2（紙の販売控えへの切替）・5（転記と照合）・6（記録の再開）と、照合が一致せず 1 つ前の世代から戻し直す分岐が模擬されない / 証跡の章の末尾に「本書の手順を新しく書いたときや改訂したときの模擬は、`opr-index` の証跡に従う。月次の演習では通らない復元の手順 2・5・6 と、照合が一致せず 1 つ前の世代から戻し直す分岐も、検証用の環境で 1 回ずつ模擬する。結果は月次点検の記録に、確認日・確認環境・戻した世代の `run_id`・合否を残す。」を足した / `vp-qe-kata-conformance`（opr-rulebook「運用作業の受入確認」「障害時の停止・復旧…を該当する手順で確認する」、6.6 バックアップ確認・リストア手順） / -","R1-2: R1 / 12. 関連ドキュメント導線 / grade finding F003。関連導線の表が `opr-incident` を「予定」としてバッククォートで仮置きしているが、`opr-incident-sample` はすでにある。本書は `opr-sample` を `opr-index` と呼んでいる / - / ほかの sample との食い違いで、kata-guide の「kata の観点の組」では R5 の `vp-qe-kata-conformance`（kata 相互と適用先）に当たる。R5 で表の行を [[specdojo:opr-incident-sample\\|運用手順（障害対応）]]・作成済へ直し、本文の `opr-incident` の仮置きもあわせて見直す案 / -","R1-3: R1 / 1. 概要 / grade finding F001・F004（未決事項の表に決定者・期限・ready 化の前に解消する項目の列がない）は `vp-po-decision-readiness`・`vp-ops-release-readiness` の指摘。kata-guide の「kata の観点の組」はこの 2 つを kata の段のレビューで使わない観点としているため、直していない / - / kata-guide「kata の観点の組」（外す観点） / -","R1-4: R1 / 11. 証跡 / grade finding F002（保管期間が `_UNDECIDED_`）は `vp-qe-verifiability` で R4 の観点のため、この段では扱わない。本書では、概要の未決事項の表にバックアップの保管期間の行があり、証跡の章に「保管期間が決まるまでは証跡を消さない」がある / - / kata-guide「kata の観点の組」（R4 の観点） / -","R1-5: R1 / 対象の確認 / plan の編集対象欄は rulebook の sample 宣言から解決した `opr-sample.md` だった。一方で task 名と plan の根拠の `path` は `opr-backup-restore-sample.md` を指し、plan の `targets` には両方が入っている。`opr-sample.md` の R1 は `T-KATA-REVIEW-ALL-opr-access-control-sample-110` で済んでいるため、本タスクは `opr-backup-restore-sample.md` をレビューし、`opr-sample.md` は変えていない / - / plan の「根拠となる成果物と編集対象」と `targets`、兄弟タスクの result / 要判断（迷った理由: plan の編集対象欄と task の対象が食い違う。選ばなかった案: `opr-sample.md` をもう一度 R1 で見直す）"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/opr-backup-restore-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更したのは docs/ja/specdojo/samples/opr-backup-restore-sample.md だけで、plan・result・個票を変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変更していない","reason":"変更したファイルに *.yaml / *.yml がない"}]}
+</specdojo_executor_evidence>
