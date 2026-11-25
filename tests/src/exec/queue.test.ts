@@ -19,6 +19,7 @@ import {
   type QueueStep,
   type QueueStepOutcome,
 } from "../../../src/exec/queue.js";
+import { EXEC_STOP_EXIT_CODE } from "../../../src/exec/stop-request.js";
 
 const roots: string[] = [];
 
@@ -338,5 +339,77 @@ describe("runQueue", () => {
 
     expect(record).toMatchObject({ state: "stopped", reason: "step 1 failed: spawn ENOENT" });
     expect(record.steps[0]).toMatchObject({ status: "failed", exit_code: null });
+  });
+
+  it("stops before the next step while an exec stop request is open", async () => {
+    const executionPath = executionDir();
+    const recordPath = createQueue(executionPath, threeSteps("stop"));
+    const { events, execute } = recordingExecutor();
+    let message: string | undefined;
+    const finished: number[] = [];
+
+    const record = await runQueue({
+      recordPath,
+      lockDir: queueLockPath(executionPath, "nightly"),
+      execute: async (step) => {
+        message = "update exec-defaults";
+        return execute(step);
+      },
+      stop: { pending: () => message, finish: (step) => finished.push(step) },
+      log: () => undefined,
+      ...fakeLock,
+    });
+
+    expect(events).toEqual(["start 1", "end 1"]);
+    expect(finished).toEqual([2]);
+    expect(record).toMatchObject({
+      state: "stopped",
+      stopped_step: 2,
+      reason: "stopped by exec stop: update exec-defaults",
+    });
+    expect(record.steps.map((step) => step.status)).toEqual(["succeeded", "pending", "pending"]);
+  });
+
+  it("puts a step drained by exec stop back to pending, even a continue step, and resumes it", async () => {
+    const executionPath = executionDir();
+    const recordPath = createQueue(executionPath, threeSteps("continue"));
+    const lockDir = queueLockPath(executionPath, "nightly");
+
+    const stopped = await runQueue({
+      recordPath,
+      lockDir,
+      execute: async (step) =>
+        step.index === 2
+          ? { exitCode: EXEC_STOP_EXIT_CODE, summary: `exit code ${EXEC_STOP_EXIT_CODE}` }
+          : { exitCode: 0, summary: "exit code 0" },
+      log: () => undefined,
+      ...fakeLock,
+    });
+    const retry = recordingExecutor();
+    const resumed = await runQueue({
+      recordPath,
+      lockDir,
+      execute: retry.execute,
+      log: () => undefined,
+      ...fakeLock,
+    });
+
+    expect(stopped).toMatchObject({
+      state: "stopped",
+      stopped_step: 2,
+      reason: "stopped by exec stop",
+    });
+    expect(stopped.steps[1]).toMatchObject({ status: "pending", exit_code: EXEC_STOP_EXIT_CODE });
+    expect(retry.events).toEqual(["start 2", "end 2", "start 3", "end 3"]);
+    expect(resumed.state).toBe("succeeded");
+  });
+
+  it("shows an open stop request on the queue status line", () => {
+    const executionPath = executionDir();
+    const record = loadQueueRecord(createQueue(executionPath, threeSteps("stop")));
+
+    expect(
+      formatQueueSummary(record, queueLockPath(executionPath, "nightly"), "update settings"),
+    ).toBe("nightly\tpending\t0/3\tstop=requested (update settings)");
   });
 });

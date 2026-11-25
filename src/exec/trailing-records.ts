@@ -19,6 +19,7 @@ import {
   runRecordsDirectory,
 } from "./run-records.js";
 import { missingRunRecords } from "./validate-records.js";
+import { stopRecordsDirectory } from "./stop-request.js";
 import { normalizeResultWhitespace, stabilizeCommitTargets } from "./worktree-ops-commit.js";
 
 // runner は Schedule タスクの complete・block・release などのイベントを統合の commit の後に書き、
@@ -78,6 +79,7 @@ function readRunnerEventTaskId(context: TrailingRecordsContext, path: string): s
 // - イベント: `exec/events/*.json` のうち、`by` が runner のもの。
 // - run の記録: 上のイベントの task の `runs/schedule/<task>/` 配下（失敗・延期・再開前の試行を含む）。
 // - plan の共通規約: run の記録を 1 件以上選んだ場合の `plan-conventions/` 配下（内容で命名される）。
+// - 止めた記録: `exec stop` で止まった run と予約の列の `exec/stops/*.json`。
 // 削除や存在しないパスは選ばない。結果はソート済みで返す。
 export function selectTrailingRunRecords(
   context: TrailingRecordsContext,
@@ -90,6 +92,7 @@ export function selectTrailingRunRecords(
     resolve(runRecordsDirectory(context.executionPath), "schedule"),
   );
   const conventionsPrefix = prefixOf(repoRoot, planConventionsDirectory(context.executionPath));
+  const stopsPrefix = prefixOf(repoRoot, stopRecordsDirectory(context.executionPath));
   const files = [...new Set(dirtyPaths.map((path) => path.replaceAll("\\", "/")))]
     .filter((path) => isFile(repoRoot, path))
     .sort();
@@ -121,10 +124,12 @@ export function selectTrailingRunRecords(
   const { kept: runRecords, incompleteRuns } = dropIncompleteRuns(context, candidates);
   const conventions =
     runRecords.length > 0 ? files.filter((path) => path.startsWith(conventionsPrefix)) : [];
+  // `exec stop` records (PJR-32PN): written by the runner when a run or queue stops on request.
+  const stops = files.filter((path) => path.startsWith(stopsPrefix) && path.endsWith(".json"));
   return {
     events,
     runRecords,
-    paths: [...events, ...runRecords, ...conventions].sort(),
+    paths: [...events, ...runRecords, ...conventions, ...stops].sort(),
     incompleteRuns,
   };
 }
