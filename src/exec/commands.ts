@@ -93,6 +93,7 @@ import { resolveOwnerForLocalId } from "./strategy.js";
 import { buildTaskView } from "./task-view.js";
 import { registerExecTrialCommands } from "./trial.js";
 import { registerExecSmokeCommand } from "./smoke.js";
+import { exitQuietlyOnClosedStdout } from "../shared/stdout-epipe.js";
 import { registerExecQueueCommands, writeActiveQueueSummary } from "./queue-command.js";
 import type { ExecEventType, ExecEventV1, StateSnapshot } from "./types.js";
 import { registerExecWorktreeCommands } from "./worktree-command.js";
@@ -733,6 +734,7 @@ export function registerExecCommands(program: Command): void {
     "doing",
   );
   statusCmd.action((opts) => {
+    exitQuietlyOnClosedStdout();
     try {
       const { schedulePath, executionPath } = resolveProjectContext(opts);
 

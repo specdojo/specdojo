@@ -15,7 +15,7 @@ import {
  * process has exited (the runner awaits the process it spawned, never a process-name search).
  */
 
-export type QueueStepKind = "grade" | "exec-run" | "post-integration";
+export type QueueStepKind = "grade" | "exec-run" | "exec-resume" | "post-integration";
 export type QueueOnFailure = "stop" | "continue";
 export type QueueStepStatus = "pending" | "running" | "succeeded" | "failed";
 export type QueueState =
@@ -24,7 +24,7 @@ export type QueueState =
 export type QueueStep = {
   index: number;
   kind: QueueStepKind;
-  /** specdojo CLI argv for `grade` / `exec-run`; `["build-dist"]` for `post-integration`. */
+  /** specdojo CLI argv for `grade` / `exec-run` / `exec-resume`; `["build-dist"]` for `post-integration`. */
   argv: string[];
   on_failure: QueueOnFailure;
   status: QueueStepStatus;
@@ -120,11 +120,20 @@ export function parseQueueStepSpec(
     }
     return { ...base, kind: "exec-run", argv: withProject(["exec", "run", ...rest]) };
   }
+  if (head === "exec resume") {
+    // A queue step resumes one schedule task; resuming everything or by due time has no fixed target.
+    if (!hasOption(rest, "--task")) {
+      throw new Error(`${where}: exec resume needs --task <task-id> in a queue`);
+    }
+    const rejected = ["--due", "--dry-run"].find((option) => hasOption(rest, option));
+    if (rejected) throw new Error(`${where}: exec resume ${rejected} is not supported in a queue`);
+    return { ...base, kind: "exec-resume", argv: withProject(["exec", "resume", ...rest]) };
+  }
   if (head === "post-integration build-dist" && rest.length === 0) {
     return { ...base, kind: "post-integration", argv: ["build-dist"] };
   }
   throw new Error(
-    `${where}: unsupported step: ${spec.trim() || "(empty)"} (allowed: "grade run ...", "exec run ...", "post-integration build-dist")`,
+    `${where}: unsupported step: ${spec.trim() || "(empty)"} (allowed: "grade run ...", "exec run ...", "exec resume --task <task-id>", "post-integration build-dist")`,
   );
 }
 
@@ -158,7 +167,10 @@ function isQueueStep(value: unknown): value is QueueStep {
   return (
     isRecord(value) &&
     typeof value.index === "number" &&
-    (value.kind === "grade" || value.kind === "exec-run" || value.kind === "post-integration") &&
+    (value.kind === "grade" ||
+      value.kind === "exec-run" ||
+      value.kind === "exec-resume" ||
+      value.kind === "post-integration") &&
     Array.isArray(value.argv) &&
     value.argv.every((token) => typeof token === "string") &&
     (value.on_failure === "stop" || value.on_failure === "continue") &&

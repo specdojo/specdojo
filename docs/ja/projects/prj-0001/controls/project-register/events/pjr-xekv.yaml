@@ -41,3 +41,87 @@
     - field: derived_from
       from: ""
       to: '["PJR-69ZX"]'
+- v: 1
+  id: reg_2bb979c8bdd843928dcc432dd0be0e02
+  ts: "2026-11-25T00:04:13Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_952b0283b3a64f18b44ba3557ce9165e
+- v: 1
+  id: reg_e5ebf57bb3f840e1bf2ba62700e9b74a
+  ts: "2026-11-25T00:11:03Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_2bb979c8bdd843928dcc432dd0be0e02
+- v: 1
+  id: reg_98e0e1cd183649b48ffe4f8e2fe0ca78
+  ts: "2026-11-25T00:13:20Z"
+  action: update
+  actor: SpecDojo
+  from_status: review
+  to_status: review
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_e5ebf57bb3f840e1bf2ba62700e9b74a
+- v: 1
+  id: reg_c9b453dda68d4b31b4b0685eb9ca3959
+  ts: "2026-11-25T00:13:37Z"
+  action: start
+  actor: sonnet-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_98e0e1cd183649b48ffe4f8e2fe0ca78
+- v: 1
+  id: reg_d301394cbbcb410fac641215f2322e3a
+  ts: "2026-11-25T00:19:00Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_c9b453dda68d4b31b4b0685eb9ca3959
+- v: 1
+  id: reg_18c13a22325f46c6aea6a9f3a1c72357
+  ts: "2026-11-25T00:19:42Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: "exec run --register（sonnet-executor、2 回、統合先は feature/prj-0001/playbook-cli-gaps）で実装。EPIPE（develop の dist は終了コード 1、直した版は 0）、列の段の予約、### の受け入れと ## の拒否のメッセージを手元で確かめた"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-25"
+    - field: conclusion
+      from: "-"
+      to: "exec queue status と exec status が EPIPE で落ちないようにし、exec resume --task を列の段に置けるようにし、--section-file で ### の小節の見出しを使えるようにした"
+  previous_event_id: reg_d301394cbbcb410fac641215f2322e3a

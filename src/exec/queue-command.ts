@@ -3,6 +3,7 @@ import { spawn } from "node:child_process";
 import { existsSync } from "node:fs";
 import { gitEnvironment } from "../shared/git-environment.js";
 import { selfRunArgs } from "../shared/spawn-self.js";
+import { exitQuietlyOnClosedStdout } from "../shared/stdout-epipe.js";
 import { specdojoRootDir } from "../shared/specdojo-config.js";
 import { addProjectOptions, printCommandError, resolveProjectId } from "./core.js";
 import { runParentValidationBatch } from "./parent-validation.js";
@@ -75,7 +76,9 @@ function executeQueueStep(executionPath: string) {
 export function registerExecQueueCommands(exec: Command): void {
   const queue = exec
     .command("queue")
-    .description("Reserve grade / exec run / post-integration steps and run them in order");
+    .description(
+      "Reserve grade / exec run / exec resume --task / post-integration steps and run them in order",
+    );
 
   // Shared by --step and --step-continue so the order of the options is the order of the steps.
   const collected: Array<{ spec: string; onFailure: QueueOnFailure }> = [];
@@ -139,6 +142,7 @@ export function registerExecQueueCommands(exec: Command): void {
     .description("Show queues, or the steps of one queue");
   addProjectOptions(status);
   status.action((queueId: string | undefined, opts: { project?: string }) => {
+    exitQuietlyOnClosedStdout();
     try {
       const { executionPath } = resolveProjectPaths({ project: opts.project });
       if (queueId) {

@@ -88,7 +88,7 @@ register 実行は exec events を記録しないため、schedule の Ready・C
 | 同じplanで複数agentを比較する                         | `exec trial run`                      | なし            | agent別  |
 | grade・`exec run`・build を混ぜた順番を予約して流す   | `exec queue add` -> `exec queue run`  | 予約ファイル    | 段に依存 |
 
-順番の予約は `<execution_path>/queues/<queue-id>.json` に残り、`exec queue status` と `exec status` の末尾の `queues:` で中身・進み具合・止まった段と理由を確かめます。段の書式と失敗時の扱いは [[specdojo:command-reference|コマンドリファレンス]] の「実行の予約（exec queue）」を参照してください。
+順番の予約は `<execution_path>/queues/<queue-id>.json` に残り、`exec queue status` と `exec status` の末尾の `queues:` で中身・進み具合・止まった段と理由を確かめます。schedule のタスクの再開（`exec resume --task <task-id>`）も段に置けます。`exec queue status` の出力を `head` で切っても EPIPE で落ちません。段の書式と失敗時の扱いは [[specdojo:command-reference|コマンドリファレンス]] の「実行の予約（exec queue）」を参照してください。
 
 `exec run --register ... --register-commit` は、各IDのcommit後にhookによる整形差分を同じcommitへ収束させ、対象差分が残っていないことを検証します。登録簿・派生ビュー・当該plan/resultはrunner管理パスとして扱い、その他の実行前からある利用者変更はcommitしません。過去の未commit plan/resultを検出した場合は、現在のIDへ混ぜず警告します。
 
