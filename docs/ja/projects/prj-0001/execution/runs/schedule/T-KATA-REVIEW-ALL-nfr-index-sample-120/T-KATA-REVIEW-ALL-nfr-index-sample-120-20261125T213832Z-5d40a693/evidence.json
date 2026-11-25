@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-nfr-index-sample-120",
+  "run_id": "T-KATA-REVIEW-ALL-nfr-index-sample-120-20261125T213832Z-5d40a693",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-25T21:39:17.184Z",
+    "completed_at": "2026-11-25T21:40:04.152Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md\n\nlint:md:changed: no changed files"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\nlint:fm:changed: no changed files"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7401 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7401 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)",
+      "reason": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nlebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-nfr-index-sample-120/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-nfr-index-sample-120/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R2（構成）の段では sample を変えなかった。章 1〜5 の順序と見出しは rulebook の本文要件とそろい、表と本文の置き方も前提から結論の順になっている。template は `undecided` で存在しない。grade の finding F001・F002 は、R1 が直した版にはもう当てはまらなかった。",
+  "completion_status": "complete",
+  "handoff": [
+    "R2-1: R2 / 全体（1〜5 章） / 章の順序と見出しは rulebook「本文要件」の 5 見出しとそろっている。どの章も表の前の 1 文、表、補足の順で、前提から結論の順に読める / - / `vp-arc-document-structure`、rulebook「本文要件」「記述ガイド」（template は `undecided` のため本文要件だけで照合した） / -",
+    "R2-2: R2 / 3. 分冊ドキュメント一覧（ID/参照先） / grade の F001 が指す備考の `_UNDECIDED_`（営業時間外の緊急連絡手段）は、R1 が直した版には残っていない。指摘の観点 `vp-po-decision-readiness` も kata のレビューでは外す観点（kata-guide「kata の観点の組」）なので、構成の直しは要らない / - / F001、kata-guide「kata の観点の組」 / -",
+    "R2-3: R2 / 3. 分冊ドキュメント一覧（ID/参照先） / grade の F002 が指す備考の目標値「監査ログの保管期間 1 年」は、R1 が直した版では「監査ログの保管期間は `opd-index` と揃える」になり、値の再掲はもうない。冗長さは R3 の観点なので、この段では繰り返さない / - / F002、`vp-arc-conciseness`（R3） / -",
+    "R2-4: R2 / 3. 分冊ドキュメント一覧（ID/参照先） / 表の後の文「目標値が `_UNDECIDED_` の分冊は、その指標で合否を判定せず、発生の記録だけを残す」と、性能の備考「決まるまで総合テストは仮置き基準で測る」は、仮置きの基準で合否を決めるのかが読み分けにくい / - / `vp-qe-omissions-consistency`。迷った理由: 「仮置き基準で測る」は合否を決めずに測った値を残すとも読め、矛盾とは言い切れない。選ばなかった案: 性能の備考を「決まるまで総合テストは仮置き基準で測った値だけを記録する」に直す。文の直しなので R3 または R5 に任せた / 要判断",
+    "R2-5: R2 / （rulebook） / rulebook の `template: undecided` と全体方針の `_UNDECIDED_` が残っているため、構成を照らし合わせる先が本文要件だけになっている / - / rulebook `specdojo:nfr-index-rulebook` の全体方針。相手側を直す案: 本文要件にそろった sample を元に、NFR 分冊と共通の template にするかを決め、その結果で `template` を埋める / -"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-nfr-index-sample-120/T-KATA-REVIEW-ALL-nfr-index-sample-120-20261125T213832Z-5d40a693/executor.log",
+      "bytes": 4157,
+      "truncated": false
+    }
+  ]
+}
