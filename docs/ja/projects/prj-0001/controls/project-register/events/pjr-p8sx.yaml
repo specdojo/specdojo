@@ -48,3 +48,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_17dd796dd7c7495f9ae1c1f2c201d677
+- v: 1
+  id: reg_7d72cee451e3445fafb0cc4418e29329
+  ts: "2026-11-25T12:28:06Z"
+  action: wait
+  actor: opus-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor reported incomplete: 親の検証ごとに、検証を終えるまでの時間を `duration_ms`（全体）、`last_output_ms`（子の時間）、`detection_lag_ms`（runner が気づくまでの遅れ）、`event_loop_delay_max_ms`（処理が止まった最長の時間）に分けて記録する `validation-exit-timing…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor reported incomplete: 親の検証ごとに、検証を終えるまでの時間を `duration_ms`（全体）、`last_output_ms`（子の時間）、`detection_lag_ms`（runner が気づくまでの遅れ）、`event_loop_delay_max_ms`（処理が止まった最長の時間）に分けて記録する `validation-exit-timing…"
+  previous_event_id: reg_2de7bd815f2c4979b6959de96323c16d
