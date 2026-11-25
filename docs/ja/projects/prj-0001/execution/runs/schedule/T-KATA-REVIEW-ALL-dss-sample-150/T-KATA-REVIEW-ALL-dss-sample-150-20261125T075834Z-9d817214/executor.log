@@ -1,0 +1,17 @@
+R5（整合）の段を終えました。`docs/ja/specdojo/samples/dss-sample.md` の 2 行を直し、prettier で整形しました。diff は 2 行の追加と 2 行の削除です。markdownlint などの検査は親 runner が回すため、ここでは prettier だけを実行しています。result ファイルには触れていません。
+
+直したのは次の 2 点です。
+
+- **状態の見せ方（`dss-state-05` 空）**: 空状態の文言を本書で「該当なし」と決めていましたが、UIS は明細が空のとき「商品を追加してください」と表示すると定めています。本書は状態の中身を UIS に任せる立場なので、「見出し付きで UIS の空表示の文言と次の操作を表示」に変えました。
+- **検証の節目と基準版の採用（3. 利用者評価）**: 操作する人を「店主代表・利用者代表」と書いていましたが、共通サンプル文脈の「利用者代表」は常連の子どもで、店番をする家族ではありません。「家族利用者代表」に直し、同じ文書の「検証」の表（店主と店番をする家族）や NFR 操作性の sample の利用者区分と揃えました。
+
+ほかに 2 件、直さずに判断を残しています。
+
+- **想定 ID の扱い（要判断）**: 本書は `nfr-usability`・`sysd-index`・`sysd-cross-cutting-policy` を「利用先で作る文書の想定 ID で、完成例を指さない」としています。ところが同じ系列の完成例（`specdojo:nfr-usability-sample` など）が実在します。UIS だけ完成例へ wikilink していて、扱いが揃っていません。一方で NFR 操作性の sample には、本書が挙げる「読み違い防止・視認性・キーボード操作」の要件がなく、指標も「完了率・誤操作率・習熟時間」です。そのため、つなぐと新しい食い違いが生まれます。今の書き方を保つか、NFR 側に要件を足してから wikilink につなぐかは、人の判断が必要です。
+- **ロール一覧の側（要判断）**: 本書は表現の正本の更新責任を ARC にしています。ロール一覧の sample では、ARC は初期に独立タスクの主責任を持たず、画面の文言は UX の専門支援です。dss-rulebook はロールを指定していないため変えていません。
+
+用語集、UIS の操作・遷移・ダイアログの決まり、共通サンプル文脈の前提（単一店舗・タブレット 1 台）とは食い違いがありませんでした。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5（整合）で dss-sample.md を 2 箇所直した（空状態の文言を UIS の空表示の文言に揃え、利用者評価の主体を家族利用者代表にした）。想定 ID の扱いとロール割り当ての 2 件は要判断として handoff に残した。","handoff":["R5-1: R5 / 6. 状態の見せ方（`dss-state-05` 空） / 視覚表現が「該当なし」を固定の文言としていて、UIS の明細なしの表示「商品を追加してください」と食い違う。本書は状態の発生条件と回復を UIS に任せる立場 / 「見出し付きで UIS の空表示の文言と次の操作を表示」にした / `vp-qe-kata-conformance`（kata 相互と適用先）、[[specdojo:uis-sample]] の「表示項目」の明細の行 / -","R5-2: R5 / 8.2. 検証の節目と基準版の採用（3. 利用者評価） / 操作する人が「店主代表・利用者代表」になっている。共通サンプル文脈の「利用者代表」は常連の子どもで、店番をする家族は「家族利用者代表」。同じ文書の「検証」の表（店主と店番をする家族）、`specdojo:nfr-usability-sample` の利用者区分（熟練=店主代表、新任=家族利用者代表）とも食い違う / 「店主代表・家族利用者代表が要件の条件で操作し」にした / `vp-qe-kata-conformance`、Sample 記述標準の「共通登場人物」 / -","R5-3: R5 / 8.1. 検証 / 本書は `nfr-usability`・`sysd-index`・`sysd-cross-cutting-policy` を「利用先で作る文書の想定 ID で、完成例を指さない」としている。しかし同じ系列の完成例 `specdojo:nfr-usability-sample`・`specdojo:sysd-index-sample`・`specdojo:sysd-cross-cutting-policy-sample` が実在し、UIS だけ wikilink していて扱いが揃わない / - / `vp-dev-change-impact`。迷った理由: `nfr-usability-sample` には本書が挙げる「読み違い防止・視認性・キーボード操作」の要件がなく、指標も完了率・誤操作率・習熟時間（本書は操作時間）のため、wikilink につなぐと新しい食い違いが生まれる。相手側の案: `nfr-usability-sample` に視認性・キーボード操作の要件を足してから、本書の想定 ID を wikilink に置き換える。選ばなかった案: 本書だけで wikilink に置き換える / 要判断","R5-4: R5 / 2. 正本と適用方法 / 表現の正本の更新責任を ARC にしている。`specdojo:pm-roles-sample` では ARC は初期に独立タスクの主責任を持たず、画面の文言と操作説明は UX の専門支援とされていて、責任の置き方がずれて見える / - / `vp-qe-kata-conformance`。dss-rulebook は更新責任の列を求めるがロールは指定していないため変えていない。相手側の案: `pm-roles-sample` の ARC か UX の `project_note` に、デザインシステムの表現の正本の保守を足す。選ばなかった案: 本書を UX に変える（検証の担当の ARC・QE の組と崩れるため） / 要判断"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/dss-sample.md","status":"passed","summary":"変更した sample を整形した。表の列幅は変わらず、diff は 2 行のまま"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/dss-sample.md だけで、plan・result・個票を変更していない"},{"command":"npm run validate:catalog","status":"not_applicable","summary":"プロジェクト成果物を変更していない","reason":"変更は docs/ja/projects/ の外（docs/ja/specdojo/samples/）だけ"}]}
+</specdojo_executor_evidence>
