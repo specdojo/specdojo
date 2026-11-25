@@ -74,4 +74,10 @@ plan に展開された finding は、message と同じ viewpoint ID の判定�
 
 - CHANGELOG の移動はできているので、内容は変えない。LP のコマンドは 1 回ずつ「cd /workspaces/specdojo-workspace/worktrees/prj-0002-PJR-0YVR/specdojo-lp && <コマンド>」の形で流す。git log origin/main..HEAD と git diff 7a5b7d7 HEAD -- CHANGELOG.md で PR #3 の公開範囲と照らし、npm run lint:md と npm run format:check を流して、結果を検証として記録する。個票の対応結果の検証と残課題も、流した結果に合わせて直す。
 
+## 再開の指示（2026-11-25T09:31:52.041Z）
+
+利用者が再開の前に足した指示である。これまでの申し送りとあわせて、この指示に従って作業を続ける。
+
+- 公開範囲の照合はオーケストレーターが済ませた。PR #3 の merge commit 7a5b7d7 と LP の作業ツリーの HEAD 0cffe55 は tree が同じ（a4d02ed826）で、そこからの差は CHANGELOG.md に「## 2026-11-25」の見出しと空行を足しただけである。この事実を個票の対応結果に書き、git のコマンドは流さず、検証（validations）にも記録しない。CHANGELOG は変えない。LP の npm run lint:md と npm run format:check は「cd <LP の作業ツリー> && <コマンド>」の形で流し、結果を検証として記録する。
+
 `共通規約 sha256:e7dd6ff2a0dec2f12ed4ffc905cd185aca2d6f9c3922c56a249c88cb45b2a14e` `docs/ja/projects/prj-0002/execution/conventions/e7dd6ff2a0dec2f12ed4ffc905cd185aca2d6f9c3922c56a249c88cb45b2a14e.txt`

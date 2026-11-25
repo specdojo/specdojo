@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-0YVR",
+  "run_id": "pjr-0yvr-20261125T092344Z-3f5b5d1b",
+  "updated_at": "2026-11-25T09:32:27.291Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sonnet-executor",
+      "attempts": 1,
+      "started_at": "2026-11-25T09:31:52.062Z",
+      "completed_at": "2026-11-25T09:32:07.036Z",
+      "artifact_ref": "docs/ja/projects/prj-0002/execution/runs/register/PJR-0YVR/pjr-0yvr-20261125T092344Z-3f5b5d1b/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 0,
+      "started_at": "2026-11-25T09:32:23.300Z",
+      "completed_at": "2026-11-25T09:32:23.300Z",
+      "artifact_ref": "docs/ja/projects/prj-0002/execution/runs/register/PJR-0YVR/pjr-0yvr-20261125T092344Z-3f5b5d1b/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "sonnet-executor",
+      "attempts": 1,
+      "started_at": "2026-11-25T09:32:27.291Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0002/execution/runs/register/PJR-0YVR/pjr-0yvr-20261125T092344Z-3f5b5d1b/plan.md",
+    "result_ref": "docs/ja/projects/prj-0002/execution/runs/register/PJR-0YVR/pjr-0yvr-20261125T092344Z-3f5b5d1b/result.md"
+  },
+  "resume_notes": [
+    {
+      "at": "2026-11-25T09:28:33.015Z",
+      "notes": [
+        "CHANGELOG の移動はできているので、内容は変えない。LP のコマンドは 1 回ずつ「cd /workspaces/specdojo-workspace/worktrees/prj-0002-PJR-0YVR/specdojo-lp && <コマンド>」の形で流す。git log origin/main..HEAD と git diff 7a5b7d7 HEAD -- CHANGELOG.md で PR #3 の公開範囲と照らし、npm run lint:md と npm run format:check を流して、結果を検証として記録する。個票の対応結果の検証と残課題も、流した結果に合わせて直す。"
+      ]
+    },
+    {
+      "at": "2026-11-25T09:31:52.041Z",
+      "notes": [
+        "公開範囲の照合はオーケストレーターが済ませた。PR #3 の merge commit 7a5b7d7 と LP の作業ツリーの HEAD 0cffe55 は tree が同じ（a4d02ed826）で、そこからの差は CHANGELOG.md に「## 2026-11-25」の見出しと空行を足しただけである。この事実を個票の対応結果に書き、git のコマンドは流さず、検証（validations）にも記録しない。CHANGELOG は変えない。LP の npm run lint:md と npm run format:check は「cd <LP の作業ツリー> && <コマンド>」の形で流し、結果を検証として記録する。"
+      ]
+    }
+  ]
+}

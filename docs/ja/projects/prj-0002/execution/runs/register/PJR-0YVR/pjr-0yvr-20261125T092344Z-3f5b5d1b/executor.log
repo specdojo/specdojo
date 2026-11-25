@@ -1,0 +1,9 @@
+CHANGELOG の移動は前回の試行で済んでおり、今回も内容は変えていません。今回は LP の検査を流し直し、個票の対応結果を更新しました。
+
+- **検査**: LP の `npm run lint:md` と `npm run format:check` は、どちらも成功しました。
+- **公開範囲の照合**: 指示どおり git のコマンドは流していません。オーケストレーターが済ませた結果（PR #3 の merge commit `7a5b7d7` と LP の HEAD `0cffe55` は tree が同じで、差は `## 2026-11-25` の見出しと空行だけ）を、個票の対応結果に書きました。
+- **個票**: 作業内容の表の行 1 のメモと、対応結果の根拠・検証結果・残課題を実績に合わせて直しました。残課題は「なし」です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"CHANGELOG は変更せず、LP の lint:md と format:check の成功を確認し、個票の対応結果をオーケストレーターが照合した公開範囲と検証結果に合わせて更新した。","handoff":[],"validations":[{"command":"cd /workspaces/specdojo-workspace/worktrees/prj-0002-PJR-0YVR/specdojo-lp && npm run lint:md","status":"passed","summary":"markdownlint の指摘なし"},{"command":"cd /workspaces/specdojo-workspace/worktrees/prj-0002-PJR-0YVR/specdojo-lp && npm run format:check","status":"passed","summary":"Prettier: 全ファイルが整形済み"}],"target_coverage":[{"target":"docs/ja/projects/prj-0002/controls/project-register/pjr-0yvr-lp-changelog-release-2026-11-25.md","status":"changed","path":"docs/ja/projects/prj-0002/controls/project-register/pjr-0yvr-lp-changelog-release-2026-11-25.md"}]}
+</specdojo_executor_evidence>
