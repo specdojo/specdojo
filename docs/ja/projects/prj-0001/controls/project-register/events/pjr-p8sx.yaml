@@ -151,3 +151,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_877a3007ff484742b265e12211edffcf
+- v: 1
+  id: reg_80d0e4dc1f0845c4b5edc1a2e488f426
+  ts: "2026-11-25T22:05:02Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 夜の全件レビューの validation-exit-timing 246 件で効き目と統合の失敗が増えないことを確かめ、indie の承認（2026-11-26）を得て close。残る遅れは PJR-CSRM で扱う。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-26"
+    - field: conclusion
+      from: "-"
+      to: 統合の commit を非同期にし、親の検証の時間を約 190 秒から平均約 33 秒に縮めた。
+  previous_event_id: reg_f0bec63de3484ca7ad89c88d3aa0c109

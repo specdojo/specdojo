@@ -2,14 +2,16 @@
 specdojo:
   id: prj-0001:pjr-p8sx-parallel-validation-slot-held
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   registered_at: "2026-11-25T09:21:32Z"
+  completed_at: "2026-11-25T22:05:02Z"
+  conclusion: 統合の commit を非同期にし、親の検証の時間を約 190 秒から平均約 33 秒に縮めた。
 ---
 
 # PJR-P8SX 並列実行で親の検証の枠が、他タスクの統合に止められて長く占有される
