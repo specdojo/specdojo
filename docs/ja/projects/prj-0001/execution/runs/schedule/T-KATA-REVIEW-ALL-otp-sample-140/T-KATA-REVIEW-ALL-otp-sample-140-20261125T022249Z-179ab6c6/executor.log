@@ -1,0 +1,26 @@
+R4（正しさ）のレビューを終え、`docs/ja/specdojo/samples/otp-sample.md` の誤りを 1 か所直しました。markdownlint と prettier の確認は通っています。`npm run lint:md` などの全体の検査は、この後に親 runner が実行します。
+
+**直した点（「問合せ窓口/一次対応」の「エスカレーション条件」）**
+直す前は「P1 または P2 のときは `otp-index` のエスカレーション先へすぐ渡す」となっていました。しかし `otp-index-sample` では、P2 を開発担当へ上げるのは「当日の日次締めまでに店主代表が訂正できない」場合だけで、一次対応は営業時間中が店主代表、閉店後が開発担当です。そこで「P1 はエスカレーション先へすぐ渡す。P2 は一次対応の受け手へすぐ渡し、そこから先は `otp-index` のエスカレーション条件に従う」に改めました。
+
+**確かめた主張（直した 1 件を除き、すべて正本と一致）**
+- frontmatter の `type: operations` と `rulebook: specdojo:otp-rulebook` は、rulebook の「推奨 Frontmatter 項目」と schema の type の列挙に合っています。
+- 11 章の順序と、各表の列は、rulebook の「本文要件」と同じです。
+- 次の参照先は `otp-index-sample` などの記述と合っています。
+  - GO4 が T+7 日の閉店後の正本切替であること（`mip-index-sample` の判定点の表）
+  - `cop-cutover-day` の term（`cop-sample` の概要）
+  - P3 は 3 営業日続いたら上げるという SLA（`otp-index-sample` の優先度の表）
+  - クローズ判断者が店主代表で、最終報告物がハイパーケア終了報告であること
+  - バックアップを USB メモリに保存し、リストアを開発担当、戻す日の判断を店主代表とすること
+  - 旧ノートの保管期間が `dmd-index` で未決であること
+
+**確かめられなかった主張**
+- `opr-support`、`opr-shift-handover`、`opr-backup-restore` という term の実在。`opr-support-sample` などの id はファイル名ベースで、term が宣言されていないためです。`otp-index-sample` で `opr-shift-handover` と `opr-backup-restore` が使われていることまでは確認しました。
+- 本書の主張のうち駄菓子屋の業務の値（時刻、2 営業日、記入例など）は、正本がない仮定なので確かめの対象にしていません。
+
+**R5（整合）に渡す指摘**
+- 「権限/アカウント移行」の表で、開発担当のハイパーケア後の問合せ先を `opr-support` としています。一方 `otp-index-sample` は、クローズ後は `opr-index` の運用へ引き継ぐと書いています。食い違いとして R5 で扱ってください。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）: otp-sample の事実を rulebook・schema・関連 sample と突き合わせ、P2 のエスカレーションの記述 1 件を otp-index-sample に合わせて修正した。","handoff":["確かめ No1: 主張=frontmatter `type: operations`・`rulebook: specdojo:otp-rulebook`／正本=docs/ja/specdojo/rulebooks/otp-rulebook.md「推奨 Frontmatter 項目」、docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml／確かめ方=読み取り・grep operations／結果=一致／根拠=schema 17 行の enum operations、rulebook の指定","確かめ No2: 主張=11 章の順序と各表の列（監視/アラート、運用手順の変更点、初期増員体制）／正本=otp-rulebook.md「本文要件」／確かめ方=読み取り／結果=一致／根拠=章名・列名が同一","確かめ No3: 主張=問合せ窓口/一次対応「P1 または P2 のときは `otp-index` のエスカレーション先へすぐ渡す」／正本=docs/ja/specdojo/samples/otp-index-sample.md 優先度の表／確かめ方=読み取り／結果=不一致（修正済み）／根拠=P2 のエスカレーション条件は『当日の日次締めまでに店主代表が訂正できない』で即時ではない。P1 は即時、P2 は一次対応の受け手へ渡し以後は `otp-index` の条件に従う、と改めた","確かめ No4: 主張=正本切替は `mip-index` の GO4・日の閉店後／正本=docs/ja/specdojo/samples/mip-index-sample.md 120 行／確かめ方=grep GO4／結果=一致／根拠=T+7 日（閉店後）正本切替 GO4","確かめ No5: 主張=`cop-cutover-day` が切替日午前の手順／正本=docs/ja/specdojo/samples/cop-sample.md 概要／確かめ方=grep／結果=一致／根拠=『概要（cutover-day）』と `cop-cutover-day` の宣言","確かめ No6: 主張=初期増員体制『`otp-index` は 3 営業日続いたら上げる』（P3）／正本=otp-index-sample.md 優先度の表／確かめ方=読み取り／結果=一致／根拠=P3: 3 営業日続けて同じ問合せ","確かめ No7: 主張=バックアップは USB メモリ、リストアは開発担当・戻す日は店主代表、手順は `opr-backup-restore`／正本=otp-index-sample.md「バックアップ/リストア」／確かめ方=読み取り／結果=一致／根拠=同章の保管先・リストア責任者の記述","確かめ No8: 主張=クローズ判断者は店主代表、最終報告物はハイパーケア終了報告／正本=otp-index-sample.md「移行完了後のクローズ条件」／確かめ方=読み取り／結果=一致／根拠=判定者・最終報告物の記述","確かめ No9: 主張=旧ノートの参照期間は `dmd-index` の保管期間に合わせ未決／正本=docs/ja/specdojo/samples/dmd-index-sample.md 51 行／確かめ方=grep 保管／結果=一致／根拠=_UNDECIDED_: 旧ノートの保管期間","確かめ No10: 主張=参照先の term `opr-support`・`opr-shift-handover`・`opr-backup-restore` が実在する／正本=docs/ja/specdojo/samples/opr-*-sample.md／確かめ方=grep id／結果=確かめられない／根拠=sample の id はファイル名ベースで term 宣言がない。`opr-shift-handover`・`opr-backup-restore` は otp-index-sample でも使用されていることのみ確認","R5 への申し送り: 「権限/アカウント移行」の開発担当行がハイパーケア後の問合せ先を `opr-support` とし、otp-index-sample は『`opr-index` の運用へ引き継ぐ』と書く。食い違いの判断は R5（整合）で扱う"],"validations":[{"command":"npx markdownlint docs/ja/specdojo/samples/otp-sample.md","status":"passed","summary":"エラーなし"},{"command":"npx prettier --check docs/ja/specdojo/samples/otp-sample.md","status":"passed","summary":"All matched files use Prettier code style"}]}
+</specdojo_executor_evidence>
