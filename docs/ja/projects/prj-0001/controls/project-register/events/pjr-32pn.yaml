@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c7a7e05fa2484d14aa6d1c4db6210aa3
+  ts: "2026-11-25T11:11:11Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 動いている exec run --auto --loop を、走っているタスクを終えてから安全に止めるコマンドを足す
+    - field: description
+      from: ""
+      to: 動いている `exec run --auto --loop` を、走っているタスクを壊さずに止めるコマンドを足す。新しいタスクは始めず、走っているタスクを統合まで終えてからループを抜ける止め方（drain）にする。設定の変更・feature ブランチの統合・dist の作り直しなどを、区切りで安全に行えるようにする。
+    - field: input
+      from: ""
+      to: '["利用者の問い（2026-11-25）: schedule を途中で安全に止めて設定を変えるコマンドは実装されているか","確かめた事実（2026-11-25）: exec queue cancel は次の段の前でしか止まらず、--max-rounds は起動時の値。SIGTERM で止めると走っていたタスクが途中で切れ、exec resume で手当てが要った。exec-defaults は起動時に 1 度だけ読まれる","利用者の判断（2026-11-25）: 担当は DEV、期限は 12 月末"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-25"
+    - field: due
+      from: ""
+      to: "2026-12-31"
+    - field: derived_from
+      from: ""
+      to: '["PJR-0BGE"]'
