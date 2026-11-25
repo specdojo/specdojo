@@ -23,15 +23,17 @@ specdojo:
 
 ## 2. 成果物別 RACI
 
-| 成果物                                 | PO  | PM  | BA  | DEV | QE  |
-| -------------------------------------- | --- | --- | --- | --- | --- |
-| プロジェクト概要・スコープ・成功基準   | A   | C   | R   | C   | C   |
-| 組織定義・ロール定義・メンバー定義     | A   | R   | C   | I   | C   |
-| 管理計画・コミュニケーション計画・RACI | C   | A/R | C   | I   | C   |
-| 利用者要求・操作設計                   | A   | C   | R   | C   | C   |
-| 実装・データ設計                       | C   | I   | C   | A/R | C   |
-| 品質計画・試験結果                     | A   | C   | C   | C   | R   |
-| リリース候補                           | A   | R   | C   | R   | C   |
+各行の成果物は、成果物カタログの ID（同じ種類が複数あるものは接頭辞）か、未同梱の架空のアプリ・記録の名前で特定する。
+
+| 成果物                                 | 対象 ID                                                                      | PO  | PM  | BA  | DEV | QE  |
+| -------------------------------------- | ---------------------------------------------------------------------------- | --- | --- | --- | --- | --- |
+| プロジェクト概要・スコープ・成功基準   | `prj-overview`・`prj-scope`・`prj-success-criteria-and-acceptance-criteria`  | A   | C   | R   | C   | C   |
+| 組織定義・ロール定義・メンバー定義     | `pm-organization`・`pm-roles`・`pm-members`                                  | A   | R   | C   | I   | C   |
+| 管理計画・コミュニケーション計画・RACI | `pm-plan`・`pm-communication-plan`・`pm-raci`                                | C   | A/R | C   | I   | C   |
+| 利用者要求・操作設計                   | `bps-*`・`uis-*`                                                             | A   | C   | R   | C   | C   |
+| 実装・データ設計                       | `sysd-index`・`bdd-*`・`kinuya-app` のコード                                 | C   | I   | C   | A/R | C   |
+| 品質計画・試験結果                     | `pm-quality-management-plan`・`kinuya-st-report`・`kinuya-acceptance-record` | A   | C   | C   | C   | R   |
+| リリース候補                           | `kinuya-app` の対象版タグ                                                    | A   | R   | C   | R   | C   |
 
 品質計画・試験結果の `A` は確認範囲と結果を、リリース候補の `A` は準備完了を確認する。利用開始の可否は次表で決める。
 
