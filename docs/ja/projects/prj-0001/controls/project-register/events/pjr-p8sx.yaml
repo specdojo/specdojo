@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_17dd796dd7c7495f9ae1c1f2c201d677
+  ts: "2026-11-25T09:21:34Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 並列実行で親の検証の枠が、他タスクの統合に止められて長く占有される
+    - field: description
+      from: ""
+      to: "`exec run --auto --parallel 4` で全件レビュー（PJR-0BGE）を流すと、1 件のタスクがちょうど 4 分おきにしか終わらず、並列度を上げても速くならない。"
+    - field: input
+      from: ""
+      to: '["利用者の判断（2026-11-25）: 全件レビューの区切りまでは設定も runner も変えずに流し、原因は issue として起票して後で直す"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-25"
+    - field: due
+      from: ""
+      to: _TODO_
