@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-0YVR",
+  "run_id": "pjr-0yvr-20261125T092344Z-3f5b5d1b",
+  "updated_at": "2026-11-25T09:30:16.318Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sonnet-executor",
+      "attempts": 1,
+      "started_at": "2026-11-25T09:28:33.029Z",
+      "completed_at": "2026-11-25T09:28:52.607Z",
+      "artifact_ref": "docs/ja/projects/prj-0002/execution/runs/register/PJR-0YVR/pjr-0yvr-20261125T092344Z-3f5b5d1b/evidence.json"
+    },
+    "reporter": {
+      "status": "failed",
+      "actor": "gemma26-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-25T09:29:08.925Z",
+      "completed_at": "2026-11-25T09:30:16.318Z",
+      "artifact_ref": "docs/ja/projects/prj-0002/execution/runs/register/PJR-0YVR/pjr-0yvr-20261125T092344Z-3f5b5d1b/result.md"
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0002/execution/runs/register/PJR-0YVR/pjr-0yvr-20261125T092344Z-3f5b5d1b/plan.md",
+    "result_ref": "docs/ja/projects/prj-0002/execution/runs/register/PJR-0YVR/pjr-0yvr-20261125T092344Z-3f5b5d1b/result.md"
+  },
+  "resume_notes": [
+    {
+      "at": "2026-11-25T09:28:33.015Z",
+      "notes": [
+        "CHANGELOG の移動はできているので、内容は変えない。LP のコマンドは 1 回ずつ「cd /workspaces/specdojo-workspace/worktrees/prj-0002-PJR-0YVR/specdojo-lp && <コマンド>」の形で流す。git log origin/main..HEAD と git diff 7a5b7d7 HEAD -- CHANGELOG.md で PR #3 の公開範囲と照らし、npm run lint:md と npm run format:check を流して、結果を検証として記録する。個票の対応結果の検証と残課題も、流した結果に合わせて直す。"
+      ]
+    }
+  ]
+}

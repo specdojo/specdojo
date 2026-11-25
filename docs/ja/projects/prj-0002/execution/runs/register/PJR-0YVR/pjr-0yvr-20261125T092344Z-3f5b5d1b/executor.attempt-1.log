@@ -1,0 +1,11 @@
+`specdojo-lp/CHANGELOG.md` を更新しました。`Unreleased` にあった 2 件を、内容と「追加」の分類を保ったまま `## 2026-11-25` の節へ移しました。その上に空の `## Unreleased` を残し、`## 2026-11-02` の節は変えていません。
+
+公開範囲は、`git log main..develop` と `git diff main..develop` で確かめていません。この環境では `git` コマンドが承認待ちで実行できなかったためです。そのため、PR #3 の merge commit（`7a5b7d7`）の内容は、個票の入力にある記述と `Unreleased` の 2 件が一致する前提で扱いました。この点は個票の対応結果と `handoff` に書き、人による再照合を残課題にしています。
+
+個票の作業内容の表は 3 行とも `done` にし、対応結果の `_TODO_` は実績に置き換えました。
+
+`npm run lint:md` と `npm run format:check` は実行していません。どちらも親 runner の検証に委ねます。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"CHANGELOG の Unreleased の 2 件を 2026-11-25 の節へ移し、空の Unreleased を残した。公開範囲の git による再照合は、git が実行できず個票の入力を根拠にした。","handoff":["git が承認待ちで実行できず、PR #3 の merge commit（7a5b7d7）との照合は git log / git diff では行っていない。個票の入力を根拠にした。人による再照合を推奨する。","LP の npm run lint:md と npm run format:check は親 runner の検証に委ねた。"],"validations":[{"command":"npm run lint:md","status":"not_applicable","reason":"親 runner が実行する allowlist の検証であり、executor では実行しない。"},{"command":"npm run format:check","status":"not_run","summary":"LP の format:check は executor の sandbox では実行しなかった。親 runner の検証を正とする。"}]}
+</specdojo_executor_evidence>

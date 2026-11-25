@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: medium
   difficulty: easy
   owner: BA
   registered_at: "2026-11-24T23:10:42Z"
   due_on: "2026-11-30"
-  block_reason: "executor validation failed or not run: git -C /workspaces/specdojo-workspace/worktrees/prj-0002-PJR-0YVR/specdojo-lp diff 7a5b7d7 HEAD -- CHANGELOG.md"
   derived_from:
     - PJR-TAK7
 ---
@@ -42,18 +41,18 @@ PR #3 の本番公開を受け、LP の CHANGELOG の Unreleased にある 2 件
 
 ## 4. 作業内容
 
-| No  | 作業                                              | 担当 | 状態 | メモ                               |
-| --- | ------------------------------------------------- | ---- | ---- | ---------------------------------- |
-| 1   | PR #3 の公開範囲と `Unreleased` の項目を照合する  | BA   | done | 個票の入力で照合。git は実行不可   |
-| 2   | 公開済み項目を日付の節へ移し、次の節を残す        | BA   | done | 2026-11-25 の節へ移した            |
-| 3   | LP の文書検査と親の検証を通し、対応結果を記録する | BA   | done | 検証は親 runner が実行。結果は記録 |
+| No  | 作業                                              | 担当 | 状態 | メモ                                                     |
+| --- | ------------------------------------------------- | ---- | ---- | -------------------------------------------------------- |
+| 1   | PR #3 の公開範囲と `Unreleased` の項目を照合する  | BA   | done | オーケストレーターが照合済み。executor は git を流さない |
+| 2   | 公開済み項目を日付の節へ移し、次の節を残す        | BA   | done | 2026-11-25 の節へ移した                                  |
+| 3   | LP の文書検査と親の検証を通し、対応結果を記録する | BA   | done | lint:md と format:check は成功。結果を記録               |
 
 ## 5. 対応結果
 
-- 公開範囲の根拠: 個票の入力にある PR #3 の merge commit（`7a5b7d7`）の内容と、`Unreleased` の 2 件が一致することを前提にした。executor のサンドボックスでは `git` が実行できず、`git log` / `git diff` による再照合はしていない。
+- 公開範囲の根拠: オーケストレーターが照合した。PR #3 の merge commit `7a5b7d7` と LP の作業ツリーの HEAD `0cffe55` は tree が同じ（`a4d02ed826`）で、そこからの差は `CHANGELOG.md` に `## 2026-11-25` の見出しと空行を足しただけである。executor は git のコマンドを流していない。
 - 変更内容: `specdojo-lp:CHANGELOG.md` の `Unreleased` にあった 2 件（「追加」）を、内容と分類を保ったまま `## 2026-11-25` の節へ移した。その上に空の `## Unreleased` を残し、`## 2026-11-02` は変更していない。
-- 検証結果: `npm run lint:md` と `npm run format:check` は親 runner の検証に委ねる。
-- 残課題: 人による `git log main..develop` と `git diff main..develop` の再照合を推奨する。
+- 検証結果: LP で `cd <LP の作業ツリー> && npm run lint:md` と `cd <LP の作業ツリー> && npm run format:check` を再実行し、どちらも成功した（markdownlint の指摘なし、Prettier は全ファイルが整形済み）。
+- 残課題: なし。
 
 ## 6. 関連ドキュメント
 
