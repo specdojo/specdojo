@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-REVIEW-ALL-sld-sample-110",
   "run_id": "T-KATA-REVIEW-ALL-sld-sample-110-20261125T151421Z-2f31c69b",
-  "updated_at": "2026-11-25T15:24:52.304Z",
+  "updated_at": "2026-11-25T15:25:43.767Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-sld-sample-110/T-KATA-REVIEW-ALL-sld-sample-110-20261125T151421Z-2f31c69b/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-25T15:24:52.304Z",
-      "completed_at": null,
+      "completed_at": "2026-11-25T15:25:43.767Z",
       "artifact_ref": null
     }
   },
