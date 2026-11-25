@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-25T23:50:36Z",
+  "type": "claim",
+  "task_id": "T-KATA-REVIEW-ALL-trc-requirements-to-specs-sample-120",
+  "by": "opus-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA"
+  }
+}
