@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-REVIEW-ALL-nfr-reliability-sample-110",
   "run_id": "T-KATA-REVIEW-ALL-nfr-reliability-sample-110-20261125T133349Z-51dc6230",
-  "updated_at": "2026-11-25T13:44:55.600Z",
+  "updated_at": "2026-11-25T13:45:44.641Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-nfr-reliability-sample-110/T-KATA-REVIEW-ALL-nfr-reliability-sample-110-20261125T133349Z-51dc6230/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-25T13:44:55.600Z",
-      "completed_at": null,
+      "completed_at": "2026-11-25T13:45:44.641Z",
       "artifact_ref": null
     }
   },
