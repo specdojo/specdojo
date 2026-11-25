@@ -35,7 +35,7 @@ agy のセッション別設定を使い、役割ごとの権限を分離する�
 - [ ] 宣言済みプロダクトリポジトリとその task worktree の成果物を edit executor が読み書きできる。対話型 orchestrator の起動経路も確認し、未宣言の外部リポジトリへの許可は追加しない。
 - [ ] プロジェクト・プロダクト両方のリポジトリで秘密情報・保護設定への制限を維持する。review・report の役割外の編集を拒否し、既存の provider 非依存ガードと両立する。
 - [ ] 変更箇所の単体・統合テストを追加し、型検査・lint・単体テストと親の固定検証を通す。空のリポジトリで scaffold した設定を確認し、実際の agy による役割別の許可・拒否とプロダクト worktree の編集を、秘密情報を使わない検証用ファイルで確認する。
-- [ ] runner・CLI の変更を統合した後に、実際の `npx specdojo exec run --register` を通して動作を確認する。prj-0001 では運用プレイブックに従い PJR-JSEY を使用し、証跡を個票の対応結果と result に残す。
+- [ ] 統合した後に、対話で起動した agy の orchestrator と subagent で、orchestrator の権限（読むことと登録簿の記帳）と、subagent の役割ごとの許可・拒否、宣言済みのプロダクトリポジトリの編集を確かめ、結果を個票の対応結果に残す。agy は exec の executor・reporter・grade には使わないため（2026-11-21〜）、`exec run --register` では確かめない。runner の動きが変わっていないことは、agy 以外の agent で `npx specdojo exec run --register` を 1 回流して確かめる（2026-11-25 利用者の判断で変更）。
 - [ ] 関連する設計・ガイド・配布 README を更新する。CHANGELOG は未公開版の節へ記載し、公開済み版の節は変更しない。
 - [ ] 保護設定の変更案は個票の対応結果に記載し、pipeline の報告の `handoff` にも残す。反映は利用者の承認を得て feature ブランチで行う。
 
