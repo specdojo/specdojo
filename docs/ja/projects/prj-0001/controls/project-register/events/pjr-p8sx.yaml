@@ -90,3 +90,35 @@
       from: ""
       to: 対応方針
   previous_event_id: reg_1d59e976a1ce40218086b34afede11b2
+- v: 1
+  id: reg_0880e5e625a8453a9e63161c5f7a7f22
+  ts: "2026-11-25T12:29:32Z"
+  action: start
+  actor: opus-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "executor reported incomplete: 親の検証ごとに、検証を終えるまでの時間を `duration_ms`（全体）、`last_output_ms`（子の時間）、`detection_lag_ms`（runner が気づくまでの遅れ）、`event_loop_delay_max_ms`（処理が止まった最長の時間）に分けて記録する `validation-exit-timing…"
+      to: "-"
+  previous_event_id: reg_756d45c849a445d1865b9a48be97fb7d
+- v: 1
+  id: reg_e157434460d24dbcb4800f86d70d8f75
+  ts: "2026-11-25T12:44:23Z"
+  action: wait
+  actor: opus-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-integration"
+  previous_event_id: reg_0880e5e625a8453a9e63161c5f7a7f22
