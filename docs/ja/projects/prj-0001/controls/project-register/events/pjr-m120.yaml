@@ -103,3 +103,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_a10a1c07bd1b4fcb9e674475bdb6891e
+- v: 1
+  id: reg_0516d4af6f1944de95b8ee2e9eb8fc3b
+  ts: "2026-11-25T22:08:06Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが裸のリモートを持つ一時のリポジトリで初回の dry-run・初回の作成と push・同期の記帳・復旧・範囲外のファイルでの停止を確かめ、indie の承認（2026-11-26）を得て close。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-26"
+    - field: conclusion
+      from: "-"
+      to: register branch-push を足し、初回の作成（リモートの統合のブランチの先端から）・復旧・検査の違反での停止を受け持つようにした。
+  previous_event_id: reg_0535ba8789514be0ba0dabcb907b21e2

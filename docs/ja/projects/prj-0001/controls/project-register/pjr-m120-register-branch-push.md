@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-m120-register-branch-push
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   registered_at: "2026-11-24T23:14:51Z"
+  completed_at: "2026-11-25T22:08:06Z"
+  conclusion: register branch-push を足し、初回の作成（リモートの統合のブランチの先端から）・復旧・検査の違反での停止を受け持つようにした。
 ---
 
 # PJR-M120 登録簿の専用ブランチへの push を受け持つ register branch-push を足す
