@@ -1,0 +1,24 @@
+R1（目的の過不足）のレビューを終えました。`docs/ja/specdojo/samples/pr-sample.md` は直す必要がなかったため、変更していません。
+
+**確かめた資料:** `pr-rulebook`、Sample 記述標準、kata ガイドの「kata を agent でレビューする」、成果物カタログの `pr-progress-report`、`pm-review-viewpoints.yaml`。
+
+**要る内容が欠けていないか:**
+- rulebook が求める 5 章（報告期間・完了事項・進行中事項・リスク・課題・次期予定）は、順番どおりにすべてそろっています。
+- 表の列、根拠 ID の書き方、進み具合を量で示すこと、影響度の判定、担当の Role code と期日も rulebook に合っています。
+- カタログの `pr-progress-report` には `done_criteria` がないため、追加で照らし合わせる完了条件はありませんでした。
+
+**要らない内容が入っていないか:** 導入文と影響度の判定基準の 1 文は報告の読み手に役立つため、残しました。
+
+**F001（報告者と報告先がない）は直しません。** 理由は次の 2 つです。
+- この指摘の観点 `vp-ba-stakeholder-clarity` は、kata ガイドでレビューの段から外す観点に入っています。sample の業務の中身は R1 と R5 の `vp-qe-kata-conformance` で確かめるためです。
+- rulebook はこの項目を求めていません。また、報告者を書くと Sample 記述標準が禁じる「文書を作る役割の割り当て」に当たります。
+
+**R5 で確かめてほしい点:** 文書 ID の付け方が、カタログと rulebook で食い違っています。
+- カタログ（`dct-project-management-template.yaml`）: `instance_id_pattern` が `pr-{yyyy}-{mm}-{dd}`、日付は「報告日」
+- rulebook: `pr-<yyyy-mm-dd>-<nn>`、日付は「報告期間の終了日」
+
+ファイルを変えていないため、この段で実行した検査はありません。Markdown の lint などは、このあと runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1（目的の過不足）を確認した。pr-sample.md は pr-rulebook の 5 章と記述ガイドをすべて満たし、要らない内容もないため変更しなかった。grade の F001 は kata ガイドが段のレビューから外す観点 vp-ba-stakeholder-clarity の指摘で、rulebook が求めていない。さらに Sample 記述標準が禁じる文書を作る役割の割り当てに当たるため、直さなかった。","handoff":["R1-1: R1 / 冒頭の導入文 / grade F001（vp-ba-stakeholder-clarity）が報告者と報告先の明記を求めている / - / kata ガイドの「kata の観点の組」は vp-ba-stakeholder-clarity を段のレビューで使わない観点としている。pr-rulebook の本文要件に報告者・報告先はない。Sample 記述標準の「記述ガイド」は、文書を作る役割の割り当てを本文に書くことを禁じている。このため直さない / -","R1-2: R1 / 全章 / rulebook の必須 5 章（報告期間・完了事項・進行中事項・リスク・課題・次期予定）、表の列、根拠 ID の形式、進み具合の量での表記、影響度の判定、担当の Role code・期日に過不足はない。カタログの pr-progress-report に `done_criteria` はない / - / vp-po-purpose-alignment、vp-qe-kata-conformance（種別の責務）、vp-arc-single-responsibility / -","R1-3: R1 / 範囲外（R5 への申し送り） / 成果物カタログの pr-progress-report は `instance_id_pattern` が pr-{yyyy}-{mm}-{dd}（日付は報告日）。pr-rulebook の「ファイル命名・ID規則」は pr-<yyyy-mm-dd>-<nn>（日付は報告期間の終了日）で、食い違っている / - / vp-qe-kata-conformance（適用先との関係）。相手側の docs/ja/specdojo/templates/dct-project-management-template.yaml の `instance_id_pattern` と note を rulebook に合わせる案を R5 で確かめる / 要判断"],"validations":[{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"executor は plan・result・個票のいずれも変更していないため、適用条件を満たさない"},{"command":"npx prettier --check docs/ja/specdojo/samples/pr-sample.md","status":"not_applicable","summary":"変更したファイルがない","reason":"sample を変更しておらず、Prettier の適用条件（*.md などの変更）を満たさない"}]}
+</specdojo_executor_evidence>
