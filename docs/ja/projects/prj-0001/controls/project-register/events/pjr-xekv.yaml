@@ -41,3 +41,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-69ZX"]'
+- v: 1
+  id: reg_2bb979c8bdd843928dcc432dd0be0e02
+  ts: "2026-11-25T00:04:13Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_952b0283b3a64f18b44ba3557ce9165e
