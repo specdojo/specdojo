@@ -7,10 +7,9 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: review
   priority: high
   registered_at: "2026-11-25T09:21:32Z"
-  block_reason: "parent validation failed: test-integration"
 ---
 
 # PJR-P8SX 並列実行で親の検証の枠が、他タスクの統合に止められて長く占有される
@@ -50,35 +49,46 @@ specdojo:
 
 ## 5. 対応結果
 
-未解決。計測の追加までを行い、直す処理は計測の後に回した（対応方針の順序のとおり）。
+計測の追加（1 回目）と、統合の commit を event loop を止めない起動にする直し（2 回目）を行った。実際の並列実行での確認は、close の前にオーケストレーターが行う。
 
-完了条件の仮説: 枠を持つ時間を「子プロセスの実際の時間」と「runner が気づくまでの遅れ」に分けて記録できること。遅れが確かめられたら、統合の同期の処理が検証の終わりの検出を止めないように直し、`exec run --auto --parallel 4` で検証の時間が直接流した場合に近くなることを確かめること。
+### 5.1. 見立ての裏付け
 
-既存の計測（`T-KATA-REVIEW-ALL-utc-sample-150` の `parent-validation-metrics.jsonl`）と統合の commit の時刻を突き合わせた結果は次のとおり。
+既存の計測（`T-KATA-REVIEW-ALL-utc-sample-150` の `parent-validation-metrics.jsonl`）と統合の commit の時刻を突き合わせた。
 
-- `validate-schema` は 03:17:58Z に始まり 03:21:07Z に終わった（約 190 秒）。その間に、他のタスク（`otp-sample-150`）の統合の commit が 03:18:24Z・03:19:16Z・03:20:11Z に並ぶ。終わりの記録はその後の同期の処理が明けた時刻に出ている。
-- 同時に流した 4 本の lint（`lint-md-changed` など）の終わりが、すべて 03:17:43.90Z〜.91Z の 10 ms 内に並ぶ。直前の 03:17:41Z に別タスクの `prepare execution` の commit がある。子はそれぞれ別の時刻に終わるはずなので、event loop が止まっていて、明けた時点でまとめて気づいた形である。
-- 負荷は load average 約 1 で、検証の子が遅くなる要因は見当たらない。
-- 以上から見立て（他のタスクの統合の spawnSync が event loop を止め、終わりの検出が遅れる）は確からしいが、子の実際の時間は記録が無く、まだ数値で分けられていない。
+- `validate-schema` は 03:17:58Z に始まり 03:21:07Z に終わった（約 190 秒）。その間に、他のタスク（`otp-sample-150`）の統合の commit が 03:18:24Z・03:19:16Z・03:20:11Z に並ぶ。
+- 同時に流した 4 本の lint の終わりが、すべて 03:17:43.90Z〜.91Z の 10 ms 内に並ぶ。直前の 03:17:41Z に別タスクの `prepare execution` の commit がある。event loop が止まり、明けた時点でまとめて気づいた形である。
+- load average は約 1 で、検証の子が遅くなる要因は見当たらない。
 
-実施内容:
+### 5.2. 実施内容
 
-- 親の検証ごとに `validation-exit-timing` の計測を `parent-validation-metrics.jsonl` へ出すようにした（`src/exec/parent-validation.ts`）。項目は `duration_ms`（spawn から runner が終わりを処理するまで）、`last_output_ms`（spawn から子が最後に出力を書いた時刻まで）、`detection_lag_ms`（その差）、`event_loop_delay_max_ms`（検証中に event loop が止まった最長の時間）。
-- 子の最後の書き込み時刻は、出力ファイルの mtime から取る（`ValidationOutputFiles.lastWriteAt`、`src/exec/parent-validation-output.ts`）。出力はファイルなので、event loop が止まっていても kernel が mtime を進める。
-- event loop の止まりは、unref した 20 ms の interval の間隔で測る。止まりが明けた同じ周回で検証の終わりを処理する場合に備え、止めた時点で開いている間隔も含める。`monitorEventLoopDelay` では、この場合に記録が 0 になることを確かめた。
-- テスト: `validationExitTiming` の単体テスト（`tests/src/exec/parent-validation.test.ts`）と、event loop を 3 秒止めたときに `detection_lag_ms` と `event_loop_delay_max_ms` が記録される統合テスト（`tests/src/exec/parent-validation-output.integration.test.ts`）を足した。
+- 計測（1 回目）: 親の検証ごとに `validation-exit-timing` を `parent-validation-metrics.jsonl` へ出す。項目は `duration_ms`（spawn から runner が終わりを処理するまで）、`last_output_ms`（子が最後に出力を書いた時刻まで。出力ファイルの mtime から取る）、`detection_lag_ms`（その差）、`event_loop_delay_max_ms`（検証中に event loop が止まった最長の時間）。計測の処理は `src/exec/validation-exit-timing.ts` に分けた。
+- 非同期の git（2 回目）: `gitResultAsync` を足した（`src/shared/git.ts`）。引数・環境・index.lock などの再試行は `gitResult` と同じで、再試行の判断を同期版と共有する関数（`gitTransientRetryPolicy`）に分け、待ち方だけを変えた。
+- 統合の commit（2 回目）: `commitWorktreeChangesAsync`・`stabilizeCommitTargetsAsync`・`commitRegisterStateAsync` を足し、hook を走らせる `git commit`（`apply task changes` と review の記帳）と hook の後の `--amend` だけを非同期に待つ。commit の前の検査・stage と後の検査は同期版と同じ関数を使う。exec run の統合段（`src/exec/run/schedule-task.ts`・`src/exec/run/register-worktree.ts`）をこれに切り替えた。手動の `exec worktree commit` は同期版のまま。
+- 統合の排他（2 回目）: `integrateTaskRepositories` を非同期にし、`beforeProjectMerge` に非同期の処理を渡せるようにした。同じ process のタスクの統合を 1 件ずつに保つ `withTaskIntegrationLock`（`src/exec/repo-integration.ts`）を足し、統合の前後の HEAD の取得と統合をその内側に置いた。`checkProject` から `mergeProject` までの間に他のタスクの merge は入らない。root への merge の commit は同期のまま排他の内側にある。
 
-直し方の案（計測で遅れを確かめた後に行う）:
+直し方を選んだ理由:
 
-- 統合の commit（task worktree での `apply task changes` の commit と、hook の後の `--amend`）を、hook が走る間 event loop を止めない非同期の起動にする。1 回約 50 秒の commit が 1 タスクにつき 3 回あり、合わせて約 160 秒止まる。これが検証の枠の占有時間（約 240 秒）の大半を説明する。
-- 非同期にすると、これまで同期だったことで暗黙に保たれていたタスク間の統合の直列が崩れる。`integrateTaskRepositories` の `checkProject` と `mergeProject` の間に他のタスクの merge が入らないよう、process 内の統合の排他を明示する必要がある。root への merge の commit は排他の内側に残す。
-- 呼び出し元は `src/exec/run/schedule-task.ts`・`src/exec/run/register-worktree.ts`・`src/exec/worktree-command.ts` と結合テストで、`commitWorktreeChanges` と `integrateTaskRepositories` の `beforeProjectMerge` の非同期化が及ぶ。
+- 検証を別のプロセスで待つ案は取らなかった。終わりに気づいても、同期の commit で止まった親の event loop は次の検証を始められず、枠の回転は速くならない。止まりそのものを無くす必要がある。
+- 1 タスクで約 160 秒（約 50 秒の commit が 3 回）止まる統合の commit が、枠の占有（約 240 秒）の大半を説明する。hook を走らせる commit だけを非同期にすれば、記録・commit の順序・ロックを変えずに止まりの大半を取り除ける。`npm ci`・`specdojo build`・root への merge など他の同期の処理は、今回の計測で目立たないため残した。
 
-次のアクション:
+テスト:
 
-1. 本変更を入れた runner で `exec run --auto --parallel 4` を流し、`validation-exit-timing` の `detection_lag_ms` と `event_loop_delay_max_ms` が統合の commit の時間に近いことを確かめる。
-2. 確かめられたら、上の案で統合の commit を非同期にする（別の実行で行う）。
-3. 直した後に `exec run --auto --parallel 4` を流し、検証の時間が直接流した場合に近くなることを確かめてから close する。
+- `tests/src/exec/parent-validation-output.integration.test.ts`: 別のタスクの commit の hook が 3 秒走る間も、検証の終わりが遅れず記録されること（`detection_lag_ms` と `event_loop_delay_max_ms` が 1 秒未満）。event loop を止めたときに遅れが記録されることも確かめる（1 回目）。
+- `tests/src/exec/repo-integration.test.ts`: `withTaskIntegrationLock` が後の統合を前の統合の終わりまで待たせ、失敗しても排他を解くこと。
+- `tests/src/shared/git.test.ts`: `runGitWithTransientRetryAsync` が同期版と同じ間隔で index.lock の取り合いを再試行すること。
+- `tests/src/exec/task-repos.integration.test.ts`: `integrateTaskRepositories` の非同期化に合わせて呼び出しを `await` にした。
+- `tests/src/exec/parent-validation.test.ts`: `validationExitTiming` の単体テスト（1 回目）。
+- `tests/src/exec/parent-validation-timeout.integration.test.ts`: 時間内に終わった検証では、停止の記録が出ず `validation-exit-timing` の 1 行だけが出ることを確かめる形に改めた。計測を毎回出すようになり、以前の「記録が空」の期待と合わなくなったため。
+
+### 5.3. 残る確認
+
+- オーケストレーターが本変更を入れた runner で `exec run --auto --parallel 4` を流し、`validation-exit-timing` の `detection_lag_ms` が小さく、検証の時間が直接流した場合（`validate:schema` は約 5〜23 秒）に近くなることを確かめてから close する。
+- 統合の commit の hook が走る間、同じ process の別タスクの同期の処理（`prepare execution` の commit、register の遷移など）が root を変えうる。root への merge は `mergeWorktreeIntoCurrent` が自分の検査（stage 済みの変更など）をしてから行うため、壊れる経路は見当たらない。実際の並列実行で統合の失敗が増えないかもあわせて見る。
+
+### 5.4. CHANGELOG に書く事項
+
+- `exec run --parallel` の統合段で、commit の hook が走る間 runner の処理が止まらないようにした。別のタスクの親の検証が終わったのに、検証の枠を長く手放せなかった問題を直す（PJR-P8SX）。
+- 親の検証ごとに、枠を持った時間を子の時間と runner が気づくまでの遅れに分けて `parent-validation-metrics.jsonl` へ記録する（`validation-exit-timing`）。
 
 ## 6. 関連ドキュメント
 

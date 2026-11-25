@@ -1,4 +1,4 @@
-import { closeSync, mkdtempSync, openSync, readSync, rmSync } from "node:fs";
+import { closeSync, fstatSync, mkdtempSync, openSync, readSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -43,6 +43,20 @@ export class ValidationOutputFiles {
       this.offsets[stream] += bytesRead;
       onChunk(buffer.subarray(0, bytesRead));
     }
+  }
+
+  /**
+   * Wall-clock time (ms since the epoch) of the child's last write to either file, or undefined
+   * when it wrote nothing. The kernel updates the mtime on each write, so it tracks when the child
+   * stopped working even while the runner's event loop is blocked (PJR-P8SX).
+   */
+  lastWriteAt(): number | undefined {
+    if (this.closed) return undefined;
+    const written = [this.stdoutFd, this.stderrFd]
+      .map((fd) => fstatSync(fd))
+      .filter((stat) => stat.size > 0)
+      .map((stat) => stat.mtimeMs);
+    return written.length > 0 ? Math.max(...written) : undefined;
   }
 
   /** Close the files and remove them. A descendant that still writes keeps only its own copy. */

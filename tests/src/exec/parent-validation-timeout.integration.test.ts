@@ -159,6 +159,7 @@ describe.skipIf(process.platform === "win32")("parent validation timeout stop", 
       stderrTruncated: false,
       durationMs: expect.any(Number),
     });
-    expect(await metricRows(metrics)).toEqual([]);
+    // 時間内に終われば、停止の記録は出ず、終わりの計測（PJR-P8SX）だけが出る。
+    expect((await metricRows(metrics)).map((row) => row.event)).toEqual(["validation-exit-timing"]);
   });
 });

@@ -24,6 +24,7 @@ import {
 import {
   commitProductWorktrees,
   integrateTaskRepositories,
+  withTaskIntegrationLock,
   PROJECT_REPO_NAME,
   projectMergeBlockers,
   RepoIntegrationError,
@@ -50,7 +51,7 @@ import { type AgentStageRole } from "../types.js";
 import {
   assertCommitScope,
   commitTargetPaths,
-  commitWorktreeChanges,
+  commitWorktreeChangesAsync,
   currentBranch,
   isExecBranchMergedIntoCurrent,
   mergeWorktreeIntoCurrent,
@@ -795,7 +796,7 @@ export async function runPreparedTask(
             const productRootNewFiles = productOutcomes.flatMap((outcome) =>
               outcome.rootNewFiles.map((path) => `${outcome.repo}:${path}`),
             );
-            commitWorktreeChanges({
+            await commitWorktreeChangesAsync({
               context,
               worktree: prepared.worktree,
               taskId: prepared.task.id,
@@ -826,62 +827,70 @@ export async function runPreparedTask(
             });
           }
 
-          const baseCommit = gitOutput(repoRoot, ["rev-parse", "HEAD"]).trim();
-          integrateTaskRepositories({
-            worktree: prepared.worktree,
-            mergeMessage,
-            checkProject: () =>
-              projectMergeBlockers({
-                context,
-                worktree: prepared.worktree,
-                taskId: prepared.task.id,
-                releasePaths: prepared.checkpointPaths,
-              }),
-            beforeProjectMerge: () => {
-              if (!pipelineStatePath) return;
-              const integrateCompletedAt = new Date().toISOString();
-              recordIntegrateStage(pipelineStatePath, integrateCompletedAt, () => ({
-                status: "succeeded",
-                completed_at: integrateCompletedAt,
-              }));
-              commitWorktreeChanges({
-                context,
-                worktree: prepared.worktree,
-                taskId: prepared.task.id,
-                failureLogPath: integrateLogPath(pipelineStatePath),
-                productsIntegratedByCaller: true,
-                allowEditedPlan: prepared.pipelineResumeStage === "executor",
-              });
-            },
-            mergeProject: () =>
-              mergeWorktreeIntoCurrent({
-                context,
-                worktree: prepared.worktree,
-                taskId: prepared.task.id,
-                message: mergeMessage,
-                releaseRootPaths: prepared.checkpointPaths,
-                // 失敗・延期の後の記帳 commit が root の作業コピーを先に統合ブランチへ入れている
-                // 場合、同じ run の記録は両側の追加として競合する。exec branch 側を最新とする。
-                resolveConflictsWithBranchPaths: [
-                  ...(prepared.checkpointPaths ?? []),
-                  ...branchOwnedRunRecordPaths({
-                    repoRoot,
-                    executionPath,
-                    branch: prepared.worktree.branch,
-                    taskId: prepared.task.id,
-                  }),
-                ],
-                failureLogPath: integrateLogPath(pipelineStatePath),
-              }),
-            record: (repo, patch) => recordRepoIntegration(pipelineStatePath, repo, patch),
-            failureLogPath: integrateLogPath(pipelineStatePath),
-            lockPath: schedulePath,
+          // PJR-P8SX: 統合の commit を非同期にしたため、統合の前後の HEAD の取得と統合を、同じ
+          // process の他のタスクの統合と排他にする。
+          const { baseCommit, outputCommit } = await withTaskIntegrationLock(async () => {
+            const integrationBase = gitOutput(repoRoot, ["rev-parse", "HEAD"]).trim();
+            await integrateTaskRepositories({
+              worktree: prepared.worktree,
+              mergeMessage,
+              checkProject: () =>
+                projectMergeBlockers({
+                  context,
+                  worktree: prepared.worktree,
+                  taskId: prepared.task.id,
+                  releasePaths: prepared.checkpointPaths,
+                }),
+              beforeProjectMerge: async () => {
+                if (!pipelineStatePath) return;
+                const integrateCompletedAt = new Date().toISOString();
+                recordIntegrateStage(pipelineStatePath, integrateCompletedAt, () => ({
+                  status: "succeeded",
+                  completed_at: integrateCompletedAt,
+                }));
+                await commitWorktreeChangesAsync({
+                  context,
+                  worktree: prepared.worktree,
+                  taskId: prepared.task.id,
+                  failureLogPath: integrateLogPath(pipelineStatePath),
+                  productsIntegratedByCaller: true,
+                  allowEditedPlan: prepared.pipelineResumeStage === "executor",
+                });
+              },
+              mergeProject: () =>
+                mergeWorktreeIntoCurrent({
+                  context,
+                  worktree: prepared.worktree,
+                  taskId: prepared.task.id,
+                  message: mergeMessage,
+                  releaseRootPaths: prepared.checkpointPaths,
+                  // 失敗・延期の後の記帳 commit が root の作業コピーを先に統合ブランチへ入れている
+                  // 場合、同じ run の記録は両側の追加として競合する。exec branch 側を最新とする。
+                  resolveConflictsWithBranchPaths: [
+                    ...(prepared.checkpointPaths ?? []),
+                    ...branchOwnedRunRecordPaths({
+                      repoRoot,
+                      executionPath,
+                      branch: prepared.worktree.branch,
+                      taskId: prepared.task.id,
+                    }),
+                  ],
+                  failureLogPath: integrateLogPath(pipelineStatePath),
+                }),
+              record: (repo, patch) => recordRepoIntegration(pipelineStatePath, repo, patch),
+              failureLogPath: integrateLogPath(pipelineStatePath),
+              lockPath: schedulePath,
+            });
+            return {
+              baseCommit: integrationBase,
+              outputCommit: gitOutput(repoRoot, ["rev-parse", "HEAD"]).trim(),
+            };
           });
           await runPostIntegration({
             entries: execDefaults.pipeline?.post_integration,
             repoRoot,
             baseCommit,
-            outputCommit: gitOutput(repoRoot, ["rev-parse", "HEAD"]).trim(),
+            outputCommit,
             logPath: runLogPath(
               prepared.resultPath ??
                 taskRecordPaths(executionPath, prepared.task.id, prepared.pipelineRunId).result,

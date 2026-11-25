@@ -222,13 +222,13 @@ function integrateFixture(
   fixture: Fixture,
   worktree: ExecWorktree,
   record: RepoIntegrationRecorder = () => undefined,
-): void {
+): Promise<void> {
   // checkpointAndEnsureWorktree leaves the runner-owned plan / result / claim copies visible in
   // the integration-target checkout. The production register path releases exactly these paths
   // before merging, so the preflight fixture must apply the same exclusion instead of treating
   // its own bookkeeping as an overlapping user change.
   const releasePaths = checkpointPaths(fixture);
-  integrateTaskRepositories({
+  return integrateTaskRepositories({
     worktree,
     mergeMessage: `exec(${TASK_ID}): integrate repositories`,
     checkProject: () =>
@@ -572,7 +572,7 @@ describe("multi-repository task worktrees", () => {
     ]);
   });
 
-  it("keeps every repository pending when the first product merge fails, then resumes", () => {
+  it("keeps every repository pending when the first product merge fails, then resumes", async () => {
     const fixture = setup();
     const worktree = prepare(fixture);
     commitIntegrationFixture(worktree);
@@ -583,7 +583,7 @@ describe("multi-repository task worktrees", () => {
       records.push([repo, patch.status]);
     };
 
-    expect(() => integrateFixture(fixture, worktree, record)).toThrow(
+    await expect(integrateFixture(fixture, worktree, record)).rejects.toThrow(
       /integrated repositories: none; not integrated: app1, app2, project/,
     );
     expect(lastRecordedStatus(records, "app1")).toBe("failed");
@@ -599,7 +599,7 @@ describe("multi-repository task worktrees", () => {
     ).toBe(1);
 
     removeHook();
-    integrateFixture(fixture, worktree, record);
+    await integrateFixture(fixture, worktree, record);
     expect(lastRecordedStatus(records, "app1")).toBe("merged");
     expect(lastRecordedStatus(records, "app2")).toBe("merged");
     expect(lastRecordedStatus(records, "project")).toBe("merged");
@@ -618,7 +618,7 @@ describe("multi-repository task worktrees", () => {
     ).toBe(0);
   });
 
-  it("does not merge an earlier product when a later repository fails preflight", () => {
+  it("does not merge an earlier product when a later repository fails preflight", async () => {
     const fixture = setup();
     const worktree = prepare(fixture);
     commitIntegrationFixture(worktree);
@@ -628,7 +628,7 @@ describe("multi-repository task worktrees", () => {
     git(app2!.repoRoot, "add", "app2.txt");
     git(app2!.repoRoot, "commit", "-m", "conflict on integration target");
 
-    expect(() => integrateFixture(fixture, worktree)).toThrow(
+    await expect(integrateFixture(fixture, worktree)).rejects.toThrow(
       /pre-integration check failed \(no repository was integrated in this attempt\)/,
     );
     expect(
@@ -646,7 +646,7 @@ describe("multi-repository task worktrees", () => {
 
   it.each(["project", "product"])(
     "rejects unrelated staged changes in the %s before merging any repository",
-    (target) => {
+    async (target) => {
       const fixture = setup();
       const worktree = prepare(fixture);
       commitIntegrationFixture(worktree);
@@ -658,7 +658,7 @@ describe("multi-repository task worktrees", () => {
       const heads = roots.map((root) => git(root, "rev-parse", "HEAD"));
       const index = git(checkout, "diff", "--cached", "--binary");
 
-      expect(() => integrateFixture(fixture, worktree)).toThrow(
+      await expect(integrateFixture(fixture, worktree)).rejects.toThrow(
         /Staged changes.*unrelated\.txt.*git restore --staged/,
       );
       if (target === "product") {
@@ -672,7 +672,7 @@ describe("multi-repository task worktrees", () => {
     },
   );
 
-  it("allows unrelated uncommitted files on product and project integration targets", () => {
+  it("allows unrelated uncommitted files on product and project integration targets", async () => {
     const fixture = setup();
     const worktree = prepare(fixture);
     commitIntegrationFixture(worktree);
@@ -680,7 +680,7 @@ describe("multi-repository task worktrees", () => {
     writeFile(join(app1.repoRoot, "local-notes.txt"), "unrelated product work\n");
     writeFile(join(fixture.repo, "local-notes.txt"), "unrelated project work\n");
 
-    integrateFixture(fixture, worktree);
+    await integrateFixture(fixture, worktree);
 
     expect(readFileSync(join(app1.repoRoot, "local-notes.txt"), "utf8")).toBe(
       "unrelated product work\n",
@@ -693,7 +693,7 @@ describe("multi-repository task worktrees", () => {
     ).toBe(0);
   });
 
-  it("records the first product as integrated when the second fails and skips it on resume", () => {
+  it("records the first product as integrated when the second fails and skips it on resume", async () => {
     const fixture = setup();
     const worktree = prepare(fixture);
     commitIntegrationFixture(worktree);
@@ -705,7 +705,7 @@ describe("multi-repository task worktrees", () => {
       records.push([repo, patch.status]);
     };
 
-    expect(() => integrateFixture(fixture, worktree, record)).toThrow(
+    await expect(integrateFixture(fixture, worktree, record)).rejects.toThrow(
       /integrated repositories: app1; not integrated: app2, project/,
     );
     expect(lastRecordedStatus(records, "app1")).toBe("merged");
@@ -725,7 +725,7 @@ describe("multi-repository task worktrees", () => {
     ).toBe(1);
 
     removeHook();
-    integrateFixture(fixture, worktree, record);
+    await integrateFixture(fixture, worktree, record);
     expect(lastRecordedStatus(records, "app1")).toBe("merged");
     expect(lastRecordedStatus(records, "app2")).toBe("merged");
     expect(lastRecordedStatus(records, "project")).toBe("merged");
@@ -735,7 +735,7 @@ describe("multi-repository task worktrees", () => {
     ).toBe(0);
   });
 
-  it("keeps both products integrated when the project fails and resumes at the project", () => {
+  it("keeps both products integrated when the project fails and resumes at the project", async () => {
     const fixture = setup();
     const worktree = prepare(fixture);
     commitIntegrationFixture(worktree);
@@ -745,7 +745,7 @@ describe("multi-repository task worktrees", () => {
       records.push([repo, patch.status]);
     };
 
-    expect(() => integrateFixture(fixture, worktree, record)).toThrow(
+    await expect(integrateFixture(fixture, worktree, record)).rejects.toThrow(
       /integrated repositories: app1, app2; not integrated: project/,
     );
     expect(lastRecordedStatus(records, "app1")).toBe("merged");
@@ -759,7 +759,7 @@ describe("multi-repository task worktrees", () => {
     ).toBe(1);
 
     removeHook();
-    integrateFixture(fixture, worktree, record);
+    await integrateFixture(fixture, worktree, record);
     expect(lastRecordedStatus(records, "app1")).toBe("merged");
     expect(lastRecordedStatus(records, "app2")).toBe("merged");
     expect(lastRecordedStatus(records, "project")).toBe("merged");
@@ -773,7 +773,7 @@ describe("multi-repository task worktrees", () => {
     ).toBe(0);
   });
 
-  it("adds the qualified Refs trailer to product commits and records the trace after integration", () => {
+  it("adds the qualified Refs trailer to product commits and records the trace after integration", async () => {
     const fixture = setup();
     const worktree = prepare(fixture);
     const [app1, app2] = worktree.repos!;
@@ -788,7 +788,7 @@ describe("multi-repository task worktrees", () => {
     const releasePaths = checkpointPaths(fixture);
 
     const outcomes = commitProductWorktrees({ worktree, message: productMessage });
-    integrateTaskRepositories({
+    await integrateTaskRepositories({
       worktree,
       mergeMessage: `${subject}\n\nTransition: start → review\nRefs: prj-0001:PJR-30SW`,
       productMergeMessage: productMessage,
@@ -907,7 +907,7 @@ describe("multi-repository task worktrees", () => {
     expect(blockers).toEqual([]);
   });
 
-  it("commits branch-only products, merges other products, records the handoff and retains the branch after cleanup", () => {
+  it("commits branch-only products, merges other products, records the handoff and retains the branch after cleanup", async () => {
     const fixture = setup();
     fixture.products[0]!.integrationStrategy = "branch-only";
     const worktree = prepare(fixture);
@@ -925,7 +925,7 @@ describe("multi-repository task worktrees", () => {
     ).toEqual([true, true]);
     const branchTip = git(app1!.path, "rev-parse", "HEAD");
     const states = new Map<string, string>();
-    integrateFixture(fixture, worktree, (repo, patch) => {
+    await integrateFixture(fixture, worktree, (repo, patch) => {
       if (patch.status) states.set(repo, patch.status);
     });
     expect(Object.fromEntries(states)).toEqual({
@@ -973,7 +973,7 @@ describe("multi-repository task worktrees", () => {
     expect(git(app1!.repoRoot, "rev-parse", app1!.branch)).toBe(branchTip);
   });
 
-  it("allows conflicting branch-only changes without modifying either branch on resume", () => {
+  it("allows conflicting branch-only changes without modifying either branch on resume", async () => {
     const fixture = setup();
     fixture.products[0]!.integrationStrategy = "branch-only";
     const worktree = prepare(fixture);
@@ -997,13 +997,13 @@ describe("multi-repository task worktrees", () => {
     });
     expect(productMergeBlockers(app1)).toEqual([]);
     const removeHook = rejectMergeCommit(fixture.repo);
-    expect(() => integrateFixture(fixture, worktree)).toThrow(
+    await expect(integrateFixture(fixture, worktree)).rejects.toThrow(
       /project:.*intentional merge failure/,
     );
     expect(git(app1.path, "rev-parse", "HEAD")).toBe(tip);
     expect(git(app1.repoRoot, "rev-parse", "HEAD")).toBe(target);
     removeHook();
-    integrateFixture(fixture, worktree);
+    await integrateFixture(fixture, worktree);
     expect(git(app1.path, "rev-parse", "HEAD")).toBe(tip);
     expect(git(app1.repoRoot, "rev-parse", "HEAD")).toBe(target);
     // Uncommitted work still prevents completion and cleanup even in branch-only mode.
@@ -1016,13 +1016,13 @@ describe("multi-repository task worktrees", () => {
     expect(branchExists(app1.repoRoot, app1.branch)).toBe(true);
   });
 
-  it("retains an unchanged branch-only product branch too", () => {
+  it("retains an unchanged branch-only product branch too", async () => {
     const fixture = setup();
     fixture.products[0]!.integrationStrategy = "branch-only";
     const worktree = prepare(fixture);
     const app1 = worktree.repos![0]!;
     const statuses = new Map<string, string>();
-    integrateFixture(fixture, worktree, (repo, patch) => {
+    await integrateFixture(fixture, worktree, (repo, patch) => {
       if (patch.status) statuses.set(repo, patch.status);
     });
     expect(statuses.get("app1")).toBe("branch-only");
@@ -1030,7 +1030,7 @@ describe("multi-repository task worktrees", () => {
     expect(branchExists(app1.repoRoot, app1.branch)).toBe(true);
   });
 
-  it("creates template branches, resumes by runner record after a configuration change, and prunes merged orphans", () => {
+  it("creates template branches, resumes by runner record after a configuration change, and prunes merged orphans", async () => {
     const fixture = setup();
     fixture.products[0]!.branchTemplate = "feature/{topic}";
     const worktree = prepare(fixture);
@@ -1050,7 +1050,7 @@ describe("multi-repository task worktrees", () => {
       })[0]!.branch,
     ).toBe(app1.branch);
     commitIntegrationFixture(worktree);
-    integrateFixture(fixture, worktree);
+    await integrateFixture(fixture, worktree);
     removeWorktree({ context: fixture.context, worktree, taskId: TASK_ID });
     expect(listOrphanedProductExecBranches(fixture.products, "prj-0001")).toContainEqual({
       repo: "app1",
@@ -1152,13 +1152,13 @@ describe("multi-repository task worktrees", () => {
     }
   });
 
-  it("retains arbitrary branch-only names and prevents fresh runs from discarding them", () => {
+  it("retains arbitrary branch-only names and prevents fresh runs from discarding them", async () => {
     const fixture = setup();
     fixture.products[0]!.branchTemplate = "feature/{topic}";
     fixture.products[0]!.integrationStrategy = "branch-only";
     const worktree = prepare(fixture);
     commitIntegrationFixture(worktree);
-    integrateFixture(fixture, worktree);
+    await integrateFixture(fixture, worktree);
     const app1 = worktree.repos![0]!;
     removeWorktree({ context: fixture.context, worktree, taskId: TASK_ID, deleteBranch: true });
     pruneOrphanedProductExecBranches({ products: fixture.products, projectId: "prj-0001" });
@@ -1174,7 +1174,7 @@ describe("multi-repository task worktrees", () => {
 
   it.each([false, true])(
     "fast-forwards checked-out and unchecked-out targets without merge commits (unchecked=%s)",
-    (unchecked) => {
+    async (unchecked) => {
       const fixture = setup();
       const product = fixture.products[0]!;
       product.integrationStrategy = "ff";
@@ -1188,7 +1188,7 @@ describe("multi-repository task worktrees", () => {
       const app1 = worktree.repos![0]!;
       const tip = git(app1.path, "rev-parse", "HEAD");
       const removeHook = rejectMergeCommit(fixture.repo);
-      expect(() => integrateFixture(fixture, worktree)).toThrow(
+      await expect(integrateFixture(fixture, worktree)).rejects.toThrow(
         /integrated repositories: app1, app2; not integrated: project/,
       );
       expect(git(app1.repoRoot, "rev-parse", productIntegrationTarget(app1))).toBe(tip);
@@ -1202,7 +1202,7 @@ describe("multi-repository task worktrees", () => {
       );
       removeHook();
       const states = new Map<string, string>();
-      integrateFixture(fixture, worktree, (repo, patch) => {
+      await integrateFixture(fixture, worktree, (repo, patch) => {
         if (patch.status) states.set(repo, patch.status);
       });
       expect(states.get("app1")).toBe("merged");
@@ -1212,7 +1212,7 @@ describe("multi-repository task worktrees", () => {
     },
   );
 
-  it("rejects diverged ff before integrating any repository and never syncs a merge into ff worktrees", () => {
+  it("rejects diverged ff before integrating any repository and never syncs a merge into ff worktrees", async () => {
     const fixture = setup();
     fixture.products[0]!.integrationStrategy = "ff";
     const worktree = prepare(fixture);
@@ -1232,7 +1232,7 @@ describe("multi-repository task worktrees", () => {
       message: "resume sync",
     });
     expect(sync[0]).toMatchObject({ status: "skipped", detail: "fast-forward only (ff)" });
-    expect(() => integrateFixture(fixture, worktree)).toThrow(
+    await expect(integrateFixture(fixture, worktree)).rejects.toThrow(
       /cannot fast-forward.*histories have diverged/,
     );
     expect([
@@ -1242,7 +1242,7 @@ describe("multi-repository task worktrees", () => {
     ]).toEqual(before);
   });
 
-  it("integrates into the branch given by --integration-branch instead of the configured one", () => {
+  it("integrates into the branch given by --integration-branch instead of the configured one", async () => {
     const fixture = setup();
     const app1Root = fixture.products[0]!.repoRoot;
     const app2Root = fixture.products[1]!.repoRoot;
@@ -1266,7 +1266,7 @@ describe("multi-repository task worktrees", () => {
     const worktree = prepare(fixture);
     commitIntegrationFixture(worktree);
 
-    integrateFixture(fixture, worktree);
+    await integrateFixture(fixture, worktree);
     const traces = worktree.repos!.map(productIntegrationTrace);
 
     expect(git(app1Root, "show", "topic:app1.txt")).toBe("app1 change");
@@ -1291,20 +1291,22 @@ describe("multi-repository task worktrees", () => {
     );
   });
 
-  it("records the merge commit of a product that a resumed integration skips", () => {
+  it("records the merge commit of a product that a resumed integration skips", async () => {
     const fixture = setup();
     const worktree = prepare(fixture);
     commitIntegrationFixture(worktree);
     const [app1, app2] = worktree.repos!;
     git(app2!.repoRoot, "checkout", "release");
     const removeHook = rejectMergeCommit(app2!.repoRoot);
-    expect(() => integrateFixture(fixture, worktree)).toThrow(/not integrated: app2, project/);
+    await expect(integrateFixture(fixture, worktree)).rejects.toThrow(
+      /not integrated: app2, project/,
+    );
     const firstMerge = git(app1!.repoRoot, "rev-parse", productIntegrationTarget(app1!));
     removeHook();
     // 統合先が先へ進んでも、記録するのは exec branch を取り込んだ merge commit とする。
     git(app1!.repoRoot, "commit", "--allow-empty", "-m", "later work on the target");
 
-    integrateFixture(fixture, worktree);
+    await integrateFixture(fixture, worktree);
     const traces = worktree.repos!.map(productIntegrationTrace);
 
     expect(traces.map((trace) => [trace.repo, trace.state, trace.commit])).toEqual([
@@ -1331,19 +1333,21 @@ describe("multi-repository task worktrees", () => {
     expect(existsSync(worktree.path)).toBe(false);
   });
 
-  it("keeps the single-repository integration callback order without repos", () => {
+  it("keeps the single-repository integration callback order without repos", async () => {
     const fixture = setup({ withProducts: false });
     const worktree = prepare(fixture);
     const calls: string[] = [];
 
-    integrateTaskRepositories({
+    await integrateTaskRepositories({
       worktree,
       mergeMessage: "single repository integration",
       checkProject: () => {
         calls.push("check");
         return [];
       },
-      beforeProjectMerge: () => calls.push("before-project"),
+      beforeProjectMerge: () => {
+        calls.push("before-project");
+      },
       mergeProject: () => calls.push("merge-project"),
     });
 
