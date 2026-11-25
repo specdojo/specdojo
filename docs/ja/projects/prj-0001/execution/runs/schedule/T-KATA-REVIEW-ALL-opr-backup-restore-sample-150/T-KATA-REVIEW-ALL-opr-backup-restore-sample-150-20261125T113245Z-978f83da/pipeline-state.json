@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-REVIEW-ALL-opr-backup-restore-sample-150",
   "run_id": "T-KATA-REVIEW-ALL-opr-backup-restore-sample-150-20261125T113245Z-978f83da",
-  "updated_at": "2026-11-25T11:54:26.088Z",
+  "updated_at": "2026-11-25T11:55:41.916Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-opr-backup-restore-sample-150/T-KATA-REVIEW-ALL-opr-backup-restore-sample-150-20261125T113245Z-978f83da/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-25T11:54:26.088Z",
-      "completed_at": null,
+      "completed_at": "2026-11-25T11:55:41.916Z",
       "artifact_ref": null
     }
   },
