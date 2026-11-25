@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: medium
   difficulty: medium
   registered_at: "2026-11-24T17:49:58Z"
@@ -44,8 +44,27 @@ PJR-FZQA の確かめ（2026-11-25）で、試しのリポジトリ（prj-9001�
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+### 5.1. 再現の条件
+
+VitePress は各ページの入力名を、`docs/` 起点のパスの `/` を `_` に置き換えて作り、asset のファイル名を `<入力名>.<hash>.js`（クライアント用は `.lean.js` も）にする。grade run の作業ディレクトリ `execution/grade/generated/runs/<run-id>/1/stage-1/<stem>-<hash>-grade-reporter-plan.md` は、run ID（task ID と sample 名を含み最大 128 文字）と stem（sample 名）が長いと、この名前が 255 バイトを超える。VitePress の `sanitizeFileName` は設定で差し替えても、描画側の参照（ページ名とハッシュの対応）が元の関数を使うため、名前の付け方は設定側から変えられない。
+
+### 5.2. 直し方と理由
+
+- `packages/docs-site/.vitepress/exec-record-paths.ts` の `EXEC_RECORD_SRC_EXCLUDE` に `docs/**/execution/grade/generated/runs/**` を足し、grade run の作業ディレクトリを文書サイトの対象から外した。
+- 理由: plan の写しなどを置く一時の作業物で、閲覧対象ではない。ファイル名を短くする案は、run ID と stem が利用者の task ID・sample 名に依存し上限を保証できず、既存の criteria ファイル名（`gradePlanFilename`）とも結びつくため採らなかった。asset の名前の付け方を変える案は上のとおり設定側からできない。
+- 生成ページへのリンク: 該当ページへ張られたリンクはない（`grade/generated/plans/` は対象のまま）。既存の生成物の扱い: 変更しない（ファイルは残り、サイトにだけ載らなくなる）。
+- 単体テスト: `tests/packages/docs-site/exec-record-paths.test.ts` に、長い run ID・stem のページが走査から外れ、`grade/generated/plans/` のページが残ることを確かめるテストを足した。
+
+### 5.3. CHANGELOG に書く事項
+
+- 区分: Fixed
+- 文案: 文書サイトのビルドが、task ID や sample 名が長い grade run の作業ディレクトリのページで `ENAMETOOLONG` により止まる問題を修正した。`execution/grade/generated/runs/` をサイトの対象から外した。
+
+### 5.4. 確認
+
+- `npx vitest run` で `exec-record-paths.test.ts`（17 件）が通ることを確認した。親の検証は runner が実行する。
+- 統合の後に、オーケストレーターが長い名前の grade の記録を持つ試しのリポジトリでサイトをビルドして確かめる（executor では実行できないため未実施）。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- 派生元: PJR-FZQA
