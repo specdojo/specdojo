@@ -1,0 +1,21 @@
+R2（構成）のレビューを終えました。sample（`docs/ja/specdojo/samples/nfr-performance-sample.md`）を 1 か所直し、ほかの文書は変えていません。
+
+**直したこと**
+
+- 「測定・検証方法」の表に「合格条件」の列を加えました。rulebook の記述ガイドは、測定方法・判定時期と並べて合格条件を表に置くよう求めていますが、sample では表の外の段落に書かれていました。
+- その段落は「基準が `_UNDECIDED_` の間は暫定の判定で pass / fail を決める」と書いていました。これは、`nfr-perf-002`・`nfr-perf-004` を「値を記録するだけ」とする性能要件一覧と食い違っていました。
+- 合格条件の列では、この 2 件を「基準の確定まで判定しない」と行ごとに書きました。段落は「合格条件で pass / fail を決める・確定したら判定し直す・運用後は監視の閾値として扱う」だけに絞りました。
+- grade の指摘 F001（暫定期間に `nfr-perf-002`・`nfr-perf-004` を判定できない）も、この直しで未判定の扱いが測定・検証方法に書かれ、解消しています。ただ F001 の観点は R4 のものなので、最終的には R4 に任せます。
+
+**直さなかったこと**
+
+- 章の順と章名は rulebook の本文構成どおり（1〜6 章）で、移動・分割・統合はしていません。
+- template は rulebook で `undecided` のため、突き合わせられませんでした。
+
+**検証**
+
+prettier で整形したことのほかは、検査を自分では実行していません。markdownlint と frontmatter の検査は、終了後に親 runner が行います。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R2 構成: 「測定・検証方法」の表に rulebook の記述ガイドが求める合格条件の列を加え、表の外の段落にあった判定の扱いを要件ごとに移した。これで段落と、性能要件一覧の『記録するだけ』の要件との食い違いを解消した。章の順・章名は rulebook の本文構成どおりで、移動・分割・統合はしていない。","handoff":["R2-1: R2 / 4. 測定・検証方法 / rulebook の記述ガイド「測定・検証方法」は、測定方法・判定タイミング・合格条件を表にするよう求めるが、sample の表に合格条件の列がなく、表の外の段落にまとめて書いていた / 表に「合格条件」の列を加え、要件ごとの合格条件を書いた。前置きの文に「合格条件」を加え、段落は pass / fail の決め方・確定後の判定し直し・運用後の監視だけに絞った / `vp-arc-document-structure`（rulebook の記述ガイド「測定・検証方法」） / -","R2-2: R2 / 4. 測定・検証方法 / 段落の『基準が `_UNDECIDED_` の間は暫定の判定で pass / fail を決め』は、性能要件一覧の `nfr-perf-002`・`nfr-perf-004`（決まるまでは値を記録するだけで判定しない）と食い違っていた（grade F001 の指摘と同じ箇所） / 合格条件の列で `nfr-perf-002`・`nfr-perf-004` を『基準の確定まで判定しない』と書き、`nfr-perf-001`・`nfr-perf-005`・`nfr-perf-006` は暫定の判定で決めると要件ごとに分けた / `vp-qe-omissions-consistency`。F001 は `vp-qe-verifiability`（R4 の観点）だが、未判定の扱いを測定・検証方法に書いたことで解消している。暫定の閾値を仮置きする案は、基準値の決定に当たり構成の段の範囲を超えるため採らなかった / 要判断","R2-3: R2 / 全体 / 章の順・章名は rulebook の本文構成（1 概要〜6 未決事項）と一致していた。rulebook の `template` は `undecided` のため、template との突き合わせはできなかった / - / `vp-arc-document-structure`。rulebook 側の `recipe`・`template` の要否の未決事項（rulebook の全体方針）は人の判断に残す / -"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/nfr-performance-sample.md","status":"passed","summary":"変更した sample を整形した"}]}
+</specdojo_executor_evidence>
