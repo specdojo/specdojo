@@ -1,0 +1,27 @@
+R1（目的の過不足）のレビューを終えました。sample を 1 か所直しています。変更したファイルは `docs/ja/specdojo/samples/bes-index-sample.md` だけです。
+
+**直したこと（F003）**
+rulebook の「検証と引き渡し」は照合の結果を残すよう求めています。ところが sample の 3.2 節には、確定入力として扱う条件しか書かれていませんでした。そこで節名を「照合の結果と確定入力として扱う条件」に変え、照合 6 項目ごとに「確かめたこと・結果・確定入力としての扱い」を並べた表にしました。照合は上位 CDFD・本文の表・個別 BES の sample を読んで行い、結果は次のとおりです。
+
+| 確かめたこと | 結果 |
+| --- | --- |
+| 上位 CDFD の 10 領域との対応 | 10 行が 1 対 1 で対応し、欠落はなし。ただし `P-03`・`P-05` の 2 件は、イベント名が CDFD の起点イベントの文言と異なる |
+| 必須列の空欄 | 0 件 |
+| イベント ID の形式と重複 | 形式違反・重複とも 0 件 |
+| 各行からの発生・不成立の判定 | 判定できる |
+| 個別 BES との相互参照 | `bes-cash-sale-confirmed` は一致。`bes-credit-sale-over-limit` は未作成のため未実施 |
+| 事実データとデータモデルの照合 | 未実施 |
+
+**直さなかったこと（F001・F002）**
+どちらも観点が `vp-pm-*`（計画・報告の観点）です。kata ガイドは、この 2 つを kata の段のレビューで使わない観点として挙げています。また Sample 記述標準は、文書の役割の割り当てや承認の進み具合を本文に書くことを禁じています。そのため、作業の担当や管理先の対応付けは sample に足していません。
+
+**判断してほしい点（要判断）**
+- **`P-03`・`P-05` の文言の差**：sample の冒頭は「起点イベントの文言は CDFD を正本とする」と言っています。それなのに 2 行のイベント名が CDFD と違います。`P-03` は個別 BES の sample も「購入した」の行を前提にしています。CDFD 側を直すか一覧側を直すかを決める必要があり、R5（整合）の段に回します。それまでは、表にあるとおり 2 行を確定入力にしない扱いにしています。
+
+**検証**
+- 変更したファイルは prettier の検査を通りました。
+- lint などは、このあと runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1: bes-index-sample の 3.2 節を照合結果の表に改め、rulebook『検証と引き渡し』が求める照合結果の記録を足した（F003）。F001・F002 は kata の段のレビューで使わない vp-pm 観点であり、Sample 記述標準が役割の割り当て・承認の進み具合を本文に書くことを禁じているため採らなかった。","handoff":["No: 1 / 段: R1 / 箇所: 「未決事項と承認条件」の 3.2 節（旧「確定入力として扱う条件」） / 指摘: rulebook の「検証と引き渡し」は照合結果を残すよう求めているが、本節は確定入力の条件だけを示し、照合した結果を記録していなかった（F003、`vp-qe-kata-conformance`） / 直した案: 節名を「照合の結果と確定入力として扱う条件」に改め、確かめたこと・結果・確定入力としての扱いの 3 列の表にした。上位 CDFD との対応（10 領域・10 行・欠落なし、`P-03`・`P-05` は起点イベントの文言と差あり）、必須列の空欄 0 件、ID の形式違反・重複 0 件、発生・不成立を判定できること、詳細化の対応（`bes-cash-sale-confirmed` は一致、`bes-credit-sale-over-limit` は未作成のため未実施）、事実データの照合（未実施）を記録した / 根拠: `specdojo:bes-index-rulebook` の「検証と引き渡し」と「本文要件」の『未決事項と承認条件』、cdfd-overview-sample のプロセス領域表、bes-sample の 17 行目 / 印: -","No: 2 / 段: R1 / 箇所: 3.1 節の『事実データが…未照合』の行 / 指摘: F001（`vp-pm-plan-feasibility`）は、照合と未作成の BES の作成に作業担当の Role code を対応付けるよう求めている / 直した案: 採らない。kata ガイドの「kata の観点の組」は `vp-pm-plan-feasibility` を kata の段のレビューで使わない観点としており、Sample 記述標準の「記述ガイド」も文書の役割の割り当てを本文に書くことを禁じている / 根拠: `docs/ja/specdojo/guides/kata-guide.md` の「kata の観点の組」、`specdojo:sample-authoring-standard` の「記述ガイド」と「禁止事項」 / 印: -","No: 3 / 段: R1 / 箇所: 3.1 節の『発注のない納品』の行 / 指摘: F002（`vp-pm-control-reporting`）は、未決事項に報告先や決定記録の転記先を対応付けるよう求めている / 直した案: 採らない。この観点は kata の段のレビューで使わず、承認と留保は登録簿の個票で追うと Sample 記述標準が定めている / 根拠: `docs/ja/specdojo/guides/kata-guide.md` の「kata の観点の組」、`specdojo:sample-authoring-standard` の「記述ガイド」 / 印: -","No: 4 / 段: R1（R5 へ申し送り） / 箇所: 業務イベント一覧の `bes-cash-sale-confirmed`（`P-03`）・`bes-stock-movement-recorded`（`P-05`）の行と冒頭の概要 / 指摘: 冒頭は起点イベントの文言を上位 CDFD を正本とすると述べているが、2 行のイベント名が cdfd-overview-sample の起点イベント（「顧客が売場の商品を持って会計を申し出た」「販売が記録された」）と異なる。照合の表では、決まるまで 2 行を確定入力にしないとした / 直した案: R5 で、cdfd-overview-sample の起点イベントの文言を直すか、一覧の行名と発生条件を CDFD に合わせるかを決める。`P-03` は bes-sample が「購入した」の行を前提にしているため、両方を合わせて直す必要がある / 根拠: cdfd-overview-sample の 44 行目・52 行目、bes-sample の 17 行目 / 印: 要判断"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/bes-index-sample.md","status":"passed","summary":"変更した sample は Prettier の形式に合っている"}]}
+</specdojo_executor_evidence>
