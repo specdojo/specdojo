@@ -4,6 +4,9 @@ export const EXEC_RECORD_SRC_EXCLUDE = [
   "docs/**/execution/exec/results/**",
   "docs/**/execution/runs/*/*/*/plan.md",
   "docs/**/execution/runs/*/*/*/result.md",
+  // grade run の作業ディレクトリ（plan の写しなど）。パスが長く、VitePress が asset 名を
+  // パス全体から作るため 255 バイトを超えて ENAMETOOLONG になる。閲覧対象ではない一時の作業物。
+  "docs/**/execution/grade/generated/runs/**",
 ];
 
 function execRecordKind(link: string): "plan" | "result" | undefined {
