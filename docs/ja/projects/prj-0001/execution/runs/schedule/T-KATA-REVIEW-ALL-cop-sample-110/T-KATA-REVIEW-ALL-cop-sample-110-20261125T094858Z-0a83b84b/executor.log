@@ -1,0 +1,16 @@
+cop-sample の R1（目的の過不足）レビューを終えました。変更したファイルは `docs/ja/specdojo/samples/cop-sample.md` の 1 か所だけです。Prettier の整形チェックは通りました。lint などの検査は、このあと親 runner が実行します。
+
+**直した点（1 件）**
+「ロールバック手順」の章では、発動条件が「GO3 で NO-GO」と「開店後に販売を 10 分以上記録できない」の 2 つだけでした。一方、「障害時判断・エスカレーション」の章では、重大度「高」の「つけ残高が取り込み後に変わった」場合も必ずロールバックするとしています。この食い違いを直すため、発動条件を「障害時判断・エスカレーション」の重大度「高」の事象を指す形に書き換え、2 つの事象を括弧に並べました。
+
+**そのままにした点**
+- 10 章の構成と順序、各章の列や必須項目は rulebook を満たしていました。
+- 文書を作る・承認する役割の割り当てや、承認の進み具合は書かれておらず、禁止事項にも当たる記述はありませんでした。
+- 要らない内容も見当たりませんでした。
+
+**R3 に回したもの**
+grade の指摘 F001 は R3 で扱う観点のため、この段では直していません。62 行目付近の箇条書きで、表は「店主代表」なのに本文は `PO` とだけ書いてあり、対応が書かれていないという指摘です。「店主代表（`PO`）」と書き添える案を R3 に渡しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"cop-sample で R1（目的の過不足）を確かめ、「ロールバック手順」の発動条件に抜けていた事象を「障害時判断・エスカレーション」の重大度「高」と同じにそろえた。ほかの必須章は rulebook を満たしており、要らない内容はなかった。F001 は R3 の観点のため直さずに引き継いだ。","handoff":["No: 1 / 段: R1 / 箇所: `docs/ja/specdojo/samples/cop-sample.md`「ロールバック手順」の冒頭の段落 / 指摘: 発動条件が「GO3 で NO-GO」と「開店後に販売の記録が 10 分以上できない」だけで、「障害時判断・エスカレーション」の重大度「高」が求める「つけ残高が取り込み後に変わった」の場合のロールバックが抜けていた。rulebook が求めるロールバック発動条件（判定点と事象）がそろっていない。 / 直した案: 発動条件を「GO3 で NO-GO となった場合と、開店後に「障害時判断・エスカレーション」の重大度「高」の事象（販売の記録が 10 分以上できない、つけ残高が取り込み後に変わった）が起きた場合」に書き換え、sample に反映した。 / 根拠: `specdojo:cop-rulebook` の「本文要件」のロールバック手順の行（発動条件（判定点と事象））。`vp-qe-kata-conformance`（種別の責務） / 印: なし","No: 2 / 段: R1 / 箇所: sample 全体 / 指摘: ほかの必須 10 章は rulebook の「本文要件」の順序・列・受入条件を満たし、Sample 記述標準の禁止事項（人物名、文書の役割の割り当てや承認の進み具合、実装詳細）にも当たる記述はない。要らない内容も見当たらない。参照した成果物カタログ（`dct-migration-planning-template.yaml`）には `cop-index` の `done_criteria` だけがあり、対象別の `cop-<term>` の項目はなかったため、rulebook と記述標準を正として確かめた。 / 直した案: 変更なし（維持） / 根拠: `specdojo:cop-rulebook` の「本文要件」・「禁止事項」、`specdojo:sample-authoring-standard` の「記述ガイド」・「禁止事項」 / 印: なし","No: 3 / 段: R1 / 箇所: 「担当者/連絡系統」の表の下の箇条書き（判定結果の記録先の行） / 指摘: grade F001（`vp-ux-language-consistency`）。表では「店主代表」と書き、本文では Role code `PO` とだけ書いており、対応が分からない。R3（読みやすさ）が扱う観点のため、この段では直さない。 / 直した案: R3 で「判断者の店主代表（`PO`）として decision 個票に」のように、役割名と Role code の対応を一度書く。 / 根拠: `specdojo:kata-guide` の「kata の観点の組」（`vp-ux-language-consistency` は R3） / 印: なし"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/cop-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"history file not changed","reason":"executor は履歴の積み上がるファイル（plan / result / 個票）を変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"no yaml changed","reason":"変更したのは Markdown だけで、`*.yaml` / `*.yml` は変更していない"}]}
+</specdojo_executor_evidence>
