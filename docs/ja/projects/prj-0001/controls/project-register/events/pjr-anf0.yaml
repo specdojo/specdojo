@@ -67,3 +67,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_72a46a740e3143ed9daa473c7b2c12f8
+- v: 1
+  id: reg_e95a2360713d44f1bbe9669ffb6cacaf
+  ts: "2026-11-25T22:00:35Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが新しい段の指示で流れた 3 件の result で、表が実施内容の後に 1 回だけ描かれることを確かめ、indie の承認（2026-11-26）を得て close。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-26"
+    - field: conclusion
+      from: "-"
+      to: 指摘を構造で受け取り、runner が result に表を 1 回だけ描くようにした。
+  previous_event_id: reg_c5d4e55fcf8c41f2962207ce178993d5

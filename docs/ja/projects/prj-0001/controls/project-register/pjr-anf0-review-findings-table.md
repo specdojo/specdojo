@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-anf0-review-findings-table
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   registered_at: "2026-11-24T17:43:28Z"
+  completed_at: "2026-11-25T22:00:35Z"
+  conclusion: 指摘を構造で受け取り、runner が result に表を 1 回だけ描くようにした。
   derived_from:
     - PJR-QCJ5
     - PJR-0BGE
