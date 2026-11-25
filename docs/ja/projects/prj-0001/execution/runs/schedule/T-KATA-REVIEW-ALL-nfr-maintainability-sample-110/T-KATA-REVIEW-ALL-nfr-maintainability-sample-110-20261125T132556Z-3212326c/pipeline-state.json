@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-REVIEW-ALL-nfr-maintainability-sample-110",
   "run_id": "T-KATA-REVIEW-ALL-nfr-maintainability-sample-110-20261125T132556Z-3212326c",
-  "updated_at": "2026-11-25T13:38:56.085Z",
+  "updated_at": "2026-11-25T13:40:02.255Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-nfr-maintainability-sample-110/T-KATA-REVIEW-ALL-nfr-maintainability-sample-110-20261125T132556Z-3212326c/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-25T13:38:56.085Z",
-      "completed_at": null,
+      "completed_at": "2026-11-25T13:40:02.255Z",
       "artifact_ref": null
     }
   },
