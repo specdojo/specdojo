@@ -34,6 +34,7 @@ import {
 import {
   commitProductWorktrees,
   integrateTaskRepositories,
+  withTaskIntegrationLock,
   PROJECT_REPO_NAME,
   projectMergeBlockers,
   RepoIntegrationError,
@@ -57,7 +58,7 @@ import {
   checkpointAndEnsureWorktree,
   assertCommitScope,
   commitTargetPaths,
-  commitWorktreeChanges,
+  commitWorktreeChangesAsync,
   discardStaleExecWorktree,
   isExecBranchMergedIntoCurrent,
   mergeWorktreeIntoCurrent,
@@ -107,7 +108,7 @@ import {
 } from "./register-core.js";
 import { runRegisterPostReview } from "./register-post-review.js";
 import {
-  commitRegisterState,
+  commitRegisterStateAsync,
   rebuildRootRegisterViews,
   registerPathsInsideWorktree,
   registerWaitSummary,
@@ -446,6 +447,7 @@ async function integrateRegisterWorktreeRun(
       started_at: integrateStartedAt,
       completed_at: null,
     }));
+    let outputCommit: string;
     try {
       const productNames = (worktree.repos ?? []).map((product) => product.name);
       try {
@@ -465,7 +467,7 @@ async function integrateRegisterWorktreeRun(
           outcome.rootNewFiles.map((path) => `${outcome.repo}:${path}`),
         );
         await publishRegisterTicket(projectId, worktree.path, worktreeTicketPath);
-        commitWorktreeChanges({
+        await commitWorktreeChangesAsync({
           context: wtContext,
           worktree,
           taskId: stem,
@@ -512,79 +514,84 @@ async function integrateRegisterWorktreeRun(
         projectId,
         itemId: item.id,
       });
-      integrateTaskRepositories({
-        worktree,
-        mergeMessage,
-        productMergeMessage: (product) => productMessage(product, "merge"),
-        checkProject: () =>
-          projectMergeBlockers({
-            context: wtContext,
-            worktree,
-            taskId: stem,
-            releasePaths: bookkeepingPaths,
-            ownedPaths: bookkeepingPaths,
-          }),
-        beforeProjectMerge: () => {
-          // review は exec branch 側（worktree）で記録し、最後の project merge commit に
-          // 同梱する。統合ブランチで遷移すると first-parent に独立した commit が増える。
-          if (
-            !spawnRegisterTransition(
-              projectId,
-              [
-                "review",
-                "--id",
-                item.id,
-                "--by",
-                actor,
-                ...(params.transitionReason ? ["--reason", params.transitionReason] : []),
-              ],
+      // PJR-P8SX: 統合の commit を非同期にしたため、統合と直後の HEAD の取得を、同じ process の
+      // 他のタスクの統合と排他にする。
+      outputCommit = await withTaskIntegrationLock(async () => {
+        await integrateTaskRepositories({
+          worktree,
+          mergeMessage,
+          productMergeMessage: (product) => productMessage(product, "merge"),
+          checkProject: () =>
+            projectMergeBlockers({
+              context: wtContext,
+              worktree,
+              taskId: stem,
+              releasePaths: bookkeepingPaths,
+              ownedPaths: bookkeepingPaths,
+            }),
+          beforeProjectMerge: async () => {
+            // review は exec branch 側（worktree）で記録し、最後の project merge commit に
+            // 同梱する。統合ブランチで遷移すると first-parent に独立した commit が増える。
+            if (
+              !spawnRegisterTransition(
+                projectId,
+                [
+                  "review",
+                  "--id",
+                  item.id,
+                  "--by",
+                  actor,
+                  ...(params.transitionReason ? ["--reason", params.transitionReason] : []),
+                ],
+                worktree.path,
+              )
+            ) {
+              throw new Error(`register review transition failed: ${item.id}`);
+            }
+            // プロダクトの統合後・プロジェクトの統合前に、統合先の commit snapshot を result の
+            // trace 表へ記録し、プロジェクト側の merge commit に同梱する。宣言の無い project では
+            // 記録せず、result は従来どおりになる。
+            const products = worktree.repos ?? [];
+            const tracePaths: string[] = [];
+            if (products.length > 0 && existsSync(worktreeResultPath)) {
+              recordResultTrace({
+                resultPath: worktreeResultPath,
+                traceKey: itemTraceKey,
+                traces: products.map(productIntegrationTrace),
+              });
+              tracePaths.push(worktreeResultPath);
+            }
+            const integrateCompletedAt = new Date().toISOString();
+            recordIntegrateStage(params.pipelineStatePath, integrateCompletedAt, () => ({
+              status: "succeeded",
+              completed_at: integrateCompletedAt,
+            }));
+            await commitRegisterStateAsync(
               worktree.path,
-            )
-          ) {
-            throw new Error(`register review transition failed: ${item.id}`);
-          }
-          // プロダクトの統合後・プロジェクトの統合前に、統合先の commit snapshot を result の
-          // trace 表へ記録し、プロジェクト側の merge commit に同梱する。宣言の無い project では
-          // 記録せず、result は従来どおりになる。
-          const products = worktree.repos ?? [];
-          const tracePaths: string[] = [];
-          if (products.length > 0 && existsSync(worktreeResultPath)) {
-            recordResultTrace({
-              resultPath: worktreeResultPath,
-              traceKey: itemTraceKey,
-              traces: products.map(productIntegrationTrace),
-            });
-            tracePaths.push(worktreeResultPath);
-          }
-          const integrateCompletedAt = new Date().toISOString();
-          recordIntegrateStage(params.pipelineStatePath, integrateCompletedAt, () => ({
-            status: "succeeded",
-            completed_at: integrateCompletedAt,
-          }));
-          commitRegisterState(
-            worktree.path,
-            worktreeRegisterPaths,
-            `exec(register ${item.id}): review`,
-            worktreeTicketPath,
-            [...(params.pipelineStatePath ? [params.pipelineStatePath] : []), ...tracePaths],
-            integrateLogPath(params.pipelineStatePath),
-          );
-        },
-        mergeProject: () =>
-          mergeWorktreeIntoCurrent({
-            context: wtContext,
-            worktree,
-            taskId: stem,
-            message: mergeMessage,
-            releaseRootPaths: [...bookkeepingPaths],
-            // waiting を複数回経た項目では、wait 時の同期後も統合先と exec branch の双方で
-            // 記帳ファイルが変わる。項目自身の記帳ファイルだけの競合は exec branch 側で解決する。
-            resolveConflictsWithBranchPaths: [...bookkeepingPaths],
-            failureLogPath: integrateLogPath(params.pipelineStatePath),
-          }),
-        record: (repo, patch) => recordRepoIntegration(params.pipelineStatePath, repo, patch),
-        failureLogPath: integrateLogPath(params.pipelineStatePath),
-        lockPath: schedulePath,
+              worktreeRegisterPaths,
+              `exec(register ${item.id}): review`,
+              worktreeTicketPath,
+              [...(params.pipelineStatePath ? [params.pipelineStatePath] : []), ...tracePaths],
+              integrateLogPath(params.pipelineStatePath),
+            );
+          },
+          mergeProject: () =>
+            mergeWorktreeIntoCurrent({
+              context: wtContext,
+              worktree,
+              taskId: stem,
+              message: mergeMessage,
+              releaseRootPaths: [...bookkeepingPaths],
+              // waiting を複数回経た項目では、wait 時の同期後も統合先と exec branch の双方で
+              // 記帳ファイルが変わる。項目自身の記帳ファイルだけの競合は exec branch 側で解決する。
+              resolveConflictsWithBranchPaths: [...bookkeepingPaths],
+              failureLogPath: integrateLogPath(params.pipelineStatePath),
+            }),
+          record: (repo, patch) => recordRepoIntegration(params.pipelineStatePath, repo, patch),
+          failureLogPath: integrateLogPath(params.pipelineStatePath),
+          lockPath: schedulePath,
+        });
+        return gitOutput(repoRoot, ["rev-parse", "HEAD"]).trim();
       });
     } catch (error) {
       // The merge may already have succeeded and only a later step failed. Root now contains the
@@ -616,7 +623,6 @@ async function integrateRegisterWorktreeRun(
       };
     }
 
-    const outputCommit = gitOutput(repoRoot, ["rev-parse", "HEAD"]).trim();
     await postIntegration(baseCommit, outputCommit);
     await params.opts.onScopeIntegrated?.();
     // post-review の差分範囲は、撤去を待つ間に別項目の commit が積まれても変わらないよう、

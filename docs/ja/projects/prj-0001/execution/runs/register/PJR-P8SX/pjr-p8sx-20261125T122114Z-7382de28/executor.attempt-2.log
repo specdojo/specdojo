@@ -1,0 +1,25 @@
+前回の実行で止まっていた修正まで終えました。exec run の統合段では、他のタスクの commit の hook が走っている間も、runner の処理が止まりません。ただし、検証の時間が実際に縮むかどうかは、本物の `exec run --auto --parallel 4` を流すまで分かりません。その確認は close の前にオーケストレーターが行います。
+
+**修正の内容**
+- **非同期の git**: `src/shared/git.ts` に `gitResultAsync` を足しました。引数・環境・index.lock の再試行は `gitResult` と同じです。再試行の判断は `gitTransientRetryPolicy` にまとめて同期版と共有し、変えたのは待ち方だけです。
+- **統合の commit**: `commitWorktreeChangesAsync`・`stabilizeCommitTargetsAsync`・`commitRegisterStateAsync` を足しました。非同期で待つのは、hook が走る `git commit` と hook の後の `--amend` だけです。その前後の検査と stage は同期版と同じ関数を使います。
+- **切り替えた箇所**: `src/exec/run/schedule-task.ts` と `src/exec/run/register-worktree.ts` を非同期の版に切り替えました。手動の `exec worktree commit` は同期のままです。
+- **統合の順序**: `integrateTaskRepositories` を非同期にしました。あわせて、同じプロセスの中で統合を 1 件ずつ進める `withTaskIntegrationLock` を足しました。これで `checkProject` から `mergeProject` までの間に、他のタスクの merge は入りません。統合の前後の HEAD の取得と root への merge も、この中で行います。
+- **ファイル行数の警告への対処**: 前回足した計測の処理を `src/exec/validation-exit-timing.ts` へ移し、`parent-validation.ts` が 1,000 行の目安を超えないようにしました。
+
+検証を別のプロセスで待つ案は取りませんでした。commit で処理が止まっている間は、検証の終わりに気づけても次の検証を始められず、速くならないためです。1 タスクあたり約 50 秒の commit が 3 回あり、合計約 160 秒止まります。これで、検証が枠を持っていた時間（約 240 秒）の大半を説明できます。
+
+**テスト**
+- 他のタスクの commit の hook が 3 秒走る間も、検証の終わりが 1 秒以内に記録されることを確かめる統合テストを足しました。
+- 統合の順序を保つ仕組みと、非同期の再試行の単体テストを足しました。
+- `task-repos.integration.test.ts` は、統合の関数が非同期になったのに合わせて呼び出しを `await` に直しました。
+
+個票の対応結果は、見立ての裏付け・実施内容・直し方を選んだ理由・残る確認・「CHANGELOG に書く事項」の文案で書き直しました。
+
+**確認できたこと**: 型チェック（src・tests）、変更したファイルの ESLint（error 0）、関係する単体テスト 66 件と統合テスト 56 件、prettier・markdownlint・`validate:history-links` はすべて通りました。全件の検証は、このあと親の runner が流します。
+
+**残る確認**: 統合の commit を待つ間に、別のタスクが root を変えることがあります（`prepare execution` の commit など）。root への merge の前に `mergeWorktreeIntoCurrent` が自分で検査するので、壊れる経路は見当たりません。それでも、並列実行で統合の失敗が増えないかはあわせて見る必要があります。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"exec run の統合段で、hook が走る commit を event loop を止めない非同期の起動にした。`gitResultAsync`、`commitWorktreeChangesAsync`、`stabilizeCommitTargetsAsync`、`commitRegisterStateAsync` を足し、`integrateTaskRepositories` を非同期にした。同じ process の統合を 1 件ずつに保つ `withTaskIntegrationLock` も足した。前回の計測（`validation-exit-timing`）は残し、別ファイルへ移した。テストと個票の対応結果（CHANGELOG の文案を含む）を更新した。","handoff":["close の前に、本変更を入れた runner で `exec run --auto --parallel 4` を流す。`parent-validation-metrics.jsonl` の `validation-exit-timing` で `detection_lag_ms` が小さいことを確かめる。検証の時間が直接流した場合（`validate:schema` は約 5〜23 秒）に近くなることも確かめる。","統合の commit の hook を待つ間に、同じ process の別タスクの同期の処理（`prepare execution` の commit、register の遷移など）が root を変えうる。root への merge は `mergeWorktreeIntoCurrent` が自分の検査をしてから行うため、壊れる経路は見当たらない。実際の並列実行で統合の失敗が増えないかもあわせて見る。","`CHANGELOG.md` は変更していない。文案は個票の「CHANGELOG に書く事項」に書いた。","`npm ci`・`specdojo build`・root への merge の commit などの同期の処理は、今回の計測で目立たないため同期のまま残した。再計測で遅れが残れば、別の項目で扱う。"],"validations":[{"command":"npx tsc -p tsconfig.build.json --noEmit","status":"passed","summary":"src の型エラーなし"},{"command":"npx tsc -p tsconfig.test.json --noEmit","status":"passed","summary":"tests の型エラーなし"},{"command":"npx eslint <changed src/tests files>","status":"passed","summary":"error 0。既存の max-lines 系の warn のみ（parent-validation.ts は分割で解消）"},{"command":"npx vitest run --config vitest.unit.config.ts tests/src/shared/git.test.ts tests/src/exec/repo-integration.test.ts tests/src/exec/parent-validation.test.ts","status":"passed","summary":"3 files, 66 tests passed"},{"command":"npx vitest run --config vitest.integration.config.ts tests/src/exec/parent-validation-output.integration.test.ts tests/src/exec/task-repos.integration.test.ts","status":"passed","summary":"2 files, 56 tests passed"},{"command":"npx prettier --check src tests","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/projects/prj-0001/controls/project-register/pjr-p8sx-parallel-validation-slot-held.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"passed","summary":"exit 0"}],"target_coverage":[{"target":"docs/ja/projects/prj-0001/controls/project-register/pjr-p8sx-parallel-validation-slot-held.md","status":"changed","path":"docs/ja/projects/prj-0001/controls/project-register/pjr-p8sx-parallel-validation-slot-held.md"},{"target":"src/exec/parent-validation-output.ts","status":"changed","path":"src/exec/parent-validation-output.ts"},{"target":"src/exec/parent-validation.ts","status":"changed","path":"src/exec/parent-validation.ts"},{"target":"tests/src/exec/parent-validation-output.integration.test.ts","status":"changed","path":"tests/src/exec/parent-validation-output.integration.test.ts"},{"target":"tests/src/exec/parent-validation.test.ts","status":"changed","path":"tests/src/exec/parent-validation.test.ts"}]}
+</specdojo_executor_evidence>

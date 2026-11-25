@@ -35,3 +35,119 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_2de7bd815f2c4979b6959de96323c16d
+  ts: "2026-11-25T12:21:17Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_17dd796dd7c7495f9ae1c1f2c201d677
+- v: 1
+  id: reg_7d72cee451e3445fafb0cc4418e29329
+  ts: "2026-11-25T12:28:06Z"
+  action: wait
+  actor: opus-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor reported incomplete: 親の検証ごとに、検証を終えるまでの時間を `duration_ms`（全体）、`last_output_ms`（子の時間）、`detection_lag_ms`（runner が気づくまでの遅れ）、`event_loop_delay_max_ms`（処理が止まった最長の時間）に分けて記録する `validation-exit-timing…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor reported incomplete: 親の検証ごとに、検証を終えるまでの時間を `duration_ms`（全体）、`last_output_ms`（子の時間）、`detection_lag_ms`（runner が気づくまでの遅れ）、`event_loop_delay_max_ms`（処理が止まった最長の時間）に分けて記録する `validation-exit-timing…"
+  previous_event_id: reg_2de7bd815f2c4979b6959de96323c16d
+- v: 1
+  id: reg_1d59e976a1ce40218086b34afede11b2
+  ts: "2026-11-25T12:28:49Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: waiting
+  to_status: waiting
+  reason: section "対応方針" updated
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_7d72cee451e3445fafb0cc4418e29329
+- v: 1
+  id: reg_756d45c849a445d1865b9a48be97fb7d
+  ts: "2026-11-25T12:29:09Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: waiting
+  to_status: waiting
+  reason: section "対応方針" updated
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_1d59e976a1ce40218086b34afede11b2
+- v: 1
+  id: reg_0880e5e625a8453a9e63161c5f7a7f22
+  ts: "2026-11-25T12:29:32Z"
+  action: start
+  actor: opus-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "executor reported incomplete: 親の検証ごとに、検証を終えるまでの時間を `duration_ms`（全体）、`last_output_ms`（子の時間）、`detection_lag_ms`（runner が気づくまでの遅れ）、`event_loop_delay_max_ms`（処理が止まった最長の時間）に分けて記録する `validation-exit-timing…"
+      to: "-"
+  previous_event_id: reg_756d45c849a445d1865b9a48be97fb7d
+- v: 1
+  id: reg_e157434460d24dbcb4800f86d70d8f75
+  ts: "2026-11-25T12:44:23Z"
+  action: wait
+  actor: opus-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-integration"
+  previous_event_id: reg_0880e5e625a8453a9e63161c5f7a7f22
+- v: 1
+  id: reg_877a3007ff484742b265e12211edffcf
+  ts: "2026-11-25T12:44:53Z"
+  action: start
+  actor: opus-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-integration"
+      to: "-"
+  previous_event_id: reg_e157434460d24dbcb4800f86d70d8f75
+- v: 1
+  id: reg_f0bec63de3484ca7ad89c88d3aa0c109
+  ts: "2026-11-25T12:50:03Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_877a3007ff484742b265e12211edffcf
