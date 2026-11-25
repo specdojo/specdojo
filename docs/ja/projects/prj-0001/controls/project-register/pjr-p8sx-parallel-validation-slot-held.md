@@ -7,9 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: waiting
   priority: high
   registered_at: "2026-11-25T09:21:32Z"
+  block_reason: "executor reported incomplete: 親の検証ごとに、検証を終えるまでの時間を `duration_ms`（全体）、`last_output_ms`（子の時間）、`detection_lag_ms`（runner が気づくまでの遅れ）、`event_loop_delay_max_ms`（処理が止まった最長の時間）に分けて記録する `validation-exit-timing…"
 ---
 
 # PJR-P8SX 並列実行で親の検証の枠が、他タスクの統合に止められて長く占有される
