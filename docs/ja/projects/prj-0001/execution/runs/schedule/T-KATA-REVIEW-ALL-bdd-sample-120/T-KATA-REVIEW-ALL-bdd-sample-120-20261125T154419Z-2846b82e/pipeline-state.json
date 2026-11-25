@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-REVIEW-ALL-bdd-sample-120",
   "run_id": "T-KATA-REVIEW-ALL-bdd-sample-120-20261125T154419Z-2846b82e",
-  "updated_at": "2026-11-25T15:50:39.517Z",
+  "updated_at": "2026-11-25T15:51:13.352Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-bdd-sample-120/T-KATA-REVIEW-ALL-bdd-sample-120-20261125T154419Z-2846b82e/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-25T15:50:39.517Z",
-      "completed_at": null,
+      "completed_at": "2026-11-25T15:51:13.352Z",
       "artifact_ref": null
     }
   },
