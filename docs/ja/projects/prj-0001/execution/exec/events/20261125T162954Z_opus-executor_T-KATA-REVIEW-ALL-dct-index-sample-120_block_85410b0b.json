@@ -1,0 +1,17 @@
+{
+  "v": 1,
+  "ts": "2026-11-25T16:29:54Z",
+  "type": "block",
+  "task_id": "T-KATA-REVIEW-ALL-dct-index-sample-120",
+  "by": "opus-executor",
+  "msg": "agent exited with non-zero code",
+  "meta": {
+    "limit_deferred": "false",
+    "claim_actor": "opus-executor",
+    "stage_actor": "opus-executor",
+    "pipeline_stage": "executor",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-dct-index-sample-120/T-KATA-REVIEW-ALL-dct-index-sample-120-20261125T162657Z-a77d2f9c/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-dct-index-sample-120/T-KATA-REVIEW-ALL-dct-index-sample-120-20261125T162657Z-a77d2f9c/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-REVIEW-ALL-dct-index-sample-120-20261125T162657Z-a77d2f9c"
+  }
+}
