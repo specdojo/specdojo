@@ -60,3 +60,16 @@
       from: ""
       to: 完了条件
   previous_event_id: reg_41b9d0ec7ba84da0b08ce45050819c4e
+- v: 1
+  id: reg_5a8104ed8b3f4d3f81517624f5485836
+  ts: "2026-11-25T13:11:57Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_e88f2c1bc2b34eb5b77e7a1482945831
