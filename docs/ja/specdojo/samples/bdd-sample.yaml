@@ -71,7 +71,7 @@ entities:
       - logical_name: 売上日時
         physical_name: sold_at
         type: datetime
-        description: 販売を確定した時点。入力を開始した時点や外部決済の応答時点とは区別する。
+        description: 販売を確定した時点。入力を開始した時点や本部が売上を受け付けた時点とは区別する。
         constraints:
           required: true
         example: "2026-11-08T10:00:00+09:00"
@@ -88,7 +88,7 @@ entities:
       - logical_name: 支払方法
         physical_name: payment_method
         type: enum
-        description: 販売時に代金を受領するか、顧客のつけとして後日受領するかを区別する。決済サービスの処理状態とは別の判断軸。
+        description: 販売時に代金を受領するか、顧客のつけとして後日受領するかを区別する。本部への登録の受付状態とは別の判断軸。
         constraints:
           required: true
         allowed_values_detailed:
@@ -154,26 +154,22 @@ entities:
           min: 1
         example: 1
 
-  - logical_name: 支払い
-    physical_name: payment
+  - logical_name: 本部売上受付
+    physical_name: hq_sale_acceptance
     description: >-
-      決済サービス連携を検討する際に扱う支払い応答の管理単位。店頭販売の売上確定やつけ残高の管理とは区別する。
-      応答の識別と受領状況の判断に必要な項目のみ注釈し、通信仕様・応答構造は [[specdojo:ifx-api-sample|決済サービスAPI]] を正本とする。
-    schema_ref: docs/ja/specdojo/samples/ifx-api-sample.yaml#/components/schemas/CreatePaymentResponse
-    key_fields: [payment_id]
+      会計確定した現金販売を本部へ登録したときに本部が返す受付結果の管理単位。店舗での売上の確定とは区別し、本部へ登録できたかの確認に使う。
+      店舗側の照合と受付状況の判断に必要な項目のみ注釈し、要求・応答の構造は [[specdojo:ifx-api-sample|本部売上登録API]] を正本とする。
+    schema_ref: docs/ja/specdojo/samples/ifx-api-sample.yaml#/components/schemas/CreateSaleResponse
+    key_fields: [sale_id]
     fields:
-      - logical_name: 支払ID
-        physical_name: payment_id
-        description: 決済サービス側で支払いを識別する番号。店舗の売上IDとは別の識別子として照合に使う。
-      - logical_name: 支払ステータス
+      - logical_name: 本部売上ID
+        physical_name: sale_id
+        description: 本部が採番した売上の識別子。店舗の売上記録の売上IDとは別に採番されるため、同じ値と読み替えずに照合する。
+      - logical_name: 受付状態
         physical_name: status
         description: >-
-          決済サービスが返す支払いの処理結果。未処理や失敗を支払済みと扱わず、売上の確定とは別に確認する。
+          本部が売上を受け付けたかを表す。拒否は応答コードで返るため、この項目の値がないことを受付済みと扱わない。
           許容値は応答スキーマに合わせ、ここでは業務上の意味を対応付ける。
         allowed_values_detailed:
-          - value: PENDING
-            label: 未処理で支払済みを確認できない
-          - value: PAID
-            label: 決済サービスで支払済みと確認された
-          - value: FAILED
-            label: 決済処理に失敗し支払済みを確認できない
+          - value: ACCEPTED
+            label: 本部が売上を受け付け、重複なく登録した
