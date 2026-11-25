@@ -133,11 +133,7 @@ docs だけの項目や、runner の通らないコード（kata、docs-site な
 ## 8. 別の project との分担
 
 - prj-0002（LP と assets）は `../specdojo-prj-0002` の作業ツリーで、そちらのオーケストレーターが進める。prj-0001 のオーケストレーターは、prj-0002 の作業を代わりに流さない。
-- 別の project の登録簿へ起票するときは、`register add --project <project-id> --commit` を使う。起票の元は `--from <project-id>:PJR-XXXX` で指す。close などの状態遷移は、その project の作業ツリーで行う。
-- 2026-11-25 から、prj-0001 と prj-0002 で登録簿の同期（`register_sync`）を使う（PJR-T2X5 と同じ日の利用者の判断）。`register ... --commit` と `exec run` は、個票とイベントを専用ブランチ（`project/<project-id>/register`）へ commit して push する。この push と、専用ブランチの初回の作成・止まった同期の復旧（`specdojo register branch-push --project <project-id>`、PJR-M120）は、specdojo のコマンドに任せる。自分で `git push` は打たない。
-  - prj-0001 から prj-0002 への起票は、設定の `external_projects` の `prj-0002`（`../specdojo-prj-0002`）を通る。prj-0002 から prj-0001 への起票は、prj-0002 の設定の prj-0001 の同期で、`project/prj-0001/register` へ直接記帳される。
-  - develop の作業の前に `specdojo register branch-merge --project prj-0001` で専用ブランチを取り込む。develop で個票とイベントを直接変えない（pre-commit の `register-branch-guard` が止める）。
-  - 専用ブランチの worktree（`../worktrees/register-prj-0001`）には `node_modules` のリンクを置き、commit の hook が動くようにしてある。
+- prj-0002 の登録簿への起票と状態遷移は、配布する本文の「登録簿（register）の使い方」の別の project への起票に従う。prj-0001 は `external_projects`・`register_sync` を設定していない（2026-11-25 時点）。
 - prj-0002 の作業ツリーを新しい版に合わせるときは、prj-0002 の develop に main を取り込み、その作業ツリーで `npm ci` と `npm run build` をしてから使う。
 
 ## 9. リリースの手順

@@ -13,4 +13,4 @@
 ## Safety
 
 - 認証情報、秘密鍵、`.env`、`secrets/` を読み込まない。
-- 破壊的変更や `git push` を行わない。`register_sync` を有効にした project の登録簿の専用ブランチへの push は、specdojo のコマンド（`register ... --commit`・`exec run`・`register branch-push`）に任せ、`git push` を自分で打たない。
+- 破壊的変更や `git push` を行わない。
