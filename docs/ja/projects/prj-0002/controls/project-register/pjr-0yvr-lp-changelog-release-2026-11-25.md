@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0002:pjr-0yvr-lp-changelog-release-2026-11-25
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: easy
   owner: BA
   registered_at: "2026-11-24T23:10:42Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-25T09:34:04Z"
+  conclusion: "specdojo-lp の CHANGELOG で、PR #3 で公開した 2 件を 2026-11-25 の節へ移し、その上に空の Unreleased を残した。公開範囲は merge commit 7a5b7d7 との tree の一致で確かめた。"
   derived_from:
     - PJR-TAK7
 ---

@@ -131,3 +131,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_c50ac5023a054b3d99fc1396685d34ac
+- v: 1
+  id: reg_9432bdfe59db4555a7be66e3f7e04fd1
+  ts: "2026-11-25T09:34:04Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register の統合後に、LP の CHANGELOG の差分・個票の対応結果・evidence を完了条件に照らし、統合後の LP develop で lint:md と format:check が通ることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-25"
+    - field: conclusion
+      from: "-"
+      to: "specdojo-lp の CHANGELOG で、PR #3 で公開した 2 件を 2026-11-25 の節へ移し、その上に空の Unreleased を残した。公開範囲は merge commit 7a5b7d7 との tree の一致で確かめた。"
+  previous_event_id: reg_59b92bfb844441588a33dcc34ba6cb10
