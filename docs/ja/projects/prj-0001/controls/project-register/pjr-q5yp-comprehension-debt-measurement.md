@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-q5yp-comprehension-debt-measurement
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   owner: BA
   registered_at: "2026-11-23T13:11:12Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-25T22:38:15Z"
+  conclusion: 理解の負債の測り方（引き継ぎのテスト）と、OpenFisca-Japan で 1 回試す計画を pm-comprehension-debt-trial-plan に書いた。
   derived_from:
     - PJR-Y5RD
   commit_type: docs

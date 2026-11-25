@@ -99,3 +99,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_f2e00daefae1479689af685ca227735e
+- v: 1
+  id: reg_ab80bb40b7ea448891c778a83e5808fd
+  ts: "2026-11-25T22:38:15Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが対応結果の小見出しの番号を直して develop へ merge（fc273650aa）し、indie の承認（2026-11-26）を得て close。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-26"
+    - field: conclusion
+      from: "-"
+      to: 理解の負債の測り方（引き継ぎのテスト）と、OpenFisca-Japan で 1 回試す計画を pm-comprehension-debt-trial-plan に書いた。
+  previous_event_id: reg_4cd188baab094d8db875b9fe4a092c8c
