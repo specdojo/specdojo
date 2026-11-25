@@ -37,6 +37,7 @@ import {
   collectProductDocIndex,
   loadProductRepos,
 } from "./product-repos";
+import { collectExternalDocLinks, loadExternalProjectLinkSources } from "./external-links";
 import * as path from "path";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 
@@ -101,6 +102,13 @@ const docIndex: Record<string, string> = {
   ...projectDocIndex,
 };
 const archiveLinks = loadArchiveLinks(WORKSPACE_ROOT);
+// 別リポジトリの project の doc id は、external_projects の source_url から URL へ引く（PJR-66ER）。
+// 手元の doc index にある id は手元の文書を優先する。
+const externalDocLinks = Object.fromEntries(
+  Object.entries(collectExternalDocLinks(loadExternalProjectLinkSources(WORKSPACE_ROOT))).filter(
+    ([id]) => !docIndex[id],
+  ),
+);
 
 // doc-index エントリから行番号サフィックスを除去する（例: "docs/ja/foo.yaml:42" → "docs/ja/foo.yaml"）
 function stripEntryLineSuffix(entry: string): string {
@@ -149,6 +157,11 @@ function collectFrontmatterDocLinks(
 
   const addCandidate = (candidate: string): void => {
     if (links[candidate]) return;
+    const external = externalDocLinks[candidate];
+    if (external) {
+      links[candidate] = external.href;
+      return;
+    }
     const docsRelPath = resolveDocRelPath(candidate);
     if (!docsRelPath || docsRelPath === currentRelPath) return;
     links[candidate] =
@@ -1182,6 +1195,7 @@ export default defineConfig({
 
         if (!silent) {
           const entry = docIndex[id];
+          const external = externalDocLinks[id];
           const sourceLink =
             resolveArchiveWikilink(inner, archiveLinks, GITHUB_SOURCE) ??
             resolveExecRecordWikilink(inner, docIndex, GITHUB_SOURCE);
@@ -1217,6 +1231,14 @@ export default defineConfig({
 
             let token = state.push("link_open", "a", 1);
             token.attrSet("href", href);
+            token = state.push("text", "", 0);
+            token.content = displayText;
+            state.push("link_close", "a", -1);
+          } else if (external) {
+            let token = state.push("link_open", "a", 1);
+            token.attrSet("href", external.href);
+            token.attrSet("target", "_blank");
+            token.attrSet("rel", "noreferrer");
             token = state.push("text", "", 0);
             token.content = displayText;
             state.push("link_close", "a", -1);

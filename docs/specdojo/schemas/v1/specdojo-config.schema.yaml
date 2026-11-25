@@ -165,6 +165,13 @@ $defs:
       project_id:
         description: Project id understood by SpecDojo in the external repository.
         $ref: "#/$defs/NonEmptyString"
+      source_url:
+        description: >-
+          Base URL that turns a repository-relative path of the external repository into a link
+          (for example https://github.com/owner/repo/blob/main). The docs site resolves wikilinks
+          to the external project's doc ids with it.
+        type: string
+        pattern: "^https?://\\S+$"
   Repo:
     type: object
     additionalProperties: false
