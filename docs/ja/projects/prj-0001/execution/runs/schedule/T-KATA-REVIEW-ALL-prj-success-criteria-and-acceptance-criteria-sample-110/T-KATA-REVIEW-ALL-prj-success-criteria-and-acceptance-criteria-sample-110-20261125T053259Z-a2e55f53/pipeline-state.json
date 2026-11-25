@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-REVIEW-ALL-prj-success-criteria-and-acceptance-criteria-sample-110",
   "run_id": "T-KATA-REVIEW-ALL-prj-success-criteria-and-acceptance-criteria-sample-110-20261125T053259Z-a2e55f53",
-  "updated_at": "2026-11-25T05:46:57.985Z",
+  "updated_at": "2026-11-25T05:47:51.557Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-prj-success-criteria-and-acceptance-criteria-sample-110/T-KATA-REVIEW-ALL-prj-success-criteria-and-acceptance-criteria-sample-110-20261125T053259Z-a2e55f53/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-25T05:46:57.985Z",
-      "completed_at": null,
+      "completed_at": "2026-11-25T05:47:51.557Z",
       "artifact_ref": null
     }
   },
