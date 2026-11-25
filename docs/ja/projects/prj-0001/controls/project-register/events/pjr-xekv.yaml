@@ -80,3 +80,29 @@
       from: ""
       to: 完了条件
   previous_event_id: reg_e5ebf57bb3f840e1bf2ba62700e9b74a
+- v: 1
+  id: reg_c9b453dda68d4b31b4b0685eb9ca3959
+  ts: "2026-11-25T00:13:37Z"
+  action: start
+  actor: sonnet-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_98e0e1cd183649b48ffe4f8e2fe0ca78
+- v: 1
+  id: reg_d301394cbbcb410fac641215f2322e3a
+  ts: "2026-11-25T00:19:00Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_c9b453dda68d4b31b4b0685eb9ca3959

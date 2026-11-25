@@ -230,14 +230,13 @@ describe("Section utility functions", () => {
         const filePath = join(root, "invalid.md");
         writeFileSync(filePath, "本文テキスト\n\n## 不正な見出し\n\n本文2", "utf8");
         expect(() => validateSectionFile(filePath)).toThrow(
-          `Section file must not contain markdown headings: ${filePath}`,
+          `must not contain markdown headings other than "###" subsection headings`,
         );
+        expect(() => validateSectionFile(filePath)).toThrow(`${filePath}:3: ## 不正な見出し`);
 
         const filePathH1 = join(root, "invalid-h1.md");
         writeFileSync(filePathH1, "# 不正なH1", "utf8");
-        expect(() => validateSectionFile(filePathH1)).toThrow(
-          `Section file must not contain markdown headings: ${filePathH1}`,
-        );
+        expect(() => validateSectionFile(filePathH1)).toThrow(`${filePathH1}:1: # 不正なH1`);
       } finally {
         rmSync(root, { recursive: true, force: true });
       }
@@ -517,7 +516,7 @@ describe("register update --section CLI", () => {
         invalidSectionFile,
       ]);
       expect(process.exitCode).toBe(1);
-      expect(stderrLines.join("")).toContain("Section file must not contain markdown headings");
+      expect(stderrLines.join("")).toContain('only "###" is allowed');
       expect(readFileSync(ticketPath, "utf8")).toBe(ticket);
 
       // 5. 個票に存在しない章
@@ -578,7 +577,7 @@ describe("register update --section CLI", () => {
         {
           section: "完了条件",
           file: invalidSectionFile,
-          message: "Section file must not contain markdown headings",
+          message: 'only "###" is allowed',
         },
       ];
 
