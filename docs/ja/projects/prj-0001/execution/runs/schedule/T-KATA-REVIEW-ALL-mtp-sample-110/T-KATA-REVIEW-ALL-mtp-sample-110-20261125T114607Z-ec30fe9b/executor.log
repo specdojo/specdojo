@@ -1,0 +1,21 @@
+R1 の確認で、rulebook が求める内容のうち sample に 1 か所だけ欠けがあったので、`docs/ja/specdojo/samples/mtp-sample.md` を直しました。ほかに足す内容・削る内容は見つかっていません。result は変更していません。
+
+**直した箇所（R1-1）**: 「差異発生時の扱い」の許容差超の行です。rulebook は再実行の判断を `pm-decision-log` へ転記するよう求めていますが、同じ回の中の取り込み直しはどこにも転記されていませんでした。転記先の列に「取り込み直しの判断を `pm-decision-log` へ」を足しました。取り込み直しを回の中の作業とみれば転記は要らないとも読めるため、この指摘には「要判断」を付けています。
+
+**照合の結果**: 9 章の必須内容、成果物カタログの `done_criteria` 4 件、Sample 記述標準の禁止事項は、上の 1 件を除いて満たしていました。概要の「対象に含むもの・含まないもの」は `mtp-<term>` だけの必須項目ですが、範囲の境界を示すので残しました。
+
+**この段では扱わなかった grade の finding**: 3 件とも R1 の観点に当たらないため、担当の段に回しました。
+
+| finding | 内容 | 扱う段 |
+| --- | --- | --- |
+| F001 | `based_on` に `specdojo:dmd-sample` がない | R5 |
+| F002 | 所要時間の基準に分数などの値がない | R4 |
+| F003 | 「決定記録」と `pm-decision-log` の呼び方の揺れ | R3 |
+
+F002 は、mip-index-sample でも停止許容時間が「切替日の午前の臨時休業（正午まで）」とされ、開始時刻が決まっていません。値を足すなら、両方の sample をそろえる必要があります。
+
+**検証**: `npx prettier --check` は通りました。diff の 6 行のうち、内容の変更は 1 行だけで、残りは表の列幅をそろえ直したものです。`lint:md` などは親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1（目的の過不足）を確認した。rulebook の判断基準（再実行の判断は pm-decision-log へ転記する）に対し、同じ回の中の取り込み直しが転記先から欠けていたため、差異発生時の扱いの表に 1 項目を足した（要判断）。ほかに足す・削る内容はない。grade の finding F001・F002・F003 は R1 の観点に当たらないため、それぞれ R5・R4・R3 に回した。","handoff":["R1-1: 段 R1 / 箇所 6. 差異発生時の扱い（許容/修正/再実行）の許容差超の行 / 指摘: 同じ回の中で別 `run_id` で取り込み直すのは再実行に当たるが、管理記録への転記先が `pm-issue-log` だけで、再実行の判断の `pm-decision-log` への転記がない。rulebook の記述ガイドの差異発生時の扱い（判断基準と良い例）が求める内容が欠けている / 直した案: 転記先の列を「差異と原因を `pm-issue-log` へ、取り込み直しの判断を `pm-decision-log` へ」にした / 根拠: `vp-qe-kata-conformance`（種別の責務）、`vp-po-purpose-alignment`。迷った理由: 回の中の取り込み直しをリハーサルの中の作業とみれば判断の記録は要らないとも読める。選ばなかった案は、許容差超の行を変えずに追加の回の判断だけを記録すること / 印: 要判断","R1-2: 段 R1 / 箇所 全章 / 指摘: rulebook の本文要件の 9 章、成果物カタログ（`dct-migration-planning-template.yaml` の `mtp-index`）の `done_criteria` 4 件、Sample 記述標準の禁止事項に照らし、R1-1 以外に欠けている内容も要らない内容もない。概要の「対象に含むもの・含まないもの」は `mtp-<term>` だけの必須項目だが、範囲の境界を示すので残した / 直した案: - / 根拠: `vp-po-purpose-alignment`、`vp-arc-single-responsibility`、`vp-qe-kata-conformance` / 印: -","申し送り（指摘以外）: grade の finding は 3 件とも R1 の観点に当たらないため、この段では直していない。F001（`based_on` に `specdojo:dmd-sample` がない、`vp-dev-change-impact`）は R5、F002（所要時間の基準に分数などの値がない、`vp-qe-verifiability`）は R4、F003（「決定記録」と `pm-decision-log` の呼び方の揺れ、`vp-ux-language-consistency`）は R3 に回す。F002 は、mip-index-sample でも停止許容時間が「切替日の午前の臨時休業（正午まで）」とされ、開始時刻が未定のため、R4 で値を足すときは mip-index-sample とそろえる必要がある。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/mtp-sample.md","status":"passed","summary":"prettier --write で表を整形した後、check が通った"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/mtp-sample.md だけで、plan・result・個票を変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変更していない","reason":"変更した *.yaml・*.yml ファイルがない"}]}
+</specdojo_executor_evidence>
