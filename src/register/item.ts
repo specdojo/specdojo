@@ -7,7 +7,7 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { dump, load } from "../shared/yaml.js";
-import { inlineCodeAnglePlaceholders } from "../shared/text.js";
+import { BARE_HTTP_URL, encloseBareHttpUrls, inlineCodeAnglePlaceholders } from "../shared/text.js";
 import type { Approach } from "../shared/agent-types.js";
 import type { SpecDojoProjectConfig, SpecDojoRepoConfig } from "../shared/specdojo-config.js";
 import { readRegisterInput } from "./input.js";
@@ -263,35 +263,6 @@ export function ticketRefCell(filename: string): string {
 
 // Markdown のコードスパン。コードとして明示された内容は、表セルでも著者の記法を保持する。
 const MARKDOWN_CODE_SPAN = /(`+)[\s\S]*?\1/g;
-
-// URL の囲みを適用しない Markdown の範囲。コードスパン、山括弧、リンク（shortcut / reference
-// link を含む）は著者がすでに選んだ記法として保持する。
-const MARKDOWN_URL_PROTECTED_SPAN =
-  /(`+)[\s\S]*?\1|<[^<>\r\n]*>|!?\[[^\]\r\n]*\](?:\([^\r\n)]*\)|\[[^\]\r\n]*\])?/g;
-
-// 全角の閉じ括弧・句読点と半角の閉じ括弧は URL の直後に続く本文として扱う。
-// ASCII の句読点は query に使えるため一度 URL 候補へ含め、末尾にあるものだけ戻す。
-const BARE_HTTP_URL = /https?:\/\/[^\s<>"'`）］｝〉》」』】〕〗〙〛。、，！？；：…)\]}]+/g;
-const TRAILING_ASCII_URL_PUNCTUATION = /[.,;:!?]+$/;
-
-function encloseBareHttpUrls(text: string): string {
-  const encloseSegment = (segment: string): string =>
-    segment.replace(BARE_HTTP_URL, (candidate) => {
-      const trailing = candidate.match(TRAILING_ASCII_URL_PUNCTUATION)?.[0] ?? "";
-      const url = trailing ? candidate.slice(0, -trailing.length) : candidate;
-      return url ? `<${url}>${trailing}` : candidate;
-    });
-
-  let result = "";
-  let lastIndex = 0;
-  for (const match of text.matchAll(MARKDOWN_URL_PROTECTED_SPAN)) {
-    const start = match.index ?? 0;
-    result += encloseSegment(text.slice(lastIndex, start));
-    result += match[0];
-    lastIndex = start + match[0].length;
-  }
-  return result + encloseSegment(text.slice(lastIndex));
-}
 
 // コードスパン外の未エスケープな強調記号をエスケープする。
 // 記号の直前に偶数個のバックスラッシュがある場合は Markdown 上で未エスケープなので、
