@@ -1,0 +1,37 @@
+R4（正しさ）を opr-batch-sample で行い、事実の誤り 4 件を直しました。opr-sample.md には、batch に関わる主張で誤りがなかったので変更していません。直した後、Prettier と markdownlint はどちらも通りました（0 issues）。
+
+変更したのは `docs/ja/specdojo/samples/opr-batch-sample.md` だけです。
+
+**直した指摘**
+
+| No | 段 | 箇所 | 指摘 | 直した案 | 根拠 | 印 |
+| --- | --- | --- | --- | --- | --- | --- |
+| R4-1 | R4 | frontmatter | `based_on` が project 修飾のない `opd-index` で、id として解決しない | `specdojo:opd-index-sample` と `specdojo:opr-sample` にした（同じ系列の opr-change・opr-incident と同じ並び） | `vp-arc-technical-constraints` | 要判断（`specdojo:opr-sample` を足すかどうかは同じ系列に合わせた。足さない案もある） |
+| R4-2 | R4 | 5. アラート対応手順 | 通知の判定を「開店時に当日分の成功記録なし」と書いているが、opd-monitoring-sample と opr-sample では判定は 9:30 に、対象は前日の閉店後の成功記録 | 「開店 30 分前の 9:30 に前日の閉店後の成功記録なし」にした | `vp-qe-verifiability` | - |
+| R4-3 | R4 | 4. 障害対応手順 | P2 の条件「当日分の成功記録がない」が opd-index-sample の「前日の閉店後の成功記録がない」と合わない | 「前日の閉店後の成功記録がない」にした | `vp-qe-verifiability` | - |
+| R4-4 | R4 | 12. 関連ドキュメント導線 | `opd-monitoring` と `opr-incident` を「予定」と書いているが、どちらの sample もすでにある | wikilink にして「作成済」にした | `vp-qe-verifiability` | - |
+
+**確かめの表**
+
+| No | 主張 | 正本 | 結果 |
+| --- | --- | --- | --- |
+| 1 | `based_on: [opd-index]` | common-frontmatter schema（`idRefArray`）と sample の id | 不一致 → 直した |
+| 2 | 通知は「開店時に当日分の成功記録なし」 | opd-monitoring-sample（46 行・49 行）、opr-sample のアラート対応手順 | 不一致 → 直した |
+| 3 | P2 の条件「当日分の成功記録がない」 | opd-index-sample（90 行） | 不一致 → 直した |
+| 4 | `opd-monitoring` と `opr-incident` は予定 | samples ディレクトリの一覧 | 不一致 → 直した |
+| 5 | 上限は自動の取得を含めて 1 日 2 回、手動の再実行は 1 回まで | opr-sample のバッチ再実行・失敗時対応 | 一致 |
+| 6 | 同じ取得日は同じ世代を上書きし、世代が増えない | opr-sample のバッチ再実行・失敗時対応 | 一致 |
+| 7 | 夜間バックアップの失敗は P2、翌朝も失敗なら P1 で `opr-incident` へ | opr-incident-sample（123 行）、opd-monitoring-sample（59 行） | 一致 |
+| 8 | 分冊に該当する作業がない章も「`opr-index` 参照」で残す | opr-rulebook（93 行） | 一致 |
+| 9 | `backup run --target sales-db --date ...` のコマンド | 正本がない（sample 内で `_ASSUMPTION_` と明記） | 確かめられない（実際のホスティング環境の手順書が要る） |
+| 10 | 取得はデータベースを読み取るだけで、取得中も記録を続けられる | 正本がない（`_ASSUMPTION_` と明記） | 確かめられない（「証跡」章の模擬で確かめる前提） |
+
+**grade の finding F001〜F004**
+
+4 件とも opr-sample の古い版を指していて、opr-sample は今回直していません。
+- F002 と F003 は、すでに解消していました。概要の未決事項の表に保管期間の行があり、関連ドキュメント導線の表には分冊がすべて「作成済」で並んでいます。
+- F001 と F004 は、kata-guide がこの段のレビューでは使わないと決めている観点（`vp-po-decision-readiness`、`vp-ops-release-readiness`）なので、扱っていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4 正しさ: opr-batch-sample の事実の誤り 4 件を直した（based_on の未修飾 id、アラート判定の時刻と対象、P2 の条件、既存 sample を予定とした導線）。opr-sample には batch に関わる誤りがなく変更なし。","handoff":["R4-1: R4 / frontmatter / based_on が project 修飾のない `opd-index` で id として解決しない / `specdojo:opd-index-sample` と `specdojo:opr-sample` にした / `vp-arc-technical-constraints`（common-frontmatter schema の `idRefArray`、同じ系列の opr-change-sample と opr-incident-sample の `based_on`） / 要判断（`specdojo:opr-sample` を足すかは同じ系列に合わせた。足さない案もある）","R4-2: R4 / 5. アラート対応手順 / 通知を「開店時に当日分の成功記録なし」と書き、opd-monitoring-sample（9:30 に前日の閉店後の成功記録を確かめる）と opr-sample のアラート対応手順に合わない / 「開店 30 分前の 9:30 に前日の閉店後の成功記録なし」にした / `vp-qe-verifiability` / -","R4-3: R4 / 4. 障害対応手順 / P2 の条件「当日分の成功記録がない」が opd-index-sample の監視の表（翌朝の開店時に前日の閉店後の成功記録がない）と合わない / 「前日の閉店後の成功記録がない」にした / `vp-qe-verifiability` / -","R4-4: R4 / 12. 関連ドキュメント導線 / `opd-monitoring` と `opr-incident` を予定としているが、opd-monitoring-sample と opr-incident-sample はすでにある / wikilink にして作成済にした / `vp-qe-verifiability` / -","確かめの表: 1 based_on（common-frontmatter schema・sample の id、不一致→直した）、2 アラート判定（opd-monitoring-sample の 46・49 行、不一致→直した）、3 P2 の条件（opd-index-sample の 90 行、不一致→直した）、4 導線の予定表記（samples の一覧、不一致→直した）、5 上限は自動を含め 1 日 2 回・手動 1 回（opr-sample のバッチ再実行、一致）、6 同じ取得日は世代を上書き（opr-sample、一致）、7 P2 から翌朝 P1 への移行（opr-incident-sample の 123 行・opd-monitoring-sample の 59 行、一致）、8 該当がない章も「`opr-index` 参照」で残す（opr-rulebook の 93 行、一致）、9 `backup run` のコマンド形式（正本なし、`_ASSUMPTION_`、確かめられない: 実際のホスティング環境の手順書が要る）、10 取得中も記録を続けられる（正本なし、`_ASSUMPTION_`、確かめられない: 証跡章の模擬で確かめる）","grade の finding F001〜F004 は opr-sample の古い版を指す。F002（保管期間の未決の行）と F003（分冊の記述）は現行の opr-sample ですでに解消。F001・F004 は kata-guide がこの段のレビューで使わないとする観点（`vp-po-decision-readiness`、`vp-ops-release-readiness`）のため扱っていない。opr-sample は変更していない。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/opr-batch-sample.md","status":"passed","summary":"整形済み（表の列幅だけ変わった）"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/opr-batch-sample.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>
