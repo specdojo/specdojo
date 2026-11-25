@@ -300,7 +300,8 @@ git commit -m "chore(prj-0002): remove project files moved to separate repositor
   "external_projects": {
     "specdojo-lp": {
       "path": "../specdojo-lp-specdojo",
-      "project_id": "prj-0002"
+      "project_id": "prj-0002",
+      "source_url": "https://github.com/specdojo/specdojo-lp-specdojo/blob/main"
     }
   }
 }
@@ -310,12 +311,15 @@ git commit -m "chore(prj-0002): remove project files moved to separate repositor
 
 新リポジトリの `.specdojo/specdojo.config.json` のトップレベルへ追加します。
 
+`source_url` は、相手の文書への wikilink を文書サイトで相手のリポジトリの URL へ置き換えるための基点です。相手の既定のブランチのファイル表示の URL を書きます（[[specdojo:specdojo-config-reference|SpecDojo設定リファレンス]] の「リポジトリをまたぐ wikilink」）。
+
 ```json
 {
   "external_projects": {
     "specdojo-core": {
       "path": "../specdojo",
-      "project_id": "prj-0001"
+      "project_id": "prj-0001",
+      "source_url": "https://github.com/specdojo/specdojo/blob/main"
     }
   }
 }
@@ -351,10 +355,7 @@ npx specdojo register add --project specdojo-lp --type note --title "外部起�
 
 #### 6.2.2. 双方向のリンクを点検する
 
-元の文書から `prj-0002` への参照と、移した文書から元に残った文書への参照の両方を点検します。`external_projects` の宣言だけでは wikilink は解決されません。
-
-> [!NOTE]
-> リポジトリをまたぐリンクの標準的な書き方（PJR-66ER）は現在準備中であるため、用意されたらその記法に従います。現時点では `rg` で検索し、移行で解決不能になる wikilink を、相手の文書への実在する完全 URL に置き換えます。URL が未確定なら文書 ID をインラインコードで残して移行記録へ記載し、切替前に参照先を確認します。
+元の文書から `prj-0002` への参照と、移した文書から元に残った文書への参照の両方を点検します。`[[prj-0002:...]]` のような project 修飾の doc id の wikilink は書き換えません。手順4で `source_url` を宣言していれば、文書サイトは相手のリポジトリの URL へ置き換えます。点検するのは、`/projects/prj-0002/` のような相対パスのリンクと、文書サイトで解決できずに `[[...]]` のまま表示される wikilink です。後者は、相手のリポジトリを `path` の位置に checkout し、相手の doc id が実在することを確かめます。
 
 ```bash
 # 元リポジトリで実行（終了コード 1 は一致なし）
