@@ -64,3 +64,29 @@
       from: "-"
       to: "executor reported incomplete: 親の検証ごとに、検証を終えるまでの時間を `duration_ms`（全体）、`last_output_ms`（子の時間）、`detection_lag_ms`（runner が気づくまでの遅れ）、`event_loop_delay_max_ms`（処理が止まった最長の時間）に分けて記録する `validation-exit-timing…"
   previous_event_id: reg_2de7bd815f2c4979b6959de96323c16d
+- v: 1
+  id: reg_1d59e976a1ce40218086b34afede11b2
+  ts: "2026-11-25T12:28:49Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: waiting
+  to_status: waiting
+  reason: section "対応方針" updated
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_7d72cee451e3445fafb0cc4418e29329
+- v: 1
+  id: reg_756d45c849a445d1865b9a48be97fb7d
+  ts: "2026-11-25T12:29:09Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: waiting
+  to_status: waiting
+  reason: section "対応方針" updated
+  changes:
+    - field: section
+      from: ""
+      to: 対応方針
+  previous_event_id: reg_1d59e976a1ce40218086b34afede11b2
