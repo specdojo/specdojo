@@ -105,7 +105,7 @@ linked worktree（`exec run --worktree` の作業場所など）では、`path` 
 
 相手の project の文書へは、手元の文書と同じく project 修飾の doc id で `[[prj-0002:pjr-xxxx-topic|表示名]]` と書きます。別名（`customer:`）は付けません。別名は呼び出し元ごとに違ううえ、project を移しても doc id は変わらないため、移した後もリンクを書き換えずに済みます。
 
-文書サイトは、手元の doc index に無い id のうち、接頭辞が `external_projects` の `project_id` に一致するものを、相手のリポジトリの `.specdojo/doc-index.json`（無ければ相手の `projects.<project_id>.base_path` 配下の Markdown の frontmatter）で引き、`source_url` の後ろにファイルのパスを足した URL へ置き換えて新しいタブで開きます。YAML の行番号付きのエントリは `#L<行番号>` を付けます。手元の doc index にある id は手元の文書を優先します。`source_url` が無い別名、`path` に相手のリポジトリが無い場合（CI で checkout していないなど）、相手の索引に無い id は、従来どおり `[[...]]` のまま表示し、文書サイトのビルドは止めません。`path` はローカル設定の差し替えと linked worktree の規則に従います。
+文書サイトは、手元の doc index に無い id のうち、接頭辞が `external_projects` の `project_id` に一致するものを、相手のリポジトリの `.specdojo/doc-index.json`（無ければ相手の `projects.<project_id>.base_path` 配下の Markdown の frontmatter）で引き、`source_url` の後ろにファイルのパスを足した URL へ置き換えて新しいタブで開きます。YAML の行番号付きのエントリは `#L<行番号>` を付けます。手元の doc index にある id は手元の文書を優先します。`source_url` が無い別名、`path` に相手のリポジトリが無い場合（CI で checkout していないなど）、相手の索引に無い id は、`[[...]]` のまま表示し、文書サイトのビルドは止めません。このとき修飾付きの id（`<namespace>:<id>` の形）は、文書と id の組ごとに 1 回、id と文書のパスを含む警告（`[external-links] unresolved wikilink ...`）を出します。`path` はローカル設定の差し替えと linked worktree の規則に従います。
 
 ### 2.2. `references`のキー
 

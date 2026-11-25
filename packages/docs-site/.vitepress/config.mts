@@ -37,7 +37,13 @@ import {
   collectProductDocIndex,
   loadProductRepos,
 } from "./product-repos";
-import { collectExternalDocLinks, loadExternalProjectLinkSources } from "./external-links";
+import {
+  classifyDocLink,
+  collectExternalDocLinks,
+  createUnresolvedWikilinkReporter,
+  loadExternalProjectLinkSources,
+  selectExternalDocLinks,
+} from "./external-links";
 import * as path from "path";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 
@@ -104,11 +110,13 @@ const docIndex: Record<string, string> = {
 const archiveLinks = loadArchiveLinks(WORKSPACE_ROOT);
 // 別リポジトリの project の doc id は、external_projects の source_url から URL へ引く（PJR-66ER）。
 // 手元の doc index にある id は手元の文書を優先する。
-const externalDocLinks = Object.fromEntries(
-  Object.entries(collectExternalDocLinks(loadExternalProjectLinkSources(WORKSPACE_ROOT))).filter(
-    ([id]) => !docIndex[id],
-  ),
+const localDocIds: ReadonlySet<string> = new Set(Object.keys(docIndex));
+const externalDocLinks = selectExternalDocLinks(
+  collectExternalDocLinks(loadExternalProjectLinkSources(WORKSPACE_ROOT)),
+  localDocIds,
 );
+// 手元にも external_projects にも無い修飾付きの wikilink は、ビルドを止めずに警告する。
+const reportUnresolvedWikilink = createUnresolvedWikilinkReporter();
 
 // doc-index エントリから行番号サフィックスを除去する（例: "docs/ja/foo.yaml:42" → "docs/ja/foo.yaml"）
 function stripEntryLineSuffix(entry: string): string {
@@ -1194,8 +1202,8 @@ export default defineConfig({
         if (!/^[a-z][a-z0-9:_-]+$/.test(id)) return false;
 
         if (!silent) {
-          const entry = docIndex[id];
-          const external = externalDocLinks[id];
+          const target = classifyDocLink(id, localDocIds, externalDocLinks);
+          const entry = target.kind === "local" ? docIndex[id] : undefined;
           const sourceLink =
             resolveArchiveWikilink(inner, archiveLinks, GITHUB_SOURCE) ??
             resolveExecRecordWikilink(inner, docIndex, GITHUB_SOURCE);
@@ -1234,15 +1242,16 @@ export default defineConfig({
             token = state.push("text", "", 0);
             token.content = displayText;
             state.push("link_close", "a", -1);
-          } else if (external) {
+          } else if (target.kind === "external") {
             let token = state.push("link_open", "a", 1);
-            token.attrSet("href", external.href);
+            token.attrSet("href", target.href);
             token.attrSet("target", "_blank");
             token.attrSet("rel", "noreferrer");
             token = state.push("text", "", 0);
             token.content = displayText;
             state.push("link_close", "a", -1);
           } else {
+            reportUnresolvedWikilink(id, state.env?.relativePath as string | undefined);
             const token = state.push("text", "", 0);
             token.content = `[[${inner}]]`;
           }

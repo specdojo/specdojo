@@ -48,11 +48,14 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業                           | 担当 | 状態 | メモ                                                                                         |
-| --- | ------------------------------ | ---- | ---- | -------------------------------------------------------------------------------------------- |
-| 1   | 選択肢の比較と方式の決定       | ARC  | done | 対応結果の「方式の比較と決定」に記録した。                                                   |
-| 2   | 文書サイトの解決の実装とテスト | ARC  | done | `external-links.ts` を追加し、`config.mts` の wikilink と frontmatter のリンクに組み込んだ。 |
-| 3   | 利用者向けの文書の更新         | ARC  | done | 設定リファレンスと移行ガイドを更新した。                                                     |
+| No  | 作業                                           | 担当 | 状態 | メモ                                                                                         |
+| --- | ---------------------------------------------- | ---- | ---- | -------------------------------------------------------------------------------------------- |
+| 1   | 選択肢の比較と方式の決定                       | ARC  | done | 対応結果の「方式の比較と決定」に記録した。                                                   |
+| 2   | 文書サイトの解決の実装とテスト                 | ARC  | done | `external-links.ts` を追加し、`config.mts` の wikilink と frontmatter のリンクに組み込んだ。 |
+| 3   | 利用者向けの文書の更新                         | ARC  | done | 設定リファレンスと移行ガイドを更新した。                                                     |
+| 4   | 解決できない修飾付き wikilink の警告（2 回目） | ARC  | done | `createUnresolvedWikilinkReporter` を足し、`config.mts` の wikilink で呼ぶ。                 |
+| 5   | 判定の切り出しと単体テスト（2 回目）           | ARC  | done | `classifyDocLink`・`selectExternalDocLinks` を切り出し、未宣言と手元優先のテストを足した。   |
+| 6   | 記法の説明への追記（2 回目）                   | ARC  | done | `docs-editing-guide` と設定リファレンスを更新した。                                          |
 
 ## 5. 対応結果
 
@@ -76,6 +79,11 @@ C を選んだ。doc id は project 修飾で、ファイルや project の置�
 - 単体テストを `tests/packages/docs-site/external-links.test.ts` に追加し、`tests/src/shared/specdojo-config-external-projects.test.ts` に `source_url` の検証を足した。
 - [[specdojo:specdojo-config-reference|SpecDojo設定リファレンス]] に `source_url` と「リポジトリをまたぐ wikilink」を足した。[[specdojo:project-move-guide|プロジェクト移行ガイド]] の手順4の例に `source_url` を足し、双方向のリンクの点検にあった「準備中」の注記を決めた書き方に置き換えた。
 
+- 2 回目（2026-11-25）: 方式は変えずに次を直した。
+  - `external-links.ts` に、解決先を決める `classifyDocLink`、手元の id を外部の表から除く `selectExternalDocLinks`、修飾付きの id（`<namespace>:<id>`）が手元にも `external_projects` にも無いときに id と文書のパスを含めて文書と id の組ごとに 1 回警告する `createUnresolvedWikilinkReporter` を足し、`config.mts` から使うようにした。ビルドは止めず、表示は `[[...]]` のままである。
+  - 単体テストに、相手の project が `external_projects` に宣言されていない場合、手元の doc index の id が外部の URL より優先される場合、警告の文面と重複の抑止、修飾の無い id を警告しない場合を足した。
+  - [[specdojo:docs-editing-guide|ドキュメント編集ガイド]] の wikilink の記法の説明にリポジトリをまたぐ書き方を足し、設定リファレンスに警告の説明を足した。
+
 ### 5.3. 成果物
 
 - `packages/docs-site/.vitepress/external-links.ts`
@@ -87,6 +95,7 @@ C を選んだ。doc id は project 修飾で、ファイルや project の置�
 - `tests/src/shared/specdojo-config-external-projects.test.ts`
 - `docs/ja/specdojo/references/specdojo-config-reference.md`
 - `docs/ja/specdojo/guides/project-move-guide.md`
+- `docs/ja/specdojo/guides/docs-editing-guide.md`
 
 ### 5.4. CHANGELOG に書く事項
 
@@ -98,7 +107,7 @@ C を選んだ。doc id は project 修飾で、ファイルや project の置�
 - このリポジトリの文書には `[[prj-0002:...]]` の wikilink が 6 種類（17 か所）ある。`.specdojo/specdojo.config.json` に prj-0002 の `external_projects` が無いため、今は解決されない。設定は agent の保護対象のため変えていない。prj-0002 を別リポジトリへ移した時に、移行ガイドの手順4で `path`・`project_id`・`source_url` を宣言する。
 - CI など相手のリポジトリを checkout しない環境では解決されない。公開する文書サイトで解決させるには、ビルドの前に相手のリポジトリを `path` の位置へ checkout する。
 - VS Code 拡張の wikilink の解決は対象にしていない。必要なら別の項目で扱う。
-- 文書サイトのビルド（`npm run docs:build`）での表示の確認はしていない。オーケストレーターがまとめて流す。
+- 文書サイトのビルド（`npm run docs:build`）での表示と警告の出方の確認はしていない。今のリポジトリでは `[[prj-0002:...]]` の 17 か所が警告に出る見込みである。オーケストレーターがまとめて流す。
 
 ## 6. 関連ドキュメント
 
