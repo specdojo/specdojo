@@ -1,0 +1,141 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-cdr-sample-120",
+  "run_id": "T-KATA-REVIEW-ALL-cdr-sample-120-20261125T055013Z-d02366b3",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-25T05:50:59.914Z",
+    "completed_at": "2026-11-25T05:54:39.661Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/samples/cdr-sample.md",
+      "status": "not_applicable",
+      "summary": "変更したファイルがないため実行していない",
+      "reason": "Prettier の適用条件（変更した *.md など）を満たすファイルがない"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/samples/cdr-sample.md",
+      "status": "not_applicable",
+      "summary": "変更したファイルがないため実行していない",
+      "reason": "markdownlint の適用条件（変更した *.md）を満たすファイルがない"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md\n\nlint:md:changed: no changed files"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\nlint:fm:changed: no changed files"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7086 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7086 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)",
+      "reason": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-cdr-sample-120/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-cdr-sample-120/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R2（構成）を確認した。章の順・粒度・表と本文の配置は cdr-rulebook の本文構成と cdr-template に一致し、移動・分割・統合の差分は要らないため sample は変更していない。F001・F002（server-only の重複）は R1 の版（bbad1006a7）で解消済み。",
+  "completion_status": "complete",
+  "handoff": [
+    "No: 1 / 段: R2 / 箇所: docs/ja/specdojo/samples/cdr-sample.md の 8 章「Next.js のサーバーとクライアントの境界」の先頭の項目（旧 93 行目、今の 104 行目） / 指摘: grade の F001（`vp-arc-conciseness`）と F002（`vp-qe-kata-conformance`）が指した、禁止事項の表と 8 章の重複は、R1 の版（commit bbad1006a7）で「クライアントから読み込まれた場合にビルドを失敗させる」が削られて解消している。理由は表だけ、8 章は `server-only` を import する手順だけに残る / 直した案: なし（今のまま） / 根拠: `cdr-rulebook` の本文要件（表に書いた禁止は本文の章で繰り返さない）、commit bbad1006a7 の差分 / 印: なし",
+    "No: 2 / 段: R2 / 箇所: docs/ja/specdojo/samples/cdr-sample.md の 6 章「テストと検証」の最後の項目（`specdojo catalog validate` と、`applyTo`・`specdojo.id`・`specdojo.rulebook` のカタログとの照合） / 指摘: 本書を変えたときの検証コマンドがコマンドの表の外にある。照合は手で行う確認で、表の 1 行にまとめるとセルが長くなりセル内改行を使わない決まりに反するため移していない / 直した案: 今のまま。表に寄せる場合は、コマンド `specdojo catalog validate`、対象「本書の Frontmatter」、実行条件「本書を変更したとき」、失敗時「`based_on` の ID を直す」の行を足し、カタログとの照合は箇条書きに残す / 根拠: `cdr-rulebook` の「テストと検証の書き方」（表の列と、カタログとの照合を合格条件とする記述）、.github/instructions/markdown.instructions.md の表の規則 / 印: 要判断",
+    "No: 3 / 段: R2 / 箇所: docs/ja/specdojo/samples/cdr-sample.md の 8 章の位置 / 指摘: 8 章を 2 章「モジュールと import」の近くへ移す案を検討した。rulebook が枠組み固有の章を必須章の後ろに置くと決め、template の末尾の注記も同じなので移さない / 直した案: なし（今のまま） / 根拠: `cdr-rulebook` の本文要件（固有の章は必須章の後ろに 1〜2 章まで）、`cdr-template` の末尾の注記 / 印: なし"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-cdr-sample-120/T-KATA-REVIEW-ALL-cdr-sample-120-20261125T055013Z-d02366b3/executor.log",
+      "bytes": 6245,
+      "truncated": false
+    }
+  ]
+}
