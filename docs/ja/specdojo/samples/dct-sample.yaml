@@ -117,6 +117,7 @@ groups:
           - prj-scope
           - prj-assumptions-constraints-dependencies
         overview: 初期課題と対応方針を整理し、計画立案の前提を明示する
+        brief: *project_baseline_brief
         path: prj-issues-and-approach.md
         rulebook: specdojo:prj-issues-and-approach-rulebook
         done_criteria:
