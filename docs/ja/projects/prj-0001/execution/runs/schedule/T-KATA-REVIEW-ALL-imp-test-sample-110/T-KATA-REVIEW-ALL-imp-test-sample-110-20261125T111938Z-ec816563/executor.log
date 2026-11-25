@@ -1,0 +1,16 @@
+R1（目的の過不足）のレビューで、`docs/ja/specdojo/samples/imp-test-sample.md` を 2 か所直しました。変更したのはこのファイルだけです。Prettier で整形し、差分は 6 行追加・5 行削除です。lint・schema・test の検査はこの後 runner が実行します。
+
+- **成功条件**: 重大度「高」の欠陥の条件から「つけ残高の誤り」を外しました。つけ管理のテストは適用範囲で対象外としているので、この条件を確かめる手段がありませんでした。
+- **反映先**: 「対応方針」に、テストの変更を反映する文書を 1 行足しました。結合テストは `itc-index`、業務受入テストは `atc-index`、回帰テストの方針はテスト戦略・方針 `tsp-index` です。rulebook の「位置づけ」は反映先を定めていますが、sample には書かれていませんでした。
+
+**要判断が 2 件あります。**
+- **結合テストの反映先**: sample の「結合テスト」を内部結合テストと読んで `itc-index` にしましたが、外部結合テスト `etc-index` とも読めます。
+- **回帰テストの反映先**: カタログが決められなかったので、絞り込む方針だけを `tsp-index` に書きました。
+
+ほかの 3 件（F001・F004・F005）は R1 の観点に当たらないので、直さずに残しました。
+- **F001**（重点回帰で欠陥が出たら残り 100 ケースを実行する件）: 本文の「全 120 ケースは期限内に終わらない」という判断と食い違っています。根拠の観点 `vp-pm-plan-feasibility` は kata のレビューでは使わないので、R2 の `vp-qe-omissions-consistency` で扱うことを提案します。
+- **F004**（受入判定日の営業日数が抜けている件）と **F005**（「連携系テストデータの準備」という論点名）: R3（読みやすさ）で扱います。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1（目的の過不足）として imp-test-sample の成功条件から対象外のつけ残高を外し（F003）、対応方針に rulebook の位置づけで定める反映先を足した（F002）。F001・F004・F005 は R1 の観点外のため後の段へ残した。","handoff":["R1-1: R1 / 2. 変更要求の概要 / 成功条件の重大度「高」に「つけ残高の誤り」があり、つけ管理のテストを対象外とした適用範囲と合わず、確かめる手段がない（F003） / 成功条件を「重大度「高」（売上金額の誤り）の未解決欠陥が 0 件」にした / `vp-qe-kata-conformance`、`vp-po-purpose-alignment`（rulebook の目的と適用範囲に対し要らない内容）。影響分析サマリの尺度「売上金額・つけ残高の誤り」は高の定義として一般的なので残した / -","R1-2: R1 / 5. 対応方針 / rulebook の「位置づけ」が定める反映先（テスト戦略・方針と各テストレベルのテストカタログ）が sample に書かれておらず、完成例として要る内容が欠けている（F002） / 「反映先」の箇条を足した（結合テスト新規 8 ケース→`itc-index`、業務受入テストの判定項目とシナリオ→`atc-index`、回帰テストを重点 20 ケースへ絞る方針→`tsp-index`） / `vp-qe-kata-conformance`、`vp-po-purpose-alignment`。迷った点: sample の「結合テスト」を内部結合と読んで `itc-index` にしたが、外部結合 `etc-index` とする案もある。回帰テストのケースの置き場所が決められず、方針だけを `tsp-index` に書いた / 要判断","R1-3: R1 / 5. 対応方針 / 重点回帰で欠陥が出たら残り 100 ケースを受入判定前に実行するという記述が、4. 影響詳細一覧の「全 120 ケースの再実行は期限内に終わらない」と食い違う（F001） / - / 根拠の観点 `vp-pm-plan-feasibility` は kata の段のレビューでは使わない（kata-guide の kata の観点の組）。文書内の矛盾として R2 の `vp-qe-omissions-consistency` で扱うことを提案する / -","R1-4: R1 / 1. 目的と適用範囲 / 「その営業日前の 2026-05-28」で営業日数が抜けている（F004） / - / `vp-ux-readability` のため R3 へ残す / -","R1-5: R1 / 6. 未解決事項 / 論点名「連携系テストデータの準備」がほかの章の呼び方と合わない（F005） / - / `vp-ux-language-consistency` のため R3 へ残す / -"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/imp-test-sample.md","status":"passed","summary":"変更した sample を整形した"},{"command":"npm run lint:md","status":"not_run","summary":"parent runner が実行する","reason":"pipeline の親 runner が実行するため"}]}
+</specdojo_executor_evidence>
