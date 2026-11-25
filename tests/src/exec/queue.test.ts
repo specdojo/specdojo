@@ -122,6 +122,34 @@ describe("parseQueueStepSpec", () => {
     );
   });
 
+  it("accepts exec resume --task as a queue step and adds the queue project", () => {
+    const step = parseQueueStepSpec(
+      "exec resume --task T-1 --resume-from executor",
+      "stop",
+      1,
+      "p",
+    );
+
+    expect(step.kind).toBe("exec-resume");
+    expect(step.argv).toEqual([
+      "exec",
+      "resume",
+      "--task",
+      "T-1",
+      "--resume-from",
+      "executor",
+      "--project",
+      "p",
+    ]);
+  });
+
+  it("rejects exec resume without --task or with --due", () => {
+    expect(() => parseQueueStepSpec("exec resume", "stop", 1, "p")).toThrow(/needs --task/);
+    expect(() => parseQueueStepSpec("exec resume --task T-1 --due", "stop", 1, "p")).toThrow(
+      /--due is not supported/,
+    );
+  });
+
   it("rejects quotes because no shell interprets the step", () => {
     expect(() => parseQueueStepSpec("grade run --kind 'rulebook'", "stop", 2, "p")).toThrow(
       /step 2: quotes and backslashes are not supported/,
