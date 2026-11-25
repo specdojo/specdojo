@@ -1,0 +1,36 @@
+R4（正しさ）のレビューでは誤りが見つからなかったため、`docs/ja/specdojo/samples/opr-sample.md` は変更していません。plan が宣言する編集対象はこのファイルなので、そのうちバックアップ確認・リストアに関わる記述を、関連する sample と schema に突き合わせました。
+
+**確かめの表**（主張ごとの記録は handoff に 1 件ずつ書きました）
+
+| No | 主張（`opr-sample` の箇所） | 正本 | 結果 |
+| --- | --- | --- | --- |
+| 1 | frontmatter の `type: operations` | `deliverable-frontmatter.schema.yaml` | 一致 |
+| 2 | RTO/RPO が決まるまでは、翌営業日の開店までに前日閉店時点へ戻れば合格（未決事項の表） | `opd-index-sample` のバックアップ・リストア方針 | 一致 |
+| 3 | 夜間バックアップは閉店後に 1 日 1 回自動で取る | `opd-index-sample`、`opr-batch-sample` | 一致 |
+| 4 | 9:30 に成功記録がなければ通知し、P2 としてバッチ再実行へ進む（アラート対応） | `opr-monitoring-sample`、`opd-index-sample` | 一致 |
+| 5 | 誤検知は、世代の取得日が前日の `closing_date` と一致すれば終える | `opr-batch-sample` | 一致 |
+| 6 | 復元は `PO` が決め、`DEV` が最新の成功したバックアップを本番へ戻す | `opr-backup-restore-sample` | 一致 |
+| 7 | 月次の演習の照合と、一致しないときに P2 として扱うこと | `opd-index-sample` | 一致 |
+| 8 | 再実行の上限は 1 日 2 回（手動は 1 回）、同じ日付の取得は世代を上書きする、上限到達時の扱い | `opr-batch-sample` | 一致 |
+| 9 | 復元演習の記録は月次点検の記録と同じ `ticket_id` で残す | `opr-backup-restore-sample` | 一致 |
+| 10 | 関連導線の wikilink（`opr-index-sample`、`opr-incident-sample` など） | 各 sample の frontmatter の id | 一致 |
+| 11 | 識別子 `closing_date`・`run_id` | 正本なし | 確かめられない（業務データ仕様の正本が要る） |
+
+**grade の finding の扱い**
+
+- **F001・F004:** kata-guide の「kata の観点の組」で、kata のレビューの段では使わない観点なので扱いませんでした。
+- **F002:** `opr-sample` の未決事項の表に「監査ログ以外の証跡の保管期間」の行が既にあり、解消済みです。
+- **F003:** R5（整合）の観点です。`opr-sample` 側は関連導線の表で分冊をすべて「作成済」としており、解消済みです。
+
+**R5 へ申し送る食い違い**（`opr-backup-restore-sample` 側で、今回は直していません）
+
+- 関連導線で `opr-incident` を「予定」と書いていますが、`opr-incident-sample` は既にあります。また `opr-index` という呼び名が、別に存在する `opr-index-sample` と紛らわしくなっています。
+- RTO の仮の基準を、開店前点検の 9:45 までとしています。`opr-sample` と `opd-index-sample` は開店（10:00）までです。
+- 夜間バックアップの通知を「開店時」と書いていますが、`opr-sample` と `opr-monitoring-sample` は 9:30 です。
+- 復元の完了条件でつけ残高の合計も照合しますが、`opr-sample` は販売件数だけです。どちらに合わせるかは R5 で決めてください。
+
+sample を変更していないので、整形・lint の検査は実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）で docs/ja/specdojo/samples/opr-sample.md のバックアップ確認・リストアに関わる主張を opd-index-sample・opr-backup-restore-sample・opr-batch-sample・opr-monitoring-sample・deliverable-frontmatter schema と照合した。一致 10 件、確かめられない 1 件、不一致 0 件のため sample は変更していない。F001・F004 は kata の段で使わない観点のため扱わず、F002・F003 は opr-sample では解消済み。","handoff":["R4 確かめ No1: 主張「frontmatter の `type: operations`」/ 正本 docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml / 確かめ方: deliverableType の enum を grep / 結果: 一致 / 根拠: enum に operations（運用設計・手順）がある","R4 確かめ No2: 主張「未決事項の表: RTO/RPO が決まるまでは、翌営業日の開店までに前日閉店時点へ復元できれば合格」/ 正本 docs/ja/specdojo/samples/opd-index-sample.md（バックアップ・リストア方針）/ 確かめ方: 読み取り / 結果: 一致 / 根拠: RTO は『翌営業日の開店までに復元して記録を再開する』、RPO は『前日の閉店時点に戻ることを許す』","R4 確かめ No3: 主張「バックアップ確認・リストア手順: 自動取得は閉店後に 1 日 1 回」/ 正本 opd-index-sample.md（取得の頻度）、opr-batch-sample.md（手順適用範囲・前提）/ 確かめ方: 読み取り / 結果: 一致 / 根拠: 『毎日、閉店後の日次締めの後に 1 回』","R4 確かめ No4: 主張「アラート対応手順: 夜間バックアップは 9:30 に前日の閉店後の成功記録がなければ通知し、P2 としてバッチ再実行へ進む」/ 正本 opr-monitoring-sample.md（時間帯・点検・アラート）、opd-index-sample.md（監視・アラート方針）/ 確かめ方: 読み取り / 結果: 一致 / 根拠: monitoring が開店 30 分前の 9:30 に確認し P2 とする。opd は『P2 として DEV に再取得を依頼する』","R4 確かめ No5: 主張「誤検知: 実行ログが成功で、世代の取得日が前日の `closing_date` と一致すれば終了」/ 正本 opr-batch-sample.md（アラート対応手順の誤検知）/ 確かめ方: 読み取り / 結果: 一致","R4 確かめ No6: 主張「復元は P1 で `PO` が決めた場合に `DEV` が行い、最新の成功したバックアップを本番へ戻して当日分を転記する」/ 正本 opr-backup-restore-sample.md（復元）、opd-index-sample.md（当日分の転記）/ 確かめ方: 読み取り / 結果: 一致","R4 確かめ No7: 主張「演習: `DEV` が月次で前日のバックアップを検証用の環境へ戻して販売件数を比べ、`OPS` が確かめ、一致しなければ P2」/ 正本 opd-index-sample.md（復元の確認・確認者）/ 確かめ方: 読み取り / 結果: 一致 / 根拠: 『月次で、検証用の環境へ復元し、前日の販売件数と一致するかを確かめる』『OPS。復元できなかった場合は P2』","R4 確かめ No8: 主張「再実行の上限は自動取得を含めて 1 日 2 回（手動は 1 回）。同じ日付の取得は世代を上書きする。上限到達時は P2 のまま翌朝も失敗なら P1」/ 正本 opr-batch-sample.md（再実行上限と上限到達時、重複の防止、優先度の表）/ 確かめ方: 読み取り / 結果: 一致","R4 確かめ No9: 主張「証跡: 実行ログの識別子は `run_id`・実行日時、復元演習の記録は月次点検の記録と同じ `ticket_id`」/ 正本 opr-backup-restore-sample.md（証跡）、opr-batch-sample.md（証跡）/ 確かめ方: 読み取り / 結果: 一致 / 根拠: 分冊は世代の日付や取得日を追加しているが、index の最低限の識別子と矛盾しない","R4 確かめ No10: 主張「関連ドキュメント導線の wikilink（`opr-index-sample`・`opr-backup-restore-sample`・`opr-incident-sample` など）」/ 正本 docs/ja/specdojo/samples/ の各 sample の frontmatter の id / 確かめ方: grep で id を照合 / 結果: 一致","R4 確かめ No11: 主張「識別子 `closing_date`・`run_id`」/ 正本: なし（schema・src・コマンドリファレンスにこの題材の正本がない）/ 確かめ方: sample 間で表記を照合 / 結果: 確かめられない / 根拠: 確かめるには業務データ仕様の正本が要る","grade の finding の扱い: F001（`vp-po-decision-readiness`）と F004（`vp-ops-release-readiness`）は、kata-guide の「kata の観点の組」で kata の段のレビューでは使わない観点のため扱わない。F002（`vp-qe-verifiability`）は、opr-sample の未決事項の表に『監査ログ以外の証跡の保管期間』の行があり解消済み。F003（`vp-qe-kata-conformance`）は R5 の観点。opr-sample の関連導線の表は分冊をすべて作成済として列挙しており、opr-sample 側は解消済み","R5 への申し送り（opr-backup-restore-sample 側、本タスクの編集対象外）: (1) 関連ドキュメント導線で `opr-incident` を『予定』としているが opr-incident-sample は存在する。本文の呼称 `opr-index` と実在の opr-index-sample の取り違えもある。(2) 未決事項の RTO の仮基準が『開店前点検（9:45）まで』で、opr-sample・opd-index-sample の『開店まで』と違う。(3) アラート対応手順で通知を『開店時』と書くが、opr-sample・opr-monitoring-sample は 9:30。(4) 復元の完了条件でつけ残高の合計も照合するが、opr-sample の復元の完了条件は販売件数だけ。どちらへ揃えるかを R5 で決める","適用外の検証: `npx prettier --check` と `npm run validate:history-links` は、sample・履歴ファイルのどちらも変更していないため適用外"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/opr-sample.md","status":"not_applicable","summary":"変更ファイルなし","reason":"本タスクでは Markdown を含むファイルを変更していないため"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルの変更なし","reason":"plan・result・個票の履歴ファイルを executor が変更していないため"}]}
+</specdojo_executor_evidence>
