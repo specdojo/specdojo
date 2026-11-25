@@ -64,3 +64,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_1ac3b105d31445c2bff84b536991024f
+- v: 1
+  id: reg_0675eef4054342979fb651a8ff0a6760
+  ts: "2026-11-25T22:01:13Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合（2026-11-25 23:22）以降の約 45 件のレビューで reporter の書式による止まりが 0 件であることを確かめ、indie の承認（2026-11-26）を得て close。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-26"
+    - field: conclusion
+      from: "-"
+      to: reporter の出力の bare URL を autolink にし、コードの書式の空白を詰めて、書式の止まりを防いだ。
+  previous_event_id: reg_5c2f3a08c4934ae299c4b793e6cc094a

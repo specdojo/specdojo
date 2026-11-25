@@ -2,14 +2,16 @@
 specdojo:
   id: prj-0001:pjr-5c3m-reporter-bare-url-md034
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   registered_at: "2026-11-25T09:25:29Z"
+  completed_at: "2026-11-25T22:01:13Z"
+  conclusion: reporter の出力の bare URL を autolink にし、コードの書式の空白を詰めて、書式の止まりを防いだ。
   derived_from:
     - PJR-0BGE
 ---
