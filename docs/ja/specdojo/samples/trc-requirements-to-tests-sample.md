@@ -90,7 +90,7 @@ specdojo:
 | `prj-success-criteria-and-acceptance-criteria-sample AC-02`                                                 | 対応テストがない             | `atc-stock-credit-check` を作成し、`relations.verifies` に要求文書、「トレース」の表に AC-02 とそれを参照するケースを持たせる                       | 再生成で `一部充足` 以上になる                                                        |
 | `atc-cash-sale TR-05`, `stc-cash-sale TR-04`                                                                | 取消の要求項目が母集団にない | `bac-sample` へ確定前の取消の受入条件を追加し、両テストの「トレース」の表を新しい項目へ差し替える                                                   | 再生成で母集団が 9 件になり、取消の行に両テストが載り、母集団外の参照から両行が消える |
 
-担当と期限は各行を PJR 登録候補として登録簿で追跡し、本書には持たない。実案件の PJR 個票は未同梱である。
+担当と期限は各行を PJR 登録候補として登録簿で追跡し、本書には持たない。
 
 ## 6. 変更履歴と更新ルール
 
