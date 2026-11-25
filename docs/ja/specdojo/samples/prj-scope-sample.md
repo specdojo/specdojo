@@ -44,7 +44,7 @@ specdojo:
 | 簡易レポート         | 日次売上一覧、在庫低下一覧、つけ残高一覧                       | 正本記録から生成し、集計値を直接編集しない           |
 | 運用補助             | 店主代表と家族利用者代表が同じ手順を参照できる最小限の操作メモ | 操作の共通化までとし、個別の店番判断は店主代表が行う |
 
-店頭で使うタブレット1台の用意と、運用開始前1か月のベースラインの手書き記録は、本書の対象システムに含めない。この2つは [[specdojo:prj-assumptions-constraints-dependencies-sample|前提・制約・依存関係]] で依存条件として扱う。
+店頭で使うタブレット1台の用意と、運用開始前1か月のベースラインの手書き記録は、本書の対象システムに含めない。タブレットは [[specdojo:prj-assumptions-constraints-dependencies-sample|前提・制約・依存関係]] で依存条件として扱い、ベースラインの記録手順は [[specdojo:prj-success-criteria-and-acceptance-criteria-sample|成功基準と受入条件]] の判定手順に従う。
 
 ## 3. 対象期間
 
