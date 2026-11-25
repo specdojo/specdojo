@@ -1,0 +1,41 @@
+R4（正しさ）の段で誤りが 2 件見つかり、`docs/ja/specdojo/samples/utc-sample.md` の「対象外」の節の 2 行を直しました。prettier の検査は通っています。
+
+**直した誤り**
+
+| 箇所 | 直す前 | 直した後 | 根拠 |
+| --- | --- | --- | --- |
+| 印刷失敗時に会計を維持すること | 代替: 外部結合テスト `PATH-05` | 代替: 外部結合テストの `receipt-print` 連携 | `ifd-sample.md` の 80 行目で `PATH-05` は「保全・復元処理 → 復元用保管サービス」の経路で、印刷とは関係がない。`tsp-index-sample.md`（37 行目）と `utc-index-sample.md`（57 行目）は、印刷を `receipt-print` 連携として分けている |
+| 販売記録と在庫の DB 保存 | 代替: 内部結合テスト `PATH-01` | 代替: 内部結合テスト `PATH-02`・`PATH-03` | `ifd-sample.md` の 76〜78 行目で `PATH-01` は「画面の取得」。`utc-index-sample.md` の 56 行目は DB への保存を `PATH-02`・`PATH-03` に割り当てている |
+
+**主張ごとの確かめの表**
+
+| No | 主張（本文の箇所） | 正本 | 確かめ方 | 結果 | 根拠 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | frontmatter の `type: test` | `deliverable-frontmatter.schema.yaml`、`utc-rulebook.md` | grep・読み取り | 一致 | schema の 16 行目に enum `test`。rulebook も `type` を `test` と定める |
+| 2 | `rulebook: specdojo:utc-rulebook` と `based_on` の 3 件 | 各ファイルの `id` | grep | 一致 | `utc-rulebook`・`tsp-index-sample`・`utc-index-sample`・`bac-sample` がすべて存在する |
+| 3 | 章の構成（概要〜テスト観点とケース、`観点:` の見出し） | `utc-rulebook.md`「本文要件」 | 読み取り | 一致 | 6 章の順と `6.n.1 意図` / `6.n.2 条件・ケース表` が合う |
+| 4 | `case_id` の形式 `ut-sales-checkout-<key>-010` | `utc-index-rulebook.md` の 237 行目 | 読み取り | 一致 | `<level>-<term>-<perspective_key>-<nnn>`、10 刻み |
+| 5 | ケース表 10 列の名前と順 | `utc-index-rulebook.md` の 224〜235 行目 | 読み取り | 一致 | 列名と順が同じ |
+| 6 | 商品A は単価 30 円・在庫 5 個（`kinuya-test-data`） | `tsp-index-sample.md` の 95 行目 | grep | 一致 | 同じ値 |
+| 7 | TR-01 / TR-02（C-01: 2 個・60 円、在庫 5→3。C-02: 5 個・150 円、在庫 5→0） | `bac-sample.md` BAC-01 | 読み取り | 一致 | C-01・C-02 の表と同じ |
+| 8 | TR-03（希望 6 個・在庫 5 個では確定しない） | `bac-sample.md` BAC-02 | 読み取り | 一致 | 前提と期待結果が同じ |
+| 9 | TR-04（合意した請求額の現金を受領してから確定する） | `bac-sample.md` BAC-01 前提 | 読み取り | 一致 | 前提に明記されている。受領額不足の扱いは本文どおり `_ASSUMPTION_` |
+| 10 | TR-05（会計確定後にレシートを印刷する） | `tsp-index-sample.md` の 57 行目 | grep | 一致 | 同じ趣旨 |
+| 11 | 印刷失敗時の代替が `PATH-05` | `ifd-sample.md` の 80 行目、`utc-index-sample.md` の 57 行目 | grep | 不一致（直した） | `PATH-05` は保管サービスへの転送 |
+| 12 | DB 保存の代替が `PATH-01` | `ifd-sample.md` の 76〜78 行目、`utc-index-sample.md` の 56 行目 | grep | 不一致（直した） | `PATH-01` は画面の取得 |
+| 13 | 代替先の term `utc-sale-input` | `utc-index-sample.md`「括り方」 | 読み取り | 一致 | 入力検証と保留判定を受け持つ term として存在する |
+| 14 | 依存の制御（商品・在庫は Fake、採番器を注入、`receipt-print` は Mock） | `utc-index-sample.md`「単体テスト共通の境界/依存の扱い」 | 読み取り | 一致 | 共通の扱いと同じ |
+| 15 | 印刷要求の例外「印刷要求データへの変換のみ」 | `utc-index-sample.md` の 57 行目 | 読み取り | 一致 | 例外の列と同じ |
+| 16 | 優先度（確定・拒否は P0、印刷要求は P1）と自動化 `automated` | `utc-index-sample.md`「ケース表の共通カラム」 | 読み取り | 一致 | 決め方の基準と合う |
+| 17 | CI ジョブ `kinuya-ci-unit` | `tsp-index-sample.md` の 115 行目 | grep | 一致 | 架空の CI ジョブとして定義されている |
+| 18 | 入口 `confirmCheckout`、テストコード `tests/unit/sales-checkout.test.ts` | 正本なし（架空の成果物） | — | 対象外 | 駄菓子屋の業務の仮定で、共通サンプル文脈と食い違わない。テストコードのパスは `utc-index-sample.md` の記入例と同じ |
+
+**検査**
+
+- prettier の検査（`npx prettier --check`）は通りました。
+- lint 系は親の runner が実行するため、ここでは実行していません。
+- markdownlint を単独では実行しておらず、親の `npm run lint:md` の結果が正になります。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）の段で utc-sample の事実の主張 18 件を schema・rulebook・参照先の sample と突き合わせた。誤り 2 件を直した: 対象外の代替経路 PATH-05 を外部結合テストの receipt-print 連携に、PATH-01 を PATH-02・PATH-03 にした。ほかの主張は一致するか、正本のない架空の仮定だった。","handoff":["R4-01 [正しさ/直した] 対象外の「印刷失敗時に会計を維持すること」の代替が `PATH-05` になっていたが、ifd-sample の `PATH-05` は「保全・復元処理 → 復元用保管サービス」の経路で印刷とは関係がない。tsp-index-sample と utc-index-sample に合わせて「外部結合テストの `receipt-print` 連携」に直した。","R4-02 [正しさ/直した] 対象外の「販売記録と在庫の DB 保存」の代替が `PATH-01`（画面の取得）になっていた。utc-index-sample の「対象外・除外理由（共通）」と ifd-sample に合わせて「内部結合テスト `PATH-02`・`PATH-03`」に直した。","R4-03 [確かめの表] 主張 18 件を確かめた（frontmatter の type・rulebook・based_on、章の構成、`case_id` の形式、10 列の順、kinuya-test-data、TR-01〜TR-05 と BAC-01・BAC-02・tsp-index-sample、PATH の割り当て、utc-sale-input、依存の制御、receipt-print の例外、優先度と自動化、kinuya-ci-unit）。不一致は R4-01・R4-02 の 2 件で、どちらも直した。`confirmCheckout` と `tests/unit/sales-checkout.test.ts` は正本のない架空の仮定のため確かめていない。","R4-04 [grade の finding の扱い] F003（入口の名前）・F004・F005（証跡のテストコードのパス）・F008（受け取りの印刷要求に適用した例外）は、前の段が直した版で解消していることを確かめた。","R4-05 [grade の finding の扱い] F001・F009 の観点（`vp-po-decision-readiness`・`vp-ops-release-readiness`）と F002 の観点（`vp-pm-dependency-risk`）は、kata-guide の「kata の観点の組」で kata のレビューに使わない観点のため扱わない。","R4-06 [grade の finding の扱い/R5 へ] F006（index の記入例との条件の書き方の違い。トレースは TR-02 にそろっており、残るのは `環境: なし` の有無と期待値の言い回し）と F007（index 側の責務にある釣銭の計算が本書にない）は `vp-qe-kata-conformance`（kata 相互）に当たるため R5 に任せる。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/utc-sample.md","status":"passed","summary":"All matched files use Prettier code style"}]}
+</specdojo_executor_evidence>
