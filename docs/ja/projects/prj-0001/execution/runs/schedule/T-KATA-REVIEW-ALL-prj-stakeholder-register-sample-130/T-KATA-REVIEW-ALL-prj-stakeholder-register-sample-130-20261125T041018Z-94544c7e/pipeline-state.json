@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-REVIEW-ALL-prj-stakeholder-register-sample-130",
   "run_id": "T-KATA-REVIEW-ALL-prj-stakeholder-register-sample-130-20261125T041018Z-94544c7e",
-  "updated_at": "2026-11-25T04:23:22.250Z",
+  "updated_at": "2026-11-25T04:24:15.526Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-prj-stakeholder-register-sample-130/T-KATA-REVIEW-ALL-prj-stakeholder-register-sample-130-20261125T041018Z-94544c7e/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-25T04:23:22.250Z",
-      "completed_at": null,
+      "completed_at": "2026-11-25T04:24:15.526Z",
       "artifact_ref": null
     }
   },
