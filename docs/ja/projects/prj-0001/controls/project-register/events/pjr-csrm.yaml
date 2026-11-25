@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_6701b5de205b45ba8707c8cb10e7c5ef
+  ts: "2026-11-25T21:59:38Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 親の検証の終わりに気づくまでの遅れが、統合の commit 以外の同期の処理で残る
+    - field: description
+      from: ""
+      to: P8SX で統合の commit を非同期にした後も、親の検証の終わりに気づくまでの遅れが平均約 30 秒、最大約 140 秒残る。npm ci・specdojo build・root への merge など、event loop を止める別の同期の処理を特定して除く。
+    - field: input
+      from: ""
+      to: '["2026-11-25 22:30〜2026-11-26 06:00 の全件レビュー（--parallel 4 と 3）で、validation-exit-timing は 246 件。`duration_ms` は平均 33.2 秒・最大 142.1 秒、`detection_lag_ms` は平均 29.8 秒・最大 139.9 秒、`event_loop_delay_max_ms` は平均 31.8 秒・最大 139.8 秒。","P8SX の個票では、npm ci・specdojo build・root への merge を、計測で目立たないため同期のまま残したと記録している。"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-26"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-P8SX"]'
