@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-XEKV",
   "run_id": "pjr-xekv-20261125T000411Z-a89e6a81",
-  "updated_at": "2026-11-25T00:10:52.481Z",
+  "updated_at": "2026-11-25T00:11:04.251Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-XEKV/pjr-xekv-20261125T000411Z-a89e6a81/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sonnet-executor",
       "attempts": 1,
       "started_at": "2026-11-25T00:10:52.481Z",
-      "completed_at": null,
+      "completed_at": "2026-11-25T00:11:04.251Z",
       "artifact_ref": null
     }
   },
