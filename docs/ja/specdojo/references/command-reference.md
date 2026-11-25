@@ -1409,7 +1409,7 @@ specdojo orchestrator night --project prj-0001 \
 specdojo orchestrator integration-tests --project prj-0001
 ```
 
-`orchestrator watch-scan` は、止まったものを見つけて理由の種類に分け、見張りのイベントの記録と朝報告に残します。claim・再開・release・commit はしません。見る対象・分け方・記録の項目・報告の形は [[specdojo:register-operation-guide|登録簿運用ガイド]] の「止まった実行を見張る」に従います。exec の実行ロックを取らないため、実行中の run を待たずに動きます。
+`orchestrator watch-scan` は、止まったものを見つけて理由の種類に分け、見張りのイベントの記録と朝報告に残します。exec-defaults の `watch.remedies` で手当てを選んだ種類（使用量の上限・負荷による時間切れ・統合先の同期）だけ、再開のコマンドを切り離して 1 件起動します。既定は手を打たず、commit はしません。見る対象・分け方・記録の項目・報告の形は [[specdojo:register-operation-guide|登録簿運用ガイド]] の「止まった実行を見張る」、手当ては同じガイドの「止まった実行に手当てを打つ」に従います。見張りは exec の実行ロックを取らないため、実行中の run を待たずに動きます。別の run が実行ロックを持つ間は手当てを次の回に回します。
 
 ```bash
 specdojo orchestrator watch-scan --project prj-0001
@@ -1419,7 +1419,9 @@ specdojo orchestrator watch-scan --project prj-0001 --stale-after 3h --dry-run
 | オプション                 | 内容                                                                                                                          |
 | -------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
 | `--stale-after <duration>` | 実行ロックがないとき、更新がこれより古い `doing`・`in-progress`・`running` を中断と見なす。`<正の整数><m\|h\|d>`。既定は `2h` |
-| `--dry-run`                | 記録と報告を書かずに、足す行と件数だけを表示する                                                                              |
+| `--exec-defaults <path>`   | 手当ての設定を読む exec-defaults。既定は `.specdojo/exec-defaults.yaml`                                                       |
+| `--no-remedy`              | 設定があっても手当てを起動せず、記録と報告だけを行う                                                                          |
+| `--dry-run`                | 記録と報告を書かず、手当ても起動せずに、足す行・起動する手当て・件数だけを表示する                                            |
 
 読めなかった記録は警告として標準エラー出力と報告に残し、ほかの対象の見張りは続けます。成功は終了コード 0、コマンド自体の異常は 1 を返します。
 

@@ -504,6 +504,40 @@ providers:
     agent_timeout_seconds: 7200
 ```
 
+### 5.2. 見張りの手当て
+
+`watch` は、`orchestrator watch-scan` が分けた止まりの種類ごとに打つ手当てを選びます。どの手当ても既定は `none` で、`watch` を書かなければ見張りは記録と報告だけを行います。判断が要るもの・中断・分けられなかったものには、設定に関係なく手を打ちません。手当ての動きと記録は [[specdojo:register-operation-guide|登録簿運用ガイド]] の「止まった実行に手当てを打つ」を正本とします。
+
+```yaml
+watch:
+  remedies:
+    usage_limit:
+      action: wait # none | wait | fallback
+      fallback_executor_by: sonnet-executor
+      fallback_reporter_by: sonnet-reporter
+      switch_after: 12h # 解除がこれより先なら代わりの agent へ替える
+      unknown_resume_wait: 1h # 解除の時刻が読めないときに待つ時間
+    load_timeout:
+      action: rerun # none | rerun
+    needs_target_sync:
+      action: sync # none | sync
+  max_attempts: 3
+  attempt_window: 24h
+```
+
+| キー                                       | 内容                                                                                                                    |
+| ------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| `remedies.usage_limit.action`              | `wait` は解除の時刻を過ぎてから同じ agent で再開する。`fallback` はすぐに代わりの agent で流し直す                      |
+| `remedies.usage_limit.fallback_*_by`       | 代わりの executor・reporter の nickname。`fallback` では少なくとも一方が要る。`wait` で書くと、長い上限のときだけ替える |
+| `remedies.usage_limit.switch_after`        | `wait` で解除の時刻がこれより先なら、claim を取り消して代わりの agent で流し直す。既定 `12h`                            |
+| `remedies.usage_limit.unknown_resume_wait` | 解除の時刻が読めないとき、止まった時刻からこれだけ待つ。既定 `1h`                                                       |
+| `remedies.load_timeout.action`             | `rerun` は止まった段から再開し、失敗した親の検証を流し直す                                                              |
+| `remedies.needs_target_sync.action`        | `sync` は worktree を統合先に同期してから再開する                                                                       |
+| `max_attempts`                             | 同じ対象に `attempt_window` の間に打つ手当ての上限。達したら手当てを止める。既定 `3`                                    |
+| `attempt_window`                           | 回数を数える期間。既定 `24h`                                                                                            |
+
+期間は `<正の整数><m|h|d>` で書きます。不正な値は `exec run` などが exec-defaults を読む時点でエラーになります。
+
 ## 6. executor / reporter pipeline の構成
 
 pipeline は、成果物の編集と検証を行う executor と、evidence から result を構成する reporter の 2 stage で 1 タスクを実行します。設定は phase（`agent_pipeline.stages`）、member（`stage_role`）、provider（`command_template`）の 3 箇所に分かれ、それぞれの責務は `設定ファイルの分担` と同じです。
