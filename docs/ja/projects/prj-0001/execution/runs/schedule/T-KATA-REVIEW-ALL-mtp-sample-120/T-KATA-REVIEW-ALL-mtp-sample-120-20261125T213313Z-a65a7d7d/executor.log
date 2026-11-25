@@ -1,0 +1,21 @@
+R2（構成）の見直しが終わり、`docs/ja/specdojo/samples/mtp-sample.md` の 2 行を直しました。整形は `npx prettier --check` で通っています。lint などのほかの検査は、終了後に親の runner が実行します。
+
+**章の構成**
+- 9 章の順番、各表の列、表と本文の置き方は、rulebook の「本文要件」と合っていました。
+- 章を移したり分けたり統合したりする必要はありませんでした。
+- rulebook の `template` は `undecided` のため、template とは照合できていません。
+
+**直した点（1 件）**
+- 再実行の上限（追加の回は 1 回まで、期限は切替日の 2 日前の閉店後まで、超えたら NO-GO）が、「差異発生時の扱い（許容/修正/再実行）」の章になく、「リハーサル回数とスケジュール」の表を見に行く形でした。
+- rulebook はこの上限を「差異発生時の扱い」の章に書くよう求めているため、そちらの箇条書きに回数・期限・判定者・NO-GO の条件をまとめて書きました。
+- スケジュール表の追加の回の完了条件からは「上限を超えたら NO-GO」の一文を外しました。予定日の列にある「1 回まで」は日程の情報として残しています。
+
+**grade の指摘 F001〜F003 は扱っていません**
+3 件とも R2 の観点ではないため、担当の段に任せます。
+- F001（`based_on` に `specdojo:dmd-sample` が宣言されていない）は R5 で扱います。
+- F002（所要時間の基準に時刻や分数の値がない）は R4 で扱います。
+- F003（「決定記録」と `pm-decision-log` の呼び方の揺れ）は R3 で扱います。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R2 構成を見直した。9 章の順・列・表と本文の配置は rulebook の本文要件と合っていた。再実行の上限（回数・期限・判定者・NO-GO の条件）を「差異発生時の扱い（許容/修正/再実行）」の章へ移し、スケジュール表の完了条件から外した。変更したのは docs/ja/specdojo/samples/mtp-sample.md の 2 行だけ。","handoff":["R2-1: 段 R2 / 箇所 6. 差異発生時の扱い（許容/修正/再実行）、2. リハーサル回数とスケジュール / 指摘 再実行の上限（回数と期限）が差異の扱いの章になく、スケジュール表を見に行く形だった。追加の回の完了条件にも NO-GO の規則が混ざっていた / 直した案 差異の扱いの章の再実行の上限に「追加の回は 1 回まで、期限は切替日の 2 日前の閉店後まで、PO が判断して pm-decision-log へ転記、上限を超えたら NO-GO」をまとめ、スケジュール表の追加の回の完了条件から NO-GO の一文を外した（予定日の「1 回まで」は日程として残した） / 根拠 vp-arc-document-structure。mtp-rulebook の本文要件が差異発生時の扱いの章に「再実行の上限（回数と期限）と判定者」を求めている / 印 -","R2-2: 段 R2 / 箇所 全体（章構成） / 指摘 9 章の順、各表の列（回数/予定日/目的/完了条件、観点/方法/期待値、項目/基準/判定者、項目/記載内容）、前提から結論への流れは rulebook の本文要件と合っている。mtp-rulebook の template が undecided のため、template とは照合できない / 直した案 - / 根拠 vp-arc-document-structure、vp-qe-omissions-consistency。template ができたら、R2 で章構成と表の列を照合し直す / 印 -","R2-3: 段 R2 / 箇所 grade の finding F001〜F003 / 指摘 F001（based_on に specdojo:dmd-sample がない）は vp-dev-change-impact で R5、F002（所要時間の基準に数値がない）は vp-qe-verifiability で R4、F003（決定記録と pm-decision-log の呼び方の揺れ）は vp-ux-language-consistency で R3 が扱う観点のため、R2 では直していない / 直した案 - / 根拠 kata-guide の「kata の観点の組」 / 印 -"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/mtp-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行するため executor では実行しない"}]}
+</specdojo_executor_evidence>
