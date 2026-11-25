@@ -1,0 +1,22 @@
+R5（整合）の段として `docs/ja/specdojo/samples/cpd-sample.md` を照合し、食い違い 3 件を sample 側で直しました。相手側（`cnd-sample`・`prj-overview-sample`・`gl-sample`・用語集）で直すべき点はありませんでした。Prettier の整形検査は通りました。lint などの残りの検査は親 runner が実行します。
+
+照合した資料は次のとおりです。
+- 上位図: `cnd-sample.md`（`based_on`）
+- wikilink の参照先: `prj-overview-sample.md`、`gl-sample.yaml`、`cpd-rulebook.md` の「位置づけと用語定義」
+- 用語集: `docs/ja/product/010-business-specs/060-glossary/*.yaml`
+- Sample 記述標準の共通サンプル文脈
+
+接頭辞 `cpd` の index sample はありません。
+
+食い違いがなかった点:
+- 関係 ID の対応（`REL-01`/`REL-06`/`REL-08` が上位図の `REL-03`/`REL-04`/`REL-05` に当たる）
+- 詳細の正本、接続方式、PJR の `a001`〜`a004`
+- 対象外の範囲、登場人物の役割名
+
+用語集とは用語が重ならず、食い違いもありませんでした。
+
+grade と condense から渡された finding はありません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5 整合として cpd-sample を cnd-sample・prj-overview-sample・gl-sample・用語集・共通サンプル文脈と照合し、食い違い 3 件を sample 側で修正した。相手側の修正案はない。","handoff":["No: 1 / 段: R5 / 箇所: docs/ja/specdojo/samples/cpd-sample.md「概要」第2段落 / 指摘: 「業務目的と成功基準は同書の『基本的な考え方』『期待効果』を根拠とする」とあるが、prj-overview-sample の「期待効果」は目標値を初期仮説とし、確定した成功判定は prj-success-criteria-and-acceptance-criteria-sample で管理すると書いている。成功基準の正本が食い違っている / 直した案: 「業務目的は同書の『基本的な考え方』、目標値の初期仮説は同書の『期待効果』を根拠とする」に直した / 根拠: docs/ja/specdojo/samples/prj-overview-sample.md「期待効果」の冒頭段落 / 印: なし","No: 2 / 段: R5 / 箇所: docs/ja/specdojo/samples/cpd-sample.md「概要」の本書固有の語（控え・発行状況） / 指摘: 上位図 cnd-sample は同じ対象を「レシート控え」「印字状態」「印字結果」と呼び、本図の「控え」「発行状況」との対応が書かれていない。上位図の関係と見比べるときに同じものか判断できない / 直した案: 定義に「上位図の『レシート控え』に当たる」「上位図の『印字状態』『印字結果』に当たる」を足した / 根拠: docs/ja/specdojo/samples/cnd-sample.md の Data Store 表と Relationship 表（REL-03〜REL-05） / 印: なし","No: 3 / 段: R5 / 箇所: docs/ja/specdojo/samples/cpd-sample.md「技術前提・制約」の箇条 5 / 指摘: 「応答欠落時に…店主代表が残った記録・紙面を照合する」としているが、上位図は印字の結果不明では店番担当が控えと紙面を照合し、結果不明や訂正の判断は店主代表へ引き継ぐと分けている。照合する人が食い違っている / 直した案: 「店番中の利用者が残った記録と紙面を照合し、結果不明の取引は店主代表へ引き継ぐ」に分けて直した。判断の担い手は直後の箇条（店主代表が販売・保留・回復の判断を担う）のままにした / 根拠: docs/ja/specdojo/samples/cnd-sample.md の Person 表、External Software System 表、検証対象表の「印刷基盤の不在・結果不明」の行 / 印: 要判断（「店番中の利用者」は本書で未定義の言い方のため、上位図の「店番担当」を本書でも定義して使うかを人が決める）"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/cpd-sample.md","status":"passed","summary":"All matched files use Prettier code style!"}]}
+</specdojo_executor_evidence>
