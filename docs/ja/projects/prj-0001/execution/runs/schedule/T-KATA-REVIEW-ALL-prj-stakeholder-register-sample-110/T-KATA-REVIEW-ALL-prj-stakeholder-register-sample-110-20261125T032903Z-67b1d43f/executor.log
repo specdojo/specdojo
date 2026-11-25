@@ -1,0 +1,18 @@
+R1（目的の過不足）のレビューを終え、`docs/ja/specdojo/samples/prj-stakeholder-register-sample.md` を 2 か所直しました。整形は `npx prettier --write` で行い、表の列幅の揃え直しを含めて 8 行の差分です。lint などの検査は親 runner が実行するため、私は実行していません。
+
+照らし合わせた正本は次の 4 つです。
+
+- rulebook（`specdojo:prj-stakeholder-register-rulebook`）
+- Sample 記述標準
+- 成果物カタログ（`dct-project-definition-template.yaml`）の `done_criteria`
+- 前提にしている `prj-overview-sample`
+
+足りなかったのは、`done_criteria` の「技術的意思決定者が識別できること」でした。技術メンターの行に「判断は行わない」とある一方、設計方針を誰が決めるのかがどこにも書かれていませんでした。このため、開発担当の「主な責任」に「設計方針の決定」を加えました。
+
+もう 1 点、完成例に作業用の目印 `_TODO_` が残っていたので、未決事項の目印 `_UNDECIDED_` に置き換えました。
+
+要らない内容は見つからず、削った箇所はありません。必須の 5 章、関与区分の区分語、Role code（`PO` と `DEV` だけ）、必要な合意、High の関係者の関与方針、禁止事項（個人情報、AI Agent の登録、配信計画の二重管理）は、どれも rulebook どおりでした。目標値（記録のある営業日 90% 以上、運用開始後 2 週間）も概要 sample と合っています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1（目的の過不足）を確認し、prj-stakeholder-register-sample に 2 件の差分を入れた。技術的意思決定者が読み取れるよう開発担当の主な責任に「設計方針の決定」を加え、完成例に残っていた _TODO_ を _UNDECIDED_ に改めた。削る内容はなかった。","handoff":["R1-1: R1 / 1. 関係者一覧 / done_criteria の「技術的意思決定者・承認者が識別できること」に対し、技術メンターは「判断は行わない」とある一方で、設計方針を決める関係者が本文から一つに決まらない / 開発担当の主な責任を「要件整理、設計方針の決定、実装・動作確認を行い、結果を店主代表に示す」にした / vp-qe-kata-conformance（種別の責務、成果物カタログの done_criteria）、vp-po-purpose-alignment / -","R1-2: R1 / 5. 見直し条件 / 完成例に作業の残りを示す _TODO_ が残っていた。定期見直しの周期は判断の節目が決まっている未決事項であり、共通サンプル文脈の前提条件は未確定事項を _UNDECIDED_ または _ASSUMPTION_ で示すよう定めている / 「運用開始後の定期見直しの周期は _UNDECIDED_: 短期指標の判定時に決める。」にした / vp-qe-kata-conformance（Sample 記述標準の共通サンプル文脈・前提条件） / -","R1-3: R1 / 全章 / rulebook の必須 5 章、関与区分の区分語、採用済み Role code（PO・DEV）だけの使用、必要な合意の記入、High の関係者の関与方針、禁止事項（個人連絡先、AI Agent の登録、配信計画の重複管理）はすべて満たしている。目標値（記録のある営業日 90% 以上、運用開始後 2 週間）は prj-overview-sample と一致し、要らない内容は見当たらない / - / vp-po-purpose-alignment、vp-arc-single-responsibility、vp-qe-kata-conformance / -"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/prj-stakeholder-register-sample.md","status":"passed","summary":"変更した sample を整形した（表の列幅を揃え直した）"}]}
+</specdojo_executor_evidence>
