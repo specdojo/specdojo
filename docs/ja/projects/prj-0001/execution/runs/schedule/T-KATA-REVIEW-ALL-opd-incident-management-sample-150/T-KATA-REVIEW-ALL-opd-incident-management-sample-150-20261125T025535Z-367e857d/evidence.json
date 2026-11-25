@@ -1,0 +1,154 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-opd-incident-management-sample-150",
+  "run_id": "T-KATA-REVIEW-ALL-opd-incident-management-sample-150-20261125T025535Z-367e857d",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-25T02:56:20.851Z",
+    "completed_at": "2026-11-25T02:59:59.657Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/opd-incident-management-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/opd-incident-management-sample.md | 4 +++-\n 1 file changed, 3 insertions(+), 1 deletion(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/samples/opd-incident-management-sample.md",
+      "status": "passed",
+      "summary": "All matched files use Prettier code style"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴ファイルを変えていない",
+      "reason": "変更は docs/ja/specdojo/samples/ の sample だけで、plan・result・個票を変えていないため"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "YAML を変えていない",
+      "reason": "変更したのは Markdown 1 ファイルだけで、*.yaml / *.yml の変更がないため"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:opd-incident-management-sample\n  type: operations\n  status: draft\n  rulebook: specdojo:opd-rulebook\n  based_on: []\n  supersedes: []\n---\n\n# 駄菓子屋きぬや 販売管理システム 運用方針・設計（障害対応）\n\n## 1. 概要（incident-management）\n\n本書は、\\[\\[specdojo:opd-index-sample|運用方針・設計（全体構成）]] の「障害対応方針（優先度・停止判断・周知）」を具体化する分冊である。販売・在庫・つけは店頭のタブレット 1 台で記録する。そのため、障害が起きると、店番担当は紙へ切り替える業務、止める業務、伝える相手と内容をその場で決めなければならない。本書は、優先度の判定条件をきぬ\n… output omitted …\n| 備考 |\n| - | - | - | - |\n| 方針 | \\[\\[specdojo:opd-index-sample\\|運用方針・設計（全体構成）]] | 差分元。優先度の条件、一次連絡の期限、紙の販売控えへの切替 | 統制が変わったら本書を見直す |\n| 方針 | \\[\\[specdojo:opd-monitoring-sample\\|運用方針・設計（監視）]] | 障害の検知。監視の閾値に達したときに優先度を判定する入口 | 作成済 |\n| 方針 | \\[\\[specdojo:opd-access-control-sample\\|運用方針・設計（権限・アカウント）]] | P1 の復旧で記録を訂正するときの緊急権限 | 作成済 |\n| 手順 | \\[\\[specdojo:opr-index-sample\\|運用手順（全体構成）]] | 運用手順の入口 | 作成済 |\n| 手順 | \\[\\[specdojo:opr-incident-sample\\|運用手順（障害対応）]] | 障害の切り分け、紙の販売控えへの切替と転記・照合、障害記録の手順 | 作成済 |"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7002 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7002 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-opd-incident-management-sample-150\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1764}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  12:04:58\n   Duration  2.64s (transform 5.87s, setup 1.22s, import 8.19s, tests 6.02s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-opd-incident-management-sample-150/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-opd-incident-management-sample-150/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R5 整合: opd-incident-management-sample の 2 か所（SLA 対象外の相手の表記、PO に連絡がつかないときの紙の販売控えへの切替）を、関連する sample にそろえた。相手側の文書を直す案 4 件は handoff に記載した。",
+  "completion_status": "complete",
+  "handoff": [
+    "R5-1: R5 / 2.3. 周知の対象・手段・時機 / 来店客以外に周知しない理由の「外部の利用者・取引先は SLA の対象外」が、`opd-index-sample` の SLA の行「外部の利用者・委託先と合意する約束がない」と表記が違う / 「外部の利用者・委託先」に直した / `vp-qe-kata-conformance`（kata 相互）。相手側案: `opr-incident-sample` の「手順適用範囲・前提」の対象外にある「外部の利用者・取引先への周知」も「外部の利用者・委託先への周知」にそろえる / -",
+    "R5-2: R5 / 2.2. 停止・切替の判断 / P1 の紙の販売控えへの切替は判断者が `PO` だけで、`PO` に連絡がつかない場合の扱いがない。一方で `opr-incident-sample` の「停止・切替とロールバックの判断」は「`PO` に 15 分以内に連絡がつかない場合、店番担当は紙の販売控えへ切り替えて `PO` の連絡を待つ」としており、`opd-access-control-sample` の未決事項も同じ扱いを前提にしている。方針にない規則を手順が持っている / 表の後に「P1 で `PO` に連絡がつかない場合は、店番担当が紙の販売控えへ切り替えて `PO` の連絡を待つ（補足）。」を足した / `vp-qe-kata-conformance`、`vp-dev-change-impact`。迷った理由: `opd-index` の「`PO` が切替を決める」に例外を足すことになるため。選ばなかった案: 未決事項の表に「`PO` に連絡がつかないときの切替判断」を足し、決まるまでの扱いとして同じ文を書く / 要判断",
+    "R5-3: R5 / 2.2. 停止・切替の判断（`opd-access-control-sample` の緊急権限との対応） / `opd-access-control-sample` の緊急権限の「使える場面」は `opd-index` の優先度の表で P1 とした障害だけを指している。本書の優先度の判定で P1 としたタブレットの故障・通信回線の切断が含まれるかが読み取れない / - / `vp-dev-change-impact`。相手側案: `opd-access-control-sample` の「緊急権限」の表の「使える場面」を「`opd-incident-management` の優先度の判定で P1 とした障害」にする。障害を P1 とする条件の具体化は本書に置かれているため / -",
+    "R5-4: R5 / 2.2. 停止・切替の判断・2.3. 周知の対象・手段・時機 / 2.2 では P2 の日次締めの持ち越しを `PO` が閉店後に判断する一方、2.3 では持ち越したことを `PO` へ翌朝の開店前に伝えるとしている。判断した本人へ後から伝える形で、本書の中で食い違う（R2 の観点 `vp-qe-omissions-consistency` に当たり、R5 の範囲の外のため直していない） / - / 直す案: 2.3 の P2 の `PO` の行の内容を「日次締めを持ち越した後の締めの結果」とするか、行を削る。`opr-incident-sample` の「復旧後の報告と再発防止」の P2 の行も同時に見直す / 要判断",
+    "R5-5: R5 / 3. 関連ドキュメント導線（`opd-monitoring-sample` 側） / `opd-monitoring-sample` の「初動の時限と完了条件」は本書を wikilink ではなく `opd-incident-management` というインラインコードで参照している（本書は作成済み） / - / `vp-dev-change-impact`。相手側案: `opd-monitoring-sample` の該当箇所を wikilink `specdojo:opd-incident-management-sample`（表示名は「運用方針・設計（障害対応）」）にする / -",
+    "注記（指摘ではない）: plan の編集対象は rulebook の sample 宣言から `opd-access-control-sample.md` に解決されていたが、タスク名と kata-guide の「直すのは対象の kata だけ」に従い、レビュー対象の `opd-incident-management-sample.md` を直した。`opd-access-control-sample.md` は変えていない。用語集（`docs/ja/product/010-business-specs/060-glossary/`）に駄菓子屋の業務用語はなく、食い違いはなかった。共通サンプル文脈の役割名とも合っている"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-opd-incident-management-sample-150/T-KATA-REVIEW-ALL-opd-incident-management-sample-150-20261125T025535Z-367e857d/executor.log",
+      "bytes": 6985,
+      "truncated": false
+    }
+  ]
+}
