@@ -1,0 +1,17 @@
+{
+  "v": 1,
+  "ts": "2026-11-25T12:59:48Z",
+  "type": "block",
+  "task_id": "T-KATA-REVIEW-ALL-tsd-sample-140",
+  "by": "opus-executor",
+  "msg": "reporter output invalid after 3 format attempts: result Markdown notation violation before writing (fix the JSON prose that produced these rendered lines; do not put Markdown headings, code fences, bare URLs, escaped backticks, or Chinese simplified glyphs in free-text fields):\nline 44 MD034/no-bare-urls Bare URL used: \"- R4 確かめの表 No1: `fly postgres config update` の `--max-connections`/`--shared-buffers`/`--log-min-duration-statement`（ms）、`-a, --app` | 正本: https://docs.fly.io/flyctl/postgres-config-update | 確かめ方: 公式の\"\nline 45 MD034/no-bare-urls Bare URL used: \"- R4 確かめの表 No2: 動作確認 1 の期待結果「状態が `running`、再起動回数が増えていない」 | 正本: https://www.fly.io/docs/hands-on/view-app/ | 確かめ方: `fly status` の Machine 一覧の出力例を読んだ | 結果: 不一致。STATE 列は `started`/`stopped` で、再起動回数は出ない →\"",
+  "meta": {
+    "limit_deferred": "false",
+    "claim_actor": "opus-executor",
+    "stage_actor": "luna-reporter",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-tsd-sample-140/T-KATA-REVIEW-ALL-tsd-sample-140-20261125T074320Z-25e7baa2/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-tsd-sample-140/T-KATA-REVIEW-ALL-tsd-sample-140-20261125T074320Z-25e7baa2/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-REVIEW-ALL-tsd-sample-140-20261125T074320Z-25e7baa2"
+  }
+}
