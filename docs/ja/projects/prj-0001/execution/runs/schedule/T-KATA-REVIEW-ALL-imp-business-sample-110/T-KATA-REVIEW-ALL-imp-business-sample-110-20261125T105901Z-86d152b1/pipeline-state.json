@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-REVIEW-ALL-imp-business-sample-110",
   "run_id": "T-KATA-REVIEW-ALL-imp-business-sample-110-20261125T105901Z-86d152b1",
-  "updated_at": "2026-11-25T11:13:27.232Z",
+  "updated_at": "2026-11-25T11:14:32.148Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-imp-business-sample-110/T-KATA-REVIEW-ALL-imp-business-sample-110-20261125T105901Z-86d152b1/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-25T11:13:27.232Z",
-      "completed_at": null,
+      "completed_at": "2026-11-25T11:14:32.148Z",
       "artifact_ref": null
     }
   },
