@@ -38,3 +38,19 @@
     - field: derived_from
       from: ""
       to: '["PJR-0BGE"]'
+- v: 1
+  id: reg_86ed882599954b5f98bbce52e022d360
+  ts: "2026-11-25T11:06:19Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: owner
+      from: _TODO_
+      to: BA
+    - field: due
+      from: _TODO_
+      to: "2026-12-31"
+  previous_event_id: reg_252197cc4b184ec59275eeb922e7400e

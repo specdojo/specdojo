@@ -9,7 +9,9 @@ specdojo:
   item_type: decision
   item_status: open
   priority: medium
+  owner: BA
   registered_at: "2026-11-25T11:05:27Z"
+  due_on: "2026-12-31"
   derived_from:
     - PJR-0BGE
 ---
