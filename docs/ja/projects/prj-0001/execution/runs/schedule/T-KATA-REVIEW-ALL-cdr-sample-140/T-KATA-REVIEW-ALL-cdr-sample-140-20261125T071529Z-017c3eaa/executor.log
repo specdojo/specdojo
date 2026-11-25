@@ -1,0 +1,24 @@
+R4（正しさ）の段で、`docs/ja/specdojo/samples/cdr-sample.md` の誤りを 1 か所直しました。
+
+**直した誤り（16 行目の `_ASSUMPTION_`）**: 修正前は `cpd-sample` を「CLI 版の設計」と書いていました。正本ではそうなっていません。`cpd-sample` 自身の `_ASSUMPTION_` に、「単一店舗・タブレット1台・店舗側サービス」の論理分割案で、扱うのは現金販売だけとあります。CLI と本部 API を使う別構成は `clis-sample` です。そこで「`cpd-sample` は現金販売だけを扱う論理分割案、`clis-sample` は CLI と本部 API を使う別構成の例で、どちらも本書の根拠にしない」と書き直しました。
+
+**F001・F002（`server-only` の規則が禁止事項の表と本章で重複）**: 前の段で直してあり、今の本文は `server-only` を import する手順だけです。この段では手を入れていません。
+
+**確かめた主張**:
+
+| No | 主張（本文の箇所） | 正本 | 結果 |
+| --- | --- | --- | --- |
+| 1 | TypeScript・Next.js・Prisma・PostgreSQL・Vitest・ESLint・Prettier・Sentry・GitHub Actions を使う（全体） | `docs/ja/specdojo/samples/tsd-index-sample.md` | 一致 |
+| 2 | 統合テストはプルリクエストの GitHub Actions で実行する（テストと検証の表） | `tsd-index-sample.md` の CI/CD 行（プルリクエスト時に ESLint・Vitest を実行） | 一致 |
+| 3 | つけ上限は `顧客台帳.つけ上限` で、税込の円の整数、未設定は上限なし（テストと検証） | `docs/ja/specdojo/samples/dmd-sample.md`（37・47 行） | 一致 |
+| 4 | `specdojo catalog validate` で `based_on` が解決することを確かめる | `npx specdojo catalog validate --help`、`src/catalog/catalog.ts` の `validateBasedOn` | 一致 |
+| 5 | `applyTo`・`specdojo.id`・`specdojo.rulebook` を照合する、トップレベルに `applyTo` を置く | `docs/ja/specdojo/rulebooks/cdr-rulebook.md`（41・45・91 行） | 一致 |
+| 6 | `tsd-index-sample`・`cpd-sample`・`dmd-sample`・`clis-sample` の wikilink の ID と表示名 | 各 sample の frontmatter と H1 | 一致 |
+| 7 | `cpd-sample` は「CLI 版の設計」 | `cpd-sample.md`・`cnd-sample.md` の `_ASSUMPTION_` | 不一致 → 修正済み |
+| 8 | `kinuya-web-cpd`・`kinuya-web-sysd-cross-cutting-policy`、`eslint.config.mjs` の `no-restricted-imports`、`npm run lint` などの架空アプリの script | 正本なし（架空の文書・アプリと本文で明示） | 確かめられない（共通サンプル文脈と食い違わないため対象外） |
+
+変更したファイルの書式は Prettier の検査を通りました。Markdown lint などの残りの検査は、この後 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）: cdr-sample の主張を tsd-index-sample・dmd-sample・cpd-sample・cnd-sample・cdr-rulebook・src/catalog/catalog.ts・catalog validate --help と突き合わせ、cpd-sample を CLI 版の設計とした誤りを修正した。F001/F002 は前の段で解消済み。","handoff":["R4 確かめ No1: 主張=Next.js・Prisma・PostgreSQL・Vitest・ESLint・Prettier・Sentry・GitHub Actions の利用（全体）／正本=docs/ja/specdojo/samples/tsd-index-sample.md／確かめ方=grep で技術名を検索／結果=一致／根拠=19〜32 行の表に各技術の行がある","R4 確かめ No2: 主張=統合テストはプルリクエストの GitHub Actions で実行（テストと検証の表）／正本=tsd-index-sample.md／確かめ方=読み取り／結果=一致／根拠=27 行 CI/CD『プルリクエスト時の ESLint・Vitest の実行』","R4 確かめ No3: 主張=つけ上限は `顧客台帳.つけ上限`、税込の円の整数、未設定は上限なし（テストと検証）／正本=docs/ja/specdojo/samples/dmd-sample.md／確かめ方=grep つけ上限／結果=一致／根拠=37 行・47 行","R4 確かめ No4: 主張=`specdojo catalog validate` で `based_on` の解決を確かめる（テストと検証）／正本=npx specdojo catalog validate --help、src/catalog/catalog.ts／確かめ方=--help 実行と grep／結果=一致／根拠=catalog.ts 363 行 validateBasedOn","R4 確かめ No5: 主張=`applyTo`・`specdojo.id`・`specdojo.rulebook` を照合、トップレベルに `applyTo`（frontmatter・テストと検証）／正本=docs/ja/specdojo/rulebooks/cdr-rulebook.md／確かめ方=grep／結果=一致／根拠=41・45・91 行","R4 確かめ No6: 主張=wikilink の ID と表示名（tsd-index-sample・cpd-sample・dmd-sample・clis-sample）／正本=各 sample の frontmatter と H1／確かめ方=grep id と H1／結果=一致／根拠=各ファイル 3 行目の id と H1","R4 確かめ No7: 主張=cpd-sample は『CLI 版の設計』（冒頭の `_ASSUMPTION_`）／正本=docs/ja/specdojo/samples/cpd-sample.md、cnd-sample.md／確かめ方=読み取り／結果=不一致→修正／根拠=cpd-sample 22 行『単一店舗・タブレット1台・店舗側サービス…の論理分割案』、CLI 構成は clis-sample。cpd-sample を現金販売のみの論理分割案、clis-sample を CLI 別構成と書き分けた","R4 確かめ No8: 主張=`kinuya-web-cpd`・`kinuya-web-sysd-cross-cutting-policy`、`eslint.config.mjs` の `no-restricted-imports`、`npm run lint` 等の架空アプリの script／正本=なし（本文で架空の文書と明示）／結果=確かめられない（共通サンプル文脈と食い違わない仮定のため対象外）","F001・F002（`server-only` の規則が禁止事項表と本章で重複）: 前の段で本章の文が『先頭で `server-only` を import する』だけに直されており解消済み。この段では変更しない"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/cdr-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/cdr-sample.md のみで、plan・result・個票を変更していない"},{"command":"specdojo catalog validate","status":"not_applicable","summary":"docs/ja/projects/ 配下を変更していない","reason":"変更は docs/ja/specdojo/samples/ 配下のみで docs/ja/projects/ に及ばない"}]}
+</specdojo_executor_evidence>

@@ -13,7 +13,7 @@ specdojo:
 
 駄菓子屋きぬや販売管理システム（Next.js・TypeScript）の `app/`・`src/`・`tests/` 配下の TypeScript を実装・更新するときの規則です。言語・ライブラリ・版は [[specdojo:tsd-index-sample|技術スタック一覧]]、モジュールの配置・境界は `kinuya-web-cpd`、エラーの通知・ログの方針は `kinuya-web-sysd-cross-cutting-policy` に従います。本書は、これら 3 つの文書に沿った書き方と検証だけを定めます。
 
-_ASSUMPTION_: `kinuya-web-cpd`・`kinuya-web-sysd-cross-cutting-policy` は店頭タブレット向け Web アプリの設計の正本として扱う架空の文書で、本リポジトリには同梱しない。CLI 版の設計（[[specdojo:cpd-sample|販売処理サービス C4コンポーネント図]] など）は別構成の例であり、本書の根拠にしない。
+_ASSUMPTION_: `kinuya-web-cpd`・`kinuya-web-sysd-cross-cutting-policy` は店頭タブレット向け Web アプリの設計の正本として扱う架空の文書で、本リポジトリには同梱しない。[[specdojo:cpd-sample|販売処理サービス C4コンポーネント図]] は現金販売だけを扱う論理分割案、[[specdojo:clis-sample|販売管理 CLI 仕様]] は CLI と本部 API を使う別構成の例であり、どちらも本書の根拠にしない。
 
 ## 1. 基本方針
 
