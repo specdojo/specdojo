@@ -1,0 +1,32 @@
+R1（目的の過不足）のレビューを終えました。直したのは `docs/ja/specdojo/samples/pm-roles-sample.yaml` だけで、ARC・UX・OPS の `project_note` から要らない記述を 3 件削りました。足すべき欠けはありませんでした。
+
+照合に使った資料は次のとおりです。
+
+- rulebook のうち、管理先の分担を示す位置づけの表と、`roles[].project_note` の書き方の節
+- Sample 記述標準
+- template
+- 成果物カタログの `done_criteria`
+- 組織定義の sample
+
+**削った記述**（3 件とも組織定義の sample が正本である内容の重複です）
+
+- **R1-1（ARC）**: 「初期は独立タスクの主責任を持たない。」を削りました。`owner` に使えるかどうかの正本は組織定義です。「専門支援として」「DEV が主導する設計へ助言する」は残しました。
+- **R1-2（UX）**: 「独立タスク化は組織定義の見直し後とする。」を削りました。理由は R1-1 と同じです。
+- **R1-3（OPS）**: 「初期は独立した Schedule タスクの主責任を持たず、公開・継続の最終判断は人間の PO に残す。」を削りました。前半は R1-1 と同じ重複、後半は PO の `project_note` と同じ内容です。
+
+R1-1 と R1-2 には「要判断」の印を付けました。rulebook は「専任化の条件」のような固有の扱いを `project_note` の良い例に挙げており、これらの文をその例と読むこともできるためです。戻す場合は、組織定義と表現をそろえたうえで残す案になります。
+
+**欠けの確認**
+
+- 採用 8 ロールは組織定義と一致しています。
+- `code` と `name` は上位標準と一致しています。
+- frontmatter の項目と `based_on` は rulebook の要件を満たしています。
+
+**検証**
+
+- schema 検査は `valid` でした。
+- Prettier の整形チェックも通りました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1（目的の過不足）: pm-roles-sample.yaml の ARC・UX・OPS の project_note から、組織定義が正本の owner 使用可否の記述と、PO の note と重なる最終判断の記述を削った。足すべき欠けはなかった。schema 検査と Prettier は通過した。","handoff":["R1-1: R1 / roles[ARC].project_note / 組織定義が正本の owner 使用可否（「初期は独立タスクの主責任を持たない」）を繰り返しており、rulebook の位置づけの表と `roles[].project_note` の節が定める固有の扱いの範囲を超えている / 文を削り、「専門支援として」「DEV が主導する設計へ助言する」を残した / vp-arc-single-responsibility, vp-qe-kata-conformance。rulebook の良い例は「専任化の条件」を `project_note` に含めるため、この文を固有の条件と読む余地がある。選ばなかった案は、組織定義と表現をそろえて残す案 / 要判断","R1-2: R1 / roles[UX].project_note / 「独立タスク化は組織定義の見直し後とする」は、組織定義が正本の owner 使用可否と見直しの記述の重複 / 文を削り、BA が主導する利用者確認への助言を残した / vp-arc-single-responsibility, vp-qe-kata-conformance。R1-1 と同じ理由で、固有の条件と読む余地がある / 要判断","R1-3: R1 / roles[OPS].project_note / 「初期は独立した Schedule タスクの主責任を持たず」は組織定義が正本の owner 使用可否の重複、「公開・継続の最終判断は人間の PO に残す」は PO の `project_note` との重複 / 両方を削り、PM が主導するリリース準備へ取り込む記述を残した / vp-arc-single-responsibility, vp-arc-conciseness / -","R1-4: R1 / roles 全体・メタ項目 / 欠けの確認: 採用 8 ロールは組織定義の sample の採用集合と一致し、`code`・`name` は上位標準と一致し、メタ項目と `based_on` は rulebook の推奨メタ項目と `based_on` の制限を満たしている。足すべき内容はない / - / vp-po-purpose-alignment, vp-qe-kata-conformance / -"],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/pm-roles.schema.yaml --data docs/ja/specdojo/samples/pm-roles-sample.yaml","status":"passed","summary":"docs/ja/specdojo/samples/pm-roles-sample.yaml: valid"},{"command":"npx prettier --check docs/ja/specdojo/samples/pm-roles-sample.yaml","status":"passed","summary":"All matched files use Prettier code style"}]}
+</specdojo_executor_evidence>
