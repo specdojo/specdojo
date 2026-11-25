@@ -1,0 +1,21 @@
+R5（整合）のレビューを終えました。直す必要があったのは 1 か所で、`docs/ja/specdojo/samples/atc-sample.md` の観点の見出しだけを変えました。
+
+**直したこと**
+- 「主要操作の自力完了」の見出しを「主要操作の自力完了の成立」にしました。`atc-index-sample` の命名規則（「名詞＋成立/保証/整合」）と、分配表に書かれた観点名に合わせています。`perspective_key`（`self-complete`）は変えていません。
+- grade の F001（分割基準から「金額の提示」が抜けている）は、今の版ではもう直っていたので手を入れていません。
+
+**確かめて、そのままにしたもの**
+- `based_on` と `relations.verifies` の参照先（`bac-sample` の BAC-01 C-01、成功基準と受入条件の SC-01・AC-01・AC-03・AC-04、`tsp-index-sample` の受入の範囲とテストデータ）は、どれも本文と合っていました。
+- 用語集（`docs/ja/product/010-business-specs/060-glossary/`）には「店番」「取引番号」「家族利用者代表」「店主代表」の定義がなく、食い違いもありませんでした。
+
+**相手側を直す案（相手の文書は変えていません）**
+1. `atc-index-sample` の「ケース表の共通カラム」にある記入例が、`atc-rulebook` と食い違っています。直書き禁止の仕様 ID（`BAC-01、AC-01`）をトレース列に書き、任意の 環境/依存 列も埋めています。案は、トレース列を `TR-xx` にし、環境/依存 列を空けることです。
+2. 要判断：`at-cash-sale-transaction-check-010` は BAC-01・AC-04 を辿るのに P1 です。index の合格基準では、AC-01〜AC-05 に対応する最短経路は P0、P1 は停止と引継ぎ・確定前の取消だけです。直し方は二つあり、どちらを選ぶかで完了条件が変わるので、人に判断してもらいます。
+   - ケースを P0 にする。
+   - index の P1 の定義に「確定後の照合」を加える。
+
+変更後の Prettier と markdownlint の確認は通りました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5（整合）で、atc-sample の観点の見出しを atc-index-sample の観点名（主要操作の自力完了の成立）に合わせた。F001 は今の版で解消済み。相手側の食い違いは直す案として handoff に残した。","handoff":["No: 1 / 段: R5 / 箇所: docs/ja/specdojo/samples/atc-sample.md の観点の見出し（主要操作の自力完了） / 指摘: 観点名が atc-index-sample の命名規則（名詞＋成立/保証/整合）と分配表の観点名「主要操作の自力完了の成立」に合っていない / 直した案: 見出しを「観点：主要操作の自力完了の成立」に変えた（`perspective_key` の `self-complete` は据え置き） / 根拠: atc-index-sample の「受入観点の立て方（共通）」と「観点/条件の採用基準と対象別への分配方針（共通）」 / 印: 直した","No: 2 / 段: R5 / 箇所: docs/ja/specdojo/samples/atc-sample.md の概要（grade F001） / 指摘: 分割基準から「金額の提示」が抜けている / 直した案: 今の版は「商品の登録→金額の提示→会計確定→レシートの受け渡し」になっており、手を入れていない / 根拠: atc-index-sample の分割基準の表の `atc-cash-sale` の行 / 印: 解消済み","No: 3 / 段: R5 / 箇所: docs/ja/specdojo/samples/atc-index-sample.md の「ケース表の共通カラム」の記入例（相手側） / 指摘: トレース列に仕様 ID（BAC-01、AC-01）を直書きし、環境/依存 列に共通方針と同じ前提を書いている。atc-rulebook は、トレース列には `TR-xx` を書き仕様 ID の直書きを禁じ、環境/依存 列は共通方針と異なる前提があるときだけ書くとしている / 直した案: 記入例のトレース列を `TR-01、TR-02` にし、環境/依存 列を空ける。あわせて共通カラムの表のトレースの書き方を「トレースの章の `TR-xx`」に改める（相手側のため変更していない） / 根拠: atc-rulebook のケース表の列の定義（トレース・環境/依存）と禁止事項 / 印: 相手側","No: 4 / 段: R5 / 箇所: docs/ja/specdojo/samples/atc-sample.md の `at-cash-sale-transaction-check-010` の優先度 / 指摘: BAC-01・AC-04 を辿るのに P1 である。atc-index-sample の合格基準では、AC-01〜AC-05 に対応する最短経路は P0、P1 は BAC-02・BAC-03 の停止と引継ぎ・確定前の取消などの重要分岐としている / 直した案: ケースを P0 にするか、atc-index-sample の P1 の定義に「確定後の取引の照合」を加える。完了条件が変わるため変更していない / 根拠: atc-index-sample の「合格基準」、prj-success-criteria-and-acceptance-criteria-sample の AC-04 / 印: 要判断"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/atc-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint docs/ja/specdojo/samples/atc-sample.md","status":"passed","summary":"エラーなし"}]}
+</specdojo_executor_evidence>
