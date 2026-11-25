@@ -68,4 +68,10 @@ plan に展開された finding は、message と同じ viewpoint ID の判定�
 - 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
 - agent 自身は登録簿の状態を変更せず、終了コードと標準エラー出力で runner に結果を返す。
 
+## 再開の指示（2026-11-25T09:28:33.015Z）
+
+利用者が再開の前に足した指示である。これまでの申し送りとあわせて、この指示に従って作業を続ける。
+
+- CHANGELOG の移動はできているので、内容は変えない。LP のコマンドは 1 回ずつ「cd /workspaces/specdojo-workspace/worktrees/prj-0002-PJR-0YVR/specdojo-lp && <コマンド>」の形で流す。git log origin/main..HEAD と git diff 7a5b7d7 HEAD -- CHANGELOG.md で PR #3 の公開範囲と照らし、npm run lint:md と npm run format:check を流して、結果を検証として記録する。個票の対応結果の検証と残課題も、流した結果に合わせて直す。
+
 `共通規約 sha256:e7dd6ff2a0dec2f12ed4ffc905cd185aca2d6f9c3922c56a249c88cb45b2a14e` `docs/ja/projects/prj-0002/execution/conventions/e7dd6ff2a0dec2f12ed4ffc905cd185aca2d6f9c3922c56a249c88cb45b2a14e.txt`
