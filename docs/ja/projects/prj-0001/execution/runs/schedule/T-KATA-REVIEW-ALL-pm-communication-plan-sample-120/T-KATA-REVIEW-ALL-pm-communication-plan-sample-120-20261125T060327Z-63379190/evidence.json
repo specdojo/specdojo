@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-pm-communication-plan-sample-120",
+  "run_id": "T-KATA-REVIEW-ALL-pm-communication-plan-sample-120-20261125T060327Z-63379190",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-25T06:04:13.254Z",
+    "completed_at": "2026-11-25T06:08:05.437Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/pm-communication-plan-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/pm-communication-plan-sample.md | 4 ++--\n 1 file changed, 2 insertions(+), 2 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/samples/pm-communication-plan-sample.md",
+      "status": "passed",
+      "summary": "All matched files use Prettier code style"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴蓄積ファイルを変更していない",
+      "reason": "変更は docs/ja/specdojo/samples/pm-communication-plan-sample.md のみで、plan・result・個票などの履歴蓄積ファイルを変更していないため"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:pm-communication-plan-sample\n  type: project\n  status: ready\n  rulebook: specdojo:pm-communication-plan-rulebook\n  based_on:\n    - specdojo:pm-plan-sample\n    - specdojo:prj-stakeholder-register-sample\n  supersedes: []\n---\n\n# コミュニケーション計画: 駄菓子屋きぬや 販売管理システム\n\n## 1. 方針と適用範囲\n\n\\[\\[specdojo:pm-plan-sample|管理計画]] の判断ゲートと \\[\\[specdojo:prj-stakeholder-register-sample|ステークホルダー登録簿]] のコミュニケーション要件\n… output omitted …\ne | 反映の証跡 |\n| - | - | - |\n| 判断依頼・受入確認の時期 | 管理計画の判断ゲート（`PM`）、`kinuya-schedule` の確認・判断待ちタスク（`PM`） | 変更要求ログの変更 ID とタスク ID |\n| エスカレーションの判断者 | 本書のエスカレーションと RACI（`PM`）、管理計画の最終判断（`PM`） | 変更要求ログの変更 ID |\n| 連絡手段・チャネル | チャットのチャネル設定と簡易手順書の連絡先（`DEV`）、本書のコミュニケーション機会（`PM`） | 課題ログの課題 ID |\n\n- *UNDECIDED*: 営業時間外の緊急連絡手段。決まるまで、コミュニケーション機会の停止連絡は営業時間外の伝達先と手段が定まらず、翌営業日の開店前の店頭連絡で代える。判断ゲート「初期リリース・店頭試用開始」の前に `PO` が決定する。\n- *UNDECIDED*: つけの記録方法の切替開始日。管理計画の U-03 が決まるまで、常連顧客への告知の掲示開始日が定まらない。U-03 の確定と同時に `PO` が決定する。"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7092 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7092 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-pm-communication-plan-sample-120\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1778}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  15:13:20\n   Duration  2.63s (transform 5.78s, setup 1.03s, import 8.27s, tests 5.98s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\n valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-pm-communication-plan-sample-120/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-pm-communication-plan-sample-120/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R2（構成）を実施した。章の順・粒度・表と本文の配置は rulebook の本文構成と template に沿っており、章の移動・分割・統合は不要だった。表の行の順を 2 か所並べ替え（コミュニケーション機会の設計相談を実装結果の報告の前へ、エスカレーションの範囲変更の行を先頭へ）、前提から結論の順に読めるようにした。F001 は R3 の観点のため R3 に回した。",
+  "completion_status": "complete",
+  "handoff": [
+    "No: R2-1 / 段: R2 / 箇所: 全体（方針と適用範囲〜見直し条件と未決事項） / 指摘: 章の順・数・必須と任意の別が rulebook の本文構成（標準テンプレ）と一致し、各章の「表の前の 1 文、表、未決事項の箇条書き」の配置も template と同じ。章の移動・分割・統合は要らない / 直した案: - / 根拠: `vp-arc-document-structure`、specdojo:pm-communication-plan-rulebook の本文構成（標準テンプレ）、specdojo:pm-communication-plan-template / 印: -",
+    "No: R2-2 / 段: R2 / 箇所: コミュニケーション機会 / 指摘: 「設計方針の確定まで週1回」の `STH-TECH-MENTOR` との設計相談が、その後に来る「Pull Request の作成時」の実装結果の報告より後ろにあり、時系列（準備 → 設計 → 実装 → 試用 → 試用後）の流れが途中で逆になる / 直した案: 設計相談の行を、実装結果の報告の行の前へ移した / 根拠: `vp-arc-document-structure`（前提から結論の順） / 印: -",
+    "No: R2-3 / 段: R2 / 箇所: エスカレーション / 指摘: 「範囲・上限・試用日の基準を変える要求」（目的・スコープ）が最後の行にあり、rulebook の記述ガイドが判断条件を挙げる順（目的・スコープ、当事者価値、費用・負荷、品質・安全、公開・権利）と合わない / 直した案: 範囲変更の行を表の先頭へ移した / 根拠: `vp-arc-document-structure`、specdojo:pm-communication-plan-rulebook の記述ガイドの「エスカレーション」。迷った理由: 記述ガイドの列挙は「など」付きの例示で、順を決めた規定ではない。選ばなかった案は、元の順（個別の判定不能 → 費用 → 品質 → 公開 → 包括的な基準変更）のまま残すこと / 印: 要判断",
+    "No: R2-4 / 段: R2 / 箇所: 見直し条件と未決事項の表「エスカレーションの判断者」の行 / 指摘: grade の F001（`vp-ux-language-consistency`。RACI が本書内で定義・参照されず、何を指すか読めない）は R3 の観点のため、この段では直さず R3 に回す。R1 の扱いと同じ / 直した案: - / 根拠: kata-guide の kata の観点の組（R3 に `vp-ux-language-consistency`）。R3 で RACI の参照先を示すか、「エスカレーションの判断者」だけにそろえる / 印: -"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-pm-communication-plan-sample-120/T-KATA-REVIEW-ALL-pm-communication-plan-sample-120-20261125T060327Z-63379190/executor.log",
+      "bytes": 5092,
+      "truncated": false
+    }
+  ]
+}
