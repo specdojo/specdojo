@@ -1,0 +1,16 @@
+R1（目的の過不足）として `docs/ja/specdojo/samples/bac-sample.md` を直しました。変更したのはこのファイル 1 つだけで、grade の finding F001（上流の根拠がたどれない）は sample の範囲で解消しました。ただし、在庫を減らす処理と販売を止める条件の根拠はまだ仮定のままです。
+
+**変更内容**
+
+| No | 段 | 箇所 | 指摘 | 直した案 | 根拠 | 印 |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 | R1 | frontmatter の `based_on` | `based_on: []` のままで、実在しない参照名 `kinuya-bps-cash-sale` に頼っていた。rulebook の「確認完了の条件」（根拠と `based_on` が有効な先行成果物へ解決できること）を満たしていない | `based_on` に既存の sample 2 つをつないだ。`specdojo:prj-success-criteria-and-acceptance-criteria-sample`（AC-01：販売記録が1件できる、SC-06：引き継ぎメモ）と、`specdojo:bes-sample`（現金会計が確定する条件と、確定時に残る記録） | `bac-rulebook` の「位置づけ」「推奨 Frontmatter 項目」「確認完了の条件」 | F001 |
+| 2 | R1 | 概要の「根拠」と最初の `_ASSUMPTION_` | 根拠の説明が上流とつながっていなかった | 根拠を上の 2 文書の wikilink に置き換えた。仮定は、上流がまだ決めていない部分（在庫を減らす処理と、販売を止める条件）だけに絞った | 同上 | F001 |
+| 3 | R1 | BAC-01〜03 の「根拠:」 | 3 つとも「概要の仮定」だけを根拠にしていた | AC-01・SC-06 と、現金会計が確定する条件を、シナリオごとに対応づけて挙げた | 同上 | F001 |
+| 4 | R1 | メモ / 将来課題の `_TODO_` の行 | 実在しない参照名のまま残っていた | 系列の他の sample（`bes-sample`・`sf-sample`・`sf-index-sample`）と同じ仮置き ID `bps-sales-order-flow` に揃え、仮定に頼っている範囲を書いた | `bes-sample` と、系列で使われている仮置き ID | 要判断 |
+
+**検証**: `npx prettier --write` で表を整え、`npx markdownlint` もエラーなしでした。`validate:history-links` は変更した中に履歴ファイルがないため対象外です。親 runner が流す検査は、ここでは実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1 として bac-sample.md を修正。frontmatter の `based_on` に既存 sample 2 つ（`specdojo:prj-success-criteria-and-acceptance-criteria-sample`、`specdojo:bes-sample`）をつなぎ、概要の根拠・BAC-01〜03 の根拠・メモの `_TODO_` を上流の AC-01/SC-06/発生条件に対応づけた。実在しない参照名は系列の仮置き ID `bps-sales-order-flow` に揃え、仮定は在庫の反映と停止条件に絞った。変更は sample 1 ファイルだけ。","handoff":["No: 1 / 段: R1 / 箇所: frontmatter `based_on` / 指摘: `based_on: []` のままで、実在しない参照名 `kinuya-bps-cash-sale` に頼っていた。rulebook の「確認完了の条件」（根拠と `based_on` が有効な先行成果物へ解決できること）を満たしていない / 直した案: `based_on` に `specdojo:prj-success-criteria-and-acceptance-criteria-sample` と `specdojo:bes-sample` をつないだ / 根拠: `bac-rulebook` の「位置づけ」（BAC は BES やプロジェクトの受入条件を根拠にする）、「推奨 Frontmatter 項目」、「確認完了の条件」 / 印: F001 に対応","No: 2 / 段: R1 / 箇所: 概要の「根拠」と最初の `_ASSUMPTION_` / 指摘: 根拠の説明が上流とつながっていなかった / 直した案: 根拠を AC-01・SC-06 と、現金会計の確定の「発生条件」への wikilink に置き換えた。仮定は、上流がまだ決めていない在庫の反映と停止条件だけに絞った / 根拠: `bac-rulebook` の「記述ガイド」の概要（上位の Why は要約と参照で引き継ぐ） / 印: F001 に対応","No: 3 / 段: R1 / 箇所: BAC-01〜03 の「根拠:」 / 指摘: 3 つとも概要の仮定だけを根拠にしていた / 直した案: BAC-01 は AC-01 と発生条件・事実データ、BAC-02 は在庫不足時の仮定・SC-06・発生条件、BAC-03 は発生条件 2 を満たさない場面・SC-06 を挙げた / 根拠: `bac-rulebook` の「本文要件」（シナリオごとに根拠を対応させる） / 印: F001 に対応","No: 4 / 段: R1 / 箇所: メモ / 将来課題の `_TODO_` の行 / 指摘: 実在しない参照名のまま残っていた / 直した案: 系列の他の sample（`bes-sample`・`sf-sample`・`sf-index-sample`）と同じ仮置き ID `bps-sales-order-flow` に揃え、BAC-01 の在庫差分と BAC-02・03 が仮定に頼っていると書いた / 根拠: `bes-sample` の「発生条件」が在庫の反映を `bps-sales-order-flow` へ委ねている / 印: 要判断（R1 の範囲は対象 sample だけのため、販売プロセスの sample `bps-sales-order-flow` は作っていない。作るなら別タスクで登録簿に起票し、できたら `based_on` に足して BAC-01〜03 の根拠を仮定から置き換える）"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/bac-sample.md","status":"passed","summary":"整形した（メモ / 将来課題の表の列幅だけが変わった）"},{"command":"npx markdownlint docs/ja/specdojo/samples/bac-sample.md","status":"passed","summary":"エラーなし"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"対象外","reason":"変更した中に履歴ファイル（plan / result / pjr 個票）がない"}]}
+</specdojo_executor_evidence>
