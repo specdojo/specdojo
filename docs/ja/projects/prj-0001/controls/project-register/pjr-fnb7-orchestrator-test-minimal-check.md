@@ -43,15 +43,22 @@ Quick Start の代表的な対話 1 本を、固定の発言のシナリオで�
 
 ## 4. 作業内容
 
-| No  | 作業                                                                                  | 担当 | 状態 | メモ |
-| --- | ------------------------------------------------------------------------------------- | ---- | ---- | ---- |
-| 1   | Quick Start の対話を固定の発言のシナリオにする                                        | BA   | open | -    |
-| 2   | 一時 Git リポジトリで実オーケストレーターを流し、承認前後の状態を検査するテストを書く | BA   | open | -    |
-| 3   | N 回流して合格率・時間・費用を記録し、PJR-3R8F に書く                                 | BA   | open | -    |
+| No  | 作業                                                                                  | 担当 | 状態 | メモ                                                                                                                     |
+| --- | ------------------------------------------------------------------------------------- | ---- | ---- | ------------------------------------------------------------------------------------------------------------------------ |
+| 1   | Quick Start の対話を固定の発言のシナリオにする                                        | BA   | done | 「機能追加を起票する（todo）」の利用者の 3 発言を `QUICK_START_TODO_SCENARIO` に固定した                                 |
+| 2   | 一時 Git リポジトリで実オーケストレーターを流し、承認前後の状態を検査するテストを書く | BA   | done | `tests/agent/orchestrator-quick-start.agent.test.ts` と `vitest.agent.config.ts` を追加した                              |
+| 3   | N 回流して合格率・時間・費用を記録し、PJR-3R8F に書く                                 | BA   | open | 実 agent の起動と利用枠の消費が要るため executor の sandbox では流せない。利用者が流して結果を PJR-3R8F の採択理由に書く |
 
 ## 5. 対応結果
 
--
+- シナリオ: Quick Start の「機能追加を起票する（todo）」の利用者の発言を 3 つに固定した（依頼 → 項目の回答 → 承認）。2 発言目には topic `add-faq-section` を足し、期待する個票の名前を決めている。
+- 実行の仕組み: 一時 Git リポジトリでビルド済みの specdojo を `npx specdojo` で呼べるようにし、`specdojo init --yes --provider claude` の結果を commit してから、`claude -p --output-format json --agent specdojo-orchestrator` を `--session-id` / `--resume` で会話を継続して流す。起動の引数は `buildOrchestratorLaunch` で組み立て、`--setting-sources project` と `--strict-mcp-config` で利用者の設定を持ち込まない。Bash は `npx specdojo`・`specdojo` と読み取りの git だけを許す。
+- 承認の前の検査: 1・2 発言の後に、HEAD、`git status --porcelain`、個票（`pjr-*.md`）とイベント（`events/pjr-*.yaml`）の内容のハッシュが初期状態と同じかを比べる。
+- 承認の後の検査: 新しい個票とイベントがそれぞれ 1 つ、個票の `item_type`・`item_status`・`priority`・`owner`・`due_on`・`difficulty` が期待どおり、最初のイベントが `add`、HEAD が進み両ファイルが commit に含まれ、作業ツリーがきれいなことを確かめる。
+- 記録: run ごとの合否・失敗理由・返答・所要時間・費用（`total_cost_usd`）と合格率を `tmp/agent-test/orchestrator-quick-start-<時刻>.json` に書き、要約を標準出力に出す。回数は `SPECDOJO_AGENT_TEST_RUNS`（既定 5）、モデルは `SPECDOJO_AGENT_TEST_MODEL`（既定 `sonnet`）で変える。
+- `npm test` との分離: `*.agent.test.ts` を unit の対象から外し、`vitest.agent.config.ts` だけで流す。判定部分は agent を呼ばない単体テスト `tests/agent/helpers/orchestrator-scenario.test.ts` で確かめた。
+- _TODO_: `package.json` は executor から編集できないため、`"test:agent": "npm run build && vitest run --config vitest.agent.config.ts"` の追加を利用者に任せる。追加までは `npm run build && npx vitest run --config vitest.agent.config.ts` で流す。
+- _TODO_: N 回の実行は未実施。利用者が上のコマンドで流し、合格率・所要時間・費用を PJR-3R8F の採択理由に書いて 3R8F を決める。
 
 ## 6. 関連ドキュメント
 
