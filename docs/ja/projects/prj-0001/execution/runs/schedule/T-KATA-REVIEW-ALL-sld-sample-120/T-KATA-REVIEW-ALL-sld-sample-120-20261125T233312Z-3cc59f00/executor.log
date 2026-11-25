@@ -1,0 +1,24 @@
+R2（構成）の段を終えました。直したのは `docs/ja/specdojo/samples/sld-sample.md` の表 2 つの行の順だけで、文言は変えていません（差分は 4 行の追加と 4 行の削除）。Prettier の整形チェックは通っています。lint などの残りの検査は、この後に runner が実行します。
+
+章立ては rulebook の 5 章構成（概要・保管場所一覧・削除と退避と復旧の判断基準・関連仕様との対応と検証・確認事項と変更影響）と同じ順でした。この rulebook は template を `not-needed` としているため、template との照合は行っていません。
+
+**R2-1 確定前の確認の表（要判断なし）**
+- **指摘:** 行の順が rulebook の受入確認の観点の順（配置と技術制約 → 記録・状態の網羅 → 削除・復旧判断の実効性）と合っていませんでした。網羅の確認が、削除・復旧の確認 2 行の間に入っていました。
+- **直したこと:** 「どの記録・状態にも置き場所がある」の行を 2 行目へ移しました。これで観点 1・2・3・3 の順になり、前提から結論へ読めます。
+- **根拠:** `vp-arc-document-structure`、rulebook の「関連仕様・実装配置との対応と検証要件」
+
+**R2-2 場面別の対処と復旧手順の表（要判断）**
+- **指摘:** 場面の順が保管場所一覧の行の順とずれていました。物理の場面（売場の期限切れ品）がタブレットの場面の間にあり、タブレットの場面も一覧と別の順でした。
+- **直したこと:** 一覧の順にそろえました。売場 → `config/store-config.yaml` → 取引セッションの 2 場面 → `data/sales/` → `data/summary/` → 空き容量不足（`receipts/` と `tmp/`）です。
+- **根拠:** `vp-arc-document-structure`、`vp-qe-omissions-consistency`
+- **迷った点:** 時系列の順（会計中の再起動を先に置く）でも読めるので、どちらにするかは好みの差があります。一覧から場面を引きやすくなる順を選びました。採らない場合は、この行の順の変更を戻すだけで済みます。
+
+**R2-3 grade の指摘の扱い（直していません）**
+- F002 と F003 は R1 で直っているため、繰り返していません。
+- F001（冗長な言い直し）と F004（店番担当と Role code の表記の揺れ）は R3 の観点なので、R3 に任せます。
+- F005 は、ガイドで型の段のレビューに使わない観点 `vp-ops-operability` に当たるため、R1 の判断どおり直していません。
+- **根拠:** kata-guide の「kata の観点の組」
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R2 構成: sld-sample の確定前の確認の表を rulebook の受入確認の観点の順（配置→網羅→削除・復旧）に、場面別の対処の表を保管場所一覧の行の順に並べ替えた。章の構成は rulebook の 5 章と一致。sample 以外は変更していない。","handoff":["R2-1: R2 / 関連仕様・実装配置との対応と検証（本書を確定する前の確認） / 確認の行の順が rulebook の受入確認の観点の順（配置と技術制約 → 記録・状態の網羅 → 削除・復旧判断の実効性）と合わず、網羅の確認が削除・復旧の確認 2 行の間にあった / 「どの記録・状態にも置き場所がある」の行を 2 行目へ移し、観点 1・2・3・3 の順にした / `vp-arc-document-structure`、sld-rulebook の「関連仕様・実装配置との対応と検証要件」 / -","R2-2: R2 / 削除・退避・復旧の判断基準（場面別の対処と復旧手順） / 場面の順が保管場所一覧の行の順とずれていた。物理の場面（売場の期限切れ品）がタブレットの場面の間にあり、タブレットの場面も一覧と別の順だった / 一覧の順（売場 → `config/store-config.yaml` → 取引セッションの 2 場面 → `data/sales/` → `data/summary/` → 空き容量不足（`receipts/`・`tmp/`））に並べ替えた。文言は変えていない / `vp-arc-document-structure`、`vp-qe-omissions-consistency` / 要判断（時系列の順で会計中の再起動を先に置く案もあり好みの差があるが、一覧から場面を引きやすい順を選んだ。採らない場合はこの行の順の変更を戻す）","R2-3: R2 / 全体（grade の指摘の扱い） / grade F002・F003 は R1 で直っているため繰り返さない。F001（`vp-arc-conciseness`）と F004（`vp-ux-language-consistency`）は R3 の観点なので R3 に任せる。F005（`vp-ops-operability`）は型の段のレビューで使わない観点のため R1 の判断どおり直さない / - / kata-guide の「kata の観点の組」 / -"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/sld-sample.md","status":"passed","summary":"All matched files use Prettier code style"}]}
+</specdojo_executor_evidence>
