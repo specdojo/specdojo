@@ -33,6 +33,7 @@ specdojo:
 | 対象   | 環境の整合と変更           | 開発端末と本番環境の設定値の統一、マイグレーションの適用・失敗時の解消                                                    |
 | 対象   | バックアップの技術操作     | `pg_dump` による取得、取得結果の確認、`pg_restore` による復元のコマンドと影響                                             |
 | 対象外 | バックアップの方針         | 取得の頻度・RTO/RPO・保管期間は [[specdojo:opd-index-sample\|運用方針・設計]] の「バックアップ・リストア方針（RTO/RPO）」 |
+| 対象外 | Fly.io アプリとボリューム  | 3 アプリとボリュームの作成・割り当ては `tsd-hosting.md`（未作成の間は各アプリの `fly.toml`）                              |
 | 対象外 | アプリケーションの詳細設計 | 個別機能の業務ロジック、詳細 API 仕様、SQL 全文                                                                           |
 | 対象外 | 店頭端末と店舗ネットワーク | 店頭タブレットの OS 設定、Wi-Fi 機器の配線と管理                                                                          |
 
@@ -174,7 +175,23 @@ graph LR
    npx prisma db seed
    ```
 
-### 5.2. スキーマ変更とマイグレーションの運用
+### 5.2. 本番環境の初期設定手順
+
+`kinuya-db` と `kinuya-db-backup` のアプリとボリュームが作成済みであることを開始条件とし、作業端末から次の順に設定する。
+
+1. **DB の設定値の反映**: 「採用設定一覧」の表の後に示した反映先の `fly postgres config update` と `ALTER DATABASE` を実行する。
+2. **バックアップ用ロールの作成**: `fly proxy` を経由した `psql` で、読み取り専用のロールを作る。既存の DB の権限は変えない。
+
+   ```sql
+   CREATE ROLE <BACKUP_USER> LOGIN PASSWORD '<BACKUP_PASSWORD>';
+   GRANT pg_read_all_data TO <BACKUP_USER>;
+   ```
+
+3. **接続文字列の保存**: `kinuya-app` と `kinuya-db-backup` に、「接続情報と秘密情報の管理」の方法で `DATABASE_URL` を保存する。`kinuya-db-backup` の接続文字列は `<BACKUP_USER>` を使う。
+4. **バックアップ環境の配置**: `backup.sh` と `crontab` を含むイメージを `fly deploy --app kinuya-db-backup` で配置する。取得の構成は「バックアップの取得」に従う。
+5. **マイグレーションの適用**: 下の「スキーマ変更とマイグレーションの運用」の CI で `npx prisma migrate deploy` を初回実行する。
+
+### 5.3. スキーマ変更とマイグレーションの運用
 
 - スキーマを変えるときは開発端末で `npx prisma migrate dev --name <変更の要約>` を実行し、生成された `prisma/migrations/<日時>_<変更の要約>/` をコミットに含める。
 - 本番稼働中の列の削除や型の変更は、新しい列の追加 → アプリの移行 → 旧列の削除の 2 回のデプロイに分ける。1 回目の後にアプリを戻しても旧列が残っているため、切り戻せる。
