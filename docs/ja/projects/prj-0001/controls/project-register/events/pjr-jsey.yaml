@@ -5548,3 +5548,19 @@
       from: C11R・TN64 の統合後の smoke が成功した
       to: YQ32 の統合後の smoke が成功した
   previous_event_id: reg_6448ff5fb4184334a38c0bf2226eb441
+- v: 1
+  id: reg_d3e5d33a076f4e82adbe7869a7e96741
+  ts: "2026-11-25T22:21:25Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-3M4M・PJR-2Q0G の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-11-24"
+      to: "-"
+  previous_event_id: reg_f229aa779c514021aea163638ad752d7
