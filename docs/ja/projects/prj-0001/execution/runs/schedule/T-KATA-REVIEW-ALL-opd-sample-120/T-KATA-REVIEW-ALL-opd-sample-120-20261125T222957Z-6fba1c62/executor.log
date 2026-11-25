@@ -1,0 +1,11 @@
+R2（構成）のレビューを終えました。`docs/ja/specdojo/samples/opd-access-control-sample.md` の段落を 1 つ移しただけで、ほかのファイルは変えていません。
+
+**照合した結果:** 章の順は rulebook の本文構成のとおりです（概要（`<term>`）→ 差分を持つ章 → 関連ドキュメント導線（`opr` 等））。opd-rulebook は `template: not-needed` なので、template とは照合していません。差分を持つ章の見出しは、`opd-index` の「権限・アカウント運用（棚卸し・監査ログ）」と同じです。節の順は、前の節で決めたことを後の節が使う順になっています（権限区分 → 付与・剥奪 → 共用タブレット → 緊急権限 → 監査ログ → 棚卸し）。未決事項の表を概要に置く形も、同じ系列の sample 2 本と同じです。
+
+**直した 1 点:** 棚卸しの節では、「月次点検ができなかった月は翌週に行う」という段落が節の最後にありました。この段落は棚卸しをいつ行うかの前提なので、節の冒頭の「月次点検で `OPS` が行う」の直後へ移しました。これで「いつ行うか → 何を照合し何を合格とするか → 差異をどう処理するか」の順に読めます。
+
+**検証:** 変更したファイルに prettier の整形チェックと markdownlint をかけ、どちらも問題なしでした。親 runner の検証は、ここでは実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R2 構成: 章の順は rulebook の本文構成と sibling sample に合っていた。棚卸しの節で実施時期の段落を照合と合否より前へ移した（1 件）。","handoff":["R2-1: R2 / 2.6. 棚卸し / 月次点検ができなかった月の扱い（実施時期の前提）が節の末尾にあり、照合・合否・差異の処理の後に読むことになっていた / 段落を節の冒頭の「月次点検で `OPS` が行う」の直後へ移した / `vp-arc-document-structure`（前提から結論の順） / -","R2-2: R2 / 全体（概要・権限・アカウント運用・関連ドキュメント導線） / 章の順（概要 → 差分を持つ章 → 関連導線）と見出しは opd-rulebook の本文構成（標準テンプレ）と `opd-index` の章名に一致していた。節の順も前の節で決めたことを後の節が使う順になっていた。opd-rulebook は `template: not-needed` のため template とは照合していない / - / `vp-arc-document-structure`、`vp-qe-omissions-consistency` / -","R2-3: R2 / 1. 概要（access-control） / 未決事項の表を概要に置く形は opd-incident-management-sample・opd-monitoring-sample と同じで、表の「影響する節」の値も節名と一致していたため移さなかった。各節へ分ける案は、同じ系列の sample との揃いが崩れるため採らなかった / - / `vp-qe-omissions-consistency` / -"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/opd-access-control-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/opd-access-control-sample.md","status":"passed","summary":"0 issues in 0 files"}]}
+</specdojo_executor_evidence>
