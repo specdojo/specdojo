@@ -1,0 +1,17 @@
+R1 の段では1か所だけ直しました。`docs/ja/specdojo/samples/bes-sample.md` の「発生条件」の場面表にある「確定の記録が成立したか分からないまま停止」の行です。この段で手を入れたのは `docs/ja/specdojo/samples/bes-sample.md` だけで、rulebook・template・result には触れていません。
+
+**直した内容**
+- **修正前:** 発生有無・回数は「発生しない」、判断根拠は「受領だけから発生済みと推定しない」でした。
+- **修正後:** 発生有無・回数は「照合するまで未判定。成立していれば一回、未成立なら発生しない」、判断根拠は「受領や停止だけから発生有無を推定しない。照合は販売プロセスで行う」です。
+- **理由:** 成立したか分からない状態を「発生しない」と言い切るのは、rulebook が求める「対象外と適用未判定を区別する」に反します。F005・F007・F008 の指摘もこの行です。
+- **検証:** Prettier で表を整えました（成功）。lint 系の検査は後で親 runner が実行するため、ここでは実行していません。
+
+**ほかの段に回した指摘**
+- **F010（参照先の誤り、R5 に回す）:** `[[specdojo:br-sample|販売金額計算の業務ルールサンプル]]` の参照先は、実際には「駄菓子屋きぬや 在庫不足判定」の sample でした。参照先が違うのは確かめましたが、参照先の確認は R5 の担当なので直していません。
+- **F002・F011（承認者の明記、要判断）:** template の第1章は承認者・判断時期・記録先を書くよう求めています。一方、Sample 記述標準は承認の割り当てや進み具合を sample の本文に書かないよう定めており、承認は登録簿で追う扱いです。sample は直さず、template の第1章の指示を標準に合わせて直す案を残します。
+- **F001・F003・F004・F006・F012・F013（扱わない観点）:** kata のレビューでは使わない観点のため扱いません。
+- **F009（R2 の担当）:** R2 の観点で、本文に担当を足すと Sample 記述標準に当たるため、ここでは直していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1 として bes-sample の「確定の記録が成立したか分からないまま停止」の行を「照合するまで未判定」に直し、rulebook の対象外と未判定の区別に合わせた（F005/F007/F008）。ほかの finding は担当の段に回すか、kata のレビューで使わない観点として handoff に記録した。","handoff":["No: 1 / 段: R1 / 箇所: docs/ja/specdojo/samples/bes-sample.md「発生条件」の場面表「確定の記録が成立したか分からないまま停止」の行 / 指摘: 確定記録の成立が不明な状態を「発生しない」と言い切っており、rulebook の「対象外と適用未判定は区別」（全体方針）と「適用未判定の業務を確認済みの対象や恒久的な対象外にしません」（記述ガイドの何が起きたか）に反する（grade F005/F007/F008） / 直した案: 発生有無・回数を「照合するまで未判定。成立していれば一回、未成立なら発生しない」に、判断根拠を「受領や停止だけから発生有無を推定しない。照合は販売プロセスで行う」に直した / 根拠: `specdojo:bes-rulebook` の全体方針、記述ガイドの何が起きたか・発生条件 / 印: なし","No: 2 / 段: R1（R5 へ申し送り） / 箇所: docs/ja/specdojo/samples/bes-sample.md「発生条件」の委譲の文 / 指摘: `[[specdojo:br-sample|販売金額計算の業務ルールサンプル]]` の参照先 br-sample は「駄菓子屋きぬや 在庫不足判定」で、金額計算と端数処理を定義していない（grade F010） / 直した案: R1 では直さない。R5 で販売金額の業務ルールへの参照に直すか、未作成なら仮置き ID と未確認である旨に置き換える / 根拠: docs/ja/specdojo/samples/br-sample.md の H1。参照先の整合は kata-guide で R5 の担当 / 印: なし","No: 3 / 段: R1 / 箇所: docs/ja/specdojo/samples/bes-sample.md「何が起きたか」と docs/ja/specdojo/templates/bes-template.md の第1章 / 指摘: template の第1章は業務定義・公開可否の承認者、判断時期、承認条件、記録先の記入を求める（grade F002/F011）。一方、Sample 記述標準の記述ガイドと禁止事項は、sample の本文に役割の割り当てや承認の進み具合を書かないと定め、承認は登録簿の個票で追う。rulebook も承認をドキュメントメタ情報標準に委ねている / 直した案: sample には足さない。template の第1章の記入指示を削るか、承認は登録簿で追う旨の指示に直す案を、template の見直しの段に回す / 根拠: `specdojo:sample-authoring-standard` の記述ガイドと禁止事項、`specdojo:bes-rulebook` の全体方針（共通の運用） / 印: 要判断","No: 4 / 段: R1 / 箇所: docs/ja/specdojo/samples/bes-sample.md「発生条件」の `_UNDECIDED_` / 指摘: grade F001/F003/F004/F006/F012/F013 は、kata のレビューで使わない観点（decision-readiness、pm 系、ba-stakeholder、ops 系）のため扱わない。F009（vp-qe-omissions-consistency）は R2 の観点で、本文に確認担当・決定者を足すと Sample 記述標準に当たる / 直した案: 変更しない。template の第4章の未決事項の記入指示（決定者・確認担当）と Sample 記述標準の食い違いは、No 3 と合わせて判断する / 根拠: docs/ja/specdojo/guides/kata-guide.md の「kata の観点の組」、`specdojo:sample-authoring-standard` の記述ガイド / 印: 要判断"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/bes-sample.md","status":"passed","summary":"変更した表を整形した"}]}
+</specdojo_executor_evidence>
