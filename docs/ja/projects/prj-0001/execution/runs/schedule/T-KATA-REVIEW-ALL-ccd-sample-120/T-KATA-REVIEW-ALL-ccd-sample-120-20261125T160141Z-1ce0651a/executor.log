@@ -1,0 +1,13 @@
+R2（構成）のレビューを終え、`docs/ja/specdojo/samples/ccd-sample.md` の構成を 1 か所直しました。変更した成果物はこのファイルだけで、rulebook と result には触れていません。Prettier の整形チェックは通りました。lint などの検査は、このあと親 runner が実行します。
+
+**直したこと:** 1章「目的と適用範囲」にあった小節「1.1. 対象領域と扱う時点」と「1.2. 識別と辞書の境界」をなくし、目的の段落と箇条書き 3 項目にまとめました。
+- 1.2 は 1 段落だけの小節でした。主キーだけを図に示し、属性の定義は辞書を正本とする、という範囲の説明は、辞書を参照する 1.1 の 2 項目めと同じ論点です。そこで 2 項目めの末尾へ移しました。
+- 「顧客台帳と商品の特殊化は 4 章に示す」という先回りの一文は削りました。同じ内容を 4 章の冒頭と 5 章の未解決事項がすでに書いているためです。
+
+**残した構成:** 2章から 5章までは、章の順・表と本文の置き方とも rulebook の本文構成どおりで、前提から結論の順に読めるため、そのままにしました。CCD の template は不要と宣言されているので（`template: not-needed`）、rulebook だけと突き合わせています。
+
+**grade の指摘 F001・F002:** frontmatter の `based_on` にはすでに `specdojo:bdd-sample` が入っており、どちらも解消済みでした。これは R2 の観点に当たらないので、手は加えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R2（構成）: ccd-sample の 1章の小節 1.1・1.2 を統合し、目的の段落と箇条書き 3 項目にした。2〜5章は rulebook の本文構成と合っているため維持。F001/F002 は based_on に specdojo:bdd-sample があり解消済み。","handoff":["R2-1: R2 / 1. 目的と適用範囲（旧 1.2. 識別と辞書の境界） / 1 段落だけの小節 1.2 が 1.1 の辞書参照の項目と同じ論点（対象範囲と辞書の境界）を別の小節に分けており、粒度が細かすぎる。さらに末尾の一文が 4章・5章の内容を先回りして言い直している / 1.2 の『図には主キーだけを示し、販売単価・数量などの定義は同辞書とその参照先を正本とする』を 1.1 の 2 項目めの末尾へ移し、4章を先回りする一文を削った。小節が 1 つだけになるため 1.1 の見出しもなくし、1章を目的の段落と箇条書き 3 項目にした / vp-arc-document-structure（rulebook の本文構成『目的と適用範囲』の内容・受入条件） / 要判断（迷った理由: 1.1 の見出し『対象領域と扱う時点』は扱う時点を示す目印にもなる。選ばなかった案: 1.2 だけを 1.1 に統合して 1.1 の見出しを残す。小節が 1 つだけ残る構成になるため採らなかった）","R2-2: R2 / 2. 概念クラス図〜5. 未解決事項 / 章の順・表と本文の配置は rulebook の本文構成（図→関連表と整合性条件→辞書対応→未解決事項）と合っており、前提から結論の順に読める。CCD の template は not-needed のため、rulebook だけと照合した / - / vp-arc-document-structure、vp-qe-omissions-consistency / -","R2-3: R2 / frontmatter（based_on） / grade の F001・F002（based_on に specdojo:bdd-sample がない）は、現行版に specdojo:bdd-sample があり解消済み / - / vp-qe-omissions-consistency、vp-qe-kata-conformance（CCD rulebook の『推奨 Frontmatter 項目』） / -"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/ccd-sample.md","status":"passed","summary":"All matched files use Prettier code style"}]}
+</specdojo_executor_evidence>
