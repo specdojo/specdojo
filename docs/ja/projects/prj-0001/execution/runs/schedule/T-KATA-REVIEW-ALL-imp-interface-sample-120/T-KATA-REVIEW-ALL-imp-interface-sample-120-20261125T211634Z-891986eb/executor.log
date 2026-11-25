@@ -1,0 +1,26 @@
+R2（構成）のレビューを終えました。章の順・粒度・表と本文の配置はおおむね rulebook に沿っていて、sample に入れた変更は高影響 2 件の並び替えだけです。確認できた検査は Prettier の整形チェック（通過）だけで、lint 系は終了後に runner が実行します。
+
+**直したこと（`docs/ja/specdojo/samples/imp-interface-sample.md`）**
+
+- 「影響分析サマリ」では「本部への売上登録の調整を先に始める」と決めていて、「対応方針」の表も売上登録が先です。一方、サマリの「主な影響対象I/F」と「影響詳細一覧」の行は商品照会が先でした。
+- この 2 か所も売上登録を先にし、3 章・4 章・5 章を同じ順で読めるようにしました（ほかの内容は変えていません）。
+
+**構成として確認したこと**
+
+- 6 章の見出しと順序、各表の必須の列名は rulebook の本文要件と一致しています。
+- template は rulebook 側で `undecided` のため、照合はできていません。
+
+**直さなかったこと（要判断）**
+
+- 「対応方針」で、見送りの在庫変更イベントは再評価を表の 1 行にしています。代替のレシート印字は、再評価を表の下の箇条書きにだけ書いています。
+- 置き方がそろっていませんが、レシートの行を足すには担当の Role を推測で決めることになるため、直していません。
+- 担当を決めて表の行にそろえるか、箇条書きに寄せるかを人の判断に残します。
+
+**他の段に任せたこと**
+
+- 展開された finding F001（`based_on` の `cr-2026-004` が個票 ID の形式 `PJR-XXXX` に合わない）は観点が `vp-qe-kata-conformance` です。R2 の観点ではないため、R1 / R5 に任せます。
+- 「影響詳細一覧」の表の前に導入の 1 文がない点は、Sample 記述標準の「表の前の 1 文」に当たるため R3 に任せます。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R2（構成）を実施。章の順・必須の列は rulebook の本文要件と一致。高影響 2 件の並びが「影響分析サマリ」の優先順・「対応方針」の表と食い違っていたため、サマリの「主な影響対象I/F」と「影響詳細一覧」の行を売上登録→商品照会の順にそろえた。F001 は R2 の観点ではないため R1/R5 に任せた。","handoff":["R2-1: R2 / 3. 影響分析サマリ・4. 影響詳細一覧 / 本文は本部への売上登録の調整を先に始めるとし、「対応方針」の表も売上登録が先だが、サマリの「主な影響対象I/F」と影響詳細一覧の行は商品照会が先で、3〜5 章の並びが食い違っていた / サマリの表のセルを「本部への売上登録、本部商品マスタの照会」にし、影響詳細一覧の 2 行を入れ替えて売上登録を先にした / vp-arc-document-structure / -","R2-2: R2 / 5. 対応方針 / 見送りの在庫変更イベントは再評価を表の 1 行（低・2026-07-31・BA）にしているが、代替のレシート印字の再評価は表の下の箇条書きにだけあり、表と本文の置き方がそろっていない / - / vp-arc-document-structure。選ばなかった案: レシートの再評価を表の 1 行として足す（担当の Role を推測で決めることになるため見送った）、在庫変更の行を外して箇条書きに寄せる（低影響の対応項目が表から消えるため見送った）。どちらにそろえるかは人が決める / 要判断","R2-3: R2 / Frontmatter（based_on）・1. 目的と適用範囲 / 展開された grade の finding F001（`based_on` が個票 ID の形式 PJR-XXXX でなく `cr-2026-004`）は観点が `vp-qe-kata-conformance` のため R2 では扱わない / - / kata-guide の「kata の観点の組」で `vp-qe-kata-conformance` は R1・R5 の観点。R1/R5 で、個票 ID の形式に合わせるか、rulebook の based_on の規定を見直すかを判断する / -","R2-4: R2 / 4. 影響詳細一覧 / ほかの章と違い、表の前に導入の 1 文がない / - / Sample 記述標準の「表の前の 1 文」に当たり、kata-guide の「文章のチェック項目」の範囲のため R3 に任せる / -"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/imp-interface-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更したのは docs/ja/specdojo/samples/ 配下の sample だけで、plan・result・個票を変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変更していない","reason":"変更したファイルに *.yaml / *.yml がない"}]}
+</specdojo_executor_evidence>
