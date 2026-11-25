@@ -38,3 +38,16 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_a7427097ee0c4074b701ad52b82c3d86
+  ts: "2026-11-25T00:22:09Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_43c6588dd5c74f3e8dba2e150cbc2189
