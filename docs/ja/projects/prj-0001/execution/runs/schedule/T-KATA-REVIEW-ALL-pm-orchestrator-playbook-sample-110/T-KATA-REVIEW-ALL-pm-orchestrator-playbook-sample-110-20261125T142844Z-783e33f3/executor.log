@@ -1,0 +1,25 @@
+R1（目的の過不足）の段として sample を 4 か所直しました。Prettier と markdownlint は通っています。
+
+**変更ファイル:** `docs/ja/specdojo/samples/pm-orchestrator-playbook-sample.md`（5 行追加・10 行削除）
+
+- **使わない agent（F007）:** agent の使い分けの章に「`local-executor` は medium・hard には使わない」「ほかに使わない agent はない」を足しました。rulebook の本文要件が求める「使わない agent と理由」を満たします。
+- **落とし穴の章を削除（F004・F001）:** `pgrep -f` の自己一致と commitlint の `body-max-line-length` は、どのプロジェクトにも当てはまる知見です。rulebook の「知見の育て方」では本体へ入れる変更案に回すものなので、章ごと削り、後ろの章の番号を詰めました。項目 ID を添えるべき行（F001）もこれで無くなります。
+- **リリースの範囲の決め方（F003）:** リリースの手順の前に、誰が・いつまでに・何を基準に範囲を決めるかを足しました。条件付き必須の章の要件「範囲の決め方」を満たします。
+- **未決事項の記録先（F002）:** タブレットが営業時間外に通信できない件の `_UNDECIDED_` に、回答を待つ登録簿の `question`（`PJR-KN15`）を添えました。
+
+**要判断が 1 件あります:** rulebook の中で記述が食い違っています。「handoff と question からの移し方」は回答待ちの間に仮の決まりを書くなとしていますが、「章ごとの書き方」は `_UNDECIDED_` に決まるまでの扱いを添えろとしています。sample では決まるまでの扱いを残しました。rulebook の両方の記述をそろえる案を handoff に書いています。
+
+**ほかの段に回した指摘:** R1 の観点に当たらないので、直していません。
+
+| 指摘 | 内容 | 回す先 |
+| --- | --- | --- |
+| F005 | 「全件の検査」が何の検査か書かれていない | R4 |
+| F006 | 参照名の例 `PJR-KN11` が本文で使われていない | R2・R5 |
+| F008 | `based_on` と `supersedes` が rulebook・template とずれている | R5 |
+| F009 | 完了条件の書き方を任意章へ移す | R2 |
+
+result は更新していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1（目的の過不足）として pm-orchestrator-playbook-sample に 4 か所の差分を入れた（使わない agent の明記、一般的な知見の落とし穴の章を削除、リリースの範囲の決め方の追加、未決事項への question の項目 ID の追加）。R1 の観点に当たらない F005・F006・F008・F009 は後の段に回した。","handoff":["No: 1 / 段: R1 / 箇所: 2. agent の使い分けと癖の導入文 / 指摘: rulebook の本文要件が求める「使わない agent と理由」がなく、該当がないことも書かれていない（F007） / 直した案: `local-executor` は開発用の PC のメモリ不足のため medium・hard には使わず easy の項目だけに使い、ほかに使わない agent はない、と書いた / 根拠: pm-orchestrator-playbook-rulebook の本文要件「agent の使い分けと癖」、vp-qe-kata-conformance / 印: なし","No: 2 / 段: R1 / 箇所: 旧 7. 落とし穴（`pgrep -f` の自己一致、commitlint の `body-max-line-length`） / 指摘: どのプロジェクトにも当てはまる一般的な知見で、運用メモの責務の外にある。回避策に直す側の項目 ID もない（F004・F001） / 直した案: 章ごと削除し、後ろの章の番号を詰めた（リリースの手順を 7、店頭の端末との分担を 8 に）。一般的な知見は本体へ入れる変更案として起票する / 根拠: rulebook の「知見の置き場所の分け方」「知見の育て方」の手順 1、禁止事項「本体に書かれた一般的な進め方を再掲する」「直す側の項目を添えずに回避策を書く」 / 印: なし","No: 3 / 段: R1 / 箇所: 7. リリースの手順の導入文 / 指摘: リリースの手順の受入条件「範囲の決め方」がない（F003） / 直した案: 店主代表（`PO`）が入れ替えの日の前日までに、登録簿の項目から店頭の販売・在庫・つけの記録に効くものを選んで版の範囲を決める、と足した / 根拠: rulebook の本文要件「リリースの手順」の受入条件 / 印: なし","No: 4 / 段: R1 / 箇所: 8. 店頭の端末との分担の `_UNDECIDED_` / 指摘: 回答を待っている登録簿の `question` の項目 ID がなく、記録先が分からない（F002） / 直した案: `question` の `PJR-KN15` で店主代表の回答を待つことを書き添えた。rulebook の「handoff と question からの移し方」は回答待ちの間に仮の決まりを書かないとし、「章ごとの書き方」は `_UNDECIDED_` に決まるまでの扱いを添えるとしていて食い違う。sample では決まるまでの扱いを残した。rulebook を直す案: 「question の回答待ちの間は、`_UNDECIDED_` と question の項目 ID、作業を止めないための最小限の扱いだけを書いてよい」と、片方の記述にそろえる / 根拠: rulebook の「handoff と question からの移し方」「章ごとの書き方」、禁止事項「利用者の返事を待っている判断を書き写す」 / 印: 要判断","後の段に回した指摘（R1 の観点に当たらないため直していない）: F005（リリースの手順 3 の「全件の検査」が何の検査か書かれていない）は R4、F006（参照名の例 `PJR-KN11` が本文で使われていない）は R2・R5、F008（`based_on` が decision ではなく pm-plan-sample を指し、template の `supersedes: []` もない）は R5（`based_on` の参照先）、F009（完了条件の書き方の決まりを任意章「登録簿項目の完了条件の書き方」へ移す）は R2（構成）。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/pm-orchestrator-playbook-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint docs/ja/specdojo/samples/pm-orchestrator-playbook-sample.md","status":"passed","summary":"エラーなし"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更したのは sample だけで、plan・result・個票を変更していないため"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変更していない","reason":"変更したファイルに `*.yaml` / `*.yml` がないため"}]}
+</specdojo_executor_evidence>
