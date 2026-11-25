@@ -1,0 +1,19 @@
+R1（目的の過不足）のレビューを終えました。`docs/ja/specdojo/samples/opr-sample.md` を 1 か所直しています。
+
+**直した箇所:** 運用変更作業の章で、事前周知の対象が価格の一括変更だけでした。rulebook の運用変更作業（6.8）は、重大変更について事前周知の要否と手段を書くよう求めています。そこで「記録の操作が変わる版の更新」も前日閉店時の店内掲示の対象に加え、「記録に影響しない表示の修正は周知しない」と書きました。周知の範囲は `opr-change-sample` に合わせています。
+
+**plan に展開された finding:**
+- **F003（分冊と id の記述のずれ）:** R1 の観点に当たりますが、すでに解消済みです。関連導線の表に分冊 sample 8 件がすべて「作成済」で並んでいます。
+- **F002（証跡の保管期間）:** R4 の観点のため、この段では扱っていません。なお、未決事項の表にすでに「監査ログ以外の証跡の保管期間」の行があります。
+- **F001・F004（未決事項の決定者・期限、ready 化の判断基準）:** kata-guide はこの 2 つの観点（`vp-po-decision-readiness`・`vp-ops-release-readiness`）を kata の段のレビューで使わないと定めているため、直していません。
+
+**判断が必要な点:** タスク名は `opr-access-control-sample` ですが、plan の編集対象と finding の行は `opr-sample` を指していたため、`opr-sample` を直しました。`opr-access-control-sample` は読んだだけで変えていません。また `opr-sample` には次のずれがありますが、直していません。
+- 兄弟の sample 群は `opr-sample` を `opr-index` として参照しています。
+- 一方で `opr-sample` 自身は、手順群の入口を別の `opr-index-sample` と書いています。
+- `opr-index` の sample が 2 つあるのは型の体系の問題なので、R5 で扱うか人が決めるべきだと考え、「要判断」の印を付けて handoff に残しました。
+
+**検証:** 対象ファイルは Prettier の整形チェックに通りました。markdownlint と `validate:history-links` は親 runner が実行するか、対象外です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1（目的の過不足）のレビューを行った。opr-sample.md の運用変更作業の章で、事前周知の対象に記録の操作が変わる版の更新を足した（opr-rulebook 6.8）。F003 は解消済みと確認した。F002 は R4 の観点、F001・F004 は kata の段で使わない観点のため扱っていない。","handoff":["R1-1: R1 / 8. 運用変更作業 / 重大変更の事前周知の要否と手段が価格の一括変更にしかなく、記録の操作が変わるアプリの版の更新の周知が書かれていない / 「記録の操作が変わる版の更新と価格の一括変更は、前日の閉店時に店内の掲示で店番担当へ周知する。記録に影響しない表示の修正は周知しない。」にした / `vp-qe-kata-conformance`（opr-rulebook の運用変更作業（6.8）「重大変更は事前周知の要否と手段を明記する」）、周知の範囲は `opr-change-sample` の運用変更の表と事前周知の手順に合わせた / -","R1-2: R1 / 12. 関連ドキュメント導線 / F003（関連導線が分冊を障害対応だけと書き、`opr-incident` を予定としている）を確かめた。現在の表は分冊 sample 8 件をすべて作成済として載せており、指摘はすでに解消している / - / `vp-qe-kata-conformance`（grade finding F003） / -","R1-3: R1 / 1. 概要・12. 関連ドキュメント導線 / 兄弟の分冊 sample（opr-incident・opr-backup-restore・opr-batch・opr-change・opr-monitoring・opr-support・opr-access-control）は `opr-sample` を `opr-index` として参照している。一方で `opr-sample` 自身は「手順群の入口は `opr-index-sample`」と書き、`opr-index` の sample が `opr-sample`（opr-rulebook）と `opr-index-sample`（opr-index-rulebook）の 2 つになっている / - / `vp-qe-kata-conformance`、`vp-arc-single-responsibility`。直さなかった理由: どちらを `opr-index` の完成例とするかは rulebook の分担（opr-rulebook と opr-index-rulebook）を決めないと選べず、対象の kata だけでは解けない。選ばなかった案: (a) `opr-sample` から `opr-index-sample` への入口の記述を消して自分を `opr-index` と名乗る、(b) 兄弟の分冊の参照先を `opr-index-sample` へ移す。R5 または人の判断で扱う / 要判断","R1-4: R1 / 1. 概要 / F001・F004（未決事項の表に決定者・期限・ready 化前に解消すべき項目の列がない）は `vp-po-decision-readiness`・`vp-ops-release-readiness` の指摘で、kata-guide の「kata の観点の組」はこの 2 つを kata の段のレビューで使わない観点としているため直していない / - / kata-guide の「kata の観点の組」（外す観点） / -","R1-5: R1 / 11. 証跡 / F002（保管期間が `_UNDECIDED_`）は `vp-qe-verifiability` で R4 の観点のため、この段では扱わない。概要の未決事項の表にはすでに「監査ログ以外の証跡の保管期間」の行がある / - / kata-guide の「kata の観点の組」（R4 の観点） / -","対象の確認: タスク名は opr-access-control-sample だが、plan の編集対象（rulebook の sample 宣言から解決）と grade finding の行は opr-sample.md を指していたため、opr-sample.md だけを直した。opr-access-control-sample.md は読んだだけで変えていない"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/opr-sample.md","status":"passed","summary":"All matched files use Prettier code style!"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変えていない","reason":"変えたのは docs/ja/specdojo/samples/opr-sample.md だけで、plan・result・個票を変えていないため"}]}
+</specdojo_executor_evidence>
