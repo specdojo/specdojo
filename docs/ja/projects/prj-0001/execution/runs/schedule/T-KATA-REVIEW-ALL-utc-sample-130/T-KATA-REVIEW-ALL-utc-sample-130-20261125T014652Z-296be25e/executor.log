@@ -1,0 +1,20 @@
+R3（読みやすさ）の段として、`docs/ja/specdojo/samples/utc-sample.md` の文を直しました。変更はこのファイルだけで、意味と判断に要る背景・例外・制約は変えていません。Prettier での整形と markdownlint は問題なしです（0 件）。
+
+指摘は 7 件で、すべて直しています。
+
+- **R3-1（1. 概要）**: 「`utc-<term>` は〜であり、括り方に従う」の主語と述語がねじれていたので、「〜とし、term の括り方は〜に従う」にしました（W2）。
+- **R3-2（2. 責務）**: 取引番号の付与と印刷要求の送信が 1 項目に入っていたので、2 項目に分けました（一項目一判断）。
+- **R3-3（4. 境界/依存）**: 括弧書き「（外れる扱いはない）」が文の途中にあり、表の前の 1 文もなかったので、文を分けて表の前の 1 文を足しました（W3、表の前の 1 文）。
+- **R3-4（5. トレース）**: 表の前の 1 文がなかったので足しました（表の前の 1 文）。
+- **R3-5（5. トレース）**: TR-04 の備考「受領額不足の扱いを含めて解釈」は、どう解釈するのかが読めないので、「受領額不足では確定しない扱いも含むと解釈」にしました（W7）。
+- **R3-6（5. トレース）**: TR-05 の備考の略語「UT」を「単体テスト」に書き換えました（W8）。
+- **R3-7（6. テスト観点とケース）**: 3 つのケース表の前に、合格の条件を示す 1 文がなかったので足しました（表の前の 1 文）。さらに、全ケースの証跡の欄は「何を何へ差し替えるのか」の係り方があいまいだったので、「`tests/unit/sales-checkout.test.ts` のローカル実行結果（`kinuya-ci-unit` 整備後に CI 実行結果へ差し替え）」にしました（W5）。
+
+plan に展開された grade の F001〜F009 は、どれも R3 の観点（`vp-ux-readability`・`vp-ux-language-consistency`・`vp-arc-conciseness`）に当たらないので、扱っていません。
+
+- F001・F002・F009 の観点は、ガイドが kata のレビューでは使わないとしています。
+- F003〜F008 は R1・R2・R4・R5 が扱う観点です。F003・F004・F005・F008 の内容は、前の段で本文に入っていました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R3（読みやすさ）として utc-sample.md の文を直した（指摘 7 件、すべて直した）。変更は docs/ja/specdojo/samples/utc-sample.md のみ。","handoff":["R3-1: R3 / 1. 概要 / 「`utc-<term>` は `utc-sales-checkout` であり、…の括り方に従う」で主語と述語がねじれている / 「`utc-sales-checkout` とし、term の括り方は … に従う」にした / W2 / -","R3-2: R3 / 2. 責務 / 取引番号の付与と印刷要求の送信が 1 項目に 2 つの判断として入っている / 「採番器が返す取引番号を付ける」と「確定1件につき、印刷要求を1回だけ送る」の 2 項目に分けた / 一項目一判断（`簡潔さと文章量を責務に合わせる`） / -","R3-3: R3 / 4. 境界/依存 / 括弧書き「（外れる扱いはない）」が文の途中に入り、依存の表の前に何の表かを示す 1 文がない / 「共通の扱いから外れる依存はない。」で文を切り、「次の表は、本 term のケースで使う依存と、その依存をテストで制御する方法を示す。」を足した / W3、表の前の 1 文（Sample 記述標準） / -","R3-4: R3 / 5. トレース / 表の前に何の対応を示す表かの 1 文がない / 「次の表は、ケース表の `trace_key` と、根拠とした仕様ID・要点の対応を示す。」を足した / 表の前の 1 文（Sample 記述標準） / -","R3-5: R3 / 5. トレース / TR-04 の備考「受領額不足の扱いを含めて解釈」では、どう解釈したかが読み取れない / 「受領額不足では確定しない扱いも含むと解釈」にした（責務と confirm-reject-020 と同じ意味） / W7 / -","R3-6: R3 / 5. トレース / TR-05 の備考で略語「UT」を正式名なしで使っている / 「単体テストは印刷要求データのみ確かめる」にした / W8 / -","R3-7: R3 / 6. テスト観点とケース / 3 つのケース表の前に合格の条件を示す 1 文がない。全ケースの証跡の欄「暫定: ローカル実行結果、テストのパス、`kinuya-ci-unit` 整備後に差し替え」は、何を何へ差し替えるのかの係り方があいまい / 各表の前に合格の条件を示す 1 文を足した。証跡の欄を「暫定: `tests/unit/sales-checkout.test.ts` のローカル実行結果（`kinuya-ci-unit` 整備後に CI 実行結果へ差し替え）」にした / 表の前の 1 文（Sample 記述標準）、W5 / -","grade の F001〜F009 は R3 の観点（`vp-ux-readability`・`vp-ux-language-consistency`・`vp-arc-conciseness`）に当たらないため扱わない。F001（`vp-po-decision-readiness`）・F002（`vp-pm-dependency-risk`）・F009（`vp-ops-release-readiness`）の観点は、kata-guide の「kata の観点の組」が kata のレビューでは使わないとしている。F003〜F008 は R1・R2・R4・R5 が扱う観点であり、F003・F004・F005・F008 の内容は前の段で本文に入っていた。F006・F007（utc-index-sample との食い違い）は R5 が扱う。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/utc-sample.md","status":"passed","summary":"整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/utc-sample.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>
