@@ -1,0 +1,43 @@
+R4（正しさ）の段として、`etc-sample.md` に書かれた事実を正本と突き合わせました。誤りは4か所あり、直しました。変更したファイルは `docs/ja/specdojo/samples/etc-sample.md` だけで、Prettier 整形と markdownlint は通っています。ほかの検査は親 runner が実行します。
+
+**直した箇所**
+
+| No | 主張（本文の箇所） | 正本 | 確かめ方 | 結果 | 根拠と直し |
+| --- | --- | --- | --- | --- | --- |
+| 1 | `et-receipt-print-failure-handling-010` の期待値・観測点（印字状態が書かれていない） | `ifx-cmd-sample.yaml` の `error_handling.timeout_action` | 読み取り | 不一致 | 打ち切りは「印字結果不明として通知」と定めている。期待値に「印字状態が `unknown`」を、観測点に「印字状態」を加えた（F004） |
+| 2 | `et-receipt-print-contract-040` の「印刷要求回数 1」 | `ifx-cmd-sample.yaml` の `exit_codes` の `5`、および `2` のケース 050 の回数 0 | 読み取り | 不一致 | 終了コード `5` はデバイスへのアクセス権がない状態なので、プリンタへは届かない。ケース 050 と同じ数え方で 0 に直した |
+| 3 | トレース `TR-02` の備考 `stdout` | `ifx-cmd-sample.yaml` | 読み取り | 不一致 | 実際のキーは `streams.stdout` なので直した |
+| 4 | トレース `TR-05` の備考「共通の境界/依存/環境の扱い」 | `etc-index-sample.md` の見出し | 読み取り | 不一致 | 実際の章名「外部結合テスト共通の境界/依存/環境の扱い」に直した |
+
+**一致を確かめた主張**
+
+- 入口が `shell: false`・stdin なしであること（`command.shell`、`streams.stdin.mode`）。
+- 終了コード `0`・`1`・`2`・`5` と、それぞれの印字状態の扱い。
+- 終了コード `0` でも結果 JSON が欠けていれば `unknown` にすること（`malformed_output_action`）。
+- 用紙切れのとき、`receipt-print` は終了コード `1` で状態は `unknown`、販売 CLI は終了コード `0` であること（`ifx-cmd` の `permanent_failure`、`clis` の「印字未完了」の行）。
+- 印刷に冪等性がないこと（`execution.idempotency`）。
+- パス `receipts/receipt-YYYYMMDD-NNNN.txt` と `data/sales/TX-YYYYMMDD-NNNN.json`（`clis` の出力情報）。
+- `TR-01` の合格率 100% と CI ジョブ `kinuya-ci-sales-recovery`（`tsp-index`）。
+- `TR-04` の章名「代表的な表示と利用者の次の手」（`clis`）。
+- 応答待ち10秒・自動再送なし（`etc-index`）。
+- `case_id` と `perspective_key` の形式（`etc-rulebook`）。
+
+**確かめられなかった主張**
+
+- 「stderr の診断は保存前にパスの利用者名をマスクする」：`ifx-cmd` が定めているのは秘密値のマスクだけで、利用者名に当たる正本はありません。サンプル内の仮定として残しました。
+
+**finding の扱い**
+
+- F003 と F007 は、前の段で直っていることを確かめました。
+- F002 と F005 は、終了コード `2` のケース `et-receipt-print-contract-050` が既にあるため、解消済みです。
+- F001（`vp-pm-control-reporting`）は、kata-guide の決まりでこの段のレビューでは使わない観点なので扱っていません。
+- F006 はサンプル間で値がそろっていない問題で、R5 の段か `ifx-cmd-sample` の側で直す必要があります。
+
+**この段で直していない点（他の段か別の kata で扱う）**
+
+- `etc-index-sample` の、ケース表の共通カラムの記入例と合格基準の例は、無応答を「印刷失敗の警告」と書いています。本書の「結果不明の警告」とずれており、`etc-index-sample` 側を直す必要があります。
+- `etc-index-sample` の観点の型「ET で扱う範囲の非機能（印刷応答待ちの上限遵守）」に当たる観点も、該当しない理由の1行も本書にありません。R1 か R5 の段で確かめる必要があります。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）の確かめで、etc-sample.md の不一致4件を直した。failure-handling-010 に印字状態 `unknown` を追加、contract-040 の印刷要求回数を 0 に修正、TR-02 の備考を `streams.stdout` に修正、TR-05 の備考を etc-index の章名に修正。ほかの主張は ifx-cmd・clis・etc-index・tsp-index・etc-rulebook と一致した。F002・F003・F005・F007 は解消済みを確認。F001 は kata の段のレビューで使わない観点のため扱わず、F006 は R5 か ifx-cmd-sample 側へ回した。","handoff":["R4 確かめの表（reporter が result の実施内容に表として記入する）: 1) failure-handling-010 の印字状態の欠落 / 正本 docs/ja/specdojo/samples/ifx-cmd-sample.yaml の `error_handling.timeout_action` / 読み取り / 不一致 / 「印字結果不明として通知」→ 期待値と観測点に印字状態 `unknown` を追加。2) contract-040 の「印刷要求回数 1」 / 正本 ifx-cmd-sample.yaml の `exit_codes` の 5（デバイスへのアクセス権なし）と exit 2 のケース 050 の回数 0 / 読み取り / 不一致 / 0 に修正。3) TR-02 の備考 `stdout` / 正本 ifx-cmd-sample.yaml / 読み取り / 不一致 / 実際のキー `streams.stdout` に修正。4) TR-05 の備考の章名 / 正本 docs/ja/specdojo/samples/etc-index-sample.md / 読み取り / 不一致 / 「外部結合テスト共通の境界/依存/環境の扱い」に修正。5) 入口が `shell: false`・stdin なし / ifx-cmd の `command.shell` と `streams.stdin.mode` / 一致。6) 終了コード 0・1・2・5 と印字状態の扱い / ifx-cmd の `exit_codes`・`malformed_output_action` / 一致。7) 用紙切れ時に receipt-print は 1・状態 `unknown`、販売 CLI は 0 / ifx-cmd の `permanent_failure` と clis-sample の「印字未完了」の行 / 一致。8) パス receipts/receipt-YYYYMMDD-NNNN.txt と data/sales/TX-YYYYMMDD-NNNN.json / clis-sample の出力情報 / 一致。9) TR-01 の合格率 100% と CI ジョブ kinuya-ci-sales-recovery / tsp-index-sample / 一致。10) TR-03 の `execution.idempotency` / ifx-cmd / 一致。11) TR-04 の章名「代表的な表示と利用者の次の手」 / clis-sample / 一致。12) 応答待ち10秒・自動再送なし / etc-index-sample / 一致（ifx-cmd との食い違いは本書の `_UNDECIDED_` に記載済み）。13) `case_id` と `perspective_key` の形式 / docs/ja/specdojo/rulebooks/etc-rulebook.md / 一致。14) stderr のパスの利用者名をマスクする / ifx-cmd の `log_policy` は秘密値のマスクだけを定める / 確かめられない（サンプル内の仮定として維持）。","F002・F005（終了コード 2 のケースがない）: ケース `et-receipt-print-contract-050`（終了コード 2、`failed`、印刷要求回数 0）が既にあり解消済み。","F003・F007: 前の段で直っていることを確認した（030 の主語は `receipt-print`、`unknown` のケースは「結果不明の警告」）。","F001（`vp-pm-control-reporting`）: kata-guide の「kata の観点の組」で、kata の段のレビューでは使わない観点のため扱っていない。","F006（ifx-cmd-sample の 30秒・再試行3回と etc-index の 10秒・自動再送なしの食い違い）: サンプル間の整合の問題で R5 の観点に当たる。ifx-cmd-sample か etc-index-sample の値をそろえる判断が要る。本書は `_UNDECIDED_` で明示済み。","相手側の修正案: etc-index-sample の「ケース表の共通カラム」の記入例と合格基準の例が、無応答を「印刷失敗の警告」と書いている。本書の「結果不明の警告」と印字状態 `unknown` に合わせて直す（R5）。","R1・R5 で確かめる事項: etc-index-sample の観点の型「ET で扱う範囲の非機能（印刷応答待ちの上限遵守）」に当たる観点も、該当しない理由の1行も本書にない。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/etc-sample.md","status":"passed","summary":"変更した sample を整形した"},{"command":"npx markdownlint docs/ja/specdojo/samples/etc-sample.md","status":"passed","summary":"エラーなし"}]}
+</specdojo_executor_evidence>
