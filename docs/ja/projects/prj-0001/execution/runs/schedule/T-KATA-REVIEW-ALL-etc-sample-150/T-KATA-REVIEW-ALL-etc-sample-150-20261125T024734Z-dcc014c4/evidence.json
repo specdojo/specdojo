@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-etc-sample-150",
+  "run_id": "T-KATA-REVIEW-ALL-etc-sample-150-20261125T024734Z-dcc014c4",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-25T02:48:19.174Z",
+    "completed_at": "2026-11-25T02:51:40.417Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/etc-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/etc-sample.md | 21 +++++++++++++++++++--\n 1 file changed, 19 insertions(+), 2 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/samples/etc-sample.md",
+      "status": "passed",
+      "summary": "All matched files use Prettier code style"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/samples/etc-sample.md",
+      "status": "passed",
+      "summary": "エラーなし"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:etc-sample\n  type: test\n  status: draft\n  rulebook: specdojo:etc-rulebook\n  based_on:\n    - specdojo:tsp-index-sample\n    - specdojo:etc-index-sample\n---\n\n# 外部結合テストカタログ: レシート印刷連携\n\n## 1. 概要（`receipt-print`）\n\n販売管理 CLI の会計確定（`sales complete`）が、店舗端末の外部コマンド `receipt-print` を起動して保存済みレシートを店舗プリンタで印刷し、その結果を判別する連携を対象とする。印刷が失敗・無応答でも、販売 CLI が会計を取り消さず、二重印刷を起こさずに店番へ次の手を示せることを、店舗プリンタの検証機とスタブで確かめる。\n\n… output omitted …\neout.test.ts`、CI run 番号、取引番号 |\n\n## 7. 実行運用メモ\n\n- 実行の場: `automated` のケースは `kinuya-ci-sales-recovery` で、印刷連携か販売 CLI の会計処理を変えた変更の merge 前に実行する。`manual` のケースは検証機の前で QE が実施し、紙面の写真を検証記録に残す。\n- 実行制約: 検証機は1台のため印刷のケースは並列にしない。営業中の店舗プリンタは使わない。\n- 後始末: 「境界/依存/環境」のテストデータの削除は、失敗したテストでも省かない。用紙切れのケースの後は用紙を戻し、テスト印刷を1回して検証機を元に戻す。\n- 失敗時の再実行: 検証機の失敗は、プリンタの電源と USB 接続を確かめてから1回だけ再実行する。再実行でも失敗したら QE が不具合として起票し、同じ日に2回以上は繰り返さない。\n- 変更時の見直し: `receipt-print` のメジャー版の更新（`>=2.0.0`）や終了コードの追加があれば、トレース表と「印刷結果の判別」のケースを更新する。"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6998 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6998 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-etc-sample-150\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 7ms\n[paren\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1777}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  11:56:21\n   Duration  2.65s (transform 5.85s, setup 1.38s, import 8.00s, tests 5.90s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-etc-sample-150/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-etc-sample-150/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R5（整合）として etc-sample.md を etc-index の観点の型・スタブの分担と揃えた。「認証・認可」を立てない理由の1行と観点「印刷応答待ちの上限遵守」（ケース2件）を足し、依存の扱いに遅延を足し、`_UNDECIDED_` の段落の更新範囲を広げて役割の割り当てを消した。etc-index と ifx-cmd-sample を直す案は handoff に残した。",
+  "completion_status": "complete",
+  "handoff": [
+    "R5-1: R5 / 6. テスト観点とケース / etc-index の「観点の立て方（共通）」は、当てはまらない観点の型の理由を `etc-<term>` に1行で残すよう求めているが、「認証・認可」を立てない理由がなかった / 章の冒頭に「`receipt-print` は端末内のコマンドで認証を持たないため立てない。権限不足（終了コード `5`）は「印刷結果の判別」で扱う」を足した / `vp-qe-kata-conformance`（etc-index の「観点の立て方（共通）」） / -",
+    "R5-2: R5 / 6.5. 観点: 印刷応答待ちの上限遵守 / etc-index が `etc-receipt-print` 用に名前を挙げている観点「印刷応答待ちの上限遵守」（ET で扱う範囲の非機能）と、「条件の立て方（共通）」の境界「応答待ち上限の1秒前（9秒）」のケースがなかった。責務の「子プロセスを終了させ、不完全な stdout を採用しない」を確かめるケースもなかった / `perspective_key: response-timeout` の観点を足し、9秒の遅延で成功するケース（010）と、途中の stdout の後に無応答となり10秒で子プロセスが終わり `unknown` になるケース（020）を置いた / `vp-qe-kata-conformance`、ifx-cmd-sample の `error_handling.timeout_action` / -",
+    "R5-3: R5 / 4. 境界/依存/環境 / 「依存の扱い」のスタブで再現するものに遅延がなく、遅延スタブを使う `et-receipt-print-duplicate-prevention-020` や、etc-index の「無応答・遅延・再送上限はスタブで再現する」と合っていなかった / 「無応答・遅延・応答 JSON の欠落・送信前ビジー」にした / `vp-qe-kata-conformance`（etc-index の「外部結合テスト共通の境界/依存/環境の扱い」） / -",
+    "R5-4: R5 / 4. 境界/依存/環境 の `_UNDECIDED_` / 値がそろったときに直すケースが `et-receipt-print-failure-handling-020` だけで、10秒に依存する `et-receipt-print-failure-handling-010`・`et-receipt-print-response-timeout-010`・本表のタイムアウトが抜けていた。前の段で入った「QE が」は、Sample 記述標準の「文書を作る役割の割り当てを本文に書かない」に反していた。追う場所も書かれていなかった（F001 の指摘の実質） / 更新の範囲を3ケースと本表のタイムアウトに広げ、「QE が」を消し、追う場所を `etc-index` の「メモ / 将来課題」とした / `vp-qe-kata-conformance`、`vp-dev-change-impact`、Sample 記述標準の「記述ガイド」。F001 の観点 `vp-pm-control-reporting` は kata-guide で kata のレビューに使わない観点のため、登録簿への転記は書いていない / -",
+    "R5-5: R5 / 4. 境界/依存/環境 の `_UNDECIDED_`（F006） / ifx-cmd-sample の `execution.timeout_seconds: 30`・`error_handling.retry.max_attempts: 3`（`transient_failure`）と、etc-index・本書の「応答待ち10秒・自動再送なし」が相反したまま / - / 相手側を直す案: ifx-cmd-sample は ready の連携仕様で I/F 契約の正本のため、etc-index の「外部結合テスト共通の境界/依存/環境の扱い」と「条件の立て方（共通）」の遅延の境界を30秒（境界は29秒）と送信前ビジーの再試行3回に合わせ、そのうえで etc-sample の `failure-handling-010`・`failure-handling-020`・`response-timeout-010` を直す。迷った理由: 業務上の待ち時間として10秒を採る判断が etc-index 側にある可能性があり、ifx-cmd-sample の側を10秒・再試行なしに変える案も選べる。rulebook の禁止事項（etc-index の上書き）により、sample 側だけでは決められない。`vp-qe-kata-conformance` / 要判断",
+    "R5-6: R5 / etc-index-sample の「ケース表の共通カラム」 / 記入例の行（`et-receipt-print-failure-handling-010`）の期待値「印刷失敗の警告」と観測点（印字状態がない）が、etc-sample の同じケース（印字状態 `unknown`、結果不明の警告、観測点に印字状態）と食い違う / - / 相手側を直す案: etc-index-sample の記入例の期待値を「10秒で打ち切り、印字状態が `unknown`、販売記録が1件のまま、結果不明の警告を表示する」に、観測点を「印字状態、販売記録の件数、印刷要求の回数、警告の表示」にする。`vp-qe-kata-conformance`、`vp-ux-language-consistency` / -",
+    "R5-7: R5 / etc-index-sample の「外部結合テスト共通の境界/依存/環境の扱い」 / 合格基準の例「応答待ち10秒で打ち切り、…店番に印刷失敗の警告を表示する」が、無応答を結果不明として区別する etc-sample の責務、および ifx-cmd-sample の `timeout_action`（印字結果不明として通知）と食い違う / - / 相手側を直す案: etc-index-sample の例を「…店番に結果不明の警告を表示する」にする。`vp-qe-kata-conformance`、`vp-ux-language-consistency` / -"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-etc-sample-150/T-KATA-REVIEW-ALL-etc-sample-150-20261125T024734Z-dcc014c4/executor.log",
+      "bytes": 9781,
+      "truncated": false
+    }
+  ]
+}
