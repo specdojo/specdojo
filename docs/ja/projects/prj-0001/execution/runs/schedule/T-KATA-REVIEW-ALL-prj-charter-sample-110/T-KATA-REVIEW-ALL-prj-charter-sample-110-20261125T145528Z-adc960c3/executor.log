@@ -1,0 +1,14 @@
+R1（目的の過不足）のレビューで sample を 1 か所直しました。欠けていた内容は 1 件で、要らない内容は見つかりませんでした。直したのは `docs/ja/specdojo/samples/prj-charter-sample.md` の「本格実行開始の GO / Not GO 判断」の表の「体制」の行です。rulebook は体制を組織定義と照らし合わせるよう求めていますが、この行には組織定義が入っていませんでした。確認内容を「組織定義の役割と各作業の責任の割り当て」に変え、記録先に組織定義へのリンクを足しました。
+
+このファイルは Prettier の整形チェックを通っています。markdownlint などの検査は、このあと runner が流します。
+
+- **欠けていない内容:** rulebook の必須の 8 章と任意の未決事項の章は、どれも求められた内容と列がそろっていました。予算枠が決まっていないことと、決まるまで外部支出をしないこと、決める時期も書かれています。
+- **要らない内容:** 詳細スコープ、受入条件、設計の細部を先取りした記述はありませんでした。
+- **ほかの段に回す指摘:**
+  - F001・F002（未決事項の担当と、引き継ぎ先の記録）は計画・報告の観点です。kata guide の「kata の観点の組」で、kata のレビューでは使わない観点とされているため直していません。
+  - F003（template に「合格条件」列がない）は、いまの template には列があり、すでに直っていました。
+  - F004（「店主」と「店主代表」の表記ゆれ）は R3 の読みやすさの段に回します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1（目的の過不足）を行い、prj-charter-sample の GO / Not GO 判断の表の「体制」の行に、rulebook 6.8 が求める組織定義との照合を足した。ほかの必須内容に過不足はなく、展開された F001〜F004 は R1 の範囲外として段の割り当てと理由を handoff に残した。","handoff":["No: 1 / 段: R1 / 箇所: `docs/ja/specdojo/samples/prj-charter-sample.md` 「本格実行開始の GO / Not GO 判断」の表の「体制」の行 / 指摘: rulebook の記述ガイド（本格実行開始の GO / Not GO 判断）は「体制は組織定義と照合」を求めるが、この行は RACI だけを見ていて組織定義との照合が欠けていた / 直した案: 確認内容を「組織定義の役割と各作業の責任の割り当て」にし、記録先に `[[specdojo:pm-organization-sample\\|組織定義]]` を足した（sample に反映済み） / 根拠: `specdojo:prj-charter-rulebook` の記述ガイド（本格実行開始の GO / Not GO 判断）、`vp-qe-kata-conformance` / 印: なし","No: 2 / 段: R1 / 箇所: sample 全体 / 指摘: rulebook の必須の 8 章と任意の未決事項の章は、求められた要素と列がそろっていた（冒頭文、認可しない範囲、AI Agent の委譲範囲、留保する判断、予算枠が決まっていないことと決めるまでの扱い、決める時期、GO / Not GO の 5 観点、承認の 4 列）。詳細スコープ・受入条件・設計の先取りといった要らない内容もない / 直した案: 変更なし / 根拠: `specdojo:prj-charter-rulebook` の本文構成と記述ガイド、Sample 記述標準の構成の原則と内容充実化、`dct-kata.yaml` の `prj-charter-sample` の `done_criteria` / 印: なし","No: 3 / 段: R1（範囲外） / 箇所: 「未決事項」の表（F001 `vp-pm-plan-feasibility`、F002 `vp-pm-control-reporting`） / 指摘: 担当の Role code と、引き継ぎ先の管理記録を足す求め。kata guide の「kata の観点の組」は `vp-pm-*` を kata の段のレビューで使わない観点としており、rulebook も未決事項の列を論点・影響・当面の扱いと定めているため、sample は変えない / 直した案: 変更なし。grade の観点の組から `vp-pm-*` を外すかを人が判断する / 根拠: kata guide の「kata の観点の組」、rulebook の記述ガイド（承認と未決事項） / 印: 要判断","No: 4 / 段: R1（範囲外） / 箇所: `docs/ja/specdojo/templates/prj-charter-template.md` の GO / Not GO 判断の表（F003） / 指摘: template に「合格条件」列がないという指摘だが、いまの template には `判断観点・確認内容・合格条件・記録先` の 4 列があり、すでに解消している / 直した案: 変更なし / 根拠: template の「本格実行開始の GO / Not GO 判断」の表 / 印: なし","No: 5 / 段: R3 に回す / 箇所: 「初期ステークホルダー」の表の `STH-DEVELOPER` の行（F004 `vp-ux-language-consistency`） / 指摘: 「変更影響を店主に示す」が、ほかの箇所の「店主代表」と表記が違う / 直した案: R3 で「店主代表（`PO`）に示す」へそろえる / 根拠: kata guide の段の分担（`vp-ux-language-consistency` は R3） / 印: なし"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/prj-charter-sample.md","status":"passed","summary":"All matched files use Prettier code style"}]}
+</specdojo_executor_evidence>
