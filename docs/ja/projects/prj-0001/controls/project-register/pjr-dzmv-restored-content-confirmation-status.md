@@ -12,6 +12,7 @@ specdojo:
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-23T13:11:20Z"
+  due_on: "2026-11-30"
   derived_from:
     - PJR-Y5RD
   commit_type: docs

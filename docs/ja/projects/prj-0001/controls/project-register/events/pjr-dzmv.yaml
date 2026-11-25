@@ -60,3 +60,16 @@
       from: ""
       to: 完了条件
   previous_event_id: reg_d47f34877e0b4dcbacfb52bb2dfba7b2
+- v: 1
+  id: reg_201e9b0f4d044bae8f938b589b9da2b4
+  ts: "2026-11-25T11:38:13Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: due
+      from: _TODO_
+      to: "2026-11-30"
+  previous_event_id: reg_9829a9fc53d34857a4b665e7d7157a79
