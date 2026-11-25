@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_b8080f0728b84453b5e502c55662d72b
+  ts: "2026-11-25T12:10:01Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 文書サイトの開発中の版の帯が、広い画面でメニューに隠れるのを直す
+    - field: description
+      from: ""
+      to: 文書サイトの開発中の版（`/specdojo/next/`）で、ページの先頭に出す帯「これは開発中の版の文書です」が、狭い画面では見えるが、広い画面では上のメニュー（ナビゲーションの帯）に隠れて見えない（利用者の報告、2026-11-25）。広い画面でも帯が見えるように直す。
+    - field: input
+      from: ""
+      to: '["利用者の報告（2026-11-25）: VitePress のサイトで next/ 以下を見ると、狭い画面では頭に「これは開発中の文書です」と出るが、画面が広くなるとメニューに隠れる","確かめた事実（2026-11-25）: 帯は packages/docs-site/.vitepress/theme/NextChannelBanner.vue で、theme/index.ts の layout-top の slot に置いている"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-25"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-98HS"]'
