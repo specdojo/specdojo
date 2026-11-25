@@ -1,0 +1,18 @@
+R5（整合）のレビューを終え、`docs/ja/specdojo/samples/opd-incident-management-sample.md` に 2 か所の修正を入れました。ほかの文書と食い違う点がさらに 4 件ありますが、そちら側の文書は変えず、直す案として handoff に書きました。
+
+**直した点**
+- **周知の対象・手段・時機:** 「外部の利用者・取引先は SLA の対象外」を「外部の利用者・委託先」に直しました。この文は `opd-index` の SLA を根拠にしており、`opd-index` 側の表記は「外部の利用者・委託先」だからです。
+- **停止・切替の判断:** P1 で `PO` に連絡がつかない場合に、店番担当が紙の販売控えへ切り替えて `PO` の連絡を待つ一文を足しました。手順側の `opr-incident-sample` と権限側の `opd-access-control-sample` はこの前提で書かれていますが、方針の本書には書かれていませんでした。`PO` が決めるという原則に例外を足すことになるため、「要判断」の印を付けています。
+
+**その他の確認結果**
+- 用語集（`docs/ja/product/010-business-specs/060-glossary/`）には駄菓子屋の業務用語がなく、食い違いはありません。
+- 共通サンプル文脈の役割名と、`opd-index-sample` の優先度・切替の期限・転記と照合の担当・バックアップとも合っています。
+
+**手順について 1 点**
+- plan の「編集対象」は `opd-access-control-sample.md` になっていましたが、タスク名とガイドの「直すのは対象の kata だけ」に従い、障害対応の sample を直しました。権限側の sample は変えていません。
+
+**検証:** `npx prettier --check` は通りました。markdownlint、frontmatter の lint などは親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5 整合: opd-incident-management-sample の 2 か所（SLA 対象外の相手の表記、PO に連絡がつかないときの紙の販売控えへの切替）を、関連する sample にそろえた。相手側の文書を直す案 4 件は handoff に記載した。","handoff":["R5-1: R5 / 2.3. 周知の対象・手段・時機 / 来店客以外に周知しない理由の「外部の利用者・取引先は SLA の対象外」が、`opd-index-sample` の SLA の行「外部の利用者・委託先と合意する約束がない」と表記が違う / 「外部の利用者・委託先」に直した / `vp-qe-kata-conformance`（kata 相互）。相手側案: `opr-incident-sample` の「手順適用範囲・前提」の対象外にある「外部の利用者・取引先への周知」も「外部の利用者・委託先への周知」にそろえる / -","R5-2: R5 / 2.2. 停止・切替の判断 / P1 の紙の販売控えへの切替は判断者が `PO` だけで、`PO` に連絡がつかない場合の扱いがない。一方で `opr-incident-sample` の「停止・切替とロールバックの判断」は「`PO` に 15 分以内に連絡がつかない場合、店番担当は紙の販売控えへ切り替えて `PO` の連絡を待つ」としており、`opd-access-control-sample` の未決事項も同じ扱いを前提にしている。方針にない規則を手順が持っている / 表の後に「P1 で `PO` に連絡がつかない場合は、店番担当が紙の販売控えへ切り替えて `PO` の連絡を待つ（補足）。」を足した / `vp-qe-kata-conformance`、`vp-dev-change-impact`。迷った理由: `opd-index` の「`PO` が切替を決める」に例外を足すことになるため。選ばなかった案: 未決事項の表に「`PO` に連絡がつかないときの切替判断」を足し、決まるまでの扱いとして同じ文を書く / 要判断","R5-3: R5 / 2.2. 停止・切替の判断（`opd-access-control-sample` の緊急権限との対応） / `opd-access-control-sample` の緊急権限の「使える場面」は `opd-index` の優先度の表で P1 とした障害だけを指している。本書の優先度の判定で P1 としたタブレットの故障・通信回線の切断が含まれるかが読み取れない / - / `vp-dev-change-impact`。相手側案: `opd-access-control-sample` の「緊急権限」の表の「使える場面」を「`opd-incident-management` の優先度の判定で P1 とした障害」にする。障害を P1 とする条件の具体化は本書に置かれているため / -","R5-4: R5 / 2.2. 停止・切替の判断・2.3. 周知の対象・手段・時機 / 2.2 では P2 の日次締めの持ち越しを `PO` が閉店後に判断する一方、2.3 では持ち越したことを `PO` へ翌朝の開店前に伝えるとしている。判断した本人へ後から伝える形で、本書の中で食い違う（R2 の観点 `vp-qe-omissions-consistency` に当たり、R5 の範囲の外のため直していない） / - / 直す案: 2.3 の P2 の `PO` の行の内容を「日次締めを持ち越した後の締めの結果」とするか、行を削る。`opr-incident-sample` の「復旧後の報告と再発防止」の P2 の行も同時に見直す / 要判断","R5-5: R5 / 3. 関連ドキュメント導線（`opd-monitoring-sample` 側） / `opd-monitoring-sample` の「初動の時限と完了条件」は本書を wikilink ではなく `opd-incident-management` というインラインコードで参照している（本書は作成済み） / - / `vp-dev-change-impact`。相手側案: `opd-monitoring-sample` の該当箇所を wikilink `specdojo:opd-incident-management-sample`（表示名は「運用方針・設計（障害対応）」）にする / -","注記（指摘ではない）: plan の編集対象は rulebook の sample 宣言から `opd-access-control-sample.md` に解決されていたが、タスク名と kata-guide の「直すのは対象の kata だけ」に従い、レビュー対象の `opd-incident-management-sample.md` を直した。`opd-access-control-sample.md` は変えていない。用語集（`docs/ja/product/010-business-specs/060-glossary/`）に駄菓子屋の業務用語はなく、食い違いはなかった。共通サンプル文脈の役割名とも合っている"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/opd-incident-management-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変えていない","reason":"変更は docs/ja/specdojo/samples/ の sample だけで、plan・result・個票を変えていないため"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変えていない","reason":"変更したのは Markdown 1 ファイルだけで、*.yaml / *.yml の変更がないため"}]}
+</specdojo_executor_evidence>
