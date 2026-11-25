@@ -1,0 +1,29 @@
+R4（正しさ）の確認では誤りが見つからなかったため、`docs/ja/specdojo/samples/uis-sample.md` は変更していません。F001（「現在庫数」の更新契機が曖昧）は前の段で直っていました。今の版は、更新契機を「商品追加・数量変更・会計確定の在庫確認の成功時」、通信失敗時は「前の値を保持」と明記しています。
+
+**主張ごとの確かめの表**（reporter が result の実施内容へ転記する材料です）
+
+| No  | 主張（本文の箇所） | 正本 | 確かめ方 | 結果 | 根拠 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | frontmatter `type: ui` | `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml`、`docs/ja/specdojo/rulebooks/uis-rulebook.md` | 読み取り | 一致 | schema の `deliverableType` の列挙に `ui` があり、rulebook の推奨 Frontmatter 項目でも `ui` |
+| 2 | frontmatter `rulebook: specdojo:uis-rulebook` | `uis-rulebook.md` | 読み取り | 一致 | rulebook の id が `specdojo:uis-rulebook` で、その `sample` 宣言が `specdojo:uis-sample` |
+| 3 | `status: draft`、`part_of: []`、`based_on: []` | `docs/specdojo/schemas/v1/common-frontmatter.schema.yaml` | 読み取り | 一致 | `status` の列挙は `draft`・`ready`・`deprecated`。`part_of` と `based_on` は `idRefArray` で既定は `[]` |
+| 4 | id `specdojo:uis-sample` | `uis-rulebook.md` のファイル命名・ID規則 | 読み取り | 一致 | 「同梱の完成例は `specdojo:uis-sample`」と定めている |
+| 5 | 画面の識別子 `uis-sales-register` | `uis-rulebook.md` のファイル命名・ID規則 | 読み取り | 一致 | `uis-<term>` の形で、rulebook の例と同じ名前 |
+| 6 | 未作成の遷移先（`uis-store-home` など 4 画面）をバッククォートで書いている | `uis-rulebook.md` の遷移の記述ガイド | `docs` 配下を grep | 一致 | 4 つの ID はどれも未作成で、仮置きの記法が正しい |
+| 7 | 章の順と必須章（概要からメモ / 将来課題まで） | `uis-rulebook.md` の本文要件 | 読み取り | 一致 | 8 章が順に並び、欠けている章はない |
+| 8 | 内税の計算（8% 分 16 円、10% 分 10 円、計 26 円、税抜小計 300 円） | 本文の計算式（3.1 の注記） | 手計算 | 一致 | 216×8÷108=16、110×10÷110=10、326−26=300 |
+| 9 | 2 品目 3 点、合計 326 円、釣銭 174 円・0 円・「未計算」 | 本文の確認例とバリデーション | 手計算 | 一致 | 216+110=326、500−326=174。325 円は合計に届かず「預かり金額不足」になる |
+| 10 | 「現在庫数」の更新契機（F001） | バリデーションの在庫との相関、エラー表の通信失敗の行 | 本文どうしの突き合わせ | 一致 | 判定時点（商品追加時・数量変更時・会計確定時）と、通信失敗時に値を保持する扱いが食い違わない |
+| 11 | 店名・商品・単価・税率区分・30 秒の待ち時間など業務の値 | `sample-authoring-standard.md` の共通サンプル文脈 | 読み取り | 対象外 | 正本のない仮定で、共通サンプル文脈とも食い違わない |
+
+**次の段（R5）への申し送り候補**
+
+- rulebook の遷移の記述ガイドの良い例は `商品検索画面`、sample は `商品検索ダイアログ（uis-product-search）` です。呼び名がそろっていません。直すなら rulebook 側の例ですが、この段の範囲外なので手を付けていません。
+
+**検査**
+
+この段で実行した検査はありません。成果物を変えていないため、変更ファイルを対象にする Prettier・markdownlint・`npm run validate:schema:file`・`npm run validate:history-links` の適用条件に当たりません。`lint:md`・`lint:fm` などは、このあと親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）で uis-sample の事実 11 件を schema・rulebook・共通サンプル文脈・手計算と突き合わせ、誤りがなかったため sample は変更しなかった。F001 は前の段で直っていた。","handoff":["R4 確かめの結果: frontmatter（`type: ui`・`rulebook`・`status`・`part_of`・`based_on`）は deliverable-frontmatter.schema.yaml・common-frontmatter.schema.yaml・uis-rulebook.md と一致し、画面の識別子 `uis-sales-register`、未作成の遷移先のバッククォート表記、本文要件の 8 章の順、内税・合計・釣銭の計算値もすべて一致した。業務の値は正本のない仮定のため確かめの対象外。直しの差分はない。","F001（minor/`vp-qe-verifiability`、現在庫数の更新契機）は前の段で直っていた。今の版は『商品追加・数量変更・会計確定の在庫確認の成功時に最新値へ更新。通信失敗時は前の値を保持』で、バリデーションの在庫との相関とエラー表の通信失敗の行とも食い違わない。","R5 への申し送り候補: uis-rulebook.md の遷移の記述ガイドの良い例は `商品検索画面`、sample は `商品検索ダイアログ（uis-product-search）` で、呼び名がそろっていない。直すなら rulebook 側の例で、この段では直していない。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/uis-sample.md","status":"not_applicable","summary":"変更ファイルなし","reason":"成果物を変えておらず、Prettier の適用条件（変更した md などのファイル）に当たらない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"変更した YAML なし","reason":"変更した *.yaml / *.yml ファイルがない"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルの変更なし","reason":"executor が変更した plan・result・個票がない"}]}
+</specdojo_executor_evidence>
