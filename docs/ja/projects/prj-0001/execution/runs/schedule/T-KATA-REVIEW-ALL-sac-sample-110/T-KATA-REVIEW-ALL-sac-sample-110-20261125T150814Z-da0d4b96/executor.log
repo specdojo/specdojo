@@ -1,0 +1,25 @@
+R1（目的の過不足）のレビューを終え、`docs/ja/specdojo/samples/sac-sample.md` を 2 か所直しました。変更したのはこの sample だけで、result は編集していません。整形（`npx prettier --write`）と markdownlint はどちらもエラーなしで通りました。
+
+**sample の直し**
+
+1. **概要の背景の文を削った（要判断）**
+   - 何を直したか: 概要の冒頭段落の 2 文目（会計確定が遅れると店番が記録を後回しにし、営業日 90% の目標が崩れる、という理由の文）を削りました。
+   - 理由: `sac-rulebook` の「記述ガイド」の概要が求めるのは、出口条件、対象範囲と対象外、根拠の 3 つです。動機は根拠の `nfr-performance-sample` と共通サンプル文脈が持っており、ここでは正本の再掲になります。文末の「受入前に出口条件を満たすことを求める」は SAC という種別そのものの定義の言い直しです。
+   - 要判断の理由: 背景を残すかどうかは判断が分かれるため、戻すかどうかを決めてください。
+
+2. **`SAC-PERF-04` の合格内容を直した**
+   - 何を直したか: 概要表の `SAC-PERF-04` の合格内容を「翌日の開店前に前日の在庫数を確かめる」から「閉店後の日次締めを翌日の開店前に終える」に直しました。
+   - 理由: 元の文は店番が行う業務の成果で、rulebook の「位置づけ」では業務受入条件（BAC）の範囲です。SAC が扱うのはシステムとしての合格基準なので、2.4 の見出しと同じ日次締めの条件にそろえました。これで grade の F002（概要表と 2.4 の見出しの食い違い）も解消します。
+
+**直さずに次の段へ回すもの**
+
+- **F001（日次締めの合否の境界が「翌日の開店まで」だけ）:** 検証可能性（`vp-qe-verifiability`）の観点なので、R4（正しさ）に任せます。rulebook は、根拠にない閾値を SAC で新たに決めることを禁止しています。そのため sample 側で閉店・開店の時刻や許容時間を足すと違反になります。直す案は次のとおりです。
+  1. 先に `nfr-performance-sample` の負荷条件の表（閉店後の行）または `nfr-perf-006` の暫定判定に、時刻か許容時間の仮置き値を足す。
+  2. そのあとで sample の 2.4.4 と「メモ / 将来課題」に反映する。
+- **概要表の「ピーク時の会計確定が待たせない」:** 主語と述語がねじれていますが、R3（読みやすさ）の範囲なので直していません。
+
+ほかの R1 の確認では問題は見つかりませんでした。rulebook の必須章 3 つと受入条件の 4 要素はそろっています。`based_on` も `nfr-perf-001`〜`006` と食い違いがなく、BAC と `sac-availability` との境界も概要に書かれています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1（目的の過不足）を実施し、sac-sample の概要から rulebook が求めない背景の文を削り、`SAC-PERF-04` の合格内容を業務の成果（在庫数の確認）からシステムの条件（日次締めの完了）へ直した。F002 はこの直しで解消し、F001 は R4 の観点かつ SAC で閾値を確定できないため申し送りとした。","handoff":["No: 1 / 段: R1 / 箇所: `docs/ja/specdojo/samples/sac-sample.md` 「概要」冒頭段落の 2 文目 / 指摘: 会計確定が遅れたときの影響と営業日 90% の初期目標を述べる背景の文と、SAC の種別の定義を言い直した文末は、rulebook の概要が求める要素（出口条件・対象範囲と対象外・根拠）に当たらず、根拠の性能要件と共通サンプル文脈の再掲になっている / 直した案: 2 文目を削除し、出口条件の 1 文だけにした / 根拠: `specdojo:sac-rulebook` の「本文要件」と「記述ガイド」の概要（1〜3 文で出口条件・対象範囲と対象外・根拠を示す）、`specdojo:sample-authoring-standard` の「サンプル群の目的」（説明に必要な範囲に限定する）、`vp-arc-conciseness`（目的に要らない背景と正本の再掲を書かない） / 印: 要判断（背景を完成例に残すかどうかは判断が分かれるため、人が採るか戻すかを決める）","No: 2 / 段: R1 / 箇所: `docs/ja/specdojo/samples/sac-sample.md` 「概要」の表の `SAC-PERF-04` 行の「合格とする内容」 / 指摘: 「翌日の開店前に前日の在庫数を確かめる」は店番が行う業務の成果で BAC の範囲にあり、SAC が扱うシステムの合格基準（2.4 の日次締めの完了）と食い違っている（grade F002 と同じ箇所） / 直した案: 「閉店後の日次締めを翌日の開店前に終える」に直し、2.4 の見出しと根拠の `nfr-perf-006` にそろえた / 根拠: `specdojo:sac-rulebook` の「位置づけ」（業務担当者が業務を進められるかは BAC で扱い、SAC は業務シナリオの成立条件を再掲しない）、`specdojo:nfr-performance-sample` の `nfr-perf-006`（日次締めの完了時間） / 印: なし","No: 3 / 段: R1（R4 へ申し送り） / 箇所: `docs/ja/specdojo/samples/sac-sample.md` 「2.4.4. 判定方法」と「メモ / 将来課題」の日次締めの行（grade F001） / 指摘: 日次締めの合否の境界が「翌日の開店まで」だけで、閉店・開店の時刻か許容時間がない。ただし検証可能性（`vp-qe-verifiability`）の観点で R1 の観点に当たらない。また rulebook が SAC での閾値の新規確定を禁止しているため、sample 単独では直せない / 直した案: 直さない。先に `specdojo:nfr-performance-sample` の負荷条件の表（閉店後の行）か `nfr-perf-006` の暫定判定に閉店・開店の時刻か許容時間の仮置き値を足し、そのあとで sac-sample の 2.4.4 とメモの表に反映する案を R4 と人の判断へ渡す / 根拠: `specdojo:sac-rulebook` の「全体方針」（新しい閾値や要求を SAC で確定しない）と「禁止事項」（根拠のない閾値・要求の追加）、`docs/ja/specdojo/guides/kata-guide.md` の「kata の観点の組」（`vp-qe-verifiability` は R4） / 印: 要判断","No: 4 / 段: R1（R3 へ申し送り） / 箇所: `docs/ja/specdojo/samples/sac-sample.md` 「概要」の表の `SAC-PERF-01` 行「ピーク時の会計確定が待たせない」 / 指摘: 主語と述語がねじれている（W2）。読みやすさの観点で R1 の範囲外のため直していない / 直した案: R3 で「ピーク時の会計確定で客を待たせない」などに直す / 根拠: `docs/ja/specdojo/guides/kata-guide.md` の「文章のチェック項目」W2 / 印: なし"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/sac-sample.md","status":"passed","summary":"変更した sample を整形した（エラーなし）"},{"command":"npx markdownlint docs/ja/specdojo/samples/sac-sample.md","status":"passed","summary":"変更した sample に markdownlint のエラーなし"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更したのは docs/ja/specdojo/samples/sac-sample.md だけで、個票や plan・result などの履歴ファイルを変更していないため"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML ファイルを変更していない","reason":"変更ファイルに *.yaml / *.yml がないため"}]}
+</specdojo_executor_evidence>
