@@ -1,0 +1,33 @@
+R1（目的の過不足）のレビューを終えました。直す箇所は見つからず、`docs/ja/specdojo/samples/pm-organization-sample.md` は変更していません。変更したファイルはありません。作業ツリーに出ている `pipeline-state.json` は runner が作ったものです。
+
+照らした資料は、rulebook（`specdojo:pm-organization-rulebook`）、template、Sample 記述標準、カタログの `pm-organization` の `done_criteria` の4つです。
+
+**rulebook の必須要件との照合**
+
+| rulebook の要件 | sample で書かれていること |
+| --- | --- |
+| 体制の設計 | 「組織モデル」に、責任領域、最終判断、実行・確認、兼務方針、家族利用者と内部 Role の区別、人間と AI Agent の境界がある |
+| ロールの採用判断 | 8つの標準ロールの採否と理由があり、未採用ロール・独自ロールは「なし」と書いてある |
+| 使用可能な `owner` | 「可」の5ロールで、RACI の列もこの5ロールにそろえている |
+| 正本への参照 | まだない `.specdojo/agent-members.yaml` も、整備する場所が書いてある |
+| 体制の見直し | 開始のきっかけ、確かめること、更新先、判断者、閉じる前の確認（`QE`）がそろっている |
+
+**`done_criteria` との照合**
+
+- 兼務構成を含む組織設計の根拠と、最終判断の集約先（`PO`）が書いてある。
+- `pm-roles` と `pm-members` への参照が「正本と責任境界」にある。
+- 見直し条件は、確かめられる粒度で書いてある。
+
+**要らない内容がないか**
+
+- rulebook の禁止事項（共通定義・名簿・詳細 RACI の再掲、必要性を示さず Role を増やすこと）には当たりません。
+- 人物名は使っていません。
+- 見直し条件の判断者は、文書を作る・承認する役割の割り当てではありません。体制そのものの内容なので、Sample 記述標準の禁止の対象外です。
+
+**R2 に回す点（要判断）**
+
+R1 の範囲外なので直していませんが、「ロール・owner方針」の表の列が template と違います。template にある「未採用時の代替方針」の列がなく、template にない「`owner` 使用可否」の列があります。使用可能な `owner` は template では表の後に1行で書く形です。どちらを正とするかは R2 で決めてください。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1（目的の過不足）のレビューで、pm-organization-sample は rulebook の必須要件 5 つと catalog の `done_criteria` を満たし、要らない内容もなかったため、sample は変更していない。","handoff":["No: 1 / 段: R1 / 箇所: sample 全体 / 指摘: rulebook の本文要件（体制の設計、ロールの採用判断、使用可能な `owner`、正本への参照、体制の見直し）、catalog の `done_criteria`（兼務の根拠と最終判断の集約先、`pm-roles` と `pm-members` への参照、見直し条件が確かめられる粒度）、Sample 記述標準の責務と禁止事項を照らした。欠けている内容も要らない内容もない / 直した案: 差分なし / 根拠: `docs/ja/specdojo/rulebooks/pm-organization-rulebook.md` の「本文要件」「禁止事項」、`docs/ja/specdojo/templates/dct-project-management-template.yaml` の `pm-organization` の `done_criteria`、`docs/ja/specdojo/standards/sample-authoring-standard.md` の「記述ガイド」「禁止事項」 / 印: なし","No: 2 / 段: R1（R2 へ回す） / 箇所: 「ロール・owner方針」の表 / 指摘: 列が template と違う。template と rulebook の「記述ガイド」にある「未採用時の代替方針」の列がなく、template にない「`owner` 使用可否」の列がある。使用可能な `owner` は template では表の後に 1 行で書く形。全ロールを採用しているため内容は欠けていないが、構成が template と合っていない / 直した案: R1 では直さない。R2 で template に合わせるか（列を「未採用時の代替方針」に替え、使用可能な `owner` を表の後の 1 行で示す）、「`owner` 使用可否」の列を残して template と rulebook を直すかを決める / 根拠: `docs/ja/specdojo/templates/pm-organization-template.md` の「ロール・owner方針」、rulebook の「記述ガイド」の「ロール・owner方針」 / 印: 要判断"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/pm-organization-sample.md","status":"not_applicable","summary":"変更したファイルがないため実行していない","reason":"executor は成果物を変更しておらず、Prettier の適用条件（変更した md/ts/js/json/yaml ファイル）に当たらない"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していないため実行していない","reason":"executor は plan・result・個票を変更していない"}]}
+</specdojo_executor_evidence>
