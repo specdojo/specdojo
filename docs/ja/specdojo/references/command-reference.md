@@ -692,6 +692,7 @@ kata authoring は register 専用です。Schedule の task は対象成果物�
 | `exec status`   | 実行状態を表示する                                                                                                                                   | `specdojo exec status --project prj-0001 --state blocked`                                               |
 | `exec queue`    | grade・`exec run`・統合の後の処理を混ぜた順番を予約し、順に流す（「実行の予約（exec queue）」を参照）                                                | `specdojo exec queue add nightly --project prj-0001 --step "exec run --register PJR-XXXX"`              |
 | `exec stop`     | 走っている `exec run --auto`・`exec cycle`・予約の列を、走っているタスクを終えてから止める（「走っている run を区切りで止める（exec stop）」を参照） | `specdojo exec stop --project prj-0001 --msg "exec-defaults を変える"`                                  |
+| `exec watch`    | 見張りの記録に指定した種類のイベントが新しく足されるまで待ち、内容を出して終わる（「見張りのイベントを待つ（exec watch）」を参照）                   | `specdojo exec watch --project prj-0001 --event stalled --timeout 2h`                                   |
 | `exec scaffold` | 共通レビュー観点を継承するプロジェクト差分を生成する                                                                                                 | `specdojo exec scaffold --project prj-0001`                                                             |
 | `exec plan`     | plan だけを生成する                                                                                                                                  | `specdojo exec plan --project prj-0001 --task <task-id>`                                                |
 | `exec archive`  | 完了済み plan を同じ run に保持する                                                                                                                  | `specdojo exec archive --project prj-0001 --task <task-id>`                                             |
@@ -1000,6 +1001,30 @@ specdojo exec stop --project prj-0001 --cancel
 # 予約の列を区切りで止め、作業の後に同じ列を続ける
 specdojo exec stop --project prj-0001 --queue nightly --msg "feature を統合する"
 specdojo exec queue run nightly --project prj-0001
+```
+
+### 7.5. 見張りのイベントを待つ（exec watch）
+
+`exec watch` は、見張り（`orchestrator watch-scan`）の記録 `execution/watch/watch-events.jsonl` を読み、指定した種類のイベントが新しく足されるまで待ちます。当たった行を出して終了コード 0 で終わります。記録を読むだけで、記録・状態・worktree を変えません。待ち始めた後に足された行だけを見るため、前に起きたイベントも拾う場合は `--since` を付けます。イベントは見張りが動いた回に足されるため、待つ時間の細かさは見張りの間隔で決まります。見張りの記録は [[specdojo:register-operation-guide|登録簿運用ガイド]] の「止まった実行を見張る」、オーケストレーターの使い方は同じガイドの「立ち上げたままのオーケストレーターと共存する」に従います。
+
+| オプション                | 内容                                                                                                                                                                                                                |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--event <kinds>`         | 待つイベントの種類（`,` 区切り）。`stalled`（止まった）・`cleared`（止まりが解けた）・`remedy`・`remedy_stopped`（手当てを打った・回数の上限で止めた）・`paused`・`resumed`（見張りの停止と再開）。既定は `stalled` |
+| `--state <states>`        | 状態で絞る。`stalled` は止まった状態（`blocked`・`deferred`・`waiting`・`review`・`stopped` など）、`cleared` は解けた後の状態（`done` など）                                                                       |
+| `--category <categories>` | `stalled`・`remedy`・`remedy_stopped` の理由の種類で絞る（例: `needs_decision`）                                                                                                                                    |
+| `--target <ids>`          | タスク・register 項目・列の ID で絞る                                                                                                                                                                               |
+| `--since <time>`          | この時刻（ISO 8601）以降に足された行も対象にする                                                                                                                                                                    |
+| `--timeout <duration>`    | 待つ上限。`<正の整数><s\|m\|h\|d>`。上限まで当たらなければ終了コード 124 で終わる                                                                                                                                   |
+| `--interval <duration>`   | 記録を読む間隔。既定は `5s`                                                                                                                                                                                         |
+| `--json`                  | 当たった行を記録の JSON のまま出す                                                                                                                                                                                  |
+
+当たった行は標準出力、待ち始めと上限の知らせは標準エラー出力に出します。引数の誤りなどの異常は終了コード 1 です。
+
+```bash
+# 止まったものか、終わったものが出るまで待つ（後ろで流して終わりの通知で起きる）
+specdojo exec watch --project prj-0001 --event stalled,cleared --timeout 8h
+# 手で流した register 項目が waiting になるか、done で解けるまで前で待つ
+specdojo exec watch --project prj-0001 --event stalled,cleared --state waiting,done --target PJR-XXXX --timeout 2h
 ```
 
 ## 8. grade
@@ -1409,21 +1434,37 @@ specdojo orchestrator night --project prj-0001 \
 specdojo orchestrator integration-tests --project prj-0001
 ```
 
-`orchestrator watch-scan` は、止まったものを見つけて理由の種類に分け、見張りのイベントの記録と朝報告に残します。exec-defaults の `watch.remedies` で手当てを選んだ種類（使用量の上限・負荷による時間切れ・統合先の同期）だけ、再開のコマンドを切り離して 1 件起動します。既定は手を打たず、commit はしません。見る対象・分け方・記録の項目・報告の形は [[specdojo:register-operation-guide|登録簿運用ガイド]] の「止まった実行を見張る」、手当ては同じガイドの「止まった実行に手当てを打つ」に従います。見張りは exec の実行ロックを取らないため、実行中の run を待たずに動きます。別の run が実行ロックを持つ間は手当てを次の回に回します。
+`orchestrator watch-scan` は、止まったものを見つけて理由の種類に分け、見張りのイベントの記録と朝報告に残します。exec-defaults の `watch.remedies` で手当てを選んだ種類（使用量の上限・負荷による時間切れ・統合先の同期）だけ、再開のコマンドを切り離して 1 件起動します。既定は手を打たず、commit はしません。見る対象・分け方・記録の項目・報告の形は [[specdojo:register-operation-guide|登録簿運用ガイド]] の「止まった実行を見張る」、手当ては同じガイドの「止まった実行に手当てを打つ」、見張りの対象外の見分け方と停止・再開は「立ち上げたままのオーケストレーターと共存する」に従います。見張りの対象外には記録も手当ても行いません。見張りは exec の実行ロックを取らないため、実行中の run を待たずに動きます。別の run が実行ロックを持つ間は手当てを次の回に回します。
 
 ```bash
 specdojo orchestrator watch-scan --project prj-0001
 specdojo orchestrator watch-scan --project prj-0001 --stale-after 3h --dry-run
 ```
 
-| オプション                 | 内容                                                                                                                          |
-| -------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `--stale-after <duration>` | 実行ロックがないとき、更新がこれより古い `doing`・`in-progress`・`running` を中断と見なす。`<正の整数><m\|h\|d>`。既定は `2h` |
-| `--exec-defaults <path>`   | 手当ての設定を読む exec-defaults。既定は `.specdojo/exec-defaults.yaml`                                                       |
-| `--no-remedy`              | 設定があっても手当てを起動せず、記録と報告だけを行う                                                                          |
-| `--dry-run`                | 記録と報告を書かず、手当ても起動せずに、足す行・起動する手当て・件数だけを表示する                                            |
+| オプション                 | 内容                                                                                                                                                  |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--stale-after <duration>` | 実行ロックがないとき、更新がこれより古い `doing`・`in-progress`・`running` を中断と見なす。`<正の整数><m\|h\|d>`。既定は `2h`                         |
+| `--if-busy <policy>`       | 別の run が実行ロックを持っているとき。`scan`（既定）は読み取りと記録を続け、`skip` は何もせず `[watch-scan] skipped: exec busy` を出して次の回に回す |
+| `--exec-defaults <path>`   | 手当ての設定を読む exec-defaults。既定は `.specdojo/exec-defaults.yaml`                                                                               |
+| `--no-remedy`              | 設定があっても手当てを起動せず、記録と報告だけを行う                                                                                                  |
+| `--dry-run`                | 記録と報告を書かず、手当ても起動せずに、足す行・起動する手当て・件数だけを表示する                                                                    |
 
-読めなかった記録は警告として標準エラー出力と報告に残し、ほかの対象の見張りは続けます。成功は終了コード 0、コマンド自体の異常は 1 を返します。
+読めなかった記録は警告として標準エラー出力と報告に残し、ほかの対象の見張りは続けます。成功は終了コード 0、コマンド自体の異常は 1 を返します。見張りを止めているときと、`--if-busy skip` で別の run がロックを持っているときは、記録も手当てもせずに終わります。routine から起動したときは終了コード 75 を返し、busy の回は routine が次の回に流し直します。
+
+`orchestrator watch-pause` と `orchestrator watch-resume` は、見張りをプロジェクト全体で、または `--id` に指定した対象ごとに止め・再開します。対象ごとの停止が、手で付ける「見張りの対象外」の印です。印は `execution/watch/watch-control.json` に置き、止めた・再開したことを見張りの記録へ `paused`・`resumed` の行として残します。既に止めている対象を止める、止めていない対象を再開するときは何もしません。`orchestrator watch-status` は、全体の停止と対象外の印を表示します。
+
+```bash
+specdojo orchestrator watch-pause --project prj-0001 --reason "feature を統合する"
+specdojo orchestrator watch-pause --project prj-0001 --id PJR-XXXX --reason "型のメニューを手で直す"
+specdojo orchestrator watch-resume --project prj-0001 --id PJR-XXXX
+specdojo orchestrator watch-status --project prj-0001
+```
+
+| オプション        | 内容                                                                                |
+| ----------------- | ----------------------------------------------------------------------------------- |
+| `--id <ids>`      | 対象のタスク・register 項目・列の ID（繰り返しか `,` 区切り）。省略すると見張り全体 |
+| `--by <actor>`    | 止める・再開する主体。名簿の人と agent、予約 actor。既定は `specdojo-orchestrator`  |
+| `--reason <text>` | 理由。印と記録に残す                                                                |
 
 `orchestrator handoff` は、セッションや LLM を切り替えるときの引き継ぎを `handoff` の個票として起票します。「進行中」の章は、流している `exec queue` の列（`running`・`pending`）と前回の handoff の起票より後（handoff がなければ直近 24 時間）に止まった列、exec run のロックを持つ実行中の run、`in-progress`・`review`・`waiting` の register 項目から組み立てます。それより前に止まった列は件数だけを 1 行で示します。「判断待ち」の章には、開いている `question` と `waiting` の項目への参照を入れます。引き継ぎ元と先・有効な承認の範囲・注意点の章は `_TODO_` のまま残すため、起票した後に手で書きます。
 

@@ -97,6 +97,7 @@ import { exitQuietlyOnClosedStdout } from "../shared/stdout-epipe.js";
 import { registerExecQueueCommands, writeActiveQueueSummary } from "./queue-command.js";
 import { registerExecStopCommand, writeStopRequestSummary } from "./stop-command.js";
 import type { ExecEventType, ExecEventV1, StateSnapshot } from "./types.js";
+import { registerExecWatchCommand } from "./watch-command.js";
 import { registerExecWorktreeCommands } from "./worktree-command.js";
 import { validateRunRecordLayout } from "./validate-records.js";
 import { validateRunRecordLayoutAtCommit } from "./validate-records-commit.js";
@@ -127,6 +128,7 @@ export function registerExecCommands(program: Command): void {
   registerExecSmokeCommand(exec);
   registerExecQueueCommands(exec);
   registerExecStopCommand(exec);
+  registerExecWatchCommand(exec);
   const lockedActions: Record<LockedEventAction["type"], LockedEventAction> = {
     claim: {
       type: "claim",

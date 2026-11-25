@@ -12,6 +12,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { registerWatchScanCommand } from "../../../src/commands/watch-scan.js";
+import { findTargetProcess, listProcesses } from "../../../src/exec/watch-control.js";
 
 // PJR-3M4M: 2026-11-13〜14 の夜に止まった実例のうち、codex の使用量の上限（解除の時刻つきの
 // 延期）と、負荷で test-unit が時間切れになった親の検証の失敗を、`orchestrator watch-scan` の
@@ -210,6 +211,16 @@ async function waitForContent(path: string): Promise<string> {
   throw new Error(`remedy log was not written: ${path}`);
 }
 
+// 手当ての子が動いている間は、見張りがその対象を「動いているプロセス」として触らない（PJR-T4E0）。
+// 次の見張りの前に、偽の specdojo が終わるのを待つ。
+async function waitForRemedyExit(id: string): Promise<void> {
+  for (let attempt = 0; attempt < 100; attempt += 1) {
+    if (!findTargetProcess(listProcesses(), id)) return;
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+  throw new Error(`remedy process for ${id} did not exit`);
+}
+
 type LogLine = { event: string; target: { id: string }; log?: string; action?: string };
 
 function watchLog(repo: string): LogLine[] {
@@ -236,6 +247,7 @@ describe("orchestrator watch-scan remedies with the 2026-11-13 to 14 night", () 
       name.includes(`_watch-scan_${LIMIT_TASK}_note_`),
     );
     expect(notes).toHaveLength(1);
+    await waitForRemedyExit(LIMIT_TASK);
 
     await watchScan();
     const second = watchLog(repo).filter((line) => line.event === "remedy");
@@ -246,6 +258,7 @@ describe("orchestrator watch-scan remedies with the 2026-11-13 to 14 night", () 
     expect(await waitForContent(join(repo, second[1]!.log!))).toBe(
       `exec resume --project test --task ${TIMEOUT_TASK} --if-busy skip\n`,
     );
+    await waitForRemedyExit(TIMEOUT_TASK);
 
     // 偽の再開は直さないため、どちらも止まったまま。上限は 2 回目、時間切れは 3 回目の見張りで
     // 回数の上限に達し、それぞれ 1 度だけ止める。
@@ -261,7 +274,7 @@ describe("orchestrator watch-scan remedies with the 2026-11-13 to 14 night", () 
       join(repo, "execution", "reports", "watch-scan", reports[0]!),
       "utf8",
     );
-    expect(report).toContain("## 3. 手当て");
+    expect(report).toContain("## 4. 手当て");
     expect(report).toContain("（`resume_due`、1/1 回目）");
     expect(report).toContain("手当てを止めた（1 回まで手を打ったが止まったまま）");
   });
