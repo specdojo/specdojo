@@ -1,0 +1,21 @@
+R2（構成）のレビューで、可用性要件の完成例（`docs/ja/specdojo/samples/nfr-availability-sample.md`）を 1 文だけ直しました。章の移動・分割・統合はしていません。Prettier と markdownlint はこのファイルについてエラーなしです。
+
+**構成の確認結果**
+
+- **章の順と必須章:** 1〜6 章は rulebook の本文構成と同じ順で、必須章の抜けはありません。6 章の未決事項も、未確定の基準値と外部 SLA があるので置いてよい条件を満たします。
+- **template:** rulebook で `template: not-needed` なので、照合していません。
+- **表と本文の配置:** 各章は前置きの 1 文のあとに表という形です。基準値は 3 章にあり、4 章の本文は「可用性要件一覧」を参照する形で、言い直していません。
+- **読む順:** 業務影響と対象時間を示し、基準、測り方、関連文書、未決事項と進みます。前提から結論の順に読めます。
+
+**直した点（4 章 測定・検証方法の最後の段落）**
+
+4 章は「基準が `_UNDECIDED_` の間は暫定の判定で pass / fail を決める」としていました。一方 3 章の `nfr-avl-001` は「達成・未達を判定しない」と決めていて、両者が食い違っていました（観点 `vp-qe-omissions-consistency`）。そこで 4 章を「可用性要件一覧」の暫定判定を参照する形にし、`nfr-avl-001` は確定まで停止の時間を記録するだけと書き足しました。
+
+**扱わなかった grade の指摘**
+
+- **F001（未決事項と一覧の基準欄の重複）:** 観点が `vp-arc-conciseness` で、R3 で扱うものなので R3 に任せます。
+- **F002（暫定判定の基準を 6 章に集約していない）:** 観点が `vp-qe-verifiability` で、R4 で扱うものなので R4 に任せます。上の修正で 4 章から暫定判定へは辿れるようになりましたが、6 章へ集約するかは R4 の判断です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R2 構成: 章の順・粒度・表と本文の配置は rulebook の本文構成どおりで、章の移動・分割・統合はしていない。4 章の判定ルールと 3 章の nfr-avl-001 の食い違いを 1 文で直した。F001・F002 は R3・R4 の観点なので扱っていない。","handoff":["R2-1: R2 / 4. 測定・検証方法 / 4 章の最後の段落は「基準が `_UNDECIDED_` の間は暫定の判定で pass / fail を決める」としていたが、3 章の `nfr-avl-001` は「達成・未達を判定しない」としており、両者が食い違っていた / 4 章を「可用性要件一覧」の暫定判定を参照する形にし、暫定判定を置かない `nfr-avl-001` は確定まで停止の時間を記録するだけと書き足した / `vp-qe-omissions-consistency` / -","R2-2: R2 / 全体（1〜6 章） / 章の順と必須章は rulebook の本文構成と一致する。6 章の未決事項も、未確定の基準値・外部 SLA があるので置く条件を満たす。表の前に 1 文を置く形がそろい、基準値は 3 章にあって 4 章から参照するだけなので、前提から結論の順に読める。template は rulebook で `not-needed` のため照合していない / - / `vp-arc-document-structure` / -","R2-3: R2 / 3. 可用性要件一覧、6. 未決事項 / grade の指摘 F001（`vp-arc-conciseness`）と F002（`vp-qe-verifiability`）は R2 の観点ではないため扱わず、R3 と R4 に任せる。F002 については、R2-1 で 4 章から暫定判定への参照を足したが、6 章へ集約するかは R4 が判断する / - / kata-guide の「kata の観点の組」 / -"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/nfr-availability-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/nfr-availability-sample.md","status":"passed","summary":"0 issues in 0 files"}]}
+</specdojo_executor_evidence>
