@@ -1201,7 +1201,9 @@ mechanically from evidence; your response supplies prose associated with evidenc
 
 The runner renders your free-text JSON fields as Markdown. Wrap every identifier or field name
 containing an underscore in inline code (for example, \`depends_on\`) so Markdown parsers do not
-misread it as emphasis.
+misread it as emphasis. Write a URL as an autolink (for example, \`<https://example.com/page>\`),
+not as a bare URL. Do not start or end inline code with a space; describe a separator such as a
+comma and a space in words instead of putting it in inline code.
 
 The plan below was written as generic instructions for a single agent that both edits the
 deliverable and records its own result. In this pipeline, those two responsibilities are split:

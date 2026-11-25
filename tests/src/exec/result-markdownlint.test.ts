@@ -91,24 +91,6 @@ describe("resultMarkdownlintValidator", () => {
       line: "- ### 確認した内容。",
     },
     {
-      name: "a bare URL",
-      overrides: { approach: "詳細は https://example.com/report を見た。" },
-      rules: ["MD034"],
-      line: "詳細は https://example.com/report を見た。",
-    },
-    {
-      name: "a heading and a code block collapsed into one line",
-      overrides: { approach: "### 結果\n```text\nnpm run lint:md\n```" },
-      rules: ["MD038"],
-      line: "### 結果 ```text npm run lint:md ```",
-    },
-    {
-      name: "escaped backticks mixed with a code span",
-      overrides: { summary: ["`npm test` と \\\\` npm run lint\\\\` を通した。"] },
-      rules: ["MD038"],
-      line: "- `npm test` と \\\\` npm run lint\\\\` を通した。",
-    },
-    {
       name: "a simplified Chinese glyph",
       overrides: { summary: ["一个の確認をした。"] },
       rules: ["MD061"],
@@ -120,6 +102,33 @@ describe("resultMarkdownlintValidator", () => {
     expect(message).toMatch(/^result Markdown notation violation before writing/);
     for (const rule of rules) expect(message).toMatch(new RegExp(`line \\d+ ${rule}/`));
     expect(message).toContain(JSON.stringify(line));
+  });
+
+  it.each([
+    {
+      name: "a bare URL in the reporter prose",
+      overrides: { approach: "詳細は https://example.com/report を見た。" },
+      handoff: [],
+    },
+    {
+      name: "a code span padded with spaces in the reporter prose",
+      overrides: { summary: ["区切りを `, ` にそろえた。"] },
+      handoff: [],
+    },
+    {
+      name: "a bare URL and a padded code span in the executor handoff",
+      overrides: {},
+      handoff: ["出典は https://docs.fly.io/docs/ で確かめ、区切りを `, ` にそろえた。"],
+    },
+  ])("accepts $name because the runner renders it lint-clean", async ({ overrides, handoff }) => {
+    const validator = resultMarkdownlintValidator({
+      repoRoot,
+      resultPath,
+      evidence: { ...evidence(), handoff },
+    });
+    if (!validator) throw new Error("expected a validator for an existing result path");
+
+    await expect(validator(output(overrides))).resolves.toBeUndefined();
   });
 
   it("returns no validator when the result path is unavailable", () => {
