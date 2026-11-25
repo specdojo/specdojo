@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-prj-charter-sample-120",
+  "run_id": "T-KATA-REVIEW-ALL-prj-charter-sample-120-20261125T230926Z-33542b73",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-25T23:10:14.124Z",
+    "completed_at": "2026-11-25T23:11:46.535Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/prj-charter-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/prj-charter-sample.md | 5 ++++-\n 1 file changed, 4 insertions(+), 1 deletion(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/samples/prj-charter-sample.md",
+      "status": "passed",
+      "summary": "All matched files use Prettier code style"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2 docs/ja/specdojo/samples/prj-charter-sample.md",
+      "status": "passed",
+      "summary": "0 issues in 0 files"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:prj-charter-sample\n  type: project\n  status: ready\n  rulebook: specdojo:prj-charter-rulebook\n  based_on:\n    - specdojo:prj-overview-sample\n    - specdojo:prj-stakeholder-register-sample\n  supersedes: []\n---\n\n# プロジェクト憲章: 駄菓子屋きぬや 販売管理システム\n\n本書は、駄菓子屋きぬや 販売管理システム構築の立ち上げを認可し、開発担当に要件整理、詳細計画、初期準備の権限を委譲する。承認責任者は店主代表（`PO`）であり、本格実行開始と外部公開は本書では承認しない。\n\n## 1. 認可対象\n\n| 項目 | 内容 |\n| - | - |\n| プロジェクト名\n… output omitted …\nが済んでいない重大な不適合がない | \\[\\[specdojo:pm-quality-management-plan-sample\\|品質管理計画]]、`execution/reviews/release-1/result.md` |\n\n## 8. 承認\n\n| 承認日 | 承認者 | 承認対象 | 証跡リンク |\n| - | - | - | - |\n| *UNDECIDED* | 店主代表（`PO`） | 立ち上げ認可、詳細計画策定と初期準備の権限委譲 | *UNDECIDED* |\n\n承認日と証跡リンクが記録されるまで、立ち上げ認可は未承認として扱う。\n\n## 9. 未決事項\n\n| 論点 | 影響 | 当面の扱い |\n| - | - | - |\n| 費用上限 | 詳細計画と予算枠を判定できない | 詳細計画の承認前に確定する |\n| リリース目標日 | マイルストーンを置けない | 見積もりの後、GO / Not GO の前に店主代表と合意する |\n| オフライン時の扱い | 対象範囲と見積もりが変わる | 詳細計画の承認前に、スコープで対象か対象外かを決める |"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7454 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7454 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-prj-charter-sample-120\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 6ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.t\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1752}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  08:13:45\n   Duration  2.71s (transform 7.71s, setup 2.66s, import 8.31s, tests 6.14s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nok.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-prj-charter-sample-120/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-prj-charter-sample-120/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R2 構成のレビューを行い、prj-charter-sample の章の配置を rulebook の本文構成と template に合わせた。直したのは 2 件で、未承認の扱いを「認可対象」の表から「承認」の章へ移し、「初期ステークホルダー」に登録簿へ委ねる 1 文を足した。章の順は rulebook と一致していた。展開された grade の finding 4 件は、R2 の観点に当たらないか解消済みのため直していない。",
+  "completion_status": "complete",
+  "handoff": [
+    "R2-1: 段=R2 / 箇所=1. 認可対象・8. 承認 / 指摘=「認可対象」の表の `認可条件` 行に、承認に付く条件ではなく未承認の間の扱い（承認日と証跡が記録されるまで未承認とする）が書かれていた。template はこの扱いを「承認」の章の表の後に置いている / 直した案=`認可条件` 行を消し、「承認」の章の表の後に「承認日と証跡リンクが記録されるまで、立ち上げ認可は未承認として扱う。」を移した / 根拠=`vp-arc-document-structure`。rulebook の記述ガイド「認可対象」は、承認に条件が付く場合だけ `認可条件` 行を足し、承認の記録要件は「承認と未決事項」に従うとしている。template の `_AUTHORIZATION_CONDITION_OR_NONE_` と「承認」の章の後の `_TODO_`（未承認の場合の扱い）とも合う。迷った理由は、店主代表が承認の条件として残したい場合もありうるため。選ばなかった案は、`認可条件` 行を残し「承認」の章から参照する形 / 印=要判断",
+    "R2-2: 段=R2 / 箇所=4. 初期ステークホルダー / 指摘=「プロジェクトの目的」と「ハイレベルスコープ」は表の後に詳細の正本へ委ねる 1 文があるのに、この章にはなかった。template は表の後に正本の登録簿を書くよう求めている / 直した案=表の後に「関係者ごとの期待、懸念、必要な合意は [[specdojo:prj-stakeholder-register-sample\\|ステークホルダー登録簿]] を正とする。」を足した / 根拠=`vp-qe-omissions-consistency`。template の「初期ステークホルダー」の `_TODO_` と、rulebook の記述ガイド「初期ステークホルダー」（登録簿を要約し、再掲しない） / 印=-",
+    "R2-3: 段=R2 / 箇所=9. 未決事項 / 指摘=grade の F001（担当がない）と F002（引き継ぎ先の記録がない）は、`vp-pm-plan-feasibility` と `vp-pm-control-reporting` の指摘である。kata-guide の「kata の観点の組」はこの 2 つを kata の段のレビューでは使わないとしている / 直した案=- / 根拠=kata-guide の「kata の観点の組」。列を足すなら rulebook の記述ガイド「承認と未決事項」と template の未決事項の表を先に変える必要があり、sample だけを変えると型の間で食い違う / 印=-",
+    "R2-4: 段=R2 / 箇所=7. 本格実行開始の GO / Not GO 判断 / 指摘=grade の F003（template に合格条件の列がない）は、今の template の 91 行目に `合格条件` の列があり、解消済みである。rulebook・template・sample の 4 列はそろっている / 直した案=- / 根拠=`vp-qe-omissions-consistency`、`docs/ja/specdojo/templates/prj-charter-template.md` / 印=-",
+    "R2-5: 段=R2 / 箇所=4. 初期ステークホルダー / 指摘=grade の F004（「店主」を「店主代表（`PO`）」にそろえる）は、`vp-ux-language-consistency` の文言の指摘で、R3 の観点に当たる。R2 では直さず R3 に渡す / 直した案=- / 根拠=kata-guide の「kata の観点の組」（R3 は `vp-ux-language-consistency`） / 印=-"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-prj-charter-sample-120/T-KATA-REVIEW-ALL-prj-charter-sample-120-20261125T230926Z-33542b73/executor.log",
+      "bytes": 4961,
+      "truncated": false
+    }
+  ]
+}
