@@ -1,0 +1,20 @@
+R5（整合）の段を終えました。食い違いは 1 件見つかり、`docs/ja/specdojo/samples/uis-sample.md` の側を 3 行直しました。Prettier と markdownlint の検査はどちらも通っています。
+
+**直した点**
+- 共通サンプル文脈の利用者には「店員」という役割がありません。店主以外で店に立つのは「店番をする家族」です。
+- そこで「概要」の「店員・店主が」を「店主と店番をする家族が」に直しました。
+- 「対象ユーザー/利用目的」の表でも「店員」を「店番の家族」にし、店主の行の「店員と同じ」を「店番の家族と同じ」にしました。
+
+**確認して問題がなかったもの**
+- **F001**: 現在庫数の更新契機は前の段で既に直っていました。商品追加・数量変更・会計確定の成功時に更新し、通信失敗時は前の値を保持すると書かれており、指摘は解消済みです。
+- **同じ接頭辞の sample**: `uis-sample.md` だけです。
+- **参照先**: wikilink はなく、`based_on` も空なので、確かめる参照先がありません。
+- **用語集**: SpecDojo の用語だけを集めたもので、販売の業務用語と食い違う語はありません。
+
+**相手側を直す案（相手のファイルは変えていません）**
+1. `dss-sample.md` の 16 行目と 145 行目にも「店員」があります。同じく「店番をする家族」に合わせる案です。直すかどうかは判断が要ります。
+2. 商品コードの桁数が sample どうしで違います。`uis-sample` は数字 8 桁ですが、`ifx-api-sample.yaml` は 4〜13 桁（JAN コードまたは店舗の独自コード）です。ただし両者は前提の構成が違い、uis は店舗サービス、ifx-api は本部 API なので、同じ系列とは言い切れません。どちらかに合わせるか、別の題材として残すかは判断が要ります。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5（整合）: 共通サンプル文脈にない役割「店員」を「店番をする家族」へ直した（概要・対象ユーザー表の 3 行）。F001（現在庫数の更新契機）は前の段で解消済みと確認した。同じ接頭辞の sample は uis-sample のみで、wikilink はなく based_on も空。用語集に食い違う語はない。相手側を直す案 2 件を handoff に残した。","handoff":["No: 1 / 段: R5 / 箇所: uis-sample.md「概要」1 文目と「対象ユーザー/利用目的」表 / 指摘: 利用者の役割「店員」が共通サンプル文脈にない。文脈では、店主以外で店番をするのは家族（「家族が店番する場合も同じ手順で」） / 直した案: 「店員・店主が」を「店主と店番をする家族が」、表の「店員」を「店番の家族」、「店員と同じ」を「店番の家族と同じ」にした（反映済み） / 根拠: docs/ja/specdojo/standards/sample-authoring-standard.md の「共通サンプル文脈」の「プロジェクト概要」「目的と必要性」 / 印: 要判断（dss-sample と同時に合わせるかどうか）","No: 2 / 段: R5 / 箇所: dss-sample.md 16 行目・145 行目（相手側。変更していない） / 指摘: uis-sample と同じく、共通サンプル文脈にない「店員」を使っている。uis-sample を直したため、2 つの sample の利用者名が食い違う / 直した案: dss-sample の「店員・店主」を「店主と店番をする家族」に、「店員による」を「店番の家族による」にする / 根拠: sample-authoring-standard.md の「共通サンプル文脈」、uis-sample.md の今回の修正 / 印: 要判断","No: 3 / 段: R5 / 箇所: uis-sample.md「バリデーション」の商品コード（半角数字 8 桁）と ifx-api-sample.yaml の product_code（pattern ^[0-9]{4,13}$、JAN コードまたは店舗の独自コード） / 指摘: 商品コードの桁数が sample どうしで違う。ただし uis は店舗サービス、ifx-api は本部 API と前提の構成が違い、同じ系列とは言い切れない / 直した案: 同じ系列として扱うなら、uis の条件を「4〜13 桁の数字（JAN コードまたは店舗の独自コード）」に合わせる。別の題材として扱うなら、どちらも変えない / 根拠: docs/ja/specdojo/samples/ifx-api-sample.yaml の product_code の定義、uis-sample.md の「バリデーション」の表 / 印: 要判断","No: 4 / 段: R5 / 箇所: uis-sample.md「表示項目」の現在庫数（F001） / 指摘: 更新契機が曖昧だという grade の指摘は、前の段で解消済みだった（商品追加・数量変更・会計確定の在庫確認の成功時に更新し、通信失敗時は前の値を保持） / 直した案: なし（維持） / 根拠: uis-sample.md の該当行、vp-qe-verifiability / 印: なし"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/uis-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint docs/ja/specdojo/samples/uis-sample.md","status":"passed","summary":"エラーなし"}]}
+</specdojo_executor_evidence>
