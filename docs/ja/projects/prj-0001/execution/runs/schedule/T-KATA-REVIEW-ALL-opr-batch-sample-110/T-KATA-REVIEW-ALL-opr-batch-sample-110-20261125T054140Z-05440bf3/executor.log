@@ -1,0 +1,20 @@
+R1 として `docs/ja/specdojo/samples/opr-sample.md` に 1 文だけ足しました。rulebook が受入確認で求める項目のうち、欠けていたものを補う差分です。
+
+**直したこと**
+- 「証跡」章の手順の模擬に、「再実行の後もバックアップの世代が増えないことを確かめる」を加えました。rulebook の「運用作業の受入確認」は再実行時の重複防止を確かめるよう求めていますが、模擬の対象にはこれだけが入っていませんでした。
+- ほかの必須章は、rulebook の「本文要件」と「記述ガイド」にある項目を満たしていたので変えていません。バッチ再実行の章も、失敗検知・再実行の条件・上限・エスカレーション・重複防止がそろっています。
+
+**plan の finding（4 件とも sample は変えていません）**
+- F001・F004（`vp-po-decision-readiness`・`vp-ops-release-readiness`）：kata-guide の「kata の観点の組」で、kata の段のレビューに使わないと決まっている観点のため扱いませんでした。
+- F002（`vp-qe-verifiability`）：R4 が扱う観点です。いまの本文では、概要の未決事項の表に保管期間の行があり、「証跡」章からその表を参照しています。
+- F003：いまの関連ドキュメント導線の表では、分冊がすべて作成済みになっています。`opr-incident-sample` も本書を `specdojo:opr-sample` として参照しているので、指摘は解消済みです。
+
+**確かめてほしいこと**
+- 編集対象は、rulebook の `sample` 宣言の先頭から `opr-sample.md` に解決されています。レビュー対象の名前である `opr-batch-sample.md` ではありません。先行の access-control のレビューも同じ扱いで、今回もそれに従いました。`opr-batch-sample.md` 自体の手直しは R5 か別の作業に回す必要があります。
+- `opr-sample` と `opr-index-sample` が、どちらも共通手順の正本だと名乗っています。どちらを `opr-index` として扱うかは人の判断が要ります。
+
+検証は Prettier の整形確認だけを実行し、通りました。markdownlint などの lint は親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1（目的の過不足）として opr-sample.md の「証跡」章の手順の模擬に、rulebook の「運用作業の受入確認」が求める再実行時の重複防止の確認を 1 文足した。finding の F001 と F004 は kata の段で使わない観点、F002 は R4 の観点、F003 は解消済みのため、sample は変えていない。","handoff":["R1-1: 段=R1 / 箇所=11. 証跡 / 指摘=rulebook の「運用作業の受入確認」は再実行時の重複防止を確かめるよう求めるが、手順の模擬の対象に入っていない / 直した案=模擬の文に「再実行の後もバックアップの世代が増えないことを確かめる」を足した / 根拠=vp-qe-kata-conformance（opr-rulebook「運用作業の受入確認」） / 印=-","R1-2: 段=R1 / 箇所=1. 概要 / 指摘=F001（vp-po-decision-readiness）の未決事項の表に決定者と期限の列を足す件 / 直した案=- / 根拠=kata-guide の「kata の観点の組」で、vp-po-decision-readiness は kata の段のレビューに使わない観点とされている（kata の承認は登録簿で追う） / 印=-","R1-3: 段=R1 / 箇所=1. 概要 / 指摘=F004（vp-ops-release-readiness）の ready 化の前に解消する項目と確認者の件 / 直した案=- / 根拠=kata-guide の「kata の観点の組」で、vp-ops-release-readiness は kata の段のレビューに使わない観点とされている / 印=-","R1-4: 段=R1 / 箇所=11. 証跡 / 指摘=F002（vp-qe-verifiability）の保管期間が _UNDECIDED_ の件 / 直した案=- / 根拠=R4 が扱う観点。いまの本文では、概要の未決事項の表に「監査ログ以外の証跡の保管期間」の行があり、証跡の章の後の文がその表を参照しているため、R4 で再確認すればよい / 印=-","R1-5: 段=R1 / 箇所=12. 関連ドキュメント導線 / 指摘=F003（分冊は障害対応だけ、opr-incident は予定、という記述） / 直した案=- / 根拠=いまの表では分冊 7 件がすべて作成済みになっており、opr-incident-sample も本書を specdojo:opr-sample として参照しているため、解消済み / 印=-","R1-6: 段=R1 / 箇所=1. 概要 / 指摘=opr-sample と opr-index-sample がどちらも共通手順の正本を名乗り、分冊は opr-sample を opr-index として参照している。opr-rulebook の「index / term 分割方針」に照らすと、どちらが opr-index かが一つに決まらない / 直した案=- / 根拠=vp-arc-single-responsibility。opr-sample を opr-index-sample へ寄せるか、opr-sample を opr-index の役から外すかは、型の構成の判断が要るため直していない / 印=要判断","R1-7: 段=R1 / 箇所=対象の解決 / 指摘=タスク名は opr-batch-sample のレビューだが、編集対象は rulebook の sample 宣言の先頭から opr-sample.md に解決されている / 直した案=- / 根拠=先行の T-KATA-REVIEW-ALL-opr-access-control-sample-110 も opr-sample を直しており、plan の編集対象に従った。opr-batch-sample.md の based_on の opd-index が project 修飾されていない点と、関連ドキュメント導線で opd-monitoring と opr-incident が「予定」のままの点（どちらも sample が存在する）は、R5 か別の作業で opr-batch-sample を直す必要がある / 印=要判断"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/opr-sample.md","status":"passed","summary":"All matched files use Prettier code style!"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更したのは docs/ja/specdojo/samples/opr-sample.md だけで、plan・result・個票などの履歴ファイルを変更していない"}]}
+</specdojo_executor_evidence>
