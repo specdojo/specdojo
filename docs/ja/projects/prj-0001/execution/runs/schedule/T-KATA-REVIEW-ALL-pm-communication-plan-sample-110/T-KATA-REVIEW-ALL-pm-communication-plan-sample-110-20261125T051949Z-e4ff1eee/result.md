@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-REVIEW-ALL-pm-communication-plan-sample-110
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-REVIEW-ALL-pm-communication-plan-sample-110/T-KATA-REVIEW-ALL-pm-communication-plan-sample-110-20261125T051949Z-e4ff1eee/plan.md
   started_at: "2026-11-25T05:19:59.139Z"
+  completed_at: "2026-11-25T05:33:45.224Z"
   agent: opus-executor
   execution: agent
   approach: sample-maintenance
@@ -20,16 +21,19 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- R1（目的の過不足）を確認した。`pm-communication-plan-sample` は rulebook の必須 4 章の受入条件、任意章の要素、登録簿の情報要求をすべて満たしていた。禁止事項に当たる記述もなかった。欠けている内容も、要らない内容もなかったため、sample は変更していない。
+- grade の F001（`vp-ux-language-consistency`）は、RACI が本書内で定義・参照されず何を指すか読めないという指摘で、R3（読みやすさ）の観点に当たる。この段では直さず、R3 に回した。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- なし
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- R1 の指摘は次の表のとおり。 | No | 段 | 箇所 | 指摘 | 直した案 | 根拠 | 印 | | --- | --- | --- | --- | --- | --- | --- | | 1 | R1 | 全体（方針と適用範囲〜見直し条件と未決事項） | 必須 4 章の受入条件、任意章の要素、登録簿の情報要求との対応がそろっている。欠けている内容も要らない内容もない | 変更なし | `specdojo:pm-communication-plan-rulebook` の本文構成・記述ガイド・禁止事項、`specdojo:sample-authoring-standard` の構成の原則・禁止事項、`specdojo:prj-stakeholder-register-sample` のコミュニケーション要件の表 | なし | | 2 | R1 | 見直し条件と未決事項の表「エスカレーションの判断者」の行 | F001 は R3 の観点のため、この段では直さない。RACI を追従対象として残すことは、目的に照らして妥当（`specdojo:pm-plan-sample` が承認責任の正本を RACI と定めている） | R3 で参照先を示す（例: 「本書のエスカレーションと RACI（`PM`）」に `specdojo:pm-raci-sample` への参照を付ける） | kata-guide の観点の組（R3 に `vp-ux-language-consistency`）、`specdojo:pm-plan-sample` の RACI の行 | なし |
+- No: 1 / 段: R1 / 箇所: 全体（方針と適用範囲〜見直し条件と未決事項） / 指摘: rulebook の必須 4 章の受入条件、任意の章の追従対象・Role・証跡・未決事項の要素、登録簿の情報要求との対応がすべてそろっており、欠けている内容も要らない内容もない / 直した案: 変更なし / 根拠: specdojo:pm-communication-plan-rulebook の本文構成（標準テンプレ）・記述ガイド・禁止事項、specdojo:sample-authoring-standard の構成の原則・禁止事項、specdojo:prj-stakeholder-register-sample のコミュニケーション要件の表 / 印: なし
+- No: 2 / 段: R1 / 箇所: 見直し条件と未決事項の表「エスカレーションの判断者」の行 / 指摘: grade の F001（`vp-ux-language-consistency`）は、RACI が本書内で定義・参照されず何を指すか読めないという指摘。R3（読みやすさ）の観点のため、この段では直さず R3 に回す。RACI を追従対象として残すことは、目的に照らして妥当（specdojo:pm-plan-sample が承認責任の正本を RACI と定めているため） / 直した案: R3 で「本書のエスカレーションと [[specdojo:pm-raci-sample\|RACI]]（`PM`）」のように参照先を示す / 根拠: kata-guide の kata の観点の組（R3 に `vp-ux-language-consistency`）、specdojo:pm-plan-sample の RACI の行 / 印: なし
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+根拠とした規範は、`specdojo:pm-communication-plan-rulebook`、`specdojo:sample-authoring-standard`、`specdojo:prj-stakeholder-register-sample`、`specdojo:pm-plan-sample` と kata-guide の R1 の定め。rulebook の必須 4 章の受入条件、任意章の要素、登録簿のコミュニケーション要件との対応を照合し、現状の記述は維持した。F001 は R3 の観点のため、この段では未解消のまま残した。次のアクションは、R3 で RACI の参照先を示すか、「エスカレーションの判断者」だけにそろえること。evidence の changes は空で、sample は変更していない。

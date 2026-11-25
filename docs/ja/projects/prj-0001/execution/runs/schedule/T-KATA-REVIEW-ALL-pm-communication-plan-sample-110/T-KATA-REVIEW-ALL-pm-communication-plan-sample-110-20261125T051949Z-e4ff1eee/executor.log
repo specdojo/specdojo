@@ -1,0 +1,22 @@
+R1 の確認は終わりました。完成例に欠けている内容も要らない内容も見つからなかったので、sample は編集していません。
+
+**読んだもの:** 対象の sample、rulebook、Sample 記述標準、`dct-kata.yaml` の `done_criteria`、ステークホルダー登録簿の sample、kata ガイドの「kata を agent でレビューする」。
+
+**結果:**
+
+- **必須の 4 章:** rulebook の受入条件を満たしています。
+  - 方針と適用範囲：対象、同期・非同期の別、AI Agent の判断境界が書かれています。
+  - コミュニケーション機会：各行にステークホルダー ID、Role code、証跡があります。
+  - エスカレーション：rulebook が挙げる目的・スコープ、当事者価値、費用・負荷、品質・安全（Agent 出力の疑義を含む）、公開・権利のすべてに条件の行があります。
+  - 情報管理と公開：情報区分ごとの共有範囲と記録先、口頭決定の転記担当 `PM` が書かれています。
+- **任意の章「見直し条件と未決事項」:** 見直しのきっかけ、追従対象と更新する Role、反映の証跡があります。未決事項 2 件には、影響、決定時期、判断者がそろっています。
+- **登録簿との対応:** 登録簿にある 4 名の伝達事項（判断依頼・相談・参加依頼・告知）と、開発担当の報告事項が、それぞれ機会の行になっています。どの情報要求にも当たらない行はありません。
+- **要らない内容:** rulebook と Sample 記述標準の禁止事項に当たる記述はありません。登録簿の再掲、重複の記載、定例会議の必須化、担当の割り当てや承認の進み具合はいずれもありません。店主代表が `PO` を担うと書いた 1 文は、本書の書き方を説明するためのもので、登録簿の再掲には当たらないと判断しました。
+
+**grade の指摘 F001** は直していません。「エスカレーションの判断者」の行の「RACI」が何を指すか読み取れない、という指摘です。観点 `vp-ux-language-consistency` は R3（読みやすさ）で扱うため、R3 に回しました。直し方の案は、参照先を `[[specdojo:pm-raci-sample|RACI]]` と示すことです。RACI を追従対象として残すこと自体は、目的に照らして妥当です。管理計画の sample が承認責任の正本を RACI と定めているためです。
+
+検査はこの段では何も実行していません。変更したファイルがないためで、lint は親 runner に任せます。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1 目的の過不足: pm-communication-plan-sample は rulebook の必須章・受入条件と登録簿の情報要求をすべて満たし、禁止事項にも当たらないため sample は変更なし。F001 は R3 の観点のため R3 に回した。","handoff":["No: 1 / 段: R1 / 箇所: 全体（方針と適用範囲〜見直し条件と未決事項） / 指摘: rulebook の必須 4 章の受入条件、任意の章の追従対象・Role・証跡・未決事項の要素、登録簿の情報要求との対応がすべてそろっており、欠けている内容も要らない内容もない / 直した案: 変更なし / 根拠: specdojo:pm-communication-plan-rulebook の本文構成（標準テンプレ）・記述ガイド・禁止事項、specdojo:sample-authoring-standard の構成の原則・禁止事項、specdojo:prj-stakeholder-register-sample のコミュニケーション要件の表 / 印: なし","No: 2 / 段: R1 / 箇所: 見直し条件と未決事項の表「エスカレーションの判断者」の行 / 指摘: grade の F001（`vp-ux-language-consistency`）は、RACI が本書内で定義・参照されず何を指すか読めないという指摘。R3（読みやすさ）の観点のため、この段では直さず R3 に回す。RACI を追従対象として残すことは、目的に照らして妥当（specdojo:pm-plan-sample が承認責任の正本を RACI と定めているため） / 直した案: R3 で「本書のエスカレーションと [[specdojo:pm-raci-sample\\|RACI]]（`PM`）」のように参照先を示す / 根拠: kata-guide の kata の観点の組（R3 に `vp-ux-language-consistency`）、specdojo:pm-plan-sample の RACI の行 / 印: なし"],"validations":[]}
+</specdojo_executor_evidence>
