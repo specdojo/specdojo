@@ -46,6 +46,11 @@ specdojo:
 - 関連する設計・ガイド・CLI リファレンスを直す。
 - runner と routine の動きを変えるため、統合の後に orchestrator が `exec smoke` と実際の routine の 1 回の実行で確かめてから close する。
 - `npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md` を通し、親の検証を通す。
+- 2 回目の実行（2026-11-26）: 1 回目の変更は別のブランチ `feature/prj-0001/exec-watch-coexist` にあり、develop には入っていない。その後に PJR-3M4M（見張りの手当て）が develop に入り、1 回目の変更と見張りのコード・テスト・3 つの文書（登録簿運用ガイド、ルーチン運用ガイド、コマンドリファレンス）で衝突する。
+  - develop を基に、1 回目の変更をすべて入れ直す。1 回目の差分は `git diff project/prj-0001/develop...feature/prj-0001/exec-watch-coexist` で、1 回目の対応結果は `git show feature/prj-0001/exec-watch-coexist` の個票で読める。
+  - 3M4M の手当て（`watch.remedies`、回数の上限、`remedy` の記録）と、T4E0 の停止・再開・`exec watch`・手で始めた run を避ける動きの両方を残す。どちらのテストも消さない。
+  - 手で始めた run・人やオーケストレーターの claim・止めた印の付いた対象には、3M4M の手当ても打たないことを単体テストか統合テストで確かめる。
+  - 対応結果は 1 回目の内容に 2 回目で変えた点を足す形で書く。
 
 ## 4. 作業内容
 
