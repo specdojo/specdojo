@@ -1,0 +1,21 @@
+R1（目的の過不足）を `docs/ja/specdojo/samples/sf-index-sample.md` に対して行いました。rulebook の要件に照らして足りない内容が 2 点あり、どちらも「4. 未決事項」の表で直しました。要らない内容は見つかりませんでした。markdownlint は通っています。lint 一式は、この後に親 runner がかけます。
+
+**直したこと**
+
+- **`Q-01`:** 機能と業務・画面の対応を暫定とする理由は書いてありましたが、何を根拠にした暫定かがありませんでした。rulebook の「全体方針」と「6.4. 未決事項」は根拠を示すよう求めています。そこで、根拠を概念データフロー図の業務プロセス領域（`P-01`〜`P-10`）と書き足しました。
+- **`Q-03`:** 影響する機能を名前だけで書いていました。rulebook の「6.4. 未決事項」は機能 ID を示すよう求めているため、`SF-INV-01`・`SF-INV-03`・`SF-CLS-02` を加えました。
+
+**R1 で扱わなかった grade の指摘**
+
+- **F001:** 観点の `vp-pm-control-reporting` は、kata の段のレビューでは使わない観点です。
+- **F002:** 観点が `vp-dev-change-impact` のため R5 に回します。
+- **F003:** 観点が `vp-qe-omissions-consistency` のため R2 に回します。
+- **F004:** 完成例どうしの相互参照の話なので、R5（kata 相互と適用先）に回します。
+
+**sample の外で直すべき点（要判断）**
+
+成果物カタログの雛形 `dct-system-functions-template.yaml` で、`sf-index` の `rulebook` が `specdojo:sf-rulebook` になっています。rulebook と sample の宣言から見ると `specdojo:sf-index-rulebook` が正しいはずです。ただし、雛形が個別仕様の rulebook をわざと流用しているのかどうかは確かめられませんでした。sample の外のファイルなので変更していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1: sf-index-sample の未決事項 Q-01 に暫定対応の根拠、Q-03 に影響する機能 ID を追加した。grade finding F001〜F004 は R1 の観点外のため他段に委ねた。","handoff":["R1-1: R1 / 4. 未決事項（Q-01） / 業務・接点の対応を暫定としているが、暫定対応の根拠が示されていない（rulebook の「全体方針」と「6.4. 未決事項」は暫定対応とその根拠を示すよう求めている） / 論点に「概念データフロー図の業務プロセス領域を根拠とした暫定」と根拠を追記した / vp-qe-kata-conformance（種別の責務）、specdojo:sf-index-rulebook「6.4. 未決事項」 / -","R1-2: R1 / 4. 未決事項（Q-03） / 影響する機能を機能 ID でなく名前（補充依頼支援・月次集計）だけで示しており、rulebook の「影響する機能 ID」の要件を欠く / `SF-INV-01`（`sf-inventory` 候補）、`SF-INV-03`、`SF-CLS-02` の ID を明記した / vp-qe-kata-conformance（種別の責務）、specdojo:sf-index-rulebook「本文要件」「6.4. 未決事項」 / -","R1-3: R1 / -（成果物カタログ雛形） / docs/ja/specdojo/templates/dct-system-functions-template.yaml の `sf-index` の `rulebook` が `specdojo:sf-rulebook` になっており、sf-index-rulebook / sf-index-sample の宣言と食い違う / -（sample 外のため未変更。相手側の案: 雛形の `sf-index` の `rulebook` を `specdojo:sf-index-rulebook` にする） / vp-qe-kata-conformance。選ばなかった案は、雛形が個別仕様の rulebook を意図して流用しているとみなして維持すること。その意図を確かめられなかった / 要判断","R1 で扱わなかった grade の finding: F001（`vp-pm-control-reporting`）は kata の段のレビューでは使わない観点（kata-guide「kata の観点の組」）。F002（`vp-dev-change-impact`）と F004（`vp-qe-kata-conformance` の kata 相互）は R5、F003（`vp-qe-omissions-consistency`）は R2 に委ねる。"],"validations":[{"command":"npx markdownlint docs/ja/specdojo/samples/sf-index-sample.md","status":"passed","summary":"エラーなし（npx prettier --write で表を整形した後に実行）"}]}
+</specdojo_executor_evidence>
