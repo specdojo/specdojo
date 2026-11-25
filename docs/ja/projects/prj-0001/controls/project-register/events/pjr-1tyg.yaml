@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_9c0df24e817b4f23a6c9134c3f39ad4b
+  ts: "2026-11-25T21:58:28Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: exec stop の前に失敗したタスクがあると、列が再開できない状態で終わる
+    - field: description
+      from: ""
+      to: exec stop で止めたループの段が、止める前に失敗したタスクがあると failed になり、列が completed\_with\_failures で終わる。同じ exec queue run で止めた段から再開できない。
+    - field: input
+      from: ""
+      to: '["2026-11-25 夜、kra-night2 と kra-night3 の列で観測（止める前に止まったタスクがあり、どちらも `completed_with_failures` で終わった）。","PJR-32PN の完了条件「同じ exec queue run で止めた段から再開できる」は、失敗が無い場合は確かめ済み。"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-26"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-32PN"]'
