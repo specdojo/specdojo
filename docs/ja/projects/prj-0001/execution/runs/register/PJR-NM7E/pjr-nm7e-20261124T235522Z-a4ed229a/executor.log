@@ -1,0 +1,16 @@
+grade run の作業ディレクトリ `execution/grade/generated/runs/**` を文書サイトの対象から外し、`ENAMETOOLONG` が出る原因のページを消しました。このリポジトリでは単体テストが通りました。長い名前の grade 記録を持つ試しのリポジトリでのビルドは、executor では実行できず未確認です。
+
+- **原因:** VitePress は asset のファイル名を、ページのパスの `/` を `_` に置き換えて作ります。run ID（task ID と sample 名を含み最大 128 文字）と stem が長いと、この名前が 255 バイトを超えます。
+- **変更:** `packages/docs-site/.vitepress/exec-record-paths.ts` の `EXEC_RECORD_SRC_EXCLUDE` に `docs/**/execution/grade/generated/runs/**` を足しました。除外したのは plan の写しなどの一時の作業物で、閲覧対象ではありません。
+- **他の案を採らなかった理由:**
+  - 名前を短くする案は、run ID と stem が利用者の task ID・sample 名に依存するため、上限を保証できません。`gradePlanFilename` を変えると、既存の criteria ファイル名とも食い違います。
+  - VitePress の `sanitizeFileName` は、設定で差し替えても描画側が元の関数を使うため、設定からは名前の付け方を変えられません。
+- **リンクと既存の生成物:** この作業ディレクトリのページへ張られたリンクはありません。`execution/grade/generated/plans/` は引き続き対象です。既存のファイルは消さず、サイトに載らなくなるだけです。
+- **テスト:** `tests/packages/docs-site/exec-record-paths.test.ts` に、長い run ID と stem のページが走査から外れ、`grade/generated/plans/` のページが残ることを確かめるテストを足しました。このファイルは `npx vitest run` で全 17 件が通りました。
+- **個票:** 個票の対応結果に、再現の条件、直し方と理由、CHANGELOG に書く事項（Fixed の文案）、確認結果を書きました。関連ドキュメントの `_TODO_` は「派生元: PJR-FZQA」に置き換えました。個票に作業内容の表はありません。
+
+`CHANGELOG.md`、保護された設定、result は変更していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"grade run の作業ディレクトリ execution/grade/generated/runs/** を VitePress の srcExclude（EXEC_RECORD_SRC_EXCLUDE）へ追加して ENAMETOOLONG を回避した。単体テストを追加し、個票の対応結果を更新した。","handoff":["直し方: 生成ページ名の短縮や VitePress の asset 名の変更ではなく、grade run の作業ディレクトリをサイトの対象から外した。理由は、run ID と stem が利用者の task ID・sample 名に依存して上限を保証できないこと、gradePlanFilename を変えると既存の criteria ファイル名と食い違うこと、VitePress の sanitizeFileName は設定で差し替えても描画側が元の関数を使うため設定から変えられないこと。","生成ページへのリンクはなく、既存の生成物は変更しない（サイトに載らなくなるだけ）。execution/grade/generated/plans/ は引き続き対象。","CHANGELOG に書く事項（Fixed）: 文書サイトのビルドが、task ID や sample 名が長い grade run の作業ディレクトリのページで ENAMETOOLONG により止まる問題を修正した。execution/grade/generated/runs/ をサイトの対象から外した。","統合後に、オーケストレーターが長い名前の grade の記録を持つ試しのリポジトリでサイトをビルドし、止まらないことを確かめてから close する（executor では実行不可）。"],"validations":[{"command":"npx vitest run --config vitest.unit.config.ts tests/packages/docs-site/exec-record-paths.test.ts","status":"passed","summary":"17 tests passed"},{"command":"npx prettier --check docs/ja/projects/prj-0001/controls/project-register/pjr-nm7e-docs-site-name-too-long.md","status":"passed","summary":"formatted"},{"command":"npm run validate:history-links","status":"not_applicable","reason":"個票は変更したが、変更した個票に Markdown リンクを追加しておらず、wikilink も使っていない"}]}
+</specdojo_executor_evidence>

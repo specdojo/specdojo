@@ -62,4 +62,23 @@ describe("exec record paths", () => {
       rmSync(root, { recursive: true, force: true });
     }
   });
+
+  it("excludes grade run work directories whose long names would overflow asset file names", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-exec-record-paths-"));
+    try {
+      const longRun = `review-prj-9001-${"long-task-id-".repeat(8)}20261124T134340Z`;
+      const longPage = `grade/generated/runs/${longRun}/1/stage-1/${"long-sample-".repeat(6)}-grade-reporter-plan.md`;
+      const keptPage = "grade/generated/plans/target/sample-grade-plan.md";
+      for (const path of [longPage, keptPage]) {
+        const filePath = join(root, execution, path);
+        mkdirSync(dirname(filePath), { recursive: true });
+        writeFileSync(filePath, "# Page\n");
+      }
+      expect(globFilesSync("docs/**/*.md", { cwd: root, ignore: EXEC_RECORD_SRC_EXCLUDE })).toEqual(
+        [`${execution}/${keptPage}`],
+      );
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
 });
