@@ -1,0 +1,13 @@
+`docs/ja/specdojo/samples/uis-sample.md` の 1 か所だけを直して、R1（目的の過不足）を終えました。rulebook など sample 以外は変えていません。
+
+照らし合わせた材料は、`specdojo:uis-rulebook` の本文要件・記述ガイド・禁止事項、Sample 記述標準、成果物カタログ（`dct-user-interface-model-template.yaml`）の `done_criteria` です。必須の 7 章と任意の「メモ / 将来課題」はそろっていました。rulebook の禁止事項（ワイヤーフレーム、実装の指定、正とする章以外での言い直しなど）に当たる記述もありませんでした。足りない内容と要らない内容を見て、指摘は 1 件だけです。
+
+- 直した内容: 表示項目の「現在庫数」の更新契機が「在庫の判定時に更新」としか書かれず、いつ更新するかが決まりませんでした（F001）。「商品追加・数量変更・会計確定の在庫確認の成功時に最新値へ更新。通信失敗時は前の値を保持」に改めました。在庫を確かめる 3 つの時点は、「バリデーション」の在庫との相関の行に合わせています。
+- 迷った点: F001 の観点 `vp-qe-verifiability` は、ガイドの観点の組では R4 に当たります。ただ、rulebook は表示項目の章に更新契機と未取得時の値の意味を求めているため、要る内容の欠けとして R1 で扱いました。この判断に「要判断」の印を付けています。
+- 差分の行数: diff は 19 行ずつ変わりますが、中身の変更は 1 セルだけです。セルが長くなり、prettier が表の列幅を揃え直したためです。
+
+検査では、prettier の整形と markdownlint-cli2 を実行し、指摘は 0 件でした。`lint:md` などの許可された検査は、このあと親 runner が流します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1（目的の過不足）を実施し、uis-sample の表示項目「現在庫数」の曖昧な更新契機（F001）を明確化した。ほかの章に過不足はない。変更ファイルは docs/ja/specdojo/samples/uis-sample.md の 1 件。","handoff":["R1-1: 段 R1 / 箇所 3. 表示項目（3.1. 入力・明細・集計）の「現在庫数」 / 指摘 更新契機が「在庫の判定時に更新」と曖昧で、どの操作のどの結果で更新するか判定できない（grade F001）。rulebook の本文要件と記述ガイドの表示項目が求める更新契機・未取得時の値の意味が欠けている / 直した案 「商品追加・数量変更・会計確定の在庫確認の成功時に最新値へ更新。通信失敗時は前の値を保持」にした（在庫を確かめる時点は「バリデーション」の在庫との相関に合わせた） / 根拠 vp-qe-kata-conformance（uis-rulebook の本文要件・記述ガイドの表示項目）、grade F001（vp-qe-verifiability） / 印 要判断（F001 の観点 vp-qe-verifiability はガイドの観点の組では R4 に当たる。rulebook が求める要る内容の欠けとして R1 で直した。R4 へ送る案は、1 セルで済む修正を後の段へ持ち越すため採らなかった）","R1 の確認結果: 必須の 7 章と任意の「メモ / 将来課題」はそろい、要らない内容（ワイヤーフレーム・実装の指定・正本の再掲・役割の割り当てや承認の進み具合）は見つからなかった。照らした材料は specdojo:uis-rulebook、specdojo:sample-authoring-standard、dct-user-interface-model-template.yaml の done_criteria。","diff の行数が多いのは、セルが長くなり prettier が表の列幅を揃え直したため。中身の変更は 1 セルだけ。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/uis-sample.md","status":"passed","summary":"整形した（列幅の揃え直しのみ）"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/uis-sample.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>
