@@ -80,3 +80,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_ef4542e25b224e5498cab9a834640a1e
+- v: 1
+  id: reg_0c4ef26614f042209c8519326b694fd0
+  ts: "2026-11-25T00:12:11Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（sonnet-executor、統合先は feature/prj-0001/docs-site-name-too-long）で実装。FZQA で止まった試しのリポジトリ（prj-9001）に長い名前の生成ページを戻してサイトをビルドし、通ることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-25"
+    - field: conclusion
+      from: "-"
+      to: grade の run の作業ディレクトリ（execution/grade/generated/runs/）を文書サイトの対象から外し、長い名前のページで ENAMETOOLONG により止まらないようにした
+  previous_event_id: reg_2f7fcd20cb8742cc8e4a3ac368556f8c

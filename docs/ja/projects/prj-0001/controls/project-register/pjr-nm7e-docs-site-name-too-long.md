@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-nm7e-docs-site-name-too-long
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   registered_at: "2026-11-24T17:49:58Z"
+  completed_at: "2026-11-25T00:12:11Z"
+  conclusion: grade の run の作業ディレクトリ（execution/grade/generated/runs/）を文書サイトの対象から外し、長い名前のページで ENAMETOOLONG により止まらないようにした
   derived_from:
     - PJR-FZQA
 ---
