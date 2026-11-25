@@ -1,0 +1,21 @@
+R1（目的の過不足）を終え、`docs/ja/specdojo/samples/otp-sample.md` を 2 か所直しました。どちらも、`otp-index` の共通方針の値をこの sample が書き写していた箇所です。prettier と markdownlint の確認は通っています。
+
+照合に使った材料は次の 4 つです。
+- `otp-rulebook` の本文要件と禁止事項
+- Sample 記述標準
+- `dct-kata.yaml` にある `otp-sample` の `done_criteria`
+- `otp-index-sample`
+
+11 章はすべてあり、各章で rulebook が求める項目もそろっています。足すべき内容は見つかりませんでした。概要には `done_criteria` が求める「販売・在庫・つけの記録を続ける」という価値と範囲が書かれています。rulebook の禁止事項に当たる記述もありません。
+
+直したのは次の 2 か所です。
+- **R1-1（概要）:** 括弧内のハイパーケアの期間「並行記録の 1 週間と正本切替から 2 週間」を「`otp-index` に従う」にしました。
+- **R1-2（監視/アラート）:** 冒頭で `otp-index` の監視対象 5 つを書き並べていた括弧を消し、「`otp-index` の監視対象はそのまま使う」としました。
+
+直さずに残した点が 2 つあります。
+- **R1-3（要判断）:** 「問合せ窓口/一次対応」の問合せ記録の記入項目の表と、「初期増員体制」の当番表の記入例の表は、rulebook の求めより多い内容です。ただ、この sample の題材がまさに当番と問合せ記録なので残しました。完成例を最小にするために削る案もあり、採るかどうかはご判断ください。
+- **R1-4:** 「移行完了後のクローズ条件」の表は、前置きで「各条件」を測る場所を示すと言っていますが、`otp-index` の「記録が営業日の 90% 以上で続いている」の条件が入っていません。食い違いの扱いなので R5 で確かめる申し送りとし、この段では直していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1（目的の過不足）を完了した。otp-sample.md で otp-index の共通方針の値を書き写していた 2 か所（概要の期間、監視/アラートの監視対象の列挙）を参照に置き換えた。足すべき内容はなかった。","handoff":["R1-1: R1 / 1. 概要（hypercare） / ハイパーケアの期間の値（並行記録の 1 週間と正本切替から 2 週間）を書き写しており、rulebook の「`otp-index` の共通方針に従う項目は値を再掲しない」に反する / 括弧内を「`otp-index` に従う」に直した / `vp-qe-kata-conformance`（otp-rulebook の本文要件と禁止事項「`otp-index` の共通方針を再掲する」） / -","R1-2: R1 / 2. 監視/アラート / 冒頭の文で `otp-index` の監視対象 5 つを括弧で書き並べており、共通方針の再掲になっている / 括弧を消し「`otp-index` の監視対象はそのまま使う。」とした / `vp-qe-kata-conformance`（otp-rulebook の禁止事項）、`vp-arc-single-responsibility` / -","R1-3: R1 / 6. 問合せ窓口/一次対応、8. 初期増員体制（期間・当番・SLA） / 問合せ記録の記入項目の表と当番表の記入例の表は rulebook の要件より多い / - / `vp-po-purpose-alignment`。この sample の対象（`otp-hypercare`）は当番と問合せ記録そのものなので、対象固有の内容として残した。選ばなかった案は、完成例を最小にするために 2 つの表を削ること / 要判断","R1-4: R1 / 10. 移行完了後のクローズ条件 / 前置きは「各条件を本書の記録のどこで測るか」を示すとしているが、`otp-index` の「記録が営業日の 90% 以上で続いている」の条件が表にない / - / 食い違いの扱いなので R5（`vp-qe-kata-conformance` の kata 相互）へ申し送る。直す案は、前置きを「本書の記録で測る条件」に限定するか、行を足して測定方法を日次締め記録とするか / -"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/otp-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint docs/ja/specdojo/samples/otp-sample.md","status":"passed","summary":"no errors"}]}
+</specdojo_executor_evidence>
