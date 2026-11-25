@@ -1,0 +1,30 @@
+`opd-monitoring-sample` の R4（正しさ）レビューを終えました。誤りが 3 件見つかり、`docs/ja/specdojo/samples/opd-monitoring-sample.md` を直しました（12 行追加・12 行削除）。Prettier の整形チェックは通っています。markdownlint とリンク・frontmatter の検査は、親 runner の結果待ちです。
+
+確かめの表です。
+
+| No | 主張（本文の箇所） | 正本 | 確かめ方 | 結果 | 根拠 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | frontmatter の `type: operations` と `rulebook: specdojo:opd-rulebook` | `opd-rulebook.md`「推奨 Frontmatter 項目」、`common-frontmatter.schema.yaml` | 読み取り | 一致 | rulebook が指定する値と同じ。`based_on` と `supersedes` はスキーマにあるキー |
+| 2 | 章の構成（概要（monitoring）→ 監視・アラート方針 → 関連ドキュメント導線） | `opd-rulebook.md`「本文構成」、`opd-index-sample.md` の章見出し | 読み取り | 一致 | 差分を持つ章の見出しが `opd-index` の章名と同じ |
+| 3 | 未決事項の表（稼働率の目標は `opd-index` と共通、営業時間外の扱い） | `opd-index-sample.md` の未決事項 | 読み取り | 一致 | 同じ未決事項があり、決まるまでの扱いとも食い違わない |
+| 4 | 自動の監視は死活とバックアップに限り、日次締めの差異は店番担当が見つける | `opd-index-sample.md`「監視・アラート方針」 | 読み取り | 一致 | 本文と監視の表の 3 行に合う |
+| 5 | 対応する目標のうち KPI「記録の継続」「人気商品の欠品」と SLO「営業時間内の稼働」 | `opd-index-sample.md`「SLO・SLA・KPI」 | 読み取り | 一致 | 指標名が同じ |
+| 6 | RPO を「前日閉店」と言い切っている | `opd-index-sample.md`「バックアップ・リストア方針」 | 読み取り | 不一致（直した） | `opd-index` の RPO は `_UNDECIDED_` で、前日の閉店時点は決まるまでの扱いにすぎない |
+| 7 | 営業時間 10:00〜18:00、閾値「5 分続けて応答がない」、通知先 `OPS` / `PO` | `opd-index-sample.md` の運用時間帯と監視の表 | 読み取り | 一致 | 同じ値 |
+| 8 | バックアップの判定を開店 30 分前（9:30）にする | `opd-index-sample.md`「翌朝の開店時」 | 読み取り | 一致 | 具体化として書かれており、`opr-monitoring-sample` の 9:30 とも合う |
+| 9 | P1・P2 の条件と 15 分の連絡期限、差異が解けないときは翌朝 `PO` が確かめる | `opd-index-sample.md` の体制・責任分界と定期運用方針 | 読み取り | 一致 | エスカレーション表と日次締めの行に合う |
+| 10 | 閾値は「`opd-index` の変更管理に従って」承認を得て変える | `opd-index-sample.md`「変更管理」と「SLO・SLA・KPI」、`opr-monitoring-sample.md` | 読み取り | 不一致（直した） | 変更管理の表に閾値の変更の行がない。目標値を変えるときは「変更要求として `PO` の承認を得る」と書かれている |
+| 11 | 関連ドキュメントの表で、障害対応・`opr-index`・`opr-monitoring` が「予定」 | `docs/ja/specdojo/samples/` の実ファイル | `ls` と `grep` で id を確かめた | 不一致（直した） | 3 件とも作成済みで、`opd-index-sample` も「作成済」と書いている |
+| 12 | 外部の死活監視サービスを 1 分ごと、通知から 10 分以内、誤検知が月 3 件で見直す | 正本なし（業務の仮定） | ― | 確かめの対象外 | `_ASSUMPTION_` などで示された業務の値で、`opr-monitoring-sample` と食い違わない |
+
+直した内容です。
+
+- **RPO の行（No.6）:** 「RPO（決まるまでは前日の閉店時点）」に書き換えました。
+- **閾値の見直し（No.10）:** 承認の経路を「変更要求として `PO` の承認を得て」に書き換えました。
+- **関連ドキュメントの表（No.11）:** 全行を wikilink に替え、備考を「作成済」にしました。
+
+計画では編集対象に `opd-access-control-sample.md` も挙がっていました。ただ、この段で確かめたのは監視の sample だけで、権限の sample は変えていません。そちらの正しさを見るのは、その sample のレビューの段に任せます。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）で opd-monitoring-sample の事実を opd-index-sample・opd-rulebook・frontmatter スキーマ・参照先の sample と突き合わせ、誤り 3 件を直した（RPO の暫定値の注記、閾値を変えるときの承認経路、関連ドキュメントの表の状態と wikilink 化）。opd-access-control-sample は変更していない。","handoff":["R4 指摘 1（不一致・修正済）: 監視対象と守る業務の表で、夜間バックアップの対応目標が RPO を「前日閉店」と言い切っていた。正本 docs/ja/specdojo/samples/opd-index-sample.md のバックアップ・リストア方針では RPO は `_UNDECIDED_` で、前日の閉店時点は決まるまでの扱いである。「RPO（決まるまでは前日の閉店時点）」に直した。","R4 指摘 2（不一致・修正済）: 閾値の見直しの節に「`opd-index` の変更管理に従って」とあったが、opd-index-sample の変更管理の表には閾値の変更の行がない。SLO・SLA・KPI の章には「目標値を変える場合は変更要求として `PO` の承認を得る」とあり、opr-monitoring-sample も先に `opd-index` を改訂するとしている。「変更要求として `PO` の承認を得て」に直した。","R4 指摘 3（不一致・修正済）: 関連ドキュメント導線の表で、opd-incident-management・opr-index・opr-monitoring が「予定」になっていた。docs/ja/specdojo/samples/ に 3 件とも作成済みで、opd-index-sample の導線も作成済としている。全行を wikilink（[[specdojo:opd-index-sample]]・[[specdojo:opd-incident-management-sample]]・[[specdojo:opr-index-sample]]・[[specdojo:opr-monitoring-sample]]）に替え、備考を「作成済」にした。","R4 確かめの表（reporter が result の実施内容に書く材料）: 一致したのは次の主張である。frontmatter の type と rulebook（opd-rulebook とスキーマ）、章の構成（rulebook の本文構成）、未決事項、自動の監視の範囲、KPI と SLO の名前、営業時間 10:00〜18:00、閾値の 5 分、通知先、9:30 の判定（「翌朝の開店時」の具体化）、P1・P2 と 15 分の期限、差異が解けないときは翌朝 `PO` が確かめる（定期運用方針）。正本のない業務の仮定として確かめの対象外にしたのは、外部監視を 1 分ごと、初動 10 分、誤検知が月 3 件で見直す、の 3 つである。","編集対象に挙がった opd-access-control-sample は、この段（監視の sample の R4）では確かめておらず、変更していない。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/opd-monitoring-sample.md","status":"passed","summary":"編集後の sample は Prettier code style に合う"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/ の sample だけで、plan・result・個票に当たる履歴ファイルを変えていない"}]}
+</specdojo_executor_evidence>
