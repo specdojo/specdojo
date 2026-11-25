@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-dmd-sample-140",
+  "run_id": "T-KATA-REVIEW-ALL-dmd-sample-140-20261125T020247Z-ac778ae4",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-25T02:03:32.867Z",
+    "completed_at": "2026-11-25T02:06:50.585Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md\n\nlint:md:changed: no changed files"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\nlint:fm:changed: no changed files"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 6976 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 6976 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)",
+      "reason": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-dmd-sample-140/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-dmd-sample-140/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R4（正しさ）で dmd-sample の主張 15 件を schema・rulebook・同じ系列の sample と突き合わせた。12 件が一致、1 件は正本のない業務の値なので対象外、2 件は dmd-index との食い違いで R5 の範囲のため直していない。この段で直す誤りはなく、変更ファイルはない。grade の F001（`vp-pm-plan-feasibility`）は kata の段のレビューで使わない観点のため扱っていない。",
+  "completion_status": "complete",
+  "handoff": [
+    "R4 確かめの表（reporter が result の実施内容に表として 1 回だけ書く）: 1 frontmatter の `type: data`・`rulebook: specdojo:dmd-rulebook` ／ 正本 docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml と dmd-rulebook の推奨 Frontmatter 項目 ／ 読み取り ／ 一致 ／ schema の enum に `data` があり `rulebook` は必須キー、rulebook が両方の値を指定。2 H1 ／ dmd-rulebook のファイル命名・ID規則 ／ 一致 ／ 書式は `# データ移行設計: <対象名>`。3 1〜10 章の見出しと概要の `credit-data` ／ dmd-rulebook の本文要件と dmd-index-sample の対象一覧 ／ 一致 ／ 10 見出しが順に並び、対応DMD は `dmd-credit-data`。4 `run_id` の例 `DMD-20261207-credit-01` と別 `run_id`（`NN` を 1 つ進める）での取り込み直し ／ dmd-index-sample の `run_id` 規約 ／ 一致 ／ 命名は `DMD-YYYYMMDD-<term>-NN`、`credit` は顧客台帳とつけ残高の略号。5 保存先 `migration/<run_id>/` と紙の記録表 ／ 同上の記録先 ／ 一致。6 証跡名 `<run_id>-check-count/sample/value` ／ dmd-index-sample の検証の共通方針 ／ 一致 ／ 証跡の名前は `<run_id>-check-<種別>`。7 方式はフル、洗い替え、開店後は空にしない ／ dmd-index-sample の共通方針 ／ 一致。8 除外条件（取り消し線あり・残高 0 円）と残高のある顧客を移すこと ／ dmd-index-sample の共通方針の除外 ／ 一致。9 成功条件「つけ残高の一致」「業務停止時間」と判定者の店主代表 ／ mip-index-sample の成功条件の表 ／ 一致。10 午前の臨時休業、1 週間の並行記録、取り込み直しは午前中に 1 回まで ／ mip-index-sample の移行方式・フェーズの表・T 当日の行 ／ 一致。11 手順 1・2 は準備フェーズ、残高は前日の閉店後に読み合わせる ／ mip-index-sample のフェーズの表 ／ 一致。12 照合の手順と証跡の取り方は `mtp-index` で定める ／ dmd-rulebook の検証方法の記述ガイド ／ 一致。13 サンプル照合の許容差「氏名の全角と半角の違いだけ（`dmd-index` の許容差）」 ／ dmd-index-sample の検証の共通方針 ／ 不一致（R5 に回す） ／ dmd-index は長音記号の違いも許容。14 合否はすべて店主代表が決める ／ dmd-index-sample の合否の判定 ／ 不一致（R5 に回す） ／ 件数照合は開発担当（DEV）が判定。15 件数・所要時間の見積 ／ 正本なし ／ 対象外 ／ 駄菓子屋の業務の値で、共通サンプル文脈と食い違わない。SpecDojo のコマンド・オプション・`src/` の挙動の記述はないため、コマンドは実行していない。",
+    "R5 への申し送り（No 13）: 検証方法の表のサンプル照合の行は「氏名の全角と半角の違いだけは差分に数えない（`dmd-index` の許容差）」だが、dmd-index-sample は長音記号の違いも許容している。案は「氏名の全角・半角と長音記号の違いは差分に数えない（`dmd-index` の許容差）」。",
+    "R5 への申し送り（No 14）: 検証方法の表の前の文は「合否は `mip-index` の成功条件の判定者（店主代表）が照合表を見て決める」だが、dmd-index-sample は件数照合を開発担当（DEV）、サンプル照合と重要値照合を店主代表（PO）が判定するとしている。案は判定者を種別ごとに書くか、`dmd-index` の判定の分担を参照する文にする。",
+    "F001（minor、`vp-pm-plan-feasibility`、line=59、移行手順表に手順 1・3・4・5 の担当がない）は対応していない。kata-guide の kata の観点の組で `vp-pm-plan-feasibility` は kata の段のレビューに使わない観点とされ、R4 の観点（`vp-arc-technical-constraints`、`vp-dev-implementation-readiness`、`vp-dev-testability`、`vp-qe-verifiability`）にも当たらない。dmd-rulebook も役割の割り当ては適用先のメンバー定義に従うとしている。次のアクションとして、担当を書かせるかは人が判断する（足す場合は R5 で cop-sample の手順表の担当と合わせる）。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-dmd-sample-140/T-KATA-REVIEW-ALL-dmd-sample-140-20261125T020247Z-ac778ae4/executor.log",
+      "bytes": 9161,
+      "truncated": false
+    }
+  ]
+}
