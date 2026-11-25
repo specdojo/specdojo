@@ -7,10 +7,9 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: in-progress
   priority: high
   registered_at: "2026-11-25T09:21:32Z"
-  block_reason: "parent validation failed: test-integration"
 ---
 
 # PJR-P8SX 並列実行で親の検証の枠が、他タスクの統合に止められて長く占有される
@@ -79,6 +78,7 @@ specdojo:
 - `tests/src/shared/git.test.ts`: `runGitWithTransientRetryAsync` が同期版と同じ間隔で index.lock の取り合いを再試行すること。
 - `tests/src/exec/task-repos.integration.test.ts`: `integrateTaskRepositories` の非同期化に合わせて呼び出しを `await` にした。
 - `tests/src/exec/parent-validation.test.ts`: `validationExitTiming` の単体テスト（1 回目）。
+- `tests/src/exec/parent-validation-timeout.integration.test.ts`: 時間内に終わった検証では、停止の記録が出ず `validation-exit-timing` の 1 行だけが出ることを確かめる形に改めた。計測を毎回出すようになり、以前の「記録が空」の期待と合わなくなったため。
 
 ### 5.3. 残る確認
 

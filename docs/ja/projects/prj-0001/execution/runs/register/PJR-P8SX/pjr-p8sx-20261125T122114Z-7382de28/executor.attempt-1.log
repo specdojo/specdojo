@@ -1,0 +1,22 @@
+計測は追加しましたが、このタスクで直す処理はまだ入れていません。そのため完了ではなく `incomplete` で終えます。個票の対応方針の順序が「計測で確かめてから直す」で、確かめるには実際の並列実行が要り、この sandbox ではできないためです。
+
+**既存の計測から分かったこと**（`T-KATA-REVIEW-ALL-utc-sample-150` の `parent-validation-metrics.jsonl` と commit の時刻を突き合わせた結果）:
+- `validate-schema` の約 190 秒（03:17:58Z〜03:21:07Z）は、他のタスクの統合の commit 3 回（03:18:24Z・03:19:16Z・03:20:11Z）と重なっています。
+- 同時に流した 4 本の lint の終わりが、10 ms 以内にまとめて記録されています。その直前（03:17:41Z）には別タスクの `prepare execution` の commit がありました。処理が止まっていて、明けた時点でまとめて終わりに気づいた形です。
+- 負荷は load average 約 1 で、検証そのものが遅くなる要因は見当たりません。
+- 見立て（他タスクの統合の同期処理のせいで、検証の終わりに気づくのが遅れる）は確からしいです。ただ、検証の実際の時間は記録が無く、遅れの量はまだ数値で分けられていません。
+
+**変更したこと**
+- `src/exec/parent-validation.ts`: 親の検証ごとに `validation-exit-timing` を計測ファイルへ出すようにしました。中身は全体の時間、検証が最後に出力した時刻までの時間、気づくまでの遅れ、処理が止まった最長の時間です。
+  - 止まった時間は 20 ms おきの interval で測ります。Node 標準の `monitorEventLoopDelay` では、止まりが明けた直後に終わりを処理すると記録が 0 になることを確かめたためです。
+- `src/exec/parent-validation-output.ts`: 検証が最後に出力した時刻を、出力ファイルの更新時刻から取る `lastWriteAt()` を足しました。処理が止まっていても、この時刻は正しく進みます。
+- テストを 2 つ足しました。計算部分の単体テストと、処理を 3 秒止めたときに遅れが記録されることを確かめる統合テストです。
+- 個票の対応結果と関連ドキュメントを記入しました。
+
+**検証**: 該当する単体テスト 59 件と統合テストのファイル 1 本（3 件）を直接流して通りました。prettier の整形確認、履歴リンクの検査、markdownlint も通っています。lint、型チェック、テスト全体は親の runner が実行します。
+
+**残っている作業**: 統合の commit（1 回約 50 秒、1 タスクにつき 3 回）を、hook の間も処理を止めない非同期の起動にすることです。この修正は個票と下の申し送りに案として書きました。
+
+<specdojo_executor_evidence>
+{"completion_status":"incomplete","final_message":"親の検証ごとに、検証を終えるまでの時間を `duration_ms`（全体）、`last_output_ms`（子の時間）、`detection_lag_ms`（runner が気づくまでの遅れ）、`event_loop_delay_max_ms`（処理が止まった最長の時間）に分けて記録する `validation-exit-timing` を追加し、テストと個票を更新した。既存の計測と commit の時刻の突き合わせで見立ては確からしいと分かったが、数値での確認には実際の並列実行が要るため、統合の commit を非同期にする修正は個票の対応方針どおり計測の後に回した。","handoff":["本変更を入れた runner で `exec run --auto --parallel 4` を流し、`parent-validation-metrics.jsonl` の `validation-exit-timing` で `detection_lag_ms` と `event_loop_delay_max_ms` が統合の commit の時間（1 回約 50 秒、1 タスクにつき 3 回）に近いことを確かめる。","遅れが確かめられたら、統合の commit（`commitWorktreeChanges` の `apply task changes` と、hook の後の `stabilizeCommitTargets` の `--amend`）を、hook が走る間 event loop を止めない非同期の起動にする。呼び出し元は `src/exec/run/schedule-task.ts`・`src/exec/run/register-worktree.ts`・`src/exec/worktree-command.ts` と結合テストで、`integrateTaskRepositories` の `beforeProjectMerge` も非同期にする必要がある。","非同期にすると、これまで同期だったことで暗黙に保たれていたタスク間の統合の直列が崩れる。`checkProject` と `mergeProject` の間に他のタスクの merge が入らないよう、process 内の統合の排他を明示する。root への merge の commit は排他の内側に残す。","直した後に `exec run --auto --parallel 4` を流し、検証の時間が直接流した場合（`validate:schema` は約 5〜23 秒）に近くなることを確かめてから close する。"],"validations":[{"command":"npx vitest run tests/src/exec/parent-validation.test.ts tests/src/exec/validation-metrics.test.ts","status":"passed","summary":"2 files, 59 tests passed"},{"command":"npx vitest run --config vitest.integration.config.ts tests/src/exec/parent-validation-output.integration.test.ts","status":"passed","summary":"3 tests passed, including the new detection-lag test"},{"command":"npx prettier --check docs/ja/projects/prj-0001/controls/project-register/pjr-p8sx-parallel-validation-slot-held.md src/exec/parent-validation.ts src/exec/parent-validation-output.ts tests/src/exec/parent-validation.test.ts tests/src/exec/parent-validation-output.integration.test.ts","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"passed","summary":"exit 0; ticket file valid"},{"command":"node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-p8sx-parallel-validation-slot-held.md","status":"passed","summary":"no markdownlint errors"},{"command":"exec run --auto --parallel 4 (measurement of detection lag)","status":"requires_human","summary":"Run a real parallel exec with agents and read validation-exit-timing in parent-validation-metrics.jsonl; consumes agent quota and cannot run in the sandbox"}]}
+</specdojo_executor_evidence>

@@ -634,6 +634,25 @@ function errorMessage(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
 }
 
+// 同じ process で並行するタスクの統合を 1 件ずつに保つ（PJR-P8SX）。統合の commit を非同期に
+// したため、同期だったことで暗黙に保たれていた直列が崩れ、`checkProject` から `mergeProject`
+// までの間や、統合の前後の HEAD の取得の間に、別タスクの merge が入りうる。
+let taskIntegrationQueue: Promise<void> = Promise.resolve();
+
+export async function withTaskIntegrationLock<T>(work: () => Promise<T>): Promise<T> {
+  const previous = taskIntegrationQueue;
+  let release: () => void = () => undefined;
+  taskIntegrationQueue = new Promise<void>((resolveRelease) => {
+    release = resolveRelease;
+  });
+  await previous;
+  try {
+    return await work();
+  } finally {
+    release();
+  }
+}
+
 /**
  * Integrate a task. Without product worktrees this runs `beforeProjectMerge` and `mergeProject`
  * only (the single-repository sequence, unchanged). With product worktrees:
@@ -648,24 +667,25 @@ function errorMessage(error: unknown): string {
  * `beforeProjectMerge` commits the state, because its merge commit contains the state itself;
  * a failure overwrites the record with `failed`. Failures are thrown as RepoIntegrationError.
  */
-export function integrateTaskRepositories(params: {
+export async function integrateTaskRepositories(params: {
   worktree: ExecWorktree;
   mergeMessage: string;
   // プロダクト側の merge commit の message。省略時は `mergeMessage`。プロジェクト側の記帳
   // （遷移・executor など）をプロダクトの履歴へ複製しないために分ける（PJR-30SW）。
   productMergeMessage?: string | ((product: ProductWorktree) => string);
   checkProject: () => RepoIntegrationBlocker[];
-  beforeProjectMerge: () => void;
+  // 統合の commit の hook が event loop を止めないよう、非同期の処理を渡せる（PJR-P8SX）。
+  beforeProjectMerge: () => void | Promise<void>;
   mergeProject: () => void;
   record?: RepoIntegrationRecorder;
   failureLogPath?: string;
   // 同じプロジェクトの並行タスクがプロダクトの統合先を同時に更新しないよう、プロジェクトの
   // merge と同じ scheduler lock で直列化する（schedule path）。
   lockPath?: string;
-}): void {
+}): Promise<void> {
   const products = params.worktree.repos ?? [];
   if (products.length === 0) {
-    params.beforeProjectMerge();
+    await params.beforeProjectMerge();
     params.mergeProject();
     return;
   }
@@ -785,7 +805,7 @@ export function integrateTaskRepositories(params: {
     merged_at: new Date().toISOString(),
   });
   try {
-    params.beforeProjectMerge();
+    await params.beforeProjectMerge();
     params.mergeProject();
   } catch (error) {
     throw fail(PROJECT_REPO_NAME, errorMessage(error));
