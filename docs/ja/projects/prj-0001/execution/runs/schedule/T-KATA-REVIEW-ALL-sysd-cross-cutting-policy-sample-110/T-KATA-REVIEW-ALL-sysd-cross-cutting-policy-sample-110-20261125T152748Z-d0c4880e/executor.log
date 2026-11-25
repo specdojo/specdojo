@@ -1,0 +1,17 @@
+R1（目的の過不足）のレビューを終え、対象の sample で要らない内容を 3 箇所直しました。変更したファイルは `docs/ja/specdojo/samples/sysd-cross-cutting-policy-sample.md` だけで、Prettier と markdownlint は通っています。足すべき内容の欠けは見つかりませんでした。
+
+**直した箇所**
+- **R1-1（概要の小節）**: 見出しを「利用・確認・承認責務」から「本書を使う判断」に改め、各役割が本書の規則を基準にする判断を書いた表にしました。PM の行は作業の追跡で、規則を使う判断ではないため削りました。Sample 記述標準は文書の確認・承認の役割分担を本文に書くことを禁じており、rulebook の本文要件は「誰がどの判断に使うか」を求めているためです。
+- **R1-2（例外の「報告と追跡」）**: Rule ID の改訂・廃止の管理と、PM の追従作業の登録・PO への提示を述べた 2 文を削りました。rulebook の全体方針は、改訂・廃止をドキュメントメタ情報標準に任せて言い直さないと定めています。
+- **R1-3（公開・昇格の判断条件）**: 役割分担と、承認・期限付き留保・差し戻し・`ready` 昇格・`draft` の維持の記述をやめ、実装の根拠にする前に確かめる 4 条件（規則の照合、K1〜K3 の証跡、論点と実 ID の結び付き、公開記録に秘密を含めないこと）に書き換えました。rulebook の本文要件と template に合わせています。
+
+**ほかの段に回すもの**
+- **F001**（5 章の見出しの略語）は R3 の観点 `vp-ux-language-consistency` に当たるため、この段では直していません。見出しを「関連ドキュメント導線」にする案を R3 に申し送ります。
+- **要判断**: 未決事項の表（6.1）の「判断者・担当」列は、template が「判断者と承認の進み具合は登録簿の個票で追う」として持っていない列です。ただ、中身が会計の業務判断なのか文書の承認なのか決めきれなかったため、R1 では残しました。R2 で列を削って template の 4 列に戻すか確かめてください。
+- 概要の対象外の領域を、template は表で示す形にしていますが、sample は文章で書いています。構成の差なので R2 で確かめてください。
+
+検証は lint・型検査・テストのどれも実行していません。それらは親 runner が実行するため、下の報告には載せていません。frontmatter の `status`（`ready`）と result ファイルには触れていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1（目的の過不足）のレビューで、docs/ja/specdojo/samples/sysd-cross-cutting-policy-sample.md の要らない内容を 3 箇所削った・書き換えた。概要の小節の文書確認・承認の役割分担、例外の「報告と追跡」の改訂・廃止の管理の文、公開・昇格の判断条件の承認と昇格の進み具合である。足すべき内容の欠けはなかった。F001 は R3 の観点のため直さず申し送った。","handoff":["R1-1: R1 / 1.1. 本書を使う判断（旧: 利用・確認・承認責務） / 本書を確認・承認する役割の割り当てと PM の作業追跡が入っていて、Sample 記述標準の記述ガイドが禁じる、文書を確かめる・承認する役割の割り当てに当たる / 見出しを「本書を使う判断」に改め、各役割が本書の規則を基準にする判断の表にした。表の前に 1 文を足し、PM の行は削った / `vp-po-purpose-alignment`、`vp-qe-kata-conformance`（Sample 記述標準の記述ガイド、rulebook 本文要件の概要「誰がどの判断に使うか」） / -","R1-2: R1 / 4.2. 報告と追跡 / 「ARC は Rule ID を維持して改訂・廃止を管理し…PM が…人間の PO へ提示する」が、rulebook の全体方針でドキュメントメタ情報標準に任せる改訂・廃止の運用を言い直している / 2 文を削り、障害窓口の文だけを残した / `vp-qe-kata-conformance`（rulebook の全体方針「共通の運用」） / -","R1-3: R1 / 6.2. 公開・昇格の判断条件 / 役割分担と、承認・期限付き留保・差し戻し・`ready` 昇格・`draft` の維持という進み具合を書いていて、Sample 記述標準と rulebook の全体方針に反する。rulebook の本文要件は「実装の根拠にする前に済ませる適合確認」を求めている / 実装の根拠にする前に確かめる 4 条件（規則の照合、K1〜K3 の証跡、論点と実 ID の結び付き、公開記録に秘密を含めないこと）に書き換え、役割と承認の記述を削った / `vp-po-purpose-alignment`、`vp-qe-kata-conformance`（template の 6.2 の骨組み） / -","R1-4: R1 / 5. 関連ドキュメント導線（SYSD/SYSD-CF/NFR/OPD/OPR/DEC） / grade の F001。見出しの略語が参照表の文書名と対応していない / - （R3 の観点 `vp-ux-language-consistency` に当たるため、この段では直さない。R3 で template どおり見出しを「関連ドキュメント導線」にする案） / F001、`vp-ux-language-consistency`、rulebook の記述ガイドの関連導線 / -","R1-5: R1 / 6.1. 判断待ちと後続への影響 / 表の「判断者・担当」列は template にない。template は「判断者と承認の進み具合は登録簿の個票で追う」としている / - （列の中身が会計・運用の業務判断なのか文書承認なのか決めきれなかったため残した。選ばなかった案は、列を削って template の 4 列にすること。R2 で確かめる） / `vp-qe-kata-conformance`、Sample 記述標準の記述ガイド / 要判断","R1-6: R1 / 1. 概要（適用範囲・優先順位） / template は対象外の領域を表（対象外の領域・構成上の理由・代替手段）で示すが、sample は文章で書いている。対象外の内容は欠けていない / - （構成の差のため R2 に回す） / `vp-arc-document-structure`（R2） / -"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/sysd-cross-cutting-policy-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/sysd-cross-cutting-policy-sample.md","status":"passed","summary":"0 issues in 1 file"}]}
+</specdojo_executor_evidence>
