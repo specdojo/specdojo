@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-REVIEW-ALL-imp-interface-sample-120",
   "run_id": "T-KATA-REVIEW-ALL-imp-interface-sample-120-20261125T211634Z-891986eb",
-  "updated_at": "2026-11-25T21:23:18.708Z",
+  "updated_at": "2026-11-25T21:24:08.813Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-imp-interface-sample-120/T-KATA-REVIEW-ALL-imp-interface-sample-120-20261125T211634Z-891986eb/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-25T21:23:18.708Z",
-      "completed_at": null,
+      "completed_at": "2026-11-25T21:24:08.813Z",
       "artifact_ref": null
     }
   },
