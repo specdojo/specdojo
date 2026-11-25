@@ -95,6 +95,7 @@ import { registerExecTrialCommands } from "./trial.js";
 import { registerExecSmokeCommand } from "./smoke.js";
 import { exitQuietlyOnClosedStdout } from "../shared/stdout-epipe.js";
 import { registerExecQueueCommands, writeActiveQueueSummary } from "./queue-command.js";
+import { registerExecStopCommand, writeStopRequestSummary } from "./stop-command.js";
 import type { ExecEventType, ExecEventV1, StateSnapshot } from "./types.js";
 import { registerExecWorktreeCommands } from "./worktree-command.js";
 import { validateRunRecordLayout } from "./validate-records.js";
@@ -125,6 +126,7 @@ export function registerExecCommands(program: Command): void {
   registerExecHandoffCommands(exec);
   registerExecSmokeCommand(exec);
   registerExecQueueCommands(exec);
+  registerExecStopCommand(exec);
   const lockedActions: Record<LockedEventAction["type"], LockedEventAction> = {
     claim: {
       type: "claim",
@@ -756,6 +758,7 @@ export function registerExecCommands(program: Command): void {
         const byMsg = filterBy ? ` for ${filterBy}` : "";
         process.stdout.write(`No ${filterState} tasks${byMsg}.\n`);
         writeActiveQueueSummary(executionPath);
+        writeStopRequestSummary(executionPath);
         writeNoProductChangeWarnings(opts.project, snapshot);
         exitWithCode(true);
         return;
@@ -791,6 +794,7 @@ export function registerExecCommands(program: Command): void {
         );
       }
       writeActiveQueueSummary(executionPath);
+      writeStopRequestSummary(executionPath);
       writeNoProductChangeWarnings(opts.project, snapshot);
       exitWithCode(true);
     } catch (error) {

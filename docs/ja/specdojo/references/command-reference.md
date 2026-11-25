@@ -673,27 +673,28 @@ kata authoring は register 専用です。Schedule の task は対象成果物�
 
 `exec` は schedule に基づいたタスクの実行、状態追跡、plan/result 生成、worktree 隔離実行を扱います。
 
-| コマンド        | 用途                                                                                                                                             | 例                                                                                                      |
-| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
-| `where exec`    | execution 関連パスを表示する                                                                                                                     | `specdojo where exec --project prj-0001`                                                                |
-| `exec validate` | schedule・event・実行記録の配置と lock の Git 除外を検証する（`--records-only` は配置のみ、`--schedule-only` は schedule・event のみ。併用不可） | `specdojo exec validate --project prj-0001`                                                             |
-| `exec refresh`  | state、Ready、CPM、gantt-chart を再計算する                                                                                                      | `specdojo exec refresh --project prj-0001`                                                              |
-| `exec claim`    | タスクを `doing` にする                                                                                                                          | `specdojo exec claim --project prj-0001 --task <task-id> --by agent-1`                                  |
-| `exec complete` | タスクを `done` にする（actor の `doing` が1件なら `--task` 省略可）                                                                             | `specdojo exec complete --project prj-0001 --by agent-1`                                                |
-| `exec reopen`   | 誤って完了したタスクを `done` から `todo` に戻す                                                                                                 | `specdojo exec reopen --project prj-0001 --task <task-id> --by indie --msg "completion criteria unmet"` |
-| `exec block`    | タスクを `blocked` にする                                                                                                                        | `specdojo exec block --project prj-0001 --task <task-id> --by agent-1 --msg "waiting"`                  |
-| `exec unblock`  | `blocked` を `doing` に戻す                                                                                                                      | `specdojo exec unblock --project prj-0001 --task <task-id> --by agent-1 --msg "resume"`                 |
-| `exec release`  | `doing` / `blocked` を `todo` に戻す                                                                                                             | `specdojo exec release --project prj-0001 --task <task-id> --by agent-1`                                |
-| `exec cancel`   | `todo` を `cancelled` にする                                                                                                                     | `specdojo exec cancel --project prj-0001 --task <task-id> --by agent-1 --msg "scope removed"`           |
-| `exec run`      | plan を生成してエージェントを実行する                                                                                                            | `specdojo exec run --project prj-0001 --task <task-id>`                                                 |
-| `exec handoff`  | block された保護設定の提案差分を確認し、統合先へ適用して commit する                                                                             | `specdojo exec handoff apply --project prj-0001 --register PJR-0012`                                    |
-| `exec resume`   | `doing`、reporter・統合段で停止した task、または due な利用制限延期 task を既存 worktree で再開する                                              | `specdojo exec resume --project prj-0001 --due`                                                         |
-| `exec cycle`    | 延期 task 再開・doc-index 再構築・古い track の再生成・状態再計算・`--auto` loop を単一ロック内で順次実行する                                    | `specdojo exec cycle --project prj-0001 --loop`                                                         |
-| `exec status`   | 実行状態を表示する                                                                                                                               | `specdojo exec status --project prj-0001 --state blocked`                                               |
-| `exec queue`    | grade・`exec run`・統合の後の処理を混ぜた順番を予約し、順に流す（「実行の予約（exec queue）」を参照）                                            | `specdojo exec queue add nightly --project prj-0001 --step "exec run --register PJR-XXXX"`              |
-| `exec scaffold` | 共通レビュー観点を継承するプロジェクト差分を生成する                                                                                             | `specdojo exec scaffold --project prj-0001`                                                             |
-| `exec plan`     | plan だけを生成する                                                                                                                              | `specdojo exec plan --project prj-0001 --task <task-id>`                                                |
-| `exec archive`  | 完了済み plan を同じ run に保持する                                                                                                              | `specdojo exec archive --project prj-0001 --task <task-id>`                                             |
+| コマンド        | 用途                                                                                                                                                 | 例                                                                                                      |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `where exec`    | execution 関連パスを表示する                                                                                                                         | `specdojo where exec --project prj-0001`                                                                |
+| `exec validate` | schedule・event・実行記録の配置と lock の Git 除外を検証する（`--records-only` は配置のみ、`--schedule-only` は schedule・event のみ。併用不可）     | `specdojo exec validate --project prj-0001`                                                             |
+| `exec refresh`  | state、Ready、CPM、gantt-chart を再計算する                                                                                                          | `specdojo exec refresh --project prj-0001`                                                              |
+| `exec claim`    | タスクを `doing` にする                                                                                                                              | `specdojo exec claim --project prj-0001 --task <task-id> --by agent-1`                                  |
+| `exec complete` | タスクを `done` にする（actor の `doing` が1件なら `--task` 省略可）                                                                                 | `specdojo exec complete --project prj-0001 --by agent-1`                                                |
+| `exec reopen`   | 誤って完了したタスクを `done` から `todo` に戻す                                                                                                     | `specdojo exec reopen --project prj-0001 --task <task-id> --by indie --msg "completion criteria unmet"` |
+| `exec block`    | タスクを `blocked` にする                                                                                                                            | `specdojo exec block --project prj-0001 --task <task-id> --by agent-1 --msg "waiting"`                  |
+| `exec unblock`  | `blocked` を `doing` に戻す                                                                                                                          | `specdojo exec unblock --project prj-0001 --task <task-id> --by agent-1 --msg "resume"`                 |
+| `exec release`  | `doing` / `blocked` を `todo` に戻す                                                                                                                 | `specdojo exec release --project prj-0001 --task <task-id> --by agent-1`                                |
+| `exec cancel`   | `todo` を `cancelled` にする                                                                                                                         | `specdojo exec cancel --project prj-0001 --task <task-id> --by agent-1 --msg "scope removed"`           |
+| `exec run`      | plan を生成してエージェントを実行する                                                                                                                | `specdojo exec run --project prj-0001 --task <task-id>`                                                 |
+| `exec handoff`  | block された保護設定の提案差分を確認し、統合先へ適用して commit する                                                                                 | `specdojo exec handoff apply --project prj-0001 --register PJR-0012`                                    |
+| `exec resume`   | `doing`、reporter・統合段で停止した task、または due な利用制限延期 task を既存 worktree で再開する                                                  | `specdojo exec resume --project prj-0001 --due`                                                         |
+| `exec cycle`    | 延期 task 再開・doc-index 再構築・古い track の再生成・状態再計算・`--auto` loop を単一ロック内で順次実行する                                        | `specdojo exec cycle --project prj-0001 --loop`                                                         |
+| `exec status`   | 実行状態を表示する                                                                                                                                   | `specdojo exec status --project prj-0001 --state blocked`                                               |
+| `exec queue`    | grade・`exec run`・統合の後の処理を混ぜた順番を予約し、順に流す（「実行の予約（exec queue）」を参照）                                                | `specdojo exec queue add nightly --project prj-0001 --step "exec run --register PJR-XXXX"`              |
+| `exec stop`     | 走っている `exec run --auto`・`exec cycle`・予約の列を、走っているタスクを終えてから止める（「走っている run を区切りで止める（exec stop）」を参照） | `specdojo exec stop --project prj-0001 --msg "exec-defaults を変える"`                                  |
+| `exec scaffold` | 共通レビュー観点を継承するプロジェクト差分を生成する                                                                                                 | `specdojo exec scaffold --project prj-0001`                                                             |
+| `exec plan`     | plan だけを生成する                                                                                                                                  | `specdojo exec plan --project prj-0001 --task <task-id>`                                                |
+| `exec archive`  | 完了済み plan を同じ run に保持する                                                                                                                  | `specdojo exec archive --project prj-0001 --task <task-id>`                                             |
 
 `exec claim`・`release`・`block`・`unblock`・`complete`・`reopen`・`cancel` などの記帳コマンドの `--by` は、名簿の人と agent に加え、`register` と同じ予約 actor（`SpecDojo`・`specdojo-orchestrator`・`night-orchestrator`）を受け付けます。予約 actor で記帳した event も `exec refresh`・`exec status` はそのまま読みます。名簿にも予約 actor にもない名前は、記帳の前にエラーで止まります。`reopen` と `--take-over` は人の actor に限ります。
 
@@ -970,6 +971,36 @@ specdojo exec queue status nightly --project prj-0001
 ```
 
 runner は自分が起動した子プロセスの終了を待ってから次の段を始めます。プロセス名の検索で待つことはしません。各段の状態（`pending`・`running`・`succeeded`・`failed`）・開始と終了の時刻・終了コードは段ごとに予約ファイルへ書きます。予約の状態は `succeeded`・`completed_with_failures`（`--step-continue` の段だけが失敗）・`stopped`（`stopped_step` と `reason` を記録）・`cancelled` のどれかで終わり、`exec queue run` は `succeeded` のときだけ終了コード 0 を返します。同じ予約は `exec/.locks/queue-<queue-id>.lock` で 1 つの runner だけが流します。runner が落ちて `running` のまま残った予約は、`status` に `running (runner not alive)` と出て、`exec queue run` で途中の段からやり直します。終わっていない予約は `exec status` の末尾の `queues:` にも 1 行ずつ出ます。`exec queue status` と `exec status` の出力を `head` などで途中で切っても、EPIPE の例外を出さずに終了コード 0 で終わります。
+
+`exec queue cancel` は流れている段を止めません。走っている段を区切りまで流してから止め、後で同じ予約を続けるときは `exec stop --queue <queue-id>` を使います（「走っている run を区切りで止める（exec stop）」を参照）。
+
+### 7.4. 走っている run を区切りで止める（exec stop）
+
+`exec stop` は、走っている `exec run --auto`（`--loop` を含む）・`exec cycle` に、新しいタスクを claim せず、走っているタスクを統合（reporter と記帳を含む）まで終えてから抜けるよう指示します。設定の変更・feature ブランチの統合・dist の作り直しを、タスクを途中で切らずに区切りで行うために使います。SIGTERM で止めた場合と違い、`exec resume` での手当ては要りません。
+
+| コマンド                                                     | 内容                                                                                     |
+| ------------------------------------------------------------ | ---------------------------------------------------------------------------------------- |
+| `exec stop --msg <text>`                                     | project のすべての auto run に止める指示を出す                                           |
+| `exec stop --track <track> --msg <text>`                     | `--track <track>` で起動した auto run だけに指示を出す                                   |
+| `exec stop --queue <queue-id> --msg <text>`                  | 予約の列と、その列の段として走っている auto run に指示を出す                             |
+| `exec stop --cancel [--track <track> \| --queue <queue-id>]` | 指示を取り消す。まだ抜けていない run は、次のタスクが終わった区切りから claim を再開する |
+
+- 指示は `exec/.locks/stop-requests/` に置かれ、run は各タスクが終わるたび（と、タスクを準備する前）に読みます。指示を見た run は `[run] stop requested ...` を出し、走っているタスクが終わるのを待ちます。
+- 止まった run は、止めた記録を `<execution_path>/exec/stops/<日時>-<対象>.json`（対象・理由・指示と停止の時刻）に残し、`[run] stopped by exec stop ...` を出して終了コード 76 で終わります。走っている間にタスクが失敗した場合は、失敗を隠さないよう終了コード 1 を返します。`exec cycle` は要約に `auto=stopped` を出し、同じく 76 で終わります。記録は run の終わりの記帳の commit に含めます。
+- 予約の列への指示は、走っている段が終わった区切りで列を `stopped` にします（`reason` は `stopped by exec stop: <text>`）。終了コード 76 で抜けた段は失敗とせず `pending` に戻すため、`--step-continue` の段でも飛ばされません。同じ `exec queue run <queue-id>` で、止めた段から再開します。project や track への指示で段の auto run が止まった場合も、列は同じくその段で止まります。
+- `exec status` の末尾の `stop requests:` と、`exec queue status` の `stop=requested (<text>)` に、開いている指示が出ます。run が指示を見た後は `draining: no new tasks; waiting for <n> running task(s) (<task-id>...)` と、終わりを待っているタスクを示します。
+- 走っている auto run（予約の列なら列の runner）がない対象への指示は `Nothing to stop: ...` で、同じ対象への二重の指示は `A stop request ... already exists` で拒否し、どちらも終了コード 1 で終わります。指示のない対象の `--cancel` も `No stop request for ...` で終了コード 1 です。
+- `exec-defaults` は run の起動時に 1 度だけ読まれます。設定を変えたら、止まった run の後に新しく起動し直してください。
+
+```bash
+specdojo exec stop --project prj-0001 --msg "exec-defaults の providers を変える"
+specdojo exec status --project prj-0001
+# 抜ける前なら取り消せる
+specdojo exec stop --project prj-0001 --cancel
+# 予約の列を区切りで止め、作業の後に同じ列を続ける
+specdojo exec stop --project prj-0001 --queue nightly --msg "feature を統合する"
+specdojo exec queue run nightly --project prj-0001
+```
 
 ## 8. grade
 
