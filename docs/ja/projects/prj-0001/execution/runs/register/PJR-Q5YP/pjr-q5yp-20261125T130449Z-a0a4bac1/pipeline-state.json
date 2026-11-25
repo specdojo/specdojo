@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-Q5YP",
   "run_id": "pjr-q5yp-20261125T130449Z-a0a4bac1",
-  "updated_at": "2026-11-25T13:11:11.756Z",
+  "updated_at": "2026-11-25T13:11:23.599Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-Q5YP/pjr-q5yp-20261125T130449Z-a0a4bac1/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-executor",
       "attempts": 1,
       "started_at": "2026-11-25T13:11:11.756Z",
-      "completed_at": null,
+      "completed_at": "2026-11-25T13:11:23.599Z",
       "artifact_ref": null
     }
   },
