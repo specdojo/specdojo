@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-dzmv-restored-content-confirmation-status
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-23T13:11:20Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-25T22:37:30Z"
+  conclusion: 復元した内容の確認状態は、本文の確認表に記録し、判断が要るものだけ decision にする案（D）を推奨とした。
   derived_from:
     - PJR-Y5RD
   commit_type: docs
