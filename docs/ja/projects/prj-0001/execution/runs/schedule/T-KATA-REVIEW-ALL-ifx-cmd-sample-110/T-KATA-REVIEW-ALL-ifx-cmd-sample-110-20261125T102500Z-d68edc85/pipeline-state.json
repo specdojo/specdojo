@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-REVIEW-ALL-ifx-cmd-sample-110",
   "run_id": "T-KATA-REVIEW-ALL-ifx-cmd-sample-110-20261125T102500Z-d68edc85",
-  "updated_at": "2026-11-25T10:37:25.968Z",
+  "updated_at": "2026-11-25T10:38:06.110Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-ifx-cmd-sample-110/T-KATA-REVIEW-ALL-ifx-cmd-sample-110-20261125T102500Z-d68edc85/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-25T10:37:25.968Z",
-      "completed_at": null,
+      "completed_at": "2026-11-25T10:38:06.110Z",
       "artifact_ref": null
     }
   },
