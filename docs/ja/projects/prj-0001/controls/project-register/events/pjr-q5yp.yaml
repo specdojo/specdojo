@@ -73,3 +73,29 @@
       from: _TODO_
       to: "2026-11-30"
   previous_event_id: reg_cec9a475d1854812a75ae753fab8d241
+- v: 1
+  id: reg_f2e00daefae1479689af685ca227735e
+  ts: "2026-11-25T13:04:51Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_9c59d6a5704e40158a2f51f7a8b91dfc
+- v: 1
+  id: reg_4cd188baab094d8db875b9fe4a092c8c
+  ts: "2026-11-25T13:11:22Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_f2e00daefae1479689af685ca227735e
