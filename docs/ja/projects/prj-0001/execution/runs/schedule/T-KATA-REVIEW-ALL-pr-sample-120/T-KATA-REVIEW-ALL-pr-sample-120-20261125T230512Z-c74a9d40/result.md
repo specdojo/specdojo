@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-REVIEW-ALL-pr-sample-120
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-REVIEW-ALL-pr-sample-120/T-KATA-REVIEW-ALL-pr-sample-120-20261125T230512Z-c74a9d40/plan.md
   started_at: "2026-11-25T23:05:23.031Z"
+  completed_at: "2026-11-25T23:10:14.147Z"
   agent: opus-executor
   execution: agent
   approach: sample-maintenance
@@ -20,16 +21,28 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- R2（構成）として pr-sample の章の順・粒度・表の列・表と本文の配置を、pr-rulebook の本文要件と記述ガイドに照らして確認した。5 章が必須の順にそろい、4 つの表の列名も記述ガイドと一致しており、章の移動・分割・統合の差分はなかった。そのため sample は変更していない。
+- template は not-needed のため照合対象はない。
+- grade finding F001（報告者・報告先の欠落、`vp-ba-stakeholder-clarity`）は、kata-guide が kata の段のレビューで使わない観点であり、R2 の観点にも当たらない。このため R2 では直さず、R5 へ申し送った。
+
+| No | 段 | 箇所 | 指摘 | 直した案 | 根拠 | 印 |
+| --- | --- | --- | --- | --- | --- | --- |
+| R2-1 | R2 | 全章（1. 報告期間〜5. 次期予定） | 章の順・粒度・表の列・表の前の 1 文を pr-rulebook の本文要件と記述ガイドに照らした。5 章が必須の順にそろい、4 つの表の列名も記述ガイドと一致するため、構成上の指摘はない。 | - | `vp-arc-document-structure`、`vp-qe-omissions-consistency`（pr-rulebook の本文要件・記述ガイド、sample-authoring-standard の構成の原則・記述ガイド。template は not-needed） | - |
+| R2-2 | R2 | H1 直下の導入文 | grade finding F001（報告者と報告先がない）は観点 `vp-ba-stakeholder-clarity` の指摘。kata-guide の「kata の観点の組」はこの観点を kata の段のレビューで使わない観点としており、R2 の観点にも当たらない。pr-rulebook の本文要件・記述ガイドにも報告者・報告先を書く求めはないため、R2 では直さない。 | 申し送り: rulebook の求めとして要るかを R5（`vp-qe-kata-conformance`）で確かめる。要る場合は rulebook 側の本文要件または記述ガイドに報告者・報告先の記述を加える案を検討する。 | kata-guide の「kata の観点の組」、pr-rulebook の本文要件・記述ガイド | - |
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- なし
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- R5（`vp-qe-kata-conformance`）で、報告者・報告先の記述が rulebook の求めとして要るかを確かめる。要る場合は pr-rulebook の本文要件または記述ガイドに加える案を検討する。
+- grade result サイドカーは再評価時に更新されるため、本タスクでは直接編集していない。
+- R2-1: R2 / 全章（1. 報告期間〜5. 次期予定） / 章の順・粒度・表の列・表の前の 1 文を pr-rulebook の本文要件と記述ガイドに照らした。5 章が必須の順にそろい、4 つの表の列名も記述ガイドと一致するため、構成上の指摘はない / - / vp-arc-document-structure、vp-qe-omissions-consistency（pr-rulebook の本文要件・記述ガイド、sample-authoring-standard の構成の原則・記述ガイド。template は not-needed） / -
+- R2-2: R2 / H1 直下の導入文 / grade finding F001（報告者と報告先がない）は観点 `vp-ba-stakeholder-clarity` の指摘。kata-guide の「kata の観点の組」はこの観点を kata の段のレビューで使わない観点としており、R2 の観点（`vp-arc-document-structure`・`vp-qe-omissions-consistency`）にも当たらない。pr-rulebook の本文要件・記述ガイドにも報告者・報告先を書く求めはないため、R2 では直さない / - / 申し送り: rulebook の求めとして要るかを R5（vp-qe-kata-conformance）で確かめる。要る場合は rulebook 側の 4. 本文要件または 5. 記述ガイドに報告者・報告先の記述を加える案を検討する。grade result サイドカーは再評価時に更新されるため直接編集しない / -
+- 適用外の検証: `npx markdownlint-cli2 docs/ja/specdojo/samples/pr-sample.md`（変更した `*.md` ファイルがなく、markdownlint の適用条件を満たさない。Markdown の lint は親 runner の lint-md / lint-md-changed で実行される）
+- 適用外の検証: `npx prettier --check docs/ja/specdojo/samples/pr-sample.md`（変更したファイルがなく、Prettier の適用条件を満たさない）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+根拠は pr-rulebook の本文要件と記述ガイド、sample-authoring-standard の構成の原則・記述ガイド、kata-guide の観点の組。構成は rulebook に一致しているため維持した。F001 は R2 の観点外として見送り、R5 に申し送った。
