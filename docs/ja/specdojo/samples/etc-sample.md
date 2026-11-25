@@ -77,6 +77,7 @@ perspective_key: contract
 | `et-receipt-print-contract-020` | 入力: 明細30件の会計確定。状態: 用紙あり。環境: 検証機             | 会計を確定し、印刷の終了を待つ | 最終明細まで印字され、印字状態が `printed`                  | 印字状態、紙面の最終行（目視記録）     | 検証機に実接続 | TR-01       | P1     | manual    | 検証記録の写真、取引番号                                         |
 | `et-receipt-print-contract-030` | 入力: 明細2件。環境: スタブが終了コード `0` で結果 JSON を返さない | 会計を確定し、印刷の終了を待つ | 印字状態が `unknown`、印刷失敗の警告を表示、販売記録は1件   | 印字状態、販売記録件数、警告の表示     | スタブ         | TR-02       | P0     | automated | `tests/et/receipt-print/contract.test.ts`、CI run 番号、取引番号 |
 | `et-receipt-print-contract-040` | 状態: テスト用ユーザーにデバイス権限なし。環境: 検証機             | 会計を確定し、印刷の終了を待つ | 終了コード `5`、印字状態が `failed`、開発担当への連絡を案内 | 印字状態、案内文の種別、印刷要求回数 1 | 検証機に実接続 | TR-02       | P1     | automated | `tests/et/receipt-print/contract.test.ts`、CI run 番号、取引番号 |
+| `et-receipt-print-contract-050` | 入力: 印字形式に適合しないレシートファイル。環境: 検証機           | 会計を確定し、印刷の終了を待つ | 終了コード `2`、印字状態が `failed`、開発担当への連絡を案内 | 印字状態、案内文の種別、印刷要求回数 0 | 検証機に実接続 | TR-02       | P1     | automated | `tests/et/receipt-print/contract.test.ts`、CI run 番号、取引番号 |
 
 ### 6.2. 観点: 印刷失敗時の会計維持
 
