@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-69ZX",
   "run_id": "pjr-69zx-20261125T002208Z-cc2d3232",
-  "updated_at": "2026-11-25T00:26:00.081Z",
+  "updated_at": "2026-11-25T00:26:11.175Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-69ZX/pjr-69zx-20261125T002208Z-cc2d3232/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-25T00:26:00.081Z",
-      "completed_at": null,
+      "completed_at": "2026-11-25T00:26:11.175Z",
       "artifact_ref": null
     }
   },
