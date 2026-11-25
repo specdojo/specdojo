@@ -1,0 +1,19 @@
+R2（構成）の段を終えました。編集したのは `docs/ja/specdojo/samples/sysd-index-sample.md` だけで、章の追加や削除はせず、表の行と文の置き場所を 3 か所移しました。
+
+**直した点**
+
+1. **SSOT 一覧の「外部コマンド」の行**: 「設定・実行構成」の後にあり、外部連携の行と離れていました。template の行の順（API・外部連携・非同期連携 → データ → モジュール → 設定 → Job → 監視 → CI）に合わせ、「非同期連携」の直後へ移しました。
+2. **変更の入口の全変更共通の検証の文**: 全変更で `npm run lint`、`npm run typecheck`、`npm run build` を実行するという文が表の後にありました。合格基準と同じく検証の前提なので、表の前の段落へ移しました。前提から結論の順に読めるようになります。
+3. **関連ドキュメント導線の行の順**: 既存文書を先に、未作成文書を後に並べていました。rulebook の「上位・同階層・下流」と template の順に合わせ、プロジェクト定義 → 構成・システム設計 → 操作仕様 → 業務・データ契約 → 外部コマンド契約 → 非機能・運用 → テスト・判断記録 に並べ替えました。
+
+**変えなかった点**
+
+- **SSOT 一覧の行の細かさ**: template の 7 種別に対し sample は 11 行です。API を 3 行に分け、レシート形式と外部コマンドを足しています。rulebook の必須の種別はすべて含まれているため、この細かさのままにしました。
+- **R1-5 の列の削除**: 未決事項の表は 3 列になっており、template の 6.1 と一致していました。追加の直しは要りません。
+- **変更の入口の行の順**: 主な行の順は template と合っているため直しませんでした。ただし印刷の行が SSOT 一覧の並びとずれており、揃えるかは決めていただきたい点として handoff に残しました。
+
+prettier と markdownlint はどちらも通りました。rulebook と template は変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R2（構成）として sysd-index-sample の SSOT 一覧・変更の入口・関連ドキュメント導線の行と文の配置を、rulebook の本文構成と template に合わせて並べ替えた。sample 以外は変更していない。","handoff":["No: R2-1 / 段: R2 / 箇所: 2. SSOT 一覧（表形式）の「外部コマンド」の行 / 指摘: 外部連携に当たる行が「設定・実行構成」の後にあり、template の行の順（API・外部連携・非同期連携 → データ → モジュール → 設定 → Job → 監視 → CI）から外れている / 直した案: 「非同期連携」の行の直後へ移した / 根拠: sysd-index-template の SSOT 一覧の行の順、sysd-index-rulebook の本文要件（見出し順・表の列は template を正本とする）、`vp-arc-document-structure` / 印: -","No: R2-2 / 段: R2 / 箇所: 4. 変更の入口（典型ケース）の表の後の文 / 指摘: 全変更で `npm run lint`・`npm run typecheck`・`npm run build` を実行するという検証の前提が表の後にあり、前提から結論の順に読めない / 直した案: 表の前の段落にある合格基準の文の後へ移し、表の後の文を削った / 根拠: template の変更の入口の指示（検証の実行場所と手順を表の前に書く）、`vp-arc-document-structure` / 印: -","No: R2-3 / 段: R2 / 箇所: 5. 関連ドキュメント導線の行の順 / 指摘: 既存文書を先に、未作成文書を後に並べており、rulebook の「上位・同階層・下流」と template の順（構成図・設計分冊・業務フロー・外部連携・非機能・運用・テスト・判断記録）に沿っていない / 直した案: プロジェクト定義 → 構成・システム設計 → 操作仕様 → 業務・データ契約 → 外部コマンド契約 → 非機能・運用 → テスト・判断記録 に並べ替えた。実在と未作成の区別は状態・備考の列とリンクの記法で残る / 根拠: sysd-index-rulebook の本文要件「関連仕様」、sysd-index-template の関連ドキュメント導線の指示、`vp-arc-document-structure` / 印: 要判断","No: R2-4 / 段: R2 / 箇所: 4. 変更の入口（典型ケース）の行の順 / 指摘: 印刷連携・レシート形式の行が CLI・設定の行と Job の行の間にあり、R2-1 で直した SSOT 一覧の行の順（外部コマンドは外部連携の並び）と揃っていない。主な行の順（API・DB・設定・Job・監視・移動）は template に合っているため直していない / 直した案: 揃える場合は、印刷の行を本部 API 契約の行の直後へ移す。行の内容は変えない / 根拠: sysd-index-template の変更の入口の指示、`vp-qe-omissions-consistency` / 印: 要判断","No: R2-5 / 段: R2 / 箇所: 6.1. 未決事項と後続作業への影響の表（R1-5 で列を削除） / 指摘: R1-5 で「担当ロール」の列を削った後の表を R2 の観点で確かめた。3 列（項目・対象 / 現状と影響範囲 / 解消条件・次アクション）は template の 6.1 と一致しており、追加の直しは要らない / 直した案: 変更なし。R1-5 の要判断は R2 の観点では列の削除を採ってよい / 根拠: sysd-index-template の 6.1 の表の列 / 印: -"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/sysd-index-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint docs/ja/specdojo/samples/sysd-index-sample.md","status":"passed","summary":"no errors"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"history file not changed","reason":"plan・result・個票を変更しておらず、変更は sample の Markdown だけのため"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"no yaml changed","reason":"変更したファイルは Markdown の sample だけで、yaml・yml の変更がないため"}]}
+</specdojo_executor_evidence>
