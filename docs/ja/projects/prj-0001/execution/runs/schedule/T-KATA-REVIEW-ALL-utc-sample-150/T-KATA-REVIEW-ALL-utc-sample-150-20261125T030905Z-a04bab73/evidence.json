@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-utc-sample-150",
+  "run_id": "T-KATA-REVIEW-ALL-utc-sample-150-20261125T030905Z-a04bab73",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-25T03:09:50.841Z",
+    "completed_at": "2026-11-25T03:13:04.707Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/utc-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/utc-sample.md | 38 +++++++++++++++++-----------------\n 1 file changed, 19 insertions(+), 19 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/samples/utc-sample.md",
+      "status": "passed",
+      "summary": "整形した（表の列幅を詰め直した）"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/samples/utc-sample.md",
+      "status": "passed",
+      "summary": "エラーなし"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:utc-sample\n  type: test\n  status: draft\n  rulebook: specdojo:utc-rulebook\n  based_on:\n    - specdojo:tsp-index-sample\n    - specdojo:utc-index-sample\n    - specdojo:bac-sample\n---\n\n# 単体テストカタログ: 会計確定（駄菓子屋きぬや 販売管理システム）\n\n## 1. 概要（sales-checkout）\n\n会計確定サービス。店番担当が確認した購入内容（商品・数量）と受領額から請求額を計算し、在庫を引き当てて販売を1件確定する。在庫不足や受領額不足のときは確定せず、在庫を変えない。\n\n本書の `utc-<term>` は `utc-sales-checkout` とし、term の括り方\n… output omitted …\n送られる | Mock の呼び出し回数と引数 | `receipt-print` Mock（例外: 印刷要求データへの変換のみ） | TR-01,TR-05 | P1 | automated | 暫定: `tests/unit/sales-checkout.test.ts` のローカル実行結果（2026-06-10・コミット `3f2a9c1`・6件失敗0件）、CI 整備後に差し替え |\n| `ut-sales-checkout-print-request-020` | 入力: 商品A×6・受領額180円 状態: 在庫5個 | 会計を確定する | 確定しないため印刷要求は送られない（呼び出し0回） | Mock の呼び出し回数 | `receipt-print` Mock（例外: 印刷要求データへの変換のみ） | TR-03,TR-05 | P1 | automated | 暫定: `tests/unit/sales-checkout.test.ts` のローカル実行結果（2026-06-10・コミット `3f2a9c1`・6件失敗0件）、CI 整備後に差し替え |"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7008 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7008 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-utc-sample-150\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/packages/docs-lint/yaml-deliverable-type.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 9ms\n[paren\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1759}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  12:17:44\n   Duration  2.60s (transform 5.70s, setup 1.07s, import 7.97s, tests 5.92s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-utc-sample-150/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-utc-sample-150/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R5 整合: utc-sample.md の TR-05 の表示名と、全ケースの暫定の証跡の書き方を utc-index-sample にそろえた。相手側（utc-index-sample）を直す案を 2 件残した。",
+  "completion_status": "complete",
+  "handoff": [
+    "R5-1: R5 / 5. トレース / TR-05 のリンクの表示名「テスト戦略」が tsp-index-sample の題名「テスト戦略・方針」と、utc-index-sample での呼び名と違う / 表示名を「テスト戦略・方針」にした / vp-qe-kata-conformance（kata 相互の整合） / -",
+    "R5-2: R5 / 6. テスト観点とケース（全ケース表の証跡の列） / utc-index-sample の「ケース表の共通カラム」は暫定の証跡を「暫定: ローカル実行結果（実行日・コミット・実行件数）、CI 整備後に差し替え」と定めているが、本書には実行日・コミット・実行件数がない / 6 ケースの証跡を「暫定: `tests/unit/sales-checkout.test.ts` のローカル実行結果（2026-06-10・コミット `3f2a9c1`・6件失敗0件）、CI 整備後に差し替え」にした / vp-qe-kata-conformance。値は架空の例。値を入れずに書き方を表の前の 1 文で示す案は、完成例として具体値を示すほうが手本になるため採らなかった / 要判断",
+    "R5-3: R5 / 1. 概要・2. 責務 / utc-index-sample の「テスト対象の括り方と分割基準」は utc-sales-checkout の責務を「請求額・釣銭の計算」とし、「観点の立て方（共通）」で「釣銭計算の正しさ」に触れるが、本書の責務とケースに釣銭がない（F007） / - / 相手側の案: utc-index-sample の表の責務を「請求額の計算と、会計確定時の在庫引当」にし、観点名の例の「釣銭計算の正しさ」を「請求額計算の正しさ」にする。bac-sample の C-01・C-02 は受領額と請求額が同じ額で、釣銭の条件がないため。本書に釣銭の責務とケースを足す案は、BAC に根拠がなく仮定を増やすため採らなかった / 要判断",
+    "R5-4: R5 / 6.1.2. 条件・ケース表 / utc-index-sample の共通カラムの記入例（同じ case_id `ut-sales-checkout-stock-allocation-020`）とは、トレースと受領額はすでにそろっている。残る差は条件の「環境: なし」と期待値の言い回し（「1件確定し、在庫が5個から0個になる」と「確定し、在庫が0個になる（負にならない）」）（F006） / - / vp-qe-kata-conformance。相手側の案: utc-index-sample の記入例の条件と期待値を本書の行と同じ文言にする / -",
+    "R5-5: R5 / 6.3.2. 条件・ケース表 / F008（印刷要求のケースに例外の適用がない）は、前の段の直しで境界/依存の列に「`receipt-print` Mock（例外: 印刷要求データへの変換のみ）」がすでに書かれ、index が求める適用した例外と依存の制御方法の両方がある / - / vp-qe-kata-conformance。追加の直しは要らない / -",
+    "F001・F002・F009（vp-po-decision-readiness・vp-pm-dependency-risk・vp-ops-release-readiness）は、kata-guide の「kata の観点の組」が段のレビューで使わないと決めている観点のため、R5 では扱っていない。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-utc-sample-150/T-KATA-REVIEW-ALL-utc-sample-150-20261125T030905Z-a04bab73/executor.log",
+      "bytes": 6623,
+      "truncated": false
+    }
+  ]
+}
