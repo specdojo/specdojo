@@ -45,9 +45,9 @@ NFR の根拠は、プロジェクト概要の期待効果（記録の継続、�
 | 可用性         | `nfr-availability`    | `nfr-availability.md`    | _UNDECIDED_: 稼働率・RTO・RPO の目標値。運用方針と同時に決める                  |
 | 保守性         | `nfr-maintainability` | `nfr-maintainability.md` | -                                                                               |
 | 完全性         | `nfr-integrity`       | `nfr-integrity.md`       | -                                                                               |
-| 機密性・安全性 | `nfr-security-safety` | `nfr-security-safety.md` | 監査ログの保管期間 1 年は運用方針と揃える                                       |
+| 機密性・安全性 | `nfr-security-safety` | `nfr-security-safety.md` | 監査ログの保管期間は `opd-index` と揃える                                       |
 | 性能           | `nfr-performance`     | `nfr-performance.md`     | _UNDECIDED_: 会計確定の応答時間の目標値。決まるまで総合テストは仮置き基準で測る |
-| 運用           | `nfr-operations`      | `nfr-operations.md`      | _UNDECIDED_: 営業時間外の緊急連絡手段                                           |
+| 運用           | `nfr-operations`      | `nfr-operations.md`      | -                                                                               |
 | 操作性         | `nfr-usability`       | `nfr-usability.md`       | -                                                                               |
 
 各分冊は `part_of` に `nfr-index` を持つ。目標値が `_UNDECIDED_` の分冊は、その指標で合否を判定せず、発生の記録だけを残す。
