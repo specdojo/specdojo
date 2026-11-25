@@ -7,10 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   registered_at: "2026-11-24T23:02:49Z"
+  completed_at: "2026-11-25T00:19:42Z"
+  conclusion: "exec queue status と exec status が EPIPE で落ちないようにし、exec resume --task を列の段に置けるようにし、--section-file で ### の小節の見出しを使えるようにした"
   derived_from:
     - PJR-69ZX
 ---

@@ -106,3 +106,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_c9b453dda68d4b31b4b0685eb9ca3959
+- v: 1
+  id: reg_18c13a22325f46c6aea6a9f3a1c72357
+  ts: "2026-11-25T00:19:42Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: "exec run --register（sonnet-executor、2 回、統合先は feature/prj-0001/playbook-cli-gaps）で実装。EPIPE（develop の dist は終了コード 1、直した版は 0）、列の段の予約、### の受け入れと ## の拒否のメッセージを手元で確かめた"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-25"
+    - field: conclusion
+      from: "-"
+      to: "exec queue status と exec status が EPIPE で落ちないようにし、exec resume --task を列の段に置けるようにし、--section-file で ### の小節の見出しを使えるようにした"
+  previous_event_id: reg_d301394cbbcb410fac641215f2322e3a
