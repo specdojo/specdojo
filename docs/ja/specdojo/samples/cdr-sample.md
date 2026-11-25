@@ -11,7 +11,7 @@ specdojo:
 
 # TypeScript 実装ルール
 
-駄菓子屋きぬや販売管理システム（Next.js・TypeScript）の `app/`・`src/`・`tests/` 配下の TypeScript を実装・更新するときの規則です。言語・ライブラリ・版は [[specdojo:tsd-index-sample|技術スタック一覧]]、モジュールの配置・境界は `kinuya-web-cpd`、エラーの通知・ログの方針は `kinuya-web-sysd-cross-cutting-policy` に従い、本書ではそれらに沿った書き方と検証だけを定めます。
+駄菓子屋きぬや販売管理システム（Next.js・TypeScript）の `app/`・`src/`・`tests/` 配下の TypeScript を実装・更新するときの規則です。言語・ライブラリ・版は [[specdojo:tsd-index-sample|技術スタック一覧]]、モジュールの配置・境界は `kinuya-web-cpd`、エラーの通知・ログの方針は `kinuya-web-sysd-cross-cutting-policy` に従います。本書は、これら 3 つの文書に沿った書き方と検証だけを定めます。
 
 _ASSUMPTION_: `kinuya-web-cpd`・`kinuya-web-sysd-cross-cutting-policy` は店頭タブレット向け Web アプリの設計の正本として扱う架空の文書で、本リポジトリには同梱しない。CLI 版の設計（[[specdojo:cpd-sample|販売処理サービス C4コンポーネント図]] など）は別構成の例であり、本書の根拠にしない。
 
@@ -34,7 +34,7 @@ _ASSUMPTION_: `kinuya-web-cpd`・`kinuya-web-sysd-cross-cutting-policy` は店�
 - `any` を使わない。フォーム入力や API の要求本文など型が不明な値は `unknown` で受け、型ガード関数で検証してから使う。
 - 文字列の取り得る値の集合は union 型で表す（例: 支払方法 `"cash" | "tsuke"`）。
 - `as` による型の強制は、直前の型ガードで検証した値と、Prisma が生成した型の絞り込みにだけ使う。
-- `null` と `undefined` を混在させない。値が無いことは `undefined` で表し、Prisma が返す `null` はサーバー側の DB 接続の境界で変換する。
+- `null` と `undefined` を混在させない。値が無いことは `undefined` で表し、Prisma が返す `null` は、サーバー側の DB 接続の境界で `undefined` に変換する。
 
 ```typescript
 type Payment = "cash" | "tsuke";
@@ -47,7 +47,7 @@ function isPayment(value: unknown): value is Payment {
 ## 4. エラー処理
 
 - 利用者の入力の不備（数量 0、未登録の商品コード、つけ上限の超過など）は、検証結果として呼び出し側へ返し、画面に項目ごとのメッセージを出す。例外にしない。
-- 想定外の失敗（DB 接続の失敗など）は例外として投げる。API ルートでは共通のエラー応答処理を通し、`kinuya-web-sysd-cross-cutting-policy` が定める送信先（Sentry）への記録と汎用のエラー応答への変換をその処理に任せる。API ルートごとに `try`/`catch` で応答を組み立てない。
+- 想定外の失敗（DB 接続の失敗など）は例外として投げる。API ルートでは共通のエラー応答処理を通す。Sentry（`kinuya-web-sysd-cross-cutting-policy` が定める送信先）への記録と汎用のエラー応答への変換は、共通のエラー応答処理に任せる。API ルートごとに `try`/`catch` で応答を組み立てない。
 - エラーメッセージには、操作名と対象の ID（商品コード、顧客 ID、販売 ID）を含める。
 - 空の `catch` で例外を握りつぶさない。再送出する場合は `cause` に元のエラーを渡す。
 
@@ -81,7 +81,7 @@ try {
 | `npm run test:integration` | DB を使う統合テスト（PostgreSQL のコンテナを起動） | DB 接続やマイグレーションを変更したとき | agent の sandbox では実行せず、プルリクエストの GitHub Actions で実行する。CI の失敗を直せない場合は内容を報告する |
 | `npm run build`            | Next.js のビルド（サーバーとクライアントの分離）   | `app/` を変更したとき                   | ビルドエラーに出たファイルの import を直す                                                                         |
 
-- 金額の計算やつけ残高の更新を変えた場合は、つけ上限（[[specdojo:dmd-sample|データ移行設計: 顧客台帳とつけ残高]] の `顧客台帳.つけ上限`。税込の円の整数、未設定は上限なし）に対して、次の境界の単体テストを追加する。
+- 金額の計算やつけ残高の更新を変えた場合は、つけ上限に対する次の境界の単体テストを追加する。つけ上限は [[specdojo:dmd-sample|データ移行設計: 顧客台帳とつけ残高]] の `顧客台帳.つけ上限` で、税込の円の整数で持ち、未設定は上限なしを表す。
   - 残高 0 円で、つけ販売を受け付ける。
   - 販売後の残高がつけ上限ちょうどになる場合は、つけ販売を受け付ける。
   - 販売後の残高がつけ上限を 1 円超える場合は、上限超過の検証結果を返す。
@@ -104,4 +104,4 @@ try {
 - DB 接続とつけ残高の更新を行うファイルは、先頭で `server-only` を import する。
 - `"use client"` は、入力・タップなど画面の操作を扱うコンポーネントにだけ付け、ページ全体に付けない。
 - サーバーからクライアントコンポーネントへ渡す値は、画面に表示する項目だけに絞った型で定義し、Prisma のモデルの型をそのまま渡さない。
-- _UNDECIDED_: 店頭タブレットの OS と対応ブラウザが決まっていない。決まるまでは、Next.js の既定の対応ブラウザで動く API だけを使い、それ以外のブラウザ API を使う場合は変更の説明に対象のブラウザを書く。
+- _UNDECIDED_: 店頭タブレットの OS と対応ブラウザが決まっていない。決まるまでは、Next.js の既定の対応ブラウザで動く API を使う。既定の対応ブラウザで動かないブラウザ API を使う場合は、変更の説明に対象のブラウザを書く。
