@@ -142,7 +142,7 @@ plan / result / 個票（`pjr-<NNNN>-<topic>`）など、履歴として蓄積�
   - `docs/ja/projects/**/controls/project-register/pjr-*.md` の個票。
 - `docs/` 配下の文書を参照する場合は、`id` を正とする wikilink（`[[id]]` または `[[id|表示名]]`）を使う。ファイルをリネームしても `id` は変えない運用のため、参照側の修正が不要になる。
 - `docs/` 外のファイル（`.github/instructions/` など）を参照する場合は、リポジトリルートからの相対パスをインラインコードまたはプレーンテキストで書く。
-- 外部URLは Markdown リンクにせず、URL そのまま（bare URL または autolink）で書く。
+- 外部URLは Markdown リンクにせず、autolink（`<https://...>`）で書く。bare URL は markdownlint の MD034（no-bare-urls）に当たるため書かない。
 - 既存の履歴ファイルは、Markdown リンクを含むものが見つかった時点で上記記法へ置き換える。一括の遡及移行は必須としない。
 - 違反検知は `npm run validate:history-links` で行う。検出時は exit 1 で失敗する。
 

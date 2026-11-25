@@ -26,7 +26,9 @@ import {
   taskRecordPaths,
 } from "./run-records.js";
 import {
+  encloseBareHttpUrls,
   escapeMarkdownInline,
+  trimCodeSpanPadding,
   unescapeBackticksWhenUniform,
   expandTemplate,
   inlineCodeFrontmatterAnglePlaceholders,
@@ -496,20 +498,29 @@ export function readResultFrontmatterSnapshot(resultPath: string): Record<string
   return parseSpecdojoDocument(readFileSync(resultPath, "utf8")).data;
 }
 
+// 山括弧は HTML と解釈されないよう文字参照にする。HTTP(S) の autolink（`<https://...>`）は
+// MD034 に合う URL の書き方なので、山括弧を残す。
 function reporterInlineText(value: string): string {
   return value
     .replace(/[\r\n]+/g, " ")
     .replace(/\s+/g, " ")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
+    .replace(/<(?!https?:\/\/[^<>\s]+>)|(?<!<https?:\/\/[^<>\s]+)>/g, (bracket) =>
+      bracket === "<" ? "&lt;" : "&gt;",
+    )
     .trim();
 }
 
 // reporter / executor 由来の自由記述は result の Markdown 本文へ直接入る。改行や山括弧を
 // 正規化したうえで、強調と解釈される `_` / `*` 入りの ASCII トークンを code span にする。
 // escapeMarkdownInline は既存の code span を保持するため、agent が意図して付けた書式は二重化しない。
+// executor の申し送りなど reporter の修復を通らない文も描くため、素の URL の autolink 化（MD034）と
+// コードスパンの前後の空白の除去（MD038）もここで行う（PJR-5C3M）。
 function reporterFreeText(value: string): string {
-  return escapeMarkdownInline(unescapeBackticksWhenUniform(reporterInlineText(value)));
+  return escapeMarkdownInline(
+    trimCodeSpanPadding(
+      encloseBareHttpUrls(unescapeBackticksWhenUniform(reporterInlineText(value))),
+    ),
+  );
 }
 
 // reporter や runner の文を `- ` の箇条書きに描くとき、文が自前のリスト記号（`1.`・`1)`・

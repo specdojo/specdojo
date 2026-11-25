@@ -1,3 +1,4 @@
+import { trimCodeSpanPadding } from "../shared/text.js";
 import type { ReporterOutput } from "./reporter-output.js";
 
 // 見出しの末尾に付くと MD026 になる句読点。
@@ -17,10 +18,7 @@ export function repairReporterText(text: string): string {
     .split("\n")
     .filter((line) => !/^\s*(```|~~~)/.test(line))
     .map((line) => {
-      const repaired = line.replace(
-        /(`+)([^`\n]+)\1(?!`)/g,
-        (_match, fence: string, body: string) => `${fence}${body.trim() || body}${fence}`,
-      );
+      const repaired = trimCodeSpanPadding(line);
       return /^#{1,6}\s/.test(repaired)
         ? repaired.replace(HEADING_TRAILING_PUNCTUATION, "")
         : repaired;

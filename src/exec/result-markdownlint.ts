@@ -94,7 +94,7 @@ export function formatResultLintIssues(issues: ResultLintIssue[]): string {
     return `line ${issue.lineNumber} ${issue.rule} ${issue.description}${detail}: ${JSON.stringify(issue.line.slice(0, 200))}`;
   });
   if (issues.length > listed.length) listed.push(`... ${issues.length - listed.length} more`);
-  return `result Markdown notation violation before writing (fix the JSON prose that produced these rendered lines; do not put Markdown headings, code fences, bare URLs, escaped backticks, or Chinese simplified glyphs in free-text fields):\n${listed.join("\n")}`;
+  return `result Markdown notation violation before writing (fix the JSON prose that produced these rendered lines; do not put Markdown headings, code fences, escaped backticks, or Chinese simplified glyphs in free-text fields; write a URL as an autolink such as <https://example.com/page> instead of a bare URL; do not start or end inline code with a space, and describe a separator such as a comma and a space in words instead of putting it in inline code):\n${listed.join("\n")}`;
 }
 
 /**
