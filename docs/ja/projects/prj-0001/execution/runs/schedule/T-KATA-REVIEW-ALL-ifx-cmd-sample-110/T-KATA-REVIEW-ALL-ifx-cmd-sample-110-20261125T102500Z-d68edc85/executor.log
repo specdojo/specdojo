@@ -1,0 +1,12 @@
+R1 では sample を 1 か所だけ直しました。対象は `docs/ja/specdojo/samples/ifx-cmd-sample.yaml` で、ほかのファイルは変えていません。schema 検査と Prettier の整形チェックはどちらも通っています。
+
+照合した範囲では、rulebook の本文要件の 8 キー（`command`〜`error_handling`）はすべて書かれていて、欠けている内容は見つかりませんでした。直したのは要らない記述のほうです。
+
+- **`authentication.log_policy`:** USB 直結で認証値を渡さないのに、秘密値を含めないこと・マスクすることを求めていて、要らない記述でした。認証値がないのでマスク対象もないと明記し、実行記録に残す項目を取引識別子・終了コード・stdout の印字結果・stderr の診断に絞りました。レシート本文は転記しない、とはっきり書いています。grade の F001 は R2 の観点ですが、R1 の「要らない内容」にも当たるため、この段で直しました。
+- **`error_handling.malformed_output_action`:** 上の直しに合わせて「マスク済み診断」を「診断」にしました。
+
+F002（紙面を確かめる人を「店頭利用者」と呼ぶ表記ゆれ）は R3・R5 の観点なので、この段では直していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1（目的の過不足）を実施。rulebook の本文要件の 8 キーはすべてあり、欠けている内容はなかった。存在しない秘密値をマスクさせる記述が要らない内容に当たるため、`log_policy` と `malformed_output_action` を直した。schema 検査と Prettier の整形チェックは通った。","handoff":["No: 1 / 段: R1 / 箇所: docs/ja/specdojo/samples/ifx-cmd-sample.yaml の `authentication.log_policy` / 指摘: 認証不要（`secret_source` で秘密値なし）なのに、秘密値を含めないこと・保存前にマスクすることを求めていた。要らない内容で、マスクの実対象もあいまいだった（grade F001 にも当たる） / 直した案: 「認証値を渡さないため、マスクする秘密値はない。呼び出し元は入力ファイルのレシート本文を実行記録へ転記せず、取引識別子・終了コード・stdout の印字結果・stderr の診断だけを残す。」に書き換えた / 根拠: ifx-cmd-rulebook の「認証注入」（`log_policy` にはマスク対象とタイミングを書く。認証不要の場合も schema を満たす表現にする）、Sample 記述標準の「サンプル群の目的」（対象ドキュメントの説明に要る範囲に限る） / 印: なし","No: 2 / 段: R1 / 箇所: docs/ja/specdojo/samples/ifx-cmd-sample.yaml の `error_handling.malformed_output_action` / 指摘: No 1 の直しでマスク処理がなくなったのに「マスク済み診断」が残っていた / 直した案: 「既存のレシートと診断を保持して」にした / 根拠: No 1 との整合（ifx-cmd-rulebook の「認証注入」） / 印: なし","No: 3 / 段: R1 / 箇所: docs/ja/specdojo/samples/ifx-cmd-sample.yaml の 92・119・126・132・135 行目 / 指摘: grade F002（紙面を確かめる人を「店頭利用者」「利用者」と呼び、ifx-index-sample・clis-sample の「店番担当」と表記がゆれる）は `vp-ux-language-consistency` の指摘で、kata-guide の観点の組では R3・R5 が扱う。この段では直さずに残す / 直した案: R3 または R5 で、共通サンプル文脈の役割名に合わせて「店番担当」へそろえる / 根拠: kata-guide の「kata の観点の組」、plan の「この段の観点に当たるものだけを扱う」 / 印: 要判断"],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/ifx-cmd.schema.yaml --data docs/ja/specdojo/samples/ifx-cmd-sample.yaml","status":"passed","summary":"docs/ja/specdojo/samples/ifx-cmd-sample.yaml: valid"},{"command":"npx prettier --check docs/ja/specdojo/samples/ifx-cmd-sample.yaml","status":"passed","summary":"All matched files use Prettier code style"}]}
+</specdojo_executor_evidence>
