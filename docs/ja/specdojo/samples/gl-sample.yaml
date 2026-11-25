@@ -45,7 +45,7 @@ terms:
     englishName: stockout
     aliases: [品切れ]
     definition: 販売すると決めている商品の在庫数量が0になり、来店した顧客に販売できない状態。
-    notes: 取り扱いをやめた商品や、季節外で棚に置いていない商品は含めない。欠品の回数は日ごとに記録する。
+    notes: 取り扱いをやめた商品や、季節外で棚に置いていない商品は含めない。
     category: tm-inventory
     relatedTerms: [tm-reorder-point]
     status: official
