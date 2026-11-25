@@ -41,3 +41,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-TAK7"]'
+- v: 1
+  id: reg_d3ea0942f4a04f97965f93ddb298b4bc
+  ts: "2026-11-25T09:23:44Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_14d6161c08884463b325000e01d0797f
