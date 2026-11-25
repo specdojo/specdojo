@@ -1,0 +1,22 @@
+R1（目的の過不足）のレビューでは、sample を直す必要はないと判断しました。ファイルは何も変えていません。ただし plan の編集対象が実際のレビュー対象と食い違っているので、まずその点を確認してください。
+
+**編集対象の食い違い:** plan の「編集対象」は `docs/ja/specdojo/samples/opd-access-control-sample.md` になっています。一方、タスク ID と「根拠となる成果物」の `path` は `opd-incident-management-sample.md` です。前者は rulebook の sample 宣言の先頭の項目を拾っただけに見えるため、タスク名どおり incident-management をレビューし、access-control には手を付けていません。
+
+**確かめた資料:** 対象の sample、`opd-rulebook`（本文構成・記述ガイド・禁止事項）、Sample 記述標準、成果物カタログ `dct-kata.yaml` の `done_criteria`、比較用に `opd-index` / `opd-monitoring` / `opd-access-control` の各 sample を読みました。
+
+**R1 の確かめの結果:**
+- **必須章:** 概要、`opd-index` と同じ見出しの差分を持つ章、関連ドキュメント導線（`opr-index` と `opr-incident` を含む）がそろっています。
+- **差分の書き方:** 各記述に補足・具体化の区別があり、`opd-index` の SLO やエスカレーション表は再掲せず参照で済ませています。
+- **カタログの完了条件:** 優先度を「店頭販売を記録できない」「つけ残高を確かめられない」などの業務への影響と対応付けている点と、周知の対象を役割名で書いている点の両方を満たしています。
+- **要らない内容:** 見つかりませんでした。未決事項の表の「オフライン時の記録方法」は `opd-index` の扱いと同じ内容ですが、決まったときに本書のどの節を見直すかを示すので残しました。
+
+**指摘（handoff に 1 件ずつ記載）:**
+1. 編集対象の食い違い（要判断）。
+2. 停止・切替の判断の表で、つけの新規記録を止める判断者が店番担当になっています。`opd-index` の RACI では業務の停止の最終責任者（A）は `PO` なので、例外に見えます（要判断）。案は sample の該当行に「`opd-index` の障害対応方針の決まりを店番担当がその場で当てはめる」と書き足し、例外ではないと読めるようにすることです。採るかは人の判断に残し、差分は入れていません。
+3. 関連ドキュメント導線の表で、sample がすでにある `opd-monitoring` と `opd-access-control` の備考が「予定」のままです。整合の問題なので R5 に送ります。
+
+**検証:** 実行した検査はありません。ファイルを変えていないため Prettier と `validate:history-links` は当てはまらず、markdownlint など allowlist の検査は親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1（目的の過不足）のレビューの結果、opd-incident-management-sample は rulebook の必須章とカタログの完了条件を満たしており、要らない内容も見つからなかったため変更しなかった。plan の編集対象が opd-access-control-sample になっている食い違い、つけの受付を止める判断者の書き方の 2 件を要判断、関連ドキュメント導線の「予定」を R5 への申し送りとして handoff に記載した。","handoff":["No: 1 / 段: R1 / 箇所: plan「根拠となる成果物と編集対象」の編集対象 / 指摘: 編集対象が `docs/ja/specdojo/samples/opd-access-control-sample.md` になっているが、タスク ID と根拠となる成果物の `path` は `opd-incident-management-sample.md` を指す。rulebook frontmatter の `sample` 宣言の先頭の項目を拾ったように見える / 直した案: 本タスクはタスク名どおり opd-incident-management-sample をレビュー対象とし、opd-access-control-sample は変更していない。plan 生成で、編集対象をタスクの sample に合わせて解決するよう確かめる / 根拠: plan frontmatter の `task_id` と「根拠となる成果物」の `path`、`specdojo:opd-rulebook` frontmatter の `sample` の並び / 印: 要判断","No: 2 / 段: R1 / 箇所: 停止・切替の判断の表の P1 の 2 行目（つけの新規記録を受けない、判断者 店番担当） / 指摘: `opd-index` の RACI では業務の停止・再開の判断の A は `PO` であり、店番担当を判断者とする行は理由のない例外に見える。実際には `opd-index` の障害対応方針（つけ残高を確認できない間はつけの新規記録を受けない）を店番担当がその場で当てはめる行であり、例外ではない / 直した案: 該当行の判断の時機などに「`opd-index` の障害対応方針の決まりを店番担当がその場で当てはめる」と書き足し、例外ではないと読めるようにする（R1 では差分を入れず人の判断に残した） / 根拠: `specdojo:opd-rulebook` の記述ガイド「各記述は補足・具体化・例外のどれかが分かるように書き、例外には理由を添える」、opd-index-sample の RACI 表と障害対応方針 / 印: 要判断","No: 3 / 段: R1（R5 への申し送り） / 箇所: 関連ドキュメント導線の表の `opd-monitoring`・`opd-access-control` の行 / 指摘: 備考が「予定」だが、どちらも sample が既にあり、本文では opd-access-control-sample へ wikilink している / 直した案: R5（整合）で備考と参照の書き方をそろえる。R1 では変更しない / 根拠: `docs/ja/specdojo/guides/kata-guide.md` の「kata を agent でレビューする」で、ほかの文書との整合は R5 が扱う / 印: なし"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/opd-incident-management-sample.md","status":"not_applicable","summary":"変更したファイルがないため実行していない","reason":"Prettier は変更した *.md などがある場合に適用されるが、本タスクではファイルを変更していない"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"変更した履歴ファイルがないため実行していない","reason":"executor は plan・result・個票などの履歴ファイルを変更していない"}]}
+</specdojo_executor_evidence>
