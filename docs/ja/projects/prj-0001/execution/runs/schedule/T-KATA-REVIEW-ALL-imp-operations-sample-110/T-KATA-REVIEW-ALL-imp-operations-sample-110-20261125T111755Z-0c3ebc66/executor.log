@@ -1,0 +1,20 @@
+R1（目的の過不足）のレビューが終わりました。サンプルの変更は 1 か所だけで、指摘は 3 件です。
+
+**サンプルの変更**
+`docs/ja/specdojo/samples/imp-operations-sample.md` の「対応方針」の章で、日次締め運用（代替）の再評価条件から 2 文を削りました。
+
+- 削った文: 「併用中に差分手順書で判断できない点は、店番が締めの記録に書き残し、翌日の開店前に店主代表が確かめる」と「店主代表が判断に迷う点は店舗運営アドバイザーに相談する」。
+- 理由: 再評価条件と期限ではなく、実際の運用手順の細部です。rulebook はこの種の記述を禁じ、委譲先の文書へ送るよう定めています。
+
+rulebook が求める 6 章と各章の項目、成果物カタログの `done_criteria`（OPS・ARC・QE）は、ほかに欠けているものがありませんでした。
+
+**grade の finding の扱い**
+- F002（「完了条件」列が rulebook の必須列にない）: 列は残しました。運用テストと受入の判定に役立つためです。rulebook の必須列に足す案を出し、「要判断」を付けています。列を消す案も選べます。
+- F001（成功条件 2 の上限時間が決まっておらず判定できない）: 観点 `vp-qe-verifiability` は R4 が受け持つため、この段では直さず R4 に回しました。
+
+**検査**
+`npx prettier --check` と `npx markdownlint` はどちらもエラーなしで通りました。`lint:md` などの lint は、終了後に親 runner が流します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1（目的の過不足）を行った。rulebook の禁止事項（実際の運用手順の細部）に当たる 2 文を「対応方針」の再評価条件から削った。F002 は列を残し、rulebook を直す案を「要判断」として申し送った。F001 は R4 の観点のため R4 に回した。","handoff":["R1-1: R1 / 5. 対応方針（見送り・代替の再評価条件） / 日次締め運用（代替）の再評価条件に、差分手順書で判断できない点の記録と確認の手順、店舗運営アドバイザーへの相談先が書かれていた。これは再評価条件と期限ではなく、実際の運用手順の細部である / 「併用中に差分手順書で判断できない点は…翌日の開店前に店主代表が確かめる。」と「店主代表が判断に迷う点は店舗運営アドバイザーに相談する。」の 2 文を削り、再評価条件と期限だけを残した / `vp-arc-single-responsibility`、`vp-qe-kata-conformance`（rulebook の禁止事項「実運用手順の詳細を書かない。委譲先の文書へ送る」、6.5「見送り・代替は、再評価条件と期限を必ず記載する」） / -","R1-2: R1 / 5. 対応方針（対応方針の表） / 「完了条件」列は rulebook の必須列（影響度、対応項目、期限、担当、前提条件）になく、sample が rulebook より先に列を足している（grade F002） / - / `vp-qe-kata-conformance`。列は残した。運用テストと受入の判定（`done_criteria` の QE「運用テスト・受入への影響が確認できること」）に役立つためである。相手側の直す案: `docs/ja/specdojo/rulebooks/imp-operations-rulebook.md` の「本文要件」の必須列の表で、対応方針の行に「完了条件」を足す。あわせて 6.5 に「対応項目ごとに完了を判定する条件を書く」を足す。選ばなかった案は、sample から「完了条件」列と表の前の文の「完了を判定する条件」を消して rulebook に揃える案。どちらを採るかは人が決める / 要判断","R1-3: R1 / 2. 変更要求の概要（成功条件の表） / grade F001（成功条件 2 の上限時間が決まっておらず判定できない）は判定ができるかどうかの指摘である。観点 `vp-qe-verifiability` は R4 が受け持つため、R1 では直さない / - / kata-guide の「kata の観点の組」で `vp-qe-verifiability` は R4 に割り当てられている。R4 への申し送り: 3 章の境界値に「決まるまでは『その日の閉店までに把握する』を下限として判定する」とある。これを成功条件 2 の判定方法の欄にも暫定の基準として書く案がある / -"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/imp-operations-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint docs/ja/specdojo/samples/imp-operations-sample.md","status":"passed","summary":"エラーなし"}]}
+</specdojo_executor_evidence>
