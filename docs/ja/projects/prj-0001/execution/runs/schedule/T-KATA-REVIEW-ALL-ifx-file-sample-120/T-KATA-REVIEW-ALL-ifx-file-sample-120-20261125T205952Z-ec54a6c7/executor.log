@@ -1,0 +1,32 @@
+R2（構成）の段を終えました。対象の `docs/ja/specdojo/samples/ifx-file-sample.md` だけを直し、rulebook とほかの kata には手を入れていません。
+
+**直したこと**
+
+- **独自の章「メモ / 将来課題」を外した。** rulebook は、未決事項を YAML コメントの `# _UNDECIDED_:` で書くよう定めています。そこで、この章の 2 件は対応する YAML 例へ移しました。
+  - 週次発注の着手可否は、既存の SFTP・ACK の `_UNDECIDED_` コメントにまとめました。
+  - 本部売上登録 API の受付照会の件は、販売実績控えの例に `_UNDECIDED_` コメントとして足しました。
+  - 担当ロールの割り当ては移していません。sample の本文に承認・担当の割り当てを書かない、という記述標準に合わせるためです。
+- **再開判定の表の先送りの参照を直した。** 「会計確定の書き込み順序と再開判定」の表の最後の行は、後ろにある章 3 の「取引状態の欠落」を指していました。これを、前に定義済みの YAML の `missing` の `current_tx_json` を指すように変えました。
+
+**確かめたこと**
+
+- prettier で整形した後、markdownlint の指摘は 0 件でした。
+- 親 runner が流す検査は、ここでは実行していません。
+
+**判断が要る点**
+
+sample の形式（F004）は人の判断が要ります。rulebook の `target_format` は `yaml` で、ほかの ifx sample も `.yaml` です。ところが、この sample は `.md` のままで、rulebook にない章（2.3・2.4・3）を持っています。案は次の 2 つで、どちらを採るかで直し方が変わるため直していません。
+
+- 案 1: 2 つの契約例を YAML の sample に分けて作り直し、補足は YAML コメントへ移す。
+- 案 2: md の補足章を持つ例外として rulebook に宣言する。
+
+**ほかの段に回した指摘**
+
+- 異常時の表の「取引状態の欠落」の行は、exit code 2 と 3 の 2 つの事象が混ざっています（F002）。期待結果の確かめなので R4 に任せます。
+- 家族利用者代表を「`PO` 業務助言」と書いていますが、メンバー定義では `UX` です（F006）。表記の食い違いなので R3・R5 に任せます。
+
+R1 が直した F001・F003・F005・F007・F008 は、今の版で直っていることを確かめました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R2 構成として ifx-file-sample.md から rulebook にない章「メモ / 将来課題」を外し、未決事項を rulebook の求める YAML コメント `# _UNDECIDED_:` へ移した。再開判定の表にあった後ろの章への参照は、前に定義済みの YAML の `missing` の `current_tx_json` を指すように直した。sample の形式（F004）は人の判断に回し、F002 は R4、F006 は R3・R5 に任せた。","handoff":["R2-1: R2 / 4. メモ / 将来課題 / rulebook の本文構成にない独自の章で、rulebook の「仮置き・前提条件の明記」は未決事項を YAML コメント `# _UNDECIDED_:` に書くよう求めている。週次発注の行も既存の YAML コメントと重なっていた / 章を削り、週次発注の着手可否は「単一ファイル・インライン定義の例」の既存の `_UNDECIDED_` コメントにまとめ、本部売上登録 API の受付照会の未整備は「複数ファイル・正本参照の例」に `_UNDECIDED_` コメントとして足した。担当ロールの割り当ては sample-authoring-standard に合わせて移していない / `vp-arc-document-structure`、`vp-qe-omissions-consistency`、ifx-file-rulebook「ファイル基本情報と責務境界の判断基準」、sample-authoring-standard「構成の原則」 / -","R2-2: R2 / 2.4. 会計確定の書き込み順序と再開判定 / 表の最後の行が、後ろにある章 3 の「取引状態の欠落」を参照しており、前提から結論の順に読めない / 参照先を、前に定義済みの YAML の `missing` の `current_tx_json` に変えた / `vp-arc-document-structure` / -","R2-3: R2 / 文書全体（2.3・2.4・3 と sample のファイル形式）/ rulebook の `target_format` は `yaml` で、sample-authoring-standard はファイル名を `target_format` に合わせ独自の章立てを作らないよう求める。本 sample は .md で、rulebook にない章（参照する正本スキーマの制約と検証、再開判定、異常時の次の手）を持ち、ほかの ifx sample（.yaml）とも形式が合わない（grade F004）/ - / `vp-qe-kata-conformance`、`vp-arc-document-structure`。迷った理由: 形式を変えるとファイルのパス、dct-kata.yaml の path、2 つの契約例の分け方まで変わり、R2 の章の移動・統合の範囲を超える。選ばなかった案: (1) 2 つの契約例を `ifx-file-sample.yaml` などの YAML sample に分け、2.3〜3 の補足を YAML コメントか error_handling の action へ移す。(2) md の補足章（正本スキーマの制約、再開判定、異常時の次の手）を持つ例外を ifx-file-rulebook に宣言する。どちらにするかは人が決める / 要判断","R2-4: R2 / 3. 異常時の判断と利用者の次の手 / 「取引状態の欠落」の行が、取引未開始（exit code 2）と未解決の控えによる停止（exit code 3）を 1 行に混ぜている（grade F002）/ - / `vp-qe-verifiability` は R4 の観点なので R4 で事象ごとに行を分ける / -","R2-5: R2 / 1. 概要 / 家族利用者代表の Role code を「`PO` 業務助言」と書いているが、pm-members-sample では UX である（grade F006）/ - / `vp-ux-language-consistency` は R3、メンバー定義との突き合わせは R5 で直す / -","R2-6: R2 / grade F001・F003・F005・F007・F008 / R1 までの版で、スキーマの全文掲載の抜粋化と、status・承認判断の記述の削除が済んでいることを確かめた / - / R1 の差分（commit 9b7b25dff4）/ -"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/ifx-file-sample.md","status":"passed","summary":"整形を当てた（--check の差分を解消）"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/ifx-file-sample.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>
