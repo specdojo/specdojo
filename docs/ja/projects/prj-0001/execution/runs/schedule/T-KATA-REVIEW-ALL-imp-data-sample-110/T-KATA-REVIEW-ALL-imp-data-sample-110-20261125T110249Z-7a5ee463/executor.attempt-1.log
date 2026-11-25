@@ -1,0 +1,15 @@
+R1（目的の過不足）を終えました。sample の変更は、変更要求の ID を rulebook が求める個票 ID の形にした 1 点だけです。変更したファイルは `docs/ja/specdojo/samples/imp-data-sample.md` の 1 つで、Prettier の確認は通りました。
+
+- **変更内容**: frontmatter の `based_on` と「目的と適用範囲」本文の `cr-2026-004` を、仮に決めた個票 ID `PJR-C4A1` に置き換えました。rulebook の「推奨 Frontmatter 項目」は `based_on` に変更要求の個票 ID（`PJR-XXXX`）を書くよう求め、「記述ガイド」の「目的と適用範囲」は変更要求の ID を書くよう求めています。grade の F001 と F002 はこれで解消します。
+- **本文の過不足**: 6 章の構成、各表の必須の列、対象外とその理由、成功条件の判定方法、境界値、再評価条件、転記先の登録項目は rulebook の求めどおりで、足りない内容も要らない内容も見つかりませんでした。
+
+**要判断が 2 件あります。**
+
+- `PJR-C4A1` は実在の個票ではなく、私が仮に決めた番号です。ほかの影響調査の sample と揃った ID にするかどうかを決めてください。
+- 影響調査の業務・I/F・テスト・運用の sample（`imp-business-sample.md`・`imp-interface-sample.md`・`imp-test-sample.md`・`imp-operations-sample.md`）は、まだ `cr-2026-004` のままです。この段では対象外なので触っていません。各 sample の見直しで同じ ID に揃えるのが案です。
+
+検査は、Markdown の lint・Frontmatter の lint・スキーマの検証を親の runner が実行し、その結果を正とします。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1: imp-data-sample の based_on と本文の変更要求 ID を cr-2026-004 から仮の個票 ID PJR-C4A1 に直し、F001・F002 を解消した。ほかの章は rulebook の目的と必須項目を満たし、過不足は見つからなかった。","handoff":["No: 1 / 段: R1 / 箇所: docs/ja/specdojo/samples/imp-data-sample.md の frontmatter の `based_on` / 指摘: 変更要求が `cr-2026-004` で、rulebook の「推奨 Frontmatter 項目」が求める個票 ID（`PJR-XXXX`）の形でない（grade F001・F002） / 直した案: `PJR-C4A1` に置き換えた / 根拠: [[specdojo:imp-data-rulebook]] の「推奨 Frontmatter 項目」、`vp-qe-kata-conformance` / 印: なし","No: 2 / 段: R1 / 箇所: docs/ja/specdojo/samples/imp-data-sample.md の「目的と適用範囲」の冒頭の段落 / 指摘: 本文の変更要求 ID も `cr-2026-004` で、frontmatter と食い違う / 直した案: `PJR-C4A1` に揃えた / 根拠: [[specdojo:imp-data-rulebook]] の「記述ガイド」の「目的と適用範囲」（変更要求の ID を記載する） / 印: なし","No: 3 / 段: R1 / 箇所: 影響調査の業務・I/F・テスト・運用の sample（`imp-business-sample.md`・`imp-interface-sample.md`・`imp-test-sample.md`・`imp-operations-sample.md`）の `based_on` と本文 / 指摘: 変更要求がまだ `cr-2026-004` のままで、今回の sample と ID が食い違う。`PJR-C4A1` は実在の個票ではなく、この段で仮に決めた番号 / 直した案: 影響調査の sample 群で使う変更要求の個票 ID を 1 つに決め、各 sample の見直しのタスクで揃える（この段では sample 以外を変えない） / 根拠: 各 imp rulebook の「推奨 Frontmatter 項目」、sample 群の整合 / 印: 要判断"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/imp-data-sample.md","status":"passed","summary":"All matched files use Prettier code style"}]}
+</specdojo_executor_evidence>
