@@ -1,0 +1,34 @@
+PJR-3M4M の実装は終わりました。見張り（`orchestrator watch-scan`）が、使用量の上限・負荷による時間切れ・統合先の同期の 3 種類に、exec-defaults の `watch.remedies` で選んだ手当てを打てます。既定はどれも `none` で、設定を書かなければ今までどおり記録と朝報告だけです。親の検証（`typecheck`・`test:unit`・`test:integration`・`lint:md` など）はまだ流しておらず、`exec smoke` と routine の 1 回の実行による確認も統合の後に残っています。
+
+**仕組み**
+- **既存の再開を使う:** 新しい再開の仕組みは作らず、`exec resume` と `exec run --register --resume` を固定の引数で見張りから切り離して起動します。統合先の取り込み・ぶつかったときの停止・agent の切り替えは、手で再開したときと同じ動きになります。
+- **使用量の上限:** `wait` は解除の時刻を過ぎてから同じ agent で再開します。解除が `switch_after`（既定 `12h`）より先で代わりの agent を書いていれば、claim をその agent へ移して流し直します。`fallback` はすぐに替えます。
+- **負荷による時間切れ:** `rerun` は止まった段から再開し、失敗した親の検証を流し直します。
+- **統合先の同期:** `sync` は統合先を取り込んでから再開します。統合の段は再試行、executor・reporter の段は `--resume-from executor` で続けますが、後者は executor を起こし直すため agent を使います。
+- **打たないもの:** 判断が要るもの・中断・分けられなかったもの・列には手を打ちません。
+- **回数の上限:** 同じ対象に `attempt_window`（既定 `24h`）の間に `max_attempts`（既定 `3`）回打っても止まったままなら、手当てを止めて朝報告に載せます。
+- **ほかの run とぶつからない:** 別の run が実行ロックを持つ間は何も起動せず、次の回に回します。1 回の見張りで起動するのは古い止まりから 1 件だけで、worktree と branch は消しません。
+- **記録:** 起動の前に見張りの記録へ `remedy` の行を足し、schedule のタスクには `watch-scan` を actor にした `note` の event を残します。朝報告には「3. 手当て」の節を足しました。
+- **オプション:** `watch-scan` に `--exec-defaults` と `--no-remedy` を足しました。`--dry-run` は起動する手当てを表示するだけです。
+
+**変えたファイル**
+- 実装: `src/exec/watch-remedy.ts`（新規）、`src/exec/watch-scan.ts`、`src/commands/watch-scan.ts`、`src/exec/agent-config.ts`
+- schema: `docs/specdojo/schemas/v1/exec-defaults.schema.yaml`
+- テスト: `tests/src/exec/watch-remedy.test.ts`（新規）、`tests/src/exec/watch-scan.test.ts`、`tests/src/commands/watch-scan.integration.test.ts`（新規。2026-11-13〜14 の夜の上限と負荷の時間切れを、CLI 経路と実際の子プロセスで再現）
+- 文書: 登録簿運用ガイド（「止まった実行に手当てを打つ」を新設）、exec設定ガイド（「見張りの手当て」を新設）、routine運用ガイド、CLI リファレンス、Job 実行設計、`rtn-exec-watch-scan.yaml`
+- 個票: 作業内容・対応結果（迷った点・CHANGELOG に書く事項・申し送り）・関連ドキュメント
+
+**確かめたこと**
+- `npm run validate:history-links` は通りました（終了コード 0）。
+- 関係する単体テスト 3 ファイル（50 件）と新しい統合テスト 1 件は、vitest を直接対象ファイルに絞って流して通りました。
+- 変えたファイルへの ESLint と、`tsc --noEmit`（`tsconfig.build.json`・`tsconfig.test.json`）でもエラーは出ませんでした。
+- これらは npm スクリプトの全件実行ではありません。正式な結果は親の検証で出ます。
+
+**決めておいてほしいこと**
+- **登録簿への記録:** register の event の記録は欄が変わらない行を持てないため、register 項目への手当ては見張りの記録と朝報告に残しました。登録簿には、再開した run 自身が書く遷移の event だけが残ります。登録簿に別の形で残す必要があれば、そう判断してください。
+- **prj-0001 の設定:** 保護された設定は変えていません。手当てを使うなら、`.specdojo/exec-defaults.yaml` に `watch` を足す案（`max_attempts: 2`）を個票の申し送りに書いてあります。
+- **二重の再開:** `rtn-exec-limit-resume`（今は `enabled: false`）を有効にしたまま `usage_limit` を `wait` にすると、同じ延期を両方が再開しようとします。どちらか片方だけを使ってください。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"Added exec-defaults watch.remedies so orchestrator watch-scan launches fixed remedies (wait for the limit or switch agents, rerun timed-out parent validations, sync with the integration target) through the existing exec resume and exec run --register --resume, detached and one per scan. Every remedy defaults to none. Added a per-target attempt cap, remedy and remedy_stopped watch-log lines, a schedule note event by watch-scan, and a remedies section in the morning report. Added unit tests and an integration test reproducing the 2026-11-13 to 14 limit and load timeout, updated the schema, guides, CLI reference, design doc, routine, and ticket.","handoff":["Decision: remedies reuse the existing exec resume and exec run --register --resume, launched detached with output under `execution/watch/remedies/`, one per scan, and only while no other exec run holds the project lock. This keeps the watch lock-free and gives the same sync, conflict stop, and agent switch behavior as a manual resume.","Decision: attempts are counted per target (kind and id) within `attempt_window`, not per stall `key`, because each re-block after a remedy creates a new key. Defaults: `max_attempts` 3, `attempt_window` 24h, `switch_after` 12h, `unknown_resume_wait` 1h.","Decision: register remedies are recorded in the watch log and the morning report only. The register event log cannot hold an entry without a field change, so the register itself only shows the transition events the resumed run writes. Schedule tasks also get a `note` event by `watch-scan`, without meta so the `limit_*` and `pipeline_*` markers stay.","Decision: `needs_target_sync` on an executor or reporter stage uses `--resume-from executor`, which restarts the executor and uses an agent. The integrate stage uses the integration retry, which syncs before commit. Schedule tasks without a pipeline stage get only `--due`.","Proposed protected-config change (not applied): to use remedies in prj-0001, add to `.specdojo/exec-defaults.yaml`: watch: { remedies: { usage_limit: { action: wait, fallback_executor_by: sonnet-executor, fallback_reporter_by: sonnet-reporter, switch_after: 12h }, load_timeout: { action: rerun }, needs_target_sync: { action: sync } }, max_attempts: 2 }. Do not enable `rtn-exec-limit-resume` at the same time as usage_limit wait.","After integration, orchestrator runs `exec smoke` and one real `specdojo routine run --project prj-0001 --id rtn-exec-watch-scan` to confirm the log and the morning report (remedies section shows none by default) before close. Ticket work row 7 stays open for this.","CHANGELOG draft (Added): exec-defaults `watch.remedies` for orchestrator watch-scan (usage limit wait or fallback, load-timeout rerun, target sync), off by default, capped by `max_attempts` and `attempt_window`. watch-scan gains `--exec-defaults` and `--no-remedy`, `remedy` and `remedy_stopped` log lines, and a remedies report section."],"validations":[{"command":"npm run validate:history-links","status":"passed","summary":"All history files valid, including the PJR-3M4M ticket (exit 0)"}]}
+</specdojo_executor_evidence>

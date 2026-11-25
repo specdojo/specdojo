@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -8,7 +8,9 @@ import {
   collectQueueObservations,
   collectRegisterObservations,
   diffWatchScan,
+  openStalls,
   parseWatchLog,
+  planWatchRemedies,
   readRunLogs,
   renderWatchReport,
   reportDate,
@@ -16,6 +18,7 @@ import {
   type WatchScanContext,
 } from "../../../src/exec/watch-scan.js";
 import type { PjrItem } from "../../../src/register/item.js";
+import { resolveWatchRemedies } from "../../../src/exec/watch-remedy.js";
 
 const NOW = "2026-11-14T00:00:00Z";
 
@@ -90,6 +93,107 @@ describe("diffWatchScan", () => {
     );
 
     expect(second.appended.map((line) => line.event)).toEqual(["stalled", "cleared"]);
+  });
+});
+
+describe("openStalls", () => {
+  it("keeps a stall open across the remedy lines written for it", () => {
+    const first = diffWatchScan([], [limitObservation()], NOW);
+    const key = first.appended[0]!.key;
+    const target = { kind: "schedule-task", id: "T-KATA-WAVE-1-dct-index-040" } as const;
+
+    const actual = openStalls([
+      ...first.appended,
+      {
+        v: 1,
+        ts: NOW,
+        event: "remedy_stopped",
+        key,
+        target,
+        category: "usage_limit",
+        attempts: 3,
+        reason: "max",
+        by: "watch-scan",
+      },
+    ]);
+
+    expect([...actual.keys()]).toEqual([key]);
+  });
+});
+
+describe("planWatchRemedies", () => {
+  const remedies = resolveWatchRemedies({
+    remedies: { usage_limit: { action: "wait" }, load_timeout: { action: "rerun" } },
+    max_attempts: 1,
+  });
+  const due = {
+    ...limitObservation(),
+    meta: {
+      limit_kind: "quota_exhausted",
+      limit_resume_at: "2026-11-13T14:37:00.000Z",
+      limit_auto_resume: "true",
+    },
+  };
+  const timeout: StallObservation = {
+    kind: "schedule-task",
+    id: "T-KATA-WAVE-1-cnd-specdojo-070",
+    state: "blocked",
+    since: "2026-11-13T16:00:00Z",
+    message: { source: "events/block.json", text: "parent validation failed: test-unit" },
+    meta: { pipeline_stage: "reporter", pipeline_state_ref: "runs/x/pipeline-state.json" },
+    logs: [{ source: "a.log", text: "Error: Test timed out in 5000ms." }],
+  };
+
+  function plan(
+    runLive: boolean,
+    history: Parameters<typeof planWatchRemedies>[0]["history"] = [],
+  ) {
+    const { current } = diffWatchScan([], [due, timeout], NOW);
+    return planWatchRemedies({
+      projectId: "prj-0001",
+      root: "/repo",
+      executionPath: "/repo/execution",
+      current,
+      observations: new Map(
+        [due, timeout].map((item) => [`${item.kind}:${item.id}:${item.state}:${item.since}`, item]),
+      ),
+      history,
+      config: remedies,
+      now: new Date(NOW),
+      nowText: NOW,
+      runLive,
+    });
+  }
+
+  it("launches one remedy per scan, starting from the oldest stall", () => {
+    const actual = plan(false);
+
+    expect(actual.launched).toMatchObject({
+      event: "remedy",
+      target: { id: "T-KATA-WAVE-1-dct-index-040" },
+      action: "resume_due",
+      attempt: 1,
+      max_attempts: 1,
+      log: "execution/watch/remedies/20261114T000000Z-T-KATA-WAVE-1-dct-index-040.log",
+      by: "watch-scan",
+    });
+  });
+
+  it("launches nothing while another exec run holds the lock", () => {
+    const actual = plan(true);
+
+    expect(actual.launched).toBeUndefined();
+    expect(actual.deferredByLock).toBe(true);
+  });
+
+  it("stops a target that reached max_attempts only once", () => {
+    const launched = plan(false).launched!;
+    const second = plan(false, [launched]);
+    const third = plan(false, [launched, ...second.stopped]);
+
+    expect(second.stopped.map((line) => line.target.id)).toEqual(["T-KATA-WAVE-1-dct-index-040"]);
+    expect(second.launched?.target.id).toBe("T-KATA-WAVE-1-cnd-specdojo-070");
+    expect(third.stopped).toEqual([]);
   });
 });
 
@@ -322,8 +426,112 @@ describe("watch-scan file readers", () => {
     );
     const report = await readFile(second.reportPath, "utf8");
     expect(report).toContain("- 最後に見た時刻: `2026-11-14T00:30:00Z`");
+    expect(report).toContain("## 3. 手当て\n\n- なし");
     expect(report).toContain(
       "- `PJR-DDDD`（register 項目、`review`、`2026-11-13T00:00:00Z` から）",
     );
+  });
+
+  async function writeLimitWait(): Promise<string> {
+    const registerPath = path.join(dir, "register");
+    await mkdir(path.join(registerPath, "events"), { recursive: true });
+    await writeFile(
+      path.join(registerPath, "events", "pjr-aaaa.yaml"),
+      [
+        "- v: 1",
+        "  id: reg_00000000000000000000000000000001",
+        '  ts: "2026-11-13T15:00:00Z"',
+        "  action: wait",
+        "  actor: sol-executor",
+        "  from_status: in-progress",
+        "  to_status: waiting",
+        "  reason: rate limit reached",
+        "  changes:",
+        "    - field: status",
+        "      from: in-progress",
+        "      to: waiting",
+        "",
+      ].join("\n"),
+      "utf8",
+    );
+    return registerPath;
+  }
+
+  it("records the remedy before launching it and lists it in the morning report", async () => {
+    const registerPath = await writeLimitWait();
+    const items = [
+      { id: "PJR-AAAA", status: "waiting", registeredAt: "2026-11-13T00:00:00Z" },
+    ] as PjrItem[];
+    const logged: string[] = [];
+    const launch = vi.fn((argv: readonly string[], logPath: string) => {
+      logged.push(path.relative(dir, logPath));
+    });
+
+    const outcome = runWatchScan({
+      projectId: "prj-test",
+      root: dir,
+      executionPath: path.join(dir, "execution"),
+      register: { items, projectRegisterPath: registerPath },
+      timeZone: "UTC",
+      now: new Date(NOW),
+      staleMs: 2 * 3_600_000,
+      dryRun: false,
+      remedies: resolveWatchRemedies({ remedies: { usage_limit: { action: "wait" } } }),
+      launch,
+      isRunLive: () => false,
+    });
+
+    expect(launch).toHaveBeenCalledTimes(1);
+    expect(launch.mock.calls[0]![0]).toEqual([
+      "exec",
+      "run",
+      "--project",
+      "prj-test",
+      "--register",
+      "PJR-AAAA",
+      "--worktree",
+      "--resume",
+      "--if-busy",
+      "skip",
+    ]);
+    expect(logged).toEqual([
+      path.join("execution", "watch", "remedies", "20261114T000000Z-PJR-AAAA.log"),
+    ]);
+    const log = (await readFile(outcome.logPath, "utf8")).trim().split("\n");
+    expect(log.map((line) => (JSON.parse(line) as { event: string }).event)).toEqual([
+      "stalled",
+      "remedy",
+    ]);
+    const report = await readFile(outcome.reportPath, "utf8");
+    expect(report).toContain(
+      "- `PJR-AAAA`（register 項目、`2026-11-14T00:00:00Z`）: 解除の時刻を過ぎたので同じ agent で再開する（`resume`、1/3 回目）",
+    );
+  });
+
+  it("plans the remedy but launches nothing in a dry run", async () => {
+    const registerPath = await writeLimitWait();
+    const launch = vi.fn();
+
+    const outcome = runWatchScan({
+      projectId: "prj-test",
+      root: dir,
+      executionPath: path.join(dir, "execution"),
+      register: {
+        items: [
+          { id: "PJR-AAAA", status: "waiting", registeredAt: "2026-11-13T00:00:00Z" },
+        ] as PjrItem[],
+        projectRegisterPath: registerPath,
+      },
+      timeZone: "UTC",
+      now: new Date(NOW),
+      staleMs: 2 * 3_600_000,
+      dryRun: true,
+      remedies: resolveWatchRemedies({ remedies: { usage_limit: { action: "wait" } } }),
+      launch,
+      isRunLive: () => false,
+    });
+
+    expect(launch).not.toHaveBeenCalled();
+    expect(outcome.remedy.launched?.action).toBe("resume");
   });
 });
