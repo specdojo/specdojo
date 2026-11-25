@@ -1,0 +1,9 @@
+R2（構成）のレビューを終えました。`docs/ja/specdojo/samples/otp-sample.md` に構成の直しを 1 件入れ、ほかの観点は指摘なしです。prettier と markdownlint はどちらも通っています。
+
+- **章の順と見出し:** rulebook の本文構成に書かれた 11 章と、順序・見出しとも一致しています。
+- **直した箇所（6. 問合せ窓口/一次対応）:** 一次対応の範囲とエスカレーション条件のあいだに、問合せ記録の書き方の表が挟まっていました。エスカレーション条件を「エスカレーション条件:」の箇条として一次対応の範囲の直後に移し、問合せ記録の表をこの章の最後に置きました。
+- **template:** otp の template は `docs/ja/specdojo/templates/` にありません。そのため、構成の照合は rulebook だけで行いました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R2 構成: otp-sample の章の順・見出しは rulebook の本文構成 11 章と一致。「6. 問合せ窓口/一次対応」でエスカレーション条件を一次対応の範囲の直後へ移し、問合せ記録の表を章末に置いた。otp の template はないため、構成は rulebook だけで照合した。","handoff":["R2-1: R2 / 6. 問合せ窓口/一次対応 / エスカレーション条件（P1・P2、金額や連絡先に関わる P3、2 営業日を過ぎた未解決）が問合せ記録の表の後に置かれ、rulebook の本文要件（窓口・受付時間・チャネル・一次対応範囲・エスカレーション条件）の順を問合せ記録の表が分断していた / 「エスカレーション条件:」の箇条として一次対応の範囲の直後へ移し、子の箇条 3 つにまとめた。問合せ記録の表は章の最後に置いた / vp-arc-document-structure / -","R2-2: R2 / 全体（章構成） / 11 章の順・見出しは rulebook の本文要件と一致し、各章で表の前に 1 文、表の後に補足という配置もそろっている。2. 監視/アラートで 8. の当番表を先に参照しているが、章の順を rulebook が決めているため動かさない / - / vp-arc-document-structure、vp-qe-omissions-consistency / -","申し送り: otp の template は docs/ja/specdojo/templates/ にない。このため、R2 の照合は rulebook の本文構成だけで行った。template を作るかどうかは型の schedule で判断する。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/otp-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/otp-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/otp-sample.md のみで、plan・result・個票を変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変更していない","reason":"変更したファイルに *.yaml / *.yml がない"}]}
+</specdojo_executor_evidence>
