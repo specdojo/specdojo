@@ -95,7 +95,44 @@ export function assertRubric(doc: ReviewViewpointsDoc): GradeRubric {
       }
     }
   }
+  assertSizeLimits(rubric);
   return rubric;
+}
+
+// size_limits は schema でも検証するが、未検証の観点定義から数値でない上限を読むと比較が
+// 常に偽になり、上限の超過を黙って見逃す。
+function assertSizeLimits(rubric: GradeRubric): void {
+  const limits: unknown = rubric.size_limits;
+  if (limits === undefined) return;
+  if (!isRecord(limits))
+    throw new Error(`grade_rubric ${rubric.id}: size_limits must be a mapping`);
+  for (const key of ["sample_ratio", "growth_ratio", "operations_ratio"] as const) {
+    const threshold = limits[key];
+    if (threshold === undefined) continue;
+    if (
+      !isRecord(threshold) ||
+      typeof threshold.minor !== "number" ||
+      typeof threshold.major !== "number" ||
+      !(threshold.minor > 0) ||
+      threshold.major < threshold.minor ||
+      (threshold.min_characters !== undefined &&
+        (!Number.isSafeInteger(threshold.min_characters) || Number(threshold.min_characters) < 0))
+    ) {
+      throw new Error(
+        `grade_rubric ${rubric.id}: size_limits.${key} needs positive minor, major >= minor, and a non-negative integer min_characters`,
+      );
+    }
+  }
+  const headings = limits.operations_headings;
+  if (
+    headings !== undefined &&
+    (!Array.isArray(headings) ||
+      headings.some((heading) => typeof heading !== "string" || !heading))
+  ) {
+    throw new Error(
+      `grade_rubric ${rubric.id}: size_limits.operations_headings must be non-empty strings`,
+    );
+  }
 }
 
 export function relativePathFromRoot(path: string, rootDir: string): string {
