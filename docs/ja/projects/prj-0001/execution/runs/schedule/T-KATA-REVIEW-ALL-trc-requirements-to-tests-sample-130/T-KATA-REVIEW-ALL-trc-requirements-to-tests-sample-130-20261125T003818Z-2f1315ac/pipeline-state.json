@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-trc-requirements-to-tests-sample-130",
+  "run_id": "T-KATA-REVIEW-ALL-trc-requirements-to-tests-sample-130-20261125T003818Z-2f1315ac",
+  "updated_at": "2026-11-25T13:49:41.390Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-25T00:39:11.347Z",
+      "completed_at": "2026-11-25T00:42:40.580Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-trc-requirements-to-tests-sample-130/T-KATA-REVIEW-ALL-trc-requirements-to-tests-sample-130-20261125T003818Z-2f1315ac/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "sonnet-reporter",
+      "attempts": 7,
+      "started_at": "2026-11-25T13:48:38.794Z",
+      "completed_at": "2026-11-25T13:48:51.922Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-trc-requirements-to-tests-sample-130/T-KATA-REVIEW-ALL-trc-requirements-to-tests-sample-130-20261125T003818Z-2f1315ac/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-25T13:49:00.343Z",
+      "completed_at": "2026-11-25T13:49:41.390Z",
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-trc-requirements-to-tests-sample-130/T-KATA-REVIEW-ALL-trc-requirements-to-tests-sample-130-20261125T003818Z-2f1315ac/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-trc-requirements-to-tests-sample-130/T-KATA-REVIEW-ALL-trc-requirements-to-tests-sample-130-20261125T003818Z-2f1315ac/result.md"
+  }
+}
