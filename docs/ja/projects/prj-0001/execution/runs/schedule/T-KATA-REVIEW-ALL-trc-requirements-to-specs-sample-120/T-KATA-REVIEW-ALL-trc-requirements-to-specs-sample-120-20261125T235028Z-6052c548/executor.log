@@ -1,0 +1,12 @@
+R2（構成）のレビューで、sample の `docs/ja/specdojo/samples/trc-requirements-to-specs-sample.md` に 2 か所の差分を入れました。変更したのはこのファイルだけで、rulebook とほかの kata は変えていません。Prettier と markdownlint はこのファイルについて通りました。
+
+章の順（目的と適用範囲 → トレース対象の前提 → トレースマトリクス → 充足状況サマリ → ギャップと対応方針 → 変更履歴と更新ルール）は rulebook の「本文要件」と一致していました。trc の template はないため、rulebook と照らし合わせました。
+
+- **充足状況サマリ:** 「要求に対応しない仕様」の行が合計 4 件の行の後に同じ表で並んでいました。数える対象が違うものが 1 つの表に混ざっていたので、表から外して表の後の 1 文にしました。
+- **ギャップと対応方針:** 行の順を「充足状況サマリ」の優先順（`req-r1-004` → `req-r1-002` → `bes-product-master`）にそろえ、表の前の文にもそう明記しました。要求 ID 順のままにする案もあるため、「要判断」の印を付けています。
+
+grade の F001（使う人の欄の表記ゆれ）は R3 の観点 `vp-ux-language-consistency` に当たるので、ここでは直さずに R3 に送りました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R2 構成のレビューで sample に構成の差分を 2 件入れた（充足状況サマリの表から要求に対応しない仕様の行を本文へ分離、ギャップと対応方針の行を優先順に並べ替え）。F001 は R3 の観点のため R3 に送った。","handoff":["R2-1: R2 / 4. 充足状況サマリ / 充足状況ごとの件数の表に、数える対象が違う「要求に対応しない仕様」の行が合計の後に並んでいた。rulebook の「トレースマトリクスの標準列」では、この表の行はサマリの充足状況ごとの件数に含めない / 表からその行を外し、表の後に「要求に対応しない仕様は 2 件であり、充足状況ごとの件数に含めない。」を置いた / `vp-arc-document-structure`、rulebook「本文要件」「トレースマトリクスの標準列」 / -","R2-2: R2 / 5. ギャップと対応方針 / ギャップの表の行の順（req-r1-002 → req-r1-004 → bes-product-master）が、直前の「充足状況サマリ」の優先順（req-r1-004 → req-r1-002 → bes-product-master）と違い、前提から結論への流れが途切れていた / 行を優先順に並べ替え、表の前の 1 文に「「充足状況サマリ」の優先順に示す」を足した / `vp-arc-document-structure`、`vp-qe-omissions-consistency`。迷った理由: トレースマトリクスと同じ要求 ID 順にそろえる案もある。選ばなかった案は、行を ID 順のまま残し、本文に優先順を書かない案 / 要判断","R2-3: R2 / 1. 目的と適用範囲 / grade の F001（使う人の欄が通称で、適用先のメンバー定義の Role code にそろっていない）は観点 `vp-ux-language-consistency` で R3 の担当のため、この段では直していない / - / `vp-ux-language-consistency`（kata-guide「kata の観点の組」で R3 の観点）。R3 の段で使う人の欄の表記を直す / -"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/trc-requirements-to-specs-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint docs/ja/specdojo/samples/trc-requirements-to-specs-sample.md","status":"passed","summary":"no errors"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/ 配下の sample だけで、plan・result・個票を変更していないため"}]}
+</specdojo_executor_evidence>
