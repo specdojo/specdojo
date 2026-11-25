@@ -91,6 +91,7 @@ specdojo:
 | 根拠           | [[specdojo:prj-assumptions-constraints-dependencies-sample\|前提・制約・依存]] | 通信断の前提（ACD-A02）とタブレット 1 台の前提（ACD-D01）                         |
 | 関連する NFR   | [[specdojo:nfr-availability-sample\|可用性要件]]                               | 稼働率・RTO・RPO。`nfr-ops-003`〜`nfr-ops-005` と同じ夜間バックアップを前提とする |
 | 受入条件       | `sac-operations`                                                               | `nfr-ops-001`〜`nfr-ops-009` の合否判定                                           |
+| 設計判断       | `dec-*`                                                                        | 基準値の見直しと対象外の判断の根拠                                                |
 | 運用方針       | [[specdojo:opd-index-sample\|運用方針・設計（全体構成）]]                      | 体制・エスカレーション表、バックアップ・リストア方針                              |
 | 運用方針       | [[specdojo:opd-monitoring-sample\|運用方針・設計（監視）]]                     | `nfr-ops-001`・`nfr-ops-002` の測定元・閾値・通知の手段                           |
 | 運用方針       | [[specdojo:opd-incident-management-sample\|運用方針・設計（障害対応）]]        | `nfr-ops-006` の対象とする優先度の判定と停止の判断                                |
