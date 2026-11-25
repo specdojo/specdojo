@@ -1,0 +1,18 @@
+R1（目的の過不足）を確認し、`docs/ja/specdojo/samples/br-sample.md` を 1 か所直しました。整形と markdownlint は通っています。残りの検査は親 runner が実行します。
+
+**直した箇所:** 第 6 章「メモ / 将来課題」の末尾
+
+- 修正前: 「未決事項はない。季節別の発注点の設定方法は将来の別ルールで扱う。」
+- 修正後: 「未決事項はない。判定例 1〜9 の期待結果が `R-01`〜`R-03` と `E-01`〜`E-03` の順序から一意に導けることを確かめた時点で、本ルールを承認できる。」
+
+**足した理由:** 承認できる条件が抜けていたため足しました（F001 への対応）。`br-template` の第 6 章末尾はこの条件の記入を求めていますが、sample には書かれていませんでした。
+
+**削った理由:** 季節別の発注点の一文は削りました。第 1 章「概要」の対象外にある「発注点の決め方」と同じことを述べていて、余分な内容だったためです。
+
+**要判断:** finding は「人間の PO による承認」も書くよう勧めていましたが、書いていません。Sample 記述標準の記述ガイドは、承認する役割の割り当てを本文に書かないよう定めているためです。役割まで書くかどうかを決めてください。
+
+rulebook と template は変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1（目的の過不足）として br-sample の第 6 章「メモ / 将来課題」に承認できる条件を足し（F001）、対象外と重なる季節別発注点の一文を削った。rulebook と template は変更していない。","handoff":["No: 1 / 段: R1 / 箇所: docs/ja/specdojo/samples/br-sample.md の「メモ / 将来課題」末尾 / 指摘: br-template の第 6 章末尾は承認できる条件の記入を求めているが、sample は未決事項なしと将来の範囲の説明だけで終わっていた（F001、`vp-qe-kata-conformance`） / 直した案: 「判定例 1〜9 の期待結果が `R-01`〜`R-03` と `E-01`〜`E-03` の順序から一意に導けることを確かめた時点で、本ルールを承認できる。」を追記した / 根拠: br-template の「メモ / 将来課題」にある「承認可能となる条件を記入する」、br-rulebook の本文要件の「メモ / 将来課題」 / 印: なし","No: 2 / 段: R1 / 箇所: docs/ja/specdojo/samples/br-sample.md の「メモ / 将来課題」 / 指摘: 「季節別の発注点の設定方法は将来の別ルールで扱う。」は、概要の対象外にある「発注点の決め方」と同じ責務の境界を繰り返しており、完成例に要らない / 直した案: この一文を削除した / 根拠: 「概要」の対象外の記述、br-rulebook の記述ガイド「メモ / 将来課題」（未決事項と確定できる範囲を区別する章であり、対象外を再掲する章ではない）、`vp-arc-conciseness` / 印: なし","No: 3 / 段: R1 / 箇所: docs/ja/specdojo/samples/br-sample.md の「メモ / 将来課題」 / 指摘: F001 は「人間の PO による承認」も書くよう勧めているが、Sample 記述標準の記述ガイドは承認する役割の割り当てを本文に書かないよう定めているため、承認者の役割は書いていない / 直した案: 承認できる条件（判定規則と判定例の確認）だけを書いた。役割まで書く場合は、template の「承認可能となる条件」と Sample 記述標準の役割の割り当ての禁止との関係を、標準または template の側で明確にする案がある / 根拠: sample-authoring-standard の記述ガイド（承認の役割と進み具合を本文に書かない）、kata-guide の「kata の観点の組」で `vp-po-decision-readiness` を使わないとしていること / 印: 要判断"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/br-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint docs/ja/specdojo/samples/br-sample.md","status":"passed","summary":"エラーなし"}]}
+</specdojo_executor_evidence>
