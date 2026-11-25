@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-REVIEW-ALL-pm-communication-plan-sample-140",
   "run_id": "T-KATA-REVIEW-ALL-pm-communication-plan-sample-140-20261125T072451Z-42c54a5c",
-  "updated_at": "2026-11-25T07:39:40.117Z",
+  "updated_at": "2026-11-25T07:40:38.538Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-pm-communication-plan-sample-140/T-KATA-REVIEW-ALL-pm-communication-plan-sample-140-20261125T072451Z-42c54a5c/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-25T07:39:40.117Z",
-      "completed_at": null,
+      "completed_at": "2026-11-25T07:40:38.538Z",
       "artifact_ref": null
     }
   },
