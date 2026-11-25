@@ -1,0 +1,21 @@
+R2（構成）のレビューを終えました。sample の変更は 1 か所で、「ギャップと対応方針」の表の行を並べ替えただけです。変更したのは `docs/ja/specdojo/samples/trc-requirements-to-tests-sample.md` で、Prettier の検査は通りました。
+
+**直したこと（R2-1）**
+「ギャップと対応方針」の表の行が、直前の「充足状況サマリ」で挙げた優先順位と食い違っていました。表の先頭は対応テストが `draft` の行でしたが、優先順位では 3 番目です。読み手が優先順位を読んだ直後に、逆の順でギャップを読むことになっていました。そこで行を次の順に並べ替えました。セルの内容は変えていません。
+
+1. `BAC-02`・`BAC-03`
+2. `AC-02`
+3. 対応テストが `draft` の群
+4. 母集団外の参照
+
+**確かめて、直さなかったこと**
+- **章の構成**: 6 章とも rulebook の「本文要件」と同じ順に並んでおり、必須の章も欠けていません。
+- **表の配置**: トレースマトリクスは 6 列で、母集団外の参照の表はその後にあります。充足状況サマリには、件数と優先する要求項目と理由がそろっています。
+- **template と recipe**: どちらも用意されていません。rulebook も要否を「未決」としているため、照らし合わせはできませんでした。
+
+**扱わなかった指摘**
+grade の F001（ギャップと対応方針の表で、要求文書 ID の付け方と区切り記号がそろっていない）は観点が `vp-ux-language-consistency` で、kata ガイドでは R3 が扱う観点です。そのため R3 に任せました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R2（構成）: 章の順・表の配置は rulebook の本文要件と一致。ギャップと対応方針の表の行を充足状況サマリの優先順位の順へ並べ替えた。F001 は R3 の観点のため R3 に委ねた。","handoff":["R2-1: R2 / 5. ギャップと対応方針 / 表の行の順が、直前の「充足状況サマリ」に書いた優先する要求項目の順（1. BAC-02・BAC-03、2. AC-02、3. draft の群）と食い違い、先頭が優先 3 の draft の群になっていた / 行を BAC-02・BAC-03 → AC-02 → draft の群 → 母集団外の参照の順へ並べ替えた（セルの内容は変えていない） / vp-arc-document-structure（前提から結論の順に読めること） / -","R2-2: R2 / 全体 / 章の順・必須章・表の配置（マトリクスは標準 6 列、母集団外の参照の表はマトリクスの後、サマリに件数と優先する要求項目と理由）は rulebook の「本文要件」と「トレースマトリクスの標準列」に合っている。template と recipe は未作成で、rulebook も要否を _UNDECIDED_ としているため、template とは照合できない / - / vp-arc-document-structure、vp-qe-omissions-consistency / -","F001（ギャップと対応方針の表で要求文書 ID の付け方と区切り記号 `,`・`・` がそろっていない）は観点 `vp-ux-language-consistency` であり、kata ガイドの「kata の観点の組」では R3 の観点のため、R2 では直さず R3 に委ねた。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/trc-requirements-to-tests-sample.md","status":"passed","summary":"All matched files use Prettier code style"}]}
+</specdojo_executor_evidence>
