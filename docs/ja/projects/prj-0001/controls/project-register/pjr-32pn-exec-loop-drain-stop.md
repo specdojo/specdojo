@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-32pn-exec-loop-drain-stop
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-25T11:11:06Z"
   due_on: "2026-12-31"
+  completed_at: "2026-11-25T22:04:21Z"
+  conclusion: exec stop で、走っているタスクを統合まで終えてからループを止め、列から再開できるようにした。
   derived_from:
     - PJR-0BGE
 ---
