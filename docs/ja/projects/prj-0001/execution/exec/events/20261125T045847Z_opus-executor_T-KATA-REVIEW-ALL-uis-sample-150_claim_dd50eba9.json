@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-25T04:58:47Z",
+  "type": "claim",
+  "task_id": "T-KATA-REVIEW-ALL-uis-sample-150",
+  "by": "opus-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "UX"
+  }
+}
