@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-cdfd-overview-sample-140",
+  "run_id": "T-KATA-REVIEW-ALL-cdfd-overview-sample-140-20261125T042222Z-e474f4ec",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-25T04:23:07.904Z",
+    "completed_at": "2026-11-25T04:26:30.246Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴ファイルを変更していない",
+      "reason": "executor は plan・result・個票を変更していないため"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "YAML を変更していない",
+      "reason": "変更した *.yaml / *.yml ファイルがないため"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md\n\nlint:md:changed: no changed files"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\nlint:fm:changed: no changed files"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7044 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7044 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)",
+      "reason": "skipped by change type: no changed file matches paths (docs/ja/specdojo/**, docs/specdojo/**)"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nd: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-cdfd-overview-sample-140/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-cdfd-overview-sample-140/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R4（正しさ）で、sample の事実を rulebook・D2 記法ルール・STSD rulebook・prj-overview-sample・package.json と突き合わせ、すべて一致した。直す誤りがないため sample は変更していない。F001（冗長さ）と F002（省略の注記。今の版で解消済み）は R4 の観点ではないので扱わない。",
+  "completion_status": "complete",
+  "handoff": [
+    "R4 確かめ No1: 主張=frontmatter の `type: flow` と `rulebook: specdojo:cdfd-overview-rulebook`／正本=docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md の「推奨 Frontmatter 項目」とスキーマ docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml／結果=一致（rulebook は type に flow を指定し、スキーマの列挙値にも flow がある）",
+    "R4 確かめ No2: 主張=プロセスグループ方式で、5 グループ・10 領域、P-01 形式の領域 ID／正本=cdfd-overview-rulebook の「位置づけと用語定義」「ファイル命名・ID規則」「プロセス領域」／結果=一致（グループは上限の 8 以下で、宣言がない場合の既定方式）",
+    "R4 確かめ No3: 主張=代表ノード 5・データストア 8・物理保管 1 の計 14 ノードなので 1 図にする／正本=cdfd-overview-rulebook の「概念データフロー（概要）」（16 を超えたら分割、外部主体は数えない）／結果=一致（表のマスタ 2 行とトランザクション 6 行が図の円柱 8 個と名前で一対一に対応）",
+    "R4 確かめ No4: 主張=詳細 CDFD の ID（`cdfd-purchasing` などと `cdfd-uc-credit-sales`・`cdfd-uc-replenishment`）とケース ID の C-01 形式／正本=cdfd-overview-rulebook の「ファイル命名・ID規則」（`cdfd-<group>`、`cdfd-uc-<topic>`、C-01）／結果=一致",
+    "R4 確かめ No5: 主張=凡例の形状と色（プロセスは border-radius 8 で #e3f2fd/#1e88e5、イベントは hexagon、マスタは #e8f5e9/#43a047、トランザクションは #c8e6c9/#2e7d32、物理保管は border-radius 20、外部主体は rectangle で #f5f7fa/#607d8b、物の流れは material_flow）／正本=docs/ja/specdojo/rulebooks/cdfd-d2-rulebook.md の概念の表とスタイル例／結果=一致",
+    "R4 確かめ No6: 主張=配置制御用の非表示の線（`style.opacity: 0` とコメント `# 配置制御用（受け渡しではない）`）と、戻りの矢印を `<-` で書くこと／正本=cdfd-d2-rulebook の「エッジ」／結果=一致",
+    "R4 確かめ No7: 主張=状態の定義と遷移は STSD を正本とする（STSD は Status Definition の略）／正本=docs/ja/specdojo/rulebooks/stsd-rulebook.md の H1 と「全体方針」／結果=一致",
+    "R4 確かめ No8: 主張=店主代表が最終判断を担い、家族利用者代表が店番を担い、システムは記録と確認を支援する（参照先は `specdojo:prj-overview-sample`）／正本=docs/ja/specdojo/samples/prj-overview-sample.md の 17 行目と 113 行目／結果=一致",
+    "R4 確かめ No9: 主張=wikilink の参照先 ID（`specdojo:prj-overview-sample`、`specdojo:cdfd-d2-rulebook`）が実在する／確かめ方=grep で frontmatter の id を確認／結果=一致",
+    "R4 確かめ No10: 主張=D2 コードブロックが描画できる／正本=`npm run lint:d2`（package.json に定義あり）／結果=私は確かめていない（親の runner が lint:d2 を実行する）",
+    "plan に展開された指摘: F001（`vp-arc-conciseness`）と F002（`vp-qe-kata-conformance`）は R4 の観点ではないので、それぞれの段に任せる。F002 が求める省略の注記は、今の版では図の直後の 1 文として既にあり、解消済みと判断した。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-cdfd-overview-sample-140/T-KATA-REVIEW-ALL-cdfd-overview-sample-140-20261125T042222Z-e474f4ec/executor.log",
+      "bytes": 5821,
+      "truncated": false
+    }
+  ]
+}
