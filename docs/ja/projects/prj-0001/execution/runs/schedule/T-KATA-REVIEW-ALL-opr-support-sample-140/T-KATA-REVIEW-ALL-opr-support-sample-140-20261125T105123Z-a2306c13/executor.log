@@ -1,0 +1,31 @@
+R4（正しさ）の段を終えました。対象の `opr-support-sample` に 3 件の直しを入れました。`opr-sample.md` は誤りが見つからなかったので変えていません。result ファイルには手を付けていません。
+
+**直した誤り**
+
+| No | 箇所 | 直す前 | 直した後 | 根拠 |
+| --- | --- | --- | --- | --- |
+| 1 | 手順適用範囲・前提の「必要権限」 | `OPS` は「閲覧の権限」、訂正は店番担当が「記録の権限」で行う | `OPS` は証跡の参照権限で日次締め記録を確かめ、訂正はしない。訂正は店番担当が店番の区分で行い、つけ残高の訂正だけは店主代表が管理の区分で行う | `opd-access-control-sample` の権限区分は店番・管理・運用・保守の 4 つで、「閲覧」「記録」という区分はない。つけ残高の訂正は管理の区分にしかなく、運用の区分は販売・つけの記録と訂正ができない |
+| 2 | 一次対応の流れ（手順 2「再現条件」） | `OPS` の閲覧の権限で同じ画面を確かめる | `OPS` が日次締め記録で同じ内容を確かめる | No.1 と同じ。日次締め記録は `opr-sample` の証跡の表で `OPS` が参照できる |
+| 3 | 関連ドキュメント導線 | `opr-incident` を「予定」としていた | `[[specdojo:opr-incident-sample\|運用手順（障害対応）]]`、作成済 | `opr-incident-sample.md` はすでにあり、rulebook の sample 宣言にも入っている |
+
+**正本と一致した主張**
+
+- **障害の優先度:** P1〜P3 の条件と期限、P1 で `OPS` が応答しないときに `PO` へ連絡すること。`opd-index-sample` の体制・責任分界の表と合っています。
+- **問い合わせの応答の目標:** 操作の質問、記録の訂正の依頼、機能の要望の 3 分類。同じ文書の問い合わせ運用方針と合っています。
+- **KPI:** 「営業日の 90% 以上で記録を継続」は `opd-index-sample` の値と合っています。
+- **時刻:** 営業時間 10:00〜18:00 と開店前 9:45 は `opr-sample` と合っています。
+- **操作メモの回答例:** 「顧客の画面の取り消しから当日分だけ消せます」は `opr-sample` の問い合わせ一次対応手順と同じです。
+- **夜間バックアップ:** 失敗を監視で見つけ、問い合わせとして受けないこと。`opd-index-sample` の監視・アラート方針と合っています。
+- **frontmatter:** `type: operations` は schema の列挙値にあります。rulebook の sample 宣言にも本書が入っています。
+
+**この段で扱わなかった grade の finding**
+
+- **F001・F004:** `vp-po-decision-readiness`・`vp-ops-release-readiness` の指摘です。kata-guide はこの 2 観点を kata の段のレビューで使わないとしているので、扱いませんでした。
+- **F002:** 監査ログ以外の証跡の保管期間の指摘です。`opr-sample` の未決事項の表に「監査ログ以外の証跡の保管期間」の行と決まるまでの扱いがもうあるので、直していません。
+- **F003:** 本文で `opr-sample` を `opr-index` と呼ぶ書き方の指摘です。ほかの分冊 sample（`opr-access-control`・`opr-change`・`opr-incident`）も同じ書き方なので、この段では変えませんでした。一方で `opr-sample` は手順群の入口を `opr-index-sample` としていて、呼び方が食い違っています。この食い違いは R5（整合）で決める必要があります。
+
+**検証:** `npx prettier --write` は整形の差分なし、`npx markdownlint` はエラーなしでした。一覧にある検証は、このあと親 runner が流します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）で opr-support-sample の誤り 3 件（権限区分の名前、つけ残高の訂正者、opr-incident の作成状態）を正本に合わせて直した。ほかの主張は opd-index-sample・opd-access-control-sample・opr-sample・rulebook・schema と一致した。","handoff":["R4 確かめ No1: 主張「OPS は閲覧の権限、訂正は店番担当が記録の権限」（手順適用範囲・前提の必要権限）／正本 docs/ja/specdojo/samples/opd-access-control-sample.md の権限区分／結果 不一致。権限区分は店番・管理・運用・保守で、つけ残高の訂正は管理の区分だけ。「OPS は証跡の参照権限で日次締め記録を確かめ、訂正しない。訂正は店番担当が店番の区分で、つけ残高は店主代表が管理の区分で」に直した。","R4 確かめ No2: 主張「OPS の閲覧の権限で同じ画面を確かめる」（一次対応の流れの手順 2）／正本 opd-access-control-sample の権限区分と opr-sample の証跡の表（日次締め記録の参照権限に OPS）／結果 不一致。「OPS が日次締め記録で同じ内容を確かめる」に直した。","R4 確かめ No3: 主張「`opr-incident` は予定」（関連ドキュメント導線）／正本 docs/ja/specdojo/samples/opr-incident-sample.md と opr-rulebook の sample 宣言／結果 不一致。[[specdojo:opr-incident-sample\\|運用手順（障害対応）]]・作成済に直した。","R4 確かめ No4: 主張 P1〜P3 の条件・期限と「P1 で OPS が応答しなければ PO」／正本 opd-index-sample の体制・責任分界の表／結果 一致。","R4 確かめ No5: 主張 操作の質問・記録の訂正の依頼・機能の要望の応答の目標／正本 opd-index-sample の問い合わせ運用方針／結果 一致。","R4 確かめ No6: 主張 KPI「営業日の 90% 以上で記録を継続」／正本 opd-index-sample の SLO・SLA・KPI／結果 一致。","R4 確かめ No7: 主張 営業時間 10:00〜18:00、開店前 9:45 から／正本 opr-sample の手順適用範囲・前提／結果 一致。","R4 確かめ No8: 主張 操作メモ「顧客の画面の取り消しから当日分だけ消せます」／正本 opr-sample の問い合わせ一次対応手順／結果 一致。","R4 確かめ No9: 主張「夜間バックアップの失敗は監視で検知」／正本 opd-index-sample の監視・アラート方針／結果 一致。","R4 確かめ No10: 主張 frontmatter の `type: operations` と `rulebook: specdojo:opr-rulebook`／正本 docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml と opr-rulebook の sample 宣言／結果 一致。","grade の finding F001（vp-po-decision-readiness）と F004（vp-ops-release-readiness）: kata-guide の『kata を agent でレビューする』は、この 2 観点を kata の段のレビューで使わないとしているため扱わない。","grade の finding F002（vp-qe-verifiability、opr-sample の保管期間）: opr-sample の未決事項の表に『監査ログ以外の証跡の保管期間』の行と決まるまでの扱いがあり、証跡の章からも参照しているため解消済みと判断し、opr-sample は変えていない。","grade の finding F003（vp-qe-kata-conformance）: 『予定』の誤りは R4 で直した。opr-sample を `opr-index` と呼ぶ書き方は分冊 sample（opr-access-control・opr-change・opr-incident）の共通の書き方なので維持した。ただし opr-sample が手順群の入口を opr-index-sample としていて呼び方が食い違うため、R5（整合）で決める必要がある。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/opr-support-sample.md","status":"passed","summary":"整形の差分なし（unchanged）"},{"command":"npx markdownlint docs/ja/specdojo/samples/opr-support-sample.md","status":"passed","summary":"エラーなし"}]}
+</specdojo_executor_evidence>
