@@ -1,0 +1,36 @@
+PJR-T4E0 の 2 回目を終えました。develop（PJR-3M4M 入り）を基に 1 回目の変更をすべて入れ直し、3M4M の手当てとどちらの機能も残しています。sandbox では関係するテストだけを流し、すべて通りました。親の検証の一式はまだ流していません。
+
+**入れ直したもの**
+- 1 回目の新しいファイルはそのまま入れました（`watch-control.ts`・`watch-wait.ts`・`watch-command.ts` とそのテスト）。
+- `git apply`・`git merge-file`・`diff3` が承認待ちで使えなかったため、衝突したファイルは両方の差分を読んで手で合わせました。対象は `src/exec/watch-scan.ts`・`src/commands/watch-scan.ts`・`tests/src/exec/watch-scan.test.ts`、3 つの文書（登録簿運用ガイド・ルーチン運用ガイド・コマンドリファレンス）と Job 実行設計（`sysd-job-execution.md`）です。
+
+**手当てとの両立**
+- 対象外の対象（止めた印・人やオーケストレーターの claim・その対象で動いているプロセス）は、記録にも手当ての候補にも入りません。
+- 見張りを全体で止めている回と `--if-busy skip` の回は、何も見ずに終わり、手当ても起動しません。
+- ロックの間は手当てを次の回に回す 3M4M の動きは残しました。
+- `exec watch` で `remedy`・`remedy_stopped` の行も待てるようにしました。
+- 朝報告の章は「3. 見張りの対象外」「4. 手当て」の順にし、以降の番号が 1 つずつ下がります。
+
+**3M4M のテストに入れた変更**（どれも消していません）
+- CLI 統合テストの章番号の期待を `## 4. 手当て` に直しました。
+- 同じテストで、次の見張りの前に偽の再開の子プロセスが終わるのを待つようにしました。子が動いている間は、見張りがその対象を「動いているプロセス」として触らないためです。
+
+**手当てを打たないことの確認**
+- 単体テストを 5 件足しました（止めた印・プロセス・claim・全体の停止で打たない、印を外すと打つ）。
+- 統合テストでは、ロックを外した後も手で作業中の対象には打たず、手を離した後の回で同期の手当てを 1 件だけ打つことを確かめました。
+
+**確認したこと**
+- 型チェック（`tsc -b`）と変更ファイルの ESLint はエラーなしです。
+- 見張り関係の単体テスト 4 ファイルは通りました（`watch-scan.test.ts` は 28 件）。
+- 統合テスト 2 ファイル（2 件）も通りました。
+- Prettier と markdownlint（文書 5 件）は問題なし、`npm run validate:history-links` は exit 0 です。
+
+個票の作業内容と対応結果は、1 回目の内容に 2 回目で変えた点を足す形で書きました。CHANGELOG に書く事項の小節もあります。`CHANGELOG.md`・保護された設定・result は変えていません。
+
+**残っていること**
+- 統合の後に、orchestrator が `exec smoke` と `rtn-exec-watch-scan` の 1 回の実行で確かめます。作業内容の表では、この行を `open` のまま残しました。
+- 1 回目のブランチ `feature/prj-0001/exec-watch-coexist` は統合後に要らなくなります。消すかは orchestrator が判断します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"develop（PJR-3M4M 入り）を基に PJR-T4E0 の 1 回目の変更を入れ直し、見張りのコード・テスト・文書の衝突を手で解いた。見張りの対象外（止めた印・人やオーケストレーターの claim・動いているプロセス）と全体の停止には 3M4M の手当ても打たない。そのことを単体テストと統合テストで確かめた。`exec watch` は `remedy`・`remedy_stopped` も待てる。個票の作業内容と対応結果（2 回目の差分・迷った点・CHANGELOG に書く事項・申し送り）を更新した。","handoff":["統合の後に orchestrator が `exec smoke` と `specdojo routine run --project prj-0001 --id rtn-exec-watch-scan` の 1 回の実行で確かめてから close する。朝報告の「3. 見張りの対象外」「4. 手当て」の節と、`exec watch --timeout` の終了コード 124 も確かめる。個票の作業内容の No 9 は open のまま。","朝報告の章番号が変わった（3. 見張りの対象外、4. 手当て、5. この日に解けたもの、6. 読めなかった記録）。3M4M の CLI 統合テストの章番号の期待を合わせ、起動した偽の再開の子プロセスが終わるのを待つ処理を足した（子が動いている間は見張りがその対象を動いているプロセスとして触らないため）。期待の中身は変えていない。","決めたこと: 手当てで起動した再開のコマンドも対象を名指しするため、動いている間はその対象を対象外とし、同じ対象へ手当てを重ねない。対象外の間は手当ての回数も増えない。朝報告の「見張りの対象外」は「手当て」の前に置いた。","保護された設定と routine `rtn-exec-watch-scan` は変えていない。ロックの間は見張りも止める運用にする場合は、`action.args` に `--if-busy`・`skip` を足す案を人が判断する。","1 回目のブランチ `feature/prj-0001/exec-watch-coexist` は本件の統合の後は要らない。消すかは orchestrator が判断する。運用メモ（`pm-orchestrator-playbook`）へ `exec watch` と `watch-pause` の使い方を足すかも orchestrator が判断する。"],"validations":[{"command":"npx tsc -b","status":"passed","summary":"型エラーなし（親の typecheck が正）"},{"command":"npx vitest run tests/src/exec/watch-scan.test.ts tests/src/exec/watch-wait.test.ts tests/src/exec/watch-control.test.ts tests/src/exec/watch-remedy.test.ts","status":"passed","summary":"見張り関係の単体テスト 4 ファイルが通過（`watch-scan.test.ts` は 28 件）"},{"command":"npx vitest run --project integration tests/src/exec/watch-coexist.integration.test.ts tests/src/commands/watch-scan.integration.test.ts","status":"passed","summary":"見張りの統合テスト 2 ファイル 2 件が通過（親の test-integration が正）"},{"command":"npx eslint src/exec/watch-scan.ts src/commands/watch-scan.ts src/exec/watch-wait.ts src/exec/watch-command.ts src/exec/watch-control.ts tests/src/exec/watch-scan.test.ts tests/src/exec/watch-wait.test.ts tests/src/exec/watch-coexist.integration.test.ts tests/src/commands/watch-scan.integration.test.ts","status":"passed","summary":"変更した TypeScript にエラーなし（親の lint-ts が正）"},{"command":"npx prettier --write","status":"passed","summary":"変更した Markdown と TypeScript を整形した"},{"command":"npx markdownlint-cli2","status":"passed","summary":"変更した文書 5 件で 0 issues"},{"command":"npm run validate:history-links","status":"passed","summary":"exit 0、違反なし（個票を変更）"}]}
+</specdojo_executor_evidence>
