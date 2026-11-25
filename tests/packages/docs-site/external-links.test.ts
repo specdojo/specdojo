@@ -3,9 +3,12 @@ import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
+  classifyDocLink,
   collectExternalDocLinks,
+  createUnresolvedWikilinkReporter,
   externalEntryHref,
   loadExternalProjectLinkSources,
+  selectExternalDocLinks,
   type ExternalProjectLinkSource,
 } from "../../../packages/docs-site/.vitepress/external-links.js";
 
@@ -161,5 +164,80 @@ describe("collectExternalDocLinks", () => {
 
     expect(actual).toEqual({});
     expect(warnings).toEqual([`skip external project "lp": ${missing} not found`]);
+  });
+});
+
+describe("classifyDocLink", () => {
+  const externalHref =
+    "https://github.com/example/lp-specdojo/blob/main/docs/ja/projects/prj-0002/pjr-hepk.md";
+
+  it("prefers the local doc index over an external URL for the same id", () => {
+    const localIds = new Set(["prj-0002:pjr-hepk-lp-content"]);
+    const links = selectExternalDocLinks(
+      { "prj-0002:pjr-hepk-lp-content": { alias: "lp", href: externalHref } },
+      localIds,
+    );
+
+    const actual = classifyDocLink("prj-0002:pjr-hepk-lp-content", localIds, links);
+
+    expect(actual).toEqual({ kind: "local" });
+    expect(links).toEqual({});
+  });
+
+  it("resolves an id missing from the local doc index to the external URL", () => {
+    const actual = classifyDocLink("prj-0002:pjr-hepk-lp-content", new Set(), {
+      "prj-0002:pjr-hepk-lp-content": { alias: "lp", href: externalHref },
+    });
+
+    expect(actual).toEqual({ kind: "external", href: externalHref });
+  });
+
+  it("leaves an id unresolved when its project is not declared in external_projects", () => {
+    writeJson(join(workspace, ".specdojo/specdojo.config.json"), {
+      version: 1,
+      projects: {},
+      external_projects: {
+        other: {
+          path: "../lp-specdojo",
+          project_id: "prj-0003",
+          source_url: "https://github.com/example/other/blob/main",
+        },
+      },
+    });
+    writeJson(join(external, ".specdojo/doc-index.json"), {
+      entries: { "prj-0002:pjr-hepk-lp-content": "docs/ja/projects/prj-0002/pjr-hepk.md" },
+    });
+    const links = collectExternalDocLinks(
+      loadExternalProjectLinkSources(workspace, {}, warn),
+      warn,
+    );
+
+    const actual = classifyDocLink("prj-0002:pjr-hepk-lp-content", new Set(), links);
+
+    expect(actual).toEqual({ kind: "unresolved" });
+    expect(warnings).toEqual([]);
+  });
+});
+
+describe("createUnresolvedWikilinkReporter", () => {
+  it("warns once per document with the id and the document path", () => {
+    const report = createUnresolvedWikilinkReporter(warn);
+
+    report("prj-0002:pjr-hepk-lp-content", "ja/projects/prj-0001/a.md");
+    report("prj-0002:pjr-hepk-lp-content", "ja/projects/prj-0001/a.md");
+    report("prj-0002:pjr-hepk-lp-content", "ja/projects/prj-0001/b.md");
+
+    expect(warnings).toEqual([
+      'unresolved wikilink "[[prj-0002:pjr-hepk-lp-content]]" in ja/projects/prj-0001/a.md: not found in the local doc index nor in external_projects',
+      'unresolved wikilink "[[prj-0002:pjr-hepk-lp-content]]" in ja/projects/prj-0001/b.md: not found in the local doc index nor in external_projects',
+    ]);
+  });
+
+  it("does not warn for an id without a namespace prefix", () => {
+    const report = createUnresolvedWikilinkReporter(warn);
+
+    report("pjr-hepk-lp-content", "ja/projects/prj-0001/a.md");
+
+    expect(warnings).toEqual([]);
   });
 });

@@ -186,3 +186,49 @@ export function collectExternalDocLinks(
   }
   return links;
 }
+
+// 手元の doc index にある id は手元の文書を優先し、外部の URL の表から除く（同じリポジトリの
+// wikilink の扱いを変えないため）。
+export function selectExternalDocLinks(
+  links: Readonly<Record<string, ExternalDocLink>>,
+  localIds: ReadonlySet<string>,
+): Record<string, ExternalDocLink> {
+  return Object.fromEntries(Object.entries(links).filter(([id]) => !localIds.has(id)));
+}
+
+export type DocLinkTarget =
+  { kind: "local" } | { kind: "external"; href: string } | { kind: "unresolved" };
+
+// wikilink の id の解決先を決める。手元の doc index を先に引き、無い場合だけ外部の表を引く。
+export function classifyDocLink(
+  id: string,
+  localIds: ReadonlySet<string>,
+  externalLinks: Readonly<Record<string, ExternalDocLink>>,
+): DocLinkTarget {
+  if (localIds.has(id)) return { kind: "local" };
+  const external = externalLinks[id];
+  return external ? { kind: "external", href: external.href } : { kind: "unresolved" };
+}
+
+// `<namespace>:<local id>` の形の doc id（prj-0002:pjr-xxxx など）。
+export function isQualifiedDocId(id: string): boolean {
+  return /^[a-z][a-z0-9-]*:[^:]/.test(id);
+}
+
+// 手元にも external_projects にも解決先のない修飾付きの wikilink を、文書と id の組ごとに
+// 1 回だけ警告する。ビルドは止めない。
+export function createUnresolvedWikilinkReporter(
+  warn: Warn = defaultWarn,
+): (id: string, relativePath: string | undefined) => void {
+  const reported = new Set<string>();
+  return (id, relativePath) => {
+    if (!isQualifiedDocId(id)) return;
+    const location = relativePath ?? "(unknown)";
+    const key = `${location}\n${id}`;
+    if (reported.has(key)) return;
+    reported.add(key);
+    warn(
+      `unresolved wikilink "[[${id}]]" in ${location}: not found in the local doc index nor in external_projects`,
+    );
+  };
+}
