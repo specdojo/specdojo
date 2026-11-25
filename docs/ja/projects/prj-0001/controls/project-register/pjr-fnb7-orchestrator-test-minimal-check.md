@@ -57,8 +57,8 @@ Quick Start の代表的な対話 1 本を、固定の発言のシナリオで�
 - 承認の後の検査: 新しい個票とイベントがそれぞれ 1 つ、個票の `item_type`・`item_status`・`priority`・`owner`・`due_on`・`difficulty` が期待どおり、最初のイベントが `add`、HEAD が進み両ファイルが commit に含まれ、作業ツリーがきれいなことを確かめる。
 - 記録: run ごとの合否・失敗理由・返答・所要時間・費用（`total_cost_usd`）と合格率を `tmp/agent-test/orchestrator-quick-start-<時刻>.json` に書き、要約を標準出力に出す。回数は `SPECDOJO_AGENT_TEST_RUNS`（既定 5）、モデルは `SPECDOJO_AGENT_TEST_MODEL`（既定 `sonnet`）で変える。
 - `npm test` との分離: `*.agent.test.ts` を unit の対象から外し、`vitest.agent.config.ts` だけで流す。判定部分は agent を呼ばない単体テスト `tests/agent/helpers/orchestrator-scenario.test.ts` で確かめた。
-- _TODO_: `package.json` は executor から編集できないため、`"test:agent": "npm run build && vitest run --config vitest.agent.config.ts"` の追加を利用者に任せる。追加までは `npm run build && npx vitest run --config vitest.agent.config.ts` で流す。
-- _TODO_: N 回の実行は未実施。利用者が上のコマンドで流し、合格率・所要時間・費用を PJR-3R8F の採択理由に書いて 3R8F を決める。
+- `package.json`: executor から編集できないため、オーケストレーターが利用者の承認（2026-11-26）のもとで `"test:agent": "npm run build && vitest run --config vitest.agent.config.ts"` を足した。
+- N 回の実行（2026-11-26、オーケストレーター）: `SPECDOJO_AGENT_TEST_RUNS=5` で 5 回中 4 回合格（80%）、合計 154 秒、約 0.83 USD。不合格の 1 回は試験の一時リポジトリでの権限の確認による停止。結果は PJR-3R8F の採択理由に書いた。仮の ID が `Refs:` に残る食い違いは PJR-V8ND で扱う。
 
 ## 6. 関連ドキュメント
 
