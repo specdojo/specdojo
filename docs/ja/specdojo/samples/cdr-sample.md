@@ -13,7 +13,7 @@ specdojo:
 
 駄菓子屋きぬや販売管理システム（Next.js・TypeScript）の `app/`・`src/`・`tests/` 配下の TypeScript を実装・更新するときの規則です。言語・ライブラリ・版は [[specdojo:tsd-index-sample|技術スタック一覧]]、モジュールの配置・境界は `kinuya-web-cpd`、エラーの通知・ログの方針は `kinuya-web-sysd-cross-cutting-policy` に従います。本書は、これら 3 つの文書に沿った書き方と検証だけを定めます。
 
-_ASSUMPTION_: `kinuya-web-cpd`・`kinuya-web-sysd-cross-cutting-policy` は店頭タブレット向け Web アプリの設計の正本として扱う架空の文書で、本リポジトリには同梱しない。[[specdojo:cpd-sample|販売処理サービス C4コンポーネント図]] は現金販売だけを扱う論理分割案、[[specdojo:clis-sample|販売管理 CLI 仕様]] は CLI と本部 API を使う別構成の例であり、どちらも本書の根拠にしない。
+_ASSUMPTION_: `kinuya-web-cpd`・`kinuya-web-sysd-cross-cutting-policy` は店頭タブレット向け Web アプリの設計の正本として扱う架空の文書で、本リポジトリには同梱しない。[[specdojo:cpd-sample|販売処理サービス C4コンポーネント図]] は現金販売だけを扱う論理分割案、[[specdojo:clis-sample|販売管理 CLI 仕様]] と [[specdojo:sysd-cross-cutting-policy-sample|販売処理の横断ルール]] は CLI と本部 API を使う別構成の例であり、いずれも本書の根拠にしない。
 
 ## 1. 基本方針
 
@@ -47,15 +47,15 @@ function isPayment(value: unknown): value is Payment {
 ## 4. エラー処理
 
 - 利用者の入力の不備（数量 0、未登録の商品コード、つけ上限の超過など）は、検証結果として呼び出し側へ返し、画面に項目ごとのメッセージを出す。例外にしない。
-- 想定外の失敗（DB 接続の失敗など）は例外として投げる。API ルートでは共通のエラー応答処理を通す。Sentry（`kinuya-web-sysd-cross-cutting-policy` が定める送信先）への記録と汎用のエラー応答への変換は、共通のエラー応答処理に任せる。API ルートごとに `try`/`catch` で応答を組み立てない。
-- エラーメッセージには、操作名と対象の ID（商品コード、顧客 ID、販売 ID）を含める。
+- 想定外の失敗（DB 接続の失敗など）は例外として投げる。API ルートでは共通のエラー応答処理を通す。Sentry（通知先を設定した環境だけ。送信先は `kinuya-web-sysd-cross-cutting-policy` が定める）への記録と汎用のエラー応答への変換は、共通のエラー応答処理に任せる。API ルートごとに `try`/`catch` で応答を組み立てない。
+- エラーメッセージには、操作名と対象の番号（商品コード、顧客番号、取引番号）を含める。
 - 空の `catch` で例外を握りつぶさない。再送出する場合は `cause` に元のエラーを渡す。
 
 ```typescript
 try {
   await recordSale(sale);
 } catch (error) {
-  throw new Error(`販売の記録に失敗しました（販売 ID: ${sale.id}）`, {
+  throw new Error(`販売の記録に失敗しました（取引番号: ${sale.id}）`, {
     cause: error,
   });
 }
