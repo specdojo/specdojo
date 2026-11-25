@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-pm-organization-sample-120",
+  "run_id": "T-KATA-REVIEW-ALL-pm-organization-sample-120-20261125T224441Z-aa37ee7a",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-25T22:45:27.546Z",
+    "completed_at": "2026-11-25T22:47:15.411Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/pm-organization-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/pm-organization-sample.md | 30 ++++++++++++----------\n 1 file changed, 16 insertions(+), 14 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/samples/pm-organization-sample.md",
+      "status": "passed",
+      "summary": "All matched files use Prettier code style"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2 docs/ja/specdojo/samples/pm-organization-sample.md",
+      "status": "passed",
+      "summary": "0 issues"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴蓄積ファイルを変更していない",
+      "reason": "executor は plan・result・個票を変更していない"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:pm-organization-sample\n  type: project\n  status: ready\n  rulebook: specdojo:pm-organization-rulebook\n  based_on:\n    - specdojo:prj-overview-sample\n    - specdojo:prj-stakeholder-register-sample\n---\n\n# 組織定義: 駄菓子屋きぬや 販売管理システム\n\n## 1. 組織モデル\n\n単一店舗・タブレット1台で販売、在庫、つけの記録を続けるため、専門部署を設けない兼務体制とし、店主代表が人間の `PO` を担う。家族利用者は `BA` の操作確認で意見を出し、内部 Role の承認責任は持たない。兼務しても作業結果と承認の記録は分ける。AI Agent は草案、整理、実装、\n… output omitted …\n務による作業・承認待ちで Schedule の期限を超えた | 止まったのが実作業か承認か、分担で解消できるか | メンバー定義、RACI、Schedule。分離する場合は本書 | 作業順序は `PM`、費用・参加時間上限は `PO` |\n| スコープ変更、成果物追加、専門支援の独立タスク化 | 業務・設計・確認範囲への影響、既存ロールで主導できるか | 本書、ロール定義、メンバー定義、RACI、WBS、Schedule | `PO` |\n| 店頭試用・公開の候補、運用範囲の変更 | 導入・復旧・引き継ぎの実施担当と人間の承認者に欠落がないか | 本書、RACI、メンバー定義、Schedule、ステークホルダー登録簿 | `PO` |\n| AI Agent の追加・削除、支援権限の変更 | 承認を委ねていないか、人間へ引き継げるか | agent 定義、本書、RACI、Schedule | `PO` |\n\n採用・使用可否を変えたら、`QE` が使用不可ロールの `owner`、採用外の RACI 列、引き継ぎ先のないタスクが残っていないことを確かめて見直しを閉じる。"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7442 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7442 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-pm-organization-sample-120\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 7ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.te\n… output omitted …\ns/src/exec/plans.test.ts\",\"duration_ms\":1782}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  07:48:07\n   Duration  2.81s (transform 7.66s, setup 1.29s, import 10.78s, tests 6.27s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nnum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-pm-organization-sample-120/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-pm-organization-sample-120/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R2 構成レビューで pm-organization-sample の「ロール・owner方針」の表の列を template に合わせ、使用可能な `owner` を表の後の 1 行に分けた。「組織モデル」の表の後の段落は表の前に移した。sample 以外は変更していない。",
+  "completion_status": "complete",
+  "handoff": [
+    "No: R2-1 / 段: R2 / 箇所: 2. ロール・owner方針 / 指摘: 表の列が template と rulebook の「記述ガイド」と合っていない。「未採用時の代替方針」の列がなく、template にない「`owner` 使用可否」の列があり、使用可能な `owner` を表の後の 1 行で示していない（R1 の申し送り No.2） / 直した案: 列を「Role code」「採用／未採用」「判断理由・プロジェクトでの扱い」「未採用時の代替方針」にした。全ロールを採用しているので代替方針は全行 `-` とした。表の後を「未採用はなし」「使用可能な `owner`: `PO`、`PM`、`BA`、`DEV`、`QE`。専門支援の `ARC`、`UX`、`OPS` は `owner` に使わない」「初期 RACI の列と専門支援の意見の扱い」の 3 段落に分け、template の順にそろえた / 根拠: `vp-arc-document-structure`、`docs/ja/specdojo/templates/pm-organization-template.md` の「ロール・owner方針」、rulebook の「本文要件」（骨組みは template を正本とする）と「記述ガイド」の「ロール・owner方針」。迷った理由: 採用しても `owner` に使わない専門支援ロールがあるので、元の「`owner` 使用可否」の列も読みやすかった。選ばなかった案: その列を残し、template と rulebook の推奨列に「`owner` 使用可否」を足す（sample 以外の変更になるので、人の判断に回す） / 印: 要判断",
+    "No: R2-2 / 段: R2 / 箇所: 1. 組織モデル / 指摘: 兼務方針、利用者の確認、人間と AI Agent の境界の段落が表の後にある。template では前提の記述を表の前に置いており、前提から表の順に読めない / 直した案: 表の後の段落を、表の前の体制方針の段落につなげて移した / 根拠: `vp-arc-document-structure`、`docs/ja/specdojo/templates/pm-organization-template.md` の「組織モデル」（`_TODO_` が表の前にある） / 印: -",
+    "No: R2-3 / 段: R2 / 箇所: 4. 見直し条件 / 指摘: 表の前の確認時期の段落と、表の後の追従確認の段落は template にないが、rulebook の「本文要件」の「体制の見直し」が求める追従確認であり、結論として末尾に置く順も合っている / 直した案: - / 根拠: `vp-qe-omissions-consistency`、rulebook の「本文要件」の「体制の見直し」 / 印: -",
+    "R3 への申し送り: 「ロール・owner方針」と「正本と責任境界」の表の前に、何の表かを示す 1 文がない（Sample 記述標準「表の前の 1 文」）。R3 の観点なので R2 では直していない。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-pm-organization-sample-120/T-KATA-REVIEW-ALL-pm-organization-sample-120-20261125T224441Z-aa37ee7a/executor.log",
+      "bytes": 5622,
+      "truncated": false
+    }
+  ]
+}
