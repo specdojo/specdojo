@@ -1,0 +1,20 @@
+R2（構成）のレビューを終えました。直したのは `docs/ja/specdojo/samples/opr-sample.md` の 1 か所です。レビュー対象の `opr-change-sample.md` そのものは変えていません。
+
+**`opr-sample.md` の変更**
+運用変更作業の表の後ろの 1 段落は、「検証 → ロールバック → 事前周知」の順になっていました。これを「適用前（検証・承認・周知）」と「ロールバック」の 2 段落に分けました。template の「適用前の確認 → 適用 → ロールバック」と同じ順に読めます。
+
+**`opr-change-sample.md` で章を移す案（2 件）**
+今回の編集対象は `opr-sample.md` だけなので、反映はせず案として残します。
+- **No 2:** 手順適用範囲・前提の章の最後にある「手順を書いたら検証用の環境で模擬する」段落は、証跡の章の表の後ろへ移す案です。rulebook は、この確認の結果を証跡の章に残すよう求めています。`opr-sample.md` も同じ置き方です。
+- **No 3:** 「ロールバックとエスカレーション」の節の最後にある「当月の変更件数・ロールバック件数を `PO` へ報告する」段落は、点検手順の章へ移す案です。月次点検の内容で、ロールバックの手順ではないためです。
+
+**判断してほしいこと（No 4）**
+「影響の範囲の判定」は変更種別を決める節なので、「変更種別と承認・実施条件」の前に置くほうが前提から結論の順になります。一方で、判定の文はこの表を参照しており、template も表を先に置いています。そのため今の順のまま直していません。並べ替えるかを決めてください。
+
+grade の指摘 F001〜F004 は、どれも R2 の観点ではありません。R1 がすでに扱ったので、ここでは繰り返していません。
+
+prettier と markdownlint は、変更したファイルで通りました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R2（構成）を実施した。opr-sample.md の運用変更作業の表の後ろの段落を、適用前（検証・承認・周知）とロールバックの 2 段落に分け、template の手順の順に並べ替えた。opr-change-sample.md の章の移動 2 件と順序の要判断 1 件は handoff に案として残した。F001〜F004 は R2 の観点ではないため扱っていない。","handoff":["No: 1 / 段: R2 / 箇所: docs/ja/specdojo/samples/opr-sample.md の運用変更作業（表の直後の段落） / 指摘: 表の後ろの 1 段落が「検証 → ロールバック → 事前周知」の順で、適用前の周知がロールバックの後にある。template の運用変更作業が示す「適用前の確認、適用、ロールバックの操作」の順で読めない。 / 直した案: 段落を「検証してから承認を求める → 前日の閉店時に周知する（表示の修正は周知しない）」の適用前の段落と、「ロールバック条件に当たったら戻し、同じ確認をして理由を書く」の段落の 2 つに分け、この順にした（sample に反映済み）。 / 根拠: docs/ja/specdojo/templates/opr-template.md の運用変更作業の記入指示、[[specdojo:opr-rulebook]] の記述ガイドの運用変更作業、[[specdojo:opr-change-sample]] の適用の手順（承認 → 事前周知 → 適用 → 確認）。 / 印: なし","No: 2 / 段: R2 / 箇所: docs/ja/specdojo/samples/opr-change-sample.md の手順適用範囲・前提（表の後ろの「手順を新しく書いたときや改訂したときは…」の段落） / 指摘: 運用作業の受入確認（検証用の環境で版の更新とロールバックを模擬する）が前提の章にある。rulebook はこの確認を成果物の章ではないとし、結果を証跡の章に残すよう求めている。opr-sample.md は同じ内容を証跡の章の表の後ろに置いており、置き方が揃っていない。 / 直した案: この段落を証跡の章の表の後ろ（「戻した変更も…」の文の後ろ）へ移す。末尾の「結果は証跡の章の手順の確認の記録に残す。」は「結果は手順の確認の記録に残す。」に縮める。今回の編集対象は opr-sample.md だけのため、反映していない。 / 根拠: [[specdojo:opr-rulebook]] の「運用作業の受入確認」、[[specdojo:opr-sample]] の証跡の章の最後の段落。 / 印: なし","No: 3 / 段: R2 / 箇所: docs/ja/specdojo/samples/opr-change-sample.md の「ロールバックとエスカレーション」の最後の段落（`OPS` が月次点検で変更件数・ロールバック件数とその理由を `PO` へ報告する） / 指摘: 月次点検で行う報告が、戻しの手順の節にある。点検を扱う章は「`opr-index` 参照。」だけで、本書に固有の月次の作業が読み手から見えない。 / 直した案: この段落を日次・週次・月次点検手順の章へ移し、「`opr-index` 参照。月次点検では、`OPS` が変更記録から…`PO` へ報告する。」とする。今回の編集対象は opr-sample.md だけのため、反映していない。 / 根拠: [[specdojo:opr-rulebook]] の本文要件（分冊は差分の手順を該当する章に書く）と記述ガイドの日次/週次/月次点検手順、docs/ja/specdojo/templates/opr-template.md の章の順。 / 印: なし","No: 4 / 段: R2 / 箇所: docs/ja/specdojo/samples/opr-change-sample.md の運用変更作業（「変更種別と承認・実施条件」と「影響の範囲の判定」の順） / 指摘: 「影響の範囲の判定」は変更種別を決める節なので、前提から結論の順では「変更種別と承認・実施条件」の表より前に来る。一方で、判定の文は表の承認者を参照しており、template も運用変更作業の表を先に置いている。 / 直した案: 直さない（今の順を維持する）。前提から結論の順を優先して 2 つの節を入れ替えるかどうかを、人が判断する。 / 根拠: docs/ja/specdojo/templates/opr-template.md の運用変更作業（表が先）、kata-guide の R2 の確かめること（前提から結論の順に読めるか）。 / 印: 要判断","grade の finding F001〜F004 は、どれも R2 の観点（`vp-arc-document-structure`、`vp-qe-omissions-consistency`）に当たらない。R1 の申し送り（No 2・No 3）で扱い済みのため、ここでは繰り返していない。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/opr-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint docs/ja/specdojo/samples/opr-sample.md","status":"passed","summary":"エラーなし"}]}
+</specdojo_executor_evidence>
