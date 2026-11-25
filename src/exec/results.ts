@@ -15,6 +15,7 @@ import {
   type ReporterOutput,
   type ReviewReporterOutput,
 } from "./reporter.js";
+import { REPORTER_FINDING_KEYS, type ReporterFinding } from "./reporter-output.js";
 import {
   isRunRecordPath,
   listRunRecords,
@@ -532,6 +533,27 @@ function reporterBulletList(values: string[], empty: string): string {
     .join("\n");
 }
 
+const FINDING_TABLE_HEADER = ["No", "段", "箇所", "指摘", "直した案", "根拠", "印"] as const;
+
+// 表のセルは 1 行で、区切りの `|` を含められない。reporter の文の改行は空白にし、
+// `|` は既にエスケープ済みのものも含めて `\|` 1 つにそろえる（二重のエスケープで列がずれないように）。
+export function reporterTableCell(value: string): string {
+  return reporterFreeText(value).replace(/\\?\|/g, "\\|") || "-";
+}
+
+// 指摘は reporter が構造（findings）で渡し、runner が表を描く。reporter の文は改行を
+// 空白へ変えて描くため、文の中に表を書かせても 1 行に詰まる（PJR-ANF0）。
+export function renderFindingsTable(findings: readonly ReporterFinding[]): string {
+  return [
+    `| ${FINDING_TABLE_HEADER.join(" | ")} |`,
+    `| ${FINDING_TABLE_HEADER.map(() => "---").join(" | ")} |`,
+    ...findings.map(
+      (finding) =>
+        `| ${REPORTER_FINDING_KEYS.map((key) => reporterTableCell(finding[key])).join(" | ")} |`,
+    ),
+  ].join("\n");
+}
+
 function findGitRoot(startDir: string): string | null {
   try {
     let current = resolve(startDir);
@@ -833,6 +855,9 @@ export function renderEditReporterBody(
     "## 1. 実施内容",
     "",
     reporterBulletList(output.summary, "実施内容なし"),
+    ...(output.findings !== undefined && output.findings.length > 0
+      ? ["", renderFindingsTable(output.findings)]
+      : []),
     "",
     "## 2. 変更ファイル",
     "",

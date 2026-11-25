@@ -1271,6 +1271,96 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     expect(markdownlintErrors(content)).toEqual([]);
   });
 
+  it("renders review findings once as a table after the summary and normalizes cells", async () => {
+    const { resultPath } = await scaffoldResult({
+      executionPath,
+      taskId: "prj-overview",
+      mode: "edit",
+      projectId: "prj-0001",
+      planRef: "exec/plans/prj-overview-plan.md",
+      agent: "pipeline-executor",
+      startedAt: "2026-08-10T07:00:00.000Z",
+    });
+    const output = {
+      schema_version: 1 as const,
+      mode: "edit" as const,
+      summary: ["R3 の文を直した。"],
+      changed_files: [{ path: "docs/test.md", summary: "文を直した。" }],
+      handoff: ["次の段で整合を見る。"],
+      approach: "kata-guide に沿って進めた。",
+      findings: [
+        {
+          no: "R3-1",
+          stage: "R3",
+          location: "2. 目的",
+          finding: "主語が\nない",
+          fix: "A | B を\r\n言い切った",
+          basis: "既に \\| を含む W1",
+          mark: "-",
+        },
+        {
+          no: "R3-2",
+          stage: "R3",
+          location: "4. 範囲",
+          finding: "「など」の範囲が読めない",
+          fix: "-",
+          basis: "W7",
+          mark: "要判断",
+        },
+      ],
+    };
+
+    await renderReporterResult(
+      resultPath,
+      output,
+      reporterEvidence([{ path: "docs/test.md", status: "M" }]),
+    );
+    const content = readFileSync(resultPath, "utf8");
+    const section = content.slice(content.indexOf("## 1. 実施内容"), content.indexOf("## 2."));
+    const rows = section.split("\n").filter((line) => line.startsWith("|"));
+
+    expect(section).toContain("- R3 の文を直した。");
+    expect(rows).toHaveLength(4);
+    expect(rows[0]).toMatch(/^\| No +\| 段 +\| 箇所 +\| 指摘 +\| 直した案 +\| 根拠 +\| 印 +\|$/);
+    expect(rows[2]).toContain("主語が ない");
+    expect(rows[2]).toContain("A \\| B を 言い切った");
+    expect(rows[2]).toContain("既に \\| を含む W1");
+    expect(rows[3]).toContain("要判断");
+    expect(content.match(/\| No /g)).toHaveLength(1);
+    expect(content).toContain("## 3. 申し送り\n\n- 次の段で整合を見る。\n\n");
+    expect(markdownlintErrors(content)).toEqual([]);
+  });
+
+  it("renders edit output without findings exactly as before", async () => {
+    const { resultPath } = await scaffoldResult({
+      executionPath,
+      taskId: "prj-overview",
+      mode: "edit",
+      projectId: "prj-0001",
+      planRef: "exec/plans/prj-overview-plan.md",
+      agent: "pipeline-executor",
+      startedAt: "2026-08-10T07:00:00.000Z",
+    });
+    const base = {
+      schema_version: 1 as const,
+      mode: "edit" as const,
+      summary: ["成果物を更新した。"],
+      changed_files: [{ path: "docs/test.md", summary: "記述を追加した。" }],
+      handoff: [],
+      approach: "rulebook に沿って進めた。",
+    };
+    const evidence = reporterEvidence([{ path: "docs/test.md", status: "M" }]);
+
+    await renderReporterResult(resultPath, base, evidence);
+    const withoutField = readFileSync(resultPath, "utf8");
+    await renderReporterResult(resultPath, { ...base, findings: [] }, evidence);
+    const withEmptyField = readFileSync(resultPath, "utf8");
+
+    expect(withoutField).toContain("## 1. 実施内容\n\n- 成果物を更新した。\n\n## 2. 変更ファイル");
+    expect(withoutField).not.toContain("| No");
+    expect(withEmptyField).toBe(withoutField);
+  });
+
   it.each([
     ["必須項目の欠落", "  task_id: prj-overview\n", ""],
     ["必須項目の空値", "  project_id: prj-0001", '  project_id: ""'],

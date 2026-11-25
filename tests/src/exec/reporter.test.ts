@@ -126,6 +126,89 @@ describe("reporter structured output", () => {
     );
   });
 
+  it("accepts optional review findings in edit output and the published schema", () => {
+    const withFindings = {
+      ...validEditOutput,
+      findings: [
+        {
+          no: "R3-1",
+          stage: "R3",
+          location: "2. 目的",
+          finding: "主語がない",
+          fix: "主語を足した",
+          basis: "W1",
+          mark: "-",
+        },
+      ],
+    };
+    const schemaPath = join(
+      dirname(fileURLToPath(import.meta.url)),
+      "..",
+      "..",
+      "..",
+      "docs",
+      "specdojo",
+      "schemas",
+      "v1",
+      "exec-reporter-output.schema.yaml",
+    );
+    const published = load(readFileSync(schemaPath, "utf8")) as Record<string, unknown>;
+    const validatePublished = new Ajv2020({ allErrors: true, strict: true }).compile(published);
+    const validateMode = new Ajv2020({ allErrors: true, strict: true }).compile(
+      reporterOutputSchemaForMode("edit"),
+    );
+
+    expect(parseReporterOutput(JSON.stringify(withFindings), "edit").output).toEqual(withFindings);
+    expect(validatePublished(withFindings), JSON.stringify(validatePublished.errors)).toBe(true);
+    expect(validateMode(withFindings), JSON.stringify(validateMode.errors)).toBe(true);
+  });
+
+  it.each([
+    ["a missing column", { no: "R1-1", stage: "R1" }, /findings|required/],
+    [
+      "an extra column",
+      {
+        no: "R1-1",
+        stage: "R1",
+        location: "1. 概要",
+        finding: "f",
+        fix: "-",
+        basis: "W1",
+        mark: "-",
+        note: "extra",
+      },
+      /findings|additional/,
+    ],
+    [
+      "an empty cell",
+      {
+        no: "R1-1",
+        stage: "R1",
+        location: "1. 概要",
+        finding: " ",
+        fix: "-",
+        basis: "W1",
+        mark: "-",
+      },
+      /finding/,
+    ],
+  ])("rejects review findings with %s", (_label, finding, message) => {
+    const output = { ...validEditOutput, findings: [finding] };
+
+    expect(parseReporterOutput(JSON.stringify(output), "edit").error).toMatch(message);
+  });
+
+  it("asks the edit reporter to pass review findings as structure instead of a table", () => {
+    const prompt = buildReporterPrompt({
+      plan: "# plan",
+      evidence: evidence(),
+      mode: "edit",
+    });
+
+    expect(prompt).toContain("optional findings array");
+    expect(prompt).toContain("do not write a table");
+  });
+
   it("supplies a simple mode-specific schema suitable for structured output", () => {
     const schema = reporterOutputSchemaForMode("edit");
     const validate = new Ajv2020({ allErrors: true, strict: true }).compile(schema);

@@ -54,6 +54,32 @@ $defs:
           $ref: "#/$defs/text"
       approach:
         $ref: "#/$defs/text"
+      findings:
+        description: >
+          Optional review findings. The runner renders them as one Markdown table after the
+          summary section and normalizes pipes and line breaks in each cell. Output without this
+          field renders as before.
+        type: array
+        maxItems: 100
+        items:
+          type: object
+          additionalProperties: false
+          required: ["no", stage, location, finding, fix, basis, mark]
+          properties:
+            "no":
+              $ref: "#/$defs/text"
+            stage:
+              $ref: "#/$defs/text"
+            location:
+              $ref: "#/$defs/text"
+            finding:
+              $ref: "#/$defs/text"
+            fix:
+              $ref: "#/$defs/text"
+            basis:
+              $ref: "#/$defs/text"
+            mark:
+              $ref: "#/$defs/text"
   review:
     type: object
     additionalProperties: false
