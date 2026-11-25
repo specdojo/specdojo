@@ -26,6 +26,7 @@ import {
   opencodeAllowCommandsConfig,
 } from "./opencode-permissions.js";
 import { resolvePostIntegrationEntries, type PostIntegrationEntry } from "./post-integration.js";
+import { resolveWatchRemedies, type WatchRemedyConfig } from "./watch-remedy.js";
 
 // ── Types for .specdojo/exec-defaults.yaml (global + per-provider) ─────────────
 
@@ -157,6 +158,8 @@ export type ExecDefaultsConfig = {
   // options override the matching route; an absent route preserves priority-based selection.
   routing?: Partial<Record<RegisterDifficulty, DifficultyAgentRoute>>;
   providers?: Partial<Record<AgentProvider, ProviderOverride>>;
+  // 見張り（orchestrator watch-scan）が種類ごとに打つ手当て（PJR-3M4M）。省略時は手を打たない。
+  watch?: WatchRemedyConfig;
 };
 
 // ── Launch command resolution ───────────────────────────────────────────────
@@ -746,6 +749,7 @@ export function loadExecDefaultsConfig(
     throw new Error("pipeline.mechanical_result in exec-defaults must be a boolean");
   }
   resolveRegisterExecution(defaults);
+  resolveWatchRemedies(defaults.watch);
   // 統合・記帳の git 操作は src/shared/git.ts の gitResult を通るため、読み込んだ設定を
   // この process の index.lock の待ち時間として反映する（PJR-964D）。
   configureIndexLockWait(resolveGitIndexLockWaitSeconds(defaults) * 1000);

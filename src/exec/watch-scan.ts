@@ -1,5 +1,6 @@
 // `orchestrator watch-scan`: 止まった schedule のタスク・register 項目・列を見つけて理由の種類に分け、
-// 見張りのイベントの記録へ 1 件 1 行で足し、朝の報告を書き直す。claim・再開・release・commit はしない。
+// 見張りのイベントの記録へ 1 件 1 行で足し、朝の報告を書き直す。exec-defaults の `watch.remedies` で
+// 手当てを選んだ種類だけ、再開のコマンドを起動する（PJR-3M4M）。選ばなければ手は打たない。
 import {
   appendFileSync,
   existsSync,
@@ -14,7 +15,7 @@ import { livePoolHolders, isLiveLock } from "../shared/cross-process-lock.js";
 import { buildScheduleIndex } from "../shared/schedule-index.js";
 import { readRegisterEventsFromContent, registerEventFilePath } from "../register/events.js";
 import type { PjrItem } from "../register/item.js";
-import { foldEventsToState, readAllEventFiles } from "./events.js";
+import { buildEvent, foldEventsToState, readAllEventFiles, writeEventFile } from "./events.js";
 import { listQueueRecords, queueLockPath, type QueueRecord } from "./queue.js";
 import { execRunJoinPoolPath, execRunLockPath } from "./run/lock.js";
 import { buildInitialStateFromStrategy } from "./schedule/initial.js";
@@ -27,6 +28,17 @@ import {
   type StallTargetKind,
   type StallText,
 } from "./watch-scan-classify.js";
+import {
+  countRecentRemedies,
+  decideRemedy,
+  hasAnyRemedy,
+  launchDetachedRemedy,
+  type RemedyDecision,
+  type RemedyLauncher,
+  type ResolvedWatchRemedies,
+  type WatchRemedyLine,
+  type WatchRemedyStoppedLine,
+} from "./watch-remedy.js";
 
 export const WATCH_SCAN_ACTOR = "watch-scan";
 const LOG_TAIL_BYTES = 256 * 1024;
@@ -55,7 +67,10 @@ export type WatchClearedLine = {
   by: string;
 };
 
-export type WatchLogLine = WatchStalledLine | WatchClearedLine;
+export type WatchLogLine =
+  WatchStalledLine | WatchClearedLine | WatchRemedyLine | WatchRemedyStoppedLine;
+
+const WATCH_LOG_EVENTS = new Set(["stalled", "cleared", "remedy", "remedy_stopped"]);
 
 export function watchEventsLogPath(executionPath: string): string {
   return join(executionPath, "watch", "watch-events.jsonl");
@@ -82,7 +97,8 @@ function isWatchLogLine(value: unknown): value is WatchLogLine {
   return (
     isRecord(value) &&
     value.v === 1 &&
-    (value.event === "stalled" || value.event === "cleared") &&
+    typeof value.event === "string" &&
+    WATCH_LOG_EVENTS.has(value.event) &&
     typeof value.key === "string" &&
     typeof value.ts === "string" &&
     isRecord(value.target)
@@ -117,7 +133,7 @@ export function openStalls(lines: readonly WatchLogLine[]): Map<string, WatchSta
   const open = new Map<string, WatchStalledLine>();
   for (const line of lines) {
     if (line.event === "stalled") open.set(line.key, line);
-    else open.delete(line.key);
+    else if (line.event === "cleared") open.delete(line.key);
   }
   return open;
 }
@@ -453,6 +469,12 @@ export function renderWatchReport(options: {
   current: readonly WatchStalledLine[];
   clearedToday: readonly WatchClearedLine[];
   warnings: readonly string[];
+  /** この日に打った手当て。 */
+  remediesToday?: readonly WatchRemedyLine[];
+  /** この日に回数の上限で止めた手当て。 */
+  stoppedToday?: readonly WatchRemedyStoppedLine[];
+  /** 上限の解除を待っている止まり。 */
+  waiting?: readonly { id: string; until: string }[];
 }): string {
   const counts = CATEGORY_ORDER.map((category) => {
     const count = options.current.filter((line) => line.category === category).length;
@@ -485,6 +507,20 @@ export function renderWatchReport(options: {
         )
         .join("\n")
     : "- なし";
+  const remedyLines = [
+    ...(options.remediesToday ?? []).map(
+      (line) =>
+        `- ${code(line.target.id)}（${TARGET_LABELS[line.target.kind]}、${code(line.ts)}）: ${line.summary}（${code(line.action)}、${line.attempt}/${line.max_attempts} 回目）\n  - コマンド: ${code(`specdojo ${line.argv.join(" ")}`)}\n  - 出力: ${code(line.log)}`,
+    ),
+    ...(options.stoppedToday ?? []).map(
+      (line) =>
+        `- ${code(line.target.id)}（${TARGET_LABELS[line.target.kind]}、${code(line.ts)}）: 手当てを止めた（${line.reason}）。記録とログを読み、人かオーケストレーターが続きを決める`,
+    ),
+    ...(options.waiting ?? []).map(
+      (item) => `- ${code(item.id)}: 上限の解除（${code(item.until)}）を待っている`,
+    ),
+  ];
+  const remedies = remedyLines.length ? remedyLines.join("\n") : "- なし";
   const warnings = options.warnings.length
     ? options.warnings.map((warning) => `- ${code(warning)}`).join("\n")
     : "- なし";
@@ -499,7 +535,7 @@ specdojo:
 # 見張りの朝報告 ${options.date}
 
 - 最後に見た時刻: ${code(options.scannedAt)}
-- 見張りは手を打たない。次にすべきことは人かオーケストレーターが行う。
+- 見張りは exec-defaults の \`watch.remedies\` で選んだ手当てだけを打つ。それ以外の次にすべきことは人かオーケストレーターが行う。
 
 ## 1. 集計
 
@@ -509,11 +545,15 @@ ${counts.join("\n")}
 
 ${sections.join("\n\n") || "止まっているものはない。"}
 
-## 3. この日に解けたもの
+## 3. 手当て
+
+${remedies}
+
+## 4. この日に解けたもの
 
 ${cleared}
 
-## 4. 読めなかった記録
+## 5. 読めなかった記録
 
 ${warnings}
 `;
@@ -533,6 +573,21 @@ export type WatchScanInput = {
   now: Date;
   staleMs: number;
   dryRun: boolean;
+  /** exec-defaults の `watch` を解決した手当て。省略時は手を打たない。 */
+  remedies?: ResolvedWatchRemedies;
+  /** 手当てのコマンドの起動。テストで差し替える。 */
+  launch?: RemedyLauncher;
+  /** 実行ロックの判定。テストで差し替える。 */
+  isRunLive?: () => boolean;
+};
+
+export type WatchRemedyOutcome = {
+  /** 起動した（dry-run では起動する）手当て。1 回の見張りで 1 件まで。 */
+  launched?: WatchRemedyLine;
+  stopped: WatchRemedyStoppedLine[];
+  waiting: { id: string; until: string }[];
+  /** 別の run が実行ロックを持つため、手当てを次の回に回した。 */
+  deferredByLock: boolean;
 };
 
 export type WatchScanOutcome = {
@@ -541,6 +596,7 @@ export type WatchScanOutcome = {
   warnings: string[];
   logPath: string;
   reportPath: string;
+  remedy: WatchRemedyOutcome;
 };
 
 function attempt<T>(label: string, warnings: string[], read: () => T[]): T[] {
@@ -552,14 +608,127 @@ function attempt<T>(label: string, warnings: string[], read: () => T[]): T[] {
   }
 }
 
+function compactTimestamp(iso: string): string {
+  return iso.replace(/[-:]/gu, "");
+}
+
+/**
+ * 今の止まりに手当てを決める。手当ては実行ロックを取る再開のコマンドなので、別の run が動いて
+ * いる間は何もせず、起動は 1 回の見張りで古い止まりから 1 件だけにする。回数の上限に達した
+ * 止まりは 1 度だけ `remedy_stopped` を残す。
+ */
+export function planWatchRemedies(input: {
+  projectId: string;
+  root: string;
+  executionPath: string;
+  current: readonly WatchStalledLine[];
+  observations: ReadonlyMap<string, StallObservation>;
+  history: readonly WatchLogLine[];
+  config: ResolvedWatchRemedies;
+  now: Date;
+  nowText: string;
+  runLive: boolean;
+}): WatchRemedyOutcome {
+  const outcome: WatchRemedyOutcome = { stopped: [], waiting: [], deferredByLock: false };
+  if (!hasAnyRemedy(input.config)) return outcome;
+  const stoppedKeys = new Set(
+    input.history.filter((line) => line.event === "remedy_stopped").map((line) => line.key),
+  );
+  const ordered = [...input.current].sort(
+    (a, b) => a.since.localeCompare(b.since) || a.target.id.localeCompare(b.target.id),
+  );
+  for (const line of ordered) {
+    const observation = input.observations.get(line.key);
+    const attempts = countRecentRemedies(
+      input.history,
+      line.target,
+      input.now,
+      input.config.attemptWindowMs,
+    );
+    const decision: RemedyDecision = decideRemedy({
+      stall: {
+        key: line.key,
+        target: line.target,
+        state: line.state,
+        since: line.since,
+        category: line.category,
+        ...(observation?.meta ? { meta: observation.meta } : {}),
+        ...(observation?.message ? { message: observation.message.text } : {}),
+      },
+      config: input.config,
+      projectId: input.projectId,
+      now: input.now,
+      attempts,
+    });
+    if (decision.kind === "wait") {
+      outcome.waiting.push({ id: line.target.id, until: decision.until });
+    } else if (decision.kind === "stop") {
+      if (stoppedKeys.has(line.key)) continue;
+      outcome.stopped.push({
+        v: 1,
+        ts: input.nowText,
+        event: "remedy_stopped",
+        key: line.key,
+        target: line.target,
+        category: line.category,
+        attempts: decision.attempts,
+        reason: `${input.config.maxAttempts} 回まで手を打ったが止まったまま`,
+        by: WATCH_SCAN_ACTOR,
+      });
+    } else if (decision.kind === "launch" && !outcome.launched) {
+      if (input.runLive) {
+        outcome.deferredByLock = true;
+        continue;
+      }
+      const log = join(
+        input.executionPath,
+        "watch",
+        "remedies",
+        `${compactTimestamp(input.nowText)}-${line.target.id}.log`,
+      );
+      outcome.launched = {
+        v: 1,
+        ts: input.nowText,
+        event: "remedy",
+        key: line.key,
+        target: line.target,
+        category: line.category,
+        action: decision.plan.action,
+        summary: decision.plan.summary,
+        argv: decision.plan.argv,
+        attempt: attempts + 1,
+        max_attempts: input.config.maxAttempts,
+        log: repoPath(input.root, log),
+        by: WATCH_SCAN_ACTOR,
+      };
+    }
+  }
+  return outcome;
+}
+
+// schedule のタスクには見張りを actor にした note を残し、`exec status` でも手当てが分かるようにする。
+// note は meta を持たせない。meta を持つ event は状態の meta を置き換え、再開に要る limit や
+// pipeline の印を消すためである。
+function recordScheduleNote(schedulePath: string, line: WatchRemedyLine): void {
+  writeEventFile(
+    schedulePath,
+    buildEvent("note", {
+      task: line.target.id,
+      by: WATCH_SCAN_ACTOR,
+      msg: `watch-scan remedy ${line.action} (${line.attempt}/${line.max_attempts}): specdojo ${line.argv.join(" ")}; log=${line.log}`,
+    }),
+  );
+}
+
 export function runWatchScan(input: WatchScanInput): WatchScanOutcome {
   const warnings: string[] = [];
+  const runLive = input.isRunLive ? input.isRunLive() : isProjectRunLive(input.executionPath);
   const context: WatchScanContext = {
     root: input.root,
     executionPath: input.executionPath,
     now: input.now,
     staleMs: input.staleMs,
-    runLive: isProjectRunLive(input.executionPath),
+    runLive,
   };
   const observations: StallObservation[] = [
     ...(input.schedulePath
@@ -591,23 +760,70 @@ export function runWatchScan(input: WatchScanInput): WatchScanOutcome {
   warnings.push(...previous.warnings);
   const now = input.now.toISOString().replace(/\.\d{3}Z$/u, "Z");
   const diff = diffWatchScan(previous.lines, observations, now);
+  const remedy = input.remedies
+    ? planWatchRemedies({
+        projectId: input.projectId,
+        root: input.root,
+        executionPath: input.executionPath,
+        current: diff.current,
+        observations: new Map(observations.map((item) => [stallKey(item), item])),
+        history: previous.lines,
+        config: input.remedies,
+        now: input.now,
+        nowText: now,
+        runLive,
+      })
+    : { stopped: [], waiting: [], deferredByLock: false };
+  const appended: WatchLogLine[] = [
+    ...diff.appended,
+    ...(remedy.launched ? [remedy.launched] : []),
+    ...remedy.stopped,
+  ];
   const date = reportDate(input.now, input.timeZone);
   const reportPath = join(
     watchReportsDirectory(input.executionPath),
     `watch-scan-${date.replaceAll("-", "")}.md`,
   );
-  const clearedToday = [...previous.lines, ...diff.appended].filter(
-    (line): line is WatchClearedLine =>
-      line.event === "cleared" && reportDate(new Date(line.ts), input.timeZone) === date,
+  const all = [...previous.lines, ...appended];
+  const isToday = (line: WatchLogLine): boolean =>
+    reportDate(new Date(line.ts), input.timeZone) === date;
+  const clearedToday = all.filter(
+    (line): line is WatchClearedLine => line.event === "cleared" && isToday(line),
+  );
+  const remediesToday = all.filter(
+    (line): line is WatchRemedyLine => line.event === "remedy" && isToday(line),
+  );
+  const stoppedToday = all.filter(
+    (line): line is WatchRemedyStoppedLine => line.event === "remedy_stopped" && isToday(line),
   );
   if (!input.dryRun) {
-    if (diff.appended.length > 0) {
+    // 記録を先に書いてから起動する。起動に失敗しても、打とうとした手当ては記録に残る。
+    if (appended.length > 0) {
       mkdirSync(dirname(logPath), { recursive: true });
-      appendFileSync(
-        logPath,
-        diff.appended.map((line) => `${JSON.stringify(line)}\n`).join(""),
-        "utf8",
-      );
+      appendFileSync(logPath, appended.map((line) => `${JSON.stringify(line)}\n`).join(""), "utf8");
+    }
+    if (remedy.launched) {
+      const launched = remedy.launched;
+      if (launched.target.kind === "schedule-task" && input.schedulePath) {
+        try {
+          recordScheduleNote(input.schedulePath, launched);
+        } catch (error) {
+          warnings.push(
+            `remedy note ${launched.target.id}: ${error instanceof Error ? error.message : String(error)}`,
+          );
+        }
+      }
+      try {
+        (input.launch ?? launchDetachedRemedy)(
+          launched.argv,
+          resolve(input.root, launched.log),
+          input.root,
+        );
+      } catch (error) {
+        warnings.push(
+          `remedy launch ${launched.target.id}: ${error instanceof Error ? error.message : String(error)}`,
+        );
+      }
     }
     mkdirSync(dirname(reportPath), { recursive: true });
     writeFileSync(
@@ -619,9 +835,12 @@ export function runWatchScan(input: WatchScanInput): WatchScanOutcome {
         current: diff.current,
         clearedToday,
         warnings,
+        remediesToday,
+        stoppedToday,
+        waiting: remedy.waiting,
       }),
       "utf8",
     );
   }
-  return { current: diff.current, appended: diff.appended, warnings, logPath, reportPath };
+  return { current: diff.current, appended, warnings, logPath, reportPath, remedy };
 }

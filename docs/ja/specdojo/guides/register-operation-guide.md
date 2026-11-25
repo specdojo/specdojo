@@ -577,7 +577,7 @@ merge に commit-msg hook を使うリポジトリでは、Git が hook に渡�
 
 ### 3.3. 止まった実行を見張る
 
-routine `rtn-exec-watch-scan` が 30 分ごとに `specdojo orchestrator watch-scan` を起動し、止まったものを見つけて理由の種類に分けます。見張りは記録と報告を書くだけで、claim・再開・release・commit はしません。cron と routine だけで動き、オーケストレーターの agent の種類に頼りません。exec の実行ロックを取らない `action.kind: specdojo` のため、夜間の run の間も止まらずに見ます。見る間隔は routine の `interval` で変えます。
+routine `rtn-exec-watch-scan` が 30 分ごとに `specdojo orchestrator watch-scan` を起動し、止まったものを見つけて理由の種類に分けます。見張りは記録と報告を書き、exec-defaults の `watch` で選んだ種類にだけ手当てを打ちます（「止まった実行に手当てを打つ」）。選ばなければ claim・再開・release はせず、どの場合も commit はしません。cron と routine だけで動き、オーケストレーターの agent の種類に頼りません。exec の実行ロックを取らない `action.kind: specdojo` のため、夜間の run の間も止まらずに見ます。見る間隔は routine の `interval` で変えます。
 
 見る対象は次のとおりです。`--stale-after`（既定 `2h`）は、実行ロックがないときに実行中の状態を中断と見なすまでの時間です。
 
@@ -600,22 +600,51 @@ routine `rtn-exec-watch-scan` が 30 分ごとに `specdojo orchestrator watch-s
 
 見つけたことは `execution/watch/watch-events.jsonl` に 1 件 1 行の JSON で足していきます。同じ止まりは、対象の種類・ID・状態・状態に入った時刻を合わせた `key` で見分け、開いている間は足し直しません。止まりが見えなくなった回に `cleared` の行を 1 行足します。新しい event で同じ対象がまた止まれば、別の `key` として足します。
 
-| 項目          | 内容                                                                    |
-| ------------- | ----------------------------------------------------------------------- |
-| `v`           | 記録の版。`1`                                                           |
-| `ts`          | 行を足した時刻（UTC）                                                   |
-| `event`       | `stalled`（止まりを見つけた）または `cleared`（止まりが見えなくなった） |
-| `key`         | 同じ止まりを見分ける鍵                                                  |
-| `target`      | 対象の種類（`schedule-task`・`register-item`・`queue`）と ID            |
-| `state`       | 止まって見える状態（`stalled` のみ）                                    |
-| `since`       | その状態に入った記録の時刻（`stalled` のみ）                            |
-| `category`    | 理由の種類（`stalled` のみ）                                            |
-| `detail`      | 理由の詳細（`stalled` のみ）                                            |
-| `basis`       | 分けた根拠。記録のパス（`source`）と当たった行（`excerpt`）             |
-| `next_action` | 次にすべきこと（`stalled` のみ）                                        |
-| `by`          | 書いた主体。`watch-scan`                                                |
+| 項目          | 内容                                                                                                                             |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `v`           | 記録の版。`1`                                                                                                                    |
+| `ts`          | 行を足した時刻（UTC）                                                                                                            |
+| `event`       | `stalled`（止まりを見つけた）・`cleared`（止まりが見えなくなった）・`remedy`・`remedy_stopped`（「止まった実行に手当てを打つ」） |
+| `key`         | 同じ止まりを見分ける鍵                                                                                                           |
+| `target`      | 対象の種類（`schedule-task`・`register-item`・`queue`）と ID                                                                     |
+| `state`       | 止まって見える状態（`stalled` のみ）                                                                                             |
+| `since`       | その状態に入った記録の時刻（`stalled` のみ）                                                                                     |
+| `category`    | 理由の種類（`stalled` のみ）                                                                                                     |
+| `detail`      | 理由の詳細（`stalled` のみ）                                                                                                     |
+| `basis`       | 分けた根拠。記録のパス（`source`）と当たった行（`excerpt`）                                                                      |
+| `next_action` | 次にすべきこと（`stalled` のみ）                                                                                                 |
+| `by`          | 書いた主体。`watch-scan`                                                                                                         |
 
-朝報告は、夜間実行の朝報告と同じ `execution/reports/` の下の `watch-scan/watch-scan-YYYYMMDD.md` に、登録簿の日付と同じ時間帯の 1 日 1 文書として毎回書き直します。「1. 集計」に種類ごとの件数、「2. 止まっているもの」に種類ごとの対象・状態・理由・根拠・次にすべきこと・最初に見つけた時刻、「3. この日に解けたもの」、「4. 読めなかった記録」を載せます。朝は判断が要るものから読み、次にすべきことに従って再開・手直しの起票・close を決めます。見張りは記録と報告を commit しません。夜間実行の朝報告と同じく、読んだ後にオーケストレーターが実行記録とまとめて commit します。
+朝報告は、夜間実行の朝報告と同じ `execution/reports/` の下の `watch-scan/watch-scan-YYYYMMDD.md` に、登録簿の日付と同じ時間帯の 1 日 1 文書として毎回書き直します。「1. 集計」に種類ごとの件数、「2. 止まっているもの」に種類ごとの対象・状態・理由・根拠・次にすべきこと・最初に見つけた時刻、「3. 手当て」にこの日に打った手当て・止めた手当て・上限の解除を待っているもの、「4. この日に解けたもの」、「5. 読めなかった記録」を載せます。朝は判断が要るものと手当てを止めたものから読み、次にすべきことに従って再開・手直しの起票・close を決めます。見張りは記録と報告を commit しません。夜間実行の朝報告と同じく、読んだ後にオーケストレーターが実行記録とまとめて commit します。
+
+### 3.4. 止まった実行に手当てを打つ
+
+exec-defaults の `watch.remedies` で手当てを選んだ種類だけ、見張りが既存の再開のコマンドを固定の引数で起動します。設定のキーは [[specdojo:exec-config-guide|exec設定ガイド]] の「見張りの手当て」に書きます。判断が要るもの（`needs_decision`）・中断・分けられなかったもの・列には手を打ちません。
+
+| 種類                | 設定                 | schedule のタスク                                                                                                      | register 項目（`waiting`）                                                     |
+| ------------------- | -------------------- | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| `usage_limit`       | `wait`               | 解除の時刻を過ぎたら `exec resume --task <id> --due`（自動再開の印がない pipeline の段は `--due` なし）                | 解除の時刻を過ぎたら `exec run --register <id> --worktree --resume`            |
+| `usage_limit`       | `fallback`、長い上限 | `exec resume --task <id> --executor-by … --reporter-by …`。claim を代わりの agent へ移す                               | `exec run --register <id> --worktree --resume --executor-by … --reporter-by …` |
+| `load_timeout`      | `rerun`              | `exec resume --task <id>`。止まった段から再開し、失敗した親の検証を流し直す                                            | `exec run --register <id> --worktree --resume`                                 |
+| `needs_target_sync` | `sync`               | 統合の段は `exec resume --task <id>`、ほかの段は `--resume-from executor` を足す。どちらも統合先を取り込んでから続ける | `exec run --register <id> --worktree --resume`（再開の前に取り込む）           |
+
+どのコマンドにも `--project` と `--if-busy skip` を付けます。解除の時刻は、schedule のタスクは block の meta の `limit_resume_at`、register 項目は理由の `resume_at=` を使い、読めなければ止まった時刻から `unknown_resume_wait` 後とします。`wait` で解除の時刻が `switch_after` より先にあり、代わりの agent を書いていれば、待たずに代わりの agent で流し直します。agent を替えられるのは、止まった pipeline の段を持つ schedule のタスクと register 項目だけです。統合先とぶつかった場合は再開のコマンドが止めて block または `waiting` に戻し、次の見張りが判断が要るもの（`merge_conflict`）として報告します。
+
+手当ては実行ロックを取る再開のコマンドなので、別の run が実行ロックを持っている間は何も起動せず、次の回に回します。1 回の見張りで起動するのは、止まった時刻の古いものから 1 件だけです。コマンドは見張りから切り離して起動し、出力を `execution/watch/remedies/<時刻>-<ID>.log` に書きます。見張りは終わりを待ちません。同じ対象に `attempt_window` の間に `max_attempts` 回打っても止まったままなら手当てを止め、`remedy_stopped` の行を 1 度だけ足して朝報告に載せます。worktree と branch は消しません。
+
+手当てを打つ前に、見張りの記録へ `remedy` の行を足します。schedule のタスクには、`watch-scan` を actor にした `note` の event も残すため、`exec status` でも分かります。`note` には meta を持たせず、再開に要る limit や pipeline の印を残します。
+
+| 項目       | 内容                                                                                       |
+| ---------- | ------------------------------------------------------------------------------------------ |
+| `action`   | `resume_due`・`resume`・`switch_agent`・`rerun_checks`・`sync_target`（`remedy` のみ）     |
+| `summary`  | 手当ての説明（`remedy` のみ）                                                              |
+| `argv`     | 起動した `specdojo` の引数（`remedy` のみ）                                                |
+| `attempt`  | この対象に `attempt_window` の間に打った何回目か。`max_attempts` と並べる（`remedy` のみ） |
+| `log`      | コマンドの出力のパス（`remedy` のみ）                                                      |
+| `attempts` | 止めるまでに打った回数（`remedy_stopped` のみ）                                            |
+| `reason`   | 止めた理由（`remedy_stopped` のみ）                                                        |
+
+`key`・`target`・`category`・`by` は `stalled` の行と同じです。`--no-remedy` を付けると、設定があっても記録と報告だけを行います。`--dry-run` は起動する手当てを表示し、何も起動しません。
 
 ## 4. 例外対応と特殊な運用
 
