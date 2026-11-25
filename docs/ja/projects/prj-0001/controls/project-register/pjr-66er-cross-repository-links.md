@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   difficulty: hard
   owner: ARC
   registered_at: "2026-11-03T05:02:47Z"
   due_on: "2026-11-30"
+  block_reason: "parent validation failed: typecheck"
   derived_from:
     - PJR-8HCB
   commit_type: feat
