@@ -1,0 +1,17 @@
+R1（目的の過不足）のレビューを終え、`docs/ja/specdojo/samples/bps-sample.md` の「概要」を 2 か所直しました。`npx prettier --check` は通っています。そのほかの検査は、このあと runner が実行します。
+
+**直した点**
+
+1. **業務目的**：これまでは `cdfd-inventory` の `P-06` に任せる一文だけで、何のための流れかが書かれていませんでした。rulebook の「導入文と概要」は概要に業務目的を書くよう求めており、参照先の CDFD の sample も活動を書くだけで目的は書いていません。そこで、共通サンプル文脈の「欠品削減」に結びつけた目的を書きました。「人気商品の欠品を減らすため、補充基準を下回った商品を店主代表の記憶に頼らず補充依頼へ変え、仕入グループへ漏れなく渡す」です。
+2. **対象外**：rulebook は、対象外に前後のプロセス・横断フロー・実装方式を書くよう求めています。このうち実装方式がなかったので、「補充依頼を記録・参照する画面や保存の方式（機能設計が扱う）」を足しました。
+
+**直さずに残した点**
+
+- **要判断**：「前提条件」の 2・3 項目め（依頼数量と未完了依頼の定め）は、yes / no で判定できる条件ではなく用語の定めです。rulebook は前提条件をこの形で書くよう求めています。ただ、流れの中では使われているので、残すか、置く場所を変えるか（R2 で扱う）かを決めてもらう必要があります。
+- **R5 の候補**：rulebook は、BES がある場合はトリガーに業務イベント ID と名称を添えるよう求めています。同じ系列の `bes-index-sample.md` に `bes-stock-below-threshold`（在庫が補充基準を下回った）があるのに、sample のトリガーには添えていません。ほかの sample との整合なので、直さずに R5 へ回しました。
+
+上に挙げた以外の必須の要件（起点・境界、開始可否、入力と正本、処理と責任、成果、例外、検証、未決事項）は欠けておらず、要らない内容も見当たりませんでした。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1（目的の過不足）を確かめ、bps-sample の「概要」で、中身のなかった業務目的を書き、対象外に実装方式を足した。","handoff":["No: 1 / 段: R1 / 箇所: 「概要」の業務目的 / 指摘: `cdfd-inventory` の `P-06` に任せる一文だけで、何のための流れかがない。参照先の CDFD の sample も活動を書くだけで目的を書いていない / 直した案: 「人気商品の欠品を減らすため、補充基準を下回った商品を店主代表の記憶に頼らず補充依頼へ変え、仕入グループへ漏れなく渡す。」へ置き換えた（sample に反映済み） / 根拠: bps-rulebook「導入文と概要」（概要に業務目的を示す）、sample-authoring-standard「共通サンプル文脈」の期待効果（欠品削減）、`vp-po-purpose-alignment` / 印: なし","No: 2 / 段: R1 / 箇所: 「概要」の対象外 / 指摘: rulebook が対象外に書くよう求める「実装方式」がない / 直した案: 「補充依頼を記録・参照する画面や保存の方式（機能設計が扱う）」を対象外に足した（sample に反映済み） / 根拠: bps-rulebook「導入文と概要」（対象外には前後のプロセス、横断フロー、実装方式を明記）、`vp-qe-kata-conformance` / 印: なし","No: 3 / 段: R1 / 箇所: 「前提条件」の 2・3 項目め（依頼数量、未完了依頼の定め） / 指摘: yes / no で判定できる前提条件ではなく、用語の定めになっている / 直した案: 流れの中で使うため直していない。残すか、置く場所を変えるか（R2 で扱う）を決める / 根拠: bps-rulebook「トリガーと前提条件」（前提条件は yes / no で判定できる文にし、不成立時の扱いを示す） / 印: 要判断","No: 4 / 段: R1（R5 へ回す） / 箇所: 「トリガー」の `T-01` / 指摘: 同じ系列の bes-index-sample に `bes-stock-below-threshold`（在庫が補充基準を下回った）があるのに、業務イベント ID と名称を添えていない / 直した案: 直していない。ほかの sample との整合なので R5 で、`T-01` の出来事に `bes-stock-below-threshold` を添えるかを確かめる / 根拠: bps-rulebook「トリガーと前提条件」（BES がある場合は業務イベント ID と名称を併記）、kata-guide「段と渡す材料」の R5 / 印: なし"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/bps-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変えていない","reason":"変更は docs/ja/specdojo/samples/bps-sample.md だけで、plan / result / 個票を変えていない"}]}
+</specdojo_executor_evidence>
