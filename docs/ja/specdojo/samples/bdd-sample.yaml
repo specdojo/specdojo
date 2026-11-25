@@ -91,12 +91,12 @@ entities:
         description: 販売時に代金を受領するか、顧客のつけとして後日受領するかを区別する。本部への登録の受付状態とは別の判断軸。
         constraints:
           required: true
+        example: cash
         allowed_values_detailed:
           - value: cash
             label: 店頭で現金を受領する
           - value: credit
             label: 顧客のつけとして後日受領する
-        example: cash
       - logical_name: 顧客ID
         physical_name: customer_id
         type: string
