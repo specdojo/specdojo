@@ -202,15 +202,15 @@ graph LR
 
 次の表は、起動からバックアップの取得までを順に確かめる項目ごとに、合否の判定と失敗時の確認先を示す。上の行が通らない場合は下の行へ進まない。
 
-| 確認対象                  | 実行場所・方法                                                                                 | 期待結果                                                             | 失敗時の確認先                                                   |
-| ------------------------- | ---------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| 1. DB の起動              | 開発端末: `docker compose ps postgres`。作業端末: `fly status --app kinuya-db`                 | 状態が `running`、再起動回数が増えていない                           | Docker デーモン、Fly.io の障害情報、`fly logs --app kinuya-db`   |
-| 2. 疎通                   | アプリ環境: `fly ssh console --app kinuya-app -C "nc -zv kinuya-db.internal 5432"`             | `succeeded` または `open` が表示される                               | 6PN の名前解決、`kinuya-db` の待受ポート                         |
-| 3. 認証                   | 作業端末: `fly proxy` を起動して `psql -h localhost -p 15432 -U <USER> -d <DB> -c "SELECT 1;"` | `1` が 1 行返る                                                      | `DATABASE_URL` の利用者名、パスワードの保存先                    |
-| 4. 設定の反映             | 作業端末: 「採用設定一覧」の各行の `SHOW`                                                      | すべての行で表の採用値が返る                                         | `fly postgres config show`、再起動の実施有無                     |
-| 5. マイグレーションの状態 | 開発端末・CI: `npx prisma migrate status`                                                      | `Database schema is up to date!` が表示される                        | `prisma/migrations`、`_prisma_migrations` テーブル               |
-| 6. 読み書き               | 開発端末: `npm run test:unit -- tests/db/connection.test.ts`                                   | 商品とつけ残高のテスト用レコードの作成・取得・更新・削除がすべて成功 | `npx prisma generate` の実施有無、トランザクションのタイムアウト |
-| 7. バックアップの取得     | 作業端末: `fly ssh console --app kinuya-db-backup -C "ls -l /backups"`                         | 当日の日付のダンプがあり、サイズが前回のダンプの 80% 以上            | `fly logs --app kinuya-db-backup` の `pg_dump` の終了コード      |
+| 確認対象                  | 実行場所・方法                                                                                       | 期待結果                                                             | 失敗時の確認先                                                   |
+| ------------------------- | ---------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| 1. DB の起動              | 開発端末: `docker compose ps postgres --format '{{.State}}'`。作業端末: `fly status --app kinuya-db` | 開発端末は `running`、DB 環境は `STATE` 列が `started`               | Docker デーモン、Fly.io の障害情報、`fly logs --app kinuya-db`   |
+| 2. 疎通                   | アプリ環境: `fly ssh console --app kinuya-app -C "nc -zv kinuya-db.internal 5432"`                   | `succeeded` または `open` が表示される                               | 6PN の名前解決、`kinuya-db` の待受ポート                         |
+| 3. 認証                   | 作業端末: `fly proxy` を起動して `psql -h localhost -p 15432 -U <USER> -d <DB> -c "SELECT 1;"`       | `1` が 1 行返る                                                      | `DATABASE_URL` の利用者名、パスワードの保存先                    |
+| 4. 設定の反映             | 作業端末: 「採用設定一覧」の各行の `SHOW`                                                            | すべての行で表の採用値が返る                                         | `fly postgres config show`、再起動の実施有無                     |
+| 5. マイグレーションの状態 | 開発端末・CI: `npx prisma migrate status`                                                            | `Database schema is up to date!` が表示される                        | `prisma/migrations`、`_prisma_migrations` テーブル               |
+| 6. 読み書き               | 開発端末: `npm run test:unit -- tests/db/connection.test.ts`                                         | 商品とつけ残高のテスト用レコードの作成・取得・更新・削除がすべて成功 | `npx prisma generate` の実施有無、トランザクションのタイムアウト |
+| 7. バックアップの取得     | 作業端末: `fly ssh console --app kinuya-db-backup -C "ls -l /backups"`                               | 当日の日付のダンプがあり、サイズが前回のダンプの 80% 以上            | `fly logs --app kinuya-db-backup` の `pg_dump` の終了コード      |
 
 次の表は、各確認の実施状況を示す。未実施の項目は成功として扱わない。
 
