@@ -1,0 +1,21 @@
+R2（構成）のレビューを終えました。直したのは `docs/ja/specdojo/samples/itc-sample.md` の 1 か所で、「テスト観点とケース」の導入段落を観点の型ごとの表に組み替えました。prettier による整形と markdownlint の検査は通っています。
+
+**照合の結果**
+- 1〜6 章の見出しの名称と順序は、rulebook の「本文要件」と一致しています。
+- 「テスト観点とケース」の下の観点見出し、`perspective_key` 行、意図、条件・ケース表の並びも rulebook のとおりです。
+- rulebook では template が `undecided` のため、template との照合はできていません。
+
+**指摘**
+1. **6. テスト観点とケース（直した）**: 導入段落は 4 つの観点の型の扱いと、採らない理由・代わりのケースを 1 段落に詰め込んでいました。前置きの 1 文と「観点の型／本書での扱い／理由・代わり」の表に分けました。表には、itc-index の観点の型 6 つ（「データ永続化の整合性」「トランザクション境界」を加えたもの）と本書の観点との対応を、本文の主張を変えずに入れています。F003 に当たります。
+2. **6. テスト観点とケース（直していない）**: F001 で求められた補完後の確定への遷移の理由と代わりのケースは、R1 の版で書き足されており、指摘は解消済みです。R1 の指摘なので繰り返していません。
+3. **6.1. 条件・ケース表（直していない・要判断）**: 行の並びが代表（010）、重大例外の再送（020）、境界（030）の順です。rulebook の「代表→境界→重大例外の順で増やす」と合いません。
+   - rulebook はケースを増やす順を決めているだけで、表の行の順は決めていないため、迷いました。
+   - `case_id` は変えられないので、取れる案は「行だけ 010・030・020 の順に並べ替える」か「今のままにする」です。並べ替えると番号の順が崩れるため、直さずに残しました。
+4. **6. テスト観点とケース（直していない・要判断、R5 へ回す）**: F002 は itc-index との食い違いなので、R5 の段で扱います。
+   - itc-index は、本対象の「依存障害時の挙動」を「DB 停止時に未保存を成功表示しない、応答欠落時の照合待ちの識別」としています。
+   - 本書は DB 停止を採らず更新拒否で代え、応答欠落時の照合待ちには触れていません。採らない理由も書かれておらず、抜けに当たります。
+   - 直す案は 2 つあります。itc-index の該当セルを「DB の更新拒否時に未保存を成功表示しない」に改める案と、本書の表に応答欠落の扱いを足す案です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R2 構成: rulebook の本文構成（1〜6章の順・観点配下の見出し構成）との一致を確認し、「テスト観点とケース」の導入段落を観点の型ごとの表に分けた。template は rulebook で undecided のため照合対象なし。","handoff":["R2-1: R2 / 6. テスト観点とケース / 導入段落に 4 つの観点の型の扱いと不採用の理由・代わりのケースが 1 段落に詰め込まれ、型と観点・ケースの対応が読み取りにくい / 前置きの 1 文と「観点の型／本書での扱い／理由・代わり」の表に分け、itc-index の観点の型 6 つ（「データ永続化の整合性」「トランザクション境界」を追加）と本書の観点の対応を明示した。本文の主張は変えていない / `vp-arc-document-structure`、grade F003（`vp-ux-readability`） / -","R2-2: R2 / 6. テスト観点とケース / F001（補完後の確定への遷移の理由と代わりのケースがない）は R1 の版で理由（補完後の購入は通常の会計確定と同じ入力）と代わり（`it-sales-checkout-persistence-integrity-010`）が足されており解消済み / - / `vp-qe-omissions-consistency`、grade F001 / -","R2-3: R2 / 6.1. 観点: 販売記録と在庫の一致 / ケース表の行の並びが代表（010）→重大例外の再送（020）→境界（030）で、rulebook の「代表→境界→重大例外の順で増やす」と合わない / - / `vp-arc-document-structure`。迷った理由: rulebook が決めているのはケースを増やす順で、表の行の順ではない。`case_id` は変更禁止のため取れる案は行の並べ替えだけで、並べ替えると番号の順が崩れる。選ばなかった案: 行を 010・030・020 の順に並べ替える / 要判断","R2-4: R2 / 6. テスト観点とケース / itc-index-sample の「観点の立て方（共通）」は本対象の「依存障害時の挙動」を「DB 停止時に未保存を成功表示しない、応答欠落時の照合待ちの識別」としている。本書は DB 停止を不採用にして更新拒否で代え、応答欠落時の照合待ちには触れず不採用の理由もない（grade F002 と抜け） / - / `vp-qe-omissions-consistency`、grade F002（`vp-qe-kata-conformance`、R5 の扱い）。相手側の直す案: `docs/ja/specdojo/samples/itc-index-sample.md` の該当セルを「DB の更新拒否時に未保存を成功表示しない」に改める。または本書の表に応答欠落時の照合待ちの扱い（採るなら観点、採らないなら理由・代わり）を足す。迷った理由: どちらを正にするかは index と対象別の整合の判断で R5 の段に属する / 要判断"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/itc-sample.md","status":"passed","summary":"変更した sample を整形した"},{"command":"npx markdownlint docs/ja/specdojo/samples/itc-sample.md","status":"passed","summary":"エラーなし"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/itc-sample.md のみで、plan・result・個票を変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML の変更なし","reason":"変更した *.yaml / *.yml ファイルがない"}]}
+</specdojo_executor_evidence>
