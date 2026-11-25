@@ -83,11 +83,32 @@ export type GradeRubricLevel = {
   review_verdict: GradeLevelReviewVerdict;
 };
 
+/** Upper limits of one size metric. A value at or above `minor` / `major` yields that severity. */
+export type GradeSizeThreshold = {
+  minor: number;
+  major: number;
+  /**
+   * Smallest absolute amount (non-whitespace characters) that may produce a finding: the increase
+   * over the sample or the previous grade, or the characters of the operations chapters.
+   */
+  min_characters?: number;
+};
+
+/** Size limits that grade measures without an LLM (PJR-2Q0G). */
+export type GradeSizeLimits = {
+  sample_ratio?: GradeSizeThreshold;
+  growth_ratio?: GradeSizeThreshold;
+  operations_ratio?: GradeSizeThreshold;
+  /** Heading words that mark a chapter about operating or verifying the document itself. */
+  operations_headings?: string[];
+};
+
 export type GradeRubric = {
   id: string;
   pass_score: number;
   levels: GradeRubricLevel[];
   weights: Record<"kata" | "deliverable", Record<string, number>>;
+  size_limits?: GradeSizeLimits;
 };
 
 export type CoverageType = {
