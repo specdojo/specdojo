@@ -1,0 +1,11 @@
+R1 の段で sample を 1 か所直しました。変更したファイルは `docs/ja/specdojo/samples/nfr-availability-sample.md` だけです。
+
+- **直した点（R1-1）:** 「可用性要件一覧」の `技術前提` 列に、基準を支える仕組みの出どころ（運用方針の監視・アラート方針、バックアップ・リストア方針、運用手順の障害対応）が書かれていませんでした。rulebook の記述ガイドはこの列に、対応する設計文書か `dec-*` を書くよう求めています。4 行すべてに出どころを書き足し、冗長化しない仮定には「決定記録はなく、ホスティング環境の SLA が決まったら見直す」を添えました。監視の閾値（5 分）と閉店後のバックアップが `opd-index-sample` の記述と合うことも確かめました。
+- **迷った点（R1-2、`要判断`）:** rulebook は「関連ドキュメント導線」に `dec-*` も紐づけるよう書いていますが、sample には `dec-*` の行がありません。対応する決定記録が実在せず、`dec-sample` は非推奨のため、架空の ID は足していません。rulebook の側を「設計判断がある場合に `dec-*` を紐づける」に変える案を出しています。rulebook はこの段では変えていません。
+- **扱わなかった finding:** F001（`vp-arc-conciseness`）は R3 の段、F002（`vp-qe-verifiability`）は R4 の段の観点なので、この段では直さず、それぞれの段に渡しました。
+
+prettier と markdownlint-cli2 で整形・検査し、問題は出ていません。`npm run lint:md` などの残りの検査は親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1（目的の過不足）を確かめ、可用性要件一覧の `技術前提` 列に rulebook が求める設計文書の出どころを書き足した。rulebook の `dec-*` 紐づけの要求は要判断の指摘として残し、F001・F002 は担当の段（R3・R4）に回した。","handoff":["R1-1: R1 / 3. 可用性要件一覧 / `技術前提` 列に、基準を支える仕組みの出どころとなる設計文書がない（rulebook の記述ガイドは、`技術前提` に対応する設計文書または `dec-*` を書くよう求めている） / 4 行すべてに出どころ（運用方針の監視・アラート方針、運用方針のバックアップ・リストア方針、運用手順の障害対応）を書き足した。冗長化しない仮定には「決定記録はなく、ホスティング環境の SLA が決まったら見直す」を添えた / `vp-qe-kata-conformance`（rulebook の「可用性要件一覧」の記述ガイド）。監視の閾値（5 分）と閉店後のバックアップは `opd-index-sample` と一致することを確かめた / -","R1-2: R1 / 5. 関連ドキュメント導線 / rulebook は、この章に設計判断の `dec-*` を紐づけるよう求めているが、sample には対応する決定記録の行がない / - / `vp-qe-kata-conformance`。可用性の設計判断の決定記録は実在せず、`dec-sample` も非推奨のため、架空の `dec-*` を足す案は採らなかった。rulebook（`specdojo:nfr-availability-rulebook`）の「関連ドキュメント導線」の記述ガイドを「設計判断がある場合に `dec-*` を紐づける」に直す案を出す / 要判断","F001（`vp-arc-conciseness`）と F002（`vp-qe-verifiability`）はこの段の観点ではないため、それぞれ R3（読みやすさ）と R4（正しさ）の段に回した"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/nfr-availability-sample.md","status":"passed","summary":"変更した sample を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/nfr-availability-sample.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>
