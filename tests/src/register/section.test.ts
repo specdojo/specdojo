@@ -244,6 +244,42 @@ describe("Section utility functions", () => {
     });
   });
 
+  describe("validateSectionFile の小節見出し", () => {
+    it("### の小節見出しを含むファイルは受け付ける", () => {
+      const root = mkdtempSync(join(tmpdir(), "validate-section-"));
+      try {
+        const filePath = join(root, "sub.md");
+        const content = "概要\n\n### CHANGELOG に書く事項\n\n- 区分: Fixed\n";
+        writeFileSync(filePath, content, "utf8");
+        expect(validateSectionFile(filePath)).toBe(content);
+      } finally {
+        rmSync(root, { recursive: true, force: true });
+      }
+    });
+
+    it("### と一緒に ## や #### を含むファイルは拒む", () => {
+      const root = mkdtempSync(join(tmpdir(), "validate-section-"));
+      try {
+        const mixed = join(root, "mixed.md");
+        writeFileSync(mixed, "### 小節\n\n## 章\n", "utf8");
+        expect(() => validateSectionFile(mixed)).toThrow(/must not contain markdown headings/);
+        const deep = join(root, "deep.md");
+        writeFileSync(deep, "#### 深い\n", "utf8");
+        expect(() => validateSectionFile(deep)).toThrow(/must not contain markdown headings/);
+      } finally {
+        rmSync(root, { recursive: true, force: true });
+      }
+    });
+
+    it("小節見出しを含む本文で章を差し替えられる", () => {
+      const ticket = "# T\n\n## 1. 概要\n\n旧\n\n## 2. 対応結果\n\n次\n";
+      const result = replaceTicketSection(ticket, "概要", "新\n\n### 小節\n\n本文");
+      expect(result.content).toBe(
+        "# T\n\n## 1. 概要\n\n新\n\n### 小節\n\n本文\n\n## 2. 対応結果\n\n次\n",
+      );
+    });
+  });
+
   describe("replaceTicketSection", () => {
     const originalTicket = buildSampleTicket();
 

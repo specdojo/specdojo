@@ -599,7 +599,7 @@ specdojo exec run --project prj-0001 --register <PJR-ID> --worktree
 
 `register update --topic <slug>` は個票のファイル名と Frontmatter の文書 ID を同時に変更し、`docs/ja` 配下の旧文書 ID 参照を更新してから生成ビューを再生成します。変更は `action: update` の event に文書 ID の変更として記録されます。形式は英小文字・数字・単一ハイフン区切りに限り、変更先ファイルが存在する場合は書き込み前に停止します。
 
-`register update --section <章の名前> --section-file <path>` は、個票の 1 つの章の本文を指定した Markdown ファイルの内容で差し替えます。章は見出しの番号を除いた名前（`完了条件`、`作業内容` など）で指定します。指定した章の見出し行（`## 3. 完了条件` など）はそのまま残し、次の同じ深さ（またはそれより浅い）見出しまでの本文だけを置き換えます。ほかの章や Frontmatter は変更しません。個票に存在しない章名、読み込めないファイル、または Markdown 見出しを含むファイルを指定した場合はエラーになり、個票は変更されません。変更は `action: update` の event に `field: section` として記録され、`--commit` と併用した場合は変更された個票とイベントファイルのみが commit されます。
+`register update --section <章の名前> --section-file <path>` は、個票の 1 つの章の本文を指定した Markdown ファイルの内容で差し替えます。章は見出しの番号を除いた名前（`完了条件`、`作業内容` など）で指定します。指定した章の見出し行（`## 3. 完了条件` など）はそのまま残し、次の同じ深さ（またはそれより浅い）見出しまでの本文だけを置き換えます。ほかの章や Frontmatter は変更しません。章の本文には、章より 1 段深い小節の見出し（`###`）を含められます。章の見出し（`##` 以浅）や `####` 以深の見出しを含むファイルは拒みます。個票に存在しない章名、読み込めないファイル、または `###` 以外の Markdown 見出しを含むファイルを指定した場合はエラーになり、個票は変更されません。変更は `action: update` の event に `field: section` として記録され、`--commit` と併用した場合は変更された個票とイベントファイルのみが commit されます。
 
 ```bash
 # 完了条件の章本文をファイルから差し替える
@@ -950,11 +950,12 @@ close は人が各項目の完了条件を確認して `register close --commit`
 
 段は `--step <spec>`（失敗したら予約を止める）と `--step-continue <spec>`（失敗しても次の段へ進む）で、指定した順に並べます。`<spec>` は次の許可リストのどれかで、空白だけで区切ります。引用符とバックスラッシュは拒否し、シェルを通さず specdojo の CLI へ argv として渡します。`--project` を書かない段には予約の project を足します。
 
-| `<spec>` の形                 | 実行する内容                                                                                                                                   |
-| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| `grade run ...`               | `specdojo grade run ...`                                                                                                                       |
-| `exec run ...`                | `specdojo exec run ...`。`--register`・`--register-filter`・`--auto`・`--task` のどれかが要る。`--job`・`--plan` は拒否する                    |
-| `post-integration build-dist` | 統合の後の処理の `build-dist`（`npm run build` の固定 argv）を、project の exec のロックを待って取ってから流す。失敗時の印も統合の後と同じ扱い |
+| `<spec>` の形                      | 実行する内容                                                                                                                                   |
+| ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `grade run ...`                    | `specdojo grade run ...`                                                                                                                       |
+| `exec run ...`                     | `specdojo exec run ...`。`--register`・`--register-filter`・`--auto`・`--task` のどれかが要る。`--job`・`--plan` は拒否する                    |
+| `exec resume --task <task-id> ...` | `specdojo exec resume --task <task-id> ...`。schedule のタスクの再開を列の段に置ける。`--task` が要り、`--due`・`--dry-run` は拒否する         |
+| `post-integration build-dist`      | 統合の後の処理の `build-dist`（`npm run build` の固定 argv）を、project の exec のロックを待って取ってから流す。失敗時の印も統合の後と同じ扱い |
 
 ```bash
 specdojo exec queue add nightly --project prj-0001 \
@@ -965,7 +966,7 @@ specdojo exec queue run nightly --project prj-0001
 specdojo exec queue status nightly --project prj-0001
 ```
 
-runner は自分が起動した子プロセスの終了を待ってから次の段を始めます。プロセス名の検索で待つことはしません。各段の状態（`pending`・`running`・`succeeded`・`failed`）・開始と終了の時刻・終了コードは段ごとに予約ファイルへ書きます。予約の状態は `succeeded`・`completed_with_failures`（`--step-continue` の段だけが失敗）・`stopped`（`stopped_step` と `reason` を記録）・`cancelled` のどれかで終わり、`exec queue run` は `succeeded` のときだけ終了コード 0 を返します。同じ予約は `exec/.locks/queue-<queue-id>.lock` で 1 つの runner だけが流します。runner が落ちて `running` のまま残った予約は、`status` に `running (runner not alive)` と出て、`exec queue run` で途中の段からやり直します。終わっていない予約は `exec status` の末尾の `queues:` にも 1 行ずつ出ます。
+runner は自分が起動した子プロセスの終了を待ってから次の段を始めます。プロセス名の検索で待つことはしません。各段の状態（`pending`・`running`・`succeeded`・`failed`）・開始と終了の時刻・終了コードは段ごとに予約ファイルへ書きます。予約の状態は `succeeded`・`completed_with_failures`（`--step-continue` の段だけが失敗）・`stopped`（`stopped_step` と `reason` を記録）・`cancelled` のどれかで終わり、`exec queue run` は `succeeded` のときだけ終了コード 0 を返します。同じ予約は `exec/.locks/queue-<queue-id>.lock` で 1 つの runner だけが流します。runner が落ちて `running` のまま残った予約は、`status` に `running (runner not alive)` と出て、`exec queue run` で途中の段からやり直します。終わっていない予約は `exec status` の末尾の `queues:` にも 1 行ずつ出ます。`exec queue status` と `exec status` の出力を `head` などで途中で切っても、EPIPE の例外を出さずに終了コード 0 で終わります。
 
 ## 8. grade
 

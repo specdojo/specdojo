@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   difficulty: medium
   registered_at: "2026-11-24T23:02:49Z"
@@ -41,13 +41,33 @@ prj-0001 の運用メモ（`pm-orchestrator-playbook`）で、オーケストレ
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                              | 担当     | 状態 | メモ                                                |
+| --- | ------------------------------------------------- | -------- | ---- | --------------------------------------------------- |
+| 1   | `exec queue status` / `exec status` の EPIPE 対策 | executor | done | `src/shared/stdout-epipe.ts` を足し両コマンドで使用 |
+| 2   | 列の段に `exec resume --task` を置けるようにする  | executor | done | 段の種類 `exec-resume` を追加                       |
+| 3   | `--section-file` で `###` の小節見出しを許可する  | executor | done | `src/register/section.ts`                           |
+| 4   | 単体テスト・コマンドリファレンス・ガイドの更新    | executor | done | 下記参照                                            |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 5.1. 実施内容
+
+- EPIPE: 標準出力の EPIPE を終了コード 0 で静かに終える `exitQuietlyOnClosedStdout` を足し、直したコマンドは `exec queue status` と `exec status`（同じ落ち方がある一覧コマンド）。
+- 列の段: `exec queue add --step "exec resume --task <task-id>"` を置ける（段の種類 `exec-resume`）。`--task` が必須で、`--due`・`--dry-run` は拒否する。設計上の制約はなく、代わりの方法は不要。
+- 小節見出し: `register update` / `register add` の `--section-file` は `###` の見出しを含められる。`##` 以浅と `####` 以深は今までどおり拒む。判断: 章は `##` が標準のため、許す深さを `###` に固定した（章の深さを個票から引かない）。
+- テスト: `tests/src/exec/queue.test.ts`、`tests/src/register/section.test.ts`、`tests/src/shared/stdout-epipe.test.ts` を追加・更新した。
+- 文書: コマンドリファレンスの「実行の予約（exec queue）」と `register update --section`、`exec-operation-guide` を更新した。
+- 保護された設定は変えていない。
+
+### 5.2. CHANGELOG に書く事項
+
+- 区分: Added / 行: `exec queue` の段に `exec resume --task <task-id>` を置けるようにした。
+- 区分: Fixed / 行: `exec queue status` と `exec status` の出力を `head` で切っても EPIPE で落ちないようにした。
+- 区分: Changed / 行: `register update` / `register add` の `--section-file` で、章の本文に `###` の小節見出しを含められるようにした。
+
+### 5.3. 残課題
+
+- 統合の後に、オーケストレーターが 3 つの動きを手元で確かめてから close する。
 
 ## 6. 関連ドキュメント
 

@@ -1,0 +1,11 @@
+`exec queue status` の EPIPE、列の段への `exec resume --task`、`--section-file` の小節見出しの 3 つを直しました。typecheck とキュー・section・EPIPE の単体テストは通り、`lint:md:changed` もエラーなしです。`lint:ts` は error 0 で、warning は既存のものです。`test:unit` 全体は流していません。手元での 3 つの動きの確認は、統合の後にオーケストレーターが行います。
+
+- **EPIPE**: `src/shared/stdout-epipe.ts` に、EPIPE を終了コード 0 で静かに終える関数を足しました。`exec queue status` と、同じ落ち方がありうる `exec status` で使っています。
+- **列の段**: `exec queue add --step "exec resume --task <task-id>"` を置けます。`--task` が必須で、`--due` と `--dry-run` は拒否します。設計上の制約はなく、代わりの方法は不要でした。
+- **小節見出し**: `register update` / `register add` の `--section-file` は `###` の見出しを含められます。`##` 以浅と `####` 以深は今までどおり拒みます。章は `##` が標準なので、許す深さを `###` に固定しました。個票から章の深さを引くことはしていません。
+- **テストと文書**: `tests/src/exec/queue.test.ts` と `tests/src/register/section.test.ts` に追加し、`tests/src/shared/stdout-epipe.test.ts` を新設しました。コマンドリファレンスと `exec-operation-guide` に変更を書いています。
+- **個票**: 作業内容の表と対応結果を更新し、「CHANGELOG に書く事項」の小節を作りました。`CHANGELOG.md` と保護された設定は変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"3 件の CLI の不足を直しました。EPIPE を静かに終える処理を `exec queue status` と `exec status` に入れ、列の段に `exec resume --task` を置けるようにし、`--section-file` で `###` の小節見出しを許可しました。単体テストとコマンドリファレンス・ガイドも更新し、個票の対応結果に CHANGELOG の文案を書きました。","handoff":["判断: `--section-file` で許す小節見出しは `###` に固定した（章は `##` が標準のため。個票から章の深さを引かない）。`register add` の `--section-file` にも同じ規則が適用される。","判断: 列の `exec resume` の段は `--task` 必須で、`--due` と `--dry-run` は拒否する。","統合の後に、オーケストレーターが EPIPE・列の段の再開・小節見出し入りの章差し替えを手元で確かめてから close する。","CHANGELOG に書く事項の文案は個票の対応結果 5.2 に記載済み。保護された設定の変更は不要。"],"validations":[{"command":"npm run typecheck","status":"passed","summary":"型エラーなし"},{"command":"npm run lint:ts","status":"passed","summary":"error 0。warning は既存のもののみ"},{"command":"npx vitest run tests/src/exec/queue.test.ts tests/src/register/section.test.ts tests/src/shared/stdout-epipe.test.ts","status":"passed","summary":"対象の単体テストがすべて通過"},{"command":"npm run lint:md:changed","status":"passed","summary":"エラーなし"}]}
+</specdojo_executor_evidence>

@@ -18,12 +18,15 @@ function isHeadingNode(node: RootContent): node is HeadingNode {
   );
 }
 
-function hasHeadingNode(node: Root | RootContent): boolean {
+/** 章の本文に含められる小節の見出しの深さ（章は `##` なので、1 段深い `###`）。 */
+const ALLOWED_SUBSECTION_DEPTH = 3;
+
+function hasDisallowedHeading(node: Root | RootContent): boolean {
   if (node.type === "heading") {
-    return true;
+    return node.depth !== ALLOWED_SUBSECTION_DEPTH;
   }
   if ("children" in node && Array.isArray(node.children)) {
-    return (node.children as RootContent[]).some(hasHeadingNode);
+    return (node.children as RootContent[]).some(hasDisallowedHeading);
   }
   return false;
 }
@@ -45,7 +48,8 @@ export function stripSectionNumber(headingText: string): string {
 
 /**
  * 差し替え用ファイルを検証し、その本文を返す。
- * ファイルが存在しない・読めない場合や、中身に Markdown 見出しが含まれる場合はエラーを投げる。
+ * ファイルが存在しない・読めない場合や、中身に章の見出し（`##` 以浅）または `###` 以外の見出しが含まれる場合はエラーを投げる。
+ * 章より 1 段深い `###` の小節見出しは本文に含められる。
  */
 export function validateSectionFile(filePath: string): string {
   if (!existsSync(filePath)) {
@@ -59,7 +63,7 @@ export function validateSectionFile(filePath: string): string {
   }
 
   const tree = unified().use(remarkParse).parse(fileContent);
-  if (hasHeadingNode(tree)) {
+  if (hasDisallowedHeading(tree)) {
     throw new Error(`Section file must not contain markdown headings: ${filePath}`);
   }
 
