@@ -1,0 +1,18 @@
+R1（目的の過不足）のレビューを終え、sample `docs/ja/specdojo/samples/sysd-critical-flows-sample.md` を 3 か所直しました（8 行追加・19 行削除）。編集したのはこのファイルだけで、rulebook と template には触れていません。
+
+**直した点**
+- **F001（検証表の列の欠落）**: 「検証への引渡し」の表に、雛形が求める「確認状況・不足の解消先」の列を足しました。5 件のシナリオそれぞれに「未実施」、不足の理由、解消先（SU-01 または SU-02）を書いています。あわせて先頭の列名を雛形と同じ「検証ID / フロー / 受入条件ID」にそろえました。
+- **概要の役割割り当て**: DEV が設計を更新し ARC・QE などが確認する、PO が最終判断するという文を削りました。Sample 記述標準は、文書を作る・確かめる・承認する役割の割り当てを本文に書くことを禁じています。公開する情報と除外する情報を述べた文は、rulebook が求める内容なので残しています。
+- **「5.4. 承認対象と公開前条件」**: 章ごと削りました。この章は rulebook と template のどちらの章構成にもなく、内容も承認の分担と進み具合で、記述標準が禁じるものです。末尾の「`draft` を維持する」は、frontmatter の `status: ready` とも食い違っていました。また「未同梱の契約・実装成功を表さない」という文は、「正本と変更影響」節の冒頭文と同じ内容の繰り返しでした。
+
+**直さなかった点**
+- **F002（「照合待ち」の定義）**: 観点が `vp-ux-language-consistency` で R3 の担当なので、ここでは直していません。概要の定義は「本部受付の成否を断定できない状態」だけですが、`itc-kinuya-cf-03` は「本部受付済みで端末の控え保存に失敗した場合」も照合待ちとしています。定義をこちらにも広げる案を R3 に渡します。
+- **未決事項表の列**: template にある「受入や運用への影響」と「当面の扱い」の列が sample にありません。内容は 2 列目の文に入っているので、R1 としては足りていると判断しました。列を分けるかどうかは R2（構成）に任せます。
+
+**確認結果**
+- 整形（prettier）と markdownlint（`markdownlint-cli2`）を流し、問題は 0 件でした。
+- `npm run lint:md` など親の runner が流す検査は、ここでは実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1: sample sysd-critical-flows の検証表に「確認状況・不足の解消先」列を追加し（F001）、本文の文書役割割り当てと雛形外の承認章（5.4）を削除した。F002 は R3 の観点のため申し送り。","handoff":["R1-1: R1 / 5.2. 検証への引渡し / 検証表に template が求める「確認状況・不足の解消先」列がなく、所在・網羅性・実行結果の区別と不足の未決事項への接続（rulebook 本文要件）を示していない（grade F001） / 列を追加し、5 シナリオすべてに「未実施」・不足理由・解消先 SU-01／SU-02 を記入。先頭列名を「検証ID / フロー / 受入条件ID」にそろえた / vp-qe-kata-conformance（sysd-critical-flows-template「検証への引渡し」、rulebook「本文要件」のテスト参照の段落） / -","R1-2: R1 / 1. 概要（対象・運用方針） / 「開発担当 DEV が設計を更新し、ARC・QE・家族利用者代表が確認し、PO が最終判断する」は文書の役割割り当てであり、Sample 記述標準の記述ガイド・禁止事項に抵触する / 該当の 2 文を削除し、公開範囲の文は残した / vp-qe-kata-conformance（sample-authoring-standard「記述ガイド」「禁止事項」） / -","R1-3: R1 / 5.4. 承認対象と公開前条件 / rulebook・template の章構成にない独自章で、内容は承認の分担と進み具合（禁止事項）。末尾の「draft を維持する」は frontmatter の status: ready と矛盾し、「未同梱の契約・実装成功を表さない」は 5.1 冒頭文の再掲 / 章ごと削除 / vp-qe-kata-conformance、vp-arc-single-responsibility（sample-authoring-standard「構成の原則」「禁止事項」） / -","R1-4: R1 / 1. 概要（対象・運用方針） / 「照合待ち」の定義が「本部受付の成否を断定できない状態」だけで、itc-kinuya-cf-03 の「本部受付後の控え保存失敗も照合待ち」と食い違う（grade F002、vp-ux-language-consistency） / - / 観点が R3 担当のため本段では直さない。案: 定義を「本部受付またはローカル販売実績の保存のどちらかが確認できない状態」に広げる / 要判断","R1-5: R1 / 5.3. 未決事項と後続作業 / template にある「受入や運用への影響」「当面の扱い」の列がなく、該当内容は 2 列目の文に含まれている / - / 内容は rulebook の要件を満たすため R1 では足し引き不要と判断。列の分割は R2（構成）で扱う / -"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/sysd-critical-flows-sample.md","status":"passed","summary":"整形済み"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/sysd-critical-flows-sample.md","status":"passed","summary":"0 issues"}]}
+</specdojo_executor_evidence>
