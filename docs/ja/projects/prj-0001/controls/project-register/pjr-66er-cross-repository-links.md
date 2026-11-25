@@ -12,7 +12,7 @@ specdojo:
   difficulty: hard
   owner: ARC
   registered_at: "2026-11-03T05:02:47Z"
-  due_on: "2026-12-31"
+  due_on: "2026-11-30"
   derived_from:
     - PJR-8HCB
   commit_type: feat
