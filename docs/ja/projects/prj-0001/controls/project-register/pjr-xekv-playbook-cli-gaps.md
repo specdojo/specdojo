@@ -59,6 +59,7 @@ prj-0001 の運用メモ（`pm-orchestrator-playbook`）で、オーケストレ
 - テスト: `tests/src/exec/queue.test.ts`、`tests/src/register/section.test.ts`、`tests/src/shared/stdout-epipe.test.ts` を追加・更新した。
 - 文書: コマンドリファレンスの「実行の予約（exec queue）」と `register update --section`、`exec-operation-guide` を更新した。
 - 保護された設定は変えていない。
+- 2 回目の実行: `--section-file` の拒否メッセージを、使える見出しが `###` のみであることと、拒んだ見出しの `ファイル:行: 見出し行` を示す形に直した（`src/register/section.ts`）。`tests/src/register/section.test.ts` でメッセージ（行番号・見出し行を含む）を確かめた。
 
 ### 5.2. CHANGELOG に書く事項
 
