@@ -217,6 +217,7 @@ purchasing -> display_shelf: "商品" {
 }
 purchasing -> purchase_record: "仕入情報"
 purchasing -> inventory_record: "入荷数量"
+purchasing -> sales: "入荷数量・受入結果"
 customer -> sales: "購入依頼・支払"
 display_shelf -> sales: "商品" {
   class: material_flow
