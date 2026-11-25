@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-0YVR",
   "run_id": "pjr-0yvr-20261125T092344Z-3f5b5d1b",
-  "updated_at": "2026-11-25T09:32:27.291Z",
+  "updated_at": "2026-11-25T09:32:43.165Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,12 +21,29 @@
       "artifact_ref": "docs/ja/projects/prj-0002/execution/runs/register/PJR-0YVR/pjr-0yvr-20261125T092344Z-3f5b5d1b/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sonnet-executor",
       "attempts": 1,
       "started_at": "2026-11-25T09:32:27.291Z",
-      "completed_at": null,
-      "artifact_ref": null
+      "completed_at": "2026-11-25T09:32:43.165Z",
+      "artifact_ref": null,
+      "repos": {
+        "specdojo-lp": {
+          "status": "merged",
+          "commit": "55e6f217f0442d06c52bd85c8bf96cf0baa0db1f",
+          "merged_at": "2026-11-25T09:32:40.172Z"
+        },
+        "specdojo-assets": {
+          "status": "unchanged",
+          "commit": null,
+          "merged_at": null
+        },
+        "project": {
+          "status": "merged",
+          "commit": null,
+          "merged_at": "2026-11-25T09:32:40.172Z"
+        }
+      }
     }
   },
   "artifacts": {

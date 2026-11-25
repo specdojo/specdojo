@@ -118,3 +118,16 @@
       from: "executor validation failed or not run: git -C /workspaces/specdojo-workspace/worktrees/prj-0002-PJR-0YVR/specdojo-lp diff 7a5b7d7 HEAD -- CHANGELOG.md"
       to: "-"
   previous_event_id: reg_d83059db64e74cef935ad3797f230b7e
+- v: 1
+  id: reg_59b92bfb844441588a33dcc34ba6cb10
+  ts: "2026-11-25T09:32:40Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_c50ac5023a054b3d99fc1396685d34ac

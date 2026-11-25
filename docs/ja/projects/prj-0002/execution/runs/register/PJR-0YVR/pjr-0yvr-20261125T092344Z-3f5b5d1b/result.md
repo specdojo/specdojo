@@ -30,3 +30,20 @@ specdojo:
 ## 4. 進め方
 
 reporter を使わず、runner が executor の報告（`final_message`・`handoff`）と証跡から機械的に作成した（`pipeline.mechanical_result`）。
+
+## 5. トレーサビリティ
+
+runner がプロダクトリポジトリの処理後に記録した状態と、統合先の commit snapshot です。
+プロジェクトリポジトリの統合は、この result を含む merge commit で確認します。
+その merge commit には `Refs: prj-0002:PJR-0YVR` を付けます。
+`branch-only` の行は未統合です。exec branch を保持し、push と PR 作成はプロダクト側で行います。
+PR が `not applicable` の行では、runner は PR を作成していません。
+
+<!-- markdownlint-disable MD013 -->
+
+| trace key           | repository        | integration branch | exec branch              | state     | PR             | commit snapshot                            | recorded at              |
+| ------------------- | ----------------- | ------------------ | ------------------------ | --------- | -------------- | ------------------------------------------ | ------------------------ |
+| `prj-0002:PJR-0YVR` | `specdojo-lp`     | `develop`          | `exec/prj-0002-PJR-0YVR` | merged    | not applicable | `55e6f217f0442d06c52bd85c8bf96cf0baa0db1f` | 2026-11-25T09:32:43.164Z |
+| `prj-0002:PJR-0YVR` | `specdojo-assets` | `develop`          | `exec/prj-0002-PJR-0YVR` | unchanged | not applicable | not applicable (no changes)                | 2026-11-25T09:32:43.164Z |
+
+<!-- markdownlint-enable MD013 -->
