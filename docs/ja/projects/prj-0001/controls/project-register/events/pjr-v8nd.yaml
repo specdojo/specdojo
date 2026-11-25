@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_57828228305c4b33b4495c8045411c48
+  ts: "2026-11-25T22:40:03Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: オーケストレーターが dry-run の仮の ID を commit メッセージの Refs に書く
+    - field: description
+      from: ""
+      to: register add の dry-run で出た ID は仮で、実際の起票では乱数で振り直される。オーケストレーターが仮の ID を commit メッセージの Refs に書き、実際の ID と食い違う。
+    - field: input
+      from: ""
+      to: '["PJR-FNB7 の実 agent の試験（2026-11-26、sonnet、5 回）のうち 2 回で観測。dry-run の PJR-2W39 に対し実際は PJR-RBET、dry-run の PJR-9077 に対し実際は PJR-PB3T で、commit の Refs は仮の ID のままだった。","直し方（CLI が実際の ID を -m に差し込む、dry-run の出力で仮の ID だと示す、オーケストレーターの本文に注意を足す、など）は executor が選び、理由を個票の対応結果に書く。本文は保護された設定のため、変更案を対応結果に書く。"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-26"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-FNB7"]'
