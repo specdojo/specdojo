@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_e40fd545058e4ceca5c072107a32b1d8
+  ts: "2026-11-25T22:34:22Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: claude の 5 時間の利用枠の上限を検出できず、代わりの agent に切り替わらない
+    - field: description
+      from: ""
+      to: claude の 5 時間の利用枠の上限（You've hit your 5-hour limit）で止まったタスクが、上限ではなくふつうの失敗として block になり、--on-rate-limit fallback の代わりの agent に切り替わらない。見張りも分類できない。
+    - field: input
+      from: ""
+      to: '["2026-11-26 01:25〜01:33 JST、全件レビューで 10 件が数秒で止まった。evidence の `final_message` は「You''ve hit your 5-hour limit · resets 2:20am (Asia/Tokyo)」、`block_reason` は「agent exited with non-zero code」（1 件は reporter exited with failure）。","exec-defaults の claude の `rate_limit_detection.stderr_patterns` は rate limit・429・overloaded・session limit だけで、5-hour limit を含まない。src/exec/limit.ts には 5-hour limit の分類がある。文言は stderr ではなく stdout に出ている。","rtn-exec-watch-scan の 1 回の実行（2026-11-26）では、この 10 件が「分けられなかった」に分類された。","exec-defaults.yaml は保護された設定のため、変更が要る場合は案を個票の対応結果に書き、反映は利用者の承認のもと feature ブランチで行う。"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-26"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-0BGE"]'
