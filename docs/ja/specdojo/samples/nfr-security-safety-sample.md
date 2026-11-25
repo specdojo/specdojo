@@ -100,6 +100,7 @@ _ASSUMPTION_: 販売管理システムは利用者ごとのログイン、権限
 | 根拠             | [[specdojo:prj-assumptions-constraints-dependencies-sample\|前提・制約・依存]] | 公開資料に実顧客の情報を含めない制約（ACD-C03）                                  |
 | セキュリティ方針 | [[specdojo:sysd-cross-cutting-policy-sample\|横断ルール]]                      | 認証値の秘匿（`scp-SEC-001`）と診断ログの記録範囲                                |
 | 受入条件         | `sac-store-sales`                                                              | `nfr-sec-001`〜`nfr-sec-003`、`nfr-sec-006`〜`nfr-sec-008`、`nfr-sec-010` の合否 |
+| 総合テスト       | （なし）                                                                       | 権限・暗号化・秘匿は受入条件で判定するため、`stc-*` を置かない                   |
 | 運用方針         | [[specdojo:opd-access-control-sample\|運用方針・設計（権限・アカウント）]]     | 権限区分、付与・剥奪、棚卸し、監査ログ、緊急権限                                 |
 | 運用方針         | [[specdojo:opd-incident-management-sample\|障害対応の運用方針]]                | `nfr-sec-005` の紛失・漏えいの疑いの扱い                                         |
 | 運用手順         | [[specdojo:opr-access-control-sample\|アカウント付与・剥奪]]                   | `nfr-sec-004`・`nfr-sec-009`〜`nfr-sec-012` の月次点検の手順                     |

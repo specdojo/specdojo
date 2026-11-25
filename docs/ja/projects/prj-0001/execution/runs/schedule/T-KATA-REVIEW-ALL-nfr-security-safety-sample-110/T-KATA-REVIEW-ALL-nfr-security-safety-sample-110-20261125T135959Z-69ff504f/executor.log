@@ -1,0 +1,21 @@
+R1（目的の過不足）のレビューを終えました。sample に入れた差分は 1 行で、`docs/ja/specdojo/samples/nfr-security-safety-sample.md` だけを変えています。
+
+**直した点**
+「関連ドキュメント導線」の表に、総合テストの行を足しました。rulebook の受入条件は `stc-*` への導線を求めていますが、表には行も、置かない理由もありませんでした。足した行は検証先を `（なし）` とし、置かない理由を「権限・暗号化・秘匿は受入条件で判定するため」と書いています。これは `nfr-index-sample` の導線表で、機密性・安全性の検証が `sac-store-sales` だけになっていることに合わせたものです。
+
+**確かめて直さなかった点**
+- 概要は保護対象と防ぐ事象が 2 文で分かり、プロジェクト概要の目的ともつながっています。
+- 各章に rulebook の求める内容があり、要らない内容は見当たりませんでした。
+- 文書の主題は機密性・安全性要件の 1 つに定まっています。
+
+**ほかの段に回した finding**
+- F001・F005（`nfr-sec-012` の未決の日数）: kata guide はこの 2 つの観点をレビューの段で使わないとしているため、扱いませんでした。
+- F002（例外の期限が相対表現）: 確かめられるかどうかの観点なので R4 に回しました。
+- F003（`nfr-sec-003` の測定方法に管理と本部連携がない）: 漏れと整合の観点なので R2 に回しました。
+
+**検証**
+prettier と markdownlint は対象ファイルで問題なしでした。`lint:md` などの許可済みの検査は、このあと親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R1（目的の過不足）を行った。sample の『関連ドキュメント導線』に、rulebook が求める `stc-*` への導線（総合テストは置かない旨とその理由）を 1 行足した。ほかに要る内容の欠け・要らない内容は見当たらなかった。F001・F002・F003・F005 は R1 の観点に当たらないため扱わず、ほかの段に任せた。","handoff":["R1-1: R1 / 6. 関連ドキュメント導線 / rulebook の本文要件（関連ドキュメント導線の受入条件）は `stc-*` への導線を求めるが、表に `stc-*` の行も置かない旨の記述もない（grade F004） / 総合テストの行を足した。検証先は `（なし）`、目的は『権限・暗号化・秘匿は受入条件で判定するため、`stc-*` を置かない』とした / `vp-qe-kata-conformance`（種別の責務）。rulebook の本文要件の表を正とした。`nfr-index-sample` の導線表で機密性・安全性の検証が `sac-store-sales` だけになっていることに合わせた。F004 の観点 `vp-qe-omissions-consistency` は R2 の観点だが、rulebook が求める内容の欠けなので R1 で扱った / 要判断（R2 に任せる案は選ばなかった）","R1-2: R1 / 3. 機密性・安全性要件一覧（`nfr-sec-012`） / grade F001・F005 は、未決の日数に決定者・期限・解消条件がないと指摘している / - / kata guide の『kata の観点の組』は、`vp-po-decision-readiness` と `vp-ops-release-readiness` を kata の段のレビューでは使わないとしている。kata の承認と ready 化は登録簿で追うため、R1 では直さなかった / -","R1-3: R1 / 5. 例外運用・4. 測定・検証方法 / grade F002（`nfr-sec-ex-001` の期限が相対表現）は `vp-qe-verifiability` なので R4 に、F003（`nfr-sec-003` の測定方法に管理と本部連携の主体がない）は `vp-qe-omissions-consistency` なので R2 に任せる / - / kata guide の『kata の観点の組』の段と観点の割り当て / -"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/nfr-security-safety-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/nfr-security-safety-sample.md","status":"passed","summary":"0 issues in 0 files"}]}
+</specdojo_executor_evidence>
