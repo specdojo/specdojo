@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-pm-orchestrator-playbook-sample-120",
+  "run_id": "T-KATA-REVIEW-ALL-pm-orchestrator-playbook-sample-120-20261125T223913Z-1acddc53",
+  "updated_at": "2026-11-25T22:46:51.253Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-25T22:40:30.633Z",
+      "completed_at": "2026-11-25T22:41:24.754Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-pm-orchestrator-playbook-sample-120/T-KATA-REVIEW-ALL-pm-orchestrator-playbook-sample-120-20261125T223913Z-1acddc53/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "sonnet-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-25T22:45:57.007Z",
+      "completed_at": "2026-11-25T22:46:38.258Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-pm-orchestrator-playbook-sample-120/T-KATA-REVIEW-ALL-pm-orchestrator-playbook-sample-120-20261125T223913Z-1acddc53/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-25T22:46:51.253Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-pm-orchestrator-playbook-sample-120/T-KATA-REVIEW-ALL-pm-orchestrator-playbook-sample-120-20261125T223913Z-1acddc53/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-pm-orchestrator-playbook-sample-120/T-KATA-REVIEW-ALL-pm-orchestrator-playbook-sample-120-20261125T223913Z-1acddc53/result.md"
+  }
+}
