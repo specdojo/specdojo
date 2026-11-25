@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-REVIEW-ALL-prj-scope-sample-120
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-REVIEW-ALL-prj-scope-sample-120/T-KATA-REVIEW-ALL-prj-scope-sample-120-20261125T034553Z-b24b6a92/plan.md
   started_at: "2026-11-25T03:46:03.964Z"
+  completed_at: "2026-11-25T03:58:49.251Z"
   agent: opus-executor
   execution: agent
   approach: sample-maintenance
@@ -20,16 +21,20 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- kata のレビュー R2（構成）を実施した。`prj-scope-sample` の章の名前・順番・必須と任意の区分は、rulebook の本文構成の表と template に一致していた。各章の中も、前提から結論の順に読めることを確かめた。
+- 章の移動・分割・統合が要る指摘はなかったので、sample を含め成果物は変更していない（`changes` は空）。
+- runner の検証では、`lint:md:changed`、`lint:fm:changed`、`lint:mermaid`、`lint:d2`、`validate:schema` が成功した。変更ファイルがないため、それ以外の検査は変更種別により `not_applicable` になった。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- なし
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 追加の申し送りはない。executor の handoff にある指摘なし 1 件と確認メモ 1 件を、そのまま参照する。
+- 指摘なし: R2 / 全章 / 章の名前・順番・必須と任意の区分が rulebook の本文構成の表と template に一致し、各章の中も前提から結論の順（対象業務: 箇条書き→利用者影響の表、境界の判断基準: 原則→優先順位→当てはめ例、スコープ変更方針: 表→記録先の参照→トレードオフ）に読める / 直した案: - / 根拠: `vp-arc-document-structure`、`vp-qe-omissions-consistency` / 印: -
+- 確認メモ: R2 / 6. スコープ変更方針 / 表と template のトレードオフ段落の間にある記録先の参照文は、表の記録先の行を補う文なので表の直後に残した。template どおりトレードオフ段落を表の直後へ移す案は選ばなかった / 直した案: - / 根拠: `vp-arc-document-structure` / 印: -
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+根拠は executor evidence だけである。R2 の観点は `vp-arc-document-structure` と `vp-qe-omissions-consistency` で、rulebook の本文構成と template に照らして章の順・粒度・表と本文の配置を確認した。R1 の指摘は繰り返していない。plan に展開された grade の finding と condense の finding はどちらもなかった。そのため、修正する対象も根拠不足で見送る項目もなかった。「6. スコープ変更方針」では、表の直後に置いた記録先の参照文を現状のまま維持した。表の記録先の行を補う文なので、template どおりトレードオフ段落を表の直後へ移す案は選ばなかった。
