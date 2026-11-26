@@ -92,7 +92,7 @@ _ASSUMPTION_: 本書は、タブレット1台で店番担当が操作する学�
 - **Scope（適用範囲）**: 商品照会、本部売上登録、印字。
 - **Enforcement（検証）**: K2 で一時失敗、認証・権限拒否、上限到達、汎用の印刷失敗を注入する。許可条件だけが上限内で再試行され、照会の上限では明細未追加、印刷の上限では警告・控え保持となることを確認する。同じ印刷終了コードでも、送信前ビジーを識別できなければ印刷を再起動しない。会計登録と印字結果不明は手動照合へ進むことも確認する。
 - **Exception（例外）**: 未登録商品は接続障害に分類しない。店番担当がコードを訂正する。
-- **References（参照）**: 照会は架空正本 `kinuya-execution-policy` の `products.retry.max_attempts`（初回を含む）・`products.retry.max_backoff_ms`（待機1回の上限、ミリ秒）、値の確定は Q-K1。印刷は [[specdojo:ifx-cmd-sample|レシート印刷コマンド連携仕様]] の失敗分類と `error_handling.retry`（回数の数え方・待機列を含む）に従う。
+- **References（参照）**: 照会は架空正本 `kinuya-execution-policy` の `products.retry.max_attempts`（初回を含む）・`products.retry.max_backoff_ms`（待機1回の上限、ミリ秒）、値の確定は Q-K1。印刷は [[specdojo:ifx-cmd-sample|レシート印刷コマンド連携仕様]] の失敗分類と `error_handling.retry` の `on_categories`・`max_attempts`・`backoff` に従い、初回を含む回数の数え方と待機の秒数は同節の注記を正とする。
 
 ### 3.5. scp-LOG-001: 診断と監査
 
@@ -110,7 +110,7 @@ _ASSUMPTION_: 本書は、タブレット1台で店番担当が操作する学�
 - **Scope（適用範囲）**: 会計・保存・印字・再印刷の照合記録。
 - **Enforcement（検証）**: K3 で異なる二取引と同一取引の印字再試行を追い、売上受付を再実行せず対象の控えだけへ到達できることを確認する。
 - **Exception（例外）**: 印刷側の実紙面は記録だけで断定せず、店番担当が確認する。
-- **References（参照）**: 架空正本 `kinuya-audit-record-schema`、[[specdojo:clis-sample|販売管理 CLI 仕様]] の引継ぎ操作。
+- **References（参照）**: 架空正本 `kinuya-audit-record-schema`、[[specdojo:clis-sample|販売管理 CLI 仕様]] の「操作の流れ」の結果の引継ぎ。
 
 ### 3.7. scp-SEC-001: 認証情報の秘匿
 
