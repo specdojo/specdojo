@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-NDM7",
   "run_id": "pjr-ndm7-20261126T210227Z-31032992",
-  "updated_at": "2026-11-26T21:03:58.375Z",
+  "updated_at": "2026-11-26T21:04:07.836Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-NDM7/pjr-ndm7-20261126T210227Z-31032992/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sonnet-executor",
       "attempts": 1,
       "started_at": "2026-11-26T21:03:58.375Z",
-      "completed_at": null,
+      "completed_at": "2026-11-26T21:04:07.836Z",
       "artifact_ref": null
     }
   },
