@@ -89,3 +89,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_7d1927adacbc4480a9afe039e7a4553a
+- v: 1
+  id: reg_bf2c1bdd1c574d4bad8867298f655b47
+  ts: "2026-11-26T12:16:55Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: indie の承認（2026-11-26）を得て close。統合後の検査とテスト、smoke、見張りの routine、watch-status と exec watch を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-26"
+    - field: conclusion
+      from: "-"
+      to: 見張りを立ち上げたままのオーケストレーターと共存させ、exec watch を足した
+  previous_event_id: reg_2ac9149284e64076bfbdcb2c5c742ce6

@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-t4e0-watch-coexist-exec-watch
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-23T00:13:27Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-26T12:16:55Z"
+  conclusion: 見張りを立ち上げたままのオーケストレーターと共存させ、exec watch を足した
   derived_from:
     - PJR-52EE
   depends_on:
