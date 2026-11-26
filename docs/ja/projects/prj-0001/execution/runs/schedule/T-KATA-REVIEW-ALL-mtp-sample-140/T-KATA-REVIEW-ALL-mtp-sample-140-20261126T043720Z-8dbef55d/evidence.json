@@ -1,0 +1,172 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-mtp-sample-140",
+  "run_id": "T-KATA-REVIEW-ALL-mtp-sample-140-20261126T043720Z-8dbef55d",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-26T04:38:16.428Z",
+    "completed_at": "2026-11-26T04:41:35.277Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/mtp-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/mtp-sample.md | 22 +++++++++++-----------\n 1 file changed, 11 insertions(+), 11 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/samples/mtp-sample.md",
+      "status": "passed",
+      "summary": "変更した sample を整形した（表の列幅が変わった）"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2 docs/ja/specdojo/samples/mtp-sample.md",
+      "status": "passed",
+      "summary": "0 issues in 0 files"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴ファイルを変更していない",
+      "reason": "変更は docs/ja/specdojo/samples/mtp-sample.md だけで、plan・result・個票を変更していないため"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "YAML を変更していない",
+      "reason": "変更したのは *.md の 1 ファイルだけで、*.yaml / *.yml を変更していないため"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:mtp-sample\n  type: test\n  status: draft\n  rulebook: specdojo:mtp-rulebook\n  based_on:\n    - specdojo:mip-index-sample\n    - specdojo:dmd-index-sample\n---\n\n# 移行テスト計画（移行リハーサル計画）: 駄菓子屋きぬや 販売管理システム\n\n## 1. 概要（index）\n\n商品ノートと常連客ノートを書き写した転記用の表を店頭タブレットへ取り込む移行（`mip-index`）を、切替日の前に 2 回リハーサルする。確かめるのは、取り込み・照合・動作確認が切替日の午前の臨時休業に収まること、つけ残高・件数・在庫数が元ノートと一致すること、移行後の端末で現金販売とつけ販売を記録できることの 3 点である。つけ残高を誤ると\n… output omitted …\n確定する。\n- NO-GO: 重大障害が残る、再実行の上限を超えた、または所要時間が臨時休業に収まらない。切替日を延期し、PO が日程を決め直してリハーサルを計画し直す。\n\n## 9. 関連ドキュメント\n\n- 分冊: （本書のみ）\n- \\[\\[specdojo:mip-index-sample|移行計画: 概要]]: 成功条件と判定者、業務停止時間、切替日を決める判断。変わったら合否基準と GO/NO-GO判断プロセスを見直す。\n- \\[\\[specdojo:dmd-index-sample|データ移行設計（全体構成）]]: `run_id` 規約、検証の共通方針と許容差。変わったら検証観点とテスト環境/データ準備を見直す。\n- \\[\\[specdojo:dmd-sample|データ移行設計: 顧客台帳とつけ残高]]: つけ残高の照合の方法と所要時間の見積。\n- `cop-index`: 切替日の当日手順と判定点。変わったらリハーサル回数とスケジュールと検証観点を見直す。\n- `otp-index`: 並行記録の運用と正本切替後の窓口。業務シナリオの観点を受け渡す。"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7608 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7608 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-mtp-sample-140\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 10ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\",\"dur\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1749}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  13:42:04\n   Duration  2.77s (transform 6.51s, setup 2.26s, import 8.86s, tests 6.27s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-mtp-sample-140/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-mtp-sample-140/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R4（正しさ）で mtp-sample の主張を schema・rulebook・関連 sample と突き合わせ、2 件を直した。F002 は所要時間の基準を 180 分の仮値に直して解消した。データ準備の担当の行は参照先の章名の誤りを直した。F001 は R5、F003 は R3 の担当なので扱っていない（F003 は解消済みだった）。",
+  "completion_status": "complete",
+  "handoff": [
+    "R4-1: R4 / 合否基準 / 所要時間の基準が「臨時休業の開始から正午まで」で、時刻も分数もなく合否を測れない（grade F002） / 基準を「…取り込み直し 1 回分を足した時間が 180 分以内（臨時休業の開始を 9:00 と仮置き）」に変え、`_UNDECIDED_` を、決まった開始時刻から正午までの分数に直す旨へ書き換えた / `vp-qe-verifiability`。mtp-rulebook の合否基準の良い例（停止許容時間（60分）以内）、cop-index-sample の「9:00 を T+0:00、T+3:00 が正午」、cop-sample の「開店の 180 分前（T-180m）に始める前提」 / -",
+    "R4-2: R4 / テスト環境/データ準備 / データ準備の担当の行が「`dmd-index` の移行手順」を参照しているが、dmd-index-sample にその章はない（章は共通方針・`run_id` 規約・検証の共通方針・対象一覧）。移行手順は dmd-sample の「移行手順（手動/バッチ/ツール）」にある / 「`dmd-index` の共通方針と対象別の `dmd-<term>` の移行手順（顧客台帳とつけ残高は `dmd-credit-data`）」に直した / `vp-dev-implementation-readiness` / -",
+    "R4-3: R4 / Frontmatter / `based_on` に `specdojo:dmd-sample` がない（grade F001）。観点 `vp-dev-change-impact` は R5 の担当なので、この段では直さない / - / R5 で、`based_on` に `specdojo:dmd-sample` を足すか、関連ドキュメントの参照だけに留めるかを決める（mtp-rulebook の推奨 Frontmatter 項目の `based_on` の条件で判断する） / -",
+    "R4-4: R4 / GO/NO-GO判断プロセス / 「決定記録」と `pm-decision-log` の呼び方が揺れている（grade F003）。観点は R3 の担当で、読んだ版ではすでに `pm-decision-log` へそろっていた / - / `vp-ux-language-consistency`。直すことはない / -",
+    "確かめの表 No1: 主張=Frontmatter の `type: test`・`rulebook: specdojo:mtp-rulebook` / 正本=docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml、mtp-rulebook の推奨 Frontmatter 項目 / 確かめ方=enum と rulebook の記述を読んだ / 結果=一致 / 根拠=schema の enum に `test`、rulebook に「`specdojo.type` は `test`、`specdojo.rulebook` は `specdojo:mtp-rulebook`」",
+    "確かめの表 No2: 主張=`run_id` の規約は `DMD-YYYYMMDD-<term>-NN`、日付でリハーサルと本番を区別する / 正本=dmd-index-sample の `run_id` 規約 / 確かめ方=読んだ / 結果=一致 / 根拠=命名の行と「移行リハーサルも同じ規約で採番する。日付の部分で…区別する」",
+    "確かめの表 No3: 主張=作業フォルダは `migration/<run_id>/`、照合表は `<run_id>-check-count`・`<run_id>-check-sample`・`<run_id>-check-value`、紙の照合表は鍵付きの引き出しにしまう / 正本=dmd-index-sample の `run_id` 規約と検証の共通方針 / 確かめ方=読んだ / 結果=一致 / 根拠=記録先の行と、証跡の行の `<run_id>-check-<種別>`（`count`・`sample`・`value`）",
+    "確かめの表 No4: 主張=許容差は商品名・氏名の全角と半角、長音記号の違いだけ / 正本=dmd-index-sample の検証の共通方針 / 確かめ方=読んだ / 結果=一致 / 根拠=「全角・半角の違いと長音記号の違いだけを許容する。金額・個数・つけ残高に許容差は設けない」",
+    "確かめの表 No5: 主張=件数の判定者 DEV は `mip-index` の成功条件と同じ役割 / 正本=mip-index-sample の項目ごとの受入基準 / 確かめ方=読んだ / 結果=一致 / 根拠=件数の一致の判定者が開発担当（DEV）",
+    "確かめの表 No6: 主張=判定者を Role code（OPS・DEV・QE・PO）で書く / 正本=mtp-rulebook の合否基準、docs/ja/specdojo/samples/pm-roles-sample.yaml / 確かめ方=grep で code を確かめた / 結果=一致 / 根拠=pm-roles-sample に PO・DEV・QE・OPS の code がある",
+    "確かめの表 No7: 主張=顧客台帳とつけ残高の設計は `dmd-credit-data` / 正本=dmd-index-sample の対象一覧、dmd-sample / 確かめ方=読んだ / 結果=一致 / 根拠=対応DMD 列が `dmd-credit-data`、dmd-sample の概要が（credit-data）",
+    "確かめの表 No8: 主張=結果報告の所要時間を `dmd-*` の見積と比べる / 正本=dmd-sample の性能/所要時間見積 / 確かめ方=読んだ / 結果=一致 / 根拠=手順ごとの見積（10 分・35 分など）があり、リハーサルで測り直すとある",
+    "確かめの表 No9: 主張=業務シナリオで店主代表が現金販売を取り消す / 正本=otp-index-sample の権限 / 確かめ方=読んだ / 結果=一致 / 根拠=販売の取り消しは店主代表だけができる",
+    "確かめの表 No10: 主張=つけ残高を 1 分以内に表示する / 正本=otp-index-sample / 確かめ方=読んだ / 結果=一致 / 根拠=「つけ残高を 1 分以内で確認するため」",
+    "確かめの表 No11: 主張=臨時休業は切替日の午前で、正午に開店する / 正本=mip-index-sample、cop-index-sample / 確かめ方=読んだ / 結果=一致 / 根拠=mip の `_ASSUMPTION_`、cop-index の T+3:00（正午）",
+    "確かめの表 No12: 主張=判断の結果を `pm-decision-log`、差異を `pm-issue-log` へ転記する / 正本=mtp-rulebook の差異発生時の扱い / 確かめ方=読んだ / 結果=一致 / 根拠=課題管理簿（`pm-issue-log`）と決定記録（`pm-decision-log`）への転記の判断基準",
+    "確かめの表 No13: 主張=結果報告は `migration/rehearsal/` の `MTP-R<n>-report` / 正本=なし（駄菓子屋の業務の値の仮定） / 確かめ方=- / 結果=確かめられない / 根拠=正本がない。共通サンプル文脈と食い違わないため、確かめの対象にしない",
+    "確かめの表 No14: 主張=データセット ID の `MTP-DS-R1`・`MTP-DS-R2`、切替日の 10 日前・3 日前の予定 / 正本=なし（業務の仮定） / 確かめ方=- / 結果=確かめられない / 根拠=正本がない。共通サンプル文脈と食い違わないため、確かめの対象にしない"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-mtp-sample-140/T-KATA-REVIEW-ALL-mtp-sample-140-20261126T043720Z-8dbef55d/executor.log",
+      "bytes": 9317,
+      "truncated": false
+    }
+  ]
+}
