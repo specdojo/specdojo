@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-REVIEW-ALL-pm-roles-sample-140
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-REVIEW-ALL-pm-roles-sample-140/T-KATA-REVIEW-ALL-pm-roles-sample-140-20261126T055249Z-0cc97e82/plan.md
   started_at: "2026-11-26T05:52:59.822Z"
+  completed_at: "2026-11-26T05:58:08.843Z"
   agent: opus-executor
   execution: agent
   approach: sample-maintenance
@@ -20,16 +21,19 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- R4（正しさ）として、`docs/ja/specdojo/samples/pm-roles-sample.yaml` の事実の主張を突き合わせた。対象は `$schema` のパス、`type`、`status`、`rulebook`、`based_on`、wikilink の id、8 つの code と正式名称、並び順、組織定義との整合、`agent-members.yaml` の管理先である。突き合わせ先は schema、上位標準、組織定義、RACI sample である。
+- executor の報告では、すべて一致し、誤りは見つからなかった。そのため sample は変更していない（`evidence.changes` は空）。
+- schema 検査 `npm run validate:schema:file` は valid だった。runner の `lint:md:changed`、`lint:fm:changed`、`lint:mermaid`、`lint:d2`、`validate:schema` も passed だった。変更がないため、その他の検査は変更種別により `not_applicable` である。
+- 主張ごとの確かめの表は、executor の最終応答の本文に載っている。この evidence には表の中身が含まれていないため、ここでは再掲しない。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- なし
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- なし
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+sample-maintenance の R4（正しさ）として、sample の事実の主張を schema・上位標準・組織定義・RACI sample と照合した。すべて整合していたため、既存記述を維持し、改訂はしていない。plan に展開された grade の finding と、成果物から届いた Kata が原因の finding は、どちらも「なし」だった。駄菓子屋の業務の値は正本のない仮定として確かめの対象にしていない。
