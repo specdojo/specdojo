@@ -1,0 +1,154 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-REVIEW-ALL-nfr-performance-sample-130",
+  "run_id": "T-KATA-REVIEW-ALL-nfr-performance-sample-130-20261126T013856Z-079b53d0",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-26T01:39:44.674Z",
+    "completed_at": "2026-11-26T01:41:22.403Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/nfr-performance-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/nfr-performance-sample.md | 30 ++++++++++++----------\n 1 file changed, 16 insertions(+), 14 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/samples/nfr-performance-sample.md",
+      "status": "passed",
+      "summary": "整形した"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2 docs/ja/specdojo/samples/nfr-performance-sample.md",
+      "status": "passed",
+      "summary": "0 issues"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴ファイルの変更なし",
+      "reason": "変えたのは sample だけで、plan・result・個票は変えていない"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-md-changed",
+      "source": "runner",
+      "command": "npm run lint:md:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:md:changed\n> node tools/lint-changed.mjs md"
+    },
+    {
+      "id": "lint-fm-changed",
+      "source": "runner",
+      "command": "npm run lint:fm:changed",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:fm:changed\n> node tools/lint-changed.mjs fm\n\n---\nspecdojo:\n  id: specdojo:nfr-performance-sample\n  type: requirement\n  status: draft\n  rulebook: specdojo:nfr-performance-rulebook\n  part_of:\n    - specdojo:nfr-index-sample\n  based_on:\n    - specdojo:prj-overview-sample\n    - specdojo:prj-assumptions-constraints-dependencies-sample\n---\n\n# 駄菓子屋きぬや 販売管理システム 性能要件\n\n## 1. 概要（対象・目的）\n\n本書は、店頭タブレット 1 台で行う会計確定・商品検索・つけ残高の表示と、閉店後の日次締めについて、応答時間と処理量を定める。目的は、放課後の混雑時でも店頭の会計\n… output omitted …\nfr-perf-002` |\n| *UNDECIDED*: 商品検索・つけ残高表示の応答時間の基準 | 「性能要件一覧」の暫定の判定に従う | `nfr-perf-004`、`nfr-perf-005` |\n| *UNDECIDED*: 日次締めの完了時間 | 「性能要件一覧」の暫定の判定に従う | `nfr-perf-006` |\n| *UNDECIDED*: ピーク時の処理件数（販売実績がない） | 60 件/時で試験し、試用開始後の販売記録で最大の 1 時間の件数を確かめて見直す | `nfr-perf-001`〜`nfr-perf-003` |\n| *UNDECIDED*: 商品数と保持する販売記録の件数 | 試用前の商品マスタの件数で試験する。件数が大きく増える見込みが出たら測り直す | `nfr-perf-004`、`nfr-perf-006` |\n| *UNDECIDED*: ホスティング環境のプランと資源の上限 | 総合テスト環境を本番と同じプランにして測る。プランを変えたら測り直す | `nfr-perf-001`〜`nfr-perf-006` |"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .markdownlint*, package.json)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)",
+      "reason": "skipped by change type: no changed file matches paths (packages/docs-lint/**, .remarkrc*, package.json)"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.3.0] 7526 file(s), 90 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 66 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 7526 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-docs",
+      "source": "runner",
+      "command": "npm run test:docs",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 test:docs\n> vitest run --config vitest.docs.config.ts\n\n\n RUN  v4.1.12 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-nfr-performance-sample-130\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts\"}\n ✓ tests/docs/specdojo/schemas/specdojo-config-schema.test.ts (56 tests) 9ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/docs/specdojo/schemas/specdojo-config-schema.te\n… output omitted …\nts/src/exec/plans.test.ts\",\"duration_ms\":1746}\n\n Test Files  19 passed (19)\n      Tests  489 passed (489)\n   Start at  10:41:50\n   Duration  2.88s (transform 9.43s, setup 3.26s, import 9.94s, tests 6.26s, environment 1ms)\n\n\nstderr | tests/src/grade/grade.test.ts > grade target filters > discovers artifact templates but excludes internal exec templates from kata\ngrade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.9.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:pipeline-state && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.9.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schem\n… output omitted …\nnum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-nfr-performance-sample-130/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-REVIEW-ALL-nfr-performance-sample-130/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.9.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, vitest.*, tsconfig*.json)"
+    }
+  ],
+  "final_message": "R3（読みやすさ）として nfr-performance-sample の文を 6 件直した（W1/W2/W3/W4/W5/W8）。F001 は R4 の観点（vp-qe-verifiability）なので R4 に任せた。Prettier で整形し、markdownlint は 0 件。",
+  "completion_status": "complete",
+  "handoff": [
+    "R3-1: R3 / 1. 概要（対象・目的） / 冒頭の 1 文に読点が 4 つあり、目的と対象の 2 つの主張を兼ねている。「店頭タブレット 1 台で行う」が日次締めにもかかるように読める / 「本書は…について、応答時間と処理量を定める。」と「目的は…ようにすることである。」の 2 文に分け、修飾が会計確定・商品検索・つけ残高の表示だけにかかるようにした / W1, W3, W5 / -",
+    "R3-2: R3 / 1. 概要（対象・目的） / 「この影響」が、後に続く箇条書きを指していて参照先が前に読めない。また、初期目標を長い連体修飾で包んだ 80 字超の文になっている / 表の前の 1 文を「次の業務影響が出る。」だけにした。基準値の決め方は箇条書きの後へ移し、「これらの業務影響」とした。初期目標の内容は別の文に分けた / W3, W4, W5 / -",
+    "R3-3: R3 / 2. 適用範囲・負荷条件 / 通信回線の遅延を計測から除くことと、通信断の扱い先という 2 つの主張が 1 文に入っている / 2 文に分けた / W3（vp-ux-readability） / -",
+    "R3-4: R3 / 3. 性能要件一覧 / P95・P99 が説明なしに初めて出てくる / 表の前の文に、パーセンタイルの説明を 1 文足した / W8 / 要判断（理由: 用語集に P95 の項目があるかは確かめていない。選ばなかった案は、説明を足さずに読み手の知識に任せること）",
+    "R3-5: R3 / 4. 測定・検証方法 / 「運用後に基準を超えた場合は、監視の閾値として扱い」で、何を閾値として扱うのかがねじれている。参照先の「運用方針の監視」も文書名と合っていない / 「運用後は基準を監視の閾値として扱い、超えた場合は [[specdojo:opd-monitoring-sample|運用方針・設計: 監視]] の手順で対応する。」にした / W2, W4 / -",
+    "R3-6: R3 / 5. 関連ドキュメント導線 / 種別のセルに略語の NFR が正式名なしで出ている / 「非機能要件の入口」にした / W8 / -",
+    "R3-7: R3 / 3. 性能要件一覧・4. 測定・検証方法 / grade の F001（nfr-perf-002・nfr-perf-004 は暫定期間中に pass / fail を判定できない）は検証可能性の観点 vp-qe-verifiability の指摘で、kata-guide の観点の組では R4 の観点である / - / vp-qe-verifiability（R4 に任せる）。なお基準と合格条件のセルにはすでに「判定しない」と書かれている。R4 では、本文の「合格条件を満たせば pass、満たさなければ fail」と判定しない要件の関係を確かめる必要がある / -"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-nfr-performance-sample-130/T-KATA-REVIEW-ALL-nfr-performance-sample-130-20261126T013856Z-079b53d0/executor.log",
+      "bytes": 4640,
+      "truncated": false
+    }
+  ]
+}
