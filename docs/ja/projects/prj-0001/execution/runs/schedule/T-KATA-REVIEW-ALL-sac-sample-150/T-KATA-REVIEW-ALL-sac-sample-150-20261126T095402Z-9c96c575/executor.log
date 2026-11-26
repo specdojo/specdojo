@@ -1,0 +1,23 @@
+R5（整合）の見直しで、`docs/ja/specdojo/samples/sac-sample.md` の食い違いを 2 点直しました。markdownlint と prettier の検査はどちらも通っています。
+
+照合した範囲は次のとおりです。
+
+- `based_on` の参照先: nfr-performance と tsp-index
+- wikilink の参照先: stc と bac
+- sac-sample を参照する側: stc-index、trc、nfr-index
+- 用語集と、Sample 記述標準の共通サンプル文脈
+
+**直した点**
+1. 概要の対象外にある「業務担当者」を「店番担当が現金販売を確定し、販売記録と在庫の変化を照合できるか」に直しました。bac-sample と stc-sample は「店番担当」で書いており、扱う範囲も bac-sample の目的に合わせました。
+2. 概要の「下位」は `SAC-PERF-01`・`SAC-PERF-02` しか挙げておらず、`SAC-PERF-03`・`SAC-PERF-04` を確かめる先がありませんでした。stc-index-sample の分割に合わせて、`stc-credit-balance` と `stc-daily-close` を追記しました。どちらも sample のファイルがないため、バッククォートで仮置きしています。
+
+**plan に展開された grade の finding**
+- F001（日次締めの合否境界）と F002（概要表と見出しの条件名）は、前の段で直っていました。閉店・開店の時刻を試験の控えに記録すること、概要表の名前を「閉店後の日次締めを翌日の開店前に終える」にそろえることの 2 点です。重ねて直してはいません。
+- 合否の観点（P95・P99、60 件/時、1 分、3 回のうち最も長い回）と、`nfr-perf-004` を合否の対象外とする扱いは、性能要件・テスト戦略・総合テストカタログと一致しました。
+- 用語集の 6 ファイル（`gl-*.yaml`）は SpecDojo の用語集で、駄菓子屋の業務用語は載っていません。用語集との食い違いはありませんでした。
+
+相手側の文書を直すべき点は見つかりませんでした。result ファイルには手を入れていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5 整合: sac-sample の参照先・同じ接頭辞の sample・共通サンプル文脈と照合し、役割名を店番担当へそろえ、SAC-PERF-03・04 の下位の総合テストカタログを追記した。F001・F002 は前の段で解消済みを確認した。","handoff":["R5-1: R5 / 1. 概要（対象外） / 対象外の「業務担当者」が、bac-sample と stc-sample の役割名「店番担当」と食い違い、扱う範囲も bac-sample の目的とずれていた / 「店番担当が現金販売を確定し、販売記録と在庫の変化を照合できるか」に直した / `vp-qe-kata-conformance`（bac-sample の共通前提「店番担当は店主代表または家族利用者代表」、Sample 記述標準「共通登場人物の役割名で記述する」） / -","R5-2: R5 / 1. 概要（下位） / 下位が `SAC-PERF-01`・`SAC-PERF-02` の総合テストだけを挙げ、`SAC-PERF-03`・`SAC-PERF-04` を確かめる先がなかった。stc-index-sample は `stc-credit-balance` を `SAC-PERF-03`、`stc-daily-close` を `SAC-PERF-04` に対応させている / 2 つの総合テストカタログを、ファイルがないためバッククォートで仮置きし、stc-index-sample への wikilink とともに追記した / `vp-qe-kata-conformance`、`vp-dev-change-impact`（stc-index-sample の分割表） / -","R5-3: R5 / 2.4. SAC-PERF-04 と概要表 / grade の F001（日次締めの合否境界）と F002（概要表と見出しの条件名）は、前の段で解消済みだった。閉店・開店の時刻を控えに記録し、概要表の名前を見出しにそろえている。nfr-performance-sample の `nfr-perf-006` の測定方法（ピーク時の試行のあと 3 回、最も長い時間で判定）とも一致する / - / `vp-qe-kata-conformance`（nfr-performance-sample の「測定・検証方法」） / -"],"validations":[{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/sac-sample.md","status":"passed","summary":"0 issues"},{"command":"npx prettier --check docs/ja/specdojo/samples/sac-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/sac-sample.md のみで、plan・result・個票を変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML の変更なし","reason":"変更したファイルに *.yaml / *.yml がない"}]}
+</specdojo_executor_evidence>

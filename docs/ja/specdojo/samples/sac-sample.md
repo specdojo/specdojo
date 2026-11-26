@@ -19,7 +19,7 @@ specdojo:
 - 対象外:
   - 商品検索の応答（`nfr-perf-004`）。基準が未確定で値を記録するだけのため、本書では合否を判定しない（「メモ / 将来課題」参照）。
   - レシート印字の時間、店舗の通信回線の遅延、通信断時の記録。通信断は `sac-availability` で扱う。
-  - 業務担当者が現金販売を進められるか。[[specdojo:bac-sample|業務受入条件]] で扱う。
+  - 店番担当が現金販売を確定し、販売記録と在庫の変化を照合できるか。[[specdojo:bac-sample|業務受入条件]] で扱う。
 
 受入条件と根拠の要件の対応を、次の表に示す。閾値は根拠の要件を正本とする。性能要件で `_UNDECIDED_` の基準は、[[specdojo:tsp-index-sample|テスト戦略・方針]] の仮置き値か、性能要件が定めた暫定の判定で合否を決める。
 
@@ -30,7 +30,7 @@ specdojo:
 | `SAC-PERF-03` | 来店客の前でつけ残高を確認しきれる     | `nfr-perf-005`                 | 顧客検索から残高確認までの全体が 1 分以内    |
 | `SAC-PERF-04` | 閉店後の日次締めを翌日の開店前に終える | `nfr-perf-006`                 | 日次締めが翌日の開店までに完了する（暫定値） |
 
-- 下位: [[specdojo:stc-sample|総合テストカタログ: 店頭の現金販売]] の `st-cash-sale-commit-response-010` が `SAC-PERF-01` を測り、`st-cash-sale-commit-records-010` が `SAC-PERF-02` を照合する。
+- 下位: [[specdojo:stc-sample|総合テストカタログ: 店頭の現金販売]] の `st-cash-sale-commit-response-010` が `SAC-PERF-01` を測り、`st-cash-sale-commit-records-010` が `SAC-PERF-02` を照合する。`SAC-PERF-03` は `stc-credit-balance`、`SAC-PERF-04` は `stc-daily-close` の総合テストカタログで確かめる（[[specdojo:stc-index-sample|総合テストカタログ 概要]] の分割に従う）。
 
 ## 2. 受入条件
 
