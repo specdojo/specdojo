@@ -1,0 +1,24 @@
+R5（整合）の差分を対象 sample 1 ファイルに入れました。直した対象は同じ系列の `sysd-index-sample` と `sysd-critical-flows-sample`、および設計索引の扱いを定める rulebook の記述との食い違いです。用語集、共通サンプル文脈、wikilink 先（`clis-sample` の `KINUYA_API_KEY` と章名、`ifx-cmd-sample.yaml` のキー、`prj-overview-sample` の「まず記録する」）とは食い違いがありませんでした。prettier は通りましたが、lint などの検査は親 runner に任せていて、ここではまだ結果が出ていません。
+
+**直したこと**（対象: `docs/ja/specdojo/samples/sysd-cross-cutting-policy-sample.md`）
+
+- frontmatter に `part_of: [specdojo:sysd-index-sample]` を足しました。rulebook の「推奨 Frontmatter 項目」が設計索引へ `part_of` でつなぐよう求めているためです。
+- 「正本と運用への入口」の表では、未同梱扱いの `kinuya-system-design-index` を実在する設計索引の sample へのリンクに置き換え、重要フローの sample の行を足しました。
+- 架空の参照名を設計索引の sample の呼び名にそろえました。
+  - `kinuya-recovery-procedure` → `kinuya-opr-recovery`
+  - `kinuya-log-policy` → `kinuya-opd-monitoring`
+  - `kinuya-sales-test-plan` → `kinuya-test-index`
+  - `kinuya-audit-record-schema` → `kinuya-audit-event-schema`
+- 「変更影響と再検証」の検証コマンドは、設計索引にない架空 script 3 件をやめ、設計索引の「変更の入口」にあるコマンドとテスト対象に替えました。
+- grade の F001（5 章の見出しの略語）は、前の段で見出しがすでに直っていたため、何もしていません。
+
+**判断が要る点**
+
+- 回復手順の名前は、設計索引の sample が `kinuya-opr-recovery` の 1 本、重要フローの sample が会計と再印刷の 2 本に分けています。本書は設計索引の側にそろえましたが、どちらに統一するかは決めていただく必要があります。
+- `kinuya-audit-event-schema` は、設計索引の sample の他の schema の命名から私が推して付けた名前です。設計索引の sample 自体には ID が書かれていません。
+
+相手側の sample を直す案は、変更せずに handoff に書きました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5（整合）として sysd-cross-cutting-policy-sample の設計索引・重要フロー sample への接続、架空正本名、検証コマンドを同系列 sample にそろえた。相手側を直す案は handoff に記載。","handoff":["R5-1: R5 / frontmatter / rulebook「推奨 Frontmatter 項目」は設計索引へ `part_of` で接続すると定めるが、`part_of` がなかった / `part_of: [specdojo:sysd-index-sample]` を追加した / vp-qe-kata-conformance（sysd-cross-cutting-policy-rulebook の「推奨 Frontmatter 項目」） / -","R5-2: R5 / 正本と運用への入口 / 設計索引を未同梱の `kinuya-system-design-index` としていたが、同じ CLI の設計索引の完成例 `specdojo:sysd-index-sample` が実在する。また同系列の `specdojo:sysd-critical-flows-sample` への導線がなかった / 設計索引の行を [[specdojo:sysd-index-sample]] へのリンクに置き換え、重要フローの sample の行を追加した / vp-qe-kata-conformance（kata 相互）、rulebook「関連導線」（呼称は参照先の文書名にそろえる） / -","R5-3: R5 / scp-IDM-001・scp-LOG-001・scp-TRC-001 の References、正本と運用への入口 / 架空正本名が設計索引の sample の呼び名と食い違っていた（`kinuya-recovery-procedure`・`kinuya-log-policy`・`kinuya-sales-test-plan`・`kinuya-audit-record-schema`） / 設計索引の sample の「関連ドキュメント導線」とログ・通知の SSOT に合わせ、`kinuya-opr-recovery`・`kinuya-opd-monitoring`・`kinuya-test-index`・`kinuya-audit-event-schema` に替えた / vp-qe-kata-conformance、vp-dev-change-impact / 要判断（回復手順の名前は、設計索引の sample が `kinuya-opr-recovery` の 1 本、重要フローの sample が `kinuya-opr-sale-reconciliation` と `kinuya-opr-reprint` の 2 本で、両者が食い違っている。所在の正本である設計索引を採り、重要フローの細かい名前は採らなかった。`kinuya-audit-event-schema` は設計索引の sample の `schemas/audit-event.schema.json` から、他の schema の命名に合わせて推した名前）","R5-4: R5 / 変更影響と再検証 / 検証コマンドが設計索引にない架空 script（`npm run check:contracts`・`npm run test:sales-recovery`・`npm run test:sales-audit`）で、設計索引の「変更の入口」の検証コマンドと食い違っていた / 設計索引の `npm run validate:config`・`npm run lint`・`npm run test:unit -- tests/cli/sales.test.ts`、`npm run test:integration -- tests/infra/head-office.test.ts tests/infra/printer.test.ts`、`npm run test:unit -- tests/storage/recovery.test.ts`、`npm run test:unit -- tests/ops/logging.test.ts` に替えた / vp-dev-change-impact、rulebook の禁止事項（検査名だけで実行経路を示さない） / -","R5-5: R5 / 相手側 sysd-critical-flows-sample の「概要」と「正本と変更影響」 / 設計索引を未同梱の `kinuya-sysd-index` としているが、`specdojo:sysd-index-sample` が実在する。運用助言の役割名「運用助言 OPS」も共通登場人物の「店舗運営アドバイザー」と違う / - / sysd-critical-flows-sample の `kinuya-sysd-index` を [[specdojo:sysd-index-sample]] に、「運用助言 OPS」を「店舗運営アドバイザー OPS」に、回復手順名を設計索引と一本化する案（vp-qe-kata-conformance） / -","R5-6: R5 / 相手側 sysd-index-sample の「関連ドキュメント導線」と「SSOT 一覧」 / 構成・システム設計の `kinuya-sysd-critical-flows` を未作成としているが `specdojo:sysd-critical-flows-sample` が実在し、横断ルール（`specdojo:sysd-cross-cutting-policy-sample`）への導線もない。監視・ログの schema `schemas/audit-event.schema.json` に他の schema のような ID の併記がなく、本部連携の時間・retry 上限の正本 `kinuya-execution-policy` の所在もない / - / sysd-index-sample の「関連ドキュメント導線」で重要フローを sample へのリンクにし、横断ルールの行を足す。`schemas/audit-event.schema.json`（`kinuya-audit-event-schema`）と併記し、設定・実行構成の行に `kinuya-execution-policy` を足す案（vp-qe-kata-conformance、vp-dev-change-impact） / -","F001（grade, vp-ux-language-consistency）: 見出し「関連ドキュメント導線」から略語の列挙は前の段で削られ、指摘はすでに解消していた。本段では変更していない。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/sysd-cross-cutting-policy-sample.md","status":"passed","summary":"prettier --write で整形後、check が成功"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルの変更なし","reason":"変更は docs/ja/specdojo/samples/ の sample だけで、pjr 個票・plan・result を変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML の変更なし","reason":"変更したファイルは *.md だけで、*.yaml / *.yml を変更していない"}]}
+</specdojo_executor_evidence>
