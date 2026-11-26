@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-1TYG",
   "run_id": "pjr-1tyg-20261126T153048Z-5977e4fb",
-  "updated_at": "2026-11-26T15:38:48.903Z",
+  "updated_at": "2026-11-26T15:38:58.525Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-1TYG/pjr-1tyg-20261126T153048Z-5977e4fb/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "terra-executor",
       "attempts": 1,
       "started_at": "2026-11-26T15:38:48.903Z",
-      "completed_at": null,
+      "completed_at": "2026-11-26T15:38:58.525Z",
       "artifact_ref": null
     }
   },
