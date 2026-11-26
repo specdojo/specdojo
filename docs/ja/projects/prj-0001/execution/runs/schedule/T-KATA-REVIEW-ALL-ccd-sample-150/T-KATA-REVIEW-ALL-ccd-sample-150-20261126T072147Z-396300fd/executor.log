@@ -1,0 +1,23 @@
+R5（整合）を終え、`docs/ja/specdojo/samples/ccd-sample.md` を 1 か所直しました。変更したのはこのファイルだけで、`status: ready` には手を付けていません。
+
+**展開された finding（F001・F002）**
+どちらも「Frontmatter に `based_on` がない」という指摘ですが、今の版には `based_on: [specdojo:bdd-sample]` がすでにあり、解消済みでした。未作成の `specdojo:bdd-customer` は `based_on` に入っておらず、rulebook の「作成済み辞書だけを `based_on` に記録する」とも合っています。
+
+**直した点**
+「図だけでは表せない整合性条件」の 3 項目めにある「つけ販売では請求先の顧客を必須とする」を、「その顧客は店主代表がつけの利用を認めた常連客に限る」と書き足しました。
+- 用語集の `tm-sales-regular-customer` は、常連客を「顧客のうち、店主代表がつけの利用を認めた人」と定めています。
+- 業務データ辞書（`bdd-sample.yaml`）の `customer_id` も、つけ販売では「請求先の常連客」を特定すると書いています。
+- 元の「顧客」だけでは、つけを使える範囲がこの 2 つより広く読めました。
+
+**食い違いがなかった点**
+- 主キーの対応（`product_id`・`sale_id`・`sale_id`＋`line_number`・`customer_id`）と、売上記録と売上明細の `1..*` は、業務データ辞書と一致しています。辞書の側も、管理単位と関連をこの sample に合わせると書いています。
+- 販売管理 CLI 仕様が対象外とする範囲（つけ販売は別の機能へ引き渡す）とも矛盾していません。
+- 同じ接頭辞の sample はほかになく、相手側を直す案もありません。
+- 共通サンプル文脈（単一店舗、役割名の使い方）とも合っています。
+
+**検査**
+Prettier の整形チェックは通りました。markdownlint などの lint は、この後に runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5（整合）を完了した。F001・F002（Frontmatter の `based_on` がない）は今の版で解消済みと確かめた。用語集の常連客の定義と業務データ辞書の `customer_id` の説明に合わせ、つけ販売の請求先を常連客に限ると「図だけでは表せない整合性条件」に書き足した。","handoff":["No: 1 / 段: R5 / 箇所: docs/ja/specdojo/samples/ccd-sample.md の Frontmatter `based_on` と「参照業務データ辞書」 / 指摘: F001・F002 が求める `based_on` への `specdojo:bdd-sample` の記録は、今の版に既にある。未作成の `specdojo:bdd-customer` は含まれていない / 直した案: 変更なし（解消済み） / 根拠: ccd-mermaid-rulebook の `based_on` の規定（作成済みの直接の根拠だけを記録し、未作成の辞書は加えない） / 印: なし","No: 2 / 段: R5 / 箇所: docs/ja/specdojo/samples/ccd-sample.md の「図だけでは表せない整合性条件」3 項目め / 指摘: 「つけ販売では請求先の顧客を必須とする」では、つけを使える範囲が用語集の常連客（店主代表がつけの利用を認めた顧客）と業務データ辞書の `customer_id`（請求先の常連客）より広く読める / 直した案: 「つけ販売では請求先の顧客を必須とし、その顧客は店主代表がつけの利用を認めた常連客に限る。」に改めた（反映済み） / 根拠: gl-sample.yaml の `tm-sales-regular-customer`・`tm-accounts-receivable`、bdd-sample.yaml の sale.`customer_id` の description / 印: なし","No: 3 / 段: R5 / 箇所: docs/ja/specdojo/samples/ccd-sample.md 全体と、bdd-sample.yaml・clis-sample.md・共通サンプル文脈 / 指摘: 主キー（`product_id`・`sale_id`・`line_number`・`customer_id`）、売上明細の多重度 `1..*`、確定済みの売上だけを扱う範囲、つけ販売を CLI の対象外とする点、単一店舗の前提と役割名の使い方は、どれも参照先と食い違わない。同じ接頭辞の sample はほかになく、相手側を直す案はない / 直した案: 変更なし / 根拠: bdd-sample.yaml の各 entity の `key_fields` と description、clis-sample.md の対象範囲、sample-authoring-standard の共通サンプル文脈 / 印: なし"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/ccd-sample.md","status":"passed","summary":"All matched files use Prettier code style"}]}
+</specdojo_executor_evidence>
