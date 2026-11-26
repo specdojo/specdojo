@@ -35,3 +35,61 @@
     - field: due
       from: ""
       to: "2026-11-30"
+- v: 1
+  id: reg_43afb251a4eb4630915e4c54c75d4c59
+  ts: "2026-11-26T13:34:33Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "概要" updated
+  changes:
+    - field: section
+      from: ""
+      to: 概要
+    - field: description
+      from: rulebook は based\_on などに大文字の PJR-XXXX を求めるが schema は小文字しか許さず、imp-interface-140 の検査が落ちた。imp-business・imp-test・imp-operations の sample は古い ID の cr-2026-004 のまま。
+      to: imp 系の rulebook と schema で、`based_on` に書く変更要求の個票 ID の形が食い違っている。schema の `idRef` は英小文字・数字・ハイフン・コロンしか許さないが、imp-data・imp-interface・imp-operations の rulebook は `PJR-XXXX` と大文字で書くよう求めている。imp-business と imp-test の rulebook は形を決めていない。そのため、T-KATA-REVIEW-ALL-imp-interface-sample-140 が `based_on` に大文字の `PJR-C4A1` を書き、検査で止まった。
+  previous_event_id: reg_89f01add130c47a9a5a471d4dbe4bfeb
+- v: 1
+  id: reg_1e60c3cb20114256bff722d6e42ad881
+  ts: "2026-11-26T13:34:38Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "完了条件" updated
+  changes:
+    - field: section
+      from: ""
+      to: 完了条件
+  previous_event_id: reg_43afb251a4eb4630915e4c54c75d4c59
+- v: 1
+  id: reg_c8d7d8d2ab41454383f6386f1d0295a8
+  ts: "2026-11-26T13:34:43Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: section "作業内容" updated
+  changes:
+    - field: section
+      from: ""
+      to: 作業内容
+  previous_event_id: reg_1e60c3cb20114256bff722d6e42ad881
+- v: 1
+  id: reg_add4ff872d194ae380a8c0a71905b972
+  ts: "2026-11-26T13:34:47Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: description
+      from: imp 系の rulebook と schema で、`based_on` に書く変更要求の個票 ID の形が食い違っている。schema の `idRef` は英小文字・数字・ハイフン・コロンしか許さないが、imp-data・imp-interface・imp-operations の rulebook は `PJR-XXXX` と大文字で書くよう求めている。imp-business と imp-test の rulebook は形を決めていない。そのため、T-KATA-REVIEW-ALL-imp-interface-sample-140 が `based_on` に大文字の `PJR-C4A1` を書き、検査で止まった。
+      to: imp 系 rulebook が based\_on に大文字の PJR-XXXX を求め schema と食い違う。rulebook を小文字の形にそろえ、4 つの sample の古い ID cr-2026-004 を pjr-c4a1 に直す。
+    - field: difficulty
+      from: "-"
+      to: easy
+  previous_event_id: reg_c8d7d8d2ab41454383f6386f1d0295a8
