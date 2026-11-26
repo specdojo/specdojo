@@ -105,7 +105,7 @@ authentication:
   log_policy: >-
     認証値を渡さないため、マスクする秘密値はない。
     呼び出し元は入力ファイルのレシート本文を実行記録へ転記せず、
-    取引識別子・終了コード・stdout の印字結果・stderr の診断だけを残す。
+    取引番号・終了コード・stdout の印字結果・stderr の診断だけを残す。
 
 execution:
   working_directory: 店舗データディレクトリ（販売 CLI と共通。入力パスはこの配下に限定する）

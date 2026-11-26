@@ -1,0 +1,30 @@
+R5（整合）の確認を終え、`docs/ja/specdojo/samples/ifx-cmd-sample.yaml` の 1 行だけを直しました。schema 検査と Prettier の書式検査はどちらも通っています。
+
+**直したこと**
+
+- `authentication.log_policy`（108 行目）の「取引識別子」を「取引番号」に変えました。
+- 呼び出し元の `clis-sample` は同じものを「取引番号」と呼んでおり、`ifx-file-sample` も同じです。
+- `ifx-api-sample` と `ifx-index-sample` の「取引 ID」は本部 API の重複排除キーを指すので、そちらは変えていません。
+
+**grade の指摘 F001・F002**
+
+前の段で直っていたので、ここでは手を加えていません。
+
+- F001: `log_policy` は「マスクする秘密値はない」と明記したうえで、記録に残さない対象をレシート本文に絞る書き方になっています。
+- F002: 紙面を確かめる人は全箇所「店番担当」で統一されています。
+
+**照合して食い違いがなかったもの**
+
+照合先は `ifx-index-sample`、`clis-sample`、`ifx-file-sample`、`ifx-api-sample`、用語集、Sample 記述標準の共通サンプル文脈です。
+
+- 入力パス `receipts/receipt-YYYYMMDD-NNNN.txt` は、`clis-sample` と `ifx-file-sample` の記載と同じです。
+- 印字に失敗したときの扱い（会計は確定のまま、警告を出して控えを残し、紙面を確かめてから保存済みレシートだけを再印刷する）は、`clis-sample` の「印字未完了」の行および `ifx-index-sample` と同じです。
+- 印刷コマンドの終了コードを販売 CLI 全体へ伝えない点、USB 直結で認証が不要な点、権限の問題を開発担当が直す点も食い違いはありません。
+- 「店番担当」は共通登場人物の表にない呼び名です。ただし `clis-sample` と `ifx-file-sample` が「店主代表か家族利用者代表」と定義しているので、そのまま使っています。
+- 用語集には、取引番号・レシート・プリンタに当たる語がありません。
+
+相手側の文書を直すべき点はありません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5 整合: ifx-cmd-sample の log_policy の「取引識別子」を、呼び出し元 clis-sample と ifx-file-sample に合わせて「取引番号」へ直した。F001・F002 は前の段で解消済み。相手側を直す案はない。","handoff":["R5-1: R5 / authentication.log_policy / 実行記録に残す項目を「取引識別子」と書いており、呼び出し元の clis-sample と ifx-file-sample が使う「取引番号」と表記が食い違う / 「取引識別子」を「取引番号」に変えた（ifx-api-sample と ifx-index-sample の「取引 ID」は本部 API の重複排除キーを指すため変えない） / `vp-qe-kata-conformance` / -","R5-2: R5 / 全体 / grade の F001（log_policy の秘密値の扱い）と F002（店頭利用者と店番担当の表記ゆれ）は前の段の版で解消済みであり、ifx-index-sample・clis-sample・ifx-file-sample と、入力パス・印字失敗時の会計維持と控え保持・再印刷の条件・終了コードを伝えない点・認証不要・開発担当による権限の修正が一致することを確かめた。用語集に該当語はない。相手側を直す案はない / - / `vp-qe-kata-conformance`、`vp-dev-change-impact` / -"],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/ifx-cmd.schema.yaml --data docs/ja/specdojo/samples/ifx-cmd-sample.yaml","status":"passed","summary":"docs/ja/specdojo/samples/ifx-cmd-sample.yaml: valid"},{"command":"npx prettier --check docs/ja/specdojo/samples/ifx-cmd-sample.yaml","status":"passed","summary":"All matched files use Prettier code style!"}]}
+</specdojo_executor_evidence>
