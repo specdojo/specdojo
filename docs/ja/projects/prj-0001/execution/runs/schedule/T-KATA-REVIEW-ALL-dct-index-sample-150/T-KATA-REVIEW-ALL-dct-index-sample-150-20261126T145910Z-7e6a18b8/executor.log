@@ -1,0 +1,21 @@
+R5（整合）の段を終えました。`docs/ja/specdojo/samples/dct-index-sample.yaml` のコメントを 1 行だけ直し、ほかに食い違いはありませんでした。schema 検査と Prettier の検査はどちらも通っています。
+
+**直した点**
+- 先頭コメントにある `dct-sample` への wikilink の表示名が「成果物カタログ（ドメイン別）」になっていました。参照先の `title` は「成果物カタログ（プロジェクト定義）」なので、こちらに合わせました。
+
+**相手側で直す案（未変更、要判断）**
+- `dct-sample.yaml` から index への wikilink の表示名が「成果物カタログ索引」で、index の `title`（「成果物カタログ」）と違います。ただ、この「索引」は rulebook の H1 と同じく種別を補う説明とも読めます。そのため、`title` に合わせる案と今のまま残す案の両方があり、判断を人に委ねます。
+
+**食い違いがなかった点**
+- **`dct-sample` との対応:** `domain` は `project-definition`、`project_id` と `base_path` は prj-0001 で、index のコメントとそろっています。
+- **用語集:** 「成果物カタログ」と、「成果物ドメイン」の別名「ドメイン」の使い方が合っています。
+- **共通サンプル文脈:** 役割名（店主代表、開発担当）、タブレット 1 台、店頭販売・在庫・つけ管理という初期の対象範囲と矛盾していません。
+- **ドキュメント構成ガイド:** グループの分け方は構成図の枠に沿っています。グループ構成と並び順は R2 で確かめ済みなので、ここでは繰り返していません。
+
+**ほかの検査**
+- `format:check` の script はリポジトリ全体が対象のため、変更したファイルだけを `npx prettier --check` で確かめました。
+- `validate:history-links` は、履歴ファイルを変えていないため対象外です。lint などは親 runner がこの後に実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5 整合: dct-index-sample.yaml 先頭コメントの dct-sample への wikilink の表示名を、参照先の title「成果物カタログ（プロジェクト定義）」に合わせて直した。ほかの食い違いはなく、相手側 dct-sample の表示名を直す案を 1 件、要判断として残した。","handoff":["R5-1: R5 / 先頭コメント（同梱カタログの説明の行） / dct-sample への wikilink の表示名「成果物カタログ（ドメイン別）」が、参照先 specdojo:dct-sample の title「成果物カタログ（プロジェクト定義）」と食い違っている / 表示名を「成果物カタログ（プロジェクト定義）」に直した / vp-qe-kata-conformance（kata 相互）、markdown.instructions の wikilink は [[id|title]] 形式 / -","R5-2: R5 / 相手側 docs/ja/specdojo/samples/dct-sample.yaml の先頭の _ASSUMPTION_ コメント / dct-sample から index への wikilink の表示名「成果物カタログ索引」が、specdojo:dct-index-sample の title「成果物カタログ」と食い違っている / - / 相手側の案: dct-sample.yaml の表示名を「成果物カタログ」に直す。迷った理由: 「索引」は rulebook の H1「成果物カタログ（インデックス）」と同じく種別を補う説明とも読め、今のまま残す案も選べるため / 要判断","R5-3: R5 / 全体（用語集・共通サンプル文脈・ドキュメント構成ガイド・dct-sample との対応） / 指摘なし。用語集の「成果物カタログ」と「成果物ドメイン」（別名「ドメイン」）、共通サンプル文脈の役割名（店主代表・開発担当）・タブレット 1 台・初期の対象範囲（店頭販売・在庫・つけ管理）、dct-sample の `domain`（project-definition）・`project_id`・`base_path` と食い違わない。グループの分け方は R2 で確かめ済みのため繰り返さない / - / vp-qe-kata-conformance、vp-dev-change-impact / -"],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/dct-index.schema.yaml --data docs/ja/specdojo/samples/dct-index-sample.yaml","status":"passed","summary":"docs/ja/specdojo/samples/dct-index-sample.yaml: valid"},{"command":"npx prettier --check docs/ja/specdojo/samples/dct-index-sample.yaml","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更したのは sample の YAML だけで、plan・result・個票などの履歴ファイルを変更していないため"}]}
+</specdojo_executor_evidence>
