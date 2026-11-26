@@ -39,4 +39,4 @@ roles:
     project_note: 店主・家族向けの画面文言と操作説明を専門支援として検討し、BA が主導する利用者確認へ助言する。
   - code: OPS
     name: Operations / Release Manager
-    project_note: 導入・障害時対応・引き継ぎを専門支援として準備し、PM が主導するリリース準備へ取り込む。
+    project_note: 導入・障害時対応・引き継ぎを専門支援として検討し、PM が主導するリリース準備へ助言する。

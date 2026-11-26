@@ -1,0 +1,19 @@
+R5（整合）では1件を直し、1件は直さずに判断を残しました。schema 検査と Prettier はどちらも通っています。変更したファイルは `docs/ja/specdojo/samples/pm-roles-sample.yaml` だけです。
+
+**直した点（R5-1）:** `OPS` の説明が、組織定義・メンバー定義・RACI と食い違っていました。この3つでは、リリース準備は `PM` が主導し、`OPS` は助言する側です。ところが sample では `OPS` が自分で「準備し」「取り込む」主体になっていたので、`ARC`・`UX` と同じ「検討し、…へ助言する」の形に直しました。
+
+**直していない点（R5-2、要判断）:** `QE` の説明に「家族の店番時の操作」の確認が入っています。RACI では利用者確認の担当は `BA` で、組織定義の `QE` の欄は記録漏れと残高誤りの検証だけです。ただ、試験として操作を確かめるのは `QE` の仕事とも読めるので、残しています。
+
+ほかに確かめて、食い違いがなかったもの:
+
+- 8つのロールの code・正式名称・並び順は、人と組織の定義標準どおりです。
+- 採用している集合は組織定義と一致しています。
+- `based_on` の参照先と冒頭コメントの正本の宛先は合っています。
+- 用語集「ロール」の定義と矛盾はありません。
+- 共通サンプル文脈（単一店舗・タブレット1台、人物名を使わない）にも反していません。
+- 同じ接頭辞の sample は `pm-roles-sample.yaml` の1本だけで、index はありません。
+- ほかの文書の側を直すべき点はありませんでした。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R5 整合: OPS の project_note を組織定義・メンバー定義・RACI に合わせて直した（1 件）。QE の確認範囲は要判断として handoff に残した。変更は docs/ja/specdojo/samples/pm-roles-sample.yaml のみ。","handoff":["R5-1: R5 / roles[].project_note（OPS） / OPS が導入・障害時対応・引き継ぎを「準備し」「PM が主導するリリース準備へ取り込む」と書かれ、準備と取り込みの主体が OPS になっている。組織定義はリリース準備を PM が主導、メンバー定義は「OPS としての支援は PM が導入準備へ取り込む」、RACI は専門支援の助言を主導ロール（PM）が取り込むとしており食い違う / 「導入・障害時対応・引き継ぎを専門支援として検討し、PM が主導するリリース準備へ助言する。」に直し、ARC・UX と同じ書き方にそろえた / `vp-qe-kata-conformance`（specdojo:pm-organization-sample のロール・owner方針、specdojo:pm-members-sample の shop-owner の note、specdojo:pm-raci-sample の適用方針と 4.1 の「リリース候補の導入・引き継ぎを準備する」の owner が PM） / -","R5-2: R5 / roles[].project_note（QE） / QE の確認範囲に「家族の店番時の操作」が入っている。RACI の判断・プロセス別では利用者確認の R が BA（QE は C）、組織定義の QE の欄は記録漏れ・残高誤りの検証だけで、BA の利用者確認と重なって読める / - / `vp-qe-kata-conformance`、`vp-dev-change-impact`。直さなかったのは、試験として家族の店番時の操作を確かめるのは QE の責務とも読め、メンバー定義の peer-reviewer の焦点（受入条件 ID と検証結果の照合）とも矛盾しないため。選ばなかった案は、QE の説明から「家族の店番時の操作」を削って BA の利用者確認だけに任せる案、または組織定義の QE の欄へ家族の店番時の操作の試験を書き足す案（相手側の specdojo:pm-organization-sample を直す） / 要判断"],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/pm-roles.schema.yaml --data docs/ja/specdojo/samples/pm-roles-sample.yaml","status":"passed","summary":"docs/ja/specdojo/samples/pm-roles-sample.yaml: valid"},{"command":"npx prettier --check docs/ja/specdojo/samples/pm-roles-sample.yaml","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/pm-roles-sample.yaml のみで、pjr 個票・plan・result を変更していないため"}]}
+</specdojo_executor_evidence>
