@@ -1,0 +1,44 @@
+R4（正しさ）のレビューで誤りが 1 件見つかり、`docs/ja/specdojo/samples/pm-plan-sample.md` の 4 か所を直しました。初期受入と試用継続の条件 ID が、成功条件の古い版のままでした。正本の `docs/ja/specdojo/samples/prj-success-criteria-and-acceptance-criteria-sample.md` に合わせています。frontmatter の `status: ready` はそのままです。
+
+| 箇所 | 直す前 | 直した後 |
+| --- | --- | --- |
+| 統合管理方針の M-07 品質 | 初期受入 SC-01・AC-01〜AC-04、試用継続 SC-02・SC-03 | 初期受入 SC-01・SC-07・SC-09・AC-01〜AC-05、試用継続 SC-02・SC-03・SC-08 |
+| 判断ゲートの表の前の文 | 初期受入に混ぜない条件 SC-02〜SC-06 | SC-02〜SC-06・SC-08・SC-10 |
+| 初期リリース・店頭試用開始ゲート | SC-01・AC-01〜AC-04 | SC-01・SC-07・SC-09・AC-01〜AC-05 |
+| 店頭試用後の継続ゲート | 合格 SC-02・SC-03、後続観測 SC-04〜SC-06 | 合格 SC-02・SC-03・SC-08、後続観測 SC-04〜SC-06・SC-10 |
+
+SC-08 を試用継続の必須条件に入れるのは私の判断です。成功条件の判定時期が SC-02・SC-03 と同じ「運用開始後2週間」なので入れました。選ばなかった案は、SC-08 を後続観測に回すことです。採るかどうか決めてください。
+
+**確かめの表**
+
+| No | 主張（箇所） | 正本 | 確かめ方 | 結果 | 根拠 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | `rulebook` と `based_on`、本文の wikilink 先 13 件（frontmatter と本文） | `docs/ja/specdojo/` 配下 | id を grep | 一致 | 13 件ともファイルがある |
+| 2 | スコープの「境界の判断基準」（M-01） | `prj-scope-sample.md` | 見出しを読む | 一致 | 5 章にある |
+| 3 | BV-01・BV-02（M-01） | 成功条件 | 読む | 一致 | 業務価値の表にある |
+| 4 | 2週間の店頭試用（管理目的、M-02） | `prj-scope-sample.md` の「対象期間」 | 読む | 一致 | 運用開始後2週間の判定で期間を終える |
+| 5 | 初期受入は SC-01・AC-01〜AC-04（M-07、初期リリースのゲート） | 成功条件の「判定対象と適用範囲」 | 読む | 不一致（直した） | 正本は SC-01・SC-07・SC-09 と AC-01〜AC-05 |
+| 6 | 初期受入に混ぜないのは SC-02〜SC-06（判断ゲートの章） | 同上 | 読む | 不一致（直した） | 正本は SC-02〜SC-06・SC-08・SC-10 |
+| 7 | 試用継続は SC-02・SC-03、後続観測は SC-04〜SC-06（M-07、継続ゲート） | 成功条件の「成功基準」 | 判定時期の列を読む | 不一致（直した、要判断） | SC-08 は2週間、SC-10 は6か月 |
+| 8 | AC-04 の照合内容（M-08） | 成功条件の「受入条件」 | 読む | 一致 | スコープ・本書・操作メモの照合、確認者は開発担当 |
+| 9 | 概要の「前提条件」（M-09） | `prj-overview-sample.md` | 見出しを読む | 一致 | 6 章にある |
+| 10 | 技術メンター（M-09） | `pm-members-sample.yaml` | grep | 一致 | `technical-mentor`（ARC） |
+| 11 | ロール `PM`・`PO`・`QE`・`DEV`・`BA` | `pm-roles-sample.yaml`、組織定義 | 読む | 一致 | 5 つとも `owner` に使えるロール |
+| 12 | 組織定義が費用・参加負荷と見直し条件の正本（管理目的と適用方針） | `pm-organization-sample.md` | 読む | 一致 | 「費用・参加負荷」の行と「見直し条件」の章がある |
+| 13 | Schedule の `owner`、Task owner（更新先と報告） | `docs/specdojo/schemas/v1/sch-common.schema.yaml` | grep | 一致 | 「Task owner Role code」と書かれている |
+| 14 | ベースラインの期間・項目・担当は「判定手順と証跡」が正本（運用前の準備） | 成功条件 | 読む | 一致 | 4 章の手順 1 |
+| 15 | 成功条件の「例外条件と未解決事項」とオフライン時・人気商品の扱い（未決事項） | 成功条件 | 読む | 一致 | 5 章。`BA` が対象商品の候補を整理する |
+| 16 | `kinuya-` で始まる記録 | なし（架空と明記） | - | 確かめの対象外 | 共通サンプル文脈の仮定で、正本がない |
+
+**検証**
+
+- `npx prettier --write` と `npx markdownlint` を対象ファイルにかけ、どちらもエラーなしでした。
+- `lint:md` などの残りの検査は、このあと runner が流します。
+
+**別の kata で直すべき点（直していません）**
+
+- `pm-quality-management-plan-sample.md` にも同じ古い条件 ID が残っています。29 行目、30 行目、32 行目、40 行目、65 行目です。成功条件に合わせる直しが要ります。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）で pm-plan-sample の事実を正本と突き合わせた。初期受入・試用継続・後続観測の条件 ID が成功条件と食い違っていたため、4 か所を成功条件に合わせて直した。ほかの主張（参照先の id、章の名前、BV・AC の内容、ロール、Schedule の `owner`）は一致した。","handoff":["R4-1: R4 / 統合管理方針（M-07 品質）、判断ゲートとエスカレーション（初期リリース・店頭試用開始） / 初期受入の必須条件が SC-01・AC-01〜AC-04 で、成功条件の SC-01・SC-07・SC-09・AC-01〜AC-05 と食い違う / 2 か所を SC-01・SC-07・SC-09・AC-01〜AC-05 に直した / `vp-arc-technical-constraints`、`vp-qe-verifiability`。正本は prj-success-criteria-and-acceptance-criteria-sample の「判定対象と適用範囲」 / -","R4-2: R4 / 判断ゲートとエスカレーション（表の前の文） / 初期受入に混ぜない条件が SC-02〜SC-06 だけで、正本の SC-08・SC-10 が抜けている / SC-02〜SC-06・SC-08・SC-10 に直した / `vp-qe-verifiability`。正本は成功条件の「判定対象と適用範囲」 / -","R4-3: R4 / 統合管理方針（M-07 品質）、判断ゲートとエスカレーション（店頭試用後の継続） / 判定時期が運用開始後2週間の SC-08 が試用継続の条件にも後続観測にもなく、6か月の SC-10 が後続観測にない / 試用継続を SC-02・SC-03・SC-08、後続観測を SC-04〜SC-06・SC-10 にした / `vp-qe-verifiability`、`vp-dev-testability`。SC-08 は判定時期が2週間の試用と同じため継続の必須条件に入れた。選ばなかった案は SC-08 を後続観測に回すこと（成功条件は継続ゲートの必須条件を定めていない） / 要判断","R4-4: R4 / 別の kata（pm-quality-management-plan-sample） / 品質ゲートの表と確認の表に、旧版の条件 ID（SC-01・AC-01〜AC-04、SC-02・SC-03、SC-04〜SC-06）が残っている（29・30・32・40・65 行目） / - / `vp-qe-kata-conformance`。pm-quality-management-plan-sample を成功条件と本 sample に合わせ、初期受入を SC-01・SC-07・SC-09・AC-01〜AC-05、試用終了時を SC-02・SC-03・SC-08、後続観測を SC-04〜SC-06・SC-10 に直す案 / -"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/pm-plan-sample.md","status":"passed","summary":"整形した。表の列幅だけが変わった"},{"command":"npx markdownlint docs/ja/specdojo/samples/pm-plan-sample.md","status":"passed","summary":"エラーなし"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/pm-plan-sample.md だけで、plan・result・個票を変更していないため"}]}
+</specdojo_executor_evidence>
