@@ -1,0 +1,5 @@
+個票の対応結果の表に 1 行追記しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"個票の対応結果の表に「2026-11-27 07:31 / PJR-1TYG / sonnet-executor」を 1 行追記しました。あわせて本文の run ID を今回のものに直し、PJR-1TYG より後に統合された項目が対象一覧に無いことを一文足しました。変更したのは個票のみです。","handoff":["確認対象は、対象一覧のうち最も新しく統合された PJR-1TYG（統合 merge commit 21a27d974e）にしました。その後に統合された PJR-CSRM・PJR-V8ND・PJR-WF8Q・PJR-NDM7 は一覧に無いため対象外です。","親 runner の検証、reporter の result 記入、統合は後続段で確認してください。"],"validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行します。"}]}
+</specdojo_executor_evidence>
