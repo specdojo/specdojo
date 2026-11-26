@@ -1,0 +1,29 @@
+R4（正しさ）の確認では、sample の記述に誤りは見つかりませんでした。そのため `docs/ja/specdojo/samples/ifx-cmd-sample.yaml` は直していません。
+
+展開された F001 と F002 は、前の段（110〜130）でもう直っています。どちらも R4 の観点の指摘ではないので、この段では扱いません。
+- **F001:** 103〜108 行目は「マスクする秘密値はない」となり、記録しない対象もレシート本文に絞られています。
+- **F002:** 92・119・126 行目は「店番担当」にそろっています。
+
+主張ごとの確かめの表です。
+
+| No | 主張（箇所） | 正本 | 確かめ方 | 結果 | 根拠 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | YAML 全体の構造・必須キー・列挙値 | `docs/specdojo/schemas/v1/ifx-cmd.schema.yaml` | `npm run validate:schema:file`（schema 検査）を実行 | 一致 | `ifx-cmd-sample.yaml: valid` |
+| 2 | `type: api`、`rulebook: specdojo:ifx-cmd-rulebook` | `ifx-cmd-rulebook.md`（Frontmatter 規約） | 読み取り | 一致 | 41 行目「`type: api`、`rulebook: specdojo:ifx-cmd-rulebook` とし」、5 行目 `deliverable_type: api` |
+| 3 | `based_on` と wikilink の参照先 `specdojo:clis-sample` | `clis-sample.md` の frontmatter | 読み取り | 一致 | 3 行目 `id: specdojo:clis-sample` |
+| 4 | `exit_codes` の category（`success`・`input_error`・`authorization_error`・`transient_failure`・`permanent_failure`） | schema の `exit_codes.items.category.enum` | 読み取り | 一致 | 5 つとも enum にある |
+| 5 | 同じ exit 1 を判定順と追加信号で分け、未分類は `permanent_failure` にする | rulebook の終了コードの判断基準・悪い例（93・96 行目） | 読み取り | 一致 | 判定順・未分類の扱いを `meaning` に書いており、exit 1 をすべて一時失敗にしていない |
+| 6 | 認証不要を `method: none`・`names: [none]` で書く | schema（`names` は `minItems: 1`）と rulebook 106 行目 | 読み取りと schema 検査 | 一致 | 「認証不要の場合の表現も schema の制約を満たすこと」に合う |
+| 7 | `retry.on_categories: [transient_failure]` と `retryable` の対応 | rulebook 113 行目 | 読み取り | 一致 | `retryable: true` は exit 1 の `transient_failure` だけ |
+| 8 | 最大 3 回・待機 1 秒と 2 秒・`backoff: exponential` | 本文の仮定コメント（126 行目） | 読み取り | 一致 | 試行の数え方（初回を含む）と待機の倍増がそろっている |
+| 9 | `timeout_seconds: 30`、`max_parallel: 1`、`network_required: false` | 先頭の `_ASSUMPTION_`（11〜12 行目） | 読み取り | 一致 | 30 秒・同時 1 件・USB 直結の仮定と同じ値 |
+| 10 | `shell: false`（実行ファイルを直接起動） | rulebook 73・128 行目 | 読み取り | 一致 | シェル起動の例外に当たらない |
+| 11 | 入力パス `receipts/receipt-YYYYMMDD-NNNN.txt` と内容の正本 `kinuya-receipt-format-schema` | `clis-sample.md` 84 行目 | 読み取り | 一致 | 同じパスと同じ正本の名前 |
+| 12 | 印字に失敗しても会計を取り消さず、警告を出して控えを残す。exit code は販売 CLI 全体へ伝わらない | `clis-sample.md` 69・91・119 行目 | 読み取り | 一致 | 「印字未完了」の警告で会計を維持する。外部印刷コマンドの終了コードは伝わらない |
+| 13 | `specdojo:ifx-index-sample` の側で、この契約へ任せている内容（USB 直結・認証不要・結果不明時の紙面確認） | `ifx-index-sample.yaml` 64〜82 行目 | 読み取り | 一致 | 同じ前提で「詳細契約に委譲する」と書かれている |
+| 14 | `working_directory` が「店舗データディレクトリ（販売 CLI と共通）」 | `clis-sample.md` | 読み取り | 確かめられない | clis-sample はパスを相対で書くだけで、基準ディレクトリに名前がない。食い違いもない。学習用の仮定として扱う |
+| 15 | `receipt-print-reference` v1・`version_constraint: ">=1.0.0 <2.0.0"`・結果 JSON と診断の構造 | 架空の CLI のリファレンス（同梱していない） | なし | 確かめられない | 11〜13 行目の `_ASSUMPTION_` で、参照名だけを示すと明記している。共通サンプル文脈と食い違わないので、確かめる対象から外した |
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）の確認では、`ifx-cmd-sample.yaml` に誤りは見つからず、sample は直していない。schema 検査は valid。rulebook・clis-sample・ifx-index-sample と主張 15 件を突き合わせ、13 件が一致、2 件が確かめられない。確かめられない 2 件は架空 CLI のリファレンスと作業ディレクトリ名の学習用の仮定で、食い違いはない。展開された F001・F002 は前の段で直っており、R4 の観点でもないため扱わない。","handoff":["R4-1: R4 / execution.working_directory / 「店舗データディレクトリ（販売 CLI と共通）」の名前は clis-sample に正本がなく確かめられない。clis-sample はパスを相対で書くだけで、食い違いはない / - / vp-qe-verifiability。学習用の仮定として据え置いた。相手側を直す場合は、clis-sample に相対パスの基準ディレクトリ名を書き足す案がある / -","R4-2: R4 / command.reference・version_constraint・streams / `receipt-print-reference` v1、対応バージョン範囲、結果 JSON と診断の構造は、同梱していない架空の CLI のリファレンスなので確かめられない / - / vp-arc-technical-constraints。11〜13 行目の `_ASSUMPTION_` で参照名だけを示すと明記しており、共通サンプル文脈とも食い違わないため、確かめる対象から外した / -","F001・F002（grade の展開分）: 前の段（110〜130）で直っている。F001 は 103〜108 行目が「マスクする秘密値はない」になり、記録しない対象がレシート本文に絞られた。F002 は 92・119・126 行目が「店番担当」にそろった。R4 の観点の指摘でもないため、この段では直していない"],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/ifx-cmd.schema.yaml --data docs/ja/specdojo/samples/ifx-cmd-sample.yaml","status":"passed","summary":"docs/ja/specdojo/samples/ifx-cmd-sample.yaml: valid（変更はしていない。確かめのために実行した）"}]}
+</specdojo_executor_evidence>

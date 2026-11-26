@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-REVIEW-ALL-ifx-cmd-sample-140
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-REVIEW-ALL-ifx-cmd-sample-140/T-KATA-REVIEW-ALL-ifx-cmd-sample-140-20261126T144726Z-5bc97b79/plan.md
   started_at: "2026-11-26T14:47:36.396Z"
+  completed_at: "2026-11-26T14:52:38.160Z"
   agent: opus-executor
   execution: agent
   approach: sample-maintenance
@@ -20,16 +21,25 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- R4（正しさ）の確認を行った。`ifx-cmd-sample.yaml` の主張 15 件を rulebook・clis-sample・ifx-index-sample と突き合わせた。13 件は一致し、2 件は正本がなく確かめられなかった。誤りは見つからず、sample は変更していない。
+- `npm run validate:schema:file` による ifx-cmd スキーマ検査は valid だった。runner の `lint:md:changed`、`lint:fm:changed`、`lint:mermaid`、`lint:d2`、`validate:schema` も passed だった。
+- plan に展開された F001 と F002 は、前の段（110〜130）で直っていた。どちらも R4 の観点ではないため、この段では扱っていない。
+
+| No | 段 | 箇所 | 指摘 | 直した案 | 根拠 | 印 |
+| --- | --- | --- | --- | --- | --- | --- |
+| R4-1 | R4 | `execution.working_directory`「店舗データディレクトリ（販売 CLI と共通）」 | このディレクトリ名は clis-sample に正本がなく、確かめられない。clis-sample はパスを相対で書くだけで、食い違いはない。 | 学習用の仮定として据え置いた。相手側を直す場合は、clis-sample に相対パスの基準ディレクトリ名を書き足す案がある。 | vp-qe-verifiability | - |
+| R4-2 | R4 | command.reference・`version_constraint`・streams | `receipt-print-reference` v1、対応バージョン範囲、結果 JSON と診断の構造は、同梱していない架空の CLI のリファレンスなので確かめられない。 | 11〜13 行目の `_ASSUMPTION_` で参照名だけを示すと明記しており、共通サンプル文脈とも食い違わない。このため確かめる対象から外した。 | vp-arc-technical-constraints | - |
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- なし
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- R4-1: R4 / `execution.working_directory` / 「店舗データディレクトリ（販売 CLI と共通）」の名前は clis-sample に正本がなく確かめられない。clis-sample はパスを相対で書くだけで、食い違いはない / - / vp-qe-verifiability。学習用の仮定として据え置いた。相手側を直す場合は、clis-sample に相対パスの基準ディレクトリ名を書き足す案がある / -
+- R4-2: R4 / command.reference・`version_constraint`・streams / `receipt-print-reference` v1、対応バージョン範囲、結果 JSON と診断の構造は、同梱していない架空の CLI のリファレンスなので確かめられない / - / vp-arc-technical-constraints。11〜13 行目の `_ASSUMPTION_` で参照名だけを示すと明記しており、共通サンプル文脈とも食い違わないため、確かめる対象から外した / -
+- F001・F002（grade の展開分）: 前の段（110〜130）で直っている。F001 は 103〜108 行目が「マスクする秘密値はない」になり、記録しない対象がレシート本文に絞られた。F002 は 92・119・126 行目が「店番担当」にそろった。R4 の観点の指摘でもないため、この段では直していない
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+sample-maintenance の R4（正しさ）として、sample の事実を rulebook、clis-sample、ifx-index-sample と schema に突き合わせた。誤りがなかったため差分は入れていない。確かめられなかった 2 件は、正本のない学習用の仮定として据え置いた。F001 と F002 は前の段で解消済みで、R4 の観点に当たらないため再修正していない。
