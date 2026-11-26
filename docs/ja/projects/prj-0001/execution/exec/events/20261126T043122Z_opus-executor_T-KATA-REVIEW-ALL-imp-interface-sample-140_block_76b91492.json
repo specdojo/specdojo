@@ -1,0 +1,17 @@
+{
+  "v": 1,
+  "ts": "2026-11-26T04:31:22Z",
+  "type": "block",
+  "task_id": "T-KATA-REVIEW-ALL-imp-interface-sample-140",
+  "by": "opus-executor",
+  "msg": "parent validation failed: lint-fm-changed",
+  "meta": {
+    "limit_deferred": "false",
+    "claim_actor": "opus-executor",
+    "stage_actor": "sonnet-reporter",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-imp-interface-sample-140/T-KATA-REVIEW-ALL-imp-interface-sample-140-20261126T042436Z-de2d264f/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-REVIEW-ALL-imp-interface-sample-140/T-KATA-REVIEW-ALL-imp-interface-sample-140-20261126T042436Z-de2d264f/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-REVIEW-ALL-imp-interface-sample-140-20261126T042436Z-de2d264f"
+  }
+}
