@@ -1,0 +1,32 @@
+R4（正しさ）の段では、`bds-sample` に誤りは見つからず、sample は直していません。差分はありません。本文に書かれた事実 14 件を正本と突き合わせ、13 件が一致、1 件は正本がないため確かめられませんでした。
+
+**確かめの表（result の実施内容に載せる分）**
+
+| No | 主張（本文の箇所） | 正本 | 確かめ方 | 結果 | 根拠 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | frontmatter `type: ui` | `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml`、`bds-rulebook.md` | 読み取り | 一致 | schema の `deliverableType` に `ui`（画面・帳票仕様）があり、rulebook の `deliverable_type: ui` と同じ |
+| 2 | frontmatter `rulebook: specdojo:bds-rulebook` | `bds-rulebook.md` | 読み取り | 一致 | rulebook の `id` と、推奨 Frontmatter 項目の指定に合う |
+| 3 | `based_on` の 2 件（`specdojo:bes-sample`、`specdojo:cdsd-sample`） | `common-frontmatter.schema.yaml`、両 sample | `grep`、読み取り | 一致 | schema に `based_on` があり、2 件とも `id` が実在する |
+| 4 | 「業務イベント: 店頭の現金会計の確定」という表示名 | `bes-sample.md` | H1 を読み取り | 一致 | H1 が同じ文言 |
+| 5 | 日次締め記録・確認版・日次販売集計・基準時点・販売集合・締め案 | `cdsd-sample.md` | `grep` | 一致 | 管理単位の表、版と基準時点の固定、締め案の記述がある |
+| 6 | 販売記録は売上 ID ごと、商品台帳は商品名と区分 | `cdsd-sample.md` | 読み取り | 一致 | 販売記録の粒度は「売上ID毎」、商品台帳は商品の識別と表示名 |
+| 7 | 店主代表が確認版を確定し、記録を直す | `cdsd-sample.md`、`pm-members-sample.yaml` | 読み取り | 一致 | 日次締め記録の確定は PO。`shop-owner`（店主代表）のロールは PO と OPS |
+| 8 | つけ残高はつけ台帳で見る | `cdsd-sample.md` | 読み取り | 一致 | つけ台帳は参照するだけの隣の台帳として書かれている |
+| 9 | `bes-stock-out-recorded` は未同梱 | `docs/ja/specdojo/samples/` | 一覧を読み取り | 一致 | `bes-sample` と `bes-index-sample` しかない |
+| 10 | `bds-index` は未作成 | `docs/ja/specdojo/rulebooks/`、`samples/` | 一覧を読み取り | 一致 | `bds-index` の rulebook も sample もない |
+| 11 | 引き継ぎ先の `pm-issue-log`、`pm-decision-log` | `document-metadata-standard.md` | `grep` | 一致 | 引き継ぎ規則に課題管理簿 `pm-issue-log` と決定記録 `pm-decision-log` がある（`pm-decision-log-template.md` もある） |
+| 12 | 担当の Role code（BA、PO、DEV） | `pm-roles-sample.yaml` | `grep` | 一致 | どれも `code` に定義されている |
+| 13 | 欠品回数の月間 50% 削減、単一店舗、EC は対象外 | `sample-authoring-standard.md` の共通サンプル文脈、`cdsd-sample.md` | `grep` | 一致 | 目的の表と、cdsd の範囲外の記述に合う |
+| 14 | 曜日・日本時間・1 年保存などの運用の値 | なし | - | 確かめられない | 駄菓子屋の業務の仮定で正本がない。共通サンプル文脈と食い違わないので対象にしない |
+
+**grade の finding F001 について**
+
+この段では扱っていません。観点 `vp-pm-control-reporting` は、kata ガイドで kata のレビューに使わない観点とされているためです。また、今の「メモ / 将来課題」には担当（BA・PO）と転送先（`pm-issue-log`・`pm-decision-log`）がすでに書かれており、指摘された内容は直っています。
+
+**検査**
+
+この中では検査を実行していません。直接回す検査はありません。`lint:md` などの検査は、後で親 runner が回します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"R4（正しさ）: bds-sample に書かれた事実 14 件を schema・rulebook・参照先の sample・メタ情報標準と突き合わせた。誤りはなく、sample は直していない（差分なし）。確かめの表は 13 件が一致、1 件（正本のない業務の値）は確かめられない。F001 は R4 の観点ではなく、今の本文で直っているため扱っていない。","handoff":["1: R4 / メモ / 将来課題 / grade の finding F001（vp-pm-control-reporting、行 89 の旧文言）は、未同梱の業務イベントの担当と転送先がないという指摘である。今の本文には BA が `pm-issue-log` の課題で作成を追うこと、PO が決めて `pm-decision-log` へ記録することが書かれており、内容は直っている / - / kata-guide の「段と観点の対応」で `vp-pm-control-reporting` は kata のレビューで使わない観点とされる。`document-metadata-standard` の引き継ぎ規則（担当 Role code と転送先）は、今の本文で満たされている / -","2: R4 / 全体 / 本文の事実 14 件（frontmatter の `type`・`rulebook`・`based_on`、cdsd-sample の管理単位と版・基準時点、店主代表のロール、未同梱・未作成の参照、引き継ぎ先、Role code、共通サンプル文脈の目的）を正本と照合し、不一致はない。曜日・日本時間・保存期間などの業務の値は正本がないため確かめの対象外とした / - / vp-arc-technical-constraints、vp-qe-verifiability / -"],"validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner の検査（parent validation）に任せる。sample を変更していないため、executor では回していない"}]}
+</specdojo_executor_evidence>
